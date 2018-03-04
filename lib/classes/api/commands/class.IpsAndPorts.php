@@ -215,10 +215,9 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 			}
 			$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] added IP/port '" . $ip . ":" . $port . "'");
 			// get ip for return-array
-			$json_result = IpsAndPorts::getLocal($this->getUserData(), array(
+			$result = $this->apiCall('IpsAndPorts.get', array(
 				'id' => $ins_data['id']
-			))->get();
-			$result = json_decode($json_result, true)['data'];
+			));
 			return $this->response(200, "successfull", $result);
 		}
 		throw new Exception("Not allowed to execute given command.", 403);
@@ -237,11 +236,10 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 	{
 		if ($this->isAdmin() && ($this->getUserDetail('change_serversettings') || ! empty($this->getUserDetail('ip')))) {
 			$id = $this->getParam('id');
-			
-			$json_result = IpsAndPorts::getLocal($this->getUserData(), array(
+
+			$result = $this->apiCall('IpsAndPorts.get', array(
 				'id' => $id
-			))->get();
-			$result = json_decode($json_result, true)['data'];
+			));
 			
 			$ip = validate_ip2($this->getParam('ip', true, $result['ip']), false, 'invalidip', false, false, false, true);
 			$port = validate($this->getParam('port', true, $result['port']), 'port', '/^(([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9])|([1-5][0-9][0-9][0-9][0-9])|(6[0-4][0-9][0-9][0-9])|(65[0-4][0-9][0-9])|(655[0-2][0-9])|(6553[0-5]))$/Di', array(
@@ -373,10 +371,9 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 				
 				$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] changed IP/port from '" . $result['ip'] . ":" . $result['port'] . "' to '" . $ip . ":" . $port . "'");
 
-				$json_result = IpsAndPorts::getLocal($this->getUserData(), array(
+				$result = $this->apiCall('IpsAndPorts.get', array(
 					'id' => $result['id']
-				))->get();
-				$result = json_decode($json_result, true)['data'];
+				));
 				return $this->response(200, "successfull", $result);
 			}
 		}
@@ -397,11 +394,10 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 	{
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
 			$id = $this->getParam('id');
-			
-			$json_result = IpsAndPorts::getLocal($this->getUserData(), array(
+
+			$result = $this->apiCall('IpsAndPorts.get', array(
 				'id' => $id
-			))->get();
-			$result = json_decode($json_result, true)['data'];
+			));
 
 			$result_checkdomain_stmt = Database::prepare("
 				SELECT `id_domain` as `id` FROM `" . TABLE_DOMAINTOIP . "` WHERE `id_ipandports` = :id

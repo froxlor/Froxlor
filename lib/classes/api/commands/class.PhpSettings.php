@@ -230,7 +230,11 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 			
 			inserttask('1');
 			$this->logger()->logAction(ADM_ACTION, LOG_INFO, "[API] php setting with description '" . $description . "' has been created by '" . $this->getUserDetail('loginname') . "'");
-			return $this->response(200, "successfull", $ins_data);
+
+			$result = $this->apiCall('PhpSettings.get', array(
+				'id' => $ins_data['id']
+			));
+			return $this->response(200, "successfull", $result);
 		}
 		throw new Exception("Not allowed to execute given command.", 403);
 	}
@@ -250,11 +254,10 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 			
 			// required parameter
 			$id = $this->getParam('id');
-			
-			$json_result = PhpSettings::getLocal($this->getUserData(), array(
+
+			$result = $this->apiCall('PhpSettings.get', array(
 				'id' => $id
-			))->get();
-			$result = json_decode($json_result, true)['data'];
+			));
 			
 			// parameters
 			$description = $this->getParam('description', true, $result['description']);
@@ -341,7 +344,11 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 			
 			inserttask('1');
 			$this->logger()->logAction(ADM_ACTION, LOG_INFO, "[API] php setting with description '" . $description . "' has been updated by '" . $this->getUserDetail('loginname') . "'");
-			return $this->response(200, "successfull", $upd_data);
+
+			$result = $this->apiCall('PhpSettings.get', array(
+				'id' => $id
+			));
+			return $this->response(200, "successfull", $result);
 		}
 		throw new Exception("Not allowed to execute given command.", 403);
 	}
@@ -359,11 +366,10 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 	{
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings') == 1) {
 			$id = $this->getParam('id');
-			
-			$json_result = PhpSettings::getLocal($this->getUserData(), array(
+
+			$result = $this->apiCall('PhpSettings.get', array(
 				'id' => $id
-			))->get();
-			$result = json_decode($json_result, true)['data'];
+			));
 			
 			if ((Settings::Get('system.mod_fcgid') == '1' && Settings::Get('system.mod_fcgid_defaultini_ownvhost') == $id) || (Settings::Get('phpfpm.enabled') == '1' && Settings::Get('phpfpm.vhost_defaultini') == $id)) {
 				standard_error('cannotdeletehostnamephpconfig', '', true);

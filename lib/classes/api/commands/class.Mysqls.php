@@ -62,7 +62,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 			if (! isset($sql_root) || ! is_array($sql_root)) {
 				throw new ErrorException("Database server with index #" . $dbserver . " is unknown", 404);
 			}
-
+			
 			if ($sendinfomail != 1) {
 				$sendinfomail = 0;
 			}
@@ -71,10 +71,9 @@ class Mysqls extends ApiCommand implements ResourceEntity
 			if ($this->isAdmin()) {
 				// get customer id
 				$customer_id = $this->getParam('customer_id');
-				$json_result = Customers::getLocal($this->getUserData(), array(
+				$customer = $this->apiCall('Customers.get', array(
 					'id' => $customer_id
-				))->get();
-				$customer = json_decode($json_result, true)['data'];
+				));
 				// check whether the customer has enough resources to get the database added
 				if ($customer['mysqls_used'] >= $customer['mysqls'] && $customer['mysqls'] != '-1') {
 					throw new Exception("Customer has no more resources available", 406);
@@ -196,10 +195,9 @@ class Mysqls extends ApiCommand implements ResourceEntity
 			}
 			$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_WARNING, "[API] added mysql-database '" . $username . "'");
 			
-			$json_result = Mysqls::getLocal($this->getUserData(), array(
+			$result = $this->apiCall('Mysqls.get', array(
 				'dbname' => $username
-			))->get();
-			$result = json_decode($json_result, true)['data'];
+			));
 			return $this->response(200, "successfull", $result);
 		}
 		throw new Exception("No more resources available", 406);
@@ -225,13 +223,13 @@ class Mysqls extends ApiCommand implements ResourceEntity
 		$dn_optional = ($id <= 0 ? false : true);
 		$dbname = $this->getParam('dbname', $dn_optional, '');
 		$dbserver = $this->getParam('mysql_server', true, - 1);
-
+		
 		if ($this->isAdmin()) {
 			if ($this->getUserDetail('customers_see_all') != 1) {
 				// if it's a reseller or an admin who cannot see all customers, we need to check
 				// whether the database belongs to one of his customers
-				$json_result = Customers::getLocal($this->getUserData())->listing();
-				$custom_list_result = json_decode($json_result, true)['data']['list'];
+				$_custom_list_result = $this->apiCall('Customers.listing');
+				$custom_list_result = $_custom_list_result['list'];
 				$customer_ids = array();
 				foreach ($custom_list_result as $customer) {
 					$customer_ids[] = $customer['customerid'];
@@ -311,7 +309,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 	 *        	optional, update password for the database
 	 * @param string $description
 	 *        	optional, description for database
-	 *
+	 *        	
 	 * @access admin, customer
 	 * @throws Exception
 	 * @return array
@@ -322,17 +320,16 @@ class Mysqls extends ApiCommand implements ResourceEntity
 		$dn_optional = ($id <= 0 ? false : true);
 		$dbname = $this->getParam('dbname', $dn_optional, '');
 		$dbserver = $this->getParam('mysql_server', true, - 1);
-
+		
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'mysql')) {
 			throw new Exception("You cannot access this resource", 405);
 		}
 		
-		$json_result = Mysqls::getLocal($this->getUserData(), array(
+		$result = $this->apiCall('Mysqls.get', array(
 			'id' => $id,
 			'dbname' => $dbname,
 			'mysql_server' => $dbserver
-		))->get();
-		$result = json_decode($json_result, true)['data'];
+		));
 		$id = $result['id'];
 		
 		// paramters
@@ -352,15 +349,14 @@ class Mysqls extends ApiCommand implements ResourceEntity
 		if (! isset($sql_root) || ! is_array($sql_root)) {
 			throw new ErrorException("Database server with index #" . $dbserver . " is unknown", 404);
 		}
-
+		
 		// get needed customer info to reduce the mysql-usage-counter by one
 		if ($this->isAdmin()) {
 			// get customer id
 			$customer_id = $this->getParam('customer_id');
-			$json_result = Customers::getLocal($this->getUserData(), array(
-				'id' => $result['customerid']
-			))->get();
-			$customer = json_decode($json_result, true)['data'];
+			$customer = $this->apiCall('Customers.get', array(
+				'id' => $customer_id
+			));
 			// check whether the customer has enough resources to get the database added
 			if ($customer['mysqls_used'] >= $customer['mysqls'] && $customer['mysqls'] != '-1') {
 				throw new Exception("Customer has no more resources available", 406);
@@ -406,7 +402,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 			"id" => $id
 		);
 		Database::pexecute($stmt, $params, true, true);
-
+		
 		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_WARNING, "[API] updated mysql-database '" . $result['databasename'] . "'");
 		return $this->response(200, "successfull", $params);
 	}
@@ -436,16 +432,16 @@ class Mysqls extends ApiCommand implements ResourceEntity
 			$loginname = $this->getParam('loginname', true, '');
 			
 			if (! empty($customer_id) || ! empty($loginname)) {
-				$json_result = Customers::getLocal($this->getUserData(), array(
+				$customer = $this->apiCall('Customers.get', array(
 					'id' => $customerid,
 					'loginname' => $loginname
-				))->get();
+				));
 				$custom_list_result = array(
-					json_decode($json_result, true)['data']
+					$customer
 				);
 			} else {
-				$json_result = Customers::getLocal($this->getUserData())->listing();
-				$custom_list_result = json_decode($json_result, true)['data']['list'];
+				$_custom_list_result = $this->apiCall('Customers.listing');
+				$custom_list_result = $_custom_list_result['list'];
 			}
 			$customer_ids = array();
 			foreach ($custom_list_result as $customer) {
@@ -526,17 +522,16 @@ class Mysqls extends ApiCommand implements ResourceEntity
 		$dn_optional = ($id <= 0 ? false : true);
 		$dbname = $this->getParam('dbname', $dn_optional, '');
 		$dbserver = $this->getParam('mysql_server', true, - 1);
-
+		
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'mysql')) {
 			throw new Exception("You cannot access this resource", 405);
 		}
-		
-		$json_result = Mysqls::getLocal($this->getUserData(), array(
+
+		$result = $this->apiCall('Mysqls.get', array(
 			'id' => $id,
 			'dbname' => $dbname,
 			'mysql_server' => $dbserver
-		))->get();
-		$result = json_decode($json_result, true)['data'];
+		));
 		$id = $result['id'];
 		
 		// Begin root-session
@@ -554,10 +549,9 @@ class Mysqls extends ApiCommand implements ResourceEntity
 		
 		// get needed customer info to reduce the mysql-usage-counter by one
 		if ($this->isAdmin()) {
-			$json_result = Customers::getLocal($this->getUserData(), array(
+			$customer = $this->apiCall('Customers.get', array(
 				'id' => $result['customerid']
-			))->get();
-			$customer = json_decode($json_result, true)['data'];
+			));
 			$mysql_used = $customer['mysqls_used'];
 			$customer_id = $customer['customer_id'];
 		} else {

@@ -84,10 +84,9 @@ class Ftps extends ApiCommand implements ResourceEntity
 			if ($this->isAdmin()) {
 				// get customer id
 				$customer_id = $this->getParam('customer_id');
-				$json_result = Customers::getLocal($this->getUserData(), array(
+				$customer = $this->apiCall('Customers.get', array(
 					'id' => $customer_id
-				))->get();
-				$customer = json_decode($json_result, true)['data'];
+				));
 				// check whether the customer has enough resources to get the ftp-user added
 				if ($customer['ftps_used'] >= $customer['ftps'] && $customer['ftps'] != '-1') {
 					throw new Exception("Customer has no more resources available", 406);
@@ -254,11 +253,10 @@ class Ftps extends ApiCommand implements ResourceEntity
 					$this->mailer()->ClearAddresses();
 				}
 				$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_WARNING, "[API] added ftp-user '" . $username . "'");
-				
-				$json_result = Ftps::getLocal($this->getUserData(), array(
+
+				$result = $this->apiCall('Ftps.get', array(
 					'username' => $username
-				))->get();
-				$result = json_decode($json_result, true)['data'];
+				));
 				return $this->response(200, "successfull", $result);
 			}
 		}
@@ -288,8 +286,8 @@ class Ftps extends ApiCommand implements ResourceEntity
 			if ($this->getUserDetail('customers_see_all') == false) {
 				// if it's a reseller or an admin who cannot see all customers, we need to check
 				// whether the database belongs to one of his customers
-				$json_result = Customers::getLocal($this->getUserData())->listing();
-				$custom_list_result = json_decode($json_result, true)['data']['list'];
+				$_custom_list_result = $this->apiCall('Customers.listing');
+				$custom_list_result = $_custom_list_result['list'];
 				$customer_ids = array();
 				foreach ($custom_list_result as $customer) {
 					$customer_ids[] = $customer['customerid'];
@@ -336,12 +334,11 @@ class Ftps extends ApiCommand implements ResourceEntity
 		$id = $this->getParam('id', true, 0);
 		$un_optional = ($id <= 0 ? false : true);
 		$username = $this->getParam('username', $un_optional, '');
-		
-		$json_result = Ftps::getLocal($this->getUserData(), array(
+
+		$result = $this->apiCall('Ftps.get', array(
 			'id' => $id,
 			'username' => $username
-		))->get();
-		$result = json_decode($json_result, true)['data'];
+		));
 		$id = $result['id'];
 		
 		// parameters
@@ -364,10 +361,9 @@ class Ftps extends ApiCommand implements ResourceEntity
 		if ($this->isAdmin()) {
 			// get customer id
 			$customer_id = $this->getParam('customer_id');
-			$json_result = Customers::getLocal($this->getUserData(), array(
+			$customer = $this->apiCall('Customers.get', array(
 				'id' => $customer_id
-			))->get();
-			$customer = json_decode($json_result, true)['data'];
+			));
 		} else {
 			$customer_id = $this->getUserDetail('customerid');
 			$customer = $this->getUserData();
@@ -430,11 +426,10 @@ class Ftps extends ApiCommand implements ResourceEntity
 			"customerid" => $customer['customerid'],
 			"id" => $id
 		), true, true);
-		
-		$json_result = Ftps::getLocal($this->getUserData(), array(
+
+		$result = $this->apiCall('Ftps.get', array(
 			'username' => $result['username']
-		))->get();
-		$result = json_decode($json_result, true)['data'];
+		));
 		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_NOTICE, "[API] updated ftp-user '" . $result['username'] . "'");
 		return $this->response(200, "successfull", $result);
 	}
@@ -460,16 +455,16 @@ class Ftps extends ApiCommand implements ResourceEntity
 			$loginname = $this->getParam('loginname', true, '');
 			
 			if (! empty($customerid) || ! empty($loginname)) {
-				$json_result = Customers::getLocal($this->getUserData(), array(
+				$_result = $this->apiCall('Customers.get', array(
 					'id' => $customerid,
 					'loginname' => $loginname
-				))->get();
+				));
 				$custom_list_result = array(
-					json_decode($json_result, true)['data']
+					$_result
 				);
 			} else {
-				$json_result = Customers::getLocal($this->getUserData())->listing();
-				$custom_list_result = json_decode($json_result, true)['data']['list'];
+				$_custom_list_result = $this->apiCall('Customers.listing');
+				$custom_list_result = $_custom_list_result['list'];
 			}
 			$customer_ids = array();
 			foreach ($custom_list_result as $customer) {
@@ -526,19 +521,17 @@ class Ftps extends ApiCommand implements ResourceEntity
 		}
 		
 		// get ftp-user
-		$json_result = Ftps::getLocal($this->getUserData(), array(
+		$result = $this->apiCall('Ftps.get', array(
 			'id' => $id,
 			'username' => $username
-		))->get();
-		$result = json_decode($json_result, true)['data'];
+		));
 		$id = $result['id'];
 		
 		if ($this->isAdmin()) {
 			// get customer-data
-			$json_result = Customers::getLocal($this->getUserData(), array(
+			$customer_data = $this->apiCall('Customers.get', array(
 				'id' => $result['customerid']
-			))->get();
-			$customer_data = json_decode($json_result, true)['data'];
+			));
 		} else {
 			$customer_data = $this->getUserData();
 		}

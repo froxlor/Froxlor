@@ -80,10 +80,9 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			if ($this->isAdmin()) {
 				// get customer id
 				$customer_id = $this->getParam('customer_id');
-				$json_result = Customers::getLocal($this->getUserData(), array(
+				$customer = $this->apiCall('Customers.get', array(
 					'id' => $customer_id
-				))->get();
-				$customer = json_decode($json_result, true)['data'];
+				));
 				// check whether the customer has enough resources to get the subdomain added
 				if ($customer['subdomains_used'] >= $customer['subdomains'] && $customer['subdomains'] != '-1') {
 					throw new Exception("Customer has no more resources available", 406);
@@ -329,11 +328,10 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			Admins::increaseUsage(($this->isAdmin() ? $customer['adminid'] : $this->getUserDetail('adminid')), 'subdomains_used');
 			
 			$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] added subdomain '" . $completedomain . "'");
-			
-			$json_result = SubDomains::getLocal($this->getUserData(), array(
+
+			$result = $this->apiCall('SubDomains.get', array(
 				'id' => $subdomain_id
-			))->get();
-			$result = json_decode($json_result, true)['data'];
+			));
 			return $this->response(200, "successfull", $result);
 		}
 		throw new Exception("No more resources available", 406);
@@ -367,8 +365,8 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			if ($this->getUserDetail('customers_see_all') != 1) {
 				// if it's a reseller or an admin who cannot see all customers, we need to check
 				// whether the database belongs to one of his customers
-				$json_result = Customers::getLocal($this->getUserData())->listing();
-				$custom_list_result = json_decode($json_result, true)['data']['list'];
+				$_custom_list_result = $this->apiCall('Customers.listing');
+				$custom_list_result = $_custom_list_result['list'];
 				$customer_ids = array();
 				foreach ($custom_list_result as $customer) {
 					$customer_ids[] = $customer['customerid'];
@@ -428,16 +426,16 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			$loginname = $this->getParam('loginname', true, '');
 			
 			if (! empty($customerid) || ! empty($loginname)) {
-				$json_result = Customers::getLocal($this->getUserData(), array(
-					'id' => $customerid,
+				$result = $this->apiCall('Customers.get', array(
+					'id' => $id,
 					'loginname' => $loginname
-				))->get();
+				));
 				$custom_list_result = array(
-					json_decode($json_result, true)['data']
+					$result
 				);
 			} else {
-				$json_result = Customers::getLocal($this->getUserData())->listing();
-				$custom_list_result = json_decode($json_result, true)['data']['list'];
+				$_custom_list_result = $this->apiCall('Customers.listing');
+				$custom_list_result = $_custom_list_result['list'];
 			}
 			$customer_ids = array();
 			$customer_stdsubs = array();
@@ -505,20 +503,18 @@ class SubDomains extends ApiCommand implements ResourceEntity
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'domains')) {
 			throw new Exception("You cannot access this resource", 405);
 		}
-		
-		$json_result = SubDomains::getLocal($this->getUserData(), array(
+
+		$result = $this->apiCall('SubDomains.get', array(
 			'id' => $id,
 			'domainname' => $domainname
-		))->get();
-		$result = json_decode($json_result, true)['data'];
+		));
 		$id = $result['id'];
 		
 		// get needed customer info to reduce the subdomain-usage-counter by one
 		if ($this->isAdmin()) {
-			$json_result = Customers::getLocal($this->getUserData(), array(
+			$customer = $this->apiCall('Customers.get', array(
 				'id' => $result['customerid']
-			))->get();
-			$customer = json_decode($json_result, true)['data'];
+			));
 			$subdomains_used = $customer['subdomains_used'];
 			$customer_id = $customer['customer_id'];
 		} else {

@@ -536,8 +536,8 @@ class Customers extends ApiCommand implements ResourceEntity
 						);
 						$domainid = - 1;
 						try {
-							$std_domain = Domains::getLocal($this->getUserData(), $ins_data)->add();
-							$domainid = json_decode($std_domain, true)['data']['id'];
+							$std_domain = $this->apiCall('Domains.add', $ins_data);
+							$domainid = $std_domain['id'];
 						} catch (Exception $e) {
 							$this->logger()->logAction(ADM_ACTION, LOG_ERR, "[API] Unable to add standard-subdomain: " . $e->getMessage());
 						}
@@ -638,10 +638,9 @@ class Customers extends ApiCommand implements ResourceEntity
 				}
 				$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] added customer '" . $loginname . "'");
 				
-				$json_result = Customers::getLocal($this->getUserData(), array(
+				$result = $this->apiCall('Customers.get', array(
 					'loginname' => $loginname
-				))->get();
-				$result = json_decode($json_result, true)['data'];
+				));
 				return $this->response(200, "successfull", $result);
 			}
 			throw new Exception("No more resources available", 406);
@@ -666,12 +665,11 @@ class Customers extends ApiCommand implements ResourceEntity
 		$id = $this->getParam('id', true, 0);
 		$ln_optional = ($id <= 0 ? false : true);
 		$loginname = $this->getParam('loginname', $ln_optional, '');
-		
-		$json_result = Customers::getLocal($this->getUserData(), array(
+
+		$result = $this->apiCall('Customers.get', array(
 			'id' => $id,
 			'loginname' => $loginname
-		))->get();
-		$result = json_decode($json_result, true)['data'];
+		));
 		$id = $result['customerid'];
 		
 		if ($this->isAdmin()) {
@@ -802,8 +800,8 @@ class Customers extends ApiCommand implements ResourceEntity
 				);
 				$domainid = - 1;
 				try {
-					$std_domain = Domains::getLocal($this->getUserData(), $ins_data)->add();
-					$domainid = json_decode($std_domain, true)['data']['id'];
+					$std_domain = $this->apiCall('Domains.add', $ins_data);
+					$domainid = $std_domain['id'];
 				} catch (Exception $e) {
 					$this->logger()->logAction(ADM_ACTION, LOG_ERR, "[API] Unable to add standard-subdomain: " . $e->getMessage());
 				}
@@ -823,10 +821,10 @@ class Customers extends ApiCommand implements ResourceEntity
 			
 			if ($createstdsubdomain == '0' && $result['standardsubdomain'] != '0') {
 				try {
-					$std_domain = Domains::getLocal($this->getUserData(), array(
+					$std_domain = $this->apiCall('Domains.delete', array(
 						'id' => $result['standardsubdomain'],
 						'is_stdsubdomain' => 1
-					))->delete();
+					));
 				} catch (Exception $e) {
 					$this->logger()->logAction(ADM_ACTION, LOG_ERR, "[API] Unable to delete standard-subdomain: " . $e->getMessage());
 				}
@@ -1157,21 +1155,19 @@ class Customers extends ApiCommand implements ResourceEntity
 		 */
 		if ($this->isAdmin()) {
 			if ($move_to_admin > 0 && $move_to_admin != $result['adminid']) {
-				$json_result = Customers::getLocal($this->getUserData(), array(
+				$move_result = $this->apiCall('Customers.move', array(
 					'id' => $result['customerid'],
 					'adminid' => $move_to_admin
-				))->move();
-				$move_result = json_decode($json_result, true)['data'];
+				));
 				if ($move_result != true) {
 					standard_error('moveofcustomerfailed', $move_result, true);
 				}
 			}
 		}
-		
-		$json_result = Customers::getLocal($this->getUserData(), array(
+
+		$result = $this->apiCall('Customers.get', array(
 			'id' => $result['customerid']
-		))->get();
-		$result = json_decode($json_result, true)['data'];
+		));
 		return $this->response(200, "successfull", $result);
 	}
 
@@ -1196,12 +1192,11 @@ class Customers extends ApiCommand implements ResourceEntity
 			$ln_optional = ($id <= 0 ? false : true);
 			$loginname = $this->getParam('loginname', $ln_optional, '');
 			$delete_userfiles = $this->getParam('delete_userfiles', true, 0);
-			
-			$json_result = Customers::getLocal($this->getUserData(), array(
+
+			$result = $this->apiCall('Customers.get', array(
 				'id' => $id,
 				'loginname' => $loginname
-			))->get();
-			$result = json_decode($json_result, true)['data'];
+			));
 			$id = $result['customerid'];
 			
 			// @fixme use Databases-ApiCommand later
@@ -1443,12 +1438,11 @@ class Customers extends ApiCommand implements ResourceEntity
 			$id = $this->getParam('id', true, 0);
 			$ln_optional = ($id <= 0 ? false : true);
 			$loginname = $this->getParam('loginname', $ln_optional, '');
-			
-			$json_result = Customers::getLocal($this->getUserData(), array(
+
+			$result = $this->apiCall('Customers.get', array(
 				'id' => $id,
 				'loginname' => $loginname
-			))->get();
-			$result = json_decode($json_result, true)['data'];
+			));
 			$id = $result['customerid'];
 			
 			$result_stmt = Database::prepare("
@@ -1488,12 +1482,11 @@ class Customers extends ApiCommand implements ResourceEntity
 			$id = $this->getParam('id', true, 0);
 			$ln_optional = ($id <= 0 ? false : true);
 			$loginname = $this->getParam('loginname', $ln_optional, '');
-			
-			$json_result = Customers::getLocal($this->getUserData(), array(
+
+			$c_result = $this->apiCall('Customers.get', array(
 				'id' => $id,
 				'loginname' => $loginname
-			))->get();
-			$c_result = json_decode($json_result, true)['data'];
+			));
 			$id = $c_result['customerid'];
 			
 			// check if target-admin is the current admin
@@ -1502,10 +1495,9 @@ class Customers extends ApiCommand implements ResourceEntity
 			}
 			
 			// get target admin
-			$json_result = Admins::getLocal($this->getUserData(), array(
+			$a_result = $this->apiCall('Admins.get', array(
 				'id' => $adminid
-			))->get();
-			$a_result = json_decode($json_result, true)['data'];
+			));
 			
 			// Update customer entry
 			$updCustomer_stmt = Database::prepare("
@@ -1538,10 +1530,10 @@ class Customers extends ApiCommand implements ResourceEntity
 			updateCounters(false);
 			
 			$this->logger()->logAction(ADM_ACTION, LOG_INFO, "[API] moved user '" . $c_result['loginname'] . "' from admin/reseller '" . $c_result['adminname'] . " to admin/reseller '" . $a_result['loginname'] . "'");
-			$json_result = Customers::getLocal($this->getUserData(), array(
+
+			$result = $this->apiCall('Customers.get', array(
 				'id' => $c_result['customerid']
-			))->get();
-			$result = json_decode($json_result, true)['data'];
+			));
 			return $this->response(200, "successfull", $result);
 		}
 		throw new Exception("Not allowed to execute given command.", 403);

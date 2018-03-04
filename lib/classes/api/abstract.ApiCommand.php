@@ -332,36 +332,6 @@ abstract class ApiCommand
 	}
 
 	/**
-	 * returns "module::function()" for better error-messages (missing parameter etc.)
-	 * makes debugging a whole lot more comfortable
-	 *
-	 * @return string
-	 */
-	private function getModFunctionString()
-	{
-		$_class = get_called_class();
-		
-		$level = 2;
-		if (version_compare(PHP_VERSION, "5.4.0", "<")) {
-			$trace = debug_backtrace();
-		} else {
-			$trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-		}
-		while (true) {
-			$class = $trace[$level]['class'];
-			$func = $trace[$level]['function'];
-			if ($class != $_class) {
-				$level ++;
-				if ($level > 5) {
-					break;
-				}
-				continue;
-			}
-			return $class . ':' . $func;
-		}
-	}
-
-	/**
 	 * update value of parameter
 	 *
 	 * @param string $param
@@ -397,6 +367,24 @@ abstract class ApiCommand
 	protected function mailer()
 	{
 		return $this->mail;
+	}
+
+	/**
+	 * call an api-command internally
+	 *
+	 * @param string $module
+	 * @param string $function
+	 * @param array|null $params
+	 *
+	 * @return array
+	 */
+	protected function apiCall($command = null, $params = null)
+	{
+		$_command = explode(".", $command);
+		$module = $_command[0];
+		$function = $_command[1];
+		$json_result = $module::getLocal($this->getUserData(), $params)->{$function}();
+		return json_decode($json_result, true)['data'];
 	}
 
 	/**
@@ -449,6 +437,35 @@ abstract class ApiCommand
 	}
 
 	/**
+	 * returns "module::function()" for better error-messages (missing parameter etc.)
+	 * makes debugging a whole lot more comfortable
+	 *
+	 * @return string
+	 */
+	private function getModFunctionString()
+	{
+		$_class = get_called_class();
+		$level = 2;
+		if (version_compare(PHP_VERSION, "5.4.0", "<")) {
+			$trace = debug_backtrace();
+		} else {
+			$trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+		}
+		while (true) {
+			$class = $trace[$level]['class'];
+			$func = $trace[$level]['function'];
+			if ($class != $_class) {
+				$level ++;
+				if ($level > 5) {
+					break;
+				}
+				continue;
+			}
+			return $class . ':' . $func;
+		}
+	}
+
+	/**
 	 * read user data from database by api-request-header fields
 	 *
 	 * @param array $header
@@ -490,6 +507,13 @@ abstract class ApiCommand
 		throw new Exception("Invalid API credentials", 400);
 	}
 
+	/**
+	 * run 'trim' function on an array recursively
+	 *
+	 * @param array $input
+	 *
+	 * @return array
+	 */
 	private function trimArray($input)
 	{
 		if (! is_array($input)) {

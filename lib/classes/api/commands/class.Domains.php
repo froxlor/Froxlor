@@ -178,10 +178,9 @@ class Domains extends ApiCommand implements ResourceEntity
 					), '', true);
 				}
 
-				$json_result = Customers::getLocal($this->getUserData(), array(
+				$customer = $this->apiCall('Customers.get', array(
 					'id' => $customerid
-				))->get();
-				$customer = json_decode($json_result, true)['data'];
+				));
 
 				if ($this->getUserDetail('customers_see_all') == '1') {
 					$admin_stmt = Database::prepare("
@@ -743,10 +742,9 @@ class Domains extends ApiCommand implements ResourceEntity
 					
 					$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] added domain '" . $domain . "'");
 
-					$json_result = Domains::getLocal($this->getUserData(), array(
+					$result = $this->apiCall('Domains.get', array(
 						'domainname' => $domain
-					))->get();
-					$result = json_decode($json_result, true)['data'];
+					));
 					return $this->response(200, "successfull", $result);
 				}
 			}
@@ -777,12 +775,11 @@ class Domains extends ApiCommand implements ResourceEntity
 			$domainname = $this->getParam('domainname', $dn_optional, '');
 
 			// get requested domain
-			$json_result = Domains::getLocal($this->getUserData(), array(
+			$result = $this->apiCall('Domains.get', array(
 				'id' => $id,
 				'domainname' => $domainname,
 				'no_std_subdomain' => true
-			))->get();
-			$result = json_decode($json_result, true)['data'];
+			));
 			$id = $result['id'];
 			
 			// optional parameters
@@ -877,8 +874,7 @@ class Domains extends ApiCommand implements ResourceEntity
 					AND (`subdomains_used` + :subdomains <= `subdomains` OR `subdomains` = '-1' )
 					AND (`emails_used` + :emails <= `emails` OR `emails` = '-1' )
 					AND (`email_forwarders_used` + :forwarders <= `email_forwarders` OR `email_forwarders` = '-1' )
-					AND (`email_accounts_used` + :accounts <= `email_accounts` OR `email_accounts` = '-1' ) " . ($this->getUserDetail('customers_see_all') ? '' : " AND `adminid` = :adminid")
-				);
+					AND (`email_accounts_used` + :accounts <= `email_accounts` OR `email_accounts` = '-1' ) " . ($this->getUserDetail('customers_see_all') ? '' : " AND `adminid` = :adminid"));
 				$params = array(
 					'customerid' => $customerid,
 					'subdomains' => $subdomains,
@@ -897,10 +893,9 @@ class Domains extends ApiCommand implements ResourceEntity
 				$customerid = $result['customerid'];
 
 				// get customer
-				$json_result = Customers::getLocal($this->getUserData(), array(
+				$customer = $this->apiCall('Customers.get', array(
 					'id' => $customerid
-				))->get();
-				$customer = json_decode($json_result, true)['data'];
+				));
 			}
 			
 			// handle change of admin (move domain from admin to admin)
@@ -1664,11 +1659,10 @@ class Domains extends ApiCommand implements ResourceEntity
 			$is_stdsubdomain = $this->getParam('is_stdsubdomain', true, 0);
 			$remove_subbutmain_domains = $this->getParam('delete_mainsubdomains', true, 0);
 
-			$json_result = Domains::getLocal($this->getUserData(), array(
+			$result = $this->apiCall('Domains.get', array(
 				'id' => $id,
 				'domainname' => $domainname
-			))->get();
-			$result = json_decode($json_result, true)['data'];
+			));
 			$id = $result['id'];
 			
 			// check for deletion of main-domains which are logically subdomains, #329

@@ -285,10 +285,9 @@ class Admins extends ApiCommand implements ResourceEntity
 				$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] added admin '" . $loginname . "'");
 				
 				// get all admin-data for return-array
-				$json_result = Admins::getLocal($this->getUserData(), array(
+				$result = $this->apiCall('Admins.get', array(
 					'id' => $adminid
-				))->get();
-				$result = json_decode($json_result, true)['data'];
+				));
 				return $this->response(200, "successfull", $result);
 			}
 		}
@@ -314,12 +313,11 @@ class Admins extends ApiCommand implements ResourceEntity
 			$id = $this->getParam('id', true, 0);
 			$ln_optional = ($id <= 0 ? false : true);
 			$loginname = $this->getParam('loginname', $ln_optional, '');
-			
-			$json_result = Admins::getLocal($this->getUserData(), array(
+
+			$result = $this->apiCall('Admins.get', array(
 				'id' => $id,
 				'loginname' => $loginname
-			))->get();
-			$result = json_decode($json_result, true)['data'];
+			));
 			$id = $result['adminid'];
 			
 			if ($this->getUserDetail('change_serversettings') == 1 || $result['adminid'] == $this->getUserDetail('adminid')) {
@@ -553,10 +551,9 @@ class Admins extends ApiCommand implements ResourceEntity
 					$this->logger()->logAction(ADM_ACTION, LOG_INFO, "[API] edited admin '" . $result['loginname'] . "'");
 					
 					// get all admin-data for return-array
-					$json_result = Admins::getLocal($this->getUserData(), array(
+					$result = $this->apiCall('Admins.get', array(
 						'id' => $result['adminid']
-					))->get();
-					$result = json_decode($json_result, true)['data'];
+					));
 					return $this->response(200, "successfull", $result);
 				}
 			}
@@ -582,12 +579,11 @@ class Admins extends ApiCommand implements ResourceEntity
 			$id = $this->getParam('id', true, 0);
 			$ln_optional = ($id <= 0 ? false : true);
 			$loginname = $this->getParam('loginname', $ln_optional, '');
-			
-			$json_result = Admins::getLocal($this->getUserData(), array(
+
+			$result = $this->apiCall('Admins.get', array(
 				'id' => $id,
 				'loginname' => $loginname
-			))->get();
-			$result = json_decode($json_result, true)['data'];
+			));
 			$id = $result['adminid'];
 			
 			// don't be stupid
@@ -684,11 +680,10 @@ class Admins extends ApiCommand implements ResourceEntity
 			$ln_optional = ($id <= 0 ? false : true);
 			$loginname = $this->getParam('loginname', $ln_optional, '');
 			
-			$json_result = Admins::getLocal($this->getUserData(), array(
+			$result = $this->apiCall('Admins.get', array(
 				'id' => $id,
 				'loginname' => $loginname
-			))->get();
-			$result = json_decode($json_result, true)['data'];
+			));
 			$id = $result['adminid'];
 			
 			$result_stmt = Database::prepare("

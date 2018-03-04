@@ -192,11 +192,10 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 			
 			// required parameter
 			$id = $this->getParam('id');
-			
-			$json_result = PhpSettings::getLocal($this->getUserData(), array(
+
+			$result = $this->apiCall('PhpSettings.get', array(
 				'id' => $id
-			))->get();
-			$result = json_decode($json_result, true)['data'];
+			));
 			
 			// parameters
 			$description = $this->getParam('description', true, $result['description']);
@@ -283,11 +282,10 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 			if ($id == 1) {
 				standard_error('cannotdeletedefaultphpconfig', '', true);
 			}
-			
-			$json_result = FpmDaemons::getLocal($this->getUserData(), array(
+
+			$result = $this->apiCall('FpmDaemons.get', array(
 				'id' => $id
-			))->get();
-			$result = json_decode($json_result, true)['data'];
+			));
 			
 			// set default fpm daemon config for all php-config that use this config that is to be deleted
 			$upd_stmt = Database::prepare("
