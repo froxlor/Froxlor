@@ -427,7 +427,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			
 			if (! empty($customerid) || ! empty($loginname)) {
 				$result = $this->apiCall('Customers.get', array(
-					'id' => $id,
+					'id' => $customerid,
 					'loginname' => $loginname
 				));
 				$custom_list_result = array(
