@@ -642,7 +642,7 @@ class Admins extends ApiCommand implements ResourceEntity
 			// delete old admin's api keys if exists (no customer keys)
 			$upd_stmt = Database::prepare("
 				DELETE FROM `" . TABLE_API_KEYS . "` WHERE
-				`adminid` = :userid AND `customerid` = '0'
+				`adminid` = :adminid AND `customerid` = '0'
 			");
 			Database::pexecute($upd_stmt, array(
 				'adminid' => $id
