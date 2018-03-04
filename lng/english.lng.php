@@ -2123,3 +2123,6 @@ $lng['admin']['notryfiles']['description'] = 'Say yes here if you want to specif
 // added in froxlor 0.10.0
 $lng['panel']['none_value'] = 'None';
 $lng['menue']['main']['apihelp'] = 'API help';
+$lng['menue']['main']['apikeys'] = 'API keys';
+$lng['apikeys']['no_api_keys'] = 'No API keys found';
+$lng['apikeys']['key_add'] = 'Add new key';

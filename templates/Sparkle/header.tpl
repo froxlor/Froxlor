@@ -68,6 +68,7 @@
 						<li><a href="{$linker->getLink(array('section' => 'index', 'page' => 'change_theme'))}">{$lng['panel']['theme']}</a></li>
 					</if>
 					<if Settings::Get('api.enabled') == 1>
+						<li><a href="{$linker->getLink(array('section' => 'index', 'page' => 'apikeys'))}">{$lng['menue']['main']['apikeys']}</a></li>
 						<li><a href="{$linker->getLink(array('section' => 'index', 'page' => 'apihelp'))}">{$lng['menue']['main']['apihelp']}</a></li>
 					</if>
 				</ul>

@@ -1773,3 +1773,6 @@ $lng['admin']['notryfiles']['description'] = 'Wähle "Ja", wenn eine eigene try_
 // added in froxlor 0.10.0
 $lng['panel']['none_value'] = 'Keine';
 $lng['menue']['main']['apihelp'] = 'API Hilfe';
+$lng['menue']['main']['apikeys'] = 'API Keys';
+$lng['apikeys']['no_api_keys'] = 'Keine API Keys gefunden';
+$lng['apikeys']['key_add'] = 'API Key hinzufügen';

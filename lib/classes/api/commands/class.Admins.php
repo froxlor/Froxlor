@@ -595,27 +595,31 @@ class Admins extends ApiCommand implements ResourceEntity
 				standard_error('youcantdeleteyourself', '', true);
 			}
 			
+			// delete admin
 			$del_stmt = Database::prepare("
 				DELETE FROM `" . TABLE_PANEL_ADMINS . "` WHERE `adminid` = :adminid
 			");
 			Database::pexecute($del_stmt, array(
 				'adminid' => $id
 			), true, true);
-			
+
+			// delete the traffic-usage
 			$del_stmt = Database::prepare("
 				DELETE FROM `" . TABLE_PANEL_TRAFFIC_ADMINS . "` WHERE `adminid` = :adminid
 			");
 			Database::pexecute($del_stmt, array(
 				'adminid' => $id
 			), true, true);
-			
+
+			// delete the diskspace usage
 			$del_stmt = Database::prepare("
 				DELETE FROM `" . TABLE_PANEL_DISKSPACE_ADMINS . "` WHERE `adminid` = :adminid
 			");
 			Database::pexecute($del_stmt, array(
 				'adminid' => $id
 			), true, true);
-			
+
+			// set admin-id of the old admin's customer to current admins
 			$upd_stmt = Database::prepare("
 				UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET
 				`adminid` = :userid WHERE `adminid` = :adminid
@@ -624,7 +628,8 @@ class Admins extends ApiCommand implements ResourceEntity
 				'userid' => $this->getUserDetail('adminid'),
 				'adminid' => $id
 			), true, true);
-			
+
+			// set admin-id of the old admin's domains to current admins
 			$upd_stmt = Database::prepare("
 				UPDATE `" . TABLE_PANEL_DOMAINS . "` SET
 				`adminid` = :userid WHERE `adminid` = :adminid
@@ -633,7 +638,26 @@ class Admins extends ApiCommand implements ResourceEntity
 				'userid' => $this->getUserDetail('adminid'),
 				'adminid' => $id
 			), true, true);
-			
+
+			// delete old admin's api keys if exists (no customer keys)
+			$upd_stmt = Database::prepare("
+				DELETE FROM `" . TABLE_API_KEYS . "` WHERE
+				`adminid` = :userid AND `customerid` = '0'
+			");
+			Database::pexecute($upd_stmt, array(
+				'adminid' => $id
+			), true, true);
+
+			// set admin-id of the old admin's api-keys to current admins
+			$upd_stmt = Database::prepare("
+				UPDATE `" . TABLE_API_KEYS . "` SET
+				`adminid` = :userid WHERE `adminid` = :adminid
+			");
+			Database::pexecute($upd_stmt, array(
+				'userid' => $this->getUserDetail('adminid'),
+				'adminid' => $id
+			), true, true);
+
 			$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] deleted admin '" . $result['loginname'] . "'");
 			updateCounters();
 			return $this->response(200, "successfull", $result);

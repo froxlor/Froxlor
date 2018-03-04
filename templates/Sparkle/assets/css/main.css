@@ -1682,13 +1682,13 @@ fieldset.file {
 	background-color: rgb(242, 222, 222);
 }
 
-.domain-hostname {
+.primary-entry {
 	background-color: rgb(53, 106, 160);
 	color: #ddd;
 	font-weight: bold;
 }
 
-table.hl tbody tr.domain-hostname:hover {
+table.hl tbody tr.primary-entry:hover {
 	background-color: rgb(64, 150, 238);
 }
 

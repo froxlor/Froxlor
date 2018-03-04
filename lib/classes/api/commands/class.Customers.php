@@ -857,9 +857,9 @@ class Customers extends ApiCommand implements ResourceEntity
 			// activate/deactivate customer services
 			if ($deactivated != $result['deactivated']) {
 				
-				$yesno = (($deactivated) ? 'N' : 'Y');
-				$pop3 = (($deactivated) ? '0' : (int) $result['pop3']);
-				$imap = (($deactivated) ? '0' : (int) $result['imap']);
+				$yesno = ($deactivated ? 'N' : 'Y');
+				$pop3 = ($deactivated ? '0' : (int) $result['pop3']);
+				$imap = ($deactivated ? '0' : (int) $result['imap']);
 				
 				$upd_stmt = Database::prepare("
 					UPDATE `" . TABLE_MAIL_USERS . "` SET `postfix`= :yesno, `pop3` = :pop3, `imap` = :imap WHERE `customerid` = :customerid
@@ -923,8 +923,16 @@ class Customers extends ApiCommand implements ResourceEntity
 				// At last flush the new privileges
 				$dbm->getManager()->flushPrivileges();
 				Database::needRoot(false);
-				
-				$this->logger()->logAction(ADM_ACTION, LOG_INFO, "[API] deactivated user '" . $result['loginname'] . "'");
+
+				// reactivate/deactivate api-keys
+				$valid_until = $deactivated ? 0 : - 1;
+				$stmt = Database::prepare("UPDATE `" . TABLE_API_KEYS . "` SET `valid_until` = :vu WHERE `customerid` = :id");
+				Database::pexecute($stmt, array(
+					'id' => $id,
+					'vu' => $valid_until
+				), true, true);
+
+				$this->logger()->logAction(ADM_ACTION, LOG_INFO, "[API] " . ($deactivated ? 'deactivated' : 'reactivated') . " user '" . $result['loginname'] . "'");
 				inserttask('1');
 			}
 			
@@ -1323,6 +1331,12 @@ class Customers extends ApiCommand implements ResourceEntity
 				'id' => $id
 			), true, true);
 			
+			// remove api-keys
+			$stmt = Database::prepare("DELETE FROM `" . TABLE_API_KEYS . "` WHERE `customerid` = :id");
+			Database::pexecute($stmt, array(
+				'id' => $id
+			), true, true);
+
 			// Delete all waiting "create user" -tasks for this user, #276
 			// Note: the WHERE selects part of a serialized array, but it should be safe this way
 			$del_stmt = Database::prepare("
