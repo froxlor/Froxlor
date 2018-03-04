@@ -1,6 +1,6 @@
 <tr <if !$isValid>class="domain-expired"</if>>
 	<td>
-		<a href="http://{$row['domain']}" target="_blank">{$row['domain']}</a>
+		<a href="https://{$row['domain']}" target="_blank">{$row['domain']}</a>
 		{$adminCustomerLink}
 	</td>
 	<td>
