@@ -156,7 +156,7 @@ abstract class ApiCommand
 		// ensure that we can display messages
 		$language = Settings::Get('panel.standardlanguage');
 		
-		if (isset($this->user_data['language']) && isset($languages[$this->user_data['language']])) {
+		if (isset($this->user_data['language']) && isset($langs[$this->user_data['language']])) {
 			// default: use language from session, #277
 			$language = $this->user_data['language'];
 		} elseif (isset($this->user_data['def_language'])) {

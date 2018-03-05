@@ -63,7 +63,7 @@ class Domains extends ApiCommand implements ResourceEntity
 	 *        	optional, the domainname
 	 * @param bool $no_std_subdomain
 	 *        	optional, default false
-	 *
+	 *        	
 	 * @access admin
 	 * @throws Exception
 	 * @return array
@@ -75,7 +75,7 @@ class Domains extends ApiCommand implements ResourceEntity
 			$dn_optional = ($id <= 0 ? false : true);
 			$domainname = $this->getParam('domainname', $dn_optional, '');
 			$no_std_subdomain = $this->getParam('no_std_subdomain', true, false);
-
+			
 			// convert possible idn domain to punycode
 			if (substr($domainname, 0, 4) != 'xn--') {
 				$idna_convert = new idna_convert_wrapper();
@@ -155,7 +155,6 @@ class Domains extends ApiCommand implements ResourceEntity
 				$ocsp_stapling = $this->getParam('ocsp_stapling', true, 0);
 				
 				// validation
-				
 				if ($p_domain == Settings::Get('system.hostname')) {
 					standard_error('admin_domain_emailsystemhostname', '', true);
 				}
@@ -177,11 +176,11 @@ class Domains extends ApiCommand implements ResourceEntity
 						'mydomain'
 					), '', true);
 				}
-
+				
 				$customer = $this->apiCall('Customers.get', array(
 					'id' => $customerid
 				));
-
+				
 				if ($this->getUserDetail('customers_see_all') == '1') {
 					$admin_stmt = Database::prepare("
 						SELECT * FROM `" . TABLE_PANEL_ADMINS . "`
@@ -304,104 +303,14 @@ class Domains extends ApiCommand implements ResourceEntity
 					$mod_fcgid_maxrequests = '-1';
 				}
 				
-				if ($this->getUserDetail('ip') != "-1") {
-					$admin_ip_stmt = Database::prepare("
-						SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "`
-						WHERE `id` = :id ORDER BY `ip`, `port` ASC");
-					$admin_ip = Database::pexecute_first($admin_ip_stmt, array(
-						'id' => $this->getUserDetail('ip')
-					), true, true);
-					$additional_ip_condition = " AND `ip` = :adminip ";
-					$aip_param = array(
-						'adminip' => $admin_ip['ip']
-					);
-				} else {
-					$additional_ip_condition = '';
-					$aip_param = array();
-				}
-				
-				if (empty($p_ipandports)) {
-					throw new Exception("No IPs given, unable to add domain (no default IPs set?)", 406);
-				}
-				
-				$ipandports = array();
-				if (! empty($p_ipandports) && is_numeric($p_ipandports)) {
-					$p_ipandports = array($p_ipandports);
-				}
-				if (! empty($p_ipandports) && ! is_array($p_ipandports)) {
-					$p_ipandports = unserialize($p_ipandports);
-				}
-				
-				if (! empty($p_ipandports) && is_array($p_ipandports)) {
-					foreach ($p_ipandports as $ipandport) {
-						$ipandport = intval($ipandport);
-						$ipandport_check_stmt = Database::prepare("
-							SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "`
-							WHERE `id` = :id " . $additional_ip_condition);
-						$ip_params = null;
-						$ip_params = array_merge(array(
-							'id' => $ipandport
-						), $aip_param);
-						$ipandport_check = Database::pexecute_first($ipandport_check_stmt, $ip_params, true, true);
-						
-						if (! isset($ipandport_check['id']) || $ipandport_check['id'] == '0' || $ipandport_check['id'] != $ipandport) {
-							standard_error('ipportdoesntexist', '', true);
-						} else {
-							$ipandports[] = $ipandport;
-						}
-					}
-				}
-				
+				// check non-ssl IP
+				$ipandports = $this->validateIpAddresses($p_ipandports);
+				// check ssl IP
+				$ssl_ipandports = array();
 				if (Settings::Get('system.use_ssl') == "1" && ! empty($p_ssl_ipandports)) {
-					
-					$ssl_ipandports = array();
-					if (! empty($p_ssl_ipandports) && ! is_array($p_ssl_ipandports)) {
-						$p_ssl_ipandports = unserialize($p_ssl_ipandports);
-					}
-					
-					// Verify SSL-Ports
-					if (! empty($p_ssl_ipandports) && is_array($p_ssl_ipandports)) {
-						foreach ($p_ssl_ipandports as $ssl_ipandport) {
-							if (trim($ssl_ipandport) == "") {
-								continue;
-							}
-							// fix if no ssl-ip/port is checked
-							if (trim($ssl_ipandport) < 1) {
-								continue;
-							}
-							$ssl_ipandport = intval($ssl_ipandport);
-							$ssl_ipandport_check_stmt = Database::prepare("
-										SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "`
-										WHERE `id` = :id " . $additional_ip_condition);
-							$ip_params = null;
-							$ip_params = array_merge(array(
-								'id' => $ssl_ipandport
-							), $aip_param);
-							$ssl_ipandport_check = Database::pexecute_first($ssl_ipandport_check_stmt, $ip_params, true, true);
-							
-							if (! isset($ssl_ipandport_check['id']) || $ssl_ipandport_check['id'] == '0' || $ssl_ipandport_check['id'] != $ssl_ipandport) {
-								standard_error('ipportdoesntexist', '', true);
-							} else {
-								$ssl_ipandports[] = $ssl_ipandport;
-							}
-						}
-					} else {
-						$ssl_redirect = 0;
-						$letsencrypt = 0;
-						$http2 = 0;
-						// we need this for the serialize
-						// if ssl is disabled or no ssl-ip/port exists
-						$ssl_ipandports[] = - 1;
-						
-						// HSTS
-						$hsts_maxage = 0;
-						$hsts_sub = 0;
-						$hsts_preload = 0;
-						
-						// OCSP stapling
-						$ocsp_stapling = 0;
-					}
-				} else {
+					$ssl_ipandports = $this->validateIpAddresses($p_ssl_ipandports, true);
+				}
+				if (Settings::Get('system.use_ssl') == "0" || empty($ssl_ipandports)) {
 					$ssl_redirect = 0;
 					$letsencrypt = 0;
 					$http2 = 0;
@@ -741,7 +650,7 @@ class Domains extends ApiCommand implements ResourceEntity
 					inserttask('4');
 					
 					$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] added domain '" . $domain . "'");
-
+					
 					$result = $this->apiCall('Domains.get', array(
 						'domainname' => $domain
 					));
@@ -760,7 +669,7 @@ class Domains extends ApiCommand implements ResourceEntity
 	 *        	optional, the domain-id
 	 * @param string $domainname
 	 *        	optional, the domainname
-	 *
+	 *        	
 	 * @access admin
 	 * @throws Exception
 	 * @return array
@@ -773,7 +682,7 @@ class Domains extends ApiCommand implements ResourceEntity
 			$id = $this->getParam('id', true, 0);
 			$dn_optional = ($id <= 0 ? false : true);
 			$domainname = $this->getParam('domainname', $dn_optional, '');
-
+			
 			// get requested domain
 			$result = $this->apiCall('Domains.get', array(
 				'id' => $id,
@@ -819,7 +728,7 @@ class Domains extends ApiCommand implements ResourceEntity
 			$hsts_sub = $this->getParam('hsts_sub', true, $result['hsts_sub']);
 			$hsts_preload = $this->getParam('hsts_preload', true, $result['hsts_preload']);
 			$ocsp_stapling = $this->getParam('ocsp_stapling', true, $result['ocsp_stapling']);
-
+			
 			// count subdomain usage of source-domain
 			$subdomains_stmt = Database::prepare("
 				SELECT COUNT(`id`) AS count FROM `" . TABLE_PANEL_DOMAINS . "` WHERE
@@ -829,7 +738,7 @@ class Domains extends ApiCommand implements ResourceEntity
 				'resultid' => $result['id']
 			), true, true);
 			$subdomains = $subdomains['count'];
-
+			
 			// count where this domain is alias domain
 			$alias_check_stmt = Database::prepare("
 				SELECT COUNT(`id`) AS count FROM `" . TABLE_PANEL_DOMAINS . "` WHERE
@@ -849,11 +758,11 @@ class Domains extends ApiCommand implements ResourceEntity
 				'customerid' => $result['customerid'],
 				'id' => $result['id']
 			), true, true);
-
+			
 			$emails = Database::num_rows();
 			$email_forwarders = 0;
 			$email_accounts = 0;
-
+			
 			while ($domain_emails_row = $domain_emails_result_stmt->fetch(PDO::FETCH_ASSOC)) {
 				if ($domain_emails_row['destination'] != '') {
 					$domain_emails_row['destination'] = explode(' ', makeCorrectDestination($domain_emails_row['destination']));
@@ -864,7 +773,7 @@ class Domains extends ApiCommand implements ResourceEntity
 					}
 				}
 			}
-
+			
 			// handle change of customer (move domain from customer to customer)
 			if ($customerid > 0 && $customerid != $result['customerid'] && Settings::Get('panel.allow_domain_change_customer') == '1') {
 				// check whether target customer has enough resources
@@ -891,7 +800,7 @@ class Domains extends ApiCommand implements ResourceEntity
 				}
 			} else {
 				$customerid = $result['customerid'];
-
+				
 				// get customer
 				$customer = $this->apiCall('Customers.get', array(
 					'id' => $customerid
@@ -963,10 +872,10 @@ class Domains extends ApiCommand implements ResourceEntity
 				
 				$specialsettings = validate(str_replace("\r\n", "\n", $specialsettings), 'specialsettings', '/^[^\0]*$/', '', array(), true);
 				$documentroot = validate($documentroot, 'documentroot', '', '', array(), true);
-
+				
 				// when moving customer and no path is specified, update would normally reuse the current document-root
 				// which would point to the wrong customer, therefore we will re-create that directory
-				if (!empty($documentroot) && $customerid > 0 && $customerid != $result['customerid'] && Settings::Get('panel.allow_domain_change_customer') == '1') {
+				if (! empty($documentroot) && $customerid > 0 && $customerid != $result['customerid'] && Settings::Get('panel.allow_domain_change_customer') == '1') {
 					if (Settings::Get('system.documentroot_use_default_value') == 1) {
 						$_documentroot = makeCorrectDir($customer['documentroot'] . '/' . $result['domain']);
 					} else {
@@ -975,7 +884,7 @@ class Domains extends ApiCommand implements ResourceEntity
 					// set the customers default docroot
 					$documentroot = $_documentroot;
 				}
-
+				
 				if ($documentroot == '') {
 					// If path is empty and 'Use domain name as default value for DocumentRoot path' is enabled in settings,
 					// set default path to subdomain or domain name
@@ -1041,89 +950,14 @@ class Domains extends ApiCommand implements ResourceEntity
 				$mod_fcgid_maxrequests = $result['mod_fcgid_maxrequests'];
 			}
 			
-			$ipandports = array();
-			if (! empty($p_ipandports) && is_numeric($p_ipandports)) {
-				$p_ipandports = array($p_ipandports);
+			// check non-ssl IP
+			$ipandports = $this->validateIpAddresses($p_ipandports, false, $result['id']);
+			// check ssl IP
+			$ssl_ipandports = array();
+			if (Settings::Get('system.use_ssl') == "1" && ! empty($p_ssl_ipandports)) {
+				$ssl_ipandports = $this->validateIpAddresses($p_ssl_ipandports, true, $result['id']);
 			}
-			if (! empty($p_ipandports) && ! is_array($p_ipandports)) {
-				$p_ipandports = unserialize($p_ipandports);
-			}
-			
-			if (! empty($p_ipandports) && is_array($p_ipandports)) {
-				$ipandport_check_stmt = Database::prepare("
-					SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id` = :ipandport
-				");
-				foreach ($p_ipandports as $ipandport) {
-					if (trim($ipandport) == "") {
-						continue;
-					}
-					$ipandport = intval($ipandport);
-					$ipandport_check = Database::pexecute_first($ipandport_check_stmt, array(
-						'ipandport' => $ipandport
-					), true, true);
-					if (! isset($ipandport_check['id']) || $ipandport_check['id'] == '0' || $ipandport_check['id'] != $ipandport) {
-						standard_error('ipportdoesntexist', '', true);
-					} else {
-						$ipandports[] = $ipandport;
-					}
-				}
-			} else {
-				// set currently used ip's
-				$ipsresult_stmt = Database::prepare("
-					SELECT `id_ipandports` FROM `" . TABLE_DOMAINTOIP . "` WHERE `id_domain` = :id
-				");
-				Database::pexecute($ipsresult_stmt, array(
-					'id' => $result['id']
-				));
-				while ($ipsresultrow = $ipsresult_stmt->fetch(PDO::FETCH_ASSOC)) {
-					$ipandports[] = $ipsresultrow['id_ipandports'];
-				}
-			}
-			
-			if (Settings::Get('system.use_ssl') == '1' && ! empty($p_ssl_ipandports)) {
-				$ssl_ipandports = array();
-				if (! empty($p_ssl_ipandports) && ! is_array($p_ssl_ipandports)) {
-					$p_ssl_ipandports = unserialize($p_ssl_ipandports);
-				}
-				if (! empty($p_ssl_ipandports) && is_array($p_ssl_ipandports)) {
-					$ssl_ipandport_check_stmt = Database::prepare("
-						SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id` = :ipandport
-					");
-					foreach ($p_ssl_ipandports as $ssl_ipandport) {
-						if (trim($ssl_ipandport) == "") {
-							continue;
-						}
-						// fix if ip/port got de-checked and it was the last one
-						if (trim($ssl_ipandport) < 1) {
-							continue;
-						}
-						$ssl_ipandport = intval($ssl_ipandport);
-						$ssl_ipandport_check = Database::pexecute_first($ssl_ipandport_check_stmt, array(
-							'ipandport' => $ssl_ipandport
-						), true, true);
-						if (! isset($ssl_ipandport_check['id']) || $ssl_ipandport_check['id'] == '0' || $ssl_ipandport_check['id'] != $ssl_ipandport) {
-							standard_error('ipportdoesntexist', '', true);
-						} else {
-							$ssl_ipandports[] = $ssl_ipandport;
-						}
-					}
-				} else {
-					$ssl_redirect = 0;
-					$letsencrypt = 0;
-					$http2 = 0;
-					// we need this for the serialize
-					// if ssl is disabled or no ssl-ip/port exists
-					$ssl_ipandports[] = - 1;
-					
-					// HSTS
-					$hsts_maxage = 0;
-					$hsts_sub = 0;
-					$hsts_preload = 0;
-					
-					// OCSP stapling
-					$ocsp_stapling = 0;
-				}
-			} else {
+			if (Settings::Get('system.use_ssl') == "0" || empty($ssl_ipandports)) {
 				$ssl_redirect = 0;
 				$letsencrypt = 0;
 				$http2 = 0;
@@ -1139,7 +973,7 @@ class Domains extends ApiCommand implements ResourceEntity
 				// OCSP stapling
 				$ocsp_stapling = 0;
 			}
-			
+
 			// We can't enable let's encrypt for wildcard domains when using acme-v1
 			if ($serveraliasoption == '0' && $letsencrypt == '1' && Settings::Get('system.leapiversion') == '1') {
 				standard_error('nowildcardwithletsencrypt', '', true);
@@ -1645,7 +1479,7 @@ class Domains extends ApiCommand implements ResourceEntity
 	 *        	optional, remove also domains that are subdomains of this domain but added as main domains; default false
 	 * @param bool $is_stdsubdomain
 	 *        	optional, default false, specify whether it's a std-subdomain you are deleting as it does not count as subdomain-resource
-	 *
+	 *        	
 	 * @access admin
 	 * @throws Exception
 	 * @return array
@@ -1658,7 +1492,7 @@ class Domains extends ApiCommand implements ResourceEntity
 			$domainname = $this->getParam('domainname', $dn_optional, '');
 			$is_stdsubdomain = $this->getParam('is_stdsubdomain', true, 0);
 			$remove_subbutmain_domains = $this->getParam('delete_mainsubdomains', true, 0);
-
+			
 			$result = $this->apiCall('Domains.get', array(
 				'id' => $id,
 				'domainname' => $domainname
@@ -1787,5 +1621,87 @@ class Domains extends ApiCommand implements ResourceEntity
 			return $this->response(200, "successfull", $result);
 		}
 		throw new Exception("Not allowed to execute given command.", 403);
+	}
+
+	/**
+	 * validate given ips
+	 *
+	 * @param int|string|array $p_ipsandports
+	 * @param boolean $edit
+	 *        	default false
+	 * @param boolean $ssl
+	 *        	default false
+	 *        	
+	 * @throws Exception
+	 * @return array
+	 */
+	private function validateIpAddresses($p_ipandports = null, $ssl = false, $edit_id = 0)
+	{
+		// when adding a new domain and no ip is given, we try to use the
+		// system-default, check here if there is none
+		// this is not required for ssl-enabled ip's
+		if ($edit_id <= 0 && ! $ssl && empty($p_ipandports)) {
+			throw new Exception("No IPs given, unable to add domain (no default IPs set?)", 406);
+		}
+		
+		// convert given value(s) correctly
+		$ipandports = array();
+		if (! empty($p_ipandports) && is_numeric($p_ipandports)) {
+			$p_ipandports = array(
+				$p_ipandports
+			);
+		}
+		if (! empty($p_ipandports) && ! is_array($p_ipandports)) {
+			$p_ipandports = unserialize($p_ipandports);
+		}
+		
+		// check whether there are ip usage restrictions
+		$additional_ip_condition = '';
+		$aip_param = array();
+		if ($this->getUserDetail('ip') != "-1") {
+			// handle multiple-ip-array
+			$additional_ip_condition = " AND `ip` IN (:adminips) ";
+			$aip_param = array(
+				'adminips' => implode(",", json_decode($this->getUserDetail('ip'), true))
+			);
+		}
+
+		if (! empty($p_ipandports) && is_array($p_ipandports)) {
+			$ipandport_check_stmt = Database::prepare("
+				SELECT `id`, `ip`, `port`
+				FROM `" . TABLE_PANEL_IPSANDPORTS . "`
+				WHERE `id` = :ipandport " . ($ssl ? " AND `ssl` = '1'" : "") . $additional_ip_condition);
+			foreach ($p_ipandports as $ipandport) {
+				if (trim($ipandport) == "") {
+					continue;
+				}
+				// fix if no ip/port is checked
+				if (trim($ipandport) < 1) {
+					continue;
+				}
+				$ipandport = intval($ipandport);
+				$ip_params = array_merge(array(
+					'ipandport' => $ipandport
+				), $aip_param);
+				$ipandport_check = Database::pexecute_first($ipandport_check_stmt, $ip_params, true, true);
+				if (! isset($ipandport_check['id']) || $ipandport_check['id'] == '0' || $ipandport_check['id'] != $ipandport) {
+					standard_error('ipportdoesntexist', '', true);
+				} else {
+					$ipandports[] = $ipandport;
+				}
+			}
+		} elseif ($edit_id > 0) {
+			// set currently used ip's
+			$ipsresult_stmt = Database::prepare("
+				SELECT `id_ipandports` FROM `" . TABLE_DOMAINTOIP . "` WHERE `id_domain` = :id
+			");
+			Database::pexecute($ipsresult_stmt, array(
+				'id' => $edit_id
+			), true, true);
+			while ($ipsresultrow = $ipsresult_stmt->fetch(PDO::FETCH_ASSOC)) {
+				$ipandports[] = $ipsresultrow['id_ipandports'];
+			}
+		}
+		return $ipandports;
 	}
 }
