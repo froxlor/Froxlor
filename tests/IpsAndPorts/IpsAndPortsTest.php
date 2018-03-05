@@ -13,7 +13,7 @@ class IpsAndPortsTest extends TestCase
 		global $admin_userdata;
 		$json_result = IpsAndPorts::getLocal($admin_userdata)->listing();
 		$result = json_decode($json_result, true)['data'];
-		$this->assertEquals(1, $result['count']);
+		$this->assertEquals(2, $result['count']);
 		$this->assertEquals('82.149.225.46', $result['list'][0]['ip']);
 	}
 
@@ -40,7 +40,7 @@ class IpsAndPortsTest extends TestCase
 		];
 		$json_result = IpsAndPorts::getLocal($admin_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
-		$this->assertEquals(2, $result['id']);
+		$this->assertEquals(3, $result['id']);
 		$this->assertEquals(80, $result['port']);
 	}
 	
@@ -66,7 +66,7 @@ class IpsAndPortsTest extends TestCase
 		];
 		$json_result = IpsAndPorts::getLocal($admin_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
-		$this->assertEquals(3, $result['id']);
+		$this->assertEquals(4, $result['id']);
 		$this->assertEquals('/var/www/html/', $result['docroot']);
 	}
 	
@@ -84,10 +84,10 @@ class IpsAndPortsTest extends TestCase
 	public function testResellerIpsAndPortsList()
 	{
 		global $admin_userdata;
-		// update reseller to allow ip access to ip id #2
+		// update reseller to allow ip access to ip id #3
 		$json_result = Admins::getLocal($admin_userdata, array(
 			'loginname' => 'reseller',
-			'ipaddress' => array(2)
+			'ipaddress' => array(3)
 		))->update();
 		$reseller_userdata = json_decode($json_result, true)['data'];
 		$reseller_userdata['adminsession'] = 1;
@@ -109,7 +109,7 @@ class IpsAndPortsTest extends TestCase
 		))->get();
 		$reseller_userdata = json_decode($json_result, true)['data'];
 		$reseller_userdata['adminsession'] = 1;
-		$json_result = IpsAndPorts::getLocal($reseller_userdata, array('id' => 2))->get();
+		$json_result = IpsAndPorts::getLocal($reseller_userdata, array('id' => 3))->get();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals('82.149.225.47', $result['ip']);
 	}
@@ -120,7 +120,7 @@ class IpsAndPortsTest extends TestCase
 	public function testResellerIpsAndPortsGetRestrictedNotOwned()
 	{
 		global $admin_userdata;
-		// update reseller to allow ip access to ip id #2
+		// get reseller
 		$json_result = Admins::getLocal($admin_userdata, array(
 			'loginname' => 'reseller'
 		))->get();
@@ -134,7 +134,7 @@ class IpsAndPortsTest extends TestCase
 	public function testResellerIpsAndPortsAdd()
 	{
 		global $admin_userdata;
-		// update reseller to allow ip access to ip id #2
+		// get reseller
 		$json_result = Admins::getLocal($admin_userdata, array(
 			'loginname' => 'reseller'
 		))->get();
@@ -230,7 +230,7 @@ class IpsAndPortsTest extends TestCase
 		$reseller_userdata = json_decode($json_result, true)['data'];
 		$reseller_userdata['adminsession'] = 1;
 		$data = [
-			'id' => 2,
+			'id' => 3,
 			'ip' => '82.149.225.46'
 		];
 		$this->expectExceptionMessage("This IP/Port combination already exists.");
@@ -251,7 +251,7 @@ class IpsAndPortsTest extends TestCase
 	{
 		global $admin_userdata;
 		$data = [
-			'id' => 2
+			'id' => 3
 		];
 		$json_result = IpsAndPorts::getLocal($admin_userdata, $data)->delete();
 		$result = json_decode($json_result, true)['data'];

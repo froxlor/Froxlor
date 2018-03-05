@@ -247,6 +247,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			$stmt = Database::prepare("
 				INSERT INTO `" . TABLE_PANEL_DOMAINS . "` SET
 				`customerid` = :customerid,
+				`adminid` = :adminid,
 				`domain` = :domain,
 				`documentroot` = :documentroot,
 				`aliasdomain` = :aliasdomain,
@@ -268,6 +269,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			");
 			$params = array(
 				"customerid" => $customer['customerid'],
+				"adminid" => $customer['adminid'],
 				"domain" => $completedomain,
 				"documentroot" => $path,
 				"aliasdomain" => $aliasdomain != 0 ? $aliasdomain : null,

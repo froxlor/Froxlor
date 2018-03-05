@@ -50,18 +50,27 @@ class Certificates extends ApiCommand implements ResourceEntity
 			'id' => $domainid,
 			'domainname' => $domainname
 		));
+		$domainid = $domain['id'];
+		
 		// parameters
 		$ssl_cert_file = $this->getParam('ssl_cert_file');
 		$ssl_key_file = $this->getParam('ssl_key_file');
 		$ssl_ca_file = $this->getParam('ssl_ca_file', true, '');
 		$ssl_cert_chainfile = $this->getParam('ssl_cert_chainfile', true, '');
-		$this->addOrUpdateCertificate($domain['id'], $ssl_cert_file, $ssl_key_file, $ssl_ca_file, $ssl_cert_chainfile, true);
-		$idna_convert = new idna_convert_wrapper();
-		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] added ssl-certificate for '" . $domain['domain'] . "'");
+		
+		// validate whether the domain does not already have an entry
 		$result = $this->apiCall('Certificates.get', array(
-			'id' => $domain['id']
+			'id' => $domainid
 		));
-		return $this->response(200, "successfull", $result);
+		if (empty($result)) {
+			$this->addOrUpdateCertificate($domain['id'], $ssl_cert_file, $ssl_key_file, $ssl_ca_file, $ssl_cert_chainfile, true);
+			$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] added ssl-certificate for '" . $domain['domain'] . "'");
+			$result = $this->apiCall('Certificates.get', array(
+				'id' => $domain['id']
+			));
+			return $this->response(200, "successfull", $result);
+		}
+		throw new Exception("Domain '" . $domain['domain'] . "' already has a certificate. Did you mean to call update?", 406);
 	}
 
 	/**

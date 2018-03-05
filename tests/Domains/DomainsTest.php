@@ -77,10 +77,10 @@ class DomainsTest extends TestCase
 	public function testResellerDomainsAddWithCanEditPhpSettingsAllowedIp()
 	{
 		global $admin_userdata;
-		// first, allow reseller access to ip #3
+		// first, allow reseller access to ip #4
 		Admins::getLocal($admin_userdata, array(
 			'loginname' => 'reseller',
-			'ipaddress' => 3
+			'ipaddress' => 4
 		))->update();
 		// get reseller
 		$json_result = Admins::getLocal($admin_userdata, array(
@@ -91,7 +91,7 @@ class DomainsTest extends TestCase
 		$data = [
 			'domain' => 'test2.local',
 			'customerid' => 1,
-			'ipandport' => 3,
+			'ipandport' => 4,
 			'isemaildomain' => 1,
 			'subcanemaildomain' => 2 
 		];

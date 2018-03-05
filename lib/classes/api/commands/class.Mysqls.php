@@ -425,36 +425,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 	{
 		$result = array();
 		$dbserver = $this->getParam('mysql_server', true, - 1);
-		if ($this->isAdmin()) {
-			// if we're an admin, list all databases of all the admins customers
-			// or optionally for one specific customer identified by id or loginname
-			$customerid = $this->getParam('customerid', true, 0);
-			$loginname = $this->getParam('loginname', true, '');
-			
-			if (! empty($customer_id) || ! empty($loginname)) {
-				$customer = $this->apiCall('Customers.get', array(
-					'id' => $customerid,
-					'loginname' => $loginname
-				));
-				$custom_list_result = array(
-					$customer
-				);
-			} else {
-				$_custom_list_result = $this->apiCall('Customers.listing');
-				$custom_list_result = $_custom_list_result['list'];
-			}
-			$customer_ids = array();
-			foreach ($custom_list_result as $customer) {
-				$customer_ids[] = $customer['customerid'];
-			}
-		} else {
-			if (Settings::IsInList('panel.customer_hide_options', 'mysql')) {
-				throw new Exception("You cannot access this resource", 405);
-			}
-			$customer_ids = array(
-				$this->getUserDetail('customerid')
-			);
-		}
+		$customer_ids = $this->getAllowedCustomerIds('mysql');
 		$result_stmt = Database::prepare("
 			SELECT * FROM `" . TABLE_PANEL_DATABASES . "`
 			WHERE `customerid`= :customerid AND `dbserver` = :dbserver

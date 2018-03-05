@@ -415,6 +415,49 @@ abstract class ApiCommand
 	}
 
 	/**
+	 * returns an array of customers the current user can access
+	 *
+	 * @param string $customer_hide_option optional, when called as customer, some options might be hidden due to the panel.customer_hide_options ettings
+	 *
+	 * @throws Exception
+	 * @return array
+	 */
+	protected function getAllowedCustomerIds($customer_hide_option = '')
+	{
+		$customer_ids = array();
+		if ($this->isAdmin()) {
+			// if we're an admin, list all ftp-users of all the admins customers
+			// or optionally for one specific customer identified by id or loginname
+			$customerid = $this->getParam('customerid', true, 0);
+			$loginname = $this->getParam('loginname', true, '');
+
+			if (! empty($customerid) || ! empty($loginname)) {
+				$_result = $this->apiCall('Customers.get', array(
+					'id' => $customerid,
+					'loginname' => $loginname
+				));
+				$custom_list_result = array(
+					$_result
+				);
+			} else {
+				$_custom_list_result = $this->apiCall('Customers.listing');
+				$custom_list_result = $_custom_list_result['list'];
+			}
+			foreach ($custom_list_result as $customer) {
+				$customer_ids[] = $customer['customerid'];
+			}
+		} else {
+			if (!empty($customer_hide_option) && Settings::IsInList('panel.customer_hide_options', $customer_hide_option)) {
+				throw new Exception("You cannot access this resource", 405);
+			}
+			$customer_ids = array(
+				$this->getUserDetail('customerid')
+			);
+		}
+		return $customer_ids;
+	}
+
+	/**
 	 * increase/decrease a resource field for customers/admins
 	 *
 	 * @param string $table

@@ -448,43 +448,14 @@ class Ftps extends ApiCommand implements ResourceEntity
 	 */
 	public function listing()
 	{
-		if ($this->isAdmin()) {
-			// if we're an admin, list all ftp-users of all the admins customers
-			// or optionally for one specific customer identified by id or loginname
-			$customerid = $this->getParam('customerid', true, 0);
-			$loginname = $this->getParam('loginname', true, '');
-			
-			if (! empty($customerid) || ! empty($loginname)) {
-				$_result = $this->apiCall('Customers.get', array(
-					'id' => $customerid,
-					'loginname' => $loginname
-				));
-				$custom_list_result = array(
-					$_result
-				);
-			} else {
-				$_custom_list_result = $this->apiCall('Customers.listing');
-				$custom_list_result = $_custom_list_result['list'];
-			}
-			$customer_ids = array();
-			foreach ($custom_list_result as $customer) {
-				$customer_ids[] = $customer['customerid'];
-			}
-		} else {
-			if (Settings::IsInList('panel.customer_hide_options', 'ftp')) {
-				throw new Exception("You cannot access this resource", 405);
-			}
-			$customer_ids = array(
-				$this->getUserDetail('customerid')
-			);
-		}
+		$customer_ids = $this->getAllowedCustomerIds('ftp');
 		$result = array();
 		$params['customerid'] = implode(", ", $customer_ids);
 		$result_stmt = Database::prepare("
 			SELECT * FROM `" . TABLE_FTP_USERS . "`
 			WHERE `customerid` IN (:customerid)
 		");
-		Database::pexecute($result_stmt, $params);
+		Database::pexecute($result_stmt, $params, true, true);
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$result[] = $row;
 		}

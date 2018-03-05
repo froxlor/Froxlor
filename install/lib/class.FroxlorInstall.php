@@ -995,7 +995,7 @@ class FroxlorInstall
 			$content .= $this->_status_message('green', $this->_lng['requirements']['installed']);
 		}
 		
-		// check for bstring-extension
+		// check for mbstring-extension
 		$content .= $this->_status_message('begin', $this->_lng['requirements']['phpmbstring']);
 		
 		if (! extension_loaded('mbstring')) {

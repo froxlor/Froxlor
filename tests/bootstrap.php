@@ -103,6 +103,20 @@ Database::query("INSERT INTO `" . TABLE_PANEL_IPSANDPORTS . "` SET
 $defaultip = Database::lastInsertId();
 Settings::Set('system.defaultip', $defaultip, true);
 
+// add ssl ip (system default)
+Database::query("INSERT INTO `" . TABLE_PANEL_IPSANDPORTS . "` SET
+	`ip` = '82.149.225.56',
+	`port` = '443',
+	`listen_statement` = '0',
+	`namevirtualhost_statement` = '0',
+	`vhostcontainer` = '1',
+	`vhostcontainer_servername_statement` = '1',
+	`specialsettings` = '',
+	`ssl` = '1'
+");
+$defaultip = Database::lastInsertId();
+Settings::Set('system.defaultsslip', $defaultip, true);
+
 // get userdata of admin 'admin'
 $sel_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_ADMINS . "` WHERE `adminid` = '1'");
 $admin_userdata = Database::pexecute_first($sel_stmt);
