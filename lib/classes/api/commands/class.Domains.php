@@ -469,66 +469,6 @@ class Domains extends ApiCommand implements ResourceEntity
 				} elseif ($aliasdomain_check['id'] != $aliasdomain) {
 					standard_error('domainisaliasorothercustomer', '', true);
 				} else {
-					
-					/**
-					 *
-					 * @todo how to handle security questions now?
-					 *      
-					 *       $params = array(
-					 *       'page' => $page,
-					 *       'action' => $action,
-					 *       'domain' => $domain,
-					 *       'customerid' => $customerid,
-					 *       'adminid' => $adminid,
-					 *       'documentroot' => $documentroot,
-					 *       'alias' => $aliasdomain,
-					 *       'isbinddomain' => $isbinddomain,
-					 *       'isemaildomain' => $isemaildomain,
-					 *       'email_only' => $email_only,
-					 *       'subcanemaildomain' => $subcanemaildomain,
-					 *       'caneditdomain' => $caneditdomain,
-					 *       'zonefile' => $zonefile,
-					 *       'dkim' => $dkim,
-					 *       'speciallogfile' => $speciallogfile,
-					 *       'selectserveralias' => $serveraliasoption,
-					 *       'ipandport' => serialize($ipandports),
-					 *       'ssl_redirect' => $ssl_redirect,
-					 *       'ssl_ipandport' => serialize($ssl_ipandports),
-					 *       'phpenabled' => $phpenabled,
-					 *       'openbasedir' => $openbasedir,
-					 *       'phpsettingid' => $phpsettingid,
-					 *       'mod_fcgid_starter' => $mod_fcgid_starter,
-					 *       'mod_fcgid_maxrequests' => $mod_fcgid_maxrequests,
-					 *       'specialsettings' => $specialsettings,
-					 *       'notryfiles' => $notryfiles,
-					 *       'registration_date' => $registration_date,
-					 *       'termination_date' => $termination_date,
-					 *       'issubof' => $issubof,
-					 *       'letsencrypt' => $letsencrypt,
-					 *       'http2' => $http2,
-					 *       'hsts_maxage' => $hsts_maxage,
-					 *       'hsts_sub' => $hsts_sub,
-					 *       'hsts_preload' => $hsts_preload,
-					 *       'ocsp_stapling' => $ocsp_stapling
-					 *       );
-					 *      
-					 *       $security_questions = array(
-					 *       'reallydisablesecuritysetting' => ($openbasedir == '0' && $userinfo['change_serversettings'] == '1'),
-					 *       'reallydocrootoutofcustomerroot' => (substr($documentroot, 0, strlen($customer['documentroot'])) != $customer['documentroot'] && ! preg_match('/^https?\:\/\//', $documentroot))
-					 *       );
-					 *       $question_nr = 1;
-					 *       foreach ($security_questions as $question_name => $question_launch) {
-					 *       if ($question_launch !== false) {
-					 *       $params[$question_name] = $question_name;
-					 *      
-					 *       if (! isset($_POST[$question_name]) || $_POST[$question_name] != $question_name) {
-					 *       ask_yesno('admin_domain_' . $question_name, $filename, $params, $question_nr);
-					 *       }
-					 *       }
-					 *       $question_nr ++;
-					 *       }
-					 */
-					
 					$wwwserveralias = ($serveraliasoption == '1') ? '1' : '0';
 					$iswildcarddomain = ($serveraliasoption == '0') ? '1' : '0';
 					
@@ -1087,66 +1027,7 @@ class Domains extends ApiCommand implements ResourceEntity
 			if ($serveraliasoption != '1' && $serveraliasoption != '2') {
 				$serveraliasoption = '0';
 			}
-			
-			/**
-			 *
-			 * @todo how to handle security questions now?
-			 *      
-			 *       $params = array(
-			 *       'id' => $id,
-			 *       'page' => $page,
-			 *       'action' => $action,
-			 *       'customerid' => $customerid,
-			 *       'adminid' => $adminid,
-			 *       'documentroot' => $documentroot,
-			 *       'alias' => $aliasdomain,
-			 *       'isbinddomain' => $isbinddomain,
-			 *       'isemaildomain' => $isemaildomain,
-			 *       'email_only' => $email_only,
-			 *       'subcanemaildomain' => $subcanemaildomain,
-			 *       'caneditdomain' => $caneditdomain,
-			 *       'zonefile' => $zonefile,
-			 *       'dkim' => $dkim,
-			 *       'selectserveralias' => $serveraliasoption,
-			 *       'ssl_redirect' => $ssl_redirect,
-			 *       'phpenabled' => $phpenabled,
-			 *       'openbasedir' => $openbasedir,
-			 *       'phpsettingid' => $phpsettingid,
-			 *       'phpsettingsforsubdomains' => $phpfs,
-			 *       'mod_fcgid_starter' => $mod_fcgid_starter,
-			 *       'mod_fcgid_maxrequests' => $mod_fcgid_maxrequests,
-			 *       'specialsettings' => $specialsettings,
-			 *       'specialsettingsforsubdomains' => $ssfs,
-			 *       'notryfiles' => $notryfiles,
-			 *       'registration_date' => $registration_date,
-			 *       'termination_date' => $termination_date,
-			 *       'issubof' => $issubof,
-			 *       'speciallogfile' => $speciallogfile,
-			 *       'speciallogverified' => $speciallogverified,
-			 *       'ipandport' => serialize($ipandports),
-			 *       'ssl_ipandport' => serialize($ssl_ipandports),
-			 *       'letsencrypt' => $letsencrypt,
-			 *       'http2' => $http2,
-			 *       'hsts_maxage' => $hsts_maxage,
-			 *       'hsts_sub' => $hsts_sub,
-			 *       'hsts_preload' => $hsts_preload,
-			 *       'ocsp_stapling' => $ocsp_stapling
-			 *       );
-			 *      
-			 *       $security_questions = array(
-			 *       'reallydisablesecuritysetting' => ($openbasedir == '0' && $userinfo['change_serversettings'] == '1'),
-			 *       'reallydocrootoutofcustomerroot' => (substr($documentroot, 0, strlen($customer['documentroot'])) != $customer['documentroot'] && ! preg_match('/^https?\:\/\//', $documentroot))
-			 *       );
-			 *       foreach ($security_questions as $question_name => $question_launch) {
-			 *       if ($question_launch !== false) {
-			 *       $params[$question_name] = $question_name;
-			 *       if (! isset($_POST[$question_name]) || $_POST[$question_name] != $question_name) {
-			 *       ask_yesno('admin_domain_' . $question_name, $filename, $params);
-			 *       }
-			 *       }
-			 *       }
-			 */
-			
+
 			$wwwserveralias = ($serveraliasoption == '1') ? '1' : '0';
 			$iswildcarddomain = ($serveraliasoption == '0') ? '1' : '0';
 			

@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
  */
 class SubDomainsTest extends TestCase
 {
+
 	public function testCustomerSubDomainsAdd()
 	{
 		global $admin_userdata;
@@ -46,7 +47,7 @@ class SubDomainsTest extends TestCase
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals('mysub2.test2.local', $result['domain']);
 	}
-	
+
 	public function testCustomerSubDomainsAddNoPunycode()
 	{
 		global $admin_userdata;
@@ -100,7 +101,7 @@ class SubDomainsTest extends TestCase
 		$this->expectExceptionMessage("Wrong Input in Field 'Domain'");
 		SubDomains::getLocal($customer_userdata, $data)->add();
 	}
-	
+
 	/**
 	 * @depends testCustomerSubDomainsAdd
 	 */
@@ -122,7 +123,72 @@ class SubDomainsTest extends TestCase
 		$this->assertEquals('mysub.test2.local', $result['domain']);
 		$this->assertEquals(1, $result['customerid']);
 	}
-	
+
+	/**
+	 * @depends testCustomerSubDomainsAdd
+	 */
+	public function testAdminSubDomainsGetMainDomain()
+	{
+		global $admin_userdata;
+		
+		// get customer
+		$json_result = Customers::getLocal($admin_userdata, array(
+			'loginname' => 'test1'
+		))->get();
+		$customer_userdata = json_decode($json_result, true)['data'];
+		
+		$data = [
+			'domainname' => 'test2.local'
+		];
+		$json_result = SubDomains::getLocal($admin_userdata, $data)->get();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals('test2.local', $result['domain']);
+		$this->assertEquals(1, $result['customerid']);
+	}
+
+	/**
+	 * @depends testCustomerSubDomainsAdd
+	 */
+	public function testAdminSubDomainsUpdate()
+	{
+		global $admin_userdata;
+		// get customer
+		$json_result = Customers::getLocal($admin_userdata, array(
+			'loginname' => 'test1'
+		))->get();
+		$customer_userdata = json_decode($json_result, true)['data'];
+		$data = [
+			'domainname' => 'mysub.test2.local',
+			'path' => 'mysub.test2.local',
+			'isemaildomain' => 1,
+			'customer_id' => $customer_userdata['customerid']
+		];
+		$json_result = SubDomains::getLocal($admin_userdata, $data)->update();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals($customer_userdata['documentroot'] . 'mysub.test2.local/', $result['documentroot']);
+	}
+
+	/**
+	 * @depends testAdminSubDomainsUpdate
+	 */
+	public function testCustomerSubDomainsUpdate()
+	{
+		global $admin_userdata;
+		// get customer
+		$json_result = Customers::getLocal($admin_userdata, array(
+			'loginname' => 'test1'
+		))->get();
+		$customer_userdata = json_decode($json_result, true)['data'];
+		$data = [
+			'domainname' => 'mysub.test2.local',
+			'url' => 'https://www.froxlor.org/',
+			'isemaildomain' => 0,
+		];
+		$json_result = SubDomains::getLocal($customer_userdata, $data)->update();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals('https://www.froxlor.org/', $result['documentroot']);
+	}
+
 	public function testCustomerSubDomainsList()
 	{
 		global $admin_userdata;
@@ -136,7 +202,7 @@ class SubDomainsTest extends TestCase
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(3, $result['count']);
 	}
-	
+
 	public function testResellerSubDomainsList()
 	{
 		global $admin_userdata;
@@ -154,11 +220,13 @@ class SubDomainsTest extends TestCase
 	public function testAdminSubDomainsListWithCustomer()
 	{
 		global $admin_userdata;
-		$json_result = SubDomains::getLocal($admin_userdata, ['loginname' => 'test1'])->listing();
+		$json_result = SubDomains::getLocal($admin_userdata, [
+			'loginname' => 'test1'
+		])->listing();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(3, $result['count']);
 	}
-	
+
 	/**
 	 * @depends testCustomerSubDomainsList
 	 */
@@ -170,7 +238,9 @@ class SubDomainsTest extends TestCase
 			'loginname' => 'test1'
 		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
-		$json_result = SubDomains::getLocal($customer_userdata, ['domainname' => 'mysub.test2.local'])->delete();
+		$json_result = SubDomains::getLocal($customer_userdata, [
+			'domainname' => 'mysub.test2.local'
+		])->delete();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals('mysub.test2.local', $result['domain']);
 		$this->assertEquals($customer_userdata['customerid'], $result['customerid']);

@@ -91,11 +91,14 @@ class DomainsTest extends TestCase
 		$data = [
 			'domain' => 'test2.local',
 			'customerid' => 1,
-			'ipandport' => 3
+			'ipandport' => 3,
+			'isemaildomain' => 1,
+			'subcanemaildomain' => 2 
 		];
 		$json_result = Domains::getLocal($reseller_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals('test2.local', $result['domain']);
+		$this->assertEquals(2, $result['subcanemaildomain']);
 	}
 
 	public function testAdminDomainsAddSysHostname()
