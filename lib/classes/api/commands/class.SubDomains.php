@@ -405,6 +405,18 @@ class SubDomains extends ApiCommand implements ResourceEntity
 		throw new Exception("Subdomain with " . $key . " could not be found", 404);
 	}
 
+	/**
+	 * update subdomain entry by either id or domainname
+	 *
+	 * @param int $id
+	 *        	optional, the domain-id
+	 * @param string $domainname
+	 *        	optional, the domainname
+	 *
+	 * @access admin, customer
+	 * @throws Exception
+	 * @return array
+	 */
 	public function update()
 	{
 		$id = $this->getParam('id', true, 0);
@@ -414,7 +426,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'domains')) {
 			throw new Exception("You cannot access this resource", 405);
 		}
-		
+
 		$result = $this->apiCall('SubDomains.get', array(
 			'id' => $id,
 			'domainname' => $domainname
@@ -628,6 +640,13 @@ class SubDomains extends ApiCommand implements ResourceEntity
 		return $this->response(200, "successfull", $result);
 	}
 
+	/**
+	 * lists all subdomain entries
+	 *
+	 * @access admin, customer
+	 * @throws Exception
+	 * @return array count|list
+	 */
 	public function listing()
 	{
 		if ($this->isAdmin()) {

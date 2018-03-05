@@ -447,87 +447,16 @@ if ($page == 'overview') {
 
 	if ($action == '' || $action == 'view') {
 		if (isset($_POST['send']) && $_POST['send'] == 'send') {
-
-			$ssl_cert_file = isset($_POST['ssl_cert_file']) ? $_POST['ssl_cert_file'] : '';
-			$ssl_key_file = isset($_POST['ssl_key_file']) ? $_POST['ssl_key_file'] : '';
-			$ssl_ca_file = isset($_POST['ssl_ca_file']) ? $_POST['ssl_ca_file'] : '';
-			$ssl_cert_chainfile = isset($_POST['ssl_cert_chainfile']) ? $_POST['ssl_cert_chainfile'] : '';
 			$do_insert = isset($_POST['do_insert']) ? (($_POST['do_insert'] == 1) ? true : false) : false;
-
-			if ($ssl_cert_file != '' && $ssl_key_file == '') {
-				standard_error('sslcertificateismissingprivatekey');
-			}
-
-			$do_verify = true;
-
-			// no cert-file given -> forget everything
-			if ($ssl_cert_file == '') {
-				$ssl_key_file = '';
-				$ssl_ca_file = '';
-				$ssl_cert_chainfile = '';
-				$do_verify = false;
-			}
-
-			// verify certificate content
-			if ($do_verify) {
-				// array openssl_x509_parse ( mixed $x509cert [, bool $shortnames = true ] )
-				// openssl_x509_parse() returns information about the supplied x509cert, including fields such as
-				// subject name, issuer name, purposes, valid from and valid to dates etc.
-				$cert_content = openssl_x509_parse($ssl_cert_file);
-
-				if (is_array($cert_content) && isset($cert_content['subject']) && isset($cert_content['subject']['CN'])) {
-					// bool openssl_x509_check_private_key ( mixed $cert , mixed $key )
-					// Checks whether the given key is the private key that corresponds to cert.
-					if (openssl_x509_check_private_key($ssl_cert_file, $ssl_key_file) === false) {
-						standard_error('sslcertificateinvalidcertkeypair');
-					}
-
-					// check optional stuff
-					if ($ssl_ca_file != '') {
-						$ca_content = openssl_x509_parse($ssl_ca_file);
-						if (!is_array($ca_content)) {
-							// invalid
-							standard_error('sslcertificateinvalidca');
-						}
-					}
-					if ($ssl_cert_chainfile != '') {
-						$chain_content = openssl_x509_parse($ssl_cert_chainfile);
-						if (!is_array($chain_content)) {
-							// invalid
-							standard_error('sslcertificateinvalidchain');
-						}
-					}
+			try {
+				if ($do_insert) {
+					Certificates::getLocal($userinfo, $_POST)->add();
 				} else {
-					standard_error('sslcertificateinvalidcert');
+					Certificates::getLocal($userinfo, $_POST)->update();
 				}
+			} catch (Exception $e) {
+				dynamic_error($e->getMessage());
 			}
-
-			// Add/Update database entry
-			$qrystart = "UPDATE ";
-			$qrywhere = "WHERE ";
-			if ($do_insert) {
-				$qrystart = "INSERT INTO ";
-				$qrywhere = ", ";
-			}
-			$stmt = Database::prepare($qrystart." `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."` SET
-				`ssl_cert_file` = :ssl_cert_file,
-				`ssl_key_file` = :ssl_key_file,
-				`ssl_ca_file` = :ssl_ca_file,
-				`ssl_cert_chainfile` = :ssl_cert_chainfile
-				".$qrywhere." `domainid`= :domainid"
-			);
-			$params = array(
-				"ssl_cert_file" => $ssl_cert_file,
-				"ssl_key_file" => $ssl_key_file,
-				"ssl_ca_file" => $ssl_ca_file,
-				"ssl_cert_chainfile" => $ssl_cert_chainfile,
-				"domainid" => $id
-			);
-			Database::pexecute($stmt, $params);
-
-			// insert task to re-generate webserver-configs (#1260)
-			inserttask('1');
-
 			// back to domain overview
 			redirectTo($filename, array('page' => 'domains', 's' => $s));
 		}
@@ -535,8 +464,7 @@ if ($page == 'overview') {
 		$stmt = Database::prepare("SELECT * FROM `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."`
 			WHERE `domainid`= :domainid"
 		);
-		Database::pexecute($stmt, array("domainid" => $id));
-		$result = $stmt->fetch(PDO::FETCH_ASSOC);
+		$result = Database::pexecute_first($stmt, array("domainid" => $id));
 
 		$do_insert = false;
 		// if no entry can be found, behave like we have empty values
