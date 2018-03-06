@@ -61,7 +61,7 @@ class ConfigServicesCmd extends CmdLineHandler
 		self::println("--create\t\tlets you create a services list configuration for the 'apply' command");
 		self::println("");
 		self::println("--apply\t\t\tconfigure your services by given configuration file. To create one run the --create command");
-		self::println("\t\t\tExample: --apply=/path/to/my-config.json");
+		self::println("\t\t\tExample: --apply=/path/to/my-config.json or --apply=http://domain.tld/my-config.json");
 		self::println("");
 		self::println("--list-daemons\t\tOutput the services that are going to be configured using a given config file. No services will be configured.");
 		self::println("\t\t\tExample: --apply=/path/to/my-config.json --list-daemons");
@@ -70,7 +70,7 @@ class ConfigServicesCmd extends CmdLineHandler
 		self::println("\t\t\tExample: --apply=/path/to/my-config.json --daemon=apache24");
 		self::println("");
 		self::println("--import-settings\tImport settings from another froxlor installation. This should be done prior to running --apply or alternatively in the same command together.");
-		self::println("\t\t\tExample: --import-settings=/path/to/Froxlor_settings-[version]-[dbversion]-[date].json");
+		self::println("\t\t\tExample: --import-settings=/path/to/Froxlor_settings-[version]-[dbversion]-[date].json or --import-settings=http://domain.tld/Froxlor_settings-[version]-[dbversion]-[date].json");
 		self::println("");
 		self::println("--froxlor-dir\t\tpath to froxlor installation");
 		self::println("\t\t\tExample: --froxlor-dir=/var/www/froxlor/");
@@ -127,7 +127,7 @@ class Action
 		if (array_key_exists("import-settings", $this->_args)) {
 			$this->_importSettings();
 		}
-
+		
 		if (array_key_exists("create", $this->_args)) {
 			$this->_createConfig();
 		} elseif (array_key_exists("apply", $this->_args)) {
@@ -139,6 +139,15 @@ class Action
 
 	private function _importSettings()
 	{
+		if (strtoupper(substr($this->_args["import-settings"], 0, 4)) == 'HTTP') {
+			echo "Settings file seems to be an URL, trying to download" . PHP_EOL;
+			$target = "/tmp/froxlor-import-settings-" . time() . ".json";
+			if (@file_exists($target)) {
+				@unlink($target);
+			}
+			$this->downloadFile($this->_args["import-settings"], $target);
+			$this->_args["import-settings"] = $target;
+		}
 		if (! is_file($this->_args["import-settings"])) {
 			throw new Exception("Given settings file is not a file");
 		} elseif (! file_exists($this->_args["import-settings"])) {
@@ -260,6 +269,15 @@ class Action
 
 	private function _applyConfig()
 	{
+		if (strtoupper(substr($this->_args["apply"], 0, 4)) == 'HTTP') {
+			echo "Config file seems to be an URL, trying to download" . PHP_EOL;
+			$target = "/tmp/froxlor-config-" . time() . ".json";
+			if (@file_exists($target)) {
+				@unlink($target);
+			}
+			$this->downloadFile($this->_args["apply"], $target);
+			$this->_args["apply"] = $target;
+		}
 		if (! is_file($this->_args["apply"])) {
 			throw new Exception("Given config file is not a file");
 		} elseif (! file_exists($this->_args["apply"])) {
@@ -442,6 +460,24 @@ class Action
 				throw new Exception("Given froxlor direcotry cannot be read ('" . $this->_args["froxlor-dir"] . "')");
 			}
 		}
+	}
+
+	private function downloadFile($src, $dest)
+	{
+		set_time_limit(0);
+		// This is the file where we save the information
+		$fp = fopen($dest, 'w+');
+		// Here is the file we are downloading, replace spaces with %20
+		$ch = curl_init(str_replace(" ", "%20", $src));
+		curl_setopt($ch, CURLOPT_TIMEOUT, 50);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		// write curl response to file
+		curl_setopt($ch, CURLOPT_FILE, $fp);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+		// get curl response
+		curl_exec($ch);
+		curl_close($ch);
+		fclose($fp);
 	}
 }
 
