@@ -23,6 +23,44 @@ if (! defined('AREA')) {
 // This file is being included in admin_index and customer_index
 // and therefore does not need to require lib/init.php
 
+$del_stmt = Database::prepare("DELETE FROM `" . TABLE_API_KEYS . "` WHERE id = :id");
+$success_message = "";
+
+// do the delete and then just show a success-message and the certificates list again
+if ($action == 'delete') {
+	$id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
+	if ($id > 0) {
+		$chk = (AREA == 'admin' && $userinfo['customers_see_all'] == '1') ? true : false;
+		if (AREA == 'customer') {
+			$chk_stmt = Database::prepare("
+				SELECT c.customerid FROM `" . TABLE_PANEL_CUSTOMERS . "` c
+				LEFT JOIN `" . TABLE_API_KEYS . "` ak ON ak.customerid = c.customerid
+				WHERE ak.`id` = :id AND c.`customerid` = :cid
+			");
+			$chk = Database::pexecute_first($chk_stmt, array(
+				'id' => $id,
+				'cid' => $userinfo['customerid']
+			));
+		} elseif (AREA == 'admin' && $userinfo['customers_see_all'] == '0') {
+			$chk_stmt = Database::prepare("
+				SELECT a.adminid FROM `" . TABLE_PANEL_ADMINS . "` a
+				LEFT JOIN `" . TABLE_API_KEYS . "` ak ON ak.adminid = a.adminid
+				WHERE ak.`id` = :id AND a.`adminid` = :aid
+			");
+			$chk = Database::pexecute_first($chk_stmt, array(
+				'id' => $id,
+				'aid' => $userinfo['adminid']
+			));
+		}
+		if ($chk !== false) {
+			Database::pexecute($del_stmt, array(
+				'id' => $id
+			));
+			$success_message = sprintf($lng['apikeys']['apikey_removed'], $id);
+		}
+	}
+}
+
 $log->logAction(USR_ACTION, LOG_NOTICE, "viewed api::api_keys");
 
 // select all my (accessable) certificates

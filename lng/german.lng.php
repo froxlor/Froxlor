@@ -1776,3 +1776,4 @@ $lng['menue']['main']['apihelp'] = 'API Hilfe';
 $lng['menue']['main']['apikeys'] = 'API Keys';
 $lng['apikeys']['no_api_keys'] = 'Keine API Keys gefunden';
 $lng['apikeys']['key_add'] = 'API Key hinzufügen';
+$lng['apikeys']['apikey_removed'] = 'Der API Key mit der ID #%s wurde erfolgreich gelöscht.';
