@@ -357,6 +357,9 @@ class Action
 					}
 				}
 			}
+			// run cronjob at the end to ensure configs are all up to date
+			exec('php ' . FROXLOR_INSTALL_DIR . '/scripts/froxlor_master_cronjob.php --force');
+			// and done
 			CmdLineHandler::printsucc("All services have been configured");
 		} else {
 			CmdLineHandler::printerr("Unable to decode given JSON file");
