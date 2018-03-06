@@ -25,10 +25,10 @@ if (! defined('AREA')) {
 
 $del_stmt = Database::prepare("DELETE FROM `" . TABLE_API_KEYS . "` WHERE id = :id");
 $success_message = "";
+$id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 
 // do the delete and then just show a success-message and the certificates list again
 if ($action == 'delete') {
-	$id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 	if ($id > 0) {
 		$chk = (AREA == 'admin' && $userinfo['customers_see_all'] == '1') ? true : false;
 		if (AREA == 'customer') {
@@ -58,6 +58,26 @@ if ($action == 'delete') {
 			));
 			$success_message = sprintf($lng['apikeys']['apikey_removed'], $id);
 		}
+	}
+} elseif ($action == 'add') {
+	$ins_stmt = Database::prepare("
+		INSERT INTO `" . TABLE_API_KEYS . "` SET
+		`apikey` = :key, `secret` = :secret, `adminid` = :aid, `customerid` = :cid, `valid_until` = '-1', `allowed_from` = ''
+	");
+	// customer generates for himself, admins will see a customer-select-box
+	if (AREA == 'customer') {
+		$key = hash('sha256', openssl_random_pseudo_bytes(64 * 64));
+		$secret = hash('sha512', openssl_random_pseudo_bytes(64 * 64 * 4));
+		Database::pexecute($ins_stmt, array(
+			'key' => $key,
+			'secret' => $secret,
+			'aid' => $userinfo['adminid'],
+			'cid' => $userinfo['customerid']
+		));
+		redirectTo($filename, array(
+			'page' => $page,
+			's' => $s
+		));
 	}
 }
 
@@ -145,6 +165,10 @@ if (count($all_keys) == 0) {
 			
 			// escape stuff
 			$row = htmlentities_array($key);
+
+			// shorten keys
+			$row['apikey'] = substr($row['apikey'], 0, 20) . '...';
+			$row['secret'] = substr($row['secret'], 0, 20) . '...';
 
 			// check whether the api key is not valid anymore
 			$isValid = true;
