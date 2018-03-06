@@ -205,76 +205,13 @@ if ($page == 'overview') {
 	} elseif ($action == 'add') {
 		if ($userinfo['emails_used'] < $userinfo['emails'] || $userinfo['emails'] == '-1') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
-				$email_part = $_POST['email_part'];
-				// domain does not need idna encoding as the value of the select-box is already Punycode
-				$domain = validate($_POST['domain'], 'domain');
-				$stmt = Database::prepare("SELECT `id`, `domain`, `customerid` FROM `" . TABLE_PANEL_DOMAINS . "`
-					WHERE `domain`= :domain
-					AND `customerid`= :customerid
-					AND `isemaildomain`='1' "
-				);
-				$domain_check = Database::pexecute_first($stmt, array("domain" => $domain, "customerid" => $userinfo['customerid']));
-
-				if (isset($_POST['iscatchall']) && $_POST['iscatchall'] == '1') {
-					$iscatchall = '1';
-					$email = '@' . $domain;
-				} else {
-					$iscatchall = '0';
-					$email = $email_part . '@' . $domain;
+				try {
+					$json_result = Emails::getLocal($userinfo, $_POST)->add();
+				} catch (Exception $e) {
+					dynamic_error($e->getMessage());
 				}
-
-				$email_full = $email_part . '@' . $domain;
-
-				if (!validateEmail($email_full)) {
-					standard_error('emailiswrong', $email_full);
-				}
-
-				$stmt = Database::prepare("SELECT `id`, `email`, `email_full`, `iscatchall`, `destination`, `customerid` FROM `" . TABLE_MAIL_VIRTUAL . "`
-					WHERE (`email` = :email
-					OR `email_full` = :emailfull )
-					AND `customerid`= :cid"
-				);
-				$params = array(
-					"email" => $email,
-					"emailfull" => $email_full,
-					"cid" => $userinfo['customerid']
-				);
-				$email_check = Database::pexecute_first($stmt, $params);
-
-				if ($email == '' || $email_full == '' || $email_part == '') {
-					standard_error(array('stringisempty', 'emailadd'));
-				} elseif ($domain == '') {
-					standard_error('domaincantbeempty');
-				} elseif ($domain_check['domain'] != $domain) {
-					standard_error('maindomainnonexist', $domain);
-				} elseif (strtolower($email_check['email_full']) == strtolower($email_full)) {
-					standard_error('emailexistalready', $email_full);
-				} elseif ($email_check['email'] == $email) {
-					standard_error('youhavealreadyacatchallforthisdomain');
-				} else {
-					$stmt = Database::prepare("INSERT INTO `" . TABLE_MAIL_VIRTUAL . "`
-						(`customerid`, `email`, `email_full`, `iscatchall`, `domainid`)
-						VALUES (:cid, :email, :email_full, :iscatchall, :domainid)"
-					);
-					$params = array(
-						"cid" => $userinfo['customerid'],
-						"email" => $email,
-						"email_full" => $email_full,
-						"iscatchall" => $iscatchall,
-						"domainid" => $domain_check['id']
-					);
-					Database::pexecute($stmt, $params);
-
-					$address_id = Database::lastInsertId();
-					$stmt = Database::prepare("UPDATE " . TABLE_PANEL_CUSTOMERS . "
-						SET `emails_used` = `emails_used` + 1
-						WHERE `customerid`= :cid"
-					);
-					Database::pexecute($stmt, array("cid" => $userinfo['customerid']));
-
-					$log->logAction(USR_ACTION, LOG_INFO, "added email address '" . $email_full . "'");
-					redirectTo($filename, array('page' => $page, 'action' => 'edit', 'id' => $address_id, 's' => $s));
-				}
+				$result = json_decode($json_result, true)['data'];
+				redirectTo($filename, array('page' => $page, 'action' => 'edit', 'id' => $result['id'], 's' => $s));
 			} else {
 				$result_stmt = Database::prepare("SELECT `id`, `domain`, `customerid` FROM `" . TABLE_PANEL_DOMAINS . "`
 					WHERE `customerid`= :cid

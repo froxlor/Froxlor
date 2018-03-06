@@ -16,6 +16,7 @@
 			<directory>tests/SubDomains</directory>
 			<directory>tests/Certificates</directory>
 			<directory>tests/Ftps</directory>
+			<directory>tests/Emails</directory>
 		</testsuite>
 	</testsuites>
 

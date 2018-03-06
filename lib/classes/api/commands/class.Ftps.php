@@ -75,8 +75,10 @@ class Ftps extends ApiCommand implements ResourceEntity
 			
 			if (Settings::Get('customer.ftpatdomain') == '1') {
 				$ftpusername = validate(trim($ftpusername), 'username', '/^[a-zA-Z0-9][a-zA-Z0-9\-_]+\$?$/', '', array(), true);
-				$idna_convert = new idna_convert_wrapper();
-				$ftpdomain = $idna_convert->encode(validate($ftpdomain, 'domain', '', '', array(), true));
+				if (substr($ftpdomain, 0, 4) != 'xn--') {
+					$idna_convert = new idna_convert_wrapper();
+					$ftpdomain = $idna_convert->encode(validate($ftpdomain, 'domain', '', '', array(), true));
+				}
 			}
 			
 			$params = array();
