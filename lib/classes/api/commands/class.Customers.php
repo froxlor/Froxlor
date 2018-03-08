@@ -1547,9 +1547,9 @@ class Customers extends ApiCommand implements ResourceEntity
 	 * @param string $extra
 	 *        	optional, default empty
 	 */
-	public static function increaseUsage($customerid = 0, $resource = null, $extra = '')
+	public static function increaseUsage($customerid = 0, $resource = null, $extra = '', $increase_by = 1)
 	{
-		self::updateResourceUsage(TABLE_PANEL_CUSTOMERS, 'customerid', $customerid, '+', $resource, $extra);
+		self::updateResourceUsage(TABLE_PANEL_CUSTOMERS, 'customerid', $customerid, '+', $resource, $extra, $increase_by);
 	}
 
 	/**
@@ -1560,8 +1560,8 @@ class Customers extends ApiCommand implements ResourceEntity
 	 * @param string $extra
 	 *        	optional, default empty
 	 */
-	public static function decreaseUsage($customerid = 0, $resource = null, $extra = '')
+	public static function decreaseUsage($customerid = 0, $resource = null, $extra = '', $decrease_by = 1)
 	{
-		self::updateResourceUsage(TABLE_PANEL_CUSTOMERS, 'customerid', $customerid, '-', $resource, $extra);
+		self::updateResourceUsage(TABLE_PANEL_CUSTOMERS, 'customerid', $customerid, '-', $resource, $extra, $decrease_by);
 	}
 }

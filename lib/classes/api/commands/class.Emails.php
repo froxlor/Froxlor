@@ -17,7 +17,7 @@
  */
 class Emails extends ApiCommand implements ResourceEntity
 {
-	
+
 	/**
 	 * add a new email address
 	 *
@@ -30,7 +30,7 @@ class Emails extends ApiCommand implements ResourceEntity
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'email')) {
 			throw new Exception("You cannot access this resource", 405);
 		}
-
+		
 		if ($this->getUserDetail('emails_used') < $this->getUserDetail('emails') || $this->getUserDetail('emails') == '-1') {
 			
 			// required parameters
@@ -39,13 +39,13 @@ class Emails extends ApiCommand implements ResourceEntity
 			
 			// parameters
 			$iscatchall = $this->getParam('iscatchall', true, 0);
-
+			
 			// validation
 			if (substr($domain, 0, 4) != 'xn--') {
 				$idna_convert = new idna_convert_wrapper();
 				$domain = $idna_convert->encode(validate($domain, 'domain', '', '', array(), true));
 			}
-
+			
 			// check domain and whether it's an email-enabled domain
 			$domain_check = $this->apiCall('SubDomains.get', array(
 				'domainname' => $domain
@@ -53,7 +53,11 @@ class Emails extends ApiCommand implements ResourceEntity
 			if ($domain_check['isemaildomain'] == 0) {
 				standard_error('maindomainnonexist', $domain, true);
 			}
-
+			
+			if (Settings::Get('catchall.catchall_enabled') != '1') {
+				$iscatchall = 0;
+			}
+			
 			// check for catchall-flag
 			if ($iscatchall) {
 				$iscatchall = '1';
@@ -62,15 +66,15 @@ class Emails extends ApiCommand implements ResourceEntity
 				$iscatchall = '0';
 				$email = $email_part . '@' . $domain;
 			}
-
+			
 			// full email value
 			$email_full = $email_part . '@' . $domain;
-
+			
 			// validate it
-			if (!validateEmail($email_full)) {
+			if (! validateEmail($email_full)) {
 				standard_error('emailiswrong', $email_full, true);
 			}
-
+			
 			// get needed customer info to reduce the email-address-counter by one
 			if ($this->isAdmin()) {
 				// get customer id
@@ -86,7 +90,7 @@ class Emails extends ApiCommand implements ResourceEntity
 				$customer_id = $this->getUserDetail('customerid');
 				$customer = $this->getUserData();
 			}
-
+			
 			// duplicate check
 			$stmt = Database::prepare("
 				SELECT `id`, `email`, `email_full`, `iscatchall`, `destination`, `customerid` FROM `" . TABLE_MAIL_VIRTUAL . "`
@@ -99,13 +103,13 @@ class Emails extends ApiCommand implements ResourceEntity
 				"cid" => $customer['customerid']
 			);
 			$email_check = Database::pexecute_first($stmt, $params, true, true);
-
+			
 			if (strtolower($email_check['email_full']) == strtolower($email_full)) {
 				standard_error('emailexistalready', $email_full, true);
 			} elseif ($email_check['email'] == $email) {
 				standard_error('youhavealreadyacatchallforthisdomain', '', true);
 			}
-
+			
 			$stmt = Database::prepare("
 				INSERT INTO `" . TABLE_MAIL_VIRTUAL . "` SET
 				`customerid` = :cid,
@@ -123,15 +127,15 @@ class Emails extends ApiCommand implements ResourceEntity
 			);
 			Database::pexecute($stmt, $params, true, true);
 			$address_id = Database::lastInsertId();
-
+			
 			// update customer usage
 			Customers::increaseUsage($customer_id, 'emails_used');
-
+			
 			// update admin usage
 			Admins::increaseUsage($customer['adminid'], 'emails_used');
-
+			
 			$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] added email address '" . $email_full . "'");
-
+			
 			$result = $this->apiCall('Emails.get', array(
 				'emailaddr' => $email_full
 			));
@@ -139,7 +143,7 @@ class Emails extends ApiCommand implements ResourceEntity
 		}
 		throw new Exception("No more resources available", 406);
 	}
-	
+
 	/**
 	 * return a email-address entry by either id or email-address
 	 *
@@ -147,7 +151,7 @@ class Emails extends ApiCommand implements ResourceEntity
 	 *        	optional, the customer-id
 	 * @param string $emailaddr
 	 *        	optional, the email-address
-	 *
+	 *        	
 	 * @access admin, customer
 	 * @throws Exception
 	 * @return array
@@ -177,11 +181,93 @@ class Emails extends ApiCommand implements ResourceEntity
 		$key = ($id > 0 ? "id #" . $id : "emailaddr '" . $emailaddr . "'");
 		throw new Exception("Email address with " . $key . " could not be found", 404);
 	}
-	
+
+	/**
+	 * toggle catchall flag of given email address either by id or email-address
+	 *
+	 * @param int $id
+	 *        	optional, the customer-id
+	 * @param string $emailaddr
+	 *        	optional, the email-address
+	 * @param boolean $iscatchall
+	 *        	optional
+	 * @param int $customerid
+	 *        	optional, required when called as admin/reseller
+	 *        	
+	 * @access admin, customer
+	 * @throws Exception
+	 * @return array
+	 */
 	public function update()
 	{
+		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'email')) {
+			throw new Exception("You cannot access this resource", 405);
+		}
+		
+		// if enabling catchall is not allowed by settings, we do not need
+		// to run update()
+		if (Settings::Get('catchall.catchall_enabled') != '1') {
+			standard_error(array(
+				'operationnotpermitted',
+				'featureisdisabled'
+			), 'catchall', true);
+		}
+		
+		$id = $this->getParam('id', true, 0);
+		$ea_optional = ($id <= 0 ? false : true);
+		$emailaddr = $this->getParam('emailaddr', $ea_optional, '');
+		
+		$result = $this->apiCall('Emails.get', array(
+			'id' => $id,
+			'emailaddr' => $emailaddr
+		));
+		$id = $result['id'];
+		
+		// parameters
+		$iscatchall = $this->getParam('iscatchall', true, $result['iscatchall']);
+		
+		// get needed customer info to reduce the email-address-counter by one
+		if ($this->isAdmin()) {
+			// get customer id
+			$customer_id = $this->getParam('customerid');
+			$customer = $this->apiCall('Customers.get', array(
+				'id' => $customer_id
+			));
+		} else {
+			$customer_id = $this->getUserDetail('customerid');
+			$customer = $this->getUserData();
+		}
+		
+		// check for catchall-flag
+		if ($iscatchall) {
+			$iscatchall = '1';
+			$email_parts = explode('@', $result['email_full']);
+			$email = '@' . $email_parts[1];
+		} else {
+			$iscatchall = '0';
+			$email = $result['email_full'];
+		}
+		
+		$stmt = Database::prepare("
+			UPDATE `" . TABLE_MAIL_VIRTUAL . "`
+			SET `email` = :email , `iscatchall` = :caflag
+			WHERE `customerid`= :cid AND `id`= :id
+		");
+		$params = array(
+			"email" => $email,
+			"caflag" => $iscatchall,
+			"cid" => $customer['customerid'],
+			"id" => $id
+		);
+		Database::pexecute($stmt, $params, true, true);
+		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] toggled catchall-flag for email address '" . $result['email_full'] . "'");
+		
+		$result = $this->apiCall('Emails.get', array(
+			'emailaddr' => $result['email_full']
+		));
+		return $this->response(200, "successfull", $result);
 	}
-	
+
 	/**
 	 * list all email addresses, if called from an admin, list all email addresses of all customers you are allowed to view, or specify id or loginname for one specific customer
 	 *
@@ -189,7 +275,7 @@ class Emails extends ApiCommand implements ResourceEntity
 	 *        	optional, admin-only, select ftp-users of a specific customer by id
 	 * @param string $loginname
 	 *        	optional, admin-only, select ftp-users of a specific customer by loginname
-	 *
+	 *        	
 	 * @access admin, customer
 	 * @throws Exception
 	 * @return array count|list
@@ -216,15 +302,100 @@ class Emails extends ApiCommand implements ResourceEntity
 			'list' => $result
 		));
 	}
-	
+
 	/**
 	 * delete an email address by either id or username
 	 *
+	 * @param int $id
+	 *        	optional, the customer-id
+	 * @param string $emailaddr
+	 *        	optional, the email-address
+	 * @param boolean $delete_userfiles
+	 *        	optional, delete email data from filesystem, default: no
+	 * @param int $customerid
+	 *        	optional, required when called as admin/reseller
+	 *        	
 	 * @access admin, customer
 	 * @throws Exception
 	 * @return array
 	 */
 	public function delete()
 	{
+		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'email')) {
+			throw new Exception("You cannot access this resource", 405);
+		}
+		
+		$id = $this->getParam('id', true, 0);
+		$ea_optional = ($id <= 0 ? false : true);
+		$emailaddr = $this->getParam('emailaddr', $ea_optional, '');
+		
+		$result = $this->apiCall('Emails.get', array(
+			'id' => $id,
+			'emailaddr' => $emailaddr
+		));
+		$id = $result['id'];
+		
+		// parameters
+		$delete_userfiles = $this->getParam('delete_userfiles', true, 0);
+		
+		// get needed customer info to reduce the email-address-counter by one
+		if ($this->isAdmin()) {
+			// get customer id
+			$customer_id = $this->getParam('customerid');
+			$customer = $this->apiCall('Customers.get', array(
+				'id' => $customer_id
+			));
+		} else {
+			$customer_id = $this->getUserDetail('customerid');
+			$customer = $this->getUserData();
+		}
+		
+		// check for forwarders
+		$number_forwarders = 0;
+		if ($result['destination'] != '') {
+			$result['destination'] = explode(' ', $result['destination']);
+			$number_forwarders = count($result['destination']);
+			Customers::decreaseUsage($customer['customerid'], 'email_forwarders_used', '', $number_forwarders);
+			Admins::decreaseUsage($customer['customerid'], 'email_forwarders_used', '', $number_forwarders);
+		}
+		// check whether this address is an account
+		if ($result['popaccountid'] != 0) {
+			// Free the Quota used by the email account
+			if (Settings::Get('system.mail_quota_enabled') == 1) {
+				$stmt = Database::prepare("SELECT `quota` FROM `" . TABLE_MAIL_USERS . "` WHERE `customerid`= :customerid AND `id`= :id");
+				$res_quota = Database::pexecute_first($stmt, array(
+					"customerid" => $customer_id,
+					"id" => $result['popaccountid']
+				), true, true);
+				Customers::decreaseUsage($customer['customerid'], 'email_quota_used', '', $res_quota['quota']);
+				Admins::decreaseUsage($customer['customerid'], 'email_quota_used', '', $res_quota['quota']);
+				$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] deleted quota entries for email address '" . $result['email_full'] . "'");
+			}
+			// delete account
+			$stmt = Database::prepare("DELETE FROM `" . TABLE_MAIL_USERS . "` WHERE `customerid`= :customerid AND `id`= :id");
+			Database::pexecute($stmt, array(
+				"customerid" => $customer_id,
+				"id" => $result['popaccountid']
+			), true, true);
+			Customers::decreaseUsage($customer['customerid'], 'email_accounts_used');
+			Admins::decreaseUsage($customer['customerid'], 'email_accounts_used');
+			$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] deleted email account '" . $result['email_full'] . "'");
+		}
+		
+		if ($delete_userfiles) {
+			inserttask('7', $customer['loginname'], $result['email_full']);
+		}
+		
+		// delete address
+		$stmt = Database::prepare("DELETE FROM `" . TABLE_MAIL_VIRTUAL . "` WHERE `customerid`= :customerid AND `id`= :id");
+		Database::pexecute($stmt, array(
+			"customerid" => $customer_id,
+			"id" => $id
+		), true, true);
+		Customers::decreaseUsage($customer['customerid'], 'emails_used');
+		Admins::decreaseUsage($customer['customerid'], 'emails_used');
+		
+		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] deleted email address '" . $result['email_full'] . "'");
+		return $this->response(200, "successfull", $result);
 	}
 }

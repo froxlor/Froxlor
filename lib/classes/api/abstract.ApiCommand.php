@@ -106,7 +106,7 @@ abstract class ApiCommand
 		$this->version = $version;
 		$this->dbversion = $dbversion;
 		$this->branding = $branding;
-
+		
 		if (! is_null($params)) {
 			$params = $this->trimArray($params);
 		}
@@ -417,8 +417,9 @@ abstract class ApiCommand
 	/**
 	 * returns an array of customers the current user can access
 	 *
-	 * @param string $customer_hide_option optional, when called as customer, some options might be hidden due to the panel.customer_hide_options ettings
-	 *
+	 * @param string $customer_hide_option
+	 *        	optional, when called as customer, some options might be hidden due to the panel.customer_hide_options ettings
+	 *        	
 	 * @throws Exception
 	 * @return array
 	 */
@@ -430,7 +431,7 @@ abstract class ApiCommand
 			// or optionally for one specific customer identified by id or loginname
 			$customerid = $this->getParam('customerid', true, 0);
 			$loginname = $this->getParam('loginname', true, '');
-
+			
 			if (! empty($customerid) || ! empty($loginname)) {
 				$_result = $this->apiCall('Customers.get', array(
 					'id' => $customerid,
@@ -447,7 +448,7 @@ abstract class ApiCommand
 				$customer_ids[] = $customer['customerid'];
 			}
 		} else {
-			if (!empty($customer_hide_option) && Settings::IsInList('panel.customer_hide_options', $customer_hide_option)) {
+			if (! empty($customer_hide_option) && Settings::IsInList('panel.customer_hide_options', $customer_hide_option)) {
 				throw new Exception("You cannot access this resource", 405);
 			}
 			$customer_ids = array(
@@ -467,11 +468,11 @@ abstract class ApiCommand
 	 * @param string $resource
 	 * @param string $extra
 	 */
-	protected static function updateResourceUsage($table = null, $keyfield = null, $key = null, $operator = '+', $resource = null, $extra = null)
+	protected static function updateResourceUsage($table = null, $keyfield = null, $key = null, $operator = '+', $resource = null, $extra = null, $step = 1)
 	{
 		$stmt = Database::prepare("
 			UPDATE `" . $table . "`
-			SET `" . $resource . "` = `" . $resource . "` " . $operator . " 1 " . $extra . "
+			SET `" . $resource . "` = `" . $resource . "` " . $operator . " " . (int)$step . " " . $extra . "
 			WHERE `" . $keyfield . "` = :key
 		");
 		Database::pexecute($stmt, array(
