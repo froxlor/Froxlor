@@ -71,7 +71,7 @@ return array(
 					'settinggroup' => 'panel',
 					'varname' => 'no_robots',
 					'type' => 'bool',
-					'default' => false,
+					'default' => true,
 					'save_method' => 'storeSettingField',
 					),
 				'panel_paging' => array(
