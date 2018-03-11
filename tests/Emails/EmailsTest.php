@@ -34,7 +34,7 @@ class MailsTest extends TestCase
 			'email_part' => 'catchall',
 			'domain' => 'test2.local',
 			'iscatchall' => 1,
-			'customer_id' => 1
+			'customerid' => 1
 		];
 		$json_result = Emails::getLocal($admin_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
