@@ -21,6 +21,15 @@ class Emails extends ApiCommand implements ResourceEntity
 	/**
 	 * add a new email address
 	 *
+	 * @param string $email_part
+	 *        	name of the address before @
+	 * @param string $domain
+	 *        	domain-name for the email-address
+	 * @param boolean $iscatchall
+	 *        	optional, make this address a catchall address, default: no
+	 * @param int $customerid
+	 *        	optional, required when called as admin/reseller
+	 *
 	 * @access admin, customer
 	 * @throws Exception
 	 * @return array
@@ -78,11 +87,11 @@ class Emails extends ApiCommand implements ResourceEntity
 			// get needed customer info to reduce the email-address-counter by one
 			if ($this->isAdmin()) {
 				// get customer id
-				$customer_id = $this->getParam('customer_id');
+				$customer_id = $this->getParam('customerid');
 				$customer = $this->apiCall('Customers.get', array(
 					'id' => $customer_id
 				));
-				// check whether the customer has enough resources to get the ftp-user added
+				// check whether the customer has enough resources to get the mail-address added
 				if ($customer['emails_used'] >= $customer['emails'] && $customer['emails'] != '-1') {
 					throw new Exception("Customer has no more resources available", 406);
 				}
@@ -148,7 +157,7 @@ class Emails extends ApiCommand implements ResourceEntity
 	 * return a email-address entry by either id or email-address
 	 *
 	 * @param int $id
-	 *        	optional, the customer-id
+	 *        	optional, the email-address-id
 	 * @param string $emailaddr
 	 *        	optional, the email-address
 	 *        	

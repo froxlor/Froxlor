@@ -658,48 +658,21 @@ if ($page == 'overview') {
 } elseif ($page == 'forwarders') {
 	if ($action == 'add' && $id != 0) {
 		if ($userinfo['email_forwarders_used'] < $userinfo['email_forwarders'] || $userinfo['email_forwarders'] == '-1') {
-			$stmt = Database::prepare("SELECT `id`, `email`, `email_full`, `iscatchall`, `destination`, `customerid`, `popaccountid`, `domainid` FROM `" . TABLE_MAIL_VIRTUAL . "`
-				WHERE `customerid`= :cid
-				AND `id`= :id"
-			);
-			$result = Database::pexecute_first($stmt, array("cid" => $userinfo['customerid'], "id" => $id));
+			try {
+				$json_result = Emails::getLocal($userinfo, array('id' => $id))->get();
+			} catch (Exception $e) {
+				dynamic_error($e->getMessage());
+			}
+			$result = json_decode($json_result, true)['data'];
 
 			if (isset($result['email']) && $result['email'] != '') {
 				if (isset($_POST['send']) && $_POST['send'] == 'send') {
-					$destination = $idna_convert->encode($_POST['destination']);
-					$result['destination_array'] = explode(' ', $result['destination']);
-
-					if ($destination == '') {
-						standard_error('destinationnonexist');
-					} elseif (!validateEmail($destination)) {
-						standard_error('destinationiswrong', $destination);
-					} elseif ($destination == $result['email']) {
-						standard_error('destinationalreadyexistasmail', $destination);
-					} elseif (in_array($destination, $result['destination_array'])) {
-						standard_error('destinationalreadyexist', $destination);
-					} else {
-						$result['destination'].= ' ' . $destination;
-						$stmt = Database::prepare("UPDATE `" . TABLE_MAIL_VIRTUAL . "`
-							SET `destination` = :dest
-							WHERE `customerid`= :cid
-							AND `id`= :id"
-						);
-						$params = array(
-							"dest" => makeCorrectDestination($result['destination']),
-							"cid" => $userinfo['customerid'],
-							"id" => $id
-						);
-						Database::pexecute($stmt, $params);
-
-						$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "`
-							SET `email_forwarders_used` = `email_forwarders_used` + 1
-							WHERE `customerid`= :cid"
-						);
-						Database::pexecute($stmt, array("cid" => $userinfo['customerid']));
-
-						$log->logAction(USR_ACTION, LOG_INFO, "added email forwarder for '" . $result['email_full'] . "'");
-						redirectTo($filename, array('page' => 'emails', 'action' => 'edit', 'id' => $id, 's' => $s));
+					try {
+						EmailForwarders::getLocal($userinfo, $_POST)->add();
+					} catch (Exception $e) {
+						dynamic_error($e->getMessage());
 					}
+					redirectTo($filename, array('page' => 'emails', 'action' => 'edit', 'id' => $id, 's' => $s));
 				} else {
 					$result['email_full'] = $idna_convert->decode($result['email_full']);
 					$result = htmlentities_array($result);
@@ -717,11 +690,12 @@ if ($page == 'overview') {
 			standard_error('allresourcesused');
 		}
 	} elseif ($action == 'delete' && $id != 0) {
-		$stmt = Database::prepare("SELECT `id`, `email`, `email_full`, `iscatchall`, `destination`, `customerid`, `popaccountid` FROM `" . TABLE_MAIL_VIRTUAL . "`
-			WHERE `customerid`='" . (int)$userinfo['customerid'] . "'
-			AND `id`='" . (int)$id . "'"
-		);
-		$result = Database::pexecute_first($stmt, array("cid" => $userinfo['customerid']));
+		try {
+			$json_result = Emails::getLocal($userinfo, array('id' => $id))->get();
+		} catch (Exception $e) {
+			dynamic_error($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
 
 		if (isset($result['destination']) && $result['destination'] != '') {
 			if (isset($_POST['forwarderid'])) {
@@ -738,27 +712,11 @@ if ($page == 'overview') {
 				$forwarder = $result['destination'][$forwarderid];
 
 				if (isset($_POST['send']) && $_POST['send'] == 'send') {
-					unset($result['destination'][$forwarderid]);
-					$result['destination'] = implode(' ', $result['destination']);
-					$stmt = Database::prepare("UPDATE `" . TABLE_MAIL_VIRTUAL . "`
-						SET `destination` = :dest
-						WHERE `customerid`= :cid
-						AND `id`= :id"
-					);
-					$params = array(
-						"dest" => makeCorrectDestination($result['destination']),
-						"cid" => $userinfo['customerid'],
-						"id" => $id
-					);
-					Database::pexecute($stmt, $params);
-
-					$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "`
-						SET `email_forwarders_used` = `email_forwarders_used` - 1
-						WHERE `customerid`= :cid"
-					);
-					Database::pexecute($stmt, array("cid" => $userinfo['customerid']));
-
-					$log->logAction(USR_ACTION, LOG_INFO, "deleted email forwarder for '" . $result['email_full'] . "'");
+					try {
+						EmailForwarders::getLocal($userinfo, $_POST)->delete();
+					} catch (Exception $e) {
+						dynamic_error($e->getMessage());
+					}
 					redirectTo($filename, array('page' => 'emails', 'action' => 'edit', 'id' => $id, 's' => $s));
 				} else {
 					ask_yesno('email_reallydelete_forwarder', $filename, array('id' => $id, 'forwarderid' => $forwarderid, 'page' => $page, 'action' => $action), $idna_convert->decode($result['email_full']) . ' -> ' . $idna_convert->decode($forwarder));

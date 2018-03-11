@@ -350,6 +350,16 @@ abstract class ApiCommand
 	}
 
 	/**
+	 * return list of all parameters
+	 *
+	 * @return array
+	 */
+	protected function getParamList()
+	{
+		return $this->cmd_params;
+	}
+
+	/**
 	 * return logger instance
 	 *
 	 * @return FroxlorLogger
@@ -455,6 +465,9 @@ abstract class ApiCommand
 				$this->getUserDetail('customerid')
 			);
 		}
+		if (empty($customer_ids)) {
+			throw new Exception("Required resource unsatisfied.", 405);
+		}
 		return $customer_ids;
 	}
 
@@ -472,7 +485,7 @@ abstract class ApiCommand
 	{
 		$stmt = Database::prepare("
 			UPDATE `" . $table . "`
-			SET `" . $resource . "` = `" . $resource . "` " . $operator . " " . (int)$step . " " . $extra . "
+			SET `" . $resource . "` = `" . $resource . "` " . $operator . " " . (int) $step . " " . $extra . "
 			WHERE `" . $keyfield . "` = :key
 		");
 		Database::pexecute($stmt, array(
