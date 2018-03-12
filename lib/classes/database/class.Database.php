@@ -28,6 +28,11 @@
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Classes
+ *
+ * @method static \PDOStatement prepare($statement, array $driver_options = null) Prepares a statement for execution and returns a statement object
+ * @method static \PDOStatement query ($statement) Executes an SQL statement, returning a result set as a PDOStatement object
+ * @method static string lastInsertId ($name = null) Returns the ID of the last inserted row or sequence value
+ * @method static string quote ($string, $parameter_type = null) Quotes a string for use in a query.
  */
 class Database {
 
