@@ -279,72 +279,49 @@ if ($page == 'overview') {
 			}
 			$result = json_decode($json_result, true)['data'];
 
-			if (isset($result['email']) && $result['email'] != '' && $result['popaccountid'] == '0') {
-				if (isset($_POST['send']) && $_POST['send'] == 'send') {
-					try {
-						EmailAccounts::getLocal($userinfo, $_POST)->add();
-					} catch (Exception $e) {
-						dynamic_error($e->getMessage());
-					}
-					redirectTo($filename, array('page' => 'emails', 'action' => 'edit', 'id' => $id, 's' => $s));
-				} else {
-
-					if (checkMailAccDeletionState($result['email_full'])) {
-					   standard_error(array('mailaccistobedeleted'), $result['email_full']);
-					}
-
-					$result['email_full'] = $idna_convert->decode($result['email_full']);
-					$result = htmlentities_array($result);
-					$quota = Settings::Get('system.mail_quota');
-
-					$account_add_data = include_once dirname(__FILE__) . '/lib/formfields/customer/email/formfield.emails_addaccount.php';
-					$account_add_form = htmlform::genHTMLForm($account_add_data);
-
-					$title = $account_add_data['emails_addaccount']['title'];
-					$image = $account_add_data['emails_addaccount']['image'];
-
-					eval("echo \"" . getTemplate("email/account_add") . "\";");
+			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+				try {
+					EmailAccounts::getLocal($userinfo, $_POST)->add();
+				} catch (Exception $e) {
+					dynamic_error($e->getMessage());
 				}
+				redirectTo($filename, array('page' => 'emails', 'action' => 'edit', 'id' => $id, 's' => $s));
+			} else {
+
+				if (checkMailAccDeletionState($result['email_full'])) {
+				   standard_error(array('mailaccistobedeleted'), $result['email_full']);
+				}
+
+				$result['email_full'] = $idna_convert->decode($result['email_full']);
+				$result = htmlentities_array($result);
+				$quota = Settings::Get('system.mail_quota');
+
+				$account_add_data = include_once dirname(__FILE__) . '/lib/formfields/customer/email/formfield.emails_addaccount.php';
+				$account_add_form = htmlform::genHTMLForm($account_add_data);
+
+				$title = $account_add_data['emails_addaccount']['title'];
+				$image = $account_add_data['emails_addaccount']['image'];
+
+				eval("echo \"" . getTemplate("email/account_add") . "\";");
 			}
 		} else {
 			standard_error(array('allresourcesused', 'allocatetoomuchquota'), $quota);
 		}
 	} elseif ($action == 'changepw' && $id != 0) {
-		$stmt = Database::prepare("SELECT `id`, `email`, `email_full`, `iscatchall`, `destination`, `customerid`, `popaccountid` FROM `" . TABLE_MAIL_VIRTUAL . "`
-			WHERE `customerid`= :cid
-			AND `id`= :id"
-		);
-		$result = Database::pexecute_first($stmt, array("cid" => $userinfo['customerid'], "id" => $id));
+		try {
+			$json_result = Emails::getLocal($userinfo, array('id' => $id))->get();
+		} catch (Exception $e) {
+			dynamic_error($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
 
 		if (isset($result['popaccountid']) && $result['popaccountid'] != '') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
-				$password = validate($_POST['email_password'], 'password');
-
-				if ($password == '') {
-					standard_error(array('stringisempty', 'mypassword'));
+				try {
+					EmailAccounts::getLocal($userinfo, $_POST)->update();
+				} catch (Exception $e) {
+					dynamic_error($e->getMessage());
 				}
-				elseif ($password == $result['email_full']) {
-					standard_error('passwordshouldnotbeusername');
-				}
-
-				$password = validatePassword($password);
-
-				$log->logAction(USR_ACTION, LOG_INFO, "changed email password for '" . $result['email_full'] . "'");
-				$cryptPassword = makeCryptPassword($password);
-				$stmt = Database::prepare("UPDATE `" . TABLE_MAIL_USERS . "`
-					SET " . (Settings::Get('system.mailpwcleartext') == '1' ? "`password` = :password, " : '') . "
-						`password_enc`= :password_enc
-					WHERE `customerid`= :cid
-					AND `id`= :id"
-				);
-				$params = array(
-					"password_enc" => $cryptPassword,
-					"cid" => $userinfo['customerid'],
-					"id" => $result['popaccountid']
-				);
-				if (Settings::Get('system.mailpwcleartext') == '1') { $params["password"] = $password; }
-				Database::pexecute($stmt, $params);
-
 				redirectTo($filename, array('page' => 'emails', 'action' => 'edit', 'id' => $id, 's' => $s));
 			} else {
 				$result['email_full'] = $idna_convert->decode($result['email_full']);
@@ -360,46 +337,21 @@ if ($page == 'overview') {
 			}
 		}
 	} elseif ($action == 'changequota' && Settings::Get('system.mail_quota_enabled') == '1' && $id != 0) {
-		$stmt = Database::prepare("SELECT `v`.`id`, `v`.`email`, `v`.`email_full`, `v`.`iscatchall`, `v`.`destination`, `v`.`customerid`, `v`.`popaccountid`, `u`.`quota`
-			FROM `" . TABLE_MAIL_VIRTUAL . "` `v`
-			LEFT JOIN `" . TABLE_MAIL_USERS . "` `u`
-			ON(`v`.`popaccountid` = `u`.`id`)
-			WHERE `v`.`customerid`= :cid
-			AND `v`.`id`= :id"
-		);
-		$result = Database::pexecute_first($stmt, array("cid" => $userinfo['customerid'], "id" => $id));
+		try {
+			$json_result = Emails::getLocal($userinfo, array('id' => $id))->get();
+		} catch (Exception $e) {
+			dynamic_error($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
 
 		if (isset($result['popaccountid']) && $result['popaccountid'] != '') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
-				$quota = (int)validate($_POST['email_quota'], 'email_quota', '/^\d+$/', 'vmailquotawrong');
-
-				if ($userinfo['email_quota'] != '-1' && ($quota == 0 || ($quota + $userinfo['email_quota_used'] - $result['quota']) > $userinfo['email_quota'])) {
-					standard_error('allocatetoomuchquota', $quota);
-				} else {
-					$log->logAction(USR_ACTION, LOG_INFO, "updated quota for email address '" . $result['email'] . "' to " . $quota . " MB");
-					$stmt = Database::prepare("UPDATE `" . TABLE_MAIL_USERS . "`
-						SET `quota` = :quota
-						WHERE `id` = :id
-						AND `customerid`= :cid"
-					);
-					$params = array(
-						"quota" => $quota,
-						"id" => $result['popaccountid'],
-						"cid" => $userinfo['customerid']
-					);
-					Database::pexecute($stmt, $params);
-
-					if ($userinfo['email_quota'] != '-1') {
-						$new_used_quota = $userinfo['email_quota_used'] + ($quota - $result['quota']);
-						$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "`
-							SET `email_quota_used` = :used
-							WHERE `customerid` = :cid"
-						);
-						Database::pexecute($stmt, array("used" => $new_used_quota, "cid" => $userinfo['customerid']));
-					}
-
-					redirectTo($filename, array('page' => 'emails', 'action' => 'edit', 'id' => $id, 's' => $s));
+				try {
+					EmailAccounts::getLocal($userinfo, $_POST)->update();
+				} catch (Exception $e) {
+					dynamic_error($e->getMessage());
 				}
+				redirectTo($filename, array('page' => 'emails', 'action' => 'edit', 'id' => $id, 's' => $s));
 			} else {
 				$result['email_full'] = $idna_convert->decode($result['email_full']);
 				$result = htmlentities_array($result);
@@ -414,55 +366,20 @@ if ($page == 'overview') {
 			}
 		}
 	} elseif ($action == 'delete' && $id != 0) {
-		$stmt = Database::prepare("SELECT `v`.`id`, `v`.`email`, `v`.`email_full`, `v`.`iscatchall`, `v`.`destination`, `v`.`customerid`, `v`.`popaccountid`, `u`.`quota`
-			FROM `" . TABLE_MAIL_VIRTUAL . "` `v`
-			LEFT JOIN `" . TABLE_MAIL_USERS . "` `u`
-			ON(`v`.`popaccountid` = `u`.`id`)
-			WHERE `v`.`customerid`='" . (int)$userinfo['customerid'] . "'
-			AND `v`.`id`='" . (int)$id . "'"
-		);
-		$result = Database::pexecute_first($stmt, array("cid" => $userinfo['customerid'], "id" => $id));
+		try {
+			$json_result = Emails::getLocal($userinfo, array('id' => $id))->get();
+		} catch (Exception $e) {
+			dynamic_error($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
 
 		if (isset($result['popaccountid']) && $result['popaccountid'] != '') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
-				$stmt = Database::prepare("DELETE FROM `" . TABLE_MAIL_USERS . "`
-					WHERE `customerid`= :cid
-					AND `id`= :id"
-				);
-				Database::pexecute($stmt, array("cid" => $userinfo['customerid'], "id" => $result['popaccountid']));
-				$result['destination'] = str_replace($result['email_full'], '', $result['destination']);
-
-				$stmt = Database::prepare("UPDATE `" . TABLE_MAIL_VIRTUAL . "`
-					SET `destination` = :dest,
-						`popaccountid` = '0'
-					WHERE `customerid`= :cid
-					AND `id`= :id"
-				);
-				$params = array(
-					"dest" => makeCorrectDestination($result['destination']),
-					"cid" => $userinfo['customerid'],
-					"id" => $id
-				);
-				Database::pexecute($stmt, $params);
-
-				if (Settings::Get('system.mail_quota_enabled') == '1' && $userinfo['email_quota'] != '-1') {
-					$quota = (int)$result['quota'];
-				} else {
-					$quota = 0;
+				try {
+					EmailAccounts::getLocal($userinfo, $_POST)->delete();
+				} catch (Exception $e) {
+					dynamic_error($e->getMessage());
 				}
-
-				if (isset($_POST['delete_userfiles']) && (int)$_POST['delete_userfiles'] == 1) {
-					inserttask('7', $userinfo['loginname'], $result['email_full']);
-				}
-
-				$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "`
-					SET `email_accounts_used` = `email_accounts_used` - 1,
-						`email_quota_used` = `email_quota_used` - :quota
-					WHERE `customerid`= :cid"
-				);
-				Database::pexecute($stmt, array("quota" => $quota, "cid" => $userinfo['customerid']));
-
-				$log->logAction(USR_ACTION, LOG_INFO, "deleted email account for '" . $result['email_full'] . "'");
 				redirectTo($filename, array('page' => 'emails', 'action' => 'edit', 'id' => $id, 's' => $s));
 			} else {
 				ask_yesno_withcheckbox('email_reallydelete_account', 'admin_customer_alsoremovemail', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $idna_convert->decode($result['email_full']));
