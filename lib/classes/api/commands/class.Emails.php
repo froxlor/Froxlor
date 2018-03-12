@@ -122,7 +122,6 @@ class Emails extends ApiCommand implements ResourceEntity
 				"domainid" => $domain_check['id']
 			);
 			Database::pexecute($stmt, $params, true, true);
-			$address_id = Database::lastInsertId();
 			
 			// update customer usage
 			Customers::increaseUsage($customer['customerid'], 'emails_used');

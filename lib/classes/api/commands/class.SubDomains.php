@@ -718,7 +718,6 @@ class SubDomains extends ApiCommand implements ResourceEntity
 		
 		// get needed customer info to reduce the subdomain-usage-counter by one
 		$customer = $this->getCustomerData();
-		$subdomains_used = $customer['subdomains_used'];
 
 		if (!$this->isAdmin() && $result['caneditdomain'] == 0) {
 			throw new Exception("You cannot edit this resource", 405);

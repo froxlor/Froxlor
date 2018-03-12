@@ -158,9 +158,7 @@ class EmailForwarders extends ApiCommand implements ResourceEntity
 				
 				// get needed customer info to reduce the email-forwarder-counter by one
 				$customer = $this->getCustomerData();
-				
-				// get specific forwarder
-				$forwarder = $result['destination'][$forwarderid];
+
 				// unset it from array
 				unset($result['destination'][$forwarderid]);
 				// rebuild destination-string
@@ -176,14 +174,7 @@ class EmailForwarders extends ApiCommand implements ResourceEntity
 					"id" => $id
 				);
 				Database::pexecute($stmt, $params, true, true);
-				
-				$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "`
-						SET `email_forwarders_used` = `email_forwarders_used` - 1
-						WHERE `customerid`= :cid");
-				Database::pexecute($stmt, array(
-					"cid" => $userinfo['customerid']
-				));
-				
+
 				// update customer usage
 				Customers::decreaseUsage($customer['customerid'], 'email_forwarders_used');
 				
