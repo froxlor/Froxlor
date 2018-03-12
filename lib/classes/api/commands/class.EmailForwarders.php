@@ -69,21 +69,8 @@ class EmailForwarders extends ApiCommand implements ResourceEntity
 				standard_error('destinationalreadyexist', $destination, true);
 			}
 			
-			// get needed customer info to reduce the email-address-counter by one
-			if ($this->isAdmin()) {
-				// get customer id
-				$customer_id = $this->getParam('customerid');
-				$customer = $this->apiCall('Customers.get', array(
-					'id' => $customer_id
-				));
-				// check whether the customer has enough resources to get the mail-forwarder added
-				if ($customer['email_forwarders_used'] >= $customer['email_forwarders'] && $customer['email_forwarders'] != '-1') {
-					throw new Exception("Customer has no more resources available", 406);
-				}
-			} else {
-				$customer_id = $this->getUserDetail('customerid');
-				$customer = $this->getUserData();
-			}
+			// get needed customer info to reduce the email-forwarder-counter by one
+			$customer = $this->getCustomerData('email_forwarders');
 			
 			// add destination to address
 			$result['destination'] .= ' ' . $destination;
@@ -93,13 +80,13 @@ class EmailForwarders extends ApiCommand implements ResourceEntity
 			");
 			$params = array(
 				"dest" => makeCorrectDestination($result['destination']),
-				"cid" => $customer_id,
+				"cid" => $customer['customerid'],
 				"id" => $id
 			);
 			Database::pexecute($stmt, $params, true, true);
 			
 			// update customer usage
-			Customers::increaseUsage($customer_id, 'email_forwarders_used');
+			Customers::increaseUsage($customer['customerid'], 'email_forwarders_used');
 			
 			// update admin usage
 			Admins::increaseUsage($customer['adminid'], 'email_forwarders_used');
@@ -169,17 +156,8 @@ class EmailForwarders extends ApiCommand implements ResourceEntity
 			$result['destination'] = explode(' ', $result['destination']);
 			if (isset($result['destination'][$forwarderid]) && $result['email'] != $result['destination'][$forwarderid]) {
 				
-				// get needed customer info to reduce the email-address-counter by one
-				if ($this->isAdmin()) {
-					// get customer id
-					$customer_id = $this->getParam('customer_id');
-					$customer = $this->apiCall('Customers.get', array(
-						'id' => $customer_id
-					));
-				} else {
-					$customer_id = $this->getUserDetail('customerid');
-					$customer = $this->getUserData();
-				}
+				// get needed customer info to reduce the email-forwarder-counter by one
+				$customer = $this->getCustomerData();
 				
 				// get specific forwarder
 				$forwarder = $result['destination'][$forwarderid];
@@ -207,7 +185,7 @@ class EmailForwarders extends ApiCommand implements ResourceEntity
 				));
 				
 				// update customer usage
-				Customers::decreaseUsage($customer_id, 'email_forwarders_used');
+				Customers::decreaseUsage($customer['customerid'], 'email_forwarders_used');
 				
 				// update admin usage
 				Admins::decreaseUsage($customer['adminid'], 'email_forwarders_used');

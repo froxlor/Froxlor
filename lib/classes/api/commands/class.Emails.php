@@ -85,20 +85,7 @@ class Emails extends ApiCommand implements ResourceEntity
 			}
 			
 			// get needed customer info to reduce the email-address-counter by one
-			if ($this->isAdmin()) {
-				// get customer id
-				$customer_id = $this->getParam('customerid');
-				$customer = $this->apiCall('Customers.get', array(
-					'id' => $customer_id
-				));
-				// check whether the customer has enough resources to get the mail-address added
-				if ($customer['emails_used'] >= $customer['emails'] && $customer['emails'] != '-1') {
-					throw new Exception("Customer has no more resources available", 406);
-				}
-			} else {
-				$customer_id = $this->getUserDetail('customerid');
-				$customer = $this->getUserData();
-			}
+			$customer = $this->getCustomerData('emails');
 			
 			// duplicate check
 			$stmt = Database::prepare("
@@ -138,7 +125,7 @@ class Emails extends ApiCommand implements ResourceEntity
 			$address_id = Database::lastInsertId();
 			
 			// update customer usage
-			Customers::increaseUsage($customer_id, 'emails_used');
+			Customers::increaseUsage($customer['customerid'], 'emails_used');
 			
 			// update admin usage
 			Admins::increaseUsage($customer['adminid'], 'emails_used');
@@ -236,16 +223,7 @@ class Emails extends ApiCommand implements ResourceEntity
 		$iscatchall = $this->getParam('iscatchall', true, $result['iscatchall']);
 		
 		// get needed customer info to reduce the email-address-counter by one
-		if ($this->isAdmin()) {
-			// get customer id
-			$customer_id = $this->getParam('customerid');
-			$customer = $this->apiCall('Customers.get', array(
-				'id' => $customer_id
-			));
-		} else {
-			$customer_id = $this->getUserDetail('customerid');
-			$customer = $this->getUserData();
-		}
+		$customer = $this->getCustomerData();
 		
 		// check for catchall-flag
 		if ($iscatchall) {
@@ -348,16 +326,7 @@ class Emails extends ApiCommand implements ResourceEntity
 		$delete_userfiles = $this->getParam('delete_userfiles', true, 0);
 		
 		// get needed customer info to reduce the email-address-counter by one
-		if ($this->isAdmin()) {
-			// get customer id
-			$customer_id = $this->getParam('customerid');
-			$customer = $this->apiCall('Customers.get', array(
-				'id' => $customer_id
-			));
-		} else {
-			$customer_id = $this->getUserDetail('customerid');
-			$customer = $this->getUserData();
-		}
+		$customer = $this->getCustomerData();
 		
 		// check for forwarders
 		$number_forwarders = 0;
@@ -373,7 +342,7 @@ class Emails extends ApiCommand implements ResourceEntity
 			if (Settings::Get('system.mail_quota_enabled') == 1) {
 				$stmt = Database::prepare("SELECT `quota` FROM `" . TABLE_MAIL_USERS . "` WHERE `customerid`= :customerid AND `id`= :id");
 				$res_quota = Database::pexecute_first($stmt, array(
-					"customerid" => $customer_id,
+					"customerid" => $customer['customerid'],
 					"id" => $result['popaccountid']
 				), true, true);
 				Customers::decreaseUsage($customer['customerid'], 'email_quota_used', '', $res_quota['quota']);
@@ -383,7 +352,7 @@ class Emails extends ApiCommand implements ResourceEntity
 			// delete account
 			$stmt = Database::prepare("DELETE FROM `" . TABLE_MAIL_USERS . "` WHERE `customerid`= :customerid AND `id`= :id");
 			Database::pexecute($stmt, array(
-				"customerid" => $customer_id,
+				"customerid" => $customer['customerid'],
 				"id" => $result['popaccountid']
 			), true, true);
 			Customers::decreaseUsage($customer['customerid'], 'email_accounts_used');
@@ -398,7 +367,7 @@ class Emails extends ApiCommand implements ResourceEntity
 		// delete address
 		$stmt = Database::prepare("DELETE FROM `" . TABLE_MAIL_VIRTUAL . "` WHERE `customerid`= :customerid AND `id`= :id");
 		Database::pexecute($stmt, array(
-			"customerid" => $customer_id,
+			"customerid" => $customer['customerid'],
 			"id" => $id
 		), true, true);
 		Customers::decreaseUsage($customer['customerid'], 'emails_used');

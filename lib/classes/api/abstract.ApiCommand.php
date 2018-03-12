@@ -15,7 +15,7 @@
  * @since      0.10.0
  *
  */
-abstract class ApiCommand
+abstract class ApiCommand extends ApiParameter
 {
 
 	/**
@@ -52,13 +52,6 @@ abstract class ApiCommand
 	 * @var PHPMailer
 	 */
 	private $mail = null;
-
-	/**
-	 * array of parameters passed to the command
-	 *
-	 * @var array
-	 */
-	private $cmd_params = null;
 
 	/**
 	 * language strings array
@@ -103,14 +96,12 @@ abstract class ApiCommand
 	{
 		global $lng, $version, $dbversion, $branding;
 		
+		parent::__construct($params);
+
 		$this->version = $version;
 		$this->dbversion = $dbversion;
 		$this->branding = $branding;
 		
-		if (! is_null($params)) {
-			$params = $this->trimArray($params);
-		}
-		$this->cmd_params = $params;
 		if (! empty($header)) {
 			$this->readUserData($header);
 		} elseif (! empty($userinfo)) {
@@ -269,97 +260,6 @@ abstract class ApiCommand
 	}
 
 	/**
-	 * get specific parameter from the parameterlist;
-	 * check for existence and != empty if needed.
-	 * Maybe more in the future
-	 *
-	 * @param string $param
-	 *        	parameter to get out of the request-parameter list
-	 * @param bool $optional
-	 *        	default: false
-	 * @param mixed $default
-	 *        	value which is returned if optional=true and param is not set
-	 *        	
-	 * @throws Exception
-	 * @return mixed
-	 */
-	protected function getParam($param = null, $optional = false, $default = '')
-	{
-		// does it exist?
-		if (! isset($this->cmd_params[$param])) {
-			if ($optional === false) {
-				// get module + function for better error-messages
-				$inmod = $this->getModFunctionString();
-				throw new Exception('Requested parameter "' . $param . '" could not be found for "' . $inmod . '"', 404);
-			}
-			return $default;
-		}
-		// is it empty? - test really on string, as value 0 is being seen as empty by php
-		if ($this->cmd_params[$param] === "") {
-			if ($optional === false) {
-				// get module + function for better error-messages
-				$inmod = $this->getModFunctionString();
-				throw new Exception('Requested parameter "' . $param . '" is empty where it should not be for "' . $inmod . '"', 406);
-			}
-			return '';
-		}
-		// everything else is fine
-		return $this->cmd_params[$param];
-	}
-
-	/**
-	 * get specific parameter which also has and unlimited-field
-	 *
-	 * @param string $param
-	 *        	parameter to get out of the request-parameter list
-	 * @param string $ul_field
-	 *        	parameter to get out of the request-parameter list
-	 * @param bool $optional
-	 *        	default: false
-	 * @param mixed $default
-	 *        	value which is returned if optional=true and param is not set
-	 *        	
-	 * @return mixed
-	 */
-	protected function getUlParam($param = null, $ul_field = null, $optional = false, $default = 0)
-	{
-		$param_value = intval_ressource($this->getParam($param, $optional, $default));
-		$ul_field_value = $this->getParam($ul_field, true, 0);
-		if ($ul_field_value != 0) {
-			$param_value = - 1;
-		}
-		return $param_value;
-	}
-
-	/**
-	 * update value of parameter
-	 *
-	 * @param string $param
-	 * @param mixed $value
-	 *
-	 * @throws Exception
-	 * @return boolean
-	 */
-	protected function updateParam($param, $value = null)
-	{
-		if (isset($this->cmd_params[$param])) {
-			$this->cmd_params[$param] = $value;
-			return true;
-		}
-		throw new Exception("Unable to update parameter '" . $param . "' as it does not exist", 500);
-	}
-
-	/**
-	 * return list of all parameters
-	 *
-	 * @return array
-	 */
-	protected function getParamList()
-	{
-		return $this->cmd_params;
-	}
-
-	/**
 	 * return logger instance
 	 *
 	 * @return FroxlorLogger
@@ -472,6 +372,38 @@ abstract class ApiCommand
 	}
 
 	/**
+	 * returns an array of customer data for customer, or by customer-id/loginname for admin/reseller
+	 *
+	 * @param int $customerid
+	 *        	optional, required if loginname is empty
+	 * @param string $loginname
+	 *        	optional, required of customerid is empty
+	 * @param string $customer_resource_check
+	 *        	optional, when called as admin, check the resources of the target customer
+	 *
+	 * @throws Exception
+	 * @return array
+	 */
+	protected function getCustomerData($customer_resource_check = '')
+	{
+		if ($this->isAdmin()) {
+			$customerid = $this->getParam('customerid', true, 0);
+			$loginname = $this->getParam('loginname', true, '');
+			$customer = $this->apiCall('Customers.get', array(
+				'id' => $customerid,
+				'loginname' => $loginname
+			));
+			// check whether the customer has enough resources
+			if (! empty($customer_resource_check) && $customer[$customer_resource_check . '_used'] >= $customer[$customer_resource_check] && $customer[$customer_resource_check] != '-1') {
+				throw new Exception("Customer has no more resources available", 406);
+			}
+		} else {
+			$customer = $this->getUserData();
+		}
+		return $customer;
+	}
+
+	/**
 	 * increase/decrease a resource field for customers/admins
 	 *
 	 * @param string $table
@@ -491,35 +423,6 @@ abstract class ApiCommand
 		Database::pexecute($stmt, array(
 			'key' => $key
 		), true, true);
-	}
-
-	/**
-	 * returns "module::function()" for better error-messages (missing parameter etc.)
-	 * makes debugging a whole lot more comfortable
-	 *
-	 * @return string
-	 */
-	private function getModFunctionString()
-	{
-		$_class = get_called_class();
-		$level = 2;
-		if (version_compare(PHP_VERSION, "5.4.0", "<")) {
-			$trace = debug_backtrace();
-		} else {
-			$trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-		}
-		while (true) {
-			$class = $trace[$level]['class'];
-			$func = $trace[$level]['function'];
-			if ($class != $_class) {
-				$level ++;
-				if ($level > 5) {
-					break;
-				}
-				continue;
-			}
-			return $class . ':' . $func;
-		}
 	}
 
 	/**
@@ -562,23 +465,5 @@ abstract class ApiCommand
 			return true;
 		}
 		throw new Exception("Invalid API credentials", 400);
-	}
-
-	/**
-	 * run 'trim' function on an array recursively
-	 *
-	 * @param array $input
-	 *
-	 * @return array
-	 */
-	private function trimArray($input)
-	{
-		if (! is_array($input)) {
-			return trim($input);
-		}
-		return array_map(array(
-			$this,
-			'trimArray'
-		), $input);
 	}
 }

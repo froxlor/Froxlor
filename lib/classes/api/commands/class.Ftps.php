@@ -83,20 +83,7 @@ class Ftps extends ApiCommand implements ResourceEntity
 			
 			$params = array();
 			// get needed customer info to reduce the ftp-user-counter by one
-			if ($this->isAdmin()) {
-				// get customer id
-				$customer_id = $this->getParam('customer_id');
-				$customer = $this->apiCall('Customers.get', array(
-					'id' => $customer_id
-				));
-				// check whether the customer has enough resources to get the ftp-user added
-				if ($customer['ftps_used'] >= $customer['ftps'] && $customer['ftps'] != '-1') {
-					throw new Exception("Customer has no more resources available", 406);
-				}
-			} else {
-				$customer_id = $this->getUserDetail('customerid');
-				$customer = $this->getUserData();
-			}
+			$customer = $this->getCustomerData('ftps');
 			
 			if ($sendinfomail != 1) {
 				$sendinfomail = 0;
@@ -114,7 +101,7 @@ class Ftps extends ApiCommand implements ResourceEntity
 						AND `customerid` = :customerid");
 				$ftpdomain_check = Database::pexecute_first($ftpdomain_check_stmt, array(
 					"domain" => $ftpdomain,
-					"customerid" => $customer_id
+					"customerid" => $customer['customerid']
 				), true, true);
 				
 				if ($ftpdomain_check && $ftpdomain_check['domain'] != $ftpdomain) {
@@ -144,7 +131,7 @@ class Ftps extends ApiCommand implements ResourceEntity
 						(`customerid`, `username`, `description`, `password`, `homedir`, `login_enabled`, `uid`, `gid`, `shell`)
 						VALUES (:customerid, :username, :description, :password, :homedir, 'y', :guid, :guid, :shell)");
 				$params = array(
-					"customerid" => $customer_id,
+					"customerid" => $customer['customerid'],
 					"username" => $username,
 					"description" => $description,
 					"password" => $cryptPassword,
@@ -179,14 +166,14 @@ class Ftps extends ApiCommand implements ResourceEntity
 				");
 				$params = array(
 					"username" => $username,
-					"customerid" => $customer_id,
+					"customerid" => $customer['customerid'],
 					"guid" => $customer['guid']
 				);
 				Database::pexecute($stmt, $params, true, true);
 
 				// update customer usage
-				Customers::increaseUsage($customer_id, 'ftps_used');
-				Customers::increaseUsage($customer_id, 'ftp_lastaccountnumber');
+				Customers::increaseUsage($customer['customerid'], 'ftps_used');
+				Customers::increaseUsage($customer['customerid'], 'ftp_lastaccountnumber');
 				
 				// update admin usage
 				Admins::increaseUsage($customer['adminid'], 'ftps_used');
@@ -360,16 +347,7 @@ class Ftps extends ApiCommand implements ResourceEntity
 		}
 
 		// get needed customer info to reduce the ftp-user-counter by one
-		if ($this->isAdmin()) {
-			// get customer id
-			$customer_id = $this->getParam('customer_id');
-			$customer = $this->apiCall('Customers.get', array(
-				'id' => $customer_id
-			));
-		} else {
-			$customer_id = $this->getUserDetail('customerid');
-			$customer = $this->getUserData();
-		}
+		$customer = $this->getCustomerData();
 		
 		// password update?
 		if ($password != '') {

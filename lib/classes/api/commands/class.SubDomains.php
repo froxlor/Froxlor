@@ -78,20 +78,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			}
 			
 			// get needed customer info to reduce the subdomain-usage-counter by one
-			if ($this->isAdmin()) {
-				// get customer id
-				$customer_id = $this->getParam('customer_id');
-				$customer = $this->apiCall('Customers.get', array(
-					'id' => $customer_id
-				));
-				// check whether the customer has enough resources to get the subdomain added
-				if ($customer['subdomains_used'] >= $customer['subdomains'] && $customer['subdomains'] != '-1') {
-					throw new Exception("Customer has no more resources available", 406);
-				}
-			} else {
-				$customer_id = $this->getUserDetail('customerid');
-				$customer = $this->getUserData();
-			}
+			$customer = $this->getCustomerData('subdomains');
 			
 			// validation
 			if (substr($subdomain, 0, 4) == 'xn--') {
@@ -127,7 +114,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			");
 			$completedomain_check = Database::pexecute_first($completedomain_stmt, array(
 				"domain" => $completedomain,
-				"customerid" => $customer_id
+				"customerid" => $customer['customerid']
 			), true, true);
 			
 			if ($completedomain_check) {
@@ -153,7 +140,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				");
 				$aliasdomain_check = Database::pexecute_first($aliasdomain_stmt, array(
 					"id" => $aliasdomain,
-					"customerid" => $customer_id
+					"customerid" => $customer['customerid']
 				), true, true);
 				if ($aliasdomain_check['id'] != $aliasdomain) {
 					standard_error('domainisaliasorothercustomer', '', true);
@@ -461,20 +448,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 		}
 		
 		// get needed customer info to reduce the subdomain-usage-counter by one
-		if ($this->isAdmin()) {
-			// get customer id
-			$customer_id = $this->getParam('customer_id');
-			$customer = $this->apiCall('Customers.get', array(
-				'id' => $customer_id
-			));
-			// check whether the customer has enough resources to get the subdomain added
-			if ($customer['subdomains_used'] >= $customer['subdomains'] && $customer['subdomains'] != '-1') {
-				throw new Exception("Customer has no more resources available", 406);
-			}
-		} else {
-			$customer_id = $this->getUserDetail('customerid');
-			$customer = $this->getUserData();
-		}
+		$customer = $this->getCustomerData();
 		
 		$alias_stmt = Database::prepare("SELECT COUNT(`id`) AS count FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `aliasdomain`= :aliasdomain");
 		$alias_check = Database::pexecute_first($alias_stmt, array(
@@ -494,7 +468,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			");
 			$aliasdomain_check = Database::pexecute_first($aliasdomain_stmt, array(
 				"id" => $aliasdomain,
-				"customerid" => $customer_id
+				"customerid" => $customer['customerid']
 			), true, true);
 			if ($aliasdomain_check['id'] != $aliasdomain) {
 				standard_error('domainisaliasorothercustomer', '', true);
@@ -743,20 +717,13 @@ class SubDomains extends ApiCommand implements ResourceEntity
 		$id = $result['id'];
 		
 		// get needed customer info to reduce the subdomain-usage-counter by one
-		if ($this->isAdmin()) {
-			$customer = $this->apiCall('Customers.get', array(
-				'id' => $result['customerid']
-			));
-			$subdomains_used = $customer['subdomains_used'];
-			$customer_id = $customer['customer_id'];
-		} else {
-			if ($result['caneditdomain'] == 0) {
-				throw new Exception("You cannot edit this resource", 405);
-			}
-			$subdomains_used = $this->getUserDetail('subdomains_used');
-			$customer_id = $this->getUserDetail('customerid');
+		$customer = $this->getCustomerData();
+		$subdomains_used = $customer['subdomains_used'];
+
+		if (!$this->isAdmin() && $result['caneditdomain'] == 0) {
+			throw new Exception("You cannot edit this resource", 405);
 		}
-		
+
 		if ($result['isemaildomain'] == '1') {
 			// check for e-mail addresses
 			$emails_stmt = Database::prepare("
@@ -764,7 +731,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				WHERE `customerid` = :customerid AND `domainid` = :domainid
 			");
 			$emails = Database::pexecute_first($emails_stmt, array(
-				"customerid" => $customer_id,
+				"customerid" => $customer['customerid'],
 				"domainid" => $id
 			), true, true);
 			
@@ -780,7 +747,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			DELETE FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `customerid` = :customerid AND `id` = :id
 		");
 		Database::pexecute($stmt, array(
-			"customerid" => $customer_id,
+			"customerid" => $customer['customerid'],
 			"id" => $id
 		), true, true);
 		
@@ -825,7 +792,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 		inserttask('4');
 		
 		// reduce subdomain-usage-counter
-		Customers::decreaseUsage($customer_id, 'subdomains_used');
+		Customers::decreaseUsage($customer['customerid'], 'subdomains_used');
 		// update admin usage
 		Admins::decreaseUsage(($this->isAdmin() ? $customer['adminid'] : $this->getUserDetail('adminid')), 'subdomains_used');
 		

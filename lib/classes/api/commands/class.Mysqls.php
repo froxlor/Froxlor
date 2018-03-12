@@ -68,19 +68,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 			}
 			
 			// get needed customer info to reduce the mysql-usage-counter by one
-			if ($this->isAdmin()) {
-				// get customer id
-				$customer_id = $this->getParam('customer_id');
-				$customer = $this->apiCall('Customers.get', array(
-					'id' => $customer_id
-				));
-				// check whether the customer has enough resources to get the database added
-				if ($customer['mysqls_used'] >= $customer['mysqls'] && $customer['mysqls'] != '-1') {
-					throw new Exception("Customer has no more resources available", 406);
-				}
-			} else {
-				$customer_id = $this->getUserDetail('customerid');
-			}
+			$customer = $this->getCustomerData('mysqls');
 			
 			$newdb_params = array(
 				'loginname' => ($this->isAdmin() ? $customer['loginname'] : $this->getUserDetail('loginname')),
@@ -105,7 +93,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 				`dbserver` = :dbserver
 			");
 			$params = array(
-				"customerid" => ($this->isAdmin() ? $customer['customerid'] : $this->getUserDetail('customerid')),
+				"customerid" => $customer['customerid'],
 				"databasename" => $username,
 				"description" => $databasedescription,
 				"dbserver" => $dbserver
@@ -115,8 +103,8 @@ class Mysqls extends ApiCommand implements ResourceEntity
 			$params['id'] = $databaseid;
 			
 			// update customer usage
-			Customers::increaseUsage(($this->isAdmin() ? $customer['customerid'] : $this->getUserDetail('customerid')), 'mysqls_used');
-			Customers::increaseUsage(($this->isAdmin() ? $customer['customerid'] : $this->getUserDetail('customerid')), 'mysql_lastaccountnumber');
+			Customers::increaseUsage($customer['customerid'], 'mysqls_used');
+			Customers::increaseUsage($customer['customerid'], 'mysql_lastaccountnumber');
 			
 			// update admin usage
 			Admins::increaseUsage($this->getUserDetail('adminid'), 'mysqls_used');
@@ -132,7 +120,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 				Database::needSqlData();
 				$sql_root = Database::getSqlData();
 				Database::needRoot(false);
-				$userinfo = ($this->isAdmin() ? $customer : $this->getUserData());
+				$userinfo = $customer;
 				
 				$replace_arr = array(
 					'SALUTATION' => getCorrectUserSalutation($userinfo),
@@ -351,19 +339,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 		}
 		
 		// get needed customer info to reduce the mysql-usage-counter by one
-		if ($this->isAdmin()) {
-			// get customer id
-			$customer_id = $this->getParam('customer_id');
-			$customer = $this->apiCall('Customers.get', array(
-				'id' => $customer_id
-			));
-			// check whether the customer has enough resources to get the database added
-			if ($customer['mysqls_used'] >= $customer['mysqls'] && $customer['mysqls'] != '-1') {
-				throw new Exception("Customer has no more resources available", 406);
-			}
-		} else {
-			$customer_id = $this->getUserDetail('customerid');
-		}
+		$customer = $this->getCustomerData();
 		
 		if ($password != '') {
 			// validate password
@@ -398,7 +374,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 		");
 		$params = array(
 			"desc" => $databasedescription,
-			"customerid" => ($this->isAdmin() ? $customer['customerid'] : $this->getUserDetail('customerid')),
+			"customerid" => $customer['customerid'],
 			"id" => $id
 		);
 		Database::pexecute($stmt, $params, true, true);
@@ -519,19 +495,12 @@ class Mysqls extends ApiCommand implements ResourceEntity
 		), true, true);
 		
 		// get needed customer info to reduce the mysql-usage-counter by one
-		if ($this->isAdmin()) {
-			$customer = $this->apiCall('Customers.get', array(
-				'id' => $result['customerid']
-			));
-			$mysql_used = $customer['mysqls_used'];
-			$customer_id = $customer['customer_id'];
-		} else {
-			$mysql_used = $this->getUserDetail('mysqls_used');
-			$customer_id = $this->getUserDetail('customerid');
-		}
+		$customer = $this->getCustomerData();
+		$mysql_used = $customer['mysqls_used'];
+
 		// reduce mysql-usage-counter
 		$resetaccnumber = ($mysql_used == '1') ? " , `mysql_lastaccountnumber` = '0' " : '';
-		Customers::decreaseUsage($customer_id, 'mysqls_used', $resetaccnumber);
+		Customers::decreaseUsage($customer['customerid'], 'mysqls_used', $resetaccnumber);
 		// update admin usage
 		Admins::decreaseUsage(($this->isAdmin() ? $customer['adminid'] : $this->getUserDetail('adminid')), 'mysqls_used');
 
