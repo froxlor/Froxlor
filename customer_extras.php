@@ -77,27 +77,22 @@ if ($page == 'overview') {
 
 		eval("echo \"" . getTemplate("extras/htpasswds") . "\";");
 	} elseif ($action == 'delete' && $id != 0) {
-		$result_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_HTPASSWDS . "`
-			WHERE `customerid`= :customerid
-			AND `id`= :id");
-		Database::pexecute($result_stmt, array(
-			"customerid" => $userinfo['customerid'],
-			"id" => $id
-		));
-		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+		try {
+			$json_result = DirProtections::getLocal($userinfo, array(
+				'id' => $id
+			))->get();
+		} catch (Exception $e) {
+			dynamic_error($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
 
 		if (isset($result['username']) && $result['username'] != '') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
-				$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_HTPASSWDS . "`
-					WHERE `customerid`= :customerid
-					AND `id`= :id");
-				Database::pexecute($stmt, array(
-					"customerid" => $userinfo['customerid'],
-					"id" => $id
-				));
-
-				$log->logAction(USR_ACTION, LOG_INFO, "deleted htpasswd for '" . $result['username'] . " (" . $result['path'] . ")'");
-				inserttask('1');
+				try {
+					DirProtections::getLocal($userinfo, $_POST)->delete();
+				} catch (Exception $e) {
+					dynamic_error($e->getMessage());
+				}
 				redirectTo($filename, array(
 					'page' => $page,
 					's' => $s
