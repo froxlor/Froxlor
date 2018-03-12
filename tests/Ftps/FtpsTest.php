@@ -3,6 +3,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers ApiCommand
+ * @covers ApiParameter
  * @covers Ftps
  */
 class FtpsTest extends TestCase
@@ -170,8 +171,8 @@ class FtpsTest extends TestCase
 			'sendinfomail' => 1
 		];
 		
-		$this->expectExceptionCode(404);
-		$this->expectExceptionMessage('Requested parameter "customer_id" could not be found for "Ftps:add"');
+		$this->expectExceptionCode(406);
+		$this->expectExceptionMessage('Requested parameter "loginname" is empty where it should not be for "Customers:get"');
 		$json_result = Ftps::getLocal($admin_userdata, $data)->add();
 	}
 
@@ -207,7 +208,7 @@ class FtpsTest extends TestCase
 		$customer_userdata = json_decode($json_result, true)['data'];
 		$data = [
 			'username' => 'test1ftp1',
-			'customer_id' => 1,
+			'customerid' => 1,
 			'ftp_password' => 'h4xXx0r2',
 			'path' => '/anotherfolder',
 			'ftp_description' => 'testing3'
@@ -229,7 +230,7 @@ class FtpsTest extends TestCase
 		$customer_userdata = json_decode($json_result, true)['data'];
 		
 		$data = [
-			'customer_id' => $customer_userdata['customerid'],
+			'customerid' => $customer_userdata['customerid'],
 			'ftp_password' => 'h4xXx0r',
 			'path' => '/',
 			'ftp_description' => 'testing',

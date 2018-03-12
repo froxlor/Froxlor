@@ -3,6 +3,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers ApiCommand
+ * @covers ApiParameter
  * @covers Customers
  */
 class CustomersTest extends TestCase

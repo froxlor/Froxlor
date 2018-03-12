@@ -35,7 +35,7 @@ class Ftps extends ApiCommand implements ResourceEntity
 	 *        	optional if customer.ftpatdomain is allowed, specify an username
 	 * @param string $ftp_domain
 	 *        	optional if customer.ftpatdomain is allowed, specify a domain (customer must be owner)
-	 * @param int $customer_id
+	 * @param int $customerid
 	 *        	required when called as admin, not needed when called as customer
 	 *        	
 	 * @access admin, customer

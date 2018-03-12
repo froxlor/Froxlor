@@ -41,7 +41,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 	 *        	optional, whether to generate a https-redirect or not, default false; requires SSL to be enabled
 	 * @param bool $letsencrypt
 	 *        	optional, whether to generate a Let's Encrypt certificate for this domain, default false; requires SSL to be enabled
-	 * @param int $customer_id
+	 * @param int $customerid
 	 *        	required when called as admin, not needed when called as customer
 	 *        	
 	 * @access admin, customer

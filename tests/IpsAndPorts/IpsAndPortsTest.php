@@ -3,6 +3,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers ApiCommand
+ * @covers ApiParameter
  * @covers IpsAndPorts
  */
 class IpsAndPortsTest extends TestCase

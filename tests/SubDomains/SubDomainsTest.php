@@ -3,6 +3,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers ApiCommand
+ * @covers ApiParameter
  * @covers SubDomains
  * @covers Domains
  */
@@ -41,7 +42,7 @@ class SubDomainsTest extends TestCase
 		$data = [
 			'subdomain' => 'mysub2',
 			'domain' => 'test2.local',
-			'customer_id' => 1
+			'customerid' => 1
 		];
 		$json_result = SubDomains::getLocal($reseller_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
@@ -161,7 +162,7 @@ class SubDomainsTest extends TestCase
 			'domainname' => 'mysub.test2.local',
 			'path' => 'mysub.test2.local',
 			'isemaildomain' => 1,
-			'customer_id' => $customer_userdata['customerid']
+			'customerid' => $customer_userdata['customerid']
 		];
 		$json_result = SubDomains::getLocal($admin_userdata, $data)->update();
 		$result = json_decode($json_result, true)['data'];
