@@ -290,7 +290,7 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 			throw new Exception("Email address '" . $result['email_full'] . "' has no account assigned.", 406);
 		}
 		
-		$email_password = $this->getParam('email_password', true, '');
+		$password = $this->getParam('email_password', true, '');
 		$quota = $this->getParam('email_quota', true, $result['quota']);
 		
 		// get needed customer info to reduce the email-account-counter by one
@@ -434,7 +434,7 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 		Admins::decreaseUsage($customer['adminid'], 'email_accounts_used');
 		Admins::decreaseUsage($customer['adminid'], 'email_quota_used', '', $quota);
 		
-		$log->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] deleted email account for '" . $result['email_full'] . "'");
+		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] deleted email account for '" . $result['email_full'] . "'");
 		return $this->response(200, "successfull", $result);
 	}
 }
