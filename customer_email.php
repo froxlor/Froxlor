@@ -269,210 +269,24 @@ if ($page == 'overview') {
 	}
 } elseif ($page == 'accounts') {
 	if ($action == 'add' && $id != 0) {
-		// ensure the int is a positive one
-		if (isset($_POST['email_quota'])) {
-			$quota = validate($_POST['email_quota'], 'email_quota', '/^\d+$/', 'vmailquotawrong');
-		}
-
 		if ($userinfo['email_accounts'] == '-1' || ($userinfo['email_accounts_used'] < $userinfo['email_accounts'])) {
-
-			// check for imap||pop3 == 1, see #1298
-			if ($userinfo['imap'] != '1' && $userinfo['pop3'] != '1') {
-				standard_error('notallowedtouseaccounts');
+			try {
+				$json_result = Emails::getLocal($userinfo, array(
+					'id' => $id
+				))->get();
+			} catch (Exception $e) {
+				dynamic_error($e->getMessage());
 			}
-
-			$stmt = Database::prepare("
-			    SELECT `id`, `email`, `email_full`, `iscatchall`, `destination`, `customerid`, `popaccountid`, `domainid`
-			    FROM `" . TABLE_MAIL_VIRTUAL . "`
-			    WHERE `customerid`= :cid AND `id`= :id
-			");
-			$result = Database::pexecute_first($stmt, array("cid" => $userinfo['customerid'], "id" => $id));
+			$result = json_decode($json_result, true)['data'];
 
 			if (isset($result['email']) && $result['email'] != '' && $result['popaccountid'] == '0') {
 				if (isset($_POST['send']) && $_POST['send'] == 'send') {
-					$email_full = $result['email_full'];
-					$username = $idna_convert->decode($email_full);
-					$password = validate($_POST['email_password'], 'password');
-					$password = validatePassword($password);
-
-					if (Settings::Get('panel.sendalternativemail') == 1) {
-						$alternative_email = $idna_convert->encode(validate($_POST['alternative_email'], 'alternative_email'));
-					} else {
-						$alternative_email = '';
+					try {
+						EmailAccounts::getLocal($userinfo, $_POST)->add();
+					} catch (Exception $e) {
+						dynamic_error($e->getMessage());
 					}
-
-					if (Settings::Get('system.mail_quota_enabled') == 1) {
-						if ($userinfo['email_quota'] != '-1' && ($quota == 0 || ($quota + $userinfo['email_quota_used']) > $userinfo['email_quota'])) {
-							standard_error('allocatetoomuchquota', $quota);
-						}
-					} else {
-						$quota = 0;
-					}
-
-					if ($email_full == '') {
-						standard_error(array('stringisempty', 'emailadd'));
-					}
-					elseif ($password == '' && !(Settings::Get('panel.sendalternativemail') == 1 && validateEmail($alternative_email))) {
-						standard_error(array('stringisempty', 'mypassword'));
-					}
-					elseif ($password == $email_full) {
-						standard_error('passwordshouldnotbeusername');
-					} else {
-						if ($password == '') {
-							$password = generatePassword();
-						}
-
-						$cryptPassword = makeCryptPassword($password);
-
-						$email_user=substr($email_full,0,strrpos($email_full,"@"));
-						$email_domain=substr($email_full,strrpos($email_full,"@")+1);
-						$maildirname=trim(Settings::Get('system.vmail_maildirname'));
-						// Add trailing slash to Maildir if needed
-						$maildirpath=$maildirname;
-						if (!empty($maildirname) && substr($maildirname,-1) != "/") {
-							$maildirpath.="/";
-						}
-
-						$stmt = Database::prepare("INSERT INTO `" . TABLE_MAIL_USERS . "`
-							(`customerid`, `email`, `username`, " . (Settings::Get('system.mailpwcleartext') == '1' ? '`password`, ' : '') . " `password_enc`, `homedir`, `maildir`, `uid`, `gid`, `domainid`, `postfix`, `quota`, `imap`, `pop3`) ".
-							"VALUES (:cid, :email, :username, " . (Settings::Get('system.mailpwcleartext') == '1' ? ":password, " : '') . ":password_enc, :homedir, :maildir, :uid, :gid, :domainid, 'y', :quota, :imap, :pop3)"
-						);
-						$params = array(
-							"cid" => $userinfo['customerid'],
-							"email" => $email_full,
-							"username" => $username,
-							"password_enc" => $cryptPassword,
-							"homedir" => Settings::Get('system.vmail_homedir'),
-							"maildir" => $userinfo['loginname'] . '/' . $email_domain . "/" . $email_user . "/" . $maildirpath,
-							"uid" => Settings::Get('system.vmail_uid'),
-							"gid" => Settings::Get('system.vmail_gid'),
-							"domainid" => $result['domainid'],
-							"quota" => $quota,
-							"imap" => $userinfo['imap'],
-							"pop3" => $userinfo['pop3']
-						);
-						if (Settings::Get('system.mailpwcleartext') == '1') { $params["password"] = $password; }
-						Database::pexecute($stmt, $params);
-
-						$popaccountid = Database::lastInsertId();
-						$result['destination'].= ' ' . $email_full;
-						$stmt = Database::prepare("UPDATE `" . TABLE_MAIL_VIRTUAL . "`
-							SET `destination` = :destination,
-								`popaccountid` = :popaccountid
-							WHERE `customerid`= :cid
-							AND `id`= :id"
-						);
-						$params = array(
-							"destination" => makeCorrectDestination($result['destination']),
-							"popaccountid" => $popaccountid,
-							"cid" => $userinfo['customerid'],
-							"id" => $id
-						);
-						Database::pexecute($stmt, $params);
-
-						$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "`
-							SET `email_accounts_used`=`email_accounts_used`+1,
-								`email_quota_used`=`email_quota_used`+ :quota
-							WHERE `customerid`= :cid"
-						);
-						Database::pexecute($stmt, array("quota" => $quota, "cid" => $userinfo['customerid']));
-
-						$log->logAction(USR_ACTION, LOG_INFO, "added email account for '" . $email_full . "'");
-						$replace_arr = array(
-							'EMAIL' => $email_full,
-							'USERNAME' => $username,
-							'PASSWORD' => $password
-						);
-
-						$stmt = Database::prepare("SELECT `name`, `email` FROM `" . TABLE_PANEL_ADMINS . "` WHERE `adminid`= :adminid");
-						$admin = Database::pexecute_first($stmt, array("adminid" => $userinfo['adminid']));
-
-						$stmt = Database::prepare("SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
-							WHERE `adminid`= :adminid
-							AND `language`= :lang
-							AND `templategroup`= 'mails'
-							AND `varname`= 'pop_success_subject'"
-						);
-						$result = Database::pexecute_first($stmt, array("adminid" => $userinfo['adminid'], "lang" => $userinfo['def_language']));
-						$mail_subject = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $lng['mails']['pop_success']['subject']), $replace_arr));
-
-						$stmt = Database::prepare("SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
-							WHERE `adminid`= :adminid
-							AND `language`= :lang
-							AND `templategroup`= 'mails'
-							AND `varname`= 'pop_success_mailbody'"
-						);
-						$result = Database::pexecute_first($stmt, array("adminid" => $userinfo['adminid'], "lang" => $userinfo['def_language']));
-						$mail_body = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $lng['mails']['pop_success']['mailbody']), $replace_arr));
-
-						$_mailerror = false;
-						try {
-							$mail->SetFrom($admin['email'], getCorrectUserSalutation($admin));
-							$mail->Subject = $mail_subject;
-							$mail->AltBody = $mail_body;
-							$mail->MsgHTML(str_replace("\n", "<br />", $mail_body));
-							$mail->AddAddress($email_full);
-							$mail->Send();
-						} catch(phpmailerException $e) {
-							$mailerr_msg = $e->errorMessage();
-							$_mailerror = true;
-						} catch (Exception $e) {
-							$mailerr_msg = $e->getMessage();
-							$_mailerror = true;
-						}
-
-						if ($_mailerror) {
-							$log->logAction(USR_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
-							standard_error('errorsendingmail', $email_full);
-						}
-
-						$mail->ClearAddresses();
-
-						if (validateEmail($alternative_email) && Settings::Get('panel.sendalternativemail') == 1) {
-							$stmt = Database::prepare("SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
-								WHERE `adminid`= :adminid
-								AND `language`= :lang
-								AND `templategroup`= 'mails'
-								AND `varname`= 'pop_success_alternative_subject'"
-							);
-							$result = Database::pexecute_first($stmt, array("adminid" => $userinfo['adminid'], "lang" => $userinfo['def_language']));
-							$mail_subject = replace_variables((($result['value'] != '') ? $result['value'] : $lng['mails']['pop_success_alternative']['subject']), $replace_arr);
-
-							$stmt = Database::prepare("SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
-								WHERE `adminid`= :adminid
-								AND `language`= :lang
-								AND `templategroup`= 'mails'
-								AND `varname`= 'pop_success_alternative_mailbody'"
-							);
-							$result = Database::pexecute_first($stmt, array("adminid" => $userinfo['adminid'], "lang" => $userinfo['def_language']));
-							$mail_body = replace_variables((($result['value'] != '') ? $result['value'] : $lng['mails']['pop_success_alternative']['mailbody']), $replace_arr);
-
-							$_mailerror = false;
-							try {
-								$mail->SetFrom($admin['email'], getCorrectUserSalutation($admin));
-								$mail->Subject = $mail_subject;
-								$mail->AltBody = $mail_body;
-								$mail->MsgHTML(str_replace("\n", "<br />", $mail_body));
-								$mail->AddAddress($idna_convert->encode($alternative_email), getCorrectUserSalutation($userinfo));
-								$mail->Send();
-							} catch(phpmailerException $e) {
-								$mailerr_msg = $e->errorMessage();
-								$_mailerror = true;
-							} catch (Exception $e) {
-								$mailerr_msg = $e->getMessage();
-								$_mailerror = true;
-							}
-
-							if ($_mailerror) {
-								$log->logAction(USR_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
-								standard_error(array('errorsendingmail'), $alternative_email);
-							}
-
-							$mail->ClearAddresses();
-						}
-
-						redirectTo($filename, array('page' => 'emails', 'action' => 'edit', 'id' => $id, 's' => $s));
-					}
+					redirectTo($filename, array('page' => 'emails', 'action' => 'edit', 'id' => $id, 's' => $s));
 				} else {
 
 					if (checkMailAccDeletionState($result['email_full'])) {

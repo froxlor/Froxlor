@@ -332,8 +332,6 @@ class Emails extends ApiCommand implements ResourceEntity
 		if ($result['destination'] != '') {
 			$result['destination'] = explode(' ', $result['destination']);
 			$number_forwarders = count($result['destination']);
-			Customers::decreaseUsage($customer['customerid'], 'email_forwarders_used', '', $number_forwarders);
-			Admins::decreaseUsage($customer['customerid'], 'email_forwarders_used', '', $number_forwarders);
 		}
 		// check whether this address is an account
 		if ($result['popaccountid'] != 0) {
@@ -357,7 +355,12 @@ class Emails extends ApiCommand implements ResourceEntity
 			Customers::decreaseUsage($customer['customerid'], 'email_accounts_used');
 			Admins::decreaseUsage($customer['customerid'], 'email_accounts_used');
 			$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] deleted email account '" . $result['email_full'] . "'");
+			$number_forwarders --;
 		}
+		
+		// decrease forwarder counter
+		Customers::decreaseUsage($customer['customerid'], 'email_forwarders_used', '', $number_forwarders);
+		Admins::decreaseUsage($customer['customerid'], 'email_forwarders_used', '', $number_forwarders);
 		
 		if ($delete_userfiles) {
 			inserttask('7', $customer['loginname'], $result['email_full']);

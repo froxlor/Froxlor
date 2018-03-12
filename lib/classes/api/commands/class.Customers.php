@@ -589,25 +589,17 @@ class Customers extends ApiCommand implements ResourceEntity
 							'DOMAINNAME' => $_stdsubdomain
 						);
 						
-						// Get mail templates from database; the ones from 'admin' are fetched for fallback
-						$result_stmt = Database::prepare("
-						SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
-						WHERE `adminid` = :adminid AND `language` = :deflang AND `templategroup` = 'mails' AND `varname` = 'createcustomer_subject'");
-						$result = Database::pexecute_first($result_stmt, array(
+						// get template for mail subject
+						$mail_subject = $this->getMailTemplate(array(
 							'adminid' => $this->getUserDetail('adminid'),
-							'deflang' => $def_language
-						), true, true);
-						$mail_subject = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $this->lng['mails']['createcustomer']['subject']), $replace_arr));
-						
-						$result_stmt = Database::prepare("
-						SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
-						WHERE `adminid` = :adminid AND `language` = :deflang AND `templategroup` = 'mails' AND `varname` = 'createcustomer_mailbody'");
-						$result = Database::pexecute_first($result_stmt, array(
+							'def_language' => $def_language
+						), 'mails', 'createcustomer_subject', $replace_arr, $this->lng['mails']['createcustomer']['subject']);
+						// get template for mail body
+						$mail_body = $this->getMailTemplate(array(
 							'adminid' => $this->getUserDetail('adminid'),
-							'deflang' => $def_language
-						), true, true);
-						$mail_body = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $this->lng['mails']['createcustomer']['mailbody']), $replace_arr));
-						
+							'def_language' => $def_language
+						), 'mails', 'createcustomer_mailbody', $replace_arr, $this->lng['mails']['createcustomer']['mailbody']);
+
 						$_mailerror = false;
 						try {
 							$this->mailer()->Subject = $mail_subject;
@@ -665,7 +657,7 @@ class Customers extends ApiCommand implements ResourceEntity
 		$id = $this->getParam('id', true, 0);
 		$ln_optional = ($id <= 0 ? false : true);
 		$loginname = $this->getParam('loginname', $ln_optional, '');
-
+		
 		$result = $this->apiCall('Customers.get', array(
 			'id' => $id,
 			'loginname' => $loginname
@@ -921,7 +913,7 @@ class Customers extends ApiCommand implements ResourceEntity
 				// At last flush the new privileges
 				$dbm->getManager()->flushPrivileges();
 				Database::needRoot(false);
-
+				
 				// reactivate/deactivate api-keys
 				$valid_until = $deactivated ? 0 : - 1;
 				$stmt = Database::prepare("UPDATE `" . TABLE_API_KEYS . "` SET `valid_until` = :vu WHERE `customerid` = :id");
@@ -929,7 +921,7 @@ class Customers extends ApiCommand implements ResourceEntity
 					'id' => $id,
 					'vu' => $valid_until
 				), true, true);
-
+				
 				$this->logger()->logAction(ADM_ACTION, LOG_INFO, "[API] " . ($deactivated ? 'deactivated' : 'reactivated') . " user '" . $result['loginname'] . "'");
 				inserttask('1');
 			}
@@ -1164,7 +1156,7 @@ class Customers extends ApiCommand implements ResourceEntity
 				}
 			}
 		}
-
+		
 		$result = $this->apiCall('Customers.get', array(
 			'id' => $result['customerid']
 		));
@@ -1192,7 +1184,7 @@ class Customers extends ApiCommand implements ResourceEntity
 			$ln_optional = ($id <= 0 ? false : true);
 			$loginname = $this->getParam('loginname', $ln_optional, '');
 			$delete_userfiles = $this->getParam('delete_userfiles', true, 0);
-
+			
 			$result = $this->apiCall('Customers.get', array(
 				'id' => $id,
 				'loginname' => $loginname
@@ -1331,7 +1323,7 @@ class Customers extends ApiCommand implements ResourceEntity
 			Database::pexecute($stmt, array(
 				'id' => $id
 			), true, true);
-
+			
 			// Delete all waiting "create user" -tasks for this user, #276
 			// Note: the WHERE selects part of a serialized array, but it should be safe this way
 			$del_stmt = Database::prepare("
@@ -1438,7 +1430,7 @@ class Customers extends ApiCommand implements ResourceEntity
 			$id = $this->getParam('id', true, 0);
 			$ln_optional = ($id <= 0 ? false : true);
 			$loginname = $this->getParam('loginname', $ln_optional, '');
-
+			
 			$result = $this->apiCall('Customers.get', array(
 				'id' => $id,
 				'loginname' => $loginname
@@ -1482,7 +1474,7 @@ class Customers extends ApiCommand implements ResourceEntity
 			$id = $this->getParam('id', true, 0);
 			$ln_optional = ($id <= 0 ? false : true);
 			$loginname = $this->getParam('loginname', $ln_optional, '');
-
+			
 			$c_result = $this->apiCall('Customers.get', array(
 				'id' => $id,
 				'loginname' => $loginname
@@ -1530,7 +1522,7 @@ class Customers extends ApiCommand implements ResourceEntity
 			updateCounters(false);
 			
 			$this->logger()->logAction(ADM_ACTION, LOG_INFO, "[API] moved user '" . $c_result['loginname'] . "' from admin/reseller '" . $c_result['adminname'] . " to admin/reseller '" . $a_result['loginname'] . "'");
-
+			
 			$result = $this->apiCall('Customers.get', array(
 				'id' => $c_result['customerid']
 			));

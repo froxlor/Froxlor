@@ -189,36 +189,11 @@ class Ftps extends ApiCommand implements ResourceEntity
 						'USR_PASS' => $password,
 						'USR_PATH' => makeCorrectDir(str_replace($customer['documentroot'], "/", $path))
 					);
-					
-					$def_language = $customer['def_language'];
-					$result_stmt = Database::prepare("
-						SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
-						WHERE `adminid` = :adminid
-						AND `language` = :lang
-						AND `templategroup`='mails'
-						AND `varname`='new_ftpaccount_by_customer_subject'
-					");
-					Database::pexecute($result_stmt, array(
-						"adminid" => $customer['adminid'],
-						"lang" => $def_language
-					));
-					$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
-					$mail_subject = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $this->lng['mails']['new_ftpaccount_by_customer']['subject']), $replace_arr));
-					
-					$def_language = $customer['def_language'];
-					$result_stmt = Database::prepare("
-						SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
-						WHERE `adminid` = :adminid
-						AND `language` = :lang
-						AND `templategroup`='mails'
-						AND `varname`='new_ftpaccount_by_customer_mailbody'");
-					Database::pexecute($result_stmt, array(
-						"adminid" => $customer['adminid'],
-						"lang" => $def_language
-					));
-					$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
-					$mail_body = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $this->lng['mails']['new_ftpaccount_by_customer']['mailbody']), $replace_arr));
-					
+					// get template for mail subject
+					$mail_subject = $this->getMailTemplate($customer, 'mails', 'new_ftpaccount_by_customer_subject', $replace_arr, $this->lng['mails']['new_ftpaccount_by_customer']['subject']);
+					// get template for mail body
+					$mail_body = $this->getMailTemplate($customer, 'mails', 'new_ftpaccount_by_customer_mailbody', $replace_arr, $this->lng['mails']['new_ftpaccount_by_customer']['mailbody']);
+
 					$_mailerror = false;
 					try {
 						$this->mailer()->Subject = $mail_subject;

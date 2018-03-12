@@ -426,6 +426,34 @@ abstract class ApiCommand extends ApiParameter
 	}
 
 	/**
+	 * return email template content from database or global language file if not found in DB
+	 *
+	 * @param array $customerdata
+	 * @param string $group
+	 * @param string $varname
+	 * @param array $replace_arr
+	 * @param string $default
+	 *
+	 * @return string
+	 */
+	protected function getMailTemplate($customerdata = null, $group = null, $varname = null, $replace_arr = array(), $default = "")
+	{
+		// get template
+		$stmt = Database::prepare("
+			SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "` WHERE `adminid`= :adminid
+			AND `language`= :lang AND `templategroup`= :group AND `varname`= :var
+		");
+		$result = Database::pexecute_first($stmt, array(
+			"adminid" => $customerdata['adminid'],
+			"lang" => $customerdata['def_language'],
+			"group" => $group,
+			"var" => $varname
+		), true, true);
+		$content = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $default), $replace_arr));
+		return $content;
+	}
+
+	/**
 	 * read user data from database by api-request-header fields
 	 *
 	 * @param array $header

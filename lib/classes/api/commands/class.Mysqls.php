@@ -131,34 +131,12 @@ class Mysqls extends ApiCommand implements ResourceEntity
 					'DB_SRV' => $sql_root['host'],
 					'PMA_URI' => $pma
 				);
-				
-				$def_language = $userinfo['def_language'];
-				$result_stmt = Database::prepare("
-					SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
-					WHERE `adminid` = :adminid
-					AND `language` = :lang
-					AND `templategroup`='mails'
-					AND `varname`='new_database_by_customer_subject'
-				");
-				$result = Database::pexecute_first($result_stmt, array(
-					"adminid" => $userinfo['adminid'],
-					"lang" => $def_language
-				), true, true);
-				$mail_subject = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $this->lng['mails']['new_database_by_customer']['subject']), $replace_arr));
-				
-				$result_stmt = Database::prepare("
-					SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
-					WHERE `adminid`= :adminid
-					AND `language`= :lang
-					AND `templategroup` = 'mails'
-					AND `varname` = 'new_database_by_customer_mailbody'
-				");
-				$result = Database::pexecute_first($result_stmt, array(
-					"adminid" => $userinfo['adminid'],
-					"lang" => $def_language
-				));
-				$mail_body = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $this->lng['mails']['new_database_by_customer']['mailbody']), $replace_arr));
-				
+
+				// get template for mail subject
+				$mail_subject = $this->getMailTemplate($userinfo, 'mails', 'new_database_by_customer_subject', $replace_arr, $this->lng['mails']['new_database_by_customer']['subject']);
+				// get template for mail body
+				$mail_body = $this->getMailTemplate($userinfo, 'mails', 'new_database_by_customer_mailbody', $replace_arr, $this->lng['mails']['new_database_by_customer']['mailbody']);
+
 				$_mailerror = false;
 				try {
 					$this->mail->Subject = $mail_subject;
