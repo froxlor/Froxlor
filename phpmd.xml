@@ -7,7 +7,9 @@
 		froxlor ruleset.
 	</description>
 
-	<rule ref="rulesets/design.xml" />
+	<rule ref="rulesets/design.xml">
+		<exclude name="NumberOfChildren" />
+	</rule>
 	<rule ref="rulesets/unusedcode.xml" />
 
 	<rule ref="rulesets/codesize.xml">
