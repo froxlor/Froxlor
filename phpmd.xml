@@ -12,7 +12,9 @@
 
 	<rule ref="rulesets/codesize.xml">
 		<exclude name="CyclomaticComplexity" />
+		<exclude name="ExcessiveClassComplexity" />
 		<exclude name="ExcessiveMethodLength" />
+		<exclude name="NPathComplexity" />
 	</rule>
 
 	<rule ref="rulesets/naming.xml">
@@ -29,7 +31,14 @@
 	<rule ref="rulesets/codesize.xml/CyclomaticComplexity">
 		<priority>1</priority>
 		<properties>
-			<property name="reportLevel" value="15" />
+			<property name="reportLevel" value="150" />
+		</properties>
+	</rule>
+
+	<rule ref="rulesets/codesize.xml/ExcessiveClassComplexity">
+		<priority>1</priority>
+		<properties>
+			<property name="reportLevel" value="300" />
 		</properties>
 	</rule>
 
