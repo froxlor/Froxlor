@@ -226,7 +226,7 @@ $lng['error']['emailexistalready'] = 'The email-address %s already exists.';
 $lng['error']['maindomainnonexist'] = 'The main-domain %s does not exist.';
 $lng['error']['destinationnonexist'] = 'Please create your forwarder in the field \'Destination\'.';
 $lng['error']['destinationalreadyexistasmail'] = 'The forwarder to %s already exists as active email-address.';
-$lng['error']['destinationalreadyexist'] = 'You have already defined a forwarder to %s .';
+$lng['error']['destinationalreadyexist'] = 'You have already defined a forwarder to "%s"';
 $lng['error']['destinationiswrong'] = 'The forwarder %s contains invalid character(s) or is incomplete.';
 $lng['error']['ticketnotaccessible'] = 'You cannot access this ticket.';
 
