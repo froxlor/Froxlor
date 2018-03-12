@@ -317,15 +317,20 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 			}
 		}
 		
-		if ($quota != $result['quota']) {
-			if ($customer['email_quota'] != '-1' && ($quota == 0 || ($quota + $customer['email_quota_used'] - $result['quota']) > $customer['email_quota'])) {
-				standard_error('allocatetoomuchquota', $quota, true);
+		if (Settings::Get('system.mail_quota_enabled') == 1) {
+			if ($quota != $result['quota']) {
+				if ($customer['email_quota'] != '-1' && ($quota == 0 || ($quota + $customer['email_quota_used'] - $result['quota']) > $customer['email_quota'])) {
+					standard_error('allocatetoomuchquota', $quota, true);
+				}
+				if (! empty($upd_query)) {
+					$upd_query .= ", ";
+				}
+				$upd_query .= "`quota` = :quota";
+				$upd_params['quota'] = $quota;
 			}
-			if (! empty($upd_query)) {
-				$upd_query .= ", ";
-			}
-			$upd_query .= "`quota` = :quota";
-			$upd_params['quota'] = $quota;
+		} else {
+			// disable
+			$quota = 0;
 		}
 		
 		// build update query
@@ -416,6 +421,7 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 			"id" => $id
 		);
 		Database::pexecute($stmt, $params, true, true);
+		$result['popaccountid'] = 0;
 		
 		if (Settings::Get('system.mail_quota_enabled') == '1' && $customer['email_quota'] != '-1') {
 			$quota = (int) $result['quota'];

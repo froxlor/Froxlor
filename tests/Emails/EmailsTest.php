@@ -222,7 +222,7 @@ class MailsTest extends TestCase
 	/**
 	 * @depends testCustomerEmailForwardersAddAnother
 	 */
-	public function testCustomerEmailForwardersDeleteunknown()
+	public function testCustomerEmailForwardersDeleteUnknown()
 	{
 		global $admin_userdata;
 		
@@ -239,5 +239,133 @@ class MailsTest extends TestCase
 		$this->expectExceptionCode(404);
 		$this->expectExceptionMessage("Unknown forwarder id");
 		EmailForwarders::getLocal($customer_userdata, $data)->delete();
+	}
+
+	public function testCustomerEmailsListing()
+	{
+		global $admin_userdata;
+		
+		// get customer
+		$json_result = Customers::getLocal($admin_userdata, array(
+			'loginname' => 'test1'
+		))->get();
+		$customer_userdata = json_decode($json_result, true)['data'];
+
+		$json_result = Emails::getLocal($customer_userdata)->listing();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(2, $result['count']);
+		$this->assertEquals("info@test2.local", $result['list'][0]['email']);
+		$this->assertEquals("@test2.local", $result['list'][1]['email']);
+	}
+
+	public function testCustomerEmailAccountsAdd()
+	{
+		global $admin_userdata;
+		
+		Settings::Set('panel.sendalternativemail', 1, true);
+		// get customer
+		$json_result = Customers::getLocal($admin_userdata, array(
+			'loginname' => 'test1'
+		))->get();
+		$customer_userdata = json_decode($json_result, true)['data'];
+		
+		$data = [
+			'emailaddr' => 'info@test2.local',
+			'email_password' => generatePassword(),
+			'alternative_email' => 'noone@example.com',
+			'email_quota' => 1337
+		];
+		$json_result = EmailAccounts::getLocal($customer_userdata, $data)->add();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(1, $result['popaccountid']);
+	}
+
+	public function testAdminEmailAccountsUpdate()
+	{
+		global $admin_userdata;
+		
+		// get customer
+		$json_result = Customers::getLocal($admin_userdata, array(
+			'loginname' => 'test1'
+		))->get();
+		$customer_userdata = json_decode($json_result, true)['data'];
+		
+		$data = [
+			'emailaddr' => 'info@test2.local',
+			'email_password' => generatePassword(),
+			'alternative_email' => 'noone@example.com',
+			'email_quota' => 1338
+		];
+		$json_result = EmailAccounts::getLocal($customer_userdata, $data)->update();
+		$result = json_decode($json_result, true)['data'];
+		// quota is disabled
+		$this->assertEquals(0, $result['quota']);
+	}
+
+	public function testAdminEmailAccountsUndefinedGet()
+	{
+		global $admin_userdata;
+		$this->expectExceptionCode(303);
+		EmailAccounts::getLocal($admin_userdata)->get();
+	}
+
+	public function testAdminEmailAccountsUndefinedListing()
+	{
+		global $admin_userdata;
+		$this->expectExceptionCode(303);
+		EmailAccounts::getLocal($admin_userdata)->listing();
+	}
+
+	public function testCustomerEmailAccountsDelete()
+	{
+		global $admin_userdata;
+		
+		// get customer
+		$json_result = Customers::getLocal($admin_userdata, array(
+			'loginname' => 'test1'
+		))->get();
+		$customer_userdata = json_decode($json_result, true)['data'];
+		
+		$data = [
+			'emailaddr' => 'info@test2.local',
+			'delete_userfiles' => 1
+		];
+		$json_result = EmailAccounts::getLocal($customer_userdata, $data)->delete();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(0, $result['popaccountid']);
+	}
+
+	public function testCustomerEmailsDelete()
+	{
+		global $admin_userdata;
+		
+		// remove possible existing delete tasks
+		Database::query("TRUNCATE `".TABLE_PANEL_TASKS."`");
+		
+		Settings::Set('panel.sendalternativemail', 0, true);
+		// get customer
+		$json_result = Customers::getLocal($admin_userdata, array(
+			'loginname' => 'test1'
+		))->get();
+		$customer_userdata = json_decode($json_result, true)['data'];
+		
+		// add account
+		$data = [
+			'emailaddr' => 'info@test2.local',
+			'email_password' => generatePassword(),
+			'alternative_email' => 'noone@example.com'
+		];
+		$json_result = EmailAccounts::getLocal($customer_userdata, $data)->add();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(2, $result['popaccountid']);
+		
+		// now delete the whole address
+		$data = [
+			'emailaddr' => 'info@test2.local',
+			'delete_userfiles' => 1
+		];
+		$json_result = Emails::getLocal($customer_userdata, $data)->delete();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals("info@test2.local", $result['email_full']);
 	}
 }

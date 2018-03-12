@@ -104,24 +104,6 @@ abstract class ApiParameter
 	}
 
 	/**
-	 * update value of parameter
-	 *
-	 * @param string $param
-	 * @param mixed $value
-	 *
-	 * @throws Exception
-	 * @return boolean
-	 */
-	protected function updateParam($param, $value = null)
-	{
-		if (isset($this->cmd_params[$param])) {
-			$this->cmd_params[$param] = $value;
-			return true;
-		}
-		throw new Exception("Unable to update parameter '" . $param . "' as it does not exist", 500);
-	}
-
-	/**
 	 * return list of all parameters
 	 *
 	 * @return array
