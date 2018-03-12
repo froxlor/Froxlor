@@ -13,6 +13,7 @@
 	<rule ref="rulesets/codesize.xml">
 		<exclude name="CyclomaticComplexity" />
 		<exclude name="ExcessiveClassComplexity" />
+		<exclude name="ExcessiveClassLength" />
 		<exclude name="ExcessiveMethodLength" />
 		<exclude name="NPathComplexity" />
 	</rule>
@@ -36,9 +37,8 @@
 	</rule>
 
 	<rule ref="rulesets/codesize.xml/ExcessiveClassComplexity">
-		<priority>1</priority>
 		<properties>
-			<property name="reportLevel" value="300" />
+			<property name="maximum" value="300" />
 		</properties>
 	</rule>
 
