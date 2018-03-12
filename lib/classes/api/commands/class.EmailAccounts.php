@@ -109,7 +109,7 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 				`customerid` = :cid,
 				`email` = :email,
 				`username` = :username," . (Settings::Get('system.mailpwcleartext') == '1' ? '`password` = :password, ' : '') . " 
-				`password_enc` = :password_end,
+				`password_enc` = :password_enc,
 				`homedir` = :homedir,
 				`maildir` = :maildir,
 				`uid` = :uid,

@@ -372,17 +372,17 @@ class Database {
 		@fwrite($errlog, "|TRACE\n".$error_trace."\n");
 		@fclose($errlog);
 
+		if (empty($sql['debug'])) {
+			$error_trace = '';
+		} elseif (!is_null($stmt)) {
+			$error_trace .= "<br><br>".$stmt->queryString;
+		}
+
 		if ($showerror && $json_response) {
-			throw new Exception($error_message, 500);
+			throw new Exception($error_message.($sql['debug'] ? "\n\n".$error_trace : ''), 500);
 		}
 
 		if ($showerror) {
-			if (empty($sql['debug'])) {
-				$error_trace = '';
-			} elseif (!is_null($stmt)) {
-				$error_trace .= "<br><br>".$stmt->queryString;
-			}
-
 			// fallback
 			$theme = 'Sparkle';
 

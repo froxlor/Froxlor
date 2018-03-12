@@ -162,7 +162,7 @@ class Emails extends ApiCommand implements ResourceEntity
 		$params['customerid'] = implode(", ", $customer_ids);
 		$params['idea'] = ($id <= 0 ? $emailaddr : $id);
 		
-		$result_stmt = Database::prepare("SELECT v.`id`, v.`email`, v.`email_full`, v.`iscatchall`, v.`destination`, v.`customerid`, v.`popaccountid`, u.`quota`
+		$result_stmt = Database::prepare("SELECT v.`id`, v.`email`, v.`email_full`, v.`iscatchall`, v.`destination`, v.`customerid`, v.`popaccountid`, v.`domainid`, u.`quota`
 			FROM `" . TABLE_MAIL_VIRTUAL . "` v
 			LEFT JOIN `" . TABLE_MAIL_USERS . "` u ON v.`popaccountid` = u.`id`
 			WHERE v.`customerid` IN (:customerid)
