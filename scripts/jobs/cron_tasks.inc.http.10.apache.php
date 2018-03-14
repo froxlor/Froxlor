@@ -360,8 +360,8 @@ class apache extends HttpConfigBase
 							// start block, cut off last pipe and close block
 							$filesmatch = '('.str_replace(".", "\.", substr($filesmatch, 0, -1)).')';
 							$this->virtualhosts_data[$vhosts_filename] .= '   <FilesMatch \.'.$filesmatch.'$>'. "\n";
-							$this->virtualhosts_data[$vhosts_filename] .= '     AddHandler php5-fastcgi .php' . "\n";
-							$this->virtualhosts_data[$vhosts_filename] .= '     Action php5-fastcgi /fastcgiphp' . "\n";
+							$this->virtualhosts_data[$vhosts_filename] .= '     AddHandler php-fastcgi .php' . "\n";
+							$this->virtualhosts_data[$vhosts_filename] .= '     Action php-fastcgi /fastcgiphp' . "\n";
 							$this->virtualhosts_data[$vhosts_filename] .= '      Options +ExecCGI' . "\n";
 							$this->virtualhosts_data[$vhosts_filename] .= '    </FilesMatch>' . "\n";
 							// >=apache-2.4 enabled?

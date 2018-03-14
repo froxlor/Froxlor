@@ -91,8 +91,8 @@ class apache_fcgid extends apache
 					// start block, cut off last pipe and close block
 					$filesmatch = '('.str_replace(".", "\.", substr($filesmatch, 0, -1)).')';
 					$php_options_text.= '    <FilesMatch \.'.$filesmatch.'$>'. "\n";
-					$php_options_text.= '      SetHandler php5-fastcgi'. "\n";
-					$php_options_text.= '      Action php5-fastcgi /fastcgiphp' . "\n";
+					$php_options_text.= '      SetHandler php-fastcgi'. "\n";
+					$php_options_text.= '      Action php-fastcgi /fastcgiphp' . "\n";
 					$php_options_text.= '      Options +ExecCGI' . "\n";
 					$php_options_text.= '    </FilesMatch>' . "\n";
 					// >=apache-2.4 enabled?
