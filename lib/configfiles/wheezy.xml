@@ -5464,7 +5464,9 @@ aliases:     files
 					<install><![CDATA[apt-get install nscd libnss-extrausers]]></install>
 					<commands index="1">
 						<command><![CDATA[mkdir -p /var/lib/extrausers]]></command>
-						<command><![CDATA[touch /var/lib/extrausers/{passwd,group,shadow}]]></command>
+						<command><![CDATA[touch /var/lib/extrausers/passwd]]></command>
+						<command><![CDATA[touch /var/lib/extrausers/group]]></command>
+						<command><![CDATA[touch /var/lib/extrausers/shadow]]></command>
 					</commands>
 					<file name="/etc/nsswitch.conf" backup="true">
 						<content><![CDATA[
