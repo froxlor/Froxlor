@@ -19,7 +19,85 @@ class DirProtections extends ApiCommand implements ResourceEntity
 {
 
 	public function add()
-	{}
+	{
+		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'extras')) {
+			throw new Exception("You cannot access this resource", 405);
+		}
+		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'extras.directoryprotection')) {
+			throw new Exception("You cannot access this resource", 405);
+		}
+		
+		// get needed customer info to reduce the email-address-counter by one
+		$customer = $this->getCustomerData();
+		
+		// required parameters
+		$path = $this->getParam('path');
+		$username = $this->getParam('username');
+		$password = $this->getParam('directory_password');
+		
+		// parameters
+		$authname = $this->getParam('directory_authname', true, '');
+		
+		// validation
+		$path = makeCorrectDir(validate($path, 'path', '', '', array(), true));
+		$path = makeCorrectDir($customer['documentroot'] . '/' . $path);
+		$username = validate($username, 'username', '/^[a-zA-Z0-9][a-zA-Z0-9\-_]+\$?$/', '', array(), true);
+		$authname = validate($authname, 'directory_authname', '/^[a-zA-Z0-9][a-zA-Z0-9\-_ ]+\$?$/', '', array(), true);
+		validate($password, 'password', '', '', array(), true);
+		
+		// check for duplicate usernames for the path
+		$username_path_check_stmt = Database::prepare("
+			SELECT `id`, `username`, `path` FROM `" . TABLE_PANEL_HTPASSWDS . "`
+			WHERE `username`= :username AND `path`= :path AND `customerid`= :customerid
+		");
+		$params = array(
+			"username" => $username,
+			"path" => $path,
+			"customerid" => $customer['customerid']
+		);
+		$username_path_check = Database::pexecute_first($username_path_check_stmt, $params, true, true);
+		
+		// check whether we can used salted passwords
+		if (CRYPT_STD_DES == 1) {
+			$saltfordescrypt = substr(md5(uniqid(microtime(), 1)), 4, 2);
+			$password_enc = crypt($password, $saltfordescrypt);
+		} else {
+			$password_enc = crypt($password);
+		}
+		
+		// duplicate check
+		if ($username_path_check['username'] == $username && $username_path_check['path'] == $path) {
+			standard_error('userpathcombinationdupe', '', true);
+		} elseif ($password == $username) {
+			standard_error('passwordshouldnotbeusername', '', true);
+		}
+		
+		// insert the entry
+		$stmt = Database::prepare("
+			INSERT INTO `" . TABLE_PANEL_HTPASSWDS . "` SET
+			`customerid` = :customerid,
+			`username` = :username,
+			`password` = :password,
+			`path` = :path,
+			`authname` = :authname
+		");
+		$params = array(
+			"customerid" => $customer['customerid'],
+			"username" => $username,
+			"password" => $password_enc,
+			"path" => $path,
+			"authname" => $authname
+		);
+		Database::pexecute($stmt, $params, true, true);
+		$id = Database::lastInsertId();
+		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] added directory-protection for '" . $username . " (" . $path . ")'");
+		inserttask('1');
+		
+		$result = $this->apiCall('DirProtections.get', array(
+			'id' => $id
+		));
+		return $this->response(200, "successfull", $result);
+	}
 
 	/**
 	 * return a directory-protection entry by either id or username

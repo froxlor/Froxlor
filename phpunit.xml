@@ -17,6 +17,7 @@
 			<directory>tests/Certificates</directory>
 			<directory>tests/Ftps</directory>
 			<directory>tests/Emails</directory>
+			<directory>tests/Extras</directory>
 		</testsuite>
 	</testsuites>
 

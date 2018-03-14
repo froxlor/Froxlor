@@ -268,7 +268,7 @@ class CustomersTest extends TestCase
 	/**
 	 * @depends testAdminCustomersAdd
 	 */
-	public function testResellerCustomersUpdateAllocateMore()
+	public function testResellerCustomersAddAllocateMore()
 	{
 		global $admin_userdata;
 		// get reseller
