@@ -271,7 +271,7 @@ class DirProtections extends ApiCommand implements ResourceEntity
 	 * delete a directory-protection by either id or username
 	 *
 	 * @param int $id
-	 *        	optional, the ftp-user-id
+	 *        	optional, the directory-protection-id
 	 * @param string $username
 	 *        	optional, the username
 	 *        	
@@ -293,7 +293,7 @@ class DirProtections extends ApiCommand implements ResourceEntity
 			throw new Exception("You cannot access this resource", 405);
 		}
 		
-		// get ftp-user
+		// get directory protection
 		$result = $this->apiCall('DirProtections.get', array(
 			'id' => $id,
 			'username' => $username

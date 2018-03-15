@@ -223,42 +223,22 @@ if ($page == 'overview') {
 
 		eval("echo \"" . getTemplate("extras/htaccess") . "\";");
 	} elseif ($action == 'delete' && $id != 0) {
-		$result_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_HTACCESS . "`
-			WHERE `customerid` = :customerid
-			AND `id` = :id");
-		Database::pexecute($result_stmt, array(
-			"customerid" => $userinfo['customerid'],
-			"id" => $id
-		));
-		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+		try {
+			$json_result = DirOptions::getLocal($userinfo, array(
+				'id' => $id
+			))->get();
+		} catch (Exception $e) {
+			dynamic_error($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
 
 		if (isset($result['customerid']) && $result['customerid'] != '' && $result['customerid'] == $userinfo['customerid']) {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
-				// do we have to remove the symlink and folder in suexecpath?
-				if ((int) Settings::Get('perl.suexecworkaround') == 1) {
-					$loginname = getCustomerDetail($result['customerid'], 'loginname');
-					$suexecpath = makeCorrectDir(Settings::Get('perl.suexecpath') . '/' . $loginname . '/' . md5($result['path']) . '/');
-					$perlsymlink = makeCorrectFile($result['path'] . '/cgi-bin');
-					// remove symlink
-					if (file_exists($perlsymlink)) {
-						safe_exec('rm -f ' . escapeshellarg($perlsymlink));
-						$log->logAction(USR_ACTION, LOG_DEBUG, "deleted suexecworkaround symlink '" . $perlsymlink . "'");
-					}
-					// remove folder in suexec-path
-					if (file_exists($suexecpath)) {
-						safe_exec('rm -rf ' . escapeshellarg($suexecpath));
-						$log->logAction(USR_ACTION, LOG_DEBUG, "deleted suexecworkaround path '" . $suexecpath . "'");
-					}
+				try {
+					DirOptions::getLocal($userinfo, $_POST)->delete();
+				} catch (Exception $e) {
+					dynamic_error($e->getMessage());
 				}
-				$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_HTACCESS . "`
-					WHERE `customerid`= :customerid
-					AND `id`= :id");
-				Database::pexecute($stmt, array(
-					"customerid" => $userinfo['customerid'],
-					"id" => $id
-				));
-				$log->logAction(USR_ACTION, LOG_INFO, "deleted htaccess for '" . str_replace($userinfo['documentroot'], '/', $result['path']) . "'");
-				inserttask('1');
 				redirectTo($filename, array(
 					'page' => $page,
 					's' => $s
@@ -273,74 +253,15 @@ if ($page == 'overview') {
 		}
 	} elseif ($action == 'add') {
 		if (isset($_POST['send']) && $_POST['send'] == 'send') {
-			$path = makeCorrectDir(validate($_POST['path'], 'path'));
-			$userpath = $path;
-			$path = makeCorrectDir($userinfo['documentroot'] . '/' . $path);
-			$path_dupe_check_stmt = Database::prepare("SELECT `id`, `path` FROM `" . TABLE_PANEL_HTACCESS . "`
-				WHERE `path`= :path
-				AND `customerid`= :customerid");
-			Database::pexecute($path_dupe_check_stmt, array(
-				"path" => $path,
-				"customerid" => $userinfo['customerid']
+			try {
+				DirOptions::getLocal($userinfo, $_POST)->add();
+			} catch (Exception $e) {
+				dynamic_error($e->getMessage());
+			}
+			redirectTo($filename, array(
+				'page' => $page,
+				's' => $s
 			));
-			$path_dupe_check = $path_dupe_check_stmt->fetch(PDO::FETCH_ASSOC);
-
-			if (! $_POST['path']) {
-				standard_error('invalidpath');
-			}
-
-			if (isset($_POST['options_cgi']) && (int) $_POST['options_cgi'] != 0) {
-				$options_cgi = '1';
-			} else {
-				$options_cgi = '0';
-			}
-
-			$error404path = '';
-			if (isset($_POST['error404path'])) {
-				$error404path = correctErrorDocument($_POST['error404path']);
-			}
-
-			$error403path = '';
-			if (isset($_POST['error403path'])) {
-				$error403path = correctErrorDocument($_POST['error403path']);
-			}
-
-			$error500path = '';
-			if (isset($_POST['error500path'])) {
-				$error500path = correctErrorDocument($_POST['error500path']);
-			}
-
-			if ($path_dupe_check['path'] == $path) {
-				standard_error('errordocpathdupe', $userpath);
-			} elseif ($path == '') {
-				standard_error('patherror');
-			} else {
-				$stmt = Database::prepare('INSERT INTO `' . TABLE_PANEL_HTACCESS . '` SET
-					`customerid` = :customerid,
-					`path` = :path,
-					`options_indexes` = :options_indexes,
-					`error404path` = :error404path,
-					`error403path` = :error403path,
-					`error500path` = :error500path,
-					`options_cgi` = :options_cgi');
-				$params = array(
-					"customerid" => $userinfo['customerid'],
-					"path" => $path,
-					"options_indexes" => $_POST['options_indexes'] == '1' ? '1' : '0',
-					"error403path" => $error403path,
-					"error404path" => $error404path,
-					"error500path" => $error500path,
-					"options_cgi" => $options_cgi
-				);
-				Database::pexecute($stmt, $params);
-
-				$log->logAction(USR_ACTION, LOG_INFO, "added htaccess for '" . $path . "'");
-				inserttask('1');
-				redirectTo($filename, array(
-					'page' => $page,
-					's' => $s
-				));
-			}
 		} else {
 			$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
 			$cperlenabled = customerHasPerlEnabled($userinfo['customerid']);
@@ -354,55 +275,22 @@ if ($page == 'overview') {
 			eval("echo \"" . getTemplate("extras/htaccess_add") . "\";");
 		}
 	} elseif (($action == 'edit') && ($id != 0)) {
-		$result_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_HTACCESS . "`
-			WHERE `customerid` = :customerid
-			AND `id` = :id");
-		Database::pexecute($result_stmt, array(
-			"customerid" => $userinfo['customerid'],
-			"id" => $id
-		));
-		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+		try {
+			$json_result = DirOptions::getLocal($userinfo, array(
+				'id' => $id
+			))->get();
+		} catch (Exception $e) {
+			dynamic_error($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
 
 		if ((isset($result['customerid'])) && ($result['customerid'] != '') && ($result['customerid'] == $userinfo['customerid'])) {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
-				$option_indexes = intval($_POST['options_indexes']);
-				$options_cgi = isset($_POST['options_cgi']) ? intval($_POST['options_cgi']) : 0;
-
-				if ($option_indexes != '1') {
-					$option_indexes = '0';
+				try {
+					DirOptions::getLocal($userinfo, $_POST)->update();
+				} catch (Exception $e) {
+					dynamic_error($e->getMessage());
 				}
-
-				if ($options_cgi != '1') {
-					$options_cgi = '0';
-				}
-
-				$error404path = correctErrorDocument($_POST['error404path']);
-				$error403path = correctErrorDocument($_POST['error403path']);
-				$error500path = correctErrorDocument($_POST['error500path']);
-
-				if (($option_indexes != $result['options_indexes']) || ($error404path != $result['error404path']) || ($error403path != $result['error403path']) || ($error500path != $result['error500path']) || ($options_cgi != $result['options_cgi'])) {
-					inserttask('1');
-					$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_HTACCESS . "`
-						SET `options_indexes` = :options_indexes,
-						`error404path` = :error404path,
-						`error403path` = :error403path,
-						`error500path` = :error500path,
-						`options_cgi` = :options_cgi
-						WHERE `customerid` = :customerid
-						AND `id` = :id");
-					$params = array(
-						"customerid" => $userinfo['customerid'],
-						"options_indexes" => $_POST['options_indexes'] == '1' ? '1' : '0',
-						"error403path" => $error403path,
-						"error404path" => $error404path,
-						"error500path" => $error500path,
-						"options_cgi" => $options_cgi,
-						"id" => $id
-					);
-					Database::pexecute($stmt, $params);
-					$log->logAction(USR_ACTION, LOG_INFO, "edited htaccess for '" . str_replace($userinfo['documentroot'], '/', $result['path']) . "'");
-				}
-
 				redirectTo($filename, array(
 					'page' => $page,
 					's' => $s

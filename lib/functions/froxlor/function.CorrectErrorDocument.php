@@ -20,13 +20,14 @@
  * refs #267
  *
  * @param string error-document-string
+ * @param bool $throw_exception
  *
  * @return string error-document-string
  *
  */
-function correctErrorDocument($errdoc = null) {
+function correctErrorDocument($errdoc = null, $throw_exception = false) {
 
-	global $idna_convert;
+	$idna_convert = new idna_convert_wrapper();
 
 	if ($errdoc !== null && $errdoc != '') {
 		// not a URL
@@ -46,14 +47,14 @@ function correctErrorDocument($errdoc = null) {
 			else {
 				// string won't work for lighty
 				if (Settings::Get('system.webserver') == 'lighttpd') {
-					standard_error('stringerrordocumentnotvalidforlighty');
+					standard_error('stringerrordocumentnotvalidforlighty', '', $throw_exception);
 				} elseif(substr($errdoc, -1) != '"') {
 					$errdoc .= '"';
 				}
 			}
 		} else {
 			if (Settings::Get('system.webserver') == 'lighttpd') {
-				standard_error('urlerrordocumentnotvalidforlighty');
+				standard_error('urlerrordocumentnotvalidforlighty', '', $throw_exception);
 			}
 		}
 	}
