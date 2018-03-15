@@ -117,4 +117,73 @@ class ExtrasTest extends TestCase
 		$this->assertEquals($customer_userdata['documentroot'] . 'test/', $result['path']);
 		$this->assertEquals('test1', $result['authname']);
 	}
+	
+	/**
+	 * @depends testCustomerDirProtectionsAdd
+	 */
+	public function testCustomerDirProtectionsUpdate()
+	{
+		global $admin_userdata;
+		
+		// get customer
+		$json_result = Customers::getLocal($admin_userdata, array(
+			'loginname' => 'test1'
+		))->get();
+		$customer_userdata = json_decode($json_result, true)['data'];
+		
+		$json_result = DirProtections::getLocal($customer_userdata, array('id' => 1))->get();
+		$data_old = json_decode($json_result, true)['data'];
+
+		$data = [
+			'id' => 1,
+			'directory_password' => generatePassword(),
+			'directory_authname' => 'test1337'
+		];
+		$json_result = DirProtections::getLocal($customer_userdata, $data)->update();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertTrue($data_old['password'] != $result['password']);
+		$this->assertTrue($data_old['authname'] != $result['authname']);
+		$this->assertEquals('test1337', $result['authname']);
+	}
+	
+	/**
+	 * @depends testCustomerDirProtectionsAdd
+	 */
+	public function testCustomerDirProtectionsList()
+	{
+		global $admin_userdata;
+		
+		// get customer
+		$json_result = Customers::getLocal($admin_userdata, array(
+			'loginname' => 'test1'
+		))->get();
+		$customer_userdata = json_decode($json_result, true)['data'];
+
+		$json_result = DirProtections::getLocal($customer_userdata)->listing();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(2, $result['count']);
+		$this->assertEquals('test1', $result['list'][0]['username']);
+		$this->assertEquals('testing', $result['list'][1]['username']);
+	}
+	
+	/**
+	 * @depends testCustomerDirProtectionsList
+	 */
+	public function testCustomerDirProtectionsDelete()
+	{
+		global $admin_userdata;
+		
+		// get customer
+		$json_result = Customers::getLocal($admin_userdata, array(
+			'loginname' => 'test1'
+		))->get();
+		$customer_userdata = json_decode($json_result, true)['data'];
+		
+		DirProtections::getLocal($customer_userdata, array('username' => 'testing'))->delete();
+
+		$json_result = DirProtections::getLocal($customer_userdata)->listing();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(1, $result['count']);
+		$this->assertEquals('test1', $result['list'][0]['username']);
+	}
 }

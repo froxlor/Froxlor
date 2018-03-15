@@ -166,7 +166,70 @@ class DirProtections extends ApiCommand implements ResourceEntity
 	}
 
 	public function update()
-	{}
+	{
+		$id = $this->getParam('id', true, 0);
+		$un_optional = ($id <= 0 ? false : true);
+		$username = $this->getParam('username', $un_optional, '');
+		
+		// validation
+		$result = $this->apiCall('DirProtections.get', array(
+			'id' => $id,
+			'username' => $username
+		));
+		$id = $result['id'];
+		
+		// parameters
+		$password = $this->getParam('directory_password', true, '');
+		$authname = $this->getParam('directory_authname', true, $result['authname']);
+		
+		// get needed customer info
+		$customer = $this->getCustomerData();
+		
+		// validation
+		$authname = validate($authname, 'directory_authname', '/^[a-zA-Z0-9][a-zA-Z0-9\-_ ]+\$?$/', '', array(), true);
+		validate($password, 'password', '', '', array(), true);
+		
+		$upd_query = "";
+		$upd_params = array(
+			"id" => $result['id'],
+			"cid" => $customer['customerid']
+		);
+		if (! empty($password)) {
+			if ($password == $result['username']) {
+				standard_error('passwordshouldnotbeusername', '', true);
+			}
+			if (CRYPT_STD_DES == 1) {
+				$saltfordescrypt = substr(md5(uniqid(microtime(), 1)), 4, 2);
+				$password_enc = crypt($password, $saltfordescrypt);
+			} else {
+				$password_enc = crypt($password);
+			}
+			$upd_query .= "`password`= :password_enc";
+			$upd_params['password_enc'] = $password_enc;
+		}
+		if ($authname != $result['authname']) {
+			if (! empty($upd_query)) {
+				$upd_query .= ", ";
+			}
+			$upd_query .= "`authname` = :authname";
+			$upd_params['authname'] = $authname;
+		}
+		
+		// build update query
+		if (! empty($upd_query)) {
+			$upd_stmt = Database::prepare("
+				UPDATE `" . TABLE_PANEL_HTPASSWDS . "` SET " . $upd_query . " WHERE `id` = :id AND `customerid`= :cid
+			");
+			Database::pexecute($upd_stmt, $upd_params, true, true);
+			inserttask('1');
+		}
+		
+		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] updated directory-protection '" . $result['username'] . " (" . $result['path'] . ")'");
+		$result = $this->apiCall('DirProtections.get', array(
+			'id' => $result['id']
+		));
+		return $this->response(200, "successfull", $result);
+	}
 
 	/**
 	 * list all directory-protections, if called from an admin, list all directory-protections of all customers you are allowed to view, or specify id or loginname for one specific customer
@@ -192,7 +255,7 @@ class DirProtections extends ApiCommand implements ResourceEntity
 			WHERE `customerid` IN (:customerids)
 		");
 		Database::pexecute($result_stmt, array(
-			"customerids" => $customer_ids
+			"customerids" => implode(', ', $customer_ids)
 		), true, true);
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$result[] = $row;

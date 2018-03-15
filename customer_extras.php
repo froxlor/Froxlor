@@ -111,74 +111,15 @@ if ($page == 'overview') {
 		}
 	} elseif ($action == 'add') {
 		if (isset($_POST['send']) && $_POST['send'] == 'send') {
-			$path = makeCorrectDir(validate($_POST['path'], 'path'));
-			$userpath = $path;
-			$path = makeCorrectDir($userinfo['documentroot'] . '/' . $path);
-			$username = validate($_POST['username'], 'username', '/^[a-zA-Z0-9][a-zA-Z0-9\-_]+\$?$/');
-			$authname = validate($_POST['directory_authname'], 'directory_authname', '/^[a-zA-Z0-9][a-zA-Z0-9\-_ ]+\$?$/');
-			validate($_POST['directory_password'], 'password');
-
-			$username_path_check_stmt = Database::prepare("SELECT `id`, `username`, `path` FROM `" . TABLE_PANEL_HTPASSWDS . "`
-				WHERE `username`= :username
-				AND `path`= :path
-				AND `customerid`= :customerid");
-			$params = array(
-				"username" => $username,
-				"path" => $path,
-				"customerid" => $userinfo['customerid']
-			);
-			Database::pexecute($username_path_check_stmt, $params);
-			$username_path_check = $username_path_check_stmt->fetch(PDO::FETCH_ASSOC);
-
-			if (CRYPT_STD_DES == 1) {
-				$saltfordescrypt = substr(md5(uniqid(microtime(), 1)), 4, 2);
-				$password = crypt($_POST['directory_password'], $saltfordescrypt);
-			} else {
-				$password = crypt($_POST['directory_password']);
+			try {
+				DirProtections::getLocal($userinfo, $_POST)->add();
+			} catch (Exception $e) {
+				dynamic_error($e->getMessage());
 			}
-
-			if (! $_POST['path']) {
-				standard_error('invalidpath');
-			}
-
-			if ($username == '') {
-				standard_error(array(
-					'stringisempty',
-					'myloginname'
-				));
-			} elseif ($username_path_check['username'] == $username && $username_path_check['path'] == $path) {
-				standard_error('userpathcombinationdupe');
-			} elseif ($_POST['directory_password'] == '') {
-				standard_error(array(
-					'stringisempty',
-					'mypassword'
-				));
-			} elseif ($path == '') {
-				standard_error('patherror');
-			} elseif ($_POST['directory_password'] == $username) {
-				standard_error('passwordshouldnotbeusername');
-			} else {
-				$stmt = Database::prepare("INSERT INTO `" . TABLE_PANEL_HTPASSWDS . "` SET
-					`customerid` = :customerid,
-					`username` = :username,
-					`password` = :password,
-					`path` = :path,
-					`authname` = :authname");
-				$params = array(
-					"customerid" => $userinfo['customerid'],
-					"username" => $username,
-					"password" => $password,
-					"path" => $path,
-					"authname" => $authname
-				);
-				Database::pexecute($stmt, $params);
-				$log->logAction(USR_ACTION, LOG_INFO, "added htpasswd for '" . $username . " (" . $path . ")'");
-				inserttask('1');
-				redirectTo($filename, array(
-					'page' => $page,
-					's' => $s
-				));
-			}
+			redirectTo($filename, array(
+				'page' => $page,
+				's' => $s
+			));
 		} else {
 			$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
 
@@ -191,65 +132,26 @@ if ($page == 'overview') {
 			eval("echo \"" . getTemplate("extras/htpasswds_add") . "\";");
 		}
 	} elseif ($action == 'edit' && $id != 0) {
-		$result_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_HTPASSWDS . "`
-			WHERE `customerid`= :customerid
-			AND `id`= :id");
-		Database::pexecute($result_stmt, array(
-			"customerid" => $userinfo['customerid'],
-			"id" => $id
-		));
-		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+		try {
+			$json_result = DirProtections::getLocal($userinfo, array(
+				'id' => $id
+			))->get();
+		} catch (Exception $e) {
+			dynamic_error($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
 
 		if (isset($result['username']) && $result['username'] != '') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
-				validate($_POST['directory_password'], 'password');
-				$authname = validate($_POST['directory_authname'], 'directory_authname', '/^[a-zA-Z0-9][a-zA-Z0-9\-_ ]+\$?$/');
-
-				if (CRYPT_STD_DES == 1) {
-					$saltfordescrypt = substr(md5(uniqid(microtime(), 1)), 4, 2);
-					$password = crypt($_POST['directory_password'], $saltfordescrypt);
-				} else {
-					$password = crypt($_POST['directory_password']);
+				try {
+					DirProtections::getLocal($userinfo, $_POST)->update();
+				} catch (Exception $e) {
+					dynamic_error($e->getMessage());
 				}
-
-				if ($_POST['directory_password'] == $result['username']) {
-					standard_error('passwordshouldnotbeusername');
-				}
-
-				$params = array(
-					"customerid" => $userinfo['customerid'],
-					"id" => $id
-				);
-
-				$pwd_sql = '';
-				if ($_POST['directory_password'] != '') {
-					$pwd_sql = "`password`= :password ";
-					$params["password"] = $password;
-				}
-
-				$auth_sql = '';
-				if ($authname != $result['authname']) {
-					$auth_sql = "`authname`= :authname ";
-					$params["authname"] = $authname;
-				}
-
-				if ($pwd_sql != '' || $auth_sql != '') {
-					if ($pwd_sql != '' && $auth_sql != '') {
-						$pwd_sql .= ', ';
-					}
-
-					$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_HTPASSWDS . "`
-						SET " . $pwd_sql . $auth_sql . "
-						WHERE `customerid`= :customerid
-						AND `id`= :id");
-					Database::pexecute($stmt, $params);
-					$log->logAction(USR_ACTION, LOG_INFO, "edited htpasswd for '" . $result['username'] . " (" . $result['path'] . ")'");
-					inserttask('1');
-					redirectTo($filename, array(
-						'page' => $page,
-						's' => $s
-					));
-				}
+				redirectTo($filename, array(
+					'page' => $page,
+					's' => $s
+				));
 			} else {
 				if (strpos($result['path'], $userinfo['documentroot']) === 0) {
 					$result['path'] = str_replace($userinfo['documentroot'], "/", $result['path']);
