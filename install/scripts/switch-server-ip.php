@@ -164,6 +164,7 @@ class Action
 		}
 		
 		if (count($ips_to_switch) > 0) {
+			$check_stmt = Database::prepare("SELECT `id` FROM panel_ipsandports WHERE `ip` = :newip");
 			$upd_stmt = Database::prepare("UPDATE panel_ipsandports SET `ip` = :newip WHERE `ip` = :oldip");
 			
 			// system.ipaddress
@@ -180,6 +181,13 @@ class Action
 			
 			foreach ($ips_to_switch as $ip_pair) {
 				echo "Switching IP \033[1m" . $ip_pair[0] . "\033[0m to IP \033[1m" . $ip_pair[1] . "\033[0m" . PHP_EOL;
+
+				$ip_check = Database::pexecute_first($check_stmt, array('newip' => $ip_pair[1]));
+				if ($ip_check) {
+					CmdLineHandler::printwarn("Note: " . $ip_pair[0] . " not updated to " . $ip_pair[1] . " - IP already exists in froxlor's database");
+					continue;
+				}
+
 				Database::pexecute($upd_stmt, array(
 					'newip' => $ip_pair[1],
 					'oldip' => $ip_pair[0]
@@ -235,6 +243,9 @@ class Action
 		if (! file_exists(FROXLOR_INSTALL_DIR . '/lib/userdata.inc.php')) {
 			throw new Exception("Could not find froxlor's userdata.inc.php file. You should use this script only with a fully installed and setup froxlor system.");
 		}
+		require FROXLOR_INSTALL_DIR . '/lib/functions/filedir/function.makeSecurePath.php';
+		require FROXLOR_INSTALL_DIR . '/lib/functions/filedir/function.makeCorrectDir.php';
+		require FROXLOR_INSTALL_DIR . '/lib/functions/filedir/function.makeCorrectFile.php';
 		require FROXLOR_INSTALL_DIR . '/lib/classes/database/class.Database.php';
 	}
 
