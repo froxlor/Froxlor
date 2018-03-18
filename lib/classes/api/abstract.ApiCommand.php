@@ -132,7 +132,7 @@ abstract class ApiCommand extends ApiParameter
 	 */
 	private function initLang()
 	{
-		$lng = array();
+		global $lng;
 
 		// query the whole table
 		$result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_LANGUAGE . "`");
