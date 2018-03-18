@@ -119,7 +119,6 @@ abstract class ApiCommand extends ApiParameter
 		}
 		
 		$this->initLang();
-		$this->lng = $lng;
 		$this->initMail();
 		
 		if ($this->debug) {
@@ -133,7 +132,8 @@ abstract class ApiCommand extends ApiParameter
 	 */
 	private function initLang()
 	{
-		global $lng;
+		$lng = array();
+
 		// query the whole table
 		$result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_LANGUAGE . "`");
 		
@@ -174,6 +174,9 @@ abstract class ApiCommand extends ApiParameter
 		
 		// last but not least include language references file
 		include_once makeSecurePath(FROXLOR_INSTALL_DIR . '/lng/lng_references.php');
+
+		// set array for ApiCommand
+		$this->lng = $lng;
 	}
 
 	/**

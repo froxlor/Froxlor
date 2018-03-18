@@ -106,7 +106,7 @@ class DirOptions extends ApiCommand implements ResourceEntity
 		);
 		Database::pexecute($stmt, $params, true, true);
 		$id = Database::lastInsertId();
-		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] added directory-protection for '" . $username . " (" . $path . ")'");
+		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] added directory-option for '" . $userpath . "'");
 		inserttask('1');
 		
 		$result = $this->apiCall('DirOptions.get', array(
@@ -350,7 +350,7 @@ class DirOptions extends ApiCommand implements ResourceEntity
 			"customerid" => $customer_data['customerid'],
 			"id" => $id
 		));
-		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] deleted directory-option for '" . str_replace($userinfo['documentroot'], '/', $result['path']) . "'");
+		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] deleted directory-option for '" . str_replace($customer_data['documentroot'], '/', $result['path']) . "'");
 		inserttask('1');
 		return $this->response(200, "successfull", $result);
 	}
