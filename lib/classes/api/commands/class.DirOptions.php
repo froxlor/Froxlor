@@ -74,7 +74,7 @@ class DirOptions extends ApiCommand implements ResourceEntity
 			SELECT `id`, `path` FROM `" . TABLE_PANEL_HTACCESS . "`
 			WHERE `path`= :path AND `customerid`= :customerid
 		");
-		$path_dupe_check = Database::pexecute($path_dupe_check_stmt, array(
+		$path_dupe_check = Database::pexecute_first($path_dupe_check_stmt, array(
 			"path" => $path,
 			"customerid" => $customer['customerid']
 		), true, true);
@@ -222,7 +222,7 @@ class DirOptions extends ApiCommand implements ResourceEntity
 			$error500path = correctErrorDocument($error500path, true);
 		}
 		
-		if (($option_indexes != $result['options_indexes']) || ($error404path != $result['error404path']) || ($error403path != $result['error403path']) || ($error500path != $result['error500path']) || ($options_cgi != $result['options_cgi'])) {
+		if (($options_indexes != $result['options_indexes']) || ($error404path != $result['error404path']) || ($error403path != $result['error403path']) || ($error500path != $result['error500path']) || ($options_cgi != $result['options_cgi'])) {
 			inserttask('1');
 			$stmt = Database::prepare("
 				UPDATE `" . TABLE_PANEL_HTACCESS . "`
@@ -236,7 +236,7 @@ class DirOptions extends ApiCommand implements ResourceEntity
 			");
 			$params = array(
 				"customerid" => $customer['customerid'],
-				"options_indexes" => $option_indexes,
+				"options_indexes" => $options_indexes,
 				"error403path" => $error403path,
 				"error404path" => $error404path,
 				"error500path" => $error500path,

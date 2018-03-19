@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
  * @covers ApiParameter
  * @covers DirProtections
  */
-class ExtrasTest extends TestCase
+class DirProtectionsTest extends TestCase
 {
 
 	public function testCustomerDirProtectionsAdd()
