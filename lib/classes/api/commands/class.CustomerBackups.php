@@ -126,7 +126,7 @@ class CustomerBackups extends ApiCommand implements ResourceEntity
 			$del_stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_TASKS . "` WHERE `id` = :tid");
 			// check for the correct job
 			foreach ($result['list'] as $backupjob) {
-				if ($backupjob['id'] == $entry) {
+				if ($backupjob['id'] == $entry && in_array($backupjob['data']['customerid'], $customer_ids)) {
 					Database::pexecute($del_stmt, array(
 						'tid' => $entry
 					));
