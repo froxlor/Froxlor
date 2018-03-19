@@ -331,74 +331,42 @@ if ($page == 'overview') {
 	{
 		if ($action == 'abort' && isset($_POST['send']) && $_POST['send'] == 'send') {
 			$log->logAction(USR_ACTION, LOG_NOTICE, "customer_extras::backup - aborted scheduled backupjob");
-			$entry = isset($_POST['backup_job_entry']) ? (int)$_POST['backup_job_entry'] : 0;
-			if ($entry > 0) {
-				$del_stmt = Database::prepare("DELETE FROM `".TABLE_PANEL_TASKS."` WHERE `id` = :tid");
-				Database::pexecute($del_stmt, array('tid' => $entry));
-				standard_success('backupaborted');
+			try {
+				CustomerBackups::getLocal($userinfo, $_POST)->delete();
+			} catch (Exception $e) {
+				dynamic_error($e->getMessage());
 			}
+			standard_success('backupaborted');
 			redirectTo($filename, array('page' => $page, 'action' => '', 's' => $s));
 		}
 		if ($action == '') {
 			$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_extras::backup");
 
 			// check whether there is a backup-job for this customer
-			$sel_stmt = Database::prepare("SELECT * FROM `".TABLE_PANEL_TASKS."` WHERE `type` = '20'");
-			Database::pexecute($sel_stmt);
+			try {
+				$json_result = CustomerBackups::getLocal($userinfo)->listing();
+			} catch (Exception $e) {
+				dynamic_error($e->getMessage());
+			}
+			$result = json_decode($json_result, true)['data'];
 			$existing_backupJob = null;
-			while ($entry = $sel_stmt->fetch())
+			if ($result['count'] > 0)
 			{
-				$data = unserialize($entry['data']);
-				if ($data['customerid'] == $userinfo['customerid']) {
-					$existing_backupJob = $entry;
-					break;
-				}
+				$existing_backupJob = array_shift($result['list']);
 			}
 
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
-
-				if (! $_POST['path']) {
-					standard_error('invalidpath');
+				try {
+					CustomerBackups::getLocal($userinfo, $_POST)->add();
+				} catch (Exception $e) {
+					dynamic_error($e->getMessage());
 				}
-
-				$path = makeCorrectDir(validate($_POST['path'], 'path'));
-				$path = makeCorrectDir($userinfo['documentroot'] . '/' . $path);
-
-				$backup_dbs = isset($_POST['backup_dbs']) ? intval($_POST['backup_dbs']) : 0;
-				$backup_mail = isset($_POST['backup_mail']) ? intval($_POST['backup_mail']) : 0;
-				$backup_web = isset($_POST['backup_web']) ? intval($_POST['backup_web']) : 0;
-
-				if ($backup_dbs != '1') {
-					$backup_dbs = '0';
-				}
-
-				if ($backup_mail != '1') {
-					$backup_mail = '0';
-				}
-
-				if ($backup_web != '1') {
-					$backup_web = '0';
-				}
-
-				$task_data = array(
-					'customerid' => $userinfo['customerid'],
-					'uid' => $userinfo['guid'],
-					'gid' => $userinfo['guid'],
-					'loginname' => $userinfo['loginname'],
-					'destdir' => $path,
-					'backup_dbs' => $backup_dbs,
-					'backup_mail' => $backup_mail,
-					'backup_web' => $backup_web
-				);
-				// schedule backup job
-				inserttask('20', $task_data);
-
 				standard_success('backupscheduled');
 			} else {
 
 				if (!empty($existing_backupJob)) {
 					$action = "abort";
-					$row = unserialize($entry['data']);
+					$row = $existing_backupJob['data'];
 					$row['path'] = makeCorrectDir(str_replace($userinfo['documentroot'], "/", $row['destdir']));
 					$row['backup_web'] = ($row['backup_web'] == '1') ? $lng['panel']['yes'] : $lng['panel']['no'];
 					$row['backup_mail'] = ($row['backup_mail'] == '1') ? $lng['panel']['yes'] : $lng['panel']['no'];

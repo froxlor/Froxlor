@@ -626,8 +626,7 @@ class Domains extends ApiCommand implements ResourceEntity
 			// get requested domain
 			$result = $this->apiCall('Domains.get', array(
 				'id' => $id,
-				'domainname' => $domainname,
-				'no_std_subdomain' => true
+				'domainname' => $domainname
 			));
 			$id = $result['id'];
 			

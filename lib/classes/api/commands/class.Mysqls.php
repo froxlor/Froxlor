@@ -305,17 +305,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 		// validation
 		$password = validate($password, 'password', '', '', array(), true);
 		$databasedescription = validate(trim($databasedescription), 'description', '', '', array(), true);
-		
-		// validate whether the dbserver exists
-		$dbserver = validate($dbserver, html_entity_decode($this->lng['mysql']['mysql_server']), '', '', 0, true);
-		Database::needRoot(true, $dbserver);
-		Database::needSqlData();
-		$sql_root = Database::getSqlData();
-		Database::needRoot(false);
-		if (! isset($sql_root) || ! is_array($sql_root)) {
-			throw new ErrorException("Database server with index #" . $dbserver . " is unknown", 404);
-		}
-		
+
 		// get needed customer info to reduce the mysql-usage-counter by one
 		$customer = $this->getCustomerData();
 		
