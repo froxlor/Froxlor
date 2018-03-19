@@ -98,7 +98,7 @@ class DirProtectionsTest extends TestCase
 	public function testResellerDirProtectionsGet()
 	{
 		global $admin_userdata;
-		// get customer
+		// get reseller
 		$json_result = Admins::getLocal($admin_userdata, array(
 			'loginname' => 'reseller'
 		))->get();
