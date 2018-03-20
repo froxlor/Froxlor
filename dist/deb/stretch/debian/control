@@ -1,0 +1,37 @@
+Source: froxlor
+Section: admin
+Priority: extra
+Maintainer: Froxlor Release Team <release@froxlor.org>
+Build-Depends: debhelper (>= 9)
+Standards-Version: 3.9.8
+Homepage: https://www.froxlor.org
+Vcs-Browser: https://github.com/Froxlor/Froxlor/tree/extras/dist/deb
+Vcs-Git: git://github.com/Froxlor/Froxlor.git
+
+Package: froxlor
+Architecture: all
+Depends:
+ ${misc:Depends},
+ apache2 | lighttpd | nginx,
+ php | php-cgi,
+ php-cli,
+ php-curl,
+ php-mysqlnd | php-mysql,
+ default-mysql-server,
+ default-mysql-client,
+ webalizer | awstats,
+Recommends:
+ postfix-mysql | exim4-daemon-heavy,
+ libsasl2-modules-sql,
+ maildrop,
+ dovecot-mysql | courier-authlib-mysql,
+ dovecot-imapd | courier-imap,
+ dovecot-pop3d | courier-pop,
+ php-gd,
+ php-imap,
+ proftpd-mod-mysql | pure-ftpd-mysql,
+ bind9 | pdns-server,
+Description: Server Management Panel
+ Froxlor, the Server Management Panel is a server administration tool which
+ enables an internet service provider to give their customers a web-based
+ application to administrate their email addresses, their subdomains etc.

@@ -1,0 +1,9 @@
+#!/usr/bin/make -f
+export DH_VERBOSE = 1
+%:
+	dh $@
+
+override_dh_fixperms:
+	dh_fixperms
+	chmod 755 debian/froxlor/var/www/froxlor/install/scripts/switch-server-ip.php
+	chmod 755 debian/froxlor/var/www/froxlor/install/scripts/config-services.php
