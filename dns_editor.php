@@ -40,7 +40,7 @@ Database::pexecute($sel_stmt, array(
 ));
 $dom_entries = $sel_stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$errors = array();
+$errors = "";
 $success_message = "";
 
 // action for adding a new entry
@@ -68,20 +68,22 @@ if ($action == 'add_record' && ! empty($_POST)) {
 				'id' => $domain_id
 			))->delete();
 		} catch (Exception $e) {
-			dynamic_error($e->getMessage());
+			$errors = str_replace("\n", "<br>", $e->getMessage());
 		}
 
-		// remove deleted entry from internal data array (no reread of DB necessary)
-		$_t = $dom_entries;
-		foreach ($_t as $idx => $entry) {
-			if ($entry['id'] == $entry_id) {
-				unset($dom_entries[$idx]);
-				break;
+		if (empty($errors)) {
+			// remove deleted entry from internal data array (no reread of DB necessary)
+			$_t = $dom_entries;
+			foreach ($_t as $idx => $entry) {
+				if ($entry['id'] == $entry_id) {
+					unset($dom_entries[$idx]);
+					break;
+				}
 			}
+			unset($_t);
+			// success message (inline)
+			$success_message = $lng['success']['dns_record_deleted'];
 		}
-		unset($_t);
-		// success message (inline)
-		$success_message = $lng['success']['dns_record_deleted'];
 	}
 }
 
