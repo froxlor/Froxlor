@@ -117,10 +117,10 @@ class CustomerBackups extends ApiCommand implements ResourceEntity
 	{
 		// get planned backups
 		$result = $this->apiCall('CustomerBackups.listing', $this->getParamList());
-		
+
 		$entry = $this->getParam('backup_job_entry');
 		$customer_ids = $this->getAllowedCustomerIds('extras.backup');
-		
+
 		if ($result['count'] > 0 && $entry > 0) {
 			// prepare statement
 			$del_stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_TASKS . "` WHERE `id` = :tid");
@@ -130,6 +130,7 @@ class CustomerBackups extends ApiCommand implements ResourceEntity
 					Database::pexecute($del_stmt, array(
 						'tid' => $entry
 					));
+					$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_NOTICE, "[API] deleted planned customer-backup #" . $entry);
 					return $this->response(200, "successfull", true);
 				}
 			}

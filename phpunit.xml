@@ -18,6 +18,7 @@
 			<directory>tests/Ftps</directory>
 			<directory>tests/Emails</directory>
 			<directory>tests/Extras</directory>
+			<directory>tests/Backup</directory>
 		</testsuite>
 	</testsuites>
 
