@@ -42,8 +42,11 @@ class DomainZones extends ApiCommand implements ResourceEntity
 		$content = $this->getParam('content', true, null);
 		$ttl = $this->getParam('ttl', true, 18000);
 		
-		// validation
-		if ($result['isbinddomain'] != '1') {
+		if ($result['parentdomainid'] != '0') {
+			throw new Exception("DNS zones can only be generated for the main domain, not for subdomains", 406);
+		}
+
+		if ($result['subisbinddomain'] != '1') {
 			standard_error('dns_domain_nodns', '', true);
 		}
 		
@@ -291,7 +294,11 @@ class DomainZones extends ApiCommand implements ResourceEntity
 		));
 		$id = $result['id'];
 		
-		if ($result['isbinddomain'] != '1') {
+		if ($result['parentdomainid'] != '0') {
+			throw new Exception("DNS zones can only be generated for the main domain, not for subdomains", 406);
+		}
+
+		if ($result['subisbinddomain'] != '1') {
 			standard_error('dns_domain_nodns', '', true);
 		}
 		
@@ -335,8 +342,11 @@ class DomainZones extends ApiCommand implements ResourceEntity
 			'id' => $entry_id,
 			'did' => $id
 		), true, true);
-		// re-generate bind configs
-		inserttask('4');
-		return $this->response(200, "successfull", true);
+		if ($del_stmt->rowCount() > 0) {
+			// re-generate bind configs
+			inserttask('4');
+			return $this->response(200, "successfull", true);
+		}
+		return $this->response(304, "successfull", true);
 	}
 }

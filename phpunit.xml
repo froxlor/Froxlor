@@ -19,6 +19,7 @@
 			<directory>tests/Emails</directory>
 			<directory>tests/Extras</directory>
 			<directory>tests/Backup</directory>
+			<directory>tests/DomainZones</directory>
 		</testsuite>
 	</testsuites>
 

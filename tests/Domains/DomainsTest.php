@@ -68,7 +68,8 @@ class DomainsTest extends TestCase
 		$reseller_userdata['caneditphpsettings'] = 1;
 		$data = [
 			'domain' => 'test2.local',
-			'customerid' => 1
+			'customerid' => 1,
+			'isbinddomain' => 1
 		];
 		// the reseller is not allowed to use the default ip/port
 		$this->expectExceptionMessage("The ip/port combination you have chosen doesn't exist.");
