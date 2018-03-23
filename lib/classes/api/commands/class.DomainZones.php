@@ -45,7 +45,7 @@ class DomainZones extends ApiCommand implements ResourceEntity
 		if ($result['parentdomainid'] != '0') {
 			throw new Exception("DNS zones can only be generated for the main domain, not for subdomains", 406);
 		}
-
+		
 		if ($result['subisbinddomain'] != '1') {
 			standard_error('dns_domain_nodns', '', true);
 		}
@@ -206,10 +206,10 @@ class DomainZones extends ApiCommand implements ResourceEntity
 		$new_entry = array(
 			'record' => $record,
 			'type' => $type,
-			'prio' => $prio,
+			'prio' => (int) $prio,
 			'content' => $content,
-			'ttl' => $ttl,
-			'domain_id' => $id
+			'ttl' => (int) $ttl,
+			'domain_id' => (int) $id
 		);
 		ksort($new_entry);
 		
@@ -297,7 +297,7 @@ class DomainZones extends ApiCommand implements ResourceEntity
 		if ($result['parentdomainid'] != '0') {
 			throw new Exception("DNS zones can only be generated for the main domain, not for subdomains", 406);
 		}
-
+		
 		if ($result['subisbinddomain'] != '1') {
 			standard_error('dns_domain_nodns', '', true);
 		}
