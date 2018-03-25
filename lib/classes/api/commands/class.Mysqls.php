@@ -139,11 +139,11 @@ class Mysqls extends ApiCommand implements ResourceEntity
 
 				$_mailerror = false;
 				try {
-					$this->mail->Subject = $mail_subject;
-					$this->mail->AltBody = $mail_body;
-					$this->mail->MsgHTML(str_replace("\n", "<br />", $mail_body));
-					$this->mail->AddAddress($userinfo['email'], getCorrectUserSalutation($userinfo));
-					$this->mail->Send();
+					$this->mailer()->Subject = $mail_subject;
+					$this->mailer()->AltBody = $mail_body;
+					$this->mailer()->MsgHTML(str_replace("\n", "<br />", $mail_body));
+					$this->mailer()->AddAddress($userinfo['email'], getCorrectUserSalutation($userinfo));
+					$this->mailer()->Send();
 				} catch (phpmailerException $e) {
 					$mailerr_msg = $e->errorMessage();
 					$_mailerror = true;
@@ -157,7 +157,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 					standard_error('errorsendingmail', $userinfo['email'], true);
 				}
 				
-				$this->mail->ClearAddresses();
+				$this->mailer()->ClearAddresses();
 			}
 			$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_WARNING, "[API] added mysql-database '" . $username . "'");
 			

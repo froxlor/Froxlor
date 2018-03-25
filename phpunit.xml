@@ -20,6 +20,7 @@
 			<directory>tests/Extras</directory>
 			<directory>tests/Backup</directory>
 			<directory>tests/DomainZones</directory>
+			<directory>tests/Mysqls</directory>
 		</testsuite>
 	</testsuites>
 

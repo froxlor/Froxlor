@@ -15,7 +15,7 @@ class CustomersTest extends TestCase
 		
 		$data = [
 			'new_loginname' => 'test1',
-			'email' => 'test@froxlor.org',
+			'email' => 'team@froxlor.org',
 			'firstname' => 'Test',
 			'name' => 'Testman',
 			'customernumber' => 1337,
@@ -46,7 +46,7 @@ class CustomersTest extends TestCase
 		$json_result = Customers::getLocal($admin_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(1, $result['customerid']);
-		$this->assertEquals('test@froxlor.org', $result['email']);
+		$this->assertEquals('team@froxlor.org', $result['email']);
 		$this->assertEquals(1337, $result['customernumber']);
 		$this->assertEquals(15, $result['subdomains']);
 		$this->assertEquals('secret', $result['custom_notes']);
@@ -147,7 +147,7 @@ class CustomersTest extends TestCase
 		$result = json_decode($json_result, true)['data'];
 		
 		$this->assertEquals(1, $result['customerid']);
-		$this->assertEquals('test@froxlor.org', $result['email']);
+		$this->assertEquals('team@froxlor.org', $result['email']);
 		$this->assertEquals(1337, $result['customernumber']);
 		$this->assertEquals(15, $result['subdomains']);
 		$this->assertEquals('Sparkle', $result['theme']);

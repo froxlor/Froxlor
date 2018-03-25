@@ -25,6 +25,10 @@ file_put_contents($userdata, $userdata_content);
 // include autoloader / api / etc
 require dirname(__DIR__) . '/lib/classes/api/api_includes.inc.php';
 
+Database::needRoot(true);
+Database::query("DROP DATABASE IF EXISTS `test1sql1`;");
+Database::needRoot(false);
+
 // clear all tables
 Database::query("TRUNCATE TABLE `" . TABLE_PANEL_CUSTOMERS . "`;");
 Database::query("TRUNCATE TABLE `" . TABLE_PANEL_DOMAINS . "`;");
