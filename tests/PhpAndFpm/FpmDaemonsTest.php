@@ -57,7 +57,7 @@ class FpmDaemonsTest extends TestCase
 		$json_result = FpmDaemons::getLocal($admin_userdata)->listing();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(2, $result['count']);
-		$this->assertEquals('test fpm', $result['list'][0]['description']);
+		$this->assertEquals('System default', $result['list'][0]['description']);
 		$this->assertEquals('test2 fpm edit', $result['list'][1]['description']);
 	}
 
