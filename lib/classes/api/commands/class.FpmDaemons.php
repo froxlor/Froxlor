@@ -72,8 +72,9 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 	/**
 	 * return a fpm-daemon entry by id
 	 *
-	 * @param int $id fpm-daemon-id
-	 *
+	 * @param int $id
+	 *        	fpm-daemon-id
+	 *        	
 	 * @access admin
 	 * @throws Exception
 	 * @return array
@@ -121,7 +122,7 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 			$max_spare_servers = $this->getParam('max_spare_servers', true, 0);
 			$max_requests = $this->getParam('max_requests', true, 0);
 			$idle_timeout = $this->getParam('idle_timeout', true, 0);
-			$limit_extensions = $this->getParam('limit_extensions', true, '');
+			$limit_extensions = $this->getParam('limit_extensions', true, '.php');
 			
 			// validation
 			$description = validate($description, 'description', '', '', array(), true);
@@ -133,6 +134,9 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 				'ondemand'
 			))) {
 				throw new ErrorException("Unknown process manager", 406);
+			}
+			if (empty($limit_extensions)) {
+				$limit_extensions = '.php';
 			}
 			$limit_extensions = validate($limit_extensions, 'limit_extensions', '/^(\.[a-z]([a-z0-9]+)\ ?)+$/', '', array(), true);
 			
@@ -168,11 +172,14 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 				'limit_extensions' => $limit_extensions
 			);
 			Database::pexecute($ins_stmt, $ins_data);
-			$ins_data['id'] = Database::lastInsertId();
+			$id = Database::lastInsertId();
 			
 			inserttask('1');
 			$this->logger()->logAction(ADM_ACTION, LOG_INFO, "[API] fpm-daemon with description '" . $description . "' has been created by '" . $this->getUserDetail('loginname') . "'");
-			return $this->response(200, "successfull", $ins_data);
+			$result = $this->apiCall('FpmDaemons.get', array(
+				'id' => $id
+			));
+			return $this->response(200, "successfull", $result);
 		}
 		throw new Exception("Not allowed to execute given command.", 403);
 	}
@@ -192,8 +199,8 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 			
 			// required parameter
 			$id = $this->getParam('id');
-
-			$result = $this->apiCall('PhpSettings.get', array(
+			
+			$result = $this->apiCall('FpmDaemons.get', array(
 				'id' => $id
 			));
 			
@@ -220,6 +227,9 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 				'ondemand'
 			))) {
 				throw new ErrorException("Unknown process manager", 406);
+			}
+			if (empty($limit_extensions)) {
+				$limit_extensions = '.php';
 			}
 			$limit_extensions = validate($limit_extensions, 'limit_extensions', '/^(\.[a-z]([a-z0-9]+)\ ?)+$/', '', array(), true);
 			
@@ -268,8 +278,9 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 	/**
 	 * delete a fpm-daemon entry by id
 	 *
-	 * @param int $id fpm-daemon-id
-	 *
+	 * @param int $id
+	 *        	fpm-daemon-id
+	 *        	
 	 * @access admin
 	 * @throws Exception
 	 * @return array
@@ -282,7 +293,7 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 			if ($id == 1) {
 				standard_error('cannotdeletedefaultphpconfig', '', true);
 			}
-
+			
 			$result = $this->apiCall('FpmDaemons.get', array(
 				'id' => $id
 			));
