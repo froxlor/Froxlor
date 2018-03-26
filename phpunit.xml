@@ -21,6 +21,7 @@
 			<directory>tests/Backup</directory>
 			<directory>tests/DomainZones</directory>
 			<directory>tests/Mysqls</directory>
+			<directory>tests/PhpAndFpm</directory>
 		</testsuite>
 	</testsuites>
 
