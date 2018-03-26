@@ -54,6 +54,7 @@ Database::query("TRUNCATE TABLE `" . TABLE_PANEL_DOMAINREDIRECTS . "`;");
 Database::query("TRUNCATE TABLE `" . TABLE_PANEL_ADMINS . "`;");
 Database::query("TRUNCATE TABLE `" . TABLE_PANEL_IPSANDPORTS . "`;");
 Database::query("TRUNCATE TABLE `" . TABLE_API_KEYS . "`;");
+Database::query("TRUNCATE TABLE `" . TABLE_PANEL_DATABASES . "`;");
 
 // add superadmin
 Database::query("INSERT INTO `" . TABLE_PANEL_ADMINS . "` SET

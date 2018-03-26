@@ -348,7 +348,10 @@ class Mysqls extends ApiCommand implements ResourceEntity
 		Database::pexecute($stmt, $params, true, true);
 		
 		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_WARNING, "[API] updated mysql-database '" . $result['databasename'] . "'");
-		return $this->response(200, "successfull", $params);
+		$result = $this->apiCall('Mysqls.get', array(
+			'dbname' => $result['databasename']
+		));
+		return $this->response(200, "successfull", $result);
 	}
 
 	/**
