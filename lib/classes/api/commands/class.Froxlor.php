@@ -234,7 +234,7 @@ class Froxlor extends ApiCommand
 						$reflection = new \ReflectionClass($mod);
 						$_functions = $reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
 						foreach ($_functions as $func) {
-							if ($func->class == $mod && $func->isPublic()) {
+							if ($func->class == $mod && $func->isPublic() && !$func->isStatic()) {
 								array_push($functions, array_merge(array(
 									'module' => $matches[1],
 									'function' => $func->name

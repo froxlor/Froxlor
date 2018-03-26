@@ -86,6 +86,77 @@ class Admins extends ApiCommand implements ResourceEntity
 	/**
 	 * create a new admin user
 	 *
+	 * @param string $name
+	 * @param string $email
+	 * @param string $admin_password
+	 *        	optional, default auto-generated
+	 * @param string $def_language
+	 *        	optional, default is system-default language
+	 * @param string $custom_notes
+	 *        	optional, default empty
+	 * @param bool $custom_notes_show
+	 *        	optional, default false
+	 * @param int $diskspace
+	 *        	optional, default 0
+	 * @param bool $diskspace_ul
+	 *        	optional, default false
+	 * @param int $traffic
+	 *        	optional, default 0
+	 * @param bool $traffic_ul
+	 *        	optional, default false
+	 * @param int $customers
+	 *        	optional, default 0
+	 * @param bool $customers_ul
+	 *        	optional, default false
+	 * @param int $domains
+	 *        	optional, default 0
+	 * @param bool $domains_ul
+	 *        	optional, default false
+	 * @param int $subdomains
+	 *        	optional, default 0
+	 * @param bool $subdomains_ul
+	 *        	optional, default false
+	 * @param int $emails
+	 *        	optional, default 0
+	 * @param bool $emails_ul
+	 *        	optional, default false
+	 * @param int $email_accounts
+	 *        	optional, default 0
+	 * @param bool $email_accounts_ul
+	 *        	optional, default false
+	 * @param int $email_forwarders
+	 *        	optional, default 0
+	 * @param bool $email_forwarders_ul
+	 *        	optional, default false
+	 * @param int $email_quota
+	 *        	optional, default 0
+	 * @param bool $email_quota_ul
+	 *        	optional, default false
+	 * @param int $ftps
+	 *        	optional, default 0
+	 * @param bool $ftps_ul
+	 *        	optional, default false
+	 * @param int $tickets
+	 *        	optional, default 0
+	 * @param bool $tickets_ul
+	 *        	optional, default false
+	 * @param int $mysqls
+	 *        	optional, default 0
+	 * @param bool $mysqls_ul
+	 *        	optional, default false
+	 * @param bool $customers_see_all
+	 *        	optional, default false
+	 * @param bool $domains_see_all
+	 *        	optional, default false
+	 * @param bool $tickets_see_all
+	 *        	optional, default false
+	 * @param bool $caneditphpsettings
+	 *        	optional, default false
+	 * @param bool $change_serversettings
+	 *        	optional, default false
+	 * @param array $ipaddress
+	 *        	optional, list of ip-address id's; default -1 (all IP's)
+	 *        	
 	 * @access admin
 	 * @throws Exception
 	 * @return array
@@ -301,6 +372,82 @@ class Admins extends ApiCommand implements ResourceEntity
 	 *        	optional, the admin-id
 	 * @param string $loginname
 	 *        	optional, the loginname
+	 * @param string $name
+	 *        	optional
+	 * @param string $email
+	 *        	optional
+	 * @param string $admin_password
+	 *        	optional, default auto-generated
+	 * @param string $def_language
+	 *        	optional, default is system-default language
+	 * @param string $custom_notes
+	 *        	optional, default empty
+	 * @param string $theme
+	 *        	optional
+	 * @param bool $deactivated
+	 *        	optional, default false
+	 * @param bool $custom_notes_show
+	 *        	optional, default false
+	 * @param int $diskspace
+	 *        	optional, default 0
+	 * @param bool $diskspace_ul
+	 *        	optional, default false
+	 * @param int $traffic
+	 *        	optional, default 0
+	 * @param bool $traffic_ul
+	 *        	optional, default false
+	 * @param int $customers
+	 *        	optional, default 0
+	 * @param bool $customers_ul
+	 *        	optional, default false
+	 * @param int $domains
+	 *        	optional, default 0
+	 * @param bool $domains_ul
+	 *        	optional, default false
+	 * @param int $subdomains
+	 *        	optional, default 0
+	 * @param bool $subdomains_ul
+	 *        	optional, default false
+	 * @param int $emails
+	 *        	optional, default 0
+	 * @param bool $emails_ul
+	 *        	optional, default false
+	 * @param int $email_accounts
+	 *        	optional, default 0
+	 * @param bool $email_accounts_ul
+	 *        	optional, default false
+	 * @param int $email_forwarders
+	 *        	optional, default 0
+	 * @param bool $email_forwarders_ul
+	 *        	optional, default false
+	 * @param int $email_quota
+	 *        	optional, default 0
+	 * @param bool $email_quota_ul
+	 *        	optional, default false
+	 * @param int $ftps
+	 *        	optional, default 0
+	 * @param bool $ftps_ul
+	 *        	optional, default false
+	 * @param int $tickets
+	 *        	optional, default 0
+	 * @param bool $tickets_ul
+	 *        	optional, default false
+	 * @param int $mysqls
+	 *        	optional, default 0
+	 * @param bool $mysqls_ul
+	 *        	optional, default false
+	 * @param bool $customers_see_all
+	 *        	optional, default false
+	 * @param bool $domains_see_all
+	 *        	optional, default false
+	 * @param bool $tickets_see_all
+	 *        	optional, default false
+	 * @param bool $caneditphpsettings
+	 *        	optional, default false
+	 * @param bool $change_serversettings
+	 *        	optional, default false
+	 * @param array $ipaddress
+	 *        	optional, list of ip-address id's; default -1 (all IP's)
 	 *        	
 	 * @access admin
 	 * @throws Exception
@@ -313,7 +460,7 @@ class Admins extends ApiCommand implements ResourceEntity
 			$id = $this->getParam('id', true, 0);
 			$ln_optional = ($id <= 0 ? false : true);
 			$loginname = $this->getParam('loginname', $ln_optional, '');
-
+			
 			$result = $this->apiCall('Admins.get', array(
 				'id' => $id,
 				'loginname' => $loginname
@@ -579,7 +726,7 @@ class Admins extends ApiCommand implements ResourceEntity
 			$id = $this->getParam('id', true, 0);
 			$ln_optional = ($id <= 0 ? false : true);
 			$loginname = $this->getParam('loginname', $ln_optional, '');
-
+			
 			$result = $this->apiCall('Admins.get', array(
 				'id' => $id,
 				'loginname' => $loginname
@@ -598,7 +745,7 @@ class Admins extends ApiCommand implements ResourceEntity
 			Database::pexecute($del_stmt, array(
 				'adminid' => $id
 			), true, true);
-
+			
 			// delete the traffic-usage
 			$del_stmt = Database::prepare("
 				DELETE FROM `" . TABLE_PANEL_TRAFFIC_ADMINS . "` WHERE `adminid` = :adminid
@@ -606,7 +753,7 @@ class Admins extends ApiCommand implements ResourceEntity
 			Database::pexecute($del_stmt, array(
 				'adminid' => $id
 			), true, true);
-
+			
 			// delete the diskspace usage
 			$del_stmt = Database::prepare("
 				DELETE FROM `" . TABLE_PANEL_DISKSPACE_ADMINS . "` WHERE `adminid` = :adminid
@@ -614,7 +761,7 @@ class Admins extends ApiCommand implements ResourceEntity
 			Database::pexecute($del_stmt, array(
 				'adminid' => $id
 			), true, true);
-
+			
 			// set admin-id of the old admin's customer to current admins
 			$upd_stmt = Database::prepare("
 				UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET
@@ -624,7 +771,7 @@ class Admins extends ApiCommand implements ResourceEntity
 				'userid' => $this->getUserDetail('adminid'),
 				'adminid' => $id
 			), true, true);
-
+			
 			// set admin-id of the old admin's domains to current admins
 			$upd_stmt = Database::prepare("
 				UPDATE `" . TABLE_PANEL_DOMAINS . "` SET
@@ -634,7 +781,7 @@ class Admins extends ApiCommand implements ResourceEntity
 				'userid' => $this->getUserDetail('adminid'),
 				'adminid' => $id
 			), true, true);
-
+			
 			// delete old admin's api keys if exists (no customer keys)
 			$upd_stmt = Database::prepare("
 				DELETE FROM `" . TABLE_API_KEYS . "` WHERE
@@ -643,7 +790,7 @@ class Admins extends ApiCommand implements ResourceEntity
 			Database::pexecute($upd_stmt, array(
 				'adminid' => $id
 			), true, true);
-
+			
 			// set admin-id of the old admin's api-keys to current admins
 			$upd_stmt = Database::prepare("
 				UPDATE `" . TABLE_API_KEYS . "` SET
@@ -653,7 +800,7 @@ class Admins extends ApiCommand implements ResourceEntity
 				'userid' => $this->getUserDetail('adminid'),
 				'adminid' => $id
 			), true, true);
-
+			
 			$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] deleted admin '" . $result['loginname'] . "'");
 			updateCounters();
 			return $this->response(200, "successfull", $result);
