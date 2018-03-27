@@ -2,9 +2,11 @@
 use PHPUnit\Framework\TestCase;
 
 /**
+ *
  * @covers ApiCommand
  * @covers ApiParameter
  * @covers Customers
+ * @covers Admins
  */
 class CustomersTest extends TestCase
 {
@@ -83,6 +85,7 @@ class CustomersTest extends TestCase
 	}
 
 	/**
+	 *
 	 * @depends testAdminCustomersAdd
 	 */
 	public function testAdminCustomersList()
@@ -95,6 +98,7 @@ class CustomersTest extends TestCase
 	}
 
 	/**
+	 *
 	 * @depends testAdminCustomersAdd
 	 */
 	public function testResellerCustomersList()
@@ -112,6 +116,7 @@ class CustomersTest extends TestCase
 	}
 
 	/**
+	 *
 	 * @depends testAdminCustomersAdd
 	 */
 	public function testCustomerCustomersList()
@@ -130,6 +135,7 @@ class CustomersTest extends TestCase
 	}
 
 	/**
+	 *
 	 * @depends testAdminCustomersAdd
 	 */
 	public function testCustomerCustomersGet()
@@ -165,6 +171,7 @@ class CustomersTest extends TestCase
 	}
 
 	/**
+	 *
 	 * @depends testAdminCustomersAdd
 	 */
 	public function testCustomerCustomersGetForeign()
@@ -185,6 +192,7 @@ class CustomersTest extends TestCase
 	}
 
 	/**
+	 *
 	 * @depends testAdminCustomersAdd
 	 */
 	public function testAdminCustomerUpdateDeactivate()
@@ -209,6 +217,7 @@ class CustomersTest extends TestCase
 	}
 
 	/**
+	 *
 	 * @depends testAdminCustomersAdd
 	 */
 	public function testCustomerCustomersGetWhenDeactivated()
@@ -230,6 +239,7 @@ class CustomersTest extends TestCase
 	}
 
 	/**
+	 *
 	 * @depends testAdminCustomersAdd
 	 */
 	public function testCustomerCustomersUpdate()
@@ -266,6 +276,7 @@ class CustomersTest extends TestCase
 	}
 
 	/**
+	 *
 	 * @depends testAdminCustomersAdd
 	 */
 	public function testResellerCustomersAddAllocateMore()
@@ -402,5 +413,135 @@ class CustomersTest extends TestCase
 		$result = json_decode($json_result, true)['data'];
 		
 		$this->assertEquals(2, $result['adminid']);
+	}
+
+	/**
+	 *
+	 * @depends testAdminCustomersMove
+	 */
+	public function testAdminCustomersAddLoginnameIsSystemaccount()
+	{
+		global $admin_userdata;
+		
+		$data = [
+			'new_loginname' => 'web1',
+			'email' => 'team@froxlor.org',
+			'firstname' => 'Test',
+			'name' => 'Testman',
+			'customernumber' => 1338,
+			'diskspace' => - 1,
+			'traffic' => - 1,
+			'subdomains' => 15,
+			'emails' => - 1,
+			'email_accounts' => 15,
+			'email_forwarders' => 15,
+			'email_imap' => 1,
+			'email_pop3' => 0,
+			'ftps' => 15,
+			'tickets' => 15,
+			'mysqls' => 15,
+			'createstdsubdomain' => 1,
+			'new_customer_password' => 'h0lYmo1y',
+			'sendpassword' => 1,
+			'phpenabled' => 1,
+			'store_defaultindex' => 1,
+			'custom_notes' => 'secret',
+			'custom_notes_show' => 0,
+			'gender' => 5,
+			'allowed_phpconfigs' => array(
+				1
+			)
+		];
+		
+		$this->expectExceptionMessage('You cannot create accounts which are similar to system accounts (as for example begin with "web"). Please enter another account name.');
+		Customers::getLocal($admin_userdata, $data)->add();
+	}
+
+	/**
+	 *
+	 * @depends testAdminCustomersAddLoginnameIsSystemaccount
+	 */
+	public function testAdminCustomersAddAutoLoginname()
+	{
+		global $admin_userdata;
+		
+		Settings::Set('system.lastaccountnumber', 0, true);
+		Settings::Set('ticket.enabled', 0, true);
+		
+		$data = [
+			'new_loginname' => '',
+			'email' => 'team@froxlor.org',
+			'firstname' => 'Test2',
+			'name' => 'Testman2',
+			'customernumber' => 1338,
+			'sendpassword' => 0,
+			'perlenabled' => 2,
+			'dnsenabled' => 4
+		];
+		
+		$json_result = Customers::getLocal($admin_userdata, $data)->add();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals('web1', $result['loginname']);
+		$this->assertEquals(1338, $result['customernumber']);
+	}
+
+	/**
+	 *
+	 * @depends testAdminCustomersAddAutoLoginname
+	 */
+	public function testAdminCustomersAddLoginnameExists()
+	{
+		global $admin_userdata;
+		
+		$data = [
+			'new_loginname' => 'test1',
+			'email' => 'team@froxlor.org',
+			'firstname' => 'Test2',
+			'name' => 'Testman2',
+			'customernumber' => 1339
+		];
+		
+		$this->expectExceptionMessage('Loginname test1 already exists');
+		Customers::getLocal($admin_userdata, $data)->add();
+	}
+
+	/**
+	 *
+	 * @depends testAdminCustomersAddLoginnameExists
+	 */
+	public function testAdminCustomersAddLoginnameInvalid()
+	{
+		global $admin_userdata;
+		
+		$data = [
+			'new_loginname' => 'user-',
+			'email' => 'team@froxlor.org',
+			'firstname' => 'Test2',
+			'name' => 'Testman2',
+			'customernumber' => 1339
+		];
+		
+		$this->expectExceptionMessage('Loginname "user-" contains illegal characters.');
+		Customers::getLocal($admin_userdata, $data)->add();
+	}
+
+	/**
+	 *
+	 * @depends testAdminCustomersAddLoginnameExists
+	 */
+	public function testAdminCustomersAddLoginnameInvalid2()
+	{
+		global $admin_userdata;
+		
+		$data = [
+			'new_loginname' => 'useruseruseruseruseruserX',
+			'email' => 'team@froxlor.org',
+			'firstname' => 'Test2',
+			'name' => 'Testman2',
+			'customernumber' => 1339
+		];
+		
+		$this->expectExceptionMessage('Loginname contains too many characters. Only ' . (14 - strlen(Settings::Get('customer.mysqlprefix'))) . ' characters are allowed.');
+		Customers::getLocal($admin_userdata, $data)->add();
 	}
 }

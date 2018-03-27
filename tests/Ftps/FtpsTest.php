@@ -5,6 +5,8 @@ use PHPUnit\Framework\TestCase;
  * @covers ApiCommand
  * @covers ApiParameter
  * @covers Ftps
+ * @covers Customers
+ * @covers Admins
  */
 class FtpsTest extends TestCase
 {

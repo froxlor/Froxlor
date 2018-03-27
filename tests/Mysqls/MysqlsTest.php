@@ -6,6 +6,8 @@ use PHPUnit\Framework\TestCase;
  * @covers ApiCommand
  * @covers ApiParameter
  * @covers Mysqls
+ * @covers Customers
+ * @covers Admins
  */
 class MysqlsTest extends TestCase
 {

@@ -51,6 +51,78 @@ class AdminsTest extends TestCase
 		$this->assertEquals(0, $result['customers_see_all']);
 	}
 	
+	/**
+	 *
+	 * @depends testAdminAdminsAdd
+	 */
+	public function testAdminAdminsAddLoginnameExists()
+	{
+		global $admin_userdata;
+		
+		$data = [
+			'new_loginname' => 'reseller',
+			'email' => 'testreseller@froxlor.org',
+			'name' => 'Testreseller'
+		];
+		
+		$this->expectExceptionMessage('Loginname reseller already exists');
+		Admins::getLocal($admin_userdata, $data)->add();
+	}
+	
+	/**
+	 *
+	 * @depends testAdminAdminsAddLoginnameExists
+	 */
+	public function testAdminAdminsAddLoginnameIsSystemaccount()
+	{
+		global $admin_userdata;
+		
+		$data = [
+			'new_loginname' => 'web2',
+			'email' => 'testreseller@froxlor.org',
+			'name' => 'Testreseller'
+		];
+		
+		$this->expectExceptionMessage('You cannot create accounts which are similar to system accounts (as for example begin with "web"). Please enter another account name.');
+		Admins::getLocal($admin_userdata, $data)->add();
+	}
+
+	/**
+	 *
+	 * @depends testAdminAdminsAddLoginnameIsSystemaccount
+	 */
+	public function testAdminAdminsAddLoginnameInvalid()
+	{
+		global $admin_userdata;
+		
+		$data = [
+			'new_loginname' => 'reslr-',
+			'email' => 'testreseller@froxlor.org',
+			'name' => 'Testreseller'
+		];
+		
+		$this->expectExceptionMessage('Loginname "reslr-" contains illegal characters.');
+		Admins::getLocal($admin_userdata, $data)->add();
+	}
+
+	/**
+	 *
+	 * @depends testAdminAdminsAddLoginnameIsSystemaccount
+	 */
+	public function testAdminAdminsAddLoginnameInvalidEmail()
+	{
+		global $admin_userdata;
+		
+		$data = [
+			'new_loginname' => 'reslr',
+			'email' => 'testreseller.froxlor.org',
+			'name' => 'Testreseller'
+		];
+		
+		$this->expectExceptionMessage('Email-address testreseller.froxlor.org contains invalid characters or is incomplete');
+		Admins::getLocal($admin_userdata, $data)->add();
+	}
+
 	public function testAdminAdminsAddNotAllowed()
 	{
 		global $admin_userdata;
@@ -160,8 +232,7 @@ class AdminsTest extends TestCase
 		$data = [
 			'new_loginname' => 'resellertest',
 			'email' => 'testreseller@froxlor.org',
-			'name' => 'Testreseller',
-			'admin_password' => 'h0lYmo1y'
+			'name' => 'Testreseller'
 		];
 		
 		$json_result = Admins::getLocal($admin_userdata, $data)->add();

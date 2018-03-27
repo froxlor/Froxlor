@@ -6,6 +6,8 @@ use PHPUnit\Framework\TestCase;
  * @covers ApiParameter
  * @covers SubDomains
  * @covers Domains
+ * @covers Customers
+ * @covers Admins
  */
 class SubDomainsTest extends TestCase
 {

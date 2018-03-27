@@ -88,6 +88,7 @@ class Admins extends ApiCommand implements ResourceEntity
 	 *
 	 * @param string $name
 	 * @param string $email
+	 * @param string $new_loginname
 	 * @param string $admin_password
 	 *        	optional, default auto-generated
 	 * @param string $def_language
@@ -168,13 +169,13 @@ class Admins extends ApiCommand implements ResourceEntity
 			// required parameters
 			$name = $this->getParam('name');
 			$email = $this->getParam('email');
-			
+			$loginname = $this->getParam('new_loginname');
+
 			// parameters
 			$def_language = $this->getParam('def_language', true, Settings::Get('panel.standardlanguage'));
 			$custom_notes = $this->getParam('custom_notes', true, '');
 			$custom_notes_show = $this->getParam('custom_notes_show', true, 0);
 			$password = $this->getParam('admin_password', true, '');
-			$loginname = $this->getParam('new_loginname', true, '');
 			
 			$diskspace = $this->getUlParam('diskspace', 'diskspace_ul', true, 0);
 			$traffic = $this->getUlParam('traffic', 'traffic_ul', true, 0);
@@ -239,28 +240,13 @@ class Admins extends ApiCommand implements ResourceEntity
 				'login' => $loginname
 			), true, true);
 			
-			if ($loginname == '') {
-				standard_error(array(
-					'stringisempty',
-					'myloginname'
-				), '', true);
-			} elseif (strtolower($loginname_check['loginname']) == strtolower($loginname) || strtolower($loginname_check_admin['loginname']) == strtolower($loginname)) {
+			if (strtolower($loginname_check['loginname']) == strtolower($loginname) || strtolower($loginname_check_admin['loginname']) == strtolower($loginname)) {
 				standard_error('loginnameexists', $loginname, true);
 			} // Accounts which match systemaccounts are not allowed, filtering them
 			elseif (preg_match('/^' . preg_quote(Settings::Get('customer.accountprefix'), '/') . '([0-9]+)/', $loginname)) {
 				standard_error('loginnameissystemaccount', Settings::Get('customer.accountprefix'), true);
 			} elseif (! validateUsername($loginname)) {
 				standard_error('loginnameiswrong', $loginname, true);
-			} elseif ($name == '') {
-				standard_error(array(
-					'stringisempty',
-					'myname'
-				), '', true);
-			} elseif ($email == '') {
-				standard_error(array(
-					'stringisempty',
-					'emailadd'
-				), '', true);
 			} elseif (! validateEmail($email)) {
 				standard_error('emailiswrong', $email, true);
 			} else {
@@ -548,17 +534,7 @@ class Admins extends ApiCommand implements ResourceEntity
 					$theme = Settings::Get('panel.default_theme');
 				}
 				
-				if ($name == '') {
-					standard_error(array(
-						'stringisempty',
-						'myname'
-					), '', true);
-				} elseif ($email == '') {
-					standard_error(array(
-						'stringisempty',
-						'emailadd'
-					), '', true);
-				} elseif (! validateEmail($email)) {
+				if (! validateEmail($email)) {
 					standard_error('emailiswrong', $email, true);
 				} else {
 					

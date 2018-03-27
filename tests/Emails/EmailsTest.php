@@ -7,6 +7,8 @@ use PHPUnit\Framework\TestCase;
  * @covers Emails
  * @covers EmailForwarders
  * @covers EmailAccounts
+ * @covers Customers
+ * @covers Admins
  */
 class MailsTest extends TestCase
 {
@@ -96,10 +98,71 @@ class MailsTest extends TestCase
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals('other@domain.tld', $result['destination']);
 	}
+	
+	/**
+	 * @depends testCustomerEmailForwardersAdd
+	 */
+	public function testCustomerEmailForwardersAddNoMoreResources()
+	{
+		global $admin_userdata;
+		
+		// get customer
+		$json_result = Customers::getLocal($admin_userdata, array(
+			'loginname' => 'test1'
+		))->get();
+		$customer_userdata = json_decode($json_result, true)['data'];
+		$customer_userdata['email_forwarders_used'] = $customer_userdata['email_forwarders'];
+		$this->expectExceptionCode(406);
+		$this->expectExceptionMessage("No more resources available");
+		EmailForwarders::getLocal($customer_userdata)->add();
+	}
+	
+	/**
+	 * @depends testCustomerEmailForwardersAddNoMoreResources
+	 */
+	public function testCustomerEmailForwardersAddEmailHidden()
+	{
+		global $admin_userdata;
+		
+		Settings::Set('panel.customer_hide_options', 'email', true);
+		
+		// get customer
+		$json_result = Customers::getLocal($admin_userdata, array(
+			'loginname' => 'test1'
+		))->get();
+		$customer_userdata = json_decode($json_result, true)['data'];
+		$this->expectExceptionCode(405);
+		$this->expectExceptionMessage("You cannot access this resource");
+		EmailForwarders::getLocal($customer_userdata)->add();
+	}
 
+	/**
+	 * @depends testCustomerEmailForwardersAddEmailHidden
+	 */
+	public function testCustomerEmailForwardersDeleteEmailHidden()
+	{
+		global $admin_userdata;
+		
+		Settings::Set('panel.customer_hide_options', 'email', true);
+		
+		// get customer
+		$json_result = Customers::getLocal($admin_userdata, array(
+			'loginname' => 'test1'
+		))->get();
+		$customer_userdata = json_decode($json_result, true)['data'];
+		$this->expectExceptionCode(405);
+		$this->expectExceptionMessage("You cannot access this resource");
+		EmailForwarders::getLocal($customer_userdata)->delete();
+	}
+	
+	/**
+	 * @depends testCustomerEmailForwardersDeleteEmailHidden
+	 */
 	public function testCustomerEmailForwardersAddAnother()
 	{
 		global $admin_userdata;
+		
+		Settings::Set('panel.customer_hide_options', '', true);
 		
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
@@ -245,6 +308,8 @@ class MailsTest extends TestCase
 	{
 		global $admin_userdata;
 		
+		Settings::Set('panel.customer_hide_options', '', true);
+
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
