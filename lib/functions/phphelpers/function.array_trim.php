@@ -27,15 +27,15 @@
  */
 function array_trim($source)
 {
-	$returnval = array();
-	if (is_array($source)) {
-		foreach ($source as $var => $val) {
-			if ($val != ' ' && $val != '') {
-				$returnval[$var] = $val;
-			}
-		}
-	} else {
-		$returnval = $source;
-	}
-	return $returnval;
+    $returnval = array();
+    if (is_array($source)) {
+        foreach ($source as $var => $val) {
+            if ($val != ' ' && $val != '') {
+                $returnval[$var] = $val;
+            }
+        }
+    } else {
+        $returnval = $source;
+    }
+    return $returnval;
 }

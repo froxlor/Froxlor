@@ -19,7 +19,7 @@
 // Load the user settings
 define('FROXLOR_INSTALL_DIR', dirname(dirname(__FILE__)));
 if (! file_exists('./userdata.inc.php')) {
-	die();
+    die();
 }
 require './userdata.inc.php';
 require './tables.inc.php';
@@ -30,72 +30,72 @@ require './functions/validate/function.validateDomain.php';
 require './classes/cURL/class.HttpClient.php';
 
 if (isset($_POST['action'])) {
-	$action = $_POST['action'];
+    $action = $_POST['action'];
 } elseif (isset($_GET['action'])) {
-	$action = $_GET['action'];
+    $action = $_GET['action'];
 } else {
-	$action = "";
+    $action = "";
 }
 
 if ($action == "newsfeed") {
-	if (isset($_GET['role']) && $_GET['role'] == "customer") {
-		$feed = Settings::Get("customer.news_feed_url");
-	} else {
-		$feed = "https://inside.froxlor.org/news/";
-	}
-	
-	if (function_exists("simplexml_load_file") == false) {
-		outputItem("Newsfeed not available due to missing php-simplexml extension", "Please install the php-simplexml extension in order to view our newsfeed.");
-		exit();
-	}
-	
-	if (function_exists('curl_version')) {
-		$output = HttpClient::urlGet($feed);
-		$news = simplexml_load_string(trim($output));
-	} else {
-		outputItem("Newsfeed not available due to missing php-curl extension", "Please install the php-curl extension in order to view our newsfeed.");
-		exit();
-	}
-	
-	if ($news !== false) {
-		for ($i = 0; $i < 3; $i ++) {
-			$item = $news->channel->item[$i];
-			
-			$title = (string) $item->title;
-			$link = (string) $item->link;
-			$date = date("Y-m-d G:i", strtotime($item->pubDate));
-			$content = preg_replace("/[\r\n]+/", " ", strip_tags($item->description));
-			$content = substr($content, 0, 150) . "...";
-			
-			outputItem($title, $content, $link, $date);
-		}
-	} else {
-		echo "";
-	}
+    if (isset($_GET['role']) && $_GET['role'] == "customer") {
+        $feed = Settings::Get("customer.news_feed_url");
+    } else {
+        $feed = "https://inside.froxlor.org/news/";
+    }
+    
+    if (function_exists("simplexml_load_file") == false) {
+        outputItem("Newsfeed not available due to missing php-simplexml extension", "Please install the php-simplexml extension in order to view our newsfeed.");
+        exit();
+    }
+    
+    if (function_exists('curl_version')) {
+        $output = HttpClient::urlGet($feed);
+        $news = simplexml_load_string(trim($output));
+    } else {
+        outputItem("Newsfeed not available due to missing php-curl extension", "Please install the php-curl extension in order to view our newsfeed.");
+        exit();
+    }
+    
+    if ($news !== false) {
+        for ($i = 0; $i < 3; $i ++) {
+            $item = $news->channel->item[$i];
+            
+            $title = (string) $item->title;
+            $link = (string) $item->link;
+            $date = date("Y-m-d G:i", strtotime($item->pubDate));
+            $content = preg_replace("/[\r\n]+/", " ", strip_tags($item->description));
+            $content = substr($content, 0, 150) . "...";
+            
+            outputItem($title, $content, $link, $date);
+        }
+    } else {
+        echo "";
+    }
 } else {
-	echo "No action set.";
+    echo "No action set.";
 }
 
 function outputItem($title, $content, $link = null, $date = null)
 {
-	echo "<li class=\"clearfix\">
+    echo "<li class=\"clearfix\">
 			<div class=\"newsfeed-body clearfix\">
 				<div class=\"header\">
 					<strong class=\"primary-font\">";
-			if (! empty($link)) {
-				echo "<a href=\"{$link}\" target=\"_blank\">";
-			}
-			echo $title;
-			if (! empty($link)) {
-				echo "</a>";
-			}
-			echo "</strong>";
-			if (! empty($date)) {
-				echo "<small class=\"pull-right text-muted\">
+    if (! empty($link)) {
+        echo "<a href=\"{$link}\" target=\"_blank\">";
+    }
+    echo $title;
+    if (! empty($link)) {
+        echo "</a>";
+    }
+    echo "</strong>";
+    if (! empty($date)) {
+        echo "<small class=\"pull-right text-muted\">
                             <i class=\"fa fa-clock-o fa-fw\"></i> {$date}
                         </small>";
-			}
-			echo "</div>
+    }
+    echo "</div>
                     <p>
                         {$content}
                     </p>

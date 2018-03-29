@@ -20,7 +20,7 @@
  *
  * generate a pseudo-random string of bytes
  *
- * @param int $length            
+ * @param int $length
  *
  * @return string
  */

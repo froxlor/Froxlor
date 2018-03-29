@@ -16,35 +16,33 @@
  *
  */
 
-function storeSettingResetCatchall($fieldname, $fielddata, $newfieldvalue) {
+function storeSettingResetCatchall($fieldname, $fielddata, $newfieldvalue)
+{
+    $returnvalue = storeSettingField($fieldname, $fielddata, $newfieldvalue);
 
-	$returnvalue = storeSettingField($fieldname, $fielddata, $newfieldvalue);
-
-	if ($returnvalue !== false
-		&& is_array($fielddata)
-		&& isset($fielddata['settinggroup'])
-		&& $fielddata['settinggroup'] == 'catchall'
-		&& isset($fielddata['varname'])
-		&& $fielddata['varname'] == 'catchall_enabled'
-		&& $newfieldvalue == '0'
-	) {
-
-		$result_stmt = Database::query("
+    if ($returnvalue !== false
+        && is_array($fielddata)
+        && isset($fielddata['settinggroup'])
+        && $fielddata['settinggroup'] == 'catchall'
+        && isset($fielddata['varname'])
+        && $fielddata['varname'] == 'catchall_enabled'
+        && $newfieldvalue == '0'
+    ) {
+        $result_stmt = Database::query("
 			SELECT `id`, `email`, `email_full`, `iscatchall`  FROM `" . TABLE_MAIL_VIRTUAL . "`
 			WHERE `iscatchall` = '1'
 		");
 
-		if (Database::num_rows() > 0) {
-
-			$upd_stmt = Database::prepare("
+        if (Database::num_rows() > 0) {
+            $upd_stmt = Database::prepare("
 				UPDATE `" . TABLE_MAIL_VIRTUAL . "` SET `email` = :email, `iscatchall` = '0' WHERE `id` = :id
 			");
 
-			while ($result_row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-				Database::pexecute($upd_stmt, array('email' => $result_row['email_full'], 'id' => $result_row['id']));
-			}
-		}
-	}
+            while ($result_row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+                Database::pexecute($upd_stmt, array('email' => $result_row['email_full'], 'id' => $result_row['id']));
+            }
+        }
+    }
 
-	return $returnvalue;
+    return $returnvalue;
 }

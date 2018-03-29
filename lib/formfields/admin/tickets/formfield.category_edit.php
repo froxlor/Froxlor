@@ -16,29 +16,29 @@
  */
 
 return array(
-	'category_edit' => array(
-		'title' => $lng['ticket']['ticket_editcateory'],
-		'image' => 'icons/category_edit.png',
-		'sections' => array(
-			'section_a' => array(
-				'title' => $lng['ticket']['ticket_editcateory'],
-				'image' => 'icons/category_edit.png',
-				'fields' => array(
-					'category' => array(
-						'label' => $lng['ticket']['category'],
-						'type' => 'text',
-						'maxlength' => 50,
-						'value' => $row['name']
-					),
-					'logicalorder' => array(
-						'label' => $lng['ticket']['logicalorder'],
-						'desc' => $lng['ticket']['orderdesc'],
-						'type' => 'text',
-						'maxlength' => 3,
-						'value' => $row['logicalorder']
-					)
-				)
-			)
-		)
-	)
+    'category_edit' => array(
+        'title' => $lng['ticket']['ticket_editcateory'],
+        'image' => 'icons/category_edit.png',
+        'sections' => array(
+            'section_a' => array(
+                'title' => $lng['ticket']['ticket_editcateory'],
+                'image' => 'icons/category_edit.png',
+                'fields' => array(
+                    'category' => array(
+                        'label' => $lng['ticket']['category'],
+                        'type' => 'text',
+                        'maxlength' => 50,
+                        'value' => $row['name']
+                    ),
+                    'logicalorder' => array(
+                        'label' => $lng['ticket']['logicalorder'],
+                        'desc' => $lng['ticket']['orderdesc'],
+                        'type' => 'text',
+                        'maxlength' => 3,
+                        'value' => $row['logicalorder']
+                    )
+                )
+            )
+        )
+    )
 );

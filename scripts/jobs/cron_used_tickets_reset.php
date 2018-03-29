@@ -1,4 +1,6 @@
-<?php if (!defined('MASTER_CRONJOB')) die('You cannot access this file directly!');
+<?php if (!defined('MASTER_CRONJOB')) {
+    die('You cannot access this file directly!');
+}
 
 /**
  * This file is part of the Froxlor project.

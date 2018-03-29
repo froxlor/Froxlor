@@ -25,20 +25,21 @@
  *
  * @return boolean
  */
-function customerHasPerlEnabled($cid = 0) {
-
-	if ($cid > 0) {
-		$result_stmt = Database::prepare("
+function customerHasPerlEnabled($cid = 0)
+{
+    if ($cid > 0) {
+        $result_stmt = Database::prepare(
+            "
 				SELECT `perlenabled` FROM `".TABLE_PANEL_CUSTOMERS."` WHERE `customerid` = :cid"
-		);
-		Database::pexecute($result_stmt, array('cid' => $cid));
-		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+        );
+        Database::pexecute($result_stmt, array('cid' => $cid));
+        $result = $result_stmt->fetch(PDO::FETCH_ASSOC);
 
-		if (is_array($result)
-				&& isset($result['perlenabled'])
-		) {
-			return ($result['perlenabled'] == '1') ? true : false;
-		}
-	}
-	return false;
+        if (is_array($result)
+                && isset($result['perlenabled'])
+        ) {
+            return ($result['perlenabled'] == '1') ? true : false;
+        }
+    }
+    return false;
 }

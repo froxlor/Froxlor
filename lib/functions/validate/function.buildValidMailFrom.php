@@ -28,6 +28,6 @@
 
 function buildValidMailFrom($name, $mailaddress)
 {
-	$mailfrom = str_replace(array("\r", "\n"), '', $name) . ' <' . str_replace(array("\r", "\n"), '', $mailaddress) . '>';
-	return $mailfrom;
+    $mailfrom = str_replace(array("\r", "\n"), '', $name) . ' <' . str_replace(array("\r", "\n"), '', $mailaddress) . '>';
+    return $mailfrom;
 }

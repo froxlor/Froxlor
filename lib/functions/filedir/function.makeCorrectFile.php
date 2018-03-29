@@ -29,23 +29,22 @@
 
 function makeCorrectFile($filename)
 {
-	if (!isset($filename)
-		|| trim($filename) == ''
-	) {
-		$error = 'Given filename for function '.__FUNCTION__.' is empty.'."\n";
-		$error.= 'This is very dangerous and should not happen.'."\n";
-		$error.= 'Please inform the Froxlor team about this issue so they can fix it.';
-		echo $error;
-		// so we can see WHERE this happened
-		debug_print_backtrace();
-		die();
-	}
+    if (!isset($filename)
+        || trim($filename) == ''
+    ) {
+        $error = 'Given filename for function '.__FUNCTION__.' is empty.'."\n";
+        $error.= 'This is very dangerous and should not happen.'."\n";
+        $error.= 'Please inform the Froxlor team about this issue so they can fix it.';
+        echo $error;
+        // so we can see WHERE this happened
+        debug_print_backtrace();
+        die();
+    }
 
-	if(substr($filename, 0, 1) != '/')
-	{
-		$filename = '/' . $filename;
-	}
+    if (substr($filename, 0, 1) != '/') {
+        $filename = '/' . $filename;
+    }
 
-	$filename = makeSecurePath($filename);
-	return $filename;
+    $filename = makeSecurePath($filename);
+    return $filename;
 }

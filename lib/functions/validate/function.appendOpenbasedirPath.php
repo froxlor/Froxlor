@@ -29,35 +29,34 @@
  */
 function appendOpenBasedirPath($path = '', $first = false)
 {
-	if ($path != '' && $path != '/' &&
-		(! preg_match("#^/dev#i", $path) || preg_match("#^/dev/urandom#i", $path))
-		&& ! preg_match("#^/proc#i", $path)
-		&& ! preg_match("#^/etc#i", $path)
-		&& ! preg_match("#^/sys#i", $path)
-		&& ! preg_match("#:#", $path)) {
+    if ($path != '' && $path != '/' &&
+        (! preg_match("#^/dev#i", $path) || preg_match("#^/dev/urandom#i", $path))
+        && ! preg_match("#^/proc#i", $path)
+        && ! preg_match("#^/etc#i", $path)
+        && ! preg_match("#^/sys#i", $path)
+        && ! preg_match("#:#", $path)) {
+        if (preg_match("#^/dev/urandom#i", $path)) {
+            $path = makeCorrectFile($path);
+        } else {
+            $path = makeCorrectDir($path);
+        }
 
-		if (preg_match("#^/dev/urandom#i", $path)) {
-			$path = makeCorrectFile($path);
-		} else {
-			$path = makeCorrectDir($path);
-		}
+        // check for php-version that requires the trailing
+        // slash to be removed as it does not allow the usage
+        // of the subfolders within the given folder, fixes #797
+        if ((PHP_MINOR_VERSION == 2 && PHP_VERSION_ID >= 50216) || PHP_VERSION_ID >= 50304) {
+            // check trailing slash
+            if (substr($path, - 1, 1) == '/') {
+                // remove it
+                $path = substr($path, 0, - 1);
+            }
+        }
 
-		// check for php-version that requires the trailing
-		// slash to be removed as it does not allow the usage
-		// of the subfolders within the given folder, fixes #797
-		if ((PHP_MINOR_VERSION == 2 && PHP_VERSION_ID >= 50216) || PHP_VERSION_ID >= 50304) {
-			// check trailing slash
-			if (substr($path, - 1, 1) == '/') {
-				// remove it
-				$path = substr($path, 0, - 1);
-			}
-		}
+        if ($first) {
+            return $path;
+        }
 
-		if ($first) {
-			return $path;
-		}
-
-		return ':' . $path;
-	}
-	return '';
+        return ':' . $path;
+    }
+    return '';
 }

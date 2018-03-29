@@ -17,33 +17,33 @@
 
 function getAllowedDomainEntry($domain_id, $area = 'customer', $userinfo, &$idna_convert)
 {
-	$dom_data = array(
-		'did' => $domain_id
-	);
+    $dom_data = array(
+        'did' => $domain_id
+    );
 
-	$where_clause = '';
-	if ($area == 'admin') {
-		if ($userinfo['domains_see_all'] != '1') {
-			$where_clause = '`adminid` = :uid AND ';
-			$dom_data['uid'] = $userinfo['userid'];
-		}
-	} else {
-		$where_clause = '`customerid` = :uid AND ';
-		$dom_data['uid'] = $userinfo['userid'];
-	}
+    $where_clause = '';
+    if ($area == 'admin') {
+        if ($userinfo['domains_see_all'] != '1') {
+            $where_clause = '`adminid` = :uid AND ';
+            $dom_data['uid'] = $userinfo['userid'];
+        }
+    } else {
+        $where_clause = '`customerid` = :uid AND ';
+        $dom_data['uid'] = $userinfo['userid'];
+    }
 
-	$dom_stmt = Database::prepare("
+    $dom_stmt = Database::prepare("
 		SELECT domain, isbinddomain
 		FROM `" . TABLE_PANEL_DOMAINS . "`
 		WHERE " . $where_clause . " id = :did
 	");
-	$domain = Database::pexecute_first($dom_stmt, $dom_data);
+    $domain = Database::pexecute_first($dom_stmt, $dom_data);
 
-	if ($domain) {
-		if ($domain['isbinddomain'] != '1') {
-			standard_error('dns_domain_nodns');
-		}
-		return $idna_convert->decode($domain['domain']);
-	}
-	standard_error('dns_notfoundorallowed');
+    if ($domain) {
+        if ($domain['isbinddomain'] != '1') {
+            standard_error('dns_domain_nodns');
+        }
+        return $idna_convert->decode($domain['domain']);
+    }
+    standard_error('dns_notfoundorallowed');
 }

@@ -19,7 +19,7 @@
 
 function getFormFieldOutputLabel($fieldname, $fielddata)
 {
-	$label = $fielddata['label'];
-	eval("\$returnvalue = \"" . getTemplate("formfields/label", true) . "\";");
-	return $returnvalue;
+    $label = $fielddata['label'];
+    eval("\$returnvalue = \"" . getTemplate("formfields/label", true) . "\";");
+    return $returnvalue;
 }

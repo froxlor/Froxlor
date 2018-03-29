@@ -17,25 +17,26 @@
  *
  */
 
-function checkUsername($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues) {
+function checkUsername($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues)
+{
+    if (!isset($allnewfieldvalues['customer_mysqlprefix'])) {
+        $allnewfieldvalues['customer_mysqlprefix'] = Settings::Get('customer.mysqlprefix');
+    }
 
-	if (!isset($allnewfieldvalues['customer_mysqlprefix'])) {
-		$allnewfieldvalues['customer_mysqlprefix'] = Settings::Get('customer.mysqlprefix');
-	}
-
-	$returnvalue = array();
-	if (validateUsername(
-		$newfieldvalue,
-		Settings::Get('panel.unix_names'),
-		14 - strlen($allnewfieldvalues['customer_mysqlprefix'])) === true
-	) {
-		$returnvalue = array(FORMFIELDS_PLAUSIBILITY_CHECK_OK);
-	} else {
-		$errmsg = 'accountprefixiswrong';
-		if ($fieldname == 'customer_mysqlprefix') {
-			$errmsg = 'mysqlprefixiswrong';
-		}
-		$returnvalue = array(FORMFIELDS_PLAUSIBILITY_CHECK_ERROR, $errmsg);
-	}
-	return $returnvalue;
+    $returnvalue = array();
+    if (validateUsername(
+        $newfieldvalue,
+        Settings::Get('panel.unix_names'),
+        14 - strlen($allnewfieldvalues['customer_mysqlprefix'])
+    ) === true
+    ) {
+        $returnvalue = array(FORMFIELDS_PLAUSIBILITY_CHECK_OK);
+    } else {
+        $errmsg = 'accountprefixiswrong';
+        if ($fieldname == 'customer_mysqlprefix') {
+            $errmsg = 'mysqlprefixiswrong';
+        }
+        $returnvalue = array(FORMFIELDS_PLAUSIBILITY_CHECK_ERROR, $errmsg);
+    }
+    return $returnvalue;
 }

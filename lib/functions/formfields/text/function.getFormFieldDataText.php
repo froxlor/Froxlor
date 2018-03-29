@@ -15,12 +15,13 @@
  *
  */
 
-function getFormFieldDataText($fieldname, $fielddata, &$input) {
-	if(isset($input[$fieldname])) {
-		$newfieldvalue = str_replace("\r\n", "\n", $input[$fieldname]);
-	} else {
-		$newfieldvalue = $fielddata['default'];
-	}
+function getFormFieldDataText($fieldname, $fielddata, &$input)
+{
+    if (isset($input[$fieldname])) {
+        $newfieldvalue = str_replace("\r\n", "\n", $input[$fieldname]);
+    } else {
+        $newfieldvalue = $fielddata['default'];
+    }
 
-	return $newfieldvalue;
+    return $newfieldvalue;
 }

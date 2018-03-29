@@ -19,14 +19,11 @@
 
 function getFormFieldDataBool($fieldname, $fielddata, &$input)
 {
-	if(isset($input[$fieldname]) && ($input[$fieldname] === '1' || $input[$fieldname] === 1 || $input[$fieldname] === true || strtolower($input[$fieldname]) === 'yes' || strtolower($input[$fieldname]) === 'ja'))
-	{
-		$newfieldvalue = '1';
-	}
-	else
-	{
-		$newfieldvalue = '0';
-	}
+    if (isset($input[$fieldname]) && ($input[$fieldname] === '1' || $input[$fieldname] === 1 || $input[$fieldname] === true || strtolower($input[$fieldname]) === 'yes' || strtolower($input[$fieldname]) === 'ja')) {
+        $newfieldvalue = '1';
+    } else {
+        $newfieldvalue = '0';
+    }
 
-	return $newfieldvalue;
+    return $newfieldvalue;
 }

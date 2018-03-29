@@ -16,16 +16,16 @@
  *
  */
 
-function checkPhpInterfaceSetting($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues) {
+function checkPhpInterfaceSetting($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues)
+{
+    $returnvalue = array(FORMFIELDS_PLAUSIBILITY_CHECK_OK);
 
-	$returnvalue = array(FORMFIELDS_PLAUSIBILITY_CHECK_OK);
+    if ((int)Settings::Get('system.mod_fcgid') == 1) {
+        // fcgid only works for apache and lighttpd
+        if (strtolower($newfieldvalue) != 'apache2' && strtolower($newfieldvalue) != 'lighttpd') {
+            $returnvalue = array(FORMFIELDS_PLAUSIBILITY_CHECK_ERROR, 'fcgidstillenableddeadlock');
+        }
+    }
 
-	if ((int)Settings::Get('system.mod_fcgid') == 1) {
-		// fcgid only works for apache and lighttpd
-		if (strtolower($newfieldvalue) != 'apache2' && strtolower($newfieldvalue) != 'lighttpd') {
-			$returnvalue = array(FORMFIELDS_PLAUSIBILITY_CHECK_ERROR, 'fcgidstillenableddeadlock');
-		}
-	}
-
-	return $returnvalue;
+    return $returnvalue;
 }

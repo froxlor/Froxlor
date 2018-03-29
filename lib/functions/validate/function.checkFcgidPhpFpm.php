@@ -24,14 +24,14 @@ function checkFcgidPhpFpm($fieldname, $fielddata, $newfieldvalue, $allnewfieldva
         'system_mod_fcgid_enabled' => array(
             'other_post_field' => 'system_phpfpm_enabled',
             'other_enabled' => 'phpfpm.enabled',
-			'other_enabled_lng' => 'phpfpmstillenabled',
-			'deactivate' => array('phpfpm.enabled_ownvhost' => 0)
+            'other_enabled_lng' => 'phpfpmstillenabled',
+            'deactivate' => array('phpfpm.enabled_ownvhost' => 0)
         ),
         'system_phpfpm_enabled' => array(
             'other_post_field' => 'system_mod_fcgid_enabled',
             'other_enabled' => 'system.mod_fcgid',
-			'other_enabled_lng' => 'fcgidstillenabled',
-			'deactivate' => array('system.mod_fcgid_ownvhost' => 0)
+            'other_enabled_lng' => 'fcgidstillenabled',
+            'deactivate' => array('system.mod_fcgid_ownvhost' => 0)
         )
     );
     
@@ -59,11 +59,11 @@ function checkFcgidPhpFpm($fieldname, $fielddata, $newfieldvalue, $allnewfieldva
             }
         }
         if (in_array(FORMFIELDS_PLAUSIBILITY_CHECK_OK, $returnvalue)) {
-			// be sure to deactivate the other one for the froxlor-vhost
-			// to avoid having a settings-deadlock
-			foreach ($check_array[$fieldname]['deactivate'] as $setting => $value) {
-				Settings::Set($setting, $value, true);
-			}
+            // be sure to deactivate the other one for the froxlor-vhost
+            // to avoid having a settings-deadlock
+            foreach ($check_array[$fieldname]['deactivate'] as $setting => $value) {
+                Settings::Set($setting, $value, true);
+            }
         }
     }
     

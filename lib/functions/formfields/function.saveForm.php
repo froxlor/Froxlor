@@ -19,18 +19,13 @@
 
 function saveForm($fielddata, $newfieldvalue)
 {
-	$returnvalue = '';
-	if(is_array($fielddata) && isset($fielddata['save_method']) && $fielddata['save_method'] != '' && function_exists($fielddata['save_method']))
-	{
-		$returnvalue = call_user_func($fielddata['save_method'], $fielddata, $newfieldvalue);
-	}
-	elseif(is_array($fielddata) && !isset($fielddata['save_method']))
-	{
-		$returnvalue = true;
-	}
-	else
-	{
-		$returnvalue = false;
-	}
-	return $returnvalue;
+    $returnvalue = '';
+    if (is_array($fielddata) && isset($fielddata['save_method']) && $fielddata['save_method'] != '' && function_exists($fielddata['save_method'])) {
+        $returnvalue = call_user_func($fielddata['save_method'], $fielddata, $newfieldvalue);
+    } elseif (is_array($fielddata) && !isset($fielddata['save_method'])) {
+        $returnvalue = true;
+    } else {
+        $returnvalue = false;
+    }
+    return $returnvalue;
 }

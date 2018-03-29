@@ -16,12 +16,12 @@
  */
 
 if (!defined('AREA')
-		|| (defined('AREA') && AREA != 'admin')
-		|| !isset($userinfo['loginname'])
-		|| (isset($userinfo['loginname']) && $userinfo['loginname'] == '')
+        || (defined('AREA') && AREA != 'admin')
+        || !isset($userinfo['loginname'])
+        || (isset($userinfo['loginname']) && $userinfo['loginname'] == '')
 ) {
-	header('Location: ../../../index.php');
-	exit;
+    header('Location: ../../../index.php');
+    exit;
 }
 
 $updateto = '0.9-r0';
@@ -31,7 +31,8 @@ showUpdateStep("Upgrading SysCP ".Settings::Get('panel.version')." to Froxlor ".
 updateToVersion($updateto);
 
 // add field frontend
-Database::query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` SET
+Database::query(
+    "INSERT INTO `" . TABLE_PANEL_SETTINGS . "` SET
 	`settinggroup` = 'panel',
 	`varname` = 'frontend',
 	`value` = 'froxlor'"

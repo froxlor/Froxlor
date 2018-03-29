@@ -19,15 +19,13 @@
 
 function validateFormFieldInt($fieldname, $fielddata, $newfieldvalue)
 {
-	if(isset($fielddata['int_min']) && (int)$newfieldvalue < (int)$fielddata['int_min'])
-	{
-		return('intvaluetoolow');
-	}
+    if (isset($fielddata['int_min']) && (int)$newfieldvalue < (int)$fielddata['int_min']) {
+        return('intvaluetoolow');
+    }
 
-	if(isset($fielddata['int_max']) && (int)$newfieldvalue > (int)$fielddata['int_max'])
-	{
-		return('intvaluetoohigh');
-	}
+    if (isset($fielddata['int_max']) && (int)$newfieldvalue > (int)$fielddata['int_max']) {
+        return('intvaluetoohigh');
+    }
 
-	return true;
+    return true;
 }

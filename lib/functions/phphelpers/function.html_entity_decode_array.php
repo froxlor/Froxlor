@@ -33,37 +33,28 @@
 
 function html_entity_decode_array($subject, $fields = '', $complete = false, $quote_style = ENT_COMPAT, $charset = 'UTF-8')
 {
-	if(is_array($subject))
-	{
-		if(!is_array($fields))
-		{
-			$fields = array_trim(explode(' ', $fields));
-		}
+    if (is_array($subject)) {
+        if (!is_array($fields)) {
+            $fields = array_trim(explode(' ', $fields));
+        }
 
-		foreach($subject as $field => $value)
-		{
-			if((!is_array($fields) || empty($fields))
-			   || (is_array($fields) && !empty($fields) && in_array($field, $fields)))
-			{
-				/**
-				 * Just call ourselve to manage multi-dimensional arrays
-				 */
+        foreach ($subject as $field => $value) {
+            if ((!is_array($fields) || empty($fields))
+               || (is_array($fields) && !empty($fields) && in_array($field, $fields))) {
+                /**
+                 * Just call ourselve to manage multi-dimensional arrays
+                 */
 
-				$subject[$field] = html_entity_decode_array($subject[$field], $fields, $complete, $quote_style, $charset);
-			}
-		}
-	}
-	else
-	{
-		if($complete == true)
-		{
-			$subject = html_entity_decode_complete($subject, $quote_style, $charset);
-		}
-		else
-		{
-			$subject = html_entity_decode($subject, $quote_style, $charset);
-		}
-	}
+                $subject[$field] = html_entity_decode_array($subject[$field], $fields, $complete, $quote_style, $charset);
+            }
+        }
+    } else {
+        if ($complete == true) {
+            $subject = html_entity_decode_complete($subject, $quote_style, $charset);
+        } else {
+            $subject = html_entity_decode($subject, $quote_style, $charset);
+        }
+    }
 
-	return $subject;
+    return $subject;
 }

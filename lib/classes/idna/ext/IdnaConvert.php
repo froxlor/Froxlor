@@ -52,8 +52,8 @@
 
 namespace Mso\IdnaConvert;
 
-class IdnaConvert {
-
+class IdnaConvert
+{
     const Version = '1.1.0';
     const SubVersion = 'main';
 
@@ -161,7 +161,6 @@ class IdnaConvert {
             }
 
             $this->idnVersion = $idnVersion;
-
         } else {
             throw new \InvalidArgumentException(sprintf('Invalid IDN version %d', $idnVersion));
         }
@@ -198,7 +197,7 @@ class IdnaConvert {
             if ($this->strictMode) {
                 throw new \InvalidArgumentException('Only individual domain name parts can be handled in strict mode');
             }
-            list ($email_pref, $input) = explode('@', $input, 2);
+            list($email_pref, $input) = explode('@', $input, 2);
             $arr = explode('.', $input);
             foreach ($arr as $k => $v) {
                 $conv = $punyCode->decode($v);
@@ -313,6 +312,7 @@ class IdnaConvert {
                     $decoded[$k] = 0x2E;
                     // Right, no break here, the above are converted to dots anyway
                 // Stumbling across an anchoring character
+                // no break
                 case 0x2E:
                 case 0x2F:
                 case 0x3A:
@@ -401,5 +401,4 @@ class IdnaConvert {
         }
         return $instances[$this->idnVersion];
     }
-
 }

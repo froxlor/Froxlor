@@ -18,23 +18,21 @@
  */
 
 return array(
-	'groups' => array(
-	'ftpserver' => array(
-			'title' => $lng['admin']['ftpserversettings'],
-			'fields' => array(
-				'ftpserver' => array(
-					'label' => $lng['admin']['ftpserver'],
-					'settinggroup' => 'system',
-					'varname' => 'ftpserver',
-					'type' => 'option',
-					'default' => 'proftpd',
-					'option_mode' => 'one',
-					'option_options' => array('proftpd' => 'Proftpd', 'pureftpd' => 'Pureftpd'),
-					'save_method' => 'storeSettingField',
-				),
-			),
-		),
-	)
+    'groups' => array(
+    'ftpserver' => array(
+            'title' => $lng['admin']['ftpserversettings'],
+            'fields' => array(
+                'ftpserver' => array(
+                    'label' => $lng['admin']['ftpserver'],
+                    'settinggroup' => 'system',
+                    'varname' => 'ftpserver',
+                    'type' => 'option',
+                    'default' => 'proftpd',
+                    'option_mode' => 'one',
+                    'option_options' => array('proftpd' => 'Proftpd', 'pureftpd' => 'Pureftpd'),
+                    'save_method' => 'storeSettingField',
+                ),
+            ),
+        ),
+    )
 );
-
-?>

@@ -19,14 +19,11 @@
 
 function getFormFieldDataInt($fieldname, $fielddata, &$input)
 {
-	if(isset($input[$fieldname]))
-	{
-		$newfieldvalue = (int)$input[$fieldname];
-	}
-	else
-	{
-		$newfieldvalue = (int)$fielddata['default'];
-	}
+    if (isset($input[$fieldname])) {
+        $newfieldvalue = (int)$input[$fieldname];
+    } else {
+        $newfieldvalue = (int)$fielddata['default'];
+    }
 
-	return $newfieldvalue;
+    return $newfieldvalue;
 }

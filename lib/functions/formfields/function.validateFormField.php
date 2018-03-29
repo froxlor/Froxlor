@@ -19,14 +19,11 @@
 
 function validateFormField($fieldname, $fielddata, $newfieldvalue)
 {
-	$returnvalue = '';
-	if(is_array($fielddata) && isset($fielddata['type']) && $fielddata['type'] != '' && function_exists('validateFormField' . ucfirst($fielddata['type'])))
-	{
-		$returnvalue = call_user_func('validateFormField' . ucfirst($fielddata['type']), $fieldname, $fielddata, $newfieldvalue);
-	}
-	else
-	{
-		$returnvalue = 'validation method not found';
-	}
-	return $returnvalue;
+    $returnvalue = '';
+    if (is_array($fielddata) && isset($fielddata['type']) && $fielddata['type'] != '' && function_exists('validateFormField' . ucfirst($fielddata['type']))) {
+        $returnvalue = call_user_func('validateFormField' . ucfirst($fielddata['type']), $fieldname, $fielddata, $newfieldvalue);
+    } else {
+        $returnvalue = 'validation method not found';
+    }
+    return $returnvalue;
 }

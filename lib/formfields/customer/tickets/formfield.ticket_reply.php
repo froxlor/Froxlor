@@ -15,37 +15,37 @@
  */
 
 return array(
-	'ticket_reply' => array(
-		'title' => $lng['ticket']['ticket_reply'],
-		'image' => 'icons/ticket_reply.png',
-		'sections' => array(
-			'section_a' => array(
-				'title' => $lng['ticket']['ticket_reply'],
-				'image' => 'icons/ticket_reply.png',
-				'fields' => array(
-					'subject' => array(
-						'label' => $lng['ticket']['subject'],
-						'type' => 'text',
-						'value' => "Re: $subject",
-					),
-					'priority' => array(
-						'label' => $lng['ticket']['priority'],
-						'type' => 'select',
-						'select_var' => $priorities,
-					),
-					'category' => array(
-						'label' => $lng['ticket']['category'],
-						'type' => 'label',
-						'value' => $row['name'],
-					),
-					'message' => array(
-						'label' => $lng['ticket']['message'],
-						'type' => 'textarea',
-						'rows' => 12,
-						'cols' => 60,
-					),
-				)
-			)
-		)
-	)
+    'ticket_reply' => array(
+        'title' => $lng['ticket']['ticket_reply'],
+        'image' => 'icons/ticket_reply.png',
+        'sections' => array(
+            'section_a' => array(
+                'title' => $lng['ticket']['ticket_reply'],
+                'image' => 'icons/ticket_reply.png',
+                'fields' => array(
+                    'subject' => array(
+                        'label' => $lng['ticket']['subject'],
+                        'type' => 'text',
+                        'value' => "Re: $subject",
+                    ),
+                    'priority' => array(
+                        'label' => $lng['ticket']['priority'],
+                        'type' => 'select',
+                        'select_var' => $priorities,
+                    ),
+                    'category' => array(
+                        'label' => $lng['ticket']['category'],
+                        'type' => 'label',
+                        'value' => $row['name'],
+                    ),
+                    'message' => array(
+                        'label' => $lng['ticket']['message'],
+                        'type' => 'textarea',
+                        'rows' => 12,
+                        'cols' => 60,
+                    ),
+                )
+            )
+        )
+    )
 );

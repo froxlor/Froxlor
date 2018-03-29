@@ -17,16 +17,16 @@
  *
  */
 
-function getCustomerDetail($customerid, $varname) {
-
-	$customer_stmt = Database::prepare("
+function getCustomerDetail($customerid, $varname)
+{
+    $customer_stmt = Database::prepare("
 		SELECT `" . $varname . "` FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `customerid` = :customerid
 	");
-	$customer = Database::pexecute_first($customer_stmt, array('customerid' => $customerid));
+    $customer = Database::pexecute_first($customer_stmt, array('customerid' => $customerid));
 
-	if (isset($customer[$varname])) {
-		return $customer[$varname];
-	} else {
-		return false;
-	}
+    if (isset($customer[$varname])) {
+        return $customer[$varname];
+    } else {
+        return false;
+    }
 }

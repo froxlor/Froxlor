@@ -28,21 +28,22 @@
  *
  * @return boolean|array
  */
-function checkDisallowedPaths($path = null) {
+function checkDisallowedPaths($path = null)
+{
 
-	/*
-	 * disallow base-directories and /
-	 */
-	$disallowed_values = array(
-		"/", "/bin/", "/boot/", "/dev/", "/etc/", "/home/", "/lib/", "/lib32/", "/lib64/",
-		"/opt/", "/proc/", "/root/", "/run/", "/sbin/", "/sys/", "/tmp/", "/usr/", "/var/"	
-	);
+    /*
+     * disallow base-directories and /
+     */
+    $disallowed_values = array(
+        "/", "/bin/", "/boot/", "/dev/", "/etc/", "/home/", "/lib/", "/lib32/", "/lib64/",
+        "/opt/", "/proc/", "/root/", "/run/", "/sbin/", "/sys/", "/tmp/", "/usr/", "/var/"
+    );
 
-	$path = makeCorrectDir($path);
+    $path = makeCorrectDir($path);
 
-	// check if it's a disallowed path
-	if (in_array($path, $disallowed_values)) {
-		return false;
-	}
-	return true;
+    // check if it's a disallowed path
+    if (in_array($path, $disallowed_values)) {
+        return false;
+    }
+    return true;
 }

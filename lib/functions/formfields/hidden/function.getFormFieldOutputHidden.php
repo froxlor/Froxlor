@@ -19,14 +19,13 @@
 
 function getFormFieldOutputHidden($fieldname, $fielddata)
 {
-	$returnvalue = '<input type="hidden" name="' . $fieldname . '" value="' . htmlentities($fielddata['value']) . '" />';
+    $returnvalue = '<input type="hidden" name="' . $fieldname . '" value="' . htmlentities($fielddata['value']) . '" />';
 
-	if(isset($fielddata['label']) && $fielddata['label'] != '')
-	{
-		$label = $fielddata['label'];
-		$value = htmlentities($fielddata['value']);
-		eval("\$returnvalue .= \"" . getTemplate("formfields/hidden", true) . "\";");
-	}
+    if (isset($fielddata['label']) && $fielddata['label'] != '') {
+        $label = $fielddata['label'];
+        $value = htmlentities($fielddata['value']);
+        eval("\$returnvalue .= \"" . getTemplate("formfields/hidden", true) . "\";");
+    }
 
-	return $returnvalue;
+    return $returnvalue;
 }

@@ -16,17 +16,15 @@
  */
 
 /**
- * validates a given regex 
- * 
+ * validates a given regex
+ *
  * @param string  $regex regex to validate
- * 
+ *
  * @return boolean
  */
 function checkValidRegEx($regex = null)
 {
-	if($regex == null || $regex == '') {
-		return true;
-	}
-
-	
+    if ($regex == null || $regex == '') {
+        return true;
+    }
 }

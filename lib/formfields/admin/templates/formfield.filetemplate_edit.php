@@ -16,29 +16,29 @@
  */
 
 return array(
-	'filetemplate_edit' => array(
-		'title' => $lng['admin']['templates']['template_edit'],
-		'image' => 'icons/templates_edit.png',
-		'sections' => array(
-			'section_a' => array(
-				'title' => $lng['admin']['templates']['template_edit'],
-				'image' => 'icons/templates_edit.png',
-				'fields' => array(
-					'template' => array(
-						'label' => $lng['admin']['templates']['action'],
-						'type' => 'hidden',
-						'value' => $lng['admin']['templates'][$row['varname']],
-						'display' => $lng['admin']['templates'][$row['varname']]
-					),
-					'filecontent' => array(
-						'label' => $lng['admin']['templates']['filecontent'],
-						'type' => 'textarea',
-						'cols' => 60,
-						'rows' => 12,
-						'value' => $row['value']
-					)
-				)
-			)
-		)
-	)
+    'filetemplate_edit' => array(
+        'title' => $lng['admin']['templates']['template_edit'],
+        'image' => 'icons/templates_edit.png',
+        'sections' => array(
+            'section_a' => array(
+                'title' => $lng['admin']['templates']['template_edit'],
+                'image' => 'icons/templates_edit.png',
+                'fields' => array(
+                    'template' => array(
+                        'label' => $lng['admin']['templates']['action'],
+                        'type' => 'hidden',
+                        'value' => $lng['admin']['templates'][$row['varname']],
+                        'display' => $lng['admin']['templates'][$row['varname']]
+                    ),
+                    'filecontent' => array(
+                        'label' => $lng['admin']['templates']['filecontent'],
+                        'type' => 'textarea',
+                        'cols' => 60,
+                        'rows' => 12,
+                        'value' => $row['value']
+                    )
+                )
+            )
+        )
+    )
 );

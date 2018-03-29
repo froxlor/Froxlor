@@ -19,10 +19,9 @@
 
 function manipulateFormFieldDataDate($fieldname, $fielddata, $newfieldvalue)
 {
-	if(isset($fielddata['date_timestamp']) && $fielddata['date_timestamp'] === true)
-	{
-		$newfieldvalue = strtotime($newfieldvalue);
-	}
+    if (isset($fielddata['date_timestamp']) && $fielddata['date_timestamp'] === true) {
+        $newfieldvalue = strtotime($newfieldvalue);
+    }
 
-	return $newfieldvalue;
+    return $newfieldvalue;
 }

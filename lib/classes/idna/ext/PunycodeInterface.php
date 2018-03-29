@@ -6,9 +6,8 @@
 
 namespace Mso\IdnaConvert;
 
-interface PunycodeInterface 
+interface PunycodeInterface
 {
-   
     public function __construct(NamePrepDataInterface $NamePrepData, UnicodeTranscoderInterface $UCTC);
 
     public function getPunycodePrefix();
@@ -16,5 +15,4 @@ interface PunycodeInterface
     public function decode($encoded);
 
     public function encode($decoded);
-
 }

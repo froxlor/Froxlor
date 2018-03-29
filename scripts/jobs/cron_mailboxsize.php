@@ -1,4 +1,6 @@
-<?php if (!defined('MASTER_CRONJOB')) die('You cannot access this file directly!');
+<?php if (!defined('MASTER_CRONJOB')) {
+    die('You cannot access this file directly!');
+}
 
 /**
  * This file is part of the Froxlor project.
@@ -29,27 +31,26 @@ $upd_stmt = Database::prepare("
 ");
 
 while ($maildir = $maildirs_stmt->fetch(PDO::FETCH_ASSOC)) {
+    $_maildir = makeCorrectDir($maildir['maildirpath']);
 
-	$_maildir = makeCorrectDir($maildir['maildirpath']);
+    if (file_exists($_maildir)
+        && is_dir($_maildir)
+    ) {
+        // mail-address allows many special characters, see http://en.wikipedia.org/wiki/Email_address#Local_part
+        $return = false;
+        $back = safe_exec('du -sk ' . escapeshellarg($_maildir), $return, array('|', '&', '`', '$', '~', '?'));
+        foreach ($back as $backrow) {
+            $emailusage = explode(' ', $backrow);
+        }
+        $emailusage = floatval($emailusage['0']);
 
-	if (file_exists($_maildir)
-		&& is_dir($_maildir)
-	) {
-		// mail-address allows many special characters, see http://en.wikipedia.org/wiki/Email_address#Local_part
-		$return = false;
-		$back = safe_exec('du -sk ' . escapeshellarg($_maildir), $return, array('|', '&', '`', '$', '~', '?'));
-		foreach ($back as $backrow) {
-			$emailusage = explode(' ', $backrow);
-		}
-		$emailusage = floatval($emailusage['0']);
+        // as freebsd does not have the -b flag for 'du' which gives
+        // the size in bytes, we use "-sk" for all and calculate from KiB
+        $emailusage *= 1024;
 
-		// as freebsd does not have the -b flag for 'du' which gives
-		// the size in bytes, we use "-sk" for all and calculate from KiB
-		$emailusage *= 1024;
-
-		unset($back);
-		Database::pexecute($upd_stmt, array('size' => $emailusage, 'id' => $maildir['id']));
-	} else {
-		$cronlog->logAction(CRON_ACTION, LOG_WARNING, 'maildir ' . $_maildir . ' does not exist');
-	}
+        unset($back);
+        Database::pexecute($upd_stmt, array('size' => $emailusage, 'id' => $maildir['id']));
+    } else {
+        $cronlog->logAction(CRON_ACTION, LOG_WARNING, 'maildir ' . $_maildir . ' does not exist');
+    }
 }

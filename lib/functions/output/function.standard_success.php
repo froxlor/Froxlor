@@ -27,31 +27,25 @@
 
 function standard_success($success_message = '', $replacer = '', $params = array())
 {
-	global $s, $header, $footer, $lng, $theme;
+    global $s, $header, $footer, $lng, $theme;
 
-	if(isset($lng['success'][$success_message]))
-	{
-		$success_message = strtr($lng['success'][$success_message], array('%s' => htmlentities($replacer)));
-	}
-	
-	if(is_array($params) && isset($params['filename']))
-	{
-		$redirect_url = $params['filename'] . '?s=' . $s;
-		unset($params['filename']);
-		
-		foreach($params as $varname => $value)
-		{
-			if($value != '')
-			{
-				$redirect_url .= '&amp;' . $varname . '=' . $value;
-			}
-		}
-	}
-	else
-	{
-		$redirect_url = '';
-	}
+    if (isset($lng['success'][$success_message])) {
+        $success_message = strtr($lng['success'][$success_message], array('%s' => htmlentities($replacer)));
+    }
+    
+    if (is_array($params) && isset($params['filename'])) {
+        $redirect_url = $params['filename'] . '?s=' . $s;
+        unset($params['filename']);
+        
+        foreach ($params as $varname => $value) {
+            if ($value != '') {
+                $redirect_url .= '&amp;' . $varname . '=' . $value;
+            }
+        }
+    } else {
+        $redirect_url = '';
+    }
 
-	eval("echo \"" . getTemplate('misc/success', '1') . "\";");
-	exit;
+    eval("echo \"" . getTemplate('misc/success', '1') . "\";");
+    exit;
 }

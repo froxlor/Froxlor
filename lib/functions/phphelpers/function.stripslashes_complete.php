@@ -27,10 +27,9 @@
 
 function stripslashes_complete($string)
 {
-	while($string != stripslashes($string))
-	{
-		$string = stripslashes($string);
-	}
+    while ($string != stripslashes($string)) {
+        $string = stripslashes($string);
+    }
 
-	return $string;
+    return $string;
 }

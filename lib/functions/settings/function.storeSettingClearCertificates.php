@@ -16,22 +16,22 @@
 *
 */
 
-function storeSettingClearCertificates($fieldname, $fielddata, $newfieldvalue) {
+function storeSettingClearCertificates($fieldname, $fielddata, $newfieldvalue)
+{
+    $returnvalue = storeSettingField($fieldname, $fielddata, $newfieldvalue);
 
-	$returnvalue = storeSettingField($fieldname, $fielddata, $newfieldvalue);
-
-	if ($returnvalue !== false
-		&& is_array($fielddata)
-		&& isset($fielddata['settinggroup'])
-		&& $fielddata['settinggroup'] == 'system'
-		&& isset($fielddata['varname'])
-		&& $fielddata['varname'] == 'le_froxlor_enabled'
-		&& $newfieldvalue == '0'
-		) {
-			Database::query("
+    if ($returnvalue !== false
+        && is_array($fielddata)
+        && isset($fielddata['settinggroup'])
+        && $fielddata['settinggroup'] == 'system'
+        && isset($fielddata['varname'])
+        && $fielddata['varname'] == 'le_froxlor_enabled'
+        && $newfieldvalue == '0'
+        ) {
+        Database::query("
 				DELETE FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` WHERE `domainid` = '0'
 			");
-		}
+    }
 
-		return $returnvalue;
+    return $returnvalue;
 }

@@ -24,29 +24,30 @@
  * @return string The corrected path
  * @author Florian Lippert <flo@syscp.org>
  */
-function makeSecurePath($path) {
+function makeSecurePath($path)
+{
 
-	// check for bad characters, some are allowed with escaping
-	// but we generally don't want them in our directory-names,
-	// thx to aaronmueller for this snipped
-	$badchars = array(':', ';', '|', '&', '>', '<', '`', '$', '~', '?', "\0");
-	foreach ($badchars as $bc) {
-		$path = str_replace($bc, "", $path);
-	}
+    // check for bad characters, some are allowed with escaping
+    // but we generally don't want them in our directory-names,
+    // thx to aaronmueller for this snipped
+    $badchars = array(':', ';', '|', '&', '>', '<', '`', '$', '~', '?', "\0");
+    foreach ($badchars as $bc) {
+        $path = str_replace($bc, "", $path);
+    }
 
-	$search = array(
-		'#/+#',
-		'#\.+#'
-	);
-	$replace = array(
-		'/',
-		'.'
-	);
-	$path = preg_replace($search, $replace, $path);
-	// don't just replace a space with an escaped space
-	// it might be escaped already
-	$path = str_replace("\ ", " ", $path);
-	$path = str_replace(" ", "\ ", $path);
+    $search = array(
+        '#/+#',
+        '#\.+#'
+    );
+    $replace = array(
+        '/',
+        '.'
+    );
+    $path = preg_replace($search, $replace, $path);
+    // don't just replace a space with an escaped space
+    // it might be escaped already
+    $path = str_replace("\ ", " ", $path);
+    $path = str_replace(" ", "\ ", $path);
 
-	return $path;
+    return $path;
 }

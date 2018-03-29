@@ -30,74 +30,71 @@
  * @author Martin Burchert  <martin.burchert@syscp.de>
  * @author Manuel Bernhardt <manuel.bernhardt@syscp.de>
  */
-function makePathfield($path, $uid, $gid, $value = '', $dom = false) {
+function makePathfield($path, $uid, $gid, $value = '', $dom = false)
+{
+    global $lng;
 
-	global $lng;
+    $value = str_replace($path, '', $value);
+    $field = array();
 
-	$value = str_replace($path, '', $value);
-	$field = array();
+    // path is given without starting slash
+    // but dirList holds the paths with starting slash
+    // so we just add one here to get the correct
+    // default path selected, #225
+    if (substr($value, 0, 1) != '/' && !$dom) {
+        $value = '/'.$value;
+    }
 
-	// path is given without starting slash
-	// but dirList holds the paths with starting slash
-	// so we just add one here to get the correct
-	// default path selected, #225
-	if (substr($value, 0, 1) != '/' && !$dom) {
-		$value = '/'.$value;
-	}
+    $fieldType = Settings::Get('panel.pathedit');
 
-	$fieldType = Settings::Get('panel.pathedit');
+    if ($fieldType == 'Manual') {
+        $field = array(
+            'type' => 'text',
+            'value' => htmlspecialchars($value)
+        );
+    } elseif ($fieldType == 'Dropdown') {
+        $dirList = findDirs($path, $uid, $gid);
+        natcasesort($dirList);
 
-	if ($fieldType == 'Manual') {
+        if (sizeof($dirList) > 0) {
+            if (sizeof($dirList) <= 100) {
+                $_field = '';
+                foreach ($dirList as $key => $dir) {
+                    if (strpos($dir, $path) === 0) {
+                        $dir = substr($dir, strlen($path));
+                        // docroot cut off of current directory == empty -> directory is the docroot
+                        if (empty($dir)) {
+                            $dir = '/';
+                        }
+                        $dir = makeCorrectDir($dir);
+                    }
+                    $_field.= makeoption($dir, $dir, $value);
+                }
+                $field = array(
+                    'type' => 'select',
+                    'value' => $_field
+                );
+            } else {
+                // remove starting slash we added
+                // for the Dropdown, #225
+                $value = substr($value, 1);
+                //$field = $lng['panel']['toomanydirs'];
+                $field = array(
+                    'type' => 'text',
+                    'value' => htmlspecialchars($value),
+                    'note' => $lng['panel']['toomanydirs']
+                );
+            }
+        } else {
+            //$field = $lng['panel']['dirsmissing'];
+            //$field = '<input type="hidden" name="path" value="/" />';
+            $field = array(
+                'type' => 'hidden',
+                'value' => '/',
+                'note' => $lng['panel']['dirsmissing']
+            );
+        }
+    }
 
-		$field = array(
-			'type' => 'text',
-			'value' => htmlspecialchars($value)
-		);
-
-	} elseif($fieldType == 'Dropdown') {
-
-		$dirList = findDirs($path, $uid, $gid);
-		natcasesort($dirList);
-
-		if (sizeof($dirList) > 0) {
-			if (sizeof($dirList) <= 100) {
-				$_field = '';
-				foreach ($dirList as $key => $dir) {
-					if (strpos($dir, $path) === 0) {
-						$dir = substr($dir, strlen($path));
-						// docroot cut off of current directory == empty -> directory is the docroot
-						if (empty($dir)) {
-							$dir = '/';
-						}
-						$dir = makeCorrectDir($dir);
-					}
-					$_field.= makeoption($dir, $dir, $value);
-				}
-				$field = array(
-					'type' => 'select',
-					'value' => $_field
-				);
-			} else {
-				// remove starting slash we added
-				// for the Dropdown, #225
-				$value = substr($value, 1);
-				//$field = $lng['panel']['toomanydirs'];
-				$field = array(
-					'type' => 'text',
-					'value' => htmlspecialchars($value),
-					'note' => $lng['panel']['toomanydirs']
-				);
-			}
-		} else {
-			//$field = $lng['panel']['dirsmissing'];
-			//$field = '<input type="hidden" name="path" value="/" />';
-			$field = array(
-				'type' => 'hidden',
-				'value' => '/',
-				'note' => $lng['panel']['dirsmissing']
-			);
-		}
-	}
-
-	return $field;
+    return $field;
 }

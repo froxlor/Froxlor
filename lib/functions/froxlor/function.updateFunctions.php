@@ -25,18 +25,19 @@
  *
  * @return bool true on success, else false
  */
-function updateToVersion($new_version = null) {
-
-	if ($new_version !== null && $new_version != '') {
-		$upd_stmt = Database::prepare("
+function updateToVersion($new_version = null)
+{
+    if ($new_version !== null && $new_version != '') {
+        $upd_stmt = Database::prepare(
+            "
 				UPDATE `".TABLE_PANEL_SETTINGS."` SET `value` = :newversion
 				WHERE `settinggroup` = 'panel' AND `varname` = 'version'"
-		);
-		Database::pexecute($upd_stmt, array('newversion' => $new_version));
-		Settings::Set('panel.version', $new_version);
-		return true;
-	}
-	return false;
+        );
+        Database::pexecute($upd_stmt, array('newversion' => $new_version));
+        Settings::Set('panel.version', $new_version);
+        return true;
+    }
+    return false;
 }
 
 /**
@@ -46,14 +47,14 @@ function updateToVersion($new_version = null) {
  *
  * @return bool true if panel is froxlor, else false
  */
-function isFroxlor() {
-
-	if (Settings::Get('panel.frontend') !== null
-			&& Settings::Get('panel.frontend') == 'froxlor'
-	) {
-		return true;
-	}
-	return false;
+function isFroxlor()
+{
+    if (Settings::Get('panel.frontend') !== null
+            && Settings::Get('panel.frontend') == 'froxlor'
+    ) {
+        return true;
+    }
+    return false;
 }
 
 /**
@@ -66,14 +67,14 @@ function isFroxlor() {
  *
  * @return bool true if version to check matches, else false
  */
-function isFroxlorVersion($to_check = null) {
-
-	if (Settings::Get('panel.frontend') == 'froxlor'
-			&& Settings::Get('panel.version') == $to_check
-	) {
-		return true;
-	}
-	return false;
+function isFroxlorVersion($to_check = null)
+{
+    if (Settings::Get('panel.frontend') == 'froxlor'
+            && Settings::Get('panel.version') == $to_check
+    ) {
+        return true;
+    }
+    return false;
 }
 
 /**
@@ -85,14 +86,14 @@ function isFroxlorVersion($to_check = null) {
  *
  * @return bool true if version to check does not match, else false
  */
-function hasUpdates($to_check = null) {
-
-	if (Settings::Get('panel.version') == null
-			|| Settings::Get('panel.version') != $to_check
-	) {
-		return true;
-	}
-	return false;
+function hasUpdates($to_check = null)
+{
+    if (Settings::Get('panel.version') == null
+            || Settings::Get('panel.version') != $to_check
+    ) {
+        return true;
+    }
+    return false;
 }
 
 /**
@@ -106,21 +107,23 @@ function hasUpdates($to_check = null) {
  *
  * @return	string		formatted output and log-entry
  */
-function showUpdateStep($task = null, $needs_status = true) {
+function showUpdateStep($task = null, $needs_status = true)
+{
+    global $updatelog, $filelog;
 
-	global $updatelog, $filelog;
+    if (!$needs_status) {
+        echo "<b>";
+    }
 
-	if (!$needs_status) echo "<b>";
+    // output
+    echo $task;
 
-	// output
-	echo $task;
+    if (!$needs_status) {
+        echo "</b><br />";
+    }
 
-	if (!$needs_status) {
-		echo "</b><br />";
-	}
-
-	$updatelog->logAction(ADM_ACTION, LOG_WARNING, $task);
-	$filelog->logAction(ADM_ACTION, LOG_WARNING, $task);
+    $updatelog->logAction(ADM_ACTION, LOG_WARNING, $task);
+    $filelog->logAction(ADM_ACTION, LOG_WARNING, $task);
 }
 
 /**
@@ -133,40 +136,39 @@ function showUpdateStep($task = null, $needs_status = true) {
  *
  * @return	string		formatted output and log-entry
  */
-function lastStepStatus($status = -1, $message = '') {
+function lastStepStatus($status = -1, $message = '')
+{
+    global $updatelog, $filelog;
 
-	global $updatelog, $filelog;
+    switch ($status) {
 
-	switch($status) {
+        case 0:
+            $status_sign = ($message != '') ? '['.$message.']' : '[OK]';
+            $status_color = 'ok';
+            break;
+        case 1:
+            $status_sign = ($message != '') ? '['.$message.']' : '[??]';
+            $status_color = 'warn';
+            break;
+        case 2:
+            $status_sign = ($message != '') ? '['.$message.']' : '[!!]';
+            $status_color = 'err';
+            break;
+        default:
+            $status_sign = '[unknown]';
+            $status_color = 'unknown';
+            break;
+    }
 
-		case 0:
-			$status_sign = ($message != '') ? '['.$message.']' : '[OK]';
-			$status_color = 'ok';
-			break;
-		case 1:
-			$status_sign = ($message != '') ? '['.$message.']' : '[??]';
-			$status_color = 'warn';
-			break;
-		case 2:
-			$status_sign = ($message != '') ? '['.$message.']' : '[!!]';
-			$status_color = 'err';
-			break;
-		default:
-			$status_sign = '[unknown]';
-			$status_color = 'unknown';
-			break;
-	}
+    // output
+    echo "<span class=\"update-step update-step-".$status_color."\">".$status_sign."</span><br />";
 
-	// output
-	echo "<span class=\"update-step update-step-".$status_color."\">".$status_sign."</span><br />";
-
-	if ($status == -1 || $status == 2) {
-		$updatelog->logAction(ADM_ACTION, LOG_WARNING, 'Attention - last update task failed!!!');
-		$filelog->logAction(ADM_ACTION, LOG_WARNING, 'Attention - last update task failed!!!');
-
-	} elseif($status == 0 || $status == 1) {
-		$filelog->logAction(ADM_ACTION, LOG_WARNING, 'Success');
-	}
+    if ($status == -1 || $status == 2) {
+        $updatelog->logAction(ADM_ACTION, LOG_WARNING, 'Attention - last update task failed!!!');
+        $filelog->logAction(ADM_ACTION, LOG_WARNING, 'Attention - last update task failed!!!');
+    } elseif ($status == 0 || $status == 1) {
+        $filelog->logAction(ADM_ACTION, LOG_WARNING, 'Success');
+    }
 }
 
 /**
@@ -177,16 +179,16 @@ function lastStepStatus($status = -1, $message = '') {
  *
  * @return string the full path with filename (can differ if not writeable => /tmp)
  */
-function validateUpdateLogFile($filename) {
-
-	if (!is_dir($filename)) {
-		$fh = @fopen($filename, 'a');
-		if ($fh) {
-			fclose($fh);
-			return $filename;
-		}
-	}
-	return '/tmp/froxlor_update.log';
+function validateUpdateLogFile($filename)
+{
+    if (!is_dir($filename)) {
+        $fh = @fopen($filename, 'a');
+        if ($fh) {
+            fclose($fh);
+            return $filename;
+        }
+    }
+    return '/tmp/froxlor_update.log';
 }
 
 /**
@@ -198,14 +200,14 @@ function validateUpdateLogFile($filename) {
  *
  * @return bool true if version to check matches, else false
  */
-function isDatabaseVersion($to_check = null) {
-
+function isDatabaseVersion($to_check = null)
+{
     if (Settings::Get('panel.frontend') == 'froxlor'
         && Settings::Get('panel.db_version') == $to_check
         ) {
-            return true;
-        }
-        return false;
+        return true;
+    }
+    return false;
 }
 
 /**
@@ -217,14 +219,14 @@ function isDatabaseVersion($to_check = null) {
  *
  * @return bool true if version to check does not match, else false
  */
-function hasDbUpdates($to_check = null) {
-
+function hasDbUpdates($to_check = null)
+{
     if (Settings::Get('panel.db_version') == null
         || Settings::Get('panel.db_version') != $to_check
         ) {
-            return true;
-        }
-        return false;
+        return true;
+    }
+    return false;
 }
 
 /**
@@ -237,10 +239,11 @@ function hasDbUpdates($to_check = null) {
  *
  * @return bool true on success, else false
  */
-function updateToDbVersion($new_version = null) {
-
+function updateToDbVersion($new_version = null)
+{
     if ($new_version !== null && $new_version != '') {
-        $upd_stmt = Database::prepare("
+        $upd_stmt = Database::prepare(
+            "
 				UPDATE `".TABLE_PANEL_SETTINGS."` SET `value` = :newversion
 				WHERE `settinggroup` = 'panel' AND `varname` = 'db_version'"
             );

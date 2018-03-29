@@ -17,25 +17,24 @@
  *
  */
 
-function getIpAddresses() {
-
-	$result_stmt = Database::query("
+function getIpAddresses()
+{
+    $result_stmt = Database::query("
 		SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` ORDER BY `ip` ASC, `port` ASC
 	");
 
-	$system_ipaddress_array = array();
+    $system_ipaddress_array = array();
 
-	while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+    while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+        if (!isset($system_ipaddress_array[$row['ip']])
+                && !in_array($row['ip'], $system_ipaddress_array)
+        ) {
+            if (filter_var($row['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+                $row['ip'] = '[' . $row['ip'] . ']';
+            }
+            $system_ipaddress_array[$row['ip']] = $row['ip'];
+        }
+    }
 
-		if (!isset($system_ipaddress_array[$row['ip']])
-				&& !in_array($row['ip'], $system_ipaddress_array)
-		) {
-			if (filter_var($row['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-				$row['ip'] = '[' . $row['ip'] . ']';
-			}
-			$system_ipaddress_array[$row['ip']] = $row['ip'];
-		}
-	}
-
-	return $system_ipaddress_array;
+    return $system_ipaddress_array;
 }

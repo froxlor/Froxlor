@@ -17,39 +17,34 @@
 
 function validateSqlInterval($interval = null)
 {
-	if(!$interval === null || $interval != '')
-	{
-		if(strstr($interval, ' ') !== false)
-		{
-			/*
-			 * [0] = ([0-9]+)
-			 * [1] = valid SQL-Interval expression 
-			 */
-			$valid_expr = array(
-								'SECOND',
-								'MINUTE',
-								'HOUR',
-								'DAY',
-								'WEEK',
-								'MONTH',
-								'YEAR'
-						);
-			
-			$interval_parts = explode(' ', $interval);
-			
-			if(is_array($interval_parts)
-			&& isset($interval_parts[0])
-			&& isset($interval_parts[1]))
-			{
-				if(preg_match('/([0-9]+)/i', $interval_parts[0]))
-				{
-					if(in_array(strtoupper($interval_parts[1]), $valid_expr))
-					{
-						return true;
-					}
-				}
-			}
-		}
-	}
-	return false;
+    if (!$interval === null || $interval != '') {
+        if (strstr($interval, ' ') !== false) {
+            /*
+             * [0] = ([0-9]+)
+             * [1] = valid SQL-Interval expression
+             */
+            $valid_expr = array(
+                                'SECOND',
+                                'MINUTE',
+                                'HOUR',
+                                'DAY',
+                                'WEEK',
+                                'MONTH',
+                                'YEAR'
+                        );
+            
+            $interval_parts = explode(' ', $interval);
+            
+            if (is_array($interval_parts)
+            && isset($interval_parts[0])
+            && isset($interval_parts[1])) {
+                if (preg_match('/([0-9]+)/i', $interval_parts[0])) {
+                    if (in_array(strtoupper($interval_parts[1]), $valid_expr)) {
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+    return false;
 }

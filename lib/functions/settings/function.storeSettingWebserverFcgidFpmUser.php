@@ -23,7 +23,6 @@
 function storeSettingWebserverFcgidFpmUser($fieldname, $fielddata, $newfieldvalue)
 {
     if (is_array($fielddata) && isset($fielddata['settinggroup']) && isset($fielddata['varname'])) {
-        
         $update_user = null;
         
         // webserver

@@ -18,55 +18,53 @@
  */
 
 return array(
-	'groups' => array(
-		'version' => array(
-			'fields' => array(
-				'panel_version' => array(
-					'settinggroup' => 'panel',
-					'varname' => 'version',
-					'type' => 'hidden',
-					'default' => '',
-					),
-				'panel_frontend' => array(
-					'settinggroup' => 'panel',
-					'varname' => 'frontend',
-					'type' => 'hidden',
-					'default' => '',
-					),
-				'system_last_tasks_run' => array(
-					'settinggroup' => 'system',
-					'varname' => 'last_tasks_run',
-					'type' => 'hidden',
-					'default' => '',
-					'save_method' => 'storeSettingField',
-					),
-				'system_last_traffic_run' => array(
-					'settinggroup' => 'system',
-					'varname' => 'last_traffic_run',
-					'type' => 'hidden',
-					'default' => '',
-					),
-				'system_lastcronrun' => array(
-					'settinggroup' => 'system',
-					'varname' => 'lastcronrun',
-					'type' => 'hidden',
-					'default' => '',
-					),
-				'system_lastguid' => array(
-					'settinggroup' => 'system',
-					'varname' => 'lastguid',
-					'type' => 'hidden',
-					'default' => 9999,
-					),
-				'system_lastaccountnumber' => array(
-					'settinggroup' => 'system',
-					'varname' => 'lastaccountnumber',
-					'type' => 'hidden',
-					'default' => 0,
-					),
-				),
-			),
-		),
-	);
-
-?>
+    'groups' => array(
+        'version' => array(
+            'fields' => array(
+                'panel_version' => array(
+                    'settinggroup' => 'panel',
+                    'varname' => 'version',
+                    'type' => 'hidden',
+                    'default' => '',
+                    ),
+                'panel_frontend' => array(
+                    'settinggroup' => 'panel',
+                    'varname' => 'frontend',
+                    'type' => 'hidden',
+                    'default' => '',
+                    ),
+                'system_last_tasks_run' => array(
+                    'settinggroup' => 'system',
+                    'varname' => 'last_tasks_run',
+                    'type' => 'hidden',
+                    'default' => '',
+                    'save_method' => 'storeSettingField',
+                    ),
+                'system_last_traffic_run' => array(
+                    'settinggroup' => 'system',
+                    'varname' => 'last_traffic_run',
+                    'type' => 'hidden',
+                    'default' => '',
+                    ),
+                'system_lastcronrun' => array(
+                    'settinggroup' => 'system',
+                    'varname' => 'lastcronrun',
+                    'type' => 'hidden',
+                    'default' => '',
+                    ),
+                'system_lastguid' => array(
+                    'settinggroup' => 'system',
+                    'varname' => 'lastguid',
+                    'type' => 'hidden',
+                    'default' => 9999,
+                    ),
+                'system_lastaccountnumber' => array(
+                    'settinggroup' => 'system',
+                    'varname' => 'lastaccountnumber',
+                    'type' => 'hidden',
+                    'default' => 0,
+                    ),
+                ),
+            ),
+        ),
+    );

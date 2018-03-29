@@ -52,7 +52,7 @@ function generatePassword($isSalt = false)
 /**
  * multibyte-character safe shuffle function
  *
- * @param string $str            
+ * @param string $str
  *
  * @return string
  */

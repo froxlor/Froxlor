@@ -31,30 +31,24 @@
 
 function htmlentities_array($subject, $fields = '', $quote_style = ENT_QUOTES, $charset = 'UTF-8')
 {
-	if(is_array($subject))
-	{
-		if(!is_array($fields))
-		{
-			$fields = array_trim(explode(' ', $fields));
-		}
+    if (is_array($subject)) {
+        if (!is_array($fields)) {
+            $fields = array_trim(explode(' ', $fields));
+        }
 
-		foreach($subject as $field => $value)
-		{
-			if((!is_array($fields) || empty($fields))
-			   || (is_array($fields) && !empty($fields) && in_array($field, $fields)))
-			{
-				/**
-				 * Just call ourselve to manage multi-dimensional arrays
-				 */
+        foreach ($subject as $field => $value) {
+            if ((!is_array($fields) || empty($fields))
+               || (is_array($fields) && !empty($fields) && in_array($field, $fields))) {
+                /**
+                 * Just call ourselve to manage multi-dimensional arrays
+                 */
 
-				$subject[$field] = htmlentities_array($subject[$field], $fields, $quote_style, $charset);
-			}
-		}
-	}
-	else
-	{
-		$subject = htmlentities($subject, $quote_style, $charset);
-	}
+                $subject[$field] = htmlentities_array($subject[$field], $fields, $quote_style, $charset);
+            }
+        }
+    } else {
+        $subject = htmlentities($subject, $quote_style, $charset);
+    }
 
-	return $subject;
+    return $subject;
 }

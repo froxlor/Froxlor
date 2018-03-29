@@ -19,15 +19,15 @@
 $baseLanguage = 'english.lng.php';
 
 // Check if we're in the CLI
-if(@php_sapi_name() !== 'cli') {
-	die('This script will only work in the shell.');
+if (@php_sapi_name() !== 'cli') {
+    die('This script will only work in the shell.');
 }
 
 // Check argument count
 /*
 if (sizeof($argv) != 2) {
-	print_help($argv);
-	exit;
+    print_help($argv);
+    exit;
 }
 */
 
@@ -37,32 +37,32 @@ $_f = isset($argv[2]) ? $argv[2] : null;
 $files = array();
 
 if ($dh = opendir($path)) {
-	while (false !== ($file = readdir($dh))) {
-		if ($file != "."
-		   && $file != ".."
-		   && !is_dir($file)
-		   && preg_match('/(.+)\.lng\.php/i', $file)
-		) {
-			if (is_null($_f) || (!is_null($_f) && ($file == $_f || $file == $baseLanguage))) {
-				$files[$file] = str_replace('//', '/', $path . '/' . $file);
-			}
-		}
-	}
+    while (false !== ($file = readdir($dh))) {
+        if ($file != "."
+           && $file != ".."
+           && !is_dir($file)
+           && preg_match('/(.+)\.lng\.php/i', $file)
+        ) {
+            if (is_null($_f) || (!is_null($_f) && ($file == $_f || $file == $baseLanguage))) {
+                $files[$file] = str_replace('//', '/', $path . '/' . $file);
+            }
+        }
+    }
 
-	closedir($dh);
+    closedir($dh);
 } else {
-	print "ERROR: The path you requested cannot be read! \n ";
-	print "\n";
-	print_help($argv);
-	exit;
+    print "ERROR: The path you requested cannot be read! \n ";
+    print "\n";
+    print_help($argv);
+    exit;
 }
 
 // check if there is the default language defined
 if (!isset($files[$baseLanguage])) {
-	print "ERROR: The baselanguage cannot be found! \n";
-	print "\n";
-	print_help($argv);
-	exit;
+    print "ERROR: The baselanguage cannot be found! \n";
+    print "\n";
+    print_help($argv);
+    exit;
 }
 
 // import the baselanguage
@@ -73,35 +73,35 @@ unset($files[$baseLanguage]);
 
 // compare each language with the baselanguage
 foreach ($files as $key => $file) {
-	$comp = import($file);
+    $comp = import($file);
 
-	print "\n\nComparing " . $baseLanguage . " to " . $key . "\n";
-	$result = compare($base, $comp);
+    print "\n\nComparing " . $baseLanguage . " to " . $key . "\n";
+    $result = compare($base, $comp);
 
-	if (is_array($result)
-	   && sizeof($result) > 0
-	) {
-		print "  found missing strings: \n";
-		foreach ($result as $value) {
-			print "    " . $value . "\n";
-		}
-	} else {
-		print "   no missing strings found! \n ";
-	}
+    if (is_array($result)
+       && sizeof($result) > 0
+    ) {
+        print "  found missing strings: \n";
+        foreach ($result as $value) {
+            print "    " . $value . "\n";
+        }
+    } else {
+        print "   no missing strings found! \n ";
+    }
 
-	print "\nReverse Checking " . $key . " to " . $baseLanguage . "\n";
-	$result = compare($comp, $base);
+    print "\nReverse Checking " . $key . " to " . $baseLanguage . "\n";
+    $result = compare($comp, $base);
 
-	if (is_array($result)
-	   && sizeof($result) > 0
-	) {
-		print "  found strings not in basefile: \n";
-		foreach ($result as $key => $value) {
-			print "    " . $value . "\n";
-		}
-	} else {
-		print "   There are no strings which are not in the basefile! \n ";
-	}
+    if (is_array($result)
+       && sizeof($result) > 0
+    ) {
+        print "  found strings not in basefile: \n";
+        foreach ($result as $key => $value) {
+            print "    " . $value . "\n";
+        }
+    } else {
+        print "   There are no strings which are not in the basefile! \n ";
+    }
 }
 
 //-----------------------------------------------------------------------------------------
@@ -113,45 +113,44 @@ foreach ($files as $key => $file) {
  *
  * @param  array  $argv
  */
-function print_help($argv) {
-	print "Usage: php " . $argv[0] . " /PATH/TO/LNG \n";
-	print " \n ";
+function print_help($argv)
+{
+    print "Usage: php " . $argv[0] . " /PATH/TO/LNG \n";
+    print " \n ";
 }
 
-function import($file) {
+function import($file)
+{
+    $input = file($file);
+    $return = array();
 
-	$input = file($file);
-	$return = array();
+    foreach ($input as $key => $value) {
+        if (!preg_match('/^\$/', $value)) {
+            unset($input[$key]);
+        } else {
+            // generate the key
+            $key = preg_replace('/^\$lng\[\'(.*)=(.*)$/U', '\\1', $value);
+            $key = str_replace('[\'', '/', $key);
+            $key = trim(str_replace('\']', '', $key));
 
-	foreach ($input as $key => $value) {
+            //generate the value
+            $value = trim($value);
 
-		if (!preg_match('/^\$/', $value)) {
-			unset($input[$key]);
-		} else {
-			// generate the key
-			$key = preg_replace('/^\$lng\[\'(.*)=(.*)$/U', '\\1', $value);
-			$key = str_replace('[\'', '/', $key);
-			$key = trim(str_replace('\']', '', $key));
-
-			//generate the value
-			$value = trim($value);
-
-			// set the result
-			$return[$key] = $value;
-		}
-	}
-	return $return;
+            // set the result
+            $return[$key] = $value;
+        }
+    }
+    return $return;
 }
 
-function compare($array1, $array2) {
+function compare($array1, $array2)
+{
+    $result = array();
 
-	$result = array();
-
-	foreach ($array1 as $key => $value) {
-
-		if (!isset($array2[$key])) {
-			$result[$key] = $value;
-		}
-	}
-	return $result;
+    foreach ($array1 as $key => $value) {
+        if (!isset($array2[$key])) {
+            $result[$key] = $value;
+        }
+    }
+    return $result;
 }

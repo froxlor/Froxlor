@@ -21,25 +21,25 @@
  *
  * @return array
  */
-function getPhpConfigs() {
+function getPhpConfigs()
+{
+    $configs_array = array();
 
-	$configs_array = array();
-
-	// check if table exists because this is used in a preconfig
-	// where the tables possibly does not exist yet
-	$results = Database::query("SHOW TABLES LIKE '".TABLE_PANEL_PHPCONFIGS."'");
-	if (!$results) {
-		$configs_array[1] = 'Default php.ini';
-	} else {
-		// get all configs
-		$result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "`");
-		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-			if (!isset($configs_array[$row['id']])
-					&& !in_array($row['id'], $configs_array)
-			) {
-				$configs_array[$row['id']] = html_entity_decode($row['description']);
-			}
-		}
-	}
-	return $configs_array;
+    // check if table exists because this is used in a preconfig
+    // where the tables possibly does not exist yet
+    $results = Database::query("SHOW TABLES LIKE '".TABLE_PANEL_PHPCONFIGS."'");
+    if (!$results) {
+        $configs_array[1] = 'Default php.ini';
+    } else {
+        // get all configs
+        $result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "`");
+        while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+            if (!isset($configs_array[$row['id']])
+                    && !in_array($row['id'], $configs_array)
+            ) {
+                $configs_array[$row['id']] = html_entity_decode($row['description']);
+            }
+        }
+    }
+    return $configs_array;
 }

@@ -32,21 +32,21 @@
 
 function makeyesno($name, $yesvalue, $novalue = '', $yesselected = '', $disabled = false)
 {
-	global $lng, $theme;
-	
-	if($disabled) {
-		$d = ' disabled="disabled"';
-	} else {
-		$d = '';
-	}
-	
-	if (isset($_SESSION['requestData'])) {
-		$yesselected = $yesselected & $_SESSION['requestData'][$name];
-	}
-	
-	return '<select class="dropdown_noborder" id="' . $name . '" name="' . $name . '"'
-	.$d.'>
-	<option value="' . $yesvalue . '"' . ($yesselected ? ' selected="selected"' : '') . '>' 
-	. $lng['panel']['yes'] . '</option><option value="' . $novalue . '"' 
-	. ($yesselected ? '' : ' selected="selected"') . '>' . $lng['panel']['no'] . '</option></select>';
+    global $lng, $theme;
+    
+    if ($disabled) {
+        $d = ' disabled="disabled"';
+    } else {
+        $d = '';
+    }
+    
+    if (isset($_SESSION['requestData'])) {
+        $yesselected = $yesselected & $_SESSION['requestData'][$name];
+    }
+    
+    return '<select class="dropdown_noborder" id="' . $name . '" name="' . $name . '"'
+    .$d.'>
+	<option value="' . $yesvalue . '"' . ($yesselected ? ' selected="selected"' : '') . '>'
+    . $lng['panel']['yes'] . '</option><option value="' . $novalue . '"'
+    . ($yesselected ? '' : ' selected="selected"') . '>' . $lng['panel']['no'] . '</option></select>';
 }

@@ -16,26 +16,26 @@
  */
 
 return array(
-	'plans_add' => array(
-		'title' => $lng['admin']['plans']['add'],
-		'image' => 'icons/templates_add_big.png',
-		'sections' => array(
-			'section_a' => array(
-				'title' => $lng['admin']['plans']['plan_details'],
-				'image' => 'icons/templates_add_big.png',
-				'fields' => array(
-					'name' => array(
-						'label' => $lng['admin']['plans']['name'],
-						'type' => 'text'
-					),
-					'description' => array(
-						'label' => $lng['admin']['plans']['description'],
-						'type' => 'textarea',
-						'cols' => 60,
-						'rows' => 12
-					)
-				)
-			)
-		)
-	)
+    'plans_add' => array(
+        'title' => $lng['admin']['plans']['add'],
+        'image' => 'icons/templates_add_big.png',
+        'sections' => array(
+            'section_a' => array(
+                'title' => $lng['admin']['plans']['plan_details'],
+                'image' => 'icons/templates_add_big.png',
+                'fields' => array(
+                    'name' => array(
+                        'label' => $lng['admin']['plans']['name'],
+                        'type' => 'text'
+                    ),
+                    'description' => array(
+                        'label' => $lng['admin']['plans']['description'],
+                        'type' => 'textarea',
+                        'cols' => 60,
+                        'rows' => 12
+                    )
+                )
+            )
+        )
+    )
 );

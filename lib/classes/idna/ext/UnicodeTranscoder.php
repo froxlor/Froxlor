@@ -290,7 +290,9 @@ class UnicodeTranscoder implements UnicodeTranscoderInterface
                     $mode = 'b';
                 }
             }
-            if (false === $v && $b64 == '') break;
+            if (false === $v && $b64 == '') {
+                break;
+            }
         }
 
         return $output;
@@ -328,7 +330,9 @@ class UnicodeTranscoder implements UnicodeTranscoderInterface
             throw new \InvalidArgumentException('Input UCS4 string is broken');
         }
         // Empty input - return empty output
-        if (!$inp_len) return $output;
+        if (!$inp_len) {
+            return $output;
+        }
 
         for ($i = 0, $out_len = -1; $i < $inp_len; ++$i) {
             if (!($i % 4)) { // Increment output position every 4 input bytes

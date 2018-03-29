@@ -19,12 +19,11 @@
 
 function validateFormFieldText($fieldname, $fielddata, $newfieldvalue)
 {
-	$returnvalue = 'stringformaterror';
-	
-	if(preg_match('/^[^\0]*$/', $newfieldvalue))
-	{
-		$returnvalue = true;
-	}
-	
-	return $returnvalue;
+    $returnvalue = 'stringformaterror';
+    
+    if (preg_match('/^[^\0]*$/', $newfieldvalue)) {
+        $returnvalue = true;
+    }
+    
+    return $returnvalue;
 }

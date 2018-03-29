@@ -19,26 +19,18 @@
 
 function getFormFieldData($fieldname, $fielddata, &$input)
 {
-	if(is_array($fielddata) && isset($fielddata['type']) && $fielddata['type'] != '' && function_exists('getFormFieldData' . ucfirst($fielddata['type'])))
-	{
-		$gfdFunc = 'getFormFieldData' . ucfirst($fielddata['type']);
-		$newfieldvalue = $gfdFunc($fieldname, $fielddata, $input);
-	}
-	else
-	{
-		if(isset($input[$fieldname]))
-		{
-			$newfieldvalue = $input[$fieldname];
-		}
-		elseif(isset($fielddata['default']))
-		{
-			$newfieldvalue = $fielddata['default'];
-		}
-		else
-		{
-			$newfieldvalue = false;
-		}
-	}
+    if (is_array($fielddata) && isset($fielddata['type']) && $fielddata['type'] != '' && function_exists('getFormFieldData' . ucfirst($fielddata['type']))) {
+        $gfdFunc = 'getFormFieldData' . ucfirst($fielddata['type']);
+        $newfieldvalue = $gfdFunc($fieldname, $fielddata, $input);
+    } else {
+        if (isset($input[$fieldname])) {
+            $newfieldvalue = $input[$fieldname];
+        } elseif (isset($fielddata['default'])) {
+            $newfieldvalue = $fielddata['default'];
+        } else {
+            $newfieldvalue = false;
+        }
+    }
 
-	return trim($newfieldvalue);
+    return trim($newfieldvalue);
 }

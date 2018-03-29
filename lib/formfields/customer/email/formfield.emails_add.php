@@ -16,36 +16,36 @@
  */
 
 return array(
-	'emails_add' => array(
-		'title' => $lng['emails']['emails_add'],
-		'image' => 'icons/email_add.png',
-		'sections' => array(
-			'section_a' => array(
-				'title' => $lng['emails']['emails_add'],
-				'image' => 'icons/email_add.png',
-				'fields' => array(
-					'email_part' => array(
-						'label' => $lng['emails']['emailaddress'],
-						'type' => 'textul',
-						'ul_field' => '',
-						'has_nextto' => true
-					),
-					'domain' => array(
-						'next_to' => 'email_part',
-						'next_to_prefix' => '&nbsp;@&nbsp;',
-						'type' => 'select',
-						'select_var' => $domains
-					),
-					'iscatchall' => array(
-						'label' => $lng['emails']['iscatchall'],
-						'type' => 'checkbox',
-						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
-						'value' => array()
-					)
-				)
-			)
-		)
-	)
+    'emails_add' => array(
+        'title' => $lng['emails']['emails_add'],
+        'image' => 'icons/email_add.png',
+        'sections' => array(
+            'section_a' => array(
+                'title' => $lng['emails']['emails_add'],
+                'image' => 'icons/email_add.png',
+                'fields' => array(
+                    'email_part' => array(
+                        'label' => $lng['emails']['emailaddress'],
+                        'type' => 'textul',
+                        'ul_field' => '',
+                        'has_nextto' => true
+                    ),
+                    'domain' => array(
+                        'next_to' => 'email_part',
+                        'next_to_prefix' => '&nbsp;@&nbsp;',
+                        'type' => 'select',
+                        'select_var' => $domains
+                    ),
+                    'iscatchall' => array(
+                        'label' => $lng['emails']['iscatchall'],
+                        'type' => 'checkbox',
+                        'values' => array(
+                                        array('label' => $lng['panel']['yes'], 'value' => '1')
+                                    ),
+                        'value' => array()
+                    )
+                )
+            )
+        )
+    )
 );

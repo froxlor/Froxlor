@@ -31,22 +31,17 @@
 
 function str_replace_array($search, $replace, $subject, $fields = '')
 {
-	if(is_array($subject))
-	{
-		$fields = array_trim(explode(' ', $fields));
-		foreach($subject as $field => $value)
-		{
-			if((!is_array($fields) || empty($fields))
-			   || (is_array($fields) && !empty($fields) && in_array($field, $fields)))
-			{
-				$subject[$field] = str_replace($search, $replace, $subject[$field]);
-			}
-		}
-	}
-	else
-	{
-		$subject = str_replace($search, $replace, $subject);
-	}
+    if (is_array($subject)) {
+        $fields = array_trim(explode(' ', $fields));
+        foreach ($subject as $field => $value) {
+            if ((!is_array($fields) || empty($fields))
+               || (is_array($fields) && !empty($fields) && in_array($field, $fields))) {
+                $subject[$field] = str_replace($search, $replace, $subject[$field]);
+            }
+        }
+    } else {
+        $subject = str_replace($search, $replace, $subject);
+    }
 
-	return $subject;
+    return $subject;
 }

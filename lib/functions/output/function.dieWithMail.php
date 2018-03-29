@@ -27,57 +27,55 @@
  *
  * @return void
  */
-function dieWithMail($message, $subject = "[froxlor] Cronjob error") {
+function dieWithMail($message, $subject = "[froxlor] Cronjob error")
+{
+    if (Settings::Get('system.send_cron_errors') == '1') {
+        $_mail = new PHPMailer(true);
+        $_mail->CharSet = "UTF-8";
 
-	if (Settings::Get('system.send_cron_errors') == '1') {
+        if (Settings::Get('system.mail_use_smtp')) {
+            $_mail->isSMTP();
+            $_mail->Host = Settings::Get('system.mail_smtp_host');
+            $_mail->SMTPAuth = Settings::Get('system.mail_smtp_auth') == '1' ? true : false;
+            $_mail->Username = Settings::Get('system.mail_smtp_user');
+            $_mail->Password = Settings::Get('system.mail_smtp_passwd');
+            if (Settings::Get('system.mail_smtp_usetls')) {
+                $_mail->SMTPSecure = 'tls';
+            } else {
+                $mail->SMTPAutoTLS = false;
+            }
+            $_mail->Port = Settings::Get('system.mail_smtp_port');
+        }
 
-		$_mail = new PHPMailer(true);
-		$_mail->CharSet = "UTF-8";
+        if (PHPMailer::ValidateAddress(Settings::Get('panel.adminmail')) !== false) {
+            // set return-to address and custom sender-name, see #76
+            $_mail->SetFrom(Settings::Get('panel.adminmail'), Settings::Get('panel.adminmail_defname'));
+            if (Settings::Get('panel.adminmail_return') != '') {
+                $_mail->AddReplyTo(Settings::Get('panel.adminmail_return'), Settings::Get('panel.adminmail_defname'));
+            }
+        }
 
-		if (Settings::Get('system.mail_use_smtp')) {
-			$_mail->isSMTP();
-			$_mail->Host = Settings::Get('system.mail_smtp_host');
-			$_mail->SMTPAuth = Settings::Get('system.mail_smtp_auth') == '1' ? true : false;
-			$_mail->Username = Settings::Get('system.mail_smtp_user');
-			$_mail->Password = Settings::Get('system.mail_smtp_passwd');
-			if (Settings::Get('system.mail_smtp_usetls')) {
-				$_mail->SMTPSecure = 'tls';
-			} else {
-				$mail->SMTPAutoTLS = false;
-			}
-			$_mail->Port = Settings::Get('system.mail_smtp_port');
-		}
+        $_mailerror = false;
+        try {
+            $_mail->Subject = $subject;
+            $_mail->AltBody = $message;
+            $_mail->MsgHTML(nl2br($message));
+            $_mail->AddAddress(Settings::Get('panel.adminmail'), Settings::Get('panel.adminmail_defname'));
+            $_mail->Send();
+        } catch (phpmailerException $e) {
+            $mailerr_msg = $e->errorMessage();
+            $_mailerror = true;
+        } catch (Exception $e) {
+            $mailerr_msg = $e->getMessage();
+            $_mailerror = true;
+        }
 
-		if (PHPMailer::ValidateAddress(Settings::Get('panel.adminmail')) !== false) {
-			// set return-to address and custom sender-name, see #76
-			$_mail->SetFrom(Settings::Get('panel.adminmail'), Settings::Get('panel.adminmail_defname'));
-			if (Settings::Get('panel.adminmail_return') != '') {
-				$_mail->AddReplyTo(Settings::Get('panel.adminmail_return'), Settings::Get('panel.adminmail_defname'));
-			}
-		}
+        $_mail->ClearAddresses();
 
-		$_mailerror = false;
-		try {
-			$_mail->Subject = $subject;
-			$_mail->AltBody = $message;
-			$_mail->MsgHTML(nl2br($message));
-			$_mail->AddAddress(Settings::Get('panel.adminmail'), Settings::Get('panel.adminmail_defname'));
-			$_mail->Send();
-		} catch (phpmailerException $e) {
-			$mailerr_msg = $e->errorMessage();
-			$_mailerror = true;
-		} catch (Exception $e) {
-			$mailerr_msg = $e->getMessage();
-			$_mailerror = true;
-		}
+        if ($_mailerror) {
+            echo 'Error sending mail: ' . $mailerr_msg . "\n";
+        }
+    }
 
-		$_mail->ClearAddresses();
-
-		if ($_mailerror) {
-			echo 'Error sending mail: ' . $mailerr_msg . "\n";
-		}
-	}
-
-	die($message);
-
+    die($message);
 }

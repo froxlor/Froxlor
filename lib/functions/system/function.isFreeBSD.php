@@ -23,11 +23,12 @@
  *
  * @return boolean
  */
-function isFreeBSD($exact = false) {
-	if (($exact && PHP_OS == 'FreeBSD')
-			|| (!$exact && stristr(PHP_OS, 'BSD'))
-	) {
-		return true;
-	}
-	return false;
+function isFreeBSD($exact = false)
+{
+    if (($exact && PHP_OS == 'FreeBSD')
+            || (!$exact && stristr(PHP_OS, 'BSD'))
+    ) {
+        return true;
+    }
+    return false;
 }

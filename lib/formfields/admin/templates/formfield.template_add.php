@@ -16,40 +16,40 @@
  */
 
 return array(
-	'template_add' => array(
-		'title' => $lng['admin']['templates']['template_add'],
-		'image' => 'icons/templates_add.png',
-		'sections' => array(
-			'section_a' => array(
-				'title' => $lng['admin']['templates']['template_add'],
-				'image' => 'icons/templates_add.png',
-				'fields' => array(
-					'language' => array(
-						'label' => $lng['login']['language'],
-						'type' => 'hidden',
-						'value' => $language,
-						'display' => $language
-					),
-					'template' => array(
-						'label' => $lng['admin']['templates']['action'],
-						'type' => 'hidden',
-						'value' => $template,
-						'display' => $lng['admin']['templates'][$template]
-					),
-					'subject' => array(
-						'label' => $lng['admin']['templates']['subject'],
-						'type' => 'text',
-						'value' => $subject
-					),
-					'mailbody' => array(
-						'label' => $lng['admin']['templates']['mailbody'],
-						'type' => 'textarea',
-						'value' => $body,
-						'cols' => 60,
-						'rows' => 12
-					)
-				)
-			)
-		)
-	)
+    'template_add' => array(
+        'title' => $lng['admin']['templates']['template_add'],
+        'image' => 'icons/templates_add.png',
+        'sections' => array(
+            'section_a' => array(
+                'title' => $lng['admin']['templates']['template_add'],
+                'image' => 'icons/templates_add.png',
+                'fields' => array(
+                    'language' => array(
+                        'label' => $lng['login']['language'],
+                        'type' => 'hidden',
+                        'value' => $language,
+                        'display' => $language
+                    ),
+                    'template' => array(
+                        'label' => $lng['admin']['templates']['action'],
+                        'type' => 'hidden',
+                        'value' => $template,
+                        'display' => $lng['admin']['templates'][$template]
+                    ),
+                    'subject' => array(
+                        'label' => $lng['admin']['templates']['subject'],
+                        'type' => 'text',
+                        'value' => $subject
+                    ),
+                    'mailbody' => array(
+                        'label' => $lng['admin']['templates']['mailbody'],
+                        'type' => 'textarea',
+                        'value' => $body,
+                        'cols' => 60,
+                        'rows' => 12
+                    )
+                )
+            )
+        )
+    )
 );

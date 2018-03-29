@@ -28,21 +28,17 @@
 
 function getCorrectUserSalutation($userinfo)
 {
-	$returnval = '';
-	
-	if(isset($userinfo['firstname']) && isset($userinfo['name']) && isset($userinfo['company']))
-	{
-		// Always prefer firstname name
+    $returnval = '';
+    
+    if (isset($userinfo['firstname']) && isset($userinfo['name']) && isset($userinfo['company'])) {
+        // Always prefer firstname name
 
-		if($userinfo['company'] != '' && $userinfo['name'] == '' && $userinfo['firstname'] == '')
-		{
-			$returnval = $userinfo['company'];
-		}
-		else
-		{
-			$returnval = $userinfo['firstname'] . ' ' . $userinfo['name'];
-		}
-	}
+        if ($userinfo['company'] != '' && $userinfo['name'] == '' && $userinfo['firstname'] == '') {
+            $returnval = $userinfo['company'];
+        } else {
+            $returnval = $userinfo['firstname'] . ' ' . $userinfo['name'];
+        }
+    }
 
-	return $returnval;
+    return $returnval;
 }

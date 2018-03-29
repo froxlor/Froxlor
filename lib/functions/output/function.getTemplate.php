@@ -26,49 +26,48 @@
  * @author Florian Lippert <flo@syscp.org>
  */
 
-function getTemplate($template, $noarea = 0) {
+function getTemplate($template, $noarea = 0)
+{
+    global $templatecache, $theme;
 
-	global $templatecache, $theme;
+    $fallback_theme = 'Sparkle';
 
-	$fallback_theme = 'Sparkle';
+    if (!isset($theme) || $theme == '') {
+        $theme = $fallback_theme;
+    }
 
-	if (!isset($theme) || $theme == '') {
-		$theme = $fallback_theme;
-	}
+    if ($noarea != 1) {
+        $template = AREA . '/' . $template;
+    }
 
-	if ($noarea != 1) {
-		$template = AREA . '/' . $template;
-	}
+    if (!isset($templatecache[$theme][$template])) {
+        $filename = './templates/' . $theme . '/' . $template . '.tpl';
 
-	if (!isset($templatecache[$theme][$template])) {
+        // check the current selected theme for the template
+        $templatefile = _checkAndParseTpl($filename);
 
-		$filename = './templates/' . $theme . '/' . $template . '.tpl';
+        if ($templatefile == false && $theme != $fallback_theme) {
+            // check fallback
+            $_filename = './templates/' . $fallback_theme . '/' . $template . '.tpl';
+            $templatefile = _checkAndParseTpl($_filename);
 
-		// check the current selected theme for the template
-		$templatefile = _checkAndParseTpl($filename);
+            if ($templatefile == false) {
+                // check for old layout
+                $_filename = './templates/' . $template . '.tpl';
+                $templatefile = _checkAndParseTpl($_filename);
 
-		if ($templatefile == false && $theme != $fallback_theme) {
-			// check fallback
-			$_filename = './templates/' . $fallback_theme . '/' . $template . '.tpl';
-			$templatefile = _checkAndParseTpl($_filename);
+                if ($templatefile == false) {
+                    // not found
+                    $templatefile = 'TEMPLATE NOT FOUND: ' . $filename;
+                }
+            }
+        }
 
-			if ($templatefile == false) {
-				// check for old layout
-				$_filename = './templates/' . $template . '.tpl';
-				$templatefile = _checkAndParseTpl($_filename);
+        $output = $templatefile;
+        $templatecache[$theme][$template] = $output;
+    }
 
-				if ($templatefile == false) {
-					// not found
-					$templatefile = 'TEMPLATE NOT FOUND: ' . $filename;
-				}
-			}
-		}
-
-		$output = $templatefile;
-		$templatecache[$theme][$template] = $output;
-	}
-
-	return $templatecache[$theme][$template];
+    return $templatecache[$theme][$template];
 }
 
 /**
@@ -78,22 +77,21 @@ function getTemplate($template, $noarea = 0) {
  *
  * @return string|bool content on success, else false
  */
-function _checkAndParseTpl($filename) {
+function _checkAndParseTpl($filename)
+{
+    $templatefile = "";
 
-	$templatefile = "";
+    if (file_exists($filename)
+        && is_readable($filename)
+    ) {
+        $templatefile = addcslashes(file_get_contents($filename), '"\\');
 
-	if (file_exists($filename)
-		&& is_readable($filename)
-	) {
+        // loop through template more than once in case we have an "if"-statement in another one
+        while (preg_match('/<if[ \t]*(.*)>(.*)(<\/if>|<else>(.*)<\/if>)/Uis', $templatefile)) {
+            $templatefile = preg_replace('/<if[ \t]*(.*)>(.*)(<\/if>|<else>(.*)<\/if>)/Uis', '".( ($1) ? ("$2") : ("$4") )."', $templatefile);
+        }
 
-		$templatefile = addcslashes(file_get_contents($filename), '"\\');
-
-		// loop through template more than once in case we have an "if"-statement in another one
-		while (preg_match('/<if[ \t]*(.*)>(.*)(<\/if>|<else>(.*)<\/if>)/Uis', $templatefile)) {
-			$templatefile = preg_replace('/<if[ \t]*(.*)>(.*)(<\/if>|<else>(.*)<\/if>)/Uis', '".( ($1) ? ("$2") : ("$4") )."', $templatefile);
-		}
-
-		return $templatefile;
-	}
-	return false;
+        return $templatefile;
+    }
+    return false;
 }

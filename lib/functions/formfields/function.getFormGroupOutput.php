@@ -17,77 +17,70 @@
  *
  */
 
-function getFormGroupOutput($groupname, $groupdetails) {
-
-	global $lng, $theme;
-	eval("\$group = \"" . getTemplate("settings/settings_group") . "\";");
-	return $group;
+function getFormGroupOutput($groupname, $groupdetails)
+{
+    global $lng, $theme;
+    eval("\$group = \"" . getTemplate("settings/settings_group") . "\";");
+    return $group;
 }
 
-function getFormOverviewGroupOutput($groupname, $groupdetails) {
+function getFormOverviewGroupOutput($groupname, $groupdetails)
+{
+    global $lng, $filename, $s, $theme;
 
-	global $lng, $filename, $s, $theme;
+    $group = '';
+    $title = $groupdetails['title'];
+    $part = $groupname;
 
-	$group = '';
-	$title = $groupdetails['title'];
-	$part = $groupname;
+    $activated = true;
+    $option = '';
+    if (isset($groupdetails['fields'])) {
+        foreach ($groupdetails['fields'] as $fieldname => $fielddetails) {
+            if (isset($fielddetails['overview_option'])
+                && $fielddetails['overview_option'] == true
+            ) {
+                if ($fielddetails['type'] != 'option'
+                    && $fielddetails['type'] != 'bool') {
+                    standard_error('overviewsettingoptionisnotavalidfield');
+                }
 
-	$activated = true;
-	$option = '';
-	if(isset($groupdetails['fields']))
-	{
-		foreach($groupdetails['fields'] as $fieldname => $fielddetails)
-		{
-			if(isset($fielddetails['overview_option'])
-				&& $fielddetails['overview_option'] == true
-			) {
-				if($fielddetails['type'] != 'option'
-					&& $fielddetails['type'] != 'bool')
-				{
-					standard_error('overviewsettingoptionisnotavalidfield');
-				}
+                if ($fielddetails['type'] == 'option') {
+                    $options_array = $fielddetails['option_options'];
+                    $options = '';
+                    foreach ($options_array as $value => $vtitle) {
+                        $options .= makeoption($vtitle, $value, Settings::Get($fielddetails['settinggroup'].'.'.$fielddetails['varname']));
+                    }
+                    $option.= $fielddetails['label'].':&nbsp;';
+                    $option.= '<select class="dropdown_noborder" name="'.$fieldname.'">';
+                    $option.= $options;
+                    $option.= '</select>';
+                    $activated = true;
+                } else {
+                    $option.= $lng['admin']['activated'].':&nbsp;';
+                    $option.= makeyesno($fieldname, '1', '0', Settings::Get($fielddetails['settinggroup'].'.'.$fielddetails['varname']));
+                    $activated = (int)Settings::Get($fielddetails['settinggroup'].'.'.$fielddetails['varname']);
+                }
+            }
+        }
+    }
 
-				if($fielddetails['type'] == 'option')
-				{
-					$options_array = $fielddetails['option_options'];
-					$options = '';
-					foreach($options_array as $value => $vtitle)
-					{
-						$options .= makeoption($vtitle, $value, Settings::Get($fielddetails['settinggroup'].'.'.$fielddetails['varname']));
-					}
-					$option.= $fielddetails['label'].':&nbsp;';
-					$option.= '<select class="dropdown_noborder" name="'.$fieldname.'">';
-					$option.= $options;
-					$option.= '</select>';
-					$activated = true;
-				}
-				else
-				{
-					$option.= $lng['admin']['activated'].':&nbsp;';
-					$option.= makeyesno($fieldname, '1', '0', Settings::Get($fielddetails['settinggroup'].'.'.$fielddetails['varname']));
-					$activated = (int)Settings::Get($fielddetails['settinggroup'].'.'.$fielddetails['varname']);
-				}
-			}
-		}
-	}
+    /**
+     * this part checks for the 'websrv_avail' entry in the settings
+     * if found, we check if the current webserver is in the array. If this
+     * is not the case, we change the setting type to "hidden", #502
+     */
+    $do_show = true;
+    if (isset($groupdetails['websrv_avail']) && is_array($groupdetails['websrv_avail'])) {
+        $websrv = Settings::Get('system.webserver');
+        if (!in_array($websrv, $groupdetails['websrv_avail'])) {
+            $do_show = false;
+            $title .= sprintf($lng['serversettings']['option_unavailable_websrv'], implode(", ", $groupdetails['websrv_avail']));
+            // hack disabled flag into select-box
+            $option = str_replace('<select class', '<select disabled="disabled" class', $option);
+        }
+    }
 
-	/**
-	 * this part checks for the 'websrv_avail' entry in the settings
-	 * if found, we check if the current webserver is in the array. If this
-	 * is not the case, we change the setting type to "hidden", #502
-	 */
-	$do_show = true;
-	if (isset($groupdetails['websrv_avail']) && is_array($groupdetails['websrv_avail'])) {
-		$websrv = Settings::Get('system.webserver');
-		if (!in_array($websrv, $groupdetails['websrv_avail'])) {
-			$do_show = false;
-			$title .= sprintf($lng['serversettings']['option_unavailable_websrv'], implode(", ", $groupdetails['websrv_avail']));
-			// hack disabled flag into select-box
-			$option = str_replace('<select class', '<select disabled="disabled" class', $option);
-		}
-	}
+    eval("\$group = \"" . getTemplate("settings/settings_overviewgroup") . "\";");
 
-	eval("\$group = \"" . getTemplate("settings/settings_overviewgroup") . "\";");
-
-	return $group;
+    return $group;
 }

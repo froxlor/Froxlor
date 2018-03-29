@@ -51,8 +51,8 @@
  * @copyright 2004-2014 phlyLabs Berlin, http://phlylabs.de
  * @version 0.9.0 2014-12-12
  */
-class idna_convert {
-
+class idna_convert
+{
     private $version = '0.9.0';
     protected $sub_version = 'main';
 
@@ -205,7 +205,7 @@ class idna_convert {
                 $this->_error('Only simple domain name parts can be handled in strict mode');
                 return false;
             }
-            list ($email_pref, $input) = explode('@', $input, 2);
+            list($email_pref, $input) = explode('@', $input, 2);
             $arr = explode('.', $input);
             foreach ($arr as $k => $v) {
                 if (preg_match('!^' . preg_quote($this->_punycode_prefix, '!') . '!', $v)) {
@@ -290,6 +290,7 @@ class idna_convert {
                 break;
             case 'ucs4_string':
                 $decoded = $this->_ucs4_string_to_ucs4($decoded);
+                // no break
             case 'ucs4_array':
                 break;
             default:
@@ -315,6 +316,7 @@ class idna_convert {
                     $decoded[$k] = 0x2E;
                     // Right, no break here, the above are converted to dots anyway
                 // Stumbling across an anchoring character
+                // no break
                 case 0x2E:
                 case 0x2F:
                 case 0x3A:
@@ -997,7 +999,7 @@ class idna_convert {
                 $out_len++;
                 $output[$out_len] = 0;
             }
-            $output[$out_len] += ord($input{$i}) << (8 * (3 - ($i % 4) ) );
+            $output[$out_len] += ord($input{$i}) << (8 * (3 - ($i % 4)));
         }
         return $output;
     }
@@ -3461,4 +3463,3 @@ class idna_convert {
             )
     );
 }
-

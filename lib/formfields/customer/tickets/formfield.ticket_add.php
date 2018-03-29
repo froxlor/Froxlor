@@ -15,36 +15,36 @@
  */
 
 return array(
-	'ticket_add' => array(
-		'title' => $lng['ticket']['ticket_new'],
-		'image' => 'icons/ticket_add.png',
-		'sections' => array(
-			'section_a' => array(
-				'title' => $lng['ticket']['ticket_new'],
-				'image' => 'icons/ticket_add.png',
-				'fields' => array(
-					'subject' => array(
-						'label' => $lng['ticket']['subject'],
-						'type' => 'text',
-					),
-					'priority' => array(
-						'label' => $lng['ticket']['priority'],
-						'type' => 'select',
-						'select_var' => $priorities,
-					),
-					'category' => array(
-						'label' => $lng['ticket']['category'],
-						'type' => 'select',
-						'select_var' => $categories,
-					),
-					'message' => array(
-						'label' => $lng['ticket']['message'],
-						'type' => 'textarea',
-						'rows' => 12,
-						'cols' => 60,
-					)
-				)
-			)
-		)
-	)
+    'ticket_add' => array(
+        'title' => $lng['ticket']['ticket_new'],
+        'image' => 'icons/ticket_add.png',
+        'sections' => array(
+            'section_a' => array(
+                'title' => $lng['ticket']['ticket_new'],
+                'image' => 'icons/ticket_add.png',
+                'fields' => array(
+                    'subject' => array(
+                        'label' => $lng['ticket']['subject'],
+                        'type' => 'text',
+                    ),
+                    'priority' => array(
+                        'label' => $lng['ticket']['priority'],
+                        'type' => 'select',
+                        'select_var' => $priorities,
+                    ),
+                    'category' => array(
+                        'label' => $lng['ticket']['category'],
+                        'type' => 'select',
+                        'select_var' => $categories,
+                    ),
+                    'message' => array(
+                        'label' => $lng['ticket']['message'],
+                        'type' => 'textarea',
+                        'rows' => 12,
+                        'cols' => 60,
+                    )
+                )
+            )
+        )
+    )
 );

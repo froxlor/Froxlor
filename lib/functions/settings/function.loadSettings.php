@@ -24,58 +24,54 @@
  *
  * @return array
  */
-function loadSettings(&$settings_data) {
+function loadSettings(&$settings_data)
+{
+    $settings = array();
 
-	$settings = array();
+    if (is_array($settings_data)
+        && isset($settings_data['groups'])
+        && is_array($settings_data['groups'])
+    ) {
 
-	if (is_array($settings_data)
-		&& isset($settings_data['groups'])
-		&& is_array($settings_data['groups'])
-	) {
-
-		// prepare for use in for-loop
-		$row_stmt = Database::prepare("
+        // prepare for use in for-loop
+        $row_stmt = Database::prepare("
 			SELECT `settinggroup`, `varname`, `value`
 			FROM `" . TABLE_PANEL_SETTINGS . "`
 			WHERE `settinggroup` = :group AND `varname` = :varname
 		");
 
-		foreach ($settings_data['groups'] as $settings_part => $settings_part_details) {
+        foreach ($settings_data['groups'] as $settings_part => $settings_part_details) {
+            if (is_array($settings_part_details)
+                && isset($settings_part_details['fields'])
+                && is_array($settings_part_details['fields'])
+            ) {
+                foreach ($settings_part_details['fields'] as $field_name => $field_details) {
+                    if (isset($field_details['settinggroup'])
+                        && isset($field_details['varname'])
+                        && isset($field_details['default'])
+                    ) {
+                        // execute prepared statement
+                        $row = Database::pexecute_first($row_stmt, array(
+                            'group' => $field_details['settinggroup'],
+                            'varname' => $field_details['varname']
+                        ));
 
-			if (is_array($settings_part_details)
-				&& isset($settings_part_details['fields'])
-				&& is_array($settings_part_details['fields'])
-			) {
+                        if (!empty($row)) {
+                            $varvalue = $row['value'];
+                        } else {
+                            $varvalue = $field_details['default'];
+                        }
 
-				foreach ($settings_part_details['fields'] as $field_name => $field_details) {
+                        $settings[$field_details['settinggroup']][$field_details['varname']] = $varvalue;
+                    } else {
+                        $varvalue = false;
+                    }
 
-					if (isset($field_details['settinggroup'])
-						&& isset($field_details['varname'])
-						&& isset($field_details['default'])
-					) {
-						// execute prepared statement
-						$row = Database::pexecute_first($row_stmt, array(
-							'group' => $field_details['settinggroup'],
-							'varname' => $field_details['varname']
-						));
+                    $settings_data['groups'][$settings_part]['fields'][$field_name]['value'] = $varvalue;
+                }
+            }
+        }
+    }
 
-						if (!empty($row)) {
-							$varvalue = $row['value'];
-						} else {
-							$varvalue = $field_details['default'];
-						}
-
-						$settings[$field_details['settinggroup']][$field_details['varname']] = $varvalue;
-
-					} else {
-						$varvalue = false;
-					}
-
-					$settings_data['groups'][$settings_part]['fields'][$field_name]['value'] = $varvalue;
-				}
-			}
-		}
-	}
-
-	return $settings;
+    return $settings;
 }

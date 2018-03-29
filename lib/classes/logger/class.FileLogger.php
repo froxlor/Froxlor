@@ -20,145 +20,136 @@
  * Logger - File-Logger-Class
  */
 
-class FileLogger extends AbstractLogger {
+class FileLogger extends AbstractLogger
+{
 
-	/**
-	 * Userinfo
-	 * @var array
-	 */
-	private $userinfo = array();
+    /**
+     * Userinfo
+     * @var array
+     */
+    private $userinfo = array();
 
-	/**
-	 * Logfile
-	 * @var logfile
-	*/
-	private $logfile = null;
+    /**
+     * Logfile
+     * @var logfile
+    */
+    private $logfile = null;
 
-	/**
-	 * Syslogger Objects Array
-	 * @var loggers
-	 */
-	static private $loggers = array();
+    /**
+     * Syslogger Objects Array
+     * @var loggers
+     */
+    private static $loggers = array();
 
-	/**
-	 * Class constructor.
-	 *
-	 * @param array userinfo
-	*/
-	protected function __construct($userinfo) {
-		parent::setupLogger();
-		$this->userinfo = $userinfo;
-		$this->setLogFile(Settings::Get('logger.logfile'));
-	}
+    /**
+     * Class constructor.
+     *
+     * @param array userinfo
+    */
+    protected function __construct($userinfo)
+    {
+        parent::setupLogger();
+        $this->userinfo = $userinfo;
+        $this->setLogFile(Settings::Get('logger.logfile'));
+    }
 
-	/**
-	 * Singleton ftw ;-)
-	 */
-	static public function getInstanceOf($_usernfo) {
-		if (!isset(self::$loggers[$_usernfo['loginname']])) {
-			self::$loggers[$_usernfo['loginname']] = new FileLogger($_usernfo);
-		}
-		return self::$loggers[$_usernfo['loginname']];
-	}
+    /**
+     * Singleton ftw ;-)
+     */
+    public static function getInstanceOf($_usernfo)
+    {
+        if (!isset(self::$loggers[$_usernfo['loginname']])) {
+            self::$loggers[$_usernfo['loginname']] = new FileLogger($_usernfo);
+        }
+        return self::$loggers[$_usernfo['loginname']];
+    }
 
-	/**
-	 * logs a given text to all enabled logger-facilities
-	 *
-	 * @param int $action
-	 * @param int $type
-	 * @param string $text
-	 */
-	public function logAction($action = USR_ACTION, $type = LOG_NOTICE, $text = null) {
-		global $lng;
+    /**
+     * logs a given text to all enabled logger-facilities
+     *
+     * @param int $action
+     * @param int $type
+     * @param string $text
+     */
+    public function logAction($action = USR_ACTION, $type = LOG_NOTICE, $text = null)
+    {
+        global $lng;
 
-		if (parent::isEnabled()) {
+        if (parent::isEnabled()) {
+            if (parent::getSeverity() <= 1
+                    && $type == LOG_NOTICE
+            ) {
+                return;
+            }
 
-			if (parent::getSeverity() <= 1
-					&& $type == LOG_NOTICE
-			) {
-				return;
-			}
+            $_action = 'unknown';
 
-			$_action = 'unknown';
+            switch ($action) {
+                case USR_ACTION:
+                    $_action = $lng['admin']['customer'];
+                    break;
+                case RES_ACTION:
+                    $_action = $lng['logger']['reseller'];
+                    break;
+                case ADM_ACTION:
+                    $_action = $lng['logger']['admin'];
+                    break;
+                case CRON_ACTION:
+                    $_action = $lng['logger']['cron'];
+                    break;
+                case LOGIN_ACTION:
+                    $_action = $lng['logger']['login'];
+                    break;
+                case LOG_ERROR:
+                    $_action = $lng['logger']['intern'];
+                    break;
+                default:
+                    $_action = $lng['logger']['unknown'];
+                    break;
+            }
 
-			switch($action)
-			{
-				case USR_ACTION:
-					$_action = $lng['admin']['customer'];
-					break;
-				case RES_ACTION:
-					$_action = $lng['logger']['reseller'];
-					break;
-				case ADM_ACTION:
-					$_action = $lng['logger']['admin'];
-					break;
-				case CRON_ACTION:
-					$_action = $lng['logger']['cron'];
-					break;
-				case LOGIN_ACTION:
-					$_action = $lng['logger']['login'];
-					break;
-				case LOG_ERROR:
-					$_action = $lng['logger']['intern'];
-					break;
-				default:
-					$_action = $lng['logger']['unknown'];
-					break;
-			}
+            $_type = getLogLevelDesc($type);
 
-			$_type = getLogLevelDesc($type);
+            if (!isset($this->userinfo['loginname'])
+                    || $this->userinfo['loginname'] == '') {
+                $name = 'unknown';
+            } else {
+                $name = $this->userinfo['loginname'];
+            }
 
-			if(!isset($this->userinfo['loginname'])
-					|| $this->userinfo['loginname'] == '')
-			{
-				$name = 'unknown';
-			}
-			else
-			{
-				$name = $this->userinfo['loginname'];
-			}
+            $fp = @fopen($this->logfile, 'a');
 
-			$fp = @fopen($this->logfile, 'a');
+            if ($fp !== false) {
+                $now = time();
 
-			if($fp !== false)
-			{
-				$now = time();
+                if ($text != null
+                        && $text != '') {
+                    fwrite($fp, date("d.m.Y H:i:s", $now) . " [" . $_type . "] [" . $_action . "-action " . $name . "] " . $text . "\n");
+                } else {
+                    fwrite($fp, date("d.m.Y H:i:s", $now) . " [" . $_type . "] [" . $_action . "-action " . $name . "] No text given!!! Check scripts!\n");
+                }
 
-				if($text != null
-						&& $text != '')
-				{
-					fwrite($fp, date("d.m.Y H:i:s", $now) . " [" . $_type . "] [" . $_action . "-action " . $name . "] " . $text . "\n");
-				}
-				else
-				{
-					fwrite($fp, date("d.m.Y H:i:s", $now) . " [" . $_type . "] [" . $_action . "-action " . $name . "] No text given!!! Check scripts!\n");
-				}
+                fclose($fp);
+            } else {
+                if ($this->logfile != null
+                        || $this->logfile != '') {
+                    throw new Exception("Cannot open logfile '" . $this->logfile . "' for writing!");
+                }
+            }
+        }
+    }
 
-				fclose($fp);
-			}
-			else
-			{
-				if($this->logfile != null
-						|| $this->logfile != '')
-				{
-					throw new Exception("Cannot open logfile '" . $this->logfile . "' for writing!");
-				}
-			}
-		}
-	}
+    public function setLogFile($filename = null)
+    {
+        if ($filename != null
+                && $filename != ''
+                && $filename != "."
+                && $filename != ".."
+                && !is_dir($filename)) {
+            $this->logfile = $filename;
+            return true;
+        }
 
-	public function setLogFile($filename = null)
-	{
-		if($filename != null
-				&& $filename != ''
-				&& $filename != "."
-				&& $filename != ".."
-				&& !is_dir($filename))
-		{
-			$this->logfile = $filename;
-			return true;
-		}
-
-		return false;
-	}
+        return false;
+    }
 }

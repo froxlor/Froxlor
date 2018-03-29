@@ -91,7 +91,8 @@ class Punycode implements PunycodeInterface
      * @param string $encoded
      * @return boolean
      */
-    public function validate($encoded) {
+    public function validate($encoded)
+    {
         // Check for existence of the prefix
         if (strpos($encoded, self::punycodePrefix) !== 0) {
             return false;
@@ -296,16 +297,13 @@ class Punycode implements PunycodeInterface
     {
         $cp = ord($cp);
         if ($cp - 48 < 10) {
-
             return $cp - 22;
         }
 
         if ($cp - 65 < 26) {
-
             return $cp - 65;
         }
         if ($cp - 97 < 26) {
-
             return $cp - 97;
         }
 

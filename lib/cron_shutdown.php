@@ -21,18 +21,18 @@
 checkCrondConfigurationFile();
 
 if (Settings::Get('logger.log_cron') == '1') {
-	$cronlog->setCronLog(0);
-	fwrite($debugHandler, 'Logging for cron has been shutdown' . "\n");
+    $cronlog->setCronLog(0);
+    fwrite($debugHandler, 'Logging for cron has been shutdown' . "\n");
 }
 
 if ($keepLockFile === true) {
-	fwrite($debugHandler, '=== Keep lockfile because of exception ===');
+    fwrite($debugHandler, '=== Keep lockfile because of exception ===');
 }
 
 fclose($debugHandler);
 
 if ($keepLockFile === false
-	&& $cronscriptDebug === false
+    && $cronscriptDebug === false
 ) {
-	unlink($lockfile);
+    unlink($lockfile);
 }

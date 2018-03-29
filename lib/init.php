@@ -22,8 +22,8 @@ header("Content-Type: text/html; charset=UTF-8");
 // prevent Froxlor pages from being cached
 header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Pragma: no-cache");
-header('Last-Modified: ' . gmdate( 'D, d M Y H:i:s \G\M\T', time()));
-header('Expires: ' . gmdate( 'D, d M Y H:i:s \G\M\T', time()));
+header('Last-Modified: ' . gmdate('D, d M Y H:i:s \G\M\T', time()));
+header('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time()));
 
 // Prevent inline - JS to be executed (i.e. XSS) in browsers which support this,
 // Inline-JS is no longer allowed and used
@@ -45,7 +45,7 @@ header("X-Content-Type-Options: nosniff");
 
 // ensure that default timezone is set
 if (function_exists("date_default_timezone_set") && function_exists("date_default_timezone_get")) {
-	@date_default_timezone_set(@date_default_timezone_get());
+    @date_default_timezone_set(@date_default_timezone_get());
 }
 
 /**
@@ -53,9 +53,9 @@ if (function_exists("date_default_timezone_set") && function_exists("date_defaul
  * - unsetting every variable registered in $_REQUEST and as variable itself
  */
 foreach ($_REQUEST as $key => $value) {
-	if (isset($$key)) {
-		unset($$key);
-	}
+    if (isset($$key)) {
+        unset($$key);
+    }
 }
 
 unset($_);
@@ -72,25 +72,25 @@ define('FROXLOR_INSTALL_DIR', dirname(dirname(__FILE__)));
 
 // check whether the userdata file exists
 if (!file_exists(FROXLOR_INSTALL_DIR.'/lib/userdata.inc.php')) {
-	$config_hint = file_get_contents(FROXLOR_INSTALL_DIR.'/templates/'.$_deftheme.'/misc/configurehint.tpl');
-	$config_hint = str_replace("<CURRENT_YEAR>", date('Y', time()), $config_hint);
-	die($config_hint);
+    $config_hint = file_get_contents(FROXLOR_INSTALL_DIR.'/templates/'.$_deftheme.'/misc/configurehint.tpl');
+    $config_hint = str_replace("<CURRENT_YEAR>", date('Y', time()), $config_hint);
+    die($config_hint);
 }
 
 // check whether we can read the userdata file
 if (!is_readable(FROXLOR_INSTALL_DIR.'/lib/userdata.inc.php')) {
-	// get possible owner
-	$posixusername = posix_getpwuid(posix_getuid());
-	$posixgroup = posix_getgrgid(posix_getgid());
-	// get hint-template
-	$owner_hint = file_get_contents(FROXLOR_INSTALL_DIR.'/templates/'.$_deftheme.'/misc/ownershiphint.tpl');
-	// replace values
-	$owner_hint = str_replace("<USER>", $posixusername['name'], $owner_hint);
-	$owner_hint = str_replace("<GROUP>", $posixgroup['name'], $owner_hint);
-	$owner_hint = str_replace("<FROXLOR_INSTALL_DIR>", FROXLOR_INSTALL_DIR, $owner_hint);
-	$owner_hint = str_replace("<CURRENT_YEAR>", date('Y', time()), $owner_hint);
-	// show
-	die($owner_hint);
+    // get possible owner
+    $posixusername = posix_getpwuid(posix_getuid());
+    $posixgroup = posix_getgrgid(posix_getgid());
+    // get hint-template
+    $owner_hint = file_get_contents(FROXLOR_INSTALL_DIR.'/templates/'.$_deftheme.'/misc/ownershiphint.tpl');
+    // replace values
+    $owner_hint = str_replace("<USER>", $posixusername['name'], $owner_hint);
+    $owner_hint = str_replace("<GROUP>", $posixgroup['name'], $owner_hint);
+    $owner_hint = str_replace("<FROXLOR_INSTALL_DIR>", FROXLOR_INSTALL_DIR, $owner_hint);
+    $owner_hint = str_replace("<CURRENT_YEAR>", date('Y', time()), $owner_hint);
+    // show
+    die($owner_hint);
 }
 
 /**
@@ -101,9 +101,9 @@ require FROXLOR_INSTALL_DIR.'/lib/userdata.inc.php';
 if (!isset($sql)
    || !is_array($sql)
 ) {
-	$config_hint = file_get_contents(FROXLOR_INSTALL_DIR.'/templates/'.$_deftheme.'/misc/configurehint.tpl');
-	$config_hint = str_replace("<CURRENT_YEAR>", date('Y', time()), $config_hint);
-	die($config_hint);
+    $config_hint = file_get_contents(FROXLOR_INSTALL_DIR.'/templates/'.$_deftheme.'/misc/configurehint.tpl');
+    $config_hint = str_replace("<CURRENT_YEAR>", date('Y', time()), $config_hint);
+    die($config_hint);
 }
 
 /**
@@ -126,18 +126,18 @@ $idna_convert = new idna_convert_wrapper();
  * If Froxlor was called via HTTPS -> enforce it for the next time by settings HSTS header according to settings
  */
 if (isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) != 'off')) {
-	$maxage = Settings::Get('system.hsts_maxage');
-	if (empty($maxage)) {
-		$maxage = 0;
-	}
-	$hsts_header = "Strict-Transport-Security: max-age=".$maxage;
-	if (Settings::Get('system.hsts_incsub') == '1') {
-		$hsts_header .= "; includeSubDomains";
-	}
-	if (Settings::Get('system.hsts_preload') == '1') {
-		$hsts_header .= "; preload";
-	}
-	header($hsts_header);
+    $maxage = Settings::Get('system.hsts_maxage');
+    if (empty($maxage)) {
+        $maxage = 0;
+    }
+    $hsts_header = "Strict-Transport-Security: max-age=".$maxage;
+    if (Settings::Get('system.hsts_incsub') == '1') {
+        $hsts_header .= "; includeSubDomains";
+    }
+    if (Settings::Get('system.hsts_preload') == '1') {
+        $hsts_header .= "; preload";
+    }
+    header($hsts_header);
 }
 
 /**
@@ -145,29 +145,29 @@ if (isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) != 'off')) {
  */
 // since 5.4 get_magic_quotes_runtime() and get_magic_quotes_gpc() return always FALSE
 if (version_compare(PHP_VERSION, "5.4.0", "<")) {
-	if (get_magic_quotes_runtime()) {
-		// deactivate
-		set_magic_quotes_runtime(false);
-	}
+    if (get_magic_quotes_runtime()) {
+        // deactivate
+        set_magic_quotes_runtime(false);
+    }
 
-	/**
-	 * Reverse magic_quotes_gpc=on to have clean GPC data again
-	 */
-	if (get_magic_quotes_gpc()) {
-		$in = array(&$_GET, &$_POST, &$_COOKIE);
+    /**
+     * Reverse magic_quotes_gpc=on to have clean GPC data again
+     */
+    if (get_magic_quotes_gpc()) {
+        $in = array(&$_GET, &$_POST, &$_COOKIE);
 
-		$_in = $in;
-		foreach ($_in as $k => $v) {
-			foreach ($v as $key => $val) {
-				if (!is_array($val)) {
-					$in[$k][$key] = stripslashes($val);
-					continue;
-				}
-				$in[] = & $in[$k][$key];
-			}
-		}
-		unset($in);
-	}
+        $_in = $in;
+        foreach ($_in as $k => $v) {
+            foreach ($v as $key => $val) {
+                if (!is_array($val)) {
+                    $in[$k][$key] = stripslashes($val);
+                    continue;
+                }
+                $in[] = & $in[$k][$key];
+            }
+        }
+        unset($in);
+    }
 }
 
 /**
@@ -176,9 +176,9 @@ if (version_compare(PHP_VERSION, "5.4.0", "<")) {
 $remote_addr = $_SERVER['REMOTE_ADDR'];
 
 if (empty($_SERVER['HTTP_USER_AGENT'])) {
-	$http_user_agent = 'unknown';
+    $http_user_agent = 'unknown';
 } else {
-	$http_user_agent = $_SERVER['HTTP_USER_AGENT'];
+    $http_user_agent = $_SERVER['HTTP_USER_AGENT'];
 }
 unset($userinfo);
 unset($userid);
@@ -187,14 +187,14 @@ unset($adminid);
 unset($s);
 
 if (isset($_POST['s'])) {
-	$s = $_POST['s'];
-	$nosession = 0;
+    $s = $_POST['s'];
+    $nosession = 0;
 } elseif (isset($_GET['s'])) {
-	$s = $_GET['s'];
-	$nosession = 0;
+    $s = $_GET['s'];
+    $nosession = 0;
 } else {
-	$s = '';
-	$nosession = 1;
+    $s = '';
+    $nosession = 1;
 }
 
 $timediff = time() - Settings::Get('session.sessiontimeout');
@@ -209,57 +209,57 @@ if (isset($s)
    && $s != ""
    && $nosession != 1
 ) {
-	ini_set("session.name", "s");
-	ini_set("url_rewriter.tags", "");
-	ini_set("session.use_cookies", false);
-	session_id($s);
-	session_start();
-	$query = "SELECT `s`.*, `u`.* FROM `" . TABLE_PANEL_SESSIONS . "` `s` LEFT JOIN `";
+    ini_set("session.name", "s");
+    ini_set("url_rewriter.tags", "");
+    ini_set("session.use_cookies", false);
+    session_id($s);
+    session_start();
+    $query = "SELECT `s`.*, `u`.* FROM `" . TABLE_PANEL_SESSIONS . "` `s` LEFT JOIN `";
 
-	if (AREA == 'admin') {
-		$query.= TABLE_PANEL_ADMINS . "` `u` ON (`s`.`userid` = `u`.`adminid`)";
-		$adminsession = '1';
-	} else {
-		$query.= TABLE_PANEL_CUSTOMERS . "` `u` ON (`s`.`userid` = `u`.`customerid`)";
-		$adminsession = '0';
-	}
+    if (AREA == 'admin') {
+        $query.= TABLE_PANEL_ADMINS . "` `u` ON (`s`.`userid` = `u`.`adminid`)";
+        $adminsession = '1';
+    } else {
+        $query.= TABLE_PANEL_CUSTOMERS . "` `u` ON (`s`.`userid` = `u`.`customerid`)";
+        $adminsession = '0';
+    }
 
-	$query.= "WHERE `s`.`hash` = :hash AND `s`.`ipaddress` = :ipaddr
+    $query.= "WHERE `s`.`hash` = :hash AND `s`.`ipaddress` = :ipaddr
 		AND `s`.`useragent` = :ua AND `s`.`lastactivity` > :timediff
 		AND `s`.`adminsession` = :adminsession
 	";
 
-	$userinfo_data = array(
-		'hash' => $s,
-		'ipaddr' => $remote_addr,
-		'ua' => $http_user_agent,
-		'timediff' => $timediff,
-		'adminsession' => $adminsession
-	);
-	$userinfo_stmt = Database::prepare($query);
-	$userinfo = Database::pexecute_first($userinfo_stmt, $userinfo_data);
+    $userinfo_data = array(
+        'hash' => $s,
+        'ipaddr' => $remote_addr,
+        'ua' => $http_user_agent,
+        'timediff' => $timediff,
+        'adminsession' => $adminsession
+    );
+    $userinfo_stmt = Database::prepare($query);
+    $userinfo = Database::pexecute_first($userinfo_stmt, $userinfo_data);
 
-	if ((($userinfo['adminsession'] == '1' && AREA == 'admin' && isset($userinfo['adminid']))
-		|| ($userinfo['adminsession'] == '0' && (AREA == 'customer' || AREA == 'login') && isset($userinfo['customerid'])))
-		&& (!isset($userinfo['deactivated']) || $userinfo['deactivated'] != '1')
-	) {
-		$upd_stmt = Database::prepare("
+    if ((($userinfo['adminsession'] == '1' && AREA == 'admin' && isset($userinfo['adminid']))
+        || ($userinfo['adminsession'] == '0' && (AREA == 'customer' || AREA == 'login') && isset($userinfo['customerid'])))
+        && (!isset($userinfo['deactivated']) || $userinfo['deactivated'] != '1')
+    ) {
+        $upd_stmt = Database::prepare("
 			UPDATE `" . TABLE_PANEL_SESSIONS . "` SET
 			`lastactivity` = :lastactive
 			WHERE `hash` = :hash AND `adminsession` = :adminsession
 		");
-		$upd_data = array(
-			'lastactive' => time(),
-			'hash' => $s,
-			'adminsession' => $adminsession
-		);
-		Database::pexecute($upd_stmt, $upd_data);
-		$nosession = 0;
-	} else {
-		$nosession = 1;
-	}
+        $upd_data = array(
+            'lastactive' => time(),
+            'hash' => $s,
+            'adminsession' => $adminsession
+        );
+        Database::pexecute($upd_stmt, $upd_data);
+        $nosession = 0;
+    } else {
+        $nosession = 1;
+    }
 } else {
-	$nosession = 1;
+    $nosession = 1;
 }
 
 /**
@@ -274,19 +274,19 @@ $result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_LANGUAGE . "`");
 
 // presort languages
 while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-	$langs[$row['language']][] = $row;
-	// check for row[iso] cause older froxlor
-	// versions didn't have that and it will
-	// lead to a lot of undfined variables
-	// before the admin can even update
-	if (isset($row['iso'])) {
-		$iso[$row['iso']] = $row['language'];
-	}
+    $langs[$row['language']][] = $row;
+    // check for row[iso] cause older froxlor
+    // versions didn't have that and it will
+    // lead to a lot of undfined variables
+    // before the admin can even update
+    if (isset($row['iso'])) {
+        $iso[$row['iso']] = $row['language'];
+    }
 }
 
 // buildup $languages for the login screen
 foreach ($langs as $key => $value) {
-	$languages[$key] = $key;
+    $languages[$key] = $key;
 }
 
 // set default language before anything else to
@@ -294,51 +294,51 @@ foreach ($langs as $key => $value) {
 $language = Settings::Get('panel.standardlanguage');
 
 if (isset($userinfo['language']) && isset($languages[$userinfo['language']])) {
-	// default: use language from session, #277
-	$language = $userinfo['language'];
+    // default: use language from session, #277
+    $language = $userinfo['language'];
 } else {
-	if (!isset($userinfo['def_language'])
-	   || !isset($languages[$userinfo['def_language']]) // this will always evaluat  true, since it is the above statement inverted. @todo remove
-	) {
-		if (isset($_GET['language'])
-		   && isset($languages[$_GET['language']])
-		) {
-			$language = $_GET['language'];
-		} else {
-			if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-				$accept_langs = explode(',',$_SERVER['HTTP_ACCEPT_LANGUAGE']);
-				for($i = 0; $i<count($accept_langs); $i++) {
-				    // this only works for most common languages. some (uncommon) languages have a 3 letter iso-code.
-				    // to be able to use these also, we would have to depend on the intl extension for php (using Locale::lookup or similar)
-				    // as long as froxlor does not support any of these languages, we can leave it like that.
-					if (isset($iso[substr($accept_langs[$i],0,2)])) {
-						$language=$iso[substr($accept_langs[$i],0,2)];
-						break;
-					}
-				}
-				unset($iso);
+    if (!isset($userinfo['def_language'])
+       || !isset($languages[$userinfo['def_language']]) // this will always evaluat  true, since it is the above statement inverted. @todo remove
+    ) {
+        if (isset($_GET['language'])
+           && isset($languages[$_GET['language']])
+        ) {
+            $language = $_GET['language'];
+        } else {
+            if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+                $accept_langs = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+                for ($i = 0; $i<count($accept_langs); $i++) {
+                    // this only works for most common languages. some (uncommon) languages have a 3 letter iso-code.
+                    // to be able to use these also, we would have to depend on the intl extension for php (using Locale::lookup or similar)
+                    // as long as froxlor does not support any of these languages, we can leave it like that.
+                    if (isset($iso[substr($accept_langs[$i], 0, 2)])) {
+                        $language=$iso[substr($accept_langs[$i], 0, 2)];
+                        break;
+                    }
+                }
+                unset($iso);
 
-				// if HTTP_ACCEPT_LANGUAGES has no valid langs, use default (very unlikely)
-				if (!strlen($language)>0) {
-					$language = Settings::Get('panel.standardlanguage');
-				}
-			}
-		}
-	} else {
-		$language = $userinfo['def_language'];
-	}
+                // if HTTP_ACCEPT_LANGUAGES has no valid langs, use default (very unlikely)
+                if (!strlen($language)>0) {
+                    $language = Settings::Get('panel.standardlanguage');
+                }
+            }
+        }
+    } else {
+        $language = $userinfo['def_language'];
+    }
 }
 
 // include every english language file we can get
 foreach ($langs['English'] as $key => $value) {
-	include_once makeSecurePath($value['file']);
+    include_once makeSecurePath($value['file']);
 }
 
 // now include the selected language if its not english
 if ($language != 'English') {
-	foreach ($langs[$language] as $key => $value) {
-		include_once makeSecurePath($value['file']);
-	}
+    foreach ($langs[$language] as $key => $value) {
+        include_once makeSecurePath($value['file']);
+    }
 }
 
 // last but not least include language references file
@@ -356,28 +356,27 @@ $theme = (Settings::Get('panel.default_theme') !== null) ? Settings::Get('panel.
  * overwrite with customer/admin theme if defined
  */
 if (isset($userinfo['theme']) && $userinfo['theme'] != $theme) {
-	$theme = $userinfo['theme'];
+    $theme = $userinfo['theme'];
 }
 
 // Check if a different variant of the theme is used
 $themevariant = "default";
 if (preg_match("/([a-z0-9\.\-]+)_([a-z0-9\.\-]+)/i", $theme, $matches)) {
-	$theme = $matches[1];
-	$themevariant = $matches[2];
+    $theme = $matches[1];
+    $themevariant = $matches[2];
 }
 
 // check for existence of the theme
 if (!file_exists('templates/'.$theme.'/config.json')) {
-	// Fallback
-	$theme = $_deftheme;
+    // Fallback
+    $theme = $_deftheme;
 }
 
 $_themeoptions = json_decode(file_get_contents('templates/'.$theme.'/config.json'), true);
 
 // check for existence of variant in theme
-if (!array_key_exists('variants', $_themeoptions) || !array_key_exists($themevariant, $_themeoptions['variants']))
-{
-	$themevariant = "default";
+if (!array_key_exists('variants', $_themeoptions) || !array_key_exists($themevariant, $_themeoptions['variants'])) {
+    $themevariant = "default";
 }
 
 // check for custom header-graphic
@@ -385,20 +384,20 @@ $hl_path = 'templates/'.$theme.'/assets/img';
 $header_logo = $hl_path.'/logo.png';
 
 if (file_exists($hl_path.'/logo_custom.png')) {
-	$header_logo = $hl_path.'/logo_custom.png';
+    $header_logo = $hl_path.'/logo_custom.png';
 }
 
 /**
  * Redirects to index.php (login page) if no session exists
  */
 if ($nosession == 1 && AREA != 'login') {
-	unset($userinfo);
-	$params = array(
-		"script" => basename($_SERVER["SCRIPT_NAME"]),
-		"qrystr" => $_SERVER["QUERY_STRING"]
-	);
-	redirectTo('index.php', $params);
-	exit;
+    unset($userinfo);
+    $params = array(
+        "script" => basename($_SERVER["SCRIPT_NAME"]),
+        "qrystr" => $_SERVER["QUERY_STRING"]
+    );
+    redirectTo('index.php', $params);
+    exit;
 }
 
 /**
@@ -412,9 +411,9 @@ $templatecache = array();
 if (isset($userinfo['loginname'])
    && $userinfo['loginname'] != ''
 ) {
-	$lng['menue']['main']['username'].= $userinfo['loginname'];
-	//Initialize logging
-	$log = FroxlorLogger::getInstanceOf($userinfo);
+    $lng['menue']['main']['username'].= $userinfo['loginname'];
+    //Initialize logging
+    $log = FroxlorLogger::getInstanceOf($userinfo);
 }
 
 /**
@@ -422,46 +421,46 @@ if (isset($userinfo['loginname'])
  */
 $navigation = "";
 if (AREA == 'admin' || AREA == 'customer') {
-	if (hasUpdates($version) || hasDbUpdates($dbversion)) {
-		/*
-		 * if froxlor-files have been updated
-		 * but not yet configured by the admin
-		 * we only show logout and the update-page
-		 */
-		$navigation_data = array (
-			'admin' => array (
-				'index' => array (
-					'url' => 'admin_index.php',
-					'label' => $lng['admin']['overview'],
-					'elements' => array (
-						array (
-							'label' => $lng['menue']['main']['username'],
-						),
-						array (
-							'url' => 'admin_index.php?action=logout',
-							'label' => $lng['login']['logout'],
-						),
-					),
-				),
-				'server' => array (
-					'label' => $lng['admin']['server'],
-					'required_resources' => 'change_serversettings',
-					'elements' => array (
-						array (
-							'url' => 'admin_updates.php?page=overview',
-							'label' => $lng['update']['update'],
-							'required_resources' => 'change_serversettings',
-						),
-					),
-				),
-			),
-		);
-		$navigation = buildNavigation($navigation_data['admin'], $userinfo);
-	} else {
-		$navigation_data = loadConfigArrayDir('lib/navigation/');
-		$navigation = buildNavigation($navigation_data[AREA], $userinfo);
-	}
-	unset($navigation_data);
+    if (hasUpdates($version) || hasDbUpdates($dbversion)) {
+        /*
+         * if froxlor-files have been updated
+         * but not yet configured by the admin
+         * we only show logout and the update-page
+         */
+        $navigation_data = array(
+            'admin' => array(
+                'index' => array(
+                    'url' => 'admin_index.php',
+                    'label' => $lng['admin']['overview'],
+                    'elements' => array(
+                        array(
+                            'label' => $lng['menue']['main']['username'],
+                        ),
+                        array(
+                            'url' => 'admin_index.php?action=logout',
+                            'label' => $lng['login']['logout'],
+                        ),
+                    ),
+                ),
+                'server' => array(
+                    'label' => $lng['admin']['server'],
+                    'required_resources' => 'change_serversettings',
+                    'elements' => array(
+                        array(
+                            'url' => 'admin_updates.php?page=overview',
+                            'label' => $lng['update']['update'],
+                            'required_resources' => 'change_serversettings',
+                        ),
+                    ),
+                ),
+            ),
+        );
+        $navigation = buildNavigation($navigation_data['admin'], $userinfo);
+    } else {
+        $navigation_data = loadConfigArrayDir('lib/navigation/');
+        $navigation = buildNavigation($navigation_data[AREA], $userinfo);
+    }
+    unset($navigation_data);
 }
 
 /**
@@ -470,53 +469,51 @@ if (AREA == 'admin' || AREA == 'customer') {
 $awaitingtickets = 0;
 $awaitingtickets_text = '';
 if (Settings::Get('ticket.enabled') == '1') {
+    $opentickets = 0;
 
-	$opentickets = 0;
-
-	if (AREA == 'admin' && isset($userinfo['adminid'])) {
-		$opentickets_stmt = Database::prepare("
+    if (AREA == 'admin' && isset($userinfo['adminid'])) {
+        $opentickets_stmt = Database::prepare("
 			SELECT COUNT(`id`) as `count` FROM `" . TABLE_PANEL_TICKETS . "`
 			WHERE `answerto` = '0' AND (`status` = '0' OR `status` = '1')
 			AND `lastreplier` = '0' AND `adminid` = :adminid
 		");
-		$opentickets = Database::pexecute_first($opentickets_stmt, array('adminid' => $userinfo['adminid']));
-		$awaitingtickets = $opentickets['count'];
+        $opentickets = Database::pexecute_first($opentickets_stmt, array('adminid' => $userinfo['adminid']));
+        $awaitingtickets = $opentickets['count'];
 
-		if ($opentickets > 0) {
-			$awaitingtickets_text = strtr($lng['ticket']['awaitingticketreply'], array('%s' => '<a href="admin_tickets.php?page=tickets&amp;s=' . $s . '">' . $opentickets['count'] . '</a>'));
-		}
-	}
-	elseif (AREA == 'customer' && isset($userinfo['customerid'])) {
-		$opentickets_stmt = Database::prepare("
+        if ($opentickets > 0) {
+            $awaitingtickets_text = strtr($lng['ticket']['awaitingticketreply'], array('%s' => '<a href="admin_tickets.php?page=tickets&amp;s=' . $s . '">' . $opentickets['count'] . '</a>'));
+        }
+    } elseif (AREA == 'customer' && isset($userinfo['customerid'])) {
+        $opentickets_stmt = Database::prepare("
 			SELECT COUNT(`id`) as `count` FROM `" . TABLE_PANEL_TICKETS . "`
 			WHERE `answerto` = '0' AND (`status` = '0' OR `status` = '2')
 			AND `lastreplier` = '1' AND `customerid` = :customerid
 		");
-		$opentickets = Database::pexecute_first($opentickets_stmt, array('customerid' => $userinfo['customerid']));
-		$awaitingtickets = $opentickets['count'];
+        $opentickets = Database::pexecute_first($opentickets_stmt, array('customerid' => $userinfo['customerid']));
+        $awaitingtickets = $opentickets['count'];
 
-		if ($opentickets > 0) {
-			$awaitingtickets_text = strtr($lng['ticket']['awaitingticketreply'], array('%s' => '<a href="customer_tickets.php?page=tickets&amp;s=' . $s . '">' . $opentickets['count'] . '</a>'));
-		}
-	}
+        if ($opentickets > 0) {
+            $awaitingtickets_text = strtr($lng['ticket']['awaitingticketreply'], array('%s' => '<a href="customer_tickets.php?page=tickets&amp;s=' . $s . '">' . $opentickets['count'] . '</a>'));
+        }
+    }
 }
 
 $js = "";
 if (array_key_exists('js', $_themeoptions['variants'][$themevariant]) && is_array($_themeoptions['variants'][$themevariant]['js'])) {
-	foreach ($_themeoptions['variants'][$themevariant]['js'] as $jsfile) {
-		if (file_exists('templates/'.$theme.'/assets/js/'.$jsfile)) {
-			$js .= '<script type="text/javascript" src="templates/' . $theme . '/assets/js/' . $jsfile . '"></script>' . "\n";
-		}
-	}
+    foreach ($_themeoptions['variants'][$themevariant]['js'] as $jsfile) {
+        if (file_exists('templates/'.$theme.'/assets/js/'.$jsfile)) {
+            $js .= '<script type="text/javascript" src="templates/' . $theme . '/assets/js/' . $jsfile . '"></script>' . "\n";
+        }
+    }
 }
 
 $css = "";
 if (array_key_exists('css', $_themeoptions['variants'][$themevariant]) && is_array($_themeoptions['variants'][$themevariant]['css'])) {
-	foreach ($_themeoptions['variants'][$themevariant]['css'] as $cssfile) {
-		if (file_exists('templates/'.$theme.'/assets/css/'.$cssfile)) {
-			$css .= '<link href="templates/' . $theme . '/assets/css/' . $cssfile . '" rel="stylesheet" type="text/css" />' . "\n";
-		}
-	}
+    foreach ($_themeoptions['variants'][$themevariant]['css'] as $cssfile) {
+        if (file_exists('templates/'.$theme.'/assets/css/'.$cssfile)) {
+            $css .= '<link href="templates/' . $theme . '/assets/css/' . $cssfile . '" rel="stylesheet" type="text/css" />' . "\n";
+        }
+    }
 }
 eval("\$header = \"" . getTemplate('header', '1') . "\";");
 
@@ -527,27 +524,27 @@ unset($js);
 unset($css);
 
 if (isset($_POST['action'])) {
-	$action = $_POST['action'];
-} elseif(isset($_GET['action'])) {
-	$action = $_GET['action'];
+    $action = $_POST['action'];
+} elseif (isset($_GET['action'])) {
+    $action = $_GET['action'];
 } else {
-	$action = '';
-	// clear request data
-	if (isset($_SESSION)) {
-		unset($_SESSION['requestData']);
-	}
+    $action = '';
+    // clear request data
+    if (isset($_SESSION)) {
+        unset($_SESSION['requestData']);
+    }
 }
 
 if (isset($_POST['page'])) {
-	$page = $_POST['page'];
-} elseif(isset($_GET['page'])) {
-	$page = $_GET['page'];
+    $page = $_POST['page'];
+} elseif (isset($_GET['page'])) {
+    $page = $_GET['page'];
 } else {
-	$page = '';
+    $page = '';
 }
 
 if ($page == '') {
-	$page = 'overview';
+    $page = 'overview';
 }
 
 /**
@@ -557,23 +554,23 @@ $mail = new PHPMailer(true);
 $mail->CharSet = "UTF-8";
 
 if (Settings::Get('system.mail_use_smtp')) {
-	$mail->isSMTP();
-	$mail->Host = Settings::Get('system.mail_smtp_host');
-	$mail->SMTPAuth = Settings::Get('system.mail_smtp_auth') == '1' ? true : false;
-	$mail->Username = Settings::Get('system.mail_smtp_user');
-	$mail->Password = Settings::Get('system.mail_smtp_passwd');
-	if (Settings::Get('system.mail_smtp_usetls')) {
-		$mail->SMTPSecure = 'tls';
-	} else {
-		$mail->SMTPAutoTLS = false;
-	}
-	$mail->Port = Settings::Get('system.mail_smtp_port');
+    $mail->isSMTP();
+    $mail->Host = Settings::Get('system.mail_smtp_host');
+    $mail->SMTPAuth = Settings::Get('system.mail_smtp_auth') == '1' ? true : false;
+    $mail->Username = Settings::Get('system.mail_smtp_user');
+    $mail->Password = Settings::Get('system.mail_smtp_passwd');
+    if (Settings::Get('system.mail_smtp_usetls')) {
+        $mail->SMTPSecure = 'tls';
+    } else {
+        $mail->SMTPAutoTLS = false;
+    }
+    $mail->Port = Settings::Get('system.mail_smtp_port');
 }
 
 if (PHPMailer::ValidateAddress(Settings::Get('panel.adminmail')) !== false) {
-	// set return-to address and custom sender-name, see #76
-	$mail->SetFrom(Settings::Get('panel.adminmail'), Settings::Get('panel.adminmail_defname'));
-	if (Settings::Get('panel.adminmail_return') != '') {
-		$mail->AddReplyTo(Settings::Get('panel.adminmail_return'), Settings::Get('panel.adminmail_defname'));
-	}
+    // set return-to address and custom sender-name, see #76
+    $mail->SetFrom(Settings::Get('panel.adminmail'), Settings::Get('panel.adminmail_defname'));
+    if (Settings::Get('panel.adminmail_return') != '') {
+        $mail->AddReplyTo(Settings::Get('panel.adminmail_return'), Settings::Get('panel.adminmail_defname'));
+    }
 }

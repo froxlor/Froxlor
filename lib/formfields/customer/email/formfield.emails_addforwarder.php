@@ -16,25 +16,25 @@
  */
 
 return array(
-	'emails_addforwarder' => array(
-		'title' => $lng['emails']['forwarder_add'],
-		'image' => 'icons/autoresponder_add.png',
-		'sections' => array(
-			'section_a' => array(
-				'title' => $lng['emails']['forwarder_add'],
-				'image' => 'icons/autoresponder_add.png',
-				'fields' => array(
-					'email_full' => array(
-						'label' => $lng['emails']['from'],
-						'type' => 'label',
-						'value' => $result['email_full']
-					),
-					'destination' => array(
-						'label' => $lng['emails']['to'],
-						'type' => 'text'
-					)
-				)
-			)
-		)
-	)
+    'emails_addforwarder' => array(
+        'title' => $lng['emails']['forwarder_add'],
+        'image' => 'icons/autoresponder_add.png',
+        'sections' => array(
+            'section_a' => array(
+                'title' => $lng['emails']['forwarder_add'],
+                'image' => 'icons/autoresponder_add.png',
+                'fields' => array(
+                    'email_full' => array(
+                        'label' => $lng['emails']['from'],
+                        'type' => 'label',
+                        'value' => $result['email_full']
+                    ),
+                    'destination' => array(
+                        'label' => $lng['emails']['to'],
+                        'type' => 'text'
+                    )
+                )
+            )
+        )
+    )
 );

@@ -19,30 +19,23 @@
 
 function validateFormFieldOption($fieldname, $fielddata, $newfieldvalue)
 {
-	$returnvalue = true;
+    $returnvalue = true;
 
-	if(isset($fielddata['option_mode']) && $fielddata['option_mode'] == 'multiple')
-	{
-		$options = explode(',', $newfieldvalue);
-		foreach($options as $option)
-		{
-			$returnvalue = ($returnvalue && isset($fielddata['option_options'][$option]));
-		}
-	}
-	else
-	{
-		$returnvalue = isset($fielddata['option_options'][$newfieldvalue]);
-	}
+    if (isset($fielddata['option_mode']) && $fielddata['option_mode'] == 'multiple') {
+        $options = explode(',', $newfieldvalue);
+        foreach ($options as $option) {
+            $returnvalue = ($returnvalue && isset($fielddata['option_options'][$option]));
+        }
+    } else {
+        $returnvalue = isset($fielddata['option_options'][$newfieldvalue]);
+    }
 
-	if($returnvalue === true || $fielddata['visible'] == false)
-	{
-		return true;
-	}
-	else
-	{
-		if (isset($fielddata['option_emptyallowed']) && $fielddata['option_emptyallowed']) {
-			return true;
-		}
-		return 'not in option';
-	}
+    if ($returnvalue === true || $fielddata['visible'] == false) {
+        return true;
+    } else {
+        if (isset($fielddata['option_emptyallowed']) && $fielddata['option_emptyallowed']) {
+            return true;
+        }
+        return 'not in option';
+    }
 }

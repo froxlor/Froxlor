@@ -16,26 +16,26 @@
  */
 
 return array(
-	'emails_accountchangequota' => array(
-		'title' => $lng['emails']['quota_edit'],
-		'image' => 'icons/email_edit.png',
-		'sections' => array(
-			'section_a' => array(
-				'title' => $lng['emails']['quota_edit'],
-				'image' => 'icons/email_edit.png',
-				'fields' => array(
-					'email_full' => array(
-						'label' => $lng['emails']['emailaddress'],
-						'type' => 'label',
-						'value' => $result['email_full']
-					),
-					'email_quota' => array(
-						'label' => $lng['emails']['quota'].' (MiB)',
-						'type' => 'text',
-						'value' => $result['quota']
-					)
-				)
-			)
-		)
-	)
+    'emails_accountchangequota' => array(
+        'title' => $lng['emails']['quota_edit'],
+        'image' => 'icons/email_edit.png',
+        'sections' => array(
+            'section_a' => array(
+                'title' => $lng['emails']['quota_edit'],
+                'image' => 'icons/email_edit.png',
+                'fields' => array(
+                    'email_full' => array(
+                        'label' => $lng['emails']['emailaddress'],
+                        'type' => 'label',
+                        'value' => $result['email_full']
+                    ),
+                    'email_quota' => array(
+                        'label' => $lng['emails']['quota'].' (MiB)',
+                        'type' => 'text',
+                        'value' => $result['quota']
+                    )
+                )
+            )
+        )
+    )
 );

@@ -19,19 +19,15 @@
 
 function getFormFieldDataOption($fieldname, $fielddata, &$input)
 {
-	if(isset($input[$fieldname]))
-	{
-		$newfieldvalue = $input[$fieldname];
-	}
-	else
-	{
-		$newfieldvalue = $fielddata['default'];
-	}
-	
-	if(is_array($newfieldvalue))
-	{
-		$newfieldvalue = implode(',', $newfieldvalue);
-	}
+    if (isset($input[$fieldname])) {
+        $newfieldvalue = $input[$fieldname];
+    } else {
+        $newfieldvalue = $fielddata['default'];
+    }
+    
+    if (is_array($newfieldvalue)) {
+        $newfieldvalue = implode(',', $newfieldvalue);
+    }
 
-	return $newfieldvalue;
+    return $newfieldvalue;
 }

@@ -16,32 +16,31 @@
  */
 class DnsZone
 {
+    public $ttl;
 
-	public $ttl;
+    public $origin;
 
-	public $origin;
+    public $serial;
 
-	public $serial;
+    public $records;
 
-	public $records;
+    public function __construct($ttl = 18000, $origin = '', $serial = '', $records = null)
+    {
+        $this->ttl = $ttl;
+        $this->origin = $origin;
+        $this->serial = $serial;
+        $this->records = $records;
+    }
 
-	public function __construct($ttl = 18000, $origin = '', $serial = '', $records = null)
-	{
-		$this->ttl = $ttl;
-		$this->origin = $origin;
-		$this->serial = $serial;
-		$this->records = $records;
-	}
-
-	public function __toString()
-	{
-		$_zonefile = "\$TTL " . $this->ttl . PHP_EOL;
-		$_zonefile .= "\$ORIGIN " . $this->origin . "." . PHP_EOL;
-		if (! empty($this->records)) {
-			foreach ($this->records as $record) {
-				$_zonefile .= (string) $record;
-			}
-		}
-		return $_zonefile;
-	}
+    public function __toString()
+    {
+        $_zonefile = "\$TTL " . $this->ttl . PHP_EOL;
+        $_zonefile .= "\$ORIGIN " . $this->origin . "." . PHP_EOL;
+        if (! empty($this->records)) {
+            foreach ($this->records as $record) {
+                $_zonefile .= (string) $record;
+            }
+        }
+        return $_zonefile;
+    }
 }

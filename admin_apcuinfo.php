@@ -102,8 +102,9 @@ if ($page == 'showinfo'
             }
             $ptr = $block['offset'] + $block['size'];
             /* Only consider blocks <5M for the fragmentation % */
-            if ($block['size'] < (5 * 1024 * 1024))
+            if ($block['size'] < (5 * 1024 * 1024)) {
                 $fragsize+=$block['size'];
+            }
             $freetotal+=$block['size'];
         }
         $freeseg += count($mem['block_lists'][$i]);
@@ -132,10 +133,8 @@ if ($page == 'showinfo'
     }
 
     eval("echo \"" . getTemplate("settings/apcuinfo/showinfo") . "\";");
-    
 } elseif ($page == 'img1'
 ) {
-
     $mem = apcu_sma_info();
 
     $size = 460;
@@ -164,8 +163,9 @@ if ($page == 'showinfo'
         foreach ($free as $block) {
             if ($block['offset'] != $ptr) {       // Used block
                 $angle_to = $angle_from + ($block['offset'] - $ptr) / $s;
-                if (($angle_to + $fuzz) > 1)
+                if (($angle_to + $fuzz) > 1) {
                     $angle_to = 1;
+                }
                 if (($angle_to * 360) - ($angle_from * 360) >= 1) {
                     fill_arc($image, $x, $y, $size, $angle_from * 360, $angle_to * 360, $col_black, $col_red);
                     if (($angle_to - $angle_from) > 0.05) {
@@ -175,8 +175,9 @@ if ($page == 'showinfo'
                 $angle_from = $angle_to;
             }
             $angle_to = $angle_from + ($block['size']) / $s;
-            if (($angle_to + $fuzz) > 1)
+            if (($angle_to + $fuzz) > 1) {
                 $angle_to = 1;
+            }
             if (($angle_to * 360) - ($angle_from * 360) >= 1) {
                 fill_arc($image, $x, $y, $size, $angle_from * 360, $angle_to * 360, $col_black, $col_green);
                 if (($angle_to - $angle_from) > 0.05) {
@@ -188,8 +189,9 @@ if ($page == 'showinfo'
         }
         if ($ptr < $mem['seg_size']) { // memory at the end
             $angle_to = $angle_from + ($mem['seg_size'] - $ptr) / $s;
-            if (($angle_to + $fuzz) > 1)
+            if (($angle_to + $fuzz) > 1) {
                 $angle_to = 1;
+            }
             fill_arc($image, $x, $y, $size, $angle_from * 360, $angle_to * 360, $col_black, $col_red);
             if (($angle_to - $angle_from) > 0.05) {
                 array_push($string_placement, array($angle_from, $angle_to));
@@ -205,7 +207,6 @@ if ($page == 'showinfo'
     exit;
 } elseif ($page == 'img2'
 ) {
-
     $cache = apcu_cache_info();
 
     $size = $horizontal_bar_size;
@@ -229,7 +230,6 @@ if ($page == 'showinfo'
     exit;
 } elseif ($page == 'img3'
 ) {
-
     $mem = apcu_sma_info();
 
     $size = $horizontal_bar_size;
@@ -281,22 +281,26 @@ if ($page == 'showinfo'
     exit;
 }
 
-function graphics_avail() {
+function graphics_avail()
+{
     return extension_loaded('gd');
 }
 
 // pretty printer for byte values
 //
-function bsize($s) {
+function bsize($s)
+{
     foreach (array('', 'K', 'M', 'G') as $i => $k) {
-        if ($s < 1024)
+        if ($s < 1024) {
             break;
+        }
         $s/=1024;
     }
     return sprintf("%5.1f %sBytes", $s, $k);
 }
 
-function duration($ts) {
+function duration($ts)
+{
     global $time;
     $years = (int) ((($time - $ts) / (7 * 86400)) / 52.177457);
     $rem = (int) (($time - $ts) - ($years * 52.177457 * 7 * 86400));
@@ -305,30 +309,40 @@ function duration($ts) {
     $hours = (int) (($rem) / 3600) - $days * 24 - $weeks * 7 * 24;
     $mins = (int) (($rem) / 60) - $hours * 60 - $days * 24 * 60 - $weeks * 7 * 24 * 60;
     $str = '';
-    if ($years == 1)
+    if ($years == 1) {
         $str .= "$years year, ";
-    if ($years > 1)
+    }
+    if ($years > 1) {
         $str .= "$years years, ";
-    if ($weeks == 1)
+    }
+    if ($weeks == 1) {
         $str .= "$weeks week, ";
-    if ($weeks > 1)
+    }
+    if ($weeks > 1) {
         $str .= "$weeks weeks, ";
-    if ($days == 1)
+    }
+    if ($days == 1) {
         $str .= "$days day,";
-    if ($days > 1)
+    }
+    if ($days > 1) {
         $str .= "$days days,";
-    if ($hours == 1)
+    }
+    if ($hours == 1) {
         $str .= " $hours hour and";
-    if ($hours > 1)
+    }
+    if ($hours > 1) {
         $str .= " $hours hours and";
-    if ($mins == 1)
+    }
+    if ($mins == 1) {
         $str .= " 1 minute";
-    else
+    } else {
         $str .= " $mins minutes";
+    }
     return $str;
 }
 
-function block_sort($array1, $array2) {
+function block_sort($array1, $array2)
+{
     if ($array1['offset'] > $array2['offset']) {
         return 1;
     } else {
@@ -336,7 +350,8 @@ function block_sort($array1, $array2) {
     }
 }
 
-function fill_arc($im, $centerX, $centerY, $diameter, $start, $end, $color1, $color2, $text = '', $placeindex = 0) {
+function fill_arc($im, $centerX, $centerY, $diameter, $start, $end, $color1, $color2, $text = '', $placeindex = 0)
+{
     $r = $diameter / 2;
     $w = deg2rad((360 + $start + ($end - $start) / 2) % 360);
 
@@ -364,7 +379,8 @@ function fill_arc($im, $centerX, $centerY, $diameter, $start, $end, $color1, $co
     }
 }
 
-function text_arc($im, $centerX, $centerY, $diameter, $start, $end, $color1, $text, $placeindex = 0) {
+function text_arc($im, $centerX, $centerY, $diameter, $start, $end, $color1, $text, $placeindex = 0)
+{
     $r = $diameter / 2;
     $w = deg2rad((360 + $start + ($end - $start) / 2) % 360);
 
@@ -376,20 +392,21 @@ function text_arc($im, $centerX, $centerY, $diameter, $start, $end, $color1, $te
     }
 }
 
-function fill_box($im, $x, $y, $w, $h, $color1, $color2, $text = '', $placeindex = '') {
+function fill_box($im, $x, $y, $w, $h, $color1, $color2, $text = '', $placeindex = '')
+{
     global $col_black;
     $x1 = $x + $w - 1;
     $y1 = $y + $h - 1;
 
     imagerectangle($im, $x, $y1, $x1 + 1, $y + 1, $col_black);
-    if ($y1 > $y)
+    if ($y1 > $y) {
         imagefilledrectangle($im, $x, $y, $x1, $y1, $color2);
-    else
+    } else {
         imagefilledrectangle($im, $x, $y1, $x1, $y, $color2);
+    }
     imagerectangle($im, $x, $y1, $x1, $y, $color1);
     if ($text) {
         if ($placeindex > 0) {
-
             if ($placeindex < 16) {
                 $px = 5;
                 $py = $placeindex * 12 + 6;

@@ -31,49 +31,48 @@
  *
  */
 
-function validate($str, $fieldname, $pattern = '', $lng = '', $emptydefault = array()) {
+function validate($str, $fieldname, $pattern = '', $lng = '', $emptydefault = array())
+{
+    global $log, $theme;
 
-	global $log, $theme;
+    if (!is_array($emptydefault)) {
+        $emptydefault_array = array(
+            $emptydefault
+        );
+        unset($emptydefault);
+        $emptydefault = $emptydefault_array;
+        unset($emptydefault_array);
+    }
 
-	if (!is_array($emptydefault)) {
-		$emptydefault_array = array(
-			$emptydefault
-		);
-		unset($emptydefault);
-		$emptydefault = $emptydefault_array;
-		unset($emptydefault_array);
-	}
+    // Check if the $str is one of the values which represent the default for an 'empty' value
+    if (is_array($emptydefault)
+       && !empty($emptydefault)
+       && in_array($str, $emptydefault)
+       && isset($emptydefault[0])
+    ) {
+        return $emptydefault[0];
+    }
 
-	// Check if the $str is one of the values which represent the default for an 'empty' value
-	if (is_array($emptydefault)
-	   && !empty($emptydefault)
-	   && in_array($str, $emptydefault)
-	   && isset($emptydefault[0])
-	) {
-		return $emptydefault[0];
-	}
+    if ($pattern == '') {
+        $pattern = '/^[^\r\n\t\f\0]*$/D';
 
-	if ($pattern == '') {
+        if (!preg_match($pattern, $str)) {
+            // Allows letters a-z, digits, space (\\040), hyphen (\\-), underscore (\\_) and backslash (\\\\),
+            // everything else is removed from the string.
+            $allowed = "/[^a-z0-9\\040\\.\\-\\_\\\\]/i";
+            $str = preg_replace($allowed, "", $str);
+            $log->logAction(USR_ACTION, LOG_WARNING, "cleaned bad formatted string (" . $str . ")");
+        }
+    }
 
-		$pattern = '/^[^\r\n\t\f\0]*$/D';
+    if (preg_match($pattern, $str)) {
+        return $str;
+    }
 
-		if (!preg_match($pattern, $str)) {
-			// Allows letters a-z, digits, space (\\040), hyphen (\\-), underscore (\\_) and backslash (\\\\),
-			// everything else is removed from the string.
-			$allowed = "/[^a-z0-9\\040\\.\\-\\_\\\\]/i";
-			$str = preg_replace($allowed, "", $str);
-			$log->logAction(USR_ACTION, LOG_WARNING, "cleaned bad formatted string (" . $str . ")");
-		}
-	}
+    if ($lng == '') {
+        $lng = 'stringformaterror';
+    }
 
-	if (preg_match($pattern, $str)) {
-		return $str;
-	}
-
-	if ($lng == '') {
-		$lng = 'stringformaterror';
-	}
-
-	standard_error($lng, $fieldname);
-	exit;
+    standard_error($lng, $fieldname);
+    exit;
 }

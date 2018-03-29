@@ -19,10 +19,9 @@
 
 function manipulateFormFieldData($fieldname, $fielddata, $newfieldvalue)
 {
-	if(is_array($fielddata) && isset($fielddata['type']) && $fielddata['type'] != '' && function_exists('manipulateFormFieldData' . ucfirst($fielddata['type'])))
-	{
-		$newfieldvalue = call_user_func('manipulateFormFieldData' . ucfirst($fielddata['type']), $fieldname, $fielddata, $newfieldvalue);
-	}
+    if (is_array($fielddata) && isset($fielddata['type']) && $fielddata['type'] != '' && function_exists('manipulateFormFieldData' . ucfirst($fielddata['type']))) {
+        $newfieldvalue = call_user_func('manipulateFormFieldData' . ucfirst($fielddata['type']), $fieldname, $fielddata, $newfieldvalue);
+    }
 
-	return $newfieldvalue;
+    return $newfieldvalue;
 }

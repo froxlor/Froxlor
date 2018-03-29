@@ -19,8 +19,8 @@
 
 function getFormFieldOutputHiddenString($fieldname, $fielddata, $do_show = true)
 {
-	$label = $fielddata['label'];
-	$value = htmlentities($fielddata['value']);
-	eval("\$returnvalue = \"" . getTemplate("formfields/hiddenstring", true) . "\";");
-	return $returnvalue;
+    $label = $fielddata['label'];
+    $value = htmlentities($fielddata['value']);
+    eval("\$returnvalue = \"" . getTemplate("formfields/hiddenstring", true) . "\";");
+    return $returnvalue;
 }

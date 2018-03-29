@@ -16,27 +16,27 @@
  */
 
 return array(
-	'filetemplate_add' => array(
-		'title' => $lng['admin']['templates']['template_add'],
-		'image' => 'icons/templates_add.png',
-		'sections' => array(
-			'section_a' => array(
-				'title' => $lng['admin']['templates']['template_add'],
-				'image' => 'icons/templates_add.png',
-				'fields' => array(
-					'template' => array(
-						'label' => $lng['admin']['templates']['action'],
-						'type' => 'select',
-						'select_var' => $free_templates
-					),
-					'filecontent' => array(
-						'label' => $lng['admin']['templates']['filecontent'],
-						'type' => 'textarea',
-						'cols' => 60,
-						'rows' => 12
-					)
-				)
-			)
-		)
-	)
+    'filetemplate_add' => array(
+        'title' => $lng['admin']['templates']['template_add'],
+        'image' => 'icons/templates_add.png',
+        'sections' => array(
+            'section_a' => array(
+                'title' => $lng['admin']['templates']['template_add'],
+                'image' => 'icons/templates_add.png',
+                'fields' => array(
+                    'template' => array(
+                        'label' => $lng['admin']['templates']['action'],
+                        'type' => 'select',
+                        'select_var' => $free_templates
+                    ),
+                    'filecontent' => array(
+                        'label' => $lng['admin']['templates']['filecontent'],
+                        'type' => 'textarea',
+                        'cols' => 60,
+                        'rows' => 12
+                    )
+                )
+            )
+        )
+    )
 );

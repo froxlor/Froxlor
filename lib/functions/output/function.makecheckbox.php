@@ -31,38 +31,30 @@
  * @author Michael Kaufmann <mkaufmann@nutime.de>
  */
 
-function makecheckbox($name, $title, $value, $break = false, $selvalue = NULL, $title_trusted = false, $value_trusted = false)
+function makecheckbox($name, $title, $value, $break = false, $selvalue = null, $title_trusted = false, $value_trusted = false)
 {
-	if($selvalue !== NULL
-	   && $value == $selvalue)
-	{
-		$checked = 'checked="checked"';
-	}
-	else if(isset($_SESSION['requestData'][$name]))
-	{
-		$checked = 'checked="checked"';
-	}
-	else
-	{
-		$checked = '';
-	}
+    if ($selvalue !== null
+       && $value == $selvalue) {
+        $checked = 'checked="checked"';
+    } elseif (isset($_SESSION['requestData'][$name])) {
+        $checked = 'checked="checked"';
+    } else {
+        $checked = '';
+    }
 
-	if(!$title_trusted)
-	{
-		$title = htmlspecialchars($title);
-	}
+    if (!$title_trusted) {
+        $title = htmlspecialchars($title);
+    }
 
-	if(!$value_trusted)
-	{
-		$value = htmlspecialchars($value);
-	}
+    if (!$value_trusted) {
+        $value = htmlspecialchars($value);
+    }
 
-	$checkbox = '<label class="nobr"><input type="checkbox" name="' . $name . '" value="' . $value . '" ' . $checked . ' />&nbsp;' . $title . '</label>';
+    $checkbox = '<label class="nobr"><input type="checkbox" name="' . $name . '" value="' . $value . '" ' . $checked . ' />&nbsp;' . $title . '</label>';
 
-	if($break)
-	{
-		$checkbox.= '<br />';
-	}
+    if ($break) {
+        $checkbox.= '<br />';
+    }
 
-	return $checkbox;
+    return $checkbox;
 }

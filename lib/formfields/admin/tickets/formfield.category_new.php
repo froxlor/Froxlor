@@ -16,28 +16,28 @@
  */
 
 return array(
-	'category_new' => array(
-		'title' => $lng['ticket']['ticket_newcateory'],
-		'image' => 'icons/category_new.png',
-		'sections' => array(
-			'section_a' => array(
-				'title' => $lng['ticket']['ticket_newcateory'],
-				'image' => 'icons/category_new.png',
-				'fields' => array(
-					'category' => array(
-						'label' => $lng['ticket']['category'],
-						'type' => 'text',
-						'maxlength' => 50
-					),
-					'logicalorder' => array(
-						'label' => $lng['ticket']['logicalorder'],
-						'desc' => $lng['ticket']['orderdesc'],
-						'type' => 'text',
-						'maxlength' => 3,
-						'value' => $order
-					)
-				)
-			)
-		)
-	)
+    'category_new' => array(
+        'title' => $lng['ticket']['ticket_newcateory'],
+        'image' => 'icons/category_new.png',
+        'sections' => array(
+            'section_a' => array(
+                'title' => $lng['ticket']['ticket_newcateory'],
+                'image' => 'icons/category_new.png',
+                'fields' => array(
+                    'category' => array(
+                        'label' => $lng['ticket']['category'],
+                        'type' => 'text',
+                        'maxlength' => 50
+                    ),
+                    'logicalorder' => array(
+                        'label' => $lng['ticket']['logicalorder'],
+                        'desc' => $lng['ticket']['orderdesc'],
+                        'type' => 'text',
+                        'maxlength' => 3,
+                        'value' => $order
+                    )
+                )
+            )
+        )
+    )
 );

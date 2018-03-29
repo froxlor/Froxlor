@@ -28,13 +28,12 @@
 
 function intval_ressource($the_value)
 {
-	$the_value = intval($the_value);
+    $the_value = intval($the_value);
 
-	if($the_value < 0
-	   && $the_value != '-1')
-	{
-		$the_value*= - 1;
-	}
+    if ($the_value < 0
+       && $the_value != '-1') {
+        $the_value*= - 1;
+    }
 
-	return $the_value;
+    return $the_value;
 }

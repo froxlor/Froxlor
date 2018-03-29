@@ -31,54 +31,55 @@
  *
  * @return string outputs parsed question_yesno template
  */
-function ask_yesno($text, $yesfile, $params = array(), $targetname = '', $back_nr = 1) {
+function ask_yesno($text, $yesfile, $params = array(), $targetname = '', $back_nr = 1)
+{
+    global $userinfo, $s, $header, $footer, $lng, $theme;
 
-	global $userinfo, $s, $header, $footer, $lng, $theme;
+    $hiddenparams = '';
 
-	$hiddenparams = '';
+    if (is_array($params)) {
+        foreach ($params as $field => $value) {
+            $hiddenparams.= '<input type="hidden" name="' . htmlspecialchars($field) . '" value="' . htmlspecialchars($value) . '" />' . "\n";
+        }
+    }
 
-	if (is_array($params)) {
-		foreach ($params as $field => $value) {
-			$hiddenparams.= '<input type="hidden" name="' . htmlspecialchars($field) . '" value="' . htmlspecialchars($value) . '" />' . "\n";
-		}
-	}
+    if (isset($lng['question'][$text])) {
+        $text = $lng['question'][$text];
+    }
 
-	if (isset($lng['question'][$text])) {
-		$text = $lng['question'][$text];
-	}
-
-	$text = strtr($text, array('%s' => $targetname));
-	eval("echo \"" . getTemplate('misc/question_yesno', '1') . "\";");
-	exit;
+    $text = strtr($text, array('%s' => $targetname));
+    eval("echo \"" . getTemplate('misc/question_yesno', '1') . "\";");
+    exit;
 }
 
-function ask_yesno_withcheckbox($text, $chk_text, $yesfile, $params = array(), $targetname = '', $show_checkbox = true) {
+function ask_yesno_withcheckbox($text, $chk_text, $yesfile, $params = array(), $targetname = '', $show_checkbox = true)
+{
+    global $userinfo, $s, $header, $footer, $lng, $theme;
 
-	global $userinfo, $s, $header, $footer, $lng, $theme;
+    $hiddenparams = '';
 
-	$hiddenparams = '';
+    if (is_array($params)) {
+        foreach ($params as $field => $value) {
+            $hiddenparams.= '<input type="hidden" name="' . htmlspecialchars($field) . '" value="' . htmlspecialchars($value) . '" />' . "\n";
+        }
+    }
 
-	if (is_array($params)) {
-		foreach ($params as $field => $value) {
-			$hiddenparams.= '<input type="hidden" name="' . htmlspecialchars($field) . '" value="' . htmlspecialchars($value) . '" />' . "\n";
-		}
-	}
+    if (isset($lng['question'][$text])) {
+        $text = $lng['question'][$text];
+    }
 
-	if (isset($lng['question'][$text])) {
-		$text = $lng['question'][$text];
-	}
+    if (isset($lng['question'][$chk_text])) {
+        $chk_text = $lng['question'][$chk_text];
+    }
 
-	if (isset($lng['question'][$chk_text])) {
-		$chk_text = $lng['question'][$chk_text];
-	}
+    if ($show_checkbox) {
+        $checkbox = makecheckbox('delete_userfiles', $chk_text, '1', false, '0', true, true);
+    } else {
+        $checkbox = '<input type="hidden" name="delete_userfiles" value="0" />' . "\n";
+        ;
+    }
 
-	if ($show_checkbox) {
-		$checkbox = makecheckbox('delete_userfiles', $chk_text, '1', false, '0', true, true);
-	} else {
-		$checkbox = '<input type="hidden" name="delete_userfiles" value="0" />' . "\n";;
-	}
-
-	$text = strtr($text, array('%s' => $targetname));
-	eval("echo \"" . getTemplate('misc/question_yesno_checkbox', '1') . "\";");
-	exit;
+    $text = strtr($text, array('%s' => $targetname));
+    eval("echo \"" . getTemplate('misc/question_yesno_checkbox', '1') . "\";");
+    exit;
 }

@@ -17,5 +17,5 @@
 
 function validateFormFieldFile($fieldname, $fielddata, $newfieldvalue)
 {
-	return true;
+    return true;
 }

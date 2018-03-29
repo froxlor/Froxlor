@@ -29,37 +29,32 @@
  * @author Florian Lippert <flo@syscp.org>
  */
 
-function makeoption($title, $value, $selvalue = NULL, $title_trusted = false, $value_trusted = false, $id = NULL, $disabled = false)
+function makeoption($title, $value, $selvalue = null, $title_trusted = false, $value_trusted = false, $id = null, $disabled = false)
 {
-	if($selvalue !== NULL
-	   && ((is_array($selvalue) && in_array($value, $selvalue)) || $value == $selvalue))
-	{
-		$selected = 'selected="selected"';
-	}
-	else
-	{
-		$selected = '';
-	}
-	
-	if ($disabled) {
-		$selected .= ' disabled="disabled"';
-	}
+    if ($selvalue !== null
+       && ((is_array($selvalue) && in_array($value, $selvalue)) || $value == $selvalue)) {
+        $selected = 'selected="selected"';
+    } else {
+        $selected = '';
+    }
+    
+    if ($disabled) {
+        $selected .= ' disabled="disabled"';
+    }
 
-	if(!$title_trusted)
-	{
-		$title = htmlspecialchars($title);
-	}
+    if (!$title_trusted) {
+        $title = htmlspecialchars($title);
+    }
 
-	if(!$value_trusted)
-	{
-		$value = htmlspecialchars($value);
-	}
+    if (!$value_trusted) {
+        $value = htmlspecialchars($value);
+    }
 
-	$id_str = ' ';
-	if($id !== NULL) {
-		$id_str = 'id="' . $id . '"';
-	}
+    $id_str = ' ';
+    if ($id !== null) {
+        $id_str = 'id="' . $id . '"';
+    }
 
-	$option = '<option value="' . $value . '" ' . $id_str . $selected . ' >' . $title . '</option>';
-	return $option;
+    $option = '<option value="' . $value . '" ' . $id_str . $selected . ' >' . $title . '</option>';
+    return $option;
 }

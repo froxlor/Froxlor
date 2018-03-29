@@ -22,7 +22,7 @@
  * Class DomainBulkAction to mass-import domains for a given customer
  *
  * @author Michael Kaufmann (d00p) <d00p@froxlor.org>
- *        
+ *
  */
 class DomainBulkAction
 {
@@ -74,7 +74,7 @@ class DomainBulkAction
      *
      * @var array
      */
-    private $_required_fields = array (
+    private $_required_fields = array(
 /*  1 */	'domain',
 /*  2 */	'documentroot',
 /*  3 */    'aliasdomain',
@@ -100,8 +100,8 @@ class DomainBulkAction
 /* 23 */	'ocsp_stapling',
 /* 24 */	'phpenabled',
 /* 25 */	'http2',
-	    /* automatically added */
-		'adminid',
+        /* automatically added */
+        'adminid',
         'customerid',
         'add_date'
     );
@@ -118,8 +118,8 @@ class DomainBulkAction
     /**
      * class constructor, optionally sets file and customer-id
      *
-     * @param string $import_file            
-     * @param int $customer_id            
+     * @param string $import_file
+     * @param int $customer_id
      *
      * @return object DomainBulkAction instance
      */
@@ -135,8 +135,8 @@ class DomainBulkAction
      * import the parsed import file data with an optional separator other then semicolon
      * and offset (maybe for header-line in csv or similar)
      *
-     * @param string $separator            
-     * @param int $offset            
+     * @param string $separator
+     * @param int $offset
      *
      * @return array 'all' => amount of records processed, 'imported' => number of imported records
      */
@@ -254,7 +254,7 @@ class DomainBulkAction
     /**
      * setter for import-file
      *
-     * @param string $import_file            
+     * @param string $import_file
      *
      * @return void
      */
@@ -266,7 +266,7 @@ class DomainBulkAction
     /**
      * setter for customer-id
      *
-     * @param int $customer_id            
+     * @param int $customer_id
      *
      * @return void
      */
@@ -278,7 +278,7 @@ class DomainBulkAction
     /**
      * adds a single domain to the database using the given array
      *
-     * @param array $domain_data            
+     * @param array $domain_data
      *
      * @return int last-inserted id or false on error
      */
@@ -354,35 +354,35 @@ class DomainBulkAction
         
         // only check for letsencrypt, hsts and oscp-stapling if ssl is enabled
         if ($domain_data['use_ssl'] == 1) {
-			//lets encrypt
-			if ($domain_data['letsencrypt'] != 1 || $domain_data['iswildcarddomain'] == 1) {
-				$domain_data['letsencrypt'] = 0;
-			}
-		} else {
-			$domain_data['letsencrypt'] = 0;
-		}
+            //lets encrypt
+            if ($domain_data['letsencrypt'] != 1 || $domain_data['iswildcarddomain'] == 1) {
+                $domain_data['letsencrypt'] = 0;
+            }
+        } else {
+            $domain_data['letsencrypt'] = 0;
+        }
 
-		// hsts
-		if ($domain_data['hsts'] != 1) {
-			$domain_data['hsts'] = 0;
-		}
-		if ($domain_data['hsts_sub'] != 1) {
-			$domain_data['hsts_sub'] = 0;
-		}
-		if ($domain_data['hsts_preload'] != 1) {
-			$domain_data['hsts_preload'] = 0;
-		}
-		if ($domain_data['ocsp_stapling'] != 1) {
-			$domain_data['ocsp_stapling'] = 0;
-		}
+        // hsts
+        if ($domain_data['hsts'] != 1) {
+            $domain_data['hsts'] = 0;
+        }
+        if ($domain_data['hsts_sub'] != 1) {
+            $domain_data['hsts_sub'] = 0;
+        }
+        if ($domain_data['hsts_preload'] != 1) {
+            $domain_data['hsts_preload'] = 0;
+        }
+        if ($domain_data['ocsp_stapling'] != 1) {
+            $domain_data['ocsp_stapling'] = 0;
+        }
 
-		if ($domain_data['phpenabled'] != 1) {
-			$domain_data['phpenabled'] = 0;
-		}
+        if ($domain_data['phpenabled'] != 1) {
+            $domain_data['phpenabled'] = 0;
+        }
 
-		if ($domain_data['http2'] != 1) {
-			$domain_data['http2'] = 0;
-		}
+        if ($domain_data['http2'] != 1) {
+            $domain_data['http2'] = 0;
+        }
 
         // add to known domains
         $this->_knownDomains[] = $domain_data['domain'];
@@ -476,8 +476,8 @@ class DomainBulkAction
         
         // add alias if any
         if ($hasAlias != false) {
-			$alias_stmt = Database::prepare("UPDATE `".TABLE_PANEL_DOMAINS."` SET `aliasdomain` = :aliasdomain WHERE `id` = :did");
-			Database::pexecute($alias_stmt, array('aliasdomain' => $hasAlias, 'did' => $domain_id));
+            $alias_stmt = Database::prepare("UPDATE `".TABLE_PANEL_DOMAINS."` SET `aliasdomain` = :aliasdomain WHERE `id` = :did");
+            Database::pexecute($alias_stmt, array('aliasdomain' => $hasAlias, 'did' => $domain_id));
         }
 
         // insert domain <-> ip/port reference
@@ -511,7 +511,7 @@ class DomainBulkAction
      * reads in the csv import file and returns an array with
      * all the domains to be imported
      *
-     * @param string $separator            
+     * @param string $separator
      *
      * @return array
      */
@@ -538,8 +538,9 @@ class DomainBulkAction
                 $data_arr = array();
                 foreach ($tmp_arr as $idx => $data) {
                     // don't include more fields than the ones we use
-                    if ($idx > (count($this->_required_fields) - 4)) // off-by-one + 3 auto-values
+                    if ($idx > (count($this->_required_fields) - 4)) { // off-by-one + 3 auto-values
                         break;
+                    }
                     $data_arr[$this->_required_fields[$idx]] = $data;
                 }
                 $file_data[] = array_map("trim", $data_arr);

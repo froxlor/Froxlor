@@ -36,55 +36,54 @@
  *          - fixed bug #91
  */
 
-function redirectTo($destination, $get_variables = null, $isRelative = true) {
+function redirectTo($destination, $get_variables = null, $isRelative = true)
+{
+    global $s;
 
-	global $s;
+    if (is_array($get_variables)) {
+        if (isset($get_variables['s'])) {
+            $linker = new linker($destination, $get_variables['s']);
+        } else {
+            $linker = new linker($destination, $s);
+        }
 
-	if (is_array($get_variables)) {
-		if (isset($get_variables['s'])) {
-			$linker = new linker($destination, $get_variables['s']);
-		} else {
-			$linker = new linker($destination, $s);
-		}
+        foreach ($get_variables as $key => $value) {
+            $linker->add($key, $value);
+        }
 
-		foreach ($get_variables as $key => $value) {
-			$linker->add($key, $value);
-		}
+        if ($isRelative) {
+            $linker->protocol = '';
+            $linker->hostname = '';
+            $path = './';
+        } else {
+            if (isset($_SERVER['HTTPS'])
+                    && strtolower($_SERVER['HTTPS']) == 'on'
+            ) {
+                $linker->protocol = 'https';
+            } else {
+                $linker->protocol = 'http';
+            }
 
-		if ($isRelative) {
-			$linker->protocol = '';
-			$linker->hostname = '';
-			$path = './';
-		} else {
-			if (isset($_SERVER['HTTPS'])
-					&& strtolower($_SERVER['HTTPS']) == 'on'
-			) {
-				$linker->protocol = 'https';
-			} else {
-				$linker->protocol = 'http';
-			}
+            $linker->hostname = $_SERVER['HTTP_HOST'];
 
-			$linker->hostname = $_SERVER['HTTP_HOST'];
+            if (dirname($_SERVER['PHP_SELF']) == '/') {
+                $path = '/';
+            } else {
+                $path = dirname($_SERVER['PHP_SELF']) . '/';
+            }
+            $linker->filename = $path . $destination;
+        }
+        header('Location: ' . $linker->getLink());
+        exit;
+    } elseif ($get_variables == null) {
+        if ($isRelative) {
+            $linker = new linker($destination, $s);
+        } else {
+            $linker = new linker($destination);
+        }
+        header('Location: ' . $linker->getLink());
+        exit;
+    }
 
-			if (dirname($_SERVER['PHP_SELF']) == '/') {
-				$path = '/';
-			} else {
-				$path = dirname($_SERVER['PHP_SELF']) . '/';
-			}
-			$linker->filename = $path . $destination;
-		}
-		header('Location: ' . $linker->getLink());
-		exit;
-
-	} elseif ($get_variables == null) {
-		if ($isRelative) {
-			$linker = new linker($destination, $s);
-		} else {
-			$linker = new linker($destination);
-		}
-		header('Location: ' . $linker->getLink());
-		exit;
-	}
-
-	return false;
+    return false;
 }

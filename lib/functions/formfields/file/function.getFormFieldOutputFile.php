@@ -17,8 +17,8 @@
 
 function getFormFieldOutputFile($fieldname, $fielddata, $do_show = true)
 {
-	$label = $fielddata['label'];
-	$value = htmlentities($fielddata['value']);
-	eval("\$returnvalue = \"" . getTemplate("formfields/text", true) . "\";");
-	return $returnvalue;
+    $label = $fielddata['label'];
+    $value = htmlentities($fielddata['value']);
+    eval("\$returnvalue = \"" . getTemplate("formfields/text", true) . "\";");
+    return $returnvalue;
 }

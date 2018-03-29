@@ -16,7 +16,7 @@
  * @package    Logger
  *
  * @link       http://www.nutime.de/
- * 
+ *
  * Logger - Abstract-Logger-Class
  */
 
@@ -33,65 +33,69 @@ LOG_DEBUG 	  debug-level message
 
 */
 
-abstract class AbstractLogger {
+abstract class AbstractLogger
+{
 
-	/** 
-	 * Enable/Disable Logging
-	 * @var logenabled
-	 */
-	private $logenabled = false;
+    /**
+     * Enable/Disable Logging
+     * @var logenabled
+     */
+    private $logenabled = false;
 
-	/** 
-	 * Enable/Disable Cronjob-Logging
-	 * @var logcronjob
-	 */
-	private $logcronjob = false;
+    /**
+     * Enable/Disable Cronjob-Logging
+     * @var logcronjob
+     */
+    private $logcronjob = false;
 
-	/** 
-	 * Loggin-Severity
-	 * @var severity
-	 */
-	private $severity = 1;
+    /**
+     * Loggin-Severity
+     * @var severity
+     */
+    private $severity = 1;
 
-	/**
-	 * setup the main logger
-	 */
-	protected function setupLogger() {
-		$this->logenabled = Settings::Get('logger.enabled');
-		$this->logcronjob = Settings::Get('logger.log_cron');
-		$this->severity = Settings::Get('logger.severity');
-	}
+    /**
+     * setup the main logger
+     */
+    protected function setupLogger()
+    {
+        $this->logenabled = Settings::Get('logger.enabled');
+        $this->logcronjob = Settings::Get('logger.log_cron');
+        $this->severity = Settings::Get('logger.severity');
+    }
 
-	/**
-	 * return whether this logging is enabled
-	 *
-	 * @return bool
-	 */
-	protected function isEnabled() {
-		return $this->logenabled;
-	}
+    /**
+     * return whether this logging is enabled
+     *
+     * @return bool
+     */
+    protected function isEnabled()
+    {
+        return $this->logenabled;
+    }
 
-	/**
-	 * return the log severity
-	 *
-	 * @return int
-	 */
-	protected function getSeverity() {
-		return $this->severity;
-	}
+    /**
+     * return the log severity
+     *
+     * @return int
+     */
+    protected function getSeverity()
+    {
+        return $this->severity;
+    }
 
-	/**
-	 * whether to log cron-runs or not
-	 *
-	 * @return bool
-	 */
-	protected function logCron() {
-		return $this->logcronjob;
-	}
+    /**
+     * whether to log cron-runs or not
+     *
+     * @return bool
+     */
+    protected function logCron()
+    {
+        return $this->logcronjob;
+    }
 
-	/**
-	 * logs a given text
-	 */
-	abstract public function logAction();
-
+    /**
+     * logs a given text
+     */
+    abstract public function logAction();
 }

@@ -29,6 +29,6 @@
 
 function validateEmail($email)
 {
-	$email = strtolower($email);
-	return filter_var($email, FILTER_VALIDATE_EMAIL);
+    $email = strtolower($email);
+    return filter_var($email, FILTER_VALIDATE_EMAIL);
 }

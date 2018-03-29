@@ -23,21 +23,21 @@
  *
  * @return boolean
  */
-function isCustomerStdSubdomain($did = 0) {
-
-	if ($did > 0) {
-		$result_stmt = Database::prepare("
+function isCustomerStdSubdomain($did = 0)
+{
+    if ($did > 0) {
+        $result_stmt = Database::prepare("
 			SELECT `customerid` FROM `".TABLE_PANEL_CUSTOMERS."`
 			WHERE `standardsubdomain` = :did
 		");
-		$result = Database::pexecute_first($result_stmt, array('did' => $did));
+        $result = Database::pexecute_first($result_stmt, array('did' => $did));
 
-		if (is_array($result)
-			&& isset($result['customerid'])
-			&& $result['customerid'] > 0
-		) {
-			return true;
-		}
-	}
-	return false;
+        if (is_array($result)
+            && isset($result['customerid'])
+            && $result['customerid'] > 0
+        ) {
+            return true;
+        }
+    }
+    return false;
 }

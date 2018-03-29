@@ -29,33 +29,34 @@
  *
  * @return boolean|array
  */
-function storeSettingDefaultTheme($fieldname, $fielddata, $newfieldvalue) {
+function storeSettingDefaultTheme($fieldname, $fielddata, $newfieldvalue)
+{
 
-	// first save the setting itself
-	$returnvalue = storeSettingField($fieldname, $fielddata, $newfieldvalue);
+    // first save the setting itself
+    $returnvalue = storeSettingField($fieldname, $fielddata, $newfieldvalue);
 
-	if ($returnvalue !== false
-		&& is_array($fielddata)
-		&& isset($fielddata['settinggroup'])
-		&& $fielddata['settinggroup'] == 'panel'
-		&& isset($fielddata['varname'])
-		&& $fielddata['varname'] == 'default_theme'
-	) {
-		// now, if changing themes is disabled we recursivly set
-		// the new theme (customers and admin, depending on settings)
-		if (Settings::Get('panel.allow_theme_change_customer') == '0') {
-			$upd_stmt = Database::prepare("
+    if ($returnvalue !== false
+        && is_array($fielddata)
+        && isset($fielddata['settinggroup'])
+        && $fielddata['settinggroup'] == 'panel'
+        && isset($fielddata['varname'])
+        && $fielddata['varname'] == 'default_theme'
+    ) {
+        // now, if changing themes is disabled we recursivly set
+        // the new theme (customers and admin, depending on settings)
+        if (Settings::Get('panel.allow_theme_change_customer') == '0') {
+            $upd_stmt = Database::prepare("
 				UPDATE `".TABLE_PANEL_CUSTOMERS."` SET `theme` = :theme
 			");
-			Database::pexecute($upd_stmt, array('theme' => $newfieldvalue));
-		}
-		if (Settings::Get('panel.allow_theme_change_admin') == '0') {
-			$upd_stmt = Database::prepare("
+            Database::pexecute($upd_stmt, array('theme' => $newfieldvalue));
+        }
+        if (Settings::Get('panel.allow_theme_change_admin') == '0') {
+            $upd_stmt = Database::prepare("
 				UPDATE `".TABLE_PANEL_ADMINS."` SET `theme` = :theme
 			");
-			Database::pexecute($upd_stmt, array('theme' => $newfieldvalue));
-		}
-	}
+            Database::pexecute($upd_stmt, array('theme' => $newfieldvalue));
+        }
+    }
 
-	return $returnvalue;
+    return $returnvalue;
 }

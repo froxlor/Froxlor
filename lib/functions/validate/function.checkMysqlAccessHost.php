@@ -17,20 +17,19 @@
  *
  */
 
-function checkMysqlAccessHost($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues) {
+function checkMysqlAccessHost($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues)
+{
+    $mysql_access_host_array = array_map('trim', explode(',', $newfieldvalue));
 
-	$mysql_access_host_array = array_map('trim', explode(',', $newfieldvalue));
-
-	foreach ($mysql_access_host_array as $host_entry) {
-
-		if (validate_ip2($host_entry, true, 'invalidip', true, true) == false
-		   && validateDomain($host_entry) == false
-		   && validateLocalHostname($host_entry) == false
-		   && $host_entry != '%'
-		) {
-			return array(FORMFIELDS_PLAUSIBILITY_CHECK_ERROR, 'invalidmysqlhost', $host_entry);
-		}
-	}
-	
-	return array(FORMFIELDS_PLAUSIBILITY_CHECK_OK);
+    foreach ($mysql_access_host_array as $host_entry) {
+        if (validate_ip2($host_entry, true, 'invalidip', true, true) == false
+           && validateDomain($host_entry) == false
+           && validateLocalHostname($host_entry) == false
+           && $host_entry != '%'
+        ) {
+            return array(FORMFIELDS_PLAUSIBILITY_CHECK_ERROR, 'invalidmysqlhost', $host_entry);
+        }
+    }
+    
+    return array(FORMFIELDS_PLAUSIBILITY_CHECK_OK);
 }

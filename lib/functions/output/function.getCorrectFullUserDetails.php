@@ -26,25 +26,24 @@
  * @author Florian Lippert <flo@syscp.org>
  */
 
-function getCorrectFullUserDetails($userinfo) {
-	$returnval = '';
+function getCorrectFullUserDetails($userinfo)
+{
+    $returnval = '';
 
-	if (isset($userinfo['firstname']) && isset($userinfo['name']) && isset($userinfo['company'])) {
-		if ($userinfo['company'] == '') {
-			$returnval = $userinfo['name'] . ', ' . $userinfo['firstname'];
-		}
-		else {
-			if ($userinfo['name'] != ''
-				&& $userinfo['firstname'] != '') {
-				$returnval = $userinfo['name'] . ', ' . $userinfo['firstname'] . ' | ' . $userinfo['company'];
-			}
-			else {
-				$returnval = $userinfo['company'];
-			}
-		}
-	} elseif (isset($userinfo['name'])) {
-		$returnval = $userinfo['name'];
-	}
+    if (isset($userinfo['firstname']) && isset($userinfo['name']) && isset($userinfo['company'])) {
+        if ($userinfo['company'] == '') {
+            $returnval = $userinfo['name'] . ', ' . $userinfo['firstname'];
+        } else {
+            if ($userinfo['name'] != ''
+                && $userinfo['firstname'] != '') {
+                $returnval = $userinfo['name'] . ', ' . $userinfo['firstname'] . ' | ' . $userinfo['company'];
+            } else {
+                $returnval = $userinfo['company'];
+            }
+        }
+    } elseif (isset($userinfo['name'])) {
+        $returnval = $userinfo['name'];
+    }
 
-	return $returnval;
+    return $returnval;
 }

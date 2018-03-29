@@ -19,10 +19,9 @@
 
 function prefetchFormFieldData($fieldname, $fielddata)
 {
-	$returnvalue = array();
-	if(is_array($fielddata) && isset($fielddata['type']) && $fielddata['type'] != '' && function_exists('prefetchFormFieldData' . ucfirst($fielddata['type'])))
-	{
-		$returnvalue = call_user_func('prefetchFormFieldData' . ucfirst($fielddata['type']), $fieldname, $fielddata);
-	}
-	return $returnvalue;
+    $returnvalue = array();
+    if (is_array($fielddata) && isset($fielddata['type']) && $fielddata['type'] != '' && function_exists('prefetchFormFieldData' . ucfirst($fielddata['type']))) {
+        $returnvalue = call_user_func('prefetchFormFieldData' . ucfirst($fielddata['type']), $fieldname, $fielddata);
+    }
+    return $returnvalue;
 }

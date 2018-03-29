@@ -27,19 +27,17 @@
 
 function makeCorrectDestination($destination)
 {
-	$search = '/ +/';
-	$replace = ' ';
-	$destination = preg_replace($search, $replace, $destination);
+    $search = '/ +/';
+    $replace = ' ';
+    $destination = preg_replace($search, $replace, $destination);
 
-	if(substr($destination, 0, 1) == ' ')
-	{
-		$destination = substr($destination, 1);
-	}
+    if (substr($destination, 0, 1) == ' ') {
+        $destination = substr($destination, 1);
+    }
 
-	if(substr($destination, -1, 1) == ' ')
-	{
-		$destination = substr($destination, 0, strlen($destination) - 1);
-	}
+    if (substr($destination, -1, 1) == ' ') {
+        $destination = substr($destination, 0, strlen($destination) - 1);
+    }
 
-	return $destination;
+    return $destination;
 }

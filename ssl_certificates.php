@@ -1,6 +1,7 @@
 <?php
-if (! defined('AREA'))
-	die('You cannot access this file directly!');
+if (! defined('AREA')) {
+    die('You cannot access this file directly!');
+}
 
 /**
  * This file is part of the Froxlor project.
@@ -18,49 +19,49 @@ if (! defined('AREA'))
  */
 
 // This file is being included in admin_domains and customer_domains
-	// and therefore does not need to require lib/init.php
+    // and therefore does not need to require lib/init.php
 
 $del_stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` WHERE id = :id");
 $success_message = "";
 
 // do the delete and then just show a success-message and the certificates list again
 if ($action == 'delete') {
-	$id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
-	if ($id > 0) {
-		$chk = (AREA == 'admin' && $userinfo['customers_see_all'] == '1') ? true : false;
-		if (AREA == 'customer') {
-			$chk_stmt = Database::prepare("
+    $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
+    if ($id > 0) {
+        $chk = (AREA == 'admin' && $userinfo['customers_see_all'] == '1') ? true : false;
+        if (AREA == 'customer') {
+            $chk_stmt = Database::prepare("
 				SELECT d.domain FROM `" . TABLE_PANEL_DOMAINS . "` d
 				LEFT JOIN `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` s ON s.domainid = d.id
 				WHERE s.`id` = :id AND d.`customerid` = :cid
 			");
-			$chk = Database::pexecute_first($chk_stmt, array(
-				'id' => $id,
-				'cid' => $userinfo['customerid']
-			));
-		} elseif (AREA == 'admin' && $userinfo['customers_see_all'] == '0') {
-			$chk_stmt = Database::prepare("
+            $chk = Database::pexecute_first($chk_stmt, array(
+                'id' => $id,
+                'cid' => $userinfo['customerid']
+            ));
+        } elseif (AREA == 'admin' && $userinfo['customers_see_all'] == '0') {
+            $chk_stmt = Database::prepare("
 				SELECT d.domain FROM `" . TABLE_PANEL_DOMAINS . "` d
 				LEFT JOIN `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` s ON s.domainid = d.id
 				WHERE s.`id` = :id AND d.`adminid` = :aid
 			");
-			$chk = Database::pexecute_first($chk_stmt, array(
-				'id' => $id,
-				'aid' => $userinfo['adminid']
-			));
-		}
-		if ($chk !== false) {
-			Database::pexecute($del_stmt, array(
-				'id' => $id
-			));
-			$success_message = sprintf($lng['domains']['ssl_certificate_removed'], $id);
-		}
-	}
+            $chk = Database::pexecute_first($chk_stmt, array(
+                'id' => $id,
+                'aid' => $userinfo['adminid']
+            ));
+        }
+        if ($chk !== false) {
+            Database::pexecute($del_stmt, array(
+                'id' => $id
+            ));
+            $success_message = sprintf($lng['domains']['ssl_certificate_removed'], $id);
+        }
+    }
 }
 
 $log->logAction(USR_ACTION, LOG_NOTICE, "viewed domains::ssl_certificates");
 $fields = array(
-	'd.domain' => $lng['domains']['domainname']
+    'd.domain' => $lng['domains']['domainname']
 );
 $paging = new paging($userinfo, TABLE_PANEL_DOMAIN_SSL_SETTINGS, $fields);
 
@@ -74,15 +75,15 @@ $certs_stmt_query = "SELECT s.*, d.domain, d.letsencrypt, c.customerid, c.loginn
 $qry_params = array();
 
 if (AREA == 'admin' && $userinfo['customers_see_all'] == '0') {
-	// admin with only customer-specific permissions
-	$certs_stmt_query .= "d.adminid = :adminid ";
-	$qry_params['adminid'] = $userinfo['adminid'];
+    // admin with only customer-specific permissions
+    $certs_stmt_query .= "d.adminid = :adminid ";
+    $qry_params['adminid'] = $userinfo['adminid'];
 } elseif (AREA == 'customer') {
-	// customer-area
-	$certs_stmt_query .= "d.customerid = :cid ";
-	$qry_params['cid'] = $userinfo['customerid'];
+    // customer-area
+    $certs_stmt_query .= "d.customerid = :cid ";
+    $qry_params['cid'] = $userinfo['customerid'];
 } else {
-	$certs_stmt_query .= "1 ";
+    $certs_stmt_query .= "1 ";
 }
 
 // sorting by domain-name
@@ -94,85 +95,85 @@ $all_certs = $certs_stmt->fetchAll(PDO::FETCH_ASSOC);
 $certificates = "";
 
 if (count($all_certs) == 0) {
-	$message = $lng['domains']['no_ssl_certificates'];
-	$sortcode = "";
-	$arrowcode = array(
-		'd.domain' => ''
-	);
-	$searchcode = "";
-	$pagingcode = "";
-	eval("\$certificates.=\"" . getTemplate("ssl_certificates/certs_error", true) . "\";");
+    $message = $lng['domains']['no_ssl_certificates'];
+    $sortcode = "";
+    $arrowcode = array(
+        'd.domain' => ''
+    );
+    $searchcode = "";
+    $pagingcode = "";
+    eval("\$certificates.=\"" . getTemplate("ssl_certificates/certs_error", true) . "\";");
 } else {
-	$paging->setEntries(count($all_certs));
-	$sortcode = $paging->getHtmlSortCode($lng);
-	$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
-	$searchcode = $paging->getHtmlSearchCode($lng);
-	$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
+    $paging->setEntries(count($all_certs));
+    $sortcode = $paging->getHtmlSortCode($lng);
+    $arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
+    $searchcode = $paging->getHtmlSearchCode($lng);
+    $pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
 
-	foreach ($all_certs as $idx => $cert) {
-		if ($paging->checkDisplay($idx)) {
+    foreach ($all_certs as $idx => $cert) {
+        if ($paging->checkDisplay($idx)) {
 
-			// respect froxlor-hostname
-			if ($cert['domainid'] == 0) {
-				$cert['domain'] = Settings::Get('system.hostname');
-				$cert['letsencrypt'] = Settings::Get('system.le_froxlor_enabled');
-				$cert['loginname'] = 'froxlor.panel';
-			}
+            // respect froxlor-hostname
+            if ($cert['domainid'] == 0) {
+                $cert['domain'] = Settings::Get('system.hostname');
+                $cert['letsencrypt'] = Settings::Get('system.le_froxlor_enabled');
+                $cert['loginname'] = 'froxlor.panel';
+            }
 
-			if (empty($cert['domain']) || empty($cert['ssl_cert_file'])) {
-				// no domain found to the entry or empty entry - safely delete it from the DB
-				Database::pexecute($del_stmt, array(
-					'id' => $cert['id']
-				));
-				continue;
-			}
+            if (empty($cert['domain']) || empty($cert['ssl_cert_file'])) {
+                // no domain found to the entry or empty entry - safely delete it from the DB
+                Database::pexecute($del_stmt, array(
+                    'id' => $cert['id']
+                ));
+                continue;
+            }
 
-			$cert_data = openssl_x509_parse($cert['ssl_cert_file']);
+            $cert_data = openssl_x509_parse($cert['ssl_cert_file']);
 
-			$cert['domain'] = $idna_convert->decode($cert['domain']);
+            $cert['domain'] = $idna_convert->decode($cert['domain']);
 
-			$adminCustomerLink = "";
-			if (AREA == 'admin' && $cert['domainid'] > 0) {
-				if (! empty($cert['loginname'])) {
-					$adminCustomerLink = '&nbsp;(<a href="' . $linker->getLink(array(
-						'section' => 'customers',
-						'page' => 'customers',
-						'action' => 'su',
-						'id' => $cert['customerid']
-					)) . '" rel="external">' . $cert['loginname'] . '</a>)';
-				}
-			}
+            $adminCustomerLink = "";
+            if (AREA == 'admin' && $cert['domainid'] > 0) {
+                if (! empty($cert['loginname'])) {
+                    $adminCustomerLink = '&nbsp;(<a href="' . $linker->getLink(array(
+                        'section' => 'customers',
+                        'page' => 'customers',
+                        'action' => 'su',
+                        'id' => $cert['customerid']
+                    )) . '" rel="external">' . $cert['loginname'] . '</a>)';
+                }
+            }
 
-			if ($cert_data) {
-				$validFrom = date('d.m.Y H:i:s', $cert_data['validFrom_time_t']);
-				$validTo = date('d.m.Y H:i:s', $cert_data['validTo_time_t']);
+            if ($cert_data) {
+                $validFrom = date('d.m.Y H:i:s', $cert_data['validFrom_time_t']);
+                $validTo = date('d.m.Y H:i:s', $cert_data['validTo_time_t']);
 
-				$isValid = true;
-				if ($cert_data['validTo_time_t'] < time()) {
-					$isValid = false;
-				}
+                $isValid = true;
+                if ($cert_data['validTo_time_t'] < time()) {
+                    $isValid = false;
+                }
 
-				$san_list = "";
-				if (isset($cert_data['extensions']['subjectAltName']) && ! empty($cert_data['extensions']['subjectAltName'])) {
-					$SANs = explode(",", $cert_data['extensions']['subjectAltName']);
-					$SANs = array_map('trim', $SANs);
-					foreach ($SANs as $san) {
-						$san = str_replace("DNS:", "", $san);
-						if ($san != $cert_data['subject']['CN'] && strpos($san, "othername:") === false) {
-							$san_list .= $san . "<br>";
-						}
-					}
-				}
+                $san_list = "";
+                if (isset($cert_data['extensions']['subjectAltName']) && ! empty($cert_data['extensions']['subjectAltName'])) {
+                    $SANs = explode(",", $cert_data['extensions']['subjectAltName']);
+                    $SANs = array_map('trim', $SANs);
+                    foreach ($SANs as $san) {
+                        $san = str_replace("DNS:", "", $san);
+                        if ($san != $cert_data['subject']['CN'] && strpos($san, "othername:") === false) {
+                            $san_list .= $san . "<br>";
+                        }
+                    }
+                }
 
-				$row = htmlentities_array($cert);
-				eval("\$certificates.=\"" . getTemplate("ssl_certificates/certs_cert", true) . "\";");
-			} else {
-				$message = sprintf($lng['domains']['ssl_certificate_error'], $cert['domain']);
-				eval("\$certificates.=\"" . getTemplate("ssl_certificates/certs_error", true) . "\";");
-			}
-		} else {
-			continue;
-		}
-	}
+                $row = htmlentities_array($cert);
+                eval("\$certificates.=\"" . getTemplate("ssl_certificates/certs_cert", true) . "\";");
+            } else {
+                $message = sprintf($lng['domains']['ssl_certificate_error'], $cert['domain']);
+                eval("\$certificates.=\"" . getTemplate("ssl_certificates/certs_error", true) . "\";");
+            }
+        } else {
+            continue;
+        }
+    }
 }
 eval("echo \"" . getTemplate("ssl_certificates/certs_list", true) . "\";");
