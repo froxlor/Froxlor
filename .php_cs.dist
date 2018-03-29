@@ -1,0 +1,64 @@
+<?php
+
+return PhpCsFixer\Config::create()
+   ->setRules([
+       '@PSR2' => true,
+       'single_blank_line_before_namespace' => true,
+       'function_typehint_space' => true,
+       'declare_strict_types' => true,
+       'function_declaration' => true,
+       'no_spaces_after_function_name' => true,
+       'no_empty_phpdoc' => true,
+       'no_empty_comment' => true,
+       'no_useless_return' => true,
+       'no_trailing_whitespace' => true,
+       'no_trailing_whitespace_in_comment' => true,
+       'no_blank_lines_after_phpdoc' => true,
+       'ordered_imports' => true,
+       'php_unit_namespaced' => true,
+       'phpdoc_add_missing_param_annotation' => [
+           'only_untyped' => false
+       ],
+       'phpdoc_no_empty_return' => true,
+       'phpdoc_order' => true,
+       'phpdoc_types' => true,
+       'phpdoc_scalar' => true,
+       'phpdoc_no_package' => true,
+       'phpdoc_single_line_var_spacing' => true,
+       'trailing_comma_in_multiline_array' => true,
+       'single_quote' => true,
+       'return_type_declaration' => [
+           'space_before' => 'none'
+       ],
+       'method_separation' => true,
+       'no_blank_lines_after_class_opening' => true,
+       'phpdoc_return_self_reference' => true,
+       'phpdoc_trim' => true,
+       'phpdoc_var_without_name' => true,
+       'strict_comparison' => true,
+       'strict_param' => true,
+       'visibility_required' => true,
+       'blank_line_before_return' => true,
+       'cast_spaces' => true,
+       'class_definition' => array('singleLine' => true),
+       'no_unused_imports' => true,
+       'self_accessor' => true,
+       'whitespace_after_comma_in_array' => true,
+       'is_null' => true,
+       'space_after_semicolon' => true,
+       'semicolon_after_instruction' => true,
+       'no_singleline_whitespace_before_semicolons' => true,
+       'no_multiline_whitespace_before_semicolons' => true,
+       'concat_space' => [
+           'spacing' => 'one'
+       ],
+       'standardize_not_equals' => true,
+       'ternary_operator_spaces' => true,
+       'no_leading_namespace_whitespace' => true,
+       'dir_constant' => true,
+       'no_useless_else' => true,
+       'native_function_casing' => true,
+       'no_multiline_whitespace_around_double_arrow' => true,
+   ])
+    ->setRiskyAllowed(true)
+    ->setFinder($finder);
