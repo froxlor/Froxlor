@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,10 +12,7 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    System
- *
  */
-
 define('TABLE_FTP_GROUPS', 'ftp_groups');
 define('TABLE_FTP_USERS', 'ftp_users');
 define('TABLE_FTP_QUOTALIMITS', 'ftp_quotalimits');
@@ -54,4 +50,4 @@ define('TABLE_DOMAIN_DNS', 'domain_dns_entries');
 define('TABLE_PANEL_FPMDAEMONS', 'panel_fpmdaemons');
 define('TABLE_PANEL_PLANS', 'panel_plans');
 
-require dirname(__FILE__).'/version.inc.php';
+require __DIR__ . '/version.inc.php';

@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -12,10 +11,8 @@
  * @author     Michael Kaufmann <mkaufmann@nutime.de>
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Cron
  *
  * @since      0.9.33
- *
  */
 
 /**
@@ -23,11 +20,9 @@
  * about a given directory in connections with its usage in froxlor
  *
  * @author Michael Kaufmann (d00p) <d00p@froxlor.org>
- *
  */
 class frxDirectory
 {
-
     /**
      * directory string
      *
@@ -50,13 +45,14 @@ class frxDirectory
      */
     public function hasUserOptions()
     {
-        $uo_stmt = Database::prepare("
-			SELECT COUNT(`id`) as `usropts` FROM `".TABLE_PANEL_HTACCESS."` WHERE `path` = :dir
-		");
+        $uo_stmt = Database::prepare('
+			SELECT COUNT(`id`) as `usropts` FROM `' . TABLE_PANEL_HTACCESS . '` WHERE `path` = :dir
+		');
         $uo_res = Database::pexecute_first($uo_stmt, array('dir' => makeCorrectDir($this->_dir)));
-        if ($uo_res != false && isset($uo_res['usropts'])) {
+        if ($uo_res !== false && isset($uo_res['usropts'])) {
             return ($uo_res['usropts'] > 0 ? true : false);
         }
+
         return false;
     }
 
@@ -65,13 +61,14 @@ class frxDirectory
      */
     public function isUserProtected()
     {
-        $up_stmt = Database::prepare("
-			SELECT COUNT(`id`) as `usrprot` FROM `".TABLE_PANEL_HTPASSWDS."` WHERE `path` = :dir
-		");
+        $up_stmt = Database::prepare('
+			SELECT COUNT(`id`) as `usrprot` FROM `' . TABLE_PANEL_HTPASSWDS . '` WHERE `path` = :dir
+		');
         $up_res = Database::pexecute_first($up_stmt, array('dir' => makeCorrectDir($this->_dir)));
-        if ($up_res != false && isset($up_res['usrprot'])) {
+        if ($up_res !== false && isset($up_res['usrprot'])) {
             return ($up_res['usrprot'] > 0 ? true : false);
         }
+
         return false;
     }
 
@@ -85,8 +82,9 @@ class frxDirectory
      */
     public function isConfigDir($ifexists = false)
     {
-        if (is_null($this->_dir)) {
-            trigger_error(__CLASS__.'::'.__FUNCTION__.' has been called with a null value', E_USER_WARNING);
+        if (null === $this->_dir) {
+            trigger_error(__CLASS__ . '::' . __FUNCTION__ . ' has been called with a null value', E_USER_WARNING);
+
             return false;
         }
 
@@ -98,7 +96,7 @@ class frxDirectory
             }
         } else {
             if (!$ifexists) {
-                if (substr($this->_dir, -1) == '/') {
+                if (substr($this->_dir, -1) === '/') {
                     $returnval = true;
                 } else {
                     $returnval = false;
@@ -107,6 +105,7 @@ class frxDirectory
                 $returnval = false;
             }
         }
+
         return $returnval;
     }
 }

@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -11,8 +10,6 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Settings
- *
  */
 
 return array(
@@ -27,7 +24,7 @@ return array(
                     'type' => 'bool',
                     'default' => false,
                     'save_method' => 'storeSettingField',
-                    'overview_option' => true
+                    'overview_option' => true,
                     ),
                 'spf_entry' => array(
                     'label' => $lng['spf']['spf_entry'],
@@ -35,9 +32,9 @@ return array(
                     'varname' => 'spf_entry',
                     'type' => 'string',
                     'default' => '"v=spf1 a mx -all"',
-                    'save_method' => 'storeSettingField'
-                    )
-                )
-            )
-        )
+                    'save_method' => 'storeSettingField',
+                    ),
+                ),
+            ),
+        ),
     );

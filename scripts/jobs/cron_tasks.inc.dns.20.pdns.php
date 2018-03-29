@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 if (! defined('MASTER_CRONJOB')) {
     die('You cannot access this file directly!');
 }
@@ -14,8 +14,6 @@ if (! defined('MASTER_CRONJOB')) {
  * @copyright (c) the authors
  * @author Froxlor team <team@froxlor.org> (2016-)
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package Cron
- *
  */
 class pdns extends DnsBase
 {
@@ -36,6 +34,7 @@ class pdns extends DnsBase
 
         if (empty($domains)) {
             $this->_logger->logAction(CRON_ACTION, LOG_INFO, 'No domains found for nameserver-config, skipping...');
+
             return;
         }
 
@@ -61,16 +60,16 @@ class pdns extends DnsBase
             $subzones[] = $this->walkDomainList($domains[$child_domain_id], $domains);
         }
 
-        if ($domain['zonefile'] == '') {
+        if ($domain['zonefile'] === '') {
             // check for system-hostname
             $isFroxlorHostname = false;
-            if (isset($domain['froxlorhost']) && $domain['froxlorhost'] == 1) {
+            if (isset($domain['froxlorhost']) && $domain['froxlorhost'] === 1) {
                 $isFroxlorHostname = true;
             }
 
-            if ($domain['ismainbutsubto'] == 0) {
+            if ($domain['ismainbutsubto'] === 0) {
                 $zoneContent = createDomainZone(
-                    ($domain['id'] == 'none') ?
+                    ($domain['id'] === 'none') ?
                     $domain :
                     $domain['id'],
                     $isFroxlorHostname
@@ -86,7 +85,7 @@ class pdns extends DnsBase
                 $this->_logger->logAction(CRON_ACTION, LOG_INFO, 'DB entries stored for zone `' . $domain['domain'] . '`');
             } else {
                 return createDomainZone(
-                    ($domain['id'] == 'none') ?
+                    ($domain['id'] === 'none') ?
                     $domain :
                     $domain['id'],
                     $isFroxlorHostname,
@@ -107,11 +106,11 @@ class pdns extends DnsBase
     {
         $this->_logger->logAction(CRON_ACTION, LOG_INFO, 'Cleaning dns zone entries from database');
 
-        $pdns_domains_stmt = $this->pdns_db->prepare("SELECT `id`, `name` FROM `domains` WHERE `name` = :domain");
+        $pdns_domains_stmt = $this->pdns_db->prepare('SELECT `id`, `name` FROM `domains` WHERE `name` = :domain');
 
-        $del_rec_stmt = $this->pdns_db->prepare("DELETE FROM `records` WHERE `domain_id` = :did");
-        $del_meta_stmt = $this->pdns_db->prepare("DELETE FROM `domainmetadata` WHERE `domain_id` = :did");
-        $del_dom_stmt = $this->pdns_db->prepare("DELETE FROM `domains` WHERE `id` = :did");
+        $del_rec_stmt = $this->pdns_db->prepare('DELETE FROM `records` WHERE `domain_id` = :did');
+        $del_meta_stmt = $this->pdns_db->prepare('DELETE FROM `domainmetadata` WHERE `domain_id` = :did');
+        $del_dom_stmt = $this->pdns_db->prepare('DELETE FROM `domains` WHERE `id` = :did');
 
         foreach ($domains as $domain) {
             $pdns_domains_stmt->execute(array('domain' => $domain['domain']));
@@ -130,6 +129,7 @@ class pdns extends DnsBase
 		");
         $ins_stmt->execute(array('domainname' => $domainname, 'serial' => $serial));
         $lastid = $this->pdns_db->lastInsertId();
+
         return $lastid;
     }
 
@@ -155,10 +155,10 @@ class pdns extends DnsBase
                 continue;
             }
 
-            if ($record->record == '@') {
+            if ($record->record === '@') {
                 $_record = $origin;
             } else {
-                $_record = $record->record.".".$origin;
+                $_record = $record->record . '.' . $origin;
             }
 
             $ins_data = array(
@@ -168,7 +168,7 @@ class pdns extends DnsBase
                 'content' => $record->content,
                 'ttl' => $record->ttl,
                 'prio' => $record->priority,
-                'changedate' => $changedate
+                'changedate' => $changedate,
             );
             $ins_stmt->execute($ins_data);
         }
@@ -181,14 +181,14 @@ class pdns extends DnsBase
 		");
 
         $ins_data = array(
-            'did' => $domainid
+            'did' => $domainid,
         );
 
         if (count($this->_ns) > 0 || count($this->_axfr) > 0) {
             // put nameservers in allow-transfer
             if (count($this->_ns) > 0) {
                 foreach ($this->_ns as $ns) {
-                    foreach ($ns["ips"] as $ip) {
+                    foreach ($ns['ips'] as $ip) {
                         $ins_data['value'] = $ip;
                         $ins_stmt->execute($ins_data);
                     }
@@ -207,45 +207,45 @@ class pdns extends DnsBase
     private function _connectToPdnsDb()
     {
         // get froxlor pdns config
-        $cf = Settings::Get('system.bindconf_directory').'/froxlor/pdns_froxlor.conf';
+        $cf = Settings::Get('system.bindconf_directory') . '/froxlor/pdns_froxlor.conf';
         $config = makeCorrectFile($cf);
 
         if (!file_exists($config)) {
-            $this->_logger->logAction(CRON_ACTION, LOG_ERROR, 'PowerDNS configuration file ('.$config.') not found. Did you go through the configuration templates?');
-            die('PowerDNS configuration file ('.$config.') not found. Did you go through the configuration templates?'.PHP_EOL);
+            $this->_logger->logAction(CRON_ACTION, LOG_ERROR, 'PowerDNS configuration file (' . $config . ') not found. Did you go through the configuration templates?');
+            die('PowerDNS configuration file (' . $config . ') not found. Did you go through the configuration templates?' . PHP_EOL);
         }
         $lines = file($config);
         $mysql_data = array();
         foreach ($lines as $line) {
             $line = trim($line);
-            if (strtolower(substr($line, 0, 6)) == 'gmysql') {
-                $namevalue = explode("=", $line);
+            if (strtolower(substr($line, 0, 6)) === 'gmysql') {
+                $namevalue = explode('=', $line);
                 $mysql_data[$namevalue[0]] = $namevalue[1];
             }
         }
 
         // build up connection string
         $driver = 'mysql';
-        $dsn = $driver.":";
+        $dsn = $driver . ':';
         $options = array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET names utf8,sql_mode="NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"');
         $attributes = array('ATTR_ERRMODE' => 'ERRMODE_EXCEPTION');
         $dbconf = array();
 
-        $dbconf["dsn"] = array(
-            'dbname' => $mysql_data["gmysql-dbname"],
-            'charset' => 'utf8'
+        $dbconf['dsn'] = array(
+            'dbname' => $mysql_data['gmysql-dbname'],
+            'charset' => 'utf8',
         );
 
         if (isset($mysql_data['gmysql-socket']) && !empty($mysql_data['gmysql-socket'])) {
-            $dbconf["dsn"]['unix_socket'] = makeCorrectFile($mysql_data['gmysql-socket']);
+            $dbconf['dsn']['unix_socket'] = makeCorrectFile($mysql_data['gmysql-socket']);
         } else {
-            $dbconf["dsn"]['host'] = $mysql_data['gmysql-host'];
-            $dbconf["dsn"]['port'] = $mysql_data['gmysql-port'];
+            $dbconf['dsn']['host'] = $mysql_data['gmysql-host'];
+            $dbconf['dsn']['port'] = $mysql_data['gmysql-port'];
         }
 
         // add options to dsn-string
-        foreach ($dbconf["dsn"] as $k => $v) {
-            $dsn .= $k."=".$v.";";
+        foreach ($dbconf['dsn'] as $k => $v) {
+            $dsn .= $k . '=' . $v . ';';
         }
 
         // clean up
@@ -260,7 +260,7 @@ class pdns extends DnsBase
 
         // set attributes
         foreach ($attributes as $k => $v) {
-            $this->pdns_db->setAttribute(constant("PDO::".$k), constant("PDO::".$v));
+            $this->pdns_db->setAttribute(constant('PDO::' . $k), constant('PDO::' . $v));
         }
     }
 }

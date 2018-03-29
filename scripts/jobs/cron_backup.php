@@ -1,4 +1,5 @@
-<?php if (!defined('MASTER_CRONJOB')) {
+<?php declare(strict_types=1);
+if (!defined('MASTER_CRONJOB')) {
     die('You cannot access this file directly!');
 }
 
@@ -14,26 +15,25 @@
  * @author     Michael Kaufmann <mkaufmann@nutime.de>
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Cron
  *
  * @since      0.9.35.1
- *
  */
 
 // Check Traffic-Lock
 if (function_exists('pcntl_fork')) {
-    $BackupLock = makeCorrectFile(dirname($lockfile)."/froxlor_cron_backup.lock");
+    $BackupLock = makeCorrectFile(dirname($lockfile) . '/froxlor_cron_backup.lock');
     if (file_exists($BackupLock)
         && is_numeric($BackupPid=file_get_contents($BackupLock))
         ) {
         if (function_exists('posix_kill')) {
             $BackupPidStatus = @posix_kill($BackupPid, 0);
         } else {
-            system("kill -CHLD " . $BackupPid . " 1> /dev/null 2> /dev/null", $BackupPidStatus);
+            system('kill -CHLD ' . $BackupPid . ' 1> /dev/null 2> /dev/null', $BackupPidStatus);
             $BackupPidStatus = $BackupPidStatus ? false : true;
         }
         if ($BackupPidStatus) {
             $cronlog->logAction(CRON_ACTION, LOG_INFO, 'Backup run already in progress');
+
             return 1;
         }
     }
@@ -48,7 +48,7 @@ if (function_exists('pcntl_fork')) {
         return 0;
     }
     //Child
-    elseif ($BackupPid == 0) {
+    elseif ($BackupPid === 0) {
         posix_setsid();
         fclose($debugHandler);
         // re-create db
@@ -60,24 +60,24 @@ if (function_exists('pcntl_fork')) {
     }
 } else {
     if (extension_loaded('pcntl')) {
-        $msg = "PHP compiled with pcntl but pcntl_fork function is not available.";
+        $msg = 'PHP compiled with pcntl but pcntl_fork function is not available.';
     } else {
-        $msg = "PHP compiled without pcntl.";
+        $msg = 'PHP compiled without pcntl.';
     }
-    $cronlog->logAction(CRON_ACTION, LOG_WARNING, $msg." Not forking backup-cron, this may take a long time!");
+    $cronlog->logAction(CRON_ACTION, LOG_WARNING, $msg . ' Not forking backup-cron, this may take a long time!');
 }
 
 $cronlog->logAction(CRON_ACTION, LOG_INFO, 'cron_backup: started - creating customer backup');
 
-$result_tasks_stmt = Database::query("
-	SELECT * FROM `" . TABLE_PANEL_TASKS . "` WHERE `type` = '20' ORDER BY `id` ASC
+$result_tasks_stmt = Database::query('
+	SELECT * FROM `' . TABLE_PANEL_TASKS . "` WHERE `type` = '20' ORDER BY `id` ASC
 ");
 
-$del_stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_TASKS . "` WHERE `id` = :id");
+$del_stmt = Database::prepare('DELETE FROM `' . TABLE_PANEL_TASKS . '` WHERE `id` = :id');
 
 $all_jobs = $result_tasks_stmt->fetchAll();
 foreach ($all_jobs as $row) {
-    if ($row['data'] != '') {
+    if ($row['data'] !== '') {
         $row['data'] = unserialize($row['data']);
     }
 
@@ -87,15 +87,15 @@ foreach ($all_jobs as $row) {
             && isset($row['data']['destdir'])
             ) {
             $row['data']['destdir'] = makeCorrectDir($row['data']['destdir']);
-            $customerdocroot = makeCorrectDir(Settings::Get('system.documentroot_prefix').'/'.$row['data']['loginname'].'/');
+            $customerdocroot = makeCorrectDir(Settings::Get('system.documentroot_prefix') . '/' . $row['data']['loginname'] . '/');
 
             if (!file_exists($row['data']['destdir'])
-                    && $row['data']['destdir'] != '/'
-                    && $row['data']['destdir'] != Settings::Get('system.documentroot_prefix')
-                    && $row['data']['destdir'] != $customerdocroot
+                    && $row['data']['destdir'] !== '/'
+                    && $row['data']['destdir'] !== Settings::Get('system.documentroot_prefix')
+                    && $row['data']['destdir'] !== $customerdocroot
                     ) {
                 $cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Creating backup-destination path for customer: ' . escapeshellarg($row['data']['destdir']));
-                safe_exec('mkdir -p '.escapeshellarg($row['data']['destdir']));
+                safe_exec('mkdir -p ' . escapeshellarg($row['data']['destdir']));
             }
 
             createCustomerBackup($row['data'], $customerdocroot, $cronlog);

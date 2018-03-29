@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -12,14 +11,11 @@
  * @author     Michael Kaufmann <mkaufmann@nutime.de>
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Cron
  *
  * @since      0.9.29
- *
  */
 class ConfigIO
 {
-
     /**
      * constructor
      */
@@ -31,8 +27,6 @@ class ConfigIO
      * clean up former created configs, including (if enabled)
      * awstats, fcgid, php-fpm and of course automatically created
      * webserver vhost and diroption files
-     *
-     * @return null
      */
     public function cleanUp()
     {
@@ -61,7 +55,7 @@ class ConfigIO
 
     private function _cleanErrLogs()
     {
-        $err_dir = makeCorrectDir(FROXLOR_INSTALL_DIR . "/logs/");
+        $err_dir = makeCorrectDir(FROXLOR_INSTALL_DIR . '/logs/');
         if (@is_dir($err_dir)) {
             // now get rid of old stuff
             // (but append /*.log so we don't delete the directory)
@@ -73,8 +67,6 @@ class ConfigIO
     /**
      * remove customer-specified auto-generated ssl-certificates
      * (they are being regenerated)
-     *
-     * @return null
      */
     private function _cleanCustomerSslCerts()
     {
@@ -82,7 +74,7 @@ class ConfigIO
         /*
          * only clean up if we're actually using SSL
          */
-        if (Settings::Get('system.use_ssl') == '1') {
+        if (Settings::Get('system.use_ssl') === '1') {
             // get correct directory
             $configdir = $this->_getFile('system', 'customer_ssl_path');
             if ($configdir !== false) {
@@ -100,8 +92,6 @@ class ConfigIO
 
     /**
      * remove webserver related configuration files before regeneration
-     *
-     * @return null
      */
     private function _cleanWebserverConfigs()
     {
@@ -145,8 +135,6 @@ class ConfigIO
 
     /**
      * remove htpasswd files before regeneration
-     *
-     * @return null
      */
     private function _cleanHtpasswdFiles()
     {
@@ -168,12 +156,10 @@ class ConfigIO
 
     /**
      * remove awstats related configuration files before regeneration
-     *
-     * @return null
      */
     private function _cleanAwstatsFiles()
     {
-        if (Settings::Get('system.awstats_enabled') == '0') {
+        if (Settings::Get('system.awstats_enabled') === '0') {
             return;
         }
         
@@ -200,7 +186,7 @@ class ConfigIO
                     $awstatsclean['headerRead'] = fgets($awstatsclean['fh'], strlen($awstatsclean['header']) + 1);
                     fclose($awstatsclean['fh']);
                     
-                    if ($awstatsclean['headerRead'] == $awstatsclean['header'] || $awstatsclean['headerRead'] == $awstatsclean['headerold']) {
+                    if ($awstatsclean['headerRead'] === $awstatsclean['header'] || $awstatsclean['headerRead'] === $awstatsclean['headerold']) {
                         $awstats_conf_file = makeCorrectFile($awstatsclean['fullentry']);
                         @unlink($awstats_conf_file);
                     }
@@ -213,12 +199,10 @@ class ConfigIO
 
     /**
      * remove fcgid related configuration files before regeneration
-     *
-     * @return null
      */
     private function _cleanFcgidFiles()
     {
-        if (Settings::Get('system.mod_fcgid') == '0') {
+        if (Settings::Get('system.mod_fcgid') === '0') {
             return;
         }
         
@@ -236,7 +220,7 @@ class ConfigIO
                 // and take immutable-flag away from them
                 // so we can delete them :)
                 foreach ($its as $fullFileName => $it) {
-                    if ($it->isFile() && $it->getFilename() == 'php-fcgi-starter') {
+                    if ($it->isFile() && $it->getFilename() === 'php-fcgi-starter') {
                         // set chattr -i
                         removeImmutable($its->getPathname());
                     }
@@ -252,17 +236,15 @@ class ConfigIO
 
     /**
      * remove php-fpm related configuration files before regeneration
-     *
-     * @return null
      */
     private function _cleanFpmFiles()
     {
-        if (Settings::Get('phpfpm.enabled') == '0') {
+        if (Settings::Get('phpfpm.enabled') === '0') {
             return;
         }
         
         // get all fpm config paths
-        $fpmconf_sel = Database::prepare("SELECT config_dir FROM `" . TABLE_PANEL_FPMDAEMONS . "`");
+        $fpmconf_sel = Database::prepare('SELECT config_dir FROM `' . TABLE_PANEL_FPMDAEMONS . '`');
         Database::pexecute($fpmconf_sel);
         $fpmconf_paths = $fpmconf_sel->fetchAll(PDO::FETCH_ASSOC);
         // clean all php-fpm config-dirs
@@ -296,10 +278,10 @@ class ConfigIO
      *        	settings-group
      * @param string $varname
      *        	var-name
-     * @param boolean $check_exists
+     * @param bool $check_exists
      *        	check if the file exists
      *
-     * @return string|boolean complete path including filename if any or false on error
+     * @return string|bool complete path including filename if any or false on error
      */
     private function _getFile($group, $varname, $check_exists = true)
     {
@@ -308,9 +290,10 @@ class ConfigIO
         $file = Settings::Get($group . '.' . $varname);
         
         // check whether it exists
-        if ($check_exists && @file_exists($file) == false) {
+        if ($check_exists && @file_exists($file) === false) {
             return false;
         }
+
         return $file;
     }
 }

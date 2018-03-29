@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,10 +12,10 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $fieldname
+ * @param mixed $fielddata
  */
-
 function getFormFieldOutput($fieldname, $fielddata)
 {
     global $lng;
@@ -24,7 +23,7 @@ function getFormFieldOutput($fieldname, $fielddata)
     $returnvalue = '';
     if (is_array($fielddata)
         && isset($fielddata['type'])
-        && $fielddata['type'] != ''
+        && $fielddata['type'] !== ''
         && function_exists('getFormFieldOutput' . ucfirst($fielddata['type']))
     ) {
         if (isset($fielddata['label']) && is_array($fielddata['label'])) {
@@ -51,9 +50,9 @@ function getFormFieldOutput($fieldname, $fielddata)
         $do_show = true;
         if (isset($fielddata['websrv_avail']) && is_array($fielddata['websrv_avail'])) {
             $websrv = Settings::Get('system.webserver');
-            if (!in_array($websrv, $fielddata['websrv_avail'])) {
+            if (!in_array($websrv, $fielddata['websrv_avail'], true)) {
                 $do_show = false;
-                $fielddata['label'].= sprintf($lng['serversettings']['option_unavailable_websrv'], implode(", ", $fielddata['websrv_avail']));
+                $fielddata['label'].= sprintf($lng['serversettings']['option_unavailable_websrv'], implode(', ', $fielddata['websrv_avail']));
             }
         }
 
@@ -71,5 +70,6 @@ function getFormFieldOutput($fieldname, $fielddata)
         $returnvalue = call_user_func('getFormFieldOutput' . ucfirst($fielddata['type']), $fieldname, $fielddata, $do_show);
         //}
     }
+
     return $returnvalue;
 }

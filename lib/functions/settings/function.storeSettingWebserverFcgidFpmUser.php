@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2015 the Froxlor Team (see authors).
@@ -11,9 +10,11 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
  * @since 0.9.34
+ * @param mixed $fieldname
+ * @param mixed $fielddata
+ * @param mixed $newfieldvalue
  */
 
 /**
@@ -26,17 +27,17 @@ function storeSettingWebserverFcgidFpmUser($fieldname, $fielddata, $newfieldvalu
         $update_user = null;
         
         // webserver
-        if ($fielddata['settinggroup'] == 'system' && $fielddata['varname'] == 'httpuser') {
+        if ($fielddata['settinggroup'] === 'system' && $fielddata['varname'] === 'httpuser') {
             $update_user = Settings::Get('system.httpuser');
         }
         
         // fcgid
-        if ($fielddata['settinggroup'] == 'system' && $fielddata['varname'] == 'mod_fcgid_httpuser') {
+        if ($fielddata['settinggroup'] === 'system' && $fielddata['varname'] === 'mod_fcgid_httpuser') {
             $update_user = Settings::Get('system.mod_fcgid_httpuser');
         }
         
         // webserver
-        if ($fielddata['settinggroup'] == 'phpfpm' && $fielddata['varname'] == 'vhost_httpuser') {
+        if ($fielddata['settinggroup'] === 'phpfpm' && $fielddata['varname'] === 'vhost_httpuser') {
             $update_user = Settings::Get('phpfpm.vhost_httpuser');
         }
         
@@ -46,8 +47,8 @@ function storeSettingWebserverFcgidFpmUser($fieldname, $fielddata, $newfieldvalu
             /**
              * only update if anything changed
              */
-            if ($update_user != null && $newfieldvalue != $update_user) {
-                $upd_stmt = Database::prepare("UPDATE `" . TABLE_FTP_GROUPS . "` SET `members` = REPLACE(`members`, :olduser, :newuser)");
+            if ($update_user !== null && $newfieldvalue !== $update_user) {
+                $upd_stmt = Database::prepare('UPDATE `' . TABLE_FTP_GROUPS . '` SET `members` = REPLACE(`members`, :olduser, :newuser)');
                 Database::pexecute($upd_stmt, array('olduser' => $update_user, 'newuser' => $newfieldvalue));
             }
         }

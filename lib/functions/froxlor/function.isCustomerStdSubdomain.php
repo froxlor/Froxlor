@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -11,8 +10,8 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $did
  */
 
 /**
@@ -21,15 +20,15 @@
  *
  * @param int domain-id
  *
- * @return boolean
+ * @return bool
  */
 function isCustomerStdSubdomain($did = 0)
 {
     if ($did > 0) {
-        $result_stmt = Database::prepare("
-			SELECT `customerid` FROM `".TABLE_PANEL_CUSTOMERS."`
+        $result_stmt = Database::prepare('
+			SELECT `customerid` FROM `' . TABLE_PANEL_CUSTOMERS . '`
 			WHERE `standardsubdomain` = :did
-		");
+		');
         $result = Database::pexecute_first($result_stmt, array('did' => $did));
 
         if (is_array($result)
@@ -39,5 +38,6 @@ function isCustomerStdSubdomain($did = 0)
             return true;
         }
     }
+
     return false;
 }

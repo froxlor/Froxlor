@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -11,8 +10,6 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Settings
- *
  */
 
 return array(
@@ -29,7 +26,7 @@ return array(
                     'default' => false,
                     'save_method' => 'storeSettingField',
                     'plausibility_check_method' => 'checkFcgidPhpFpm',
-                    'overview_option' => true
+                    'overview_option' => true,
                     ),
                 'system_mod_fcgid_configdir' => array(
                     'label' => $lng['serversettings']['mod_fcgid']['configdir'],
@@ -69,7 +66,7 @@ return array(
                     'option_options' => array(0 => 'ScriptAlias', 1=> 'FcgidWrapper'),
                     'default' => 1,
                     'save_method' => 'storeSettingField',
-                    'websrv_avail' => array('apache2')
+                    'websrv_avail' => array('apache2'),
                     ),
                 'system_mod_fcgid_starter' => array(
                     'label' => $lng['serversettings']['mod_fcgid']['starter'],
@@ -103,9 +100,9 @@ return array(
                     'varname' => 'mod_fcgid_idle_timeout',
                     'type' => 'int',
                     'default' => 30,
-                    'save_method' => 'storeSettingField'
-                    )
-                )
-            )
-        )
+                    'save_method' => 'storeSettingField',
+                    ),
+                ),
+            ),
+        ),
     );

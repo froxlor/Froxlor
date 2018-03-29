@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,8 +12,8 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $userinfo
  */
 
 /**
@@ -25,7 +24,6 @@
  *
  * @author Florian Lippert <flo@syscp.org>
  */
-
 function getCorrectUserSalutation($userinfo)
 {
     $returnval = '';
@@ -33,7 +31,7 @@ function getCorrectUserSalutation($userinfo)
     if (isset($userinfo['firstname']) && isset($userinfo['name']) && isset($userinfo['company'])) {
         // Always prefer firstname name
 
-        if ($userinfo['company'] != '' && $userinfo['name'] == '' && $userinfo['firstname'] == '') {
+        if ($userinfo['company'] !== '' && $userinfo['name'] === '' && $userinfo['firstname'] === '') {
             $returnval = $userinfo['company'];
         } else {
             $returnval = $userinfo['firstname'] . ' ' . $userinfo['name'];

@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,16 +12,20 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $path
+ * @param mixed $uid
+ * @param mixed $gid
+ * @param mixed $value
+ * @param mixed $dom
  */
 
 /**
  * Returns a valid html tag for the chosen $fieldType for paths
  *
  * @param string  path      The path to start searching in
- * @param integer uid       The uid which must match the found directories
- * @param integer gid       The gid which must match the found direcotries
+ * @param int uid       The uid which must match the found directories
+ * @param int gid       The gid which must match the found direcotries
  * @param string  value     the value for the input-field
  *
  * @return string   The html tag for the chosen $fieldType
@@ -41,18 +44,18 @@ function makePathfield($path, $uid, $gid, $value = '', $dom = false)
     // but dirList holds the paths with starting slash
     // so we just add one here to get the correct
     // default path selected, #225
-    if (substr($value, 0, 1) != '/' && !$dom) {
-        $value = '/'.$value;
+    if (substr($value, 0, 1) !== '/' && !$dom) {
+        $value = '/' . $value;
     }
 
     $fieldType = Settings::Get('panel.pathedit');
 
-    if ($fieldType == 'Manual') {
+    if ($fieldType === 'Manual') {
         $field = array(
             'type' => 'text',
-            'value' => htmlspecialchars($value)
+            'value' => htmlspecialchars($value),
         );
-    } elseif ($fieldType == 'Dropdown') {
+    } elseif ($fieldType === 'Dropdown') {
         $dirList = findDirs($path, $uid, $gid);
         natcasesort($dirList);
 
@@ -72,7 +75,7 @@ function makePathfield($path, $uid, $gid, $value = '', $dom = false)
                 }
                 $field = array(
                     'type' => 'select',
-                    'value' => $_field
+                    'value' => $_field,
                 );
             } else {
                 // remove starting slash we added
@@ -82,7 +85,7 @@ function makePathfield($path, $uid, $gid, $value = '', $dom = false)
                 $field = array(
                     'type' => 'text',
                     'value' => htmlspecialchars($value),
-                    'note' => $lng['panel']['toomanydirs']
+                    'note' => $lng['panel']['toomanydirs'],
                 );
             }
         } else {
@@ -91,7 +94,7 @@ function makePathfield($path, $uid, $gid, $value = '', $dom = false)
             $field = array(
                 'type' => 'hidden',
                 'value' => '/',
-                'note' => $lng['panel']['dirsmissing']
+                'note' => $lng['panel']['dirsmissing'],
             );
         }
     }

@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,7 +12,6 @@
  * @author     Michael Kaufmann <mkaufmann@nutime.de>
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Logger
  *
  * @link       http://www.nutime.de/
  *
@@ -35,7 +33,6 @@ LOG_DEBUG 	  debug-level message
 
 abstract class AbstractLogger
 {
-
     /**
      * Enable/Disable Logging
      * @var logenabled

@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * returns the loginname of a customer by given uid
  *
@@ -9,9 +8,9 @@
  */
 function getLoginNameByUid($uid = null)
 {
-    $result_stmt = Database::prepare("
-		SELECT `loginname` FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `guid` = :guid
-	");
+    $result_stmt = Database::prepare('
+		SELECT `loginname` FROM `' . TABLE_PANEL_CUSTOMERS . '` WHERE `guid` = :guid
+	');
     $result = Database::pexecute_first($result_stmt, array('guid' => $uid));
 
     if (is_array($result)
@@ -19,5 +18,6 @@ function getLoginNameByUid($uid = null)
     ) {
         return $result['loginname'];
     }
+
     return false;
 }

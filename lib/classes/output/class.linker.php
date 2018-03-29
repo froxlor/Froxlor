@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -12,10 +11,7 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Panel
- *
  */
-
 class linker
 {
     private $protocol = '';
@@ -51,6 +47,7 @@ class linker
             case 'filename': $this->filename = $value; break;
             default: return false;
         }
+
         return true;
     }
 
@@ -91,7 +88,7 @@ class linker
             $link .= urlencode($this->username);
 
             // Maybe we even have to append a password?
-            if ($this->password != '') {
+            if ($this->password !== '') {
                 $link .= ':' . urlencode($this->password);
             }
 
@@ -110,7 +107,7 @@ class linker
         }
 
         // Overwrite $this->args with parameters of this function (if necessary)
-        if (func_num_args() == 1 && is_array(func_get_arg(0))) {
+        if (func_num_args() === 1 && is_array(func_get_arg(0))) {
             $arguments = func_get_arg(0);
             $this->args = array_merge($this->args, $arguments);
         }
@@ -127,18 +124,18 @@ class linker
         }
 
         // Let's see if we are done (no arguments in query)
-        if (count($this->args) == 0) {
+        if (count($this->args) === 0) {
             return $link;
         }
 
         // We have parameters, add them with a "?"
-        $link .= "?";
+        $link .= '?';
 
         // Loop through arguments and add them to the link
         foreach ($this->args as $key => $value) {
             // For all but the first argument, prepend "&amp;"
-            if (substr($link, -1) != "?") {
-                $link .= "&";
+            if (substr($link, -1) !== '?') {
+                $link .= '&';
             }
 
             // Encode parameters and add them to the link
@@ -147,6 +144,7 @@ class linker
 
         // Reset our class for further use
         $this->delAll();
+
         return $link;
     }
 }

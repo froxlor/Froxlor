@@ -1,8 +1,6 @@
-<?php
-
+<?php declare(strict_types=1);
 class HttpClient
 {
-
     /**
      * Executes simple GET request
      *
@@ -22,9 +20,10 @@ class HttpClient
         if ($output === false) {
             $e = curl_error($ch);
             curl_close($ch);
-            throw new \Exception("Curl error: " . $e);
+            throw new \Exception('Curl error: ' . $e);
         }
         curl_close($ch);
+
         return $output;
     }
     
@@ -52,9 +51,10 @@ class HttpClient
         if ($output === false) {
             $e = curl_error($ch);
             curl_close($ch);
-            throw new \Exception("Curl error: " . $e);
+            throw new \Exception('Curl error: ' . $e);
         }
         curl_close($ch);
+
         return $output;
     }
 }

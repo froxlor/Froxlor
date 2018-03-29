@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,10 +12,7 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Panel
- *
  */
-
 define('AREA', 'admin');
 require './lib/init.php';
 
@@ -26,28 +22,28 @@ if (isset($_POST['id'])) {
     $id = intval($_GET['id']);
 }
 
-if ($page == 'message') {
-    if ($action == '') {
+if ($page === 'message') {
+    if ($action === '') {
         $log->logAction(ADM_ACTION, LOG_NOTICE, 'viewed panel_message');
 
         if (isset($_POST['send'])
-           && $_POST['send'] == 'send'
+           && $_POST['send'] === 'send'
         ) {
-            if ($_POST['receipient'] == 0
-               && $userinfo['customers_see_all'] == '1'
+            if ($_POST['receipient'] === 0
+               && $userinfo['customers_see_all'] === '1'
             ) {
                 $log->logAction(ADM_ACTION, LOG_NOTICE, 'sending messages to admins');
-                $result = Database::query('SELECT `name`, `email`  FROM `' . TABLE_PANEL_ADMINS . "`");
-            } elseif ($_POST['receipient'] == 1) {
-                if ($userinfo['customers_see_all'] == '1') {
+                $result = Database::query('SELECT `name`, `email`  FROM `' . TABLE_PANEL_ADMINS . '`');
+            } elseif ($_POST['receipient'] === 1) {
+                if ($userinfo['customers_see_all'] === '1') {
                     $log->logAction(ADM_ACTION, LOG_NOTICE, 'sending messages to ALL customers');
-                    $result = Database::query('SELECT `firstname`, `name`, `company`, `email`  FROM `' . TABLE_PANEL_CUSTOMERS . "`");
+                    $result = Database::query('SELECT `firstname`, `name`, `company`, `email`  FROM `' . TABLE_PANEL_CUSTOMERS . '`');
                 } else {
                     $log->logAction(ADM_ACTION, LOG_NOTICE, 'sending messages to customers');
                     $result = Database::prepare(
                         '
-						SELECT `firstname`, `name`, `company`, `email`  FROM `' . TABLE_PANEL_CUSTOMERS . "`
-						WHERE `adminid` = :adminid"
+						SELECT `firstname`, `name`, `company`, `email`  FROM `' . TABLE_PANEL_CUSTOMERS . '`
+						WHERE `adminid` = :adminid'
                     );
                     Database::pexecute($result, array('adminid' => $userinfo['adminid']));
                 }
@@ -71,7 +67,7 @@ if ($page == 'message') {
                     $mail->FromName = (isset($userinfo['firstname']) ? $userinfo['firstname'] . ' ' : '') . $userinfo['name'];
 
                     if (!$mail->Send()) {
-                        if ($mail->ErrorInfo != '') {
+                        if ($mail->ErrorInfo !== '') {
                             $mailerr_msg = $mail->ErrorInfo;
                         } else {
                             $mailerr_msg = $row['email'];
@@ -92,11 +88,11 @@ if ($page == 'message') {
         }
     }
 
-    if ($action == 'showsuccess') {
+    if ($action === 'showsuccess') {
         $success = 1;
-        $sentitems = isset($_GET['sentitems']) ? (int)$_GET['sentitems'] : 0;
+        $sentitems = isset($_GET['sentitems']) ? (int) $_GET['sentitems'] : 0;
 
-        if ($sentitems == 0) {
+        if ($sentitems === 0) {
             $successmessage = $lng['message']['noreceipients'];
         } else {
             $successmessage = str_replace('%s', $sentitems, $lng['message']['success']);
@@ -110,10 +106,10 @@ if ($page == 'message') {
     $action = '';
     $receipients = '';
 
-    if ($userinfo['customers_see_all'] == '1') {
+    if ($userinfo['customers_see_all'] === '1') {
         $receipients.= makeoption($lng['panel']['reseller'], 0);
     }
 
     $receipients .= makeoption($lng['panel']['customer'], 1);
-    eval("echo \"" . getTemplate('message/message') . "\";");
+    eval('echo "' . getTemplate('message/message') . '";');
 }

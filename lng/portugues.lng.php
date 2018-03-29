@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -15,14 +14,11 @@
  * @author     Rafael Andrade <slyppp@gmail.com>
  * @author     Froxlor Team <team@froxlor.org>
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Language
- *
  */
 
 /**
  * Global
  */
-
 $lng['translator'] = 'Ricardo Luiz Costa, Rafael Andrade, Thiago Goncalves de Castro';
 $lng['panel']['edit'] = 'Editar';
 $lng['panel']['delete'] = 'Deletar';
@@ -40,7 +36,6 @@ $lng['panel']['dirsmissing'] = 'Directório não disponível ou ilegível';
 /**
  * Login
  */
-
 $lng['login']['username'] = 'Usuário';
 $lng['login']['password'] = 'Senha';
 $lng['login']['language'] = 'Idioma';
@@ -51,7 +46,6 @@ $lng['login']['profile_lng'] = 'Idioma padrão';
 /**
  * Customer
  */
-
 $lng['customer']['documentroot'] = 'Diretório home';
 $lng['customer']['name'] = 'Sobrenome';
 $lng['customer']['firstname'] = 'Primeiro nome';
@@ -76,7 +70,6 @@ $lng['customer']['domains'] = 'Domínio(s)';
 /**
  * Customermenue
  */
-
 $lng['menue']['main']['main'] = 'Principal';
 $lng['menue']['main']['changepassword'] = 'Trocar senha';
 $lng['menue']['main']['changelanguage'] = 'Trocar idioma';
@@ -98,14 +91,12 @@ $lng['menue']['extras']['pathoptions'] = 'Opções de caminhos';
 /**
  * Index
  */
-
 $lng['index']['customerdetails'] = 'Detalhes dos Clientes';
 $lng['index']['accountdetails'] = 'Detalhes das Contas';
 
 /**
  * Change Password
  */
-
 $lng['changepassword']['old_password'] = 'Senha atual';
 $lng['changepassword']['new_password'] = 'Nova senha';
 $lng['changepassword']['new_password_confirm'] = 'Repita a nova senha';
@@ -115,7 +106,6 @@ $lng['changepassword']['also_change_ftp'] = ' trocar tambem a senha da conta pri
 /**
  * Domains
  */
-
 $lng['domains']['description'] = 'Aqui você pode criar (sub-)domínios e alterar seu destino.<br />O sistema irá levar algum tempo para aplicar as novas configurações depois de salvas.';
 $lng['domains']['domainsettings'] = 'Configurar Domínio';
 $lng['domains']['domainname'] = 'Nome do domínio';
@@ -128,7 +118,6 @@ $lng['domains']['noaliasdomain'] = 'Não domínio do aliás';
 /**
  * E-mails
  */
-
 $lng['emails']['description'] = 'Aqui você pode criar e alterer seus e-mails.<br />Uma conta é como uma caixa de correio na frente de sua casa. Quando alguem envia para você um e-mail, ele é colocado nesta conta.<br /><br />Para baixar seus e-mails use as seguintes configurações no seu propraga de e-mails favorito: (Os dados em <i>italico</i> devem ser substituidos pelo equivalente da conta que você criou!)<br />Hostname: <b><i>Nome de seu domínio</i></b><br />Usuário: <b><i>Nome da conta / Endereço de e-mail</i></b><br />Senha: <b><i>a senha que você escolheu</i></b>';
 $lng['emails']['emailaddress'] = 'Endereços de e-mail';
 $lng['emails']['emails_add'] = 'Criar e-mail';
@@ -146,14 +135,12 @@ $lng['emails']['forwarder_add'] = 'Criar redirecionamento';
 /**
  * FTP
  */
-
 $lng['ftp']['description'] = 'Aqui você pode criar e alterar suas contas de FTP.<br />As alterações são instantâneas e podem ser utilizadas imediatamente depois de salvas.';
 $lng['ftp']['account_add'] = 'Criar conta';
 
 /**
  * MySQL
  */
-
 $lng['mysql']['description'] = 'Aqui você pode criar e alterar seus bancos de dados MySQL.<br />As alterações são instantâneas e podem ser utilizadas imediatamente depois de salvas.<br />No menu do lado esquerdo você pode encontrar a ferramenta phpMyAdmin e com ela facilmente administrar seus bancos de dados.<br /><br />Para usar seu banco de dados com scripts em PHP use as seguintes configurações: (Os dados em <i>italico</i> devem ser substituidos pelo equivalente do banco de dados que você criou!)<br />Hostname: <b><SQL_HOST></b><br />Usuario: <b><i>Nome do banco de dadose</i></b><br />Senha: <b><i>a senha que você escolheu</i></b><br />Banco de dados: <b><i>Nome do banco de dados';
 $lng['mysql']['databasename'] = 'Usuario / Nome do banco de dados';
 $lng['mysql']['databasedescription'] = 'Descrição do banco de dados';
@@ -162,7 +149,6 @@ $lng['mysql']['database_create'] = 'Criar banco de dados';
 /**
  * Extras
  */
-
 $lng['extras']['description'] = 'Aqui você pode adicoionar alguns recursos extras, como por exemplo um diretório protegido.<br />O sistema ira precisar de algum tempo para aplicar suas alterações depois de salvas.';
 $lng['extras']['directoryprotection_add'] = 'Adicionar diretório pretogido';
 $lng['extras']['view_directory'] = 'Mostrar conteúdo do diretório';
@@ -177,7 +163,6 @@ $lng['extras']['errordocument401path'] = 'URL para página de erro 401';
 /**
  * Errors
  */
-
 $lng['error']['error'] = 'Erro';
 $lng['error']['directorymustexist'] = 'O diretório %s deve existir. Por favor crie ele primeiro com seu programa de FTP.';
 $lng['error']['filemustexist'] = 'O arquivo %s deve existir.';
@@ -229,7 +214,6 @@ $lng['error']['destinationiswrong'] = 'O redirecionamento %s contém caracteres 
 /**
  * Questions
  */
-
 $lng['question']['question'] = 'Pergunta de segurança';
 $lng['question']['admin_customer_reallydelete'] = 'Você realmente deseja deletar o cliente %s? Este comando não poderá ser cancelado!';
 $lng['question']['admin_domain_reallydelete'] = 'Você realmente deseja deletar o domínio %s?';
@@ -252,7 +236,6 @@ $lng['question']['admin_customer_alsoremoveftphomedir'] = 'Remover o diretório 
 /**
  * Mails
  */
-
 $lng['mails']['pop_success']['mailbody'] = 'Olá,\n\n sua conta de e-mail {EMAIL}\n foi criada com sucesso.\n\nEsta é uma mensagem automática\neMail, por favor não responda!\n\nAtenciosamente, Equipe de desenvolvimento do Froxlor';
 $lng['mails']['pop_success']['subject'] = 'Conta de e-mail criada com sucesso!';
 $lng['mails']['createcustomer']['mailbody'] = 'Olá {FIRSTNAME} {NAME},\n\nseguem os detalhes de sua nova conta de e-mail:\n\nUsuario: {USERNAME}\nSenha: {PASSWORD}\n\nObrigado,\nEquipe de desenvolvimento do Froxlor';
@@ -261,7 +244,6 @@ $lng['mails']['createcustomer']['subject'] = 'Informações da conta';
 /**
  * Admin
  */
-
 $lng['admin']['overview'] = 'Visão geral';
 $lng['admin']['ressourcedetails'] = 'Recursos usados';
 $lng['admin']['systemdetails'] = 'Detalhes do sistema';
@@ -316,7 +298,6 @@ $lng['admin']['templates']['EMAIL'] = 'Altere com os dados do servidor POP3/IMAP
 /**
  * Serversettings
  */
-
 $lng['serversettings']['session_timeout']['title'] = 'Tempo esgotado';
 $lng['serversettings']['session_timeout']['description'] = 'Quanto tempo o usuario deve estar inativo para ser desconectado (segundos)?';
 $lng['serversettings']['accountprefix']['title'] = 'Prefixo do cliente';
@@ -366,7 +347,6 @@ $lng['serversettings']['pathedit']['description'] = 'A escolha do file tem que s
 /**
  * ADDED BETWEEN 1.2.12 and 1.2.13
  */
-
 $lng['serversettings']['paging']['title'] = 'Entradas por pagina';
 $lng['serversettings']['paging']['description'] = 'Quantas entradas devem ser mostradas por pagina? (0 = desabilitar paginas)';
 $lng['error']['ipstillhasdomains'] = 'O IP/Porta que você quer deletar ainda possui domínios associados e eles, por favor altere o IP/Porta destes domínios antes de deletá-los.';
@@ -610,21 +590,21 @@ $lng['admin']['tickets']['yearly'] = 'Anualmente';
 $lng['error']['ticketresetcycleiswrong'] = 'O ciclo de resetes de ticket pode ser "diário", "semanal", "mensal" or "anual".';
 $lng['menue']['traffic']['traffic'] = 'Tráfego';
 $lng['menue']['traffic']['current'] = 'Mês corrente';
-$lng['traffic']['month'] = "Mês";
-$lng['traffic']['day'] = "Diariamente";
-$lng['traffic']['months'][1] = "Janeiro";
-$lng['traffic']['months'][2] = "Fevereiro";
-$lng['traffic']['months'][3] = "Março";
-$lng['traffic']['months'][4] = "Abril";
-$lng['traffic']['months'][5] = "Maio";
-$lng['traffic']['months'][6] = "Junho";
-$lng['traffic']['months'][7] = "Julho";
-$lng['traffic']['months'][8] = "Agosto";
-$lng['traffic']['months'][9] = "Setembro";
-$lng['traffic']['months'][10] = "Outubro";
-$lng['traffic']['months'][11] = "Novembro";
-$lng['traffic']['months'][12] = "Dezembro";
-$lng['traffic']['mb'] = "Tráfego (MB)";
+$lng['traffic']['month'] = 'Mês';
+$lng['traffic']['day'] = 'Diariamente';
+$lng['traffic']['months'][1] = 'Janeiro';
+$lng['traffic']['months'][2] = 'Fevereiro';
+$lng['traffic']['months'][3] = 'Março';
+$lng['traffic']['months'][4] = 'Abril';
+$lng['traffic']['months'][5] = 'Maio';
+$lng['traffic']['months'][6] = 'Junho';
+$lng['traffic']['months'][7] = 'Julho';
+$lng['traffic']['months'][8] = 'Agosto';
+$lng['traffic']['months'][9] = 'Setembro';
+$lng['traffic']['months'][10] = 'Outubro';
+$lng['traffic']['months'][11] = 'Novembro';
+$lng['traffic']['months'][12] = 'Dezembro';
+$lng['traffic']['mb'] = 'Tráfego (MB)';
 $lng['traffic']['distribution'] = '<font color="#019522">FTP</font> | <font color="#0000FF">HTTP</font> | <font color="#800000">E-Mail</font>';
 $lng['traffic']['sumhttp'] = 'Resumo Tráfego de HTTP em';
 $lng['traffic']['sumftp'] = 'Resumo Tráfego de FTP em';

@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,8 +12,8 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param & $settings_data
  */
 
 /**
@@ -34,11 +33,11 @@ function loadSettings(&$settings_data)
     ) {
 
         // prepare for use in for-loop
-        $row_stmt = Database::prepare("
+        $row_stmt = Database::prepare('
 			SELECT `settinggroup`, `varname`, `value`
-			FROM `" . TABLE_PANEL_SETTINGS . "`
+			FROM `' . TABLE_PANEL_SETTINGS . '`
 			WHERE `settinggroup` = :group AND `varname` = :varname
-		");
+		');
 
         foreach ($settings_data['groups'] as $settings_part => $settings_part_details) {
             if (is_array($settings_part_details)
@@ -53,7 +52,7 @@ function loadSettings(&$settings_data)
                         // execute prepared statement
                         $row = Database::pexecute_first($row_stmt, array(
                             'group' => $field_details['settinggroup'],
-                            'varname' => $field_details['varname']
+                            'varname' => $field_details['varname'],
                         ));
 
                         if (!empty($row)) {

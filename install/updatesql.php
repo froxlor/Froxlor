@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,15 +12,12 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Install
- *
  */
-
 if (!defined('_CRON_UPDATE')) {
     if (!defined('AREA')
-        || (defined('AREA') && AREA != 'admin')
+        || (defined('AREA') && AREA !== 'admin')
         || !isset($userinfo['loginname'])
-        || (isset($userinfo['loginname']) && $userinfo['loginname'] == '')
+        || (isset($userinfo['loginname']) && $userinfo['loginname'] === '')
     ) {
         header('Location: ../index.php');
         exit;
@@ -30,7 +26,7 @@ if (!defined('_CRON_UPDATE')) {
 
 $updatelog = FroxlorLogger::getInstanceOf(array('loginname' => 'updater'));
 
-$updatelogfile = validateUpdateLogFile(makeCorrectFile(dirname(__FILE__).'/update.log'));
+$updatelogfile = validateUpdateLogFile(makeCorrectFile(__DIR__ . '/update.log'));
 $filelog = FileLogger::getInstanceOf(array('loginname' => 'updater'));
 $filelog->setLogFile($updatelogfile);
 
@@ -50,19 +46,19 @@ if (!isFroxlor()) {
     /**
      * Upgrading SysCP to Froxlor-0.9
      */
-    include_once(makeCorrectFile(dirname(__FILE__).'/updates/froxlor/upgrade_syscp.inc.php'));
+    include_once(makeCorrectFile(__DIR__ . '/updates/froxlor/upgrade_syscp.inc.php'));
 }
 
 if (isFroxlor()) {
-    include_once(makeCorrectFile(dirname(__FILE__).'/updates/froxlor/0.9/update_0.9.inc.php'));
+    include_once(makeCorrectFile(__DIR__ . '/updates/froxlor/0.9/update_0.9.inc.php'));
 
     // Check Froxlor - database integrity (only happens after all updates are done, so we know the db-layout is okay)
-    showUpdateStep("Checking database integrity");
+    showUpdateStep('Checking database integrity');
 
     $integrity = new IntegrityCheck();
     if (!$integrity->checkAll()) {
         lastStepStatus(1, 'Monkeys ate the integrity');
-        showUpdateStep("Trying to remove monkeys, feeding bananas");
+        showUpdateStep('Trying to remove monkeys, feeding bananas');
         if (!$integrity->fixAll()) {
             lastStepStatus(2, 'Some monkeys just would not move, you should contact team@froxlor.org');
         } else {

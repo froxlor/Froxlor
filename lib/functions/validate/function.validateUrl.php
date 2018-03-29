@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,8 +12,8 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $url
  */
 
 /**
@@ -24,14 +23,13 @@
  * @return bool
  * @author Christian Hoffmann
  * @author Froxlor team <team@froxlor.org> (2010-)
- *
  */
 function validateUrl($url)
 {
     global $idna_convert, $theme;
 
-    if (strtolower(substr($url, 0, 7)) != "http://"
-            && strtolower(substr($url, 0, 8)) != "https://"
+    if (strtolower(substr($url, 0, 7)) !== 'http://'
+            && strtolower(substr($url, 0, 8)) !== 'https://'
     ) {
         $url = 'http://' . $url;
     }
@@ -49,14 +47,14 @@ function validateUrl($url)
     }
 
     // not an fqdn
-    if (strtolower(substr($url, 0, 7)) == "http://"
-            || strtolower(substr($url, 0, 8)) == "https://"
+    if (strtolower(substr($url, 0, 7)) === 'http://'
+            || strtolower(substr($url, 0, 8)) === 'https://'
     ) {
-        if (strtolower(substr($url, 0, 7)) == "http://") {
+        if (strtolower(substr($url, 0, 7)) === 'http://') {
             $ip = strtolower(substr($url, 7));
         }
 
-        if (strtolower(substr($url, 0, 8)) == "https://") {
+        if (strtolower(substr($url, 0, 8)) === 'https://') {
             $ip = strtolower(substr($url, 8));
         }
 
@@ -69,10 +67,10 @@ function validateUrl($url)
 
         if (validate_ip($ip, true) !== false) {
             return true;
-        } else {
-            return false;
         }
-    } else {
+
         return false;
     }
+
+    return false;
 }

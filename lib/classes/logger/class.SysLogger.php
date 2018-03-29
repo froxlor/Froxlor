@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,16 +12,13 @@
  * @author     Michael Kaufmann <mkaufmann@nutime.de>
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Logger
  *
  * @link       http://www.nutime.de/
  *
  * Logger - SysLog-Logger-Class
  */
-
 class SysLogger extends AbstractLogger
 {
-
     /**
      * Userinfo
      * @var array
@@ -39,6 +35,7 @@ class SysLogger extends AbstractLogger
      * Class constructor.
      *
      * @param array userinfo
+    * @param mixed $userinfo
     */
     protected function __construct($userinfo)
     {
@@ -48,12 +45,14 @@ class SysLogger extends AbstractLogger
 
     /**
      * Singleton ftw ;-)
+     * @param mixed $_usernfo
      */
     public static function getInstanceOf($_usernfo)
     {
         if (!isset(self::$loggers[$_usernfo['loginname']])) {
-            self::$loggers[$_usernfo['loginname']] = new SysLogger($_usernfo);
+            self::$loggers[$_usernfo['loginname']] = new self($_usernfo);
         }
+
         return self::$loggers[$_usernfo['loginname']];
     }
 
@@ -69,7 +68,7 @@ class SysLogger extends AbstractLogger
         global $lng;
         if (parent::isEnabled()) {
             if (parent::getSeverity() <= 1
-                    && $type == LOG_NOTICE
+                    && $type === LOG_NOTICE
             ) {
                 return;
             }
@@ -101,21 +100,21 @@ class SysLogger extends AbstractLogger
             }
 
             if (!isset($this->userinfo['loginname'])
-                    || $this->userinfo['loginname'] == ''
+                    || $this->userinfo['loginname'] === ''
             ) {
                 $name = 'unknown';
             } else {
                 $name = $this->userinfo['loginname'];
             }
 
-            openlog("Froxlor", LOG_NDELAY, LOG_USER);
+            openlog('Froxlor', LOG_NDELAY, LOG_USER);
 
-            if ($text != null
-                    && $text != ''
+            if ($text !== null
+                    && $text !== ''
             ) {
-                syslog((int)$type, "[" . ucfirst($_action) . " Action " . $name . "] [".getLogLevelDesc($type)."] " . $text);
+                syslog((int) $type, '[' . ucfirst($_action) . ' Action ' . $name . '] [' . getLogLevelDesc($type) . '] ' . $text);
             } else {
-                syslog((int)$type, "[" . ucfirst($_action) . " Action " . $name . "] [".getLogLevelDesc($type)."] No text given!!! Check scripts!");
+                syslog((int) $type, '[' . ucfirst($_action) . ' Action ' . $name . '] [' . getLogLevelDesc($type) . '] No text given!!! Check scripts!');
             }
 
             closelog();

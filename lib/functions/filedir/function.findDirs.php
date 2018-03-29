@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,8 +12,10 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $path
+ * @param mixed $uid
+ * @param mixed $gid
  */
 
 
@@ -44,20 +45,20 @@ function findDirs($path, $uid, $gid)
         // Will exclude everything under these directories
         $exclude = array(
             'awstats',
-            'webalizer'
+            'webalizer',
         );
 
         /**
-         *
          * @param SplFileInfo $file
          * @param mixed $key
          * @param RecursiveCallbackFilterIterator $iterator
          * @return bool True if you need to recurse or if the item is acceptable
          */
         $filter = function ($file, $key, $iterator) use ($exclude) {
-            if (in_array($file->getFilename(), $exclude)) {
+            if (in_array($file->getFilename(), $exclude, true)) {
                 return false;
             }
+
             return true;
         };
 
@@ -76,7 +77,7 @@ function findDirs($path, $uid, $gid)
 
         // check every file
         foreach ($its as $fullFileName => $it) {
-            if ($it->isDir() && (fileowner($fullFileName) == $uid || filegroup($fullFileName) == $gid)) {
+            if ($it->isDir() && (fileowner($fullFileName) === $uid || filegroup($fullFileName) === $gid)) {
                 $_fileList[] = makeCorrectDir(dirname($fullFileName));
             }
         }
@@ -97,7 +98,7 @@ class IgnorantRecursiveDirectoryIterator extends RecursiveDirectoryIterator
     public function getChildren()
     {
         try {
-            return new IgnorantRecursiveDirectoryIterator($this->getPathname());
+            return new self($this->getPathname());
         } catch (UnexpectedValueException $e) {
             return new RecursiveArrayIterator(array());
         }

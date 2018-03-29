@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,8 +12,8 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $destination
  */
 
 /**
@@ -24,18 +23,17 @@
  * @return string the corrected destinations
  * @author Florian Lippert <flo@syscp.org>
  */
-
 function makeCorrectDestination($destination)
 {
     $search = '/ +/';
     $replace = ' ';
     $destination = preg_replace($search, $replace, $destination);
 
-    if (substr($destination, 0, 1) == ' ') {
+    if (substr($destination, 0, 1) === ' ') {
         $destination = substr($destination, 1);
     }
 
-    if (substr($destination, -1, 1) == ' ') {
+    if (substr($destination, -1, 1) === ' ') {
         $destination = substr($destination, 0, strlen($destination) - 1);
     }
 

@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,8 +12,6 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Settings
- *
  */
 
 return array(
@@ -30,7 +27,7 @@ return array(
                     'string_type' => 'dir',
                     'default' => '/var/customers/webs/',
                     'save_method' => 'storeSettingField',
-                    'plausibility_check_method' => 'checkPathConflicts'
+                    'plausibility_check_method' => 'checkPathConflicts',
                     ),
                 'system_documentroot_use_default_value' => array(
                     'label' => $lng['serversettings']['documentroot_use_default_value'],
@@ -100,7 +97,7 @@ return array(
                     'varname' => 'nssextrausers',
                     'type' => 'bool',
                     'default' => false,
-                    'save_method' => 'storeSettingField'
+                    'save_method' => 'storeSettingField',
                     ),
                 'system_index_file_extension' => array(
                     'label' => $lng['serversettings']['index_file_extension'],

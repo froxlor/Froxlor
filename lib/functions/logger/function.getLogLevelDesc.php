@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -12,10 +11,9 @@
  * @author     Michael Kaufmann <mkaufmann@nutime.de>
  * @author     Daniel Reichelt <hacking@nachtgeist.net> (2016-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $type
  */
-
 function getLogLevelDesc($type)
 {
     switch ($type) {
@@ -41,5 +39,6 @@ function getLogLevelDesc($type)
             $_type = 'unknown';
             break;
     }
+
     return $_type;
 }

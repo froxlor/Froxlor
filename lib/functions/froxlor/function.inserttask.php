@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,8 +12,12 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $type
+ * @param mixed $param1
+ * @param mixed $param2
+ * @param mixed $param3
+ * @param mixed $param4
  */
 
 /**
@@ -31,39 +34,39 @@ function inserttask($type, $param1 = '', $param2 = '', $param3 = '', $param4 = '
 {
 
     // prepare the insert-statement
-    $ins_stmt = Database::prepare("
-		INSERT INTO `" . TABLE_PANEL_TASKS . "` SET `type` = :type, `data` = :data
-	");
+    $ins_stmt = Database::prepare('
+		INSERT INTO `' . TABLE_PANEL_TASKS . '` SET `type` = :type, `data` = :data
+	');
 
-    if ($type == '1'
-        || $type == '3'
-        || $type == '4'
-        || $type == '5'
-        || $type == '10'
-        || $type == '99'
+    if ($type === '1'
+        || $type === '3'
+        || $type === '4'
+        || $type === '5'
+        || $type === '10'
+        || $type === '99'
     ) {
         // 4 = bind -> if bind disabled -> no task
-        if ($type == '4' && Settings::Get('system.bind_enable') == '0') {
+        if ($type === '4' && Settings::Get('system.bind_enable') === '0') {
             return;
         }
         // 10 = quota -> if quota disabled -> no task
-        if ($type == '10' && Settings::Get('system.diskquota_enabled') == '0') {
+        if ($type === '10' && Settings::Get('system.diskquota_enabled') === '0') {
             return;
         }
 
         // delete previously inserted tasks if they are the same as we only need ONE
-        $del_stmt = Database::prepare("
-			DELETE FROM `" . TABLE_PANEL_TASKS . "` WHERE `type` = :type
-		");
+        $del_stmt = Database::prepare('
+			DELETE FROM `' . TABLE_PANEL_TASKS . '` WHERE `type` = :type
+		');
         Database::pexecute($del_stmt, array('type' => $type));
 
         // insert the new task
         Database::pexecute($ins_stmt, array('type' => $type, 'data' => ''));
-    } elseif ($type == '2'
-        && $param1 != ''
-        && $param2 != ''
-        && $param3 != ''
-        && ($param4 == 0 || $param4 == 1)
+    } elseif ($type === '2'
+        && $param1 !== ''
+        && $param2 !== ''
+        && $param3 !== ''
+        && ($param4 === 0 || $param4 === 1)
     ) {
         $data = array();
         $data['loginname'] = $param1;
@@ -72,32 +75,32 @@ function inserttask($type, $param1 = '', $param2 = '', $param3 = '', $param4 = '
         $data['store_defaultindex'] = $param4;
         $data = serialize($data);
         Database::pexecute($ins_stmt, array('type' => '2', 'data' => $data));
-    } elseif ($type == '6'
-        && $param1 != ''
+    } elseif ($type === '6'
+        && $param1 !== ''
     ) {
         $data = array();
         $data['loginname'] = $param1;
         $data = serialize($data);
         Database::pexecute($ins_stmt, array('type' => '6', 'data' => $data));
-    } elseif ($type == '7'
-        && $param1 != ''
-        && $param2 != ''
+    } elseif ($type === '7'
+        && $param1 !== ''
+        && $param2 !== ''
     ) {
         $data = array();
         $data['loginname'] = $param1;
         $data['email'] = $param2;
         $data = serialize($data);
         Database::pexecute($ins_stmt, array('type' => '7', 'data' => $data));
-    } elseif ($type == '8'
-        && $param1 != ''
-        && $param2 != ''
+    } elseif ($type === '8'
+        && $param1 !== ''
+        && $param2 !== ''
     ) {
         $data = array();
         $data['loginname'] = $param1;
         $data['homedir'] = $param2;
         $data = serialize($data);
         Database::pexecute($ins_stmt, array('type' => '8', 'data' => $data));
-    } elseif ($type == '20'
+    } elseif ($type === '20'
         && is_array($param1)
     ) {
         $data = serialize($param1);

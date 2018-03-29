@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the SysCP project.
  * Copyright (c) 2003-2007 the SysCP Team (see authors).
@@ -11,8 +10,6 @@
  * @copyright  (c) the authors
  * @author     Martin Burchert <eremit@syscp.org>
  * @license    GPLv2 http://files.syscp.org/misc/COPYING.txt
- * @package    System
- *
  */
 
 // some configs
@@ -38,12 +35,12 @@ $files = array();
 
 if ($dh = opendir($path)) {
     while (false !== ($file = readdir($dh))) {
-        if ($file != "."
-           && $file != ".."
+        if ($file !== '.'
+           && $file !== '..'
            && !is_dir($file)
            && preg_match('/(.+)\.lng\.php/i', $file)
         ) {
-            if (is_null($_f) || (!is_null($_f) && ($file == $_f || $file == $baseLanguage))) {
+            if (null === $_f || (null !== $_f && ($file === $_f || $file === $baseLanguage))) {
                 $files[$file] = str_replace('//', '/', $path . '/' . $file);
             }
         }
@@ -75,7 +72,7 @@ unset($files[$baseLanguage]);
 foreach ($files as $key => $file) {
     $comp = import($file);
 
-    print "\n\nComparing " . $baseLanguage . " to " . $key . "\n";
+    print "\n\nComparing " . $baseLanguage . ' to ' . $key . "\n";
     $result = compare($base, $comp);
 
     if (is_array($result)
@@ -83,13 +80,13 @@ foreach ($files as $key => $file) {
     ) {
         print "  found missing strings: \n";
         foreach ($result as $value) {
-            print "    " . $value . "\n";
+            print '    ' . $value . "\n";
         }
     } else {
         print "   no missing strings found! \n ";
     }
 
-    print "\nReverse Checking " . $key . " to " . $baseLanguage . "\n";
+    print "\nReverse Checking " . $key . ' to ' . $baseLanguage . "\n";
     $result = compare($comp, $base);
 
     if (is_array($result)
@@ -97,7 +94,7 @@ foreach ($files as $key => $file) {
     ) {
         print "  found strings not in basefile: \n";
         foreach ($result as $key => $value) {
-            print "    " . $value . "\n";
+            print '    ' . $value . "\n";
         }
     } else {
         print "   There are no strings which are not in the basefile! \n ";
@@ -115,7 +112,7 @@ foreach ($files as $key => $file) {
  */
 function print_help($argv)
 {
-    print "Usage: php " . $argv[0] . " /PATH/TO/LNG \n";
+    print 'Usage: php ' . $argv[0] . " /PATH/TO/LNG \n";
     print " \n ";
 }
 
@@ -140,6 +137,7 @@ function import($file)
             $return[$key] = $value;
         }
     }
+
     return $return;
 }
 
@@ -152,5 +150,6 @@ function compare($array1, $array2)
             $result[$key] = $value;
         }
     }
+
     return $result;
 }

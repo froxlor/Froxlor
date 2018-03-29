@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -11,8 +10,6 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Formfields
- *
  */
 
 return array(
@@ -27,47 +24,47 @@ return array(
                     'path' => array(
                         'label' => $lng['panel']['path'],
                         'type' => 'label',
-                        'value' => $result['path']
+                        'value' => $result['path'],
                     ),
                     'options_indexes' => array(
                         'label' => $lng['extras']['directory_browsing'],
                         'type' => 'checkbox',
                         'values' => array(
-                                        array('label' => $lng['panel']['yes'], 'value' => '1')
+                                        array('label' => $lng['panel']['yes'], 'value' => '1'),
                                     ),
-                        'value' => array($result['options_indexes'])
+                        'value' => array($result['options_indexes']),
                     ),
                     'error404path' => array(
                         'label' => $lng['extras']['errordocument404path'],
                         'desc' => $lng['panel']['descriptionerrordocument'],
                         'type' => 'text',
-                        'value' => $result['error404path']
+                        'value' => $result['error404path'],
                     ),
                     'error403path' => array(
-                        'visible' => (Settings::Get('system.webserver') == 'apache2'),
+                        'visible' => (Settings::Get('system.webserver') === 'apache2'),
                         'label' => $lng['extras']['errordocument403path'],
                         'desc' => $lng['panel']['descriptionerrordocument'],
                         'type' => 'text',
-                        'value' => $result['error403path']
+                        'value' => $result['error403path'],
                     ),
                     'error500path' => array(
-                        'visible' => (Settings::Get('system.webserver') == 'apache2'),
+                        'visible' => (Settings::Get('system.webserver') === 'apache2'),
                         'label' => $lng['extras']['errordocument500path'],
                         'desc' => $lng['panel']['descriptionerrordocument'],
                         'type' => 'text',
-                        'value' => $result['error500path']
+                        'value' => $result['error500path'],
                     ),
                     'options_cgi' => array(
-                        'visible' => ($cperlenabled == 1),
+                        'visible' => ($cperlenabled === 1),
                         'label' => $lng['extras']['execute_perl'],
                         'type' => 'checkbox',
                         'values' => array(
-                                        array('label' => $lng['panel']['yes'], 'value' => '1')
+                                        array('label' => $lng['panel']['yes'], 'value' => '1'),
                                     ),
-                        'value' => array($result['options_cgi'])
-                    )
-                )
-            )
-        )
-    )
+                        'value' => array($result['options_cgi']),
+                    ),
+                ),
+            ),
+        ),
+    ),
 );

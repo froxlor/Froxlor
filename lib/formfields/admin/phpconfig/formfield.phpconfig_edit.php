@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -11,8 +10,6 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Formfields
- *
  */
 
 return array(
@@ -28,79 +25,79 @@ return array(
                         'label' => $lng['admin']['phpsettings']['description'],
                         'type' => 'text',
                         'maxlength' => 50,
-                        'value' => $result['description']
+                        'value' => $result['description'],
                     ),
                     'binary' => array(
-                        'visible' => (Settings::Get('system.mod_fcgid') == 1 ? true : false),
+                        'visible' => (Settings::Get('system.mod_fcgid') === 1 ? true : false),
                         'label' => $lng['admin']['phpsettings']['binary'],
                         'type' => 'text',
                         'maxlength' => 255,
-                        'value' => $result['binary']
+                        'value' => $result['binary'],
                     ),
                     'fpmconfig' => array(
-                        'visible' => (Settings::Get('phpfpm.enabled') == 1 ? true : false),
+                        'visible' => (Settings::Get('phpfpm.enabled') === 1 ? true : false),
                         'label' => $lng['admin']['phpsettings']['fpmdesc'],
                         'type' => 'select',
-                        'select_var' => $fpmconfigs
+                        'select_var' => $fpmconfigs,
                     ),
                     'file_extensions' => array(
-                        'visible' => (Settings::Get('system.mod_fcgid') == 1 ? true : false),
+                        'visible' => (Settings::Get('system.mod_fcgid') === 1 ? true : false),
                         'label' => $lng['admin']['phpsettings']['file_extensions'],
                         'desc' => $lng['admin']['phpsettings']['file_extensions_note'],
                         'type' => 'text',
                         'maxlength' => 255,
-                        'value' => $result['file_extensions']
+                        'value' => $result['file_extensions'],
                     ),
                     'mod_fcgid_starter' => array(
-                        'visible' => (Settings::Get('system.mod_fcgid') == 1 ? true : false),
+                        'visible' => (Settings::Get('system.mod_fcgid') === 1 ? true : false),
                         'label' => $lng['admin']['mod_fcgid_starter']['title'],
                         'type' => 'text',
-                        'value' => ((int)$result['mod_fcgid_starter'] != - 1 ? $result['mod_fcgid_starter'] : '')
+                        'value' => ((int) $result['mod_fcgid_starter'] !== - 1 ? $result['mod_fcgid_starter'] : ''),
                     ),
                     'mod_fcgid_maxrequests' => array(
-                        'visible' => (Settings::Get('system.mod_fcgid') == 1 ? true : false),
+                        'visible' => (Settings::Get('system.mod_fcgid') === 1 ? true : false),
                         'label' => $lng['admin']['mod_fcgid_maxrequests']['title'],
                         'type' => 'text',
-                        'value' => ((int)$result['mod_fcgid_maxrequests'] != - 1 ? $result['mod_fcgid_maxrequests'] : '')
+                        'value' => ((int) $result['mod_fcgid_maxrequests'] !== - 1 ? $result['mod_fcgid_maxrequests'] : ''),
                     ),
                     'mod_fcgid_umask' => array(
-                        'visible' => (Settings::Get('system.mod_fcgid') == 1 ? true : false),
+                        'visible' => (Settings::Get('system.mod_fcgid') === 1 ? true : false),
                         'label' => $lng['admin']['mod_fcgid_umask']['title'],
                         'type' => 'text',
                         'maxlength' => 3,
-                        'value' => $result['mod_fcgid_umask']
+                        'value' => $result['mod_fcgid_umask'],
                     ),
                     'phpfpm_enable_slowlog' => array(
-                        'visible' => (Settings::Get('phpfpm.enabled') == 1 ? true : false),
+                        'visible' => (Settings::Get('phpfpm.enabled') === 1 ? true : false),
                         'label' => $lng['admin']['phpsettings']['enable_slowlog'],
                         'type' => 'checkbox',
                         'values' => array(
-                            array('label' => $lng['panel']['yes'], 'value' => '1')
+                            array('label' => $lng['panel']['yes'], 'value' => '1'),
                         ),
-                        'value' => array($result['fpm_slowlog'])
+                        'value' => array($result['fpm_slowlog']),
                     ),
                     'phpfpm_reqtermtimeout' => array(
-                        'visible' => (Settings::Get('phpfpm.enabled') == 1 ? true : false),
+                        'visible' => (Settings::Get('phpfpm.enabled') === 1 ? true : false),
                         'label' => $lng['admin']['phpsettings']['request_terminate_timeout'],
                         'type' => 'text',
                         'maxlength' => 10,
-                        'value' => $result['fpm_reqterm']
+                        'value' => $result['fpm_reqterm'],
                     ),
                     'phpfpm_reqslowtimeout' => array(
-                        'visible' => (Settings::Get('phpfpm.enabled') == 1 ? true : false),
+                        'visible' => (Settings::Get('phpfpm.enabled') === 1 ? true : false),
                         'label' => $lng['admin']['phpsettings']['request_slowlog_timeout'],
                         'type' => 'text',
                         'maxlength' => 10,
-                        'value' => $result['fpm_reqslow']
+                        'value' => $result['fpm_reqslow'],
                     ),
                     'phpfpm_pass_authorizationheader' => array(
-                        'visible' => (Settings::Get('phpfpm.enabled') == 1 ? true : false),
+                        'visible' => (Settings::Get('phpfpm.enabled') === 1 ? true : false),
                         'label' => $lng['admin']['phpsettings']['pass_authorizationheader'],
                         'type' => 'checkbox',
                         'values' => array(
-                            array('label' => $lng['panel']['yes'], 'value' => '1')
+                            array('label' => $lng['panel']['yes'], 'value' => '1'),
                         ),
-                        'value' => array($result['pass_authorizationheader'])
+                        'value' => array($result['pass_authorizationheader']),
                     ),
                     'phpsettings' => array(
                         'style' => 'align-top',
@@ -108,10 +105,10 @@ return array(
                         'type' => 'textarea',
                         'cols' => 80,
                         'rows' => 20,
-                        'value' => $result['phpsettings']
-                    )
-                )
-            )
-        )
-    )
+                        'value' => $result['phpsettings'],
+                    ),
+                ),
+            ),
+        ),
+    ),
 );

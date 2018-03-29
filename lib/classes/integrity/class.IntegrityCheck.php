@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,14 +12,9 @@
  * @author     Florian Aders <eleras@froxlor.org>
  * @author     Froxlor team <team@froxlor.org> (2014-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Integrity
- *
- * IntegrityCheck - class
  */
-
 class IntegrityCheck
 {
-
     // Store all available checks
     public $available = array();
 
@@ -39,9 +33,9 @@ class IntegrityCheck
         }
         $this->_log = FroxlorLogger::getInstanceOf($userinfo);
         $this->available = get_class_methods($this);
-        unset($this->available[array_search('__construct', $this->available)]);
-        unset($this->available[array_search('checkAll', $this->available)]);
-        unset($this->available[array_search('fixAll', $this->available)]);
+        unset($this->available[array_search('__construct', $this->available, true)]);
+        unset($this->available[array_search('checkAll', $this->available, true)]);
+        unset($this->available[array_search('fixAll', $this->available, true)]);
         sort($this->available);
     }
 
@@ -54,6 +48,7 @@ class IntegrityCheck
         foreach ($this->available as $check) {
             $integrityok = $this->$check() ? $integrityok : false;
         }
+
         return $integrityok;
     }
 
@@ -66,6 +61,7 @@ class IntegrityCheck
         foreach ($this->available as $check) {
             $integrityok = $this->$check(true) ? $integrityok : false;
         }
+
         return $integrityok;
     }
 
@@ -74,7 +70,7 @@ class IntegrityCheck
      *
      * @param bool $fix fix db charset/collation if not utf8
      *
-     * @return boolean
+     * @return bool
      */
     public function DatabaseCharset($fix = false)
     {
@@ -83,8 +79,8 @@ class IntegrityCheck
         $cs_stmt = Database::prepare('SELECT default_character_set_name FROM information_schema.SCHEMATA WHERE schema_name = :dbname');
         $resp = Database::pexecute_first($cs_stmt, array('dbname' => Database::getDbName()));
         $charset = isset($resp['default_character_set_name']) ? $resp['default_character_set_name'] : null;
-        if (!empty($charset) && strtolower($charset) != 'utf8') {
-            $this->_log->logAction(ADM_ACTION, LOG_NOTICE, "database charset seems to be different from UTF-8, integrity-check can fix that");
+        if (!empty($charset) && strtolower($charset) !== 'utf8') {
+            $this->_log->logAction(ADM_ACTION, LOG_NOTICE, 'database charset seems to be different from UTF-8, integrity-check can fix that');
             if ($fix) {
                 // fix database
                 Database::query('ALTER DATABASE `' . Database::getDbName() . '` CHARACTER SET utf8 COLLATE utf8_general_ci');
@@ -94,7 +90,7 @@ class IntegrityCheck
                     $table = $row[0];
                     Database::query('ALTER TABLE `' . $table . '` CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;');
                 }
-                $this->_log->logAction(ADM_ACTION, LOG_WARNING, "database charset was different from UTF-8, integrity-check fixed that");
+                $this->_log->logAction(ADM_ACTION, LOG_WARNING, 'database charset was different from UTF-8, integrity-check fixed that');
             } else {
                 return false;
             }
@@ -103,6 +99,7 @@ class IntegrityCheck
         if ($fix) {
             return $this->DatabaseCharset();
         }
+
         return true;
     }
 
@@ -120,21 +117,21 @@ class IntegrityCheck
         if ($fix) {
             // Prepare insert / delete statement for the fixes
             $del_stmt = Database::prepare(
-                "
-				DELETE FROM `" . TABLE_DOMAINTOIP . "`
-				WHERE `id_domain` = :domainid AND `id_ipandports` = :ipandportid "
+                '
+				DELETE FROM `' . TABLE_DOMAINTOIP . '`
+				WHERE `id_domain` = :domainid AND `id_ipandports` = :ipandportid '
             );
             $ins_stmt = Database::prepare(
-                "
-				INSERT INTO `" . TABLE_DOMAINTOIP . "`
-				SET `id_domain` = :domainid, `id_ipandports` = :ipandportid "
+                '
+				INSERT INTO `' . TABLE_DOMAINTOIP . '`
+				SET `id_domain` = :domainid, `id_ipandports` = :ipandportid '
             );
 
             // Cache all IPs the admins have assigned
-            $adm_stmt = Database::prepare("SELECT `adminid`, `ip` FROM `" . TABLE_PANEL_ADMINS . "` ORDER BY `adminid` ASC");
+            $adm_stmt = Database::prepare('SELECT `adminid`, `ip` FROM `' . TABLE_PANEL_ADMINS . '` ORDER BY `adminid` ASC');
             Database::pexecute($adm_stmt);
             while ($row = $adm_stmt->fetch(PDO::FETCH_ASSOC)) {
-                if ($row['ip'] < 0 || is_null($row['ip']) || empty($row['ip'])) {
+                if ($row['ip'] < 0 || null === $row['ip'] || empty($row['ip'])) {
                     // Admin uses default-IP
                     $admips[$row['adminid']] = explode(',', Settings::Get('system.defaultip'));
                 } else {
@@ -144,38 +141,40 @@ class IntegrityCheck
         }
 
         // Cache all available ip/port - combinations
-        $result_stmt = Database::prepare("SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` ORDER BY `id` ASC");
+        $result_stmt = Database::prepare('SELECT `id`, `ip`, `port` FROM `' . TABLE_PANEL_IPSANDPORTS . '` ORDER BY `id` ASC');
         Database::pexecute($result_stmt);
         while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
             $ips[$row['id']] = $row['ip'] . ':' . $row['port'];
         }
 
         // Cache all configured domains
-        $result_stmt = Database::prepare("SELECT `id`, `adminid` FROM `" . TABLE_PANEL_DOMAINS . "` ORDER BY `id` ASC");
+        $result_stmt = Database::prepare('SELECT `id`, `adminid` FROM `' . TABLE_PANEL_DOMAINS . '` ORDER BY `id` ASC');
         Database::pexecute($result_stmt);
         while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
             $domains[$row['id']] = $row['adminid'];
         }
 
         // Check if every domain to ip/port - association is valid in TABLE_DOMAINTOIP
-        $result_stmt = Database::prepare("SELECT `id_domain`, `id_ipandports` FROM `" . TABLE_DOMAINTOIP . "`");
+        $result_stmt = Database::prepare('SELECT `id_domain`, `id_ipandports` FROM `' . TABLE_DOMAINTOIP . '`');
         Database::pexecute($result_stmt);
         while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
             if (!array_key_exists($row['id_ipandports'], $ips)) {
                 if ($fix) {
                     Database::pexecute($del_stmt, array('domainid' => $row['id_domain'], 'ipandportid' => $row['id_ipandports']));
-                    $this->_log->logAction(ADM_ACTION, LOG_WARNING, "found an ip/port-id in domain <> ip table which does not exist, integrity check fixed this");
+                    $this->_log->logAction(ADM_ACTION, LOG_WARNING, 'found an ip/port-id in domain <> ip table which does not exist, integrity check fixed this');
                 } else {
-                    $this->_log->logAction(ADM_ACTION, LOG_NOTICE, "found an ip/port-id in domain <> ip table which does not exist, integrity check can fix this");
+                    $this->_log->logAction(ADM_ACTION, LOG_NOTICE, 'found an ip/port-id in domain <> ip table which does not exist, integrity check can fix this');
+
                     return false;
                 }
             }
             if (!array_key_exists($row['id_domain'], $domains)) {
                 if ($fix) {
                     Database::pexecute($del_stmt, array('domainid' => $row['id_domain'], 'ipandportid' => $row['id_ipandports']));
-                    $this->_log->logAction(ADM_ACTION, LOG_WARNING, "found a domain-id in domain <> ip table which does not exist, integrity check fixed this");
+                    $this->_log->logAction(ADM_ACTION, LOG_WARNING, 'found a domain-id in domain <> ip table which does not exist, integrity check fixed this');
                 } else {
-                    $this->_log->logAction(ADM_ACTION, LOG_NOTICE, "found a domain-id in domain <> ip table which does not exist, integrity check can fix this");
+                    $this->_log->logAction(ADM_ACTION, LOG_NOTICE, 'found a domain-id in domain <> ip table which does not exist, integrity check can fix this');
+
                     return false;
                 }
             }
@@ -190,9 +189,10 @@ class IntegrityCheck
                     foreach ($admips[$adminid] as $defaultip) {
                         Database::pexecute($ins_stmt, array('domainid' => $domainid, 'ipandportid' => $defaultip));
                     }
-                    $this->_log->logAction(ADM_ACTION, LOG_WARNING, "found a domain-id with no entry in domain <> ip table, integrity check fixed this");
+                    $this->_log->logAction(ADM_ACTION, LOG_WARNING, 'found a domain-id with no entry in domain <> ip table, integrity check fixed this');
                 } else {
-                    $this->_log->logAction(ADM_ACTION, LOG_NOTICE, "found a domain-id with no entry in domain <> ip table, integrity check can fix this");
+                    $this->_log->logAction(ADM_ACTION, LOG_NOTICE, 'found a domain-id with no entry in domain <> ip table, integrity check can fix this');
+
                     return false;
                 }
             }
@@ -200,9 +200,9 @@ class IntegrityCheck
 
         if ($fix) {
             return $this->DomainIpTable();
-        } else {
-            return true;
         }
+
+        return true;
     }
 
     /**
@@ -218,25 +218,25 @@ class IntegrityCheck
         if ($fix) {
             // Prepare update statement for the fixes
             $upd_stmt = Database::prepare(
-                "
-				UPDATE `" . TABLE_PANEL_DOMAINS . "`
-				SET `ssl_redirect` = 0 WHERE `parentdomainid` = :domainid"
+                '
+				UPDATE `' . TABLE_PANEL_DOMAINS . '`
+				SET `ssl_redirect` = 0 WHERE `parentdomainid` = :domainid'
             );
         }
 
         // Cache all ssl ip/port - combinations
-        $result_stmt = Database::prepare("SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `ssl` = 1 ORDER BY `id` ASC");
+        $result_stmt = Database::prepare('SELECT `id`, `ip`, `port` FROM `' . TABLE_PANEL_IPSANDPORTS . '` WHERE `ssl` = 1 ORDER BY `id` ASC');
         Database::pexecute($result_stmt);
         while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
             $ips[$row['id']] = $row['ip'] . ':' . $row['port'];
         }
 
         // Cache all configured domains
-        $result_stmt = Database::prepare("SELECT `id`, `parentdomainid`, `ssl_redirect` FROM `" . TABLE_PANEL_DOMAINS . "` ORDER BY `id` ASC");
-        $ip_stmt = Database::prepare("SELECT `id_domain`, `id_ipandports` FROM `" . TABLE_DOMAINTOIP . "` WHERE `id_domain` = :domainid");
+        $result_stmt = Database::prepare('SELECT `id`, `parentdomainid`, `ssl_redirect` FROM `' . TABLE_PANEL_DOMAINS . '` ORDER BY `id` ASC');
+        $ip_stmt = Database::prepare('SELECT `id_domain`, `id_ipandports` FROM `' . TABLE_DOMAINTOIP . '` WHERE `id_domain` = :domainid');
         Database::pexecute($result_stmt);
         while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-            if ($row['parentdomainid'] == 0) {
+            if ($row['parentdomainid'] === 0) {
                 // All parentdomains by default have no ssl - ip/port
                 $parentdomains[$row['id']] = false;
                 Database::pexecute($ip_stmt, array('domainid' => $row['id']));
@@ -246,7 +246,7 @@ class IntegrityCheck
                         $parentdomains[$row['id']] = true;
                     }
                 }
-            } elseif ($row['ssl_redirect'] == 1) {
+            } elseif ($row['ssl_redirect'] === 1) {
                 // All subdomains with enabled ssl_redirect enabled are stored
                 if (!isset($subdomains[$row['parentdomainid']])) {
                     $subdomains[$row['parentdomainid']] = array();
@@ -270,19 +270,20 @@ class IntegrityCheck
             if ($fix) {
                 // We make a blanket update to all subdomains of this parentdomain, doesn't matter which one is wrong, all have to be disabled
                 Database::pexecute($upd_stmt, array('domainid' => $id));
-                $this->_log->logAction(ADM_ACTION, LOG_WARNING, "found a subdomain with ssl_redirect=1 but parent-domain has ssl=0, integrity check fixed this");
+                $this->_log->logAction(ADM_ACTION, LOG_WARNING, 'found a subdomain with ssl_redirect=1 but parent-domain has ssl=0, integrity check fixed this');
             } else {
                 // It's just the check, let the function fail
-                $this->_log->logAction(ADM_ACTION, LOG_NOTICE, "found a subdomain with ssl_redirect=1 but parent-domain has ssl=0, integrity check can fix this");
+                $this->_log->logAction(ADM_ACTION, LOG_NOTICE, 'found a subdomain with ssl_redirect=1 but parent-domain has ssl=0, integrity check can fix this');
+
                 return false;
             }
         }
 
         if ($fix) {
             return $this->SubdomainSslRedirect();
-        } else {
-            return true;
         }
+
+        return true;
     }
 
     /**
@@ -298,25 +299,25 @@ class IntegrityCheck
         if ($fix) {
             // Prepare update statement for the fixes
             $upd_stmt = Database::prepare(
-                "
-				UPDATE `" . TABLE_PANEL_DOMAINS . "`
-				SET `letsencrypt` = 0 WHERE `parentdomainid` = :domainid"
+                '
+				UPDATE `' . TABLE_PANEL_DOMAINS . '`
+				SET `letsencrypt` = 0 WHERE `parentdomainid` = :domainid'
             );
         }
 
         // Cache all ssl ip/port - combinations
-        $result_stmt = Database::prepare("SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `ssl` = 1 ORDER BY `id` ASC");
+        $result_stmt = Database::prepare('SELECT `id`, `ip`, `port` FROM `' . TABLE_PANEL_IPSANDPORTS . '` WHERE `ssl` = 1 ORDER BY `id` ASC');
         Database::pexecute($result_stmt);
         while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
             $ips[$row['id']] = $row['ip'] . ':' . $row['port'];
         }
 
         // Cache all configured domains
-        $result_stmt = Database::prepare("SELECT `id`, `parentdomainid`, `letsencrypt` FROM `" . TABLE_PANEL_DOMAINS . "` ORDER BY `id` ASC");
-        $ip_stmt = Database::prepare("SELECT `id_domain`, `id_ipandports` FROM `" . TABLE_DOMAINTOIP . "` WHERE `id_domain` = :domainid");
+        $result_stmt = Database::prepare('SELECT `id`, `parentdomainid`, `letsencrypt` FROM `' . TABLE_PANEL_DOMAINS . '` ORDER BY `id` ASC');
+        $ip_stmt = Database::prepare('SELECT `id_domain`, `id_ipandports` FROM `' . TABLE_DOMAINTOIP . '` WHERE `id_domain` = :domainid');
         Database::pexecute($result_stmt);
         while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-            if ($row['parentdomainid'] == 0) {
+            if ($row['parentdomainid'] === 0) {
                 // All parentdomains by default have no ssl - ip/port
                 $parentdomains[$row['id']] = false;
                 Database::pexecute($ip_stmt, array('domainid' => $row['id']));
@@ -326,7 +327,7 @@ class IntegrityCheck
                         $parentdomains[$row['id']] = true;
                     }
                 }
-            } elseif ($row['letsencrypt'] == 1) {
+            } elseif ($row['letsencrypt'] === 1) {
                 // All subdomains with enabled letsencrypt enabled are stored
                 if (!isset($subdomains[$row['parentdomainid']])) {
                     $subdomains[$row['parentdomainid']] = array();
@@ -350,19 +351,20 @@ class IntegrityCheck
             if ($fix) {
                 // We make a blanket update to all subdomains of this parentdomain, doesn't matter which one is wrong, all have to be disabled
                 Database::pexecute($upd_stmt, array('domainid' => $id));
-                $this->_log->logAction(ADM_ACTION, LOG_WARNING, "found a subdomain with letsencrypt=1 but parent-domain has ssl=0, integrity check fixed this");
+                $this->_log->logAction(ADM_ACTION, LOG_WARNING, 'found a subdomain with letsencrypt=1 but parent-domain has ssl=0, integrity check fixed this');
             } else {
                 // It's just the check, let the function fail
-                $this->_log->logAction(ADM_ACTION, LOG_NOTICE, "found a subdomain with letsencrypt=1 but parent-domain has ssl=0, integrity check can fix this");
+                $this->_log->logAction(ADM_ACTION, LOG_NOTICE, 'found a subdomain with letsencrypt=1 but parent-domain has ssl=0, integrity check can fix this');
+
                 return false;
             }
         }
 
         if ($fix) {
             return $this->SubdomainLetsencrypt();
-        } else {
-            return true;
         }
+
+        return true;
     }
 
     /**
@@ -371,35 +373,35 @@ class IntegrityCheck
      *
      * @param bool $fix fix member/groups
      *
-     * @return boolean
+     * @return bool
      */
     public function WebserverGroupMemberForFcgidPhpFpm($fix = false)
     {
-        if (Settings::Get('system.mod_fcgid') == 0 && Settings::Get('phpfpm.enabled') == 0) {
+        if (Settings::Get('system.mod_fcgid') === 0 && Settings::Get('phpfpm.enabled') === 0) {
             return true;
         }
 
         // get all customers that don't have the webserver-user in their group
-        $cwg_stmt = Database::prepare("
-	       SELECT `id` FROM `".TABLE_FTP_GROUPS."` WHERE NOT FIND_IN_SET(:webserveruser, `members`)
-	    ");
+        $cwg_stmt = Database::prepare('
+	       SELECT `id` FROM `' . TABLE_FTP_GROUPS . '` WHERE NOT FIND_IN_SET(:webserveruser, `members`)
+	    ');
         Database::pexecute($cwg_stmt, array('webserveruser' => Settings::Get('system.httpuser')));
 
         if ($cwg_stmt->rowCount() > 0) {
-            $this->_log->logAction(ADM_ACTION, LOG_NOTICE, "Customers are missing the webserver-user as group-member, integrity-check can fix that");
+            $this->_log->logAction(ADM_ACTION, LOG_NOTICE, 'Customers are missing the webserver-user as group-member, integrity-check can fix that');
             if ($fix) {
                 // prepare update statement
-                $upd_stmt = Database::prepare("
-	                UPDATE `".TABLE_FTP_GROUPS."` SET `members` = CONCAT(`members`, :additionaluser)
+                $upd_stmt = Database::prepare('
+	                UPDATE `' . TABLE_FTP_GROUPS . '` SET `members` = CONCAT(`members`, :additionaluser)
 	                WHERE `id` = :id
-	            ");
-                $upd_data = array('additionaluser' => ",".Settings::Get('system.httpuser'));
+	            ');
+                $upd_data = array('additionaluser' => ',' . Settings::Get('system.httpuser'));
 
                 while ($cwg_row = $cwg_stmt->fetch()) {
                     $upd_data['id'] = $cwg_row['id'];
                     Database::pexecute($upd_stmt, $upd_data);
                 }
-                $this->_log->logAction(ADM_ACTION, LOG_NOTICE, "Customers were missing the webserver-user as group-member, integrity-check fixed that");
+                $this->_log->logAction(ADM_ACTION, LOG_NOTICE, 'Customers were missing the webserver-user as group-member, integrity-check fixed that');
             } else {
                 return false;
             }
@@ -408,6 +410,7 @@ class IntegrityCheck
         if ($fix) {
             return $this->WebserverGroupMemberForFcgidPhpFpm();
         }
+
         return true;
     }
 
@@ -418,51 +421,49 @@ class IntegrityCheck
      *
      * @param bool $fix fix member/groups
      *
-     * @return boolean
+     * @return bool
      */
     public function FroxlorLocalGroupMemberForFcgidPhpFpm($fix = false)
     {
-        if (Settings::Get('system.mod_fcgid') == 0 && Settings::Get('phpfpm.enabled') == 0) {
+        if (Settings::Get('system.mod_fcgid') === 0 && Settings::Get('phpfpm.enabled') === 0) {
             return true;
         }
 
-        if (Settings::get('system.mod_fcgid') == 1) {
-            if (Settings::get('system.mod_fcgid_ownvhost') == 0) {
+        if (Settings::get('system.mod_fcgid') === 1) {
+            if (Settings::get('system.mod_fcgid_ownvhost') === 0) {
                 return true;
-            } else {
-                $localuser = Settings::Get('system.mod_fcgid_httpuser');
             }
+            $localuser = Settings::Get('system.mod_fcgid_httpuser');
         }
 
-        if (Settings::get('phpfpm.enabled') == 1) {
-            if (Settings::get('phpfpm.enabled_ownvhost') == 0) {
+        if (Settings::get('phpfpm.enabled') === 1) {
+            if (Settings::get('phpfpm.enabled_ownvhost') === 0) {
                 return true;
-            } else {
-                $localuser = Settings::Get('phpfpm.vhost_httpuser');
             }
+            $localuser = Settings::Get('phpfpm.vhost_httpuser');
         }
 
         // get all customers that don't have the webserver-user in their group
-        $cwg_stmt = Database::prepare("
-	       SELECT `id` FROM `".TABLE_FTP_GROUPS."` WHERE NOT FIND_IN_SET(:localuser, `members`)
-	    ");
+        $cwg_stmt = Database::prepare('
+	       SELECT `id` FROM `' . TABLE_FTP_GROUPS . '` WHERE NOT FIND_IN_SET(:localuser, `members`)
+	    ');
         Database::pexecute($cwg_stmt, array('localuser' => $localuser));
 
         if ($cwg_stmt->rowCount() > 0) {
-            $this->_log->logAction(ADM_ACTION, LOG_NOTICE, "Customers are missing the local froxlor-user as group-member, integrity-check can fix that");
+            $this->_log->logAction(ADM_ACTION, LOG_NOTICE, 'Customers are missing the local froxlor-user as group-member, integrity-check can fix that');
             if ($fix) {
                 // prepare update statement
-                $upd_stmt = Database::prepare("
-	                UPDATE `".TABLE_FTP_GROUPS."` SET `members` = CONCAT(`members`, :additionaluser)
+                $upd_stmt = Database::prepare('
+	                UPDATE `' . TABLE_FTP_GROUPS . '` SET `members` = CONCAT(`members`, :additionaluser)
 	                WHERE `id` = :id
-	            ");
-                $upd_data = array('additionaluser' => ",".$localuser);
+	            ');
+                $upd_data = array('additionaluser' => ',' . $localuser);
 
                 while ($cwg_row = $cwg_stmt->fetch()) {
                     $upd_data['id'] = $cwg_row['id'];
                     Database::pexecute($upd_stmt, $upd_data);
                 }
-                $this->_log->logAction(ADM_ACTION, LOG_NOTICE, "Customers were missing the local froxlor-user as group-member, integrity-check fixed that");
+                $this->_log->logAction(ADM_ACTION, LOG_NOTICE, 'Customers were missing the local froxlor-user as group-member, integrity-check fixed that');
             } else {
                 return false;
             }
@@ -471,6 +472,7 @@ class IntegrityCheck
         if ($fix) {
             return $this->FroxlorLocalGroupMemberForFcgidPhpFpm();
         }
+
         return true;
     }
 }

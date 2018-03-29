@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,8 +12,6 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Settings
- *
  */
 
 return array(
@@ -29,7 +26,7 @@ return array(
                     'type' => 'bool',
                     'default' => false,
                     'save_method' => 'storeSettingField',
-                    'overview_option' => true
+                    'overview_option' => true,
                     ),
                 'logger_severity' => array(
                     'label' => $lng['serversettings']['logger']['severity'],
@@ -71,11 +68,11 @@ return array(
                     'option_options' => array(
                             0 => $lng['serversettings']['logger']['logcronoption']['never'],
                             1 => $lng['serversettings']['logger']['logcronoption']['once'],
-                            2 => $lng['serversettings']['logger']['logcronoption']['always']
+                            2 => $lng['serversettings']['logger']['logcronoption']['always'],
                         ),
                     'save_method' => 'storeSettingField',
                     ),
                 ),
             ),
-        )
+        ),
     );

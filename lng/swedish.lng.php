@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,14 +12,11 @@
  * @author     Staffan Starberg <staff@starberg.com>
  * @author     Froxlor Team <team@froxlor.org>
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Language
- *
  */
 
 /**
  * Global
  */
-
 $lng['translator'] = 'Staffan Starberg';
 $lng['panel']['edit'] = 'Ändra';
 $lng['panel']['delete'] = 'Radera';
@@ -38,7 +34,6 @@ $lng['panel']['dirsmissing'] = 'Kan inte hitta eller läsa katalogen!';
 /**
  * Login
  */
-
 $lng['login']['username'] = 'Användarnamn';
 $lng['login']['password'] = 'Lösenord';
 $lng['login']['language'] = 'Språk';
@@ -49,7 +44,6 @@ $lng['login']['profile_lng'] = 'Profilspråk';
 /**
  * Customer
  */
-
 $lng['customer']['documentroot'] = 'Hemkatalog';
 $lng['customer']['name'] = 'Efternamn';
 $lng['customer']['firstname'] = 'Förnamn';
@@ -74,7 +68,6 @@ $lng['customer']['domains'] = 'Domäner';
 /**
  * Customermenue
  */
-
 $lng['menue']['main']['main'] = 'Huvudsidan';
 $lng['menue']['main']['changepassword'] = 'Ändra lösenord';
 $lng['menue']['main']['changelanguage'] = 'Ändra språk';
@@ -96,14 +89,12 @@ $lng['menue']['extras']['pathoptions'] = 'Inställningar sökväg';
 /**
  * Index
  */
-
 $lng['index']['customerdetails'] = 'Kunddetaljer';
 $lng['index']['accountdetails'] = 'Kontodetaljer';
 
 /**
  * Change Password
  */
-
 $lng['changepassword']['old_password'] = 'Gammalt lösenord';
 $lng['changepassword']['new_password'] = 'Nytt lösenord';
 $lng['changepassword']['new_password_confirm'] = 'Nytt lösenord (verifiera)';
@@ -113,7 +104,6 @@ $lng['changepassword']['also_change_ftp'] = ' Ändra även lösenord för huvud 
 /**
  * Domains
  */
-
 $lng['domains']['description'] = 'Här kan du skapa (sub-)domäner och ändra i dem.<br />Systemet behöver dock lite tid på sig att genomföra ändringarna.';
 $lng['domains']['domainsettings'] = 'Domäninställningar';
 $lng['domains']['domainname'] = 'Domännamn';
@@ -126,7 +116,6 @@ $lng['domains']['noaliasdomain'] = '(inget alias)';
 /**
  * E-mails
  */
-
 $lng['emails']['description'] = 'Här kan du skapa eller ändra dina E-postadresser.<br />Ett konto är som en brevlåda utanför huset. Om någon skickar dig E-post kommer det att hamna i din brevlåda (ditt konto).<br /><br />För att hämta din E-post så skall du använda följande inställningar i ditt E-postprogram: (Text i kursiv stil <i>italics</i> måste ändras till det som motsvaras av det du knappade in tidigare!)<br />Servernamn (Hostname): <b><i>Domännamn (Domainname)</i></b><br />Användarnamn (Username): <b><i>Konto namn (Account name) / E-postadress</i></b><br />Lösenord (Password): <b><i>lösenordet som du valde</i></b>';
 $lng['emails']['emailaddress'] = 'E-postadress';
 $lng['emails']['emails_add'] = '[Skapa en E-postadress]';
@@ -144,14 +133,12 @@ $lng['emails']['forwarder_add'] = '[Skapa ny "skicka vidare"]';
 /**
  * FTP
  */
-
 $lng['ftp']['description'] = 'Här kan du skapa eller änra i dina FTP konton.<br />Ändringen genomförs omedelbart så man kan använda det nya/ändrade kontot direkt.';
 $lng['ftp']['account_add'] = '[Skapa ett nytt FTP konto]';
 
 /**
  * MySQL
  */
-
 $lng['mysql']['databasename'] = 'Användare/databasnamn';
 $lng['mysql']['databasedescription'] = 'Beskrivning av databasen';
 $lng['mysql']['database_create'] = '[Skapa en ny databas]';
@@ -159,7 +146,6 @@ $lng['mysql']['database_create'] = '[Skapa en ny databas]';
 /**
  * Extras
  */
-
 $lng['extras']['description'] = 'Här kan du ändra övriga saker såsom katalogskydd mm.<br />Systemet behöver dock lite tid på sig att genomföra ändringarna.';
 $lng['extras']['directoryprotection_add'] = '[Skapa ett nytt katalogskydd]';
 $lng['extras']['view_directory'] = 'Visa kataloginnehåll';
@@ -170,7 +156,6 @@ $lng['extras']['pathoptions_edit'] = 'Ändra sökvägsinställningar';
 /**
  * Errors
  */
-
 $lng['error']['error'] = 'Följande fel har uppstått';
 $lng['error']['directorymustexist'] = 'Katalogen %s måste finnas. Skapa den med ditt FTP program.';
 $lng['error']['filemustexist'] = 'Filen %s måste existera.';
@@ -221,7 +206,6 @@ $lng['error']['destinationiswrong'] = 'Denna forwarder: %s innehåller ogiltiga 
 /**
  * Questions
  */
-
 $lng['question']['question'] = 'Säkerhetsfråga';
 $lng['question']['admin_customer_reallydelete'] = 'Är du säker på att du vill radera kunden %s? Om du väljer att radera går det inte att ångra sig efteråt!';
 $lng['question']['admin_domain_reallydelete'] = 'Är du riktigt säker på att du vill radera domänen %s?';
@@ -241,7 +225,6 @@ $lng['question']['admin_configs_reallyrebuild'] = 'Är du riktigt säker på att
 /**
  * Mails
  */
-
 $lng['mails']['pop_success']['mailbody'] = 'Hej,\n\nDitt E-postkonto {EMAIL}\nhar nu skapats.\n\nDetta är ett automatgenererat E-post meddelande\n, Det går därför inte att svara på detta meddelande!\n';
 $lng['mails']['pop_success']['subject'] = 'E-postkontot är nu skapat';
 $lng['mails']['createcustomer']['mailbody'] = 'Hej {FIRSTNAME} {NAME},\n\nHär kommer kontoinformationen för ditt konto:\n\nAnvändarnamn (Username): {USERNAME}\nLösenord (Password): {PASSWORD}\n\n';
@@ -250,7 +233,6 @@ $lng['mails']['createcustomer']['subject'] = 'Kontoinformation';
 /**
  * Admin
  */
-
 $lng['admin']['overview'] = 'Översikt';
 $lng['admin']['ressourcedetails'] = 'Använda resurser';
 $lng['admin']['systemdetails'] = 'System Detaljer';
@@ -305,7 +287,6 @@ $lng['admin']['templates']['EMAIL'] = 'Ändra till adressen för POP3/IMAP konto
 /**
  * Serversettings
  */
-
 $lng['serversettings']['session_timeout']['title'] = 'Sessionen har avslutats för att den tog för lång tid att utföra (session Timeout)';
 $lng['serversettings']['session_timeout']['description'] = 'Tiden (i sekunder) som användaren får vara inaktiv innan han måste logga in igen är (seconds)?';
 $lng['serversettings']['accountprefix']['title'] = 'Kund ID (Customer prefix)';
@@ -357,7 +338,6 @@ $lng['serversettings']['mxservers']['description'] = 'En kommaseparerad lista me
 /**
  * CHANGED BETWEEN 1.2.12 and 1.2.13
  */
-
 $lng['mysql']['description'] = 'Här ändras eller skapas MySQL-Databaser.<br />Ändringen sker omedelbart och databasen kan användas direkt.<br />I menyn på vänster sida finns verktyget phpMyAdmin med vilket man enkelt kan ändra i sin databas.<br /><br />För att använda databasen i dina egna php-scripts använd följande inställningar: (Data med kursiv stil <i>italics</i> måste ändras till det du matat in!)<br />Servernamn (Hostname): <b><SQL_HOST></b><br />Användarnamn (Username): <b><i>Databsnamn (Databasename)</i></b><br />Lösenord (Password): <b><i>Lösenordet som du har valt</i></b><br />Databas (Database): <b><i>Databasnamn (Databasename)</i></b>';
 
 /**
@@ -664,21 +644,21 @@ $lng['error']['ticketresetcycleiswrong'] = 'Cykeln för återställning av suppo
 
 $lng['menue']['traffic']['traffic'] = 'Trafik';
 $lng['menue']['traffic']['current'] = 'Nuvarande månad';
-$lng['traffic']['month'] = "Månad";
-$lng['traffic']['day'] = "Dag";
-$lng['traffic']['months'][1] = "Januari";
-$lng['traffic']['months'][2] = "Februari";
-$lng['traffic']['months'][3] = "Mars";
-$lng['traffic']['months'][4] = "April";
-$lng['traffic']['months'][5] = "Maj";
-$lng['traffic']['months'][6] = "Juni";
-$lng['traffic']['months'][7] = "Juli";
-$lng['traffic']['months'][8] = "Augusti";
-$lng['traffic']['months'][9] = "September";
-$lng['traffic']['months'][10] = "Oktober";
-$lng['traffic']['months'][11] = "November";
-$lng['traffic']['months'][12] = "December";
-$lng['traffic']['mb'] = "Trafik (MB)";
+$lng['traffic']['month'] = 'Månad';
+$lng['traffic']['day'] = 'Dag';
+$lng['traffic']['months'][1] = 'Januari';
+$lng['traffic']['months'][2] = 'Februari';
+$lng['traffic']['months'][3] = 'Mars';
+$lng['traffic']['months'][4] = 'April';
+$lng['traffic']['months'][5] = 'Maj';
+$lng['traffic']['months'][6] = 'Juni';
+$lng['traffic']['months'][7] = 'Juli';
+$lng['traffic']['months'][8] = 'Augusti';
+$lng['traffic']['months'][9] = 'September';
+$lng['traffic']['months'][10] = 'Oktober';
+$lng['traffic']['months'][11] = 'November';
+$lng['traffic']['months'][12] = 'December';
+$lng['traffic']['mb'] = 'Trafik (MB)';
 $lng['traffic']['distribution'] = '<font color="#019522">FTP</font> | <font color="#0000FF">HTTP</font> | <font color="#800000">Mail</font>';
 $lng['traffic']['sumhttp'] = 'Summa HTTP-Trafik i';
 $lng['traffic']['sumftp'] = 'Summa FTP-Trafik i';

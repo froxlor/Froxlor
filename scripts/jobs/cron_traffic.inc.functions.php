@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,16 +12,16 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Cron
  *
+ * @param mixed $domain
+ * @param mixed $outputdir
  */
-
 function awstatsDoSingleDomain($domain, $outputdir)
 {
     global $cronlog, $theme;
     $returnval = 0;
 
-    $domainconfig = makeCorrectFile(Settings::Get('system.awstats_conf').'/awstats.' . $domain . '.conf');
+    $domainconfig = makeCorrectFile(Settings::Get('system.awstats_conf') . '/awstats.' . $domain . '.conf');
 
     if (file_exists($domainconfig)) {
         $outputdir       = makeCorrectDir($outputdir . '/' . $domain);
@@ -33,17 +32,17 @@ function awstatsDoSingleDomain($domain, $outputdir)
         }
 
         //check for correct path of awstats_buildstaticpages.pl
-        $awbsp = makeCorrectFile(Settings::Get('system.awstats_path').'/awstats_buildstaticpages.pl');
-        $awprog = makeCorrectFile(Settings::Get('system.awstats_awstatspath').'/awstats.pl');
+        $awbsp = makeCorrectFile(Settings::Get('system.awstats_path') . '/awstats_buildstaticpages.pl');
+        $awprog = makeCorrectFile(Settings::Get('system.awstats_awstatspath') . '/awstats.pl');
 
         if (!file_exists($awbsp)) {
-            echo "WANRING: Necessary awstats_buildstaticpages.pl script could not be found, no traffic is being calculated and no stats are generated. Please check your AWStats-Path setting";
-            $cronlog->logAction(CRON_ACTION, LOG_WARNING, "Necessary awstats_buildstaticpages.pl script could not be found, no traffic is being calculated and no stats are generated. Please check your AWStats-Path setting");
+            echo 'WANRING: Necessary awstats_buildstaticpages.pl script could not be found, no traffic is being calculated and no stats are generated. Please check your AWStats-Path setting';
+            $cronlog->logAction(CRON_ACTION, LOG_WARNING, 'Necessary awstats_buildstaticpages.pl script could not be found, no traffic is being calculated and no stats are generated. Please check your AWStats-Path setting');
             exit;
         }
 
-        $cronlog->logAction(CRON_ACTION, LOG_INFO, "Running awstats_buildstaticpages.pl for domain '".$domain."' (Output: '".$staticOutputdir."')");
-        safe_exec($awbsp.' -awstatsprog='.escapeshellarg($awprog).' -update -month=' . date('m') . ' -year=' . date('Y') . ' -config=' . $domain . ' -dir='.escapeshellarg($staticOutputdir));
+        $cronlog->logAction(CRON_ACTION, LOG_INFO, "Running awstats_buildstaticpages.pl for domain '" . $domain . "' (Output: '" . $staticOutputdir . "')");
+        safe_exec($awbsp . ' -awstatsprog=' . escapeshellarg($awprog) . ' -update -month=' . date('m') . ' -year=' . date('Y') . ' -config=' . $domain . ' -dir=' . escapeshellarg($staticOutputdir));
 
         // update our awstats index files
         awstatsGenerateIndex($domain, $outputdir);
@@ -54,8 +53,8 @@ function awstatsDoSingleDomain($domain, $outputdir)
         safe_exec('ln -fTs ' . escapeshellarg($staticOutputdir) . ' ' . escapeshellarg($new_current));
 
         //statistics file looks like: 'awstats[month][year].[domain].txt'
-        $file = makeCorrectFile($outputdir.'/awstats'.date('mY', time()).'.'.$domain.'.txt');
-        $cronlog->logAction(CRON_ACTION, LOG_INFO, "Gathering traffic information from '".$file."'");
+        $file = makeCorrectFile($outputdir . '/awstats' . date('mY', time()) . '.' . $domain . '.txt');
+        $cronlog->logAction(CRON_ACTION, LOG_INFO, "Gathering traffic information from '" . $file . "'");
 
         if (file_exists($file)) {
             $content = @file_get_contents($file);
@@ -65,8 +64,8 @@ function awstatsDoSingleDomain($domain, $outputdir)
                 $count_bdw = false;
                 foreach ($content_array as $line) {
                     // skip empty lines and comments
-                    if (trim($line) == ''
-                        || substr(trim($line), 0, 1) == '#'
+                    if (trim($line) === ''
+                        || substr(trim($line), 0, 1) === '#'
                     ) {
                         continue;
                     }
@@ -74,14 +73,14 @@ function awstatsDoSingleDomain($domain, $outputdir)
                     $parts = explode(' ', $line);
 
                     if (isset($parts[0])
-                        && strtoupper($parts[0]) == 'BEGIN_DOMAIN'
+                        && strtoupper($parts[0]) === 'BEGIN_DOMAIN'
                     ) {
                         $count_bdw = true;
                     }
 
                     if ($count_bdw) {
                         if (isset($parts[0])
-                            && strtoupper($parts[0]) == 'END_DOMAIN'
+                            && strtoupper($parts[0]) === 'END_DOMAIN'
                         ) {
                             $count_bdw = false;
                             break;
@@ -93,6 +92,7 @@ function awstatsDoSingleDomain($domain, $outputdir)
             }
         }
     }
+
     return $returnval;
 }
 
@@ -114,18 +114,18 @@ function awstatsGenerateIndex($domain, $outputdir)
     // These are the variables we will replace
     $regex = array(
         '/\{SITE_DOMAIN\}/',
-        '/\{SELECT_ENTRIES\}/'
+        '/\{SELECT_ENTRIES\}/',
     );
 
     $replace = array(
         $domain,
-        implode($entries)
+        implode($entries),
     );
 
     // File names
-    $index_file = FROXLOR_INSTALL_DIR.'/templates/misc/awstats/index.html';
+    $index_file = FROXLOR_INSTALL_DIR . '/templates/misc/awstats/index.html';
     $index_file = makeCorrectFile($index_file);
-    $nav_file   = FROXLOR_INSTALL_DIR.'/templates/misc/awstats/nav.html';
+    $nav_file   = FROXLOR_INSTALL_DIR . '/templates/misc/awstats/nav.html';
     $nav_file   = makeCorrectFile($nav_file);
 
     // Write the index file
@@ -142,7 +142,7 @@ function awstatsGenerateIndex($domain, $outputdir)
         // Write the configuration file
         while (($line = fgets($awstats_index_tpl, 4096)) !== false) {
             if (!preg_match('/^#/', $line)
-               && trim($line) != ''
+               && trim($line) !== ''
             ) {
                 fwrite($awstats_index_file, preg_replace($regex, $replace, $line));
             }
@@ -162,7 +162,7 @@ function awstatsGenerateIndex($domain, $outputdir)
         // Write the configuration file
         while (($line = fgets($awstats_nav_tpl, 4096)) !== false) {
             if (!preg_match('/^#/', $line)
-               && trim($line) != ''
+               && trim($line) !== ''
             ) {
                 fwrite($awstats_nav_file, preg_replace($regex, $replace, $line));
             }
@@ -170,8 +170,6 @@ function awstatsGenerateIndex($domain, $outputdir)
         fclose($awstats_nav_file);
         fclose($awstats_nav_tpl);
     }
-
-    return;
 }
 
 
@@ -201,15 +199,15 @@ function callAwstatsGetTraffic($customerid, $outputdir, $usersdomainlist)
      * (awstats overwrites the customers .html stats-files)
      */
     if ($customerid !== false) {
-        $result_stmt = Database::prepare("
-			SELECT SUM(`http`) as `trafficmonth` FROM `" . TABLE_PANEL_TRAFFIC . "`
+        $result_stmt = Database::prepare('
+			SELECT SUM(`http`) as `trafficmonth` FROM `' . TABLE_PANEL_TRAFFIC . '`
 			WHERE `customerid` = :customerid
 			AND `year` = :year AND `month` = :month
-		");
+		');
         $result_data = array(
             'customerid' => $customerid,
             'year' => date('Y', time()),
-            'month' => date('m', time())
+            'month' => date('m', time()),
         );
         $result = Database::pexecute_first($result_stmt, $result_data);
 
@@ -230,6 +228,10 @@ function callAwstatsGetTraffic($customerid, $outputdir, $usersdomainlist)
  * @param string Name of logfile
  * @param string Place where stats should be build
  * @param string Caption for webalizer output
+ * @param mixed $logfile
+ * @param mixed $outputdir
+ * @param mixed $caption
+ * @param mixed $usersdomainlist
  * @return int Used traffic
  * @author Florian Lippert <flo@syscp.org>
  */
@@ -263,9 +265,9 @@ function callWebalizerGetTraffic($logfile, $outputdir, $caption, $usersdomainlis
         }
 
         $verbosity = '';
-        if (Settings::Get('system.webalizer_quiet') == '1') {
+        if (Settings::Get('system.webalizer_quiet') === '1') {
             $verbosity = '-q';
-        } elseif (Settings::Get('system.webalizer_quiet') == '2') {
+        } elseif (Settings::Get('system.webalizer_quiet') === '2') {
             $verbosity = '-Q';
         }
 
@@ -276,7 +278,7 @@ function callWebalizerGetTraffic($logfile, $outputdir, $caption, $usersdomainlis
             $we = '/usr/local/bin/webalizer';
         }
 
-        $cronlog->logAction(CRON_ACTION, LOG_INFO, "Running webalizer for domain '".$caption."'");
+        $cronlog->logAction(CRON_ACTION, LOG_INFO, "Running webalizer for domain '" . $caption . "'");
         safe_exec($we . ' ' . $verbosity . ' -p -o ' . escapeshellarg($outputdir) . ' -n ' . escapeshellarg($caption) . $domainargs . ' ' . escapeshellarg($logfile));
 
         /**
@@ -287,11 +289,11 @@ function callWebalizerGetTraffic($logfile, $outputdir, $caption, $usersdomainlis
          */
         $httptraffic = array();
         $webalizer_hist = @file_get_contents($outputdir . 'webalizer.hist');
-        $cronlog->logAction(CRON_ACTION, LOG_INFO, "Gathering traffic information from '".$webalizer_hist."'");
+        $cronlog->logAction(CRON_ACTION, LOG_INFO, "Gathering traffic information from '" . $webalizer_hist . "'");
 
         $webalizer_hist_rows = explode("\n", $webalizer_hist);
         foreach ($webalizer_hist_rows as $webalizer_hist_row) {
-            if ($webalizer_hist_row != '') {
+            if ($webalizer_hist_row !== '') {
                 $webalizer_hist_row = explode(' ', $webalizer_hist_row);
 
                 if (isset($webalizer_hist_row['0'])
@@ -314,11 +316,11 @@ function callWebalizerGetTraffic($logfile, $outputdir, $caption, $usersdomainlis
         reset($httptraffic);
         $httptrafficlast = array();
         $webalizer_lasthist = @file_get_contents($outputdir . 'webalizer.hist.1');
-        $cronlog->logAction(CRON_ACTION, LOG_INFO, "Gathering traffic information from '".$webalizer_lasthist."'");
+        $cronlog->logAction(CRON_ACTION, LOG_INFO, "Gathering traffic information from '" . $webalizer_lasthist . "'");
 
         $webalizer_lasthist_rows = explode("\n", $webalizer_lasthist);
         foreach ($webalizer_lasthist_rows as $webalizer_lasthist_row) {
-            if ($webalizer_lasthist_row != '') {
+            if ($webalizer_lasthist_row !== '') {
                 $webalizer_lasthist_row = explode(' ', $webalizer_lasthist_row);
 
                 if (isset($webalizer_lasthist_row['0'])

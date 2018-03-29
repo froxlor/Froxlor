@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -11,8 +10,8 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $row
  */
 
 /**
@@ -21,16 +20,14 @@
  * is used - the customers name, #258
  *
  * @param array $row array if panel_customers
- *
- * @return void
  */
 function makeChownWithNewStats($row)
 {
 
     // get correct user
-    if ((Settings::Get('system.mod_fcgid') == '1' || Settings::Get('phpfpm.enabled') == '1')
+    if ((Settings::Get('system.mod_fcgid') === '1' || Settings::Get('phpfpm.enabled') === '1')
         && isset($row['deactivated'])
-        && $row['deactivated'] == '0'
+        && $row['deactivated'] === '0'
     ) {
         $user = $row['loginname'];
         $group = $row['loginname'];
@@ -41,7 +38,7 @@ function makeChownWithNewStats($row)
 
     // get correct directory
     $dir = $row['documentroot'];
-    if (Settings::Get('system.awstats_enabled') == '1') {
+    if (Settings::Get('system.awstats_enabled') === '1') {
         $dir .= '/awstats/';
     } else {
         $dir .= '/webalizer/';
@@ -50,6 +47,6 @@ function makeChownWithNewStats($row)
     // only run chown if directory exists
     if (file_exists($dir)) {
         // run chown
-        safe_exec('chown -R '.escapeshellarg($user).':'.escapeshellarg($group).' '.escapeshellarg(makeCorrectDir($dir)));
+        safe_exec('chown -R ' . escapeshellarg($user) . ':' . escapeshellarg($group) . ' ' . escapeshellarg(makeCorrectDir($dir)));
     }
 }

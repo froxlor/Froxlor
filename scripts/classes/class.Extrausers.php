@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2017 the Froxlor Team (see authors).
@@ -11,8 +10,6 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2017-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Cron
- *
  */
 class Extrausers
 {
@@ -30,7 +27,7 @@ class Extrausers
 
         // shadow
         $shadow = '/var/lib/extrausers/shadow';
-        $sql = "SELECT username,password FROM ftp_users ORDER BY gid ASC";
+        $sql = 'SELECT username,password FROM ftp_users ORDER BY gid ASC';
         self::_generateFile($shadow, $sql, $cronlog);
 
         // set correct permissions
@@ -52,12 +49,12 @@ class Extrausers
         }
 
         $data_sel_stmt = Database::query($query);
-        $data_content = "";
+        $data_content = '';
         $cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Writing ' . $data_sel_stmt->rowCount() . ' entries to ' . $type . ' file');
         while ($u = $data_sel_stmt->fetch(PDO::FETCH_ASSOC)) {
             switch ($type) {
                 case 'passwd':
-                    if ($u['login_enabled'] != 'Y') {
+                    if ($u['login_enabled'] !== 'Y') {
                         $u['password'] = '*';
                         $u['shell'] = '/bin/false';
                         $u['comment'] = 'Locked Froxlor User';

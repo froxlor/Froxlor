@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2016 the Froxlor Team (see authors).
@@ -11,8 +10,8 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param null|mixed $email_addr
  */
 
 /**
@@ -20,18 +19,17 @@
  * reference: #1519
  *
  * @return bool true if the domain is to be deleted, false otherwise
- *
  */
 function checkMailAccDeletionState($email_addr = null)
 {
     // example data of task 7: a:2:{s:9:"loginname";s:4:"webX";s:5:"email";s:20:"deleteme@example.tld";}
     
     // check for task
-    $result_tasks_stmt = Database::prepare("
-		SELECT * FROM `" . TABLE_PANEL_TASKS . "` WHERE `type` = '7' AND `data` LIKE :emailaddr
+    $result_tasks_stmt = Database::prepare('
+		SELECT * FROM `' . TABLE_PANEL_TASKS . "` WHERE `type` = '7' AND `data` LIKE :emailaddr
 	");
     Database::pexecute($result_tasks_stmt, array(
-        'emailaddr' => "%" . $email_addr . "%"
+        'emailaddr' => '%' . $email_addr . '%',
     ));
     $num_results = Database::num_rows();
     
@@ -39,5 +37,6 @@ function checkMailAccDeletionState($email_addr = null)
     if ($num_results > 0) {
         return true;
     }
+
     return false;
 }

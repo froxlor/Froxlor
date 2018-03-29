@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2014 the Froxlor Team (see authors).
@@ -11,8 +10,6 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Settings
- *
  */
 
 return array(
@@ -60,8 +57,8 @@ return array(
                     'type' => 'bool',
                     'default' => false,
                     'save_method' => 'storeSettingField',
-                    )
-            )
-        )
-    )
+                    ),
+            ),
+        ),
+    ),
 );

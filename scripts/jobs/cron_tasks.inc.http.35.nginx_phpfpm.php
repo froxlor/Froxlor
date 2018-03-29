@@ -1,4 +1,5 @@
-<?php if (!defined('MASTER_CRONJOB')) {
+<?php declare(strict_types=1);
+if (!defined('MASTER_CRONJOB')) {
     die('You cannot access this file directly!');
 }
 
@@ -13,19 +14,16 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Cron
- *
  */
-
 class nginx_phpfpm extends nginx
 {
     protected function composePhpOptions($domain, $ssl_vhost = false)
     {
         $php_options_text = '';
 
-        if ($domain['phpenabled_customer'] == 1 && $domain['phpenabled_vhost'] == '1') {
+        if ($domain['phpenabled_customer'] === 1 && $domain['phpenabled_vhost'] === '1') {
             $php = new phpinterface($domain);
-            $phpconfig = $php->getPhpConfig((int)$domain['phpsettingid']);
+            $phpconfig = $php->getPhpConfig((int) $domain['phpsettingid']);
             
             $php_options_text = "\t" . 'location ~ ^(.+?\.php)(/.*)?$ {' . "\n";
             $php_options_text .= "\t\t" . 'try_files ' . $domain['nonexistinguri'] . ' @php;' . "\n";
@@ -37,7 +35,7 @@ class nginx_phpfpm extends nginx
             $php_options_text .= "\t\t" . 'fastcgi_split_path_info ^(.+\.php)(/.+)\$;' . "\n";
             $php_options_text .= "\t\t" . 'fastcgi_param SCRIPT_FILENAME $document_root$1;' . "\n";
             $php_options_text .= "\t\t" . 'fastcgi_param PATH_INFO $2;' . "\n";
-            if ($domain['ssl'] == '1' && $ssl_vhost) {
+            if ($domain['ssl'] === '1' && $ssl_vhost) {
                 $php_options_text .= "\t\t" . 'fastcgi_param HTTPS on;' . "\n";
             }
             $php_options_text .= "\t\t" . 'fastcgi_pass unix:' . $php->getInterface()->getSocketFile() . ";\n";
@@ -56,14 +54,13 @@ class nginx_phpfpm extends nginx
 
         return $php_options_text;
     }
-    
 
     public function createOwnVhostStarter()
     {
-        if (Settings::Get('phpfpm.enabled') == '1'
-            && Settings::Get('phpfpm.enabled_ownvhost') == '1'
+        if (Settings::Get('phpfpm.enabled') === '1'
+            && Settings::Get('phpfpm.enabled_ownvhost') === '1'
         ) {
-            $mypath = makeCorrectDir(dirname(dirname(dirname(__FILE__)))); // /var/www/froxlor, needed for chown
+            $mypath = makeCorrectDir(dirname(dirname(__DIR__))); // /var/www/froxlor, needed for chown
 
             $user = Settings::Get('phpfpm.vhost_httpuser');
             $group = Settings::Get('phpfpm.vhost_httpgroup');
@@ -78,7 +75,7 @@ class nginx_phpfpm extends nginx
                 'openbasedir' => 0,
                 'email' => Settings::Get('panel.adminmail'),
                 'loginname' => 'froxlor.panel',
-                'documentroot' => $mypath
+                'documentroot' => $mypath,
             );
 
             // all the files and folders have to belong to the local user
@@ -89,7 +86,7 @@ class nginx_phpfpm extends nginx
             $php = new phpinterface($domain);
 
             // get php-config
-            if (Settings::Get('phpfpm.enabled') == '1') {
+            if (Settings::Get('phpfpm.enabled') === '1') {
                 // fpm
                 $phpconfig = $php->getPhpConfig(Settings::Get('phpfpm.vhost_defaultini'));
             } else {

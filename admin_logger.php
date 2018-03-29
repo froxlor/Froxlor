@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,22 +12,19 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Panel
- *
  */
-
 define('AREA', 'admin');
 require './lib/init.php';
 
-if ($page == 'log'
-   && $userinfo['change_serversettings'] == '1'
+if ($page === 'log'
+   && $userinfo['change_serversettings'] === '1'
 ) {
-    if ($action == '') {
+    if ($action === '') {
         $fields = array(
             'date' => $lng['logger']['date'],
             'type' => $lng['logger']['type'],
             'user' => $lng['logger']['user'],
-            'text' => $lng['logger']['action']
+            'text' => $lng['logger']['action'],
         );
         $paging = new paging($userinfo, TABLE_PANEL_LOG, $fields, null, null, 0, 'desc', 30);
         $query = 'SELECT * FROM `' . TABLE_PANEL_LOG . '` ' . $paging->getSqlWhere(false) . ' ' . $paging->getSqlOrderBy();
@@ -51,8 +47,8 @@ if ($page == 'log'
             $clog[$row['action']][$row['logid']] = $row;
         }
 
-        if ($paging->sortfield == 'date'
-            && $paging->sortorder == 'desc'
+        if ($paging->sortfield === 'date'
+            && $paging->sortorder === 'desc'
         ) {
             krsort($clog);
         } else {
@@ -68,9 +64,9 @@ if ($page == 'log'
             foreach ($logrows as $row) {
                 // if ($paging->checkDisplay($i)) {
                 $row = htmlentities_array($row);
-                $row['date'] = date("d.m.y H:i:s", $row['date']);
+                $row['date'] = date('d.m.y H:i:s', $row['date']);
 
-                if ($_action != $action) {
+                if ($_action !== $action) {
                     switch ($action) {
                             case USR_ACTION:
                                 $_action = $lng['admin']['customer'];
@@ -96,12 +92,12 @@ if ($page == 'log'
                         }
 
                     $row['action'] = $_action;
-                    eval("\$log.=\"" . getTemplate('logger/logger_action') . "\";");
+                    eval('$log.="' . getTemplate('logger/logger_action') . '";');
                 }
 
                 $log_count++;
                 $row['type'] = getLogLevelDesc($row['type']);
-                eval("\$log.=\"" . getTemplate('logger/logger_log') . "\";");
+                eval('$log.="' . getTemplate('logger/logger_log') . '";');
                 $count++;
                 $_action = $action;
                 // }
@@ -110,15 +106,15 @@ if ($page == 'log'
             $i++;
         }
 
-        eval("echo \"" . getTemplate('logger/logger') . "\";");
-    } elseif ($action == 'truncate') {
+        eval('echo "' . getTemplate('logger/logger') . '";');
+    } elseif ($action === 'truncate') {
         if (isset($_POST['send'])
-           && $_POST['send'] == 'send'
+           && $_POST['send'] === 'send'
         ) {
             $truncatedate = time() - (60 * 10);
             $trunc_stmt = Database::prepare(
-                "
-				DELETE FROM `" . TABLE_PANEL_LOG . "` WHERE `date` < :trunc"
+                '
+				DELETE FROM `' . TABLE_PANEL_LOG . '` WHERE `date` < :trunc'
             );
             Database::pexecute($trunc_stmt, array('trunc' => $truncatedate));
             $log->logAction(ADM_ACTION, LOG_WARNING, 'truncated the system-log (mysql)');

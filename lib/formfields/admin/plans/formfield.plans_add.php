@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -11,8 +10,6 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Formfields
- *
  */
 
 return array(
@@ -26,16 +23,16 @@ return array(
                 'fields' => array(
                     'name' => array(
                         'label' => $lng['admin']['plans']['name'],
-                        'type' => 'text'
+                        'type' => 'text',
                     ),
                     'description' => array(
                         'label' => $lng['admin']['plans']['description'],
                         'type' => 'textarea',
                         'cols' => 60,
-                        'rows' => 12
-                    )
-                )
-            )
-        )
-    )
+                        'rows' => 12,
+                    ),
+                ),
+            ),
+        ),
+    ),
 );

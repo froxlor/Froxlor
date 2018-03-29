@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -11,8 +10,6 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Formfields
- *
  */
 
 return array(
@@ -27,46 +24,46 @@ return array(
                     'loginname' => array(
                         'label' => $lng['login']['username'],
                         'type' => 'label',
-                        'value' => $result['loginname']
+                        'value' => $result['loginname'],
                     ),
                     'documentroot' => array(
                         'label' => $lng['customer']['documentroot'],
                         'type' => 'label',
-                        'value' => $result['documentroot']
+                        'value' => $result['documentroot'],
                     ),
                     'createstdsubdomain' => array(
-                        'label' => $lng['admin']['stdsubdomain_add'].'?',
+                        'label' => $lng['admin']['stdsubdomain_add'] . '?',
                         'type' => 'checkbox',
                         'values' => array(
-                            array('label' => $lng['panel']['yes'], 'value' => '1')
+                            array('label' => $lng['panel']['yes'], 'value' => '1'),
                         ),
-                        'value' => array(($result['standardsubdomain'] != '0') ? '1' : '0')
+                        'value' => array(($result['standardsubdomain'] !== '0') ? '1' : '0'),
                     ),
                     'deactivated' => array(
                         'label' => $lng['admin']['deactivated_user'],
                         'type' => 'checkbox',
                         'values' => array(
-                            array('label' => $lng['panel']['yes'], 'value' => '1')
+                            array('label' => $lng['panel']['yes'], 'value' => '1'),
                         ),
-                        'value' => array($result['deactivated'])
+                        'value' => array($result['deactivated']),
                     ),
                     'new_customer_password' => array(
-                        'label' => $lng['login']['password'].'&nbsp;('.$lng['panel']['emptyfornochanges'].')',
+                        'label' => $lng['login']['password'] . '&nbsp;(' . $lng['panel']['emptyfornochanges'] . ')',
                         'type' => 'password',
-                        'autocomplete' => 'off'
+                        'autocomplete' => 'off',
                     ),
                     'new_customer_password_suggestion' => array(
                         'label' => $lng['customer']['generated_pwd'],
                         'type' => 'text',
-                        'visible' => (Settings::Get('panel.password_regex') == ''),
+                        'visible' => (Settings::Get('panel.password_regex') === ''),
                         'value' => generatePassword(),
                     ),
                     'def_language' => array(
                         'label' => $lng['login']['language'],
                         'type' => 'select',
-                        'select_var' => $language_options
-                    )
-                )
+                        'select_var' => $language_options,
+                    ),
+                ),
             ),
             'section_b' => array(
                 'title' => $lng['admin']['contactdata'],
@@ -76,60 +73,60 @@ return array(
                         'label' => $lng['customer']['name'],
                         'type' => 'text',
                         'mandatory_ex' => true,
-                        'value' => $result['name']
+                        'value' => $result['name'],
                     ),
                     'firstname' => array(
                         'label' => $lng['customer']['firstname'],
                         'type' => 'text',
                         'mandatory_ex' => true,
-                        'value' => $result['firstname']
+                        'value' => $result['firstname'],
                     ),
                     'gender' => array(
                         'label' => $lng['gender']['title'],
                         'type' => 'select',
-                        'select_var' => $gender_options
+                        'select_var' => $gender_options,
                     ),
                     'company' => array(
                         'label' => $lng['customer']['company'],
                         'type' => 'text',
                         'mandatory_ex' => true,
-                        'value' => $result['company']
+                        'value' => $result['company'],
                     ),
                     'street' => array(
                         'label' => $lng['customer']['street'],
                         'type' => 'text',
-                        'value' => $result['street']
+                        'value' => $result['street'],
                     ),
                     'zipcode' => array(
                         'label' => $lng['customer']['zipcode'],
                         'type' => 'text',
-                        'value' => $result['zipcode']
+                        'value' => $result['zipcode'],
                     ),
                     'city' => array(
                         'label' => $lng['customer']['city'],
                         'type' => 'text',
-                        'value' => $result['city']
+                        'value' => $result['city'],
                     ),
                     'phone' => array(
                         'label' => $lng['customer']['phone'],
                         'type' => 'text',
-                        'value' => $result['phone']
+                        'value' => $result['phone'],
                     ),
                     'fax' => array(
                         'label' => $lng['customer']['fax'],
                         'type' => 'text',
-                        'value' => $result['fax']
+                        'value' => $result['fax'],
                     ),
                     'email' => array(
                         'label' => $lng['customer']['email'],
                         'type' => 'text',
                         'mandatory' => true,
-                        'value' => $result['email']
+                        'value' => $result['email'],
                     ),
                     'customernumber' => array(
                         'label' => $lng['customer']['customernumber'],
                         'type' => 'text',
-                        'value' => $result['customernumber']
+                        'value' => $result['customernumber'],
                     ),
                     'custom_notes' => array(
                         'style' => 'align-top',
@@ -138,17 +135,17 @@ return array(
                         'type' => 'textarea',
                         'cols' => 60,
                         'rows' => 12,
-                        'value' => $result['custom_notes']
+                        'value' => $result['custom_notes'],
                     ),
                     'custom_notes_show' => array(
                         'label' => $lng['usersettings']['custom_notes']['show'],
                         'type' => 'checkbox',
                         'values' => array(
-                            array('label' => $lng['panel']['yes'], 'value' => '1')
+                            array('label' => $lng['panel']['yes'], 'value' => '1'),
                         ),
-                        'value' => array($result['custom_notes_show'])
-                    )
-                )
+                        'value' => array($result['custom_notes_show']),
+                    ),
+                ),
             ),
             'section_cpre' => array(
                 'visible' => !empty($hosting_plans),
@@ -158,9 +155,9 @@ return array(
                     'use_plan' => array(
                         'label' => $lng['admin']['plans']['use_plan'],
                         'type' => 'select',
-                        'select_var' => $hosting_plans
-                    )
-                )
+                        'select_var' => $hosting_plans,
+                    ),
+                ),
             ),
             'section_c' => array(
                 'title' => $lng['admin']['servicedata'],
@@ -172,7 +169,7 @@ return array(
                         'value' => $result['diskspace'],
                         'maxlength' => 6,
                         'mandatory' => true,
-                        'ul_field' => $diskspace_ul
+                        'ul_field' => $diskspace_ul,
                     ),
                     'traffic' => array(
                         'label' => $lng['customer']['traffic'],
@@ -180,7 +177,7 @@ return array(
                         'value' => $result['traffic'],
                         'maxlength' => 4,
                         'mandatory' => true,
-                        'ul_field' => $traffic_ul
+                        'ul_field' => $traffic_ul,
                     ),
                     'subdomains' => array(
                         'label' => $lng['customer']['subdomains'],
@@ -188,7 +185,7 @@ return array(
                         'value' => $result['subdomains'],
                         'maxlength' => 9,
                         'mandatory' => true,
-                        'ul_field' => $subdomains_ul
+                        'ul_field' => $subdomains_ul,
                     ),
                     'emails' => array(
                         'label' => $lng['customer']['emails'],
@@ -196,7 +193,7 @@ return array(
                         'value' => $result['emails'],
                         'maxlength' => 9,
                         'mandatory' => true,
-                        'ul_field' => $emails_ul
+                        'ul_field' => $emails_ul,
                     ),
                     'email_accounts' => array(
                         'label' => $lng['customer']['accounts'],
@@ -204,7 +201,7 @@ return array(
                         'value' => $result['email_accounts'],
                         'maxlength' => 9,
                         'mandatory' => true,
-                        'ul_field' => $email_accounts_ul
+                        'ul_field' => $email_accounts_ul,
                     ),
                     'email_forwarders' => array(
                         'label' => $lng['customer']['forwarders'],
@@ -212,49 +209,49 @@ return array(
                         'value' => $result['email_forwarders'],
                         'maxlength' => 9,
                         'mandatory' => true,
-                        'ul_field' => $email_forwarders_ul
+                        'ul_field' => $email_forwarders_ul,
                     ),
                     'email_quota' => array(
                         'label' => $lng['customer']['email_quota'],
                         'type' => 'textul',
                         'value' => $result['email_quota'],
                         'maxlength' => 9,
-                        'visible' => (Settings::Get('system.mail_quota_enabled') == '1' ? true : false),
+                        'visible' => (Settings::Get('system.mail_quota_enabled') === '1' ? true : false),
                         'mandatory' => true,
-                        'ul_field' => $email_quota_ul
+                        'ul_field' => $email_quota_ul,
                     ),
                     'email_imap' => array(
                         'label' => $lng['customer']['email_imap'],
                         'type' => 'checkbox',
                         'values' => array(
-                            array('label' => $lng['panel']['yes'], 'value' => '1')
+                            array('label' => $lng['panel']['yes'], 'value' => '1'),
                         ),
                         'value' => array($result['imap']),
-                        'mandatory' => true
+                        'mandatory' => true,
                     ),
                     'email_pop3' => array(
                         'label' => $lng['customer']['email_pop3'],
                         'type' => 'checkbox',
                         'values' => array(
-                            array('label' => $lng['panel']['yes'], 'value' => '1')
+                            array('label' => $lng['panel']['yes'], 'value' => '1'),
                         ),
                         'value' => array($result['pop3']),
-                        'mandatory' => true
+                        'mandatory' => true,
                     ),
                     'ftps' => array(
                         'label' => $lng['customer']['ftps'],
                         'type' => 'textul',
                         'value' => $result['ftps'],
                         'maxlength' => 9,
-                        'ul_field' => $ftps_ul
+                        'ul_field' => $ftps_ul,
                     ),
                     'tickets' => array(
                         'label' => $lng['customer']['tickets'],
                         'type' => 'textul',
                         'value' => $result['tickets'],
                         'maxlength' => 9,
-                        'visible' => (Settings::Get('ticket.enabled') == '1' ? true : false),
-                        'ul_field' => $tickets_ul
+                        'visible' => (Settings::Get('ticket.enabled') === '1' ? true : false),
+                        'ul_field' => $tickets_ul,
                     ),
                     'mysqls' => array(
                         'label' => $lng['customer']['mysqls'],
@@ -262,42 +259,42 @@ return array(
                         'value' => $result['mysqls'],
                         'maxlength' => 9,
                         'mandatory' => true,
-                        'ul_field' => $mysqls_ul
+                        'ul_field' => $mysqls_ul,
                     ),
                     'phpenabled' => array(
-                        'label' => $lng['admin']['phpenabled'].'?',
+                        'label' => $lng['admin']['phpenabled'] . '?',
                         'type' => 'checkbox',
                         'values' => array(
-                            array('label' => $lng['panel']['yes'], 'value' => '1')
+                            array('label' => $lng['panel']['yes'], 'value' => '1'),
                         ),
-                        'value' => array($result['phpenabled'])
+                        'value' => array($result['phpenabled']),
                     ),
                     'allowed_phpconfigs' => array(
-                        'visible' => (((int) Settings::Get('system.mod_fcgid') == 1 || (int) Settings::Get('phpfpm.enabled') == 1) ? true : false),
+                        'visible' => (((int) Settings::Get('system.mod_fcgid') === 1 || (int) Settings::Get('phpfpm.enabled') === 1) ? true : false),
                         'label' => $lng['admin']['phpsettings']['title'],
                         'type' => 'checkbox',
                         'values' => $phpconfigs,
                         'value' => isset($result['allowed_phpconfigs']) && !empty($result['allowed_phpconfigs']) ? json_decode($result['allowed_phpconfigs'], JSON_OBJECT_AS_ARRAY) : array(),
-                        'is_array' => 1
+                        'is_array' => 1,
                     ),
                     'perlenabled' => array(
-                        'label' => $lng['admin']['perlenabled'].'?',
+                        'label' => $lng['admin']['perlenabled'] . '?',
                         'type' => 'checkbox',
                         'values' => array(
-                            array('label' => $lng['panel']['yes'], 'value' => '1')
+                            array('label' => $lng['panel']['yes'], 'value' => '1'),
                         ),
-                        'value' => array($result['perlenabled'])
+                        'value' => array($result['perlenabled']),
                     ),
                     'dnsenabled' => array(
-                        'label' => $lng['admin']['dnsenabled'].'?',
+                        'label' => $lng['admin']['dnsenabled'] . '?',
                         'type' => 'checkbox',
                         'values' => array(
-                            array('label' => $lng['panel']['yes'], 'value' => '1')
+                            array('label' => $lng['panel']['yes'], 'value' => '1'),
                         ),
                         'value' => array($result['dnsenabled']),
-                        'visible' => (Settings::Get('system.dnsenabled') == '1' ? true : false)
+                        'visible' => (Settings::Get('system.dnsenabled') === '1' ? true : false),
                     ),
-                )
+                ),
             ),
             'section_d' => array(
                 'title' => $lng['admin']['movetoadmin'],
@@ -307,10 +304,10 @@ return array(
                     'move_to_admin' => array(
                         'label' => $lng['admin']['movecustomertoadmin'],
                         'type' => 'select',
-                        'select_var' => $admin_select
-                    )
-                )
-            )
-        )
-    )
+                        'select_var' => $admin_select,
+                    ),
+                ),
+            ),
+        ),
+    ),
 );

@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,8 +12,6 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Settings
- *
  */
 
 return array(
@@ -166,8 +163,8 @@ return array(
                                 'settinggroup' => 'panel',
                                 'varname' => 'allow_preset_admin',
                             ),
-                            'onlyif' => 0
-                        )
+                            'onlyif' => 0,
+                        ),
                     ),
                 'panel_allow_preset_admin' => array(
                     'label' => $lng['serversettings']['allow_password_reset_admin'],
@@ -182,8 +179,8 @@ return array(
                                 'settinggroup' => 'panel',
                                 'varname' => 'allow_preset',
                             ),
-                            'onlyif' => 1
-                    )
+                            'onlyif' => 1,
+                    ),
                 ),
                 'system_backupenabled' => array(
                     'label' => $lng['serversettings']['backupenabled'],
@@ -192,9 +189,9 @@ return array(
                     'type' => 'bool',
                     'default' => false,
                     'cronmodule' => 'froxlor/backup',
-                    'save_method' => 'storeSettingField'
+                    'save_method' => 'storeSettingField',
                 ),
             ),
         ),
-    )
+    ),
 );

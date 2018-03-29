@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,8 +12,12 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $name
+ * @param mixed $yesvalue
+ * @param mixed $novalue
+ * @param mixed $yesselected
+ * @param mixed $disabled
  */
 
 /**
@@ -29,7 +32,6 @@
  * @author Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  */
-
 function makeyesno($name, $yesvalue, $novalue = '', $yesselected = '', $disabled = false)
 {
     global $lng, $theme;
@@ -45,7 +47,7 @@ function makeyesno($name, $yesvalue, $novalue = '', $yesselected = '', $disabled
     }
     
     return '<select class="dropdown_noborder" id="' . $name . '" name="' . $name . '"'
-    .$d.'>
+    . $d . '>
 	<option value="' . $yesvalue . '"' . ($yesselected ? ' selected="selected"' : '') . '>'
     . $lng['panel']['yes'] . '</option><option value="' . $novalue . '"'
     . ($yesselected ? '' : ' selected="selected"') . '>' . $lng['panel']['no'] . '</option></select>';

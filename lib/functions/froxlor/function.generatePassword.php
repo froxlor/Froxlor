@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2011- the Froxlor Team (see authors).
@@ -11,14 +10,14 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2011-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $isSalt
  */
 
 /**
  * Generates a random password
  *
- * @param boolean $isSalt
+ * @param bool $isSalt
  *            optional, create a hash for a salt used in makeCryptPassword because crypt() does not like some special characters in its salts, default is false
  */
 function generatePassword($isSalt = false)
@@ -64,5 +63,6 @@ function special_shuffle($str = null)
         $sploded[] = mb_substr($str, $len, 1);
     }
     shuffle($sploded);
+
     return join('', $sploded);
 }

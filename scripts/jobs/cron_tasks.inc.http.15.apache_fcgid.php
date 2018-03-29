@@ -1,4 +1,5 @@
-<?php if (!defined('MASTER_CRONJOB')) {
+<?php declare(strict_types=1);
+if (!defined('MASTER_CRONJOB')) {
     die('You cannot access this file directly!');
 }
 
@@ -15,23 +16,20 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Cron
- *
  */
-
 class apache_fcgid extends apache
 {
     protected function composePhpOptions($domain, $ssl_vhost = false)
     {
         $php_options_text = '';
 
-        if ($domain['phpenabled_customer'] == 1 && $domain['phpenabled_vhost'] == '1') {
+        if ($domain['phpenabled_customer'] === 1 && $domain['phpenabled_vhost'] === '1') {
             $php = new phpinterface($domain);
-            $phpconfig = $php->getPhpConfig((int)$domain['phpsettingid']);
+            $phpconfig = $php->getPhpConfig((int) $domain['phpsettingid']);
 
-            if ((int)Settings::Get('phpfpm.enabled') == 1) {
+            if ((int) Settings::Get('phpfpm.enabled') === 1) {
                 $srvName = 'fpm.external';
-                if ($domain['ssl'] == 1 && $ssl_vhost) {
+                if ($domain['ssl'] === 1 && $ssl_vhost) {
                     $srvName = 'ssl-fpm.external';
                 }
                 // #1317 - perl is executed via apache and therefore, when using fpm, does not know the user
@@ -41,65 +39,65 @@ class apache_fcgid extends apache
                 }
                 
                 // mod_proxy stuff for apache-2.4
-                if (Settings::Get('system.apache24') == '1'
-                    && Settings::Get('phpfpm.use_mod_proxy') == '1'
+                if (Settings::Get('system.apache24') === '1'
+                    && Settings::Get('phpfpm.use_mod_proxy') === '1'
                 ) {
                     $filesmatch = $phpconfig['fpm_settings']['limit_extensions'];
-                    $extensions = explode(" ", $filesmatch);
-                    $filesmatch = "";
+                    $extensions = explode(' ', $filesmatch);
+                    $filesmatch = '';
                     foreach ($extensions as $ext) {
-                        $filesmatch .= substr($ext, 1).'|';
+                        $filesmatch .= substr($ext, 1) . '|';
                     }
                     // start block, cut off last pipe and close block
-                    $filesmatch = '('.str_replace(".", "\.", substr($filesmatch, 0, -1)).')';
-                    $php_options_text.= '  <FilesMatch \.'.$filesmatch.'$>'. "\n";
-                    $php_options_text.= '  SetHandler proxy:unix:' . $php->getInterface()->getSocketFile()  . '|fcgi://localhost'. "\n";
+                    $filesmatch = '(' . str_replace('.', "\.", substr($filesmatch, 0, -1)) . ')';
+                    $php_options_text.= '  <FilesMatch \.' . $filesmatch . '$>' . "\n";
+                    $php_options_text.= '  SetHandler proxy:unix:' . $php->getInterface()->getSocketFile() . '|fcgi://localhost' . "\n";
                     $php_options_text.= '  </FilesMatch>' . "\n";
 
                     $mypath_dir = new frxDirectory($domain['documentroot']);
 
                     // only create the require all granted if there is not active directory-protection
                     // for this path, as this would be the first require and therefore grant all access
-                    if ($mypath_dir->isUserProtected() == false) {
+                    if ($mypath_dir->isUserProtected() === false) {
                         $php_options_text.= '  <Directory "' . makeCorrectDir($domain['documentroot']) . '">' . "\n";
-                        if ($phpconfig['pass_authorizationheader'] == '1') {
+                        if ($phpconfig['pass_authorizationheader'] === '1') {
                             $php_options_text.= '    CGIPassAuth On' . "\n";
                         }
                         $php_options_text.= '    Require all granted' . "\n";
                         $php_options_text.= '    AllowOverride All' . "\n";
                         $php_options_text.= '  </Directory>' . "\n";
-                    } elseif ($phpconfig['pass_authorizationheader'] == '1') {
+                    } elseif ($phpconfig['pass_authorizationheader'] === '1') {
                         // allow Pass of Authorization header
                         $php_options_text.= '  <Directory "' . makeCorrectDir($domain['documentroot']) . '">' . "\n";
                         $php_options_text.= '    CGIPassAuth On' . "\n";
                         $php_options_text.= '  </Directory>' . "\n";
                     }
                 } else {
-                    $addheader = "";
-                    if ($phpconfig['pass_authorizationheader'] == '1') {
-                        $addheader = " -pass-header Authorization";
+                    $addheader = '';
+                    if ($phpconfig['pass_authorizationheader'] === '1') {
+                        $addheader = ' -pass-header Authorization';
                     }
-                    $php_options_text.= '  FastCgiExternalServer ' . $php->getInterface()->getAliasConfigDir() . $srvName . ' -socket ' . $php->getInterface()->getSocketFile()  . ' -idle-timeout ' . $phpconfig['fpm_settings']['idle_timeout'] . $addheader . "\n";
+                    $php_options_text.= '  FastCgiExternalServer ' . $php->getInterface()->getAliasConfigDir() . $srvName . ' -socket ' . $php->getInterface()->getSocketFile() . ' -idle-timeout ' . $phpconfig['fpm_settings']['idle_timeout'] . $addheader . "\n";
                     $php_options_text.= '  <Directory "' . makeCorrectDir($domain['documentroot']) . '">' . "\n";
                     $filesmatch = $phpconfig['fpm_settings']['limit_extensions'];
-                    $extensions = explode(" ", $filesmatch);
-                    $filesmatch = "";
+                    $extensions = explode(' ', $filesmatch);
+                    $filesmatch = '';
                     foreach ($extensions as $ext) {
-                        $filesmatch .= substr($ext, 1).'|';
+                        $filesmatch .= substr($ext, 1) . '|';
                     }
                     // start block, cut off last pipe and close block
-                    $filesmatch = '('.str_replace(".", "\.", substr($filesmatch, 0, -1)).')';
-                    $php_options_text.= '    <FilesMatch \.'.$filesmatch.'$>'. "\n";
-                    $php_options_text.= '      SetHandler php-fastcgi'. "\n";
+                    $filesmatch = '(' . str_replace('.', "\.", substr($filesmatch, 0, -1)) . ')';
+                    $php_options_text.= '    <FilesMatch \.' . $filesmatch . '$>' . "\n";
+                    $php_options_text.= '      SetHandler php-fastcgi' . "\n";
                     $php_options_text.= '      Action php-fastcgi /fastcgiphp' . "\n";
                     $php_options_text.= '      Options +ExecCGI' . "\n";
                     $php_options_text.= '    </FilesMatch>' . "\n";
                     // >=apache-2.4 enabled?
-                    if (Settings::Get('system.apache24') == '1') {
+                    if (Settings::Get('system.apache24') === '1') {
                         $mypath_dir = new frxDirectory($domain['documentroot']);
                         // only create the require all granted if there is not active directory-protection
                         // for this path, as this would be the first require and therefore grant all access
-                        if ($mypath_dir->isUserProtected() == false) {
+                        if ($mypath_dir->isUserProtected() === false) {
                             $php_options_text.= '    Require all granted' . "\n";
                             $php_options_text.= '    AllowOverride All' . "\n";
                         }
@@ -112,7 +110,7 @@ class apache_fcgid extends apache
                 }
             } else {
                 $php_options_text.= '  FcgidIdleTimeout ' . Settings::Get('system.mod_fcgid_idle_timeout') . "\n";
-                if ((int)Settings::Get('system.mod_fcgid_wrapper') == 0) {
+                if ((int) Settings::Get('system.mod_fcgid_wrapper') === 0) {
                     $php_options_text.= '  SuexecUserGroup "' . $domain['loginname'] . '" "' . $domain['loginname'] . '"' . "\n";
                     $php_options_text.= '  ScriptAlias /php/ ' . $php->getInterface()->getConfigDir() . "\n";
                 } else {
@@ -127,11 +125,11 @@ class apache_fcgid extends apache
                     $php_options_text.= '      Options +ExecCGI' . "\n";
                     $php_options_text.= '    </FilesMatch>' . "\n";
                     // >=apache-2.4 enabled?
-                    if (Settings::Get('system.apache24') == '1') {
+                    if (Settings::Get('system.apache24') === '1') {
                         $mypath_dir = new frxDirectory($domain['documentroot']);
                         // only create the require all granted if there is not active directory-protection
                         // for this path, as this would be the first require and therefore grant all access
-                        if ($mypath_dir->isUserProtected() == false) {
+                        if ($mypath_dir->isUserProtected() === false) {
                             $php_options_text.= '    Require all granted' . "\n";
                             $php_options_text.= '    AllowOverride All' . "\n";
                         }
@@ -158,29 +156,29 @@ class apache_fcgid extends apache
 
     public function createOwnVhostStarter()
     {
-        if (Settings::Get('system.mod_fcgid_ownvhost') == '1'
-            || (Settings::Get('phpfpm.enabled') == '1'
-                && Settings::Get('phpfpm.enabled_ownvhost') == '1')
+        if (Settings::Get('system.mod_fcgid_ownvhost') === '1'
+            || (Settings::Get('phpfpm.enabled') === '1'
+                && Settings::Get('phpfpm.enabled_ownvhost') === '1')
         ) {
-            $mypath = makeCorrectDir(dirname(dirname(dirname(__FILE__)))); // /var/www/froxlor, needed for chown
+            $mypath = makeCorrectDir(dirname(dirname(__DIR__))); // /var/www/froxlor, needed for chown
 
-            if (Settings::Get('system.mod_fcgid_ownvhost') == '1') {
+            if (Settings::Get('system.mod_fcgid_ownvhost') === '1') {
                 $user = Settings::Get('system.mod_fcgid_httpuser');
                 $group = Settings::Get('system.mod_fcgid_httpgroup');
-            } elseif (Settings::Get('phpfpm.enabled') == '1'
-                && Settings::Get('phpfpm.enabled_ownvhost') == '1'
+            } elseif (Settings::Get('phpfpm.enabled') === '1'
+                && Settings::Get('phpfpm.enabled_ownvhost') === '1'
             ) {
                 $user = Settings::Get('phpfpm.vhost_httpuser');
                 $group = Settings::Get('phpfpm.vhost_httpgroup');
                 
                 // get fpm config
-                $fpm_sel_stmt = Database::prepare("
-					SELECT f.id FROM `" . TABLE_PANEL_FPMDAEMONS . "` f
-					LEFT JOIN `" . TABLE_PANEL_PHPCONFIGS . "` p ON p.fpmsettingid = f.id
+                $fpm_sel_stmt = Database::prepare('
+					SELECT f.id FROM `' . TABLE_PANEL_FPMDAEMONS . '` f
+					LEFT JOIN `' . TABLE_PANEL_PHPCONFIGS . '` p ON p.fpmsettingid = f.id
 					WHERE p.id = :phpconfigid
-				");
+				');
                 $fpm_config = Database::pexecute_first($fpm_sel_stmt, array(
-                    'phpconfigid' => Settings::Get('phpfpm.vhost_defaultini')
+                    'phpconfigid' => Settings::Get('phpfpm.vhost_defaultini'),
                 ));
             }
 
@@ -195,7 +193,7 @@ class apache_fcgid extends apache
                 'email' => Settings::Get('panel.adminmail'),
                 'loginname' => 'froxlor.panel',
                 'documentroot' => $mypath,
-                'fpm_config_id' => isset($fpm_config['id']) ? $fpm_config['id'] : 1
+                'fpm_config_id' => isset($fpm_config['id']) ? $fpm_config['id'] : 1,
             );
 
             // all the files and folders have to belong to the local user
@@ -206,7 +204,7 @@ class apache_fcgid extends apache
             $php = new phpinterface($domain);
 
             // get php-config
-            if (Settings::Get('phpfpm.enabled') == '1') {
+            if (Settings::Get('phpfpm.enabled') === '1') {
                 // fpm
                 $phpconfig = $php->getPhpConfig(Settings::Get('phpfpm.vhost_defaultini'));
             } else {

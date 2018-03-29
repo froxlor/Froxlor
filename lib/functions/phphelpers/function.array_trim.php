@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,8 +12,8 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $source
  */
 
 /**
@@ -30,12 +29,13 @@ function array_trim($source)
     $returnval = array();
     if (is_array($source)) {
         foreach ($source as $var => $val) {
-            if ($val != ' ' && $val != '') {
+            if ($val !== ' ' && $val !== '') {
                 $returnval[$var] = $val;
             }
         }
     } else {
         $returnval = $source;
     }
+
     return $returnval;
 }

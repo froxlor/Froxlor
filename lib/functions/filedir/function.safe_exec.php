@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,8 +12,10 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $exec_string
+ * @param & $return_value
+ * @param null|mixed $allowedChars
  */
 
 /**
@@ -31,12 +32,12 @@ function safe_exec($exec_string, &$return_value = false, $allowedChars = null)
     $disallowed = array(';', '|', '&', '>', '<', '`', '$', '~', '?');
 
     $acheck = false;
-    if ($allowedChars != null && is_array($allowedChars) && count($allowedChars) > 0) {
+    if ($allowedChars !== null && is_array($allowedChars) && count($allowedChars) > 0) {
         $acheck = true;
     }
 
     foreach ($disallowed as $dc) {
-        if ($acheck && in_array($dc, $allowedChars)) {
+        if ($acheck && in_array($dc, $allowedChars, true)) {
             continue;
         }
         // check for bad signs in execute command
@@ -49,7 +50,7 @@ function safe_exec($exec_string, &$return_value = false, $allowedChars = null)
     $return = '';
 
     // -------------------------------------------------------------------------------
-    if ($return_value == false) {
+    if ($return_value === false) {
         exec($exec_string, $return);
     } else {
         exec($exec_string, $return, $return_value);

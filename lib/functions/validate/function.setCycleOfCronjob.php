@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -11,10 +10,12 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $fieldname
+ * @param mixed $fielddata
+ * @param mixed $newfieldvalue
+ * @param mixed $allnewfieldvalues
  */
-
 function setCycleOfCronjob($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues)
 {
     switch ($newfieldvalue) {
@@ -35,7 +36,7 @@ function setCycleOfCronjob($fieldname, $fielddata, $newfieldvalue, $allnewfieldv
             break;
     }
     
-    Database::query("UPDATE `cronjobs_run` SET `interval` = '1 ".$interval."' WHERE `cronfile` = 'cron_used_tickets_reset.php';");
+    Database::query("UPDATE `cronjobs_run` SET `interval` = '1 " . $interval . "' WHERE `cronfile` = 'cron_used_tickets_reset.php';");
 
     return array(FORMFIELDS_PLAUSIBILITY_CHECK_OK);
 }

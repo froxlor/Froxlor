@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -11,8 +10,6 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Formfields
- *
  */
 
 return array(
@@ -31,7 +28,7 @@ return array(
                         'type' => 'textarea',
                         'cols' => 100,
                         'rows' => 15,
-                        'value' => $result['ssl_cert_file']
+                        'value' => $result['ssl_cert_file'],
                     ),
                     'ssl_key_file' => array(
                         'style' => 'align-top',
@@ -40,28 +37,28 @@ return array(
                         'type' => 'textarea',
                         'cols' => 100,
                         'rows' => 15,
-                        'value' => $result['ssl_key_file']
+                        'value' => $result['ssl_key_file'],
                     ),
                     'ssl_cert_chainfile' => array(
                         'style' => 'align-top',
                         'label' => $lng['admin']['ipsandports']['ssl_cert_chainfile_content'],
-                        'desc' => $lng['admin']['ipsandports']['ssl_paste_description'].$lng['admin']['ipsandports']['ssl_cert_chainfile_content_desc'],
+                        'desc' => $lng['admin']['ipsandports']['ssl_paste_description'] . $lng['admin']['ipsandports']['ssl_cert_chainfile_content_desc'],
                         'type' => 'textarea',
                         'cols' => 100,
                         'rows' => 15,
-                        'value' => $result['ssl_cert_chainfile']
+                        'value' => $result['ssl_cert_chainfile'],
                     ),
                     'ssl_ca_file' => array(
                         'style' => 'align-top',
                         'label' => $lng['admin']['ipsandports']['ssl_ca_file_content'],
-                        'desc' => $lng['admin']['ipsandports']['ssl_paste_description'].$lng['admin']['ipsandports']['ssl_ca_file_content_desc'],
+                        'desc' => $lng['admin']['ipsandports']['ssl_paste_description'] . $lng['admin']['ipsandports']['ssl_ca_file_content_desc'],
                         'type' => 'textarea',
                         'cols' => 100,
                         'rows' => 15,
-                        'value' => $result['ssl_ca_file']
-                    )
-                )
-            )
-        )
-    )
+                        'value' => $result['ssl_ca_file'],
+                    ),
+                ),
+            ),
+        ),
+    ),
 );

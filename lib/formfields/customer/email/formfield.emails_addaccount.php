@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -11,8 +10,6 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Formfields
- *
  */
 
 return array(
@@ -27,33 +24,33 @@ return array(
                     'email_full' => array(
                         'label' => $lng['emails']['emailaddress'],
                         'type' => 'label',
-                        'value' => $result['email_full']
+                        'value' => $result['email_full'],
                     ),
                     'email_password' => array(
                         'label' => $lng['login']['password'],
                         'type' => 'password',
-                        'autocomplete' => 'off'
+                        'autocomplete' => 'off',
                     ),
                     'email_password_suggestion' => array(
                         'label' => $lng['customer']['generated_pwd'],
                         'type' => 'text',
-                        'visible' => (Settings::Get('panel.password_regex') == ''),
+                        'visible' => (Settings::Get('panel.password_regex') === ''),
                         'value' => generatePassword(),
                     ),
                     'email_quota' => array(
-                        'visible' => (Settings::Get('system.mail_quota_enabled') == '1' ? true : false),
+                        'visible' => (Settings::Get('system.mail_quota_enabled') === '1' ? true : false),
                         'label' => $lng['emails']['quota'],
-                        'desc' => "MiB",
+                        'desc' => 'MiB',
                         'type' => 'text',
-                        'value' => $quota
+                        'value' => $quota,
                     ),
                     'alternative_email' => array(
-                        'visible' => (Settings::Get('panel.sendalternativemail') == '1' ? true : false),
+                        'visible' => (Settings::Get('panel.sendalternativemail') === '1' ? true : false),
                         'label' => $lng['emails']['alternative_emailaddress'],
-                        'type' => 'text'
-                    )
-                )
-            )
-        )
-    )
+                        'type' => 'text',
+                    ),
+                ),
+            ),
+        ),
+    ),
 );

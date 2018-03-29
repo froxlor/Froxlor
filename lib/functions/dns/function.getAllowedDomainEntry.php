@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2016 the Froxlor Team (see authors).
@@ -11,19 +10,21 @@
  * @copyright (c) the authors
  * @author Froxlor team <team@froxlor.org> (2016-)
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package Functions
  *
+ * @param mixed $domain_id
+ * @param mixed $area
+ * @param mixed $userinfo
+ * @param & $idna_convert
  */
-
 function getAllowedDomainEntry($domain_id, $area = 'customer', $userinfo, &$idna_convert)
 {
     $dom_data = array(
-        'did' => $domain_id
+        'did' => $domain_id,
     );
 
     $where_clause = '';
-    if ($area == 'admin') {
-        if ($userinfo['domains_see_all'] != '1') {
+    if ($area === 'admin') {
+        if ($userinfo['domains_see_all'] !== '1') {
             $where_clause = '`adminid` = :uid AND ';
             $dom_data['uid'] = $userinfo['userid'];
         }
@@ -32,17 +33,18 @@ function getAllowedDomainEntry($domain_id, $area = 'customer', $userinfo, &$idna
         $dom_data['uid'] = $userinfo['userid'];
     }
 
-    $dom_stmt = Database::prepare("
+    $dom_stmt = Database::prepare('
 		SELECT domain, isbinddomain
-		FROM `" . TABLE_PANEL_DOMAINS . "`
-		WHERE " . $where_clause . " id = :did
-	");
+		FROM `' . TABLE_PANEL_DOMAINS . '`
+		WHERE ' . $where_clause . ' id = :did
+	');
     $domain = Database::pexecute_first($dom_stmt, $dom_data);
 
     if ($domain) {
-        if ($domain['isbinddomain'] != '1') {
+        if ($domain['isbinddomain'] !== '1') {
             standard_error('dns_domain_nodns');
         }
+
         return $idna_convert->decode($domain['domain']);
     }
     standard_error('dns_notfoundorallowed');

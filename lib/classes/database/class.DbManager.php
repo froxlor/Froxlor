@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -12,10 +11,8 @@
  * @author     Michael Kaufmann <mkaufmann@nutime.de>
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Classes
  *
  * @since      0.9.31
- *
  */
 
 /**
@@ -28,11 +25,9 @@
  * @author     Michael Kaufmann <mkaufmann@nutime.de>
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Classes
  */
 class DbManager
 {
-
     /**
      * FroxlorLogger object
      * @var object
@@ -73,13 +68,13 @@ class DbManager
         Database::needRoot(true);
 
         // check whether we shall create a random username
-        if (strtoupper(Settings::Get('customer.mysqlprefix')) == 'RANDOM') {
+        if (strtoupper(Settings::Get('customer.mysqlprefix')) === 'RANDOM') {
             // get all usernames from db-manager
             $allsqlusers = $this->getManager()->getAllSqlUsers();
             // generate random username
             $username = $loginname . '-' . substr(md5(uniqid(microtime(), 1)), 20, 3);
             // check whether it exists on the DBMS
-            while (in_array($username, $allsqlusers)) {
+            while (in_array($username, $allsqlusers, true)) {
                 $username = $loginname . '-' . substr(md5(uniqid(microtime(), 1)), 20, 3);
             }
         } else {
@@ -87,7 +82,7 @@ class DbManager
         }
 
         // don't use a password that is the same as the username
-        if ($username == $password) {
+        if ($username === $password) {
             return false;
         }
 

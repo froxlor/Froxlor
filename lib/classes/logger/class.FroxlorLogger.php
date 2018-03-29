@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,16 +12,13 @@
  * @author     Michael Kaufmann <mkaufmann@nutime.de>
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Logger
  *
  * @link       http://www.nutime.de/
  *
  * Logger - Froxlor-Base-Logger-Class
  */
-
 class FroxlorLogger
 {
-
     /**
      * Userinfo
      * @var array
@@ -51,20 +47,21 @@ class FroxlorLogger
      * Class constructor.
      *
      * @param array userinfo
+     * @param mixed $userinfo
      */
     protected function __construct($userinfo)
     {
         $this->userinfo = $userinfo;
         self::$logtypes = array();
 
-        if ((Settings::Get('logger.logtypes') == null || Settings::Get('logger.logtypes') == '')
+        if ((Settings::Get('logger.logtypes') === null || Settings::Get('logger.logtypes') === '')
            && (Settings::Get('logger.enabled') !== null && Settings::Get('logger.enabled'))
         ) {
             self::$logtypes[0] = 'syslog';
             self::$logtypes[1] = 'mysql';
         } else {
             if (Settings::Get('logger.logtypes') !== null
-               && Settings::Get('logger.logtypes') != ''
+               && Settings::Get('logger.logtypes') !== ''
             ) {
                 self::$logtypes = explode(',', Settings::Get('logger.logtypes'));
             } else {
@@ -76,18 +73,19 @@ class FroxlorLogger
     /**
      * Singleton ftw ;-)
      *
+     * @param mixed $_usernfo
      */
     public static function getInstanceOf($_usernfo)
     {
         if (!isset($_usernfo)
-           || $_usernfo == null
+           || $_usernfo === null
         ) {
             $_usernfo = array();
             $_usernfo['loginname'] = 'unknown';
         }
 
         if (!isset(self::$loggers[$_usernfo['loginname']])) {
-            self::$loggers[$_usernfo['loginname']] = new FroxlorLogger($_usernfo);
+            self::$loggers[$_usernfo['loginname']] = new self($_usernfo);
         }
 
         return self::$loggers[$_usernfo['loginname']];
@@ -102,17 +100,17 @@ class FroxlorLogger
      */
     public function logAction($action = USR_ACTION, $type = LOG_NOTICE, $text = null)
     {
-        if (self::$logtypes == null) {
+        if (self::$logtypes === null) {
             return;
         }
 
         if (self::$crondebug_flag
-            || ($action == CRON_ACTION && $type <= LOG_WARNING)) {
-            echo "[".getLogLevelDesc($type)."] ".$text.PHP_EOL;
+            || ($action === CRON_ACTION && $type <= LOG_WARNING)) {
+            echo '[' . getLogLevelDesc($type) . '] ' . $text . PHP_EOL;
         }
 
-        if (Settings::Get('logger.log_cron') == '0'
-            && $action == CRON_ACTION
+        if (Settings::Get('logger.log_cron') === '0'
+            && $action === CRON_ACTION
             && $type > LOG_WARNING // warnings, errors and critical mesages WILL be logged
         ) {
             return;
@@ -127,10 +125,10 @@ class FroxlorLogger
                     try {
                         $_log = FileLogger::getInstanceOf($this->userinfo);
                     } catch (Exception $e) {
-                        if ($action != CRON_ACTION) {
+                        if ($action !== CRON_ACTION) {
                             standard_error('logerror', $e->getMessage());
                         } else {
-                            echo "Log-Error: " . $e->getMessage();
+                            echo 'Log-Error: ' . $e->getMessage();
                         }
                     }
                     break;
@@ -142,14 +140,14 @@ class FroxlorLogger
                     break;
             }
 
-            if ($_log != null) {
+            if ($_log !== null) {
                 try {
                     $_log->logAction($action, $type, $text);
                 } catch (Exception $e) {
-                    if ($action != CRON_ACTION) {
+                    if ($action !== CRON_ACTION) {
                         standard_error('logerror', $e->getMessage());
                     } else {
-                        echo "Log-Error: " . $e->getMessage();
+                        echo 'Log-Error: ' . $e->getMessage();
                     }
                 }
             }
@@ -161,16 +159,17 @@ class FroxlorLogger
      *
      * @param bool $_cronlog
      *
-     * @return boolean
+     * @return bool
      */
     public function setCronLog($_cronlog = 0)
     {
-        $_cronlog = (int)$_cronlog;
+        $_cronlog = (int) $_cronlog;
 
         if ($_cronlog < 0 || $_cronlog > 2) {
             $_cronlog = 0;
         }
         Settings::Set('logger.log_cron', $_cronlog);
+
         return $_cronlog;
     }
 
@@ -178,11 +177,9 @@ class FroxlorLogger
      * setter for crondebug-flag
      *
      * @param bool $_flag
-     *
-     * @return void
      */
     public function setCronDebugFlag($_flag = false)
     {
-        self::$crondebug_flag = (bool)$_flag;
+        self::$crondebug_flag = (bool) $_flag;
     }
 }

@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -12,7 +11,6 @@
  * @author     Florian Aders <eleras@froxlor.org>
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Classes
  *
  * @since      0.9.34
  */
@@ -28,7 +26,6 @@
  * @author     Florian Aders <eleras@froxlor.org>
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Classes
  */
 class ConfigService
 {
@@ -68,8 +65,8 @@ class ConfigService
         $this->xpath = $xpath;
         $service = $this->fullxml->xpath($this->xpath);
         $attributes = $service[0]->attributes();
-        if ($attributes['title'] != '') {
-            $this->title = $this->_parseContent((string)$attributes['title']);
+        if ($attributes['title'] !== '') {
+            $this->title = $this->_parseContent((string) $attributes['title']);
         }
     }
 
@@ -80,41 +77,42 @@ class ConfigService
     private function _parse()
     {
         // We only want to parse the stuff one time
-        if ($this->isparsed == true) {
+        if ($this->isparsed === true) {
             return true;
         }
 
         $daemons = $this->fullxml->xpath($this->xpath . '/daemon');
         foreach ($daemons as $daemon) {
-            if ($daemon->getName() == 'comment') {
+            if ($daemon->getName() === 'comment') {
                 continue;
             }
             $name = '';
             $nametag = '';
             $versiontag = '';
             foreach ($daemon->attributes() as $key => $value) {
-                if ($key == 'name' && $name == '') {
-                    $name = (string)$value;
+                if ($key === 'name' && $name === '') {
+                    $name = (string) $value;
                     $nametag = "[@name='" . $value . "']";
-                } elseif ($key == 'name' && $name != '') {
-                    $name = (string)$value . '_' . $name;
+                } elseif ($key === 'name' && $name !== '') {
+                    $name = (string) $value . '_' . $name;
                     $nametag = "[@name='" . $value . "']";
-                } elseif ($key == 'version' && $name == '') {
+                } elseif ($key === 'version' && $name === '') {
                     $name = str_replace('.', '', $value);
                     $versiontag = "[@version='" . $value . "']";
-                } elseif ($key == 'version' && $name != '') {
+                } elseif ($key === 'version' && $name !== '') {
                     $name = $name . str_replace('.', '', $value);
                     $versiontag = "[@version='" . $value . "']";
                 }
             }
-            if ($name == '') {
+            if ($name === '') {
                 throw new Exception('No name attribute for daemon');
             }
-            $this->daemons[$name] = new ConfigDaemon($this->fullxml, $this->xpath . "/daemon" . $nametag . $versiontag);
+            $this->daemons[$name] = new ConfigDaemon($this->fullxml, $this->xpath . '/daemon' . $nametag . $versiontag);
         }
 
         // Switch flag to indicate we parsed our data
         $this->isparsed = true;
+
         return true;
     }
 
@@ -130,22 +128,25 @@ class ConfigService
                 return Settings::Get($match[1]);
             } elseif (preg_match('/^lng\.(.*)(?:\.(.*)(?:\.(.*)))$/U', $matches[1], $match)) {
                 global $lng;
-                if (isset($match[1]) && $match[1] != '' && isset($match[2]) && $match[2] != '' && isset($match[3]) && $match[3] != '') {
+                if (isset($match[1]) && $match[1] !== '' && isset($match[2]) && $match[2] !== '' && isset($match[3]) && $match[3] !== '') {
                     return $lng[$match[1]][$match[2]][$match[3]];
-                } elseif (isset($match[1]) && $match[1] != '' && isset($match[2]) && $match[2] != '') {
+                } elseif (isset($match[1]) && $match[1] !== '' && isset($match[2]) && $match[2] !== '') {
                     return $lng[$match[1]][$match[2]];
-                } elseif (isset($match[1]) && $match[1] != '') {
+                } elseif (isset($match[1]) && $match[1] !== '') {
                     return $lng[$match[1]];
                 }
+
                 return '';
             }
         }, $content);
+
         return $content;
     }
 
     public function getDaemons()
     {
         $this->_parse();
+
         return $this->daemons;
     }
 }

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Return human readable sizes
  *
@@ -10,7 +10,6 @@
  * @param       string  $system      'si' for SI, 'bi' for binary prefixes
  * @param       string  $retstring   return string format
  */
-
 function size_readable($size, $max = null, $system = 'si', $retstring = '%01.2f %s')
 {
     // Pick units
@@ -22,7 +21,7 @@ function size_readable($size, $max = null, $system = 'si', $retstring = '%01.2f 
 
     // Max unit to display
     $depth = count($sys['prefix']) - 1;
-    if ($max && false !== $d = array_search($max, $sys['prefix'])) {
+    if ($max && false !== $d = array_search($max, $sys['prefix'], true)) {
         $depth = $d;
     }
     // Loop

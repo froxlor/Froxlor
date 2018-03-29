@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2016 the Froxlor Team (see authors).
@@ -11,8 +10,6 @@
  * @copyright (c) the authors
  * @author Froxlor team <team@froxlor.org> (2016-)
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package Classes
- *
  */
 class DnsZone
 {
@@ -34,13 +31,14 @@ class DnsZone
 
     public function __toString()
     {
-        $_zonefile = "\$TTL " . $this->ttl . PHP_EOL;
-        $_zonefile .= "\$ORIGIN " . $this->origin . "." . PHP_EOL;
+        $_zonefile = '$TTL ' . $this->ttl . PHP_EOL;
+        $_zonefile .= '$ORIGIN ' . $this->origin . '.' . PHP_EOL;
         if (! empty($this->records)) {
             foreach ($this->records as $record) {
                 $_zonefile .= (string) $record;
             }
         }
+
         return $_zonefile;
     }
 }

@@ -1,5 +1,5 @@
-<?php
- /*
+<?php declare(strict_types=1);
+/*
  * @author  Matthias Sommerfeld <mso@phlylabs.de>
  * @copyright 2004-2016 phlyLabs Berlin, http://phlylabs.de
  */

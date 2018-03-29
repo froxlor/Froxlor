@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2016 the Froxlor Team (see authors).
@@ -11,8 +10,6 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Formfields
- *
  */
 return array(
     'backup' => array(
@@ -25,15 +22,15 @@ return array(
                 'fields' => array(
                     'path' => array(
                         'label' => $lng['panel']['path'],
-                        'desc' => (Settings::Get('panel.pathedit') != 'Dropdown' ? $lng['panel']['pathDescription'] : null).(isset($pathSelect['note']) ? '<br />'.$pathSelect['value'] : ''),
+                        'desc' => (Settings::Get('panel.pathedit') !== 'Dropdown' ? $lng['panel']['pathDescription'] : null) . (isset($pathSelect['note']) ? '<br />' . $pathSelect['value'] : ''),
                         'type' => $pathSelect['type'],
                         'select_var' => $pathSelect['value'],
-                        'value' => $pathSelect['value']
+                        'value' => $pathSelect['value'],
                     ),
                     'path_protection_info' => array(
                         'label' => $lng['extras']['path_protection_label'],
                         'type' => 'label',
-                        'value' => $lng['extras']['path_protection_info']
+                        'value' => $lng['extras']['path_protection_info'],
                     ),
                     'backup_web' => array(
                         'label' => $lng['extras']['backup_web'],
@@ -41,10 +38,10 @@ return array(
                         'values' => array(
                             array(
                                 'label' => $lng['panel']['yes'],
-                                'value' => '1'
-                            )
+                                'value' => '1',
+                            ),
                         ),
-                        'value' => array('1')
+                        'value' => array('1'),
                     ),
                     'backup_mail' => array(
                         'label' => $lng['extras']['backup_mail'],
@@ -52,10 +49,10 @@ return array(
                         'values' => array(
                             array(
                                 'label' => $lng['panel']['yes'],
-                                'value' => '1'
-                            )
+                                'value' => '1',
+                            ),
                         ),
-                        'value' => array('1')
+                        'value' => array('1'),
                     ),
                     'backup_dbs' => array(
                         'label' => $lng['extras']['backup_dbs'],
@@ -63,13 +60,13 @@ return array(
                         'values' => array(
                             array(
                                 'label' => $lng['panel']['yes'],
-                                'value' => '1'
-                            )
+                                'value' => '1',
+                            ),
                         ),
-                        'value' => array('1')
-                    )
-                )
-            )
-        )
-    )
+                        'value' => array('1'),
+                    ),
+                ),
+            ),
+        ),
+    ),
 );

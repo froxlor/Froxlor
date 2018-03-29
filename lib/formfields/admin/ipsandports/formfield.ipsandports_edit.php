@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -11,8 +10,6 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Formfields
- *
  */
 
 return array(
@@ -27,15 +24,15 @@ return array(
                     'ip' => array(
                         'label' => $lng['admin']['ipsandports']['ip'],
                         'type' => 'text',
-                        'value' => $result['ip']
+                        'value' => $result['ip'],
                     ),
                     'port' => array(
                         'label' => $lng['admin']['ipsandports']['port'],
                         'type' => 'text',
                         'value' => $result['port'],
-                        'size' => 5
-                    )
-                )
+                        'size' => 5,
+                    ),
+                ),
             ),
             'section_b' => array(
                 'title' => $lng['admin']['ipsandports']['webserverdefaultconfig'],
@@ -46,32 +43,32 @@ return array(
                         'label' => $lng['admin']['ipsandports']['create_listen_statement'],
                         'type' => 'checkbox',
                         'values' => array(
-                            array('label' => $lng['panel']['yes'], 'value' => '1')
+                            array('label' => $lng['panel']['yes'], 'value' => '1'),
                         ),
-                        'value' => array($result['listen_statement'])
+                        'value' => array($result['listen_statement']),
                     ),
                     'namevirtualhost_statement' => array(
                         'visible' => $is_apache && !$is_apache24,
                         'label' => $lng['admin']['ipsandports']['create_namevirtualhost_statement'],
                         'type' => 'checkbox',
                         'values' => array(
-                            array('label' => $lng['panel']['yes'], 'value' => '1')
+                            array('label' => $lng['panel']['yes'], 'value' => '1'),
                         ),
-                        'value' => array($result['namevirtualhost_statement'])
+                        'value' => array($result['namevirtualhost_statement']),
                     ),
                     'vhostcontainer' => array(
                         'label' => $lng['admin']['ipsandports']['create_vhostcontainer'],
                         'type' => 'checkbox',
                         'values' => array(
-                            array('label' => $lng['panel']['yes'], 'value' => '1')
+                            array('label' => $lng['panel']['yes'], 'value' => '1'),
                         ),
-                        'value' => array($result['vhostcontainer'])
+                        'value' => array($result['vhostcontainer']),
                     ),
                     'docroot' => array(
                         'label' => $lng['admin']['ipsandports']['docroot']['title'],
                         'desc' => $lng['admin']['ipsandports']['docroot']['description'],
                         'type' => 'text',
-                        'value' => $result['docroot']
+                        'value' => $result['docroot'],
                     ),
                     'specialsettings' => array(
                         'style' => 'align-top',
@@ -80,18 +77,18 @@ return array(
                         'type' => 'textarea',
                         'cols' => 60,
                         'rows' => 12,
-                        'value' => $result['specialsettings']
+                        'value' => $result['specialsettings'],
                     ),
                     'vhostcontainer_servername_statement' => array(
                         'visible' => $is_apache,
                         'label' => $lng['admin']['ipsandports']['create_vhostcontainer_servername_statement'],
                         'type' => 'checkbox',
                         'values' => array(
-                            array('label' => $lng['panel']['yes'], 'value' => '1')
+                            array('label' => $lng['panel']['yes'], 'value' => '1'),
                         ),
-                        'value' => array($result['vhostcontainer_servername_statement'])
-                    )
-                )
+                        'value' => array($result['vhostcontainer_servername_statement']),
+                    ),
+                ),
             ),
             'section_c' => array(
                 'title' => $lng['admin']['ipsandports']['webserverdomainconfig'],
@@ -104,46 +101,46 @@ return array(
                         'type' => 'textarea',
                         'cols' => 60,
                         'rows' => 12,
-                        'value' => $result['default_vhostconf_domain']
-                    )
-                )
+                        'value' => $result['default_vhostconf_domain'],
+                    ),
+                ),
             ),
             'section_d' => array(
                 'title' => $lng['admin']['ipsandports']['webserverssldomainconfig'],
                 'image' => 'icons/ipsports_edit.png',
-                'visible' => (Settings::Get('system.use_ssl') == 1 ? true : false),
+                'visible' => (Settings::Get('system.use_ssl') === 1 ? true : false),
                 'fields' => array(
                     'ssl' => array(
                         'label' => $lng['admin']['ipsandports']['enable_ssl'],
                         'type' => 'checkbox',
                         'values' => array(
-                            array('label' => $lng['panel']['yes'], 'value' => '1')
+                            array('label' => $lng['panel']['yes'], 'value' => '1'),
                         ),
-                        'value' => array($result['ssl'])
+                        'value' => array($result['ssl']),
                     ),
                     'ssl_cert_file' => array(
                         'label' => $lng['admin']['ipsandports']['ssl_cert_file'],
                         'type' => 'text',
-                        'value' => $result['ssl_cert_file']
+                        'value' => $result['ssl_cert_file'],
                     ),
                     'ssl_key_file' => array(
                         'label' => $lng['admin']['ipsandports']['ssl_key_file'],
                         'type' => 'text',
-                        'value' => $result['ssl_key_file']
+                        'value' => $result['ssl_key_file'],
                     ),
                     'ssl_ca_file' => array(
                         'label' => $lng['admin']['ipsandports']['ssl_ca_file'],
                         'type' => 'text',
-                        'value' => $result['ssl_ca_file']
+                        'value' => $result['ssl_ca_file'],
                     ),
                     'ssl_cert_chainfile' => array(
                         'label' => $lng['admin']['ipsandports']['ssl_cert_chainfile']['title'],
                         'desc' => $lng['admin']['ipsandports']['ssl_cert_chainfile']['description'],
                         'type' => 'text',
-                        'value' => $result['ssl_cert_chainfile']
-                    )
-                )
-            )
-        )
-    )
+                        'value' => $result['ssl_cert_chainfile'],
+                    ),
+                ),
+            ),
+        ),
+    ),
 );

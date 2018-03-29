@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -11,8 +10,6 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Settings
- *
  */
 
 return array(
@@ -28,7 +25,7 @@ return array(
                     'default' => false,
                     'save_method' => 'storeSettingField',
                     'plausibility_check_method' => 'checkFcgidPhpFpm',
-                    'overview_option' => true
+                    'overview_option' => true,
                     ),
                 'system_phpfpm_defaultini' => array(
                     'label' => $lng['serversettings']['mod_fcgid']['defaultini'],
@@ -38,7 +35,7 @@ return array(
                     'default' => '1',
                     'option_mode' => 'one',
                     'option_options_method' => 'getPhpConfigs',
-                    'save_method' => 'storeSettingField'
+                    'save_method' => 'storeSettingField',
                     ),
                 'system_phpfpm_aliasconfigdir' => array(
                     'label' => $lng['serversettings']['phpfpm_settings']['aliasconfigdir'],
@@ -47,7 +44,7 @@ return array(
                     'type' => 'string',
                     'string_type' => 'confdir',
                     'default' => '/var/www/php-fpm/',
-                    'save_method' => 'storeSettingField'
+                    'save_method' => 'storeSettingField',
                     ),
                 'system_phpfpm_tmpdir' => array(
                     'label' => $lng['serversettings']['mod_fcgid']['tmpdir'],
@@ -56,7 +53,7 @@ return array(
                     'type' => 'string',
                     'string_type' => 'dir',
                     'default' => '/var/customers/tmp/',
-                    'save_method' => 'storeSettingField'
+                    'save_method' => 'storeSettingField',
                     ),
                 'system_phpfpm_peardir' => array(
                     'label' => $lng['serversettings']['mod_fcgid']['peardir'],
@@ -67,7 +64,7 @@ return array(
                     'string_delimiter' => ':',
                     'string_emptyallowed' => true,
                     'default' => '/usr/share/php/:/usr/share/php5/',
-                    'save_method' => 'storeSettingField'
+                    'save_method' => 'storeSettingField',
                     ),
                 'system_phpfpm_envpath' => array(
                     'label' => $lng['serversettings']['phpfpm_settings']['envpath'],
@@ -78,7 +75,7 @@ return array(
                     'string_delimiter' => ':',
                     'string_emptyallowed' => true,
                     'default' => '/usr/local/bin:/usr/bin:/bin',
-                    'save_method' => 'storeSettingField'
+                    'save_method' => 'storeSettingField',
                 ),
                 'system_phpfpm_fastcgi_ipcdir' => array(
                     'label' => $lng['serversettings']['phpfpm_settings']['ipcdir'],
@@ -87,7 +84,7 @@ return array(
                     'type' => 'string',
                     'string_type' => 'dir',
                     'default' => '/var/lib/apache2/fastcgi/',
-                    'save_method' => 'storeSettingField'
+                    'save_method' => 'storeSettingField',
                     ),
                 'system_phpfpm_use_mod_proxy' => array(
                     'label' => $lng['phpfpm']['use_mod_proxy'],
@@ -96,7 +93,7 @@ return array(
                     'type' => 'bool',
                     'default' => false,
                     'visible' => Settings::Get('system.apache24'),
-                    'save_method' => 'storeSettingField'
+                    'save_method' => 'storeSettingField',
                     ),
                 'system_phpfpm_ini_flags' => array(
                     'label' => $lng['phpfpm']['ini_flags'],
@@ -104,7 +101,7 @@ return array(
                     'varname' => 'ini_flags',
                     'type' => 'text',
                     'default' => '',
-                    'save_method' => 'storeSettingField'
+                    'save_method' => 'storeSettingField',
                 ),
                 'system_phpfpm_ini_values' => array(
                     'label' => $lng['phpfpm']['ini_values'],
@@ -112,7 +109,7 @@ return array(
                     'varname' => 'ini_values',
                     'type' => 'text',
                     'default' => '',
-                    'save_method' => 'storeSettingField'
+                    'save_method' => 'storeSettingField',
                 ),
                 'system_phpfpm_ini_admin_flags' => array(
                     'label' => $lng['phpfpm']['ini_admin_flags'],
@@ -120,7 +117,7 @@ return array(
                     'varname' => 'ini_admin_flags',
                     'type' => 'text',
                     'default' => '',
-                    'save_method' => 'storeSettingField'
+                    'save_method' => 'storeSettingField',
                 ),
                 'system_phpfpm_ini_admin_values' => array(
                     'label' => $lng['phpfpm']['ini_admin_values'],
@@ -128,8 +125,8 @@ return array(
                     'varname' => 'ini_admin_values',
                     'type' => 'text',
                     'default' => '',
-                    'save_method' => 'storeSettingField'
-                )
+                    'save_method' => 'storeSettingField',
+                ),
                 ),
             ),
         ),

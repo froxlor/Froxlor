@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,10 +12,7 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Language
- *
  */
-
 $lng['requirements']['title'] = 'Prüfe Systemvoraussetzungen...';
 $lng['requirements']['installed'] = 'installiert';
 $lng['requirements']['not_true'] = 'nein';
@@ -85,8 +81,8 @@ $lng['install']['changing_data'] = 'Einstellungen anpassen...';
 $lng['install']['creating_entries'] = 'Trage neue Werte ein...';
 $lng['install']['adding_admin_user'] = 'Erstelle Admin-Benutzer...';
 $lng['install']['creating_configfile'] = 'Erstelle Konfigurationsdatei...';
-$lng['install']['creating_configfile_temp'] = 'Datei wurde in /tmp/userdata.inc.php gespeichert, bitte nach '.dirname(dirname(__DIR__)).'/lib/ verschieben.';
-$lng['install']['creating_configfile_failed'] = 'Konnte '.dirname(dirname(__DIR__)).'/lib/userdata.inc.php nicht erstellen, bitte manuell mit folgendem Inhalt anlegen:';
+$lng['install']['creating_configfile_temp'] = 'Datei wurde in /tmp/userdata.inc.php gespeichert, bitte nach ' . dirname(dirname(__DIR__)) . '/lib/ verschieben.';
+$lng['install']['creating_configfile_failed'] = 'Konnte ' . dirname(dirname(__DIR__)) . '/lib/userdata.inc.php nicht erstellen, bitte manuell mit folgendem Inhalt anlegen:';
 $lng['install']['froxlor_succ_installed'] = 'Froxlor wurde erfolgreich installiert.';
 
 $lng['click_here_to_refresh'] = 'Hier klicken, um erneut zu prüfen';

@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -12,7 +11,6 @@
  * @author     Florian Aders <eleras@froxlor.org>
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Classes
  *
  * @since      0.9.34
  */
@@ -26,7 +24,6 @@
  * @author     Florian Aders <eleras@froxlor.org>
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Classes
  */
 class ConfigParser
 {
@@ -83,7 +80,6 @@ class ConfigParser
      *
      * Initialize the XML - ConfigParser
      * @param string $filename filename of the froxlor - configurationfile
-     * @return void
      */
     public function __construct($filename)
     {
@@ -110,12 +106,12 @@ class ConfigParser
 
         // Search for attributes we understand
         foreach ($distribution[0]->attributes() as $key => $value) {
-            switch ((string)$key) {
-                case "name": $this->distributionName = (string)$value; break;
-                case "version": $this->distributionVersion = (string)$value; break;
-                case "codename": $this->distributionCodename = (string)$value; break;
-                case "defaulteditor": $this->distributionEditor = (string)$value; break;
-                case "deprecated": (string)$value == 'true' ? $this->deprecated = true : $this->deprecated = false; break;
+            switch ((string) $key) {
+                case 'name': $this->distributionName = (string) $value; break;
+                case 'version': $this->distributionVersion = (string) $value; break;
+                case 'codename': $this->distributionCodename = (string) $value; break;
+                case 'defaulteditor': $this->distributionEditor = (string) $value; break;
+                case 'deprecated': (string) $value === 'true' ? $this->deprecated = true : $this->deprecated = false; break;
             }
         }
     }
@@ -127,7 +123,7 @@ class ConfigParser
     private function _parse()
     {
         // We only want to parse the stuff one time
-        if ($this->isparsed == true) {
+        if ($this->isparsed === true) {
             return true;
         }
 
@@ -135,19 +131,20 @@ class ConfigParser
         $services = $this->xml->xpath('//services/service');
         foreach ($services as $service) {
             // We don't want comments
-            if ($service->getName() == 'comment') {
+            if ($service->getName() === 'comment') {
                 continue;
             }
             // Search the attributes for "type"
             foreach ($service->attributes() as $key => $value) {
-                if ($key == 'type') {
-                    $this->services[(string)$value] = new ConfigService($this->xml, '//services/service[@type="' . (string)$value . '"]');
+                if ($key === 'type') {
+                    $this->services[(string) $value] = new ConfigService($this->xml, '//services/service[@type="' . (string) $value . '"]');
                 }
             }
         }
 
         // Switch flag to indicate we parsed our data
         $this->isparsed = true;
+
         return true;
     }
 

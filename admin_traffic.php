@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -12,17 +11,14 @@
  * @copyright  (c) the authors
  * @author     Morton Jonuschat <m.jonuschat@chrome-it.de>
  * @license    GPLv2 http://files.syscp.org/misc/COPYING.txt
- * @package    Panel
- *
  */
-
 define('AREA', 'admin');
 require './lib/init.php';
 
-if ($action == 'logout') {
+if ($action === 'logout') {
     $logout_stmt = Database::prepare(
-        "
-		DELETE FROM `" . TABLE_PANEL_SESSIONS . "`
+        '
+		DELETE FROM `' . TABLE_PANEL_SESSIONS . "`
 		WHERE `userid` = :adminid
 		AND `adminsession` = '1'"
     );
@@ -52,20 +48,20 @@ $months = array(
     '12' => 'dec',
 );
 
-if ($page == 'overview' || $page == 'customers') {
+if ($page === 'overview' || $page === 'customers') {
     $customerview = 1;
     $stats_tables = '';
-    $minyear_stmt = Database::query("SELECT `year` FROM `". TABLE_PANEL_TRAFFIC . "` ORDER BY `year` ASC LIMIT 1");
+    $minyear_stmt = Database::query('SELECT `year` FROM `' . TABLE_PANEL_TRAFFIC . '` ORDER BY `year` ASC LIMIT 1');
     $minyear = $minyear_stmt->fetch(PDO::FETCH_ASSOC);
 
-    if (!isset($minyear['year']) || $minyear['year'] == 0) {
+    if (!isset($minyear['year']) || $minyear['year'] === 0) {
         $maxyears = 0;
     } else {
-        $maxyears = date("Y") - $minyear['year'];
+        $maxyears = date('Y') - $minyear['year'];
     }
 
     for ($years = 0; $years<=$maxyears; $years++) {
-        $overview['year'] = date("Y")-$years;
+        $overview['year'] = date('Y')-$years;
         $overview['type'] = $lng['traffic']['customer'];
         $domain_list = '';
         $totals = array(
@@ -84,18 +80,18 @@ if ($page == 'overview' || $page == 'customers') {
         );
 
         $customer_name_list_stmt = Database::prepare(
-            "
+            '
 			SELECT `customerid`,`company`,`name`,`firstname`
-			FROM `" . TABLE_PANEL_CUSTOMERS . "`
+			FROM `' . TABLE_PANEL_CUSTOMERS . "`
 			WHERE `deactivated`='0'" .
-            ($userinfo['customers_see_all'] ? '' : " AND `adminid` = :id") . "
-			ORDER BY name"
+            ($userinfo['customers_see_all'] ? '' : ' AND `adminid` = :id') . '
+			ORDER BY name'
         );
         Database::pexecute($customer_name_list_stmt, array('id' => $userinfo['adminid']));
 
         while ($customer_name = $customer_name_list_stmt->fetch(PDO::FETCH_ASSOC)) {
             $virtual_host = array(
-                'name' => ($customer_name['company'] == '' ? $customer_name['name'] . ", " . $customer_name['firstname'] : $customer_name['company']),
+                'name' => ($customer_name['company'] === '' ? $customer_name['name'] . ', ' . $customer_name['firstname'] : $customer_name['company']),
                 'customerid' => $customer_name['customerid'],
                 'jan' => '-',
                 'feb' => '-',
@@ -112,30 +108,30 @@ if ($page == 'overview' || $page == 'customers') {
             );
 
             $traffic_list_stmt = Database::prepare(
-                "
+                '
 				SELECT month, SUM(http+ftp_up+ftp_down+mail)*1024 AS traffic
-				FROM `" . TABLE_PANEL_TRAFFIC . "`
+				FROM `' . TABLE_PANEL_TRAFFIC . '`
 				WHERE year = :year AND `customerid` = :id
-				GROUP BY month ORDER BY month"
+				GROUP BY month ORDER BY month'
             );
-            Database::pexecute($traffic_list_stmt, array('year' => (date("Y")-$years), 'id' => $customer_name['customerid']));
+            Database::pexecute($traffic_list_stmt, array('year' => (date('Y')-$years), 'id' => $customer_name['customerid']));
 
             while ($traffic_month = $traffic_list_stmt->fetch(PDO::FETCH_ASSOC)) {
-                $virtual_host[$months[(int)$traffic_month['month']]] = size_readable($traffic_month['traffic'], 'GiB', 'bi', '%01.'.(int)Settings::Get('panel.decimal_places').'f %s');
-                $totals[$months[(int)$traffic_month['month']]] += $traffic_month['traffic'];
+                $virtual_host[$months[(int) $traffic_month['month']]] = size_readable($traffic_month['traffic'], 'GiB', 'bi', '%01.' . (int) Settings::Get('panel.decimal_places') . 'f %s');
+                $totals[$months[(int) $traffic_month['month']]] += $traffic_month['traffic'];
             }
-            eval("\$domain_list .= sprintf(\"%s\", \"" . getTemplate("traffic/index_table_row") . "\");");
+            eval('$domain_list .= sprintf("%s", "' . getTemplate('traffic/index_table_row') . '");');
         }
         // sum up totals
         $virtual_host = array(
             'name' => $lng['traffic']['months']['total'],
         );
         foreach ($totals as $month => $bytes) {
-            $virtual_host[$month] = ($bytes == 0 ? '-' : size_readable($bytes, 'GiB', 'bi', '%01.'.(int)Settings::Get('panel.decimal_places').'f %s'));
+            $virtual_host[$month] = ($bytes === 0 ? '-' : size_readable($bytes, 'GiB', 'bi', '%01.' . (int) Settings::Get('panel.decimal_places') . 'f %s'));
         }
         $customerview = 0;
-        eval("\$total_list = sprintf(\"%s\", \"" . getTemplate("traffic/index_table_row") . "\");");
-        eval("\$stats_tables .= sprintf(\"%s\", \"" . getTemplate("traffic/index_table") . "\");");
+        eval('$total_list = sprintf("%s", "' . getTemplate('traffic/index_table_row') . '");');
+        eval('$stats_tables .= sprintf("%s", "' . getTemplate('traffic/index_table') . '");');
     }
-    eval("echo \"" . getTemplate("traffic/index") . "\";");
+    eval('echo "' . getTemplate('traffic/index') . '";');
 }

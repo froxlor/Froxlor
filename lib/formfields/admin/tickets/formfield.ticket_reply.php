@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -11,8 +10,6 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Formfields
- *
  */
 
 return array(
@@ -21,19 +18,19 @@ return array(
         'image' => 'icons/ticket_reply.png',
         'sections' => array(
             'section_a' => array(
-                'visible' => ($isclosed == 0 ? true : false),
+                'visible' => ($isclosed === 0 ? true : false),
                 'title' => $lng['ticket']['ticket_reply'],
                 'image' => 'icons/ticket_reply.png',
                 'fields' => array(
                     'subject' => array(
                         'label' => $lng['ticket']['subject'],
                         'type' => 'text',
-                        'value' => 'Re: '.$subject
+                        'value' => 'Re: ' . $subject,
                     ),
                     'priority' => array(
                         'label' => $lng['ticket']['priority'],
                         'type' => 'select',
-                        'select_var' => $priorities
+                        'select_var' => $priorities,
                     ),
                     'category' => array(
                         'label' => $lng['ticket']['category'],
@@ -45,10 +42,10 @@ return array(
                         'label' => $lng['ticket']['message'],
                         'type' => 'textarea',
                         'cols' => 60,
-                        'rows' => 12
-                    )
-                )
-            )
-        )
-    )
+                        'rows' => 12,
+                    ),
+                ),
+            ),
+        ),
+    ),
 );

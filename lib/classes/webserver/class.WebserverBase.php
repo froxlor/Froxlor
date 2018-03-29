@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -12,14 +11,11 @@
  * @author     Michael Kaufmann <mkaufmann@nutime.de>
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Cron
  *
  * @since      0.9.31
- *
  */
 class WebserverBase
 {
-
     /**
      * returns an array with all entries required for all
      * webserver-vhost-configs
@@ -28,17 +24,17 @@ class WebserverBase
      */
     public static function getVhostsToCreate()
     {
-        $query = "SELECT `d`.*, `pd`.`domain` AS `parentdomain`, `c`.`loginname`,
+        $query = 'SELECT `d`.*, `pd`.`domain` AS `parentdomain`, `c`.`loginname`,
 				`d`.`phpsettingid`, `c`.`adminid`, `c`.`guid`, `c`.`email`,
 				`c`.`documentroot` AS `customerroot`, `c`.`deactivated`,
 				`c`.`phpenabled` AS `phpenabled_customer`,
 				`d`.`phpenabled` AS `phpenabled_vhost`,
 				`d`.`mod_fcgid_starter`,`d`.`mod_fcgid_maxrequests`,
 				`d`.`ocsp_stapling`
-				FROM `" . TABLE_PANEL_DOMAINS . "` `d`
+				FROM `' . TABLE_PANEL_DOMAINS . '` `d`
 
-				LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`)
-				LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `pd` ON (`pd`.`id` = `d`.`parentdomainid`)
+				LEFT JOIN `' . TABLE_PANEL_CUSTOMERS . '` `c` USING(`customerid`)
+				LEFT JOIN `' . TABLE_PANEL_DOMAINS . "` `pd` ON (`pd`.`id` = `d`.`parentdomainid`)
 
 				WHERE `d`.`aliasdomain` IS NULL AND `d`.`email_only` <> '1'
 				ORDER BY `d`.`parentdomainid` DESC, `d`.`iswildcarddomain`, `d`.`domain` ASC;
@@ -47,20 +43,20 @@ class WebserverBase
         $result_domains_stmt = Database::query($query);
         
         // prepare IP statement
-        $ip_stmt = Database::prepare("
+        $ip_stmt = Database::prepare('
 			SELECT `di`.`id_domain` , `p`.`ssl`, `p`.`ssl_cert_file`, `p`.`ssl_key_file`, `p`.`ssl_ca_file`, `p`.`ssl_cert_chainfile`
-			FROM `" . TABLE_DOMAINTOIP . "` `di`, `" . TABLE_PANEL_IPSANDPORTS . "` `p`
+			FROM `' . TABLE_DOMAINTOIP . '` `di`, `' . TABLE_PANEL_IPSANDPORTS . "` `p`
 			WHERE `p`.`id` = `di`.`id_ipandports`
 			AND `di`.`id_domain` = :domainid
 			AND `p`.`ssl` = '1'
 		");
         
         // prepare fpm-config select query
-        $fpm_sel_stmt = Database::prepare("
-			SELECT f.id FROM `" . TABLE_PANEL_FPMDAEMONS . "` f
-			LEFT JOIN `" . TABLE_PANEL_PHPCONFIGS . "` p ON p.fpmsettingid = f.id
+        $fpm_sel_stmt = Database::prepare('
+			SELECT f.id FROM `' . TABLE_PANEL_FPMDAEMONS . '` f
+			LEFT JOIN `' . TABLE_PANEL_PHPCONFIGS . '` p ON p.fpmsettingid = f.id
 			WHERE p.id = :phpconfigid
-		");
+		');
         
         $domains = array();
         while ($domain = $result_domains_stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -78,7 +74,7 @@ class WebserverBase
             // the corresponding information from the db
             if (domainHasSslIpPort($domain['id'])) {
                 $ssl_ip = Database::pexecute_first($ip_stmt, array(
-                    'domainid' => $domain['id']
+                    'domainid' => $domain['id'],
                 ));
                 
                 // set ssl info for domain
@@ -90,9 +86,9 @@ class WebserverBase
             }
             
             // read fpm-config-id if using fpm
-            if ((int) Settings::Get('phpfpm.enabled') == 1) {
+            if ((int) Settings::Get('phpfpm.enabled') === 1) {
                 $fpm_config = Database::pexecute_first($fpm_sel_stmt, array(
-                    'phpconfigid' => $domain['phpsettingid']
+                    'phpconfigid' => $domain['phpsettingid'],
                 ));
                 if ($fpm_config) {
                     $domains[$domain['domain']]['fpm_config_id'] = $fpm_config['id'];

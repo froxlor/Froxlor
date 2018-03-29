@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -12,16 +11,12 @@
  * @author     Michael Kaufmann <mkaufmann@nutime.de>
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Cron
  *
  * @link       http://www.nutime.de/
  * @since      0.9.16
- *
  */
-
 class phpinterface
 {
-
     /**
      * Domain-Data array
      * @var array
@@ -42,6 +37,7 @@ class phpinterface
 
     /**
      * main constructor
+     * @param mixed $domain
      */
     public function __construct($domain)
     {
@@ -66,9 +62,9 @@ class phpinterface
     private function _setInterface()
     {
         // php-fpm
-        if ((int)Settings::Get('phpfpm.enabled') == 1) {
+        if ((int) Settings::Get('phpfpm.enabled') === 1) {
             $this->_interface = new phpinterface_fpm($this->_domain);
-        } elseif ((int)Settings::Get('system.mod_fcgid') == 1) {
+        } elseif ((int) Settings::Get('system.mod_fcgid') === 1) {
             $this->_interface = new phpinterface_fcgid($this->_domain);
         }
     }
@@ -85,20 +81,20 @@ class phpinterface
         $php_config_id = intval($php_config_id);
 
         // If domain has no config, we will use the default one.
-        if ($php_config_id == 0) {
+        if ($php_config_id === 0) {
             $php_config_id = 1;
         }
 
         if (!isset($this->php_configs_cache[$php_config_id])) {
             $stmt = Database::prepare(
-                "
-					SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "` WHERE `id` = :id"
+                '
+					SELECT * FROM `' . TABLE_PANEL_PHPCONFIGS . '` WHERE `id` = :id'
             );
             $this->_php_configs_cache[$php_config_id] = Database::pexecute_first($stmt, array('id' => $php_config_id));
-            if ((int)Settings::Get('phpfpm.enabled') == 1) {
+            if ((int) Settings::Get('phpfpm.enabled') === 1) {
                 $stmt = Database::prepare(
-                    "
-					SELECT * FROM `" . TABLE_PANEL_FPMDAEMONS . "` WHERE `id` = :id"
+                    '
+					SELECT * FROM `' . TABLE_PANEL_FPMDAEMONS . '` WHERE `id` = :id'
                 );
                 $this->_php_configs_cache[$php_config_id]['fpm_settings'] = Database::pexecute_first($stmt, array('id' => $this->_php_configs_cache[$php_config_id]['fpmsettingid']));
             }

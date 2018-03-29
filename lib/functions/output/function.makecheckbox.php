@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,8 +12,14 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $name
+ * @param mixed $title
+ * @param mixed $value
+ * @param mixed $break
+ * @param null|mixed $selvalue
+ * @param mixed $title_trusted
+ * @param mixed $value_trusted
  */
 
 /**
@@ -30,11 +35,10 @@
  * @return string HTML Code
  * @author Michael Kaufmann <mkaufmann@nutime.de>
  */
-
 function makecheckbox($name, $title, $value, $break = false, $selvalue = null, $title_trusted = false, $value_trusted = false)
 {
     if ($selvalue !== null
-       && $value == $selvalue) {
+       && $value === $selvalue) {
         $checked = 'checked="checked"';
     } elseif (isset($_SESSION['requestData'][$name])) {
         $checked = 'checked="checked"';

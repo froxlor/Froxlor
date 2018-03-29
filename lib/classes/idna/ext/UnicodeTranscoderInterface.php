@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * UCTC - The Unicode Transcoder
  *
@@ -10,7 +10,6 @@
  * - UTF-7
  * - UTF-7 IMAP (modified UTF-7)
  *
- * @package IdnaConvert
  * @author Matthias Sommerfeld  <mso@phlyLabs.de>
  * @copyright 2003-2016 phlyLabs Berlin, http://phlylabs.de
  * @version 0.1.0 2016-01-08

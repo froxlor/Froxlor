@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2013 the Froxlor Team (see authors).
@@ -12,10 +11,10 @@
  * @author     Michael Kaufmann <mkaufmann@nutime.de>
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
  * @since      0.9.30
  *
+ * @param null|mixed $path
  */
 
 /**
@@ -26,7 +25,7 @@
  * @param array $fielddata
  * @param mixed $newfieldvalue
  *
- * @return boolean|array
+ * @return bool|array
  */
 function checkDisallowedPaths($path = null)
 {
@@ -35,15 +34,16 @@ function checkDisallowedPaths($path = null)
      * disallow base-directories and /
      */
     $disallowed_values = array(
-        "/", "/bin/", "/boot/", "/dev/", "/etc/", "/home/", "/lib/", "/lib32/", "/lib64/",
-        "/opt/", "/proc/", "/root/", "/run/", "/sbin/", "/sys/", "/tmp/", "/usr/", "/var/"
+        '/', '/bin/', '/boot/', '/dev/', '/etc/', '/home/', '/lib/', '/lib32/', '/lib64/',
+        '/opt/', '/proc/', '/root/', '/run/', '/sbin/', '/sys/', '/tmp/', '/usr/', '/var/',
     );
 
     $path = makeCorrectDir($path);
 
     // check if it's a disallowed path
-    if (in_array($path, $disallowed_values)) {
+    if (in_array($path, $disallowed_values, true)) {
         return false;
     }
+
     return true;
 }

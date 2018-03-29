@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,10 +12,7 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Panel
- *
  */
-
 define('AREA', 'admin');
 require './lib/init.php';
 
@@ -26,11 +22,11 @@ if (isset($_POST['id'])) {
     $id = intval($_GET['id']);
 }
 
-if ($page == 'admins'
-    && $userinfo['change_serversettings'] == '1'
+if ($page === 'admins'
+    && $userinfo['change_serversettings'] === '1'
 ) {
-    if ($action == '') {
-        $log->logAction(ADM_ACTION, LOG_NOTICE, "viewed admin_admins");
+    if ($action === '') {
+        $log->logAction(ADM_ACTION, LOG_NOTICE, 'viewed admin_admins');
         $fields = array(
             'loginname' => $lng['login']['username'],
             'name' => $lng['customer']['name'],
@@ -38,11 +34,11 @@ if ($page == 'admins'
             'diskspace_used' => $lng['customer']['diskspace'] . ' (' . $lng['panel']['used'] . ')',
             'traffic' => $lng['customer']['traffic'],
             'traffic_used' => $lng['customer']['traffic'] . ' (' . $lng['panel']['used'] . ')',
-            'deactivated' => $lng['admin']['deactivated']
+            'deactivated' => $lng['admin']['deactivated'],
         );
         $paging = new paging($userinfo, TABLE_PANEL_ADMINS, $fields);
         $admins = '';
-        $result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_ADMINS . "` " . $paging->getSqlWhere(false) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
+        $result_stmt = Database::query('SELECT * FROM `' . TABLE_PANEL_ADMINS . '` ' . $paging->getSqlWhere(false) . ' ' . $paging->getSqlOrderBy() . ' ' . $paging->getSqlLimit());
         $numrows_admins = Database::num_rows();
         $paging->setEntries($numrows_admins);
         $sortcode = $paging->getHtmlSortCode($lng, true);
@@ -90,34 +86,34 @@ if ($page == 'admins'
                 $row = str_replace_array('-1', 'UL', $row, 'customers domains diskspace traffic mysqls emails email_accounts email_forwarders email_quota ftps subdomains tickets');
                 $row = htmlentities_array($row);
 
-                $row['custom_notes'] = ($row['custom_notes'] != '') ? nl2br($row['custom_notes']) : '';
+                $row['custom_notes'] = ($row['custom_notes'] !== '') ? nl2br($row['custom_notes']) : '';
 
-                eval("\$admins.=\"" . getTemplate("admins/admins_admin") . "\";");
+                eval('$admins.="' . getTemplate('admins/admins_admin') . '";');
                 $count++;
             }
             $i++;
         }
 
         $admincount = $numrows_admins;
-        eval("echo \"" . getTemplate("admins/admins") . "\";");
-    } elseif ($action == 'su') {
-        $result_stmt = Database::prepare("
-			SELECT * FROM `" . TABLE_PANEL_ADMINS . "` WHERE `adminid` = :adminid
-		");
+        eval('echo "' . getTemplate('admins/admins') . '";');
+    } elseif ($action === 'su') {
+        $result_stmt = Database::prepare('
+			SELECT * FROM `' . TABLE_PANEL_ADMINS . '` WHERE `adminid` = :adminid
+		');
         $result = Database::pexecute_first($result_stmt, array('adminid' => $id));
         $destination_admin = $result['loginname'];
 
-        if ($destination_admin != ''
-            && $result['adminid'] != $userinfo['userid']
+        if ($destination_admin !== ''
+            && $result['adminid'] !== $userinfo['userid']
         ) {
-            $result_stmt = Database::prepare("
-				SELECT * FROM `" . TABLE_PANEL_SESSIONS . "` WHERE `userid` = :userid
-			");
+            $result_stmt = Database::prepare('
+				SELECT * FROM `' . TABLE_PANEL_SESSIONS . '` WHERE `userid` = :userid
+			');
             $result = Database::pexecute_first($result_stmt, array('userid' => $userinfo['userid']));
 
             $s = md5(uniqid(microtime(), 1));
-            $ins_stmt = Database::prepare("
-				INSERT INTO `" . TABLE_PANEL_SESSIONS . "` SET
+            $ins_stmt = Database::prepare('
+				INSERT INTO `' . TABLE_PANEL_SESSIONS . "` SET
 				`hash` = :hash, `userid` = :userid, `ipaddress` = :ip,
 				`useragent` = :ua, `lastactivity` = :la,
 				`language` = :lang, `adminsession` = '1'
@@ -128,7 +124,7 @@ if ($page == 'admins'
                 'ip' => $result['ipaddress'],
                 'ua' => $result['useragent'],
                 'la' => time(),
-                'lang' => $result['language']
+                'lang' => $result['language'],
             );
             Database::pexecute($ins_stmt, $ins_data);
             $log->logAction(ADM_ACTION, LOG_INFO, "switched adminuser and is now '" . $destination_admin . "'");
@@ -136,47 +132,47 @@ if ($page == 'admins'
         } else {
             redirectTo('index.php', array('action' => 'login'));
         }
-    } elseif ($action == 'delete'
-        && $id != 0
+    } elseif ($action === 'delete'
+        && $id !== 0
     ) {
-        $result_stmt = Database::prepare("
-			SELECT * FROM `" . TABLE_PANEL_ADMINS . "` WHERE `adminid` = :adminid
-		");
+        $result_stmt = Database::prepare('
+			SELECT * FROM `' . TABLE_PANEL_ADMINS . '` WHERE `adminid` = :adminid
+		');
         $result = Database::pexecute_first($result_stmt, array('adminid' => $id));
 
-        if ($result['loginname'] != '') {
-            if ($result['adminid'] == $userinfo['userid']) {
+        if ($result['loginname'] !== '') {
+            if ($result['adminid'] === $userinfo['userid']) {
                 standard_error('youcantdeleteyourself');
             }
 
             if (isset($_POST['send'])
-                && $_POST['send'] == 'send'
+                && $_POST['send'] === 'send'
             ) {
-                $del_stmt = Database::prepare("
-					DELETE FROM `" . TABLE_PANEL_ADMINS . "` WHERE `adminid` = :adminid
-				");
+                $del_stmt = Database::prepare('
+					DELETE FROM `' . TABLE_PANEL_ADMINS . '` WHERE `adminid` = :adminid
+				');
                 Database::pexecute($del_stmt, array('adminid' => $id));
 
-                $del_stmt = Database::prepare("
-					DELETE FROM `" . TABLE_PANEL_TRAFFIC_ADMINS . "` WHERE `adminid` = :adminid
-				");
+                $del_stmt = Database::prepare('
+					DELETE FROM `' . TABLE_PANEL_TRAFFIC_ADMINS . '` WHERE `adminid` = :adminid
+				');
                 Database::pexecute($del_stmt, array('adminid' => $id));
 
-                $del_stmt = Database::prepare("
-					DELETE FROM `" . TABLE_PANEL_DISKSPACE_ADMINS . "` WHERE `adminid` = :adminid
-				");
+                $del_stmt = Database::prepare('
+					DELETE FROM `' . TABLE_PANEL_DISKSPACE_ADMINS . '` WHERE `adminid` = :adminid
+				');
                 Database::pexecute($del_stmt, array('adminid' => $id));
 
-                $upd_stmt = Database::prepare("
-					UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET
+                $upd_stmt = Database::prepare('
+					UPDATE `' . TABLE_PANEL_CUSTOMERS . '` SET
 					`adminid` = :userid WHERE `adminid` = :adminid
-				");
+				');
                 Database::pexecute($upd_stmt, array('userid' => $userinfo['userid'], 'adminid' => $id));
 
-                $upd_stmt = Database::prepare("
-					UPDATE `" . TABLE_PANEL_DOMAINS . "` SET
+                $upd_stmt = Database::prepare('
+					UPDATE `' . TABLE_PANEL_DOMAINS . '` SET
 					`adminid` = :userid WHERE `adminid` = :adminid
-				");
+				');
                 Database::pexecute($upd_stmt, array('userid' => $userinfo['userid'], 'adminid' => $id));
 
                 $log->logAction(ADM_ACTION, LOG_INFO, "deleted admin '" . $result['loginname'] . "'");
@@ -186,9 +182,9 @@ if ($page == 'admins'
                 ask_yesno('admin_admin_reallydelete', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $result['loginname']);
             }
         }
-    } elseif ($action == 'add') {
+    } elseif ($action === 'add') {
         if (isset($_POST['send'])
-            && $_POST['send'] == 'send'
+            && $_POST['send'] === 'send'
         ) {
             $name = validate($_POST['name'], 'name');
             $email = $idna_convert->encode(validate($_POST['email'], 'email'));
@@ -234,7 +230,7 @@ if ($page == 'admins'
                 $email_forwarders = -1;
             }
 
-            if (Settings::Get('system.mail_quota_enabled') == '1') {
+            if (Settings::Get('system.mail_quota_enabled') === '1') {
                 $email_quota = validate($_POST['email_quota'], 'email_quota', '/^\d+$/', 'vmailquotawrong', array('0', ''));
                 if (isset($_POST['email_quota_ul'])) {
                     $email_quota = -1;
@@ -248,7 +244,7 @@ if ($page == 'admins'
                 $ftps = -1;
             }
 
-            if (Settings::Get('ticket.enabled') == 1) {
+            if (Settings::Get('ticket.enabled') === 1) {
                 $tickets = intval_ressource($_POST['tickets']);
                 if (isset($_POST['tickets_ul'])) {
                     $tickets = -1;
@@ -302,20 +298,20 @@ if ($page == 'admins'
             $ipaddress = intval_ressource($_POST['ipaddress']);
 
             // Check if the account already exists
-            $loginname_check_stmt = Database::prepare("
-				SELECT `loginname` FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `loginname` = :login
-			");
+            $loginname_check_stmt = Database::prepare('
+				SELECT `loginname` FROM `' . TABLE_PANEL_CUSTOMERS . '` WHERE `loginname` = :login
+			');
             $loginname_check = Database::pexecute_first($loginname_check_stmt, array('login' => $loginname));
 
-            $loginname_check_admin_stmt = Database::prepare("
-				SELECT `loginname` FROM `" . TABLE_PANEL_ADMINS . "` WHERE `loginname` = :login
-			");
+            $loginname_check_admin_stmt = Database::prepare('
+				SELECT `loginname` FROM `' . TABLE_PANEL_ADMINS . '` WHERE `loginname` = :login
+			');
             $loginname_check_admin = Database::pexecute_first($loginname_check_admin_stmt, array('login' => $loginname));
 
-            if ($loginname == '') {
+            if ($loginname === '') {
                 standard_error(array('stringisempty', 'myloginname'));
-            } elseif (strtolower($loginname_check['loginname']) == strtolower($loginname)
-                || strtolower($loginname_check_admin['loginname']) == strtolower($loginname)
+            } elseif (strtolower($loginname_check['loginname']) === strtolower($loginname)
+                || strtolower($loginname_check_admin['loginname']) === strtolower($loginname)
             ) {
                 standard_error('loginnameexists', $loginname);
             }
@@ -324,32 +320,32 @@ if ($page == 'admins'
                 standard_error('loginnameissystemaccount', Settings::Get('customer.accountprefix'));
             } elseif (!validateUsername($loginname)) {
                 standard_error('loginnameiswrong', $loginname);
-            } elseif ($name == '') {
+            } elseif ($name === '') {
                 standard_error(array('stringisempty', 'myname'));
-            } elseif ($email == '') {
+            } elseif ($email === '') {
                 standard_error(array('stringisempty', 'emailadd'));
-            } elseif ($password == '') {
+            } elseif ($password === '') {
                 standard_error(array('stringisempty', 'mypassword'));
             } elseif (!validateEmail($email)) {
                 standard_error('emailiswrong', $email);
             } else {
-                if ($customers_see_all != '1') {
+                if ($customers_see_all !== '1') {
                     $customers_see_all = '0';
                 }
 
-                if ($domains_see_all != '1') {
+                if ($domains_see_all !== '1') {
                     $domains_see_all = '0';
                 }
 
-                if ($caneditphpsettings != '1') {
+                if ($caneditphpsettings !== '1') {
                     $caneditphpsettings = '0';
                 }
 
-                if ($change_serversettings != '1') {
+                if ($change_serversettings !== '1') {
                     $change_serversettings = '0';
                 }
 
-                if ($tickets_see_all != '1') {
+                if ($tickets_see_all !== '1') {
                     $tickets_see_all  = '0';
                 }
 
@@ -381,11 +377,11 @@ if ($page == 'admins'
                     'ip' => $ipaddress,
                     'theme' => $_theme,
                     'custom_notes' => $custom_notes,
-                    'custom_notes_show' => $custom_notes_show
+                    'custom_notes_show' => $custom_notes_show,
                 );
 
-                $ins_stmt = Database::prepare("
-					INSERT INTO `" . TABLE_PANEL_ADMINS . "` SET
+                $ins_stmt = Database::prepare('
+					INSERT INTO `' . TABLE_PANEL_ADMINS . '` SET
 					`loginname` = :loginname,
 					`password` = :password,
 					`name` = :name,
@@ -412,7 +408,7 @@ if ($page == 'admins'
 					`theme` = :theme,
 					`custom_notes` = :custom_notes,
 					`custom_notes_show` = :custom_notes_show
-				");
+				');
                 Database::pexecute($ins_stmt, $ins_data);
 
                 $adminid = Database::lastInsertId();
@@ -425,10 +421,10 @@ if ($page == 'admins'
                 $language_options.= makeoption($language_name, $language_file, $userinfo['language'], true);
             }
 
-            $ipaddress = makeoption($lng['admin']['allips'], "-1");
-            $ipsandports_stmt = Database::query("
-				SELECT `id`, `ip` FROM `" . TABLE_PANEL_IPSANDPORTS . "` GROUP BY `ip` ORDER BY `ip` ASC
-			");
+            $ipaddress = makeoption($lng['admin']['allips'], '-1');
+            $ipsandports_stmt = Database::query('
+				SELECT `id`, `ip` FROM `' . TABLE_PANEL_IPSANDPORTS . '` GROUP BY `ip` ORDER BY `ip` ASC
+			');
 
             while ($row = $ipsandports_stmt->fetch(PDO::FETCH_ASSOC)) {
                 $ipaddress.= makeoption($row['ip'], $row['id']);
@@ -447,25 +443,25 @@ if ($page == 'admins'
             $tickets_ul = makecheckbox('tickets_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
             $mysqls_ul = makecheckbox('mysqls_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 
-            $admin_add_data = include_once dirname(__FILE__).'/lib/formfields/admin/admin/formfield.admin_add.php';
+            $admin_add_data = include_once __DIR__ . '/lib/formfields/admin/admin/formfield.admin_add.php';
             $admin_add_form = htmlform::genHTMLForm($admin_add_data);
 
             $title = $admin_add_data['admin_add']['title'];
             $image = $admin_add_data['admin_add']['image'];
 
-            eval("echo \"" . getTemplate("admins/admins_add") . "\";");
+            eval('echo "' . getTemplate('admins/admins_add') . '";');
         }
-    } elseif ($action == 'edit'
-        && $id != 0
+    } elseif ($action === 'edit'
+        && $id !== 0
     ) {
-        $result_stmt = Database::prepare("
-			SELECT * FROM `" . TABLE_PANEL_ADMINS . "` WHERE `adminid` = :adminid
-		");
+        $result_stmt = Database::prepare('
+			SELECT * FROM `' . TABLE_PANEL_ADMINS . '` WHERE `adminid` = :adminid
+		');
         $result = Database::pexecute_first($result_stmt, array('adminid' => $id));
 
-        if ($result['loginname'] != '') {
+        if ($result['loginname'] !== '') {
             if (isset($_POST['send'])
-                && $_POST['send'] == 'send'
+                && $_POST['send'] === 'send'
             ) {
                 $name = validate($_POST['name'], 'name');
                 $email = $idna_convert->encode(validate($_POST['email'], 'email'));
@@ -476,7 +472,7 @@ if ($page == 'admins'
                     $custom_notes_show = intval_ressource($_POST['custom_notes_show']);
                 }
 
-                if ($result['adminid'] == $userinfo['userid']) {
+                if ($result['adminid'] === $userinfo['userid']) {
                     $password = '';
                     $def_language = $result['def_language'];
                     $deactivated = $result['deactivated'];
@@ -533,7 +529,7 @@ if ($page == 'admins'
                         $email_forwarders = -1;
                     }
 
-                    if (Settings::Get('system.mail_quota_enabled') == '1') {
+                    if (Settings::Get('system.mail_quota_enabled') === '1') {
                         $email_quota = validate($_POST['email_quota'], 'email_quota', '/^\d+$/', 'vmailquotawrong', array('0', ''));
                         if (isset($_POST['email_quota_ul'])) {
                             $email_quota = -1;
@@ -547,7 +543,7 @@ if ($page == 'admins'
                         $ftps = -1;
                     }
 
-                    if (Settings::Get('ticket.enabled') == 1) {
+                    if (Settings::Get('ticket.enabled') === 1) {
                         $tickets = intval_ressource($_POST['tickets']);
                         if (isset($_POST['tickets_ul'])) {
                             $tickets = -1;
@@ -601,85 +597,85 @@ if ($page == 'admins'
                     $ipaddress = intval_ressource($_POST['ipaddress']);
                 }
 
-                if ($name == '') {
+                if ($name === '') {
                     standard_error(array('stringisempty', 'myname'));
-                } elseif ($email == '') {
+                } elseif ($email === '') {
                     standard_error(array('stringisempty', 'emailadd'));
                 } elseif (!validateEmail($email)) {
                     standard_error('emailiswrong', $email);
                 } else {
-                    if ($password != '') {
+                    if ($password !== '') {
                         $password = validatePassword($password);
                         $password = makeCryptPassword($password);
                     } else {
                         $password = $result['password'];
                     }
 
-                    if ($deactivated != '1') {
+                    if ($deactivated !== '1') {
                         $deactivated = '0';
                     }
 
-                    if ($customers_see_all != '1') {
+                    if ($customers_see_all !== '1') {
                         $customers_see_all = '0';
                     }
 
-                    if ($domains_see_all != '1') {
+                    if ($domains_see_all !== '1') {
                         $domains_see_all = '0';
                     }
 
-                    if ($caneditphpsettings != '1') {
+                    if ($caneditphpsettings !== '1') {
                         $caneditphpsettings = '0';
                     }
 
-                    if ($change_serversettings != '1') {
+                    if ($change_serversettings !== '1') {
                         $change_serversettings = '0';
                     }
 
-                    if ($tickets_see_all != '1') {
+                    if ($tickets_see_all !== '1') {
                         $tickets_see_all = '0';
                     }
 
                     // check if a resource was set to something lower
                     // than actually used by the admin/reseller
-                    $res_warning = "";
-                    if ($customers != $result['customers'] && $customers != -1 && $customers < $result['customers_used']) {
+                    $res_warning = '';
+                    if ($customers !== $result['customers'] && $customers !== -1 && $customers < $result['customers_used']) {
                         $res_warning .= sprintf($lng['error']['setlessthanalreadyused'], 'customers');
                     }
-                    if ($domains != $result['domains'] && $domains != -1 && $domains < $result['domains_used']) {
+                    if ($domains !== $result['domains'] && $domains !== -1 && $domains < $result['domains_used']) {
                         $res_warning .= sprintf($lng['error']['setlessthanalreadyused'], 'domains');
                     }
-                    if ($diskspace != $result['diskspace'] && ($diskspace / 1024) != -1 && $diskspace < $result['diskspace_used']) {
+                    if ($diskspace !== $result['diskspace'] && ($diskspace / 1024) !== -1 && $diskspace < $result['diskspace_used']) {
                         $res_warning .= sprintf($lng['error']['setlessthanalreadyused'], 'diskspace');
                     }
-                    if ($traffic != $result['traffic'] && ($traffic / 1024 / 1024) != -1 && $traffic < $result['traffic_used']) {
+                    if ($traffic !== $result['traffic'] && ($traffic / 1024 / 1024) !== -1 && $traffic < $result['traffic_used']) {
                         $res_warning .= sprintf($lng['error']['setlessthanalreadyused'], 'traffic');
                     }
-                    if ($emails != $result['emails'] && $emails != -1 && $emails < $result['emails_used']) {
+                    if ($emails !== $result['emails'] && $emails !== -1 && $emails < $result['emails_used']) {
                         $res_warning .= sprintf($lng['error']['setlessthanalreadyused'], 'emails');
                     }
-                    if ($email_accounts != $result['email_accounts'] && $email_accounts != -1 && $email_accounts < $result['email_accounts_used']) {
+                    if ($email_accounts !== $result['email_accounts'] && $email_accounts !== -1 && $email_accounts < $result['email_accounts_used']) {
                         $res_warning .= sprintf($lng['error']['setlessthanalreadyused'], 'email accounts');
                     }
-                    if ($email_forwarders != $result['email_forwarders'] && $email_forwarders != -1 && $email_forwarders < $result['email_forwarders_used']) {
+                    if ($email_forwarders !== $result['email_forwarders'] && $email_forwarders !== -1 && $email_forwarders < $result['email_forwarders_used']) {
                         $res_warning .= sprintf($lng['error']['setlessthanalreadyused'], 'email forwarders');
                     }
-                    if ($email_quota != $result['email_quota'] && $email_quota != -1 && $email_quota < $result['email_quota_used']) {
+                    if ($email_quota !== $result['email_quota'] && $email_quota !== -1 && $email_quota < $result['email_quota_used']) {
                         $res_warning .= sprintf($lng['error']['setlessthanalreadyused'], 'email quota');
                     }
-                    if ($ftps != $result['ftps'] && $ftps != -1 && $ftps < $result['ftps_used']) {
+                    if ($ftps !== $result['ftps'] && $ftps !== -1 && $ftps < $result['ftps_used']) {
                         $res_warning .= sprintf($lng['error']['setlessthanalreadyused'], 'ftps');
                     }
-                    if ($tickets != $result['tickets'] && $tickets != -1 && $tickets < $result['tickets_used']) {
+                    if ($tickets !== $result['tickets'] && $tickets !== -1 && $tickets < $result['tickets_used']) {
                         $res_warning .= sprintf($lng['error']['setlessthanalreadyused'], 'tickets');
                     }
-                    if ($mysqls != $result['mysqls'] && $mysqls != -1 && $mysqls < $result['mysqls_used']) {
+                    if ($mysqls !== $result['mysqls'] && $mysqls !== -1 && $mysqls < $result['mysqls_used']) {
                         $res_warning .= sprintf($lng['error']['setlessthanalreadyused'], 'mysqls');
                     }
 
-                    if ($res_warning != "") {
+                    if ($res_warning !== '') {
                         $link = '';
                         $error = $res_warning;
-                        eval("echo \"" . getTemplate('misc/error', '1') . "\";");
+                        eval('echo "' . getTemplate('misc/error', '1') . '";');
                         exit;
                     }
 
@@ -709,11 +705,11 @@ if ($page == 'admins'
                         'deactivated' => $deactivated,
                         'custom_notes' => $custom_notes,
                         'custom_notes_show' => $custom_notes_show,
-                        'adminid' => $id
+                        'adminid' => $id,
                     );
 
-                    $upd_stmt = Database::prepare("
-						UPDATE `" . TABLE_PANEL_ADMINS . "` SET
+                    $upd_stmt = Database::prepare('
+						UPDATE `' . TABLE_PANEL_ADMINS . '` SET
 						`password` = :password,
 						`name` = :name,
 						`email` = :email,
@@ -740,7 +736,7 @@ if ($page == 'admins'
 						`custom_notes` = :custom_notes,
 						`custom_notes_show` = :custom_notes_show
 						WHERE `adminid` = :adminid
-					");
+					');
                     Database::pexecute($upd_stmt, $upd_data);
 
                     $log->logAction(ADM_ACTION, LOG_INFO, "edited admin '#" . $id . "'");
@@ -753,62 +749,62 @@ if ($page == 'admins'
                 $result['email'] = $idna_convert->decode($result['email']);
 
                 $customers_ul = makecheckbox('customers_ul', $lng['customer']['unlimited'], '-1', false, $result['customers'], true, true);
-                if ($result['customers'] == '-1') {
+                if ($result['customers'] === '-1') {
                     $result['customers'] = '';
                 }
 
                 $diskspace_ul = makecheckbox('diskspace_ul', $lng['customer']['unlimited'], '-1', false, $result['diskspace'], true, true);
-                if ($result['diskspace'] == '-1') {
+                if ($result['diskspace'] === '-1') {
                     $result['diskspace'] = '';
                 }
 
                 $traffic_ul = makecheckbox('traffic_ul', $lng['customer']['unlimited'], '-1', false, $result['traffic'], true, true);
-                if ($result['traffic'] == '-1') {
+                if ($result['traffic'] === '-1') {
                     $result['traffic'] = '';
                 }
 
                 $domains_ul = makecheckbox('domains_ul', $lng['customer']['unlimited'], '-1', false, $result['domains'], true, true);
-                if ($result['domains'] == '-1') {
+                if ($result['domains'] === '-1') {
                     $result['domains'] = '';
                 }
 
                 $subdomains_ul = makecheckbox('subdomains_ul', $lng['customer']['unlimited'], '-1', false, $result['subdomains'], true, true);
-                if ($result['subdomains'] == '-1') {
+                if ($result['subdomains'] === '-1') {
                     $result['subdomains'] = '';
                 }
 
                 $emails_ul = makecheckbox('emails_ul', $lng['customer']['unlimited'], '-1', false, $result['emails'], true, true);
-                if ($result['emails'] == '-1') {
+                if ($result['emails'] === '-1') {
                     $result['emails'] = '';
                 }
 
                 $email_accounts_ul = makecheckbox('email_accounts_ul', $lng['customer']['unlimited'], '-1', false, $result['email_accounts'], true, true);
-                if ($result['email_accounts'] == '-1') {
+                if ($result['email_accounts'] === '-1') {
                     $result['email_accounts'] = '';
                 }
 
                 $email_forwarders_ul = makecheckbox('email_forwarders_ul', $lng['customer']['unlimited'], '-1', false, $result['email_forwarders'], true, true);
-                if ($result['email_forwarders'] == '-1') {
+                if ($result['email_forwarders'] === '-1') {
                     $result['email_forwarders'] = '';
                 }
 
                 $email_quota_ul = makecheckbox('email_quota_ul', $lng['customer']['unlimited'], '-1', false, $result['email_quota'], true, true);
-                if ($result['email_quota'] == '-1') {
+                if ($result['email_quota'] === '-1') {
                     $result['email_quota'] = '';
                 }
 
                 $ftps_ul = makecheckbox('ftps_ul', $lng['customer']['unlimited'], '-1', false, $result['ftps'], true, true);
-                if ($result['ftps'] == '-1') {
+                if ($result['ftps'] === '-1') {
                     $result['ftps'] = '';
                 }
 
                 $tickets_ul = makecheckbox('tickets_ul', $lng['customer']['unlimited'], '-1', false, $result['tickets'], true, true);
-                if ($result['tickets'] == '-1') {
+                if ($result['tickets'] === '-1') {
                     $result['tickets'] = '';
                 }
 
                 $mysqls_ul = makecheckbox('mysqls_ul', $lng['customer']['unlimited'], '-1', false, $result['mysqls'], true, true);
-                if ($result['mysqls'] == '-1') {
+                if ($result['mysqls'] === '-1') {
                     $result['mysqls'] = '';
                 }
 
@@ -817,10 +813,10 @@ if ($page == 'admins'
                     $language_options.= makeoption($language_name, $language_file, $result['def_language'], true);
                 }
 
-                $ipaddress = makeoption($lng['admin']['allips'], "-1", $result['ip']);
-                $ipsandports_stmt = Database::query("
-					SELECT `id`, `ip` FROM `" . TABLE_PANEL_IPSANDPORTS . "` GROUP BY `id`, `ip` ORDER BY `ip`, `port` ASC
-				");
+                $ipaddress = makeoption($lng['admin']['allips'], '-1', $result['ip']);
+                $ipsandports_stmt = Database::query('
+					SELECT `id`, `ip` FROM `' . TABLE_PANEL_IPSANDPORTS . '` GROUP BY `id`, `ip` ORDER BY `ip`, `port` ASC
+				');
 
                 while ($row = $ipsandports_stmt->fetch(PDO::FETCH_ASSOC)) {
                     $ipaddress.= makeoption($row['ip'], $row['id'], $result['ip']);
@@ -828,13 +824,13 @@ if ($page == 'admins'
 
                 $result = htmlentities_array($result);
 
-                $admin_edit_data = include_once dirname(__FILE__).'/lib/formfields/admin/admin/formfield.admin_edit.php';
+                $admin_edit_data = include_once __DIR__ . '/lib/formfields/admin/admin/formfield.admin_edit.php';
                 $admin_edit_form = htmlform::genHTMLForm($admin_edit_data);
 
                 $title = $admin_edit_data['admin_edit']['title'];
                 $image = $admin_edit_data['admin_edit']['image'];
 
-                eval("echo \"" . getTemplate("admins/admins_edit") . "\";");
+                eval('echo "' . getTemplate('admins/admins_edit') . '";');
             }
         }
     }

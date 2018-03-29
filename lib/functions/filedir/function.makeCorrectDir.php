@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,8 +12,8 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $dir
  */
 
 /**
@@ -26,20 +25,21 @@
  */
 function makeCorrectDir($dir)
 {
-    if (version_compare("5.4.6", PHP_VERSION, ">")) {
+    if (version_compare('5.4.6', PHP_VERSION, '>')) {
         assert('is_string($dir) && strlen($dir) > 0 /* $dir does not look like an actual folder name */');
     } else {
-        assert('is_string($dir) && strlen($dir) > 0', 'Value "' . $dir .'" does not look like an actual folder name');
+        assert('is_string($dir) && strlen($dir) > 0', 'Value "' . $dir . '" does not look like an actual folder name');
     }
 
     $dir = trim($dir);
 
-    if (substr($dir, -1, 1) != '/') {
+    if (substr($dir, -1, 1) !== '/') {
         $dir.= '/';
     }
-    if (substr($dir, 0, 1) != '/') {
+    if (substr($dir, 0, 1) !== '/') {
         $dir = '/' . $dir;
     }
     $dir = makeSecurePath($dir);
+
     return $dir;
 }

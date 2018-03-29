@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -11,14 +10,11 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Install
- *
  */
-
 if (!defined('AREA')
-        || (defined('AREA') && AREA != 'admin')
+        || (defined('AREA') && AREA !== 'admin')
         || !isset($userinfo['loginname'])
-        || (isset($userinfo['loginname']) && $userinfo['loginname'] == '')
+        || (isset($userinfo['loginname']) && $userinfo['loginname'] === '')
 ) {
     header('Location: ../../../index.php');
     exit;
@@ -27,12 +23,12 @@ if (!defined('AREA')
 $updateto = '0.9-r0';
 $frontend = 'froxlor';
 
-showUpdateStep("Upgrading SysCP ".Settings::Get('panel.version')." to Froxlor ". $updateto, false);
+showUpdateStep('Upgrading SysCP ' . Settings::Get('panel.version') . ' to Froxlor ' . $updateto, false);
 updateToVersion($updateto);
 
 // add field frontend
 Database::query(
-    "INSERT INTO `" . TABLE_PANEL_SETTINGS . "` SET
+    'INSERT INTO `' . TABLE_PANEL_SETTINGS . "` SET
 	`settinggroup` = 'panel',
 	`varname` = 'frontend',
 	`value` = 'froxlor'"

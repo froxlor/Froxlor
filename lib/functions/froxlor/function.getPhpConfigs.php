@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -11,8 +10,6 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
- *
  */
 
 /**
@@ -27,19 +24,20 @@ function getPhpConfigs()
 
     // check if table exists because this is used in a preconfig
     // where the tables possibly does not exist yet
-    $results = Database::query("SHOW TABLES LIKE '".TABLE_PANEL_PHPCONFIGS."'");
+    $results = Database::query("SHOW TABLES LIKE '" . TABLE_PANEL_PHPCONFIGS . "'");
     if (!$results) {
         $configs_array[1] = 'Default php.ini';
     } else {
         // get all configs
-        $result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "`");
+        $result_stmt = Database::query('SELECT * FROM `' . TABLE_PANEL_PHPCONFIGS . '`');
         while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
             if (!isset($configs_array[$row['id']])
-                    && !in_array($row['id'], $configs_array)
+                    && !in_array($row['id'], $configs_array, true)
             ) {
                 $configs_array[$row['id']] = html_entity_decode($row['description']);
             }
         }
     }
+
     return $configs_array;
 }

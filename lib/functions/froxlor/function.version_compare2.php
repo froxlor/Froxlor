@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -11,8 +10,9 @@
  * @copyright  (c) the authors
  * @author     Michael Kaufmann <d00p@froxlor.org>
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $a
+ * @param mixed $b
  */
 
 /**
@@ -21,19 +21,19 @@
  * @param string $a
  * @param string $b
  *
- * @return integer 0 if equal, 1 if a>b and -1 if b>a
+ * @return int 0 if equal, 1 if a>b and -1 if b>a
  */
 function version_compare2($a, $b)
 {
 
     // split version into pieces and remove trailing .0
-    $a = explode(".", $a);
-    $b = explode(".", $b);
+    $a = explode('.', $a);
+    $b = explode('.', $b);
 
     _parseVersionArray($a);
     _parseVersionArray($b);
 
-    while (count($a) != count($b)) {
+    while (count($a) !== count($b)) {
         if (count($a) < count($b)) {
             $a[] = '0';
         } elseif (count($b) < count($a)) {
@@ -65,7 +65,7 @@ function _parseVersionArray(&$arr = null)
 {
     // -svn or -dev or -rc ?
     if (stripos($arr[count($arr)-1], '-') !== false) {
-        $x = explode("-", $arr[count($arr)-1]);
+        $x = explode('-', $arr[count($arr)-1]);
         $arr[count($arr)-1] = $x[0];
         if (stripos($x[1], 'rc') !== false) {
             $arr[] = '-1';

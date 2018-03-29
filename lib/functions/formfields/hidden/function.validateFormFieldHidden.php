@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,10 +12,11 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $fieldname
+ * @param mixed $fielddata
+ * @param mixed $newfieldvalue
  */
-
 function validateFormFieldHidden($fieldname, $fielddata, $newfieldvalue)
 {
     /**
@@ -25,12 +25,12 @@ function validateFormFieldHidden($fieldname, $fielddata, $newfieldvalue)
      * while settings have been edited (bug #52)
      */
     if ($newfieldvalue === $fielddata['value']
-        || $fieldname == 'system_last_tasks_run'
-        || $fieldname == 'system_last_traffic_run'
-        || $fieldname == 'system_lastcronrun'
+        || $fieldname === 'system_last_tasks_run'
+        || $fieldname === 'system_last_traffic_run'
+        || $fieldname === 'system_lastcronrun'
     ) {
         return true;
-    } else {
-        return 'hiddenfieldvaluechanged';
     }
+
+    return 'hiddenfieldvaluechanged';
 }

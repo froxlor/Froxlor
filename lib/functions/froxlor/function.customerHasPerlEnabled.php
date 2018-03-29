@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -11,8 +10,8 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $cid
  */
 
 /**
@@ -23,14 +22,14 @@
  *
  * @param int customer-id
  *
- * @return boolean
+ * @return bool
  */
 function customerHasPerlEnabled($cid = 0)
 {
     if ($cid > 0) {
         $result_stmt = Database::prepare(
-            "
-				SELECT `perlenabled` FROM `".TABLE_PANEL_CUSTOMERS."` WHERE `customerid` = :cid"
+            '
+				SELECT `perlenabled` FROM `' . TABLE_PANEL_CUSTOMERS . '` WHERE `customerid` = :cid'
         );
         Database::pexecute($result_stmt, array('cid' => $cid));
         $result = $result_stmt->fetch(PDO::FETCH_ASSOC);
@@ -38,8 +37,9 @@ function customerHasPerlEnabled($cid = 0)
         if (is_array($result)
                 && isset($result['perlenabled'])
         ) {
-            return ($result['perlenabled'] == '1') ? true : false;
+            return ($result['perlenabled'] === '1') ? true : false;
         }
     }
+
     return false;
 }

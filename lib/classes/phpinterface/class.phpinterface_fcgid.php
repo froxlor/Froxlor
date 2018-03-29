@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -12,16 +11,12 @@
  * @author     Michael Kaufmann <mkaufmann@nutime.de>
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Cron
  *
  * @link       http://www.nutime.de/
  * @since      0.9.16
- *
  */
-
 class phpinterface_fcgid
 {
-
     /**
      * Domain-Data array
      * @var array
@@ -36,6 +31,7 @@ class phpinterface_fcgid
 
     /**
      * main constructor
+    * @param mixed $domain
     */
     public function __construct($domain)
     {
@@ -52,41 +48,41 @@ class phpinterface_fcgid
         // create starter
         $starter_file = "#!/bin/sh\n\n";
         $starter_file.= "#\n";
-        $starter_file.= "# starter created/changed on " . date("Y.m.d H:i:s") . " for domain '" . $this->_domain['domain'] . "' with id #" . $this->_domain['id'] . " from php template '" . $phpconfig['description'] . "' with id #" . $phpconfig['id'] . "\n";
+        $starter_file.= '# starter created/changed on ' . date('Y.m.d H:i:s') . " for domain '" . $this->_domain['domain'] . "' with id #" . $this->_domain['id'] . " from php template '" . $phpconfig['description'] . "' with id #" . $phpconfig['id'] . "\n";
         $starter_file.= "# Do not change anything in this file, it will be overwritten by the Froxlor Cronjob!\n";
         $starter_file.= "#\n\n";
-        $starter_file.= "umask ".$phpconfig['mod_fcgid_umask']."\n";
-        $starter_file.= "PHPRC=" . escapeshellarg($this->getConfigDir()) . "\n";
+        $starter_file.= 'umask ' . $phpconfig['mod_fcgid_umask'] . "\n";
+        $starter_file.= 'PHPRC=' . escapeshellarg($this->getConfigDir()) . "\n";
         $starter_file.= "export PHPRC\n";
 
         // set number of processes for one domain
-        if ((int)$this->_domain['mod_fcgid_starter'] != - 1) {
-            $starter_file.= "PHP_FCGI_CHILDREN=" . (int)$this->_domain['mod_fcgid_starter'] . "\n";
+        if ((int) $this->_domain['mod_fcgid_starter'] !== - 1) {
+            $starter_file.= 'PHP_FCGI_CHILDREN=' . (int) $this->_domain['mod_fcgid_starter'] . "\n";
         } else {
-            if ((int)$phpconfig['mod_fcgid_starter'] != - 1) {
-                $starter_file.= "PHP_FCGI_CHILDREN=" . (int)$phpconfig['mod_fcgid_starter'] . "\n";
+            if ((int) $phpconfig['mod_fcgid_starter'] !== - 1) {
+                $starter_file.= 'PHP_FCGI_CHILDREN=' . (int) $phpconfig['mod_fcgid_starter'] . "\n";
             } else {
-                $starter_file.= "PHP_FCGI_CHILDREN=" . (int)Settings::Get('system.mod_fcgid_starter') . "\n";
+                $starter_file.= 'PHP_FCGI_CHILDREN=' . (int) Settings::Get('system.mod_fcgid_starter') . "\n";
             }
         }
 
         $starter_file.= "export PHP_FCGI_CHILDREN\n";
 
         // set number of maximum requests for one domain
-        if ((int)$this->_domain['mod_fcgid_maxrequests'] != - 1) {
-            $starter_file.= "PHP_FCGI_MAX_REQUESTS=" . (int)$this->_domain['mod_fcgid_maxrequests'] . "\n";
+        if ((int) $this->_domain['mod_fcgid_maxrequests'] !== - 1) {
+            $starter_file.= 'PHP_FCGI_MAX_REQUESTS=' . (int) $this->_domain['mod_fcgid_maxrequests'] . "\n";
         } else {
-            if ((int)$phpconfig['mod_fcgid_maxrequests'] != - 1) {
-                $starter_file.= "PHP_FCGI_MAX_REQUESTS=" . (int)$phpconfig['mod_fcgid_maxrequests'] . "\n";
+            if ((int) $phpconfig['mod_fcgid_maxrequests'] !== - 1) {
+                $starter_file.= 'PHP_FCGI_MAX_REQUESTS=' . (int) $phpconfig['mod_fcgid_maxrequests'] . "\n";
             } else {
-                $starter_file.= "PHP_FCGI_MAX_REQUESTS=" . (int)Settings::Get('system.mod_fcgid_maxrequests') . "\n";
+                $starter_file.= 'PHP_FCGI_MAX_REQUESTS=' . (int) Settings::Get('system.mod_fcgid_maxrequests') . "\n";
             }
         }
 
         $starter_file.= "export PHP_FCGI_MAX_REQUESTS\n";
 
         // Set Binary
-        $starter_file.= "exec " . $phpconfig['binary'] . " -c " . escapeshellarg($this->getConfigDir()) . "\n";
+        $starter_file.= 'exec ' . $phpconfig['binary'] . ' -c ' . escapeshellarg($this->getConfigDir()) . "\n";
 
         //remove +i attibute, so starter can be overwritten
         if (file_exists($this->getStarterFile())) {
@@ -111,7 +107,7 @@ class phpinterface_fcgid
         $openbasedir = '';
         $openbasedirc = ';';
 
-        if ($this->_domain['openbasedir'] == '1') {
+        if ($this->_domain['openbasedir'] === '1') {
             $openbasedirc = '';
             $_phpappendopenbasedir = '';
 
@@ -125,8 +121,8 @@ class phpinterface_fcgid
                 $_phpappendopenbasedir .= appendOpenBasedirPath($cobd);
             }
 
-            if ($this->_domain['openbasedir_path'] == '0'
-                    && strstr($this->_domain['documentroot'], ":") === false
+            if ($this->_domain['openbasedir_path'] === '0'
+                    && strstr($this->_domain['documentroot'], ':') === false
             ) {
                 $openbasedir = appendOpenBasedirPath($this->_domain['documentroot'], true);
             } else {
@@ -153,12 +149,12 @@ class phpinterface_fcgid
                 'OPEN_BASEDIR' => $openbasedir,
                 'OPEN_BASEDIR_C' => $openbasedirc,
                 'OPEN_BASEDIR_GLOBAL' => Settings::Get('system.phpappendopenbasedir'),
-                'DOCUMENT_ROOT' => makeCorrectDir($this->_domain['documentroot'])
+                'DOCUMENT_ROOT' => makeCorrectDir($this->_domain['documentroot']),
         );
 
         //insert a small header for the file
         $phpini_file = ";\n";
-        $phpini_file.= "; php.ini created/changed on " . date("Y.m.d H:i:s") . " for domain '" . $this->_domain['domain'] . "' with id #" . $this->_domain['id'] . " from php template '" . $phpconfig['description'] . "' with id #" . $phpconfig['id'] . "\n";
+        $phpini_file.= '; php.ini created/changed on ' . date('Y.m.d H:i:s') . " for domain '" . $this->_domain['domain'] . "' with id #" . $this->_domain['id'] . " from php template '" . $phpconfig['description'] . "' with id #" . $phpconfig['id'] . "\n";
         $phpini_file.= "; Do not change anything in this file, it will be overwritten by the Froxlor Cronjob!\n";
         $phpini_file.= ";\n\n";
         $phpini_file.= replace_variables($phpconfig['phpsettings'], $php_ini_variables);
@@ -174,7 +170,7 @@ class phpinterface_fcgid
     /**
      * fcgid-config directory
      *
-     * @param boolean $createifnotexists create the directory if it does not exist
+     * @param bool $createifnotexists create the directory if it does not exist
      *
      * @return string the directory
      */
@@ -193,7 +189,7 @@ class phpinterface_fcgid
     /**
      * fcgid-temp directory
      *
-     * @param boolean $createifnotexists create the directory if it does not exist
+     * @param bool $createifnotexists create the directory if it does not exist
      *
      * @return string the directory
      */
@@ -218,6 +214,7 @@ class phpinterface_fcgid
     public function getStarterFile()
     {
         $starter_filename = makeCorrectFile($this->getConfigDir() . '/php-fcgi-starter');
+
         return $starter_filename;
     }
 
@@ -229,6 +226,7 @@ class phpinterface_fcgid
     public function getIniFile()
     {
         $phpini_filename = makeCorrectFile($this->getConfigDir() . '/php.ini');
+
         return $phpini_filename;
     }
 
@@ -245,11 +243,12 @@ class phpinterface_fcgid
 
         if (!isset($this->_admin_cache[$adminid])) {
             $stmt = Database::prepare(
-                "
-					SELECT `email`, `loginname` FROM `" . TABLE_PANEL_ADMINS . "` WHERE `adminid` = :id"
+                '
+					SELECT `email`, `loginname` FROM `' . TABLE_PANEL_ADMINS . '` WHERE `adminid` = :id'
             );
             $this->_admin_cache[$adminid] = Database::pexecute_first($stmt, array('id' => $adminid));
         }
+
         return $this->_admin_cache[$adminid];
     }
 }

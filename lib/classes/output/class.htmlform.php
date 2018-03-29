@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -11,10 +10,7 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Classes
- *
  */
-
 class htmlform
 {
     /**
@@ -45,8 +41,8 @@ class htmlform
                     continue;
                 }
 
-                if (!isset($section['nobuttons']) || $section['nobuttons'] == false) {
-                    eval("self::\$_form .= \"" . getTemplate("misc/form/table_section", "1") . "\";");
+                if (!isset($section['nobuttons']) || $section['nobuttons'] === false) {
+                    eval('self::$_form .= "' . getTemplate('misc/form/table_section', '1') . '";');
                 } else {
                     $nob = true;
                 }
@@ -57,25 +53,25 @@ class htmlform
                         continue;
                     }
 
-                    if ($nexto === false || (isset($fielddata['next_to']) && $nexto['field'] != $fielddata['next_to'])) {
+                    if ($nexto === false || (isset($fielddata['next_to']) && $nexto['field'] !== $fielddata['next_to'])) {
                         $label = $fielddata['label'];
                         $desc = (isset($fielddata['desc']) ? $fielddata['desc'] : '');
-                        $style = (isset($fielddata['style']) ? ' class="'.$fielddata['style'].'"' : '');
+                        $style = (isset($fielddata['style']) ? ' class="' . $fielddata['style'] . '"' : '');
                         $mandatory = self::_getMandatoryFlag($fielddata);
                         $data_field = self::_parseDataField($fieldname, $fielddata);
                         if (isset($fielddata['has_nextto'])) {
                             $nexto = array('field' => $fieldname);
-                            $data_field.='{NEXTTOFIELD_'.$fieldname.'}';
+                            $data_field.='{NEXTTOFIELD_' . $fieldname . '}';
                         } else {
                             $nexto = false;
                         }
-                        eval("self::\$_form .= \"" . getTemplate("misc/form/table_row", "1") . "\";");
+                        eval('self::$_form .= "' . getTemplate('misc/form/table_row', '1') . '";');
                     } else {
                         $data_field = self::_parseDataField($fieldname, $fielddata);
-                        $data_field = str_replace("\t", "", $data_field);
-                        $data_field = $fielddata['next_to_prefix'].$data_field;
+                        $data_field = str_replace("\t", '', $data_field);
+                        $data_field = $fielddata['next_to_prefix'] . $data_field;
                         self::$_form = str_replace(
-                                '{NEXTTOFIELD_'.$fielddata['next_to'].'}',
+                                '{NEXTTOFIELD_' . $fielddata['next_to'] . '}',
                                 $data_field,
                                 self::$_form
                         );
@@ -87,7 +83,7 @@ class htmlform
 
         // add save/reset buttons at the end of the form
         if (!$nob) {
-            eval("self::\$_form .= \"" . getTemplate("misc/form/table_end", "1") . "\";");
+            eval('self::$_form .= "' . getTemplate('misc/form/table_end', '1') . '";');
         }
 
         return self::$_form;
@@ -128,6 +124,7 @@ class htmlform
         } elseif (isset($data['mandatory_ex'])) {
             return '&nbsp;<span class="red">**</span>';
         }
+
         return '';
     }
 
@@ -136,13 +133,13 @@ class htmlform
         $return = '';
         $extras = '';
         if (isset($data['maxlength'])) {
-            $extras .= ' maxlength="'.$data['maxlength'].'"';
+            $extras .= ' maxlength="' . $data['maxlength'] . '"';
         }
         if (isset($data['size'])) {
-            $extras .= ' size="'.$data['size'].'"';
+            $extras .= ' size="' . $data['size'] . '"';
         }
         if (isset($data['autocomplete'])) {
-            $extras .= ' autocomplete="'.$data['autocomplete'].'"';
+            $extras .= ' autocomplete="' . $data['autocomplete'] . '"';
         }
 
         // add support to save reloaded forms
@@ -154,12 +151,13 @@ class htmlform
             $value = '';
         }
 
-        $ulfield = ($unlimited == true ? '&nbsp;'.$data['ul_field'] : '');
-        if (isset($data['display']) && $data['display'] != '') {
-            $ulfield = '<strong>'.$data['display'].'</strong>';
+        $ulfield = ($unlimited === true ? '&nbsp;' . $data['ul_field'] : '');
+        if (isset($data['display']) && $data['display'] !== '') {
+            $ulfield = '<strong>' . $data['display'] . '</strong>';
         }
 
-        eval("\$return = \"" . getTemplate("misc/form/input_text", "1") . "\";");
+        eval('$return = "' . getTemplate('misc/form/input_text', '1') . '";');
+
         return $return;
     }
 
@@ -168,10 +166,10 @@ class htmlform
         $return = '';
         $extras = '';
         if (isset($data['cols'])) {
-            $extras .= ' cols="'.$data['cols'].'"';
+            $extras .= ' cols="' . $data['cols'] . '"';
         }
         if (isset($data['rows'])) {
-            $extras .= ' rows="'.$data['rows'].'"';
+            $extras .= ' rows="' . $data['rows'] . '"';
         }
 
         // add support to save reloaded forms
@@ -184,7 +182,8 @@ class htmlform
         }
         trim($value);
 
-        eval("\$return = \"" . getTemplate("misc/form/input_textarea", "1") . "\";");
+        eval('$return = "' . getTemplate('misc/form/input_textarea', '1') . '";');
+
         return $return;
     }
 
@@ -210,11 +209,11 @@ class htmlform
         }
 
         return '<select
-				id="'.$fieldname.'"
-						name="'.$fieldname.'"
-								'.(isset($data['class']) ? ' class="'.$data['class'] .'" ' : '').'
+				id="' . $fieldname . '"
+						name="' . $fieldname . '"
+								' . (isset($data['class']) ? ' class="' . $data['class'] . '" ' : '') . '
 										>'
-                                        .$select_var.
+                                        . $select_var .
                                         '</select>';
     }
 
@@ -256,25 +255,25 @@ class htmlform
         // default value is none, so the checkbox isn't an array
         $isArray = '';
 
-        if (count($data['values']) > 1 || (isset($data['is_array']) && $data['is_array'] == 1)) {
+        if (count($data['values']) > 1 || (isset($data['is_array']) && $data['is_array'] === 1)) {
             $isArray = '[]';
         }
 
         // will contain the output
-        $output = "";
+        $output = '';
         foreach ($data['values'] as $val) {
             $key = $val['label'];
             // is this box checked?
             $isChecked = '';
             if (is_array($checked) && count($checked) > 0) {
                 foreach ($checked as $tmp) {
-                    if ($tmp == $val['value']) {
+                    if ($tmp === $val['value']) {
                         $isChecked = ' checked="checked" ';
                         break;
                     }
                 }
             }
-            $output .= '<label><input type="checkbox" name="'.$fieldname.$isArray.'" value="'.$val['value'].'" '.$isChecked.'/>'.$key.'</label>';
+            $output .= '<label><input type="checkbox" name="' . $fieldname . $isArray . '" value="' . $val['value'] . '" ' . $isChecked . '/>' . $key . '</label>';
         }
 
         return $output;
@@ -285,7 +284,7 @@ class htmlform
         $return = '';
         $extras = '';
         if (isset($data['maxlength'])) {
-            $extras .= ' maxlength="'.$data['maxlength'].'"';
+            $extras .= ' maxlength="' . $data['maxlength'] . '"';
         }
 
         // add support to save reloaded forms
@@ -297,11 +296,12 @@ class htmlform
             $value = '';
         }
 
-        if (isset($data['display']) && $data['display'] != '') {
-            $ulfield = '<strong>'.$data['display'].'</strong>';
+        if (isset($data['display']) && $data['display'] !== '') {
+            $ulfield = '<strong>' . $data['display'] . '</strong>';
         }
 
-        eval("\$return = \"" . getTemplate("misc/form/input_file", "1") . "\";");
+        eval('$return = "' . getTemplate('misc/form/input_file', '1') . '";');
+
         return $return;
     }
 
@@ -310,10 +310,10 @@ class htmlform
         $return = '';
         $extras = '';
         if (isset($data['int_min'])) {
-            $extras .= ' min="'.$data['int_min'].'"';
+            $extras .= ' min="' . $data['int_min'] . '"';
         }
         if (isset($data['int_max'])) {
-            $extras .= ' max="'.$data['int_max'].'"';
+            $extras .= ' max="' . $data['int_max'] . '"';
         }
 
         // add support to save reloaded forms
@@ -327,7 +327,8 @@ class htmlform
 
         $type = 'number';
         $ulfield = '';
-        eval("\$return = \"" . getTemplate("misc/form/input_text", "1") . "\";");
+        eval('$return = "' . getTemplate('misc/form/input_text', '1') . '";');
+
         return $return;
     }
 }

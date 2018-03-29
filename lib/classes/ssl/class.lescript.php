@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 // Copyright (c) 2015, Stanislav Humplik <sh@analogic.cz>
 // All rights reserved.
 //
@@ -28,7 +28,6 @@
 // and modified to work without files and integrate in Froxlor
 class lescript
 {
-
     // https://letsencrypt.org/repository/
 
     private $logger;
@@ -49,7 +48,7 @@ class lescript
     {
         $this->logger = $logger;
         $this->version = $version;
-        if (Settings::Get('system.letsencryptca') == 'production') {
+        if (Settings::Get('system.letsencryptca') === 'production') {
             $ca = 'https://acme-v01.api.letsencrypt.org';
         } else {
             $ca = 'https://acme-staging.api.letsencrypt.org';
@@ -64,11 +63,11 @@ class lescript
         $this->accountKey = $certrow['leprivatekey'];
         $this->customerId = (!$isFroxlorVhost ? $certrow['customerid'] : null);
         $this->isFroxlorVhost = $isFroxlorVhost;
-        $this->isLeProduction = (Settings::Get('system.letsencryptca') == 'production');
+        $this->isLeProduction = (Settings::Get('system.letsencryptca') === 'production');
 
         $leregistered=$certrow['leregistered'];
 
-        if (! $this->accountKey || $this->accountKey == 'unset' || !$this->isLeProduction) {
+        if (! $this->accountKey || $this->accountKey === 'unset' || !$this->isLeProduction) {
 
             // generate and save new private key for account
             // ---------------------------------------------
@@ -82,12 +81,12 @@ class lescript
                     Settings::Set('system.leprivatekey', $keys['private']);
                     Settings::Set('system.leregistered', 0); // key is not registered
                 } else {
-                    $upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `lepublickey` = :public, `leprivatekey` = :private, `leregistered` = :registered " . "WHERE `customerid` = :customerid;");
+                    $upd_stmt = Database::prepare('UPDATE `' . TABLE_PANEL_CUSTOMERS . '` SET `lepublickey` = :public, `leprivatekey` = :private, `leregistered` = :registered ' . 'WHERE `customerid` = :customerid;');
                     Database::pexecute($upd_stmt, array(
                         'public' => $keys['public'],
                         'private' => $keys['private'],
                         'registered' => 0,
-                        'customerid' => $this->customerId
+                        'customerid' => $this->customerId,
                     ));
                 }
             }
@@ -97,16 +96,16 @@ class lescript
             $this->log('Using existing account key');
         }
 
-        if ($leregistered==0) { // Account not registered
+        if ($leregistered===0) { // Account not registered
 
             $this->log('Starting new account registration');
             $response = $this->postNewReg();
-            if ($this->client->getLastCode() == 409) {
+            if ($this->client->getLastCode() === 409) {
                 $this->log('The key was already registered. Using existing account.');
-            } elseif ($this->client->getLastCode() == 201) {
+            } elseif ($this->client->getLastCode() === 201) {
                 $this->log('New account registered.');
             } else {
-                throw new \RuntimeException("Account not initialized, probably due to rate limiting. Whole response: " . json_encode($response));
+                throw new \RuntimeException('Account not initialized, probably due to rate limiting. Whole response: ' . json_encode($response));
             }
             $accountUrl=$this->client->getLastLocation();
 
@@ -117,7 +116,6 @@ class lescript
     }
 
     /**
-     *
      * @param array $domains
      * @param string $domainkey
      * @param string $csr
@@ -129,7 +127,7 @@ class lescript
     public function signDomains(array $domains, $domainkey = null, $csr = null)
     {
         if (! $this->accountKey) {
-            throw new \RuntimeException("Account not initialized");
+            throw new \RuntimeException('Account not initialized');
         }
 
         $this->log('Starting certificate generation process for domains');
@@ -147,16 +145,16 @@ class lescript
 
             $this->log("Requesting challenge for $domain");
 
-            $response = $this->signedRequest("/acme/new-authz", array(
-                "resource" => "new-authz",
-                "identifier" => array(
-                    "type" => "dns",
-                    "value" => $domain
-                )
+            $response = $this->signedRequest('/acme/new-authz', array(
+                'resource' => 'new-authz',
+                'identifier' => array(
+                    'type' => 'dns',
+                    'value' => $domain,
+                ),
             ));
 
-            if ($this->client->getLastCode() == 403) {
-                $this->log("Got status 403 - setting LE status to unregistered.");
+            if ($this->client->getLastCode() === 403) {
+                $this->log('Got status 403 - setting LE status to unregistered.');
                 $this->setLeRegisteredState(0);
                 throw new RuntimeException("Got 'unauthorized' response - we need to re-register at next run.  Whole response: " . json_encode($response));
             }
@@ -174,7 +172,7 @@ class lescript
 
             // choose http-01 challenge only
             $challenge = array_reduce($response['challenges'], function ($v, $w) {
-                return $v ? $v : ($w['type'] == 'http-01' ? $w : false);
+                return $v ? $v : ($w['type'] === 'http-01' ? $w : false);
             });
 
             if (! $challenge) {
@@ -196,9 +194,9 @@ class lescript
 
             $header = array(
                 // need to be in precise order!
-                "e" => Base64UrlSafeEncoder::encode($accountKeyDetails["rsa"]["e"]),
-                "kty" => "RSA",
-                "n" => Base64UrlSafeEncoder::encode($accountKeyDetails["rsa"]["n"])
+                'e' => Base64UrlSafeEncoder::encode($accountKeyDetails['rsa']['e']),
+                'kty' => 'RSA',
+                'n' => Base64UrlSafeEncoder::encode($accountKeyDetails['rsa']['n']),
             );
             $payload = $challenge['token'] . '.' . Base64UrlSafeEncoder::encode(hash('sha256', json_encode($header), true));
 
@@ -213,41 +211,41 @@ class lescript
             $this->log("Token for $domain saved at $tokenPath and should be available at $uri");
 
             // simple self check
-            if (Settings::Get('system.disable_le_selfcheck') == '0') {
+            if (Settings::Get('system.disable_le_selfcheck') === '0') {
                 $selfcheckpayload = HttpClient::urlGet($uri);
                 if ($payload !== trim($selfcheckpayload)) {
                     $errmsg = json_encode(error_get_last());
-                    if ($errmsg != "null") {
-                        $errmsg = "; PHP error: " . $errmsg;
+                    if ($errmsg !== 'null') {
+                        $errmsg = '; PHP error: ' . $errmsg;
                     } else {
-                        $errmsg = "";
+                        $errmsg = '';
                     }
                     $this->logger->logAction(CRON_ACTION, LOG_WARNING, "[Lets Encrypt self-check] Please check $uri - token seems to be not available. This is just a simple self-check, it might be wrong but consider using this information when Let's Encrypt fails to issue a certificate" . $errmsg);
                 }
             }
 
-            $this->log("Sending request to challenge");
+            $this->log('Sending request to challenge');
 
             // send request to challenge
             $result = $this->signedRequest($challenge['uri'], array(
-                "resource" => "challenge",
-                "type" => "http-01",
-                "keyAuthorization" => $payload,
-                "token" => $challenge['token']
+                'resource' => 'challenge',
+                'type' => 'http-01',
+                'keyAuthorization' => $payload,
+                'token' => $challenge['token'],
             ));
 
             // waiting loop
             // we wait for a maximum of 30 seconds to avoid endless loops
             $count = 0;
             do {
-                if (empty($result['status']) || $result['status'] == "invalid") {
+                if (empty($result['status']) || $result['status'] === 'invalid') {
                     @unlink($tokenPath);
-                    throw new \RuntimeException("Verification ended with error: " . json_encode($result));
+                    throw new \RuntimeException('Verification ended with error: ' . json_encode($result));
                 }
-                $ended = ! ($result['status'] === "pending");
+                $ended = ! ($result['status'] === 'pending');
 
                 if (! $ended) {
-                    $this->log("Verification pending, sleeping 1s");
+                    $this->log('Verification pending, sleeping 1s');
                     sleep(1);
                     $count ++;
                 }
@@ -263,7 +261,7 @@ class lescript
         // ----------------------
 
         // generate private key for domain if not exist
-        if (empty($domainkey) || Settings::Get('system.letsencryptreuseold') == 0) {
+        if (empty($domainkey) || Settings::Get('system.letsencryptreuseold') === 0) {
             $keys = $this->generateKey();
             $domainkey = $keys['private'];
         }
@@ -278,12 +276,12 @@ class lescript
         }
 
         // request certificates creation
-        $result = $this->signedRequest("/acme/new-cert", array(
+        $result = $this->signedRequest('/acme/new-cert', array(
             'resource' => 'new-cert',
-            'csr' => $csr
+            'csr' => $csr,
         ));
         if ($this->client->getLastCode() !== 201) {
-            throw new \RuntimeException("Invalid response code: " . $this->client->getLastCode() . ", " . json_encode($result));
+            throw new \RuntimeException('Invalid response code: ' . $this->client->getLastCode() . ', ' . json_encode($result));
         }
         $location = $this->client->getLastLocation();
 
@@ -294,11 +292,11 @@ class lescript
 
             $result = $this->client->get($location);
 
-            if ($this->client->getLastCode() == 202) {
-                $this->log("Certificate generation pending, sleeping 1s");
+            if ($this->client->getLastCode() === 202) {
+                $this->log('Certificate generation pending, sleeping 1s');
                 sleep(1);
-            } elseif ($this->client->getLastCode() == 200) {
-                $this->log("Got certificate! YAY!");
+            } elseif ($this->client->getLastCode() === 200) {
+                $this->log('Got certificate! YAY!');
                 $certificates[] = $this->parsePemFromBody($result);
 
                 foreach ($this->client->getLastLinks() as $link) {
@@ -321,13 +319,14 @@ class lescript
         $crt = array_shift($certificates);
         $chain = implode("\n", $certificates);
 
-        $this->log("Done, returning new certificates and key");
+        $this->log('Done, returning new certificates and key');
+
         return array(
             'fullchain' => $fullchain,
             'crt' => $crt,
             'chain' => $chain,
             'key' => $domainkey,
-            'csr' => $csr
+            'csr' => $csr,
         );
     }
 
@@ -337,10 +336,10 @@ class lescript
             if ($this->isFroxlorVhost) {
                 Settings::Set('system.leregistered', $state);
             } else {
-                $upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `leregistered` = :registered " . "WHERE `customerid` = :customerid;");
+                $upd_stmt = Database::prepare('UPDATE `' . TABLE_PANEL_CUSTOMERS . '` SET `leregistered` = :registered ' . 'WHERE `customerid` = :customerid;');
                 Database::pexecute($upd_stmt, array(
                     'registered' => $state,
-                    'customerid' => $this->customerId
+                    'customerid' => $this->customerId,
                 ));
             }
         }
@@ -349,6 +348,7 @@ class lescript
     private function parsePemFromBody($body)
     {
         $pem = chunk_split(base64_encode($body), 64, "\n");
+
         return "-----BEGIN CERTIFICATE-----\n" . $pem . "-----END CERTIFICATE-----\n";
     }
 
@@ -357,25 +357,25 @@ class lescript
         $this->log('Getting last terms of service URL');
         $directory = $this->client->get('/directory');
         if (!isset($directory['meta']) || !isset($directory['meta']['terms-of-service'])) {
-            throw new \RuntimeException("No terms of service link available!");
+            throw new \RuntimeException('No terms of service link available!');
         }
         $this->log('Sending registration to letsencrypt server');
 
         return $this->signedRequest('/acme/new-reg', array(
             'resource' => 'new-reg',
-            'agreement' => $directory['meta']['terms-of-service']
+            'agreement' => $directory['meta']['terms-of-service'],
         ));
     }
 
     private function generateCSR($privateKey, array $domains)
     {
         $domain = reset($domains);
-        $san = implode(",", array_map(function ($dns) {
-            return "DNS:" . $dns;
+        $san = implode(',', array_map(function ($dns) {
+            return 'DNS:' . $dns;
         }, $domains));
         $tmpConf = tmpfile();
         $tmpConfMeta = stream_get_meta_data($tmpConf);
-        $tmpConfPath = $tmpConfMeta["uri"];
+        $tmpConfPath = $tmpConfMeta['uri'];
 
         // workaround to get SAN working
         fwrite($tmpConf, 'HOME = .
@@ -393,13 +393,13 @@ subjectAltName = ' . $san . '
 keyUsage = nonRepudiation, digitalSignature, keyEncipherment');
 
         $csr = openssl_csr_new(array(
-            "CN" => $domain,
-            "ST" => Settings::Get('system.letsencryptstate'),
-            "C" => Settings::Get('system.letsencryptcountrycode'),
-            "O" => "Unknown"
+            'CN' => $domain,
+            'ST' => Settings::Get('system.letsencryptstate'),
+            'C' => Settings::Get('system.letsencryptcountrycode'),
+            'O' => 'Unknown',
         ), $privateKey, array(
-            "config" => $tmpConfPath,
-            "digest_alg" => "sha256"
+            'config' => $tmpConfPath,
+            'digest_alg' => 'sha256',
         ));
 
         if (! $csr) {
@@ -411,25 +411,25 @@ keyUsage = nonRepudiation, digitalSignature, keyEncipherment');
 
         preg_match('~REQUEST-----(.*)-----END~s', $csr, $matches);
 
-        return trim(Base64UrlSafeEncoder::encode(base64_decode($matches[1])));
+        return trim(Base64UrlSafeEncoder::encode(base64_decode($matches[1], true)));
     }
 
     private function generateKey()
     {
         $res = openssl_pkey_new(array(
-            "private_key_type" => OPENSSL_KEYTYPE_RSA,
-            "private_key_bits" => (int) Settings::Get('system.letsencryptkeysize')
+            'private_key_type' => OPENSSL_KEYTYPE_RSA,
+            'private_key_bits' => (int) Settings::Get('system.letsencryptkeysize'),
         ));
 
         if (! openssl_pkey_export($res, $privateKey)) {
-            throw new \RuntimeException("Key export failed!");
+            throw new \RuntimeException('Key export failed!');
         }
 
         $details = openssl_pkey_get_details($res);
 
         return array(
             'private' => $privateKey,
-            'public' => $details['key']
+            'public' => $details['key'],
         );
     }
 
@@ -439,21 +439,21 @@ keyUsage = nonRepudiation, digitalSignature, keyEncipherment');
         $details = openssl_pkey_get_details($privateKey);
 
         $header = array(
-            "alg" => "RS256",
-            "jwk" => array(
-                "kty" => "RSA",
-                "n" => Base64UrlSafeEncoder::encode($details["rsa"]["n"]),
-                "e" => Base64UrlSafeEncoder::encode($details["rsa"]["e"])
-            )
+            'alg' => 'RS256',
+            'jwk' => array(
+                'kty' => 'RSA',
+                'n' => Base64UrlSafeEncoder::encode($details['rsa']['n']),
+                'e' => Base64UrlSafeEncoder::encode($details['rsa']['e']),
+            ),
         );
 
         $protected = $header;
-        $protected["nonce"] = $this->client->getLastNonce();
+        $protected['nonce'] = $this->client->getLastNonce();
 
         $payload64 = Base64UrlSafeEncoder::encode(str_replace('\\/', '/', json_encode($payload)));
         $protected64 = Base64UrlSafeEncoder::encode(json_encode($protected));
 
-        openssl_sign($protected64 . '.' . $payload64, $signed, $privateKey, "SHA256");
+        openssl_sign($protected64 . '.' . $payload64, $signed, $privateKey, 'SHA256');
 
         $signed64 = Base64UrlSafeEncoder::encode($signed);
 
@@ -461,7 +461,7 @@ keyUsage = nonRepudiation, digitalSignature, keyEncipherment');
             'header' => $header,
             'protected' => $protected64,
             'payload' => $payload64,
-            'signature' => $signed64
+            'signature' => $signed64,
         );
 
         $this->log("Sending signed request to $uri");
@@ -471,7 +471,7 @@ keyUsage = nonRepudiation, digitalSignature, keyEncipherment');
 
     protected function log($message)
     {
-        $this->logger->logAction(CRON_ACTION, LOG_INFO, "letsencrypt " . $message);
+        $this->logger->logAction(CRON_ACTION, LOG_INFO, 'letsencrypt ' . $message);
     }
 }
 
@@ -492,7 +492,7 @@ class Client
     {
         $headers = array(
             'Accept: application/json',
-            'Content-Type: application/json'
+            'Content-Type: application/json',
         );
         $handle = curl_init();
         curl_setopt($handle, CURLOPT_URL, preg_match('~^http~', $url) ? $url : $this->base . $url);
@@ -527,6 +527,7 @@ class Client
         $this->lastCode = curl_getinfo($handle, CURLINFO_HTTP_CODE);
 
         $data = json_decode($body, true);
+
         return $data === null ? $body : $data;
     }
 
@@ -547,6 +548,7 @@ class Client
         }
 
         $this->curl('GET', '/directory');
+
         return $this->getLastNonce();
     }
 
@@ -555,6 +557,7 @@ class Client
         if (preg_match('~Location: (.+)~i', $this->lastHeader, $matches)) {
             return trim($matches[1]);
         }
+
         return null;
     }
 
@@ -566,6 +569,7 @@ class Client
     public function getLastLinks()
     {
         preg_match_all('~Link: <(.+)>;rel="up"~', $this->lastHeader, $matches);
+
         return $matches[1];
     }
 }
@@ -584,6 +588,7 @@ class Base64UrlSafeEncoder
             $padlen = 4 - $remainder;
             $input .= str_repeat('=', $padlen);
         }
-        return base64_decode(strtr($input, '-_', '+/'));
+
+        return base64_decode(strtr($input, '-_', '+/'), true);
     }
 }

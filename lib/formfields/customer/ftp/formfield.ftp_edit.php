@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -11,7 +10,6 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Formfields
  */
 
 return array(
@@ -31,35 +29,35 @@ return array(
                     'ftp_description' => array(
                         'label' => $lng['panel']['ftpdesc'] = 'FTP description',
                         'type' => 'text',
-                        'value' => $result['description']
+                        'value' => $result['description'],
                     ),
                     'path' => array(
                         'label' => $lng['panel']['path'],
-                        'desc' => (Settings::Get('panel.pathedit') != 'Dropdown' ? $lng['panel']['pathDescription'] : null).(isset($pathSelect['note']) ? '<br />'.$pathSelect['value'] : ''),
+                        'desc' => (Settings::Get('panel.pathedit') !== 'Dropdown' ? $lng['panel']['pathDescription'] : null) . (isset($pathSelect['note']) ? '<br />' . $pathSelect['value'] : ''),
                         'type' => $pathSelect['type'],
                         'select_var' => $pathSelect['value'],
-                        'value' => $pathSelect['value']
+                        'value' => $pathSelect['value'],
                     ),
                     'ftp_password' => array(
                         'label' => $lng['login']['password'],
                         'desc' => $lng['ftp']['editpassdescription'],
                         'type' => 'password',
-                        'autocomplete' => 'off'
+                        'autocomplete' => 'off',
                     ),
                     'ftp_password_suggestion' => array(
                         'label' => $lng['customer']['generated_pwd'],
                         'type' => 'text',
-                        'visible' => (Settings::Get('panel.password_regex') == ''),
+                        'visible' => (Settings::Get('panel.password_regex') === ''),
                         'value' => generatePassword(),
                     ),
                     'shell' => array(
-                        'visible' => (Settings::Get('system.allow_customer_shell') == '1' ? true : false),
+                        'visible' => (Settings::Get('system.allow_customer_shell') === '1' ? true : false),
                         'label' => $lng['panel']['shell'],
                         'type' => 'select',
-                        'select_var' => (isset($shells) ? $shells : ""),
-                    )
-                )
-            )
-        )
-    )
+                        'select_var' => (isset($shells) ? $shells : ''),
+                    ),
+                ),
+            ),
+        ),
+    ),
 );

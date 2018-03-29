@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -11,13 +10,12 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param null|mixed $interval
  */
-
 function validateSqlInterval($interval = null)
 {
-    if (!$interval === null || $interval != '') {
+    if (!$interval === null || $interval !== '') {
         if (strstr($interval, ' ') !== false) {
             /*
              * [0] = ([0-9]+)
@@ -30,7 +28,7 @@ function validateSqlInterval($interval = null)
                                 'DAY',
                                 'WEEK',
                                 'MONTH',
-                                'YEAR'
+                                'YEAR',
                         );
             
             $interval_parts = explode(' ', $interval);
@@ -39,12 +37,13 @@ function validateSqlInterval($interval = null)
             && isset($interval_parts[0])
             && isset($interval_parts[1])) {
                 if (preg_match('/([0-9]+)/i', $interval_parts[0])) {
-                    if (in_array(strtoupper($interval_parts[1]), $valid_expr)) {
+                    if (in_array(strtoupper($interval_parts[1]), $valid_expr, true)) {
                         return true;
                     }
                 }
             }
         }
     }
+
     return false;
 }

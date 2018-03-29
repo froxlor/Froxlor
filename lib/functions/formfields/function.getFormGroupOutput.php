@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,14 +12,15 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $groupname
+ * @param mixed $groupdetails
  */
-
 function getFormGroupOutput($groupname, $groupdetails)
 {
     global $lng, $theme;
-    eval("\$group = \"" . getTemplate("settings/settings_group") . "\";");
+    eval('$group = "' . getTemplate('settings/settings_group') . '";');
+
     return $group;
 }
 
@@ -37,28 +37,28 @@ function getFormOverviewGroupOutput($groupname, $groupdetails)
     if (isset($groupdetails['fields'])) {
         foreach ($groupdetails['fields'] as $fieldname => $fielddetails) {
             if (isset($fielddetails['overview_option'])
-                && $fielddetails['overview_option'] == true
+                && $fielddetails['overview_option'] === true
             ) {
-                if ($fielddetails['type'] != 'option'
-                    && $fielddetails['type'] != 'bool') {
+                if ($fielddetails['type'] !== 'option'
+                    && $fielddetails['type'] !== 'bool') {
                     standard_error('overviewsettingoptionisnotavalidfield');
                 }
 
-                if ($fielddetails['type'] == 'option') {
+                if ($fielddetails['type'] === 'option') {
                     $options_array = $fielddetails['option_options'];
                     $options = '';
                     foreach ($options_array as $value => $vtitle) {
-                        $options .= makeoption($vtitle, $value, Settings::Get($fielddetails['settinggroup'].'.'.$fielddetails['varname']));
+                        $options .= makeoption($vtitle, $value, Settings::Get($fielddetails['settinggroup'] . '.' . $fielddetails['varname']));
                     }
-                    $option.= $fielddetails['label'].':&nbsp;';
-                    $option.= '<select class="dropdown_noborder" name="'.$fieldname.'">';
+                    $option.= $fielddetails['label'] . ':&nbsp;';
+                    $option.= '<select class="dropdown_noborder" name="' . $fieldname . '">';
                     $option.= $options;
                     $option.= '</select>';
                     $activated = true;
                 } else {
-                    $option.= $lng['admin']['activated'].':&nbsp;';
-                    $option.= makeyesno($fieldname, '1', '0', Settings::Get($fielddetails['settinggroup'].'.'.$fielddetails['varname']));
-                    $activated = (int)Settings::Get($fielddetails['settinggroup'].'.'.$fielddetails['varname']);
+                    $option.= $lng['admin']['activated'] . ':&nbsp;';
+                    $option.= makeyesno($fieldname, '1', '0', Settings::Get($fielddetails['settinggroup'] . '.' . $fielddetails['varname']));
+                    $activated = (int) Settings::Get($fielddetails['settinggroup'] . '.' . $fielddetails['varname']);
                 }
             }
         }
@@ -72,15 +72,15 @@ function getFormOverviewGroupOutput($groupname, $groupdetails)
     $do_show = true;
     if (isset($groupdetails['websrv_avail']) && is_array($groupdetails['websrv_avail'])) {
         $websrv = Settings::Get('system.webserver');
-        if (!in_array($websrv, $groupdetails['websrv_avail'])) {
+        if (!in_array($websrv, $groupdetails['websrv_avail'], true)) {
             $do_show = false;
-            $title .= sprintf($lng['serversettings']['option_unavailable_websrv'], implode(", ", $groupdetails['websrv_avail']));
+            $title .= sprintf($lng['serversettings']['option_unavailable_websrv'], implode(', ', $groupdetails['websrv_avail']));
             // hack disabled flag into select-box
             $option = str_replace('<select class', '<select disabled="disabled" class', $option);
         }
     }
 
-    eval("\$group = \"" . getTemplate("settings/settings_overviewgroup") . "\";");
+    eval('$group = "' . getTemplate('settings/settings_overviewgroup') . '";');
 
     return $group;
 }

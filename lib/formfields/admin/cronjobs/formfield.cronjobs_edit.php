@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -11,8 +10,6 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Formfields
- *
  */
 
 return array(
@@ -26,29 +23,29 @@ return array(
                 'fields' => array(
                     'cronfile' => array(
                         'label' => 'Cronjob',
-                        'type' => ($change_cronfile == 1 ? 'text' : 'label'),
-                        'value' => $result['cronfile']
+                        'type' => ($change_cronfile === 1 ? 'text' : 'label'),
+                        'value' => $result['cronfile'],
                     ),
                     'isactive' => array(
                         'label' => $lng['admin']['activated'],
                         'type' => 'checkbox',
                         'values' => array(
-                                        array('label' => $lng['panel']['yes'], 'value' => '1')
+                                        array('label' => $lng['panel']['yes'], 'value' => '1'),
                                     ),
-                        'value' => array($result['isactive'])
+                        'value' => array($result['isactive']),
                     ),
                     'interval_value' => array(
                         'label' => $lng['cronjob']['cronjobintervalv'],
                         'type' => 'text',
-                        'value' => $interval_value
+                        'value' => $interval_value,
                     ),
                     'interval_interval' => array(
                         'label' => $lng['cronjob']['cronjobinterval'],
                         'type' => 'select',
-                        'select_var' => $interval_interval
-                    )
-                )
-            )
-        )
-    )
+                        'select_var' => $interval_interval,
+                    ),
+                ),
+            ),
+        ),
+    ),
 );

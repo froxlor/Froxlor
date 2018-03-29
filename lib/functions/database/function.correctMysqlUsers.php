@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,10 +12,9 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $mysql_access_host_array
  */
-
 function correctMysqlUsers($mysql_access_host_array)
 {
     global $log;
@@ -27,7 +25,7 @@ function correctMysqlUsers($mysql_access_host_array)
     $sql_root = Database::getSqlData();
     Database::needRoot(false);
 
-    $dbservers_stmt = Database::query("SELECT DISTINCT `dbserver` FROM `".TABLE_PANEL_DATABASES."`");
+    $dbservers_stmt = Database::query('SELECT DISTINCT `dbserver` FROM `' . TABLE_PANEL_DATABASES . '`');
     $mysql_servers = '';
 
     while ($dbserver = $dbservers_stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -39,12 +37,12 @@ function correctMysqlUsers($mysql_access_host_array)
         $users = $dbm->getManager()->getAllSqlUsers(false);
 
         $databases = array(
-                $sql_root['db']
+                $sql_root['db'],
         );
-        $databases_result_stmt = Database::prepare("
-			SELECT * FROM `" . TABLE_PANEL_DATABASES . "`
+        $databases_result_stmt = Database::prepare('
+			SELECT * FROM `' . TABLE_PANEL_DATABASES . '`
 			WHERE `dbserver` = :mysqlserver
-		");
+		');
         Database::pexecute($databases_result_stmt, array('mysqlserver' => $dbserver['dbserver']));
 
         while ($databases_row = $databases_result_stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -62,13 +60,13 @@ function correctMysqlUsers($mysql_access_host_array)
                 foreach ($mysql_access_host_array as $mysql_access_host) {
                     $mysql_access_host = trim($mysql_access_host);
 
-                    if (!in_array($mysql_access_host, $users[$username]['hosts'])) {
+                    if (!in_array($mysql_access_host, $users[$username]['hosts'], true)) {
                         $dbm->getManager()->grantPrivilegesTo($username, $password, $mysql_access_host, true);
                     }
                 }
 
                 foreach ($users[$username]['hosts'] as $mysql_access_host) {
-                    if (!in_array($mysql_access_host, $mysql_access_host_array)) {
+                    if (!in_array($mysql_access_host, $mysql_access_host_array, true)) {
                         $dbm->getManager()->deleteUser($username, $mysql_access_host);
                     }
                 }

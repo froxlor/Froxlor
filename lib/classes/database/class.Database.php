@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -12,10 +11,8 @@
  * @author     Michael Kaufmann <mkaufmann@nutime.de>
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Classes
  *
  * @since      0.9.31
- *
  */
 
 /**
@@ -27,7 +24,6 @@
  * @author     Michael Kaufmann <mkaufmann@nutime.de>
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Classes
  *
  * @method static \PDOStatement prepare($statement, array $driver_options = null) Prepares a statement for execution and returns a statement object
  * @method static \PDOStatement query ($statement) Executes an SQL statement, returning a result set as a PDOStatement object
@@ -36,13 +32,12 @@
  */
 class Database
 {
-
     /**
      * current database link
      *
      * @var object
      */
-    private static $_link = null ;
+    private static $_link = null;
 
     /**
      * indicator whether to use root-connection or not
@@ -96,6 +91,7 @@ class Database
     public static function pexecute_first(&$stmt, $params = null, $showerror = true)
     {
         self::pexecute($stmt, $params, $showerror);
+
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
@@ -106,7 +102,7 @@ class Database
      */
     public static function num_rows()
     {
-        return Database::query("SELECT FOUND_ROWS()")->fetchColumn();
+        return self::query('SELECT FOUND_ROWS()')->fetchColumn();
     }
 
     /**
@@ -142,7 +138,6 @@ class Database
      * call needRoot(true) first. Also, this will
      * only give you the data ONCE as it disable itself
      * after the first access to the data
-     *
      */
     public static function needSqlData()
     {
@@ -175,6 +170,7 @@ class Database
             self::$_sqldata = null;
             self::$_needsqldata = false;
         }
+
         return $return;
     }
 
@@ -196,6 +192,7 @@ class Database
         } catch (PDOException $e) {
             self::_showerror($e);
         }
+
         return $result;
     }
 
@@ -220,8 +217,8 @@ class Database
      */
     private static function getDB()
     {
-        if (!extension_loaded('pdo') || in_array("mysql", PDO::getAvailableDrivers()) == false) {
-            self::_showerror(new Exception("The php PDO extension or PDO-MySQL driver is not available"));
+        if (!extension_loaded('pdo') || in_array('mysql', PDO::getAvailableDrivers(), true) === false) {
+            self::_showerror(new Exception('The php PDO extension or PDO-MySQL driver is not available'));
         }
 
         // do we got a connection already?
@@ -231,10 +228,10 @@ class Database
         }
 
         // include userdata.inc.php
-        require FROXLOR_INSTALL_DIR."/lib/userdata.inc.php";
+        require FROXLOR_INSTALL_DIR . '/lib/userdata.inc.php';
 
         // le format
-        if (self::$_needroot == true
+        if (self::$_needroot === true
                 && isset($sql['root_user'])
                 && isset($sql['root_password'])
                 && (!isset($sql_root) || !is_array($sql_root))
@@ -254,9 +251,9 @@ class Database
             $port = isset($sql_root[self::$_dbserver]['port']) ? $sql_root[self::$_dbserver]['port'] : '3306';
         } else {
             $caption = 'localhost';
-            $user = $sql["user"];
-            $password = $sql["password"];
-            $host = $sql["host"];
+            $user = $sql['user'];
+            $password = $sql['password'];
+            $host = $sql['host'];
             $socket = isset($sql['socket']) ? $sql['socket'] : null;
             $port = isset($sql['port']) ? $sql['port'] : '3306';
         }
@@ -269,34 +266,34 @@ class Database
                     'host' => $host,
                     'port' => $port,
                     'socket' => $socket,
-                    'db' => $sql["db"],
-                    'caption' => $caption
+                    'db' => $sql['db'],
+                    'caption' => $caption,
             );
         }
 
         // build up connection string
         $driver = 'mysql';
-        $dsn = $driver.":";
+        $dsn = $driver . ':';
         $options = array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET names utf8,sql_mode="NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"');
         $attributes = array('ATTR_ERRMODE' => 'ERRMODE_EXCEPTION');
 
-        $dbconf["dsn"] = array(
-                'dbname' => $sql["db"],
-                'charset' => 'utf8'
+        $dbconf['dsn'] = array(
+                'dbname' => $sql['db'],
+                'charset' => 'utf8',
         );
 
-        if ($socket != null) {
-            $dbconf["dsn"]['unix_socket'] = makeCorrectFile($socket);
+        if ($socket !== null) {
+            $dbconf['dsn']['unix_socket'] = makeCorrectFile($socket);
         } else {
-            $dbconf["dsn"]['host'] = $host;
-            $dbconf["dsn"]['port'] = $port;
+            $dbconf['dsn']['host'] = $host;
+            $dbconf['dsn']['port'] = $port;
         }
 
-        self::$_dbname = $sql["db"];
+        self::$_dbname = $sql['db'];
 
         // add options to dsn-string
-        foreach ($dbconf["dsn"] as $k => $v) {
-            $dsn .= $k."=".$v.";";
+        foreach ($dbconf['dsn'] as $k => $v) {
+            $dsn .= $k . '=' . $v . ';';
         }
 
         // clean up
@@ -311,7 +308,7 @@ class Database
 
         // set attributes
         foreach ($attributes as $k => $v) {
-            self::$_link->setAttribute(constant("PDO::".$k), constant("PDO::".$v));
+            self::$_link->setAttribute(constant('PDO::' . $k), constant('PDO::' . $v));
         }
 
         // return PDO instance
@@ -329,7 +326,7 @@ class Database
         global $userinfo, $theme, $linker;
 
         // include userdata.inc.php
-        require FROXLOR_INSTALL_DIR."/lib/userdata.inc.php";
+        require FROXLOR_INSTALL_DIR . '/lib/userdata.inc.php';
 
         // le format
         if (isset($sql['root_user'])
@@ -352,35 +349,35 @@ class Database
         // error-trace
         $error_trace = self::_substitute($error_trace, $substitutions);
 
-        if ($error->getCode() == 2003) {
-            $error_message = "Unable to connect to database. Either the mysql-server is not running or your user/password is wrong.";
-            $error_trace = "";
+        if ($error->getCode() === 2003) {
+            $error_message = 'Unable to connect to database. Either the mysql-server is not running or your user/password is wrong.';
+            $error_trace = '';
         }
 
         /**
          * log to a file, so we can actually ask people for the error
          * (no one seems to find the stuff in the syslog)
          */
-        $sl_dir = makeCorrectDir(FROXLOR_INSTALL_DIR."/logs/");
+        $sl_dir = makeCorrectDir(FROXLOR_INSTALL_DIR . '/logs/');
         if (!file_exists($sl_dir)) {
             @mkdir($sl_dir, 0755);
         }
-        openlog("froxlor", LOG_PID | LOG_PERROR, LOG_LOCAL0);
-        syslog(LOG_WARNING, str_replace("\n", " ", $error_message));
-        syslog(LOG_WARNING, str_replace("\n", " ", "--- DEBUG: ".$error_trace));
+        openlog('froxlor', LOG_PID | LOG_PERROR, LOG_LOCAL0);
+        syslog(LOG_WARNING, str_replace("\n", ' ', $error_message));
+        syslog(LOG_WARNING, str_replace("\n", ' ', '--- DEBUG: ' . $error_trace));
         closelog();
 
         /**
          * log error for reporting
         */
         $errid = substr(md5(microtime()), 5, 5);
-        $err_file = makeCorrectFile($sl_dir."/".$errid."_sql-error.log");
+        $err_file = makeCorrectFile($sl_dir . '/' . $errid . '_sql-error.log');
         $errlog = @fopen($err_file, 'w');
-        @fwrite($errlog, "|CODE ".$error->getCode()."\n");
-        @fwrite($errlog, "|MSG ".$error_message."\n");
-        @fwrite($errlog, "|FILE ".$error->getFile()."\n");
-        @fwrite($errlog, "|LINE ".$error->getLine()."\n");
-        @fwrite($errlog, "|TRACE\n".$error_trace."\n");
+        @fwrite($errlog, '|CODE ' . $error->getCode() . "\n");
+        @fwrite($errlog, '|MSG ' . $error_message . "\n");
+        @fwrite($errlog, '|FILE ' . $error->getFile() . "\n");
+        @fwrite($errlog, '|LINE ' . $error->getLine() . "\n");
+        @fwrite($errlog, "|TRACE\n" . $error_trace . "\n");
         @fclose($errlog);
 
         if ($showerror) {
@@ -395,34 +392,34 @@ class Database
             unset($sql);
             unset($sql_root);
 
-            if ((isset($theme) && $theme != '')
-                    && !isset($_SERVER['SHELL']) || (isset($_SERVER['SHELL']) && $_SERVER['SHELL'] == '')
+            if ((isset($theme) && $theme !== '')
+                    && !isset($_SERVER['SHELL']) || (isset($_SERVER['SHELL']) && $_SERVER['SHELL'] === '')
             ) {
                 // if we're not on the shell, output a nice error
-                $_errtpl = dirname($sl_dir).'/templates/'.$theme.'/misc/dberrornice.tpl';
+                $_errtpl = dirname($sl_dir) . '/templates/' . $theme . '/misc/dberrornice.tpl';
                 if (file_exists($_errtpl)) {
                     $err_hint = file_get_contents($_errtpl);
                     // replace values
-                    $err_hint = str_replace("<TEXT>", $error_message, $err_hint);
-                    $err_hint = str_replace("<DEBUG>", $error_trace, $err_hint);
-                    $err_hint = str_replace("<CURRENT_YEAR>", date('Y', time()), $err_hint);
+                    $err_hint = str_replace('<TEXT>', $error_message, $err_hint);
+                    $err_hint = str_replace('<DEBUG>', $error_trace, $err_hint);
+                    $err_hint = str_replace('<CURRENT_YEAR>', date('Y', time()), $err_hint);
 
                     $err_report_html = '';
                     if (is_array($userinfo) && (
-                            ($userinfo['adminsession'] == '1' && Settings::Get('system.allow_error_report_admin') == '1')
-                            || ($userinfo['adminsession'] == '0' && Settings::Get('system.allow_error_report_customer') == '1')
+                            ($userinfo['adminsession'] === '1' && Settings::Get('system.allow_error_report_admin') === '1')
+                            || ($userinfo['adminsession'] === '0' && Settings::Get('system.allow_error_report_customer') === '1')
                     )
                     ) {
                         $err_report_html = '<a href="<LINK>" title="Click here to report error">Report error</a>';
-                        $err_report_html = str_replace("<LINK>", $linker->getLink(array('section' => 'index', 'page' => 'send_error_report', 'errorid' => $errid)), $err_report_html);
+                        $err_report_html = str_replace('<LINK>', $linker->getLink(array('section' => 'index', 'page' => 'send_error_report', 'errorid' => $errid)), $err_report_html);
                     }
-                    $err_hint = str_replace("<REPORT>", $err_report_html, $err_hint);
+                    $err_hint = str_replace('<REPORT>', $err_report_html, $err_hint);
 
                     // show
                     die($err_hint);
                 }
             }
-            die("We are sorry, but a MySQL - error occurred. The administrator may find more information in the syslog");
+            die('We are sorry, but a MySQL - error occurred. The administrator may find more information in the syslog');
         }
     }
 

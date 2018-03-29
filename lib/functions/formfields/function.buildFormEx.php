@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -11,10 +10,10 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Settings
  *
+ * @param mixed $form
+ * @param mixed $part
  */
-
 function buildFormEx($form, $part = '')
 {
     $fields = '';
@@ -22,13 +21,13 @@ function buildFormEx($form, $part = '')
     if (validateFormDefinition($form)) {
         foreach ($form['groups'] as $groupname => $groupdetails) {
             // show overview
-            if ($part == '') {
-                if (isset($groupdetails['title']) && $groupdetails['title'] != '') {
+            if ($part === '') {
+                if (isset($groupdetails['title']) && $groupdetails['title'] !== '') {
                     $fields .= getFormOverviewGroupOutput($groupname, $groupdetails);
                 }
             }
             // only show one section
-            elseif ($part != '' && ($groupname == $part || $part == 'all')) {
+            elseif ($part !== '' && ($groupname === $part || $part === 'all')) {
                 /**
                  * this part checks for the 'websrv_avail' entry in the settings-array
                  * if found, we check if the current webserver is in the array. If this
@@ -37,7 +36,7 @@ function buildFormEx($form, $part = '')
                 $do_show = true;
                 if (isset($groupdetails['websrv_avail']) && is_array($groupdetails['websrv_avail'])) {
                     $websrv = Settings::Get('system.webserver');
-                    if (!in_array($websrv, $groupdetails['websrv_avail'])) {
+                    if (!in_array($websrv, $groupdetails['websrv_avail'], true)) {
                         $do_show = false;
                     }
                 }
@@ -50,7 +49,7 @@ function buildFormEx($form, $part = '')
                 }
 
                 //if ($do_show) {
-                if (isset($groupdetails['title']) && $groupdetails['title'] != '') {
+                if (isset($groupdetails['title']) && $groupdetails['title'] !== '') {
                     $fields .= getFormGroupOutput($groupname, $groupdetails);
                 }
 

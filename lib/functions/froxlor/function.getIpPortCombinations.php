@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,10 +12,9 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $ssl
  */
-
 function getIpPortCombinations($ssl = false)
 {
     global $userinfo;
@@ -24,31 +22,31 @@ function getIpPortCombinations($ssl = false)
     $additional_conditions_params = array();
     $additional_conditions_array = array();
 
-    if ($userinfo['ip'] != '-1') {
-        $admin_ip_stmt = Database::prepare("
-			SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id` = :ipid
-		");
+    if ($userinfo['ip'] !== '-1') {
+        $admin_ip_stmt = Database::prepare('
+			SELECT `id`, `ip`, `port` FROM `' . TABLE_PANEL_IPSANDPORTS . '` WHERE `id` = :ipid
+		');
         $admin_ip = Database::pexecute_first($admin_ip_stmt, array('ipid' => $userinfo['ip']));
 
-        $additional_conditions_array[] = "`ip` = :adminip";
+        $additional_conditions_array[] = '`ip` = :adminip';
         $additional_conditions_params['adminip'] = $admin_ip['ip'];
         $admin_ip = null;
     }
 
     if ($ssl !== null) {
-        $additional_conditions_array[] = "`ssl` = :ssl";
+        $additional_conditions_array[] = '`ssl` = :ssl';
         $additional_conditions_params['ssl'] = ($ssl === true ? '1' : '0');
     }
 
     $additional_conditions = '';
     if (count($additional_conditions_array) > 0) {
-        $additional_conditions = " WHERE " . implode(" AND ", $additional_conditions_array) . " ";
+        $additional_conditions = ' WHERE ' . implode(' AND ', $additional_conditions_array) . ' ';
     }
 
-    $result_stmt = Database::prepare("
-		SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` " .
-        $additional_conditions . " ORDER BY `ip` ASC, `port` ASC
-	");
+    $result_stmt = Database::prepare('
+		SELECT `id`, `ip`, `port` FROM `' . TABLE_PANEL_IPSANDPORTS . '` ' .
+        $additional_conditions . ' ORDER BY `ip` ASC, `port` ASC
+	');
 
     Database::pexecute($result_stmt, $additional_conditions_params);
     $system_ipaddress_array = array();

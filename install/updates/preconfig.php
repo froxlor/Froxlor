@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -11,8 +10,9 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Language
  *
+ * @param mixed $current_version
+ * @param mixed $current_db_version
  */
 
 /**
@@ -31,18 +31,18 @@ function getPreConfig($current_version, $current_db_version)
     $has_preconfig = false;
     $return = '<div class="preconfig"><h3 class="red">PLEASE NOTE - Important update notifications</h3>';
 
-    include_once makeCorrectFile(dirname(__FILE__).'/preconfig/0.9/preconfig_0.9.inc.php');
+    include_once makeCorrectFile(__DIR__ . '/preconfig/0.9/preconfig_0.9.inc.php');
     parseAndOutputPreconfig($has_preconfig, $return, $current_version, $current_db_version);
 
-    $return .= '<br /><br />'.makecheckbox('update_changesagreed', '<strong>I have read the update notifications above and I am aware of the changes made to my system.</strong>', '1', true, '0', true);
+    $return .= '<br /><br />' . makecheckbox('update_changesagreed', '<strong>I have read the update notifications above and I am aware of the changes made to my system.</strong>', '1', true, '0', true);
     $return .= '</div>';
     $return .= '<input type="hidden" name="update_preconfig" value="1" />';
 
     if ($has_preconfig) {
         return $return;
-    } else {
-        return '';
     }
+
+    return '';
 }
 
 function versionInUpdate($current_version, $version_to_check)
@@ -51,5 +51,5 @@ function versionInUpdate($current_version, $version_to_check)
         return true;
     }
 
-    return (version_compare2($current_version, $version_to_check) == -1 ? true : false);
+    return (version_compare2($current_version, $version_to_check) === -1 ? true : false);
 }

@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,16 +12,13 @@
  * @author     Michael Kaufmann <mkaufmann@nutime.de>
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Logger
  *
  * @link       http://www.nutime.de/
  *
  * Logger - MySQL-Logger-Class
  */
-
 class MysqlLogger extends AbstractLogger
 {
-
     /**
      * Userinfo
      * @var array
@@ -39,6 +35,7 @@ class MysqlLogger extends AbstractLogger
      * Class constructor.
      *
      * @param array userinfo
+     * @param mixed $userinfo
      */
     protected function __construct($userinfo)
     {
@@ -48,12 +45,14 @@ class MysqlLogger extends AbstractLogger
 
     /**
      * Singleton ftw ;-)
+     * @param mixed $_usernfo
      */
     public static function getInstanceOf($_usernfo)
     {
         if (!isset(self::$loggers[$_usernfo['loginname']])) {
-            self::$loggers[$_usernfo['loginname']] = new MysqlLogger($_usernfo);
+            self::$loggers[$_usernfo['loginname']] = new self($_usernfo);
         }
+
         return self::$loggers[$_usernfo['loginname']];
     }
 
@@ -68,13 +67,13 @@ class MysqlLogger extends AbstractLogger
     {
         if (parent::isEnabled()) {
             if (parent::getSeverity() <= 1
-               && $type == LOG_NOTICE
+               && $type === LOG_NOTICE
             ) {
                 return;
             }
 
             if (!isset($this->userinfo['loginname'])
-               || $this->userinfo['loginname'] == ''
+               || $this->userinfo['loginname'] === ''
             ) {
                 $name = 'unknown';
             } else {
@@ -84,24 +83,24 @@ class MysqlLogger extends AbstractLogger
             $now = time();
 
             $stmt = Database::prepare(
-                "
+                '
 					INSERT INTO `panel_syslog` SET
 					`type` = :type,
 					`date` = :now,
 					`action` = :action,
 					`user` = :user,
-					`text` = :text"
+					`text` = :text'
             );
 
             $ins_data = array(
                     'type' => $type,
                     'now' => $now,
                     'action' => $action,
-                    'user' => $name
+                    'user' => $name,
             );
 
-            if ($text != null
-               && $text != ''
+            if ($text !== null
+               && $text !== ''
             ) {
                 $ins_data['text'] = $text;
                 Database::pexecute($stmt, $ins_data);

@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,8 +12,10 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $subject
+ * @param mixed $fields
+ * @param mixed $complete
  */
 
 /**
@@ -30,7 +31,6 @@
  * @return array The array with stripslashe'd strings
  * @author Florian Lippert <flo@syscp.org>
  */
-
 function stripslashes_array($subject, $fields = '', $complete = false)
 {
     if (is_array($subject)) {
@@ -40,16 +40,15 @@ function stripslashes_array($subject, $fields = '', $complete = false)
 
         foreach ($subject as $field => $value) {
             if ((!is_array($fields) || empty($fields))
-               || (is_array($fields) && !empty($fields) && in_array($field, $fields))) {
+               || (is_array($fields) && !empty($fields) && in_array($field, $fields, true))) {
                 /**
                  * Just call ourselve to manage multi-dimensional arrays
                  */
-
                 $subject[$field] = stripslashes_array($subject[$field], $fields, $complete);
             }
         }
     } else {
-        if ($complete == true) {
+        if ($complete === true) {
             $subject = stripslashes_complete($subject);
         } else {
             $subject = stripslashes($subject);

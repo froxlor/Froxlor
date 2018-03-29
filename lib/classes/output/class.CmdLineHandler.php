@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2018 the Froxlor Team (see authors).
@@ -11,12 +10,9 @@
  * @copyright (c) the authors
  * @author Froxlor team <team@froxlor.org> (2018-)
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package Cron
- *
  */
 abstract class CmdLineHandler
 {
-
     /**
      * internal variable for passed arguments
      *
@@ -43,6 +39,7 @@ abstract class CmdLineHandler
     public static function processParameters($argc, $argv)
     {
         $me = get_called_class();
+
         return new $me($argc, $argv);
     }
 
@@ -64,7 +61,6 @@ abstract class CmdLineHandler
      * @param int $argc
      * @param string[] $argv
      *
-     * @return null
      * @throws Exception
      */
     private function __construct($argc, $argv)
@@ -97,7 +93,7 @@ abstract class CmdLineHandler
         array_shift($argv);
         $o = array();
         foreach ($argv as $a) {
-            if (substr($a, 0, 2) == '--') {
+            if (substr($a, 0, 2) === '--') {
                 $eq = strpos($a, '=');
                 if ($eq !== false) {
                     $o[substr($a, 2, $eq - 2)] = substr($a, $eq + 1);
@@ -107,8 +103,8 @@ abstract class CmdLineHandler
                         $o[$k] = true;
                     }
                 }
-            } elseif (substr($a, 0, 1) == '-') {
-                if (substr($a, 2, 1) == '=') {
+            } elseif (substr($a, 0, 1) === '-') {
+                if (substr($a, 2, 1) === '=') {
                     $o[substr($a, 1, 1)] = substr($a, 3);
                 } else {
                     foreach (str_split(substr($a, 1)) as $k) {
@@ -121,20 +117,21 @@ abstract class CmdLineHandler
                 $o[] = $a;
             }
         }
+
         return $o;
     }
 
     /**
      * Creates an Action-Object for the Action-Handler
      *
-     * @return Action
      * @throws Exception
+     * @return Action
      */
     private function _createAction()
     {
         
         // Test for help-switch
-        if (empty(self::$args) || array_key_exists("help", self::$args) || array_key_exists("h", self::$args)) {
+        if (empty(self::$args) || array_key_exists('help', self::$args) || array_key_exists('h', self::$args)) {
             static::printHelp();
             // end of execution
         }
@@ -142,13 +139,13 @@ abstract class CmdLineHandler
         foreach (self::$args as $arg => $value) {
             if (is_numeric($arg)) {
                 throw new Exception("Unknown parameter '" . $value . "' in argument list");
-            } elseif (! in_array($arg, static::$params) && ! in_array($arg, static::$switches)) {
+            } elseif (! in_array($arg, static::$params, true) && ! in_array($arg, static::$switches, true)) {
                 throw new Exception("Unknown parameter '" . $arg . "' in argument list");
             }
         }
         
         // set debugger switch
-        if (isset(self::$args["d"]) && self::$args["d"] == true) {
+        if (isset(self::$args['d']) && self::$args['d'] === true) {
             // Debugger::getInstance()->setEnabled(true);
             // Debugger::getInstance()->debug("debug output enabled");
         }
@@ -156,40 +153,41 @@ abstract class CmdLineHandler
         return new static::$action_class(self::$args);
     }
 
-    public static function getInput($prompt = "#", $default = "")
+    public static function getInput($prompt = '#', $default = '')
     {
         if (! empty($default)) {
-            $prompt .= " [" . $default . "]";
+            $prompt .= ' [' . $default . ']';
         }
-        $result = readline($prompt . ":");
+        $result = readline($prompt . ':');
         if (empty($result) && ! empty($default)) {
             $result = $default;
         }
+
         return mb_strtolower($result);
     }
 
-    public static function println($msg = "")
+    public static function println($msg = '')
     {
         print $msg . PHP_EOL;
     }
 
-    private static function _printcolor($msg = "", $color = "0")
+    private static function _printcolor($msg = '', $color = '0')
     {
-        print "\033[" . $color . "m" . $msg . "\033[0m" . PHP_EOL;
+        print "\033[" . $color . 'm' . $msg . "\033[0m" . PHP_EOL;
     }
 
-    public static function printerr($msg = "")
+    public static function printerr($msg = '')
     {
-        self::_printcolor($msg, "31");
+        self::_printcolor($msg, '31');
     }
 
-    public static function printsucc($msg = "")
+    public static function printsucc($msg = '')
     {
-        self::_printcolor($msg, "32");
+        self::_printcolor($msg, '32');
     }
 
-    public static function printwarn($msg = "")
+    public static function printwarn($msg = '')
     {
-        self::_printcolor($msg, "33");
+        self::_printcolor($msg, '33');
     }
 }

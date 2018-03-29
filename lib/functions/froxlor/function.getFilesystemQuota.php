@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2011- the Froxlor Team (see authors).
@@ -11,10 +10,7 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2011-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
- *
  */
-
 function getFilesystemQuota()
 {
 
@@ -22,18 +18,18 @@ function getFilesystemQuota()
     if (Settings::Get('system.diskquota_enabled')) {
 
         // set linux defaults
-        $repquota_params = "-np";
+        $repquota_params = '-np';
         //$quota_line_regex = "/^#([0-9]+)\s*[+-]{2}\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)/i";
         $quota_line_regex = "/^#([0-9]+)\s+[+-]{2}\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)/i";
 
         // check for freebsd - which needs other values
         if (isFreeBSD()) {
-            $repquota_params = "-nu";
+            $repquota_params = '-nu';
             $quota_line_regex = "/^([0-9]+)\s+[+-]{2}\s+(\d+)\s+(\d+)\s+(\d+)\s+(\S+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\S+)/i";
         }
 
         // Fetch all quota in the desired partition
-        exec(Settings::Get('system.diskquota_repquota_path') . " " . $repquota_params . " " . escapeshellarg(Settings::Get('system.diskquota_customer_partition')), $repquota);
+        exec(Settings::Get('system.diskquota_repquota_path') . ' ' . $repquota_params . ' ' . escapeshellarg(Settings::Get('system.diskquota_customer_partition')), $repquota);
 
         $usedquota = array();
         foreach ($repquota as $tmpquota) {
@@ -47,13 +43,13 @@ function getFilesystemQuota()
                                 'used' => $matches[2],
                                 'soft' => $matches[3],
                                 'hard' => $matches[4],
-                                'grace' => (isFreeBSD() ? '0' : $matches[5])
+                                'grace' => (isFreeBSD() ? '0' : $matches[5]),
                         ),
                         'file' => array(
                                 'used' => $matches[6],
                                 'soft' => $matches[7],
                                 'hard' => $matches[8],
-                                'grace' => (isFreeBSD() ? '0' : $matches[9])
+                                'grace' => (isFreeBSD() ? '0' : $matches[9]),
                         ),
                 );
             }
@@ -61,5 +57,6 @@ function getFilesystemQuota()
 
         return $usedquota;
     }
+
     return false;
 }

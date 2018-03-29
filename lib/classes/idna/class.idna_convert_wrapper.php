@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,15 +12,12 @@
  * @author     Michael Duergner <michael@duergner.com> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Classes
- *
  */
 
 // Source for updates: https://github.com/phlylabs/idna-convert.git
 
 /**
  * Class for wrapping a specific idna conversion class and offering a standard interface
- * @package Functions
  */
 class idna_convert_wrapper
 {
@@ -29,17 +25,15 @@ class idna_convert_wrapper
      * idna converter we use
      * @var object
      */
-
     private $idna_converter;
 
     /**
      * Class constructor. Creates a new idna converter
      */
-
     public function __construct()
     {
         // Instantiate it
-        if (version_compare("5.6.0", PHP_VERSION, ">=")) {
+        if (version_compare('5.6.0', PHP_VERSION, '>=')) {
             $this->idna_converter = new idna_convert(array('idn_version' => '2008', 'encode_german_sz' => false));
         } else {
             // use this when using new version of IdnaConverter (which does not work yet)
@@ -52,29 +46,29 @@ class idna_convert_wrapper
      *
      * @param string May be either a single domain name, e single email address or a list of one
      * separated either by ',', ';' or ' '.
+     * @param mixed $to_encode
      *
      * @return string Returns either a single domain name, a single email address or a list of one of
      * both separated by the same string as the input.
      */
-
     public function encode($to_encode)
     {
-        if (version_compare("5.6.0", PHP_VERSION, ">=")) {
+        if (version_compare('5.6.0', PHP_VERSION, '>=')) {
             return $this->_do_action('encode', $to_encode);
-        } else {
-            $to_encode = $this->is_utf8($to_encode) ? $to_encode : utf8_encode($to_encode);
-            return $this->idna_converter->encode($to_encode);
         }
+        $to_encode = $this->is_utf8($to_encode) ? $to_encode : utf8_encode($to_encode);
+
+        return $this->idna_converter->encode($to_encode);
     }
 
     public function encode_uri($to_encode)
     {
-        if (version_compare("5.6.0", PHP_VERSION, ">=")) {
+        if (version_compare('5.6.0', PHP_VERSION, '>=')) {
             return $this->_do_action('encode', $to_encode);
-        } else {
-            $to_encode = $this->is_utf8($to_encode) ? $to_encode : utf8_encode($to_encode);
-            return $this->idna_converter->encodeUri($to_encode);
         }
+        $to_encode = $this->is_utf8($to_encode) ? $to_encode : utf8_encode($to_encode);
+
+        return $this->idna_converter->encodeUri($to_encode);
     }
 
     /**
@@ -82,18 +76,18 @@ class idna_convert_wrapper
      *
      * @param string May be either a single domain name, e single email address or a list of one
      * separated either by ',', ';' or ' '.
+     * @param mixed $to_decode
      *
      * @return string Returns either a single domain name, a single email address or a list of one of
      * both separated by the same string as the input.
      */
-
     public function decode($to_decode)
     {
-        if (version_compare("5.6.0", PHP_VERSION, ">=")) {
+        if (version_compare('5.6.0', PHP_VERSION, '>=')) {
             return $this->_do_action('decode', $to_decode);
-        } else {
-            return $this->idna_converter->decode($to_decode);
         }
+
+        return $this->idna_converter->decode($to_decode);
     }
 
     /**
@@ -101,14 +95,15 @@ class idna_convert_wrapper
      *
      * @param string $string
      *
-     * @return boolean
+     * @return bool
      */
     public function is_utf8($string = null)
     {
-        if (function_exists("mb_detect_encoding")) {
-            if (mb_detect_encoding($string, 'UTF-8, ISO-8859-1') === 'UTF-8') {
+        if (function_exists('mb_detect_encoding')) {
+            if (mb_detect_encoding($string, 'UTF-8, ISO-8859-1', true) === 'UTF-8') {
                 return true;
             }
+
             return false;
         }
         $strlen = strlen($string);
@@ -146,10 +141,11 @@ class idna_convert_wrapper
      *
      * @param string May be either 'decode' or 'encode'.
      * @param string The string to de- or endcode.
+     * @param mixed $action
+     * @param mixed $string
      *
      * @return string The input string after being processed.
      */
-
     private function _do_action($action, $string)
     {
         $string = trim($string);
@@ -165,12 +161,12 @@ class idna_convert_wrapper
             $sepchar = ' ';
         } else {
             $strings = array(
-                $string
+                $string,
             );
             $sepchar = '';
         }
 
-        for ($i = 0;$i < count($strings);$i++) {
+        for ($i = 0; $i < count($strings); $i++) {
             if (strpos($strings[$i], '@') !== false) {
                 $split = explode('@', $strings[$i]);
                 $localpart = $split[0];

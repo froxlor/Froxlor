@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,8 +12,13 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $homeDir
+ * @param mixed $dirToCreate
+ * @param mixed $uid
+ * @param mixed $gid
+ * @param mixed $placeindex
+ * @param mixed $allow_notwithinhomedir
  */
 
 /**
@@ -34,17 +38,16 @@
  * @author Florian Lippert <flo@syscp.org>
  * @author Martin Burchert <martin.burchert@syscp.org>
  */
-
 function mkDirWithCorrectOwnership($homeDir, $dirToCreate, $uid, $gid, $placeindex = false, $allow_notwithinhomedir = false)
 {
     $returncode = true;
 
-    if ($homeDir != ''
-       && $dirToCreate != '') {
+    if ($homeDir !== ''
+       && $dirToCreate !== '') {
         $homeDir = makeCorrectDir($homeDir);
         $dirToCreate = makeCorrectDir($dirToCreate);
 
-        if (substr($dirToCreate, 0, strlen($homeDir)) == $homeDir) {
+        if (substr($dirToCreate, 0, strlen($homeDir)) === $homeDir) {
             $subdir = substr($dirToCreate, strlen($homeDir) - 1);
             $within_homedir = true;
         } else {
@@ -86,7 +89,7 @@ function mkDirWithCorrectOwnership($homeDir, $dirToCreate, $uid, $gid, $placeind
                     }
                 }
 
-                safe_exec('chown -R ' . (int)$uid . ':' . (int)$gid . ' ' . escapeshellarg($sdir));
+                safe_exec('chown -R ' . (int) $uid . ':' . (int) $gid . ' ' . escapeshellarg($sdir));
             }
         }
     } else {

@@ -1,4 +1,5 @@
-<?php if (!defined('MASTER_CRONJOB')) {
+<?php declare(strict_types=1);
+if (!defined('MASTER_CRONJOB')) {
     die('You cannot access this file directly!');
 }
 
@@ -13,67 +14,64 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Cron
- *
  */
-
 class lighttpd_fcgid extends lighttpd
 {
     protected function composePhpOptions($domain)
     {
         $php_options_text = '';
 
-        if ($domain['phpenabled_customer'] == 1 && $domain['phpenabled_vhost'] == '1') {
+        if ($domain['phpenabled_customer'] === 1 && $domain['phpenabled_vhost'] === '1') {
             $php = new phpinterface($domain);
-            $phpconfig = $php->getPhpConfig((int)$domain['phpsettingid']);
+            $phpconfig = $php->getPhpConfig((int) $domain['phpsettingid']);
 
             // vhost data for php-fpm
-            if ((int)Settings::Get('phpfpm.enabled') == 1) {
-                $php_options_text = '  fastcgi.server = ( '."\n";
-                $php_options_text.=	"\t".'".php" => ('."\n";
-                $php_options_text.=	"\t\t".'"localhost" => ('."\n";
-                $php_options_text.=	"\t\t".'"socket" => "'.$php->getInterface()->getSocketFile().'",'."\n";
-                $php_options_text.=	"\t\t".'"check-local" => "enable",'."\n";
-                $php_options_text.=	"\t\t".'"disable-time" => 1'."\n";
-                $php_options_text.=	"\t".')'."\n";
-                $php_options_text.=	"\t".')'."\n";
-                $php_options_text.=	'  )'."\n";
+            if ((int) Settings::Get('phpfpm.enabled') === 1) {
+                $php_options_text = '  fastcgi.server = ( ' . "\n";
+                $php_options_text.=	"\t" . '".php" => (' . "\n";
+                $php_options_text.=	"\t\t" . '"localhost" => (' . "\n";
+                $php_options_text.=	"\t\t" . '"socket" => "' . $php->getInterface()->getSocketFile() . '",' . "\n";
+                $php_options_text.=	"\t\t" . '"check-local" => "enable",' . "\n";
+                $php_options_text.=	"\t\t" . '"disable-time" => 1' . "\n";
+                $php_options_text.=	"\t" . ')' . "\n";
+                $php_options_text.=	"\t" . ')' . "\n";
+                $php_options_text.=	'  )' . "\n";
             }
             // vhost data for fcgid
-            elseif ((int)Settings::Get('system.mod_fcgid') == 1) {
-                $php_options_text = '  fastcgi.server = ( '."\n";
+            elseif ((int) Settings::Get('system.mod_fcgid') === 1) {
+                $php_options_text = '  fastcgi.server = ( ' . "\n";
                 $file_extensions = explode(' ', $phpconfig['file_extensions']);
                 foreach ($file_extensions as $f_extension) {
-                    $php_options_text.=	"\t".'".'.$f_extension.'" => ('."\n";
-                    $php_options_text.=	"\t\t".'"localhost" => ('."\n";
-                    $php_options_text.=	"\t\t".'"socket" => "/var/run/lighttpd/'.$domain['loginname'].'-'.$domain['domain'].'-php.socket",'."\n";
-                    $php_options_text.=	"\t\t".'"bin-path" => "'.$phpconfig['binary'].' -c '.$php->getInterface()->getIniFile().'",'."\n";
-                    $php_options_text.=	"\t\t".'"bin-environment" => ('."\n";
-                    if ((int)$domain['mod_fcgid_starter'] != - 1) {
-                        $php_options_text.=	"\t\t\t".'"PHP_FCGI_CHILDREN" => "' . (int)$domain['mod_fcgid_starter'] . '",'."\n";
+                    $php_options_text.=	"\t" . '".' . $f_extension . '" => (' . "\n";
+                    $php_options_text.=	"\t\t" . '"localhost" => (' . "\n";
+                    $php_options_text.=	"\t\t" . '"socket" => "/var/run/lighttpd/' . $domain['loginname'] . '-' . $domain['domain'] . '-php.socket",' . "\n";
+                    $php_options_text.=	"\t\t" . '"bin-path" => "' . $phpconfig['binary'] . ' -c ' . $php->getInterface()->getIniFile() . '",' . "\n";
+                    $php_options_text.=	"\t\t" . '"bin-environment" => (' . "\n";
+                    if ((int) $domain['mod_fcgid_starter'] !== - 1) {
+                        $php_options_text.=	"\t\t\t" . '"PHP_FCGI_CHILDREN" => "' . (int) $domain['mod_fcgid_starter'] . '",' . "\n";
                     } else {
-                        if ((int)$phpconfig['mod_fcgid_starter'] != - 1) {
-                            $php_options_text.=	"\t\t\t".'"PHP_FCGI_CHILDREN" => "' . (int)$phpconfig['mod_fcgid_starter'] . '",'."\n";
+                        if ((int) $phpconfig['mod_fcgid_starter'] !== - 1) {
+                            $php_options_text.=	"\t\t\t" . '"PHP_FCGI_CHILDREN" => "' . (int) $phpconfig['mod_fcgid_starter'] . '",' . "\n";
                         } else {
-                            $php_options_text.=	"\t\t\t".'"PHP_FCGI_CHILDREN" => "' . (int)Settings::Get('system.mod_fcgid_starter') . '",'."\n";
+                            $php_options_text.=	"\t\t\t" . '"PHP_FCGI_CHILDREN" => "' . (int) Settings::Get('system.mod_fcgid_starter') . '",' . "\n";
                         }
                     }
     
-                    if ((int)$domain['mod_fcgid_maxrequests'] != - 1) {
-                        $php_options_text.=	"\t\t\t".'"PHP_FCGI_MAX_REQUESTS" => "' . (int)$domain['mod_fcgid_maxrequests'] . '"'."\n";
+                    if ((int) $domain['mod_fcgid_maxrequests'] !== - 1) {
+                        $php_options_text.=	"\t\t\t" . '"PHP_FCGI_MAX_REQUESTS" => "' . (int) $domain['mod_fcgid_maxrequests'] . '"' . "\n";
                     } else {
-                        if ((int)$phpconfig['mod_fcgid_maxrequests'] != - 1) {
-                            $php_options_text.=	"\t\t\t".'"PHP_FCGI_MAX_REQUESTS" => "' . (int)$phpconfig['mod_fcgid_maxrequests'] . '"'."\n";
+                        if ((int) $phpconfig['mod_fcgid_maxrequests'] !== - 1) {
+                            $php_options_text.=	"\t\t\t" . '"PHP_FCGI_MAX_REQUESTS" => "' . (int) $phpconfig['mod_fcgid_maxrequests'] . '"' . "\n";
                         } else {
-                            $php_options_text.=	"\t\t\t".'"PHP_FCGI_MAX_REQUESTS" => "' . (int)Settings::Get('system.mod_fcgid_maxrequests') . '"'."\n";
+                            $php_options_text.=	"\t\t\t" . '"PHP_FCGI_MAX_REQUESTS" => "' . (int) Settings::Get('system.mod_fcgid_maxrequests') . '"' . "\n";
                         }
                     }
     
-                    $php_options_text.=	"\t\t".')'."\n";
-                    $php_options_text.=	"\t".')'."\n";
-                    $php_options_text.=	"\t".')'."\n";
+                    $php_options_text.=	"\t\t" . ')' . "\n";
+                    $php_options_text.=	"\t" . ')' . "\n";
+                    $php_options_text.=	"\t" . ')' . "\n";
                 } // foreach extension
-                $php_options_text.=	'  )'."\n";
+                $php_options_text.=	'  )' . "\n";
             }
 
             // create starter-file | config-file
@@ -91,10 +89,10 @@ class lighttpd_fcgid extends lighttpd
 
     public function createOwnVhostStarter()
     {
-        if (Settings::Get('phpfpm.enabled') == '1'
-            && Settings::Get('phpfpm.enabled_ownvhost') == '1'
+        if (Settings::Get('phpfpm.enabled') === '1'
+            && Settings::Get('phpfpm.enabled_ownvhost') === '1'
         ) {
-            $mypath = makeCorrectDir(dirname(dirname(dirname(__FILE__)))); // /var/www/froxlor, needed for chown
+            $mypath = makeCorrectDir(dirname(dirname(__DIR__))); // /var/www/froxlor, needed for chown
 
             $user = Settings::Get('phpfpm.vhost_httpuser');
             $group = Settings::Get('phpfpm.vhost_httpgroup');
@@ -109,7 +107,7 @@ class lighttpd_fcgid extends lighttpd
                 'openbasedir' => 0,
                 'email' => Settings::Get('panel.adminmail'),
                 'loginname' => 'froxlor.panel',
-                'documentroot' => $mypath
+                'documentroot' => $mypath,
             );
 
             // all the files and folders have to belong to the local user
@@ -120,7 +118,7 @@ class lighttpd_fcgid extends lighttpd
             $php = new phpinterface($domain);
 
             // get php-config
-            if (Settings::Get('phpfpm.enabled') == '1') {
+            if (Settings::Get('phpfpm.enabled') === '1') {
                 // fpm
                 $phpconfig = $php->getPhpConfig(Settings::Get('phpfpm.vhost_defaultini'));
             } else {

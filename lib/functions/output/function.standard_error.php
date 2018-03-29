@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,8 +12,9 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $errors
+ * @param mixed $replacer
  */
 
 /**
@@ -34,13 +34,13 @@ function standard_error($errors = '', $replacer = '')
 
     if (!is_array($errors)) {
         $errors = array(
-            $errors
+            $errors,
         );
     }
 
     $link = '';
     if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $_SERVER['HTTP_HOST']) !== false) {
-        $link = '<a href="'.htmlentities($_SERVER['HTTP_REFERER']).'">'.$lng['panel']['back'].'</a>';
+        $link = '<a href="' . htmlentities($_SERVER['HTTP_REFERER']) . '">' . $lng['panel']['back'] . '</a>';
     }
 
     $error = '';
@@ -60,7 +60,7 @@ function standard_error($errors = '', $replacer = '')
         }
     }
 
-    eval("echo \"" . getTemplate('misc/error', '1') . "\";");
+    eval('echo "' . getTemplate('misc/error', '1') . '";');
     exit;
 }
 
@@ -70,9 +70,9 @@ function dynamic_error($message)
     $_SESSION['requestData'] = $_POST;
     $link = '';
     if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $_SERVER['HTTP_HOST']) !== false) {
-        $link = '<a href="'.htmlentities($_SERVER['HTTP_REFERER']).'">'.$lng['panel']['back'].'</a>';
+        $link = '<a href="' . htmlentities($_SERVER['HTTP_REFERER']) . '">' . $lng['panel']['back'] . '</a>';
     }
     $error = $message;
-    eval("echo \"" . getTemplate('misc/error', '1') . "\";");
+    eval('echo "' . getTemplate('misc/error', '1') . '";');
     exit;
 }

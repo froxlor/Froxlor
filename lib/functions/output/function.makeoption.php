@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,8 +12,14 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $title
+ * @param mixed $value
+ * @param null|mixed $selvalue
+ * @param mixed $title_trusted
+ * @param mixed $value_trusted
+ * @param null|mixed $id
+ * @param mixed $disabled
  */
 
 /**
@@ -28,11 +33,10 @@
  * @return string HTML Code
  * @author Florian Lippert <flo@syscp.org>
  */
-
 function makeoption($title, $value, $selvalue = null, $title_trusted = false, $value_trusted = false, $id = null, $disabled = false)
 {
     if ($selvalue !== null
-       && ((is_array($selvalue) && in_array($value, $selvalue)) || $value == $selvalue)) {
+       && ((is_array($selvalue) && in_array($value, $selvalue, true)) || $value === $selvalue)) {
         $selected = 'selected="selected"';
     } else {
         $selected = '';
@@ -56,5 +60,6 @@ function makeoption($title, $value, $selvalue = null, $title_trusted = false, $v
     }
 
     $option = '<option value="' . $value . '" ' . $id_str . $selected . ' >' . $title . '</option>';
+
     return $option;
 }

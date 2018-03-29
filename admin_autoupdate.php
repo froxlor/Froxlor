@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2016 the Froxlor Team (see authors).
@@ -12,33 +11,31 @@
  * @author     Michael Kaufmann <mkaufmann@nutime.de>
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Frontend
  *
  * @since      0.9.35
- *
  */
 define('AREA', 'admin');
 require './lib/init.php';
 
 // define update-uri
-define('UPDATE_URI', "https://version.froxlor.org/Froxlor/legacy/" . $version);
-define('RELEASE_URI', "https://autoupdate.froxlor.org/froxlor-{version}.zip");
-define('CHECKSUM_URI', "https://autoupdate.froxlor.org/froxlor-{version}.zip.sha256");
+define('UPDATE_URI', 'https://version.froxlor.org/Froxlor/legacy/' . $version);
+define('RELEASE_URI', 'https://autoupdate.froxlor.org/froxlor-{version}.zip');
+define('CHECKSUM_URI', 'https://autoupdate.froxlor.org/froxlor-{version}.zip.sha256');
 
 // check for archive-stuff
 if (! extension_loaded('zip')) {
     redirectTo($filename, array(
         's' => $s,
         'page' => 'error',
-        'errno' => 2
+        'errno' => 2,
     ));
 }
 
 // display initial version check
-if ($page == 'overview') {
+if ($page === 'overview') {
     
     // log our actions
-    $log->logAction(ADM_ACTION, LOG_NOTICE, "checking auto-update");
+    $log->logAction(ADM_ACTION, LOG_NOTICE, 'checking auto-update');
     
     // check for new version
     $latestversion = HttpClient::urlGet(UPDATE_URI);
@@ -63,9 +60,9 @@ if ($page == 'overview') {
             redirectTo($filename, array(
                 's' => $s,
                 'page' => 'error',
-                'errno' => 3
+                'errno' => 3,
             ));
-        } elseif (version_compare2($version, $_version) == - 1) {
+        } elseif (version_compare2($version, $_version) === - 1) {
             // there is a newer version - yay
             $isnewerversion = 1;
         } else {
@@ -75,13 +72,13 @@ if ($page == 'overview') {
         
         // anzeige über version-status mit ggfls. formular
         // zum update schritt #1 -> download
-        if ($isnewerversion == 1) {
+        if ($isnewerversion === 1) {
             $text = 'There is a newer version available. Update to version <b>' . $_version . '</b> now?<br/>(Your current version is: ' . $version . ')';
             $hiddenparams = '<input type="hidden" name="newversion" value="' . $_version . '" />';
             $yesfile = $filename . '?s=' . $s . '&amp;page=getdownload';
-            eval("echo \"" . getTemplate("misc/question_yesno", true) . "\";");
+            eval('echo "' . getTemplate('misc/question_yesno', true) . '";');
             exit();
-        } elseif ($isnewerversion == 0) {
+        } elseif ($isnewerversion === 0) {
             // all good
             standard_success('noupdatesavail');
         } else {
@@ -89,7 +86,7 @@ if ($page == 'overview') {
         }
     }
 }// download the new archive
-elseif ($page == 'getdownload') {
+elseif ($page === 'getdownload') {
     
     // retrieve the new version from the form
     $newversion = isset($_POST['newversion']) ? $_POST['newversion'] : null;
@@ -109,7 +106,7 @@ elseif ($page == 'getdownload') {
         // name archive
         $localArchive = FROXLOR_INSTALL_DIR . '/updates/' . basename($toLoad);
         
-        $log->logAction(ADM_ACTION, LOG_NOTICE, "Downloading " . $toLoad . " to " . $localArchive);
+        $log->logAction(ADM_ACTION, LOG_NOTICE, 'Downloading ' . $toLoad . ' to ' . $localArchive);
         
         // remove old archive
         if (file_exists($localArchive)) {
@@ -123,25 +120,25 @@ elseif ($page == 'getdownload') {
             redirectTo($filename, array(
                 's' => $s,
                 'page' => 'error',
-                'errno' => 4
+                'errno' => 4,
             ));
         }
         
         // validate the integrity of the downloaded file
         $_shouldsum = HttpClient::urlGet($toCheck);
         if (! empty($_shouldsum)) {
-            $_t = explode(" ", $_shouldsum);
+            $_t = explode(' ', $_shouldsum);
             $shouldsum = $_t[0];
         } else {
             $shouldsum = null;
         }
         $filesum = hash_file('sha256', $localArchive);
         
-        if ($filesum != $shouldsum) {
+        if ($filesum !== $shouldsum) {
             redirectTo($filename, array(
                 's' => $s,
                 'page' => 'error',
-                'errno' => 9
+                'errno' => 9,
             ));
         }
         
@@ -149,25 +146,25 @@ elseif ($page == 'getdownload') {
         redirectTo($filename, array(
             's' => $s,
             'page' => 'extract',
-            'archive' => basename($localArchive)
+            'archive' => basename($localArchive),
         ));
     }
     redirectTo($filename, array(
         's' => $s,
         'page' => 'error',
-        'errno' => 6
+        'errno' => 6,
     ));
 }// extract and install new version
-elseif ($page == 'extract') {
+elseif ($page === 'extract') {
     $toExtract = isset($_GET['archive']) ? $_GET['archive'] : null;
     $localArchive = FROXLOR_INSTALL_DIR . '/updates/' . $toExtract;
     
-    if (isset($_POST['send']) && $_POST['send'] == 'send') {
+    if (isset($_POST['send']) && $_POST['send'] === 'send') {
         // decompress from zip
         $zip = new ZipArchive();
         $res = $zip->open($localArchive);
         if ($res === true) {
-            $log->logAction(ADM_ACTION, LOG_NOTICE, "Extracting " . $localArchive . " to " . FROXLOR_INSTALL_DIR);
+            $log->logAction(ADM_ACTION, LOG_NOTICE, 'Extracting ' . $localArchive . ' to ' . FROXLOR_INSTALL_DIR);
             $zip->extractTo(FROXLOR_INSTALL_DIR);
             $zip->close();
             // success - remove unused archive
@@ -177,13 +174,13 @@ elseif ($page == 'extract') {
             redirectTo($filename, array(
                 's' => $s,
                 'page' => 'error',
-                'errno' => 8
+                'errno' => 8,
             ));
         }
         
         // redirect to update-page?
         redirectTo('admin_updates.php', array(
-            's' => $s
+            's' => $s,
         ));
     }
     
@@ -191,17 +188,17 @@ elseif ($page == 'extract') {
         redirectTo($filename, array(
             's' => $s,
             'page' => 'error',
-            'errno' => 7
+            'errno' => 7,
         ));
     }
     
     $text = 'Extract downloaded archive "' . $toExtract . '"?';
     $hiddenparams = '';
     $yesfile = $filename . '?s=' . $s . '&amp;page=extract&amp;archive=' . $toExtract;
-    eval("echo \"" . getTemplate("misc/question_yesno", true) . "\";");
+    eval('echo "' . getTemplate('misc/question_yesno', true) . '";');
 }
 // display error
-elseif ($page == 'error') {
+elseif ($page === 'error') {
     
     // retrieve error-number via url-parameter
     $errno = isset($_GET['errno']) ? (int) $_GET['errno'] : 0;

@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,8 +12,8 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $returndebuginfo
  */
 
 /**
@@ -32,7 +31,7 @@ function updateCounters($returndebuginfo = false)
     if ($returndebuginfo === true) {
         $returnval = array(
             'admins' => array(),
-            'customers' => array()
+            'customers' => array(),
         );
     }
 
@@ -53,39 +52,39 @@ function updateCounters($returndebuginfo = false)
         _addResourceCountEx($admin_resources[$cur_adm], $customer, 'traffic_used', 'traffic_used'); // !!! yes, USED and USED
 
         foreach (array('mysqls', 'ftps', 'emails', 'email_accounts', 'tickets', 'email_forwarders', 'email_quota', 'subdomains') as $field) {
-            _addResourceCount($admin_resources[$cur_adm], $customer, $field.'_used', $field);
+            _addResourceCount($admin_resources[$cur_adm], $customer, $field . '_used', $field);
         }
 
         $customer_mysqls_stmt = Database::prepare(
             'SELECT COUNT(*) AS `number_mysqls` FROM `' . TABLE_PANEL_DATABASES . '`
 			WHERE `customerid` = :cid'
         );
-        $customer_mysqls = Database::pexecute_first($customer_mysqls_stmt, array("cid" => $customer['customerid']));
-        $customer['mysqls_used_new'] = (int)$customer_mysqls['number_mysqls'];
+        $customer_mysqls = Database::pexecute_first($customer_mysqls_stmt, array('cid' => $customer['customerid']));
+        $customer['mysqls_used_new'] = (int) $customer_mysqls['number_mysqls'];
         
         $customer_emails_stmt = Database::prepare(
         
             'SELECT COUNT(*) AS `number_emails` FROM `' . TABLE_MAIL_VIRTUAL . '`
 			WHERE `customerid` = :cid'
         );
-        $customer_emails = Database::pexecute_first($customer_emails_stmt, array("cid" => $customer['customerid']));
-        $customer['emails_used_new'] = (int)$customer_emails['number_emails'];
+        $customer_emails = Database::pexecute_first($customer_emails_stmt, array('cid' => $customer['customerid']));
+        $customer['emails_used_new'] = (int) $customer_emails['number_emails'];
         
         $customer_emails_result_stmt = Database::prepare(
         
             'SELECT `email`, `email_full`, `destination`, `popaccountid` AS `number_email_forwarders` FROM `' . TABLE_MAIL_VIRTUAL . '`
 			WHERE `customerid` = :cid'
         );
-        Database::pexecute($customer_emails_result_stmt, array("cid" => $customer['customerid']));
+        Database::pexecute($customer_emails_result_stmt, array('cid' => $customer['customerid']));
         $customer_email_forwarders = 0;
         $customer_email_accounts = 0;
 
         while ($customer_emails_row = $customer_emails_result_stmt->fetch(PDO::FETCH_ASSOC)) {
-            if ($customer_emails_row['destination'] != '') {
+            if ($customer_emails_row['destination'] !== '') {
                 $customer_emails_row['destination'] = explode(' ', makeCorrectDestination($customer_emails_row['destination']));
                 $customer_email_forwarders+= count($customer_emails_row['destination']);
 
-                if (in_array($customer_emails_row['email_full'], $customer_emails_row['destination'])) {
+                if (in_array($customer_emails_row['email_full'], $customer_emails_row['destination'], true)) {
                     $customer_email_forwarders-= 1;
                     $customer_email_accounts++;
                 }
@@ -96,20 +95,20 @@ function updateCounters($returndebuginfo = false)
         $customer['email_forwarders_used_new'] = $customer_email_forwarders;
         
         $customer_ftps_stmt = Database::prepare('SELECT COUNT(*) AS `number_ftps` FROM `' . TABLE_FTP_USERS . '` WHERE `customerid` = :cid');
-        $customer_ftps = Database::pexecute_first($customer_ftps_stmt, array("cid" => $customer['customerid']));
-        $customer['ftps_used_new'] = ((int)$customer_ftps['number_ftps'] - 1);
+        $customer_ftps = Database::pexecute_first($customer_ftps_stmt, array('cid' => $customer['customerid']));
+        $customer['ftps_used_new'] = ((int) $customer_ftps['number_ftps'] - 1);
         
         $customer_tickets_stmt = Database::prepare('SELECT COUNT(*) AS `number_tickets` FROM `' . TABLE_PANEL_TICKETS . '` WHERE `answerto` = "0" AND `customerid` =  :cid');
-        $customer_tickets = Database::pexecute_first($customer_tickets_stmt, array("cid" => $customer['customerid']));
-        $customer['tickets_used_new'] = (int)$customer_tickets['number_tickets'];
+        $customer_tickets = Database::pexecute_first($customer_tickets_stmt, array('cid' => $customer['customerid']));
+        $customer['tickets_used_new'] = (int) $customer_tickets['number_tickets'];
         
         $customer_subdomains_stmt = Database::prepare('SELECT COUNT(*) AS `number_subdomains` FROM `' . TABLE_PANEL_DOMAINS . '` WHERE `customerid` = :cid AND `parentdomainid` <> "0"');
-        $customer_subdomains = Database::pexecute_first($customer_subdomains_stmt, array("cid" => $customer['customerid']));
-        $customer['subdomains_used_new'] = (int)$customer_subdomains['number_subdomains'];
+        $customer_subdomains = Database::pexecute_first($customer_subdomains_stmt, array('cid' => $customer['customerid']));
+        $customer['subdomains_used_new'] = (int) $customer_subdomains['number_subdomains'];
         
         $customer_email_quota_stmt = Database::prepare('SELECT SUM(`quota`) AS `email_quota` FROM `' . TABLE_MAIL_USERS . '` WHERE `customerid` = :cid');
-        $customer_email_quota = Database::pexecute_first($customer_email_quota_stmt, array("cid" => $customer['customerid']));
-        $customer['email_quota_used_new'] = (int)$customer_email_quota['email_quota'];
+        $customer_email_quota = Database::pexecute_first($customer_email_quota_stmt, array('cid' => $customer['customerid']));
+        $customer['email_quota_used_new'] = (int) $customer_email_quota['email_quota'];
 
         $stmt = Database::prepare(
             'UPDATE `' . TABLE_PANEL_CUSTOMERS . '` 
@@ -124,15 +123,15 @@ function updateCounters($returndebuginfo = false)
 			WHERE `customerid` = :cid'
         );
         $params = array(
-            "mysqls_used" => $customer['mysqls_used_new'],
-            "emails_used" => $customer['emails_used_new'],
-            "email_accounts_used" => $customer['email_accounts_used_new'],
-            "email_forwarders_used" => $customer['email_forwarders_used_new'],
-            "email_quota_used" => $customer['email_quota_used_new'],
-            "ftps_used" => $customer['ftps_used_new'],
-            "tickets_used" => $customer['tickets_used_new'],
-            "subdomains_used" => $customer['subdomains_used_new'],
-            "cid" => $customer['customerid']
+            'mysqls_used' => $customer['mysqls_used_new'],
+            'emails_used' => $customer['emails_used_new'],
+            'email_accounts_used' => $customer['email_accounts_used_new'],
+            'email_forwarders_used' => $customer['email_forwarders_used_new'],
+            'email_quota_used' => $customer['email_quota_used_new'],
+            'ftps_used' => $customer['ftps_used_new'],
+            'tickets_used' => $customer['tickets_used_new'],
+            'subdomains_used' => $customer['subdomains_used_new'],
+            'cid' => $customer['customerid'],
         );
         Database::pexecute($stmt, $params);
 
@@ -147,11 +146,11 @@ function updateCounters($returndebuginfo = false)
 
     while ($admin = $admins_stmt->fetch(PDO::FETCH_ASSOC)) {
         $admin_customers_stmt = Database::prepare('SELECT COUNT(*) AS `number_customers` FROM `' . TABLE_PANEL_CUSTOMERS . '` WHERE `adminid` = :aid');
-        $admin_customers = Database::pexecute_first($admin_customers_stmt, array("aid" => $admin['adminid']));
+        $admin_customers = Database::pexecute_first($admin_customers_stmt, array('aid' => $admin['adminid']));
         $admin['customers_used_new'] = $admin_customers['number_customers'];
         
         $admin_domains_stmt = Database::prepare('SELECT COUNT(*) AS `number_domains` FROM `' . TABLE_PANEL_DOMAINS . '` WHERE `adminid` = :aid AND `isemaildomain` = "1"');
-        $admin_domains = Database::pexecute_first($admin_domains_stmt, array("aid" => $admin['adminid']));
+        $admin_domains = Database::pexecute_first($admin_domains_stmt, array('aid' => $admin['adminid']));
         $admin['domains_used_new'] = $admin_domains['number_domains'];
 
         $cur_adm = $admin['adminid'];
@@ -162,7 +161,7 @@ function updateCounters($returndebuginfo = false)
 
         foreach (array('diskspace_used', 'traffic_used', 'mysqls_used', 'ftps_used', 'emails_used', 'email_accounts_used', 'tickets_used', 'email_forwarders_used', 'email_quota_used', 'subdomains_used') as $field) {
             _initArrField($field, $admin_resources[$cur_adm], 0);
-            $admin[$field.'_new'] = $admin_resources[$cur_adm][$field];
+            $admin[$field . '_new'] = $admin_resources[$cur_adm][$field];
         }
 
         $stmt = Database::prepare(
@@ -183,19 +182,19 @@ function updateCounters($returndebuginfo = false)
         );
 
         $params = array(
-            "customers_used" => $admin['customers_used_new'],
-            "domains_used" => $admin['domains_used_new'],
-            "diskspace_used" => $admin['diskspace_used_new'],
-            "mysqls_used" => $admin['mysqls_used_new'],
-            "emails_used" => $admin['emails_used_new'],
-            "email_accounts_used" => $admin['email_accounts_used_new'],
-            "email_forwarders_used" => $admin['email_forwarders_used_new'],
-            "email_quota_used" => $admin['email_quota_used_new'],
-            "ftps_used" => $admin['ftps_used_new'],
-            "tickets_used" => $admin['tickets_used_new'],
-            "subdomains_used" => $admin['subdomains_used_new'],
-            "traffic_used" => $admin['traffic_used_new'],
-            "aid" => $admin['adminid']
+            'customers_used' => $admin['customers_used_new'],
+            'domains_used' => $admin['domains_used_new'],
+            'diskspace_used' => $admin['diskspace_used_new'],
+            'mysqls_used' => $admin['mysqls_used_new'],
+            'emails_used' => $admin['emails_used_new'],
+            'email_accounts_used' => $admin['email_accounts_used_new'],
+            'email_forwarders_used' => $admin['email_forwarders_used_new'],
+            'email_quota_used' => $admin['email_quota_used_new'],
+            'ftps_used' => $admin['ftps_used_new'],
+            'tickets_used' => $admin['tickets_used_new'],
+            'subdomains_used' => $admin['subdomains_used_new'],
+            'traffic_used' => $admin['traffic_used_new'],
+            'aid' => $admin['adminid'],
         );
         Database::pexecute($stmt, $params);
 
@@ -213,8 +212,6 @@ function updateCounters($returndebuginfo = false)
  * @param string $field
  * @param array $arr reference
  * @param int $init_value
- *
- * @return void
  */
 function _initArrField($field = null, &$arr, $init_value = 0)
 {
@@ -231,13 +228,11 @@ function _initArrField($field = null, &$arr, $init_value = 0)
  * @param array $customer_arr
  * @param string $used_field
  * @param string $field
- *
- * @return void
  */
 function _addResourceCount(&$arr, $customer_arr, $used_field = null, $field = null)
 {
     _initArrField($used_field, $arr, 0);
-    if ($customer_arr[$field] != '-1') {
+    if ($customer_arr[$field] !== '-1') {
         $arr[$used_field] += intval($customer_arr[$used_field]);
     }
 }
@@ -252,15 +247,13 @@ function _addResourceCount(&$arr, $customer_arr, $used_field = null, $field = nu
  * @param array $customer_arr
  * @param string $used_field
  * @param string $field
- *
- * @return void
  */
 function _addResourceCountEx(&$arr, $customer_arr, $used_field = null, $field = null)
 {
     _initArrField($used_field, $arr, 0);
-    if ($field == 'diskspace' && ($customer_arr[$field] / 1024) != '-1') {
+    if ($field === 'diskspace' && ($customer_arr[$field] / 1024) !== '-1') {
         $arr[$used_field] += intval($customer_arr[$used_field]);
-    } elseif ($field == 'traffic_used') {
+    } elseif ($field === 'traffic_used') {
         $arr[$used_field] += intval($customer_arr[$used_field]);
     }
 }

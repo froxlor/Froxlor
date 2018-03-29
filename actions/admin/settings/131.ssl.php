@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,8 +12,6 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Settings
- *
  */
 return array(
     'groups' => array(
@@ -28,7 +25,7 @@ return array(
                     'type' => 'bool',
                     'default' => false,
                     'save_method' => 'storeSettingField',
-                    'overview_option' => true
+                    'overview_option' => true,
                 ),
                 'system_ssl_protocols' => array(
                     'label' => $lng['serversettings']['ssl']['ssl_protocols'],
@@ -40,9 +37,9 @@ return array(
                     'option_options' => array(
                         'TLSv1' => 'TLSv1',
                         'TLSv1.1' => 'TLSv1.1',
-                        'TLSv1.2' => 'TLSv1.2'
+                        'TLSv1.2' => 'TLSv1.2',
                     ),
-                    'save_method' => 'storeSettingField'
+                    'save_method' => 'storeSettingField',
                 ),
                 'system_ssl_cipher_list' => array(
                     'label' => $lng['serversettings']['ssl']['ssl_cipher_list'],
@@ -51,7 +48,7 @@ return array(
                     'type' => 'string',
                     'string_emptyallowed' => false,
                     'default' => 'ECDH+AESGCM:ECDH+AES256:!aNULL:!MD5:!DSS:!DH:!AES128',
-                    'save_method' => 'storeSettingField'
+                    'save_method' => 'storeSettingField',
                 ),
                 'system_ssl_cert_file' => array(
                     'label' => $lng['serversettings']['ssl']['ssl_cert_file'],
@@ -61,7 +58,7 @@ return array(
                     'string_type' => 'file',
                     'string_emptyallowed' => true,
                     'default' => '/etc/apache2/apache2.pem',
-                    'save_method' => 'storeSettingField'
+                    'save_method' => 'storeSettingField',
                 ),
                 'system_ssl_key_file' => array(
                     'label' => $lng['serversettings']['ssl']['ssl_key_file'],
@@ -71,7 +68,7 @@ return array(
                     'string_type' => 'file',
                     'string_emptyallowed' => true,
                     'default' => '/etc/apache2/apache2.key',
-                    'save_method' => 'storeSettingField'
+                    'save_method' => 'storeSettingField',
                 ),
                 'system_ssl_cert_chainfile' => array(
                     'label' => $lng['admin']['ipsandports']['ssl_cert_chainfile'],
@@ -81,7 +78,7 @@ return array(
                     'string_type' => 'file',
                     'string_emptyallowed' => true,
                     'default' => '',
-                    'save_method' => 'storeSettingField'
+                    'save_method' => 'storeSettingField',
                 ),
                 'system_ssl_ca_file' => array(
                     'label' => $lng['serversettings']['ssl']['ssl_ca_file'],
@@ -91,7 +88,7 @@ return array(
                     'string_type' => 'file',
                     'string_emptyallowed' => true,
                     'default' => '',
-                    'save_method' => 'storeSettingField'
+                    'save_method' => 'storeSettingField',
                 ),
                 'system_apache24_ocsp_cache_path' => array(
                     'label' => $lng['serversettings']['ssl']['apache24_ocsp_cache_path'],
@@ -101,8 +98,8 @@ return array(
                     'string_type' => 'string',
                     'string_emptyallowed' => false,
                     'default' => 'shmcb:/var/run/apache2/ocsp-stapling.cache(131072)',
-                    'visible' => Settings::Get('system.webserver') == "apache2" && Settings::Get('system.apache24') == 1,
-                    'save_method' => 'storeSettingField'
+                    'visible' => Settings::Get('system.webserver') === 'apache2' && Settings::Get('system.apache24') === 1,
+                    'save_method' => 'storeSettingField',
                 ),
                 'system_leenabled' => array(
                     'label' => $lng['serversettings']['leenabled'],
@@ -111,7 +108,7 @@ return array(
                     'type' => 'bool',
                     'default' => false,
                     'cronmodule' => 'froxlor/letsencrypt',
-                    'save_method' => 'storeSettingField'
+                    'save_method' => 'storeSettingField',
                 ),
                 'system_letsencryptacmeconf' => array(
                     'label' => $lng['serversettings']['letsencryptacmeconf'],
@@ -120,7 +117,7 @@ return array(
                     'type' => 'string',
                     'string_type' => 'file',
                     'default' => '/etc/apache2/conf-enabled/acme.conf',
-                    'save_method' => 'storeSettingField'
+                    'save_method' => 'storeSettingField',
                 ),
                 'system_leapiversion' => array(
                     'label' => $lng['serversettings']['leapiversion'],
@@ -131,9 +128,9 @@ return array(
                     'option_mode' => 'one',
                     'option_options' => array(
                         '1' => 'ACME v1',
-                        '2' => 'ACME v2'
+                        '2' => 'ACME v2',
                     ),
-                    'save_method' => 'storeSettingField'
+                    'save_method' => 'storeSettingField',
                 ),
                 'system_letsencryptca' => array(
                     'label' => $lng['serversettings']['letsencryptca'],
@@ -143,10 +140,10 @@ return array(
                     'default' => 'testing',
                     'option_mode' => 'one',
                     'option_options' => array(
-                        'testing' => 'https://acme-staging' . (Settings::Get('system.leapiversion') == '2' ? '-v02' : '') . '.api.letsencrypt.org (Test)',
-                        'production' => 'https://acme-v0' . Settings::Get('system.leapiversion') . '.api.letsencrypt.org (Live)'
+                        'testing' => 'https://acme-staging' . (Settings::Get('system.leapiversion') === '2' ? '-v02' : '') . '.api.letsencrypt.org (Test)',
+                        'production' => 'https://acme-v0' . Settings::Get('system.leapiversion') . '.api.letsencrypt.org (Live)',
                     ),
-                    'save_method' => 'storeSettingField'
+                    'save_method' => 'storeSettingField',
                 ),
                 'system_letsencryptcountrycode' => array(
                     'label' => $lng['serversettings']['letsencryptcountrycode'],
@@ -155,7 +152,7 @@ return array(
                     'type' => 'string',
                     'string_emptyallowed' => false,
                     'default' => 'DE',
-                    'save_method' => 'storeSettingField'
+                    'save_method' => 'storeSettingField',
                 ),
                 'system_letsencryptstate' => array(
                     'label' => $lng['serversettings']['letsencryptstate'],
@@ -164,7 +161,7 @@ return array(
                     'type' => 'string',
                     'string_emptyallowed' => false,
                     'default' => 'Hessen',
-                    'save_method' => 'storeSettingField'
+                    'save_method' => 'storeSettingField',
                 ),
                 'system_letsencryptchallengepath' => array(
                     'label' => $lng['serversettings']['letsencryptchallengepath'],
@@ -173,7 +170,7 @@ return array(
                     'type' => 'string',
                     'string_emptyallowed' => false,
                     'default' => FROXLOR_INSTALL_DIR,
-                    'save_method' => 'storeSettingField'
+                    'save_method' => 'storeSettingField',
                 ),
                 'system_letsencryptkeysize' => array(
                     'label' => $lng['serversettings']['letsencryptkeysize'],
@@ -182,7 +179,7 @@ return array(
                     'type' => 'int',
                     'int_min' => 2048,
                     'default' => 4096,
-                    'save_method' => 'storeSettingField'
+                    'save_method' => 'storeSettingField',
                 ),
                 'system_letsencryptreuseold' => array(
                     'label' => $lng['serversettings']['letsencryptreuseold'],
@@ -190,7 +187,7 @@ return array(
                     'varname' => 'letsencryptreuseold',
                     'type' => 'bool',
                     'default' => false,
-                    'save_method' => 'storeSettingField'
+                    'save_method' => 'storeSettingField',
                 ),
                 'system_disable_le_selfcheck' => array(
                     'label' => $lng['serversettings']['disable_le_selfcheck'],
@@ -198,9 +195,9 @@ return array(
                     'varname' => 'disable_le_selfcheck',
                     'type' => 'bool',
                     'default' => false,
-                    'save_method' => 'storeSettingField'
-                )
-            )
-        )
-    )
+                    'save_method' => 'storeSettingField',
+                ),
+            ),
+        ),
+    ),
 );

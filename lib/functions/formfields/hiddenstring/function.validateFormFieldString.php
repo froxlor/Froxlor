@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,13 +12,14 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $fieldname
+ * @param mixed $fielddata
+ * @param mixed $newfieldvalue
  */
-
 function validateFormFieldHiddenString($fieldname, $fielddata, $newfieldvalue)
 {
-    if (isset($fielddata['string_delimiter']) && $fielddata['string_delimiter'] != '') {
+    if (isset($fielddata['string_delimiter']) && $fielddata['string_delimiter'] !== '') {
         $newfieldvalues = explode($fielddata['string_delimiter'], $newfieldvalue);
         unset($fielddata['string_delimiter']);
 
@@ -28,7 +28,7 @@ function validateFormFieldHiddenString($fieldname, $fielddata, $newfieldvalue)
             /**
               * don't use tabs in value-fields, #81
               */
-            $single_newfieldvalue = str_replace("\t", " ", $single_newfieldvalue);
+            $single_newfieldvalue = str_replace("\t", ' ', $single_newfieldvalue);
             $single_returnvalue = validateFormFieldString($fieldname, $fielddata, $single_newfieldvalue);
             if ($single_returnvalue !== true) {
                 $returnvalue = $single_returnvalue;
@@ -41,28 +41,28 @@ function validateFormFieldHiddenString($fieldname, $fielddata, $newfieldvalue)
         /**
          * don't use tabs in value-fields, #81
          */
-        $newfieldvalue = str_replace("\t", " ", $newfieldvalue);
+        $newfieldvalue = str_replace("\t", ' ', $newfieldvalue);
 
-        if (isset($fielddata['string_type']) && $fielddata['string_type'] == 'mail') {
-            $returnvalue = (filter_var($newfieldvalue, FILTER_VALIDATE_EMAIL) == $newfieldvalue);
-        } elseif (isset($fielddata['string_type']) && $fielddata['string_type'] == 'url') {
+        if (isset($fielddata['string_type']) && $fielddata['string_type'] === 'mail') {
+            $returnvalue = (filter_var($newfieldvalue, FILTER_VALIDATE_EMAIL) === $newfieldvalue);
+        } elseif (isset($fielddata['string_type']) && $fielddata['string_type'] === 'url') {
             $returnvalue = validateUrl($newfieldvalue);
-        } elseif (isset($fielddata['string_type']) && $fielddata['string_type'] == 'dir') {
+        } elseif (isset($fielddata['string_type']) && $fielddata['string_type'] === 'dir') {
             // add trailing slash to validate path if needed
             // refs #331
-            if (substr($newfieldvalue, -1) != '/') {
+            if (substr($newfieldvalue, -1) !== '/') {
                 $newfieldvalue.= '/';
             }
-            $returnvalue = ($newfieldvalue == makeCorrectDir($newfieldvalue));
-        } elseif (isset($fielddata['string_type']) && $fielddata['string_type'] == 'file') {
-            $returnvalue = ($newfieldvalue == makeCorrectFile($newfieldvalue));
-        } elseif (isset($fielddata['string_type']) && $fielddata['string_type'] == 'filedir') {
-            $returnvalue = (($newfieldvalue == makeCorrectDir($newfieldvalue)) || ($newfieldvalue == makeCorrectFile($newfieldvalue)));
+            $returnvalue = ($newfieldvalue === makeCorrectDir($newfieldvalue));
+        } elseif (isset($fielddata['string_type']) && $fielddata['string_type'] === 'file') {
+            $returnvalue = ($newfieldvalue === makeCorrectFile($newfieldvalue));
+        } elseif (isset($fielddata['string_type']) && $fielddata['string_type'] === 'filedir') {
+            $returnvalue = (($newfieldvalue === makeCorrectDir($newfieldvalue)) || ($newfieldvalue === makeCorrectFile($newfieldvalue)));
         } elseif (preg_match('/^[^\r\n\t\f\0]*$/D', $newfieldvalue)) {
             $returnvalue = true;
         }
 
-        if (isset($fielddata['string_regexp']) && $fielddata['string_regexp'] != '') {
+        if (isset($fielddata['string_regexp']) && $fielddata['string_regexp'] !== '') {
             if (preg_match($fielddata['string_regexp'], $newfieldvalue)) {
                 $returnvalue = true;
             } else {
@@ -81,7 +81,7 @@ function validateFormFieldHiddenString($fieldname, $fielddata, $newfieldvalue)
         return true;
     } elseif ($returnvalue === false) {
         return 'stringformaterror';
-    } else {
-        return $returnvalue;
     }
+
+    return $returnvalue;
 }

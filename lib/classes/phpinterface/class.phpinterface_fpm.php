@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -12,15 +11,12 @@
  * @author     Michael Kaufmann <mkaufmann@nutime.de>
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Cron
  *
  * @link       http://www.nutime.de/
  * @since      0.9.16
- *
  */
 class phpinterface_fpm
 {
-
     /**
      * Domain-Data array
      *
@@ -52,6 +48,7 @@ class phpinterface_fpm
 
     /**
      * main constructor
+     * @param mixed $domain
      */
     public function __construct($domain)
     {
@@ -69,15 +66,15 @@ class phpinterface_fpm
             'php_flag' => explode("\n", Settings::Get('phpfpm.ini_flags')),
             'php_value' => explode("\n", Settings::Get('phpfpm.ini_values')),
             'php_admin_flag' => explode("\n", Settings::Get('phpfpm.ini_admin_flags')),
-            'php_admin_value' => explode("\n", Settings::Get('phpfpm.ini_admin_values'))
+            'php_admin_value' => explode("\n", Settings::Get('phpfpm.ini_admin_values')),
         );
     }
 
     private function _readFpmConfig($fpm_config_id)
     {
-        $stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_FPMDAEMONS . "` WHERE `id` = :id");
+        $stmt = Database::prepare('SELECT * FROM `' . TABLE_PANEL_FPMDAEMONS . '` WHERE `id` = :id');
         $this->_fpm_cfg = Database::pexecute_first($stmt, array(
-            'id' => $fpm_config_id
+            'id' => $fpm_config_id,
         ));
     }
 
@@ -100,14 +97,14 @@ class phpinterface_fpm
             $fpm_process_idle_timeout = (int) $this->_fpm_cfg['idle_timeout'];
             $fpm_limit_extensions = $this->_fpm_cfg['limit_extensions'];
             
-            if ($fpm_children == 0) {
+            if ($fpm_children === 0) {
                 $fpm_children = 1;
             }
             
-            $fpm_config = ';PHP-FPM configuration for "' . $this->_domain['domain'] . '" created on ' . date("Y.m.d H:i:s") . "\n";
+            $fpm_config = ';PHP-FPM configuration for "' . $this->_domain['domain'] . '" created on ' . date('Y.m.d H:i:s') . "\n";
             $fpm_config .= '[' . $this->_domain['domain'] . ']' . "\n";
             $fpm_config .= 'listen = ' . $this->getSocketFile() . "\n";
-            if ($this->_domain['loginname'] == 'froxlor.panel') {
+            if ($this->_domain['loginname'] === 'froxlor.panel') {
                 $fpm_config .= 'listen.owner = ' . $this->_domain['guid'] . "\n";
                 $fpm_config .= 'listen.group = ' . $this->_domain['guid'] . "\n";
             } else {
@@ -117,7 +114,7 @@ class phpinterface_fpm
             // see #1418 why this is 0660
             $fpm_config .= 'listen.mode = 0660' . "\n";
             
-            if ($this->_domain['loginname'] == 'froxlor.panel') {
+            if ($this->_domain['loginname'] === 'froxlor.panel') {
                 $fpm_config .= 'user = ' . $this->_domain['guid'] . "\n";
                 $fpm_config .= 'group = ' . $this->_domain['guid'] . "\n";
             } else {
@@ -128,7 +125,7 @@ class phpinterface_fpm
             $fpm_config .= 'pm = ' . $fpm_pm . "\n";
             $fpm_config .= 'pm.max_children = ' . $fpm_children . "\n";
             
-            if ($fpm_pm == 'dynamic') {
+            if ($fpm_pm === 'dynamic') {
                 // honor max_children
                 if ($fpm_children < $fpm_min_spare_servers) {
                     $fpm_min_spare_servers = $fpm_children;
@@ -146,14 +143,14 @@ class phpinterface_fpm
                 $fpm_config .= 'pm.start_servers = ' . $fpm_start_servers . "\n";
                 $fpm_config .= 'pm.min_spare_servers = ' . $fpm_min_spare_servers . "\n";
                 $fpm_config .= 'pm.max_spare_servers = ' . $fpm_max_spare_servers . "\n";
-            } elseif ($fpm_pm == 'ondemand') {
+            } elseif ($fpm_pm === 'ondemand') {
                 $fpm_config .= 'pm.process_idle_timeout = ' . $fpm_process_idle_timeout . "\n";
             }
             
             $fpm_config .= 'pm.max_requests = ' . $fpm_requests . "\n";
             
             // possible slowlog configs
-            if ($phpconfig['fpm_slowlog'] == '1') {
+            if ($phpconfig['fpm_slowlog'] === '1') {
                 $fpm_config .= 'request_terminate_timeout = ' . $phpconfig['fpm_reqterm'] . "\n";
                 $fpm_config .= 'request_slowlog_timeout = ' . $phpconfig['fpm_reqslow'] . "\n";
                 $slowlog = makeCorrectFile(Settings::Get('system.logfiles_directory') . '/' . $this->_domain['loginname'] . '-php-slow.log');
@@ -162,7 +159,7 @@ class phpinterface_fpm
             }
             
             $fpm_config .= ';chroot = ' . makeCorrectDir($this->_domain['documentroot']) . "\n";
-            $fpm_config .= 'security.limit_extensions = '.$fpm_limit_extensions . "\n";
+            $fpm_config .= 'security.limit_extensions = ' . $fpm_limit_extensions . "\n";
             
             $tmpdir = makeCorrectDir(Settings::Get('phpfpm.tmpdir') . '/' . $this->_domain['loginname'] . '/');
             if (! is_dir($tmpdir)) {
@@ -178,8 +175,8 @@ class phpinterface_fpm
             $fpm_config .= 'env[TEMP] = ' . $tmpdir . "\n";
             
             $openbasedir = '';
-            if ($this->_domain['loginname'] != 'froxlor.panel') {
-                if ($this->_domain['openbasedir'] == '1') {
+            if ($this->_domain['loginname'] !== 'froxlor.panel') {
+                if ($this->_domain['openbasedir'] === '1') {
                     $_phpappendopenbasedir = '';
                     $_custom_openbasedir = explode(':', Settings::Get('phpfpm.peardir'));
                     foreach ($_custom_openbasedir as $cobd) {
@@ -191,7 +188,7 @@ class phpinterface_fpm
                         $_phpappendopenbasedir .= appendOpenBasedirPath($cobd);
                     }
                     
-                    if ($this->_domain['openbasedir_path'] == '0' && strstr($this->_domain['documentroot'], ":") === false) {
+                    if ($this->_domain['openbasedir_path'] === '0' && strstr($this->_domain['documentroot'], ':') === false) {
                         $openbasedir = appendOpenBasedirPath($this->_domain['documentroot'], true);
                     } else {
                         $openbasedir = appendOpenBasedirPath($this->_domain['customerroot'], true);
@@ -217,7 +214,7 @@ class phpinterface_fpm
                 'OPEN_BASEDIR' => $openbasedir,
                 'OPEN_BASEDIR_C' => '',
                 'OPEN_BASEDIR_GLOBAL' => Settings::Get('system.phpappendopenbasedir'),
-                'DOCUMENT_ROOT' => makeCorrectDir($this->_domain['documentroot'])
+                'DOCUMENT_ROOT' => makeCorrectDir($this->_domain['documentroot']),
             );
             
             $phpini = replace_variables($phpconfig['phpsettings'], $php_ini_variables);
@@ -225,11 +222,11 @@ class phpinterface_fpm
             
             $fpm_config .= "\n\n";
             foreach ($phpini_array as $inisection) {
-                $is = explode("=", $inisection);
+                $is = explode('=', $inisection);
                 foreach ($this->_ini as $sec => $possibles) {
-                    if (in_array(trim($is[0]), $possibles)) {
+                    if (in_array(trim($is[0]), $possibles, true)) {
                         // check explicitly for open_basedir
-                        if (trim($is[0]) == 'open_basedir' && $openbasedir == '') {
+                        if (trim($is[0]) === 'open_basedir' && $openbasedir === '') {
                             continue;
                         }
                         $fpm_config .= $sec . '[' . trim($is[0]) . '] = ' . trim($is[1]) . "\n";
@@ -256,13 +253,12 @@ class phpinterface_fpm
      */
     public function createIniFile($phpconfig)
     {
-        return;
     }
 
     /**
      * fpm-config file
      *
-     * @param boolean $createifnotexists
+     * @param bool $createifnotexists
      *        	create the directory if it does not exist
      *
      * @return string the full path to the file
@@ -282,7 +278,7 @@ class phpinterface_fpm
     /**
      * return path of fpm-socket file
      *
-     * @param boolean $createifnotexists
+     * @param bool $createifnotexists
      *        	create the directory if it does not exist
      *
      * @return string the full path to the socket
@@ -304,7 +300,7 @@ class phpinterface_fpm
     /**
      * fpm-temp directory
      *
-     * @param boolean $createifnotexists
+     * @param bool $createifnotexists
      *        	create the directory if it does not exist
      *
      * @return string the directory
@@ -325,7 +321,7 @@ class phpinterface_fpm
     /**
      * fastcgi-fakedirectory directory
      *
-     * @param boolean $createifnotexists
+     * @param bool $createifnotexists
      *        	create the directory if it does not exist
      *
      * @return string the directory
@@ -334,7 +330,7 @@ class phpinterface_fpm
     {
         
         // ensure default...
-        if (Settings::Get('phpfpm.aliasconfigdir') == null) {
+        if (Settings::Get('phpfpm.aliasconfigdir') === null) {
             Settings::Set('phpfpm.aliasconfigdir', '/var/www/php-fpm');
         }
         
@@ -359,12 +355,12 @@ class phpinterface_fpm
             safe_exec('mkdir -p ' . escapeshellarg($configdir));
         }
         $config = makeCorrectFile($configdir . '/dummy.conf');
-        $dummy = "[dummy]
-user = ".Settings::Get('system.httpuser')."
-listen = /run/" . md5($configdir) . "-fpm.sock
+        $dummy = '[dummy]
+user = ' . Settings::Get('system.httpuser') . '
+listen = /run/' . md5($configdir) . '-fpm.sock
 pm = static
 pm.max_children = 1
-";
+';
         file_put_contents($config, $dummy);
     }
 
@@ -381,12 +377,13 @@ pm.max_children = 1
         $adminid = intval($adminid);
         
         if (! isset($this->_admin_cache[$adminid])) {
-            $stmt = Database::prepare("
-					SELECT `email`, `loginname` FROM `" . TABLE_PANEL_ADMINS . "` WHERE `adminid` = :id");
+            $stmt = Database::prepare('
+					SELECT `email`, `loginname` FROM `' . TABLE_PANEL_ADMINS . '` WHERE `adminid` = :id');
             $this->_admin_cache[$adminid] = Database::pexecute_first($stmt, array(
-                'id' => $adminid
+                'id' => $adminid,
             ));
         }
+
         return $this->_admin_cache[$adminid];
     }
 }

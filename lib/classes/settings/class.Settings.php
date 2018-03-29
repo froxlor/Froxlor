@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -12,10 +11,8 @@
  * @author     Michael Kaufmann <mkaufmann@nutime.de>
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Classes
  *
  * @since      0.9.31
- *
  */
 
 /**
@@ -27,11 +24,9 @@
  * @author     Michael Kaufmann <mkaufmann@nutime.de>
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Classes
  */
 class Settings
 {
-
     /**
      * current settings object
      *
@@ -69,10 +64,10 @@ class Settings
         $this->_readSettings();
         self::$_updatedata = array();
         // prepare statement
-        self::$_updstmt = Database::prepare("
-				UPDATE `".TABLE_PANEL_SETTINGS."` SET `value` = :value
+        self::$_updstmt = Database::prepare('
+				UPDATE `' . TABLE_PANEL_SETTINGS . '` SET `value` = :value
 				WHERE `settinggroup` = :group AND `varname` = :varname
-				");
+				');
     }
 
     /**
@@ -81,14 +76,15 @@ class Settings
      */
     private function _readSettings()
     {
-        $result_stmt = Database::query("
+        $result_stmt = Database::query('
 				SELECT `settingid`, `settinggroup`, `varname`, `value`
-				FROM `" . TABLE_PANEL_SETTINGS . "`
-				");
+				FROM `' . TABLE_PANEL_SETTINGS . '`
+				');
         self::$_data = array();
         while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
             self::$_data[$row['settinggroup']][$row['varname']] = $row['value'];
         }
+
         return true;
     }
 
@@ -104,7 +100,7 @@ class Settings
         $upd_data = array(
                 'group' => $group,
                 'varname' => $varname,
-                'value' => $value
+                'value' => $value,
         );
         Database::pexecute(self::$_updstmt, $upd_data);
     }
@@ -118,7 +114,7 @@ class Settings
      */
     public function pGet($setting = null)
     {
-        $sstr = explode(".", $setting);
+        $sstr = explode('.', $setting);
         // no separator - do'h
         if (!isset($sstr[1])) {
             return null;
@@ -127,6 +123,7 @@ class Settings
         if (isset(self::$_data[$sstr[0]][$sstr[1]])) {
             $result = self::$_data[$sstr[0]][$sstr[1]];
         }
+
         return $result;
     }
 
@@ -136,16 +133,17 @@ class Settings
      * @param string $setting a group and a varname separated by a dot (group.varname)
      * @param string $entry the entry that is expected to be in the list
      *
-     * @return boolean true, if the list contains $entry
+     * @return bool true, if the list contains $entry
      */
     public function pIsInList($setting = null, $entry = null)
     {
-        $s=Settings::Get($setting);
-        if ($s==null) {
+        $s=self::Get($setting);
+        if ($s===null) {
             return false;
         }
-        $slist = explode(",", $s);
-        return in_array($entry, $slist);
+        $slist = explode(',', $s);
+
+        return in_array($entry, $slist, true);
     }
 
     /**
@@ -153,14 +151,14 @@ class Settings
      *
      * @param string $setting a group and a varname separated by a dot (group.varname)
      * @param string $value
-     * @param boolean $instant_save
+     * @param bool $instant_save
      */
     public function pSet($setting = null, $value = null, $instant_save = true)
     {
         // check whether the setting exists
-        if (Settings::Get($setting) !== null) {
+        if (self::Get($setting) !== null) {
             // set new value in array
-            $sstr = explode(".", $setting);
+            $sstr = explode('.', $setting);
             if (!isset($sstr[1])) {
                 return false;
             }
@@ -180,8 +178,10 @@ class Settings
                 }
                 self::$_updatedata[$sstr[0]][$sstr[1]] = $value;
             }
+
             return true;
         }
+
         return false;
     }
 
@@ -191,35 +191,37 @@ class Settings
      * @param string $setting a group and a varname separated by a dot (group.varname)
      * @param string $value
      *
-     * @return boolean
+     * @return bool
      */
     public function pAddNew($setting = null, $value = null)
     {
 
         // first check if it doesn't exist
-        if (Settings::Get($setting) === null) {
+        if (self::Get($setting) === null) {
             // validate parameter
-            $sstr = explode(".", $setting);
+            $sstr = explode('.', $setting);
             if (!isset($sstr[1])) {
                 return false;
             }
             // prepare statement
-            $ins_stmt = Database::prepare("
-					INSERT INTO `".TABLE_PANEL_SETTINGS."` SET
+            $ins_stmt = Database::prepare('
+					INSERT INTO `' . TABLE_PANEL_SETTINGS . '` SET
 					`settinggroup` = :group,
 					`varname` = :varname,
 					`value` = :value
-					");
+					');
             $ins_data = array(
                     'group' => $sstr[0],
                     'varname' => $sstr[1],
-                    'value' => $value
+                    'value' => $value,
             );
             Database::pexecute($ins_stmt, $ins_data);
             // also set new value to internal array and make it available
             self::$_data[$sstr[0]][$sstr[1]] = $value;
+
             return true;
         }
+
         return false;
     }
 
@@ -241,6 +243,7 @@ class Settings
             // re-read in all settings
             return $this->_readSettings();
         }
+
         return false;
     }
 
@@ -261,7 +264,7 @@ class Settings
     private static function getInstance()
     {
         // do we got an object already?
-        if (self::$_obj == null) {
+        if (self::$_obj === null) {
             self::$_obj = new self();
         }
         // return it
@@ -283,8 +286,9 @@ class Settings
         // be called statically, we prefix a 'p' to all of
         // our public functions so we can use Settings::functionname()
         // which looks cooler and is easier to use
-        $callback = array(self::getInstance(), "p".$name);
+        $callback = array(self::getInstance(), 'p' . $name);
         $result = call_user_func_array($callback, $args);
+
         return $result;
     }
 }

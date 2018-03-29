@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,8 +12,6 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Settings
- *
  */
 
 return array(
@@ -29,7 +26,7 @@ return array(
                     'type' => 'bool',
                     'default' => true,
                     'save_method' => 'storeSettingField',
-                    'overview_option' => true
+                    'overview_option' => true,
                     ),
                 'system_dnsenabled' => array(
                     'label' => $lng['serversettings']['dnseditorenable'],
@@ -37,7 +34,7 @@ return array(
                     'varname' => 'dnsenabled',
                     'type' => 'bool',
                     'default' => false,
-                    'save_method' => 'storeSettingField'
+                    'save_method' => 'storeSettingField',
                     ),
                 'system_dns_server' => array(
                     'label' => $lng['serversettings']['dns_server'],
@@ -47,7 +44,7 @@ return array(
                     'default' => 'bind',
                     'option_mode' => 'one',
                     'option_options' => array('bind' => 'Bind9', 'pdns' => 'PowerDNS'),
-                    'save_method' => 'storeSettingField'
+                    'save_method' => 'storeSettingField',
                 ),
                 'system_bindconf_directory' => array(
                     'label' => $lng['serversettings']['bindconf_directory'],
@@ -103,7 +100,7 @@ return array(
                     'varname' => 'dns_createmailentry',
                     'type' => 'bool',
                     'default' => false,
-                    'save_method' => 'storeSettingField'
+                    'save_method' => 'storeSettingField',
                     ),
                 'system_defaultttl' => array(
                     'label' => $lng['serversettings']['defaultttl'],

@@ -1,4 +1,5 @@
-<?php if (!defined('MASTER_CRONJOB')) {
+<?php declare(strict_types=1);
+if (!defined('MASTER_CRONJOB')) {
     die('You cannot access this file directly!');
 }
 
@@ -15,12 +16,10 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Cron
- *
  */
 
 /**
  * RESET USED TICKETS COUNTER
  */
-$cronlog->logAction(CRON_ACTION, LOG_INFO, "Resetting customers used ticket counter");
-Database::query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `tickets_used` = '0'");
+$cronlog->logAction(CRON_ACTION, LOG_INFO, 'Resetting customers used ticket counter');
+Database::query('UPDATE `' . TABLE_PANEL_CUSTOMERS . "` SET `tickets_used` = '0'");

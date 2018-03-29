@@ -1,4 +1,5 @@
-<?php if (!defined('MASTER_CRONJOB')) {
+<?php declare(strict_types=1);
+if (!defined('MASTER_CRONJOB')) {
     die('You cannot access this file directly!');
 }
 
@@ -14,21 +15,18 @@
  * @author     Michael Kaufmann <mkaufmann@nutime.de>
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Cron
  *
  * @since      0.9.29.1
- *
  */
-
 $cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'calculating mailspace usage');
 
-$maildirs_stmt = Database::query("
-	SELECT `id`, CONCAT(`homedir`, `maildir`) AS `maildirpath` FROM `".TABLE_MAIL_USERS."` ORDER BY `id`
-");
+$maildirs_stmt = Database::query('
+	SELECT `id`, CONCAT(`homedir`, `maildir`) AS `maildirpath` FROM `' . TABLE_MAIL_USERS . '` ORDER BY `id`
+');
 
-$upd_stmt = Database::prepare("
-	UPDATE `".TABLE_MAIL_USERS."` SET `mboxsize` = :size WHERE `id` = :id
-");
+$upd_stmt = Database::prepare('
+	UPDATE `' . TABLE_MAIL_USERS . '` SET `mboxsize` = :size WHERE `id` = :id
+');
 
 while ($maildir = $maildirs_stmt->fetch(PDO::FETCH_ASSOC)) {
     $_maildir = makeCorrectDir($maildir['maildirpath']);

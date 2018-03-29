@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,8 +12,8 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $domainname
  */
 
 /**
@@ -23,7 +22,7 @@
  *
  * @param string The domainname which should be checked.
  *
- * @return string|boolean the domain-name if the domain is valid, false otherwise
+ * @return string|bool the domain-name if the domain is valid, false otherwise
  */
 function validateDomain($domainname)
 {
@@ -45,7 +44,7 @@ function validateDomain($domainname)
  *
  * @param string $hostname
  *
- * @return string|boolean hostname on success, else false
+ * @return string|bool hostname on success, else false
  */
 function validateLocalHostname($hostname)
 {
@@ -53,5 +52,6 @@ function validateLocalHostname($hostname)
     if (preg_match($pattern, $hostname)) {
         return $hostname;
     }
+
     return false;
 }

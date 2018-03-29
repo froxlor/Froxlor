@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,8 +12,9 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $template
+ * @param mixed $noarea
  */
 
 /**
@@ -25,18 +25,17 @@
  * @return string The Template
  * @author Florian Lippert <flo@syscp.org>
  */
-
 function getTemplate($template, $noarea = 0)
 {
     global $templatecache, $theme;
 
     $fallback_theme = 'Sparkle';
 
-    if (!isset($theme) || $theme == '') {
+    if (!isset($theme) || $theme === '') {
         $theme = $fallback_theme;
     }
 
-    if ($noarea != 1) {
+    if ($noarea !== 1) {
         $template = AREA . '/' . $template;
     }
 
@@ -46,17 +45,17 @@ function getTemplate($template, $noarea = 0)
         // check the current selected theme for the template
         $templatefile = _checkAndParseTpl($filename);
 
-        if ($templatefile == false && $theme != $fallback_theme) {
+        if ($templatefile === false && $theme !== $fallback_theme) {
             // check fallback
             $_filename = './templates/' . $fallback_theme . '/' . $template . '.tpl';
             $templatefile = _checkAndParseTpl($_filename);
 
-            if ($templatefile == false) {
+            if ($templatefile === false) {
                 // check for old layout
                 $_filename = './templates/' . $template . '.tpl';
                 $templatefile = _checkAndParseTpl($_filename);
 
-                if ($templatefile == false) {
+                if ($templatefile === false) {
                     // not found
                     $templatefile = 'TEMPLATE NOT FOUND: ' . $filename;
                 }
@@ -79,7 +78,7 @@ function getTemplate($template, $noarea = 0)
  */
 function _checkAndParseTpl($filename)
 {
-    $templatefile = "";
+    $templatefile = '';
 
     if (file_exists($filename)
         && is_readable($filename)
@@ -93,5 +92,6 @@ function _checkAndParseTpl($filename)
 
         return $templatefile;
     }
+
     return false;
 }

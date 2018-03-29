@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * froxlor php error handler
  *
@@ -9,7 +8,7 @@
  * @param int $errline
  * @param array $errcontext
  *
- * @return void|boolean
+ * @return void|bool
  */
 function phpErrHandler($errno, $errstr, $errfile, $errline, $errcontext)
 {
@@ -18,20 +17,20 @@ function phpErrHandler($errno, $errstr, $errfile, $errline, $errcontext)
         return;
     }
 
-    if (!isset($_SERVER['SHELL']) || (isset($_SERVER['SHELL']) && $_SERVER['SHELL'] == '')) {
+    if (!isset($_SERVER['SHELL']) || (isset($_SERVER['SHELL']) && $_SERVER['SHELL'] === '')) {
         global $theme;
 
         // fallback
         if (empty($theme)) {
-            $theme = "Sparkle";
+            $theme = 'Sparkle';
         }
         // prevent possible file-path-disclosure
-        $errfile = str_replace(FROXLOR_INSTALL_DIR, "", $errfile);
+        $errfile = str_replace(FROXLOR_INSTALL_DIR, '', $errfile);
         // if we're not on the shell, output a nicer error-message
-        $err_hint = file_get_contents(FROXLOR_INSTALL_DIR.'/templates/'.$theme.'/misc/phperrornice.tpl');
+        $err_hint = file_get_contents(FROXLOR_INSTALL_DIR . '/templates/' . $theme . '/misc/phperrornice.tpl');
         // replace values
-        $err_hint = str_replace("<TEXT>", '#'.$errno.' '.$errstr, $err_hint);
-        $err_hint = str_replace("<DEBUG>", $errfile.':'.$errline, $err_hint);
+        $err_hint = str_replace('<TEXT>', '#' . $errno . ' ' . $errstr, $err_hint);
+        $err_hint = str_replace('<DEBUG>', $errfile . ':' . $errline, $err_hint);
 
         // show
         echo $err_hint;

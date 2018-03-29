@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,8 +12,8 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $string
  */
 
 /**
@@ -24,10 +23,9 @@
  * @return string The cleaned string
  * @author Florian Lippert <flo@syscp.org>
  */
-
 function stripslashes_complete($string)
 {
-    while ($string != stripslashes($string)) {
+    while ($string !== stripslashes($string)) {
         $string = stripslashes($string);
     }
 

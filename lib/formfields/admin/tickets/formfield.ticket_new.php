@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -11,8 +10,6 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Formfields
- *
  */
 
 return array(
@@ -27,32 +24,32 @@ return array(
                     'customer' => array(
                         'label' => $lng['ticket']['customer'],
                         'type' => 'select',
-                        'select_var' => $customers
+                        'select_var' => $customers,
                     ),
                     'subject' => array(
                         'label' => $lng['ticket']['subject'],
                         'type' => 'text',
-                        'maxlength' => 70
+                        'maxlength' => 70,
                     ),
                     'priority' => array(
                         'label' => $lng['ticket']['priority'],
                         'type' => 'select',
-                        'select_var' => $priorities
+                        'select_var' => $priorities,
                     ),
                     'category' => array(
                         'label' => $lng['ticket']['category'],
                         'type' => 'select',
-                        'select_var' => $categories
+                        'select_var' => $categories,
                     ),
                     'message' => array(
                         'style' => 'align-top',
                         'label' => $lng['ticket']['message'],
                         'type' => 'textarea',
                         'cols' => 60,
-                        'rows' => 12
-                    )
-                )
-            )
-        )
-    )
+                        'rows' => 12,
+                    ),
+                ),
+            ),
+        ),
+    ),
 );

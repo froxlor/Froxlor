@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,8 +12,10 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $username
+ * @param mixed $unix_names
+ * @param mixed $mysql_max
  */
 
 /**
@@ -23,18 +24,16 @@
  * @param string The username to check
  * @return bool Correct or not
  * @author Michael Duergner <michael@duergner.com>
- *
  */
-
 function validateUsername($username, $unix_names = 1, $mysql_max = '')
 {
-    if ($unix_names == 0) {
+    if ($unix_names === 0) {
         if (strpos($username, '--') === false) {
-            return (preg_match('/^[a-z][a-z0-9\-_]{0,' . (int)($mysql_max - 1) . '}[a-z0-9]{1}$/Di', $username) != false);
-        } else {
-            return false;
+            return (preg_match('/^[a-z][a-z0-9\-_]{0,' . (int) ($mysql_max - 1) . '}[a-z0-9]{1}$/Di', $username) !== false);
         }
-    } else {
-        return (preg_match('/^[a-z][a-z0-9]{0,' . $mysql_max . '}$/Di', $username) != false);
+
+        return false;
     }
+
+    return (preg_match('/^[a-z][a-z0-9]{0,' . $mysql_max . '}$/Di', $username) !== false);
 }

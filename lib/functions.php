@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,11 +12,8 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
- *
  */
-
-$libdirname = dirname(__FILE__);
+$libdirname = __DIR__;
 
 includeFunctions($libdirname . '/functions/');
 
@@ -25,8 +21,8 @@ function includeFunctions($dirname)
 {
     $dirhandle = opendir($dirname);
     while (false !== ($filename = readdir($dirhandle))) {
-        if ($filename != '.' && $filename != '..' && $filename != '') {
-            if ((substr($filename, 0, 9) == 'function.' || substr($filename, 0, 9) == 'constant.') && substr($filename, -4) == '.php') {
+        if ($filename !== '.' && $filename !== '..' && $filename !== '') {
+            if ((substr($filename, 0, 9) === 'function.' || substr($filename, 0, 9) === 'constant.') && substr($filename, -4) === '.php') {
                 include($dirname . $filename);
             }
 
@@ -49,12 +45,10 @@ Autoloader::init();
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2013-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Autoloader
  * @since      0.9.29.1
  */
 class Autoloader
 {
-
     /**
      * returns a new AutoLoader-object
      * @return Autoloader
@@ -66,8 +60,6 @@ class Autoloader
 
     /**
      * class constructor
-     *
-     * @return null
      */
     public function __construct()
     {
@@ -82,21 +74,22 @@ class Autoloader
      * @param string $class
      *
      * @throws Exception
-     * @return boolean
+     * @return bool
      */
     public function doAutoload($class)
     {
 
         // define the paths where to look for classes
         $paths = array(
-                dirname(__FILE__) . '/',
-                dirname(dirname(__FILE__)) . '/scripts/',
-                dirname(dirname(__FILE__)) . '/install/',
+                __DIR__ . '/',
+                dirname(__DIR__) . '/scripts/',
+                dirname(__DIR__) . '/install/',
         );
 
-        if (substr($class, 0, 15) == "Mso\IdnaConvert") {
+        if (substr($class, 0, 15) === "Mso\IdnaConvert") {
             $class = substr($class, 16);
-            include_once __DIR__.'/classes/idna/ext/'.$class.'.php';
+            include_once __DIR__ . '/classes/idna/ext/' . $class . '.php';
+
             return true;
         }
 
@@ -115,15 +108,16 @@ class Autoloader
                     if (preg_match("/^(class|module|interface|abstract|)\.?$class\.php$/i", $it->getFilename())) {
                         // include the file and return from the loop
                         include_once $fullFileName;
+
                         return true;
                     }
                 }
             } else {
                 // yikes - no valid directory to check
-                throw new Exception("Cannot autoload from directory '".$path."'. No such directory.");
+                throw new Exception("Cannot autoload from directory '" . $path . "'. No such directory.");
             }
         }
         // yikes - class not found
-        throw new Exception("Could not find class '".$class."'");
+        throw new Exception("Could not find class '" . $class . "'");
     }
 }

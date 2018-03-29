@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,8 +12,8 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $path
  */
 
 /**
@@ -32,22 +31,22 @@ function makeSecurePath($path)
     // thx to aaronmueller for this snipped
     $badchars = array(':', ';', '|', '&', '>', '<', '`', '$', '~', '?', "\0");
     foreach ($badchars as $bc) {
-        $path = str_replace($bc, "", $path);
+        $path = str_replace($bc, '', $path);
     }
 
     $search = array(
         '#/+#',
-        '#\.+#'
+        '#\.+#',
     );
     $replace = array(
         '/',
-        '.'
+        '.',
     );
     $path = preg_replace($search, $replace, $path);
     // don't just replace a space with an escaped space
     // it might be escaped already
-    $path = str_replace("\ ", " ", $path);
-    $path = str_replace(" ", "\ ", $path);
+    $path = str_replace("\ ", ' ', $path);
+    $path = str_replace(' ', "\ ", $path);
 
     return $path;
 }

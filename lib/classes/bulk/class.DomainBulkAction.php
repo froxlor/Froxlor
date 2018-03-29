@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -12,21 +11,17 @@
  * @author     Michael Kaufmann <mkaufmann@nutime.de>
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Cron
  *
  * @since      0.9.33
- *
  */
 
 /**
  * Class DomainBulkAction to mass-import domains for a given customer
  *
  * @author Michael Kaufmann (d00p) <d00p@froxlor.org>
- *
  */
 class DomainBulkAction
 {
-
     /**
      * complete path including filename of file to be imported
      *
@@ -103,7 +98,7 @@ class DomainBulkAction
         /* automatically added */
         'adminid',
         'customerid',
-        'add_date'
+        'add_date',
     );
 
     /**
@@ -140,13 +135,13 @@ class DomainBulkAction
      *
      * @return array 'all' => amount of records processed, 'imported' => number of imported records
      */
-    public function doImport($separator = ";", $offset = 0)
+    public function doImport($separator = ';', $offset = 0)
     {
         
         // get the admins userinfo to check for domains_used, etc.
         global $userinfo;
         
-        if ($userinfo['domains'] == "-1") {
+        if ($userinfo['domains'] === '-1') {
             $dom_unlimited = true;
         } else {
             $dom_unlimited = false;
@@ -155,22 +150,22 @@ class DomainBulkAction
         $domains_used = (int) $userinfo['domains_used'];
         $domains_avail = (int) $userinfo['domains'];
         
-        if (empty($separator) || strlen($separator) != 1) {
+        if (empty($separator) || strlen($separator) !== 1) {
             throw new Exception("Invalid separator specified: '" . $separator . "'");
         }
         
         if (! is_int($offset) || $offset < 0) {
-            throw new Exception("Invalid offset specified");
+            throw new Exception('Invalid offset specified');
         }
         
         if ($this->_custId <= 0) {
-            throw new Exception("Invalid customer selected");
+            throw new Exception('Invalid customer selected');
         }
         
         $this->_readCustomerData();
         
-        if (is_null($this->_custData)) {
-            throw new Exception("Failed to read customer data");
+        if (null === $this->_custData) {
+            throw new Exception('Failed to read customer data');
         }
         
         $this->_readIpPortData();
@@ -183,14 +178,14 @@ class DomainBulkAction
         }
         
         if (count($domain_array) <= 0) {
-            throw new Exception("No domains were read from the file.");
+            throw new Exception('No domains were read from the file.');
         }
         
         // preapre insert statement as it is used a few times
         // leave out aliasdomain for now, cause empty = NULL value which cannot be
         // added this easily using prepared statements
-        $this->_ins_stmt = Database::prepare("
-			INSERT INTO `" . TABLE_PANEL_DOMAINS . "` SET
+        $this->_ins_stmt = Database::prepare('
+			INSERT INTO `' . TABLE_PANEL_DOMAINS . '` SET
 				`domain` = :domain,
 				`adminid` = :adminid,
 				`customerid` = :customerid,
@@ -216,14 +211,14 @@ class DomainBulkAction
 				`ocsp_stapling` = :ocsp_stapling,
 				`phpenabled` = :phpenabled,
 				`http2` = :http2
-		");
+		');
         
         // prepare insert statement for ip/port <> domain
-        $this->_ipp_ins_stmt = Database::prepare("
-			INSERT INTO `" . TABLE_DOMAINTOIP . "` SET
+        $this->_ipp_ins_stmt = Database::prepare('
+			INSERT INTO `' . TABLE_DOMAINTOIP . '` SET
 				`id_domain` = :domid,
 				`id_ipandports` = :ipid
-		");
+		');
         
         $global_counter = 0;
         $import_counter = 0;
@@ -247,7 +242,7 @@ class DomainBulkAction
         return array(
             'all' => $global_counter,
             'imported' => $import_counter,
-            'notice' => $note
+            'notice' => $note,
         );
     }
 
@@ -255,8 +250,6 @@ class DomainBulkAction
      * setter for import-file
      *
      * @param string $import_file
-     *
-     * @return void
      */
     public function setImportFile($import_file = null)
     {
@@ -267,8 +260,6 @@ class DomainBulkAction
      * setter for customer-id
      *
      * @param int $customer_id
-     *
-     * @return void
      */
     public function setCustomer($customer_id = 0)
     {
@@ -289,7 +280,7 @@ class DomainBulkAction
         $idna_convert = new idna_convert_wrapper();
         $domain_data['domain'] = $idna_convert->encode(preg_replace(array(
             '/\:(\d)+$/',
-            '/^https?\:\/\//'
+            '/^https?\:\/\//',
         ), '', $domain_data['domain']));
         
         // check if it is a valid domain
@@ -298,12 +289,12 @@ class DomainBulkAction
         }
         
         // no system-hostname can be added
-        if ($domain_data['domain'] == Settings::Get('system.hostname')) {
+        if ($domain_data['domain'] === Settings::Get('system.hostname')) {
             return false;
         }
         
         // no existing domains can be imported
-        if (in_array($domain_data['domain'], $this->_knownDomains)) {
+        if (in_array($domain_data['domain'], $this->_knownDomains, true)) {
             return false;
         }
         
@@ -313,7 +304,7 @@ class DomainBulkAction
             // format
             $domain_data['aliasdomain'] = $idna_convert->encode(preg_replace(array(
                 '/\:(\d)+$/',
-                '/^https?\:\/\//'
+                '/^https?\:\/\//',
             ), '', $domain_data['aliasdomain']));
             // validate alias-domain
             if (! validateDomain($domain_data['aliasdomain'])) {
@@ -321,7 +312,7 @@ class DomainBulkAction
                 return false;
             }
             // does the domain we want to be an alias of exists?
-            if (! in_array($domain_data['aliasdomain'], $this->_knownDomains)) {
+            if (! in_array($domain_data['aliasdomain'], $this->_knownDomains, true)) {
                 // it does not - User should respect the order of import so if the domain
                 // he wants to alias is also part of the import is ABOVE this one
                 // - we'd better skip
@@ -331,31 +322,31 @@ class DomainBulkAction
         }
         
         // check for use_ssl and ssl_redirect
-        if (!isset($domain_data['use_ssl']) || $domain_data['use_ssl'] == 1) {
+        if (!isset($domain_data['use_ssl']) || $domain_data['use_ssl'] === 1) {
             // if not set: default is whatever the system says
             // if set to 1: set to 0 if system has no ssl enabled
-            $domain_data['use_ssl'] = (Settings::get('system.use_ssl') == 1 ? 1 : 0);
+            $domain_data['use_ssl'] = (Settings::get('system.use_ssl') === 1 ? 1 : 0);
         }
 
         // use_ssl flag
-        if ($domain_data['use_ssl'] != 1) {
+        if ($domain_data['use_ssl'] !== 1) {
             $domain_data['use_ssl'] = 0;
         }
         
         // ssl_redirect flag
-        if ($domain_data['ssl_redirect'] != 1) {
+        if ($domain_data['ssl_redirect'] !== 1) {
             $domain_data['ssl_redirect'] = 0;
         }
 
         // if use_ssl is 0 ssl_redirect must be too (no ssl-ip => no ssl-redirect)
-        if ($domain_data['use_ssl'] == 0 && $domain_data['ssl_redirect'] == 1) {
+        if ($domain_data['use_ssl'] === 0 && $domain_data['ssl_redirect'] === 1) {
             $domain_data['ssl_redirect'] = 0;
         }
         
         // only check for letsencrypt, hsts and oscp-stapling if ssl is enabled
-        if ($domain_data['use_ssl'] == 1) {
+        if ($domain_data['use_ssl'] === 1) {
             //lets encrypt
-            if ($domain_data['letsencrypt'] != 1 || $domain_data['iswildcarddomain'] == 1) {
+            if ($domain_data['letsencrypt'] !== 1 || $domain_data['iswildcarddomain'] === 1) {
                 $domain_data['letsencrypt'] = 0;
             }
         } else {
@@ -363,24 +354,24 @@ class DomainBulkAction
         }
 
         // hsts
-        if ($domain_data['hsts'] != 1) {
+        if ($domain_data['hsts'] !== 1) {
             $domain_data['hsts'] = 0;
         }
-        if ($domain_data['hsts_sub'] != 1) {
+        if ($domain_data['hsts_sub'] !== 1) {
             $domain_data['hsts_sub'] = 0;
         }
-        if ($domain_data['hsts_preload'] != 1) {
+        if ($domain_data['hsts_preload'] !== 1) {
             $domain_data['hsts_preload'] = 0;
         }
-        if ($domain_data['ocsp_stapling'] != 1) {
+        if ($domain_data['ocsp_stapling'] !== 1) {
             $domain_data['ocsp_stapling'] = 0;
         }
 
-        if ($domain_data['phpenabled'] != 1) {
+        if ($domain_data['phpenabled'] !== 1) {
             $domain_data['phpenabled'] = 0;
         }
 
-        if ($domain_data['http2'] != 1) {
+        if ($domain_data['http2'] !== 1) {
             $domain_data['http2'] = 0;
         }
 
@@ -389,38 +380,38 @@ class DomainBulkAction
         
         // docroot (URL allowed, will lead to redirect)
         if (! preg_match('/^https?\:\/\//', $domain_data['documentroot'])) {
-            $domain_data['documentroot'] = makeCorrectDir($this->_custData['documentroot'] . "/" . $domain_data['documentroot']);
+            $domain_data['documentroot'] = makeCorrectDir($this->_custData['documentroot'] . '/' . $domain_data['documentroot']);
         }
         
         // is bind domain?
         if (! isset($domain_data['isbinddomain'])) {
-            $domain_data['isbinddomain'] = (Settings::Get('system.bind_enable') == '1') ? 1 : 0;
-        } elseif ($domain_data['isbinddomain'] != 1) {
+            $domain_data['isbinddomain'] = (Settings::Get('system.bind_enable') === '1') ? 1 : 0;
+        } elseif ($domain_data['isbinddomain'] !== 1) {
             $domain_data['isbinddomain'] = 0;
         }
         
         // zonefile
         if (!isset($domain_data['zonefile'])) {
-            $domain_data['zonefile'] = "";
+            $domain_data['zonefile'] = '';
         } else {
-            if (!empty($domain_data['zonefile']) && Settings::Get('system.bind_enable') == '1') {
+            if (!empty($domain_data['zonefile']) && Settings::Get('system.bind_enable') === '1') {
                 $domain_data['zonefile'] = makeCorrectFile($domain_data['zonefile']);
             } else {
-                $domain_data['zonefile'] = "";
+                $domain_data['zonefile'] = '';
             }
         }
 
         // openbasedir flag
         if (! isset($domain_data['openbasedir'])) {
             $domain_data['openbasedir'] = 1;
-        } elseif ($domain_data['openbasedir'] != 1) {
+        } elseif ($domain_data['openbasedir'] !== 1) {
             $domain_data['openbasedir'] = 0;
         }
 
         // speciallogfile flag
         if (! isset($domain_data['speciallogfile'])) {
             $domain_data['speciallogfile'] = 0;
-        } elseif ($domain_data['speciallogfile'] != 1) {
+        } elseif ($domain_data['speciallogfile'] !== 1) {
             $domain_data['speciallogfile'] = 0;
         }
 
@@ -430,9 +421,9 @@ class DomainBulkAction
         // add date
         $domain_data['add_date'] = time();
         // set adminid
-        $domain_data['adminid'] = (int)$this->_custData['adminid'];
+        $domain_data['adminid'] = (int) $this->_custData['adminid'];
         // set customerid
-        $domain_data['customerid'] = (int)$this->_custId;
+        $domain_data['customerid'] = (int) $this->_custId;
         
         // check for required fields
         foreach ($this->_required_fields as $rfld) {
@@ -444,25 +435,25 @@ class DomainBulkAction
         // clean all fields that do not belong to the required fields
         $domain_data_tmp = $domain_data;
         foreach ($domain_data_tmp as $fld => $val) {
-            if (! in_array($fld, $this->_required_fields)) {
+            if (! in_array($fld, $this->_required_fields, true)) {
                 unset($domain_data[$fld]);
             }
         }
         
         // save iplist
         $iplist = $domain_data['ips'];
-        $iplist_arr = array_unique(explode(",", $iplist));
+        $iplist_arr = array_unique(explode(',', $iplist));
         $knownIPsCheck = array_unique($this->_knownIpPortChk);
         // check whether we actually have at least one of the used IP's in our system
         $result_iplist = array_intersect($iplist_arr, $knownIPsCheck);
         // write back iplist
-        $iplist = implode(",", $result_iplist);
+        $iplist = implode(',', $result_iplist);
         
         // don't need that for the domain-insert-statement
         unset($domain_data['ips']);
         
         // remember use_ssl value
-        $use_ssl = (bool)$domain_data['use_ssl'];
+        $use_ssl = (bool) $domain_data['use_ssl'];
         // don't need that for the domain-insert-statement
         unset($domain_data['use_ssl']);
         // don't need alias
@@ -475,8 +466,8 @@ class DomainBulkAction
         $domain_id = Database::lastInsertId();
         
         // add alias if any
-        if ($hasAlias != false) {
-            $alias_stmt = Database::prepare("UPDATE `".TABLE_PANEL_DOMAINS."` SET `aliasdomain` = :aliasdomain WHERE `id` = :did");
+        if ($hasAlias !== false) {
+            $alias_stmt = Database::prepare('UPDATE `' . TABLE_PANEL_DOMAINS . '` SET `aliasdomain` = :aliasdomain WHERE `id` = :did');
             Database::pexecute($alias_stmt, array('aliasdomain' => $hasAlias, 'did' => $domain_id));
         }
 
@@ -486,19 +477,19 @@ class DomainBulkAction
         }
         
         // split ip-list and remove duplicates
-        $iplist_arr = array_unique(explode(",", $iplist));
+        $iplist_arr = array_unique(explode(',', $iplist));
         foreach ($iplist_arr as $ip) {
             // if we know the ip, at all variants (different ports, ssl and non-ssl) of it!
             if (isset($this->_knownIpPort[$ip])) {
                 foreach ($this->_knownIpPort[$ip] as $ipdata) {
                     // no ssl ip/ports should be used for this domain
-                    if ($use_ssl == false && $ipdata['ssl'] == 1) {
+                    if ($use_ssl === false && $ipdata['ssl'] === 1) {
                         continue;
                     }
                     // add domain->ip reference
                     Database::pexecute($this->_ipp_ins_stmt, array(
                         'domid' => $domain_id,
-                        'ipid' => $ipdata['id']
+                        'ipid' => $ipdata['id'],
                     ));
                 }
             }
@@ -515,10 +506,10 @@ class DomainBulkAction
      *
      * @return array
      */
-    private function _parseImportFile($separator = ";")
+    private function _parseImportFile($separator = ';')
     {
         if (empty($this->_impFile)) {
-            throw new Exception("No file was given for import");
+            throw new Exception('No file was given for import');
         }
         
         if (! file_exists($this->_impFile)) {
@@ -531,7 +522,7 @@ class DomainBulkAction
         
         $file_data = array();
         
-        $fh = @fopen($this->_impFile, "r");
+        $fh = @fopen($this->_impFile, 'r');
         if ($fh) {
             while (($line = fgets($fh)) !== false) {
                 $tmp_arr = explode($separator, $line);
@@ -543,7 +534,7 @@ class DomainBulkAction
                     }
                     $data_arr[$this->_required_fields[$idx]] = $data;
                 }
-                $file_data[] = array_map("trim", $data_arr);
+                $file_data[] = array_map('trim', $data_arr);
             }
         } else {
             throw new Exception("Unable to open file '" . $this->_impFile . "'");
@@ -560,25 +551,24 @@ class DomainBulkAction
      */
     private function _readCustomerData()
     {
-        $cust_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `customerid` = :cid");
+        $cust_stmt = Database::prepare('SELECT * FROM `' . TABLE_PANEL_CUSTOMERS . '` WHERE `customerid` = :cid');
         $this->_custData = Database::pexecute_first($cust_stmt, array(
-            'cid' => $this->_custId
+            'cid' => $this->_custId,
         ));
-        if (is_array($this->_custData) && isset($this->_custData['customerid']) && $this->_custData['customerid'] == $this->_custId) {
+        if (is_array($this->_custData) && isset($this->_custData['customerid']) && $this->_custData['customerid'] === $this->_custId) {
             return true;
         }
         $this->_custData = null;
+
         return false;
     }
 
     /**
      * reads domain data from panel_domain
-     *
-     * @return void
      */
     private function _readDomainData()
     {
-        $knowndom_stmt = Database::prepare("SELECT `domain` FROM `" . TABLE_PANEL_DOMAINS . "` ORDER BY `domain` ASC");
+        $knowndom_stmt = Database::prepare('SELECT `domain` FROM `' . TABLE_PANEL_DOMAINS . '` ORDER BY `domain` ASC');
         Database::pexecute($knowndom_stmt);
         $this->_knownDomains = array();
         while ($dom = $knowndom_stmt->fetch()) {
@@ -588,12 +578,10 @@ class DomainBulkAction
 
     /**
      * reads ip/port data from panel_ipsandports
-     *
-     * @return void
      */
     private function _readIpPortData()
     {
-        $knownip_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "`");
+        $knownip_stmt = Database::prepare('SELECT * FROM `' . TABLE_PANEL_IPSANDPORTS . '`');
         Database::pexecute($knownip_stmt);
         $this->_knownIpPort = array();
         while ($ipp = $knownip_stmt->fetch()) {

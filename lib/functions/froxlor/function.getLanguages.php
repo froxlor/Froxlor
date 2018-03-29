@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,18 +12,15 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
- *
  */
-
 function getLanguages()
 {
-    $result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_LANGUAGE . "` ");
+    $result_stmt = Database::query('SELECT * FROM `' . TABLE_PANEL_LANGUAGE . '` ');
     $languages_array = array();
 
     while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
         if (!isset($languages_array[$row['language']])
-            && !in_array($row['language'], $languages_array)
+            && !in_array($row['language'], $languages_array, true)
         ) {
             $languages_array[$row['language']] = html_entity_decode($row['language']);
         }

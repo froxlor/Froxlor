@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -11,8 +10,6 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Formfields
- *
  */
 
 return array(
@@ -28,24 +25,24 @@ return array(
                         'label' => $lng['emails']['emailaddress'],
                         'type' => 'textul',
                         'ul_field' => '',
-                        'has_nextto' => true
+                        'has_nextto' => true,
                     ),
                     'domain' => array(
                         'next_to' => 'email_part',
                         'next_to_prefix' => '&nbsp;@&nbsp;',
                         'type' => 'select',
-                        'select_var' => $domains
+                        'select_var' => $domains,
                     ),
                     'iscatchall' => array(
                         'label' => $lng['emails']['iscatchall'],
                         'type' => 'checkbox',
                         'values' => array(
-                                        array('label' => $lng['panel']['yes'], 'value' => '1')
+                                        array('label' => $lng['panel']['yes'], 'value' => '1'),
                                     ),
-                        'value' => array()
-                    )
-                )
-            )
-        )
-    )
+                        'value' => array(),
+                    ),
+                ),
+            ),
+        ),
+    ),
 );

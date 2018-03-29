@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 if (! defined('MASTER_CRONJOB')) {
     die('You cannot access this file directly!');
 }
@@ -14,12 +14,10 @@ if (! defined('MASTER_CRONJOB')) {
  * @copyright (c) the authors
  * @author Froxlor team <team@froxlor.org> (2016-)
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package Cron
- *
  */
 class bind extends DnsBase
 {
-    private $_bindconf_file = "";
+    private $_bindconf_file = '';
 
     public function writeConfigs()
     {
@@ -39,6 +37,7 @@ class bind extends DnsBase
 
         if (empty($domains)) {
             $this->_logger->logAction(CRON_ACTION, LOG_INFO, 'No domains found for nameserver-config, skipping...');
+
             return;
         }
 
@@ -60,7 +59,6 @@ class bind extends DnsBase
         $this->_logger->logAction(CRON_ACTION, LOG_INFO, 'Task4 finished');
     }
 
-
     private function walkDomainList($domain, $domains)
     {
         $zoneContent = '';
@@ -70,16 +68,16 @@ class bind extends DnsBase
             $subzones .= $this->walkDomainList($domains[$child_domain_id], $domains);
         }
 
-        if ($domain['zonefile'] == '') {
+        if ($domain['zonefile'] === '') {
             // check for system-hostname
             $isFroxlorHostname = false;
-            if (isset($domain['froxlorhost']) && $domain['froxlorhost'] == 1) {
+            if (isset($domain['froxlorhost']) && $domain['froxlorhost'] === 1) {
                 $isFroxlorHostname = true;
             }
 
-            if ($domain['ismainbutsubto'] == 0) {
+            if ($domain['ismainbutsubto'] === 0) {
                 $zoneContent = (string) createDomainZone(
-                    ($domain['id'] == 'none') ?
+                    ($domain['id'] === 'none') ?
                     $domain :
                     $domain['id'],
                     $isFroxlorHostname
@@ -94,7 +92,7 @@ class bind extends DnsBase
                 $this->_bindconf_file .= $this->_generateDomainConfig($domain);
             } else {
                 return (string) createDomainZone(
-                    ($domain['id'] == 'none') ?
+                    ($domain['id'] === 'none') ?
                     $domain :
                     $domain['id'],
                     $isFroxlorHostname,
@@ -128,7 +126,7 @@ class bind extends DnsBase
             // put nameservers in allow-transfer
             if (count($this->_ns) > 0) {
                 foreach ($this->_ns as $ns) {
-                    foreach ($ns["ips"] as $ip) {
+                    foreach ($ns['ips'] as $ip) {
                         $bindconf_file .= '		' . $ip . ";\n";
                     }
                 }

@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -12,10 +11,8 @@
  * @author     Michael Kaufmann <mkaufmann@nutime.de>
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Classes
  *
  * @since      0.9.31
- *
  */
 
 /**
@@ -28,11 +25,9 @@
  * @author     Michael Kaufmann <mkaufmann@nutime.de>
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Classes
  */
 class DbManagerMySQL
 {
-
     /**
      * FroxlorLogger object
      * @var object
@@ -56,7 +51,7 @@ class DbManagerMySQL
      */
     public function createDatabase($dbname = null)
     {
-        Database::query("CREATE DATABASE `" . $dbname . "`");
+        Database::query('CREATE DATABASE `' . $dbname . '`');
     }
 
     /**
@@ -71,18 +66,18 @@ class DbManagerMySQL
     public function grantPrivilegesTo($username = null, $password = null, $access_host = null, $p_encrypted = false)
     {
         // grant privileges
-        $stmt = Database::prepare("
-				GRANT ALL PRIVILEGES ON `" . $username . "`.*
+        $stmt = Database::prepare('
+				GRANT ALL PRIVILEGES ON `' . $username . "`.*
 				TO :username@:host IDENTIFIED BY 'password'
 				");
-        Database::pexecute($stmt, array("username" => $username, "host" => $access_host));
+        Database::pexecute($stmt, array('username' => $username, 'host' => $access_host));
         // set passoword
         if ($p_encrypted) {
-            $stmt = Database::prepare("SET PASSWORD FOR :username@:host = :password");
+            $stmt = Database::prepare('SET PASSWORD FOR :username@:host = :password');
         } else {
-            $stmt = Database::prepare("SET PASSWORD FOR :username@:host = PASSWORD(:password)");
+            $stmt = Database::prepare('SET PASSWORD FOR :username@:host = PASSWORD(:password)');
         }
-        Database::pexecute($stmt, array("username" => $username, "host" => $access_host, "password" => $password));
+        Database::pexecute($stmt, array('username' => $username, 'host' => $access_host, 'password' => $password));
     }
 
     /**
@@ -95,23 +90,23 @@ class DbManagerMySQL
     {
         if (Database::getAttribute(PDO::ATTR_SERVER_VERSION) < '5.0.2') {
             // failsafe if user has been deleted manually (requires MySQL 4.1.2+)
-            $stmt = Database::prepare("REVOKE ALL PRIVILEGES, GRANT OPTION FROM `".$dbname."`");
+            $stmt = Database::prepare('REVOKE ALL PRIVILEGES, GRANT OPTION FROM `' . $dbname . '`');
             Database::pexecute($stmt, array(), false);
         }
 
         $host_res_stmt = Database::prepare(
-            "
-			SELECT `Host` FROM `mysql`.`user` WHERE `User` = :dbname"
+            '
+			SELECT `Host` FROM `mysql`.`user` WHERE `User` = :dbname'
         );
         Database::pexecute($host_res_stmt, array('dbname' => $dbname));
 
         while ($host = $host_res_stmt->fetch(PDO::FETCH_ASSOC)) {
             // as of MySQL 5.0.2 this also revokes privileges. (requires MySQL 4.1.2+)
-            $drop_stmt = Database::prepare("DROP USER :dbname@:host");
+            $drop_stmt = Database::prepare('DROP USER :dbname@:host');
             Database::pexecute($drop_stmt, array('dbname' => $dbname, 'host' => $host['Host']), false);
         }
 
-        $drop_stmt = Database::prepare("DROP DATABASE IF EXISTS `".$dbname."`");
+        $drop_stmt = Database::prepare('DROP DATABASE IF EXISTS `' . $dbname . '`');
         Database::pexecute($drop_stmt);
     }
 
@@ -125,12 +120,12 @@ class DbManagerMySQL
     {
         if (Database::getAttribute(PDO::ATTR_SERVER_VERSION) < '5.0.2') {
             // Revoke privileges (only required for MySQL 4.1.2 - 5.0.1)
-            $stmt = Database::prepare("REVOKE ALL PRIVILEGES ON * . * FROM `". $username . "`@`".$host."`");
+            $stmt = Database::prepare('REVOKE ALL PRIVILEGES ON * . * FROM `' . $username . '`@`' . $host . '`');
             Database::pexecute($stmt);
         }
         // as of MySQL 5.0.2 this also revokes privileges. (requires MySQL 4.1.2+)
-        $stmt = Database::prepare("DROP USER :username@:host");
-        Database::pexecute($stmt, array("username" => $username, "host" => $host));
+        $stmt = Database::prepare('DROP USER :username@:host');
+        Database::pexecute($stmt, array('username' => $username, 'host' => $host));
     }
 
     /**
@@ -153,7 +148,7 @@ class DbManagerMySQL
      */
     public function enableUser($username = null, $host = null)
     {
-        Database::query('GRANT ALL PRIVILEGES ON `' . $username .'`.* TO `' . $username . '`@`' . $host . '`');
+        Database::query('GRANT ALL PRIVILEGES ON `' . $username . '`.* TO `' . $username . '`@`' . $host . '`');
         Database::query('GRANT ALL PRIVILEGES ON `' . str_replace('_', '\_', $username) . '` . * TO `' . $username . '`@`' . $host . '`');
     }
 
@@ -162,7 +157,7 @@ class DbManagerMySQL
      */
     public function flushPrivileges()
     {
-        Database::query("FLUSH PRIVILEGES");
+        Database::query('FLUSH PRIVILEGES');
     }
 
     /**
@@ -174,7 +169,7 @@ class DbManagerMySQL
      */
     public function getAllSqlUsers($user_only = true)
     {
-        if ($user_only == false) {
+        if ($user_only === false) {
             $result_stmt = Database::prepare('SELECT * FROM mysql.user');
         } else {
             $result_stmt = Database::prepare('SELECT `User` FROM mysql.user');
@@ -182,13 +177,13 @@ class DbManagerMySQL
         Database::pexecute($result_stmt);
         $allsqlusers = array();
         while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-            if ($user_only == false) {
+            if ($user_only === false) {
                 if (!isset($allsqlusers[$row['User']])
                         || !is_array($allsqlusers[$row['User']])
                 ) {
                     $allsqlusers[$row['User']] = array(
                             'password' => $row['Password'],
-                            'hosts' => array()
+                            'hosts' => array(),
                     );
                 }
                 $allsqlusers[$row['User']]['hosts'][] = $row['Host'];
@@ -196,6 +191,7 @@ class DbManagerMySQL
                 $allsqlusers[] = $row['User'];
             }
         }
+
         return $allsqlusers;
     }
 }

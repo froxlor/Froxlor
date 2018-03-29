@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,8 +12,6 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Panel
- *
  */
 define('AREA', 'customer');
 require './lib/init.php';
@@ -24,23 +21,23 @@ if (Settings::IsInList('panel.customer_hide_options', 'extras.logger')) {
     redirectTo('customer_index.php');
 }
 
-if ($page == 'log') {
-    if ($action == '') {
+if ($page === 'log') {
+    if ($action === '') {
         $fields = array(
             'date' => $lng['logger']['date'],
             'type' => $lng['logger']['type'],
             'user' => $lng['logger']['user'],
-            'text' => $lng['logger']['action']
+            'text' => $lng['logger']['action'],
         );
         $paging = new paging($userinfo, TABLE_PANEL_LOG, $fields, null, null, 0, 'desc', 30);
         $query = 'SELECT * FROM `' . TABLE_PANEL_LOG . '` WHERE `user` = :loginname ' . $paging->getSqlWhere(true) . ' ' . $paging->getSqlOrderBy();
         $result_stmt = Database::prepare($query . ' ' . $paging->getSqlLimit());
         Database::pexecute($result_stmt, array(
-            "loginname" => $userinfo['loginname']
+            'loginname' => $userinfo['loginname'],
         ));
         $result_cnt_stmt = Database::prepare($query);
         Database::pexecute($result_cnt_stmt, array(
-            "loginname" => $userinfo['loginname']
+            'loginname' => $userinfo['loginname'],
         ));
         $res_cnt = $result_cnt_stmt->fetch(PDO::FETCH_ASSOC);
         $logs_count = $result_cnt_stmt->rowCount();
@@ -58,7 +55,7 @@ if ($page == 'log') {
             $clog[$row['action']][$row['logid']] = $row;
         }
         
-        if ($paging->sortfield == 'date' && $paging->sortorder == 'desc') {
+        if ($paging->sortfield === 'date' && $paging->sortorder === 'desc') {
             krsort($clog);
         } else {
             ksort($clog);
@@ -73,9 +70,9 @@ if ($page == 'log') {
             foreach ($logrows as $row) {
                 // if ($paging->checkDisplay($i)) {
                 $row = htmlentities_array($row);
-                $row['date'] = date("d.m.y H:i:s", $row['date']);
+                $row['date'] = date('d.m.y H:i:s', $row['date']);
                 
-                if ($_action != $action) {
+                if ($_action !== $action) {
                     switch ($action) {
                         case USR_ACTION:
                             $_action = $lng['admin']['customer'];
@@ -101,12 +98,12 @@ if ($page == 'log') {
                     }
                     
                     $row['action'] = $_action;
-                    eval("\$log.=\"" . getTemplate('logger/logger_action') . "\";");
+                    eval('$log.="' . getTemplate('logger/logger_action') . '";');
                 }
                 
                 $log_count ++;
                 $row['type'] = getLogLevelDesc($row['type']);
-                eval("\$log.=\"" . getTemplate('logger/logger_log') . "\";");
+                eval('$log.="' . getTemplate('logger/logger_log') . '";');
                 $count ++;
                 $_action = $action;
                 // }
@@ -115,6 +112,6 @@ if ($page == 'log') {
             $i ++;
         }
         
-        eval("echo \"" . getTemplate('logger/logger') . "\";");
+        eval('echo "' . getTemplate('logger/logger') . '";');
     }
 }

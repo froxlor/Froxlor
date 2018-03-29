@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -11,8 +10,6 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Settings
- *
  */
 
 return array(
@@ -27,7 +24,7 @@ return array(
                     'type' => 'string',
                     'default' => '/usr/bin/perl',
                     'save_method' => 'storeSettingField',
-                    'websrv_avail' => array('lighttpd')
+                    'websrv_avail' => array('lighttpd'),
                     ),
                 'system_perl_suexecworkaround' => array(
                     'label' => $lng['serversettings']['perl']['suexecworkaround'],
@@ -36,7 +33,7 @@ return array(
                     'type' => 'bool',
                     'default' => false,
                     'save_method' => 'storeSettingField',
-                    'websrv_avail' => array('apache2')
+                    'websrv_avail' => array('apache2'),
                     ),
                 'system_perl_suexeccgipath' => array(
                     'label' => $lng['serversettings']['perl']['suexeccgipath'],
@@ -46,7 +43,7 @@ return array(
                     'string_type' => 'dir',
                     'default' => '/var/www/cgi-bin/',
                     'save_method' => 'storeSettingField',
-                    'websrv_avail' => array('apache2')
+                    'websrv_avail' => array('apache2'),
                     ),
                 'perl_server' => array(
                     'label' => $lng['serversettings']['perl_server'],
@@ -55,7 +52,7 @@ return array(
                     'type' => 'string',
                     'default' => 'unix:/var/run/nginx/cgiwrap-dispatch.sock',
                     'save_method' => 'storeSettingField',
-                    'websrv_avail' => array('nginx')
+                    'websrv_avail' => array('nginx'),
                     ),
                 ),
             ),

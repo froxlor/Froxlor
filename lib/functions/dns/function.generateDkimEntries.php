@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2016 the Froxlor Team (see authors).
@@ -11,14 +10,14 @@
  * @copyright (c) the authors
  * @author Froxlor team <team@froxlor.org> (2016-)
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package Functions
  *
+ * @param mixed $domain
  */
 function generateDkimEntries($domain)
 {
     $zone_dkim = array();
 
-    if (Settings::Get('dkim.use_dkim') == '1' && $domain['dkim'] == '1' && $domain['dkim_pubkey'] != '') {
+    if (Settings::Get('dkim.use_dkim') === '1' && $domain['dkim'] === '1' && $domain['dkim_pubkey'] !== '') {
         // start
         $dkim_txt = 'v=DKIM1;';
 
@@ -26,20 +25,19 @@ function generateDkimEntries($domain)
         $algorithm = explode(',', Settings::Get('dkim.dkim_algorithm'));
         $alg = '';
         foreach ($algorithm as $a) {
-            if ($a == 'all') {
+            if ($a === 'all') {
                 break;
-            } else {
-                $alg .= $a . ':';
             }
+            $alg .= $a . ':';
         }
 
-        if ($alg != '') {
+        if ($alg !== '') {
             $alg = substr($alg, 0, - 1);
             $dkim_txt .= 'h=' . $alg . ';';
         }
 
         // notes
-        if (trim(Settings::Get('dkim.dkim_notes') != '')) {
+        if (trim(Settings::Get('dkim.dkim_notes') !== '')) {
             $dkim_txt .= 'n=' . trim(Settings::Get('dkim.dkim_notes')) . ';';
         }
 
@@ -47,7 +45,7 @@ function generateDkimEntries($domain)
         $dkim_txt .= 'k=rsa;p=' . trim(preg_replace('/-----BEGIN PUBLIC KEY-----(.+)-----END PUBLIC KEY-----/s', '$1', str_replace("\n", '', $domain['dkim_pubkey']))) . ';';
 
         // service-type
-        if (Settings::Get('dkim.dkim_servicetype') == '1') {
+        if (Settings::Get('dkim.dkim_servicetype') === '1') {
             $dkim_txt .= 's=email;';
         }
 
@@ -58,7 +56,7 @@ function generateDkimEntries($domain)
         $zone_dkim[] = $dkim_txt;
 
         // adsp-entry
-        if (Settings::Get('dkim.dkim_add_adsp') == "1") {
+        if (Settings::Get('dkim.dkim_add_adsp') === '1') {
             $adsp = '"dkim=';
             switch ((int) Settings::Get('dkim.dkim_add_adsppolicy')) {
                 case 0:

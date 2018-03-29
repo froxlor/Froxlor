@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,10 +12,7 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
- *
  */
-
 function loadConfigArrayDir()
 {
 
@@ -38,7 +34,7 @@ function loadConfigArrayDir()
     // we assume that this is a list of
     // setting-groups to be selected
     $selection = null;
-    for ($x=0;$x<$numargs;$x++) {
+    for ($x=0; $x<$numargs; $x++) {
         $arg = func_get_arg($x);
         if (is_array($arg) && isset($arg[0])) {
             $selection = $arg;
@@ -55,10 +51,10 @@ function loadConfigArrayDir()
         if (is_dir($data_dirname)) {
             $data_dirhandle = opendir($data_dirname);
             while (false !== ($data_filename = readdir($data_dirhandle))) {
-                if ($data_filename != '.'
-                        && $data_filename != '..'
-                        && $data_filename != ''
-                        && substr($data_filename, -4) == '.php'
+                if ($data_filename !== '.'
+                        && $data_filename !== '..'
+                        && $data_filename !== ''
+                        && substr($data_filename, -4) === '.php'
                 ) {
                     $data_files[] = $data_dirname . $data_filename;
                 }
@@ -78,13 +74,13 @@ function loadConfigArrayDir()
     // to select, we'll handle this here
     // (this is for multiserver-client settings)
     $_data = array();
-    if ($selection != null
+    if ($selection !== null
             && is_array($selection)
             && isset($selection[0])
     ) {
         $_data['groups'] = array();
         foreach ($data['groups'] as $group => $data) {
-            if (in_array($group, $selection)) {
+            if (in_array($group, $selection, true)) {
                 $_data['groups'][$group] = $data;
             }
         }

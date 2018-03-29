@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -11,8 +10,6 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Formfields
- *
  */
 return array(
     'domain_add' => array(
@@ -26,31 +23,31 @@ return array(
                     'domain' => array(
                         'label' => 'Domain',
                         'type' => 'text',
-                        'mandatory' => true
+                        'mandatory' => true,
                     ),
                     'customerid' => array(
                         'label' => $lng['admin']['customer'],
                         'type' => 'select',
                         'select_var' => $customers,
-                        'mandatory' => true
+                        'mandatory' => true,
                     ),
                     'adminid' => array(
-                        'visible' => ($userinfo['customers_see_all'] == '1' ? true : false),
+                        'visible' => ($userinfo['customers_see_all'] === '1' ? true : false),
                         'label' => $lng['admin']['admin'],
                         'type' => 'select',
                         'select_var' => $admins,
-                        'mandatory' => true
+                        'mandatory' => true,
                     ),
                     'alias' => array(
                         'label' => $lng['domains']['aliasdomain'],
                         'type' => 'select',
-                        'select_var' => $domains
+                        'select_var' => $domains,
                     ),
                     'issubof' => array(
                         'label' => $lng['domains']['issubof'],
                         'desc' => $lng['domains']['issubofinfo'],
                         'type' => 'select',
-                        'select_var' => $subtodomains
+                        'select_var' => $subtodomains,
                     ),
                     'caneditdomain' => array(
                         'label' => $lng['admin']['domain_editable']['title'],
@@ -59,42 +56,42 @@ return array(
                         'values' => array(
                             array(
                                 'label' => $lng['panel']['yes'],
-                                'value' => '1'
-                            )
+                                'value' => '1',
+                            ),
                         ),
                         'value' => array(
-                            '1'
-                        )
+                            '1',
+                        ),
                     ),
                     'add_date' => array(
                         'label' => $lng['domains']['add_date'],
                         'desc' => $lng['panel']['dateformat'],
                         'type' => 'label',
-                        'value' => $add_date
+                        'value' => $add_date,
                     ),
                     'registration_date' => array(
                         'label' => $lng['domains']['registration_date'],
                         'desc' => $lng['panel']['dateformat'],
                         'type' => 'text',
-                        'size' => 10
+                        'size' => 10,
                     ),
                     'termination_date' => array(
                         'label' => $lng['domains']['termination_date'],
                         'desc' => $lng['panel']['dateformat'],
                         'type' => 'text',
-                        'size' => 10
-                    )
-                )
+                        'size' => 10,
+                    ),
+                ),
             ),
             'section_b' => array(
                 'title' => $lng['admin']['webserversettings'],
                 'image' => 'icons/domain_add.png',
                 'fields' => array(
                     'documentroot' => array(
-                        'visible' => ($userinfo['change_serversettings'] == '1' ? true : false),
+                        'visible' => ($userinfo['change_serversettings'] === '1' ? true : false),
                         'label' => 'DocumentRoot',
                         'desc' => $lng['panel']['emptyfordefault'],
-                        'type' => 'text'
+                        'type' => 'text',
                     ),
                     'ipandport' => array(
                         'label' => $lng['domains']['ipandport_multi']['title'],
@@ -103,13 +100,13 @@ return array(
                         'values' => $ipsandports,
                         'value' => explode(',', Settings::Get('system.defaultip')),
                         'is_array' => 1,
-                        'mandatory' => true
+                        'mandatory' => true,
                     ),
                     'selectserveralias' => array(
                         'label' => $lng['admin']['selectserveralias'],
                         'desc' => $lng['admin']['selectserveralias_desc'],
                         'type' => 'select',
-                        'select_var' => $serveraliasoptions
+                        'select_var' => $serveraliasoptions,
                     ),
                     'speciallogfile' => array(
                         'label' => $lng['admin']['speciallogfile']['title'],
@@ -118,39 +115,39 @@ return array(
                         'values' => array(
                             array(
                                 'label' => $lng['panel']['yes'],
-                                'value' => '1'
-                            )
+                                'value' => '1',
+                            ),
                         ),
-                        'value' => array()
+                        'value' => array(),
                     ),
                     'specialsettings' => array(
-                        'visible' => ($userinfo['change_serversettings'] == '1' ? true : false),
+                        'visible' => ($userinfo['change_serversettings'] === '1' ? true : false),
                         'style' => 'align-top',
                         'label' => $lng['admin']['ownvhostsettings'],
                         'desc' => $lng['serversettings']['default_vhostconf']['description'],
                         'type' => 'textarea',
                         'cols' => 60,
-                        'rows' => 12
+                        'rows' => 12,
                     ),
                     'notryfiles' => array(
-                        'visible' => (Settings::Get('system.webserver') == 'nginx' && $userinfo['change_serversettings'] == '1'),
+                        'visible' => (Settings::Get('system.webserver') === 'nginx' && $userinfo['change_serversettings'] === '1'),
                         'label' => $lng['admin']['notryfiles']['title'],
                         'desc' => $lng['admin']['notryfiles']['description'],
                         'type' => 'checkbox',
                         'values' => array(
                             array(
                                 'label' => $lng['panel']['yes'],
-                                'value' => '1'
-                            )
+                                'value' => '1',
+                            ),
                         ),
-                        'value' => array()
-                    )
-                )
+                        'value' => array(),
+                    ),
+                ),
             ),
             'section_bssl' => array(
                 'title' => $lng['admin']['webserversettings_ssl'],
                 'image' => 'icons/domain_add.png',
-                'visible' => Settings::Get('system.use_ssl') == '1' ? true : false,
+                'visible' => Settings::Get('system.use_ssl') === '1' ? true : false,
                 'fields' => array(
                     'ssl_ipandport' => array(
                         'label' => $lng['domains']['ipandport_ssl_multi']['title'],
@@ -158,111 +155,111 @@ return array(
                         'type' => 'checkbox',
                         'values' => $ssl_ipsandports,
                         'value' => '',
-                        'is_array' => 1
+                        'is_array' => 1,
                     ),
                     'ssl_redirect' => array(
-                        'visible' => ($ssl_ipsandports != '' ? true : false),
+                        'visible' => ($ssl_ipsandports !== '' ? true : false),
                         'label' => $lng['domains']['ssl_redirect']['title'],
                         'desc' => $lng['domains']['ssl_redirect']['description'],
                         'type' => 'checkbox',
                         'values' => array(
                             array(
                                 'label' => $lng['panel']['yes'],
-                                'value' => '1'
-                            )
+                                'value' => '1',
+                            ),
                         ),
-                        'value' => array()
+                        'value' => array(),
                     ),
                     'letsencrypt' => array(
-                        'visible' => (Settings::Get('system.leenabled') == '1' ? ($ssl_ipsandports != '' ? true : false) : false),
+                        'visible' => (Settings::Get('system.leenabled') === '1' ? ($ssl_ipsandports !== '' ? true : false) : false),
                         'label' => $lng['admin']['letsencrypt']['title'],
                         'desc' => $lng['admin']['letsencrypt']['description'],
                         'type' => 'checkbox',
                         'values' => array(
                             array(
                                 'label' => $lng['panel']['yes'],
-                                'value' => '1'
-                            )
+                                'value' => '1',
+                            ),
                         ),
-                        'value' => array()
+                        'value' => array(),
                     ),
                     'http2' => array(
-                        'visible' => ($ssl_ipsandports != '' ? true : false) && Settings::Get('system.webserver') != 'lighttpd' && Settings::Get('system.http2_support') == '1',
+                        'visible' => ($ssl_ipsandports !== '' ? true : false) && Settings::Get('system.webserver') !== 'lighttpd' && Settings::Get('system.http2_support') === '1',
                         'label' => $lng['admin']['domain_http2']['title'],
                         'desc' => $lng['admin']['domain_http2']['description'],
                         'type' => 'checkbox',
                         'values' => array(
                             array(
                                 'label' => $lng['panel']['yes'],
-                                'value' => '1'
-                            )
+                                'value' => '1',
+                            ),
                         ),
-                        'value' => array()
+                        'value' => array(),
                     ),
                     'no_ssl_available_info' => array(
-                        'visible' => ($ssl_ipsandports == '' ? true : false),
+                        'visible' => ($ssl_ipsandports === '' ? true : false),
                         'label' => 'SSL',
                         'type' => 'label',
-                        'value' => $lng['panel']['nosslipsavailable']
+                        'value' => $lng['panel']['nosslipsavailable'],
                     ),
                     'hsts_maxage' => array(
-                        'visible' => ($ssl_ipsandports != '' ? true : false),
+                        'visible' => ($ssl_ipsandports !== '' ? true : false),
                         'label' => $lng['admin']['domain_hsts_maxage']['title'],
                         'desc' => $lng['admin']['domain_hsts_maxage']['description'],
                         'type' => 'int',
                         'int_min' => 0,
                         'int_max' => 94608000, // 3-years
-                        'value' => 0
+                        'value' => 0,
                     ),
                     'hsts_sub' => array(
-                        'visible' => ($ssl_ipsandports != '' ? true : false),
+                        'visible' => ($ssl_ipsandports !== '' ? true : false),
                         'label' => $lng['admin']['domain_hsts_incsub']['title'],
                         'desc' => $lng['admin']['domain_hsts_incsub']['description'],
                         'type' => 'checkbox',
                         'values' => array(
                             array(
                                 'label' => $lng['panel']['yes'],
-                                'value' => '1'
-                            )
+                                'value' => '1',
+                            ),
                         ),
-                        'value' => array()
+                        'value' => array(),
                     ),
                     'hsts_preload' => array(
-                        'visible' => ($ssl_ipsandports != '' ? true : false),
+                        'visible' => ($ssl_ipsandports !== '' ? true : false),
                         'label' => $lng['admin']['domain_hsts_preload']['title'],
                         'desc' => $lng['admin']['domain_hsts_preload']['description'],
                         'type' => 'checkbox',
                         'values' => array(
                             array(
                                 'label' => $lng['panel']['yes'],
-                                'value' => '1'
-                            )
+                                'value' => '1',
+                            ),
                         ),
-                        'value' => array()
+                        'value' => array(),
                     ),
                     'ocsp_stapling' => array(
-                        'visible' => ($ssl_ipsandports != '' ? true : false) &&
-                                Settings::Get('system.webserver') != 'lighttpd',
+                        'visible' => ($ssl_ipsandports !== '' ? true : false) &&
+                                Settings::Get('system.webserver') !== 'lighttpd',
                         'label' => $lng['admin']['domain_ocsp_stapling']['title'],
                         'desc' => $lng['admin']['domain_ocsp_stapling']['description'] .
-                                (Settings::Get('system.webserver') == 'nginx' ?
+                                (Settings::Get('system.webserver') === 'nginx' ?
                                 $lng['admin']['domain_ocsp_stapling']['nginx_version_warning'] :
-                                ""),
+                                ''),
                         'type' => 'checkbox',
                         'values' => array(
                             array(
                                 'label' => $lng['panel']['yes'],
-                                'value' => '1'
-                            )
+                                'value' => '1',
+                            ),
                         ),
-                        'value' => array()
+                        'value' => array(),
                     ),
-                )
+                ),
             ),
             'section_c' => array(
                 'title' => $lng['admin']['phpserversettings'],
                 'image' => 'icons/domain_add.png',
-                'visible' => (($userinfo['change_serversettings'] == '1' || $userinfo['caneditphpsettings'] == '1') ? true : false),
+                'visible' => (($userinfo['change_serversettings'] === '1' || $userinfo['caneditphpsettings'] === '1') ? true : false),
                 'fields' => array(
                     'openbasedir' => array(
                         'label' => 'OpenBasedir',
@@ -270,12 +267,12 @@ return array(
                         'values' => array(
                             array(
                                 'label' => $lng['panel']['yes'],
-                                'value' => '1'
-                            )
+                                'value' => '1',
+                            ),
                         ),
                         'value' => array(
-                            '1'
-                        )
+                            '1',
+                        ),
                     ),
                     'phpenabled' => array(
                         'label' => $lng['admin']['phpenabled'],
@@ -283,35 +280,35 @@ return array(
                         'values' => array(
                             array(
                                 'label' => $lng['panel']['yes'],
-                                'value' => '1'
-                            )
+                                'value' => '1',
+                            ),
                         ),
                         'value' => array(
-                            '1'
-                        )
+                            '1',
+                        ),
                     ),
                     'phpsettingid' => array(
-                        'visible' => (((int) Settings::Get('system.mod_fcgid') == 1 || (int) Settings::Get('phpfpm.enabled') == 1) ? true : false),
+                        'visible' => (((int) Settings::Get('system.mod_fcgid') === 1 || (int) Settings::Get('phpfpm.enabled') === 1) ? true : false),
                         'label' => $lng['admin']['phpsettings']['title'],
                         'type' => 'select',
-                        'select_var' => $phpconfigs
+                        'select_var' => $phpconfigs,
                     ),
                     'mod_fcgid_starter' => array(
-                        'visible' => ((int) Settings::Get('system.mod_fcgid') == 1 ? true : false),
+                        'visible' => ((int) Settings::Get('system.mod_fcgid') === 1 ? true : false),
                         'label' => $lng['admin']['mod_fcgid_starter']['title'],
-                        'type' => 'text'
+                        'type' => 'text',
                     ),
                     'mod_fcgid_maxrequests' => array(
-                        'visible' => ((int) Settings::Get('system.mod_fcgid') == 1 ? true : false),
+                        'visible' => ((int) Settings::Get('system.mod_fcgid') === 1 ? true : false),
                         'label' => $lng['admin']['mod_fcgid_maxrequests']['title'],
-                        'type' => 'text'
-                    )
-                )
+                        'type' => 'text',
+                    ),
+                ),
             ),
             'section_d' => array(
                 'title' => $lng['admin']['nameserversettings'],
                 'image' => 'icons/domain_add.png',
-                'visible' => (Settings::Get('system.bind_enable') == '1' && $userinfo['change_serversettings'] == '1' ? true : false),
+                'visible' => (Settings::Get('system.bind_enable') === '1' && $userinfo['change_serversettings'] === '1' ? true : false),
                 'fields' => array(
                     'isbinddomain' => array(
                         'label' => 'Nameserver',
@@ -319,19 +316,19 @@ return array(
                         'values' => array(
                             array(
                                 'label' => $lng['panel']['yes'],
-                                'value' => '1'
-                            )
+                                'value' => '1',
+                            ),
                         ),
                         'value' => array(
-                            '1'
-                        )
+                            '1',
+                        ),
                     ),
                     'zonefile' => array(
                         'label' => 'Zonefile',
                         'desc' => $lng['admin']['bindzonewarning'],
-                        'type' => 'text'
-                    )
-                )
+                        'type' => 'text',
+                    ),
+                ),
             ),
             'section_e' => array(
                 'title' => $lng['admin']['mailserversettings'],
@@ -343,12 +340,12 @@ return array(
                         'values' => array(
                             array(
                                 'label' => $lng['panel']['yes'],
-                                'value' => '1'
-                            )
+                                'value' => '1',
+                            ),
                         ),
                         'value' => array(
-                            '1'
-                        )
+                            '1',
+                        ),
                     ),
                     'email_only' => array(
                         'label' => $lng['admin']['email_only'],
@@ -356,32 +353,32 @@ return array(
                         'values' => array(
                             array(
                                 'label' => $lng['panel']['yes'],
-                                'value' => '1'
-                            )
+                                'value' => '1',
+                            ),
                         ),
-                        'value' => array()
+                        'value' => array(),
                     ),
                     'subcanemaildomain' => array(
                         'label' => $lng['admin']['subdomainforemail'],
                         'type' => 'select',
-                        'select_var' => $subcanemaildomain
+                        'select_var' => $subcanemaildomain,
                     ),
                     'dkim' => array(
-                        'visible' => (Settings::Get('dkim.use_dkim') == '1' ? true : false),
+                        'visible' => (Settings::Get('dkim.use_dkim') === '1' ? true : false),
                         'label' => 'DomainKeys',
                         'type' => 'checkbox',
                         'values' => array(
                             array(
                                 'label' => $lng['panel']['yes'],
-                                'value' => '1'
-                            )
+                                'value' => '1',
+                            ),
                         ),
                         'value' => array(
-                            '1'
-                        )
-                    )
-                )
-            )
-        )
-    )
+                            '1',
+                        ),
+                    ),
+                ),
+            ),
+        ),
+    ),
 );

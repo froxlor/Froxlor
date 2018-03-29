@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,8 +12,9 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $name
+ * @param mixed $mailaddress
  */
 
 /**
@@ -25,9 +25,9 @@
  * @return string A valid header-entry
  * @author Florian Aders <eleras@syscp.org>
  */
-
 function buildValidMailFrom($name, $mailaddress)
 {
     $mailfrom = str_replace(array("\r", "\n"), '', $name) . ' <' . str_replace(array("\r", "\n"), '', $mailaddress) . '>';
+
     return $mailfrom;
 }

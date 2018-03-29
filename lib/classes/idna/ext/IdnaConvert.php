@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 // {{{ license
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 foldmethod=marker: */
@@ -95,7 +94,7 @@ class IdnaConvert
 
     public function getClassVersion()
     {
-        return self::Version.'-'.self::SubVersion;
+        return self::Version . '-' . self::SubVersion;
     }
 
     /**
@@ -123,7 +122,7 @@ class IdnaConvert
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isStrictMode()
     {
@@ -131,7 +130,7 @@ class IdnaConvert
     }
 
     /**
-     * @param boolean $strictMode
+     * @param bool $strictMode
      */
     public function setStrictMode($strictMode)
     {
@@ -151,11 +150,11 @@ class IdnaConvert
      */
     public function setIdnVersion($idnVersion)
     {
-        if (in_array($idnVersion, ['2003', '2008'])) {
-            if (is_null($this->NamePrepData) || $idnVersion != $this->idnVersion) {
+        if (in_array($idnVersion, ['2003', '2008'], true)) {
+            if (null === $this->NamePrepData || $idnVersion !== $this->idnVersion) {
                 $this->NamePrepData = null; // Ought to destroy the object's reference
                 // Re-instantiate with different data set
-                $this->NamePrepData = ($idnVersion == 2003)
+                $this->NamePrepData = ($idnVersion === 2003)
                         ? new NamePrepData2003()
                         : new NamePrepData();
             }
@@ -170,6 +169,7 @@ class IdnaConvert
      * Decode a given ACE domain name
      * @param string $input  Domain name (ACE string)
      * [@param string $one_time_encoding  Desired output encoding]
+     * @param null|mixed $one_time_encoding
      * @return string  Decoded Domain name (UTF-8 or UCS-4)
      */
     public function decode($input, $one_time_encoding = null)
@@ -230,12 +230,12 @@ class IdnaConvert
                     }
                 }
                 $parsed['host'] = join('.', $arr);
-                $return = (empty($parsed['scheme']) ? '' : $parsed['scheme'] . (strtolower($parsed['scheme']) == 'mailto' ? ':' : '://')).
-                        (empty($parsed['user']) ? '' : $parsed['user'] . (empty($parsed['pass']) ? '' : ':' . $parsed['pass']) . '@').
-                        $parsed['host'].
-                        (empty($parsed['port']) ? '' : ':' . $parsed['port']).
-                        (empty($parsed['path']) ? '' : $parsed['path']).
-                        (empty($parsed['query']) ? '' : '?' . $parsed['query']).
+                $return = (empty($parsed['scheme']) ? '' : $parsed['scheme'] . (strtolower($parsed['scheme']) === 'mailto' ? ':' : '://')) .
+                        (empty($parsed['user']) ? '' : $parsed['user'] . (empty($parsed['pass']) ? '' : ':' . $parsed['pass']) . '@') .
+                        $parsed['host'] .
+                        (empty($parsed['port']) ? '' : ':' . $parsed['port']) .
+                        (empty($parsed['path']) ? '' : $parsed['path']) .
+                        (empty($parsed['query']) ? '' : '?' . $parsed['query']) .
                         (empty($parsed['fragment']) ? '' : '#' . $parsed['fragment']);
             } else { // parse_url seems to have failed, try without it
                 $arr = explode('.', $input);
@@ -272,6 +272,7 @@ class IdnaConvert
      * Encode a given UTF-8 domain name
      * @param string $decoded  Domain name (UTF-8 or UCS-4)
      * [@param boolean  $one_time_encoding  Desired input encoding, see {@link set_parameter}]
+     * @param mixed $one_time_encoding
      * @return string   Encoded Domain name (ACE string)
      */
     public function encode($decoded, $one_time_encoding = false)
@@ -321,7 +322,7 @@ class IdnaConvert
                     // Neither email addresses nor URLs allowed in strict mode
                     if ($this->strictMode) {
                         throw new \InvalidArgumentException('Neither email addresses nor URLs are allowed in strict mode.');
-                    } else {
+                    }
                         // Skip first char
                         if ($k) {
                             $encoded = $punyCode->encode(array_slice($decoded, $last_begin, (($k) - $last_begin)));
@@ -333,7 +334,7 @@ class IdnaConvert
                             $output .= chr($decoded[$k]);
                         }
                         $last_begin = $k + 1;
-                    }
+                    
             }
         }
         // Catch the rest of the string
@@ -345,14 +346,14 @@ class IdnaConvert
             } else {
                 $output .= $this->UnicodeTranscoder->convert(array_slice($decoded, $last_begin, (($inp_len) - $last_begin)), 'ucs4array', 'utf8');
             }
+
             return $output;
-        } else {
-            if (false !== ($output = $punyCode->encode($decoded))) {
-                return $output;
-            } else {
-                return $this->UnicodeTranscoder->convert($decoded, 'ucs4array', 'utf8');
-            }
         }
+        if (false !== ($output = $punyCode->encode($decoded))) {
+            return $output;
+        }
+
+        return $this->UnicodeTranscoder->convert($decoded, 'ucs4array', 'utf8');
     }
 
     /**
@@ -376,13 +377,14 @@ class IdnaConvert
             }
         }
         $parsed['host'] = join('.', $arr);
-        $return = (empty($parsed['scheme']) ? '' : $parsed['scheme'] . (strtolower($parsed['scheme']) == 'mailto' ? ':' : '://')).
-                (empty($parsed['user']) ? '' : $parsed['user'] . (empty($parsed['pass']) ? '' : ':' . $parsed['pass']) . '@').
-                $parsed['host'].
-                (empty($parsed['port']) ? '' : ':' . $parsed['port']).
-                (empty($parsed['path']) ? '' : $parsed['path']).
-                (empty($parsed['query']) ? '' : '?' . $parsed['query']).
+        $return = (empty($parsed['scheme']) ? '' : $parsed['scheme'] . (strtolower($parsed['scheme']) === 'mailto' ? ':' : '://')) .
+                (empty($parsed['user']) ? '' : $parsed['user'] . (empty($parsed['pass']) ? '' : ':' . $parsed['pass']) . '@') .
+                $parsed['host'] .
+                (empty($parsed['port']) ? '' : ':' . $parsed['port']) .
+                (empty($parsed['path']) ? '' : $parsed['path']) .
+                (empty($parsed['query']) ? '' : '?' . $parsed['query']) .
                 (empty($parsed['fragment']) ? '' : '#' . $parsed['fragment']);
+
         return $return;
     }
 
@@ -399,6 +401,7 @@ class IdnaConvert
         if (!isset($instances[$this->idnVersion])) {
             $instances[$this->idnVersion] = new Punycode($this->NamePrepData, $this->UnicodeTranscoder);
         }
+
         return $instances[$this->idnVersion];
     }
 }

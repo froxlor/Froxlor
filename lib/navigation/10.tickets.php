@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,8 +12,6 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Navigation
- *
  */
 
 return array(
@@ -22,7 +19,7 @@ return array(
         'tickets' => array(
             'url' => 'customer_tickets.php',
             'label' => $lng['menue']['ticket']['ticket'],
-            'show_element' => (Settings::Get('ticket.enabled') == true),
+            'show_element' => (Settings::Get('ticket.enabled') === true),
             'elements' => array(
                 array(
                     'url' => 'customer_tickets.php?page=tickets',
@@ -34,7 +31,7 @@ return array(
     'admin' => array(
         'tickets' => array(
             'label' => $lng['admin']['ticketsystem'],
-            'show_element' => (Settings::Get('ticket.enabled') == true),
+            'show_element' => (Settings::Get('ticket.enabled') === true),
             'elements' => array(
                 array(
                     'url' => 'admin_tickets.php?page=tickets',

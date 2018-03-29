@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,10 +12,11 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param & $form
+ * @param & $input
+ * @param mixed $url_params
  */
-
 function processForm(&$form, &$input, $url_params = array())
 {
     if (validateFormDefinition($form)) {
@@ -40,7 +40,7 @@ function processForm(&$form, &$input, $url_params = array())
                 foreach ($groupdetails['fields'] as $fieldname => $fielddetails) {
                     $newfieldvalue = getFormFieldData($fieldname, $fielddetails, $input);
 
-                    if ($newfieldvalue != $fielddetails['value']) {
+                    if ($newfieldvalue !== $fielddetails['value']) {
                         if (($error = validateFormField($fieldname, $fielddetails, $newfieldvalue)) !== true) {
                             standard_error($error, $fieldname);
                         } else {
@@ -59,15 +59,15 @@ function processForm(&$form, &$input, $url_params = array())
                 foreach ($groupdetails['fields'] as $fieldname => $fielddetails) {
                     if (($plausibility_check = checkPlausibilityFormField($fieldname, $fielddetails, $submitted_fields[$fieldname], $submitted_fields)) !== false) {
                         if (is_array($plausibility_check) && isset($plausibility_check[0])) {
-                            if ($plausibility_check[0] == FORMFIELDS_PLAUSIBILITY_CHECK_OK) {
+                            if ($plausibility_check[0] === FORMFIELDS_PLAUSIBILITY_CHECK_OK) {
                                 // Nothing to do here, everything's okay
-                            } elseif ($plausibility_check[0] == FORMFIELDS_PLAUSIBILITY_CHECK_ERROR) {
+                            } elseif ($plausibility_check[0] === FORMFIELDS_PLAUSIBILITY_CHECK_ERROR) {
                                 unset($plausibility_check[0]);
                                 $error = $plausibility_check[1];
                                 unset($plausibility_check[1]);
                                 $targetname = implode(' ', $plausibility_check);
                                 standard_error($error, $targetname);
-                            } elseif ($plausibility_check[0] == FORMFIELDS_PLAUSIBILITY_CHECK_QUESTION) {
+                            } elseif ($plausibility_check[0] === FORMFIELDS_PLAUSIBILITY_CHECK_QUESTION) {
                                 unset($plausibility_check[0]);
                                 $question = $plausibility_check[1];
                                 unset($plausibility_check[1]);
@@ -118,7 +118,7 @@ function processFormEx(&$form, &$input, $url_params = array(), $part, $settings_
         $saved_fields = array();
 
         foreach ($form['groups'] as $groupname => $groupdetails) {
-            if (($settings_part && $part == $groupname)
+            if (($settings_part && $part === $groupname)
                 || $settings_all
                 || $only_enabledisable
             ) {
@@ -137,7 +137,7 @@ function processFormEx(&$form, &$input, $url_params = array(), $part, $settings_
         }
 
         foreach ($form['groups'] as $groupname => $groupdetails) {
-            if (($settings_part && $part == $groupname)
+            if (($settings_part && $part === $groupname)
                 || $settings_all
                 || $only_enabledisable
             ) {
@@ -148,7 +148,7 @@ function processFormEx(&$form, &$input, $url_params = array(), $part, $settings_
                             || ($only_enabledisable && isset($fielddetails['overview_option']))
                         ) {
                             $newfieldvalue = getFormFieldData($fieldname, $fielddetails, $input);
-                            if ($newfieldvalue != $fielddetails['value']) {
+                            if ($newfieldvalue !== $fielddetails['value']) {
                                 if (($error = validateFormField($fieldname, $fielddetails, $newfieldvalue)) !== true) {
                                     standard_error($error, $fieldname);
                                 } else {
@@ -164,7 +164,7 @@ function processFormEx(&$form, &$input, $url_params = array(), $part, $settings_
         }
 
         foreach ($form['groups'] as $groupname => $groupdetails) {
-            if (($settings_part && $part == $groupname)
+            if (($settings_part && $part === $groupname)
                 || $settings_all
                 || $only_enabledisable
             ) {
@@ -176,15 +176,15 @@ function processFormEx(&$form, &$input, $url_params = array(), $part, $settings_
                         ) {
                             if (($plausibility_check = checkPlausibilityFormField($fieldname, $fielddetails, $submitted_fields[$fieldname], $submitted_fields)) !== false) {
                                 if (is_array($plausibility_check) && isset($plausibility_check[0])) {
-                                    if ($plausibility_check[0] == FORMFIELDS_PLAUSIBILITY_CHECK_OK) {
+                                    if ($plausibility_check[0] === FORMFIELDS_PLAUSIBILITY_CHECK_OK) {
                                         // Nothing to do here, everything's okay
-                                    } elseif ($plausibility_check[0] == FORMFIELDS_PLAUSIBILITY_CHECK_ERROR) {
+                                    } elseif ($plausibility_check[0] === FORMFIELDS_PLAUSIBILITY_CHECK_ERROR) {
                                         unset($plausibility_check[0]);
                                         $error = $plausibility_check[1];
                                         unset($plausibility_check[1]);
                                         $targetname = implode(' ', $plausibility_check);
                                         standard_error($error, $targetname);
-                                    } elseif ($plausibility_check[0] == FORMFIELDS_PLAUSIBILITY_CHECK_QUESTION) {
+                                    } elseif ($plausibility_check[0] === FORMFIELDS_PLAUSIBILITY_CHECK_QUESTION) {
                                         unset($plausibility_check[0]);
                                         $question = $plausibility_check[1];
                                         unset($plausibility_check[1]);
@@ -210,7 +210,7 @@ function processFormEx(&$form, &$input, $url_params = array(), $part, $settings_
         }
 
         foreach ($form['groups'] as $groupname => $groupdetails) {
-            if (($settings_part && $part == $groupname)
+            if (($settings_part && $part === $groupname)
                 || $settings_all
                 || $only_enabledisable
             ) {

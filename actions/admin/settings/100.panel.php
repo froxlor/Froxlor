@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,8 +12,6 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Language
- *
  */
 
 return array(
@@ -56,7 +53,7 @@ return array(
                     'varname' => 'allow_theme_change_admin',
                     'type' => 'bool',
                     'default' => true,
-                    'save_method' => 'storeSettingField'
+                    'save_method' => 'storeSettingField',
                     ),
                 'panel_natsorting' => array(
                     'label' => $lng['serversettings']['natsorting'],
@@ -241,14 +238,14 @@ return array(
                         'domains'                     => $lng['menue']['domains']['domains'],
                         'ftp'                         => $lng['menue']['ftp']['ftp'],
                         'extras'                      => $lng['menue']['extras']['extras'],
-                        'extras.directoryprotection'  => $lng['menue']['extras']['extras']." / ".$lng['menue']['extras']['directoryprotection'],
-                        'extras.pathoptions'          => $lng['menue']['extras']['extras']." / ".$lng['menue']['extras']['pathoptions'],
-                        'extras.logger'               => $lng['menue']['extras']['extras']." / ".$lng['menue']['logger']['logger'],
-                        'extras.backup'               => $lng['menue']['extras']['extras']." / ".$lng['menue']['extras']['backup'],
+                        'extras.directoryprotection'  => $lng['menue']['extras']['extras'] . ' / ' . $lng['menue']['extras']['directoryprotection'],
+                        'extras.pathoptions'          => $lng['menue']['extras']['extras'] . ' / ' . $lng['menue']['extras']['pathoptions'],
+                        'extras.logger'               => $lng['menue']['extras']['extras'] . ' / ' . $lng['menue']['logger']['logger'],
+                        'extras.backup'               => $lng['menue']['extras']['extras'] . ' / ' . $lng['menue']['extras']['backup'],
                         'traffic'                     => $lng['menue']['traffic']['traffic'],
-                        'traffic.http'                => $lng['menue']['traffic']['traffic']." / HTTP",
-                        'traffic.ftp'                 => $lng['menue']['traffic']['traffic']." / FTP",
-                        'traffic.mail'                => $lng['menue']['traffic']['traffic']." / Mail",
+                        'traffic.http'                => $lng['menue']['traffic']['traffic'] . ' / HTTP',
+                        'traffic.ftp'                 => $lng['menue']['traffic']['traffic'] . ' / FTP',
+                        'traffic.mail'                => $lng['menue']['traffic']['traffic'] . ' / Mail',
                     ),
                     'save_method' => 'storeSettingField',
                     ),
