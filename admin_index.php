@@ -85,35 +85,42 @@ if ($page == 'overview') {
 	if ((isset($_GET['lookfornewversion']) && $_GET['lookfornewversion'] == 'yes')
 		|| (isset($lookfornewversion) && $lookfornewversion == 'yes')
 	) {
-		$update_check_uri = 'http://version.froxlor.org/Froxlor/legacy/' . $version;
-		$latestversion = HttpClient::urlGet($update_check_uri);
-		$latestversion = explode('|', $latestversion);
+		if (function_exists('curl_version')) {
+			$update_check_uri = 'http://version.froxlor.org/Froxlor/legacy/' . $version;
+			$latestversion = HttpClient::urlGet($update_check_uri);
+			$latestversion = explode('|', $latestversion);
 
-		if (is_array($latestversion)
-			&& count($latestversion) >= 1
-		) {
-			$_version = $latestversion[0];
-			$_message = isset($latestversion[1]) ? $latestversion[1] : '';
-			$_link = isset($latestversion[2]) ? $latestversion[2] : htmlspecialchars($filename . '?s=' . urlencode($s) . '&page=' . urlencode($page) . '&lookfornewversion=yes');
+			if (is_array($latestversion)
+				&& count($latestversion) >= 1
+			) {
+				$_version = $latestversion[0];
+				$_message = isset($latestversion[1]) ? $latestversion[1] : '';
+				$_link = isset($latestversion[2]) ? $latestversion[2] : htmlspecialchars($filename . '?s=' . urlencode($s) . '&page=' . urlencode($page) . '&lookfornewversion=yes');
 
-			// add the branding so debian guys are not gettings confused
-			// about their version-number
-			$lookfornewversion_lable = $_version.$branding;
-			$lookfornewversion_link = $_link;
-			$lookfornewversion_addinfo = $_message;
+				// add the branding so debian guys are not gettings confused
+				// about their version-number
+				$lookfornewversion_lable = $_version.$branding;
+				$lookfornewversion_link = $_link;
+				$lookfornewversion_addinfo = $_message;
 
-			// not numeric -> error-message
-			if (!preg_match('/^((\d+\\.)(\d+\\.)(\d+\\.)?(\d+)?(\-(svn|dev|rc)(\d+))?)$/', $_version)) {
-				// check for customized version to not output
-				// "There is a newer version of froxlor" besides the error-message
-				$isnewerversion = 2;
-			} elseif (version_compare2($version, $_version) == -1) {
-				$isnewerversion = 1;
+				// not numeric -> error-message
+				if (!preg_match('/^((\d+\\.)(\d+\\.)(\d+\\.)?(\d+)?(\-(svn|dev|rc)(\d+))?)$/', $_version)) {
+					// check for customized version to not output
+					// "There is a newer version of froxlor" besides the error-message
+					$isnewerversion = 2;
+				} elseif (version_compare2($version, $_version) == -1) {
+					$isnewerversion = 1;
+				} else {
+					$isnewerversion = 0;
+				}
 			} else {
-				$isnewerversion = 0;
+				redirectTo($update_check_uri.'/pretty', NULL, false);
 			}
 		} else {
-			redirectTo($update_check_uri.'/pretty', NULL, false);
+			$lookfornewversion_lable = "Version-check not available due to missing php-curl extension";
+			$lookfornewversion_link = htmlspecialchars($filename . '?s=' . urlencode($s) . '&page=' . urlencode($page) . '&lookfornewversion=yes');
+			$lookfornewversion_addinfo = '';
+			$isnewerversion = 0;
 		}
 	} else {
 		$lookfornewversion_lable = $lng['admin']['lookfornewversion']['clickhere'];
