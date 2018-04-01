@@ -431,7 +431,7 @@ class Customers extends ApiCommand implements ResourceEntity
 					// Using filesystem - quota, insert a task which cleans the filesystem - quota
 					inserttask('10');
 					
-					// Add htpasswd for the webalizer stats
+					// Add htpasswd for the stats-pages
 					if (CRYPT_STD_DES == 1) {
 						$saltfordescrypt = substr(md5(uniqid(microtime(), 1)), 4, 2);
 						$htpasswdPassword = crypt($password, $saltfordescrypt);
@@ -452,13 +452,12 @@ class Customers extends ApiCommand implements ResourceEntity
 						'passwd' => $htpasswdPassword
 					);
 					
+					$stats_folder = 'webalizer';
 					if (Settings::Get('system.awstats_enabled') == '1') {
-						$ins_data['path'] = makeCorrectDir($documentroot . '/awstats/');
-						$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] automatically added awstats htpasswd for user '" . $loginname . "'");
-					} else {
-						$ins_data['path'] = makeCorrectDir($documentroot . '/webalizer/');
-						$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] automatically added webalizer htpasswd for user '" . $loginname . "'");
+						$stats_folder = 'awstats';
 					}
+					$ins_data['path'] = makeCorrectDir($documentroot . '/' . $stats_folder . '/');
+					$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] automatically added ".$stats_folder." htpasswd for user '" . $loginname . "'");
 					Database::pexecute($ins_stmt, $ins_data, true, true);
 					
 					inserttask('1');
