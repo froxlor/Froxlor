@@ -270,7 +270,10 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 			
 			inserttask('1');
 			$this->logger()->logAction(ADM_ACTION, LOG_INFO, "[API] fpm-daemon with description '" . $description . "' has been updated by '" . $this->getUserDetail('loginname') . "'");
-			return $this->response(200, "successfull", $upd_data);
+			$result = $this->apiCall('FpmDaemons.get', array(
+				'id' => $id
+			));
+			return $this->response(200, "successfull", $result);
 		}
 		throw new Exception("Not allowed to execute given command.", 403);
 	}

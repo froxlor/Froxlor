@@ -117,29 +117,33 @@ abstract class ApiParameter
 	 * returns "module::function()" for better error-messages (missing parameter etc.)
 	 * makes debugging a whole lot more comfortable
 	 *
+	 * @param int $level
+	 *        	depth of backtrace, default 2
+	 *        	
 	 * @return string
 	 */
-	private function getModFunctionString()
+	private function getModFunctionString($level = 1, $max_level = 5, $trace = null)
 	{
+		// which class called us
 		$_class = get_called_class();
-		$level = 2;
-		if (version_compare(PHP_VERSION, "5.4.0", "<")) {
-			$trace = debug_backtrace();
-		} else {
-			$trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-		}
-		while (true) {
-			$class = $trace[$level]['class'];
-			$func = $trace[$level]['function'];
-			if ($class != $_class) {
-				$level ++;
-				if ($level > 5) {
-					break;
-				}
-				continue;
+		if (empty($trace)) {
+			// check php version for backtrace flags
+			$_traceopts = false;
+			if (version_compare(PHP_VERSION, "5.3.6", ">")) {
+				$_traceopts = DEBUG_BACKTRACE_IGNORE_ARGS;
 			}
-			return $class . ':' . $func;
+			// get backtrace
+			$trace = debug_backtrace($_traceopts);
 		}
+		// check class and function
+		$class = $trace[$level]['class'];
+		$func = $trace[$level]['function'];
+		// is it the one we are looking for?
+		if ($class != $_class && $level <= $max_level) {
+			// check one level deeper
+			return $this->getModFunctionString(++ $level, $max_level, $trace);
+		}
+		return $class . ':' . $func;
 	}
 
 	/**
