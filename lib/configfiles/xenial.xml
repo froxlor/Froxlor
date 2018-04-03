@@ -4631,7 +4631,7 @@ aliases:     files
 						<command><![CDATA[useradd -s /bin/false -g {{settings.system.mod_fcgid_httpgroup}} {{settings.system.mod_fcgid_httpuser}}]]></command>
 						<command><![CDATA[mkdir -p {{settings.system.mod_fcgid_configdir}}]]></command>
 						<command><![CDATA[mkdir -p {{settings.system.mod_fcgid_tmpdir}}]]></command>
-						<command><![CDATA[a2dismod php]]></command>
+						<command><![CDATA[a2dismod php7.0]]></command>
 					</commands>
 					<!-- instead of just restarting apache, we let the cronjob do all the
 						dirty work -->
