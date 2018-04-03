@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2013 the Froxlor Team (see authors).
@@ -12,20 +11,22 @@
  * @author     Michael Kaufmann <d00p@froxlor.org>
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    AJAX
  *
+ * @param mixed $fieldname
+ * @param mixed $fielddata
+ * @param mixed $newfieldvalue
+ * @param mixed $allnewfieldvalues
  */
+function checkPhpInterfaceSetting($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues)
+{
+    $returnvalue = array(FORMFIELDS_PLAUSIBILITY_CHECK_OK);
 
-function checkPhpInterfaceSetting($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues) {
+    if ((int) Settings::Get('system.mod_fcgid') === 1) {
+        // fcgid only works for apache and lighttpd
+        if (strtolower($newfieldvalue) !== 'apache2' && strtolower($newfieldvalue) !== 'lighttpd') {
+            $returnvalue = array(FORMFIELDS_PLAUSIBILITY_CHECK_ERROR, 'fcgidstillenableddeadlock');
+        }
+    }
 
-	$returnvalue = array(FORMFIELDS_PLAUSIBILITY_CHECK_OK);
-
-	if ((int)Settings::Get('system.mod_fcgid') == 1) {
-		// fcgid only works for apache and lighttpd
-		if (strtolower($newfieldvalue) != 'apache2' && strtolower($newfieldvalue) != 'lighttpd') {
-			$returnvalue = array(FORMFIELDS_PLAUSIBILITY_CHECK_ERROR, 'fcgidstillenableddeadlock');
-		}
-	}
-
-	return $returnvalue;
+    return $returnvalue;
 }

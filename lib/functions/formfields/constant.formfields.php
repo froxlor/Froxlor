@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,13 +12,13 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
- *
  */
-
-if(!defined('FORMFIELDS_PLAUSIBILITY_CHECK_OK'))
-	define('FORMFIELDS_PLAUSIBILITY_CHECK_OK', 0);
-if(!defined('FORMFIELDS_PLAUSIBILITY_CHECK_ERROR'))
-	define('FORMFIELDS_PLAUSIBILITY_CHECK_ERROR', 1);
-if(!defined('FORMFIELDS_PLAUSIBILITY_CHECK_QUESTION'))
-	define('FORMFIELDS_PLAUSIBILITY_CHECK_QUESTION', 2);
+if (!defined('FORMFIELDS_PLAUSIBILITY_CHECK_OK')) {
+    define('FORMFIELDS_PLAUSIBILITY_CHECK_OK', 0);
+}
+if (!defined('FORMFIELDS_PLAUSIBILITY_CHECK_ERROR')) {
+    define('FORMFIELDS_PLAUSIBILITY_CHECK_ERROR', 1);
+}
+if (!defined('FORMFIELDS_PLAUSIBILITY_CHECK_QUESTION')) {
+    define('FORMFIELDS_PLAUSIBILITY_CHECK_QUESTION', 2);
+}

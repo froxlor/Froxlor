@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2014 the Froxlor Team (see authors).
@@ -11,23 +10,25 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2014-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $exact
  */
 
 /**
  * check if the system is FreeBSD (if exact)
  * or BSD-based (NetBSD, OpenBSD, etc. if exact = false [default])
  *
- * @param boolean $exact whether to check explicitly for FreeBSD or *BSD
+ * @param bool $exact whether to check explicitly for FreeBSD or *BSD
  *
- * @return boolean
+ * @return bool
  */
-function isFreeBSD($exact = false) {
-	if (($exact && PHP_OS == 'FreeBSD')
-			|| (!$exact && stristr(PHP_OS, 'BSD'))
-	) {
-		return true;
-	}
-	return false;
+function isFreeBSD($exact = false)
+{
+    if (($exact && PHP_OS === 'FreeBSD')
+            || (!$exact && stristr(PHP_OS, 'BSD'))
+    ) {
+        return true;
+    }
+
+    return false;
 }

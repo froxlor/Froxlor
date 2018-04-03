@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,20 +12,20 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $customerid
+ * @param mixed $varname
  */
+function getCustomerDetail($customerid, $varname)
+{
+    $customer_stmt = Database::prepare('
+		SELECT `' . $varname . '` FROM `' . TABLE_PANEL_CUSTOMERS . '` WHERE `customerid` = :customerid
+	');
+    $customer = Database::pexecute_first($customer_stmt, array('customerid' => $customerid));
 
-function getCustomerDetail($customerid, $varname) {
+    if (isset($customer[$varname])) {
+        return $customer[$varname];
+    }
 
-	$customer_stmt = Database::prepare("
-		SELECT `" . $varname . "` FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `customerid` = :customerid
-	");
-	$customer = Database::pexecute_first($customer_stmt, array('customerid' => $customerid));
-
-	if (isset($customer[$varname])) {
-		return $customer[$varname];
-	} else {
-		return false;
-	}
+    return false;
 }

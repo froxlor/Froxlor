@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -11,32 +10,33 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $fieldname
+ * @param mixed $fielddata
+ * @param mixed $newfieldvalue
+ * @param mixed $allnewfieldvalues
  */
+function setCycleOfCronjob($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues)
+{
+    switch ($newfieldvalue) {
+        case 0:
+            $interval = 'DAY';
+            break;
+        case 1:
+            $interval = 'WEEK';
+            break;
+        case 2:
+            $interval = 'MONTH';
+            break;
+        case 3:
+            $interval = 'YEAR';
+            break;
+        default:
+            $interval = 'MONTH';
+            break;
+    }
+    
+    Database::query("UPDATE `cronjobs_run` SET `interval` = '1 " . $interval . "' WHERE `cronfile` = 'cron_used_tickets_reset.php';");
 
-function setCycleOfCronjob($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues) {
-
-	switch ($newfieldvalue)
-	{
-		case 0:
-			$interval = 'DAY';
-			break;
-		case 1:
-			$interval = 'WEEK';
-			break;
-		case 2:
-			$interval = 'MONTH';
-			break;
-		case 3:
-			$interval = 'YEAR';
-			break;
-		default:
-			$interval = 'MONTH';
-			break;
-	}
-	
-	Database::query("UPDATE `cronjobs_run` SET `interval` = '1 ".$interval."' WHERE `cronfile` = 'cron_used_tickets_reset.php';");
-
-	return array(FORMFIELDS_PLAUSIBILITY_CHECK_OK);
+    return array(FORMFIELDS_PLAUSIBILITY_CHECK_OK);
 }

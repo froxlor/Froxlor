@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,24 +12,21 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $fieldname
+ * @param mixed $fielddata
+ * @param mixed $newfieldvalue
  */
-
 function saveFormField($fieldname, $fielddata, $newfieldvalue)
 {
-	$returnvalue = '';
-	if(is_array($fielddata) && isset($fielddata['save_method']) && $fielddata['save_method'] != '' && function_exists($fielddata['save_method']))
-	{
-		$returnvalue = call_user_func($fielddata['save_method'], $fieldname, $fielddata, $newfieldvalue);
-	}
-	elseif(is_array($fielddata) && !isset($fielddata['save_method']))
-	{
-		$returnvalue = array();
-	}
-	else
-	{
-		$returnvalue = false;
-	}
-	return $returnvalue;
+    $returnvalue = '';
+    if (is_array($fielddata) && isset($fielddata['save_method']) && $fielddata['save_method'] !== '' && function_exists($fielddata['save_method'])) {
+        $returnvalue = call_user_func($fielddata['save_method'], $fieldname, $fielddata, $newfieldvalue);
+    } elseif (is_array($fielddata) && !isset($fielddata['save_method'])) {
+        $returnvalue = array();
+    } else {
+        $returnvalue = false;
+    }
+
+    return $returnvalue;
 }

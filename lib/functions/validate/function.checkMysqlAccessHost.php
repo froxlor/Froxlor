@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,24 +12,25 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $fieldname
+ * @param mixed $fielddata
+ * @param mixed $newfieldvalue
+ * @param mixed $allnewfieldvalues
  */
+function checkMysqlAccessHost($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues)
+{
+    $mysql_access_host_array = array_map('trim', explode(',', $newfieldvalue));
 
-function checkMysqlAccessHost($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues) {
-
-	$mysql_access_host_array = array_map('trim', explode(',', $newfieldvalue));
-
-	foreach ($mysql_access_host_array as $host_entry) {
-
-		if (validate_ip2($host_entry, true, 'invalidip', true, true) == false
-		   && validateDomain($host_entry) == false
-		   && validateLocalHostname($host_entry) == false
-		   && $host_entry != '%'
-		) {
-			return array(FORMFIELDS_PLAUSIBILITY_CHECK_ERROR, 'invalidmysqlhost', $host_entry);
-		}
-	}
-	
-	return array(FORMFIELDS_PLAUSIBILITY_CHECK_OK);
+    foreach ($mysql_access_host_array as $host_entry) {
+        if (validate_ip2($host_entry, true, 'invalidip', true, true) === false
+           && validateDomain($host_entry) === false
+           && validateLocalHostname($host_entry) === false
+           && $host_entry !== '%'
+        ) {
+            return array(FORMFIELDS_PLAUSIBILITY_CHECK_ERROR, 'invalidmysqlhost', $host_entry);
+        }
+    }
+    
+    return array(FORMFIELDS_PLAUSIBILITY_CHECK_OK);
 }

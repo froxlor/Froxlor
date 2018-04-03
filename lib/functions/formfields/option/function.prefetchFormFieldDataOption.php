@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,18 +12,17 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $fieldname
+ * @param mixed $fielddata
  */
-
 function prefetchFormFieldDataOption($fieldname, $fielddata)
 {
-	$returnvalue = array();
-	
-	if((!isset($fielddata['option_options']) || !is_array($fielddata['option_options']) || empty($fielddata['option_options'])) && (isset($fielddata['option_options_method']) && function_exists($fielddata['option_options_method'])))
-	{
-		$returnvalue['options'] = call_user_func($fielddata['option_options_method']);
-	}
-	
-	return $returnvalue;
+    $returnvalue = array();
+    
+    if ((!isset($fielddata['option_options']) || !is_array($fielddata['option_options']) || empty($fielddata['option_options'])) && (isset($fielddata['option_options_method']) && function_exists($fielddata['option_options_method']))) {
+        $returnvalue['options'] = call_user_func($fielddata['option_options_method']);
+    }
+    
+    return $returnvalue;
 }

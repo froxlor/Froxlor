@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,8 +12,8 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $email
  */
 
 /**
@@ -26,9 +25,9 @@
  *
  * @changes Backported regex from SysCP 1.3 (lib/classes/Syscp/Handler/Validation.class.php)
  */
-
 function validateEmail($email)
 {
-	$email = strtolower($email);
-	return filter_var($email, FILTER_VALIDATE_EMAIL);
+    $email = strtolower($email);
+
+    return filter_var($email, FILTER_VALIDATE_EMAIL);
 }

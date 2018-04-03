@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,8 +12,8 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $filename
  */
 
 /**
@@ -26,26 +25,25 @@
  * @author Michael Russ <mr@edvruss.com>
  * @author Martin Burchert <eremit@adm1n.de>
  */
-
 function makeCorrectFile($filename)
 {
-	if (!isset($filename)
-		|| trim($filename) == ''
-	) {
-		$error = 'Given filename for function '.__FUNCTION__.' is empty.'."\n";
-		$error.= 'This is very dangerous and should not happen.'."\n";
-		$error.= 'Please inform the Froxlor team about this issue so they can fix it.';
-		echo $error;
-		// so we can see WHERE this happened
-		debug_print_backtrace();
-		die();
-	}
+    if (!isset($filename)
+        || trim($filename) === ''
+    ) {
+        $error = 'Given filename for function ' . __FUNCTION__ . ' is empty.' . "\n";
+        $error.= 'This is very dangerous and should not happen.' . "\n";
+        $error.= 'Please inform the Froxlor team about this issue so they can fix it.';
+        echo $error;
+        // so we can see WHERE this happened
+        debug_print_backtrace();
+        die();
+    }
 
-	if(substr($filename, 0, 1) != '/')
-	{
-		$filename = '/' . $filename;
-	}
+    if (substr($filename, 0, 1) !== '/') {
+        $filename = '/' . $filename;
+    }
 
-	$filename = makeSecurePath($filename);
-	return $filename;
+    $filename = makeSecurePath($filename);
+
+    return $filename;
 }

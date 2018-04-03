@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -12,33 +11,34 @@
  * @author     Michael Kaufmann <mkaufmann@nutime.de>
  * @author     Daniel Reichelt <hacking@nachtgeist.net> (2016-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $type
  */
+function getLogLevelDesc($type)
+{
+    switch ($type) {
+        case LOG_INFO:
+            $_type = 'information';
+            break;
+        case LOG_NOTICE:
+            $_type = 'notice';
+            break;
+        case LOG_WARNING:
+            $_type = 'warning';
+            break;
+        case LOG_ERR:
+            $_type = 'error';
+            break;
+        case LOG_CRIT:
+            $_type = 'critical';
+            break;
+        case LOG_DEBUG:
+            $_type = 'debug';
+            break;
+        default:
+            $_type = 'unknown';
+            break;
+    }
 
-function getLogLevelDesc($type) {
-	switch($type) {
-		case LOG_INFO:
-			$_type = 'information';
-			break;
-		case LOG_NOTICE:
-			$_type = 'notice';
-			break;
-		case LOG_WARNING:
-			$_type = 'warning';
-			break;
-		case LOG_ERR:
-			$_type = 'error';
-			break;
-		case LOG_CRIT:
-			$_type = 'critical';
-			break;
-		case LOG_DEBUG:
-			$_type = 'debug';
-			break;
-		default:
-			$_type = 'unknown';
-			break;
-	}
-	return $_type;
+    return $_type;
 }

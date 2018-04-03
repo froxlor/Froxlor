@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -11,36 +10,38 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $fieldname
+ * @param mixed $fielddata
+ * @param mixed $newfieldvalue
+ * @param mixed $allnewfieldvalues
  */
+function checkPathConflicts($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues)
+{
+    if ((int) Settings::Get('system.mod_fcgid') === 1) {
+        // fcgid-configdir has changed -> check against customer-doc-prefix
+        if ($fieldname === 'system_mod_fcgid_configdir') {
+            $newdir = makeCorrectDir($newfieldvalue);
+            $cdir = makeCorrectDir(Settings::Get('system.documentroot_prefix'));
+        }
+        // customer-doc-prefix has changed -> check against fcgid-configdir
+        elseif ($fieldname === 'system_documentroot_prefix') {
+            $newdir = makeCorrectDir($newfieldvalue);
+            $cdir = makeCorrectDir(Settings::Get('system.mod_fcgid_configdir'));
+        }
 
-function checkPathConflicts($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues) {
+        // neither dir can be within the other nor can they be equal
+        if (substr($newdir, 0, strlen($cdir)) === $cdir
+                || substr($cdir, 0, strlen($newdir)) === $newdir
+                || $newdir === $cdir
+        ) {
+            $returnvalue = array(FORMFIELDS_PLAUSIBILITY_CHECK_ERROR, 'fcgidpathcannotbeincustomerdoc');
+        } else {
+            $returnvalue = array(FORMFIELDS_PLAUSIBILITY_CHECK_OK);
+        }
+    } else {
+        $returnvalue = array(FORMFIELDS_PLAUSIBILITY_CHECK_OK);
+    }
 
-	if((int)Settings::Get('system.mod_fcgid') == 1) {
-		// fcgid-configdir has changed -> check against customer-doc-prefix
-		if ($fieldname == "system_mod_fcgid_configdir") {
-			$newdir = makeCorrectDir($newfieldvalue);
-			$cdir = makeCorrectDir(Settings::Get('system.documentroot_prefix'));
-		}
-		// customer-doc-prefix has changed -> check against fcgid-configdir
-		elseif ($fieldname == "system_documentroot_prefix") {
-			$newdir = makeCorrectDir($newfieldvalue);
-			$cdir = makeCorrectDir(Settings::Get('system.mod_fcgid_configdir'));
-		}
-
-		// neither dir can be within the other nor can they be equal
-		if (substr($newdir, 0, strlen($cdir)) == $cdir
-				|| substr($cdir, 0, strlen($newdir)) == $newdir
-				|| $newdir == $cdir
-		) {
-			$returnvalue = array(FORMFIELDS_PLAUSIBILITY_CHECK_ERROR, 'fcgidpathcannotbeincustomerdoc');
-		} else {
-			$returnvalue = array(FORMFIELDS_PLAUSIBILITY_CHECK_OK);
-		}
-	} else {
-		$returnvalue = array(FORMFIELDS_PLAUSIBILITY_CHECK_OK);
-	}
-
-	return $returnvalue;
+    return $returnvalue;
 }

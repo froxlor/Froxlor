@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -14,8 +13,6 @@
  * @author     Emilien
  * @author     Froxlor Team <team@froxlor.org>
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Language
- *
  */
 
 /**
@@ -38,7 +35,6 @@ $lng['panel']['dirsmissing'] = 'La cartella fornita non è stata trovata.';
 /**
  * Login
  */
-
 $lng['login']['username'] = 'Nome Utente';
 $lng['login']['password'] = 'Password';
 $lng['login']['language'] = 'Lingua';
@@ -49,7 +45,6 @@ $lng['login']['profile_lng'] = 'Scegli la lingua';
 /**
  * Customer
  */
-
 $lng['customer']['documentroot'] = 'Cartella Principale';
 $lng['customer']['name'] = 'Cognome';
 $lng['customer']['firstname'] = 'Nome';
@@ -74,7 +69,6 @@ $lng['customer']['domains'] = 'Domini';
 /**
  * Customermenue
  */
-
 $lng['menue']['main']['main'] = 'Principale';
 $lng['menue']['main']['changepassword'] = 'Cambia la password';
 $lng['menue']['main']['changelanguage'] = 'Cambia la lingua';
@@ -96,14 +90,12 @@ $lng['menue']['extras']['pathoptions'] = 'Opzioni Cartelle';
 /**
  * Index
  */
-
 $lng['index']['customerdetails'] = 'Dettagli Cliente';
 $lng['index']['accountdetails'] = 'Dettagli Account';
 
 /**
  * Change Password
  */
-
 $lng['changepassword']['old_password'] = 'Vecchia password';
 $lng['changepassword']['new_password'] = 'Nuova password';
 $lng['changepassword']['new_password_confirm'] = 'Nuova password (verifica)';
@@ -113,7 +105,6 @@ $lng['changepassword']['also_change_ftp'] = ' cambia la password dell\'account F
 /**
  * Domains
  */
-
 $lng['domains']['description'] = 'Qui puoi creare (sotto)domini e cambiare il loro percorso.<br />Il sistema, dopo ogni cambiamento, necessita di un po\' di tempo per applicare le nuove impostazioni.';
 $lng['domains']['domainsettings'] = 'Opzioni del dominio';
 $lng['domains']['domainname'] = 'Nome del dominio';
@@ -126,7 +117,6 @@ $lng['domains']['noaliasdomain'] = 'Nessun alias per il dominio';
 /**
  * E-mails
  */
-
 $lng['emails']['description'] = 'Qui puoi creare e cambiare i tuoi indirizzi Email.<br />Un account è come la bucalettere davanti a casa tua. Se qualcuno ti manda un\'Email, essa sarà recapitata all\'interno del tuo account.<br /><br />Per scaricare le tue Email usa le seguenti impostazioni nel tuo programma di posta elettronica: (I dati scritti in <i>corsivo</i> vanno cambiati con i tuoi!)<br />Hostname: <b><i>Nome del dominio</i></b><br />Username: <b><i>Nome dell\'account / Indirizzo Email</i></b><br />Password: <b><i>La password scelta</i></b>';
 $lng['emails']['emailaddress'] = 'Indirizzo Email';
 $lng['emails']['emails_add'] = 'Crea indirizzo Email';
@@ -144,7 +134,6 @@ $lng['emails']['forwarder_add'] = 'Crea reindirizzamento';
 /**
  * FTP
  */
-
 $lng['ftp']['description'] = 'Qui puoi creare e modificare i tuoi account FTP.<br />I cambiamenti sono effettuati in tempo reale e gli account si possono usare immediatamente.';
 $lng['ftp']['account_add'] = 'Crea account';
 
@@ -161,7 +150,6 @@ $lng['mysql']['database_create'] = 'Crea database';
 /**
  * Extras
  */
-
 $lng['extras']['description'] = 'Qui puoi aggiungere alcune opzioni extra, per esempio impostare delle cartelle protette.<br />Il sistema, dopo ogni cambiamento, necessita di un po\' di tempo per applicare le nuove impostazioni.';
 $lng['extras']['directoryprotection_add'] = 'Aggiungi protezione cartella';
 $lng['extras']['view_directory'] = 'Mostra protezione cartella';
@@ -176,7 +164,6 @@ $lng['extras']['errordocument401path'] = 'URL to ErrorDocument 401';
 /**
  * Errors
  */
-
 $lng['error']['error'] = 'Errore';
 $lng['error']['directorymustexist'] = 'La cartella %s deve esistere. Per favore creala tramite il tuo client FTP.';
 $lng['error']['filemustexist'] = 'Il file %s deve esistere.';
@@ -227,7 +214,6 @@ $lng['error']['destinationiswrong'] = 'Il reindirizzamento %s contiene caratteri
 /**
  * Questions
  */
-
 $lng['question']['question'] = 'Domanda di sicurezza';
 $lng['question']['admin_customer_reallydelete'] = 'Sei sicuro di voler cancellare il cliente %s? Quest\'azione non potrà essere annullata!';
 $lng['question']['admin_domain_reallydelete'] = 'Sei sicuro di voler cancellare il dominio %s?';
@@ -248,7 +234,6 @@ $lng['question']['admin_customer_alsoremovefiles'] = 'Cancellare anche i file de
 /**
  * Mails
  */
-
 $lng['mails']['pop_success']['mailbody'] = 'Salve,\n\nil tuo indirizzo Email {EMAIL}\nè stato configurato con successo.\n\nQuesta è un\'Email creata automaticamente,\n per favore non rispondere!\n\nCordiali saluti, Amministratore.';
 $lng['mails']['pop_success']['subject'] = 'Indirizzo Email configurato con successo';
 $lng['mails']['createcustomer']['mailbody'] = 'Salve {FIRSTNAME} {NAME},\n\nqueste sono le informazioni per il tuo account:\n\nNome Utente: {USERNAME}\nPassword: {PASSWORD}\n\nGrazie,\nAmministratore.';
@@ -257,7 +242,6 @@ $lng['mails']['createcustomer']['subject'] = 'Informazioni account';
 /**
  * Admin
  */
-
 $lng['admin']['overview'] = 'Generale';
 $lng['admin']['ressourcedetails'] = 'Risorse utilizzate';
 $lng['admin']['systemdetails'] = 'Dettagli sistema';
@@ -313,7 +297,6 @@ $lng['admin']['webserver'] = 'Webserver';
 /**
  * Serversettings
  */
-
 $lng['serversettings']['session_timeout']['title'] = 'Timeout della sessione';
 $lng['serversettings']['session_timeout']['description'] = 'Quanto tempo un utente deve rimanere inattivo prima che la sessione diventi invalida (secondi)?';
 $lng['serversettings']['accountprefix']['title'] = 'Prefisso Cliente';
@@ -365,7 +348,6 @@ $lng['serversettings']['mxservers']['description'] = 'Lista dei server mx (separ
 /**
  * ADDED BETWEEN 1.2.12 and 1.2.13
  */
-
 $lng['serversettings']['paging']['title'] = 'Elementi da visualizzare per pagina';
 $lng['serversettings']['paging']['description'] = 'Quanti elementi dovrebbero essere visualizzati su una pagina? (0 = disattiva impaginazione)';
 $lng['error']['ipstillhasdomains'] = 'La combinazione IP/Porta che vuoi eliminare ha ancora dei domini assegnati, per favore riassegna questi domini ad altre combinazioni IP/Porta prima di eliminare questa.';
@@ -676,21 +658,21 @@ $lng['error']['ticketresetcycleiswrong'] = 'Il periodo di reset del numero ticke
 
 $lng['menue']['traffic']['traffic'] = 'Traffico';
 $lng['menue']['traffic']['current'] = 'Mese corrente';
-$lng['traffic']['month'] = "Mese";
-$lng['traffic']['day'] = "Giorno";
-$lng['traffic']['months'][1] = "Gennaio";
-$lng['traffic']['months'][2] = "Febbraio";
-$lng['traffic']['months'][3] = "Marzo";
-$lng['traffic']['months'][4] = "Aprile";
-$lng['traffic']['months'][5] = "Maggio";
-$lng['traffic']['months'][6] = "Giugno";
-$lng['traffic']['months'][7] = "Luglio";
-$lng['traffic']['months'][8] = "Agosto";
-$lng['traffic']['months'][9] = "Settembre";
-$lng['traffic']['months'][10] = "Ottobre";
-$lng['traffic']['months'][11] = "Novembre";
-$lng['traffic']['months'][12] = "Dicembre";
-$lng['traffic']['mb'] = "Traffico (MB)";
+$lng['traffic']['month'] = 'Mese';
+$lng['traffic']['day'] = 'Giorno';
+$lng['traffic']['months'][1] = 'Gennaio';
+$lng['traffic']['months'][2] = 'Febbraio';
+$lng['traffic']['months'][3] = 'Marzo';
+$lng['traffic']['months'][4] = 'Aprile';
+$lng['traffic']['months'][5] = 'Maggio';
+$lng['traffic']['months'][6] = 'Giugno';
+$lng['traffic']['months'][7] = 'Luglio';
+$lng['traffic']['months'][8] = 'Agosto';
+$lng['traffic']['months'][9] = 'Settembre';
+$lng['traffic']['months'][10] = 'Ottobre';
+$lng['traffic']['months'][11] = 'Novembre';
+$lng['traffic']['months'][12] = 'Dicembre';
+$lng['traffic']['mb'] = 'Traffico (MB)';
 $lng['traffic']['distribution'] = '<font color="#019522">FTP</font> | <font color="#0000FF">HTTP</font> | <font color="#800000">Mail</font>';
 $lng['traffic']['sumhttp'] = 'Sommatoria Traffico in ingresso HTTP';
 $lng['traffic']['sumftp'] = 'Sommatoria Traffico in ingresso FTP';
@@ -1332,7 +1314,7 @@ $lng['serversettings']['bindenable']['title'] = 'Abilita Nameserver';
 $lng['serversettings']['bindenable']['description'] = 'Qui il Nameserver può essere abilitato e disabilitato globalmente.';
 $lng['admin']['serversoftware'] = 'Software per Server';
 $lng['panel']['pathDescriptionEx'] = '<br /><br />Se vuoi redirezionare ad un altro dominio, questo valore deve iniziare con http:// or https://.';
-$lng['panel']['pathDescriptionSubdomain'] = $lng['panel']['pathDescription'] . $lng['panel']['pathDescriptionEx'] . "<br /><br />Se la URL termina con / è considerata una cartella, altrimenti verrà trattata come un file.";
+$lng['panel']['pathDescriptionSubdomain'] = $lng['panel']['pathDescription'] . $lng['panel']['pathDescriptionEx'] . '<br /><br />Se la URL termina con / è considerata una cartella, altrimenti verrà trattata come un file.';
 $lng['admin']['configfiles']['wizard'] = 'Wizard (assistente)';
 $lng['admin']['configfiles']['http'] = 'Server WEB (HTTP)';
 $lng['admin']['configfiles']['dns'] = 'Nameserver (DNS)';
@@ -1367,254 +1349,254 @@ $lng['gender']['title'] = 'Titolo';
 $lng['gender']['male'] = 'Sig.';
 $lng['gender']['female'] = 'Sig.ra';
 $lng['gender']['undef'] = '';
-$lng['country']['AF'] = "Afganistan";
-$lng['country']['AX'] = "Isole Aland";
-$lng['country']['AL'] = "Albania";
-$lng['country']['DZ'] = "Algeria";
-$lng['country']['AS'] = "American Samoa";
-$lng['country']['AD'] = "Andorra";
-$lng['country']['AO'] = "Angola";
-$lng['country']['AI'] = "Anguilla";
-$lng['country']['AQ'] = "Antarctica";
-$lng['country']['AG'] = "Antigua and Barbuda";
-$lng['country']['AR'] = "Argentina";
-$lng['country']['AM'] = "Armenia";
-$lng['country']['AW'] = "Aruba";
-$lng['country']['AU'] = "Australia";
-$lng['country']['AT'] = "Austria";
-$lng['country']['AZ'] = "Azerbaijan";
-$lng['country']['BS'] = "Bahamas";
-$lng['country']['BH'] = "Bahrain";
-$lng['country']['BD'] = "Bangladesh";
-$lng['country']['BB'] = "Barbados";
-$lng['country']['BY'] = "Belarus";
-$lng['country']['BE'] = "Belgium";
-$lng['country']['BZ'] = "Belize";
-$lng['country']['BJ'] = "Benin";
-$lng['country']['BM'] = "Bermuda";
-$lng['country']['BT'] = "Bhutan";
-$lng['country']['BO'] = "Bolivia, Stato Plurinazionale della";
-$lng['country']['BQ'] = "Bonaire, Saint Eustatius e Saba";
-$lng['country']['BA'] = "Bosnia e Herzegovina";
-$lng['country']['BW'] = "Botswana";
-$lng['country']['BV'] = "Bouvet Island";
-$lng['country']['BR'] = "Brasile";
-$lng['country']['IO'] = "Territorio Britannico del oceano indiano";
-$lng['country']['BN'] = "Brunei Darussalam";
-$lng['country']['BG'] = "Bulgaria";
-$lng['country']['BF'] = "Burkina Faso";
-$lng['country']['BI'] = "Burundi";
-$lng['country']['KH'] = "Cambogia";
-$lng['country']['CM'] = "Camerun";
-$lng['country']['CA'] = "Canada";
-$lng['country']['CV'] = "Capo Verde";
-$lng['country']['KY'] = "Isole Cayman";
+$lng['country']['AF'] = 'Afganistan';
+$lng['country']['AX'] = 'Isole Aland';
+$lng['country']['AL'] = 'Albania';
+$lng['country']['DZ'] = 'Algeria';
+$lng['country']['AS'] = 'American Samoa';
+$lng['country']['AD'] = 'Andorra';
+$lng['country']['AO'] = 'Angola';
+$lng['country']['AI'] = 'Anguilla';
+$lng['country']['AQ'] = 'Antarctica';
+$lng['country']['AG'] = 'Antigua and Barbuda';
+$lng['country']['AR'] = 'Argentina';
+$lng['country']['AM'] = 'Armenia';
+$lng['country']['AW'] = 'Aruba';
+$lng['country']['AU'] = 'Australia';
+$lng['country']['AT'] = 'Austria';
+$lng['country']['AZ'] = 'Azerbaijan';
+$lng['country']['BS'] = 'Bahamas';
+$lng['country']['BH'] = 'Bahrain';
+$lng['country']['BD'] = 'Bangladesh';
+$lng['country']['BB'] = 'Barbados';
+$lng['country']['BY'] = 'Belarus';
+$lng['country']['BE'] = 'Belgium';
+$lng['country']['BZ'] = 'Belize';
+$lng['country']['BJ'] = 'Benin';
+$lng['country']['BM'] = 'Bermuda';
+$lng['country']['BT'] = 'Bhutan';
+$lng['country']['BO'] = 'Bolivia, Stato Plurinazionale della';
+$lng['country']['BQ'] = 'Bonaire, Saint Eustatius e Saba';
+$lng['country']['BA'] = 'Bosnia e Herzegovina';
+$lng['country']['BW'] = 'Botswana';
+$lng['country']['BV'] = 'Bouvet Island';
+$lng['country']['BR'] = 'Brasile';
+$lng['country']['IO'] = 'Territorio Britannico del oceano indiano';
+$lng['country']['BN'] = 'Brunei Darussalam';
+$lng['country']['BG'] = 'Bulgaria';
+$lng['country']['BF'] = 'Burkina Faso';
+$lng['country']['BI'] = 'Burundi';
+$lng['country']['KH'] = 'Cambogia';
+$lng['country']['CM'] = 'Camerun';
+$lng['country']['CA'] = 'Canada';
+$lng['country']['CV'] = 'Capo Verde';
+$lng['country']['KY'] = 'Isole Cayman';
 $lng['country']['CF'] = "Repubblica dell'Africa Centrale";
-$lng['country']['TD'] = "Chad";
-$lng['country']['CL'] = "Chile";
-$lng['country']['CN'] = "Cina";
-$lng['country']['CX'] = "Isola di Natale";
-$lng['country']['CC'] = "Isole Cocos (Keeling)";
-$lng['country']['CO'] = "Colombia";
-$lng['country']['KM'] = "Comoros";
-$lng['country']['CG'] = "Congo";
-$lng['country']['CD'] = "Congo, Repubblica democratica del";
-$lng['country']['CK'] = "Isole Cook";
-$lng['country']['CR'] = "Costa Rica";
+$lng['country']['TD'] = 'Chad';
+$lng['country']['CL'] = 'Chile';
+$lng['country']['CN'] = 'Cina';
+$lng['country']['CX'] = 'Isola di Natale';
+$lng['country']['CC'] = 'Isole Cocos (Keeling)';
+$lng['country']['CO'] = 'Colombia';
+$lng['country']['KM'] = 'Comoros';
+$lng['country']['CG'] = 'Congo';
+$lng['country']['CD'] = 'Congo, Repubblica democratica del';
+$lng['country']['CK'] = 'Isole Cook';
+$lng['country']['CR'] = 'Costa Rica';
 $lng['country']['CI'] = "Costa D'avorio";
-$lng['country']['HR'] = "Croazia";
-$lng['country']['CU'] = "Cuba";
-$lng['country']['CW'] = "Curacao";
-$lng['country']['CY'] = "Cipro";
-$lng['country']['CZ'] = "Repubblica Ceca";
-$lng['country']['DK'] = "Danimarca";
-$lng['country']['DJ'] = "Djibouti";
-$lng['country']['DM'] = "Dominica";
-$lng['country']['DO'] = "Repubblica Dominicana";
-$lng['country']['EC'] = "Ecuador";
-$lng['country']['EG'] = "Egitto";
-$lng['country']['SV'] = "El Salvador";
-$lng['country']['GQ'] = "Guinea Equatoriale";
-$lng['country']['ER'] = "Eritrea";
-$lng['country']['EE'] = "Estonia";
-$lng['country']['ET'] = "Etiopia";
-$lng['country']['FK'] = "Isole Falkland (Malvinas)";
-$lng['country']['FO'] = "Isole Faroe";
-$lng['country']['FJ'] = "Fiji";
-$lng['country']['FI'] = "Finlandia";
-$lng['country']['FR'] = "Francia";
-$lng['country']['GF'] = "Guiana Francese";
-$lng['country']['PF'] = "Polinesia Francese";
-$lng['country']['TF'] = "Territori Francesi del Sud";
-$lng['country']['GA'] = "Gabon";
-$lng['country']['GM'] = "Gambia";
-$lng['country']['GE'] = "Georgia";
-$lng['country']['DE'] = "Germania";
-$lng['country']['GH'] = "Ghana";
-$lng['country']['GI'] = "Gibilterra";
-$lng['country']['GR'] = "Grecia";
-$lng['country']['GL'] = "Groenlandia";
-$lng['country']['GD'] = "Grenada";
-$lng['country']['GP'] = "Guadeloupe";
-$lng['country']['GU'] = "Guam";
-$lng['country']['GT'] = "Guatemala";
-$lng['country']['GG'] = "Guernsey";
-$lng['country']['GN'] = "Guinea";
-$lng['country']['GW'] = "Guinea-Bissau";
-$lng['country']['GY'] = "Guyana";
-$lng['country']['HT'] = "Haiti";
-$lng['country']['HM'] = "Isola Heard e Isola McDonald";
-$lng['country']['VA'] = "Stato del Vaticano";
-$lng['country']['HN'] = "Honduras";
-$lng['country']['HK'] = "Hong Kong";
-$lng['country']['HU'] = "Ungheria";
-$lng['country']['IS'] = "Islanda";
-$lng['country']['IN'] = "India";
-$lng['country']['ID'] = "Indonesia";
-$lng['country']['IR'] = "Iran, Repubblica Islamica del";
-$lng['country']['IQ'] = "Iraq";
-$lng['country']['IE'] = "Irlanda";
-$lng['country']['IM'] = "Isola Man";
-$lng['country']['IL'] = "Israele";
-$lng['country']['IT'] = "ITALIA";
-$lng['country']['JM'] = "Giamaica";
-$lng['country']['JP'] = "Giappone";
-$lng['country']['JE'] = "Jersey";
-$lng['country']['JO'] = "Giordania";
-$lng['country']['KZ'] = "Kazakistan";
-$lng['country']['KE'] = "Kenya";
-$lng['country']['KI'] = "Kiribati";
-$lng['country']['KP'] = "Corea, Repubblica popolare della";
-$lng['country']['KR'] = "Corea, Repubblica della";
-$lng['country']['KW'] = "Kuwait";
-$lng['country']['KG'] = "Kyrgyzstan";
-$lng['country']['LA'] = "Lao, Repubblica popolare del";
-$lng['country']['LV'] = "Lettonia";
-$lng['country']['LB'] = "Libano";
-$lng['country']['LS'] = "Lesotho";
-$lng['country']['LR'] = "Liberia";
-$lng['country']['LY'] = "Libia";
-$lng['country']['LI'] = "Liechtenstein";
-$lng['country']['LT'] = "Lituania";
-$lng['country']['LU'] = "Lussemburgo";
-$lng['country']['MO'] = "Macao";
-$lng['country']['MK'] = "Macedonia";
-$lng['country']['MG'] = "Madagascar";
-$lng['country']['MW'] = "Malawi";
-$lng['country']['MY'] = "Malesia";
-$lng['country']['MV'] = "Maldive";
-$lng['country']['ML'] = "Mali";
-$lng['country']['MT'] = "Malta";
-$lng['country']['MH'] = "Isole Marshall";
-$lng['country']['MQ'] = "Martinique";
-$lng['country']['MR'] = "Mauritania";
-$lng['country']['MU'] = "Mauritius";
-$lng['country']['YT'] = "Mayotte";
-$lng['country']['MX'] = "Messico";
-$lng['country']['FM'] = "Micronesia, Stati Federali del";
-$lng['country']['MD'] = "Moldavia";
-$lng['country']['MC'] = "Monaco";
-$lng['country']['MN'] = "Mongolia";
-$lng['country']['ME'] = "Montenegro";
-$lng['country']['MS'] = "Montserrat";
-$lng['country']['MA'] = "Marocco";
-$lng['country']['MZ'] = "Mozambico";
-$lng['country']['MM'] = "Myanmar";
-$lng['country']['NA'] = "Namibia";
-$lng['country']['NR'] = "Nauru";
-$lng['country']['NP'] = "Nepal";
-$lng['country']['NL'] = "Olanda";
-$lng['country']['NC'] = "Nuova Caledonia";
-$lng['country']['NZ'] = "Nuova Zelanda";
-$lng['country']['NI'] = "Nicaragua";
-$lng['country']['NE'] = "Niger";
-$lng['country']['NG'] = "Nigeria";
-$lng['country']['NU'] = "Niue";
-$lng['country']['NF'] = "Isole Norfolk";
-$lng['country']['MP'] = "Isole Mariana Settentrionali";
-$lng['country']['NO'] = "Norvegia";
-$lng['country']['OM'] = "Oman";
-$lng['country']['PK'] = "Pakistan";
-$lng['country']['PW'] = "Palau";
-$lng['country']['PS'] = "Territorio Occupato della Palestina";
-$lng['country']['PA'] = "Panama";
-$lng['country']['PG'] = "Papua Nuova Guinea";
-$lng['country']['PY'] = "Paraguay";
-$lng['country']['PE'] = "Peru";
-$lng['country']['PH'] = "Filippine";
-$lng['country']['PN'] = "Pitcairn";
-$lng['country']['PL'] = "Polonia";
-$lng['country']['PT'] = "Portogallo";
-$lng['country']['PR'] = "Porto Rico";
-$lng['country']['QA'] = "Qatar";
-$lng['country']['RE'] = "Reunion";
-$lng['country']['RO'] = "Romania";
-$lng['country']['RU'] = "Russia";
-$lng['country']['RW'] = "Ruanda";
-$lng['country']['BL'] = "Saint Barthelemy";
-$lng['country']['SH'] = "Saint Helena, Ascension and Tristan Da Cunha";
-$lng['country']['KN'] = "Saint Kitts and Nevis";
-$lng['country']['LC'] = "Saint Lucia";
-$lng['country']['MF'] = "Saint Martin (French Part)";
-$lng['country']['PM'] = "Saint Pierre and Miquelon";
-$lng['country']['VC'] = "Saint Vincent and the Grenadines";
-$lng['country']['WS'] = "Samoa";
-$lng['country']['SM'] = "San Marino";
-$lng['country']['ST'] = "Sao Tome and Principe";
-$lng['country']['SA'] = "Arabia Saudita";
-$lng['country']['SN'] = "Senegal";
-$lng['country']['RS'] = "Serbia";
-$lng['country']['SC'] = "Seychelles";
-$lng['country']['SL'] = "Sierra Leone";
-$lng['country']['SG'] = "Singapore";
-$lng['country']['SX'] = "Sint Maarten (Dutch Part)";
-$lng['country']['SK'] = "Slovacchia";
-$lng['country']['SI'] = "Slovenia";
-$lng['country']['SB'] = "Isole Solomon";
-$lng['country']['SO'] = "Somalia";
-$lng['country']['ZA'] = "Africa del Sud";
-$lng['country']['GS'] = "South Georgia and the South Sandwich Islands";
-$lng['country']['ES'] = "Spagna";
-$lng['country']['LK'] = "Sri Lanka";
-$lng['country']['SD'] = "Sudan";
-$lng['country']['SR'] = "Suriname";
-$lng['country']['SJ'] = "Svalbard and Jan Mayen";
-$lng['country']['SZ'] = "Swaziland";
-$lng['country']['SE'] = "Svezia";
-$lng['country']['CH'] = "Svizzera";
-$lng['country']['SY'] = "Siria";
-$lng['country']['TW'] = "Taiwan, Provincia della Cina";
-$lng['country']['TJ'] = "Tajikistan";
-$lng['country']['TZ'] = "Tanzania";
-$lng['country']['TH'] = "Tailandia";
-$lng['country']['TL'] = "Timor-Leste";
-$lng['country']['TG'] = "Togo";
-$lng['country']['TK'] = "Tokelau";
-$lng['country']['TO'] = "Tonga";
-$lng['country']['TT'] = "Trinidad and Tobago";
-$lng['country']['TN'] = "Tunisia";
-$lng['country']['TR'] = "Turchia";
-$lng['country']['TM'] = "Turkmenistan";
-$lng['country']['TC'] = "Turks and Caicos Islands";
-$lng['country']['TV'] = "Tuvalu";
-$lng['country']['UG'] = "Uganda";
-$lng['country']['UA'] = "Ucraina";
-$lng['country']['AE'] = "Emirati Arabi Uniti";
-$lng['country']['GB'] = "Gran Bretagna";
+$lng['country']['HR'] = 'Croazia';
+$lng['country']['CU'] = 'Cuba';
+$lng['country']['CW'] = 'Curacao';
+$lng['country']['CY'] = 'Cipro';
+$lng['country']['CZ'] = 'Repubblica Ceca';
+$lng['country']['DK'] = 'Danimarca';
+$lng['country']['DJ'] = 'Djibouti';
+$lng['country']['DM'] = 'Dominica';
+$lng['country']['DO'] = 'Repubblica Dominicana';
+$lng['country']['EC'] = 'Ecuador';
+$lng['country']['EG'] = 'Egitto';
+$lng['country']['SV'] = 'El Salvador';
+$lng['country']['GQ'] = 'Guinea Equatoriale';
+$lng['country']['ER'] = 'Eritrea';
+$lng['country']['EE'] = 'Estonia';
+$lng['country']['ET'] = 'Etiopia';
+$lng['country']['FK'] = 'Isole Falkland (Malvinas)';
+$lng['country']['FO'] = 'Isole Faroe';
+$lng['country']['FJ'] = 'Fiji';
+$lng['country']['FI'] = 'Finlandia';
+$lng['country']['FR'] = 'Francia';
+$lng['country']['GF'] = 'Guiana Francese';
+$lng['country']['PF'] = 'Polinesia Francese';
+$lng['country']['TF'] = 'Territori Francesi del Sud';
+$lng['country']['GA'] = 'Gabon';
+$lng['country']['GM'] = 'Gambia';
+$lng['country']['GE'] = 'Georgia';
+$lng['country']['DE'] = 'Germania';
+$lng['country']['GH'] = 'Ghana';
+$lng['country']['GI'] = 'Gibilterra';
+$lng['country']['GR'] = 'Grecia';
+$lng['country']['GL'] = 'Groenlandia';
+$lng['country']['GD'] = 'Grenada';
+$lng['country']['GP'] = 'Guadeloupe';
+$lng['country']['GU'] = 'Guam';
+$lng['country']['GT'] = 'Guatemala';
+$lng['country']['GG'] = 'Guernsey';
+$lng['country']['GN'] = 'Guinea';
+$lng['country']['GW'] = 'Guinea-Bissau';
+$lng['country']['GY'] = 'Guyana';
+$lng['country']['HT'] = 'Haiti';
+$lng['country']['HM'] = 'Isola Heard e Isola McDonald';
+$lng['country']['VA'] = 'Stato del Vaticano';
+$lng['country']['HN'] = 'Honduras';
+$lng['country']['HK'] = 'Hong Kong';
+$lng['country']['HU'] = 'Ungheria';
+$lng['country']['IS'] = 'Islanda';
+$lng['country']['IN'] = 'India';
+$lng['country']['ID'] = 'Indonesia';
+$lng['country']['IR'] = 'Iran, Repubblica Islamica del';
+$lng['country']['IQ'] = 'Iraq';
+$lng['country']['IE'] = 'Irlanda';
+$lng['country']['IM'] = 'Isola Man';
+$lng['country']['IL'] = 'Israele';
+$lng['country']['IT'] = 'ITALIA';
+$lng['country']['JM'] = 'Giamaica';
+$lng['country']['JP'] = 'Giappone';
+$lng['country']['JE'] = 'Jersey';
+$lng['country']['JO'] = 'Giordania';
+$lng['country']['KZ'] = 'Kazakistan';
+$lng['country']['KE'] = 'Kenya';
+$lng['country']['KI'] = 'Kiribati';
+$lng['country']['KP'] = 'Corea, Repubblica popolare della';
+$lng['country']['KR'] = 'Corea, Repubblica della';
+$lng['country']['KW'] = 'Kuwait';
+$lng['country']['KG'] = 'Kyrgyzstan';
+$lng['country']['LA'] = 'Lao, Repubblica popolare del';
+$lng['country']['LV'] = 'Lettonia';
+$lng['country']['LB'] = 'Libano';
+$lng['country']['LS'] = 'Lesotho';
+$lng['country']['LR'] = 'Liberia';
+$lng['country']['LY'] = 'Libia';
+$lng['country']['LI'] = 'Liechtenstein';
+$lng['country']['LT'] = 'Lituania';
+$lng['country']['LU'] = 'Lussemburgo';
+$lng['country']['MO'] = 'Macao';
+$lng['country']['MK'] = 'Macedonia';
+$lng['country']['MG'] = 'Madagascar';
+$lng['country']['MW'] = 'Malawi';
+$lng['country']['MY'] = 'Malesia';
+$lng['country']['MV'] = 'Maldive';
+$lng['country']['ML'] = 'Mali';
+$lng['country']['MT'] = 'Malta';
+$lng['country']['MH'] = 'Isole Marshall';
+$lng['country']['MQ'] = 'Martinique';
+$lng['country']['MR'] = 'Mauritania';
+$lng['country']['MU'] = 'Mauritius';
+$lng['country']['YT'] = 'Mayotte';
+$lng['country']['MX'] = 'Messico';
+$lng['country']['FM'] = 'Micronesia, Stati Federali del';
+$lng['country']['MD'] = 'Moldavia';
+$lng['country']['MC'] = 'Monaco';
+$lng['country']['MN'] = 'Mongolia';
+$lng['country']['ME'] = 'Montenegro';
+$lng['country']['MS'] = 'Montserrat';
+$lng['country']['MA'] = 'Marocco';
+$lng['country']['MZ'] = 'Mozambico';
+$lng['country']['MM'] = 'Myanmar';
+$lng['country']['NA'] = 'Namibia';
+$lng['country']['NR'] = 'Nauru';
+$lng['country']['NP'] = 'Nepal';
+$lng['country']['NL'] = 'Olanda';
+$lng['country']['NC'] = 'Nuova Caledonia';
+$lng['country']['NZ'] = 'Nuova Zelanda';
+$lng['country']['NI'] = 'Nicaragua';
+$lng['country']['NE'] = 'Niger';
+$lng['country']['NG'] = 'Nigeria';
+$lng['country']['NU'] = 'Niue';
+$lng['country']['NF'] = 'Isole Norfolk';
+$lng['country']['MP'] = 'Isole Mariana Settentrionali';
+$lng['country']['NO'] = 'Norvegia';
+$lng['country']['OM'] = 'Oman';
+$lng['country']['PK'] = 'Pakistan';
+$lng['country']['PW'] = 'Palau';
+$lng['country']['PS'] = 'Territorio Occupato della Palestina';
+$lng['country']['PA'] = 'Panama';
+$lng['country']['PG'] = 'Papua Nuova Guinea';
+$lng['country']['PY'] = 'Paraguay';
+$lng['country']['PE'] = 'Peru';
+$lng['country']['PH'] = 'Filippine';
+$lng['country']['PN'] = 'Pitcairn';
+$lng['country']['PL'] = 'Polonia';
+$lng['country']['PT'] = 'Portogallo';
+$lng['country']['PR'] = 'Porto Rico';
+$lng['country']['QA'] = 'Qatar';
+$lng['country']['RE'] = 'Reunion';
+$lng['country']['RO'] = 'Romania';
+$lng['country']['RU'] = 'Russia';
+$lng['country']['RW'] = 'Ruanda';
+$lng['country']['BL'] = 'Saint Barthelemy';
+$lng['country']['SH'] = 'Saint Helena, Ascension and Tristan Da Cunha';
+$lng['country']['KN'] = 'Saint Kitts and Nevis';
+$lng['country']['LC'] = 'Saint Lucia';
+$lng['country']['MF'] = 'Saint Martin (French Part)';
+$lng['country']['PM'] = 'Saint Pierre and Miquelon';
+$lng['country']['VC'] = 'Saint Vincent and the Grenadines';
+$lng['country']['WS'] = 'Samoa';
+$lng['country']['SM'] = 'San Marino';
+$lng['country']['ST'] = 'Sao Tome and Principe';
+$lng['country']['SA'] = 'Arabia Saudita';
+$lng['country']['SN'] = 'Senegal';
+$lng['country']['RS'] = 'Serbia';
+$lng['country']['SC'] = 'Seychelles';
+$lng['country']['SL'] = 'Sierra Leone';
+$lng['country']['SG'] = 'Singapore';
+$lng['country']['SX'] = 'Sint Maarten (Dutch Part)';
+$lng['country']['SK'] = 'Slovacchia';
+$lng['country']['SI'] = 'Slovenia';
+$lng['country']['SB'] = 'Isole Solomon';
+$lng['country']['SO'] = 'Somalia';
+$lng['country']['ZA'] = 'Africa del Sud';
+$lng['country']['GS'] = 'South Georgia and the South Sandwich Islands';
+$lng['country']['ES'] = 'Spagna';
+$lng['country']['LK'] = 'Sri Lanka';
+$lng['country']['SD'] = 'Sudan';
+$lng['country']['SR'] = 'Suriname';
+$lng['country']['SJ'] = 'Svalbard and Jan Mayen';
+$lng['country']['SZ'] = 'Swaziland';
+$lng['country']['SE'] = 'Svezia';
+$lng['country']['CH'] = 'Svizzera';
+$lng['country']['SY'] = 'Siria';
+$lng['country']['TW'] = 'Taiwan, Provincia della Cina';
+$lng['country']['TJ'] = 'Tajikistan';
+$lng['country']['TZ'] = 'Tanzania';
+$lng['country']['TH'] = 'Tailandia';
+$lng['country']['TL'] = 'Timor-Leste';
+$lng['country']['TG'] = 'Togo';
+$lng['country']['TK'] = 'Tokelau';
+$lng['country']['TO'] = 'Tonga';
+$lng['country']['TT'] = 'Trinidad and Tobago';
+$lng['country']['TN'] = 'Tunisia';
+$lng['country']['TR'] = 'Turchia';
+$lng['country']['TM'] = 'Turkmenistan';
+$lng['country']['TC'] = 'Turks and Caicos Islands';
+$lng['country']['TV'] = 'Tuvalu';
+$lng['country']['UG'] = 'Uganda';
+$lng['country']['UA'] = 'Ucraina';
+$lng['country']['AE'] = 'Emirati Arabi Uniti';
+$lng['country']['GB'] = 'Gran Bretagna';
 $lng['country']['US'] = "Stati Uniti d'America";
-$lng['country']['UM'] = "Stati Uniti, Isole Minori";
-$lng['country']['UY'] = "Uruguay";
-$lng['country']['UZ'] = "Uzbekistan";
-$lng['country']['VU'] = "Vanuatu";
-$lng['country']['VE'] = "Venezuela";
-$lng['country']['VN'] = "Vietnam";
-$lng['country']['VG'] = "Isole Vergini Brittaniche";
-$lng['country']['VI'] = "Isole Vergini, U.S.";
-$lng['country']['WF'] = "Wallis and Futuna";
-$lng['country']['EH'] = "Sahara Occidentale";
-$lng['country']['YE'] = "Yemen";
-$lng['country']['ZM'] = "Zambia";
-$lng['country']['ZW'] = "Zimbabue";
+$lng['country']['UM'] = 'Stati Uniti, Isole Minori';
+$lng['country']['UY'] = 'Uruguay';
+$lng['country']['UZ'] = 'Uzbekistan';
+$lng['country']['VU'] = 'Vanuatu';
+$lng['country']['VE'] = 'Venezuela';
+$lng['country']['VN'] = 'Vietnam';
+$lng['country']['VG'] = 'Isole Vergini Brittaniche';
+$lng['country']['VI'] = 'Isole Vergini, U.S.';
+$lng['country']['WF'] = 'Wallis and Futuna';
+$lng['country']['EH'] = 'Sahara Occidentale';
+$lng['country']['YE'] = 'Yemen';
+$lng['country']['ZM'] = 'Zambia';
+$lng['country']['ZW'] = 'Zimbabue';
 $lng['diskquota'] = 'Quota';
 $lng['serversettings']['diskquota_enabled'] = 'Quota attivita?';
 $lng['serversettings']['diskquota_repquota_path']['description'] = 'Percorso a repquota';
@@ -1730,21 +1712,21 @@ $lng['admin']['templates']['SERVER_IP'] = 'Sostituisce l\'indrizzo IP predefinit
 $lng['admin']['templates']['SERVER_PORT'] = 'Sostituisce la porta predefinita del server';
 $lng['admin']['templates']['DOMAINNAME'] = 'Sostituisce il sottodominio predefinito dei clienti (può essere vuoto se non viene generato)';
 $lng['admin']['show_news_feed'] = 'Mostra il feed notizie sul cruscotto dell \'amministratore';
-$lng['logger']['reseller'] = "Rivenditore";
-$lng['logger']['admin'] = "Amministratore";
-$lng['logger']['cron'] = "Cronjob";
-$lng['logger']['login'] = "Login";
-$lng['logger']['intern'] = "Interno";
-$lng['logger']['unknown'] = "Sconosciuto";
-$lng['serversettings']['mailtraffic_enabled']['title'] = "Analizza traffico posta";
+$lng['logger']['reseller'] = 'Rivenditore';
+$lng['logger']['admin'] = 'Amministratore';
+$lng['logger']['cron'] = 'Cronjob';
+$lng['logger']['login'] = 'Login';
+$lng['logger']['intern'] = 'Interno';
+$lng['logger']['unknown'] = 'Sconosciuto';
+$lng['serversettings']['mailtraffic_enabled']['title'] = 'Analizza traffico posta';
 $lng['serversettings']['mailtraffic_enabled']['description'] = "Abilita l\'analisi dei log del server di posta per calcolare il traffico";
-$lng['serversettings']['mdaserver']['title'] = "tipo MDA";
-$lng['serversettings']['mdaserver']['description'] = "Tipo del Server di consegna di posta";
-$lng['serversettings']['mdalog']['title'] = "log MDA";
-$lng['serversettings']['mdalog']['description'] = "File log del Server di consegna di posta";
-$lng['serversettings']['mtaserver']['title'] = "tipo MTA";
-$lng['serversettings']['mtaserver']['description'] = "Tipo agente di trasferimento di posta";
-$lng['serversettings']['mtalog']['title'] = "log MTA";
+$lng['serversettings']['mdaserver']['title'] = 'tipo MDA';
+$lng['serversettings']['mdaserver']['description'] = 'Tipo del Server di consegna di posta';
+$lng['serversettings']['mdalog']['title'] = 'log MDA';
+$lng['serversettings']['mdalog']['description'] = 'File log del Server di consegna di posta';
+$lng['serversettings']['mtaserver']['title'] = 'tipo MTA';
+$lng['serversettings']['mtaserver']['description'] = 'Tipo agente di trasferimento di posta';
+$lng['serversettings']['mtalog']['title'] = 'log MTA';
 $lng['serversettings']['mtalog']['description'] = "File log dell\'agente di trasferimento di posta";
 $lng['panel']['ftpdesc'] = 'Descrizione FTP';
 $lng['admin']['cronsettings'] = 'Impostazioni Cronjob';
@@ -1769,9 +1751,9 @@ $lng['error']['cannotdeletedefaultphpconfig'] = 'Questa configurazione PHP è im
 $lng['serversettings']['system_cron_allowautoupdate']['title'] = 'Permetti aggiornamenti automatici del database';
 $lng['serversettings']['system_cron_allowautoupdate']['description'] = '<div class="red"><b>ATTENZIONE:</b></div> Questa impostazione permette al cronjob di bypassare la verifica di versione dei file e database di froxlors ed esegue gli aggiornamenti di database in caso si verificasse un disallineamento di versione.<br><br><div class="red">l\'aggiornamento automatico imposterà sempre i valori predefiniti per nuove impostazioni o modifiche. Questo, non sempre potrebbe essere congruo ed adeguato per il vostro sistema. Pensaci due volte prima di attivare questa opzione</div>';
 $lng['error']['passwordshouldnotbeusername'] = 'La password deve essere diversa dal nome utente.';
-$lng['admin']['customer_show_news_feed'] = "Mostra feed di notizie personalizzati sul cruscotto dei clienti";
-$lng['admin']['customer_news_feed_url'] = "Feed RSS- per il feed di notizie personalizzato";
-$lng['serversettings']['dns_createhostnameentry'] = "Crea la zone/config di bind per il nome host del sistema";
+$lng['admin']['customer_show_news_feed'] = 'Mostra feed di notizie personalizzati sul cruscotto dei clienti';
+$lng['admin']['customer_news_feed_url'] = 'Feed RSS- per il feed di notizie personalizzato';
+$lng['serversettings']['dns_createhostnameentry'] = 'Crea la zone/config di bind per il nome host del sistema';
 $lng['serversettings']['panel_password_alpha_lower']['title'] = 'Caratteri minuscoli';
 $lng['serversettings']['panel_password_alpha_lower']['description'] = 'La Password deve contenere almeno una lettera minuscola (a-z).';
 $lng['serversettings']['panel_password_alpha_upper']['title'] = 'Caratteri maiuscoli';

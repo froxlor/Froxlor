@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -11,35 +10,31 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Settings
- *
  */
 
 return array(
-	'groups' => array(
-		'spf' => array(
-			'title' => $lng['admin']['spfsettings'],
-			'fields' => array(
-				'spf_enabled' => array(
-					'label' => $lng['spf']['use_spf'],
-					'settinggroup' => 'spf',
-					'varname' => 'use_spf',
-					'type' => 'bool',
-					'default' => false,
-					'save_method' => 'storeSettingField',
-					'overview_option' => true
-					),
-				'spf_entry' => array(
-					'label' => $lng['spf']['spf_entry'],
-					'settinggroup' => 'spf',
-					'varname' => 'spf_entry',
-					'type' => 'string',
-					'default' => '"v=spf1 a mx -all"',
-					'save_method' => 'storeSettingField'
-					)
-				)
-			)
-		)
-	);
-
-?>
+    'groups' => array(
+        'spf' => array(
+            'title' => $lng['admin']['spfsettings'],
+            'fields' => array(
+                'spf_enabled' => array(
+                    'label' => $lng['spf']['use_spf'],
+                    'settinggroup' => 'spf',
+                    'varname' => 'use_spf',
+                    'type' => 'bool',
+                    'default' => false,
+                    'save_method' => 'storeSettingField',
+                    'overview_option' => true,
+                    ),
+                'spf_entry' => array(
+                    'label' => $lng['spf']['spf_entry'],
+                    'settinggroup' => 'spf',
+                    'varname' => 'spf_entry',
+                    'type' => 'string',
+                    'default' => '"v=spf1 a mx -all"',
+                    'save_method' => 'storeSettingField',
+                    ),
+                ),
+            ),
+        ),
+    );

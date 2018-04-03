@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,8 +12,14 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $name
+ * @param mixed $title
+ * @param mixed $value
+ * @param mixed $break
+ * @param null|mixed $selvalue
+ * @param mixed $title_trusted
+ * @param mixed $value_trusted
  */
 
 /**
@@ -30,39 +35,30 @@
  * @return string HTML Code
  * @author Michael Kaufmann <mkaufmann@nutime.de>
  */
-
-function makecheckbox($name, $title, $value, $break = false, $selvalue = NULL, $title_trusted = false, $value_trusted = false)
+function makecheckbox($name, $title, $value, $break = false, $selvalue = null, $title_trusted = false, $value_trusted = false)
 {
-	if($selvalue !== NULL
-	   && $value == $selvalue)
-	{
-		$checked = 'checked="checked"';
-	}
-	else if(isset($_SESSION['requestData'][$name]))
-	{
-		$checked = 'checked="checked"';
-	}
-	else
-	{
-		$checked = '';
-	}
+    if ($selvalue !== null
+       && $value === $selvalue) {
+        $checked = 'checked="checked"';
+    } elseif (isset($_SESSION['requestData'][$name])) {
+        $checked = 'checked="checked"';
+    } else {
+        $checked = '';
+    }
 
-	if(!$title_trusted)
-	{
-		$title = htmlspecialchars($title);
-	}
+    if (!$title_trusted) {
+        $title = htmlspecialchars($title);
+    }
 
-	if(!$value_trusted)
-	{
-		$value = htmlspecialchars($value);
-	}
+    if (!$value_trusted) {
+        $value = htmlspecialchars($value);
+    }
 
-	$checkbox = '<label class="nobr"><input type="checkbox" name="' . $name . '" value="' . $value . '" ' . $checked . ' />&nbsp;' . $title . '</label>';
+    $checkbox = '<label class="nobr"><input type="checkbox" name="' . $name . '" value="' . $value . '" ' . $checked . ' />&nbsp;' . $title . '</label>';
 
-	if($break)
-	{
-		$checkbox.= '<br />';
-	}
+    if ($break) {
+        $checkbox.= '<br />';
+    }
 
-	return $checkbox;
+    return $checkbox;
 }

@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -11,24 +10,25 @@
  * @copyright  (c) the authors
  * @author     Daniel Reichelt <hacking@nachtgeist.net> (2016-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $aliasDestinationDomainID
+ * @param mixed $log
  */
-
 function triggerLetsEncryptCSRForAliasDestinationDomain($aliasDestinationDomainID, $log)
 {
-	if (isset($aliasDestinationDomainID) && $aliasDestinationDomainID > 0) {
-		$log->logAction(ADM_ACTION, LOG_INFO, "LetsEncrypt CSR triggered for domain ID " . $aliasDestinationDomainID);
-		$upd_stmt = Database::prepare(
-			"UPDATE
-					`" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "`
+    if (isset($aliasDestinationDomainID) && $aliasDestinationDomainID > 0) {
+        $log->logAction(ADM_ACTION, LOG_INFO, 'LetsEncrypt CSR triggered for domain ID ' . $aliasDestinationDomainID);
+        $upd_stmt = Database::prepare(
+            'UPDATE
+					`' . TABLE_PANEL_DOMAIN_SSL_SETTINGS . '`
 				SET
 					`expirationdate` = null
 				WHERE
 					domainid = :domainid
-			");
-		Database::pexecute($upd_stmt, array(
-			'domainid' => $aliasDestinationDomainID
-		));
-	}
+			'
+        );
+        Database::pexecute($upd_stmt, array(
+            'domainid' => $aliasDestinationDomainID,
+        ));
+    }
 }

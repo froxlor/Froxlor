@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,8 +12,10 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $path
+ * @param mixed $uid
+ * @param mixed $gid
  */
 
 
@@ -35,55 +36,55 @@
  */
 function findDirs($path, $uid, $gid)
 {
-	$_fileList = array();
-	$path = makeCorrectDir($path);
+    $_fileList = array();
+    $path = makeCorrectDir($path);
 
-	// valid directory?
-	if (is_dir($path)) {
+    // valid directory?
+    if (is_dir($path)) {
 
-		// Will exclude everything under these directories
-		$exclude = array(
-			'awstats',
-			'webalizer'
-		);
+        // Will exclude everything under these directories
+        $exclude = array(
+            'awstats',
+            'webalizer',
+        );
 
-		/**
-		 *
-		 * @param SplFileInfo $file
-		 * @param mixed $key
-		 * @param RecursiveCallbackFilterIterator $iterator
-		 * @return bool True if you need to recurse or if the item is acceptable
-		 */
-		$filter = function ($file, $key, $iterator) use ($exclude) {
-			if (in_array($file->getFilename(), $exclude)) {
-				return false;
-			}
-			return true;
-		};
+        /**
+         * @param SplFileInfo $file
+         * @param mixed $key
+         * @param RecursiveCallbackFilterIterator $iterator
+         * @return bool True if you need to recurse or if the item is acceptable
+         */
+        $filter = function ($file, $key, $iterator) use ($exclude) {
+            if (in_array($file->getFilename(), $exclude, true)) {
+                return false;
+            }
 
-		// create RecursiveIteratorIterator
-		$its = new RecursiveIteratorIterator(
-			new RecursiveCallbackFilterIterator(
-				new IgnorantRecursiveDirectoryIterator($path, RecursiveDirectoryIterator::SKIP_DOTS),
-				$filter
-			)
-		);
-		// we can limit the recursion-depth, but will it be helpful or
-		// will people start asking "why do I only see 2 subdirectories, i want to use /a/b/c"
-		// let's keep this in mind and see whether it will be useful
-		// @TODO
-		// $its->setMaxDepth(2);
+            return true;
+        };
 
-		// check every file
-		foreach ($its as $fullFileName => $it) {
-			if ($it->isDir() && (fileowner($fullFileName) == $uid || filegroup($fullFileName) == $gid)) {
-				$_fileList[] = makeCorrectDir(dirname($fullFileName));
-			}
-		}
-		$_fileList[] = $path;
-	}
+        // create RecursiveIteratorIterator
+        $its = new RecursiveIteratorIterator(
+            new RecursiveCallbackFilterIterator(
+                new IgnorantRecursiveDirectoryIterator($path, RecursiveDirectoryIterator::SKIP_DOTS),
+                $filter
+            )
+        );
+        // we can limit the recursion-depth, but will it be helpful or
+        // will people start asking "why do I only see 2 subdirectories, i want to use /a/b/c"
+        // let's keep this in mind and see whether it will be useful
+        // @TODO
+        // $its->setMaxDepth(2);
 
-	return array_unique($_fileList);
+        // check every file
+        foreach ($its as $fullFileName => $it) {
+            if ($it->isDir() && (fileowner($fullFileName) === $uid || filegroup($fullFileName) === $gid)) {
+                $_fileList[] = makeCorrectDir(dirname($fullFileName));
+            }
+        }
+        $_fileList[] = $path;
+    }
+
+    return array_unique($_fileList);
 }
 
 /**
@@ -94,13 +95,12 @@ function findDirs($path, $uid, $gid)
  */
 class IgnorantRecursiveDirectoryIterator extends RecursiveDirectoryIterator
 {
-
-	function getChildren()
-	{
-		try {
-			return new IgnorantRecursiveDirectoryIterator($this->getPathname());
-		} catch (UnexpectedValueException $e) {
-			return new RecursiveArrayIterator(array());
-		}
-	}
+    public function getChildren()
+    {
+        try {
+            return new self($this->getPathname());
+        } catch (UnexpectedValueException $e) {
+            return new RecursiveArrayIterator(array());
+        }
+    }
 }

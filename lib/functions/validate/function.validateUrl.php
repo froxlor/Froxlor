@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,8 +12,8 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $url
  */
 
 /**
@@ -24,55 +23,54 @@
  * @return bool
  * @author Christian Hoffmann
  * @author Froxlor team <team@froxlor.org> (2010-)
- *
  */
-function validateUrl($url) {
+function validateUrl($url)
+{
+    global $idna_convert, $theme;
 
-	global $idna_convert, $theme;
+    if (strtolower(substr($url, 0, 7)) !== 'http://'
+            && strtolower(substr($url, 0, 8)) !== 'https://'
+    ) {
+        $url = 'http://' . $url;
+    }
 
-	if (strtolower(substr($url, 0, 7)) != "http://"
-			&& strtolower(substr($url, 0, 8)) != "https://"
-	) {
-		$url = 'http://' . $url;
-	}
+    // needs converting
+    try {
+        $url = $idna_convert->encode($url);
+    } catch (Exception $e) {
+        return false;
+    }
 
-	// needs converting
-	try {
-		$url = $idna_convert->encode($url);
-	} catch (Exception $e) {
-		return false;
-	}
+    $pattern = "/^https?:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,4}(\:[0-9]+)?\/?(.+)?$/i";
+    if (preg_match($pattern, $url)) {
+        return true;
+    }
 
-	$pattern = "/^https?:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,4}(\:[0-9]+)?\/?(.+)?$/i";
-	if (preg_match($pattern, $url)) {
-		return true;
-	}
+    // not an fqdn
+    if (strtolower(substr($url, 0, 7)) === 'http://'
+            || strtolower(substr($url, 0, 8)) === 'https://'
+    ) {
+        if (strtolower(substr($url, 0, 7)) === 'http://') {
+            $ip = strtolower(substr($url, 7));
+        }
 
-	// not an fqdn
-	if (strtolower(substr($url, 0, 7)) == "http://"
-			|| strtolower(substr($url, 0, 8)) == "https://"
-	) {
-		if (strtolower(substr($url, 0, 7)) == "http://") {
-			$ip = strtolower(substr($url, 7));
-		}
+        if (strtolower(substr($url, 0, 8)) === 'https://') {
+            $ip = strtolower(substr($url, 8));
+        }
 
-		if (strtolower(substr($url, 0, 8)) == "https://") {
-			$ip = strtolower(substr($url, 8));
-		}
+        $ip = substr($ip, 0, strpos($ip, '/'));
+        // possible : in IP (when a port is given), #1173
+        // but only if there actually IS ONE
+        if (strpos($ip, ':') !== false) {
+            $ip = substr($ip, 0, strpos($ip, ':'));
+        }
 
-		$ip = substr($ip, 0, strpos($ip, '/'));
-		// possible : in IP (when a port is given), #1173
-		// but only if there actually IS ONE
-		if (strpos($ip, ':') !== false) {
-			$ip = substr($ip, 0, strpos($ip, ':'));
-		}
+        if (validate_ip($ip, true) !== false) {
+            return true;
+        }
 
-		if (validate_ip($ip, true) !== false) {
-			return true;
-		} else {
-			return false;
-		}
-	} else {
-		return false;
-	}
+        return false;
+    }
+
+    return false;
 }

@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -12,136 +11,140 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Panel
- *
  */
+class linker
+{
+    private $protocol = '';
+    private $username = '';
+    private $password = '';
+    private $hostname = '';
+    private $port = 80;
+    private $filename = 'index.php';
 
-class linker {
+    private $args = array();
 
-	private $protocol = '';
-	private $username = '';
-	private $password = '';
-	private $hostname = '';
-	private $port = 80;
-	private $filename = 'index.php';
+    public function __construct($file = 'index.php', $sessionid = '', $hostname = '', $protocol = '', $port = '', $username = '', $password = '')
+    {
+        // Set the basic parts of our URL
+        $this->protocol = $protocol;
+        $this->username = $username;
+        $this->password = $password;
+        $this->hostname = $hostname;
+        $this->port = $port;
+        $this->filename = $file;
+        // @TODO: Remove this
+        $this->args['s'] = $sessionid;
+    }
 
-	private $args = array();
+    public function __set($key, $value)
+    {
+        switch (strtolower($key)) {
+            case 'protocol': $this->protocol = $value; break;
+            case 'username': $this->username = $value; break;
+            case 'password': $this->password = $value; break;
+            case 'hostname': $this->hostname = $value; break;
+            case 'port': $this->port = $value; break;
+            case 'filename': $this->filename = $value; break;
+            default: return false;
+        }
 
-	public function __construct($file = 'index.php', $sessionid = '', $hostname = '', $protocol = '', $port = '', $username = '', $password = '') {
-		// Set the basic parts of our URL
-		$this->protocol = $protocol;
-		$this->username = $username;
-		$this->password = $password;
-		$this->hostname = $hostname;
-		$this->port = $port;
-		$this->filename = $file;
-		// @TODO: Remove this
-		$this->args['s'] = $sessionid;
-	}
+        return true;
+    }
 
-	public function __set($key, $value) {
+    public function add($key, $value)
+    {
+        // Add a new value to our parameters (overwrite = enabled)
+        $this->args[$key] = $value;
+    }
 
-		switch (strtolower($key)) {
-			case 'protocol': $this->protocol = $value; break;
-			case 'username': $this->username = $value; break;
-			case 'password': $this->password = $value; break;
-			case 'hostname': $this->hostname = $value; break;
-			case 'port': $this->port = $value; break;
-			case 'filename': $this->filename = $value; break;
-			default: return false;
-		}
-		return true;
-	}
+    public function del($key)
+    {
+        // If the key exists in our array -> delete it
+        if (isset($this->args[$key])) {
+            unset($this->args[$key]);
+        }
+    }
 
-	public function add($key, $value) {
-		// Add a new value to our parameters (overwrite = enabled)
-		$this->args[$key] = $value;
-	}
+    public function delAll()
+    {
+        // Just resetting the array
+        // Until the sessionid can be removed: save it
+        // @TODO: Remove this
+        $this->args = array('s' => $this->args['s']);
+    }
 
-	public function del($key) {
-		// If the key exists in our array -> delete it
-		if (isset($this->args[$key])) {
-			unset($this->args[$key]);
-		}
-	}
+    public function getLink()
+    {
+        $link = '';
 
-	public function delAll() {
-		// Just resetting the array
-		// Until the sessionid can be removed: save it
-		// @TODO: Remove this
-		$this->args = array('s' => $this->args['s']);
-	}
+        // Build the basic URL
+        if (strlen($this->protocol) > 0 && strlen($this->hostname) > 0) {
+            $link = $this->protocol . '://';
+        }
 
-	public function getLink() {
-		$link = '';
+        // Let's see if we shall use a username in the URL
+        // This is only available if a hostname is used as well
+        if (strlen($this->username) > 0 && strlen($this->hostname) > 0) {
+            $link .= urlencode($this->username);
 
-		// Build the basic URL
-		if (strlen($this->protocol) > 0 && strlen($this->hostname) > 0) {
-			$link = $this->protocol . '://';
-		}
+            // Maybe we even have to append a password?
+            if ($this->password !== '') {
+                $link .= ':' . urlencode($this->password);
+            }
 
-		// Let's see if we shall use a username in the URL
-		// This is only available if a hostname is used as well
-		if (strlen($this->username) > 0 && strlen($this->hostname) > 0) {
-			$link .= urlencode($this->username);
+            // At least a username was given, add the @ to allow appending the hostname
+            $link .= '@';
+        }
 
-			// Maybe we even have to append a password?
-			if ($this->password != '') {
-				$link .= ':' . urlencode($this->password);
-			}
+        // Add hostname, port and filename to the URL
+        if (strlen($this->hostname) > 0) {
+            $link .= $this->hostname;
 
-			// At least a username was given, add the @ to allow appending the hostname
-			$link .= '@';
-		}
+            // A port may only be used if hostname is used as well
+            if (strlen($this->port) > 0) {
+                $link .= ':' . $this->port;
+            }
+        }
 
-		// Add hostname, port and filename to the URL
-		if (strlen($this->hostname) > 0) {
-			$link .= $this->hostname;
+        // Overwrite $this->args with parameters of this function (if necessary)
+        if (func_num_args() === 1 && is_array(func_get_arg(0))) {
+            $arguments = func_get_arg(0);
+            $this->args = array_merge($this->args, $arguments);
+        }
 
-			// A port may only be used if hostname is used as well
-			if (strlen($this->port) > 0) {
-				$link .= ':' . $this->port;
-			}
-		}
+        // temporary until frontcontroller exists
+        // We got a section in the URL -> morph AREA and section into filename
+        // @TODO: Remove this
+        if (isset($this->args['section']) && strlen($this->args['section']) > 0) {
+            $link .= AREA . '_' . $this->args['section'] . '.php';
+            unset($this->args['section']);
+        } else {
+            // filename has a prefixed slash
+            $link .= $this->filename;
+        }
 
-		// Overwrite $this->args with parameters of this function (if necessary)
-		if (func_num_args() == 1 && is_array(func_get_arg(0))) {
-			$arguments = func_get_arg(0);
-			$this->args = array_merge($this->args, $arguments);
-		}
+        // Let's see if we are done (no arguments in query)
+        if (count($this->args) === 0) {
+            return $link;
+        }
 
-		// temporary until frontcontroller exists
-		// We got a section in the URL -> morph AREA and section into filename
-		// @TODO: Remove this
-		if (isset($this->args['section']) && strlen($this->args['section']) > 0) {
-			$link .= AREA . '_' . $this->args['section'] . '.php';
-			unset($this->args['section']);
-		} else {
-			// filename has a prefixed slash
-			$link .= $this->filename;
-		}
+        // We have parameters, add them with a "?"
+        $link .= '?';
 
-		// Let's see if we are done (no arguments in query)
-		if (count($this->args) == 0) {
-			return $link;
-		}
+        // Loop through arguments and add them to the link
+        foreach ($this->args as $key => $value) {
+            // For all but the first argument, prepend "&amp;"
+            if (substr($link, -1) !== '?') {
+                $link .= '&';
+            }
 
-		// We have parameters, add them with a "?"
-		$link .= "?";
+            // Encode parameters and add them to the link
+            $link .= urlencode($key) . '=' . urlencode($value);
+        }
 
-		// Loop through arguments and add them to the link
-		foreach ($this->args as $key => $value) {
-			// For all but the first argument, prepend "&amp;"
-			if (substr($link, -1) != "?") {
-				$link .= "&";
-			}
+        // Reset our class for further use
+        $this->delAll();
 
-			// Encode parameters and add them to the link
-			$link .= urlencode($key) . '=' . urlencode($value);
-		}
-
-		// Reset our class for further use
-		$this->delAll();
-		return $link;
-	}
+        return $link;
+    }
 }

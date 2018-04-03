@@ -1,8 +1,6 @@
-<?php
+<?php declare(strict_types=1);
 /**
  * Encoding Helper - convert various encodings to / from UTF-8
- * @package IDNA Convert
- * @subpackage charset transcoding
  * @author Matthias Sommerfeld, <mso@phlylabs.de>
  * @copyright 2003-2016 phlyLabs Berlin, http://phlylabs.de
  * @version 1.0.0 2016-01-08
@@ -18,46 +16,42 @@ class EncodingHelper
      * @param  string  $string String to encode
      *[@param  string $encoding  Encoding; Default: ISO-8859-1]
      *[@param  bool $safe_mode  Safe Mode: if set to TRUE, the original string is retunred on errors]
+     * @param mixed $encoding
+     * @param mixed $safe_mode
      * @return  string|false  The encoded string or false on failure
      * @since 0.0.1
      */
     public static function toUtf8($string = '', $encoding = 'iso-8859-1', $safe_mode = false)
     {
         $safe = ($safe_mode) ? $string : false;
-        if (strtoupper($encoding) == 'UTF-8' || strtoupper($encoding) == 'UTF8') {
-
+        if (strtoupper($encoding) === 'UTF-8' || strtoupper($encoding) === 'UTF8') {
             return $string;
         }
-        if (strtoupper($encoding) == 'ISO-8859-1') {
-
+        if (strtoupper($encoding) === 'ISO-8859-1') {
             return \utf8_encode($string);
-
-        } if (strtoupper($encoding) == 'WINDOWS-1252') {
-
+        }
+        if (strtoupper($encoding) === 'WINDOWS-1252') {
             return \utf8_encode(self::map_w1252_iso8859_1($string));
         }
 
-        if (strtoupper($encoding) == 'UNICODE-1-1-UTF-7') {
+        if (strtoupper($encoding) === 'UNICODE-1-1-UTF-7') {
             $encoding = 'utf-7';
         }
         if (function_exists('mb_convert_encoding')) {
             $conv = @mb_convert_encoding($string, 'UTF-8', strtoupper($encoding));
             if ($conv) {
-
                 return $conv;
             }
         }
         if (function_exists('iconv')) {
             $conv = @iconv(strtoupper($encoding), 'UTF-8', $string);
             if ($conv) {
-
                 return $conv;
             }
         }
         if (function_exists('libiconv')) {
             $conv = @libiconv(strtoupper($encoding), 'UTF-8', $string);
             if ($conv) {
-
                 return $conv;
             }
         }
@@ -71,47 +65,45 @@ class EncodingHelper
      * @param  string  $string String to decode
      *[@param  string  $encoding Encoding; Default: ISO-8859-1]
      *[@param  bool  $safe_mode Safe Mode: if set to TRUE, the original string is retunred on errors]
+     * @param mixed $encoding
+     * @param mixed $safe_mode
      * @return  string|false  The decoded string or false on failure
      * @since 0.0.1
      */
     public static function fromUtf8($string = '', $encoding = 'iso-8859-1', $safe_mode = false)
     {
         $safe = ($safe_mode) ? $string : false;
-        if (!$encoding) $encoding = 'ISO-8859-1';
-        if (strtoupper($encoding) == 'UTF-8' || strtoupper($encoding) == 'UTF8') {
-
+        if (!$encoding) {
+            $encoding = 'ISO-8859-1';
+        }
+        if (strtoupper($encoding) === 'UTF-8' || strtoupper($encoding) === 'UTF8') {
             return $string;
         }
-        if (strtoupper($encoding) == 'ISO-8859-1') {
-
+        if (strtoupper($encoding) === 'ISO-8859-1') {
             return utf8_decode($string);
         }
-        if (strtoupper($encoding) == 'WINDOWS-1252') {
-
+        if (strtoupper($encoding) === 'WINDOWS-1252') {
             return self::map_iso8859_1_w1252(utf8_decode($string));
         }
 
-        if (strtoupper($encoding) == 'UNICODE-1-1-UTF-7') {
+        if (strtoupper($encoding) === 'UNICODE-1-1-UTF-7') {
             $encoding = 'utf-7';
         }
         if (function_exists('mb_convert_encoding')) {
             $conv = @mb_convert_encoding($string, strtoupper($encoding), 'UTF-8');
             if ($conv) {
-
                 return $conv;
             }
         }
         if (function_exists('iconv')) {
             $conv = @iconv('UTF-8', strtoupper($encoding), $string);
             if ($conv) {
-
                 return $conv;
             }
         }
         if (function_exists('libiconv')) {
             $conv = @libiconv('UTF-8', strtoupper($encoding), $string);
             if ($conv) {
-
                 return $conv;
             }
         }
@@ -129,8 +121,7 @@ class EncodingHelper
      */
     protected static function map_w1252_iso8859_1($string = '')
     {
-        if ($string == '') {
-
+        if ($string === '') {
             return '';
         }
         $return = '';
@@ -162,7 +153,7 @@ class EncodingHelper
      */
     protected static function map_iso8859_1_w1252($string = '')
     {
-        if ($string == '') {
+        if ($string === '') {
             return '';
         }
 

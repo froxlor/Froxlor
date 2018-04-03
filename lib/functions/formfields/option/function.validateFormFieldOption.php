@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,36 +12,30 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $fieldname
+ * @param mixed $fielddata
+ * @param mixed $newfieldvalue
  */
-
 function validateFormFieldOption($fieldname, $fielddata, $newfieldvalue)
 {
-	$returnvalue = true;
+    $returnvalue = true;
 
-	if(isset($fielddata['option_mode']) && $fielddata['option_mode'] == 'multiple')
-	{
-		$options = explode(',', $newfieldvalue);
-		foreach($options as $option)
-		{
-			$returnvalue = ($returnvalue && isset($fielddata['option_options'][$option]));
-		}
-	}
-	else
-	{
-		$returnvalue = isset($fielddata['option_options'][$newfieldvalue]);
-	}
+    if (isset($fielddata['option_mode']) && $fielddata['option_mode'] === 'multiple') {
+        $options = explode(',', $newfieldvalue);
+        foreach ($options as $option) {
+            $returnvalue = ($returnvalue && isset($fielddata['option_options'][$option]));
+        }
+    } else {
+        $returnvalue = isset($fielddata['option_options'][$newfieldvalue]);
+    }
 
-	if($returnvalue === true || $fielddata['visible'] == false)
-	{
-		return true;
-	}
-	else
-	{
-		if (isset($fielddata['option_emptyallowed']) && $fielddata['option_emptyallowed']) {
-			return true;
-		}
-		return 'not in option';
-	}
+    if ($returnvalue === true || $fielddata['visible'] === false) {
+        return true;
+    }
+    if (isset($fielddata['option_emptyallowed']) && $fielddata['option_emptyallowed']) {
+        return true;
+    }
+
+    return 'not in option';
 }

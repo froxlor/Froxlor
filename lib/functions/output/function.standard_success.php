@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,8 +12,10 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $success_message
+ * @param mixed $replacer
+ * @param mixed $params
  */
 
 /**
@@ -24,34 +25,27 @@
  * @param string A %s in the errormessage will be replaced by this string.
  * @author Florian Lippert <flo@syscp.org>
  */
-
 function standard_success($success_message = '', $replacer = '', $params = array())
 {
-	global $s, $header, $footer, $lng, $theme;
+    global $s, $header, $footer, $lng, $theme;
 
-	if(isset($lng['success'][$success_message]))
-	{
-		$success_message = strtr($lng['success'][$success_message], array('%s' => htmlentities($replacer)));
-	}
-	
-	if(is_array($params) && isset($params['filename']))
-	{
-		$redirect_url = $params['filename'] . '?s=' . $s;
-		unset($params['filename']);
-		
-		foreach($params as $varname => $value)
-		{
-			if($value != '')
-			{
-				$redirect_url .= '&amp;' . $varname . '=' . $value;
-			}
-		}
-	}
-	else
-	{
-		$redirect_url = '';
-	}
+    if (isset($lng['success'][$success_message])) {
+        $success_message = strtr($lng['success'][$success_message], array('%s' => htmlentities($replacer)));
+    }
+    
+    if (is_array($params) && isset($params['filename'])) {
+        $redirect_url = $params['filename'] . '?s=' . $s;
+        unset($params['filename']);
+        
+        foreach ($params as $varname => $value) {
+            if ($value !== '') {
+                $redirect_url .= '&amp;' . $varname . '=' . $value;
+            }
+        }
+    } else {
+        $redirect_url = '';
+    }
 
-	eval("echo \"" . getTemplate('misc/success', '1') . "\";");
-	exit;
+    eval('echo "' . getTemplate('misc/success', '1') . '";');
+    exit;
 }

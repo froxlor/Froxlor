@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -11,16 +10,18 @@
  * @copyright  (c) the authors
  * @author     Daniel Reichelt <hacking@nachtgeist.net> (2016-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $fieldname
+ * @param mixed $fielddata
+ * @param & $input
  */
+function getFormFieldDataText($fieldname, $fielddata, &$input)
+{
+    if (isset($input[$fieldname])) {
+        $newfieldvalue = str_replace("\r\n", "\n", $input[$fieldname]);
+    } else {
+        $newfieldvalue = $fielddata['default'];
+    }
 
-function getFormFieldDataText($fieldname, $fielddata, &$input) {
-	if(isset($input[$fieldname])) {
-		$newfieldvalue = str_replace("\r\n", "\n", $input[$fieldname]);
-	} else {
-		$newfieldvalue = $fielddata['default'];
-	}
-
-	return $newfieldvalue;
+    return $newfieldvalue;
 }

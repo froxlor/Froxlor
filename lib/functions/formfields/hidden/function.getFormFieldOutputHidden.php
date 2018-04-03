@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,20 +12,19 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $fieldname
+ * @param mixed $fielddata
  */
-
 function getFormFieldOutputHidden($fieldname, $fielddata)
 {
-	$returnvalue = '<input type="hidden" name="' . $fieldname . '" value="' . htmlentities($fielddata['value']) . '" />';
+    $returnvalue = '<input type="hidden" name="' . $fieldname . '" value="' . htmlentities($fielddata['value']) . '" />';
 
-	if(isset($fielddata['label']) && $fielddata['label'] != '')
-	{
-		$label = $fielddata['label'];
-		$value = htmlentities($fielddata['value']);
-		eval("\$returnvalue .= \"" . getTemplate("formfields/hidden", true) . "\";");
-	}
+    if (isset($fielddata['label']) && $fielddata['label'] !== '') {
+        $label = $fielddata['label'];
+        $value = htmlentities($fielddata['value']);
+        eval('$returnvalue .= "' . getTemplate('formfields/hidden', true) . '";');
+    }
 
-	return $returnvalue;
+    return $returnvalue;
 }

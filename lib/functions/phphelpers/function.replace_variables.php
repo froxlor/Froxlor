@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,8 +12,9 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $text
+ * @param mixed $vars
  */
 
 /**
@@ -26,33 +26,30 @@
  * @return string The submitted string with the variables replaced.
  * @author Michael Duergner
  */
-
 function replace_variables($text, $vars)
 {
-	$pattern = "/\{([a-zA-Z0-9\-_]+)\}/";
+    $pattern = "/\{([a-zA-Z0-9\-_]+)\}/";
 
-	// --- martin @ 08.08.2005 -------------------------------------------------------
-	// fixing usage of uninitialised variable
+    // --- martin @ 08.08.2005 -------------------------------------------------------
+    // fixing usage of uninitialised variable
 
-	$matches = array();
+    $matches = array();
 
-	// -------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------------
 
-	if(count($vars) > 0
-	   && preg_match_all($pattern, $text, $matches))
-	{
-		for ($i = 0;$i < count($matches[1]);$i++)
-		{
-			$current = $matches[1][$i];
+    if (count($vars) > 0
+       && preg_match_all($pattern, $text, $matches)) {
+        for ($i = 0; $i < count($matches[1]); $i++) {
+            $current = $matches[1][$i];
 
-			if(isset($vars[$current]))
-			{
-				$var = $vars[$current];
-				$text = str_replace("{" . $current . "}", $var, $text);
-			}
-		}
-	}
+            if (isset($vars[$current])) {
+                $var = $vars[$current];
+                $text = str_replace('{' . $current . '}', $var, $text);
+            }
+        }
+    }
 
-	$text = str_replace('\n', "\n", $text);
-	return $text;
+    $text = str_replace('\n', "\n", $text);
+
+    return $text;
 }

@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,20 +12,18 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $fieldname
+ * @param mixed $fielddata
+ * @param mixed $newfieldvalue
  */
-
 function validateFormFieldDate($fieldname, $fielddata, $newfieldvalue)
 {
-	if($newfieldvalue == '0000-00-00' || preg_match('/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', $newfieldvalue))
-	{
-		$returnvalue = true;
-	}
-	else
-	{
-		$returnvalue = false;
-	}
-	
-	return $returnvalue;
+    if ($newfieldvalue === '0000-00-00' || preg_match('/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', $newfieldvalue)) {
+        $returnvalue = true;
+    } else {
+        $returnvalue = false;
+    }
+    
+    return $returnvalue;
 }

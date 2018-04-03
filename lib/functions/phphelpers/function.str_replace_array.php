@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,8 +12,11 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $search
+ * @param mixed $replace
+ * @param mixed $subject
+ * @param mixed $fields
  */
 
 /**
@@ -28,25 +30,19 @@
  * @return array The str_replace'd array
  * @author Florian Lippert <flo@syscp.org>
  */
-
 function str_replace_array($search, $replace, $subject, $fields = '')
 {
-	if(is_array($subject))
-	{
-		$fields = array_trim(explode(' ', $fields));
-		foreach($subject as $field => $value)
-		{
-			if((!is_array($fields) || empty($fields))
-			   || (is_array($fields) && !empty($fields) && in_array($field, $fields)))
-			{
-				$subject[$field] = str_replace($search, $replace, $subject[$field]);
-			}
-		}
-	}
-	else
-	{
-		$subject = str_replace($search, $replace, $subject);
-	}
+    if (is_array($subject)) {
+        $fields = array_trim(explode(' ', $fields));
+        foreach ($subject as $field => $value) {
+            if ((!is_array($fields) || empty($fields))
+               || (is_array($fields) && !empty($fields) && in_array($field, $fields, true))) {
+                $subject[$field] = str_replace($search, $replace, $subject[$field]);
+            }
+        }
+    } else {
+        $subject = str_replace($search, $replace, $subject);
+    }
 
-	return $subject;
+    return $subject;
 }

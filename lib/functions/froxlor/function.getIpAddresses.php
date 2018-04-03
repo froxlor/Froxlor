@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,29 +12,25 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
- *
  */
+function getIpAddresses()
+{
+    $result_stmt = Database::query('
+		SELECT `id`, `ip`, `port` FROM `' . TABLE_PANEL_IPSANDPORTS . '` ORDER BY `ip` ASC, `port` ASC
+	');
 
-function getIpAddresses() {
+    $system_ipaddress_array = array();
 
-	$result_stmt = Database::query("
-		SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` ORDER BY `ip` ASC, `port` ASC
-	");
+    while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+        if (!isset($system_ipaddress_array[$row['ip']])
+                && !in_array($row['ip'], $system_ipaddress_array, true)
+        ) {
+            if (filter_var($row['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+                $row['ip'] = '[' . $row['ip'] . ']';
+            }
+            $system_ipaddress_array[$row['ip']] = $row['ip'];
+        }
+    }
 
-	$system_ipaddress_array = array();
-
-	while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-
-		if (!isset($system_ipaddress_array[$row['ip']])
-				&& !in_array($row['ip'], $system_ipaddress_array)
-		) {
-			if (filter_var($row['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-				$row['ip'] = '[' . $row['ip'] . ']';
-			}
-			$system_ipaddress_array[$row['ip']] = $row['ip'];
-		}
-	}
-
-	return $system_ipaddress_array;
+    return $system_ipaddress_array;
 }

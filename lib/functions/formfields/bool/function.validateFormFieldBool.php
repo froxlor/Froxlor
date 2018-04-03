@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,18 +12,16 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $fieldname
+ * @param mixed $fielddata
+ * @param mixed $newfieldvalue
  */
-
 function validateFormFieldBool($fieldname, $fielddata, $newfieldvalue)
 {
-	if($newfieldvalue === '1' || $newfieldvalue === 1 || $newfieldvalue === true || strtolower($newfieldvalue) === 'yes' || strtolower($newfieldvalue) === 'ja' || $newfieldvalue === '0' || $newfieldvalue === 0 || $newfieldvalue === false || strtolower($newfieldvalue) === 'no' || strtolower($newfieldvalue) === 'nein' || strtolower($newfieldvalue) === '')
-	{
-		return true;
-	}
-	else
-	{
-		return 'noboolean';
-	}
+    if ($newfieldvalue === '1' || $newfieldvalue === 1 || $newfieldvalue === true || strtolower($newfieldvalue) === 'yes' || strtolower($newfieldvalue) === 'ja' || $newfieldvalue === '0' || $newfieldvalue === 0 || $newfieldvalue === false || strtolower($newfieldvalue) === 'no' || strtolower($newfieldvalue) === 'nein' || strtolower($newfieldvalue) === '') {
+        return true;
+    }
+
+    return 'noboolean';
 }

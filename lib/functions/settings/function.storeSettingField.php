@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,62 +12,63 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $fieldname
+ * @param mixed $fielddata
+ * @param mixed $newfieldvalue
  */
+function storeSettingField($fieldname, $fielddata, $newfieldvalue)
+{
+    if (is_array($fielddata)
+            && isset($fielddata['settinggroup'])
+            && $fielddata['settinggroup'] !== ''
+            && isset($fielddata['varname'])
+            && $fielddata['varname'] !== ''
+    ) {
+        if (Settings::Set($fielddata['settinggroup'] . '.' . $fielddata['varname'], $newfieldvalue) !== false) {
+            /*
+             * when fielddata[cronmodule] is set, this means enable/disable a cronjob
+            */
+            if (isset($fielddata['cronmodule'])
+                    && $fielddata['cronmodule'] !== ''
+            ) {
+                toggleCronStatus($fielddata['cronmodule'], $newfieldvalue);
+            }
 
-function storeSettingField($fieldname, $fielddata, $newfieldvalue) {
+            /*
+             * satisfy dependencies
+            */
+            if (isset($fielddata['dependency'])
+                    && is_array($fielddata['dependency'])
+            ) {
+                if ((int) $fielddata['dependency']['onlyif'] === (int) $newfieldvalue) {
+                    storeSettingField($fielddata['dependency']['fieldname'], $fielddata['dependency']['fielddata'], $newfieldvalue);
+                }
+            }
 
-	if (is_array($fielddata)
-			&& isset($fielddata['settinggroup'])
-			&& $fielddata['settinggroup'] != ''
-			&& isset($fielddata['varname'])
-			&& $fielddata['varname'] != ''
-	) {
-		if (Settings::Set($fielddata['settinggroup'].'.'.$fielddata['varname'], $newfieldvalue) !== false) {
-			/*
-			 * when fielddata[cronmodule] is set, this means enable/disable a cronjob
-			*/
-			if (isset($fielddata['cronmodule'])
-					&& $fielddata['cronmodule'] != ''
-			) {
-				toggleCronStatus($fielddata['cronmodule'], $newfieldvalue);
-			}
+            return array($fielddata['settinggroup'] . '.' . $fielddata['varname'] => $newfieldvalue);
+        }
 
-			/*
-			 * satisfy dependencies
-			*/
-			if (isset($fielddata['dependency'])
-					&& is_array($fielddata['dependency'])
-			) {
-				if ((int)$fielddata['dependency']['onlyif'] == (int)$newfieldvalue) {
-					storeSettingField($fielddata['dependency']['fieldname'], $fielddata['dependency']['fielddata'], $newfieldvalue);
-				}
-			}
+        return false;
+    }
 
-			return array($fielddata['settinggroup'] . '.' . $fielddata['varname'] => $newfieldvalue);
-		} else {
-			return false;
-		}
-	} else {
-		return false;
-	}
+    return false;
 }
 
-function storeSettingFieldInsertBindTask($fieldname, $fielddata, $newfieldvalue) {
+function storeSettingFieldInsertBindTask($fieldname, $fielddata, $newfieldvalue)
+{
+    if (is_array($fielddata)
+            && isset($fielddata['settinggroup'])
+            && $fielddata['settinggroup'] !== ''
+            && isset($fielddata['varname'])
+            && $fielddata['varname'] !== ''
+    ) {
+        if (Settings::Set($fielddata['settinggroup'] . '.' . $fielddata['varname'], $newfieldvalue) !== false) {
+            return array($fielddata['settinggroup'] . '.' . $fielddata['varname'] => $newfieldvalue);
+        }
 
-	if (is_array($fielddata)
-			&& isset($fielddata['settinggroup'])
-			&& $fielddata['settinggroup'] != ''
-			&& isset($fielddata['varname'])
-			&& $fielddata['varname'] != ''
-	) {
-		if (Settings::Set($fielddata['settinggroup'].'.'.$fielddata['varname'], $newfieldvalue) !== false) {
-			return array($fielddata['settinggroup'] . '.' . $fielddata['varname'] => $newfieldvalue);
-		} else {
-			return false;
-		}
-	} else {
-		return false;
-	}
+        return false;
+    }
+
+    return false;
 }

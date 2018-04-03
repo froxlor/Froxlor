@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -11,47 +10,48 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param null|mixed $filename
  */
 
 /**
  * set the immutable flag for a file
- * 
+ *
  * @param string $filename the file to set the flag for
- * 
- * @return boolean
+ *
+ * @return bool
  */
-function setImmutable($filename = null) {
-	safe_exec(_getImmutableFunction(false).escapeshellarg($filename));
+function setImmutable($filename = null)
+{
+    safe_exec(_getImmutableFunction(false) . escapeshellarg($filename));
 }
 
 /**
  * removes the immutable flag for a file
- * 
+ *
  * @param string $filename the file to set the flag for
- * 
- * @return boolean
+ *
+ * @return bool
  */
-function removeImmutable($filename = null) {
-	safe_exec(_getImmutableFunction(true).escapeshellarg($filename));
+function removeImmutable($filename = null)
+{
+    safe_exec(_getImmutableFunction(true) . escapeshellarg($filename));
 }
 
 /**
  * internal function to check whether
  * to use chattr (Linux) or chflags (FreeBSD)
- * 
- * @param boolean $remove whether to use +i|schg (false) or -i|noschg (true)
- * 
+ *
+ * @param bool $remove whether to use +i|schg (false) or -i|noschg (true)
+ *
  * @return string functionname + parameter (not the file)
  */
-function _getImmutableFunction($remove = false) {
-
-	if (isFreeBSD()) {
-		// FreeBSD style
-		return 'chflags '.(($remove === true) ? 'noschg ' : 'schg ');  
-	} else {
-		// Linux style
-		return 'chattr '.(($remove === true) ? '-i ' : '+i ');
-	}
+function _getImmutableFunction($remove = false)
+{
+    if (isFreeBSD()) {
+        // FreeBSD style
+        return 'chflags ' . (($remove === true) ? 'noschg ' : 'schg ');
+    }
+    // Linux style
+    return 'chattr ' . (($remove === true) ? '-i ' : '+i ');
 }

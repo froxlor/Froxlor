@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /*
   +----------------------------------------------------------------------+
   | APC                                                                  |
@@ -32,12 +31,12 @@ require './lib/init.php';
 
 $horizontal_bar_size = 950; // 1280px window width
 
-if ($action == 'delete' &&
+if ($action === 'delete' &&
         function_exists('apcu_clear_cache') &&
-        $userinfo['change_serversettings'] == '1'
+        $userinfo['change_serversettings'] === '1'
 ) {
     apcu_clear_cache();
-    $log->logAction(ADM_ACTION, LOG_INFO, "cleared APCu cache");
+    $log->logAction(ADM_ACTION, LOG_INFO, 'cleared APCu cache');
     header('Location: ' . $linker->getLink(array('section' => 'apcuinfo', 'page' => 'showinfo')));
     exit();
 }
@@ -48,12 +47,12 @@ if (!function_exists('apcu_cache_info') ||
     standard_error($lng['error']['no_apcuinfo']);
 }
 
-if ($page == 'showinfo'
+if ($page === 'showinfo'
 ) {
     $cache = apcu_cache_info();
     $mem = apcu_sma_info();
     $time = time();
-    $log->logAction(ADM_ACTION, LOG_NOTICE, "viewed admin_apcuinfo");
+    $log->logAction(ADM_ACTION, LOG_NOTICE, 'viewed admin_apcuinfo');
 
     $passtime = $time - $cache['start_time'] > 0 ? $time - $cache['start_time'] : 1; // zero division
     $mem_size = $mem['num_seg'] * $mem['seg_size'];
@@ -61,10 +60,10 @@ if ($page == 'showinfo'
     $mem_used = $mem_size - $mem_avail;
     $seg_size = bsize($mem['seg_size']);
     $sharedmem = sprintf($lng['apcuinfo']['sharedmemval'], $mem['num_seg'], $seg_size, $cache['memory_type']);
-    $req_rate_user = sprintf("%.2f", $cache['num_hits'] ? (($cache['num_hits'] + $cache['num_misses']) / $passtime) : 0);
-    $hit_rate_user = sprintf("%.2f", $cache['num_hits'] ? (($cache['num_hits']) / $passtime) : 0);
-    $miss_rate_user = sprintf("%.2f", $cache['num_misses'] ? (($cache['num_misses']) / $passtime) : 0);
-    $insert_rate_user = sprintf("%.2f", $cache['num_inserts'] ? (($cache['num_inserts']) / $passtime) : 0);
+    $req_rate_user = sprintf('%.2f', $cache['num_hits'] ? (($cache['num_hits'] + $cache['num_misses']) / $passtime) : 0);
+    $hit_rate_user = sprintf('%.2f', $cache['num_hits'] ? (($cache['num_hits']) / $passtime) : 0);
+    $miss_rate_user = sprintf('%.2f', $cache['num_misses'] ? (($cache['num_misses']) / $passtime) : 0);
+    $insert_rate_user = sprintf('%.2f', $cache['num_inserts'] ? (($cache['num_inserts']) / $passtime) : 0);
     $apcversion = phpversion('apcu');
     $phpversion = phpversion();
     $number_vars = $cache['num_entries'];
@@ -84,35 +83,36 @@ if ($page == 'showinfo'
     $runtimelines = '';
     foreach (ini_get_all('apcu') as $name => $v) {
         $value = $v['local_value'];
-        eval("\$runtimelines.=\"" . getTemplate("settings/apcuinfo/runtime_line") . "\";");
+        eval('$runtimelines.="' . getTemplate('settings/apcuinfo/runtime_line') . '";');
     }
 
-    $freemem = bsize($mem_avail) . sprintf(" (%.1f%%)", $mem_avail * 100 / $mem_size);
-    $usedmem = bsize($mem_used) . sprintf(" (%.1f%%)", $mem_used * 100 / $mem_size);
-    $hits = $cache['num_hits'] . @sprintf(" (%.1f%%)", $cache['num_hits'] * 100 / ($cache['num_hits'] + $cache['num_misses']));
-    $misses = $cache['num_misses'] . @sprintf(" (%.1f%%)", $cache['num_misses'] * 100 / ($cache['num_hits'] + $cache['num_misses']));
+    $freemem = bsize($mem_avail) . sprintf(' (%.1f%%)', $mem_avail * 100 / $mem_size);
+    $usedmem = bsize($mem_used) . sprintf(' (%.1f%%)', $mem_used * 100 / $mem_size);
+    $hits = $cache['num_hits'] . @sprintf(' (%.1f%%)', $cache['num_hits'] * 100 / ($cache['num_hits'] + $cache['num_misses']));
+    $misses = $cache['num_misses'] . @sprintf(' (%.1f%%)', $cache['num_misses'] * 100 / ($cache['num_hits'] + $cache['num_misses']));
 
     // Fragementation: (freeseg - 1) / total_seg
     $nseg = $freeseg = $fragsize = $freetotal = 0;
     for ($i = 0; $i < $mem['num_seg']; $i++) {
         $ptr = 0;
         foreach ($mem['block_lists'][$i] as $block) {
-            if ($block['offset'] != $ptr) {
+            if ($block['offset'] !== $ptr) {
                 ++$nseg;
             }
             $ptr = $block['offset'] + $block['size'];
             /* Only consider blocks <5M for the fragmentation % */
-            if ($block['size'] < (5 * 1024 * 1024))
+            if ($block['size'] < (5 * 1024 * 1024)) {
                 $fragsize+=$block['size'];
+            }
             $freetotal+=$block['size'];
         }
         $freeseg += count($mem['block_lists'][$i]);
     }
 
     if ($freeseg > 1) {
-        $frag = sprintf("%.2f%% (%s out of %s in %d fragments)", ($fragsize / $freetotal) * 100, bsize($fragsize), bsize($freetotal), $freeseg);
+        $frag = sprintf('%.2f%% (%s out of %s in %d fragments)', ($fragsize / $freetotal) * 100, bsize($fragsize), bsize($freetotal), $freeseg);
     } else {
-        $frag = "0%";
+        $frag = '0%';
     }
 
     foreach (ini_get_all('apcu') as $name => $v) {
@@ -124,18 +124,16 @@ if ($page == 'showinfo'
     $img_src3 = '';
     if (graphics_avail()) {
         $img_src = $linker->getLink(array('section' => 'apcuinfo', 'page' => 'img1', 'action' => mt_rand(0, 1000000)));
-        eval("\$img_src1=\"" . getTemplate("settings/apcuinfo/img_line") . "\";");
+        eval('$img_src1="' . getTemplate('settings/apcuinfo/img_line') . '";');
         $img_src = $linker->getLink(array('section' => 'apcuinfo', 'page' => 'img2', 'action' => mt_rand(0, 1000000)));
-        eval("\$img_src2=\"" . getTemplate("settings/apcuinfo/img_line") . "\";");
+        eval('$img_src2="' . getTemplate('settings/apcuinfo/img_line') . '";');
         $img_src = $linker->getLink(array('section' => 'apcuinfo', 'page' => 'img3', 'action' => mt_rand(0, 1000000)));
-        eval("\$img_src3=\"" . getTemplate("settings/apcuinfo/img_line") . "\";");
+        eval('$img_src3="' . getTemplate('settings/apcuinfo/img_line') . '";');
     }
 
-    eval("echo \"" . getTemplate("settings/apcuinfo/showinfo") . "\";");
-    
-} elseif ($page == 'img1'
+    eval('echo "' . getTemplate('settings/apcuinfo/showinfo') . '";');
+} elseif ($page === 'img1'
 ) {
-
     $mem = apcu_sma_info();
 
     $size = 460;
@@ -162,10 +160,11 @@ if ($page == 'showinfo'
         $free = $mem['block_lists'][$i];
         uasort($free, 'block_sort');
         foreach ($free as $block) {
-            if ($block['offset'] != $ptr) {       // Used block
+            if ($block['offset'] !== $ptr) {       // Used block
                 $angle_to = $angle_from + ($block['offset'] - $ptr) / $s;
-                if (($angle_to + $fuzz) > 1)
+                if (($angle_to + $fuzz) > 1) {
                     $angle_to = 1;
+                }
                 if (($angle_to * 360) - ($angle_from * 360) >= 1) {
                     fill_arc($image, $x, $y, $size, $angle_from * 360, $angle_to * 360, $col_black, $col_red);
                     if (($angle_to - $angle_from) > 0.05) {
@@ -175,8 +174,9 @@ if ($page == 'showinfo'
                 $angle_from = $angle_to;
             }
             $angle_to = $angle_from + ($block['size']) / $s;
-            if (($angle_to + $fuzz) > 1)
+            if (($angle_to + $fuzz) > 1) {
                 $angle_to = 1;
+            }
             if (($angle_to * 360) - ($angle_from * 360) >= 1) {
                 fill_arc($image, $x, $y, $size, $angle_from * 360, $angle_to * 360, $col_black, $col_green);
                 if (($angle_to - $angle_from) > 0.05) {
@@ -188,8 +188,9 @@ if ($page == 'showinfo'
         }
         if ($ptr < $mem['seg_size']) { // memory at the end
             $angle_to = $angle_from + ($mem['seg_size'] - $ptr) / $s;
-            if (($angle_to + $fuzz) > 1)
+            if (($angle_to + $fuzz) > 1) {
                 $angle_to = 1;
+            }
             fill_arc($image, $x, $y, $size, $angle_from * 360, $angle_to * 360, $col_black, $col_red);
             if (($angle_to - $angle_from) > 0.05) {
                 array_push($string_placement, array($angle_from, $angle_to));
@@ -200,12 +201,11 @@ if ($page == 'showinfo'
         text_arc($image, $x, $y, $size, $angle[0] * 360, $angle[1] * 360, $col_black, bsize($s * ($angle[1] - $angle[0])));
     }
 
-    header("Content-type: image/png");
+    header('Content-type: image/png');
     imagepng($image);
     exit;
-} elseif ($page == 'img2'
+} elseif ($page === 'img2'
 ) {
-
     $cache = apcu_cache_info();
 
     $size = $horizontal_bar_size;
@@ -224,12 +224,11 @@ if ($page == 'showinfo'
     fill_box($image, 1, 10, $s ? ($a * ($size - 21) / $s) : $size, 50, $col_black, $col_green/* , sprintf("%.1f%%", $s ? $cache['num_hits'] * 100 / $s : 0) */);
     fill_box($image, 1, 80, $s ? max(4, ($s - $a) * ($size - 21) / $s) : $size, 50, $col_black, $col_red/* , sprintf("%.1f%%", $s ? $cache['num_misses'] * 100 / $s : 0) */);
 
-    header("Content-type: image/png");
+    header('Content-type: image/png');
     imagepng($image);
     exit;
-} elseif ($page == 'img3'
+} elseif ($page === 'img3'
 ) {
-
     $mem = apcu_sma_info();
 
     $size = $horizontal_bar_size;
@@ -254,7 +253,7 @@ if ($page == 'showinfo'
         $free = $mem['block_lists'][$i];
         uasort($free, 'block_sort');
         foreach ($free as $block) {
-            if ($block['offset'] != $ptr) {       // Used block
+            if ($block['offset'] !== $ptr) {       // Used block
                 $h = ($size - 5) * ($block['offset'] - $ptr) / $s;
                 if ($h > 0) {
                     fill_box($image, $y, $x, $h, 50, $col_black, $col_red);
@@ -276,27 +275,32 @@ if ($page == 'showinfo'
         }
     }
 
-    header("Content-type: image/png");
+    header('Content-type: image/png');
     imagepng($image);
     exit;
 }
 
-function graphics_avail() {
+function graphics_avail()
+{
     return extension_loaded('gd');
 }
 
 // pretty printer for byte values
 //
-function bsize($s) {
+function bsize($s)
+{
     foreach (array('', 'K', 'M', 'G') as $i => $k) {
-        if ($s < 1024)
+        if ($s < 1024) {
             break;
+        }
         $s/=1024;
     }
-    return sprintf("%5.1f %sBytes", $s, $k);
+
+    return sprintf('%5.1f %sBytes', $s, $k);
 }
 
-function duration($ts) {
+function duration($ts)
+{
     global $time;
     $years = (int) ((($time - $ts) / (7 * 86400)) / 52.177457);
     $rem = (int) (($time - $ts) - ($years * 52.177457 * 7 * 86400));
@@ -305,43 +309,55 @@ function duration($ts) {
     $hours = (int) (($rem) / 3600) - $days * 24 - $weeks * 7 * 24;
     $mins = (int) (($rem) / 60) - $hours * 60 - $days * 24 * 60 - $weeks * 7 * 24 * 60;
     $str = '';
-    if ($years == 1)
+    if ($years === 1) {
         $str .= "$years year, ";
-    if ($years > 1)
+    }
+    if ($years > 1) {
         $str .= "$years years, ";
-    if ($weeks == 1)
+    }
+    if ($weeks === 1) {
         $str .= "$weeks week, ";
-    if ($weeks > 1)
+    }
+    if ($weeks > 1) {
         $str .= "$weeks weeks, ";
-    if ($days == 1)
+    }
+    if ($days === 1) {
         $str .= "$days day,";
-    if ($days > 1)
+    }
+    if ($days > 1) {
         $str .= "$days days,";
-    if ($hours == 1)
+    }
+    if ($hours === 1) {
         $str .= " $hours hour and";
-    if ($hours > 1)
+    }
+    if ($hours > 1) {
         $str .= " $hours hours and";
-    if ($mins == 1)
-        $str .= " 1 minute";
-    else
+    }
+    if ($mins === 1) {
+        $str .= ' 1 minute';
+    } else {
         $str .= " $mins minutes";
+    }
+
     return $str;
 }
 
-function block_sort($array1, $array2) {
+function block_sort($array1, $array2)
+{
     if ($array1['offset'] > $array2['offset']) {
         return 1;
-    } else {
-        return -1;
     }
+
+    return -1;
 }
 
-function fill_arc($im, $centerX, $centerY, $diameter, $start, $end, $color1, $color2, $text = '', $placeindex = 0) {
+function fill_arc($im, $centerX, $centerY, $diameter, $start, $end, $color1, $color2, $text = '', $placeindex = 0)
+{
     $r = $diameter / 2;
     $w = deg2rad((360 + $start + ($end - $start) / 2) % 360);
 
 
-    if (function_exists("imagefilledarc")) {
+    if (function_exists('imagefilledarc')) {
         // exists only if GD 2.0.1 is available
         imagefilledarc($im, $centerX + 1, $centerY + 1, $diameter, $diameter, $start, $end, $color1, IMG_ARC_PIE);
         imagefilledarc($im, $centerX, $centerY, $diameter, $diameter, $start, $end, $color2, IMG_ARC_PIE);
@@ -364,7 +380,8 @@ function fill_arc($im, $centerX, $centerY, $diameter, $start, $end, $color1, $co
     }
 }
 
-function text_arc($im, $centerX, $centerY, $diameter, $start, $end, $color1, $text, $placeindex = 0) {
+function text_arc($im, $centerX, $centerY, $diameter, $start, $end, $color1, $text, $placeindex = 0)
+{
     $r = $diameter / 2;
     $w = deg2rad((360 + $start + ($end - $start) / 2) % 360);
 
@@ -376,20 +393,21 @@ function text_arc($im, $centerX, $centerY, $diameter, $start, $end, $color1, $te
     }
 }
 
-function fill_box($im, $x, $y, $w, $h, $color1, $color2, $text = '', $placeindex = '') {
+function fill_box($im, $x, $y, $w, $h, $color1, $color2, $text = '', $placeindex = '')
+{
     global $col_black;
     $x1 = $x + $w - 1;
     $y1 = $y + $h - 1;
 
     imagerectangle($im, $x, $y1, $x1 + 1, $y + 1, $col_black);
-    if ($y1 > $y)
+    if ($y1 > $y) {
         imagefilledrectangle($im, $x, $y, $x1, $y1, $color2);
-    else
+    } else {
         imagefilledrectangle($im, $x, $y1, $x1, $y, $color2);
+    }
     imagerectangle($im, $x, $y1, $x1, $y, $color1);
     if ($text) {
         if ($placeindex > 0) {
-
             if ($placeindex < 16) {
                 $px = 5;
                 $py = $placeindex * 12 + 6;

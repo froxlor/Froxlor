@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,20 +12,18 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $fieldname
+ * @param mixed $fielddata
+ * @param & $input
  */
-
 function getFormFieldDataBool($fieldname, $fielddata, &$input)
 {
-	if(isset($input[$fieldname]) && ($input[$fieldname] === '1' || $input[$fieldname] === 1 || $input[$fieldname] === true || strtolower($input[$fieldname]) === 'yes' || strtolower($input[$fieldname]) === 'ja'))
-	{
-		$newfieldvalue = '1';
-	}
-	else
-	{
-		$newfieldvalue = '0';
-	}
+    if (isset($input[$fieldname]) && ($input[$fieldname] === '1' || $input[$fieldname] === 1 || $input[$fieldname] === true || strtolower($input[$fieldname]) === 'yes' || strtolower($input[$fieldname]) === 'ja')) {
+        $newfieldvalue = '1';
+    } else {
+        $newfieldvalue = '0';
+    }
 
-	return $newfieldvalue;
+    return $newfieldvalue;
 }

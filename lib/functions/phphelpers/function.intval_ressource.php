@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,8 +12,8 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $the_value
  */
 
 /**
@@ -25,16 +24,14 @@
  * @return int The positive value
  * @author Florian Lippert <flo@syscp.org>
  */
-
 function intval_ressource($the_value)
 {
-	$the_value = intval($the_value);
+    $the_value = intval($the_value);
 
-	if($the_value < 0
-	   && $the_value != '-1')
-	{
-		$the_value*= - 1;
-	}
+    if ($the_value < 0
+       && $the_value !== '-1') {
+        $the_value*= - 1;
+    }
 
-	return $the_value;
+    return $the_value;
 }

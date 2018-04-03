@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,14 +12,11 @@
  * @author     Sander Klein <roedie@roedie.nl>
  * @author     Frits Letteboer <f.letteboer@radiotwenterand.nl>
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Language
- *
  */
 
 /**
  * Global
  */
-
 $lng['translator'] = 'Sander Klein/Frits Letteboer';
 $lng['panel']['edit'] = 'bewerken';
 $lng['panel']['delete'] = 'verwijderen';
@@ -38,7 +34,6 @@ $lng['panel']['dirsmissing'] = 'Kan de map niet lezen of vinden!';
 /**
  * Login
  */
-
 $lng['login']['username'] = 'Gebruikersnaam';
 $lng['login']['password'] = 'Wachtwoord';
 $lng['login']['language'] = 'Taal';
@@ -49,7 +44,6 @@ $lng['login']['profile_lng'] = 'Profiel taal';
 /**
  * Customer
  */
-
 $lng['customer']['name'] = 'Naam';
 $lng['customer']['firstname'] = 'Voornaam';
 $lng['customer']['company'] = 'Bedrijfsnaam';
@@ -69,7 +63,6 @@ $lng['customer']['domains'] = 'Domein(en)';
 /**
  * Customermenue
  */
-
 $lng['menue']['main']['main'] = 'Main';
 $lng['menue']['main']['changepassword'] = 'Wijzig wachtwoord';
 $lng['menue']['main']['changelanguage'] = 'Wijzig taal';
@@ -82,14 +75,12 @@ $lng['menue']['extras']['pathoptions'] = 'pad opties';
 /**
  * Index
  */
-
 $lng['index']['customerdetails'] = 'Klant Details';
 $lng['index']['accountdetails'] = 'Account Details';
 
 /**
  * Change Password
  */
-
 $lng['changepassword']['old_password'] = 'Oud wachtwoord';
 $lng['changepassword']['new_password'] = 'Nieuw wachtwoord';
 $lng['changepassword']['new_password_confirm'] = 'Nieuw wacthwoord (bevestigen)';
@@ -99,7 +90,6 @@ $lng['changepassword']['also_change_ftp'] = ' wijzig ook het wachtwoord van het 
 /**
  * Domains
  */
-
 $lng['domains']['description'] = 'Hier kunt u nieuwe (sub-) domeinen maken en de paden aanpassen.<br />Het systeem heeft een paar minuten nodig om de wijzigingen door te voeren na iedere varandering.';
 $lng['domains']['domainsettings'] = 'Domein instellingen';
 $lng['domains']['domainname'] = 'Domeinnaam';
@@ -112,7 +102,6 @@ $lng['domains']['noaliasdomain'] = 'Geen alias domein';
 /**
  * E-mails
  */
-
 $lng['emails']['description'] = 'Hier kunt u e-mail adressen maken en wijzigen.<br />Een aacount is net als een brievenbus voor uw huis. Als iemand u mail stuurd word dit op uw account bezorgt.<br /><br />Om uw emails te downloaden moet u het volgende installen in uw mail programma: (De <i>schuigedrukte</i> gegevens moeten gewijzigd worden in hetgeen dat u ingegeven heeft!)<br />Servernaam: <b><i>Domeinnaam</i></b><br />Gebruikersnaam: <b><i>Account naam / e-mail adres</i></b><br />Wachtwoord: <b><i>het door u ingegeven wachtwoord</i></b>';
 $lng['emails']['emailaddress'] = 'E-mail adres';
 $lng['emails']['emails_add'] = 'Maak nieuw e-mail adres';
@@ -128,14 +117,12 @@ $lng['emails']['forwarder_add'] = 'Maak forwarder';
 /**
  * FTP
  */
-
 $lng['ftp']['description'] = 'Hier kunt u nieuwe FTP accounts maken of bestaande accounts wijzigen.<br />De wijzigingen worden direct doorgevoerd en het account kan direct gebruikt worden.';
 $lng['ftp']['account_add'] = 'Maak nieuw account';
 
 /**
  * MySQL
  */
-
 $lng['mysql']['databasename'] = 'gebruiker/database naam';
 $lng['mysql']['databasedescription'] = 'database omschrijving';
 $lng['mysql']['database_create'] = 'Maak database';
@@ -143,7 +130,6 @@ $lng['mysql']['database_create'] = 'Maak database';
 /**
  * Extras
  */
-
 $lng['extras']['description'] = 'Hier kunt u wat extra instellingen doen zoals map beveiliging.<br />Het systeem heeft enkele minuten nodig om elke wijziging door te voeren.';
 $lng['extras']['directoryprotection_add'] = 'Map beveiliging toevoegen';
 $lng['extras']['view_directory'] = 'map inhoud laten zien';
@@ -158,7 +144,6 @@ $lng['extras']['errordocument401path'] = 'URL naar Foutducument 401';
 /**
  * Errors
  */
-
 $lng['error']['error'] = 'Fout';
 $lng['error']['directorymustexist'] = 'De map %s bestaat niet. Maak hem eerst aan met uw FTP client.';
 $lng['error']['filemustexist'] = 'Het bestand %s bestaat niet.';
@@ -207,7 +192,6 @@ $lng['error']['destinationiswrong'] = 'De forwarder naar %s bevat illegale karak
 /**
  * Questions
  */
-
 $lng['question']['question'] = 'Beveiligings vraag';
 $lng['question']['admin_customer_reallydelete'] = 'Weet u zeker dat u de klant %s wilt verwijderen? Dit kan niet ongedaan worden gemaakt!';
 $lng['question']['admin_domain_reallydelete'] = 'Weet u zeker dat u het domein %s wilt verwijderen?';
@@ -227,7 +211,6 @@ $lng['question']['admin_configs_reallyrebuild'] = 'Weet u zeker dat u de configu
 /**
  * Mails
  */
-
 $lng['mails']['pop_success']['mailbody'] = 'Hallo,\n\nUw mail account {EMAIL}\nis succesvol aangemaakt.\n\nDit is een automatisch verstuurde\ne-mail, beantwoord deze niet AUB!\n\nMet vriendelijke groet, uw beheerder';
 $lng['mails']['pop_success']['subject'] = 'Mail account succesvol aangemaakt';
 $lng['mails']['createcustomer']['mailbody'] = 'Hallo {FIRSTNAME} {NAME},\n\nhierbij uw account informatie:\n\nGebruikersnaam: {USERNAME}\nWachtwoord: {PASSWORD}\n\nMet vriendelijke groet,\nuw beheerder';
@@ -236,7 +219,6 @@ $lng['mails']['createcustomer']['subject'] = 'Account informatie';
 /**
  * Admin
  */
-
 $lng['admin']['overview'] = 'Overzicht';
 $lng['admin']['ressourcedetails'] = 'Gebruikte resources';
 $lng['admin']['systemdetails'] = 'Systeem Details';
@@ -287,7 +269,6 @@ $lng['admin']['templates']['EMAIL'] = 'Vervangen door het adres van het POP3/IMA
 /**
  * Serversettings
  */
-
 $lng['serversettings']['session_timeout']['title'] = 'Sessie Timeout';
 $lng['serversettings']['session_timeout']['description'] = 'Hoe lang moet een gebruiker inactief zijn voor dat de sessie ongeldig wordt (seconden)?';
 $lng['serversettings']['accountprefix']['title'] = 'Klant Voorvoegsel';
@@ -335,13 +316,11 @@ $lng['serversettings']['pathedit']['description'] = 'Moet het pad geselecteerd w
 /**
  * CHANGED BETWEEN 1.2.12 and 1.2.13
  */
-
 $lng['mysql']['description'] = 'Hier kunt u MySQL-Databases maken en wijzigen.<br />De wijzigingen worden direct gemaakt en de database kan direkt gebruikt worden.<br />In het menu dat links staat vind u de tool phpMyAdmin welke u kunt gebruiken om uw database makkelijk te beheren.<br /><br />Om gebruikt te maken van uw database in uw eigen php programmas kunt u de volgende instellingen gebruiken: (De gegeven in <i>italics</i> moeten aangepast worden in wat u ingevoerd heeft!)<br />Hostnaam: <b><SQL_HOST></b><br />Gebruikersnaam: <b><i>Databasenaam</i></b><br />Wachtwoord: <b><i>het wachtwoord dat u gekozen heeft</i></b><br />Database: <b><i>Databasenaam</i></b>';
 
 /**
  * ADDED BETWEEN 1.2.12 and 1.2.13
  */
-
 $lng['serversettings']['paging']['title'] = 'Vermeldingen per pagina';
 $lng['serversettings']['paging']['description'] = 'Hoeveel vermeldingen er getoond moeten worden per pagina? (0 = alles laten zien)';
 $lng['error']['ipstillhasdomains'] = 'De IP/Port combinatie die u verwijderen wilt heeft nog domeinen toegewezen, wijs deze opnieuw to aan andere IP/Poort combinaties voordat u deze IP/Poort combinatie verwijderd.';
@@ -651,21 +630,21 @@ $lng['error']['ticketresetcycleiswrong'] = 'De cyclus dient "Dagelijks", "Wekeli
 
 $lng['menue']['traffic']['traffic'] = 'Dataverkeer';
 $lng['menue']['traffic']['current'] = 'Deze maand';
-$lng['traffic']['month'] = "Maand";
-$lng['traffic']['day'] = "Dag";
-$lng['traffic']['months'][1] = "Januari";
-$lng['traffic']['months'][2] = "Februari";
-$lng['traffic']['months'][3] = "Maart";
-$lng['traffic']['months'][4] = "April";
-$lng['traffic']['months'][5] = "Mei";
-$lng['traffic']['months'][6] = "Juni";
-$lng['traffic']['months'][7] = "Juli";
-$lng['traffic']['months'][8] = "Augustus";
-$lng['traffic']['months'][9] = "September";
-$lng['traffic']['months'][10] = "Oktober";
-$lng['traffic']['months'][11] = "November";
-$lng['traffic']['months'][12] = "December";
-$lng['traffic']['mb'] = "Datavekeer (MB)";
+$lng['traffic']['month'] = 'Maand';
+$lng['traffic']['day'] = 'Dag';
+$lng['traffic']['months'][1] = 'Januari';
+$lng['traffic']['months'][2] = 'Februari';
+$lng['traffic']['months'][3] = 'Maart';
+$lng['traffic']['months'][4] = 'April';
+$lng['traffic']['months'][5] = 'Mei';
+$lng['traffic']['months'][6] = 'Juni';
+$lng['traffic']['months'][7] = 'Juli';
+$lng['traffic']['months'][8] = 'Augustus';
+$lng['traffic']['months'][9] = 'September';
+$lng['traffic']['months'][10] = 'Oktober';
+$lng['traffic']['months'][11] = 'November';
+$lng['traffic']['months'][12] = 'December';
+$lng['traffic']['mb'] = 'Datavekeer (MB)';
 $lng['traffic']['distribution'] = '<font color="#019522">FTP</font> | <font color="#0000FF">HTTP</font> | <font color="#800000">Mail</font>';
 $lng['traffic']['sumhttp'] = 'Samenvatting HTTP-verkeer in';
 $lng['traffic']['sumftp'] = 'Samenvatting FTP-verkeer in';

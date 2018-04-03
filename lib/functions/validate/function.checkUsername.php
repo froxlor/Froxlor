@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,29 +12,33 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $fieldname
+ * @param mixed $fielddata
+ * @param mixed $newfieldvalue
+ * @param mixed $allnewfieldvalues
  */
+function checkUsername($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues)
+{
+    if (!isset($allnewfieldvalues['customer_mysqlprefix'])) {
+        $allnewfieldvalues['customer_mysqlprefix'] = Settings::Get('customer.mysqlprefix');
+    }
 
-function checkUsername($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues) {
+    $returnvalue = array();
+    if (validateUsername(
+        $newfieldvalue,
+        Settings::Get('panel.unix_names'),
+        14 - strlen($allnewfieldvalues['customer_mysqlprefix'])
+    ) === true
+    ) {
+        $returnvalue = array(FORMFIELDS_PLAUSIBILITY_CHECK_OK);
+    } else {
+        $errmsg = 'accountprefixiswrong';
+        if ($fieldname === 'customer_mysqlprefix') {
+            $errmsg = 'mysqlprefixiswrong';
+        }
+        $returnvalue = array(FORMFIELDS_PLAUSIBILITY_CHECK_ERROR, $errmsg);
+    }
 
-	if (!isset($allnewfieldvalues['customer_mysqlprefix'])) {
-		$allnewfieldvalues['customer_mysqlprefix'] = Settings::Get('customer.mysqlprefix');
-	}
-
-	$returnvalue = array();
-	if (validateUsername(
-		$newfieldvalue,
-		Settings::Get('panel.unix_names'),
-		14 - strlen($allnewfieldvalues['customer_mysqlprefix'])) === true
-	) {
-		$returnvalue = array(FORMFIELDS_PLAUSIBILITY_CHECK_OK);
-	} else {
-		$errmsg = 'accountprefixiswrong';
-		if ($fieldname == 'customer_mysqlprefix') {
-			$errmsg = 'mysqlprefixiswrong';
-		}
-		$returnvalue = array(FORMFIELDS_PLAUSIBILITY_CHECK_ERROR, $errmsg);
-	}
-	return $returnvalue;
+    return $returnvalue;
 }

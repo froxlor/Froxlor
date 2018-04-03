@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,8 +12,10 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $ip
+ * @param mixed $return_bool
+ * @param mixed $lng
  */
 
 /**
@@ -23,22 +24,20 @@
  * @return mixed 	ip address on success, standard_error on failure
  * @deprecated use validate_ip2
  */
-function validate_ip($ip, $return_bool = false, $lng = 'invalidip') {
+function validate_ip($ip, $return_bool = false, $lng = 'invalidip')
+{
+    if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) === false
+            && filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === false
+            && filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE) === false
+    ) {
+        if ($return_bool) {
+            return false;
+        }
+        standard_error($lng, $ip);
+        exit();
+    }
 
-	if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) === false
-			&& filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === false
-			&& filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE) === false
-	) {
-		if ($return_bool) {
-			return false;
-		} else {
-			standard_error($lng, $ip);
-			exit();
-		}
-	} else {
-		return $ip;
-	}
-
+    return $ip;
 }
 
 /**
@@ -53,45 +52,43 @@ function validate_ip($ip, $return_bool = false, $lng = 'invalidip') {
  *
  * @return string|bool ip address on success, false on failure
  */
-function validate_ip2($ip, $return_bool = false, $lng = 'invalidip', $allow_localhost = false, $allow_priv = false, $allow_cidr = false) {
+function validate_ip2($ip, $return_bool = false, $lng = 'invalidip', $allow_localhost = false, $allow_priv = false, $allow_cidr = false)
+{
+    $cidr = '';
+    if ($allow_cidr) {
+        $org_ip = $ip;
+        $ip_cidr = explode('/', $ip);
+        if (count($ip_cidr) === 2) {
+            $ip = $ip_cidr[0];
+            $cidr = '/' . $ip_cidr[1];
+        } else {
+            $ip = $org_ip;
+        }
+    } elseif (strpos($ip, '/') !== false) {
+        if ($return_bool) {
+            return false;
+        }
+        standard_error($lng, $ip);
+        exit();
+    }
 
-	$cidr = "";
-	if ($allow_cidr) {
-		$org_ip = $ip;
-		$ip_cidr = explode("/", $ip);
-		if (count($ip_cidr) == 2) {
-			$ip = $ip_cidr[0];
-			$cidr = "/".$ip_cidr[1];
-		} else {
-			$ip = $org_ip;
-		}
-	} elseif (strpos($ip, "/") !== false) {
-		if ($return_bool) {
-			return false;
-		} else {
-			standard_error($lng, $ip);
-			exit();
-		}
-	}
+    $filter_lan = $allow_priv ? FILTER_FLAG_NO_RES_RANGE : (FILTER_FLAG_NO_RES_RANGE | FILTER_FLAG_NO_PRIV_RANGE);
 
-	$filter_lan = $allow_priv ? FILTER_FLAG_NO_RES_RANGE : (FILTER_FLAG_NO_RES_RANGE | FILTER_FLAG_NO_PRIV_RANGE);
+    if ((filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)
+            || filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4))
+            && filter_var($ip, FILTER_VALIDATE_IP, $filter_lan)
+    ) {
+        return $ip . $cidr;
+    }
 
-	if ((filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)
-			|| filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4))
-			&& filter_var($ip, FILTER_VALIDATE_IP, $filter_lan)
-	) {
-		return $ip.$cidr;
-	}
+    // special case where localhost ip is allowed (mysql-access-hosts for example)
+    if ($allow_localhost && $ip === '127.0.0.1') {
+        return $ip . $cidr;
+    }
 
-	// special case where localhost ip is allowed (mysql-access-hosts for example)
-	if ($allow_localhost && $ip == '127.0.0.1') {
-		return $ip.$cidr;
-	}
-
-	if ($return_bool) {
-		return false;
-	} else {
-		standard_error($lng, $ip);
-		exit();
-	}
+    if ($return_bool) {
+        return false;
+    }
+    standard_error($lng, $ip);
+    exit();
 }

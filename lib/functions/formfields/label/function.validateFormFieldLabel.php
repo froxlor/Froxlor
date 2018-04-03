@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,14 +12,15 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $fieldname
+ * @param mixed $fielddata
+ * @param mixed $newfieldvalue
  */
-
 function validateFormFieldLabel($fieldname, $fielddata, $newfieldvalue)
 {
-	// Return false, in case we happen to have that field in our $input array, so someone doesn't get the chance to save crap to our database
-	// TODO: Throw some error that actually makes sense - false would just throw unknown error
+    // Return false, in case we happen to have that field in our $input array, so someone doesn't get the chance to save crap to our database
+    // TODO: Throw some error that actually makes sense - false would just throw unknown error
 
-	return false;
+    return false;
 }

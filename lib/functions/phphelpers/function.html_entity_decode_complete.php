@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,8 +12,8 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $string
  */
 
 /**
@@ -24,25 +23,19 @@
  * @return string The cleaned string
  * @author Florian Lippert <flo@syscp.org>
  */
-
 function html_entity_decode_complete($string)
 {
-	global $theme;
+    global $theme;
 
-	if($theme == 'Classic')
-	{
-		while($string != html_entity_decode($string))
-		{
-			$string = html_entity_decode($string);
-		}
-	}
-	else
-	{
-		while($string != html_entity_decode($string, ENT_COMPAT | ENT_HTML5, 'UTF-8'))
-		{
-			$string = html_entity_decode($string, ENT_COMPAT | ENT_HTML5, 'UTF-8');
-		}
-	}
+    if ($theme === 'Classic') {
+        while ($string !== html_entity_decode($string)) {
+            $string = html_entity_decode($string);
+        }
+    } else {
+        while ($string !== html_entity_decode($string, ENT_COMPAT | ENT_HTML5, 'UTF-8')) {
+            $string = html_entity_decode($string, ENT_COMPAT | ENT_HTML5, 'UTF-8');
+        }
+    }
 
-	return $string;
+    return $string;
 }

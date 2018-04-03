@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,8 +12,12 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $str
+ * @param mixed $fieldname
+ * @param mixed $pattern
+ * @param mixed $lng
+ * @param mixed $emptydefault
  */
 
 /**
@@ -28,52 +31,49 @@
  *
  * If the default pattern is used and the string does not match, we try to replace the
  * 'bad' values and log the action.
- *
  */
+function validate($str, $fieldname, $pattern = '', $lng = '', $emptydefault = array())
+{
+    global $log, $theme;
 
-function validate($str, $fieldname, $pattern = '', $lng = '', $emptydefault = array()) {
+    if (!is_array($emptydefault)) {
+        $emptydefault_array = array(
+            $emptydefault,
+        );
+        unset($emptydefault);
+        $emptydefault = $emptydefault_array;
+        unset($emptydefault_array);
+    }
 
-	global $log, $theme;
+    // Check if the $str is one of the values which represent the default for an 'empty' value
+    if (is_array($emptydefault)
+       && !empty($emptydefault)
+       && in_array($str, $emptydefault, true)
+       && isset($emptydefault[0])
+    ) {
+        return $emptydefault[0];
+    }
 
-	if (!is_array($emptydefault)) {
-		$emptydefault_array = array(
-			$emptydefault
-		);
-		unset($emptydefault);
-		$emptydefault = $emptydefault_array;
-		unset($emptydefault_array);
-	}
+    if ($pattern === '') {
+        $pattern = '/^[^\r\n\t\f\0]*$/D';
 
-	// Check if the $str is one of the values which represent the default for an 'empty' value
-	if (is_array($emptydefault)
-	   && !empty($emptydefault)
-	   && in_array($str, $emptydefault)
-	   && isset($emptydefault[0])
-	) {
-		return $emptydefault[0];
-	}
+        if (!preg_match($pattern, $str)) {
+            // Allows letters a-z, digits, space (\\040), hyphen (\\-), underscore (\\_) and backslash (\\\\),
+            // everything else is removed from the string.
+            $allowed = '/[^a-z0-9\\040\\.\\-\\_\\\\]/i';
+            $str = preg_replace($allowed, '', $str);
+            $log->logAction(USR_ACTION, LOG_WARNING, 'cleaned bad formatted string (' . $str . ')');
+        }
+    }
 
-	if ($pattern == '') {
+    if (preg_match($pattern, $str)) {
+        return $str;
+    }
 
-		$pattern = '/^[^\r\n\t\f\0]*$/D';
+    if ($lng === '') {
+        $lng = 'stringformaterror';
+    }
 
-		if (!preg_match($pattern, $str)) {
-			// Allows letters a-z, digits, space (\\040), hyphen (\\-), underscore (\\_) and backslash (\\\\),
-			// everything else is removed from the string.
-			$allowed = "/[^a-z0-9\\040\\.\\-\\_\\\\]/i";
-			$str = preg_replace($allowed, "", $str);
-			$log->logAction(USR_ACTION, LOG_WARNING, "cleaned bad formatted string (" . $str . ")");
-		}
-	}
-
-	if (preg_match($pattern, $str)) {
-		return $str;
-	}
-
-	if ($lng == '') {
-		$lng = 'stringformaterror';
-	}
-
-	standard_error($lng, $fieldname);
-	exit;
+    standard_error($lng, $fieldname);
+    exit;
 }

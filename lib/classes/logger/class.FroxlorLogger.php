@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,178 +12,174 @@
  * @author     Michael Kaufmann <mkaufmann@nutime.de>
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Logger
  *
  * @link       http://www.nutime.de/
  *
  * Logger - Froxlor-Base-Logger-Class
  */
+class FroxlorLogger
+{
+    /**
+     * Userinfo
+     * @var array
+     */
+    private $userinfo = array();
 
-class FroxlorLogger {
+    /**
+     * LogTypes Array
+     * @var logtypes
+     */
+    private static $logtypes = null;
 
-	/**
-	 * Userinfo
-	 * @var array
-	 */
-	private $userinfo = array();
+    /**
+     * Logger-Object-Array
+     * @var loggers
+     */
+    private static $loggers = null;
 
-	/**
-	 * LogTypes Array
-	 * @var logtypes
-	 */
-	static private $logtypes = null;
+    /**
+     * whether to output log-messages to STDOUT (cron)
+     * @var bool
+     */
+    private static $crondebug_flag = false;
 
-	/**
-	 * Logger-Object-Array
-	 * @var loggers
-	 */
-	static private $loggers = null;
+    /**
+     * Class constructor.
+     *
+     * @param array userinfo
+     * @param mixed $userinfo
+     */
+    protected function __construct($userinfo)
+    {
+        $this->userinfo = $userinfo;
+        self::$logtypes = array();
 
-	/**
-	 * whether to output log-messages to STDOUT (cron)
-	 * @var bool
-	 */
-	static private $crondebug_flag = false;
+        if ((Settings::Get('logger.logtypes') === null || Settings::Get('logger.logtypes') === '')
+           && (Settings::Get('logger.enabled') !== null && Settings::Get('logger.enabled'))
+        ) {
+            self::$logtypes[0] = 'syslog';
+            self::$logtypes[1] = 'mysql';
+        } else {
+            if (Settings::Get('logger.logtypes') !== null
+               && Settings::Get('logger.logtypes') !== ''
+            ) {
+                self::$logtypes = explode(',', Settings::Get('logger.logtypes'));
+            } else {
+                self::$logtypes = null;
+            }
+        }
+    }
 
-	/**
-	 * Class constructor.
-	 *
-	 * @param array userinfo
-	 */
-	protected function __construct($userinfo) {
-		$this->userinfo = $userinfo;
-		self::$logtypes = array();
+    /**
+     * Singleton ftw ;-)
+     *
+     * @param mixed $_usernfo
+     */
+    public static function getInstanceOf($_usernfo)
+    {
+        if (!isset($_usernfo)
+           || $_usernfo === null
+        ) {
+            $_usernfo = array();
+            $_usernfo['loginname'] = 'unknown';
+        }
 
-		if ((Settings::Get('logger.logtypes') == null || Settings::Get('logger.logtypes') == '')
-		   && (Settings::Get('logger.enabled') !== null && Settings::Get('logger.enabled'))
-		) {
-			self::$logtypes[0] = 'syslog';
-			self::$logtypes[1] = 'mysql';
-		}  else {
-			if (Settings::Get('logger.logtypes') !== null
-			   && Settings::Get('logger.logtypes') != ''
-			) {
-				self::$logtypes = explode(',', Settings::Get('logger.logtypes'));
-			} else {
-				self::$logtypes = null;
-			}
-		}
-	}
+        if (!isset(self::$loggers[$_usernfo['loginname']])) {
+            self::$loggers[$_usernfo['loginname']] = new self($_usernfo);
+        }
 
-	/**
-	 * Singleton ftw ;-)
-	 *
-	 */
-	static public function getInstanceOf($_usernfo) {
+        return self::$loggers[$_usernfo['loginname']];
+    }
 
-		if (!isset($_usernfo)
-		   || $_usernfo == null
-		) {
-			$_usernfo = array();
-			$_usernfo['loginname'] = 'unknown';
-		}
+    /**
+     * logs a given text to all enabled logger-facilities
+     *
+     * @param int $action
+     * @param int $type
+     * @param string $text
+     */
+    public function logAction($action = USR_ACTION, $type = LOG_NOTICE, $text = null)
+    {
+        if (self::$logtypes === null) {
+            return;
+        }
 
-		if (!isset(self::$loggers[$_usernfo['loginname']])) {
-			self::$loggers[$_usernfo['loginname']] = new FroxlorLogger($_usernfo);
-		}
+        if (self::$crondebug_flag
+            || ($action === CRON_ACTION && $type <= LOG_WARNING)) {
+            echo '[' . getLogLevelDesc($type) . '] ' . $text . PHP_EOL;
+        }
 
-		return self::$loggers[$_usernfo['loginname']];
-	}
+        if (Settings::Get('logger.log_cron') === '0'
+            && $action === CRON_ACTION
+            && $type > LOG_WARNING // warnings, errors and critical mesages WILL be logged
+        ) {
+            return;
+        }
 
-	/**
-	 * logs a given text to all enabled logger-facilities
-	 *
-	 * @param int $action
-	 * @param int $type
-	 * @param string $text
-	 */
-	public function logAction ($action = USR_ACTION, $type = LOG_NOTICE, $text = null) {
+        foreach (self::$logtypes as $logger) {
+            switch ($logger) {
+                case 'syslog':
+                    $_log = SysLogger::getInstanceOf($this->userinfo);
+                    break;
+                case 'file':
+                    try {
+                        $_log = FileLogger::getInstanceOf($this->userinfo);
+                    } catch (Exception $e) {
+                        if ($action !== CRON_ACTION) {
+                            standard_error('logerror', $e->getMessage());
+                        } else {
+                            echo 'Log-Error: ' . $e->getMessage();
+                        }
+                    }
+                    break;
+                case 'mysql':
+                    $_log = MysqlLogger::getInstanceOf($this->userinfo);
+                    break;
+                default:
+                    $_log = null;
+                    break;
+            }
 
-		if (self::$logtypes == null) {
-			return;
-		}
+            if ($_log !== null) {
+                try {
+                    $_log->logAction($action, $type, $text);
+                } catch (Exception $e) {
+                    if ($action !== CRON_ACTION) {
+                        standard_error('logerror', $e->getMessage());
+                    } else {
+                        echo 'Log-Error: ' . $e->getMessage();
+                    }
+                }
+            }
+        }
+    }
 
-		if (self::$crondebug_flag
-			|| ($action == CRON_ACTION && $type <= LOG_WARNING)) {
-			echo "[".getLogLevelDesc($type)."] ".$text.PHP_EOL;
-		}
+    /**
+     * Set whether to log cron-runs
+     *
+     * @param bool $_cronlog
+     *
+     * @return bool
+     */
+    public function setCronLog($_cronlog = 0)
+    {
+        $_cronlog = (int) $_cronlog;
 
-		if (Settings::Get('logger.log_cron') == '0'
-			&& $action == CRON_ACTION
-			&& $type > LOG_WARNING // warnings, errors and critical mesages WILL be logged
-		) {
-			return;
-		}
+        if ($_cronlog < 0 || $_cronlog > 2) {
+            $_cronlog = 0;
+        }
+        Settings::Set('logger.log_cron', $_cronlog);
 
-		foreach (self::$logtypes as $logger) {
+        return $_cronlog;
+    }
 
-			switch ($logger)
-			{
-				case 'syslog':
-					$_log = SysLogger::getInstanceOf($this->userinfo);
-					break;
-				case 'file':
-					try
-					{
-						$_log = FileLogger::getInstanceOf($this->userinfo);
-					}
-					catch(Exception $e)
-					{
-						if ($action != CRON_ACTION) {
-							standard_error('logerror', $e->getMessage());
-						} else {
-							echo "Log-Error: " . $e->getMessage();
-						}
-					}
-					break;
-				case 'mysql':
-					$_log = MysqlLogger::getInstanceOf($this->userinfo);
-					break;
-				default:
-					$_log = null;
-					break;
-			}
-
-			if ($_log != null) {
-				try {
-					$_log->logAction($action, $type, $text);
-				} catch(Exception $e) {
-					if ($action != CRON_ACTION) {
-						standard_error('logerror', $e->getMessage());
-					} else {
-						echo "Log-Error: " . $e->getMessage();
-					}
-				}
-			}
-		}
-	}
-
-	/**
-	 * Set whether to log cron-runs
-	 *
-	 * @param bool $_cronlog
-	 *
-	 * @return boolean
-	 */
-	public function setCronLog($_cronlog = 0) {
-
-		$_cronlog = (int)$_cronlog;
-
-		if ($_cronlog < 0 || $_cronlog > 2) {
-			$_cronlog = 0;
-		}
-		Settings::Set('logger.log_cron', $_cronlog);
-		return $_cronlog;
-	}
-
-	/**
-	 * setter for crondebug-flag
-	 *
-	 * @param bool $_flag
-	 *
-	 * @return void
-	 */
-	public function setCronDebugFlag($_flag = false) {
-	    self::$crondebug_flag = (bool)$_flag;
-	}
+    /**
+     * setter for crondebug-flag
+     *
+     * @param bool $_flag
+     */
+    public function setCronDebugFlag($_flag = false)
+    {
+        self::$crondebug_flag = (bool) $_flag;
+    }
 }

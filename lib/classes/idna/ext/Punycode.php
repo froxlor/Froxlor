@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 // {{{ license
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4 foldmethod=marker: */
@@ -89,9 +88,10 @@ class Punycode implements PunycodeInterface
     /**
      * Checks, whether or not the provided string is a valid punycode string
      * @param string $encoded
-     * @return boolean
+     * @return bool
      */
-    public function validate($encoded) {
+    public function validate($encoded)
+    {
         // Check for existence of the prefix
         if (strpos($encoded, self::punycodePrefix) !== 0) {
             return false;
@@ -100,12 +100,14 @@ class Punycode implements PunycodeInterface
         if (strlen(trim($encoded)) <= strlen(self::punycodePrefix)) {
             return false;
         }
+
         return true;
     }
 
     /**
      * The actual decoding algorithm
      * @param string
+     * @param mixed $encoded
      * @return mixed
      */
     public function decode($encoded)
@@ -154,6 +156,7 @@ class Punycode implements PunycodeInterface
             }
             $decoded[$idx++] = $char;
         }
+
         return $this->UnicodeTranscoder->ucs4array_utf8($decoded);
     }
 
@@ -169,7 +172,7 @@ class Punycode implements PunycodeInterface
         $check_pref = $this->UnicodeTranscoder->utf8_ucs4array(self::punycodePrefix);
         $check_deco = array_slice($decoded, 0, $extract);
 
-        if ($check_pref == $check_deco) {
+        if ($check_pref === $check_deco) {
             throw new \InvalidArgumentException('This is already a Punycode string');
         }
         // We will not try to encode strings consisting of basic code points only
@@ -201,12 +204,12 @@ class Punycode implements PunycodeInterface
             if ((0x2F < $test && $test < 0x40)
                     || (0x40 < $test && $test < 0x5B)
                     || (0x60 < $test && $test <= 0x7B)
-                    || (0x2D == $test)) {
+                    || (0x2D === $test)) {
                 $encoded .= chr($decoded[$i]);
                 $codecount++;
             }
         }
-        if ($codecount == $deco_len) {
+        if ($codecount === $deco_len) {
             return $encoded; // All codepoints were basic ones
         }
         // Start with the prefix; copy it to output
@@ -235,7 +238,7 @@ class Punycode implements PunycodeInterface
             for ($i = 0; $i < $deco_len; $i++) {
                 if ($decoded[$i] < $cur_code) {
                     $delta++;
-                } elseif ($decoded[$i] == $cur_code) {
+                } elseif ($decoded[$i] === $cur_code) {
                     for ($q = $delta, $k = self::base; 1; $k += self::base) {
                         $t = ($k <= $bias)
                                 ? self::tMin
@@ -257,6 +260,7 @@ class Punycode implements PunycodeInterface
             $delta++;
             $cur_code++;
         }
+
         return $encoded;
     }
 
@@ -274,6 +278,7 @@ class Punycode implements PunycodeInterface
         for ($k = 0; $delta > ((self::base - self::tMin) * self::tMax) / 2; $k += self::base) {
             $delta = intval($delta / (self::base - self::tMin));
         }
+
         return intval($k + (self::base - self::tMin + 1) * $delta / ($delta + self::skew));
     }
 
@@ -296,16 +301,13 @@ class Punycode implements PunycodeInterface
     {
         $cp = ord($cp);
         if ($cp - 48 < 10) {
-
             return $cp - 22;
         }
 
         if ($cp - 65 < 26) {
-
             return $cp - 65;
         }
         if ($cp - 97 < 26) {
-
             return $cp - 97;
         }
 
@@ -327,11 +329,11 @@ class Punycode implements PunycodeInterface
         // While mapping required chars we apply the canonical ordering
         foreach ($input as $v) {
             // Map to nothing == skip that code point
-            if (in_array($v, $this->NamePrepData->mapToNothing)) {
+            if (in_array($v, $this->NamePrepData->mapToNothing, true)) {
                 continue;
             }
             // Try to find prohibited input
-            if (in_array($v, $this->NamePrepData->prohibit) || in_array($v, $this->NamePrepData->generalProhibited)) {
+            if (in_array($v, $this->NamePrepData->prohibit, true) || in_array($v, $this->NamePrepData->generalProhibited, true)) {
                 throw new \InvalidArgumentException(sprintf('NAMEPREP: Prohibited input U+%08X', $v));
             }
             foreach ($this->NamePrepData->prohibitRanges as $range) {
@@ -371,7 +373,7 @@ class Punycode implements PunycodeInterface
                 // the now redundant non-starter(s)
                 if ($out) {
                     $output[$last_starter] = $out;
-                    if (count($out) != $seq_len) {
+                    if (count($out) !== $seq_len) {
                         for ($j = $i + 1; $j < $out_len; ++$j) {
                             $output[$j - 1] = $output[$j];
                         }
@@ -380,7 +382,7 @@ class Punycode implements PunycodeInterface
                     // Rewind the for loop by one, since there can be more possible compositions
                     $i--;
                     $out_len--;
-                    $last_class = ($i == $last_starter) ? 0 : $this->getCombiningClass($output[$i - 1]);
+                    $last_class = ($i === $last_starter) ? 0 : $this->getCombiningClass($output[$i - 1]);
                     continue;
                 }
             }
@@ -390,13 +392,15 @@ class Punycode implements PunycodeInterface
             }
             $last_class = $class;
         }
+
         return $output;
     }
 
     /**
      * Decomposes a Hangul syllable
      * (see http://www.unicode.org/unicode/reports/tr15/#Hangul
-     * @param    integer  32bit UCS4 code point
+     * @param    int  32bit UCS4 code point
+     * @param mixed $char
      * @return   array    Either Hangul Syllable decomposed or original 32bit value as one value array
      */
     protected function hangulDecompose($char)
@@ -409,9 +413,10 @@ class Punycode implements PunycodeInterface
         $result[] = (int) self::lBase + $sindex / self::nCount;
         $result[] = (int) self::vBase + ($sindex % self::nCount) / self::tCount;
         $T = intval(self::tBase + $sindex % self::tCount);
-        if ($T != self::tBase) {
+        if ($T !== self::tBase) {
             $result[] = $T;
         }
+
         return $result;
     }
 
@@ -438,7 +443,7 @@ class Punycode implements PunycodeInterface
             $vindex = $char - self::vBase;
             $tindex = $char - self::tBase;
             // Find out, whether two current characters are LV and T
-            if (0 <= $sindex && $sindex < self::sCount && ($sindex % self::tCount == 0) && 0 <= $tindex && $tindex <= self::tCount) {
+            if (0 <= $sindex && $sindex < self::sCount && ($sindex % self::tCount === 0) && 0 <= $tindex && $tindex <= self::tCount) {
                 // create syllable of form LVT
                 $last += $tindex;
                 $result[(count($result) - 1)] = $last; // reset last
@@ -455,13 +460,14 @@ class Punycode implements PunycodeInterface
             $last = $char;
             $result[] = $char;
         }
+
         return $result;
     }
 
     /**
      * Returns the combining class of a certain wide char
-     * @param integer  $char  Wide char to check (32bit integer)
-     * @return integer Combining class if found, else 0
+     * @param int  $char  Wide char to check (32bit integer)
+     * @return int Combining class if found, else 0
      */
     protected function getCombiningClass($char)
     {
@@ -484,7 +490,7 @@ class Punycode implements PunycodeInterface
             $last = $this->getCombiningClass(intval($input[0]));
             for ($i = 0; $i < $size - 1; ++$i) {
                 $next = $this->getCombiningClass(intval($input[$i + 1]));
-                if ($next != 0 && $last > $next) {
+                if ($next !== 0 && $last > $next) {
                     // Move item leftward until it fits
                     for ($j = $i + 1; $j > 0; --$j) {
                         if ($this->getCombiningClass(intval($input[$j - 1])) <= $next) {
@@ -501,6 +507,7 @@ class Punycode implements PunycodeInterface
                 $last = $next;
             }
         }
+
         return $input;
     }
 
@@ -512,19 +519,19 @@ class Punycode implements PunycodeInterface
     protected function combine($input)
     {
         $inp_len = count($input);
-        if (0 == $inp_len) {
+        if (0 === $inp_len) {
             return false;
         }
         foreach ($this->NamePrepData->replaceMaps as $np_src => $np_target) {
-            if ($np_target[0] != $input[0]) {
+            if ($np_target[0] !== $input[0]) {
                 continue;
             }
-            if (count($np_target) != $inp_len) {
+            if (count($np_target) !== $inp_len) {
                 continue;
             }
             $hit = false;
             foreach ($input as $k2 => $v2) {
-                if ($v2 == $np_target[$k2]) {
+                if ($v2 === $np_target[$k2]) {
                     $hit = true;
                 } else {
                     $hit = false;
@@ -535,6 +542,7 @@ class Punycode implements PunycodeInterface
                 return $np_src;
             }
         }
+
         return false;
     }
 
@@ -543,13 +551,14 @@ class Punycode implements PunycodeInterface
      * overloading is turned on
      *
      * @param string $string the string for which to get the length.
-     * @return integer the length of the string in bytes.
+     * @return int the length of the string in bytes.
      */
     protected static function byteLength($string)
     {
         if (self::$isMbStringOverload) {
             return mb_strlen($string, '8bit');
         }
+
         return strlen((binary) $string);
     }
 }

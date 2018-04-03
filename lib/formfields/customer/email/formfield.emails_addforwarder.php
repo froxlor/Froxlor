@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -11,30 +10,28 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Formfields
- *
  */
 
 return array(
-	'emails_addforwarder' => array(
-		'title' => $lng['emails']['forwarder_add'],
-		'image' => 'icons/autoresponder_add.png',
-		'sections' => array(
-			'section_a' => array(
-				'title' => $lng['emails']['forwarder_add'],
-				'image' => 'icons/autoresponder_add.png',
-				'fields' => array(
-					'email_full' => array(
-						'label' => $lng['emails']['from'],
-						'type' => 'label',
-						'value' => $result['email_full']
-					),
-					'destination' => array(
-						'label' => $lng['emails']['to'],
-						'type' => 'text'
-					)
-				)
-			)
-		)
-	)
+    'emails_addforwarder' => array(
+        'title' => $lng['emails']['forwarder_add'],
+        'image' => 'icons/autoresponder_add.png',
+        'sections' => array(
+            'section_a' => array(
+                'title' => $lng['emails']['forwarder_add'],
+                'image' => 'icons/autoresponder_add.png',
+                'fields' => array(
+                    'email_full' => array(
+                        'label' => $lng['emails']['from'],
+                        'type' => 'label',
+                        'value' => $result['email_full'],
+                    ),
+                    'destination' => array(
+                        'label' => $lng['emails']['to'],
+                        'type' => 'text',
+                    ),
+                ),
+            ),
+        ),
+    ),
 );

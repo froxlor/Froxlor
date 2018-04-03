@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,18 +12,16 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $field
  */
-
 function validateFieldDefinition($field)
 {
-	$returnvalue = false;
-	
-	if(is_array($field) && !empty($field) && isset($field['fields']) && is_array($field['fields']) && !empty($field['fields']))
-	{
-		$returnvalue = true;
-	}
-	
-	return $returnvalue;
+    $returnvalue = false;
+    
+    if (is_array($field) && !empty($field) && isset($field['fields']) && is_array($field['fields']) && !empty($field['fields'])) {
+        $returnvalue = true;
+    }
+    
+    return $returnvalue;
 }

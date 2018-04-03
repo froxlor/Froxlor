@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,8 +12,13 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $homeDir
+ * @param mixed $dirToCreate
+ * @param mixed $uid
+ * @param mixed $gid
+ * @param mixed $placeindex
+ * @param mixed $allow_notwithinhomedir
  */
 
 /**
@@ -28,82 +32,69 @@
  * @param  int    The gid of the user
  * @param  bool   Place standard-index.html into the new folder
  * @param  bool   Allow creating a directory out of the customers docroot
- * 
+ *
  * @return bool   true if everything went okay, false if something went wrong
  *
  * @author Florian Lippert <flo@syscp.org>
  * @author Martin Burchert <martin.burchert@syscp.org>
  */
-
 function mkDirWithCorrectOwnership($homeDir, $dirToCreate, $uid, $gid, $placeindex = false, $allow_notwithinhomedir = false)
 {
-	$returncode = true;
+    $returncode = true;
 
-	if($homeDir != ''
-	   && $dirToCreate != '')
-	{
-		$homeDir = makeCorrectDir($homeDir);
-		$dirToCreate = makeCorrectDir($dirToCreate);
+    if ($homeDir !== ''
+       && $dirToCreate !== '') {
+        $homeDir = makeCorrectDir($homeDir);
+        $dirToCreate = makeCorrectDir($dirToCreate);
 
-		if(substr($dirToCreate, 0, strlen($homeDir)) == $homeDir)
-		{
-			$subdir = substr($dirToCreate, strlen($homeDir) - 1);
-			$within_homedir = true;
-		}
-		else
-		{
-			$subdir = $dirToCreate;
-			$within_homedir = false;
-		}
+        if (substr($dirToCreate, 0, strlen($homeDir)) === $homeDir) {
+            $subdir = substr($dirToCreate, strlen($homeDir) - 1);
+            $within_homedir = true;
+        } else {
+            $subdir = $dirToCreate;
+            $within_homedir = false;
+        }
 
-		$subdir = makeCorrectDir($subdir);
-		$subdirs = array();		
+        $subdir = makeCorrectDir($subdir);
+        $subdirs = array();
 
-		if($within_homedir || !$allow_notwithinhomedir)
-		{
-			$subdirlen = strlen($subdir);
-			$offset = 0;
-	
-			while($offset < $subdirlen)
-			{
-				$offset = strpos($subdir, '/', $offset);
-				$subdirelem = substr($subdir, 0, $offset);
-				$offset++;
-				array_push($subdirs, makeCorrectDir($homeDir . $subdirelem));
-			}
-		}
-		else
-		{
-			array_push($subdirs, $dirToCreate);
-		}
+        if ($within_homedir || !$allow_notwithinhomedir) {
+            $subdirlen = strlen($subdir);
+            $offset = 0;
+    
+            while ($offset < $subdirlen) {
+                $offset = strpos($subdir, '/', $offset);
+                $subdirelem = substr($subdir, 0, $offset);
+                $offset++;
+                array_push($subdirs, makeCorrectDir($homeDir . $subdirelem));
+            }
+        } else {
+            array_push($subdirs, $dirToCreate);
+        }
 
-		$subdirs = array_unique($subdirs);
-		sort($subdirs);
-		foreach($subdirs as $sdir)
-		{
-			if(!is_dir($sdir))
-			{
-				$sdir = makeCorrectDir($sdir);
-				safe_exec('mkdir -p ' . escapeshellarg($sdir));
-				
-				/**
-				 * #68
-				 */
-				if ($placeindex) {
-					$loginname = getLoginNameByUid($uid);
-					if ($loginname !== false) {
-						storeDefaultIndex($loginname, $sdir, null);
-					}
-				}
+        $subdirs = array_unique($subdirs);
+        sort($subdirs);
+        foreach ($subdirs as $sdir) {
+            if (!is_dir($sdir)) {
+                $sdir = makeCorrectDir($sdir);
+                safe_exec('mkdir -p ' . escapeshellarg($sdir));
+                
+                /**
+                 * #68
+                 */
+                if ($placeindex) {
+                    $loginname = getLoginNameByUid($uid);
+                    if ($loginname !== false) {
+                        storeDefaultIndex($loginname, $sdir, null);
+                    }
+                }
 
-				safe_exec('chown -R ' . (int)$uid . ':' . (int)$gid . ' ' . escapeshellarg($sdir));
-			}
-		}
-	}
-	else
-	{
-		$returncode = false;
-	}
+                safe_exec('chown -R ' . (int) $uid . ':' . (int) $gid . ' ' . escapeshellarg($sdir));
+            }
+        }
+    } else {
+        $returncode = false;
+    }
 
-	return $returncode;
+    return $returncode;
 }

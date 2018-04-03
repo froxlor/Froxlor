@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -11,7 +10,6 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Formfields
  */
 return array(
     'mysql_edit' => array(
@@ -25,32 +23,32 @@ return array(
                     'databasename' => array(
                         'label' => $lng['mysql']['databasename'],
                         'type' => 'label',
-                        'value' => $result['databasename']
+                        'value' => $result['databasename'],
                     ),
                     'description' => array(
                         'label' => $lng['mysql']['databasedescription'],
                         'type' => 'text',
-                        'value' => $result['description']
+                        'value' => $result['description'],
                     ),
                     'mysql_server' => array(
                         'visible' => (1 < $count_mysqlservers ? true : false),
                         'label' => $lng['mysql']['mysql_server'],
                         'type' => 'label',
-                        'value' => $sql_root['caption']
+                        'value' => $sql_root['caption'],
                     ),
                     'mysql_password' => array(
                         'label' => $lng['changepassword']['new_password_ifnotempty'],
                         'type' => 'password',
-                        'autocomplete' => 'off'
+                        'autocomplete' => 'off',
                     ),
                     'mysql_password_suggestion' => array(
                         'label' => $lng['customer']['generated_pwd'],
                         'type' => 'text',
-                        'visible' => (Settings::Get('panel.password_regex') == ''),
-                        'value' => generatePassword()
-                    )
-                )
-            )
-        )
-    )
+                        'visible' => (Settings::Get('panel.password_regex') === ''),
+                        'value' => generatePassword(),
+                    ),
+                ),
+            ),
+        ),
+    ),
 );

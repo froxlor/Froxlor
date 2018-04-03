@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -11,33 +10,31 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Formfields
- *
  */
 
 return array(
-	'category_new' => array(
-		'title' => $lng['ticket']['ticket_newcateory'],
-		'image' => 'icons/category_new.png',
-		'sections' => array(
-			'section_a' => array(
-				'title' => $lng['ticket']['ticket_newcateory'],
-				'image' => 'icons/category_new.png',
-				'fields' => array(
-					'category' => array(
-						'label' => $lng['ticket']['category'],
-						'type' => 'text',
-						'maxlength' => 50
-					),
-					'logicalorder' => array(
-						'label' => $lng['ticket']['logicalorder'],
-						'desc' => $lng['ticket']['orderdesc'],
-						'type' => 'text',
-						'maxlength' => 3,
-						'value' => $order
-					)
-				)
-			)
-		)
-	)
+    'category_new' => array(
+        'title' => $lng['ticket']['ticket_newcateory'],
+        'image' => 'icons/category_new.png',
+        'sections' => array(
+            'section_a' => array(
+                'title' => $lng['ticket']['ticket_newcateory'],
+                'image' => 'icons/category_new.png',
+                'fields' => array(
+                    'category' => array(
+                        'label' => $lng['ticket']['category'],
+                        'type' => 'text',
+                        'maxlength' => 50,
+                    ),
+                    'logicalorder' => array(
+                        'label' => $lng['ticket']['logicalorder'],
+                        'desc' => $lng['ticket']['orderdesc'],
+                        'type' => 'text',
+                        'maxlength' => 3,
+                        'value' => $order,
+                    ),
+                ),
+            ),
+        ),
+    ),
 );

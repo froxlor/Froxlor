@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -15,8 +14,6 @@
  * @author     Romain MARIADASSOU <roms2000@free.fr>
  * @author     Froxlor Team <team@froxlor.org>
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Language
- *
  */
 
 /**
@@ -31,7 +28,6 @@
 /**
  * Global
  */
-
 $lng['translator'] = 'Tim Zielosko, Aldo Reset, Romain MARIADASSOU';
 $lng['panel']['edit'] = 'Modifier';
 $lng['panel']['delete'] = 'Supprimer';
@@ -49,7 +45,6 @@ $lng['panel']['dirsmissing'] = 'Dossiers non disponibles ou illisibles';
 /**
  * Login
  */
-
 $lng['login']['username'] = 'Identifiant';
 $lng['login']['password'] = 'Mot de passe';
 $lng['login']['language'] = 'Langue';
@@ -60,7 +55,6 @@ $lng['login']['profile_lng'] = 'Langue du profil';
 /**
  * Customer
  */
-
 $lng['customer']['documentroot'] = 'Chemin';
 $lng['customer']['name'] = 'Nom';
 $lng['customer']['firstname'] = 'Prénom';
@@ -85,7 +79,6 @@ $lng['customer']['domains'] = 'Domaine(s)';
 /**
  * Customermenue
  */
-
 $lng['menue']['main']['main'] = 'Général';
 $lng['menue']['main']['changepassword'] = 'Changer de mot de passe';
 $lng['menue']['main']['changelanguage'] = 'Changer de langue';
@@ -107,14 +100,12 @@ $lng['menue']['extras']['pathoptions'] = 'Options des dossiers';
 /**
  * Index
  */
-
 $lng['index']['customerdetails'] = 'Informations personnelles';
 $lng['index']['accountdetails'] = 'Informations du compte';
 
 /**
  * Change Password
  */
-
 $lng['changepassword']['old_password'] = 'Ancien mot de passe';
 $lng['changepassword']['new_password'] = 'Nouveau mot de passe';
 $lng['changepassword']['new_password_confirm'] = 'Nouveau mot de passe (confirmation)';
@@ -124,7 +115,6 @@ $lng['changepassword']['also_change_ftp'] = 'Changer aussi le mot de passe du co
 /**
  * Domains
  */
-
 $lng['domains']['description'] = 'Ici, vous pouvez ajouter des sites et domaines et changer leurs doosiers.<br />Il vous faudra patienter quelques minutes après chaque changement pour que la configuration soit activée.';
 $lng['domains']['domainsettings'] = 'Configuration des Domaines';
 $lng['domains']['domainname'] = 'Nom du Domaine';
@@ -137,7 +127,6 @@ $lng['domains']['noaliasdomain'] = 'Domaine sans alias';
 /**
  * E-mails
  */
-
 $lng['emails']['description'] = 'Ici, vous pouvez ajouter vos boîtes e-mails.<br /><br />Les informations pour configurer votre logiciel e-mail sont les suivantes : <br /><br />Nom du serveur : <b><i>votre-domaine.com</i></b><br />Identifiant : <b><i>l\'adresse e-mail</i></b><br />Mot de passe : <b><i>le mot de passe que vous avez choisi</i></b>';
 $lng['emails']['emailaddress'] = 'Adresse';
 $lng['emails']['emails_add'] = 'Ajouter une adresse e-mail';
@@ -155,14 +144,12 @@ $lng['emails']['forwarder_add'] = 'Ajouter un renvoi';
 /**
  * FTP
  */
-
 $lng['ftp']['description'] = 'Ici, vous pouvez ajouter des accès FTP supplémentaires.<br />Les changements, ainsi que l\'accès, sont immédiatement opérationnels.';
 $lng['ftp']['account_add'] = 'Ajouter un accès';
 
 /**
  * MySQL
  */
-
 $lng['mysql']['databasename'] = 'Nom de la base de données';
 $lng['mysql']['databasedescription'] = 'Description de la base de données';
 $lng['mysql']['database_create'] = 'Ajouter une base de données';
@@ -170,7 +157,6 @@ $lng['mysql']['database_create'] = 'Ajouter une base de données';
 /**
  * Extras
  */
-
 $lng['extras']['description'] = 'Ici, vous pouvez ajouter des extras, comme par exemple, la protection de dossiers du site.<br />Il vous faudra patienter quelques minutes après chaque changement pour que la configuration soit activée.';
 $lng['extras']['directoryprotection_add'] = 'Ajouter une protection de dossier';
 $lng['extras']['view_directory'] = 'Aperçu du dossier';
@@ -185,7 +171,6 @@ $lng['extras']['errordocument401path'] = 'Emplacement du document "Erreur 401"';
 /**
  * Errors
  */
-
 $lng['error']['error'] = 'Erreur';
 $lng['error']['directorymustexist'] = 'Le dossier que vous avez choisi n\'existe pas. Veuillez ajouter le dossier avec votre client FTP.';
 $lng['error']['filemustexist'] = 'Le fichier que vous avez sélectionné n\'existe pas.';
@@ -237,7 +222,6 @@ $lng['error']['loginnameissystemaccount'] = 'Vous ne pouvez pas créer de compte
 /**
  * Questions
  */
-
 $lng['question']['question'] = 'Question de sécurité';
 $lng['question']['admin_customer_reallydelete'] = 'Etes-vous sûr de vouloir supprimer le compte "%s" ?<br />ATTENTION ! Toutes ses informations seront supprimées ! Une fois fait, il vous appartiendra de supprimer manuellement tous les dossiers du compte sur le système de fichiers.';
 $lng['question']['admin_domain_reallydelete'] = 'Etes-vous sûr de vouloir supprimer le domaine "%s" ?';
@@ -257,7 +241,6 @@ $lng['question']['admin_configs_reallyrebuild'] = 'Etes-vous sûr de vouloir ré
 /**
  * Mails
  */
-
 $lng['mails']['pop_success']['mailbody'] = 'Bonjour,\n\nvotre accès POP3 / IMAP {EMAIL}\na été créé avec succès.\n\nCeci est un e-mail généré automatiquement, veuillez ne pas répondre à ce message.\n\nCordialement,\nL\'équipe Froxlor\nhttp://www.froxlor.org';
 $lng['mails']['pop_success']['subject'] = 'Accès POP3 / IMAP créé';
 $lng['mails']['createcustomer']['mailbody'] = 'Bonjour {FIRSTNAME} {NAME},\n\nVous trouverez ci-dessous vos informations d\'accès au panel d\'administration :\n\nAdresse d\'administration : http://demo.froxlor.org\n\nIdentifiant : {USERNAME}\nMot de passe : {PASSWORD}\n\nCordialement,\nL\'équipe Froxlor\nhttp://www.froxlor.org\n';
@@ -266,7 +249,6 @@ $lng['mails']['createcustomer']['subject'] = 'Froxlor : Informations pour votre 
 /**
  * Admin
  */
-
 $lng['admin']['overview'] = 'Sommaire';
 $lng['admin']['ressourcedetails'] = 'Ressources utilisées';
 $lng['admin']['systemdetails'] = 'Informations du système';
@@ -321,7 +303,6 @@ $lng['admin']['templates']['EMAIL'] = 'Sera remplacé par l\'accès e-mail.';
 /**
  * Serversettings
  */
-
 $lng['serversettings']['session_timeout']['title'] = 'Durée d\'inactivité maximale';
 $lng['serversettings']['session_timeout']['description'] = 'Combien de secondes d\'inactivité avant qu\'une session ne se ferme ?';
 $lng['serversettings']['accountprefix']['title'] = 'Préfix des comptes';
@@ -373,13 +354,11 @@ $lng['serversettings']['mxservers']['description'] = 'Une liste séparée par de
 /**
  * CHANGED BETWEEN 1.2.12 and 1.2.13
  */
-
 $lng['mysql']['description'] = 'Ici, vous pouvez ajouter et effacer des bases de données MySQL.<br />Les changements, ainsi que les bases de données, sont immédiatement opérationnels.<br />Dans le menu, vous trouverez un lien vers phpMyAdmin, avec lequel vous pouvez gérer vos bases de données.<br /><br />L\'accès aux bases de données depuis les scripts PHP fonctionne comme suit : (Il faut remplacer les valeurs en <i><b>italique</b></i> par vos informations !)<br /><br />$connexion = mysql_connect(\'localhost\', \'<i><b>Votre identifiant</b></i>\', \'<i><b>Votre mot de passe</b></i>\');<br />mysql_select_db(\'<i><b>Le nom de la base de données</b></i>\', $connexion);';
 
 /**
  * ADDED BETWEEN 1.2.12 and 1.2.13
  */
-
 $lng['serversettings']['paging']['title'] = 'Nombre de résultats par page';
 $lng['serversettings']['paging']['description'] = 'Nombre de résultats par page ? (0 = Désactive la pagination)';
 $lng['error']['ipstillhasdomains'] = 'La combinaison IP / port est encore utilisée, veuillez réassigner le ou les domaines existant(s) avec cette adresse IP / port concerné(s) à une autre combinaison IP / port avant de supprimer celle-ci.';

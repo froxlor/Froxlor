@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,26 +12,24 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Cron
- *
  */
 
 // check for cron.d-generation task and create it if necessary
 checkCrondConfigurationFile();
 
-if (Settings::Get('logger.log_cron') == '1') {
-	$cronlog->setCronLog(0);
-	fwrite($debugHandler, 'Logging for cron has been shutdown' . "\n");
+if (Settings::Get('logger.log_cron') === '1') {
+    $cronlog->setCronLog(0);
+    fwrite($debugHandler, 'Logging for cron has been shutdown' . "\n");
 }
 
 if ($keepLockFile === true) {
-	fwrite($debugHandler, '=== Keep lockfile because of exception ===');
+    fwrite($debugHandler, '=== Keep lockfile because of exception ===');
 }
 
 fclose($debugHandler);
 
 if ($keepLockFile === false
-	&& $cronscriptDebug === false
+    && $cronscriptDebug === false
 ) {
-	unlink($lockfile);
+    unlink($lockfile);
 }

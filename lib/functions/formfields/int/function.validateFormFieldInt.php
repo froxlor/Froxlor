@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -13,21 +12,20 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $fieldname
+ * @param mixed $fielddata
+ * @param mixed $newfieldvalue
  */
-
 function validateFormFieldInt($fieldname, $fielddata, $newfieldvalue)
 {
-	if(isset($fielddata['int_min']) && (int)$newfieldvalue < (int)$fielddata['int_min'])
-	{
-		return('intvaluetoolow');
-	}
+    if (isset($fielddata['int_min']) && (int) $newfieldvalue < (int) $fielddata['int_min']) {
+        return('intvaluetoolow');
+    }
 
-	if(isset($fielddata['int_max']) && (int)$newfieldvalue > (int)$fielddata['int_max'])
-	{
-		return('intvaluetoohigh');
-	}
+    if (isset($fielddata['int_max']) && (int) $newfieldvalue > (int) $fielddata['int_max']) {
+        return('intvaluetoohigh');
+    }
 
-	return true;
+    return true;
 }

@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -11,7 +10,6 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Formfields
  */
 return array(
     'mysql_add' => array(
@@ -24,24 +22,24 @@ return array(
                 'fields' => array(
                     'description' => array(
                         'label' => $lng['mysql']['databasedescription'],
-                        'type' => 'text'
+                        'type' => 'text',
                     ),
                     'mysql_server' => array(
                         'visible' => (1 < $count_mysqlservers ? true : false),
                         'label' => $lng['mysql']['mysql_server'],
                         'type' => 'select',
-                        'select_var' => $mysql_servers
+                        'select_var' => $mysql_servers,
                     ),
                     'mysql_password' => array(
                         'label' => $lng['login']['password'],
                         'type' => 'password',
-                        'autocomplete' => 'off'
+                        'autocomplete' => 'off',
                     ),
                     'mysql_password_suggestion' => array(
                         'label' => $lng['customer']['generated_pwd'],
                         'type' => 'text',
-                        'visible' => (Settings::Get('panel.password_regex') == ''),
-                        'value' => generatePassword()
+                        'visible' => (Settings::Get('panel.password_regex') === ''),
+                        'value' => generatePassword(),
                     ),
                     'sendinfomail' => array(
                         'label' => $lng['customer']['sendinfomail'],
@@ -49,13 +47,13 @@ return array(
                         'values' => array(
                             array(
                                 'label' => $lng['panel']['yes'],
-                                'value' => '1'
-                            )
+                                'value' => '1',
+                            ),
                         ),
-                        'value' => array()
-                    )
-                )
-            )
-        )
-    )
+                        'value' => array(),
+                    ),
+                ),
+            ),
+        ),
+    ),
 );

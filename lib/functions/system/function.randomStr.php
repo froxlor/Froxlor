@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -11,8 +10,8 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2016-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param mixed $length
  */
 
 /**
@@ -20,7 +19,7 @@
  *
  * generate a pseudo-random string of bytes
  *
- * @param int $length            
+ * @param int $length
  *
  * @return string
  */
@@ -30,15 +29,15 @@ function randomStr($length)
         return random_bytes($length);
     } elseif (function_exists('openssl_random_pseudo_bytes')) {
         return openssl_random_pseudo_bytes($length);
-    } else {
-        $pr_bits = '';
-        $fp = @fopen('/dev/urandom', 'rb');
-        if ($fp !== false) {
-            $pr_bits .= @fread($fp, $length);
-            @fclose($fp);
-        } else {
-            $pr_bits = substr(rand(time(), getrandmax()).rand(time(), getrandmax()), 0, $length);
-        }
-        return $pr_bits;
     }
+    $pr_bits = '';
+    $fp = @fopen('/dev/urandom', 'rb');
+    if ($fp !== false) {
+        $pr_bits .= @fread($fp, $length);
+        @fclose($fp);
+    } else {
+        $pr_bits = substr(rand(time(), getrandmax()) . rand(time(), getrandmax()), 0, $length);
+    }
+
+    return $pr_bits;
 }

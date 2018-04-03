@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -11,8 +10,8 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Functions
  *
+ * @param null|mixed $password
  */
 
 /**
@@ -26,58 +25,58 @@
  *
  * @return string either the password or an errormessage+exit
  */
-function validatePassword($password = null) {
-	
-	if (Settings::Get('panel.password_min_length') > 0) {
-		$password = validate(
-			$password,
-			Settings::Get('panel.password_min_length'),
-			'/^.{'.(int)Settings::Get('panel.password_min_length').',}$/D',
-			'notrequiredpasswordlength'
-		);
-	}
-	
-	if (Settings::Get('panel.password_regex') != '') {
-		$password = validate(
-			$password,
-			Settings::Get('panel.password_regex'),
-			Settings::Get('panel.password_regex'),
-			'notrequiredpasswordcomplexity'
-		);
-	} else {
-		if (Settings::Get('panel.password_alpha_lower')) {
-			$password = validate(
-				$password,
-				'/.*[a-z]+.*/',
-				'/.*[a-z]+.*/',
-				'notrequiredpasswordcomplexity'
-			);
-		}
-		if (Settings::Get('panel.password_alpha_upper')) {
-			$password = validate(
-				$password,
-				'/.*[A-Z]+.*/',
-				'/.*[A-Z]+.*/',
-				'notrequiredpasswordcomplexity'
-			);
-		}
-		if (Settings::Get('panel.password_numeric')) {
-			$password = validate(
-				$password,
-				'/.*[0-9]+.*/',
-				'/.*[0-9]+.*/',
-				'notrequiredpasswordcomplexity'
-			);
-		}
-		if (Settings::Get('panel.password_special_char_required')) {
-			$password = validate(
-				$password,
-				'/.*[' . preg_quote(Settings::Get('panel.password_special_char')) . ']+.*/',
-				'/.*[' . preg_quote(Settings::Get('panel.password_special_char')) . ']+.*/',
-				'notrequiredpasswordcomplexity'
-			);
-		}
-	}
-	
-	return $password;
+function validatePassword($password = null)
+{
+    if (Settings::Get('panel.password_min_length') > 0) {
+        $password = validate(
+            $password,
+            Settings::Get('panel.password_min_length'),
+            '/^.{' . (int) Settings::Get('panel.password_min_length') . ',}$/D',
+            'notrequiredpasswordlength'
+        );
+    }
+    
+    if (Settings::Get('panel.password_regex') !== '') {
+        $password = validate(
+            $password,
+            Settings::Get('panel.password_regex'),
+            Settings::Get('panel.password_regex'),
+            'notrequiredpasswordcomplexity'
+        );
+    } else {
+        if (Settings::Get('panel.password_alpha_lower')) {
+            $password = validate(
+                $password,
+                '/.*[a-z]+.*/',
+                '/.*[a-z]+.*/',
+                'notrequiredpasswordcomplexity'
+            );
+        }
+        if (Settings::Get('panel.password_alpha_upper')) {
+            $password = validate(
+                $password,
+                '/.*[A-Z]+.*/',
+                '/.*[A-Z]+.*/',
+                'notrequiredpasswordcomplexity'
+            );
+        }
+        if (Settings::Get('panel.password_numeric')) {
+            $password = validate(
+                $password,
+                '/.*[0-9]+.*/',
+                '/.*[0-9]+.*/',
+                'notrequiredpasswordcomplexity'
+            );
+        }
+        if (Settings::Get('panel.password_special_char_required')) {
+            $password = validate(
+                $password,
+                '/.*[' . preg_quote(Settings::Get('panel.password_special_char')) . ']+.*/',
+                '/.*[' . preg_quote(Settings::Get('panel.password_special_char')) . ']+.*/',
+                'notrequiredpasswordcomplexity'
+            );
+        }
+    }
+    
+    return $password;
 }
