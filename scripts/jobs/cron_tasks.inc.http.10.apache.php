@@ -964,7 +964,7 @@ class apache extends HttpConfigBase
 			$corrected_docroot = $domain['documentroot'];
 			
 			// Get domain's redirect code
-			$code = getDomainRedirectCode($domain['id'], '301');
+			$code = getDomainRedirectCode($domain['id']);
 			$modrew_red = '';
 			if ($code != '') {
 				$modrew_red = ' [R=' . $code . ';L,NE]';

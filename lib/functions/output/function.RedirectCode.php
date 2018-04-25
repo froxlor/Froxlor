@@ -36,9 +36,11 @@ function getRedirectCodesArray() {
  * return an array of all enabled redirect-codes
  * for the settings form
  *
+ * @param bool $add_desc optional, default true, add the code-description
+ *
  * @return array array of enabled redirect-codes
  */
-function getRedirectCodes() {
+function getRedirectCodes($add_desc = true) {
 
 	global $lng;
 
@@ -47,7 +49,10 @@ function getRedirectCodes() {
 
 	$codes = array();
 	while ($rc = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-		$codes[$rc['id']] = $rc['code']. ' ('.$lng['redirect_desc'][$rc['desc']].')';
+		$codes[$rc['id']] = $rc['code'];
+		if ($add_desc) {
+			$codes[$rc['id']] .= ' ('.$lng['redirect_desc'][$rc['desc']].')';
+		}
 	}
 
 	return $codes;
@@ -58,12 +63,17 @@ function getRedirectCodes() {
  * domain-id
  *
  * @param integer $domainid id of the domain
- * @param string $default
  *
  * @return string redirect-code
  */
-function getDomainRedirectCode($domainid = 0, $default = '') {
+function getDomainRedirectCode($domainid = 0) {
 
+	// get system default
+	$default = '301';
+	if (Settings::Get('customredirect.enabled') == '1') {
+		$all_codes = getRedirectCodes(false);
+		$default = $all_codes[Settings::Get('customredirect.default')];
+	}
 	$code = $default;
 	if ($domainid > 0) {
 
