@@ -43,9 +43,9 @@ class DnsEntry
 	{
 		$_content = $this->content;
 		// check content length for txt records for bind9 (multiline)
-		if (Settings::Get('system.dns_server') != 'pdns' && $this->type == 'TXT' && strlen($_content) >= 64) {
+		if (Settings::Get('system.dns_server') != 'pdns' && $this->type == 'TXT' && strlen($_content) >= 255) {
 			// split string
-			$_contentlines = str_split($_content, 63);
+			$_contentlines = str_split($_content, 254);
 			// first line
 			$_l = array_shift($_contentlines);
 			// check for starting quote
