@@ -467,7 +467,7 @@ class lighttpd extends HttpConfigBase
 			$uri = $domain['documentroot'];
 
 			// Get domain's redirect code
-			$code = getDomainRedirectCode($domain['id'], '301');
+			$code = getDomainRedirectCode($domain['id']);
 
 			$vhost_content .= '  url.redirect-code = ' . $code. "\n";
 			$vhost_content .= '  url.redirect = (' . "\n";

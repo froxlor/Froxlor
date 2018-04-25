@@ -486,7 +486,7 @@ class nginx extends HttpConfigBase
 			}
 
 			// Get domain's redirect code
-			$code = getDomainRedirectCode($domain['id'], '301');
+			$code = getDomainRedirectCode($domain['id']);
 
 			$vhost_content .= "\t" . 'if ($request_uri !~ ^/.well-known/acme-challenge/\w+$) {' . "\n";
 			$vhost_content .= "\t\t" . 'return ' . $code .' ' . $uri . '$request_uri;' . "\n";
