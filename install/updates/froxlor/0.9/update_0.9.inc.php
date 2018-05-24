@@ -3959,3 +3959,12 @@ if (isDatabaseVersion('201802250')) {
 
 	updateToDbVersion('201805240');
 }
+
+if (isDatabaseVersion('201805240')) {
+
+	showUpdateStep("Adding webserver logfile-script settings");
+	Settings::AddNew("system.logfiles_script",  '');
+	lastStepStatus(0);
+
+	updateToDbVersion('201805241');
+}

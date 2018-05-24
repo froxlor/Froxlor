@@ -733,19 +733,16 @@ class apache extends HttpConfigBase
 			$logtype = 'vhost_combined';
 		}
 
-		if (Settings::Get('system.logfiles_piped') == '1') {
-			// don't use custom-script as path for logfile-names
-			$error_log = makeCorrectFile($domain['loginname'] . $speciallogfile . '-error.log');
-			$access_log = makeCorrectFile($domain['loginname'] . $speciallogfile . '-access.log');
+		if (Settings::Get('system.logfiles_piped') == '1' && Settings::Get('system.logfiles_script') != '') {
 			// replace for error_log
-			$command = replace_variables(Settings::Get('system.logfiles_directory'), array(
+			$command = replace_variables(Settings::Get('system.logfiles_script'), array(
 				'LOGFILE' => $error_log,
 				'DOMAIN' => $domain['domain'],
 				'CUSTOMER' => $domain['loginname']
 			));
 			$logfiles_text .= '  ErrorLog "| ' . $command . "\"\n";
 			// replace for access_log
-			$command = replace_variables(Settings::Get('system.logfiles_directory'), array(
+			$command = replace_variables(Settings::Get('system.logfiles_script'), array(
 				'LOGFILE' => $access_log,
 				'DOMAIN' => $domain['domain'],
 				'CUSTOMER' => $domain['loginname']
