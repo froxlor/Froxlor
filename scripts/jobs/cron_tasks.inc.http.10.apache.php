@@ -722,16 +722,7 @@ class apache extends HttpConfigBase
 		
 		// The normal access/error - logging is enabled
 		$error_log = makeCorrectFile(Settings::Get('system.logfiles_directory') . $domain['loginname'] . $speciallogfile . '-error.log');
-		// Create the logfile if it does not exist (fixes #46)
-		touch($error_log);
-		chown($error_log, Settings::Get('system.httpuser'));
-		chgrp($error_log, Settings::Get('system.httpgroup'));
-		
 		$access_log = makeCorrectFile(Settings::Get('system.logfiles_directory') . $domain['loginname'] . $speciallogfile . '-access.log');
-		// Create the logfile if it does not exist (fixes #46)
-		touch($access_log);
-		chown($access_log, Settings::Get('system.httpuser'));
-		chgrp($access_log, Settings::Get('system.httpgroup'));
 		
 		$logtype = 'combined';
 		if (Settings::Get('system.logfiles_format') != '') {
@@ -743,9 +734,32 @@ class apache extends HttpConfigBase
 		}
 
 		if (Settings::Get('system.logfiles_piped') == '1') {
-			$logfiles_text .= '  ErrorLog "|' . str_replace('{LOGFILE}', $error_log, Settings::Get('system.logfiles_directory')) . "\"\n";
-			$logfiles_text .= '  CustomLog "|' . str_replace('{LOGFILE}', $access_log, Settings::Get('system.logfiles_directory')) . '" ' . $logtype . "\n";
+			// don't use custom-script as path for logfile-names
+			$error_log = makeCorrectFile($domain['loginname'] . $speciallogfile . '-error.log');
+			$access_log = makeCorrectFile($domain['loginname'] . $speciallogfile . '-access.log');
+			// replace for error_log
+			$command = replace_variables(Settings::Get('system.logfiles_directory'), array(
+				'LOGFILE' => $error_log,
+				'DOMAIN' => $domain['domain'],
+				'CUSTOMER' => $domain['loginname']
+			));
+			$logfiles_text .= '  ErrorLog "| ' . $command . "\"\n";
+			// replace for access_log
+			$command = replace_variables(Settings::Get('system.logfiles_directory'), array(
+				'LOGFILE' => $access_log,
+				'DOMAIN' => $domain['domain'],
+				'CUSTOMER' => $domain['loginname']
+			));
+			$logfiles_text .= '  CustomLog "| ' . $command . '" ' . $logtype . "\n";
 		} else {
+			// Create the logfile if it does not exist (fixes #46)
+			touch($error_log);
+			chown($error_log, Settings::Get('system.httpuser'));
+			chgrp($error_log, Settings::Get('system.httpgroup'));
+			touch($access_log);
+			chown($access_log, Settings::Get('system.httpuser'));
+			chgrp($access_log, Settings::Get('system.httpgroup'));
+
 			$logfiles_text .= '  ErrorLog "' . $error_log . '"' . "\n";
 			$logfiles_text .= '  CustomLog "' . $access_log . '" ' . $logtype . "\n";
 		}
