@@ -72,7 +72,8 @@ function getDomainRedirectCode($domainid = 0) {
 	$default = '301';
 	if (Settings::Get('customredirect.enabled') == '1') {
 		$all_codes = getRedirectCodes(false);
-		$default = $all_codes[Settings::Get('customredirect.default')];
+		$_default = $all_codes[Settings::Get('customredirect.default')];
+		$default = ($_default == '---') ? $default : $_default;
 	}
 	$code = $default;
 	if ($domainid > 0) {
