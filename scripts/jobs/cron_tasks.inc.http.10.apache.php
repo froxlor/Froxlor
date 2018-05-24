@@ -733,8 +733,22 @@ class apache extends HttpConfigBase
 		chown($access_log, Settings::Get('system.httpuser'));
 		chgrp($access_log, Settings::Get('system.httpgroup'));
 		
-		$logfiles_text .= '  ErrorLog "' . $error_log . "\"\n";
-		$logfiles_text .= '  CustomLog "' . $access_log . '" combined' . "\n";
+		$logtype = 'combined';
+		if (Settings::Get('system.logfiles_format') != '') {
+			$logtype = 'frx_custom';
+			$logfiles_text .= '  LogFormat "' . Settings::Get('system.logfiles_format') . '" ' . $logtype . "\n";
+		}
+		if (Settings::Get('system.logfiles_type') == '2' && Settings::Get('system.logfiles_format') == '') {
+			$logtype = 'vhost_combined';
+		}
+
+		if (Settings::Get('system.logfiles_piped') == '1') {
+			$logfiles_text .= '  ErrorLog "|' . str_replace('{LOGFILE}', $error_log, Settings::Get('system.logfiles_directory')) . "\"\n";
+			$logfiles_text .= '  CustomLog "|' . str_replace('{LOGFILE}', $access_log, Settings::Get('system.logfiles_directory')) . '" ' . $logtype . "\n";
+		} else {
+			$logfiles_text .= '  ErrorLog "' . $error_log . '"' . "\n";
+			$logfiles_text .= '  CustomLog "' . $access_log . '" ' . $logtype . "\n";
+		}
 		
 		if (Settings::Get('system.awstats_enabled') == '1') {
 			if ((int) $domain['parentdomainid'] == 0) {
