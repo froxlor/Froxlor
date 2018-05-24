@@ -1005,7 +1005,13 @@ class nginx extends HttpConfigBase
 		chown($access_log, Settings::Get('system.httpuser'));
 		chgrp($access_log, Settings::Get('system.httpgroup'));
 
-		$logfiles_text .= "\t" . 'access_log    ' . $access_log . ' combined;' . "\n";
+		$logtype = 'combined';
+		if (Settings::Get('system.logfiles_format') != '') {
+			$logtype = 'frx_custom';
+			$logfiles_text .= "\t" . 'log_format ' . $logtype . ' "' . Settings::Get('system.logfiles_format') . '";' . "\n";
+		}
+
+		$logfiles_text .= "\t" . 'access_log    ' . $access_log . ' ' . $logtype . ';' . "\n";
 		$logfiles_text .= "\t" . 'error_log    ' . $error_log . ' error;' . "\n";
 
 		if (Settings::Get('system.awstats_enabled') == '1') {

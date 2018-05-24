@@ -3948,3 +3948,14 @@ if (isDatabaseVersion('201802130')) {
 
 	updateToDbVersion('201802250');
 }
+
+if (isDatabaseVersion('201802250')) {
+
+	showUpdateStep("Adding webserver logfile settings");
+	Settings::AddNew("system.logfiles_format",  '');
+	Settings::AddNew("system.logfiles_type",  '1');
+	Settings::AddNew("system.logfiles_piped",  '0');
+	lastStepStatus(0);
+
+	updateToDbVersion('201805240');
+}

@@ -722,19 +722,47 @@ class apache extends HttpConfigBase
 		
 		// The normal access/error - logging is enabled
 		$error_log = makeCorrectFile(Settings::Get('system.logfiles_directory') . $domain['loginname'] . $speciallogfile . '-error.log');
-		// Create the logfile if it does not exist (fixes #46)
-		touch($error_log);
-		chown($error_log, Settings::Get('system.httpuser'));
-		chgrp($error_log, Settings::Get('system.httpgroup'));
-		
 		$access_log = makeCorrectFile(Settings::Get('system.logfiles_directory') . $domain['loginname'] . $speciallogfile . '-access.log');
-		// Create the logfile if it does not exist (fixes #46)
-		touch($access_log);
-		chown($access_log, Settings::Get('system.httpuser'));
-		chgrp($access_log, Settings::Get('system.httpgroup'));
 		
-		$logfiles_text .= '  ErrorLog "' . $error_log . "\"\n";
-		$logfiles_text .= '  CustomLog "' . $access_log . '" combined' . "\n";
+		$logtype = 'combined';
+		if (Settings::Get('system.logfiles_format') != '') {
+			$logtype = 'frx_custom';
+			$logfiles_text .= '  LogFormat "' . Settings::Get('system.logfiles_format') . '" ' . $logtype . "\n";
+		}
+		if (Settings::Get('system.logfiles_type') == '2' && Settings::Get('system.logfiles_format') == '') {
+			$logtype = 'vhost_combined';
+		}
+
+		if (Settings::Get('system.logfiles_piped') == '1') {
+			// don't use custom-script as path for logfile-names
+			$error_log = makeCorrectFile($domain['loginname'] . $speciallogfile . '-error.log');
+			$access_log = makeCorrectFile($domain['loginname'] . $speciallogfile . '-access.log');
+			// replace for error_log
+			$command = replace_variables(Settings::Get('system.logfiles_directory'), array(
+				'LOGFILE' => $error_log,
+				'DOMAIN' => $domain['domain'],
+				'CUSTOMER' => $domain['loginname']
+			));
+			$logfiles_text .= '  ErrorLog "| ' . $command . "\"\n";
+			// replace for access_log
+			$command = replace_variables(Settings::Get('system.logfiles_directory'), array(
+				'LOGFILE' => $access_log,
+				'DOMAIN' => $domain['domain'],
+				'CUSTOMER' => $domain['loginname']
+			));
+			$logfiles_text .= '  CustomLog "| ' . $command . '" ' . $logtype . "\n";
+		} else {
+			// Create the logfile if it does not exist (fixes #46)
+			touch($error_log);
+			chown($error_log, Settings::Get('system.httpuser'));
+			chgrp($error_log, Settings::Get('system.httpgroup'));
+			touch($access_log);
+			chown($access_log, Settings::Get('system.httpuser'));
+			chgrp($access_log, Settings::Get('system.httpgroup'));
+
+			$logfiles_text .= '  ErrorLog "' . $error_log . '"' . "\n";
+			$logfiles_text .= '  CustomLog "' . $access_log . '" ' . $logtype . "\n";
+		}
 		
 		if (Settings::Get('system.awstats_enabled') == '1') {
 			if ((int) $domain['parentdomainid'] == 0) {
