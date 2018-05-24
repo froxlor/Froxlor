@@ -124,6 +124,17 @@ return array(
 						'apache2'
 					)
 				),
+				'system_logfiles_piped' => array(
+					'label' => $lng['serversettings']['logfiles_piped'],
+					'settinggroup' => 'system',
+					'varname' => 'logfiles_piped',
+					'type' => 'bool',
+					'default' => false,
+					'save_method' => 'storeSettingField',
+					'websrv_avail' => array(
+						'apache2'
+					)
+				),
 				'system_logfiles_format' => array(
 					'label' => $lng['serversettings']['logfiles_format'],
 					'settinggroup' => 'system',
@@ -148,17 +159,6 @@ return array(
 						'1' => 'combined',
 						'2' => 'vhost_combined'
 					),
-					'save_method' => 'storeSettingField',
-					'websrv_avail' => array(
-						'apache2'
-					)
-				),
-				'system_logfiles_piped' => array(
-					'label' => $lng['serversettings']['logfiles_piped'],
-					'settinggroup' => 'system',
-					'varname' => 'logfiles_piped',
-					'type' => 'bool',
-					'default' => false,
 					'save_method' => 'storeSettingField',
 					'websrv_avail' => array(
 						'apache2'
