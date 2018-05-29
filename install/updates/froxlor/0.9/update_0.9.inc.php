@@ -3968,3 +3968,33 @@ if (isDatabaseVersion('201805240')) {
 
 	updateToDbVersion('201805241');
 }
+
+if (isDatabaseVersion('201805241')) {
+
+	$do_update = true;
+	showUpdateStep("Checking for required PHP json-extension");
+	if (! extension_loaded('json')) {
+		$do_update = false;
+		lastStepStatus(2, 'not installed');
+	} else {
+		lastStepStatus(0);
+
+		showUpdateStep("Checking for current cronjobs that need converting");
+		$result_tasks_stmt = Database::query("
+			SELECT * FROM `" . TABLE_PANEL_TASKS . "` ORDER BY `id` ASC
+		");
+		$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_TASKS . "` SET `data` = :data WHERE `id` = :taskid");
+		while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
+			if (! empty($row['data'])) {
+				$data = unserialize($row['data']);
+				Database::pexecute($upd_stmt, array(
+					'data' => json_encode($data),
+					'taskid' => $row['id']
+				));
+			}
+		}
+		lastStepStatus(0);
+
+		updateToDbVersion('201805290');
+	}
+}

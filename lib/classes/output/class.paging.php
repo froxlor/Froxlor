@@ -114,7 +114,7 @@ class paging {
 		$this->userinfo = $userinfo;
 
 		if (!is_array($this->userinfo['lastpaging'])) {
-			$this->userinfo['lastpaging'] = unserialize($this->userinfo['lastpaging']);
+			$this->userinfo['lastpaging'] = json_decode($this->userinfo['lastpaging'], true);
 		}
 
 		$this->table = $table;
@@ -224,7 +224,7 @@ class paging {
 			AND `adminsession` = :adminsession
 		");
 		$upd_data = array(
-			'lastpaging' => serialize($this->userinfo['lastpaging']),
+			'lastpaging' => json_encode($this->userinfo['lastpaging']),
 			'hash' => $userinfo['hash'],
 			'userid' => $userinfo['userid'],
 			'ipaddr' => $userinfo['ipaddress'],

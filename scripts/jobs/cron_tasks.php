@@ -43,7 +43,7 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 	$resultIDs[] = $row['id'];
 
 	if ($row['data'] != '') {
-		$row['data'] = unserialize($row['data']);
+		$row['data'] = json_decode($row['data'], true);
 	}
 
 	/**

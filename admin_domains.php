@@ -528,7 +528,7 @@ if ($page == 'domains' || $page == 'overview') {
 
 				$ipandports = array();
 				if (isset($_POST['ipandport']) && ! is_array($_POST['ipandport'])) {
-					$_POST['ipandport'] = unserialize($_POST['ipandport']);
+					$_POST['ipandport'] = json_decode($_POST['ipandport'], true);
 				}
 
 				if (isset($_POST['ipandport']) && is_array($_POST['ipandport'])) {
@@ -564,7 +564,7 @@ if ($page == 'domains' || $page == 'overview') {
 
 					$ssl_ipandports = array();
 					if (isset($_POST['ssl_ipandport']) && ! is_array($_POST['ssl_ipandport'])) {
-						$_POST['ssl_ipandport'] = unserialize($_POST['ssl_ipandport']);
+						$_POST['ssl_ipandport'] = json_decode($_POST['ssl_ipandport'], true);
 					}
 
 					// Verify SSL-Ports
@@ -606,7 +606,7 @@ if ($page == 'domains' || $page == 'overview') {
 						$ssl_redirect = 0;
 						$letsencrypt = 0;
 						$http2 = 0;
-						// we need this for the serialize
+						// we need this for the json-encode
 						// if ssl is disabled or no ssl-ip/port exists
 						$ssl_ipandports[] = - 1;
 
@@ -622,7 +622,7 @@ if ($page == 'domains' || $page == 'overview') {
 					$ssl_redirect = 0;
 					$letsencrypt = 0;
 					$http2 = 0;
-					// we need this for the serialize
+					// we need this for the json-encode
 					// if ssl is disabled or no ssl-ip/port exists
 					$ssl_ipandports[] = - 1;
 
@@ -692,7 +692,7 @@ if ($page == 'domains' || $page == 'overview') {
 					}
 
 					if (count($ssl_ipandports) == 0) {
-						// we need this for the serialize
+						// we need this for the json-encode
 						// if ssl is disabled or no ssl-ip/port exists
 						$ssl_ipandports[] = - 1;
 					}
@@ -794,9 +794,9 @@ if ($page == 'domains' || $page == 'overview') {
 						'dkim' => $dkim,
 						'speciallogfile' => $speciallogfile,
 						'selectserveralias' => $serveraliasoption,
-						'ipandport' => serialize($ipandports),
+						'ipandport' => json_encode($ipandports),
 						'ssl_redirect' => $ssl_redirect,
-						'ssl_ipandport' => serialize($ssl_ipandports),
+						'ssl_ipandport' => json_encode($ssl_ipandports),
 						'phpenabled' => $phpenabled,
 						'openbasedir' => $openbasedir,
 						'phpsettingid' => $phpsettingid,
@@ -1420,7 +1420,7 @@ if ($page == 'domains' || $page == 'overview') {
 
 				$ipandports = array();
 				if (isset($_POST['ipandport']) && ! is_array($_POST['ipandport'])) {
-					$_POST['ipandport'] = unserialize($_POST['ipandport']);
+					$_POST['ipandport'] = json_decode($_POST['ipandport'], true);
 				}
 				if (isset($_POST['ipandport']) && is_array($_POST['ipandport'])) {
 
@@ -1466,7 +1466,7 @@ if ($page == 'domains' || $page == 'overview') {
 
 					$ssl_ipandports = array();
 					if (isset($_POST['ssl_ipandport']) && ! is_array($_POST['ssl_ipandport'])) {
-						$_POST['ssl_ipandport'] = unserialize($_POST['ssl_ipandport']);
+						$_POST['ssl_ipandport'] = json_decode($_POST['ssl_ipandport'], true);
 					}
 					if (isset($_POST['ssl_ipandport']) && is_array($_POST['ssl_ipandport'])) {
 
@@ -1494,7 +1494,7 @@ if ($page == 'domains' || $page == 'overview') {
 						$ssl_redirect = 0;
 						$letsencrypt = 0;
 						$http2 = 0;
-						// we need this for the serialize
+						// we need this for the json-encode
 						// if ssl is disabled or no ssl-ip/port exists
 						$ssl_ipandports[] = - 1;
 
@@ -1510,7 +1510,7 @@ if ($page == 'domains' || $page == 'overview') {
 					$ssl_redirect = 0;
 					$letsencrypt = 0;
 					$http2 = 0;
-					// we need this for the serialize
+					// we need this for the json-encode
 					// if ssl is disabled or no ssl-ip/port exists
 					$ssl_ipandports[] = - 1;
 
@@ -1603,7 +1603,7 @@ if ($page == 'domains' || $page == 'overview') {
 					}
 
 					if (count($ssl_ipandports) == 0) {
-						// we need this for the serialize
+						// we need this for the json-encode
 						// if ssl is disabled or no ssl-ip/port exists
 						$ssl_ipandports[] = - 1;
 					}
@@ -1668,8 +1668,8 @@ if ($page == 'domains' || $page == 'overview') {
 					'issubof' => $issubof,
 					'speciallogfile' => $speciallogfile,
 					'speciallogverified' => $speciallogverified,
-					'ipandport' => serialize($ipandports),
-					'ssl_ipandport' => serialize($ssl_ipandports),
+					'ipandport' => json_encode($ipandports),
+					'ssl_ipandport' => json_encode($ssl_ipandports),
 					'letsencrypt' => $letsencrypt,
 					'http2' => $http2,
 					'hsts_maxage' => $hsts_maxage,

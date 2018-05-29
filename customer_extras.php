@@ -563,7 +563,7 @@ if ($page == 'overview') {
 			$existing_backupJob = null;
 			while ($entry = $sel_stmt->fetch())
 			{
-				$data = unserialize($entry['data']);
+				$data = json_decode($entry['data'], true);
 				if ($data['customerid'] == $userinfo['customerid']) {
 					$existing_backupJob = $entry;
 					break;
@@ -613,7 +613,7 @@ if ($page == 'overview') {
 
 				if (!empty($existing_backupJob)) {
 					$action = "abort";
-					$row = unserialize($entry['data']);
+					$row = json_decode($entry['data'], true);
 					$row['path'] = makeCorrectDir(str_replace($userinfo['documentroot'], "/", $row['destdir']));
 					$row['backup_web'] = ($row['backup_web'] == '1') ? $lng['panel']['yes'] : $lng['panel']['no'];
 					$row['backup_mail'] = ($row['backup_mail'] == '1') ? $lng['panel']['yes'] : $lng['panel']['no'];
