@@ -79,7 +79,7 @@ $all_jobs = $result_tasks_stmt->fetchAll();
 foreach ($all_jobs as $row) {
 
 	if ($row['data'] != '') {
-		$row['data'] = unserialize($row['data']);
+		$row['data'] = json_decode($row['data'], true);
 	}
 
 	if (is_array($row['data'])) {

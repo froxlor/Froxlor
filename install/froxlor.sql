@@ -660,6 +660,7 @@ opcache.interned_strings_buffer'),
 	('system', 'logfiles_format', ''),
 	('system', 'logfiles_type', '1'),
 	('system', 'logfiles_piped', '0'),
+	('system', 'logfiles_script', ''),
 	('api', 'enabled', '0'),
 	('panel', 'decimal_places', '4'),
 	('panel', 'adminmail', 'admin@SERVERNAME'),
@@ -693,7 +694,7 @@ opcache.interned_strings_buffer'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'version', '0.10.0'),
-	('panel', 'db_version', '201805240');
+	('panel', 'db_version', '201805290');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

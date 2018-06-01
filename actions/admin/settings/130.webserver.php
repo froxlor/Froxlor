@@ -104,13 +104,36 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_logfiles_directory' => array(
-					'label' => (Settings::Get('system.webserver') != 'apache2') ? $lng['serversettings']['logfiles_directory'] : $lng['serversettings']['logfiles_directory2'],
+					'label' => $lng['serversettings']['logfiles_directory'],
 					'settinggroup' => 'system',
 					'varname' => 'logfiles_directory',
 					'type' => 'string',
-					'string_type' => (Settings::Get('system.webserver') != 'apache2') ? 'dir' : '',
+					'string_type' => 'dir',
 					'default' => '/var/customers/logs/',
 					'save_method' => 'storeSettingField'
+				),
+				'system_logfiles_script' => array(
+					'label' => $lng['serversettings']['logfiles_script'],
+					'settinggroup' => 'system',
+					'varname' => 'logfiles_script',
+					'type' => 'string',
+					'string_type' => '',
+					'default' => '',
+					'save_method' => 'storeSettingField',
+					'websrv_avail' => array(
+						'apache2'
+					)
+				),
+				'system_logfiles_piped' => array(
+					'label' => $lng['serversettings']['logfiles_piped'],
+					'settinggroup' => 'system',
+					'varname' => 'logfiles_piped',
+					'type' => 'bool',
+					'default' => false,
+					'save_method' => 'storeSettingField',
+					'websrv_avail' => array(
+						'apache2'
+					)
 				),
 				'system_logfiles_format' => array(
 					'label' => $lng['serversettings']['logfiles_format'],
@@ -136,17 +159,6 @@ return array(
 						'1' => 'combined',
 						'2' => 'vhost_combined'
 					),
-					'save_method' => 'storeSettingField',
-					'websrv_avail' => array(
-						'apache2'
-					)
-				),
-				'system_logfiles_piped' => array(
-					'label' => $lng['serversettings']['logfiles_piped'],
-					'settinggroup' => 'system',
-					'varname' => 'logfiles_piped',
-					'type' => 'bool',
-					'default' => false,
 					'save_method' => 'storeSettingField',
 					'websrv_avail' => array(
 						'apache2'

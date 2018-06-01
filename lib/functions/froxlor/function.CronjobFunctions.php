@@ -63,7 +63,7 @@ function getOutstandingTasks() {
 	while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
 
 		if ($row['data'] != '') {
-			$row['data'] = unserialize($row['data']);
+			$row['data'] = json_decode($row['data'], true);
 		}
 
 		// rebuilding webserver-configuration

@@ -60,7 +60,7 @@ if (isFroxlorVersion('0.10.0')) {
 	Database::query("ALTER TABLE `panel_admins` MODIFY `ip` varchar(500) NOT NULL default '-1';");
 	$upd_stmt = Database::prepare("UPDATE `panel_admins` SET `ip` = :ip WHERE `adminid` = :adminid");
 	foreach ($all_admins as $adm) {
-		if ($admin['ip'] != -1) {
+		if ($admin['ip'] != '-1') {
 			Database::pexecute($upd_stmt, array('ip' => json_encode($adm['ip']), 'adminid' => $adm['adminid']));
 		}
 	}

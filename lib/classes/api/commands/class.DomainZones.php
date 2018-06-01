@@ -215,7 +215,7 @@ class DomainZones extends ApiCommand implements ResourceEntity
 		
 		// check for duplicate
 		foreach ($dom_entries as $existing_entry) {
-			// compare serialized string of array
+			// compare json-encoded string of array
 			$check_entry = $existing_entry;
 			// new entry has no ID yet
 			unset($check_entry['id']);
@@ -225,9 +225,9 @@ class DomainZones extends ApiCommand implements ResourceEntity
 			$check_entry['prio'] = (int) $check_entry['prio'];
 			$check_entry['ttl'] = (int) $check_entry['ttl'];
 			$check_entry['domain_id'] = (int) $check_entry['domain_id'];
-			// serialize both
-			$check_entry = serialize($check_entry);
-			$new = serialize($new_entry);
+			// encode both
+			$check_entry = json_encode($check_entry);
+			$new = json_encode($new_entry);
 			// compare
 			if ($check_entry === $new) {
 				$errors[] = $this->lng['error']['dns_duplicate_entry'];

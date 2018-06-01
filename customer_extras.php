@@ -367,6 +367,7 @@ if ($page == 'overview') {
 				if (!empty($existing_backupJob)) {
 					$action = "abort";
 					$row = $existing_backupJob['data'];
+
 					$row['path'] = makeCorrectDir(str_replace($userinfo['documentroot'], "/", $row['destdir']));
 					$row['backup_web'] = ($row['backup_web'] == '1') ? $lng['panel']['yes'] : $lng['panel']['no'];
 					$row['backup_mail'] = ($row['backup_mail'] == '1') ? $lng['panel']['yes'] : $lng['panel']['no'];

@@ -2,6 +2,7 @@
 use PHPUnit\Framework\TestCase;
 
 /**
+ *
  * @covers ApiParameter
  */
 class ApiParameterTest extends TestCase
@@ -14,5 +15,4 @@ class ApiParameterTest extends TestCase
 		$this->expectExceptionMessage('Requested parameter "key" could not be found for "Froxlor:getSetting"');
 		Froxlor::getLocal($admin_userdata)->getSetting();
 	}
-
 }

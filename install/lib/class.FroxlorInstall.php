@@ -1017,7 +1017,7 @@ class FroxlorInstall
 
 		// check for json extension
 		$content .= $this->_status_message('begin', $this->_lng['requirements']['phpjson']);
-		
+
 		if (! extension_loaded('json')) {
 			$content .= $this->_status_message('red', $this->_lng['requirements']['notinstalled']);
 			$_die = true;

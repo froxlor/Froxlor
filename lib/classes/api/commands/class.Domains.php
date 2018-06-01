@@ -314,7 +314,7 @@ class Domains extends ApiCommand implements ResourceEntity
 					$ssl_redirect = 0;
 					$letsencrypt = 0;
 					$http2 = 0;
-					// we need this for the serialize
+					// we need this for the json_encode
 					// if ssl is disabled or no ssl-ip/port exists
 					$ssl_ipandports[] = - 1;
 					
@@ -383,7 +383,7 @@ class Domains extends ApiCommand implements ResourceEntity
 					}
 					
 					if (count($ssl_ipandports) == 0) {
-						// we need this for the serialize
+						// we need this for the json_encode
 						// if ssl is disabled or no ssl-ip/port exists
 						$ssl_ipandports[] = - 1;
 					}
@@ -900,7 +900,7 @@ class Domains extends ApiCommand implements ResourceEntity
 				$ssl_redirect = 0;
 				$letsencrypt = 0;
 				$http2 = 0;
-				// we need this for the serialize
+				// we need this for the json_encode
 				// if ssl is disabled or no ssl-ip/port exists
 				$ssl_ipandports[] = - 1;
 				
@@ -993,7 +993,7 @@ class Domains extends ApiCommand implements ResourceEntity
 				}
 				
 				if (count($ssl_ipandports) == 0) {
-					// we need this for the serialize
+					// we need this for the json_encode
 					// if ssl is disabled or no ssl-ip/port exists
 					$ssl_ipandports[] = - 1;
 				}
@@ -1532,7 +1532,7 @@ class Domains extends ApiCommand implements ResourceEntity
 			);
 		}
 		if (! empty($p_ipandports) && ! is_array($p_ipandports)) {
-			$p_ipandports = unserialize($p_ipandports);
+			$p_ipandports = json_decode($p_ipandports, true);
 		}
 		
 		// check whether there are ip usage restrictions

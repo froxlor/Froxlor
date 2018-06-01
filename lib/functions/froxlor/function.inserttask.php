@@ -70,7 +70,7 @@ function inserttask($type, $param1 = '', $param2 = '', $param3 = '', $param4 = '
 		$data['uid'] = $param2;
 		$data['gid'] = $param3;
 		$data['store_defaultindex'] = $param4;
-		$data = serialize($data);
+		$data = json_encode($data);
 		Database::pexecute($ins_stmt, array('type' => '2', 'data' => $data));
 
 	} elseif ($type == '6'
@@ -78,7 +78,7 @@ function inserttask($type, $param1 = '', $param2 = '', $param3 = '', $param4 = '
 	) {
 		$data = array();
 		$data['loginname'] = $param1;
-		$data = serialize($data);
+		$data = json_encode($data);
 		Database::pexecute($ins_stmt, array('type' => '6', 'data' => $data));
 
 	} elseif ($type == '7'
@@ -88,7 +88,7 @@ function inserttask($type, $param1 = '', $param2 = '', $param3 = '', $param4 = '
 		$data = array();
 		$data['loginname'] = $param1;
 		$data['email'] = $param2;
-		$data = serialize($data);
+		$data = json_encode($data);
 		Database::pexecute($ins_stmt, array('type' => '7', 'data' => $data));
 
 	} elseif ($type == '8'
@@ -98,13 +98,13 @@ function inserttask($type, $param1 = '', $param2 = '', $param3 = '', $param4 = '
 		$data = array();
 		$data['loginname'] = $param1;
 		$data['homedir'] = $param2;
-		$data = serialize($data);
+		$data = json_encode($data);
 		Database::pexecute($ins_stmt, array('type' => '8', 'data' => $data));
 
 	} elseif ($type == '20'
 		&& is_array($param1)
 	) {
-		$data = serialize($param1);
+		$data = json_encode($param1);
 		Database::pexecute($ins_stmt, array('type' => '20', 'data' => $data));
 	}
 }

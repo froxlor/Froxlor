@@ -101,7 +101,7 @@ class CustomerBackups extends ApiCommand implements ResourceEntity
 		Database::pexecute($sel_stmt);
 		$result = array();
 		while ($entry = $sel_stmt->fetch(PDO::FETCH_ASSOC)) {
-			$entry['data'] = unserialize($entry['data']);
+			$entry['data'] = json_decode($entry['data'], true);
 			if (in_array($entry['data']['customerid'], $customer_ids)) {
 				$result[] = $entry;
 			}
