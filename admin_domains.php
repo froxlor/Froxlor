@@ -2027,7 +2027,15 @@ if ($page == 'domains' || $page == 'overview') {
 				} else
 					if ($result['wwwserveralias'] != $wwwserveralias || $result['letsencrypt'] != $letsencrypt) {
 						// or when wwwserveralias or letsencrypt was changed
+
 						triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $log);
+
+						if ($aliasdomain === 0) {
+							// in case the wwwserveralias is set on a main domain, $aliasdomain is 0
+							// --> the call just above to triggerLetsEncryptCSRForAliasDestinationDomain
+							//     is a noop...let's repeat it with the domain id of the main domain
+							triggerLetsEncryptCSRForAliasDestinationDomain($id, $log);
+						}
 					}
 
 				$log->logAction(ADM_ACTION, LOG_INFO, "edited domain #" . $id);
