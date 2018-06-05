@@ -1124,7 +1124,6 @@ if ($page == 'domains' || $page == 'overview') {
 			}
 		}
 	} elseif ($action == 'edit' && $id != 0) {
-
 		$result_stmt = Database::prepare("
 			SELECT `d`.*, `c`.`customerid`
 			FROM `" . TABLE_PANEL_DOMAINS . "` `d`
@@ -2250,12 +2249,12 @@ if ($page == 'domains' || $page == 'overview') {
 			}
 		}
 	} elseif ($action == 'jqGetCustomerPHPConfigs') {
-		
+
 		$customerid = intval($_POST['customerid']);
 		$allowed_phpconfigs = getCustomerDetail($customerid, 'allowed_phpconfigs');
 		echo !empty($allowed_phpconfigs) ? $allowed_phpconfigs : json_encode(array());
 		exit;
-		
+
 	} elseif ($action == 'import') {
 
 		if (isset($_POST['send']) && $_POST['send'] == 'send') {
