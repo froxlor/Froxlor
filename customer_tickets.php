@@ -250,6 +250,11 @@ if ($page == 'overview') {
 			if ($replyticket->Get('message') == null) {
 				standard_error(array('stringisempty', 'mymessage'));
 			} else {
+				try {
+					$mainticket = ticket::getInstanceOf($userinfo, (int)$id);
+				} catch(Exception $e) {
+					standard_error($e->getMessage());
+				}
 				$now = time();
 				$replyticket->Set('customer', (int)$userinfo['customerid'], true, true);
 				$replyticket->Set('lastchange', $now, true, true);
@@ -260,8 +265,6 @@ if ($page == 'overview') {
 				$replyticket->Insert();
 
 				// Update priority if changed
-				$mainticket = ticket::getInstanceOf($userinfo, (int)$id);
-
 				if ($replyticket->Get('priority') != $mainticket->Get('priority')) {
 					$mainticket->Set('priority', $replyticket->Get('priority'), true);
 				}

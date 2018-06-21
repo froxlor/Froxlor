@@ -46,7 +46,7 @@ class ticket
 	/**
 	 * Ticket-Object-Array
 	 *
-	 * @var ticket
+	 * @var ticket[]
 	 */
 	private static $tickets = array();
 
