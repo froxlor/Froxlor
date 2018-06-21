@@ -27,7 +27,7 @@ $del_stmt = Database::prepare("DELETE FROM `" . TABLE_API_KEYS . "` WHERE id = :
 $success_message = "";
 $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 
-// do the delete and then just show a success-message and the certificates list again
+// do the delete and then just show a success-message and the apikeys list again
 if ($action == 'delete') {
 	if ($id > 0) {
 		$chk = (AREA == 'admin' && $userinfo['customers_see_all'] == '1') ? true : false;
@@ -65,20 +65,21 @@ if ($action == 'delete') {
 		`apikey` = :key, `secret` = :secret, `adminid` = :aid, `customerid` = :cid, `valid_until` = '-1', `allowed_from` = ''
 	");
 	// customer generates for himself, admins will see a customer-select-box
-	if (AREA == 'customer') {
-		$key = hash('sha256', openssl_random_pseudo_bytes(64 * 64));
-		$secret = hash('sha512', openssl_random_pseudo_bytes(64 * 64 * 4));
-		Database::pexecute($ins_stmt, array(
-			'key' => $key,
-			'secret' => $secret,
-			'aid' => $userinfo['adminid'],
-			'cid' => $userinfo['customerid']
-		));
-		redirectTo($filename, array(
-			'page' => $page,
-			's' => $s
-		));
+	if (AREA == 'admin') {
+		$cid = 0;
 	}
+	elseif (AREA == 'customer') {
+		$cid = $userinfo['customerid'];
+	}
+	$key = hash('sha256', openssl_random_pseudo_bytes(64 * 64));
+	$secret = hash('sha512', openssl_random_pseudo_bytes(64 * 64 * 4));
+	Database::pexecute($ins_stmt, array(
+		'key' => $key,
+		'secret' => $secret,
+		'aid' => $userinfo['adminid'],
+		'cid' => $cid
+	));
+	$success_message = $lng['apikeys']['apikey_added'];
 }
 
 $log->logAction(USR_ACTION, LOG_NOTICE, "viewed api::api_keys");
@@ -167,8 +168,8 @@ if (count($all_keys) == 0) {
 			$row = htmlentities_array($key);
 
 			// shorten keys
-			$row['apikey'] = substr($row['apikey'], 0, 20) . '...';
-			$row['secret'] = substr($row['secret'], 0, 20) . '...';
+			$row['_apikey'] = substr($row['apikey'], 0, 20) . '...';
+			$row['_secret'] = substr($row['secret'], 0, 20) . '...';
 
 			// check whether the api key is not valid anymore
 			$isValid = true;

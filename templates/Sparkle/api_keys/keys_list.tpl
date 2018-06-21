@@ -34,11 +34,11 @@
 				<table class="full hl">
 					<thead>
 						<tr>
-							<th>User</th>
-							<th>API-keys</th>
+							<th>{$lng['login']['username']}</th>
+							<th>API-key</th>
 							<th>Secret</th>
-							<th>Allowed from</th>
-							<th>Valid until</th>
+							<th>{$lng['apikeys']['allowed_from']}</th>
+							<th>{$lng['apikeys']['valid_until']}</th>
 							<th>{$lng['panel']['options']}</th>
 						</tr>
 					</thead>
