@@ -415,7 +415,7 @@ if ($page == 'domains' || $page == 'overview') {
 					Domains::getLocal($userinfo, $_POST)->update();
 				} catch (Exception $e) {
 					dynamic_error($e->getMessage());
-				}		
+				}
 				redirectTo($filename, array(
 					'page' => $page,
 					's' => $s

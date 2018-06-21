@@ -238,7 +238,11 @@ if ($page == 'overview') {
 		}
 	} elseif ($action == 'answer' && $id != 0) {
 		if (isset($_POST['send']) && $_POST['send'] == 'send') {
-			$replyticket = ticket::getInstanceOf($userinfo, -1);
+			try {
+				$replyticket = ticket::getInstanceOf($userinfo, -1);
+			} catch(Exception $e) {
+				standard_error($e->getMessage());
+			}
 			$replyticket->Set('subject', validate($_POST['subject'], 'subject'), true, false);
 			$replyticket->Set('priority', validate($_POST['priority'], 'priority'), true, false);
 			$replyticket->Set('message', validate(str_replace("\r\n", "\n", $_POST['message']), 'message', '/^[^\0]*$/'), true, false);
@@ -246,6 +250,11 @@ if ($page == 'overview') {
 			if ($replyticket->Get('message') == null) {
 				standard_error(array('stringisempty', 'mymessage'));
 			} else {
+				try {
+					$mainticket = ticket::getInstanceOf($userinfo, (int)$id);
+				} catch(Exception $e) {
+					standard_error($e->getMessage());
+				}
 				$now = time();
 				$replyticket->Set('customer', (int)$userinfo['customerid'], true, true);
 				$replyticket->Set('lastchange', $now, true, true);
@@ -256,8 +265,6 @@ if ($page == 'overview') {
 				$replyticket->Insert();
 
 				// Update priority if changed
-				$mainticket = ticket::getInstanceOf($userinfo, (int)$id);
-
 				if ($replyticket->Get('priority') != $mainticket->Get('priority')) {
 					$mainticket->Set('priority', $replyticket->Get('priority'), true);
 				}
@@ -272,7 +279,11 @@ if ($page == 'overview') {
 			}
 		} else {
 			$ticket_replies = '';
-			$mainticket = ticket::getInstanceOf($userinfo, (int)$id);
+			try {
+				$mainticket = ticket::getInstanceOf($userinfo, (int)$id);
+			} catch(Exception $e) {
+				standard_error($e->getMessage());
+			}
 			$dt = date("d.m.Y H:i\h", $mainticket->Get('dt'));
 			$status = ticket::getStatusText($lng, $mainticket->Get('status'));
 
@@ -351,7 +362,11 @@ if ($page == 'overview') {
 	} elseif ($action == 'close' && $id != 0) {
 		if (isset($_POST['send']) && $_POST['send'] == 'send') {
 			$now = time();
-			$mainticket = ticket::getInstanceOf($userinfo, (int)$id);
+			try {
+				$mainticket = ticket::getInstanceOf($userinfo, (int)$id);
+			} catch(Exception $e) {
+				standard_error($e->getMessage());
+			}
 			$mainticket->Set('lastchange', $now, true, true);
 			$mainticket->Set('lastreplier', '0', true, true);
 			$mainticket->Set('status', '3', true, true);
@@ -359,7 +374,11 @@ if ($page == 'overview') {
 			$log->logAction(USR_ACTION, LOG_NOTICE, "closed support-ticket '" . $mainticket->Get('subject') . "'");
 			redirectTo($filename, array('page' => $page, 's' => $s));
 		} else {
-			$mainticket = ticket::getInstanceOf($userinfo, (int)$id);
+			try {
+				$mainticket = ticket::getInstanceOf($userinfo, (int)$id);
+			} catch(Exception $e) {
+				standard_error($e->getMessage());
+			}
 			ask_yesno('ticket_reallyclose', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $mainticket->Get('subject'));
 		}
 	} elseif ($action == 'reopen' && $id != 0) {
@@ -377,7 +396,11 @@ if ($page == 'overview') {
 		}
 
 		$now = time();
-		$mainticket = ticket::getInstanceOf($userinfo, (int)$id);
+		try {
+			$mainticket = ticket::getInstanceOf($userinfo, (int)$id);
+		} catch(Exception $e) {
+			standard_error($e->getMessage());
+		}
 		$mainticket->Set('lastchange', $now, true, true);
 		$mainticket->Set('lastreplier', '0', true, true);
 		$mainticket->Set('status', '0', true, true);

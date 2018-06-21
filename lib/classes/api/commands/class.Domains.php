@@ -1340,6 +1340,12 @@ class Domains extends ApiCommand implements ResourceEntity
 			} elseif ($result['wwwserveralias'] != $wwwserveralias || $result['letsencrypt'] != $letsencrypt) {
 				// or when wwwserveralias or letsencrypt was changed
 				triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $this->logger());
+				if ($aliasdomain === 0) {
+					// in case the wwwserveralias is set on a main domain, $aliasdomain is 0
+					// --> the call just above to triggerLetsEncryptCSRForAliasDestinationDomain
+					//     is a noop...let's repeat it with the domain id of the main domain
+					triggerLetsEncryptCSRForAliasDestinationDomain($id, $this->logger());
+				}
 			}
 			
 			$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] updated domain '" . $result['domain'] . "'");

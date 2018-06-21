@@ -47,7 +47,7 @@ if ($page == 'overview') {
 			WHERE `d`.`customerid`= :customerid
 			AND `d`.`email_only`='0'
 			AND `d`.`id` <> :standardsubdomain " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit()
-		);
+			);
 		Database::pexecute($domains_stmt, array("customerid" => $userinfo['customerid'], "standardsubdomain" => $userinfo['standardsubdomain']));
 		$paging->setEntries(Database::num_rows());
 		$sortcode = $paging->getHtmlSortCode($lng);
@@ -58,16 +58,16 @@ if ($page == 'overview') {
 		$parentdomains_count = 0;
 		$domains_count = 0;
 		$domain_array = array();
-
+		
 		while ($row = $domains_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$row['domain'] = $idna_convert->decode($row['domain']);
 			$row['aliasdomain'] = $idna_convert->decode($row['aliasdomain']);
 			$row['domainalias'] = $idna_convert->decode($row['domainalias']);
-
+			
 			if ($row['parentdomainid'] == '0' && $row['caneditdomain'] == '1') {
 				$parentdomains_count++;
 			}
-
+			
 			/**
 			 * check for set ssl-certs to show different state-icons
 			 */
@@ -91,29 +91,29 @@ if ($page == 'overview') {
 					}
 				}
 			}
-
+			
 			$row['termination_date'] = str_replace("0000-00-00", "", $row['termination_date']);
 			if($row['termination_date'] != "") {
 				$cdate = strtotime($row['termination_date'] . " 23:59:59");
 				$today = time();
-
+				
 				if($cdate < $today) {
 					$row['termination_css'] = 'domain-expired';
 				} else {
 					$row['termination_css'] = 'domain-canceled';
 				}
 			}
-
+			
 			$domains_count++;
 			$domain_array[$row['domain']] = $row;
 		}
-
+		
 		ksort($domain_array);
 		$domain_id_array = array();
 		foreach ($domain_array as $sortkey => $row) {
 			$domain_id_array[$row['id']] = $sortkey;
 		}
-
+		
 		$domain_sort_array = array();
 		foreach ($domain_array as $sortkey => $row) {
 			if ($row['parentdomainid'] == 0) {
@@ -122,45 +122,45 @@ if ($page == 'overview') {
 				// when searching and the results are subdomains only, we need to get
 				// the parent domain to this subdomain
 				if (!isset($domain_id_array[$row['parentdomainid']])) {
-				    $domain_id_array[$row['parentdomainid']] = "[parent-domain]";
+					$domain_id_array[$row['parentdomainid']] = "[parent-domain]";
 				}
 				$domain_sort_array[$domain_id_array[$row['parentdomainid']]][$sortkey] = $row;
 			}
 		}
-
+		
 		$domain_array = array();
-
+		
 		if ($paging->sortfield == 'd.domain' && $paging->sortorder == 'asc') {
 			ksort($domain_sort_array);
 		} elseif ($paging->sortfield == 'd.domain' && $paging->sortorder == 'desc') {
 			krsort($domain_sort_array);
 		}
-
+		
 		$i = 0;
 		foreach ($domain_sort_array as $sortkey => $domain_array) {
 			if ($paging->checkDisplay($i)) {
-
+				
 				if (isset($domain_array[$sortkey])) {
 					$row = htmlentities_array($domain_array[$sortkey]);
 					if (Settings::Get('system.awstats_enabled') == '1') {
-					   $statsapp = 'awstats';
+						$statsapp = 'awstats';
 					} else {
-					   $statsapp = 'webalizer';
+						$statsapp = 'webalizer';
 					}
 					eval("\$domains.=\"" . getTemplate("domains/domains_delimiter") . "\";");
 				}
-
+				
 				if ($paging->sortfield == 'd.domain' && $paging->sortorder == 'asc') {
 					ksort($domain_array);
 				} elseif ($paging->sortfield == 'd.domain' && $paging->sortorder == 'desc') {
 					krsort($domain_array);
 				}
-
+				
 				foreach ($domain_array as $row) {
 					if (strpos($row['documentroot'], $userinfo['documentroot']) === 0) {
 						$row['documentroot'] = makeCorrectDir(str_replace($userinfo['documentroot'], "/", $row['documentroot']));
 					}
-
+					
 					// get ssl-ips if activated
 					$show_ssledit = false;
 					if (Settings::Get('system.use_ssl') == '1' && domainHasSslIpPort($row['id']) && $row['caneditdomain'] == '1' && $row['letsencrypt'] == 0) {
@@ -170,10 +170,10 @@ if ($page == 'overview') {
 					eval("\$domains.=\"" . getTemplate("domains/domains_domain") . "\";");
 				}
 			}
-
+			
 			$i+= count($domain_array);
 		}
-
+		
 		eval("echo \"" . getTemplate("domains/domainlist") . "\";");
 	} elseif ($action == 'delete' && $id != 0) {
 		try {
@@ -184,10 +184,10 @@ if ($page == 'overview') {
 			dynamic_error($e->getMessage());
 		}
 		$result = json_decode($json_result, true)['data'];
-
+		
 		$alias_stmt = Database::prepare("SELECT COUNT(`id`) AS `count` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `aliasdomain` = :aliasdomain");
 		$alias_check = Database::pexecute_first($alias_stmt, array("aliasdomain" => $id));
-
+		
 		if (isset($result['parentdomainid']) && $result['parentdomainid'] != '0' && $alias_check['count'] == 0) {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
@@ -218,14 +218,14 @@ if ($page == 'overview') {
 					AND `email_only` = '0'
 					AND `caneditdomain` = '1'
 					ORDER BY `domain` ASC"
-				);
+					);
 				Database::pexecute($stmt, array("customerid" => $userinfo['customerid']));
 				$domains = '';
-
+				
 				while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 					$domains .= makeoption($idna_convert->decode($row['domain']), $row['domain']);
 				}
-
+				
 				$aliasdomains = makeoption($lng['domains']['noaliasdomain'], 0, NULL, true);
 				$domains_stmt = Database::prepare("SELECT `d`.`id`, `d`.`domain` FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_CUSTOMERS . "` `c`
 					WHERE `d`.`aliasdomain` IS NULL
@@ -235,13 +235,13 @@ if ($page == 'overview') {
 					AND `d`.`email_only`='0'
 					AND `d`.`customerid`= :customerid
 					ORDER BY `d`.`domain` ASC"
-				);
+					);
 				Database::pexecute($domains_stmt, array("customerid" => $userinfo['customerid']));
-
+				
 				while ($row_domain = $domains_stmt->fetch(PDO::FETCH_ASSOC)) {
 					$aliasdomains .= makeoption($idna_convert->decode($row_domain['domain']), $row_domain['id']);
 				}
-
+				
 				$redirectcode = '';
 				if (Settings::Get('customredirect.enabled') == '1') {
 					$codes = getRedirectCodesArray();
@@ -249,7 +249,7 @@ if ($page == 'overview') {
 						$redirectcode .= makeoption($rc['code']. ' ('.$lng['redirect_desc'][$rc['desc']].')', $rc['id']);
 					}
 				}
-
+				
 				// check if we at least have one ssl-ip/port, #1179
 				$ssl_ipsandports = '';
 				$ssl_ip_stmt = Database::prepare("
@@ -263,10 +263,10 @@ if ($page == 'overview') {
 				if (isset($resultX['countSSL']) && (int)$resultX['countSSL'] > 0) {
 					$ssl_ipsandports = 'notempty';
 				}
-
+				
 				$openbasedir = makeoption($lng['domain']['docroot'], 0, NULL, true) . makeoption($lng['domain']['homedir'], 1, NULL, true);
 				$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
-
+				
 				$phpconfigs = '';
 				$has_phpconfigs = false;
 				if (isset($userinfo['allowed_phpconfigs']) && !empty($userinfo['allowed_phpconfigs']))
@@ -287,18 +287,18 @@ if ($page == 'overview') {
 						}
 					}
 				}
-
+				
 				$subdomain_add_data = include_once dirname(__FILE__).'/lib/formfields/customer/domains/formfield.domains_add.php';
 				$subdomain_add_form = htmlform::genHTMLForm($subdomain_add_data);
-
+				
 				$title = $subdomain_add_data['domain_add']['title'];
 				$image = $subdomain_add_data['domain_add']['image'];
-
+				
 				eval("echo \"" . getTemplate("domains/domains_add") . "\";");
 			}
 		}
 	} elseif ($action == 'edit' && $id != 0) {
-
+		
 		try {
 			$json_result = SubDomains::getLocal($userinfo, array(
 				'id' => $id
@@ -307,7 +307,7 @@ if ($page == 'overview') {
 			dynamic_error($e->getMessage());
 		}
 		$result = json_decode($json_result, true)['data'];
-
+		
 		if (isset($result['customerid']) && $result['customerid'] == $userinfo['customerid']) {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
@@ -318,7 +318,7 @@ if ($page == 'overview') {
 				redirectTo($filename, array('page' => $page, 's' => $s));
 			} else {
 				$result['domain'] = $idna_convert->decode($result['domain']);
-
+				
 				$domains = makeoption($lng['domains']['noaliasdomain'], 0, $result['aliasdomain'], true);
 				// also check ip/port combination to be the same, #176
 				$domains_stmt = Database::prepare("SELECT `d`.`id`, `d`.`domain` FROM `" . TABLE_PANEL_DOMAINS . "` `d` , `" . TABLE_PANEL_CUSTOMERS . "` `c` , `".TABLE_DOMAINTOIP."` `dip`
@@ -334,13 +334,13 @@ if ($page == 'overview') {
 						WHERE `id_domain` = :id)
 					GROUP BY `d`.`id`, `d`.`domain`
 					ORDER BY `d`.`domain` ASC"
-				);
+					);
 				Database::pexecute($domains_stmt, array("id" => $result['id'], "customerid" => $userinfo['customerid']));
-
+				
 				while ($row_domain = $domains_stmt->fetch(PDO::FETCH_ASSOC)) {
 					$domains .= makeoption($idna_convert->decode($row_domain['domain']), $row_domain['id'], $result['aliasdomain']);
 				}
-
+				
 				if (preg_match('/^https?\:\/\//', $result['documentroot']) && validateUrl($result['documentroot'])) {
 					if (Settings::Get('panel.pathedit') == 'Dropdown') {
 						$urlvalue = $result['documentroot'];
@@ -353,7 +353,7 @@ if ($page == 'overview') {
 					$urlvalue = '';
 					$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $result['documentroot']);
 				}
-
+				
 				$redirectcode = '';
 				if (Settings::Get('customredirect.enabled') == '1') {
 					$def_code = getDomainRedirectId($id);
@@ -362,7 +362,7 @@ if ($page == 'overview') {
 						$redirectcode .= makeoption($rc['code']. ' ('.$lng['redirect_desc'][$rc['desc']].')', $rc['id'], $def_code);
 					}
 				}
-
+				
 				// check if we at least have one ssl-ip/port, #1179
 				$ssl_ipsandports = '';
 				$ssl_ip_stmt = Database::prepare("
@@ -376,13 +376,13 @@ if ($page == 'overview') {
 				if (isset($resultX['countSSL']) && (int)$resultX['countSSL'] > 0) {
 					$ssl_ipsandports = 'notempty';
 				}
-
+				
 				// Fudge the result for ssl_redirect to hide the Let's Encrypt steps
 				$result['temporary_ssl_redirect'] = $result['ssl_redirect'];
 				$result['ssl_redirect'] = ($result['ssl_redirect'] == 0 ? 0 : 1);
-
+				
 				$openbasedir = makeoption($lng['domain']['docroot'], 0, $result['openbasedir_path'], true) . makeoption($lng['domain']['homedir'], 1, $result['openbasedir_path'], true);
-
+				
 				// create serveralias options
 				$serveraliasoptions = "";
 				$_value = '2';
@@ -394,19 +394,19 @@ if ($page == 'overview') {
 				$serveraliasoptions .= makeoption($lng['domains']['serveraliasoption_wildcard'], '0', $_value, true, true);
 				$serveraliasoptions .= makeoption($lng['domains']['serveraliasoption_www'], '1', $_value, true, true);
 				$serveraliasoptions .= makeoption($lng['domains']['serveraliasoption_none'], '2', $_value, true, true);
-
+				
 				$ips_stmt = Database::prepare("SELECT `p`.`ip` AS `ip` FROM `".TABLE_PANEL_IPSANDPORTS."` `p`
 					LEFT JOIN `".TABLE_DOMAINTOIP."` `dip`
 					ON ( `dip`.`id_ipandports` = `p`.`id` )
 					WHERE `dip`.`id_domain` = :id_domain
 					GROUP BY `p`.`ip`"
-				);
+					);
 				Database::pexecute($ips_stmt, array("id_domain" => $result['id']));
 				$result_ipandport['ip'] = '';
 				while ($rowip = $ips_stmt->fetch(PDO::FETCH_ASSOC)) {
 					$result_ipandport['ip'] .= $rowip['ip'] . "<br />";
 				}
-
+				
 				$phpconfigs = '';
 				$has_phpconfigs = false;
 				if (isset($userinfo['allowed_phpconfigs']) && !empty($userinfo['allowed_phpconfigs']))
@@ -427,16 +427,16 @@ if ($page == 'overview') {
 						}
 					}
 				}
-
+				
 				$domainip = $result_ipandport['ip'];
 				$result = htmlentities_array($result);
-
+				
 				$subdomain_edit_data = include_once dirname(__FILE__).'/lib/formfields/customer/domains/formfield.domains_edit.php';
 				$subdomain_edit_form = htmlform::genHTMLForm($subdomain_edit_data);
-
+				
 				$title = $subdomain_edit_data['domain_edit']['title'];
 				$image = $subdomain_edit_data['domain_edit']['image'];
-
+				
 				eval("echo \"" . getTemplate("domains/domains_edit") . "\";");
 			}
 		} else {
@@ -444,7 +444,7 @@ if ($page == 'overview') {
 		}
 	}
 } elseif ($page == 'domainssleditor') {
-
+	
 	if ($action == '' || $action == 'view') {
 		if (isset($_POST['send']) && $_POST['send'] == 'send') {
 			$do_insert = isset($_POST['do_insert']) ? (($_POST['do_insert'] == 1) ? true : false) : false;
@@ -460,12 +460,12 @@ if ($page == 'overview') {
 			// back to domain overview
 			redirectTo($filename, array('page' => 'domains', 's' => $s));
 		}
-
+		
 		$stmt = Database::prepare("SELECT * FROM `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."`
 			WHERE `domainid`= :domainid"
-		);
+			);
 		$result = Database::pexecute_first($stmt, array("domainid" => $id));
-
+		
 		$do_insert = false;
 		// if no entry can be found, behave like we have empty values
 		if (!is_array($result) || !isset($result['ssl_cert_file'])) {
@@ -477,23 +477,23 @@ if ($page == 'overview') {
 			);
 			$do_insert = true;
 		}
-
+		
 		$result = htmlentities_array($result);
-
+		
 		$ssleditor_data = include_once dirname(__FILE__).'/lib/formfields/customer/domains/formfield.domain_ssleditor.php';
 		$ssleditor_form = htmlform::genHTMLForm($ssleditor_data);
-
+		
 		$title = $ssleditor_data['domain_ssleditor']['title'];
 		$image = $ssleditor_data['domain_ssleditor']['image'];
-
+		
 		eval("echo \"" . getTemplate("domains/domain_ssleditor") . "\";");
 	}
 } elseif ($page == 'domaindnseditor' && $userinfo['dnsenabled'] == '1' && Settings::Get('system.dnsenabled') == '1') {
-
+	
 	require_once __DIR__.'/dns_editor.php';
-
+	
 } elseif ($page == 'sslcertificates') {
-
+	
 	require_once __DIR__.'/ssl_certificates.php';
-
+	
 }
