@@ -1,12 +1,12 @@
-<tr <if $isMyKey>class="primary-entry"</if>>
+<tr <if $isMyKey>class="primary-entry"</if> id="apikey-{$row['id']}" data-id="{$row['id']}" title="{$lng['apikeys']['clicktoview']}">
 	<td>
 		{$adminCustomerLink}
 	</td>
 	<td>
-		<span id="apikey-{$row['id']}" data-id="{$row['id']}" title="{$lng['apikeys']['clicktoview']}">{$row['_apikey']}</span>
+		<span>{$row['_apikey']}</span>
 	</td>
 	<td>
-		<span id="secret-{$row['id']}" data-id="{$row['id']}" title="{$lng['apikeys']['clicktoview']}">{$row['_secret']}</span>
+		<span>{$row['_secret']}</span>
 	</td>
 	<td>
 		{$row['allowed_from']}
@@ -17,9 +17,6 @@
 		<if !$isValid></span></strong></if>
 	</td>
 	<td>
-		<a href="{$linker->getLink(array('section' => 'index', 'page' => $page, 'action' => 'edit', 'id' => $row['id']))}">
-			<img src="templates/{$theme}/assets/img/icons/edit.png" alt="{$lng['panel']['edit']}" title="{$lng['panel']['edit']}" />
-		</a>&nbsp;
 		<a href="{$linker->getLink(array('section' => 'index', 'page' => $page, 'action' => 'delete', 'id' => $row['id']))}">
 			<img src="templates/{$theme}/assets/img/icons/delete.png" alt="{$lng['panel']['delete']}" title="{$lng['panel']['delete']}" />
 		</a>

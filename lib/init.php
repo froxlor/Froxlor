@@ -29,7 +29,7 @@ header('Expires: ' . gmdate( 'D, d M Y H:i:s \G\M\T', time()));
 // Inline-JS is no longer allowed and used
 // See: http://people.mozilla.org/~bsterne/content-security-policy/index.html
 // New stuff see: https://www.owasp.org/index.php/List_of_useful_HTTP_headers and https://www.owasp.org/index.php/Content_Security_Policy
-$csp_content = "default-src 'self'; script-src 'self'; connect-src 'self'; img-src 'self' data:; style-src 'self'; reflected-xss block;";
+$csp_content = "default-src 'self'; script-src 'self'; connect-src 'self'; img-src 'self' data:; style-src 'self';";
 header("Content-Security-Policy: ".$csp_content);
 header("X-Content-Security-Policy: ".$csp_content);
 header("X-WebKit-CSP: ".$csp_content);

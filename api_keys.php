@@ -80,6 +80,37 @@ if ($action == 'delete') {
 		'cid' => $cid
 	));
 	$success_message = $lng['apikeys']['apikey_added'];
+} elseif ($action == 'jqEditApiKey') {
+	$keyid = isset($_POST['id']) ? (int)$_POST['id'] : 0;
+	$allowed_from = isset($_POST['allowed_from']) ? $_POST['allowed_from'] : "";
+	$valid_until = isset($_POST['valid_until']) ? (int)$_POST['valid_until'] : -1;
+
+	// @todo validate allowed_from
+
+	if ($valid_until <= 0 || !is_numeric($valid_until)) {
+		$valid_until = -1;
+	}
+
+	$upd_stmt = Database::prepare("
+		UPDATE `" . TABLE_API_KEYS . "` SET
+		`valid_until` = :vu, `allowed_from` = :af
+		WHERE `id` = :keyid AND `adminid` = :aid AND `customerid` = :cid
+	");
+	if (AREA == 'admin') {
+		$cid = 0;
+	}
+	elseif (AREA == 'customer') {
+		$cid = $userinfo['customerid'];
+	}
+	Database::pexecute($upd_stmt, array(
+		'keyid' => $keyid,
+		'af' => $allowed_from,
+		'vu' => $valid_until,
+		'aid' => $userinfo['adminid'],
+		'cid' => $cid
+	));
+	echo json_encode(true);
+	exit;
 }
 
 $log->logAction(USR_ACTION, LOG_NOTICE, "viewed api::api_keys");
@@ -178,9 +209,10 @@ if (count($all_keys) == 0) {
 					$isValid = false;
 				}
 				// format
-				$row['valid_until'] = date('d.m.Y H:i', $row['valid_until']);
+				$row['valid_until'] = date('Y-m-d', $row['valid_until']);
 			} else {
-				$row['valid_until'] = "&infin;";
+				// infinity
+				$row['valid_until'] = "";
 			}
 			eval("\$apikeys.=\"" . getTemplate("api_keys/keys_key", true) . "\";");
 		} else {
