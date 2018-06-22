@@ -41,7 +41,7 @@ $(document).ready(function() {
 	        dataType: "json",
 	        success: function(json) {
 	        	$('#dialog-' + id).dialog("close");
-	        	location.reload();
+	        	location.href = "admin_index.php?s="+sid+"&page="+page;
 	        },
 	        error: function(a, b) {
 	            console.log(a, b);
