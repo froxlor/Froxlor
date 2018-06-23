@@ -23,6 +23,7 @@
 		<div id="dialog-{$row['id']}" title="API-key / Secret" class="hidden api-dialog">
 			<form action="{$linker->getLink(array('section' => 'apikeys'))}" method="post" enctype="application/x-www-form-urlencoded">
 			<input type="hidden" name="id" value="{$row['id']}"/>
+			<input type="hidden" name="area" value="{$area}"/>
 			<table class="full hl">
 				<tr>
 					<th>API-key</th><td><input type="text" value="{$row['apikey']}" readonly/></td>

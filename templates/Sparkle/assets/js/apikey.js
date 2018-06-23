@@ -22,6 +22,7 @@ $(document).ready(function() {
 		var sid = getUrlParameter('s');
 		var page = getUrlParameter('page');
 		
+		var area = $('#dialog-' + id + ' input[name="area"]').val();
 		var apikey_id = $('#dialog-' + id + ' input[name="id"]').val();
 		var allowed_from = $('#dialog-' + id + ' input[name="allowed_from"]').val();
 		var valid_until = $('#dialog-' + id + ' input[name="valid_until"]').val();
@@ -33,7 +34,7 @@ $(document).ready(function() {
         }
 
 		$.ajax({
-	        url: "admin_index.php?s="+sid+"&page="+page+"&action=jqEditApiKey",
+	        url: area + "_index.php?s="+sid+"&page="+page+"&action=jqEditApiKey",
 	        type: "POST",
 	        data: {
 	        	id: apikey_id, allowed_from: allowed_from, valid_until: s
@@ -41,7 +42,7 @@ $(document).ready(function() {
 	        dataType: "json",
 	        success: function(json) {
 	        	$('#dialog-' + id).dialog("close");
-	        	location.href = "admin_index.php?s="+sid+"&page="+page;
+	        	location.href = area + "_index.php?s="+sid+"&page="+page;
 	        },
 	        error: function(a, b) {
 	            console.log(a, b);
