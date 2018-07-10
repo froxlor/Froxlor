@@ -35,7 +35,7 @@ return array(
 					'settinggroup' => 'system',
 					'varname' => 'mailpwcleartext',
 					'type' => 'bool',
-					'default' => true,
+					'default' => false,
 					'save_method' => 'storeSettingField',
 					),
 				'system_passwordcryptfunc' => array(

@@ -513,8 +513,8 @@ $lng['changepassword']['also_change_webalizer'] = ' Auch Passwort der Statistiks
 
 $lng['serversettings']['mailpwcleartext']['title'] = 'Passwörter der Mail-Konten auch im Klartext in der Datenbank speichern';
 $lng['serversettings']['mailpwcleartext']['description'] = 'Wenn diese Einstellung auf Ja gesetzt wird, werden alle Passwörter auch unverschlüsselt (also im Klartext, für jeden mit Zugriff auf die Froxlor-Datenbank sofort lesbar) in der mail_users-Tabelle gespeichert. Aktivieren Sie diese Option nur dann, wenn Sie SASL nutzen!';
-$lng['serversettings']['mailpwcleartext']['removelink'] = 'Klicken Sie hier, um alle unverschlüsselten Passwörter aus der Tabelle zu entfernen.';
-$lng['question']['admin_cleartextmailpws_reallywipe'] = 'Wollen Sie wirklich alle unverschlüsselten Passwörter aus der Tabelle mail_users entfernen? Dieser Schritt kann nicht rückgängig gemacht werden!';
+$lng['admin']['wipecleartextmailpwd'] = 'Klartext-Passwörter leeren';
+$lng['question']['admin_cleartextmailpws_reallywipe'] = 'Wollen Sie wirklich alle unverschlüsselten Passwörter aus der Tabelle mail_users entfernen? Dieser Schritt kann nicht rückgängig gemacht werden! Die Einstellung für das Speichern der E-Mail Konten Passwörter in Klartext wird hierbei ebenfalls deaktiviert.';
 $lng['admin']['configfiles']['overview'] = 'Übersicht';
 $lng['admin']['configfiles']['wizard'] = 'Assistent';
 $lng['admin']['configfiles']['distribution'] = 'Distribution';

@@ -518,8 +518,8 @@ $lng['changepassword']['also_change_webalizer'] = ' also change password for the
 
 $lng['serversettings']['mailpwcleartext']['title'] = 'Also save passwords of mail accounts unencrypted in database';
 $lng['serversettings']['mailpwcleartext']['description'] = 'If this is set to yes, all passwords will also be saved unencrypted (clear text, plain readable for everyone with database access) in the mail_users-table. Only activate this if you intend to use SASL!';
-$lng['serversettings']['mailpwcleartext']['removelink'] = 'Click here to wipe all unencrypted passwords from the table.';
-$lng['question']['admin_cleartextmailpws_reallywipe'] = 'Do you really want to wipe all unencrypted mail account passwords from the table mail_users? This cannot be reverted!';
+$lng['admin']['wipecleartextmailpwd'] = 'Clear plaintext passwords';
+$lng['question']['admin_cleartextmailpws_reallywipe'] = 'Do you really want to wipe all unencrypted mail account passwords from the table mail_users? This cannot be reverted! The setting to store email passwords unencrypted will also be set to OFF';
 $lng['admin']['configfiles']['overview'] = 'Overview';
 $lng['admin']['configfiles']['wizard'] = 'Wizard';
 $lng['admin']['configfiles']['distribution'] = 'Distribution';
