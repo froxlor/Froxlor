@@ -178,7 +178,7 @@ return array(
 						'label' => $lng['customer']['diskspace'],
 						'type' => 'textul',
 						'value' => 0,
-						'maxlength' => 6,
+						'maxlength' => 16,
 						'mandatory' => true,
 						'ul_field' => $diskspace_ul
 					),
@@ -186,7 +186,7 @@ return array(
 						'label' => $lng['customer']['traffic'],
 						'type' => 'textul',
 						'value' => 0,
-						'maxlength' => 4,
+						'maxlength' => 14,
 						'mandatory' => true,
 						'ul_field' => $traffic_ul
 					),
