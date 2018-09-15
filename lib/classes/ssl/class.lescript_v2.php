@@ -495,8 +495,8 @@ class Client
 	private function curl($method, $url, $data = null)
 	{
 		$headers = array(
-			'Accept: application/json',
-			'Content-Type: application/json'
+			'Accept: application/jose+json',
+			'Content-Type: application/jose+json'
 		);
 		$handle = curl_init();
 		curl_setopt($handle, CURLOPT_URL, preg_match('~^http~', $url) ? $url : $this->base . $url);
@@ -550,7 +550,7 @@ class Client
 			return trim($matches[1]);
 		}
 		
-		$this->curl('GET', '/directory');
+		$this->curl('GET', '/acme/new-nonce');
 		return $this->getLastNonce();
 	}
 
