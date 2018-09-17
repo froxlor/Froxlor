@@ -149,42 +149,54 @@ class lescript_v2
 		
 		// start domains authentication
 		// ----------------------------
-		
+
+		// Prepare order
+		$domains_in_order = array();
 		foreach ($domains as $domain) {
+			$domains_in_order []= array(
+				"type" => "dns",
+				"value" => $domain
+			);
+		}
+
+		// Send new-order request
+		$response = $this->signedRequest($this->_req_uris['newOrder'], array(
+			"identifiers" => $domains_in_order
+		), false);
+		
+		if ($this->client->getLastCode() == 403) {
+			$this->log("Got status 403 - setting LE status to unregistered.");
+			$this->setLeRegisteredState(0);
+			throw new RuntimeException("Got 'unauthorized' response - we need to re-register at next run.  Whole response: " . json_encode($response));
+		}
+		
+		// if response is not an array but a string, it's most likely a server-error, e.g.
+		// <HTML><HEAD><TITLE>Error</TITLE></HEAD><BODY>An error occurred while processing your request.
+		// <p>Reference&#32;&#35;179&#46;d8be1402&#46;1458059103&#46;3613c4db</BODY></HTML>
+		if (! is_array($response)) {
+			throw new RuntimeException("Invalid response from LE for domain $domain. Whole response: " . json_encode($response));
+		}
+		
+		if (! array_key_exists('authorizations', $response)) {
+			throw new RuntimeException("No authorizations received for $domain. Whole response: " . json_encode($response));
+		}
+
+		$authorizations = $response['authorizations'];
+		$finalizeLink = $response['finalize'];
+
+		$i = 0;
+		
+		foreach ($authorizations as $authorization) {
 			
 			// 1. getting available authentication options
 			// -------------------------------------------
+
+			$domain = $response['identifiers'][$i++]['value'];
 			
 			$this->log("Requesting challenge for $domain");
 			
-			$response = $this->signedRequest($this->_req_uris['newOrder'], array(
-				"identifiers" => array(
-					array(
-						"type" => "dns",
-						"value" => $domain
-					)
-				)
-			), false);
-			
-			if ($this->client->getLastCode() == 403) {
-				$this->log("Got status 403 - setting LE status to unregistered.");
-				$this->setLeRegisteredState(0);
-				throw new RuntimeException("Got 'unauthorized' response - we need to re-register at next run.  Whole response: " . json_encode($response));
-			}
-			
-			// if response is not an array but a string, it's most likely a server-error, e.g.
-			// <HTML><HEAD><TITLE>Error</TITLE></HEAD><BODY>An error occurred while processing your request.
-			// <p>Reference&#32;&#35;179&#46;d8be1402&#46;1458059103&#46;3613c4db</BODY></HTML>
-			if (! is_array($response)) {
-				throw new RuntimeException("Invalid response from LE for domain $domain. Whole response: " . json_encode($response));
-			}
-			
-			if (! array_key_exists('authorizations', $response)) {
-				throw new RuntimeException("No authorizations received for $domain. Whole response: " . json_encode($response));
-			}
-			
 			// get authorization
-			$auth_response = $this->client->get($response['authorizations'][0]);
+			$auth_response = $this->client->get($authorization);
 			
 			if (! array_key_exists('challenges', $auth_response)) {
 				throw new RuntimeException("No challenges received for $domain. Whole response: " . json_encode($auth_response));
@@ -201,7 +213,6 @@ class lescript_v2
 			
 			$this->log("Got challenge token for $domain");
 			$location = $challenge['url'];
-			$finalizeLink = $response['finalize'];
 			
 			// 2. saving authentication token for web verification
 			// ---------------------------------------------------
