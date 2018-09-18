@@ -76,6 +76,7 @@ class lescript_v2
 		$this->customerId = (! $isFroxlorVhost ? $certrow['customerid'] : null);
 		$this->isFroxlorVhost = $isFroxlorVhost;
 		$this->isLeProduction = (Settings::Get('system.letsencryptca') == 'production');
+		$this->_acc_location = $certrow['leaccount'];
 		
 		$leregistered = $certrow['leregistered'];
 		
@@ -166,6 +167,7 @@ class lescript_v2
 		
 		if ($this->client->getLastCode() == 403) {
 			$this->log("Got status 403 - setting LE status to unregistered.");
+			$this->_acc_location = '';
 			$this->setLeRegisteredState(0);
 			throw new RuntimeException("Got 'unauthorized' response - we need to re-register at next run.  Whole response: " . json_encode($response));
 		}
@@ -347,10 +349,12 @@ class lescript_v2
 		if ($this->isLeProduction) {
 			if ($this->isFroxlorVhost) {
 				Settings::Set('system.leregistered', $state);
+				Settings::Set('system.leaccount', $this->_acc_location);
 			} else {
-				$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `leregistered` = :registered " . "WHERE `customerid` = :customerid;");
+				$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `leregistered` = :registered, `leaccount` = :kid " . "WHERE `customerid` = :customerid;");
 				Database::pexecute($upd_stmt, array(
 					'registered' => $state,
+					'kid' => $this->_acc_location,
 					'customerid' => $this->customerId
 				));
 			}

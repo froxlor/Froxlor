@@ -3998,3 +3998,16 @@ if (isDatabaseVersion('201805241')) {
 		updateToDbVersion('201805290');
 	}
 }
+
+if (isDatabaseVersion('201805290')) {
+
+	showUpdateStep("Adding leaccount field to panel customers");
+	Database::query("ALTER TABLE `froxlor`.`panel_customers` ADD COLUMN `leaccount` varchar(255) default '' AFTER `leregistered`;");
+	lastStepStatus(0);
+
+	showUpdateStep("Adding system setting for let's-encrypt account");
+	Settings::AddNew('system.leaccount', "");
+	lastStepStatus(0);
+
+	updateToDbVersion('201809180');
+}
