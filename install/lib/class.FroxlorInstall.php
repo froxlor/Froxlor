@@ -964,84 +964,39 @@ class FroxlorInstall
 		} else {
 			$content .= $this->_status_message('green', $this->_lng['requirements']['installed']);
 		}
-		
+
+		// check for session-extension
+		$this->_requirementCheckFor($content, $_die, 'session', false, 'phpsession');
+
+		// check for ctype-extension
+		$this->_requirementCheckFor($content, $_die, 'ctype', false, 'phpctype');
+
+		// check for SimpleXML-extension
+		$this->_requirementCheckFor($content, $_die, 'simplexml', false, 'phpsimplexml');
+
 		// check for xml-extension
-		$content .= $this->_status_message('begin', $this->_lng['requirements']['phpxml']);
-		
-		if (! extension_loaded('xml')) {
-			$content .= $this->_status_message('red', $this->_lng['requirements']['notinstalled']);
-			$_die = true;
-		} else {
-			$content .= $this->_status_message('green', $this->_lng['requirements']['installed']);
-		}
+		$this->_requirementCheckFor($content, $_die, 'xml', false, 'phpxml');
 		
 		// check for filter-extension
-		$content .= $this->_status_message('begin', $this->_lng['requirements']['phpfilter']);
-		
-		if (! extension_loaded('filter')) {
-			$content .= $this->_status_message('red', $this->_lng['requirements']['notinstalled']);
-			$_die = true;
-		} else {
-			$content .= $this->_status_message('green', $this->_lng['requirements']['installed']);
-		}
+		$this->_requirementCheckFor($content, $_die, 'filter', false, 'phpfilter');
 		
 		// check for posix-extension
-		$content .= $this->_status_message('begin', $this->_lng['requirements']['phpposix']);
-		
-		if (! extension_loaded('posix')) {
-			$content .= $this->_status_message('red', $this->_lng['requirements']['notinstalled']);
-			$_die = true;
-		} else {
-			$content .= $this->_status_message('green', $this->_lng['requirements']['installed']);
-		}
-		
-		// check for bstring-extension
-		$content .= $this->_status_message('begin', $this->_lng['requirements']['phpmbstring']);
-		
-		if (! extension_loaded('mbstring')) {
-			$content .= $this->_status_message('red', $this->_lng['requirements']['notinstalled']);
-			$_die = true;
-		} else {
-			$content .= $this->_status_message('green', $this->_lng['requirements']['installed']);
-		}
+		$this->_requirementCheckFor($content, $_die, 'posix', false, 'phpposix');
+
+		// check for mbstring-extension
+		$this->_requirementCheckFor($content, $_die, 'mbstring', false, 'phpmbstring');
 		
 		// check for curl extension
-		$content .= $this->_status_message('begin', $this->_lng['requirements']['phpcurl']);
-		
-		if (! extension_loaded('curl')) {
-			$content .= $this->_status_message('red', $this->_lng['requirements']['notinstalled']);
-			$_die = true;
-		} else {
-			$content .= $this->_status_message('green', $this->_lng['requirements']['installed']);
-		}
-		
-		// check for json extension
-		$content .= $this->_status_message('begin', $this->_lng['requirements']['phpjson']);
+		$this->_requirementCheckFor($content, $_die, 'curl', false, 'phpcurl');
 
-		if (! extension_loaded('json')) {
-			$content .= $this->_status_message('red', $this->_lng['requirements']['notinstalled']);
-			$_die = true;
-		} else {
-			$content .= $this->_status_message('green', $this->_lng['requirements']['installed']);
-		}
+		// check for json extension
+		$this->_requirementCheckFor($content, $_die, 'json', false, 'phpjson');
 
 		// check for bcmath extension
-		$content .= $this->_status_message('begin', $this->_lng['requirements']['phpbcmath']);
-		
-		if (! extension_loaded('bcmath')) {
-			$content .= $this->_status_message('orange', $this->_lng['requirements']['notinstalled'] . "<br />" . $this->_lng['requirements']['bcmathdescription']);
-		} else {
-			$content .= $this->_status_message('green', $this->_lng['requirements']['installed']);
-		}
+		$this->_requirementCheckFor($content, $_die, 'bcmath', true, 'phpbcmath', 'bcmathdescription');
 		
 		// check for zip extension
-		$content .= $this->_status_message('begin', $this->_lng['requirements']['phpzip']);
-		
-		if (! extension_loaded('zip')) {
-			$content .= $this->_status_message('orange', $this->_lng['requirements']['notinstalled'] . "<br />" . $this->_lng['requirements']['zipdescription']);
-		} else {
-			$content .= $this->_status_message('green', $this->_lng['requirements']['installed']);
-		}
+		$this->_requirementCheckFor($content, $_die, 'zip', true, 'phpzip', 'zipdescription');
 
 		// check for open_basedir
 		$content .= $this->_status_message('begin', $this->_lng['requirements']['openbasedir']);
@@ -1051,6 +1006,16 @@ class FroxlorInstall
 		} else {
 			$content .= $this->_status_message('green', 'off');
 		}
+		
+		// check for mysqldump binary in order to backup existing database
+		$content .= $this->_status_message('begin', $this->_lng['requirements']['mysqldump']);
+
+		if (file_exists("/usr/bin/mysqldump") || file_exists("/usr/local/bin/mysqldump")) {
+			$content .= $this->_status_message('green', $this->_lng['requirements']['installed']);
+		} else {
+			$content .= $this->_status_message('orange', $this->_lng['requirements']['notinstalled'] . "<br />" . $this->_lng['requirements']['mysqldumpmissing']);
+		}
+		
 		$content .= "</table>";
 		
 		// check if we have unrecoverable errors
@@ -1072,6 +1037,22 @@ class FroxlorInstall
 			'pagecontent' => $content,
 			'pagenavigation' => $navigation
 		);
+	}
+	
+	private function _requirementCheckFor(&$content, &$_die, $ext = '', $optional = false, $lng_txt = "", $lng_desc = "")
+	{
+		$content .= $this->_status_message('begin', $this->_lng['requirements'][$lng_txt]);
+		
+		if (! extension_loaded($ext)) {
+			if (!$optional) {
+				$content .= $this->_status_message('red', $this->_lng['requirements']['notinstalled']);
+				$_die = true;
+			} else {
+				$content .= $this->_status_message('orange', $this->_lng['requirements']['notinstalled'] . "<br />" . $this->_lng['requirements'][$lng_desc]);
+			}
+		} else {
+			$content .= $this->_status_message('green', $this->_lng['requirements']['installed']);
+		}
 	}
 
 	/**
@@ -1141,11 +1122,23 @@ class FroxlorInstall
 			}
 		}
 		
-		$lngfile = $this->_basepath . '/install/lng/' . $this->_activelng . '.lng.php';
+		// require english base language as fallback
+		$lngfile = $this->_basepath . '/install/lng/english.lng.php';
 		if (file_exists($lngfile)) {
 			// includes file /lng/$language.lng.php if it exists
 			require $lngfile;
 			$this->_lng = $lng;
+		}
+		
+		// require chosen language if not english
+		if ($this->_activelng != 'english')
+		{
+			$lngfile = $this->_basepath . '/install/lng/' . $this->_activelng . '.lng.php';
+			if (file_exists($lngfile)) {
+				// includes file /lng/$language.lng.php if it exists
+				require $lngfile;
+				$this->_lng = $lng;
+			}
 		}
 	}
 
