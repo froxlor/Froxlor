@@ -1774,7 +1774,7 @@ default_pass_scheme = CRYPT
 #password_query = \
 #  SELECT username, domain, password \
 #  FROM users WHERE username = '%n' AND domain = '%d'
-password_query = SELECT username AS user, password_enc AS password, CONCAT(homedir, maildir) AS userdb_home, uid AS userdb_uid, gid AS userdb_gid, CONCAT('maildir:', homedir, maildir) AS userdb_mail, CONCAT('*:storage=', quota, 'M') as userdb_quota_rule FROM mail_users WHERE (username = '%u' OR email = '%u') AND ((imap = 1 AND '%Ls' = 'imap') OR (pop3 = 1 AND '%Ls' = 'pop3') OR '%Ls' = 'smtp' OR '%Ls' = 'sieve')
+password_query = SELECT username AS user, password_enc AS password, CONCAT(homedir, maildir) AS userdb_home, uid AS userdb_uid, gid AS userdb_gid, CONCAT('maildir:', homedir, maildir) AS userdb_mail, CONCAT('*:storage=', quota, 'M') as userdb_quota_rule FROM mail_users WHERE (username = '%u' OR email = '%u') AND ((imap = 1 AND '%Ls' = 'imap') OR (pop3 = 1 AND '%Ls' = 'pop3') OR ((postfix = 'Y' AND '%Ls' = 'smtp') OR (postfix = 'Y' AND '%Ls' = 'sieve')))
 #password_query = SELECT username as user, password, '/var/vmail/%d/%n' as userdb_home, 'maildir:/var/vmail/%d/%n' as userdb_mail, 150 as userdb_uid, 12 as userdb_gid FROM mailbox WHERE username = '%u' AND active = '1'
 
 # userdb query to retrieve the user information. It can return fields:
