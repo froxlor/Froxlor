@@ -216,7 +216,7 @@ class lescript
 			// simple self check
 			if (Settings::Get('system.disable_le_selfcheck') == '0')
 			{
-				$selfcheckpayload = HttpClient::urlGet($uri);
+				$selfcheckpayload = HttpClient::urlGet($uri, false);
 				if ($payload !== trim($selfcheckpayload)) {
 					$errmsg = json_encode(error_get_last());
 					if ($errmsg != "null") {
