@@ -82,7 +82,7 @@ class lescript
 					Settings::Set('system.leprivatekey', $keys['private']);
 					Settings::Set('system.leregistered', 0); // key is not registered
 				} else {
-					$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `lepublickey` = :public, `leprivatekey` = :private, `leregistered` = :registered " . "WHERE `customerid` = :customerid;");
+					$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `lepublickey` = :public, `leprivatekey` = :private, `leregistered` = :registered WHERE `customerid` = :customerid;");
 					Database::pexecute($upd_stmt, array(
 						'public' => $keys['public'],
 						'private' => $keys['private'],
@@ -342,7 +342,7 @@ class lescript
 			if ($this->isFroxlorVhost) {
 				Settings::Set('system.leregistered', $state);
 			} else {
-				$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `leregistered` = :registered " . "WHERE `customerid` = :customerid;");
+				$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `leregistered` = :registered WHERE `customerid` = :customerid;");
 				Database::pexecute($upd_stmt, array(
 					'registered' => $state,
 					'customerid' => $this->customerId

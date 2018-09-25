@@ -94,7 +94,7 @@ class lescript_v2
 					Settings::Set('system.leprivatekey', $keys['private']);
 					Settings::Set('system.leregistered', 0); // key is not registered
 				} else {
-					$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `lepublickey` = :public, `leprivatekey` = :private, `leregistered` = :registered " . "WHERE `customerid` = :customerid;");
+					$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `lepublickey` = :public, `leprivatekey` = :private, `leregistered` = :registered WHERE `customerid` = :customerid;");
 					Database::pexecute($upd_stmt, array(
 						'public' => $keys['public'],
 						'private' => $keys['private'],
@@ -351,7 +351,7 @@ class lescript_v2
 				Settings::Set('system.leregistered', $state);
 				Settings::Set('system.leaccount', $this->_acc_location);
 			} else {
-				$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `leregistered` = :registered, `leaccount` = :kid " . "WHERE `customerid` = :customerid;");
+				$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `leregistered` = :registered, `leaccount` = :kid WHERE `customerid` = :customerid;");
 				Database::pexecute($upd_stmt, array(
 					'registered' => $state,
 					'kid' => $this->_acc_location,

@@ -1123,7 +1123,7 @@ class FroxlorInstall
 		}
 		
 		// require english base language as fallback
-		$lngfile = $this->_basepath . '/install/lng/english.lng.php';
+		$lngfile = $this->_basepath . '/install/lng/' . $standardlanguage . '.lng.php';
 		if (file_exists($lngfile)) {
 			// includes file /lng/$language.lng.php if it exists
 			require $lngfile;
@@ -1131,7 +1131,7 @@ class FroxlorInstall
 		}
 		
 		// require chosen language if not english
-		if ($this->_activelng != 'english')
+		if ($this->_activelng != $standardlanguage)
 		{
 			$lngfile = $this->_basepath . '/install/lng/' . $this->_activelng . '.lng.php';
 			if (file_exists($lngfile)) {
