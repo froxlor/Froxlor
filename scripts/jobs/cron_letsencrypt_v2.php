@@ -45,6 +45,7 @@ $certificates_stmt = Database::query("
 			cust.`leprivatekey`,
 			cust.`lepublickey`,
 			cust.`leregistered`,
+			cust.`leaccount`,
 			cust.`customerid`,
 			cust.`loginname`
 		FROM
@@ -109,6 +110,7 @@ if (Settings::Get('system.le_froxlor_enabled') == '1') {
 		'leprivatekey' => Settings::Get('system.leprivatekey'),
 		'lepublickey' => Settings::Get('system.lepublickey'),
 		'leregistered' => Settings::Get('system.leregistered'),
+		'leaccount' => Settings::Get('system.leaccount'),
 		'ssl_redirect' => Settings::Get('system.le_froxlor_redirect'),
 		'expirationdate' => null,
 		'ssl_cert_file' => null,
