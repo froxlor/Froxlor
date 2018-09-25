@@ -10,13 +10,15 @@ class HttpClient
 	 *
 	 * @return array
 	 */
-	public static function urlGet($url)
+	public static function urlGet($url, $follow_location = true)
 	{
 		include FROXLOR_INSTALL_DIR . '/lib/version.inc.php';
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_USERAGENT, 'Froxlor/' . $version);
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+		if ($follow_location) {
+			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+		}
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		$output = curl_exec($ch);
 		if ($output === false) {

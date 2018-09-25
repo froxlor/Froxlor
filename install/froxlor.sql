@@ -198,6 +198,7 @@ CREATE TABLE `panel_customers` (
   `lepublickey` mediumtext default NULL,
   `leprivatekey` mediumtext default NULL,
   `leregistered` tinyint(1) NOT NULL default '0',
+  `leaccount` varchar(255) default '',
   `allowed_phpconfigs` varchar(500) NOT NULL default '',
    PRIMARY KEY  (`customerid`),
    UNIQUE KEY `loginname` (`loginname`)
@@ -654,6 +655,7 @@ opcache.interned_strings_buffer'),
 	('system', 'hsts_incsub', '0'),
 	('system', 'hsts_preload', '0'),
 	('system', 'leregistered', '0'),
+	('system', 'leaccount', ''),
 	('system', 'nssextrausers', '0'),
 	('system', 'disable_le_selfcheck', '0'),
 	('system', 'ssl_protocols', 'TLSv1,TLSv1.2'),
@@ -694,7 +696,7 @@ opcache.interned_strings_buffer'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'version', '0.10.0'),
-	('panel', 'db_version', '201805290');
+	('panel', 'db_version', '201809180');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
