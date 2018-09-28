@@ -125,12 +125,35 @@ if ($page == 'overview') {
 					$fpm_reqtermtimeout = 0;
 					$fpm_reqslowtimeout = 0;
 					$fpm_pass_authorizationheader = 0;
+					$override_fpmconfig = 0;
+					$stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_FPMDAEMONS . "` WHERE `id` = :id");
+					$def_fpmconfig = Database::pexecute_first($stmt, array(
+						'id' => $fpm_config_id
+					));
+					$pm = $def_fpmconfig['pm'];
+					$max_children = $def_fpmconfig['max_children'];
+					$start_servers = $def_fpmconfig['start_servers'];
+					$min_spare_servers = $def_fpmconfig['min_spare_servers'];
+					$max_spare_servers = $def_fpmconfig['max_spare_servers'];
+					$max_requests = $def_fpmconfig['max_requests'];
+					$idle_timeout = $def_fpmconfig['idle_timeout'];
+					$limit_extensions = $def_fpmconfig['limit_extensions'];
+
 				} elseif (Settings::Get('phpfpm.enabled') == 1) {
 					$fpm_config_id = intval($_POST['fpmconfig']);
 					$fpm_enableslowlog = isset($_POST['phpfpm_enable_slowlog']) ? (int) $_POST['phpfpm_enable_slowlog'] : 0;
 					$fpm_reqtermtimeout = validate($_POST['phpfpm_reqtermtimeout'], 'phpfpm_reqtermtimeout', '/^([0-9]+)(|s|m|h|d)$/');
 					$fpm_reqslowtimeout = validate($_POST['phpfpm_reqslowtimeout'], 'phpfpm_reqslowtimeout', '/^([0-9]+)(|s|m|h|d)$/');
 					$fpm_pass_authorizationheader = isset($_POST['phpfpm_pass_authorizationheader']) ? (int) $_POST['phpfpm_pass_authorizationheader'] : 0;
+					$override_fpmconfig = isset($_POST['override_fpmconfig']) ? (int) $_POST['override_fpmconfig'] : 0;
+					$pm = $_POST['pm'];
+					$max_children = isset($_POST['max_children']) ? (int) $_POST['max_children'] : 0;
+					$start_servers = isset($_POST['start_servers']) ? (int) $_POST['start_servers'] : 0;
+					$min_spare_servers = isset($_POST['min_spare_servers']) ? (int) $_POST['min_spare_servers'] : 0;
+					$max_spare_servers = isset($_POST['max_spare_servers']) ? (int) $_POST['max_spare_servers'] : 0;
+					$max_requests = isset($_POST['max_requests']) ? (int) $_POST['max_requests'] : 0;
+					$idle_timeout = isset($_POST['idle_timeout']) ? (int) $_POST['idle_timeout'] : 0;
+					$limit_extensions = validate($_POST['limit_extensions'], 'limit_extensions', '/^(\.[a-z]([a-z0-9]+)\ ?)+$/');
 					// disable fcgid stuff
 					$binary = '/usr/bin/php-cgi';
 					$file_extensions = 'php';
@@ -156,7 +179,16 @@ if ($page == 'overview') {
 						`fpm_reqslow` = :fpmreqslow,
 						`phpsettings` = :phpsettings,
 						`fpmsettingid` = :fpmsettingid,
-						`pass_authorizationheader` = :fpmpassauth");
+						`pass_authorizationheader` = :fpmpassauth,
+						`override_fpmconfig` = :ofc,
+						`pm` = :pm,
+						`max_children` = :max_children,
+						`start_servers` = :start_servers,
+						`min_spare_servers` = :min_spare_servers,
+						`max_spare_servers` = :max_spare_servers,
+						`max_requests` = :max_requests,
+						`idle_timeout` = :idle_timeout,
+						`limit_extensions` = :limit_extensions");
 				$ins_data = array(
 					'desc' => $description,
 					'binary' => $binary,
@@ -169,7 +201,16 @@ if ($page == 'overview') {
 					'fpmreqslow' => $fpm_reqslowtimeout,
 					'phpsettings' => $phpsettings,
 					'fpmsettingid' => $fpm_config_id,
-					'fpmpassauth' => $fpm_pass_authorizationheader
+					'fpmpassauth' => $fpm_pass_authorizationheader,
+					'ofc' => $override_fpmconfig,
+					'pm' => $pm,
+					'max_children' => $max_children,
+					'start_servers' => $start_servers,
+					'min_spare_servers' => $min_spare_servers,
+					'max_spare_servers' => $max_spare_servers,
+					'max_requests' => $max_requests,
+					'idle_timeout' => $idle_timeout,
+					'limit_extensions' => $limit_extensions
 				);
 				Database::pexecute($ins_stmt, $ins_data);
 				
@@ -189,6 +230,10 @@ if ($page == 'overview') {
 				while ($row = $configs->fetch(PDO::FETCH_ASSOC)) {
 					$fpmconfigs .= makeoption($row['description'], $row['id'], 1, true, true);
 				}
+				
+				$pm_select = makeoption('static', 'static', 'static', true, true);
+				$pm_select.= makeoption('dynamic', 'dynamic', 'static', true, true);
+				$pm_select.= makeoption('ondemand', 'ondemand', 'static', true, true);
 				
 				$phpconfig_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/phpconfig/formfield.phpconfig_add.php';
 				$phpconfig_add_form = htmlform::genHTMLForm($phpconfig_add_data);
@@ -288,12 +333,35 @@ if ($page == 'overview') {
 					$fpm_reqtermtimeout = 0;
 					$fpm_reqslowtimeout = 0;
 					$fpm_pass_authorizationheader = 0;
+					$override_fpmconfig = 0;
+					$stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_FPMDAEMONS . "` WHERE `id` = :id");
+					$def_fpmconfig = Database::pexecute_first($stmt, array(
+						'id' => $fpm_config_id
+					));
+					$pm = $def_fpmconfig['pm'];
+					$max_children = $def_fpmconfig['max_children'];
+					$start_servers = $def_fpmconfig['start_servers'];
+					$min_spare_servers = $def_fpmconfig['min_spare_servers'];
+					$max_spare_servers = $def_fpmconfig['max_spare_servers'];
+					$max_requests = $def_fpmconfig['max_requests'];
+					$idle_timeout = $def_fpmconfig['idle_timeout'];
+					$limit_extensions = $def_fpmconfig['limit_extensions'];
+
 				} elseif (Settings::Get('phpfpm.enabled') == 1) {
 					$fpm_config_id = intval($_POST['fpmconfig']);
 					$fpm_enableslowlog = isset($_POST['phpfpm_enable_slowlog']) ? (int) $_POST['phpfpm_enable_slowlog'] : 0;
 					$fpm_reqtermtimeout = validate($_POST['phpfpm_reqtermtimeout'], 'phpfpm_reqtermtimeout', '/^([0-9]+)(|s|m|h|d)$/');
 					$fpm_reqslowtimeout = validate($_POST['phpfpm_reqslowtimeout'], 'phpfpm_reqslowtimeout', '/^([0-9]+)(|s|m|h|d)$/');
 					$fpm_pass_authorizationheader = isset($_POST['phpfpm_pass_authorizationheader']) ? (int) $_POST['phpfpm_pass_authorizationheader'] : 0;
+					$override_fpmconfig = isset($_POST['override_fpmconfig']) ? (int) $_POST['override_fpmconfig'] : $result['override_fpmconfig'];
+					$pm = $_POST['pm'];
+					$max_children = isset($_POST['max_children']) ? (int) $_POST['max_children'] : $result['max_children'];
+					$start_servers = isset($_POST['start_servers']) ? (int) $_POST['start_servers'] : $result['start_servers'];
+					$min_spare_servers = isset($_POST['min_spare_servers']) ? (int) $_POST['min_spare_servers'] : $result['min_spare_servers'];
+					$max_spare_servers = isset($_POST['max_spare_servers']) ? (int) $_POST['max_spare_servers'] : $result['max_spare_servers'];
+					$max_requests = isset($_POST['max_requests']) ? (int) $_POST['max_requests'] : $result['max_requests'];
+					$idle_timeout = isset($_POST['idle_timeout']) ? (int) $_POST['idle_timeout'] : $result['idle_timeout'];
+					$limit_extensions = validate($_POST['limit_extensions'], 'limit_extensions', '/^(\.[a-z]([a-z0-9]+)\ ?)+$/');
 					// disable fcgid stuff
 					$binary = '/usr/bin/php-cgi';
 					$file_extensions = 'php';
@@ -319,7 +387,16 @@ if ($page == 'overview') {
 						`fpm_reqslow` = :fpmreqslow,
 						`phpsettings` = :phpsettings,
 						`fpmsettingid` = :fpmsettingid,
-						`pass_authorizationheader` = :fpmpassauth
+						`pass_authorizationheader` = :fpmpassauth,
+						`override_fpmconfig` = :ofc,
+						`pm` = :pm,
+						`max_children` = :max_children,
+						`start_servers` = :start_servers,
+						`min_spare_servers` = :min_spare_servers,
+						`max_spare_servers` = :max_spare_servers,
+						`max_requests` = :max_requests,
+						`idle_timeout` = :idle_timeout,
+						`limit_extensions` = :limit_extensions
 					WHERE `id` = :id");
 				$upd_data = array(
 					'desc' => $description,
@@ -334,6 +411,15 @@ if ($page == 'overview') {
 					'phpsettings' => $phpsettings,
 					'fpmsettingid' => $fpm_config_id,
 					'fpmpassauth' => $fpm_pass_authorizationheader,
+					'ofc' => $override_fpmconfig,
+					'pm' => $pm,
+					'max_children' => $max_children,
+					'start_servers' => $start_servers,
+					'min_spare_servers' => $min_spare_servers,
+					'max_spare_servers' => $max_spare_servers,
+					'max_requests' => $max_requests,
+					'idle_timeout' => $idle_timeout,
+					'limit_extensions' => $limit_extensions,
 					'id' => $id
 				);
 				Database::pexecute($upd_stmt, $upd_data);
@@ -351,6 +437,10 @@ if ($page == 'overview') {
 				while ($row = $configs->fetch(PDO::FETCH_ASSOC)) {
 					$fpmconfigs .= makeoption($row['description'], $row['id'], $result['fpmsettingid'], true, true);
 				}
+				
+				$pm_select = makeoption('static', 'static', $result['pm'], true, true);
+				$pm_select.= makeoption('dynamic', 'dynamic', $result['pm'], true, true);
+				$pm_select.= makeoption('ondemand', 'ondemand', $result['pm'], true, true);
 
 				$phpconfig_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/phpconfig/formfield.phpconfig_edit.php';
 				$phpconfig_edit_form = htmlform::genHTMLForm($phpconfig_edit_data);

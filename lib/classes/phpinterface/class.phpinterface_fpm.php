@@ -91,6 +91,18 @@ class phpinterface_fpm
 		$fh = @fopen($this->getConfigFile(), 'w');
 		
 		if ($fh) {
+			
+			if ($phpconfig['override_fpmconfig'] == 1) {
+				$this->_fpm_cfg['pm'] = $phpconfig['pm'];
+				$this->_fpm_cfg['max_children'] = $phpconfig['max_children'];
+				$this->_fpm_cfg['start_servers'] = $phpconfig['start_servers'];
+				$this->_fpm_cfg['min_spare_servers'] = $phpconfig['min_spare_servers'];
+				$this->_fpm_cfg['max_spare_servers'] = $phpconfig['max_spare_servers'];
+				$this->_fpm_cfg['max_requests'] = $phpconfig['max_requests'];
+				$this->_fpm_cfg['idle_timeout'] = $phpconfig['idle_timeout'];
+				$this->_fpm_cfg['limit_extensions'] = $phpconfig['limit_extensions'];
+			}
+			
 			$fpm_pm = $this->_fpm_cfg['pm'];
 			$fpm_children = (int) $this->_fpm_cfg['max_children'];
 			$fpm_start_servers = (int) $this->_fpm_cfg['start_servers'];
