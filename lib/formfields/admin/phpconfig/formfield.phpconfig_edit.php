@@ -113,55 +113,56 @@ return array(
 					'pm' => array(
 						'visible' => (Settings::Get('phpfpm.enabled') == 1 ? true : false),
 						'label' => $lng['serversettings']['phpfpm_settings']['pm'],
+						'desc' => $lng['serversettings']['phpfpm_settings']['override_fpmconfig_addinfo'],
 						'type' => 'select',
 						'select_var' => $pm_select
 					),
 					'max_children' => array(
 						'visible' => (Settings::Get('phpfpm.enabled') == 1 ? true : false),
 						'label' => $lng['serversettings']['phpfpm_settings']['max_children']['title'],
-						'desc' => $lng['serversettings']['phpfpm_settings']['max_children']['description'],
+						'desc' => $lng['serversettings']['phpfpm_settings']['max_children']['description'].$lng['serversettings']['phpfpm_settings']['override_fpmconfig_addinfo'],
 						'type' => 'int',
 						'value' => $result['max_children']
 					),
 					'start_servers' => array(
 						'visible' => (Settings::Get('phpfpm.enabled') == 1 ? true : false),
 						'label' => $lng['serversettings']['phpfpm_settings']['start_servers']['title'],
-						'desc' => $lng['serversettings']['phpfpm_settings']['start_servers']['description'],
+						'desc' => $lng['serversettings']['phpfpm_settings']['start_servers']['description'].$lng['serversettings']['phpfpm_settings']['override_fpmconfig_addinfo'],
 						'type' => 'int',
 						'value' => $result['start_servers']
 					),
 					'min_spare_servers' => array(
 						'visible' => (Settings::Get('phpfpm.enabled') == 1 ? true : false),
 						'label' => $lng['serversettings']['phpfpm_settings']['min_spare_servers']['title'],
-						'desc' => $lng['serversettings']['phpfpm_settings']['min_spare_servers']['description'],
+						'desc' => $lng['serversettings']['phpfpm_settings']['min_spare_servers']['description'].$lng['serversettings']['phpfpm_settings']['override_fpmconfig_addinfo'],
 						'type' => 'int',
 						'value' => $result['min_spare_servers']
 					),
 					'max_spare_servers' => array(
 						'visible' => (Settings::Get('phpfpm.enabled') == 1 ? true : false),
 						'label' => $lng['serversettings']['phpfpm_settings']['max_spare_servers']['title'],
-						'desc' => $lng['serversettings']['phpfpm_settings']['max_spare_servers']['description'],
+						'desc' => $lng['serversettings']['phpfpm_settings']['max_spare_servers']['description'].$lng['serversettings']['phpfpm_settings']['override_fpmconfig_addinfo'],
 						'type' => 'int',
 						'value' => $result['max_spare_servers']
 					),
 					'max_requests' => array(
 						'visible' => (Settings::Get('phpfpm.enabled') == 1 ? true : false),
 						'label' => $lng['serversettings']['phpfpm_settings']['max_requests']['title'],
-						'desc' => $lng['serversettings']['phpfpm_settings']['max_requests']['description'],
+						'desc' => $lng['serversettings']['phpfpm_settings']['max_requests']['description'].$lng['serversettings']['phpfpm_settings']['override_fpmconfig_addinfo'],
 						'type' => 'int',
 						'value' => $result['max_requests']
 					),
 					'idle_timeout' => array(
 						'visible' => (Settings::Get('phpfpm.enabled') == 1 ? true : false),
 						'label' => $lng['serversettings']['phpfpm_settings']['idle_timeout']['title'],
-						'desc' => $lng['serversettings']['phpfpm_settings']['idle_timeout']['description'],
+						'desc' => $lng['serversettings']['phpfpm_settings']['idle_timeout']['description'].$lng['serversettings']['phpfpm_settings']['override_fpmconfig_addinfo'],
 						'type' => 'int',
 						'value' => $result['idle_timeout']
 					),
 					'limit_extensions' => array(
 						'visible' => (Settings::Get('phpfpm.enabled') == 1 ? true : false),
 						'label' => $lng['serversettings']['phpfpm_settings']['limit_extensions']['title'],
-						'desc' => $lng['serversettings']['phpfpm_settings']['limit_extensions']['description'],
+						'desc' => $lng['serversettings']['phpfpm_settings']['limit_extensions']['description'].$lng['serversettings']['phpfpm_settings']['override_fpmconfig_addinfo'],
 						'type' => 'text',
 						'value' => $result['limit_extensions']
 					),
