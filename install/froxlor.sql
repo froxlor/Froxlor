@@ -893,6 +893,7 @@ CREATE TABLE `panel_phpconfigs` (
   `phpsettings` text NOT NULL,
   `fpmsettingid` int(11) NOT NULL DEFAULT '1',
   `pass_authorizationheader` tinyint(1) NOT NULL default '0',
+  `override_fpmconfig` tinyint(1) NOT NULL DEFAULT '0',
   `pm` varchar(15) NOT NULL DEFAULT 'static',
   `max_children` int(4) NOT NULL DEFAULT '1',
   `start_servers` int(4) NOT NULL DEFAULT '20',
