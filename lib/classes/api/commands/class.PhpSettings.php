@@ -146,6 +146,7 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 			
 			if (Settings::Get('system.mod_fcgid') == 1) {
 				$binary = $this->getParam('binary');
+				$fpm_config_id = 1;
 			} elseif (Settings::Get('phpfpm.enabled') == 1) {
 				$fpm_config_id = intval($this->getParam('fpmconfig'));
 			}
@@ -160,6 +161,19 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 			$fpm_reqslowtimeout = $this->getParam('phpfpm_reqslowtimeout', true, "5s");
 			$fpm_pass_authorizationheader = $this->getParam('phpfpm_pass_authorizationheader', true, 0);
 			
+			$override_fpmconfig = $this->getParam('override_fpmconfig', true, 0);
+			$def_fpmconfig = $this->apiCall('FpmDaemons.get', array(
+				'id' => $fpm_config_id
+			));
+			$pmanager = $this->getParam('pm', true, $def_fpmconfig['pm']);
+			$max_children = $this->getParam('max_children', true, $def_fpmconfig['max_children']);
+			$start_servers = $this->getParam('start_servers', true, $def_fpmconfig['start_servers']);
+			$min_spare_servers = $this->getParam('min_spare_servers', true, $def_fpmconfig['min_spare_servers']);
+			$max_spare_servers = $this->getParam('max_spare_servers', true, $def_fpmconfig['max_spare_servers']);
+			$max_requests = $this->getParam('max_requests', true, $def_fpmconfig['max_requests']);
+			$idle_timeout = $this->getParam('idle_timeout', true, $def_fpmconfig['idle_timeout']);
+			$limit_extensions = $this->getParam('limit_extensions', true, $def_fpmconfig['limit_extensions']);
+
 			// validation
 			$description = validate($description, 'description', '', '', array(), true);
 			$phpsettings = validate(str_replace("\r\n", "\n", $phpsettings), 'phpsettings', '/^[^\0]*$/', '', array(), true);
@@ -181,9 +195,22 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 				$fpm_reqtermtimeout = 0;
 				$fpm_reqslowtimeout = 0;
 				$fpm_pass_authorizationheader = 0;
+				$override_fpmconfig = 0;
 			} elseif (Settings::Get('phpfpm.enabled') == 1) {
 				$fpm_reqtermtimeout = validate($fpm_reqtermtimeout, 'phpfpm_reqtermtimeout', '/^([0-9]+)(|s|m|h|d)$/', '', array(), true);
 				$fpm_reqslowtimeout = validate($fpm_reqslowtimeout, 'phpfpm_reqslowtimeout', '/^([0-9]+)(|s|m|h|d)$/', '', array(), true);
+				if (! in_array($pmanager, array(
+					'static',
+					'dynamic',
+					'ondemand'
+				))) {
+					throw new ErrorException("Unknown process manager", 406);
+				}
+				if (empty($limit_extensions)) {
+					$limit_extensions = '.php';
+				}
+				$limit_extensions = validate($limit_extensions, 'limit_extensions', '/^(\.[a-z]([a-z0-9]+)\ ?)+$/', '', array(), true);
+
 				// disable fcgid stuff
 				$binary = '/usr/bin/php-cgi';
 				$file_extensions = 'php';
@@ -209,7 +236,16 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 				`fpm_reqslow` = :fpmreqslow,
 				`phpsettings` = :phpsettings,
 				`fpmsettingid` = :fpmsettingid,
-				`pass_authorizationheader` = :fpmpassauth
+				`pass_authorizationheader` = :fpmpassauth,
+				`override_fpmconfig` = :ofc,
+				`pm` = :pm,
+				`max_children` = :max_children,
+				`start_servers` = :start_servers,
+				`min_spare_servers` = :min_spare_servers,
+				`max_spare_servers` = :max_spare_servers,
+				`max_requests` = :max_requests,
+				`idle_timeout` = :idle_timeout,
+				`limit_extensions` = :limit_extensions
 			");
 			$ins_data = array(
 				'desc' => $description,
@@ -223,7 +259,16 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 				'fpmreqslow' => $fpm_reqslowtimeout,
 				'phpsettings' => $phpsettings,
 				'fpmsettingid' => $fpm_config_id,
-				'fpmpassauth' => $fpm_pass_authorizationheader
+				'fpmpassauth' => $fpm_pass_authorizationheader,
+				'ofc' => $override_fpmconfig,
+				'pm' => $pmanager,
+				'max_children' => $max_children,
+				'start_servers' => $start_servers,
+				'min_spare_servers' => $min_spare_servers,
+				'max_spare_servers' => $max_spare_servers,
+				'max_requests' => $max_requests,
+				'idle_timeout' => $idle_timeout,
+				'limit_extensions' => $limit_extensions
 			);
 			Database::pexecute($ins_stmt, $ins_data, true, true);
 			$ins_data['id'] = Database::lastInsertId();
@@ -272,7 +317,16 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 			$fpm_reqtermtimeout = $this->getParam('phpfpm_reqtermtimeout', true, $result['fpm_reqterm']);
 			$fpm_reqslowtimeout = $this->getParam('phpfpm_reqslowtimeout', true, $result['fpm_reqslow']);
 			$fpm_pass_authorizationheader = $this->getParam('phpfpm_pass_authorizationheader', true, $result['pass_authorizationheader']);
-			
+			$override_fpmconfig = $this->getParam('override_fpmconfig', true, $result['override_fpmconfig']);
+			$pmanager = $this->getParam('pm', true, $result['pm']);
+			$max_children = $this->getParam('max_children', true, $result['max_children']);
+			$start_servers = $this->getParam('start_servers', true, $result['start_servers']);
+			$min_spare_servers = $this->getParam('min_spare_servers', true, $result['min_spare_servers']);
+			$max_spare_servers = $this->getParam('max_spare_servers', true, $result['max_spare_servers']);
+			$max_requests = $this->getParam('max_requests', true, $result['max_requests']);
+			$idle_timeout = $this->getParam('idle_timeout', true, $result['idle_timeout']);
+			$limit_extensions = $this->getParam('limit_extensions', true, $result['limit_extensions']);
+
 			// validation
 			$description = validate($description, 'description', '', '', array(), true);
 			$phpsettings = validate(str_replace("\r\n", "\n", $phpsettings), 'phpsettings', '/^[^\0]*$/', '', array(), true);
@@ -294,9 +348,22 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 				$fpm_reqtermtimeout = 0;
 				$fpm_reqslowtimeout = 0;
 				$fpm_pass_authorizationheader = 0;
+				$override_fpmconfig = 0;
 			} elseif (Settings::Get('phpfpm.enabled') == 1) {
 				$fpm_reqtermtimeout = validate($fpm_reqtermtimeout, 'phpfpm_reqtermtimeout', '/^([0-9]+)(|s|m|h|d)$/', '', array(), true);
 				$fpm_reqslowtimeout = validate($fpm_reqslowtimeout, 'phpfpm_reqslowtimeout', '/^([0-9]+)(|s|m|h|d)$/', '', array(), true);
+				if (! in_array($pmanager, array(
+					'static',
+					'dynamic',
+					'ondemand'
+				))) {
+					throw new ErrorException("Unknown process manager", 406);
+				}
+				if (empty($limit_extensions)) {
+					$limit_extensions = '.php';
+				}
+				$limit_extensions = validate($limit_extensions, 'limit_extensions', '/^(\.[a-z]([a-z0-9]+)\ ?)+$/', '', array(), true);
+
 				// disable fcgid stuff
 				$binary = '/usr/bin/php-cgi';
 				$file_extensions = 'php';
@@ -322,7 +389,16 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 				`fpm_reqslow` = :fpmreqslow,
 				`phpsettings` = :phpsettings,
 				`fpmsettingid` = :fpmsettingid,
-				`pass_authorizationheader` = :fpmpassauth
+				`pass_authorizationheader` = :fpmpassauth,
+				`override_fpmconfig` = :ofc,
+				`pm` = :pm,
+				`max_children` = :max_children,
+				`start_servers` = :start_servers,
+				`min_spare_servers` = :min_spare_servers,
+				`max_spare_servers` = :max_spare_servers,
+				`max_requests` = :max_requests,
+				`idle_timeout` = :idle_timeout,
+				`limit_extensions` = :limit_extensions
 				WHERE `id` = :id
 			");
 			$upd_data = array(
@@ -338,6 +414,15 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 				'phpsettings' => $phpsettings,
 				'fpmsettingid' => $fpm_config_id,
 				'fpmpassauth' => $fpm_pass_authorizationheader,
+				'ofc' => $override_fpmconfig,
+				'pm' => $pmanager,
+				'max_children' => $max_children,
+				'start_servers' => $start_servers,
+				'min_spare_servers' => $min_spare_servers,
+				'max_spare_servers' => $max_spare_servers,
+				'max_requests' => $max_requests,
+				'idle_timeout' => $idle_timeout,
+				'limit_extensions' => $limit_extensions,
 				'id' => $id
 			);
 			Database::pexecute($upd_stmt, $upd_data, true, true);

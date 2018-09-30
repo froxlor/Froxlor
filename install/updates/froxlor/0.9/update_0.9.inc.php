@@ -4011,3 +4011,52 @@ if (isDatabaseVersion('201805290')) {
 
 	updateToDbVersion('201809180');
 }
+
+if (isDatabaseVersion('201809180')) {
+	
+	showUpdateStep("Adding new fields for php configs");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_PHPCONFIGS . "` ADD `override_fpmconfig` tinyint(1) NOT NULL DEFAULT '0';");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_PHPCONFIGS . "` ADD `pm` varchar(15) NOT NULL DEFAULT 'static';");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_PHPCONFIGS . "` ADD `max_children` int(4) NOT NULL DEFAULT '1';");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_PHPCONFIGS . "` ADD `start_servers` int(4) NOT NULL DEFAULT '20';");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_PHPCONFIGS . "` ADD `min_spare_servers` int(4) NOT NULL DEFAULT '5';");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_PHPCONFIGS . "` ADD `max_spare_servers` int(4) NOT NULL DEFAULT '35';");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_PHPCONFIGS . "` ADD `max_requests` int(4) NOT NULL DEFAULT '0';");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_PHPCONFIGS . "` ADD `idle_timeout` int(4) NOT NULL DEFAULT '30';");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_PHPCONFIGS . "` ADD `limit_extensions` varchar(255) NOT NULL default '.php';");
+	lastStepStatus(0);
+	
+	showUpdateStep("Synchronize fpm-daemon process manager settings with php-configs");
+	// get all fpm-daemons
+	$sel_stmt = Database::prepare("SELECT * FROM `panel_fpmdaemons`;");
+	Database::pexecute($sel_stmt);
+	$fpm_daemons = $sel_stmt->fetchAll(PDO::FETCH_ASSOC);
+	$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_PHPCONFIGS . "` SET
+		`pm` = :pm,
+		`max_children` = :maxc,
+		`start_servers` = :starts,
+		`min_spare_servers` = :minss,
+		`max_spare_servers` = :maxss,
+		`max_requests` = :maxr,
+		`idle_timeout` = :it,
+		`limit_extensions` = :le
+		WHERE `fpmsettingid` = :fpmid
+	");
+	// update all php-configs with the pm data from the fpm-daemon
+	foreach ($fpm_daemons as $fpm_daemon) {
+		Database::pexecute($upd_stmt, array(
+			'pm' => $fpm_daemon['pm'],
+			'maxc' => $fpm_daemon['max_children'],
+			'starts' => $fpm_daemon['start_servers'],
+			'minss' => $fpm_daemon['min_spare_servers'],
+			'maxss' => $fpm_daemon['max_spare_servers'],
+			'maxr' => $fpm_daemon['max_requests'],
+			'it' => $fpm_daemon['idle_timeout'],
+			'le' => $fpm_daemon['limit_extensions'],
+			'fpmid' => $fpm_daemon['id']
+		));
+	}
+	lastStepStatus(0);
+	
+	updateToDbVersion('201809280');
+}

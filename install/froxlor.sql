@@ -406,21 +406,12 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('login', 'maxloginattempts', '3'),
 	('login', 'deactivatetime', '900'),
 	('phpfpm', 'enabled', '0'),
-	('phpfpm', 'configdir', '/etc/php-fpm.d/'),
-	('phpfpm', 'reload', '/etc/init.d/php-fpm restart'),
-	('phpfpm', 'pm', 'static'),
-	('phpfpm', 'max_children', '1'),
-	('phpfpm', 'start_servers', '20'),
-	('phpfpm', 'min_spare_servers', '5'),
-	('phpfpm', 'max_spare_servers', '35'),
-	('phpfpm', 'max_requests', '0'),
 	('phpfpm', 'tmpdir', '/var/customers/tmp/'),
 	('phpfpm', 'peardir', '/usr/share/php/:/usr/share/php5/'),
 	('phpfpm', 'envpath', '/usr/local/bin:/usr/bin:/bin'),
 	('phpfpm', 'enabled_ownvhost', '0'),
 	('phpfpm', 'vhost_httpuser', 'froxlorlocal'),
 	('phpfpm', 'vhost_httpgroup', 'froxlorlocal'),
-	('phpfpm', 'idle_timeout', '30'),
 	('phpfpm', 'aliasconfigdir', '/var/www/php-fpm/'),
 	('phpfpm', 'defaultini', '1'),
 	('phpfpm', 'vhost_defaultini', '2'),
@@ -696,7 +687,7 @@ opcache.interned_strings_buffer'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'version', '0.10.0'),
-	('panel', 'db_version', '201809180');
+	('panel', 'db_version', '201809280');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
@@ -904,6 +895,15 @@ CREATE TABLE `panel_phpconfigs` (
   `phpsettings` text NOT NULL,
   `fpmsettingid` int(11) NOT NULL DEFAULT '1',
   `pass_authorizationheader` tinyint(1) NOT NULL default '0',
+  `override_fpmconfig` tinyint(1) NOT NULL DEFAULT '0',
+  `pm` varchar(15) NOT NULL DEFAULT 'static',
+  `max_children` int(4) NOT NULL DEFAULT '1',
+  `start_servers` int(4) NOT NULL DEFAULT '20',
+  `min_spare_servers` int(4) NOT NULL DEFAULT '5',
+  `max_spare_servers` int(4) NOT NULL DEFAULT '35',
+  `max_requests` int(4) NOT NULL DEFAULT '0',
+  `idle_timeout` int(4) NOT NULL DEFAULT '30',
+  `limit_extensions` varchar(255) NOT NULL default '.php',
   PRIMARY KEY  (`id`),
   KEY `fpmsettingid` (`fpmsettingid`)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;

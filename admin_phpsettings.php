@@ -79,6 +79,10 @@ if ($page == 'overview') {
 				while ($row = $configs->fetch(PDO::FETCH_ASSOC)) {
 					$fpmconfigs .= makeoption($row['description'], $row['id'], 1, true, true);
 				}
+
+				$pm_select = makeoption('static', 'static', 'static', true, true);
+				$pm_select.= makeoption('dynamic', 'dynamic', 'static', true, true);
+				$pm_select.= makeoption('ondemand', 'ondemand', 'static', true, true);
 				
 				$phpconfig_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/phpconfig/formfield.phpconfig_add.php';
 				$phpconfig_add_form = htmlform::genHTMLForm($phpconfig_add_data);
@@ -155,7 +159,11 @@ if ($page == 'overview') {
 				while ($row = $configs->fetch(PDO::FETCH_ASSOC)) {
 					$fpmconfigs .= makeoption($row['description'], $row['id'], $result['fpmsettingid'], true, true);
 				}
-				
+
+				$pm_select = makeoption('static', 'static', $result['pm'], true, true);
+				$pm_select.= makeoption('dynamic', 'dynamic', $result['pm'], true, true);
+				$pm_select.= makeoption('ondemand', 'ondemand', $result['pm'], true, true);
+
 				$phpconfig_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/phpconfig/formfield.phpconfig_edit.php';
 				$phpconfig_edit_form = htmlform::genHTMLForm($phpconfig_edit_data);
 				

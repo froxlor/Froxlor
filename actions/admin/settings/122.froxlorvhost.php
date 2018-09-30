@@ -80,19 +80,6 @@ return array(
 					'save_method' => 'storeSettingField',
 					'visible' => Settings::Get('system.use_ssl')
 				),
-				'system_http2_support' => array(
-					'label' => $lng['serversettings']['http2_support'],
-					'settinggroup' => 'system',
-					'varname' => 'http2_support',
-					'type' => 'bool',
-					'default' => false,
-					'save_method' => 'storeSettingField',
-					'websrv_avail' => array(
-						'apache2',
-						'nginx'
-					),
-					'visible' => Settings::Get('system.use_ssl')
-				),
 				/**
 				 * FCGID
 				 */
