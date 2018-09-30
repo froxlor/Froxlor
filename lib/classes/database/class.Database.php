@@ -379,7 +379,11 @@ class Database {
 		}
 
 		if ($showerror && $json_response) {
-			throw new Exception($error_message.($sql['debug'] ? "\n\n".$error_trace : ''), 500);
+			$exception_message = $error_message;
+			if (isset($sql['debug']) && $sql['debug'] == true) {
+				$exception_message .= "\n\n".$error_trace;
+			}
+			throw new Exception($exception_message, 500);
 		}
 
 		if ($showerror) {
