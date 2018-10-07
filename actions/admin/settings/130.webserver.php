@@ -244,6 +244,39 @@ return array(
 						'nginx'
 					)
 				),
+				'system_apache_use_nrp' => array(
+                                        'label' => $lng['serversettings']['apacheconf_use_nrp'],
+                                        'settinggroup' => 'system',
+                                        'varname' => 'apache_use_nrp',
+                                        'type' => 'bool',
+                                        'default' => false,
+                                        'save_method' => 'storeSettingField',
+                                        'websrv_avail' => array(
+                                                'apache2'
+                                        )
+                                ),
+                                'system_proxyconf_vhost' => array(
+                                        'label' => $lng['serversettings']['proxyconf_vhost'],
+                                        'settinggroup' => 'system',
+                                        'varname' => 'proxyconf_vhost',
+                                        'type' => 'string',
+                                        'default' => '',
+                                        'save_method' => 'storeSettingField',
+                                        'websrv_avail' => array(
+                                                'apache2'
+                                        )
+                                ),
+                                'system_default_proxyconf' => array(
+                                        'label' => $lng['serversettings']['default_proxyconf'],
+                                        'settinggroup' => 'system',
+                                        'varname' => 'default_proxyconf',
+                                        'type' => 'text',
+                                        'default' => '',
+                                        'save_method' => 'storeSettingField',
+                                        'websrv_avail' => array(
+                                                'apache2'
+                                        )
+                                ),
 				'system_nginx_php_backend' => array(
 					'label' => $lng['serversettings']['nginx_php_backend'],
 					'settinggroup' => 'system',

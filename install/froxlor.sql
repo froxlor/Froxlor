@@ -689,8 +689,8 @@ opcache.interned_strings_buffer'),
 	('system', 'proxyconf_vhost', '/etc/nginx/sites-enabled/')
         ('system', 'default_proxyconf', '')
 	('system', 'proxyreload_command', 'service nginx reload')
-	('panel', 'version', '0.9.39.6-dev1'),
-	('panel', 'db_version', '201809280-dev1');
+	('panel', 'version', '0.9.39.5'),
+	('panel', 'db_version', '201810070');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

@@ -3893,11 +3893,6 @@ if (isFroxlorVersion('0.9.39.1')) {
 	updateToVersion('0.9.39.2');
 }
 
-if (isFroxlorVersion('0.9.39.2-dev1')) {
-
-        showUpdateStep("Updating from 0.9.39.2 to 0.9.39.1-dev1", false);
-        updateToVersion('0.9.39.');
-}
 
 if (isDatabaseVersion('201801260')) {
 
@@ -4067,19 +4062,18 @@ if (isDatabaseVersion('201809180')) {
 }
 
 
-if (isFroxlorVersion('0.9.39.5') || isDatabaseVersion('201809280')) {
+if (isDatabaseVersion('201809280')) {
 
         showUpdateStep("Adding new fields for NGINX-Reverse-Proxy");
         Database::query("ALTER TABLE `" . TABLE_PANEL_IPSANDPORTS . "` ADD `proxyto` int(11) NOT NULL DEFAULT '0';");
         lastStepStatus(0);
 
         showUpdateStep("Updating settings table");
-        Database::query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'apache_use_nrp', '0');");
-        Database::query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'proxyconf_vhost', '');");
-        Database::query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'default_proxyconf', '');");
-        Database::query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'proxyreload_command', 'service nginx reload');");
+	Settings::addNew('system.apache_use_nrp', '0');
+        Settings::addNew('system.proxyconf_vhost', '');
+        Settings::addNew('system.default_proxyconf', '');
+        Settings::addNew('system.proxyreload_command', 'service nginx reload');
         lastStepStatus(0);
 
-        updateToVersion('0.9.39.6-dev1');
-        updateToDbVersion('201809280-dev1');
+        updateToDbVersion('201810070');
 }

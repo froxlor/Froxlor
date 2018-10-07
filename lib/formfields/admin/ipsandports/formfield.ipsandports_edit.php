@@ -146,7 +146,7 @@ return array(
 			),
                         'section_f' => array(
                                 'title' => $lng['admin']['ipsandports']['nrpconfig'],
-                                'image' => 'icons/ipsports_add.png',
+                                'image' => 'icons/ipsports_edit.png',
                                 'visible' => (Settings::Get('system.apache_use_nrp') == 1 ? true : false) && $is_apache,
                                 'fields' => array(
                                         'proxyto' => array(
@@ -155,15 +155,6 @@ return array(
                                                 'select_var' => $proxy_targets,
                                                 'value' => $result['proxyto']
                                         ),
-                                        'proxyconf' => array(
-                                                'style' => 'align-top',
-                                                'label' => $lng['admin']['ipsandports']['proxyconf'],
-                                                'desc' => $lng['serversettings']['default_vhostconf_domain']['description'],
-                                                'type' => 'textarea',
-                                                'cols' => 60,
-                                                'rows' => 12,
-                                                'value' => $result['proxyconf']
-                                        )
                                 )
                         ),
 		)

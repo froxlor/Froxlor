@@ -140,10 +140,12 @@ if ($page == 'ipsandports'
 					standard_error('cantdeletedefaultip');
 				}
 			} else {
-				if($result_checkdomain['id'] != '')
+				if($result_checkdomain['id'] != '') {
 					standard_error('ipstillhasdomains');
-                                if($result_checkproxy['id'] != '')
+				}
+                                if($result_checkproxy['id'] != '') {
                                         standard_error('ipstillhasproxy');
+				}
 			}
 		}
 
@@ -179,10 +181,8 @@ if ($page == 'ipsandports'
 
 			if ((int)Settings::Get('system.apache_use_nrp') == 1) {
 				$proxyto = intval_ressource($_POST['proxyto']);
-				$proxyconf = validate(str_replace("\r\n", "\n", $_POST['proxyconf']), 'proxyconf', '/^[^\0]*$/');
 			} else {
 				$proxyto = 0;
-				$proxyconf = '';
 			}
 
 			if ($listen_statement != '1') {
@@ -245,7 +245,7 @@ if ($page == 'ipsandports'
 						`specialsettings` = :ss, `ssl` = :ssl,
 						`ssl_cert_file` = :ssl_cert, `ssl_key_file` = :ssl_key,
 						`ssl_ca_file` = :ssl_ca, `ssl_cert_chainfile` = :ssl_chain,
-						`default_vhostconf_domain` = :dvhd, `docroot` = :docroot, `proxyto` = :proxyto, `proxyconf` = :proxyconf;
+						`default_vhostconf_domain` = :dvhd, `docroot` = :docroot, `proxyto` = :proxyto;
 				");
 				$ins_data = array(
 					'ip' => $ip,
@@ -263,7 +263,6 @@ if ($page == 'ipsandports'
 					'dvhd' => $default_vhostconf_domain,
 					'docroot' => $docroot,
 					'proxyto' => $proxyto,
-					'proxyconf' => $proxyconf
 				);
 				Database::pexecute($ins_stmt, $ins_data);
 
@@ -350,10 +349,8 @@ if ($page == 'ipsandports'
 
                         	if ((int)Settings::Get('system.apache_use_nrp') == 1) {
                                 	$proxyto = intval_ressource($_POST['proxyto']);
-                                	$proxyconf = validate(str_replace("\r\n", "\n", $_POST['proxyconf']), 'proxyconf', '/^[^\0]*$/');
 	                        } else {
         	                        $proxyto = 0;
-                	                $proxyconf = '';
                         	}
 
 				if ($listen_statement != '1') {
@@ -420,7 +417,7 @@ if ($page == 'ipsandports'
 							`specialsettings` = :ss, `ssl` = :ssl,
 							`ssl_cert_file` = :ssl_cert, `ssl_key_file` = :ssl_key,
 							`ssl_ca_file` = :ssl_ca, `ssl_cert_chainfile` = :ssl_chain,
-							`default_vhostconf_domain` = :dvhd, `docroot` = :docroot, `proxyto` = :proxyto, `proxyconf` = :proxyconf
+							`default_vhostconf_domain` = :dvhd, `docroot` = :docroot, `proxyto` = :proxyto
 						WHERE `id` = :id;
 					");
 					$upd_data = array(
@@ -439,7 +436,6 @@ if ($page == 'ipsandports'
 						'dvhd' => $default_vhostconf_domain,
 						'docroot' => $docroot,
 	                                        'proxyto' => $proxyto,
-        	                                'proxyconf' => $proxyconf,
 						'id' => $id
 					);
 					Database::pexecute($upd_stmt, $upd_data);

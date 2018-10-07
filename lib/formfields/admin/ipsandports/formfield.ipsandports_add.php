@@ -16,9 +16,9 @@
  */
 
 return array(
-	'ipsandports_edit' => array(
-		'title' => $lng['admin']['ipsandports']['edit'],
-		'image' => 'icons/ipsports_edit.png',
+	'ipsandports_add' => array(
+		'title' => $lng['admin']['ipsandports']['add'],
+		'image' => 'icons/ipsports_add.png',
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['admin']['ipsandports']['ipandport'],
@@ -26,20 +26,18 @@ return array(
 				'fields' => array(
 					'ip' => array(
 						'label' => $lng['admin']['ipsandports']['ip'],
-						'type' => 'text',
-						'value' => $result['ip']
+						'type' => 'text'
 					),
 					'port' => array(
 						'label' => $lng['admin']['ipsandports']['port'],
 						'type' => 'text',
-						'value' => $result['port'],
 						'size' => 5
 					)
 				)
 			),
 			'section_b' => array(
 				'title' => $lng['admin']['ipsandports']['webserverdefaultconfig'],
-				'image' => 'icons/ipsports_edit.png',
+				'image' => 'icons/ipsports_add.png',
 				'fields' => array(
 					'listen_statement' => array(
 						'visible' => !$is_nginx,
@@ -48,7 +46,7 @@ return array(
 						'values' => array(
 							array ('label' => $lng['panel']['yes'], 'value' => '1')
 						),
-						'value' => array($result['listen_statement'])
+						'value' => array('1')
 					),
 					'namevirtualhost_statement' => array(
 						'visible' => $is_apache && !$is_apache24,
@@ -57,7 +55,7 @@ return array(
 						'values' => array(
 							array ('label' => $lng['panel']['yes'], 'value' => '1')
 						),
-						'value' => array($result['namevirtualhost_statement'])
+						'value' => array('1')
 					),
 					'vhostcontainer' => array(
 						'label' => $lng['admin']['ipsandports']['create_vhostcontainer'],
@@ -65,13 +63,12 @@ return array(
 						'values' => array(
 							array ('label' => $lng['panel']['yes'], 'value' => '1')
 						),
-						'value' => array($result['vhostcontainer'])
+						'value' => array('1')
 					),
 					'docroot' => array(
 						'label' => $lng['admin']['ipsandports']['docroot']['title'],
 						'desc' => $lng['admin']['ipsandports']['docroot']['description'],
-						'type' => 'text',
-						'value' => $result['docroot']
+						'type' => 'text'
 					),
 					'specialsettings' => array(
 						'style' => 'align-top',
@@ -79,8 +76,7 @@ return array(
 						'desc' => $lng['serversettings']['default_vhostconf']['description'],
 						'type' => 'textarea',
 						'cols' => 60,
-						'rows' => 12,
-						'value' => $result['specialsettings']
+						'rows' => 12
 					),
 					'vhostcontainer_servername_statement' => array(
 						'visible' => $is_apache,
@@ -89,13 +85,13 @@ return array(
 						'values' => array(
 							array ('label' => $lng['panel']['yes'], 'value' => '1')
 						),
-						'value' => array($result['vhostcontainer_servername_statement'])
-					)
+						'value' => array('1')
+					),
 				)
 			),
 			'section_c' => array(
 				'title' => $lng['admin']['ipsandports']['webserverdomainconfig'],
-				'image' => 'icons/ipsports_edit.png',
+				'image' => 'icons/ipsports_add.png',
 				'fields' => array(
 					'default_vhostconf_domain' => array(
 						'style' => 'align-top',
@@ -103,14 +99,13 @@ return array(
 						'desc' => $lng['serversettings']['default_vhostconf_domain']['description'],
 						'type' => 'textarea',
 						'cols' => 60,
-						'rows' => 12,
-						'value' => $result['default_vhostconf_domain']
+						'rows' => 12
 					)
 				)
 			),
 			'section_d' => array(
 				'title' => $lng['admin']['ipsandports']['webserverssldomainconfig'],
-				'image' => 'icons/ipsports_edit.png',
+				'image' => 'icons/ipsports_add.png',
 				'visible' => (Settings::Get('system.use_ssl') == 1 ? true : false),
 				'fields' => array(
 					'ssl' => array(
@@ -119,28 +114,24 @@ return array(
 						'values' => array(
 							array ('label' => $lng['panel']['yes'], 'value' => '1')
 						),
-						'value' => array($result['ssl'])
+						'value' => array()
 					),
 					'ssl_cert_file' => array(
 						'label' => $lng['admin']['ipsandports']['ssl_cert_file'],
-						'type' => 'text',
-						'value' => $result['ssl_cert_file']
+						'type' => 'text'
 					),
 					'ssl_key_file' => array(
 						'label' => $lng['admin']['ipsandports']['ssl_key_file'],
-						'type' => 'text',
-						'value' => $result['ssl_key_file']
+						'type' => 'text'
 					),
 					'ssl_ca_file' => array(
 						'label' => $lng['admin']['ipsandports']['ssl_ca_file'],
-						'type' => 'text',
-						'value' => $result['ssl_ca_file']
+						'type' => 'text'
 					),
 					'ssl_cert_chainfile' => array(
 						'label' => $lng['admin']['ipsandports']['ssl_cert_chainfile']['title'],
 						'desc' => $lng['admin']['ipsandports']['ssl_cert_chainfile']['description'],
-						'type' => 'text',
-						'value' => $result['ssl_cert_chainfile']
+						'type' => 'text'
 					)
 				)
 			),
@@ -152,18 +143,8 @@ return array(
                                         'proxyto' => array(
                                                 'label' => $lng['admin']['ipsandports']['proxyto'],
                                                 'type' => 'select',
-                                                'select_var' => $proxy_targets,
-                                                'value' => $result['proxyto']
+                                                'select_var' => $proxy_targets
                                         ),
-                                        'proxyconf' => array(
-                                                'style' => 'align-top',
-                                                'label' => $lng['admin']['ipsandports']['proxyconf'],
-                                                'desc' => $lng['serversettings']['default_vhostconf_domain']['description'],
-                                                'type' => 'textarea',
-                                                'cols' => 60,
-                                                'rows' => 12,
-                                                'value' => $result['proxyconf']
-                                        )
                                 )
                         ),
 		)

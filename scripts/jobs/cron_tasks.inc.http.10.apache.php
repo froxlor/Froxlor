@@ -167,6 +167,8 @@ class apache extends HttpConfigBase
 	public function createIpPort()
 	{
 		//$result_ipsandports_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` ORDER BY `ip` ASC, `port` ASC");
+
+		// Only create IP/Port which are not Proxy-IP
 		$query = "SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` ";
 		if(Settings::Get('system.apache_use_nrp') == '1') {
 			$query .= "WHERE proxyto = '0' "; 
@@ -843,10 +845,6 @@ class apache extends HttpConfigBase
 		$query = "SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` `i`, `" . TABLE_DOMAINTOIP . "` `dip`
 			WHERE dip.id_domain = :domainid AND i.id = dip.id_ipandports ";
 		
-		// Ignore IPs which are proxied by NRP
-		//if((int)Settings::Get('system.apache_use_nrp') == 1) {
-		//	$query .= "AND i.proxyto = '0' ";
-		//}
 		if ($ssl_vhost === true && ($domain['ssl'] == '1' || $domain['ssl_redirect'] == '1')) {
 			// by ordering by cert-file the row with filled out SSL-Fields will be shown last, thus it is enough to fill out 1 set of SSL-Fields
 			$query .= "AND i.ssl = '1' ORDER BY i.ssl_cert_file ASC;";
@@ -866,6 +864,8 @@ class apache extends HttpConfigBase
 		$_vhost_content = '';
 		while ($ipandport = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$ipport = '';
+			// If the set IP is configured as a Reverse-Proxy IP 
+			// the VHost should be realized with the Target-IP of the Proxy
 			if((int)$ipandport['proxyto'] != 0) {
 				$proxy_stmt = Database::prepare("
                                 	SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE id=:proxyto
