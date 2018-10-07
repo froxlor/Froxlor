@@ -32,7 +32,9 @@ $header
 							<th>Specialsettings</th>
 							<if $is_apache><th>ServerName</th></if>
 							<th>SSL</th>
+							<th>NRP</th>
 							<th>{$lng['panel']['options']}</th>
+							
 						</tr>
 					</thead>
 

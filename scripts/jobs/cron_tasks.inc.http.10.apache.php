@@ -166,8 +166,13 @@ class apache extends HttpConfigBase
 
 	public function createIpPort()
 	{
-		$result_ipsandports_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` ORDER BY `ip` ASC, `port` ASC");
-		
+		//$result_ipsandports_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` ORDER BY `ip` ASC, `port` ASC");
+		$query = "SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` ";
+		if(Settings::Get('system.apache_use_nrp') == '1') {
+			$query .= "WHERE proxyto = '0' "; 
+		}
+		$query .= "ORDER BY `ip` ASC, `port` ASC;";
+		$result_ipsandports_stmt = Database::query($query);
 		while ($row_ipsandports = $result_ipsandports_stmt->fetch(PDO::FETCH_ASSOC)) {
 			if (filter_var($row_ipsandports['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
 				$ipport = '[' . $row_ipsandports['ip'] . ']:' . $row_ipsandports['port'];
@@ -838,12 +843,18 @@ class apache extends HttpConfigBase
 		$query = "SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` `i`, `" . TABLE_DOMAINTOIP . "` `dip`
 			WHERE dip.id_domain = :domainid AND i.id = dip.id_ipandports ";
 		
+		// Ignore IPs which are proxied by NRP
+		//if((int)Settings::Get('system.apache_use_nrp') == 1) {
+		//	$query .= "AND i.proxyto = '0' ";
+		//}
 		if ($ssl_vhost === true && ($domain['ssl'] == '1' || $domain['ssl_redirect'] == '1')) {
 			// by ordering by cert-file the row with filled out SSL-Fields will be shown last, thus it is enough to fill out 1 set of SSL-Fields
 			$query .= "AND i.ssl = '1' ORDER BY i.ssl_cert_file ASC;";
 		} else {
 			$query .= "AND i.ssl = '0';";
 		}
+
+		
 		
 		$vhost_content = '';
 		$result_stmt = Database::prepare($query);
@@ -854,16 +865,26 @@ class apache extends HttpConfigBase
 		$ipportlist = '';
 		$_vhost_content = '';
 		while ($ipandport = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-			
 			$ipport = '';
-			$domain['ip'] = $ipandport['ip'];
-			$domain['port'] = $ipandport['port'];
+			if((int)$ipandport['proxyto'] != 0) {
+				$proxy_stmt = Database::prepare("
+                                	SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE id=:proxyto
+                        	");
+                        	$proxy = Database::pexecute_first($proxy_stmt, array(
+                                	'proxyto' => $ipandport['proxyto']
+                        	));
+	                        $domain['ip'] = $proxy['ip'];
+        	                $domain['port'] = $proxy['port'];
+			} else {
+				$domain['ip'] = $ipandport['ip'];
+				$domain['port'] = $ipandport['port'];
+			}
+
 			if ($domain['ssl'] == '1') {
 				$domain['ssl_cert_file'] = $ipandport['ssl_cert_file'];
 				$domain['ssl_key_file'] = $ipandport['ssl_key_file'];
 				$domain['ssl_ca_file'] = $ipandport['ssl_ca_file'];
 				$domain['ssl_cert_chainfile'] = $ipandport['ssl_cert_chainfile'];
-				
 				// SSL STUFF
 				$dssl = new DomainSSL();
 				// this sets the ssl-related array-indices in the $domain array
@@ -882,107 +903,104 @@ class apache extends HttpConfigBase
 			}
 			$ipportlist .= $ipport;
 		}
+
+                $domain['documentroot_norewrite'] = $domain['documentroot'];
+		$domain['documentroot'] = trim($domain['documentroot']);
+                if (($ssl_vhost == false && $domain['ssl'] == '1' && $domain['ssl_redirect'] == '1')) {
+                        // We must not check if our port differs from port 443,
+                        // but if there is a destination-port != 443
+                        $_sslport = '';
+                        // This returns the first port that is != 443 with ssl enabled, if any
+                        // ordered by ssl-certificate (if any) so that the ip/port combo
+                        // with certificate is used
+                        //// TODO: I AM NOT SURE WETHER TO CHECK-HERE FOR proxyto
+                        $ssldestport_stmt = Database::prepare("
+                                SELECT `ip`.`port` FROM " . TABLE_PANEL_IPSANDPORTS . " `ip`
+                                LEFT JOIN `" . TABLE_DOMAINTOIP . "` `dip` ON (`ip`.`id` = `dip`.`id_ipandports`)
+                                WHERE `dip`.`id_domain` = :domainid
+                                AND `ip`.`ssl` = '1'  AND `ip`.`port` != 443
+                                ORDER BY `ip`.`ssl_cert_file` DESC, `ip`.`port` LIMIT 1;
+                        ");
+                        $ssldestport = Database::pexecute_first($ssldestport_stmt, array(
+                                'domainid' => $domain['id']
+                        ));
+                        
+                        if ($ssldestport['port'] != '') {
+                                $_sslport = ":" . $ssldestport['port'];
+                        }
+                        
+                        $domain['documentroot'] = 'https://%{HTTP_HOST}' . $_sslport . '/';
+                        $domain['documentroot_norewrite'] = 'https://' . $domain['domain'] . $_sslport . '/';
+                } elseif($ssl_vhost === true && $domain['ssl'] == '1' && Settings::Get('system.use_ssl') == '1') {
+                        if ($domain['ssl_cert_file'] == '') {
+                                $domain['ssl_cert_file'] = Settings::Get('system.ssl_cert_file');
+                        }
+
+                        if ($domain['ssl_key_file'] == '') {
+                                $domain['ssl_key_file'] = Settings::Get('system.ssl_key_file');
+                        }
+
+                        if ($domain['ssl_ca_file'] == '') {
+                                $domain['ssl_ca_file'] = Settings::Get('system.ssl_ca_file');
+                        }
+
+                        if ($domain['ssl_cert_chainfile'] == '') {
+                                $domain['ssl_cert_chainfile'] = Settings::Get('system.ssl_cert_chainfile');
+                        }
+		} 
+		if($ipportlist == '') return '';
 		
 		$vhost_content .= '<VirtualHost ' . trim($ipportlist) . '>' . "\n";
 		$vhost_content .= $this->getServerNames($domain);
-		
-		$domain['documentroot_norewrite'] = $domain['documentroot'];
-		if (($ssl_vhost == false && $domain['ssl'] == '1' && $domain['ssl_redirect'] == '1')) {
-			// We must not check if our port differs from port 443,
-			// but if there is a destination-port != 443
-			$_sslport = '';
-			// This returns the first port that is != 443 with ssl enabled, if any
-			// ordered by ssl-certificate (if any) so that the ip/port combo
-			// with certificate is used
-			$ssldestport_stmt = Database::prepare("
-				SELECT `ip`.`port` FROM " . TABLE_PANEL_IPSANDPORTS . " `ip`
-				LEFT JOIN `" . TABLE_DOMAINTOIP . "` `dip` ON (`ip`.`id` = `dip`.`id_ipandports`)
-				WHERE `dip`.`id_domain` = :domainid
-				AND `ip`.`ssl` = '1'  AND `ip`.`port` != 443
-				ORDER BY `ip`.`ssl_cert_file` DESC, `ip`.`port` LIMIT 1;
-			");
-			$ssldestport = Database::pexecute_first($ssldestport_stmt, array(
-				'domainid' => $domain['id']
-			));
+		if ($ssl_vhost === true && $domain['ssl'] == '1' && Settings::Get('system.use_ssl') == '1' && $domain['ssl_cert_file'] != '') {
+			$vhost_content .= '  SSLEngine On' . "\n";
+			$vhost_content .= '  SSLProtocol -ALL +' . str_replace(","," +", Settings::Get('system.ssl_protocols')) . "\n";
+			if (Settings::Get('system.apache24') == '1') {
+				if (isset($domain['http2']) && $domain['http2'] == '1' && Settings::Get('system.http2_support') == '1') {
+					$vhost_content .= ' Protocols h2 http/1.1' . "\n";
+				}
+				$vhost_content .= '  SSLCompression Off' . "\n";
+			}
+			// this makes it more secure, thx to Marcel (08/2013)
+			$vhost_content .= '  SSLHonorCipherOrder On' . "\n";
+			$vhost_content .= '  SSLCipherSuite ' . Settings::Get('system.ssl_cipher_list') . "\n";
+			$vhost_content .= '  SSLVerifyDepth 10' . "\n";
+			$vhost_content .= '  SSLCertificateFile ' . makeCorrectFile($domain['ssl_cert_file']) . "\n";
 			
-			if ($ssldestport['port'] != '') {
-				$_sslport = ":" . $ssldestport['port'];
+			if ($domain['ssl_key_file'] != '') {
+				$vhost_content .= '  SSLCertificateKeyFile ' . makeCorrectFile($domain['ssl_key_file']) . "\n";
 			}
 			
-			$domain['documentroot'] = 'https://%{HTTP_HOST}' . $_sslport . '/';
-			$domain['documentroot_norewrite'] = 'https://' . $domain['domain'] . $_sslport . '/';
+			if ($domain['ssl_ca_file'] != '') {
+				$vhost_content .= '  SSLCACertificateFile ' . makeCorrectFile($domain['ssl_ca_file']) . "\n";
+			}
+			
+			if ($domain['ssl_cert_chainfile'] != '') {
+				$vhost_content .= '  SSLCertificateChainFile ' . makeCorrectFile($domain['ssl_cert_chainfile']) . "\n";
+			}
+			
+			if (Settings::Get('system.apache24') == '1' && isset($domain['ocsp_stapling']) && $domain['ocsp_stapling'] == '1') {
+				$vhost_content .= '  SSLUseStapling on' . PHP_EOL;
+			}
+			
+			if ($domain['hsts'] >= 0) {
+				$vhost_content .= '  <IfModule mod_headers.c>' . "\n";
+				$vhost_content .= '    Header always set Strict-Transport-Security "max-age=' . $domain['hsts'];
+				if ($domain['hsts_sub'] == 1) {
+					$vhost_content .= '; includeSubDomains';
+				}
+				if ($domain['hsts_preload'] == 1) {
+					$vhost_content .= '; preload';
+				}
+				$vhost_content .= '"' . "\n";
+				$vhost_content .= '  </IfModule>' . "\n";
+			}
+		} else if($ssl_vhost === true && $domain['ssl'] == '1' && Settings::Get('system.use_ssl') == '1' && $domain['ssl_cert_file'] == '') {
+			// if there is no cert-file specified but we are generating a ssl-vhost,
+			// we should return an empty string because this vhost would suck dick, ref #1583
+			$this->logger->logAction(CRON_ACTION, LOG_ERR, $domain['domain'] . ' :: empty certificate file! Cannot create ssl-directives');
+			return '# no ssl-certificate was specified for this domain, therefore no explicit vhost is being generated';
 		}
-		
-		if ($ssl_vhost === true && $domain['ssl'] == '1' && Settings::Get('system.use_ssl') == '1') {
-			if ($domain['ssl_cert_file'] == '') {
-				$domain['ssl_cert_file'] = Settings::Get('system.ssl_cert_file');
-			}
-			
-			if ($domain['ssl_key_file'] == '') {
-				$domain['ssl_key_file'] = Settings::Get('system.ssl_key_file');
-			}
-			
-			if ($domain['ssl_ca_file'] == '') {
-				$domain['ssl_ca_file'] = Settings::Get('system.ssl_ca_file');
-			}
-			
-			if ($domain['ssl_cert_chainfile'] == '') {
-				$domain['ssl_cert_chainfile'] = Settings::Get('system.ssl_cert_chainfile');
-			}
-			
-			if ($domain['ssl_cert_file'] != '') {
-				$vhost_content .= '  SSLEngine On' . "\n";
-				$vhost_content .= '  SSLProtocol -ALL +' . str_replace(","," +", Settings::Get('system.ssl_protocols')) . "\n";
-				if (Settings::Get('system.apache24') == '1') {
-					if (isset($domain['http2']) && $domain['http2'] == '1' && Settings::Get('system.http2_support') == '1') {
-						$vhost_content .= ' Protocols h2 http/1.1' . "\n";
-					}
-					$vhost_content .= '  SSLCompression Off' . "\n";
-				}
-				// this makes it more secure, thx to Marcel (08/2013)
-				$vhost_content .= '  SSLHonorCipherOrder On' . "\n";
-				$vhost_content .= '  SSLCipherSuite ' . Settings::Get('system.ssl_cipher_list') . "\n";
-				$vhost_content .= '  SSLVerifyDepth 10' . "\n";
-				$vhost_content .= '  SSLCertificateFile ' . makeCorrectFile($domain['ssl_cert_file']) . "\n";
-				
-				if ($domain['ssl_key_file'] != '') {
-					$vhost_content .= '  SSLCertificateKeyFile ' . makeCorrectFile($domain['ssl_key_file']) . "\n";
-				}
-				
-				if ($domain['ssl_ca_file'] != '') {
-					$vhost_content .= '  SSLCACertificateFile ' . makeCorrectFile($domain['ssl_ca_file']) . "\n";
-				}
-				
-				if ($domain['ssl_cert_chainfile'] != '') {
-					$vhost_content .= '  SSLCertificateChainFile ' . makeCorrectFile($domain['ssl_cert_chainfile']) . "\n";
-				}
-				
-				if (Settings::Get('system.apache24') == '1' && isset($domain['ocsp_stapling']) && $domain['ocsp_stapling'] == '1') {
-					$vhost_content .= '  SSLUseStapling on' . PHP_EOL;
-				}
-				
-				if ($domain['hsts'] >= 0) {
-					$vhost_content .= '  <IfModule mod_headers.c>' . "\n";
-					$vhost_content .= '    Header always set Strict-Transport-Security "max-age=' . $domain['hsts'];
-					if ($domain['hsts_sub'] == 1) {
-						$vhost_content .= '; includeSubDomains';
-					}
-					if ($domain['hsts_preload'] == 1) {
-						$vhost_content .= '; preload';
-					}
-					$vhost_content .= '"' . "\n";
-					$vhost_content .= '  </IfModule>' . "\n";
-				}
-			} else {
-				// if there is no cert-file specified but we are generating a ssl-vhost,
-				// we should return an empty string because this vhost would suck dick, ref #1583
-				$this->logger->logAction(CRON_ACTION, LOG_ERR, $domain['domain'] . ' :: empty certificate file! Cannot create ssl-directives');
-				return '# no ssl-certificate was specified for this domain, therefore no explicit vhost is being generated';
-			}
-		}
-		
-		// avoid using any whitespaces
-		$domain['documentroot'] = trim($domain['documentroot']);
 		
 		if (preg_match('/^https?\:\/\//', $domain['documentroot'])) {
 			$corrected_docroot = $domain['documentroot'];
@@ -1032,7 +1050,6 @@ class apache extends HttpConfigBase
 		}
 		
 		$vhost_content .= '</VirtualHost>' . "\n";
-		
 		return $vhost_content;
 	}
 
@@ -1106,7 +1123,6 @@ class apache extends HttpConfigBase
 				$diroptions[$row_htpasswds['path']]['htpasswds'][] = $row_htpasswds;
 			}
 		}
-		
 		foreach ($diroptions as $row_diroptions) {
 			$row_diroptions['path'] = makeCorrectDir($row_diroptions['path']);
 			mkDirWithCorrectOwnership($row_diroptions['customerroot'], $row_diroptions['path'], $row_diroptions['guid'], $row_diroptions['guid']);

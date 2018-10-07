@@ -27,6 +27,10 @@ require_once makeCorrectFile(dirname(__FILE__) . '/cron_tasks.inc.http.25.lightt
 require_once makeCorrectFile(dirname(__FILE__) . '/cron_tasks.inc.http.30.nginx.php');
 require_once makeCorrectFile(dirname(__FILE__) . '/cron_tasks.inc.http.35.nginx_phpfpm.php');
 
+
+## NRP
+require_once makeCorrectFile(dirname(__FILE__) . '/cron_tasks.inc.http.40.nginx_proxy.php');
+
 /**
  * LOOK INTO TASKS TABLE TO SEE IF THERE ARE ANY UNDONE JOBS
  */
@@ -37,6 +41,7 @@ $result_tasks_stmt = Database::query("
 ");
 $num_results = Database::num_rows();
 $resultIDs = array();
+$run_nrp = false;
 
 while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 
@@ -62,6 +67,9 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 				if (Settings::Get('system.mod_fcgid') == 1 || Settings::Get('phpfpm.enabled') == 1) {
 					$websrv .= '_fcgid';
 				}
+				if((int)Settings::Get('system.apache_use_nrp') == 1) {
+					$run_nrp = true;
+				}
 			} elseif (Settings::Get('system.webserver') == "lighttpd") {
 				$websrv = 'lighttpd';
 				if (Settings::Get('system.mod_fcgid') == 1 || Settings::Get('phpfpm.enabled') == 1) {
@@ -84,6 +92,16 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$webserver->writeConfigs();
 			$webserver->createOwnVhostStarter();
 			$webserver->reload();
+
+			if($run_nrp) {
+				$nrp = new nginx_proxy($cronlog, $idna_convert);
+
+				$nrp->createIpPort();
+				$nrp->createVirtualHosts();
+				$nrp->writeConfigs();
+				$nrp->createOwnVhostStarter();
+				$nrp->reload();
+			}
 		} else {
 			echo "Please check you Webserver settings\n";
 		}

@@ -287,6 +287,7 @@ CREATE TABLE `panel_ipsandports` (
   `default_vhostconf_domain` text,
   `ssl_cert_chainfile` varchar(255) NOT NULL default '',
   `docroot` varchar(255) NOT NULL default '',
+  `proxyto` int(11) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `ip_port` (`ip`,`port`)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
@@ -684,8 +685,12 @@ opcache.interned_strings_buffer'),
 	('panel', 'password_special_char_required', '0'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'customer_hide_options', ''),
-	('panel', 'version', '0.9.39.5'),
-	('panel', 'db_version', '201809280');
+	('system', 'apache_use_nrp', '0'),
+	('system', 'proxyconf_vhost', '/etc/nginx/sites-enabled/')
+        ('system', 'default_proxyconf', '')
+	('system', 'proxyreload_command', 'service nginx reload')
+	('panel', 'version', '0.9.39.6-dev1'),
+	('panel', 'db_version', '201809280-dev1');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

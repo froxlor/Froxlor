@@ -3893,6 +3893,12 @@ if (isFroxlorVersion('0.9.39.1')) {
 	updateToVersion('0.9.39.2');
 }
 
+if (isFroxlorVersion('0.9.39.2-dev1')) {
+
+        showUpdateStep("Updating from 0.9.39.2 to 0.9.39.1-dev1", false);
+        updateToVersion('0.9.39.');
+}
+
 if (isDatabaseVersion('201801260')) {
 
 	showUpdateStep("Adding new plans table");
@@ -4013,7 +4019,6 @@ if (isDatabaseVersion('201805290')) {
 }
 
 if (isDatabaseVersion('201809180')) {
-	
 	showUpdateStep("Adding new fields for php configs");
 	Database::query("ALTER TABLE `" . TABLE_PANEL_PHPCONFIGS . "` ADD `override_fpmconfig` tinyint(1) NOT NULL DEFAULT '0';");
 	Database::query("ALTER TABLE `" . TABLE_PANEL_PHPCONFIGS . "` ADD `pm` varchar(15) NOT NULL DEFAULT 'static';");
@@ -4025,7 +4030,7 @@ if (isDatabaseVersion('201809180')) {
 	Database::query("ALTER TABLE `" . TABLE_PANEL_PHPCONFIGS . "` ADD `idle_timeout` int(4) NOT NULL DEFAULT '30';");
 	Database::query("ALTER TABLE `" . TABLE_PANEL_PHPCONFIGS . "` ADD `limit_extensions` varchar(255) NOT NULL default '.php';");
 	lastStepStatus(0);
-	
+
 	showUpdateStep("Synchronize fpm-daemon process manager settings with php-configs");
 	// get all fpm-daemons
 	$sel_stmt = Database::prepare("SELECT * FROM `panel_fpmdaemons`;");
@@ -4059,4 +4064,22 @@ if (isDatabaseVersion('201809180')) {
 	lastStepStatus(0);
 	
 	updateToDbVersion('201809280');
+}
+
+
+if (isFroxlorVersion('0.9.39.5') || isDatabaseVersion('201809280')) {
+
+        showUpdateStep("Adding new fields for NGINX-Reverse-Proxy");
+        Database::query("ALTER TABLE `" . TABLE_PANEL_IPSANDPORTS . "` ADD `proxyto` int(11) NOT NULL DEFAULT '0';");
+        lastStepStatus(0);
+
+        showUpdateStep("Updating settings table");
+        Database::query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'apache_use_nrp', '0');");
+        Database::query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'proxyconf_vhost', '');");
+        Database::query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'default_proxyconf', '');");
+        Database::query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'proxyreload_command', 'service nginx reload');");
+        lastStepStatus(0);
+
+        updateToVersion('0.9.39.6-dev1');
+        updateToDbVersion('201809280-dev1');
 }
