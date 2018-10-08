@@ -79,6 +79,14 @@ return array(
 					'save_method' => 'storeSettingHostname',
 					'plausibility_check_method' => 'checkHostname',
 					),
+				'api_enabled' => array(
+					'label' => $lng['serversettings']['enable_api'],
+					'settinggroup' => 'api',
+					'varname' => 'enabled',
+					'type' => 'bool',
+					'default' => false,
+					'save_method' => 'storeSettingField',
+				),
 				'system_validatedomain' => array(
 					'label' => $lng['serversettings']['validate_domain'],
 					'settinggroup' => 'system',

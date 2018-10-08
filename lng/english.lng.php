@@ -2143,3 +2143,5 @@ $lng['apikeys']['allowed_from'] = 'Allowed from';
 $lng['apikeys']['allowed_from_help'] = 'Comma separated list of ip addresses. Default empty.';
 $lng['apikeys']['valid_until'] = 'Valid until';
 $lng['apikeys']['valid_until_help'] = 'Date until valid, format YYYY-MM-DD';
+$lng['serversettings']['enable_api']['title'] = 'Enable external API usage';
+$lng['serversettings']['enable_api']['description'] = 'In order to use the froxlor API you need to activate this option. For more detailed information see <a href="https://api.froxlor.org/" target="_new">https://api.froxlor.org/</a>';

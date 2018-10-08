@@ -13,7 +13,8 @@ $userdata_content = "<?php
 \$sql_root[0]['user'] = 'root';
 \$sql_root[0]['password'] = '$rpwd';
 \$sql_root[0]['host'] = 'localhost';
-\$sql_root[0]['caption'] = 'Test default';" . PHP_EOL;
+\$sql_root[0]['caption'] = 'Test default';
+\$sql['debug'] = true;" . PHP_EOL;
 
 $userdata = dirname(__DIR__) . '/lib/userdata.inc.php';
 
