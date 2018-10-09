@@ -94,7 +94,7 @@ if ($action == 'delete') {
 			unset ($ip_list[$idx]);
 		}
 	}
-	$ip_list = array_map('inet_pton', $ip_list);
+	$ip_list = array_map('inet_ntop', array_map('inet_pton', $ip_list));
 	$allowed_from = implode(",", array_unique($ip_list));
 
 	if ($valid_until <= 0 || !is_numeric($valid_until)) {

@@ -62,9 +62,9 @@ class FroxlorRPC
 		if ($result) {
 			if ($result['apikey'] == $key && $result['secret'] == $secret && ($result['valid_until'] == -1 || $result['valid_until'] >= time())) {
 				if (!empty($result['allowed_from'])) {
+					// @todo allow specification and validating of whole subnets later
 					$ip_list = explode(",", $result['allowed_from']);
-					$ip_list = array_map('inet_pton', $ip_list);
-					$access_ip = inet_pton($_SERVER['REMOTE_ADDR']);
+					$access_ip = inet_ntop(inet_pton($_SERVER['REMOTE_ADDR']));
 					if (in_array($access_ip, $ip_list)) {
 						return true;
 					}
