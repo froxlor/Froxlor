@@ -73,6 +73,11 @@ class CustomerBackups extends ApiCommand implements ResourceEntity
 		$userpath = $path;
 		$path = makeCorrectDir($customer['documentroot'] . '/' . $path);
 
+		// path cannot be the customers docroot
+		if ($path == makeCorrectDir($customer['documentroot'])) {
+			standar_error('backupfoldercannotbedocroot', '', true);
+		}
+
 		if ($backup_dbs != '1') {
 			$backup_dbs = '0';
 		}

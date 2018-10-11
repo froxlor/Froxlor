@@ -227,6 +227,7 @@ $lng['error']['destinationalreadyexistasmail'] = 'Die Weiterleitung zu "%s" exis
 $lng['error']['destinationalreadyexist'] = 'Es existiert bereits eine Weiterleitung nach "%s".';
 $lng['error']['destinationiswrong'] = 'Die Weiterleitungsadresse "%s" enthält ungültige Zeichen oder ist nicht vollständig.';
 $lng['error']['ticketnotaccessible'] = 'Sie können sich das Ticket nicht ansehen.';
+$lng['error']['backupfoldercannotbedocroot'] = 'Der Ordner für Backups darf nicht das Heimatverzeichnis sein, wähle einen Ordner unterhalb des Heimatverzeichnisses, z.B. /backups';
 
 /**
  * Questions
@@ -1779,6 +1780,8 @@ $lng['admin']['notryfiles']['title'] = 'Keine generierte try_files Anweisung';
 $lng['admin']['notryfiles']['description'] = 'Wähle "Ja", wenn eine eigene try_files Direktive in den "eigenen Vhost Einstellungen" angegeben werden soll (z.B. nötig für manche Wordpress Plugins).';
 $lng['serversettings']['phpfpm_settings']['override_fpmconfig'] = 'Überschreibe FPM-Daemon Einstellungen (pm, max_children, etc.)';
 $lng['serversettings']['phpfpm_settings']['override_fpmconfig_addinfo'] = '<br /><span class="red">Nur verwendet wenn "Überschreibe FPM-Daemon Einstellungen" auf "Ja" gestellt ist</span>';
+$lng['panel']['backuppath']['title'] = 'Pfad zur Ablage der Backups';
+$lng['panel']['backuppath']['description'] = 'In diesem Ordner werden die Backups abgelegt. Wenn das Sichern von Web-Daten aktiviert ist, werden alle Dateien aus dem Heimatverzeichnis gesichert, exklusive des hier angegebenen Backup-Ordners.';
 
 // added in froxlor 0.10.0
 $lng['panel']['none_value'] = 'Keine';
