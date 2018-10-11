@@ -91,6 +91,7 @@ foreach ($all_jobs as $row) {
 				$row['data']['destdir'] = makeCorrectDir($row['data']['destdir']);
 				$customerdocroot = makeCorrectDir(Settings::Get('system.documentroot_prefix').'/'.$row['data']['loginname'].'/');
 
+				// create folder if not exists
 				if (!file_exists($row['data']['destdir'])
 					&& $row['data']['destdir'] != '/'
 					&& $row['data']['destdir'] != Settings::Get('system.documentroot_prefix')

@@ -24,8 +24,8 @@ return array(
 				'image' => 'icons/backup_big.png',
 				'fields' => array(
 					'path' => array(
-						'label' => $lng['panel']['path'],
-						'desc' => (Settings::Get('panel.pathedit') != 'Dropdown' ? $lng['panel']['pathDescription'] : null).(isset($pathSelect['note']) ? '<br />'.$pathSelect['value'] : ''),
+						'label' => $lng['panel']['backuppath']['title'],
+						'desc' => $lng['panel']['backuppath']['description'].'<br>'.(Settings::Get('panel.pathedit') != 'Dropdown' ? $lng['panel']['pathDescription'] : null).(isset($pathSelect['note']) ? '<br />'.$pathSelect['value'] : ''),
 						'type' => $pathSelect['type'],
 						'select_var' => $pathSelect['value'],
 						'value' => $pathSelect['value']
