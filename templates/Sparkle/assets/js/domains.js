@@ -35,7 +35,7 @@ $(document).ready(function() {
                     $('#phpsettingid option').each(function() {
                         var pid = $(this).val();
                         $(this).attr("disabled", "disabled");
-                        for (i in json) {
+                        for (var i in json) {
                         	if (pid == json[i]) {
                             	$(this).removeAttr("disabled");
                             }

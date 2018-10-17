@@ -30,7 +30,7 @@ $(document).ready(function() {
 		        },
 		        dataType: "json",
 		        success: function(json) {
-		        	for (i in json) {
+				for (var i in json) {
 		        		if (i == 'email_imap' || i == 'email_pop3' || i == 'perlenabled' || i == 'phpenabled' || i == 'dnsenabled') {
 		        			/** handle checkboxes **/
 		        			if (json[i] == 1) {
@@ -42,8 +42,8 @@ $(document).ready(function() {
 		        			/** handle array of values **/
 		        			$("input[name='allowed_phpconfigs[]']").each(function(index) {
 		        				$(this).prop('checked', false);
-		        				for (j in json[i]) {
-		                        	if ($(this).val() == json[i][j]) {
+							for (var j in json[i]) {
+								if ($(this).val() == json[i][j]) {
 				        				$(this).prop('checked', true);
 				        				break;
 				        			}
