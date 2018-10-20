@@ -1505,7 +1505,7 @@ $lng['admin']['templates']['SERVER_PORT'] = 'Wird mit dem Standard-Port ersetzt'
 $lng['admin']['templates']['DOMAINNAME'] = 'Wird mit der Standardsubdomain des Kunden ersetzt (kann leer sein, wenn keine erstellt werden soll)';
 $lng['admin']['show_news_feed']['title'] = 'Zeige Newsfeed im Admin-Dashboard';
 $lng['admin']['show_news_feed']['description'] = 'Aktivieren Sie diese Option, um das offizielle Froxlor newsfeed (https://inside.froxlor.org/news/) auf deinem Dashboard anzuzeigen und verpasse keine wichtigen Informationen oder Release-Announcements.';
-$lng['panel']['newsfeed_disabled'] = 'Das Newsfeed ist deaktiviert. Klicke das Editier-Icon, um zu den Einstellungen zu gelangen.';
+$lng['panel']['newsfeed_disabled'] = 'Das Newsfeed ist deaktiviert. Klicken Sie auf das Editier-Icon, um zu den Einstellungen zu gelangen.';
 
 // Added in Froxlfor 0.9.32
 $lng['logger']['reseller'] = "Reseller";
