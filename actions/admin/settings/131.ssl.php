@@ -40,7 +40,8 @@ return array(
 					'option_options' => array(
 						'TLSv1' => 'TLSv1',
 						'TLSv1.1' => 'TLSv1.1',
-						'TLSv1.2' => 'TLSv1.2'
+						'TLSv1.2' => 'TLSv1.2',
+						'TLSv1.3' => 'TLSv1.3'
 					),
 					'save_method' => 'storeSettingField'
 				),
