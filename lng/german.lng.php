@@ -1585,12 +1585,12 @@ $lng['error']['fcgidandphpfpmnogoodtogether'] = 'FCGID und PHP-FPM können nicht
 // Added in Froxlor 0.9.34
 $lng['admin']['configfiles']['legend'] = '<h3>Sie konfigurieren nun einen Service/Daemon.</h3>';
 $lng['admin']['configfiles']['commands'] = '<span class="red">Kommandos:</span> Die angezeigten Befehle müssen als Benutzer root in einer Shell ausgeführt werden. Es kann auch problemlos der ganze Block kopiert und in die Shell eingefügt werden.';
-$lng['admin']['configfiles']['files'] = '<span class="red">Konfigurationsdateien:</span> Der Befehl direkt vor dem Textfeld sollte einen Editor mit der Zieldatei öffnen. Der Inhalt kann nun einfach kopiert und in den Editor eingefügt und die Datei gespeichert werden.<br><span class="red">Bitte beachten:</span> Das MySQL-Passwort wurde aus Sicherheitsgründen nicht ersetzt. Bitte ersetze "FROXLOR_MYSQL_PASSWORD" manuell oder nutze das folgende Formular, um es temporär auf dieser Seite zu setzen. Falls das Passwort vergessen wurde, findet es sich in der Datei "lib/userdata.inc.php".';
+$lng['admin']['configfiles']['files'] = '<span class="red">Konfigurationsdateien:</span> Der Befehl direkt vor dem Textfeld sollte einen Editor mit der Zieldatei öffnen. Der Inhalt kann nun einfach kopiert und in den Editor eingefügt und die Datei gespeichert werden.<br><span class="red">Bitte beachten:</span> Das MySQL-Passwort wurde aus Sicherheitsgründen nicht ersetzt. Bitte ersetzen Sie "FROXLOR_MYSQL_PASSWORD" manuell oder nutzen Sie das folgende Formular, um es temporär auf dieser Seite zu setzen. Falls das Passwort vergessen wurde, findet es sich in der Datei "lib/userdata.inc.php".';
 $lng['serversettings']['apache_itksupport']['title'] = 'Anpassungen für Apache ITK-MPM verwenden';
 $lng['serversettings']['apache_itksupport']['description'] = '<div class="red">Achtung: Bitte nur verwenden, wenn wirklich Apache itk-mpm verwendet wird, ansonsten wird der Webserver nicht starten.</div>';
 $lng['integrity_check']['DatabaseCharset'] = 'Characterset der Datenbank (sollte UTF-8 sein)';
 $lng['integrity_check']['DomainIpTable'] = 'IP &lt;&dash;&gt; Domain Verkn&uuml;pfung';
-$lng['integrity_check']['SubdomainSslRedirect'] = 'Falsches SSL-redirect Flag bei nicht-ssl Domains';
+$lng['integrity_check']['SubdomainSslRedirect'] = 'Falsches SSL-redirect Flag bei nicht-SSL Domains';
 $lng['integrity_check']['FroxlorLocalGroupMemberForFcgidPhpFpm'] = 'froxlor-Benutzer in Kunden-Gruppen (f&uuml;r FCGID/php-fpm)';
 $lng['integrity_check']['WebserverGroupMemberForFcgidPhpFpm'] = 'Webserver-Benutzer in Kunden-Gruppen (f&uuml;r FCGID/php-fpm)';
 $lng['integrity_check']['SubdomainLetsencrypt'] = 'Hauptdomains ohne zugewiesenen SSL-Port haben keine Subdomain mit aktiviertem SSL-Redirect';
@@ -1618,7 +1618,7 @@ $lng['serversettings']['letsencryptkeysize']['description'] = "Größe des Schl�
 $lng['serversettings']['letsencryptreuseold']['title'] = "Let's Encrypt Schlüssel wiederverwenden";
 $lng['serversettings']['letsencryptreuseold']['description'] = "Wenn dies aktiviert ist, wird der alte Schlüssel bei jeder Verlängerung verwendet, andernfalls wird ein neues Paar generiert.<br><strong class=\"red\">ACHTUNG:</strong> Let's Encrypt befindet sich noch im Test";
 $lng['serversettings']['leenabled']['title'] = "Let's Encrypt verwenden";
-$lng['serversettings']['leenabled']['description'] = "Wenn dies aktiviert ist, können Kunden durch Froxlor automatisch generierte und verlängerbare Let's Encrypt SSL-Zertifikate für Domains mit SSL IP/port nutzen.<br /><br />Bitte die Webserver-Konfiguration beachten wenn aktiviert, da dieses Feature eine spezielle Konfiguration benötigt.";
+$lng['serversettings']['leenabled']['description'] = "Wenn dies aktiviert ist, können Kunden durch Froxlor automatisch generierte und verlängerbare Let's Encrypt SSL-Zertifikate für Domains mit SSL IP/Port nutzen.<br /><br />Bitte die Webserver-Konfiguration beachten wenn aktiviert, da dieses Feature eine spezielle Konfiguration benötigt.";
 $lng['domains']['ssl_redirect_temporarilydisabled'] = "<br>Die SSL-Umleitung ist, während ein neues Let's Encrypt - Zertifikat erstellt wird, temporär deaktiviert. Die Umleitung wird nach der Zertifikatserstellung wieder aktiviert.";
 
 // Autoupdate
@@ -1659,7 +1659,7 @@ $lng['tasks']['backup_customerfiles'] = 'Datensicherung für Kunde %loginname%';
 $lng['error']['dns_domain_nodns'] = 'DNS ist für diese Domain nicht aktiviert';
 $lng['error']['dns_content_empty'] = 'Keinen Inhalt angegeben';
 $lng['error']['dns_arec_noipv4'] = 'Keine gültige IP-Adresse für A-Eintrag angegeben';
-$lng['error']['dns_aaaarec_noipv6'] = 'Kein gültige IP Adresse für AAAA-Eintrag angegeben';
+$lng['error']['dns_aaaarec_noipv6'] = 'Keine gültige IP-Adresse für AAAA-Eintrag angegeben';
 $lng['error']['dns_mx_prioempty'] = 'Ungültige MX Priorität angegeben';
 $lng['error']['dns_mx_needdom'] = 'Der Wert des MX Eintrags muss ein gültiger Domainname sein';
 $lng['error']['dns_mx_noalias'] = 'Der MX Eintrag darf kein CNAME Eintrag sein.';
@@ -1667,7 +1667,7 @@ $lng['error']['dns_cname_invaliddom'] = 'Ungültiger Domain-Name für CNAME Eint
 $lng['error']['dns_cname_nomorerr'] = 'Es existiert bereits ein Eintrag mit dem gleichen Namen. Dieser Eintrag kann daher nicht für CNAME genutzt werden.';
 $lng['error']['dns_ns_invaliddom'] = 'Ungültiger Domain-Name für NS Eintrag';
 $lng['error']['dns_srv_prioempty'] = 'Ungültige SRV Priorität angegeben';
-$lng['error']['dns_srv_invalidcontent'] = 'Ungültiger Wert des SRV Eintrags, dieser muss aus den Feldern: weight, port und target, bestehen. Bsp.: 5 5060 sipserver.example.com.';
+$lng['error']['dns_srv_invalidcontent'] = 'Ungültiger Wert des SRV Eintrags, dieser muss aus den Feldern weight, port und target, bestehen. Bsp.: 5 5060 sipserver.example.com.';
 $lng['error']['dns_srv_needdom'] = 'Der Wert des SRV Eintrags muss ein gültiger Domainname sein';
 $lng['error']['dns_srv_noalias'] = 'Der SRV Eintrag darf kein CNAME Eintrag sein.';
 $lng['error']['dns_duplicate_entry'] = 'Eintrag existiert bereits';
@@ -1677,7 +1677,7 @@ $lng['dnseditor']['edit'] = 'DNS editieren';
 $lng['dnseditor']['records'] = 'Einträge';
 $lng['error']['dns_notfoundorallowed'] = 'Domain nicht gefunden oder keine Berechtigung';
 $lng['serversettings']['dnseditorenable']['title'] = 'DNS Editor aktivieren';
-$lng['serversettings']['dnseditorenable']['description'] = 'Erlaubt es Admins und Kunden die DNS Einträge Ihrer Domains zu verwalten';
+$lng['serversettings']['dnseditorenable']['description'] = 'Erlaubt es Admins und Kunden die DNS Einträge ihrer Domains zu verwalten.';
 $lng['dns']['howitworks'] = 'Hier können DNS Einträge für die Domain verwaltet werden. Beachten Sie, dass Froxlor automatisch NS/MX/A/AAAA Einträge generiert. Die benutzerdefinierten Einträge werden bevorzugt, nur fehlende Einträge werden automatisch generiert.';
 $lng['serversettings']['dns_server']['title'] = 'DNS Server Dienst';
 $lng['serversettings']['dns_server']['description'] = 'Dienste müssen mit den froxlor Konfigurationstemplates konfiguriert werden';
@@ -1694,7 +1694,7 @@ $lng['serversettings']['panel_customer_hide_options']['description'] = 'Wählen 
 $lng['serversettings']['allow_allow_customer_shell']['title'] = 'Erlaube Kunden für FTP Benutzer eine Shell auszuwählen';
 $lng['serversettings']['allow_allow_customer_shell']['description'] = '<strong class="red">Bitte beachten: Shell Zugriff gestattet dem Benutzer verschiedene Programme auf Ihrem System auszuführen. Mit großer Vorsicht verwenden. Bitte aktiviere dies nur wenn WIRKLICH bekannt ist, was das bedeutet!!!</strong>';
 $lng['serversettings']['available_shells']['title'] = 'Liste der verfügbaren Shells';
-$lng['serversettings']['available_shells']['description'] = 'Komma-getrennte Liste von Shells die der Kunde für seine FTP-Konten wählen kann.<br><br>Hinweis: Die Standard-Shell <strong>/bin/false</strong> wird immer eine Auswahlmöglichkeit sein (wenn aktiviert), auch wenn diese Einstellung leer ist. Sie ist in jedem Fall der Standardwert für alle FTP-Konten';
+$lng['serversettings']['available_shells']['description'] = 'Komma-getrennte Liste von Shells, die der Kunde für seine FTP-Konten wählen kann.<br><br>Hinweis: Die Standard-Shell <strong>/bin/false</strong> wird immer eine Auswahlmöglichkeit sein (wenn aktiviert), auch wenn diese Einstellung leer ist. Sie ist in jedem Fall der Standardwert für alle FTP-Konten';
 $lng['serversettings']['le_froxlor_enabled']['title'] = "Let's Encrypt für den froxlor Vhost verwenden";
 $lng['serversettings']['le_froxlor_enabled']['description'] = "Wenn dies aktiviert ist, erstellt froxlor für seinen vhost automatisch ein Let's Encrypt Zertifikat.";
 $lng['serversettings']['le_froxlor_redirect']['title'] = "SSL-Weiterleitung für den froxlor Vhost aktivieren";
@@ -1723,7 +1723,7 @@ $lng['admin']['domain_hsts_maxage']['description'] = '"max-age" Wert für den St
 $lng['admin']['domain_hsts_incsub']['title'] = 'Inkludiere HSTS für jede Subdomain';
 $lng['admin']['domain_hsts_incsub']['description'] = 'Die optionale "includeSubDomains" Direktive, wenn vorhanden, signalisiert dem UA, dass die HSTS Regel für diese Domain und auch jede Subdomain dieser gilt.';
 $lng['admin']['domain_hsts_preload']['title'] = 'Füge Domain in die <a href="https://hstspreload.appspot.com/" target="_blank">HSTS preload Liste</a> hinzu';
-$lng['admin']['domain_hsts_preload']['description'] = 'Wenn die Domain in die HSTS preload Liste, verwaltet von Chrome (und genutzt von Firefox und Safari), hinzugefügt werden soll, dann aktiviere diese Einstellung.<br>Die preload-Direktive zu senden kann PERMANTENTE KONSEQUENZEN haben und dazu führen, dass Benutzer auf diese Domain und auch Subdomains nicht zugreifen können.<br>Beachte Details unter <a href="https://hstspreload.appspot.com/#removal" target="_blank">hstspreload.appspot.com/#removal</a> bevor ein Header mit "preload" gesendet wird.';
+$lng['admin']['domain_hsts_preload']['description'] = 'Wenn die Domain in die HSTS preload Liste, verwaltet von Chrome (und genutzt von Firefox und Safari), hinzugefügt werden soll, dann aktivieren Sie diese Einstellung.<br>Die preload-Direktive zu senden kann PERMANTENTE KONSEQUENZEN haben und dazu führen, dass Benutzer auf diese Domain und auch Subdomains nicht zugreifen können.<br>Beachten Sie die Details unter <a href="https://hstspreload.appspot.com/#removal" target="_blank">hstspreload.appspot.com/#removal</a> bevor ein Header mit "preload" gesendet wird.';
 
 $lng['serversettings']['http2_support']['title'] = 'HTTP2 Unterstützung';
 $lng['serversettings']['http2_support']['description'] = 'Aktiviere HTTP2 Unterstützung für SSL.<br><em class="red">NUR AKTIVIEREN, WENN DER WEBSERVER DIESE FUNKTION UNTERSTÜTZT (nginx version 1.9.5+, apache2 version 2.4.17+)</em>';
@@ -1737,13 +1737,13 @@ $lng['admin']['domain_ocsp_stapling']['nginx_version_warning'] = '<br /><strong 
 $lng['serversettings']['ssl']['apache24_ocsp_cache_path']['title'] = 'Apache 2.4: Pfad zum OCSP-Stapling-Cache';
 $lng['serversettings']['ssl']['apache24_ocsp_cache_path']['description'] = 'Konfiguriert den Cache-Pfad zum Zwischenspeichern der OCSP-Antworten,<br />die an TLS-Handshakes angehängt werden.';
 $lng['serversettings']['nssextrausers']['title'] = 'Verwende libnss-extrausers anstatt libnss-mysql';
-$lng['serversettings']['nssextrausers']['description'] = 'Lese Benutzer nicht direkt aus der Datenbank sondern über Dateien, bitte nur aktivieren, wenn die entsprechende Konfiguration vorgenommen wurde (System -> libnss-extrausers).<br><strong class="red">Nur für Debian/Ubuntu (oder wenn libnss-extrausers manuell kompiliert wurde!)</strong>';
+$lng['serversettings']['nssextrausers']['description'] = 'Lese Benutzer nicht direkt aus der Datenbank sondern über Dateien. Bitte nur aktivieren, wenn die entsprechende Konfiguration vorgenommen wurde (System -> libnss-extrausers).<br><strong class="red">Nur für Debian/Ubuntu (oder wenn libnss-extrausers manuell kompiliert wurde!)</strong>';
 $lng['admin']['domain_http2']['title'] = 'HTTP2 Unterstützung';
 $lng['admin']['domain_http2']['description'] = 'Siehe <a target="_blank" href="https://de.wikipedia.org/wiki/Hypertext_Transfer_Protocol#HTTP.2F2">Wikipedia</a> für eine ausführliche Beschreibung von HTTP2';
 $lng['admin']['testmail'] = 'SMTP Test';
 $lng['success']['testmailsent'] = 'Test E-Mail erfolgreich gesendet';
 $lng['serversettings']['disable_le_selfcheck']['title'] = "Deaktiviere Let's Encrypt lokale Selbstprüfung";
-$lng['serversettings']['disable_le_selfcheck']['description'] = "Wenn aktiviert wird Froxlor <strong>keine</strong> Erreichbarkeitsprüfung des Tokens vornehmen. Nötig bei ge-NAT-eten IP's oder Ähnlichem";
+$lng['serversettings']['disable_le_selfcheck']['description'] = "Wenn aktiviert wird Froxlor <strong>keine</strong> Erreichbarkeitsprüfung des Tokens vornehmen. Nötig bei ge-NAT-eten IP-Adressen oder Ähnlichem";
 $lng['menue']['phpsettings']['fpmdaemons'] = 'PHP-FPM Versionen';
 $lng['admin']['phpsettings']['activephpconfigs'] = 'In Verwendung für PHP-Konfiguration(en)';
 $lng['admin']['phpsettingsforsubdomains'] = 'PHP-Config für alle Subdomains übernehmen:';
