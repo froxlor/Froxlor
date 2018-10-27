@@ -60,7 +60,7 @@ $header
  			<tr>
 				<td>{$lng['ticket']['lastchange']}:</td>
 				<td>
-					<label for="fromdate">{$lng['ticket']['lastchange_from']}<br /><input type="text" id="fromdate" name="fromdate" /></label>
+					<label for="fromdate">{$lng['ticket']['lastchange_from']}<br /><input type="text" id="fromdate" name="fromdate" /></label><br />
 					<label for="todate">{$lng['ticket']['lastchange_to']}<br /><input type="text" id="todate" name="todate" /></label>
 				</td>
  			</tr>
