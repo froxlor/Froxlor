@@ -83,10 +83,7 @@ if ($page == 'ipsandports'
 			);
 			$result_checkdomain = Database::pexecute_first($result_checkdomain_stmt, array('id' => $id));
 
-	                $result_checkproxy_stmt = Database::prepare("SELECT `id` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `proxyto` = :proxyto");
-        	        $result_checkproxy = Database::pexecute_first($result_checkproxy_stmt, array('proxyto' => $id));
-
-			if ($result_checkdomain['id'] == '' && $result_checkproxy['id'] == '') {
+			if ($result_checkdomain['id'] == '') {
 				if (!in_array($result['id'], explode(',', Settings::Get('system.defaultip')))) {
 
 					$result_sameipotherport_stmt = Database::prepare("
@@ -140,12 +137,7 @@ if ($page == 'ipsandports'
 					standard_error('cantdeletedefaultip');
 				}
 			} else {
-				if($result_checkdomain['id'] != '') {
-					standard_error('ipstillhasdomains');
-				}
-                                if($result_checkproxy['id'] != '') {
-                                        standard_error('ipstillhasproxy');
-				}
+				standard_error('ipstillhasdomains');
 			}
 		}
 
@@ -178,11 +170,24 @@ if ($page == 'ipsandports'
 				$ssl_ca_file = '';
 				$ssl_cert_chainfile = '';
 			}
-
-			if ((int)Settings::Get('system.apache_use_nrp') == 1) {
-				$proxyto = intval_ressource($_POST['proxyto']);
+                        if ((int)Settings::Get('system.apache_use_nrp') == 1 && trim($_POST['proxy_port']) != '') {
+				$proxy_port = validate($_POST['proxy_port'], 'proxy_port', '/^(([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9])|([1-5][0-9][0-9][0-9][0-9])|(6[0-4][0-9][0-9][0-9])|(65[0-4][0-9][0-9])|(655[0-2][0-9])|(6553[0-5]))$/Di', array('stringisempty', 'proxy_port'));
 			} else {
-				$proxyto = 0;
+				$proxy_port = '0';
+			}
+
+			if ($proxy_port != '0') {
+				$proxy_ip   = trim($_POST['proxy_ip']) == '' ? $ip : validate_ip($_POST['proxy_ip']);
+				$proxy_conf_domain = validate(str_replace("\r\n", "\n", $_POST['proxy_conf_domain']), 'proxy_conf_domain', '/^[^\0]*$/');
+				$proxy_conf_ip = validate(str_replace("\r\n", "\n", $_POST['proxy_conf_ip']), 'proxy_conf_ip', '/^[^\0]*$/');
+                                $result_checkforproxy_stmt = Database::prepare("SELECT `id` FROM `" . TABLE_PANEL_IPSANDPORTS . "` 
+                                                WHERE `ip` = :ip AND `port` = :port");                         
+                                $result_checkforproxy = Database::pexecute_first($result_checkforproxy_stmt, array('ip' => $proxy_ip, 'port' => $proxy_port));
+			} else {
+				$proxy_ip = '';
+				$proxy_conf_domain = '';
+				$proxy_conf_ip = '';
+				$result_checkforproxy = array('id' => '');
 			}
 
 			if ($listen_statement != '1') {
@@ -229,12 +234,16 @@ if ($page == 'ipsandports'
 
 			$result_checkfordouble_stmt = Database::prepare("
 				SELECT `id` FROM `" . TABLE_PANEL_IPSANDPORTS . "`
-				WHERE `ip` = :ip AND `port` = :port"
+				WHERE (`ip` = :ip AND `port` = :port) OR (`ip` = :proxy_ip AND `port` = :proxy_port)
+				OR (`proxy_ip` != '' AND `proxy_ip` = :proxy_ip AND `proxy_port` != '0' AND `proxy_port` = :proxy_port) 
+				OR (`proxy_ip` != '' AND `proxy_ip` = :ip AND `proxy_port` != '0' AND `proxy_port` = :port)"
 			);
-			$result_checkfordouble = Database::pexecute_first($result_checkfordouble_stmt, array('ip' => $ip, 'port' => $port));
+			$result_checkfordouble = Database::pexecute_first($result_checkfordouble_stmt, array('ip' => $ip, 'port' => $port, 'proxy_ip' => $proxy_ip, 'proxy_port' => $proxy_port));
 
 			if ($result_checkfordouble['id'] != '') {
 				standard_error('myipnotdouble');
+			} elseif($proxy_port != '0' && (($proxy_ip == $ip && $proxy_port == $port) || $result_checkforproxy['id'] != '')) {
+                                standard_error('myipnotdouble');
 			} else {
 				$ins_stmt = Database::prepare("
 					INSERT INTO `" . TABLE_PANEL_IPSANDPORTS . "`
@@ -245,7 +254,9 @@ if ($page == 'ipsandports'
 						`specialsettings` = :ss, `ssl` = :ssl,
 						`ssl_cert_file` = :ssl_cert, `ssl_key_file` = :ssl_key,
 						`ssl_ca_file` = :ssl_ca, `ssl_cert_chainfile` = :ssl_chain,
-						`default_vhostconf_domain` = :dvhd, `docroot` = :docroot, `proxyto` = :proxyto;
+						`default_vhostconf_domain` = :dvhd, `docroot` = :docroot, 
+						`proxy_ip` = :proxy_ip, `proxy_port` = :proxy_port,
+						`proxy_conf_ip` = :proxy_conf_ip, `proxy_conf_domain` = :proxy_conf_domain;
 				");
 				$ins_data = array(
 					'ip' => $ip,
@@ -262,7 +273,10 @@ if ($page == 'ipsandports'
 					'ssl_chain' => $ssl_cert_chainfile,
 					'dvhd' => $default_vhostconf_domain,
 					'docroot' => $docroot,
-					'proxyto' => $proxyto,
+					'proxy_ip' => $proxy_ip,
+                                        'proxy_port' => $proxy_port,
+                                        'proxy_conf_ip' => $proxy_conf_ip,
+                                        'proxy_conf_domain' => $proxy_conf_domain,
 				);
 				Database::pexecute($ins_stmt, $ins_data);
 
@@ -278,13 +292,6 @@ if ($page == 'ipsandports'
 			}
 
 		} else {
-                        $proxy_targets_stmt = Database::query("
-                               SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `proxyto`='0' ORDER BY `ip`, `port` ASC
-                        ");
-			$proxy_targets = makeoption($lng['admin']['ipsandports']['noproxy'] , "0");
-			while ($row_ip_port = $proxy_targets_stmt->fetch(PDO::FETCH_ASSOC)) {
-                        	$proxy_targets .= makeoption($row_ip_port['ip'] .':'. $row_ip_port['port'] , $row_ip_port['id']);
-                        }
 			$ipsandports_add_data = include_once dirname(__FILE__).'/lib/formfields/admin/ipsandports/formfield.ipsandports_add.php';
 			$ipsandports_add_form = htmlform::genHTMLForm($ipsandports_add_data);
 
@@ -318,11 +325,29 @@ if ($page == 'ipsandports'
 				$default_vhostconf_domain = validate(str_replace("\r\n", "\n", $_POST['default_vhostconf_domain']), 'default_vhostconf_domain', '/^[^\0]*$/');
 				$docroot =  validate($_POST['docroot'], 'docroot');
 
-				$result_checkfordouble_stmt = Database::prepare("
-					SELECT `id` FROM `" . TABLE_PANEL_IPSANDPORTS . "`
-					WHERE `ip` = :ip AND `port` = :port"
-				);
-				$result_checkfordouble = Database::pexecute_first($result_checkfordouble_stmt, array('ip' => $ip, 'port' => $port));
+                                if ((int)Settings::Get('system.apache_use_nrp') == 1 && trim($_POST['proxy_port']) != '') {
+                                        $proxy_port = validate($_POST['proxy_port'], 'proxy_port', '/^(([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9])|([1-5][0-9][0-9][0-9][0-9])|(6[0-4][0-9][0-9][0-9])|(65[0-4][0-9][0-9])|(655[0-2][0-9])|(6553[0-5]))$/Di', array('stringisempty', 'proxy_port'));
+                                } else {
+                                        $proxy_port = '0';
+                                }
+
+                                if ($proxy_port != '0') {
+                                        $proxy_ip   = trim($_POST['proxy_ip']) == '' ? $ip : validate_ip($_POST['proxy_ip']);
+                                        $proxy_conf_domain = validate(str_replace("\r\n", "\n", $_POST['proxy_conf_domain']), 'proxy_conf_domain', '/^[^\0]*$/');
+                                        $proxy_conf_ip = validate(str_replace("\r\n", "\n", $_POST['proxy_conf_ip']), 'proxy_conf_ip', '/^[^\0]*$/');
+					$result_checkforproxy_stmt = Database::prepare("SELECT `id` FROM `" . TABLE_PANEL_IPSANDPORTS . "` 
+                                        	WHERE `ip` = :ip AND `port` = :port");                         
+                                	$result_checkforproxy = Database::pexecute_first($result_checkforproxy_stmt, array('ip' => $proxy_ip, 'port' => $proxy_port));
+                                } else {
+                                        $proxy_ip = '';
+                                        $proxy_conf_domain = '';
+                                        $proxy_conf_ip = '';
+					$result_checkforproxy = array('id' => '');
+                                }
+
+                                $result_checkfordouble_stmt = Database::prepare("SELECT `id` FROM `" . TABLE_PANEL_IPSANDPORTS . "` 
+                                        WHERE (`ip` = :ip AND `port` = :port) OR (proxy_ip = :ip AND proxy_port = :port)"); 
+                                $result_checkfordouble = Database::pexecute_first($result_checkfordouble_stmt, array('ip' => $ip, 'port' => $port));
 
 				$result_sameipotherport_stmt = Database::prepare("
 					SELECT `id` FROM `" . TABLE_PANEL_IPSANDPORTS . "`
@@ -346,12 +371,6 @@ if ($page == 'ipsandports'
 					$ssl_ca_file = '';
 					$ssl_cert_chainfile = '';
 				}
-
-                        	if ((int)Settings::Get('system.apache_use_nrp') == 1) {
-                                	$proxyto = intval_ressource($_POST['proxyto']);
-	                        } else {
-        	                        $proxyto = 0;
-                        	}
 
 				if ($listen_statement != '1') {
 					$listen_statement = '0';
@@ -405,7 +424,9 @@ if ($page == 'ipsandports'
 					&& $result_checkfordouble['id'] != $id
 				) {
 					standard_error('myipnotdouble');
-
+				} elseif($proxy_port != '0' && (($proxy_ip == $ip && $proxy_port == $port) || ($result_checkforproxy['id'] != '' && $result_checkfordouble['id'] != $id))
+				) {
+					standard_error('myipnotdouble');
 				} else {
 
 					$upd_stmt = Database::prepare("
@@ -417,7 +438,9 @@ if ($page == 'ipsandports'
 							`specialsettings` = :ss, `ssl` = :ssl,
 							`ssl_cert_file` = :ssl_cert, `ssl_key_file` = :ssl_key,
 							`ssl_ca_file` = :ssl_ca, `ssl_cert_chainfile` = :ssl_chain,
-							`default_vhostconf_domain` = :dvhd, `docroot` = :docroot, `proxyto` = :proxyto
+							`default_vhostconf_domain` = :dvhd, `docroot` = :docroot,
+	                                                `proxy_ip` = :proxy_ip, `proxy_port` = :proxy_port,
+	                                                `proxy_conf_ip` = :proxy_conf_ip, `proxy_conf_domain` = :proxy_conf_domain
 						WHERE `id` = :id;
 					");
 					$upd_data = array(
@@ -435,7 +458,10 @@ if ($page == 'ipsandports'
 						'ssl_chain' => $ssl_cert_chainfile,
 						'dvhd' => $default_vhostconf_domain,
 						'docroot' => $docroot,
-	                                        'proxyto' => $proxyto,
+	                                        'proxy_ip' => $proxy_ip,
+        	                                'proxy_port' => $proxy_port,
+                	                        'proxy_conf_ip' => $proxy_conf_ip,
+                        	                'proxy_conf_domain' => $proxy_conf_domain,
 						'id' => $id
 					);
 					Database::pexecute($upd_stmt, $upd_data);
@@ -451,14 +477,6 @@ if ($page == 'ipsandports'
 
 			} else {
 
-                        	$proxy_targets_stmt = Database::prepare("
-                               		SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `proxyto`='0' AND `id`<>:id  ORDER BY `ip`, `port` ASC
-                        	");
-				Database::pexecute($proxy_targets_stmt, array('id' => $id));
-                        	$proxy_targets = makeoption($lng['admin']['ipsandports']['noproxy'] , "0", $result['proxyto']);
-                        	while ($row_ip_port = $proxy_targets_stmt->fetch(PDO::FETCH_ASSOC)) {
-                                	$proxy_targets .= makeoption($row_ip_port['ip'] .':'. $row_ip_port['port'] , $row_ip_port['id'], $result['proxyto']);
-                        	}
 				$result = htmlentities_array($result);
 
 				$ipsandports_edit_data = include_once dirname(__FILE__).'/lib/formfields/admin/ipsandports/formfield.ipsandports_edit.php';

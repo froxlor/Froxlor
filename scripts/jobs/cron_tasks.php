@@ -28,7 +28,7 @@ require_once makeCorrectFile(dirname(__FILE__) . '/cron_tasks.inc.http.30.nginx.
 require_once makeCorrectFile(dirname(__FILE__) . '/cron_tasks.inc.http.35.nginx_phpfpm.php');
 
 
-## NRP
+## Reverse-Proxy
 require_once makeCorrectFile(dirname(__FILE__) . '/cron_tasks.inc.http.40.nginx_proxy.php');
 
 /**
@@ -93,7 +93,7 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$webserver->createOwnVhostStarter();
 			$webserver->reload();
 
-			if($run_nrp) {
+			if(1 && $run_nrp) {
 				$nrp = new nginx_proxy($cronlog, $idna_convert);
 
 				$nrp->createIpPort();

@@ -149,11 +149,35 @@ return array(
                                 'image' => 'icons/ipsports_edit.png',
                                 'visible' => (Settings::Get('system.apache_use_nrp') == 1 ? true : false) && $is_apache,
                                 'fields' => array(
-                                        'proxyto' => array(
-                                                'label' => $lng['admin']['ipsandports']['proxyto'],
-                                                'type' => 'select',
-                                                'select_var' => $proxy_targets,
-                                                'value' => $result['proxyto']
+                                        'proxy_port' => array(
+                                                'label' => $lng['admin']['ipsandports']['proxy_port']['title'],
+                                                'desc' => $lng['admin']['ipsandports']['proxy_port']['description'],
+                                                'type' => 'text',
+                                                'value'=> ((int)$result['proxy_port'] == 0) ? '' : $result['proxy_port']
+                                        ),
+                                        'proxy_ip' => array(
+                                                'label' => $lng['admin']['ipsandports']['proxy_ip']['title'],
+                                                'desc' => $lng['admin']['ipsandports']['proxy_ip']['description'],
+                                                'type' => 'text',
+                                                'value'=> ($result['proxy_ip'] == $result['ip']) ? '' : $result['proxy_ip']
+                                        ),
+                                        'proxy_conf_ip' => array(
+                                                'style' => 'align-top',
+                                                'label' => $lng['admin']['ipsandports']['proxy_conf_ip']['title'],
+                                                'desc' => $lng['admin']['ipsandports']['proxy_conf_ip']['description'],
+                                                'type' => 'textarea',
+                                                'cols' => 60,
+                                                'rows' => 12,
+                                                'value'=> $result['proxy_conf_ip']
+                                        ),
+                                        'proxy_conf_domain' => array(
+                                                'style' => 'align-top',
+                                                'label' => $lng['admin']['ipsandports']['proxy_conf_domain']['title'],
+                                                'desc' => $lng['admin']['ipsandports']['proxy_conf_domain']['description'],
+                                                'type' => 'textarea',
+                                                'cols' => 60,
+                                                'rows' => 12,
+						'value'=> $result['proxy_conf_domain']	
                                         ),
                                 )
                         ),

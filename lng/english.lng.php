@@ -299,7 +299,7 @@ $lng['admin']['phpenabled'] = 'PHP enabled';
 $lng['admin']['deactivated'] = 'Deactivated';
 $lng['admin']['deactivated_user'] = 'Deactivate user';
 $lng['admin']['sendpassword'] = 'Send password';
-$lng['admin']['ownvhostsettings'] = 'Own vHost-settings'
+$lng['admin']['ownvhostsettings'] = 'Own vHost-settings';
 $lng['admin']['configfiles']['serverconfiguration'] = 'Configuration';
 $lng['admin']['templates']['templates'] = 'Email-templates';
 $lng['admin']['templates']['template_add'] = 'Add template';
@@ -2128,16 +2128,23 @@ $lng['admin']['notryfiles']['description'] = 'Say yes here if you want to specif
 $lng['serversettings']['phpfpm_settings']['override_fpmconfig'] = 'Override FPM-daemon settings (pm, max_children, etc.)';
 $lng['serversettings']['phpfpm_settings']['override_fpmconfig_addinfo'] = '<br /><span class="red">Only used if "Override FPM-daemon settings" is set to "Yes"</span>';
 
+
+$lng['admin']['proxy_replacements'] = "You can use the following variables:<br/><code>{DOMAIN}</code>, <code>{DOCROOT}</code>, <code>{CUSTOMER}</code>, <code>{IP}</code>, <code>{PORT}</code>, <code>{SCHEME}</code>, <code>{PROXY_IP}</code>, <code>{PROXY_PORT}</code><br/>";
 $lng['serversettings']['apacheconf_use_nrp']['title'] = 'Use NGINX as Reverse-Proxy';
 $lng['serversettings']['apacheconf_use_nrp']['description'] = 'Enable this option if you want that NGINX is working as reverse proxy for Apache';
 $lng['serversettings']['proxyconf_vhost']['title'] = 'Proxy vHost configuration file/dirname';
 $lng['serversettings']['proxyconf_vhost']['description'] = 'Where should the vHost configuration be stored? You could either specify a file (all vHosts in one file) or directory (each vHost in his own file) here.';
 $lng['serversettings']['default_proxyconf']['title'] = 'Default Proxy-vHost-settings';
-$lng['serversettings']['default_proxyconf']['description'] = 'The content of this field will be included into this ip/port vHost container directly. '.$lng['admin']['specialsettings_replacements'].' Attention: The code won\'t be checked for any errors. If it contains errors, webserver might not start again!';
+$lng['serversettings']['default_proxyconf']['description'] = 'The content of this field will be included into this ip/port vHost container of the Reverse-Proxy (NGINX) directly. '.$lng['admin']['proxy_replacements'].' Attention: The code won\'t be checked for any errors. If it contains errors, webserver might not start again!';
 $lng['admin']['ipsandports']['nrpconfig'] = 'NGINX Reverse-Proxy';
-$lng['admin']['ipsandports']['proxyto'] = 'Target for which this IP and Port should work as a Reverse Proxy';
-$lng['admin']['ipsandports']['proxyconf'] = 'NGINX VHost Configutation';
-$lng['admin']['ipsandports']['noproxy'] = 'No Proxy';
-$lng['error']['ipstillhasproxy'] = 'The IP/Port combination you want to delete still has reverse proxy assigned to it, please unassign this before deleting this IP/Port combination.';
+$lng['admin']['ipsandports']['proxy_ip']['title'] = 'Reverse-Proxy IP';
+$lng['admin']['ipsandports']['proxy_ip']['description'] = 'Leave empty to listen on the same IP.';
+$lng['admin']['ipsandports']['proxy_port']['title'] = 'Reverse-Proxy Port';
+$lng['admin']['ipsandports']['proxy_port']['description'] = 'Leave empty to disable Reverse-Proxy for this IP and Port.';
+$lng['admin']['ipsandports']['proxy_conf_ip']['title'] = 'Reverse-Proxy VHost Configuration';
+$lng['admin']['ipsandports']['proxy_conf_ip']['description'] = 'The content of this field will be included into this ip/port vHost container of the Reverse-Proxy (NGINX) directly. '.$lng['admin']['proxy_replacements'].' Attention: The code won\'t be checked for any errors. If it contains errors, webserver might not start again!';
+$lng['admin']['ipsandports']['proxy_conf_domain']['title'] = 'Reverse-Proxy VHost Domain Configuration';
+$lng['admin']['ipsandports']['proxy_conf_domain']['description'] = 'The content of this field will be included into each domain vHost container of the Reverse-Proxy (NGINX) directly. '.$lng['admin']['proxy_replacements'].' Attention: The code won\'t be checked for any errors. If it contains errors, webserver might not start again!';
 
-
+$lng['error']['proxy_ipaddress'] = '\'Proxy-IP\'';
+$lng['error']['proxy_port'] = '\'Proxy-Port\'';

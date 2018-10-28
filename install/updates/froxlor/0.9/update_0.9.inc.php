@@ -4077,3 +4077,16 @@ if (isDatabaseVersion('201809280')) {
 
         updateToDbVersion('201810070');
 }
+
+if (isDatabaseVersion('201810070')) {
+
+        showUpdateStep("Adding new fields for NGINX-Reverse-Proxy");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_IPSANDPORTS . "` DROP `proxyto`;");
+        Database::query("ALTER TABLE `" . TABLE_PANEL_IPSANDPORTS . "` ADD `proxy_ip` varchar(39) NOT NULL DEFAULT '';");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_IPSANDPORTS . "` ADD `proxy_port` int(5) NOT NULL DEFAULT '0';");
+        Database::query("ALTER TABLE `" . TABLE_PANEL_IPSANDPORTS . "` ADD `proxy_conf_ip` text;");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_IPSANDPORTS . "` ADD `proxy_conf_domain` text;");
+        lastStepStatus(0);
+
+        updateToDbVersion('201810080');
+}

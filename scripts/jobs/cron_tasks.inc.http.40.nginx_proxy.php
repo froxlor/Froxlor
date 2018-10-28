@@ -106,6 +106,12 @@ class nginx_proxy extends HttpConfigBase
 
 	protected function processSpecialConfigTemplate($template, $domain, $ip, $port, $is_ssl_vhost, $extravars = array())
         {
+		if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+                                $ip = '[' . $ip . ']';
+		}
+                if (in_array('PROXY_IP', $extravars) && filter_var($extravars['PROXY_IP'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+                                $extravars['PROXY_IP'] = '[' . $extravars['PROXY_IP'] . ']';
+                }
                 $templateVars = array(
                         'DOMAIN' => $domain['domain'],
                         'CUSTOMER' => $domain['loginname'],
@@ -142,7 +148,7 @@ class nginx_proxy extends HttpConfigBase
 		$conf .= "\t\ttry_files \$uri \$uri/ @proxy;\n";
 		$conf .= "\t}\n\n";
         	$conf .= "\tlocation @proxy {\n";
-                $conf .= "\t\tproxy_pass {SCHEME}://\$server_addr:{PROXY_PORT}\$request_uri;\n";
+                $conf .= "\t\tproxy_pass {SCHEME}://{IP}:{PORT}\$request_uri;\n";
 	        $conf .= "\t\tproxy_set_header Host \$host;\n";
         	$conf .= "\t\tproxy_set_header X-Real-IP \$remote_addr;\n";
 	        $conf .= "\t\tproxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;\n";
@@ -174,28 +180,22 @@ class nginx_proxy extends HttpConfigBase
 	public function createIpPort()
 	{
 		$result_ipsandports_stmt = Database::query("
-			SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE proxyto != '0'  ORDER BY `ip` ASC, `port` ASC
+			SELECT *, CONCAT(proxy_ip, ':', proxy_port) AS ip_port FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE proxy_port != '0' GROUP BY ip_port  ORDER BY `ip` ASC, `port` ASC
 		");
 
 		while ($row_ipsandports = $result_ipsandports_stmt->fetch(PDO::FETCH_ASSOC)) {
-			$proxy_stmt = Database::prepare("
-                        	SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE id=:proxyto
-                	");
-			$proxy = Database::pexecute_first($proxy_stmt, array(
-                                'proxyto' => $row_ipsandports['proxyto']
-                        ));
-			if($proxy['id']=='') continue;
-                        $proxy_ip = $proxy['ip'];
-                        $proxy_port = $proxy['port'];
-			if (filter_var($row_ipsandports['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-				$ip = '[' . $row_ipsandports['ip'] . ']';
-			} else {
-				$ip = $row_ipsandports['ip'];
-			}
+			$ip = $row_ipsandports['ip'];
 			$port = $row_ipsandports['port'];
+                        $proxy_ip = $row_ipsandports['proxy_ip'] == '' ? $ip : $row_ipsandports['proxy_ip'];
+                        $proxy_port = $row_ipsandports['proxy_port'];
+			if (filter_var($proxy_ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+				$ipport = '[' . $proxy_ip . ']:'.$proxy_port;
+			} else {
+				$ipport = $proxy_ip .':'. $proxy_port;
+			}
 
-			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'nginx::createIpPort: creating ip/port settings for  ' . $ip . ":" . $port);
-			$vhost_filename = makeCorrectFile(Settings::Get('system.proxyconf_vhost') . '/10_froxlor_ipandport_' . trim(str_replace(':', '.', $row_ipsandports['ip']), '.') . '.' . $row_ipsandports['port'] . '.conf');
+			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'nginx::createIpPort: creating ip/port settings for  ' . $proxy_ip . ":" . $proxy_port);
+			$vhost_filename = makeCorrectFile(Settings::Get('system.proxyconf_vhost') . '/10_froxlor_ipandport_' . trim(str_replace(':', '.', $proxy_ip), '.') . '.' . $proxy_port . '.conf');
 
 			if (! isset($this->nginx_data[$vhost_filename])) {
 				$this->nginx_data[$vhost_filename] = '';
@@ -208,8 +208,8 @@ class nginx_proxy extends HttpConfigBase
                         'loginname' => 'froxlor.panel',
                         'documentroot' => $this->getMyPath($row_ipsandports),
                         'parentdomainid' => 0,
-			'ip' => $row_ipsandports['ip'],
-			'port' => $row_ipsandports['port'],
+			'ip' => $ip,
+			'port' => $port,
                         'proxy_ip' => $proxy_ip,
                         'proxy_port' => $proxy_port,
                         );
@@ -260,10 +260,15 @@ class nginx_proxy extends HttpConfigBase
 
 				$http2 = $ssl_vhost == true && Settings::Get('system.http2_support') == '1';
 
+                        	if (filter_var($proxy_ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+                                	$ipport = '[' . $proxy_ip . ']:' . $proxy_port;
+                        	} else {
+                                	$ipport = $proxy_ip . ':' . $proxy_port;
+                        	}
 				/**
 				 * this HAS to be set for the default host in nginx or else no vhost will work
 				 */
-				$this->nginx_data[$vhost_filename] .= "\t" . 'listen    ' . $ip . ':' . $port . ' default_server' . ($ssl_vhost == true ? ' ssl' : '') . ($http2 == true ? ' http2' : '') . ';' . "\n";
+				$this->nginx_data[$vhost_filename] .= "\t" . 'listen    ' . $ipport . ' default_server' . ($ssl_vhost == true ? ' ssl' : '') . ($http2 == true ? ' http2' : '') . ';' . "\n";
 
 				$this->nginx_data[$vhost_filename] .= "\t" . '# Froxlor default vhost' . "\n";
 				$this->nginx_data[$vhost_filename] .= "\t" . 'server_name    ' . Settings::Get('system.hostname') . ';' . "\n";
@@ -302,17 +307,17 @@ class nginx_proxy extends HttpConfigBase
                                                         'PROXY_IP' => $domain['proxy_ip'],
                                                         'PROXY_PORT' => $domain['proxy_port'],
                                                 );
-				$config = $this->processSpecialConfigTemplate($this->proxyConf($domain, $domain['proxy_ip'],$domain['proxy_port']),
-						$domain, $domain['ip'], $domain['port'], $ssl_vhost, $config_vars) ."\n";
+				$config = $this->processSpecialConfigTemplate($this->proxyConf($domain, $proxy_ip, $proxy_port),
+						$domain, $ip, $port, $ssl_vhost, $config_vars) ."\n";
 
 				if (Settings::Get('system.default_proxyconf') != '') {
                                         $config = $this->mergeVhostCustom($config, $this->processSpecialConfigTemplate(Settings::Get('system.default_proxyconf'), 
-						$domain, $row_ipsandports['ip'], $row_ipsandports['port'], $row_ipsandports['ssl'] == '1', $config_vars) . "\n");
+						$domain,  $ip, $port, $row_ipsandports['ssl'] == '1', $config_vars) . "\n");
                                 }
 
-				if ($row_ipsandports['specialsettings'] != '') {
-					$config = $this->mergeVhostCustom($config, $this->processSpecialConfigTemplate($row_ipsandports['specialsettings'], 
-						$domain, $row_ipsandports['ip'], $row_ipsandports['port'], $row_ipsandports['ssl'] == '1', $config_vars) . "\n");
+				if ($row_ipsandports['proxy_conf_ip'] != '') {
+					$config = $this->mergeVhostCustom($config, $this->processSpecialConfigTemplate($row_ipsandports['proxy_conf_ip'], 
+						$domain, $ip, $port, $row_ipsandports['ssl'] == '1', $config_vars) . "\n") ."\n";
 				}
 				$this->nginx_data[$vhost_filename] .= $config;
 
@@ -325,7 +330,7 @@ class nginx_proxy extends HttpConfigBase
 					$this->nginx_data[$vhost_filename] .= $this->composeSslSettings($row_ipsandports);
 				}
 
-				$this->nginx_data[$vhost_filename] .= "}\n\n";
+				$this->nginx_data[$vhost_filename] .= "\n}\n\n";
 				// End of Froxlor server{}-part
 			}
 		}
@@ -355,10 +360,8 @@ class nginx_proxy extends HttpConfigBase
 			if (! isset($this->nginx_data[$vhost_filename])) {
 				$this->nginx_data[$vhost_filename] = '';
 			}
-
 			if ((empty($this->nginx_data[$vhost_filename]) && ! is_dir(Settings::Get('system.proxyconf_vhost'))) || is_dir(Settings::Get('system.proxyconf_vhost'))) {
 				$domain['nonexistinguri'] = '/' . md5(uniqid(microtime(), 1)) . '.htm';
-
 				// Create non-ssl host
 				$this->nginx_data[$vhost_filename] .= $this->getVhostContent($domain, false);
 				if ($domain['ssl'] == '1' || $domain['ssl_redirect'] == '1') {
@@ -409,7 +412,7 @@ class nginx_proxy extends HttpConfigBase
 		$_vhost_content = '';
 
 		$query = "SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` `i`, `" . TABLE_DOMAINTOIP . "` `dip`
-			WHERE dip.id_domain = :domainid AND i.id = dip.id_ipandports AND proxyto != '0' ";
+			WHERE dip.id_domain = :domainid AND i.id = dip.id_ipandports AND proxy_port != '0' ";
 
 		if ($ssl_vhost === true && ($domain['ssl'] == '1' || $domain['ssl_redirect'] == '1')) {
 			// by ordering by cert-file the row with filled out SSL-Fields will be shown last,
@@ -418,7 +421,6 @@ class nginx_proxy extends HttpConfigBase
 		} else {
 			$query .= "AND i.ssl = '0';";
 		}
-
 		$result_stmt = Database::prepare($query);
 		Database::pexecute($result_stmt, array(
 			'domainid' => $domain['id']
@@ -427,17 +429,10 @@ class nginx_proxy extends HttpConfigBase
 		$_vhost_default = '';
 		$listen = '';
 		while ($ipandport = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-			$proxy_stmt = Database::prepare("
-                                SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE id=:proxyto
-                        ");
-                        $proxy = Database::pexecute_first($proxy_stmt, array(
-                                'proxyto' => $ipandport['proxyto']
-                        ));
-                        if($proxy['id']=='') continue;
                         $domain['ip'] = $ipandport['ip'];
                         $domain['port'] = $ipandport['port'];
-			$domain['proxy_ip'] = $proxy['ip'];
-			$domain['proxy_port'] = $proxy['port'];
+			$domain['proxy_ip'] = $ipandport['proxy_ip'];
+			$domain['proxy_port'] = $ipandport['proxy_port'];
 			if ($domain['ssl'] == '1') {
 				$domain['ssl_cert_file'] = $ipandport['ssl_cert_file'];
 				$domain['ssl_key_file'] = $ipandport['ssl_key_file'];
@@ -451,14 +446,16 @@ class nginx_proxy extends HttpConfigBase
 				$dssl->setDomainSSLFilesArray($domain,false);
 			}
 
-			if (filter_var($domain['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-				$ipport = '[' . $domain['ip'] . ']:' . $domain['port'];
+			if (filter_var($domain['proxy_ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+				$ipport = '[' . $domain['proxy_ip'] . ']:' . $domain['proxy_port'];
 			} else {
-				$ipport = $domain['ip'] . ':' . $domain['port'];
+				$ipport = $domain['proxy_ip'] . ':' . $domain['proxy_port'];
 			}
 
-			if ($ipandport['default_vhostconf_domain'] != '') {
-				$_vhost_content .= $this->processSpecialConfigTemplate($ipandport['default_vhostconf_domain'], $domain, $domain['ip'], $domain['port'], $ssl_vhost, array(
+
+
+			if ($ipandport['proxy_conf_domain'] != '') {
+				$_vhost_content .= $this->processSpecialConfigTemplate($ipandport['proxy_conf_domain'], $domain, $domain['ip'], $domain['port'], $ssl_vhost, array(
                                                 'PROXY_IP' => $domain['proxy_ip'],
                                                 'PROXY_PORT' => $domain['proxy_port'],
                                         )) . "\n";
@@ -480,14 +477,14 @@ class nginx_proxy extends HttpConfigBase
                         $ssldestport_stmt = Database::prepare("SELECT `ip`.`port` FROM " . TABLE_PANEL_IPSANDPORTS . " `ip`
                                 LEFT JOIN `" . TABLE_DOMAINTOIP . "` `dip` ON (`ip`.`id` = `dip`.`id_ipandports`)
                                 WHERE `dip`.`id_domain` = :domainid
-                                AND `ip`.`ssl` = '1'  AND `ip`.`port` != 443
-                                ORDER BY `ip`.`ssl_cert_file` DESC, `ip`.`port` LIMIT 1;");
+                                AND `ip`.`ssl` = '1'  AND `ip`.`proxy_port` != 443
+                                ORDER BY `ip`.`ssl_cert_file` DESC, `ip`.`proxy_port` LIMIT 1;");
                         $ssldestport = Database::pexecute_first($ssldestport_stmt, array(
                                 'domainid' => $domain['id']
                         ));
 
-                        if ($ssldestport['port'] != '') {
-                                $_sslport = ":" . $ssldestport['port'];
+                        if ($ssldestport['proxy_port'] != '') {
+                                $_sslport = ":" . $ssldestport['proxy_port'];
                         }
 
                         $domain['documentroot'] = 'https://$host' . $_sslport . '/';
@@ -544,7 +541,7 @@ class nginx_proxy extends HttpConfigBase
 				//	$vhost_content = $this->mergeVhostCustom($vhost_content, $this->processSpecialConfigTemplate($domain['specialsettings'], $domain, $domain['ip'], $domain['port'], $ssl_vhost));
 				//}
 				$vhost_content = $this->mergeVhostCustom($vhost_content, 
-					$this->processSpecialConfigTemplate($this->proxyConf($domain, $domain['proxy_ip'],$domain['proxy_port']), $domain, $domain['ip'], $domain['port'],  $ssl_vhost, array(
+					$this->processSpecialConfigTemplate($this->proxyConf($domain, $domain['ip'],$domain['port']), $domain, $domain['ip'], $domain['port'],  $ssl_vhost, array(
 					        'PROXY_IP' => $domain['proxy_ip'],
                                                 'PROXY_PORT' => $domain['proxy_port']
 					)) ."\n");

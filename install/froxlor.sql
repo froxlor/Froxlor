@@ -287,7 +287,10 @@ CREATE TABLE `panel_ipsandports` (
   `default_vhostconf_domain` text,
   `ssl_cert_chainfile` varchar(255) NOT NULL default '',
   `docroot` varchar(255) NOT NULL default '',
-  `proxyto` int(11) unsigned NOT NULL default '0',
+  `proxy_ip` varchar(39) NOT NULL default '',
+  `proxy_port` int(5) NOT NULL default '0',
+  `proxy_conf_ip` text,
+  `proxy_conf_domain` text,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `ip_port` (`ip`,`port`)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
