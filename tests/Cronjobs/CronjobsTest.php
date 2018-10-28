@@ -17,7 +17,20 @@ class CronjobsTest extends TestCase
 		$this->assertTrue(isset($result['list'][0]['module']));
 		$this->assertTrue(isset($result['list'][0]['cronfile']));
 	}
-
+	
+	public function testCustomerCronjobsListNotAllowed()
+	{
+		global $admin_userdata;
+		// get customer
+		$json_result = Customers::getLocal($admin_userdata, array(
+			'loginname' => 'test1'
+		))->get();
+		$customer_userdata = json_decode($json_result, true)['data'];
+		$this->expectExceptionCode(403);
+		$this->expectExceptionMessage("Not allowed to execute given command.");
+		Cronjobs::getLocal($customer_userdata)->listing();
+	}
+	
 	public function testAdminCronjobsAdd()
 	{
 		global $admin_userdata;
