@@ -77,31 +77,21 @@ if ($page == 'cronjobs' || $page == 'overview') {
 		 * @TODO later
 		 */
 	} elseif ($action == 'edit' && $id != 0) {
-		$result_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_CRONRUNS . "` WHERE `id`= :id");
-		Database::pexecute($result_stmt, array('id' => $id));
-		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+		try {
+			$json_result = Cronjobs::getLocal($userinfo, array(
+				'id' => $id
+			))->get();
+		} catch (Exception $e) {
+			dynamic_error($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
 		if ($result['cronfile'] != '') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
-				$isactive = isset($_POST['isactive']) ? 1 : 0;
-				$interval_value = validate($_POST['interval_value'], 'interval_value', '/^([0-9]+)$/Di', 'stringisempty');
-				$interval_interval = validate($_POST['interval_interval'], 'interval_interval');
-
-				if ($isactive != 1) {
-					$isactive = 0;
+				try {
+					Cronjobs::getLocal($userinfo, $_POST)->update();
+				} catch (Exception $e) {
+					dynamic_error($e->getMessage());
 				}
-
-				$interval = $interval_value . ' ' . strtoupper($interval_interval);
-
-				$upd = Database::prepare("
-					UPDATE `" . TABLE_PANEL_CRONRUNS . "`
-					SET `isactive` = :isactive, `interval` = :int
-					WHERE `id` = :id"
-				);
-				Database::pexecute($upd, array('isactive' => $isactive, 'int' => $interval, 'id' => $id));
-
-				// insert task to re-generate the cron.d-file
-				inserttask('99');
-
 				redirectTo($filename, array('page' => $page, 's' => $s));
 			} else {
 
