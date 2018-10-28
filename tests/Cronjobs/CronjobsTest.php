@@ -4,7 +4,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * @covers ApiCommand
  * @covers ApiParameter
- * @covers IpsAndPorts
+ * @covers Cronjobs
  */
 class CronjobsTest extends TestCase
 {
