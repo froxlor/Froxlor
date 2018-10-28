@@ -13,6 +13,7 @@
 			<directory>tests/Customers</directory>
 			<directory>tests/IpsAndPorts</directory>
 			<directory>tests/Domains</directory>
+			<directory>tests/Cronjobs</directory>
 			<directory>tests/SubDomains</directory>
 			<directory>tests/Certificates</directory>
 			<directory>tests/Ftps</directory>
