@@ -17,20 +17,38 @@
  */
 class Traffic extends ApiCommand implements ResourceEntity
 {
+
+	/**
+	 * You cannot add traffic data
+	 */
 	public function add()
-	{}
+	{
+		throw new Exception('You cannot add traffic data', 303);
+	}
 
 	public function get()
-	{}
+	{
+		
+	}
 
+	/**
+	 * You cannot update traffic data
+	 */
 	public function update()
-	{}
+	{
+		throw new Exception('You cannot update traffic data', 303);
+	}
 
 	public function listing()
-	{}
+	{
+		
+	}
 
+	/**
+	 * You cannot delete traffic data
+	 */
 	public function delete()
-	{}
-
-
+	{
+		throw new Exception('You cannot delete traffic data', 303);
+	}
 }
