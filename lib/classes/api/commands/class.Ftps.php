@@ -289,6 +289,30 @@ class Ftps extends ApiCommand implements ResourceEntity
 		throw new Exception("FTP user with " . $key . " could not be found", 404);
 	}
 
+	/**
+	 * update a given ftp-user by id or username
+	 *
+	 * @param int $id
+	 *        	optional, the customer-id
+	 * @param string $username
+	 *        	optional, the username
+	 * @param string $ftp_password
+	 *        	password for the created database and database-user
+	 * @param string $path
+	 *        	destination path relative to the customers-homedir
+	 * @param string $ftp_description
+	 *        	optional, description for ftp-user
+	 * @param bool $sendinfomail
+	 *        	optional, send created resource-information to customer, default: false
+	 * @param string $shell
+	 *        	optional, default /bin/false (not changeable when deactivated)
+	 * @param int $customerid
+	 *        	required when called as admin, not needed when called as customer
+	 *
+	 * @access admin, customer
+	 * @throws Exception
+	 * @return array
+	 */
 	public function update()
 	{
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'ftp')) {
@@ -405,7 +429,7 @@ class Ftps extends ApiCommand implements ResourceEntity
 	{
 		$customer_ids = $this->getAllowedCustomerIds('ftp');
 		$result = array();
-		$params['customerid'] = implode(", ", $customer_ids);
+		$params = array('customerid' => implode(", ", $customer_ids));
 		$result_stmt = Database::prepare("
 			SELECT * FROM `" . TABLE_FTP_USERS . "`
 			WHERE `customerid` IN (:customerid)
