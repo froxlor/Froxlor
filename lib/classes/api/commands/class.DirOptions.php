@@ -148,10 +148,9 @@ class DirOptions extends ApiCommand implements ResourceEntity
 				}
 				$result_stmt = Database::prepare("
 					SELECT * FROM `" . TABLE_PANEL_HTACCESS . "`
-					WHERE `customerid` IN (:customerid)
+					WHERE `customerid` IN (".implode(", ", $customer_ids).")
 					AND `id` = :id
 				");
-				$params['customerid'] = implode(", ", $customer_ids);
 			} else {
 				$result_stmt = Database::prepare("
 					SELECT * FROM `" . TABLE_PANEL_HTACCESS . "`
@@ -272,13 +271,12 @@ class DirOptions extends ApiCommand implements ResourceEntity
 		}
 		$customer_ids = $this->getAllowedCustomerIds('extras.pathoptions');
 		
+		$result = array();
 		$result_stmt = Database::prepare("
 			SELECT * FROM `" . TABLE_PANEL_HTACCESS . "`
-			WHERE `customerid` IN (:customerids)
+			WHERE `customerid` IN (".implode(', ', $customer_ids).")
 		");
-		Database::pexecute($result_stmt, array(
-			"customerids" => implode(', ', $customer_ids)
-		), true, true);
+		Database::pexecute($result_stmt, null, true, true);
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$result[] = $row;
 		}

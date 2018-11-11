@@ -82,7 +82,7 @@ class FtpsTest extends TestCase
 		
 		$json_result = Ftps::getLocal($admin_userdata)->listing();
 		$result = json_decode($json_result, true)['data'];
-		$this->assertEquals(1, $result['count']);
+		$this->assertEquals(2, $result['count']);
 	}
 
 	public function testAdminFtpsListSpecificCustomer()

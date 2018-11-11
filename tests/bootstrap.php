@@ -130,3 +130,4 @@ $admin_userdata = Database::pexecute_first($sel_stmt);
 $admin_userdata['adminsession'] = 1;
 
 Settings::Set('panel.standardlanguage', 'English', true);
+Settings::Set('system.lastguid', '10000', true);

@@ -23,6 +23,7 @@
 			<directory>tests/DomainZones</directory>
 			<directory>tests/Mysqls</directory>
 			<directory>tests/PhpAndFpm</directory>
+			<directory>tests/Traffic</directory>
 		</testsuite>
 	</testsuites>
 

@@ -159,13 +159,12 @@ class Emails extends ApiCommand implements ResourceEntity
 		
 		$params = array();
 		$customer_ids = $this->getAllowedCustomerIds('email');
-		$params['customerid'] = implode(", ", $customer_ids);
 		$params['idea'] = ($id <= 0 ? $emailaddr : $id);
 		
 		$result_stmt = Database::prepare("SELECT v.`id`, v.`email`, v.`email_full`, v.`iscatchall`, v.`destination`, v.`customerid`, v.`popaccountid`, v.`domainid`, u.`quota`
 			FROM `" . TABLE_MAIL_VIRTUAL . "` v
 			LEFT JOIN `" . TABLE_MAIL_USERS . "` u ON v.`popaccountid` = u.`id`
-			WHERE v.`customerid` IN (:customerid)
+			WHERE v.`customerid` IN (".implode(", ", $customer_ids).")
 			AND (v.`id`= :idea OR (v.`email` = :idea OR v.`email_full` = :idea))
 		");
 		$result = Database::pexecute_first($result_stmt, $params, true, true);
@@ -270,15 +269,14 @@ class Emails extends ApiCommand implements ResourceEntity
 	{
 		$customer_ids = $this->getAllowedCustomerIds('email');
 		$result = array();
-		$params['customerid'] = implode(", ", $customer_ids);
 		$result_stmt = Database::prepare("
 			SELECT m.`id`, m.`domainid`, m.`email`, m.`email_full`, m.`iscatchall`, u.`quota`, m.`destination`, m.`popaccountid`, d.`domain`, u.`mboxsize`
 			FROM `" . TABLE_MAIL_VIRTUAL . "` m
 			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` d ON (m.`domainid` = d.`id`)
 			LEFT JOIN `" . TABLE_MAIL_USERS . "` u ON (m.`popaccountid` = u.`id`)
-			WHERE m.`customerid` IN (:customerid)
+			WHERE m.`customerid` IN (".implode(", ", $customer_ids).")
 		");
-		Database::pexecute($result_stmt, $params, true, true);
+		Database::pexecute($result_stmt, null, true, true);
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$result[] = $row;
 		}

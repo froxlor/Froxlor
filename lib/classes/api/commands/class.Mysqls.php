@@ -203,11 +203,10 @@ class Mysqls extends ApiCommand implements ResourceEntity
 				if (count($customer_ids) > 0) {
 					$result_stmt = Database::prepare("
 						SELECT * FROM `" . TABLE_PANEL_DATABASES . "`
-						WHERE " . ($id > 0 ? "`id` = :iddn" : "`databasename` = :iddn") . ($dbserver >= 0 ? " AND `dbserver` = :dbserver" : "") . " AND `customerid` IN (:customerids)
+						WHERE " . ($id > 0 ? "`id` = :iddn" : "`databasename` = :iddn") . ($dbserver >= 0 ? " AND `dbserver` = :dbserver" : "") . " AND `customerid` IN (".implode(", ", $customer_ids).")
 					");
 					$params = array(
-						'iddn' => ($id <= 0 ? $dbname : $id),
-						'customerids' => implode(", ", $customer_ids)
+						'iddn' => ($id <= 0 ? $dbname : $id)
 					);
 					if ($dbserver >= 0) {
 						$params['dbserver'] = $dbserver;

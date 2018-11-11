@@ -349,12 +349,11 @@ class SubDomains extends ApiCommand implements ResourceEntity
 					$result_stmt = Database::prepare("
 						SELECT d.*, pd.`subcanemaildomain`, pd.`isbinddomain` as subisbinddomain
 						FROM `" . TABLE_PANEL_DOMAINS . "` d, `" . TABLE_PANEL_DOMAINS . "` pd
-						WHERE " . ($id > 0 ? "d.`id` = :iddn" : "d.`domain` = :iddn") . " AND d.`customerid` IN (:customerids)
+						WHERE " . ($id > 0 ? "d.`id` = :iddn" : "d.`domain` = :iddn") . " AND d.`customerid` IN (".implode(", ", $customer_ids).")
 						AND ((d.`parentdomainid`!='0'	AND pd.`id` = d.`parentdomainid`) OR (d.`parentdomainid`='0' AND pd.`id` = d.`id`))
 					");
 					$params = array(
-						'iddn' => ($id <= 0 ? $domainname : $id),
-						'customerids' => implode(", ", $customer_ids)
+						'iddn' => ($id <= 0 ? $domainname : $id)
 					);
 				} else {
 					throw new Exception("You do not have any customers yet", 406);

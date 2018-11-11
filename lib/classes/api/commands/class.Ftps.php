@@ -258,10 +258,9 @@ class Ftps extends ApiCommand implements ResourceEntity
 				}
 				$result_stmt = Database::prepare("
 					SELECT * FROM `" . TABLE_FTP_USERS . "`
-					WHERE `customerid` IN (:customerid)
+					WHERE `customerid` IN (".implode(", ", $customer_ids).")
 					AND (`id` = :idun OR `username` = :idun)
 				");
-				$params['customerid'] = implode(", ", $customer_ids);
 			} else {
 				$result_stmt = Database::prepare("
 					SELECT * FROM `" . TABLE_FTP_USERS . "`
@@ -429,12 +428,11 @@ class Ftps extends ApiCommand implements ResourceEntity
 	{
 		$customer_ids = $this->getAllowedCustomerIds('ftp');
 		$result = array();
-		$params = array('customerid' => implode(", ", $customer_ids));
 		$result_stmt = Database::prepare("
 			SELECT * FROM `" . TABLE_FTP_USERS . "`
-			WHERE `customerid` IN (:customerid)
+			WHERE `customerid` IN (".implode(", ", $customer_ids).")
 		");
-		Database::pexecute($result_stmt, $params, true, true);
+		Database::pexecute($result_stmt, null, true, true);
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$result[] = $row;
 		}
