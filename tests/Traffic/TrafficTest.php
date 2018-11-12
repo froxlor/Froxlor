@@ -35,8 +35,11 @@ class TrafficTest extends TestCase
 		$fdown = 2 * 1024 * 1024 * 1024; // 2 GB
 		$mail = 250 * 1024 * 1024; // 250 MB
 
-		foreach (array(1,2,3) as $cid)
-		{
+		foreach (array(
+			1,
+			2,
+			3
+		) as $cid) {
 			Database::pexecute($ins_stmt, array(
 				'cid' => $cid,
 				'y' => date('Y'),
@@ -74,6 +77,19 @@ class TrafficTest extends TestCase
 		$this->assertEquals($http, $result['list'][0]['http']);
 	}
 
+	public function testAdminTrafficListSpecificDate()
+	{
+		global $admin_userdata;
+
+		$json_result = Traffic::getLocal($admin_userdata, array(
+			'year' => date('Y') + 1,
+			'month' => date('m'),
+			'day' => date('d')
+		))->listing();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(0, $result['count']);
+	}
+
 	public function testAdminTrafficListCustomers()
 	{
 		global $admin_userdata;
@@ -100,5 +116,41 @@ class TrafficTest extends TestCase
 		$this->assertEquals(1, $result['count']);
 		$mail = 250 * 1024 * 1024; // 250 MB
 		$this->assertEquals($mail, $result['list'][0]['mail']);
+	}
+
+	public function testAdminTrafficAdd()
+	{
+		global $admin_userdata;
+
+		$this->expectExceptionCode(303);
+		$this->expectExceptionMessage("You cannot add traffic data");
+		Traffic::getLocal($admin_userdata)->add();
+	}
+
+	public function testAdminTrafficGet()
+	{
+		global $admin_userdata;
+
+		$this->expectExceptionCode(303);
+		$this->expectExceptionMessage("To get specific traffic details use year, month and/or day parameter for Traffic.listing()");
+		Traffic::getLocal($admin_userdata)->get();
+	}
+
+	public function testAdminTrafficUpdate()
+	{
+		global $admin_userdata;
+
+		$this->expectExceptionCode(303);
+		$this->expectExceptionMessage("You cannot update traffic data");
+		Traffic::getLocal($admin_userdata)->update();
+	}
+
+	public function testAdminTrafficDelete()
+	{
+		global $admin_userdata;
+
+		$this->expectExceptionCode(303);
+		$this->expectExceptionMessage("You cannot delete traffic data");
+		Traffic::getLocal($admin_userdata)->delete();
 	}
 }
