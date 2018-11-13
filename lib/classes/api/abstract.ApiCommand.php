@@ -23,7 +23,7 @@ abstract class ApiCommand extends ApiParameter
 	 *
 	 * @var boolean
 	 */
-	private $debug = true;
+	private $debug = false;
 
 	/**
 	 * is admin flag
@@ -95,13 +95,13 @@ abstract class ApiCommand extends ApiParameter
 	public function __construct($header = null, $params = null, $userinfo = null)
 	{
 		global $lng, $version, $dbversion, $branding;
-		
+
 		parent::__construct($params);
 
 		$this->version = $version;
 		$this->dbversion = $dbversion;
 		$this->branding = $branding;
-		
+
 		if (! empty($header)) {
 			$this->readUserData($header);
 		} elseif (! empty($userinfo)) {
@@ -111,16 +111,16 @@ abstract class ApiCommand extends ApiParameter
 			throw new Exception("Invalid user data", 500);
 		}
 		$this->logger = FroxlorLogger::getInstanceOf($this->user_data);
-		
+
 		// check whether the user is deactivated
 		if ($this->getUserDetail('deactivated') == 1) {
 			$this->logger()->logAction(LOG_ERROR, LOG_INFO, "[API] User '" . $this->getUserDetail('loginnname') . "' tried to use API but is deactivated");
 			throw new Exception("Account suspended", 406);
 		}
-		
+
 		$this->initLang();
 		$this->initMail();
-		
+
 		if ($this->debug) {
 			$this->logger()->logAction(LOG_ERROR, LOG_DEBUG, "[API] " . get_called_class() . ": " . json_encode($params, JSON_UNESCAPED_SLASHES));
 		}
@@ -136,33 +136,33 @@ abstract class ApiCommand extends ApiParameter
 
 		// query the whole table
 		$result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_LANGUAGE . "`");
-		
+
 		$langs = array();
 		// presort languages
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$langs[$row['language']][] = $row;
 		}
-		
+
 		// set default language before anything else to
 		// ensure that we can display messages
 		$language = Settings::Get('panel.standardlanguage');
-		
+
 		if (isset($this->user_data['language']) && isset($langs[$this->user_data['language']])) {
 			// default: use language from session, #277
 			$language = $this->user_data['language'];
 		} elseif (isset($this->user_data['def_language'])) {
 			$language = $this->user_data['def_language'];
 		}
-		
+
 		// include every english language file we can get
-		foreach ($langs['English'] as $key => $value) {
+		foreach ($langs['English'] as $value) {
 			include_once makeSecurePath(FROXLOR_INSTALL_DIR . '/' . $value['file']);
 		}
-		
+
 		// now include the selected language if its not english
 		if ($language != 'English') {
 			if (isset($langs[$language])) {
-				foreach ($langs[$language] as $key => $value) {
+				foreach ($langs[$language] as $value) {
 					include_once makeSecurePath(FROXLOR_INSTALL_DIR . '/' . $value['file']);
 				}
 			} else {
@@ -171,7 +171,7 @@ abstract class ApiCommand extends ApiParameter
 				}
 			}
 		}
-		
+
 		// last but not least include language references file
 		include_once makeSecurePath(FROXLOR_INSTALL_DIR . '/lng/lng_references.php');
 
@@ -189,7 +189,7 @@ abstract class ApiCommand extends ApiParameter
 		 */
 		$this->mail = new PHPMailer(true);
 		$this->mail->CharSet = "UTF-8";
-		
+
 		if (Settings::Get('system.mail_use_smtp')) {
 			$this->mail->isSMTP();
 			$this->mail->Host = Settings::Get('system.mail_smtp_host');
@@ -203,7 +203,7 @@ abstract class ApiCommand extends ApiParameter
 			}
 			$this->mail->Port = Settings::Get('system.mail_smtp_port');
 		}
-		
+
 		if (PHPMailer::ValidateAddress(Settings::Get('panel.adminmail')) !== false) {
 			// set return-to address and custom sender-name, see #76
 			$this->mail->SetFrom(Settings::Get('panel.adminmail'), Settings::Get('panel.adminmail_defname'));
@@ -318,11 +318,12 @@ abstract class ApiCommand extends ApiParameter
 			}
 			header($resheader);
 		}
-		
+
+		$response = array();
 		$response['status'] = $status;
 		$response['status_message'] = $status_message;
 		$response['data'] = $data;
-		
+
 		$json_response = json_encode($response, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
 		return $json_response;
 	}
@@ -344,7 +345,7 @@ abstract class ApiCommand extends ApiParameter
 			// or optionally for one specific customer identified by id or loginname
 			$customerid = $this->getParam('customerid', true, 0);
 			$loginname = $this->getParam('loginname', true, '');
-			
+
 			if (! empty($customerid) || ! empty($loginname)) {
 				$_result = $this->apiCall('Customers.get', array(
 					'id' => $customerid,
@@ -383,7 +384,7 @@ abstract class ApiCommand extends ApiParameter
 	 *        	optional, required of customerid is empty
 	 * @param string $customer_resource_check
 	 *        	optional, when called as admin, check the resources of the target customer
-	 *
+	 *        	
 	 * @throws Exception
 	 * @return array
 	 */

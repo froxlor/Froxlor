@@ -65,7 +65,7 @@ if ($action == 'delete') {
 		INSERT INTO `" . TABLE_API_KEYS . "` SET
 		`apikey` = :key, `secret` = :secret, `adminid` = :aid, `customerid` = :cid, `valid_until` = '-1', `allowed_from` = ''
 	");
-	// customer generates for himself, admins will see a customer-select-box
+	// customer generates for himself, admins will see a customer-select-box later
 	if (AREA == 'admin') {
 		$cid = 0;
 	}
@@ -183,7 +183,7 @@ if (count($all_keys) == 0) {
 
 			// my own key
 			$isMyKey = false;
-			if ($key['adminid'] == $userinfo['adminid'] && (AREA == 'admin' || (AREA == 'customer' && $key['customerid'] == $userinfo['customerid']))) {
+			if ($key['adminid'] == $userinfo['adminid'] && ((AREA == 'admin' && $key['customerid'] == 0) || (AREA == 'customer' && $key['customerid'] == $userinfo['customerid']))) {
 				// this is mine
 				$isMyKey = true;
 			}
@@ -193,12 +193,12 @@ if (count($all_keys) == 0) {
 				if ($isMyKey) {
 					$adminCustomerLink = $key['adminname'];
 				} else {
-					$adminCustomerLink = '&nbsp;(<a href="' . $linker->getLink(array(
+					$adminCustomerLink = '<a href="' . $linker->getLink(array(
 						'section' => (empty($key['customerid']) ? 'admins' : 'customers'),
 						'page' => (empty($key['customerid']) ? 'admins' : 'customers'),
 						'action' => 'su',
 						'id' => (empty($key['customerid']) ? $key['adminid'] : $key['customerid'])
-					)) . '" rel="external">' . (empty($key['customerid']) ? $key['adminname'] : $key['loginname']) . '</a>)';
+					)) . '" rel="external">' . (empty($key['customerid']) ? $key['adminname'] : $key['loginname']) . '</a>';
 				}
 			} else {
 				// customer do not need links
