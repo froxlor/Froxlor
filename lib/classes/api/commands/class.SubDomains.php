@@ -788,6 +788,8 @@ class SubDomains extends ApiCommand implements ResourceEntity
 		inserttask('1');
 		// Using nameserver, insert a task which rebuilds the server config
 		inserttask('4');
+		// remove domains DNS from powerDNS if used, #581
+		inserttask('11', $result['domain']);
 		
 		// reduce subdomain-usage-counter
 		Customers::decreaseUsage($customer['customerid'], 'subdomains_used');
