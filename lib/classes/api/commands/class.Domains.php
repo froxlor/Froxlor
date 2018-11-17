@@ -1038,8 +1038,12 @@ class Domains extends ApiCommand implements ResourceEntity
 				$speciallogfile = $result['speciallogfile'];
 			}
 			
-			if ($isbinddomain != $result['isbinddomain'] || $zonefile != $result['zonefile'] || $dkim != $result['dkim']) {
+			if ($isbinddomain != $result['isbinddomain'] || $zonefile != $result['zonefile'] || $dkim != $result['dkim'] || $isemaildomain != $result['isemaildomain']) {
 				inserttask('4');
+			}
+			// check whether nameserver has been disabled, #581
+			if ($isbinddomain != $result['isbinddomain'] && $isbinddomain == 0) {
+				inserttask('11', $result['domain']);
 			}
 			
 			if ($isemaildomain == '0' && $result['isemaildomain'] == '1') {
@@ -1499,6 +1503,9 @@ class Domains extends ApiCommand implements ResourceEntity
 			
 			triggerLetsEncryptCSRForAliasDestinationDomain($result['aliasdomain'], $this->logger());
 			
+			// remove domains DNS from powerDNS if used, #581
+			inserttask('11', $result['domain']);
+
 			$this->logger()->logAction(ADM_ACTION, LOG_INFO, "[API] deleted domain/subdomains (#" . $result['id'] . ")");
 			updateCounters();
 			inserttask('1');

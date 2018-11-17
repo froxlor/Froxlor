@@ -61,7 +61,7 @@ function json_response($status, $status_message = '', $data = null)
 		}
 		header($resheader);
 	}
-	
+	$response = array();
 	$response['status'] = $status;
 	$response['status_message'] = $status_message;
 	$response['data'] = $data;
