@@ -243,6 +243,14 @@ class lighttpd extends HttpConfigBase
 					} else {
 						$this->lighttpd_data[$vhost_filename] .= 'ssl.engine = "enable"' . "\n";
 						$this->lighttpd_data[$vhost_filename] .= 'ssl.use-compression = "disable"' . "\n";
+						if (!empty(Settings::Get('system.dhparams_file'))) {
+							$dhparams = makeCorrectFile(Settings::Get('system.dhparams_file'));
+							if (!file_exists($dhparams)) {
+								safe_exec('openssl dhparam -out '.escapeshellarg($dhparams).' 4096');
+							}
+							$this->lighttpd_data[$vhost_filename] .= 'ssl.dh-file = "' . $dhparams . '"' . "\n";
+							$this->lighttpd_data[$vhost_filename] .= 'ssl.ec-curve = "secp384r1"' . "\n";
+						}
 						$this->lighttpd_data[$vhost_filename] .= 'ssl.use-sslv2 = "disable"' . "\n";
 						$this->lighttpd_data[$vhost_filename] .= 'ssl.use-sslv3 = "disable"' . "\n";
 						$this->lighttpd_data[$vhost_filename] .= 'ssl.cipher-list = "' . Settings::Get('system.ssl_cipher_list') . '"' . "\n";
@@ -552,6 +560,14 @@ class lighttpd extends HttpConfigBase
 				// ssl.engine only necessary once in the ip/port vhost (SERVER['socket'] condition)
 				//$ssl_settings .= 'ssl.engine = "enable"' . "\n";
 				$ssl_settings .= 'ssl.use-compression = "disable"' . "\n";
+				if (!empty(Settings::Get('system.dhparams_file'))) {
+					$dhparams = makeCorrectFile(Settings::Get('system.dhparams_file'));
+					if (!file_exists($dhparams)) {
+						safe_exec('openssl dhparam -out '.escapeshellarg($dhparams).' 4096');
+					}
+					$ssl_settings .= 'ssl.dh-file = "' . $dhparams . '"' . "\n";
+					$ssl_settings .= 'ssl.ec-curve = "secp384r1"' . "\n";
+				}
 				$ssl_settings .= 'ssl.use-sslv2 = "disable"' . "\n";
 				$ssl_settings .= 'ssl.use-sslv3 = "disable"' . "\n";
 				$ssl_settings .= 'ssl.cipher-list = "' . Settings::Get('system.ssl_cipher_list') . '"' . "\n";

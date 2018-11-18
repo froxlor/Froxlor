@@ -73,6 +73,17 @@ return array(
 					),
 					'visible' => Settings::Get('system.use_ssl')
 				),
+				'system_dhparams_file' => array(
+					'label' => $lng['serversettings']['dhparams_file'],
+					'settinggroup' => 'system',
+					'varname' => 'dhparams_file',
+					'type' => 'string',
+					'string_type' => 'file',
+					'string_emptyallowed' => true,
+					'default' => '',
+					'save_method' => 'storeSettingField',
+					'visible' => Settings::Get('system.use_ssl')
+				),
 				'system_httpuser' => array(
 					'label' => $lng['admin']['webserver_user'],
 					'settinggroup' => 'system',

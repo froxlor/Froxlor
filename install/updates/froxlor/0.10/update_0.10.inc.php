@@ -21,8 +21,8 @@ if (! defined('_CRON_UPDATE')) {
 	}
 }
 
-if (isFroxlorVersion('0.9.39.5')) {
-	showUpdateStep("Updating from 0.9.39.5 to 0.10.0", false);
+if (isFroxlorVersion('0.9.40')) {
+	showUpdateStep("Updating from 0.9.40 to 0.10.0", false);
 	
 	showUpdateStep("Adding new api keys table");
 	Database::query("DROP TABLE IF EXISTS `api_keys`;");
@@ -67,4 +67,13 @@ if (isFroxlorVersion('0.9.39.5')) {
 	lastStepStatus(0);
 	
 	updateToVersion('0.10.0');
+}
+
+if (isDatabaseVersion('201809280')) {
+
+	showUpdateStep("Adding dhparams-file setting");
+	Settings::AddNew("system.dhparams_file",  '');
+	lastStepStatus(0);
+
+	updateToDbVersion('201811180');
 }

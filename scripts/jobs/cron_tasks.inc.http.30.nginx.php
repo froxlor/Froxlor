@@ -625,6 +625,13 @@ class nginx extends HttpConfigBase
 				// $sslsettings .= "\t" . 'ssl on;' . "\n";
 				$sslsettings .= "\t" . 'ssl_protocols ' . str_replace(",", " ", Settings::Get('system.ssl_protocols')) . ';' . "\n";
 				$sslsettings .= "\t" . 'ssl_ciphers ' . Settings::Get('system.ssl_cipher_list') . ';' . "\n";
+				if (!empty(Settings::Get('system.dhparams_file'))) {
+					$dhparams = makeCorrectFile(Settings::Get('system.dhparams_file'));
+					if (!file_exists($dhparams)) {
+						safe_exec('openssl dhparam -out '.escapeshellarg($dhparams).' 4096');
+					}
+					$sslsettings .= 'ssl_dhparam ' . $dhparams . ';' . "\n";
+				}
 				$sslsettings .= "\t" . 'ssl_ecdh_curve secp384r1;' . "\n";
 				$sslsettings .= "\t" . 'ssl_prefer_server_ciphers on;' . "\n";
 				$sslsettings .= "\t" . 'ssl_certificate ' . makeCorrectFile($domain_or_ip['ssl_cert_file']) . ';' . "\n";

@@ -474,6 +474,13 @@ class apache extends HttpConfigBase
 								if (Settings::Get('system.http2_support') == '1') {
 									$this->virtualhosts_data[$vhosts_filename] .= ' Protocols h2 http/1.1' . "\n";
 								}
+								if (!empty(Settings::Get('system.dhparams_file'))) {
+									$dhparams = makeCorrectFile(Settings::Get('system.dhparams_file'));
+									if (!file_exists($dhparams)) {
+										safe_exec('openssl dhparam -out '.escapeshellarg($dhparams).' 4096');
+									}
+									$this->virtualhosts_data[$vhosts_filename] .= ' SSLOpenSSLConfCmd DHParameters "' . $dhparams . '"' . "\n";
+								}
 								$this->virtualhosts_data[$vhosts_filename] .= ' SSLCompression Off' . "\n";
 							}
 							// this makes it more secure, thx to Marcel (08/2013)
@@ -936,6 +943,13 @@ class apache extends HttpConfigBase
 				if (Settings::Get('system.apache24') == '1') {
 					if (isset($domain['http2']) && $domain['http2'] == '1' && Settings::Get('system.http2_support') == '1') {
 						$vhost_content .= ' Protocols h2 http/1.1' . "\n";
+					}
+					if (!empty(Settings::Get('system.dhparams_file'))) {
+						$dhparams = makeCorrectFile(Settings::Get('system.dhparams_file'));
+						if (!file_exists($dhparams)) {
+							safe_exec('openssl dhparam -out '.escapeshellarg($dhparams).' 4096');
+						}
+						$vhost_content .= '  SSLOpenSSLConfCmd DHParameters "' . $dhparams . '"' . "\n";
 					}
 					$vhost_content .= '  SSLCompression Off' . "\n";
 				}
