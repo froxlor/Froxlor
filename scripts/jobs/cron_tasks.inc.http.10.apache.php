@@ -564,20 +564,20 @@ class apache extends HttpConfigBase
 					*:* - customerroot
 				***/
 				if ($this->_domain['openbasedir_path'] == '2'
-					&& strstr($this->_domain['documentroot'], ":") === false
+					&& strstr($domain['documentroot'], ":") === false
 				) {
 					// if calculated openbasedir (parent of documentroot) is outside customerroot, fallback to customerroot
-					if (strstr($this->_domain['customerroot'], dirname($this->_domain['documentroot'])) === false) {
-						$openbasedir = appendOpenBasedirPath($this->_domain['customerroot'], true);
+					if (strstr($domain['customerroot'], dirname($domain['documentroot'])) === false) {
+						$openbasedir = appendOpenBasedirPath($domain['customerroot'], true);
 					} else {
-						$openbasedir = appendOpenBasedirPath(dirname($this->_domain['documentroot']), true);
+						$openbasedir = appendOpenBasedirPath(dirname($domain['documentroot']), true);
 					}
-				} elseif ($this->_domain['openbasedir_path'] == '0'
-					&& strstr($this->_domain['documentroot'], ":") === false
+				} elseif ($domain['openbasedir_path'] == '0'
+					&& strstr($domain['documentroot'], ":") === false
 				) {
-					$openbasedir = appendOpenBasedirPath($this->_domain['documentroot'], true);
+					$openbasedir = appendOpenBasedirPath($domain['documentroot'], true);
 				} else {
-					$openbasedir = appendOpenBasedirPath($this->_domain['customerroot'], true);
+					$openbasedir = appendOpenBasedirPath($domain['customerroot'], true);
 				}
 
 				$_custom_openbasedir = explode(':', Settings::Get('system.phpappendopenbasedir'));
