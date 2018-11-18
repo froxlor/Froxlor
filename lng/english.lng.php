@@ -2130,3 +2130,6 @@ $lng['serversettings']['phpfpm_settings']['override_fpmconfig'] = 'Override FPM-
 $lng['serversettings']['phpfpm_settings']['override_fpmconfig_addinfo'] = '<br /><span class="red">Only used if "Override FPM-daemon settings" is set to "Yes"</span>';
 $lng['panel']['backuppath']['title'] = 'Destination path for the backup';
 $lng['panel']['backuppath']['description'] = 'This is the path where the backups will be stored. If backup of web-data is selected, all files from the homedir are stored excluding the backup-folder specified here.';
+
+// added in froxlor 0.9.40.1
+$lng['domain']['docroot_parent'] = 'Parent of path from field above';

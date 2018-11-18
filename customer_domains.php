@@ -345,6 +345,9 @@ if ($page == 'overview') {
 				if (isset($_POST['openbasedir_path']) && $_POST['openbasedir_path'] == '1') {
 					$openbasedir_path = '1';
 				}
+				if (isset($_POST['openbasedir_path']) && $_POST['openbasedir_path'] == '2') {
+					$openbasedir_path = '2';
+				}
 
 				$ssl_redirect = '0';
 				if (isset($_POST['ssl_redirect']) && $_POST['ssl_redirect'] == '1') {
@@ -535,7 +538,7 @@ if ($page == 'overview') {
 					$ssl_ipsandports = 'notempty';
 				}
 
-				$openbasedir = makeoption($lng['domain']['docroot'], 0, NULL, true) . makeoption($lng['domain']['homedir'], 1, NULL, true);
+				$openbasedir = makeoption($lng['domain']['docroot'], 0, NULL, true) . makeoption($lng['domain']['homedir'], 1, NULL, true) . makeoption($lng['domain']['docroot_parent'], 2, NULL, true);
 				$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
 
 				$phpconfigs = '';
@@ -645,6 +648,8 @@ if ($page == 'overview') {
 
 				if (isset($_POST['openbasedir_path']) && $_POST['openbasedir_path'] == '1') {
 					$openbasedir_path = '1';
+				} elseif (isset($_POST['openbasedir_path']) && $_POST['openbasedir_path'] == '2') {
+					$openbasedir_path = '2';
 				} else {
 					$openbasedir_path = '0';
 				}
@@ -868,7 +873,7 @@ if ($page == 'overview') {
 				$result['temporary_ssl_redirect'] = $result['ssl_redirect'];
 				$result['ssl_redirect'] = ($result['ssl_redirect'] == 0 ? 0 : 1);
 
-				$openbasedir = makeoption($lng['domain']['docroot'], 0, $result['openbasedir_path'], true) . makeoption($lng['domain']['homedir'], 1, $result['openbasedir_path'], true);
+				$openbasedir = makeoption($lng['domain']['docroot'], 0, $result['openbasedir_path'], true) . makeoption($lng['domain']['homedir'], 1, $result['openbasedir_path'], true) . makeoption($lng['domain']['docroot_parent'], 2, $result['openbasedir_path'], true);
 
 				// create serveralias options
 				$serveraliasoptions = "";

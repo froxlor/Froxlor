@@ -557,18 +557,35 @@ class apache extends HttpConfigBase
 			$php_options_text .= '  php_admin_value sendmail_path "/usr/sbin/sendmail -t -f ' . $cmail . '"' . PHP_EOL;
 			
 			if ($domain['openbasedir'] == '1') {
-				if ($domain['openbasedir_path'] == '1' || strstr($domain['documentroot'], ":") !== false) {
-					$_phpappendopenbasedir = appendOpenBasedirPath($domain['customerroot'], true);
+				/***
+					0   - documentroot
+					1   - customerroot
+					2   - parent of documentroot
+					*:* - customerroot
+				***/
+				if ($this->_domain['openbasedir_path'] == '2'
+					&& strstr($this->_domain['documentroot'], ":") === false
+				) {
+					// if calculated openbasedir (parent of documentroot) is outside customerroot, fallback to customerroot
+					if (strstr($this->_domain['customerroot'], dirname($this->_domain['documentroot'])) === false) {
+						$openbasedir = appendOpenBasedirPath($this->_domain['customerroot'], true);
+					} else {
+						$openbasedir = appendOpenBasedirPath(dirname($this->_domain['documentroot']), true);
+					}
+				} elseif ($this->_domain['openbasedir_path'] == '0'
+					&& strstr($this->_domain['documentroot'], ":") === false
+				) {
+					$openbasedir = appendOpenBasedirPath($this->_domain['documentroot'], true);
 				} else {
-					$_phpappendopenbasedir = appendOpenBasedirPath($domain['documentroot'], true);
+					$openbasedir = appendOpenBasedirPath($this->_domain['customerroot'], true);
 				}
-				
+
 				$_custom_openbasedir = explode(':', Settings::Get('system.phpappendopenbasedir'));
 				foreach ($_custom_openbasedir as $cobd) {
-					$_phpappendopenbasedir .= appendOpenBasedirPath($cobd);
+					$openbasedir .= appendOpenBasedirPath($cobd);
 				}
 				
-				$php_options_text .= '  php_admin_value open_basedir "' . $_phpappendopenbasedir . '"' . "\n";
+				$php_options_text .= '  php_admin_value open_basedir "' . $openbasedir . '"' . "\n";
 			}
 		} else {
 			$php_options_text .= '  # PHP is disabled for this vHost' . "\n";

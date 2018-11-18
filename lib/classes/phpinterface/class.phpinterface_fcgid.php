@@ -124,8 +124,23 @@ class phpinterface_fcgid {
 				$_phpappendopenbasedir .= appendOpenBasedirPath($cobd);
 			}
 
-			if ($this->_domain['openbasedir_path'] == '0'
-					&& strstr($this->_domain['documentroot'], ":") === false
+			/***
+				0   - documentroot
+				1   - customerroot
+				2   - parent of documentroot
+				*:* - customerroot
+			***/
+			if ($this->_domain['openbasedir_path'] == '2'
+				&& strstr($this->_domain['documentroot'], ":") === false
+			) {
+				// if calculated openbasedir (parent of documentroot) is outside customerroot, fallback to customerroot
+				if (strstr($this->_domain['customerroot'], dirname($this->_domain['documentroot'])) === false) {
+					$openbasedir = appendOpenBasedirPath($this->_domain['customerroot'], true);
+				} else {
+					$openbasedir = appendOpenBasedirPath(dirname($this->_domain['documentroot']), true);
+				}
+			} elseif ($this->_domain['openbasedir_path'] == '0'
+				&& strstr($this->_domain['documentroot'], ":") === false
 			) {
 				$openbasedir = appendOpenBasedirPath($this->_domain['documentroot'], true);
 			} else {
