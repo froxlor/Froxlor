@@ -337,7 +337,7 @@ class DirOptions extends ApiCommand implements ResourceEntity
 	 * delete a directory-options by id
 	 *
 	 * @param int $id
-	 *        	optional, the directory-option-id
+	 *        	id of dir-protection entry
 	 *        	
 	 * @access admin, customer
 	 * @throws Exception

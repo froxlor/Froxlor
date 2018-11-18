@@ -120,7 +120,7 @@ class DirProtections extends ApiCommand implements ResourceEntity
 	 * return a directory-protection entry by either id or username
 	 *
 	 * @param int $id
-	 *        	optional, the entry-id
+	 *        	optional, the directory-protection-id
 	 * @param string $username
 	 *        	optional, the username
 	 *        	
@@ -185,7 +185,7 @@ class DirProtections extends ApiCommand implements ResourceEntity
 	 * update htaccess protection of a given directory
 	 *
 	 * @param int $id
-	 *        	optional, the entry-id
+	 *        	optional the directory-protection-id
 	 * @param string $username
 	 *        	optional, the username
 	 * @param int $customerid
