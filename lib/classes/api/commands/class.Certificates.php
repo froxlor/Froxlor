@@ -41,23 +41,23 @@ class Certificates extends ApiCommand implements ResourceEntity
 		$domainid = $this->getParam('domainid', true, 0);
 		$dn_optional = ($domainid <= 0 ? false : true);
 		$domainname = $this->getParam('domainname', $dn_optional, '');
-		
+
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'domains')) {
 			throw new Exception("You cannot access this resource", 405);
 		}
-		
+
 		$domain = $this->apiCall('SubDomains.get', array(
 			'id' => $domainid,
 			'domainname' => $domainname
 		));
 		$domainid = $domain['id'];
-		
+
 		// parameters
 		$ssl_cert_file = $this->getParam('ssl_cert_file');
 		$ssl_key_file = $this->getParam('ssl_key_file');
 		$ssl_ca_file = $this->getParam('ssl_ca_file', true, '');
 		$ssl_cert_chainfile = $this->getParam('ssl_cert_chainfile', true, '');
-		
+
 		// validate whether the domain does not already have an entry
 		$result = $this->apiCall('Certificates.get', array(
 			'id' => $domainid
@@ -90,17 +90,17 @@ class Certificates extends ApiCommand implements ResourceEntity
 		$id = $this->getParam('id', true, 0);
 		$dn_optional = ($id <= 0 ? false : true);
 		$domainname = $this->getParam('domainname', $dn_optional, '');
-		
+
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'domains')) {
 			throw new Exception("You cannot access this resource", 405);
 		}
-		
+
 		$domain = $this->apiCall('SubDomains.get', array(
 			'id' => $id,
 			'domainname' => $domainname
 		));
 		$domainid = $domain['id'];
-		
+
 		$stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` WHERE `domainid`= :domainid");
 		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] get ssl-certificate for '" . $domain['domain'] . "'");
 		$result = Database::pexecute_first($stmt, array(
@@ -116,6 +116,12 @@ class Certificates extends ApiCommand implements ResourceEntity
 	 *        	optional, the domain-id
 	 * @param string $domainname
 	 *        	optional, the domainname
+	 * @param string $ssl_cert_file
+	 * @param string $ssl_key_file
+	 * @param string $ssl_ca_file
+	 *        	optional
+	 * @param string $ssl_cert_chainfile
+	 *        	optional
 	 *        	
 	 * @access admin, customer
 	 * @throws Exception
@@ -126,16 +132,16 @@ class Certificates extends ApiCommand implements ResourceEntity
 		$id = $this->getParam('id', true, 0);
 		$dn_optional = ($id <= 0 ? false : true);
 		$domainname = $this->getParam('domainname', $dn_optional, '');
-		
+
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'domains')) {
 			throw new Exception("You cannot access this resource", 405);
 		}
-		
+
 		$domain = $this->apiCall('SubDomains.get', array(
 			'id' => $id,
 			'domainname' => $domainname
 		));
-		
+
 		// parameters
 		$ssl_cert_file = $this->getParam('ssl_cert_file');
 		$ssl_key_file = $this->getParam('ssl_key_file');
@@ -164,9 +170,9 @@ class Certificates extends ApiCommand implements ResourceEntity
 			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` d ON `d`.`id` = `s`.`domainid`
 			LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` c ON `c`.`customerid` = `d`.`customerid`
 			WHERE ";
-		
+
 		$qry_params = array();
-		
+
 		if ($this->isAdmin() && $this->getUserDetail('customers_see_all') == '0') {
 			// admin with only customer-specific permissions
 			$certs_stmt_query .= "d.adminid = :adminid ";
@@ -206,7 +212,7 @@ class Certificates extends ApiCommand implements ResourceEntity
 	public function delete()
 	{
 		$id = $this->getParam('id');
-		
+
 		$chk = ($this->isAdmin() && $this->getUserDetail('customers_see_all') == '1') ? true : false;
 		if ($this->isAdmin() == false) {
 			$chk_stmt = Database::prepare("
@@ -261,7 +267,7 @@ class Certificates extends ApiCommand implements ResourceEntity
 		if ($ssl_cert_file != '' && $ssl_key_file == '') {
 			standard_error('sslcertificateismissingprivatekey', '', true);
 		}
-		
+
 		$do_verify = true;
 		// no cert-file given -> forget everything
 		if ($ssl_cert_file == '') {
@@ -270,21 +276,21 @@ class Certificates extends ApiCommand implements ResourceEntity
 			$ssl_cert_chainfile = '';
 			$do_verify = false;
 		}
-		
+
 		// verify certificate content
 		if ($do_verify) {
 			// array openssl_x509_parse ( mixed $x509cert [, bool $shortnames = true ] )
 			// openssl_x509_parse() returns information about the supplied x509cert, including fields such as
 			// subject name, issuer name, purposes, valid from and valid to dates etc.
 			$cert_content = openssl_x509_parse($ssl_cert_file);
-			
+
 			if (is_array($cert_content) && isset($cert_content['subject']) && isset($cert_content['subject']['CN'])) {
 				// bool openssl_x509_check_private_key ( mixed $cert , mixed $key )
 				// Checks whether the given key is the private key that corresponds to cert.
 				if (openssl_x509_check_private_key($ssl_cert_file, $ssl_key_file) === false) {
 					standard_error('sslcertificateinvalidcertkeypair', '', true);
 				}
-				
+
 				// check optional stuff
 				if ($ssl_ca_file != '') {
 					$ca_content = openssl_x509_parse($ssl_ca_file);
@@ -304,7 +310,7 @@ class Certificates extends ApiCommand implements ResourceEntity
 				standard_error('sslcertificateinvalidcert', '', true);
 			}
 		}
-		
+
 		// Add/Update database entry
 		$qrystart = "UPDATE ";
 		$qrywhere = "WHERE ";
