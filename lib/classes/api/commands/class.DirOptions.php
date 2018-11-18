@@ -18,6 +18,30 @@
 class DirOptions extends ApiCommand implements ResourceEntity
 {
 
+	/**
+	 * add options for a given directory
+	 *
+	 * @param int $customerid
+	 *        	optional, admin-only, the customer-id
+	 * @param string $loginname
+	 *        	optional, admin-only, the loginname
+	 * @param string $path
+	 *        	path relative to the customer's home-Directory
+	 * @param bool $options_indexes
+	 *        	optional, activate directory-listing for this path, default 0 (false)
+	 * @param bool $options_cgi
+	 *        	optional, allow Perl/CGI execution, default 0 (false)
+	 * @param string $error404path
+	 *        	optional, custom 404 error string/file
+	 * @param string $error403path
+	 *        	optional, custom 403 error string/file
+	 * @param string $error500path
+	 *        	optional, custom 500 error string/file
+	 *        	
+	 * @access admin, customer
+	 * @throws Exception
+	 * @return array
+	 */
 	public function add()
 	{
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'extras')) {
@@ -26,49 +50,49 @@ class DirOptions extends ApiCommand implements ResourceEntity
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'extras.pathoptions')) {
 			throw new Exception("You cannot access this resource", 405);
 		}
-		
+
 		// get needed customer info to reduce the email-address-counter by one
 		$customer = $this->getCustomerData();
-		
+
 		// required parameters
 		$path = $this->getParam('path');
-		
+
 		// parameters
 		$options_indexes = $this->getParam('options_indexes', true, 0);
 		$options_cgi = $this->getParam('options_cgi', true, 0);
 		$error404path = $this->getParam('error404path', true, '');
 		$error403path = $this->getParam('error403path', true, '');
 		$error500path = $this->getParam('error500path', true, '');
-		
+
 		// validation
 		$path = makeCorrectDir(validate($path, 'path', '', '', array(), true));
 		$userpath = $path;
 		$path = makeCorrectDir($customer['documentroot'] . '/' . $path);
-		
+
 		if ($options_indexes != 0) {
 			$options_indexes = '1';
 		} else {
 			$options_indexes = '0';
 		}
-		
+
 		if ($options_cgi != 0) {
 			$options_cgi = '1';
 		} else {
 			$options_cgi = '0';
 		}
-		
+
 		if (! empty($error404path)) {
 			$error404path = correctErrorDocument($error404path, true);
 		}
-		
+
 		if (! empty($error403path)) {
 			$error403path = correctErrorDocument($error403path, true);
 		}
-		
+
 		if (! empty($error500path)) {
 			$error500path = correctErrorDocument($error500path, true);
 		}
-		
+
 		// check for duplicate path
 		$path_dupe_check_stmt = Database::prepare("
 			SELECT `id`, `path` FROM `" . TABLE_PANEL_HTACCESS . "`
@@ -78,12 +102,12 @@ class DirOptions extends ApiCommand implements ResourceEntity
 			"path" => $path,
 			"customerid" => $customer['customerid']
 		), true, true);
-		
+
 		// duplicate check
 		if ($path_dupe_check['path'] == $path) {
 			standard_error('errordocpathdupe', $userpath, true);
 		}
-		
+
 		// insert the entry
 		$stmt = Database::prepare('
 			INSERT INTO `' . TABLE_PANEL_HTACCESS . '` SET
@@ -108,7 +132,7 @@ class DirOptions extends ApiCommand implements ResourceEntity
 		$id = Database::lastInsertId();
 		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] added directory-option for '" . $userpath . "'");
 		inserttask('1');
-		
+
 		$result = $this->apiCall('DirOptions.get', array(
 			'id' => $id
 		));
@@ -116,12 +140,10 @@ class DirOptions extends ApiCommand implements ResourceEntity
 	}
 
 	/**
-	 * return a directory-protection entry by either id or username
+	 * return a directory-protection entry by id
 	 *
 	 * @param int $id
-	 *        	optional, the customer-id
-	 * @param string $username
-	 *        	optional, the username
+	 *        	id of dir-protection entry
 	 *        	
 	 * @access admin, customer
 	 * @throws Exception
@@ -132,9 +154,9 @@ class DirOptions extends ApiCommand implements ResourceEntity
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'extras')) {
 			throw new Exception("You cannot access this resource", 405);
 		}
-		
+
 		$id = $this->getParam('id', true, 0);
-		
+
 		$params = array();
 		if ($this->isAdmin()) {
 			if ($this->getUserDetail('customers_see_all') == false) {
@@ -148,7 +170,7 @@ class DirOptions extends ApiCommand implements ResourceEntity
 				}
 				$result_stmt = Database::prepare("
 					SELECT * FROM `" . TABLE_PANEL_HTACCESS . "`
-					WHERE `customerid` IN (".implode(", ", $customer_ids).")
+					WHERE `customerid` IN (" . implode(", ", $customer_ids) . ")
 					AND `id` = :id
 				");
 			} else {
@@ -178,49 +200,73 @@ class DirOptions extends ApiCommand implements ResourceEntity
 		throw new Exception("Directory option with " . $key . " could not be found", 404);
 	}
 
+	/**
+	 * update options for a given directory by id
+	 *
+	 * @param int $id
+	 *        	id of dir-protection entry
+	 * @param int $customerid
+	 *        	optional, admin-only, the customer-id
+	 * @param string $loginname
+	 *        	optional, admin-only, the loginname
+	 * @param bool $options_indexes
+	 *        	optional, activate directory-listing for this path, default 0 (false)
+	 * @param bool $options_cgi
+	 *        	optional, allow Perl/CGI execution, default 0 (false)
+	 * @param string $error404path
+	 *        	optional, custom 404 error string/file
+	 * @param string $error403path
+	 *        	optional, custom 403 error string/file
+	 * @param string $error500path
+	 *        	optional, custom 500 error string/file
+	 *        	
+	 * @access admin, customer
+	 * @throws Exception
+	 * @return array
+	 */
 	public function update()
 	{
 		$id = $this->getParam('id', true, 0);
-		
+
 		// validation
 		$result = $this->apiCall('DirOptions.get', array(
 			'id' => $id
 		));
-		
+
 		// get needed customer info to reduce the email-address-counter by one
 		$customer = $this->getCustomerData();
-		
+
 		// parameters
 		$options_indexes = $this->getParam('options_indexes', true, $result['options_indexes']);
 		$options_cgi = $this->getParam('options_cgi', true, $result['options_cgi']);
 		$error404path = $this->getParam('error404path', true, $result['error404path']);
 		$error403path = $this->getParam('error403path', true, $result['error403path']);
 		$error500path = $this->getParam('error500path', true, $result['error500path']);
-		
+
 		if ($options_indexes != 0) {
 			$options_indexes = '1';
 		} else {
 			$options_indexes = '0';
 		}
-		
+
 		if ($options_cgi != 0) {
 			$options_cgi = '1';
 		} else {
 			$options_cgi = '0';
 		}
-		
+
 		if (! empty($error404path)) {
 			$error404path = correctErrorDocument($error404path, true);
 		}
-		
+
 		if (! empty($error403path)) {
 			$error403path = correctErrorDocument($error403path, true);
 		}
-		
+
 		if (! empty($error500path)) {
 			$error500path = correctErrorDocument($error500path, true);
 		}
-		
+
 		if (($options_indexes != $result['options_indexes']) || ($error404path != $result['error404path']) || ($error403path != $result['error403path']) || ($error500path != $result['error500path']) || ($options_cgi != $result['options_cgi'])) {
 			inserttask('1');
 			$stmt = Database::prepare("
@@ -245,7 +291,7 @@ class DirOptions extends ApiCommand implements ResourceEntity
 			Database::pexecute($stmt, $params, true, true);
 			$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] edited directory options for '" . str_replace($customer['documentroot'], '/', $result['path']) . "'");
 		}
-		
+
 		$result = $this->apiCall('DirOptions.get', array(
 			'id' => $id
 		));
@@ -270,11 +316,11 @@ class DirOptions extends ApiCommand implements ResourceEntity
 			throw new Exception("You cannot access this resource", 405);
 		}
 		$customer_ids = $this->getAllowedCustomerIds('extras.pathoptions');
-		
+
 		$result = array();
 		$result_stmt = Database::prepare("
 			SELECT * FROM `" . TABLE_PANEL_HTACCESS . "`
-			WHERE `customerid` IN (".implode(', ', $customer_ids).")
+			WHERE `customerid` IN (" . implode(', ', $customer_ids) . ")
 		");
 		Database::pexecute($result_stmt, null, true, true);
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -302,18 +348,18 @@ class DirOptions extends ApiCommand implements ResourceEntity
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'extras')) {
 			throw new Exception("You cannot access this resource", 405);
 		}
-		
+
 		$id = $this->getParam('id');
-		
+
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'extras.pathoptions')) {
 			throw new Exception("You cannot access this resource", 405);
 		}
-		
+
 		// get directory-option
 		$result = $this->apiCall('DirOptions.get', array(
 			'id' => $id
 		));
-		
+
 		if ($this->isAdmin()) {
 			// get customer-data
 			$customer_data = $this->apiCall('Customers.get', array(
@@ -322,7 +368,7 @@ class DirOptions extends ApiCommand implements ResourceEntity
 		} else {
 			$customer_data = $this->getUserData();
 		}
-		
+
 		// do we have to remove the symlink and folder in suexecpath?
 		if ((int) Settings::Get('perl.suexecworkaround') == 1) {
 			$loginname = $customer_data['loginname'];
