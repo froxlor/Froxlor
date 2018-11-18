@@ -2134,6 +2134,7 @@ $lng['panel']['backuppath']['title'] = 'Destination path for the backup';
 $lng['panel']['backuppath']['description'] = 'This is the path where the backups will be stored. If backup of web-data is selected, all files from the homedir are stored excluding the backup-folder specified here.';
 
 // added in froxlor 0.10.0
+$lng['domain']['docroot_parent'] = 'Parent of path from field above';
 $lng['panel']['none_value'] = 'None';
 $lng['menue']['main']['apihelp'] = 'API help';
 $lng['menue']['main']['apikeys'] = 'API keys';

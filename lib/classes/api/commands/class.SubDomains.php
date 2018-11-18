@@ -32,7 +32,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 	 * @param string $url
 	 *        	optional, overwrites path value with an URL to generate a redirect, alternatively use the path parameter also for URLs
 	 * @param int $openbasedir_path
-	 *        	optional, either 0 for customers-homedir or 1 for domains-docroot
+	 *        	optional, either 0 for customers-homedir, 1 for domains-docroot or 2 for parent of domains-docroot
 	 * @param int $phpsettingid
 	 *        	optional, php-settings-id, if empty the $domain value is used
 	 * @param int $redirectcode
@@ -151,8 +151,13 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			// validate / correct path/url of domain
 			$path = $this->validateDomainDocumentRoot($path, $url, $customer, $completedomain, $_doredirect);
 			
-			if ($openbasedir_path != 1) {
-				$openbasedir_path = 0;
+			switch ($openbasedir_path) {
+				case 1:		// docroot
+				case 2:		// parent of docroot
+					break;
+				default:
+					$openbasedir_path = 0;
+					break;
 			}
 
 			// get main domain for various checks

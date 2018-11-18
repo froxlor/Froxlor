@@ -1784,6 +1784,7 @@ $lng['panel']['backuppath']['title'] = 'Pfad zur Ablage der Backups';
 $lng['panel']['backuppath']['description'] = 'In diesem Ordner werden die Backups abgelegt. Wenn das Sichern von Web-Daten aktiviert ist, werden alle Dateien aus dem Heimatverzeichnis gesichert, exklusive des hier angegebenen Backup-Ordners.';
 
 // added in froxlor 0.10.0
+$lng['domain']['docroot_parent'] = 'Elternverzeichnis vom oben angegebenem Pfad';
 $lng['panel']['none_value'] = 'Keine';
 $lng['menue']['main']['apihelp'] = 'API Hilfe';
 $lng['menue']['main']['apikeys'] = 'API Keys';

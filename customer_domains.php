@@ -263,8 +263,8 @@ if ($page == 'overview') {
 				if (isset($resultX['countSSL']) && (int)$resultX['countSSL'] > 0) {
 					$ssl_ipsandports = 'notempty';
 				}
-				
-				$openbasedir = makeoption($lng['domain']['docroot'], 0, NULL, true) . makeoption($lng['domain']['homedir'], 1, NULL, true);
+
+				$openbasedir = makeoption($lng['domain']['docroot'], 0, NULL, true) . makeoption($lng['domain']['homedir'], 1, NULL, true) . makeoption($lng['domain']['docroot_parent'], 2, NULL, true);
 				$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
 				
 				$phpconfigs = '';
@@ -380,9 +380,9 @@ if ($page == 'overview') {
 				// Fudge the result for ssl_redirect to hide the Let's Encrypt steps
 				$result['temporary_ssl_redirect'] = $result['ssl_redirect'];
 				$result['ssl_redirect'] = ($result['ssl_redirect'] == 0 ? 0 : 1);
-				
-				$openbasedir = makeoption($lng['domain']['docroot'], 0, $result['openbasedir_path'], true) . makeoption($lng['domain']['homedir'], 1, $result['openbasedir_path'], true);
-				
+
+				$openbasedir = makeoption($lng['domain']['docroot'], 0, $result['openbasedir_path'], true) . makeoption($lng['domain']['homedir'], 1, $result['openbasedir_path'], true) . makeoption($lng['domain']['docroot_parent'], 2, $result['openbasedir_path'], true);
+
 				// create serveralias options
 				$serveraliasoptions = "";
 				$_value = '2';
