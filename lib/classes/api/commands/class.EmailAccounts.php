@@ -293,7 +293,7 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 	 * @param string $email_password
 	 *        	optional, update password
 	 *        	
-	 * @access admin,customer
+	 * @access admin, customer
 	 * @throws Exception
 	 * @return array
 	 */
@@ -405,7 +405,7 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 	 * @param bool $delete_userfiles
 	 *        	optional, default false
 	 *        	
-	 * @access admin,customer
+	 * @access admin, customer
 	 * @throws Exception
 	 * @return array
 	 */
