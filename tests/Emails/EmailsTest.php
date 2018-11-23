@@ -312,7 +312,7 @@ class MailsTest extends TestCase
 		];
 		$json_result = EmailForwarders::getLocal($customer_userdata, $data)->delete();
 		$result = json_decode($json_result, true)['data'];
-		$this->assertEquals('other@domain.tld', $result['destination']);
+		$this->assertEquals('other@domain.tld other3@domain.tld', $result['destination']);
 	}
 
 	/**
