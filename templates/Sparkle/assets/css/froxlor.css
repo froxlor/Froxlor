@@ -83,18 +83,14 @@ nav div:last-child {
 	-moz-border-radius-bottomleft:20px;
 	border-top-right-radius:20px;
 	border-bottom-left-radius:20px;
-	margin-top:4px;
-	margin-right:0;
-	margin-bottom:8px;
-	margin-left:12px;
+	margin: 4px 0 8px 12px;
 	padding:4px 0 0 8px;
 	border:1px solid #666;
 	background-color:#fff;
 }
 
 .menuelement ul li {
-	margin:0;
-	margin-left:20px;
+	margin: 0 0 0 20px;
 }
 
 .menuelement h4 {
@@ -198,10 +194,7 @@ select {
 }
 
 .dboarditem {
-	margin-top: 4px;
-	margin-right: 0;
-	margin-bottom: 18px;
-	margin-left: 12px;
+	margin: 4px 0 18px 12px;
 	border: 1px solid #666;
 	-webkit-border-top-right-radius:20px;
 	-webkit-border-bottom-left-radius:20px;
