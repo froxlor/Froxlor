@@ -121,6 +121,10 @@ p {
 	padding:0;
 }
 
+.installsec fieldset p, .installsec fieldset h3{
+	clear: both;
+}
+
 .installsec legend {
 	display:none;
 }
@@ -485,6 +489,7 @@ input[type="checkbox"] {
 }
 
 input[type="radio"] {
+	vertical-align: middle;
 	margin: 0 10px 0 10px;
 	height:22px;
 }
