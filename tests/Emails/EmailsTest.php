@@ -2,6 +2,7 @@
 use PHPUnit\Framework\TestCase;
 
 /**
+ *
  * @covers ApiCommand
  * @covers ApiParameter
  * @covers Emails
@@ -16,13 +17,13 @@ class MailsTest extends TestCase
 	public function testCustomerEmailsAdd()
 	{
 		global $admin_userdata;
-		
+
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
 		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
-		
+
 		$data = [
 			'email_part' => 'info',
 			'domain' => 'test2.local'
@@ -64,13 +65,13 @@ class MailsTest extends TestCase
 	public function testCustomerEmailsUpdate()
 	{
 		global $admin_userdata;
-		
+
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
 		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
-		
+
 		$data = [
 			'emailaddr' => 'catchall@test2.local',
 			'iscatchall' => 1
@@ -83,13 +84,13 @@ class MailsTest extends TestCase
 	public function testCustomerEmailForwardersAdd()
 	{
 		global $admin_userdata;
-		
+
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
 		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
-		
+
 		$data = [
 			'emailaddr' => 'info@test2.local',
 			'destination' => 'other@domain.tld'
@@ -98,14 +99,15 @@ class MailsTest extends TestCase
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals('other@domain.tld', $result['destination']);
 	}
-	
+
 	/**
+	 *
 	 * @depends testCustomerEmailForwardersAdd
 	 */
 	public function testCustomerEmailForwardersAddNoMoreResources()
 	{
 		global $admin_userdata;
-		
+
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
@@ -116,16 +118,17 @@ class MailsTest extends TestCase
 		$this->expectExceptionMessage("No more resources available");
 		EmailForwarders::getLocal($customer_userdata)->add();
 	}
-	
+
 	/**
+	 *
 	 * @depends testCustomerEmailForwardersAddNoMoreResources
 	 */
 	public function testCustomerEmailForwardersAddEmailHidden()
 	{
 		global $admin_userdata;
-		
+
 		Settings::Set('panel.customer_hide_options', 'email', true);
-		
+
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
@@ -137,14 +140,15 @@ class MailsTest extends TestCase
 	}
 
 	/**
+	 *
 	 * @depends testCustomerEmailForwardersAddEmailHidden
 	 */
 	public function testCustomerEmailForwardersDeleteEmailHidden()
 	{
 		global $admin_userdata;
-		
+
 		Settings::Set('panel.customer_hide_options', 'email', true);
-		
+
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
@@ -154,22 +158,23 @@ class MailsTest extends TestCase
 		$this->expectExceptionMessage("You cannot access this resource");
 		EmailForwarders::getLocal($customer_userdata)->delete();
 	}
-	
+
 	/**
+	 *
 	 * @depends testCustomerEmailForwardersDeleteEmailHidden
 	 */
 	public function testCustomerEmailForwardersAddAnother()
 	{
 		global $admin_userdata;
-		
+
 		Settings::Set('panel.customer_hide_options', '', true);
-		
+
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
 		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
-		
+
 		$data = [
 			'emailaddr' => 'info@test2.local',
 			'destination' => 'other2@domain.tld'
@@ -180,18 +185,44 @@ class MailsTest extends TestCase
 	}
 
 	/**
-	 * @depends testCustomerEmailForwardersAdd
+	 *
+	 * @depends testCustomerEmailForwardersDeleteEmailHidden
 	 */
-	public function testCustomerEmailForwardersAddExistingAsMail()
+	public function testCustomerEmailForwardersAddWithSpaces()
 	{
 		global $admin_userdata;
-		
+
+		Settings::Set('panel.customer_hide_options', '', true);
+
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
 		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
-		
+
+		$data = [
+			'emailaddr' => 'info@test2.local',
+			'destination' => 'other3@domain.tld  '
+		];
+		$json_result = EmailForwarders::getLocal($customer_userdata, $data)->add();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals('other@domain.tld other2@domain.tld other3@domain.tld', $result['destination']);
+	}
+
+	/**
+	 *
+	 * @depends testCustomerEmailForwardersAdd
+	 */
+	public function testCustomerEmailForwardersAddExistingAsMail()
+	{
+		global $admin_userdata;
+
+		// get customer
+		$json_result = Customers::getLocal($admin_userdata, array(
+			'loginname' => 'test1'
+		))->get();
+		$customer_userdata = json_decode($json_result, true)['data'];
+
 		$data = [
 			'emailaddr' => 'info@test2.local',
 			'destination' => 'info@test2.local'
@@ -201,18 +232,19 @@ class MailsTest extends TestCase
 	}
 
 	/**
+	 *
 	 * @depends testCustomerEmailForwardersAdd
 	 */
 	public function testCustomerEmailForwardersAddExistingAsDestination()
 	{
 		global $admin_userdata;
-		
+
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
 		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
-		
+
 		$data = [
 			'emailaddr' => 'info@test2.local',
 			'destination' => 'other@domain.tld'
@@ -224,13 +256,13 @@ class MailsTest extends TestCase
 	public function testCustomerEmailForwardersAddInvalid()
 	{
 		global $admin_userdata;
-		
+
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
 		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
-		
+
 		$data = [
 			'emailaddr' => 'info@test2.local',
 			'destination' => '@domain.com'
@@ -261,18 +293,19 @@ class MailsTest extends TestCase
 	}
 
 	/**
+	 *
 	 * @depends testCustomerEmailForwardersAddAnother
 	 */
 	public function testCustomerEmailForwardersDelete()
 	{
 		global $admin_userdata;
-		
+
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
 		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
-		
+
 		$data = [
 			'emailaddr' => 'info@test2.local',
 			'forwarderid' => 1
@@ -283,18 +316,19 @@ class MailsTest extends TestCase
 	}
 
 	/**
+	 *
 	 * @depends testCustomerEmailForwardersAddAnother
 	 */
 	public function testCustomerEmailForwardersDeleteUnknown()
 	{
 		global $admin_userdata;
-		
+
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
 		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
-		
+
 		$data = [
 			'emailaddr' => 'info@test2.local',
 			'forwarderid' => 1337
@@ -307,7 +341,7 @@ class MailsTest extends TestCase
 	public function testCustomerEmailsListing()
 	{
 		global $admin_userdata;
-		
+
 		Settings::Set('panel.customer_hide_options', '', true);
 
 		// get customer
@@ -326,14 +360,14 @@ class MailsTest extends TestCase
 	public function testCustomerEmailAccountsAdd()
 	{
 		global $admin_userdata;
-		
+
 		Settings::Set('panel.sendalternativemail', 1, true);
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
 		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
-		
+
 		$data = [
 			'emailaddr' => 'info@test2.local',
 			'email_password' => generatePassword(),
@@ -348,13 +382,13 @@ class MailsTest extends TestCase
 	public function testAdminEmailAccountsUpdate()
 	{
 		global $admin_userdata;
-		
+
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
 		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
-		
+
 		$data = [
 			'emailaddr' => 'info@test2.local',
 			'email_password' => generatePassword(),
@@ -384,13 +418,13 @@ class MailsTest extends TestCase
 	public function testCustomerEmailAccountsDelete()
 	{
 		global $admin_userdata;
-		
+
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
 		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
-		
+
 		$data = [
 			'emailaddr' => 'info@test2.local',
 			'delete_userfiles' => 1
@@ -403,17 +437,17 @@ class MailsTest extends TestCase
 	public function testCustomerEmailsDelete()
 	{
 		global $admin_userdata;
-		
+
 		// remove possible existing delete tasks
-		Database::query("TRUNCATE `".TABLE_PANEL_TASKS."`");
-		
+		Database::query("TRUNCATE `" . TABLE_PANEL_TASKS . "`");
+
 		Settings::Set('panel.sendalternativemail', 0, true);
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
 		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
-		
+
 		// add account
 		$data = [
 			'emailaddr' => 'info@test2.local',
@@ -423,7 +457,7 @@ class MailsTest extends TestCase
 		$json_result = EmailAccounts::getLocal($customer_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(2, $result['popaccountid']);
-		
+
 		// now delete the whole address
 		$data = [
 			'emailaddr' => 'info@test2.local',

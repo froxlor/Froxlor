@@ -63,6 +63,9 @@ class EmailForwarders extends ApiCommand implements ResourceEntity
 			// current destination array
 			$result['destination_array'] = explode(' ', $result['destination']);
 
+			// prepare destination
+			$destination = trim($destination);
+
 			if (! validateEmail($destination)) {
 				standard_error('destinationiswrong', $destination, true);
 			} elseif ($destination == $result['email']) {
