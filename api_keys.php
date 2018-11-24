@@ -87,7 +87,7 @@ if ($action == 'delete') {
 	$valid_until = isset($_POST['valid_until']) ? (int)$_POST['valid_until'] : -1;
 
 	// validate allowed_from
-	$ip_list = explode(",", $allowed_from);
+	$ip_list = array_map('trim', explode(",", $allowed_from));
 	$_check_list = $ip_list;
 	foreach ($_check_list as $idx => $ip) {
 		if (validate_ip2($ip, true, 'invalidip', true, true) == false) {
