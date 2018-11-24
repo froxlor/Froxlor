@@ -41,6 +41,12 @@ class SubDomains extends ApiCommand implements ResourceEntity
 	 *        	optional, whether to generate a https-redirect or not, default false; requires SSL to be enabled
 	 * @param bool $letsencrypt
 	 *        	optional, whether to generate a Let's Encrypt certificate for this domain, default false; requires SSL to be enabled
+	 * @param int $hsts_maxage
+	 *        	optional max-age value for HSTS header, default 0
+	 * @param bool $hsts_sub
+	 *        	optional whether or not to add subdomains to the HSTS header, default 0
+	 * @param bool $hsts_preload
+	 *        	optional whether or not to preload HSTS header value, default 0
 	 * @param int $customerid
 	 *        	required when called as admin, not needed when called as customer
 	 *        	
@@ -54,7 +60,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			// parameters
 			$subdomain = $this->getParam('subdomain');
 			$domain = $this->getParam('domain');
-			
+
 			// optional parameters
 			$aliasdomain = $this->getParam('alias', true, 0);
 			$path = $this->getParam('path', true, '');
@@ -76,24 +82,24 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				$hsts_sub = 0;
 				$hsts_preload = 0;
 			}
-			
+
 			// get needed customer info to reduce the subdomain-usage-counter by one
 			$customer = $this->getCustomerData('subdomains');
-			
+
 			// validation
 			if (substr($subdomain, 0, 4) == 'xn--') {
 				standard_error('domain_nopunycode', '', true);
 			}
-			
+
 			$idna_convert = new idna_convert_wrapper();
 			$subdomain = $idna_convert->encode(preg_replace(array(
 				'/\:(\d)+$/',
 				'/^https?\:\/\//'
 			), '', validate($subdomain, 'subdomain', '', 'subdomainiswrong', array(), true)));
-			
+
 			// merge the two parts together
 			$completedomain = $subdomain . '.' . $domain;
-			
+
 			if (Settings::Get('system.validate_domain') && ! validateDomain($completedomain)) {
 				standard_error(array(
 					'stringiswrong',
@@ -103,7 +109,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			if ($completedomain == Settings::Get('system.hostname')) {
 				standard_error('admin_domain_emailsystemhostname', '', true);
 			}
-			
+
 			// check whether the domain already exists
 			$completedomain_stmt = Database::prepare("
 				SELECT * FROM `" . TABLE_PANEL_DOMAINS . "`
@@ -116,12 +122,12 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				"domain" => $completedomain,
 				"customerid" => $customer['customerid']
 			), true, true);
-			
+
 			if ($completedomain_check) {
 				// no exception so far - domain exists
 				standard_error('domainexistalready', $completedomain, true);
 			}
-			
+
 			// alias domain checked?
 			if ($aliasdomain != 0) {
 				// also check ip/port combination to be the same, #176
@@ -147,10 +153,11 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				}
 				triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $this->logger());
 			}
-			
+
 			// validate / correct path/url of domain
+			$_doredirect = false;
 			$path = $this->validateDomainDocumentRoot($path, $url, $customer, $completedomain, $_doredirect);
-			
+
 			if ($openbasedir_path != 1) {
 				$openbasedir_path = 0;
 			}
@@ -168,7 +175,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				"domain" => $domain,
 				"customerid" => $customer['customerid']
 			), true, true);
-			
+
 			if (! $domain_check) {
 				// the given main-domain
 				standard_error('maindomainnonexist', $domain, true);
@@ -197,7 +204,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 					standard_error('sslredirectonlypossiblewithsslipport', '', true);
 				}
 			}
-			
+
 			if ($letsencrypt != 0) {
 				// let's encrypt only works if there actually is a
 				// ssl ip/port assigned to the domain
@@ -207,12 +214,12 @@ class SubDomains extends ApiCommand implements ResourceEntity
 					standard_error('letsencryptonlypossiblewithsslipport', '', true);
 				}
 			}
-			
+
 			// Temporarily deactivate ssl_redirect until Let's Encrypt certificate was generated
 			if ($ssl_redirect > 0 && $letsencrypt == 1) {
 				$ssl_redirect = 2;
 			}
-			
+
 			// get the phpsettingid from parentdomain, #107
 			$phpsid_stmt = Database::prepare("
 				SELECT `phpsettingid` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `id` = :id
@@ -220,7 +227,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			$phpsid_result = Database::pexecute_first($phpsid_stmt, array(
 				"id" => $domain_check['id']
 			), true, true);
-			
+
 			if (! isset($phpsid_result['phpsettingid']) || (int) $phpsid_result['phpsettingid'] <= 0) {
 				// assign default config
 				$phpsid_result['phpsettingid'] = 1;
@@ -229,7 +236,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			if ($phpsettingid > 0 && $phpsettingid != $phpsid_result['phpsettingid']) {
 				$phpsid_result['phpsettingid'] = intval($phpsettingid);
 			}
-			
+
 			// acutall insert domain
 			$stmt = Database::prepare("
 				INSERT INTO `" . TABLE_PANEL_DOMAINS . "` SET
@@ -278,7 +285,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			);
 			Database::pexecute($stmt, $params, true, true);
 			$subdomain_id = Database::lastInsertId();
-			
+
 			$stmt = Database::prepare("
 				INSERT INTO `" . TABLE_DOMAINTOIP . "`
 				(`id_domain`, `id_ipandports`)
@@ -289,20 +296,20 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			Database::pexecute($stmt, array(
 				"id_domain" => $domain_check['id']
 			));
-			
+
 			if ($_doredirect) {
 				addRedirectToDomain($subdomain_id, $redirectcode);
 			}
-			
+
 			inserttask('1');
 			// Using nameserver, insert a task which rebuilds the server config
 			inserttask('4');
-			
+
 			Customers::increaseUsage($customer['customerid'], 'subdomains_used');
 			Admins::increaseUsage(($this->isAdmin() ? $customer['adminid'] : $this->getUserDetail('adminid')), 'subdomains_used');
-			
+
 			$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] added subdomain '" . $completedomain . "'");
-			
+
 			$result = $this->apiCall('SubDomains.get', array(
 				'id' => $subdomain_id
 			));
@@ -328,13 +335,13 @@ class SubDomains extends ApiCommand implements ResourceEntity
 		$id = $this->getParam('id', true, 0);
 		$dn_optional = ($id <= 0 ? false : true);
 		$domainname = $this->getParam('domainname', $dn_optional, '');
-		
+
 		// convert possible idn domain to punycode
 		if (substr($domainname, 0, 4) != 'xn--') {
 			$idna_convert = new idna_convert_wrapper();
 			$domainname = $idna_convert->encode($domainname);
 		}
-		
+
 		if ($this->isAdmin()) {
 			if ($this->getUserDetail('customers_see_all') != 1) {
 				// if it's a reseller or an admin who cannot see all customers, we need to check
@@ -349,7 +356,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 					$result_stmt = Database::prepare("
 						SELECT d.*, pd.`subcanemaildomain`, pd.`isbinddomain` as subisbinddomain
 						FROM `" . TABLE_PANEL_DOMAINS . "` d, `" . TABLE_PANEL_DOMAINS . "` pd
-						WHERE " . ($id > 0 ? "d.`id` = :iddn" : "d.`domain` = :iddn") . " AND d.`customerid` IN (".implode(", ", $customer_ids).")
+						WHERE " . ($id > 0 ? "d.`id` = :iddn" : "d.`domain` = :iddn") . " AND d.`customerid` IN (" . implode(", ", $customer_ids) . ")
 						AND ((d.`parentdomainid`!='0'	AND pd.`id` = d.`parentdomainid`) OR (d.`parentdomainid`='0' AND pd.`id` = d.`id`))
 					");
 					$params = array(
@@ -400,7 +407,35 @@ class SubDomains extends ApiCommand implements ResourceEntity
 	 *        	optional, the domain-id
 	 * @param string $domainname
 	 *        	optional, the domainname
-	 *
+	 * @param int $alias
+	 *        	optional, domain-id of a domain that the new domain should be an alias of
+	 * @param string $path
+	 *        	optional, destination path relative to the customers-homedir, default is customers-homedir
+	 * @param string $url
+	 *        	optional, overwrites path value with an URL to generate a redirect, alternatively use the path parameter also for URLs
+	 * @param int $selectserveralias
+	 *        	optional, 0 = wildcard, 1 = www-alias, 2 = none
+	 * @param bool $isemaildomain
+	 *        	optional
+	 * @param int $openbasedir_path
+	 *        	optional, either 0 for customers-homedir or 1 for domains-docroot
+	 * @param int $phpsettingid
+	 *        	optional, php-settings-id, if empty the $domain value is used
+	 * @param int $redirectcode
+	 *        	optional, redirect-code-id from TABLE_PANEL_REDIRECTCODES
+	 * @param bool $ssl_redirect
+	 *        	optional, whether to generate a https-redirect or not, default false; requires SSL to be enabled
+	 * @param bool $letsencrypt
+	 *        	optional, whether to generate a Let's Encrypt certificate for this domain, default false; requires SSL to be enabled
+	 * @param int $hsts_maxage
+	 *        	optional max-age value for HSTS header
+	 * @param bool $hsts_sub
+	 *        	optional whether or not to add subdomains to the HSTS header
+	 * @param bool $hsts_preload
+	 *        	optional whether or not to preload HSTS header value
+	 * @param int $customerid
+	 *        	required when called as admin, not needed when called as customer
+	 *        	
 	 * @access admin, customer
 	 * @throws Exception
 	 * @return array
@@ -410,7 +445,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 		$id = $this->getParam('id', true, 0);
 		$dn_optional = ($id <= 0 ? false : true);
 		$domainname = $this->getParam('domainname', $dn_optional, '');
-		
+
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'domains')) {
 			throw new Exception("You cannot access this resource", 405);
 		}
@@ -420,7 +455,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			'domainname' => $domainname
 		));
 		$id = $result['id'];
-		
+
 		// parameters
 		$aliasdomain = $this->getParam('alias', true, 0);
 		$path = $this->getParam('path', true, $result['documentroot']);
@@ -445,16 +480,16 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			$hsts_sub = 0;
 			$hsts_preload = 0;
 		}
-		
+
 		// get needed customer info to reduce the subdomain-usage-counter by one
 		$customer = $this->getCustomerData();
-		
+
 		$alias_stmt = Database::prepare("SELECT COUNT(`id`) AS count FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `aliasdomain`= :aliasdomain");
 		$alias_check = Database::pexecute_first($alias_stmt, array(
 			"aliasdomain" => $result['id']
 		));
 		$alias_check = $alias_check['count'];
-		
+
 		// alias domain checked?
 		if ($aliasdomain != 0) {
 			$aliasdomain_stmt = Database::prepare("
@@ -474,26 +509,27 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			}
 			triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $this->logger());
 		}
-		
+
 		// validate / correct path/url of domain
+		$_doredirect = false;
 		$path = $this->validateDomainDocumentRoot($path, $url, $customer, $result['domain'], $_doredirect);
-		
+
 		// set alias-fields according to selected alias mode
 		$iswildcarddomain = ($selectserveralias == '0') ? '1' : '0';
 		$wwwserveralias = ($selectserveralias == '1') ? '1' : '0';
-		
+
 		// if allowed, check for 'is email domain'-flag
 		if ($result['parentdomainid'] != '0' && ($result['subcanemaildomain'] == '1' || $result['subcanemaildomain'] == '2') && $isemaildomain != $result['isemaildomain']) {
 			$isemaildomain = intval($isemaildomain);
 		} else {
 			$isemaildomain = $result['subcanemaildomain'] == '3' ? 1 : 0;
 		}
-		
+
 		// check changes of openbasedir-path variable
 		if ($openbasedir_path != 1) {
 			$openbasedir_path = 0;
 		}
-		
+
 		if ($ssl_redirect != 0) {
 			// a ssl-redirect only works if there actually is a
 			// ssl ip/port assigned to the domain
@@ -504,7 +540,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				standard_error('sslredirectonlypossiblewithsslipport', '', true);
 			}
 		}
-		
+
 		if ($letsencrypt != 0) {
 			// let's encrypt only works if there actually is a
 			// ssl ip/port assigned to the domain
@@ -514,7 +550,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				standard_error('letsencryptonlypossiblewithsslipport', '', true);
 			}
 		}
-		
+
 		// We can't enable let's encrypt for wildcard - domains when using acme-v1
 		if ($iswildcarddomain == '1' && $letsencrypt == '1' && Settings::Get('system.leapiversion') == '1') {
 			standard_error('nowildcardwithletsencrypt');
@@ -524,12 +560,12 @@ class SubDomains extends ApiCommand implements ResourceEntity
 		if ($iswildcarddomain == '0' && $letsencrypt == '1' && Settings::Get('system.leapiversion') == '2') {
 			standard_error('nowildcardwithletsencryptv2');
 		}
-		
+
 		// Temporarily deactivate ssl_redirect until Let's Encrypt certificate was generated
 		if ($ssl_redirect > 0 && $letsencrypt == 1 && $result['letsencrypt'] != $letsencrypt) {
 			$ssl_redirect = 2;
 		}
-		
+
 		// is-email-domain flag changed - remove mail accounts and mail-addresses
 		if (($result['isemaildomain'] == '1') && $isemaildomain == '0') {
 			$params = array(
@@ -543,12 +579,12 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			$idna_convert = new idna_convert_wrapper();
 			$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_NOTICE, "[API] automatically deleted mail-table entries for '" . $idna_convert->decode($result['domain']) . "'");
 		}
-		
+
 		// handle redirect
 		if ($_doredirect) {
 			updateRedirectOfDomain($id, $redirectcode);
 		}
-		
+
 		if ($path != $result['documentroot'] || $isemaildomain != $result['isemaildomain'] || $wwwserveralias != $result['wwwserveralias'] || $iswildcarddomain != $result['iswildcarddomain'] || $aliasdomain != $result['aliasdomain'] || $openbasedir_path != $result['openbasedir_path'] || $ssl_redirect != $result['ssl_redirect'] || $letsencrypt != $result['letsencrypt'] || $hsts_maxage != $result['hsts'] || $hsts_sub != $result['hsts_sub'] || $hsts_preload != $result['hsts_preload'] || $phpsettingid != $result['phpsettingid']) {
 			$stmt = Database::prepare("
 					UPDATE `" . TABLE_PANEL_DOMAINS . "` SET
@@ -583,7 +619,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				"id" => $id
 			);
 			Database::pexecute($stmt, $params, true, true);
-			
+
 			if ($result['aliasdomain'] != $aliasdomain) {
 				// trigger when domain id for alias destination has changed: both for old and new destination
 				triggerLetsEncryptCSRForAliasDestinationDomain($result['aliasdomain'], $this->logger());
@@ -592,7 +628,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				// or when wwwserveralias or letsencrypt was changed
 				triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $this->logger());
 			}
-			
+
 			// check whether LE has been disabled, so we remove the certificate
 			if ($letsencrypt == '0' && $result['letsencrypt'] == '1') {
 				$del_stmt = Database::prepare("
@@ -602,10 +638,10 @@ class SubDomains extends ApiCommand implements ResourceEntity
 					'id' => $id
 				), true, true);
 			}
-			
+
 			inserttask('1');
 			inserttask('4');
-			
+
 			$idna_convert = new idna_convert_wrapper();
 			$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] edited domain '" . $idna_convert->decode($result['domain']) . "'");
 		}
@@ -629,7 +665,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			// or optionally for one specific customer identified by id or loginname
 			$customerid = $this->getParam('customerid', true, 0);
 			$loginname = $this->getParam('loginname', true, '');
-			
+
 			if (! empty($customerid) || ! empty($loginname)) {
 				$result = $this->apiCall('Customers.get', array(
 					'id' => $customerid,
@@ -659,7 +695,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				$this->getUserDetail('customerid') => $this->getUserDetail('standardsubdomain')
 			);
 		}
-		
+
 		// prepare select statement
 		$domains_stmt = Database::prepare("
 			SELECT `d`.`id`, `d`.`customerid`, `d`.`domain`, `d`.`documentroot`, `d`.`isbinddomain`, `d`.`isemaildomain`, `d`.`caneditdomain`, `d`.`iswildcarddomain`, `d`.`parentdomainid`, `d`.`letsencrypt`, `d`.`termination_date`, `ad`.`id` AS `aliasdomainid`, `ad`.`domain` AS `aliasdomain`, `da`.`id` AS `domainaliasid`, `da`.`domain` AS `domainalias`
@@ -670,7 +706,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			AND `d`.`email_only`='0'
 			AND `d`.`id` <> :standardsubdomain
 		");
-		
+
 		$result = array();
 		foreach ($customer_ids as $customer_id) {
 			Database::pexecute($domains_stmt, array(
@@ -704,21 +740,21 @@ class SubDomains extends ApiCommand implements ResourceEntity
 		$id = $this->getParam('id', true, 0);
 		$dn_optional = ($id <= 0 ? false : true);
 		$domainname = $this->getParam('domainname', $dn_optional, '');
-		
+
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'domains')) {
 			throw new Exception("You cannot access this resource", 405);
 		}
-		
+
 		$result = $this->apiCall('SubDomains.get', array(
 			'id' => $id,
 			'domainname' => $domainname
 		));
 		$id = $result['id'];
-		
+
 		// get needed customer info to reduce the subdomain-usage-counter by one
 		$customer = $this->getCustomerData();
 
-		if (!$this->isAdmin() && $result['caneditdomain'] == 0) {
+		if (! $this->isAdmin() && $result['caneditdomain'] == 0) {
 			throw new Exception("You cannot edit this resource", 405);
 		}
 
@@ -732,14 +768,14 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				"customerid" => $customer['customerid'],
 				"domainid" => $id
 			), true, true);
-			
+
 			if ($emails['count'] != '0') {
 				standard_error('domains_cantdeletedomainwithemail', '', true);
 			}
 		}
-		
+
 		triggerLetsEncryptCSRForAliasDestinationDomain($result['aliasdomain'], $this->logger());
-		
+
 		// delete domain from table
 		$stmt = Database::prepare("
 			DELETE FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `customerid` = :customerid AND `id` = :id
@@ -748,7 +784,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			"customerid" => $customer['customerid'],
 			"id" => $id
 		), true, true);
-		
+
 		// remove connections to ips and domainredirects
 		$del_stmt = Database::prepare("
 			DELETE FROM `" . TABLE_DOMAINTOIP . "`
@@ -757,7 +793,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 		Database::pexecute($del_stmt, array(
 			'domainid' => $id
 		), true, true);
-		
+
 		// remove redirect-codes
 		$del_stmt = Database::prepare("
 			DELETE FROM `" . TABLE_PANEL_DOMAINREDIRECTS . "`
@@ -766,7 +802,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 		Database::pexecute($del_stmt, array(
 			'domainid' => $id
 		), true, true);
-		
+
 		// remove certificate from domain_ssl_settings, fixes #1596
 		$del_stmt = Database::prepare("
 			DELETE FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "`
@@ -775,7 +811,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 		Database::pexecute($del_stmt, array(
 			'domainid' => $id
 		), true, true);
-		
+
 		// remove possible existing DNS entries
 		$del_stmt = Database::prepare("
 			DELETE FROM `" . TABLE_DOMAIN_DNS . "`
@@ -784,18 +820,18 @@ class SubDomains extends ApiCommand implements ResourceEntity
 		Database::pexecute($del_stmt, array(
 			'domainid' => $id
 		), true, true);
-		
+
 		inserttask('1');
 		// Using nameserver, insert a task which rebuilds the server config
 		inserttask('4');
 		// remove domains DNS from powerDNS if used, #581
 		inserttask('11', $result['domain']);
-		
+
 		// reduce subdomain-usage-counter
 		Customers::decreaseUsage($customer['customerid'], 'subdomains_used');
 		// update admin usage
 		Admins::decreaseUsage(($this->isAdmin() ? $customer['adminid'] : $this->getUserDetail('adminid')), 'subdomains_used');
-		
+
 		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_WARNING, "[API] deleted subdomain '" . $result['domain'] . "'");
 		return $this->response(200, "successfull", $result);
 	}
@@ -821,7 +857,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 		} else {
 			$path = validate($path, 'path', '', '', array(), true);
 		}
-		
+
 		// check whether path is a real path
 		if (! preg_match('/^https?\:\/\//', $path) || ! validateUrl($path)) {
 			if (strstr($path, ":") !== false) {
