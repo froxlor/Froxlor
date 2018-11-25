@@ -374,7 +374,7 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 	 *        	optional number of seconds for idle-timeout if FPM is used, default is fpm-daemon-value
 	 * @param string $limit_extensions
 	 *        	optional limitation of php-file-extensions if FPM is used, default is fpm-daemon-value
-	 *
+	 *        	
 	 * @access admin
 	 * @throws Exception
 	 * @return array

@@ -30,23 +30,23 @@ class Froxlor extends ApiCommand
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
 			// log our actions
 			$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] checking for updates");
-			
+
 			// check for new version
 			define('UPDATE_URI', "https://version.froxlor.org/Froxlor/api/" . $this->version);
 			$latestversion = HttpClient::urlGet(UPDATE_URI);
 			$latestversion = explode('|', $latestversion);
-			
+
 			if (is_array($latestversion) && count($latestversion) >= 1) {
 				$_version = $latestversion[0];
 				$_message = isset($latestversion[1]) ? $latestversion[1] : '';
 				$_link = isset($latestversion[2]) ? $latestversion[2] : '';
-				
+
 				// add the branding so debian guys are not gettings confused
 				// about their version-number
 				$version_label = $_version . $this->branding;
 				$version_link = $_link;
 				$message_addinfo = $_message;
-				
+
 				// not numeric -> error-message
 				if (! preg_match('/^((\d+\\.)(\d+\\.)(\d+\\.)?(\d+)?(\-(svn|dev|rc)(\d+))?)$/', $_version)) {
 					// check for customized version to not output
@@ -59,7 +59,7 @@ class Froxlor extends ApiCommand
 					// nothing new
 					$isnewerversion = 0;
 				}
-				
+
 				// anzeige über version-status mit ggfls. formular
 				// zum update schritt #1 -> download
 				if ($isnewerversion == 1) {
@@ -93,7 +93,7 @@ class Froxlor extends ApiCommand
 
 	/**
 	 *
-	 * @todo export settings to file
+	 * @todo export settings
 	 *      
 	 * @access admin
 	 */
@@ -166,7 +166,7 @@ class Froxlor extends ApiCommand
 	{
 		// currently not implemented as it required validation too so no wrong settings are being stored via API
 		throw new Exception("Not available yet.", 501);
-		
+
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
 			$setting = $this->getParam('key');
 			$value = $this->getParam('value', true, '');
@@ -193,7 +193,7 @@ class Froxlor extends ApiCommand
 	public function listFunctions()
 	{
 		$module = $this->getParam('module', true, '');
-		
+
 		$functions = array();
 		if ($module != null) {
 			// check existence
@@ -234,7 +234,7 @@ class Froxlor extends ApiCommand
 						$reflection = new \ReflectionClass($mod);
 						$_functions = $reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
 						foreach ($_functions as $func) {
-							if ($func->class == $mod && $func->isPublic() && !$func->isStatic()) {
+							if ($func->class == $mod && $func->isPublic() && ! $func->isStatic()) {
 								array_push($functions, array_merge(array(
 									'module' => $matches[1],
 									'function' => $func->name
@@ -248,7 +248,7 @@ class Froxlor extends ApiCommand
 				throw new Exception("Cannot search directory '" . $path . "'. No such directory.", 500);
 			}
 		}
-		
+
 		// return the list
 		return $this->response(200, "successfull", $functions);
 	}
@@ -274,7 +274,7 @@ class Froxlor extends ApiCommand
 					'head' => 'There is no comment-block for "' . $module . '.' . $function . '"'
 				);
 			}
-			
+
 			$clines = explode("\n", $comment);
 			$result = array();
 			$result['params'] = array();

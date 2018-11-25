@@ -29,38 +29,38 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 	{
 		if ($this->isAdmin()) {
 			$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] list fpm-daemons");
-			
+
 			$result = Database::query("
 				SELECT * FROM `" . TABLE_PANEL_FPMDAEMONS . "` ORDER BY `description` ASC
 			");
-			
+
 			$fpmdaemons = array();
 			while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-				
+
 				$query_params = array(
 					'id' => $row['id']
 				);
-				
+
 				$query = "SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "` WHERE `fpmsettingid` = :id";
-				
+
 				$configresult_stmt = Database::prepare($query);
 				Database::pexecute($configresult_stmt, $query_params, true, true);
-				
+
 				$configs = array();
 				if (Database::num_rows() > 0) {
 					while ($row2 = $configresult_stmt->fetch(PDO::FETCH_ASSOC)) {
 						$configs[] = $row2['description'];
 					}
 				}
-				
+
 				if (empty($configs)) {
 					$configs[] = $this->lng['admin']['phpsettings']['notused'];
 				}
-				
+
 				$row['configs'] = $configs;
 				$fpmdaemons[] = $row;
 			}
-			
+
 			return $this->response(200, "successfull", array(
 				'count' => count($fpmdaemons),
 				'list' => $fpmdaemons
@@ -83,7 +83,7 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 	{
 		if ($this->isAdmin()) {
 			$id = $this->getParam('id');
-			
+
 			$result_stmt = Database::prepare("
 				SELECT * FROM `" . TABLE_PANEL_FPMDAEMONS . "` WHERE `id` = :id
 			");
@@ -101,6 +101,26 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 	/**
 	 * create a new fpm-daemon entry
 	 *
+	 * @param string $description
+	 * @param string $reload_cmd
+	 * @param string $config_dir
+	 * @param string $pm
+	 *        	optional, process-manager, one of 'static', 'dynamic' or 'ondemand', default 'static'
+	 * @param int $max_children
+	 *        	optional, default 0
+	 * @param int $start_servers
+	 *        	optional, default 0
+	 * @param int $min_spare_servers
+	 *        	optional, default 0
+	 * @param int $max_spare_servers
+	 *        	optional, default 0
+	 * @param int $max_requests
+	 *        	optional, default 0
+	 * @param int $idle_timeout
+	 *        	optional, default 0
+	 * @param string $limit_extensions
+	 *        	optional, limit execution to the following extensions, default '.php'
+	 *        	
 	 * @access admin
 	 * @throws Exception
 	 * @return array
@@ -108,12 +128,12 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 	public function add()
 	{
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings') == 1) {
-			
+
 			// required parameter
 			$description = $this->getParam('description');
 			$reload_cmd = $this->getParam('reload_cmd');
 			$config_dir = $this->getParam('config_dir');
-			
+
 			// parameters
 			$pmanager = $this->getParam('pm', true, 'static');
 			$max_children = $this->getParam('max_children', true, 0);
@@ -123,7 +143,7 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 			$max_requests = $this->getParam('max_requests', true, 0);
 			$idle_timeout = $this->getParam('idle_timeout', true, 0);
 			$limit_extensions = $this->getParam('limit_extensions', true, '.php');
-			
+
 			// validation
 			$description = validate($description, 'description', '', '', array(), true);
 			$reload_cmd = validate($reload_cmd, 'reload_cmd', '', '', array(), true);
@@ -139,11 +159,11 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 				$limit_extensions = '.php';
 			}
 			$limit_extensions = validate($limit_extensions, 'limit_extensions', '/^(\.[a-z]([a-z0-9]+)\ ?)+$/', '', array(), true);
-			
+
 			if (strlen($description) == 0 || strlen($description) > 50) {
 				standard_error('descriptioninvalid', '', true);
 			}
-			
+
 			$ins_stmt = Database::prepare("
 				INSERT INTO `" . TABLE_PANEL_FPMDAEMONS . "` SET
 				`description` = :desc,
@@ -173,7 +193,7 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 			);
 			Database::pexecute($ins_stmt, $ins_data);
 			$id = Database::lastInsertId();
-			
+
 			inserttask('1');
 			$this->logger()->logAction(ADM_ACTION, LOG_INFO, "[API] fpm-daemon with description '" . $description . "' has been created by '" . $this->getUserDetail('loginname') . "'");
 			$result = $this->apiCall('FpmDaemons.get', array(
@@ -188,7 +208,30 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 	 * update a fpm-daemon entry by given id
 	 *
 	 * @param int $id
-	 *
+	 *        	fpm-daemon id
+	 * @param string $description
+	 *        	optional
+	 * @param string $reload_cmd
+	 *        	optional
+	 * @param string $config_dir
+	 *        	optional
+	 * @param string $pm
+	 *        	optional, process-manager, one of 'static', 'dynamic' or 'ondemand', default 'static'
+	 * @param int $max_children
+	 *        	optional, default 0
+	 * @param int $start_servers
+	 *        	optional, default 0
+	 * @param int $min_spare_servers
+	 *        	optional, default 0
+	 * @param int $max_spare_servers
+	 *        	optional, default 0
+	 * @param int $max_requests
+	 *        	optional, default 0
+	 * @param int $idle_timeout
+	 *        	optional, default 0
+	 * @param string $limit_extensions
+	 *        	optional, limit execution to the following extensions, default '.php'
+	 *        	
 	 * @access admin
 	 * @throws Exception
 	 * @return array
@@ -196,14 +239,14 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 	public function update()
 	{
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings') == 1) {
-			
+
 			// required parameter
 			$id = $this->getParam('id');
-			
+
 			$result = $this->apiCall('FpmDaemons.get', array(
 				'id' => $id
 			));
-			
+
 			// parameters
 			$description = $this->getParam('description', true, $result['description']);
 			$reload_cmd = $this->getParam('reload_cmd', true, $result['reload_cmd']);
@@ -216,7 +259,7 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 			$max_requests = $this->getParam('max_requests', true, $result['max_requests']);
 			$idle_timeout = $this->getParam('idle_timeout', true, $result['idle_timeout']);
 			$limit_extensions = $this->getParam('limit_extensions', true, $result['limit_extensions']);
-			
+
 			// validation
 			$description = validate($description, 'description', '', '', array(), true);
 			$reload_cmd = validate($reload_cmd, 'reload_cmd', '', '', array(), true);
@@ -232,11 +275,11 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 				$limit_extensions = '.php';
 			}
 			$limit_extensions = validate($limit_extensions, 'limit_extensions', '/^(\.[a-z]([a-z0-9]+)\ ?)+$/', '', array(), true);
-			
+
 			if (strlen($description) == 0 || strlen($description) > 50) {
 				standard_error('descriptioninvalid', '', true);
 			}
-			
+
 			$upd_stmt = Database::prepare("
 				UPDATE `" . TABLE_PANEL_FPMDAEMONS . "` SET
 				`description` = :desc,
@@ -267,7 +310,7 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 				'id' => $id
 			);
 			Database::pexecute($upd_stmt, $upd_data, true, true);
-			
+
 			inserttask('1');
 			$this->logger()->logAction(ADM_ACTION, LOG_INFO, "[API] fpm-daemon with description '" . $description . "' has been updated by '" . $this->getUserDetail('loginname') . "'");
 			$result = $this->apiCall('FpmDaemons.get', array(
@@ -292,15 +335,15 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 	{
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings') == 1) {
 			$id = $this->getParam('id');
-			
+
 			if ($id == 1) {
 				standard_error('cannotdeletedefaultphpconfig', '', true);
 			}
-			
+
 			$result = $this->apiCall('FpmDaemons.get', array(
 				'id' => $id
 			));
-			
+
 			// set default fpm daemon config for all php-config that use this config that is to be deleted
 			$upd_stmt = Database::prepare("
 				UPDATE `" . TABLE_PANEL_PHPCONFIGS . "` SET
@@ -309,14 +352,14 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 			Database::pexecute($upd_stmt, array(
 				'id' => $id
 			), true, true);
-			
+
 			$del_stmt = Database::prepare("
 				DELETE FROM `" . TABLE_PANEL_FPMDAEMONS . "` WHERE `id` = :id
 			");
 			Database::pexecute($del_stmt, array(
 				'id' => $id
 			), true, true);
-			
+
 			inserttask('1');
 			$this->logger()->logAction(ADM_ACTION, LOG_INFO, "[API] fpm-daemon setting '" . $result['description'] . "' has been deleted by '" . $this->getUserDetail('loginname') . "'");
 			return $this->response(200, "successfull", $result);

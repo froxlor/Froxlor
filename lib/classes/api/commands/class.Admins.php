@@ -64,7 +64,7 @@ class Admins extends ApiCommand implements ResourceEntity
 		$id = $this->getParam('id', true, 0);
 		$ln_optional = ($id <= 0 ? false : true);
 		$loginname = $this->getParam('loginname', $ln_optional, '');
-		
+
 		if ($this->isAdmin() && ($this->getUserDetail('change_serversettings') == 1 || ($this->getUserDetail('adminid') == $id || $this->getUserDetail('loginname') == $loginname))) {
 			$result_stmt = Database::prepare("
 				SELECT * FROM `" . TABLE_PANEL_ADMINS . "`
@@ -165,7 +165,7 @@ class Admins extends ApiCommand implements ResourceEntity
 	public function add()
 	{
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings') == 1) {
-			
+
 			// required parameters
 			$name = $this->getParam('name');
 			$email = $this->getParam('email');
@@ -176,7 +176,7 @@ class Admins extends ApiCommand implements ResourceEntity
 			$custom_notes = $this->getParam('custom_notes', true, '');
 			$custom_notes_show = $this->getParam('custom_notes_show', true, 0);
 			$password = $this->getParam('admin_password', true, '');
-			
+
 			$diskspace = $this->getUlParam('diskspace', 'diskspace_ul', true, 0);
 			$traffic = $this->getUlParam('traffic', 'traffic_ul', true, 0);
 			$customers = $this->getUlParam('customers', 'customers_ul', true, 0);
@@ -189,39 +189,39 @@ class Admins extends ApiCommand implements ResourceEntity
 			$ftps = $this->getUlParam('ftps', 'ftps_ul', true, 0);
 			$tickets = $this->getUlParam('tickets', 'tickets_ul', true, 0);
 			$mysqls = $this->getUlParam('mysqls', 'mysqls_ul', true, 0);
-			
+
 			$customers_see_all = $this->getParam('customers_see_all', true, 0);
 			$domains_see_all = $this->getParam('domains_see_all', true, 0);
 			$tickets_see_all = $this->getParam('tickets_see_all', true, 0);
 			$caneditphpsettings = $this->getParam('caneditphpsettings', true, 0);
 			$change_serversettings = $this->getParam('change_serversettings', true, 0);
 			$ipaddress = $this->getParam('ipaddress', true, - 1);
-			
+
 			// validation
 			$name = validate($name, 'name', '', '', array(), true);
 			$idna_convert = new idna_convert_wrapper();
 			$email = $idna_convert->encode(validate($email, 'email', '', '', array(), true));
 			$def_language = validate($def_language, 'default language', '', '', array(), true);
 			$custom_notes = validate(str_replace("\r\n", "\n", $custom_notes), 'custom_notes', '/^[^\0]*$/', '', array(), true);
-			
+
 			if (Settings::Get('system.mail_quota_enabled') != '1') {
 				$email_quota = - 1;
 			}
-			
+
 			if (Settings::Get('ticket.enabled') != '1') {
 				$tickets = - 1;
 			}
-			
+
 			$password = validate($password, 'password', '', '', array(), true);
 			// only check if not empty,
 			// cause empty == generate password automatically
 			if ($password != '') {
 				$password = validatePassword($password, true);
 			}
-			
+
 			$diskspace = $diskspace * 1024;
 			$traffic = $traffic * 1024 * 1024;
-			
+
 			// Check if the account already exists
 			// do not check via api as we skip any permission checks for this task
 			$loginname_check_stmt = Database::prepare("
@@ -230,7 +230,7 @@ class Admins extends ApiCommand implements ResourceEntity
 			$loginname_check = Database::pexecute_first($loginname_check_stmt, array(
 				'login' => $loginname
 			), true, true);
-			
+
 			// Check if an admin with the loginname already exists
 			// do not check via api as we skip any permission checks for this task
 			$loginname_check_admin_stmt = Database::prepare("
@@ -239,7 +239,7 @@ class Admins extends ApiCommand implements ResourceEntity
 			$loginname_check_admin = Database::pexecute_first($loginname_check_admin_stmt, array(
 				'login' => $loginname
 			), true, true);
-			
+
 			if (strtolower($loginname_check['loginname']) == strtolower($loginname) || strtolower($loginname_check_admin['loginname']) == strtolower($loginname)) {
 				standard_error('loginnameexists', $loginname, true);
 			} // Accounts which match systemaccounts are not allowed, filtering them
@@ -250,33 +250,33 @@ class Admins extends ApiCommand implements ResourceEntity
 			} elseif (! validateEmail($email)) {
 				standard_error('emailiswrong', $email, true);
 			} else {
-				
+
 				if ($customers_see_all != '1') {
 					$customers_see_all = '0';
 				}
-				
+
 				if ($domains_see_all != '1') {
 					$domains_see_all = '0';
 				}
-				
+
 				if ($caneditphpsettings != '1') {
 					$caneditphpsettings = '0';
 				}
-				
+
 				if ($change_serversettings != '1') {
 					$change_serversettings = '0';
 				}
-				
+
 				if ($tickets_see_all != '1') {
 					$tickets_see_all = '0';
 				}
-				
+
 				if ($password == '') {
 					$password = generatePassword();
 				}
-				
+
 				$_theme = Settings::Get('panel.default_theme');
-				
+
 				$ins_data = array(
 					'loginname' => $loginname,
 					'password' => makeCryptPassword($password),
@@ -305,7 +305,7 @@ class Admins extends ApiCommand implements ResourceEntity
 					'custom_notes' => $custom_notes,
 					'custom_notes_show' => $custom_notes_show
 				);
-				
+
 				$ins_stmt = Database::prepare("
 					INSERT INTO `" . TABLE_PANEL_ADMINS . "` SET
 					`loginname` = :loginname,
@@ -336,11 +336,11 @@ class Admins extends ApiCommand implements ResourceEntity
 					`custom_notes_show` = :custom_notes_show
 				");
 				Database::pexecute($ins_stmt, $ins_data, true, true);
-				
+
 				$adminid = Database::lastInsertId();
 				$ins_data['adminid'] = $adminid;
 				$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] added admin '" . $loginname . "'");
-				
+
 				// get all admin-data for return-array
 				$result = $this->apiCall('Admins.get', array(
 					'id' => $adminid
@@ -442,17 +442,17 @@ class Admins extends ApiCommand implements ResourceEntity
 	public function update()
 	{
 		if ($this->isAdmin()) {
-			
+
 			$id = $this->getParam('id', true, 0);
 			$ln_optional = ($id <= 0 ? false : true);
 			$loginname = $this->getParam('loginname', $ln_optional, '');
-			
+
 			$result = $this->apiCall('Admins.get', array(
 				'id' => $id,
 				'loginname' => $loginname
 			));
 			$id = $result['adminid'];
-			
+
 			if ($this->getUserDetail('change_serversettings') == 1 || $result['adminid'] == $this->getUserDetail('adminid')) {
 				// parameters
 				$name = $this->getParam('name', true, $result['name']);
@@ -463,7 +463,7 @@ class Admins extends ApiCommand implements ResourceEntity
 				$custom_notes = $this->getParam('custom_notes', true, $result['custom_notes']);
 				$custom_notes_show = $this->getParam('custom_notes_show', true, $result['custom_notes_show']);
 				$theme = $this->getParam('theme', true, $result['theme']);
-				
+
 				// you cannot edit some of the details of yourself
 				if ($result['adminid'] == $this->getUserDetail('adminid')) {
 					$deactivated = $result['deactivated'];
@@ -487,7 +487,7 @@ class Admins extends ApiCommand implements ResourceEntity
 					$ipaddress = ($result['ip'] != - 1 ? json_decode($result['ip'], true) : - 1);
 				} else {
 					$deactivated = $this->getParam('deactivated', true, $result['deactivated']);
-					
+
 					$dec_places = Settings::Get('panel.decimal_places');
 					$diskspace = $this->getUlParam('diskspace', 'diskspace_ul', true, round($result['diskspace'] / 1024, $dec_places));
 					$traffic = $this->getUlParam('traffic', 'traffic_ul', true, round($result['traffic'] / (1024 * 1024), $dec_places));
@@ -501,18 +501,18 @@ class Admins extends ApiCommand implements ResourceEntity
 					$ftps = $this->getUlParam('ftps', 'ftps_ul', true, $result['ftps']);
 					$tickets = $this->getUlParam('tickets', 'tickets_ul', true, $result['tickets']);
 					$mysqls = $this->getUlParam('mysqls', 'mysqls_ul', true, $result['mysqls']);
-					
+
 					$customers_see_all = $this->getParam('customers_see_all', true, $result['customers_see_all']);
 					$domains_see_all = $this->getParam('domains_see_all', true, $result['domains_see_all']);
 					$tickets_see_all = $this->getParam('tickets_see_all', true, $result['tickets_see_all']);
 					$caneditphpsettings = $this->getParam('caneditphpsettings', true, $result['caneditphpsettings']);
 					$change_serversettings = $this->getParam('change_serversettings', true, $result['change_serversettings']);
 					$ipaddress = $this->getParam('ipaddress', true, ($result['ip'] != - 1 ? json_decode($result['ip'], true) : - 1));
-					
+
 					$diskspace = $diskspace * 1024;
 					$traffic = $traffic * 1024 * 1024;
 				}
-				
+
 				// validation
 				$name = validate($name, 'name', '', '', array(), true);
 				$idna_convert = new idna_convert_wrapper();
@@ -521,54 +521,54 @@ class Admins extends ApiCommand implements ResourceEntity
 				$custom_notes = validate(str_replace("\r\n", "\n", $custom_notes), 'custom_notes', '/^[^\0]*$/', '', array(), true);
 				$theme = validate($theme, 'theme', '', '', array(), true);
 				$password = validate($password, 'password', '', '', array(), true);
-				
+
 				if (Settings::Get('system.mail_quota_enabled') != '1') {
 					$email_quota = - 1;
 				}
-				
+
 				if (Settings::Get('ticket.enabled') != '1') {
 					$tickets = - 1;
 				}
-				
+
 				if (empty($theme)) {
 					$theme = Settings::Get('panel.default_theme');
 				}
-				
+
 				if (! validateEmail($email)) {
 					standard_error('emailiswrong', $email, true);
 				} else {
-					
+
 					if ($deactivated != '1') {
 						$deactivated = '0';
 					}
-					
+
 					if ($customers_see_all != '1') {
 						$customers_see_all = '0';
 					}
-					
+
 					if ($domains_see_all != '1') {
 						$domains_see_all = '0';
 					}
-					
+
 					if ($caneditphpsettings != '1') {
 						$caneditphpsettings = '0';
 					}
-					
+
 					if ($change_serversettings != '1') {
 						$change_serversettings = '0';
 					}
-					
+
 					if ($tickets_see_all != '1') {
 						$tickets_see_all = '0';
 					}
-					
+
 					if ($password != '') {
 						$password = validatePassword($password, true);
 						$password = makeCryptPassword($password);
 					} else {
 						$password = $result['password'];
 					}
-					
+
 					// check if a resource was set to something lower
 					// than actually used by the admin/reseller
 					$res_warning = "";
@@ -605,11 +605,11 @@ class Admins extends ApiCommand implements ResourceEntity
 					if ($mysqls != $result['mysqls'] && $mysqls != - 1 && $mysqls < $result['mysqls_used']) {
 						$res_warning .= sprintf($this->lng['error']['setlessthanalreadyused'], 'mysqls');
 					}
-					
+
 					if (! empty($res_warning)) {
 						throw new Exception($res_warning, 406);
 					}
-					
+
 					$upd_data = array(
 						'password' => $password,
 						'name' => $name,
@@ -639,7 +639,7 @@ class Admins extends ApiCommand implements ResourceEntity
 						'theme' => $theme,
 						'adminid' => $id
 					);
-					
+
 					$upd_stmt = Database::prepare("
 						UPDATE `" . TABLE_PANEL_ADMINS . "` SET
 						`password` = :password,
@@ -672,7 +672,7 @@ class Admins extends ApiCommand implements ResourceEntity
 					");
 					Database::pexecute($upd_stmt, $upd_data, true, true);
 					$this->logger()->logAction(ADM_ACTION, LOG_INFO, "[API] edited admin '" . $result['loginname'] . "'");
-					
+
 					// get all admin-data for return-array
 					$result = $this->apiCall('Admins.get', array(
 						'id' => $result['adminid']
@@ -702,18 +702,18 @@ class Admins extends ApiCommand implements ResourceEntity
 			$id = $this->getParam('id', true, 0);
 			$ln_optional = ($id <= 0 ? false : true);
 			$loginname = $this->getParam('loginname', $ln_optional, '');
-			
+
 			$result = $this->apiCall('Admins.get', array(
 				'id' => $id,
 				'loginname' => $loginname
 			));
 			$id = $result['adminid'];
-			
+
 			// don't be stupid
 			if ($id == $this->getUserDetail('adminid')) {
 				standard_error('youcantdeleteyourself', '', true);
 			}
-			
+
 			// delete admin
 			$del_stmt = Database::prepare("
 				DELETE FROM `" . TABLE_PANEL_ADMINS . "` WHERE `adminid` = :adminid
@@ -721,7 +721,7 @@ class Admins extends ApiCommand implements ResourceEntity
 			Database::pexecute($del_stmt, array(
 				'adminid' => $id
 			), true, true);
-			
+
 			// delete the traffic-usage
 			$del_stmt = Database::prepare("
 				DELETE FROM `" . TABLE_PANEL_TRAFFIC_ADMINS . "` WHERE `adminid` = :adminid
@@ -729,7 +729,7 @@ class Admins extends ApiCommand implements ResourceEntity
 			Database::pexecute($del_stmt, array(
 				'adminid' => $id
 			), true, true);
-			
+
 			// delete the diskspace usage
 			$del_stmt = Database::prepare("
 				DELETE FROM `" . TABLE_PANEL_DISKSPACE_ADMINS . "` WHERE `adminid` = :adminid
@@ -737,7 +737,7 @@ class Admins extends ApiCommand implements ResourceEntity
 			Database::pexecute($del_stmt, array(
 				'adminid' => $id
 			), true, true);
-			
+
 			// set admin-id of the old admin's customer to current admins
 			$upd_stmt = Database::prepare("
 				UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET
@@ -747,7 +747,7 @@ class Admins extends ApiCommand implements ResourceEntity
 				'userid' => $this->getUserDetail('adminid'),
 				'adminid' => $id
 			), true, true);
-			
+
 			// set admin-id of the old admin's domains to current admins
 			$upd_stmt = Database::prepare("
 				UPDATE `" . TABLE_PANEL_DOMAINS . "` SET
@@ -757,7 +757,7 @@ class Admins extends ApiCommand implements ResourceEntity
 				'userid' => $this->getUserDetail('adminid'),
 				'adminid' => $id
 			), true, true);
-			
+
 			// delete old admin's api keys if exists (no customer keys)
 			$upd_stmt = Database::prepare("
 				DELETE FROM `" . TABLE_API_KEYS . "` WHERE
@@ -766,7 +766,7 @@ class Admins extends ApiCommand implements ResourceEntity
 			Database::pexecute($upd_stmt, array(
 				'adminid' => $id
 			), true, true);
-			
+
 			// set admin-id of the old admin's api-keys to current admins
 			$upd_stmt = Database::prepare("
 				UPDATE `" . TABLE_API_KEYS . "` SET
@@ -776,7 +776,7 @@ class Admins extends ApiCommand implements ResourceEntity
 				'userid' => $this->getUserDetail('adminid'),
 				'adminid' => $id
 			), true, true);
-			
+
 			$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] deleted admin '" . $result['loginname'] . "'");
 			updateCounters();
 			return $this->response(200, "successfull", $result);
@@ -802,13 +802,13 @@ class Admins extends ApiCommand implements ResourceEntity
 			$id = $this->getParam('id', true, 0);
 			$ln_optional = ($id <= 0 ? false : true);
 			$loginname = $this->getParam('loginname', $ln_optional, '');
-			
+
 			$result = $this->apiCall('Admins.get', array(
 				'id' => $id,
 				'loginname' => $loginname
 			));
 			$id = $result['adminid'];
-			
+
 			$result_stmt = Database::prepare("
 				UPDATE `" . TABLE_PANEL_ADMINS . "` SET
 				`loginfail_count` = '0'
@@ -819,7 +819,7 @@ class Admins extends ApiCommand implements ResourceEntity
 			), true, true);
 			// set the new value for result-array
 			$result['loginfail_count'] = 0;
-			
+
 			$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] unlocked admin '" . $result['loginname'] . "'");
 			return $this->response(200, "successfull", $result);
 		}

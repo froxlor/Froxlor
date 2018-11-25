@@ -49,7 +49,7 @@ class CustomerBackups extends ApiCommand implements ResourceEntity
 	 *        	optional whether to backup web-data, default is 0 (false)
 	 * @param int $customerid
 	 *        	required when called as admin, not needed when called as customer
-	 *
+	 *        	
 	 * @access admin, customer
 	 * @return array
 	 */
@@ -132,7 +132,7 @@ class CustomerBackups extends ApiCommand implements ResourceEntity
 	 *        	optional, admin-only, select backup-jobs of a specific customer by id
 	 * @param string $loginname
 	 *        	optional, admin-only, select backup-jobs of a specific customer by loginname
-	 *
+	 *        	
 	 * @access admin, customer
 	 * @throws Exception
 	 * @return array count|list
@@ -169,7 +169,7 @@ class CustomerBackups extends ApiCommand implements ResourceEntity
 	 *        	optional, required when called as admin (if $loginname is not specified)
 	 * @param string $loginname
 	 *        	optional, required when called as admin (if $customerid is not specified)
-	 *
+	 *        	
 	 * @access admin, customer
 	 * @throws Exception
 	 * @return bool

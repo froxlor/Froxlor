@@ -30,8 +30,8 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 		if ($this->isAdmin() && ($this->getUserDetail('change_serversettings') || ! empty($this->getUserDetail('ip')))) {
 			$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] list ips and ports");
 			$ip_where = "";
-			if (!empty($this->getUserDetail('ip')) && $this->getUserDetail('ip') != -1) {
-				$ip_where = "WHERE `id` IN (".implode(", ", json_decode($this->getUserDetail('ip'), true)).")";
+			if (! empty($this->getUserDetail('ip')) && $this->getUserDetail('ip') != - 1) {
+				$ip_where = "WHERE `id` IN (" . implode(", ", json_decode($this->getUserDetail('ip'), true)) . ")";
 			}
 			$result_stmt = Database::prepare("
 				SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` " . $ip_where . " ORDER BY `ip` ASC, `port` ASC
@@ -63,9 +63,9 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 	{
 		if ($this->isAdmin() && ($this->getUserDetail('change_serversettings') || ! empty($this->getUserDetail('ip')))) {
 			$id = $this->getParam('id');
-			if (!empty($this->getUserDetail('ip')) && $this->getUserDetail('ip') != -1) {
+			if (! empty($this->getUserDetail('ip')) && $this->getUserDetail('ip') != - 1) {
 				$allowed_ips = json_decode($this->getUserDetail('ip'), true);
-				if (!in_array($id, $allowed_ips)) {
+				if (! in_array($id, $allowed_ips)) {
 					throw new Exception("You cannot access this resource", 405);
 				}
 			}
@@ -87,6 +87,34 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 	/**
 	 * create a new ip/port entry
 	 *
+	 * @param string $ip
+	 * @param int $port
+	 *        	optional, default 80
+	 * @param bool $listen_statement
+	 *        	optional, default 0 (false)
+	 * @param bool $namevirtualhost_statement
+	 *        	optional, default 0 (false)
+	 * @param bool $vhostcontainer
+	 *        	optional, default 0 (false)
+	 * @param string $specialsettings
+	 *        	optional, default empty
+	 * @param bool $vhostcontainer_servername_statement
+	 *        	optional, default 0 (false)
+	 * @param string $default_vhostconf_domain
+	 *        	optional, defatul empty
+	 * @param string $docroot
+	 *        	optional, default empty (point to froxlor)
+	 * @param bool $ssl
+	 *        	optional, default 0 (false)
+	 * @param string $ssl_cert_file
+	 *        	optional, requires $ssl = 1, default empty
+	 * @param string $ssl_key_file
+	 *        	optional, requires $ssl = 1, default empty
+	 * @param string $ssl_ca_file
+	 *        	optional, requires $ssl = 1, default empty
+	 * @param string $ssl_cert_chainfile
+	 *        	optional, requires $ssl = 1, default empty
+	 *        	
 	 * @access admin
 	 * @throws Exception
 	 * @return array
@@ -94,7 +122,7 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 	public function add()
 	{
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
-			
+
 			$ip = validate_ip2($this->getParam('ip'), false, 'invalidip', false, false, false, true);
 			$port = validate($this->getParam('port', true, 80), 'port', '/^(([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9])|([1-5][0-9][0-9][0-9][0-9])|(6[0-4][0-9][0-9][0-9])|(65[0-4][0-9][0-9])|(655[0-2][0-9])|(6553[0-5]))$/Di', array(
 				'stringisempty',
@@ -107,7 +135,7 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 			$vhostcontainer_servername_statement = ! empty($this->getParam('vhostcontainer_servername_statement', true, 1)) ? 1 : 0;
 			$default_vhostconf_domain = validate(str_replace("\r\n", "\n", $this->getParam('default_vhostconf_domain', true, '')), 'default_vhostconf_domain', '/^[^\0]*$/', '', array(), true);
 			$docroot = validate($this->getParam('docroot', true, ''), 'docroot', '', '', array(), true);
-			
+
 			if ((int) Settings::Get('system.use_ssl') == 1) {
 				$ssl = ! empty($this->getParam('ssl', true, 0)) ? intval($this->getParam('ssl', true, 0)) : 0;
 				$ssl_cert_file = validate($this->getParam('ssl_cert_file', $ssl, ''), 'ssl_cert_file', '', '', array(), true);
@@ -121,49 +149,49 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 				$ssl_ca_file = '';
 				$ssl_cert_chainfile = '';
 			}
-			
+
 			if ($listen_statement != '1') {
 				$listen_statement = '0';
 			}
-			
+
 			if ($namevirtualhost_statement != '1') {
 				$namevirtualhost_statement = '0';
 			}
-			
+
 			if ($vhostcontainer != '1') {
 				$vhostcontainer = '0';
 			}
-			
+
 			if ($vhostcontainer_servername_statement != '1') {
 				$vhostcontainer_servername_statement = '0';
 			}
-			
+
 			if ($ssl != '1') {
 				$ssl = '0';
 			}
-			
+
 			if ($ssl_cert_file != '') {
 				$ssl_cert_file = makeCorrectFile($ssl_cert_file);
 			}
-			
+
 			if ($ssl_key_file != '') {
 				$ssl_key_file = makeCorrectFile($ssl_key_file);
 			}
-			
+
 			if ($ssl_ca_file != '') {
 				$ssl_ca_file = makeCorrectFile($ssl_ca_file);
 			}
-			
+
 			if ($ssl_cert_chainfile != '') {
 				$ssl_cert_chainfile = makeCorrectFile($ssl_cert_chainfile);
 			}
-			
+
 			if (strlen(trim($docroot)) > 0) {
 				$docroot = makeCorrectDir($docroot);
 			} else {
 				$docroot = '';
 			}
-			
+
 			$result_checkfordouble_stmt = Database::prepare("
 			SELECT `id` FROM `" . TABLE_PANEL_IPSANDPORTS . "`
 			WHERE `ip` = :ip AND `port` = :port");
@@ -171,11 +199,11 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 				'ip' => $ip,
 				'port' => $port
 			));
-			
+
 			if ($result_checkfordouble['id'] != '') {
 				standard_error('myipnotdouble', '', true);
 			}
-			
+
 			$ins_stmt = Database::prepare("
 				INSERT INTO `" . TABLE_PANEL_IPSANDPORTS . "`
 				SET
@@ -205,11 +233,11 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 			);
 			Database::pexecute($ins_stmt, $ins_data);
 			$ins_data['id'] = Database::lastInsertId();
-			
+
 			inserttask('1');
 			// Using nameserver, insert a task which rebuilds the server config
 			inserttask('4');
-			
+
 			if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
 				$ip = '[' . $ip . ']';
 			}
@@ -227,7 +255,35 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 	 * update ip/port entry by given id
 	 *
 	 * @param int $id
-	 *
+	 * @param string $ip
+	 *        	optional
+	 * @param int $port
+	 *        	optional, default 80
+	 * @param bool $listen_statement
+	 *        	optional, default 0 (false)
+	 * @param bool $namevirtualhost_statement
+	 *        	optional, default 0 (false)
+	 * @param bool $vhostcontainer
+	 *        	optional, default 0 (false)
+	 * @param string $specialsettings
+	 *        	optional, default empty
+	 * @param bool $vhostcontainer_servername_statement
+	 *        	optional, default 0 (false)
+	 * @param string $default_vhostconf_domain
+	 *        	optional, defatul empty
+	 * @param string $docroot
+	 *        	optional, default empty (point to froxlor)
+	 * @param bool $ssl
+	 *        	optional, default 0 (false)
+	 * @param string $ssl_cert_file
+	 *        	optional, requires $ssl = 1, default empty
+	 * @param string $ssl_key_file
+	 *        	optional, requires $ssl = 1, default empty
+	 * @param string $ssl_ca_file
+	 *        	optional, requires $ssl = 1, default empty
+	 * @param string $ssl_cert_chainfile
+	 *        	optional, requires $ssl = 1, default empty
+	 *        	
 	 * @access admin
 	 * @throws ErrorException
 	 * @return array
@@ -240,7 +296,7 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 			$result = $this->apiCall('IpsAndPorts.get', array(
 				'id' => $id
 			));
-			
+
 			$ip = validate_ip2($this->getParam('ip', true, $result['ip']), false, 'invalidip', false, false, false, true);
 			$port = validate($this->getParam('port', true, $result['port']), 'port', '/^(([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9])|([1-5][0-9][0-9][0-9][0-9])|(6[0-4][0-9][0-9][0-9])|(65[0-4][0-9][0-9])|(655[0-2][0-9])|(6553[0-5]))$/Di', array(
 				'stringisempty',
@@ -253,7 +309,7 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 			$vhostcontainer_servername_statement = $this->getParam('vhostcontainer_servername_statement', true, $result['vhostcontainer_servername_statement']);
 			$default_vhostconf_domain = validate(str_replace("\r\n", "\n", $this->getParam('default_vhostconf_domain', true, $result['default_vhostconf_domain'])), 'default_vhostconf_domain', '/^[^\0]*$/', '', array(), true);
 			$docroot = validate($this->getParam('docroot', true, $result['docroot']), 'docroot', '', '', array(), true);
-			
+
 			if ((int) Settings::Get('system.use_ssl') == 1) {
 				$ssl = $this->getParam('ssl', true, $result['ssl']);
 				$ssl_cert_file = validate($this->getParam('ssl_cert_file', $ssl, $result['ssl_cert_file']), 'ssl_cert_file', '', '', array(), true);
@@ -267,7 +323,7 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 				$ssl_ca_file = '';
 				$ssl_cert_chainfile = '';
 			}
-			
+
 			$result_checkfordouble_stmt = Database::prepare("
 				SELECT `id` FROM `" . TABLE_PANEL_IPSANDPORTS . "`
 				WHERE `ip` = :ip AND `port` = :port
@@ -276,7 +332,7 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 				'ip' => $ip,
 				'port' => $port
 			));
-			
+
 			$result_sameipotherport_stmt = Database::prepare("
 				SELECT `id` FROM `" . TABLE_PANEL_IPSANDPORTS . "`
 				WHERE `ip` = :ip AND `id` <> :id
@@ -285,55 +341,55 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 				'ip' => $ip,
 				'id' => $id
 			), true, true);
-			
+
 			if ($listen_statement != '1') {
 				$listen_statement = '0';
 			}
-			
+
 			if ($namevirtualhost_statement != '1') {
 				$namevirtualhost_statement = '0';
 			}
-			
+
 			if ($vhostcontainer != '1') {
 				$vhostcontainer = '0';
 			}
-			
+
 			if ($vhostcontainer_servername_statement != '1') {
 				$vhostcontainer_servername_statement = '0';
 			}
-			
+
 			if ($ssl != '1') {
 				$ssl = '0';
 			}
-			
+
 			if ($ssl_cert_file != '') {
 				$ssl_cert_file = makeCorrectFile($ssl_cert_file);
 			}
-			
+
 			if ($ssl_key_file != '') {
 				$ssl_key_file = makeCorrectFile($ssl_key_file);
 			}
-			
+
 			if ($ssl_ca_file != '') {
 				$ssl_ca_file = makeCorrectFile($ssl_ca_file);
 			}
-			
+
 			if ($ssl_cert_chainfile != '') {
 				$ssl_cert_chainfile = makeCorrectFile($ssl_cert_chainfile);
 			}
-			
+
 			if (strlen(trim($docroot)) > 0) {
 				$docroot = makeCorrectDir($docroot);
 			} else {
 				$docroot = '';
 			}
-			
+
 			if ($result['ip'] != $ip && $result['ip'] == Settings::Get('system.ipaddress') && $result_sameipotherport['id'] == '') {
 				standard_error('cantchangesystemip', '', true);
 			} elseif ($result_checkfordouble['id'] != '' && $result_checkfordouble['id'] != $id) {
 				standard_error('myipnotdouble', '', true);
 			} else {
-				
+
 				$upd_stmt = Database::prepare("
 					UPDATE `" . TABLE_PANEL_IPSANDPORTS . "`
 					SET
@@ -364,11 +420,11 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 					'id' => $id
 				);
 				Database::pexecute($upd_stmt, $upd_data);
-				
+
 				inserttask('1');
 				// Using nameserver, insert a task which rebuilds the server config
 				inserttask('4');
-				
+
 				$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] changed IP/port from '" . $result['ip'] . ":" . $result['port'] . "' to '" . $ip . ":" . $port . "'");
 
 				$result = $this->apiCall('IpsAndPorts.get', array(
@@ -405,7 +461,7 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 			$result_checkdomain = Database::pexecute_first($result_checkdomain_stmt, array(
 				'id' => $id
 			), true, true);
-			
+
 			if (empty($result_checkdomain)) {
 				if (! in_array($result['id'], explode(',', Settings::Get('system.defaultip'))) && ! in_array($result['id'], explode(',', Settings::Get('system.defaultsslip')))) {
 
@@ -419,7 +475,7 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 						'id' => $id,
 						'ip' => $result['ip']
 					));
-					
+
 					if (($result['ip'] != Settings::Get('system.ipaddress')) || ($result['ip'] == Settings::Get('system.ipaddress') && $result_sameipotherport['id'] != '')) {
 
 						$del_stmt = Database::prepare("
