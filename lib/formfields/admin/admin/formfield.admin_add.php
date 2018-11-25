@@ -24,7 +24,7 @@ return array(
 				'title' => $lng['admin']['accountdata'],
 				'image' => 'icons/user_add.png',
 				'fields' => array(
-					'loginname' => array(
+					'new_loginname' => array(
 						'label' => $lng['login']['username'],
 						'type' => 'text',
 						'mandatory' => true
