@@ -1,0 +1,41 @@
+{
+    "name": "froxlor/froxlor",
+    "description": "The server administration software for your needs. Developed by experienced server administrators, this panel simplifies the effort of managing your hosting platform.",
+    "keywords": ["server", "administration", "php"],
+    "homepage": "https://www.froxlor.org",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Michael Kaufmann",
+            "email": "team@froxlor.org",
+            "role": "Lead Developer"
+        },
+        {
+            "name": "Robert Förster",
+            "email": "team@froxlor.org",
+            "role": "Package Maintainer"
+        }
+    ],
+    "support": {
+        "email": "team@froxlor.org",
+        "issues": "https://github.com/Froxlor/Froxlor/issues",
+        "forum": "https://forum.froxlor.org/",
+        "wiki": "https://github.com/Froxlor/Froxlor/wiki",
+        "irc": "irc://chat.freenode.net/froxlor",
+        "source": "https://github.com/Froxlor/Froxlor",
+        "docs": "https://github.com/Froxlor/Froxlor/wiki"
+    },
+    "require" : {
+        "php" : ">=5.3",
+        "ext-pdo": "*",
+        "ext-pdo_mysql": "*",
+        "ext-xml": "*",
+        "ext-mbstring": "*",
+        "ext-curl": "*",
+        "ext-json": "*"
+    },
+    "suggest": {
+        "ext-bcmath": "*",
+        "ext-zip": "*"
+    }
+}
