@@ -27,79 +27,123 @@ class Froxlor extends ApiCommand
 	 */
 	public function checkUpdate()
 	{
+		define('UPDATE_URI', "https://version.froxlor.org/Froxlor/api/" . $this->version);
+
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
-			// log our actions
-			$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] checking for updates");
+			if (function_exists('curl_version')) {
+				// log our actions
+				$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] checking for updates");
 
-			// check for new version
-			define('UPDATE_URI', "https://version.froxlor.org/Froxlor/api/" . $this->version);
-			$latestversion = HttpClient::urlGet(UPDATE_URI);
-			$latestversion = explode('|', $latestversion);
+				// check for new version
+				$latestversion = HttpClient::urlGet(UPDATE_URI);
+				$latestversion = explode('|', $latestversion);
 
-			if (is_array($latestversion) && count($latestversion) >= 1) {
-				$_version = $latestversion[0];
-				$_message = isset($latestversion[1]) ? $latestversion[1] : '';
-				$_link = isset($latestversion[2]) ? $latestversion[2] : '';
+				if (is_array($latestversion) && count($latestversion) >= 1) {
+					$_version = $latestversion[0];
+					$_message = isset($latestversion[1]) ? $latestversion[1] : '';
+					$_link = isset($latestversion[2]) ? $latestversion[2] : '';
 
-				// add the branding so debian guys are not gettings confused
-				// about their version-number
-				$version_label = $_version . $this->branding;
-				$version_link = $_link;
-				$message_addinfo = $_message;
+					// add the branding so debian guys are not gettings confused
+					// about their version-number
+					$version_label = $_version . $this->branding;
+					$version_link = $_link;
+					$message_addinfo = $_message;
 
-				// not numeric -> error-message
-				if (! preg_match('/^((\d+\\.)(\d+\\.)(\d+\\.)?(\d+)?(\-(svn|dev|rc)(\d+))?)$/', $_version)) {
-					// check for customized version to not output
-					// "There is a newer version of froxlor" besides the error-message
-					$isnewerversion = - 1;
-				} elseif (version_compare2($this->version, $_version) == - 1) {
-					// there is a newer version - yay
-					$isnewerversion = 1;
-				} else {
-					// nothing new
-					$isnewerversion = 0;
+					// not numeric -> error-message
+					if (! preg_match('/^((\d+\\.)(\d+\\.)(\d+\\.)?(\d+)?(\-(svn|dev|rc)(\d+))?)$/', $_version)) {
+						// check for customized version to not output
+						// "There is a newer version of froxlor" besides the error-message
+						$isnewerversion = - 1;
+					} elseif (version_compare2($this->version, $_version) == - 1) {
+						// there is a newer version - yay
+						$isnewerversion = 1;
+					} else {
+						// nothing new
+						$isnewerversion = 0;
+					}
+
+					// anzeige über version-status mit ggfls. formular
+					// zum update schritt #1 -> download
+					if ($isnewerversion == 1) {
+						$text = 'There is a newer version available: "' . $_version . '" (Your current version is: ' . $this->version . ')';
+						return $this->response(200, "successfull", array(
+							'isnewerversion' => $isnewerversion,
+							'version' => $_version,
+							'message' => $text,
+							'link' => $version_link,
+							'additional_info' => $message_addinfo
+						));
+					} elseif ($isnewerversion == 0) {
+						// all good
+						return $this->response(200, "successfull", array(
+							'isnewerversion' => $isnewerversion,
+							'version' => $version_label,
+							'message' => "",
+							'link' => $version_link,
+							'additional_info' => $message_addinfo
+						));
+					} else {
+						standard_error('customized_version', '', true);
+					}
 				}
+			}
+			return $this->response(300, "successfull", array(
+				'isnewerversion' => 0,
+				'version' => $this->version.$this->branding,
+				'message' => 'Version-check not available due to missing php-curl extension',
+				'link' => UPDATE_URI.'/pretty',
+				'additional_info' => ""
+			));
+		}
+		throw new Exception("Not allowed to execute given command.", 403);
+	}
 
-				// anzeige über version-status mit ggfls. formular
-				// zum update schritt #1 -> download
-				if ($isnewerversion == 1) {
-					$text = 'There is a newer version available: "' . $_version . '" (Your current version is: ' . $version_label . ')';
-					return $this->response(200, "successfull", array(
-						'message' => $text,
-						'link' => $version_link,
-						'additional_info' => $message_addinfo
-					));
-				} elseif ($isnewerversion == 0) {
-					// all good
-					standard_success('noupdatesavail', '', array(), true);
-				} else {
-					standard_error('customized_version', '', true);
-				}
+	/**
+	 * import settings
+	 *
+	 * @param string $json_str
+	 *        	content of exported froxlor-settings json file
+	 *        	
+	 * @access admin
+	 * @throws Exception
+	 * @return bool
+	 */
+	public function importSettings()
+	{
+		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
+			$json_str = $this->getParam('json_str');
+			$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "User " . $this->getUserDetail('loginname') . " imported settings");
+			try {
+				SImExporter::import($json_str);
+				inserttask('1');
+				inserttask('10');
+				// Using nameserver, insert a task which rebuilds the server config
+				inserttask('4');
+				// cron.d file
+				inserttask('99');
+				return $this->response(200, "successfull", true);
+			} catch (Exception $e) {
+				throw new Exception($e->getMessage(), 406);
 			}
 		}
 		throw new Exception("Not allowed to execute given command.", 403);
 	}
 
 	/**
+	 * export settings
 	 *
-	 * @todo import settings
-	 *      
 	 * @access admin
-	 */
-	public function importSettings()
-	{
-		throw new Exception("Not available yet.", 501);
-	}
-
-	/**
-	 *
-	 * @todo export settings
-	 *      
-	 * @access admin
+	 * @throws Exception
+	 * @return string json-string
 	 */
 	public function exportSettings()
 	{
-		throw new Exception("Not available yet.", 501);
+		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
+			$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "User " . $this->getUserDetail('loginname') . " exported settings");
+			$json_export = SImExporter::export();
+			return $this->response(200, "successfull", $json_export);
+		}
+		throw new Exception("Not allowed to execute given command.", 403);
 	}
 
 	/**
@@ -279,6 +323,7 @@ class Froxlor extends ApiCommand
 			$result = array();
 			$result['params'] = array();
 			$param_desc = false;
+			$r = array();
 			foreach ($clines as $c) {
 				$c = trim($c);
 				// check param-section

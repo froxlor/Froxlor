@@ -692,6 +692,7 @@ class Customers extends ApiCommand implements ResourceEntity
 						), 'mails', 'createcustomer_mailbody', $replace_arr, $this->lng['mails']['createcustomer']['mailbody']);
 
 						$_mailerror = false;
+						$mailerr_msg = "";
 						try {
 							$this->mailer()->Subject = $mail_subject;
 							$this->mailer()->AltBody = $mail_body;

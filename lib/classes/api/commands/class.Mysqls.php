@@ -138,6 +138,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 				$mail_body = $this->getMailTemplate($userinfo, 'mails', 'new_database_by_customer_mailbody', $replace_arr, $this->lng['mails']['new_database_by_customer']['mailbody']);
 
 				$_mailerror = false;
+				$mailerr_msg = "";
 				try {
 					$this->mailer()->Subject = $mail_subject;
 					$this->mailer()->AltBody = $mail_body;

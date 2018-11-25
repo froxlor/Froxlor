@@ -195,6 +195,7 @@ class Ftps extends ApiCommand implements ResourceEntity
 					$mail_body = $this->getMailTemplate($customer, 'mails', 'new_ftpaccount_by_customer_mailbody', $replace_arr, $this->lng['mails']['new_ftpaccount_by_customer']['mailbody']);
 
 					$_mailerror = false;
+					$mailerr_msg = "";
 					try {
 						$this->mailer()->Subject = $mail_subject;
 						$this->mailer()->AltBody = $mail_body;

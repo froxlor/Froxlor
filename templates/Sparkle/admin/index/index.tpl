@@ -275,15 +275,15 @@ $header
 								<td><a href="$lookfornewversion_link">$lookfornewversion_lable</a></td>
 							</if>
 						</tr>
-						<if $isnewerversion == 1 >
+						<if $lookfornewversion_message != ''>
 						<tr>
-							<td colspan="2"><strong>{$lng['admin']['newerversionavailable']}</strong></td>
+							<td colspan="2"><strong>$lookfornewversion_message</strong></td>
 						</tr>
-							<if $lookfornewversion_addinfo != ''>
-							<tr>
-								<td colspan="2">$lookfornewversion_addinfo</td>
-							</tr>
-							</if>
+						</if>
+						<if $lookfornewversion_addinfo != ''>
+						<tr>
+							<td colspan="2">$lookfornewversion_addinfo</td>
+						</tr>
 						</if>
 					</tbody>
 				</table>
@@ -292,4 +292,3 @@ $header
 
 	</article>
 $footer
-

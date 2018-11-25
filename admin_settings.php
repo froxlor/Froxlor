@@ -300,7 +300,8 @@ elseif ($page == 'importexport' && $userinfo['change_serversettings'] == '1')
 	if (isset($_GET['action']) && $_GET['action'] == "export") {
 		// export
 		try {
-			$json_export = SImExporter::export();
+			$json_result = Froxlor::getLocal($userinfo)->exportSettings();
+			$json_export = json_decode($json_result, true)['data'];
 		} catch(Exception $e) {
 			dynamic_error($e->getMessage());
 		}
@@ -315,16 +316,10 @@ elseif ($page == 'importexport' && $userinfo['change_serversettings'] == '1')
 			if (isset($_FILES["import_file"]["tmp_name"])) {
 				$imp_content = file_get_contents($_FILES["import_file"]["tmp_name"]);
 				try {
-					SImExporter::import($imp_content);
+					Froxlor::getLocal($userinfo, array('json_str' => $imp_content))->importSettings();
 				} catch(Exception $e) {
 					dynamic_error($e->getMessage());
 				}
-				inserttask('1');
-				inserttask('10');
-				// Using nameserver, insert a task which rebuilds the server config
-				inserttask('4');
-				// cron.d file
-				inserttask('99');
 				standard_success('settingsimported', '', array('filename' => 'admin_settings.php'));
 			}
 			dynamic_error("Upload failed");
