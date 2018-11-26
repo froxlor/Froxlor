@@ -27,13 +27,26 @@
     },
     "require" : {
         "php" : ">=5.3",
+        "ext-session": "*",
+        "ext-ctype": "*",
         "ext-pdo": "*",
         "ext-pdo_mysql": "*",
+        "ext-simplexml": "*",
         "ext-xml": "*",
+        "ext-filter": "*",
+        "ext-posix": "*",
         "ext-mbstring": "*",
         "ext-curl": "*",
         "ext-json": "*"
     },
+    "require-dev": {
+		"pdepend/pdepend"           : "2.5.0",
+		"phpmd/phpmd"               : "2.6.0",
+		"sebastian/phpcpd"          : "3.0.1",
+		"squizlabs/php_codesniffer" : "3.3.2",
+		"phploc/phploc"             : "3.0.1",
+		"theseer/phpdox"            : "0.11.2"
+	},
     "suggest": {
         "ext-bcmath": "*",
         "ext-zip": "*"
