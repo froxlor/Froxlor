@@ -39,8 +39,8 @@ before_script:
   - mysql -e 'CREATE DATABASE IF NOT EXISTS froxlor010'
   - echo "USE mysql;\nUPDATE user SET password=PASSWORD('fr0xl0r.TravisCI') WHERE user='root';\nFLUSH PRIVILEGES;\n" | mysql -u root
   - mysql -u root -pfr0xl0r.TravisCI froxlor010 < install/froxlor.sql
-  - mysql -u root -pfr0xl0r.TravisCI -e 'CREATE USER 'froxlor010'@'localhost' IDENTIFIED BY 'fr0xl0r.TravisCI';'
-  - mysql -u root -pfr0xl0r.TravisCI -e 'GRANT ALL ON froxlor010.* TO 'froxlor010'@'localhost';'
+  - mysql -u root -pfr0xl0r.TravisCI -e "CREATE USER 'froxlor010'@'localhost' IDENTIFIED BY 'fr0xl0r.TravisCI';"
+  - mysql -u root -pfr0xl0r.TravisCI -e "GRANT ALL ON froxlor010.* TO 'froxlor010'@'localhost';"
 
 script:
   - ant full-build-parallel
