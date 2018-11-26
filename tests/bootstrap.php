@@ -1,9 +1,14 @@
 <?php
-if (! file_exists('/etc/froxlor-test.pwd') || ! file_exists('/etc/froxlor-test.rpwd')) {
-	die('This is not the test-system...' . PHP_EOL);
+
+if (file_exists('/etc/froxlor-test.pwd') && file_exists('/etc/froxlor-test.rpwd')) {
+	// froxlor jenkins test-system
+	$pwd = trim(file_get_contents('/etc/froxlor-test.pwd'));
+	$rpwd = trim(file_get_contents('/etc/froxlor-test.rpwd'));
+} else {
+	// travis-ci.org
+	$pwd = 'fr0xl0r.TravisCI';
+	$rpwd = 'fr0xl0r.TravisCI';
 }
-$pwd = trim(file_get_contents('/etc/froxlor-test.pwd'));
-$rpwd = trim(file_get_contents('/etc/froxlor-test.rpwd'));
 
 $userdata_content = "<?php
 \$sql['user'] = 'froxlor010';
