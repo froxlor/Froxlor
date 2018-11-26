@@ -23,8 +23,6 @@ mysql:
   username: root
   encoding: utf8
 
-before_install:
-  - sudo apt-get install -y --force-yes php5-mysql php5-xml php5-zip php5-curl php5-bcmath php5-mbstring php5-json
 addons:
   apt:
     update: true
