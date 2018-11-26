@@ -50,7 +50,7 @@ script:
       -Dphpcs=$(pwd)/vendor/bin/phpcs
       -Dphploc=$(pwd)/vendor/bin/phploc
       -Dphpdox=$(pwd)/vendor/bin/phpdox
-      -Dphpunit=phpunit
+      -Dphpunit=$(pwd)/vendor/bin/phpunit
 
 notifications:
   irc: "irc.freenode.org#froxlor"
