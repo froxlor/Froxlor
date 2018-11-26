@@ -1,0 +1,55 @@
+{
+    "name": "froxlor/froxlor",
+    "description": "The server administration software for your needs. Developed by experienced server administrators, this panel simplifies the effort of managing your hosting platform.",
+    "keywords": ["server", "administration", "php"],
+    "homepage": "https://www.froxlor.org",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Michael Kaufmann",
+            "email": "team@froxlor.org",
+            "role": "Lead Developer"
+        },
+        {
+            "name": "Robert Förster",
+            "email": "team@froxlor.org",
+            "role": "Package Maintainer"
+        }
+    ],
+    "support": {
+        "email": "team@froxlor.org",
+        "issues": "https://github.com/Froxlor/Froxlor/issues",
+        "forum": "https://forum.froxlor.org/",
+        "wiki": "https://github.com/Froxlor/Froxlor/wiki",
+        "irc": "irc://chat.freenode.net/froxlor",
+        "source": "https://github.com/Froxlor/Froxlor",
+        "docs": "https://github.com/Froxlor/Froxlor/wiki"
+    },
+    "require" : {
+        "php" : ">=5.3",
+        "ext-session": "*",
+        "ext-ctype": "*",
+        "ext-pdo": "*",
+        "ext-pdo_mysql": "*",
+        "ext-simplexml": "*",
+        "ext-xml": "*",
+        "ext-filter": "*",
+        "ext-posix": "*",
+        "ext-mbstring": "*",
+        "ext-curl": "*",
+        "ext-json": "*"
+    },
+    "require-dev": {
+	    	"phpunit/phpunit"	    : "^6",
+		"pdepend/pdepend"           : "2.5.0",
+		"phpmd/phpmd"               : "2.6.0",
+		"sebastian/phpcpd"          : "3.0.1",
+		"squizlabs/php_codesniffer" : "3.3.2",
+		"phploc/phploc"             : "3.0.1",
+		"theseer/phpdox"            : "0.11.2"
+	},
+    "suggest": {
+        "ext-bcmath": "*",
+        "ext-zip": "*"
+    }
+}
