@@ -265,6 +265,7 @@ class Customers extends ApiCommand implements ResourceEntity
 				$customernumber = validate($customernumber, 'customer number', '/^[A-Za-z0-9 \-]*$/Di', '', array(), true);
 				$def_language = validate($def_language, 'default language', '', '', array(), true);
 				$custom_notes = validate(str_replace("\r\n", "\n", $custom_notes), 'custom_notes', '/^[^\0]*$/', '', array(), true);
+				$allowed_phpconfigs = array_map('intval', $allowed_phpconfigs);
 
 				if (Settings::Get('system.mail_quota_enabled') != '1') {
 					$email_quota = - 1;
@@ -910,6 +911,7 @@ class Customers extends ApiCommand implements ResourceEntity
 			$email = $idna_convert->encode(validate($email, 'email', '', '', array(), true));
 			$customernumber = validate($customernumber, 'customer number', '/^[A-Za-z0-9 \-]*$/Di', '', array(), true);
 			$custom_notes = validate(str_replace("\r\n", "\n", $custom_notes), 'custom_notes', '/^[^\0]*$/', '', array(), true);
+			$allowed_phpconfigs = array_map('intval', $allowed_phpconfigs);
 		}
 		$def_language = validate($def_language, 'default language', '', '', array(), true);
 		$theme = validate($theme, 'theme', '', '', array(), true);
