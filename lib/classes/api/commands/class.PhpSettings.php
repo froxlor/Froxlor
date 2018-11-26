@@ -193,6 +193,8 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 				$fpm_config_id = 1;
 			} elseif (Settings::Get('phpfpm.enabled') == 1) {
 				$fpm_config_id = intval($this->getParam('fpmconfig'));
+			} else {
+				$fpm_config_id = 1;
 			}
 
 			// parameters
