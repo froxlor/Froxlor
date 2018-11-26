@@ -1,9 +1,9 @@
 language: php
 
 php:
-  - "5.4"
-  - "5.6"
-#  - "7.0"
+#  - "5.4"
+#  - "5.6"
+  - "7.0"
 #  - "7.1"
 #  - "7.2"
 
@@ -13,10 +13,12 @@ branches:
 
 matrix:
   include:
-    - php: 5.6
+ #   - php: 5.6
+ #     env: deps=highest
+ #   - php: 5.4
+ #     env: deps=lowest
+    - php: 7.0
       env: deps=highest
-    - php: 5.4
-      env: deps=lowest
 
 mysql:
   database: froxlor010
