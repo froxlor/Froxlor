@@ -37,7 +37,7 @@
         "ext-posix": "*",
         "ext-mbstring": "*",
         "ext-curl": "*",
-        "ext-json": "*",
+        "ext-json": "*"
     },
     "require-dev": {
 		"phpunit/phpunit"	    : "6.5.13",
