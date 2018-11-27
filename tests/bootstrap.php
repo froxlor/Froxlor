@@ -4,10 +4,12 @@ if (file_exists('/etc/froxlor-test.pwd') && file_exists('/etc/froxlor-test.rpwd'
 	// froxlor jenkins test-system
 	$pwd = trim(file_get_contents('/etc/froxlor-test.pwd'));
 	$rpwd = trim(file_get_contents('/etc/froxlor-test.rpwd'));
+	define('TRAVIS_CI', 0);
 } else {
 	// travis-ci.org
 	$pwd = 'fr0xl0r.TravisCI';
 	$rpwd = 'fr0xl0r.TravisCI';
+	define('TRAVIS_CI', 1);
 }
 
 $userdata_content = "<?php

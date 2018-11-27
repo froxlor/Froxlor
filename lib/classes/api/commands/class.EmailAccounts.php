@@ -35,6 +35,8 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 	 *        	optional email address to send account information to, default is the account that is being created
 	 * @param int $email_quota
 	 *        	optional quota if enabled in MB, default 0
+	 * @param bool $sendinfomail
+	 *        	optional, sends the welcome message to the new account (needed for creation, without the user won't be able to login before any mail is received), default 1 (true)
 	 *        	
 	 * @access admin, customer
 	 * @throws Exception
@@ -55,6 +57,7 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 			$email_password = $this->getParam('email_password');
 			$alternative_email = $this->getParam('alternative_email', true, '');
 			$quota = $this->getParam('email_quota', true, 0);
+			$sendinfomail = $this->getParam('sendinfomail', true, 1);
 
 			// validation
 			$quota = validate($quota, 'email_quota', '/^\d+$/', 'vmailquotawrong', array(), true);
@@ -184,62 +187,33 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 			Admins::increaseUsage($customer['adminid'], 'email_accounts_used');
 			Admins::increaseUsage($customer['adminid'], 'email_quota_used', '', $quota);
 
-			// replacer array for mail to create account on server
-			$replace_arr = array(
-				'EMAIL' => $email_full,
-				'USERNAME' => $username,
-				'PASSWORD' => $password
-			);
+			if ($sendinfomail) {
+				// replacer array for mail to create account on server
+				$replace_arr = array(
+					'EMAIL' => $email_full,
+					'USERNAME' => $username,
+					'PASSWORD' => $password
+				);
 
-			// get the customers admin
-			$stmt = Database::prepare("SELECT `name`, `email` FROM `" . TABLE_PANEL_ADMINS . "` WHERE `adminid`= :adminid");
-			$admin = Database::pexecute_first($stmt, array(
-				"adminid" => $customer['adminid']
-			));
+				// get the customers admin
+				$stmt = Database::prepare("SELECT `name`, `email` FROM `" . TABLE_PANEL_ADMINS . "` WHERE `adminid`= :adminid");
+				$admin = Database::pexecute_first($stmt, array(
+					"adminid" => $customer['adminid']
+				));
 
-			// get template for mail subject
-			$mail_subject = $this->getMailTemplate($customer, 'mails', 'pop_success_subject', $replace_arr, $this->lng['mails']['pop_success']['subject']);
-			// get template for mail body
-			$mail_body = $this->getMailTemplate($customer, 'mails', 'pop_success_mailbody', $replace_arr, $this->lng['mails']['pop_success']['mailbody']);
-
-			$_mailerror = false;
-			$mailerr_msg = "";
-			try {
-				$this->mailer()->SetFrom($admin['email'], getCorrectUserSalutation($admin));
-				$this->mailer()->Subject = $mail_subject;
-				$this->mailer()->AltBody = $mail_body;
-				$this->mailer()->MsgHTML(str_replace("\n", "<br />", $mail_body));
-				$this->mailer()->AddAddress($email_full);
-				$this->mailer()->Send();
-			} catch (phpmailerException $e) {
-				$mailerr_msg = $e->errorMessage();
-				$_mailerror = true;
-			} catch (Exception $e) {
-				$mailerr_msg = $e->getMessage();
-				$_mailerror = true;
-			}
-
-			if ($_mailerror) {
-				$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_ERR, "[API] Error sending mail: " . $mailerr_msg);
-				standard_error('errorsendingmail', $email_full, true);
-			}
-
-			$this->mailer()->ClearAddresses();
-
-			// customer wants to send the e-mail to an alternative email address too
-			if (Settings::Get('panel.sendalternativemail') == 1) {
 				// get template for mail subject
-				$mail_subject = $this->getMailTemplate($customer, 'mails', 'pop_success_alternative_subject', $replace_arr, $this->lng['mails']['pop_success_alternative']['subject']);
+				$mail_subject = $this->getMailTemplate($customer, 'mails', 'pop_success_subject', $replace_arr, $this->lng['mails']['pop_success']['subject']);
 				// get template for mail body
-				$mail_body = $this->getMailTemplate($customer, 'mails', 'pop_success_alternative_mailbody', $replace_arr, $this->lng['mails']['pop_success_alternative']['mailbody']);
+				$mail_body = $this->getMailTemplate($customer, 'mails', 'pop_success_mailbody', $replace_arr, $this->lng['mails']['pop_success']['mailbody']);
 
 				$_mailerror = false;
+				$mailerr_msg = "";
 				try {
 					$this->mailer()->SetFrom($admin['email'], getCorrectUserSalutation($admin));
 					$this->mailer()->Subject = $mail_subject;
 					$this->mailer()->AltBody = $mail_body;
 					$this->mailer()->MsgHTML(str_replace("\n", "<br />", $mail_body));
-					$this->mailer()->AddAddress($idna_convert->encode($alternative_email), getCorrectUserSalutation($customer));
+					$this->mailer()->AddAddress($email_full);
 					$this->mailer()->Send();
 				} catch (phpmailerException $e) {
 					$mailerr_msg = $e->errorMessage();
@@ -251,12 +225,43 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 
 				if ($_mailerror) {
 					$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_ERR, "[API] Error sending mail: " . $mailerr_msg);
-					standard_error(array(
-						'errorsendingmail'
-					), $alternative_email, true);
+					standard_error('errorsendingmail', $email_full, true);
 				}
 
 				$this->mailer()->ClearAddresses();
+
+				// customer wants to send the e-mail to an alternative email address too
+				if (Settings::Get('panel.sendalternativemail') == 1) {
+					// get template for mail subject
+					$mail_subject = $this->getMailTemplate($customer, 'mails', 'pop_success_alternative_subject', $replace_arr, $this->lng['mails']['pop_success_alternative']['subject']);
+					// get template for mail body
+					$mail_body = $this->getMailTemplate($customer, 'mails', 'pop_success_alternative_mailbody', $replace_arr, $this->lng['mails']['pop_success_alternative']['mailbody']);
+
+					$_mailerror = false;
+					try {
+						$this->mailer()->SetFrom($admin['email'], getCorrectUserSalutation($admin));
+						$this->mailer()->Subject = $mail_subject;
+						$this->mailer()->AltBody = $mail_body;
+						$this->mailer()->MsgHTML(str_replace("\n", "<br />", $mail_body));
+						$this->mailer()->AddAddress($idna_convert->encode($alternative_email), getCorrectUserSalutation($customer));
+						$this->mailer()->Send();
+					} catch (phpmailerException $e) {
+						$mailerr_msg = $e->errorMessage();
+						$_mailerror = true;
+					} catch (Exception $e) {
+						$mailerr_msg = $e->getMessage();
+						$_mailerror = true;
+					}
+
+					if ($_mailerror) {
+						$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_ERR, "[API] Error sending mail: " . $mailerr_msg);
+						standard_error(array(
+							'errorsendingmail'
+						), $alternative_email, true);
+					}
+
+					$this->mailer()->ClearAddresses();
+				}
 			}
 
 			$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] added email account for '" . $result['email_full'] . "'");

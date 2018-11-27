@@ -25,7 +25,7 @@ class MysqlsTest extends TestCase
 		$data = [
 			'mysql_password' => generatePassword(),
 			'description' => 'testdb',
-			'sendinfomail' => true
+			'sendinfomail' => TRAVIS_CI == 1 ? 0 : 1
 		];
 		$json_result = Mysqls::getLocal($customer_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];

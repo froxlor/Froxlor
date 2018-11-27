@@ -372,7 +372,8 @@ class MailsTest extends TestCase
 			'emailaddr' => 'info@test2.local',
 			'email_password' => generatePassword(),
 			'alternative_email' => 'noone@example.com',
-			'email_quota' => 1337
+			'email_quota' => 1337,
+			'sendinfomail' => TRAVIS_CI == 1 ? 0 : 1
 		];
 		$json_result = EmailAccounts::getLocal($customer_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
@@ -452,7 +453,8 @@ class MailsTest extends TestCase
 		$data = [
 			'emailaddr' => 'info@test2.local',
 			'email_password' => generatePassword(),
-			'alternative_email' => 'noone@example.com'
+			'alternative_email' => 'noone@example.com',
+			'sendinfomail' => TRAVIS_CI == 1 ? 0 : 1
 		];
 		$json_result = EmailAccounts::getLocal($customer_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];

@@ -35,7 +35,7 @@ class CustomersTest extends TestCase
 			'mysqls' => 15,
 			'createstdsubdomain' => 1,
 			'new_customer_password' => 'h0lYmo1y',
-			'sendpassword' => 1,
+			'sendpassword' => TRAVIS_CI == 1 ? 0 : 1,
 			'phpenabled' => 1,
 			'store_defaultindex' => 1,
 			'custom_notes' => 'secret',
