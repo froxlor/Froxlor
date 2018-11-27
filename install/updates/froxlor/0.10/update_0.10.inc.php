@@ -21,8 +21,8 @@ if (! defined('_CRON_UPDATE')) {
 	}
 }
 
-if (isFroxlorVersion('0.9.40')) {
-	showUpdateStep("Updating from 0.9.40 to 0.10.0", false);
+if (isFroxlorVersion('0.9.40.1')) {
+	showUpdateStep("Updating from 0.9.40.1 to 0.10.0", false);
 	
 	showUpdateStep("Adding new api keys table");
 	Database::query("DROP TABLE IF EXISTS `api_keys`;");
