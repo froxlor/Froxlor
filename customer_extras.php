@@ -581,7 +581,7 @@ if ($page == 'overview') {
 
 				// path cannot be the customers docroot
 				if ($path == makeCorrectDir($userinfo['documentroot'])) {
-					standar_error('backupfoldercannotbedocroot');
+					standard_error('backupfoldercannotbedocroot');
 				}
 
 				$backup_dbs = isset($_POST['backup_dbs']) ? intval($_POST['backup_dbs']) : 0;
