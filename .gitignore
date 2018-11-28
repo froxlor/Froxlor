@@ -1,3 +1,4 @@
+vendor/*
 install/update.log
 templates/*
 lib/userdata.inc.php
