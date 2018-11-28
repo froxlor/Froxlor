@@ -95,6 +95,28 @@ class CustomerBackupsTest extends TestCase
 		$this->assertEquals('0', $result['backup_web']);
 	}
 
+	/**
+	 * @depends testCustomerCustomerBackupsAdd
+	 */
+	public function testCustomerCustomerBackupsAddPathNotDocroot()
+	{
+		global $admin_userdata;
+
+		// get customer
+		$json_result = Customers::getLocal($admin_userdata, array(
+			'loginname' => 'test1'
+		))->get();
+		$customer_userdata = json_decode($json_result, true)['data'];
+
+		$data = [
+			'path' => '/'
+		];
+
+		$this->expectExceptionCode(400);
+		$this->expectExceptionMessage('The folder for backups cannot be your homedir, please chose a folder within your homedir, e.g. /backups');
+		$json_result = CustomerBackups::getLocal($customer_userdata, $data)->add();
+	}
+
 	public function testAdminCustomerBackupsGet()
 	{
 		global $admin_userdata;
