@@ -55,6 +55,7 @@ if(!isFroxlor()) {
 
 if (isFroxlor()) {
 	include_once (makeCorrectFile(dirname(__FILE__).'/updates/froxlor/0.9/update_0.9.inc.php'));
+	include_once (makeCorrectFile(dirname(__FILE__).'/updates/froxlor/0.10/update_0.10.inc.php'));
 
 	// Check Froxlor - database integrity (only happens after all updates are done, so we know the db-layout is okay)
 	showUpdateStep("Checking database integrity");

@@ -75,7 +75,8 @@ class nginx_phpfpm extends nginx
 				'openbasedir' => 0,
 				'email' => Settings::Get('panel.adminmail'),
 				'loginname' => 'froxlor.panel',
-				'documentroot' => $mypath
+				'documentroot' => $mypath,
+				'customerroot' => $mypath
 			);
 
 			// all the files and folders have to belong to the local user

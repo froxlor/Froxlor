@@ -77,27 +77,22 @@ if ($page == 'overview') {
 
 		eval("echo \"" . getTemplate("extras/htpasswds") . "\";");
 	} elseif ($action == 'delete' && $id != 0) {
-		$result_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_HTPASSWDS . "`
-			WHERE `customerid`= :customerid
-			AND `id`= :id");
-		Database::pexecute($result_stmt, array(
-			"customerid" => $userinfo['customerid'],
-			"id" => $id
-		));
-		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+		try {
+			$json_result = DirProtections::getLocal($userinfo, array(
+				'id' => $id
+			))->get();
+		} catch (Exception $e) {
+			dynamic_error($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
 
 		if (isset($result['username']) && $result['username'] != '') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
-				$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_HTPASSWDS . "`
-					WHERE `customerid`= :customerid
-					AND `id`= :id");
-				Database::pexecute($stmt, array(
-					"customerid" => $userinfo['customerid'],
-					"id" => $id
-				));
-
-				$log->logAction(USR_ACTION, LOG_INFO, "deleted htpasswd for '" . $result['username'] . " (" . $result['path'] . ")'");
-				inserttask('1');
+				try {
+					DirProtections::getLocal($userinfo, $_POST)->delete();
+				} catch (Exception $e) {
+					dynamic_error($e->getMessage());
+				}
 				redirectTo($filename, array(
 					'page' => $page,
 					's' => $s
@@ -116,74 +111,15 @@ if ($page == 'overview') {
 		}
 	} elseif ($action == 'add') {
 		if (isset($_POST['send']) && $_POST['send'] == 'send') {
-			$path = makeCorrectDir(validate($_POST['path'], 'path'));
-			$userpath = $path;
-			$path = makeCorrectDir($userinfo['documentroot'] . '/' . $path);
-			$username = validate($_POST['username'], 'username', '/^[a-zA-Z0-9][a-zA-Z0-9\-_]+\$?$/');
-			$authname = validate($_POST['directory_authname'], 'directory_authname', '/^[a-zA-Z0-9][a-zA-Z0-9\-_ ]+\$?$/');
-			validate($_POST['directory_password'], 'password');
-
-			$username_path_check_stmt = Database::prepare("SELECT `id`, `username`, `path` FROM `" . TABLE_PANEL_HTPASSWDS . "`
-				WHERE `username`= :username
-				AND `path`= :path
-				AND `customerid`= :customerid");
-			$params = array(
-				"username" => $username,
-				"path" => $path,
-				"customerid" => $userinfo['customerid']
-			);
-			Database::pexecute($username_path_check_stmt, $params);
-			$username_path_check = $username_path_check_stmt->fetch(PDO::FETCH_ASSOC);
-
-			if (CRYPT_STD_DES == 1) {
-				$saltfordescrypt = substr(md5(uniqid(microtime(), 1)), 4, 2);
-				$password = crypt($_POST['directory_password'], $saltfordescrypt);
-			} else {
-				$password = crypt($_POST['directory_password']);
+			try {
+				DirProtections::getLocal($userinfo, $_POST)->add();
+			} catch (Exception $e) {
+				dynamic_error($e->getMessage());
 			}
-
-			if (! $_POST['path']) {
-				standard_error('invalidpath');
-			}
-
-			if ($username == '') {
-				standard_error(array(
-					'stringisempty',
-					'myloginname'
-				));
-			} elseif ($username_path_check['username'] == $username && $username_path_check['path'] == $path) {
-				standard_error('userpathcombinationdupe');
-			} elseif ($_POST['directory_password'] == '') {
-				standard_error(array(
-					'stringisempty',
-					'mypassword'
-				));
-			} elseif ($path == '') {
-				standard_error('patherror');
-			} elseif ($_POST['directory_password'] == $username) {
-				standard_error('passwordshouldnotbeusername');
-			} else {
-				$stmt = Database::prepare("INSERT INTO `" . TABLE_PANEL_HTPASSWDS . "` SET
-					`customerid` = :customerid,
-					`username` = :username,
-					`password` = :password,
-					`path` = :path,
-					`authname` = :authname");
-				$params = array(
-					"customerid" => $userinfo['customerid'],
-					"username" => $username,
-					"password" => $password,
-					"path" => $path,
-					"authname" => $authname
-				);
-				Database::pexecute($stmt, $params);
-				$log->logAction(USR_ACTION, LOG_INFO, "added htpasswd for '" . $username . " (" . $path . ")'");
-				inserttask('1');
-				redirectTo($filename, array(
-					'page' => $page,
-					's' => $s
-				));
-			}
+			redirectTo($filename, array(
+				'page' => $page,
+				's' => $s
+			));
 		} else {
 			$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
 
@@ -196,65 +132,26 @@ if ($page == 'overview') {
 			eval("echo \"" . getTemplate("extras/htpasswds_add") . "\";");
 		}
 	} elseif ($action == 'edit' && $id != 0) {
-		$result_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_HTPASSWDS . "`
-			WHERE `customerid`= :customerid
-			AND `id`= :id");
-		Database::pexecute($result_stmt, array(
-			"customerid" => $userinfo['customerid'],
-			"id" => $id
-		));
-		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+		try {
+			$json_result = DirProtections::getLocal($userinfo, array(
+				'id' => $id
+			))->get();
+		} catch (Exception $e) {
+			dynamic_error($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
 
 		if (isset($result['username']) && $result['username'] != '') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
-				validate($_POST['directory_password'], 'password');
-				$authname = validate($_POST['directory_authname'], 'directory_authname', '/^[a-zA-Z0-9][a-zA-Z0-9\-_ ]+\$?$/');
-
-				if (CRYPT_STD_DES == 1) {
-					$saltfordescrypt = substr(md5(uniqid(microtime(), 1)), 4, 2);
-					$password = crypt($_POST['directory_password'], $saltfordescrypt);
-				} else {
-					$password = crypt($_POST['directory_password']);
+				try {
+					DirProtections::getLocal($userinfo, $_POST)->update();
+				} catch (Exception $e) {
+					dynamic_error($e->getMessage());
 				}
-
-				if ($_POST['directory_password'] == $result['username']) {
-					standard_error('passwordshouldnotbeusername');
-				}
-
-				$params = array(
-					"customerid" => $userinfo['customerid'],
-					"id" => $id
-				);
-
-				$pwd_sql = '';
-				if ($_POST['directory_password'] != '') {
-					$pwd_sql = "`password`= :password ";
-					$params["password"] = $password;
-				}
-
-				$auth_sql = '';
-				if ($authname != $result['authname']) {
-					$auth_sql = "`authname`= :authname ";
-					$params["authname"] = $authname;
-				}
-
-				if ($pwd_sql != '' || $auth_sql != '') {
-					if ($pwd_sql != '' && $auth_sql != '') {
-						$pwd_sql .= ', ';
-					}
-
-					$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_HTPASSWDS . "`
-						SET " . $pwd_sql . $auth_sql . "
-						WHERE `customerid`= :customerid
-						AND `id`= :id");
-					Database::pexecute($stmt, $params);
-					$log->logAction(USR_ACTION, LOG_INFO, "edited htpasswd for '" . $result['username'] . " (" . $result['path'] . ")'");
-					inserttask('1');
-					redirectTo($filename, array(
-						'page' => $page,
-						's' => $s
-					));
-				}
+				redirectTo($filename, array(
+					'page' => $page,
+					's' => $s
+				));
 			} else {
 				if (strpos($result['path'], $userinfo['documentroot']) === 0) {
 					$result['path'] = str_replace($userinfo['documentroot'], "/", $result['path']);
@@ -326,42 +223,22 @@ if ($page == 'overview') {
 
 		eval("echo \"" . getTemplate("extras/htaccess") . "\";");
 	} elseif ($action == 'delete' && $id != 0) {
-		$result_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_HTACCESS . "`
-			WHERE `customerid` = :customerid
-			AND `id` = :id");
-		Database::pexecute($result_stmt, array(
-			"customerid" => $userinfo['customerid'],
-			"id" => $id
-		));
-		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+		try {
+			$json_result = DirOptions::getLocal($userinfo, array(
+				'id' => $id
+			))->get();
+		} catch (Exception $e) {
+			dynamic_error($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
 
 		if (isset($result['customerid']) && $result['customerid'] != '' && $result['customerid'] == $userinfo['customerid']) {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
-				// do we have to remove the symlink and folder in suexecpath?
-				if ((int) Settings::Get('perl.suexecworkaround') == 1) {
-					$loginname = getCustomerDetail($result['customerid'], 'loginname');
-					$suexecpath = makeCorrectDir(Settings::Get('perl.suexecpath') . '/' . $loginname . '/' . md5($result['path']) . '/');
-					$perlsymlink = makeCorrectFile($result['path'] . '/cgi-bin');
-					// remove symlink
-					if (file_exists($perlsymlink)) {
-						safe_exec('rm -f ' . escapeshellarg($perlsymlink));
-						$log->logAction(USR_ACTION, LOG_DEBUG, "deleted suexecworkaround symlink '" . $perlsymlink . "'");
-					}
-					// remove folder in suexec-path
-					if (file_exists($suexecpath)) {
-						safe_exec('rm -rf ' . escapeshellarg($suexecpath));
-						$log->logAction(USR_ACTION, LOG_DEBUG, "deleted suexecworkaround path '" . $suexecpath . "'");
-					}
+				try {
+					DirOptions::getLocal($userinfo, $_POST)->delete();
+				} catch (Exception $e) {
+					dynamic_error($e->getMessage());
 				}
-				$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_HTACCESS . "`
-					WHERE `customerid`= :customerid
-					AND `id`= :id");
-				Database::pexecute($stmt, array(
-					"customerid" => $userinfo['customerid'],
-					"id" => $id
-				));
-				$log->logAction(USR_ACTION, LOG_INFO, "deleted htaccess for '" . str_replace($userinfo['documentroot'], '/', $result['path']) . "'");
-				inserttask('1');
 				redirectTo($filename, array(
 					'page' => $page,
 					's' => $s
@@ -376,74 +253,15 @@ if ($page == 'overview') {
 		}
 	} elseif ($action == 'add') {
 		if (isset($_POST['send']) && $_POST['send'] == 'send') {
-			$path = makeCorrectDir(validate($_POST['path'], 'path'));
-			$userpath = $path;
-			$path = makeCorrectDir($userinfo['documentroot'] . '/' . $path);
-			$path_dupe_check_stmt = Database::prepare("SELECT `id`, `path` FROM `" . TABLE_PANEL_HTACCESS . "`
-				WHERE `path`= :path
-				AND `customerid`= :customerid");
-			Database::pexecute($path_dupe_check_stmt, array(
-				"path" => $path,
-				"customerid" => $userinfo['customerid']
+			try {
+				DirOptions::getLocal($userinfo, $_POST)->add();
+			} catch (Exception $e) {
+				dynamic_error($e->getMessage());
+			}
+			redirectTo($filename, array(
+				'page' => $page,
+				's' => $s
 			));
-			$path_dupe_check = $path_dupe_check_stmt->fetch(PDO::FETCH_ASSOC);
-
-			if (! $_POST['path']) {
-				standard_error('invalidpath');
-			}
-
-			if (isset($_POST['options_cgi']) && (int) $_POST['options_cgi'] != 0) {
-				$options_cgi = '1';
-			} else {
-				$options_cgi = '0';
-			}
-
-			$error404path = '';
-			if (isset($_POST['error404path'])) {
-				$error404path = correctErrorDocument($_POST['error404path']);
-			}
-
-			$error403path = '';
-			if (isset($_POST['error403path'])) {
-				$error403path = correctErrorDocument($_POST['error403path']);
-			}
-
-			$error500path = '';
-			if (isset($_POST['error500path'])) {
-				$error500path = correctErrorDocument($_POST['error500path']);
-			}
-
-			if ($path_dupe_check['path'] == $path) {
-				standard_error('errordocpathdupe', $userpath);
-			} elseif ($path == '') {
-				standard_error('patherror');
-			} else {
-				$stmt = Database::prepare('INSERT INTO `' . TABLE_PANEL_HTACCESS . '` SET
-					`customerid` = :customerid,
-					`path` = :path,
-					`options_indexes` = :options_indexes,
-					`error404path` = :error404path,
-					`error403path` = :error403path,
-					`error500path` = :error500path,
-					`options_cgi` = :options_cgi');
-				$params = array(
-					"customerid" => $userinfo['customerid'],
-					"path" => $path,
-					"options_indexes" => $_POST['options_indexes'] == '1' ? '1' : '0',
-					"error403path" => $error403path,
-					"error404path" => $error404path,
-					"error500path" => $error500path,
-					"options_cgi" => $options_cgi
-				);
-				Database::pexecute($stmt, $params);
-
-				$log->logAction(USR_ACTION, LOG_INFO, "added htaccess for '" . $path . "'");
-				inserttask('1');
-				redirectTo($filename, array(
-					'page' => $page,
-					's' => $s
-				));
-			}
 		} else {
 			$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
 			$cperlenabled = customerHasPerlEnabled($userinfo['customerid']);
@@ -457,55 +275,22 @@ if ($page == 'overview') {
 			eval("echo \"" . getTemplate("extras/htaccess_add") . "\";");
 		}
 	} elseif (($action == 'edit') && ($id != 0)) {
-		$result_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_HTACCESS . "`
-			WHERE `customerid` = :customerid
-			AND `id` = :id");
-		Database::pexecute($result_stmt, array(
-			"customerid" => $userinfo['customerid'],
-			"id" => $id
-		));
-		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+		try {
+			$json_result = DirOptions::getLocal($userinfo, array(
+				'id' => $id
+			))->get();
+		} catch (Exception $e) {
+			dynamic_error($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
 
 		if ((isset($result['customerid'])) && ($result['customerid'] != '') && ($result['customerid'] == $userinfo['customerid'])) {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
-				$option_indexes = intval($_POST['options_indexes']);
-				$options_cgi = isset($_POST['options_cgi']) ? intval($_POST['options_cgi']) : 0;
-
-				if ($option_indexes != '1') {
-					$option_indexes = '0';
+				try {
+					DirOptions::getLocal($userinfo, $_POST)->update();
+				} catch (Exception $e) {
+					dynamic_error($e->getMessage());
 				}
-
-				if ($options_cgi != '1') {
-					$options_cgi = '0';
-				}
-
-				$error404path = correctErrorDocument($_POST['error404path']);
-				$error403path = correctErrorDocument($_POST['error403path']);
-				$error500path = correctErrorDocument($_POST['error500path']);
-
-				if (($option_indexes != $result['options_indexes']) || ($error404path != $result['error404path']) || ($error403path != $result['error403path']) || ($error500path != $result['error500path']) || ($options_cgi != $result['options_cgi'])) {
-					inserttask('1');
-					$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_HTACCESS . "`
-						SET `options_indexes` = :options_indexes,
-						`error404path` = :error404path,
-						`error403path` = :error403path,
-						`error500path` = :error500path,
-						`options_cgi` = :options_cgi
-						WHERE `customerid` = :customerid
-						AND `id` = :id");
-					$params = array(
-						"customerid" => $userinfo['customerid'],
-						"options_indexes" => $_POST['options_indexes'] == '1' ? '1' : '0',
-						"error403path" => $error403path,
-						"error404path" => $error404path,
-						"error500path" => $error500path,
-						"options_cgi" => $options_cgi,
-						"id" => $id
-					);
-					Database::pexecute($stmt, $params);
-					$log->logAction(USR_ACTION, LOG_INFO, "edited htaccess for '" . str_replace($userinfo['documentroot'], '/', $result['path']) . "'");
-				}
-
 				redirectTo($filename, array(
 					'page' => $page,
 					's' => $s
@@ -546,79 +331,43 @@ if ($page == 'overview') {
 	{
 		if ($action == 'abort' && isset($_POST['send']) && $_POST['send'] == 'send') {
 			$log->logAction(USR_ACTION, LOG_NOTICE, "customer_extras::backup - aborted scheduled backupjob");
-			$entry = isset($_POST['backup_job_entry']) ? (int)$_POST['backup_job_entry'] : 0;
-			if ($entry > 0) {
-				$del_stmt = Database::prepare("DELETE FROM `".TABLE_PANEL_TASKS."` WHERE `id` = :tid");
-				Database::pexecute($del_stmt, array('tid' => $entry));
-				standard_success('backupaborted');
+			try {
+				CustomerBackups::getLocal($userinfo, $_POST)->delete();
+			} catch (Exception $e) {
+				dynamic_error($e->getMessage());
 			}
+			standard_success('backupaborted');
 			redirectTo($filename, array('page' => $page, 'action' => '', 's' => $s));
 		}
 		if ($action == '') {
 			$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_extras::backup");
 
 			// check whether there is a backup-job for this customer
-			$sel_stmt = Database::prepare("SELECT * FROM `".TABLE_PANEL_TASKS."` WHERE `type` = '20'");
-			Database::pexecute($sel_stmt);
+			try {
+				$json_result = CustomerBackups::getLocal($userinfo)->listing();
+			} catch (Exception $e) {
+				dynamic_error($e->getMessage());
+			}
+			$result = json_decode($json_result, true)['data'];
 			$existing_backupJob = null;
-			while ($entry = $sel_stmt->fetch())
+			if ($result['count'] > 0)
 			{
-				$data = json_decode($entry['data'], true);
-				if ($data['customerid'] == $userinfo['customerid']) {
-					$existing_backupJob = $entry;
-					break;
-				}
+				$existing_backupJob = array_shift($result['list']);
 			}
 
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
-
-				if (! $_POST['path']) {
-					standard_error('invalidpath');
+				try {
+					CustomerBackups::getLocal($userinfo, $_POST)->add();
+				} catch (Exception $e) {
+					dynamic_error($e->getMessage());
 				}
-
-				$path = makeCorrectDir(validate($_POST['path'], 'path'));
-				$path = makeCorrectDir($userinfo['documentroot'] . '/' . $path);
-
-				// path cannot be the customers docroot
-				if ($path == makeCorrectDir($userinfo['documentroot'])) {
-					standar_error('backupfoldercannotbedocroot');
-				}
-
-				$backup_dbs = isset($_POST['backup_dbs']) ? intval($_POST['backup_dbs']) : 0;
-				$backup_mail = isset($_POST['backup_mail']) ? intval($_POST['backup_mail']) : 0;
-				$backup_web = isset($_POST['backup_web']) ? intval($_POST['backup_web']) : 0;
-
-				if ($backup_dbs != '1') {
-					$backup_dbs = '0';
-				}
-
-				if ($backup_mail != '1') {
-					$backup_mail = '0';
-				}
-
-				if ($backup_web != '1') {
-					$backup_web = '0';
-				}
-
-				$task_data = array(
-					'customerid' => $userinfo['customerid'],
-					'uid' => $userinfo['guid'],
-					'gid' => $userinfo['guid'],
-					'loginname' => $userinfo['loginname'],
-					'destdir' => $path,
-					'backup_dbs' => $backup_dbs,
-					'backup_mail' => $backup_mail,
-					'backup_web' => $backup_web
-				);
-				// schedule backup job
-				inserttask('20', $task_data);
-
 				standard_success('backupscheduled');
 			} else {
 
 				if (!empty($existing_backupJob)) {
 					$action = "abort";
-					$row = json_decode($entry['data'], true);
+					$row = $existing_backupJob['data'];
+
 					$row['path'] = makeCorrectDir(str_replace($userinfo['documentroot'], "/", $row['destdir']));
 					$row['backup_web'] = ($row['backup_web'] == '1') ? $lng['panel']['yes'] : $lng['panel']['no'];
 					$row['backup_mail'] = ($row['backup_mail'] == '1') ? $lng['panel']['yes'] : $lng['panel']['no'];

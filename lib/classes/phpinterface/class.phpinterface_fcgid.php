@@ -153,7 +153,8 @@ class phpinterface_fcgid {
 				'OPEN_BASEDIR' => $openbasedir,
 				'OPEN_BASEDIR_C' => $openbasedirc,
 				'OPEN_BASEDIR_GLOBAL' => Settings::Get('system.phpappendopenbasedir'),
-				'DOCUMENT_ROOT' => makeCorrectDir($this->_domain['documentroot'])
+				'DOCUMENT_ROOT' => makeCorrectDir($this->_domain['documentroot']),
+				'CUSTOMER_HOMEDIR' => makeCorrectDir($this->_domain['customerroot'])
 		);
 
 		//insert a small header for the file

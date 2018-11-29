@@ -5,6 +5,7 @@ function twoDigits(value) {
 	return value;
 }
 $(document).ready(function() {
+
 	// Scroll to top
 	$(window).scroll(function() {
 		if ($(this).scrollTop() > 100) {

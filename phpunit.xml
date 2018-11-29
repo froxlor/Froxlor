@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit backupGlobals="false" backupStaticAttributes="false"
+	colors="false" convertErrorsToExceptions="true"
+	convertNoticesToExceptions="true" convertWarningsToExceptions="true"
+	processIsolation="false" stopOnFailure="false" syntaxCheck="false"
+	bootstrap="tests/bootstrap.php">
+
+	<testsuites>
+		<testsuite name="froxlor">
+			<!-- we need to specify the order of the tests for dependency-reasons -->
+			<directory>tests/Global</directory>
+			<directory>tests/Froxlor</directory>
+			<directory>tests/Admins</directory>
+			<directory>tests/Customers</directory>
+			<directory>tests/IpsAndPorts</directory>
+			<directory>tests/Domains</directory>
+			<directory>tests/Cronjobs</directory>
+			<directory>tests/SubDomains</directory>
+			<directory>tests/Certificates</directory>
+			<directory>tests/Ftps</directory>
+			<directory>tests/Emails</directory>
+			<directory>tests/Extras</directory>
+			<directory>tests/Backup</directory>
+			<directory>tests/DomainZones</directory>
+			<directory>tests/Mysqls</directory>
+			<directory>tests/PhpAndFpm</directory>
+			<directory>tests/Traffic</directory>
+		</testsuite>
+	</testsuites>
+
+	<logging>
+		<log type="coverage-html" target="build/coverage" title="froxlor"
+			charset="UTF-8" yui="true" highlight="true" lowUpperBound="35"
+			highLowerBound="70" />
+		<log type="coverage-clover" target="build/logs/clover.xml" />
+		<log type="coverage-crap4j" target="build/logs/crap4j.xml" />
+		<log type="junit" target="build/logs/junit.xml"
+			logIncompleteSkipped="false" />
+	</logging>
+
+	<filter>
+		<whitelist processUncoveredFilesFromWhitelist="true">
+			<directory suffix=".php">./lib/classes/api</directory>
+			<exclude>
+				<file>./lib/classes/api/api_includes.inc.php</file>
+				<file>./lib/classes/api/interface.ResourceEntity.php</file>
+			</exclude>
+		</whitelist>
+	</filter>
+
+</phpunit>

@@ -28,6 +28,13 @@
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Classes
+ * 
+ * @method static mixed Get ($setting = null) return a setting-value by its group and varname separated by a dot (group.varname)
+ * @method static boolean Set ($setting = null, $value = null, $instant_save = true) update a setting / set a new value
+ * @method static boolean IsInList ($setting = null, $entry = null) tests if a setting-value that i s a comma separated list contains an entry
+ * @method static boolean AddNew ($setting = null, $value = null) add a new setting to the database (mainly used in updater)
+ * @method static boolean Flush () Store all un-saved changes to the database and re-read in all settings
+ * @method static void Stash () forget all un-saved changes to settings
  */
 class Settings {
 
@@ -148,6 +155,8 @@ class Settings {
 	 * @param string $setting a group and a varname separated by a dot (group.varname)
 	 * @param string $value
 	 * @param boolean $instant_save
+	 *
+	 * @return bool
 	 */
 	public function pSet($setting = null, $value = null, $instant_save = true) {
 		// check whether the setting exists

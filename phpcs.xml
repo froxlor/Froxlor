@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<ruleset name="PSR2-Froxlor">
+	<description>PSR2 with tabs instead of spaces.</description>
+	<config name="show_progress" value="1" />
+	<config name="ignore_warnings_on_exit" value="1" />
+	<arg name="tab-width" value="4" />
+	<!-- Show sniff codes in all reports -->
+	<arg value="s" />
+	<rule ref="PSR2">
+		<exclude name="Generic.WhiteSpace.DisallowTabIndent" />
+		<exclude name="Generic.Files.LineLength" />
+		<exclude name="PSR1.Classes.ClassDeclaration.MissingNamespace" />
+		<exclude name="Squiz.WhiteSpace.ControlStructureSpacing.SpacingAfterOpen" />
+		<exclude name="Squiz.WhiteSpace.SuperfluousWhitespace.EndLine" />
+	</rule>
+</ruleset>

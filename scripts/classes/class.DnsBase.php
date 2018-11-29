@@ -43,14 +43,14 @@ abstract class DnsBase
 				$nameserver = trim($nameserver);
 				// DNS servers might be multi homed; allow transfer from all ip
 				// addresses of the DNS server
-				$nameserver_ips = gethostbynamel($nameserver);
+				$nameserver_ips = gethostbynamel6($nameserver);
 				// append dot to hostname
 				if (substr($nameserver, - 1, 1) != '.') {
 					$nameserver .= '.';
 				}
 				// ignore invalid responses
 				if (! is_array($nameserver_ips)) {
-					// act like gethostbyname() and return unmodified hostname on error
+					// act like gethostbynamel6() and return unmodified hostname on error
 					$nameserver_ips = array(
 						$nameserver
 					);

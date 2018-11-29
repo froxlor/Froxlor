@@ -19,16 +19,6 @@
 define('AREA', 'admin');
 require './lib/init.php';
 
-if ($action == 'logout') {
-	$logout_stmt = Database::prepare("
-		DELETE FROM `" . TABLE_PANEL_SESSIONS . "`
-		WHERE `userid` = :adminid
-		AND `adminsession` = '1'"
-	);
-	Database::pexecute($logout_stmt, array('adminid' => $userinfo['adminid']));
-	redirectTo('index.php');
-}
-
 if (isset($_POST['id'])) {
 	$id = intval($_POST['id']);
 } elseif(isset($_GET['id'])) {

@@ -60,7 +60,7 @@ td a {
 
 .bradius {
 	border-radius: 5px 5px 5px 5px;
-	box-shadow: rgba(0, 0, 0, 0.34902) 0px 1px 3px 0px;
+	box-shadow: rgba(0, 0, 0, 0.34902) 0 1px 3px 0;
 }
 
 /* FOOTER */
@@ -78,10 +78,7 @@ footer a,footer a:active,footer a:visited {
 
 .install {
 	background-color:#fff;
-	margin: 20px;
-	margin-left: auto;
-	margin-right: auto;
-	margin-bottom: 12px;
+	margin: 20px auto 12px;
 	width: 800px;
 }
 
@@ -122,6 +119,10 @@ p {
 	width:600px;
 	margin:0 100px 10px;
 	padding:0;
+}
+
+.installsec fieldset p, .installsec fieldset h3{
+	clear: both;
 }
 
 .installsec legend {
@@ -191,7 +192,7 @@ p.submit {
 	margin: 10px 0 10px 0 !important;
 	text-align:left!important;
 	overflow:hidden;
-	box-shadow: 0px 0px 0px black;
+	box-shadow: 0 0 0 black;
 }
 
 .errortitle {
@@ -214,7 +215,7 @@ p.submit {
 	margin: 10px 0 10px 0 !important;
 	text-align:left!important;
 	overflow:hidden;
-	box-shadow: 0px 0px 0px black;
+	box-shadow: 0 0 0 black;
 }
 .ui-dialog {
 	padding: 10px !important;
@@ -239,7 +240,7 @@ p.submit {
 	margin: 10px 0 10px 0 !important;
 	text-align:left!important;
 	overflow:hidden;
-	box-shadow: 0px 0px 0px black;
+	box-shadow: 0 0 0 black;
 }
 
 .successtitle {
@@ -261,7 +262,7 @@ p.submit {
 	margin: 10px 0 10px 0 !important;
 	text-align:left!important;
 	overflow:hidden;
-	box-shadow: 0px 0px 0px black;
+	box-shadow: 0 0 0 black;
 }
 
 .neutraltitle {
@@ -292,10 +293,7 @@ a:hover {
  * main container
  */
 .main {
-	margin-left:240px;
-	margin-right:10px;
-	margin-top:105px;
-	margin-bottom:0;
+	margin: 105px 10px 0 240px;
 	background-color:#fff;
 	padding: 30px 30px 30px 30px;
 	min-height:400px;
@@ -317,14 +315,14 @@ table {
 	border-spacing:0;
 	border:1px solid #d1d5d8;
 	border-collapse:separate;
-	box-shadow:0px 0px 0px black !important;
+	box-shadow:0 0 0 black !important;
 }
 
 table thead th, table th {
 	border-top: 1px solid #d1d5d8;
 	border-bottom: 1px solid #d1d5d8;
 	height: 25px !important;
-	padding: 5px 0px 5px 8px;
+	padding: 5px 0 5px 8px;
 	background-color: #e9edf0;
 	font-weight: bold;
 }
@@ -390,10 +388,7 @@ table tbody tr:last-child td {
 }
 
 td {
-	padding-top:5px;
-	padding-left:10px;
-	padding-right: 10px;
-	padding-bottom:5px;
+	padding: 5px 10px;
 	min-height: 20px;
 }
 
@@ -447,7 +442,6 @@ input[type="button"],input[type="submit"],input[type="reset"] {
 	min-width: 80px;
 	height: 26px;
 	background-image: none;
-	border-width: 0px;
 }
 .loginsec input[type="button"], .loginsec input[type="submit"], .loginsec input[type="reset"] {
 	margin: 0 1px;
@@ -495,6 +489,7 @@ input[type="checkbox"] {
 }
 
 input[type="radio"] {
+	vertical-align: middle;
 	margin: 0 10px 0 10px;
 	height:22px;
 }

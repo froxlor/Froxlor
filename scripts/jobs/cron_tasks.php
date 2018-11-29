@@ -417,6 +417,15 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 			}
 		}
 	}
+	
+	/**
+	 * TYPE=11 domain has been deleted, remove from pdns database if used
+	 */
+	if ($row['type'] == '11' && Settings::Get('system.dns_server') == 'pdns')
+	{
+		$cronlog->logAction(CRON_ACTION, LOG_NOTICE, "Removing PowerDNS entries for domain " . $row['data']['domain']);
+		PowerDNS::cleanDomainZone($row['data']['domain']);
+	}
 }
 
 if ($num_results != 0) {

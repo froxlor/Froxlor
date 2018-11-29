@@ -51,6 +51,7 @@ if (isset($_POST['id'])) {
 }
 
 if ($page == 'overview') {
+
 	$log->logAction(ADM_ACTION, LOG_NOTICE, "viewed admin_index");
 	$overview_stmt = Database::prepare("SELECT COUNT(*) AS `number_customers`,
 				SUM(`diskspace_used`) AS `diskspace_used`,
@@ -85,46 +86,22 @@ if ($page == 'overview') {
 	if ((isset($_GET['lookfornewversion']) && $_GET['lookfornewversion'] == 'yes')
 		|| (isset($lookfornewversion) && $lookfornewversion == 'yes')
 	) {
-		if (function_exists('curl_version')) {
-			$update_check_uri = 'http://version.froxlor.org/Froxlor/legacy/' . $version;
-			$latestversion = HttpClient::urlGet($update_check_uri);
-			$latestversion = explode('|', $latestversion);
-
-			if (is_array($latestversion)
-				&& count($latestversion) >= 1
-			) {
-				$_version = $latestversion[0];
-				$_message = isset($latestversion[1]) ? $latestversion[1] : '';
-				$_link = isset($latestversion[2]) ? $latestversion[2] : htmlspecialchars($filename . '?s=' . urlencode($s) . '&page=' . urlencode($page) . '&lookfornewversion=yes');
-
-				// add the branding so debian guys are not gettings confused
-				// about their version-number
-				$lookfornewversion_lable = $_version.$branding;
-				$lookfornewversion_link = $_link;
-				$lookfornewversion_addinfo = $_message;
-
-				// not numeric -> error-message
-				if (!preg_match('/^((\d+\\.)(\d+\\.)(\d+\\.)?(\d+)?(\-(svn|dev|rc)(\d+))?)$/', $_version)) {
-					// check for customized version to not output
-					// "There is a newer version of froxlor" besides the error-message
-					$isnewerversion = 2;
-				} elseif (version_compare2($version, $_version) == -1) {
-					$isnewerversion = 1;
-				} else {
-					$isnewerversion = 0;
-				}
-			} else {
-				redirectTo($update_check_uri.'/pretty', NULL, false);
-			}
-		} else {
-			$lookfornewversion_lable = "Version-check not available due to missing php-curl extension";
-			$lookfornewversion_link = htmlspecialchars($filename . '?s=' . urlencode($s) . '&page=' . urlencode($page) . '&lookfornewversion=yes');
-			$lookfornewversion_addinfo = '';
-			$isnewerversion = 0;
+		try {
+			$json_result = Froxlor::getLocal($userinfo)->checkUpdate();
+		} catch (Exception $e) {
+			dynamic_error($e->getMessage());
 		}
+		$result = json_decode($json_result, true)['data'];
+
+		$lookfornewversion_lable = $result['version'];
+		$lookfornewversion_link = $result['link'];
+		$lookfornewversion_message = $result['message'];
+		$lookfornewversion_addinfo = $result['additional_info'];
+		$isnewerversion = $result['isnewerversion'];
 	} else {
 		$lookfornewversion_lable = $lng['admin']['lookfornewversion']['clickhere'];
 		$lookfornewversion_link = htmlspecialchars($filename . '?s=' . urlencode($s) . '&page=' . urlencode($page) . '&lookfornewversion=yes');
+		$lookfornewversion_message = '';
 		$lookfornewversion_addinfo = '';
 		$isnewerversion = 0;
 	}
@@ -220,15 +197,11 @@ if ($page == 'overview') {
 		} elseif($new_password != $new_password_confirm) {
 			standard_error('newpasswordconfirmerror');
 		} else {
-			$chgpwd_stmt = Database::prepare("
-				UPDATE `" . TABLE_PANEL_ADMINS . "`
-				SET `password`= :newpasswd
-				WHERE `adminid`= :adminid"
-			);
-			Database::pexecute($chgpwd_stmt, array(
-				'newpasswd' => makeCryptPassword($new_password),
-				'adminid' => (int)$userinfo['adminid']
-			));
+			try {
+				Admins::getLocal($userinfo, array('id' => $userinfo['adminid'], 'admin_password' => $new_password))->update();
+			} catch (Exception $e) {
+				dynamic_error($e->getMessage());
+			}
 			$log->logAction(ADM_ACTION, LOG_NOTICE, 'changed password');
 			redirectTo($filename, Array('s' => $s));
 		}
@@ -244,16 +217,13 @@ if ($page == 'overview') {
 		$def_language = validate($_POST['def_language'], 'default language');
 
 		if (isset($languages[$def_language])) {
-			$lng_stmt = Database::prepare("
-				UPDATE `" . TABLE_PANEL_ADMINS . "`
-				SET `def_language`= :deflng
-				WHERE `adminid`= :adminid"
-			);
-			Database::pexecute($lng_stmt, array(
-				'deflng' => $def_language,
-				'adminid' => (int)$userinfo['adminid']
-			));
+			try {
+				Admins::getLocal($userinfo, array('id' => $userinfo['adminid'], 'def_language' => $def_language))->update();
+			} catch (Exception $e) {
+				dynamic_error($e->getMessage());
+			}
 
+			// also update current session
 			$lng_stmt = Database::prepare("
 				UPDATE `" . TABLE_PANEL_SESSIONS . "`
 				SET `language`= :lng
@@ -264,7 +234,6 @@ if ($page == 'overview') {
 				'hash' => $s
 			));
 		}
-
 		$log->logAction(ADM_ACTION, LOG_NOTICE, "changed his/her default language to '" . $def_language . "'");
 		redirectTo($filename, array('s' => $s));
 
@@ -290,17 +259,13 @@ if ($page == 'overview') {
 		&& $_POST['send'] == 'send'
 	) {
 		$theme = validate($_POST['theme'], 'theme');
+		try {
+			Admins::getLocal($userinfo, array('id' => $userinfo['adminid'], 'theme' => $theme))->update();
+		} catch (Exception $e) {
+			dynamic_error($e->getMessage());
+		}
 
-		$theme_stmt = Database::prepare("
-				UPDATE `" . TABLE_PANEL_ADMINS . "`
-				SET `theme`= :theme
-				WHERE `adminid`= :adminid"
-		);
-		Database::pexecute($theme_stmt, array(
-			'theme' => $theme,
-			'adminid' => (int)$userinfo['adminid']
-		));
-
+		// also update current session
 		$theme_stmt = Database::prepare("
 				UPDATE `" . TABLE_PANEL_SESSIONS . "`
 				SET `theme`= :theme
@@ -410,4 +375,10 @@ if ($page == 'overview') {
 	} else {
 		redirectTo($filename, array('s' => $s));
 	}
+}
+elseif ($page == 'apikeys' && Settings::Get('api.enabled') == 1) {
+	require_once __DIR__ . '/api_keys.php';
+}
+elseif ($page == 'apihelp' && Settings::Get('api.enabled') == 1) {
+	require_once __DIR__ . '/apihelp.php';
 }

@@ -2,6 +2,7 @@ install/update.log
 templates/*
 lib/userdata.inc.php
 logs/*
+!logs/index.html
 .buildpath
 .project
 .settings/

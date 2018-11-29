@@ -26,13 +26,12 @@ function getIpPortCombinations($ssl = false) {
 
 	if ($userinfo['ip'] != '-1') {
 		$admin_ip_stmt = Database::prepare("
-			SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id` = :ipid
+			SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id` = IN (:ipid)
 		");
-		$admin_ip = Database::pexecute_first($admin_ip_stmt, array('ipid' => $userinfo['ip']));
-
-		$additional_conditions_array[] = "`ip` = :adminip";
-		$additional_conditions_params['adminip'] = $admin_ip['ip'];
-		$admin_ip = null;
+		$myips = implode(",", json_decode($userinfo['ip'], true));
+		Database::pexecute($admin_ip_stmt, array('ipid' => $myips));
+		$additional_conditions_array[] = "`ip` IN (:adminips)";
+		$additional_conditions_params['adminips'] = $myips;
 	}
 
 	if ($ssl !== null) {
@@ -61,4 +60,9 @@ function getIpPortCombinations($ssl = false) {
 	}
 
 	return $system_ipaddress_array;
+}
+
+function getSslIpPortCombinations() {
+	global $lng;
+	return array('' => $lng['panel']['none_value']) + getIpPortCombinations(true);
 }

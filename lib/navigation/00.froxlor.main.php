@@ -39,6 +39,16 @@ return array(
 					'show_element' => (Settings::Get('panel.allow_theme_change_customer') == true)
 				),
 				array(
+					'url' => 'customer_index.php?page=apikeys',
+					'label' => $lng['menue']['main']['apikeys'],
+					'show_element' => (Settings::Get('api.enabled') == true)
+				),
+				array(
+					'url' => 'customer_index.php?page=apihelp',
+					'label' => $lng['menue']['main']['apihelp'],
+					'show_element' => (Settings::Get('api.enabled') == true)
+				),
+				array(
 					'url' => 'customer_index.php?action=logout',
 					'label' => $lng['login']['logout']
 				)
@@ -178,6 +188,16 @@ return array(
 					'url' => 'admin_index.php?page=change_theme',
 					'label' => $lng['menue']['main']['changetheme'],
 					'show_element' => (Settings::Get('panel.allow_theme_change_admin') == true)
+				),
+				array(
+					'url' => 'admin_index.php?page=apikeys',
+					'label' => $lng['menue']['main']['apikeys'],
+					'show_element' => (Settings::Get('api.enabled') == true)
+				),
+				array(
+					'url' => 'admin_index.php?page=apihelp',
+					'label' => $lng['menue']['main']['apihelp'],
+					'show_element' => (Settings::Get('api.enabled') == true)
 				),
 				array(
 					'url' => 'admin_index.php?action=logout',

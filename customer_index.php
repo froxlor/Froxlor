@@ -122,15 +122,11 @@ if ($page == 'overview') {
 			standard_error('newpasswordconfirmerror');
 		} else {
 			// Update user password
-			$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "`
-				SET `password` = :newpassword
-				WHERE `customerid` = :customerid"
-			);
-			$params = array(
-				"newpassword" => makeCryptPassword($new_password),
-				"customerid" => $userinfo['customerid']
-			);
-			Database::pexecute($stmt, $params);
+			try {
+				Customers::getLocal($userinfo, array('id' => $userinfo['customerid'], 'new_customer_password' => $new_password))->update();
+			} catch (Exception $e) {
+				dynamic_error($e->getMessage());
+			}
 			$log->logAction(USR_ACTION, LOG_NOTICE, 'changed password');
 
 			// Update ftp password
@@ -181,21 +177,20 @@ if ($page == 'overview') {
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 		$def_language = validate($_POST['def_language'], 'default language');
 		if (isset($languages[$def_language])) {
-			$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "`
-				SET `def_language` = :lang
-				WHERE `customerid` = :customerid"
-			);
-			Database::pexecute($stmt, array("lang" => $def_language, "customerid" => $userinfo['customerid']));
+			try {
+				Customers::getLocal($userinfo, array('id' => $userinfo['customerid'], 'def_language' => $def_language))->update();
+			} catch (Exception $e) {
+				dynamic_error($e->getMessage());
+			}
 
+			// also update current session
 			$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_SESSIONS . "`
 				SET `language` = :lang
 				WHERE `hash` = :hash"
 			);
 			Database::pexecute($stmt, array("lang" => $def_language, "hash" => $s));
-
-			$log->logAction(USR_ACTION, LOG_NOTICE, "changed default language to '" . $def_language . "'");
 		}
-
+		$log->logAction(USR_ACTION, LOG_NOTICE, "changed default language to '" . $def_language . "'");
 		redirectTo($filename, array('s' => $s));
 	} else {
 		$default_lang = Settings::Get('panel.standardlanguage');
@@ -213,13 +208,13 @@ if ($page == 'overview') {
 } elseif ($page == 'change_theme') {
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 		$theme = validate($_POST['theme'], 'theme');
+		try {
+			Customers::getLocal($userinfo, array('id' => $userinfo['customerid'], 'theme' => $theme))->update();
+		} catch (Exception $e) {
+			dynamic_error($e->getMessage());
+		}
 
-		$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "`
-			SET `theme` = :theme
-			WHERE `customerid` = :customerid"
-		);
-		Database::pexecute($stmt, array("theme" => $theme, "customerid" => $userinfo['customerid']));
-
+		// also update current session
 		$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_SESSIONS . "`
 			SET `theme` = :theme
 			WHERE `hash` = :hash"
@@ -318,4 +313,10 @@ if ($page == 'overview') {
 	} else {
 		redirectTo($filename, array('s' => $s));
 	}
+}
+elseif ($page == 'apikeys' && Settings::Get('api.enabled') == 1) {
+	require_once __DIR__ . '/api_keys.php';
+}
+elseif ($page == 'apihelp' && Settings::Get('api.enabled') == 1) {
+	require_once __DIR__ . '/apihelp.php';
 }

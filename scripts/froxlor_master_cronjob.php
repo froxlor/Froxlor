@@ -29,7 +29,8 @@ if (count($argv) < 2 || (isset($argv[1]) && strtolower($argv[1]) == '--help')) {
 	echo "Below are possible parameters for this file\n\n";
 	echo "--[cronname]\t\tincludes the given cron-file\n";
 	echo "--force\t\t\tforces re-generating of config-files (webserver, nameserver, etc.)\n";
-	echo "--debug\t\t\toutput debug information about what is going on to STDOUT.\n\n";
+	echo "--debug\t\t\toutput debug information about what is going on to STDOUT.\n";
+	echo "--no-fork\t\t\tdo not fork to backkground (traffic cron only).\n\n";
 }
 
 /**
@@ -55,6 +56,9 @@ for ($x = 1; $x < count($argv); $x++) {
 		}
 		elseif (strtolower($argv[$x]) == '--debug') {
 		    define('CRON_DEBUG_FLAG', 1);
+		}
+		elseif (strtolower($argv[$x]) == '--no-fork') {
+			define('CRON_NOFORK_FLAG', 1);
 		}
 		// --[cronname]
 		elseif (substr(strtolower($argv[$x]), 0, 2) == '--') {

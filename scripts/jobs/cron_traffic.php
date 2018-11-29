@@ -18,7 +18,7 @@
  */
 
 // Check Traffic-Lock
-if (function_exists('pcntl_fork')) {
+if (function_exists('pcntl_fork') && !defined('CRON_NOFORK_FLAG')) {
 	$TrafficLock = makeCorrectFile(dirname($lockfile)."/froxlor_cron_traffic.lock");
 	if (file_exists($TrafficLock)
 		&& is_numeric($TrafficPid=file_get_contents($TrafficLock))
@@ -606,7 +606,7 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 Database::query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = UNIX_TIMESTAMP() WHERE `settinggroup` = 'system' AND `varname` = 'last_traffic_run'");
 
-if (function_exists('pcntl_fork')) {
+if (function_exists('pcntl_fork') && !defined('CRON_NOFORK_FLAG')) {
 	@unlink($TrafficLock);
 	die();
 }

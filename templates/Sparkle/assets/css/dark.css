@@ -16,8 +16,8 @@ nav .active {
 .menuelement {
 	border: none;
 	color: #424a51;
-	margin: 15px 0px 25px 10px;
-	padding: 0px;
+	margin: 15px 0 25px 10px;
+	padding: 0;
 }
 .menuelement h4 {
 	background: none;

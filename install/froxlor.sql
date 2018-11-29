@@ -95,7 +95,7 @@ CREATE TABLE `panel_admins` (
   `name` varchar(255) NOT NULL default '',
   `email` varchar(255) NOT NULL default '',
   `def_language` varchar(255) NOT NULL default '',
-  `ip` tinyint(4) NOT NULL default '-1',
+  `ip` varchar(500) NOT NULL default '-1',
   `customers` int(15) NOT NULL default '0',
   `customers_used` int(15) NOT NULL default '0',
   `customers_see_all` tinyint(1) NOT NULL default '0',
@@ -532,6 +532,7 @@ opcache.interned_strings_buffer'),
 	('system', 'mysql_access_host', 'localhost'),
 	('system', 'lastcronrun', ''),
 	('system', 'defaultip', '1'),
+	('system', 'defaultsslip', ''),
 	('system', 'phpappendopenbasedir', '/tmp/'),
 	('system', 'deactivateddocroot', ''),
 	('system', 'mailpwcleartext', '0'),
@@ -645,7 +646,7 @@ opcache.interned_strings_buffer'),
 	('system', 'hsts_incsub', '0'),
 	('system', 'hsts_preload', '0'),
 	('system', 'leregistered', '0'),
-  ('system', 'leaccount', ''),
+	('system', 'leaccount', ''),
 	('system', 'nssextrausers', '0'),
 	('system', 'disable_le_selfcheck', '0'),
 	('system', 'ssl_protocols', 'TLSv1,TLSv1.2'),
@@ -653,6 +654,8 @@ opcache.interned_strings_buffer'),
 	('system', 'logfiles_type', '1'),
 	('system', 'logfiles_piped', '0'),
 	('system', 'logfiles_script', ''),
+	('system', 'dhparams_file', ''),
+	('api', 'enabled', '0'),
 	('panel', 'decimal_places', '4'),
 	('panel', 'adminmail', 'admin@SERVERNAME'),
 	('panel', 'phpmyadmin_url', ''),
@@ -684,8 +687,8 @@ opcache.interned_strings_buffer'),
 	('panel', 'password_special_char_required', '0'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'customer_hide_options', ''),
-	('panel', 'version', '0.9.39.5'),
-	('panel', 'db_version', '201809280');
+	('panel', 'version', '0.10.0'),
+	('panel', 'db_version', '201811180');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
@@ -1047,5 +1050,20 @@ CREATE TABLE `panel_plans` (
   `ts` int(15) NOT NULL default '0',
   PRIMARY KEY  (id),
   KEY adminid (adminid)
+) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
+
+
+DROP TABLE IF EXISTS `api_keys`;
+CREATE TABLE `api_keys` (
+  `id` int(11) NOT NULL auto_increment,
+  `adminid` int(11) NOT NULL default '0',
+  `customerid` int(11) NOT NULL default '0',
+  `apikey` varchar(500) NOT NULL default '',
+  `secret` varchar(500) NOT NULL default '',
+  `allowed_from` text NOT NULL,
+  `valid_until` int(15) NOT NULL default '0',
+  PRIMARY KEY  (id),
+  KEY adminid (adminid),
+  KEY customerid (customerid)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 

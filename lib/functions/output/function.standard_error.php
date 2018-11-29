@@ -25,7 +25,7 @@
  * @author Florian Lippert <flo@syscp.org>
  * @author Ron Brand <ron.brand@web.de>
  */
-function standard_error($errors = '', $replacer = '') {
+function standard_error($errors = '', $replacer = '', $throw_exception = false) {
 
 	global $userinfo, $s, $header, $footer, $lng, $theme;
 
@@ -60,6 +60,9 @@ function standard_error($errors = '', $replacer = '') {
 		}
 	}
 
+	if ($throw_exception) {
+		throw new Exception(strip_tags($error), 400);
+	}
 	eval("echo \"" . getTemplate('misc/error', '1') . "\";");
 	exit;
 }

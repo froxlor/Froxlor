@@ -30,7 +30,7 @@ class MysqlLogger extends AbstractLogger {
 
 	/**
 	 * Syslogger Objects Array
-	 * @var loggers
+	 * @var MysqlLogger[]
 	 */
 	static private $loggers = array();
 

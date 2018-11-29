@@ -1,0 +1,56 @@
+language: php
+
+php:
+#  - "5.4"
+#  - "5.6"
+  - "7.0"
+#  - "7.1"
+#  - "7.2"
+
+branches:
+  only:
+    master
+
+matrix:
+  include:
+ #   - php: 5.6
+ #     env: deps=highest
+ #   - php: 5.4
+ #     env: deps=lowest
+    - php: 7.0
+      env: deps=highest
+
+mysql:
+  database: froxlor010
+  username: root
+  encoding: utf8
+
+addons:
+  apt:
+    update: true
+
+install:
+  - composer install
+
+service:
+  - mysql
+
+before_script:
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS froxlor010'
+  - echo "USE mysql;\nUPDATE user SET password=PASSWORD('fr0xl0r.TravisCI') WHERE user='root';\nFLUSH PRIVILEGES;\n" | mysql -u root
+  - mysql -u root -pfr0xl0r.TravisCI froxlor010 < install/froxlor.sql
+  - mysql -u root -pfr0xl0r.TravisCI -e "CREATE USER 'froxlor010'@'localhost' IDENTIFIED BY 'fr0xl0r.TravisCI';"
+  - mysql -u root -pfr0xl0r.TravisCI -e "GRANT ALL ON froxlor010.* TO 'froxlor010'@'localhost';"
+
+script:
+  - ant full-build-parallel
+      -Dpdepend=$(pwd)/vendor/bin/pdepend
+      -Dphpmd=$(pwd)/vendor/bin/phpmd
+      -Dphpcpd=$(pwd)/vendor/bin/phpcpd
+      -Dphpcs=$(pwd)/vendor/bin/phpcs
+      -Dphploc=$(pwd)/vendor/bin/phploc
+      -Dphpdox=$(pwd)/vendor/bin/phpdox
+      -Dphpunit=$(pwd)/vendor/bin/phpunit
+
+notifications:
+  irc: "irc.freenode.org#froxlor"

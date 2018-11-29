@@ -20,26 +20,23 @@
 /**
  * Function which returns a correct dirname, means to add slashes at the beginning and at the end if there weren't some
  *
- * @param string The dirname
+ * @param string $dir
+ *        	The dirname
+ *
  * @return string The corrected dirname
- * @author Florian Lippert <flo@syscp.org>
  */
-function makeCorrectDir($dir) {
-
-	if (version_compare("5.4.6", PHP_VERSION, ">")) {
-		assert('is_string($dir) && strlen($dir) > 0 /* $dir does not look like an actual folder name */');
-	} else {
-		assert('is_string($dir) && strlen($dir) > 0', 'Value "' . $dir .'" does not look like an actual folder name');
+function makeCorrectDir($dir)
+{
+	if (is_string($dir) && strlen($dir) > 0) {
+		$dir = trim($dir);
+		if (substr($dir, - 1, 1) != '/') {
+			$dir .= '/';
+		}
+		if (substr($dir, 0, 1) != '/') {
+			$dir = '/' . $dir;
+		}
+		$dir = makeSecurePath($dir);
+		return $dir;
 	}
-
-	$dir = trim($dir);
-
-	if (substr($dir, -1, 1) != '/') {
-		$dir.= '/';
-	}
-	if (substr($dir, 0, 1) != '/') {
-		$dir = '/' . $dir;
-	}
-	$dir = makeSecurePath($dir);
-	return $dir;
+	throw new Exception("Cannot validate directory in " . __FUNCTION__ . " which is very dangerous.");
 }

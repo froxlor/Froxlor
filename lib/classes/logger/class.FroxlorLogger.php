@@ -30,13 +30,13 @@ class FroxlorLogger {
 
 	/**
 	 * LogTypes Array
-	 * @var logtypes
+	 * @var array
 	 */
 	static private $logtypes = null;
 
 	/**
 	 * Logger-Object-Array
-	 * @var loggers
+	 * @var FroxlorLogger[]
 	 */
 	static private $loggers = null;
 

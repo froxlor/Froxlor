@@ -100,6 +100,11 @@ class Autoloader {
 			return true;
 		}
 
+		// don't load anything from a namespace, it's not our responsibility
+		if (strpos($class, "\\") !== false) {
+			return true;
+		}
+
 		// now iterate through the paths
 		foreach ($paths as $path) {
 			// valid directory?

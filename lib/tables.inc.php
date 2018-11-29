@@ -53,5 +53,6 @@ define('TABLE_DOMAINTOIP', 'panel_domaintoip');
 define('TABLE_DOMAIN_DNS', 'domain_dns_entries');
 define('TABLE_PANEL_FPMDAEMONS', 'panel_fpmdaemons');
 define('TABLE_PANEL_PLANS', 'panel_plans');
+define('TABLE_API_KEYS', 'api_keys');
 
 require dirname(__FILE__).'/version.inc.php';

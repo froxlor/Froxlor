@@ -1,6 +1,8 @@
 <?php
-if (! defined('AREA'))
-	die('You cannot access this file directly!');
+if (! defined('AREA')) {
+	header("Location: index.php");
+	exit;
+}
 
 /**
  * This file is part of the Froxlor project.
@@ -18,42 +20,21 @@ if (! defined('AREA'))
  */
 
 // This file is being included in admin_domains and customer_domains
-	// and therefore does not need to require lib/init.php
+// and therefore does not need to require lib/init.php
 
-$del_stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` WHERE id = :id");
 $success_message = "";
 
 // do the delete and then just show a success-message and the certificates list again
 if ($action == 'delete') {
 	$id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 	if ($id > 0) {
-		$chk = (AREA == 'admin' && $userinfo['customers_see_all'] == '1') ? true : false;
-		if (AREA == 'customer') {
-			$chk_stmt = Database::prepare("
-				SELECT d.domain FROM `" . TABLE_PANEL_DOMAINS . "` d
-				LEFT JOIN `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` s ON s.domainid = d.id
-				WHERE s.`id` = :id AND d.`customerid` = :cid
-			");
-			$chk = Database::pexecute_first($chk_stmt, array(
-				'id' => $id,
-				'cid' => $userinfo['customerid']
-			));
-		} elseif (AREA == 'admin' && $userinfo['customers_see_all'] == '0') {
-			$chk_stmt = Database::prepare("
-				SELECT d.domain FROM `" . TABLE_PANEL_DOMAINS . "` d
-				LEFT JOIN `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` s ON s.domainid = d.id
-				WHERE s.`id` = :id AND d.`adminid` = :aid
-			");
-			$chk = Database::pexecute_first($chk_stmt, array(
-				'id' => $id,
-				'aid' => $userinfo['adminid']
-			));
-		}
-		if ($chk !== false) {
-			Database::pexecute($del_stmt, array(
+		try {
+			$json_result = Certificates::getLocal($userinfo, array(
 				'id' => $id
-			));
+			))->delete();
 			$success_message = sprintf($lng['domains']['ssl_certificate_removed'], $id);
+		} catch (Exception $e) {
+			dynamic_error($e->getMessage());
 		}
 	}
 }

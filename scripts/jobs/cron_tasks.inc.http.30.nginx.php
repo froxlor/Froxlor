@@ -185,6 +185,7 @@ class nginx extends HttpConfigBase
 						'adminid' => 1, /* first admin-user (superadmin) */
 						'loginname' => 'froxlor.panel',
 						'documentroot' => $mypath,
+						'customerroot' => $mypath,
 						'parentdomainid' => 0
 					);
 
@@ -255,7 +256,8 @@ class nginx extends HttpConfigBase
 					$this->nginx_data[$vhost_filename] .= $this->processSpecialConfigTemplate($row_ipsandports['specialsettings'], array(
 						'domain' => Settings::Get('system.hostname'),
 						'loginname' => Settings::Get('phpfpm.vhost_httpuser'),
-						'documentroot' => $mypath
+						'documentroot' => $mypath,
+						'customerroot' => $mypath
 					), $row_ipsandports['ip'], $row_ipsandports['port'], $row_ipsandports['ssl'] == '1') . "\n";
 				}
 
@@ -290,7 +292,8 @@ class nginx extends HttpConfigBase
 							'openbasedir' => 0,
 							'email' => Settings::Get('panel.adminmail'),
 							'loginname' => 'froxlor.panel',
-							'documentroot' => $mypath
+							'documentroot' => $mypath,
+							'customerroot' => $mypath
 						);
 
 						$php = new phpinterface($domain);
@@ -625,6 +628,13 @@ class nginx extends HttpConfigBase
 				// $sslsettings .= "\t" . 'ssl on;' . "\n";
 				$sslsettings .= "\t" . 'ssl_protocols ' . str_replace(",", " ", Settings::Get('system.ssl_protocols')) . ';' . "\n";
 				$sslsettings .= "\t" . 'ssl_ciphers ' . Settings::Get('system.ssl_cipher_list') . ';' . "\n";
+				if (!empty(Settings::Get('system.dhparams_file'))) {
+					$dhparams = makeCorrectFile(Settings::Get('system.dhparams_file'));
+					if (!file_exists($dhparams)) {
+						safe_exec('openssl dhparam -out '.escapeshellarg($dhparams).' 4096');
+					}
+					$sslsettings .= 'ssl_dhparam ' . $dhparams . ';' . "\n";
+				}
 				$sslsettings .= "\t" . 'ssl_ecdh_curve secp384r1;' . "\n";
 				$sslsettings .= "\t" . 'ssl_prefer_server_ciphers on;' . "\n";
 				$sslsettings .= "\t" . 'ssl_certificate ' . makeCorrectFile($domain_or_ip['ssl_cert_file']) . ';' . "\n";

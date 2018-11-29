@@ -1,1 +1,1 @@
-{"variants":{"default":{"css":["main.css"],"js":["main.js"],"description":"Default"},"froxlor":{"css":["main.css","froxlor.css"],"js":["main.js"],"description":"Froxlor"}},"author":"Roman Schmerold"}
+{"variants":{"default":{"css":["main.css"],"js":["main.js", "apikey.js"],"description":"Default"},"froxlor":{"css":["main.css","froxlor.css"],"js":["main.js", "apikey.js"],"description":"Froxlor"}},"author":"Roman Schmerold"}

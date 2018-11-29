@@ -4060,3 +4060,14 @@ if (isDatabaseVersion('201809180')) {
 	
 	updateToDbVersion('201809280');
 }
+
+if (isFroxlorVersion('0.9.39.5')) {
+	showUpdateStep("Updating from 0.9.39.5 to 0.9.40", false);
+	updateToVersion('0.9.40');
+}
+
+if (isFroxlorVersion('0.9.40')) {
+
+	showUpdateStep("Updating from 0.9.40 to 0.9.40.1", false);
+	updateToVersion('0.9.40.1');
+}
