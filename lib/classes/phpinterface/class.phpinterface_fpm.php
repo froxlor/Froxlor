@@ -229,7 +229,8 @@ class phpinterface_fpm
 				'OPEN_BASEDIR' => $openbasedir,
 				'OPEN_BASEDIR_C' => '',
 				'OPEN_BASEDIR_GLOBAL' => Settings::Get('system.phpappendopenbasedir'),
-				'DOCUMENT_ROOT' => makeCorrectDir($this->_domain['documentroot'])
+				'DOCUMENT_ROOT' => makeCorrectDir($this->_domain['documentroot']),
+				'CUSTOMER_HOMEDIR' => makeCorrectDir($this->_domain['customerroot'])
 			);
 			
 			$phpini = replace_variables($phpconfig['phpsettings'], $php_ini_variables);

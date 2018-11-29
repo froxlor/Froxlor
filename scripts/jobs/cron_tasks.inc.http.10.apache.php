@@ -262,7 +262,8 @@ class apache extends HttpConfigBase
 								'openbasedir' => 0,
 								'email' => Settings::Get('panel.adminmail'),
 								'loginname' => 'froxlor.panel',
-								'documentroot' => $mypath
+								'documentroot' => $mypath,
+								'customerroot' => $mypath
 							);
 							$php = new phpinterface($domain);
 							$phpconfig = $php->getPhpConfig(Settings::Get('system.mod_fcgid_defaultini_ownvhost'));
@@ -315,6 +316,7 @@ class apache extends HttpConfigBase
 							'email' => Settings::Get('panel.adminmail'),
 							'loginname' => 'froxlor.panel',
 							'documentroot' => $mypath,
+							'customerroot' => $mypath,
 							'fpm_config_id' => isset($fpm_config['id']) ? $fpm_config['id'] : 1
 						);
 						
@@ -389,7 +391,8 @@ class apache extends HttpConfigBase
 							'openbasedir' => 0,
 							'email' => Settings::Get('panel.adminmail'),
 							'loginname' => 'froxlor.panel',
-							'documentroot' => $mypath
+							'documentroot' => $mypath,
+							'customerroot' => $mypath
 						);
 					}
 				} // end of ssl-redirect check
@@ -398,7 +401,8 @@ class apache extends HttpConfigBase
 					$domain = array(
 						'domain' => Settings::Get('system.hostname'),
 						'loginname' => 'froxlor.panel',
-						'documentroot' => $mypath
+						'documentroot' => $mypath,
+						'customerroot' => $mypath
 					);
 				}
 				
@@ -446,6 +450,7 @@ class apache extends HttpConfigBase
 						'adminid' => 1, /* first admin-user (superadmin) */
 						'loginname' => 'froxlor.panel',
 						'documentroot' => $mypath,
+						'customerroot' => $mypath,
 						'parentdomainid' => 0
 					);
 					

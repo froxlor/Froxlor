@@ -206,6 +206,7 @@ class apache_fcgid extends apache
 				'email' => Settings::Get('panel.adminmail'),
 				'loginname' => 'froxlor.panel',
 				'documentroot' => $mypath,
+				'customerroot' => $mypath,
 				'fpm_config_id' => isset($fpm_config['id']) ? $fpm_config['id'] : 1
 			);
 

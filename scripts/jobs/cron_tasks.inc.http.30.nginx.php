@@ -185,6 +185,7 @@ class nginx extends HttpConfigBase
 						'adminid' => 1, /* first admin-user (superadmin) */
 						'loginname' => 'froxlor.panel',
 						'documentroot' => $mypath,
+						'customerroot' => $mypath,
 						'parentdomainid' => 0
 					);
 
@@ -255,7 +256,8 @@ class nginx extends HttpConfigBase
 					$this->nginx_data[$vhost_filename] .= $this->processSpecialConfigTemplate($row_ipsandports['specialsettings'], array(
 						'domain' => Settings::Get('system.hostname'),
 						'loginname' => Settings::Get('phpfpm.vhost_httpuser'),
-						'documentroot' => $mypath
+						'documentroot' => $mypath,
+						'customerroot' => $mypath
 					), $row_ipsandports['ip'], $row_ipsandports['port'], $row_ipsandports['ssl'] == '1') . "\n";
 				}
 
@@ -290,7 +292,8 @@ class nginx extends HttpConfigBase
 							'openbasedir' => 0,
 							'email' => Settings::Get('panel.adminmail'),
 							'loginname' => 'froxlor.panel',
-							'documentroot' => $mypath
+							'documentroot' => $mypath,
+							'customerroot' => $mypath
 						);
 
 						$php = new phpinterface($domain);

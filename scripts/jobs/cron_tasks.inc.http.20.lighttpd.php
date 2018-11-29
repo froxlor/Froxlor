@@ -162,7 +162,8 @@ class lighttpd extends HttpConfigBase
 							'openbasedir' => 0,
 							'email' => Settings::Get('panel.adminmail'),
 							'loginname' => 'froxlor.panel',
-							'documentroot' => $mypath
+							'documentroot' => $mypath,
+							'customerroot' => $mypath
 						);
 
 						$php = new phpinterface($domain);
@@ -185,7 +186,8 @@ class lighttpd extends HttpConfigBase
 							'openbasedir' => 0,
 							'email' => Settings::Get('panel.adminmail'),
 							'loginname' => 'froxlor.panel',
-							'documentroot' => $mypath
+							'documentroot' => $mypath,
+							'customerroot' => $mypath
 						);
 					}
 				} else {
@@ -193,7 +195,8 @@ class lighttpd extends HttpConfigBase
 					$domain = array(
 						'domain' => Settings::Get('system.hostname'),
 						'loginname' => 'froxlor.panel',
-						'documentroot' => $mypath
+						'documentroot' => $mypath,
+						'customerroot' => $mypath
 					);
 				}
 
@@ -219,6 +222,7 @@ class lighttpd extends HttpConfigBase
 					'adminid' => 1, /* first admin-user (superadmin) */
 					'loginname' => 'froxlor.panel',
 					'documentroot' => $mypath,
+					'customerroot' => $mypath,
 					'parentdomainid' => 0,
 				);
 
