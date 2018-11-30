@@ -77,3 +77,22 @@ if (isDatabaseVersion('201809280')) {
 
 	updateToDbVersion('201811180');
 }
+
+if (isDatabaseVersion('201811180')) {
+
+	showUpdateStep("Adding new settings for 2FA");
+	Settings::Add('2fa.enabled', '1', true);
+	lastStepStatus(0);
+
+	showUpdateStep("Adding new fields to admin-table for 2FA");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_ADMINS . "` ADD `type_2fa` tinyint(1) NOT NULL default '0';");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_ADMINS . "` ADD `data_2fa` varchar(500) NOT NULL default '' AFTER `type_2fa`;");
+	lastStepStatus(0);
+
+	showUpdateStep("Adding new fields to customer-table for 2FA");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` ADD `type_2fa` tinyint(1) NOT NULL default '0';");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` ADD `data_2fa` varchar(500) NOT NULL default '' AFTER `type_2fa`;");
+	lastStepStatus(0);
+
+	updateToDbVersion('201811300');
+}

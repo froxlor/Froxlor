@@ -61,6 +61,9 @@
 				<ul>
 					<li><a href="{$linker->getLink(array('section' => 'index', 'page' => 'change_password'))}">{$lng['login']['password']}</a></li>
 					<li><a href="{$linker->getLink(array('section' => 'index', 'page' => 'change_language'))}">{$lng['login']['language']}</a></li>
+					<if Settings::Get('2fa.enabled') == 1>
+						<li><a href="{$linker->getLink(array('section' => 'index', 'page' => '2fa'))}">{$lng['2fa']['2fa']}</a></li>
+					</if>
 					<if Settings::Get('panel.allow_theme_change_admin') == '1' && $userinfo['adminsession'] == 1>
 						<li><a href="{$linker->getLink(array('section' => 'index', 'page' => 'change_theme'))}">{$lng['panel']['theme']}</a></li>
 					</if>

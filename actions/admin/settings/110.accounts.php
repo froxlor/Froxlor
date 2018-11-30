@@ -62,6 +62,14 @@ return array(
 					'default' => 900,
 					'save_method' => 'storeSettingField',
 					),
+				'2fa_enabled' => array(
+					'label' => $lng['2fa']['2fa_enabled'],
+					'settinggroup' => '2fa',
+					'varname' => 'enabled',
+					'type' => 'bool',
+					'default' => true,
+					'save_method' => 'storeSettingField',
+				),
 				'panel_password_min_length' => array(
 					'label' => $lng['serversettings']['panel_password_min_length'],
 					'settinggroup' => 'panel',

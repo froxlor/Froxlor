@@ -133,6 +133,8 @@ CREATE TABLE `panel_admins` (
   `theme` varchar(255) NOT NULL default 'Sparkle',
   `custom_notes` text,
   `custom_notes_show` tinyint(1) NOT NULL default '0',
+  `type_2fa` tinyint(1) NOT NULL default '0',
+  `data_2fa` varchar(500) NOT NULL default '',
    PRIMARY KEY  (`adminid`),
    UNIQUE KEY `loginname` (`loginname`)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
@@ -200,6 +202,8 @@ CREATE TABLE `panel_customers` (
   `leregistered` tinyint(1) NOT NULL default '0',
   `leaccount` varchar(255) default '',
   `allowed_phpconfigs` varchar(500) NOT NULL default '',
+  `type_2fa` tinyint(1) NOT NULL default '0',
+  `data_2fa` varchar(500) NOT NULL default '',
    PRIMARY KEY  (`customerid`),
    UNIQUE KEY `loginname` (`loginname`)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
@@ -656,6 +660,7 @@ opcache.interned_strings_buffer'),
 	('system', 'logfiles_script', ''),
 	('system', 'dhparams_file', ''),
 	('api', 'enabled', '0'),
+	('2fa', 'enabled', '1'),
 	('panel', 'decimal_places', '4'),
 	('panel', 'adminmail', 'admin@SERVERNAME'),
 	('panel', 'phpmyadmin_url', ''),
@@ -688,7 +693,7 @@ opcache.interned_strings_buffer'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'version', '0.10.0'),
-	('panel', 'db_version', '201811180');
+	('panel', 'db_version', '201811300');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
