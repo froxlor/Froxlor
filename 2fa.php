@@ -59,7 +59,7 @@ if ($action == 'delete') {
 		'd2fa' => $data,
 		'id' => $uid
 	));
-	standard_success($lng['2fa']['2fa_added']);
+	standard_success(sprintf($lng['2fa']['2fa_added'], $filename, $s));
 }
 
 $log->logAction(USR_ACTION, LOG_NOTICE, "viewed 2fa::overview");

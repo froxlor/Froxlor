@@ -2156,7 +2156,7 @@ $lng['2fa']['2fa_enabled'] = 'Activate Two-factor authentication (2FA)';
 $lng['login']['2fa'] = 'Two-factor authentication (2FA)';
 $lng['login']['2facode'] = 'Please enter 2FA code';
 $lng['2fa']['2fa_removed'] = '2FA removed successfully';
-$lng['2fa']['2fa_added'] = '2FA activated successfully<br><a href="'.$filename.'?s='.$s.'&page=2fa">View 2FA details</a>';
+$lng['2fa']['2fa_added'] = '2FA activated successfully<br><a href="%s?s=%s&page=2fa">View 2FA details</a>';
 $lng['2fa']['2fa_add'] = 'Activate 2FA';
 $lng['2fa']['2fa_delete'] = 'Deactivate 2FA';
 $lng['2fa']['2fa_verify'] = 'Verify code';
