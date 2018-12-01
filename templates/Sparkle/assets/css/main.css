@@ -1640,7 +1640,7 @@ table thead th.tablesorter-headerDesc {
 	margin-bottom: 20px;
 }
 
-.shell, .filecontent .logcontent {
+.shell, .filecontent, .logcontent {
 	font-family: Consolas, Monaco, Lucida Console, Liberation Mono,
 		DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
 	border: 1px solid #d1d5d8;
