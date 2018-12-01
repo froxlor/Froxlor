@@ -496,4 +496,7 @@ if ($page == 'overview') {
 	
 	require_once __DIR__.'/ssl_certificates.php';
 	
+} elseif ($page == 'logfiles') {
+
+	require_once __DIR__.'/logfiles_viewer.php';
 }

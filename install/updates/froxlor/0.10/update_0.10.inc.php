@@ -96,3 +96,12 @@ if (isDatabaseVersion('201811180')) {
 
 	updateToDbVersion('201811300');
 }
+
+if (isDatabaseVersion('201811300')) {
+
+	showUpdateStep("Adding new logview-flag to customers");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` ADD `logviewenabled` tinyint(1) NOT NULL default '0';");
+	lastStepStatus(0);
+
+	updateToDbVersion('201812010');
+}

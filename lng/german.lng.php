@@ -1813,3 +1813,5 @@ $lng['mails']['2fa']['subject'] = 'Froxlor - 2FA Code';
 $lng['2fa']['2fa_overview_desc'] = 'Hier kann für das Konto eine Zwei-Faktor-Authentisierung aktiviert werden.<br><br>Es kann entweder eine Authenticator-App (time-based one-time password / TOTP) genutzt werden oder ein Einmalpasswort, welches nach erfolgreichem Login an die hinterlegte E-Mail Adresse gesendet wird.';
 $lng['2fa']['2fa_email_desc'] = 'Das Konto ist eingerichtet, um Einmalpasswörter per E-Mail zu erhalten. Zum Deaktivieren, klicke auf "'.$lng['2fa']['2fa_delete'].'"';
 $lng['2fa']['2fa_ga_desc'] = 'Das Konto ist eingerichtet, um zeitbasierte Einmalpasswörter via Authenticator-App zu erhalten. Um die gewünschte Authenticator-App einzurichten, scanne bitte den untenstehenden QR-Code. Zum Deaktivieren, klicke auf "'.$lng['2fa']['2fa_delete'].'"';
+$lng['admin']['logviewenabled'] = 'Zugriff auf access/error-Logdateien';
+$lng['panel']['viewlogs'] = 'Logdateien einsehen';

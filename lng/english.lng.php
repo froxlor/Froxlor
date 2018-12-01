@@ -2165,3 +2165,5 @@ $lng['mails']['2fa']['subject'] = 'Froxlor - 2FA Code';
 $lng['2fa']['2fa_overview_desc'] = 'Here you can activate a two-factor authentication for your account.<br><br>You can either use an authenticator-app (time-based one-time password / TOTP) or let froxlor send you an email to your account-address after each successful login with a one-time password.';
 $lng['2fa']['2fa_email_desc'] = 'Your account is set up to use one-time passwords via e-mail. To deactivate, click on "'.$lng['2fa']['2fa_delete'].'"';
 $lng['2fa']['2fa_ga_desc'] = 'Your account is set up to use time-based one-time passwords via authenticator-app. Please scan the QR code below with your desired authenticator app to generate the codes. To deactivate, click on "'.$lng['2fa']['2fa_delete'].'"';
+$lng['admin']['logviewenabled'] = 'Enable access to access/error-logs';
+$lng['panel']['viewlogs'] = 'View logfiles';

@@ -297,6 +297,17 @@ return array(
 						'value' => array($result['dnsenabled']),
 						'visible' => (Settings::Get('system.dnsenabled') == '1' ? true : false)
 					),
+					'logviewenabled' => array(
+						'label' => $lng['admin']['logviewenabled'] . '?',
+						'type' => 'checkbox',
+						'values' => array(
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array($result['logviewenabled'])
+					)
 				)
 			),
 			'section_d' => array(

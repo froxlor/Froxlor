@@ -197,10 +197,12 @@ class Customers extends ApiCommand implements ResourceEntity
 	 * @param bool $perlenabled
 	 *        	optional, whether to allow usage of Perl/CGI, default 0 (false)
 	 * @param bool $dnsenabled
-	 *        	optional, ether to allow usage of the DNS editor (requires activated nameserver in settings)
+	 *        	optional, ether to allow usage of the DNS editor (requires activated nameserver in settings), default 0 (false)
+	 * @param bool $logviewenabled
+	 *        	optional, ether to allow acccess to webserver access/error-logs, default 0 (false)
 	 * @param bool $store_defaultindex
 	 *        	optional, whether to store the default index file to customers homedir
-	 *
+	 *        	
 	 * @access admin
 	 * @throws Exception
 	 * @return array
@@ -248,6 +250,7 @@ class Customers extends ApiCommand implements ResourceEntity
 				$p_allowed_phpconfigs = $this->getParam('allowed_phpconfigs', true, array());
 				$perlenabled = $this->getParam('perlenabled', true, 0);
 				$dnsenabled = $this->getParam('dnsenabled', true, 0);
+				$logviewenabled = $this->getParam('logviewenabled', true, 0);
 				$store_defaultindex = $this->getParam('store_defaultindex', true, 0);
 				$loginname = $this->getParam('new_loginname', true, '');
 
@@ -375,6 +378,10 @@ class Customers extends ApiCommand implements ResourceEntity
 						$dnsenabled = '1';
 					}
 
+					if ($logviewenabled != '0') {
+						$logviewenabled = '1';
+					}
+
 					if ($password == '') {
 						$password = generatePassword();
 					}
@@ -415,6 +422,7 @@ class Customers extends ApiCommand implements ResourceEntity
 						'pop3' => $email_pop3,
 						'perlenabled' => $perlenabled,
 						'dnsenabled' => $dnsenabled,
+						'logviewenabled' => $logviewenabled,
 						'theme' => $_theme,
 						'custom_notes' => $custom_notes,
 						'custom_notes_show' => $custom_notes_show
@@ -456,6 +464,7 @@ class Customers extends ApiCommand implements ResourceEntity
 						`pop3` = :pop3,
 						`perlenabled` = :perlenabled,
 						`dnsenabled` = :dnsenabled,
+						`logviewenabled` = :logviewenabled,
 						`theme` = :theme,
 						`custom_notes` = :custom_notes,
 						`custom_notes_show` = :custom_notes_show
@@ -828,7 +837,9 @@ class Customers extends ApiCommand implements ResourceEntity
 	 * @param bool $perlenabled
 	 *        	optional, whether to allow usage of Perl/CGI, default 0 (false)
 	 * @param bool $dnsenabled
-	 *        	optional, ether to allow usage of the DNS editor (requires activated nameserver in settings)
+	 *        	optional, ether to allow usage of the DNS editor (requires activated nameserver in settings), default 0 (false)
+	 * @param bool $logviewenabled
+	 *        	optional, ether to allow acccess to webserver access/error-logs, default 0 (false)
 	 * @param string $theme
 	 *        	optional, change theme
 	 *        	
@@ -888,6 +899,7 @@ class Customers extends ApiCommand implements ResourceEntity
 			$allowed_phpconfigs = $this->getParam('allowed_phpconfigs', true, json_decode($result['allowed_phpconfigs'], true));
 			$perlenabled = $this->getParam('perlenabled', true, $result['perlenabled']);
 			$dnsenabled = $this->getParam('dnsenabled', true, $result['dnsenabled']);
+			$logviewenabled = $this->getParam('logviewenabled', true, $result['logviewenabled']);
 			$deactivated = $this->getParam('deactivated', true, $result['deactivated']);
 			$theme = $this->getParam('theme', true, $result['theme']);
 		} else {
@@ -1029,6 +1041,10 @@ class Customers extends ApiCommand implements ResourceEntity
 				inserttask('1');
 			}
 
+			if ($logviewenabled != '0') {
+				$logviewenabled = '1';
+			}
+
 			// activate/deactivate customer services
 			if ($deactivated != $result['deactivated']) {
 
@@ -1167,6 +1183,7 @@ class Customers extends ApiCommand implements ResourceEntity
 				'pop3' => $email_pop3,
 				'perlenabled' => $perlenabled,
 				'dnsenabled' => $dnsenabled,
+				'logviewenabled' => $logviewenabled,
 				'custom_notes' => $custom_notes,
 				'custom_notes_show' => $custom_notes_show
 			);
@@ -1208,6 +1225,7 @@ class Customers extends ApiCommand implements ResourceEntity
 				`pop3` = :pop3,
 				`perlenabled` = :perlenabled,
 				`dnsenabled` = :dnsenabled,
+				`logviewenabled` = :logviewenabled,
 				`custom_notes` = :custom_notes,
 				`custom_notes_show` = :custom_notes_show";
 			$upd_query .= $admin_upd_query;
