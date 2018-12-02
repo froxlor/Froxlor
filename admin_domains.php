@@ -658,15 +658,16 @@ if ($page == 'domains' || $page == 'overview') {
 				standard_error('domain_import_error', $e->getMessage());
 			}
 			
-			// @FIXME find a way to display $result['notice'] here somehow,
-			// as it might be important if you've reached your maximum allocation of domains
-			
+			if (!empty($bulk->getErrors())) {
+				dynamic_error(implode("<br>", $bulk->getErrors()));
+			}
+
 			// update customer/admin counters
 			updateCounters(false);
 			inserttask('1');
 			inserttask('4');
 			
-			$result_str = $result['imported'] . ' / ' . $result['all'];
+			$result_str = $result['imported'] . ' / ' . $result['all'] . (!empty($result['note']) ? ' ('.$result['note'].')' : '');
 			standard_success('domain_import_successfully', $result_str, array(
 				'filename' => $filename,
 				'action' => '',
