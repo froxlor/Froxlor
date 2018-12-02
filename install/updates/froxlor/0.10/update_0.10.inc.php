@@ -81,7 +81,7 @@ if (isDatabaseVersion('201809280')) {
 if (isDatabaseVersion('201811180')) {
 
 	showUpdateStep("Adding new settings for 2FA");
-	Settings::Add('2fa.enabled', '1', true);
+	Settings::AddNew('2fa.enabled', '1', true);
 	lastStepStatus(0);
 
 	showUpdateStep("Adding new fields to admin-table for 2FA");
