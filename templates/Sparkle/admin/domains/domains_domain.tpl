@@ -4,9 +4,12 @@
 <if $row['termination_css'] == ''>
 	<tr <if $row['deactivated'] == 1>class="disabled"</if>>
 </if>
-	<td>{$row['domain']}
+	<td><b>{$row['domain']}</b>
 		<if (isset($row['standardsubdomain']) && $row['standardsubdomain'] == $row['id'])>
 			&nbsp;({$lng['admin']['stdsubdomain']})
+		</if>
+		<if $row['registration_date'] != ''>
+			<br><small>{$lng['domains']['registration_date']}: {$row['registration_date']}</small>
 		</if>
 		<if $row['termination_date'] != ''>
 			<br><small><div class="red">({$lng['domains']['termination_date_overview']} {$row['termination_date']})</div></small>

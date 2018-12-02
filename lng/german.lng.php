@@ -887,7 +887,7 @@ $lng['panel']['active'] = 'Aktiv';
 $lng['panel']['please_choose'] = 'Bitte auswählen';
 $lng['panel']['allow_modifications'] = 'Änderungen zulassen';
 $lng['domains']['add_date'] = 'Zu Froxlor hinzugefügt';
-$lng['domains']['registration_date'] = 'Bei Registry hinzugefügt';
+$lng['domains']['registration_date'] = 'Registriert am';
 $lng['domains']['topleveldomain'] = 'Top-Level-Domain';
 
 // ADDED IN 1.2.19-svn22

@@ -5,7 +5,10 @@
 	<tr>
 </if>
 	<td>
-		<a href="http://{$row['domain']}" target="_blank">{$row['domain']}</a>
+		<a href="http://{$row['domain']}" target="_blank"><b>{$row['domain']}</b></a>
+		<if $row['registration_date'] != ''>
+			<br><small>{$lng['domains']['registration_date']}: {$row['registration_date']}</small>
+		</if>
 		<if $row['termination_date'] != ''>
 			<br><small><div class="red">({$lng['domains']['termination_date_overview']} {$row['termination_date']})</div></small>
 		</if>
