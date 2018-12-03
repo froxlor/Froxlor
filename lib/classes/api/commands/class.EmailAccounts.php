@@ -209,12 +209,12 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 				$_mailerror = false;
 				$mailerr_msg = "";
 				try {
-					$this->mailer()->SetFrom($admin['email'], getCorrectUserSalutation($admin));
+					$this->mailer()->setFrom($admin['email'], getCorrectUserSalutation($admin));
 					$this->mailer()->Subject = $mail_subject;
 					$this->mailer()->AltBody = $mail_body;
-					$this->mailer()->MsgHTML(str_replace("\n", "<br />", $mail_body));
-					$this->mailer()->AddAddress($email_full);
-					$this->mailer()->Send();
+					$this->mailer()->msgHTML(str_replace("\n", "<br />", $mail_body));
+					$this->mailer()->addAddress($email_full);
+					$this->mailer()->send();
 				} catch (phpmailerException $e) {
 					$mailerr_msg = $e->errorMessage();
 					$_mailerror = true;
@@ -228,7 +228,7 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 					standard_error('errorsendingmail', $email_full, true);
 				}
 
-				$this->mailer()->ClearAddresses();
+				$this->mailer()->clearAddresses();
 
 				// customer wants to send the e-mail to an alternative email address too
 				if (Settings::Get('panel.sendalternativemail') == 1) {
@@ -239,12 +239,12 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 
 					$_mailerror = false;
 					try {
-						$this->mailer()->SetFrom($admin['email'], getCorrectUserSalutation($admin));
+						$this->mailer()->setFrom($admin['email'], getCorrectUserSalutation($admin));
 						$this->mailer()->Subject = $mail_subject;
 						$this->mailer()->AltBody = $mail_body;
-						$this->mailer()->MsgHTML(str_replace("\n", "<br />", $mail_body));
-						$this->mailer()->AddAddress($idna_convert->encode($alternative_email), getCorrectUserSalutation($customer));
-						$this->mailer()->Send();
+						$this->mailer()->msgHTML(str_replace("\n", "<br />", $mail_body));
+						$this->mailer()->addAddress($idna_convert->encode($alternative_email), getCorrectUserSalutation($customer));
+						$this->mailer()->send();
 					} catch (phpmailerException $e) {
 						$mailerr_msg = $e->errorMessage();
 						$_mailerror = true;
@@ -260,7 +260,7 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 						), $alternative_email, true);
 					}
 
-					$this->mailer()->ClearAddresses();
+					$this->mailer()->clearAddresses();
 				}
 			}
 

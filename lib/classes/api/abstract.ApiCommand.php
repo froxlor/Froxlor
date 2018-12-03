@@ -204,11 +204,11 @@ abstract class ApiCommand extends ApiParameter
 			$this->mail->Port = Settings::Get('system.mail_smtp_port');
 		}
 
-		if (PHPMailer::ValidateAddress(Settings::Get('panel.adminmail')) !== false) {
+		if ( PHPMailer::validateAddress(Settings::Get('panel.adminmail')) !== false) {
 			// set return-to address and custom sender-name, see #76
-			$this->mail->SetFrom(Settings::Get('panel.adminmail'), Settings::Get('panel.adminmail_defname'));
+			$this->mail->setFrom(Settings::Get('panel.adminmail'), Settings::Get('panel.adminmail_defname'));
 			if (Settings::Get('panel.adminmail_return') != '') {
-				$this->mail->AddReplyTo(Settings::Get('panel.adminmail_return'), Settings::Get('panel.adminmail_defname'));
+				$this->mail->addReplyTo(Settings::Get('panel.adminmail_return'), Settings::Get('panel.adminmail_defname'));
 			}
 		}
 	}
