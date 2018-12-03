@@ -47,7 +47,7 @@ class PowerDNS
 			$sql_mode .= ',NO_AUTO_CREATE_USER';
 		}
 		$options = array(
-			PDO::MYSQL_ATTR_INIT_COMMAND => 'SET names utf8,sql_mode="' . $sql_mode . '"'
+			'PDO::MYSQL_ATTR_INIT_COMMAND' => 'SET names utf8,sql_mode="' . $sql_mode . '"'
 		);
 		$attributes = array(
 			'ATTR_ERRMODE' => 'ERRMODE_EXCEPTION'
@@ -102,7 +102,7 @@ class PowerDNS
 
 	/**
 	 * remove all records and entries of a given domain
-	 * 
+	 *
 	 * @param array $domain
 	 */
 	public static function cleanDomainZone($domain = null)

@@ -216,7 +216,7 @@ class FroxlorInstall
 			$sql_mode .= ',NO_AUTO_CREATE_USER';
 		}
 		$options = array(
-			PDO::MYSQL_ATTR_INIT_COMMAND => 'SET names utf8,sql_mode="' . $sql_mode . '"'
+			'PDO::MYSQL_ATTR_INIT_COMMAND' => 'SET names utf8,sql_mode="' . $sql_mode . '"'
 		);
 		$dsn = "mysql:host=" . $this->_data['mysql_host'] . ";";
 		$fatal_fail = false;
@@ -258,7 +258,7 @@ class FroxlorInstall
 					$sql_mode .= ',NO_AUTO_CREATE_USER';
 				}
 				$options = array(
-					PDO::MYSQL_ATTR_INIT_COMMAND => 'SET names utf8,sql_mode="' . $sql_mode . '"'
+					'PDO::MYSQL_ATTR_INIT_COMMAND' => 'SET names utf8,sql_mode="' . $sql_mode . '"'
 				);
 				$dsn = "mysql:host=" . $this->_data['mysql_host'] . ";dbname=" . $this->_data['mysql_database'] . ";";
 				$another_fail = false;
@@ -535,7 +535,7 @@ class FroxlorInstall
 			$sql_mode .= ',NO_AUTO_CREATE_USER';
 		}
 		$options = array(
-			PDO::MYSQL_ATTR_INIT_COMMAND => 'SET names utf8,sql_mode="' . $sql_mode . '"'
+			'PDO::MYSQL_ATTR_INIT_COMMAND' => 'SET names utf8,sql_mode="' . $sql_mode . '"'
 		);
 		$dsn = "mysql:host=" . $this->_data['mysql_host'] . ";dbname=" . $this->_data['mysql_database'] . ";";
 		$fatal_fail = false;
