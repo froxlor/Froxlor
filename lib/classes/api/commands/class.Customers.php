@@ -706,13 +706,13 @@ class Customers extends ApiCommand implements ResourceEntity
 						try {
 							$this->mailer()->Subject = $mail_subject;
 							$this->mailer()->AltBody = $mail_body;
-							$this->mailer()->MsgHTML(str_replace("\n", "<br />", $mail_body));
-							$this->mailer()->AddAddress($email, getCorrectUserSalutation(array(
+							$this->mailer()->msgHTML(str_replace("\n", "<br />", $mail_body));
+							$this->mailer()->addAddress($email, getCorrectUserSalutation(array(
 								'firstname' => $firstname,
 								'name' => $name,
 								'company' => $company
 							)));
-							$this->mailer()->Send();
+							$this->mailer()->send();
 						} catch (phpmailerException $e) {
 							$mailerr_msg = $e->errorMessage();
 							$_mailerror = true;
@@ -726,7 +726,7 @@ class Customers extends ApiCommand implements ResourceEntity
 							standard_error('errorsendingmail', $email, true);
 						}
 
-						$this->mailer()->ClearAddresses();
+						$this->mailer()->clearAddresses();
 						$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] automatically sent password to user '" . $loginname . "'");
 					}
 				}
