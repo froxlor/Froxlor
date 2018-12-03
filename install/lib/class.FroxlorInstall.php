@@ -209,14 +209,9 @@ class FroxlorInstall
 		
 		// check for mysql-root-connection
 		$content .= $this->_status_message('begin', $this->_lng['install']['testing_mysql']);
-		
-		$version_server = PDO::getAttribute(PDO::ATTR_SERVER_VERSION);
-		$sql_mode = 'NO_ENGINE_SUBSTITUTION';
-		if (version_compare($version_server, '8.0.11', '<')) {
-			$sql_mode .= ',NO_AUTO_CREATE_USER';
-		}
+
 		$options = array(
-			'PDO::MYSQL_ATTR_INIT_COMMAND' => 'SET names utf8,sql_mode="' . $sql_mode . '"'
+			'PDO::MYSQL_ATTR_INIT_COMMAND' => 'SET names utf8'
 		);
 		$dsn = "mysql:host=" . $this->_data['mysql_host'] . ";";
 		$fatal_fail = false;
@@ -239,6 +234,12 @@ class FroxlorInstall
 				$fatal_fail = true;
 			}
 		}
+		$version_server = $db_root->getAttribute(PDO::ATTR_SERVER_VERSION);
+		$sql_mode = 'NO_ENGINE_SUBSTITUTION';
+		if (version_compare($version_server, '8.0.11', '<')) {
+			$sql_mode .= ',NO_AUTO_CREATE_USER';
+		}
+		$db_root->exec('SET sql_mode = "'.$sql_mode.'"');
 		
 		if (! $fatal_fail) {
 			
@@ -252,18 +253,19 @@ class FroxlorInstall
 			$content .= $this->_importDatabaseData();
 			if (! $this->_abort) {
 				// create DB object for new database
-				$version_server = PDO::getAttribute(PDO::ATTR_SERVER_VERSION);
-				$sql_mode = 'NO_ENGINE_SUBSTITUTION';
-				if (version_compare($version_server, '8.0.11', '<')) {
-					$sql_mode .= ',NO_AUTO_CREATE_USER';
-				}
 				$options = array(
-					'PDO::MYSQL_ATTR_INIT_COMMAND' => 'SET names utf8,sql_mode="' . $sql_mode . '"'
+					'PDO::MYSQL_ATTR_INIT_COMMAND' => 'SET names utf8'
 				);
 				$dsn = "mysql:host=" . $this->_data['mysql_host'] . ";dbname=" . $this->_data['mysql_database'] . ";";
 				$another_fail = false;
 				try {
 					$db = new PDO($dsn, $this->_data['mysql_unpriv_user'], $this->_data['mysql_unpriv_pass'], $options);
+					$version_server = $db->getAttribute(PDO::ATTR_SERVER_VERSION);
+					$sql_mode = 'NO_ENGINE_SUBSTITUTION';
+					if (version_compare($version_server, '8.0.11', '<')) {
+						$sql_mode .= ',NO_AUTO_CREATE_USER';
+					}
+					$db->exec('SET sql_mode = "'.$sql_mode.'"');
 				} catch (PDOException $e) {
 					// dafuq? this should have happened in _importDatabaseData()
 					$content .= $this->_status_message('red', $e->getMessage());
@@ -535,7 +537,7 @@ class FroxlorInstall
 			$sql_mode .= ',NO_AUTO_CREATE_USER';
 		}
 		$options = array(
-			'PDO::MYSQL_ATTR_INIT_COMMAND' => 'SET names utf8,sql_mode="' . $sql_mode . '"'
+			'PDO::MYSQL_ATTR_INIT_COMMAND' => 'SET names utf8'
 		);
 		$dsn = "mysql:host=" . $this->_data['mysql_host'] . ";dbname=" . $this->_data['mysql_database'] . ";";
 		$fatal_fail = false;
@@ -548,6 +550,12 @@ class FroxlorInstall
 			foreach ($attributes as $k => $v) {
 				$db->setAttribute(constant("PDO::" . $k), constant("PDO::" . $v));
 			}
+			$version_server = $db->getAttribute(PDO::ATTR_SERVER_VERSION);
+			$sql_mode = 'NO_ENGINE_SUBSTITUTION';
+			if (version_compare($version_server, '8.0.11', '<')) {
+				$sql_mode .= ',NO_AUTO_CREATE_USER';
+			}
+			$db->exec('SET sql_mode = "'.$sql_mode.'"');
 		} catch (PDOException $e) {
 			$content .= $this->_status_message('red', $e->getMessage());
 			$fatal_fail = true;
