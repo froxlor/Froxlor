@@ -208,6 +208,7 @@ class Certificates extends ApiCommand implements ResourceEntity
 	 * @param int $id
 	 *
 	 * @return array
+	 * @throws Exception
 	 */
 	public function delete()
 	{
@@ -261,6 +262,7 @@ class Certificates extends ApiCommand implements ResourceEntity
 	 *        	optional default false
 	 *        	
 	 * @return boolean
+	 * @throws Exception
 	 */
 	private function addOrUpdateCertificate($domainid = 0, $ssl_cert_file = '', $ssl_key_file = '', $ssl_ca_file = '', $ssl_cert_chainfile = '', $do_insert = false)
 	{

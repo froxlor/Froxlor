@@ -284,8 +284,9 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 	 * @param string $ssl_cert_chainfile
 	 *        	optional, requires $ssl = 1, default empty
 	 *        	
+	 *
 	 * @access admin
-	 * @throws ErrorException
+	 * @throws Exception
 	 * @return array
 	 */
 	public function update()

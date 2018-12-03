@@ -117,6 +117,7 @@ abstract class ApiParameter
 	 *        	value which is returned if optional=true and param is not set
 	 *        	
 	 * @return mixed
+	 * @throws Exception
 	 */
 	protected function getUlParam($param = null, $ul_field = null, $optional = false, $default = 0)
 	{
@@ -145,6 +146,9 @@ abstract class ApiParameter
 	 * @param int $level
 	 *        	depth of backtrace, default 2
 	 *        	
+	 * @param int $max_level
+	 * @param array|null $trace
+	 *
 	 * @return string
 	 */
 	private function getModFunctionString($level = 1, $max_level = 5, $trace = null)

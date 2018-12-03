@@ -181,6 +181,7 @@ abstract class ApiCommand extends ApiParameter
 
 	/**
 	 * initialize mail interface so an API wide mail-object is available
+	 * @throws phpmailerException
 	 */
 	private function initMail()
 	{
@@ -224,6 +225,7 @@ abstract class ApiCommand extends ApiParameter
 	 *        	array of parameters for the command
 	 *        	
 	 * @return ApiCommand
+	 * @throws Exception
 	 */
 	public static function getLocal($userinfo = null, $params = null)
 	{
@@ -285,8 +287,7 @@ abstract class ApiCommand extends ApiParameter
 	/**
 	 * call an api-command internally
 	 *
-	 * @param string $module
-	 * @param string $function
+	 * @param string $command
 	 * @param array|null $params
 	 *
 	 * @return array

@@ -79,10 +79,10 @@ class FroxlorRPC
 	/**
 	 * validates the given command
 	 *
-	 * @param array $body
+	 * @param array $request
 	 *
+	 * @return array
 	 * @throws Exception
-	 * @return boolean
 	 */
 	private static function validateBody($request)
 	{

@@ -52,6 +52,7 @@ class CustomerBackups extends ApiCommand implements ResourceEntity
 	 *        	
 	 * @access admin, customer
 	 * @return array
+	 * @throws Exception
 	 */
 	public function add()
 	{
