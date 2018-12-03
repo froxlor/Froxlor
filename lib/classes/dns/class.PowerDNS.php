@@ -41,8 +41,13 @@ class PowerDNS
 		// build up connection string
 		$driver = 'mysql';
 		$dsn = $driver . ":";
+		$version_server = PDO::getAttribute(PDO::ATTR_SERVER_VERSION);
+		$sql_mode = 'NO_ENGINE_SUBSTITUTION';
+		if (version_compare($version_server, '8.0.11', '<')) {
+			$sql_mode .= ',NO_AUTO_CREATE_USER';
+		}
 		$options = array(
-			PDO::MYSQL_ATTR_INIT_COMMAND => 'SET names utf8,sql_mode="NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"'
+			PDO::MYSQL_ATTR_INIT_COMMAND => 'SET names utf8,sql_mode="' . $sql_mode . '"'
 		);
 		$attributes = array(
 			'ATTR_ERRMODE' => 'ERRMODE_EXCEPTION'

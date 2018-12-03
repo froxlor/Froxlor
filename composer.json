@@ -28,7 +28,7 @@
 		"docs" : "https://github.com/Froxlor/Froxlor/wiki"
 	},
 	"require" : {
-		"php" : ">=5.3",
+		"php" : ">=5.6",
 		"ext-session" : "*",
 		"ext-ctype" : "*",
 		"ext-pdo" : "*",
@@ -51,7 +51,8 @@
 		"theseer/phpdox" : "0.11.2",
 		"phpunit/php-invoker" : "1.1.4",
 		"php" : ">=7.0",
-		"ext-pcntl" : "*"
+		"ext-pcntl" : "*",
+		"phpcompatibility/php-compatibility": "*"
 	},
 	"suggest" : {
 		"ext-bcmath" : "*",

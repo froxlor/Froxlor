@@ -141,36 +141,6 @@ if (isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) != 'off')) {
 }
 
 /**
- * disable magic_quotes_runtime if enabled
- */
-// since 5.4 get_magic_quotes_runtime() and get_magic_quotes_gpc() return always FALSE
-if (version_compare(PHP_VERSION, "5.4.0", "<")) {
-	if (get_magic_quotes_runtime()) {
-		// deactivate
-		set_magic_quotes_runtime(false);
-	}
-
-	/**
-	 * Reverse magic_quotes_gpc=on to have clean GPC data again
-	 */
-	if (get_magic_quotes_gpc()) {
-		$in = array(&$_GET, &$_POST, &$_COOKIE);
-
-		$_in = $in;
-		foreach ($_in as $k => $v) {
-			foreach ($v as $key => $val) {
-				if (!is_array($val)) {
-					$in[$k][$key] = stripslashes($val);
-					continue;
-				}
-				$in[] = & $in[$k][$key];
-			}
-		}
-		unset($in);
-	}
-}
-
-/**
  * SESSION MANAGEMENT
  */
 $remote_addr = $_SERVER['REMOTE_ADDR'];

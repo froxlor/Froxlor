@@ -127,13 +127,8 @@ abstract class ApiParameter
 		// which class called us
 		$_class = get_called_class();
 		if (empty($trace)) {
-			// check php version for backtrace flags
-			$_traceopts = false;
-			if (version_compare(PHP_VERSION, "5.3.6", ">")) {
-				$_traceopts = DEBUG_BACKTRACE_IGNORE_ARGS;
-			}
 			// get backtrace
-			$trace = debug_backtrace($_traceopts);
+			$trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 		}
 		// check class and function
 		$class = $trace[$level]['class'];

@@ -210,8 +210,13 @@ class FroxlorInstall
 		// check for mysql-root-connection
 		$content .= $this->_status_message('begin', $this->_lng['install']['testing_mysql']);
 		
+		$version_server = PDO::getAttribute(PDO::ATTR_SERVER_VERSION);
+		$sql_mode = 'NO_ENGINE_SUBSTITUTION';
+		if (version_compare($version_server, '8.0.11', '<')) {
+			$sql_mode .= ',NO_AUTO_CREATE_USER';
+		}
 		$options = array(
-			'PDO::MYSQL_ATTR_INIT_COMMAND' => 'SET names utf8,sql_mode="NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"'
+			PDO::MYSQL_ATTR_INIT_COMMAND => 'SET names utf8,sql_mode="' . $sql_mode . '"'
 		);
 		$dsn = "mysql:host=" . $this->_data['mysql_host'] . ";";
 		$fatal_fail = false;
@@ -247,8 +252,13 @@ class FroxlorInstall
 			$content .= $this->_importDatabaseData();
 			if (! $this->_abort) {
 				// create DB object for new database
+				$version_server = PDO::getAttribute(PDO::ATTR_SERVER_VERSION);
+				$sql_mode = 'NO_ENGINE_SUBSTITUTION';
+				if (version_compare($version_server, '8.0.11', '<')) {
+					$sql_mode .= ',NO_AUTO_CREATE_USER';
+				}
 				$options = array(
-					'PDO::MYSQL_ATTR_INIT_COMMAND' => 'SET names utf8,sql_mode="NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"'
+					PDO::MYSQL_ATTR_INIT_COMMAND => 'SET names utf8,sql_mode="' . $sql_mode . '"'
 				);
 				$dsn = "mysql:host=" . $this->_data['mysql_host'] . ";dbname=" . $this->_data['mysql_database'] . ";";
 				$another_fail = false;
@@ -519,8 +529,13 @@ class FroxlorInstall
 	{
 		$content = "";
 		$content .= $this->_status_message('begin', $this->_lng['install']['testing_new_db']);
+		$version_server = PDO::getAttribute(PDO::ATTR_SERVER_VERSION);
+		$sql_mode = 'NO_ENGINE_SUBSTITUTION';
+		if (version_compare($version_server, '8.0.11', '<')) {
+			$sql_mode .= ',NO_AUTO_CREATE_USER';
+		}
 		$options = array(
-			'PDO::MYSQL_ATTR_INIT_COMMAND' => 'SET names utf8,sql_mode="NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"'
+			PDO::MYSQL_ATTR_INIT_COMMAND => 'SET names utf8,sql_mode="' . $sql_mode . '"'
 		);
 		$dsn = "mysql:host=" . $this->_data['mysql_host'] . ";dbname=" . $this->_data['mysql_database'] . ";";
 		$fatal_fail = false;
@@ -932,26 +947,14 @@ class FroxlorInstall
 		// check for correct php version
 		$content .= $this->_status_message('begin', $this->_lng['requirements']['phpversion']);
 		
-		if (version_compare("5.3.0", PHP_VERSION, ">=")) {
+		if (version_compare("5.6.0", PHP_VERSION, ">=")) {
 			$content .= $this->_status_message('red', $this->_lng['requirements']['notfound'] . ' (' . PHP_VERSION . ')');
 			$_die = true;
 		} else {
-			if (version_compare("5.6.0", PHP_VERSION, ">=")) {
+			if (version_compare("7.0.0", PHP_VERSION, ">=")) {
 				$content .= $this->_status_message('orange', $this->_lng['requirements']['newerphpprefered'] . ' (' . PHP_VERSION . ')');
 			} else {
 				$content .= $this->_status_message('green', PHP_VERSION);
-			}
-		}
-		
-		// Check if magic_quotes_runtime is active | get_magic_quotes_runtime() is always FALSE since 5.4
-		if (version_compare(PHP_VERSION, "5.4.0", "<")) {
-			$content .= $this->_status_message('begin', $this->_lng['requirements']['phpmagic_quotes_runtime']);
-			if (get_magic_quotes_runtime()) {
-				// deactivate it
-				set_magic_quotes_runtime(false);
-				$content .= $this->_status_message('orange', $this->_lng['requirements']['not_true'] . "<br />" . $this->_lng['requirements']['phpmagic_quotes_runtime_description']);
-			} else {
-				$content .= $this->_status_message('green', 'off');
 			}
 		}
 		
