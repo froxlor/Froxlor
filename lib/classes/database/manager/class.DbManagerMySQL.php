@@ -70,7 +70,7 @@ class DbManagerMySQL {
 		if (Database::getAttribute(PDO::ATTR_SERVER_VERSION) >= '8.0.0') {
 			// create user
 			$stmt = Database::prepare("
-				CREATE USER '" . $username . "'.'" . $access_host . "' IDENTIFIED BY 'password'
+				CREATE USER '" . $username . "'@'" . $access_host . "' IDENTIFIED BY 'password'
 			");
 			Database::pexecute($stmt);
 			// grant privileges
