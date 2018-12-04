@@ -1743,6 +1743,7 @@ class Customers extends ApiCommand implements ResourceEntity
 	 * @param string $resource
 	 * @param string $extra
 	 *        	optional, default empty
+	 * @param int $increase_by
 	 */
 	public static function increaseUsage($customerid = 0, $resource = null, $extra = '', $increase_by = 1)
 	{
@@ -1756,6 +1757,7 @@ class Customers extends ApiCommand implements ResourceEntity
 	 * @param string $resource
 	 * @param string $extra
 	 *        	optional, default empty
+	 * @param int $decrease_by
 	 */
 	public static function decreaseUsage($customerid = 0, $resource = null, $extra = '', $decrease_by = 1)
 	{

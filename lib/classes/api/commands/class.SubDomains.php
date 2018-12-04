@@ -846,6 +846,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 	 * @param boolean $_doredirect
 	 *
 	 * @return string validated path
+	 * @throws Exception
 	 */
 	private function validateDomainDocumentRoot($path = null, $url = null, $customer = null, $completedomain = null, &$_doredirect = false)
 	{
