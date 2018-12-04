@@ -67,7 +67,7 @@ class DbManagerMySQL {
 	 */
 	public function grantPrivilegesTo($username = null, $password = null, $access_host = null, $p_encrypted = false) {
 		// mysql8 compatibility
-		if (Database::getAttribute(PDO::ATTR_SERVER_VERSION) >= '8.0.0') {
+		if (version_compare(Database::getAttribute(PDO::ATTR_SERVER_VERSION), '8.0.11', '>=')) {
 			// create user
 			$stmt = Database::prepare("
 				CREATE USER '" . $username . "'@'" . $access_host . "' IDENTIFIED BY 'password'
@@ -86,10 +86,14 @@ class DbManagerMySQL {
 			Database::pexecute($stmt, array("username" => $username, "host" => $access_host));
 		}
 		// set passoword
-		if ($p_encrypted) {
-			$stmt = Database::prepare("SET PASSWORD FOR :username@:host = :password");
+		if (version_compare(Database::getAttribute(PDO::ATTR_SERVER_VERSION), '5.7.6', '<')) {
+			if ($p_encrypted) {
+				$stmt = Database::prepare("SET PASSWORD FOR :username@:host = :password");
+			} else {
+				$stmt = Database::prepare("SET PASSWORD FOR :username@:host = PASSWORD(:password)");
+			}
 		} else {
-			$stmt = Database::prepare("SET PASSWORD FOR :username@:host = PASSWORD(:password)");
+			$stmt = Database::prepare("ALTER USER :username@:host IDENTIFIED BY :password");
 		}
 		Database::pexecute($stmt, array("username" => $username, "host" => $access_host, "password" => $password));
 	}
