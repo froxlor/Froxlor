@@ -23,7 +23,7 @@ class Admins extends ApiCommand implements ResourceEntity
 	 *
 	 * @access admin
 	 * @throws Exception
-	 * @return array count|list
+	 * @return string
 	 */
 	public function listing()
 	{
@@ -57,7 +57,7 @@ class Admins extends ApiCommand implements ResourceEntity
 	 *        	
 	 * @access admin
 	 * @throws Exception
-	 * @return array
+	 * @return string
 	 */
 	public function get()
 	{
@@ -160,7 +160,7 @@ class Admins extends ApiCommand implements ResourceEntity
 	 *        	
 	 * @access admin
 	 * @throws Exception
-	 * @return array
+	 * @return string
 	 */
 	public function add()
 	{
@@ -437,7 +437,7 @@ class Admins extends ApiCommand implements ResourceEntity
 	 *        	
 	 * @access admin
 	 * @throws Exception
-	 * @return array
+	 * @return string
 	 */
 	public function update()
 	{
@@ -694,7 +694,7 @@ class Admins extends ApiCommand implements ResourceEntity
 	 *        	
 	 * @access admin
 	 * @throws Exception
-	 * @return array
+	 * @return string
 	 */
 	public function delete()
 	{
@@ -794,7 +794,7 @@ class Admins extends ApiCommand implements ResourceEntity
 	 *        	
 	 * @access admin
 	 * @throws Exception
-	 * @return array
+	 * @return string
 	 */
 	public function unlock()
 	{
@@ -829,7 +829,7 @@ class Admins extends ApiCommand implements ResourceEntity
 	/**
 	 * increase resource-usage
 	 *
-	 * @param int $customerid
+	 * @param int $adminid
 	 * @param string $resource
 	 * @param string $extra
 	 *        	optional, default empty
@@ -842,7 +842,7 @@ class Admins extends ApiCommand implements ResourceEntity
 	/**
 	 * decrease resource-usage
 	 *
-	 * @param int $customerid
+	 * @param int $adminid
 	 * @param string $resource
 	 * @param string $extra
 	 *        	optional, default empty
