@@ -80,6 +80,31 @@ abstract class ApiParameter
 	}
 
 	/**
+	 * getParam wrapper for boolean parameter
+	 *
+	 * @param string $param
+	 *        	parameter to get out of the request-parameter list
+	 * @param bool $optional
+	 *        	default: false
+	 * @param mixed $default
+	 *        	value which is returned if optional=true and param is not set
+	 *
+	 * @return string
+	 */
+	protected function getBoolParam($param = null, $optional = false, $default = false)
+	{
+		$_default = '0';
+		if ($default) {
+			$_default = '1';
+		}
+		$param_value = $this->getParam($param, $optional, $_default);
+		if ($param_value && intval($param_value) != 0) {
+			return '1';
+		}
+		return '0';
+	}
+
+	/**
 	 * get specific parameter which also has and unlimited-field
 	 *
 	 * @param string $param

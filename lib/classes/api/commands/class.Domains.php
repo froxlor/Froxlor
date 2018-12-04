@@ -191,34 +191,34 @@ class Domains extends ApiCommand implements ResourceEntity
 				$p_ipandports = $this->getParam('ipandport', true, explode(',', Settings::Get('system.defaultip')));
 				$adminid = intval($this->getParam('adminid', true, $this->getUserDetail('adminid')));
 				$subcanemaildomain = $this->getParam('subcanemaildomain', true, 0);
-				$isemaildomain = $this->getParam('isemaildomain', true, 0);
-				$email_only = $this->getParam('email_only', true, 0);
+				$isemaildomain = $this->getBoolParam('isemaildomain', true, 0);
+				$email_only = $this->getBoolParam('email_only', true, 0);
 				$serveraliasoption = $this->getParam('selectserveralias', true, 0);
-				$speciallogfile = $this->getParam('speciallogfile', true, 0);
+				$speciallogfile = $this->getBoolParam('speciallogfile', true, 0);
 				$aliasdomain = intval($this->getParam('alias', true, 0));
-				$issubof = intval($this->getParam('issubof', true, 0));
+				$issubof = $this->getBoolParam('issubof', true, 0);
 				$registration_date = $this->getParam('registration_date', true, '');
 				$termination_date = $this->getParam('termination_date', true, '');
-				$caneditdomain = $this->getParam('caneditdomain', true, 0);
-				$isbinddomain = $this->getParam('isbinddomain', true, 0);
+				$caneditdomain = $this->getBoolParam('caneditdomain', true, 0);
+				$isbinddomain = $this->getBoolParam('isbinddomain', true, 0);
 				$zonefile = $this->getParam('zonefile', true, '');
-				$dkim = intval($this->getParam('dkim', true, 0));
+				$dkim = $this->getBoolParam('dkim', true, 0);
 				$specialsettings = $this->getParam('specialsettings', true, '');
-				$notryfiles = $this->getParam('notryfiles', true, 0);
+				$notryfiles = $this->getBoolParam('notryfiles', true, 0);
 				$documentroot = $this->getParam('documentroot', true, '');
-				$phpenabled = $this->getParam('phpenabled', true, 0);
-				$openbasedir = $this->getParam('openbasedir', true, 0);
+				$phpenabled = $this->getBoolParam('phpenabled', true, 0);
+				$openbasedir = $this->getBoolParam('openbasedir', true, 0);
 				$phpsettingid = $this->getParam('phpsettingid', true, 1);
 				$mod_fcgid_starter = $this->getParam('mod_fcgid_starter', true, - 1);
 				$mod_fcgid_maxrequests = $this->getParam('mod_fcgid_maxrequests', true, - 1);
-				$ssl_redirect = $this->getParam('ssl_redirect', true, 0);
-				$letsencrypt = $this->getParam('letsencrypt', true, 0);
+				$ssl_redirect = $this->getBoolParam('ssl_redirect', true, 0);
+				$letsencrypt = $this->getBoolParam('letsencrypt', true, 0);
 				$p_ssl_ipandports = $this->getParam('ssl_ipandport', true, explode(',', Settings::Get('system.defaultsslip')));
-				$http2 = $this->getParam('http2', true, 0);
+				$http2 = $this->getBoolParam('http2', true, 0);
 				$hsts_maxage = $this->getParam('hsts_maxage', true, 0);
-				$hsts_sub = $this->getParam('hsts_sub', true, 0);
-				$hsts_preload = $this->getParam('hsts_preload', true, 0);
-				$ocsp_stapling = $this->getParam('ocsp_stapling', true, 0);
+				$hsts_sub = $this->getBoolParam('hsts_sub', true, 0);
+				$hsts_preload = $this->getBoolParam('hsts_preload', true, 0);
+				$ocsp_stapling = $this->getBoolParam('ocsp_stapling', true, 0);
 
 				// validation
 				if ($p_domain == Settings::Get('system.hostname')) {
@@ -472,26 +472,6 @@ class Domains extends ApiCommand implements ResourceEntity
 					standard_error('noipportgiven', '', true);
 				}
 
-				if ($phpenabled != '1') {
-					$phpenabled = '0';
-				}
-
-				if ($openbasedir != '1') {
-					$openbasedir = '0';
-				}
-
-				if ($speciallogfile != '1') {
-					$speciallogfile = '0';
-				}
-
-				if ($isbinddomain != '1') {
-					$isbinddomain = '0';
-				}
-
-				if ($isemaildomain != '1') {
-					$isemaildomain = '0';
-				}
-
 				if ($email_only == '1') {
 					$isemaildomain = '1';
 				} else {
@@ -502,19 +482,11 @@ class Domains extends ApiCommand implements ResourceEntity
 					$subcanemaildomain = '0';
 				}
 
-				if ($dkim != '1') {
-					$dkim = '0';
-				}
-
 				if ($serveraliasoption != '1' && $serveraliasoption != '2') {
 					$serveraliasoption = '0';
 				}
 
-				if ($caneditdomain != '1') {
-					$caneditdomain = '0';
-				}
-
-				if ($issubof <= '0') {
+				if ($issubof <= 0) {
 					$issubof = '0';
 				}
 
@@ -772,38 +744,38 @@ class Domains extends ApiCommand implements ResourceEntity
 			$customerid = intval($this->getParam('customerid', true, $result['customerid']));
 			$adminid = intval($this->getParam('adminid', true, $result['adminid']));
 
-			$subcanemaildomain = $this->getParam('subcanemaildomain', true, $result['subcanemaildomain']);
-			$isemaildomain = $this->getParam('isemaildomain', true, $result['isemaildomain']);
-			$email_only = $this->getParam('email_only', true, $result['email_only']);
+			$subcanemaildomain = $this->getBoolParam('subcanemaildomain', true, $result['subcanemaildomain']);
+			$isemaildomain = $this->getBoolParam('isemaildomain', true, $result['isemaildomain']);
+			$email_only = $this->getBoolParam('email_only', true, $result['email_only']);
 			$p_serveraliasoption = $this->getParam('selectserveralias', true, - 1);
-			$speciallogfile = $this->getParam('speciallogfile', true, $result['speciallogfile']);
-			$speciallogverified = $this->getParam('speciallogverified', true, 0);
+			$speciallogfile = $this->getBoolParam('speciallogfile', true, $result['speciallogfile']);
+			$speciallogverified = $this->getBoolParam('speciallogverified', true, 0);
 			$aliasdomain = intval($this->getParam('alias', true, $result['aliasdomain']));
-			$issubof = intval($this->getParam('issubof', true, $result['ismainbutsubto']));
+			$issubof = $this->getBoolParam('issubof', true, $result['ismainbutsubto']);
 			$registration_date = $this->getParam('registration_date', true, $result['registration_date']);
 			$termination_date = $this->getParam('termination_date', true, $result['termination_date']);
-			$caneditdomain = $this->getParam('caneditdomain', true, $result['caneditdomain']);
-			$isbinddomain = $this->getParam('isbinddomain', true, $result['isbinddomain']);
+			$caneditdomain = $this->getBoolParam('caneditdomain', true, $result['caneditdomain']);
+			$isbinddomain = $this->getBoolParam('isbinddomain', true, $result['isbinddomain']);
 			$zonefile = $this->getParam('zonefile', true, $result['zonefile']);
-			$dkim = intval($this->getParam('dkim', true, $result['dkim']));
+			$dkim = $this->getBoolParam('dkim', true, $result['dkim']);
 			$specialsettings = $this->getParam('specialsettings', true, $result['specialsettings']);
-			$ssfs = $this->getParam('specialsettingsforsubdomains', true, 0);
-			$notryfiles = $this->getParam('notryfiles', true, $result['notryfiles']);
+			$ssfs = $this->getBoolParam('specialsettingsforsubdomains', true, 0);
+			$notryfiles = $this->getBoolParam('notryfiles', true, $result['notryfiles']);
 			$documentroot = $this->getParam('documentroot', true, $result['documentroot']);
-			$phpenabled = $this->getParam('phpenabled', true, $result['phpenabled']);
-			$phpfs = $this->getParam('phpsettingsforsubdomains', true, 0);
-			$openbasedir = $this->getParam('openbasedir', true, $result['openbasedir']);
+			$phpenabled = $this->getBoolParam('phpenabled', true, $result['phpenabled']);
+			$phpfs = $this->getBoolParam('phpsettingsforsubdomains', true, 0);
+			$openbasedir = $this->getBoolParam('openbasedir', true, $result['openbasedir']);
 			$phpsettingid = $this->getParam('phpsettingid', true, $result['phpsettingid']);
 			$mod_fcgid_starter = $this->getParam('mod_fcgid_starter', true, $result['mod_fcgid_starter']);
 			$mod_fcgid_maxrequests = $this->getParam('mod_fcgid_maxrequests', true, $result['mod_fcgid_maxrequests']);
-			$ssl_redirect = $this->getParam('ssl_redirect', true, $result['ssl_redirect']);
-			$letsencrypt = $this->getParam('letsencrypt', true, $result['letsencrypt']);
+			$ssl_redirect = $this->getBoolParam('ssl_redirect', true, $result['ssl_redirect']);
+			$letsencrypt = $this->getBoolParam('letsencrypt', true, $result['letsencrypt']);
 			$p_ssl_ipandports = $this->getParam('ssl_ipandport', true, array());
-			$http2 = $this->getParam('http2', true, $result['http2']);
+			$http2 = $this->getBoolParam('http2', true, $result['http2']);
 			$hsts_maxage = $this->getParam('hsts_maxage', true, $result['hsts']);
-			$hsts_sub = $this->getParam('hsts_sub', true, $result['hsts_sub']);
-			$hsts_preload = $this->getParam('hsts_preload', true, $result['hsts_preload']);
-			$ocsp_stapling = $this->getParam('ocsp_stapling', true, $result['ocsp_stapling']);
+			$hsts_sub = $this->getBoolParam('hsts_sub', true, $result['hsts_sub']);
+			$hsts_preload = $this->getBoolParam('hsts_preload', true, $result['hsts_preload']);
+			$ocsp_stapling = $this->getBoolParam('ocsp_stapling', true, $result['ocsp_stapling']);
 
 			// count subdomain usage of source-domain
 			$subdomains_stmt = Database::prepare("
@@ -1069,22 +1041,6 @@ class Domains extends ApiCommand implements ResourceEntity
 				$documentroot = makeCorrectDir($documentroot);
 			}
 
-			if ($phpenabled != '1') {
-				$phpenabled = '0';
-			}
-
-			if ($openbasedir != '1') {
-				$openbasedir = '0';
-			}
-
-			if ($isbinddomain != '1') {
-				$isbinddomain = '0';
-			}
-
-			if ($isemaildomain != '1') {
-				$isemaildomain = '0';
-			}
-
 			if ($email_only == '1') {
 				$isemaildomain = '1';
 			} else {
@@ -1093,14 +1049,6 @@ class Domains extends ApiCommand implements ResourceEntity
 
 			if ($subcanemaildomain != '1' && $subcanemaildomain != '2' && $subcanemaildomain != '3') {
 				$subcanemaildomain = '0';
-			}
-
-			if ($dkim != '1') {
-				$dkim = '0';
-			}
-
-			if ($caneditdomain != '1') {
-				$caneditdomain = '0';
 			}
 
 			$aliasdomain_check = array(
@@ -1156,7 +1104,7 @@ class Domains extends ApiCommand implements ResourceEntity
 				standard_error('domainisaliasorothercustomer', '', true);
 			}
 
-			if ($issubof <= '0') {
+			if ($issubof <= 0) {
 				$issubof = '0';
 			}
 
