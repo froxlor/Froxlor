@@ -73,7 +73,7 @@ class Traffic extends ApiCommand implements ResourceEntity
 		$year = $this->getParam('year', true, "");
 		$month = $this->getParam('month', true, "");
 		$day = $this->getParam('day', true, "");
-		$customer_traffic = $this->getParam('customer_traffic', true, 0);
+		$customer_traffic = $this->getBoolParam('customer_traffic', true, 0);
 		$customer_ids = $this->getAllowedCustomerIds();
 		$result = array();
 		$params = array();

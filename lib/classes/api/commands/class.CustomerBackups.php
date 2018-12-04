@@ -61,9 +61,9 @@ class CustomerBackups extends ApiCommand implements ResourceEntity
 		$path = $this->getParam('path');
 
 		// parameter
-		$backup_dbs = $this->getParam('backup_dbs', true, 0);
-		$backup_mail = $this->getParam('backup_mail', true, 0);
-		$backup_web = $this->getParam('backup_web', true, 0);
+		$backup_dbs = $this->getBoolParam('backup_dbs', true, 0);
+		$backup_mail = $this->getBoolParam('backup_mail', true, 0);
+		$backup_web = $this->getBoolParam('backup_web', true, 0);
 
 		// get customer data
 		$customer = $this->getCustomerData();

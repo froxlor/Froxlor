@@ -58,8 +58,8 @@ class DirOptions extends ApiCommand implements ResourceEntity
 		$path = $this->getParam('path');
 
 		// parameters
-		$options_indexes = $this->getParam('options_indexes', true, 0);
-		$options_cgi = $this->getParam('options_cgi', true, 0);
+		$options_indexes = $this->getBoolParam('options_indexes', true, 0);
+		$options_cgi = $this->getBoolParam('options_cgi', true, 0);
 		$error404path = $this->getParam('error404path', true, '');
 		$error403path = $this->getParam('error403path', true, '');
 		$error500path = $this->getParam('error500path', true, '');
@@ -68,18 +68,6 @@ class DirOptions extends ApiCommand implements ResourceEntity
 		$path = makeCorrectDir(validate($path, 'path', '', '', array(), true));
 		$userpath = $path;
 		$path = makeCorrectDir($customer['documentroot'] . '/' . $path);
-
-		if ($options_indexes != 0) {
-			$options_indexes = '1';
-		} else {
-			$options_indexes = '0';
-		}
-
-		if ($options_cgi != 0) {
-			$options_cgi = '1';
-		} else {
-			$options_cgi = '0';
-		}
 
 		if (! empty($error404path)) {
 			$error404path = correctErrorDocument($error404path, true);
@@ -237,23 +225,11 @@ class DirOptions extends ApiCommand implements ResourceEntity
 		$customer = $this->getCustomerData();
 
 		// parameters
-		$options_indexes = $this->getParam('options_indexes', true, $result['options_indexes']);
-		$options_cgi = $this->getParam('options_cgi', true, $result['options_cgi']);
+		$options_indexes = $this->getBoolParam('options_indexes', true, $result['options_indexes']);
+		$options_cgi = $this->getBoolParam('options_cgi', true, $result['options_cgi']);
 		$error404path = $this->getParam('error404path', true, $result['error404path']);
 		$error403path = $this->getParam('error403path', true, $result['error403path']);
 		$error500path = $this->getParam('error500path', true, $result['error500path']);
-
-		if ($options_indexes != 0) {
-			$options_indexes = '1';
-		} else {
-			$options_indexes = '0';
-		}
-
-		if ($options_cgi != 0) {
-			$options_cgi = '1';
-		} else {
-			$options_cgi = '0';
-		}
 
 		if (! empty($error404path)) {
 			$error404path = correctErrorDocument($error404path, true);

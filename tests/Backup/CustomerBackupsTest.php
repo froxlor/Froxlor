@@ -90,9 +90,9 @@ class CustomerBackupsTest extends TestCase
 		$json_result = CustomerBackups::getLocal($customer_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals($customer_userdata['documentroot'] . 'my-backup/', $result['destdir']);
-		$this->assertEquals('0', $result['backup_dbs']);
-		$this->assertEquals('0', $result['backup_mail']);
-		$this->assertEquals('0', $result['backup_web']);
+		$this->assertEquals('1', $result['backup_dbs']);
+		$this->assertEquals('1', $result['backup_mail']);
+		$this->assertEquals('1', $result['backup_web']);
 	}
 
 	/**
@@ -142,9 +142,9 @@ class CustomerBackupsTest extends TestCase
 		$json_result = CustomerBackups::getLocal($admin_userdata)->listing();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(1, $result['count']);
-		$this->assertEquals('0', $result['list'][0]['data']['backup_dbs']);
-		$this->assertEquals('0', $result['list'][0]['data']['backup_mail']);
-		$this->assertEquals('0', $result['list'][0]['data']['backup_web']);
+		$this->assertEquals('1', $result['list'][0]['data']['backup_dbs']);
+		$this->assertEquals('1', $result['list'][0]['data']['backup_mail']);
+		$this->assertEquals('1', $result['list'][0]['data']['backup_web']);
 	}
 
 	/**

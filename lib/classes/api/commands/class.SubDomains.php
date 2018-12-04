@@ -70,11 +70,11 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			$redirectcode = $this->getParam('redirectcode', true, Settings::Get('customredirect.default'));
 			$isemaildomain = $this->getParam('isemaildomain', true, 0);
 			if (Settings::Get('system.use_ssl')) {
-				$ssl_redirect = $this->getParam('ssl_redirect', true, 0);
-				$letsencrypt = $this->getParam('letsencrypt', true, 0);
+				$ssl_redirect = $this->getBoolParam('ssl_redirect', true, 0);
+				$letsencrypt = $this->getBoolParam('letsencrypt', true, 0);
 				$hsts_maxage = $this->getParam('hsts_maxage', true, 0);
-				$hsts_sub = $this->getParam('hsts_sub', true, 0);
-				$hsts_preload = $this->getParam('hsts_preload', true, 0);
+				$hsts_sub = $this->getBoolParam('hsts_sub', true, 0);
+				$hsts_preload = $this->getBoolParam('hsts_preload', true, 0);
 			} else {
 				$ssl_redirect = 0;
 				$letsencrypt = 0;
@@ -463,16 +463,16 @@ class SubDomains extends ApiCommand implements ResourceEntity
 		// default: 0 = wildcard, 1 = www-alias, 2 = none
 		$_serveraliasdefault = $result['iswildcarddomain'] == '1' ? 0 : ($result['wwwserveralias'] == '1' ? 1 : 2);
 		$selectserveralias = $this->getParam('selectserveralias', true, $_serveraliasdefault);
-		$isemaildomain = $this->getParam('isemaildomain', true, $result['isemaildomain']);
+		$isemaildomain = $this->getBoolParam('isemaildomain', true, $result['isemaildomain']);
 		$openbasedir_path = $this->getParam('openbasedir_path', true, $result['openbasedir_path']);
 		$phpsettingid = $this->getParam('phpsettingid', true, $result['phpsettingid']);
 		$redirectcode = $this->getParam('redirectcode', true, getDomainRedirectId($id));
 		if (Settings::Get('system.use_ssl')) {
-			$ssl_redirect = $this->getParam('ssl_redirect', true, $result['ssl_redirect']);
-			$letsencrypt = $this->getParam('letsencrypt', true, $result['letsencrypt']);
+			$ssl_redirect = $this->getBoolParam('ssl_redirect', true, $result['ssl_redirect']);
+			$letsencrypt = $this->getBoolParam('letsencrypt', true, $result['letsencrypt']);
 			$hsts_maxage = $this->getParam('hsts_maxage', true, $result['hsts']);
-			$hsts_sub = $this->getParam('hsts_sub', true, $result['hsts_sub']);
-			$hsts_preload = $this->getParam('hsts_preload', true, $result['hsts_preload']);
+			$hsts_sub = $this->getBoolParam('hsts_sub', true, $result['hsts_sub']);
+			$hsts_preload = $this->getBoolParam('hsts_preload', true, $result['hsts_preload']);
 		} else {
 			$ssl_redirect = 0;
 			$letsencrypt = 0;

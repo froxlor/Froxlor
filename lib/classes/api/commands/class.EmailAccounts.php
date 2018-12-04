@@ -57,7 +57,7 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 			$email_password = $this->getParam('email_password');
 			$alternative_email = $this->getParam('alternative_email', true, '');
 			$quota = $this->getParam('email_quota', true, 0);
-			$sendinfomail = $this->getParam('sendinfomail', true, 1);
+			$sendinfomail = $this->getBoolParam('sendinfomail', true, 1);
 
 			// validation
 			$quota = validate($quota, 'email_quota', '/^\d+$/', 'vmailquotawrong', array(), true);
@@ -424,7 +424,7 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 		$id = $this->getParam('id', true, 0);
 		$ea_optional = ($id <= 0 ? false : true);
 		$emailaddr = $this->getParam('emailaddr', $ea_optional, '');
-		$delete_userfiles = $this->getParam('delete_userfiles', true, 0);
+		$delete_userfiles = $this->getBoolParam('delete_userfiles', true, 0);
 
 		// validation
 		$result = $this->apiCall('Emails.get', array(

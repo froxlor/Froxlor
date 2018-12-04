@@ -229,7 +229,7 @@ class Customers extends ApiCommand implements ResourceEntity
 				$def_language = $this->getParam('def_language', true, Settings::Get('panel.standardlanguage'));
 				$gender = intval_ressource($this->getParam('gender', true, 0));
 				$custom_notes = $this->getParam('custom_notes', true, '');
-				$custom_notes_show = $this->getParam('custom_notes_show', true, 0);
+				$custom_notes_show = $this->getBoolParam('custom_notes_show', true, 0);
 
 				$diskspace = $this->getUlParam('diskspace', 'diskspace_ul', true, 0);
 				$traffic = $this->getUlParam('traffic', 'traffic_ul', true, 0);
@@ -238,20 +238,20 @@ class Customers extends ApiCommand implements ResourceEntity
 				$email_accounts = $this->getUlParam('email_accounts', 'email_accounts_ul', true, 0);
 				$email_forwarders = $this->getUlParam('email_forwarders', 'email_forwarders_ul', true, 0);
 				$email_quota = $this->getUlParam('email_quota', 'email_quota_ul', true, Settings::Get('system.mail_quota'));
-				$email_imap = $this->getParam('email_imap', true, 0);
-				$email_pop3 = $this->getParam('email_pop3', true, 0);
+				$email_imap = $this->getBoolParam('email_imap', true, 0);
+				$email_pop3 = $this->getBoolParam('email_pop3', true, 0);
 				$ftps = $this->getUlParam('ftps', 'ftps_ul', true, 0);
 				$tickets = $this->getUlParam('tickets', 'tickets_ul', true, 0);
 				$mysqls = $this->getUlParam('mysqls', 'mysqls_ul', true, 0);
-				$createstdsubdomain = $this->getParam('createstdsubdomain', true, 0);
+				$createstdsubdomain = $this->getBoolParam('createstdsubdomain', true, 0);
 				$password = $this->getParam('new_customer_password', true, '');
-				$sendpassword = $this->getParam('sendpassword', true, 0);
-				$phpenabled = $this->getParam('phpenabled', true, 0);
+				$sendpassword = $this->getBoolParam('sendpassword', true, 0);
+				$phpenabled = $this->getBoolParam('phpenabled', true, 0);
 				$p_allowed_phpconfigs = $this->getParam('allowed_phpconfigs', true, array());
-				$perlenabled = $this->getParam('perlenabled', true, 0);
-				$dnsenabled = $this->getParam('dnsenabled', true, 0);
-				$logviewenabled = $this->getParam('logviewenabled', true, 0);
-				$store_defaultindex = $this->getParam('store_defaultindex', true, 0);
+				$perlenabled = $this->getBoolParam('perlenabled', true, 0);
+				$dnsenabled = $this->getBoolParam('dnsenabled', true, 0);
+				$logviewenabled = $this->getBoolParam('logviewenabled', true, 0);
+				$store_defaultindex = $this->getBoolParam('store_defaultindex', true, 0);
 				$loginname = $this->getParam('new_loginname', true, '');
 
 				// validation
@@ -861,7 +861,7 @@ class Customers extends ApiCommand implements ResourceEntity
 
 		if ($this->isAdmin()) {
 			// parameters
-			$move_to_admin = intval_ressource($this->getParam('move_to_admin', true, 0));
+			$move_to_admin = intval_ressource($this->getBoolParam('move_to_admin', true, 0));
 
 			$idna_convert = new idna_convert_wrapper();
 			$email = $this->getParam('email', true, $idna_convert->decode($result['email']));
@@ -878,7 +878,7 @@ class Customers extends ApiCommand implements ResourceEntity
 			$def_language = $this->getParam('def_language', true, $result['def_language']);
 			$gender = intval_ressource($this->getParam('gender', true, $result['gender']));
 			$custom_notes = $this->getParam('custom_notes', true, $result['custom_notes']);
-			$custom_notes_show = $this->getParam('custom_notes_show', true, $result['custom_notes_show']);
+			$custom_notes_show = $this->getBoolParam('custom_notes_show', true, $result['custom_notes_show']);
 
 			$dec_places = Settings::Get('panel.decimal_places');
 			$diskspace = $this->getUlParam('diskspace', 'diskspace_ul', true, round($result['diskspace'] / 1024, $dec_places));
@@ -893,14 +893,14 @@ class Customers extends ApiCommand implements ResourceEntity
 			$ftps = $this->getUlParam('ftps', 'ftps_ul', true, $result['ftps']);
 			$tickets = $this->getUlParam('tickets', 'tickets_ul', true, $result['tickets']);
 			$mysqls = $this->getUlParam('mysqls', 'mysqls_ul', true, $result['mysqls']);
-			$createstdsubdomain = $this->getParam('createstdsubdomain', true, 0);
+			$createstdsubdomain = $this->getBoolParam('createstdsubdomain', true, 0);
 			$password = $this->getParam('new_customer_password', true, '');
-			$phpenabled = $this->getParam('phpenabled', true, $result['phpenabled']);
+			$phpenabled = $this->getBoolParam('phpenabled', true, $result['phpenabled']);
 			$allowed_phpconfigs = $this->getParam('allowed_phpconfigs', true, json_decode($result['allowed_phpconfigs'], true));
-			$perlenabled = $this->getParam('perlenabled', true, $result['perlenabled']);
-			$dnsenabled = $this->getParam('dnsenabled', true, $result['dnsenabled']);
-			$logviewenabled = $this->getParam('logviewenabled', true, $result['logviewenabled']);
-			$deactivated = $this->getParam('deactivated', true, $result['deactivated']);
+			$perlenabled = $this->getBoolParam('perlenabled', true, $result['perlenabled']);
+			$dnsenabled = $this->getBoolParam('dnsenabled', true, $result['dnsenabled']);
+			$logviewenabled = $this->getBoolParam('logviewenabled', true, $result['logviewenabled']);
+			$deactivated = $this->getBoolParam('deactivated', true, $result['deactivated']);
 			$theme = $this->getParam('theme', true, $result['theme']);
 		} else {
 			// allowed parameters

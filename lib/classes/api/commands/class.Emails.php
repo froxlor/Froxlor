@@ -49,7 +49,7 @@ class Emails extends ApiCommand implements ResourceEntity
 			$domain = $this->getParam('domain');
 
 			// parameters
-			$iscatchall = $this->getParam('iscatchall', true, 0);
+			$iscatchall = $this->getBoolParam('iscatchall', true, 0);
 
 			// validation
 			if (substr($domain, 0, 4) != 'xn--') {
@@ -222,7 +222,7 @@ class Emails extends ApiCommand implements ResourceEntity
 		$id = $result['id'];
 
 		// parameters
-		$iscatchall = $this->getParam('iscatchall', true, $result['iscatchall']);
+		$iscatchall = $this->getBoolParam('iscatchall', true, $result['iscatchall']);
 
 		// get needed customer info to reduce the email-address-counter by one
 		$customer = $this->getCustomerData();
@@ -326,7 +326,7 @@ class Emails extends ApiCommand implements ResourceEntity
 		$id = $result['id'];
 
 		// parameters
-		$delete_userfiles = $this->getParam('delete_userfiles', true, 0);
+		$delete_userfiles = $this->getBoolParam('delete_userfiles', true, 0);
 
 		// get needed customer info to reduce the email-address-counter by one
 		$customer = $this->getCustomerData();

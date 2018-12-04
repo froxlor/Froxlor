@@ -56,7 +56,7 @@ class Ftps extends ApiCommand implements ResourceEntity
 			
 			// parameters
 			$description = $this->getParam('ftp_description', true, '');
-			$sendinfomail = $this->getParam('sendinfomail', true, 0);
+			$sendinfomail = $this->getBoolParam('sendinfomail', true, 0);
 			$shell = $this->getParam('shell', true, '/bin/false');
 			
 			$ftpusername = $this->getParam('ftp_username', true, '');
@@ -302,8 +302,6 @@ class Ftps extends ApiCommand implements ResourceEntity
 	 *        	destination path relative to the customers-homedir
 	 * @param string $ftp_description
 	 *        	optional, description for ftp-user
-	 * @param bool $sendinfomail
-	 *        	optional, send created resource-information to customer, default: false
 	 * @param string $shell
 	 *        	optional, default /bin/false (not changeable when deactivated)
 	 * @param int $customerid
@@ -463,7 +461,7 @@ class Ftps extends ApiCommand implements ResourceEntity
 		$id = $this->getParam('id', true, 0);
 		$un_optional = ($id <= 0 ? false : true);
 		$username = $this->getParam('username', $un_optional, '');
-		$delete_userfiles = $this->getParam('delete_userfiles', true, 0);
+		$delete_userfiles = $this->getBoolParam('delete_userfiles', true, 0);
 		
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'ftp')) {
 			throw new Exception("You cannot access this resource", 405);

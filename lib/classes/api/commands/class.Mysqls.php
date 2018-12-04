@@ -46,7 +46,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 			// parameters
 			$dbserver = $this->getParam('mysql_server', true, 0);
 			$databasedescription = $this->getParam('description', true, '');
-			$sendinfomail = $this->getParam('sendinfomail', true, 0);
+			$sendinfomail = $this->getBoolParam('sendinfomail', true, 0);
 			
 			// validation
 			$password = validate($password, 'password', '', '', array(), true);

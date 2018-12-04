@@ -128,16 +128,16 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 				'stringisempty',
 				'myport'
 			), array(), true);
-			$listen_statement = ! empty($this->getParam('listen_statement', true, 0)) ? 1 : 0;
-			$namevirtualhost_statement = ! empty($this->getParam('namevirtualhost_statement', true, 0)) ? 1 : 0;
-			$vhostcontainer = ! empty($this->getParam('vhostcontainer', true, 0)) ? 1 : 0;
+			$listen_statement = ! empty($this->getBoolParam('listen_statement', true, 0)) ? 1 : 0;
+			$namevirtualhost_statement = ! empty($this->getBoolParam('namevirtualhost_statement', true, 0)) ? 1 : 0;
+			$vhostcontainer = ! empty($this->getBoolParam('vhostcontainer', true, 0)) ? 1 : 0;
 			$specialsettings = validate(str_replace("\r\n", "\n", $this->getParam('specialsettings', true, '')), 'specialsettings', '/^[^\0]*$/', '', array(), true);
-			$vhostcontainer_servername_statement = ! empty($this->getParam('vhostcontainer_servername_statement', true, 1)) ? 1 : 0;
+			$vhostcontainer_servername_statement = ! empty($this->getBoolParam('vhostcontainer_servername_statement', true, 1)) ? 1 : 0;
 			$default_vhostconf_domain = validate(str_replace("\r\n", "\n", $this->getParam('default_vhostconf_domain', true, '')), 'default_vhostconf_domain', '/^[^\0]*$/', '', array(), true);
 			$docroot = validate($this->getParam('docroot', true, ''), 'docroot', '', '', array(), true);
 
 			if ((int) Settings::Get('system.use_ssl') == 1) {
-				$ssl = ! empty($this->getParam('ssl', true, 0)) ? intval($this->getParam('ssl', true, 0)) : 0;
+				$ssl = ! empty($this->getBoolParam('ssl', true, 0)) ? intval($this->getBoolParam('ssl', true, 0)) : 0;
 				$ssl_cert_file = validate($this->getParam('ssl_cert_file', $ssl, ''), 'ssl_cert_file', '', '', array(), true);
 				$ssl_key_file = validate($this->getParam('ssl_key_file', $ssl, ''), 'ssl_key_file', '', '', array(), true);
 				$ssl_ca_file = validate($this->getParam('ssl_ca_file', true, ''), 'ssl_ca_file', '', '', array(), true);
@@ -302,16 +302,16 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 				'stringisempty',
 				'myport'
 			), array(), true);
-			$listen_statement = $this->getParam('listen_statement', true, $result['listen_statement']);
-			$namevirtualhost_statement = $this->getParam('namevirtualhost_statement', true, $result['namevirtualhost_statement']);
-			$vhostcontainer = $this->getParam('vhostcontainer', true, $result['vhostcontainer']);
+			$listen_statement = $this->getBoolParam('listen_statement', true, $result['listen_statement']);
+			$namevirtualhost_statement = $this->getBoolParam('namevirtualhost_statement', true, $result['namevirtualhost_statement']);
+			$vhostcontainer = $this->getBoolParam('vhostcontainer', true, $result['vhostcontainer']);
 			$specialsettings = validate(str_replace("\r\n", "\n", $this->getParam('specialsettings', true, $result['specialsettings'])), 'specialsettings', '/^[^\0]*$/', '', array(), true);
 			$vhostcontainer_servername_statement = $this->getParam('vhostcontainer_servername_statement', true, $result['vhostcontainer_servername_statement']);
 			$default_vhostconf_domain = validate(str_replace("\r\n", "\n", $this->getParam('default_vhostconf_domain', true, $result['default_vhostconf_domain'])), 'default_vhostconf_domain', '/^[^\0]*$/', '', array(), true);
 			$docroot = validate($this->getParam('docroot', true, $result['docroot']), 'docroot', '', '', array(), true);
 
 			if ((int) Settings::Get('system.use_ssl') == 1) {
-				$ssl = $this->getParam('ssl', true, $result['ssl']);
+				$ssl = $this->getBoolParam('ssl', true, $result['ssl']);
 				$ssl_cert_file = validate($this->getParam('ssl_cert_file', $ssl, $result['ssl_cert_file']), 'ssl_cert_file', '', '', array(), true);
 				$ssl_key_file = validate($this->getParam('ssl_key_file', $ssl, $result['ssl_key_file']), 'ssl_key_file', '', '', array(), true);
 				$ssl_ca_file = validate($this->getParam('ssl_ca_file', true, $result['ssl_ca_file']), 'ssl_ca_file', '', '', array(), true);

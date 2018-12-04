@@ -85,7 +85,7 @@ class Cronjobs extends ApiCommand implements ResourceEntity
 			$cur_int = explode(" ", $result['interval']);
 
 			// parameter
-			$isactive = $this->getParam('isactive', true, $result['isactive']);
+			$isactive = $this->getBoolParam('isactive', true, $result['isactive']);
 			$interval_value = $this->getParam('interval_value', true, $cur_int[0]);
 			$interval_interval = $this->getParam('interval_interval', true, $cur_int[1]);
 

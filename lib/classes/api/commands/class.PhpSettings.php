@@ -202,12 +202,12 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 			$mod_fcgid_starter = $this->getParam('mod_fcgid_starter', true, - 1);
 			$mod_fcgid_maxrequests = $this->getParam('mod_fcgid_maxrequests', true, - 1);
 			$mod_fcgid_umask = $this->getParam('mod_fcgid_umask', true, "022");
-			$fpm_enableslowlog = $this->getParam('phpfpm_enable_slowlog', true, 0);
+			$fpm_enableslowlog = $this->getBoolParam('phpfpm_enable_slowlog', true, 0);
 			$fpm_reqtermtimeout = $this->getParam('phpfpm_reqtermtimeout', true, "60s");
 			$fpm_reqslowtimeout = $this->getParam('phpfpm_reqslowtimeout', true, "5s");
-			$fpm_pass_authorizationheader = $this->getParam('phpfpm_pass_authorizationheader', true, 0);
+			$fpm_pass_authorizationheader = $this->getBoolParam('phpfpm_pass_authorizationheader', true, 0);
 
-			$override_fpmconfig = $this->getParam('override_fpmconfig', true, 0);
+			$override_fpmconfig = $this->getBoolParam('override_fpmconfig', true, 0);
 			$def_fpmconfig = $this->apiCall('FpmDaemons.get', array(
 				'id' => $fpm_config_id
 			));
@@ -401,11 +401,11 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 			$mod_fcgid_starter = $this->getParam('mod_fcgid_starter', true, $result['mod_fcgid_starter']);
 			$mod_fcgid_maxrequests = $this->getParam('mod_fcgid_maxrequests', true, $result['mod_fcgid_maxrequests']);
 			$mod_fcgid_umask = $this->getParam('mod_fcgid_umask', true, $result['mod_fcgid_umask']);
-			$fpm_enableslowlog = $this->getParam('phpfpm_enable_slowlog', true, $result['fpm_slowlog']);
+			$fpm_enableslowlog = $this->getBoolParam('phpfpm_enable_slowlog', true, $result['fpm_slowlog']);
 			$fpm_reqtermtimeout = $this->getParam('phpfpm_reqtermtimeout', true, $result['fpm_reqterm']);
 			$fpm_reqslowtimeout = $this->getParam('phpfpm_reqslowtimeout', true, $result['fpm_reqslow']);
-			$fpm_pass_authorizationheader = $this->getParam('phpfpm_pass_authorizationheader', true, $result['pass_authorizationheader']);
-			$override_fpmconfig = $this->getParam('override_fpmconfig', true, $result['override_fpmconfig']);
+			$fpm_pass_authorizationheader = $this->getBoolParam('phpfpm_pass_authorizationheader', true, $result['pass_authorizationheader']);
+			$override_fpmconfig = $this->getBoolParam('override_fpmconfig', true, $result['override_fpmconfig']);
 			$pmanager = $this->getParam('pm', true, $result['pm']);
 			$max_children = $this->getParam('max_children', true, $result['max_children']);
 			$start_servers = $this->getParam('start_servers', true, $result['start_servers']);

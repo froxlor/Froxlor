@@ -174,7 +174,7 @@ class Admins extends ApiCommand implements ResourceEntity
 			// parameters
 			$def_language = $this->getParam('def_language', true, Settings::Get('panel.standardlanguage'));
 			$custom_notes = $this->getParam('custom_notes', true, '');
-			$custom_notes_show = $this->getParam('custom_notes_show', true, 0);
+			$custom_notes_show = $this->getBoolParam('custom_notes_show', true, 0);
 			$password = $this->getParam('admin_password', true, '');
 
 			$diskspace = $this->getUlParam('diskspace', 'diskspace_ul', true, 0);
@@ -190,11 +190,11 @@ class Admins extends ApiCommand implements ResourceEntity
 			$tickets = $this->getUlParam('tickets', 'tickets_ul', true, 0);
 			$mysqls = $this->getUlParam('mysqls', 'mysqls_ul', true, 0);
 
-			$customers_see_all = $this->getParam('customers_see_all', true, 0);
-			$domains_see_all = $this->getParam('domains_see_all', true, 0);
-			$tickets_see_all = $this->getParam('tickets_see_all', true, 0);
-			$caneditphpsettings = $this->getParam('caneditphpsettings', true, 0);
-			$change_serversettings = $this->getParam('change_serversettings', true, 0);
+			$customers_see_all = $this->getBoolParam('customers_see_all', true, 0);
+			$domains_see_all = $this->getBoolParam('domains_see_all', true, 0);
+			$tickets_see_all = $this->getBoolParam('tickets_see_all', true, 0);
+			$caneditphpsettings = $this->getBoolParam('caneditphpsettings', true, 0);
+			$change_serversettings = $this->getBoolParam('change_serversettings', true, 0);
 			$ipaddress = $this->getParam('ipaddress', true, - 1);
 
 			// validation
@@ -461,7 +461,7 @@ class Admins extends ApiCommand implements ResourceEntity
 				$password = $this->getParam('admin_password', true, '');
 				$def_language = $this->getParam('def_language', true, $result['def_language']);
 				$custom_notes = $this->getParam('custom_notes', true, $result['custom_notes']);
-				$custom_notes_show = $this->getParam('custom_notes_show', true, $result['custom_notes_show']);
+				$custom_notes_show = $this->getBoolParam('custom_notes_show', true, $result['custom_notes_show']);
 				$theme = $this->getParam('theme', true, $result['theme']);
 
 				// you cannot edit some of the details of yourself
@@ -486,7 +486,7 @@ class Admins extends ApiCommand implements ResourceEntity
 					$traffic = $result['traffic'];
 					$ipaddress = ($result['ip'] != - 1 ? json_decode($result['ip'], true) : - 1);
 				} else {
-					$deactivated = $this->getParam('deactivated', true, $result['deactivated']);
+					$deactivated = $this->getBoolParam('deactivated', true, $result['deactivated']);
 
 					$dec_places = Settings::Get('panel.decimal_places');
 					$diskspace = $this->getUlParam('diskspace', 'diskspace_ul', true, round($result['diskspace'] / 1024, $dec_places));
@@ -502,11 +502,11 @@ class Admins extends ApiCommand implements ResourceEntity
 					$tickets = $this->getUlParam('tickets', 'tickets_ul', true, $result['tickets']);
 					$mysqls = $this->getUlParam('mysqls', 'mysqls_ul', true, $result['mysqls']);
 
-					$customers_see_all = $this->getParam('customers_see_all', true, $result['customers_see_all']);
-					$domains_see_all = $this->getParam('domains_see_all', true, $result['domains_see_all']);
-					$tickets_see_all = $this->getParam('tickets_see_all', true, $result['tickets_see_all']);
-					$caneditphpsettings = $this->getParam('caneditphpsettings', true, $result['caneditphpsettings']);
-					$change_serversettings = $this->getParam('change_serversettings', true, $result['change_serversettings']);
+					$customers_see_all = $this->getBoolParam('customers_see_all', true, $result['customers_see_all']);
+					$domains_see_all = $this->getBoolParam('domains_see_all', true, $result['domains_see_all']);
+					$tickets_see_all = $this->getBoolParam('tickets_see_all', true, $result['tickets_see_all']);
+					$caneditphpsettings = $this->getBoolParam('caneditphpsettings', true, $result['caneditphpsettings']);
+					$change_serversettings = $this->getBoolParam('change_serversettings', true, $result['change_serversettings']);
 					$ipaddress = $this->getParam('ipaddress', true, ($result['ip'] != - 1 ? json_decode($result['ip'], true) : - 1));
 
 					$diskspace = $diskspace * 1024;
