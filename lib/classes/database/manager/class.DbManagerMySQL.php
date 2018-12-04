@@ -66,12 +66,25 @@ class DbManagerMySQL {
 	 * @param bool $p_encrypted optional, whether the password is encrypted or not, default false
 	 */
 	public function grantPrivilegesTo($username = null, $password = null, $access_host = null, $p_encrypted = false) {
-		// grant privileges
-		$stmt = Database::prepare("
-				GRANT ALL PRIVILEGES ON `" . $username . "`.*
-				TO :username@:host IDENTIFIED BY 'password'
-				");
-		Database::pexecute($stmt, array("username" => $username, "host" => $access_host));
+		// mysql8 compatibility
+		if (Database::getAttribute(PDO::ATTR_SERVER_VERSION) >= '8.0.0') {
+			// create user
+			$stmt = Database::prepare("
+				CREATE USER `" . $username . "`.`" . $access_host . "` IDENTIFIED BY 'password'
+			");
+			Database::pexecute($stmt);
+			// grant privileges
+			$stmt = Database::prepare("
+				GRANT ALL ON `" . $username . "`.* TO :username@:host
+			");
+			Database::pexecute($stmt, array("username" => $username, "host" => $access_host));
+		} else {
+			// grant privileges
+			$stmt = Database::prepare("
+				GRANT ALL PRIVILEGES ON `" . $username . "`.* TO :username@:host IDENTIFIED BY 'password'
+			");
+			Database::pexecute($stmt, array("username" => $username, "host" => $access_host));
+		}
 		// set passoword
 		if ($p_encrypted) {
 			$stmt = Database::prepare("SET PASSWORD FOR :username@:host = :password");
@@ -102,7 +115,7 @@ class DbManagerMySQL {
 
 		while ($host = $host_res_stmt->fetch(PDO::FETCH_ASSOC)) {
 			// as of MySQL 5.0.2 this also revokes privileges. (requires MySQL 4.1.2+)
-			$drop_stmt = Database::prepare("DROP USER :dbname@:host");
+			$drop_stmt = Database::prepare("DROP USER IF EXISTS :dbname@:host");
 			Database::pexecute($drop_stmt, array('dbname' => $dbname, 'host' => $host['Host']), false);
 		}
 

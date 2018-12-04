@@ -1,4 +1,4 @@
-[![Build Status](http://services.nutime.de:8081/job/froxlor-0.10/badge/icon)](http://services.nutime.de:8081/job/froxlor-0.10/)
+[![Build Status](https://travis-ci.com/Froxlor/Froxlor.svg?branch=master)](https://travis-ci.com/Froxlor/Froxlor)
 
 # Froxlor
 

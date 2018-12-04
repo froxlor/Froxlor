@@ -2,15 +2,12 @@
 
 Before you start working on a PR, contact us via IRC in #froxlor on Freenode or
 the forum at https://forum.froxlor.org to get a clue whether someone else isn't
-already working on it or if we don't want to invest the effort in favour of
-working on Froxlor 2.0.
-Of course, bug fixes are always welcome.
+already working on it or if we don not want/need this certain change.
+Of course, bugfixes are always welcome.
 However, at this stage of the 0.9.x branch, we are not looking for new
 features or refactoring, especially not the kind which requires changes to a
 lot of files.
-Currently, we are working on a complete re-write, which, at this point in
-time, is not yet public to keep delays due to discussions about internal
-details to a minimum.
+Please focus on our API based version 0.10.x (current master).
 
 
 
@@ -35,7 +32,7 @@ Thanks!
 
 ### Webserver changes
 If you make changes to the functionality of webserver configuration, please
-make sure your implementation covers both apache **and** nginx.
+make sure your implementation covers all supported webservers.
 
 
 
@@ -51,8 +48,10 @@ strings in
 
 
 
-### New settings
-If you add new settings, please make sure you add the default values to
+### New settings and database-layout changnes
+If you add new settings or layout changes, please make sure you add these to
 
 * `install/froxlor.sql`
-* handle the update (see `install/updates/froxlor/0.9/update_0.9.inc.php`)
+* and handle the update (see `install/updates/froxlor/0.10/update_0.10.inc.php`)
+* if you have any question on how update-process works, please contact us
+
