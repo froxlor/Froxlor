@@ -34,7 +34,7 @@ class Cronjobs extends ApiCommand implements ResourceEntity
 	 *        	
 	 * @access admin
 	 * @throws Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function get()
 	{
@@ -68,7 +68,7 @@ class Cronjobs extends ApiCommand implements ResourceEntity
 	 *        	
 	 * @access admin
 	 * @throws Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function update()
 	{
@@ -126,7 +126,7 @@ class Cronjobs extends ApiCommand implements ResourceEntity
 	 *
 	 * @access admin
 	 * @throws Exception
-	 * @return array count|list
+	 * @return string json-encoded array count|list
 	 */
 	public function listing()
 	{

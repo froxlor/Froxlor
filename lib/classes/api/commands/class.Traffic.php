@@ -66,7 +66,7 @@ class Traffic extends ApiCommand implements ResourceEntity
 	 *        	
 	 * @access admin, customer
 	 * @throws Exception
-	 * @return array count|list
+	 * @return string json-encoded array count|list
 	 */
 	public function listing()
 	{

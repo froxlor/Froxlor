@@ -417,6 +417,7 @@ abstract class ApiCommand extends ApiParameter
 	 * @param string $operator
 	 * @param string $resource
 	 * @param string $extra
+	 * @param int $step
 	 */
 	protected static function updateResourceUsage($table = null, $keyfield = null, $key = null, $operator = '+', $resource = null, $extra = null, $step = 1)
 	{

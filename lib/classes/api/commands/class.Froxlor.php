@@ -151,7 +151,7 @@ class Froxlor extends ApiCommand
 	 *
 	 * @access admin
 	 * @throws Exception
-	 * @return array count|list
+	 * @return string json-encoded array count|list
 	 */
 	public function listSettings()
 	{
@@ -232,7 +232,7 @@ class Froxlor extends ApiCommand
 	 *        	
 	 * @access admin, customer
 	 * @throws Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function listFunctions()
 	{

@@ -38,7 +38,7 @@ class DomainZones extends ApiCommand implements ResourceEntity
 	 *        	
 	 * @access admin, customer
 	 * @throws Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function add()
 	{
@@ -298,7 +298,7 @@ class DomainZones extends ApiCommand implements ResourceEntity
 	 *        	
 	 * @access admin, customer
 	 * @throws Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function get()
 	{

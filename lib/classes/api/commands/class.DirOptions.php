@@ -40,7 +40,7 @@ class DirOptions extends ApiCommand implements ResourceEntity
 	 *        	
 	 * @access admin, customer
 	 * @throws Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function add()
 	{
@@ -135,7 +135,7 @@ class DirOptions extends ApiCommand implements ResourceEntity
 	 *        	
 	 * @access admin, customer
 	 * @throws Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function get()
 	{
@@ -210,7 +210,7 @@ class DirOptions extends ApiCommand implements ResourceEntity
 	 *        	
 	 * @access admin, customer
 	 * @throws Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function update()
 	{
@@ -284,7 +284,7 @@ class DirOptions extends ApiCommand implements ResourceEntity
 	 *        	
 	 * @access admin, customer
 	 * @throws Exception
-	 * @return array count|list
+	 * @return string json-encoded array count|list
 	 */
 	public function listing()
 	{
@@ -317,7 +317,7 @@ class DirOptions extends ApiCommand implements ResourceEntity
 	 *        	
 	 * @access admin, customer
 	 * @throws Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function delete()
 	{

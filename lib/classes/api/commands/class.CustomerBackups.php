@@ -51,7 +51,7 @@ class CustomerBackups extends ApiCommand implements ResourceEntity
 	 *        	required when called as admin, not needed when called as customer
 	 *        	
 	 * @access admin, customer
-	 * @return array
+	 * @return string json-encoded array
 	 * @throws Exception
 	 */
 	public function add()
@@ -136,7 +136,7 @@ class CustomerBackups extends ApiCommand implements ResourceEntity
 	 *        	
 	 * @access admin, customer
 	 * @throws Exception
-	 * @return array count|list
+	 * @return string json-encoded array count|list
 	 */
 	public function listing()
 	{

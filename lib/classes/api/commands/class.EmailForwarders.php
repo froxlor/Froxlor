@@ -34,7 +34,7 @@ class EmailForwarders extends ApiCommand implements ResourceEntity
 	 *        	
 	 * @access admin,customer
 	 * @throws Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function add()
 	{
@@ -149,7 +149,7 @@ class EmailForwarders extends ApiCommand implements ResourceEntity
 	 *        	
 	 * @access admin,customer
 	 * @throws Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function delete()
 	{

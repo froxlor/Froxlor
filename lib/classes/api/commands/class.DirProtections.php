@@ -33,7 +33,7 @@ class DirProtections extends ApiCommand implements ResourceEntity
 	 *        	
 	 * @access admin, customer
 	 * @throws Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function add()
 	{
@@ -126,7 +126,7 @@ class DirProtections extends ApiCommand implements ResourceEntity
 	 *        	
 	 * @access admin, customer
 	 * @throws Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function get()
 	{
@@ -199,7 +199,7 @@ class DirProtections extends ApiCommand implements ResourceEntity
 	 *        	
 	 * @access admin, customer
 	 * @throws Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function update()
 	{
@@ -277,7 +277,7 @@ class DirProtections extends ApiCommand implements ResourceEntity
 	 *        	
 	 * @access admin, customer
 	 * @throws Exception
-	 * @return array count|list
+	 * @return string json-encoded array count|list
 	 */
 	public function listing()
 	{
@@ -312,7 +312,7 @@ class DirProtections extends ApiCommand implements ResourceEntity
 	 *        	
 	 * @access admin, customer
 	 * @throws Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function delete()
 	{
