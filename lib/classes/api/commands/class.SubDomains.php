@@ -357,7 +357,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 						SELECT d.*, pd.`subcanemaildomain`, pd.`isbinddomain` as subisbinddomain
 						FROM `" . TABLE_PANEL_DOMAINS . "` d, `" . TABLE_PANEL_DOMAINS . "` pd
 						WHERE " . ($id > 0 ? "d.`id` = :iddn" : "d.`domain` = :iddn") . " AND d.`customerid` IN (" . implode(", ", $customer_ids) . ")
-						AND ((d.`parentdomainid`!='0'	AND pd.`id` = d.`parentdomainid`) OR (d.`parentdomainid`='0' AND pd.`id` = d.`id`))
+						AND ((d.`parentdomainid`!='0' AND pd.`id` = d.`parentdomainid`) OR (d.`parentdomainid`='0' AND pd.`id` = d.`id`))
 					");
 					$params = array(
 						'iddn' => ($id <= 0 ? $domainname : $id)
@@ -370,7 +370,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 					SELECT d.*, pd.`subcanemaildomain`, pd.`isbinddomain` as subisbinddomain
 					FROM `" . TABLE_PANEL_DOMAINS . "` d, `" . TABLE_PANEL_DOMAINS . "` pd
 					WHERE " . ($id > 0 ? "d.`id` = :iddn" : "d.`domain` = :iddn") . "
-					AND ((d.`parentdomainid`!='0'	AND pd.`id` = d.`parentdomainid`) OR (d.`parentdomainid`='0' AND pd.`id` = d.`id`))
+					AND ((d.`parentdomainid`!='0' AND pd.`id` = d.`parentdomainid`) OR (d.`parentdomainid`='0' AND pd.`id` = d.`id`))
 				");
 				$params = array(
 					'iddn' => ($id <= 0 ? $domainname : $id)
@@ -384,7 +384,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				SELECT d.*, pd.`subcanemaildomain`, pd.`isbinddomain` as subisbinddomain
 				FROM `" . TABLE_PANEL_DOMAINS . "` d, `" . TABLE_PANEL_DOMAINS . "` pd
 				WHERE d.`customerid`= :customerid AND " . ($id > 0 ? "d.`id` = :iddn" : "d.`domain` = :iddn") . "
-				AND ((d.`parentdomainid`!='0'	AND pd.`id` = d.`parentdomainid`) OR (d.`parentdomainid`='0' AND pd.`id` = d.`id`))
+				AND ((d.`parentdomainid`!='0' AND pd.`id` = d.`parentdomainid`) OR (d.`parentdomainid`='0' AND pd.`id` = d.`id`))
 			");
 			$params = array(
 				'customerid' => $this->getUserDetail('customerid'),
@@ -521,7 +521,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 		// if allowed, check for 'is email domain'-flag
 		if ($result['parentdomainid'] != '0' && ($result['subcanemaildomain'] == '1' || $result['subcanemaildomain'] == '2') && $isemaildomain != $result['isemaildomain']) {
 			$isemaildomain = intval($isemaildomain);
-		} else {
+		} elseif ($result['parentdomainid'] != '0') {
 			$isemaildomain = $result['subcanemaildomain'] == '3' ? 1 : 0;
 		}
 

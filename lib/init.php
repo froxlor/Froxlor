@@ -194,7 +194,7 @@ if (isset($s)
 		$adminsession = '0';
 	}
 
-	$query.= "WHERE `s`.`hash` = :hash AND `s`.`ipaddress` = :ipaddr
+	$query.= " WHERE `s`.`hash` = :hash AND `s`.`ipaddress` = :ipaddr
 		AND `s`.`useragent` = :ua AND `s`.`lastactivity` > :timediff
 		AND `s`.`adminsession` = :adminsession
 	";

@@ -23,7 +23,9 @@ if ($action == '') {
 	$action = 'login';
 }
 
-session_start();
+if (session_status() == PHP_SESSION_NONE) {
+	session_start();
+}
 
 if ($action == '2fa_entercode') {
 	// page for entering the 2FA code after successful login
