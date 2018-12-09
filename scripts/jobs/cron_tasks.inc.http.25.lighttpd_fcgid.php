@@ -116,6 +116,16 @@ class lighttpd_fcgid extends lighttpd
 			$user = Settings::Get('phpfpm.vhost_httpuser');
 			$group = Settings::Get('phpfpm.vhost_httpgroup');	
 
+			// get fpm config
+			$fpm_sel_stmt = Database::prepare("
+				SELECT f.id FROM `" . TABLE_PANEL_FPMDAEMONS . "` f
+				LEFT JOIN `" . TABLE_PANEL_PHPCONFIGS . "` p ON p.fpmsettingid = f.id
+				WHERE p.id = :phpconfigid
+			");
+			$fpm_config = Database::pexecute_first($fpm_sel_stmt, array(
+				'phpconfigid' => Settings::Get('phpfpm.vhost_defaultini')
+			));
+
 			$domain = array(
 				'id' => 'none',
 				'domain' => Settings::Get('system.hostname'),
@@ -127,7 +137,8 @@ class lighttpd_fcgid extends lighttpd
 				'email' => Settings::Get('panel.adminmail'),
 				'loginname' => 'froxlor.panel',
 				'documentroot' => $mypath,
-				'customerroot' => $mypath
+				'customerroot' => $mypath,
+				'fpm_config_id' => isset($fpm_config['id']) ? $fpm_config['id'] : 1
 			);
 
 			// all the files and folders have to belong to the local user
