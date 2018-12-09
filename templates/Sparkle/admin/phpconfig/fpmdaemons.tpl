@@ -3,7 +3,7 @@ $header
 		<header>
 			<h2>
 				<img src="templates/{$theme}/assets/img/icons/phpsettings_big.png" alt="" />&nbsp;
-				{$lng['menue']['phpsettings']['maintitle']}
+				{$lng['menue']['phpsettings']['fpmdaemons']}
 			</h2>
 		</header>
 
