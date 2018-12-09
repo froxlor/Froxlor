@@ -294,7 +294,7 @@ class apache extends HttpConfigBase
 							}
 							$this->virtualhosts_data[$vhosts_filename] .= '  </Directory>' . "\n";
 						}
-					} elseif (Settings::Get('phpfpm.enabled') == '1') {
+					} elseif (Settings::Get('phpfpm.enabled') == '1' && (int) Settings::Get('phpfpm.enabled_ownvhost') == 1) {
 						// get fpm config
 						$fpm_sel_stmt = Database::prepare("
 							SELECT f.id FROM `" . TABLE_PANEL_FPMDAEMONS . "` f
