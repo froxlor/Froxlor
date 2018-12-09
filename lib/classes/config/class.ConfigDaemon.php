@@ -139,7 +139,7 @@ class ConfigDaemon {
 								break;
 							case "include":
 								// Includes, get the part we want via xpath
-								$includes = $this->fullxml->xpath((string)$chile);
+								$includes = $this->fullxml->xpath((string)$child);
 								foreach ($includes[0] as $include) {
 									// The "include" is also a child, so just skip it, would make a mess later
 									if ((string)$include->getName() == 'include') {
@@ -148,11 +148,9 @@ class ConfigDaemon {
 									$preparsed[] = $include;
 								}
 								break;
-							default: continue;
 						}
 					}
 					break;
-				default: continue;
 			}
 		}
 
