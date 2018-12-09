@@ -63,16 +63,7 @@ class nginx extends HttpConfigBase
 
 	public function reload()
 	{
-		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'nginx::reload: reloading nginx');
-		safe_exec(Settings::Get('system.apachereload_command'));
-
-		/**
-		 * nginx does not auto-spawn fcgi-processes
-		 */
-		if (Settings::Get('system.phpreload_command') != '' && (int) Settings::Get('phpfpm.enabled') == 0) {
-			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'nginx::reload: restarting php processes');
-			safe_exec(Settings::Get('system.phpreload_command'));
-		} elseif ((int) Settings::Get('phpfpm.enabled') == 1) {
+		if ((int) Settings::Get('phpfpm.enabled') == 1) {
 			// get all start/stop commands
 			$startstop_sel = Database::prepare("SELECT reload_cmd, config_dir FROM `" . TABLE_PANEL_FPMDAEMONS . "`");
 			Database::pexecute($startstop_sel);
@@ -89,6 +80,17 @@ class nginx extends HttpConfigBase
 				$this->logger->logAction(CRON_ACTION, LOG_INFO, 'nginx::reload: running ' . $restart_cmd['reload_cmd']);
 				safe_exec(escapeshellcmd($restart_cmd['reload_cmd']));
 			}
+		}
+
+		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'nginx::reload: reloading nginx');
+		safe_exec(Settings::Get('system.apachereload_command'));
+
+		/**
+		 * nginx does not auto-spawn fcgi-processes
+		 */
+		if (Settings::Get('system.phpreload_command') != '' && (int) Settings::Get('phpfpm.enabled') == 0) {
+			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'nginx::reload: restarting php processes');
+			safe_exec(Settings::Get('system.phpreload_command'));
 		}
 	}
 
