@@ -43,6 +43,11 @@
 	</a>
 	<div class="topheader_navigation">
 		<ul class="topheadernav">
+			<if Settings::Get('panel.is_configured') == 0 && $userinfo['adminsession'] == 1 && $userinfo['change_serversettings'] == 1>
+				<li class="liwarn">
+					<a href="{$linker->getLink(array('section' => 'configfiles', 'page' => 'configfiles'))}">{$lng['panel']['not_configured']}</a>
+				</li>
+			</if>
 			<if Settings::Get('ticket.enabled') == 1>
 				<li>
 					<a href="{$linker->getLink(array('section' => 'tickets', 'page' => 'tickets'))}">

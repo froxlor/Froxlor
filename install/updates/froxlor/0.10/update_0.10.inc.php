@@ -105,3 +105,14 @@ if (isDatabaseVersion('201811300')) {
 
 	updateToDbVersion('201812010');
 }
+
+if (isDatabaseVersion('201812010')) {
+
+	showUpdateStep("Adding new is_configured-flag");
+	// updated systems are already configured (most likely :P)
+	Settings::AddNew('panel.is_configured', '1', true);
+	lastStepStatus(0);
+
+	updateToDbVersion('201812100');
+}
+

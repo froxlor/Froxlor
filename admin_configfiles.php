@@ -20,6 +20,14 @@ require './lib/init.php';
 
 if ($userinfo['change_serversettings'] == '1') {
 
+	if ($action == 'setconfigured')
+	{
+		Settings::Set('panel.is_configured', '1', true);
+		redirectTo('admin_configfiles.php', array(
+			's' => $s
+		));
+	}
+
 	$customer_tmpdir = '/tmp/';
 	if (Settings::Get('system.mod_fcgid') == '1' && Settings::Get('system.mod_fcgid_tmpdir') != '')
 	{
@@ -164,38 +172,38 @@ if ($userinfo['change_serversettings'] == '1') {
 
 		$lasttype = '';
 		$commands = '';
-		foreach ($confarr as $idx => $action) {
-			if ($lasttype != '' && $lasttype != $action['type']) {
+		foreach ($confarr as $_action) {
+			if ($lasttype != '' && $lasttype != $_action['type']) {
 				$commands = trim($commands);
 				$numbrows = count(explode("\n", $commands));
 				eval("\$configpage.=\"" . getTemplate("configfiles/configfiles_commands") . "\";");
 				$lasttype = '';
 				$commands = '';
 			}
-			switch ($action['type']) {
+			switch ($_action['type']) {
 				case "install":
-					$commands .= strtr($action['content'], $replace_arr) . "\n";
+					$commands .= strtr($_action['content'], $replace_arr) . "\n";
 					$lasttype = "install";
 					break;
 				case "command":
-					$commands .= strtr($action['content'], $replace_arr) . "\n";
+					$commands .= strtr($_action['content'], $replace_arr) . "\n";
 					$lasttype = "command";
 					break;
 				case "file":
-					if (array_key_exists('content', $action)) {
-						$commands_file = getFileContentContainer($action['content'], $replace_arr, $action['name'], $distro_editor);
-					} elseif (array_key_exists('subcommands', $action)) {
-						foreach ($action['subcommands'] as $fileaction) {
+					if (array_key_exists('content', $_action)) {
+						$commands_file = getFileContentContainer($_action['content'], $replace_arr, $_action['name'], $distro_editor);
+					} elseif (array_key_exists('subcommands', $_action)) {
+						foreach ($_action['subcommands'] as $fileaction) {
 							if (array_key_exists('execute', $fileaction) && $fileaction['execute'] == "pre") {
 								$commands_pre .= $fileaction['content'] . "\n";
 							} elseif (array_key_exists('execute', $fileaction) && $fileaction['execute'] == "post") {
 								$commands_post .= $fileaction['content'] . "\n";
 							} elseif ($fileaction['type'] == 'file') {
-								$commands_file = getFileContentContainer($fileaction['content'], $replace_arr, $action['name'], $distro_editor);
+								$commands_file = getFileContentContainer($fileaction['content'], $replace_arr, $_action['name'], $distro_editor);
 							}
 						}
 					}
-					$realname = $action['name'];
+					$realname = $_action['name'];
 					$commands = trim($commands_pre);
 					if ($commands != "") {
 						$numbrows = count(explode("\n", $commands));
@@ -220,11 +228,13 @@ if ($userinfo['change_serversettings'] == '1') {
 		}
 		eval("echo \"" . getTemplate("configfiles/configfiles") . "\";");
 	} else {
+		$basedir = FROXLOR_INSTALL_DIR;
 		eval("echo \"" . getTemplate("configfiles/wizard") . "\";");
 	}
 } else {
-	die('not allowed to see this page');
-	// redirect or similar here
+	redirectTo('admin_index.php', array(
+		's' => $s
+	));
 }
 
 // helper functions

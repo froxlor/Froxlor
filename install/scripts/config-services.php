@@ -236,6 +236,10 @@ class Action
 						$_daemons_config[$si][] = $sysservice;
 					}
 				} while (! empty($sysservice));
+				// add 'cron' as fixed part (doesn't hurt if it exists)
+				if (!in_array('cron', $_daemons_config[$si])) {
+					$_daemons_config[$si][] = 'cron';
+				}
 			} else {
 				// for all others -> only one value
 				while (! array_key_exists($_daemons_config[$si], $daemons)) {
@@ -249,6 +253,9 @@ class Action
 		$output = CmdLineHandler::getInput("choose output-filename", "/tmp/froxlor-config-" . date('Ymd') . ".json");
 		file_put_contents($output, $daemons_config);
 		CmdLineHandler::printsucc("Successfully generated service-configfile '" . $output . "'");
+		echo PHP_EOL;
+		CmdLineHandler::printsucc("You can now apply this config running:" . PHP_EOL . "php " . __FILE__ . " --froxlor-dir=" . dirname(dirname(__DIR__)) . " --apply=" . $output);
+		echo PHP_EOL;
 	}
 
 	private function getCompleteDistroName($cparser)
@@ -342,10 +349,11 @@ class Action
 					}
 					// run all cmds
 					$confarr = $dd->getConfig();
-					foreach ($confarr as $idx => $action) {
+					foreach ($confarr as $action) {
 						switch ($action['type']) {
 							case "install":
 								CmdLineHandler::println("Installing required packages");
+								$result = null;
 								passthru(strtr($action['content'], $replace_arr), $result);
 								if (strlen($result) > 1) {
 									echo $result;
@@ -375,6 +383,8 @@ class Action
 					}
 				}
 			}
+			// set is_configured flag
+			Settings::Set('panel.is_configured', '1', true);
 			// run cronjob at the end to ensure configs are all up to date
 			exec('php ' . FROXLOR_INSTALL_DIR . '/scripts/froxlor_master_cronjob.php --force');
 			// and done
