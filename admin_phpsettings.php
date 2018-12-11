@@ -46,7 +46,7 @@ if ($page == 'overview') {
 					$row['description'] = "<b>" . $row['description'] . "</b>";
 				}
 				$domains = "";
-				$subdomains_count = $row['subdomains_count'];
+				$subdomains_count = count($row['subdomains']);
 				foreach ($row['domains'] as $configdomain) {
 					$domains .= $configdomain . "<br>";
 				}

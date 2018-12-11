@@ -74,14 +74,14 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 				}
 
 				$domains = array();
-				$subdomains_count = 0;
+				$subdomains = array();
 				$domainresult_stmt = Database::prepare($query);
 				Database::pexecute($domainresult_stmt, $query_params, true, true);
 
 				if (Database::num_rows() > 0) {
 					while ($row2 = $domainresult_stmt->fetch(PDO::FETCH_ASSOC)) {
 						if ($row2['parentdomainid'] != 0) {
-							$subdomains_count++;
+							$subdomains[] = $row2['domain'];
 						} else {
 							$domains[] = $row2['domain'];
 						}
@@ -99,7 +99,7 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 				}
 
 				$row['domains'] = $domains;
-				$row['subdomains_count'] = $subdomains_count;
+				$row['subdomains'] = $subdomains;
 				$phpconfigs[] = $row;
 			}
 
