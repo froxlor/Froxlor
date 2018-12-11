@@ -21,6 +21,9 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 	/**
 	 * lists all php-setting entries
 	 *
+	 * @param bool $with_subdomains
+	 *        	optional, also include subdomains to the list domains that use the config, default 0 (false)
+	 *        	
 	 * @access admin
 	 * @throws Exception
 	 * @return array count|list
@@ -29,6 +32,8 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 	{
 		if ($this->isAdmin()) {
 			$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] list php-configs");
+
+			$with_subdomains = $this->getBoolParam('with_subdomains', true, false);
 
 			$result = Database::query("
 				SELECT c.*, fd.description as fpmdesc
@@ -44,8 +49,11 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 				);
 
 				$query = "SELECT * FROM `" . TABLE_PANEL_DOMAINS . "`
-					WHERE `phpsettingid` = :id
-					AND `parentdomainid` = '0'";
+					WHERE `phpsettingid` = :id";
+
+				if (!$with_subdomains) {
+					$query .= " AND `parentdomainid` = '0'";
+				}
 
 				if ((int) $this->getUserDetail('domains_see_all') == 0) {
 					$query .= " AND `adminid` = :adminid";
@@ -66,12 +74,17 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 				}
 
 				$domains = array();
+				$subdomains_count = 0;
 				$domainresult_stmt = Database::prepare($query);
 				Database::pexecute($domainresult_stmt, $query_params, true, true);
 
 				if (Database::num_rows() > 0) {
 					while ($row2 = $domainresult_stmt->fetch(PDO::FETCH_ASSOC)) {
-						$domains[] = $row2['domain'];
+						if ($row2['parentdomainid'] != 0) {
+							$subdomains_count++;
+						} else {
+							$domains[] = $row2['domain'];
+						}
 					}
 				}
 
@@ -80,16 +93,13 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 					$domains[] = Settings::Get('system.hostname');
 				}
 
-				if (empty($domains)) {
-					$domains[] = $this->lng['admin']['phpsettings']['notused'];
-				}
-
 				// check whether this is our default config
 				if ((Settings::Get('system.mod_fcgid') == '1' && Settings::Get('system.mod_fcgid_defaultini') == $row['id']) || (Settings::Get('phpfpm.enabled') == '1' && Settings::Get('phpfpm.defaultini') == $row['id'])) {
 					$row['is_default'] = true;
 				}
 
 				$row['domains'] = $domains;
+				$row['subdomains_count'] = $subdomains_count;
 				$phpconfigs[] = $row;
 			}
 

@@ -30,7 +30,9 @@ if ($page == 'overview') {
 	if ($action == '') {
 		
 		try {
-			$json_result = PhpSettings::getLocal($userinfo)->listing();
+			$json_result = PhpSettings::getLocal($userinfo, array(
+				'with_subdomains' => true
+			))->listing();
 		} catch (Exception $e) {
 			dynamic_error($e->getMessage());
 		}
@@ -44,10 +46,14 @@ if ($page == 'overview') {
 					$row['description'] = "<b>" . $row['description'] . "</b>";
 				}
 				$domains = "";
+				$subdomains_count = $row['subdomains_count'];
 				foreach ($row['domains'] as $configdomain) {
 					$domains .= $configdomain . "<br>";
 				}
 				$count++;
+				if ($subdomains_count == 0 && empty($domains)) {
+					$domains = $lng['admin']['phpsettings']['notused'];
+				}
 				eval("\$tablecontent.=\"" . getTemplate("phpconfig/overview_overview") . "\";");
 			}
 		}
