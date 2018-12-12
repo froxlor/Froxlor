@@ -234,14 +234,14 @@ class FroxlorInstall
 				$fatal_fail = true;
 			}
 		}
-		$version_server = $db_root->getAttribute(PDO::ATTR_SERVER_VERSION);
-		$sql_mode = 'NO_ENGINE_SUBSTITUTION';
-		if (version_compare($version_server, '8.0.11', '<')) {
-			$sql_mode .= ',NO_AUTO_CREATE_USER';
-		}
-		$db_root->exec('SET sql_mode = "'.$sql_mode.'"');
 		
 		if (! $fatal_fail) {
+			$version_server = $db_root->getAttribute(PDO::ATTR_SERVER_VERSION);
+			$sql_mode = 'NO_ENGINE_SUBSTITUTION';
+			if (version_compare($version_server, '8.0.11', '<')) {
+				$sql_mode .= ',NO_AUTO_CREATE_USER';
+			}
+			$db_root->exec('SET sql_mode = "'.$sql_mode.'"');
 			
 			// ok, if we are here, the database connection is up and running
 			$content .= $this->_status_message('green', "OK");
@@ -531,11 +531,6 @@ class FroxlorInstall
 	{
 		$content = "";
 		$content .= $this->_status_message('begin', $this->_lng['install']['testing_new_db']);
-		$version_server = PDO::getAttribute(PDO::ATTR_SERVER_VERSION);
-		$sql_mode = 'NO_ENGINE_SUBSTITUTION';
-		if (version_compare($version_server, '8.0.11', '<')) {
-			$sql_mode .= ',NO_AUTO_CREATE_USER';
-		}
 		$options = array(
 			'PDO::MYSQL_ATTR_INIT_COMMAND' => 'SET names utf8'
 		);
