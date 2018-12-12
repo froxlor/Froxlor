@@ -50,6 +50,8 @@ for ($x = 1; $x < count($argv); $x++) {
 			inserttask('1');
 			// bind (if enabled, inserttask() checks this)
 			inserttask('4');
+			// set quotas (if enabled)
+			inserttask('10');
 			// also regenerate cron.d-file
 			inserttask('99');
 			addToQueue($jobs_to_run, 'tasks');
