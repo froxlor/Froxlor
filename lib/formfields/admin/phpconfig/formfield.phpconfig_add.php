@@ -100,6 +100,7 @@ return array(
 						'value' => array()
 					),
 					'override_fpmconfig' => array(
+						'visible' => (Settings::Get('phpfpm.enabled') == 1 ? true : false),
 						'label' => $lng['serversettings']['phpfpm_settings']['override_fpmconfig'],
 						'type' => 'checkbox',
 						'values' => array(
