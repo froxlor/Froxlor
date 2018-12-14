@@ -162,7 +162,7 @@ class DomainZones extends ApiCommand implements ResourceEntity
 				// add domain name
 				$content .= '.' . $domain;
 			}
-			if (! validateDomain($content)) {
+			if (! validateDomain($content, true)) {
 				$errors[] = $this->lng['error']['dns_cname_invaliddom'];
 			} else {
 				// check whether there are RR-records for the same resource
@@ -208,7 +208,7 @@ class DomainZones extends ApiCommand implements ResourceEntity
 					$target = substr($target, 0, - 1);
 				}
 			}
-			if ($target != '.' && ! validateDomain($target)) {
+			if ($target != '.' && ! validateDomain($target, true)) {
 				$errors[] = $this->lng['error']['dns_srv_needdom'];
 			} else {
 				// check whether there is a CNAME-record for the same resource

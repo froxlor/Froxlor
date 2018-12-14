@@ -330,6 +330,33 @@ class DomainZonesTest extends TestCase
 		DomainZones::getLocal($admin_userdata, $data)->add();
 	}
 	
+	/**
+	 * @depends testAdminDomainZonesAddCname
+	 */
+	public function testAdminDomainZonesAddCnameUnderscore()
+	{
+		global $admin_userdata;
+
+		$data = [
+			'domainname' => 'test2.local',
+			'record' => 'dkimtest',
+			'type' => 'CNAME',
+			'content' => 'test._domainkey.myhost.tld.'
+		];
+		$json_result = DomainZones::getLocal($admin_userdata, $data)->add();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertTrue(count($result) > 1);
+		$found = false;
+		foreach ($result as $entry) {
+			if (substr($entry, strlen('test._domainkey.myhost.tld.') * -1) == 'test._domainkey.myhost.tld.') {
+				$found = true;
+				break;
+			}
+		}
+		$this->assertTrue($found);
+		$this->assertEquals('dkimtest	18000	IN	CNAME	test._domainkey.myhost.tld.', $entry);
+	}
+
 	public function testAdminDomainZonesAddNS()
 	{
 		global $admin_userdata;

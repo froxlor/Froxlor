@@ -2,7 +2,6 @@
 
 /**
  * This file is part of the Froxlor project.
- * Copyright (c) 2003-2009 the SysCP Team (see authors).
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
  * For the full copyright and license information, please view the COPYING
@@ -10,7 +9,6 @@
  * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
  * @copyright  (c) the authors
- * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Functions
@@ -18,24 +16,30 @@
  */
 
 /**
- * Check if the submitted string is a valid domainname, i.e.
- * it consists only of the following characters ([a-z0-9][a-z0-9\-]+\.)+[a-z]{2,4}
+ * Check if the submitted string is a valid domainname
  *
- * @param string The domainname which should be checked.
- *
+ * @param string $domainname
+ *        	The domainname which should be checked.
+ * @param bool $allow_underscore
+ *        	optional if true, allowes the underscore character in a domain label (DKIM etc.)
+ *        	
  * @return string|boolean the domain-name if the domain is valid, false otherwise
  */
-function validateDomain($domainname) {
+function validateDomain($domainname, $allow_underscore = false)
+{
+	if (is_string($domainname)) {
+		$char_validation = '([a-z\d](-*[a-z\d])*)(\.?([a-z\d](-*[a-z\d])*))*\.([a-z\d])+';
+		if ($allow_underscore) {
+			$char_validation = '([a-z\d\_](-*[a-z\d\_])*)(\.([a-z\d\_](-*[a-z\d])*))*(\.?([a-z\d](-*[a-z\d])*))+\.([a-z\d])+';
+		}
 
-	// we add http:// because this makes a domain valid for the filter;
-	$domainname_tmp = 'http://' . $domainname;
-
-	// we just always use our regex
-	$pattern = '/^http:\/\/([a-z0-9]([a-z0-9\-]{0,61}[a-z0-9])?\.)+[a-z0-9\-]{2,63}$/i';
-	if (preg_match($pattern, $domainname_tmp)) {
-		return $domainname;
+		if (preg_match("/^" . $char_validation . "$/i", $domainname) && // valid chars check
+		preg_match("/^.{1,253}$/", $domainname) && // overall length check
+		preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domainname)) // length of each label
+		{
+			return $domainname;
+		}
 	}
-
 	return false;
 }
 
@@ -46,8 +50,8 @@ function validateDomain($domainname) {
  *
  * @return string|boolean hostname on success, else false
  */
-function validateLocalHostname($hostname) {
-
+function validateLocalHostname($hostname)
+{
 	$pattern = '/^([a-zA-Z0-9\-])+$/i';
 	if (preg_match($pattern, $hostname)) {
 		return $hostname;
