@@ -132,7 +132,7 @@ abstract class CmdLineHandler
 	 */
 	private function _createAction()
 	{
-		
+
 		// Test for help-switch
 		if (empty(self::$args) || array_key_exists("help", self::$args) || array_key_exists("h", self::$args)) {
 			static::printHelp();
@@ -140,20 +140,20 @@ abstract class CmdLineHandler
 		}
 		// check if no unknown parameters are present
 		foreach (self::$args as $arg => $value) {
-			
+
 			if (is_numeric($arg)) {
 				throw new Exception("Unknown parameter '" . $value . "' in argument list");
 			} elseif (! in_array($arg, static::$params) && ! in_array($arg, static::$switches)) {
 				throw new Exception("Unknown parameter '" . $arg . "' in argument list");
 			}
 		}
-		
+
 		// set debugger switch
 		if (isset(self::$args["d"]) && self::$args["d"] == true) {
 			// Debugger::getInstance()->setEnabled(true);
 			// Debugger::getInstance()->debug("debug output enabled");
 		}
-		
+
 		return new static::$action_class(self::$args);
 	}
 
@@ -167,6 +167,35 @@ abstract class CmdLineHandler
 			$result = $default;
 		}
 		return mb_strtolower($result);
+	}
+
+	public static function getYesNo($prompt = "#", $default = null)
+	{
+		$value = null;
+		$_v = null;
+
+		while (true) {
+			$_v = self::getInput($prompt);
+
+			if (strtolower($_v) == 'y' || strtolower($_v) == 'yes') {
+				$value = 1;
+				break;
+			} elseif (strtolower($_v) == 'n' || strtolower($_v) == 'no') {
+				$value = 0;
+				break;
+			} else {
+				if ($_v == '' && $default != null) {
+					$value = $default;
+					break;
+				} else {
+					echo "Sorry, response " . $_v . " not understood. Please enter 'yes' or 'no'\n";
+					$value = null;
+					continue;
+				}
+			}
+		}
+
+		return $value;
 	}
 
 	public static function println($msg = "")

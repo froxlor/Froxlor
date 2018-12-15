@@ -81,7 +81,7 @@ class ConfigServicesCmd extends CmdLineHandler
 		// self::println("-d\t\t\tenable debug output");
 		self::println("-h\t\t\tsame as --help");
 		self::println("");
-		
+
 		die(); // end of execution
 	}
 }
@@ -115,7 +115,7 @@ class Action
 	{
 		$this->_checkConfigParam(true);
 		$this->_parseConfig();
-		
+
 		require FROXLOR_INSTALL_DIR . '/lib/tables.inc.php';
 		require FROXLOR_INSTALL_DIR . '/lib/functions.php';
 		require FROXLOR_INSTALL_DIR . '/lib/classes/settings/class.Settings.php';
@@ -123,11 +123,11 @@ class Action
 		require FROXLOR_INSTALL_DIR . '/lib/classes/config/class.ConfigParser.php';
 		require FROXLOR_INSTALL_DIR . '/lib/classes/config/class.ConfigService.php';
 		require FROXLOR_INSTALL_DIR . '/lib/classes/config/class.ConfigDaemon.php';
-		
+
 		if (array_key_exists("import-settings", $this->_args)) {
 			$this->_importSettings();
 		}
-		
+
 		if (array_key_exists("create", $this->_args)) {
 			$this->_createConfig();
 		} elseif (array_key_exists("apply", $this->_args)) {
@@ -165,7 +165,7 @@ class Action
 		$_daemons_config = array(
 			'distro' => ""
 		);
-		
+
 		$config_dir = FROXLOR_INSTALL_DIR . '/lib/configfiles/';
 		// show list of available distro's
 		$distros = glob($config_dir . '*.xml');
@@ -180,10 +180,10 @@ class Action
 			// store in tmp array
 			$distributions_select_data[$dist_display] = str_replace(".xml", "", strtolower(basename($_distribution)));
 		}
-		
+
 		// sort by distribution name
 		ksort($distributions_select_data);
-		
+
 		// list all distributions
 		$mask = "|%-50.50s |%-50.50s |\n";
 		printf($mask, str_repeat("-", 50), str_repeat("-", 50));
@@ -194,19 +194,19 @@ class Action
 		}
 		printf($mask, str_repeat("-", 50), str_repeat("-", 50));
 		echo PHP_EOL;
-		
+
 		while (! in_array($_daemons_config['distro'], $distributions_select_data)) {
 			$_daemons_config['distro'] = CmdLineHandler::getInput("choose distribution", "stretch");
 		}
-		
+
 		// go through all services and let user check whether to include it or not
 		$configfiles = new ConfigParser($config_dir . '/' . $_daemons_config['distro'] . ".xml");
 		$services = $configfiles->getServices();
-		
+
 		foreach ($services as $si => $service) {
 			echo PHP_EOL . "--- " . strtoupper($si) . " ---" . PHP_EOL . PHP_EOL;
 			$_daemons_config[$si] = "";
-			
+
 			$daemons = $service->getDaemons();
 			$mask = "|%-50.50s |%-50.50s |\n";
 			printf($mask, str_repeat("-", 50), str_repeat("-", 50));
@@ -237,7 +237,7 @@ class Action
 					}
 				} while (! empty($sysservice));
 				// add 'cron' as fixed part (doesn't hurt if it exists)
-				if (!in_array('cron', $_daemons_config[$si])) {
+				if (! in_array('cron', $_daemons_config[$si])) {
 					$_daemons_config[$si][] = 'cron';
 				}
 			} else {
@@ -247,7 +247,7 @@ class Action
 				}
 			}
 		}
-		
+
 		echo PHP_EOL . PHP_EOL;
 		$daemons_config = json_encode($_daemons_config);
 		$output = CmdLineHandler::getInput("choose output-filename", "/tmp/froxlor-config-" . date('Ymd') . ".json");
@@ -256,6 +256,10 @@ class Action
 		echo PHP_EOL;
 		CmdLineHandler::printsucc("You can now apply this config running:" . PHP_EOL . "php " . __FILE__ . " --froxlor-dir=" . dirname(dirname(__DIR__)) . " --apply=" . $output);
 		echo PHP_EOL;
+		$proceed = CmdLineHandler::getYesNo("Do you want to apply the config now? [y/N]", 0);
+		if ($proceed) {
+			passthru("php " . __FILE__ . " --froxlor-dir=" . dirname(dirname(__DIR__)) . " --apply=" . $output);
+		}
 	}
 
 	private function getCompleteDistroName($cparser)
@@ -292,10 +296,10 @@ class Action
 		} elseif (! is_readable($this->_args["apply"])) {
 			throw new Exception("Given config file cannot be read ('" . $this->_args["apply"] . "')");
 		}
-		
+
 		$config = file_get_contents($this->_args["apply"]);
 		$decoded_config = json_decode($config, true);
-		
+
 		if (array_key_exists("list-daemons", $this->_args)) {
 			$mask = "|%-50.50s |%-50.50s |\n";
 			printf($mask, str_repeat("-", 50), str_repeat("-", 50));
@@ -317,18 +321,18 @@ class Action
 			echo PHP_EOL;
 			exit();
 		}
-		
+
 		$only_daemon = null;
 		if (array_key_exists("daemon", $this->_args)) {
 			$only_daemon = $this->_args['daemon'];
 		}
-		
+
 		if (! empty($decoded_config)) {
 			$config_dir = FROXLOR_INSTALL_DIR . '/lib/configfiles/';
 			$configfiles = new ConfigParser($config_dir . '/' . $decoded_config['distro'] . ".xml");
 			$services = $configfiles->getServices();
 			$replace_arr = $this->_getReplacerArray();
-			
+
 			foreach ($services as $si => $service) {
 				echo PHP_EOL . "--- Configuring: " . strtoupper($si) . " ---" . PHP_EOL . PHP_EOL;
 				if (! isset($decoded_config[$si]) || $decoded_config[$si] == 'x') {
@@ -342,7 +346,7 @@ class Action
 						continue;
 					}
 					CmdLineHandler::println("Configuring '" . $di . "'");
-					
+
 					if (! empty($only_daemon) && $only_daemon != $di) {
 						CmdLineHandler::printwarn("Skipping " . $di . " configuration as desired");
 						continue;
@@ -402,7 +406,7 @@ class Action
 		} elseif (Settings::Get('phpfpm.enabled') == '1' && Settings::Get('phpfpm.tmpdir') != '') {
 			$customer_tmpdir = Settings::Get('phpfpm.tmpdir');
 		}
-		
+
 		// try to convert namserver hosts to ip's
 		$ns_ips = "";
 		if (Settings::Get('system.nameservers') != '') {
@@ -415,10 +419,10 @@ class Action
 				}
 			}
 		}
-		
+
 		Database::needSqlData();
 		$sql = Database::getSqlData();
-		
+
 		$replace_arr = array(
 			'<SQL_UNPRIVILEGED_USER>' => $sql['user'],
 			'<SQL_UNPRIVILEGED_PASSWORD>' => $sql['passwd'],
