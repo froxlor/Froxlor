@@ -214,7 +214,6 @@ class Certificates extends ApiCommand implements ResourceEntity
 	{
 		$id = $this->getParam('id');
 
-		$chk = ($this->isAdmin() && $this->getUserDetail('customers_see_all') == '1') ? true : false;
 		if ($this->isAdmin() == false) {
 			$chk_stmt = Database::prepare("
 				SELECT d.domain FROM `" . TABLE_PANEL_DOMAINS . "` d
@@ -225,16 +224,18 @@ class Certificates extends ApiCommand implements ResourceEntity
 				'id' => $id,
 				'cid' => $this->getUserDetail('customerid')
 			));
-		} elseif ($this->isAdmin() && $this->getUserDetail('customers_see_all') == '0') {
+		} elseif ($this->isAdmin()) {
 			$chk_stmt = Database::prepare("
 				SELECT d.domain FROM `" . TABLE_PANEL_DOMAINS . "` d
 				LEFT JOIN `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` s ON s.domainid = d.id
-				WHERE s.`id` = :id AND d.`adminid` = :aid
-			");
-			$chk = Database::pexecute_first($chk_stmt, array(
-				'id' => $id,
-				'aid' => $this->getUserDetail('adminid')
-			));
+				WHERE s.`id` = :id" . ($this->getUserDetail('customers_see_all') == '0' ? " AND d.`adminid` = :aid" : ""));
+			$params = array(
+				'id' => $id
+			);
+			if ($this->getUserDetail('customers_see_all') == '0') {
+				$params['aid'] = $this->getUserDetail('adminid');
+			}
+			$chk = Database::pexecute_first($chk_stmt, $params);
 		}
 		if ($chk !== false) {
 			// additional access check by trying to get the certificate
