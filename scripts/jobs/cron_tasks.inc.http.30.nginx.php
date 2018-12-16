@@ -170,6 +170,11 @@ class nginx extends HttpConfigBase
 				if ($row_ipsandports['ssl'] == '1') {
 					if ($row_ipsandports['ssl_cert_file'] == '') {
 						$row_ipsandports['ssl_cert_file'] = Settings::Get('system.ssl_cert_file');
+						if (!file_exists($row_ipsandports['ssl_cert_file'])) {
+							// explicitly disable ssl for this vhost
+							$row_ipsandports['ssl_cert_file'] = "";
+							$this->logger->logAction(CRON_ACTION, LOG_DEBUG, 'System certificate file "'.Settings::Get('system.ssl_cert_file').'" does not seem to exist. Disabling SSL-vhost for "'.Settings::Get('system.hostname').'"');
+						}
 					}
 					if ($row_ipsandports['ssl_key_file'] == '') {
 						$row_ipsandports['ssl_key_file'] = Settings::Get('system.ssl_key_file');
@@ -615,6 +620,11 @@ class nginx extends HttpConfigBase
 
 		if ($domain_or_ip['ssl_cert_file'] == '') {
 			$domain_or_ip['ssl_cert_file'] = Settings::Get('system.ssl_cert_file');
+			if (!file_exists($domain_or_ip['ssl_cert_file'])) {
+				// explicitly disable ssl for this vhost
+				$domain_or_ip['ssl_cert_file'] = "";
+				$this->logger->logAction(CRON_ACTION, LOG_DEBUG, 'System certificate file "'.Settings::Get('system.ssl_cert_file').'" does not seem to exist. Disabling SSL-vhost for "'.$domain_or_ip['domain'].'"');
+			}
 		}
 
 		if ($domain_or_ip['ssl_key_file'] == '') {
