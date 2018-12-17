@@ -634,13 +634,15 @@ class lighttpd extends HttpConfigBase
 		// The normal access/error - logging is enabled
 		// error log cannot be set conditionally see
 		// https://redmine.lighttpd.net/issues/665
-		$access_log = makeCorrectFile(Settings::Get('system.logfiles_directory') . $domain['loginname'] . $speciallogfile . '-access.log');
-		// Create the logfile if it does not exist (fixes #46)
-		touch($access_log);
-		chown($access_log, Settings::Get('system.httpuser'));
-		chgrp($access_log, Settings::Get('system.httpgroup'));
+		if ($domain['writeaccesslog']) {
+			$access_log = makeCorrectFile(Settings::Get('system.logfiles_directory') . $domain['loginname'] . $speciallogfile . '-access.log');
+			// Create the logfile if it does not exist (fixes #46)
+			touch($access_log);
+			chown($access_log, Settings::Get('system.httpuser'));
+			chgrp($access_log, Settings::Get('system.httpgroup'));
 
-		$logfiles_text .= '  accesslog.filename	= "' . $access_log . '"' . "\n";
+			$logfiles_text .= '  accesslog.filename	= "' . $access_log . '"' . "\n";
+		}
 
 		if (Settings::Get('system.awstats_enabled') == '1') {
 
