@@ -176,6 +176,30 @@ return array(
 						'value' => array(
 							$result['notryfiles']
 						)
+					),
+					'writeaccesslog' => array(
+						'label' => $lng['admin']['writeaccesslog']['title'],
+						'desc' => $lng['admin']['writeaccesslog']['description'],
+						'type' => 'checkbox',
+						'values' => array(
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array($result['writeaccesslog'])
+					),
+					'writeerrorlog' => array(
+						'label' => $lng['admin']['writeerrorlog']['title'],
+						'desc' => $lng['admin']['writeerrorlog']['description'],
+						'type' => 'checkbox',
+						'values' => array(
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array($result['writeerrorlog'])
 					)
 				)
 			),

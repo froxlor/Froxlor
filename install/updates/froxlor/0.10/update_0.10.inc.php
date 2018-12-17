@@ -111,8 +111,16 @@ if (isDatabaseVersion('201812010')) {
 	showUpdateStep("Adding new is_configured-flag");
 	// updated systems are already configured (most likely :P)
 	Settings::AddNew('panel.is_configured', '1', true);
-	lastStepStatus(0);
 
-	updateToDbVersion('201812100');
+        updateToDbVersion('201812100');
 }
 
+if (isDatabaseVersion('201812100')) {
+
+	showUpdateStep("Adding fields writeaccesslog and writeerrorlog for domains");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `writeaccesslog` tinyint(1) NOT NULL default '1';");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `writeerrorlog` tinyint(1) NOT NULL default '1';");
+	lastStepStatus(0);
+
+	updateToDbVersion('201812180');
+}
