@@ -82,8 +82,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 			$id = $result['id'];
 
 			$email_full = $result['email_full'];
-			// @fixme idna
-			$idna_convert = new \idna_convert_wrapper();
+			$idna_convert = new \Froxlor\Idna\IdnaWrapper();
 			$username = $idna_convert->decode($email_full);
 			$password = validate($email_password, 'password', '', '', array(), true);
 			$password = validatePassword($password, true);

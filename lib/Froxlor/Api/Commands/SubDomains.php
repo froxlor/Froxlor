@@ -94,8 +94,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				standard_error('domain_nopunycode', '', true);
 			}
 
-			// @fixme idna_convert_wrapper
-			$idna_convert = new \idna_convert_wrapper();
+			$idna_convert = new \Froxlor\Idna\IdnaWrapper();
 			$subdomain = $idna_convert->encode(preg_replace(array(
 				'/\:(\d)+$/',
 				'/^https?\:\/\//'
@@ -342,8 +341,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 
 		// convert possible idn domain to punycode
 		if (substr($domainname, 0, 4) != 'xn--') {
-			// @fixme idna_convert_wrapper
-			$idna_convert = new \idna_convert_wrapper();
+			$idna_convert = new \Froxlor\Idna\IdnaWrapper();
 			$domainname = $idna_convert->encode($domainname);
 		}
 
@@ -581,8 +579,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			Database::pexecute($stmt, $params, true, true);
 			$stmt = Database::prepare("DELETE FROM `" . TABLE_MAIL_VIRTUAL . "` WHERE `customerid`= :customerid AND `domainid`= :domainid");
 			Database::pexecute($stmt, $params, true, true);
-			// @fixme idna
-			$idna_convert = new \idna_convert_wrapper();
+			$idna_convert = new \Froxlor\Idna\IdnaWrapper();
 			$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_NOTICE, "[API] automatically deleted mail-table entries for '" . $idna_convert->decode($result['domain']) . "'");
 		}
 
@@ -647,8 +644,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 
 			inserttask('1');
 			inserttask('4');
-			// @fixme idna
-			$idna_convert = new \idna_convert_wrapper();
+			$idna_convert = new \Froxlor\Idna\IdnaWrapper();
 			$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] edited domain '" . $idna_convert->decode($result['domain']) . "'");
 		}
 		$result = $this->apiCall('SubDomains.get', array(

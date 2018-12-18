@@ -82,8 +82,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 
 			// convert possible idn domain to punycode
 			if (substr($domainname, 0, 4) != 'xn--') {
-				// @fixme idna
-				$idna_convert = new \idna_convert_wrapper();
+				$idna_convert = new \Froxlor\Idna\IdnaWrapper();
 				$domainname = $idna_convert->encode($domainname);
 			}
 
@@ -240,8 +239,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 					standard_error('domain_nopunycode', '', true);
 				}
 
-				// @fixme idna
-				$idna_convert = new \idna_convert_wrapper();
+				$idna_convert = new \Froxlor\Idna\IdnaWrapper();
 				$domain = $idna_convert->encode(preg_replace(array(
 					'/\:(\d)+$/',
 					'/^https?\:\/\//'
@@ -504,8 +502,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 					$issubof = '0';
 				}
 
-				// @fixme idna
-				$idna_convert = new \idna_convert_wrapper();
+				$idna_convert = new \Froxlor\Idna\IdnaWrapper();
 				if ($domain == '') {
 					standard_error(array(
 						'stringisempty',

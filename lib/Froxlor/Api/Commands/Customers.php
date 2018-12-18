@@ -267,8 +267,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				$city = validate($city, 'city', '', '', array(), true);
 				$phone = validate($phone, 'phone', '/^[0-9\- \+\(\)\/]*$/', '', array(), true);
 				$fax = validate($fax, 'fax', '/^[0-9\- \+\(\)\/]*$/', '', array(), true);
-				// @fixme idna
-				$idna_convert = new \idna_convert_wrapper();
+				$idna_convert = new \Froxlor\Idna\IdnaWrapper();
 				$email = $idna_convert->encode(validate($email, 'email', '', '', array(), true));
 				$customernumber = validate($customernumber, 'customer number', '/^[A-Za-z0-9 \-]*$/Di', '', array(), true);
 				$def_language = validate($def_language, 'default language', '', '', array(), true);
@@ -868,8 +867,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 			// parameters
 			$move_to_admin = intval_ressource($this->getBoolParam('move_to_admin', true, 0));
 
-			// @fixme idna
-			$idna_convert = new \idna_convert_wrapper();
+			$idna_convert = new \Froxlor\Idna\IdnaWrapper();
 			$email = $this->getParam('email', true, $idna_convert->decode($result['email']));
 			$name = $this->getParam('name', true, $result['name']);
 			$firstname = $this->getParam('firstname', true, $result['firstname']);
@@ -917,8 +915,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 
 		// validation
 		if ($this->isAdmin()) {
-			// @fixme idna
-			$idna_convert = new \idna_convert_wrapper();
+			$idna_convert = new \Froxlor\Idna\IdnaWrapper();
 			$name = validate($name, 'name', '', '', array(), true);
 			$firstname = validate($firstname, 'first name', '', '', array(), true);
 			$company = validate($company, 'company', '', '', array(), true);
@@ -1093,8 +1090,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				Database::needRoot(true);
 				$last_dbserver = 0;
 
-				// @fixme dbManager
-				$dbm = new \DbManager($this->logger());
+				$dbm = new \Froxlor\Database\DbManager($this->logger());
 
 				// For each of them
 				while ($row_database = $databases_stmt->fetch(\PDO::FETCH_ASSOC)) {
@@ -1402,7 +1398,6 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 			));
 			$id = $result['customerid'];
 
-			// @fixme use Databases-ApiCommand later
 			$databases_stmt = Database::prepare("
 				SELECT * FROM `" . TABLE_PANEL_DATABASES . "`
 				WHERE `customerid` = :id ORDER BY `dbserver`
@@ -1413,8 +1408,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 			Database::needRoot(true);
 			$last_dbserver = 0;
 
-			// @fixme db manager
-			$dbm = new \DbManager($this->logger());
+			$dbm = new \Froxlor\Database\DbManager($this->logger());
 
 			while ($row_database = $databases_stmt->fetch(\PDO::FETCH_ASSOC)) {
 				if ($last_dbserver != $row_database['dbserver']) {

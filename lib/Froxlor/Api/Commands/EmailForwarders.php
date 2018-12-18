@@ -54,8 +54,7 @@ class EmailForwarders extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 			$destination = $this->getParam('destination');
 
 			// validation
-			// @fixme idna
-			$idna_convert = new \idna_convert_wrapper();
+			$idna_convert = new \Froxlor\Idna\IdnaWrapper();
 			$destination = $idna_convert->encode($destination);
 
 			$result = $this->apiCall('Emails.get', array(

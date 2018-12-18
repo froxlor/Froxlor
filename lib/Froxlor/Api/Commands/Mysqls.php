@@ -79,8 +79,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 				'mysql_lastaccountnumber' => ($this->isAdmin() ? $customer['mysql_lastaccountnumber'] : $this->getUserDetail('mysql_lastaccountnumber'))
 			);
 			// create database, user, set permissions, etc.pp.
-			// @fixme dbManager
-			$dbm = new \DbManager($this->logger());
+			$dbm = new \Froxlor\Database\DbManager($this->logger());
 			$username = $dbm->createDatabase($newdb_params['loginname'], $password, $newdb_params['mysql_lastaccountnumber']);
 
 			// we've checked against the password in dbm->createDatabase
@@ -459,8 +458,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 
 		// Begin root-session
 		Database::needRoot(true, $result['dbserver']);
-		// @fixme dbManager
-		$dbm = new \DbManager($this->logger());
+		$dbm = new \Froxlor\Database\DbManager($this->logger());
 		$dbm->getManager()->deleteDatabase($result['databasename']);
 		Database::needRoot(false);
 		// End root-session

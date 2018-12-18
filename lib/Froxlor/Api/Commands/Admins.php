@@ -203,8 +203,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 
 			// validation
 			$name = validate($name, 'name', '', '', array(), true);
-			// @fixme idna_convert_wrapper
-			$idna_convert = new \idna_convert_wrapper();
+			$idna_convert = new \Froxlor\Idna\IdnaWrapper();
 			$email = $idna_convert->encode(validate($email, 'email', '', '', array(), true));
 			$def_language = validate($def_language, 'default language', '', '', array(), true);
 			$custom_notes = validate(str_replace("\r\n", "\n", $custom_notes), 'custom_notes', '/^[^\0]*$/', '', array(), true);
@@ -461,8 +460,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			if ($this->getUserDetail('change_serversettings') == 1 || $result['adminid'] == $this->getUserDetail('adminid')) {
 				// parameters
 				$name = $this->getParam('name', true, $result['name']);
-				// @fixme idna_convert_wrapper
-				$idna_convert = new \idna_convert_wrapper();
+				$idna_convert = new \Froxlor\Idna\IdnaWrapper();
 				$email = $this->getParam('email', true, $idna_convert->decode($result['email']));
 				$password = $this->getParam('admin_password', true, '');
 				$def_language = $this->getParam('def_language', true, $result['def_language']);
@@ -521,8 +519,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 
 				// validation
 				$name = validate($name, 'name', '', '', array(), true);
-				// @fixme idna_convert_wrapper
-				$idna_convert = new \idna_convert_wrapper();
+				$idna_convert = new \Froxlor\Idna\IdnaWrapper();
 				$email = $idna_convert->encode(validate($email, 'email', '', '', array(), true));
 				$def_language = validate($def_language, 'default language', '', '', array(), true);
 				$custom_notes = validate(str_replace("\r\n", "\n", $custom_notes), 'custom_notes', '/^[^\0]*$/', '', array(), true);

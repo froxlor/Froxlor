@@ -76,8 +76,7 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			standard_error('dns_domain_nodns', '', true);
 		}
 
-		// @fixme idna
-		$idna_convert = new \idna_convert_wrapper();
+		$idna_convert = new \Froxlor\Idna\IdnaWrapper();
 		$domain = $idna_convert->encode($result['domain']);
 
 		// select all entries

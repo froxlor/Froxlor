@@ -57,8 +57,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 
 			// validation
 			if (substr($domain, 0, 4) != 'xn--') {
-				// @fixme idna
-				$idna_convert = new \idna_convert_wrapper();
+				$idna_convert = new \Froxlor\Idna\IdnaWrapper();
 				$domain = $idna_convert->encode(validate($domain, 'domain', '', '', array(), true));
 			}
 

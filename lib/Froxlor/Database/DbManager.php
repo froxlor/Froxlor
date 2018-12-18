@@ -1,4 +1,7 @@
 <?php
+namespace Froxlor\Database;
+
+use \Froxlor\Settings;
 
 /**
  * This file is part of the Froxlor project.
@@ -47,7 +50,7 @@ class DbManager {
 	/**
 	 * main constructor
 	 *
-	 * @param FroxlorLogger $log
+	 * @param \FroxlorLogger $log
 	 */
 	public function __construct($log = null) {
 		$this->_log = $log;
@@ -122,6 +125,6 @@ class DbManager {
 	 */
 	private function _setManager() {
 		// TODO read different dbms from settings later
-		$this->_manager = new DbManagerMySQL($this->_log);
+		$this->_manager = new \Froxlor\Database\Manager\DbManagerMySQL($this->_log);
 	}
 }

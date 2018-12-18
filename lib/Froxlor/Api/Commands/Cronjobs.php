@@ -2,7 +2,6 @@
 namespace Froxlor\Api\Commands;
 
 use Froxlor\Database as Database;
-use Froxlor\Settings as Settings;
 
 /**
  * This file is part of the Froxlor project.

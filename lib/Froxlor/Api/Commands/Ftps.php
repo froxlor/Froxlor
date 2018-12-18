@@ -80,8 +80,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 			if (Settings::Get('customer.ftpatdomain') == '1') {
 				$ftpusername = validate(trim($ftpusername), 'username', '/^[a-zA-Z0-9][a-zA-Z0-9\-_]+\$?$/', '', array(), true);
 				if (substr($ftpdomain, 0, 4) != 'xn--') {
-					// @fixme idna
-					$idna_convert = new \idna_convert_wrapper();
+					$idna_convert = new \Froxlor\Idna\IdnaWrapper();
 					$ftpdomain = $idna_convert->encode(validate($ftpdomain, 'domain', '', '', array(), true));
 				}
 			}

@@ -1,4 +1,7 @@
 <?php
+namespace Froxlor\Database\Manager;
+
+use Froxlor\Database;
 
 /**
  * This file is part of the Froxlor project.
@@ -8,14 +11,14 @@
  * file that was distributed with this source code. You can also view the
  * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
- * @copyright  (c) the authors
- * @author     Michael Kaufmann <mkaufmann@nutime.de>
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Classes
- *
- * @since      0.9.31
- *
+ * @copyright (c) the authors
+ * @author Michael Kaufmann <mkaufmann@nutime.de>
+ * @author Froxlor team <team@froxlor.org> (2010-)
+ * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package Classes
+ *         
+ * @since 0.9.31
+ *       
  */
 
 /**
@@ -24,16 +27,18 @@
  * Explicit class for database-management like creating
  * and removing databases, users and permissions for MySQL
  *
- * @copyright  (c) the authors
- * @author     Michael Kaufmann <mkaufmann@nutime.de>
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Classes
+ * @copyright (c) the authors
+ * @author Michael Kaufmann <mkaufmann@nutime.de>
+ * @author Froxlor team <team@froxlor.org> (2010-)
+ * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package Classes
  */
-class DbManagerMySQL {
+class DbManagerMySQL
+{
 
 	/**
 	 * FroxlorLogger object
+	 *
 	 * @var object
 	 */
 	private $_log = null;
@@ -41,9 +46,10 @@ class DbManagerMySQL {
 	/**
 	 * main constructor
 	 *
-	 * @param FroxlorLogger $log
+	 * @param \FroxlorLogger $log
 	 */
-	public function __construct(&$log = null) {
+	public function __construct(&$log = null)
+	{
 		$this->_log = $log;
 	}
 
@@ -52,7 +58,8 @@ class DbManagerMySQL {
 	 *
 	 * @param string $dbname
 	 */
-	public function createDatabase($dbname = null) {
+	public function createDatabase($dbname = null)
+	{
 		Database::query("CREATE DATABASE `" . $dbname . "`");
 	}
 
@@ -63,11 +70,13 @@ class DbManagerMySQL {
 	 * @param string $username
 	 * @param string $password
 	 * @param string $access_host
-	 * @param bool $p_encrypted optional, whether the password is encrypted or not, default false
+	 * @param bool $p_encrypted
+	 *        	optional, whether the password is encrypted or not, default false
 	 */
-	public function grantPrivilegesTo($username = null, $password = null, $access_host = null, $p_encrypted = false) {
+	public function grantPrivilegesTo($username = null, $password = null, $access_host = null, $p_encrypted = false)
+	{
 		// mysql8 compatibility
-		if (version_compare(Database::getAttribute(PDO::ATTR_SERVER_VERSION), '8.0.11', '>=')) {
+		if (version_compare(Database::getAttribute(\PDO::ATTR_SERVER_VERSION), '8.0.11', '>=')) {
 			// create user
 			$stmt = Database::prepare("
 				CREATE USER '" . $username . "'@'" . $access_host . "' IDENTIFIED BY 'password'
@@ -77,16 +86,22 @@ class DbManagerMySQL {
 			$stmt = Database::prepare("
 				GRANT ALL ON `" . $username . "`.* TO :username@:host
 			");
-			Database::pexecute($stmt, array("username" => $username, "host" => $access_host));
+			Database::pexecute($stmt, array(
+				"username" => $username,
+				"host" => $access_host
+			));
 		} else {
 			// grant privileges
 			$stmt = Database::prepare("
 				GRANT ALL PRIVILEGES ON `" . $username . "`.* TO :username@:host IDENTIFIED BY 'password'
 			");
-			Database::pexecute($stmt, array("username" => $username, "host" => $access_host));
+			Database::pexecute($stmt, array(
+				"username" => $username,
+				"host" => $access_host
+			));
 		}
 		// set passoword
-		if (version_compare(Database::getAttribute(PDO::ATTR_SERVER_VERSION), '5.7.6', '<')) {
+		if (version_compare(Database::getAttribute(\PDO::ATTR_SERVER_VERSION), '5.7.6', '<')) {
 			if ($p_encrypted) {
 				$stmt = Database::prepare("SET PASSWORD FOR :username@:host = :password");
 			} else {
@@ -95,7 +110,11 @@ class DbManagerMySQL {
 		} else {
 			$stmt = Database::prepare("ALTER USER :username@:host IDENTIFIED BY :password");
 		}
-		Database::pexecute($stmt, array("username" => $username, "host" => $access_host, "password" => $password));
+		Database::pexecute($stmt, array(
+			"username" => $username,
+			"host" => $access_host,
+			"password" => $password
+		));
 	}
 
 	/**
@@ -104,26 +123,30 @@ class DbManagerMySQL {
 	 *
 	 * @param string $dbname
 	 */
-	public function deleteDatabase($dbname = null) {
-
-		if (Database::getAttribute(PDO::ATTR_SERVER_VERSION) < '5.0.2') {
+	public function deleteDatabase($dbname = null)
+	{
+		if (Database::getAttribute(\PDO::ATTR_SERVER_VERSION) < '5.0.2') {
 			// failsafe if user has been deleted manually (requires MySQL 4.1.2+)
-			$stmt = Database::prepare("REVOKE ALL PRIVILEGES, GRANT OPTION FROM `".$dbname."`");
+			$stmt = Database::prepare("REVOKE ALL PRIVILEGES, GRANT OPTION FROM `" . $dbname . "`");
 			Database::pexecute($stmt, array(), false);
 		}
 
 		$host_res_stmt = Database::prepare("
-			SELECT `Host` FROM `mysql`.`user` WHERE `User` = :dbname"
-		);
-		Database::pexecute($host_res_stmt, array('dbname' => $dbname));
+			SELECT `Host` FROM `mysql`.`user` WHERE `User` = :dbname");
+		Database::pexecute($host_res_stmt, array(
+			'dbname' => $dbname
+		));
 
-		while ($host = $host_res_stmt->fetch(PDO::FETCH_ASSOC)) {
+		while ($host = $host_res_stmt->fetch(\PDO::FETCH_ASSOC)) {
 			// as of MySQL 5.0.2 this also revokes privileges. (requires MySQL 4.1.2+)
 			$drop_stmt = Database::prepare("DROP USER IF EXISTS :dbname@:host");
-			Database::pexecute($drop_stmt, array('dbname' => $dbname, 'host' => $host['Host']), false);
+			Database::pexecute($drop_stmt, array(
+				'dbname' => $dbname,
+				'host' => $host['Host']
+			), false);
 		}
 
-		$drop_stmt = Database::prepare("DROP DATABASE IF EXISTS `".$dbname."`");
+		$drop_stmt = Database::prepare("DROP DATABASE IF EXISTS `" . $dbname . "`");
 		Database::pexecute($drop_stmt);
 	}
 
@@ -133,24 +156,30 @@ class DbManagerMySQL {
 	 * @param string $username
 	 * @param string $host
 	 */
-	public function deleteUser($username = null, $host = null) {
-		if (Database::getAttribute(PDO::ATTR_SERVER_VERSION) < '5.0.2') {
+	public function deleteUser($username = null, $host = null)
+	{
+		if (Database::getAttribute(\PDO::ATTR_SERVER_VERSION) < '5.0.2') {
 			// Revoke privileges (only required for MySQL 4.1.2 - 5.0.1)
-			$stmt = Database::prepare("REVOKE ALL PRIVILEGES ON * . * FROM `". $username . "`@`".$host."`");
+			$stmt = Database::prepare("REVOKE ALL PRIVILEGES ON * . * FROM `" . $username . "`@`" . $host . "`");
 			Database::pexecute($stmt);
 		}
 		// as of MySQL 5.0.2 this also revokes privileges. (requires MySQL 4.1.2+)
 		$stmt = Database::prepare("DROP USER :username@:host");
-		Database::pexecute($stmt, array("username" => $username, "host" => $host));
+		Database::pexecute($stmt, array(
+			"username" => $username,
+			"host" => $host
+		));
 	}
 
 	/**
 	 * removes permissions from a user
 	 *
 	 * @param string $username
-	 * @param string $host (unused in mysql)
+	 * @param string $host
+	 *        	(unused in mysql)
 	 */
-	public function disableUser($username = null, $host = null) {
+	public function disableUser($username = null, $host = null)
+	{
 		$stmt = Database::prepare('REVOKE ALL PRIVILEGES, GRANT OPTION FROM `' . $username . '`@`' . $host . '`');
 		Database::pexecute($stmt, array(), false);
 	}
@@ -161,27 +190,30 @@ class DbManagerMySQL {
 	 * @param string $username
 	 * @param string $host
 	 */
-	public function enableUser($username = null, $host = null) {
-		Database::query('GRANT ALL PRIVILEGES ON `' . $username .'`.* TO `' . $username . '`@`' . $host . '`');
+	public function enableUser($username = null, $host = null)
+	{
+		Database::query('GRANT ALL PRIVILEGES ON `' . $username . '`.* TO `' . $username . '`@`' . $host . '`');
 		Database::query('GRANT ALL PRIVILEGES ON `' . str_replace('_', '\_', $username) . '` . * TO `' . $username . '`@`' . $host . '`');
 	}
 
 	/**
 	 * flushes the privileges...pretty obvious eh?
 	 */
-	public function flushPrivileges() {
+	public function flushPrivileges()
+	{
 		Database::query("FLUSH PRIVILEGES");
 	}
 
 	/**
 	 * return an array of all usernames used in that DBMS
 	 *
-	 * @param bool $user_only if false, * will be selected from mysql.user and slightly different array will be generated
-	 *
+	 * @param bool $user_only
+	 *        	if false, * will be selected from mysql.user and slightly different array will be generated
+	 *        	
 	 * @return array
 	 */
-	public function getAllSqlUsers($user_only = true) {
-
+	public function getAllSqlUsers($user_only = true)
+	{
 		if ($user_only == false) {
 			$result_stmt = Database::prepare('SELECT * FROM mysql.user');
 		} else {
@@ -189,14 +221,12 @@ class DbManagerMySQL {
 		}
 		Database::pexecute($result_stmt);
 		$allsqlusers = array();
-		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+		while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 			if ($user_only == false) {
-				if (!isset($allsqlusers[$row['User']])
-						|| !is_array($allsqlusers[$row['User']])
-				) {
+				if (! isset($allsqlusers[$row['User']]) || ! is_array($allsqlusers[$row['User']])) {
 					$allsqlusers[$row['User']] = array(
-							'password' => $row['Password'],
-							'hosts' => array()
+						'password' => $row['Password'],
+						'hosts' => array()
 					);
 				}
 				$allsqlusers[$row['User']]['hosts'][] = $row['Host'];
@@ -206,5 +236,4 @@ class DbManagerMySQL {
 		}
 		return $allsqlusers;
 	}
-
 }
