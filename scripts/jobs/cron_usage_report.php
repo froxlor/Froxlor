@@ -17,13 +17,16 @@
  *
  */
 
+use \Froxlor\Database;
+use \Froxlor\Settings;
+
 $cronlog->logAction(CRON_ACTION, LOG_INFO, 'Web- and Traffic-usage reporting started...');
 $yesterday = time() - (60 * 60 * 24);
 
 /**
  * Initialize the mailingsystem
  */
-$mail = new PHPMailer(true);
+$mail = new \PHPMailer\PHPMailer\PHPMailer(true);
 $mail->CharSet = "UTF-8";
 
 if (Settings::Get('system.mail_use_smtp')) {
@@ -40,7 +43,7 @@ if (Settings::Get('system.mail_use_smtp')) {
 	$mail->Port = Settings::Get('system.mail_smtp_port');
 }
 
-if (PHPMailer::ValidateAddress(Settings::Get('panel.adminmail')) !== false) {
+if (\PHPMailer\PHPMailer\PHPMailer::ValidateAddress(Settings::Get('panel.adminmail')) !== false) {
 	// set return-to address and custom sender-name, see #76
 	$mail->SetFrom(Settings::Get('panel.adminmail'), Settings::Get('panel.adminmail_defname'));
 	if (Settings::Get('panel.adminmail_return') != '') {
@@ -136,7 +139,7 @@ if ((int)Settings::Get('system.report_trafficmax') > 0)
 				$mail->MsgHTML(nl2br($mail_body));
 				$mail->AddAddress($row['email'], $row['firstname'] . ' ' . $row['name']);
 				$mail->Send();
-			} catch(phpmailerException $e) {
+			} catch(\PHPMailer\PHPMailer\Exception $e) {
 				$mailerr_msg = $e->errorMessage();
 				$_mailerror = true;
 			} catch (Exception $e) {
@@ -234,7 +237,7 @@ if ((int)Settings::Get('system.report_trafficmax') > 0)
 				$mail->MsgHTML(nl2br($mail_body));
 				$mail->AddAddress($row['email'], $row['name']);
 				$mail->Send();
-			} catch(phpmailerException $e) {
+			} catch(\PHPMailer\PHPMailer\Exception $e) {
 				$mailerr_msg = $e->errorMessage();
 				$_mailerror = true;
 			} catch (Exception $e) {
@@ -316,7 +319,7 @@ if ((int)Settings::Get('system.report_trafficmax') > 0)
 				$mail->Body = $mail_body;
 				$mail->AddAddress($row['email'], $row['name']);
 				$mail->Send();
-			} catch(phpmailerException $e) {
+			} catch(\PHPMailer\PHPMailer\Exception $e) {
 				$mailerr_msg = $e->errorMessage();
 				$_mailerror = true;
 			} catch (Exception $e) {

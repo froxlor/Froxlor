@@ -17,8 +17,13 @@
  *
  */
 
+use \Froxlor\Database;
+use \Froxlor\Settings;
+use \Froxlor\Api\Commands\Froxlor;
+
 define('AREA', 'admin');
 require './lib/init.php';
+
 
 // get sql-root access data
 Database::needRoot(true);
@@ -337,7 +342,7 @@ elseif ($page == 'testmail')
 			/**
 			 * Initialize the mailingsystem
 			 */
-			$testmail = new PHPMailer(true);
+			$testmail = new \PHPMailer\PHPMailer\PHPMailer(true);
 			$testmail->CharSet = "UTF-8";
 
 			if (Settings::Get('system.mail_use_smtp')) {
@@ -355,7 +360,7 @@ elseif ($page == 'testmail')
 			}
 
 			$_mailerror = false;
-			if (PHPMailer::ValidateAddress(Settings::Get('panel.adminmail')) !== false) {
+			if (\PHPMailer\PHPMailer\PHPMailer::ValidateAddress(Settings::Get('panel.adminmail')) !== false) {
 				// set return-to address and custom sender-name, see #76
 				$testmail->SetFrom(Settings::Get('panel.adminmail'), Settings::Get('panel.adminmail_defname'));
 				if (Settings::Get('panel.adminmail_return') != '') {
@@ -369,7 +374,7 @@ elseif ($page == 'testmail')
 					$testmail->MsgHTML(str_replace("\n", "<br />", $mail_body));
 					$testmail->AddAddress($test_addr);
 					$testmail->Send();
-				} catch(phpmailerException $e) {
+				} catch(\PHPMailer\PHPMailer\Exception $e) {
 					$mailerr_msg = $e->errorMessage();
 					$_mailerror = true;
 				} catch (Exception $e) {

@@ -50,7 +50,7 @@ abstract class ApiCommand extends ApiParameter
 	/**
 	 * mail interface
 	 *
-	 * @var \PHPMailer
+	 * @var \PHPMailer\PHPMailer\PHPMailer
 	 */
 	private $mail = null;
 
@@ -183,14 +183,14 @@ abstract class ApiCommand extends ApiParameter
 	/**
 	 * initialize mail interface so an API wide mail-object is available
 	 *
-	 * @throws \phpmailerException
+	 * @throws \PHPMailer\PHPMailer\Exception
 	 */
 	private function initMail()
 	{
 		/**
 		 * Initialize the mailingsystem
 		 */
-		$this->mail = new \PHPMailer(true);
+		$this->mail = new \PHPMailer\PHPMailer\PHPMailer(true);
 		$this->mail->CharSet = "UTF-8";
 
 		if (\Froxlor\Settings::Get('system.mail_use_smtp')) {
@@ -207,7 +207,7 @@ abstract class ApiCommand extends ApiParameter
 			$this->mail->Port = \Froxlor\Settings::Get('system.mail_smtp_port');
 		}
 
-		if (\PHPMailer::validateAddress(\Froxlor\Settings::Get('panel.adminmail')) !== false) {
+		if (\PHPMailer\PHPMailer\PHPMailer::validateAddress(\Froxlor\Settings::Get('panel.adminmail')) !== false) {
 			// set return-to address and custom sender-name, see #76
 			$this->mail->setFrom(\Froxlor\Settings::Get('panel.adminmail'), \Froxlor\Settings::Get('panel.adminmail_defname'));
 			if (\Froxlor\Settings::Get('panel.adminmail_return') != '') {
@@ -279,7 +279,7 @@ abstract class ApiCommand extends ApiParameter
 	/**
 	 * return mailer instance
 	 *
-	 * @return \PHPMailer
+	 * @return \PHPMailer\PHPMailer\PHPMailer
 	 */
 	protected function mailer()
 	{

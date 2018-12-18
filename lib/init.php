@@ -17,6 +17,9 @@
  *
  */
 
+use \Froxlor\Database;
+use \Froxlor\Settings;
+
 header("Content-Type: text/html; charset=UTF-8");
 
 // prevent Froxlor pages from being cached
@@ -120,7 +123,7 @@ require FROXLOR_INSTALL_DIR.'/lib/tables.inc.php';
 /**
  * Create a new idna converter
  */
-$idna_convert = new idna_convert_wrapper();
+$idna_convert = new \Froxlor\Idna\IdnaWrapper();
 
 /**
  * If Froxlor was called via HTTPS -> enforce it for the next time by settings HSTS header according to settings
@@ -523,7 +526,7 @@ if ($page == '') {
 /**
  * Initialize the mailingsystem
  */
-$mail = new PHPMailer(true);
+$mail = new \PHPMailer\PHPMailer\PHPMailer(true);
 $mail->CharSet = "UTF-8";
 
 if (Settings::Get('system.mail_use_smtp')) {
@@ -540,7 +543,7 @@ if (Settings::Get('system.mail_use_smtp')) {
 	$mail->Port = Settings::Get('system.mail_smtp_port');
 }
 
-if (PHPMailer::ValidateAddress(Settings::Get('panel.adminmail')) !== false) {
+if (\PHPMailer\PHPMailer\PHPMailer::ValidateAddress(Settings::Get('panel.adminmail')) !== false) {
 	// set return-to address and custom sender-name, see #76
 	$mail->SetFrom(Settings::Get('panel.adminmail'), Settings::Get('panel.adminmail_defname'));
 	if (Settings::Get('panel.adminmail_return') != '') {
