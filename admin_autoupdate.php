@@ -20,6 +20,8 @@
 define('AREA', 'admin');
 require './lib/init.php';
 
+use \Froxlor\Http\HttpClient;
+
 // define update-uri
 define('UPDATE_URI', "https://version.froxlor.org/Froxlor/api/" . $version);
 define('RELEASE_URI', "https://autoupdate.froxlor.org/froxlor-{version}.zip");

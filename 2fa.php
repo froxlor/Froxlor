@@ -3,6 +3,10 @@ if (! defined('AREA')) {
 	header("Location: index.php");
 	exit();
 }
+
+use Froxlor\Database as Database;
+use Froxlor\Settings as Settings;
+
 if (Settings::Get('2fa.enabled') != '1') {
 	dynamic_error("2FA not activated");
 }

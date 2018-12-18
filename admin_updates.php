@@ -18,6 +18,9 @@
 define('AREA', 'admin');
 require './lib/init.php';
 
+use Froxlor\Database as Database;
+use Froxlor\Settings as Settings;
+
 if ($page == 'overview') {
 	$log->logAction(ADM_ACTION, LOG_NOTICE, "viewed admin_updates");
 

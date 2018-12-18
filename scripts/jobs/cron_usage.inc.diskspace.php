@@ -14,6 +14,8 @@
  * @package    Cron
  *
  */
+use \Froxlor\Database;
+use \Froxlor\Settings;
 
 if ((int)Settings::Get('system.report_webmax') > 0)
 {
@@ -97,7 +99,7 @@ if ((int)Settings::Get('system.report_webmax') > 0)
 				$mail->MsgHTML(nl2br($mail_body));
 				$mail->AddAddress($row['email'], $row['name']);
 				$mail->Send();
-			} catch(phpmailerException $e) {
+			} catch(\PHPMailer\PHPMailer\Exception $e) {
 				$mailerr_msg = $e->errorMessage();
 				$_mailerror = true;
 			} catch (Exception $e) {
@@ -187,7 +189,7 @@ if ((int)Settings::Get('system.report_webmax') > 0)
 				$mail->MsgHTML(nl2br($mail_body));
 				$mail->AddAddress($row['email'], $row['name']);
 				$mail->Send();
-			} catch(phpmailerException $e) {
+			} catch(\PHPMailer\PHPMailer\Exception $e) {
 				$mailerr_msg = $e->errorMessage();
 				$_mailerror = true;
 			} catch (Exception $e) {

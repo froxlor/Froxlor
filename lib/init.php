@@ -17,6 +17,8 @@
  *
  */
 
+require __DIR__ . '/vendor/autoload.php';
+
 use \Froxlor\Database;
 use \Froxlor\Settings;
 

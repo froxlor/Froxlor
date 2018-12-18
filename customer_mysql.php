@@ -20,6 +20,10 @@
 define('AREA', 'customer');
 require './lib/init.php';
 
+use Froxlor\Database as Database;
+use Froxlor\Settings as Settings;
+use Froxlor\Api\Commands\Mysqls as Mysqls;
+
 // redirect if this customer page is hidden via settings
 if (Settings::IsInList('panel.customer_hide_options','mysql')) {
 	redirectTo('customer_index.php');

@@ -16,18 +16,16 @@
  *
  */
 
+require __DIR__ . '/vendor/autoload.php';
+
 // Load the user settings
-define('FROXLOR_INSTALL_DIR', dirname(dirname(__FILE__)));
 if (! file_exists('./userdata.inc.php')) {
 	die();
 }
 require './userdata.inc.php';
 require './tables.inc.php';
-require './classes/database/class.Database.php';
-require './classes/settings/class.Settings.php';
 require './functions/validate/function.validate_ip.php';
 require './functions/validate/function.validateDomain.php';
-require './classes/cURL/class.HttpClient.php';
 
 if (isset($_POST['action'])) {
 	$action = $_POST['action'];
@@ -39,7 +37,7 @@ if (isset($_POST['action'])) {
 
 if ($action == "newsfeed") {
 	if (isset($_GET['role']) && $_GET['role'] == "customer") {
-		$feed = Settings::Get("customer.news_feed_url");
+		$feed = \Froxlor\Settings::Get("customer.news_feed_url");
 	} else {
 		$feed = "https://inside.froxlor.org/news/";
 	}
@@ -50,7 +48,7 @@ if ($action == "newsfeed") {
 	}
 	
 	if (function_exists('curl_version')) {
-		$output = HttpClient::urlGet($feed);
+		$output = \Froxlor\Http\HttpClient::urlGet($feed);
 		$news = simplexml_load_string(trim($output));
 	} else {
 		outputItem("Newsfeed not available due to missing php-curl extension", "Please install the php-curl extension in order to view our newsfeed.");

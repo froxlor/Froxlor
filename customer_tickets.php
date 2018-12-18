@@ -20,6 +20,8 @@
 define('AREA', 'customer');
 require './lib/init.php';
 
+use Froxlor\Database as Database;
+use Froxlor\Settings as Settings;
 
 if (isset($_POST['id'])) {
 

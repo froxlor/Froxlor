@@ -20,6 +20,12 @@
 define('AREA', 'customer');
 require './lib/init.php';
 
+use Froxlor\Database as Database;
+use Froxlor\Settings as Settings;
+use Froxlor\Api\Commands\Emails as Emails;
+use Froxlor\Api\Commands\EmailAccounts as EmailAccounts;
+use Froxlor\Api\Commands\EmailForwarders as EmailForwarders;
+
 // redirect if this customer page is hidden via settings
 if (Settings::IsInList('panel.customer_hide_options','email')) {
 	redirectTo('customer_index.php');

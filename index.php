@@ -19,6 +19,10 @@
 define('AREA', 'login');
 require './lib/init.php';
 
+use \Froxlor\Database;
+use \Froxlor\Settings;
+use \Froxlor\FroxlorLogger;
+
 if ($action == '') {
 	$action = 'login';
 }
@@ -285,7 +289,7 @@ if ($action == '2fa_entercode') {
 					$mail->MsgHTML(str_replace("\n", "<br />", $mail_body));
 					$mail->AddAddress($userinfo['email'], getCorrectUserSalutation($userinfo));
 					$mail->Send();
-				} catch (phpmailerException $e) {
+				} catch (\PHPMailer\PHPMailer\Exception $e) {
 					$mailerr_msg = $e->errorMessage();
 					$_mailerror = true;
 				} catch (Exception $e) {
@@ -514,7 +518,7 @@ if ($action == 'forgotpwd') {
 						$mail->MsgHTML(str_replace("\n", "<br />", $mail_body));
 						$mail->AddAddress($user['email'], getCorrectUserSalutation($user));
 						$mail->Send();
-					} catch (phpmailerException $e) {
+					} catch (\PHPMailer\PHPMailer\Exception $e) {
 						$mailerr_msg = $e->errorMessage();
 						$_mailerror = true;
 					} catch (Exception $e) {

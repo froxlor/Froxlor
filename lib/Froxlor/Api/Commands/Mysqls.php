@@ -149,7 +149,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 					$this->mailer()->msgHTML(str_replace("\n", "<br />", $mail_body));
 					$this->mailer()->addAddress($userinfo['email'], getCorrectUserSalutation($userinfo));
 					$this->mailer()->send();
-				} catch (\phpmailerException $e) {
+				} catch (\PHPMailer\PHPMailer\Exception $e) {
 					$mailerr_msg = $e->errorMessage();
 					$_mailerror = true;
 				} catch (\Exception $e) {

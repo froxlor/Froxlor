@@ -717,7 +717,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 								'company' => $company
 							)));
 							$this->mailer()->send();
-						} catch (\phpmailerException $e) {
+						} catch (\PHPMailer\PHPMailer\Exception $e) {
 							$mailerr_msg = $e->errorMessage();
 							$_mailerror = true;
 						} catch (\Exception $e) {

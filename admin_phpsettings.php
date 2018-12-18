@@ -19,6 +19,10 @@
 define('AREA', 'admin');
 require './lib/init.php';
 
+use Froxlor\Database as Database;
+use Froxlor\Api\Commands\PhpSettings as PhpSettings;
+use Froxlor\Api\Commands\FpmDaemons as FpmDaemons;
+
 if (isset($_POST['id'])) {
 	$id = intval($_POST['id']);
 } elseif (isset($_GET['id'])) {

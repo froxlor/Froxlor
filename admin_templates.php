@@ -20,6 +20,9 @@
 define('AREA', 'admin');
 require './lib/init.php';
 
+use Froxlor\Database as Database;
+use Froxlor\Settings as Settings;
+
 if (isset($_POST['subjectid'])) {
 	$subjectid = intval($_POST['subjectid']);
 	$mailbodyid = intval($_POST['mailbodyid']);

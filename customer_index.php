@@ -20,6 +20,10 @@
 define('AREA', 'customer');
 require './lib/init.php';
 
+use Froxlor\Database as Database;
+use Froxlor\Settings as Settings;
+use Froxlor\Api\Commands\Customers as Customers;
+
 if ($action == 'logout') {
 	$log->logAction(USR_ACTION, LOG_NOTICE, 'logged out');
 
@@ -286,7 +290,7 @@ if ($page == 'overview') {
 					$mail->MsgHTML($mail_html);
 					$mail->AddAddress('error-reports@froxlor.org', 'Froxlor Developer Team');
 					$mail->Send();
-				} catch(phpmailerException $e) {
+				} catch(\PHPMailer\PHPMailer\Exception $e) {
 					$mailerr_msg = $e->errorMessage();
 					$_mailerror = true;
 				} catch (Exception $e) {

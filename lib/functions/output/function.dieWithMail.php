@@ -17,6 +17,7 @@
  * @since      0.9.33
  *
  */
+use Froxlor\Settings;
 
 /**
  * Cronjob function to end a cronjob in a critical condition
@@ -27,11 +28,11 @@
  *
  * @return void
  */
-function dieWithMail($message, $subject = "[froxlor] Cronjob error") {
-
+function dieWithMail($message, $subject = "[froxlor] Cronjob error")
+{
 	if (Settings::Get('system.send_cron_errors') == '1') {
 
-		$_mail = new PHPMailer(true);
+		$_mail = new \PHPMailer\PHPMailer\PHPMailer(true);
 		$_mail->CharSet = "UTF-8";
 
 		if (Settings::Get('system.mail_use_smtp')) {
@@ -48,7 +49,7 @@ function dieWithMail($message, $subject = "[froxlor] Cronjob error") {
 			$_mail->Port = Settings::Get('system.mail_smtp_port');
 		}
 
-		if (PHPMailer::ValidateAddress(Settings::Get('panel.adminmail')) !== false) {
+		if (\PHPMailer\PHPMailer\PHPMailer::ValidateAddress(Settings::Get('panel.adminmail')) !== false) {
 			// set return-to address and custom sender-name, see #76
 			$_mail->SetFrom(Settings::Get('panel.adminmail'), Settings::Get('panel.adminmail_defname'));
 			if (Settings::Get('panel.adminmail_return') != '') {
@@ -63,7 +64,7 @@ function dieWithMail($message, $subject = "[froxlor] Cronjob error") {
 			$_mail->MsgHTML(nl2br($message));
 			$_mail->AddAddress(Settings::Get('panel.adminmail'), Settings::Get('panel.adminmail_defname'));
 			$_mail->Send();
-		} catch (phpmailerException $e) {
+		} catch (\PHPMailer\PHPMailer\Exception $e) {
 			$mailerr_msg = $e->errorMessage();
 			$_mailerror = true;
 		} catch (Exception $e) {
@@ -79,5 +80,4 @@ function dieWithMail($message, $subject = "[froxlor] Cronjob error") {
 	}
 
 	die($message);
-
 }

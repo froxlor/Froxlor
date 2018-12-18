@@ -18,6 +18,9 @@
 define('AREA', 'admin');
 require './lib/init.php';
 
+use Froxlor\Database as Database;
+use Froxlor\Api\Commands\Cronjobs as Cronjobs;
+
 if (isset($_POST['id'])) {
 	$id = intval($_POST['id']);
 } elseif(isset($_GET['id'])) {

@@ -20,6 +20,10 @@
 define('AREA', 'customer');
 require './lib/init.php';
 
+use Froxlor\Database as Database;
+use Froxlor\Settings as Settings;
+use Froxlor\Api\Commands\Ftps as Ftps;
+
 // redirect if this customer page is hidden via settings
 if (Settings::IsInList('panel.customer_hide_options','ftp')) {
 	redirectTo('customer_index.php');

@@ -19,6 +19,9 @@ if (! defined('AREA')) {
  *
  */
 
+use Froxlor\Database as Database;
+use Froxlor\Api\Commands\DomainZones as DomainZones;
+
 // This file is being included in admin_domains and customer_domains
 // and therefore does not need to require lib/init.php
 

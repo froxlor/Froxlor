@@ -1,4 +1,7 @@
-<?php if (!defined('MASTER_CRONJOB')) die('You cannot access this file directly!');
+<?php
+
+if (! defined('MASTER_CRONJOB'))
+	die('You cannot access this file directly!');
 
 /**
  * This file is part of the Froxlor project.
@@ -9,37 +12,32 @@
  * file that was distributed with this source code. You can also view the
  * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
- * @copyright  (c) the authors
- * @author     Florian Lippert <flo@syscp.org> (2003-2009)
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Cron
- *
+ * @copyright (c) the authors
+ * @author Florian Lippert <flo@syscp.org> (2003-2009)
+ * @author Froxlor team <team@froxlor.org> (2010-)
+ * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package Cron
+ *         
  */
 
-if (@php_sapi_name() != 'cli'
-	&& @php_sapi_name() != 'cgi'
-	&& @php_sapi_name() != 'cgi-fcgi'
-) {
+if (@php_sapi_name() != 'cli' && @php_sapi_name() != 'cgi' && @php_sapi_name() != 'cgi-fcgi') {
 	die('This script will only work in the shell.');
 }
 
+require __DIR__ . '/vendor/autoload.php';
+
 // ensure that default timezone is set
-if (function_exists("date_default_timezone_set")
-	&& function_exists("date_default_timezone_get")
-) {
+if (function_exists("date_default_timezone_set") && function_exists("date_default_timezone_get")) {
 	@date_default_timezone_set(@date_default_timezone_get());
 }
 
 $basename = basename($_SERVER['PHP_SELF'], '.php');
 $crontype = "";
 if (isset($argv) && is_array($argv) && count($argv) > 1) {
-	for($x=1;$x < count($argv);$x++) {
-		if (substr(strtolower($argv[$x]), 0, 2) == '--'
-			&& strlen($argv[$x]) > 3
-		) {
+	for ($x = 1; $x < count($argv); $x ++) {
+		if (substr(strtolower($argv[$x]), 0, 2) == '--' && strlen($argv[$x]) > 3) {
 			$crontype = substr(strtolower($argv[$x]), 2);
-			$basename .= "-".$crontype;
+			$basename .= "-" . $crontype;
 			break;
 		}
 	}
@@ -54,14 +52,13 @@ $lockfile = $lockdir . $lockfName;
 // froxlor installation isn't in /var/www/froxlor
 define('FROXLOR_INSTALL_DIR', dirname(dirname(__FILE__)));
 
-
 // create and open the lockfile!
 $keepLockFile = false;
 $debugHandler = fopen($lockfile, 'w');
 fwrite($debugHandler, 'Setting Lockfile to ' . $lockfile . "\n");
 fwrite($debugHandler, 'Setting Froxlor installation path to ' . FROXLOR_INSTALL_DIR . "\n");
 
-if (!file_exists(FROXLOR_INSTALL_DIR . '/lib/userdata.inc.php')) {
+if (! file_exists(FROXLOR_INSTALL_DIR . '/lib/userdata.inc.php')) {
 	die("Froxlor does not seem to be installed yet - skipping cronjob");
 }
 
@@ -70,11 +67,15 @@ require FROXLOR_INSTALL_DIR . '/lib/userdata.inc.php';
 fwrite($debugHandler, 'Userdatas included' . "\n");
 
 // Legacy sql-root-information
-if (isset($sql['root_user'])
-	&& isset($sql['root_password'])
-	&& (!isset($sql_root) || !is_array($sql_root))
-) {
-	$sql_root = array(0 => array('caption' => 'Default', 'host' => $sql['host'], 'user' => $sql['root_user'], 'password' => $sql['root_password']));
+if (isset($sql['root_user']) && isset($sql['root_password']) && (! isset($sql_root) || ! is_array($sql_root))) {
+	$sql_root = array(
+		0 => array(
+			'caption' => 'Default',
+			'host' => $sql['host'],
+			'user' => $sql['root_user'],
+			'password' => $sql['root_password']
+		)
+	);
 	unset($sql['root_user']);
 	unset($sql['root_password']);
 }
@@ -82,14 +83,14 @@ if (isset($sql['root_user'])
 // Includes the Functions
 require FROXLOR_INSTALL_DIR . '/lib/functions.php';
 
-//Includes the MySQL-Tabledefinitions etc.
+// Includes the MySQL-Tabledefinitions etc.
 require FROXLOR_INSTALL_DIR . '/lib/tables.inc.php';
 fwrite($debugHandler, 'Table definitions included' . "\n");
 
 // try database connection, it will throw
 // and exception itself if failed
 try {
-	Database::query("SELECT 1");
+	\Froxlor\Database\Database::query("SELECT 1");
 } catch (Exception $e) {
 	// Do not proceed further if no database connection could be established
 	fclose($debugHandler);
@@ -104,9 +105,7 @@ $lockDirHandle = opendir($lockdir);
 
 while ($fName = readdir($lockDirHandle)) {
 
-	if ($lockFilename == substr($fName, 0, strlen($lockFilename))
-			&& $lockfName != $fName
-	) {
+	if ($lockFilename == substr($fName, 0, strlen($lockFilename)) && $lockfName != $fName) {
 		// Check if last run jailed out with an exception
 		$croncontent = file($lockdir . $fName);
 		$lastline = $croncontent[(count($croncontent) - 1)];
@@ -119,29 +118,28 @@ while ($fName = readdir($lockDirHandle)) {
 
 		// Check if cron is running or has died.
 		$check_pid = substr(strrchr($fName, "-"), 1);
-		system("kill -CHLD " . (int)$check_pid . " 1> /dev/null 2> /dev/null", $check_pid_return);
+		system("kill -CHLD " . (int) $check_pid . " 1> /dev/null 2> /dev/null", $check_pid_return);
 
 		if ($check_pid_return == 1) {
-			// Result:      Existing lockfile/pid isn't running
-			//              Most likely it has died
+			// Result: Existing lockfile/pid isn't running
+			// Most likely it has died
 			//
-			// Action:      Remove it and continue
+			// Action: Remove it and continue
 			//
 			fwrite($debugHandler, 'Previous cronjob didn\'t exit clean. PID: ' . $check_pid . "\n");
 			fwrite($debugHandler, 'Removing lockfile: ' . $lockdir . $fName . "\n");
 			@unlink($lockdir . $fName);
-
 		} else {
-			// Result:      A Cronscript with this pid
-			//              is still running
-			// Action:      remove my own Lock and die
+			// Result: A Cronscript with this pid
+			// is still running
+			// Action: remove my own Lock and die
 			//
 			// close the current lockfile
 			fclose($debugHandler);
 
 			// ... and delete it
 			unlink($lockfile);
-			dieWithMail('There is already a Cronjob for '.$crontype.' in progress. Exiting...' . "\n" . 'Take a look into the contents of ' . $lockdir . $lockFilename . '* for more information!' . "\n");
+			dieWithMail('There is already a Cronjob for ' . $crontype . ' in progress. Exiting...' . "\n" . 'Take a look into the contents of ' . $lockdir . $lockFilename . '* for more information!' . "\n");
 		}
 	}
 }
@@ -150,51 +148,48 @@ while ($fName = readdir($lockDirHandle)) {
  * if using fcgid or fpm for froxlor-vhost itself, we have to check
  * whether the permission of the files are still correct
  */
-fwrite($debugHandler, 'Checking froxlor file permissions'."\n");
+fwrite($debugHandler, 'Checking froxlor file permissions' . "\n");
 $_mypath = makeCorrectDir(FROXLOR_INSTALL_DIR);
 
-if (((int)Settings::Get('system.mod_fcgid') == 1 && (int)Settings::Get('system.mod_fcgid_ownvhost') == 1)
-		|| ((int)Settings::Get('phpfpm.enabled') == 1 && (int)Settings::Get('phpfpm.enabled_ownvhost') == 1)
-) {
-	$user = Settings::Get('system.mod_fcgid_httpuser');
-	$group = Settings::Get('system.mod_fcgid_httpgroup');
+if (((int) \Froxlor\Settings::Get('system.mod_fcgid') == 1 && (int) \Froxlor\Settings::Get('system.mod_fcgid_ownvhost') == 1) || ((int) \Froxlor\Settings::Get('phpfpm.enabled') == 1 && (int) \Froxlor\Settings::Get('phpfpm.enabled_ownvhost') == 1)) {
+	$user = \Froxlor\Settings::Get('system.mod_fcgid_httpuser');
+	$group = \Froxlor\Settings::Get('system.mod_fcgid_httpgroup');
 
-	if (Settings::Get('phpfpm.enabled') == 1) {
-		$user = Settings::Get('phpfpm.vhost_httpuser');
-		$group = Settings::Get('phpfpm.vhost_httpgroup');
+	if (\Froxlor\Settings::Get('phpfpm.enabled') == 1) {
+		$user = \Froxlor\Settings::Get('phpfpm.vhost_httpuser');
+		$group = \Froxlor\Settings::Get('phpfpm.vhost_httpgroup');
 	}
 	// all the files and folders have to belong to the local user
 	// now because we also use fcgid for our own vhost
 	safe_exec('chown -R ' . $user . ':' . $group . ' ' . escapeshellarg($_mypath));
 } else {
 	// back to webserver permission
-	$user = Settings::Get('system.httpuser');
-	$group = Settings::Get('system.httpgroup');
+	$user = \Froxlor\Settings::Get('system.httpuser');
+	$group = \Froxlor\Settings::Get('system.httpgroup');
 	safe_exec('chown -R ' . $user . ':' . $group . ' ' . escapeshellarg($_mypath));
 }
 
 // Initialize logging
-$cronlog = FroxlorLogger::getInstanceOf(array('loginname' => 'cronjob'));
+$cronlog = \Froxlor\FroxlorLogger::getInstanceOf(array(
+	'loginname' => 'cronjob'
+));
 fwrite($debugHandler, 'Logger has been included' . "\n");
 
-if (hasUpdates($version) || hasDbUpdates($dbversion)
-) {
-	if (Settings::Get('system.cron_allowautoupdate') == null
-		|| Settings::Get('system.cron_allowautoupdate') == 0
-	) {
+if (hasUpdates($version) || hasDbUpdates($dbversion)) {
+	if (\Froxlor\Settings::Get('system.cron_allowautoupdate') == null || \Froxlor\Settings::Get('system.cron_allowautoupdate') == 0) {
 		/**
 		 * Do not proceed further if the Database version is not the same as the script version
 		 */
 		fclose($debugHandler);
 		unlink($lockfile);
 		$errormessage = "Version of file doesn't match version of database. Exiting...\n\n";
-		$errormessage.= "Possible reason: Froxlor update\n";
-		$errormessage.= "Information: Current version in database: ".Settings::Get('panel.version')." (DB: ".Settings::Get('panel.db_version').") - version of Froxlor files: ".$version." (DB: ".$dbversion.")\n";
-		$errormessage.= "Solution: Please visit your Foxlor admin interface for further information.\n";
+		$errormessage .= "Possible reason: Froxlor update\n";
+		$errormessage .= "Information: Current version in database: " . \Froxlor\Settings::Get('panel.version') . " (DB: " . \Froxlor\Settings::Get('panel.db_version') . ") - version of Froxlor files: " . $version . " (DB: " . $dbversion . ")\n";
+		$errormessage .= "Solution: Please visit your Foxlor admin interface for further information.\n";
 		dieWithMail($errormessage);
 	}
 
-	if (Settings::Get('system.cron_allowautoupdate') == 1) {
+	if (\Froxlor\Settings::Get('system.cron_allowautoupdate') == 1) {
 		/**
 		 * let's walk the walk - do the dangerous shit
 		 */
@@ -206,7 +201,7 @@ if (hasUpdates($version) || hasDbUpdates($dbversion)
 		fwrite($debugHandler, "*** WARNING *** - If you don't want this to happen in the future consider removing the --allow-autoupdate flag from the cronjob\n");
 		// including update procedures
 		define('_CRON_UPDATE', 1);
-		include_once FROXLOR_INSTALL_DIR.'/install/updatesql.php';
+		include_once FROXLOR_INSTALL_DIR . '/install/updatesql.php';
 		// pew - everything went better than expected
 		$cronlog->logAction(CRON_ACTION, LOG_WARNING, 'Automatic update done - you should check your settings to be sure everything is fine');
 		fwrite($debugHandler, '*** WARNING *** - Automatic update done - you should check your settings to be sure everything is fine' . "\n");
@@ -215,7 +210,7 @@ if (hasUpdates($version) || hasDbUpdates($dbversion)
 
 fwrite($debugHandler, 'Froxlor version and database version are correct' . "\n");
 
-$cronscriptDebug = (Settings::Get('system.debug_cron') == '1') ? true : false;
+$cronscriptDebug = (\Froxlor\Settings::Get('system.debug_cron') == '1') ? true : false;
 
 // Create a new idna converter
-$idna_convert = new idna_convert_wrapper();
+$idna_convert = new \Froxlor\Idna\IdnaWrapper();

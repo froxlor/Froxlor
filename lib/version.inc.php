@@ -16,10 +16,10 @@
  */
 
 // Main version variable
-$version = '0.10.0';
+$version = \Froxlor\Froxlor::VERSION;
 
 // Database version (YYYYMMDDC where C is a daily counter)
-$dbversion = '201812180';
+$dbversion = \Froxlor\Froxlor::DBVERSION;
 
 // Distribution branding-tag (used for Debian etc.)
-$branding = '';
+$branding = \Froxlor\Froxlor::BRANDING;

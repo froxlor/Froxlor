@@ -1,5 +1,9 @@
 <?php
 
+use \Froxlor\Database;
+use \Froxlor\Settings;
+use \Froxlor\FroxlorLogger;
+
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -325,7 +329,7 @@ class ticket
 				$mail->MsgHTML(str_replace("\n", "<br />", $mail_body));
 				$mail->AddAddress($usr['email'], $usr['firstname'] . ' ' . $usr['name']);
 				$mail->Send();
-			} catch (phpmailerException $e) {
+			} catch (\PHPMailer\PHPMailer\Exception $e) {
 				$mailerr_msg = $e->errorMessage();
 				$_mailerror = true;
 			} catch (Exception $e) {
@@ -357,7 +361,7 @@ class ticket
 				$mail->MsgHTML(str_replace("\n", "<br />", $mail_body));
 				$mail->AddAddress($admin['email'], $admin['name']);
 				$mail->Send();
-			} catch (phpmailerException $e) {
+			} catch (\PHPMailer\PHPMailer\Exception $e) {
 				$mailerr_msg = $e->errorMessage();
 				$_mailerror = true;
 			} catch (Exception $e) {
