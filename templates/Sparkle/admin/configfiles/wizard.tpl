@@ -59,7 +59,7 @@ $header
 								<td colspan="2" align="center"><input class="bottom" type="submit" value="{$lng['panel']['next']}" /></td>
 							</tr>
 							<tr>
-								<if Settings::Get('panel.is_configured') == '0'>
+								<if \Froxlor\Settings::Get('panel.is_configured') == '0'>
 								<td colspan="2" align="center">{$lng['panel']['done_configuring']}:<br><br><a href="{$linker->getLink(array('section' => 'configfiles', 'page' => 'overview', 'action' => 'setconfigured'))}" class="btnlink">{$lng['panel']['ihave_configured']}</a><br><br></td>
 								<else>
 								<td colspan="2" align="center">{$lng['panel']['system_is_configured']}</td>

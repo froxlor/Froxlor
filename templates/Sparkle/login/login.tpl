@@ -50,7 +50,7 @@ $header
 			</form>
 
 			<aside>
-				<if Settings::Get('panel.allow_preset') == '1'>
+				<if \Froxlor\Settings::Get('panel.allow_preset') == '1'>
 					<a href="$filename?action=forgotpwd">{$lng['login']['forgotpwd']}</a>
 				<else>
 					&nbsp;

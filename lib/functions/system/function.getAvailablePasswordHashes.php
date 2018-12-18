@@ -23,24 +23,24 @@
  */
 function getAvailablePasswordHashes()
 {
-    global $lng;
-    
-    // get available pwd-hases
-    $available_pwdhashes = array(
-        0 => $lng['serversettings']['systemdefault']
-    );
-    if (defined('CRYPT_MD5') && CRYPT_MD5 == 1) {
-        $available_pwdhashes[1] = 'MD5';
-    }
-    if (defined('CRYPT_BLOWFISH') && CRYPT_BLOWFISH == 1) {
-        $available_pwdhashes[2] = 'BLOWFISH';
-    }
-    if (defined('CRYPT_SHA256') && CRYPT_SHA256 == 1) {
-        $available_pwdhashes[3] = 'SHA-256';
-    }
-    if (defined('CRYPT_SHA512') && CRYPT_SHA512 == 1) {
-        $available_pwdhashes[4] = 'SHA-512';
-    }
-    
-    return $available_pwdhashes;
+	global $lng;
+
+	// get available pwd-hases
+	$available_pwdhashes = array(
+		0 => $lng['serversettings']['systemdefault']
+	);
+	if (defined('CRYPT_MD5') && CRYPT_MD5 == 1) {
+		$available_pwdhashes[1] = 'MD5';
+	}
+	if (defined('CRYPT_BLOWFISH') && CRYPT_BLOWFISH == 1) {
+		$available_pwdhashes[2] = 'BLOWFISH';
+	}
+	if (defined('CRYPT_SHA256') && CRYPT_SHA256 == 1) {
+		$available_pwdhashes[3] = 'SHA-256';
+	}
+	if (defined('CRYPT_SHA512') && CRYPT_SHA512 == 1) {
+		$available_pwdhashes[4] = 'SHA-512';
+	}
+
+	return $available_pwdhashes;
 }

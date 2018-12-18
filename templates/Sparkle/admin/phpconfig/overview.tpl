@@ -19,7 +19,7 @@ $header
 					<tr>
 						<th>{$lng['admin']['phpsettings']['description']}</th>
 						<th>{$lng['admin']['phpsettings']['activedomains']}</th>
-						<if Settings::Get('phpfpm.enabled') == '1'>
+						<if \Froxlor\Settings::Get('phpfpm.enabled') == '1'>
 							<th>{$lng['admin']['phpsettings']['fpmdesc']}</th>
 						<else>
 							<th>{$lng['admin']['phpsettings']['binary']}</th>

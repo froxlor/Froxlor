@@ -71,7 +71,7 @@ $header
 						<td><em>{EMAIL}</em></td>
 						<td>{$lng['admin']['templates']['EMAIL']}</td>
 					</tr>
-					<if Settings::Get('panel.sendalternativemail') == 1>
+					<if \Froxlor\Settings::Get('panel.sendalternativemail') == 1>
 					<tr>
 						<td colspan="2">
 							<strong>{$lng['admin']['templates']['pop_success_alternative']}</strong>

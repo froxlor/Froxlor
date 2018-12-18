@@ -1,7 +1,7 @@
 <tr class="top">
 	<td><strong>{$row['description']}</strong></td>
 	<td>{$domains}<if 0 < $subdomains_count><if !empty($domains)>+ </if>{$subdomains_count} {$lng['customer']['subdomains']}</if></td>
-	<if Settings::Get('phpfpm.enabled') == '1'>
+	<if \Froxlor\Settings::Get('phpfpm.enabled') == '1'>
 		<td>{$row['fpmdesc']}</td>
 	<else>
 		<td>{$row['binary']}</td>

@@ -30,7 +30,7 @@
 							<th>{$lng['login']['username']}&nbsp;{$arrowcode['username']}</th>
 							<th>{$lng['panel']['ftpdesc']}&nbsp;{$arrowcode['description']}</th>
 							<th>{$lng['panel']['path']}&nbsp;{$arrowcode['homedir']}</th>
-							<if Settings::Get('system.allow_customer_shell') == '1' >
+							<if \Froxlor\Settings::Get('system.allow_customer_shell') == '1' >
 							<th>{$lng['panel']['shell']}</th>
 							</if>
 							<th>{$lng['panel']['options']}</th>

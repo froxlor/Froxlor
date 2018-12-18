@@ -31,15 +31,15 @@ $header
 		</tbody>
 	</table>
 	<div id="charts" class="hidden">
-		<if !Settings::IsInList('panel.customer_hide_options','traffic.http')>
+		<if !\Froxlor\Settings::IsInList('panel.customer_hide_options','traffic.http')>
 			<h3>HTTP {$lng['admin']['traffic']} ({$lng['traffic']['months']['total']} {$traffic_complete['http']})</h3>
 			<div id="httpchart" class="trafficchart"></div>
 		</if>
-		<if !Settings::IsInList('panel.customer_hide_options','traffic.ftp')>
+		<if !\Froxlor\Settings::IsInList('panel.customer_hide_options','traffic.ftp')>
 			<h3>FTP {$lng['admin']['traffic']} ({$lng['traffic']['months']['total']} {$traffic_complete['ftp']})</h3>
 			<div id="ftpchart" class="trafficchart"></div>
 		</if>
-		<if !Settings::IsInList('panel.customer_hide_options','traffic.mail')>
+		<if !\Froxlor\Settings::IsInList('panel.customer_hide_options','traffic.mail')>
 			<h3>Mail {$lng['admin']['traffic']} ({$lng['traffic']['months']['total']} {$traffic_complete['mail']})</h3>
 			<div id="mailchart" class="trafficchart"></div>
 		</if>

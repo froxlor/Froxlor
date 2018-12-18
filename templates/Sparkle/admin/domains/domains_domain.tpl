@@ -26,7 +26,7 @@
 		<a href="{$linker->getLink(array('section' => 'domains', 'page' => 'logfiles', 'domain_id' => $row['id']))}">
 			<img src="templates/{$theme}/assets/img/icons/view.png" alt="{$lng['panel']['viewlogs']}" title="{$lng['panel']['viewlogs']}" />
 		</a>
-		<if $row['isbinddomain'] == '1' && Settings::Get('system.bind_enable') == '1' && Settings::Get('system.dnsenabled') == '1'>
+		<if $row['isbinddomain'] == '1' && \Froxlor\Settings::Get('system.bind_enable') == '1' && \Froxlor\Settings::Get('system.dnsenabled') == '1'>
 			&nbsp;<a href="{$linker->getLink(array('section' => 'domains', 'page' => 'domaindnseditor', 'domain_id' => $row['id']))}">
 				<img src="templates/{$theme}/assets/img/icons/dns_edit.png" alt="{$lng['dnseditor']['edit']}" title="{$lng['dnseditor']['edit']}" />
 			</a>
@@ -34,7 +34,7 @@
 		<if $row['letsencrypt'] == '1'>
 			&nbsp;<img src="templates/{$theme}/assets/img/icons/ssl_letsencrypt.png" alt="{$lng['panel']['letsencrypt']}" title="{$lng['panel']['letsencrypt']}" />
 		</if>
-		<if !(isset($row['domainaliasid']) && $row['domainaliasid'] != 0) && $row['id'] != Settings::Get('system.hostname_id')>
+		<if !(isset($row['domainaliasid']) && $row['domainaliasid'] != 0) && $row['id'] != \Froxlor\Settings::Get('system.hostname_id')>
 			<if !(isset($row['standardsubdomain']) && $row['standardsubdomain'] == $row['id'])>
 				&nbsp;<a href="{$linker->getLink(array('section' => 'domains', 'page' => $page, 'action' => 'delete', 'id' => $row['id']))}">
 					<img src="templates/{$theme}/assets/img/icons/delete.png" alt="{$lng['panel']['delete']}" title="{$lng['panel']['delete']}" />

@@ -33,7 +33,7 @@
 				<img src="templates/{$theme}/assets/img/icons/delete.png" alt="{$lng['panel']['delete']}" title="{$lng['panel']['delete']}" />
 			</a>&nbsp;
 		</if>
-		<if $row['isbinddomain'] == '1' && $userinfo['dnsenabled'] == '1' && $row['caneditdomain'] == '1' && Settings::Get('system.bind_enable') == '1' && Settings::Get('system.dnsenabled') == '1'>
+		<if $row['isbinddomain'] == '1' && $userinfo['dnsenabled'] == '1' && $row['caneditdomain'] == '1' && \Froxlor\Settings::Get('system.bind_enable') == '1' && \Froxlor\Settings::Get('system.dnsenabled') == '1'>
 			<a href="{$linker->getLink(array('section' => 'domains', 'page' => 'domaindnseditor', 'domain_id' => $row['id']))}">
 				<img src="templates/{$theme}/assets/img/icons/dns_edit.png" alt="{$lng['dnseditor']['edit']}" title="{$lng['dnseditor']['edit']}" />
 			</a>&nbsp;
