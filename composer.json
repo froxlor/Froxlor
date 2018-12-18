@@ -41,7 +41,7 @@
 		"ext-curl" : "*",
 		"ext-json" : "*",
 		"ext-openssl": "*"
-    },
+        },
 	"require-dev" : {
 		"phpunit/phpunit" : "6.5.13",
 		"pdepend/pdepend" : "2.5.0",
@@ -58,5 +58,12 @@
 	"suggest" : {
 		"ext-bcmath" : "*",
 		"ext-zip" : "*"
+	},
+	"autoload" : {
+		"psr-4" : {
+			"Froxlor\\" : [
+				"lib/Froxlor"
+			]
+		}
 	}
 }
