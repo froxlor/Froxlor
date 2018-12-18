@@ -17,6 +17,9 @@
  *
  */
 
+use \Froxlor\Database;
+use \Froxlor\Settings;
+
 // Check Traffic-Lock
 if (function_exists('pcntl_fork') && !defined('CRON_NOFORK_FLAG')) {
 	$TrafficLock = makeCorrectFile(dirname($lockfile)."/froxlor_cron_traffic.lock");
@@ -154,7 +157,7 @@ if (Settings::Get('system.diskquota_enabled')) {
  * MAIL-Traffic
  */
 if (Settings::Get("system.mailtraffic_enabled")) {
-	$mailTrafficCalc = new MailLogParser(Settings::Get("system.last_traffic_run"));
+	$mailTrafficCalc = new \Froxlor\MailLogParser(Settings::Get("system.last_traffic_run"));
 }
 
 $result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_CUSTOMERS . "` ORDER BY `customerid` ASC");

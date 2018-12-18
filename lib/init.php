@@ -387,7 +387,7 @@ if (isset($userinfo['loginname'])
 ) {
 	$lng['menue']['main']['username'].= $userinfo['loginname'];
 	//Initialize logging
-	$log = FroxlorLogger::getInstanceOf($userinfo);
+	$log = \Froxlor\FroxlorLogger::getInstanceOf($userinfo);
 }
 
 /**
