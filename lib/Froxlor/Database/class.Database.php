@@ -1,4 +1,5 @@
 <?php
+namespace Froxlor\Database;
 
 /**
  * This file is part of the Froxlor project.
@@ -8,14 +9,14 @@
  * file that was distributed with this source code. You can also view the
  * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
- * @copyright  (c) the authors
- * @author     Michael Kaufmann <mkaufmann@nutime.de>
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Classes
- *
- * @since      0.9.31
- *
+ * @copyright (c) the authors
+ * @author Michael Kaufmann <mkaufmann@nutime.de>
+ * @author Froxlor team <team@froxlor.org> (2010-)
+ * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package Classes
+ *         
+ * @since 0.9.31
+ *       
  */
 
 /**
@@ -23,25 +24,26 @@
  *
  * Wrapper-class for PHP-PDO
  *
- * @copyright  (c) the authors
- * @author     Michael Kaufmann <mkaufmann@nutime.de>
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Classes
- *
+ * @copyright (c) the authors
+ * @author Michael Kaufmann <mkaufmann@nutime.de>
+ * @author Froxlor team <team@froxlor.org> (2010-)
+ * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package Classes
+ *         
  * @method static \PDOStatement prepare($statement, array $driver_options = null) Prepares a statement for execution and returns a statement object
  * @method static \PDOStatement query ($statement) Executes an SQL statement, returning a result set as a PDOStatement object
  * @method static string lastInsertId ($name = null) Returns the ID of the last inserted row or sequence value
  * @method static string quote ($string, $parameter_type = null) Quotes a string for use in a query.
  */
-class Database {
+class Database
+{
 
 	/**
 	 * current database link
 	 *
 	 * @var object
 	 */
-	private static $_link = null ;
+	private static $_link = null;
 
 	/**
 	 * indicator whether to use root-connection or not
@@ -62,20 +64,24 @@ class Database {
 	 * sql-access data
 	 */
 	private static $_needsqldata = false;
+
 	private static $_sqldata = null;
 
 	/**
 	 * Wrapper for PDOStatement::execute so we can catch the PDOException
 	 * and display the error nicely on the panel
 	 *
-	 * @param PDOStatement $stmt
-	 * @param array $params (optional)
-	 * @param bool $showerror suppress errordisplay (default true)
+	 * @param \PDOStatement $stmt
+	 * @param array $params
+	 *        	(optional)
+	 * @param bool $showerror
+	 *        	suppress errordisplay (default true)
 	 */
-	public static function pexecute(&$stmt, $params = null, $showerror = true, $json_response = false) {
+	public static function pexecute(&$stmt, $params = null, $showerror = true, $json_response = false)
+	{
 		try {
 			$stmt->execute($params);
-		} catch (PDOException $e) {
+		} catch (\PDOException $e) {
 			self::_showerror($e, $showerror, $json_response, $stmt);
 		}
 	}
@@ -85,15 +91,18 @@ class Database {
 	 * and display the error nicely on the panel - also fetches the
 	 * result from the statement and returns the resulting array
 	 *
-	 * @param PDOStatement $stmt
-	 * @param array $params (optional)
-	 * @param bool $showerror suppress errordisplay (default true)
-	 *
+	 * @param \PDOStatement $stmt
+	 * @param array $params
+	 *        	(optional)
+	 * @param bool $showerror
+	 *        	suppress errordisplay (default true)
+	 *        	
 	 * @return array
 	 */
-	public static function pexecute_first(&$stmt, $params = null, $showerror = true, $json_response = false) {
+	public static function pexecute_first(&$stmt, $params = null, $showerror = true, $json_response = false)
+	{
 		self::pexecute($stmt, $params, $showerror, $json_response);
-		return $stmt->fetch(PDO::FETCH_ASSOC);
+		return $stmt->fetch(\PDO::FETCH_ASSOC);
 	}
 
 	/**
@@ -101,7 +110,8 @@ class Database {
 	 *
 	 * @return int
 	 */
-	public static function num_rows() {
+	public static function num_rows()
+	{
 		return Database::query("SELECT FOUND_ROWS()")->fetchColumn();
 	}
 
@@ -110,7 +120,8 @@ class Database {
 	 *
 	 * @return string
 	 */
-	public static function getDbName() {
+	public static function getDbName()
+	{
 		return self::$_dbname;
 	}
 
@@ -121,9 +132,11 @@ class Database {
 	 * the 'normal' database-connection
 	 *
 	 * @param bool $needroot
-	 * @param int $dbserver optional
+	 * @param int $dbserver
+	 *        	optional
 	 */
-	public static function needRoot($needroot = false, $dbserver = 0) {
+	public static function needRoot($needroot = false, $dbserver = 0)
+	{
 		// force re-connecting to the db with corresponding user
 		// and set the $dbserver (mostly to 0 = default)
 		self::_setServer($dbserver);
@@ -133,12 +146,13 @@ class Database {
 	/**
 	 * enable the temporary access to sql-access data
 	 * note: if you want root-sqldata you need to
-	 * call needRoot(true) first. Also, this will
+	 * call needRoot(true) first.
+	 * Also, this will
 	 * only give you the data ONCE as it disable itself
 	 * after the first access to the data
-	 *
 	 */
-	public static function needSqlData() {
+	public static function needSqlData()
+	{
 		self::$_needsqldata = true;
 		self::$_sqldata = array();
 		self::$_link = null;
@@ -152,16 +166,15 @@ class Database {
 
 	/**
 	 * returns the sql-access data as array using indeces
-	 * 'user', 'passwd' and 'host'. Returns false if not enabled
+	 * 'user', 'passwd' and 'host'.
+	 * Returns false if not enabled
 	 *
 	 * @return array|bool
 	 */
-	public static function getSqlData() {
+	public static function getSqlData()
+	{
 		$return = false;
-		if (self::$_sqldata !== null
-				&& is_array(self::$_sqldata)
-				&& isset(self::$_sqldata['user'])
-		) {
+		if (self::$_sqldata !== null && is_array(self::$_sqldata) && isset(self::$_sqldata['user'])) {
 			$return = self::$_sqldata;
 			// automatically disable sql-data
 			self::$_sqldata = null;
@@ -179,12 +192,16 @@ class Database {
 	 *
 	 * @return mixed
 	 */
-	public static function __callStatic($name, $args) {
-		$callback = array(self::getDB(), $name);
+	public static function __callStatic($name, $args)
+	{
+		$callback = array(
+			self::getDB(),
+			$name
+		);
 		$result = null;
 		try {
-			$result = call_user_func_array($callback, $args );
-		} catch (PDOException $e) {
+			$result = call_user_func_array($callback, $args);
+		} catch (\PDOException $e) {
 			self::_showerror($e);
 		}
 		return $result;
@@ -195,7 +212,8 @@ class Database {
 	 *
 	 * @param int $dbserver
 	 */
-	private static function _setServer($dbserver = 0) {
+	private static function _setServer($dbserver = 0)
+	{
 		self::$_dbserver = $dbserver;
 		self::$_link = null;
 	}
@@ -208,10 +226,10 @@ class Database {
 	 *
 	 * @return object
 	 */
-	private static function getDB() {
-
-		if (!extension_loaded('pdo') || in_array("mysql", PDO::getAvailableDrivers()) == false) {
-			self::_showerror(new Exception("The php PDO extension or PDO-MySQL driver is not available"));
+	private static function getDB()
+	{
+		if (! extension_loaded('pdo') || in_array("mysql", \PDO::getAvailableDrivers()) == false) {
+			self::_showerror(new \Exception("The php PDO extension or PDO-MySQL driver is not available"));
 		}
 
 		// do we got a connection already?
@@ -221,15 +239,19 @@ class Database {
 		}
 
 		// include userdata.inc.php
-		require FROXLOR_INSTALL_DIR."/lib/userdata.inc.php";
+		require FROXLOR_INSTALL_DIR . "/lib/userdata.inc.php";
 
 		// le format
-		if (self::$_needroot == true
-				&& isset($sql['root_user'])
-				&& isset($sql['root_password'])
-				&& (!isset($sql_root) || !is_array($sql_root))
-		) {
-			$sql_root = array(0 => array('caption' => 'Default', 'host' => $sql['host'], 'socket' => (isset($sql['socket']) ? $sql['socket'] : null), 'user' => $sql['root_user'], 'password' => $sql['root_password']));
+		if (self::$_needroot == true && isset($sql['root_user']) && isset($sql['root_password']) && (! isset($sql_root) || ! is_array($sql_root))) {
+			$sql_root = array(
+				0 => array(
+					'caption' => 'Default',
+					'host' => $sql['host'],
+					'socket' => (isset($sql['socket']) ? $sql['socket'] : null),
+					'user' => $sql['root_user'],
+					'password' => $sql['root_password']
+				)
+			);
 			unset($sql['root_user']);
 			unset($sql['root_password']);
 		}
@@ -254,27 +276,29 @@ class Database {
 		// save sql-access-data if needed
 		if (self::$_needsqldata) {
 			self::$_sqldata = array(
-					'user' => $user,
-					'passwd' => $password,
-					'host' => $host,
-					'port' => $port,
-					'socket' => $socket,
-					'db' => $sql["db"],
-					'caption' => $caption
+				'user' => $user,
+				'passwd' => $password,
+				'host' => $host,
+				'port' => $port,
+				'socket' => $socket,
+				'db' => $sql["db"],
+				'caption' => $caption
 			);
 		}
 
 		// build up connection string
 		$driver = 'mysql';
-		$dsn = $driver.":";
+		$dsn = $driver . ":";
 		$options = array(
 			'PDO::MYSQL_ATTR_INIT_COMMAND' => 'SET names utf8'
 		);
-		$attributes = array('ATTR_ERRMODE' => 'ERRMODE_EXCEPTION');
+		$attributes = array(
+			'ATTR_ERRMODE' => 'ERRMODE_EXCEPTION'
+		);
 
 		$dbconf["dsn"] = array(
-				'dbname' => $sql["db"],
-				'charset' => 'utf8'
+			'dbname' => $sql["db"],
+			'charset' => 'utf8'
 		);
 
 		if ($socket != null) {
@@ -288,7 +312,7 @@ class Database {
 
 		// add options to dsn-string
 		foreach ($dbconf["dsn"] as $k => $v) {
-			$dsn .= $k."=".$v.";";
+			$dsn .= $k . "=" . $v . ";";
 		}
 
 		// clean up
@@ -296,22 +320,22 @@ class Database {
 
 		// try to connect
 		try {
-			self::$_link = new PDO($dsn, $user, $password, $options);
-		} catch (PDOException $e) {
+			self::$_link = new \PDO($dsn, $user, $password, $options);
+		} catch (\PDOException $e) {
 			self::_showerror($e);
 		}
 
 		// set attributes
 		foreach ($attributes as $k => $v) {
-			self::$_link->setAttribute(constant("PDO::".$k), constant("PDO::".$v));
+			self::$_link->setAttribute(constant("PDO::" . $k), constant("PDO::" . $v));
 		}
 
-		$version_server = self::$_link->getAttribute(PDO::ATTR_SERVER_VERSION);
+		$version_server = self::$_link->getAttribute(\PDO::ATTR_SERVER_VERSION);
 		$sql_mode = 'NO_ENGINE_SUBSTITUTION';
 		if (version_compare($version_server, '8.0.11', '<')) {
 			$sql_mode .= ',NO_AUTO_CREATE_USER';
 		}
-		self::$_link->exec('SET sql_mode = "'.$sql_mode.'"');
+		self::$_link->exec('SET sql_mode = "' . $sql_mode . '"');
 
 		// return PDO instance
 		return self::$_link;
@@ -320,26 +344,33 @@ class Database {
 	/**
 	 * display a nice error if it occurs and log everything
 	 *
-	 * @param PDOException $error
-	 * @param bool $showerror if set to false, the error will be logged but we go on
+	 * @param \PDOException $error
+	 * @param bool $showerror
+	 *        	if set to false, the error will be logged but we go on
 	 */
-	private static function _showerror($error, $showerror = true, $json_response = false, PDOStatement $stmt = null) {
+	private static function _showerror($error, $showerror = true, $json_response = false, \PDOStatement $stmt = null)
+	{
 		global $userinfo, $theme, $linker;
 
 		// include userdata.inc.php
-		require FROXLOR_INSTALL_DIR."/lib/userdata.inc.php";
+		require FROXLOR_INSTALL_DIR . "/lib/userdata.inc.php";
 
 		// le format
-		if (isset($sql['root_user'])
-		    && isset($sql['root_password'])
-		    && (!isset($sql_root) || !is_array($sql_root))
-		) {
-		    $sql_root = array(0 => array('caption' => 'Default', 'host' => $sql['host'], 'socket' => (isset($sql['socket']) ? $sql['socket'] : null), 'user' => $sql['root_user'], 'password' => $sql['root_password']));
+		if (isset($sql['root_user']) && isset($sql['root_password']) && (! isset($sql_root) || ! is_array($sql_root))) {
+			$sql_root = array(
+				0 => array(
+					'caption' => 'Default',
+					'host' => $sql['host'],
+					'socket' => (isset($sql['socket']) ? $sql['socket'] : null),
+					'user' => $sql['root_user'],
+					'password' => $sql['root_password']
+				)
+			);
 		}
 
 		$substitutions = array(
 			$sql['password'] => 'DB_UNPRIV_PWD',
-			$sql_root[0]['password'] => 'DB_ROOT_PWD',
+			$sql_root[0]['password'] => 'DB_ROOT_PWD'
 		);
 
 		// hide username/password in messages
@@ -351,48 +382,48 @@ class Database {
 		$error_trace = self::_substitute($error_trace, $substitutions);
 
 		if ($error->getCode() == 2003) {
-		    $error_message = "Unable to connect to database. Either the mysql-server is not running or your user/password is wrong.";
-		    $error_trace = "";
+			$error_message = "Unable to connect to database. Either the mysql-server is not running or your user/password is wrong.";
+			$error_trace = "";
 		}
 
 		/**
 		 * log to a file, so we can actually ask people for the error
 		 * (no one seems to find the stuff in the syslog)
 		 */
-		$sl_dir = makeCorrectDir(FROXLOR_INSTALL_DIR."/logs/");
-		if (!file_exists($sl_dir)) {
+		$sl_dir = makeCorrectDir(FROXLOR_INSTALL_DIR . "/logs/");
+		if (! file_exists($sl_dir)) {
 			@mkdir($sl_dir, 0755);
 		}
 		openlog("froxlor", LOG_PID | LOG_PERROR, LOG_LOCAL0);
 		syslog(LOG_WARNING, str_replace("\n", " ", $error_message));
-		syslog(LOG_WARNING, str_replace("\n", " ", "--- DEBUG: ".$error_trace));
+		syslog(LOG_WARNING, str_replace("\n", " ", "--- DEBUG: " . $error_trace));
 		closelog();
 
 		/**
 		 * log error for reporting
-		*/
+		 */
 		$errid = substr(md5(microtime()), 5, 5);
-		$err_file = makeCorrectFile($sl_dir."/".$errid."_sql-error.log");
+		$err_file = makeCorrectFile($sl_dir . "/" . $errid . "_sql-error.log");
 		$errlog = @fopen($err_file, 'w');
-		@fwrite($errlog, "|CODE ".$error->getCode()."\n");
-		@fwrite($errlog, "|MSG ".$error_message."\n");
-		@fwrite($errlog, "|FILE ".$error->getFile()."\n");
-		@fwrite($errlog, "|LINE ".$error->getLine()."\n");
-		@fwrite($errlog, "|TRACE\n".$error_trace."\n");
+		@fwrite($errlog, "|CODE " . $error->getCode() . "\n");
+		@fwrite($errlog, "|MSG " . $error_message . "\n");
+		@fwrite($errlog, "|FILE " . $error->getFile() . "\n");
+		@fwrite($errlog, "|LINE " . $error->getLine() . "\n");
+		@fwrite($errlog, "|TRACE\n" . $error_trace . "\n");
 		@fclose($errlog);
 
 		if (empty($sql['debug'])) {
 			$error_trace = '';
-		} elseif (!is_null($stmt)) {
-			$error_trace .= "<br><br>".$stmt->queryString;
+		} elseif (! is_null($stmt)) {
+			$error_trace .= "<br><br>" . $stmt->queryString;
 		}
 
 		if ($showerror && $json_response) {
 			$exception_message = $error_message;
 			if (isset($sql['debug']) && $sql['debug'] == true) {
-				$exception_message .= "\n\n".$error_trace;
+				$exception_message .= "\n\n" . $error_trace;
 			}
-			throw new Exception($exception_message, 500);
+			throw new \Exception($exception_message, 500);
 		}
 
 		if ($showerror) {
@@ -403,11 +434,9 @@ class Database {
 			unset($sql);
 			unset($sql_root);
 
-			if ((isset($theme) && $theme != '')
-					&& !isset($_SERVER['SHELL']) || (isset($_SERVER['SHELL']) && $_SERVER['SHELL'] == '')
-			) {
+			if ((isset($theme) && $theme != '') && ! isset($_SERVER['SHELL']) || (isset($_SERVER['SHELL']) && $_SERVER['SHELL'] == '')) {
 				// if we're not on the shell, output a nice error
-				$_errtpl = dirname($sl_dir).'/templates/'.$theme.'/misc/dberrornice.tpl';
+				$_errtpl = dirname($sl_dir) . '/templates/' . $theme . '/misc/dberrornice.tpl';
 				if (file_exists($_errtpl)) {
 					$err_hint = file_get_contents($_errtpl);
 					// replace values
@@ -416,12 +445,13 @@ class Database {
 					$err_hint = str_replace("<CURRENT_YEAR>", date('Y', time()), $err_hint);
 
 					$err_report_html = '';
-					if (is_array($userinfo) && (
-							($userinfo['adminsession'] == '1' && Settings::Get('system.allow_error_report_admin') == '1')
-							|| ($userinfo['adminsession'] == '0' && Settings::Get('system.allow_error_report_customer') == '1'))
-					) {
+					if (is_array($userinfo) && (($userinfo['adminsession'] == '1' && \Froxlor\Settings::Get('system.allow_error_report_admin') == '1') || ($userinfo['adminsession'] == '0' && \Froxlor\Settings::Get('system.allow_error_report_customer') == '1'))) {
 						$err_report_html = '<a href="<LINK>" title="Click here to report error">Report error</a>';
-						$err_report_html = str_replace("<LINK>", $linker->getLink(array('section' => 'index', 'page' => 'send_error_report', 'errorid' => $errid)), $err_report_html);
+						$err_report_html = str_replace("<LINK>", $linker->getLink(array(
+							'section' => 'index',
+							'page' => 'send_error_report',
+							'errorid' => $errid
+						)), $err_report_html);
 					}
 					$err_hint = str_replace("<REPORT>", $err_report_html, $err_hint);
 
@@ -441,18 +471,15 @@ class Database {
 	 * @param int $minLength
 	 * @return string
 	 */
-	private static function _substitute($content, array $substitutions, $minLength = 6) {
+	private static function _substitute($content, array $substitutions, $minLength = 6)
+	{
 		$replacements = array();
 
 		foreach ($substitutions as $search => $replace) {
 			$replacements = $replacements + self::_createShiftedSubstitutions($search, $replace, $minLength);
 		}
 
-		$content = str_replace(
-			array_keys($replacements),
-			array_values($replacements),
-			$content
-		);
+		$content = str_replace(array_keys($replacements), array_values($replacements), $content);
 
 		return $content;
 	}
@@ -461,25 +488,26 @@ class Database {
 	 * Creates substitutions, shifted by length, e.g.
 	 *
 	 * _createShiftedSubstitutions('abcdefgh', 'value', 4):
-	 *   array(
-	 *     'abcdefgh' => 'value',
-	 *     'abcdefg' => 'value',
-	 *     'abcdef' => 'value',
-	 *     'abcde' => 'value',
-	 *     'abcd' => 'value',
-	 *   )
+	 * array(
+	 * 'abcdefgh' => 'value',
+	 * 'abcdefg' => 'value',
+	 * 'abcdef' => 'value',
+	 * 'abcde' => 'value',
+	 * 'abcd' => 'value',
+	 * )
 	 *
 	 * @param string $search
 	 * @param string $replace
 	 * @param int $minLength
 	 * @return array
 	 */
-	private static function _createShiftedSubstitutions($search, $replace, $minLength) {
+	private static function _createShiftedSubstitutions($search, $replace, $minLength)
+	{
 		$substitutions = array();
 		$length = strlen($search);
 
 		if ($length > $minLength) {
-			for ($shiftedLength = $length; $shiftedLength >= $minLength; $shiftedLength--) {
+			for ($shiftedLength = $length; $shiftedLength >= $minLength; $shiftedLength --) {
 				$substitutions[substr($search, 0, $shiftedLength)] = $replace;
 			}
 		}

@@ -1,5 +1,9 @@
 <?php
 
+namespace Froxlor;
+
+use Froxlor\Database as Database;
+
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -63,7 +67,7 @@ class Settings {
 	 * prepared statement for updating the
 	 * settings table
 	 *
-	 * @var PDOStatement
+	 * @var \PDOStatement
 	 */
 	private static $_updstmt = null;
 
@@ -90,7 +94,7 @@ class Settings {
 				FROM `" . TABLE_PANEL_SETTINGS . "`
 				");
 		self::$_data = array();
-		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+		while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 			self::$_data[$row['settinggroup']][$row['varname']] = $row['value'];
 		}
 		return true;
