@@ -1,4 +1,7 @@
 <?php
+namespace Froxlor;
+
+use Froxlor\Database as Database;
 
 /**
  * This file is part of the Froxlor project.
@@ -8,14 +11,14 @@
  * file that was distributed with this source code. You can also view the
  * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
- * @copyright  (c) the authors
- * @author     Michael Kaufmann <d00p@froxlor.org>
- * @author     Froxlor team <team@froxlor.org> (2018-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Classes
- *
- * @since      0.9.39
- *
+ * @copyright (c) the authors
+ * @author Michael Kaufmann <d00p@froxlor.org>
+ * @author Froxlor team <team@froxlor.org> (2018-)
+ * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package Classes
+ *         
+ * @since 0.9.39
+ *       
  */
 
 /**
@@ -48,7 +51,7 @@ class SImExporter
 		'system.mysql_access_host',
 		'system.lastcronrun',
 		'system.defaultip',
-		'system.defaultsslip'.
+		'system.defaultsslip',
 		'system.last_tasks_run',
 		'system.last_archive_run',
 		'system.leprivatekey',
@@ -61,7 +64,7 @@ class SImExporter
 			SELECT * FROM `" . TABLE_PANEL_SETTINGS . "` ORDER BY `settingid` ASC
 		");
 		$_data = array();
-		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+		while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$index = $row['settinggroup'] . "." . $row['varname'];
 			if (! in_array($index, self::$_no_export)) {
 				$_data[$index] = $row['value'];
@@ -71,7 +74,7 @@ class SImExporter
 		$_data['_sha'] = sha1(var_export($_data, true));
 		$_export = json_encode($_data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
 		if (! $_export) {
-			throw new Exception("Error exporting settings: " . json_last_error_msg());
+			throw new \Exception("Error exporting settings: " . json_last_error_msg());
 		}
 		return $_export;
 	}
@@ -87,13 +90,13 @@ class SImExporter
 			$_dbversion = isset($_data['panel.db_version']) ? $_data['panel.db_version'] : false;
 			// check if we have everything we need
 			if (! $_sha || ! $_version || ! $_dbversion) {
-				throw new Exception("Invalid froxlor settings data. Unable to import.");
+				throw new \Exception("Invalid froxlor settings data. Unable to import.");
 			}
 			// validate import file
 			unset($_data['_sha']);
 			// compare
 			if ($_sha != sha1(var_export($_data, true))) {
-				throw new Exception("SHA check of import data failed. Unable to import.");
+				throw new \Exception("SHA check of import data failed. Unable to import.");
 			}
 			// do not import version info - but we need that to possibily update settings
 			// when there were changes in the variable-name or similar
@@ -124,6 +127,6 @@ class SImExporter
 			// all good
 			return true;
 		}
-		throw new Exception("Invalid JSON data: " . json_last_error_msg());
+		throw new \Exception("Invalid JSON data: " . json_last_error_msg());
 	}
 }

@@ -1,5 +1,8 @@
 <?php
+namespace Froxlor\Api\Commands;
 
+use Froxlor\Database as Database;
+use Froxlor\Settings as Settings;
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -15,7 +18,7 @@
  * @since      0.10.0
  *
  */
-class SubDomains extends ApiCommand implements ResourceEntity
+class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntity
 {
 
 	/**
@@ -51,7 +54,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 	 *        	required when called as admin, not needed when called as customer
 	 *        	
 	 * @access admin, customer
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function add()
@@ -91,7 +94,8 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				standard_error('domain_nopunycode', '', true);
 			}
 
-			$idna_convert = new idna_convert_wrapper();
+			// @fixme idna_convert_wrapper
+			$idna_convert = new \idna_convert_wrapper();
 			$subdomain = $idna_convert->encode(preg_replace(array(
 				'/\:(\d)+$/',
 				'/^https?\:\/\//'
@@ -315,7 +319,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			));
 			return $this->response(200, "successfull", $result);
 		}
-		throw new Exception("No more resources available", 406);
+		throw new \Exception("No more resources available", 406);
 	}
 
 	/**
@@ -327,7 +331,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 	 *        	optional, the domainname
 	 *        	
 	 * @access admin, customer
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function get()
@@ -338,7 +342,8 @@ class SubDomains extends ApiCommand implements ResourceEntity
 
 		// convert possible idn domain to punycode
 		if (substr($domainname, 0, 4) != 'xn--') {
-			$idna_convert = new idna_convert_wrapper();
+			// @fixme idna_convert_wrapper
+			$idna_convert = new \idna_convert_wrapper();
 			$domainname = $idna_convert->encode($domainname);
 		}
 
@@ -363,7 +368,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 						'iddn' => ($id <= 0 ? $domainname : $id)
 					);
 				} else {
-					throw new Exception("You do not have any customers yet", 406);
+					throw new \Exception("You do not have any customers yet", 406);
 				}
 			} else {
 				$result_stmt = Database::prepare("
@@ -378,7 +383,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			}
 		} else {
 			if (Settings::IsInList('panel.customer_hide_options', 'domains')) {
-				throw new Exception("You cannot access this resource", 405);
+				throw new \Exception("You cannot access this resource", 405);
 			}
 			$result_stmt = Database::prepare("
 				SELECT d.*, pd.`subcanemaildomain`, pd.`isbinddomain` as subisbinddomain
@@ -397,7 +402,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			return $this->response(200, "successfull", $result);
 		}
 		$key = ($id > 0 ? "id #" . $id : "domainname '" . $domainname . "'");
-		throw new Exception("Subdomain with " . $key . " could not be found", 404);
+		throw new \Exception("Subdomain with " . $key . " could not be found", 404);
 	}
 
 	/**
@@ -437,7 +442,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 	 *        	required when called as admin, not needed when called as customer
 	 *        	
 	 * @access admin, customer
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function update()
@@ -447,7 +452,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 		$domainname = $this->getParam('domainname', $dn_optional, '');
 
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'domains')) {
-			throw new Exception("You cannot access this resource", 405);
+			throw new \Exception("You cannot access this resource", 405);
 		}
 
 		$result = $this->apiCall('SubDomains.get', array(
@@ -576,7 +581,8 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			Database::pexecute($stmt, $params, true, true);
 			$stmt = Database::prepare("DELETE FROM `" . TABLE_MAIL_VIRTUAL . "` WHERE `customerid`= :customerid AND `domainid`= :domainid");
 			Database::pexecute($stmt, $params, true, true);
-			$idna_convert = new idna_convert_wrapper();
+			// @fixme idna
+			$idna_convert = new \idna_convert_wrapper();
 			$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_NOTICE, "[API] automatically deleted mail-table entries for '" . $idna_convert->decode($result['domain']) . "'");
 		}
 
@@ -641,8 +647,8 @@ class SubDomains extends ApiCommand implements ResourceEntity
 
 			inserttask('1');
 			inserttask('4');
-
-			$idna_convert = new idna_convert_wrapper();
+			// @fixme idna
+			$idna_convert = new \idna_convert_wrapper();
 			$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] edited domain '" . $idna_convert->decode($result['domain']) . "'");
 		}
 		$result = $this->apiCall('SubDomains.get', array(
@@ -655,7 +661,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 	 * lists all subdomain entries
 	 *
 	 * @access admin, customer
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array count|list
 	 */
 	public function listing()
@@ -686,7 +692,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			}
 		} else {
 			if (Settings::IsInList('panel.customer_hide_options', 'domains')) {
-				throw new Exception("You cannot access this resource", 405);
+				throw new \Exception("You cannot access this resource", 405);
 			}
 			$customer_ids = array(
 				$this->getUserDetail('customerid')
@@ -713,7 +719,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 				"customerid" => $customer_id,
 				"standardsubdomain" => $customer_stdsubs[$customer_id]
 			), true, true);
-			while ($row = $domains_stmt->fetch(PDO::FETCH_ASSOC)) {
+			while ($row = $domains_stmt->fetch(\PDO::FETCH_ASSOC)) {
 				$result[] = $row;
 			}
 		}
@@ -732,7 +738,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 	 *        	optional, the domainname
 	 *        	
 	 * @access admin, customer
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function delete()
@@ -742,7 +748,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 		$domainname = $this->getParam('domainname', $dn_optional, '');
 
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'domains')) {
-			throw new Exception("You cannot access this resource", 405);
+			throw new \Exception("You cannot access this resource", 405);
 		}
 
 		$result = $this->apiCall('SubDomains.get', array(
@@ -755,7 +761,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 		$customer = $this->getCustomerData();
 
 		if (! $this->isAdmin() && $result['caneditdomain'] == 0) {
-			throw new Exception("You cannot edit this resource", 405);
+			throw new \Exception("You cannot edit this resource", 405);
 		}
 
 		if ($result['isemaildomain'] == '1') {
@@ -846,7 +852,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 	 * @param boolean $_doredirect
 	 *
 	 * @return string validated path
-	 * @throws Exception
+	 * @throws \Exception
 	 */
 	private function validateDomainDocumentRoot($path = null, $url = null, $customer = null, $completedomain = null, &$_doredirect = false)
 	{

@@ -1,4 +1,8 @@
 <?php
+namespace Froxlor\Api\Commands;
+
+use Froxlor\Database as Database;
+use Froxlor\Settings as Settings;
 
 /**
  * This file is part of the Froxlor project.
@@ -8,31 +12,31 @@
  * file that was distributed with this source code. You can also view the
  * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
- * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    API
- * @since      0.10.0
- *
+ * @copyright (c) the authors
+ * @author Froxlor team <team@froxlor.org> (2010-)
+ * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package API
+ * @since 0.10.0
+ *       
  */
-class CustomerBackups extends ApiCommand implements ResourceEntity
+class CustomerBackups extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntity
 {
 
 	/**
 	 * check whether backup is enabled systemwide and if accessable for customer (hide_options)
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 */
 	private function validateAccess()
 	{
 		if (Settings::Get('system.backupenabled') != 1) {
-			throw new Exception("You cannot access this resource", 405);
+			throw new \Exception("You cannot access this resource", 405);
 		}
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'extras')) {
-			throw new Exception("You cannot access this resource", 405);
+			throw new \Exception("You cannot access this resource", 405);
 		}
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'extras.backup')) {
-			throw new Exception("You cannot access this resource", 405);
+			throw new \Exception("You cannot access this resource", 405);
 		}
 	}
 
@@ -52,7 +56,7 @@ class CustomerBackups extends ApiCommand implements ResourceEntity
 	 *        	
 	 * @access admin, customer
 	 * @return array
-	 * @throws Exception
+	 * @throws \Exception
 	 */
 	public function add()
 	{
@@ -114,7 +118,7 @@ class CustomerBackups extends ApiCommand implements ResourceEntity
 	 */
 	public function get()
 	{
-		throw new Exception('You cannot get a planned backup. Try CustomerBackups.listing()', 303);
+		throw new \Exception('You cannot get a planned backup. Try CustomerBackups.listing()', 303);
 	}
 
 	/**
@@ -123,7 +127,7 @@ class CustomerBackups extends ApiCommand implements ResourceEntity
 	 */
 	public function update()
 	{
-		throw new Exception('You cannot update a planned backup. You need to delete it and re-add it.', 303);
+		throw new \Exception('You cannot update a planned backup. You need to delete it and re-add it.', 303);
 	}
 
 	/**
@@ -135,7 +139,7 @@ class CustomerBackups extends ApiCommand implements ResourceEntity
 	 *        	optional, admin-only, select backup-jobs of a specific customer by loginname
 	 *        	
 	 * @access admin, customer
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array count|list
 	 */
 	public function listing()
@@ -148,7 +152,7 @@ class CustomerBackups extends ApiCommand implements ResourceEntity
 		$sel_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_TASKS . "` WHERE `type` = '20'");
 		Database::pexecute($sel_stmt);
 		$result = array();
-		while ($entry = $sel_stmt->fetch(PDO::FETCH_ASSOC)) {
+		while ($entry = $sel_stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$entry['data'] = json_decode($entry['data'], true);
 			if (in_array($entry['data']['customerid'], $customer_ids)) {
 				$result[] = $entry;
@@ -172,7 +176,7 @@ class CustomerBackups extends ApiCommand implements ResourceEntity
 	 *        	optional, required when called as admin (if $customerid is not specified)
 	 *        	
 	 * @access admin, customer
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return bool
 	 */
 	public function delete()
@@ -197,6 +201,6 @@ class CustomerBackups extends ApiCommand implements ResourceEntity
 				}
 			}
 		}
-		throw new Exception('Backup job with id #' . $entry . ' could not be found', 404);
+		throw new \Exception('Backup job with id #' . $entry . ' could not be found', 404);
 	}
 }

@@ -1,4 +1,5 @@
 <?php
+namespace Froxlor\Api;
 
 /**
  * This file is part of the Froxlor project.
@@ -8,12 +9,12 @@
  * file that was distributed with this source code. You can also view the
  * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
- * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    API
- * @since      0.10.0
- *
+ * @copyright (c) the authors
+ * @author Froxlor team <team@froxlor.org> (2010-)
+ * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package API
+ * @since 0.10.0
+ *       
  */
 class FroxlorRPC
 {
@@ -23,22 +24,22 @@ class FroxlorRPC
 	 *
 	 * @param array $request
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public static function validateRequest($request)
 	{
 		// check header
 		if (! isset($request['header']) || empty($request['header'])) {
-			throw new Exception("Invalid request header", 400);
+			throw new \Exception("Invalid request header", 400);
 		}
-		
+
 		// check authorization
 		if (! isset($request['header']['apikey']) || empty($request['header']['apikey']) || ! isset($request['header']['secret']) || empty($request['header']['secret'])) {
-			throw new Exception("No authorization credentials given", 400);
+			throw new \Exception("No authorization credentials given", 400);
 		}
 		self::validateAuth($request['header']['apikey'], $request['header']['secret']);
-		
+
 		// check command
 		return self::validateBody($request);
 	}
@@ -49,19 +50,19 @@ class FroxlorRPC
 	 * @param string $key
 	 * @param string $secret
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return boolean
 	 */
 	private static function validateAuth($key, $secret)
 	{
-		$sel_stmt = Database::prepare("SELECT * FROM `api_keys` WHERE `apikey` = :ak AND `secret` = :as");
-		$result = Database::pexecute_first($sel_stmt, array(
+		$sel_stmt = \Froxlor\Database\Database::prepare("SELECT * FROM `api_keys` WHERE `apikey` = :ak AND `secret` = :as");
+		$result = \Froxlor\Database\Database::pexecute_first($sel_stmt, array(
 			'ak' => $key,
 			'as' => $secret
 		), true, true);
 		if ($result) {
-			if ($result['apikey'] == $key && $result['secret'] == $secret && ($result['valid_until'] == -1 || $result['valid_until'] >= time())) {
-				if (!empty($result['allowed_from'])) {
+			if ($result['apikey'] == $key && $result['secret'] == $secret && ($result['valid_until'] == - 1 || $result['valid_until'] >= time())) {
+				if (! empty($result['allowed_from'])) {
 					// @todo allow specification and validating of whole subnets later
 					$ip_list = explode(",", $result['allowed_from']);
 					$access_ip = inet_ntop(inet_pton($_SERVER['REMOTE_ADDR']));
@@ -73,7 +74,7 @@ class FroxlorRPC
 				}
 			}
 		}
-		throw new Exception("Invalid authorization credentials", 403);
+		throw new \Exception("Invalid authorization credentials", 403);
 	}
 
 	/**
@@ -82,30 +83,30 @@ class FroxlorRPC
 	 * @param array $request
 	 *
 	 * @return array
-	 * @throws Exception
+	 * @throws \Exception
 	 */
 	private static function validateBody($request)
 	{
 		// check body
 		if (! isset($request['body']) || empty($request['body'])) {
-			throw new Exception("Invalid request body", 400);
+			throw new \Exception("Invalid request body", 400);
 		}
-		
+
 		// check command exists
 		if (! isset($request['body']['command']) || empty($request['body']['command'])) {
-			throw new Exception("No command given", 400);
+			throw new \Exception("No command given", 400);
 		}
-		
+
 		$command = explode(".", $request['body']['command']);
-		
+
 		if (count($command) != 2) {
-			throw new Exception("Invalid command", 400);
+			throw new \Exception("Invalid command", 400);
 		}
 		// simply check for file-existance, as we do not want to use our autoloader because this way
 		// it will recognize non-api classes+methods as valid commands
-		$apiclass = FROXLOR_INSTALL_DIR . '/lib/classes/api/commands/class.' . $command[0] . '.php';
+		$apiclass = \Froxlor\Froxlor::getInstallDir() . '/lib/Froxlor/Api/Commands/' . $command[0] . '.php';
 		if (! file_exists($apiclass) || ! @method_exists($command[0], $command[1])) {
-			throw new Exception("Unknown command", 400);
+			throw new \Exception("Unknown command", 400);
 		}
 		return array(
 			'command' => array(

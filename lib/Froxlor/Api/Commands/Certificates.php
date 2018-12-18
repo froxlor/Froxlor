@@ -1,4 +1,8 @@
 <?php
+namespace Froxlor\Api\Commands;
+
+use Froxlor\Database as Database;
+use Froxlor\Settings as Settings;
 
 /**
  * This file is part of the Froxlor project.
@@ -8,14 +12,14 @@
  * file that was distributed with this source code. You can also view the
  * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
- * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    API
- * @since      0.10.0
- *
+ * @copyright (c) the authors
+ * @author Froxlor team <team@froxlor.org> (2010-)
+ * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package API
+ * @since 0.10.0
+ *       
  */
-class Certificates extends ApiCommand implements ResourceEntity
+class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntity
 {
 
 	/**
@@ -33,7 +37,7 @@ class Certificates extends ApiCommand implements ResourceEntity
 	 *        	optional
 	 *        	
 	 * @access admin, customer
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function add()
@@ -43,7 +47,7 @@ class Certificates extends ApiCommand implements ResourceEntity
 		$domainname = $this->getParam('domainname', $dn_optional, '');
 
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'domains')) {
-			throw new Exception("You cannot access this resource", 405);
+			throw new \Exception("You cannot access this resource", 405);
 		}
 
 		$domain = $this->apiCall('SubDomains.get', array(
@@ -70,7 +74,7 @@ class Certificates extends ApiCommand implements ResourceEntity
 			));
 			return $this->response(200, "successfull", $result);
 		}
-		throw new Exception("Domain '" . $domain['domain'] . "' already has a certificate. Did you mean to call update?", 406);
+		throw new \Exception("Domain '" . $domain['domain'] . "' already has a certificate. Did you mean to call update?", 406);
 	}
 
 	/**
@@ -82,7 +86,7 @@ class Certificates extends ApiCommand implements ResourceEntity
 	 *        	optional, the domainname
 	 *        	
 	 * @access admin, customer
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function get()
@@ -92,7 +96,7 @@ class Certificates extends ApiCommand implements ResourceEntity
 		$domainname = $this->getParam('domainname', $dn_optional, '');
 
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'domains')) {
-			throw new Exception("You cannot access this resource", 405);
+			throw new \Exception("You cannot access this resource", 405);
 		}
 
 		$domain = $this->apiCall('SubDomains.get', array(
@@ -124,7 +128,7 @@ class Certificates extends ApiCommand implements ResourceEntity
 	 *        	optional
 	 *        	
 	 * @access admin, customer
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function update()
@@ -134,7 +138,7 @@ class Certificates extends ApiCommand implements ResourceEntity
 		$domainname = $this->getParam('domainname', $dn_optional, '');
 
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'domains')) {
-			throw new Exception("You cannot access this resource", 405);
+			throw new \Exception("You cannot access this resource", 405);
 		}
 
 		$domain = $this->apiCall('SubDomains.get', array(
@@ -159,7 +163,7 @@ class Certificates extends ApiCommand implements ResourceEntity
 	 * lists all certificate entries
 	 *
 	 * @access admin, customer
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array count|list
 	 */
 	public function listing()
@@ -187,7 +191,7 @@ class Certificates extends ApiCommand implements ResourceEntity
 		$certs_stmt = Database::prepare($certs_stmt_query);
 		Database::pexecute($certs_stmt, $qry_params, true, true);
 		$result = array();
-		while ($cert = $certs_stmt->fetch(PDO::FETCH_ASSOC)) {
+		while ($cert = $certs_stmt->fetch(\PDO::FETCH_ASSOC)) {
 			// respect froxlor-hostname
 			if ($cert['domainid'] == 0) {
 				$cert['domain'] = Settings::Get('system.hostname');
@@ -208,7 +212,7 @@ class Certificates extends ApiCommand implements ResourceEntity
 	 * @param int $id
 	 *
 	 * @return array
-	 * @throws Exception
+	 * @throws \Exception
 	 */
 	public function delete()
 	{
@@ -263,7 +267,7 @@ class Certificates extends ApiCommand implements ResourceEntity
 	 *        	optional default false
 	 *        	
 	 * @return boolean
-	 * @throws Exception
+	 * @throws \Exception
 	 */
 	private function addOrUpdateCertificate($domainid = 0, $ssl_cert_file = '', $ssl_key_file = '', $ssl_ca_file = '', $ssl_cert_chainfile = '', $do_insert = false)
 	{

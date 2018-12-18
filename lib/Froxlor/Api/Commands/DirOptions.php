@@ -1,4 +1,8 @@
 <?php
+namespace Froxlor\Api\Commands;
+
+use Froxlor\Database as Database;
+use Froxlor\Settings as Settings;
 
 /**
  * This file is part of the Froxlor project.
@@ -8,14 +12,14 @@
  * file that was distributed with this source code. You can also view the
  * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
- * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    API
- * @since      0.10.0
- *
+ * @copyright (c) the authors
+ * @author Froxlor team <team@froxlor.org> (2010-)
+ * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package API
+ * @since 0.10.0
+ *       
  */
-class DirOptions extends ApiCommand implements ResourceEntity
+class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntity
 {
 
 	/**
@@ -39,16 +43,16 @@ class DirOptions extends ApiCommand implements ResourceEntity
 	 *        	optional, custom 500 error string/file
 	 *        	
 	 * @access admin, customer
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function add()
 	{
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'extras')) {
-			throw new Exception("You cannot access this resource", 405);
+			throw new \Exception("You cannot access this resource", 405);
 		}
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'extras.pathoptions')) {
-			throw new Exception("You cannot access this resource", 405);
+			throw new \Exception("You cannot access this resource", 405);
 		}
 
 		// get needed customer info to reduce the email-address-counter by one
@@ -134,13 +138,13 @@ class DirOptions extends ApiCommand implements ResourceEntity
 	 *        	id of dir-protection entry
 	 *        	
 	 * @access admin, customer
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function get()
 	{
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'extras')) {
-			throw new Exception("You cannot access this resource", 405);
+			throw new \Exception("You cannot access this resource", 405);
 		}
 
 		$id = $this->getParam('id', true, 0);
@@ -169,7 +173,7 @@ class DirOptions extends ApiCommand implements ResourceEntity
 			}
 		} else {
 			if (Settings::IsInList('panel.customer_hide_options', 'extras.pathoptions')) {
-				throw new Exception("You cannot access this resource", 405);
+				throw new \Exception("You cannot access this resource", 405);
 			}
 			$result_stmt = Database::prepare("
 				SELECT * FROM `" . TABLE_PANEL_HTACCESS . "`
@@ -185,7 +189,7 @@ class DirOptions extends ApiCommand implements ResourceEntity
 			return $this->response(200, "successfull", $result);
 		}
 		$key = "id #" . $id;
-		throw new Exception("Directory option with " . $key . " could not be found", 404);
+		throw new \Exception("Directory option with " . $key . " could not be found", 404);
 	}
 
 	/**
@@ -209,7 +213,7 @@ class DirOptions extends ApiCommand implements ResourceEntity
 	 *        	optional, custom 500 error string/file
 	 *        	
 	 * @access admin, customer
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function update()
@@ -283,13 +287,13 @@ class DirOptions extends ApiCommand implements ResourceEntity
 	 *        	optional, admin-only, select directory-protections of a specific customer by loginname
 	 *        	
 	 * @access admin, customer
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array count|list
 	 */
 	public function listing()
 	{
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'extras')) {
-			throw new Exception("You cannot access this resource", 405);
+			throw new \Exception("You cannot access this resource", 405);
 		}
 		$customer_ids = $this->getAllowedCustomerIds('extras.pathoptions');
 
@@ -299,7 +303,7 @@ class DirOptions extends ApiCommand implements ResourceEntity
 			WHERE `customerid` IN (" . implode(', ', $customer_ids) . ")
 		");
 		Database::pexecute($result_stmt, null, true, true);
-		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+		while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$result[] = $row;
 		}
 		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_NOTICE, "[API] list directory-options");
@@ -316,19 +320,19 @@ class DirOptions extends ApiCommand implements ResourceEntity
 	 *        	id of dir-protection entry
 	 *        	
 	 * @access admin, customer
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function delete()
 	{
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'extras')) {
-			throw new Exception("You cannot access this resource", 405);
+			throw new \Exception("You cannot access this resource", 405);
 		}
 
 		$id = $this->getParam('id');
 
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'extras.pathoptions')) {
-			throw new Exception("You cannot access this resource", 405);
+			throw new \Exception("You cannot access this resource", 405);
 		}
 
 		// get directory-option

@@ -1,4 +1,7 @@
 <?php
+namespace Froxlor\Api\Commands;
+
+use Froxlor\Database as Database;
 
 /**
  * This file is part of the Froxlor project.
@@ -8,44 +11,44 @@
  * file that was distributed with this source code. You can also view the
  * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
- * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    API
- * @since      0.10.0
- *
+ * @copyright (c) the authors
+ * @author Froxlor team <team@froxlor.org> (2010-)
+ * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package API
+ * @since 0.10.0
+ *       
  */
-class Traffic extends ApiCommand implements ResourceEntity
+class Traffic extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntity
 {
 
 	/**
 	 * You cannot add traffic data
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 */
 	public function add()
 	{
-		throw new Exception('You cannot add traffic data', 303);
+		throw new \Exception('You cannot add traffic data', 303);
 	}
 
 	/**
 	 * to get specific traffic details use year, month and/or day parameter for Traffic.listing()
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 */
 	public function get()
 	{
-		throw new Exception('To get specific traffic details use year, month and/or day parameter for Traffic.listing()', 303);
+		throw new \Exception('To get specific traffic details use year, month and/or day parameter for Traffic.listing()', 303);
 	}
 
 	/**
 	 * You cannot update traffic data
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 */
 	public function update()
 	{
-		throw new Exception('You cannot update traffic data', 303);
+		throw new \Exception('You cannot update traffic data', 303);
 	}
 
 	/**
@@ -65,7 +68,7 @@ class Traffic extends ApiCommand implements ResourceEntity
 	 *        	optional, admin-only, select traffic of a specific customer by loginname
 	 *        	
 	 * @access admin, customer
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array count|list
 	 */
 	public function listing()
@@ -95,7 +98,7 @@ class Traffic extends ApiCommand implements ResourceEntity
 		if (! $this->isAdmin() || ($this->isAdmin() && $customer_traffic)) {
 			$result_stmt = Database::prepare("
 				SELECT * FROM `" . TABLE_PANEL_TRAFFIC . "`
-				WHERE `customerid` IN (".implode(", ", $customer_ids).")" . $where_str);
+				WHERE `customerid` IN (" . implode(", ", $customer_ids) . ")" . $where_str);
 		} else {
 			$params['adminid'] = $this->getUserDetail('adminid');
 			$result_stmt = Database::prepare("
@@ -103,7 +106,7 @@ class Traffic extends ApiCommand implements ResourceEntity
 				WHERE `adminid` = :adminid" . $where_str);
 		}
 		Database::pexecute($result_stmt, $params, true, true);
-		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+		while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$result[] = $row;
 		}
 		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_NOTICE, "[API] list traffic");
@@ -116,10 +119,10 @@ class Traffic extends ApiCommand implements ResourceEntity
 	/**
 	 * You cannot delete traffic data
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 */
 	public function delete()
 	{
-		throw new Exception('You cannot delete traffic data', 303);
+		throw new \Exception('You cannot delete traffic data', 303);
 	}
 }

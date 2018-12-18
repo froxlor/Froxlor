@@ -1,5 +1,8 @@
 <?php
+namespace Froxlor\Api\Commands;
 
+use Froxlor\Database as Database;
+use Froxlor\Settings as Settings;
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -15,7 +18,7 @@
  * @since      0.10.0
  *
  */
-class EmailForwarders extends ApiCommand implements ResourceEntity
+class EmailForwarders extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntity
 {
 
 	/**
@@ -33,13 +36,13 @@ class EmailForwarders extends ApiCommand implements ResourceEntity
 	 *        	email-address to add as forwarder
 	 *        	
 	 * @access admin,customer
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function add()
 	{
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'email')) {
-			throw new Exception("You cannot access this resource", 405);
+			throw new \Exception("You cannot access this resource", 405);
 		}
 
 		if ($this->getUserDetail('email_forwarders_used') < $this->getUserDetail('email_forwarders') || $this->getUserDetail('email_forwarders') == '-1') {
@@ -51,7 +54,8 @@ class EmailForwarders extends ApiCommand implements ResourceEntity
 			$destination = $this->getParam('destination');
 
 			// validation
-			$idna_convert = new idna_convert_wrapper();
+			// @fixme idna
+			$idna_convert = new \idna_convert_wrapper();
 			$destination = $idna_convert->encode($destination);
 
 			$result = $this->apiCall('Emails.get', array(
@@ -103,7 +107,7 @@ class EmailForwarders extends ApiCommand implements ResourceEntity
 			));
 			return $this->response(200, "successfull", $result);
 		}
-		throw new Exception("No more resources available", 406);
+		throw new \Exception("No more resources available", 406);
 	}
 
 	/**
@@ -112,7 +116,7 @@ class EmailForwarders extends ApiCommand implements ResourceEntity
 	 */
 	public function get()
 	{
-		throw new Exception('You cannot directly get an email forwarder. You need to call Emails.get()', 303);
+		throw new \Exception('You cannot directly get an email forwarder. You need to call Emails.get()', 303);
 	}
 
 	/**
@@ -121,7 +125,7 @@ class EmailForwarders extends ApiCommand implements ResourceEntity
 	 */
 	public function update()
 	{
-		throw new Exception('You cannot update an email forwarder. You need to delete the entry and create a new one.', 303);
+		throw new \Exception('You cannot update an email forwarder. You need to delete the entry and create a new one.', 303);
 	}
 
 	/**
@@ -130,7 +134,7 @@ class EmailForwarders extends ApiCommand implements ResourceEntity
 	 */
 	public function listing()
 	{
-		throw new Exception('You cannot directly list email forwarders. You need to call Emails.listing()', 303);
+		throw new \Exception('You cannot directly list email forwarders. You need to call Emails.listing()', 303);
 	}
 
 	/**
@@ -148,13 +152,13 @@ class EmailForwarders extends ApiCommand implements ResourceEntity
 	 *        	id of the forwarder to delete
 	 *        	
 	 * @access admin,customer
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function delete()
 	{
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'email')) {
-			throw new Exception("You cannot access this resource", 405);
+			throw new \Exception("You cannot access this resource", 405);
 		}
 
 		// parameter
@@ -205,6 +209,6 @@ class EmailForwarders extends ApiCommand implements ResourceEntity
 			));
 			return $this->response(200, "successfull", $result);
 		}
-		throw new Exception("Unknown forwarder id", 404);
+		throw new \Exception("Unknown forwarder id", 404);
 	}
 }

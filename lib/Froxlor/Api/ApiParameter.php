@@ -1,4 +1,5 @@
 <?php
+namespace Froxlor\Api;
 
 /**
  * This file is part of the Froxlor project.
@@ -8,12 +9,12 @@
  * file that was distributed with this source code. You can also view the
  * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
- * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    API
- * @since      0.10.0
- *
+ * @copyright (c) the authors
+ * @author Froxlor team <team@froxlor.org> (2010-)
+ * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package API
+ * @since 0.10.0
+ *       
  */
 abstract class ApiParameter
 {
@@ -30,7 +31,7 @@ abstract class ApiParameter
 	 * @param array $params
 	 *        	optional, array of parameters (var=>value) for the command
 	 *        	
-	 * @throws Exception
+	 * @throws \Exception
 	 */
 	public function __construct($params = null)
 	{
@@ -52,7 +53,7 @@ abstract class ApiParameter
 	 * @param mixed $default
 	 *        	value which is returned if optional=true and param is not set
 	 *        	
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return mixed
 	 */
 	protected function getParam($param = null, $optional = false, $default = '')
@@ -62,7 +63,7 @@ abstract class ApiParameter
 			if ($optional === false) {
 				// get module + function for better error-messages
 				$inmod = $this->getModFunctionString();
-				throw new Exception('Requested parameter "' . $param . '" could not be found for "' . $inmod . '"', 404);
+				throw new \Exception('Requested parameter "' . $param . '" could not be found for "' . $inmod . '"', 404);
 			}
 			return $default;
 		}
@@ -71,7 +72,7 @@ abstract class ApiParameter
 			if ($optional === false) {
 				// get module + function for better error-messages
 				$inmod = $this->getModFunctionString();
-				throw new Exception('Requested parameter "' . $param . '" is empty where it should not be for "' . $inmod . '"', 406);
+				throw new \Exception('Requested parameter "' . $param . '" is empty where it should not be for "' . $inmod . '"', 406);
 			}
 			return '';
 		}
@@ -88,7 +89,7 @@ abstract class ApiParameter
 	 *        	default: false
 	 * @param mixed $default
 	 *        	value which is returned if optional=true and param is not set
-	 *
+	 *        	
 	 * @return string
 	 */
 	protected function getBoolParam($param = null, $optional = false, $default = false)
@@ -117,7 +118,7 @@ abstract class ApiParameter
 	 *        	value which is returned if optional=true and param is not set
 	 *        	
 	 * @return mixed
-	 * @throws Exception
+	 * @throws \Exception
 	 */
 	protected function getUlParam($param = null, $ul_field = null, $optional = false, $default = 0)
 	{

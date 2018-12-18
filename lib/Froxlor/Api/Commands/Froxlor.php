@@ -1,4 +1,8 @@
 <?php
+namespace Froxlor\Api\Commands;
+
+use Froxlor\Database as Database;
+use Froxlor\Settings as Settings;
 
 /**
  * This file is part of the Froxlor project.
@@ -8,21 +12,21 @@
  * file that was distributed with this source code. You can also view the
  * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
- * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    API
- * @since      0.10.0
- *
+ * @copyright (c) the authors
+ * @author Froxlor team <team@froxlor.org> (2010-)
+ * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package API
+ * @since 0.10.0
+ *       
  */
-class Froxlor extends ApiCommand
+class Froxlor extends \Froxlor\Api\ApiCommand
 {
 
 	/**
 	 * checks whether there is a newer version of froxlor available
 	 *
 	 * @access admin
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return string
 	 */
 	public function checkUpdate()
@@ -35,7 +39,7 @@ class Froxlor extends ApiCommand
 				$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] checking for updates");
 
 				// check for new version
-				$latestversion = HttpClient::urlGet(UPDATE_URI);
+				$latestversion = \Froxlor\Http\HttpClient::urlGet(UPDATE_URI);
 				$latestversion = explode('|', $latestversion);
 
 				if (is_array($latestversion) && count($latestversion) >= 1) {
@@ -89,13 +93,13 @@ class Froxlor extends ApiCommand
 			}
 			return $this->response(300, "successfull", array(
 				'isnewerversion' => 0,
-				'version' => $this->version.$this->branding,
+				'version' => $this->version . $this->branding,
 				'message' => 'Version-check not available due to missing php-curl extension',
-				'link' => UPDATE_URI.'/pretty',
+				'link' => UPDATE_URI . '/pretty',
 				'additional_info' => ""
 			));
 		}
-		throw new Exception("Not allowed to execute given command.", 403);
+		throw new \Exception("Not allowed to execute given command.", 403);
 	}
 
 	/**
@@ -105,7 +109,7 @@ class Froxlor extends ApiCommand
 	 *        	content of exported froxlor-settings json file
 	 *        	
 	 * @access admin
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return bool
 	 */
 	public function importSettings()
@@ -114,7 +118,7 @@ class Froxlor extends ApiCommand
 			$json_str = $this->getParam('json_str');
 			$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "User " . $this->getUserDetail('loginname') . " imported settings");
 			try {
-				SImExporter::import($json_str);
+				\Froxlor\SImExporter::import($json_str);
 				inserttask('1');
 				inserttask('10');
 				// Using nameserver, insert a task which rebuilds the server config
@@ -122,35 +126,35 @@ class Froxlor extends ApiCommand
 				// cron.d file
 				inserttask('99');
 				return $this->response(200, "successfull", true);
-			} catch (Exception $e) {
-				throw new Exception($e->getMessage(), 406);
+			} catch (\Exception $e) {
+				throw new \Exception($e->getMessage(), 406);
 			}
 		}
-		throw new Exception("Not allowed to execute given command.", 403);
+		throw new \Exception("Not allowed to execute given command.", 403);
 	}
 
 	/**
 	 * export settings
 	 *
 	 * @access admin
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return string json-string
 	 */
 	public function exportSettings()
 	{
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
 			$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "User " . $this->getUserDetail('loginname') . " exported settings");
-			$json_export = SImExporter::export();
+			$json_export = \Froxlor\SImExporter::export();
 			return $this->response(200, "successfull", $json_export);
 		}
-		throw new Exception("Not allowed to execute given command.", 403);
+		throw new \Exception("Not allowed to execute given command.", 403);
 	}
 
 	/**
 	 * return a list of all settings
 	 *
 	 * @access admin
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array count|list
 	 */
 	public function listSettings()
@@ -161,7 +165,7 @@ class Froxlor extends ApiCommand
 			");
 			Database::pexecute($sel_stmt, null, true, true);
 			$result = array();
-			while ($row = $sel_stmt->fetch(PDO::FETCH_ASSOC)) {
+			while ($row = $sel_stmt->fetch(\PDO::FETCH_ASSOC)) {
 				$result[] = array(
 					'key' => $row['settinggroup'] . '.' . $row['varname'],
 					'value' => $row['value']
@@ -172,7 +176,7 @@ class Froxlor extends ApiCommand
 				'list' => $result
 			));
 		}
-		throw new Exception("Not allowed to execute given command.", 403);
+		throw new \Exception("Not allowed to execute given command.", 403);
 	}
 
 	/**
@@ -182,7 +186,7 @@ class Froxlor extends ApiCommand
 	 *        	settinggroup.varname couple
 	 *        	
 	 * @access admin
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return string
 	 */
 	public function getSetting()
@@ -191,7 +195,7 @@ class Froxlor extends ApiCommand
 			$setting = $this->getParam('key');
 			return $this->response(200, "successfull", Settings::Get($setting));
 		}
-		throw new Exception("Not allowed to execute given command.", 403);
+		throw new \Exception("Not allowed to execute given command.", 403);
 	}
 
 	/**
@@ -203,25 +207,25 @@ class Froxlor extends ApiCommand
 	 *        	optional the new value, default is ''
 	 *        	
 	 * @access admin
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return string
 	 */
 	public function updateSetting()
 	{
 		// currently not implemented as it required validation too so no wrong settings are being stored via API
-		throw new Exception("Not available yet.", 501);
+		throw new \Exception("Not available yet.", 501);
 
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
 			$setting = $this->getParam('key');
 			$value = $this->getParam('value', true, '');
 			$oldvalue = Settings::Get($setting);
 			if (is_null($oldvalue)) {
-				throw new Exception("Setting '" . $setting . "' could not be found");
+				throw new \Exception("Setting '" . $setting . "' could not be found");
 			}
 			$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] Changing setting '" . $setting . "' from '" . $oldvalue . "' to '" . $value . "'");
 			return $this->response(200, "successfull", Settings::Set($setting, $value, true));
 		}
-		throw new Exception("Not allowed to execute given command.", 403);
+		throw new \Exception("Not allowed to execute given command.", 403);
 	}
 
 	/**
@@ -231,7 +235,7 @@ class Froxlor extends ApiCommand
 	 *        	optional, return list of functions for a specific module
 	 *        	
 	 * @access admin, customer
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function listFunctions()
@@ -255,7 +259,7 @@ class Froxlor extends ApiCommand
 			}
 		} else {
 			// check all the modules
-			$path = FROXLOR_INSTALL_DIR . '/lib/classes/api/commands/';
+			$path = \Froxlor\Froxlor::getInstallDir() . '/lib/Froxlor/Api/Commands/';
 			// valid directory?
 			if (is_dir($path)) {
 				// create RecursiveIteratorIterator
@@ -264,13 +268,13 @@ class Froxlor extends ApiCommand
 				foreach ($its as $it) {
 					// does it match the Filename pattern?
 					$matches = array();
-					if (preg_match("/^class\.(.+)\.php$/i", $it->getFilename(), $matches)) {
+					if (preg_match("/^(.+)\.php$/i", $it->getFilename(), $matches)) {
 						// check for existence
 						try {
 							// set the module to be in our namespace
 							$mod = $matches[1];
 							$this->requireModules($mod);
-						} catch (Exception $e) {
+						} catch (\Exception $e) {
 							// @todo log?
 							continue;
 						}
@@ -289,7 +293,7 @@ class Froxlor extends ApiCommand
 				}
 			} else {
 				// yikes - no valid directory to check
-				throw new Exception("Cannot search directory '" . $path . "'. No such directory.", 500);
+				throw new \Exception("Cannot search directory '" . $path . "'. No such directory.", 500);
 			}
 		}
 
@@ -304,7 +308,7 @@ class Froxlor extends ApiCommand
 	 * @param string $module
 	 * @param string $function
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array|bool
 	 */
 	private function getParamListFromDoc($module = null, $function = null)
@@ -396,7 +400,7 @@ class Froxlor extends ApiCommand
 	 *
 	 * @param string|array $modules
 	 *
-	 * @throws Exception
+	 * @throws \Exception
 	 */
 	private function requireModules($modules = null)
 	{
@@ -410,17 +414,18 @@ class Froxlor extends ApiCommand
 			// check all the modules
 			foreach ($modules as $module) {
 				try {
+					$module = "\Froxlor\Api\Commands\\" . $module;
 					// can we use the class?
 					if (class_exists($module)) {
 						continue;
 					} else {
-						throw new Exception('The required class "' . $module . '" could not be found but the module-file exists', 404);
+						throw new \Exception('The required class "' . $module . '" could not be found but the module-file exists', 404);
 					}
-				} catch (Exception $e) {
+				} catch (\Exception $e) {
 					// The autoloader will throw an Exception
 					// that the required class could not be found
 					// but we want a nicer error-message for this here
-					throw new Exception('The required module "' . $module . '" could not be found', 404);
+					throw new \Exception('The required module "' . $module . '" could not be found', 404);
 				}
 			}
 		}

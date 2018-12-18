@@ -1,4 +1,8 @@
 <?php
+namespace Froxlor\Api\Commands;
+
+use Froxlor\Database as Database;
+use Froxlor\Settings as Settings;
 
 /**
  * This file is part of the Froxlor project.
@@ -8,21 +12,21 @@
  * file that was distributed with this source code. You can also view the
  * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
- * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    API
- * @since      0.10.0
- *
+ * @copyright (c) the authors
+ * @author Froxlor team <team@froxlor.org> (2010-)
+ * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package API
+ * @since 0.10.0
+ *       
  */
-class Customers extends ApiCommand implements ResourceEntity
+class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntity
 {
 
 	/**
 	 * lists all customer entries
 	 *
 	 * @access admin
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array count|list
 	 */
 	public function listing()
@@ -44,7 +48,7 @@ class Customers extends ApiCommand implements ResourceEntity
 			}
 			Database::pexecute($result_stmt, $params, true, true);
 			$result = array();
-			while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+			while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 				$result[] = $row;
 			}
 			return $this->response(200, "successfull", array(
@@ -52,7 +56,7 @@ class Customers extends ApiCommand implements ResourceEntity
 				'list' => $result
 			));
 		}
-		throw new Exception("Not allowed to execute given command.", 403);
+		throw new \Exception("Not allowed to execute given command.", 403);
 	}
 
 	/**
@@ -64,7 +68,7 @@ class Customers extends ApiCommand implements ResourceEntity
 	 *        	optional, the loginname
 	 *        	
 	 * @access admin, customer
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function get()
@@ -86,7 +90,7 @@ class Customers extends ApiCommand implements ResourceEntity
 			}
 		} else {
 			if (($id > 0 && $id != $this->getUserDetail('customerid')) || ! empty($loginname) && $loginname != $this->getUserDetail('loginname')) {
-				throw new Exception("You cannot access data of other customers", 401);
+				throw new \Exception("You cannot access data of other customers", 401);
 			}
 			$result_stmt = Database::prepare("
 				SELECT * FROM `" . TABLE_PANEL_CUSTOMERS . "`
@@ -105,7 +109,7 @@ class Customers extends ApiCommand implements ResourceEntity
 			return $this->response(200, "successfull", $result);
 		}
 		$key = ($id > 0 ? "id #" . $id : "loginname '" . $loginname . "'");
-		throw new Exception("Customer with " . $key . " could not be found", 404);
+		throw new \Exception("Customer with " . $key . " could not be found", 404);
 	}
 
 	/**
@@ -204,7 +208,7 @@ class Customers extends ApiCommand implements ResourceEntity
 	 *        	optional, whether to store the default index file to customers homedir
 	 *        	
 	 * @access admin
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function add()
@@ -263,7 +267,8 @@ class Customers extends ApiCommand implements ResourceEntity
 				$city = validate($city, 'city', '', '', array(), true);
 				$phone = validate($phone, 'phone', '/^[0-9\- \+\(\)\/]*$/', '', array(), true);
 				$fax = validate($fax, 'fax', '/^[0-9\- \+\(\)\/]*$/', '', array(), true);
-				$idna_convert = new idna_convert_wrapper();
+				// @fixme idna
+				$idna_convert = new \idna_convert_wrapper();
 				$email = $idna_convert->encode(validate($email, 'email', '', '', array(), true));
 				$customernumber = validate($customernumber, 'customer number', '/^[A-Za-z0-9 \-]*$/Di', '', array(), true);
 				$def_language = validate($def_language, 'default language', '', '', array(), true);
@@ -639,7 +644,7 @@ class Customers extends ApiCommand implements ResourceEntity
 						try {
 							$std_domain = $this->apiCall('Domains.add', $ins_data);
 							$domainid = $std_domain['id'];
-						} catch (Exception $e) {
+						} catch (\Exception $e) {
 							$this->logger()->logAction(ADM_ACTION, LOG_ERR, "[API] Unable to add standard-subdomain: " . $e->getMessage());
 						}
 
@@ -713,10 +718,10 @@ class Customers extends ApiCommand implements ResourceEntity
 								'company' => $company
 							)));
 							$this->mailer()->send();
-						} catch (phpmailerException $e) {
+						} catch (\phpmailerException $e) {
 							$mailerr_msg = $e->errorMessage();
 							$_mailerror = true;
-						} catch (Exception $e) {
+						} catch (\Exception $e) {
 							$mailerr_msg = $e->getMessage();
 							$_mailerror = true;
 						}
@@ -737,9 +742,9 @@ class Customers extends ApiCommand implements ResourceEntity
 				));
 				return $this->response(200, "successfull", $result);
 			}
-			throw new Exception("No more resources available", 406);
+			throw new \Exception("No more resources available", 406);
 		}
-		throw new Exception("Not allowed to execute given command.", 403);
+		throw new \Exception("Not allowed to execute given command.", 403);
 	}
 
 	/**
@@ -844,7 +849,7 @@ class Customers extends ApiCommand implements ResourceEntity
 	 *        	optional, change theme
 	 *        	
 	 * @access admin, customer
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function update()
@@ -863,7 +868,8 @@ class Customers extends ApiCommand implements ResourceEntity
 			// parameters
 			$move_to_admin = intval_ressource($this->getBoolParam('move_to_admin', true, 0));
 
-			$idna_convert = new idna_convert_wrapper();
+			// @fixme idna
+			$idna_convert = new \idna_convert_wrapper();
 			$email = $this->getParam('email', true, $idna_convert->decode($result['email']));
 			$name = $this->getParam('name', true, $result['name']);
 			$firstname = $this->getParam('firstname', true, $result['firstname']);
@@ -911,7 +917,8 @@ class Customers extends ApiCommand implements ResourceEntity
 
 		// validation
 		if ($this->isAdmin()) {
-			$idna_convert = new idna_convert_wrapper();
+			// @fixme idna
+			$idna_convert = new \idna_convert_wrapper();
 			$name = validate($name, 'name', '', '', array(), true);
 			$firstname = validate($firstname, 'first name', '', '', array(), true);
 			$company = validate($company, 'company', '', '', array(), true);
@@ -991,7 +998,7 @@ class Customers extends ApiCommand implements ResourceEntity
 				try {
 					$std_domain = $this->apiCall('Domains.add', $ins_data);
 					$domainid = $std_domain['id'];
-				} catch (Exception $e) {
+				} catch (\Exception $e) {
 					$this->logger()->logAction(ADM_ACTION, LOG_ERR, "[API] Unable to add standard-subdomain: " . $e->getMessage());
 				}
 
@@ -1014,7 +1021,7 @@ class Customers extends ApiCommand implements ResourceEntity
 						'id' => $result['standardsubdomain'],
 						'is_stdsubdomain' => 1
 					));
-				} catch (Exception $e) {
+				} catch (\Exception $e) {
 					$this->logger()->logAction(ADM_ACTION, LOG_ERR, "[API] Unable to delete standard-subdomain: " . $e->getMessage());
 				}
 				$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] automatically deleted standardsubdomain for user '" . $result['loginname'] . "'");
@@ -1086,10 +1093,11 @@ class Customers extends ApiCommand implements ResourceEntity
 				Database::needRoot(true);
 				$last_dbserver = 0;
 
-				$dbm = new DbManager($this->logger());
+				// @fixme dbManager
+				$dbm = new \DbManager($this->logger());
 
 				// For each of them
-				while ($row_database = $databases_stmt->fetch(PDO::FETCH_ASSOC)) {
+				while ($row_database = $databases_stmt->fetch(\PDO::FETCH_ASSOC)) {
 
 					if ($last_dbserver != $row_database['dbserver']) {
 						$dbm->getManager()->flushPrivileges();
@@ -1377,7 +1385,7 @@ class Customers extends ApiCommand implements ResourceEntity
 	 *        	optional, default false
 	 *        	
 	 * @access admin
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function delete()
@@ -1405,9 +1413,10 @@ class Customers extends ApiCommand implements ResourceEntity
 			Database::needRoot(true);
 			$last_dbserver = 0;
 
-			$dbm = new DbManager($this->logger());
+			// @fixme db manager
+			$dbm = new \DbManager($this->logger());
 
-			while ($row_database = $databases_stmt->fetch(PDO::FETCH_ASSOC)) {
+			while ($row_database = $databases_stmt->fetch(\PDO::FETCH_ASSOC)) {
 				if ($last_dbserver != $row_database['dbserver']) {
 					Database::needRoot(true, $row_database['dbserver']);
 					$dbm->getManager()->flushPrivileges();
@@ -1435,7 +1444,7 @@ class Customers extends ApiCommand implements ResourceEntity
 			Database::pexecute($did_stmt, array(
 				'id' => $id
 			), true, true);
-			while ($row = $did_stmt->fetch(PDO::FETCH_ASSOC)) {
+			while ($row = $did_stmt->fetch(\PDO::FETCH_ASSOC)) {
 				// remove domain->ip connection
 				$stmt = Database::prepare("DELETE FROM `" . TABLE_DOMAINTOIP . "` WHERE `id_domain` = :did");
 				Database::pexecute($stmt, array(
@@ -1501,7 +1510,7 @@ class Customers extends ApiCommand implements ResourceEntity
 			Database::pexecute($result2_stmt, array(
 				'id' => $id
 			), true, true);
-			while ($row = $result2_stmt->fetch(PDO::FETCH_ASSOC)) {
+			while ($row = $result2_stmt->fetch(\PDO::FETCH_ASSOC)) {
 				// delete ftp-quotatallies by username
 				$stmt = Database::prepare("DELETE FROM `" . TABLE_FTP_QUOTATALLIES . "` WHERE `name` = :name");
 				Database::pexecute($stmt, array(
@@ -1595,11 +1604,12 @@ class Customers extends ApiCommand implements ResourceEntity
 			inserttask('10');
 
 			// move old tickets to archive
-			$tickets = ticket::customerHasTickets($id);
+			// @fixme ticket
+			$tickets = \ticket::customerHasTickets($id);
 			if ($tickets !== false && isset($tickets[0])) {
 				foreach ($tickets as $ticket) {
 					$now = time();
-					$mainticket = ticket::getInstanceOf($result, (int) $ticket);
+					$mainticket = \ticket::getInstanceOf($result, (int) $ticket);
 					$mainticket->Set('lastchange', $now, true, true);
 					$mainticket->Set('lastreplier', '1', true, true);
 					$mainticket->Set('status', '3', true, true);
@@ -1612,7 +1622,7 @@ class Customers extends ApiCommand implements ResourceEntity
 			$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] deleted customer '" . $result['loginname'] . "'");
 			return $this->response(200, "successfull", $result);
 		}
-		throw new Exception("Not allowed to execute given command.", 403);
+		throw new \Exception("Not allowed to execute given command.", 403);
 	}
 
 	/**
@@ -1624,7 +1634,7 @@ class Customers extends ApiCommand implements ResourceEntity
 	 *        	optional, the loginname
 	 *        	
 	 * @access admin
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function unlock()
@@ -1654,7 +1664,7 @@ class Customers extends ApiCommand implements ResourceEntity
 			$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] unlocked customer '" . $result['loginname'] . "'");
 			return $this->response(200, "successfull", $result);
 		}
-		throw new Exception("Not allowed to execute given command.", 403);
+		throw new \Exception("Not allowed to execute given command.", 403);
 	}
 
 	/**
@@ -1669,7 +1679,7 @@ class Customers extends ApiCommand implements ResourceEntity
 	 *        	target-admin-id
 	 *        	
 	 * @access admin
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function move()
@@ -1688,7 +1698,7 @@ class Customers extends ApiCommand implements ResourceEntity
 
 			// check if target-admin is the current admin
 			if ($adminid == $c_result['adminid']) {
-				throw new Exception("Cannot move customer to the same admin/reseller as he currently is assigned to", 406);
+				throw new \Exception("Cannot move customer to the same admin/reseller as he currently is assigned to", 406);
 			}
 
 			// get target admin
@@ -1733,7 +1743,7 @@ class Customers extends ApiCommand implements ResourceEntity
 			));
 			return $this->response(200, "successfull", $result);
 		}
-		throw new Exception("Not allowed to execute given command.", 403);
+		throw new \Exception("Not allowed to execute given command.", 403);
 	}
 
 	/**

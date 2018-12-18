@@ -1,4 +1,5 @@
 <?php
+namespace Froxlor\Api;
 
 /**
  * This file is part of the Froxlor project.
@@ -8,12 +9,12 @@
  * file that was distributed with this source code. You can also view the
  * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
- * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    API
- * @since      0.10.0
- *
+ * @copyright (c) the authors
+ * @author Froxlor team <team@froxlor.org> (2010-)
+ * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package API
+ * @since 0.10.0
+ *       
  */
 abstract class ApiCommand extends ApiParameter
 {
@@ -42,14 +43,14 @@ abstract class ApiCommand extends ApiParameter
 	/**
 	 * logger interface
 	 *
-	 * @var FroxlorLogger
+	 * @var \FroxlorLogger
 	 */
 	private $logger = null;
 
 	/**
 	 * mail interface
 	 *
-	 * @var PHPMailer
+	 * @var \PHPMailer
 	 */
 	private $mail = null;
 
@@ -90,11 +91,11 @@ abstract class ApiCommand extends ApiParameter
 	 * @param array $userinfo
 	 *        	optional, passed via WebInterface (instead of $header)
 	 *        	
-	 * @throws Exception
+	 * @throws \Exception
 	 */
 	public function __construct($header = null, $params = null, $userinfo = null)
 	{
-		global $lng, $version, $dbversion, $branding;
+		global $version, $dbversion, $branding;
 
 		parent::__construct($params);
 
@@ -108,14 +109,14 @@ abstract class ApiCommand extends ApiParameter
 			$this->user_data = $userinfo;
 			$this->is_admin = (isset($userinfo['adminsession']) && $userinfo['adminsession'] == 1 && $userinfo['adminid'] > 0) ? true : false;
 		} else {
-			throw new Exception("Invalid user data", 500);
+			throw new \Exception("Invalid user data", 500);
 		}
-		$this->logger = FroxlorLogger::getInstanceOf($this->user_data);
+		$this->logger = \FroxlorLogger::getInstanceOf($this->user_data);
 
 		// check whether the user is deactivated
 		if ($this->getUserDetail('deactivated') == 1) {
 			$this->logger()->logAction(LOG_ERROR, LOG_INFO, "[API] User '" . $this->getUserDetail('loginnname') . "' tried to use API but is deactivated");
-			throw new Exception("Account suspended", 406);
+			throw new \Exception("Account suspended", 406);
 		}
 
 		$this->initLang();
@@ -135,17 +136,17 @@ abstract class ApiCommand extends ApiParameter
 		global $lng;
 
 		// query the whole table
-		$result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_LANGUAGE . "`");
+		$result_stmt = \Froxlor\Database\Database::query("SELECT * FROM `" . TABLE_PANEL_LANGUAGE . "`");
 
 		$langs = array();
 		// presort languages
-		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+		while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$langs[$row['language']][] = $row;
 		}
 
 		// set default language before anything else to
 		// ensure that we can display messages
-		$language = Settings::Get('panel.standardlanguage');
+		$language = \Froxlor\Settings::Get('panel.standardlanguage');
 
 		if (isset($this->user_data['language']) && isset($langs[$this->user_data['language']])) {
 			// default: use language from session, #277
@@ -156,14 +157,14 @@ abstract class ApiCommand extends ApiParameter
 
 		// include every english language file we can get
 		foreach ($langs['English'] as $value) {
-			include_once makeSecurePath(FROXLOR_INSTALL_DIR . '/' . $value['file']);
+			include_once \Froxlor\FileDir::makeSecurePath(FROXLOR_INSTALL_DIR . '/' . $value['file']);
 		}
 
 		// now include the selected language if its not english
 		if ($language != 'English') {
 			if (isset($langs[$language])) {
 				foreach ($langs[$language] as $value) {
-					include_once makeSecurePath(FROXLOR_INSTALL_DIR . '/' . $value['file']);
+					include_once \Froxlor\FileDir::makeSecurePath(FROXLOR_INSTALL_DIR . '/' . $value['file']);
 				}
 			} else {
 				if ($this->debug) {
@@ -181,35 +182,36 @@ abstract class ApiCommand extends ApiParameter
 
 	/**
 	 * initialize mail interface so an API wide mail-object is available
-	 * @throws phpmailerException
+	 *
+	 * @throws \phpmailerException
 	 */
 	private function initMail()
 	{
 		/**
 		 * Initialize the mailingsystem
 		 */
-		$this->mail = new PHPMailer(true);
+		$this->mail = new \PHPMailer(true);
 		$this->mail->CharSet = "UTF-8";
 
-		if (Settings::Get('system.mail_use_smtp')) {
+		if (\Froxlor\Settings::Get('system.mail_use_smtp')) {
 			$this->mail->isSMTP();
-			$this->mail->Host = Settings::Get('system.mail_smtp_host');
-			$this->mail->SMTPAuth = Settings::Get('system.mail_smtp_auth') == '1' ? true : false;
-			$this->mail->Username = Settings::Get('system.mail_smtp_user');
-			$this->mail->Password = Settings::Get('system.mail_smtp_passwd');
-			if (Settings::Get('system.mail_smtp_usetls')) {
+			$this->mail->Host = \Froxlor\Settings::Get('system.mail_smtp_host');
+			$this->mail->SMTPAuth = \Froxlor\Settings::Get('system.mail_smtp_auth') == '1' ? true : false;
+			$this->mail->Username = \Froxlor\Settings::Get('system.mail_smtp_user');
+			$this->mail->Password = \Froxlor\Settings::Get('system.mail_smtp_passwd');
+			if (\Froxlor\Settings::Get('system.mail_smtp_usetls')) {
 				$this->mail->SMTPSecure = 'tls';
 			} else {
 				$this->mail->SMTPAutoTLS = false;
 			}
-			$this->mail->Port = Settings::Get('system.mail_smtp_port');
+			$this->mail->Port = \Froxlor\Settings::Get('system.mail_smtp_port');
 		}
 
-		if ( PHPMailer::validateAddress(Settings::Get('panel.adminmail')) !== false) {
+		if (\PHPMailer::validateAddress(\Froxlor\Settings::Get('panel.adminmail')) !== false) {
 			// set return-to address and custom sender-name, see #76
-			$this->mail->setFrom(Settings::Get('panel.adminmail'), Settings::Get('panel.adminmail_defname'));
-			if (Settings::Get('panel.adminmail_return') != '') {
-				$this->mail->addReplyTo(Settings::Get('panel.adminmail_return'), Settings::Get('panel.adminmail_defname'));
+			$this->mail->setFrom(\Froxlor\Settings::Get('panel.adminmail'), \Froxlor\Settings::Get('panel.adminmail_defname'));
+			if (\Froxlor\Settings::Get('panel.adminmail_return') != '') {
+				$this->mail->addReplyTo(\Froxlor\Settings::Get('panel.adminmail_return'), \Froxlor\Settings::Get('panel.adminmail_defname'));
 			}
 		}
 	}
@@ -225,7 +227,7 @@ abstract class ApiCommand extends ApiParameter
 	 *        	array of parameters for the command
 	 *        	
 	 * @return ApiCommand
-	 * @throws Exception
+	 * @throws \Exception
 	 */
 	public static function getLocal($userinfo = null, $params = null)
 	{
@@ -267,7 +269,7 @@ abstract class ApiCommand extends ApiParameter
 	/**
 	 * return logger instance
 	 *
-	 * @return FroxlorLogger
+	 * @return \FroxlorLogger
 	 */
 	protected function logger()
 	{
@@ -277,7 +279,7 @@ abstract class ApiCommand extends ApiParameter
 	/**
 	 * return mailer instance
 	 *
-	 * @return PHPMailer
+	 * @return \PHPMailer
 	 */
 	protected function mailer()
 	{
@@ -295,7 +297,7 @@ abstract class ApiCommand extends ApiParameter
 	protected function apiCall($command = null, $params = null)
 	{
 		$_command = explode(".", $command);
-		$module = $_command[0];
+		$module = __NAMESPACE__ . "\Commands\\" . $_command[0];
 		$function = $_command[1];
 		$json_result = $module::getLocal($this->getUserData(), $params)->{$function}();
 		return json_decode($json_result, true)['data'];
@@ -335,7 +337,7 @@ abstract class ApiCommand extends ApiParameter
 	 * @param string $customer_hide_option
 	 *        	optional, when called as customer, some options might be hidden due to the panel.customer_hide_options ettings
 	 *        	
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	protected function getAllowedCustomerIds($customer_hide_option = '')
@@ -363,15 +365,15 @@ abstract class ApiCommand extends ApiParameter
 				$customer_ids[] = $customer['customerid'];
 			}
 		} else {
-			if (! empty($customer_hide_option) && Settings::IsInList('panel.customer_hide_options', $customer_hide_option)) {
-				throw new Exception("You cannot access this resource", 405);
+			if (! empty($customer_hide_option) && \Froxlor\Settings::IsInList('panel.customer_hide_options', $customer_hide_option)) {
+				throw new \Exception("You cannot access this resource", 405);
 			}
 			$customer_ids = array(
 				$this->getUserDetail('customerid')
 			);
 		}
 		if (empty($customer_ids)) {
-			throw new Exception("Required resource unsatisfied.", 405);
+			throw new \Exception("Required resource unsatisfied.", 405);
 		}
 		return $customer_ids;
 	}
@@ -386,7 +388,7 @@ abstract class ApiCommand extends ApiParameter
 	 * @param string $customer_resource_check
 	 *        	optional, when called as admin, check the resources of the target customer
 	 *        	
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	protected function getCustomerData($customer_resource_check = '')
@@ -400,7 +402,7 @@ abstract class ApiCommand extends ApiParameter
 			));
 			// check whether the customer has enough resources
 			if (! empty($customer_resource_check) && $customer[$customer_resource_check . '_used'] >= $customer[$customer_resource_check] && $customer[$customer_resource_check] != '-1') {
-				throw new Exception("Customer has no more resources available", 406);
+				throw new \Exception("Customer has no more resources available", 406);
 			}
 		} else {
 			$customer = $this->getUserData();
@@ -420,12 +422,12 @@ abstract class ApiCommand extends ApiParameter
 	 */
 	protected static function updateResourceUsage($table = null, $keyfield = null, $key = null, $operator = '+', $resource = null, $extra = null, $step = 1)
 	{
-		$stmt = Database::prepare("
+		$stmt = \Froxlor\Database\Database::prepare("
 			UPDATE `" . $table . "`
 			SET `" . $resource . "` = `" . $resource . "` " . $operator . " " . (int) $step . " " . $extra . "
 			WHERE `" . $keyfield . "` = :key
 		");
-		Database::pexecute($stmt, array(
+		\Froxlor\Database\Database::pexecute($stmt, array(
 			'key' => $key
 		), true, true);
 	}
@@ -444,16 +446,17 @@ abstract class ApiCommand extends ApiParameter
 	protected function getMailTemplate($customerdata = null, $group = null, $varname = null, $replace_arr = array(), $default = "")
 	{
 		// get template
-		$stmt = Database::prepare("
+		$stmt = \Froxlor\Database\Database::prepare("
 			SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "` WHERE `adminid`= :adminid
 			AND `language`= :lang AND `templategroup`= :group AND `varname`= :var
 		");
-		$result = Database::pexecute_first($stmt, array(
+		$result = \Froxlor\Database\Database::pexecute_first($stmt, array(
 			"adminid" => $customerdata['adminid'],
 			"lang" => $customerdata['def_language'],
 			"group" => $group,
 			"var" => $varname
 		), true, true);
+		// @fixme html_entity_decode
 		$content = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $default), $replace_arr));
 		return $content;
 	}
@@ -464,13 +467,13 @@ abstract class ApiCommand extends ApiParameter
 	 * @param array $header
 	 *        	api-request header
 	 *        	
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return boolean
 	 */
 	private function readUserData($header = null)
 	{
-		$sel_stmt = Database::prepare("SELECT * FROM `api_keys` WHERE `apikey` = :ak AND `secret` = :as");
-		$result = Database::pexecute_first($sel_stmt, array(
+		$sel_stmt = \Froxlor\Database\Database::prepare("SELECT * FROM `api_keys` WHERE `apikey` = :ak AND `secret` = :as");
+		$result = \Froxlor\Database\Database::pexecute_first($sel_stmt, array(
 			'ak' => $header['apikey'],
 			'as' => $header['secret']
 		), true, true);
@@ -486,10 +489,10 @@ abstract class ApiCommand extends ApiParameter
 				$key = "customerid";
 			} else {
 				// neither adminid is > 0 nor customerid is > 0 - sorry man, no way
-				throw new Exception("Invalid API credentials", 400);
+				throw new \Exception("Invalid API credentials", 400);
 			}
-			$sel_stmt = Database::prepare("SELECT * FROM `" . $table . "` WHERE `" . $key . "` = :id");
-			$this->user_data = Database::pexecute_first($sel_stmt, array(
+			$sel_stmt = \Froxlor\Database\Database::prepare("SELECT * FROM `" . $table . "` WHERE `" . $key . "` = :id");
+			$this->user_data = \Froxlor\Database\Database::pexecute_first($sel_stmt, array(
 				'id' => ($this->is_admin ? $result['adminid'] : $result['customerid'])
 			), true, true);
 			if ($this->is_admin) {
@@ -497,6 +500,6 @@ abstract class ApiCommand extends ApiParameter
 			}
 			return true;
 		}
-		throw new Exception("Invalid API credentials", 400);
+		throw new \Exception("Invalid API credentials", 400);
 	}
 }

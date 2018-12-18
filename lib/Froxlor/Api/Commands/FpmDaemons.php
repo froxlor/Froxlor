@@ -1,4 +1,8 @@
 <?php
+namespace Froxlor\Api\Commands;
+
+use Froxlor\Database as Database;
+
 
 /**
  * This file is part of the Froxlor project.
@@ -8,21 +12,21 @@
  * file that was distributed with this source code. You can also view the
  * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
- * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    API
- * @since      0.10.0
- *
+ * @copyright (c) the authors
+ * @author Froxlor team <team@froxlor.org> (2010-)
+ * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package API
+ * @since 0.10.0
+ *       
  */
-class FpmDaemons extends ApiCommand implements ResourceEntity
+class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntity
 {
 
 	/**
 	 * lists all fpm-daemon entries
 	 *
 	 * @access admin
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array count|list
 	 */
 	public function listing()
@@ -35,7 +39,7 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 			");
 
 			$fpmdaemons = array();
-			while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+			while ($row = $result->fetch(\PDO::FETCH_ASSOC)) {
 
 				$query_params = array(
 					'id' => $row['id']
@@ -48,7 +52,7 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 
 				$configs = array();
 				if (Database::num_rows() > 0) {
-					while ($row2 = $configresult_stmt->fetch(PDO::FETCH_ASSOC)) {
+					while ($row2 = $configresult_stmt->fetch(\PDO::FETCH_ASSOC)) {
 						$configs[] = $row2['description'];
 					}
 				}
@@ -66,7 +70,7 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 				'list' => $fpmdaemons
 			));
 		}
-		throw new Exception("Not allowed to execute given command.", 403);
+		throw new \Exception("Not allowed to execute given command.", 403);
 	}
 
 	/**
@@ -76,7 +80,7 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 	 *        	fpm-daemon-id
 	 *        	
 	 * @access admin
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function get()
@@ -93,9 +97,9 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 			if ($result) {
 				return $this->response(200, "successfull", $result);
 			}
-			throw new Exception("fpm-daemon with id #" . $id . " could not be found", 404);
+			throw new \Exception("fpm-daemon with id #" . $id . " could not be found", 404);
 		}
-		throw new Exception("Not allowed to execute given command.", 403);
+		throw new \Exception("Not allowed to execute given command.", 403);
 	}
 
 	/**
@@ -122,7 +126,7 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 	 *        	optional, limit execution to the following extensions, default '.php'
 	 *        	
 	 * @access admin
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function add()
@@ -153,7 +157,7 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 				'dynamic',
 				'ondemand'
 			))) {
-				throw new ErrorException("Unknown process manager", 406);
+				throw new \Exception("Unknown process manager", 406);
 			}
 			if (empty($limit_extensions)) {
 				$limit_extensions = '.php';
@@ -201,7 +205,7 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 			));
 			return $this->response(200, "successfull", $result);
 		}
-		throw new Exception("Not allowed to execute given command.", 403);
+		throw new \Exception("Not allowed to execute given command.", 403);
 	}
 
 	/**
@@ -233,7 +237,7 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 	 *        	optional, limit execution to the following extensions, default '.php'
 	 *        	
 	 * @access admin
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function update()
@@ -269,7 +273,7 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 				'dynamic',
 				'ondemand'
 			))) {
-				throw new ErrorException("Unknown process manager", 406);
+				throw new \Exception("Unknown process manager", 406);
 			}
 			if (empty($limit_extensions)) {
 				$limit_extensions = '.php';
@@ -318,7 +322,7 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 			));
 			return $this->response(200, "successfull", $result);
 		}
-		throw new Exception("Not allowed to execute given command.", 403);
+		throw new \Exception("Not allowed to execute given command.", 403);
 	}
 
 	/**
@@ -328,7 +332,7 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 	 *        	fpm-daemon-id
 	 *        	
 	 * @access admin
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function delete()
@@ -364,6 +368,6 @@ class FpmDaemons extends ApiCommand implements ResourceEntity
 			$this->logger()->logAction(ADM_ACTION, LOG_INFO, "[API] fpm-daemon setting '" . $result['description'] . "' has been deleted by '" . $this->getUserDetail('loginname') . "'");
 			return $this->response(200, "successfull", $result);
 		}
-		throw new Exception("Not allowed to execute given command.", 403);
+		throw new \Exception("Not allowed to execute given command.", 403);
 	}
 }

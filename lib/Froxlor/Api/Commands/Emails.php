@@ -1,4 +1,8 @@
 <?php
+namespace Froxlor\Api\Commands;
+
+use Froxlor\Database as Database;
+use Froxlor\Settings as Settings;
 
 /**
  * This file is part of the Froxlor project.
@@ -8,14 +12,14 @@
  * file that was distributed with this source code. You can also view the
  * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
- * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    API
- * @since      0.10.0
- *
+ * @copyright (c) the authors
+ * @author Froxlor team <team@froxlor.org> (2010-)
+ * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package API
+ * @since 0.10.0
+ *       
  */
-class Emails extends ApiCommand implements ResourceEntity
+class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntity
 {
 
 	/**
@@ -33,13 +37,13 @@ class Emails extends ApiCommand implements ResourceEntity
 	 *        	optional, admin-only, the loginname
 	 *        	
 	 * @access admin, customer
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function add()
 	{
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'email')) {
-			throw new Exception("You cannot access this resource", 405);
+			throw new \Exception("You cannot access this resource", 405);
 		}
 
 		if ($this->getUserDetail('emails_used') < $this->getUserDetail('emails') || $this->getUserDetail('emails') == '-1') {
@@ -53,7 +57,8 @@ class Emails extends ApiCommand implements ResourceEntity
 
 			// validation
 			if (substr($domain, 0, 4) != 'xn--') {
-				$idna_convert = new idna_convert_wrapper();
+				// @fixme idna
+				$idna_convert = new \idna_convert_wrapper();
 				$domain = $idna_convert->encode(validate($domain, 'domain', '', '', array(), true));
 			}
 
@@ -138,7 +143,7 @@ class Emails extends ApiCommand implements ResourceEntity
 			));
 			return $this->response(200, "successfull", $result);
 		}
-		throw new Exception("No more resources available", 406);
+		throw new \Exception("No more resources available", 406);
 	}
 
 	/**
@@ -150,7 +155,7 @@ class Emails extends ApiCommand implements ResourceEntity
 	 *        	optional, the email-address
 	 *        	
 	 * @access admin, customer
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function get()
@@ -175,7 +180,7 @@ class Emails extends ApiCommand implements ResourceEntity
 			return $this->response(200, "successfull", $result);
 		}
 		$key = ($id > 0 ? "id #" . $id : "emailaddr '" . $emailaddr . "'");
-		throw new Exception("Email address with " . $key . " could not be found", 404);
+		throw new \Exception("Email address with " . $key . " could not be found", 404);
 	}
 
 	/**
@@ -193,13 +198,13 @@ class Emails extends ApiCommand implements ResourceEntity
 	 *        	optional
 	 *        	
 	 * @access admin, customer
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function update()
 	{
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'email')) {
-			throw new Exception("You cannot access this resource", 405);
+			throw new \Exception("You cannot access this resource", 405);
 		}
 
 		// if enabling catchall is not allowed by settings, we do not need
@@ -266,7 +271,7 @@ class Emails extends ApiCommand implements ResourceEntity
 	 *        	optional, admin-only, select email addresses of a specific customer by loginname
 	 *        	
 	 * @access admin, customer
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array count|list
 	 */
 	public function listing()
@@ -281,7 +286,7 @@ class Emails extends ApiCommand implements ResourceEntity
 			WHERE m.`customerid` IN (" . implode(", ", $customer_ids) . ")
 		");
 		Database::pexecute($result_stmt, null, true, true);
-		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+		while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$result[] = $row;
 		}
 		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_NOTICE, "[API] list email-addresses");
@@ -306,13 +311,13 @@ class Emails extends ApiCommand implements ResourceEntity
 	 *        	optional, delete email data from filesystem, default: 0 (false)
 	 *        	
 	 * @access admin, customer
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function delete()
 	{
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'email')) {
-			throw new Exception("You cannot access this resource", 405);
+			throw new \Exception("You cannot access this resource", 405);
 		}
 
 		$id = $this->getParam('id', true, 0);

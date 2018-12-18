@@ -1,4 +1,8 @@
 <?php
+namespace Froxlor\Api\Commands;
+
+use Froxlor\Database as Database;
+use Froxlor\Settings as Settings;
 
 /**
  * This file is part of the Froxlor project.
@@ -8,14 +12,14 @@
  * file that was distributed with this source code. You can also view the
  * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
- * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    API
- * @since      0.10.0
- *
+ * @copyright (c) the authors
+ * @author Froxlor team <team@froxlor.org> (2010-)
+ * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package API
+ * @since 0.10.0
+ *       
  */
-class DomainZones extends ApiCommand implements ResourceEntity
+class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntity
 {
 
 	/**
@@ -37,13 +41,13 @@ class DomainZones extends ApiCommand implements ResourceEntity
 	 *        	optional, default 18000
 	 *        	
 	 * @access admin, customer
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function add()
 	{
 		if (Settings::Get('system.dnsenabled') != '1') {
-			throw new Exception("DNS server not enabled on this system", 405);
+			throw new \Exception("DNS server not enabled on this system", 405);
 		}
 
 		$id = $this->getParam('id', true, 0);
@@ -65,14 +69,15 @@ class DomainZones extends ApiCommand implements ResourceEntity
 		$ttl = $this->getParam('ttl', true, 18000);
 
 		if ($result['parentdomainid'] != '0') {
-			throw new Exception("DNS zones can only be generated for the main domain, not for subdomains", 406);
+			throw new \Exception("DNS zones can only be generated for the main domain, not for subdomains", 406);
 		}
 
 		if ($result['subisbinddomain'] != '1') {
 			standard_error('dns_domain_nodns', '', true);
 		}
 
-		$idna_convert = new idna_convert_wrapper();
+		// @fixme idna
+		$idna_convert = new \idna_convert_wrapper();
 		$domain = $idna_convert->encode($result['domain']);
 
 		// select all entries
@@ -80,7 +85,7 @@ class DomainZones extends ApiCommand implements ResourceEntity
 		Database::pexecute($sel_stmt, array(
 			'did' => $id
 		), true, true);
-		$dom_entries = $sel_stmt->fetchAll(PDO::FETCH_ASSOC);
+		$dom_entries = $sel_stmt->fetchAll(\PDO::FETCH_ASSOC);
 
 		// validation
 		$errors = array();
@@ -285,7 +290,7 @@ class DomainZones extends ApiCommand implements ResourceEntity
 			return $this->response(200, "successfull", $result);
 		}
 		// return $errors
-		throw new Exception(implode("\n", $errors));
+		throw new \Exception(implode("\n", $errors));
 	}
 
 	/**
@@ -297,13 +302,13 @@ class DomainZones extends ApiCommand implements ResourceEntity
 	 *        	optional, the domain name
 	 *        	
 	 * @access admin, customer
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function get()
 	{
 		if (Settings::Get('system.dnsenabled') != '1') {
-			throw new Exception("DNS server not enabled on this system", 405);
+			throw new \Exception("DNS server not enabled on this system", 405);
 		}
 
 		$id = $this->getParam('id', true, 0);
@@ -318,7 +323,7 @@ class DomainZones extends ApiCommand implements ResourceEntity
 		$id = $result['id'];
 
 		if ($result['parentdomainid'] != '0') {
-			throw new Exception("DNS zones can only be generated for the main domain, not for subdomains", 406);
+			throw new \Exception("DNS zones can only be generated for the main domain, not for subdomains", 406);
 		}
 
 		if ($result['subisbinddomain'] != '1') {
@@ -338,7 +343,7 @@ class DomainZones extends ApiCommand implements ResourceEntity
 	 */
 	public function update()
 	{
-		throw new Exception('You cannot update a dns zone entry. You need to delete it and re-add it.', 303);
+		throw new \Exception('You cannot update a dns zone entry. You need to delete it and re-add it.', 303);
 	}
 
 	/**
@@ -347,7 +352,7 @@ class DomainZones extends ApiCommand implements ResourceEntity
 	 */
 	public function listing()
 	{
-		throw new Exception('You cannot list dns zones. To get all domains use Domains.listing() or SubDomains.listing()', 303);
+		throw new \Exception('You cannot list dns zones. To get all domains use Domains.listing() or SubDomains.listing()', 303);
 	}
 
 	/**
@@ -360,13 +365,13 @@ class DomainZones extends ApiCommand implements ResourceEntity
 	 *        	optional, the domain name
 	 *        	
 	 * @access admin, customer
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return bool
 	 */
 	public function delete()
 	{
 		if (Settings::Get('system.dnsenabled') != '1') {
-			throw new Exception("DNS server not enabled on this system", 405);
+			throw new \Exception("DNS server not enabled on this system", 405);
 		}
 
 		$entry_id = $this->getParam('entry_id');

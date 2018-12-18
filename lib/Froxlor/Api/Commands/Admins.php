@@ -1,4 +1,8 @@
 <?php
+namespace Froxlor\Api\Commands;
+
+use Froxlor\Database as Database;
+use Froxlor\Settings as Settings;
 
 /**
  * This file is part of the Froxlor project.
@@ -8,21 +12,21 @@
  * file that was distributed with this source code. You can also view the
  * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
- * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    API
- * @since      0.10.0
- *
+ * @copyright (c) the authors
+ * @author Froxlor team <team@froxlor.org> (2010-)
+ * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package API
+ * @since 0.10.0
+ *       
  */
-class Admins extends ApiCommand implements ResourceEntity
+class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntity
 {
 
 	/**
 	 * lists all admin entries
 	 *
 	 * @access admin
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array count|list
 	 */
 	public function listing()
@@ -36,7 +40,7 @@ class Admins extends ApiCommand implements ResourceEntity
 			");
 			Database::pexecute($result_stmt, null, true, true);
 			$result = array();
-			while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+			while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 				$result[] = $row;
 			}
 			return $this->response(200, "successfull", array(
@@ -44,7 +48,7 @@ class Admins extends ApiCommand implements ResourceEntity
 				'list' => $result
 			));
 		}
-		throw new Exception("Not allowed to execute given command.", 403);
+		throw new \Exception("Not allowed to execute given command.", 403);
 	}
 
 	/**
@@ -56,7 +60,7 @@ class Admins extends ApiCommand implements ResourceEntity
 	 *        	optional, the loginname
 	 *        	
 	 * @access admin
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function get()
@@ -78,9 +82,9 @@ class Admins extends ApiCommand implements ResourceEntity
 				return $this->response(200, "successfull", $result);
 			}
 			$key = ($id > 0 ? "id #" . $id : "loginname '" . $loginname . "'");
-			throw new Exception("Admin with " . $key . " could not be found", 404);
+			throw new \Exception("Admin with " . $key . " could not be found", 404);
 		}
-		throw new Exception("Not allowed to execute given command.", 403);
+		throw new \Exception("Not allowed to execute given command.", 403);
 	}
 
 	/**
@@ -159,7 +163,7 @@ class Admins extends ApiCommand implements ResourceEntity
 	 *        	optional, list of ip-address id's; default -1 (all IP's)
 	 *        	
 	 * @access admin
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function add()
@@ -199,7 +203,8 @@ class Admins extends ApiCommand implements ResourceEntity
 
 			// validation
 			$name = validate($name, 'name', '', '', array(), true);
-			$idna_convert = new idna_convert_wrapper();
+			// @fixme idna_convert_wrapper
+			$idna_convert = new \idna_convert_wrapper();
 			$email = $idna_convert->encode(validate($email, 'email', '', '', array(), true));
 			$def_language = validate($def_language, 'default language', '', '', array(), true);
 			$custom_notes = validate(str_replace("\r\n", "\n", $custom_notes), 'custom_notes', '/^[^\0]*$/', '', array(), true);
@@ -348,7 +353,7 @@ class Admins extends ApiCommand implements ResourceEntity
 				return $this->response(200, "successfull", $result);
 			}
 		}
-		throw new Exception("Not allowed to execute given command.", 403);
+		throw new \Exception("Not allowed to execute given command.", 403);
 	}
 
 	/**
@@ -436,7 +441,7 @@ class Admins extends ApiCommand implements ResourceEntity
 	 *        	optional, list of ip-address id's; default -1 (all IP's)
 	 *        	
 	 * @access admin
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function update()
@@ -456,7 +461,8 @@ class Admins extends ApiCommand implements ResourceEntity
 			if ($this->getUserDetail('change_serversettings') == 1 || $result['adminid'] == $this->getUserDetail('adminid')) {
 				// parameters
 				$name = $this->getParam('name', true, $result['name']);
-				$idna_convert = new idna_convert_wrapper();
+				// @fixme idna_convert_wrapper
+				$idna_convert = new \idna_convert_wrapper();
 				$email = $this->getParam('email', true, $idna_convert->decode($result['email']));
 				$password = $this->getParam('admin_password', true, '');
 				$def_language = $this->getParam('def_language', true, $result['def_language']);
@@ -515,7 +521,8 @@ class Admins extends ApiCommand implements ResourceEntity
 
 				// validation
 				$name = validate($name, 'name', '', '', array(), true);
-				$idna_convert = new idna_convert_wrapper();
+				// @fixme idna_convert_wrapper
+				$idna_convert = new \idna_convert_wrapper();
 				$email = $idna_convert->encode(validate($email, 'email', '', '', array(), true));
 				$def_language = validate($def_language, 'default language', '', '', array(), true);
 				$custom_notes = validate(str_replace("\r\n", "\n", $custom_notes), 'custom_notes', '/^[^\0]*$/', '', array(), true);
@@ -607,7 +614,7 @@ class Admins extends ApiCommand implements ResourceEntity
 					}
 
 					if (! empty($res_warning)) {
-						throw new Exception($res_warning, 406);
+						throw new \Exception($res_warning, 406);
 					}
 
 					$upd_data = array(
@@ -681,7 +688,7 @@ class Admins extends ApiCommand implements ResourceEntity
 				}
 			}
 		}
-		throw new Exception("Not allowed to execute given command.", 403);
+		throw new \Exception("Not allowed to execute given command.", 403);
 	}
 
 	/**
@@ -693,7 +700,7 @@ class Admins extends ApiCommand implements ResourceEntity
 	 *        	optional, the loginname
 	 *        	
 	 * @access admin
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function delete()
@@ -781,7 +788,7 @@ class Admins extends ApiCommand implements ResourceEntity
 			updateCounters();
 			return $this->response(200, "successfull", $result);
 		}
-		throw new Exception("Not allowed to execute given command.", 403);
+		throw new \Exception("Not allowed to execute given command.", 403);
 	}
 
 	/**
@@ -793,7 +800,7 @@ class Admins extends ApiCommand implements ResourceEntity
 	 *        	optional, the loginname
 	 *        	
 	 * @access admin
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function unlock()
@@ -823,7 +830,7 @@ class Admins extends ApiCommand implements ResourceEntity
 			$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] unlocked admin '" . $result['loginname'] . "'");
 			return $this->response(200, "successfull", $result);
 		}
-		throw new Exception("Not allowed to execute given command.", 403);
+		throw new \Exception("Not allowed to execute given command.", 403);
 	}
 
 	/**

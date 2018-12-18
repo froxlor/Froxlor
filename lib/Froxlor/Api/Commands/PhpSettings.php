@@ -1,4 +1,8 @@
 <?php
+namespace Froxlor\Api\Commands;
+
+use Froxlor\Database as Database;
+use Froxlor\Settings as Settings;
 
 /**
  * This file is part of the Froxlor project.
@@ -8,14 +12,14 @@
  * file that was distributed with this source code. You can also view the
  * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
- * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    API
- * @since      0.10.0
- *
+ * @copyright (c) the authors
+ * @author Froxlor team <team@froxlor.org> (2010-)
+ * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package API
+ * @since 0.10.0
+ *       
  */
-class PhpSettings extends ApiCommand implements ResourceEntity
+class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntity
 {
 
 	/**
@@ -25,7 +29,7 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 	 *        	optional, also include subdomains to the list domains that use the config, default 0 (false)
 	 *        	
 	 * @access admin
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array count|list
 	 */
 	public function listing()
@@ -43,7 +47,7 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 			");
 
 			$phpconfigs = array();
-			while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+			while ($row = $result->fetch(\PDO::FETCH_ASSOC)) {
 				$query_params = array(
 					'id' => $row['id']
 				);
@@ -51,7 +55,7 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 				$query = "SELECT * FROM `" . TABLE_PANEL_DOMAINS . "`
 					WHERE `phpsettingid` = :id";
 
-				if (!$with_subdomains) {
+				if (! $with_subdomains) {
 					$query .= " AND `parentdomainid` = '0'";
 				}
 
@@ -65,7 +69,7 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 					SELECT DISTINCT `standardsubdomain` FROM `" . TABLE_PANEL_CUSTOMERS . "`
 					WHERE `standardsubdomain` > 0 ORDER BY `standardsubdomain` ASC;");
 					$ssdids = array();
-					while ($ssd = $ssdids_res->fetch(PDO::FETCH_ASSOC)) {
+					while ($ssd = $ssdids_res->fetch(\PDO::FETCH_ASSOC)) {
 						$ssdids[] = $ssd['standardsubdomain'];
 					}
 					if (count($ssdids) > 0) {
@@ -79,7 +83,7 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 				Database::pexecute($domainresult_stmt, $query_params, true, true);
 
 				if (Database::num_rows() > 0) {
-					while ($row2 = $domainresult_stmt->fetch(PDO::FETCH_ASSOC)) {
+					while ($row2 = $domainresult_stmt->fetch(\PDO::FETCH_ASSOC)) {
 						if ($row2['parentdomainid'] != 0) {
 							$subdomains[] = $row2['domain'];
 						} else {
@@ -108,7 +112,7 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 				'list' => $phpconfigs
 			));
 		}
-		throw new Exception("Not allowed to execute given command.", 403);
+		throw new \Exception("Not allowed to execute given command.", 403);
 	}
 
 	/**
@@ -118,7 +122,7 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 	 *        	php-settings-id
 	 *        	
 	 * @access admin
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function get()
@@ -135,9 +139,9 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 			if ($result) {
 				return $this->response(200, "successfull", $result);
 			}
-			throw new Exception("php-config with id #" . $id . " could not be found", 404);
+			throw new \Exception("php-config with id #" . $id . " could not be found", 404);
 		}
-		throw new Exception("Not allowed to execute given command.", 403);
+		throw new \Exception("Not allowed to execute given command.", 403);
 	}
 
 	/**
@@ -187,7 +191,7 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 	 *        	optional limitation of php-file-extensions if FPM is used, default is fpm-daemon-value
 	 *        	
 	 * @access admin
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function add()
@@ -260,7 +264,7 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 					'dynamic',
 					'ondemand'
 				))) {
-					throw new ErrorException("Unknown process manager", 406);
+					throw new \Exception("Unknown process manager", 406);
 				}
 				if (empty($limit_extensions)) {
 					$limit_extensions = '.php';
@@ -337,7 +341,7 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 			));
 			return $this->response(200, "successfull", $result);
 		}
-		throw new Exception("Not allowed to execute given command.", 403);
+		throw new \Exception("Not allowed to execute given command.", 403);
 	}
 
 	/**
@@ -388,7 +392,7 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 	 *        	optional limitation of php-file-extensions if FPM is used, default is fpm-daemon-value
 	 *        	
 	 * @access admin
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function update()
@@ -455,7 +459,7 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 					'dynamic',
 					'ondemand'
 				))) {
-					throw new ErrorException("Unknown process manager", 406);
+					throw new \Exception("Unknown process manager", 406);
 				}
 				if (empty($limit_extensions)) {
 					$limit_extensions = '.php';
@@ -533,7 +537,7 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 			));
 			return $this->response(200, "successfull", $result);
 		}
-		throw new Exception("Not allowed to execute given command.", 403);
+		throw new \Exception("Not allowed to execute given command.", 403);
 	}
 
 	/**
@@ -543,7 +547,7 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 	 *        	php-settings-id
 	 *        	
 	 * @access admin
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function delete()
@@ -584,6 +588,6 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 			$this->logger()->logAction(ADM_ACTION, LOG_INFO, "[API] php setting '" . $result['description'] . "' has been deleted by '" . $this->getUserDetail('loginname') . "'");
 			return $this->response(200, "successfull", $result);
 		}
-		throw new Exception("Not allowed to execute given command.", 403);
+		throw new \Exception("Not allowed to execute given command.", 403);
 	}
 }

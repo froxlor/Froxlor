@@ -1,4 +1,8 @@
 <?php
+namespace Froxlor\Api\Commands;
+
+use Froxlor\Database as Database;
+use Froxlor\Settings as Settings;
 
 /**
  * This file is part of the Froxlor project.
@@ -8,21 +12,21 @@
  * file that was distributed with this source code. You can also view the
  * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
- * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    API
- * @since      0.10.0
- *
+ * @copyright (c) the authors
+ * @author Froxlor team <team@froxlor.org> (2010-)
+ * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package API
+ * @since 0.10.0
+ *       
  */
-class Domains extends ApiCommand implements ResourceEntity
+class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntity
 {
 
 	/**
 	 * lists all domain entries
 	 *
 	 * @access admin
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array count|list
 	 */
 	public function listing()
@@ -43,7 +47,7 @@ class Domains extends ApiCommand implements ResourceEntity
 			}
 			Database::pexecute($result_stmt, $params);
 			$result = array();
-			while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+			while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 				$result[] = $row;
 			}
 			return $this->response(200, "successfull", array(
@@ -51,7 +55,7 @@ class Domains extends ApiCommand implements ResourceEntity
 				'list' => $result
 			));
 		}
-		throw new Exception("Not allowed to execute given command.", 403);
+		throw new \Exception("Not allowed to execute given command.", 403);
 	}
 
 	/**
@@ -65,7 +69,7 @@ class Domains extends ApiCommand implements ResourceEntity
 	 *        	optional, default false
 	 *        	
 	 * @access admin
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function get()
@@ -78,7 +82,8 @@ class Domains extends ApiCommand implements ResourceEntity
 
 			// convert possible idn domain to punycode
 			if (substr($domainname, 0, 4) != 'xn--') {
-				$idna_convert = new idna_convert_wrapper();
+				// @fixme idna
+				$idna_convert = new \idna_convert_wrapper();
 				$domainname = $idna_convert->encode($domainname);
 			}
 
@@ -100,9 +105,9 @@ class Domains extends ApiCommand implements ResourceEntity
 				return $this->response(200, "successfull", $result);
 			}
 			$key = ($id > 0 ? "id #" . $id : "domainname '" . $domainname . "'");
-			throw new Exception("Domain with " . $key . " could not be found", 404);
+			throw new \Exception("Domain with " . $key . " could not be found", 404);
 		}
-		throw new Exception("Not allowed to execute given command.", 403);
+		throw new \Exception("Not allowed to execute given command.", 403);
 	}
 
 	/**
@@ -179,7 +184,7 @@ class Domains extends ApiCommand implements ResourceEntity
 	 *        	optional whether to enable oscp-stapling for this domain. default 0 (false), requires SSL
 	 *        	
 	 * @access admin
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function add()
@@ -235,7 +240,8 @@ class Domains extends ApiCommand implements ResourceEntity
 					standard_error('domain_nopunycode', '', true);
 				}
 
-				$idna_convert = new idna_convert_wrapper();
+				// @fixme idna
+				$idna_convert = new \idna_convert_wrapper();
 				$domain = $idna_convert->encode(preg_replace(array(
 					'/\:(\d)+$/',
 					'/^https?\:\/\//'
@@ -446,7 +452,7 @@ class Domains extends ApiCommand implements ResourceEntity
 						'id' => $aliasdomain
 					), true, true);
 					$ipdata_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id` = :ipid");
-					while ($origip = $origipresult_stmt->fetch(PDO::FETCH_ASSOC)) {
+					while ($origip = $origipresult_stmt->fetch(\PDO::FETCH_ASSOC)) {
 						$_origip_tmp = Database::pexecute_first($ipdata_stmt, array(
 							'ipid' => $origip['id_ipandports']
 						), true, true);
@@ -498,7 +504,8 @@ class Domains extends ApiCommand implements ResourceEntity
 					$issubof = '0';
 				}
 
-				$idna_convert = new idna_convert_wrapper();
+				// @fixme idna
+				$idna_convert = new \idna_convert_wrapper();
 				if ($domain == '') {
 					standard_error(array(
 						'stringisempty',
@@ -648,9 +655,9 @@ class Domains extends ApiCommand implements ResourceEntity
 					return $this->response(200, "successfull", $result);
 				}
 			}
-			throw new Exception("No more resources available", 406);
+			throw new \Exception("No more resources available", 406);
 		}
-		throw new Exception("Not allowed to execute given command.", 403);
+		throw new \Exception("Not allowed to execute given command.", 403);
 	}
 
 	/**
@@ -736,7 +743,7 @@ class Domains extends ApiCommand implements ResourceEntity
 	 *        	optional whether to enable oscp-stapling for this domain. default 0 (false), requires SSL
 	 *        	
 	 * @access admin
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function update()
@@ -829,7 +836,7 @@ class Domains extends ApiCommand implements ResourceEntity
 			$email_forwarders = 0;
 			$email_accounts = 0;
 
-			while ($domain_emails_row = $domain_emails_result_stmt->fetch(PDO::FETCH_ASSOC)) {
+			while ($domain_emails_row = $domain_emails_result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 				if ($domain_emails_row['destination'] != '') {
 					$domain_emails_row['destination'] = explode(' ', makeCorrectDestination($domain_emails_row['destination']));
 					$email_forwarders += count($domain_emails_row['destination']);
@@ -1086,7 +1093,7 @@ class Domains extends ApiCommand implements ResourceEntity
 					'aliasdomain' => $aliasdomain
 				), true, true);
 				$ipdata_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id` = :ipid");
-				while ($origip = $origipresult_stmt->fetch(PDO::FETCH_ASSOC)) {
+				while ($origip = $origipresult_stmt->fetch(\PDO::FETCH_ASSOC)) {
 					$_origip_tmp = Database::pexecute_first($ipdata_stmt, array(
 						'ipid' => $origip['id_ipandports']
 					), true, true);
@@ -1413,7 +1420,7 @@ class Domains extends ApiCommand implements ResourceEntity
 				'id' => $id
 			), true, true);
 
-			while ($row = $domainidsresult_stmt->fetch(PDO::FETCH_ASSOC)) {
+			while ($row = $domainidsresult_stmt->fetch(\PDO::FETCH_ASSOC)) {
 
 				$del_stmt = Database::prepare("
 					DELETE FROM `" . TABLE_DOMAINTOIP . "` WHERE `id_domain` = :rowid
@@ -1461,7 +1468,7 @@ class Domains extends ApiCommand implements ResourceEntity
 			$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] updated domain '" . $result['domain'] . "'");
 			return $this->response(200, "successfull", $update_data);
 		}
-		throw new Exception("Not allowed to execute given command.", 403);
+		throw new \Exception("Not allowed to execute given command.", 403);
 	}
 
 	/**
@@ -1477,7 +1484,7 @@ class Domains extends ApiCommand implements ResourceEntity
 	 *        	optional, default false, specify whether it's a std-subdomain you are deleting as it does not count as subdomain-resource
 	 *        	
 	 * @access admin
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function delete()
@@ -1509,7 +1516,7 @@ class Domains extends ApiCommand implements ResourceEntity
 			), true, true);
 			$idString = array();
 			$paramString = array();
-			while ($subRow = $subresult_stmt->fetch(PDO::FETCH_ASSOC)) {
+			while ($subRow = $subresult_stmt->fetch(\PDO::FETCH_ASSOC)) {
 				$idString[] = "`domainid` = :domain_" . (int) $subRow['id'];
 				$paramString['domain_' . $subRow['id']] = $subRow['id'];
 			}
@@ -1619,7 +1626,7 @@ class Domains extends ApiCommand implements ResourceEntity
 			inserttask('4');
 			return $this->response(200, "successfull", $result);
 		}
-		throw new Exception("Not allowed to execute given command.", 403);
+		throw new \Exception("Not allowed to execute given command.", 403);
 	}
 
 	/**
@@ -1631,7 +1638,7 @@ class Domains extends ApiCommand implements ResourceEntity
 	 * @param boolean $ssl
 	 *        	default false
 	 *        	
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	private function validateIpAddresses($p_ipandports = null, $ssl = false, $edit_id = 0)
@@ -1640,7 +1647,7 @@ class Domains extends ApiCommand implements ResourceEntity
 		// system-default, check here if there is none
 		// this is not required for ssl-enabled ip's
 		if ($edit_id <= 0 && ! $ssl && empty($p_ipandports)) {
-			throw new Exception("No IPs given, unable to add domain (no default IPs set?)", 406);
+			throw new \Exception("No IPs given, unable to add domain (no default IPs set?)", 406);
 		}
 
 		// convert given value(s) correctly
@@ -1694,7 +1701,7 @@ class Domains extends ApiCommand implements ResourceEntity
 			Database::pexecute($ipsresult_stmt, array(
 				'id' => $edit_id
 			), true, true);
-			while ($ipsresultrow = $ipsresult_stmt->fetch(PDO::FETCH_ASSOC)) {
+			while ($ipsresultrow = $ipsresult_stmt->fetch(\PDO::FETCH_ASSOC)) {
 				$ipandports[] = $ipsresultrow['id_ipandports'];
 			}
 		}

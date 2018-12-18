@@ -1,4 +1,8 @@
 <?php
+namespace Froxlor\Api\Commands;
+
+use Froxlor\Database as Database;
+use Froxlor\Settings as Settings;
 
 /**
  * This file is part of the Froxlor project.
@@ -8,14 +12,14 @@
  * file that was distributed with this source code. You can also view the
  * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
- * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    API
- * @since      0.10.0
- *
+ * @copyright (c) the authors
+ * @author Froxlor team <team@froxlor.org> (2010-)
+ * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package API
+ * @since 0.10.0
+ *       
  */
-class EmailAccounts extends ApiCommand implements ResourceEntity
+class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntity
 {
 
 	/**
@@ -39,13 +43,13 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 	 *        	optional, sends the welcome message to the new account (needed for creation, without the user won't be able to login before any mail is received), default 1 (true)
 	 *        	
 	 * @access admin, customer
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function add()
 	{
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'email')) {
-			throw new Exception("You cannot access this resource", 405);
+			throw new \Exception("You cannot access this resource", 405);
 		}
 
 		if ($this->getUserDetail('email_accounts_used') < $this->getUserDetail('email_accounts') || $this->getUserDetail('email_accounts') == '-1') {
@@ -78,13 +82,14 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 			$id = $result['id'];
 
 			$email_full = $result['email_full'];
-			$idna_convert = new idna_convert_wrapper();
+			// @fixme idna
+			$idna_convert = new \idna_convert_wrapper();
 			$username = $idna_convert->decode($email_full);
 			$password = validate($email_password, 'password', '', '', array(), true);
 			$password = validatePassword($password, true);
 
 			if ($result['popaccountid'] != 0) {
-				throw new Exception("Email address '" . $email_full . "' has already an account assigned.", 406);
+				throw new \Exception("Email address '" . $email_full . "' has already an account assigned.", 406);
 			}
 
 			if (checkMailAccDeletionState($email_full)) {
@@ -215,10 +220,10 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 					$this->mailer()->msgHTML(str_replace("\n", "<br />", $mail_body));
 					$this->mailer()->addAddress($email_full);
 					$this->mailer()->send();
-				} catch (phpmailerException $e) {
+				} catch (\phpmailerException $e) {
 					$mailerr_msg = $e->errorMessage();
 					$_mailerror = true;
-				} catch (Exception $e) {
+				} catch (\Exception $e) {
 					$mailerr_msg = $e->getMessage();
 					$_mailerror = true;
 				}
@@ -245,10 +250,10 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 						$this->mailer()->msgHTML(str_replace("\n", "<br />", $mail_body));
 						$this->mailer()->addAddress($idna_convert->encode($alternative_email), getCorrectUserSalutation($customer));
 						$this->mailer()->send();
-					} catch (phpmailerException $e) {
+					} catch (\phpmailerException $e) {
 						$mailerr_msg = $e->errorMessage();
 						$_mailerror = true;
-					} catch (Exception $e) {
+					} catch (\Exception $e) {
 						$mailerr_msg = $e->getMessage();
 						$_mailerror = true;
 					}
@@ -270,7 +275,7 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 			));
 			return $this->response(200, "successfull", $result);
 		}
-		throw new Exception("No more resources available", 406);
+		throw new \Exception("No more resources available", 406);
 	}
 
 	/**
@@ -279,7 +284,7 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 	 */
 	public function get()
 	{
-		throw new Exception('You cannot directly get an email account. You need to call Emails.get()', 303);
+		throw new \Exception('You cannot directly get an email account. You need to call Emails.get()', 303);
 	}
 
 	/**
@@ -299,13 +304,13 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 	 *        	optional, update password
 	 *        	
 	 * @access admin, customer
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function update()
 	{
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'email')) {
-			throw new Exception("You cannot access this resource", 405);
+			throw new \Exception("You cannot access this resource", 405);
 		}
 
 		// parameter
@@ -321,7 +326,7 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 		$id = $result['id'];
 
 		if (empty($result['popaccountid']) || $result['popaccountid'] == 0) {
-			throw new Exception("Email address '" . $result['email_full'] . "' has no account assigned.", 406);
+			throw new \Exception("Email address '" . $result['email_full'] . "' has no account assigned.", 406);
 		}
 
 		$password = $this->getParam('email_password', true, '');
@@ -393,7 +398,7 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 	 */
 	public function listing()
 	{
-		throw new Exception('You cannot directly list email forwarders. You need to call Emails.listing()', 303);
+		throw new \Exception('You cannot directly list email forwarders. You need to call Emails.listing()', 303);
 	}
 
 	/**
@@ -411,13 +416,13 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 	 *        	optional, default false
 	 *        	
 	 * @access admin, customer
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function delete()
 	{
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'email')) {
-			throw new Exception("You cannot access this resource", 405);
+			throw new \Exception("You cannot access this resource", 405);
 		}
 
 		// parameter
@@ -434,7 +439,7 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 		$id = $result['id'];
 
 		if (empty($result['popaccountid']) || $result['popaccountid'] == 0) {
-			throw new Exception("Email address '" . $result['email_full'] . "' has no account assigned.", 406);
+			throw new \Exception("Email address '" . $result['email_full'] . "' has no account assigned.", 406);
 		}
 
 		// get needed customer info to reduce the email-account-counter by one

@@ -1,4 +1,8 @@
 <?php
+namespace Froxlor\Api\Commands;
+
+use Froxlor\Database as Database;
+use Froxlor\Settings as Settings;
 
 /**
  * This file is part of the Froxlor project.
@@ -8,14 +12,14 @@
  * file that was distributed with this source code. You can also view the
  * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
- * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    API
- * @since      0.10.0
- *
+ * @copyright (c) the authors
+ * @author Froxlor team <team@froxlor.org> (2010-)
+ * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package API
+ * @since 0.10.0
+ *       
  */
-class Cronjobs extends ApiCommand implements ResourceEntity
+class Cronjobs extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntity
 {
 
 	/**
@@ -23,7 +27,7 @@ class Cronjobs extends ApiCommand implements ResourceEntity
 	 */
 	public function add()
 	{
-		throw new Exception('You cannot add new cronjobs yet.', 303);
+		throw new \Exception('You cannot add new cronjobs yet.', 303);
 	}
 
 	/**
@@ -33,7 +37,7 @@ class Cronjobs extends ApiCommand implements ResourceEntity
 	 *        	cronjob-id
 	 *        	
 	 * @access admin
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function get()
@@ -50,9 +54,9 @@ class Cronjobs extends ApiCommand implements ResourceEntity
 			if ($result) {
 				return $this->response(200, "successfull", $result);
 			}
-			throw new Exception("cronjob with id #" . $id . " could not be found", 404);
+			throw new \Exception("cronjob with id #" . $id . " could not be found", 404);
 		}
-		throw new Exception("Not allowed to execute given command.", 403);
+		throw new \Exception("Not allowed to execute given command.", 403);
 	}
 
 	/**
@@ -67,7 +71,7 @@ class Cronjobs extends ApiCommand implements ResourceEntity
 	 *        	optional interval for the cronjob (MINUTE, HOUR, DAY, WEEK or MONTH)
 	 *        	
 	 * @access admin
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array
 	 */
 	public function update()
@@ -118,14 +122,14 @@ class Cronjobs extends ApiCommand implements ResourceEntity
 			));
 			return $this->response(200, "successfull", $result);
 		}
-		throw new Exception("Not allowed to execute given command.", 403);
+		throw new \Exception("Not allowed to execute given command.", 403);
 	}
 
 	/**
 	 * lists all cronjob entries
 	 *
 	 * @access admin
-	 * @throws Exception
+	 * @throws \Exception
 	 * @return array count|list
 	 */
 	public function listing()
@@ -137,7 +141,7 @@ class Cronjobs extends ApiCommand implements ResourceEntity
 			");
 			Database::pexecute($result_stmt);
 			$result = array();
-			while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+			while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 				$result[] = $row;
 			}
 			return $this->response(200, "successfull", array(
@@ -145,7 +149,7 @@ class Cronjobs extends ApiCommand implements ResourceEntity
 				'list' => $result
 			));
 		}
-		throw new Exception("Not allowed to execute given command.", 403);
+		throw new \Exception("Not allowed to execute given command.", 403);
 	}
 
 	/**
@@ -153,6 +157,6 @@ class Cronjobs extends ApiCommand implements ResourceEntity
 	 */
 	public function delete()
 	{
-		throw new Exception('You cannot delete system cronjobs.', 303);
+		throw new \Exception('You cannot delete system cronjobs.', 303);
 	}
 }
