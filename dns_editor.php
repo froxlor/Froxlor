@@ -34,7 +34,7 @@ $content = isset($_POST['record']['content']) ? trim($_POST['record']['content']
 $ttl = isset($_POST['record']['ttl']) ? (int) $_POST['record']['ttl'] : 18000;
 
 // get domain-name
-$domain = getAllowedDomainEntry($domain_id, AREA, $userinfo, $idna_convert);
+$domain = \Froxlor\Dns\Dns::getAllowedDomainEntry($domain_id, AREA, $userinfo);
 
 // select all entries
 $sel_stmt = Database::prepare("SELECT * FROM `" . TABLE_DOMAIN_DNS . "` WHERE domain_id = :did");
