@@ -16,28 +16,27 @@
  * @package    System
  *
  */
+require dirname(__DIR__) . '/vendor/autoload.php';
 
-require __DIR__ . '/vendor/autoload.php';
-
-use \Froxlor\Database;
-use \Froxlor\Settings;
+use Froxlor\Database\Database;
+use Froxlor\Settings;
 
 header("Content-Type: text/html; charset=UTF-8");
 
 // prevent Froxlor pages from being cached
 header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Pragma: no-cache");
-header('Last-Modified: ' . gmdate( 'D, d M Y H:i:s \G\M\T', time()));
-header('Expires: ' . gmdate( 'D, d M Y H:i:s \G\M\T', time()));
+header('Last-Modified: ' . gmdate('D, d M Y H:i:s \G\M\T', time()));
+header('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time()));
 
 // Prevent inline - JS to be executed (i.e. XSS) in browsers which support this,
 // Inline-JS is no longer allowed and used
 // See: http://people.mozilla.org/~bsterne/content-security-policy/index.html
 // New stuff see: https://www.owasp.org/index.php/List_of_useful_HTTP_headers and https://www.owasp.org/index.php/Content_Security_Policy
 $csp_content = "default-src 'self'; script-src 'self'; connect-src 'self'; img-src 'self' data:; style-src 'self';";
-header("Content-Security-Policy: ".$csp_content);
-header("X-Content-Security-Policy: ".$csp_content);
-header("X-WebKit-CSP: ".$csp_content);
+header("Content-Security-Policy: " . $csp_content);
+header("X-Content-Security-Policy: " . $csp_content);
+header("X-WebKit-CSP: " . $csp_content);
 
 header("X-XSS-Protection: 1; mode=block");
 
@@ -73,19 +72,19 @@ $filename = htmlentities(basename($_SERVER['PHP_SELF']));
 $_deftheme = 'Sparkle';
 
 // check whether the userdata file exists
-if (!file_exists(\Froxlor\Froxlor::getInstallDir().'/lib/userdata.inc.php')) {
-	$config_hint = file_get_contents(\Froxlor\Froxlor::getInstallDir().'/templates/'.$_deftheme.'/misc/configurehint.tpl');
+if (! file_exists(\Froxlor\Froxlor::getInstallDir() . '/lib/userdata.inc.php')) {
+	$config_hint = file_get_contents(\Froxlor\Froxlor::getInstallDir() . '/templates/' . $_deftheme . '/misc/configurehint.tpl');
 	$config_hint = str_replace("<CURRENT_YEAR>", date('Y', time()), $config_hint);
 	die($config_hint);
 }
 
 // check whether we can read the userdata file
-if (!is_readable(\Froxlor\Froxlor::getInstallDir().'/lib/userdata.inc.php')) {
+if (! is_readable(\Froxlor\Froxlor::getInstallDir() . '/lib/userdata.inc.php')) {
 	// get possible owner
 	$posixusername = posix_getpwuid(posix_getuid());
 	$posixgroup = posix_getgrgid(posix_getgid());
 	// get hint-template
-	$owner_hint = file_get_contents(\Froxlor\Froxlor::getInstallDir().'/templates/'.$_deftheme.'/misc/ownershiphint.tpl');
+	$owner_hint = file_get_contents(\Froxlor\Froxlor::getInstallDir() . '/templates/' . $_deftheme . '/misc/ownershiphint.tpl');
 	// replace values
 	$owner_hint = str_replace("<USER>", $posixusername['name'], $owner_hint);
 	$owner_hint = str_replace("<GROUP>", $posixgroup['name'], $owner_hint);
@@ -96,14 +95,13 @@ if (!is_readable(\Froxlor\Froxlor::getInstallDir().'/lib/userdata.inc.php')) {
 }
 
 /**
- * Includes the Usersettings eg. MySQL-Username/Passwort etc.
+ * Includes the Usersettings eg.
+ * MySQL-Username/Passwort etc.
  */
-require \Froxlor\Froxlor::getInstallDir().'/lib/userdata.inc.php';
+require \Froxlor\Froxlor::getInstallDir() . '/lib/userdata.inc.php';
 
-if (!isset($sql)
-   || !is_array($sql)
-) {
-	$config_hint = file_get_contents(\Froxlor\Froxlor::getInstallDir().'/templates/'.$_deftheme.'/misc/configurehint.tpl');
+if (! isset($sql) || ! is_array($sql)) {
+	$config_hint = file_get_contents(\Froxlor\Froxlor::getInstallDir() . '/templates/' . $_deftheme . '/misc/configurehint.tpl');
 	$config_hint = str_replace("<CURRENT_YEAR>", date('Y', time()), $config_hint);
 	die($config_hint);
 }
@@ -111,13 +109,13 @@ if (!isset($sql)
 /**
  * Includes the Functions
  */
-require \Froxlor\Froxlor::getInstallDir().'/lib/functions.php';
+require \Froxlor\Froxlor::getInstallDir() . '/lib/functions.php';
 @set_error_handler('phpErrHandler');
 
 /**
  * Includes the MySQL-Tabledefinitions etc.
  */
-require \Froxlor\Froxlor::getInstallDir().'/lib/tables.inc.php';
+require \Froxlor\Froxlor::getInstallDir() . '/lib/tables.inc.php';
 
 /**
  * Create a new idna converter
@@ -132,7 +130,7 @@ if (isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) != 'off')) {
 	if (empty($maxage)) {
 		$maxage = 0;
 	}
-	$hsts_header = "Strict-Transport-Security: max-age=".$maxage;
+	$hsts_header = "Strict-Transport-Security: max-age=" . $maxage;
 	if (Settings::Get('system.hsts_incsub') == '1') {
 		$hsts_header .= "; includeSubDomains";
 	}
@@ -173,14 +171,13 @@ $timediff = time() - Settings::Get('session.sessiontimeout');
 $del_stmt = Database::prepare("
 	DELETE FROM `" . TABLE_PANEL_SESSIONS . "` WHERE `lastactivity` < :timediff
 ");
-Database::pexecute($del_stmt, array('timediff' => $timediff));
+Database::pexecute($del_stmt, array(
+	'timediff' => $timediff
+));
 
 $userinfo = array();
 
-if (isset($s)
-   && $s != ""
-   && $nosession != 1
-) {
+if (isset($s) && $s != "" && $nosession != 1) {
 	ini_set("session.name", "s");
 	ini_set("url_rewriter.tags", "");
 	ini_set("session.use_cookies", false);
@@ -189,14 +186,14 @@ if (isset($s)
 	$query = "SELECT `s`.*, `u`.* FROM `" . TABLE_PANEL_SESSIONS . "` `s` LEFT JOIN `";
 
 	if (AREA == 'admin') {
-		$query.= TABLE_PANEL_ADMINS . "` `u` ON (`s`.`userid` = `u`.`adminid`)";
+		$query .= TABLE_PANEL_ADMINS . "` `u` ON (`s`.`userid` = `u`.`adminid`)";
 		$adminsession = '1';
 	} else {
-		$query.= TABLE_PANEL_CUSTOMERS . "` `u` ON (`s`.`userid` = `u`.`customerid`)";
+		$query .= TABLE_PANEL_CUSTOMERS . "` `u` ON (`s`.`userid` = `u`.`customerid`)";
 		$adminsession = '0';
 	}
 
-	$query.= " WHERE `s`.`hash` = :hash AND `s`.`ipaddress` = :ipaddr
+	$query .= " WHERE `s`.`hash` = :hash AND `s`.`ipaddress` = :ipaddr
 		AND `s`.`useragent` = :ua AND `s`.`lastactivity` > :timediff
 		AND `s`.`adminsession` = :adminsession
 	";
@@ -211,10 +208,7 @@ if (isset($s)
 	$userinfo_stmt = Database::prepare($query);
 	$userinfo = Database::pexecute_first($userinfo_stmt, $userinfo_data);
 
-	if ((($userinfo['adminsession'] == '1' && AREA == 'admin' && isset($userinfo['adminid']))
-		|| ($userinfo['adminsession'] == '0' && (AREA == 'customer' || AREA == 'login') && isset($userinfo['customerid'])))
-		&& (!isset($userinfo['deactivated']) || $userinfo['deactivated'] != '1')
-	) {
+	if ((($userinfo['adminsession'] == '1' && AREA == 'admin' && isset($userinfo['adminid'])) || ($userinfo['adminsession'] == '0' && (AREA == 'customer' || AREA == 'login') && isset($userinfo['customerid']))) && (! isset($userinfo['deactivated']) || $userinfo['deactivated'] != '1')) {
 		$upd_stmt = Database::prepare("
 			UPDATE `" . TABLE_PANEL_SESSIONS . "` SET
 			`lastactivity` = :lastactive
@@ -269,29 +263,26 @@ if (isset($userinfo['language']) && isset($languages[$userinfo['language']])) {
 	// default: use language from session, #277
 	$language = $userinfo['language'];
 } else {
-	if (!isset($userinfo['def_language'])
-	   || !isset($languages[$userinfo['def_language']]) // this will always evaluat  true, since it is the above statement inverted. @todo remove
-	) {
-		if (isset($_GET['language'])
-		   && isset($languages[$_GET['language']])
-		) {
+	if (! isset($userinfo['def_language']) || ! isset($languages[$userinfo['def_language']])) // this will always evaluat true, since it is the above statement inverted. @todo remove
+	{
+		if (isset($_GET['language']) && isset($languages[$_GET['language']])) {
 			$language = $_GET['language'];
 		} else {
 			if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-				$accept_langs = explode(',',$_SERVER['HTTP_ACCEPT_LANGUAGE']);
-				for($i = 0; $i<count($accept_langs); $i++) {
-				    // this only works for most common languages. some (uncommon) languages have a 3 letter iso-code.
-				    // to be able to use these also, we would have to depend on the intl extension for php (using Locale::lookup or similar)
-				    // as long as froxlor does not support any of these languages, we can leave it like that.
-					if (isset($iso[substr($accept_langs[$i],0,2)])) {
-						$language=$iso[substr($accept_langs[$i],0,2)];
+				$accept_langs = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+				for ($i = 0; $i < count($accept_langs); $i ++) {
+					// this only works for most common languages. some (uncommon) languages have a 3 letter iso-code.
+					// to be able to use these also, we would have to depend on the intl extension for php (using Locale::lookup or similar)
+					// as long as froxlor does not support any of these languages, we can leave it like that.
+					if (isset($iso[substr($accept_langs[$i], 0, 2)])) {
+						$language = $iso[substr($accept_langs[$i], 0, 2)];
 						break;
 					}
 				}
 				unset($iso);
 
 				// if HTTP_ACCEPT_LANGUAGES has no valid langs, use default (very unlikely)
-				if (!strlen($language)>0) {
+				if (! strlen($language) > 0) {
 					$language = Settings::Get('panel.standardlanguage');
 				}
 			}
@@ -339,25 +330,24 @@ if (preg_match("/([a-z0-9\.\-]+)_([a-z0-9\.\-]+)/i", $theme, $matches)) {
 }
 
 // check for existence of the theme
-if (!file_exists('templates/'.$theme.'/config.json')) {
+if (! file_exists('templates/' . $theme . '/config.json')) {
 	// Fallback
 	$theme = $_deftheme;
 }
 
-$_themeoptions = json_decode(file_get_contents('templates/'.$theme.'/config.json'), true);
+$_themeoptions = json_decode(file_get_contents('templates/' . $theme . '/config.json'), true);
 
 // check for existence of variant in theme
-if (!array_key_exists('variants', $_themeoptions) || !array_key_exists($themevariant, $_themeoptions['variants']))
-{
+if (! array_key_exists('variants', $_themeoptions) || ! array_key_exists($themevariant, $_themeoptions['variants'])) {
 	$themevariant = "default";
 }
 
 // check for custom header-graphic
-$hl_path = 'templates/'.$theme.'/assets/img';
-$header_logo = $hl_path.'/logo.png';
+$hl_path = 'templates/' . $theme . '/assets/img';
+$header_logo = $hl_path . '/logo.png';
 
-if (file_exists($hl_path.'/logo_custom.png')) {
-	$header_logo = $hl_path.'/logo_custom.png';
+if (file_exists($hl_path . '/logo_custom.png')) {
+	$header_logo = $hl_path . '/logo_custom.png';
 }
 
 /**
@@ -370,7 +360,7 @@ if ($nosession == 1 && AREA != 'login') {
 		"qrystr" => $_SERVER["QUERY_STRING"]
 	);
 	redirectTo('index.php', $params);
-	exit;
+	exit();
 }
 
 /**
@@ -381,11 +371,9 @@ $templatecache = array();
 /**
  * Logic moved out of lng-file
  */
-if (isset($userinfo['loginname'])
-   && $userinfo['loginname'] != ''
-) {
-	$lng['menue']['main']['username'].= $userinfo['loginname'];
-	//Initialize logging
+if (isset($userinfo['loginname']) && $userinfo['loginname'] != '') {
+	$lng['menue']['main']['username'] .= $userinfo['loginname'];
+	// Initialize logging
 	$log = \Froxlor\FroxlorLogger::getInstanceOf($userinfo);
 }
 
@@ -400,33 +388,33 @@ if (AREA == 'admin' || AREA == 'customer') {
 		 * but not yet configured by the admin
 		 * we only show logout and the update-page
 		 */
-		$navigation_data = array (
-			'admin' => array (
-				'index' => array (
+		$navigation_data = array(
+			'admin' => array(
+				'index' => array(
 					'url' => 'admin_index.php',
 					'label' => $lng['admin']['overview'],
-					'elements' => array (
-						array (
-							'label' => $lng['menue']['main']['username'],
+					'elements' => array(
+						array(
+							'label' => $lng['menue']['main']['username']
 						),
-						array (
+						array(
 							'url' => 'admin_index.php?action=logout',
-							'label' => $lng['login']['logout'],
-						),
-					),
+							'label' => $lng['login']['logout']
+						)
+					)
 				),
-				'server' => array (
+				'server' => array(
 					'label' => $lng['admin']['server'],
 					'required_resources' => 'change_serversettings',
-					'elements' => array (
-						array (
+					'elements' => array(
+						array(
 							'url' => 'admin_updates.php?page=overview',
 							'label' => $lng['update']['update'],
-							'required_resources' => 'change_serversettings',
-						),
-					),
-				),
-			),
+							'required_resources' => 'change_serversettings'
+						)
+					)
+				)
+			)
 		);
 		$navigation = buildNavigation($navigation_data['admin'], $userinfo);
 	} else {
@@ -439,7 +427,7 @@ if (AREA == 'admin' || AREA == 'customer') {
 $js = "";
 if (array_key_exists('js', $_themeoptions['variants'][$themevariant]) && is_array($_themeoptions['variants'][$themevariant]['js'])) {
 	foreach ($_themeoptions['variants'][$themevariant]['js'] as $jsfile) {
-		if (file_exists('templates/'.$theme.'/assets/js/'.$jsfile)) {
+		if (file_exists('templates/' . $theme . '/assets/js/' . $jsfile)) {
 			$js .= '<script type="text/javascript" src="templates/' . $theme . '/assets/js/' . $jsfile . '"></script>' . "\n";
 		}
 	}
@@ -448,7 +436,7 @@ if (array_key_exists('js', $_themeoptions['variants'][$themevariant]) && is_arra
 $css = "";
 if (array_key_exists('css', $_themeoptions['variants'][$themevariant]) && is_array($_themeoptions['variants'][$themevariant]['css'])) {
 	foreach ($_themeoptions['variants'][$themevariant]['css'] as $cssfile) {
-		if (file_exists('templates/'.$theme.'/assets/css/'.$cssfile)) {
+		if (file_exists('templates/' . $theme . '/assets/css/' . $cssfile)) {
 			$css .= '<link href="templates/' . $theme . '/assets/css/' . $cssfile . '" rel="stylesheet" type="text/css" />' . "\n";
 		}
 	}
@@ -463,7 +451,7 @@ unset($css);
 
 if (isset($_POST['action'])) {
 	$action = $_POST['action'];
-} elseif(isset($_GET['action'])) {
+} elseif (isset($_GET['action'])) {
 	$action = $_GET['action'];
 } else {
 	$action = '';
@@ -475,7 +463,7 @@ if (isset($_POST['action'])) {
 
 if (isset($_POST['page'])) {
 	$page = $_POST['page'];
-} elseif(isset($_GET['page'])) {
+} elseif (isset($_GET['page'])) {
 	$page = $_GET['page'];
 } else {
 	$page = '';

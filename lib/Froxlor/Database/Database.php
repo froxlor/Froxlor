@@ -302,7 +302,7 @@ class Database
 		);
 
 		if ($socket != null) {
-			$dbconf["dsn"]['unix_socket'] = makeCorrectFile($socket);
+			$dbconf["dsn"]['unix_socket'] = \Froxlor\FileDir::makeCorrectFile($socket);
 		} else {
 			$dbconf["dsn"]['host'] = $host;
 			$dbconf["dsn"]['port'] = $port;
@@ -390,7 +390,7 @@ class Database
 		 * log to a file, so we can actually ask people for the error
 		 * (no one seems to find the stuff in the syslog)
 		 */
-		$sl_dir = makeCorrectDir(\Froxlor\Froxlor::getInstallDir() . "/logs/");
+		$sl_dir = \Froxlor\FileDir::makeCorrectDir(\Froxlor\Froxlor::getInstallDir() . "/logs/");
 		if (! file_exists($sl_dir)) {
 			@mkdir($sl_dir, 0755);
 		}
@@ -403,7 +403,7 @@ class Database
 		 * log error for reporting
 		 */
 		$errid = substr(md5(microtime()), 5, 5);
-		$err_file = makeCorrectFile($sl_dir . "/" . $errid . "_sql-error.log");
+		$err_file = \Froxlor\FileDir::makeCorrectFile($sl_dir . "/" . $errid . "_sql-error.log");
 		$errlog = @fopen($err_file, 'w');
 		@fwrite($errlog, "|CODE " . $error->getCode() . "\n");
 		@fwrite($errlog, "|MSG " . $error_message . "\n");

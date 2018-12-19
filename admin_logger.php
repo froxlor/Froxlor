@@ -20,7 +20,7 @@
 define('AREA', 'admin');
 require './lib/init.php';
 
-use Froxlor\Database as Database;
+use Froxlor\Database\Database;
 
 if ($page == 'log'
    && $userinfo['change_serversettings'] == '1'

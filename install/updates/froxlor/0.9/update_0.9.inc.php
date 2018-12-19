@@ -1,7 +1,6 @@
 <?php
-
-use \Froxlor\Database;
-use \Froxlor\Settings;
+use Froxlor\Database\Database;
+use Froxlor\Settings;
 
 /**
  * This file is part of the Froxlor project.
@@ -11,13 +10,13 @@ use \Froxlor\Settings;
  * file that was distributed with this source code. You can also view the
  * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
- * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Install
- *
+ * @copyright (c) the authors
+ * @author Froxlor team <team@froxlor.org> (2010-)
+ * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package Install
+ *         
  */
-if (!defined('_CRON_UPDATE')) {
+if (! defined('_CRON_UPDATE')) {
 	if (! defined('AREA') || (defined('AREA') && AREA != 'admin') || ! isset($userinfo['loginname']) || (isset($userinfo['loginname']) && $userinfo['loginname'] == '')) {
 		header('Location: ../../../../index.php');
 		exit();
@@ -983,7 +982,7 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.9.12-svn1')) {
 	showUpdateStep("Updating from 0.9.12-svn1 to 0.9.12-svn2", false);
 
 	$update_perl_suexecworkaround = isset($_POST['update_perl_suexecworkaround']) ? (int) $_POST['update_perl_suexecworkaround'] : '0';
-	$update_perl_suexecpath = isset($_POST['update_perl_suexecpath']) ? makeCorrectDir($_POST['update_perl_suexecpath']) : '/var/www/cgi-bin/';
+	$update_perl_suexecpath = isset($_POST['update_perl_suexecpath']) ? \Froxlor\FileDir::makeCorrectDir($_POST['update_perl_suexecpath']) : '/var/www/cgi-bin/';
 
 	if ($update_perl_suexecpath == '') {
 		$update_perl_suexecpath = '/var/www/cgi-bin/';
@@ -1023,7 +1022,7 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.9.12-svn3')) {
 
 	showUpdateStep("Updating from 0.9.12-svn3 to 0.9.12-svn4", false);
 
-	$update_awstats_awstatspath = isset($_POST['update_awstats_awstatspath']) ? makeCorrectDir($_POST['update_awstats_awstatspath']) : Settings::Get('system.awstats_path');
+	$update_awstats_awstatspath = isset($_POST['update_awstats_awstatspath']) ? \Froxlor\FileDir::makeCorrectDir($_POST['update_awstats_awstatspath']) : Settings::Get('system.awstats_path');
 
 	showUpdateStep("Adding new settings for awstats");
 	$stmt = Database::prepare("
@@ -1150,7 +1149,7 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.9.13.1')) {
 if (\Froxlor\Froxlor::isFroxlorVersion('0.9.14-svn2')) {
 	showUpdateStep("Updating from 0.9.14-svn2 to 0.9.14-svn3", false);
 
-	$update_awstats_icons = isset($_POST['update_awstats_icons']) ? makeCorrectDir($_POST['update_awstats_icons']) : Settings::Get('system.awstats_icons');
+	$update_awstats_icons = isset($_POST['update_awstats_icons']) ? \Froxlor\FileDir::makeCorrectDir($_POST['update_awstats_icons']) : Settings::Get('system.awstats_icons');
 
 	showUpdateStep("Adding AWStats icons path to the settings");
 	$stmt = Database::prepare("
@@ -1173,7 +1172,7 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.9.14-svn3')) {
 	$update_ssl_cert_chainfile = isset($_POST['update_ssl_cert_chainfile']) ? $_POST['update_ssl_cert_chainfile'] : '';
 
 	if ($update_ssl_cert_chainfile != '') {
-		$update_ssl_cert_chainfile = makeCorrectFile($update_ssl_cert_chainfile);
+		$update_ssl_cert_chainfile = \Froxlor\FileDir::makeCorrectFile($update_ssl_cert_chainfile);
 	}
 
 	showUpdateStep("Adding SSLCertificateChainFile to the settings");
@@ -1337,9 +1336,9 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.9.15')) {
 	showUpdateStep("Updating from 0.9.15 to 0.9.16-svn1", false);
 
 	$update_phpfpm_enabled = isset($_POST['update_phpfpm_enabled']) ? (int) $_POST['update_phpfpm_enabled'] : '0';
-	$update_phpfpm_configdir = isset($_POST['update_phpfpm_configdir']) ? makeCorrectDir($_POST['update_phpfpm_configdir']) : '/etc/php-fpm.d/';
-	$update_phpfpm_tmpdir = isset($_POST['update_phpfpm_tmpdir']) ? makeCorrectDir($_POST['update_phpfpm_tmpdir']) : '/var/customers/tmp';
-	$update_phpfpm_peardir = isset($_POST['update_phpfpm_peardir']) ? makeCorrectDir($_POST['update_phpfpm_peardir']) : '/usr/share/php/:/usr/share/php5/';
+	$update_phpfpm_configdir = isset($_POST['update_phpfpm_configdir']) ? \Froxlor\FileDir::makeCorrectDir($_POST['update_phpfpm_configdir']) : '/etc/php-fpm.d/';
+	$update_phpfpm_tmpdir = isset($_POST['update_phpfpm_tmpdir']) ? \Froxlor\FileDir::makeCorrectDir($_POST['update_phpfpm_tmpdir']) : '/var/customers/tmp';
+	$update_phpfpm_peardir = isset($_POST['update_phpfpm_peardir']) ? \Froxlor\FileDir::makeCorrectDir($_POST['update_phpfpm_peardir']) : '/usr/share/php/:/usr/share/php5/';
 	$update_phpfpm_reload = isset($_POST['update_phpfpm_reload']) ? $_POST['update_phpfpm_reload'] : '/etc/init.d/php-fpm restart';
 
 	$update_phpfpm_pm = isset($_POST['update_phpfpm_pm']) ? $_POST['update_phpfpm_pm'] : 'static';
@@ -2164,7 +2163,7 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.9.28-svn5')) {
 	showUpdateStep("Inserting settings for nginx fastcgi-params file", true);
 	$fastcgiparams = '/etc/nginx/fastcgi_params';
 	if (isset($_POST['nginx_fastcgi_params']) && $_POST['nginx_fastcgi_params'] != '') {
-		$fastcgiparams = makeCorrectFile($_POST['nginx_fastcgi_params']);
+		$fastcgiparams = \Froxlor\FileDir::makeCorrectFile($_POST['nginx_fastcgi_params']);
 	}
 	$stmt = Database::prepare("
 		INSERT INTO `" . TABLE_PANEL_SETTINGS . "` SET
@@ -2244,7 +2243,7 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.9.28.1')) {
 	$fastcgiparams = Settings::Get('nginx.fastcgiparams');
 	// check the faulty value explicitly
 	if ($fastcgiparams == '/etc/nginx/fastcgi_params/') {
-		$fastcgiparams = makeCorrectFile(substr($fastcgiparams, 0, - 1));
+		$fastcgiparams = \Froxlor\FileDir::makeCorrectFile(substr($fastcgiparams, 0, - 1));
 		$stmt = Database::prepare("
 		UPDATE `" . TABLE_PANEL_SETTINGS . "` SET
 			`value` = :value
@@ -2329,7 +2328,7 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.9.29-dev3')) {
 	) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;");
 	lastStepStatus(0);
 
-	$system_customersslpath = isset($_POST['system_customersslpath']) ? makeCorrectDir($_POST['system_customersslpath']) : '/etc/ssl/froxlor-custom/';
+	$system_customersslpath = isset($_POST['system_customersslpath']) ? \Froxlor\FileDir::makeCorrectDir($_POST['system_customersslpath']) : '/etc/ssl/froxlor-custom/';
 	if (trim($system_customersslpath) == '/') {
 		// prevent users from specifying nonsense here
 		$system_customersslpath = '/etc/ssl/froxlor-custom/';
@@ -2411,7 +2410,7 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.9.29')) {
 			Database::query("INSERT INTO `" . TABLE_DOMAINTOIP . "` SET
 					`id_domain` = " . (int) $row['id'] . ",
 					`id_ipandports` = " . (int) $row['ssl_ipandport']);
-		}		// Subdomains also have ssl ports if the parent has
+		} // Subdomains also have ssl ports if the parent has
 		elseif ((int) $row['ssl_ipandport'] == 0 && (int) $row['ssl_redirect'] != 0 && (int) $row['parentdomainid'] != 0) {
 			Database::query("INSERT INTO `" . TABLE_DOMAINTOIP . "` SET
 					`id_domain` = " . (int) $row['id'] . ",
@@ -2808,7 +2807,7 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.9.32-dev4')) {
 	showUpdateStep("Adding new settings for cron");
 	// get user-chosen value
 	$crondfile = isset($_POST['crondfile']) ? $_POST['crondfile'] : "/etc/cron.d/froxlor";
-	$crondfile = makeCorrectFile($crondfile);
+	$crondfile = \Froxlor\FileDir::makeCorrectFile($crondfile);
 	Settings::AddNew("system.cronconfig", $crondfile);
 	// add task to generate cron.d-file
 	inserttask('99');
@@ -3312,9 +3311,10 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.9.35.1') && \Froxlor\Froxlor::isDataba
 		`interval` = '1 DAY',
 		`desc_lng_key` = 'cron_backup',
 		`lastrun` = 0,
-		`isactive` = :isactive"
-	);
-	Database::pexecute($stmt, array('isactive' => $enable_backup));
+		`isactive` = :isactive");
+	Database::pexecute($stmt, array(
+		'isactive' => $enable_backup
+	));
 	lastStepStatus(0);
 
 	\Froxlor\Froxlor::updateToDbVersion('201604270');
@@ -3355,7 +3355,7 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201605090')) {
 
 	showUpdateStep("Adjusting SPF record setting");
 	$current_spf = Settings::Get('spf.spf_entry');
-	// @	IN	TXT	"v=spf1 a mx -all"
+	// @ IN TXT "v=spf1 a mx -all"
 	$new_spf = substr($current_spf, strpos($current_spf, '"'));
 	Settings::Set('spf.spf_entry', $new_spf, true);
 	lastStepStatus(0);
@@ -3376,7 +3376,7 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201605120')) {
 if (\Froxlor\Froxlor::isDatabaseVersion('201605170')) {
 
 	showUpdateStep("Adding new dns-editor setting for customers");
-	Database::query("ALTER TABLE `".TABLE_PANEL_CUSTOMERS."` ADD `dnsenabled` tinyint(1) NOT NULL default '0' AFTER `perlenabled`;");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` ADD `dnsenabled` tinyint(1) NOT NULL default '0' AFTER `perlenabled`;");
 	lastStepStatus(0);
 
 	\Froxlor\Froxlor::updateToDbVersion('201605180');
@@ -3385,9 +3385,9 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201605170')) {
 if (\Froxlor\Froxlor::isDatabaseVersion('201605180')) {
 
 	showUpdateStep("Changing tables to be more mysql strict-mode compatible");
-	Database::query("ALTER TABLE `".TABLE_FTP_USERS."` CHANGE `last_login` `last_login` DATETIME NULL DEFAULT NULL;");
-	Database::query("ALTER TABLE `".TABLE_PANEL_IPSANDPORTS."` CHANGE `specialsettings` `specialsettings` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;");
-	Database::query("ALTER TABLE `".TABLE_PANEL_TASKS."` CHANGE `data` `data` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;");
+	Database::query("ALTER TABLE `" . TABLE_FTP_USERS . "` CHANGE `last_login` `last_login` DATETIME NULL DEFAULT NULL;");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_IPSANDPORTS . "` CHANGE `specialsettings` `specialsettings` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_TASKS . "` CHANGE `data` `data` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;");
 	lastStepStatus(0);
 
 	\Froxlor\Froxlor::updateToDbVersion('201606190');
@@ -3452,7 +3452,7 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201609050')) {
 		$websrv_default = "/etc/nginx/acme.conf";
 	}
 	$acmeconffile = isset($_POST['acmeconffile']) ? $_POST['acmeconffile'] : $websrv_default;
-	$acmeconffile = makeCorrectFile($acmeconffile);
+	$acmeconffile = \Froxlor\FileDir::makeCorrectFile($acmeconffile);
 	Settings::AddNew("system.letsencryptacmeconf", $acmeconffile);
 	lastStepStatus(0);
 
@@ -3465,7 +3465,7 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201609120')) {
 	// get user-chosen value
 	$smtp_enable = isset($_POST['smtp_enable']) ? (int) $_POST['smtp_enable'] : 0;
 	$smtp_host = isset($_POST['smtp_host']) ? $_POST['smtp_host'] : "localhost";
-	$smtp_port = isset($_POST['smtp_port']) ? (int)$_POST['smtp_port'] : 25;
+	$smtp_port = isset($_POST['smtp_port']) ? (int) $_POST['smtp_port'] : 25;
 	$smtp_usetls = isset($_POST['smtp_usetls']) ? (int) $_POST['smtp_usetls'] : 1;
 	$smtp_useauth = isset($_POST['smtp_auth']) ? (int) $_POST['smtp_auth'] : 1;
 	$smtp_user = isset($_POST['smtp_user']) ? $_POST['smtp_user'] : "";
@@ -3486,9 +3486,9 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201609120')) {
 if (\Froxlor\Froxlor::isDatabaseVersion('201609200')) {
 
 	showUpdateStep("Changing tables to be more mysql strict-mode compatible");
-	Database::query("ALTER TABLE `".TABLE_MAIL_VIRTUAL."` CHANGE `destination` `destination` TEXT NOT NULL DEFAULT '';");
-	Database::query("ALTER TABLE `".TABLE_PANEL_DOMAINS."` CHANGE `registration_date` `registration_date` DATE NULL DEFAULT NULL;");
-	Database::query("ALTER TABLE `".TABLE_PANEL_DOMAINS."` CHANGE `termination_date` `termination_date` DATE NULL DEFAULT NULL;");
+	Database::query("ALTER TABLE `" . TABLE_MAIL_VIRTUAL . "` CHANGE `destination` `destination` TEXT NOT NULL DEFAULT '';");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` CHANGE `registration_date` `registration_date` DATE NULL DEFAULT NULL;");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` CHANGE `termination_date` `termination_date` DATE NULL DEFAULT NULL;");
 	lastStepStatus(0);
 
 	\Froxlor\Froxlor::updateToDbVersion('201609240');
@@ -3503,7 +3503,7 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201609240')) {
 	lastStepStatus(0);
 
 	showUpdateStep("Settings HSTS default values for all domains (deactivated)");
-	Database::query("UPDATE `".TABLE_PANEL_DOMAINS."` SET `hsts_sub` = '0', `hsts_preload` = '0';");
+	Database::query("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `hsts_sub` = '0', `hsts_preload` = '0';");
 	lastStepStatus(0);
 
 	\Froxlor\Froxlor::updateToDbVersion('201610070');
@@ -3567,14 +3567,14 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201611180')) {
 	lastStepStatus(0);
 
 	showUpdateStep("Adding field for let's-encrypt registration status");
-	Database::query("ALTER TABLE `".TABLE_PANEL_CUSTOMERS."` add `leregistered` TINYINT(1) NOT NULL DEFAULT 0;");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` add `leregistered` TINYINT(1) NOT NULL DEFAULT 0;");
 	lastStepStatus(0);
 
 	showUpdateStep("Adding system setting for let's-encrypt registration status");
 	Settings::AddNew('system.leregistered', '0');
 	lastStepStatus(0);
 
-  showUpdateStep("Adding unique key to ipsandports table");
+	showUpdateStep("Adding unique key to ipsandports table");
 	Database::query("ALTER TABLE `" . TABLE_PANEL_IPSANDPORTS . "` ADD UNIQUE KEY `ip_port` (`ip`,`port`)");
 	lastStepStatus(0);
 
@@ -3602,8 +3602,7 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.9.38.6')) {
 if (\Froxlor\Froxlor::isDatabaseVersion('201612110')) {
 
 	showUpdateStep("Adding field for OCSP stapling");
-	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS .
-		"` ADD `ocsp_stapling` TINYINT(1) NOT NULL DEFAULT '0';");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `ocsp_stapling` TINYINT(1) NOT NULL DEFAULT '0';");
 	lastStepStatus(0);
 
 	showUpdateStep("Adding default setting for Apache 2.4 OCSP cache path");
@@ -3616,7 +3615,7 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201612110')) {
 if (\Froxlor\Froxlor::isDatabaseVersion('201704100')) {
 
 	showUpdateStep("Adding new setting for libnss-extrausers");
-	$system_nssextrausers= isset($_POST['system_nssextrausers']) ? (int) $_POST['system_nssextrausers'] : 0;
+	$system_nssextrausers = isset($_POST['system_nssextrausers']) ? (int) $_POST['system_nssextrausers'] : 0;
 	Settings::AddNew('system.nssextrausers', $system_nssextrausers);
 	lastStepStatus(0);
 
@@ -3640,7 +3639,7 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201705050')) {
 }
 
 if (\Froxlor\Froxlor::isDatabaseVersion('201708240')) {
-	
+
 	showUpdateStep("Adding new 'disable LE self-check' setting");
 	$system_disable_le_selfcheck = isset($_POST['system_disable_le_selfcheck']) ? (int) $_POST['system_disable_le_selfcheck'] : 0;
 	Settings::AddNew('system.disable_le_selfcheck', $system_disable_le_selfcheck);
@@ -3708,15 +3707,15 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201712310')) {
 	lastStepStatus(0);
 
 	showUpdateStep("Deleting unneeded settings");
-	Database::query("DELETE FROM `".TABLE_PANEL_SETTINGS."` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'reload'");
-	Database::query("DELETE FROM `".TABLE_PANEL_SETTINGS."` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'configdir'");
-	Database::query("DELETE FROM `".TABLE_PANEL_SETTINGS."` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'pm'");
-	Database::query("DELETE FROM `".TABLE_PANEL_SETTINGS."` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'max_children'");
-	Database::query("DELETE FROM `".TABLE_PANEL_SETTINGS."` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'start_servers'");
-	Database::query("DELETE FROM `".TABLE_PANEL_SETTINGS."` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'min_spare_servers'");
-	Database::query("DELETE FROM `".TABLE_PANEL_SETTINGS."` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'max_spare_servers'");
-	Database::query("DELETE FROM `".TABLE_PANEL_SETTINGS."` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'max_requests'");
-	Database::query("DELETE FROM `".TABLE_PANEL_SETTINGS."` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'idle_timeout'");
+	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'reload'");
+	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'configdir'");
+	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'pm'");
+	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'max_children'");
+	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'start_servers'");
+	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'min_spare_servers'");
+	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'max_spare_servers'");
+	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'max_requests'");
+	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'idle_timeout'");
 	lastStepStatus(0);
 
 	\Froxlor\Froxlor::updateToDbVersion('201801070');
@@ -3874,7 +3873,7 @@ opcache.interned_strings_buffer');
 if (\Froxlor\Froxlor::isDatabaseVersion('201801110')) {
 
 	showUpdateStep("Adding php-fpm php PATH setting for envrironment");
-	Settings::AddNew("phpfpm.envpath",  '/usr/local/bin:/usr/bin:/bin');
+	Settings::AddNew("phpfpm.envpath", '/usr/local/bin:/usr/bin:/bin');
 	lastStepStatus(0);
 
 	\Froxlor\Froxlor::updateToDbVersion('201801260');
@@ -3957,9 +3956,9 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201802130')) {
 if (\Froxlor\Froxlor::isDatabaseVersion('201802250')) {
 
 	showUpdateStep("Adding webserver logfile settings");
-	Settings::AddNew("system.logfiles_format",  '');
-	Settings::AddNew("system.logfiles_type",  '1');
-	Settings::AddNew("system.logfiles_piped",  '0');
+	Settings::AddNew("system.logfiles_format", '');
+	Settings::AddNew("system.logfiles_type", '1');
+	Settings::AddNew("system.logfiles_piped", '0');
 	lastStepStatus(0);
 
 	\Froxlor\Froxlor::updateToDbVersion('201805240');
@@ -3968,7 +3967,7 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201802250')) {
 if (\Froxlor\Froxlor::isDatabaseVersion('201805240')) {
 
 	showUpdateStep("Adding webserver logfile-script settings");
-	Settings::AddNew("system.logfiles_script",  '');
+	Settings::AddNew("system.logfiles_script", '');
 	lastStepStatus(0);
 
 	\Froxlor\Froxlor::updateToDbVersion('201805241');
@@ -4018,7 +4017,7 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201805290')) {
 }
 
 if (\Froxlor\Froxlor::isDatabaseVersion('201809180')) {
-	
+
 	showUpdateStep("Adding new fields for php configs");
 	Database::query("ALTER TABLE `" . TABLE_PANEL_PHPCONFIGS . "` ADD `override_fpmconfig` tinyint(1) NOT NULL DEFAULT '0';");
 	Database::query("ALTER TABLE `" . TABLE_PANEL_PHPCONFIGS . "` ADD `pm` varchar(15) NOT NULL DEFAULT 'static';");
@@ -4030,7 +4029,7 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201809180')) {
 	Database::query("ALTER TABLE `" . TABLE_PANEL_PHPCONFIGS . "` ADD `idle_timeout` int(4) NOT NULL DEFAULT '30';");
 	Database::query("ALTER TABLE `" . TABLE_PANEL_PHPCONFIGS . "` ADD `limit_extensions` varchar(255) NOT NULL default '.php';");
 	lastStepStatus(0);
-	
+
 	showUpdateStep("Synchronize fpm-daemon process manager settings with php-configs");
 	// get all fpm-daemons
 	$sel_stmt = Database::prepare("SELECT * FROM `panel_fpmdaemons`;");
@@ -4062,7 +4061,7 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201809180')) {
 		));
 	}
 	lastStepStatus(0);
-	
+
 	\Froxlor\Froxlor::updateToDbVersion('201809280');
 }
 

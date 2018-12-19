@@ -1,7 +1,7 @@
 <?php
 namespace Froxlor\Http\LetsEncrypt;
 
-use Froxlor\Database;
+use Froxlor\Database\Database;
 use Froxlor\Settings;
 
 // Copyright (c) 2015, Stanislav Humplik <sh@analogic.cz>

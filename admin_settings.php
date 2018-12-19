@@ -16,14 +16,12 @@
  * @package    Panel
  *
  */
-
-use \Froxlor\Database;
-use \Froxlor\Settings;
-use \Froxlor\Api\Commands\Froxlor;
+use Froxlor\Database\Database;
+use Froxlor\Settings;
+use Froxlor\Api\Commands\Froxlor;
 
 define('AREA', 'admin');
 require './lib/init.php';
-
 
 // get sql-root access data
 Database::needRoot(true);
@@ -34,9 +32,7 @@ Database::needRoot(false);
 if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 	$settings_data = loadConfigArrayDir('./actions/admin/settings/');
 
-	if (isset($_POST['send'])
-		&& $_POST['send'] == 'send'
-	) {
+	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 
 		$_part = isset($_GET['part']) ? $_GET['part'] : '';
 		if ($_part == '') {
@@ -52,7 +48,6 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 				$settings_part = true;
 			}
 			$only_enabledisable = false;
-
 		} else {
 			$settings_all = false;
 			$settings_part = false;
@@ -60,30 +55,26 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 		}
 
 		// check if the session timeout is too low #815
-		if (isset($_POST['session_sessiontimeout'])
-			&& $_POST['session_sessiontimeout'] < 60
-		) {
+		if (isset($_POST['session_sessiontimeout']) && $_POST['session_sessiontimeout'] < 60) {
 			standard_error($lng['error']['session_timeout'], $lng['error']['session_timeout_desc']);
 		}
 
-		if (processFormEx(
-			$settings_data,
-			$_POST,
-			array('filename' => $filename, 'action' => $action, 'page' => $page),
-			$_part,
-			$settings_all,
-			$settings_part,
-			$only_enabledisable
-			)
-		) {
+		if (processFormEx($settings_data, $_POST, array(
+			'filename' => $filename,
+			'action' => $action,
+			'page' => $page
+		), $_part, $settings_all, $settings_part, $only_enabledisable)) {
 			$log->logAction(ADM_ACTION, LOG_INFO, "rebuild configfiles due to changed setting");
 			inserttask('1');
 			// Using nameserver, insert a task which rebuilds the server config
 			inserttask('4');
 
-			standard_success('settingssaved', '', array('filename' => $filename, 'action' => $action, 'page' => $page));
+			standard_success('settingssaved', '', array(
+				'filename' => $filename,
+				'action' => $action,
+				'page' => $page
+			));
 		}
-
 	} else {
 
 		$_part = isset($_GET['part']) ? $_GET['part'] : '';
@@ -103,27 +94,24 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 		eval("echo \"" . getTemplate("settings/settings_form_begin") . "\";");
 		eval("echo \$settings_page;");
 		eval("echo \"" . getTemplate("settings/settings_form_end") . "\";");
-
 	}
-
-} elseif($page == 'phpinfo'
-	&& $userinfo['change_serversettings'] == '1'
-) {
+} elseif ($page == 'phpinfo' && $userinfo['change_serversettings'] == '1') {
 	ob_start();
 	phpinfo();
-	$phpinfo = array('phpinfo' => array());
-	if (preg_match_all(
-			'#(?:<h2>(?:<a name=".*?">)?(.*?)(?:</a>)?</h2>)|(?:<tr(?: class=".*?")?><t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>(?:<t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>(?:<t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>)?)?</tr>)#s',
-			ob_get_clean(), $matches, PREG_SET_ORDER
-		)
-	) {
+	$phpinfo = array(
+		'phpinfo' => array()
+	);
+	if (preg_match_all('#(?:<h2>(?:<a name=".*?">)?(.*?)(?:</a>)?</h2>)|(?:<tr(?: class=".*?")?><t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>(?:<t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>(?:<t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>)?)?</tr>)#s', ob_get_clean(), $matches, PREG_SET_ORDER)) {
 		foreach ($matches as $match) {
 			$end = array_keys($phpinfo);
 			$end = end($end);
 			if (strlen($match[1])) {
 				$phpinfo[$match[1]] = array();
 			} elseif (isset($match[3])) {
-				$phpinfo[$end][$match[2]] = isset($match[4]) ? array($match[3], $match[4]) : $match[3];
+				$phpinfo[$end][$match[2]] = isset($match[4]) ? array(
+					$match[3],
+					$match[4]
+				) : $match[3];
 			} else {
 				$phpinfo[$end][] = $match[2];
 			}
@@ -142,7 +130,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 			}
 			// first header -> show actual php version
 			if (strtolower($name) == "phpinfo") {
-				$name = "PHP ".PHP_VERSION;
+				$name = "PHP " . PHP_VERSION;
 			}
 			eval("\$phpinfohtml .= \"" . getTemplate("settings/phpinfo/phpinfo_table") . "\";");
 		}
@@ -151,13 +139,8 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 		standard_error($lng['error']['no_phpinfo']);
 	}
 	eval("echo \"" . getTemplate("settings/phpinfo") . "\";");
-
-} elseif($page == 'rebuildconfigs'
-	&& $userinfo['change_serversettings'] == '1'
-) {
-	if (isset($_POST['send'])
-		&& $_POST['send'] == 'send'
-	) {
+} elseif ($page == 'rebuildconfigs' && $userinfo['change_serversettings'] == '1') {
+	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 
 		$log->logAction(ADM_ACTION, LOG_INFO, "rebuild configfiles");
 		inserttask('1');
@@ -167,19 +150,17 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 		// cron.d file
 		inserttask('99');
 
-		standard_success('rebuildingconfigs', '', array('filename' => 'admin_index.php'));
-
+		standard_success('rebuildingconfigs', '', array(
+			'filename' => 'admin_index.php'
+		));
 	} else {
-		ask_yesno('admin_configs_reallyrebuild', $filename, array('page' => $page));
+		ask_yesno('admin_configs_reallyrebuild', $filename, array(
+			'page' => $page
+		));
 	}
+} elseif ($page == 'updatecounters' && $userinfo['change_serversettings'] == '1') {
 
-} elseif($page == 'updatecounters'
-	&& $userinfo['change_serversettings'] == '1'
-) {
-
-	if (isset($_POST['send'])
-		&& $_POST['send'] == 'send'
-	) {
+	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 
 		$log->logAction(ADM_ACTION, LOG_INFO, "updated resource-counters");
 		$updatecounters = updateCounters(true);
@@ -194,53 +175,45 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 		}
 
 		eval("echo \"" . getTemplate("settings/updatecounters") . "\";");
-
 	} else {
-		ask_yesno('admin_counters_reallyupdate', $filename, array('page' => $page));
+		ask_yesno('admin_counters_reallyupdate', $filename, array(
+			'page' => $page
+		));
 	}
+} elseif ($page == 'wipecleartextmailpws' && $userinfo['change_serversettings'] == '1') {
 
-} elseif ($page == 'wipecleartextmailpws'
-	&& $userinfo['change_serversettings'] == '1'
-) {
-
-	if (isset($_POST['send'])
-		&& $_POST['send'] == 'send'
-	) {
+	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 
 		$log->logAction(ADM_ACTION, LOG_WARNING, "wiped all cleartext mail passwords");
 		Database::query("UPDATE `" . TABLE_MAIL_USERS . "` SET `password` = '';");
 		Database::query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '0' WHERE `settinggroup` = 'system' AND `varname` = 'mailpwcleartext'");
-		redirectTo($filename, array('s' => $s));
-
+		redirectTo($filename, array(
+			's' => $s
+		));
 	} else {
-		ask_yesno('admin_cleartextmailpws_reallywipe', $filename, array('page' => $page));
+		ask_yesno('admin_cleartextmailpws_reallywipe', $filename, array(
+			'page' => $page
+		));
 	}
+} elseif ($page == 'wipequotas' && $userinfo['change_serversettings'] == '1') {
 
-} elseif($page == 'wipequotas'
-	&& $userinfo['change_serversettings'] == '1'
-) {
-
-	if (isset($_POST['send'])
-		&& $_POST['send'] == 'send'
-	) {
+	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 
 		$log->logAction(ADM_ACTION, LOG_WARNING, "wiped all mailquotas");
 
 		// Set the quota to 0 which means unlimited
 		Database::query("UPDATE `" . TABLE_MAIL_USERS . "` SET `quota` = '0';");
 		Database::query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `email_quota_used` = '0'");
-		redirectTo($filename, array('s' => $s));
-
+		redirectTo($filename, array(
+			's' => $s
+		));
 	} else {
-		ask_yesno('admin_quotas_reallywipe', $filename, array('page' => $page));
+		ask_yesno('admin_quotas_reallywipe', $filename, array(
+			'page' => $page
+		));
 	}
-
-} elseif ($page == 'enforcequotas'
-	&& $userinfo['change_serversettings'] == '1'
-) {
-	if (isset($_POST['send'])
-		&& $_POST['send'] == 'send'
-	) {
+} elseif ($page == 'enforcequotas' && $userinfo['change_serversettings'] == '1') {
+	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 		// Fetch all accounts
 		$result_stmt = Database::query("SELECT `quota`, `customerid` FROM `" . TABLE_MAIL_USERS . "`");
 
@@ -254,7 +227,10 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 
 			while ($array = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 				$difference = Settings::Get('system.mail_quota') - $array['quota'];
-				Database::pexecute($upd_stmt, array('diff' => $difference, 'customerid' => $customerid));
+				Database::pexecute($upd_stmt, array(
+					'diff' => $difference,
+					'customerid' => $customerid
+				));
 			}
 		}
 
@@ -262,27 +238,29 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 		$upd_stmt = Database::prepare("
 			UPDATE `" . TABLE_MAIL_USERS . "` SET `quota` = :quota
 		");
-		Database::pexecute($upd_stmt, array('quota' => Settings::Get('system.mail_quota')));
+		Database::pexecute($upd_stmt, array(
+			'quota' => Settings::Get('system.mail_quota')
+		));
 
 		// Update the Customer, if the used quota is bigger than the allowed quota
 		Database::query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `email_quota` = `email_quota_used` WHERE `email_quota` < `email_quota_used`");
 		$log->logAction(ADM_ACTION, LOG_WARNING, 'enforcing mailquota to all customers: ' . Settings::Get('system.mail_quota') . ' MB');
-		redirectTo($filename, array('s' => $s));
-
+		redirectTo($filename, array(
+			's' => $s
+		));
 	} else {
-		ask_yesno('admin_quotas_reallyenforce', $filename, array('page' => $page));
+		ask_yesno('admin_quotas_reallyenforce', $filename, array(
+			'page' => $page
+		));
 	}
-} elseif ($page == 'integritycheck'
-	&& $userinfo['change_serversettings'] == '1'
-) {
+} elseif ($page == 'integritycheck' && $userinfo['change_serversettings'] == '1') {
 	$integrity = new IntegrityCheck();
-	if (isset($_POST['send'])
-		&& $_POST['send'] == 'send'
-	) {
+	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 		$integrity->fixAll();
-	} elseif(isset($_GET['action'])
-		 && $_GET['action'] == "fix") {
-		ask_yesno('admin_integritycheck_reallyfix', $filename, array('page' => $page));
+	} elseif (isset($_GET['action']) && $_GET['action'] == "fix") {
+		ask_yesno('admin_integritycheck_reallyfix', $filename, array(
+			'page' => $page
+		));
 	}
 
 	$integritycheck = '';
@@ -293,9 +271,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 		eval("\$integritycheck.=\"" . getTemplate("settings/integritycheck_row") . "\";");
 	}
 	eval("echo \"" . getTemplate("settings/integritycheck") . "\";");
-}
-elseif ($page == 'importexport' && $userinfo['change_serversettings'] == '1')
-{
+} elseif ($page == 'importexport' && $userinfo['change_serversettings'] == '1') {
 	// check for json-stuff
 	if (! extension_loaded('json')) {
 		standard_error('jsonextensionnotfound');
@@ -306,13 +282,13 @@ elseif ($page == 'importexport' && $userinfo['change_serversettings'] == '1')
 		try {
 			$json_result = Froxlor::getLocal($userinfo)->exportSettings();
 			$json_export = json_decode($json_result, true)['data'];
-		} catch(Exception $e) {
+		} catch (Exception $e) {
 			dynamic_error($e->getMessage());
 		}
-		header('Content-disposition: attachment; filename=Froxlor_settings-'.$version.'-'.$dbversion.'_'.date('d.m.Y').'.json');
+		header('Content-disposition: attachment; filename=Froxlor_settings-' . $version . '-' . $dbversion . '_' . date('d.m.Y') . '.json');
 		header('Content-type: application/json');
 		echo $json_export;
-		exit;
+		exit();
 	} elseif (isset($_GET['action']) && $_GET['action'] == "import") {
 		// import
 		if (isset($_POST['send']) && $_POST['send'] == 'send') {
@@ -320,82 +296,86 @@ elseif ($page == 'importexport' && $userinfo['change_serversettings'] == '1')
 			if (isset($_FILES["import_file"]["tmp_name"])) {
 				$imp_content = file_get_contents($_FILES["import_file"]["tmp_name"]);
 				try {
-					Froxlor::getLocal($userinfo, array('json_str' => $imp_content))->importSettings();
-				} catch(Exception $e) {
+					Froxlor::getLocal($userinfo, array(
+						'json_str' => $imp_content
+					))->importSettings();
+				} catch (Exception $e) {
 					dynamic_error($e->getMessage());
 				}
-				standard_success('settingsimported', '', array('filename' => 'admin_settings.php'));
+				standard_success('settingsimported', '', array(
+					'filename' => 'admin_settings.php'
+				));
 			}
 			dynamic_error("Upload failed");
 		}
 	} else {
 		eval("echo \"" . getTemplate("settings/importexport/index") . "\";");
 	}
-}
-elseif ($page == 'testmail')
-{
-		if (isset($_POST['send']) && $_POST['send'] == 'send')
-		{
-			$test_addr = isset($_POST['test_addr']) ? $_POST['test_addr'] : null;
+} elseif ($page == 'testmail') {
+	if (isset($_POST['send']) && $_POST['send'] == 'send') {
+		$test_addr = isset($_POST['test_addr']) ? $_POST['test_addr'] : null;
 
-			/**
-			 * Initialize the mailingsystem
-			 */
-			$testmail = new \PHPMailer\PHPMailer\PHPMailer(true);
-			$testmail->CharSet = "UTF-8";
+		/**
+		 * Initialize the mailingsystem
+		 */
+		$testmail = new \PHPMailer\PHPMailer\PHPMailer(true);
+		$testmail->CharSet = "UTF-8";
 
-			if (Settings::Get('system.mail_use_smtp')) {
-				$testmail->isSMTP();
-				$testmail->Host = Settings::Get('system.mail_smtp_host');
-				$testmail->SMTPAuth = Settings::Get('system.mail_smtp_auth') == '1' ? true : false;
-				$testmail->Username = Settings::Get('system.mail_smtp_user');
-				$testmail->Password = Settings::Get('system.mail_smtp_passwd');
-				if (Settings::Get('system.mail_smtp_usetls')) {
-					$testmail->SMTPSecure = 'tls';
-				} else {
-					$testmail->SMTPAutoTLS = false;
-				}
-				$testmail->Port = Settings::Get('system.mail_smtp_port');
-			}
-
-			$_mailerror = false;
-			if (\PHPMailer\PHPMailer\PHPMailer::ValidateAddress(Settings::Get('panel.adminmail')) !== false) {
-				// set return-to address and custom sender-name, see #76
-				$testmail->SetFrom(Settings::Get('panel.adminmail'), Settings::Get('panel.adminmail_defname'));
-				if (Settings::Get('panel.adminmail_return') != '') {
-					$testmail->AddReplyTo(Settings::Get('panel.adminmail_return'), Settings::Get('panel.adminmail_defname'));
-				}
-
-				try {
-					$testmail->Subject = "Froxlor Test-Mail";
-					$mail_body = "Yay, this worked :)";
-					$testmail->AltBody = $mail_body;
-					$testmail->MsgHTML(str_replace("\n", "<br />", $mail_body));
-					$testmail->AddAddress($test_addr);
-					$testmail->Send();
-				} catch(\PHPMailer\PHPMailer\Exception $e) {
-					$mailerr_msg = $e->errorMessage();
-					$_mailerror = true;
-				} catch (Exception $e) {
-					$mailerr_msg = $e->getMessage();
-					$_mailerror = true;
-				}
-
-				if (!$_mailerror) {
-					// success
-					$mail->ClearAddresses();
-					standard_success('testmailsent', '', array('filename' => 'admin_settings.php', 'page' => 'testmail'));
-				}
+		if (Settings::Get('system.mail_use_smtp')) {
+			$testmail->isSMTP();
+			$testmail->Host = Settings::Get('system.mail_smtp_host');
+			$testmail->SMTPAuth = Settings::Get('system.mail_smtp_auth') == '1' ? true : false;
+			$testmail->Username = Settings::Get('system.mail_smtp_user');
+			$testmail->Password = Settings::Get('system.mail_smtp_passwd');
+			if (Settings::Get('system.mail_smtp_usetls')) {
+				$testmail->SMTPSecure = 'tls';
 			} else {
-				// invalid sender e-mail
-				$mailerr_msg = "Invalid sender e-mail address: ".Settings::Get('panel.adminmail');
-				$_mailerror = true;
+				$testmail->SMTPAutoTLS = false;
 			}
+			$testmail->Port = Settings::Get('system.mail_smtp_port');
 		}
 
-		$mail_smtp_user = Settings::Get('system.mail_smtp_user');
-		$mail_smtp_host = Settings::Get('system.mail_smtp_host');
-		$mail_smtp_port = Settings::Get('system.mail_smtp_port');
+		$_mailerror = false;
+		if (\PHPMailer\PHPMailer\PHPMailer::ValidateAddress(Settings::Get('panel.adminmail')) !== false) {
+			// set return-to address and custom sender-name, see #76
+			$testmail->SetFrom(Settings::Get('panel.adminmail'), Settings::Get('panel.adminmail_defname'));
+			if (Settings::Get('panel.adminmail_return') != '') {
+				$testmail->AddReplyTo(Settings::Get('panel.adminmail_return'), Settings::Get('panel.adminmail_defname'));
+			}
 
-		eval("echo \"" . getTemplate("settings/testmail") . "\";");
+			try {
+				$testmail->Subject = "Froxlor Test-Mail";
+				$mail_body = "Yay, this worked :)";
+				$testmail->AltBody = $mail_body;
+				$testmail->MsgHTML(str_replace("\n", "<br />", $mail_body));
+				$testmail->AddAddress($test_addr);
+				$testmail->Send();
+			} catch (\PHPMailer\PHPMailer\Exception $e) {
+				$mailerr_msg = $e->errorMessage();
+				$_mailerror = true;
+			} catch (Exception $e) {
+				$mailerr_msg = $e->getMessage();
+				$_mailerror = true;
+			}
+
+			if (! $_mailerror) {
+				// success
+				$mail->ClearAddresses();
+				standard_success('testmailsent', '', array(
+					'filename' => 'admin_settings.php',
+					'page' => 'testmail'
+				));
+			}
+		} else {
+			// invalid sender e-mail
+			$mailerr_msg = "Invalid sender e-mail address: " . Settings::Get('panel.adminmail');
+			$_mailerror = true;
+		}
+	}
+
+	$mail_smtp_user = Settings::Get('system.mail_smtp_user');
+	$mail_smtp_host = Settings::Get('system.mail_smtp_host');
+	$mail_smtp_port = Settings::Get('system.mail_smtp_port');
+
+	eval("echo \"" . getTemplate("settings/testmail") . "\";");
 }

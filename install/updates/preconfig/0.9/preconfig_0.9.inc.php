@@ -14,7 +14,7 @@
  * @package    Language
  *
  */
-use Froxlor\Database;
+use Froxlor\Database\Database;
 use Froxlor\Settings;
 use PHPMailer\PHPMailer;
 

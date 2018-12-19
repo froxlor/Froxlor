@@ -20,7 +20,7 @@
 define('AREA', 'admin');
 require './lib/init.php';
 
-use Froxlor\Database as Database;
+use Froxlor\Database\Database;
 
 if (isset($_POST['id'])) {
 	$id = intval($_POST['id']);

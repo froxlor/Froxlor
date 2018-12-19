@@ -19,9 +19,9 @@
 define('AREA', 'login');
 require './lib/init.php';
 
-use \Froxlor\Database;
-use \Froxlor\Settings;
-use \Froxlor\FroxlorLogger;
+use Froxlor\Database\Database;
+use Froxlor\Settings;
+use Froxlor\FroxlorLogger;
 
 if ($action == '') {
 	$action = 'login';
@@ -475,7 +475,7 @@ if ($action == 'forgotpwd') {
 					// there can be only one script to handle this so we can use a fixed value here
 					$script = "/index.php"; // $_SERVER['SCRIPT_NAME'];
 					if (Settings::Get('system.froxlordirectlyviahostname') == 0) {
-						$script = makeCorrectFile("/" . basename(__DIR__) . "/" . $script);
+						$script = \Froxlor\FileDir::makeCorrectFile("/" . basename(__DIR__) . "/" . $script);
 					}
 					$activationlink = $protocol . '://' . $host . $port . $script . '?action=resetpwd&resetcode=' . $activationcode;
 

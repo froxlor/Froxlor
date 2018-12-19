@@ -1,7 +1,7 @@
 <?php
 namespace Froxlor\Cli\Action;
 
-use Froxlor\Database;
+use Froxlor\Database\Database;
 use Froxlor\SImExporter;
 use Froxlor\Settings;
 use Froxlor\Cli\ConfigServicesCmd;

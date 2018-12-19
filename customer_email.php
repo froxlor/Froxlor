@@ -20,8 +20,8 @@
 define('AREA', 'customer');
 require './lib/init.php';
 
-use Froxlor\Database as Database;
-use Froxlor\Settings as Settings;
+use Froxlor\Database\Database;
+use Froxlor\Settings;
 use Froxlor\Api\Commands\Emails as Emails;
 use Froxlor\Api\Commands\EmailAccounts as EmailAccounts;
 use Froxlor\Api\Commands\EmailForwarders as EmailForwarders;

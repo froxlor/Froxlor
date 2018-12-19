@@ -18,7 +18,7 @@ namespace Froxlor\Http;
  * @since 0.9.33
  *       
  */
-use Froxlor\Database;
+use Froxlor\Database\Database;
 use Froxlor\FileDir;
 
 /**

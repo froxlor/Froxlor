@@ -14,16 +14,15 @@
  * @package    Panel
  *
  */
-
 define('AREA', 'admin');
 require './lib/init.php';
 
-use Froxlor\Database as Database;
+use Froxlor\Database\Database;
 use Froxlor\Api\Commands\Cronjobs as Cronjobs;
 
 if (isset($_POST['id'])) {
 	$id = intval($_POST['id']);
-} elseif(isset($_GET['id'])) {
+} elseif (isset($_GET['id'])) {
 	$id = intval($_GET['id']);
 }
 
@@ -62,19 +61,18 @@ if ($page == 'cronjobs' || $page == 'overview') {
 				$row = htmlentities_array($row);
 
 				$row['lastrun'] = date('d.m.Y H:i', $row['lastrun']);
-				$row['isactive'] = ((int)$row['isactive'] == 1) ? $lng['panel']['yes'] : $lng['panel']['no'];
+				$row['isactive'] = ((int) $row['isactive'] == 1) ? $lng['panel']['yes'] : $lng['panel']['no'];
 
 				$description = $lng['crondesc'][$row['desc_lng_key']];
 
 				eval("\$crons.=\"" . getTemplate('cronjobs/cronjobs_cronjob') . "\";");
-				$count++;
+				$count ++;
 			}
 
-			$i++;
+			$i ++;
 		}
 
 		eval("echo \"" . getTemplate('cronjobs/cronjobs') . "\";");
-
 	} elseif ($action == 'new') {
 		/*
 		 * @TODO later
@@ -95,7 +93,10 @@ if ($page == 'cronjobs' || $page == 'overview') {
 				} catch (Exception $e) {
 					dynamic_error($e->getMessage());
 				}
-				redirectTo($filename, array('page' => $page, 's' => $s));
+				redirectTo($filename, array(
+					'page' => $page,
+					's' => $s
+				));
 			} else {
 
 				// interval
@@ -115,7 +116,7 @@ if ($page == 'cronjobs' || $page == 'overview') {
 					$change_cronfile = true;
 				}
 
-				$cronjobs_edit_data = include_once dirname(__FILE__).'/lib/formfields/admin/cronjobs/formfield.cronjobs_edit.php';
+				$cronjobs_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/cronjobs/formfield.cronjobs_edit.php';
 				$cronjobs_edit_form = htmlform::genHTMLForm($cronjobs_edit_data);
 
 				$title = $cronjobs_edit_data['cronjobs_edit']['title'];
@@ -124,8 +125,7 @@ if ($page == 'cronjobs' || $page == 'overview') {
 				eval("echo \"" . getTemplate('cronjobs/cronjob_edit') . "\";");
 			}
 		}
-	}
-	elseif ($action == 'delete' && $id != 0) {
+	} elseif ($action == 'delete' && $id != 0) {
 		/*
 		 * @TODO later
 		 */

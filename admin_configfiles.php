@@ -18,7 +18,7 @@
 define('AREA', 'admin');
 require './lib/init.php';
 
-use Froxlor\Settings as Settings;
+use Froxlor\Settings;
 
 if ($userinfo['change_serversettings'] == '1') {
 

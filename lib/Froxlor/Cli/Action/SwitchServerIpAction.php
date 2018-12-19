@@ -1,7 +1,7 @@
 <?php
 namespace Froxlor\Cli\Action;
 
-use Froxlor\Database;
+use Froxlor\Database\Database;
 use Froxlor\Cli\SwitchServerIpCmd;
 
 class SwitchServerIpAction extends \Froxlor\Cli\Action

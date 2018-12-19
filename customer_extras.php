@@ -19,8 +19,8 @@
 define('AREA', 'customer');
 require './lib/init.php';
 
-use Froxlor\Database as Database;
-use Froxlor\Settings as Settings;
+use Froxlor\Database\Database;
+use Froxlor\Settings;
 use Froxlor\Api\Commands\DirOptions as DirOptions;
 use Froxlor\Api\Commands\DirProtections as DirProtections;
 use Froxlor\Api\Commands\CustomerBackups as CustomerBackups;
@@ -72,7 +72,7 @@ if ($page == 'overview') {
 				if (strpos($row['path'], $userinfo['documentroot']) === 0) {
 					$row['path'] = str_replace($userinfo['documentroot'], "/", $row['path']);
 				}
-				$row['path'] = makeCorrectDir($row['path']);
+				$row['path'] = \Froxlor\FileDir::makeCorrectDir($row['path']);
 				$row = htmlentities_array($row);
 				eval("\$htpasswds.=\"" . getTemplate("extras/htpasswds_htpasswd") . "\";");
 				$count ++;
@@ -214,7 +214,7 @@ if ($page == 'overview') {
 				if (strpos($row['path'], $userinfo['documentroot']) === 0) {
 					$row['path'] = str_replace($userinfo['documentroot'], "/", $row['path']);
 				}
-				$row['path'] = makeCorrectDir($row['path']);
+				$row['path'] = \Froxlor\FileDir::makeCorrectDir($row['path']);
 				$row['options_indexes'] = str_replace('1', $lng['panel']['yes'], $row['options_indexes']);
 				$row['options_indexes'] = str_replace('0', $lng['panel']['no'], $row['options_indexes']);
 				$row['options_cgi'] = str_replace('1', $lng['panel']['yes'], $row['options_cgi']);
@@ -374,7 +374,7 @@ if ($page == 'overview') {
 					$action = "abort";
 					$row = $existing_backupJob['data'];
 
-					$row['path'] = makeCorrectDir(str_replace($userinfo['documentroot'], "/", $row['destdir']));
+					$row['path'] = \Froxlor\FileDir::makeCorrectDir(str_replace($userinfo['documentroot'], "/", $row['destdir']));
 					$row['backup_web'] = ($row['backup_web'] == '1') ? $lng['panel']['yes'] : $lng['panel']['no'];
 					$row['backup_mail'] = ($row['backup_mail'] == '1') ? $lng['panel']['yes'] : $lng['panel']['no'];
 					$row['backup_dbs'] = ($row['backup_dbs'] == '1') ? $lng['panel']['yes'] : $lng['panel']['no'];

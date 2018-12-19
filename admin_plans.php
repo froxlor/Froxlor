@@ -17,8 +17,8 @@
 define('AREA', 'admin');
 require './lib/init.php';
 
-use Froxlor\Database as Database;
-use Froxlor\Settings as Settings;
+use Froxlor\Database\Database;
+use Froxlor\Settings;
 
 if (isset($_POST['id'])) {
 	$id = intval($_POST['id']);
@@ -27,9 +27,9 @@ if (isset($_POST['id'])) {
 }
 
 if ($page == '' || $page == 'overview') {
-	
+
 	if ($action == '') {
-		
+
 		$log->logAction(ADM_ACTION, LOG_NOTICE, "viewed admin_plans");
 		$fields = array(
 			'p.name' => $lng['admin']['plans']['name'],
@@ -54,9 +54,9 @@ if ($page == '' || $page == 'overview') {
 		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
 		$i = 0;
 		$count = 0;
-		
+
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-			
+
 			if ($paging->checkDisplay($i)) {
 				$row = htmlentities_array($row);
 				$row['ts_format'] = date("d.m.Y H:i", $row['ts']);
@@ -65,25 +65,25 @@ if ($page == '' || $page == 'overview') {
 			}
 			$i ++;
 		}
-		
+
 		eval("echo \"" . getTemplate("plans/plans") . "\";");
 	} elseif ($action == 'delete' && $id != 0) {
-		
+
 		$result_stmt = Database::prepare("
 			SELECT * FROM `" . TABLE_PANEL_PLANS . "` WHERE `id` = :id");
 		$result = Database::pexecute_first($result_stmt, array(
 			'id' => $id
 		));
-		
+
 		if ($result['id'] != 0 && $result['id'] == $id && (int) $userinfo['adminid'] == $result['adminid']) {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
-				
+
 				$del_stmt = Database::prepare("
 					DELETE FROM `" . TABLE_PANEL_PLANS . "` WHERE `id` = :id");
 				Database::pexecute($del_stmt, array(
 					'id' => $id
 				));
-				
+
 				$log->logAction(ADM_ACTION, LOG_INFO, "Plan '" . $result['name'] . "' has been deleted by '" . $userinfo['loginname'] . "'");
 				redirectTo($filename, array(
 					'page' => $page,
@@ -100,43 +100,43 @@ if ($page == '' || $page == 'overview') {
 			standard_error('nopermissionsorinvalidid');
 		}
 	} elseif ($action == 'add') {
-		
+
 		if (isset($_POST['send']) && $_POST['send'] == 'send') {
 			$name = validate($_POST['name'], 'name');
 			$description = validate(str_replace("\r\n", "\n", $_POST['description']), 'description', '/^[^\0]*$/');
-			
+
 			$value_arr = array();
-			
+
 			$value_arr['diskspace'] = intval_ressource($_POST['diskspace']);
 			if (isset($_POST['diskspace_ul'])) {
 				$value_arr['diskspace'] = - 1;
 			}
-			
+
 			$value_arr['traffic'] = doubleval_ressource($_POST['traffic']);
 			if (isset($_POST['traffic_ul'])) {
 				$value_arr['traffic'] = - 1;
 			}
-			
+
 			$value_arr['subdomains'] = intval_ressource($_POST['subdomains']);
 			if (isset($_POST['subdomains_ul'])) {
 				$value_arr['subdomains'] = - 1;
 			}
-			
+
 			$value_arr['emails'] = intval_ressource($_POST['emails']);
 			if (isset($_POST['emails_ul'])) {
 				$value_arr['emails'] = - 1;
 			}
-			
+
 			$value_arr['email_accounts'] = intval_ressource($_POST['email_accounts']);
 			if (isset($_POST['email_accounts_ul'])) {
 				$value_arr['email_accounts'] = - 1;
 			}
-			
+
 			$value_arr['email_forwarders'] = intval_ressource($_POST['email_forwarders']);
 			if (isset($_POST['email_forwarders_ul'])) {
 				$value_arr['email_forwarders'] = - 1;
 			}
-			
+
 			if (Settings::Get('system.mail_quota_enabled') == '1') {
 				$value_arr['email_quota'] = validate($_POST['email_quota'], 'email_quota', '/^\d+$/', 'vmailquotawrong', array(
 					'0',
@@ -148,37 +148,37 @@ if ($page == '' || $page == 'overview') {
 			} else {
 				$value_arr['email_quota'] = - 1;
 			}
-			
+
 			$value_arr['email_imap'] = 0;
 			if (isset($_POST['email_imap'])) {
 				$value_arr['email_imap'] = intval_ressource($_POST['email_imap']);
 			}
-			
+
 			$value_arr['email_pop3'] = 0;
 			if (isset($_POST['email_pop3'])) {
 				$value_arr['email_pop3'] = intval_ressource($_POST['email_pop3']);
 			}
-			
+
 			$value_arr['ftps'] = intval_ressource($_POST['ftps']);
 			if (isset($_POST['ftps_ul'])) {
 				$value_arr['ftps'] = - 1;
 			}
-			
+
 			$value_arr['tickets'] = (Settings::Get('ticket.enabled') == 1 ? intval_ressource($_POST['tickets']) : 0);
 			if (isset($_POST['tickets_ul']) && Settings::Get('ticket.enabled') == '1') {
 				$value_arr['tickets'] = - 1;
 			}
-			
+
 			$value_arr['mysqls'] = intval_ressource($_POST['mysqls']);
 			if (isset($_POST['mysqls_ul'])) {
 				$value_arr['mysqls'] = - 1;
 			}
-			
+
 			$value_arr['phpenabled'] = 0;
 			if (isset($_POST['phpenabled'])) {
 				$value_arr['phpenabled'] = intval($_POST['phpenabled']);
 			}
-			
+
 			$value_arr['allowed_phpconfigs'] = array();
 			if (isset($_POST['allowed_phpconfigs']) && is_array($_POST['allowed_phpconfigs'])) {
 				foreach ($_POST['allowed_phpconfigs'] as $allowed_phpconfig) {
@@ -186,17 +186,17 @@ if ($page == '' || $page == 'overview') {
 					$value_arr['allowed_phpconfigs'][] = $allowed_phpconfig;
 				}
 			}
-			
+
 			$value_arr['perlenabled'] = 0;
 			if (isset($_POST['perlenabled'])) {
 				$value_arr['perlenabled'] = intval($_POST['perlenabled']);
 			}
-			
+
 			$value_arr['dnsenabled'] = 0;
 			if (isset($_POST['dnsenabled'])) {
 				$value_arr['dnsenabled'] = intval($_POST['dnsenabled']);
 			}
-			
+
 			$ins_stmt = Database::prepare("
 				INSERT INTO `" . TABLE_PANEL_PLANS . "`
 				SET `adminid` = :adminid, `name` = :name, `description` = :desc, `value` = :valuearr, `ts` = UNIX_TIMESTAMP();
@@ -208,14 +208,14 @@ if ($page == '' || $page == 'overview') {
 				'valuearr' => json_encode($value_arr)
 			);
 			Database::pexecute($ins_stmt, $ins_data);
-			
+
 			$log->logAction(ADM_ACTION, LOG_WARNING, "added plan '" . $name . "'");
 			redirectTo($filename, array(
 				'page' => $page,
 				's' => $s
 			));
 		} else {
-			
+
 			$diskspace_ul = makecheckbox('diskspace_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 			$traffic_ul = makecheckbox('traffic_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 			$subdomains_ul = makecheckbox('subdomains_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
@@ -226,7 +226,7 @@ if ($page == '' || $page == 'overview') {
 			$ftps_ul = makecheckbox('ftps_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 			$tickets_ul = makecheckbox('tickets_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 			$mysqls_ul = makecheckbox('mysqls_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
-			
+
 			$phpconfigs = array();
 			$configs = Database::query("
 					SELECT c.*, fc.description as interpreter
@@ -246,7 +246,7 @@ if ($page == '' || $page == 'overview') {
 					);
 				}
 			}
-			
+
 			// dummy to avoid unknown variables
 			$language_options = null;
 			$gender_options = null;
@@ -261,10 +261,10 @@ if ($page == '' || $page == 'overview') {
 			// merge
 			$plans_add_data['plans_add']['sections'] = array_merge($plans_add_data['plans_add']['sections'], $cust_add_data['customer_add']['sections']);
 			$plans_add_form = htmlform::genHTMLForm($plans_add_data);
-			
+
 			$title = $plans_add_data['plans_add']['title'];
 			$image = $plans_add_data['plans_add']['image'];
-			
+
 			eval("echo \"" . getTemplate("plans/plans_add") . "\";");
 		}
 	} elseif ($action == 'edit' && $id != 0) {
@@ -273,54 +273,54 @@ if ($page == '' || $page == 'overview') {
 		$result = Database::pexecute_first($result_stmt, array(
 			'id' => $id
 		));
-		
+
 		if ($result['name'] != '') {
-			
+
 			$result['value'] = json_decode($result['value'], true);
 			$result = htmlentities_array($result);
-			
+
 			foreach ($result['value'] as $index => $value) {
 				$result[$index] = $value;
 			}
 			$result['allowed_phpconfigs'] = json_encode($result['allowed_phpconfigs']);
-			
+
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
-				
+
 				$name = validate($_POST['name'], 'name');
 				$description = validate(str_replace("\r\n", "\n", $_POST['description']), 'description', '/^[^\0]*$/');
-				
+
 				$value_arr = array();
-				
+
 				$value_arr['diskspace'] = intval_ressource($_POST['diskspace']);
 				if (isset($_POST['diskspace_ul'])) {
 					$value_arr['diskspace'] = - 1;
 				}
-				
+
 				$value_arr['traffic'] = doubleval_ressource($_POST['traffic']);
 				if (isset($_POST['traffic_ul'])) {
 					$value_arr['traffic'] = - 1;
 				}
-				
+
 				$value_arr['subdomains'] = intval_ressource($_POST['subdomains']);
 				if (isset($_POST['subdomains_ul'])) {
 					$value_arr['subdomains'] = - 1;
 				}
-				
+
 				$value_arr['emails'] = intval_ressource($_POST['emails']);
 				if (isset($_POST['emails_ul'])) {
 					$value_arr['emails'] = - 1;
 				}
-				
+
 				$value_arr['email_accounts'] = intval_ressource($_POST['email_accounts']);
 				if (isset($_POST['email_accounts_ul'])) {
 					$value_arr['email_accounts'] = - 1;
 				}
-				
+
 				$value_arr['email_forwarders'] = intval_ressource($_POST['email_forwarders']);
 				if (isset($_POST['email_forwarders_ul'])) {
 					$value_arr['email_forwarders'] = - 1;
 				}
-				
+
 				if (Settings::Get('system.mail_quota_enabled') == '1') {
 					$value_arr['email_quota'] = validate($_POST['email_quota'], 'email_quota', '/^\d+$/', 'vmailquotawrong', array(
 						'0',
@@ -332,37 +332,37 @@ if ($page == '' || $page == 'overview') {
 				} else {
 					$value_arr['email_quota'] = - 1;
 				}
-				
+
 				$value_arr['email_imap'] = 0;
 				if (isset($_POST['email_imap'])) {
 					$value_arr['email_imap'] = intval_ressource($_POST['email_imap']);
 				}
-				
+
 				$value_arr['email_pop3'] = 0;
 				if (isset($_POST['email_pop3'])) {
 					$value_arr['email_pop3'] = intval_ressource($_POST['email_pop3']);
 				}
-				
+
 				$value_arr['ftps'] = intval_ressource($_POST['ftps']);
 				if (isset($_POST['ftps_ul'])) {
 					$value_arr['ftps'] = - 1;
 				}
-				
+
 				$value_arr['tickets'] = (Settings::Get('ticket.enabled') == 1 ? intval_ressource($_POST['tickets']) : 0);
 				if (isset($_POST['tickets_ul']) && Settings::Get('ticket.enabled') == '1') {
 					$value_arr['tickets'] = - 1;
 				}
-				
+
 				$value_arr['mysqls'] = intval_ressource($_POST['mysqls']);
 				if (isset($_POST['mysqls_ul'])) {
 					$value_arr['mysqls'] = - 1;
 				}
-				
+
 				$value_arr['phpenabled'] = 0;
 				if (isset($_POST['phpenabled'])) {
 					$value_arr['phpenabled'] = intval($_POST['phpenabled']);
 				}
-				
+
 				$value_arr['allowed_phpconfigs'] = array();
 				if (isset($_POST['allowed_phpconfigs']) && is_array($_POST['allowed_phpconfigs'])) {
 					foreach ($_POST['allowed_phpconfigs'] as $allowed_phpconfig) {
@@ -370,17 +370,17 @@ if ($page == '' || $page == 'overview') {
 						$value_arr['allowed_phpconfigs'][] = $allowed_phpconfig;
 					}
 				}
-				
+
 				$value_arr['perlenabled'] = 0;
 				if (isset($_POST['perlenabled'])) {
 					$value_arr['perlenabled'] = intval($_POST['perlenabled']);
 				}
-				
+
 				$value_arr['dnsenabled'] = 0;
 				if (isset($_POST['dnsenabled'])) {
 					$value_arr['dnsenabled'] = intval($_POST['dnsenabled']);
 				}
-				
+
 				$ins_stmt = Database::prepare("
 					UPDATE `" . TABLE_PANEL_PLANS . "`
 					SET `name` = :name, `description` = :desc, `value` = :valuearr, `ts` = UNIX_TIMESTAMP()
@@ -393,7 +393,7 @@ if ($page == '' || $page == 'overview') {
 					'id' => $id
 				);
 				Database::pexecute($ins_stmt, $ins_data);
-				
+
 				$log->logAction(ADM_ACTION, LOG_WARNING, "updated plan '" . $name . "'");
 				redirectTo($filename, array(
 					'page' => $page,
@@ -415,42 +415,42 @@ if ($page == '' || $page == 'overview') {
 				if ($result['subdomains'] == '-1') {
 					$result['subdomains'] = '';
 				}
-				
+
 				$emails_ul = makecheckbox('emails_ul', $lng['customer']['unlimited'], '-1', false, $result['emails'], true, true);
 				if ($result['emails'] == '-1') {
 					$result['emails'] = '';
 				}
-				
+
 				$email_accounts_ul = makecheckbox('email_accounts_ul', $lng['customer']['unlimited'], '-1', false, $result['email_accounts'], true, true);
 				if ($result['email_accounts'] == '-1') {
 					$result['email_accounts'] = '';
 				}
-				
+
 				$email_forwarders_ul = makecheckbox('email_forwarders_ul', $lng['customer']['unlimited'], '-1', false, $result['email_forwarders'], true, true);
 				if ($result['email_forwarders'] == '-1') {
 					$result['email_forwarders'] = '';
 				}
-				
+
 				$email_quota_ul = makecheckbox('email_quota_ul', $lng['customer']['unlimited'], '-1', false, $result['email_quota'], true, true);
 				if ($result['email_quota'] == '-1') {
 					$result['email_quota'] = '';
 				}
-				
+
 				$ftps_ul = makecheckbox('ftps_ul', $lng['customer']['unlimited'], '-1', false, $result['ftps'], true, true);
 				if ($result['ftps'] == '-1') {
 					$result['ftps'] = '';
 				}
-				
+
 				$tickets_ul = makecheckbox('tickets_ul', $lng['customer']['unlimited'], '-1', false, $result['tickets'], true, true);
 				if ($result['tickets'] == '-1') {
 					$result['tickets'] = '';
 				}
-				
+
 				$mysqls_ul = makecheckbox('mysqls_ul', $lng['customer']['unlimited'], '-1', false, $result['mysqls'], true, true);
 				if ($result['mysqls'] == '-1') {
 					$result['mysqls'] = '';
 				}
-				
+
 				$phpconfigs = array();
 				$configs = Database::query("
 					SELECT c.*, fc.description as interpreter
@@ -505,21 +505,21 @@ if ($page == '' || $page == 'overview') {
 				// merge
 				$plans_edit_data['plans_edit']['sections'] = array_merge($plans_edit_data['plans_edit']['sections'], $cust_edit_data['customer_edit']['sections']);
 				$plans_edit_form = htmlform::genHTMLForm($plans_edit_data);
-				
+
 				$title = $plans_edit_data['plans_edit']['title'];
 				$image = $plans_edit_data['plans_edit']['image'];
-				
+
 				eval("echo \"" . getTemplate("plans/plans_edit") . "\";");
 			}
 		}
 	} elseif ($action == 'jqGetPlanValues') {
-		$planid = isset($_POST['planid']) ? (int)$_POST['planid'] : 0;
+		$planid = isset($_POST['planid']) ? (int) $_POST['planid'] : 0;
 		$result_stmt = Database::prepare("
 			SELECT * FROM `" . TABLE_PANEL_PLANS . "` WHERE `id` = :id");
 		$result = Database::pexecute_first($result_stmt, array(
 			'id' => $planid
 		));
 		echo $result['value'];
-		exit;
+		exit();
 	}
 }

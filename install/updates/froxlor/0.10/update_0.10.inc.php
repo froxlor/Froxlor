@@ -1,7 +1,6 @@
 <?php
-
-use \Froxlor\Database;
-use \Froxlor\Settings;
+use Froxlor\Database\Database;
+use Froxlor\Settings;
 
 /**
  * This file is part of the Froxlor project.
@@ -11,11 +10,11 @@ use \Froxlor\Settings;
  * file that was distributed with this source code. You can also view the
  * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
- * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Install
- *
+ * @copyright (c) the authors
+ * @author Froxlor team <team@froxlor.org> (2010-)
+ * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package Install
+ *         
  */
 if (! defined('_CRON_UPDATE')) {
 	if (! defined('AREA') || (defined('AREA') && AREA != 'admin') || ! isset($userinfo['loginname']) || (isset($userinfo['loginname']) && $userinfo['loginname'] == '')) {
@@ -134,12 +133,30 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201812180')) {
 	showUpdateStep("Updating cronjob table");
 	Database::query("ALTER TABLE `" . TABLE_PANEL_CRONRUNS . "` ADD `cronclass` varchar(500) NOT NULL AFTER `cronfile`");
 	$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CRONRUNS . "` SET `cronclass`  = :cc WHERE `cronfile` = :cf");
-	Database::pexecute($upd_stmt, array('cc' => '\\Froxlor\\Cron\\TasksCron', 'cf' => 'tasks'));
-	Database::pexecute($upd_stmt, array('cc' => '\\Froxlor\\Cron\\Traffic\\TrafficCron', 'cf' => 'traffic'));
-	Database::pexecute($upd_stmt, array('cc' => '\\Froxlor\\Cron\\Traffic\\ReportsCron', 'cf' => 'usage_report'));
-	Database::pexecute($upd_stmt, array('cc' => '\\Froxlor\\Cron\\System\\MailboxsizeCron', 'cf' => 'mailboxsize'));
-	Database::pexecute($upd_stmt, array('cc' => '\\Froxlor\\Cron\\LetsEncrypt\\LetsEncrypt', 'cf' => 'letsencrypt'));
-	Database::pexecute($upd_stmt, array('cc' => '\\Froxlor\\Cron\\System\\BackupCron', 'cf' => 'backup'));
+	Database::pexecute($upd_stmt, array(
+		'cc' => '\\Froxlor\\Cron\\TasksCron',
+		'cf' => 'tasks'
+	));
+	Database::pexecute($upd_stmt, array(
+		'cc' => '\\Froxlor\\Cron\\Traffic\\TrafficCron',
+		'cf' => 'traffic'
+	));
+	Database::pexecute($upd_stmt, array(
+		'cc' => '\\Froxlor\\Cron\\Traffic\\ReportsCron',
+		'cf' => 'usage_report'
+	));
+	Database::pexecute($upd_stmt, array(
+		'cc' => '\\Froxlor\\Cron\\System\\MailboxsizeCron',
+		'cf' => 'mailboxsize'
+	));
+	Database::pexecute($upd_stmt, array(
+		'cc' => '\\Froxlor\\Cron\\LetsEncrypt\\LetsEncrypt',
+		'cf' => 'letsencrypt'
+	));
+	Database::pexecute($upd_stmt, array(
+		'cc' => '\\Froxlor\\Cron\\System\\BackupCron',
+		'cf' => 'backup'
+	));
 	Database::query("DELETE FROM `" . TABLE_PANEL_CRONRUNS . "` WHERE `module` = 'froxlor/ticket'");
 	lastStepStatus(0);
 
@@ -150,7 +167,7 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201812180')) {
 	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` DROP `tickets`");
 	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` DROP `tickets_used`");
 	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'ticket'");
-	
+
 	define('TABLE_PANEL_TICKETS', 'panel_tickets');
 	define('TABLE_PANEL_TICKET_CATS', 'panel_ticket_categories');
 	Database::query("DROP TABLE IF EXISTS `" . TABLE_PANEL_TICKETS . "`;");
@@ -163,7 +180,9 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201812180')) {
 		$dns_target = 'PowerDNS';
 	}
 	$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value`  = :v WHERE `settinggroup` = 'system' AND `varname` = 'dns_server'");
-	Database::pexecute($upd_stmt, array('v' => $dns_target));
+	Database::pexecute($upd_stmt, array(
+		'v' => $dns_target
+	));
 	lastStepStatus(0);
 
 	\Froxlor\Froxlor::updateToDbVersion('201812190');

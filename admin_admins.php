@@ -16,23 +16,20 @@
  * @package    Panel
  *
  */
-
 define('AREA', 'admin');
 require './lib/init.php';
 
-use Froxlor\Database as Database;
-use Froxlor\Settings as Settings;
+use Froxlor\Database\Database;
+use Froxlor\Settings;
 use Froxlor\Api\Commands\Admins as Admins;
 
 if (isset($_POST['id'])) {
 	$id = intval($_POST['id']);
-} elseif(isset($_GET['id'])) {
+} elseif (isset($_GET['id'])) {
 	$id = intval($_GET['id']);
 }
 
-if ($page == 'admins'
-	&& $userinfo['change_serversettings'] == '1'
-) {
+if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
 
 	if ($action == '') {
 
@@ -72,16 +69,16 @@ if ($page == 'admins'
 				// percent-values for progressbar
 				// For Disk usage
 				if ($row['diskspace'] > 0) {
-					$disk_percent = round(($row['diskspace_used']*100)/$row['diskspace'], 0);
-					$disk_doublepercent = round($disk_percent*2, 2);
+					$disk_percent = round(($row['diskspace_used'] * 100) / $row['diskspace'], 0);
+					$disk_doublepercent = round($disk_percent * 2, 2);
 				} else {
 					$disk_percent = 0;
 					$disk_doublepercent = 0;
 				}
 				// For Traffic usage
 				if ($row['traffic'] > 0) {
-					$traffic_percent = round(($row['traffic_used']*100)/$row['traffic'], 0);
-					$traffic_doublepercent = round($traffic_percent*2, 2);
+					$traffic_percent = round(($row['traffic_used'] * 100) / $row['traffic'], 0);
+					$traffic_doublepercent = round($traffic_percent * 2, 2);
 				} else {
 					$traffic_percent = 0;
 					$traffic_doublepercent = 0;
@@ -101,15 +98,14 @@ if ($page == 'admins'
 				$row['custom_notes'] = ($row['custom_notes'] != '') ? nl2br($row['custom_notes']) : '';
 
 				eval("\$admins.=\"" . getTemplate("admins/admins_admin") . "\";");
-				$count++;
+				$count ++;
 			}
-			$i++;
+			$i ++;
 		}
 
 		$admincount = $numrows_admins;
 		eval("echo \"" . getTemplate("admins/admins") . "\";");
-
-	} elseif($action == 'su') {
+	} elseif ($action == 'su') {
 
 		try {
 			$json_result = Admins::getLocal($userinfo, array(
@@ -121,13 +117,13 @@ if ($page == 'admins'
 		$result = json_decode($json_result, true)['data'];
 		$destination_admin = $result['loginname'];
 
-		if ($destination_admin != ''
-			&& $result['adminid'] != $userinfo['userid']
-		) {
+		if ($destination_admin != '' && $result['adminid'] != $userinfo['userid']) {
 			$result_stmt = Database::prepare("
 				SELECT * FROM `" . TABLE_PANEL_SESSIONS . "` WHERE `userid` = :userid
 			");
-			$result = Database::pexecute_first($result_stmt, array('userid' => $userinfo['userid']));
+			$result = Database::pexecute_first($result_stmt, array(
+				'userid' => $userinfo['userid']
+			));
 
 			$s = md5(uniqid(microtime(), 1));
 			$ins_stmt = Database::prepare("
@@ -146,15 +142,15 @@ if ($page == 'admins'
 			);
 			Database::pexecute($ins_stmt, $ins_data);
 			$log->logAction(ADM_ACTION, LOG_INFO, "switched adminuser and is now '" . $destination_admin . "'");
-			redirectTo('admin_index.php', array('s' => $s));
-
+			redirectTo('admin_index.php', array(
+				's' => $s
+			));
 		} else {
-			redirectTo('index.php', array('action' => 'login'));
+			redirectTo('index.php', array(
+				'action' => 'login'
+			));
 		}
-
-	} elseif ($action == 'delete'
-		&& $id != 0
-	) {
+	} elseif ($action == 'delete' && $id != 0) {
 		try {
 			$json_result = Admins::getLocal($userinfo, array(
 				'id' => $id
@@ -169,34 +165,39 @@ if ($page == 'admins'
 				standard_error('youcantdeleteyourself');
 			}
 
-			if (isset($_POST['send'])
-				&& $_POST['send'] == 'send'
-			) {
+			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				Admins::getLocal($this->getUserData(), array(
 					'id' => $id
 				))->delete();
-				redirectTo($filename, array('page' => $page, 's' => $s));
+				redirectTo($filename, array(
+					'page' => $page,
+					's' => $s
+				));
 			} else {
-				ask_yesno('admin_admin_reallydelete', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $result['loginname']);
+				ask_yesno('admin_admin_reallydelete', $filename, array(
+					'id' => $id,
+					'page' => $page,
+					'action' => $action
+				), $result['loginname']);
 			}
 		}
+	} elseif ($action == 'add') {
 
-	} elseif($action == 'add') {
-
-		if (isset($_POST['send'])
-			&& $_POST['send'] == 'send'
-		) {
+		if (isset($_POST['send']) && $_POST['send'] == 'send') {
 			try {
 				Admins::getLocal($userinfo, $_POST)->add();
 			} catch (Exception $e) {
 				dynamic_error($e->getMessage());
 			}
-			redirectTo($filename, array('page' => $page, 's' => $s));
+			redirectTo($filename, array(
+				'page' => $page,
+				's' => $s
+			));
 		} else {
 
 			$language_options = '';
 			foreach ($languages as $language_file => $language_name) {
-				$language_options.= makeoption($language_name, $language_file, $userinfo['language'], true);
+				$language_options .= makeoption($language_name, $language_file, $userinfo['language'], true);
 			}
 
 			$ipaddress = makeoption($lng['admin']['allips'], "-1");
@@ -205,7 +206,7 @@ if ($page == 'admins'
 			");
 
 			while ($row = $ipsandports_stmt->fetch(PDO::FETCH_ASSOC)) {
-				$ipaddress.= makeoption($row['ip'], $row['id']);
+				$ipaddress .= makeoption($row['ip'], $row['id']);
 			}
 
 			$customers_ul = makecheckbox('customers_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
@@ -221,7 +222,7 @@ if ($page == 'admins'
 			$tickets_ul = makecheckbox('tickets_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 			$mysqls_ul = makecheckbox('mysqls_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 
-			$admin_add_data = include_once dirname(__FILE__).'/lib/formfields/admin/admin/formfield.admin_add.php';
+			$admin_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/admin/formfield.admin_add.php';
 			$admin_add_form = htmlform::genHTMLForm($admin_add_data);
 
 			$title = $admin_add_data['admin_add']['title'];
@@ -229,10 +230,7 @@ if ($page == 'admins'
 
 			eval("echo \"" . getTemplate("admins/admins_add") . "\";");
 		}
-
-	} elseif($action == 'edit'
-		&& $id != 0
-	) {
+	} elseif ($action == 'edit' && $id != 0) {
 		try {
 			$json_result = Admins::getLocal($userinfo, array(
 				'id' => $id
@@ -244,15 +242,16 @@ if ($page == 'admins'
 
 		if ($result['loginname'] != '') {
 
-			if (isset($_POST['send'])
-				&& $_POST['send'] == 'send'
-			) {
+			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
 					Admins::getLocal($userinfo, $_POST)->update();
 				} catch (Exception $e) {
 					dynamic_error($e->getMessage());
 				}
-				redirectTo($filename, array('page' => $page, 's' => $s));
+				redirectTo($filename, array(
+					'page' => $page,
+					's' => $s
+				));
 			} else {
 
 				$dec_places = Settings::Get('panel.decimal_places');
@@ -322,7 +321,7 @@ if ($page == 'admins'
 
 				$language_options = '';
 				foreach ($languages as $language_file => $language_name) {
-					$language_options.= makeoption($language_name, $language_file, $result['def_language'], true);
+					$language_options .= makeoption($language_name, $language_file, $result['def_language'], true);
 				}
 
 				$ipaddress = makeoption($lng['admin']['allips'], "-1", $result['ip']);
@@ -331,12 +330,12 @@ if ($page == 'admins'
 				");
 
 				while ($row = $ipsandports_stmt->fetch(PDO::FETCH_ASSOC)) {
-					$ipaddress.= makeoption($row['ip'], $row['id'], $result['ip']);
+					$ipaddress .= makeoption($row['ip'], $row['id'], $result['ip']);
 				}
 
 				$result = htmlentities_array($result);
 
-				$admin_edit_data = include_once dirname(__FILE__).'/lib/formfields/admin/admin/formfield.admin_edit.php';
+				$admin_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/admin/formfield.admin_edit.php';
 				$admin_edit_form = htmlform::genHTMLForm($admin_edit_data);
 
 				$title = $admin_edit_data['admin_edit']['title'];

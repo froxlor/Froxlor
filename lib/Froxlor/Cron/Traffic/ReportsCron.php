@@ -17,7 +17,7 @@ namespace Froxlor\Cron\Traffic;
  * @package Cron
  *         
  */
-use Froxlor\Database;
+use Froxlor\Database\Database;
 use Froxlor\Settings;
 
 class ReportsCron extends \Froxlor\Cron\FroxlorCron

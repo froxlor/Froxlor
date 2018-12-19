@@ -1,9 +1,7 @@
 <?php
 namespace Froxlor\Cron;
 
-use Froxlor\Database;
-use Froxlor\Settings;
-use Froxlor\FroxlorLogger;
+use Froxlor\Database\Database;
 
 /**
  * This file is part of the Froxlor project.

@@ -19,8 +19,8 @@ if (! defined('AREA')) {
  *
  */
 
-use Froxlor\Database as Database;
-use Froxlor\Settings as Settings;
+use Froxlor\Database\Database;
+use Froxlor\Settings;
 use Froxlor\Api\Commands\Certificates as Certificates;
 
 // This file is being included in admin_domains and customer_domains

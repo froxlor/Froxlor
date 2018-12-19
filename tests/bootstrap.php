@@ -1,5 +1,4 @@
 <?php
-
 if (file_exists('/etc/froxlor-test.pwd') && file_exists('/etc/froxlor-test.rpwd')) {
 	// froxlor jenkins test-system
 	$pwd = trim(file_get_contents('/etc/froxlor-test.pwd'));
@@ -33,8 +32,8 @@ file_put_contents($userdata, $userdata_content);
 // include autoloader / api / etc
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-use \Froxlor\Database;
-use \Froxlor\Settings;
+use Froxlor\Database\Database;
+use Froxlor\Settings;
 
 Database::needRoot(true);
 Database::query("DROP DATABASE IF EXISTS `test1sql1`;");
@@ -71,7 +70,7 @@ Database::query("ALTER TABLE `" . TABLE_PANEL_FPMDAEMONS . "` AUTO_INCREMENT=2;"
 // add superadmin
 Database::query("INSERT INTO `" . TABLE_PANEL_ADMINS . "` SET
 	`loginname` = 'admin',
-	`password` = '".makeCryptPassword('admin')."',
+	`password` = '" . makeCryptPassword('admin') . "',
 	`name` = 'Froxlor-Administrator',
 	`email` = 'admin@dev.froxlor.org',
 	`def_language` = 'English',
