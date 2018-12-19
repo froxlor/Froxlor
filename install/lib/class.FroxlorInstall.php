@@ -422,8 +422,6 @@ class FroxlorInstall
 				`email_forwarders` = -1,
 				`email_quota` = -1,
 				`ftps` = -1,
-				`tickets` = -1,
-				`tickets_see_all` = 1,
 				`subdomains` = -1,
 				`traffic` = -1048576
 				");
@@ -507,10 +505,7 @@ class FroxlorInstall
 		
 		// set specific times for some crons (traffic only at night, etc.)
 		$ts = mktime(0, 0, 0, date('m', time()), date('d', time()), date('Y', time()));
-		$db->query("UPDATE `" . TABLE_PANEL_CRONRUNS . "` SET `lastrun` = '" . $ts . "' WHERE `cronfile` ='cron_traffic.php';");
-		$ts = mktime(1, 0, 0, date('m', time()), date('d', time()), date('Y', time()));
-		$db->query("UPDATE `" . TABLE_PANEL_CRONRUNS . "` SET `lastrun` = '" . $ts . "' WHERE `cronfile` ='cron_used_tickets_reset.php';");
-		$db->query("UPDATE `" . TABLE_PANEL_CRONRUNS . "` SET `lastrun` = '" . $ts . "' WHERE `cronfile` ='cron_ticketarchive.php';");
+		$db->query("UPDATE `" . TABLE_PANEL_CRONRUNS . "` SET `lastrun` = '" . $ts . "' WHERE `cronfile` ='cron_traffic';");
 		
 		// insert task 99 to generate a correct cron.d-file automatically
 		$db->query("INSERT INTO `" . TABLE_PANEL_TASKS . "` SET `type` = '99';");

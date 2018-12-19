@@ -1,6 +1,9 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
+use Froxlor\Database\Database;
+use Froxlor\Api\Commands\Admins;
+
 /**
  * @covers ApiCommand
  * @covers ApiParameter
@@ -29,7 +32,6 @@ class AdminsTest extends TestCase
 			'email_imap' => 1,
 			'email_pop3' => 0,
 			'ftps' => 15,
-			'tickets' => 15,
 			'mysqls' => 15,
 			'sendpassword' => 0,
 			'phpenabled' => 1,

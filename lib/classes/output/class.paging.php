@@ -108,8 +108,8 @@ class paging {
 		// entries per page and natsorting-flag are not
 		// passed as parameter anymore, because these are
 		// from the settings anyway
-		$entriesperpage = Settings::Get('panel.paging');
-		$natSorting = Settings::Get('panel.natsorting');
+		$entriesperpage = \Froxlor\Settings::Get('panel.paging');
+		$natSorting = \Froxlor\Settings::Get('panel.natsorting');
 
 		$this->userinfo = $userinfo;
 
@@ -216,7 +216,7 @@ class paging {
 		}
 
 		$this->userinfo['lastpaging']['pageno'] = $this->pageno;
-		$upd_stmt = Database::prepare("
+		$upd_stmt = \Froxlor\Database\Database::prepare("
 			UPDATE `" . TABLE_PANEL_SESSIONS . "` SET
 			`lastpaging` = :lastpaging
 			WHERE `hash` = :hash  AND `userid` = :userid
@@ -231,7 +231,7 @@ class paging {
 			'ua' => $userinfo['useragent'],
 			'adminsession' => $userinfo['adminsession']
 		);
-		Database::pexecute($upd_stmt, $upd_data);
+		\Froxlor\Database\Database::pexecute($upd_stmt, $upd_data);
 		
 		$this->_limit = $limit;
 	}
@@ -320,12 +320,12 @@ class paging {
 			
 			if ($useOper == 1 && is_numeric(substr($this->searchtext, $useOper))) {
 				// now as we use >, < or = we use the given operator and not LIKE
-				$condition.= $searchfield . " ".$oper." " . Database::quote($searchtext);
+				$condition.= $searchfield . " ".$oper." " . \Froxlor\Database\Database::quote($searchtext);
 			} else {
 				$searchtext = str_replace('*', '%', $this->searchtext);
 				// append wildcards if user did not enter any
 				if (strpos($searchtext,'%') === false) $searchtext='%'.$searchtext.'%';
-				$condition.= $searchfield . " LIKE " . Database::quote($searchtext);
+				$condition.= $searchfield . " LIKE " . \Froxlor\Database\Database::quote($searchtext);
 			}
 			
 		} else {

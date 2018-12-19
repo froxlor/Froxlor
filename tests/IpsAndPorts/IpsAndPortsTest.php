@@ -1,10 +1,15 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
+use Froxlor\Api\Commands\Admins;
+use Froxlor\Api\Commands\Customers;
+use Froxlor\Api\Commands\IpsAndPorts;
+
 /**
- * @covers ApiCommand
- * @covers ApiParameter
- * @covers IpsAndPorts
+ *
+ * @covers \Froxlor\Api\ApiCommand
+ * @covers \Froxlor\Api\ApiParameter
+ * @covers \Froxlor\Api\Commands\IpsAndPorts
  */
 class IpsAndPortsTest extends TestCase
 {
@@ -44,8 +49,9 @@ class IpsAndPortsTest extends TestCase
 		$this->assertEquals(3, $result['id']);
 		$this->assertEquals(80, $result['port']);
 	}
-	
+
 	/**
+	 *
 	 * @depends testAdminIpsAndPortsAdd
 	 */
 	public function testAdminIpsAndPortsAddExists()
@@ -57,7 +63,7 @@ class IpsAndPortsTest extends TestCase
 		];
 		IpsAndPorts::getLocal($admin_userdata, $data)->add();
 	}
-	
+
 	public function testAdminIpsAndPortsAddIpv6()
 	{
 		global $admin_userdata;
@@ -70,16 +76,19 @@ class IpsAndPortsTest extends TestCase
 		$this->assertEquals(4, $result['id']);
 		$this->assertEquals('/var/www/html/', $result['docroot']);
 	}
-	
+
 	public function testAdminIpsAndPortsGetNotFound()
 	{
 		global $admin_userdata;
 		$this->expectExceptionCode(404);
 		$this->expectExceptionMessage("IP/port with id #999 could not be found");
-		IpsAndPorts::getLocal($admin_userdata, array('id' => 999))->get();
+		IpsAndPorts::getLocal($admin_userdata, array(
+			'id' => 999
+		))->get();
 	}
-	
+
 	/**
+	 *
 	 * @depends testAdminIpsAndPortsAdd
 	 */
 	public function testResellerIpsAndPortsList()
@@ -88,7 +97,9 @@ class IpsAndPortsTest extends TestCase
 		// update reseller to allow ip access to ip id #3
 		$json_result = Admins::getLocal($admin_userdata, array(
 			'loginname' => 'reseller',
-			'ipaddress' => array(3)
+			'ipaddress' => array(
+				3
+			)
 		))->update();
 		$reseller_userdata = json_decode($json_result, true)['data'];
 		$reseller_userdata['adminsession'] = 1;
@@ -97,8 +108,9 @@ class IpsAndPortsTest extends TestCase
 		$this->assertEquals(1, $result['count']);
 		$this->assertEquals('82.149.225.47', $result['list'][0]['ip']);
 	}
-	
+
 	/**
+	 *
 	 * @depends testResellerIpsAndPortsList
 	 */
 	public function testResellerIpsAndPortsGet()
@@ -110,12 +122,15 @@ class IpsAndPortsTest extends TestCase
 		))->get();
 		$reseller_userdata = json_decode($json_result, true)['data'];
 		$reseller_userdata['adminsession'] = 1;
-		$json_result = IpsAndPorts::getLocal($reseller_userdata, array('id' => 3))->get();
+		$json_result = IpsAndPorts::getLocal($reseller_userdata, array(
+			'id' => 3
+		))->get();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals('82.149.225.47', $result['ip']);
 	}
-	
+
 	/**
+	 *
 	 * @depends testResellerIpsAndPortsList
 	 */
 	public function testResellerIpsAndPortsGetRestrictedNotOwned()
@@ -129,9 +144,11 @@ class IpsAndPortsTest extends TestCase
 		$reseller_userdata['adminsession'] = 1;
 		$this->expectExceptionCode(405);
 		$this->expectExceptionMessage("You cannot access this resource");
-		IpsAndPorts::getLocal($reseller_userdata, array('id' => 1))->get();
+		IpsAndPorts::getLocal($reseller_userdata, array(
+			'id' => 1
+		))->get();
 	}
-	
+
 	public function testResellerIpsAndPortsAdd()
 	{
 		global $admin_userdata;
@@ -159,9 +176,11 @@ class IpsAndPortsTest extends TestCase
 		$customer_userdata = json_decode($json_result, true)['data'];
 		$this->expectExceptionCode(403);
 		$this->expectExceptionMessage("Not allowed to execute given command.");
-		IpsAndPorts::getLocal($customer_userdata, array('id' => 1))->get();
+		IpsAndPorts::getLocal($customer_userdata, array(
+			'id' => 1
+		))->get();
 	}
-	
+
 	public function testAdminIpsAndPortsEdit()
 	{
 		global $admin_userdata;
@@ -221,7 +240,7 @@ class IpsAndPortsTest extends TestCase
 		$this->expectExceptionMessage("You cannot change the last system IP, either create another new IP/Port combination for the system IP or change the system IP.");
 		$json_result = IpsAndPorts::getLocal($admin_userdata, $data)->update();
 	}
-	
+
 	public function testResellerIpsAndPortsEditNoDuplicate()
 	{
 		global $admin_userdata;
@@ -237,7 +256,7 @@ class IpsAndPortsTest extends TestCase
 		$this->expectExceptionMessage("This IP/Port combination already exists.");
 		IpsAndPorts::getLocal($reseller_userdata, $data)->update();
 	}
-	
+
 	public function testAdminIpsAndPortsDeleteCantDeleteDefaultIp()
 	{
 		global $admin_userdata;
@@ -247,7 +266,7 @@ class IpsAndPortsTest extends TestCase
 		$this->expectExceptionMessage("You cannot delete the default IP/Port combination, please make another IP/Port combination default for before deleting this IP/Port combination.");
 		IpsAndPorts::getLocal($admin_userdata, $data)->delete();
 	}
-	
+
 	public function testAdminIpsAndPortsDelete()
 	{
 		global $admin_userdata;
@@ -258,7 +277,7 @@ class IpsAndPortsTest extends TestCase
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals('82.149.225.47', $result['ip']);
 	}
-	
+
 	public function testResellerIpsAndPortsDeleteNotAllowed()
 	{
 		global $admin_userdata;

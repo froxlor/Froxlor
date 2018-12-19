@@ -164,11 +164,6 @@ if ($page == '' || $page == 'overview') {
 				$value_arr['ftps'] = - 1;
 			}
 
-			$value_arr['tickets'] = (Settings::Get('ticket.enabled') == 1 ? intval_ressource($_POST['tickets']) : 0);
-			if (isset($_POST['tickets_ul']) && Settings::Get('ticket.enabled') == '1') {
-				$value_arr['tickets'] = - 1;
-			}
-
 			$value_arr['mysqls'] = intval_ressource($_POST['mysqls']);
 			if (isset($_POST['mysqls_ul'])) {
 				$value_arr['mysqls'] = - 1;
@@ -224,7 +219,6 @@ if ($page == '' || $page == 'overview') {
 			$email_forwarders_ul = makecheckbox('email_forwarders_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 			$email_quota_ul = makecheckbox('email_quota_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 			$ftps_ul = makecheckbox('ftps_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
-			$tickets_ul = makecheckbox('tickets_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 			$mysqls_ul = makecheckbox('mysqls_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 
 			$phpconfigs = array();
@@ -348,11 +342,6 @@ if ($page == '' || $page == 'overview') {
 					$value_arr['ftps'] = - 1;
 				}
 
-				$value_arr['tickets'] = (Settings::Get('ticket.enabled') == 1 ? intval_ressource($_POST['tickets']) : 0);
-				if (isset($_POST['tickets_ul']) && Settings::Get('ticket.enabled') == '1') {
-					$value_arr['tickets'] = - 1;
-				}
-
 				$value_arr['mysqls'] = intval_ressource($_POST['mysqls']);
 				if (isset($_POST['mysqls_ul'])) {
 					$value_arr['mysqls'] = - 1;
@@ -439,11 +428,6 @@ if ($page == '' || $page == 'overview') {
 				$ftps_ul = makecheckbox('ftps_ul', $lng['customer']['unlimited'], '-1', false, $result['ftps'], true, true);
 				if ($result['ftps'] == '-1') {
 					$result['ftps'] = '';
-				}
-
-				$tickets_ul = makecheckbox('tickets_ul', $lng['customer']['unlimited'], '-1', false, $result['tickets'], true, true);
-				if ($result['tickets'] == '-1') {
-					$result['tickets'] = '';
 				}
 
 				$mysqls_ul = makecheckbox('mysqls_ul', $lng['customer']['unlimited'], '-1', false, $result['mysqls'], true, true);

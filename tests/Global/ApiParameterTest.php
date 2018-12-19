@@ -1,9 +1,13 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
+use Froxlor\Api\Commands\Froxlor;
+
 /**
  *
- * @covers ApiParameter
+ * @covers \Froxlor\Api\ApiCommand
+ * @covers \Froxlor\Api\ApiParameter
+ * @covers \Froxlor\Froxlor
  */
 class ApiParameterTest extends TestCase
 {

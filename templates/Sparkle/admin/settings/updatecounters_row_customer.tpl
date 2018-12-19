@@ -14,8 +14,5 @@
 				{$lng['customer']['email_quota']}: <span <if $customer['email_quota_used'] == $customer['email_quota_used_new']>class="green"<else>class="red"</if>><b>{$customer['email_quota_used']} -&gt; {$customer['email_quota_used_new']}</b></span><br />
 				</if>
 				{$lng['customer']['ftps']}: <span <if $customer['ftps_used'] == $customer['ftps_used_new']>class="green"<else>class="red"</if>><b>{$customer['ftps_used']} -&gt; {$customer['ftps_used_new']}</b></span><br />
-				<if \Froxlor\Settings::Get('ticket.enabled') == '1'>
-				{$lng['customer']['tickets']}: <span <if $customer['tickets_used'] == $customer['tickets_used_new']>class="green"<else>class="red"</if>><b>{$customer['tickets_used']} -&gt; {$customer['tickets_used_new']}</b></span><br />
-				</if>
 			</td>
 		</tr>

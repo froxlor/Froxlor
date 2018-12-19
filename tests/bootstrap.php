@@ -53,7 +53,6 @@ Database::query("TRUNCATE TABLE `" . TABLE_PANEL_DISKSPACE . "`;");
 Database::query("TRUNCATE TABLE `" . TABLE_PANEL_DISKSPACE_ADMINS . "`;");
 Database::query("TRUNCATE TABLE `" . TABLE_PANEL_TRAFFIC . "`;");
 Database::query("TRUNCATE TABLE `" . TABLE_PANEL_TRAFFIC_ADMINS . "`;");
-Database::query("TRUNCATE TABLE `" . TABLE_PANEL_TICKETS . "`;");
 Database::query("TRUNCATE TABLE `" . TABLE_PANEL_TASKS . "`;");
 Database::query("TRUNCATE TABLE `" . TABLE_PANEL_SESSIONS . "`;");
 Database::query("TRUNCATE TABLE `" . TABLE_PANEL_LOG . "`;");
@@ -87,8 +86,6 @@ Database::query("INSERT INTO `" . TABLE_PANEL_ADMINS . "` SET
 	`email_forwarders` = -1,
 	`email_quota` = -1,
 	`ftps` = -1,
-	`tickets` = -1,
-	`tickets_see_all` = 1,
 	`subdomains` = -1,
 	`traffic` = -1048576,
 	`ip` = -1

@@ -1,10 +1,15 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
+use Froxlor\Api\Commands\Admins;
+use Froxlor\Api\Commands\Customers;
+use Froxlor\Api\Commands\DirOptions;
+
 /**
- * @covers ApiCommand
- * @covers ApiParameter
- * @covers DirOptions
+ *
+ * @covers \Froxlor\Api\ApiCommand
+ * @covers \Froxlor\Api\ApiParameter
+ * @covers \Froxlor\Api\Commands\DirOptions
  */
 class DirOptionsTest extends TestCase
 {

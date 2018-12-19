@@ -137,29 +137,6 @@ $header
 						<td>{$lng['admin']['templates']['USAGE_PERCENT']}</td>
 					</tr>
 				</if>
-				<if ($template == 'new_ticket_by_customer') || ($template == 'new_ticket_for_customer') || ($template == 'new_ticket_by_staff')
-						|| ($template == 'new_reply_ticket_by_customer') || ($template == 'new_reply_ticket_by_staff') >
-					<tr>
-						<td><em>{SUBJECT}</em></td>
-						<td>{$lng['admin']['templates']['SUBJECT']}</td>
-					</tr>
-					<tr>
-						<td><em>{SALUTATION}</em></td>
-						<td>{$lng['admin']['templates']['SALUTATION']}</td>
-					</tr>
-					<tr>
-						<td><em>{FIRSTNAME}</em></td>
-						<td>{$lng['admin']['templates']['FIRSTNAME']}</td>
-					</tr>
-					<tr>
-						<td><em>{NAME}</em></td>
-						<td>{$lng['admin']['templates']['NAME']}</td>
-					</tr>
-					<tr>
-						<td><em>{COMPANY}</em></td>
-						<td>{$lng['admin']['templates']['COMPANY']}</td>
-					</tr>
-				</if>
 				<if ($template == 'new_database_by_customer')>
 					<tr>
 						<td><em>{SALUTATION}</em></td>

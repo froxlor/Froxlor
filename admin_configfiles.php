@@ -99,7 +99,7 @@ if ($userinfo['change_serversettings'] == '1') {
 		}
 
 		// create configparser object
-		$configfiles = new ConfigParser($config_dir . '/' . $distribution . ".xml");
+		$configfiles = new \Froxlor\Config\ConfigParser($config_dir . '/' . $distribution . ".xml");
 
 		// get distro-info
 		$dist_display = getCompleteDistroName($configfiles);
@@ -139,7 +139,7 @@ if ($userinfo['change_serversettings'] == '1') {
 		// read in all the distros
 		foreach ($distros as $_distribution) {
 			// get configparser object
-			$dist = new ConfigParser($_distribution);
+			$dist = new \Froxlor\Config\ConfigParser($_distribution);
 			// get distro-info
 			$dist_display = getCompleteDistroName($dist);
 			// store in tmp array

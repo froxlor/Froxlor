@@ -17,6 +17,8 @@
  *
  */
 
+use \Froxlor\Database\Database;
+
 /**
  * Function which updates all counters of used ressources in panel_admins and panel_customers
  * @param bool Set to true to get an array with debug information
@@ -53,7 +55,7 @@ function updateCounters($returndebuginfo = false) {
 		_addResourceCountEx($admin_resources[$cur_adm], $customer, 'diskspace_used', 'diskspace');
 		_addResourceCountEx($admin_resources[$cur_adm], $customer, 'traffic_used', 'traffic_used'); // !!! yes, USED and USED
 
-		foreach (array('mysqls', 'ftps', 'emails', 'email_accounts', 'tickets', 'email_forwarders', 'email_quota', 'subdomains') as $field) {
+		foreach (array('mysqls', 'ftps', 'emails', 'email_accounts', 'email_forwarders', 'email_quota', 'subdomains') as $field) {
 			_addResourceCount($admin_resources[$cur_adm], $customer, $field.'_used', $field);
 		}
 
@@ -95,10 +97,6 @@ function updateCounters($returndebuginfo = false) {
 		$customer_ftps = Database::pexecute_first($customer_ftps_stmt, array("cid" => $customer['customerid']));
 		$customer['ftps_used_new'] = ((int)$customer_ftps['number_ftps'] - 1);
 		
-		$customer_tickets_stmt = Database::prepare('SELECT COUNT(*) AS `number_tickets` FROM `' . TABLE_PANEL_TICKETS . '` WHERE `answerto` = "0" AND `customerid` =  :cid');
-		$customer_tickets = Database::pexecute_first($customer_tickets_stmt, array("cid" => $customer['customerid']));
-		$customer['tickets_used_new'] = (int)$customer_tickets['number_tickets'];
-		
 		$customer_subdomains_stmt = Database::prepare('SELECT COUNT(*) AS `number_subdomains` FROM `' . TABLE_PANEL_DOMAINS . '` WHERE `customerid` = :cid AND `parentdomainid` <> "0"');
 		$customer_subdomains = Database::pexecute_first($customer_subdomains_stmt, array("cid" => $customer['customerid']));
 		$customer['subdomains_used_new'] = (int)$customer_subdomains['number_subdomains'];
@@ -114,7 +112,6 @@ function updateCounters($returndebuginfo = false) {
 				`email_forwarders_used` = :email_forwarders_used,
 				`email_quota_used` = :email_quota_used,
 				`ftps_used` = :ftps_used, 
-				`tickets_used` = :tickets_used,
 				`subdomains_used` = :subdomains_used
 			WHERE `customerid` = :cid'
 		);
@@ -125,7 +122,6 @@ function updateCounters($returndebuginfo = false) {
 			"email_forwarders_used" => $customer['email_forwarders_used_new'],
 			"email_quota_used" => $customer['email_quota_used_new'],
 			"ftps_used" => $customer['ftps_used_new'],
-			"tickets_used" => $customer['tickets_used_new'],
 			"subdomains_used" => $customer['subdomains_used_new'],
 			"cid" => $customer['customerid']
 		);
@@ -155,7 +151,7 @@ function updateCounters($returndebuginfo = false) {
 			$admin_resources[$cur_adm] = array();
 		}
 
-		foreach (array('diskspace_used', 'traffic_used', 'mysqls_used', 'ftps_used', 'emails_used', 'email_accounts_used', 'tickets_used', 'email_forwarders_used', 'email_quota_used', 'subdomains_used') as $field) {
+		foreach (array('diskspace_used', 'traffic_used', 'mysqls_used', 'ftps_used', 'emails_used', 'email_accounts_used', 'email_forwarders_used', 'email_quota_used', 'subdomains_used') as $field) {
 			_initArrField($field, $admin_resources[$cur_adm], 0);
 			$admin[$field.'_new'] = $admin_resources[$cur_adm][$field];
 		}
@@ -170,7 +166,6 @@ function updateCounters($returndebuginfo = false) {
 				`email_forwarders_used` = :email_forwarders_used,
 				`email_quota_used` = :email_quota_used,
 				`ftps_used` = :ftps_used, 
-				`tickets_used` = :tickets_used,
 				`subdomains_used` = :subdomains_used,
 				`traffic_used` = :traffic_used
 			WHERE `adminid` = :aid'
@@ -186,7 +181,6 @@ function updateCounters($returndebuginfo = false) {
 			"email_forwarders_used" => $admin['email_forwarders_used_new'],
 			"email_quota_used" => $admin['email_quota_used_new'],
 			"ftps_used" => $admin['ftps_used_new'],
-			"tickets_used" => $admin['tickets_used_new'],
 			"subdomains_used" => $admin['subdomains_used_new'],
 			"traffic_used" => $admin['traffic_used_new'],
 			"aid" => $admin['adminid']

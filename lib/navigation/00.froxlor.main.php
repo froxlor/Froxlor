@@ -36,17 +36,17 @@ return array(
 				array(
 					'url' => 'customer_index.php?page=change_theme',
 					'label' => $lng['menue']['main']['changetheme'],
-					'show_element' => (Settings::Get('panel.allow_theme_change_customer') == true)
+					'show_element' => (\Froxlor\Settings::Get('panel.allow_theme_change_customer') == true)
 				),
 				array(
 					'url' => 'customer_index.php?page=apikeys',
 					'label' => $lng['menue']['main']['apikeys'],
-					'show_element' => (Settings::Get('api.enabled') == true)
+					'show_element' => (\Froxlor\Settings::Get('api.enabled') == true)
 				),
 				array(
 					'url' => 'customer_index.php?page=apihelp',
 					'label' => $lng['menue']['main']['apihelp'],
-					'show_element' => (Settings::Get('api.enabled') == true)
+					'show_element' => (\Froxlor\Settings::Get('api.enabled') == true)
 				),
 				array(
 					'url' => 'customer_index.php?action=logout',
@@ -57,7 +57,7 @@ return array(
 		'email' => array(
 			'url' => 'customer_email.php',
 			'label' => $lng['menue']['email']['email'],
-			'show_element' => (! Settings::IsInList('panel.customer_hide_options', 'email')),
+			'show_element' => (! \Froxlor\Settings::IsInList('panel.customer_hide_options', 'email')),
 			'elements' => array(
 				array(
 					'url' => 'customer_email.php?page=emails',
@@ -70,18 +70,18 @@ return array(
 					'required_resources' => 'emails'
 				),
 				array(
-					'url' => Settings::Get('panel.webmail_url'),
+					'url' => \Froxlor\Settings::Get('panel.webmail_url'),
 					'new_window' => true,
 					'label' => $lng['menue']['email']['webmail'],
 					'required_resources' => 'emails_used',
-					'show_element' => (Settings::Get('panel.webmail_url') != '')
+					'show_element' => (\Froxlor\Settings::Get('panel.webmail_url') != '')
 				)
 			)
 		),
 		'mysql' => array(
 			'url' => 'customer_mysql.php',
 			'label' => $lng['menue']['mysql']['mysql'],
-			'show_element' => (! Settings::IsInList('panel.customer_hide_options', 'mysql')),
+			'show_element' => (! \Froxlor\Settings::IsInList('panel.customer_hide_options', 'mysql')),
 			'elements' => array(
 				array(
 					'url' => 'customer_mysql.php?page=mysqls',
@@ -89,18 +89,18 @@ return array(
 					'required_resources' => 'mysqls'
 				),
 				array(
-					'url' => Settings::Get('panel.phpmyadmin_url'),
+					'url' => \Froxlor\Settings::Get('panel.phpmyadmin_url'),
 					'new_window' => true,
 					'label' => $lng['menue']['mysql']['phpmyadmin'],
 					'required_resources' => 'mysqls_used',
-					'show_element' => (Settings::Get('panel.phpmyadmin_url') != '')
+					'show_element' => (\Froxlor\Settings::Get('panel.phpmyadmin_url') != '')
 				)
 			)
 		),
 		'domains' => array(
 			'url' => 'customer_domains.php',
 			'label' => $lng['menue']['domains']['domains'],
-			'show_element' => (! Settings::IsInList('panel.customer_hide_options', 'domains')),
+			'show_element' => (! \Froxlor\Settings::IsInList('panel.customer_hide_options', 'domains')),
 			'elements' => array(
 				array(
 					'url' => 'customer_domains.php?page=domains',
@@ -115,51 +115,51 @@ return array(
 		'ftp' => array(
 			'url' => 'customer_ftp.php',
 			'label' => $lng['menue']['ftp']['ftp'],
-			'show_element' => (! Settings::IsInList('panel.customer_hide_options', 'ftp')),
+			'show_element' => (! \Froxlor\Settings::IsInList('panel.customer_hide_options', 'ftp')),
 			'elements' => array(
 				array(
 					'url' => 'customer_ftp.php?page=accounts',
 					'label' => $lng['menue']['ftp']['accounts']
 				),
 				array(
-					'url' => Settings::Get('panel.webftp_url'),
+					'url' => \Froxlor\Settings::Get('panel.webftp_url'),
 					'new_window' => true,
 					'label' => $lng['menue']['ftp']['webftp'],
-					'show_element' => (Settings::Get('panel.webftp_url') != '')
+					'show_element' => (\Froxlor\Settings::Get('panel.webftp_url') != '')
 				)
 			)
 		),
 		'extras' => array(
 			'url' => 'customer_extras.php',
 			'label' => $lng['menue']['extras']['extras'],
-			'show_element' => (! Settings::IsInList('panel.customer_hide_options', 'extras')),
+			'show_element' => (! \Froxlor\Settings::IsInList('panel.customer_hide_options', 'extras')),
 			'elements' => array(
 				array(
 					'url' => 'customer_extras.php?page=htpasswds',
 					'label' => $lng['menue']['extras']['directoryprotection'],
-					'show_element' => (! Settings::IsInList('panel.customer_hide_options', 'extras.directoryprotection'))
+					'show_element' => (! \Froxlor\Settings::IsInList('panel.customer_hide_options', 'extras.directoryprotection'))
 				),
 				array(
 					'url' => 'customer_extras.php?page=htaccess',
 					'label' => $lng['menue']['extras']['pathoptions'],
-					'show_element' => (! Settings::IsInList('panel.customer_hide_options', 'extras.pathoptions'))
+					'show_element' => (! \Froxlor\Settings::IsInList('panel.customer_hide_options', 'extras.pathoptions'))
 				),
 				array(
 					'url' => 'customer_logger.php?page=log',
 					'label' => $lng['menue']['logger']['logger'],
-					'show_element' => (Settings::Get('logger.enabled') == true) && (! Settings::IsInList('panel.customer_hide_options', 'extras.logger'))
+					'show_element' => (\Froxlor\Settings::Get('logger.enabled') == true) && (! \Froxlor\Settings::IsInList('panel.customer_hide_options', 'extras.logger'))
 				),
 				array(
 					'url' => 'customer_extras.php?page=backup',
 					'label' => $lng['menue']['extras']['backup'],
-					'show_element' => (Settings::Get('system.backupenabled') == true) && (! Settings::IsInList('panel.customer_hide_options', 'extras.backup'))
+					'show_element' => (\Froxlor\Settings::Get('system.backupenabled') == true) && (! \Froxlor\Settings::IsInList('panel.customer_hide_options', 'extras.backup'))
 				)
 			)
 		),
 		'traffic' => array(
 			'url' => 'customer_traffic.php',
 			'label' => $lng['menue']['traffic']['traffic'],
-			'show_element' => (! Settings::IsInList('panel.customer_hide_options', 'traffic')),
+			'show_element' => (! \Froxlor\Settings::IsInList('panel.customer_hide_options', 'traffic')),
 			'elements' => array(
 				array(
 					'url' => 'customer_traffic.php?page=current',
@@ -187,17 +187,17 @@ return array(
 				array(
 					'url' => 'admin_index.php?page=change_theme',
 					'label' => $lng['menue']['main']['changetheme'],
-					'show_element' => (Settings::Get('panel.allow_theme_change_admin') == true)
+					'show_element' => (\Froxlor\Settings::Get('panel.allow_theme_change_admin') == true)
 				),
 				array(
 					'url' => 'admin_index.php?page=apikeys',
 					'label' => $lng['menue']['main']['apikeys'],
-					'show_element' => (Settings::Get('api.enabled') == true)
+					'show_element' => (\Froxlor\Settings::Get('api.enabled') == true)
 				),
 				array(
 					'url' => 'admin_index.php?page=apihelp',
 					'label' => $lng['menue']['main']['apihelp'],
-					'show_element' => (Settings::Get('api.enabled') == true)
+					'show_element' => (\Froxlor\Settings::Get('api.enabled') == true)
 				),
 				array(
 					'url' => 'admin_index.php?action=logout',
@@ -280,7 +280,7 @@ return array(
 					'url' => 'admin_logger.php?page=log',
 					'label' => $lng['menue']['logger']['logger'],
 					'required_resources' => 'change_serversettings',
-					'show_element' => (Settings::Get('logger.enabled') == true)
+					'show_element' => (\Froxlor\Settings::Get('logger.enabled') == true)
 				),
 				array(
 					'url' => 'admin_settings.php?page=rebuildconfigs',
@@ -297,7 +297,7 @@ return array(
 					'url' => 'admin_settings.php?page=wipecleartextmailpws',
 					'label' => $lng['admin']['wipecleartextmailpwd'],
 					'required_resources' => 'change_serversettings',
-					'show_element' => (Settings::Get('system.mailpwcleartext') == true)
+					'show_element' => (\Froxlor\Settings::Get('system.mailpwcleartext') == true)
 				)
 			)
 		),
@@ -308,13 +308,13 @@ return array(
 				array(
 					'url' => 'admin_phpsettings.php?page=overview',
 					'label' => $lng['menue']['phpsettings']['maintitle'],
-					'show_element' => (Settings::Get('system.mod_fcgid') == true || Settings::Get('phpfpm.enabled') == true)
+					'show_element' => (\Froxlor\Settings::Get('system.mod_fcgid') == true || \Froxlor\Settings::Get('phpfpm.enabled') == true)
 				),
 				array(
 					'url' => 'admin_phpsettings.php?page=fpmdaemons',
 					'label' => $lng['menue']['phpsettings']['fpmdaemons'],
 					'required_resources' => 'change_serversettings',
-					'show_element' => Settings::Get('phpfpm.enabled') == true
+					'show_element' => \Froxlor\Settings::Get('phpfpm.enabled') == true
 				),
 				array(
 					'url' => 'admin_settings.php?page=phpinfo',

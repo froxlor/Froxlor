@@ -55,16 +55,6 @@ if ((int)Settings::Get('system.report_enable') == 1) {
 	);
 }
 
-if ((int)Settings::Get('ticket.enabled') == 1) {
-	array_push($available_templates,
-		'new_ticket_by_customer',
-		'new_ticket_for_customer',
-		'new_ticket_by_staff',
-		'new_reply_ticket_by_customer',
-		'new_reply_ticket_by_staff'
-	);
-}
-
 $file_templates = array(
 	'index_html'
 );

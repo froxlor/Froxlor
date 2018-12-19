@@ -1,14 +1,19 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
+use Froxlor\Settings;
+use Froxlor\Api\Commands\Customers;
+use Froxlor\Api\Commands\PhpSettings;
+
 /**
  *
- * @covers ApiCommand
- * @covers ApiParameter
- * @covers PhpSettings
+ * @covers \Froxlor\Api\ApiCommand
+ * @covers \Froxlor\Api\ApiParameter
+ * @covers \Froxlor\Api\Commands\PhpSettings
  */
 class PhpSettingsText extends TestCase
 {
+
 	private static $id = 0;
 
 	public function testAdminPhpSettingsList()
@@ -47,7 +52,7 @@ class PhpSettingsText extends TestCase
 		$this->assertEquals('60s', $result['fpm_reqterm']);
 		self::$id = $result['id'];
 	}
-	
+
 	public function testAdminPhpSettingsGet()
 	{
 		global $admin_userdata;
@@ -65,9 +70,11 @@ class PhpSettingsText extends TestCase
 		global $admin_userdata;
 		$this->expectExceptionCode(404);
 		$this->expectExceptionMessage("php-config with id #999 could not be found");
-		PhpSettings::getLocal($admin_userdata, array('id' => 999))->get();
+		PhpSettings::getLocal($admin_userdata, array(
+			'id' => 999
+		))->get();
 	}
-	
+
 	public function testCustomerPhpSettingsGetNotAllowed()
 	{
 		global $admin_userdata;
@@ -78,6 +85,8 @@ class PhpSettingsText extends TestCase
 		$customer_userdata = json_decode($json_result, true)['data'];
 		$this->expectExceptionCode(403);
 		$this->expectExceptionMessage("Not allowed to execute given command.");
-		PhpSettings::getLocal($customer_userdata, array('id' => 1))->get();
+		PhpSettings::getLocal($customer_userdata, array(
+			'id' => 1
+		))->get();
 	}
 }

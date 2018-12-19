@@ -1,10 +1,15 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
+use Froxlor\Api\Commands\Admins;
+use Froxlor\Api\Commands\Customers;
+use Froxlor\Api\Commands\Certificates;
+
 /**
- * @covers ApiCommand
- * @covers ApiParameter
- * @covers Certificates
+ *
+ * @covers \Froxlor\Api\ApiCommand
+ * @covers \Froxlor\Api\ApiParameter
+ * @covers \Froxlor\Api\Commands\Certificates
  */
 class CertificatesTest extends TestCase
 {
@@ -12,7 +17,7 @@ class CertificatesTest extends TestCase
 	public function testAdminCertificatesAdd()
 	{
 		global $admin_userdata;
-		
+
 		$certdata = $this->generateKey();
 		$json_result = Certificates::getLocal($admin_userdata, array(
 			'domainname' => 'test2.local',
@@ -32,7 +37,7 @@ class CertificatesTest extends TestCase
 		))->get();
 		$reseller_userdata = json_decode($json_result, true)['data'];
 		$reseller_userdata['adminsession'] = 1;
-		
+
 		$certdata = $this->generateKey();
 		$this->expectExceptionCode(406);
 		$this->expectExceptionMessage("Domain 'test2.local' already has a certificate. Did you mean to call update?");
@@ -51,7 +56,7 @@ class CertificatesTest extends TestCase
 			'loginname' => 'test1'
 		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
-		
+
 		$certdata = $this->generateKey();
 		$json_result = Certificates::getLocal($customer_userdata, array(
 			'domainname' => 'mysub2.test2.local',
@@ -65,7 +70,7 @@ class CertificatesTest extends TestCase
 	public function testAdminCertificatesList()
 	{
 		global $admin_userdata;
-		
+
 		$json_result = Certificates::getLocal($admin_userdata)->listing();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(2, $result['count']);
@@ -80,7 +85,7 @@ class CertificatesTest extends TestCase
 		))->get();
 		$reseller_userdata = json_decode($json_result, true)['data'];
 		$reseller_userdata['adminsession'] = 1;
-		
+
 		$json_result = Certificates::getLocal($reseller_userdata)->listing();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(2, $result['count']);
@@ -89,7 +94,7 @@ class CertificatesTest extends TestCase
 	public function testCustomerCertificatesList()
 	{
 		global $admin_userdata;
-		
+
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
@@ -103,7 +108,7 @@ class CertificatesTest extends TestCase
 	public function testAdminCertificatesUpdate()
 	{
 		global $admin_userdata;
-		
+
 		$certdata = $this->generateKey();
 		$json_result = Certificates::getLocal($admin_userdata, array(
 			'domainname' => 'test2.local',
@@ -123,7 +128,7 @@ class CertificatesTest extends TestCase
 			'loginname' => 'test1'
 		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
-		
+
 		$certdata = $this->generateKey();
 		$json_result = Certificates::getLocal($customer_userdata, array(
 			'domainname' => 'mysub2.test2.local',
@@ -136,12 +141,13 @@ class CertificatesTest extends TestCase
 	}
 
 	/**
+	 *
 	 * @depends testAdminCertificatesUpdate
 	 */
 	public function testCustomerCertificatesDelete()
 	{
 		global $admin_userdata;
-		
+
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
@@ -165,28 +171,28 @@ class CertificatesTest extends TestCase
 			"commonName" => "test2.local",
 			"emailAddress" => "team@froxlor.org"
 		);
-		
+
 		// generate key pair
 		$privkey = openssl_pkey_new(array(
 			"private_key_bits" => 2048,
 			"private_key_type" => OPENSSL_KEYTYPE_RSA
 		));
-		
+
 		// generate csr
 		$csr = openssl_csr_new($dn, $privkey, array(
 			'digest_alg' => 'sha256'
 		));
-		
+
 		// generate self-signed certificate
 		$sscert = openssl_csr_sign($csr, null, $privkey, 365, array(
 			'digest_alg' => 'sha256'
 		));
-		
+
 		// export
 		openssl_csr_export($csr, $csrout);
 		openssl_x509_export($sscert, $certout);
 		openssl_pkey_export($privkey, $pkeyout, null);
-		
+
 		return array(
 			'cert' => $certout,
 			'key' => $pkeyout

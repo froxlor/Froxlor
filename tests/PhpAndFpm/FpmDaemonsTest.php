@@ -1,14 +1,18 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
+use Froxlor\Api\Commands\Customers;
+use Froxlor\Api\Commands\FpmDaemons;
+
 /**
  *
- * @covers ApiCommand
- * @covers ApiParameter
- * @covers FpmDaemons
+ * @covers \Froxlor\Api\ApiCommand
+ * @covers \Froxlor\Api\ApiParameter
+ * @covers \Froxlor\Api\Commands\FpmDaemons
  */
 class FpmDaemonsTest extends TestCase
 {
+
 	private static $id = 0;
 
 	public function testAdminFpmDaemonsAdd()
@@ -27,7 +31,7 @@ class FpmDaemonsTest extends TestCase
 		$this->assertEquals('.php', $result['limit_extensions']);
 		self::$id = $result['id'];
 	}
-	
+
 	public function testAdminFpmDaemonsAddUnknownPM()
 	{
 		global $admin_userdata;
@@ -41,7 +45,7 @@ class FpmDaemonsTest extends TestCase
 		$this->expectExceptionMessage("Unknown process manager");
 		FpmDaemons::getLocal($admin_userdata, $data)->add();
 	}
-	
+
 	public function testAdminFpmDaemonsAddInvalidDesc()
 	{
 		// max 50. characters
@@ -56,6 +60,7 @@ class FpmDaemonsTest extends TestCase
 	}
 
 	/**
+	 *
 	 * @depends testAdminFpmDaemonsAdd
 	 */
 	public function testAdminFpmDaemonsUpdate()
@@ -67,7 +72,7 @@ class FpmDaemonsTest extends TestCase
 			'pm' => 'dynamic',
 			'max_children' => '10',
 			'start_servers' => '4',
-			'limit_extensions' => '.php .php.xml',
+			'limit_extensions' => '.php .php.xml'
 		];
 		$json_result = FpmDaemons::getLocal($admin_userdata, $data)->update();
 		$result = json_decode($json_result, true)['data'];
@@ -77,6 +82,7 @@ class FpmDaemonsTest extends TestCase
 	}
 
 	/**
+	 *
 	 * @depends testAdminFpmDaemonsUpdate
 	 */
 	public function testAdminFpmDaemonsUpdate2()
@@ -84,7 +90,7 @@ class FpmDaemonsTest extends TestCase
 		global $admin_userdata;
 		$data = [
 			'id' => self::$id,
-			'limit_extensions' => '',
+			'limit_extensions' => ''
 		];
 		$json_result = FpmDaemons::getLocal($admin_userdata, $data)->update();
 		$result = json_decode($json_result, true)['data'];
@@ -92,6 +98,7 @@ class FpmDaemonsTest extends TestCase
 	}
 
 	/**
+	 *
 	 * @depends testAdminFpmDaemonsAdd
 	 */
 	public function testAdminFpmDaemonsUpdateUnknownPM()
@@ -105,8 +112,9 @@ class FpmDaemonsTest extends TestCase
 		$this->expectExceptionMessage("Unknown process manager");
 		FpmDaemons::getLocal($admin_userdata, $data)->update();
 	}
-	
+
 	/**
+	 *
 	 * @depends testAdminFpmDaemonsAdd
 	 */
 	public function testAdminFpmDaemonsUpdateInvalidDesc()
@@ -122,6 +130,7 @@ class FpmDaemonsTest extends TestCase
 	}
 
 	/**
+	 *
 	 * @depends testAdminFpmDaemonsUpdate
 	 */
 	public function testAdminFpmDaemonsList()
@@ -139,7 +148,9 @@ class FpmDaemonsTest extends TestCase
 		global $admin_userdata;
 		$this->expectExceptionCode(404);
 		$this->expectExceptionMessage("fpm-daemon with id #-1 could not be found");
-		FpmDaemons::getLocal($admin_userdata, array('id' => -1))->get();
+		FpmDaemons::getLocal($admin_userdata, array(
+			'id' => - 1
+		))->get();
 	}
 
 	public function testCustomerFpmDaemonsAdd()
@@ -154,7 +165,7 @@ class FpmDaemonsTest extends TestCase
 		$this->expectExceptionMessage("Not allowed to execute given command.");
 		FpmDaemons::getLocal($customer_userdata)->add();
 	}
-	
+
 	public function testCustomerFpmDaemonsGet()
 	{
 		global $admin_userdata;
@@ -208,6 +219,7 @@ class FpmDaemonsTest extends TestCase
 	}
 
 	/**
+	 *
 	 * @depends testAdminFpmDaemonsList
 	 */
 	public function testAdminFpmDaemonsDelete()
@@ -224,6 +236,7 @@ class FpmDaemonsTest extends TestCase
 	}
 
 	/**
+	 *
 	 * @depends testAdminFpmDaemonsDelete
 	 */
 	public function testAdminFpmDaemonsDeleteDefaultConfig()

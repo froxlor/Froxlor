@@ -656,7 +656,7 @@ if ($page == 'domains' || $page == 'overview') {
 			$result = array();
 
 			try {
-				$bulk = new DomainBulkAction($file_name, $customerid);
+				$bulk = new \Froxlor\Bulk\DomainBulkAction($file_name, $customerid);
 				$result = $bulk->doImport($separator, $offset);
 			} catch (Exception $e) {
 				standard_error('domain_import_error', $e->getMessage());

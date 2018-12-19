@@ -1,11 +1,17 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
+use Froxlor\Settings;
+use Froxlor\Api\Commands\Admins;
+use Froxlor\Api\Commands\Customers;
+use Froxlor\Api\Commands\Domains;
+
 /**
- * @covers ApiCommand
- * @covers ApiParameter
- * @covers SubDomains
- * @covers Domains
+ *
+ * @covers \Froxlor\Api\ApiCommand
+ * @covers \Froxlor\Api\ApiParameter
+ * @covers \Froxlor\Api\Commands\Domains
+ * @covers \Froxlor\Api\Commands\SubDomains
  */
 class DomainsTest extends TestCase
 {
@@ -28,6 +34,7 @@ class DomainsTest extends TestCase
 	}
 
 	/**
+	 *
 	 * @depends testAdminDomainsAdd
 	 */
 	public function testAdminDomainsList()
@@ -40,6 +47,7 @@ class DomainsTest extends TestCase
 	}
 
 	/**
+	 *
 	 * @depends testAdminDomainsAdd
 	 */
 	public function testResellerDomainsList()
@@ -95,7 +103,7 @@ class DomainsTest extends TestCase
 			'customerid' => 1,
 			'ipandport' => 4,
 			'isemaildomain' => 1,
-			'subcanemaildomain' => 2 
+			'subcanemaildomain' => 2
 		];
 		$json_result = Domains::getLocal($reseller_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
@@ -137,6 +145,7 @@ class DomainsTest extends TestCase
 	}
 
 	/**
+	 *
 	 * @depends testAdminDomainsAdd
 	 */
 	public function testAdminDomainsUpdate()
@@ -152,6 +161,7 @@ class DomainsTest extends TestCase
 	}
 
 	/**
+	 *
 	 * @depends testAdminDomainsUpdate
 	 */
 	public function testAdminDomainsMoveButUnknownCustomer()
@@ -185,7 +195,7 @@ class DomainsTest extends TestCase
 		];
 		$json_result = Customers::getLocal($admin_userdata, $data)->add();
 		$customer_userdata = json_decode($json_result, true)['data'];
-		
+
 		$data = [
 			'domainname' => 'test.local',
 			'customerid' => $customer_userdata['customerid']
@@ -197,6 +207,7 @@ class DomainsTest extends TestCase
 	}
 
 	/**
+	 *
 	 * @depends testAdminDomainsMove
 	 */
 	public function testAdminDomainsDelete()
@@ -209,7 +220,7 @@ class DomainsTest extends TestCase
 		$json_result = Domains::getLocal($admin_userdata, $data)->delete();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals('test.local', $result['domain']);
-		
+
 		// remove customer again
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test3'

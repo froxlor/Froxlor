@@ -126,7 +126,7 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 					$islocked = 1;
 				}
 
-				$row = str_replace_array('-1', 'UL', $row, 'diskspace traffic mysqls emails email_accounts email_forwarders ftps tickets subdomains');
+				$row = str_replace_array('-1', 'UL', $row, 'diskspace traffic mysqls emails email_accounts email_forwarders ftps subdomains');
 				$row = htmlentities_array($row);
 
 				// fix progress-bars if value is >100%
@@ -293,7 +293,6 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 			$email_forwarders_ul = makecheckbox('email_forwarders_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 			$email_quota_ul = makecheckbox('email_quota_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 			$ftps_ul = makecheckbox('ftps_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
-			$tickets_ul = makecheckbox('tickets_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 			$mysqls_ul = makecheckbox('mysqls_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 
 			$gender_options = makeoption($lng['gender']['undef'], 0, true, true, true);
@@ -432,11 +431,6 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 				$ftps_ul = makecheckbox('ftps_ul', $lng['customer']['unlimited'], '-1', false, $result['ftps'], true, true);
 				if ($result['ftps'] == '-1') {
 					$result['ftps'] = '';
-				}
-
-				$tickets_ul = makecheckbox('tickets_ul', $lng['customer']['unlimited'], '-1', false, $result['tickets'], true, true);
-				if ($result['tickets'] == '-1') {
-					$result['tickets'] = '';
 				}
 
 				$mysqls_ul = makecheckbox('mysqls_ul', $lng['customer']['unlimited'], '-1', false, $result['mysqls'], true, true);

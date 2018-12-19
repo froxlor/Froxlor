@@ -134,20 +134,6 @@ $header
 					</small>
 				</div>
 				</if>
-
-				<if (int)\Froxlor\Settings::Get('ticket.enabled') == 1 && $userinfo['tickets'] != '0'>
-				<div class="canvasbox">
-					<input type="hidden" id="tickets" class="circular" data-used="{$userinfo['tickets_used']}" data-available="{$userinfo['tickets']}">
-					<canvas id="tickets-canvas" width="120" height="76"></canvas><br />
-					{$lng['customer']['tickets']}<br />
-					<small>
-						{$userinfo['tickets_used']} {$lng['panel']['used']}<br />
-						<if $userinfo['tickets'] != '∞'>
-						{$userinfo['tickets']} {$lng['panel']['available']}
-						</if>
-					</small>
-				</div>
-				</if>
 			</div>
 
 			<div class="grid-u-1-2">

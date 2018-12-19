@@ -1,13 +1,17 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
+use Froxlor\Database\Database;
+use Froxlor\Api\Commands\Customers;
+use Froxlor\Api\Commands\Traffic;
+
 /**
  *
- * @covers ApiCommand
- * @covers ApiParameter
- * @covers Traffic
- * @covers Customers
- * @covers Admins
+ * @covers \Froxlor\Api\ApiCommand
+ * @covers \Froxlor\Api\ApiParameter
+ * @covers \Froxlor\Api\Commands\Traffic
+ * @covers \Froxlor\Api\Commands\Customers
+ * @covers \Froxlor\Api\Commands\Admins
  */
 class TrafficTest extends TestCase
 {

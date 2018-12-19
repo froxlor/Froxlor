@@ -254,7 +254,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 		));
 	}
 } elseif ($page == 'integritycheck' && $userinfo['change_serversettings'] == '1') {
-	$integrity = new IntegrityCheck();
+	$integrity = new \Froxlor\Database\IntegrityCheck();
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 		$integrity->fixAll();
 	} elseif (isset($_GET['action']) && $_GET['action'] == "fix") {

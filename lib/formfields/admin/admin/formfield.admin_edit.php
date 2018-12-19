@@ -47,7 +47,7 @@ return array(
 					'admin_password_suggestion' => array(
 						'label' => $lng['customer']['generated_pwd'],
 						'type' => 'text',
-						'visible' => (Settings::Get('panel.password_regex') == ''),
+						'visible' => (\Froxlor\Settings::Get('panel.password_regex') == ''),
 						'value' => generatePassword(),
 						'visible' => ($result['adminid'] == $userinfo['userid'] ? false : true)
 					),
@@ -205,7 +205,7 @@ return array(
 						'type' => 'textul',
 						'value' => $result['email_quota'],
 						'maxlength' => 9,
-						'visible' => (Settings::Get('system.mail_quota_enabled') == '1' ? true : false),
+						'visible' => (\Froxlor\Settings::Get('system.mail_quota_enabled') == '1' ? true : false),
 						'mandatory' => true,
 						'ul_field' => $email_quota_ul
 					),
@@ -215,22 +215,6 @@ return array(
 						'value' => $result['ftps'],
 						'maxlength' => 9,
 						'ul_field' => $ftps_ul
-					),
-					'tickets' => array(
-						'label' => $lng['customer']['tickets'],
-						'type' => 'textul',
-						'value' => $result['tickets'],
-						'maxlength' => 9,
-						'visible' => (Settings::Get('ticket.enabled') == '1' ? true : false),
-						'ul_field' => $tickets_ul
-					),
-					'tickets_see_all' => array(
-							'label' => $lng['admin']['tickets_see_all'],
-							'type' => 'checkbox',
-							'values' => array(
-									array ('label' => $lng['panel']['yes'], 'value' => '1')
-							),
-							'value' => array($result['tickets_see_all'])
 					),
 					'mysqls' => array(
 						'label' => $lng['customer']['mysqls'],
