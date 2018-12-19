@@ -1,4 +1,5 @@
 <?php
+namespace Froxlor\Cli;
 
 /**
  * This file is part of the Froxlor project.
@@ -12,7 +13,7 @@
  * @author Froxlor team <team@froxlor.org> (2018-)
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package Cron
- *
+ *         
  */
 abstract class CmdLineHandler
 {
@@ -27,7 +28,7 @@ abstract class CmdLineHandler
 	/**
 	 * Action object read from commandline/config
 	 *
-	 * @var Action
+	 * @var \Froxlor\Cli\Action
 	 */
 	private $_action = null;
 
@@ -47,17 +48,6 @@ abstract class CmdLineHandler
 	}
 
 	/**
-	 * returns the Action object generated in
-	 * the class constructor
-	 *
-	 * @return Action
-	 */
-	public function getAction()
-	{
-		return $this->_action;
-	}
-
-	/**
 	 * class constructor, validates the command line parameters
 	 * and sets the Action-object if valid
 	 *
@@ -65,12 +55,13 @@ abstract class CmdLineHandler
 	 * @param string[] $argv
 	 *
 	 * @return null
-	 * @throws Exception
+	 * @throws \Exception
 	 */
 	private function __construct($argc, $argv)
 	{
 		self::$args = $this->_parseArgs($argv);
 		$this->_action = $this->_createAction();
+		$this->_action->run();
 	}
 
 	/**
@@ -127,8 +118,8 @@ abstract class CmdLineHandler
 	/**
 	 * Creates an Action-Object for the Action-Handler
 	 *
-	 * @return Action
-	 * @throws Exception
+	 * @return \Froxlor\Cli\Action
+	 * @throws \Exception
 	 */
 	private function _createAction()
 	{
@@ -142,9 +133,9 @@ abstract class CmdLineHandler
 		foreach (self::$args as $arg => $value) {
 
 			if (is_numeric($arg)) {
-				throw new Exception("Unknown parameter '" . $value . "' in argument list");
+				throw new \Exception("Unknown parameter '" . $value . "' in argument list");
 			} elseif (! in_array($arg, static::$params) && ! in_array($arg, static::$switches)) {
-				throw new Exception("Unknown parameter '" . $arg . "' in argument list");
+				throw new \Exception("Unknown parameter '" . $arg . "' in argument list");
 			}
 		}
 
