@@ -1,4 +1,5 @@
 <?php
+namespace Froxlor\Bulk;
 
 /**
  * This file is part of the Froxlor project.
@@ -8,14 +9,14 @@
  * file that was distributed with this source code. You can also view the
  * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
- * @copyright  (c) the authors
- * @author     Michael Kaufmann <mkaufmann@nutime.de>
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Cron
- *
- * @since      0.10.0
- *
+ * @copyright (c) the authors
+ * @author Michael Kaufmann <mkaufmann@nutime.de>
+ * @author Froxlor team <team@froxlor.org> (2010-)
+ * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package Cron
+ *         
+ * @since 0.10.0
+ *       
  */
 
 /**
@@ -80,7 +81,7 @@ abstract class BulkAction
 	protected function __construct($import_file = null, $customer_id = 0)
 	{
 		if (! empty($import_file)) {
-			$this->_impFile = makeCorrectFile($import_file);
+			$this->_impFile = \Froxlor\FileDir::makeCorrectFile($import_file);
 		}
 		$this->_custId = $customer_id;
 	}
@@ -105,7 +106,7 @@ abstract class BulkAction
 	 */
 	public function setImportFile($import_file = null)
 	{
-		$this->_impFile = makeCorrectFile($import_file);
+		$this->_impFile = \Froxlor\FileDir::makeCorrectFile($import_file);
 	}
 
 	/**
@@ -146,13 +147,12 @@ abstract class BulkAction
 	{
 		global $userinfo;
 
-		$module = substr($this->api_call, 0, strpos($this->api_call, "."));
+		$module = '\\Froxlor\\Api\\Commands\\' . substr($this->api_call, 0, strpos($this->api_call, "."));
 		$function = substr($this->api_call, strpos($this->api_call, ".") + 1);
 
 		$new_data = array();
 		foreach ($this->api_params as $idx => $param) {
-			if (isset($data_array[$idx]) && !empty($data_array[$idx]))
-			{
+			if (isset($data_array[$idx]) && ! empty($data_array[$idx])) {
 				$new_data[$param] = $data_array[$idx];
 			}
 		}
@@ -161,10 +161,10 @@ abstract class BulkAction
 		try {
 			$json_result = $module::getLocal($userinfo, $new_data)->$function();
 			$result = json_decode($json_result, true)['data'];
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			$this->errors[] = $e->getMessage();
 		}
-		return !empty($result);
+		return ! empty($result);
 	}
 
 	/**
@@ -178,15 +178,15 @@ abstract class BulkAction
 	protected function _parseImportFile($separator = ";")
 	{
 		if (empty($this->_impFile)) {
-			throw new Exception("No file was given for import");
+			throw new \Exception("No file was given for import");
 		}
 
 		if (! file_exists($this->_impFile)) {
-			throw new Exception("The file '" . $this->_impFile . "' could not be found");
+			throw new \Exception("The file '" . $this->_impFile . "' could not be found");
 		}
 
 		if (! is_readable($this->_impFile)) {
-			throw new Exception("Unable to read file '" . $this->_impFile . "'");
+			throw new \Exception("Unable to read file '" . $this->_impFile . "'");
 		}
 
 		$file_data = array();
@@ -211,7 +211,7 @@ abstract class BulkAction
 			}
 			$this->api_params = array_map("trim", $this->api_params);
 		} else {
-			throw new Exception("Unable to open file '" . $this->_impFile . "'");
+			throw new \Exception("Unable to open file '" . $this->_impFile . "'");
 		}
 		fclose($fh);
 
@@ -226,11 +226,11 @@ abstract class BulkAction
 		$this->_readCustomerData();
 
 		if ($this->_custId <= 0) {
-			throw new Exception("Invalid customer selected");
+			throw new \Exception("Invalid customer selected");
 		}
 
 		if (is_null($this->_custData)) {
-			throw new Exception("Failed to read customer data");
+			throw new \Exception("Failed to read customer data");
 		}
 	}
 
@@ -241,8 +241,8 @@ abstract class BulkAction
 	 */
 	protected function _readCustomerData()
 	{
-		$cust_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `customerid` = :cid");
-		$this->_custData = Database::pexecute_first($cust_stmt, array(
+		$cust_stmt = \Froxlor\Database\Database::prepare("SELECT * FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `customerid` = :cid");
+		$this->_custData = \Froxlor\Database\Database::pexecute_first($cust_stmt, array(
 			'cid' => $this->_custId
 		));
 		if (is_array($this->_custData) && isset($this->_custData['customerid']) && $this->_custData['customerid'] == $this->_custId) {

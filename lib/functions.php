@@ -94,12 +94,6 @@ class Autoloader {
 				dirname(dirname(__FILE__)) . '/install/',
 		);
 
-		if (substr($class, 0, 15) == "Mso\IdnaConvert") {
-			$class = substr($class, 16);
-			include_once __DIR__.'/classes/idna/ext/'.$class.'.php';
-			return true;
-		}
-
 		// don't load anything from a namespace, it's not our responsibility
 		if (strpos($class, "\\") !== false) {
 			return true;

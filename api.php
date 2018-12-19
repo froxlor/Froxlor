@@ -32,7 +32,7 @@ if (is_null($decoded_request)) {
 try {
 	$request = \Froxlor\Api\FroxlorRPC::validateRequest($decoded_request);
 	// now actually do it
-	$cls = "\Froxlor\Api\Commands\\" . $request['command']['class'];
+	$cls = "\\Froxlor\\Api\\Commands\\" . $request['command']['class'];
 	$method = $request['command']['method'];
 	$apiObj = new $cls($decoded_request['header'], $request['params']);
 	// call the method with the params if any

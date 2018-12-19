@@ -1,4 +1,5 @@
 <?php
+namespace Froxlor\Bulk;
 
 /**
  * This file is part of the Froxlor project.
@@ -8,14 +9,14 @@
  * file that was distributed with this source code. You can also view the
  * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
- * @copyright  (c) the authors
- * @author     Michael Kaufmann <mkaufmann@nutime.de>
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Cron
- *
- * @since      0.9.33
- *
+ * @copyright (c) the authors
+ * @author Michael Kaufmann <mkaufmann@nutime.de>
+ * @author Froxlor team <team@froxlor.org> (2010-)
+ * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package Cron
+ *         
+ * @since 0.9.33
+ *       
  */
 
 /**
@@ -63,21 +64,21 @@ class DomainBulkAction extends BulkAction
 		$domains_avail = (int) $userinfo['domains'];
 
 		if (empty($separator) || strlen($separator) != 1) {
-			throw new Exception("Invalid separator specified: '" . $separator . "'");
+			throw new \Exception("Invalid separator specified: '" . $separator . "'");
 		}
 
 		if (! is_int($offset) || $offset < 0) {
-			throw new Exception("Invalid offset specified");
+			throw new \Exception("Invalid offset specified");
 		}
 
 		try {
 			$domain_array = $this->_parseImportFile($separator);
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			throw $e;
 		}
 
 		if (count($domain_array) <= 0) {
-			throw new Exception("No domains were read from the file.");
+			throw new \Exception("No domains were read from the file.");
 		}
 
 		$global_counter = 0;
