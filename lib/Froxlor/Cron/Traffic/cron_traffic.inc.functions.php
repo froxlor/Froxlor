@@ -124,9 +124,9 @@ function awstatsGenerateIndex($domain, $outputdir) {
 	);
 
 	// File names
-	$index_file = FROXLOR_INSTALL_DIR.'/templates/misc/awstats/index.html';
+	$index_file = \Froxlor\Froxlor::getInstallDir().'/templates/misc/awstats/index.html';
 	$index_file = makeCorrectFile($index_file);
-	$nav_file   = FROXLOR_INSTALL_DIR.'/templates/misc/awstats/nav.html';
+	$nav_file   = \Froxlor\Froxlor::getInstallDir().'/templates/misc/awstats/nav.html';
 	$nav_file   = makeCorrectFile($nav_file);
 
 	// Write the index file

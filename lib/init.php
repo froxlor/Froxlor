@@ -72,27 +72,24 @@ $filename = htmlentities(basename($_SERVER['PHP_SELF']));
 // define default theme for configurehint, etc.
 $_deftheme = 'Sparkle';
 
-// define installation directory
-define('FROXLOR_INSTALL_DIR', dirname(dirname(__FILE__)));
-
 // check whether the userdata file exists
-if (!file_exists(FROXLOR_INSTALL_DIR.'/lib/userdata.inc.php')) {
-	$config_hint = file_get_contents(FROXLOR_INSTALL_DIR.'/templates/'.$_deftheme.'/misc/configurehint.tpl');
+if (!file_exists(\Froxlor\Froxlor::getInstallDir().'/lib/userdata.inc.php')) {
+	$config_hint = file_get_contents(\Froxlor\Froxlor::getInstallDir().'/templates/'.$_deftheme.'/misc/configurehint.tpl');
 	$config_hint = str_replace("<CURRENT_YEAR>", date('Y', time()), $config_hint);
 	die($config_hint);
 }
 
 // check whether we can read the userdata file
-if (!is_readable(FROXLOR_INSTALL_DIR.'/lib/userdata.inc.php')) {
+if (!is_readable(\Froxlor\Froxlor::getInstallDir().'/lib/userdata.inc.php')) {
 	// get possible owner
 	$posixusername = posix_getpwuid(posix_getuid());
 	$posixgroup = posix_getgrgid(posix_getgid());
 	// get hint-template
-	$owner_hint = file_get_contents(FROXLOR_INSTALL_DIR.'/templates/'.$_deftheme.'/misc/ownershiphint.tpl');
+	$owner_hint = file_get_contents(\Froxlor\Froxlor::getInstallDir().'/templates/'.$_deftheme.'/misc/ownershiphint.tpl');
 	// replace values
 	$owner_hint = str_replace("<USER>", $posixusername['name'], $owner_hint);
 	$owner_hint = str_replace("<GROUP>", $posixgroup['name'], $owner_hint);
-	$owner_hint = str_replace("<FROXLOR_INSTALL_DIR>", FROXLOR_INSTALL_DIR, $owner_hint);
+	$owner_hint = str_replace("<\Froxlor\Froxlor::getInstallDir()>", \Froxlor\Froxlor::getInstallDir(), $owner_hint);
 	$owner_hint = str_replace("<CURRENT_YEAR>", date('Y', time()), $owner_hint);
 	// show
 	die($owner_hint);
@@ -101,12 +98,12 @@ if (!is_readable(FROXLOR_INSTALL_DIR.'/lib/userdata.inc.php')) {
 /**
  * Includes the Usersettings eg. MySQL-Username/Passwort etc.
  */
-require FROXLOR_INSTALL_DIR.'/lib/userdata.inc.php';
+require \Froxlor\Froxlor::getInstallDir().'/lib/userdata.inc.php';
 
 if (!isset($sql)
    || !is_array($sql)
 ) {
-	$config_hint = file_get_contents(FROXLOR_INSTALL_DIR.'/templates/'.$_deftheme.'/misc/configurehint.tpl');
+	$config_hint = file_get_contents(\Froxlor\Froxlor::getInstallDir().'/templates/'.$_deftheme.'/misc/configurehint.tpl');
 	$config_hint = str_replace("<CURRENT_YEAR>", date('Y', time()), $config_hint);
 	die($config_hint);
 }
@@ -114,13 +111,13 @@ if (!isset($sql)
 /**
  * Includes the Functions
  */
-require FROXLOR_INSTALL_DIR.'/lib/functions.php';
+require \Froxlor\Froxlor::getInstallDir().'/lib/functions.php';
 @set_error_handler('phpErrHandler');
 
 /**
  * Includes the MySQL-Tabledefinitions etc.
  */
-require FROXLOR_INSTALL_DIR.'/lib/tables.inc.php';
+require \Froxlor\Froxlor::getInstallDir().'/lib/tables.inc.php';
 
 /**
  * Create a new idna converter

@@ -31,7 +31,10 @@ if (file_exists($userdata)) {
 file_put_contents($userdata, $userdata_content);
 
 // include autoloader / api / etc
-require dirname(__DIR__) . '/lib/classes/api/api_includes.inc.php';
+require dirname(__DIR__) . '/vendor/autoload.php';
+
+use \Froxlor\Database;
+use \Froxlor\Settings;
 
 Database::needRoot(true);
 Database::query("DROP DATABASE IF EXISTS `test1sql1`;");

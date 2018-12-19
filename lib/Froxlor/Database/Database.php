@@ -239,7 +239,7 @@ class Database
 		}
 
 		// include userdata.inc.php
-		require FROXLOR_INSTALL_DIR . "/lib/userdata.inc.php";
+		require \Froxlor\Froxlor::getInstallDir() . "/lib/userdata.inc.php";
 
 		// le format
 		if (self::$_needroot == true && isset($sql['root_user']) && isset($sql['root_password']) && (! isset($sql_root) || ! is_array($sql_root))) {
@@ -353,7 +353,7 @@ class Database
 		global $userinfo, $theme, $linker;
 
 		// include userdata.inc.php
-		require FROXLOR_INSTALL_DIR . "/lib/userdata.inc.php";
+		require \Froxlor\Froxlor::getInstallDir() . "/lib/userdata.inc.php";
 
 		// le format
 		if (isset($sql['root_user']) && isset($sql['root_password']) && (! isset($sql_root) || ! is_array($sql_root))) {
@@ -390,7 +390,7 @@ class Database
 		 * log to a file, so we can actually ask people for the error
 		 * (no one seems to find the stuff in the syslog)
 		 */
-		$sl_dir = makeCorrectDir(FROXLOR_INSTALL_DIR . "/logs/");
+		$sl_dir = makeCorrectDir(\Froxlor\Froxlor::getInstallDir() . "/logs/");
 		if (! file_exists($sl_dir)) {
 			@mkdir($sl_dir, 0755);
 		}

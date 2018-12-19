@@ -47,23 +47,18 @@ $lockFilename = 'froxlor_' . $basename . '.lock-';
 $lockfName = $lockFilename . getmypid();
 $lockfile = $lockdir . $lockfName;
 
-// guess the froxlor installation path
-// normally you should not need to modify this script anymore, if your
-// froxlor installation isn't in /var/www/froxlor
-define('FROXLOR_INSTALL_DIR', dirname(dirname(__FILE__)));
-
 // create and open the lockfile!
 $keepLockFile = false;
 $debugHandler = fopen($lockfile, 'w');
 fwrite($debugHandler, 'Setting Lockfile to ' . $lockfile . "\n");
-fwrite($debugHandler, 'Setting Froxlor installation path to ' . FROXLOR_INSTALL_DIR . "\n");
+fwrite($debugHandler, 'Setting Froxlor installation path to ' . \Froxlor\Froxlor::getInstallDir() . "\n");
 
-if (! file_exists(FROXLOR_INSTALL_DIR . '/lib/userdata.inc.php')) {
+if (! file_exists(\Froxlor\Froxlor::getInstallDir() . '/lib/userdata.inc.php')) {
 	die("Froxlor does not seem to be installed yet - skipping cronjob");
 }
 
 // Includes the Usersettings eg. MySQL-Username/Passwort etc.
-require FROXLOR_INSTALL_DIR . '/lib/userdata.inc.php';
+require \Froxlor\Froxlor::getInstallDir() . '/lib/userdata.inc.php';
 fwrite($debugHandler, 'Userdatas included' . "\n");
 
 // Legacy sql-root-information
@@ -81,10 +76,10 @@ if (isset($sql['root_user']) && isset($sql['root_password']) && (! isset($sql_ro
 }
 
 // Includes the Functions
-require FROXLOR_INSTALL_DIR . '/lib/functions.php';
+require \Froxlor\Froxlor::getInstallDir() . '/lib/functions.php';
 
 // Includes the MySQL-Tabledefinitions etc.
-require FROXLOR_INSTALL_DIR . '/lib/tables.inc.php';
+require \Froxlor\Froxlor::getInstallDir() . '/lib/tables.inc.php';
 fwrite($debugHandler, 'Table definitions included' . "\n");
 
 // try database connection, it will throw
@@ -149,7 +144,7 @@ while ($fName = readdir($lockDirHandle)) {
  * whether the permission of the files are still correct
  */
 fwrite($debugHandler, 'Checking froxlor file permissions' . "\n");
-$_mypath = makeCorrectDir(FROXLOR_INSTALL_DIR);
+$_mypath = makeCorrectDir(\Froxlor\Froxlor::getInstallDir());
 
 if (((int) \Froxlor\Settings::Get('system.mod_fcgid') == 1 && (int) \Froxlor\Settings::Get('system.mod_fcgid_ownvhost') == 1) || ((int) \Froxlor\Settings::Get('phpfpm.enabled') == 1 && (int) \Froxlor\Settings::Get('phpfpm.enabled_ownvhost') == 1)) {
 	$user = \Froxlor\Settings::Get('system.mod_fcgid_httpuser');
@@ -175,7 +170,7 @@ $cronlog = \Froxlor\FroxlorLogger::getInstanceOf(array(
 ));
 fwrite($debugHandler, 'Logger has been included' . "\n");
 
-if (hasUpdates($version) || hasDbUpdates($dbversion)) {
+if (\Froxlor\Froxlor::hasUpdates() || \Froxlor\Froxlor::hasDbUpdates()) {
 	if (\Froxlor\Settings::Get('system.cron_allowautoupdate') == null || \Froxlor\Settings::Get('system.cron_allowautoupdate') == 0) {
 		/**
 		 * Do not proceed further if the Database version is not the same as the script version
@@ -184,7 +179,7 @@ if (hasUpdates($version) || hasDbUpdates($dbversion)) {
 		unlink($lockfile);
 		$errormessage = "Version of file doesn't match version of database. Exiting...\n\n";
 		$errormessage .= "Possible reason: Froxlor update\n";
-		$errormessage .= "Information: Current version in database: " . \Froxlor\Settings::Get('panel.version') . " (DB: " . \Froxlor\Settings::Get('panel.db_version') . ") - version of Froxlor files: " . $version . " (DB: " . $dbversion . ")\n";
+		$errormessage .= "Information: Current version in database: " . \Froxlor\Settings::Get('panel.version') . "-" . \Froxlor\Froxlor::BRANDING . " (DB: " . \Froxlor\Settings::Get('panel.db_version') . ") - version of Froxlor files: " . \Froxlor\Froxlor::getVersionString() . ")\n";
 		$errormessage .= "Solution: Please visit your Foxlor admin interface for further information.\n";
 		dieWithMail($errormessage);
 	}
@@ -201,7 +196,7 @@ if (hasUpdates($version) || hasDbUpdates($dbversion)) {
 		fwrite($debugHandler, "*** WARNING *** - If you don't want this to happen in the future consider removing the --allow-autoupdate flag from the cronjob\n");
 		// including update procedures
 		define('_CRON_UPDATE', 1);
-		include_once FROXLOR_INSTALL_DIR . '/install/updatesql.php';
+		include_once \Froxlor\Froxlor::getInstallDir() . '/install/updatesql.php';
 		// pew - everything went better than expected
 		$cronlog->logAction(CRON_ACTION, LOG_WARNING, 'Automatic update done - you should check your settings to be sure everything is fine');
 		fwrite($debugHandler, '*** WARNING *** - Automatic update done - you should check your settings to be sure everything is fine' . "\n");

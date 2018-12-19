@@ -157,14 +157,14 @@ abstract class ApiCommand extends ApiParameter
 
 		// include every english language file we can get
 		foreach ($langs['English'] as $value) {
-			include_once \Froxlor\FileDir::makeSecurePath(FROXLOR_INSTALL_DIR . '/' . $value['file']);
+			include_once \Froxlor\FileDir::makeSecurePath(\Froxlor\Froxlor::getInstallDir() . '/' . $value['file']);
 		}
 
 		// now include the selected language if its not english
 		if ($language != 'English') {
 			if (isset($langs[$language])) {
 				foreach ($langs[$language] as $value) {
-					include_once \Froxlor\FileDir::makeSecurePath(FROXLOR_INSTALL_DIR . '/' . $value['file']);
+					include_once \Froxlor\FileDir::makeSecurePath(\Froxlor\Froxlor::getInstallDir() . '/' . $value['file']);
 				}
 			} else {
 				if ($this->debug) {
@@ -174,7 +174,7 @@ abstract class ApiCommand extends ApiParameter
 		}
 
 		// last but not least include language references file
-		include_once makeSecurePath(FROXLOR_INSTALL_DIR . '/lng/lng_references.php');
+		include_once makeSecurePath(\Froxlor\Froxlor::getInstallDir() . '/lng/lng_references.php');
 
 		// set array for ApiCommand
 		$this->lng = $lng;

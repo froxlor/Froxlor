@@ -22,7 +22,7 @@
  */
 function getThemes() {
 
-	$themespath = makeCorrectDir(FROXLOR_INSTALL_DIR.'/templates/');
+	$themespath = makeCorrectDir(\Froxlor\Froxlor::getInstallDir().'/templates/');
 	$themes_available = array();
 
 	if (is_dir($themespath)) {

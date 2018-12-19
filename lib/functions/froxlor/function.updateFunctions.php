@@ -76,24 +76,7 @@ function isFroxlorVersion($to_check = null) {
 	return false;
 }
 
-/**
- * Function hasUpdates
- *
- * checks if a given version is not equal the current one
- *
- * @param string $to_check version to check
- *
- * @return bool true if version to check does not match, else false
- */
-function hasUpdates($to_check = null) {
 
-	if (Settings::Get('panel.version') == null
-			|| Settings::Get('panel.version') != $to_check
-	) {
-		return true;
-	}
-	return false;
-}
 
 /**
  * Function showUpdateStep
@@ -202,25 +185,6 @@ function isDatabaseVersion($to_check = null) {
 
     if (Settings::Get('panel.frontend') == 'froxlor'
         && Settings::Get('panel.db_version') == $to_check
-        ) {
-            return true;
-        }
-        return false;
-}
-
-/**
- * Function hasUpdates
- *
- * checks if a given database-version is not equal the current one
- *
- * @param int $to_check version to check
- *
- * @return bool true if version to check does not match, else false
- */
-function hasDbUpdates($to_check = null) {
-
-    if (Settings::Get('panel.db_version') == null
-        || Settings::Get('panel.db_version') != $to_check
         ) {
             return true;
         }

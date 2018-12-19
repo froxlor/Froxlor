@@ -62,7 +62,7 @@ function createAWStatsConf($logFile, $siteDomain, $hostAliases, $customerDocroot
 
 	// File names
 	$domain_file = makeCorrectFile(Settings::Get('system.awstats_conf').'/awstats.' . $siteDomain . '.conf');
-	$model_file = FROXLOR_INSTALL_DIR.'/templates/misc/awstats/awstats.froxlor.model.conf';
+	$model_file = \Froxlor\Froxlor::getInstallDir().'/templates/misc/awstats/awstats.froxlor.model.conf';
 	$model_file = makeCorrectFile($model_file);
 
 	// Test if the file exists

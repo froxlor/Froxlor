@@ -171,7 +171,7 @@ while ($row = $result_tasks_stmt->fetch(PDO::FETCH_ASSOC)) {
 			if (Settings::Get('system.nssextrausers') == 1)
 			{
 				// explicitly create files after user has been created to avoid unknown user issues for apache/php-fpm when task#1 runs after this
-				include_once makeCorrectFile(FROXLOR_INSTALL_DIR.'/scripts/classes/class.Extrausers.php');
+				include_once makeCorrectFile(\Froxlor\Froxlor::getInstallDir().'/scripts/classes/class.Extrausers.php');
 				Extrausers::generateFiles($cronlog);
 			}
 

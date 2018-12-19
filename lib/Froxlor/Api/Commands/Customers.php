@@ -664,7 +664,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 
 						$srv_hostname = Settings::Get('system.hostname');
 						if (Settings::Get('system.froxlordirectlyviahostname') == '0') {
-							$srv_hostname .= '/' . basename(FROXLOR_INSTALL_DIR);
+							$srv_hostname .= '/' . basename(\Froxlor\Froxlor::getInstallDir());
 						}
 
 						$srv_ip_stmt = Database::prepare("

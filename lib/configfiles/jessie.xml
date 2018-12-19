@@ -4724,7 +4724,7 @@ aliases:     files
 					</commands>
 					<!-- instead of just restarting apache, we let the cronjob do all the
 						dirty work -->
-					<command><![CDATA[php {{const.FROXLOR_INSTALL_DIR}}/scripts/froxlor_master_cronjob.php --force]]></command>
+					<command><![CDATA[php {{const.\Froxlor\Froxlor::getInstallDir()}}/scripts/froxlor_master_cronjob.php --force]]></command>
 				</daemon>
 				<!-- PHP-FPM -->
 				<daemon name="php-fpm" title="PHP-FPM (alternative to mod_php)">
@@ -4767,7 +4767,7 @@ aliases:     files
 					</commands>
 					<!-- instead of just restarting apache, we let the cronjob do all the
 						dirty work -->
-					<command><![CDATA[php {{const.FROXLOR_INSTALL_DIR}}/scripts/froxlor_master_cronjob.php --force]]></command>
+					<command><![CDATA[php {{const.\Froxlor\Froxlor::getInstallDir()}}/scripts/froxlor_master_cronjob.php --force]]></command>
 				</daemon>
 			</service>
 		</services>

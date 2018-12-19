@@ -360,8 +360,8 @@ class ConfigDaemon {
 			} elseif (preg_match('/^sql\.(.*)$/', $matches[1], $match)) {
 				if (is_null($this->_sqldata_cache)) {
 				    // read in sql-data (if exists)
-				    if (file_exists(FROXLOR_INSTALL_DIR."/lib/userdata.inc.php")) {
-				        require FROXLOR_INSTALL_DIR."/lib/userdata.inc.php";
+				    if (file_exists(\Froxlor\Froxlor::getInstallDir()."/lib/userdata.inc.php")) {
+				        require \Froxlor\Froxlor::getInstallDir()."/lib/userdata.inc.php";
 				        unset($sql_root);
 				        $this->_sqldata_cache = $sql;
 				    }

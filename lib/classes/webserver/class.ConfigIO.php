@@ -60,7 +60,7 @@ class ConfigIO
 
 	private function _cleanErrLogs()
 	{
-		$err_dir = makeCorrectDir(FROXLOR_INSTALL_DIR . "/logs/");
+		$err_dir = makeCorrectDir(\Froxlor\Froxlor::getInstallDir() . "/logs/");
 		if (@is_dir($err_dir)) {
 			// now get rid of old stuff
 			// (but append /*.log so we don't delete the directory)

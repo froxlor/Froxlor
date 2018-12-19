@@ -20,12 +20,6 @@ if (! defined('MASTER_CRONJOB'))
  *
  */
 
-if (Settings::Get('system.leapiversion') == '2') {
-	// use ACME v2 is specified
-	require_once __DIR__ . '/cron_letsencrypt_v2.php';
-	exit;
-}
-
 $cronlog->logAction(CRON_ACTION, LOG_INFO, "Updating Let's Encrypt certificates");
 
 if (! extension_loaded('curl')) {
@@ -44,12 +38,14 @@ $certificates_stmt = Database::query("
 			domssl.`ssl_csr_file`,
 			dom.`domain`,
 			dom.`wwwserveralias`,
+			dom.`iswildcarddomain`,
 			dom.`documentroot`,
 			dom.`id` AS 'domainid',
 			dom.`ssl_redirect`,
 			cust.`leprivatekey`,
 			cust.`lepublickey`,
 			cust.`leregistered`,
+			cust.`leaccount`,
 			cust.`customerid`,
 			cust.`loginname`
 		FROM
@@ -74,7 +70,8 @@ $aliasdomains_stmt = Database::prepare("
 		SELECT
 			dom.`id` as domainid,
 			dom.`domain`,
-			dom.`wwwserveralias`
+			dom.`wwwserveralias`,
+			dom.`iswildcarddomain`
 		FROM `" . TABLE_PANEL_DOMAINS . "` AS dom
 		WHERE
 			dom.`aliasdomain` = :id
@@ -109,10 +106,11 @@ if (Settings::Get('system.le_froxlor_enabled') == '1') {
 		'loginname' => 'froxlor.panel',
 		'domain' => Settings::Get('system.hostname'),
 		'domainid' => 0,
-		'documentroot' => FROXLOR_INSTALL_DIR,
+		'documentroot' => \Froxlor\Froxlor::getInstallDir(),
 		'leprivatekey' => Settings::Get('system.leprivatekey'),
 		'lepublickey' => Settings::Get('system.lepublickey'),
 		'leregistered' => Settings::Get('system.leregistered'),
+		'leaccount' => Settings::Get('system.leaccount'),
 		'ssl_redirect' => Settings::Get('system.le_froxlor_redirect'),
 		'expirationdate' => null,
 		'ssl_cert_file' => null,
@@ -164,7 +162,7 @@ if (Settings::Get('system.le_froxlor_enabled') == '1') {
 
 		try {
 			// Initialize Lescript with documentroot
-			$le = new lescript($cronlog, $version);
+			$le = new lescript_v2($cronlog, $version);
 
 			// Initialize Lescript
 			$le->initAccount($certrow, true);
@@ -218,8 +216,12 @@ foreach ($certrows as $certrow) {
 		$domains = array(
 			$certrow['domain']
 		);
-		// add www.<domain> to SAN list
-		if ($certrow['wwwserveralias'] == 1) {
+		if ($certrow['iswildcarddomain'] == 1) {
+			$cronlog->logAction(CRON_ACTION, LOG_INFO, "Adding SAN entry: *." . $certrow['domain']);
+			$domains[] = '*.' . $certrow['domain'];
+		}
+		elseif ($certrow['wwwserveralias'] == 1) {
+			// add www.<domain> to SAN list
 			$cronlog->logAction(CRON_ACTION, LOG_INFO, "Adding SAN entry: www." . $certrow['domain']);
 			$domains[] = 'www.' . $certrow['domain'];
 		}
@@ -232,7 +234,11 @@ foreach ($certrows as $certrow) {
 		foreach ($aliasdomains as $aliasdomain) {
 			$cronlog->logAction(CRON_ACTION, LOG_INFO, "Adding SAN entry: " . $aliasdomain['domain']);
 			$domains[] = $aliasdomain['domain'];
-			if ($aliasdomain['wwwserveralias'] == 1) {
+			if ($aliasdomain['iswildcarddomain'] == 1) {
+				$cronlog->logAction(CRON_ACTION, LOG_INFO, "Adding SAN entry: *." . $aliasdomain['domain']);
+				$domains[] = '*.' . $aliasdomain['domain'];
+			}
+			elseif ($aliasdomain['wwwserveralias'] == 1) {
 				$cronlog->logAction(CRON_ACTION, LOG_INFO, "Adding SAN entry: www." . $aliasdomain['domain']);
 				$domains[] = 'www.' . $aliasdomain['domain'];
 			}
@@ -240,7 +246,7 @@ foreach ($certrows as $certrow) {
 
 		try {
 			// Initialize Lescript with documentroot
-			$le = new lescript($cronlog, $version);
+			$le = new lescript_v2($cronlog, $version);
 
 			// Initialize Lescript
 			$le->initAccount($certrow);

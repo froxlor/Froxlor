@@ -108,9 +108,9 @@ if ((int)Settings::Get('system.report_trafficmax') > 0)
 			}
 
 			// include english language file (fallback)
-			include_once makeCorrectFile(FROXLOR_INSTALL_DIR . '/lng/english.lng.php');
+			include_once makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/lng/english.lng.php');
 			// include admin/customer language file
-			include_once makeCorrectFile(FROXLOR_INSTALL_DIR . '/' . $langfile);
+			include_once makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/' . $langfile);
 
 			// Get mail templates from database; the ones from 'admin' are fetched for fallback
 			$result2_stmt = Database::prepare("
@@ -206,9 +206,9 @@ if ((int)Settings::Get('system.report_trafficmax') > 0)
 			}
 
 			// include english language file (fallback)
-			include_once makeCorrectFile(FROXLOR_INSTALL_DIR . '/lng/english.lng.php');
+			include_once makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/lng/english.lng.php');
 			// include admin/customer language file
-			include_once makeCorrectFile(FROXLOR_INSTALL_DIR . '/' . $langfile);
+			include_once makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/' . $langfile);
 
 			// Get mail templates from database; the ones from 'admin' are fetched for fallback
 			$result2_stmt = Database::prepare("

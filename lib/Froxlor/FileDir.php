@@ -182,9 +182,9 @@ class FileDir
 				} else {
 					$destination = self::makeCorrectDir($destination);
 					if ($logger !== null) {
-						$logger->logAction(CRON_ACTION, LOG_NOTICE, 'Running: cp -a ' . FROXLOR_INSTALL_DIR . '/templates/misc/standardcustomer/* ' . escapeshellarg($destination));
+						$logger->logAction(CRON_ACTION, LOG_NOTICE, 'Running: cp -a ' . \Froxlor\Froxlor::getInstallDir() . '/templates/misc/standardcustomer/* ' . escapeshellarg($destination));
 					}
-					self::safe_exec('cp -a ' . FROXLOR_INSTALL_DIR . '/templates/misc/standardcustomer/* ' . escapeshellarg($destination));
+					self::safe_exec('cp -a ' . \Froxlor\Froxlor::getInstallDir() . '/templates/misc/standardcustomer/* ' . escapeshellarg($destination));
 				}
 			}
 			return;

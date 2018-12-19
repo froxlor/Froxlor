@@ -1,4 +1,7 @@
 <?php
+namespace Froxlor\Cron\System;
+
+use Froxlor\Database;
 
 /**
  * This file is part of the Froxlor project.
@@ -8,11 +11,11 @@
  * file that was distributed with this source code. You can also view the
  * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
- * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2017-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Cron
- *
+ * @copyright (c) the authors
+ * @author Froxlor team <team@froxlor.org> (2017-)
+ * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package Cron
+ *         
  */
 class Extrausers
 {
@@ -55,7 +58,7 @@ class Extrausers
 		$data_sel_stmt = Database::query($query);
 		$data_content = "";
 		$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Writing ' . $data_sel_stmt->rowCount() . ' entries to ' . $type . ' file');
-		while ($u = $data_sel_stmt->fetch(PDO::FETCH_ASSOC)) {
+		while ($u = $data_sel_stmt->fetch(\PDO::FETCH_ASSOC)) {
 			switch ($type) {
 				case 'passwd':
 					if ($u['login_enabled'] != 'Y') {

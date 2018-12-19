@@ -18,10 +18,10 @@
  */
 
 // check for cron.d-generation task and create it if necessary
-checkCrondConfigurationFile();
+\Froxlor\Cron\CronConfig::checkCrondConfigurationFile();
 
 if (\Froxlor\Settings::Get('logger.log_cron') == '1') {
-	$cronlog->setCronLog(0);
+	\Froxlor\FroxlorLogger::getInstanceOf()->setCronLog(0);
 	fwrite($debugHandler, 'Logging for cron has been shutdown' . "\n");
 }
 
