@@ -276,7 +276,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				if (Settings::Get('system.documentroot_use_default_value') == 1) {
 					$path_suffix = '/' . $domain;
 				}
-				$_documentroot = makeCorrectDir($customer['documentroot'] . $path_suffix);
+				$_documentroot = \Froxlor\FileDir::makeCorrectDir($customer['documentroot'] . $path_suffix);
 
 				$registration_date = validate($registration_date, 'registration_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', array(
 					'0000-00-00',
@@ -425,7 +425,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 					if (strstr($documentroot, ":") !== false) {
 						standard_error('pathmaynotcontaincolon', '', true);
 					} else {
-						$documentroot = makeCorrectDir($documentroot);
+						$documentroot = \Froxlor\FileDir::makeCorrectDir($documentroot);
 					}
 				}
 
@@ -835,7 +835,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 
 			while ($domain_emails_row = $domain_emails_result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 				if ($domain_emails_row['destination'] != '') {
-					$domain_emails_row['destination'] = explode(' ', makeCorrectDestination($domain_emails_row['destination']));
+					$domain_emails_row['destination'] = explode(' ', \Froxlor\FileDir::makeCorrectDestination($domain_emails_row['destination']));
 					$email_forwarders += count($domain_emails_row['destination']);
 					if (in_array($domain_emails_row['email_full'], $domain_emails_row['destination'])) {
 						$email_forwarders -= 1;
@@ -947,7 +947,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				// which would point to the wrong customer, therefore we will re-create that directory
 				if (! empty($documentroot) && $customerid > 0 && $customerid != $result['customerid'] && Settings::Get('panel.allow_domain_change_customer') == '1') {
 					if (Settings::Get('system.documentroot_use_default_value') == 1) {
-						$_documentroot = makeCorrectDir($customer['documentroot'] . '/' . $result['domain']);
+						$_documentroot = \Froxlor\FileDir::makeCorrectDir($customer['documentroot'] . '/' . $result['domain']);
 					} else {
 						$_documentroot = $customer['documentroot'];
 					}
@@ -959,7 +959,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 					// If path is empty and 'Use domain name as default value for DocumentRoot path' is enabled in settings,
 					// set default path to subdomain or domain name
 					if (Settings::Get('system.documentroot_use_default_value') == 1) {
-						$documentroot = makeCorrectDir($customer['documentroot'] . '/' . $result['domain']);
+						$documentroot = \Froxlor\FileDir::makeCorrectDir($customer['documentroot'] . '/' . $result['domain']);
 					} else {
 						$documentroot = $customer['documentroot'];
 					}
@@ -1062,7 +1062,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 			}
 
 			if (! preg_match('/^https?\:\/\//', $documentroot)) {
-				$documentroot = makeCorrectDir($documentroot);
+				$documentroot = \Froxlor\FileDir::makeCorrectDir($documentroot);
 			}
 
 			if ($email_only == '1') {

@@ -26,7 +26,7 @@ class PowerDNS
 	{
 		// get froxlor pdns config
 		$cf = Settings::Get('system.bindconf_directory') . '/froxlor/pdns_froxlor.conf';
-		$config = makeCorrectFile($cf);
+		$config = \Froxlor\FileDir::makeCorrectFile($cf);
 
 		if (! file_exists($config)) {
 			die('PowerDNS configuration file (' . $config . ') not found. Did you go through the configuration templates?' . PHP_EOL);
@@ -58,7 +58,7 @@ class PowerDNS
 		);
 
 		if (isset($mysql_data['gmysql-socket']) && ! empty($mysql_data['gmysql-socket'])) {
-			$dbconf["dsn"]['unix_socket'] = makeCorrectFile($mysql_data['gmysql-socket']);
+			$dbconf["dsn"]['unix_socket'] = \Froxlor\FileDir::makeCorrectFile($mysql_data['gmysql-socket']);
 		} else {
 			$dbconf["dsn"]['host'] = $mysql_data['gmysql-host'];
 			$dbconf["dsn"]['port'] = $mysql_data['gmysql-port'];

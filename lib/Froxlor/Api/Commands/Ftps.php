@@ -128,7 +128,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 			} elseif ($username == $password) {
 				standard_error('passwordshouldnotbeusername', '', true);
 			} else {
-				$path = makeCorrectDir($customer['documentroot'] . '/' . $path);
+				$path = \Froxlor\FileDir::makeCorrectDir($customer['documentroot'] . '/' . $path);
 				$cryptPassword = makeCryptPassword($password);
 
 				$stmt = Database::prepare("INSERT INTO `" . TABLE_FTP_USERS . "`
@@ -191,7 +191,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 						'CUST_NAME' => getCorrectUserSalutation($customer), // < keep this for compatibility
 						'USR_NAME' => $username,
 						'USR_PASS' => $password,
-						'USR_PATH' => makeCorrectDir(str_replace($customer['documentroot'], "/", $path))
+						'USR_PATH' => \Froxlor\FileDir::makeCorrectDir(str_replace($customer['documentroot'], "/", $path))
 					);
 					// get template for mail subject
 					$mail_subject = $this->getMailTemplate($customer, 'mails', 'new_ftpaccount_by_customer_subject', $replace_arr, $this->lng['mails']['new_ftpaccount_by_customer']['subject']);
@@ -375,7 +375,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 
 		// path update?
 		if ($path != '') {
-			$path = makeCorrectDir($customer['documentroot'] . '/' . $path);
+			$path = \Froxlor\FileDir::makeCorrectDir($customer['documentroot'] . '/' . $path);
 
 			if ($path != $result['homedir']) {
 				$stmt = Database::prepare("UPDATE `" . TABLE_FTP_USERS . "`

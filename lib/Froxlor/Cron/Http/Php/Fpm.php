@@ -172,15 +172,15 @@ class Fpm
 			if ($phpconfig['fpm_slowlog'] == '1') {
 				$fpm_config .= 'request_terminate_timeout = ' . $phpconfig['fpm_reqterm'] . "\n";
 				$fpm_config .= 'request_slowlog_timeout = ' . $phpconfig['fpm_reqslow'] . "\n";
-				$slowlog = makeCorrectFile(Settings::Get('system.logfiles_directory') . '/' . $this->_domain['loginname'] . '-php-slow.log');
+				$slowlog = \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.logfiles_directory') . '/' . $this->_domain['loginname'] . '-php-slow.log');
 				$fpm_config .= 'slowlog = ' . $slowlog . "\n";
 				$fpm_config .= 'catch_workers_output = yes' . "\n";
 			}
 
-			$fpm_config .= ';chroot = ' . makeCorrectDir($this->_domain['documentroot']) . "\n";
+			$fpm_config .= ';chroot = ' . \Froxlor\FileDir::makeCorrectDir($this->_domain['documentroot']) . "\n";
 			$fpm_config .= 'security.limit_extensions = ' . $fpm_limit_extensions . "\n";
 
-			$tmpdir = makeCorrectDir(Settings::Get('phpfpm.tmpdir') . '/' . $this->_domain['loginname'] . '/');
+			$tmpdir = \Froxlor\FileDir::makeCorrectDir(Settings::Get('phpfpm.tmpdir') . '/' . $this->_domain['loginname'] . '/');
 			if (! is_dir($tmpdir)) {
 				$this->getTempDir();
 			}
@@ -217,8 +217,8 @@ class Fpm
 					$openbasedir .= $_phpappendopenbasedir;
 				}
 			}
-			$fpm_config .= 'php_admin_value[session.save_path] = ' . makeCorrectDir(Settings::Get('phpfpm.tmpdir') . '/' . $this->_domain['loginname'] . '/') . "\n";
-			$fpm_config .= 'php_admin_value[upload_tmp_dir] = ' . makeCorrectDir(Settings::Get('phpfpm.tmpdir') . '/' . $this->_domain['loginname'] . '/') . "\n";
+			$fpm_config .= 'php_admin_value[session.save_path] = ' . \Froxlor\FileDir::makeCorrectDir(Settings::Get('phpfpm.tmpdir') . '/' . $this->_domain['loginname'] . '/') . "\n";
+			$fpm_config .= 'php_admin_value[upload_tmp_dir] = ' . \Froxlor\FileDir::makeCorrectDir(Settings::Get('phpfpm.tmpdir') . '/' . $this->_domain['loginname'] . '/') . "\n";
 
 			$admin = $this->_getAdminData($this->_domain['adminid']);
 			$php_ini_variables = array(
@@ -233,8 +233,8 @@ class Fpm
 				'OPEN_BASEDIR' => $openbasedir,
 				'OPEN_BASEDIR_C' => '',
 				'OPEN_BASEDIR_GLOBAL' => Settings::Get('system.phpappendopenbasedir'),
-				'DOCUMENT_ROOT' => makeCorrectDir($this->_domain['documentroot']),
-				'CUSTOMER_HOMEDIR' => makeCorrectDir($this->_domain['customerroot'])
+				'DOCUMENT_ROOT' => \Froxlor\FileDir::makeCorrectDir($this->_domain['documentroot']),
+				'CUSTOMER_HOMEDIR' => \Froxlor\FileDir::makeCorrectDir($this->_domain['customerroot'])
 			);
 
 			$phpini = replace_variables($phpconfig['phpsettings'], $php_ini_variables);
@@ -287,7 +287,7 @@ class Fpm
 	public function getConfigFile($createifnotexists = true)
 	{
 		$configdir = $this->_fpm_cfg['config_dir'];
-		$config = makeCorrectFile($configdir . '/' . $this->_domain['domain'] . '.conf');
+		$config = \Froxlor\FileDir::makeCorrectFile($configdir . '/' . $this->_domain['domain'] . '.conf');
 
 		if (! is_dir($configdir) && $createifnotexists) {
 			safe_exec('mkdir -p ' . escapeshellarg($configdir));
@@ -306,9 +306,9 @@ class Fpm
 	 */
 	public function getSocketFile($createifnotexists = true)
 	{
-		$socketdir = makeCorrectDir(Settings::Get('phpfpm.fastcgi_ipcdir'));
+		$socketdir = \Froxlor\FileDir::makeCorrectDir(Settings::Get('phpfpm.fastcgi_ipcdir'));
 		// add fpm-config-id to filename so it's unique for the fpm-daemon and doesn't interfere with running configs when reuilding
-		$socket = strtolower(makeCorrectFile($socketdir . '/' . $this->_domain['fpm_config_id'] . '-' . $this->_domain['loginname'] . '-' . $this->_domain['domain'] . '-php-fpm.socket'));
+		$socket = strtolower(\Froxlor\FileDir::makeCorrectFile($socketdir . '/' . $this->_domain['fpm_config_id'] . '-' . $this->_domain['loginname'] . '-' . $this->_domain['domain'] . '-php-fpm.socket'));
 
 		if (! is_dir($socketdir) && $createifnotexists) {
 			safe_exec('mkdir -p ' . escapeshellarg($socketdir));
@@ -328,7 +328,7 @@ class Fpm
 	 */
 	public function getTempDir($createifnotexists = true)
 	{
-		$tmpdir = makeCorrectDir(Settings::Get('phpfpm.tmpdir') . '/' . $this->_domain['loginname'] . '/');
+		$tmpdir = \Froxlor\FileDir::makeCorrectDir(Settings::Get('phpfpm.tmpdir') . '/' . $this->_domain['loginname'] . '/');
 
 		if (! is_dir($tmpdir) && $createifnotexists) {
 			safe_exec('mkdir -p ' . escapeshellarg($tmpdir));
@@ -355,7 +355,7 @@ class Fpm
 			Settings::Set('phpfpm.aliasconfigdir', '/var/www/php-fpm');
 		}
 
-		$configdir = makeCorrectDir(Settings::Get('phpfpm.aliasconfigdir') . '/' . $this->_domain['loginname'] . '/' . $this->_domain['domain'] . '/');
+		$configdir = \Froxlor\FileDir::makeCorrectDir(Settings::Get('phpfpm.aliasconfigdir') . '/' . $this->_domain['loginname'] . '/' . $this->_domain['domain'] . '/');
 		if (! is_dir($configdir) && $createifnotexists) {
 			safe_exec('mkdir -p ' . escapeshellarg($configdir));
 			safe_exec('chown ' . $this->_domain['guid'] . ':' . $this->_domain['guid'] . ' ' . escapeshellarg($configdir));
@@ -375,7 +375,7 @@ class Fpm
 		if (! is_dir($configdir)) {
 			safe_exec('mkdir -p ' . escapeshellarg($configdir));
 		}
-		$config = makeCorrectFile($configdir . '/dummy.conf');
+		$config = \Froxlor\FileDir::makeCorrectFile($configdir . '/dummy.conf');
 		$dummy = "[dummy]
 user = " . Settings::Get('system.httpuser') . "
 listen = /run/" . md5($configdir) . "-fpm.sock

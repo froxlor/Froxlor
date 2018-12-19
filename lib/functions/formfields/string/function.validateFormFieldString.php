@@ -65,7 +65,7 @@ function validateFormFieldString($fieldname, $fielddata, $newfieldvalue)
 				if (substr($newfieldvalue, -1) != '/') {
 					$newfieldvalue.= '/';
 				}
-				$returnvalue = ($newfieldvalue == makeCorrectDir($newfieldvalue));
+				$returnvalue = ($newfieldvalue == \Froxlor\FileDir::makeCorrectDir($newfieldvalue));
 			}
 		}
 		elseif (isset($fielddata['string_type']) && $fielddata['string_type'] == 'confdir') {
@@ -84,7 +84,7 @@ function validateFormFieldString($fieldname, $fielddata, $newfieldvalue)
 					$newfieldvalue = '';
 					$returnvalue = 'givendirnotallowed';
 				} else {
-					$returnvalue = ($newfieldvalue == makeCorrectDir($newfieldvalue));
+					$returnvalue = ($newfieldvalue == \Froxlor\FileDir::makeCorrectDir($newfieldvalue));
 				}
 			}
 		}
@@ -94,7 +94,7 @@ function validateFormFieldString($fieldname, $fielddata, $newfieldvalue)
 				$newfieldvalue = '';
 				$returnvalue = 'stringmustntbeempty';
 			} else {
-				$returnvalue = ($newfieldvalue == makeCorrectFile($newfieldvalue));
+				$returnvalue = ($newfieldvalue == \Froxlor\FileDir::makeCorrectFile($newfieldvalue));
 			}
 		}
 		elseif (isset($fielddata['string_type']) && $fielddata['string_type'] == 'filedir') {
@@ -103,7 +103,7 @@ function validateFormFieldString($fieldname, $fielddata, $newfieldvalue)
 				$newfieldvalue = '';
 				$returnvalue = 'stringmustntbeempty';
 			} else {
-				$returnvalue = (($newfieldvalue == makeCorrectDir($newfieldvalue)) || ($newfieldvalue == makeCorrectFile($newfieldvalue)));
+				$returnvalue = (($newfieldvalue == \Froxlor\FileDir::makeCorrectDir($newfieldvalue)) || ($newfieldvalue == \Froxlor\FileDir::makeCorrectFile($newfieldvalue)));
 			}
 		}
 		elseif (isset($fielddata['string_type']) && $fielddata['string_type'] == 'validate_ip') {

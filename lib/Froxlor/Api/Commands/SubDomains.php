@@ -869,9 +869,9 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			// If path is empty or '/' and 'Use domain name as default value for DocumentRoot path' is enabled in settings,
 			// set default path to subdomain or domain name
 			if ((($path == '') || ($path == '/')) && Settings::Get('system.documentroot_use_default_value') == 1) {
-				$path = makeCorrectDir($customer['documentroot'] . '/' . $completedomain);
+				$path = \Froxlor\FileDir::makeCorrectDir($customer['documentroot'] . '/' . $completedomain);
 			} else {
-				$path = makeCorrectDir($customer['documentroot'] . '/' . $path);
+				$path = \Froxlor\FileDir::makeCorrectDir($customer['documentroot'] . '/' . $path);
 			}
 		} else {
 			// no it's not, create a redirect

@@ -112,9 +112,9 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 					}
 
 					// include english language file (fallback)
-					include_once makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/lng/english.lng.php');
+					include_once \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/lng/english.lng.php');
 					// include admin/customer language file
-					include_once makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/' . $langfile);
+					include_once \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/' . $langfile);
 
 					// Get mail templates from database; the ones from 'admin' are fetched for fallback
 					$result2_stmt = Database::prepare("
@@ -214,9 +214,9 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 					}
 
 					// include english language file (fallback)
-					include_once makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/lng/english.lng.php');
+					include_once \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/lng/english.lng.php');
 					// include admin/customer language file
-					include_once makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/' . $langfile);
+					include_once \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/' . $langfile);
 
 					// Get mail templates from database; the ones from 'admin' are fetched for fallback
 					$result2_stmt = Database::prepare("

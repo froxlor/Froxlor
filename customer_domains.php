@@ -163,7 +163,7 @@ if ($page == 'overview') {
 				
 				foreach ($domain_array as $row) {
 					if (strpos($row['documentroot'], $userinfo['documentroot']) === 0) {
-						$row['documentroot'] = makeCorrectDir(str_replace($userinfo['documentroot'], "/", $row['documentroot']));
+						$row['documentroot'] = \Froxlor\FileDir::makeCorrectDir(str_replace($userinfo['documentroot'], "/", $row['documentroot']));
 					}
 					
 					// get ssl-ips if activated

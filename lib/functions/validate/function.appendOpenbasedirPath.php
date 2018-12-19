@@ -37,9 +37,9 @@ function appendOpenBasedirPath($path = '', $first = false)
 		&& ! preg_match("#:#", $path)) {
 
 		if (preg_match("#^/dev/urandom#i", $path)) {
-			$path = makeCorrectFile($path);
+			$path = \Froxlor\FileDir::makeCorrectFile($path);
 		} else {
-			$path = makeCorrectDir($path);
+			$path = \Froxlor\FileDir::makeCorrectDir($path);
 		}
 
 		// check for php-version that requires the trailing

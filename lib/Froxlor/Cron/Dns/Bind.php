@@ -32,7 +32,7 @@ class Bind extends DnsBase
 
 		// check for subfolder in bind-config-directory
 		if (! file_exists(\Froxlor\FileDir::makeCorrectDir(Settings::Get('system.bindconf_directory') . '/domains/'))) {
-			$this->_logger->logAction(CRON_ACTION, LOG_NOTICE, 'mkdir ' . escapeshellarg(makeCorrectDir(Settings::Get('system.bindconf_directory') . '/domains/')));
+			$this->_logger->logAction(CRON_ACTION, LOG_NOTICE, 'mkdir ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir(Settings::Get('system.bindconf_directory') . '/domains/')));
 			safe_exec('mkdir -p ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir(Settings::Get('system.bindconf_directory') . '/domains/')));
 		}
 
@@ -80,7 +80,7 @@ class Bind extends DnsBase
 			if ($domain['ismainbutsubto'] == 0) {
 				$zoneContent = (string) createDomainZone(($domain['id'] == 'none') ? $domain : $domain['id'], $isFroxlorHostname);
 				$domain['zonefile'] = 'domains/' . $domain['domain'] . '.zone';
-				$zonefile_name = makeCorrectFile(Settings::Get('system.bindconf_directory') . '/' . $domain['zonefile']);
+				$zonefile_name = \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.bindconf_directory') . '/' . $domain['zonefile']);
 				$zonefile_handler = fopen($zonefile_name, 'w');
 				fwrite($zonefile_handler, $zoneContent . $subzones);
 				fclose($zonefile_handler);
@@ -148,7 +148,7 @@ class Bind extends DnsBase
 			foreach ($its as $it) {
 				if ($it->isFile()) {
 					// remove file
-					\Froxlor\FileDir::safe_exec('rm -f ' . escapeshellarg(makeCorrectFile($its->getPathname())));
+					\Froxlor\FileDir::safe_exec('rm -f ' . escapeshellarg(\Froxlor\FileDir::makeCorrectFile($its->getPathname())));
 				}
 			}
 		}

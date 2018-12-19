@@ -392,7 +392,7 @@ if ($page == 'domains' || $page == 'overview') {
 
 				if ($domain_emails_row['destination'] != '') {
 
-					$domain_emails_row['destination'] = explode(' ', makeCorrectDestination($domain_emails_row['destination']));
+					$domain_emails_row['destination'] = explode(' ', \Froxlor\FileDir::makeCorrectDestination($domain_emails_row['destination']));
 					$email_forwarders += count($domain_emails_row['destination']);
 
 					if (in_array($domain_emails_row['email_full'], $domain_emails_row['destination'])) {

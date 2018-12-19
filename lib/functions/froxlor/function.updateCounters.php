@@ -78,7 +78,7 @@ function updateCounters($returndebuginfo = false) {
 
 		while($customer_emails_row = $customer_emails_result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			if($customer_emails_row['destination'] != '') {
-				$customer_emails_row['destination'] = explode(' ', makeCorrectDestination($customer_emails_row['destination']));
+				$customer_emails_row['destination'] = explode(' ', \Froxlor\FileDir::makeCorrectDestination($customer_emails_row['destination']));
 				$customer_email_forwarders+= count($customer_emails_row['destination']);
 
 				if(in_array($customer_emails_row['email_full'], $customer_emails_row['destination'])) {

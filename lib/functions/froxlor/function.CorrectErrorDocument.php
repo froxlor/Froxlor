@@ -37,7 +37,7 @@ function correctErrorDocument($errdoc = null, $throw_exception = false) {
 		) {
 			// a file
 			if (substr($errdoc, 0, 1) != '"') {
-				$errdoc = makeCorrectFile($errdoc);
+				$errdoc = \Froxlor\FileDir::makeCorrectFile($errdoc);
 				// apache needs a starting-slash (starting at the domains-docroot)
 				if (!substr($errdoc, 0, 1) == '/') {
 					$errdoc = '/'.$errdoc;

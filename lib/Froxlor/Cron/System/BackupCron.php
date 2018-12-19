@@ -29,7 +29,7 @@ class BackupCron extends \Froxlor\Cron\FroxlorCron
 	{
 		// Check Traffic-Lock
 		if (function_exists('pcntl_fork')) {
-			$BackupLock = makeCorrectFile(dirname(self::getLockfile()) . "/froxlor_cron_backup.lock");
+			$BackupLock = \Froxlor\FileDir::makeCorrectFile(dirname(self::getLockfile()) . "/froxlor_cron_backup.lock");
 			if (file_exists($BackupLock) && is_numeric($BackupPid = file_get_contents($BackupLock))) {
 				if (function_exists('posix_kill')) {
 					$BackupPidStatus = @posix_kill($BackupPid, 0);
@@ -87,8 +87,8 @@ class BackupCron extends \Froxlor\Cron\FroxlorCron
 			if (is_array($row['data'])) {
 
 				if (isset($row['data']['customerid']) && isset($row['data']['loginname']) && isset($row['data']['destdir'])) {
-					$row['data']['destdir'] = makeCorrectDir($row['data']['destdir']);
-					$customerdocroot = makeCorrectDir(Settings::Get('system.documentroot_prefix') . '/' . $row['data']['loginname'] . '/');
+					$row['data']['destdir'] = \Froxlor\FileDir::makeCorrectDir($row['data']['destdir']);
+					$customerdocroot = \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.documentroot_prefix') . '/' . $row['data']['loginname'] . '/');
 
 					// create folder if not exists
 					if (! file_exists($row['data']['destdir']) && $row['data']['destdir'] != '/' && $row['data']['destdir'] != Settings::Get('system.documentroot_prefix') && $row['data']['destdir'] != $customerdocroot) {
@@ -125,7 +125,7 @@ class BackupCron extends \Froxlor\Cron\FroxlorCron
 		$cronlog->logAction(CRON_ACTION, LOG_INFO, 'Creating Backup for user "' . $data['loginname'] . '"');
 
 		// create tmp folder
-		$tmpdir = makeCorrectDir($data['destdir'] . '/.tmp/');
+		$tmpdir = \Froxlor\FileDir::makeCorrectDir($data['destdir'] . '/.tmp/');
 		$cronlog->logAction(CRON_ACTION, LOG_DEBUG, 'Creating tmp-folder "' . $tmpdir . '"');
 		$cronlog->logAction(CRON_ACTION, LOG_DEBUG, 'shell> mkdir -p ' . escapeshellarg($tmpdir));
 		\Froxlor\FileDir::safe_exec('mkdir -p ' . escapeshellarg($tmpdir));
@@ -135,8 +135,8 @@ class BackupCron extends \Froxlor\Cron\FroxlorCron
 		if ($data['backup_dbs'] == 1) {
 
 			$cronlog->logAction(CRON_ACTION, LOG_DEBUG, 'Creating mysql-folder "' . \Froxlor\FileDir::makeCorrectDir($tmpdir . '/mysql') . '"');
-			$cronlog->logAction(CRON_ACTION, LOG_DEBUG, 'shell> mkdir -p ' . escapeshellarg(makeCorrectDir($tmpdir . '/mysql')));
-			\Froxlor\FileDir::safe_exec('mkdir -p ' . escapeshellarg(makeCorrectDir($tmpdir . '/mysql')));
+			$cronlog->logAction(CRON_ACTION, LOG_DEBUG, 'shell> mkdir -p ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir($tmpdir . '/mysql')));
+			\Froxlor\FileDir::safe_exec('mkdir -p ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir($tmpdir . '/mysql')));
 
 			// get all customer database-names
 			$sel_stmt = Database::prepare("SELECT `databasename` FROM `" . TABLE_PANEL_DATABASES . "` WHERE `customerid` = :cid");

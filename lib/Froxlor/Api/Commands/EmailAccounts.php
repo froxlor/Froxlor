@@ -176,7 +176,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 				WHERE `customerid`= :cid AND `id`= :id
 			");
 			$params = array(
-				"destination" => makeCorrectDestination($result['destination']),
+				"destination" => \Froxlor\FileDir::makeCorrectDestination($result['destination']),
 				"popaccountid" => $popaccountid,
 				"cid" => $customer['customerid'],
 				"id" => $id
@@ -460,7 +460,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 			UPDATE `" . TABLE_MAIL_VIRTUAL . "` SET `destination` = :dest, `popaccountid` = '0' WHERE `customerid`= :cid AND `id`= :id
 		");
 		$params = array(
-			"dest" => makeCorrectDestination($result['destination']),
+			"dest" => \Froxlor\FileDir::makeCorrectDestination($result['destination']),
 			"cid" => $customer['customerid'],
 			"id" => $id
 		);

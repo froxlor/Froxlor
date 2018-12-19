@@ -52,7 +52,7 @@ function storeDefaultIndex($loginname = null, $destination = null, $logger = nul
 			);
 
 			$htmlcontent = replace_variables($template['value'], $replace_arr);
-			$indexhtmlpath = makeCorrectFile($destination . '/index.' . Settings::Get('system.index_file_extension'));
+			$indexhtmlpath = \Froxlor\FileDir::makeCorrectFile($destination . '/index.' . Settings::Get('system.index_file_extension'));
 			$index_html_handler = fopen($indexhtmlpath, 'w');
 			fwrite($index_html_handler, $htmlcontent);
 			fclose($index_html_handler);
@@ -61,7 +61,7 @@ function storeDefaultIndex($loginname = null, $destination = null, $logger = nul
 			}
 
 		} else {
-			$destination = makeCorrectDir($destination);
+			$destination = \Froxlor\FileDir::makeCorrectDir($destination);
 			if ($logger !== null) {
 				$logger->logAction(CRON_ACTION, LOG_NOTICE, 'Running: cp -a ' . \Froxlor\Froxlor::getInstallDir() . '/templates/misc/standardcustomer/* ' . escapeshellarg($destination));
 			}

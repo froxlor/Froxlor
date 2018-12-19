@@ -63,15 +63,15 @@ class DomainSSL
 		// check if it's an array and if the most important field is set
 		if (is_array($dom_certs) && isset($dom_certs['ssl_cert_file']) && $dom_certs['ssl_cert_file'] != '') {
 			// get destination path
-			$sslcertpath = makeCorrectDir(Settings::Get('system.customer_ssl_path'));
+			$sslcertpath = \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.customer_ssl_path'));
 			// create path if it does not exist
 			if (! file_exists($sslcertpath)) {
 				safe_exec('mkdir -p ' . escapeshellarg($sslcertpath));
 			}
 			// make correct files for the certificates
 			$ssl_files = array(
-				'ssl_cert_file' => makeCorrectFile($sslcertpath . '/' . $domain['domain'] . '.crt'),
-				'ssl_key_file' => makeCorrectFile($sslcertpath . '/' . $domain['domain'] . '.key')
+				'ssl_cert_file' => \Froxlor\FileDir::makeCorrectFile($sslcertpath . '/' . $domain['domain'] . '.crt'),
+				'ssl_key_file' => \Froxlor\FileDir::makeCorrectFile($sslcertpath . '/' . $domain['domain'] . '.key')
 			);
 
 			if (Settings::Get('system.webserver') == 'lighttpd') {
@@ -85,19 +85,19 @@ class DomainSSL
 			$ssl_files['ssl_cert_chainfile'] = '';
 			// set them if they are != empty
 			if ($dom_certs['ssl_ca_file'] != '') {
-				$ssl_files['ssl_ca_file'] = makeCorrectFile($sslcertpath . '/' . $domain['domain'] . '_CA.pem');
+				$ssl_files['ssl_ca_file'] = \Froxlor\FileDir::makeCorrectFile($sslcertpath . '/' . $domain['domain'] . '_CA.pem');
 			}
 			if ($dom_certs['ssl_cert_chainfile'] != '') {
 				if (Settings::Get('system.webserver') == 'nginx') {
 					// put ca.crt in my.crt, as nginx does not support a separate chain file.
 					$dom_certs['ssl_cert_file'] = trim($dom_certs['ssl_cert_file']) . "\n" . trim($dom_certs['ssl_cert_chainfile']) . "\n";
 				} else {
-					$ssl_files['ssl_cert_chainfile'] = makeCorrectFile($sslcertpath . '/' . $domain['domain'] . '_chain.pem');
+					$ssl_files['ssl_cert_chainfile'] = \Froxlor\FileDir::makeCorrectFile($sslcertpath . '/' . $domain['domain'] . '_chain.pem');
 				}
 			}
 			// will only be generated to be used externally, froxlor does not need this
 			if ($dom_certs['ssl_fullchain_file'] != '') {
-				$ssl_files['ssl_fullchain_file'] = makeCorrectFile($sslcertpath . '/' . $domain['domain'] . '_fullchain.pem');
+				$ssl_files['ssl_fullchain_file'] = \Froxlor\FileDir::makeCorrectFile($sslcertpath . '/' . $domain['domain'] . '_fullchain.pem');
 			}
 			// create them on the filesystem
 			foreach ($ssl_files as $type => $filename) {

@@ -63,15 +63,15 @@ function validateFormFieldHiddenString($fieldname, $fielddata, $newfieldvalue)
 			if(substr($newfieldvalue, -1) != '/') {
 				$newfieldvalue.= '/';
 			}
-			$returnvalue = ($newfieldvalue == makeCorrectDir($newfieldvalue));
+			$returnvalue = ($newfieldvalue == \Froxlor\FileDir::makeCorrectDir($newfieldvalue));
 		}
 		elseif(isset($fielddata['string_type']) && $fielddata['string_type'] == 'file')
 		{
-			$returnvalue = ($newfieldvalue == makeCorrectFile($newfieldvalue));
+			$returnvalue = ($newfieldvalue == \Froxlor\FileDir::makeCorrectFile($newfieldvalue));
 		}
 		elseif(isset($fielddata['string_type']) && $fielddata['string_type'] == 'filedir')
 		{
-			$returnvalue = (($newfieldvalue == makeCorrectDir($newfieldvalue)) || ($newfieldvalue == makeCorrectFile($newfieldvalue)));
+			$returnvalue = (($newfieldvalue == \Froxlor\FileDir::makeCorrectDir($newfieldvalue)) || ($newfieldvalue == \Froxlor\FileDir::makeCorrectFile($newfieldvalue)));
 		}
 		elseif(preg_match('/^[^\r\n\t\f\0]*$/D', $newfieldvalue))
 		{

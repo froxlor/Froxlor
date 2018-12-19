@@ -69,9 +69,9 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		$error500path = $this->getParam('error500path', true, '');
 
 		// validation
-		$path = makeCorrectDir(validate($path, 'path', '', '', array(), true));
+		$path = \Froxlor\FileDir::makeCorrectDir(validate($path, 'path', '', '', array(), true));
 		$userpath = $path;
-		$path = makeCorrectDir($customer['documentroot'] . '/' . $path);
+		$path = \Froxlor\FileDir::makeCorrectDir($customer['documentroot'] . '/' . $path);
 
 		if (! empty($error404path)) {
 			$error404path = correctErrorDocument($error404path, true);
@@ -352,8 +352,8 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		// do we have to remove the symlink and folder in suexecpath?
 		if ((int) Settings::Get('perl.suexecworkaround') == 1) {
 			$loginname = $customer_data['loginname'];
-			$suexecpath = makeCorrectDir(Settings::Get('perl.suexecpath') . '/' . $loginname . '/' . md5($result['path']) . '/');
-			$perlsymlink = makeCorrectFile($result['path'] . '/cgi-bin');
+			$suexecpath = \Froxlor\FileDir::makeCorrectDir(Settings::Get('perl.suexecpath') . '/' . $loginname . '/' . md5($result['path']) . '/');
+			$perlsymlink = \Froxlor\FileDir::makeCorrectFile($result['path'] . '/cgi-bin');
 			// remove symlink
 			if (file_exists($perlsymlink)) {
 				safe_exec('rm -f ' . escapeshellarg($perlsymlink));

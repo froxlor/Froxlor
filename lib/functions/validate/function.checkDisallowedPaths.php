@@ -38,7 +38,7 @@ function checkDisallowedPaths($path = null) {
 		"/opt/", "/proc/", "/root/", "/run/", "/sbin/", "/sys/", "/tmp/", "/usr/", "/var/"	
 	);
 
-	$path = makeCorrectDir($path);
+	$path = \Froxlor\FileDir::makeCorrectDir($path);
 
 	// check if it's a disallowed path
 	if (in_array($path, $disallowed_values)) {

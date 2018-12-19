@@ -28,7 +28,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 
 		// Check Traffic-Lock
 		if (function_exists('pcntl_fork') && ! defined('CRON_NOFORK_FLAG')) {
-			$TrafficLock = makeCorrectFile(dirname($lockfile) . "/froxlor_cron_traffic.lock");
+			$TrafficLock = \Froxlor\FileDir::makeCorrectFile(dirname($lockfile) . "/froxlor_cron_traffic.lock");
 			if (file_exists($TrafficLock) && is_numeric($TrafficPid = file_get_contents($TrafficLock))) {
 				if (function_exists('posix_kill')) {
 					$TrafficPidStatus = @posix_kill($TrafficPid, 0);
@@ -69,7 +69,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 			$cronlog->logAction(CRON_ACTION, LOG_INFO, $msg . " Not forking traffic-cron, this may take a long time!");
 		}
 
-		require_once makeCorrectFile(dirname(__FILE__) . '/TrafficCron.inc.functions.php');
+		require_once \Froxlor\FileDir::makeCorrectFile(dirname(__FILE__) . '/TrafficCron.inc.functions.php');
 
 		/**
 		 * TRAFFIC AND DISKUSAGE MESSURE
@@ -83,7 +83,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 	FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `aliasdomain` IS NULL AND `email_only` <> '1';
 ");
 
-		while ($row_domainlist = $result_domainlist_stmt->fetch(PDO::FETCH_ASSOC)) {
+		while ($row_domainlist = $result_domainlist_stmt->fetch(\PDO::FETCH_ASSOC)) {
 
 			if (! isset($domainlist[$row_domainlist['customerid']])) {
 				$domainlist[$row_domainlist['customerid']] = array();
@@ -106,11 +106,11 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 		$databases_list = array();
 		Database::needRoot(true);
 		$databases_list_result_stmt = Database::query("SHOW DATABASES");
-		while ($databases_list_row = $databases_list_result_stmt->fetch(PDO::FETCH_ASSOC)) {
+		while ($databases_list_row = $databases_list_result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$databases_list[] = strtolower($databases_list_row['Database']);
 		}
 
-		while ($row_database = $databases_stmt->fetch(PDO::FETCH_ASSOC)) {
+		while ($row_database = $databases_stmt->fetch(\PDO::FETCH_ASSOC)) {
 
 			if ($last_dbserver != $row_database['dbserver']) {
 				Database::needRoot(true, $row_database['dbserver']);
@@ -118,7 +118,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 
 				$databases_list = array();
 				$databases_list_result_stmt = Database::query("SHOW DATABASES");
-				while ($databases_list_row = $databases_list_result_stmt->fetch(PDO::FETCH_ASSOC)) {
+				while ($databases_list_row = $databases_list_result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 					$databases_list[] = strtolower($databases_list_row['Database']);
 				}
 			}
@@ -162,7 +162,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 
 		$result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_CUSTOMERS . "` ORDER BY `customerid` ASC");
 
-		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+		while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 			/**
 			 * HTTP-Traffic
 			 */
@@ -255,7 +255,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 				Database::pexecute($domains_stmt, array(
 					"cid" => $row['customerid']
 				));
-				while ($domainRow = $domains_stmt->fetch(PDO::FETCH_ASSOC)) {
+				while ($domainRow = $domains_stmt->fetch(\PDO::FETCH_ASSOC)) {
 					$domainMailTraffic = $mailTrafficCalc->getDomainTraffic($domainRow["domain"]);
 					if (! is_array($domainMailTraffic)) {
 						continue;
@@ -282,7 +282,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 							);
 							Database::pexecute($stmt, $params);
 							if ($stmt->rowCount() > 0) {
-								$updRow = $stmt->fetch(PDO::FETCH_ASSOC);
+								$updRow = $stmt->fetch(\PDO::FETCH_ASSOC);
 								$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_TRAFFIC . "` SET
 							`mail` = :mail
 							WHERE `id` = :id");
@@ -391,7 +391,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 			$cronlog->logAction(CRON_ACTION, LOG_INFO, 'calculating mailspace usage for ' . $row['loginname']);
 			$emailusage = 0;
 
-			$maildir = makeCorrectDir(Settings::Get('system.vmail_homedir') . $row['loginname']);
+			$maildir = \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.vmail_homedir') . $row['loginname']);
 			if (file_exists($maildir) && is_dir($maildir)) {
 				$back = safe_exec('du -sk ' . escapeshellarg($maildir) . '');
 				foreach ($back as $backrow) {
@@ -509,7 +509,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 					$group = $row['guid'];
 				}
 
-				while ($row_quota = $result_quota_stmt->fetch(PDO::FETCH_ASSOC)) {
+				while ($row_quota = $result_quota_stmt->fetch(\PDO::FETCH_ASSOC)) {
 					$quotafile = "" . $row_quota['homedir'] . ".ftpquota";
 					$fh = fopen($quotafile, 'w');
 					$stringdata = "0 " . $current_diskspace['all'] * 1024 . "";
@@ -525,7 +525,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 		 */
 		$result_stmt = Database::query("SELECT `adminid` FROM `" . TABLE_PANEL_ADMINS . "` ORDER BY `adminid` ASC");
 
-		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+		while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 
 			if (isset($admin_traffic[$row['adminid']])) {
 
@@ -615,20 +615,20 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 	{
 		$returnval = 0;
 
-		$domainconfig = makeCorrectFile(Settings::Get('system.awstats_conf') . '/awstats.' . $domain . '.conf');
+		$domainconfig = \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.awstats_conf') . '/awstats.' . $domain . '.conf');
 
 		if (file_exists($domainconfig)) {
 
-			$outputdir = makeCorrectDir($outputdir . '/' . $domain);
-			$staticOutputdir = makeCorrectDir($outputdir . '/' . date('Y') . '-' . date('m'));
+			$outputdir = \Froxlor\FileDir::makeCorrectDir($outputdir . '/' . $domain);
+			$staticOutputdir = \Froxlor\FileDir::makeCorrectDir($outputdir . '/' . date('Y') . '-' . date('m'));
 
 			if (! is_dir($staticOutputdir)) {
 				safe_exec('mkdir -p ' . escapeshellarg($staticOutputdir));
 			}
 
 			// check for correct path of awstats_buildstaticpages.pl
-			$awbsp = makeCorrectFile(Settings::Get('system.awstats_path') . '/awstats_buildstaticpages.pl');
-			$awprog = makeCorrectFile(Settings::Get('system.awstats_awstatspath') . '/awstats.pl');
+			$awbsp = \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.awstats_path') . '/awstats_buildstaticpages.pl');
+			$awprog = \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.awstats_awstatspath') . '/awstats.pl');
 
 			if (! file_exists($awbsp)) {
 				echo "WANRING: Necessary awstats_buildstaticpages.pl script could not be found, no traffic is being calculated and no stats are generated. Please check your AWStats-Path setting";
@@ -644,11 +644,11 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 
 			// the default selection is 'current',
 			// so link the latest dir to it
-			$new_current = makeCorrectFile($outputdir . '/current');
+			$new_current = \Froxlor\FileDir::makeCorrectFile($outputdir . '/current');
 			safe_exec('ln -fTs ' . escapeshellarg($staticOutputdir) . ' ' . escapeshellarg($new_current));
 
 			// statistics file looks like: 'awstats[month][year].[domain].txt'
-			$file = makeCorrectFile($outputdir . '/awstats' . date('mY', time()) . '.' . $domain . '.txt');
+			$file = \Froxlor\FileDir::makeCorrectFile($outputdir . '/awstats' . date('mY', time()) . '.' . $domain . '.txt');
 			$cronlog->logAction(CRON_ACTION, LOG_INFO, "Gathering traffic information from '" . $file . "'");
 
 			if (file_exists($file)) {
@@ -694,7 +694,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 		// Looking for {year}-{month} directories
 		$entries = array();
 		foreach (scandir($outputdir) as $a) {
-			if (is_dir(makeCorrectDir($outputdir . '/' . $a)) && preg_match('/^[0-9]{4}-[0-9]{2}$/', $a)) {
+			if (is_dir(\Froxlor\FileDir::makeCorrectDir($outputdir . '/' . $a)) && preg_match('/^[0-9]{4}-[0-9]{2}$/', $a)) {
 				array_push($entries, '<option value="' . $a . '">' . $a . '</option>');
 			}
 		}
@@ -712,16 +712,16 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 
 		// File names
 		$index_file = \Froxlor\Froxlor::getInstallDir() . '/templates/misc/awstats/index.html';
-		$index_file = makeCorrectFile($index_file);
+		$index_file = \Froxlor\FileDir::makeCorrectFile($index_file);
 		$nav_file = \Froxlor\Froxlor::getInstallDir() . '/templates/misc/awstats/nav.html';
-		$nav_file = makeCorrectFile($nav_file);
+		$nav_file = \Froxlor\FileDir::makeCorrectFile($nav_file);
 
 		// Write the index file
 		{
 			// 'index.html' used to be a symlink (ignore errors in case this is the first run and no index.html exists yet)
-			@unlink(makeCorrectFile($outputdir . '/' . 'index.html'));
+			@unlink(\Froxlor\FileDir::makeCorrectFile($outputdir . '/' . 'index.html'));
 
-			$awstats_index_file = fopen(makeCorrectFile($outputdir . '/' . 'index.html'), 'w');
+			$awstats_index_file = fopen(\Froxlor\FileDir::makeCorrectFile($outputdir . '/' . 'index.html'), 'w');
 			$awstats_index_tpl = fopen($index_file, 'r');
 
 			// Write the header
@@ -739,7 +739,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 
 		// Write the nav file
 		{
-			$awstats_nav_file = fopen(makeCorrectFile($outputdir . '/' . 'nav.html'), 'w');
+			$awstats_nav_file = fopen(\Froxlor\FileDir::makeCorrectFile($outputdir . '/' . 'nav.html'), 'w');
 			$awstats_nav_tpl = fopen($nav_file, 'r');
 
 			// Write the header
@@ -823,7 +823,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 
 		$returnval = 0;
 
-		$logfile = makeCorrectFile(Settings::Get('system.logfiles_directory') . $logfile . '-access.log');
+		$logfile = \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.logfiles_directory') . $logfile . '-access.log');
 		if (file_exists($logfile)) {
 			$domainargs = '';
 			foreach ($usersdomainlist as $domainid => $domain) {
@@ -831,7 +831,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 				$domainargs .= ' -r ' . escapeshellarg($domain);
 			}
 
-			$outputdir = makeCorrectDir($outputdir);
+			$outputdir = \Froxlor\FileDir::makeCorrectDir($outputdir);
 			if (! file_exists($outputdir)) {
 				safe_exec('mkdir -p ' . escapeshellarg($outputdir));
 			}

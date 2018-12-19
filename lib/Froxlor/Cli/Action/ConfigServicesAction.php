@@ -346,12 +346,12 @@ class ConfigServicesAction extends \Froxlor\Cli\Action
 			'<VIRTUAL_UID_MAPS>' => Settings::Get('system.vmail_uid'),
 			'<VIRTUAL_GID_MAPS>' => Settings::Get('system.vmail_gid'),
 			'<SSLPROTOCOLS>' => (Settings::Get('system.use_ssl') == '1') ? 'imaps pop3s' : '',
-			'<CUSTOMER_TMP>' => makeCorrectDir($customer_tmpdir),
-			'<BASE_PATH>' => makeCorrectDir(FROXLOR_INSTALL_DIR),
-			'<BIND_CONFIG_PATH>' => makeCorrectDir(Settings::Get('system.bindconf_directory')),
+			'<CUSTOMER_TMP>' => \Froxlor\FileDir::makeCorrectDir($customer_tmpdir),
+			'<BASE_PATH>' => \Froxlor\FileDir::makeCorrectDir(FROXLOR_INSTALL_DIR),
+			'<BIND_CONFIG_PATH>' => \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.bindconf_directory')),
 			'<WEBSERVER_RELOAD_CMD>' => Settings::Get('system.apachereload_command'),
-			'<CUSTOMER_LOGS>' => makeCorrectDir(Settings::Get('system.logfiles_directory')),
-			'<FPM_IPCDIR>' => makeCorrectDir(Settings::Get('phpfpm.fastcgi_ipcdir')),
+			'<CUSTOMER_LOGS>' => \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.logfiles_directory')),
+			'<FPM_IPCDIR>' => \Froxlor\FileDir::makeCorrectDir(Settings::Get('phpfpm.fastcgi_ipcdir')),
 			'<WEBSERVER_GROUP>' => Settings::Get('system.httpgroup')
 		);
 		return $replace_arr;

@@ -158,8 +158,8 @@ class Fcgid
 			'OPEN_BASEDIR' => $openbasedir,
 			'OPEN_BASEDIR_C' => $openbasedirc,
 			'OPEN_BASEDIR_GLOBAL' => Settings::Get('system.phpappendopenbasedir'),
-			'DOCUMENT_ROOT' => makeCorrectDir($this->_domain['documentroot']),
-			'CUSTOMER_HOMEDIR' => makeCorrectDir($this->_domain['customerroot'])
+			'DOCUMENT_ROOT' => \Froxlor\FileDir::makeCorrectDir($this->_domain['documentroot']),
+			'CUSTOMER_HOMEDIR' => \Froxlor\FileDir::makeCorrectDir($this->_domain['customerroot'])
 		);
 
 		// insert a small header for the file
@@ -187,7 +187,7 @@ class Fcgid
 	 */
 	public function getConfigDir($createifnotexists = true)
 	{
-		$configdir = makeCorrectDir(Settings::Get('system.mod_fcgid_configdir') . '/' . $this->_domain['loginname'] . '/' . $this->_domain['domain'] . '/');
+		$configdir = \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.mod_fcgid_configdir') . '/' . $this->_domain['loginname'] . '/' . $this->_domain['domain'] . '/');
 
 		if (! is_dir($configdir) && $createifnotexists) {
 			safe_exec('mkdir -p ' . escapeshellarg($configdir));
@@ -207,7 +207,7 @@ class Fcgid
 	 */
 	public function getTempDir($createifnotexists = true)
 	{
-		$tmpdir = makeCorrectDir(Settings::Get('system.mod_fcgid_tmpdir') . '/' . $this->_domain['loginname'] . '/');
+		$tmpdir = \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.mod_fcgid_tmpdir') . '/' . $this->_domain['loginname'] . '/');
 
 		if (! is_dir($tmpdir) && $createifnotexists) {
 			safe_exec('mkdir -p ' . escapeshellarg($tmpdir));
@@ -225,7 +225,7 @@ class Fcgid
 	 */
 	public function getStarterFile()
 	{
-		$starter_filename = makeCorrectFile($this->getConfigDir() . '/php-fcgi-starter');
+		$starter_filename = \Froxlor\FileDir::makeCorrectFile($this->getConfigDir() . '/php-fcgi-starter');
 		return $starter_filename;
 	}
 
@@ -236,7 +236,7 @@ class Fcgid
 	 */
 	public function getIniFile()
 	{
-		$phpini_filename = makeCorrectFile($this->getConfigDir() . '/php.ini');
+		$phpini_filename = \Froxlor\FileDir::makeCorrectFile($this->getConfigDir() . '/php.ini');
 		return $phpini_filename;
 	}
 

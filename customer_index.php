@@ -249,8 +249,8 @@ if ($page == 'overview') {
 
 		$errid = $_GET['errorid'];
 		// read error file
-		$err_dir = makeCorrectDir(FROXLOR_INSTALL_DIR."/logs/");
-		$err_file = makeCorrectFile($err_dir."/".$errid."_sql-error.log");
+		$err_dir = \Froxlor\FileDir::makeCorrectDir(FROXLOR_INSTALL_DIR."/logs/");
+		$err_file = \Froxlor\FileDir::makeCorrectFile($err_dir."/".$errid."_sql-error.log");
 
 		if (file_exists($err_file)) {
 

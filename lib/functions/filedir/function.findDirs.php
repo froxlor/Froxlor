@@ -36,7 +36,7 @@
 function findDirs($path, $uid, $gid)
 {
 	$_fileList = array();
-	$path = makeCorrectDir($path);
+	$path = \Froxlor\FileDir::makeCorrectDir($path);
 
 	// valid directory?
 	if (is_dir($path)) {
@@ -77,7 +77,7 @@ function findDirs($path, $uid, $gid)
 		// check every file
 		foreach ($its as $fullFileName => $it) {
 			if ($it->isDir() && (fileowner($fullFileName) == $uid || filegroup($fullFileName) == $gid)) {
-				$_fileList[] = makeCorrectDir(dirname($fullFileName));
+				$_fileList[] = \Froxlor\FileDir::makeCorrectDir(dirname($fullFileName));
 			}
 		}
 		$_fileList[] = $path;

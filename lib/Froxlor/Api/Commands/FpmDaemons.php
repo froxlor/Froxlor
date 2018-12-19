@@ -185,7 +185,7 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			$ins_data = array(
 				'desc' => $description,
 				'reload_cmd' => $reload_cmd,
-				'config_dir' => makeCorrectDir($config_dir),
+				'config_dir' => \Froxlor\FileDir::makeCorrectDir($config_dir),
 				'pm' => $pmanager,
 				'max_children' => $max_children,
 				'start_servers' => $start_servers,
@@ -302,7 +302,7 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			$upd_data = array(
 				'desc' => $description,
 				'reload_cmd' => $reload_cmd,
-				'config_dir' => makeCorrectDir($config_dir),
+				'config_dir' => \Froxlor\FileDir::makeCorrectDir($config_dir),
 				'pm' => $pmanager,
 				'max_children' => $max_children,
 				'start_servers' => $start_servers,

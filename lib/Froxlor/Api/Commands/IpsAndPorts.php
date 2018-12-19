@@ -175,23 +175,23 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			}
 
 			if ($ssl_cert_file != '') {
-				$ssl_cert_file = makeCorrectFile($ssl_cert_file);
+				$ssl_cert_file = \Froxlor\FileDir::makeCorrectFile($ssl_cert_file);
 			}
 
 			if ($ssl_key_file != '') {
-				$ssl_key_file = makeCorrectFile($ssl_key_file);
+				$ssl_key_file = \Froxlor\FileDir::makeCorrectFile($ssl_key_file);
 			}
 
 			if ($ssl_ca_file != '') {
-				$ssl_ca_file = makeCorrectFile($ssl_ca_file);
+				$ssl_ca_file = \Froxlor\FileDir::makeCorrectFile($ssl_ca_file);
 			}
 
 			if ($ssl_cert_chainfile != '') {
-				$ssl_cert_chainfile = makeCorrectFile($ssl_cert_chainfile);
+				$ssl_cert_chainfile = \Froxlor\FileDir::makeCorrectFile($ssl_cert_chainfile);
 			}
 
 			if (strlen(trim($docroot)) > 0) {
-				$docroot = makeCorrectDir($docroot);
+				$docroot = \Froxlor\FileDir::makeCorrectDir($docroot);
 			} else {
 				$docroot = '';
 			}
@@ -368,23 +368,23 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			}
 
 			if ($ssl_cert_file != '') {
-				$ssl_cert_file = makeCorrectFile($ssl_cert_file);
+				$ssl_cert_file = \Froxlor\FileDir::makeCorrectFile($ssl_cert_file);
 			}
 
 			if ($ssl_key_file != '') {
-				$ssl_key_file = makeCorrectFile($ssl_key_file);
+				$ssl_key_file = \Froxlor\FileDir::makeCorrectFile($ssl_key_file);
 			}
 
 			if ($ssl_ca_file != '') {
-				$ssl_ca_file = makeCorrectFile($ssl_ca_file);
+				$ssl_ca_file = \Froxlor\FileDir::makeCorrectFile($ssl_ca_file);
 			}
 
 			if ($ssl_cert_chainfile != '') {
-				$ssl_cert_chainfile = makeCorrectFile($ssl_cert_chainfile);
+				$ssl_cert_chainfile = \Froxlor\FileDir::makeCorrectFile($ssl_cert_chainfile);
 			}
 
 			if (strlen(trim($docroot)) > 0) {
-				$docroot = makeCorrectDir($docroot);
+				$docroot = \Froxlor\FileDir::makeCorrectDir($docroot);
 			} else {
 				$docroot = '';
 			}

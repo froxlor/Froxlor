@@ -57,7 +57,7 @@ class Lighttpd extends HttpConfigBase
 			foreach ($restart_cmds as $restart_cmd) {
 				// check whether the config dir is empty (no domains uses this daemon)
 				// so we need to create a dummy
-				$_conffiles = glob(makeCorrectFile($restart_cmd['config_dir'] . "/*.conf"));
+				$_conffiles = glob(\Froxlor\FileDir::makeCorrectFile($restart_cmd['config_dir'] . "/*.conf"));
 				if ($_conffiles === false || empty($_conffiles)) {
 					$this->logger->logAction(CRON_ACTION, LOG_INFO, 'lighttpd::reload: fpm config directory "' . $restart_cmd['config_dir'] . '" is empty. Creating dummy.');
 					Fpm::createDummyPool($restart_cmd['config_dir']);
@@ -86,7 +86,7 @@ class Lighttpd extends HttpConfigBase
 			}
 
 			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'lighttpd::createIpPort: creating ip/port settings for  ' . $ip . ":" . $port);
-			$vhost_filename = makeCorrectFile(Settings::Get('system.apacheconf_vhost') . '/10_froxlor_ipandport_' . trim(str_replace(':', '.', $row_ipsandports['ip']), '.') . '.' . $row_ipsandports['port'] . '.conf');
+			$vhost_filename = \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.apacheconf_vhost') . '/10_froxlor_ipandport_' . trim(str_replace(':', '.', $row_ipsandports['ip']), '.') . '.' . $row_ipsandports['port'] . '.conf');
 
 			if (! isset($this->lighttpd_data[$vhost_filename])) {
 				$this->lighttpd_data[$vhost_filename] = '';
@@ -254,7 +254,7 @@ class Lighttpd extends HttpConfigBase
 						$this->lighttpd_data[$vhost_filename] .= 'ssl.engine = "enable"' . "\n";
 						$this->lighttpd_data[$vhost_filename] .= 'ssl.use-compression = "disable"' . "\n";
 						if (!empty(Settings::Get('system.dhparams_file'))) {
-							$dhparams = makeCorrectFile(Settings::Get('system.dhparams_file'));
+							$dhparams = \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.dhparams_file'));
 							if (!file_exists($dhparams)) {
 								safe_exec('openssl dhparam -out '.escapeshellarg($dhparams).' 4096');
 							}
@@ -265,7 +265,7 @@ class Lighttpd extends HttpConfigBase
 						$this->lighttpd_data[$vhost_filename] .= 'ssl.use-sslv3 = "disable"' . "\n";
 						$this->lighttpd_data[$vhost_filename] .= 'ssl.cipher-list = "' . Settings::Get('system.ssl_cipher_list') . '"' . "\n";
 						$this->lighttpd_data[$vhost_filename] .= 'ssl.honor-cipher-order = "enable"' . "\n";
-						$this->lighttpd_data[$vhost_filename] .= 'ssl.pemfile = "' . makeCorrectFile($domain['ssl_cert_file']) . '"' . "\n";
+						$this->lighttpd_data[$vhost_filename] .= 'ssl.pemfile = "' . \Froxlor\FileDir::makeCorrectFile($domain['ssl_cert_file']) . '"' . "\n";
 
 						if ($domain['ssl_ca_file'] != '') {
 							// check for existence, #1485
@@ -273,7 +273,7 @@ class Lighttpd extends HttpConfigBase
 								$this->logger->logAction(CRON_ACTION, LOG_ERR, $ip . ':' . $port . ' :: certificate CA file "' . $domain['ssl_ca_file'] . '" does not exist! Cannot create ssl-directives');
 								echo $ip . ':' . port . ' :: certificate CA file "' . $domain['ssl_ca_file'] . '" does not exist! SSL-directives might not be working' . "\n";
 							} else {
-								$this->lighttpd_data[$vhost_filename] .= 'ssl.ca-file = "' . makeCorrectFile($domain['ssl_ca_file']) . '"' . "\n";
+								$this->lighttpd_data[$vhost_filename] .= 'ssl.ca-file = "' . \Froxlor\FileDir::makeCorrectFile($domain['ssl_ca_file']) . '"' . "\n";
 							}
 						}
 					}
@@ -310,7 +310,7 @@ class Lighttpd extends HttpConfigBase
 	private function _createStandardErrorHandler()
 	{
 		if (Settings::Get('defaultwebsrverrhandler.enabled') == '1' && Settings::Get('defaultwebsrverrhandler.err404') != '') {
-			$vhost_filename = makeCorrectFile(Settings::Get('system.apacheconf_vhost') . '/05_froxlor_default_errorhandler.conf');
+			$vhost_filename = \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.apacheconf_vhost') . '/05_froxlor_default_errorhandler.conf');
 
 			if (! isset($this->lighttpd_data[$vhost_filename])) {
 				$this->lighttpd_data[$vhost_filename] = '';
@@ -318,7 +318,7 @@ class Lighttpd extends HttpConfigBase
 
 			$defhandler = Settings::Get('defaultwebsrverrhandler.err404');
 			if (! validateUrl($defhandler)) {
-				$defhandler = makeCorrectFile($defhandler);
+				$defhandler = \Froxlor\FileDir::makeCorrectFile($defhandler);
 			}
 			$this->lighttpd_data[$vhost_filename] = 'server.error-handler-404 = "' . $defhandler . '"';
 		}
@@ -337,7 +337,7 @@ class Lighttpd extends HttpConfigBase
 
 		$htaccess_text = '';
 		while ($row_htpasswds = $result_htpasswds_stmt->fetch(\PDO::FETCH_ASSOC)) {
-			$row_htpasswds['path'] = makeCorrectDir($row_htpasswds['path']);
+			$row_htpasswds['path'] = \Froxlor\FileDir::makeCorrectDir($row_htpasswds['path']);
 			mkDirWithCorrectOwnership($domain['documentroot'], $row_htpasswds['path'], $domain['guid'], $domain['guid']);
 
 			$filename = $row_htpasswds['customerid'] . '-' . md5($row_htpasswds['path']) . '.htpasswd';
@@ -352,11 +352,11 @@ class Lighttpd extends HttpConfigBase
 				}
 
 				$htaccess_path = substr($row_htpasswds['path'], strlen($domain['documentroot']) - 1);
-				$htaccess_path = makeCorrectDir($htaccess_path);
+				$htaccess_path = \Froxlor\FileDir::makeCorrectDir($htaccess_path);
 
 				$htaccess_text .= '  $HTTP["url"] =~ "^' . $htaccess_path . '" {' . "\n";
 				$htaccess_text .= '    auth.backend = "htpasswd"' . "\n";
-				$htaccess_text .= '    auth.backend.htpasswd.userfile = "' . makeCorrectFile(Settings::Get('system.apacheconf_htpasswddir') . '/' . $filename) . '"' . "\n";
+				$htaccess_text .= '    auth.backend.htpasswd.userfile = "' . \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.apacheconf_htpasswddir') . '/' . $filename) . '"' . "\n";
 				$htaccess_text .= '    auth.require = ( ' . "\n";
 				$htaccess_text .= '      "' . $htaccess_path . '" =>' . "\n";
 				$htaccess_text .= '      (' . "\n";
@@ -392,12 +392,12 @@ class Lighttpd extends HttpConfigBase
 		foreach ($domains as $domain) {
 
 			if (is_dir(Settings::Get('system.apacheconf_vhost'))) {
-				safe_exec('mkdir -p ' . escapeshellarg(makeCorrectDir(Settings::Get('system.apacheconf_vhost') . '/vhosts/')));
+				safe_exec('mkdir -p ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir(Settings::Get('system.apacheconf_vhost') . '/vhosts/')));
 
 				// determine correct include-path:
 				// e.g. '/etc/lighttpd/conf-enabled/vhosts/ has to become'
 				// 'conf-enabled/vhosts/' (damn debian, but luckily works too on other distros)
-				$_tmp_path = substr(makeCorrectDir(Settings::Get('system.apacheconf_vhost')), 0, - 1);
+				$_tmp_path = substr(\Froxlor\FileDir::makeCorrectDir(Settings::Get('system.apacheconf_vhost')), 0, - 1);
 				$_pos = strrpos($_tmp_path, '/');
 				$_inc_path = substr($_tmp_path, $_pos + 1);
 
@@ -417,7 +417,7 @@ class Lighttpd extends HttpConfigBase
 					$vhost_no = (int) $vhost_no += 10;
 				}
 
-				$vhost_filename = makeCorrectFile(Settings::Get('system.apacheconf_vhost') . '/vhosts/' . $vhost_no . '_' . $domain['domain'] . '.conf');
+				$vhost_filename = \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.apacheconf_vhost') . '/vhosts/' . $vhost_no . '_' . $domain['domain'] . '.conf');
 				$included_vhosts[] = $_inc_path . '/vhosts/' . $vhost_no . '_' . $domain['domain'] . '.conf';
 			}
 
@@ -576,7 +576,7 @@ class Lighttpd extends HttpConfigBase
 				//$ssl_settings .= 'ssl.engine = "enable"' . "\n";
 				$ssl_settings .= 'ssl.use-compression = "disable"' . "\n";
 				if (!empty(Settings::Get('system.dhparams_file'))) {
-					$dhparams = makeCorrectFile(Settings::Get('system.dhparams_file'));
+					$dhparams = \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.dhparams_file'));
 					if (!file_exists($dhparams)) {
 						safe_exec('openssl dhparam -out '.escapeshellarg($dhparams).' 4096');
 					}
@@ -587,10 +587,10 @@ class Lighttpd extends HttpConfigBase
 				$ssl_settings .= 'ssl.use-sslv3 = "disable"' . "\n";
 				$ssl_settings .= 'ssl.cipher-list = "' . Settings::Get('system.ssl_cipher_list') . '"' . "\n";
 				$ssl_settings .= 'ssl.honor-cipher-order = "enable"' . "\n";
-				$ssl_settings .= 'ssl.pemfile = "' . makeCorrectFile($domain['ssl_cert_file']) . '"' . "\n";
+				$ssl_settings .= 'ssl.pemfile = "' . \Froxlor\FileDir::makeCorrectFile($domain['ssl_cert_file']) . '"' . "\n";
 
 				if ($domain['ssl_ca_file'] != '') {
-					$ssl_settings .= 'ssl.ca-file = "' . makeCorrectFile($domain['ssl_ca_file']) . '"' . "\n";
+					$ssl_settings .= 'ssl.ca-file = "' . \Froxlor\FileDir::makeCorrectFile($domain['ssl_ca_file']) . '"' . "\n";
 				}
 
 				if ($domain['hsts'] >= 0) {
@@ -626,7 +626,7 @@ class Lighttpd extends HttpConfigBase
 		// error log cannot be set conditionally see
 		// https://redmine.lighttpd.net/issues/665
 		if ($domain['writeaccesslog']) {
-			$access_log = makeCorrectFile(Settings::Get('system.logfiles_directory') . $domain['loginname'] . $speciallogfile . '-access.log');
+			$access_log = \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.logfiles_directory') . $domain['loginname'] . $speciallogfile . '-access.log');
 			// Create the logfile if it does not exist (fixes #46)
 			touch($access_log);
 			chown($access_log, Settings::Get('system.httpuser'));
@@ -703,7 +703,7 @@ class Lighttpd extends HttpConfigBase
 			if (! empty($row['error404path'])) {
 				$defhandler = $row['error404path'];
 				if (! validateUrl($defhandler)) {
-					$defhandler = makeCorrectFile($domain['documentroot'] . '/' . $defhandler);
+					$defhandler = \Froxlor\FileDir::makeCorrectFile($domain['documentroot'] . '/' . $defhandler);
 				}
 				$error_string .= '  server.error-handler-404 = "' . $defhandler . '"' . "\n\n";
 			}
@@ -715,7 +715,7 @@ class Lighttpd extends HttpConfigBase
 					$error_string = '';
 				}
 
-				$path = makeCorrectDir(substr($row['path'], strlen($domain['documentroot']) - 1));
+				$path = \Froxlor\FileDir::makeCorrectDir(substr($row['path'], strlen($domain['documentroot']) - 1));
 				mkDirWithCorrectOwnership($domain['documentroot'], $row['path'], $domain['guid'], $domain['guid']);
 
 				// We need to remove the last slash, otherwise the regex wouldn't work
@@ -730,7 +730,7 @@ class Lighttpd extends HttpConfigBase
 			}
 
 			if (customerHasPerlEnabled($domain['customerid']) && $row['options_cgi'] != '0') {
-				$path = makeCorrectDir(substr($row['path'], strlen($domain['documentroot']) - 1));
+				$path = \Froxlor\FileDir::makeCorrectDir(substr($row['path'], strlen($domain['documentroot']) - 1));
 				mkDirWithCorrectOwnership($domain['documentroot'], $row['path'], $domain['guid'], $domain['guid']);
 
 				// We need to remove the last slash, otherwise the regex wouldn't work
@@ -739,8 +739,8 @@ class Lighttpd extends HttpConfigBase
 				}
 				$path_options .= '  $HTTP["url"] =~ "^' . $path . '($|/)" {' . "\n";
 				$path_options .= "\t" . 'cgi.assign = (' . "\n";
-				$path_options .= "\t\t" . '".pl" => "' . makeCorrectFile(Settings::Get('system.perl_path')) . '",' . "\n";
-				$path_options .= "\t\t" . '".cgi" => "' . makeCorrectFile(Settings::Get('system.perl_path')) . '"' . "\n";
+				$path_options .= "\t\t" . '".pl" => "' . \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.perl_path')) . '",' . "\n";
+				$path_options .= "\t\t" . '".cgi" => "' . \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.perl_path')) . '"' . "\n";
 				$path_options .= "\t" . ')' . "\n";
 				$path_options .= '  }' . "\n\n";
 			}
@@ -766,21 +766,21 @@ class Lighttpd extends HttpConfigBase
 				if ($this->auth_backend_loaded[$domain['ipandport']] != 'yes') {
 					$auth_backend_loaded[$domain['ipandport']] = 'yes';
 					$diroption_text .= 'auth.backend = "htpasswd"' . "\n";
-					$diroption_text .= 'auth.backend.htpasswd.userfile = "' . makeCorrectFile(Settings::Get('system.apacheconf_htpasswddir') . '/' . $filename) . '"' . "\n";
+					$diroption_text .= 'auth.backend.htpasswd.userfile = "' . \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.apacheconf_htpasswddir') . '/' . $filename) . '"' . "\n";
 					$this->needed_htpasswds[$filename] = $row_htpasswds['username'] . ':' . $row_htpasswds['password'] . "\n";
 					$diroption_text .= 'auth.require = ( ' . "\n";
 					$previous_domain_id = '1';
 				} elseif ($this->auth_backend_loaded[$domain['ssl_ipandport']] != 'yes') {
 					$auth_backend_loaded[$domain['ssl_ipandport']] = 'yes';
 					$diroption_text .= 'auth.backend= "htpasswd"' . "\n";
-					$diroption_text .= 'auth.backend.htpasswd.userfile = "' . makeCorrectFile(Settings::Get('system.apacheconf_htpasswddir') . '/' . $filename) . '"' . "\n";
+					$diroption_text .= 'auth.backend.htpasswd.userfile = "' . \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.apacheconf_htpasswddir') . '/' . $filename) . '"' . "\n";
 					$this->needed_htpasswds[$filename] = $row_htpasswds['username'] . ':' . $row_htpasswds['password'] . "\n";
 					$diroption_text .= 'auth.require = ( ' . "\n";
 					$previous_domain_id = '1';
 				}
 			}
 
-			$diroption_text .= '"' . makeCorrectDir($row_htpasswds['path']) . '" =>' . "\n";
+			$diroption_text .= '"' . \Froxlor\FileDir::makeCorrectDir($row_htpasswds['path']) . '" =>' . "\n";
 			$diroption_text .= '(' . "\n";
 			$diroption_text .= '   "method"  => "basic",' . "\n";
 			$diroption_text .= '   "realm"   => "' . $row_htpasswds['authname'] . '",' . "\n";
@@ -796,7 +796,7 @@ class Lighttpd extends HttpConfigBase
 			}
 		}
 
-		return '  auth.backend.htpasswd.userfile = "' . makeCorrectFile(Settings::Get('system.apacheconf_htpasswddir') . '/' . $filename) . '"' . "\n";
+		return '  auth.backend.htpasswd.userfile = "' . \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.apacheconf_htpasswddir') . '/' . $filename) . '"' . "\n";
 	}
 
 	protected function getServerNames($domain)
@@ -870,7 +870,7 @@ class Lighttpd extends HttpConfigBase
 
 		if ($domain['deactivated'] == '1' && Settings::Get('system.deactivateddocroot') != '') {
 			$webroot_text .= '  # Using docroot for deactivated users...' . "\n";
-			$webroot_text .= '  server.document-root = "' . makeCorrectDir(Settings::Get('system.deactivateddocroot')) . "\"\n";
+			$webroot_text .= '  server.document-root = "' . \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.deactivateddocroot')) . "\"\n";
 			$this->_deactivated = true;
 		} else {
 			if ($ssl === false && $domain['ssl_redirect'] == '1') {
@@ -888,7 +888,7 @@ class Lighttpd extends HttpConfigBase
 				$webroot_text .= "\t" . '"/" => "' . $redirect_domain . '"' . "\n";
 				$webroot_text .= '  )' . "\n";
 			} else {
-				$webroot_text .= '  server.document-root = "' . makeCorrectDir($domain['documentroot']) . "\"\n";
+				$webroot_text .= '  server.document-root = "' . \Froxlor\FileDir::makeCorrectDir($domain['documentroot']) . "\"\n";
 			}
 			$this->_deactivated = false;
 		}
@@ -906,34 +906,34 @@ class Lighttpd extends HttpConfigBase
 		if ($domain['speciallogfile'] == '1') {
 			if ($domain['parentdomainid'] == '0') {
 				if (Settings::Get('system.awstats_enabled') == '1') {
-					$stats_text .= '  alias.url = ( "/awstats/" => "' . makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']) . '" )' . "\n";
-					$stats_text .= '  alias.url += ( "/awstats-icon" => "' . makeCorrectDir(Settings::Get('system.awstats_icons')) . '" )' . "\n";
+					$stats_text .= '  alias.url = ( "/awstats/" => "' . \Froxlor\FileDir::makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']) . '" )' . "\n";
+					$stats_text .= '  alias.url += ( "/awstats-icon" => "' . \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.awstats_icons')) . '" )' . "\n";
 				} else {
-					$stats_text .= '  alias.url = ( "/webalizer/" => "' . makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['domain']) . '/" )' . "\n";
+					$stats_text .= '  alias.url = ( "/webalizer/" => "' . \Froxlor\FileDir::makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['domain']) . '/" )' . "\n";
 				}
 			} else {
 				if (Settings::Get('system.awstats_enabled') == '1') {
-					$stats_text .= '  alias.url = ( "/awstats/" => "' . makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['parentdomain']) . '" )' . "\n";
-					$stats_text .= '  alias.url += ( "/awstats-icon" => "' . makeCorrectDir(Settings::Get('system.awstats_icons')) . '" )' . "\n";
+					$stats_text .= '  alias.url = ( "/awstats/" => "' . \Froxlor\FileDir::makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['parentdomain']) . '" )' . "\n";
+					$stats_text .= '  alias.url += ( "/awstats-icon" => "' . \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.awstats_icons')) . '" )' . "\n";
 				} else {
-					$stats_text .= '  alias.url = ( "/webalizer/" => "' . makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['parentdomain']) . '/" )' . "\n";
+					$stats_text .= '  alias.url = ( "/webalizer/" => "' . \Froxlor\FileDir::makeCorrectFile($domain['customerroot'] . '/webalizer/' . $domain['parentdomain']) . '/" )' . "\n";
 				}
 			}
 		} else {
 			if ($domain['customerroot'] != $domain['documentroot']) {
 				if (Settings::Get('system.awstats_enabled') == '1') {
-					$stats_text .= '  alias.url = ( "/awstats/" => "' . makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']) . '" )' . "\n";
-					$stats_text .= '  alias.url += ( "/awstats-icon" => "' . makeCorrectDir(Settings::Get('system.awstats_icons')) . '" )' . "\n";
+					$stats_text .= '  alias.url = ( "/awstats/" => "' . \Froxlor\FileDir::makeCorrectFile($domain['customerroot'] . '/awstats/' . $domain['domain']) . '" )' . "\n";
+					$stats_text .= '  alias.url += ( "/awstats-icon" => "' . \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.awstats_icons')) . '" )' . "\n";
 				} else {
-					$stats_text .= '  alias.url = ( "/webalizer/" => "' . makeCorrectFile($domain['customerroot'] . '/webalizer/') . '" )' . "\n";
+					$stats_text .= '  alias.url = ( "/webalizer/" => "' . \Froxlor\FileDir::makeCorrectFile($domain['customerroot'] . '/webalizer/') . '" )' . "\n";
 				}
 			}			// if the docroots are equal, we still have to set an alias for awstats
 			// because the stats are in /awstats/[domain], not just /awstats/
 			// also, the awstats-icons are someplace else too!
 			// -> webalizer does not need this!
 			elseif (Settings::Get('system.awstats_enabled') == '1') {
-				$stats_text .= '  alias.url = ( "/awstats/" => "' . makeCorrectFile($domain['documentroot'] . '/awstats/' . $domain['domain']) . '" )' . "\n";
-				$stats_text .= '  alias.url += ( "/awstats-icon" => "' . makeCorrectDir(Settings::Get('system.awstats_icons')) . '" )' . "\n";
+				$stats_text .= '  alias.url = ( "/awstats/" => "' . \Froxlor\FileDir::makeCorrectFile($domain['documentroot'] . '/awstats/' . $domain['domain']) . '" )' . "\n";
+				$stats_text .= '  alias.url += ( "/awstats-icon" => "' . \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.awstats_icons')) . '" )' . "\n";
 			}
 		}
 
@@ -969,8 +969,8 @@ class Lighttpd extends HttpConfigBase
 			fclose($vhosts_file_handler);
 		} else {
 			if (! file_exists(Settings::Get('system.apacheconf_vhost'))) {
-				$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'lighttpd::writeConfigs: mkdir ' . escapeshellarg(makeCorrectDir(Settings::Get('system.apacheconf_vhost'))));
-				safe_exec('mkdir ' . escapeshellarg(makeCorrectDir(Settings::Get('system.apacheconf_vhost'))));
+				$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'lighttpd::writeConfigs: mkdir ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir(Settings::Get('system.apacheconf_vhost'))));
+				safe_exec('mkdir ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir(Settings::Get('system.apacheconf_vhost'))));
 			}
 
 			// Write a single file for every vhost
@@ -993,10 +993,10 @@ class Lighttpd extends HttpConfigBase
 		if ($htpasswdDir->isConfigDir()) {
 			foreach ($this->needed_htpasswds as $key => $data) {
 				if (! is_dir(Settings::Get('system.apacheconf_htpasswddir'))) {
-					mkdir(makeCorrectDir(Settings::Get('system.apacheconf_htpasswddir')));
+					mkdir(\Froxlor\FileDir::makeCorrectDir(Settings::Get('system.apacheconf_htpasswddir')));
 				}
 
-				$filename = makeCorrectFile(Settings::Get('system.apacheconf_htpasswddir') . '/' . $key);
+				$filename = \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.apacheconf_htpasswddir') . '/' . $key);
 				$htpasswd_handler = fopen($filename, 'w');
 				fwrite($htpasswd_handler, $data);
 				fclose($htpasswd_handler);

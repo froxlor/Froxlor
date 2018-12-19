@@ -63,7 +63,7 @@ class NginxFcgi extends Nginx
 	public function createOwnVhostStarter()
 	{
 		if (Settings::Get('phpfpm.enabled') == '1' && Settings::Get('phpfpm.enabled_ownvhost') == '1') {
-			$mypath = makeCorrectDir(dirname(dirname(dirname(__FILE__)))); // /var/www/froxlor, needed for chown
+			$mypath = \Froxlor\FileDir::makeCorrectDir(dirname(dirname(dirname(__FILE__)))); // /var/www/froxlor, needed for chown
 
 			$user = Settings::Get('phpfpm.vhost_httpuser');
 			$group = Settings::Get('phpfpm.vhost_httpgroup');

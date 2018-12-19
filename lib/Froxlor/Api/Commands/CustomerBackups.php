@@ -74,12 +74,12 @@ class CustomerBackups extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 		$customer = $this->getCustomerData();
 
 		// validation
-		$path = makeCorrectDir(validate($path, 'path', '', '', array(), true));
+		$path = \Froxlor\FileDir::makeCorrectDir(validate($path, 'path', '', '', array(), true));
 		$userpath = $path;
-		$path = makeCorrectDir($customer['documentroot'] . '/' . $path);
+		$path = \Froxlor\FileDir::makeCorrectDir($customer['documentroot'] . '/' . $path);
 
 		// path cannot be the customers docroot
-		if ($path == makeCorrectDir($customer['documentroot'])) {
+		if ($path == \Froxlor\FileDir::makeCorrectDir($customer['documentroot'])) {
 			standard_error('backupfoldercannotbedocroot', '', true);
 		}
 

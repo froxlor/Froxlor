@@ -35,7 +35,7 @@ class MailboxsizeCron extends \Froxlor\Cron\FroxlorCron
 
 		while ($maildir = $maildirs_stmt->fetch(\PDO::FETCH_ASSOC)) {
 
-			$_maildir = makeCorrectDir($maildir['maildirpath']);
+			$_maildir = \Froxlor\FileDir::makeCorrectDir($maildir['maildirpath']);
 
 			if (file_exists($_maildir) && is_dir($_maildir)) {
 				// mail-address allows many special characters, see http://en.wikipedia.org/wiki/Email_address#Local_part

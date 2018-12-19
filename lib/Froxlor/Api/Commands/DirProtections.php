@@ -60,8 +60,8 @@ class DirProtections extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Res
 		$authname = $this->getParam('directory_authname', true, '');
 
 		// validation
-		$path = makeCorrectDir(validate($path, 'path', '', '', array(), true));
-		$path = makeCorrectDir($customer['documentroot'] . '/' . $path);
+		$path = \Froxlor\FileDir::makeCorrectDir(validate($path, 'path', '', '', array(), true));
+		$path = \Froxlor\FileDir::makeCorrectDir($customer['documentroot'] . '/' . $path);
 		$username = validate($username, 'username', '/^[a-zA-Z0-9][a-zA-Z0-9\-_]+\$?$/', '', array(), true);
 		$authname = validate($authname, 'directory_authname', '/^[a-zA-Z0-9][a-zA-Z0-9\-_ ]+\$?$/', '', array(), true);
 		validate($password, 'password', '', '', array(), true);

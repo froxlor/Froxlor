@@ -69,7 +69,7 @@ function makePathfield($path, $uid, $gid, $value = '', $dom = false) {
 						if (empty($dir)) {
 							$dir = '/';
 						}
-						$dir = makeCorrectDir($dir);
+						$dir = \Froxlor\FileDir::makeCorrectDir($dir);
 					}
 					$_field.= makeoption($dir, $dir, $value);
 				}

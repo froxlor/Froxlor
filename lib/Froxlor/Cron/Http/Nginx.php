@@ -66,7 +66,7 @@ class Nginx extends HttpConfigBase
 			foreach ($restart_cmds as $restart_cmd) {
 				// check whether the config dir is empty (no domains uses this daemon)
 				// so we need to create a dummy
-				$_conffiles = glob(makeCorrectFile($restart_cmd['config_dir'] . "/*.conf"));
+				$_conffiles = glob(\Froxlor\FileDir::makeCorrectFile($restart_cmd['config_dir'] . "/*.conf"));
 				if ($_conffiles === false || empty($_conffiles)) {
 					$this->logger->logAction(CRON_ACTION, LOG_INFO, 'nginx::reload: fpm config directory "' . $restart_cmd['config_dir'] . '" is empty. Creating dummy.');
 					Fpm::createDummyPool($restart_cmd['config_dir']);
@@ -96,12 +96,12 @@ class Nginx extends HttpConfigBase
 		if (Settings::Get('defaultwebsrverrhandler.enabled') == '1' && (Settings::Get('defaultwebsrverrhandler.err401') != '' || Settings::Get('defaultwebsrverrhandler.err403') != '' || Settings::Get('defaultwebsrverrhandler.err404') != '' || Settings::Get('defaultwebsrverrhandler.err500') != '')) {
 			$vhosts_folder = '';
 			if (is_dir(Settings::Get('system.apacheconf_vhost'))) {
-				$vhosts_folder = makeCorrectDir(Settings::Get('system.apacheconf_vhost'));
+				$vhosts_folder = \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.apacheconf_vhost'));
 			} else {
-				$vhosts_folder = makeCorrectDir(dirname(Settings::Get('system.apacheconf_vhost')));
+				$vhosts_folder = \Froxlor\FileDir::makeCorrectDir(dirname(Settings::Get('system.apacheconf_vhost')));
 			}
 
-			$vhosts_filename = makeCorrectFile($vhosts_folder . '/05_froxlor_default_errorhandler.conf');
+			$vhosts_filename = \Froxlor\FileDir::makeCorrectFile($vhosts_folder . '/05_froxlor_default_errorhandler.conf');
 
 			if (! isset($this->nginx_data[$vhosts_filename])) {
 				$this->nginx_data[$vhosts_filename] = '';
@@ -117,7 +117,7 @@ class Nginx extends HttpConfigBase
 				if (Settings::Get('defaultwebsrverrhandler.err' . $statusCode) != '') {
 					$defhandler = Settings::Get('defaultwebsrverrhandler.err' . $statusCode);
 					if (! validateUrl($defhandler)) {
-						$defhandler = makeCorrectFile($defhandler);
+						$defhandler = \Froxlor\FileDir::makeCorrectFile($defhandler);
 					}
 					$this->nginx_data[$vhosts_filename] .= 'error_page ' . $statusCode . ' ' . $defhandler . ';' . "\n";
 				}
@@ -146,7 +146,7 @@ class Nginx extends HttpConfigBase
 			$port = $row_ipsandports['port'];
 
 			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'nginx::createIpPort: creating ip/port settings for  ' . $ip . ":" . $port);
-			$vhost_filename = makeCorrectFile(Settings::Get('system.apacheconf_vhost') . '/10_froxlor_ipandport_' . trim(str_replace(':', '.', $row_ipsandports['ip']), '.') . '.' . $row_ipsandports['port'] . '.conf');
+			$vhost_filename = \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.apacheconf_vhost') . '/10_froxlor_ipandport_' . trim(str_replace(':', '.', $row_ipsandports['ip']), '.') . '.' . $row_ipsandports['port'] . '.conf');
 
 			if (! isset($this->nginx_data[$vhost_filename])) {
 				$this->nginx_data[$vhost_filename] = '';
@@ -339,7 +339,7 @@ class Nginx extends HttpConfigBase
 		foreach ($domains as $domain) {
 
 			if (is_dir(Settings::Get('system.apacheconf_vhost'))) {
-				safe_exec('mkdir -p ' . escapeshellarg(makeCorrectDir(Settings::Get('system.apacheconf_vhost'))));
+				safe_exec('mkdir -p ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir(Settings::Get('system.apacheconf_vhost'))));
 			}
 
 			$vhost_filename = $this->getVhostFilename($domain);
@@ -377,9 +377,9 @@ class Nginx extends HttpConfigBase
 		}
 
 		if ($ssl_vhost === true) {
-			$vhost_filename = makeCorrectFile(Settings::Get('system.apacheconf_vhost') . '/' . $vhost_no . '_froxlor_ssl_vhost_' . $domain['domain'] . '.conf');
+			$vhost_filename = \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.apacheconf_vhost') . '/' . $vhost_no . '_froxlor_ssl_vhost_' . $domain['domain'] . '.conf');
 		} else {
-			$vhost_filename = makeCorrectFile(Settings::Get('system.apacheconf_vhost') . '/' . $vhost_no . '_froxlor_normal_vhost_' . $domain['domain'] . '.conf');
+			$vhost_filename = \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.apacheconf_vhost') . '/' . $vhost_no . '_froxlor_normal_vhost_' . $domain['domain'] . '.conf');
 		}
 
 		return $vhost_filename;
@@ -645,7 +645,7 @@ class Nginx extends HttpConfigBase
 				$sslsettings .= "\t" . 'ssl_protocols ' . str_replace(",", " ", Settings::Get('system.ssl_protocols')) . ';' . "\n";
 				$sslsettings .= "\t" . 'ssl_ciphers ' . Settings::Get('system.ssl_cipher_list') . ';' . "\n";
 				if (! empty(Settings::Get('system.dhparams_file'))) {
-					$dhparams = makeCorrectFile(Settings::Get('system.dhparams_file'));
+					$dhparams = \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.dhparams_file'));
 					if (! file_exists($dhparams)) {
 						safe_exec('openssl dhparam -out ' . escapeshellarg($dhparams) . ' 4096');
 					}
@@ -653,14 +653,14 @@ class Nginx extends HttpConfigBase
 				}
 				$sslsettings .= "\t" . 'ssl_ecdh_curve secp384r1;' . "\n";
 				$sslsettings .= "\t" . 'ssl_prefer_server_ciphers on;' . "\n";
-				$sslsettings .= "\t" . 'ssl_certificate ' . makeCorrectFile($domain_or_ip['ssl_cert_file']) . ';' . "\n";
+				$sslsettings .= "\t" . 'ssl_certificate ' . \Froxlor\FileDir::makeCorrectFile($domain_or_ip['ssl_cert_file']) . ';' . "\n";
 
 				if ($domain_or_ip['ssl_key_file'] != '') {
 					// check for existence, #1485
 					if (! file_exists($domain_or_ip['ssl_key_file'])) {
 						$this->logger->logAction(CRON_ACTION, LOG_ERR, $domain_or_ip['domain'] . ' :: certificate key file "' . $domain_or_ip['ssl_key_file'] . '" does not exist! Cannot create ssl-directives');
 					} else {
-						$sslsettings .= "\t" . 'ssl_certificate_key ' . makeCorrectFile($domain_or_ip['ssl_key_file']) . ';' . "\n";
+						$sslsettings .= "\t" . 'ssl_certificate_key ' . \Froxlor\FileDir::makeCorrectFile($domain_or_ip['ssl_key_file']) . ';' . "\n";
 					}
 				}
 
@@ -678,7 +678,7 @@ class Nginx extends HttpConfigBase
 				if ((isset($domain_or_ip['ocsp_stapling']) && $domain_or_ip['ocsp_stapling'] == "1") || (isset($domain_or_ip['letsencrypt']) && $domain_or_ip['letsencrypt'] == "1")) {
 					$sslsettings .= "\t" . 'ssl_stapling on;' . "\n";
 					$sslsettings .= "\t" . 'ssl_stapling_verify on;' . "\n";
-					$sslsettings .= "\t" . 'ssl_trusted_certificate ' . makeCorrectFile($domain_or_ip['ssl_cert_file']) . ';' . "\n";
+					$sslsettings .= "\t" . 'ssl_trusted_certificate ' . \Froxlor\FileDir::makeCorrectFile($domain_or_ip['ssl_cert_file']) . ';' . "\n";
 				}
 			}
 		}
@@ -704,7 +704,7 @@ class Nginx extends HttpConfigBase
 			if (! empty($row['error404path'])) {
 				$defhandler = $row['error404path'];
 				if (! validateUrl($defhandler)) {
-					$defhandler = makeCorrectFile($defhandler);
+					$defhandler = \Froxlor\FileDir::makeCorrectFile($defhandler);
 				}
 				$path_options .= "\t" . 'error_page   404    ' . $defhandler . ';' . "\n";
 			}
@@ -712,7 +712,7 @@ class Nginx extends HttpConfigBase
 			if (! empty($row['error403path'])) {
 				$defhandler = $row['error403path'];
 				if (! validateUrl($defhandler)) {
-					$defhandler = makeCorrectFile($defhandler);
+					$defhandler = \Froxlor\FileDir::makeCorrectFile($defhandler);
 				}
 				$path_options .= "\t" . 'error_page   403    ' . $defhandler . ';' . "\n";
 			}
@@ -720,13 +720,13 @@ class Nginx extends HttpConfigBase
 			if (! empty($row['error500path'])) {
 				$defhandler = $row['error500path'];
 				if (! validateUrl($defhandler)) {
-					$defhandler = makeCorrectFile($defhandler);
+					$defhandler = \Froxlor\FileDir::makeCorrectFile($defhandler);
 				}
 				$path_options .= "\t" . 'error_page   500 502 503 504    ' . $defhandler . ';' . "\n";
 			}
 
 			// if ($row['options_indexes'] != '0') {
-			$path = makeCorrectDir(substr($row['path'], strlen($domain['documentroot']) - 1));
+			$path = \Froxlor\FileDir::makeCorrectDir(substr($row['path'], strlen($domain['documentroot']) - 1));
 
 			mkDirWithCorrectOwnership($domain['documentroot'], $row['path'], $domain['guid'], $domain['guid']);
 
@@ -754,7 +754,7 @@ class Nginx extends HttpConfigBase
 							default:
 								if ($single['path'] == '/') {
 									$path_options .= "\t\t" . 'auth_basic            "' . $single['authname'] . '";' . "\n";
-									$path_options .= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';' . "\n";
+									$path_options .= "\t\t" . 'auth_basic_user_file  ' . \Froxlor\FileDir::makeCorrectFile($single['usrf']) . ';' . "\n";
 									if ($domain['phpenabled_customer'] == 1 && $domain['phpenabled_vhost'] == '1') {
 										$path_options .= "\t\t" . 'index    index.php index.html index.htm;' . "\n";
 									} else {
@@ -787,7 +787,7 @@ class Nginx extends HttpConfigBase
 			 * required the fastCGI wrapper to be running to receive the CGI requests.
 			 */
 			if (customerHasPerlEnabled($domain['customerid']) && $row['options_cgi'] != '0') {
-				$path = makeCorrectDir(substr($row['path'], strlen($domain['documentroot']) - 1));
+				$path = \Froxlor\FileDir::makeCorrectDir(substr($row['path'], strlen($domain['documentroot']) - 1));
 				mkDirWithCorrectOwnership($domain['documentroot'], $row['path'], $domain['guid'], $domain['guid']);
 
 				// We need to remove the last slash, otherwise the regex wouldn't work
@@ -814,9 +814,9 @@ class Nginx extends HttpConfigBase
 						unset($htpasswds[$idx]);
 						break;
 					default:
-						$path_options .= "\t" . 'location ' . makeCorrectDir($single['path']) . ' {' . "\n";
+						$path_options .= "\t" . 'location ' . \Froxlor\FileDir::makeCorrectDir($single['path']) . ' {' . "\n";
 						$path_options .= "\t\t" . 'auth_basic            "' . $single['authname'] . '";' . "\n";
-						$path_options .= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';' . "\n";
+						$path_options .= "\t\t" . 'auth_basic_user_file  ' . \Froxlor\FileDir::makeCorrectFile($single['usrf']) . ';' . "\n";
 						if ($domain['phpenabled_customer'] == 1 && $domain['phpenabled_vhost'] == '1') {
 							$path_options .= "\t\t" . 'index    index.php index.html index.htm;' . "\n";
 						} else {
@@ -852,7 +852,7 @@ class Nginx extends HttpConfigBase
 		$x = 0;
 		while ($row_htpasswds = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 			if (count($row_htpasswds) > 0) {
-				$htpasswd_filename = makeCorrectFile(Settings::Get('system.apacheconf_htpasswddir') . '/' . $row_htpasswds['customerid'] . '-' . md5($row_htpasswds['path']) . '.htpasswd');
+				$htpasswd_filename = \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.apacheconf_htpasswddir') . '/' . $row_htpasswds['customerid'] . '-' . md5($row_htpasswds['path']) . '.htpasswd');
 
 				// ensure we can write to the array with index $htpasswd_filename
 				if (! isset($this->htpasswds_data[$htpasswd_filename])) {
@@ -865,15 +865,15 @@ class Nginx extends HttpConfigBase
 				// the nginx user, we have to evaluate the right path which is to protect
 				if (stripos($row_htpasswds['path'], $domain['documentroot']) !== false) {
 					// if the website contents is located in the user directory
-					$path = makeCorrectDir(substr($row_htpasswds['path'], strlen($domain['documentroot']) - 1));
+					$path = \Froxlor\FileDir::makeCorrectDir(substr($row_htpasswds['path'], strlen($domain['documentroot']) - 1));
 				} else {
 					// if the website contents is located in a subdirectory of the user
 					preg_match('/^([\/[:print:]]*\/)([[:print:]\/]+){1}$/i', $row_htpasswds['path'], $matches);
-					$path = makeCorrectDir(substr($row_htpasswds['path'], strlen($matches[1]) - 1));
+					$path = \Froxlor\FileDir::makeCorrectDir(substr($row_htpasswds['path'], strlen($matches[1]) - 1));
 				}
 
 				$returnval[$x]['path'] = $path;
-				$returnval[$x]['root'] = makeCorrectDir($domain['documentroot']);
+				$returnval[$x]['root'] = \Froxlor\FileDir::makeCorrectDir($domain['documentroot']);
 
 				// Ensure there is only one auth name per password block, otherwise
 				// the directives are inserted multiple times -> invalid config
@@ -927,10 +927,10 @@ class Nginx extends HttpConfigBase
 
 		if ($domain['deactivated'] == '1' && Settings::Get('system.deactivateddocroot') != '') {
 			$webroot_text .= "\t" . '# Using docroot for deactivated users...' . "\n";
-			$webroot_text .= "\t" . 'root     ' . makeCorrectDir(Settings::Get('system.deactivateddocroot')) . ';' . "\n";
+			$webroot_text .= "\t" . 'root     ' . \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.deactivateddocroot')) . ';' . "\n";
 			$this->_deactivated = true;
 		} else {
-			$webroot_text .= "\t" . 'root     ' . makeCorrectDir($domain['documentroot']) . ';' . "\n";
+			$webroot_text .= "\t" . 'root     ' . \Froxlor\FileDir::makeCorrectDir($domain['documentroot']) . ';' . "\n";
 			$this->_deactivated = false;
 		}
 
@@ -966,16 +966,16 @@ class Nginx extends HttpConfigBase
 
 		// define basic path to the stats
 		if (Settings::Get('system.awstats_enabled') == '1') {
-			$alias_dir = makeCorrectFile($domain['customerroot'] . '/awstats/');
+			$alias_dir = \Froxlor\FileDir::makeCorrectFile($domain['customerroot'] . '/awstats/');
 		} else {
-			$alias_dir = makeCorrectFile($domain['customerroot'] . '/webalizer/');
+			$alias_dir = \Froxlor\FileDir::makeCorrectFile($domain['customerroot'] . '/webalizer/');
 		}
 
 		// if this is a parentdomain, we use this domain-name
 		if ($domain['parentdomainid'] == '0') {
-			$alias_dir = makeCorrectDir($alias_dir . '/' . $domain['domain']);
+			$alias_dir = \Froxlor\FileDir::makeCorrectDir($alias_dir . '/' . $domain['domain']);
 		} else {
-			$alias_dir = makeCorrectDir($alias_dir . '/' . $domain['parentdomain']);
+			$alias_dir = \Froxlor\FileDir::makeCorrectDir($alias_dir . '/' . $domain['parentdomain']);
 		}
 
 		if (Settings::Get('system.awstats_enabled') == '1') {
@@ -988,13 +988,13 @@ class Nginx extends HttpConfigBase
 
 		$stats_text .= "\t\t" . 'alias ' . $alias_dir . ';' . "\n";
 		$stats_text .= "\t\t" . 'auth_basic            "' . $single['authname'] . '";' . "\n";
-		$stats_text .= "\t\t" . 'auth_basic_user_file  ' . makeCorrectFile($single['usrf']) . ';' . "\n";
+		$stats_text .= "\t\t" . 'auth_basic_user_file  ' . \Froxlor\FileDir::makeCorrectFile($single['usrf']) . ';' . "\n";
 		$stats_text .= "\t" . '}' . "\n\n";
 
 		// awstats icons
 		if (Settings::Get('system.awstats_enabled') == '1') {
 			$stats_text .= "\t" . 'location ~ ^/awstats-icon/(.*)$ {' . "\n";
-			$stats_text .= "\t\t" . 'alias ' . makeCorrectDir(Settings::Get('system.awstats_icons')) . '$1;' . "\n";
+			$stats_text .= "\t\t" . 'alias ' . \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.awstats_icons')) . '$1;' . "\n";
 			$stats_text .= "\t" . '}' . "\n\n";
 		}
 
@@ -1016,7 +1016,7 @@ class Nginx extends HttpConfigBase
 
 		if ($domain['writeerrorlog']) {
 			// The normal access/error - logging is enabled
-			$error_log = makeCorrectFile(Settings::Get('system.logfiles_directory') . $domain['loginname'] . $speciallogfile . '-error.log');
+			$error_log = \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.logfiles_directory') . $domain['loginname'] . $speciallogfile . '-error.log');
 			// Create the logfile if it does not exist (fixes #46)
 			touch($error_log);
 			chown($error_log, Settings::Get('system.httpuser'));
@@ -1026,7 +1026,7 @@ class Nginx extends HttpConfigBase
 		}
 
 		if ($domain['writeaccesslog']) {
-			$access_log = makeCorrectFile(Settings::Get('system.logfiles_directory') . $domain['loginname'] . $speciallogfile . '-access.log');
+			$access_log = \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.logfiles_directory') . $domain['loginname'] . $speciallogfile . '-access.log');
 			// Create the logfile if it does not exist (fixes #46)
 			touch($access_log);
 			chown($access_log, Settings::Get('system.httpuser'));
@@ -1158,8 +1158,8 @@ class Nginx extends HttpConfigBase
 			fclose($vhosts_file_handler);
 		} else {
 			if (! file_exists(Settings::Get('system.apacheconf_vhost'))) {
-				$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'nginx::writeConfigs: mkdir ' . escapeshellarg(makeCorrectDir(Settings::Get('system.apacheconf_vhost'))));
-				safe_exec('mkdir -p ' . escapeshellarg(makeCorrectDir(Settings::Get('system.apacheconf_vhost'))));
+				$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'nginx::writeConfigs: mkdir ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir(Settings::Get('system.apacheconf_vhost'))));
+				safe_exec('mkdir -p ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir(Settings::Get('system.apacheconf_vhost'))));
 			}
 
 			// Write a single file for every vhost

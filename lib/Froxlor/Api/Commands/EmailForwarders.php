@@ -87,7 +87,7 @@ class EmailForwarders extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 				WHERE `customerid`= :cid AND `id`= :id
 			");
 			$params = array(
-				"dest" => makeCorrectDestination($result['destination']),
+				"dest" => \Froxlor\FileDir::makeCorrectDestination($result['destination']),
 				"cid" => $customer['customerid'],
 				"id" => $id
 			);
@@ -189,7 +189,7 @@ class EmailForwarders extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 				WHERE `customerid`= :cid AND `id`= :id
 			");
 			$params = array(
-				"dest" => makeCorrectDestination($result['destination']),
+				"dest" => \Froxlor\FileDir::makeCorrectDestination($result['destination']),
 				"cid" => $customer['customerid'],
 				"id" => $id
 			);

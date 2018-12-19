@@ -275,7 +275,7 @@ class ConfigIO
 				// now get rid of old stuff
 				// (but append /*.conf so we don't delete the directory)
 				$configdir .= '/*.conf';
-				\Froxlor\FileDir::safe_exec('rm -f ' . makeCorrectFile($configdir));
+				\Froxlor\FileDir::safe_exec('rm -f ' . \Froxlor\FileDir::makeCorrectFile($configdir));
 			} else {
 				\Froxlor\FileDir::safe_exec('mkdir -p ' . $configdir);
 			}

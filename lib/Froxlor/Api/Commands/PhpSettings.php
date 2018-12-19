@@ -238,7 +238,7 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			$description = validate($description, 'description', '', '', array(), true);
 			$phpsettings = validate(str_replace("\r\n", "\n", $phpsettings), 'phpsettings', '/^[^\0]*$/', '', array(), true);
 			if (Settings::Get('system.mod_fcgid') == 1) {
-				$binary = makeCorrectFile(validate($binary, 'binary', '', '', array(), true));
+				$binary = \Froxlor\FileDir::makeCorrectFile(validate($binary, 'binary', '', '', array(), true));
 				$file_extensions = validate($file_extensions, 'file_extensions', '/^[a-zA-Z0-9\s]*$/', '', array(), true);
 				$mod_fcgid_starter = validate($mod_fcgid_starter, 'mod_fcgid_starter', '/^[0-9]*$/', '', array(
 					'-1',
@@ -433,7 +433,7 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			$description = validate($description, 'description', '', '', array(), true);
 			$phpsettings = validate(str_replace("\r\n", "\n", $phpsettings), 'phpsettings', '/^[^\0]*$/', '', array(), true);
 			if (Settings::Get('system.mod_fcgid') == 1) {
-				$binary = makeCorrectFile(validate($binary, 'binary', '', '', array(), true));
+				$binary = \Froxlor\FileDir::makeCorrectFile(validate($binary, 'binary', '', '', array(), true));
 				$file_extensions = validate($file_extensions, 'file_extensions', '/^[a-zA-Z0-9\s]*$/', '', array(), true);
 				$mod_fcgid_starter = validate($mod_fcgid_starter, 'mod_fcgid_starter', '/^[0-9]*$/', '', array(
 					'-1',

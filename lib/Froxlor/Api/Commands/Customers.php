@@ -351,7 +351,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 					}
 
 					$guid = intval(Settings::Get('system.lastguid')) + 1;
-					$documentroot = makeCorrectDir(Settings::Get('system.documentroot_prefix') . '/' . $loginname);
+					$documentroot = \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.documentroot_prefix') . '/' . $loginname);
 
 					if (file_exists($documentroot)) {
 						standard_error('documentrootexists', $documentroot, true);
@@ -547,7 +547,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 					if (Settings::Get('system.awstats_enabled') == '1') {
 						$stats_folder = 'awstats';
 					}
-					$ins_data['path'] = makeCorrectDir($documentroot . '/' . $stats_folder . '/');
+					$ins_data['path'] = \Froxlor\FileDir::makeCorrectDir($documentroot . '/' . $stats_folder . '/');
 					$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] automatically added " . $stats_folder . " htpasswd for user '" . $loginname . "'");
 					Database::pexecute($ins_stmt, $ins_data, true, true);
 

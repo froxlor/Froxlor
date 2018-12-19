@@ -20,13 +20,13 @@ function checkPathConflicts($fieldname, $fielddata, $newfieldvalue, $allnewfield
 	if((int)Settings::Get('system.mod_fcgid') == 1) {
 		// fcgid-configdir has changed -> check against customer-doc-prefix
 		if ($fieldname == "system_mod_fcgid_configdir") {
-			$newdir = makeCorrectDir($newfieldvalue);
-			$cdir = makeCorrectDir(Settings::Get('system.documentroot_prefix'));
+			$newdir = \Froxlor\FileDir::makeCorrectDir($newfieldvalue);
+			$cdir = \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.documentroot_prefix'));
 		}
 		// customer-doc-prefix has changed -> check against fcgid-configdir
 		elseif ($fieldname == "system_documentroot_prefix") {
-			$newdir = makeCorrectDir($newfieldvalue);
-			$cdir = makeCorrectDir(Settings::Get('system.mod_fcgid_configdir'));
+			$newdir = \Froxlor\FileDir::makeCorrectDir($newfieldvalue);
+			$cdir = \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.mod_fcgid_configdir'));
 		}
 
 		// neither dir can be within the other nor can they be equal

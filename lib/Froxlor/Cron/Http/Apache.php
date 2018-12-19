@@ -105,13 +105,13 @@ class Apache extends HttpConfigBase
 		}
 		$this->virtualhosts_data[$vhosts_filename] .= '  </Directory>' . "\n";
 
-		$ocsp_cache_filename = makeCorrectFile($vhosts_folder . '/03_froxlor_ocsp_cache.conf');
+		$ocsp_cache_filename = \Froxlor\FileDir::makeCorrectFile($vhosts_folder . '/03_froxlor_ocsp_cache.conf');
 		if (Settings::Get('system.use_ssl') == '1' && Settings::Get('system.apache24') == 1) {
 			$this->virtualhosts_data[$ocsp_cache_filename] = 'SSLStaplingCache ' . Settings::Get('system.apache24_ocsp_cache_path') . "\n";
 		} else {
 			if (file_exists($ocsp_cache_filename)) {
 				\Froxlor\FroxlorLogger::getInstance()->logAction(CRON_ACTION, LOG_NOTICE, 'apache::_createStandardDirectoryEntry: unlinking ' . basename($ocsp_cache_filename));
-				unlink(makeCorrectFile($ocsp_cache_filename));
+				unlink(\Froxlor\FileDir::makeCorrectFile($ocsp_cache_filename));
 			}
 		}
 	}

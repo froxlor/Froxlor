@@ -61,13 +61,13 @@ class HttpConfigBase
 	{
 		if (! empty($ip_port) && $ip_port['docroot'] == '') {
 			if (Settings::Get('system.froxlordirectlyviahostname')) {
-				$mypath = makeCorrectDir(dirname(dirname(dirname(__FILE__))));
+				$mypath = \Froxlor\FileDir::makeCorrectDir(dirname(dirname(dirname(__FILE__))));
 			} else {
-				$mypath = makeCorrectDir(dirname(dirname(dirname(dirname(__FILE__)))));
+				$mypath = \Froxlor\FileDir::makeCorrectDir(dirname(dirname(dirname(dirname(__FILE__)))));
 			}
 		} else {
 			// user-defined docroot, #417
-			$mypath = makeCorrectDir($ip_port['docroot']);
+			$mypath = \Froxlor\FileDir::makeCorrectDir($ip_port['docroot']);
 		}
 		return $mypath;
 	}

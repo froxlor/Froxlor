@@ -71,7 +71,7 @@ if ($page == 'overview') {
 					$row['documentroot'] = $row['homedir'];
 				}
 
-				$row['documentroot'] = makeCorrectDir($row['documentroot']);
+				$row['documentroot'] = \Froxlor\FileDir::makeCorrectDir($row['documentroot']);
 
 				$row = htmlentities_array($row);
 				eval("\$accounts.=\"" . getTemplate('ftp/accounts_account') . "\";");
@@ -187,7 +187,7 @@ if ($page == 'overview') {
 				} else {
 					$homedir = $result['homedir'];
 				}
-				$homedir = makeCorrectDir($homedir);
+				$homedir = \Froxlor\FileDir::makeCorrectDir($homedir);
 
 				$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $homedir);
 
