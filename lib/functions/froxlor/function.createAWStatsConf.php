@@ -34,14 +34,14 @@ function createAWStatsConf($logFile, $siteDomain, $hostAliases, $customerDocroot
 
 	$awstats_dir = \Froxlor\FileDir::makeCorrectDir($customerDocroot.'/awstats/'.$siteDomain.'/');
 	if (!is_dir($awstats_dir)) {
-		safe_exec('mkdir -p '.escapeshellarg($awstats_dir));
+	 \Froxlor\FileDir::safe_exec('mkdir -p '.escapeshellarg($awstats_dir));
 	}
 	// chown created folder, #258
 	makeChownWithNewStats($awstats_params);
 
 	// weird but could happen...
 	if (!is_dir(Settings::Get('system.awstats_conf'))) {
-		safe_exec('mkdir -p '.escapeshellarg(Settings::Get('system.awstats_conf')));
+	 \Froxlor\FileDir::safe_exec('mkdir -p '.escapeshellarg(Settings::Get('system.awstats_conf')));
 	}
 
 	// These are the variables we will replace

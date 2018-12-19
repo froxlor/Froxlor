@@ -28,7 +28,7 @@ class MailboxsizeCron extends \Froxlor\Cron\FroxlorCron
 		$maildirs_stmt = \Froxlor\Database\Database::query("
 			SELECT `id`, CONCAT(`homedir`, `maildir`) AS `maildirpath` FROM `" . TABLE_MAIL_USERS . "` ORDER BY `id`
 		");
-		
+
 		$upd_stmt = \Froxlor\Database\Database::prepare("
 			UPDATE `" . TABLE_MAIL_USERS . "` SET `mboxsize` = :size WHERE `id` = :id
 		");
@@ -40,7 +40,7 @@ class MailboxsizeCron extends \Froxlor\Cron\FroxlorCron
 			if (file_exists($_maildir) && is_dir($_maildir)) {
 				// mail-address allows many special characters, see http://en.wikipedia.org/wiki/Email_address#Local_part
 				$return = false;
-				$back = safe_exec('du -sk ' . escapeshellarg($_maildir), $return, array(
+				$back = \Froxlor\FileDir::safe_exec('du -sk ' . escapeshellarg($_maildir), $return, array(
 					'|',
 					'&',
 					'`',

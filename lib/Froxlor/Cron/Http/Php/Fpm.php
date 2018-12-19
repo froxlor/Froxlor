@@ -290,7 +290,7 @@ class Fpm
 		$config = \Froxlor\FileDir::makeCorrectFile($configdir . '/' . $this->_domain['domain'] . '.conf');
 
 		if (! is_dir($configdir) && $createifnotexists) {
-			safe_exec('mkdir -p ' . escapeshellarg($configdir));
+			\Froxlor\FileDir::safe_exec('mkdir -p ' . escapeshellarg($configdir));
 		}
 
 		return $config;
@@ -311,8 +311,8 @@ class Fpm
 		$socket = strtolower(\Froxlor\FileDir::makeCorrectFile($socketdir . '/' . $this->_domain['fpm_config_id'] . '-' . $this->_domain['loginname'] . '-' . $this->_domain['domain'] . '-php-fpm.socket'));
 
 		if (! is_dir($socketdir) && $createifnotexists) {
-			safe_exec('mkdir -p ' . escapeshellarg($socketdir));
-			safe_exec('chown -R ' . Settings::Get('system.httpuser') . ':' . Settings::Get('system.httpgroup') . ' ' . escapeshellarg($socketdir));
+			\Froxlor\FileDir::safe_exec('mkdir -p ' . escapeshellarg($socketdir));
+			\Froxlor\FileDir::safe_exec('chown -R ' . Settings::Get('system.httpuser') . ':' . Settings::Get('system.httpgroup') . ' ' . escapeshellarg($socketdir));
 		}
 
 		return $socket;
@@ -331,9 +331,9 @@ class Fpm
 		$tmpdir = \Froxlor\FileDir::makeCorrectDir(Settings::Get('phpfpm.tmpdir') . '/' . $this->_domain['loginname'] . '/');
 
 		if (! is_dir($tmpdir) && $createifnotexists) {
-			safe_exec('mkdir -p ' . escapeshellarg($tmpdir));
-			safe_exec('chown -R ' . $this->_domain['guid'] . ':' . $this->_domain['guid'] . ' ' . escapeshellarg($tmpdir));
-			safe_exec('chmod 0750 ' . escapeshellarg($tmpdir));
+			\Froxlor\FileDir::safe_exec('mkdir -p ' . escapeshellarg($tmpdir));
+			\Froxlor\FileDir::safe_exec('chown -R ' . $this->_domain['guid'] . ':' . $this->_domain['guid'] . ' ' . escapeshellarg($tmpdir));
+			\Froxlor\FileDir::safe_exec('chmod 0750 ' . escapeshellarg($tmpdir));
 		}
 
 		return $tmpdir;
@@ -357,8 +357,8 @@ class Fpm
 
 		$configdir = \Froxlor\FileDir::makeCorrectDir(Settings::Get('phpfpm.aliasconfigdir') . '/' . $this->_domain['loginname'] . '/' . $this->_domain['domain'] . '/');
 		if (! is_dir($configdir) && $createifnotexists) {
-			safe_exec('mkdir -p ' . escapeshellarg($configdir));
-			safe_exec('chown ' . $this->_domain['guid'] . ':' . $this->_domain['guid'] . ' ' . escapeshellarg($configdir));
+			\Froxlor\FileDir::safe_exec('mkdir -p ' . escapeshellarg($configdir));
+			\Froxlor\FileDir::safe_exec('chown ' . $this->_domain['guid'] . ':' . $this->_domain['guid'] . ' ' . escapeshellarg($configdir));
 		}
 
 		return $configdir;
@@ -373,7 +373,7 @@ class Fpm
 	public static function createDummyPool($configdir)
 	{
 		if (! is_dir($configdir)) {
-			safe_exec('mkdir -p ' . escapeshellarg($configdir));
+			\Froxlor\FileDir::safe_exec('mkdir -p ' . escapeshellarg($configdir));
 		}
 		$config = \Froxlor\FileDir::makeCorrectFile($configdir . '/dummy.conf');
 		$dummy = "[dummy]

@@ -102,8 +102,8 @@ class Fcgid
 		$starter_file_handler = fopen($this->getStarterFile(), 'w');
 		fwrite($starter_file_handler, $starter_file);
 		fclose($starter_file_handler);
-		safe_exec('chmod 750 ' . escapeshellarg($this->getStarterFile()));
-		safe_exec('chown ' . $this->_domain['guid'] . ':' . $this->_domain['guid'] . ' ' . escapeshellarg($this->getStarterFile()));
+		\Froxlor\FileDir::safe_exec('chmod 750 ' . escapeshellarg($this->getStarterFile()));
+		\Froxlor\FileDir::safe_exec('chown ' . $this->_domain['guid'] . ':' . $this->_domain['guid'] . ' ' . escapeshellarg($this->getStarterFile()));
 		setImmutable($this->getStarterFile());
 	}
 
@@ -173,8 +173,8 @@ class Fcgid
 		$phpini_file_handler = fopen($this->getIniFile(), 'w');
 		fwrite($phpini_file_handler, $phpini_file);
 		fclose($phpini_file_handler);
-		safe_exec('chown root:0 ' . escapeshellarg($this->getIniFile()));
-		safe_exec('chmod 0644 ' . escapeshellarg($this->getIniFile()));
+		\Froxlor\FileDir::safe_exec('chown root:0 ' . escapeshellarg($this->getIniFile()));
+		\Froxlor\FileDir::safe_exec('chmod 0644 ' . escapeshellarg($this->getIniFile()));
 	}
 
 	/**
@@ -190,8 +190,8 @@ class Fcgid
 		$configdir = \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.mod_fcgid_configdir') . '/' . $this->_domain['loginname'] . '/' . $this->_domain['domain'] . '/');
 
 		if (! is_dir($configdir) && $createifnotexists) {
-			safe_exec('mkdir -p ' . escapeshellarg($configdir));
-			safe_exec('chown ' . $this->_domain['guid'] . ':' . $this->_domain['guid'] . ' ' . escapeshellarg($configdir));
+			\Froxlor\FileDir::safe_exec('mkdir -p ' . escapeshellarg($configdir));
+			\Froxlor\FileDir::safe_exec('chown ' . $this->_domain['guid'] . ':' . $this->_domain['guid'] . ' ' . escapeshellarg($configdir));
 		}
 
 		return $configdir;
@@ -210,9 +210,9 @@ class Fcgid
 		$tmpdir = \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.mod_fcgid_tmpdir') . '/' . $this->_domain['loginname'] . '/');
 
 		if (! is_dir($tmpdir) && $createifnotexists) {
-			safe_exec('mkdir -p ' . escapeshellarg($tmpdir));
-			safe_exec('chown -R ' . $this->_domain['guid'] . ':' . $this->_domain['guid'] . ' ' . escapeshellarg($tmpdir));
-			safe_exec('chmod 0750 ' . escapeshellarg($tmpdir));
+			\Froxlor\FileDir::safe_exec('mkdir -p ' . escapeshellarg($tmpdir));
+			\Froxlor\FileDir::safe_exec('chown -R ' . $this->_domain['guid'] . ':' . $this->_domain['guid'] . ' ' . escapeshellarg($tmpdir));
+			\Froxlor\FileDir::safe_exec('chmod 0750 ' . escapeshellarg($tmpdir));
 		}
 
 		return $tmpdir;

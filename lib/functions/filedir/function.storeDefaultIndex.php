@@ -65,7 +65,7 @@ function storeDefaultIndex($loginname = null, $destination = null, $logger = nul
 			if ($logger !== null) {
 				$logger->logAction(CRON_ACTION, LOG_NOTICE, 'Running: cp -a ' . \Froxlor\Froxlor::getInstallDir() . '/templates/misc/standardcustomer/* ' . escapeshellarg($destination));
 			}
-			safe_exec('cp -a ' . \Froxlor\Froxlor::getInstallDir() . '/templates/misc/standardcustomer/* ' . escapeshellarg($destination));
+		 \Froxlor\FileDir::safe_exec('cp -a ' . \Froxlor\Froxlor::getInstallDir() . '/templates/misc/standardcustomer/* ' . escapeshellarg($destination));
 		}
 	}
 	return;

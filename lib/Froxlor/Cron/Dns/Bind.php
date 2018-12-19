@@ -33,7 +33,7 @@ class Bind extends DnsBase
 		// check for subfolder in bind-config-directory
 		if (! file_exists(\Froxlor\FileDir::makeCorrectDir(Settings::Get('system.bindconf_directory') . '/domains/'))) {
 			$this->_logger->logAction(CRON_ACTION, LOG_NOTICE, 'mkdir ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir(Settings::Get('system.bindconf_directory') . '/domains/')));
-			safe_exec('mkdir -p ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir(Settings::Get('system.bindconf_directory') . '/domains/')));
+			\Froxlor\FileDir::safe_exec('mkdir -p ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir(Settings::Get('system.bindconf_directory') . '/domains/')));
 		}
 
 		$domains = $this->getDomainList();

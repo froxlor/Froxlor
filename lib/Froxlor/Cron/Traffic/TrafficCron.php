@@ -373,7 +373,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 
 				// Use the old fashioned way with "du"
 				if (file_exists($row['documentroot']) && is_dir($row['documentroot'])) {
-					$back = safe_exec('du -sk ' . escapeshellarg($row['documentroot']) . '');
+					$back = \Froxlor\FileDir::safe_exec('du -sk ' . escapeshellarg($row['documentroot']) . '');
 					foreach ($back as $backrow) {
 						$webspaceusage = explode(' ', $backrow);
 					}
@@ -393,7 +393,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 
 			$maildir = \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.vmail_homedir') . $row['loginname']);
 			if (file_exists($maildir) && is_dir($maildir)) {
-				$back = safe_exec('du -sk ' . escapeshellarg($maildir) . '');
+				$back = \Froxlor\FileDir::safe_exec('du -sk ' . escapeshellarg($maildir) . '');
 				foreach ($back as $backrow) {
 					$emailusage = explode(' ', $backrow);
 				}
@@ -515,7 +515,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 					$stringdata = "0 " . $current_diskspace['all'] * 1024 . "";
 					fwrite($fh, $stringdata);
 					fclose($fh);
-					safe_exec('chown ' . $user . ':' . $group . ' ' . escapeshellarg($quotafile) . '');
+					\Froxlor\FileDir::safe_exec('chown ' . $user . ':' . $group . ' ' . escapeshellarg($quotafile) . '');
 				}
 			}
 		}
@@ -623,7 +623,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 			$staticOutputdir = \Froxlor\FileDir::makeCorrectDir($outputdir . '/' . date('Y') . '-' . date('m'));
 
 			if (! is_dir($staticOutputdir)) {
-				safe_exec('mkdir -p ' . escapeshellarg($staticOutputdir));
+				\Froxlor\FileDir::safe_exec('mkdir -p ' . escapeshellarg($staticOutputdir));
 			}
 
 			// check for correct path of awstats_buildstaticpages.pl
@@ -637,7 +637,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 			}
 
 			$cronlog->logAction(CRON_ACTION, LOG_INFO, "Running awstats_buildstaticpages.pl for domain '" . $domain . "' (Output: '" . $staticOutputdir . "')");
-			safe_exec($awbsp . ' -awstatsprog=' . escapeshellarg($awprog) . ' -update -month=' . date('m') . ' -year=' . date('Y') . ' -config=' . $domain . ' -dir=' . escapeshellarg($staticOutputdir));
+			\Froxlor\FileDir::safe_exec($awbsp . ' -awstatsprog=' . escapeshellarg($awprog) . ' -update -month=' . date('m') . ' -year=' . date('Y') . ' -config=' . $domain . ' -dir=' . escapeshellarg($staticOutputdir));
 
 			// update our awstats index files
 			awstatsGenerateIndex($domain, $outputdir);
@@ -645,7 +645,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 			// the default selection is 'current',
 			// so link the latest dir to it
 			$new_current = \Froxlor\FileDir::makeCorrectFile($outputdir . '/current');
-			safe_exec('ln -fTs ' . escapeshellarg($staticOutputdir) . ' ' . escapeshellarg($new_current));
+			\Froxlor\FileDir::safe_exec('ln -fTs ' . escapeshellarg($staticOutputdir) . ' ' . escapeshellarg($new_current));
 
 			// statistics file looks like: 'awstats[month][year].[domain].txt'
 			$file = \Froxlor\FileDir::makeCorrectFile($outputdir . '/awstats' . date('mY', time()) . '.' . $domain . '.txt');
@@ -833,7 +833,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 
 			$outputdir = \Froxlor\FileDir::makeCorrectDir($outputdir);
 			if (! file_exists($outputdir)) {
-				safe_exec('mkdir -p ' . escapeshellarg($outputdir));
+				\Froxlor\FileDir::safe_exec('mkdir -p ' . escapeshellarg($outputdir));
 			}
 
 			if (file_exists($outputdir . 'webalizer.hist.1')) {
@@ -841,7 +841,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 			}
 
 			if (file_exists($outputdir . 'webalizer.hist') && ! file_exists($outputdir . 'webalizer.hist.1')) {
-				safe_exec('cp ' . escapeshellarg($outputdir . 'webalizer.hist') . ' ' . escapeshellarg($outputdir . 'webalizer.hist.1'));
+				\Froxlor\FileDir::safe_exec('cp ' . escapeshellarg($outputdir . 'webalizer.hist') . ' ' . escapeshellarg($outputdir . 'webalizer.hist.1'));
 			}
 
 			$verbosity = '';
@@ -859,7 +859,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 			}
 
 			$cronlog->logAction(CRON_ACTION, LOG_INFO, "Running webalizer for domain '" . $caption . "'");
-			safe_exec($we . ' ' . $verbosity . ' -p -o ' . escapeshellarg($outputdir) . ' -n ' . escapeshellarg($caption) . $domainargs . ' ' . escapeshellarg($logfile));
+			\Froxlor\FileDir::safe_exec($we . ' ' . $verbosity . ' -p -o ' . escapeshellarg($outputdir) . ' -n ' . escapeshellarg($caption) . $domainargs . ' ' . escapeshellarg($logfile));
 
 			/**
 			 * Format of webalizer.hist-files:

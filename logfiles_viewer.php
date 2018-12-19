@@ -64,7 +64,7 @@ if (function_exists('exec')) {
 
 	// error log
 	if (file_exists($error_log)) {
-		$result = safe_exec('tail -n ' . $last_n . ' ' . escapeshellarg($error_log));
+		$result = \Froxlor\FileDir::safe_exec('tail -n ' . $last_n . ' ' . escapeshellarg($error_log));
 		$error_log_content = implode("\n", $result) . "</textarea>";
 	} else {
 		$error_log_content = "Error-Log" . (AREA == 'admin' ? " '" . $error_log . "'" : "") . " does not seem to exist";
@@ -72,7 +72,7 @@ if (function_exists('exec')) {
 
 	// access log
 	if (file_exists($access_log)) {
-		$result = safe_exec('tail -n ' . $last_n . ' ' . escapeshellarg($access_log));
+		$result = \Froxlor\FileDir::safe_exec('tail -n ' . $last_n . ' ' . escapeshellarg($access_log));
 		$access_log_content = implode("\n", $result);
 	} else {
 		$access_log_content = "Access-Log" . (AREA == 'admin' ? " '" . $access_log . "'" : "") . " does not seem to exist";

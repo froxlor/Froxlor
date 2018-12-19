@@ -1,7 +1,7 @@
 <?php
 namespace Froxlor;
 
-use Froxlor\Database as Database;
+use Froxlor\Database\Database;
 
 class FileDir
 {
@@ -346,7 +346,7 @@ class FileDir
 	 */
 	public static function setImmutable($filename = null)
 	{
-		safe_exec(self::getImmutableFunction(false) . escapeshellarg($filename));
+		\Froxlor\FileDir::safe_exec(self::getImmutableFunction(false) . escapeshellarg($filename));
 	}
 
 	/**
@@ -359,7 +359,7 @@ class FileDir
 	 */
 	public static function removeImmutable($filename = null)
 	{
-		safe_exec(self::getImmutableFunction(true) . escapeshellarg($filename));
+		\Froxlor\FileDir::safe_exec(self::getImmutableFunction(true) . escapeshellarg($filename));
 	}
 
 	/**

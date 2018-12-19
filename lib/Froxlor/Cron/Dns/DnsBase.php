@@ -170,7 +170,7 @@ abstract class DnsBase
 		// reload DNS daemon
 		$cmd = Settings::Get('system.bindreload_command');
 		$cmdStatus = 1;
-		safe_exec(escapeshellcmd($cmd), $cmdStatus);
+		\Froxlor\FileDir::safe_exec(escapeshellcmd($cmd), $cmdStatus);
 		if ($cmdStatus === 0) {
 			$this->_logger->logAction(CRON_ACTION, LOG_INFO, Settings::Get('system.dns_server') . ' daemon reloaded');
 		} else {
@@ -183,7 +183,7 @@ abstract class DnsBase
 		if (Settings::Get('dkim.use_dkim') == '1') {
 			if (! file_exists(\Froxlor\FileDir::makeCorrectDir(Settings::Get('dkim.dkim_prefix')))) {
 				$this->_logger->logAction(CRON_ACTION, LOG_NOTICE, 'mkdir -p ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir(Settings::Get('dkim.dkim_prefix'))));
-				safe_exec('mkdir -p ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir(Settings::Get('dkim.dkim_prefix'))));
+				\Froxlor\FileDir::safe_exec('mkdir -p ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir(Settings::Get('dkim.dkim_prefix'))));
 			}
 
 			$dkimdomains = '';
@@ -203,13 +203,13 @@ abstract class DnsBase
 					$max_dkim_id = $max_dkim_id_stmt->fetch(\PDO::FETCH_ASSOC);
 					$domain['dkim_id'] = (int) $max_dkim_id['max_dkim_id'] + 1;
 					$privkey_filename = \Froxlor\FileDir::makeCorrectFile(Settings::Get('dkim.dkim_prefix') . '/dkim_' . $domain['dkim_id']);
-					safe_exec('openssl genrsa -out ' . escapeshellarg($privkey_filename) . ' ' . Settings::Get('dkim.dkim_keylength'));
+					\Froxlor\FileDir::safe_exec('openssl genrsa -out ' . escapeshellarg($privkey_filename) . ' ' . Settings::Get('dkim.dkim_keylength'));
 					$domain['dkim_privkey'] = file_get_contents($privkey_filename);
-					safe_exec("chmod 0640 " . escapeshellarg($privkey_filename));
+					\Froxlor\FileDir::safe_exec("chmod 0640 " . escapeshellarg($privkey_filename));
 					$pubkey_filename = \Froxlor\FileDir::makeCorrectFile(Settings::Get('dkim.dkim_prefix') . '/dkim_' . $domain['dkim_id'] . '.public');
-					safe_exec('openssl rsa -in ' . escapeshellarg($privkey_filename) . ' -pubout -outform pem -out ' . escapeshellarg($pubkey_filename));
+					\Froxlor\FileDir::safe_exec('openssl rsa -in ' . escapeshellarg($privkey_filename) . ' -pubout -outform pem -out ' . escapeshellarg($pubkey_filename));
 					$domain['dkim_pubkey'] = file_get_contents($pubkey_filename);
-					safe_exec("chmod 0664 " . escapeshellarg($pubkey_filename));
+					\Froxlor\FileDir::safe_exec("chmod 0664 " . escapeshellarg($pubkey_filename));
 					$upd_stmt = Database::prepare("
 						UPDATE `" . TABLE_PANEL_DOMAINS . "` SET
 						`dkim_id` = :dkimid,
@@ -230,14 +230,14 @@ abstract class DnsBase
 					$privkey_file_handler = fopen($privkey_filename, "w");
 					fwrite($privkey_file_handler, $domain['dkim_privkey']);
 					fclose($privkey_file_handler);
-					safe_exec("chmod 0640 " . escapeshellarg($privkey_filename));
+					\Froxlor\FileDir::safe_exec("chmod 0640 " . escapeshellarg($privkey_filename));
 				}
 
 				if (! file_exists($pubkey_filename) && $domain['dkim_pubkey'] != '') {
 					$pubkey_file_handler = fopen($pubkey_filename, "w");
 					fwrite($pubkey_file_handler, $domain['dkim_pubkey']);
 					fclose($pubkey_file_handler);
-					safe_exec("chmod 0644 " . escapeshellarg($pubkey_filename));
+					\Froxlor\FileDir::safe_exec("chmod 0644 " . escapeshellarg($pubkey_filename));
 				}
 
 				$dkimdomains .= $domain['domain'] . "\n";
@@ -253,7 +253,7 @@ abstract class DnsBase
 			fwrite($dkimkeys_file_handler, $dkimkeys);
 			fclose($dkimkeys_file_handler);
 
-			safe_exec(escapeshellcmd(Settings::Get('dkim.dkimrestart_command')));
+			\Froxlor\FileDir::safe_exec(escapeshellcmd(Settings::Get('dkim.dkimrestart_command')));
 			$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'Dkim-milter reloaded');
 		}
 	}

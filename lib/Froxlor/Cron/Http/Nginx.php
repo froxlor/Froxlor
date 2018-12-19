@@ -72,19 +72,19 @@ class Nginx extends HttpConfigBase
 					Fpm::createDummyPool($restart_cmd['config_dir']);
 				}
 				$this->logger->logAction(CRON_ACTION, LOG_INFO, 'nginx::reload: running ' . $restart_cmd['reload_cmd']);
-				safe_exec(escapeshellcmd($restart_cmd['reload_cmd']));
+				\Froxlor\FileDir::safe_exec(escapeshellcmd($restart_cmd['reload_cmd']));
 			}
 		}
 
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'nginx::reload: reloading nginx');
-		safe_exec(Settings::Get('system.apachereload_command'));
+		\Froxlor\FileDir::safe_exec(Settings::Get('system.apachereload_command'));
 
 		/**
 		 * nginx does not auto-spawn fcgi-processes
 		 */
 		if (Settings::Get('system.phpreload_command') != '' && (int) Settings::Get('phpfpm.enabled') == 0) {
 			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'nginx::reload: restarting php processes');
-			safe_exec(Settings::Get('system.phpreload_command'));
+			\Froxlor\FileDir::safe_exec(Settings::Get('system.phpreload_command'));
 		}
 	}
 
@@ -339,7 +339,7 @@ class Nginx extends HttpConfigBase
 		foreach ($domains as $domain) {
 
 			if (is_dir(Settings::Get('system.apacheconf_vhost'))) {
-				safe_exec('mkdir -p ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir(Settings::Get('system.apacheconf_vhost'))));
+				\Froxlor\FileDir::safe_exec('mkdir -p ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir(Settings::Get('system.apacheconf_vhost'))));
 			}
 
 			$vhost_filename = $this->getVhostFilename($domain);
@@ -647,7 +647,7 @@ class Nginx extends HttpConfigBase
 				if (! empty(Settings::Get('system.dhparams_file'))) {
 					$dhparams = \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.dhparams_file'));
 					if (! file_exists($dhparams)) {
-						safe_exec('openssl dhparam -out ' . escapeshellarg($dhparams) . ' 4096');
+						\Froxlor\FileDir::safe_exec('openssl dhparam -out ' . escapeshellarg($dhparams) . ' 4096');
 					}
 					$sslsettings .= 'ssl_dhparam ' . $dhparams . ';' . "\n";
 				}
@@ -1159,7 +1159,7 @@ class Nginx extends HttpConfigBase
 		} else {
 			if (! file_exists(Settings::Get('system.apacheconf_vhost'))) {
 				$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'nginx::writeConfigs: mkdir ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir(Settings::Get('system.apacheconf_vhost'))));
-				safe_exec('mkdir -p ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir(Settings::Get('system.apacheconf_vhost'))));
+				\Froxlor\FileDir::safe_exec('mkdir -p ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir(Settings::Get('system.apacheconf_vhost'))));
 			}
 
 			// Write a single file for every vhost

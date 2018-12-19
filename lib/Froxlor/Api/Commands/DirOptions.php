@@ -356,12 +356,12 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			$perlsymlink = \Froxlor\FileDir::makeCorrectFile($result['path'] . '/cgi-bin');
 			// remove symlink
 			if (file_exists($perlsymlink)) {
-				safe_exec('rm -f ' . escapeshellarg($perlsymlink));
+				\Froxlor\FileDir::safe_exec('rm -f ' . escapeshellarg($perlsymlink));
 				$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_DEBUG, "[API] deleted suexecworkaround symlink '" . $perlsymlink . "'");
 			}
 			// remove folder in suexec-path
 			if (file_exists($suexecpath)) {
-				safe_exec('rm -rf ' . escapeshellarg($suexecpath));
+				\Froxlor\FileDir::safe_exec('rm -rf ' . escapeshellarg($suexecpath));
 				$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_DEBUG, "[API] deleted suexecworkaround path '" . $suexecpath . "'");
 			}
 		}

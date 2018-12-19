@@ -20,10 +20,9 @@ use Froxlor\Cron\Http\Php\PhpInterface;
  * @author Froxlor team <team@froxlor.org> (2010-)
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package Cron
- *
+ *         
  * @todo ssl-redirect to non-standard port
  */
-
 class Lighttpd extends HttpConfigBase
 {
 
@@ -63,11 +62,11 @@ class Lighttpd extends HttpConfigBase
 					Fpm::createDummyPool($restart_cmd['config_dir']);
 				}
 				$this->logger->logAction(CRON_ACTION, LOG_INFO, 'lighttpd::reload: running ' . $restart_cmd['reload_cmd']);
-				safe_exec(escapeshellcmd($restart_cmd['reload_cmd']));
+				\Froxlor\FileDir::safe_exec(escapeshellcmd($restart_cmd['reload_cmd']));
 			}
 		}
 		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'lighttpd::reload: reloading lighttpd');
-		safe_exec(escapeshellcmd(Settings::Get('system.apachereload_command')));
+		\Froxlor\FileDir::safe_exec(escapeshellcmd(Settings::Get('system.apachereload_command')));
 	}
 
 	public function createIpPort()
@@ -128,12 +127,12 @@ class Lighttpd extends HttpConfigBase
 					}
 				}
 
-				if (!$is_redirect) {
+				if (! $is_redirect) {
 					/**
 					 * dirprotection, see #72
 					 *
 					 * @todo use better regex for this, deferred until 0.9.5
-					 *
+					 *      
 					 *       $this->lighttpd_data[$vhost_filename].= ' $HTTP["url"] =~ "^/(.+)\/(.+)\.php" {' . "\n";
 					 *       $this->lighttpd_data[$vhost_filename].= ' url.access-deny = ("")' . "\n";
 					 *       $this->lighttpd_data[$vhost_filename].= ' }' . "\n";
@@ -211,10 +210,10 @@ class Lighttpd extends HttpConfigBase
 			if ($row_ipsandports['ssl'] == '1') {
 				if ($row_ipsandports['ssl_cert_file'] == '') {
 					$row_ipsandports['ssl_cert_file'] = Settings::Get('system.ssl_cert_file');
-					if (!file_exists($row_ipsandports['ssl_cert_file'])) {
+					if (! file_exists($row_ipsandports['ssl_cert_file'])) {
 						// explicitly disable ssl for this vhost
 						$row_ipsandports['ssl_cert_file'] = "";
-						$this->logger->logAction(CRON_ACTION, LOG_DEBUG, 'System certificate file "'.Settings::Get('system.ssl_cert_file').'" does not seem to exist. Disabling SSL-vhost for "'.Settings::Get('system.hostname').'"');
+						$this->logger->logAction(CRON_ACTION, LOG_DEBUG, 'System certificate file "' . Settings::Get('system.ssl_cert_file') . '" does not seem to exist. Disabling SSL-vhost for "' . Settings::Get('system.hostname') . '"');
 					}
 				}
 
@@ -229,7 +228,7 @@ class Lighttpd extends HttpConfigBase
 					'loginname' => 'froxlor.panel',
 					'documentroot' => $mypath,
 					'customerroot' => $mypath,
-					'parentdomainid' => 0,
+					'parentdomainid' => 0
 				);
 
 				// override corresponding array values
@@ -253,10 +252,10 @@ class Lighttpd extends HttpConfigBase
 					} else {
 						$this->lighttpd_data[$vhost_filename] .= 'ssl.engine = "enable"' . "\n";
 						$this->lighttpd_data[$vhost_filename] .= 'ssl.use-compression = "disable"' . "\n";
-						if (!empty(Settings::Get('system.dhparams_file'))) {
+						if (! empty(Settings::Get('system.dhparams_file'))) {
 							$dhparams = \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.dhparams_file'));
-							if (!file_exists($dhparams)) {
-								safe_exec('openssl dhparam -out '.escapeshellarg($dhparams).' 4096');
+							if (! file_exists($dhparams)) {
+								\Froxlor\FileDir::safe_exec('openssl dhparam -out ' . escapeshellarg($dhparams) . ' 4096');
 							}
 							$this->lighttpd_data[$vhost_filename] .= 'ssl.dh-file = "' . $dhparams . '"' . "\n";
 							$this->lighttpd_data[$vhost_filename] .= 'ssl.ec-curve = "secp384r1"' . "\n";
@@ -392,7 +391,7 @@ class Lighttpd extends HttpConfigBase
 		foreach ($domains as $domain) {
 
 			if (is_dir(Settings::Get('system.apacheconf_vhost'))) {
-				safe_exec('mkdir -p ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir(Settings::Get('system.apacheconf_vhost') . '/vhosts/')));
+				\Froxlor\FileDir::safe_exec('mkdir -p ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir(Settings::Get('system.apacheconf_vhost') . '/vhosts/')));
 
 				// determine correct include-path:
 				// e.g. '/etc/lighttpd/conf-enabled/vhosts/ has to become'
@@ -404,10 +403,10 @@ class Lighttpd extends HttpConfigBase
 				// maindomain
 				if ((int) $domain['parentdomainid'] == 0 && isCustomerStdSubdomain((int) $domain['id']) == false && ((int) $domain['ismainbutsubto'] == 0 || domainMainToSubExists($domain['ismainbutsubto']) == false)) {
 					$vhost_no = '50';
-				}				// sub-but-main-domain
+				} // sub-but-main-domain
 				elseif ((int) $domain['parentdomainid'] == 0 && isCustomerStdSubdomain((int) $domain['id']) == false && (int) $domain['ismainbutsubto'] > 0) {
 					$vhost_no = '51';
-				} 				// subdomains
+				} // subdomains
 				else {
 					// number of dots in a domain specifies it's position (and depth of subdomain) starting at 89 going downwards on higher depth
 					$vhost_no = (string) (90 - substr_count($domain['domain'], ".") + 1);
@@ -486,7 +485,7 @@ class Lighttpd extends HttpConfigBase
 			// Get domain's redirect code
 			$code = getDomainRedirectCode($domain['id']);
 
-			$vhost_content .= '  url.redirect-code = ' . $code. "\n";
+			$vhost_content .= '  url.redirect-code = ' . $code . "\n";
 			$vhost_content .= '  url.redirect = (' . "\n";
 			$vhost_content .= '     "^/(.*)$" => "' . $uri . '$1"' . "\n";
 			$vhost_content .= '  )' . "\n";
@@ -559,10 +558,10 @@ class Lighttpd extends HttpConfigBase
 		if ($ssl_vhost === true && $domain['ssl'] == '1' && (int) Settings::Get('system.use_ssl') == 1) {
 			if ($domain['ssl_cert_file'] == '') {
 				$domain['ssl_cert_file'] = Settings::Get('system.ssl_cert_file');
-				if (!file_exists($domain['ssl_cert_file'])) {
+				if (! file_exists($domain['ssl_cert_file'])) {
 					// explicitly disable ssl for this vhost
 					$domain['ssl_cert_file'] = "";
-					$this->logger->logAction(CRON_ACTION, LOG_DEBUG, 'System certificate file "'.Settings::Get('system.ssl_cert_file').'" does not seem to exist. Disabling SSL-vhost for "'.$domain['domain'].'"');
+					$this->logger->logAction(CRON_ACTION, LOG_DEBUG, 'System certificate file "' . Settings::Get('system.ssl_cert_file') . '" does not seem to exist. Disabling SSL-vhost for "' . $domain['domain'] . '"');
 				}
 			}
 
@@ -573,12 +572,12 @@ class Lighttpd extends HttpConfigBase
 			if ($domain['ssl_cert_file'] != '') {
 
 				// ssl.engine only necessary once in the ip/port vhost (SERVER['socket'] condition)
-				//$ssl_settings .= 'ssl.engine = "enable"' . "\n";
+				// $ssl_settings .= 'ssl.engine = "enable"' . "\n";
 				$ssl_settings .= 'ssl.use-compression = "disable"' . "\n";
-				if (!empty(Settings::Get('system.dhparams_file'))) {
+				if (! empty(Settings::Get('system.dhparams_file'))) {
 					$dhparams = \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.dhparams_file'));
-					if (!file_exists($dhparams)) {
-						safe_exec('openssl dhparam -out '.escapeshellarg($dhparams).' 4096');
+					if (! file_exists($dhparams)) {
+						\Froxlor\FileDir::safe_exec('openssl dhparam -out ' . escapeshellarg($dhparams) . ' 4096');
 					}
 					$ssl_settings .= 'ssl.dh-file = "' . $dhparams . '"' . "\n";
 					$ssl_settings .= 'ssl.ec-curve = "secp384r1"' . "\n";
@@ -927,10 +926,10 @@ class Lighttpd extends HttpConfigBase
 				} else {
 					$stats_text .= '  alias.url = ( "/webalizer/" => "' . \Froxlor\FileDir::makeCorrectFile($domain['customerroot'] . '/webalizer/') . '" )' . "\n";
 				}
-			}			// if the docroots are equal, we still have to set an alias for awstats
-			// because the stats are in /awstats/[domain], not just /awstats/
-			// also, the awstats-icons are someplace else too!
-			// -> webalizer does not need this!
+			} // if the docroots are equal, we still have to set an alias for awstats
+			  // because the stats are in /awstats/[domain], not just /awstats/
+			  // also, the awstats-icons are someplace else too!
+			  // -> webalizer does not need this!
 			elseif (Settings::Get('system.awstats_enabled') == '1') {
 				$stats_text .= '  alias.url = ( "/awstats/" => "' . \Froxlor\FileDir::makeCorrectFile($domain['documentroot'] . '/awstats/' . $domain['domain']) . '" )' . "\n";
 				$stats_text .= '  alias.url += ( "/awstats-icon" => "' . \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.awstats_icons')) . '" )' . "\n";
@@ -970,7 +969,7 @@ class Lighttpd extends HttpConfigBase
 		} else {
 			if (! file_exists(Settings::Get('system.apacheconf_vhost'))) {
 				$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'lighttpd::writeConfigs: mkdir ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir(Settings::Get('system.apacheconf_vhost'))));
-				safe_exec('mkdir ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir(Settings::Get('system.apacheconf_vhost'))));
+				\Froxlor\FileDir::safe_exec('mkdir ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir(Settings::Get('system.apacheconf_vhost'))));
 			}
 
 			// Write a single file for every vhost

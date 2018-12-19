@@ -66,7 +66,7 @@ class DomainSSL
 			$sslcertpath = \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.customer_ssl_path'));
 			// create path if it does not exist
 			if (! file_exists($sslcertpath)) {
-				safe_exec('mkdir -p ' . escapeshellarg($sslcertpath));
+				\Froxlor\FileDir::safe_exec('mkdir -p ' . escapeshellarg($sslcertpath));
 			}
 			// make correct files for the certificates
 			$ssl_files = array(
