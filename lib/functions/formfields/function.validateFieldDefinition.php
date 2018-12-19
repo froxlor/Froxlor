@@ -16,15 +16,13 @@
  * @package    Functions
  *
  */
-
 function validateFieldDefinition($field)
 {
 	$returnvalue = false;
-	
-	if(is_array($field) && !empty($field) && isset($field['fields']) && is_array($field['fields']) && !empty($field['fields']))
-	{
+
+	if (is_array($field) && ! empty($field) && isset($field['fields']) && is_array($field['fields']) && ! empty($field['fields'])) {
 		$returnvalue = true;
 	}
-	
+
 	return $returnvalue;
 }
