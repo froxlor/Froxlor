@@ -153,13 +153,13 @@ if ($action == '2fa_entercode') {
 			}
 		}
 
-		if ((hasUpdates($version) || hasDbUpdates($dbversion)) && $is_admin == false) {
+		if ((\Froxlor\Froxlor::hasUpdates() || \Froxlor\Froxlor::hasDbUpdates()) && $is_admin == false) {
 			redirectTo('index.php');
 			exit();
 		}
 
 		if ($is_admin) {
-			if (hasUpdates($version) || hasDbUpdates($dbversion)) {
+			if (\Froxlor\Froxlor::hasUpdates() || \Froxlor\Froxlor::hasDbUpdates()) {
 				$stmt = Database::prepare("SELECT `loginname` AS `admin` FROM `" . TABLE_PANEL_ADMINS . "`
 					WHERE `loginname`= :loginname
 					AND `change_serversettings` = '1'");
@@ -364,7 +364,7 @@ if ($action == '2fa_entercode') {
 		}
 
 		$update_in_progress = '';
-		if (hasUpdates($version) || hasDbUpdates($dbversion)) {
+		if (\Froxlor\Froxlor::hasUpdates() || \Froxlor\Froxlor::hasDbUpdates()) {
 			$update_in_progress = $lng['update']['updateinprogress_onlyadmincanlogin'];
 		}
 

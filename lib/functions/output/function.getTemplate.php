@@ -91,6 +91,7 @@ function _checkAndParseTpl($filename) {
 		// loop through template more than once in case we have an "if"-statement in another one
 		while (preg_match('/<if[ \t]*(.*)>(.*)(<\/if>|<else>(.*)<\/if>)/Uis', $templatefile)) {
 			$templatefile = preg_replace('/<if[ \t]*(.*)>(.*)(<\/if>|<else>(.*)<\/if>)/Uis', '".( ($1) ? ("$2") : ("$4") )."', $templatefile);
+			$templatefile = str_replace('\\\\', '\\', $templatefile);
 		}
 
 		return $templatefile;
