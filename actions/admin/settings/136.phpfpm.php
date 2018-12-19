@@ -11,7 +11,7 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Settings
+ * @package    \Froxlor\Settings
  *
  */
 
@@ -95,7 +95,7 @@ return array(
 					'varname' => 'use_mod_proxy',
 					'type' => 'bool',
 					'default' => false,
-					'visible' => Settings::Get('system.apache24'),
+					'visible' => \Froxlor\Settings::Get('system.apache24'),
 					'save_method' => 'storeSettingField'
 					),
 				'system_phpfpm_ini_flags' => array(

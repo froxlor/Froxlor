@@ -48,18 +48,6 @@
 					<a href="{$linker->getLink(array('section' => 'configfiles', 'page' => 'configfiles'))}">{$lng['panel']['not_configured']}</a>
 				</li>
 			</if>
-			<if \Froxlor\Settings::Get('ticket.enabled') == 1>
-				<li>
-					<a href="{$linker->getLink(array('section' => 'tickets', 'page' => 'tickets'))}">
-						<if 0 < $awaitingtickets>
-							<img src="templates/{$theme}/assets/img/icons/menubar_tickets.png" alt="{$lng['menue']['ticket']['ticket']}" />
-							<span class="countbubble">{$awaitingtickets}</span>
-						<else>
-							<img src="templates/{$theme}/assets/img/icons/menubar_tickets_null.png" alt="{$lng['menue']['ticket']['ticket']}" />
-						</if>
-					</a>
-				</li>
-			</if>
 			<li>{$userinfo['loginname']}</li>
 			<li><a href="{$linker->getLink(array('section' => 'index'))}">{$lng['panel']['dashboard']}</a></li>
 			<li><a href="#">{$lng['panel']['options']}&nbsp;&#x25BE;</a>

@@ -13,7 +13,7 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Settings
+ * @package    \Froxlor\Settings
  *
  */
 return array(
@@ -102,7 +102,7 @@ return array(
 					'string_type' => 'string',
 					'string_emptyallowed' => false,
 					'default' => 'shmcb:/var/run/apache2/ocsp-stapling.cache(131072)',
-					'visible' => Settings::Get('system.webserver') == "apache2" && Settings::Get('system.apache24') == 1,
+					'visible' => \Froxlor\Settings::Get('system.webserver') == "apache2" && \Froxlor\Settings::Get('system.apache24') == 1,
 					'save_method' => 'storeSettingField'
 				),
 				'system_leenabled' => array(
@@ -144,8 +144,8 @@ return array(
 					'default' => 'testing',
 					'option_mode' => 'one',
 					'option_options' => array(
-						'testing' => 'https://acme-staging' . (Settings::Get('system.leapiversion') == '2' ? '-v02' : '') . '.api.letsencrypt.org (Test)',
-						'production' => 'https://acme-v0' . Settings::Get('system.leapiversion') . '.api.letsencrypt.org (Live)'
+						'testing' => 'https://acme-staging' . (\Froxlor\Settings::Get('system.leapiversion') == '2' ? '-v02' : '') . '.api.letsencrypt.org (Test)',
+						'production' => 'https://acme-v0' . \Froxlor\Settings::Get('system.leapiversion') . '.api.letsencrypt.org (Live)'
 					),
 					'save_method' => 'storeSettingField'
 				),

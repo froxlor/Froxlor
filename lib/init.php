@@ -303,18 +303,18 @@ if (isset($userinfo['language']) && isset($languages[$userinfo['language']])) {
 
 // include every english language file we can get
 foreach ($langs['English'] as $key => $value) {
-	include_once makeSecurePath($value['file']);
+	include_once \Froxlor\FileDir::makeSecurePath($value['file']);
 }
 
 // now include the selected language if its not english
 if ($language != 'English') {
 	foreach ($langs[$language] as $key => $value) {
-		include_once makeSecurePath($value['file']);
+		include_once \Froxlor\FileDir::makeSecurePath($value['file']);
 	}
 }
 
 // last but not least include language references file
-include_once makeSecurePath('lng/lng_references.php');
+include_once \Froxlor\FileDir::makeSecurePath('lng/lng_references.php');
 
 // Initialize our new link - class
 $linker = new linker('index.php', $s);
@@ -394,7 +394,7 @@ if (isset($userinfo['loginname'])
  */
 $navigation = "";
 if (AREA == 'admin' || AREA == 'customer') {
-	if (hasUpdates($version) || hasDbUpdates($dbversion)) {
+	if (\Froxlor\Froxlor::hasUpdates() || \Froxlor\Froxlor::hasDbUpdates()) {
 		/*
 		 * if froxlor-files have been updated
 		 * but not yet configured by the admin
@@ -434,43 +434,6 @@ if (AREA == 'admin' || AREA == 'customer') {
 		$navigation = buildNavigation($navigation_data[AREA], $userinfo);
 	}
 	unset($navigation_data);
-}
-
-/**
- * header information about open tickets (only if used)
- */
-$awaitingtickets = 0;
-$awaitingtickets_text = '';
-if (Settings::Get('ticket.enabled') == '1') {
-
-	$opentickets = 0;
-
-	if (AREA == 'admin' && isset($userinfo['adminid'])) {
-		$opentickets_stmt = Database::prepare("
-			SELECT COUNT(`id`) as `count` FROM `" . TABLE_PANEL_TICKETS . "`
-			WHERE `answerto` = '0' AND (`status` = '0' OR `status` = '1')
-			AND `lastreplier` = '0' AND `adminid` = :adminid
-		");
-		$opentickets = Database::pexecute_first($opentickets_stmt, array('adminid' => $userinfo['adminid']));
-		$awaitingtickets = $opentickets['count'];
-
-		if ($opentickets > 0) {
-			$awaitingtickets_text = strtr($lng['ticket']['awaitingticketreply'], array('%s' => '<a href="admin_tickets.php?page=tickets&amp;s=' . $s . '">' . $opentickets['count'] . '</a>'));
-		}
-	}
-	elseif (AREA == 'customer' && isset($userinfo['customerid'])) {
-		$opentickets_stmt = Database::prepare("
-			SELECT COUNT(`id`) as `count` FROM `" . TABLE_PANEL_TICKETS . "`
-			WHERE `answerto` = '0' AND (`status` = '0' OR `status` = '2')
-			AND `lastreplier` = '1' AND `customerid` = :customerid
-		");
-		$opentickets = Database::pexecute_first($opentickets_stmt, array('customerid' => $userinfo['customerid']));
-		$awaitingtickets = $opentickets['count'];
-
-		if ($opentickets > 0) {
-			$awaitingtickets_text = strtr($lng['ticket']['awaitingticketreply'], array('%s' => '<a href="customer_tickets.php?page=tickets&amp;s=' . $s . '">' . $opentickets['count'] . '</a>'));
-		}
-	}
 }
 
 $js = "";

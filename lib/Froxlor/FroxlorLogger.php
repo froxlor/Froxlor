@@ -183,18 +183,6 @@ class FroxlorLogger
 		self::$crondebug_flag = (bool) $_flag;
 	}
 
-	/**
-	 * setter for crondebug-flag
-	 *
-	 * @param bool $_flag
-	 *
-	 * @return void
-	 */
-	public function setCronDebugFlag($_flag = false)
-	{
-		self::$crondebug_flag = (bool) $_flag;
-	}
-
 	private function getLogLevelDesc($type)
 	{
 		switch ($type) {

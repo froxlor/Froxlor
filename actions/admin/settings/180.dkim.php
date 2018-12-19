@@ -13,7 +13,7 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Settings
+ * @package    \Froxlor\Settings
  *
  */
 
@@ -81,7 +81,7 @@ return array(
 				'dkim_keylength' => array(
 					'label' => array(
 						'title' => $lng['dkim']['dkim_keylength']['title'],
-						'description' => sprintf($lng['dkim']['dkim_keylength']['description'], Settings::Get('dkim.dkim_prefix'))
+						'description' => sprintf($lng['dkim']['dkim_keylength']['description'], \Froxlor\Settings::Get('dkim.dkim_prefix'))
 					),
 					'settinggroup' => 'dkim',
 					'varname' => 'dkim_keylength',
