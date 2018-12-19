@@ -134,7 +134,7 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201812180')) {
 	Database::query("ALTER TABLE `" . TABLE_PANEL_CRONRUNS . "` ADD `cronclass` varchar(500) NOT NULL AFTER `cronfile`");
 	$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CRONRUNS . "` SET `cronclass`  = :cc WHERE `cronfile` = :cf");
 	Database::pexecute($upd_stmt, array(
-		'cc' => '\\Froxlor\\Cron\\TasksCron',
+		'cc' => '\\Froxlor\\Cron\\System\\TasksCron',
 		'cf' => 'tasks'
 	));
 	Database::pexecute($upd_stmt, array(
@@ -150,7 +150,7 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201812180')) {
 		'cf' => 'mailboxsize'
 	));
 	Database::pexecute($upd_stmt, array(
-		'cc' => '\\Froxlor\\Cron\\LetsEncrypt\\LetsEncrypt',
+		'cc' => '\\Froxlor\\Cron\\Http\\LetsEncrypt\\LetsEncrypt',
 		'cf' => 'letsencrypt'
 	));
 	Database::pexecute($upd_stmt, array(
