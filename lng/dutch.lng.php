@@ -525,127 +525,15 @@ $lng['admin']['webalizer']['veryquiet'] = 'Geen uitvoer';
 $lng['serversettings']['webalizer_quiet']['title'] = 'Uitvoer Webalizer';
 $lng['serversettings']['webalizer_quiet']['description'] = 'Informatieniveau van Webalizer';
 
-// ADDED IN 1.2.18-svn3
-
-$lng['ticket']['admin_email'] = 'root@localhost';
-$lng['ticket']['noreply_email'] = 'tickets@froxlor';
-$lng['admin']['ticketsystem'] = 'Ondersteuningstickets';
-$lng['menue']['ticket']['ticket'] = 'Ondersteuningstickets';
-$lng['menue']['ticket']['categories'] = 'Ondersteuningscategorieën';
-$lng['menue']['ticket']['archive'] = 'Ticket-archief';
-$lng['ticket']['description'] = 'Hier kunt u hulpverzoeken naar uw beheerder sturen.<br /> Notificatie\'s worden verzonden via email.';
-$lng['ticket']['ticket_new'] = 'Een nieuw ticket openen';
-$lng['ticket']['ticket_reply'] = 'Ticket beantwoorden';
-$lng['ticket']['ticket_reopen'] = 'Ticket heropenen';
-$lng['ticket']['ticket_newcateory'] = 'Nieuwe categorie maken';
-$lng['ticket']['ticket_editcateory'] = 'Categorie bewerken';
-$lng['ticket']['ticket_view'] = 'Ticketverloop weergeven';
-$lng['ticket']['ticketcount'] = 'Tickets';
-$lng['ticket']['ticket_answers'] = 'Antwoorden';
-$lng['ticket']['lastchange'] = 'Laatste actie';
-$lng['ticket']['subject'] = 'Onderwerp';
-$lng['ticket']['status'] = 'Status';
-$lng['ticket']['lastreplier'] = 'Laatste beantwoorder';
-$lng['ticket']['priority'] = 'Prioriteit';
-$lng['ticket']['low'] = 'Laag';
-$lng['ticket']['normal'] = 'Normaal';
-$lng['ticket']['high'] = 'Hoog';
-$lng['ticket']['lastchange'] = 'Laatste wijziging';
-$lng['ticket']['lastchange_from'] = 'Datum vanaf (dd.mm.yyyy)';
-$lng['ticket']['lastchange_to'] = 'Datum tot (dd.mm.yyyy)';
-$lng['ticket']['category'] = 'Categorie';
-$lng['ticket']['no_cat'] = 'Geen';
-$lng['ticket']['message'] = 'Bericht';
-$lng['ticket']['show'] = 'Tonen';
-$lng['ticket']['answer'] = 'Beantwoorden';
-$lng['ticket']['close'] = 'Sluiten';
-$lng['ticket']['reopen'] = 'Heropenen';
-$lng['ticket']['archive'] = 'Archiveren';
-$lng['ticket']['ticket_delete'] = 'Ticket verwijderen';
-$lng['ticket']['lastarchived'] = 'Recentelijk ontvangen tickets';
-$lng['ticket']['archivedtime'] = 'Gearchiveerd';
-$lng['ticket']['open'] = 'Openen';
-$lng['ticket']['wait_reply'] = 'Gereed voor antwoord';
-$lng['ticket']['replied'] = 'Beantwoord';
-$lng['ticket']['closed'] = 'Gesloten';
-$lng['ticket']['staff'] = 'Staf';
-$lng['ticket']['customer'] = 'Klant';
-$lng['ticket']['old_tickets'] = 'Berichten voor ticket';
-$lng['ticket']['search'] = 'Archief doorzoeken';
-$lng['ticket']['nocustomer'] = 'Geen keuze';
-$lng['ticket']['archivesearch'] = 'Zoekresultaten archief';
-$lng['ticket']['noresults'] = 'Geen resultaten gevonden';
-$lng['ticket']['notmorethanxopentickets'] = 'Omwille van spambeveiliging kunt u niet meer dan %s tickets open hebben';
-$lng['ticket']['supportstatus'] = 'Status support';
-$lng['ticket']['supportavailable'] = '<span class="ticket_low">Onze ondersteuningsmedewerkers zijn beschikbaar.</span>';
-$lng['ticket']['supportnotavailable'] = '<span class="ticket_high">Onze ondersteuningsmedewerkers zijn niet beschikbaar</span>';
-$lng['admin']['templates']['ticket'] = 'Notificatie-mails voor ondersteuningstickets';
-$lng['admin']['templates']['SUBJECT'] = 'Wordt vervangen door het onderwerp van het ondersteuni';
-$lng['admin']['templates']['new_ticket_for_customer'] = 'Informatie voor de klant dat het ticket is verstuurd';
-$lng['admin']['templates']['new_ticket_by_customer'] = 'Notificatie voor beheerder';
-$lng['admin']['templates']['new_reply_ticket_by_customer'] = 'Notificatie voor beheerder voor antwoord van klant';
-$lng['admin']['templates']['new_ticket_by_staff'] = 'Notificatie voor klant van ticket geopend door stafleden';
-$lng['admin']['templates']['new_reply_ticket_by_staff'] = 'Notificatie voor klant van antwoorden door stafleden';
-$lng['mails']['new_ticket_for_customer']['mailbody'] = 'Hallo {FIRSTNAME} {NAME},\n\nuw ondersteuningsticket met het onderwerp "{SUBJECT}" is verstuurd.\n\nU krijgt bericht wanneer uw ticket beantwoord is.\n\nMet vriendelijke groet,\nuw beheerder';
-$lng['mails']['new_ticket_for_customer']['subject'] = 'Uw ondersteuningsticket is verzonden';
-$lng['mails']['new_ticket_by_customer']['mailbody'] = 'Hallo beheerder,\n\neen nieuw ondersteuningsticket met onderwerp "{SUBJECT}" is verstuurd.\n\nU dient in te loggen om het ticket te behandelen.\n\nMet vriendelijke groet,\nuw beheerder';
-$lng['mails']['new_ticket_by_customer']['subject'] = 'Nieuw ondersteuningsticket verzonden';
-$lng['mails']['new_reply_ticket_by_customer']['mailbody'] = 'Hallo beheerder,\n\nhet ondersteuningsticket "{SUBJECT}" is beantwoord door een klant.\n\nU dient in te loggen om het ticket te behandelen.\n\nMet vriendelijk groet,\nuw beheerder';
-$lng['mails']['new_reply_ticket_by_customer']['subject'] = 'Nieuw antwoord op ondersteuningsticket';
-$lng['mails']['new_ticket_by_staff']['mailbody'] = 'Hallo {FIRSTNAME} {NAME},\n\neen ondersteuningsticket met onderwerp "{SUBJECT}" is voor u geopend.\n\nU dient in te loggen om het ticket te bekijken.\n\nMet vriendelijk groet,\nuw beheerder';
-$lng['mails']['new_ticket_by_staff']['subject'] = 'Nieuw ondersteuningsticket verzonden';
-$lng['mails']['new_reply_ticket_by_staff']['mailbody'] = 'Hallo {FIRSTNAME} {NAME},\n\nhet ondersteuningsticket met onderwerp "{SUBJECT}" is door onze staf beantwoord.\n\nU dient in te loggen om het ticket te bekijken.\n\nMet vriendelijk groet,\nuw beheerder';
-$lng['mails']['new_reply_ticket_by_staff']['subject'] = 'Nieuw antwoord op ondersteuningsticket';
-$lng['question']['ticket_reallyclose'] = 'Weet u zeker dat u ticket "%s" wilt sluiten?';
-$lng['question']['ticket_reallydelete'] = 'Weet u zeker dat u ticket "%s" wilt verwijderen?';
-$lng['question']['ticket_reallydeletecat'] = 'Weet u zeker dat u de categorie "%s" wilt verwijderen?';
-$lng['question']['ticket_reallyarchive'] = 'Weet u zeker dat u ticket "%s" wilt archiveren?';
-$lng['error']['nomoreticketsavailable'] = 'U hebt al uw beschikbare tickets verbruikt. Neem contact op met uw beheerder.';
-$lng['error']['nocustomerforticket'] = 'U kunt geen tickets aanmaken zonder gebruikers';
-$lng['error']['categoryhastickets'] = 'Deze categorie bevat nog tickets.<br />Verwijder de tickets eerst alvorens de categorie te verwijderen';
-$lng['admin']['ticketsettings'] = 'Instellingen voor ondersteuningstickets';
-$lng['admin']['archivelastrun'] = 'Laatste archivering tickets';
-$lng['serversettings']['ticket']['noreply_email']['title'] = 'Emailadres voor geen-antwoord';
-$lng['serversettings']['ticket']['noreply_email']['description'] = 'Het adres van de afzender, in de meeste gevallen zoiets als no-reply@domein.tld';
-$lng['serversettings']['ticket']['worktime_begin']['title'] = 'Aanvang beschikbaarheid ondersteuning (hh:mm)';
-$lng['serversettings']['ticket']['worktime_begin']['description'] = 'Tijd vanaf beschikbaarheid ondersteuning';
-$lng['serversettings']['ticket']['worktime_end']['title'] = 'Eindtijd beschikbaarheid onder steuning (hh:mm)';
-$lng['serversettings']['ticket']['worktime_end']['description'] = 'Eindtijd beschikbaarheid ondersteuning';
-$lng['serversettings']['ticket']['worktime_sat'] = 'Ondersteuning beschikbaar op zaterdagen?';
-$lng['serversettings']['ticket']['worktime_sun'] = 'Ondersteuning beschikbaar op zondagen?';
-$lng['serversettings']['ticket']['worktime_all']['title'] = 'Geen tijdlimiet voor ondersteuning';
-$lng['serversettings']['ticket']['worktime_all']['description'] = 'Indien "Ja" worden de instelling voor de tijd overschreven';
-$lng['serversettings']['ticket']['archiving_days'] = 'Na hoeveel dagen dienen gesloten tickets te worden gearchiveerd?';
-$lng['customer']['tickets'] = 'Ondersteuningstickets';
-
 // ADDED IN 1.2.18-svn4
 
 $lng['admin']['domain_nocustomeraddingavailable'] = 'Het is niet mogelijk een domein toe te voegen. U dient tenminste een klant aan te maken.';
-$lng['serversettings']['ticket']['enable'] = 'Ticketsysteem inschakelijk';
-$lng['serversettings']['ticket']['concurrentlyopen'] = 'Hoeveel tickets kunnen per keer open staan?';
-$lng['error']['norepymailiswrong'] = 'Het "geen-antwoord-adres" is onjuist. Alleen geldige emailadressen zijn toegestaan.';
-$lng['error']['tadminmailiswrong'] = 'Het "Ticketbeheerder-adres" is onjuist. Alleen geldige emailadressen zijn toegestaan.';
-$lng['ticket']['awaitingticketreply'] = 'U hebt %s onbeantwoorde ondersteuningsticket(s)';
-
-// ADDED IN 1.2.18-svn5
-
-$lng['serversettings']['ticket']['noreply_name'] = 'Afzender van emailas ondersteuningsticket';
 
 // ADDED IN 1.2.19-svn1
 
 $lng['serversettings']['mod_fcgid']['configdir']['title'] = 'Configuratiemap';
 $lng['serversettings']['mod_fcgid']['configdir']['description'] = 'Waar dienen alle configuratiebestanden voor FCGID te worden opgeslagen? Indien u geen aangepaste versie van SuExec gebruikt, zoals gebruikelijk is, dient dit pad onder /var/www/ te liggen';
 $lng['serversettings']['mod_fcgid']['tmpdir']['title'] = 'Map voor tijdelijke bestanden';
-
-// ADDED IN 1.2.19-svn3
-
-$lng['serversettings']['ticket']['reset_cycle']['title'] = 'Cyclus voor opnieuw instellen gebruikte tickets';
-$lng['serversettings']['ticket']['reset_cycle']['description'] = 'Stelt het door klant gebruikte tickets in op 0 na deze periode';
-$lng['admin']['tickets']['daily'] = 'Dagelijks';
-$lng['admin']['tickets']['weekly'] = 'Wekelijks';
-$lng['admin']['tickets']['monthly'] = 'Maandelijks';
-$lng['admin']['tickets']['yearly'] = 'Jaarlijks';
-$lng['error']['ticketresetcycleiswrong'] = 'De cyclus dient "Dagelijks", "Wekelijks", "Maandelijks" of "Jaarlijks" te zijn.';
 
 // ADDED IN 1.2.19-svn4
 
@@ -744,7 +632,6 @@ $lng['dkim']['dkimrestart_command']['description'] = 'Geef het commando om de mi
 
 $lng['admin']['allips'] = 'Alle IP\'s';
 $lng['panel']['nosslipsavailable'] = 'Er zijn op dit moment geen SSL IP/poorten beschikbaar';
-$lng['ticket']['by'] = 'door';
 $lng['dkim']['use_dkim']['title'] = 'Activeer ondersteuning voor DKIM?';
 $lng['dkim']['use_dkim']['description'] = 'Wilt u gebruikmaken van Domain Keys (DKIM) systeem?';
 $lng['error']['invalidmysqlhost'] = 'Ongeldig adres voor MySQL-host: %s';
@@ -988,8 +875,6 @@ $lng['tasks']['rebuild_bindconfig'] = 'Opnieuw opbouwen bind-configuratie';
 $lng['tasks']['creating_ftpdir'] = 'Map aanmaken voor nieuwe FTP-gebruiker';
 $lng['tasks']['deleting_customerfiles'] = 'Verwijderen klantbestanden van %loginname%';
 $lng['tasks']['noneoutstanding'] = 'Er zijn op dit moment geen uitstaande taken voor Froxlor';
-$lng['ticket']['nonexistingcustomer'] = '(verwijderde klant)';
-$lng['admin']['ticket_nocustomeraddingavailable'] = 'Het is niet mogelijk een nieuw supportticket te openen. U dient minimaal 1 klant toe te voegen.';
 
 // ADDED IN FROXLOR 0.9.1
 
@@ -1044,8 +929,6 @@ $lng['admin']['cron']['add'] = 'Cron-taak toevoegen';
 $lng['crondesc']['cron_tasks'] = 'aanmaken configuratiebestanden';
 $lng['crondesc']['cron_legacy'] = 'oude cron-taak';
 $lng['crondesc']['cron_traffic'] = 'berekenen verkeersgegevens';
-$lng['crondesc']['cron_ticketsreset'] = 'opnieuw instellen ticket-tellers';
-$lng['crondesc']['cron_ticketarchive'] = 'oude tickets archiveren';
 $lng['cronmgmt']['seconds'] = 'seconden';
 $lng['cronmgmt']['minutes'] = 'minuten';
 $lng['cronmgmt']['hours'] = 'uren';
@@ -1077,8 +960,6 @@ $lng['panel']['neverloggedin'] = 'Nog niet ingelogd';
 
 // ADDED IN FROXLOR 0.9.6-svn1
 $lng['serversettings']['defaultttl'] = 'Standaard TTL voor domeinen in seconden (standaard \'604800\' = 1 week)';
-$lng['ticket']['logicalorder'] = 'Logische volgorde';
-$lng['ticket']['orderdesc'] = 'Hier kunt u uw eigen logische volgorde instellen voor het weergeven van de categorie voor tickets. Gebruik 1 - 999, lage nummers worden bovenaan getoond.';
 
 // ADDED IN FROXLOR 0.9.6-svn3
 $lng['serversettings']['defaultwebsrverrhandler_enabled'] = 'Standaard foutdocumenten voor alle klanten activeren';
@@ -1089,9 +970,6 @@ $lng['serversettings']['defaultwebsrverrhandler_err403']['description'] = '<div 
 $lng['serversettings']['defaultwebsrverrhandler_err404'] = 'Bestand/URL voor foutcode 404';
 $lng['serversettings']['defaultwebsrverrhandler_err500']['title'] = 'Bestand/URL voor foutcode 500';
 $lng['serversettings']['defaultwebsrverrhandler_err500']['description'] = '<div class="red">Wordt niet ondersteund in: lighttpd</div>';
-
-// ADDED IN FROXLOR 0.9.6-svn4
-$lng['serversettings']['ticket']['default_priority'] = 'Standaardprioriteit voor support-tickets';
 
 // ADDED IN FROXLOR 0.9.6-svn5
 $lng['serversettings']['mod_fcgid']['defaultini'] = 'Standaard PHP-configuratie voor nieuwe domeinen';

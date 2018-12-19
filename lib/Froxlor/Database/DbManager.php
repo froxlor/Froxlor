@@ -50,7 +50,7 @@ class DbManager {
 	/**
 	 * main constructor
 	 *
-	 * @param \FroxlorLogger $log
+	 * @param \Froxlor\FroxlorLogger $log
 	 */
 	public function __construct($log = null) {
 		$this->_log = $log;

@@ -184,10 +184,6 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 	 *        	optional amount of ftp-accounts available for customer, default 0
 	 * @param bool $ftps_ul
 	 *        	optional, whether customer should have unlimited ftp-accounts, default 0 (false)
-	 * @param int $tickets
-	 *        	optional amount of tickets available for customer if enabled, default 0
-	 * @param bool $tickets_ul
-	 *        	optional, whether customer should have unlimited tickets if enabled, default 0 (false)
 	 * @param int $mysqls
 	 *        	optional amount of mysql-databases available for customer, default 0
 	 * @param bool $mysqls_ul
@@ -245,7 +241,6 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				$email_imap = $this->getBoolParam('email_imap', true, 0);
 				$email_pop3 = $this->getBoolParam('email_pop3', true, 0);
 				$ftps = $this->getUlParam('ftps', 'ftps_ul', true, 0);
-				$tickets = $this->getUlParam('tickets', 'tickets_ul', true, 0);
 				$mysqls = $this->getUlParam('mysqls', 'mysqls_ul', true, 0);
 				$createstdsubdomain = $this->getBoolParam('createstdsubdomain', true, 0);
 				$password = $this->getParam('new_customer_password', true, '');
@@ -277,10 +272,6 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 					$email_quota = - 1;
 				}
 
-				if (Settings::Get('ticket.enabled') != '1') {
-					$tickets = - 1;
-				}
-
 				$password = validate($password, 'password', '', '', array(), true);
 				// only check if not empty,
 				// cause empty == generate password automatically
@@ -305,7 +296,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				$diskspace = $diskspace * 1024;
 				$traffic = $traffic * 1024 * 1024;
 
-				if (((($this->getUserDetail('diskspace_used') + $diskspace) > $this->getUserDetail('diskspace')) && ($this->getUserDetail('diskspace') / 1024) != '-1') || ((($this->getUserDetail('mysqls_used') + $mysqls) > $this->getUserDetail('mysqls')) && $this->getUserDetail('mysqls') != '-1') || ((($this->getUserDetail('emails_used') + $emails) > $this->getUserDetail('emails')) && $this->getUserDetail('emails') != '-1') || ((($this->getUserDetail('email_accounts_used') + $email_accounts) > $this->getUserDetail('email_accounts')) && $this->getUserDetail('email_accounts') != '-1') || ((($this->getUserDetail('email_forwarders_used') + $email_forwarders) > $this->getUserDetail('email_forwarders')) && $this->getUserDetail('email_forwarders') != '-1') || ((($this->getUserDetail('email_quota_used') + $email_quota) > $this->getUserDetail('email_quota')) && $this->getUserDetail('email_quota') != '-1' && Settings::Get('system.mail_quota_enabled') == '1') || ((($this->getUserDetail('ftps_used') + $ftps) > $this->getUserDetail('ftps')) && $this->getUserDetail('ftps') != '-1') || ((($this->getUserDetail('tickets_used') + $tickets) > $this->getUserDetail('tickets')) && $this->getUserDetail('tickets') != '-1') || ((($this->getUserDetail('subdomains_used') + $subdomains) > $this->getUserDetail('subdomains')) && $this->getUserDetail('subdomains') != '-1') || (($diskspace / 1024) == '-1' && ($this->getUserDetail('diskspace') / 1024) != '-1') || ($mysqls == '-1' && $this->getUserDetail('mysqls') != '-1') || ($emails == '-1' && $this->getUserDetail('emails') != '-1') || ($email_accounts == '-1' && $this->getUserDetail('email_accounts') != '-1') || ($email_forwarders == '-1' && $this->getUserDetail('email_forwarders') != '-1') || ($email_quota == '-1' && $this->getUserDetail('email_quota') != '-1' && Settings::Get('system.mail_quota_enabled') == '1') || ($ftps == '-1' && $this->getUserDetail('ftps') != '-1') || ($tickets == '-1' && $this->getUserDetail('tickets') != '-1') || ($subdomains == '-1' && $this->getUserDetail('subdomains') != '-1')) {
+				if (((($this->getUserDetail('diskspace_used') + $diskspace) > $this->getUserDetail('diskspace')) && ($this->getUserDetail('diskspace') / 1024) != '-1') || ((($this->getUserDetail('mysqls_used') + $mysqls) > $this->getUserDetail('mysqls')) && $this->getUserDetail('mysqls') != '-1') || ((($this->getUserDetail('emails_used') + $emails) > $this->getUserDetail('emails')) && $this->getUserDetail('emails') != '-1') || ((($this->getUserDetail('email_accounts_used') + $email_accounts) > $this->getUserDetail('email_accounts')) && $this->getUserDetail('email_accounts') != '-1') || ((($this->getUserDetail('email_forwarders_used') + $email_forwarders) > $this->getUserDetail('email_forwarders')) && $this->getUserDetail('email_forwarders') != '-1') || ((($this->getUserDetail('email_quota_used') + $email_quota) > $this->getUserDetail('email_quota')) && $this->getUserDetail('email_quota') != '-1' && Settings::Get('system.mail_quota_enabled') == '1') || ((($this->getUserDetail('ftps_used') + $ftps) > $this->getUserDetail('ftps')) && $this->getUserDetail('ftps') != '-1') || ((($this->getUserDetail('subdomains_used') + $subdomains) > $this->getUserDetail('subdomains')) && $this->getUserDetail('subdomains') != '-1') || (($diskspace / 1024) == '-1' && ($this->getUserDetail('diskspace') / 1024) != '-1') || ($mysqls == '-1' && $this->getUserDetail('mysqls') != '-1') || ($emails == '-1' && $this->getUserDetail('emails') != '-1') || ($email_accounts == '-1' && $this->getUserDetail('email_accounts') != '-1') || ($email_forwarders == '-1' && $this->getUserDetail('email_forwarders') != '-1') || ($email_quota == '-1' && $this->getUserDetail('email_quota') != '-1' && Settings::Get('system.mail_quota_enabled') == '1') || ($ftps == '-1' && $this->getUserDetail('ftps') != '-1') || ($subdomains == '-1' && $this->getUserDetail('subdomains') != '-1')) {
 					standard_error('youcantallocatemorethanyouhave', '', true);
 				}
 
@@ -418,7 +409,6 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 						'email_forwarders' => $email_forwarders,
 						'email_quota' => $email_quota,
 						'ftps' => $ftps,
-						'tickets' => $tickets,
 						'mysqls' => $mysqls,
 						'phpenabled' => $phpenabled,
 						'allowed_phpconfigs' => empty($allowed_phpconfigs) ? "" : json_encode($allowed_phpconfigs),
@@ -459,7 +449,6 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 						`email_forwarders` = :email_forwarders,
 						`email_quota` = :email_quota,
 						`ftps` = :ftps,
-						`tickets` = :tickets,
 						`mysqls` = :mysqls,
 						`standardsubdomain` = '0',
 						`phpenabled` = :phpenabled,
@@ -507,10 +496,6 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 
 					if ($ftps != '-1') {
 						$admin_update_query .= ", `ftps_used` = `ftps_used` + 0" . (int) $ftps;
-					}
-
-					if ($tickets != '-1' && Settings::Get('ticket.enabled') == 1) {
-						$admin_update_query .= ", `tickets_used` = `tickets_used` + 0" . (int) $tickets;
 					}
 
 					if (($diskspace / 1024) != '-1') {
@@ -824,10 +809,6 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 	 *        	optional amount of ftp-accounts available for customer, default 0
 	 * @param bool $ftps_ul
 	 *        	optional, whether customer should have unlimited ftp-accounts, default 0 (false)
-	 * @param int $tickets
-	 *        	optional amount of tickets available for customer if enabled, default 0
-	 * @param bool $tickets_ul
-	 *        	optional, whether customer should have unlimited tickets if enabled, default 0 (false)
 	 * @param int $mysqls
 	 *        	optional amount of mysql-databases available for customer, default 0
 	 * @param bool $mysqls_ul
@@ -895,7 +876,6 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 			$email_imap = $this->getParam('email_imap', true, $result['imap']);
 			$email_pop3 = $this->getParam('email_pop3', true, $result['pop3']);
 			$ftps = $this->getUlParam('ftps', 'ftps_ul', true, $result['ftps']);
-			$tickets = $this->getUlParam('tickets', 'tickets_ul', true, $result['tickets']);
 			$mysqls = $this->getUlParam('mysqls', 'mysqls_ul', true, $result['mysqls']);
 			$createstdsubdomain = $this->getBoolParam('createstdsubdomain', true, 0);
 			$password = $this->getParam('new_customer_password', true, '');
@@ -936,10 +916,6 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 			$email_quota = - 1;
 		}
 
-		if (Settings::Get('ticket.enabled') != '1') {
-			$tickets = - 1;
-		}
-
 		if (empty($theme)) {
 			$theme = Settings::Get('panel.default_theme');
 		}
@@ -949,7 +925,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 			$diskspace = $diskspace * 1024;
 			$traffic = $traffic * 1024 * 1024;
 
-			if (((($this->getUserDetail('diskspace_used') + $diskspace - $result['diskspace']) > $this->getUserDetail('diskspace')) && ($this->getUserDetail('diskspace') / 1024) != '-1') || ((($this->getUserDetail('mysqls_used') + $mysqls - $result['mysqls']) > $this->getUserDetail('mysqls')) && $this->getUserDetail('mysqls') != '-1') || ((($this->getUserDetail('emails_used') + $emails - $result['emails']) > $this->getUserDetail('emails')) && $this->getUserDetail('emails') != '-1') || ((($this->getUserDetail('email_accounts_used') + $email_accounts - $result['email_accounts']) > $this->getUserDetail('email_accounts')) && $this->getUserDetail('email_accounts') != '-1') || ((($this->getUserDetail('email_forwarders_used') + $email_forwarders - $result['email_forwarders']) > $this->getUserDetail('email_forwarders')) && $this->getUserDetail('email_forwarders') != '-1') || ((($this->getUserDetail('email_quota_used') + $email_quota - $result['email_quota']) > $this->getUserDetail('email_quota')) && $this->getUserDetail('email_quota') != '-1' && Settings::Get('system.mail_quota_enabled') == '1') || ((($this->getUserDetail('ftps_used') + $ftps - $result['ftps']) > $this->getUserDetail('ftps')) && $this->getUserDetail('ftps') != '-1') || ((($this->getUserDetail('tickets_used') + $tickets - $result['tickets']) > $this->getUserDetail('tickets')) && $this->getUserDetail('tickets') != '-1') || ((($this->getUserDetail('subdomains_used') + $subdomains - $result['subdomains']) > $this->getUserDetail('subdomains')) && $this->getUserDetail('subdomains') != '-1') || (($diskspace / 1024) == '-1' && ($this->getUserDetail('diskspace') / 1024) != '-1') || ($mysqls == '-1' && $this->getUserDetail('mysqls') != '-1') || ($emails == '-1' && $this->getUserDetail('emails') != '-1') || ($email_accounts == '-1' && $this->getUserDetail('email_accounts') != '-1') || ($email_forwarders == '-1' && $this->getUserDetail('email_forwarders') != '-1') || ($email_quota == '-1' && $this->getUserDetail('email_quota') != '-1' && Settings::Get('system.mail_quota_enabled') == '1') || ($ftps == '-1' && $this->getUserDetail('ftps') != '-1') || ($tickets == '-1' && $this->getUserDetail('tickets') != '-1') || ($subdomains == '-1' && $this->getUserDetail('subdomains') != '-1')) {
+			if (((($this->getUserDetail('diskspace_used') + $diskspace - $result['diskspace']) > $this->getUserDetail('diskspace')) && ($this->getUserDetail('diskspace') / 1024) != '-1') || ((($this->getUserDetail('mysqls_used') + $mysqls - $result['mysqls']) > $this->getUserDetail('mysqls')) && $this->getUserDetail('mysqls') != '-1') || ((($this->getUserDetail('emails_used') + $emails - $result['emails']) > $this->getUserDetail('emails')) && $this->getUserDetail('emails') != '-1') || ((($this->getUserDetail('email_accounts_used') + $email_accounts - $result['email_accounts']) > $this->getUserDetail('email_accounts')) && $this->getUserDetail('email_accounts') != '-1') || ((($this->getUserDetail('email_forwarders_used') + $email_forwarders - $result['email_forwarders']) > $this->getUserDetail('email_forwarders')) && $this->getUserDetail('email_forwarders') != '-1') || ((($this->getUserDetail('email_quota_used') + $email_quota - $result['email_quota']) > $this->getUserDetail('email_quota')) && $this->getUserDetail('email_quota') != '-1' && Settings::Get('system.mail_quota_enabled') == '1') || ((($this->getUserDetail('ftps_used') + $ftps - $result['ftps']) > $this->getUserDetail('ftps')) && $this->getUserDetail('ftps') != '-1') || ((($this->getUserDetail('subdomains_used') + $subdomains - $result['subdomains']) > $this->getUserDetail('subdomains')) && $this->getUserDetail('subdomains') != '-1') || (($diskspace / 1024) == '-1' && ($this->getUserDetail('diskspace') / 1024) != '-1') || ($mysqls == '-1' && $this->getUserDetail('mysqls') != '-1') || ($emails == '-1' && $this->getUserDetail('emails') != '-1') || ($email_accounts == '-1' && $this->getUserDetail('email_accounts') != '-1') || ($email_forwarders == '-1' && $this->getUserDetail('email_forwarders') != '-1') || ($email_quota == '-1' && $this->getUserDetail('email_quota') != '-1' && Settings::Get('system.mail_quota_enabled') == '1') || ($ftps == '-1' && $this->getUserDetail('ftps') != '-1') || ($subdomains == '-1' && $this->getUserDetail('subdomains') != '-1')) {
 				standard_error('youcantallocatemorethanyouhave', '', true);
 			}
 
@@ -1178,7 +1154,6 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				'email_forwarders' => $email_forwarders,
 				'email_quota' => $email_quota,
 				'ftps' => $ftps,
-				'tickets' => $tickets,
 				'mysqls' => $mysqls,
 				'deactivated' => $deactivated,
 				'phpenabled' => $phpenabled,
@@ -1219,7 +1194,6 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				`email_accounts` = :email_accounts,
 				`email_forwarders` = :email_forwarders,
 				`ftps` = :ftps,
-				`tickets` = :tickets,
 				`mysqls` = :mysqls,
 				`deactivated` = :deactivated,
 				`phpenabled` = :phpenabled,
@@ -1318,17 +1292,6 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				}
 				if ($result['ftps'] != '-1') {
 					$admin_update_query .= " - 0" . (int) $result['ftps'] . " ";
-				}
-			}
-
-			if ($tickets != '-1' || $result['tickets'] != '-1') {
-				$admin_update_query .= ", `tickets_used` = `tickets_used` ";
-
-				if ($tickets != '-1') {
-					$admin_update_query .= " + 0" . (int) $tickets . " ";
-				}
-				if ($result['tickets'] != '-1') {
-					$admin_update_query .= " - 0" . (int) $result['tickets'] . " ";
 				}
 			}
 
@@ -1572,10 +1535,6 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				$admin_update_query .= ", `ftps_used` = `ftps_used` - 0" . (int) $result['ftps'];
 			}
 
-			if ($result['tickets'] != '-1') {
-				$admin_update_query .= ", `tickets_used` = `tickets_used` - 0" . (int) $result['tickets'];
-			}
-
 			if (($result['diskspace'] / 1024) != '-1') {
 				$admin_update_query .= ", `diskspace_used` = `diskspace_used` - 0" . (int) $result['diskspace'];
 			}
@@ -1596,22 +1555,6 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 
 			// Using filesystem - quota, insert a task which cleans the filesystem - quota
 			inserttask('10');
-
-			// move old tickets to archive
-			// @fixme ticket
-			$tickets = \ticket::customerHasTickets($id);
-			if ($tickets !== false && isset($tickets[0])) {
-				foreach ($tickets as $ticket) {
-					$now = time();
-					$mainticket = \ticket::getInstanceOf($result, (int) $ticket);
-					$mainticket->Set('lastchange', $now, true, true);
-					$mainticket->Set('lastreplier', '1', true, true);
-					$mainticket->Set('status', '3', true, true);
-					$mainticket->Update();
-					$mainticket->Archive();
-					$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] archived ticket '" . $mainticket->Get('subject') . "'");
-				}
-			}
 
 			$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] deleted customer '" . $result['loginname'] . "'");
 			return $this->response(200, "successfull", $result);
@@ -1714,15 +1657,6 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `adminid` = :adminid WHERE `customerid` = :cid
 			");
 			Database::pexecute($updDomains_stmt, array(
-				'adminid' => $adminid,
-				'cid' => $id
-			), true, true);
-
-			// Update customer-tickets
-			$updTickets_stmt = Database::prepare("
-				UPDATE `" . TABLE_PANEL_TICKETS . "` SET `adminid` = :adminid WHERE `customerid` = :cid
-			");
-			Database::pexecute($updTickets_stmt, array(
 				'adminid' => $adminid,
 				'cid' => $id
 			), true, true);

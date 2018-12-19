@@ -46,7 +46,7 @@ return array(
 					'type' => 'option',
 					'default' => 'bind',
 					'option_mode' => 'one',
-					'option_options' => array('bind' => 'Bind9', 'pdns' => 'PowerDNS'),
+					'option_options' => array('Bind' => 'Bind9', 'PowerDNS' => 'PowerDNS'),
 					'save_method' => 'storeSettingField'
 				),
 				'system_bindconf_directory' => array(

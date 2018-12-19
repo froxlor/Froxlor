@@ -41,8 +41,6 @@ define('TABLE_PANEL_DISKSPACE', 'panel_diskspace');
 define('TABLE_PANEL_DISKSPACE_ADMINS', 'panel_diskspace_admins');
 define('TABLE_PANEL_LANGUAGE', 'panel_languages');
 define('TABLE_PANEL_IPSANDPORTS', 'panel_ipsandports');
-define('TABLE_PANEL_TICKETS', 'panel_tickets');
-define('TABLE_PANEL_TICKET_CATS', 'panel_ticket_categories');
 define('TABLE_PANEL_LOG', 'panel_syslog');
 define('TABLE_PANEL_PHPCONFIGS', 'panel_phpconfigs');
 define('TABLE_PANEL_CRONRUNS', 'cronjobs_run');

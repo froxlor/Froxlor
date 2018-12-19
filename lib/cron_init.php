@@ -144,7 +144,7 @@ while ($fName = readdir($lockDirHandle)) {
  * whether the permission of the files are still correct
  */
 fwrite($debugHandler, 'Checking froxlor file permissions' . "\n");
-$_mypath = makeCorrectDir(\Froxlor\Froxlor::getInstallDir());
+$_mypath = \Froxlor\FileDir::makeCorrectDir(\Froxlor\Froxlor::getInstallDir());
 
 if (((int) \Froxlor\Settings::Get('system.mod_fcgid') == 1 && (int) \Froxlor\Settings::Get('system.mod_fcgid_ownvhost') == 1) || ((int) \Froxlor\Settings::Get('phpfpm.enabled') == 1 && (int) \Froxlor\Settings::Get('phpfpm.enabled_ownvhost') == 1)) {
 	$user = \Froxlor\Settings::Get('system.mod_fcgid_httpuser');
@@ -156,12 +156,12 @@ if (((int) \Froxlor\Settings::Get('system.mod_fcgid') == 1 && (int) \Froxlor\Set
 	}
 	// all the files and folders have to belong to the local user
 	// now because we also use fcgid for our own vhost
-	safe_exec('chown -R ' . $user . ':' . $group . ' ' . escapeshellarg($_mypath));
+	\Froxlor\FileDir::safe_exec('chown -R ' . $user . ':' . $group . ' ' . escapeshellarg($_mypath));
 } else {
 	// back to webserver permission
 	$user = \Froxlor\Settings::Get('system.httpuser');
 	$group = \Froxlor\Settings::Get('system.httpgroup');
-	safe_exec('chown -R ' . $user . ':' . $group . ' ' . escapeshellarg($_mypath));
+	\Froxlor\FileDir::safe_exec('chown -R ' . $user . ':' . $group . ' ' . escapeshellarg($_mypath));
 }
 
 // Initialize logging

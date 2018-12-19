@@ -228,7 +228,6 @@ $lng['error']['destinationnonexist'] = 'Please create your forwarder in the fiel
 $lng['error']['destinationalreadyexistasmail'] = 'The forwarder to %s already exists as active email-address.';
 $lng['error']['destinationalreadyexist'] = 'You have already defined a forwarder to "%s"';
 $lng['error']['destinationiswrong'] = 'The forwarder %s contains invalid character(s) or is incomplete.';
-$lng['error']['ticketnotaccessible'] = 'You cannot access this ticket.';
 $lng['error']['backupfoldercannotbedocroot'] = 'The folder for backups cannot be your homedir, please chose a folder within your homedir, e.g. /backups';
 
 /**
@@ -589,126 +588,16 @@ $lng['admin']['webalizer']['veryquiet'] = 'No output';
 $lng['serversettings']['webalizer_quiet']['title'] = 'Webalizer output';
 $lng['serversettings']['webalizer_quiet']['description'] = 'Verbosity of the webalizer-program';
 
-// ADDED IN 1.2.18-svn3
-
-$lng['ticket']['admin_email'] = 'root@localhost';
-$lng['ticket']['noreply_email'] = 'tickets@froxlor';
-$lng['admin']['ticketsystem'] = 'Support-tickets';
-$lng['menue']['ticket']['ticket'] = 'Support tickets';
-$lng['menue']['ticket']['categories'] = 'Support categories';
-$lng['menue']['ticket']['archive'] = 'Ticket-archive';
-$lng['ticket']['description'] = 'Here you can send help-requests to your responsible administrator.<br />Notifications will be sent via e-mail.';
-$lng['ticket']['ticket_new'] = 'Open a new ticket';
-$lng['ticket']['ticket_reply'] = 'Answer ticket';
-$lng['ticket']['ticket_reopen'] = 'Reopen ticket';
-$lng['ticket']['ticket_newcateory'] = 'Create new category';
-$lng['ticket']['ticket_editcateory'] = 'Edit category';
-$lng['ticket']['ticket_view'] = 'View ticketcourse';
-$lng['ticket']['ticketcount'] = 'Tickets';
-$lng['ticket']['ticket_answers'] = 'Replies';
-$lng['ticket']['subject'] = 'Subject';
-$lng['ticket']['status'] = 'Status';
-$lng['ticket']['lastreplier'] = 'Last replier';
-$lng['ticket']['priority'] = 'Priority';
-$lng['ticket']['low'] = 'Low';
-$lng['ticket']['normal'] = 'Normal';
-$lng['ticket']['high'] = 'High';
-$lng['ticket']['lastchange'] = 'Last change';
-$lng['ticket']['lastchange_from'] = 'From date (dd.mm.yyyy)';
-$lng['ticket']['lastchange_to'] = 'To date (dd.mm.yyyy)';
-$lng['ticket']['category'] = 'Category';
-$lng['ticket']['no_cat'] = 'None';
-$lng['ticket']['message'] = 'Message';
-$lng['ticket']['show'] = 'View';
-$lng['ticket']['answer'] = 'Answer';
-$lng['ticket']['close'] = 'Close';
-$lng['ticket']['reopen'] = 'Re-open';
-$lng['ticket']['archive'] = 'Archive';
-$lng['ticket']['ticket_delete'] = 'Delete ticket';
-$lng['ticket']['lastarchived'] = 'Recently archived tickets';
-$lng['ticket']['archivedtime'] = 'Archived';
-$lng['ticket']['open'] = 'Open';
-$lng['ticket']['wait_reply'] = 'Waiting for reply';
-$lng['ticket']['replied'] = 'Replied';
-$lng['ticket']['closed'] = 'Closed';
-$lng['ticket']['staff'] = 'Staff';
-$lng['ticket']['customer'] = 'Customer';
-$lng['ticket']['old_tickets'] = 'Ticket messages';
-$lng['ticket']['search'] = 'Search archive';
-$lng['ticket']['nocustomer'] = 'No choice';
-$lng['ticket']['archivesearch'] = 'Archive searchresults';
-$lng['ticket']['noresults'] = 'No tickets found';
-$lng['ticket']['notmorethanxopentickets'] = 'Due to spam-protection you cannot have more than %s open tickets';
-$lng['ticket']['supportstatus'] = 'Support-Status';
-$lng['ticket']['supportavailable'] = '<span class="ticket_low">Our support engineers are available and ready to assist.</span>';
-$lng['ticket']['supportnotavailable'] = '<span class="ticket_high">Our support engineers are currently not available</span>';
-$lng['admin']['templates']['ticket'] = 'Notification-mails for support-tickets';
-$lng['admin']['templates']['SUBJECT'] = 'Replaced with the support-ticket subject';
-$lng['admin']['templates']['new_ticket_for_customer'] = 'Customer-information that the ticket has been sent';
-$lng['admin']['templates']['new_ticket_by_customer'] = 'Admin-notification for a ticket opened by a customer';
-$lng['admin']['templates']['new_reply_ticket_by_customer'] = 'Admin-notification for a ticket-reply by a customer';
-$lng['admin']['templates']['new_ticket_by_staff'] = 'Customer-notification for a ticket opened by a staff';
-$lng['admin']['templates']['new_reply_ticket_by_staff'] = 'Customer-notification for a ticket-reply by a staff';
-$lng['mails']['new_ticket_for_customer']['mailbody'] = 'Hello {FIRSTNAME} {NAME},\n\nyour support-ticket with the subject "{SUBJECT}" has been sent.\n\nYou will be notified when your ticket has been answered.\n\nThank you,\nyour administrator';
-$lng['mails']['new_ticket_for_customer']['subject'] = 'Your support ticket has been sent';
-$lng['mails']['new_ticket_by_customer']['mailbody'] = 'Hello admin,\n\na new support-ticket with the subject "{SUBJECT}" has been submitted.\n\nPlease login to open the ticket.\n\nThank you,\nyour administrator';
-$lng['mails']['new_ticket_by_customer']['subject'] = 'New support ticket submitted';
-$lng['mails']['new_reply_ticket_by_customer']['mailbody'] = 'Hello admin,\n\nthe support-ticket "{SUBJECT}" has been answered by a customer.\n\nPlease login to open the ticket.\n\nThank you,\nyour administrator';
-$lng['mails']['new_reply_ticket_by_customer']['subject'] = 'New reply to support ticket';
-$lng['mails']['new_ticket_by_staff']['mailbody'] = 'Hello {FIRSTNAME} {NAME},\n\na support-ticket with the subject "{SUBJECT}" has been opened for you.\n\nPlease login to open the ticket.\n\nThank you,\nyour administrator';
-$lng['mails']['new_ticket_by_staff']['subject'] = 'New support ticket submitted';
-$lng['mails']['new_reply_ticket_by_staff']['mailbody'] = 'Hello {FIRSTNAME} {NAME},\n\nthe support-ticket with the subject "{SUBJECT}" has been answered by our staff.\n\nPlease login to view the ticket.\n\nThank you,\nyour administrator';
-$lng['mails']['new_reply_ticket_by_staff']['subject'] = 'New reply to support ticket';
-$lng['question']['ticket_reallyclose'] = 'Do you really want to close the ticket "%s"?';
-$lng['question']['ticket_reallydelete'] = 'Do you really want to delete the ticket "%s"?';
-$lng['question']['ticket_reallydeletecat'] = 'Do you really want to delete the category "%s"?';
-$lng['question']['ticket_reallyarchive'] = 'Do you really want to move the ticket "%s" to the archive?';
-$lng['error']['nomoreticketsavailable'] = 'You have used all your available tickets. Please contact your administrator.';
-$lng['error']['nocustomerforticket'] = 'Cannot create tickets without customers';
-$lng['error']['categoryhastickets'] = 'The category still has tickets in it.<br />Please delete the tickets to delete the category';
-$lng['admin']['ticketsettings'] = 'Support-Ticket settings';
-$lng['admin']['archivelastrun'] = 'Last ticket archiving';
-$lng['serversettings']['ticket']['noreply_email']['title'] = 'No-reply e-mail address';
-$lng['serversettings']['ticket']['noreply_email']['description'] = 'The sender-address for support-ticket, mostly something like no-reply@domain.tld';
-$lng['serversettings']['ticket']['worktime_begin']['title'] = 'Begin support-time (hh:mm)';
-$lng['serversettings']['ticket']['worktime_begin']['description'] = 'Start-time when support is available';
-$lng['serversettings']['ticket']['worktime_end']['title'] = 'End support-time (hh:mm)';
-$lng['serversettings']['ticket']['worktime_end']['description'] = 'End-time when support is available';
-$lng['serversettings']['ticket']['worktime_sat'] = 'Support available on saturdays?';
-$lng['serversettings']['ticket']['worktime_sun'] = 'Support available on sundays?';
-$lng['serversettings']['ticket']['worktime_all']['title'] = 'No time limit for support';
-$lng['serversettings']['ticket']['worktime_all']['description'] = 'If "Yes" the options for start- and endtime will be overwritten';
-$lng['serversettings']['ticket']['archiving_days'] = 'After how many days should closed tickets be archived?';
-$lng['customer']['tickets'] = 'Support-tickets';
-
 // ADDED IN 1.2.18-svn4
 
 $lng['admin']['domain_nocustomeraddingavailable'] = 'It\'s not possible to add a domain currently. You first need to add at least one customer.';
-$lng['serversettings']['ticket']['enable'] = 'Enable ticketsystem';
-$lng['serversettings']['ticket']['concurrentlyopen'] = 'How many tickets shall be able to be opened at one time?';
 $lng['error']['norepymailiswrong'] = 'The "Noreply-address" is wrong. Only a valid email-address is allowed.';
-$lng['error']['tadminmailiswrong'] = 'The "Ticketadmin-address" is wrong. Only a valid email-address is allowed.';
-$lng['ticket']['awaitingticketreply'] = 'You have %s unanswered support-ticket(s)';
-
-// ADDED IN 1.2.18-svn5
-
-$lng['serversettings']['ticket']['noreply_name'] = 'Ticket e-mail sendername';
 
 // ADDED IN 1.2.19-svn1
 
 $lng['serversettings']['mod_fcgid']['configdir']['title'] = 'Configuration directory';
 $lng['serversettings']['mod_fcgid']['configdir']['description'] = 'Where should all fcgid-configuration files be stored? If you don\'t use a self compiled suexec binary, which is the normal situation, this path must be under /var/www/<br /><br /><div class="red">NOTE: This folder\'s content gets deleted regulary so avoid storing data in there manually.</div>';
 $lng['serversettings']['mod_fcgid']['tmpdir']['title'] = 'Temp directory';
-
-// ADDED IN 1.2.19-svn3
-
-$lng['serversettings']['ticket']['reset_cycle']['title'] = 'Reset used tickets cycle';
-$lng['serversettings']['ticket']['reset_cycle']['description'] = 'Reset the customers used ticket counter to 0 in the chosen cycle';
-$lng['admin']['tickets']['daily'] = 'Daily';
-$lng['admin']['tickets']['weekly'] = 'Weekly';
-$lng['admin']['tickets']['monthly'] = 'Monthly';
-$lng['admin']['tickets']['yearly'] = 'Yearly';
-$lng['error']['ticketresetcycleiswrong'] = 'The cycle for ticket-resets has to be "daily", "weekly", "monthly" or "yearly".';
 
 // ADDED IN 1.2.19-svn4
 
@@ -819,7 +708,6 @@ $lng['admin']['caneditphpsettings'] = 'Can change php-related domain settings?';
 
 $lng['admin']['allips'] = 'All IP\'s';
 $lng['panel']['nosslipsavailable'] = 'There are currently no ssl ip/port combinations for this server';
-$lng['ticket']['by'] = 'by';
 $lng['dkim']['use_dkim']['title'] = 'Activate DKIM support?';
 $lng['dkim']['use_dkim']['description'] = 'Would you like to use the Domain Keys (DKIM) system?<br/><em class="red">Note: DKIM is only supported using dkim-filter, not opendkim (yet)</em>';
 $lng['error']['invalidmysqlhost'] = 'Invalid MySQL host address: %s';
@@ -1073,8 +961,6 @@ $lng['tasks']['rebuild_bindconfig'] = 'Rebuilding bind-configuration';
 $lng['tasks']['creating_ftpdir'] = 'Creating directory for new ftp-user';
 $lng['tasks']['deleting_customerfiles'] = 'Deleting customer-files %loginname%';
 $lng['tasks']['noneoutstanding'] = 'There are currently no outstanding tasks for Froxlor';
-$lng['ticket']['nonexistingcustomer'] = '(deleted customer)';
-$lng['admin']['ticket_nocustomeraddingavailable'] = 'It\'s not possible to open a new support-ticket currently. You first need to add at least one customer.';
 
 // ADDED IN FROXLOR 0.9.1
 
@@ -1129,8 +1015,6 @@ $lng['admin']['cron']['add'] = 'Add cronjob';
 $lng['crondesc']['cron_tasks'] = 'generating of configfiles';
 $lng['crondesc']['cron_legacy'] = 'legacy (old) cronjob';
 $lng['crondesc']['cron_traffic'] = 'traffic calculation';
-$lng['crondesc']['cron_ticketsreset'] = 'resetting ticket-counters';
-$lng['crondesc']['cron_ticketarchive'] = 'archiving old tickets';
 $lng['cronmgmt']['minutes'] = 'minutes';
 $lng['cronmgmt']['hours'] = 'hours';
 $lng['cronmgmt']['days'] = 'days';
@@ -1162,8 +1046,6 @@ $lng['panel']['neverloggedin'] = 'No login yet';
 
 // ADDED IN FROXLOR 0.9.6-svn1
 $lng['serversettings']['defaultttl'] = 'Domain TTL for bind in seconds (default \'604800\' = 1 week)';
-$lng['ticket']['logicalorder'] = 'Logical order';
-$lng['ticket']['orderdesc'] = 'Here you can define your own logical order for the ticket-category. Use 1 - 999, lower numbers are displayed first.';
 
 // ADDED IN FROXLOR 0.9.6-svn3
 $lng['serversettings']['defaultwebsrverrhandler_enabled'] = 'Enable default errordocuments for all customers';
@@ -1174,9 +1056,6 @@ $lng['serversettings']['defaultwebsrverrhandler_err403']['description'] = '<div 
 $lng['serversettings']['defaultwebsrverrhandler_err404'] = 'File/URL for error 404';
 $lng['serversettings']['defaultwebsrverrhandler_err500']['title'] = 'File/URL for error 500';
 $lng['serversettings']['defaultwebsrverrhandler_err500']['description'] = '<div class="red">Not supported in: lighttpd</div>';
-
-// ADDED IN FROXLOR 0.9.6-svn4
-$lng['serversettings']['ticket']['default_priority'] = 'Default support-ticket priority';
 
 // ADDED IN FROXLOR 0.9.6-svn5
 $lng['serversettings']['mod_fcgid']['defaultini'] = 'Default PHP configuration for new domains';
@@ -1691,7 +1570,6 @@ $lng['serversettings']['catchall_enabled']['description']  = 'Do you want to pro
 // ADDED IN 0.9.28.svn6
 $lng['serversettings']['apache_24']['title'] = 'Use modifications for Apache 2.4';
 $lng['serversettings']['apache_24']['description'] = '<strong class="red">ATTENTION:</strong> use only if you acutally have apache version 2.4 or higher installed<br />otherwise your webserver will not be able to start';
-$lng['admin']['tickets_see_all'] = 'Can see all ticket-categories?';
 $lng['serversettings']['nginx_fastcgiparams']['title'] = 'Path to fastcgi_params file';
 $lng['serversettings']['nginx_fastcgiparams']['description'] = 'Specify the path to nginx\'s fastcgi_params file including filename';
 

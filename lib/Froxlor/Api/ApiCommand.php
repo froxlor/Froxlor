@@ -43,7 +43,7 @@ abstract class ApiCommand extends ApiParameter
 	/**
 	 * logger interface
 	 *
-	 * @var \FroxlorLogger
+	 * @var \Froxlor\FroxlorLogger
 	 */
 	private $logger = null;
 
@@ -111,7 +111,7 @@ abstract class ApiCommand extends ApiParameter
 		} else {
 			throw new \Exception("Invalid user data", 500);
 		}
-		$this->logger = \FroxlorLogger::getInstanceOf($this->user_data);
+		$this->logger = \Froxlor\FroxlorLogger::getInstanceOf($this->user_data);
 
 		// check whether the user is deactivated
 		if ($this->getUserDetail('deactivated') == 1) {
@@ -269,7 +269,7 @@ abstract class ApiCommand extends ApiParameter
 	/**
 	 * return logger instance
 	 *
-	 * @return \FroxlorLogger
+	 * @return \Froxlor\FroxlorLogger
 	 */
 	protected function logger()
 	{

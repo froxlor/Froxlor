@@ -118,9 +118,6 @@ CREATE TABLE `panel_admins` (
   `email_quota_used` bigint(13) NOT NULL default '0',
   `ftps` int(15) NOT NULL default '0',
   `ftps_used` int(15) NOT NULL default '0',
-  `tickets` int(15) NOT NULL default '-1',
-  `tickets_used` int(15) NOT NULL default '0',
-  `tickets_see_all` tinyint(1) NOT NULL default '0',
   `subdomains` int(15) NOT NULL default '0',
   `subdomains_used` int(15) NOT NULL default '0',
   `traffic` bigint(30) NOT NULL default '0',
@@ -173,8 +170,6 @@ CREATE TABLE `panel_customers` (
   `email_quota_used` bigint(13) NOT NULL default '0',
   `ftps` int(15) NOT NULL default '0',
   `ftps_used` int(15) NOT NULL default '0',
-  `tickets` int(15) NOT NULL default '0',
-  `tickets_used` int(15) NOT NULL default '0',
   `subdomains` int(15) NOT NULL default '0',
   `subdomains_used` int(15) NOT NULL default '0',
   `traffic` bigint(30) NOT NULL default '0',
@@ -367,17 +362,6 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('customer', 'ftpatdomain', '0'),
 	('customer', 'show_news_feed', '0'),
 	('customer', 'news_feed_url', ''),
-	('ticket', 'noreply_email', 'NO-REPLY@SERVERNAME'),
-	('ticket', 'worktime_all', '1'),
-	('ticket', 'worktime_begin', '00:00'),
-	('ticket', 'worktime_end', '23:59'),
-	('ticket', 'worktime_sat', '0'),
-	('ticket', 'worktime_sun', '0'),
-	('ticket', 'archiving_days', '5'),
-	('ticket', 'enabled', '1'),
-	('ticket', 'concurrently_open', '5'),
-	('ticket', 'noreply_name', 'Hosting Support'),
-	('ticket', 'reset_cycle', '2'),
 	('logger', 'enabled', '1'),
 	('logger', 'log_cron', '0'),
 	('logger', 'logfile', ''),
@@ -404,7 +388,6 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('defaultwebsrverrhandler', 'err403', ''),
 	('defaultwebsrverrhandler', 'err404', ''),
 	('defaultwebsrverrhandler', 'err500', ''),
-	('ticket', 'default_priority', '2'),
 	('customredirect', 'enabled', '1'),
 	('customredirect', 'default', '1'),
 	('perl', 'suexecworkaround', '0'),
@@ -635,7 +618,7 @@ opcache.interned_strings_buffer'),
 	('system', 'leapiversion', '1'),
 	('system', 'backupenabled', '0'),
 	('system', 'dnsenabled', '0'),
-	('system', 'dns_server', 'bind'),
+	('system', 'dns_server', 'Bind'),
 	('system', 'apacheglobaldiropt', ''),
 	('system', 'allow_customer_shell', '0'),
 	('system', 'available_shells', ''),
@@ -697,7 +680,7 @@ opcache.interned_strings_buffer'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'is_configured', '0'),
 	('panel', 'version', '0.10.0'),
-	('panel', 'db_version', '201812180');
+	('panel', 'db_version', '201812190');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
@@ -816,41 +799,6 @@ INSERT INTO `panel_languages` (`id`, `language`, `iso`, `file`) VALUES
     (7, 'Svenska', 'sv', 'lng/swedish.lng.php');
 
 
-
-DROP TABLE IF EXISTS `panel_tickets`;
-CREATE TABLE `panel_tickets` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `customerid` int(11) NOT NULL,
-  `adminid` int(11) NOT NULL,
-  `category` smallint(5) unsigned NOT NULL default '1',
-  `priority` enum('1','2','3') NOT NULL default '3',
-  `subject` varchar(70) NOT NULL,
-  `message` text NOT NULL,
-  `dt` int(15) NOT NULL,
-  `lastchange` int(15) NOT NULL,
-  `ip` varchar(39) NOT NULL default '',
-  `status` enum('0','1','2','3') NOT NULL default '1',
-  `lastreplier` enum('0','1') NOT NULL default '0',
-  `answerto` int(11) unsigned NOT NULL,
-  `by` enum('0','1') NOT NULL default '0',
-  `archived` enum('0','1') NOT NULL default '0',
-  PRIMARY KEY  (`id`),
-  KEY `customerid` (`customerid`)
-) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
-
-
-
-DROP TABLE IF EXISTS `panel_ticket_categories`;
-CREATE TABLE `panel_ticket_categories` (
-  `id` smallint(5) unsigned NOT NULL auto_increment,
-  `name` varchar(60) NOT NULL,
-  `adminid` int(11) NOT NULL,
-  `logicalorder` int(3) NOT NULL default '1',
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
-
-
-
 DROP TABLE IF EXISTS `panel_syslog`;
 CREATE TABLE IF NOT EXISTS `panel_syslog` (
   `logid` bigint(20) NOT NULL auto_increment,
@@ -930,6 +878,7 @@ CREATE TABLE IF NOT EXISTS `cronjobs_run` (
   `id` bigint(20) NOT NULL auto_increment,
   `module` varchar(250) NOT NULL,
   `cronfile` varchar(250) NOT NULL,
+  `cronclass` varchar(500) NOT NULL,
   `lastrun` int(15) NOT NULL DEFAULT '0',
   `interval` varchar(100) NOT NULL DEFAULT '5 MINUTE',
   `isactive` tinyint(1) DEFAULT '1',
@@ -938,15 +887,13 @@ CREATE TABLE IF NOT EXISTS `cronjobs_run` (
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
-INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `interval`, `isactive`, `desc_lng_key`) VALUES
-	(1, 'froxlor/core', 'tasks', '5 MINUTE', '1', 'cron_tasks'),
-	(2, 'froxlor/core', 'traffic', '1 DAY', '1', 'cron_traffic'),
-	(3, 'froxlor/ticket', 'used_tickets_reset', '1 DAY', '1', 'cron_ticketsreset'),
-	(4, 'froxlor/ticket', 'ticketarchive', '1 MONTH', '1', 'cron_ticketarchive'),
-	(5, 'froxlor/reports', 'usage_report', '1 DAY', '1', 'cron_usage_report'),
-	(6, 'froxlor/core', 'mailboxsize', '6 HOUR', '1', 'cron_mailboxsize'),
-	(7, 'froxlor/letsencrypt', 'letsencrypt', '5 MINUTE', '0', 'cron_letsencrypt'),
-	(8, 'froxlor/backup', 'backup', '1 DAY', '1', 'cron_backup');
+INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `cronclass`, `interval`, `isactive`, `desc_lng_key`) VALUES
+	(1, 'froxlor/core', 'tasks', '\\Froxlor\\Cron\\TasksCron', '5 MINUTE', '1', 'cron_tasks'),
+	(2, 'froxlor/core', 'traffic', '\\Froxlor\\Cron\\Traffic\\TrafficCron', '1 DAY', '1', 'cron_traffic'),
+	(3, 'froxlor/reports', 'usage_report', '\\Froxlor\\Cron\\Traffic\\ReportsCron', '1 DAY', '1', 'cron_usage_report'),
+	(4, 'froxlor/core', 'mailboxsize', '\\Froxlor\\Cron\\System\\MailboxsizeCron', '6 HOUR', '1', 'cron_mailboxsize'),
+	(5, 'froxlor/letsencrypt', 'letsencrypt', '\\Froxlor\\Cron\\LetsEncrypt\\LetsEncrypt', '5 MINUTE', '0', 'cron_letsencrypt'),
+	(6, 'froxlor/backup', 'backup', '\\Froxlor\\Cron\\System\\BackupCron', '1 DAY', '1', 'cron_backup');
 
 
 

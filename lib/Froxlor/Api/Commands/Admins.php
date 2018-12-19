@@ -141,10 +141,6 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	optional, default 0
 	 * @param bool $ftps_ul
 	 *        	optional, default false
-	 * @param int $tickets
-	 *        	optional, default 0
-	 * @param bool $tickets_ul
-	 *        	optional, default false
 	 * @param int $mysqls
 	 *        	optional, default 0
 	 * @param bool $mysqls_ul
@@ -152,8 +148,6 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 * @param bool $customers_see_all
 	 *        	optional, default false
 	 * @param bool $domains_see_all
-	 *        	optional, default false
-	 * @param bool $tickets_see_all
 	 *        	optional, default false
 	 * @param bool $caneditphpsettings
 	 *        	optional, default false
@@ -191,12 +185,10 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			$email_forwarders = $this->getUlParam('email_forwarders', 'email_forwarders_ul', true, 0);
 			$email_quota = $this->getUlParam('email_quota', 'email_quota_ul', true, 0);
 			$ftps = $this->getUlParam('ftps', 'ftps_ul', true, 0);
-			$tickets = $this->getUlParam('tickets', 'tickets_ul', true, 0);
 			$mysqls = $this->getUlParam('mysqls', 'mysqls_ul', true, 0);
 
 			$customers_see_all = $this->getBoolParam('customers_see_all', true, 0);
 			$domains_see_all = $this->getBoolParam('domains_see_all', true, 0);
-			$tickets_see_all = $this->getBoolParam('tickets_see_all', true, 0);
 			$caneditphpsettings = $this->getBoolParam('caneditphpsettings', true, 0);
 			$change_serversettings = $this->getBoolParam('change_serversettings', true, 0);
 			$ipaddress = $this->getParam('ipaddress', true, - 1);
@@ -210,10 +202,6 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 
 			if (Settings::Get('system.mail_quota_enabled') != '1') {
 				$email_quota = - 1;
-			}
-
-			if (Settings::Get('ticket.enabled') != '1') {
-				$tickets = - 1;
 			}
 
 			$password = validate($password, 'password', '', '', array(), true);
@@ -271,10 +259,6 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 					$change_serversettings = '0';
 				}
 
-				if ($tickets_see_all != '1') {
-					$tickets_see_all = '0';
-				}
-
 				if ($password == '') {
 					$password = generatePassword();
 				}
@@ -301,8 +285,6 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 					'forwarders' => $email_forwarders,
 					'quota' => $email_quota,
 					'ftps' => $ftps,
-					'tickets' => $tickets,
-					'tickets_see_all' => $tickets_see_all,
 					'mysqls' => $mysqls,
 					'ip' => empty($ipaddress) ? "" : (is_array($ipaddress) && $ipaddress > 0 ? json_encode($ipaddress) : - 1),
 					'theme' => $_theme,
@@ -331,8 +313,6 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 					`email_forwarders` = :forwarders,
 					`email_quota` = :quota,
 					`ftps` = :ftps,
-					`tickets` = :tickets,
-					`tickets_see_all` = :tickets_see_all,
 					`mysqls` = :mysqls,
 					`ip` = :ip,
 					`theme` = :theme,
@@ -418,10 +398,6 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	optional, default 0
 	 * @param bool $ftps_ul
 	 *        	optional, default false
-	 * @param int $tickets
-	 *        	optional, default 0
-	 * @param bool $tickets_ul
-	 *        	optional, default false
 	 * @param int $mysqls
 	 *        	optional, default 0
 	 * @param bool $mysqls_ul
@@ -429,8 +405,6 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 * @param bool $customers_see_all
 	 *        	optional, default false
 	 * @param bool $domains_see_all
-	 *        	optional, default false
-	 * @param bool $tickets_see_all
 	 *        	optional, default false
 	 * @param bool $caneditphpsettings
 	 *        	optional, default false
@@ -479,9 +453,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 					$email_forwarders = $result['email_forwarders'];
 					$email_quota = $result['email_quota'];
 					$ftps = $result['ftps'];
-					$tickets = $result['tickets'];
 					$mysqls = $result['mysqls'];
-					$tickets_see_all = $result['tickets_see_all'];
 					$customers_see_all = $result['customers_see_all'];
 					$domains_see_all = $result['domains_see_all'];
 					$caneditphpsettings = $result['caneditphpsettings'];
@@ -503,12 +475,10 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 					$email_forwarders = $this->getUlParam('email_forwarders', 'email_forwarders_ul', true, $result['email_forwarders']);
 					$email_quota = $this->getUlParam('email_quota', 'email_quota_ul', true, $result['email_quota']);
 					$ftps = $this->getUlParam('ftps', 'ftps_ul', true, $result['ftps']);
-					$tickets = $this->getUlParam('tickets', 'tickets_ul', true, $result['tickets']);
 					$mysqls = $this->getUlParam('mysqls', 'mysqls_ul', true, $result['mysqls']);
 
 					$customers_see_all = $this->getBoolParam('customers_see_all', true, $result['customers_see_all']);
 					$domains_see_all = $this->getBoolParam('domains_see_all', true, $result['domains_see_all']);
-					$tickets_see_all = $this->getBoolParam('tickets_see_all', true, $result['tickets_see_all']);
 					$caneditphpsettings = $this->getBoolParam('caneditphpsettings', true, $result['caneditphpsettings']);
 					$change_serversettings = $this->getBoolParam('change_serversettings', true, $result['change_serversettings']);
 					$ipaddress = $this->getParam('ipaddress', true, ($result['ip'] != - 1 ? json_decode($result['ip'], true) : - 1));
@@ -528,10 +498,6 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 
 				if (Settings::Get('system.mail_quota_enabled') != '1') {
 					$email_quota = - 1;
-				}
-
-				if (Settings::Get('ticket.enabled') != '1') {
-					$tickets = - 1;
 				}
 
 				if (empty($theme)) {
@@ -560,10 +526,6 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 
 					if ($change_serversettings != '1') {
 						$change_serversettings = '0';
-					}
-
-					if ($tickets_see_all != '1') {
-						$tickets_see_all = '0';
 					}
 
 					if ($password != '') {
@@ -603,9 +565,6 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 					if ($ftps != $result['ftps'] && $ftps != - 1 && $ftps < $result['ftps_used']) {
 						$res_warning .= sprintf($this->lng['error']['setlessthanalreadyused'], 'ftps');
 					}
-					if ($tickets != $result['tickets'] && $tickets != - 1 && $tickets < $result['tickets_used']) {
-						$res_warning .= sprintf($this->lng['error']['setlessthanalreadyused'], 'tickets');
-					}
 					if ($mysqls != $result['mysqls'] && $mysqls != - 1 && $mysqls < $result['mysqls_used']) {
 						$res_warning .= sprintf($this->lng['error']['setlessthanalreadyused'], 'mysqls');
 					}
@@ -633,8 +592,6 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 						'forwarders' => $email_forwarders,
 						'quota' => $email_quota,
 						'ftps' => $ftps,
-						'tickets' => $tickets,
-						'tickets_see_all' => $tickets_see_all,
 						'mysqls' => $mysqls,
 						'ip' => empty($ipaddress) ? "" : (is_array($ipaddress) && $ipaddress > 0 ? json_encode($ipaddress) : - 1),
 						'deactivated' => $deactivated,
@@ -664,8 +621,6 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 						`email_forwarders` = :forwarders,
 						`email_quota` = :quota,
 						`ftps` = :ftps,
-						`tickets` = :tickets,
-						`tickets_see_all` = :tickets_see_all,
 						`mysqls` = :mysqls,
 						`ip` = :ip,
 						`deactivated` = :deactivated,

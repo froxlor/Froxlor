@@ -14,6 +14,9 @@
  * @package    Language
  *
  */
+use Froxlor\Database;
+use Froxlor\Settings;
+use PHPMailer\PHPMailer;
 
 /**
  * checks if the new-version has some updating to do
@@ -24,7 +27,7 @@
  *        	pointer to output string
  * @param string $current_version
  *        	current froxlor version
- *
+ *        	
  * @return null
  */
 function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $current_db_version)
@@ -130,7 +133,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 			$description = 'Resetting the open_basedir to customer - root';
 			$question = '<strong>Due to a security - issue regarding open_basedir, Froxlor will set the open_basedir for the following domains to the customers root instead of the chosen documentroot:</strong><br />&nbsp;';
 			$question .= '<ul>';
-			$idna_convert = new idna_convert_wrapper();
+			$idna_convert = new \Froxlor\Idna\IdnaWrapper();
 			foreach ($wrongOpenBasedirDomain as $domain) {
 				$question .= '<li>' . $idna_convert->decode($domain) . '</li>';
 			}
@@ -381,7 +384,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 		$question .= '<select name="update_default_theme">';
 		$themes = getThemes();
 		foreach ($themes as $cur_theme) // $theme is already in use
-{
+		{
 			$question .= makeoption($cur_theme, $cur_theme, 'Froxlor');
 		}
 		$question .= '</select>';
