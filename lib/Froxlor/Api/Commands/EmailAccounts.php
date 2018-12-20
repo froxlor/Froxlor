@@ -91,7 +91,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 				throw new \Exception("Email address '" . $email_full . "' has already an account assigned.", 406);
 			}
 
-			if (checkMailAccDeletionState($email_full)) {
+			if (\Froxlor\Validate\Validate::checkMailAccDeletionState($email_full)) {
 				standard_error(array(
 					'mailaccistobedeleted'
 				), $email_full, true);

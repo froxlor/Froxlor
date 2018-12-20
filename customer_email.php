@@ -118,7 +118,7 @@ if ($page == 'overview') {
 						$row['destination'] = substr($row['destination'], 0, 32) . '... (' . $destinations_count . ')';
 					}
 
-					$row['mboxsize'] = size_readable($row['mboxsize'], 'GiB', 'bi', '%01.' . (int)Settings::Get('panel.decimal_places') . 'f %s');
+					$row['mboxsize'] = \Froxlor\PhpHelper::size_readable($row['mboxsize'], 'GiB', 'bi', '%01.' . (int)Settings::Get('panel.decimal_places') . 'f %s');
 
 					$row = htmlentities_array($row);
 					eval("\$accounts.=\"" . getTemplate("email/emails_email") . "\";");
@@ -294,7 +294,7 @@ if ($page == 'overview') {
 				redirectTo($filename, array('page' => 'emails', 'action' => 'edit', 'id' => $id, 's' => $s));
 			} else {
 
-				if (checkMailAccDeletionState($result['email_full'])) {
+				if (\Froxlor\Validate\Validate::checkMailAccDeletionState($result['email_full'])) {
 				   standard_error(array('mailaccistobedeleted'), $result['email_full']);
 				}
 

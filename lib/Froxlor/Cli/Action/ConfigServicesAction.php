@@ -321,7 +321,7 @@ class ConfigServicesAction extends \Froxlor\Cli\Action
 			$nameservers = explode(',', Settings::Get('system.nameservers'));
 			foreach ($nameservers as $nameserver) {
 				$nameserver = trim($nameserver);
-				$nameserver_ips = gethostbynamel6($nameserver);
+				$nameserver_ips = \Froxlor\PhpHelper::gethostbynamel6($nameserver);
 				if (is_array($nameserver_ips) && count($nameserver_ips) > 0) {
 					$ns_ips .= implode(",", $nameserver_ips);
 				}

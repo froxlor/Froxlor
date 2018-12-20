@@ -132,6 +132,35 @@ class FileDir
 	}
 
 	/**
+	 * checks a directory against disallowed paths which could
+	 * lead to a damaged system if you use them
+	 *
+	 * @param string $fieldname
+	 * @param array $fielddata
+	 * @param mixed $newfieldvalue
+	 *
+	 * @return boolean|array
+	 */
+	public static function checkDisallowedPaths($path = null) {
+		
+		/*
+		 * disallow base-directories and /
+		 */
+		$disallowed_values = array(
+			"/", "/bin/", "/boot/", "/dev/", "/etc/", "/home/", "/lib/", "/lib32/", "/lib64/",
+			"/opt/", "/proc/", "/root/", "/run/", "/sbin/", "/sys/", "/tmp/", "/usr/", "/var/"
+		);
+		
+		$path = self::makeCorrectDir($path);
+		
+		// check if it's a disallowed path
+		if (in_array($path, $disallowed_values)) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
 	 * store the default index-file in a given destination folder
 	 *
 	 * @param string $loginname

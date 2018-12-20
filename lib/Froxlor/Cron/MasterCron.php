@@ -116,7 +116,7 @@ class MasterCron extends \Froxlor\Cron\FroxlorCron
 		 * so users in the database don't conflict with system users
 		 */
 		$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Checking system\'s last guid');
-		checkLastGuid();
+		\Froxlor\System\Cronjob::checkLastGuid();
 
 		// shutdown cron
 		include_once \Froxlor\Froxlor::getInstallDir() . '/lib/cron_shutdown.php';

@@ -109,9 +109,9 @@ if (!is_null($month) && !is_null($year)) {
 		$show = $lng['traffic']['months'][intval($row['month'])] . ' ' . $row['year'];
 	}
 
-	$traffic_complete['http'] = size_readable($traffic_complete['http'] * 1024, 'GiB', 'bi', '%01.'.(int)Settings::Get('panel.decimal_places').'f %s');
-	$traffic_complete['ftp'] = size_readable($traffic_complete['ftp'] * 1024, 'GiB', 'bi', '%01.'.(int)Settings::Get('panel.decimal_places').'f %s');
-	$traffic_complete['mail'] = size_readable($traffic_complete['mail'] * 1024, 'GiB', 'bi', '%01.'.(int)Settings::Get('panel.decimal_places').'f %s');
+	$traffic_complete['http'] = \Froxlor\PhpHelper::size_readable($traffic_complete['http'] * 1024, 'GiB', 'bi', '%01.'.(int)Settings::Get('panel.decimal_places').'f %s');
+	$traffic_complete['ftp'] = \Froxlor\PhpHelper::size_readable($traffic_complete['ftp'] * 1024, 'GiB', 'bi', '%01.'.(int)Settings::Get('panel.decimal_places').'f %s');
+	$traffic_complete['mail'] = \Froxlor\PhpHelper::size_readable($traffic_complete['mail'] * 1024, 'GiB', 'bi', '%01.'.(int)Settings::Get('panel.decimal_places').'f %s');
 
 	eval("echo \"" . getTemplate('traffic/traffic_details') . "\";");
 } else {
@@ -160,9 +160,9 @@ if (!is_null($month) && !is_null($year)) {
 		eval("\$traffic.=\"" . getTemplate('traffic/traffic_traffic') . "\";");
 	}
 
-	$traffic_complete['http'] = size_readable($traffic_complete['http'] * 1024, 'GiB', 'bi', '%01.'.(int)Settings::Get('panel.decimal_places').'f %s');
-	$traffic_complete['ftp'] = size_readable($traffic_complete['ftp'] * 1024, 'GiB', 'bi', '%01.'.(int)Settings::Get('panel.decimal_places').'f %s');
-	$traffic_complete['mail'] = size_readable($traffic_complete['mail'] * 1024, 'GiB', 'bi', '%01.'.(int)Settings::Get('panel.decimal_places').'f %s');
+	$traffic_complete['http'] = \Froxlor\PhpHelper::size_readable($traffic_complete['http'] * 1024, 'GiB', 'bi', '%01.'.(int)Settings::Get('panel.decimal_places').'f %s');
+	$traffic_complete['ftp'] = \Froxlor\PhpHelper::size_readable($traffic_complete['ftp'] * 1024, 'GiB', 'bi', '%01.'.(int)Settings::Get('panel.decimal_places').'f %s');
+	$traffic_complete['mail'] = \Froxlor\PhpHelper::size_readable($traffic_complete['mail'] * 1024, 'GiB', 'bi', '%01.'.(int)Settings::Get('panel.decimal_places').'f %s');
 
 	eval("echo \"" . getTemplate('traffic/traffic') . "\";");
 }

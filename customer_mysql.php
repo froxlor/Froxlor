@@ -85,7 +85,7 @@ if ($page == 'overview') {
 				);
 				Database::pexecute($mbdata_stmt, array("table_schema" => $row['databasename']));
 				$mbdata = $mbdata_stmt->fetch(PDO::FETCH_ASSOC);
-				$row['size'] = size_readable($mbdata['MB'], 'GiB', 'bi', '%01.' . (int)Settings::Get('panel.decimal_places') . 'f %s');
+				$row['size'] = \Froxlor\PhpHelper::size_readable($mbdata['MB'], 'GiB', 'bi', '%01.' . (int)Settings::Get('panel.decimal_places') . 'f %s');
 				eval("\$mysqls.=\"" . getTemplate('mysql/mysqls_database') . "\";");
 				$count++;
 			}

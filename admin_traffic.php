@@ -114,7 +114,7 @@ if ($page == 'overview' || $page == 'customers') {
 			Database::pexecute($traffic_list_stmt, array('year' => (date("Y")-$years), 'id' => $customer_name['customerid']));
 
 			while ($traffic_month = $traffic_list_stmt->fetch(PDO::FETCH_ASSOC)) {
-				$virtual_host[$months[(int)$traffic_month['month']]] = size_readable($traffic_month['traffic'], 'GiB', 'bi', '%01.'.(int)Settings::Get('panel.decimal_places').'f %s');
+				$virtual_host[$months[(int)$traffic_month['month']]] = \Froxlor\PhpHelper::size_readable($traffic_month['traffic'], 'GiB', 'bi', '%01.'.(int)Settings::Get('panel.decimal_places').'f %s');
 				$totals[$months[(int)$traffic_month['month']]] += $traffic_month['traffic'];
 			}
 			eval("\$domain_list .= sprintf(\"%s\", \"" . getTemplate("traffic/index_table_row") . "\");");
@@ -124,7 +124,7 @@ if ($page == 'overview' || $page == 'customers') {
 			'name' => $lng['traffic']['months']['total'],
 		);
 		foreach ($totals as $month => $bytes) {
-			$virtual_host[$month] = ($bytes == 0 ? '-' : size_readable($bytes, 'GiB', 'bi', '%01.'.(int)Settings::Get('panel.decimal_places').'f %s'));
+			$virtual_host[$month] = ($bytes == 0 ? '-' : \Froxlor\PhpHelper::size_readable($bytes, 'GiB', 'bi', '%01.'.(int)Settings::Get('panel.decimal_places').'f %s'));
 		}
 		$customerview = 0;
 		eval("\$total_list = sprintf(\"%s\", \"" . getTemplate("traffic/index_table_row") . "\");");

@@ -297,7 +297,7 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.9.1')) {
 	$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
 
 	if (isset($result['latestguid']) && (int) $result['latestguid'] > 0 && $result['latestguid'] != Settings::Get('system.lastguid')) {
-		checkLastGuid();
+		\Froxlor\System\Cronjob::checkLastGuid();
 		lastStepStatus(1, 'fixed');
 	} else {
 		lastStepStatus(0);

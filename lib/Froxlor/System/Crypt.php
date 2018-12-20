@@ -137,4 +137,151 @@ class Crypt
 
 		return $available_pwdhashes;
 	}
+	
+	/**
+	 * Function validatePassword
+	 *
+	 * if password-min-length is set in settings
+	 * we check against the length, if not matched
+	 * an error message will be output and 'exit' is called
+	 *
+	 * @param string $password the password to validate
+	 *
+	 * @return string either the password or an errormessage+exit
+	 */
+	public static function validatePassword($password = null, $json_response = false) {
+		
+		if (Settings::Get('panel.password_min_length') > 0) {
+			$password = validate(
+				$password,
+				Settings::Get('panel.password_min_length'),
+				'/^.{'.(int)Settings::Get('panel.password_min_length').',}$/D',
+				'notrequiredpasswordlength',
+				array(),
+				$json_response
+				);
+		}
+		
+		if (Settings::Get('panel.password_regex') != '') {
+			$password = validate(
+				$password,
+				Settings::Get('panel.password_regex'),
+				Settings::Get('panel.password_regex'),
+				'notrequiredpasswordcomplexity',
+				array(),
+				$json_response
+				);
+		} else {
+			if (Settings::Get('panel.password_alpha_lower')) {
+				$password = validate(
+					$password,
+					'/.*[a-z]+.*/',
+					'/.*[a-z]+.*/',
+					'notrequiredpasswordcomplexity',
+					array(),
+					$json_response
+					);
+			}
+			if (Settings::Get('panel.password_alpha_upper')) {
+				$password = validate(
+					$password,
+					'/.*[A-Z]+.*/',
+					'/.*[A-Z]+.*/',
+					'notrequiredpasswordcomplexity',
+					array(),
+					$json_response
+					);
+			}
+			if (Settings::Get('panel.password_numeric')) {
+				$password = validate(
+					$password,
+					'/.*[0-9]+.*/',
+					'/.*[0-9]+.*/',
+					'notrequiredpasswordcomplexity',
+					array(),
+					$json_response
+					);
+			}
+			if (Settings::Get('panel.password_special_char_required')) {
+				$password = validate(
+					$password,
+					'/.*[' . preg_quote(Settings::Get('panel.password_special_char')) . ']+.*/',
+					'/.*[' . preg_quote(Settings::Get('panel.password_special_char')) . ']+.*/',
+					'notrequiredpasswordcomplexity',
+					array(),
+					$json_response
+					);
+			}
+		}
+		
+		return $password;
+	}
+	
+	/**
+	 * Function validatePasswordLogin
+	 *
+	 * compare user password-hash with given user-password
+	 * and check if they are the same
+	 * additionally it updates the hash if the system settings changed
+	 * or if the very old md5() sum is used
+	 *
+	 * @param array $userinfo user-data from table
+	 * @param string $password the password to validate
+	 * @param string $table either panel_customers or panel_admins
+	 * @param string $uid user-id-field in $table
+	 *
+	 * @return boolean
+	 */
+	public static function validatePasswordLogin($userinfo = null, $password = null, $table = 'panel_customers', $uid = 'customerid') {
+
+		$systype = 3; // SHA256
+		if (Settings::Get('system.passwordcryptfunc') !== null) {
+			$systype = (int)Settings::Get('system.passwordcryptfunc');
+		}
+		
+		$pwd_hash = $userinfo['password'];
+		
+		$update_hash = false;
+		// check for good'ole md5
+		if (strlen($pwd_hash) == 32 && ctype_xdigit($pwd_hash)) {
+			$pwd_check = md5($password);
+			$update_hash = true;
+		} else {
+			// cut out the salt from the hash
+			$pwd_salt = str_replace(substr(strrchr($pwd_hash, "$"), 1), "", $pwd_hash);
+			// create same hash to compare
+			$pwd_check = crypt($password, $pwd_salt);
+			// check whether the hash needs to be updated
+			$hash_type_chk = substr($pwd_hash, 0, 3);
+			if (($systype == 1 && $hash_type_chk != '$1$') || // MD5
+				($systype == 2 && $hash_type_chk != '$2$') || // BLOWFISH
+				($systype == 3 && $hash_type_chk != '$5$') || // SHA256
+				($systype == 4 && $hash_type_chk != '$6$')    // SHA512
+				) {
+					$update_hash = true;
+				}
+		}
+		
+		if ($pwd_hash == $pwd_check) {
+			
+			// check for update of hash (only if our database is ready to handle the bigger string)
+			$is_ready = (version_compare2("0.9.33", \Froxlor\Froxlor::getVersion()) <= 0 ? true : false);
+			if ($update_hash && $is_ready) {
+				$upd_stmt = \Froxlor\Database\Database::prepare("
+					UPDATE " . $table . " SET `password` = :newpasswd WHERE `" . $uid . "` = :uid
+				");
+				$params = array (
+					'newpasswd' => self::makeCryptPassword($password),
+					'uid' => $userinfo[$uid]
+				);
+				\Froxlor\Database\Database::pexecute($upd_stmt, $params);
+			}
+			
+			return true;
+		}
+		return false;
+		
+	}
+	
+
 }

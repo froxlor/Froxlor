@@ -44,7 +44,7 @@ if (\Froxlor\Froxlor::isFroxlor()) {
 	// Check Froxlor - database integrity (only happens after all updates are done, so we know the db-layout is okay)
 	showUpdateStep("Checking database integrity");
 
-	$integrity = new IntegrityCheck();
+	$integrity = new \Froxlor\Database\IntegrityCheck();
 	if (! $integrity->checkAll()) {
 		lastStepStatus(1, 'Monkeys ate the integrity');
 		showUpdateStep("Trying to remove monkeys, feeding bananas");
