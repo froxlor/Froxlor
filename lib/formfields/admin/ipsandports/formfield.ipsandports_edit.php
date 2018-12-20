@@ -111,7 +111,7 @@ return array(
 			'section_d' => array(
 				'title' => $lng['admin']['ipsandports']['webserverssldomainconfig'],
 				'image' => 'icons/ipsports_edit.png',
-				'visible' => (Settings::Get('system.use_ssl') == 1 ? true : false),
+				'visible' => (\Froxlor\Settings::Get('system.use_ssl') == 1 ? true : false),
 				'fields' => array(
 					'ssl' => array(
 						'label' => $lng['admin']['ipsandports']['enable_ssl'],

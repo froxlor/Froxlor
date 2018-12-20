@@ -129,7 +129,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 				standard_error('passwordshouldnotbeusername', '', true);
 			} else {
 				$path = \Froxlor\FileDir::makeCorrectDir($customer['documentroot'] . '/' . $path);
-				$cryptPassword = \Froxlor\System::makeCryptPassword($password);
+				$cryptPassword = \Froxlor\System\Crypt::makeCryptPassword($password);
 
 				$stmt = Database::prepare("INSERT INTO `" . TABLE_FTP_USERS . "`
 						(`customerid`, `username`, `description`, `password`, `homedir`, `login_enabled`, `uid`, `gid`, `shell`)
@@ -358,7 +358,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 			if ($password == $result['username']) {
 				standard_error('passwordshouldnotbeusername', '', true);
 			}
-			$cryptPassword = \Froxlor\System::makeCryptPassword($password);
+			$cryptPassword = \Froxlor\System\Crypt::makeCryptPassword($password);
 
 			$stmt = Database::prepare("UPDATE `" . TABLE_FTP_USERS . "`
 				SET `password` = :password

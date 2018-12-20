@@ -179,7 +179,7 @@ class Store
 				 * when fielddata[cronmodule] is set, this means enable/disable a cronjob
 				 */
 				if (isset($fielddata['cronmodule']) && $fielddata['cronmodule'] != '') {
-					toggleCronStatus($fielddata['cronmodule'], $newfieldvalue);
+					\Froxlor\System\Cronjob::toggleCronStatus($fielddata['cronmodule'], $newfieldvalue);
 				}
 
 				/*

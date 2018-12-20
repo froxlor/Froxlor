@@ -377,7 +377,7 @@ class MailsTest extends TestCase
 
 		$data = [
 			'emailaddr' => 'info@test2.local',
-			'email_password' => \Froxlor\System::generatePassword(),
+			'email_password' => \Froxlor\System\Crypt::generatePassword(),
 			'alternative_email' => 'noone@example.com',
 			'email_quota' => 1337,
 			'sendinfomail' => TRAVIS_CI == 1 ? 0 : 1
@@ -399,7 +399,7 @@ class MailsTest extends TestCase
 
 		$data = [
 			'emailaddr' => 'info@test2.local',
-			'email_password' => \Froxlor\System::generatePassword(),
+			'email_password' => \Froxlor\System\Crypt::generatePassword(),
 			'alternative_email' => 'noone@example.com',
 			'email_quota' => 1338
 		];
@@ -459,7 +459,7 @@ class MailsTest extends TestCase
 		// add account
 		$data = [
 			'emailaddr' => 'info@test2.local',
-			'email_password' => \Froxlor\System::generatePassword(),
+			'email_password' => \Froxlor\System\Crypt::generatePassword(),
 			'alternative_email' => 'noone@example.com',
 			'sendinfomail' => TRAVIS_CI == 1 ? 0 : 1
 		];

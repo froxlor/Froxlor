@@ -43,18 +43,18 @@ return array(
 					),
 					'path' => array(
 						'label' => $lng['panel']['path'],
-						'desc' => (Settings::Get('panel.pathedit') != 'Dropdown' ? $lng['panel']['pathDescriptionSubdomain'] : null).(isset($pathSelect['note']) ? $pathSelect['note'].'<br />'.$pathSelect['value'] : ''),
+						'desc' => (\Froxlor\Settings::Get('panel.pathedit') != 'Dropdown' ? $lng['panel']['pathDescriptionSubdomain'] : null).(isset($pathSelect['note']) ? $pathSelect['note'].'<br />'.$pathSelect['value'] : ''),
 						'type' => $pathSelect['type'],
 						'select_var' => $pathSelect['value'],
 						'value' => $pathSelect['value']
 					),
 					'url' => array(
-						'visible' => (Settings::Get('panel.pathedit') == 'Dropdown' ? true : false),
+						'visible' => (\Froxlor\Settings::Get('panel.pathedit') == 'Dropdown' ? true : false),
 						'label' => $lng['panel']['urloverridespath'],
 						'type' => 'text'
 					),
 					'redirectcode' => array(
-						'visible' => (Settings::Get('customredirect.enabled') == '1' ? true : false),
+						'visible' => (\Froxlor\Settings::Get('customredirect.enabled') == '1' ? true : false),
 						'label' => $lng['domains']['redirectifpathisurl'],
 						'desc' => $lng['domains']['redirectifpathisurlinfo'],
 						'type' => 'select',
@@ -72,7 +72,7 @@ return array(
 						'select_var' => $openbasedir
 					),
 					'phpsettingid' => array(
-						'visible' => (((int) Settings::Get('system.mod_fcgid') == 1 || (int) Settings::Get('phpfpm.enabled') == 1) && $has_phpconfigs ? true : false),
+						'visible' => (((int) \Froxlor\Settings::Get('system.mod_fcgid') == 1 || (int) \Froxlor\Settings::Get('phpfpm.enabled') == 1) && $has_phpconfigs ? true : false),
 						'label' => $lng['admin']['phpsettings']['title'],
 						'type' => 'select',
 						'select_var' => $phpconfigs
@@ -82,7 +82,7 @@ return array(
 			'section_bssl' => array(
 				'title' => $lng['admin']['webserversettings_ssl'],
 				'image' => 'icons/domain_add.png',
-				'visible' => Settings::Get('system.use_ssl') == '1' ? ($ssl_ipsandports != '' ? true : false) : false,
+				'visible' => \Froxlor\Settings::Get('system.use_ssl') == '1' ? ($ssl_ipsandports != '' ? true : false) : false,
 				'fields' => array(
 					'ssl_redirect' => array(
 						'label' => $lng['domains']['ssl_redirect']['title'],
@@ -94,7 +94,7 @@ return array(
 						'value' => array()
 					),
 					'letsencrypt' => array(
-						'visible' => (Settings::Get('system.leenabled') == '1' ? true : false),
+						'visible' => (\Froxlor\Settings::Get('system.leenabled') == '1' ? true : false),
 						'label' => $lng['customer']['letsencrypt']['title'],
 						'desc' => $lng['customer']['letsencrypt']['description'],
 						'type' => 'checkbox',

@@ -45,7 +45,7 @@ return array(
 					'type' => 'option',
 					'default' => 0,
 					'option_mode' => 'one',
-					'option_options_method' => array('\\Froxlor\\System', 'getAvailablePasswordHashes'),
+					'option_options_method' => array('\\Froxlor\\System\\Crypt', 'getAvailablePasswordHashes'),
 					'save_method' => 'storeSettingField',
 					),
 				'system_allow_error_report_admin' => array(

@@ -27,7 +27,7 @@ class MysqlsTest extends TestCase
 		$customer_userdata = json_decode($json_result, true)['data'];
 
 		$data = [
-			'mysql_password' => \Froxlor\System::generatePassword(),
+			'mysql_password' => \Froxlor\System\Crypt::generatePassword(),
 			'description' => 'testdb',
 			'sendinfomail' => TRAVIS_CI == 1 ? 0 : 1
 		];
@@ -103,7 +103,7 @@ class MysqlsTest extends TestCase
 
 		$data = [
 			'dbname' => 'test1sql1',
-			'mysql_password' => \Froxlor\System::generatePassword(),
+			'mysql_password' => \Froxlor\System\Crypt::generatePassword(),
 			'description' => 'testdb-upd',
 			'loginname' => 'test1'
 		];

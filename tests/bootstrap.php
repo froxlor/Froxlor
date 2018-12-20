@@ -69,7 +69,7 @@ Database::query("ALTER TABLE `" . TABLE_PANEL_FPMDAEMONS . "` AUTO_INCREMENT=2;"
 // add superadmin
 Database::query("INSERT INTO `" . TABLE_PANEL_ADMINS . "` SET
 	`loginname` = 'admin',
-	`password` = '" . makeCryptPassword('admin') . "',
+	`password` = '" . \Froxlor\System\Crypt::makeCryptPassword('admin') . "',
 	`name` = 'Froxlor-Administrator',
 	`email` = 'admin@dev.froxlor.org',
 	`def_language` = 'English',

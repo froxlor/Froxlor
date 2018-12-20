@@ -260,14 +260,14 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 				}
 
 				if ($password == '') {
-					$password = \Froxlor\System::generatePassword();
+					$password = \Froxlor\System\Crypt::generatePassword();
 				}
 
 				$_theme = Settings::Get('panel.default_theme');
 
 				$ins_data = array(
 					'loginname' => $loginname,
-					'password' => \Froxlor\System::makeCryptPassword($password),
+					'password' => \Froxlor\System\Crypt::makeCryptPassword($password),
 					'name' => $name,
 					'email' => $email,
 					'lang' => $def_language,
@@ -530,7 +530,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 
 					if ($password != '') {
 						$password = validatePassword($password, true);
-						$password = \Froxlor\System::makeCryptPassword($password);
+						$password = \Froxlor\System\Crypt::makeCryptPassword($password);
 					} else {
 						$password = $result['password'];
 					}

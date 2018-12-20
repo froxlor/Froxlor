@@ -37,18 +37,18 @@ return array(
 					'email_password_suggestion' => array(
 						'label' => $lng['customer']['generated_pwd'],
 						'type' => 'text',
-						'visible' => (Settings::Get('panel.password_regex') == ''),
-						'value' => \Froxlor\System::generatePassword(),
+						'visible' => (\Froxlor\Settings::Get('panel.password_regex') == ''),
+						'value' => \Froxlor\System\Crypt::generatePassword(),
 					),
 					'email_quota' => array(
-						'visible' => (Settings::Get('system.mail_quota_enabled') == '1' ? true : false),
+						'visible' => (\Froxlor\Settings::Get('system.mail_quota_enabled') == '1' ? true : false),
 						'label' => $lng['emails']['quota'],
 						'desc' => "MiB",
 						'type' => 'text',
 						'value' => $quota
 					),
 					'alternative_email' => array(
-						'visible' => (Settings::Get('panel.sendalternativemail') == '1' ? true : false),
+						'visible' => (\Froxlor\Settings::Get('panel.sendalternativemail') == '1' ? true : false),
 						'label' => $lng['emails']['alternative_emailaddress'],
 						'type' => 'text'
 					)

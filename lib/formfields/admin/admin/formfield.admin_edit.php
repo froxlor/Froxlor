@@ -48,7 +48,7 @@ return array(
 						'label' => $lng['customer']['generated_pwd'],
 						'type' => 'text',
 						'visible' => (\Froxlor\Settings::Get('panel.password_regex') == ''),
-						'value' => \Froxlor\System::generatePassword(),
+						'value' => \Froxlor\System\Crypt::generatePassword(),
 						'visible' => ($result['adminid'] == $userinfo['userid'] ? false : true)
 					),
 					'def_language' => array(

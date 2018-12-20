@@ -3,14 +3,14 @@ namespace Froxlor\System;
 
 use Froxlor\Settings;
 
-class System
+class Crypt
 {
 
 	/**
 	 * Generates a random password
 	 *
 	 * @param boolean $isSalt
-	 *        	optional, create a hash for a salt used in \Froxlor\System::makeCryptPassword because crypt() does not like some special characters in its salts, default is false
+	 *        	optional, create a hash for a salt used in \Froxlor\System\Crypt::makeCryptPassword because crypt() does not like some special characters in its salts, default is false
 	 */
 	public static function generatePassword($isSalt = false)
 	{
@@ -136,69 +136,5 @@ class System
 		}
 
 		return $available_pwdhashes;
-	}
-
-	/**
-	 * Cronjob function to end a cronjob in a critical condition
-	 * but not without sending a notification mail to the admin
-	 *
-	 * @param string $message
-	 * @param string $subject
-	 *
-	 * @return void
-	 */
-	public static function dieWithMail($message, $subject = "[froxlor] Cronjob error")
-	{
-		if (Settings::Get('system.send_cron_errors') == '1') {
-
-			$_mail = new \PHPMailer\PHPMailer\PHPMailer(true);
-			$_mail->CharSet = "UTF-8";
-
-			if (Settings::Get('system.mail_use_smtp')) {
-				$_mail->isSMTP();
-				$_mail->Host = Settings::Get('system.mail_smtp_host');
-				$_mail->SMTPAuth = Settings::Get('system.mail_smtp_auth') == '1' ? true : false;
-				$_mail->Username = Settings::Get('system.mail_smtp_user');
-				$_mail->Password = Settings::Get('system.mail_smtp_passwd');
-				if (Settings::Get('system.mail_smtp_usetls')) {
-					$_mail->SMTPSecure = 'tls';
-				} else {
-					$_mail->SMTPAutoTLS = false;
-				}
-				$_mail->Port = Settings::Get('system.mail_smtp_port');
-			}
-
-			if (\PHPMailer\PHPMailer\PHPMailer::ValidateAddress(Settings::Get('panel.adminmail')) !== false) {
-				// set return-to address and custom sender-name, see #76
-				$_mail->SetFrom(Settings::Get('panel.adminmail'), Settings::Get('panel.adminmail_defname'));
-				if (Settings::Get('panel.adminmail_return') != '') {
-					$_mail->AddReplyTo(Settings::Get('panel.adminmail_return'), Settings::Get('panel.adminmail_defname'));
-				}
-			}
-
-			$_mailerror = false;
-			$mailerr_msg = "";
-			try {
-				$_mail->Subject = $subject;
-				$_mail->AltBody = $message;
-				$_mail->MsgHTML(nl2br($message));
-				$_mail->AddAddress(Settings::Get('panel.adminmail'), Settings::Get('panel.adminmail_defname'));
-				$_mail->Send();
-			} catch (\PHPMailer\PHPMailer\Exception $e) {
-				$mailerr_msg = $e->errorMessage();
-				$_mailerror = true;
-			} catch (\Exception $e) {
-				$mailerr_msg = $e->getMessage();
-				$_mailerror = true;
-			}
-
-			$_mail->ClearAddresses();
-
-			if ($_mailerror) {
-				echo 'Error sending mail: ' . $mailerr_msg . "\n";
-			}
-		}
-
-		die($message);
 	}
 }

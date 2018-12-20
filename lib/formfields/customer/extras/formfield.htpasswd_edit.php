@@ -42,8 +42,8 @@ return array(
 					'directory_password_suggestion' => array(
 						'label' => $lng['customer']['generated_pwd'],
 						'type' => 'text',
-						'visible' => (Settings::Get('panel.password_regex') == ''),
-						'value' => \Froxlor\System::generatePassword(),
+						'visible' => (\Froxlor\Settings::Get('panel.password_regex') == ''),
+						'value' => \Froxlor\System\Crypt::generatePassword(),
 					),
 					'directory_authname' => array(
 						'label' => $lng['extras']['htpasswdauthname'],

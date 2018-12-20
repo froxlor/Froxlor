@@ -122,7 +122,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 			}
 
 			// encrypt the password
-			$cryptPassword = \Froxlor\System::makeCryptPassword($password);
+			$cryptPassword = \Froxlor\System\Crypt::makeCryptPassword($password);
 
 			$email_user = substr($email_full, 0, strrpos($email_full, "@"));
 			$email_domain = substr($email_full, strrpos($email_full, "@") + 1);
@@ -347,7 +347,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 				standard_error('passwordshouldnotbeusername', '', true);
 			}
 			$password = validatePassword($password, true);
-			$cryptPassword = \Froxlor\System::makeCryptPassword($password);
+			$cryptPassword = \Froxlor\System\Crypt::makeCryptPassword($password);
 			$upd_query .= (Settings::Get('system.mailpwcleartext') == '1' ? "`password` = :password, " : '') . "`password_enc`= :password_enc";
 			$upd_params['password_enc'] = $cryptPassword;
 			if (Settings::Get('system.mailpwcleartext') == '1') {

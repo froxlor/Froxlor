@@ -119,8 +119,8 @@ if ($page == 'overview') {
 
 	$userinfo['custom_notes'] = ($userinfo['custom_notes'] != '') ? nl2br($userinfo['custom_notes']) : '';
 
-	$cron_last_runs = getCronjobsLastRun();
-	$outstanding_tasks = getOutstandingTasks();
+	$cron_last_runs = \Froxlor\System\Cronjob::getCronjobsLastRun();
+	$outstanding_tasks = \Froxlor\System\Cronjob::getOutstandingTasks();
 
 	$system_hostname = gethostname();
 	$meminfo = explode("\n", @file_get_contents("/proc/meminfo"));

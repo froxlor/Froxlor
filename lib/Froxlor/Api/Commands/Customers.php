@@ -378,7 +378,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 					}
 
 					if ($password == '') {
-						$password = \Froxlor\System::generatePassword();
+						$password = \Froxlor\System\Crypt::generatePassword();
 					}
 
 					$_theme = Settings::Get('panel.default_theme');
@@ -386,7 +386,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 					$ins_data = array(
 						'adminid' => $this->getUserDetail('adminid'),
 						'loginname' => $loginname,
-						'passwd' => \Froxlor\System::makeCryptPassword($password),
+						'passwd' => \Froxlor\System\Crypt::makeCryptPassword($password),
 						'name' => $name,
 						'firstname' => $firstname,
 						'gender' => $gender,
@@ -552,7 +552,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 					Database::pexecute($ins_stmt, $ins_data, true, true);
 
 					inserttask('1');
-					$cryptPassword = \Froxlor\System::makeCryptPassword($password);
+					$cryptPassword = \Froxlor\System\Crypt::makeCryptPassword($password);
 					// add FTP-User
 					// @fixme use Ftp-ApiCommand later
 					$ins_stmt = Database::prepare("
@@ -941,7 +941,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 
 		if ($password != '') {
 			$password = validatePassword($password, true);
-			$password = \Froxlor\System::makeCryptPassword($password);
+			$password = \Froxlor\System\Crypt::makeCryptPassword($password);
 		} else {
 			$password = $result['password'];
 		}
