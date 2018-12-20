@@ -240,7 +240,7 @@ class phpinterface_fcgid {
 	 */
 	private function _getAdminData($adminid) {
 
-		$adminid = intval($adminid);
+		$adminid = (int) $adminid;
 
 		if (!isset($this->_admin_cache[$adminid])) {
 			$stmt = Database::prepare("

@@ -23,7 +23,7 @@ require './lib/init.php';
 
 if (isset($_POST['id'])) {
 
-	$id = intval($_POST['id']);
+	$id = (int) $_POST['id'];
 
 	//Check if the current user is allowed to see the current ticket.
 	$stmt = Database::prepare("SELECT `id` FROM `panel_tickets` WHERE `id` = :id AND `customerid` = :customerid");
@@ -34,7 +34,7 @@ if (isset($_POST['id'])) {
 		standard_error(array('ticketnotaccessible'));
 	}
 } elseif (isset($_GET['id'])) {
-	$id = intval($_GET['id']);
+	$id = (int) $_GET['id'];
 }
 
 if ($page == 'overview') {

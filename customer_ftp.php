@@ -27,9 +27,9 @@ if (Settings::IsInList('panel.customer_hide_options','ftp')) {
 
 $id = 0;
 if (isset($_POST['id'])) {
-	$id = intval($_POST['id']);
+	$id = (int) $_POST['id'];
 } elseif (isset($_GET['id'])) {
-	$id = intval($_GET['id']);
+	$id = (int) $_GET['id'];
 }
 
 if ($page == 'overview') {

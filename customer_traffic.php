@@ -31,11 +31,11 @@ $month = null;
 $year = null;
 
 if (isset($_POST['month']) && isset($_POST['year'])) {
-	$month = intval($_POST['month']);
-	$year = intval($_POST['year']);
+	$month = (int) $_POST['month'];
+	$year = (int) $_POST['year'];
 } elseif (isset($_GET['month']) && isset($_GET['year'])) {
-	$month = intval($_GET['month']);
-	$year = intval($_GET['year']);
+	$month = (int) $_GET['month'];
+	$year = (int) $_GET['year'];
 }
 //BAM! $_GET???
 elseif (isset($_GET['page']) && $_GET['page'] == 'current') {
@@ -103,7 +103,7 @@ if (!is_null($month) && !is_null($year)) {
 		}
 
 		eval("\$traffic.=\"" . getTemplate('traffic/traffic_month') . "\";");
-		$show = $lng['traffic']['months'][intval($row['month'])] . ' ' . $row['year'];
+		$show = $lng['traffic']['months'][ (int) $row['month'] ] . ' ' . $row['year'];
 	}
 
 	$traffic_complete['http'] = size_readable($traffic_complete['http'] * 1024, 'GiB', 'bi', '%01.'.(int)Settings::Get('panel.decimal_places').'f %s');
@@ -133,7 +133,7 @@ if (!is_null($month) && !is_null($year)) {
 		$traffic_complete['mail'] += $mail;
 		$traf['month'] = $row['month'];
 		$traf['year'] = $row['year'];
-		$traf['monthname'] = $lng['traffic']['months'][intval($row['month'])] . " " . $row['year'];
+		$traf['monthname'] = $lng['traffic']['months'][ (int) $row['month'] ] . " " . $row['year'];
 		$traf['byte'] = $http + $ftp_up + $ftp_down + $mail;
 
 		if (extension_loaded('bcmath')) {

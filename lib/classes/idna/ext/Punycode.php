@@ -244,7 +244,7 @@ class Punycode implements PunycodeInterface
                             break;
                         }
 
-                        $encoded .= $this->encodeDigit(intval($t + (($q - $t) % (self::base - $t))));
+                        $encoded .= $this->encodeDigit( (int) ( $t + ( ( $q - $t ) % ( self::base - $t ) ) ) );
                         $q = (int) (($q - $t) / (self::base - $t));
                     }
                     $encoded .= $this->encodeDigit($q);
@@ -269,12 +269,12 @@ class Punycode implements PunycodeInterface
      */
     protected function adapt($delta, $npoints, $is_first)
     {
-        $delta = intval($is_first ? ($delta / self::damp) : ($delta / 2));
-        $delta += intval($delta / $npoints);
+        $delta = (int) ( $is_first ? ( $delta / self::damp ) : ( $delta / 2 ) );
+        $delta += (int) ( $delta / $npoints );
         for ($k = 0; $delta > ((self::base - self::tMin) * self::tMax) / 2; $k += self::base) {
-            $delta = intval($delta / (self::base - self::tMin));
+            $delta = (int) ( $delta / ( self::base - self::tMin ) );
         }
-        return intval($k + (self::base - self::tMin + 1) * $delta / ($delta + self::skew));
+        return (int) ( $k + ( self::base - self::tMin + 1 ) * $delta / ( $delta + self::skew ) );
     }
 
     /**
@@ -408,7 +408,7 @@ class Punycode implements PunycodeInterface
         $result = [];
         $result[] = (int) self::lBase + $sindex / self::nCount;
         $result[] = (int) self::vBase + ($sindex % self::nCount) / self::tCount;
-        $T = intval(self::tBase + $sindex % self::tCount);
+        $T = (int) ( self::tBase + $sindex % self::tCount );
         if ($T != self::tBase) {
             $result[] = $T;
         }
@@ -481,17 +481,17 @@ class Punycode implements PunycodeInterface
         $size = count($input);
         while ($swap) {
             $swap = false;
-            $last = $this->getCombiningClass(intval($input[0]));
+            $last = $this->getCombiningClass( (int) $input[0] );
             for ($i = 0; $i < $size - 1; ++$i) {
-                $next = $this->getCombiningClass(intval($input[$i + 1]));
+                $next = $this->getCombiningClass( (int) $input[ $i + 1 ] );
                 if ($next != 0 && $last > $next) {
                     // Move item leftward until it fits
                     for ($j = $i + 1; $j > 0; --$j) {
-                        if ($this->getCombiningClass(intval($input[$j - 1])) <= $next) {
+                        if ( $this->getCombiningClass( (int) $input[ $j - 1 ] ) <= $next) {
                             break;
                         }
-                        $t = intval($input[$j]);
-                        $input[$j] = intval($input[$j - 1]);
+                        $t = (int) $input[ $j ];
+                        $input[$j] = (int) $input[ $j - 1 ];
                         $input[$j - 1] = $t;
                         $swap = true;
                     }

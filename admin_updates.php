@@ -63,7 +63,7 @@ if ($page == 'overview') {
 		) {
 			if ((isset($_POST['update_preconfig'])
 				&& isset($_POST['update_changesagreed'])
-				&& intval($_POST['update_changesagreed']) != 0)
+			     && (int) $_POST['update_changesagreed'] != 0)
 				|| !isset($_POST['update_preconfig'])
 			) {
 				eval("echo \"" . getTemplate('update/update_start') . "\";");

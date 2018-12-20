@@ -189,17 +189,17 @@ class Domains extends ApiCommand implements ResourceEntity
 
 				// parameters
 				$p_domain = $this->getParam('domain');
-				$customerid = intval($this->getParam('customerid'));
+				$customerid = (int) $this->getParam( 'customerid' );
 
 				// optional parameters
 				$p_ipandports = $this->getParam('ipandport', true, explode(',', Settings::Get('system.defaultip')));
-				$adminid = intval($this->getParam('adminid', true, $this->getUserDetail('adminid')));
+				$adminid = (int) $this->getParam( 'adminid', true, $this->getUserDetail( 'adminid' ) );
 				$subcanemaildomain = $this->getParam('subcanemaildomain', true, 0);
 				$isemaildomain = $this->getBoolParam('isemaildomain', true, 0);
 				$email_only = $this->getBoolParam('email_only', true, 0);
 				$serveraliasoption = $this->getParam('selectserveralias', true, 0);
 				$speciallogfile = $this->getBoolParam('speciallogfile', true, 0);
-				$aliasdomain = intval($this->getParam('alias', true, 0));
+				$aliasdomain = (int) $this->getParam( 'alias', true, 0 );
 				$issubof = $this->getBoolParam('issubof', true, 0);
 				$registration_date = $this->getParam('registration_date', true, '');
 				$termination_date = $this->getParam('termination_date', true, '');
@@ -757,8 +757,8 @@ class Domains extends ApiCommand implements ResourceEntity
 
 			// optional parameters
 			$p_ipandports = $this->getParam('ipandport', true, array());
-			$customerid = intval($this->getParam('customerid', true, $result['customerid']));
-			$adminid = intval($this->getParam('adminid', true, $result['adminid']));
+			$customerid = (int) $this->getParam( 'customerid', true, $result['customerid'] );
+			$adminid = (int) $this->getParam( 'adminid', true, $result['adminid'] );
 
 			$subcanemaildomain = $this->getBoolParam('subcanemaildomain', true, $result['subcanemaildomain']);
 			$isemaildomain = $this->getBoolParam('isemaildomain', true, $result['isemaildomain']);
@@ -766,7 +766,7 @@ class Domains extends ApiCommand implements ResourceEntity
 			$p_serveraliasoption = $this->getParam('selectserveralias', true, - 1);
 			$speciallogfile = $this->getBoolParam('speciallogfile', true, $result['speciallogfile']);
 			$speciallogverified = $this->getBoolParam('speciallogverified', true, 0);
-			$aliasdomain = intval($this->getParam('alias', true, $result['aliasdomain']));
+			$aliasdomain = (int) $this->getParam( 'alias', true, $result['aliasdomain'] );
 			$issubof = $this->getBoolParam('issubof', true, $result['ismainbutsubto']);
 			$registration_date = $this->getParam('registration_date', true, $result['registration_date']);
 			$termination_date = $this->getParam('termination_date', true, $result['termination_date']);
@@ -1675,7 +1675,7 @@ class Domains extends ApiCommand implements ResourceEntity
 				if (trim($ipandport) < 1) {
 					continue;
 				}
-				$ipandport = intval($ipandport);
+				$ipandport = (int) $ipandport;
 				$ip_params = array_merge(array(
 					'ipandport' => $ipandport
 				), $aip_param);

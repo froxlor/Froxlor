@@ -18,9 +18,9 @@ define('AREA', 'admin');
 require './lib/init.php';
 
 if (isset($_POST['id'])) {
-	$id = intval($_POST['id']);
+	$id = (int) $_POST['id'];
 } elseif (isset($_GET['id'])) {
-	$id = intval($_GET['id']);
+	$id = (int) $_GET['id'];
 }
 
 if ($page == '' || $page == 'overview') {
@@ -173,25 +173,25 @@ if ($page == '' || $page == 'overview') {
 			
 			$value_arr['phpenabled'] = 0;
 			if (isset($_POST['phpenabled'])) {
-				$value_arr['phpenabled'] = intval($_POST['phpenabled']);
+				$value_arr['phpenabled'] = (int) $_POST['phpenabled'];
 			}
 			
 			$value_arr['allowed_phpconfigs'] = array();
 			if (isset($_POST['allowed_phpconfigs']) && is_array($_POST['allowed_phpconfigs'])) {
 				foreach ($_POST['allowed_phpconfigs'] as $allowed_phpconfig) {
-					$allowed_phpconfig = intval($allowed_phpconfig);
+					$allowed_phpconfig = (int) $allowed_phpconfig;
 					$value_arr['allowed_phpconfigs'][] = $allowed_phpconfig;
 				}
 			}
 			
 			$value_arr['perlenabled'] = 0;
 			if (isset($_POST['perlenabled'])) {
-				$value_arr['perlenabled'] = intval($_POST['perlenabled']);
+				$value_arr['perlenabled'] = (int) $_POST['perlenabled'];
 			}
 			
 			$value_arr['dnsenabled'] = 0;
 			if (isset($_POST['dnsenabled'])) {
-				$value_arr['dnsenabled'] = intval($_POST['dnsenabled']);
+				$value_arr['dnsenabled'] = (int) $_POST['dnsenabled'];
 			}
 			
 			$ins_stmt = Database::prepare("
@@ -357,25 +357,25 @@ if ($page == '' || $page == 'overview') {
 				
 				$value_arr['phpenabled'] = 0;
 				if (isset($_POST['phpenabled'])) {
-					$value_arr['phpenabled'] = intval($_POST['phpenabled']);
+					$value_arr['phpenabled'] = (int) $_POST['phpenabled'];
 				}
 				
 				$value_arr['allowed_phpconfigs'] = array();
 				if (isset($_POST['allowed_phpconfigs']) && is_array($_POST['allowed_phpconfigs'])) {
 					foreach ($_POST['allowed_phpconfigs'] as $allowed_phpconfig) {
-						$allowed_phpconfig = intval($allowed_phpconfig);
+						$allowed_phpconfig = (int) $allowed_phpconfig;
 						$value_arr['allowed_phpconfigs'][] = $allowed_phpconfig;
 					}
 				}
 				
 				$value_arr['perlenabled'] = 0;
 				if (isset($_POST['perlenabled'])) {
-					$value_arr['perlenabled'] = intval($_POST['perlenabled']);
+					$value_arr['perlenabled'] = (int) $_POST['perlenabled'];
 				}
 				
 				$value_arr['dnsenabled'] = 0;
 				if (isset($_POST['dnsenabled'])) {
-					$value_arr['dnsenabled'] = intval($_POST['dnsenabled']);
+					$value_arr['dnsenabled'] = (int) $_POST['dnsenabled'];
 				}
 				
 				$ins_stmt = Database::prepare("

@@ -98,7 +98,7 @@ abstract class ApiParameter
 			$_default = '1';
 		}
 		$param_value = $this->getParam($param, $optional, $_default);
-		if ($param_value && intval($param_value) != 0) {
+		if ( $param_value && (int) $param_value != 0) {
 			return '1';
 		}
 		return '0';

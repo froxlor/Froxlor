@@ -200,16 +200,16 @@ class paging {
 
 		$this->userinfo['lastpaging']['searchtext'] = $this->searchtext;
 
-		if (isset($_REQUEST['pageno'])
-			&& intval($_REQUEST['pageno']) != 0
+		if ( isset($_REQUEST['pageno'])
+		     && (int) $_REQUEST['pageno'] != 0
 		) {
-			$this->pageno = intval($_REQUEST['pageno']);
+			$this->pageno = (int) $_REQUEST['pageno'];
 		} else {
 			if ($checklastpaging
 				&& isset($this->userinfo['lastpaging']['pageno'])
-				&& intval($this->userinfo['lastpaging']['pageno']) != 0
+			    && (int) $this->userinfo['lastpaging']['pageno'] != 0
 			) {
-				$this->pageno = intval($this->userinfo['lastpaging']['pageno']);
+				$this->pageno = (int) $this->userinfo['lastpaging']['pageno'];
 			} else {
 				$this->pageno = 1;
 			}
@@ -259,8 +259,8 @@ class paging {
 	 * @return bool to display or not to display, that's the question
 	 */
 	public function checkDisplay($count) {
-		$begin = (intval($this->pageno) - 1) * intval($this->entriesperpage);
-		$end = (intval($this->pageno) * intval($this->entriesperpage));
+		$begin = ( (int) $this->pageno - 1) * (int) $this->entriesperpage;
+		$end = ( (int) $this->pageno * (int) $this->entriesperpage );
 		return (($count >= $begin && $count < $end) || $this->entriesperpage == 0);
 	}
 
@@ -475,7 +475,7 @@ class paging {
 		if ($this->entriesperpage == 0) {
 			return '';
 		} else {
-			$pages = intval($this->entries / $this->entriesperpage);
+			$pages = (int) ( $this->entries / $this->entriesperpage );
 		}
 
 		if ($this->entries % $this->entriesperpage != 0) {
@@ -494,7 +494,7 @@ class paging {
 				$stop = $pages;
 			}
 
-			$pagingcode = '<a href="' . htmlspecialchars($baseurl) . '&amp;pageno=1">&laquo;</a> <a href="' . htmlspecialchars($baseurl) . '&amp;pageno=' . ((intval($this->pageno) - 1) == 0 ? '1' : intval($this->pageno) - 1) . '">&lt;</a>&nbsp;';
+			$pagingcode = '<a href="' . htmlspecialchars($baseurl) . '&amp;pageno=1">&laquo;</a> <a href="' . htmlspecialchars($baseurl) . '&amp;pageno=' . ( ( (int) $this->pageno - 1) == 0 ? '1' : (int) $this->pageno - 1) . '">&lt;</a>&nbsp;';
 			for ($i = $start;$i <= $stop;$i++) {
 				if ($i != $this->pageno) {
 					$pagingcode.= ' <a href="' . htmlspecialchars($baseurl) . '&amp;pageno=' . $i . '">' . $i . '</a>&nbsp;';
@@ -502,7 +502,7 @@ class paging {
 					$pagingcode.= ' <strong>' . $i . '</strong>&nbsp;';
 				}
 			}
-			$pagingcode.= ' <a href="' . htmlspecialchars($baseurl) . '&amp;pageno=' . ((intval($this->pageno) + 1) > $pages ? $pages : intval($this->pageno) + 1) . '">&gt;</a> <a href="' . $baseurl . '&amp;pageno=' . $pages . '">&raquo;</a>';
+			$pagingcode.= ' <a href="' . htmlspecialchars($baseurl) . '&amp;pageno=' . ( ( (int) $this->pageno + 1) > $pages ? $pages : (int) $this->pageno + 1) . '">&gt;</a> <a href="' . $baseurl . '&amp;pageno=' . $pages . '">&raquo;</a>';
 		} else {
 			$pagingcode = '';
 		}

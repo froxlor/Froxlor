@@ -88,7 +88,7 @@ function awstatsDoSingleDomain($domain, $outputdir) {
 							$count_bdw = false;
 							break;
 						} elseif (isset($parts[3])) {
-							$returnval += floatval($parts[3]);
+							$returnval += (float) $parts[3];
 						}
 					}
 				}
@@ -193,7 +193,7 @@ function callAwstatsGetTraffic($customerid, $outputdir, $usersdomainlist) {
 	 * as of #124, awstats traffic is saved in bytes instead
 	 * of kilobytes (like webalizer does)
 	 */
-	$returnval = floatval($returnval / 1024);
+	$returnval = (float) ( $returnval / 1024 );
 
 	/**
 	 * now, because this traffic is being saved daily, we have to
@@ -218,11 +218,11 @@ function callAwstatsGetTraffic($customerid, $outputdir, $usersdomainlist) {
 		if (is_array($result)
 			&& isset($result['trafficmonth'])
 		) {
-			$returnval = ($returnval - floatval($result['trafficmonth']));
+			$returnval = ( $returnval - (float) $result['trafficmonth'] );
 		}
 	}
 
-	return floatval($returnval);
+	return (float) $returnval;
 }
 
 
@@ -301,9 +301,9 @@ function callWebalizerGetTraffic($logfile, $outputdir, $caption, $usersdomainlis
 					&& isset($webalizer_hist_row['1'])
 					&& isset($webalizer_hist_row['5'])
 				) {
-					$month = intval($webalizer_hist_row['0']);
-					$year = intval($webalizer_hist_row['1']);
-					$traffic = floatval($webalizer_hist_row['5']);
+					$month = (int) $webalizer_hist_row['0'];
+					$year = (int) $webalizer_hist_row['1'];
+					$traffic = (float) $webalizer_hist_row['5'];
 
 					if (!isset($httptraffic[$year])) {
 						$httptraffic[$year] = array();
@@ -329,9 +329,9 @@ function callWebalizerGetTraffic($logfile, $outputdir, $caption, $usersdomainlis
 					&& isset($webalizer_lasthist_row['1'])
 					&& isset($webalizer_lasthist_row['5'])
 				) {
-					$month = intval($webalizer_lasthist_row['0']);
-					$year = intval($webalizer_lasthist_row['1']);
-					$traffic = floatval($webalizer_lasthist_row['5']);
+					$month = (int) $webalizer_lasthist_row['0'];
+					$year = (int) $webalizer_lasthist_row['1'];
+					$traffic = (float) $webalizer_lasthist_row['5'];
 
 					if (!isset($httptrafficlast[$year])) {
 						$httptrafficlast[$year] = array();
@@ -354,5 +354,5 @@ function callWebalizerGetTraffic($logfile, $outputdir, $caption, $usersdomainlis
 		}
 	}
 
-	return floatval($returnval);
+	return (float) $returnval;
 }

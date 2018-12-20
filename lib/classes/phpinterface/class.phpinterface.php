@@ -79,7 +79,7 @@ class phpinterface {
 	 */
 	public function getPhpConfig($php_config_id) {
 
-		$php_config_id = intval($php_config_id);
+		$php_config_id = (int) $php_config_id;
 
 		// If domain has no config, we will use the default one.
 		if ($php_config_id == 0) {

@@ -137,7 +137,7 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 			$docroot = validate($this->getParam('docroot', true, ''), 'docroot', '', '', array(), true);
 
 			if ((int) Settings::Get('system.use_ssl') == 1) {
-				$ssl = ! empty($this->getBoolParam('ssl', true, 0)) ? intval($this->getBoolParam('ssl', true, 0)) : 0;
+				$ssl = ! empty($this->getBoolParam('ssl', true, 0)) ? (int) $this->getBoolParam( 'ssl', true, 0 ) : 0;
 				$ssl_cert_file = validate($this->getParam('ssl_cert_file', $ssl, ''), 'ssl_cert_file', '', '', array(), true);
 				$ssl_key_file = validate($this->getParam('ssl_key_file', $ssl, ''), 'ssl_key_file', '', '', array(), true);
 				$ssl_ca_file = validate($this->getParam('ssl_ca_file', true, ''), 'ssl_ca_file', '', '', array(), true);

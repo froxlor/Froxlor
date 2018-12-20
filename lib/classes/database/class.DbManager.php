@@ -81,7 +81,7 @@ class DbManager {
 				$username = $loginname . '-' . substr(md5(uniqid(microtime(), 1)), 20, 3);
 			}
 		} else {
-			$username = $loginname . Settings::Get('customer.mysqlprefix') . (intval($last_accnumber) + 1);
+			$username = $loginname . Settings::Get('customer.mysqlprefix') . ( (int) $last_accnumber + 1);
 		}
 
 		// don't use a password that is the same as the username

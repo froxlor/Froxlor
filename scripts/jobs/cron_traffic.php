@@ -137,7 +137,7 @@ while ($row_database = $databases_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$mysqlusage_all[$row_database['customerid']] = 0;
 		}
 		// sum up result
-		$mysqlusage_all[$row_database['customerid']] += floatval($mysql_usage_row['customerusage']);
+		$mysqlusage_all[$row_database['customerid']] += (float) $mysql_usage_row['customerusage'];
 	} else {
 		$cronlog->logAction(CRON_ACTION, LOG_WARNING, "Seems like the database " . $row_database['databasename'] . " had been removed manually.");
 	}
@@ -200,7 +200,7 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			reset($speciallogfile_domainlist[$row['customerid']]);
 			if (Settings::Get('system.awstats_enabled') == '0') {
 				foreach ($speciallogfile_domainlist[$row['customerid']] as $domainid => $domain) {
-					$httptraffic+= floatval(callWebalizerGetTraffic($row['loginname'] . '-' . $domain, $row['documentroot'] . '/webalizer/' . $domain . '/', $domain, $domainlist[$row['customerid']]));
+					$httptraffic+= (float) callWebalizerGetTraffic( $row['loginname'] . '-' . $domain, $row['documentroot'] . '/webalizer/' . $domain . '/', $domain, $domainlist[ $row['customerid'] ] );
 				}
 			}
 		}
@@ -212,9 +212,9 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 		// will iterate through all customer-domains and the awstats-configs
 		// know the logfile-name, #246
 		if (Settings::Get('system.awstats_enabled') == '1') {
-			$httptraffic+= floatval(callAwstatsGetTraffic($row['customerid'], $row['documentroot'] . '/awstats/', $domainlist[$row['customerid']]));
+			$httptraffic+= (float) callAwstatsGetTraffic( $row['customerid'], $row['documentroot'] . '/awstats/', $domainlist[ $row['customerid'] ] );
 		} else {
-			$httptraffic+= floatval(callWebalizerGetTraffic($row['loginname'], $row['documentroot'] . '/webalizer/', $caption, $domainlist[$row['customerid']]));
+			$httptraffic+= (float) callWebalizerGetTraffic( $row['loginname'], $row['documentroot'] . '/webalizer/', $caption, $domainlist[ $row['customerid'] ] );
 		}
 
 		// make the stuff readable for the customer, #258
@@ -259,7 +259,7 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			if (!is_array($domainMailTraffic)) { continue; }
 
 			foreach ($domainMailTraffic as $dateTraffic => $dayTraffic) {
-				$dayTraffic = floatval($dayTraffic / 1024);
+				$dayTraffic = (float) ( $dayTraffic / 1024 );
 
 				list($year, $month, $day) = explode("-", $dateTraffic);
 				if ($dateTraffic == $currentDate) {
@@ -295,10 +295,10 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 	 */
 	$cronlog->logAction(CRON_ACTION, LOG_INFO, 'total traffic for ' . $row['loginname'] . ' started');
 	$current_traffic = array();
-	$current_traffic['http'] = floatval($httptraffic);
-	$current_traffic['ftp_up'] = floatval(($ftptraffic['up_bytes_sum'] / 1024));
-	$current_traffic['ftp_down'] = floatval(($ftptraffic['down_bytes_sum'] / 1024));
-	$current_traffic['mail'] = floatval($mailtraffic);
+	$current_traffic['http'] = (float) $httptraffic;
+	$current_traffic['ftp_up'] = (float) ( $ftptraffic['up_bytes_sum'] / 1024 );
+	$current_traffic['ftp_down'] = (float) ( $ftptraffic['down_bytes_sum'] / 1024 );
+	$current_traffic['mail'] = (float) $mailtraffic;
 	$current_traffic['all'] = $current_traffic['http'] + $current_traffic['ftp_up'] + $current_traffic['ftp_down'] + $current_traffic['mail'];
 
 	$ins_data = array(
@@ -363,7 +363,7 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 		&& $usedquota[$row['guid']]['block']['used'] >= 1
 	) {
 		// We may use the array we created earlier, the used diskspace is stored in [<guid>][block][used]
-		$webspaceusage = floatval($usedquota[$row['guid']]['block']['used']);
+		$webspaceusage = (float) $usedquota[ $row['guid'] ]['block']['used'];
 
 	} else {
 
@@ -376,7 +376,7 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 				$webspaceusage = explode(' ', $backrow);
 			}
 
-			$webspaceusage = floatval($webspaceusage['0']);
+			$webspaceusage = (float) $webspaceusage['0'];
 			unset($back);
 
 		} else {
@@ -397,7 +397,7 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$emailusage = explode(' ', $backrow);
 		}
 
-		$emailusage = floatval($emailusage['0']);
+		$emailusage = (float) $emailusage['0'];
 		unset($back);
 
 	} else {
@@ -411,13 +411,13 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 	$mysqlusage = 0;
 
 	if (isset($mysqlusage_all[$row['customerid']])) {
-		$mysqlusage = floatval($mysqlusage_all[$row['customerid']] / 1024);
+		$mysqlusage = (float) ( $mysqlusage_all[ $row['customerid'] ] / 1024 );
 	}
 
 	$current_diskspace = array();
-	$current_diskspace['webspace'] = floatval($webspaceusage);
-	$current_diskspace['mail'] = floatval($emailusage);
-	$current_diskspace['mysql'] = floatval($mysqlusage);
+	$current_diskspace['webspace'] = (float) $webspaceusage;
+	$current_diskspace['mail'] = (float) $emailusage;
+	$current_diskspace['mysql'] = (float) $mysqlusage;
 	$current_diskspace['all'] = $current_diskspace['webspace'] + $current_diskspace['mail'] + $current_diskspace['mysql'];
 
 	$ins_data = array(
@@ -461,7 +461,7 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 	/**
 	 * Total Usage
 	 */
-	$diskusage = floatval($webspaceusage + $emailusage + $mysqlusage);
+	$diskusage = (float) ( $webspaceusage + $emailusage + $mysqlusage );
 
 	$upd_data = array(
 		'diskspace' => $current_diskspace['all'],

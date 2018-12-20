@@ -21,19 +21,19 @@ define('AREA', 'admin');
 require './lib/init.php';
 
 if (isset($_POST['subjectid'])) {
-	$subjectid = intval($_POST['subjectid']);
-	$mailbodyid = intval($_POST['mailbodyid']);
+	$subjectid = (int) $_POST['subjectid'];
+	$mailbodyid = (int) $_POST['mailbodyid'];
 
 } elseif(isset($_GET['subjectid'])) {
-	$subjectid = intval($_GET['subjectid']);
-	$mailbodyid = intval($_GET['mailbodyid']);
+	$subjectid = (int) $_GET['subjectid'];
+	$mailbodyid = (int) $_GET['mailbodyid'];
 }
 
 if (isset($_POST['id'])) {
-	$id = intval($_POST['id']);
+	$id = (int) $_POST['id'];
 
 } elseif(isset($_GET['id'])) {
-	$id = intval($_GET['id']);
+	$id = (int) $_GET['id'];
 }
 
 $available_templates = array(

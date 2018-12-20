@@ -21,11 +21,11 @@ define('AREA', 'admin');
 require './lib/init.php';
 
 if (isset($_POST['id'])) {
-	$id = intval($_POST['id']);
+	$id = (int) $_POST['id'];
 
 } elseif(isset($_GET['id'])) {
 
-	$id = intval($_GET['id']);
+	$id = (int) $_GET['id'];
 
 	// only check if this is not a category-id
 	if (!isset($_GET['page']) || (isset($_GET['page']) && $_GET['page'] != 'categories')) {

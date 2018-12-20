@@ -189,7 +189,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 
 			// if allowed, check for 'is email domain'-flag
 			if ($domain_check['subcanemaildomain'] == '1' || $domain_check['subcanemaildomain'] == '2') {
-				$isemaildomain = intval($isemaildomain);
+				$isemaildomain = (int) $isemaildomain;
 			} else {
 				$isemaildomain = $domain_check['subcanemaildomain'] == '3' ? 1 : 0;
 			}
@@ -234,7 +234,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			}
 			// check whether the customer has chosen its own php-config
 			if ($phpsettingid > 0 && $phpsettingid != $phpsid_result['phpsettingid']) {
-				$phpsid_result['phpsettingid'] = intval($phpsettingid);
+				$phpsid_result['phpsettingid'] = (int) $phpsettingid;
 			}
 
 			// acutall insert domain
@@ -520,7 +520,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 
 		// if allowed, check for 'is email domain'-flag
 		if ($result['parentdomainid'] != '0' && ($result['subcanemaildomain'] == '1' || $result['subcanemaildomain'] == '2') && $isemaildomain != $result['isemaildomain']) {
-			$isemaildomain = intval($isemaildomain);
+			$isemaildomain = (int) $isemaildomain;
 		} elseif ($result['parentdomainid'] != '0') {
 			$isemaildomain = $result['subcanemaildomain'] == '3' ? 1 : 0;
 		}

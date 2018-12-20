@@ -230,7 +230,7 @@ function _initArrField($field = null, &$arr, $init_value = 0) {
 function _addResourceCount(&$arr, $customer_arr, $used_field = null, $field = null) {
 	_initArrField($used_field, $arr, 0);
 	if ($customer_arr[$field] != '-1') {
-		$arr[$used_field] += intval($customer_arr[$used_field]);
+		$arr[$used_field] += (int) $customer_arr[ $used_field ];
 	}
 }
 
@@ -250,9 +250,9 @@ function _addResourceCount(&$arr, $customer_arr, $used_field = null, $field = nu
 function _addResourceCountEx(&$arr, $customer_arr, $used_field = null, $field = null) {
 	_initArrField($used_field, $arr, 0);
 	if ($field == 'diskspace' && ($customer_arr[$field] / 1024) != '-1') {
-		$arr[$used_field] += intval($customer_arr[$used_field]);
+		$arr[$used_field] += (int) $customer_arr[ $used_field ];
 	}
 	elseif ($field == 'traffic_used') {
-		$arr[$used_field] += intval($customer_arr[$used_field]);
+		$arr[$used_field] += (int) $customer_arr[ $used_field ];
 	}
 }

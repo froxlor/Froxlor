@@ -20,9 +20,9 @@ define('AREA', 'admin');
 require './lib/init.php';
 
 if (isset($_POST['id'])) {
-	$id = intval($_POST['id']);
+	$id = (int) $_POST['id'];
 } elseif (isset($_GET['id'])) {
-	$id = intval($_GET['id']);
+	$id = (int) $_GET['id'];
 }
 
 if ($page == 'domains' || $page == 'overview') {
@@ -635,7 +635,7 @@ if ($page == 'domains' || $page == 'overview') {
 		}
 	} elseif ($action == 'jqGetCustomerPHPConfigs') {
 		
-		$customerid = intval($_POST['customerid']);
+		$customerid = (int) $_POST['customerid'];
 		$allowed_phpconfigs = getCustomerDetail($customerid, 'allowed_phpconfigs');
 		echo ! empty($allowed_phpconfigs) ? $allowed_phpconfigs : json_encode(array());
 		exit();
@@ -643,7 +643,7 @@ if ($page == 'domains' || $page == 'overview') {
 		
 		if (isset($_POST['send']) && $_POST['send'] == 'send') {
 			
-			$customerid = intval($_POST['customerid']);
+			$customerid = (int) $_POST['customerid'];
 			$separator = validate($_POST['separator'], 'separator');
 			$offset = (int) validate($_POST['offset'], 'offset', "/[0-9]/i");
 			

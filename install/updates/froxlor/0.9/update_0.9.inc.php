@@ -421,7 +421,7 @@ if (isFroxlorVersion('0.9.4-svn1')) {
 
 	showUpdateStep("Updating from 0.9.4-svn1 to 0.9.4-svn2", false);
 
-	$update_domains = isset($_POST['update_domainwildcardentry']) ? intval($_POST['update_domainwildcardentry']) : 0;
+	$update_domains = isset($_POST['update_domainwildcardentry']) ? (int) $_POST['update_domainwildcardentry'] : 0;
 
 	if ($update_domains != 1) {
 		$update_domains = 0;
@@ -578,7 +578,7 @@ if (isFroxlorVersion('0.9.6-svn3')) {
 
 	showUpdateStep("Updating from 0.9.6-svn3 to 0.9.6-svn4", false);
 
-	$update_deftic_priority = isset($_POST['update_deftic_priority']) ? intval($_POST['update_deftic_priority']) : 2;
+	$update_deftic_priority = isset($_POST['update_deftic_priority']) ? (int) $_POST['update_deftic_priority'] : 2;
 
 	showUpdateStep("Setting default support-ticket priority");
 	Database::query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('ticket', 'default_priority', '" . (int) $update_deftic_priority . "');");
@@ -591,7 +591,7 @@ if (isFroxlorVersion('0.9.6-svn4')) {
 
 	showUpdateStep("Updating from 0.9.6-svn4 to 0.9.6-svn5", false);
 
-	$update_defsys_phpconfig = isset($_POST['update_defsys_phpconfig']) ? intval($_POST['update_defsys_phpconfig']) : 1;
+	$update_defsys_phpconfig = isset($_POST['update_defsys_phpconfig']) ? (int) $_POST['update_defsys_phpconfig'] : 1;
 
 	if ($update_defsys_phpconfig != 1) {
 		showUpdateStep("Setting default php-configuration to user defined config #" . $update_defsys_phpconfig);
@@ -610,7 +610,7 @@ if (isFroxlorVersion('0.9.6-svn5')) {
 	showUpdateStep("Updating from 0.9.6-svn5 to 0.9.6-svn6", false);
 
 	showUpdateStep("Adding new FTP-quota settings");
-	$update_defsys_ftpserver = isset($_POST['update_defsys_ftpserver']) ? intval($_POST['update_defsys_ftpserver']) : 'proftpd';
+	$update_defsys_ftpserver = isset($_POST['update_defsys_ftpserver']) ? (int) $_POST['update_defsys_ftpserver'] : 'proftpd';
 
 	// add ftp server setting
 	$stmt = Database::prepare("INSERT INTO `panel_settings` SET `settinggroup` = 'system', `varname` = 'ftpserver', `value` = :value;");

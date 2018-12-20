@@ -109,7 +109,7 @@ class Ftps extends ApiCommand implements ResourceEntity
 				}
 				$username = $ftpusername . "@" . $ftpdomain;
 			} else {
-				$username = $customer['loginname'] . Settings::Get('customer.ftpprefix') . (intval($customer['ftp_lastaccountnumber']) + 1);
+				$username = $customer['loginname'] . Settings::Get('customer.ftpprefix') . ( (int) $customer['ftp_lastaccountnumber'] + 1);
 			}
 			
 			$username_check_stmt = Database::prepare("

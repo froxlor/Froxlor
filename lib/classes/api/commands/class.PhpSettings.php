@@ -202,7 +202,7 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 				$binary = $this->getParam('binary');
 				$fpm_config_id = 1;
 			} elseif (Settings::Get('phpfpm.enabled') == 1) {
-				$fpm_config_id = intval($this->getParam('fpmconfig'));
+				$fpm_config_id = (int) $this->getParam( 'fpmconfig' );
 			} else {
 				$fpm_config_id = 1;
 			}
@@ -406,7 +406,7 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 			$description = $this->getParam('description', true, $result['description']);
 			$phpsettings = $this->getParam('phpsettings', true, $result['phpsettings']);
 			$binary = $this->getParam('binary', true, $result['binary']);
-			$fpm_config_id = intval($this->getParam('fpmconfig', true, $result['fpmsettingid']));
+			$fpm_config_id = (int) $this->getParam( 'fpmconfig', true, $result['fpmsettingid'] );
 			$file_extensions = $this->getParam('file_extensions', true, $result['file_extensions']);
 			$mod_fcgid_starter = $this->getParam('mod_fcgid_starter', true, $result['mod_fcgid_starter']);
 			$mod_fcgid_maxrequests = $this->getParam('mod_fcgid_maxrequests', true, $result['mod_fcgid_maxrequests']);

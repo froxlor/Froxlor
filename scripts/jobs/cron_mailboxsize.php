@@ -41,7 +41,7 @@ while ($maildir = $maildirs_stmt->fetch(PDO::FETCH_ASSOC)) {
 		foreach ($back as $backrow) {
 			$emailusage = explode(' ', $backrow);
 		}
-		$emailusage = floatval($emailusage['0']);
+		$emailusage = (float) $emailusage['0'];
 
 		// as freebsd does not have the -b flag for 'du' which gives
 		// the size in bytes, we use "-sk" for all and calculate from KiB

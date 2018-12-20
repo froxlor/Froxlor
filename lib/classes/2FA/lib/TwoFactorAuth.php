@@ -177,9 +177,9 @@ class TwoFactorAuth
         return 'otpauth://totp/' . rawurlencode($label)
             . '?secret=' . rawurlencode($secret)
             . '&issuer=' . rawurlencode($this->issuer)
-            . '&period=' . intval($this->period)
+            . '&period=' . (int) $this->period
             . '&algorithm=' . rawurlencode(strtoupper($this->algorithm))
-            . '&digits=' . intval($this->digits);
+            . '&digits=' . (int) $this->digits;
     }
 
     private function base32Decode($value)

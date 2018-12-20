@@ -26,9 +26,9 @@ if (Settings::IsInList('panel.customer_hide_options','email')) {
 }
 
 if (isset($_POST['id'])) {
-	$id = intval($_POST['id']);
+	$id = (int) $_POST['id'];
 } elseif (isset($_GET['id'])) {
-	$id = intval($_GET['id']);
+	$id = (int) $_GET['id'];
 }
 
 if ($page == 'overview') {
@@ -430,9 +430,9 @@ if ($page == 'overview') {
 
 		if (isset($result['destination']) && $result['destination'] != '') {
 			if (isset($_POST['forwarderid'])) {
-				$forwarderid = intval($_POST['forwarderid']);
+				$forwarderid = (int) $_POST['forwarderid'];
 			} elseif (isset($_GET['forwarderid'])) {
-				$forwarderid = intval($_GET['forwarderid']);
+				$forwarderid = (int) $_GET['forwarderid'];
 			} else {
 				$forwarderid = 0;
 			}

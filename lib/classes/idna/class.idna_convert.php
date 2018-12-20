@@ -547,7 +547,7 @@ class idna_convert {
                         if ($q < $t) {
                             break;
                         }
-                        $encoded .= $this->_encode_digit(intval($t + (($q - $t) % ($this->_base - $t)))); //v0.4.5 Changed from ceil() to intval()
+                        $encoded .= $this->_encode_digit( (int) ( $t + ( ( $q - $t ) % ( $this->_base - $t ) ) ) ); //v0.4.5 Changed from ceil() to intval()
                         $q = (int) (($q - $t) / ($this->_base - $t));
                     }
                     $encoded .= $this->_encode_digit($q);
@@ -572,12 +572,12 @@ class idna_convert {
      */
     protected function _adapt($delta, $npoints, $is_first)
     {
-        $delta = intval($is_first ? ($delta / $this->_damp) : ($delta / 2));
-        $delta += intval($delta / $npoints);
+        $delta = (int) ( $is_first ? ( $delta / $this->_damp ) : ( $delta / 2 ) );
+        $delta += (int) ( $delta / $npoints );
         for ($k = 0; $delta > (($this->_base - $this->_tmin) * $this->_tmax) / 2; $k += $this->_base) {
-            $delta = intval($delta / ($this->_base - $this->_tmin));
+            $delta = (int) ( $delta / ( $this->_base - $this->_tmin ) );
         }
-        return intval($k + ($this->_base - $this->_tmin + 1) * $delta / ($delta + $this->_skew));
+        return (int) ( $k + ( $this->_base - $this->_tmin + 1 ) * $delta / ( $delta + $this->_skew ) );
     }
 
     /**
@@ -712,7 +712,7 @@ class idna_convert {
         $result = array();
         $result[] = (int) $this->_lbase + $sindex / $this->_ncount;
         $result[] = (int) $this->_vbase + ($sindex % $this->_ncount) / $this->_tcount;
-        $T = intval($this->_tbase + $sindex % $this->_tcount);
+        $T = (int) ( $this->_tbase + $sindex % $this->_tcount );
         if ($T != $this->_tbase) {
             $result[] = $T;
         }
@@ -783,17 +783,17 @@ class idna_convert {
         $size = count($input);
         while ($swap) {
             $swap = false;
-            $last = $this->_get_combining_class(intval($input[0]));
+            $last = $this->_get_combining_class( (int) $input[0] );
             for ($i = 0; $i < $size - 1; ++$i) {
-                $next = $this->_get_combining_class(intval($input[$i + 1]));
+                $next = $this->_get_combining_class( (int) $input[ $i + 1 ] );
                 if ($next != 0 && $last > $next) {
                     // Move item leftward until it fits
                     for ($j = $i + 1; $j > 0; --$j) {
-                        if ($this->_get_combining_class(intval($input[$j - 1])) <= $next) {
+                        if ( $this->_get_combining_class( (int) $input[ $j - 1 ] ) <= $next) {
                             break;
                         }
-                        $t = intval($input[$j]);
-                        $input[$j] = intval($input[$j - 1]);
+                        $t = (int) $input[ $j ];
+                        $input[$j] = (int) $input[ $j - 1 ];
                         $input[$j - 1] = $t;
                         $swap = true;
                     }

@@ -21,9 +21,9 @@ define('AREA', 'admin');
 require './lib/init.php';
 
 if (isset($_POST['id'])) {
-	$id = intval($_POST['id']);
+	$id = (int) $_POST['id'];
 } elseif(isset($_GET['id'])) {
-	$id = intval($_GET['id']);
+	$id = (int) $_GET['id'];
 }
 
 if ($page == 'customers'
@@ -82,7 +82,7 @@ if ($page == 'customers'
 				);
 				Database::pexecute($domains_stmt, array('cid' => $row['customerid'], 'stdd' => $row['standardsubdomain']));
 				$domains = $domains_stmt->fetch(PDO::FETCH_ASSOC);
-				$row['domains'] = intval($domains['domains']);
+				$row['domains'] = (int) $domains['domains'];
 				$dec_places = Settings::Get('panel.decimal_places');
 
 				// get disk-space usages for web, mysql and mail

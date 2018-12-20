@@ -292,7 +292,7 @@ class Customers extends ApiCommand implements ResourceEntity
 				$allowed_phpconfigs = array();
 				if (! empty($p_allowed_phpconfigs) && is_array($p_allowed_phpconfigs)) {
 					foreach ($p_allowed_phpconfigs as $allowed_phpconfig) {
-						$allowed_phpconfig = intval($allowed_phpconfig);
+						$allowed_phpconfig = (int) $allowed_phpconfig;
 						$allowed_phpconfigs[] = $allowed_phpconfig;
 					}
 				}
@@ -310,7 +310,7 @@ class Customers extends ApiCommand implements ResourceEntity
 				} else {
 
 					if ($loginname != '') {
-						$accountnumber = intval(Settings::Get('system.lastaccountnumber'));
+						$accountnumber = (int) Settings::Get( 'system.lastaccountnumber' );
 						$loginname = validate($loginname, 'loginname', '/^[a-z][a-z0-9\-_]+$/i', '', array(), true);
 
 						// Accounts which match systemaccounts are not allowed, filtering them
@@ -323,7 +323,7 @@ class Customers extends ApiCommand implements ResourceEntity
 							standard_error('loginnameissystemaccount', Settings::Get('customer.accountprefix'), true);
 						}
 					} else {
-						$accountnumber = intval(Settings::Get('system.lastaccountnumber')) + 1;
+						$accountnumber = (int) Settings::Get( 'system.lastaccountnumber' ) + 1;
 						$loginname = Settings::Get('customer.accountprefix') . $accountnumber;
 					}
 
@@ -355,7 +355,7 @@ class Customers extends ApiCommand implements ResourceEntity
 						}
 					}
 
-					$guid = intval(Settings::Get('system.lastguid')) + 1;
+					$guid = (int) Settings::Get( 'system.lastguid' ) + 1;
 					$documentroot = makeCorrectDir(Settings::Get('system.documentroot_prefix') . '/' . $loginname);
 
 					if (file_exists($documentroot)) {
@@ -519,7 +519,7 @@ class Customers extends ApiCommand implements ResourceEntity
 					// update last guid
 					Settings::Set('system.lastguid', $guid, true);
 
-					if ($accountnumber != intval(Settings::Get('system.lastaccountnumber'))) {
+					if ( $accountnumber != (int) Settings::Get( 'system.lastaccountnumber' ) ) {
 						// update last account number
 						Settings::Set('system.lastaccountnumber', $accountnumber, true);
 					}
