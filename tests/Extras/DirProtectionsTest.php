@@ -27,7 +27,7 @@ class DirProtectionsTest extends TestCase
 		$data = [
 			'path' => '/test',
 			'username' => 'testing',
-			'directory_password' => generatePassword(),
+			'directory_password' => \Froxlor\System::generatePassword(),
 			'directory_authname' => 'test1'
 		];
 		$json_result = DirProtections::getLocal($customer_userdata, $data)->add();
@@ -49,7 +49,7 @@ class DirProtectionsTest extends TestCase
 		$data = [
 			'path' => '/test',
 			'username' => 'testing',
-			'directory_password' => generatePassword(),
+			'directory_password' => \Froxlor\System::generatePassword(),
 			'directory_authname' => 'test2'
 		];
 		$this->expectExceptionMessage("Combination of username and path already exists");
@@ -65,7 +65,7 @@ class DirProtectionsTest extends TestCase
 			'loginname' => 'test1'
 		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
-		$up = generatePassword();
+		$up = \Froxlor\System::generatePassword();
 		$data = [
 			'path' => '/test',
 			'username' => $up,
@@ -146,7 +146,7 @@ class DirProtectionsTest extends TestCase
 
 		$data = [
 			'id' => 1,
-			'directory_password' => generatePassword(),
+			'directory_password' => \Froxlor\System::generatePassword(),
 			'directory_authname' => 'test1337'
 		];
 		$json_result = DirProtections::getLocal($customer_userdata, $data)->update();

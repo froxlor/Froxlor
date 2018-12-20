@@ -135,7 +135,7 @@ if ($page == 'overview') {
 
 			// Update ftp password
 			if (isset($_POST['change_main_ftp']) && $_POST['change_main_ftp'] == 'true') {
-				$cryptPassword = makeCryptPassword($new_password);
+				$cryptPassword = \Froxlor\System::makeCryptPassword($new_password);
 				$stmt = Database::prepare("UPDATE `" . TABLE_FTP_USERS . "`
 					SET `password` = :password
 					WHERE `customerid` = :customerid

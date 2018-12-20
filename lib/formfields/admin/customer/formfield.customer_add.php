@@ -62,7 +62,7 @@ return array(
 						'label' => $lng['customer']['generated_pwd'],
 						'type' => 'text',
 						'visible' => (\Froxlor\Settings::Get('panel.password_regex') == ''),
-						'value' => generatePassword()
+						'value' => \Froxlor\System::generatePassword()
 					),
 					'sendpassword' => array(
 						'label' => $lng['admin']['sendpassword'],

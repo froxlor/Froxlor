@@ -624,7 +624,7 @@ if ($action == 'resetpwd') {
 								WHERE `customerid` = :userid");
 						}
 						Database::pexecute($stmt, array(
-							"newpassword" => makeCryptPassword($new_password),
+							"newpassword" => \Froxlor\System::makeCryptPassword($new_password),
 							"userid" => $result['userid']
 						));
 

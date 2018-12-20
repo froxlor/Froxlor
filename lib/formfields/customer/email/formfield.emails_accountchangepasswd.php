@@ -38,7 +38,7 @@ return array(
 						'label' => $lng['customer']['generated_pwd'],
 						'type' => 'text',
 						'visible' => (Settings::Get('panel.password_regex') == ''),
-						'value' => generatePassword(),
+						'value' => \Froxlor\System::generatePassword(),
 					)
 				)
 			)

@@ -71,7 +71,7 @@ function validatePasswordLogin($userinfo = null, $password = null, $table = 'pan
 				UPDATE " . $table . " SET `password` = :newpasswd WHERE `" . $uid . "` = :uid
 			");
 			$params = array (
-				'newpasswd' => makeCryptPassword($password),
+				'newpasswd' => \Froxlor\System::makeCryptPassword($password),
 				'uid' => $userinfo[$uid]
 			);
 			Database::pexecute($upd_stmt, $params);
