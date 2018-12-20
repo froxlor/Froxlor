@@ -291,7 +291,7 @@ class LetsEncrypt extends \Froxlor\Cron\FroxlorCron
 		// If we have a change in a certificate, we need to update the webserver - configs
 		// This is easiest done by just creating a new task ;)
 		if ($changedetected) {
-			inserttask(1);
+			\Froxlor\System\Cronjob::inserttask(1);
 		}
 
 		// reset logger

@@ -54,13 +54,13 @@ class MasterCron extends \Froxlor\Cron\FroxlorCron
 				if (strtolower($argv[$x]) == '--force') {
 					// really force re-generating of config-files by
 					// inserting task 1
-					inserttask('1');
-					// bind (if enabled, inserttask() checks this)
-					inserttask('4');
+					\Froxlor\System\Cronjob::inserttask('1');
+					// bind (if enabled, \Froxlor\System\Cronjob::inserttask() checks this)
+					\Froxlor\System\Cronjob::inserttask('4');
 					// set quotas (if enabled)
-					inserttask('10');
+					\Froxlor\System\Cronjob::inserttask('10');
 					// also regenerate cron.d-file
-					inserttask('99');
+					\Froxlor\System\Cronjob::inserttask('99');
 					addToQueue($jobs_to_run, 'tasks');
 				} elseif (strtolower($argv[$x]) == '--debug') {
 					define('CRON_DEBUG_FLAG', 1);

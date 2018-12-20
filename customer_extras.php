@@ -26,7 +26,7 @@ use Froxlor\Api\Commands\DirProtections as DirProtections;
 use Froxlor\Api\Commands\CustomerBackups as CustomerBackups;
 
 // redirect if this customer page is hidden via settings
-if (Settings::IsInList('panel.customer_hide_options','extras')) {
+if (Settings::IsInList('panel.customer_hide_options', 'extras')) {
 	redirectTo('customer_index.php');
 }
 
@@ -42,7 +42,7 @@ if ($page == 'overview') {
 } elseif ($page == 'htpasswds') {
 
 	// redirect if this customer sub-page is hidden via settings
-	if (Settings::IsInList('panel.customer_hide_options','extras.directoryprotection')) {
+	if (Settings::IsInList('panel.customer_hide_options', 'extras.directoryprotection')) {
 		redirectTo('customer_index.php');
 	}
 
@@ -127,7 +127,7 @@ if ($page == 'overview') {
 				's' => $s
 			));
 		} else {
-			$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
+			$pathSelect = \Froxlor\FileDir::makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
 
 			$htpasswd_add_data = include_once dirname(__FILE__) . '/lib/formfields/customer/extras/formfield.htpasswd_add.php';
 			$htpasswd_add_form = htmlform::genHTMLForm($htpasswd_add_data);
@@ -178,7 +178,7 @@ if ($page == 'overview') {
 } elseif ($page == 'htaccess') {
 
 	// redirect if this customer sub-page is hidden via settings
-	if (Settings::IsInList('panel.customer_hide_options','extras.pathoptions')) {
+	if (Settings::IsInList('panel.customer_hide_options', 'extras.pathoptions')) {
 		redirectTo('customer_index.php');
 	}
 
@@ -269,7 +269,7 @@ if ($page == 'overview') {
 				's' => $s
 			));
 		} else {
-			$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
+			$pathSelect = \Froxlor\FileDir::makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
 			$cperlenabled = customerHasPerlEnabled($userinfo['customerid']);
 
 			$htaccess_add_data = include_once dirname(__FILE__) . '/lib/formfields/customer/extras/formfield.htaccess_add.php';
@@ -329,12 +329,11 @@ if ($page == 'overview') {
 } elseif ($page == 'backup') {
 
 	// redirect if this customer sub-page is hidden via settings
-	if (Settings::IsInList('panel.customer_hide_options','extras.backup')) {
+	if (Settings::IsInList('panel.customer_hide_options', 'extras.backup')) {
 		redirectTo('customer_index.php');
 	}
 
-	if (Settings::Get('system.backupenabled') == 1)
-	{
+	if (Settings::Get('system.backupenabled') == 1) {
 		if ($action == 'abort' && isset($_POST['send']) && $_POST['send'] == 'send') {
 			$log->logAction(USR_ACTION, LOG_NOTICE, "customer_extras::backup - aborted scheduled backupjob");
 			try {
@@ -343,7 +342,11 @@ if ($page == 'overview') {
 				dynamic_error($e->getMessage());
 			}
 			standard_success('backupaborted');
-			redirectTo($filename, array('page' => $page, 'action' => '', 's' => $s));
+			redirectTo($filename, array(
+				'page' => $page,
+				'action' => '',
+				's' => $s
+			));
 		}
 		if ($action == '') {
 			$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_extras::backup");
@@ -356,8 +359,7 @@ if ($page == 'overview') {
 			}
 			$result = json_decode($json_result, true)['data'];
 			$existing_backupJob = null;
-			if ($result['count'] > 0)
-			{
+			if ($result['count'] > 0) {
 				$existing_backupJob = array_shift($result['list']);
 			}
 
@@ -370,7 +372,7 @@ if ($page == 'overview') {
 				standard_success('backupscheduled');
 			} else {
 
-				if (!empty($existing_backupJob)) {
+				if (! empty($existing_backupJob)) {
 					$action = "abort";
 					$row = $existing_backupJob['data'];
 
@@ -379,22 +381,20 @@ if ($page == 'overview') {
 					$row['backup_mail'] = ($row['backup_mail'] == '1') ? $lng['panel']['yes'] : $lng['panel']['no'];
 					$row['backup_dbs'] = ($row['backup_dbs'] == '1') ? $lng['panel']['yes'] : $lng['panel']['no'];
 				}
-				$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
+				$pathSelect = \Froxlor\FileDir::makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
 				$backup_data = include_once dirname(__FILE__) . '/lib/formfields/customer/extras/formfield.backup.php';
 				$backup_form = htmlform::genHTMLForm($backup_data);
 				$title = $backup_data['backup']['title'];
 				$image = $backup_data['backup']['image'];
 
-				if (!empty($existing_backupJob)) {
+				if (! empty($existing_backupJob)) {
 					// overwrite backup_form after we took everything from it we needed
 					eval("\$backup_form = \"" . getTemplate("extras/backup_listexisting") . "\";");
 				}
 				eval("echo \"" . getTemplate("extras/backup") . "\";");
 			}
 		}
-	}
-	else
-	{
+	} else {
 		standard_error('backupfunctionnotenabled');
 	}
 }

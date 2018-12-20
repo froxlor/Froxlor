@@ -371,7 +371,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		Admins::decreaseUsage($customer['customerid'], 'email_forwarders_used', '', $number_forwarders);
 
 		if ($delete_userfiles) {
-			inserttask('7', $customer['loginname'], $result['email_full']);
+			\Froxlor\System\Cronjob::inserttask('7', $customer['loginname'], $result['email_full']);
 		}
 
 		// delete address

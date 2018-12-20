@@ -238,9 +238,9 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			Database::pexecute($ins_stmt, $ins_data);
 			$ins_data['id'] = Database::lastInsertId();
 
-			inserttask('1');
+			\Froxlor\System\Cronjob::inserttask('1');
 			// Using nameserver, insert a task which rebuilds the server config
-			inserttask('4');
+			\Froxlor\System\Cronjob::inserttask('4');
 
 			if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
 				$ip = '[' . $ip . ']';
@@ -426,9 +426,9 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 				);
 				Database::pexecute($upd_stmt, $upd_data);
 
-				inserttask('1');
+				\Froxlor\System\Cronjob::inserttask('1');
 				// Using nameserver, insert a task which rebuilds the server config
-				inserttask('4');
+				\Froxlor\System\Cronjob::inserttask('4');
 
 				$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] changed IP/port from '" . $result['ip'] . ":" . $result['port'] . "' to '" . $ip . ":" . $port . "'");
 
@@ -499,9 +499,9 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 							'id' => $id
 						), true, true);
 
-						inserttask('1');
+						\Froxlor\System\Cronjob::inserttask('1');
 						// Using nameserver, insert a task which rebuilds the server config
-						inserttask('4');
+						\Froxlor\System\Cronjob::inserttask('4');
 
 						$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] deleted IP/port '" . $result['ip'] . ":" . $result['port'] . "'");
 						return $this->response(200, "successfull", $result);

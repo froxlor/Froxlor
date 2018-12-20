@@ -116,7 +116,7 @@ if ($page == 'overview') {
 				}
 				redirectTo($filename, array('page' => $page, 's' => $s));
 			} else {
-				$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], '/');
+				$pathSelect = \Froxlor\FileDir::makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], '/');
 
 				if (Settings::Get('customer.ftpatdomain') == '1') {
 					$domainlist = array();
@@ -189,7 +189,7 @@ if ($page == 'overview') {
 				}
 				$homedir = \Froxlor\FileDir::makeCorrectDir($homedir);
 
-				$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $homedir);
+				$pathSelect = \Froxlor\FileDir::makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $homedir);
 
 				if (Settings::Get('customer.ftpatdomain') == '1') {
 					$domains = '';

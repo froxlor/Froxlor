@@ -156,7 +156,7 @@ if ($page == 'domains' || $page == 'overview') {
 			} else {
 
 				$showcheck = false;
-				if (domainHasMainSubDomains($id)) {
+				if (\Froxlor\Domain\Domain::domainHasMainSubDomains($id)) {
 					$showcheck = true;
 				}
 				ask_yesno_withcheckbox('admin_domain_reallydelete', 'remove_subbutmain_domains', $filename, array(
@@ -668,8 +668,8 @@ if ($page == 'domains' || $page == 'overview') {
 
 			// update customer/admin counters
 			updateCounters(false);
-			inserttask('1');
-			inserttask('4');
+			\Froxlor\System\Cronjob::inserttask('1');
+			\Froxlor\System\Cronjob::inserttask('4');
 
 			$result_str = $result['imported'] . ' / ' . $result['all'] . (! empty($result['note']) ? ' (' . $result['note'] . ')' : '');
 			standard_success('domain_import_successfully', $result_str, array(

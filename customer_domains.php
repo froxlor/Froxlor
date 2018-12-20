@@ -168,7 +168,7 @@ if ($page == 'overview') {
 					
 					// get ssl-ips if activated
 					$show_ssledit = false;
-					if (Settings::Get('system.use_ssl') == '1' && domainHasSslIpPort($row['id']) && $row['caneditdomain'] == '1' && $row['letsencrypt'] == 0) {
+					if (Settings::Get('system.use_ssl') == '1' && \Froxlor\Domain\Domain::domainHasSslIpPort($row['id']) && $row['caneditdomain'] == '1' && $row['letsencrypt'] == 0) {
 						$show_ssledit = true;
 					}
 					$row = htmlentities_array($row);
@@ -270,7 +270,7 @@ if ($page == 'overview') {
 				}
 				
 				$openbasedir = makeoption($lng['domain']['docroot'], 0, NULL, true) . makeoption($lng['domain']['homedir'], 1, NULL, true);
-				$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
+				$pathSelect = \Froxlor\FileDir::makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
 				
 				$phpconfigs = '';
 				$has_phpconfigs = false;
@@ -349,14 +349,14 @@ if ($page == 'overview') {
 				if (preg_match('/^https?\:\/\//', $result['documentroot']) && validateUrl($result['documentroot'])) {
 					if (Settings::Get('panel.pathedit') == 'Dropdown') {
 						$urlvalue = $result['documentroot'];
-						$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
+						$pathSelect = \Froxlor\FileDir::makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
 					} else {
 						$urlvalue = '';
-						$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $result['documentroot'], true);
+						$pathSelect = \Froxlor\FileDir::makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $result['documentroot'], true);
 					}
 				} else {
 					$urlvalue = '';
-					$pathSelect = makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $result['documentroot']);
+					$pathSelect = \Froxlor\FileDir::makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $result['documentroot']);
 				}
 				
 				$redirectcode = '';

@@ -401,10 +401,10 @@ class Lighttpd extends HttpConfigBase
 				$_inc_path = substr($_tmp_path, $_pos + 1);
 
 				// maindomain
-				if ((int) $domain['parentdomainid'] == 0 && isCustomerStdSubdomain((int) $domain['id']) == false && ((int) $domain['ismainbutsubto'] == 0 || domainMainToSubExists($domain['ismainbutsubto']) == false)) {
+				if ((int) $domain['parentdomainid'] == 0 && \Froxlor\Domain\Domain::isCustomerStdSubdomain((int) $domain['id']) == false && ((int) $domain['ismainbutsubto'] == 0 || \Froxlor\Domain\Domain::domainMainToSubExists($domain['ismainbutsubto']) == false)) {
 					$vhost_no = '50';
 				} // sub-but-main-domain
-				elseif ((int) $domain['parentdomainid'] == 0 && isCustomerStdSubdomain((int) $domain['id']) == false && (int) $domain['ismainbutsubto'] > 0) {
+				elseif ((int) $domain['parentdomainid'] == 0 && \Froxlor\Domain\Domain::isCustomerStdSubdomain((int) $domain['id']) == false && (int) $domain['ismainbutsubto'] > 0) {
 					$vhost_no = '51';
 				} // subdomains
 				else {

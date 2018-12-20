@@ -341,7 +341,7 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 		);
 		Database::pexecute($stmt, $params, true, true);
 		// insert task to re-generate webserver-configs (#1260)
-		inserttask('1');
+		\Froxlor\System\Cronjob::inserttask('1');
 		return true;
 	}
 }

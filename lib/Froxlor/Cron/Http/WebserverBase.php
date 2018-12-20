@@ -80,7 +80,7 @@ class WebserverBase
 
 			// now, if the domain has an ssl ip/port assigned, get
 			// the corresponding information from the db
-			if (domainHasSslIpPort($domain['id'])) {
+			if (\Froxlor\Domain\Domain::domainHasSslIpPort($domain['id'])) {
 
 				$ssl_ip = Database::pexecute_first($ip_stmt, array(
 					'domainid' => $domain['id']

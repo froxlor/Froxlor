@@ -2810,7 +2810,7 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.9.32-dev4')) {
 	$crondfile = \Froxlor\FileDir::makeCorrectFile($crondfile);
 	Settings::AddNew("system.cronconfig", $crondfile);
 	// add task to generate cron.d-file
-	inserttask('99');
+	\Froxlor\System\Cronjob::inserttask('99');
 	lastStepStatus(0);
 
 	\Froxlor\Froxlor::updateToVersion('0.9.32-dev5');
@@ -2825,7 +2825,7 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.9.32-dev5')) {
 	$crondreload = isset($_POST['crondreload']) ? $_POST['crondreload'] : "/etc/init.d/cron reload";
 	Settings::AddNew("system.crondreload", $crondreload);
 	// add task to generate cron.d-file
-	inserttask('99');
+	\Froxlor\System\Cronjob::inserttask('99');
 	lastStepStatus(0);
 
 	\Froxlor\Froxlor::updateToVersion('0.9.32-dev6');
@@ -2855,7 +2855,7 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.9.32-rc1')) {
 	$croncmdline = isset($_POST['croncmdline']) ? $_POST['croncmdline'] : "/usr/bin/nice -n 5 /usr/bin/php5 -q";
 	Settings::AddNew("system.croncmdline", $croncmdline);
 	// add task to generate cron.d-file
-	inserttask('99');
+	\Froxlor\System\Cronjob::inserttask('99');
 	// silenty add the auto-update setting - we do not want everybody to know and use this
 	// as it is a very dangerous setting
 	Settings::AddNew("system.cron_allowautoupdate", 0);

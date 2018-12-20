@@ -65,9 +65,9 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 			'page' => $page
 		), $_part, $settings_all, $settings_part, $only_enabledisable)) {
 			$log->logAction(ADM_ACTION, LOG_INFO, "rebuild configfiles due to changed setting");
-			inserttask('1');
+			\Froxlor\System\Cronjob::inserttask('1');
 			// Using nameserver, insert a task which rebuilds the server config
-			inserttask('4');
+			\Froxlor\System\Cronjob::inserttask('4');
 
 			standard_success('settingssaved', '', array(
 				'filename' => $filename,
@@ -143,12 +143,12 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 
 		$log->logAction(ADM_ACTION, LOG_INFO, "rebuild configfiles");
-		inserttask('1');
-		inserttask('10');
+		\Froxlor\System\Cronjob::inserttask('1');
+		\Froxlor\System\Cronjob::inserttask('10');
 		// Using nameserver, insert a task which rebuilds the server config
-		inserttask('4');
+		\Froxlor\System\Cronjob::inserttask('4');
 		// cron.d file
-		inserttask('99');
+		\Froxlor\System\Cronjob::inserttask('99');
 
 		standard_success('rebuildingconfigs', '', array(
 			'filename' => 'admin_index.php'

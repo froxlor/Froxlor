@@ -154,7 +154,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				if ($aliasdomain_check['id'] != $aliasdomain) {
 					standard_error('domainisaliasorothercustomer', '', true);
 				}
-				triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $this->logger());
+				\Froxlor\Domain\Domain::triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $this->logger());
 			}
 
 			// validate / correct path/url of domain
@@ -200,7 +200,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			if ($ssl_redirect != 0) {
 				// a ssl-redirect only works if there actually is a
 				// ssl ip/port assigned to the domain
-				if (domainHasSslIpPort($domain_check['id']) == true) {
+				if (\Froxlor\Domain\Domain::domainHasSslIpPort($domain_check['id']) == true) {
 					$ssl_redirect = '1';
 					$_doredirect = true;
 				} else {
@@ -211,7 +211,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			if ($letsencrypt != 0) {
 				// let's encrypt only works if there actually is a
 				// ssl ip/port assigned to the domain
-				if (domainHasSslIpPort($domain_check['id']) == true) {
+				if (\Froxlor\Domain\Domain::domainHasSslIpPort($domain_check['id']) == true) {
 					$letsencrypt = '1';
 				} else {
 					standard_error('letsencryptonlypossiblewithsslipport', '', true);
@@ -304,9 +304,9 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				addRedirectToDomain($subdomain_id, $redirectcode);
 			}
 
-			inserttask('1');
+			\Froxlor\System\Cronjob::inserttask('1');
 			// Using nameserver, insert a task which rebuilds the server config
-			inserttask('4');
+			\Froxlor\System\Cronjob::inserttask('4');
 
 			Customers::increaseUsage($customer['customerid'], 'subdomains_used');
 			Admins::increaseUsage(($this->isAdmin() ? $customer['adminid'] : $this->getUserDetail('adminid')), 'subdomains_used');
@@ -510,7 +510,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			if ($aliasdomain_check['id'] != $aliasdomain) {
 				standard_error('domainisaliasorothercustomer', '', true);
 			}
-			triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $this->logger());
+			\Froxlor\Domain\Domain::triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $this->logger());
 		}
 
 		// validate / correct path/url of domain
@@ -536,7 +536,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		if ($ssl_redirect != 0) {
 			// a ssl-redirect only works if there actually is a
 			// ssl ip/port assigned to the domain
-			if (domainHasSslIpPort($result['id']) == true) {
+			if (\Froxlor\Domain\Domain::domainHasSslIpPort($result['id']) == true) {
 				$ssl_redirect = '1';
 				$_doredirect = true;
 			} else {
@@ -547,7 +547,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		if ($letsencrypt != 0) {
 			// let's encrypt only works if there actually is a
 			// ssl ip/port assigned to the domain
-			if (domainHasSslIpPort($result['id']) == true) {
+			if (\Froxlor\Domain\Domain::domainHasSslIpPort($result['id']) == true) {
 				$letsencrypt = '1';
 			} else {
 				standard_error('letsencryptonlypossiblewithsslipport', '', true);
@@ -625,11 +625,11 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 
 			if ($result['aliasdomain'] != $aliasdomain) {
 				// trigger when domain id for alias destination has changed: both for old and new destination
-				triggerLetsEncryptCSRForAliasDestinationDomain($result['aliasdomain'], $this->logger());
-				triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $this->logger());
+				\Froxlor\Domain\Domain::triggerLetsEncryptCSRForAliasDestinationDomain($result['aliasdomain'], $this->logger());
+				\Froxlor\Domain\Domain::triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $this->logger());
 			} elseif ($result['wwwserveralias'] != $wwwserveralias || $result['letsencrypt'] != $letsencrypt) {
 				// or when wwwserveralias or letsencrypt was changed
-				triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $this->logger());
+				\Froxlor\Domain\Domain::triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $this->logger());
 			}
 
 			// check whether LE has been disabled, so we remove the certificate
@@ -642,8 +642,8 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				), true, true);
 			}
 
-			inserttask('1');
-			inserttask('4');
+			\Froxlor\System\Cronjob::inserttask('1');
+			\Froxlor\System\Cronjob::inserttask('4');
 			$idna_convert = new \Froxlor\Idna\IdnaWrapper();
 			$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] edited domain '" . $idna_convert->decode($result['domain']) . "'");
 		}
@@ -776,7 +776,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			}
 		}
 
-		triggerLetsEncryptCSRForAliasDestinationDomain($result['aliasdomain'], $this->logger());
+		\Froxlor\Domain\Domain::triggerLetsEncryptCSRForAliasDestinationDomain($result['aliasdomain'], $this->logger());
 
 		// delete domain from table
 		$stmt = Database::prepare("
@@ -823,11 +823,11 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			'domainid' => $id
 		), true, true);
 
-		inserttask('1');
+		\Froxlor\System\Cronjob::inserttask('1');
 		// Using nameserver, insert a task which rebuilds the server config
-		inserttask('4');
+		\Froxlor\System\Cronjob::inserttask('4');
 		// remove domains DNS from powerDNS if used, #581
-		inserttask('11', $result['domain']);
+		\Froxlor\System\Cronjob::inserttask('11', $result['domain']);
 
 		// reduce subdomain-usage-counter
 		Customers::decreaseUsage($customer['customerid'], 'subdomains_used');

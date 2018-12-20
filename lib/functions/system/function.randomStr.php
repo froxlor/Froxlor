@@ -15,30 +15,3 @@
  *
  */
 
-/**
- * Function randomStr
- *
- * generate a pseudo-random string of bytes
- *
- * @param int $length            
- *
- * @return string
- */
-function randomStr($length)
-{
-    if (version_compare(PHP_VERSION, '7.0.0') >= 0) {
-        return random_bytes($length);
-    } elseif (function_exists('openssl_random_pseudo_bytes')) {
-        return openssl_random_pseudo_bytes($length);
-    } else {
-        $pr_bits = '';
-        $fp = @fopen('/dev/urandom', 'rb');
-        if ($fp !== false) {
-            $pr_bits .= @fread($fp, $length);
-            @fclose($fp);
-        } else {
-            $pr_bits = substr(rand(time(), getrandmax()).rand(time(), getrandmax()), 0, $length);
-        }
-        return $pr_bits;
-    }
-}

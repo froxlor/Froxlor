@@ -205,7 +205,7 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 
 			// check if admin of customer has added template for new customer directories
 			if ((int) $row['data']['store_defaultindex'] == 1) {
-				storeDefaultIndex($row['data']['loginname'], $userhomedir, \Froxlor\FroxlorLogger::getInstanceOf(), true);
+				\Froxlor\FileDir::storeDefaultIndex($row['data']['loginname'], $userhomedir, \Froxlor\FroxlorLogger::getInstanceOf(), true);
 			}
 
 			// strip of last slash of paths to have correct chown results

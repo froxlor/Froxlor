@@ -119,12 +119,12 @@ class Froxlor extends \Froxlor\Api\ApiCommand
 			$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "User " . $this->getUserDetail('loginname') . " imported settings");
 			try {
 				\Froxlor\SImExporter::import($json_str);
-				inserttask('1');
-				inserttask('10');
+				\Froxlor\System\Cronjob::inserttask('1');
+				\Froxlor\System\Cronjob::inserttask('10');
 				// Using nameserver, insert a task which rebuilds the server config
-				inserttask('4');
+				\Froxlor\System\Cronjob::inserttask('4');
 				// cron.d file
-				inserttask('99');
+				\Froxlor\System\Cronjob::inserttask('99');
 				return $this->response(200, "successfull", true);
 			} catch (\Exception $e) {
 				throw new \Exception($e->getMessage(), 406);

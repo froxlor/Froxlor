@@ -333,7 +333,7 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			Database::pexecute($ins_stmt, $ins_data, true, true);
 			$ins_data['id'] = Database::lastInsertId();
 
-			inserttask('1');
+			\Froxlor\System\Cronjob::inserttask('1');
 			$this->logger()->logAction(ADM_ACTION, LOG_INFO, "[API] php setting with description '" . $description . "' has been created by '" . $this->getUserDetail('loginname') . "'");
 
 			$result = $this->apiCall('PhpSettings.get', array(
@@ -529,7 +529,7 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			);
 			Database::pexecute($upd_stmt, $upd_data, true, true);
 
-			inserttask('1');
+			\Froxlor\System\Cronjob::inserttask('1');
 			$this->logger()->logAction(ADM_ACTION, LOG_INFO, "[API] php setting with description '" . $description . "' has been updated by '" . $this->getUserDetail('loginname') . "'");
 
 			$result = $this->apiCall('PhpSettings.get', array(
@@ -584,7 +584,7 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 				'id' => $id
 			), true, true);
 
-			inserttask('1');
+			\Froxlor\System\Cronjob::inserttask('1');
 			$this->logger()->logAction(ADM_ACTION, LOG_INFO, "[API] php setting '" . $result['description'] . "' has been deleted by '" . $this->getUserDetail('loginname') . "'");
 			return $this->response(200, "successfull", $result);
 		}

@@ -123,7 +123,7 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		Database::pexecute($stmt, $params, true, true);
 		$id = Database::lastInsertId();
 		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] added directory-option for '" . $userpath . "'");
-		inserttask('1');
+		\Froxlor\System\Cronjob::inserttask('1');
 
 		$result = $this->apiCall('DirOptions.get', array(
 			'id' => $id
@@ -248,7 +248,7 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		}
 
 		if (($options_indexes != $result['options_indexes']) || ($error404path != $result['error404path']) || ($error403path != $result['error403path']) || ($error500path != $result['error500path']) || ($options_cgi != $result['options_cgi'])) {
-			inserttask('1');
+			\Froxlor\System\Cronjob::inserttask('1');
 			$stmt = Database::prepare("
 				UPDATE `" . TABLE_PANEL_HTACCESS . "`
 				SET `options_indexes` = :options_indexes,
@@ -375,7 +375,7 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			"id" => $id
 		));
 		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] deleted directory-option for '" . str_replace($customer_data['documentroot'], '/', $result['path']) . "'");
-		inserttask('1');
+		\Froxlor\System\Cronjob::inserttask('1');
 		return $this->response(200, "successfull", $result);
 	}
 }

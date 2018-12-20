@@ -106,7 +106,7 @@ class CustomerBackups extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 			'backup_web' => $backup_web
 		);
 		// schedule backup job
-		inserttask('20', $task_data);
+		\Froxlor\System\Cronjob::inserttask('20', $task_data);
 
 		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_NOTICE, "[API] added customer-backup job for '" . $customer['loginname'] . "'. Target directory: " . $userpath);
 		return $this->response(200, "successfull", $task_data);

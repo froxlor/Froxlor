@@ -638,11 +638,11 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 						}
 					}
 
-					triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $this->logger());
+					\Froxlor\Domain\Domain::triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $this->logger());
 
-					inserttask('1');
+					\Froxlor\System\Cronjob::inserttask('1');
 					// Using nameserver, insert a task which rebuilds the server config
-					inserttask('4');
+					\Froxlor\System\Cronjob::inserttask('4');
 
 					$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] added domain '" . $domain . "'");
 
@@ -1140,7 +1140,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 			$iswildcarddomain = ($serveraliasoption == '0') ? '1' : '0';
 
 			if ($documentroot != $result['documentroot'] || $ssl_redirect != $result['ssl_redirect'] || $wwwserveralias != $result['wwwserveralias'] || $iswildcarddomain != $result['iswildcarddomain'] || $phpenabled != $result['phpenabled'] || $openbasedir != $result['openbasedir'] || $phpsettingid != $result['phpsettingid'] || $mod_fcgid_starter != $result['mod_fcgid_starter'] || $mod_fcgid_maxrequests != $result['mod_fcgid_maxrequests'] || $specialsettings != $result['specialsettings'] || $notryfiles != $result['notryfiles'] || $writeaccesslog != $result['writeaccesslog'] || $writeerrorlog != $result['writeerrorlog'] || $aliasdomain != $result['aliasdomain'] || $issubof != $result['ismainbutsubto'] || $email_only != $result['email_only'] || ($speciallogfile != $result['speciallogfile'] && $speciallogverified == '1') || $letsencrypt != $result['letsencrypt'] || $http2 != $result['http2'] || $hsts_maxage != $result['hsts'] || $hsts_sub != $result['hsts_sub'] || $hsts_preload != $result['hsts_preload'] || $ocsp_stapling != $result['ocsp_stapling']) {
-				inserttask('1');
+				\Froxlor\System\Cronjob::inserttask('1');
 			}
 
 			if ($speciallogfile != $result['speciallogfile'] && $speciallogverified != '1') {
@@ -1148,11 +1148,11 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 			}
 
 			if ($isbinddomain != $result['isbinddomain'] || $zonefile != $result['zonefile'] || $dkim != $result['dkim'] || $isemaildomain != $result['isemaildomain']) {
-				inserttask('4');
+				\Froxlor\System\Cronjob::inserttask('4');
 			}
 			// check whether nameserver has been disabled, #581
 			if ($isbinddomain != $result['isbinddomain'] && $isbinddomain == 0) {
-				inserttask('11', $result['domain']);
+				\Froxlor\System\Cronjob::inserttask('11', $result['domain']);
 			}
 
 			if ($isemaildomain == '0' && $result['isemaildomain'] == '1') {
@@ -1380,7 +1380,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 			Database::pexecute($_update_stmt, $_update_data, true, true);
 
 			// insert a rebuild-task
-			inserttask('1');
+			\Froxlor\System\Cronjob::inserttask('1');
 
 			// Cleanup domain <-> ip mapping
 			$del_stmt = Database::prepare("
@@ -1449,16 +1449,16 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 			}
 			if ($result['aliasdomain'] != $aliasdomain) {
 				// trigger when domain id for alias destination has changed: both for old and new destination
-				triggerLetsEncryptCSRForAliasDestinationDomain($result['aliasdomain'], $this->logger());
-				triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $this->logger());
+				\Froxlor\Domain\Domain::triggerLetsEncryptCSRForAliasDestinationDomain($result['aliasdomain'], $this->logger());
+				\Froxlor\Domain\Domain::triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $this->logger());
 			} elseif ($result['wwwserveralias'] != $wwwserveralias || $result['letsencrypt'] != $letsencrypt) {
 				// or when wwwserveralias or letsencrypt was changed
-				triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $this->logger());
+				\Froxlor\Domain\Domain::triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $this->logger());
 				if ($aliasdomain === 0) {
 					// in case the wwwserveralias is set on a main domain, $aliasdomain is 0
 					// --> the call just above to triggerLetsEncryptCSRForAliasDestinationDomain
 					// is a noop...let's repeat it with the domain id of the main domain
-					triggerLetsEncryptCSRForAliasDestinationDomain($id, $this->logger());
+					\Froxlor\Domain\Domain::triggerLetsEncryptCSRForAliasDestinationDomain($id, $this->logger());
 				}
 			}
 
@@ -1611,16 +1611,16 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				'domainid' => $id
 			), true, true);
 
-			triggerLetsEncryptCSRForAliasDestinationDomain($result['aliasdomain'], $this->logger());
+			\Froxlor\Domain\Domain::triggerLetsEncryptCSRForAliasDestinationDomain($result['aliasdomain'], $this->logger());
 
 			// remove domains DNS from powerDNS if used, #581
-			inserttask('11', $result['domain']);
+			\Froxlor\System\Cronjob::inserttask('11', $result['domain']);
 
 			$this->logger()->logAction(ADM_ACTION, LOG_INFO, "[API] deleted domain/subdomains (#" . $result['id'] . ")");
 			updateCounters();
-			inserttask('1');
+			\Froxlor\System\Cronjob::inserttask('1');
 			// Using nameserver, insert a task which rebuilds the server config
-			inserttask('4');
+			\Froxlor\System\Cronjob::inserttask('4');
 			return $this->response(200, "successfull", $result);
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);

@@ -367,9 +367,9 @@ class Nginx extends HttpConfigBase
 
 	protected function getVhostFilename($domain, $ssl_vhost = false)
 	{
-		if ((int) $domain['parentdomainid'] == 0 && isCustomerStdSubdomain((int) $domain['id']) == false && ((int) $domain['ismainbutsubto'] == 0 || domainMainToSubExists($domain['ismainbutsubto']) == false)) {
+		if ((int) $domain['parentdomainid'] == 0 && \Froxlor\Domain\Domain::isCustomerStdSubdomain((int) $domain['id']) == false && ((int) $domain['ismainbutsubto'] == 0 || \Froxlor\Domain\Domain::domainMainToSubExists($domain['ismainbutsubto']) == false)) {
 			$vhost_no = '35';
-		} elseif ((int) $domain['parentdomainid'] == 0 && isCustomerStdSubdomain((int) $domain['id']) == false && (int) $domain['ismainbutsubto'] > 0) {
+		} elseif ((int) $domain['parentdomainid'] == 0 && \Froxlor\Domain\Domain::isCustomerStdSubdomain((int) $domain['id']) == false && (int) $domain['ismainbutsubto'] > 0) {
 			$vhost_no = '30';
 		} else {
 			// number of dots in a domain specifies it's position (and depth of subdomain) starting at 29 going downwards on higher depth

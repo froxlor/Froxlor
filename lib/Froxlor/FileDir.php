@@ -118,11 +118,9 @@ class FileDir
 					self::safe_exec('mkdir -p ' . escapeshellarg($sdir));
 					// place index
 					if ($placeindex) {
-						// @fixme
-						$loginname = getLoginNameByUid($uid);
+						$loginname = \Froxlor\Customer\Customer::getLoginNameByUid($uid);
 						if ($loginname !== false) {
-							// @fixme
-							storeDefaultIndex($loginname, $sdir, null);
+							self::storeDefaultIndex($loginname, $sdir, null);
 						}
 					}
 					self::safe_exec('chown -R ' . (int) $uid . ':' . (int) $gid . ' ' . escapeshellarg($sdir));
@@ -319,6 +317,94 @@ class FileDir
 	}
 
 	/**
+	 * Returns a valid html tag for the chosen $fieldType for paths
+	 *
+	 * @param
+	 *        	string path The path to start searching in
+	 * @param
+	 *        	integer uid The uid which must match the found directories
+	 * @param
+	 *        	integer gid The gid which must match the found direcotries
+	 * @param
+	 *        	string value the value for the input-field
+	 *        	
+	 * @return string The html tag for the chosen $fieldType
+	 *        
+	 * @author Martin Burchert <martin.burchert@syscp.de>
+	 * @author Manuel Bernhardt <manuel.bernhardt@syscp.de>
+	 */
+	public static function makePathfield($path, $uid, $gid, $value = '', $dom = false)
+	{
+		global $lng;
+
+		$value = str_replace($path, '', $value);
+		$field = array();
+
+		// path is given without starting slash
+		// but dirList holds the paths with starting slash
+		// so we just add one here to get the correct
+		// default path selected, #225
+		if (substr($value, 0, 1) != '/' && ! $dom) {
+			$value = '/' . $value;
+		}
+
+		$fieldType = \Froxlor\Settings::Get('panel.pathedit');
+
+		if ($fieldType == 'Manual') {
+
+			$field = array(
+				'type' => 'text',
+				'value' => htmlspecialchars($value)
+			);
+		} elseif ($fieldType == 'Dropdown') {
+
+			$dirList = self::findDirs($path, $uid, $gid);
+			natcasesort($dirList);
+
+			if (sizeof($dirList) > 0) {
+				if (sizeof($dirList) <= 100) {
+					$_field = '';
+					foreach ($dirList as $dir) {
+						if (strpos($dir, $path) === 0) {
+							$dir = substr($dir, strlen($path));
+							// docroot cut off of current directory == empty -> directory is the docroot
+							if (empty($dir)) {
+								$dir = '/';
+							}
+							$dir = self::makeCorrectDir($dir);
+						}
+						$_field .= makeoption($dir, $dir, $value);
+					}
+					$field = array(
+						'type' => 'select',
+						'value' => $_field
+					);
+				} else {
+					// remove starting slash we added
+					// for the Dropdown, #225
+					$value = substr($value, 1);
+					// $field = $lng['panel']['toomanydirs'];
+					$field = array(
+						'type' => 'text',
+						'value' => htmlspecialchars($value),
+						'note' => $lng['panel']['toomanydirs']
+					);
+				}
+			} else {
+				// $field = $lng['panel']['dirsmissing'];
+				// $field = '<input type="hidden" name="path" value="/" />';
+				$field = array(
+					'type' => 'hidden',
+					'value' => '/',
+					'note' => $lng['panel']['dirsmissing']
+				);
+			}
+		}
+
+		return $field;
+	}
+
+	/**
 	 * Returns an array of found directories
 	 *
 	 * This function checks every found directory if they match either $uid or $gid, if they do
@@ -333,7 +419,7 @@ class FileDir
 	 *        	
 	 * @return array Array of found valid paths
 	 */
-	public static function findDirs($path, $uid, $gid)
+	private static function findDirs($path, $uid, $gid)
 	{
 		$_fileList = array();
 		$path = self::makeCorrectDir($path);

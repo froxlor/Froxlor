@@ -183,7 +183,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 				Admins::increaseUsage($customer['adminid'], 'ftps_used');
 
 				$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] added ftp-account '" . $username . " (" . $path . ")'");
-				inserttask(5);
+				\Froxlor\System\Cronjob::inserttask(5);
 
 				if ($sendinfomail == 1) {
 					$replace_arr = array(
@@ -393,7 +393,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 		}
 		// it's the task for "new ftp" but that will
 		// create all directories and correct their permissions
-		inserttask(5);
+		\Froxlor\System\Cronjob::inserttask(5);
 
 		$stmt = Database::prepare("
 			UPDATE `" . TABLE_FTP_USERS . "`
@@ -534,11 +534,11 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 
 		// refs #293
 		if ($delete_userfiles == 1) {
-			inserttask('8', $customer_data['loginname'], $result['homedir']);
+			\Froxlor\System\Cronjob::inserttask('8', $customer_data['loginname'], $result['homedir']);
 		} else {
 			if (Settings::Get('system.nssextrausers') == 1) {
 				// this is used so that the libnss-extrausers cron is fired
-				inserttask(5);
+				\Froxlor\System\Cronjob::inserttask(5);
 			}
 		}
 
