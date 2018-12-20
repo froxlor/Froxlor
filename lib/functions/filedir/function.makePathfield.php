@@ -20,18 +20,22 @@
 /**
  * Returns a valid html tag for the chosen $fieldType for paths
  *
- * @param string  path      The path to start searching in
- * @param integer uid       The uid which must match the found directories
- * @param integer gid       The gid which must match the found direcotries
- * @param string  value     the value for the input-field
- *
- * @return string   The html tag for the chosen $fieldType
- *
- * @author Martin Burchert  <martin.burchert@syscp.de>
+ * @param
+ *        	string path The path to start searching in
+ * @param
+ *        	integer uid The uid which must match the found directories
+ * @param
+ *        	integer gid The gid which must match the found direcotries
+ * @param
+ *        	string value the value for the input-field
+ *        	
+ * @return string The html tag for the chosen $fieldType
+ *        
+ * @author Martin Burchert <martin.burchert@syscp.de>
  * @author Manuel Bernhardt <manuel.bernhardt@syscp.de>
  */
-function makePathfield($path, $uid, $gid, $value = '', $dom = false) {
-
+function makePathfield($path, $uid, $gid, $value = '', $dom = false)
+{
 	global $lng;
 
 	$value = str_replace($path, '', $value);
@@ -41,11 +45,11 @@ function makePathfield($path, $uid, $gid, $value = '', $dom = false) {
 	// but dirList holds the paths with starting slash
 	// so we just add one here to get the correct
 	// default path selected, #225
-	if (substr($value, 0, 1) != '/' && !$dom) {
-		$value = '/'.$value;
+	if (substr($value, 0, 1) != '/' && ! $dom) {
+		$value = '/' . $value;
 	}
 
-	$fieldType = Settings::Get('panel.pathedit');
+	$fieldType = \Froxlor\Settings::Get('panel.pathedit');
 
 	if ($fieldType == 'Manual') {
 
@@ -53,16 +57,15 @@ function makePathfield($path, $uid, $gid, $value = '', $dom = false) {
 			'type' => 'text',
 			'value' => htmlspecialchars($value)
 		);
+	} elseif ($fieldType == 'Dropdown') {
 
-	} elseif($fieldType == 'Dropdown') {
-
-		$dirList = findDirs($path, $uid, $gid);
+		$dirList = \Froxlor\FileDir::findDirs($path, $uid, $gid);
 		natcasesort($dirList);
 
 		if (sizeof($dirList) > 0) {
 			if (sizeof($dirList) <= 100) {
 				$_field = '';
-				foreach ($dirList as $key => $dir) {
+				foreach ($dirList as $dir) {
 					if (strpos($dir, $path) === 0) {
 						$dir = substr($dir, strlen($path));
 						// docroot cut off of current directory == empty -> directory is the docroot
@@ -71,7 +74,7 @@ function makePathfield($path, $uid, $gid, $value = '', $dom = false) {
 						}
 						$dir = \Froxlor\FileDir::makeCorrectDir($dir);
 					}
-					$_field.= makeoption($dir, $dir, $value);
+					$_field .= makeoption($dir, $dir, $value);
 				}
 				$field = array(
 					'type' => 'select',
@@ -81,7 +84,7 @@ function makePathfield($path, $uid, $gid, $value = '', $dom = false) {
 				// remove starting slash we added
 				// for the Dropdown, #225
 				$value = substr($value, 1);
-				//$field = $lng['panel']['toomanydirs'];
+				// $field = $lng['panel']['toomanydirs'];
 				$field = array(
 					'type' => 'text',
 					'value' => htmlspecialchars($value),
@@ -89,8 +92,8 @@ function makePathfield($path, $uid, $gid, $value = '', $dom = false) {
 				);
 			}
 		} else {
-			//$field = $lng['panel']['dirsmissing'];
-			//$field = '<input type="hidden" name="path" value="/" />';
+			// $field = $lng['panel']['dirsmissing'];
+			// $field = '<input type="hidden" name="path" value="/" />';
 			$field = array(
 				'type' => 'hidden',
 				'value' => '/',

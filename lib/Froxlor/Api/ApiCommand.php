@@ -457,7 +457,7 @@ abstract class ApiCommand extends ApiParameter
 			"var" => $varname
 		), true, true);
 		// @fixme html_entity_decode
-		$content = html_entity_decode(replace_variables((($result['value'] != '') ? $result['value'] : $default), $replace_arr));
+		$content = html_entity_decode(\Froxlor\PhpHelper::replace_variables((($result['value'] != '') ? $result['value'] : $default), $replace_arr));
 		return $content;
 	}
 

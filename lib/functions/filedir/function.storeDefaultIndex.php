@@ -28,36 +28,36 @@
 function storeDefaultIndex($loginname = null, $destination = null, $logger = null, $force = false) {
 
 	if ($force
-		|| (int)Settings::Get('system.store_index_file_subs') == 1
+		|| (int)\Froxlor\Settings::Get('system.store_index_file_subs') == 1
 	) {
-		$result_stmt = Database::prepare("
+		$result_stmt = \Froxlor\Database\Database::prepare("
 			SELECT `t`.`value`, `c`.`email` AS `customer_email`, `a`.`email` AS `admin_email`, `c`.`loginname` AS `customer_login`, `a`.`loginname` AS `admin_login`
 			FROM `" . TABLE_PANEL_CUSTOMERS . "` AS `c` INNER JOIN `" . TABLE_PANEL_ADMINS . "` AS `a`
 			ON `c`.`adminid` = `a`.`adminid`
 			INNER JOIN `" . TABLE_PANEL_TEMPLATES . "` AS `t`
 			ON `a`.`adminid` = `t`.`adminid`
 			WHERE `varname` = 'index_html' AND `c`.`loginname` = :loginname");
-		Database::pexecute($result_stmt, array('loginname' => $loginname));
+		\Froxlor\Database\Database::pexecute($result_stmt, array('loginname' => $loginname));
 
-		if (Database::num_rows() > 0) {
+		if (\Froxlor\Database\Database::num_rows() > 0) {
 
 			$template = $result_stmt->fetch(PDO::FETCH_ASSOC);
 
 			$replace_arr = array(
-				'SERVERNAME' => Settings::Get('system.hostname'),
+				'SERVERNAME' => \Froxlor\Settings::Get('system.hostname'),
 				'CUSTOMER' => $template['customer_login'],
 				'ADMIN' => $template['admin_login'],
 				'CUSTOMER_EMAIL' => $template['customer_email'],
 				'ADMIN_EMAIL' => $template['admin_email']
 			);
 
-			$htmlcontent = replace_variables($template['value'], $replace_arr);
-			$indexhtmlpath = \Froxlor\FileDir::makeCorrectFile($destination . '/index.' . Settings::Get('system.index_file_extension'));
+			$htmlcontent = \Froxlor\PhpHelper::replace_variables($template['value'], $replace_arr);
+			$indexhtmlpath = \Froxlor\FileDir::makeCorrectFile($destination . '/index.' . \Froxlor\Settings::Get('system.index_file_extension'));
 			$index_html_handler = fopen($indexhtmlpath, 'w');
 			fwrite($index_html_handler, $htmlcontent);
 			fclose($index_html_handler);
 			if ($logger !== null) {
-				$logger->logAction(CRON_ACTION, LOG_NOTICE, 'Creating \'index.' . Settings::Get('system.index_file_extension') . '\' for Customer \'' . $template['customer_login'] . '\' based on template in directory ' . escapeshellarg($indexhtmlpath));
+				$logger->logAction(CRON_ACTION, LOG_NOTICE, 'Creating \'index.' . \Froxlor\Settings::Get('system.index_file_extension') . '\' for Customer \'' . $template['customer_login'] . '\' based on template in directory ' . escapeshellarg($indexhtmlpath));
 			}
 
 		} else {

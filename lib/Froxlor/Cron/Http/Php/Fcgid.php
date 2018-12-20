@@ -167,7 +167,7 @@ class Fcgid
 		$phpini_file .= "; php.ini created/changed on " . date("Y.m.d H:i:s") . " for domain '" . $this->_domain['domain'] . "' with id #" . $this->_domain['id'] . " from php template '" . $phpconfig['description'] . "' with id #" . $phpconfig['id'] . "\n";
 		$phpini_file .= "; Do not change anything in this file, it will be overwritten by the Froxlor Cronjob!\n";
 		$phpini_file .= ";\n\n";
-		$phpini_file .= replace_variables($phpconfig['phpsettings'], $php_ini_variables);
+		$phpini_file .= \Froxlor\PhpHelper::replace_variables($phpconfig['phpsettings'], $php_ini_variables);
 		$phpini_file = str_replace('"none"', 'none', $phpini_file);
 		// $phpini_file = preg_replace('/\"+/', '"', $phpini_file);
 		$phpini_file_handler = fopen($this->getIniFile(), 'w');
