@@ -122,7 +122,7 @@ if ($page == 'log' && $userinfo['change_serversettings'] == '1') {
 				's' => $s
 			));
 		} else {
-			ask_yesno('logger_reallytruncate', $filename, array(
+			\Froxlor\UI\HTML::ask_yesno('logger_reallytruncate', $filename, array(
 				'page' => $page,
 				'action' => $action
 			), TABLE_PANEL_LOG);

@@ -104,11 +104,11 @@ if ($page == 'cronjobs' || $page == 'overview') {
 				$interval_value = $interval_nfo[0];
 
 				$interval_interval = '';
-				$interval_interval .= makeoption($lng['cronmgmt']['minutes'], 'MINUTE', $interval_nfo[1]);
-				$interval_interval .= makeoption($lng['cronmgmt']['hours'], 'HOUR', $interval_nfo[1]);
-				$interval_interval .= makeoption($lng['cronmgmt']['days'], 'DAY', $interval_nfo[1]);
-				$interval_interval .= makeoption($lng['cronmgmt']['weeks'], 'WEEK', $interval_nfo[1]);
-				$interval_interval .= makeoption($lng['cronmgmt']['months'], 'MONTH', $interval_nfo[1]);
+				$interval_interval .= \Froxlor\UI\HTML::makeoption($lng['cronmgmt']['minutes'], 'MINUTE', $interval_nfo[1]);
+				$interval_interval .= \Froxlor\UI\HTML::makeoption($lng['cronmgmt']['hours'], 'HOUR', $interval_nfo[1]);
+				$interval_interval .= \Froxlor\UI\HTML::makeoption($lng['cronmgmt']['days'], 'DAY', $interval_nfo[1]);
+				$interval_interval .= \Froxlor\UI\HTML::makeoption($lng['cronmgmt']['weeks'], 'WEEK', $interval_nfo[1]);
+				$interval_interval .= \Froxlor\UI\HTML::makeoption($lng['cronmgmt']['months'], 'MONTH', $interval_nfo[1]);
 				// end of interval
 
 				$change_cronfile = false;

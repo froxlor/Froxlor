@@ -159,7 +159,7 @@ if ($page == 'domains' || $page == 'overview') {
 				if (\Froxlor\Domain\Domain::domainHasMainSubDomains($id)) {
 					$showcheck = true;
 				}
-				ask_yesno_withcheckbox('admin_domain_reallydelete', 'remove_subbutmain_domains', $filename, array(
+				\Froxlor\UI\HTML::ask_yesno_withcheckbox('admin_domain_reallydelete', 'remove_subbutmain_domains', $filename, array(
 					'id' => $id,
 					'page' => $page,
 					'action' => $action
@@ -180,7 +180,7 @@ if ($page == 'domains' || $page == 'overview') {
 			));
 		} else {
 
-			$customers = makeoption($lng['panel']['please_choose'], 0, 0, true);
+			$customers = \Froxlor\UI\HTML::makeoption($lng['panel']['please_choose'], 0, 0, true);
 			$result_customers_stmt = Database::prepare("
 					SELECT `customerid`, `loginname`, `name`, `firstname`, `company`
 					FROM `" . TABLE_PANEL_CUSTOMERS . "` " . ($userinfo['customers_see_all'] ? '' : " WHERE `adminid` = '" . (int) $userinfo['adminid'] . "' ") . " ORDER BY COALESCE(NULLIF(`name`,''), `company`) ASC");
@@ -191,7 +191,7 @@ if ($page == 'domains' || $page == 'overview') {
 			Database::pexecute($result_customers_stmt, $params);
 
 			while ($row_customer = $result_customers_stmt->fetch(PDO::FETCH_ASSOC)) {
-				$customers .= makeoption(getCorrectFullUserDetails($row_customer) . ' (' . $row_customer['loginname'] . ')', $row_customer['customerid']);
+				$customers .= \Froxlor\UI\HTML::makeoption(getCorrectFullUserDetails($row_customer) . ' (' . $row_customer['loginname'] . ')', $row_customer['customerid']);
 			}
 
 			$admins = '';
@@ -203,7 +203,7 @@ if ($page == 'domains' || $page == 'overview') {
 						WHERE `domains_used` < `domains` OR `domains` = '-1' ORDER BY `name` ASC");
 
 				while ($row_admin = $result_admins_stmt->fetch(PDO::FETCH_ASSOC)) {
-					$admins .= makeoption(getCorrectFullUserDetails($row_admin) . ' (' . $row_admin['loginname'] . ')', $row_admin['adminid'], $userinfo['adminid']);
+					$admins .= \Froxlor\UI\HTML::makeoption(getCorrectFullUserDetails($row_admin) . ' (' . $row_admin['loginname'] . ')', $row_admin['adminid'], $userinfo['adminid']);
 				}
 			}
 
@@ -279,7 +279,7 @@ if ($page == 'domains' || $page == 'overview') {
 				$standardsubdomains = '';
 			}
 
-			$domains = makeoption($lng['domains']['noaliasdomain'], 0, NULL, true);
+			$domains = \Froxlor\UI\HTML::makeoption($lng['domains']['noaliasdomain'], 0, NULL, true);
 			$result_domains_stmt = Database::prepare("
 					SELECT `d`.`id`, `d`.`domain`, `c`.`loginname` FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_CUSTOMERS . "` `c`
 					WHERE `d`.`aliasdomain` IS NULL AND `d`.`parentdomainid` = 0" . $standardsubdomains . ($userinfo['customers_see_all'] ? '' : " AND `d`.`adminid` = :adminid") . "
@@ -292,10 +292,10 @@ if ($page == 'domains' || $page == 'overview') {
 			Database::pexecute($result_domains_stmt, $params);
 
 			while ($row_domain = $result_domains_stmt->fetch(PDO::FETCH_ASSOC)) {
-				$domains .= makeoption($idna_convert->decode($row_domain['domain']) . ' (' . $row_domain['loginname'] . ')', $row_domain['id']);
+				$domains .= \Froxlor\UI\HTML::makeoption($idna_convert->decode($row_domain['domain']) . ' (' . $row_domain['loginname'] . ')', $row_domain['id']);
 			}
 
-			$subtodomains = makeoption($lng['domains']['nosubtomaindomain'], 0, NULL, true);
+			$subtodomains = \Froxlor\UI\HTML::makeoption($lng['domains']['nosubtomaindomain'], 0, NULL, true);
 			$result_domains_stmt = Database::prepare("
 					SELECT `d`.`id`, `d`.`domain`, `c`.`loginname` FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_CUSTOMERS . "` `c`
 					WHERE `d`.`aliasdomain` IS NULL AND `d`.`parentdomainid` = 0 AND `d`.`ismainbutsubto` = 0 " . $standardsubdomains . ($userinfo['customers_see_all'] ? '' : " AND `d`.`adminid` = :adminid") . "
@@ -305,7 +305,7 @@ if ($page == 'domains' || $page == 'overview') {
 			Database::pexecute($result_domains_stmt, $params);
 
 			while ($row_domain = $result_domains_stmt->fetch(PDO::FETCH_ASSOC)) {
-				$subtodomains .= makeoption($idna_convert->decode($row_domain['domain']) . ' (' . $row_domain['loginname'] . ')', $row_domain['id']);
+				$subtodomains .= \Froxlor\UI\HTML::makeoption($idna_convert->decode($row_domain['domain']) . ' (' . $row_domain['loginname'] . ')', $row_domain['id']);
 			}
 
 			$phpconfigs = '';
@@ -317,22 +317,22 @@ if ($page == 'domains' || $page == 'overview') {
 
 			while ($row = $configs->fetch(PDO::FETCH_ASSOC)) {
 				if ((int) Settings::Get('phpfpm.enabled') == 1) {
-					$phpconfigs .= makeoption($row['description'] . " [" . $row['interpreter'] . "]", $row['id'], Settings::Get('phpfpm.defaultini'), true, true);
+					$phpconfigs .= \Froxlor\UI\HTML::makeoption($row['description'] . " [" . $row['interpreter'] . "]", $row['id'], Settings::Get('phpfpm.defaultini'), true, true);
 				} else {
-					$phpconfigs .= makeoption($row['description'], $row['id'], Settings::Get('system.mod_fcgid_defaultini'), true, true);
+					$phpconfigs .= \Froxlor\UI\HTML::makeoption($row['description'], $row['id'], Settings::Get('system.mod_fcgid_defaultini'), true, true);
 				}
 			}
 
 			// create serveralias options
 			$serveraliasoptions = "";
-			$serveraliasoptions .= makeoption($lng['domains']['serveraliasoption_wildcard'], '0', '0', true, true);
-			$serveraliasoptions .= makeoption($lng['domains']['serveraliasoption_www'], '1', '0', true, true);
-			$serveraliasoptions .= makeoption($lng['domains']['serveraliasoption_none'], '2', '0', true, true);
+			$serveraliasoptions .= \Froxlor\UI\HTML::makeoption($lng['domains']['serveraliasoption_wildcard'], '0', '0', true, true);
+			$serveraliasoptions .= \Froxlor\UI\HTML::makeoption($lng['domains']['serveraliasoption_www'], '1', '0', true, true);
+			$serveraliasoptions .= \Froxlor\UI\HTML::makeoption($lng['domains']['serveraliasoption_none'], '2', '0', true, true);
 
-			$subcanemaildomain = makeoption($lng['admin']['subcanemaildomain']['never'], '0', '0', true, true);
-			$subcanemaildomain .= makeoption($lng['admin']['subcanemaildomain']['choosableno'], '1', '0', true, true);
-			$subcanemaildomain .= makeoption($lng['admin']['subcanemaildomain']['choosableyes'], '2', '0', true, true);
-			$subcanemaildomain .= makeoption($lng['admin']['subcanemaildomain']['always'], '3', '0', true, true);
+			$subcanemaildomain = \Froxlor\UI\HTML::makeoption($lng['admin']['subcanemaildomain']['never'], '0', '0', true, true);
+			$subcanemaildomain .= \Froxlor\UI\HTML::makeoption($lng['admin']['subcanemaildomain']['choosableno'], '1', '0', true, true);
+			$subcanemaildomain .= \Froxlor\UI\HTML::makeoption($lng['admin']['subcanemaildomain']['choosableyes'], '2', '0', true, true);
+			$subcanemaildomain .= \Froxlor\UI\HTML::makeoption($lng['admin']['subcanemaildomain']['always'], '3', '0', true, true);
 
 			$add_date = date('Y-m-d');
 
@@ -449,7 +449,7 @@ if ($page == 'domains' || $page == 'overview') {
 					Database::pexecute($result_customers_stmt, $params);
 
 					while ($row_customer = $result_customers_stmt->fetch(PDO::FETCH_ASSOC)) {
-						$customers .= makeoption(getCorrectFullUserDetails($row_customer) . ' (' . $row_customer['loginname'] . ')', $row_customer['customerid'], $result['customerid']);
+						$customers .= \Froxlor\UI\HTML::makeoption(getCorrectFullUserDetails($row_customer) . ' (' . $row_customer['loginname'] . ')', $row_customer['customerid'], $result['customerid']);
 					}
 				} else {
 					$customer_stmt = Database::prepare("
@@ -475,7 +475,7 @@ if ($page == 'domains' || $page == 'overview') {
 						));
 
 						while ($row_admin = $result_admins_stmt->fetch(PDO::FETCH_ASSOC)) {
-							$admins .= makeoption(getCorrectFullUserDetails($row_admin) . ' (' . $row_admin['loginname'] . ')', $row_admin['adminid'], $result['adminid']);
+							$admins .= \Froxlor\UI\HTML::makeoption(getCorrectFullUserDetails($row_admin) . ' (' . $row_admin['loginname'] . ')', $row_admin['adminid'], $result['adminid']);
 						}
 					} else {
 						$admin_stmt = Database::prepare("
@@ -489,7 +489,7 @@ if ($page == 'domains' || $page == 'overview') {
 				}
 
 				$result['domain'] = $idna_convert->decode($result['domain']);
-				$domains = makeoption($lng['domains']['noaliasdomain'], 0, null, true);
+				$domains = \Froxlor\UI\HTML::makeoption($lng['domains']['noaliasdomain'], 0, null, true);
 
 				$result_domains_stmt = Database::prepare("
 					SELECT `d`.`id`, `d`.`domain`  FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_CUSTOMERS . "` `c`
@@ -503,10 +503,10 @@ if ($page == 'domains' || $page == 'overview') {
 				));
 
 				while ($row_domain = $result_domains_stmt->fetch(PDO::FETCH_ASSOC)) {
-					$domains .= makeoption($idna_convert->decode($row_domain['domain']), $row_domain['id'], $result['aliasdomain']);
+					$domains .= \Froxlor\UI\HTML::makeoption($idna_convert->decode($row_domain['domain']), $row_domain['id'], $result['aliasdomain']);
 				}
 
-				$subtodomains = makeoption($lng['domains']['nosubtomaindomain'], 0, null, true);
+				$subtodomains = \Froxlor\UI\HTML::makeoption($lng['domains']['nosubtomaindomain'], 0, null, true);
 				$result_domains_stmt = Database::prepare("
 					SELECT `d`.`id`, `d`.`domain` FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_CUSTOMERS . "` `c`
 					WHERE `d`.`aliasdomain` IS NULL AND `d`.`parentdomainid` = '0' AND `d`.`id` <> :id
@@ -522,7 +522,7 @@ if ($page == 'domains' || $page == 'overview') {
 				Database::pexecute($result_domains_stmt, $params);
 
 				while ($row_domain = $result_domains_stmt->fetch(PDO::FETCH_ASSOC)) {
-					$subtodomains .= makeoption($idna_convert->decode($row_domain['domain']), $row_domain['id'], $result['ismainbutsubto']);
+					$subtodomains .= \Froxlor\UI\HTML::makeoption($idna_convert->decode($row_domain['domain']), $row_domain['id'], $result['ismainbutsubto']);
 				}
 
 				if ($userinfo['ip'] == "-1") {
@@ -591,14 +591,14 @@ if ($page == 'domains' || $page == 'overview') {
 				$result['temporary_ssl_redirect'] = $result['ssl_redirect'];
 				$result['ssl_redirect'] = ($result['ssl_redirect'] == 0 ? 0 : 1);
 
-				$serveraliasoptions .= makeoption($lng['domains']['serveraliasoption_wildcard'], '0', $_value, true, true);
-				$serveraliasoptions .= makeoption($lng['domains']['serveraliasoption_www'], '1', $_value, true, true);
-				$serveraliasoptions .= makeoption($lng['domains']['serveraliasoption_none'], '2', $_value, true, true);
+				$serveraliasoptions .= \Froxlor\UI\HTML::makeoption($lng['domains']['serveraliasoption_wildcard'], '0', $_value, true, true);
+				$serveraliasoptions .= \Froxlor\UI\HTML::makeoption($lng['domains']['serveraliasoption_www'], '1', $_value, true, true);
+				$serveraliasoptions .= \Froxlor\UI\HTML::makeoption($lng['domains']['serveraliasoption_none'], '2', $_value, true, true);
 
-				$subcanemaildomain = makeoption($lng['admin']['subcanemaildomain']['never'], '0', $result['subcanemaildomain'], true, true);
-				$subcanemaildomain .= makeoption($lng['admin']['subcanemaildomain']['choosableno'], '1', $result['subcanemaildomain'], true, true);
-				$subcanemaildomain .= makeoption($lng['admin']['subcanemaildomain']['choosableyes'], '2', $result['subcanemaildomain'], true, true);
-				$subcanemaildomain .= makeoption($lng['admin']['subcanemaildomain']['always'], '3', $result['subcanemaildomain'], true, true);
+				$subcanemaildomain = \Froxlor\UI\HTML::makeoption($lng['admin']['subcanemaildomain']['never'], '0', $result['subcanemaildomain'], true, true);
+				$subcanemaildomain .= \Froxlor\UI\HTML::makeoption($lng['admin']['subcanemaildomain']['choosableno'], '1', $result['subcanemaildomain'], true, true);
+				$subcanemaildomain .= \Froxlor\UI\HTML::makeoption($lng['admin']['subcanemaildomain']['choosableyes'], '2', $result['subcanemaildomain'], true, true);
+				$subcanemaildomain .= \Froxlor\UI\HTML::makeoption($lng['admin']['subcanemaildomain']['always'], '3', $result['subcanemaildomain'], true, true);
 				$speciallogfile = ($result['speciallogfile'] == 1 ? $lng['panel']['yes'] : $lng['panel']['no']);
 				$result['add_date'] = date('Y-m-d', $result['add_date']);
 
@@ -618,9 +618,9 @@ if ($page == 'domains' || $page == 'overview') {
 				while ($phpconfigs_row = $phpconfigs_result_stmt->fetch(PDO::FETCH_ASSOC)) {
 					$disabled = ! empty($c_allowed_configs) && ! in_array($phpconfigs_row['id'], $c_allowed_configs);
 					if ((int) Settings::Get('phpfpm.enabled') == 1) {
-						$phpconfigs .= makeoption($phpconfigs_row['description'] . " [" . $phpconfigs_row['interpreter'] . "]", $phpconfigs_row['id'], $result['phpsettingid'], true, true, null, $disabled);
+						$phpconfigs .= \Froxlor\UI\HTML::makeoption($phpconfigs_row['description'] . " [" . $phpconfigs_row['interpreter'] . "]", $phpconfigs_row['id'], $result['phpsettingid'], true, true, null, $disabled);
 					} else {
-						$phpconfigs .= makeoption($phpconfigs_row['description'], $phpconfigs_row['id'], $result['phpsettingid'], true, true, null, $disabled);
+						$phpconfigs .= \Froxlor\UI\HTML::makeoption($phpconfigs_row['description'], $phpconfigs_row['id'], $result['phpsettingid'], true, true, null, $disabled);
 					}
 				}
 
@@ -678,7 +678,7 @@ if ($page == 'domains' || $page == 'overview') {
 				'page' => 'domains'
 			));
 		} else {
-			$customers = makeoption($lng['panel']['please_choose'], 0, 0, true);
+			$customers = \Froxlor\UI\HTML::makeoption($lng['panel']['please_choose'], 0, 0, true);
 			$result_customers_stmt = Database::prepare("
 				SELECT `customerid`, `loginname`, `name`, `firstname`, `company`
 				FROM `" . TABLE_PANEL_CUSTOMERS . "` " . ($userinfo['customers_see_all'] ? '' : " WHERE `adminid` = '" . (int) $userinfo['adminid'] . "' ") . " ORDER BY `name` ASC");
@@ -689,7 +689,7 @@ if ($page == 'domains' || $page == 'overview') {
 			Database::pexecute($result_customers_stmt, $params);
 
 			while ($row_customer = $result_customers_stmt->fetch(PDO::FETCH_ASSOC)) {
-				$customers .= makeoption(getCorrectFullUserDetails($row_customer) . ' (' . $row_customer['loginname'] . ')', $row_customer['customerid']);
+				$customers .= \Froxlor\UI\HTML::makeoption(getCorrectFullUserDetails($row_customer) . ' (' . $row_customer['loginname'] . ')', $row_customer['customerid']);
 			}
 
 			$domain_import_data = include_once dirname(__FILE__) . '/lib/formfields/admin/domains/formfield.domains_import.php';

@@ -118,12 +118,12 @@ if ($userinfo['change_serversettings'] == '1') {
 					if ($dd->default) {
 						$title = $title . " (" . strtolower($lng['panel']['default']) . ")";
 					}
-					$daemons_select .= makeoption($title, $di);
+					$daemons_select .= \Froxlor\UI\HTML::makeoption($title, $di);
 				}
 			}
 		} else {
 			foreach ($services as $si => $sd) {
-				$services_select .= makeoption($sd->title, $si);
+				$services_select .= \Froxlor\UI\HTML::makeoption($sd->title, $si);
 			}
 		}
 	} else {
@@ -147,7 +147,7 @@ if ($userinfo['change_serversettings'] == '1') {
 
 		foreach ($distributions_select_data as $dist_display => $dist_index) {
 			// create select-box-option
-			$distributions_select .= makeoption($dist_display, $dist_index);
+			$distributions_select .= \Froxlor\UI\HTML::makeoption($dist_display, $dist_index);
 		}
 	}
 

@@ -104,7 +104,7 @@ if ($page == 'overview') {
 					's' => $s
 				));
 			} else {
-				ask_yesno_withcheckbox('ftp_reallydelete', 'admin_customer_alsoremoveftphomedir', $filename, array(
+				\Froxlor\UI\HTML::ask_yesno_withcheckbox('ftp_reallydelete', 'admin_customer_alsoremoveftphomedir', $filename, array(
 					'id' => $id,
 					'page' => $page,
 					'action' => $action
@@ -146,24 +146,24 @@ if ($page == 'overview') {
 
 					if (isset($domainlist[0]) && $domainlist[0] != '') {
 						foreach ($domainlist as $dom) {
-							$domains .= makeoption($idna_convert->decode($dom), $dom);
+							$domains .= \Froxlor\UI\HTML::makeoption($idna_convert->decode($dom), $dom);
 						}
 					}
 				}
 
 				if (Settings::Get('system.allow_customer_shell') == '1') {
-					$shells = makeoption("/bin/false", "/bin/false", "/bin/false");
+					$shells = \Froxlor\UI\HTML::makeoption("/bin/false", "/bin/false", "/bin/false");
 					$shells_avail = Settings::Get('system.available_shells');
 					if (! empty($shells_avail)) {
 						$shells_avail = explode(",", $shells_avail);
 						$shells_avail = array_map("trim", $shells_avail);
 						foreach ($shells_avail as $_shell) {
-							$shells .= makeoption($_shell, $_shell, "/bin/false");
+							$shells .= \Froxlor\UI\HTML::makeoption($_shell, $_shell, "/bin/false");
 						}
 					}
 				}
 
-				// $sendinfomail = makeyesno('sendinfomail', '1', '0', '0');
+				// $sendinfomail = \Froxlor\UI\HTML::makeyesno('sendinfomail', '1', '0', '0');
 
 				$ftp_add_data = include_once dirname(__FILE__) . '/lib/formfields/customer/ftp/formfield.ftp_add.php';
 				$ftp_add_form = \Froxlor\UI\HtmlForm::genHTMLForm($ftp_add_data);
@@ -215,18 +215,18 @@ if ($page == 'overview') {
 					));
 
 					while ($row_domain = $result_domains_stmt->fetch(PDO::FETCH_ASSOC)) {
-						$domains .= makeoption($idna_convert->decode($row_domain['domain']), $row_domain['domain']);
+						$domains .= \Froxlor\UI\HTML::makeoption($idna_convert->decode($row_domain['domain']), $row_domain['domain']);
 					}
 				}
 
 				if (Settings::Get('system.allow_customer_shell') == '1') {
-					$shells = makeoption("/bin/false", "/bin/false", $result['shell']);
+					$shells = \Froxlor\UI\HTML::makeoption("/bin/false", "/bin/false", $result['shell']);
 					$shells_avail = Settings::Get('system.available_shells');
 					if (! empty($shells_avail)) {
 						$shells_avail = explode(",", $shells_avail);
 						$shells_avail = array_map("trim", $shells_avail);
 						foreach ($shells_avail as $_shell) {
-							$shells .= makeoption($_shell, $_shell, $result['shell']);
+							$shells .= \Froxlor\UI\HTML::makeoption($_shell, $_shell, $result['shell']);
 						}
 					}
 				}

@@ -119,9 +119,9 @@ if ($page == 'message') {
 	$receipients = '';
 
 	if ($userinfo['customers_see_all'] == '1') {
-		$receipients .= makeoption($lng['panel']['reseller'], 0);
+		$receipients .= \Froxlor\UI\HTML::makeoption($lng['panel']['reseller'], 0);
 	}
 
-	$receipients .= makeoption($lng['panel']['customer'], 1);
+	$receipients .= \Froxlor\UI\HTML::makeoption($lng['panel']['customer'], 1);
 	eval("echo \"" . \Froxlor\UI\Template::getTemplate('message/message') . "\";");
 }

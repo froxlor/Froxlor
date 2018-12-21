@@ -133,7 +133,7 @@ if ($page == 'overview') {
 				if (isset($result['description']) && $result['description'] != '') {
 					$dbnamedesc .= ' (' . $result['description'] . ')';
 				}
-				ask_yesno('mysql_reallydelete', $filename, array(
+				\Froxlor\UI\HTML::ask_yesno('mysql_reallydelete', $filename, array(
 					'id' => $id,
 					'page' => $page,
 					'action' => $action
@@ -161,7 +161,7 @@ if ($page == 'overview') {
 					Database::needRoot(true, $dbserver['dbserver']);
 					Database::needSqlData();
 					$sql_root = Database::getSqlData();
-					$mysql_servers .= makeoption($sql_root['caption'], $dbserver['dbserver']);
+					$mysql_servers .= \Froxlor\UI\HTML::makeoption($sql_root['caption'], $dbserver['dbserver']);
 					$count_mysqlservers ++;
 				}
 				Database::needRoot(false);

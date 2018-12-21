@@ -154,7 +154,7 @@ if ($action == '') {
 				's' => $s
 			));
 		} else {
-			ask_yesno('admin_template_reallydelete', $filename, array(
+			\Froxlor\UI\HTML::ask_yesno('admin_template_reallydelete', $filename, array(
 				'subjectid' => $subjectid,
 				'mailbodyid' => $mailbodyid,
 				'page' => $page,
@@ -190,7 +190,7 @@ if ($action == '') {
 				's' => $s
 			));
 		} else {
-			ask_yesno('admin_template_reallydelete', $filename, array(
+			\Froxlor\UI\HTML::ask_yesno('admin_template_reallydelete', $filename, array(
 				'id' => $id,
 				'page' => $page,
 				'action' => $action
@@ -337,12 +337,12 @@ if ($action == '') {
 
 			if (count(array_diff($available_templates, $templates)) > 0) {
 				$add = true;
-				$language_options .= makeoption($language_name, $language_file, $userinfo['language'], true, true);
+				$language_options .= \Froxlor\UI\HTML::makeoption($language_name, $language_file, $userinfo['language'], true, true);
 
 				$templates = array_diff($available_templates, $templates);
 
 				foreach ($templates as $template) {
-					$template_options .= makeoption($lng['admin']['templates'][$template], $template, NULL, true, true, $language_file) . "\n";
+					$template_options .= \Froxlor\UI\HTML::makeoption($lng['admin']['templates'][$template], $template, NULL, true, true, $language_file) . "\n";
 				}
 			}
 		}
@@ -373,7 +373,7 @@ if ($action == '') {
 			}
 
 			foreach (array_diff($file_templates, $templatesdefined) as $template) {
-				$free_templates .= makeoption($lng['admin']['templates'][$template], $template, '', true);
+				$free_templates .= \Froxlor\UI\HTML::makeoption($lng['admin']['templates'][$template], $template, '', true);
 			}
 
 			$filetemplate_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/templates/formfield.filetemplate_add.php';

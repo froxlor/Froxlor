@@ -168,7 +168,7 @@ if ($page == 'overview') {
 				} else {
 					$show_checkbox = false;
 				}
-				ask_yesno_withcheckbox('email_reallydelete', 'admin_customer_alsoremovemail', $filename, array(
+				\Froxlor\UI\HTML::ask_yesno_withcheckbox('email_reallydelete', 'admin_customer_alsoremovemail', $filename, array(
 					'id' => $id,
 					'page' => $page,
 					'action' => $action
@@ -201,10 +201,10 @@ if ($page == 'overview') {
 				$domains = '';
 
 				while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-					$domains .= makeoption($idna_convert->decode($row['domain']), $row['domain']);
+					$domains .= \Froxlor\UI\HTML::makeoption($idna_convert->decode($row['domain']), $row['domain']);
 				}
 
-				// $iscatchall = makeyesno('iscatchall', '1', '0', '0');
+				// $iscatchall = \Froxlor\UI\HTML::makeyesno('iscatchall', '1', '0', '0');
 
 				$email_add_data = include_once dirname(__FILE__) . '/lib/formfields/customer/email/formfield.emails_add.php';
 
@@ -438,7 +438,7 @@ if ($page == 'overview') {
 					's' => $s
 				));
 			} else {
-				ask_yesno_withcheckbox('email_reallydelete_account', 'admin_customer_alsoremovemail', $filename, array(
+				\Froxlor\UI\HTML::ask_yesno_withcheckbox('email_reallydelete_account', 'admin_customer_alsoremovemail', $filename, array(
 					'id' => $id,
 					'page' => $page,
 					'action' => $action
@@ -524,7 +524,7 @@ if ($page == 'overview') {
 						's' => $s
 					));
 				} else {
-					ask_yesno('email_reallydelete_forwarder', $filename, array(
+					\Froxlor\UI\HTML::ask_yesno('email_reallydelete_forwarder', $filename, array(
 						'id' => $id,
 						'forwarderid' => $forwarderid,
 						'page' => $page,

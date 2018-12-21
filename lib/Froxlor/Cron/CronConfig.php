@@ -25,7 +25,7 @@ class CronConfig
 		if ($num_results > 0) {
 
 			// get all crons and their intervals
-			if (isFreeBSD()) {
+			if (\Froxlor\FileDir::isFreeBSD()) {
 				// FreeBSD does not need a header as we are writing directly to the crontab
 				$cronfile = "\n";
 			} else {
@@ -88,7 +88,7 @@ class CronConfig
 				}
 			}
 
-			if (isFreeBSD()) {
+			if (\Froxlor\FileDir::isFreeBSD()) {
 				// FreeBSD handles the cron-stuff in another way. We need to directly
 				// write to the crontab file as there is not cron.d/froxlor file
 				// (settings for system.cronconfig should be set correctly of course)

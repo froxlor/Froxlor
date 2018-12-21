@@ -158,7 +158,7 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 			// check group members
 			if (isset($groupinfo['members']) && ! in_array(Settings::Get('system.httpuser'), $groupinfo['members'])) {
 				// webserver has no access, add it
-				if (isFreeBSD()) {
+				if (\Froxlor\FileDir::isFreeBSD()) {
 					\Froxlor\FileDir::safe_exec('pw usermod ' . escapeshellarg(Settings::Get('system.httpuser')) . ' -G ' . escapeshellarg(Settings::Get('phpfpm.vhost_httpgroup')));
 				} else {
 					\Froxlor\FileDir::safe_exec('usermod -a -G ' . escapeshellarg(Settings::Get('phpfpm.vhost_httpgroup')) . ' ' . escapeshellarg(Settings::Get('system.httpuser')));

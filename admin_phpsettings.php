@@ -87,12 +87,12 @@ if ($page == 'overview') {
 				$fpmconfigs = '';
 				$configs = Database::query("SELECT * FROM `" . TABLE_PANEL_FPMDAEMONS . "` ORDER BY `description` ASC");
 				while ($row = $configs->fetch(PDO::FETCH_ASSOC)) {
-					$fpmconfigs .= makeoption($row['description'], $row['id'], 1, true, true);
+					$fpmconfigs .= \Froxlor\UI\HTML::makeoption($row['description'], $row['id'], 1, true, true);
 				}
 
-				$pm_select = makeoption('static', 'static', 'static', true, true);
-				$pm_select .= makeoption('dynamic', 'dynamic', 'static', true, true);
-				$pm_select .= makeoption('ondemand', 'ondemand', 'static', true, true);
+				$pm_select = \Froxlor\UI\HTML::makeoption('static', 'static', 'static', true, true);
+				$pm_select .= \Froxlor\UI\HTML::makeoption('dynamic', 'dynamic', 'static', true, true);
+				$pm_select .= \Froxlor\UI\HTML::makeoption('ondemand', 'ondemand', 'static', true, true);
 
 				$phpconfig_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/phpconfig/formfield.phpconfig_add.php';
 				$phpconfig_add_form = \Froxlor\UI\HtmlForm::genHTMLForm($phpconfig_add_data);
@@ -134,7 +134,7 @@ if ($page == 'overview') {
 					's' => $s
 				));
 			} else {
-				ask_yesno('phpsetting_reallydelete', $filename, array(
+				\Froxlor\UI\HTML::ask_yesno('phpsetting_reallydelete', $filename, array(
 					'id' => $id,
 					'page' => $page,
 					'action' => $action
@@ -173,12 +173,12 @@ if ($page == 'overview') {
 				$fpmconfigs = '';
 				$configs = Database::query("SELECT * FROM `" . TABLE_PANEL_FPMDAEMONS . "` ORDER BY `description` ASC");
 				while ($row = $configs->fetch(PDO::FETCH_ASSOC)) {
-					$fpmconfigs .= makeoption($row['description'], $row['id'], $result['fpmsettingid'], true, true);
+					$fpmconfigs .= \Froxlor\UI\HTML::makeoption($row['description'], $row['id'], $result['fpmsettingid'], true, true);
 				}
 
-				$pm_select = makeoption('static', 'static', $result['pm'], true, true);
-				$pm_select .= makeoption('dynamic', 'dynamic', $result['pm'], true, true);
-				$pm_select .= makeoption('ondemand', 'ondemand', $result['pm'], true, true);
+				$pm_select = \Froxlor\UI\HTML::makeoption('static', 'static', $result['pm'], true, true);
+				$pm_select .= \Froxlor\UI\HTML::makeoption('dynamic', 'dynamic', $result['pm'], true, true);
+				$pm_select .= \Froxlor\UI\HTML::makeoption('ondemand', 'ondemand', $result['pm'], true, true);
 
 				$phpconfig_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/phpconfig/formfield.phpconfig_edit.php';
 				$phpconfig_edit_form = \Froxlor\UI\HtmlForm::genHTMLForm($phpconfig_edit_data);
@@ -234,9 +234,9 @@ if ($page == 'overview') {
 				));
 			} else {
 
-				$pm_select = makeoption('static', 'static', 'static', true, true);
-				$pm_select .= makeoption('dynamic', 'dynamic', 'static', true, true);
-				$pm_select .= makeoption('ondemand', 'ondemand', 'static', true, true);
+				$pm_select = \Froxlor\UI\HTML::makeoption('static', 'static', 'static', true, true);
+				$pm_select .= \Froxlor\UI\HTML::makeoption('dynamic', 'dynamic', 'static', true, true);
+				$pm_select .= \Froxlor\UI\HTML::makeoption('ondemand', 'ondemand', 'static', true, true);
 
 				$fpmconfig_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/phpconfig/formfield.fpmconfig_add.php';
 				$fpmconfig_add_form = \Froxlor\UI\HtmlForm::genHTMLForm($fpmconfig_add_data);
@@ -279,7 +279,7 @@ if ($page == 'overview') {
 					's' => $s
 				));
 			} else {
-				ask_yesno('fpmsetting_reallydelete', $filename, array(
+				\Froxlor\UI\HTML::ask_yesno('fpmsetting_reallydelete', $filename, array(
 					'id' => $id,
 					'page' => $page,
 					'action' => $action
@@ -315,9 +315,9 @@ if ($page == 'overview') {
 				));
 			} else {
 
-				$pm_select = makeoption('static', 'static', $result['pm'], true, true);
-				$pm_select .= makeoption('dynamic', 'dynamic', $result['pm'], true, true);
-				$pm_select .= makeoption('ondemand', 'ondemand', $result['pm'], true, true);
+				$pm_select = \Froxlor\UI\HTML::makeoption('static', 'static', $result['pm'], true, true);
+				$pm_select .= \Froxlor\UI\HTML::makeoption('dynamic', 'dynamic', $result['pm'], true, true);
+				$pm_select .= \Froxlor\UI\HTML::makeoption('ondemand', 'ondemand', $result['pm'], true, true);
 
 				$fpmconfig_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/phpconfig/formfield.fpmconfig_edit.php';
 				$fpmconfig_edit_form = \Froxlor\UI\HtmlForm::genHTMLForm($fpmconfig_edit_data);

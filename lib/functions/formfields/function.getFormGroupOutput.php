@@ -53,7 +53,7 @@ function getFormOverviewGroupOutput($groupname, $groupdetails)
 					$activated = true;
 				} else {
 					$option .= $lng['admin']['activated'] . ':&nbsp;';
-					$option .= makeyesno($fieldname, '1', '0', Settings::Get($fielddetails['settinggroup'] . '.' . $fielddetails['varname']));
+					$option .= \Froxlor\UI\HTML::makeyesno($fieldname, '1', '0', Settings::Get($fielddetails['settinggroup'] . '.' . $fielddetails['varname']));
 					$activated = (int) Settings::Get($fielddetails['settinggroup'] . '.' . $fielddetails['varname']);
 				}
 			}

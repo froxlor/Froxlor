@@ -108,7 +108,7 @@ if ($page == 'overview') {
 					$result['path'] = str_replace($userinfo['documentroot'], "/", $result['path']);
 				}
 
-				ask_yesno('extras_reallydelete', $filename, array(
+				\Froxlor\UI\HTML::ask_yesno('extras_reallydelete', $filename, array(
 					'id' => $id,
 					'page' => $page,
 					'action' => $action
@@ -250,7 +250,7 @@ if ($page == 'overview') {
 					's' => $s
 				));
 			} else {
-				ask_yesno('extras_reallydelete_pathoptions', $filename, array(
+				\Froxlor\UI\HTML::ask_yesno('extras_reallydelete_pathoptions', $filename, array(
 					'id' => $id,
 					'page' => $page,
 					'action' => $action
@@ -311,8 +311,8 @@ if ($page == 'overview') {
 				$result['error500path'] = $result['error500path'];
 				$cperlenabled = customerHasPerlEnabled($userinfo['customerid']);
 				/*
-				 * $options_indexes = makeyesno('options_indexes', '1', '0', $result['options_indexes']);
-				 * $options_cgi = makeyesno('options_cgi', '1', '0', $result['options_cgi']);
+				 * $options_indexes = \Froxlor\UI\HTML::makeyesno('options_indexes', '1', '0', $result['options_indexes']);
+				 * $options_cgi = \Froxlor\UI\HTML::makeyesno('options_cgi', '1', '0', $result['options_cgi']);
 				 */
 				$result = \Froxlor\PhpHelper::htmlentities_array($result);
 

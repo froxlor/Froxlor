@@ -230,7 +230,7 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 				's' => $s
 			));
 		} else {
-			ask_yesno('customer_reallyunlock', $filename, array(
+			\Froxlor\UI\HTML::ask_yesno('customer_reallyunlock', $filename, array(
 				'id' => $id,
 				'page' => $page,
 				'action' => $action
@@ -260,7 +260,7 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 				's' => $s
 			));
 		} else {
-			ask_yesno_withcheckbox('admin_customer_reallydelete', 'admin_customer_alsoremovefiles', $filename, array(
+			\Froxlor\UI\HTML::ask_yesno_withcheckbox('admin_customer_reallydelete', 'admin_customer_alsoremovefiles', $filename, array(
 				'id' => $id,
 				'page' => $page,
 				'action' => $action
@@ -282,22 +282,22 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 			$language_options = '';
 
 			foreach ($languages as $language_file => $language_name) {
-				$language_options .= makeoption($language_name, $language_file, Settings::Get('panel.standardlanguage'), true);
+				$language_options .= \Froxlor\UI\HTML::makeoption($language_name, $language_file, Settings::Get('panel.standardlanguage'), true);
 			}
 
-			$diskspace_ul = makecheckbox('diskspace_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
-			$traffic_ul = makecheckbox('traffic_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
-			$subdomains_ul = makecheckbox('subdomains_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
-			$emails_ul = makecheckbox('emails_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
-			$email_accounts_ul = makecheckbox('email_accounts_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
-			$email_forwarders_ul = makecheckbox('email_forwarders_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
-			$email_quota_ul = makecheckbox('email_quota_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
-			$ftps_ul = makecheckbox('ftps_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
-			$mysqls_ul = makecheckbox('mysqls_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
+			$diskspace_ul = \Froxlor\UI\HTML::makecheckbox('diskspace_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
+			$traffic_ul = \Froxlor\UI\HTML::makecheckbox('traffic_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
+			$subdomains_ul = \Froxlor\UI\HTML::makecheckbox('subdomains_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
+			$emails_ul = \Froxlor\UI\HTML::makecheckbox('emails_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
+			$email_accounts_ul = \Froxlor\UI\HTML::makecheckbox('email_accounts_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
+			$email_forwarders_ul = \Froxlor\UI\HTML::makecheckbox('email_forwarders_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
+			$email_quota_ul = \Froxlor\UI\HTML::makecheckbox('email_quota_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
+			$ftps_ul = \Froxlor\UI\HTML::makecheckbox('ftps_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
+			$mysqls_ul = \Froxlor\UI\HTML::makecheckbox('mysqls_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 
-			$gender_options = makeoption($lng['gender']['undef'], 0, true, true, true);
-			$gender_options .= makeoption($lng['gender']['male'], 1, null, true, true);
-			$gender_options .= makeoption($lng['gender']['female'], 2, null, true, true);
+			$gender_options = \Froxlor\UI\HTML::makeoption($lng['gender']['undef'], 0, true, true, true);
+			$gender_options .= \Froxlor\UI\HTML::makeoption($lng['gender']['male'], 1, null, true, true);
+			$gender_options .= \Froxlor\UI\HTML::makeoption($lng['gender']['female'], 2, null, true, true);
 
 			$phpconfigs = array();
 			$configs = Database::query("
@@ -327,10 +327,10 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 				ORDER BY name ASC
 			");
 			if (Database::num_rows() > 0) {
-				$hosting_plans .= makeoption("---", 0, 0, true, true);
+				$hosting_plans .= \Froxlor\UI\HTML::makeoption("---", 0, 0, true, true);
 			}
 			while ($row = $plans->fetch(PDO::FETCH_ASSOC)) {
-				$hosting_plans .= makeoption($row['name'], $row['id'], 0, true, true);
+				$hosting_plans .= \Froxlor\UI\HTML::makeoption($row['name'], $row['id'], 0, true, true);
 			}
 
 			$customer_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/customer/formfield.customer_add.php';
@@ -359,10 +359,10 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 			SELECT * FROM `" . TABLE_PANEL_ADMINS . "`
 			WHERE (`customers` = '-1' OR `customers` > `customers_used`)");
 		Database::pexecute($available_admins_stmt);
-		$admin_select = makeoption("-----", 0, true, true, true);
+		$admin_select = \Froxlor\UI\HTML::makeoption("-----", 0, true, true, true);
 		$admin_select_cnt = 0;
 		while ($available_admin = $available_admins_stmt->fetch()) {
-			$admin_select .= makeoption($available_admin['name'] . " (" . $available_admin['loginname'] . ")", $available_admin['adminid'], null, true, true);
+			$admin_select .= \Froxlor\UI\HTML::makeoption($available_admin['name'] . " (" . $available_admin['loginname'] . ")", $available_admin['adminid'], null, true, true);
 			$admin_select_cnt ++;
 		}
 		/*
@@ -385,7 +385,7 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 				$language_options = '';
 
 				foreach ($languages as $language_file => $language_name) {
-					$language_options .= makeoption($language_name, $language_file, $result['def_language'], true);
+					$language_options .= \Froxlor\UI\HTML::makeoption($language_name, $language_file, $result['def_language'], true);
 				}
 
 				$dec_places = Settings::Get('panel.decimal_places');
@@ -393,56 +393,56 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 				$result['diskspace'] = round($result['diskspace'] / 1024, $dec_places);
 				$result['email'] = $idna_convert->decode($result['email']);
 
-				$diskspace_ul = makecheckbox('diskspace_ul', $lng['customer']['unlimited'], '-1', false, $result['diskspace'], true, true);
+				$diskspace_ul = \Froxlor\UI\HTML::makecheckbox('diskspace_ul', $lng['customer']['unlimited'], '-1', false, $result['diskspace'], true, true);
 				if ($result['diskspace'] == '-1') {
 					$result['diskspace'] = '';
 				}
 
-				$traffic_ul = makecheckbox('traffic_ul', $lng['customer']['unlimited'], '-1', false, $result['traffic'], true, true);
+				$traffic_ul = \Froxlor\UI\HTML::makecheckbox('traffic_ul', $lng['customer']['unlimited'], '-1', false, $result['traffic'], true, true);
 				if ($result['traffic'] == '-1') {
 					$result['traffic'] = '';
 				}
 
-				$subdomains_ul = makecheckbox('subdomains_ul', $lng['customer']['unlimited'], '-1', false, $result['subdomains'], true, true);
+				$subdomains_ul = \Froxlor\UI\HTML::makecheckbox('subdomains_ul', $lng['customer']['unlimited'], '-1', false, $result['subdomains'], true, true);
 				if ($result['subdomains'] == '-1') {
 					$result['subdomains'] = '';
 				}
 
-				$emails_ul = makecheckbox('emails_ul', $lng['customer']['unlimited'], '-1', false, $result['emails'], true, true);
+				$emails_ul = \Froxlor\UI\HTML::makecheckbox('emails_ul', $lng['customer']['unlimited'], '-1', false, $result['emails'], true, true);
 				if ($result['emails'] == '-1') {
 					$result['emails'] = '';
 				}
 
-				$email_accounts_ul = makecheckbox('email_accounts_ul', $lng['customer']['unlimited'], '-1', false, $result['email_accounts'], true, true);
+				$email_accounts_ul = \Froxlor\UI\HTML::makecheckbox('email_accounts_ul', $lng['customer']['unlimited'], '-1', false, $result['email_accounts'], true, true);
 				if ($result['email_accounts'] == '-1') {
 					$result['email_accounts'] = '';
 				}
 
-				$email_forwarders_ul = makecheckbox('email_forwarders_ul', $lng['customer']['unlimited'], '-1', false, $result['email_forwarders'], true, true);
+				$email_forwarders_ul = \Froxlor\UI\HTML::makecheckbox('email_forwarders_ul', $lng['customer']['unlimited'], '-1', false, $result['email_forwarders'], true, true);
 				if ($result['email_forwarders'] == '-1') {
 					$result['email_forwarders'] = '';
 				}
 
-				$email_quota_ul = makecheckbox('email_quota_ul', $lng['customer']['unlimited'], '-1', false, $result['email_quota'], true, true);
+				$email_quota_ul = \Froxlor\UI\HTML::makecheckbox('email_quota_ul', $lng['customer']['unlimited'], '-1', false, $result['email_quota'], true, true);
 				if ($result['email_quota'] == '-1') {
 					$result['email_quota'] = '';
 				}
 
-				$ftps_ul = makecheckbox('ftps_ul', $lng['customer']['unlimited'], '-1', false, $result['ftps'], true, true);
+				$ftps_ul = \Froxlor\UI\HTML::makecheckbox('ftps_ul', $lng['customer']['unlimited'], '-1', false, $result['ftps'], true, true);
 				if ($result['ftps'] == '-1') {
 					$result['ftps'] = '';
 				}
 
-				$mysqls_ul = makecheckbox('mysqls_ul', $lng['customer']['unlimited'], '-1', false, $result['mysqls'], true, true);
+				$mysqls_ul = \Froxlor\UI\HTML::makecheckbox('mysqls_ul', $lng['customer']['unlimited'], '-1', false, $result['mysqls'], true, true);
 				if ($result['mysqls'] == '-1') {
 					$result['mysqls'] = '';
 				}
 
 				$result = \Froxlor\PhpHelper::htmlentities_array($result);
 
-				$gender_options = makeoption($lng['gender']['undef'], 0, ($result['gender'] == '0' ? true : false), true, true);
-				$gender_options .= makeoption($lng['gender']['male'], 1, ($result['gender'] == '1' ? true : false), true, true);
-				$gender_options .= makeoption($lng['gender']['female'], 2, ($result['gender'] == '2' ? true : false), true, true);
+				$gender_options = \Froxlor\UI\HTML::makeoption($lng['gender']['undef'], 0, ($result['gender'] == '0' ? true : false), true, true);
+				$gender_options .= \Froxlor\UI\HTML::makeoption($lng['gender']['male'], 1, ($result['gender'] == '1' ? true : false), true, true);
+				$gender_options .= \Froxlor\UI\HTML::makeoption($lng['gender']['female'], 2, ($result['gender'] == '2' ? true : false), true, true);
 
 				$phpconfigs = array();
 				$configs = Database::query("
@@ -472,10 +472,10 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 					ORDER BY name ASC
 				");
 				if (Database::num_rows() > 0) {
-					$hosting_plans .= makeoption("---", 0, 0, true, true);
+					$hosting_plans .= \Froxlor\UI\HTML::makeoption("---", 0, 0, true, true);
 				}
 				while ($row = $plans->fetch(PDO::FETCH_ASSOC)) {
-					$hosting_plans .= makeoption($row['name'], $row['id'], 0, true, true);
+					$hosting_plans .= \Froxlor\UI\HTML::makeoption($row['name'], $row['id'], 0, true, true);
 				}
 
 				$customer_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/customer/formfield.customer_edit.php';

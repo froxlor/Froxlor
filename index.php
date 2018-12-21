@@ -325,10 +325,10 @@ if ($action == '2fa_entercode') {
 		exit();
 	} else {
 		$language_options = '';
-		$language_options .= makeoption($lng['login']['profile_lng'], 'profile', 'profile', true, true);
+		$language_options .= \Froxlor\UI\HTML::makeoption($lng['login']['profile_lng'], 'profile', 'profile', true, true);
 
 		foreach ($languages as $language_file => $language_name) {
-			$language_options .= makeoption($language_name, $language_file, 'profile', true);
+			$language_options .= \Froxlor\UI\HTML::makeoption($language_name, $language_file, 'profile', true);
 		}
 
 		$smessage = isset($_GET['showmessage']) ? (int) $_GET['showmessage'] : 0;

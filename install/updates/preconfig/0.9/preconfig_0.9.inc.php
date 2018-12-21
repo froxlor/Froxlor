@@ -40,7 +40,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 		$description .= 'This makes it possible to catch all non-existing subdomains with the main vhost but also have the ability to use subdomains for that domain.<br />';
 		$description .= 'If you would like Froxlor to do so with your domains, the update script can set the correct values for existing domains for you. Note: future domains will have wildcard-entries enabled by default no matter how you decide here.';
 		$question = '<strong>Do you want to use wildcard-entries for existing domains?:</strong>&nbsp;';
-		$question .= makeyesno('update_domainwildcardentry', '1', '0', '1');
+		$question .= \Froxlor\UI\HTML::makeyesno('update_domainwildcardentry', '1', '0', '1');
 
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
@@ -58,7 +58,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 		$has_preconfig = true;
 		$description = 'You now have the possibility to define default error-documents for your webserver which replace the default webserver error-messages.';
 		$question = '<strong>Do you want to enable default error-documents?:</strong>&nbsp;';
-		$question .= makeyesno('update_deferr_enable', '1', '0', '0') . '<br /><br />';
+		$question .= \Froxlor\UI\HTML::makeyesno('update_deferr_enable', '1', '0', '0') . '<br /><br />';
 		if (Settings::Get('system.webserver') == 'apache2') {
 			$question .= 'Path/URL for error 500:&nbsp;<input type="text" class="text" name="update_deferr_500" /><br /><br />';
 			$question .= 'Path/URL for error 401:&nbsp;<input type="text" class="text" name="update_deferr_401" /><br /><br />';
@@ -109,7 +109,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 		$has_preconfig = true;
 		$description = 'You can now choose whether customers can select the http-redirect code and which of them acts as default.';
 		$question = '<strong>Allow customer chosen redirects?:</strong>&nbsp;';
-		$question .= makeyesno('update_customredirect_enable', '1', '0', '1') . '<br /><br />';
+		$question .= \Froxlor\UI\HTML::makeyesno('update_customredirect_enable', '1', '0', '1') . '<br /><br />';
 		$question .= '<strong>Select default redirect code (default: empty):</strong>&nbsp;';
 		$question .= '<select name="update_customredirect_default">';
 		$redirects = makeoption('--- (' . $lng['redirect_desc']['rc_default'] . ')', 1, '1');
@@ -146,7 +146,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 		$has_preconfig = true;
 		$description = 'When entering MX servers to Froxlor there was no mail-, imap-, pop3- and smtp-"A record" created. You can now chose whether this should be done or not.';
 		$question = '<strong>Do you want these A-records to be created even with MX servers given?:</strong>&nbsp;';
-		$question .= makeyesno('update_defdns_mailentry', '1', '0', '0');
+		$question .= \Froxlor\UI\HTML::makeyesno('update_defdns_mailentry', '1', '0', '0');
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
 
@@ -200,7 +200,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 		$has_preconfig = true;
 		$description = 'you can now decide whether Froxlor should be reached via hostname/froxlor or directly via the hostname.';
 		$question = '<strong>Do you want Froxlor to be reached directly via the hostname?:</strong>&nbsp;';
-		$question .= makeyesno('update_directlyviahostname', '1', '0', '0');
+		$question .= \Froxlor\UI\HTML::makeyesno('update_directlyviahostname', '1', '0', '0');
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
 
@@ -225,7 +225,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 			$has_preconfig = true;
 			$description = 'You can chose whether you want Froxlor to use FCGID itself too now.';
 			$question = '<strong>Use FCGID for the Froxlor Panel?:</strong>&nbsp;';
-			$question .= makeyesno('update_fcgid_ownvhost', '1', '0', '0') . '<br /><br />';
+			$question .= \Froxlor\UI\HTML::makeyesno('update_fcgid_ownvhost', '1', '0', '0') . '<br /><br />';
 			$question .= '<strong>If \'yes\', please specify local user/group (have to exist, Froxlor does not add them automatically):</strong><br /><br />';
 			$question .= 'Local user:&nbsp;';
 			$question .= '<input type="text" class="text" name="update_fcgid_httpuser" value="froxlorlocal" /><br /><br />';
@@ -239,7 +239,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 		$has_preconfig = true;
 		$description = 'Many apache user will have problems using perl/CGI as the customer docroots are not within the suexec path. Froxlor provides a simple workaround for that.';
 		$question = '<strong>Enable Apache/SuExec/Perl workaround?:</strong>&nbsp;';
-		$question .= makeyesno('update_perl_suexecworkaround', '1', '0', '0') . '<br /><br />';
+		$question .= \Froxlor\UI\HTML::makeyesno('update_perl_suexecworkaround', '1', '0', '0') . '<br /><br />';
 		$question .= '<strong>If \'yes\', please specify a path within the suexec path where Froxlor will create symlinks to customer perl-enabled paths:</strong><br /><br />';
 		$question .= 'Path for symlinks (must be within suexec path):&nbsp;';
 		$question .= '<input type="text" class="text" name="update_perl_suexecpath" value="/var/www/cgi-bin/" /><br />';
@@ -261,7 +261,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 			$has_preconfig = true;
 			$description = 'Froxlor can now limit the number of autoresponder-entries for each user. Here you can set the value which will be available for each customer (Of course you can change the value for each customer separately after the update).';
 			$question = '<strong>How many autoresponders should your customers be able to add?:</strong>&nbsp;';
-			$question .= '<input type="text" class="text" name="update_autoresponder_default" value="0" />&nbsp;' . makecheckbox('update_autoresponder_default', $lng['customer']['unlimited'], '-1', false, 0, true, true) . '<br />';
+			$question .= '<input type="text" class="text" name="update_autoresponder_default" value="0" />&nbsp;' . \Froxlor\UI\HTML::makecheckbox('update_autoresponder_default', $lng['customer']['unlimited'], '-1', false, 0, true, true) . '<br />';
 			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 		}
 	}
@@ -306,7 +306,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 		$has_preconfig = true;
 		$description = 'You can now allow customers to use any of their domains as username for the login.';
 		$question = '<strong>Do you want to enable domain-login for all customers?:</strong>&nbsp;';
-		$question .= makeyesno('update_allow_domain_login', '1', '0', '0');
+		$question .= \Froxlor\UI\HTML::makeyesno('update_allow_domain_login', '1', '0', '0');
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
 
@@ -321,7 +321,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 		$has_preconfig = true;
 		$description = 'Froxlor now features support for php-fpm.';
 		$question = '<strong>Do you want to enable php-fpm?:</strong>&nbsp;';
-		$question .= makeyesno('update_phpfpm_enabled', '1', '0', '0') . '<br /><br />';
+		$question .= \Froxlor\UI\HTML::makeyesno('update_phpfpm_enabled', '1', '0', '0') . '<br /><br />';
 		$question .= 'If \'yes\', please specify the configuration directory:&nbsp;';
 		$question .= '<input type="text" class="text" name="update_phpfpm_configdir" value="/etc/php-fpm.d/" /><br /><br />';
 		$question .= 'Please specify the temporary files directory:&nbsp;';
@@ -354,7 +354,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 			$has_preconfig = true;
 			$description = 'You can chose whether you want Froxlor to use PHP-FPM itself too now.';
 			$question = '<strong>Use PHP-FPM for the Froxlor Panel?:</strong>&nbsp;';
-			$question .= makeyesno('update_phpfpm_enabled_ownvhost', '1', '0', '0') . '<br /><br />';
+			$question .= \Froxlor\UI\HTML::makeyesno('update_phpfpm_enabled_ownvhost', '1', '0', '0') . '<br /><br />';
 			$question .= '<strong>If \'yes\', please specify local user/group (have to exist, Froxlor does not add them automatically):</strong><br /><br />';
 			$question .= 'Local user:&nbsp;';
 			$question .= '<input type="text" class="text" name="update_phpfpm_httpuser" value="' . Settings::Get('system.mod_fcgid_httpuser') . '" /><br /><br />';
@@ -368,7 +368,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 		$has_preconfig = true;
 		$description = 'Select if you want to enable the web- and traffic-reports';
 		$question = '<strong>Enable?:</strong>&nbsp;';
-		$question .= makeyesno('update_system_report_enable', '1', '0', '1') . '<br /><br />';
+		$question .= \Froxlor\UI\HTML::makeyesno('update_system_report_enable', '1', '0', '1') . '<br /><br />';
 		$question .= '<strong>If \'yes\', please specify a percentage value for web- and traffic when reports are to be sent:</strong><br /><br />';
 		$question .= 'Webusage warning level:&nbsp;';
 		$question .= '<input type="text" class="text" name="update_system_report_webmax" value="90" /><br /><br />';
@@ -418,7 +418,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 			$description .= '<pre>LoadModule authz_core_module modules/mod_authz_core.so
 					LoadModule authz_host_module modules/mod_authz_host.so</pre><br />';
 			$question = '<strong>Do you want to enable the Apache-2.4 modification?:</strong>&nbsp;';
-			$question .= makeyesno('update_system_apache24', '1', '0', '0');
+			$question .= \Froxlor\UI\HTML::makeyesno('update_system_apache24', '1', '0', '0');
 			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 		} elseif (Settings::Get('system.webserver') == 'nginx') {
 			$has_preconfig = true;
@@ -437,7 +437,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 		$description .= 'You can enable or disable this feature anytime from settings -> system settings.<br />';
 
 		$question = '<strong>Do you want to automatically append the domain-name to the documentroot of newly created domains?:</strong>&nbsp;';
-		$question .= makeyesno('update_system_documentroot_use_default_value', '1', '0', '0');
+		$question .= \Froxlor\UI\HTML::makeyesno('update_system_documentroot_use_default_value', '1', '0', '0');
 
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
@@ -466,7 +466,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 			$has_preconfig = true;
 			$description = 'Standard-subdomains can now be hidden from the php-configuration overview.<br />';
 			$question = '<strong>Do you want to hide the standard-subdomains (this can be changed in the settings any time)?:</strong>&nbsp;';
-			$question .= makeyesno('hide_stdsubdomains', '1', '0', '0');
+			$question .= \Froxlor\UI\HTML::makeyesno('hide_stdsubdomains', '1', '0', '0');
 			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 		}
 	}
@@ -475,8 +475,8 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 		$has_preconfig = true;
 		$description = 'You can now decide whether admins/customers are able to change the theme<br />';
 		$question = '<strong>If you want to disallow theme-changing, select "no" from the dropdowns:</strong>&nbsp;';
-		$question .= "Admins: " . makeyesno('allow_themechange_a', '1', '0', '1') . '&nbsp;&nbsp;';
-		$question .= "Customers: " . makeyesno('allow_themechange_c', '1', '0', '1');
+		$question .= "Admins: " . \Froxlor\UI\HTML::makeyesno('allow_themechange_a', '1', '0', '1') . '&nbsp;&nbsp;';
+		$question .= "Customers: " . \Froxlor\UI\HTML::makeyesno('allow_themechange_c', '1', '0', '1');
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
 
@@ -543,9 +543,9 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 		$has_preconfig = true;
 		$description = 'You can enable/disable error-reporting for admins and customers!<br /><br />';
 		$question = '<strong>Do you want to enable error-reporting for admins? (default: yes):</strong>&nbsp;';
-		$question .= makeyesno('update_error_report_admin', '1', '0', '1') . '<br />';
+		$question .= \Froxlor\UI\HTML::makeyesno('update_error_report_admin', '1', '0', '1') . '<br />';
 		$question .= '<strong>Do you want to enable error-reporting for customers? (default: no):</strong>&nbsp;';
-		$question .= makeyesno('update_error_report_customer', '1', '0', '0');
+		$question .= \Froxlor\UI\HTML::makeyesno('update_error_report_customer', '1', '0', '0');
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
 
@@ -553,7 +553,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 		$has_preconfig = true;
 		$description = 'You can enable/disable the display/usage of the news-feed for admins<br /><br />';
 		$question = '<strong>Do you want to enable the news-feed for admins? (default: yes):</strong>&nbsp;';
-		$question .= makeyesno('update_admin_news_feed', '1', '0', '1') . '<br />';
+		$question .= \Froxlor\UI\HTML::makeyesno('update_admin_news_feed', '1', '0', '1') . '<br />';
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
 
@@ -561,7 +561,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 		$has_preconfig = true;
 		$description = 'To enable logging of the mail-traffic, you need to set the following settings accordingly<br /><br />';
 		$question = '<strong>Do you want to enable the traffic collection for mail? (default: yes):</strong>&nbsp;';
-		$question .= makeyesno('mailtraffic_enabled', '1', '0', '1') . '<br />';
+		$question .= \Froxlor\UI\HTML::makeyesno('mailtraffic_enabled', '1', '0', '1') . '<br />';
 		$question .= '<strong>Mail Transfer Agent</strong><br />';
 		$question .= 'Type of your MTA:&nbsp;';
 		$question .= '<select name="mtaserver">';
@@ -609,7 +609,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 		$has_preconfig = true;
 		$description = 'You can enable/disable the display/usage of the custom newsfeed for customers.<br /><br />';
 		$question = '<strong>Do you want to enable the custom newsfeed for customer? (default: no):</strong>&nbsp;';
-		$question .= makeyesno('customer_show_news_feed', '1', '0', '0') . '<br />';
+		$question .= \Froxlor\UI\HTML::makeyesno('customer_show_news_feed', '1', '0', '0') . '<br />';
 		$question .= '<strong>You have to set the URL for your RSS-feed here, if you have chosen to enable the custom newsfeed on the customer-dashboard:</strong>&nbsp;';
 		$question .= '<input type="text" class="text" name="customer_news_feed_url" value="" /><br />';
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
@@ -621,7 +621,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 			$has_preconfig = true;
 			$description = 'You can enable/disable the generation of the bind-zone / config for the system hostname.<br /><br />';
 			$question = '<strong>Do you want to generate a bind-zone for the system-hostname? (default: no):</strong>&nbsp;';
-			$question .= makeyesno('dns_createhostnameentry', '1', '0', '0') . '<br />';
+			$question .= \Froxlor\UI\HTML::makeyesno('dns_createhostnameentry', '1', '0', '0') . '<br />';
 			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 		}
 	}
@@ -630,7 +630,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 		$has_preconfig = true;
 		$description = 'You can chose whether you want to receive an e-mail on cronjob errors. Keep in mind that this can lead to an e-mail being sent every 5 minutes.<br /><br />';
 		$question = '<strong>Do you want to receive cron-errors via mail? (default: no):</strong>&nbsp;';
-		$question .= makeyesno('system_send_cron_errors', '1', '0', '0') . '<br />';
+		$question .= \Froxlor\UI\HTML::makeyesno('system_send_cron_errors', '1', '0', '0') . '<br />';
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
 
@@ -652,7 +652,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 		$has_preconfig = true;
 		$description = 'You can chose whether you want to enable or disable our Let\'s Encrypt implementation.<br />Please remember that you need to go through the webserver-configuration when enabled because this feature needs a special configuration.<br /><br />';
 		$question = '<strong>Do you want to enable Let\'s Encrypt? (default: yes):</strong>&nbsp;';
-		$question .= makeyesno('enable_letsencrypt', '1', '0', '1') . '<br />';
+		$question .= \Froxlor\UI\HTML::makeyesno('enable_letsencrypt', '1', '0', '1') . '<br />';
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
 
@@ -660,7 +660,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 		$has_preconfig = true;
 		$description = 'You can chose whether you want to enable or disable our backup function.<br /><br />';
 		$question = '<strong>Do you want to enable Backup? (default: no):</strong>&nbsp;';
-		$question .= makeyesno('enable_backup', '1', '0', '0') . '<br />';
+		$question .= \Froxlor\UI\HTML::makeyesno('enable_backup', '1', '0', '0') . '<br />';
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
 
@@ -668,7 +668,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 		$has_preconfig = true;
 		$description = 'You can chose whether you want to enable or disable our DNS editor<br /><br />';
 		$question = '<strong>Do you want to enable the DNS editor? (default: no):</strong>&nbsp;';
-		$question .= makeyesno('enable_dns', '1', '0', '0') . '<br />';
+		$question .= \Froxlor\UI\HTML::makeyesno('enable_dns', '1', '0', '0') . '<br />';
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
 
@@ -697,15 +697,15 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 		$has_preconfig = true;
 		$description = 'Specify SMTP settings which froxlor should use to send mail (optional)<br /><br />';
 		$question = '<strong>Enable sending mails via SMTP?</strong><br />';
-		$question .= makeyesno('smtp_enable', '1', '0', '0') . '<br />';
+		$question .= \Froxlor\UI\HTML::makeyesno('smtp_enable', '1', '0', '0') . '<br />';
 		$question .= '<strong>Enable sending mails via SMTP?</strong><br />';
 		$question .= '<input type="text" class="text" name="smtp_host" value="localhost" /><br />';
 		$question .= '<strong>TCP port to connect to?</strong><br />';
 		$question .= '<input type="text" class="text" name="smtp_port" value="25" /><br />';
 		$question .= '<strong>Enable TLS encryption?</strong><br />';
-		$question .= makeyesno('smtp_usetls', '1', '0', '1') . '<br />';
+		$question .= \Froxlor\UI\HTML::makeyesno('smtp_usetls', '1', '0', '1') . '<br />';
 		$question .= '<strong>Enable SMTP authentication?</strong><br />';
-		$question .= makeyesno('smtp_auth', '1', '0', '1') . '<br />';
+		$question .= \Froxlor\UI\HTML::makeyesno('smtp_auth', '1', '0', '1') . '<br />';
 		$question .= '<strong>SMTP user?</strong><br />';
 		$question .= '<input type="text" class="text" name="smtp_user" value="" /><br />';
 		$question .= '<strong>SMTP password?</strong><br />';
@@ -717,7 +717,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 		$has_preconfig = true;
 		$description = 'DEBIAN/UBUNTU ONLY: Enable usage of libnss-extrausers as alternative to libnss-mysql (NOTE: if enabled, go through the configuration steps right after the update!!!)<br /><br />';
 		$question = '<strong>Enable usage of libnss-extrausers?</strong><br />';
-		$question .= makeyesno('system_nssextrausers', '1', '0', '0') . '<br />';
+		$question .= \Froxlor\UI\HTML::makeyesno('system_nssextrausers', '1', '0', '0') . '<br />';
 		eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 	}
 
@@ -726,7 +726,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 			$has_preconfig = true;
 			$description = 'Chose whether you want to disable the Let\'s Encrypt selfcheck as it causes false positives for some configurations.<br /><br />';
 			$question = '<strong>Disable Let\'s Encrypt self-check?</strong><br />';
-			$question .= makeyesno('system_disable_le_selfcheck', '1', '0', '0') . '<br />';
+			$question .= \Froxlor\UI\HTML::makeyesno('system_disable_le_selfcheck', '1', '0', '0') . '<br />';
 			eval("\$return.=\"" . getTemplate("update/preconfigitem") . "\";");
 		}
 	}

@@ -116,7 +116,7 @@ $type_select_values = array(
 );
 asort($type_select_values);
 foreach ($type_select_values as $_type) {
-	$type_select .= makeoption($_type, $_type, $type);
+	$type_select .= \Froxlor\UI\HTML::makeoption($_type, $_type, $type);
 }
 
 eval("\$record_list=\"" . \Froxlor\UI\Template::getTemplate("dns_editor/list", true) . "\";");

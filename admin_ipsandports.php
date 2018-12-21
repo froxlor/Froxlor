@@ -94,7 +94,7 @@ if ($page == 'ipsandports' || $page == 'overview') {
 					's' => $s
 				));
 			} else {
-				ask_yesno('admin_ip_reallydelete', $filename, array(
+				\Froxlor\UI\HTML::ask_yesno('admin_ip_reallydelete', $filename, array(
 					'id' => $id,
 					'page' => $page,
 					'action' => $action

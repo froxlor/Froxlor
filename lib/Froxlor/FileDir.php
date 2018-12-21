@@ -609,13 +609,13 @@ class FileDir
 							'used' => $matches[2],
 							'soft' => $matches[3],
 							'hard' => $matches[4],
-							'grace' => (isFreeBSD() ? '0' : $matches[5])
+							'grace' => (self::isFreeBSD() ? '0' : $matches[5])
 						),
 						'file' => array(
 							'used' => $matches[6],
 							'soft' => $matches[7],
 							'hard' => $matches[8],
-							'grace' => (isFreeBSD() ? '0' : $matches[9])
+							'grace' => (self::isFreeBSD() ? '0' : $matches[9])
 						)
 					);
 				}

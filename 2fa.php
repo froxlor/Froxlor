@@ -78,7 +78,7 @@ if ($userinfo['type_2fa'] == '0') {
 	);
 	asort($type_select_values);
 	foreach ($type_select_values as $_val => $_type) {
-		$type_select .= makeoption($_type, $_val);
+		$type_select .= \Froxlor\UI\HTML::makeoption($_type, $_val);
 	}
 } elseif ($userinfo['type_2fa'] == '1') {
 	// email 2fa enabled

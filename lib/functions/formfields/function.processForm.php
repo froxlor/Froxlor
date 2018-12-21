@@ -78,7 +78,7 @@ function processForm(&$form, &$input, $url_params = array())
 									} else {
 										$filename = '';
 									}
-									ask_yesno($question, $filename, array_merge($url_params, $submitted_fields, array(
+									\Froxlor\UI\HTML::ask_yesno($question, $filename, array_merge($url_params, $submitted_fields, array(
 										$question => $question
 									)), $targetname);
 								}
@@ -182,7 +182,7 @@ function processFormEx(&$form, &$input, $url_params = array(), $part, $settings_
 											} else {
 												$filename = '';
 											}
-											ask_yesno($question, $filename, array_merge($url_params, $submitted_fields, array(
+											\Froxlor\UI\HTML::ask_yesno($question, $filename, array_merge($url_params, $submitted_fields, array(
 												$question => $question
 											)), $targetname);
 										}

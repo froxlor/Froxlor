@@ -234,7 +234,7 @@ if ($page == 'overview') {
 
 		$language_options = '';
 		foreach ($languages as $language_file => $language_name) {
-			$language_options .= makeoption($language_name, $language_file, $default_lang, true);
+			$language_options .= \Froxlor\UI\HTML::makeoption($language_name, $language_file, $default_lang, true);
 		}
 
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate('index/change_language') . "\";");
@@ -273,7 +273,7 @@ if ($page == 'overview') {
 		$theme_options = '';
 		$themes_avail = getThemes();
 		foreach ($themes_avail as $t => $d) {
-			$theme_options .= makeoption($d, $t, $default_theme, true);
+			$theme_options .= \Froxlor\UI\HTML::makeoption($d, $t, $default_theme, true);
 		}
 
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate('index/change_theme') . "\";");
