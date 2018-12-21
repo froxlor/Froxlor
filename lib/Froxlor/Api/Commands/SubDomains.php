@@ -1,8 +1,8 @@
 <?php
 namespace Froxlor\Api\Commands;
 
-use Froxlor\Database as Database;
-use Froxlor\Settings as Settings;
+use Froxlor\Database\Database;
+use Froxlor\Settings;
 
 /**
  * This file is part of the Froxlor project.
@@ -99,7 +99,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			$subdomain = $idna_convert->encode(preg_replace(array(
 				'/\:(\d)+$/',
 				'/^https?\:\/\//'
-			), '', validate($subdomain, 'subdomain', '', 'subdomainiswrong', array(), true)));
+			), '', \Froxlor\Validate\Validate::validate($subdomain, 'subdomain', '', 'subdomainiswrong', array(), true)));
 
 			// merge the two parts together
 			$completedomain = $subdomain . '.' . $domain;
@@ -859,7 +859,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			$path = $url;
 			$_doredirect = true;
 		} else {
-			$path = validate($path, 'path', '', '', array(), true);
+			$path = \Froxlor\Validate\Validate::validate($path, 'path', '', '', array(), true);
 		}
 
 		// check whether path is a real path

@@ -60,11 +60,11 @@ class DirProtections extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Res
 		$authname = $this->getParam('directory_authname', true, '');
 
 		// validation
-		$path = \Froxlor\FileDir::makeCorrectDir(validate($path, 'path', '', '', array(), true));
+		$path = \Froxlor\FileDir::makeCorrectDir(\Froxlor\Validate\Validate::validate($path, 'path', '', '', array(), true));
 		$path = \Froxlor\FileDir::makeCorrectDir($customer['documentroot'] . '/' . $path);
-		$username = validate($username, 'username', '/^[a-zA-Z0-9][a-zA-Z0-9\-_]+\$?$/', '', array(), true);
-		$authname = validate($authname, 'directory_authname', '/^[a-zA-Z0-9][a-zA-Z0-9\-_ ]+\$?$/', '', array(), true);
-		validate($password, 'password', '', '', array(), true);
+		$username = \Froxlor\Validate\Validate::validate($username, 'username', '/^[a-zA-Z0-9][a-zA-Z0-9\-_]+\$?$/', '', array(), true);
+		$authname = \Froxlor\Validate\Validate::validate($authname, 'directory_authname', '/^[a-zA-Z0-9][a-zA-Z0-9\-_ ]+\$?$/', '', array(), true);
+		\Froxlor\Validate\Validate::validate($password, 'password', '', '', array(), true);
 
 		// check for duplicate usernames for the path
 		$username_path_check_stmt = Database::prepare("
@@ -226,8 +226,8 @@ class DirProtections extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Res
 		$customer = $this->getCustomerData();
 
 		// validation
-		$authname = validate($authname, 'directory_authname', '/^[a-zA-Z0-9][a-zA-Z0-9\-_ ]+\$?$/', '', array(), true);
-		validate($password, 'password', '', '', array(), true);
+		$authname = \Froxlor\Validate\Validate::validate($authname, 'directory_authname', '/^[a-zA-Z0-9][a-zA-Z0-9\-_ ]+\$?$/', '', array(), true);
+		\Froxlor\Validate\Validate::validate($password, 'password', '', '', array(), true);
 
 		$upd_query = "";
 		$upd_params = array(

@@ -74,7 +74,7 @@ class CustomerBackups extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 		$customer = $this->getCustomerData();
 
 		// validation
-		$path = \Froxlor\FileDir::makeCorrectDir(validate($path, 'path', '', '', array(), true));
+		$path = \Froxlor\FileDir::makeCorrectDir(\Froxlor\Validate\Validate::validate($path, 'path', '', '', array(), true));
 		$userpath = $path;
 		$path = \Froxlor\FileDir::makeCorrectDir($customer['documentroot'] . '/' . $path);
 

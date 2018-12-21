@@ -96,8 +96,8 @@ class Cronjobs extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceE
 			if ($isactive != 1) {
 				$isactive = 0;
 			}
-			$interval_value = validate($interval_value, 'interval_value', '/^([0-9]+)$/Di', 'stringisempty', array(), true);
-			$interval_interval = validate($interval_interval, 'interval_interval', '', '', array(), true);
+			$interval_value = \Froxlor\Validate\Validate::validate($interval_value, 'interval_value', '/^([0-9]+)$/Di', 'stringisempty', array(), true);
+			$interval_interval = \Froxlor\Validate\Validate::validate($interval_interval, 'interval_interval', '', '', array(), true);
 
 			// put together interval value
 			$interval = $interval_value . ' ' . strtoupper($interval_interval);

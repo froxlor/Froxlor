@@ -67,21 +67,21 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 			$ftpdomain = $this->getParam('ftp_domain', true, '');
 
 			// validation
-			$password = validate($password, 'password', '', '', array(), true);
+			$password = \Froxlor\Validate\Validate::validate($password, 'password', '', '', array(), true);
 			$password = validatePassword($password, true);
-			$description = validate(trim($description), 'description', '', '', array(), true);
+			$description = \Froxlor\Validate\Validate::validate(trim($description), 'description', '', '', array(), true);
 
 			if (Settings::Get('system.allow_customer_shell') == '1') {
-				$shell = validate(trim($shell), 'shell', '', '', array(), true);
+				$shell = \Froxlor\Validate\Validate::validate(trim($shell), 'shell', '', '', array(), true);
 			} else {
 				$shell = "/bin/false";
 			}
 
 			if (Settings::Get('customer.ftpatdomain') == '1') {
-				$ftpusername = validate(trim($ftpusername), 'username', '/^[a-zA-Z0-9][a-zA-Z0-9\-_]+\$?$/', '', array(), true);
+				$ftpusername = \Froxlor\Validate\Validate::validate(trim($ftpusername), 'username', '/^[a-zA-Z0-9][a-zA-Z0-9\-_]+\$?$/', '', array(), true);
 				if (substr($ftpdomain, 0, 4) != 'xn--') {
 					$idna_convert = new \Froxlor\Idna\IdnaWrapper();
-					$ftpdomain = $idna_convert->encode(validate($ftpdomain, 'domain', '', '', array(), true));
+					$ftpdomain = $idna_convert->encode(\Froxlor\Validate\Validate::validate($ftpdomain, 'domain', '', '', array(), true));
 				}
 			}
 
@@ -338,11 +338,11 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 		$shell = $this->getParam('shell', true, $result['shell']);
 
 		// validation
-		$password = validate($password, 'password', '', '', array(), true);
-		$description = validate(trim($description), 'description', '', '', array(), true);
+		$password = \Froxlor\Validate\Validate::validate($password, 'password', '', '', array(), true);
+		$description = \Froxlor\Validate\Validate::validate(trim($description), 'description', '', '', array(), true);
 
 		if (Settings::Get('system.allow_customer_shell') == '1') {
-			$shell = validate(trim($shell), 'shell', '', '', array(), true);
+			$shell = \Froxlor\Validate\Validate::validate(trim($shell), 'shell', '', '', array(), true);
 		} else {
 			$shell = "/bin/false";
 		}

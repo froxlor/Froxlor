@@ -648,8 +648,8 @@ if ($page == 'domains' || $page == 'overview') {
 		if (isset($_POST['send']) && $_POST['send'] == 'send') {
 
 			$customerid = intval($_POST['customerid']);
-			$separator = validate($_POST['separator'], 'separator');
-			$offset = (int) validate($_POST['offset'], 'offset', "/[0-9]/i");
+			$separator = \Froxlor\Validate\Validate::validate($_POST['separator'], 'separator');
+			$offset = (int) \Froxlor\Validate\Validate::validate($_POST['offset'], 'offset', "/[0-9]/i");
 
 			$file_name = $_FILES['file']['tmp_name'];
 

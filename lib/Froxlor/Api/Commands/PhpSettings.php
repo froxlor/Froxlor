@@ -1,8 +1,8 @@
 <?php
 namespace Froxlor\Api\Commands;
 
-use Froxlor\Database as Database;
-use Froxlor\Settings as Settings;
+use Froxlor\Database\Database;
+use Froxlor\Settings;
 
 /**
  * This file is part of the Froxlor project.
@@ -235,20 +235,20 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			$limit_extensions = $this->getParam('limit_extensions', true, $def_fpmconfig['limit_extensions']);
 
 			// validation
-			$description = validate($description, 'description', '', '', array(), true);
-			$phpsettings = validate(str_replace("\r\n", "\n", $phpsettings), 'phpsettings', '/^[^\0]*$/', '', array(), true);
+			$description = \Froxlor\Validate\Validate::validate($description, 'description', '', '', array(), true);
+			$phpsettings = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $phpsettings), 'phpsettings', '/^[^\0]*$/', '', array(), true);
 			if (Settings::Get('system.mod_fcgid') == 1) {
-				$binary = \Froxlor\FileDir::makeCorrectFile(validate($binary, 'binary', '', '', array(), true));
-				$file_extensions = validate($file_extensions, 'file_extensions', '/^[a-zA-Z0-9\s]*$/', '', array(), true);
-				$mod_fcgid_starter = validate($mod_fcgid_starter, 'mod_fcgid_starter', '/^[0-9]*$/', '', array(
+				$binary = \Froxlor\FileDir::makeCorrectFile(\Froxlor\Validate\Validate::validate($binary, 'binary', '', '', array(), true));
+				$file_extensions = \Froxlor\Validate\Validate::validate($file_extensions, 'file_extensions', '/^[a-zA-Z0-9\s]*$/', '', array(), true);
+				$mod_fcgid_starter = \Froxlor\Validate\Validate::validate($mod_fcgid_starter, 'mod_fcgid_starter', '/^[0-9]*$/', '', array(
 					'-1',
 					''
 				), true);
-				$mod_fcgid_maxrequests = validate($mod_fcgid_maxrequests, 'mod_fcgid_maxrequests', '/^[0-9]*$/', '', array(
+				$mod_fcgid_maxrequests = \Froxlor\Validate\Validate::validate($mod_fcgid_maxrequests, 'mod_fcgid_maxrequests', '/^[0-9]*$/', '', array(
 					'-1',
 					''
 				), true);
-				$mod_fcgid_umask = validate($mod_fcgid_umask, 'mod_fcgid_umask', '/^[0-9]*$/', '', array(), true);
+				$mod_fcgid_umask = \Froxlor\Validate\Validate::validate($mod_fcgid_umask, 'mod_fcgid_umask', '/^[0-9]*$/', '', array(), true);
 				// disable fpm stuff
 				$fpm_config_id = 1;
 				$fpm_enableslowlog = 0;
@@ -257,8 +257,8 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 				$fpm_pass_authorizationheader = 0;
 				$override_fpmconfig = 0;
 			} elseif (Settings::Get('phpfpm.enabled') == 1) {
-				$fpm_reqtermtimeout = validate($fpm_reqtermtimeout, 'phpfpm_reqtermtimeout', '/^([0-9]+)(|s|m|h|d)$/', '', array(), true);
-				$fpm_reqslowtimeout = validate($fpm_reqslowtimeout, 'phpfpm_reqslowtimeout', '/^([0-9]+)(|s|m|h|d)$/', '', array(), true);
+				$fpm_reqtermtimeout = \Froxlor\Validate\Validate::validate($fpm_reqtermtimeout, 'phpfpm_reqtermtimeout', '/^([0-9]+)(|s|m|h|d)$/', '', array(), true);
+				$fpm_reqslowtimeout = \Froxlor\Validate\Validate::validate($fpm_reqslowtimeout, 'phpfpm_reqslowtimeout', '/^([0-9]+)(|s|m|h|d)$/', '', array(), true);
 				if (! in_array($pmanager, array(
 					'static',
 					'dynamic',
@@ -269,7 +269,7 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 				if (empty($limit_extensions)) {
 					$limit_extensions = '.php';
 				}
-				$limit_extensions = validate($limit_extensions, 'limit_extensions', '/^(\.[a-z]([a-z0-9]+)\ ?)+$/', '', array(), true);
+				$limit_extensions = \Froxlor\Validate\Validate::validate($limit_extensions, 'limit_extensions', '/^(\.[a-z]([a-z0-9]+)\ ?)+$/', '', array(), true);
 
 				// disable fcgid stuff
 				$binary = '/usr/bin/php-cgi';
@@ -430,20 +430,20 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			$limit_extensions = $this->getParam('limit_extensions', true, $result['limit_extensions']);
 
 			// validation
-			$description = validate($description, 'description', '', '', array(), true);
-			$phpsettings = validate(str_replace("\r\n", "\n", $phpsettings), 'phpsettings', '/^[^\0]*$/', '', array(), true);
+			$description = \Froxlor\Validate\Validate::validate($description, 'description', '', '', array(), true);
+			$phpsettings = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $phpsettings), 'phpsettings', '/^[^\0]*$/', '', array(), true);
 			if (Settings::Get('system.mod_fcgid') == 1) {
-				$binary = \Froxlor\FileDir::makeCorrectFile(validate($binary, 'binary', '', '', array(), true));
-				$file_extensions = validate($file_extensions, 'file_extensions', '/^[a-zA-Z0-9\s]*$/', '', array(), true);
-				$mod_fcgid_starter = validate($mod_fcgid_starter, 'mod_fcgid_starter', '/^[0-9]*$/', '', array(
+				$binary = \Froxlor\FileDir::makeCorrectFile(\Froxlor\Validate\Validate::validate($binary, 'binary', '', '', array(), true));
+				$file_extensions = \Froxlor\Validate\Validate::validate($file_extensions, 'file_extensions', '/^[a-zA-Z0-9\s]*$/', '', array(), true);
+				$mod_fcgid_starter = \Froxlor\Validate\Validate::validate($mod_fcgid_starter, 'mod_fcgid_starter', '/^[0-9]*$/', '', array(
 					'-1',
 					''
 				), true);
-				$mod_fcgid_maxrequests = validate($mod_fcgid_maxrequests, 'mod_fcgid_maxrequests', '/^[0-9]*$/', '', array(
+				$mod_fcgid_maxrequests = \Froxlor\Validate\Validate::validate($mod_fcgid_maxrequests, 'mod_fcgid_maxrequests', '/^[0-9]*$/', '', array(
 					'-1',
 					''
 				), true);
-				$mod_fcgid_umask = validate($mod_fcgid_umask, 'mod_fcgid_umask', '/^[0-9]*$/', '', array(), true);
+				$mod_fcgid_umask = \Froxlor\Validate\Validate::validate($mod_fcgid_umask, 'mod_fcgid_umask', '/^[0-9]*$/', '', array(), true);
 				// disable fpm stuff
 				$fpm_config_id = 1;
 				$fpm_enableslowlog = 0;
@@ -452,8 +452,8 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 				$fpm_pass_authorizationheader = 0;
 				$override_fpmconfig = 0;
 			} elseif (Settings::Get('phpfpm.enabled') == 1) {
-				$fpm_reqtermtimeout = validate($fpm_reqtermtimeout, 'phpfpm_reqtermtimeout', '/^([0-9]+)(|s|m|h|d)$/', '', array(), true);
-				$fpm_reqslowtimeout = validate($fpm_reqslowtimeout, 'phpfpm_reqslowtimeout', '/^([0-9]+)(|s|m|h|d)$/', '', array(), true);
+				$fpm_reqtermtimeout = \Froxlor\Validate\Validate::validate($fpm_reqtermtimeout, 'phpfpm_reqtermtimeout', '/^([0-9]+)(|s|m|h|d)$/', '', array(), true);
+				$fpm_reqslowtimeout = \Froxlor\Validate\Validate::validate($fpm_reqslowtimeout, 'phpfpm_reqslowtimeout', '/^([0-9]+)(|s|m|h|d)$/', '', array(), true);
 				if (! in_array($pmanager, array(
 					'static',
 					'dynamic',
@@ -464,7 +464,7 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 				if (empty($limit_extensions)) {
 					$limit_extensions = '.php';
 				}
-				$limit_extensions = validate($limit_extensions, 'limit_extensions', '/^(\.[a-z]([a-z0-9]+)\ ?)+$/', '', array(), true);
+				$limit_extensions = \Froxlor\Validate\Validate::validate($limit_extensions, 'limit_extensions', '/^(\.[a-z]([a-z0-9]+)\ ?)+$/', '', array(), true);
 
 				// disable fcgid stuff
 				$binary = '/usr/bin/php-cgi';

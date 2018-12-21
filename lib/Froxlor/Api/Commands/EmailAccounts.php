@@ -64,7 +64,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 			$sendinfomail = $this->getBoolParam('sendinfomail', true, 1);
 
 			// validation
-			$quota = validate($quota, 'email_quota', '/^\d+$/', 'vmailquotawrong', array(), true);
+			$quota = \Froxlor\Validate\Validate::validate($quota, 'email_quota', '/^\d+$/', 'vmailquotawrong', array(), true);
 
 			// get needed customer info to reduce the email-account-counter by one
 			$customer = $this->getCustomerData('email_accounts');
@@ -84,7 +84,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 			$email_full = $result['email_full'];
 			$idna_convert = new \Froxlor\Idna\IdnaWrapper();
 			$username = $idna_convert->decode($email_full);
-			$password = validate($email_password, 'password', '', '', array(), true);
+			$password = \Froxlor\Validate\Validate::validate($email_password, 'password', '', '', array(), true);
 			$password = validatePassword($password, true);
 
 			if ($result['popaccountid'] != 0) {
@@ -99,7 +99,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 
 			// alternative email address to send info to
 			if (Settings::Get('panel.sendalternativemail') == 1) {
-				$alternative_email = $idna_convert->encode(validate($alternative_email, 'alternative_email', '', '', array(), true));
+				$alternative_email = $idna_convert->encode(\Froxlor\Validate\Validate::validate($alternative_email, 'alternative_email', '', '', array(), true));
 				if (! validateEmail($alternative_email)) {
 					\Froxlor\UI\Response::standard_error('emailiswrong', $alternative_email, true);
 				}
@@ -335,7 +335,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 		$customer = $this->getCustomerData();
 
 		// validation
-		$quota = validate($quota, 'email_quota', '/^\d+$/', 'vmailquotawrong', array(), true);
+		$quota = \Froxlor\Validate\Validate::validate($quota, 'email_quota', '/^\d+$/', 'vmailquotawrong', array(), true);
 
 		$upd_query = "";
 		$upd_params = array(

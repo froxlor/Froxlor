@@ -119,7 +119,7 @@ if ($page == 'overview') {
 	eval("echo \"" . \Froxlor\UI\Template::getTemplate('index/index') . "\";");
 } elseif ($page == 'change_password') {
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
-		$old_password = validate($_POST['old_password'], 'old password');
+		$old_password = \Froxlor\Validate\Validate::validate($_POST['old_password'], 'old password');
 		if (! validatePasswordLogin($userinfo, $old_password, TABLE_PANEL_CUSTOMERS, 'customerid')) {
 			\Froxlor\UI\Response::standard_error('oldpasswordnotcorrect');
 		}
@@ -202,7 +202,7 @@ if ($page == 'overview') {
 	}
 } elseif ($page == 'change_language') {
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
-		$def_language = validate($_POST['def_language'], 'default language');
+		$def_language = \Froxlor\Validate\Validate::validate($_POST['def_language'], 'default language');
 		if (isset($languages[$def_language])) {
 			try {
 				Customers::getLocal($userinfo, array(
@@ -241,7 +241,7 @@ if ($page == 'overview') {
 	}
 } elseif ($page == 'change_theme') {
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
-		$theme = validate($_POST['theme'], 'theme');
+		$theme = \Froxlor\Validate\Validate::validate($_POST['theme'], 'theme');
 		try {
 			Customers::getLocal($userinfo, array(
 				'id' => $userinfo['customerid'],

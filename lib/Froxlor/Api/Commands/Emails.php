@@ -1,8 +1,8 @@
 <?php
 namespace Froxlor\Api\Commands;
 
-use Froxlor\Database as Database;
-use Froxlor\Settings as Settings;
+use Froxlor\Database\Database;
+use Froxlor\Settings;
 
 /**
  * This file is part of the Froxlor project.
@@ -58,7 +58,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			// validation
 			if (substr($domain, 0, 4) != 'xn--') {
 				$idna_convert = new \Froxlor\Idna\IdnaWrapper();
-				$domain = $idna_convert->encode(validate($domain, 'domain', '', '', array(), true));
+				$domain = $idna_convert->encode(\Froxlor\Validate\Validate::validate($domain, 'domain', '', '', array(), true));
 			}
 
 			// check domain and whether it's an email-enabled domain

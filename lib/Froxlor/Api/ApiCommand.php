@@ -176,7 +176,7 @@ abstract class ApiCommand extends ApiParameter
 		}
 
 		// last but not least include language references file
-		include_once makeSecurePath(\Froxlor\Froxlor::getInstallDir() . '/lng/lng_references.php');
+		include_once \Froxlor\FileDir::makeSecurePath(\Froxlor\Froxlor::getInstallDir() . '/lng/lng_references.php');
 
 		// set array for ApiCommand
 		$this->lng = $lng;

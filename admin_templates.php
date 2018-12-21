@@ -207,16 +207,16 @@ if ($action == '') {
 
 	if (isset($_POST['prepare']) && $_POST['prepare'] == 'prepare') {
 		// email templates
-		$language = htmlentities(validate($_POST['language'], 'language', '/^[^\r\n\0"\']+$/', 'nolanguageselect'));
-		$template = validate($_POST['template'], 'template');
+		$language = htmlentities(\Froxlor\Validate\Validate::validate($_POST['language'], 'language', '/^[^\r\n\0"\']+$/', 'nolanguageselect'));
+		$template = \Froxlor\Validate\Validate::validate($_POST['template'], 'template');
 
 		$lng_bak = $lng;
 		foreach ($langs['English'] as $key => $value) {
-			include_once makeSecurePath($value['file']);
+			include_once \Froxlor\FileDir::makeSecurePath($value['file']);
 		}
 		if ($language != 'English') {
 			foreach ($langs[$language] as $key => $value) {
-				include makeSecurePath($value['file']);
+				include \Froxlor\FileDir::makeSecurePath($value['file']);
 			}
 		}
 
@@ -234,10 +234,10 @@ if ($action == '') {
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate("templates/templates_add_2") . "\";");
 	} elseif (isset($_POST['send']) && $_POST['send'] == 'send') {
 		// email templates
-		$language = htmlentities(validate($_POST['language'], 'language', '/^[^\r\n\0"\']+$/', 'nolanguageselect'));
-		$template = validate($_POST['template'], 'template');
-		$subject = validate($_POST['subject'], 'subject', '/^[^\r\n\0]+$/', 'nosubjectcreate');
-		$mailbody = validate($_POST['mailbody'], 'mailbody', '/^[^\0]+$/', 'nomailbodycreate');
+		$language = htmlentities(\Froxlor\Validate\Validate::validate($_POST['language'], 'language', '/^[^\r\n\0"\']+$/', 'nolanguageselect'));
+		$template = \Froxlor\Validate\Validate::validate($_POST['template'], 'template');
+		$subject = \Froxlor\Validate\Validate::validate($_POST['subject'], 'subject', '/^[^\r\n\0]+$/', 'nosubjectcreate');
+		$mailbody = \Froxlor\Validate\Validate::validate($_POST['mailbody'], 'mailbody', '/^[^\0]+$/', 'nomailbodycreate');
 		$templates = array();
 		$result_stmt = Database::prepare("
 			SELECT `varname` FROM `" . TABLE_PANEL_TEMPLATES . "`
@@ -290,8 +290,8 @@ if ($action == '') {
 		}
 	} elseif (isset($_POST['filesend']) && $_POST['filesend'] == 'filesend') {
 		// file templates
-		$template = validate($_POST['template'], 'template');
-		$filecontent = validate($_POST['filecontent'], 'filecontent', '/^[^\0]+$/', 'filecontentnotset');
+		$template = \Froxlor\Validate\Validate::validate($_POST['template'], 'template');
+		$filecontent = \Froxlor\Validate\Validate::validate($_POST['filecontent'], 'filecontent', '/^[^\0]+$/', 'filecontentnotset');
 
 		$ins_stmt = Database::prepare("
 			INSERT INTO `" . TABLE_PANEL_TEMPLATES . "` SET
@@ -399,8 +399,8 @@ if ($action == '') {
 	if ($result['varname'] != '') {
 
 		if (isset($_POST['send']) && $_POST['send'] == 'send') {
-			$subject = validate($_POST['subject'], 'subject', '/^[^\r\n\0]+$/', 'nosubjectcreate');
-			$mailbody = validate($_POST['mailbody'], 'mailbody', '/^[^\0]+$/', 'nomailbodycreate');
+			$subject = \Froxlor\Validate\Validate::validate($_POST['subject'], 'subject', '/^[^\r\n\0]+$/', 'nosubjectcreate');
+			$mailbody = \Froxlor\Validate\Validate::validate($_POST['mailbody'], 'mailbody', '/^[^\0]+$/', 'nomailbodycreate');
 
 			$upd_stmt = Database::prepare("
 				UPDATE `" . TABLE_PANEL_TEMPLATES . "` SET
@@ -470,7 +470,7 @@ if ($action == '') {
 
 		// filetemplates
 		if (isset($_POST['filesend']) && $_POST['filesend'] == 'filesend') {
-			$filecontent = validate($_POST['filecontent'], 'filecontent', '/^[^\0]+$/', 'filecontentnotset');
+			$filecontent = \Froxlor\Validate\Validate::validate($_POST['filecontent'], 'filecontent', '/^[^\0]+$/', 'filecontentnotset');
 			$upd_stmt = Database::prepare("
 				UPDATE `" . TABLE_PANEL_TEMPLATES . "` SET
 					`value` = :value

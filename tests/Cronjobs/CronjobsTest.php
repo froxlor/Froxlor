@@ -9,7 +9,7 @@ use Froxlor\Api\Commands\Cronjobs;
  *
  * @covers \Froxlor\Api\ApiCommand
  * @covers \Froxlor\Api\ApiParameter
- * @covers Cronjobs
+ * @covers \Froxlor\Api\Commands\Cronjobs
  */
 class CronjobsTest extends TestCase
 {

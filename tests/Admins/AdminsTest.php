@@ -6,9 +6,9 @@ use Froxlor\Api\Commands\Admins;
 
 /**
  *
- * @covers ApiCommand
- * @covers ApiParameter
- * @covers Admins
+ * @covers \Froxlor\Api\ApiCommand
+ * @covers \Froxlor\Api\ApiParameter
+ * @covers \Froxlor\Api\Commands\Admins
  */
 class AdminsTest extends TestCase
 {

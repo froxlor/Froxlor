@@ -1,8 +1,8 @@
 <?php
 namespace Froxlor\Api\Commands;
 
-use Froxlor\Database as Database;
-use Froxlor\Settings as Settings;
+use Froxlor\Database\Database;
+use Froxlor\Settings;
 
 /**
  * This file is part of the Froxlor project.

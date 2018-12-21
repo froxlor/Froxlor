@@ -254,25 +254,25 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				$loginname = $this->getParam('new_loginname', true, '');
 
 				// validation
-				$name = validate($name, 'name', '', '', array(), true);
-				$firstname = validate($firstname, 'first name', '', '', array(), true);
-				$company = validate($company, 'company', '', '', array(), true);
-				$street = validate($street, 'street', '', '', array(), true);
-				$zipcode = validate($zipcode, 'zipcode', '/^[0-9 \-A-Z]*$/', '', array(), true);
-				$city = validate($city, 'city', '', '', array(), true);
-				$phone = validate($phone, 'phone', '/^[0-9\- \+\(\)\/]*$/', '', array(), true);
-				$fax = validate($fax, 'fax', '/^[0-9\- \+\(\)\/]*$/', '', array(), true);
+				$name = \Froxlor\Validate\Validate::validate($name, 'name', '', '', array(), true);
+				$firstname = \Froxlor\Validate\Validate::validate($firstname, 'first name', '', '', array(), true);
+				$company = \Froxlor\Validate\Validate::validate($company, 'company', '', '', array(), true);
+				$street = \Froxlor\Validate\Validate::validate($street, 'street', '', '', array(), true);
+				$zipcode = \Froxlor\Validate\Validate::validate($zipcode, 'zipcode', '/^[0-9 \-A-Z]*$/', '', array(), true);
+				$city = \Froxlor\Validate\Validate::validate($city, 'city', '', '', array(), true);
+				$phone = \Froxlor\Validate\Validate::validate($phone, 'phone', '/^[0-9\- \+\(\)\/]*$/', '', array(), true);
+				$fax = \Froxlor\Validate\Validate::validate($fax, 'fax', '/^[0-9\- \+\(\)\/]*$/', '', array(), true);
 				$idna_convert = new \Froxlor\Idna\IdnaWrapper();
-				$email = $idna_convert->encode(validate($email, 'email', '', '', array(), true));
-				$customernumber = validate($customernumber, 'customer number', '/^[A-Za-z0-9 \-]*$/Di', '', array(), true);
-				$def_language = validate($def_language, 'default language', '', '', array(), true);
-				$custom_notes = validate(str_replace("\r\n", "\n", $custom_notes), 'custom_notes', '/^[^\0]*$/', '', array(), true);
+				$email = $idna_convert->encode(\Froxlor\Validate\Validate::validate($email, 'email', '', '', array(), true));
+				$customernumber = \Froxlor\Validate\Validate::validate($customernumber, 'customer number', '/^[A-Za-z0-9 \-]*$/Di', '', array(), true);
+				$def_language = \Froxlor\Validate\Validate::validate($def_language, 'default language', '', '', array(), true);
+				$custom_notes = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $custom_notes), 'custom_notes', '/^[^\0]*$/', '', array(), true);
 
 				if (Settings::Get('system.mail_quota_enabled') != '1') {
 					$email_quota = - 1;
 				}
 
-				$password = validate($password, 'password', '', '', array(), true);
+				$password = \Froxlor\Validate\Validate::validate($password, 'password', '', '', array(), true);
 				// only check if not empty,
 				// cause empty == generate password automatically
 				if ($password != '') {
@@ -306,7 +306,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 
 					if ($loginname != '') {
 						$accountnumber = intval(Settings::Get('system.lastaccountnumber'));
-						$loginname = validate($loginname, 'loginname', '/^[a-z][a-z0-9\-_]+$/i', '', array(), true);
+						$loginname = \Froxlor\Validate\Validate::validate($loginname, 'loginname', '/^[a-z][a-z0-9\-_]+$/i', '', array(), true);
 
 						// Accounts which match systemaccounts are not allowed, filtering them
 						if (preg_match('/^' . preg_quote(Settings::Get('customer.accountprefix'), '/') . '([0-9]+)/', $loginname)) {
@@ -896,21 +896,21 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 		// validation
 		if ($this->isAdmin()) {
 			$idna_convert = new \Froxlor\Idna\IdnaWrapper();
-			$name = validate($name, 'name', '', '', array(), true);
-			$firstname = validate($firstname, 'first name', '', '', array(), true);
-			$company = validate($company, 'company', '', '', array(), true);
-			$street = validate($street, 'street', '', '', array(), true);
-			$zipcode = validate($zipcode, 'zipcode', '/^[0-9 \-A-Z]*$/', '', array(), true);
-			$city = validate($city, 'city', '', '', array(), true);
-			$phone = validate($phone, 'phone', '/^[0-9\- \+\(\)\/]*$/', '', array(), true);
-			$fax = validate($fax, 'fax', '/^[0-9\- \+\(\)\/]*$/', '', array(), true);
-			$email = $idna_convert->encode(validate($email, 'email', '', '', array(), true));
-			$customernumber = validate($customernumber, 'customer number', '/^[A-Za-z0-9 \-]*$/Di', '', array(), true);
-			$custom_notes = validate(str_replace("\r\n", "\n", $custom_notes), 'custom_notes', '/^[^\0]*$/', '', array(), true);
+			$name = \Froxlor\Validate\Validate::validate($name, 'name', '', '', array(), true);
+			$firstname = \Froxlor\Validate\Validate::validate($firstname, 'first name', '', '', array(), true);
+			$company = \Froxlor\Validate\Validate::validate($company, 'company', '', '', array(), true);
+			$street = \Froxlor\Validate\Validate::validate($street, 'street', '', '', array(), true);
+			$zipcode = \Froxlor\Validate\Validate::validate($zipcode, 'zipcode', '/^[0-9 \-A-Z]*$/', '', array(), true);
+			$city = \Froxlor\Validate\Validate::validate($city, 'city', '', '', array(), true);
+			$phone = \Froxlor\Validate\Validate::validate($phone, 'phone', '/^[0-9\- \+\(\)\/]*$/', '', array(), true);
+			$fax = \Froxlor\Validate\Validate::validate($fax, 'fax', '/^[0-9\- \+\(\)\/]*$/', '', array(), true);
+			$email = $idna_convert->encode(\Froxlor\Validate\Validate::validate($email, 'email', '', '', array(), true));
+			$customernumber = \Froxlor\Validate\Validate::validate($customernumber, 'customer number', '/^[A-Za-z0-9 \-]*$/Di', '', array(), true);
+			$custom_notes = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $custom_notes), 'custom_notes', '/^[^\0]*$/', '', array(), true);
 			$allowed_phpconfigs = array_map('intval', $allowed_phpconfigs);
 		}
-		$def_language = validate($def_language, 'default language', '', '', array(), true);
-		$theme = validate($theme, 'theme', '', '', array(), true);
+		$def_language = \Froxlor\Validate\Validate::validate($def_language, 'default language', '', '', array(), true);
+		$theme = \Froxlor\Validate\Validate::validate($theme, 'theme', '', '', array(), true);
 
 		if (Settings::Get('system.mail_quota_enabled') != '1') {
 			$email_quota = - 1;

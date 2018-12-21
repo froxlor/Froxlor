@@ -104,8 +104,8 @@ if ($action == '2fa_entercode') {
 	exit();
 } elseif ($action == 'login') {
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
-		$loginname = validate($_POST['loginname'], 'loginname');
-		$password = validate($_POST['password'], 'password');
+		$loginname = \Froxlor\Validate\Validate::validate($_POST['loginname'], 'loginname');
+		$password = \Froxlor\Validate\Validate::validate($_POST['password'], 'password');
 
 		$stmt = Database::prepare("SELECT `loginname` AS `customer` FROM `" . TABLE_PANEL_CUSTOMERS . "`
 			WHERE `loginname`= :loginname");
@@ -391,7 +391,7 @@ if ($action == 'forgotpwd') {
 	$message = '';
 
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
-		$loginname = validate($_POST['loginname'], 'loginname');
+		$loginname = \Froxlor\Validate\Validate::validate($_POST['loginname'], 'loginname');
 		$email = validateEmail($_POST['loginemail'], 'email');
 		$result_stmt = Database::prepare("SELECT `adminid`, `customerid`, `firstname`, `name`, `company`, `email`, `loginname`, `def_language`, `deactivated` FROM `" . TABLE_PANEL_CUSTOMERS . "`
 			WHERE `loginname`= :loginname
@@ -599,8 +599,8 @@ if ($action == 'resetpwd') {
 
 				if ($result !== false) {
 					if ($result['admin'] == 1) {
-						$new_password = validate($_POST['new_password'], 'new password');
-						$new_password_confirm = validate($_POST['new_password_confirm'], 'new password confirm');
+						$new_password = \Froxlor\Validate\Validate::validate($_POST['new_password'], 'new password');
+						$new_password_confirm = \Froxlor\Validate\Validate::validate($_POST['new_password_confirm'], 'new password confirm');
 					} else {
 						$new_password = validatePassword($_POST['new_password'], 'new password');
 						$new_password_confirm = validatePassword($_POST['new_password_confirm'], 'new password confirm');
@@ -671,7 +671,7 @@ function finishLogin($userinfo)
 		$s = md5(uniqid(microtime(), 1));
 
 		if (isset($_POST['language'])) {
-			$language = validate($_POST['language'], 'language');
+			$language = \Froxlor\Validate\Validate::validate($_POST['language'], 'language');
 			if ($language == 'profile') {
 				$language = $userinfo['def_language'];
 			} elseif (! isset($languages[$language])) {

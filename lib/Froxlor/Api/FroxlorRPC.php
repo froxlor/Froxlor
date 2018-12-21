@@ -104,8 +104,8 @@ class FroxlorRPC
 		}
 		// simply check for file-existance, as we do not want to use our autoloader because this way
 		// it will recognize non-api classes+methods as valid commands
-		$apiclass = \Froxlor\Froxlor::getInstallDir() . '/lib/Froxlor/Api/Commands/' . $command[0] . '.php';
-		if (! file_exists($apiclass) || ! @method_exists($command[0], $command[1])) {
+		$apiclass = '\\Froxlor\\Api\\Commands\\' . $command[0];
+		if (! class_exists($apiclass) || ! @method_exists($apiclass, $command[1])) {
 			throw new \Exception("Unknown command", 400);
 		}
 		return array(

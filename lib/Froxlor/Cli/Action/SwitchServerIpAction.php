@@ -14,7 +14,7 @@ class SwitchServerIpAction extends \Froxlor\Cli\Action
 
 	public function run()
 	{
-		$this->_validate();
+		$this->_\Froxlor\Validate\Validate::validate();
 	}
 
 	/**
@@ -22,7 +22,7 @@ class SwitchServerIpAction extends \Froxlor\Cli\Action
 	 *
 	 * @throws \Exception
 	 */
-	private function _validate()
+	private function _\Froxlor\Validate\Validate::validate()
 	{
 		$need_config = false;
 		if (array_key_exists("list", $this->_args) || array_key_exists("switch", $this->_args)) {

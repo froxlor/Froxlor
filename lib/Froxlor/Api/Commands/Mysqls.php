@@ -53,12 +53,12 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			$sendinfomail = $this->getBoolParam('sendinfomail', true, 0);
 
 			// validation
-			$password = validate($password, 'password', '', '', array(), true);
+			$password = \Froxlor\Validate\Validate::validate($password, 'password', '', '', array(), true);
 			$password = validatePassword($password, true);
-			$databasedescription = validate(trim($databasedescription), 'description', '', '', array(), true);
+			$databasedescription = \Froxlor\Validate\Validate::validate(trim($databasedescription), 'description', '', '', array(), true);
 
 			// validate whether the dbserver exists
-			$dbserver = validate($dbserver, html_entity_decode($this->lng['mysql']['mysql_server']), '', '', 0, true);
+			$dbserver = \Froxlor\Validate\Validate::validate($dbserver, html_entity_decode($this->lng['mysql']['mysql_server']), '', '', 0, true);
 			Database::needRoot(true, $dbserver);
 			Database::needSqlData();
 			$sql_root = Database::getSqlData();
@@ -307,8 +307,8 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		$databasedescription = $this->getParam('description', true, '');
 
 		// validation
-		$password = validate($password, 'password', '', '', array(), true);
-		$databasedescription = validate(trim($databasedescription), 'description', '', '', array(), true);
+		$password = \Froxlor\Validate\Validate::validate($password, 'password', '', '', array(), true);
+		$databasedescription = \Froxlor\Validate\Validate::validate(trim($databasedescription), 'description', '', '', array(), true);
 
 		// get needed customer info to reduce the mysql-usage-counter by one
 		$customer = $this->getCustomerData();

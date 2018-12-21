@@ -1,7 +1,7 @@
 <?php
 namespace Froxlor\Api\Commands;
 
-use Froxlor\Database as Database;
+use Froxlor\Database\Database;
 
 /**
  * This file is part of the Froxlor project.
@@ -148,9 +148,9 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			$limit_extensions = $this->getParam('limit_extensions', true, '.php');
 
 			// validation
-			$description = validate($description, 'description', '', '', array(), true);
-			$reload_cmd = validate($reload_cmd, 'reload_cmd', '', '', array(), true);
-			$config_dir = validate($config_dir, 'config_dir', '', '', array(), true);
+			$description = \Froxlor\Validate\Validate::validate($description, 'description', '', '', array(), true);
+			$reload_cmd = \Froxlor\Validate\Validate::validate($reload_cmd, 'reload_cmd', '', '', array(), true);
+			$config_dir = \Froxlor\Validate\Validate::validate($config_dir, 'config_dir', '', '', array(), true);
 			if (! in_array($pmanager, array(
 				'static',
 				'dynamic',
@@ -161,7 +161,7 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			if (empty($limit_extensions)) {
 				$limit_extensions = '.php';
 			}
-			$limit_extensions = validate($limit_extensions, 'limit_extensions', '/^(\.[a-z]([a-z0-9]+)\ ?)+$/', '', array(), true);
+			$limit_extensions = \Froxlor\Validate\Validate::validate($limit_extensions, 'limit_extensions', '/^(\.[a-z]([a-z0-9]+)\ ?)+$/', '', array(), true);
 
 			if (strlen($description) == 0 || strlen($description) > 50) {
 				\Froxlor\UI\Response::standard_error('descriptioninvalid', '', true);
@@ -264,9 +264,9 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			$limit_extensions = $this->getParam('limit_extensions', true, $result['limit_extensions']);
 
 			// validation
-			$description = validate($description, 'description', '', '', array(), true);
-			$reload_cmd = validate($reload_cmd, 'reload_cmd', '', '', array(), true);
-			$config_dir = validate($config_dir, 'config_dir', '', '', array(), true);
+			$description = \Froxlor\Validate\Validate::validate($description, 'description', '', '', array(), true);
+			$reload_cmd = \Froxlor\Validate\Validate::validate($reload_cmd, 'reload_cmd', '', '', array(), true);
+			$config_dir = \Froxlor\Validate\Validate::validate($config_dir, 'config_dir', '', '', array(), true);
 			if (! in_array($pmanager, array(
 				'static',
 				'dynamic',
@@ -277,7 +277,7 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			if (empty($limit_extensions)) {
 				$limit_extensions = '.php';
 			}
-			$limit_extensions = validate($limit_extensions, 'limit_extensions', '/^(\.[a-z]([a-z0-9]+)\ ?)+$/', '', array(), true);
+			$limit_extensions = \Froxlor\Validate\Validate::validate($limit_extensions, 'limit_extensions', '/^(\.[a-z]([a-z0-9]+)\ ?)+$/', '', array(), true);
 
 			if (strlen($description) == 0 || strlen($description) > 50) {
 				\Froxlor\UI\Response::standard_error('descriptioninvalid', '', true);

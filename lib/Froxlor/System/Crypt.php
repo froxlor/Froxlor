@@ -153,23 +153,23 @@ class Crypt
 	public static function validatePassword($password = null, $json_response = false)
 	{
 		if (Settings::Get('panel.password_min_length') > 0) {
-			$password = validate($password, Settings::Get('panel.password_min_length'), '/^.{' . (int) Settings::Get('panel.password_min_length') . ',}$/D', 'notrequiredpasswordlength', array(), $json_response);
+			$password = \Froxlor\Validate\Validate::validate($password, Settings::Get('panel.password_min_length'), '/^.{' . (int) Settings::Get('panel.password_min_length') . ',}$/D', 'notrequiredpasswordlength', array(), $json_response);
 		}
 
 		if (Settings::Get('panel.password_regex') != '') {
-			$password = validate($password, Settings::Get('panel.password_regex'), Settings::Get('panel.password_regex'), 'notrequiredpasswordcomplexity', array(), $json_response);
+			$password = \Froxlor\Validate\Validate::validate($password, Settings::Get('panel.password_regex'), Settings::Get('panel.password_regex'), 'notrequiredpasswordcomplexity', array(), $json_response);
 		} else {
 			if (Settings::Get('panel.password_alpha_lower')) {
-				$password = validate($password, '/.*[a-z]+.*/', '/.*[a-z]+.*/', 'notrequiredpasswordcomplexity', array(), $json_response);
+				$password = \Froxlor\Validate\Validate::validate($password, '/.*[a-z]+.*/', '/.*[a-z]+.*/', 'notrequiredpasswordcomplexity', array(), $json_response);
 			}
 			if (Settings::Get('panel.password_alpha_upper')) {
-				$password = validate($password, '/.*[A-Z]+.*/', '/.*[A-Z]+.*/', 'notrequiredpasswordcomplexity', array(), $json_response);
+				$password = \Froxlor\Validate\Validate::validate($password, '/.*[A-Z]+.*/', '/.*[A-Z]+.*/', 'notrequiredpasswordcomplexity', array(), $json_response);
 			}
 			if (Settings::Get('panel.password_numeric')) {
-				$password = validate($password, '/.*[0-9]+.*/', '/.*[0-9]+.*/', 'notrequiredpasswordcomplexity', array(), $json_response);
+				$password = \Froxlor\Validate\Validate::validate($password, '/.*[0-9]+.*/', '/.*[0-9]+.*/', 'notrequiredpasswordcomplexity', array(), $json_response);
 			}
 			if (Settings::Get('panel.password_special_char_required')) {
-				$password = validate($password, '/.*[' . preg_quote(Settings::Get('panel.password_special_char')) . ']+.*/', '/.*[' . preg_quote(Settings::Get('panel.password_special_char')) . ']+.*/', 'notrequiredpasswordcomplexity', array(), $json_response);
+				$password = \Froxlor\Validate\Validate::validate($password, '/.*[' . preg_quote(Settings::Get('panel.password_special_char')) . ']+.*/', '/.*[' . preg_quote(Settings::Get('panel.password_special_char')) . ']+.*/', 'notrequiredpasswordcomplexity', array(), $json_response);
 			}
 		}
 

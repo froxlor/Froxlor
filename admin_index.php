@@ -177,14 +177,14 @@ if ($page == 'overview') {
 } elseif ($page == 'change_password') {
 
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
-		$old_password = validate($_POST['old_password'], 'old password');
+		$old_password = \Froxlor\Validate\Validate::validate($_POST['old_password'], 'old password');
 
 		if (! validatePasswordLogin($userinfo, $old_password, TABLE_PANEL_ADMINS, 'adminid')) {
 			\Froxlor\UI\Response::standard_error('oldpasswordnotcorrect');
 		}
 
-		$new_password = validate($_POST['new_password'], 'new password');
-		$new_password_confirm = validate($_POST['new_password_confirm'], 'new password confirm');
+		$new_password = \Froxlor\Validate\Validate::validate($_POST['new_password'], 'new password');
+		$new_password_confirm = \Froxlor\Validate\Validate::validate($_POST['new_password_confirm'], 'new password confirm');
 
 		if ($old_password == '') {
 			\Froxlor\UI\Response::standard_error(array(
@@ -223,7 +223,7 @@ if ($page == 'overview') {
 } elseif ($page == 'change_language') {
 
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
-		$def_language = validate($_POST['def_language'], 'default language');
+		$def_language = \Froxlor\Validate\Validate::validate($_POST['def_language'], 'default language');
 
 		if (isset($languages[$def_language])) {
 			try {
@@ -267,7 +267,7 @@ if ($page == 'overview') {
 } elseif ($page == 'change_theme') {
 
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
-		$theme = validate($_POST['theme'], 'theme');
+		$theme = \Froxlor\Validate\Validate::validate($_POST['theme'], 'theme');
 		try {
 			Admins::getLocal($userinfo, array(
 				'id' => $userinfo['adminid'],

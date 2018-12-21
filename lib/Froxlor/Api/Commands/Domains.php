@@ -1,8 +1,8 @@
 <?php
 namespace Froxlor\Api\Commands;
 
-use Froxlor\Database as Database;
-use Froxlor\Settings as Settings;
+use Froxlor\Database\Database;
+use Froxlor\Settings;
 
 /**
  * This file is part of the Froxlor project.
@@ -243,7 +243,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				$domain = $idna_convert->encode(preg_replace(array(
 					'/\:(\d)+$/',
 					'/^https?\:\/\//'
-				), '', validate($p_domain, 'domain')));
+				), '', \Froxlor\Validate\Validate::validate($p_domain, 'domain')));
 
 				// Check whether domain validation is enabled and if, validate the domain
 				if (Settings::Get('system.validate_domain') && ! validateDomain($domain)) {
@@ -278,7 +278,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				}
 				$_documentroot = \Froxlor\FileDir::makeCorrectDir($customer['documentroot'] . $path_suffix);
 
-				$registration_date = validate($registration_date, 'registration_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', array(
+				$registration_date = \Froxlor\Validate\Validate::validate($registration_date, 'registration_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', array(
 					'0000-00-00',
 					'0',
 					''
@@ -287,7 +287,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 					$registration_date = null;
 				}
 
-				$termination_date = validate($termination_date, 'termination_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', array(
+				$termination_date = \Froxlor\Validate\Validate::validate($termination_date, 'termination_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', array(
 					'0000-00-00',
 					'0',
 					''
@@ -298,14 +298,14 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 
 				if ($this->getUserDetail('change_serversettings') == '1') {
 					if (Settings::Get('system.bind_enable') == '1') {
-						$zonefile = validate($zonefile, 'zonefile', '', '', array(), true);
+						$zonefile = \Froxlor\Validate\Validate::validate($zonefile, 'zonefile', '', '', array(), true);
 					} else {
 						$isbinddomain = 0;
 						$zonefile = '';
 					}
 
-					$specialsettings = validate(str_replace("\r\n", "\n", $specialsettings), 'specialsettings', '/^[^\0]*$/', '', array(), true);
-					validate($documentroot, 'documentroot', '', '', array(), true);
+					$specialsettings = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $specialsettings), 'specialsettings', '/^[^\0]*$/', '', array(), true);
+					\Froxlor\Validate\Validate::validate($documentroot, 'documentroot', '', '', array(), true);
 
 					// If path is empty and 'Use domain name as default value for DocumentRoot path' is enabled in settings,
 					// set default path to subdomain or domain name
@@ -346,11 +346,11 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 						}
 
 						if ((int) Settings::Get('system.mod_fcgid') == 1) {
-							$mod_fcgid_starter = validate($mod_fcgid_starter, 'mod_fcgid_starter', '/^[0-9]*$/', '', array(
+							$mod_fcgid_starter = \Froxlor\Validate\Validate::validate($mod_fcgid_starter, 'mod_fcgid_starter', '/^[0-9]*$/', '', array(
 								'-1',
 								''
 							), true);
-							$mod_fcgid_maxrequests = validate($mod_fcgid_maxrequests, 'mod_fcgid_maxrequests', '/^[0-9]*$/', '', array(
+							$mod_fcgid_maxrequests = \Froxlor\Validate\Validate::validate($mod_fcgid_maxrequests, 'mod_fcgid_maxrequests', '/^[0-9]*$/', '', array(
 								'-1',
 								''
 							), true);
@@ -900,7 +900,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				$adminid = $result['adminid'];
 			}
 
-			$registration_date = validate($registration_date, 'registration_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', array(
+			$registration_date = \Froxlor\Validate\Validate::validate($registration_date, 'registration_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', array(
 				'0000-00-00',
 				'0',
 				''
@@ -908,7 +908,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 			if ($registration_date == '0000-00-00') {
 				$registration_date = null;
 			}
-			$termination_date = validate($termination_date, 'termination_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', array(
+			$termination_date = \Froxlor\Validate\Validate::validate($termination_date, 'termination_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', array(
 				'0000-00-00',
 				'0',
 				''
@@ -930,7 +930,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 			if ($this->getUserDetail('change_serversettings') == '1') {
 
 				if (Settings::Get('system.bind_enable') != '1') {
-					$zonefile = validate($zonefile, 'zonefile', '', '', array(), true);
+					$zonefile = \Froxlor\Validate\Validate::validate($zonefile, 'zonefile', '', '', array(), true);
 				} else {
 					$isbinddomain = $result['isbinddomain'];
 					$zonefile = $result['zonefile'];
@@ -940,8 +940,8 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 					$dkim = $result['dkim'];
 				}
 
-				$specialsettings = validate(str_replace("\r\n", "\n", $specialsettings), 'specialsettings', '/^[^\0]*$/', '', array(), true);
-				$documentroot = validate($documentroot, 'documentroot', '', '', array(), true);
+				$specialsettings = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $specialsettings), 'specialsettings', '/^[^\0]*$/', '', array(), true);
+				$documentroot = \Froxlor\Validate\Validate::validate($documentroot, 'documentroot', '', '', array(), true);
 
 				// when moving customer and no path is specified, update would normally reuse the current document-root
 				// which would point to the wrong customer, therefore we will re-create that directory
@@ -995,11 +995,11 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 					}
 
 					if ((int) Settings::Get('system.mod_fcgid') == 1) {
-						$mod_fcgid_starter = validate($mod_fcgid_starter, 'mod_fcgid_starter', '/^[0-9]*$/', '', array(
+						$mod_fcgid_starter = \Froxlor\Validate\Validate::validate($mod_fcgid_starter, 'mod_fcgid_starter', '/^[0-9]*$/', '', array(
 							'-1',
 							''
 						), true);
-						$mod_fcgid_maxrequests = validate($mod_fcgid_maxrequests, 'mod_fcgid_maxrequests', '/^[0-9]*$/', '', array(
+						$mod_fcgid_maxrequests = \Froxlor\Validate\Validate::validate($mod_fcgid_maxrequests, 'mod_fcgid_maxrequests', '/^[0-9]*$/', '', array(
 							'-1',
 							''
 						), true);

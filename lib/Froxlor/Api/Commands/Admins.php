@@ -194,17 +194,17 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			$ipaddress = $this->getParam('ipaddress', true, - 1);
 
 			// validation
-			$name = validate($name, 'name', '', '', array(), true);
+			$name = \Froxlor\Validate\Validate::validate($name, 'name', '', '', array(), true);
 			$idna_convert = new \Froxlor\Idna\IdnaWrapper();
-			$email = $idna_convert->encode(validate($email, 'email', '', '', array(), true));
-			$def_language = validate($def_language, 'default language', '', '', array(), true);
-			$custom_notes = validate(str_replace("\r\n", "\n", $custom_notes), 'custom_notes', '/^[^\0]*$/', '', array(), true);
+			$email = $idna_convert->encode(\Froxlor\Validate\Validate::validate($email, 'email', '', '', array(), true));
+			$def_language = \Froxlor\Validate\Validate::validate($def_language, 'default language', '', '', array(), true);
+			$custom_notes = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $custom_notes), 'custom_notes', '/^[^\0]*$/', '', array(), true);
 
 			if (Settings::Get('system.mail_quota_enabled') != '1') {
 				$email_quota = - 1;
 			}
 
-			$password = validate($password, 'password', '', '', array(), true);
+			$password = \Froxlor\Validate\Validate::validate($password, 'password', '', '', array(), true);
 			// only check if not empty,
 			// cause empty == generate password automatically
 			if ($password != '') {
@@ -488,13 +488,13 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 				}
 
 				// validation
-				$name = validate($name, 'name', '', '', array(), true);
+				$name = \Froxlor\Validate\Validate::validate($name, 'name', '', '', array(), true);
 				$idna_convert = new \Froxlor\Idna\IdnaWrapper();
-				$email = $idna_convert->encode(validate($email, 'email', '', '', array(), true));
-				$def_language = validate($def_language, 'default language', '', '', array(), true);
-				$custom_notes = validate(str_replace("\r\n", "\n", $custom_notes), 'custom_notes', '/^[^\0]*$/', '', array(), true);
-				$theme = validate($theme, 'theme', '', '', array(), true);
-				$password = validate($password, 'password', '', '', array(), true);
+				$email = $idna_convert->encode(\Froxlor\Validate\Validate::validate($email, 'email', '', '', array(), true));
+				$def_language = \Froxlor\Validate\Validate::validate($def_language, 'default language', '', '', array(), true);
+				$custom_notes = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $custom_notes), 'custom_notes', '/^[^\0]*$/', '', array(), true);
+				$theme = \Froxlor\Validate\Validate::validate($theme, 'theme', '', '', array(), true);
+				$password = \Froxlor\Validate\Validate::validate($password, 'password', '', '', array(), true);
 
 				if (Settings::Get('system.mail_quota_enabled') != '1') {
 					$email_quota = - 1;

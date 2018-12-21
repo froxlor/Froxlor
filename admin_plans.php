@@ -102,8 +102,8 @@ if ($page == '' || $page == 'overview') {
 	} elseif ($action == 'add') {
 
 		if (isset($_POST['send']) && $_POST['send'] == 'send') {
-			$name = validate($_POST['name'], 'name');
-			$description = validate(str_replace("\r\n", "\n", $_POST['description']), 'description', '/^[^\0]*$/');
+			$name = \Froxlor\Validate\Validate::validate($_POST['name'], 'name');
+			$description = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $_POST['description']), 'description', '/^[^\0]*$/');
 
 			$value_arr = array();
 
@@ -138,7 +138,7 @@ if ($page == '' || $page == 'overview') {
 			}
 
 			if (Settings::Get('system.mail_quota_enabled') == '1') {
-				$value_arr['email_quota'] = validate($_POST['email_quota'], 'email_quota', '/^\d+$/', 'vmailquotawrong', array(
+				$value_arr['email_quota'] = \Froxlor\Validate\Validate::validate($_POST['email_quota'], 'email_quota', '/^\d+$/', 'vmailquotawrong', array(
 					'0',
 					''
 				));
@@ -280,8 +280,8 @@ if ($page == '' || $page == 'overview') {
 
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 
-				$name = validate($_POST['name'], 'name');
-				$description = validate(str_replace("\r\n", "\n", $_POST['description']), 'description', '/^[^\0]*$/');
+				$name = \Froxlor\Validate\Validate::validate($_POST['name'], 'name');
+				$description = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $_POST['description']), 'description', '/^[^\0]*$/');
 
 				$value_arr = array();
 
@@ -316,7 +316,7 @@ if ($page == '' || $page == 'overview') {
 				}
 
 				if (Settings::Get('system.mail_quota_enabled') == '1') {
-					$value_arr['email_quota'] = validate($_POST['email_quota'], 'email_quota', '/^\d+$/', 'vmailquotawrong', array(
+					$value_arr['email_quota'] = \Froxlor\Validate\Validate::validate($_POST['email_quota'], 'email_quota', '/^\d+$/', 'vmailquotawrong', array(
 						'0',
 						''
 					));
