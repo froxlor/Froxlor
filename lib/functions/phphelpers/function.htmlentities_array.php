@@ -21,28 +21,26 @@
  * Wrapper around htmlentities to handle arrays, with the advantage that you
  * can select which fields should be handled by htmlentities
  *
- * @param array The subject array
- * @param string The fields which should be checked for, separated by spaces
- * @param int See php documentation about this
- * @param string See php documentation about this
+ * @param
+ *        	array The subject array
+ * @param
+ *        	string The fields which should be checked for, separated by spaces
+ * @param
+ *        	int See php documentation about this
+ * @param
+ *        	string See php documentation about this
  * @return array The array with htmlentitie'd strings
  * @author Florian Lippert <flo@syscp.org>
  */
-
 function htmlentities_array($subject, $fields = '', $quote_style = ENT_QUOTES, $charset = 'UTF-8')
 {
-	if(is_array($subject))
-	{
-		if(!is_array($fields))
-		{
+	if (is_array($subject)) {
+		if (! is_array($fields)) {
 			$fields = array_trim(explode(' ', $fields));
 		}
 
-		foreach($subject as $field => $value)
-		{
-			if((!is_array($fields) || empty($fields))
-			   || (is_array($fields) && !empty($fields) && in_array($field, $fields)))
-			{
+		foreach ($subject as $field => $value) {
+			if ((! is_array($fields) || empty($fields)) || (is_array($fields) && ! empty($fields) && in_array($field, $fields))) {
 				/**
 				 * Just call ourselve to manage multi-dimensional arrays
 				 */
@@ -50,9 +48,7 @@ function htmlentities_array($subject, $fields = '', $quote_style = ENT_QUOTES, $
 				$subject[$field] = htmlentities_array($subject[$field], $fields, $quote_style, $charset);
 			}
 		}
-	}
-	else
-	{
+	} else {
 		$subject = htmlentities($subject, $quote_style, $charset);
 	}
 

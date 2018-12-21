@@ -15,28 +15,30 @@
  *
  */
 
-
 /**
  * Function showUpdateStep
  *
  * outputs and logs the current
  * update progress
  *
- * @param	string		task/status
- * @param	bool		needs_status (if false, a linebreak will be added)
- *
- * @return	string		formatted output and log-entry
+ * @param
+ *        	string task/status
+ * @param
+ *        	bool needs_status (if false, a linebreak will be added)
+ *        	
+ * @return string formatted output and log-entry
  */
-function showUpdateStep($task = null, $needs_status = true) {
-
+function showUpdateStep($task = null, $needs_status = true)
+{
 	global $updatelog, $filelog;
 
-	if (!$needs_status) echo "<b>";
+	if (! $needs_status)
+		echo "<b>";
 
 	// output
 	echo $task;
 
-	if (!$needs_status) {
+	if (! $needs_status) {
 		echo "</b><br />";
 	}
 
@@ -50,26 +52,27 @@ function showUpdateStep($task = null, $needs_status = true) {
  * outputs [OK] (success), [??] (warning) or [!!] (failure)
  * of the last update-step
  *
- * @param	int			status	(0 = success, 1 = warning, 2 = failure)
- *
- * @return	string		formatted output and log-entry
+ * @param
+ *        	int status (0 = success, 1 = warning, 2 = failure)
+ *        	
+ * @return string formatted output and log-entry
  */
-function lastStepStatus($status = -1, $message = '') {
-
+function lastStepStatus($status = -1, $message = '')
+{
 	global $updatelog, $filelog;
 
-	switch($status) {
+	switch ($status) {
 
 		case 0:
-			$status_sign = ($message != '') ? '['.$message.']' : '[OK]';
+			$status_sign = ($message != '') ? '[' . $message . ']' : '[OK]';
 			$status_color = 'ok';
 			break;
 		case 1:
-			$status_sign = ($message != '') ? '['.$message.']' : '[??]';
+			$status_sign = ($message != '') ? '[' . $message . ']' : '[??]';
 			$status_color = 'warn';
 			break;
 		case 2:
-			$status_sign = ($message != '') ? '['.$message.']' : '[!!]';
+			$status_sign = ($message != '') ? '[' . $message . ']' : '[!!]';
 			$status_color = 'err';
 			break;
 		default:
@@ -79,13 +82,12 @@ function lastStepStatus($status = -1, $message = '') {
 	}
 
 	// output
-	echo "<span class=\"update-step update-step-".$status_color."\">".$status_sign."</span><br />";
+	echo "<span class=\"update-step update-step-" . $status_color . "\">" . $status_sign . "</span><br />";
 
-	if ($status == -1 || $status == 2) {
+	if ($status == - 1 || $status == 2) {
 		$updatelog->logAction(ADM_ACTION, LOG_WARNING, 'Attention - last update task failed!!!');
 		$filelog->logAction(ADM_ACTION, LOG_WARNING, 'Attention - last update task failed!!!');
-
-	} elseif($status == 0 || $status == 1) {
+	} elseif ($status == 0 || $status == 1) {
 		$filelog->logAction(ADM_ACTION, LOG_WARNING, 'Success');
 	}
 }

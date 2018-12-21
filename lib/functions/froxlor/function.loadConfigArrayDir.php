@@ -16,8 +16,8 @@
  * @package    Functions
  *
  */
-
-function loadConfigArrayDir() {
+function loadConfigArrayDir()
+{
 
 	// Workaround until we use gettext
 	global $lng, $theme;
@@ -26,7 +26,7 @@ function loadConfigArrayDir() {
 	// so we can read from more than one directory
 	// and still be valid for old calls
 	$numargs = func_num_args();
-	if($numargs <= 0) {
+	if ($numargs <= 0) {
 		return null;
 	}
 
@@ -37,9 +37,9 @@ function loadConfigArrayDir() {
 	// we assume that this is a list of
 	// setting-groups to be selected
 	$selection = null;
-	for($x=0;$x<$numargs;$x++) {
+	for ($x = 0; $x < $numargs; $x ++) {
 		$arg = func_get_arg($x);
-		if(is_array($arg) && isset($arg[0])) {
+		if (is_array($arg) && isset($arg[0])) {
 			$selection = $arg;
 		} else {
 			$configdirs[] = $arg;
@@ -54,11 +54,7 @@ function loadConfigArrayDir() {
 		if (is_dir($data_dirname)) {
 			$data_dirhandle = opendir($data_dirname);
 			while (false !== ($data_filename = readdir($data_dirhandle))) {
-				if ($data_filename != '.'
-						&& $data_filename != '..'
-						&& $data_filename != ''
-						&& substr($data_filename, -4 ) == '.php'
-				) {
+				if ($data_filename != '.' && $data_filename != '..' && $data_filename != '' && substr($data_filename, - 4) == '.php') {
 					$data_files[] = $data_dirname . $data_filename;
 				}
 			}
@@ -69,7 +65,7 @@ function loadConfigArrayDir() {
 	if ($has_data) {
 		sort($data_files);
 		foreach ($data_files as $data_filename) {
-			$data = array_merge_recursive($data, include($data_filename));
+			$data = array_merge_recursive($data, include ($data_filename));
 		}
 	}
 
@@ -77,10 +73,7 @@ function loadConfigArrayDir() {
 	// to select, we'll handle this here
 	// (this is for multiserver-client settings)
 	$_data = array();
-	if ($selection != null
-			&& is_array($selection)
-			&& isset($selection[0])
-	) {
+	if ($selection != null && is_array($selection) && isset($selection[0])) {
 		$_data['groups'] = array();
 		foreach ($data['groups'] as $group => $data) {
 			if (in_array($group, $selection)) {

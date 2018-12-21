@@ -14,7 +14,6 @@
  * @package    Formfields
  *
  */
-
 return array(
 	'emails_addforwarder' => array(
 		'title' => $lng['emails']['forwarder_add'],

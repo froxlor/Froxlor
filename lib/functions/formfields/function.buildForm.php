@@ -16,32 +16,25 @@
  * @package    Functions
  *
  */
-
 function buildForm($form)
 {
 	$fields = '';
 
-	if(validateFormDefinition($form))
-	{
-		foreach($form['groups'] as $groupname => $groupdetails)
-		{
-			if(isset($groupdetails['title']) && $groupdetails['title'] != '')
-			{
+	if (validateFormDefinition($form)) {
+		foreach ($form['groups'] as $groupname => $groupdetails) {
+			if (isset($groupdetails['title']) && $groupdetails['title'] != '') {
 				$fields .= getFormGroupOutput($groupname, $groupdetails);
 			}
-			
-			if(validateFieldDefinition($groupdetails))
-			{
+
+			if (validateFieldDefinition($groupdetails)) {
 				// Prefetch form fields
-				foreach($groupdetails['fields'] as $fieldname => $fielddetails)
-				{
+				foreach ($groupdetails['fields'] as $fieldname => $fielddetails) {
 					$groupdetails['fields'][$fieldname] = array_merge_prefix($fielddetails, $fielddetails['type'], prefetchFormFieldData($fieldname, $fielddetails));
 					$form['groups'][$groupname]['fields'][$fieldname] = $groupdetails['fields'][$fieldname];
 				}
 
 				// Collect form field output
-				foreach($groupdetails['fields'] as $fieldname => $fielddetails)
-				{
+				foreach ($groupdetails['fields'] as $fieldname => $fielddetails) {
 					$fields .= getFormFieldOutput($fieldname, $fielddetails);
 				}
 			}

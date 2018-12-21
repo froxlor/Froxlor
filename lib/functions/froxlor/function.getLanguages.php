@@ -16,16 +16,13 @@
  * @package    Functions
  *
  */
-
-function getLanguages() {
-
+function getLanguages()
+{
 	$result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_LANGUAGE . "` ");
 	$languages_array = array();
 
 	while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-		if (!isset($languages_array[$row['language']])
-			&& !in_array($row['language'], $languages_array)
-		) {
+		if (! isset($languages_array[$row['language']]) && ! in_array($row['language'], $languages_array)) {
 			$languages_array[$row['language']] = html_entity_decode($row['language']);
 		}
 	}

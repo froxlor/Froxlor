@@ -16,28 +16,22 @@
  * @package    Functions
  *
  */
-
 function getFormFieldOutputOption($fieldname, $fielddata, $do_show = true)
 {
 	$returnvalue = '';
 
-	if(isset($fielddata['option_options']) && is_array($fielddata['option_options']) && !empty($fielddata['option_options']))
-	{
-		if(isset($fielddata['option_mode']) && $fielddata['option_mode'] == 'multiple')
-		{
+	if (isset($fielddata['option_options']) && is_array($fielddata['option_options']) && ! empty($fielddata['option_options'])) {
+		if (isset($fielddata['option_mode']) && $fielddata['option_mode'] == 'multiple') {
 			$multiple = true;
 			$fielddata['value'] = explode(',', $fielddata['value']);
-		}
-		else
-		{
+		} else {
 			$multiple = false;
 		}
 
 		$label = $fielddata['label'];
 		$options_array = $fielddata['option_options'];
 		$options = '';
-		foreach($options_array as $value => $title)
-		{
+		foreach ($options_array as $value => $title) {
 			$options .= makeoption($title, $value, $fielddata['value']);
 		}
 		eval("\$returnvalue = \"" . \Froxlor\UI\Template::getTemplate("formfields/option", true) . "\";");

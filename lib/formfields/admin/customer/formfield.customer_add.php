@@ -159,7 +159,7 @@ return array(
 				)
 			),
 			'section_cpre' => array(
-				'visible' => !empty($hosting_plans),
+				'visible' => ! empty($hosting_plans),
 				'title' => $lng['admin']['plans']['use_plan'],
 				'image' => 'icons/user_add.png',
 				'fields' => array(

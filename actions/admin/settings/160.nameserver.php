@@ -16,7 +16,6 @@
  * @package    Settings
  *
  */
-
 return array(
 	'groups' => array(
 		'nameserver' => array(
@@ -30,7 +29,7 @@ return array(
 					'default' => true,
 					'save_method' => 'storeSettingField',
 					'overview_option' => true
-					),
+				),
 				'system_dnsenabled' => array(
 					'label' => $lng['serversettings']['dnseditorenable'],
 					'settinggroup' => 'system',
@@ -38,7 +37,7 @@ return array(
 					'type' => 'bool',
 					'default' => false,
 					'save_method' => 'storeSettingField'
-					),
+				),
 				'system_dns_server' => array(
 					'label' => $lng['serversettings']['dns_server'],
 					'settinggroup' => 'system',
@@ -46,7 +45,10 @@ return array(
 					'type' => 'option',
 					'default' => 'bind',
 					'option_mode' => 'one',
-					'option_options' => array('Bind' => 'Bind9', 'PowerDNS' => 'PowerDNS'),
+					'option_options' => array(
+						'Bind' => 'Bind9',
+						'PowerDNS' => 'PowerDNS'
+					),
 					'save_method' => 'storeSettingField'
 				),
 				'system_bindconf_directory' => array(
@@ -56,16 +58,16 @@ return array(
 					'type' => 'string',
 					'string_type' => 'dir',
 					'default' => '/etc/bind/',
-					'save_method' => 'storeSettingField',
-					),
+					'save_method' => 'storeSettingField'
+				),
 				'system_bindreload_command' => array(
 					'label' => $lng['serversettings']['bindreload_command'],
 					'settinggroup' => 'system',
 					'varname' => 'bindreload_command',
 					'type' => 'string',
 					'default' => '/etc/init.d/bind9 reload',
-					'save_method' => 'storeSettingField',
-					),
+					'save_method' => 'storeSettingField'
+				),
 				'system_nameservers' => array(
 					'label' => $lng['serversettings']['nameservers'],
 					'settinggroup' => 'system',
@@ -74,8 +76,8 @@ return array(
 					'string_regexp' => '/^(([a-z0-9\-\._]+, ?)*[a-z0-9\-\._]+)?$/i',
 					'string_emptyallowed' => true,
 					'default' => '',
-					'save_method' => 'storeSettingFieldInsertBindTask',
-					),
+					'save_method' => 'storeSettingFieldInsertBindTask'
+				),
 				'system_mxservers' => array(
 					'label' => $lng['serversettings']['mxservers'],
 					'settinggroup' => 'system',
@@ -84,8 +86,8 @@ return array(
 					'string_regexp' => '/^(([0-9]+ [a-z0-9\-\._]+, ?)*[0-9]+ [a-z0-9\-\._]+)?$/i',
 					'string_emptyallowed' => true,
 					'default' => '',
-					'save_method' => 'storeSettingField',
-					),
+					'save_method' => 'storeSettingField'
+				),
 				'system_axfrservers' => array(
 					'label' => $lng['serversettings']['axfrservers'],
 					'settinggroup' => 'system',
@@ -95,7 +97,7 @@ return array(
 					'string_delimiter' => ',',
 					'string_emptyallowed' => true,
 					'default' => '',
-					'save_method' => 'storeSettingField',
+					'save_method' => 'storeSettingField'
 				),
 				'system_dns_createmailentry' => array(
 					'label' => $lng['serversettings']['mail_also_with_mxservers'],
@@ -104,7 +106,7 @@ return array(
 					'type' => 'bool',
 					'default' => false,
 					'save_method' => 'storeSettingField'
-					),
+				),
 				'system_defaultttl' => array(
 					'label' => $lng['serversettings']['defaultttl'],
 					'settinggroup' => 'system',
@@ -113,9 +115,9 @@ return array(
 					'default' => 604800, /* 1 week */
 					'int_min' => 3600, /* 1 hour */
 					'int_max' => 2147483647, /* integer max */
-					'save_method' => 'storeSettingField',
-					),
-				),
-			),
-		),
-	);
+					'save_method' => 'storeSettingField'
+				)
+			)
+		)
+	)
+);

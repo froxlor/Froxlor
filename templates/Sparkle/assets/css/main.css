@@ -662,14 +662,14 @@ input[type="button"], input[type="submit"], input[type="reset"], input[type="fil
 	margin: 0 1px;
 }
 
-input[type="button"]:hover, input[type="submit"]:hover, input[type="reset"]:hover, .btnlink:hover
-	{
+input[type="button"]:hover, input[type="submit"]:hover, input[type="reset"]:hover,
+	.btnlink:hover {
 	color: #333;
 	background-color: #dcdcdc;
 }
 
-input[type="button"]:active, input[type="submit"]:active, input[type="reset"]:active, .btnlink:active
-	{
+input[type="button"]:active, input[type="submit"]:active, input[type="reset"]:active,
+	.btnlink:active {
 	-webkit-box-shadow: inset 0 1px 8px rgba(0, 0, 0, 0.25);
 	-moz-box-shadow: inset 0 1px 8px rgba(0, 0, 0, 0.25);
 	box-shadow: inset 0 1px 8px rgba(0, 0, 0, 0.25);
@@ -681,12 +681,14 @@ input[type="submit"], input[class="yesbutton"], .btnlink {
 	background-color: #35aa47;
 }
 
-input[type="submit"]:hover, input[class="yesbutton"]:hover, .btnlink:hover {
+input[type="submit"]:hover, input[class="yesbutton"]:hover, .btnlink:hover
+	{
 	color: #fff;
 	background-color: #1d943b;
 }
 
-input[class="submit"]:active, input[class="yesbutton"]:active, .btnlink:active {
+input[class="submit"]:active, input[class="yesbutton"]:active, .btnlink:active
+	{
 	background-color: #35aa47;
 }
 

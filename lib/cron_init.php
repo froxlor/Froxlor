@@ -1,5 +1,4 @@
 <?php
-
 if (! defined('MASTER_CRONJOB'))
 	die('You cannot access this file directly!');
 

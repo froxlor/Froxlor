@@ -16,15 +16,11 @@
  * @package    Functions
  *
  */
-
 function getFormFieldDataBool($fieldname, $fielddata, &$input)
 {
-	if(isset($input[$fieldname]) && ($input[$fieldname] === '1' || $input[$fieldname] === 1 || $input[$fieldname] === true || strtolower($input[$fieldname]) === 'yes' || strtolower($input[$fieldname]) === 'ja'))
-	{
+	if (isset($input[$fieldname]) && ($input[$fieldname] === '1' || $input[$fieldname] === 1 || $input[$fieldname] === true || strtolower($input[$fieldname]) === 'yes' || strtolower($input[$fieldname]) === 'ja')) {
 		$newfieldvalue = '1';
-	}
-	else
-	{
+	} else {
 		$newfieldvalue = '0';
 	}
 

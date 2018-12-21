@@ -16,17 +16,13 @@
  * @package    Functions
  *
  */
-
 function validateFormFieldDate($fieldname, $fielddata, $newfieldvalue)
 {
-	if($newfieldvalue == '0000-00-00' || preg_match('/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', $newfieldvalue))
-	{
+	if ($newfieldvalue == '0000-00-00' || preg_match('/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', $newfieldvalue)) {
 		$returnvalue = true;
-	}
-	else
-	{
+	} else {
 		$returnvalue = false;
 	}
-	
+
 	return $returnvalue;
 }

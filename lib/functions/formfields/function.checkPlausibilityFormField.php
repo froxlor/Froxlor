@@ -16,16 +16,12 @@
  * @package    Functions
  *
  */
-
 function checkPlausibilityFormField($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues)
 {
 	$returnvalue = '';
-	if(is_array($fielddata) && isset($fielddata['plausibility_check_method']) && $fielddata['plausibility_check_method'] != '' && function_exists($fielddata['plausibility_check_method']))
-	{
+	if (is_array($fielddata) && isset($fielddata['plausibility_check_method']) && $fielddata['plausibility_check_method'] != '' && function_exists($fielddata['plausibility_check_method'])) {
 		$returnvalue = call_user_func($fielddata['plausibility_check_method'], $fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues);
-	}
-	else
-	{
+	} else {
 		$returnvalue = false;
 	}
 	return $returnvalue;

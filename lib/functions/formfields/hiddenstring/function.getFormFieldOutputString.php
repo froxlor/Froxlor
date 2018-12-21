@@ -16,7 +16,6 @@
  * @package    Functions
  *
  */
-
 function getFormFieldOutputHiddenString($fieldname, $fielddata, $do_show = true)
 {
 	$label = $fielddata['label'];

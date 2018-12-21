@@ -16,30 +16,22 @@
  * @package    Functions
  *
  */
-
 function validateFormFieldOption($fieldname, $fielddata, $newfieldvalue)
 {
 	$returnvalue = true;
 
-	if(isset($fielddata['option_mode']) && $fielddata['option_mode'] == 'multiple')
-	{
+	if (isset($fielddata['option_mode']) && $fielddata['option_mode'] == 'multiple') {
 		$options = explode(',', $newfieldvalue);
-		foreach($options as $option)
-		{
+		foreach ($options as $option) {
 			$returnvalue = ($returnvalue && isset($fielddata['option_options'][$option]));
 		}
-	}
-	else
-	{
+	} else {
 		$returnvalue = isset($fielddata['option_options'][$newfieldvalue]);
 	}
 
-	if($returnvalue === true || $fielddata['visible'] == false)
-	{
+	if ($returnvalue === true || $fielddata['visible'] == false) {
 		return true;
-	}
-	else
-	{
+	} else {
 		if (isset($fielddata['option_emptyallowed']) && $fielddata['option_emptyallowed']) {
 			return true;
 		}

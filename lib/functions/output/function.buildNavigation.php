@@ -19,48 +19,47 @@
 
 /**
  * Build Navigation Sidebar
- * @param array navigation data
- * @param array userinfo the userinfo of the user
- * @return string the content of the navigation bar
  *
+ * @param
+ *        	array navigation data
+ * @param
+ *        	array userinfo the userinfo of the user
+ * @return string the content of the navigation bar
+ *        
  * @author Florian Lippert <flo@syscp.org>
  */
-
-function buildNavigation($navigation, $userinfo) {
+function buildNavigation($navigation, $userinfo)
+{
 	global $theme;
 
 	$returnvalue = '';
 
 	// sanitize user-given input (url-manipulation)
 	if (isset($_GET['page']) && is_array($_GET['page'])) {
-		$_GET['page'] = (string)$_GET['page'][0];
+		$_GET['page'] = (string) $_GET['page'][0];
 	}
 	if (isset($_GET['action']) && is_array($_GET['action'])) {
-		$_GET['action'] = (string)$_GET['action'][0];
+		$_GET['action'] = (string) $_GET['action'][0];
 	}
 
-	foreach($navigation as $box) {
-		if ((!isset($box['show_element']) || $box['show_element'] === true) &&
-			(!isset($box['required_resources']) || $box['required_resources'] == '' || (isset($userinfo[$box['required_resources']]) && ((int)$userinfo[$box['required_resources']] > 0 || $userinfo[$box['required_resources']] == '-1')))) {
+	foreach ($navigation as $box) {
+		if ((! isset($box['show_element']) || $box['show_element'] === true) && (! isset($box['required_resources']) || $box['required_resources'] == '' || (isset($userinfo[$box['required_resources']]) && ((int) $userinfo[$box['required_resources']] > 0 || $userinfo[$box['required_resources']] == '-1')))) {
 			$navigation_links = '';
 			foreach ($box['elements'] as $element_id => $element) {
-				if ((!isset($element['show_element']) || $element['show_element'] === true) &&
-					(!isset($element['required_resources']) || $element['required_resources'] == '' || (isset($userinfo[$element['required_resources']]) && ((int)$userinfo[$element['required_resources']] > 0 || $userinfo[$element['required_resources']] == '-1')))
-				) {
+				if ((! isset($element['show_element']) || $element['show_element'] === true) && (! isset($element['required_resources']) || $element['required_resources'] == '' || (isset($userinfo[$element['required_resources']]) && ((int) $userinfo[$element['required_resources']] > 0 || $userinfo[$element['required_resources']] == '-1')))) {
 					$target = '';
 					$active = '';
 					$navurl = '#';
 					if (isset($element['url']) && trim($element['url']) != '') {
 						// append sid only to local
 
-						if (!preg_match('/^https?\:\/\//', $element['url'])
-						   && (isset($userinfo['hash']) && $userinfo['hash'] != '')) {
+						if (! preg_match('/^https?\:\/\//', $element['url']) && (isset($userinfo['hash']) && $userinfo['hash'] != '')) {
 							// generate sid with ? oder &
 
 							if (strpos($element['url'], '?') !== false) {
-								$element['url'].= '&s=' . $userinfo['hash'];
+								$element['url'] .= '&s=' . $userinfo['hash'];
 							} else {
-								$element['url'].= '?s=' . $userinfo['hash'];
+								$element['url'] .= '?s=' . $userinfo['hash'];
 							}
 						}
 
@@ -70,7 +69,7 @@ function buildNavigation($navigation, $userinfo) {
 
 						if (isset($_GET['page']) && substr_count($element['url'], "page=" . $_GET['page']) > 0 && substr_count($element['url'], basename($_SERVER["SCRIPT_FILENAME"])) > 0 && isset($_GET['action']) && substr_count($element['url'], "action=" . $_GET['action']) > 0) {
 							$active = ' active';
-						} elseif (isset($_GET['page']) && substr_count($element['url'], "page=" . $_GET['page']) > 0 && substr_count($element['url'], basename($_SERVER["SCRIPT_FILENAME"])) > 0 && substr_count($element['url'], "action=") == 0 && !isset($_GET['action'])) {
+						} elseif (isset($_GET['page']) && substr_count($element['url'], "page=" . $_GET['page']) > 0 && substr_count($element['url'], basename($_SERVER["SCRIPT_FILENAME"])) > 0 && substr_count($element['url'], "action=") == 0 && ! isset($_GET['action'])) {
 							$active = ' active';
 						}
 
@@ -89,20 +88,20 @@ function buildNavigation($navigation, $userinfo) {
 				if (isset($box['url']) && trim($box['url']) != '') {
 					// append sid only to local
 
-					if (!preg_match('/^https?\:\/\//', $box['url']) && (isset($userinfo['hash']) && $userinfo['hash'] != '')) {
+					if (! preg_match('/^https?\:\/\//', $box['url']) && (isset($userinfo['hash']) && $userinfo['hash'] != '')) {
 						// generate sid with ? oder &
 
 						if (strpos($box['url'], '?') !== false) {
-							$box['url'].= '&s=' . $userinfo['hash'];
+							$box['url'] .= '&s=' . $userinfo['hash'];
 						} else {
-							$box['url'].= '?s=' . $userinfo['hash'];
+							$box['url'] .= '?s=' . $userinfo['hash'];
 						}
 					}
 
 					if (isset($box['new_window']) && $box['new_window'] == true) {
 						$target = ' target="_blank"';
 					}
-					
+
 					$navurl = htmlspecialchars($box['url']);
 					$navlabel = $box['label'];
 				} else {

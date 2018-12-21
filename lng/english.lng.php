@@ -20,7 +20,6 @@
 /**
  * Global
  */
-
 $lng['translator'] = '';
 $lng['panel']['edit'] = 'Edit';
 $lng['panel']['delete'] = 'Delete';
@@ -499,7 +498,7 @@ $lng['admin']['updatecounters'] = 'Recalculate resource usage';
 $lng['question']['admin_counters_reallyupdate'] = 'Do you really want to recalculate resource usage?';
 $lng['panel']['pathDescription'] = 'If the directory doesn\'t exist, it will be created automatically.';
 $lng['panel']['pathDescriptionEx'] = '<br /><br />If you want a redirect to another domain than this entry has to start with http:// or https://.';
-$lng['panel']['pathDescriptionSubdomain'] = $lng['panel']['pathDescription'].$lng['panel']['pathDescriptionEx']."<br /><br />If the URL ends with / it is considered a folder, if not, it is treated as file.";
+$lng['panel']['pathDescriptionSubdomain'] = $lng['panel']['pathDescription'] . $lng['panel']['pathDescriptionEx'] . "<br /><br />If the URL ends with / it is considered a folder, if not, it is treated as file.";
 
 // ADDED IN 1.2.16-svn6
 
@@ -681,10 +680,10 @@ $lng['admin']['sslsettings'] = 'SSL settings';
 $lng['cronjobs']['notyetrun'] = 'Not yet run';
 $lng['serversettings']['default_vhostconf']['title'] = 'Default vHost-settings';
 $lng['admin']['specialsettings_replacements'] = "You can use the following variables:<br/><code>{DOMAIN}</code>, <code>{DOCROOT}</code>, <code>{CUSTOMER}</code>, <code>{IP}</code>, <code>{PORT}</code>, <code>{SCHEME}</code><br/>";
-$lng['serversettings']['default_vhostconf']['description'] = 'The content of this field will be included into this ip/port vHost container directly. '.$lng['admin']['specialsettings_replacements'].' Attention: The code won\'t be checked for any errors. If it contains errors, webserver might not start again!';
+$lng['serversettings']['default_vhostconf']['description'] = 'The content of this field will be included into this ip/port vHost container directly. ' . $lng['admin']['specialsettings_replacements'] . ' Attention: The code won\'t be checked for any errors. If it contains errors, webserver might not start again!';
 $lng['serversettings']['apache_globaldiropt']['title'] = 'Directory options for customer-prefix';
 $lng['serversettings']['apache_globaldiropt']['description'] = 'The content of this field will be included into the 05_froxlor_dirfix_nofcgid.conf apache config. If empty, the default value is used:<br><br>apache >=2.4<br><code>Require all granted<br>AllowOverride All</code><br><br>apache <=2.2<br><code>Order allow,deny<br>allow from all</code>';
-$lng['serversettings']['default_vhostconf_domain']['description'] = 'The content of this field will be included into the domain vHost container directly. '.$lng['admin']['specialsettings_replacements'].' Attention: The code won\'t be checked for any errors. If it contains errors, webserver might not start again!';
+$lng['serversettings']['default_vhostconf_domain']['description'] = 'The content of this field will be included into the domain vHost container directly. ' . $lng['admin']['specialsettings_replacements'] . ' Attention: The code won\'t be checked for any errors. If it contains errors, webserver might not start again!';
 $lng['error']['invalidip'] = 'Invalid IP address: %s';
 $lng['serversettings']['decimal_places'] = 'Number of decimal places in traffic/webspace output';
 
@@ -823,7 +822,7 @@ $lng['admin']['show_version_footer']['description'] = 'Show the Froxlor version 
 $lng['admin']['froxlor_graphic']['title'] = 'Header graphic for Froxlor';
 $lng['admin']['froxlor_graphic']['description'] = 'What graphic should be shown in the header';
 
-//improved froxlor
+// improved froxlor
 
 $lng['menue']['phpsettings']['maintitle'] = 'PHP Configurations';
 $lng['admin']['phpsettings']['title'] = 'PHP Configuration';
@@ -866,7 +865,7 @@ $lng['serversettings']['mod_fcgid']['tmpdir']['description'] = 'Where should the
 $lng['serversettings']['mod_fcgid']['peardir']['title'] = 'Global PEAR directories';
 $lng['serversettings']['mod_fcgid']['peardir']['description'] = 'Which global PEAR directories should be replaced in every php.ini config? Different directories must be separated by a colon.';
 
-//improved Froxlor  2
+// improved Froxlor 2
 
 $lng['admin']['templates']['index_html'] = 'index file for newly created customer directories';
 $lng['admin']['templates']['SERVERNAME'] = 'Replaced with the servername.';
@@ -1564,8 +1563,8 @@ $lng['tasks']['remove_emailacc_files'] = 'Delete customer e-mail data.';
 // ADDED IN 0.9.28-svn5
 $lng['error']['operationnotpermitted'] = 'Operation not permitted!';
 $lng['error']['featureisdisabled'] = 'Feature %s is disabled. Please contact your service provider.';
-$lng['serversettings']['catchall_enabled']['title']  = 'Use Catchall';
-$lng['serversettings']['catchall_enabled']['description']  = 'Do you want to provide your customers the catchall-feature?';
+$lng['serversettings']['catchall_enabled']['title'] = 'Use Catchall';
+$lng['serversettings']['catchall_enabled']['description'] = 'Do you want to provide your customers the catchall-feature?';
 
 // ADDED IN 0.9.28.svn6
 $lng['serversettings']['apache_24']['title'] = 'Use modifications for Apache 2.4';
@@ -2045,8 +2044,8 @@ $lng['2fa']['2fa_verify'] = 'Verify code';
 $lng['mails']['2fa']['mailbody'] = 'Hello,\n\nyour 2FA login-code is: {CODE}.\n\nThis is an automatically created\ne-mail, please do not answer!\n\nYours sincerely, your administrator';
 $lng['mails']['2fa']['subject'] = 'Froxlor - 2FA Code';
 $lng['2fa']['2fa_overview_desc'] = 'Here you can activate a two-factor authentication for your account.<br><br>You can either use an authenticator-app (time-based one-time password / TOTP) or let froxlor send you an email to your account-address after each successful login with a one-time password.';
-$lng['2fa']['2fa_email_desc'] = 'Your account is set up to use one-time passwords via e-mail. To deactivate, click on "'.$lng['2fa']['2fa_delete'].'"';
-$lng['2fa']['2fa_ga_desc'] = 'Your account is set up to use time-based one-time passwords via authenticator-app. Please scan the QR code below with your desired authenticator app to generate the codes. To deactivate, click on "'.$lng['2fa']['2fa_delete'].'"';
+$lng['2fa']['2fa_email_desc'] = 'Your account is set up to use one-time passwords via e-mail. To deactivate, click on "' . $lng['2fa']['2fa_delete'] . '"';
+$lng['2fa']['2fa_ga_desc'] = 'Your account is set up to use time-based one-time passwords via authenticator-app. Please scan the QR code below with your desired authenticator app to generate the codes. To deactivate, click on "' . $lng['2fa']['2fa_delete'] . '"';
 $lng['admin']['logviewenabled'] = 'Enable access to access/error-logs';
 $lng['panel']['viewlogs'] = 'View logfiles';
 $lng['panel']['not_configured'] = 'System not configured yet. Click here to go to configurations.';

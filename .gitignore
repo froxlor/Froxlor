@@ -16,3 +16,4 @@ logs/*
 !templates/Sparkle/
 !templates/misc/
 templates/Froxlor/assets/img/logo_custom.png
+vendor/

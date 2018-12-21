@@ -20,19 +20,20 @@
 /**
  * Get template from filesystem
  *
- * @param string Templatename
- * @param string noarea If area should be used to get template
+ * @param
+ *        	string Templatename
+ * @param
+ *        	string noarea If area should be used to get template
  * @return string The Template
  * @author Florian Lippert <flo@syscp.org>
  */
-
-function getTemplate($template, $noarea = 0) {
-
+function getTemplate($template, $noarea = 0)
+{
 	global $templatecache, $theme;
 
 	$fallback_theme = 'Sparkle';
 
-	if (!isset($theme) || $theme == '') {
+	if (! isset($theme) || $theme == '') {
 		$theme = $fallback_theme;
 	}
 
@@ -40,7 +41,7 @@ function getTemplate($template, $noarea = 0) {
 		$template = AREA . '/' . $template;
 	}
 
-	if (!isset($templatecache[$theme][$template])) {
+	if (! isset($templatecache[$theme][$template])) {
 
 		$filename = './templates/' . $theme . '/' . $template . '.tpl';
 
@@ -78,13 +79,11 @@ function getTemplate($template, $noarea = 0) {
  *
  * @return string|bool content on success, else false
  */
-function _checkAndParseTpl($filename) {
-
+function _checkAndParseTpl($filename)
+{
 	$templatefile = "";
 
-	if (file_exists($filename)
-		&& is_readable($filename)
-	) {
+	if (file_exists($filename) && is_readable($filename)) {
 
 		$templatefile = addcslashes(file_get_contents($filename), '"\\');
 

@@ -16,20 +16,15 @@
  * @package    Functions
  *
  */
-
 function getFormFieldDataOption($fieldname, $fielddata, &$input)
 {
-	if(isset($input[$fieldname]))
-	{
+	if (isset($input[$fieldname])) {
 		$newfieldvalue = $input[$fieldname];
-	}
-	else
-	{
+	} else {
 		$newfieldvalue = $fielddata['default'];
 	}
-	
-	if(is_array($newfieldvalue))
-	{
+
+	if (is_array($newfieldvalue)) {
 		$newfieldvalue = implode(',', $newfieldvalue);
 	}
 

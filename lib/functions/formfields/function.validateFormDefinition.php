@@ -16,15 +16,13 @@
  * @package    Functions
  *
  */
-
 function validateFormDefinition($form)
 {
 	$returnvalue = false;
-	
-	if(is_array($form) && !empty($form) && isset($form['groups']) && is_array($form['groups']) && !empty($form['groups']))
-	{
+
+	if (is_array($form) && ! empty($form) && isset($form['groups']) && is_array($form['groups']) && ! empty($form['groups'])) {
 		$returnvalue = true;
 	}
-	
+
 	return $returnvalue;
 }

@@ -20,19 +20,21 @@
 /**
  * Prints one ore more errormessages on screen
  *
- * @param array Errormessages
- * @param string A %s in the errormessage will be replaced by this string.
+ * @param
+ *        	array Errormessages
+ * @param
+ *        	string A %s in the errormessage will be replaced by this string.
  * @author Florian Lippert <flo@syscp.org>
  * @author Ron Brand <ron.brand@web.de>
  */
-function standard_error($errors = '', $replacer = '', $throw_exception = false) {
-
+function standard_error($errors = '', $replacer = '', $throw_exception = false)
+{
 	global $userinfo, $s, $header, $footer, $lng, $theme;
 
 	$_SESSION['requestData'] = $_POST;
 	$replacer = htmlentities($replacer);
 
-	if (!is_array($errors)) {
+	if (! is_array($errors)) {
 		$errors = array(
 			$errors
 		);
@@ -40,14 +42,16 @@ function standard_error($errors = '', $replacer = '', $throw_exception = false) 
 
 	$link = '';
 	if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $_SERVER['HTTP_HOST']) !== false) {
-		$link = '<a href="'.htmlentities($_SERVER['HTTP_REFERER']).'">'.$lng['panel']['back'].'</a>';
+		$link = '<a href="' . htmlentities($_SERVER['HTTP_REFERER']) . '">' . $lng['panel']['back'] . '</a>';
 	}
 
 	$error = '';
 	foreach ($errors as $single_error) {
 		if (isset($lng['error'][$single_error])) {
 			$single_error = $lng['error'][$single_error];
-			$single_error = strtr($single_error, array('%s' => $replacer));
+			$single_error = strtr($single_error, array(
+				'%s' => $replacer
+			));
 		} else {
 			$error = 'Unknown Error (' . $single_error . '): ' . $replacer;
 			break;
@@ -56,7 +60,7 @@ function standard_error($errors = '', $replacer = '', $throw_exception = false) 
 		if (empty($error)) {
 			$error = $single_error;
 		} else {
-			$error.= ' ' . $single_error;
+			$error .= ' ' . $single_error;
 		}
 	}
 
@@ -64,17 +68,18 @@ function standard_error($errors = '', $replacer = '', $throw_exception = false) 
 		throw new Exception(strip_tags($error), 400);
 	}
 	eval("echo \"" . getTemplate('misc/error', '1') . "\";");
-	exit;
+	exit();
 }
 
-function dynamic_error($message) {
+function dynamic_error($message)
+{
 	global $userinfo, $s, $header, $footer, $lng, $theme;
 	$_SESSION['requestData'] = $_POST;
 	$link = '';
 	if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $_SERVER['HTTP_HOST']) !== false) {
-		$link = '<a href="'.htmlentities($_SERVER['HTTP_REFERER']).'">'.$lng['panel']['back'].'</a>';
+		$link = '<a href="' . htmlentities($_SERVER['HTTP_REFERER']) . '">' . $lng['panel']['back'] . '</a>';
 	}
 	$error = $message;
 	eval("echo \"" . getTemplate('misc/error', '1') . "\";");
-	exit;
+	exit();
 }

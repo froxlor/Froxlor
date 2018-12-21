@@ -1,7 +1,7 @@
 <?php
 namespace Froxlor\Validate\Form;
 
-class String
+class Strings
 {
 
 	public static function validateFormFieldString($fieldname, $fielddata, $newfieldvalue)

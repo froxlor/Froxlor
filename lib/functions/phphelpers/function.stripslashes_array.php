@@ -22,29 +22,28 @@
  * can select which fields should be handled by htmlentities and with advantage,
  * that you can eliminate all slashes by setting complete=true
  *
- * @param array The subject array
- * @param int See php documentation about this
- * @param string See php documentation about this
- * @param string The fields which should be checked for, separated by spaces
- * @param bool Select true to use stripslashes_complete instead of stripslashes
+ * @param
+ *        	array The subject array
+ * @param
+ *        	int See php documentation about this
+ * @param
+ *        	string See php documentation about this
+ * @param
+ *        	string The fields which should be checked for, separated by spaces
+ * @param
+ *        	bool Select true to use stripslashes_complete instead of stripslashes
  * @return array The array with stripslashe'd strings
  * @author Florian Lippert <flo@syscp.org>
  */
-
 function stripslashes_array($subject, $fields = '', $complete = false)
 {
-	if(is_array($subject))
-	{
-		if(!is_array($fields))
-		{
+	if (is_array($subject)) {
+		if (! is_array($fields)) {
 			$fields = array_trim(explode(' ', $fields));
 		}
 
-		foreach($subject as $field => $value)
-		{
-			if((!is_array($fields) || empty($fields))
-			   || (is_array($fields) && !empty($fields) && in_array($field, $fields)))
-			{
+		foreach ($subject as $field => $value) {
+			if ((! is_array($fields) || empty($fields)) || (is_array($fields) && ! empty($fields) && in_array($field, $fields))) {
 				/**
 				 * Just call ourselve to manage multi-dimensional arrays
 				 */
@@ -52,15 +51,10 @@ function stripslashes_array($subject, $fields = '', $complete = false)
 				$subject[$field] = stripslashes_array($subject[$field], $fields, $complete);
 			}
 		}
-	}
-	else
-	{
-		if($complete == true)
-		{
+	} else {
+		if ($complete == true) {
 			$subject = stripslashes_complete($subject);
-		}
-		else
-		{
+		} else {
 			$subject = stripslashes($subject);
 		}
 	}

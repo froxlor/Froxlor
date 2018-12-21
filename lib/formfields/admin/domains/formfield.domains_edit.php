@@ -187,7 +187,9 @@ return array(
 								'value' => '1'
 							)
 						),
-						'value' => array($result['writeaccesslog'])
+						'value' => array(
+							$result['writeaccesslog']
+						)
 					),
 					'writeerrorlog' => array(
 						'label' => $lng['admin']['writeerrorlog']['title'],
@@ -199,7 +201,9 @@ return array(
 								'value' => '1'
 							)
 						),
-						'value' => array($result['writeerrorlog'])
+						'value' => array(
+							$result['writeerrorlog']
+						)
 					)
 				)
 			),
@@ -252,7 +256,7 @@ return array(
 						'desc' => $lng['admin']['domain_http2']['description'],
 						'type' => 'checkbox',
 						'values' => array(
-							array (
+							array(
 								'label' => $lng['panel']['yes'],
 								'value' => '1'
 							)
@@ -307,16 +311,12 @@ return array(
 						)
 					),
 					'ocsp_stapling' => array(
-						'visible' => ($ssl_ipsandports != '' ? true : false) &&
-								\Froxlor\Settings::Get('system.webserver') != 'lighttpd',
+						'visible' => ($ssl_ipsandports != '' ? true : false) && \Froxlor\Settings::Get('system.webserver') != 'lighttpd',
 						'label' => $lng['admin']['domain_ocsp_stapling']['title'],
-						'desc' => $lng['admin']['domain_ocsp_stapling']['description'] .
-								(\Froxlor\Settings::Get('system.webserver') == 'nginx' ?
-								$lng['admin']['domain_ocsp_stapling']['nginx_version_warning'] :
-								""),
+						'desc' => $lng['admin']['domain_ocsp_stapling']['description'] . (\Froxlor\Settings::Get('system.webserver') == 'nginx' ? $lng['admin']['domain_ocsp_stapling']['nginx_version_warning'] : ""),
 						'type' => 'checkbox',
 						'values' => array(
-							array (
+							array(
 								'label' => $lng['panel']['yes'],
 								'value' => '1'
 							)
@@ -324,7 +324,7 @@ return array(
 						'value' => array(
 							$result['ocsp_stapling']
 						)
-					),
+					)
 				)
 			),
 			'section_c' => array(

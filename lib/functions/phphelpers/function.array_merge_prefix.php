@@ -16,28 +16,20 @@
  * @package    Functions
  *
  */
-
 function array_merge_prefix($array1, $key_prefix, $array2)
 {
-	if(is_array($array1) && is_array($array2))
-	{
-		if($key_prefix != '')
-		{
-			foreach($array2 as $key => $value)
-			{
+	if (is_array($array1) && is_array($array2)) {
+		if ($key_prefix != '') {
+			foreach ($array2 as $key => $value) {
 				$array1[$key_prefix . '_' . $key] = $value;
 				unset($array2[$key]);
 			}
 			unset($array2);
 			return $array1;
-		}
-		else
-		{
+		} else {
 			return array_merge($array1, $array2);
 		}
-	}
-	else
-	{
+	} else {
 		return $array1;
 	}
 }

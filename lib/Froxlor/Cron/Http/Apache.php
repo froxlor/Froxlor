@@ -2,7 +2,7 @@
 namespace Froxlor\Cron\Http;
 
 use Froxlor\Database\Database;
-use \Froxlor\Settings;
+use Froxlor\Settings;
 use Froxlor\Cron\Http\Php\Fpm;
 use Froxlor\Cron\Http\Php\PhpInterface;
 

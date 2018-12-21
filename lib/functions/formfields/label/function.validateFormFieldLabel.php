@@ -16,11 +16,9 @@
  * @package    Functions
  *
  */
-
 function validateFormFieldLabel($fieldname, $fielddata, $newfieldvalue)
 {
 	// Return false, in case we happen to have that field in our $input array, so someone doesn't get the chance to save crap to our database
 	// TODO: Throw some error that actually makes sense - false would just throw unknown error
-
 	return false;
 }

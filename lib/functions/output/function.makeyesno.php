@@ -20,33 +20,34 @@
 /**
  * Returns HTML Code for two radio buttons with two choices: yes and no
  *
- * @param string Name of HTML-Variable
- * @param string Value which will be returned if user chooses yes
- * @param string Value which will be returned if user chooses no
- * @param string Value which is chosen by default
- * @param bool   Whether this element is disabled or not (default: false)
+ * @param
+ *        	string Name of HTML-Variable
+ * @param
+ *        	string Value which will be returned if user chooses yes
+ * @param
+ *        	string Value which will be returned if user chooses no
+ * @param
+ *        	string Value which is chosen by default
+ * @param
+ *        	bool Whether this element is disabled or not (default: false)
  * @return string HTML Code
  * @author Florian Lippert <flo@syscp.org> (2003-2009)
- * @author     Froxlor team <team@froxlor.org> (2010-)
+ * @author Froxlor team <team@froxlor.org> (2010-)
  */
-
 function makeyesno($name, $yesvalue, $novalue = '', $yesselected = '', $disabled = false)
 {
 	global $lng, $theme;
-	
-	if($disabled) {
+
+	if ($disabled) {
 		$d = ' disabled="disabled"';
 	} else {
 		$d = '';
 	}
-	
+
 	if (isset($_SESSION['requestData'])) {
 		$yesselected = $yesselected & $_SESSION['requestData'][$name];
 	}
-	
-	return '<select class="dropdown_noborder" id="' . $name . '" name="' . $name . '"'
-	.$d.'>
-	<option value="' . $yesvalue . '"' . ($yesselected ? ' selected="selected"' : '') . '>' 
-	. $lng['panel']['yes'] . '</option><option value="' . $novalue . '"' 
-	. ($yesselected ? '' : ' selected="selected"') . '>' . $lng['panel']['no'] . '</option></select>';
+
+	return '<select class="dropdown_noborder" id="' . $name . '" name="' . $name . '"' . $d . '>
+	<option value="' . $yesvalue . '"' . ($yesselected ? ' selected="selected"' : '') . '>' . $lng['panel']['yes'] . '</option><option value="' . $novalue . '"' . ($yesselected ? '' : ' selected="selected"') . '>' . $lng['panel']['no'] . '</option></select>';
 }

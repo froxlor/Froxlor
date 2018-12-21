@@ -11,14 +11,14 @@
  *
  * @return void|boolean
  */
-function phpErrHandler($errno, $errstr, $errfile, $errline, $errcontext) {
-
-	if (!(error_reporting() & $errno)) {
+function phpErrHandler($errno, $errstr, $errfile, $errline, $errcontext)
+{
+	if (! (error_reporting() & $errno)) {
 		// This error code is not included in error_reporting
 		return;
 	}
 
-	if (!isset($_SERVER['SHELL']) || (isset($_SERVER['SHELL']) && $_SERVER['SHELL'] == '')) {
+	if (! isset($_SERVER['SHELL']) || (isset($_SERVER['SHELL']) && $_SERVER['SHELL'] == '')) {
 		global $theme;
 
 		// fallback
@@ -28,10 +28,10 @@ function phpErrHandler($errno, $errstr, $errfile, $errline, $errcontext) {
 		// prevent possible file-path-disclosure
 		$errfile = str_replace(\Froxlor\Froxlor::getInstallDir(), "", $errfile);
 		// if we're not on the shell, output a nicer error-message
-		$err_hint = file_get_contents(\Froxlor\Froxlor::getInstallDir().'/templates/'.$theme.'/misc/phperrornice.tpl');
+		$err_hint = file_get_contents(\Froxlor\Froxlor::getInstallDir() . '/templates/' . $theme . '/misc/phperrornice.tpl');
 		// replace values
-		$err_hint = str_replace("<TEXT>", '#'.$errno.' '.$errstr, $err_hint);
-		$err_hint = str_replace("<DEBUG>", $errfile.':'.$errline, $err_hint);
+		$err_hint = str_replace("<TEXT>", '#' . $errno . ' ' . $errstr, $err_hint);
+		$err_hint = str_replace("<DEBUG>", $errfile . ':' . $errline, $err_hint);
 
 		// show
 		echo $err_hint;

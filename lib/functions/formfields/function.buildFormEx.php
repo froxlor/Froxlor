@@ -14,9 +14,8 @@
  * @package    Settings
  *
  */
-
-function buildFormEx($form, $part = '') {
-
+function buildFormEx($form, $part = '')
+{
 	$fields = '';
 
 	if (validateFormDefinition($form)) {
@@ -26,18 +25,18 @@ function buildFormEx($form, $part = '') {
 				if (isset($groupdetails['title']) && $groupdetails['title'] != '') {
 					$fields .= getFormOverviewGroupOutput($groupname, $groupdetails);
 				}
-			}
-			// only show one section
+			} // only show one section
 			elseif ($part != '' && ($groupname == $part || $part == 'all')) {
 				/**
 				 * this part checks for the 'websrv_avail' entry in the settings-array
-				 * if found, we check if the current webserver is in the array. If this
+				 * if found, we check if the current webserver is in the array.
+				 * If this
 				 * is not the case, we change the setting type to "hidden", #502
 				 */
 				$do_show = true;
 				if (isset($groupdetails['websrv_avail']) && is_array($groupdetails['websrv_avail'])) {
 					$websrv = Settings::Get('system.webserver');
-					if (!in_array($websrv, $groupdetails['websrv_avail'])) {
+					if (! in_array($websrv, $groupdetails['websrv_avail'])) {
 						$do_show = false;
 					}
 				}
@@ -49,24 +48,24 @@ function buildFormEx($form, $part = '') {
 					$do_show = $groupdetails['visible'];
 				}
 
-				//if ($do_show) {
-					if (isset($groupdetails['title']) && $groupdetails['title'] != '') {
-						$fields .= getFormGroupOutput($groupname, $groupdetails);
+				// if ($do_show) {
+				if (isset($groupdetails['title']) && $groupdetails['title'] != '') {
+					$fields .= getFormGroupOutput($groupname, $groupdetails);
+				}
+
+				if (validateFieldDefinition($groupdetails)) {
+					// Prefetch form fields
+					foreach ($groupdetails['fields'] as $fieldname => $fielddetails) {
+						$groupdetails['fields'][$fieldname] = array_merge_prefix($fielddetails, $fielddetails['type'], prefetchFormFieldData($fieldname, $fielddetails));
+						$form['groups'][$groupname]['fields'][$fieldname] = $groupdetails['fields'][$fieldname];
 					}
 
-					if (validateFieldDefinition($groupdetails)) {
-						// Prefetch form fields
-						foreach ($groupdetails['fields'] as $fieldname => $fielddetails) {
-							$groupdetails['fields'][$fieldname] = array_merge_prefix($fielddetails, $fielddetails['type'], prefetchFormFieldData($fieldname, $fielddetails));
-							$form['groups'][$groupname]['fields'][$fieldname] = $groupdetails['fields'][$fieldname];
-						}
-
-						// Collect form field output
-						foreach ($groupdetails['fields'] as $fieldname => $fielddetails) {
-							$fields .= getFormFieldOutput($fieldname, $fielddetails);
-						}
+					// Collect form field output
+					foreach ($groupdetails['fields'] as $fieldname => $fielddetails) {
+						$fields .= getFormFieldOutput($fieldname, $fielddetails);
 					}
-				//}
+				}
+				// }
 			}
 		}
 	}

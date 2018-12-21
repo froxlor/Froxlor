@@ -19,7 +19,6 @@
 /**
  * Error References Mapping (do not need to be translated)
  */
-
 $lng['error']['myloginname'] = '\'' . $lng['login']['username'] . '\'';
 $lng['error']['mypassword'] = '\'' . $lng['login']['password'] . '\'';
 $lng['error']['oldpassword'] = '\'' . $lng['changepassword']['old_password'] . '\'';

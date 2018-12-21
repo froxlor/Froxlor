@@ -15,19 +15,25 @@
  * @package    Panel
  *
  */
-
-class linker {
+class linker
+{
 
 	private $protocol = '';
+
 	private $username = '';
+
 	private $password = '';
+
 	private $hostname = '';
+
 	private $port = 80;
+
 	private $filename = 'index.php';
 
 	private $args = array();
 
-	public function __construct($file = 'index.php', $sessionid = '', $hostname = '', $protocol = '', $port = '', $username = '', $password = '') {
+	public function __construct($file = 'index.php', $sessionid = '', $hostname = '', $protocol = '', $port = '', $username = '', $password = '')
+	{
 		// Set the basic parts of our URL
 		$this->protocol = $protocol;
 		$this->username = $username;
@@ -39,40 +45,59 @@ class linker {
 		$this->args['s'] = $sessionid;
 	}
 
-	public function __set($key, $value) {
-
+	public function __set($key, $value)
+	{
 		switch (strtolower($key)) {
-			case 'protocol': $this->protocol = $value; break;
-			case 'username': $this->username = $value; break;
-			case 'password': $this->password = $value; break;
-			case 'hostname': $this->hostname = $value; break;
-			case 'port': $this->port = $value; break;
-			case 'filename': $this->filename = $value; break;
-			default: return false;
+			case 'protocol':
+				$this->protocol = $value;
+				break;
+			case 'username':
+				$this->username = $value;
+				break;
+			case 'password':
+				$this->password = $value;
+				break;
+			case 'hostname':
+				$this->hostname = $value;
+				break;
+			case 'port':
+				$this->port = $value;
+				break;
+			case 'filename':
+				$this->filename = $value;
+				break;
+			default:
+				return false;
 		}
 		return true;
 	}
 
-	public function add($key, $value) {
+	public function add($key, $value)
+	{
 		// Add a new value to our parameters (overwrite = enabled)
 		$this->args[$key] = $value;
 	}
 
-	public function del($key) {
+	public function del($key)
+	{
 		// If the key exists in our array -> delete it
 		if (isset($this->args[$key])) {
 			unset($this->args[$key]);
 		}
 	}
 
-	public function delAll() {
+	public function delAll()
+	{
 		// Just resetting the array
 		// Until the sessionid can be removed: save it
 		// @TODO: Remove this
-		$this->args = array('s' => $this->args['s']);
+		$this->args = array(
+			's' => $this->args['s']
+		);
 	}
 
-	public function getLink() {
+	public function getLink()
+	{
 		$link = '';
 
 		// Build the basic URL
@@ -132,7 +157,7 @@ class linker {
 		// Loop through arguments and add them to the link
 		foreach ($this->args as $key => $value) {
 			// For all but the first argument, prepend "&amp;"
-			if (substr($link, -1) != "?") {
+			if (substr($link, - 1) != "?") {
 				$link .= "&";
 			}
 

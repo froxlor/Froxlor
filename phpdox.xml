@@ -22,10 +22,7 @@
 					<file name="logs/pmd.xml" />
 				</source>
 
-				<!-- PHPUnit Coverage XML
-				<source type="phpunit">
-				</source>
-				 -->
+				<!-- PHPUnit Coverage XML <source type="phpunit"> </source> -->
 			</enrich>
 			<build engine="html" enabled="true" output="api">
 				<file extension="html" />

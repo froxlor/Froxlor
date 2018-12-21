@@ -19,9 +19,9 @@
  *
  * @return array array of enabled redirect-codes
  */
-function getRedirectCodesArray() {
-
-	$sql = "SELECT * FROM `".TABLE_PANEL_REDIRECTCODES."` WHERE `enabled` = '1' ORDER BY `id` ASC";
+function getRedirectCodesArray()
+{
+	$sql = "SELECT * FROM `" . TABLE_PANEL_REDIRECTCODES . "` WHERE `enabled` = '1' ORDER BY `id` ASC";
 	$result_stmt = Database::query($sql);
 
 	$codes = array();
@@ -36,22 +36,23 @@ function getRedirectCodesArray() {
  * return an array of all enabled redirect-codes
  * for the settings form
  *
- * @param bool $add_desc optional, default true, add the code-description
- *
+ * @param bool $add_desc
+ *        	optional, default true, add the code-description
+ *        	
  * @return array array of enabled redirect-codes
  */
-function getRedirectCodes($add_desc = true) {
-
+function getRedirectCodes($add_desc = true)
+{
 	global $lng;
 
-	$sql = "SELECT * FROM `".TABLE_PANEL_REDIRECTCODES."` WHERE `enabled` = '1' ORDER BY `id` ASC";
+	$sql = "SELECT * FROM `" . TABLE_PANEL_REDIRECTCODES . "` WHERE `enabled` = '1' ORDER BY `id` ASC";
 	$result_stmt = Database::query($sql);
 
 	$codes = array();
 	while ($rc = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 		$codes[$rc['id']] = $rc['code'];
 		if ($add_desc) {
-			$codes[$rc['id']] .= ' ('.$lng['redirect_desc'][$rc['desc']].')';
+			$codes[$rc['id']] .= ' (' . $lng['redirect_desc'][$rc['desc']] . ')';
 		}
 	}
 
@@ -62,11 +63,13 @@ function getRedirectCodes($add_desc = true) {
  * returns the redirect-code for a given
  * domain-id
  *
- * @param integer $domainid id of the domain
- *
+ * @param integer $domainid
+ *        	id of the domain
+ *        	
  * @return string redirect-code
  */
-function getDomainRedirectCode($domainid = 0) {
+function getDomainRedirectCode($domainid = 0)
+{
 
 	// get system default
 	$default = '301';
@@ -80,14 +83,14 @@ function getDomainRedirectCode($domainid = 0) {
 
 		$result_stmt = Database::prepare("
 			SELECT `r`.`code` as `redirect`
-			FROM `".TABLE_PANEL_REDIRECTCODES."` `r`, `".TABLE_PANEL_DOMAINREDIRECTS."` `rc`
+			FROM `" . TABLE_PANEL_REDIRECTCODES . "` `r`, `" . TABLE_PANEL_DOMAINREDIRECTS . "` `rc`
 			WHERE `r`.`id` = `rc`.`rid` and `rc`.`did` = :domainid
 		");
-		$result = Database::pexecute_first($result_stmt, array('domainid' => $domainid));
+		$result = Database::pexecute_first($result_stmt, array(
+			'domainid' => $domainid
+		));
 
-		if (is_array($result)
-			&& isset($result['redirect'])
-		) {
+		if (is_array($result) && isset($result['redirect'])) {
 			$code = ($result['redirect'] == '---') ? $default : $result['redirect'];
 		}
 	}
@@ -98,25 +101,26 @@ function getDomainRedirectCode($domainid = 0) {
  * returns the redirect-id for a given
  * domain-id
  *
- * @param integer $domainid id of the domain
- *
+ * @param integer $domainid
+ *        	id of the domain
+ *        	
  * @return integer redirect-code-id
  */
-function getDomainRedirectId($domainid = 0) {
-
+function getDomainRedirectId($domainid = 0)
+{
 	$code = 1;
 	if ($domainid > 0) {
 		$result_stmt = Database::prepare("
 			SELECT `r`.`id` as `redirect`
-			FROM `".TABLE_PANEL_REDIRECTCODES."` `r`, `".TABLE_PANEL_DOMAINREDIRECTS."` `rc`
+			FROM `" . TABLE_PANEL_REDIRECTCODES . "` `r`, `" . TABLE_PANEL_DOMAINREDIRECTS . "` `rc`
 			WHERE `r`.`id` = `rc`.`rid` and `rc`.`did` = :domainid
 		");
-		$result = Database::pexecute_first($result_stmt, array('domainid' => $domainid));
+		$result = Database::pexecute_first($result_stmt, array(
+			'domainid' => $domainid
+		));
 
-		if (is_array($result)
-			&& isset($result['redirect'])
-		) {
-			$code = (int)$result['redirect'];
+		if (is_array($result) && isset($result['redirect'])) {
+			$code = (int) $result['redirect'];
 		}
 	}
 	return $code;
@@ -125,17 +129,23 @@ function getDomainRedirectId($domainid = 0) {
 /**
  * adds a redirectcode for a domain
  *
- * @param integer $domainid id of the domain to add the code for
- * @param integer $redirect selected redirect-id
- *
+ * @param integer $domainid
+ *        	id of the domain to add the code for
+ * @param integer $redirect
+ *        	selected redirect-id
+ *        	
  * @return null
  */
-function addRedirectToDomain($domainid = 0, $redirect = 1) {
+function addRedirectToDomain($domainid = 0, $redirect = 1)
+{
 	if ($domainid > 0) {
 		$ins_stmt = Database::prepare("
-			INSERT INTO `".TABLE_PANEL_DOMAINREDIRECTS."` SET `rid` = :rid, `did` = :did
+			INSERT INTO `" . TABLE_PANEL_DOMAINREDIRECTS . "` SET `rid` = :rid, `did` = :did
 		");
-		Database::pexecute($ins_stmt, array('rid' => $redirect, 'did' => $domainid));
+		Database::pexecute($ins_stmt, array(
+			'rid' => $redirect,
+			'did' => $domainid
+		));
 	}
 }
 
@@ -143,26 +153,33 @@ function addRedirectToDomain($domainid = 0, $redirect = 1) {
  * updates the redirectcode of a domain
  * if redirect-code is false, nothing happens
  *
- * @param integer $domainid id of the domain to update
- * @param integer $redirect selected redirect-id or false
- *
+ * @param integer $domainid
+ *        	id of the domain to update
+ * @param integer $redirect
+ *        	selected redirect-id or false
+ *        	
  * @return null
  */
-function updateRedirectOfDomain($domainid = 0, $redirect = false) {
-
+function updateRedirectOfDomain($domainid = 0, $redirect = false)
+{
 	if ($redirect == false) {
 		return;
 	}
 
 	if ($domainid > 0) {
 		$del_stmt = Database::prepare("
-			DELETE FROM `".TABLE_PANEL_DOMAINREDIRECTS."` WHERE `did` = :domainid
+			DELETE FROM `" . TABLE_PANEL_DOMAINREDIRECTS . "` WHERE `did` = :domainid
 		");
-		Database::pexecute($del_stmt, array('domainid' => $domainid));
+		Database::pexecute($del_stmt, array(
+			'domainid' => $domainid
+		));
 
 		$ins_stmt = Database::prepare("
-			INSERT INTO `".TABLE_PANEL_DOMAINREDIRECTS."` SET `rid` = :rid, `did` = :did
+			INSERT INTO `" . TABLE_PANEL_DOMAINREDIRECTS . "` SET `rid` = :rid, `did` = :did
 		");
-		Database::pexecute($ins_stmt, array('rid' => $redirect, 'did' => $domainid));
+		Database::pexecute($ins_stmt, array(
+			'rid' => $redirect,
+			'did' => $domainid
+		));
 	}
 }

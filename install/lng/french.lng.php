@@ -16,7 +16,6 @@
  * @package    Language
  *
  */
-
 $lng['requirements']['title'] = 'Vérification des prérequis système...';
 $lng['requirements']['installed'] = 'installé';
 $lng['requirements']['not_true'] = 'non';
@@ -77,8 +76,8 @@ $lng['install']['changing_data'] = 'Ajustement des paramètres...';
 $lng['install']['creating_entries'] = 'Insertion des nouvelles valeurs...';
 $lng['install']['adding_admin_user'] = 'Création du compte administrateur...';
 $lng['install']['creating_configfile'] = 'Création du fichier de configuration...';
-$lng['install']['creating_configfile_temp'] = 'Le fichier a été enregistré dans /tmp/userdata.inc.php, merci de le déplacer dans '.dirname(dirname(__DIR__)).'/lib/.';
-$lng['install']['creating_configfile_failed'] = 'Impossible de créer '.dirname(dirname(__DIR__)).'/lib/userdata.inc.php, merci de le créer manuellement avec le contenu suivant:';
+$lng['install']['creating_configfile_temp'] = 'Le fichier a été enregistré dans /tmp/userdata.inc.php, merci de le déplacer dans ' . dirname(dirname(__DIR__)) . '/lib/.';
+$lng['install']['creating_configfile_failed'] = 'Impossible de créer ' . dirname(dirname(__DIR__)) . '/lib/userdata.inc.php, merci de le créer manuellement avec le contenu suivant:';
 $lng['install']['froxlor_succ_installed'] = 'Froxlor a été installé avec succès.';
 
 $lng['click_here_to_refresh'] = 'Cliquez ici pour vérifier à nouveau';

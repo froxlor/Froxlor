@@ -16,7 +16,6 @@
  * @package    Functions
  *
  */
-
 function getFormFieldOutputLabel($fieldname, $fielddata)
 {
 	$label = $fielddata['label'];

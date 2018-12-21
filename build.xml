@@ -19,7 +19,8 @@
 		depends="prepare,static-analysis-parallel,phpunit,phpdox,-check-failure"
 		description="Performs static analysis (executing the tools in parallel), runs the tests, and generates project documentation" />
 
-	<target name="quick-build" depends="prepare,lint,phpunit-no-coverage"
+	<target name="quick-build"
+		depends="prepare,lint,phpunit-no-coverage"
 		description="Performs a lint check and runs the tests (without generating code coverage reports)" />
 
 	<target name="static-analysis"
@@ -41,7 +42,8 @@
 		</parallel>
 	</target>
 
-	<target name="clean" unless="clean.done" description="Cleanup build artifacts">
+	<target name="clean" unless="clean.done"
+		description="Cleanup build artifacts">
 		<delete dir="${basedir}/build/api" />
 		<delete dir="${basedir}/build/coverage" />
 		<delete dir="${basedir}/build/logs" />
@@ -109,7 +111,8 @@
 		description="Calculate software metrics using PHP_Depend and log result in XML format. Intended for usage within a continuous integration environment.">
 		<exec executable="${pdepend}" taskname="pdepend">
 			<arg value="--jdepend-xml=${basedir}/build/logs/jdepend.xml" />
-			<arg value="--jdepend-chart=${basedir}/build/pdepend/dependencies.svg" />
+			<arg
+				value="--jdepend-chart=${basedir}/build/pdepend/dependencies.svg" />
 			<arg
 				value="--overview-pyramid=${basedir}/build/pdepend/overview-pyramid.svg" />
 			<arg path="${basedir}/lib/Froxlor" />
@@ -204,7 +207,8 @@
 	<target name="phpunit-no-coverage" unless="phpunit.done"
 		depends="prepare"
 		description="Run unit tests with PHPUnit (without generating code coverage reports)">
-		<exec executable="${phpunit}" failonerror="true" taskname="phpunit">
+		<exec executable="${phpunit}" failonerror="true"
+			taskname="phpunit">
 			<arg value="--configuration" />
 			<arg path="${basedir}/phpunit.xml" />
 			<arg value="--testsuite" />
@@ -215,9 +219,11 @@
 		<property name="phpunit.done" value="true" />
 	</target>
 
-	<target name="phpdox" unless="phpdox.done" depends="phploc-ci,phpcs-ci,phpmd-ci"
+	<target name="phpdox" unless="phpdox.done"
+		depends="phploc-ci,phpcs-ci,phpmd-ci"
 		description="Generate project documentation using phpDox">
-		<exec executable="${phpdox}" dir="${basedir}/build" taskname="phpdox">
+		<exec executable="${phpdox}" dir="${basedir}/build"
+			taskname="phpdox">
 			<arg value="--file" />
 			<arg path="${basedir}/phpdox.xml" />
 		</exec>

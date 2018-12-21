@@ -50,7 +50,7 @@ if ($action == 'delete') {
 	\Froxlor\UI\Response::standard_success($lng['2fa']['2fa_removed']);
 } elseif ($action == 'add') {
 	$type = isset($_POST['type_2fa']) ? $_POST['type_2fa'] : '0';
-	
+
 	if ($type == 0 || $type == 1) {
 		$data = "";
 	}
@@ -69,7 +69,7 @@ if ($action == 'delete') {
 $log->logAction(USR_ACTION, LOG_NOTICE, "viewed 2fa::overview");
 
 if ($userinfo['type_2fa'] == '0') {
-	
+
 	// available types
 	$type_select_values = array(
 		0 => '-',
@@ -80,11 +80,9 @@ if ($userinfo['type_2fa'] == '0') {
 	foreach ($type_select_values as $_val => $_type) {
 		$type_select .= makeoption($_type, $_val);
 	}
-}
-elseif ($userinfo['type_2fa'] == '1') {
+} elseif ($userinfo['type_2fa'] == '1') {
 	// email 2fa enabled
-}
-elseif ($userinfo['type_2fa'] == '2') {
+} elseif ($userinfo['type_2fa'] == '2') {
 	// authenticator 2fa enabled
 	$ga_qrcode = $tfa->getQRCodeImageAsDataUri($userinfo['loginname'], $userinfo['data_2fa']);
 }

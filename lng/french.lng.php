@@ -22,8 +22,8 @@
 /**
  * Some importants rules of typograhie in french :
  * These signs << ! ? : " & >> must be be preceded by white space
- *   ->  We can make the white space like that : << &nbsp; >>
- *   ->  so the white space is still committed to the previous letter and punctuation mark as follows.
+ * -> We can make the white space like that : << &nbsp; >>
+ * -> so the white space is still committed to the previous letter and punctuation mark as follows.
  * These signs << . ; , ' >> should be glued to the previous letter
  * These signs << / | = >> would be preceded and followed with a white as mush as possible, it is much clear from reading.
  */
@@ -31,7 +31,6 @@
 /**
  * Global
  */
-
 $lng['translator'] = 'Tim Zielosko, Aldo Reset, Romain MARIADASSOU';
 $lng['panel']['edit'] = 'Modifier';
 $lng['panel']['delete'] = 'Supprimer';
@@ -231,7 +230,7 @@ $lng['error']['destinationnonexist'] = 'Veuillez écrire votre adresse de renvoi
 $lng['error']['destinationalreadyexistasmail'] = 'Le renvoi vers l\'adresse "%s" existe déjà comme adresse active.';
 $lng['error']['destinationalreadyexist'] = 'Il existe déjà une réexpédition vers l\'adresse "%s".';
 $lng['error']['destinationiswrong'] = 'L\'adresse "%s" contient des signes invalides ou est incomplète.';
-//  $lng['error']['loginnameissystemaccount'] = 'Vous ne pouvez pas créer un compte identique au compte système, veuillez réessayer avec un autre nom.';
+// $lng['error']['loginnameissystemaccount'] = 'Vous ne pouvez pas créer un compte identique au compte système, veuillez réessayer avec un autre nom.';
 $lng['error']['loginnameissystemaccount'] = 'Vous ne pouvez pas créer de compte ressemblant aux comptes système (ex : "%s"). Veuillez entrer un autre nom de compte.';
 
 /**

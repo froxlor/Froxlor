@@ -65,7 +65,7 @@ function json_response($status, $status_message = '', $data = null)
 	$response['status'] = $status;
 	$response['status_message'] = $status_message;
 	$response['data'] = $data;
-	
+
 	$json_response = json_encode($response, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
 	echo $json_response;
 	exit();

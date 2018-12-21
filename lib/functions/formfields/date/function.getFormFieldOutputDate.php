@@ -16,11 +16,9 @@
  * @package    Functions
  *
  */
-
 function getFormFieldOutputDate($fieldname, $fielddata, $do_show = true)
 {
-	if(isset($fielddata['date_timestamp']) && $fielddata['date_timestamp'] === true)
-	{
+	if (isset($fielddata['date_timestamp']) && $fielddata['date_timestamp'] === true) {
 		$fielddata['value'] = date('Y-m-d', $fielddata['value']);
 	}
 

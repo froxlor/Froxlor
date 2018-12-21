@@ -17,7 +17,7 @@ if (! defined('AREA')) {
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package Panel
  * @since 0.10.0
- *
+ *       
  */
 
 use Froxlor\Database as Database;
@@ -70,8 +70,7 @@ if ($action == 'delete') {
 	// customer generates for himself, admins will see a customer-select-box later
 	if (AREA == 'admin') {
 		$cid = 0;
-	}
-	elseif (AREA == 'customer') {
+	} elseif (AREA == 'customer') {
 		$cid = $userinfo['customerid'];
 	}
 	$key = hash('sha256', openssl_random_pseudo_bytes(64 * 64));
@@ -84,23 +83,23 @@ if ($action == 'delete') {
 	));
 	$success_message = $lng['apikeys']['apikey_added'];
 } elseif ($action == 'jqEditApiKey') {
-	$keyid = isset($_POST['id']) ? (int)$_POST['id'] : 0;
+	$keyid = isset($_POST['id']) ? (int) $_POST['id'] : 0;
 	$allowed_from = isset($_POST['allowed_from']) ? $_POST['allowed_from'] : "";
-	$valid_until = isset($_POST['valid_until']) ? (int)$_POST['valid_until'] : -1;
+	$valid_until = isset($_POST['valid_until']) ? (int) $_POST['valid_until'] : - 1;
 
 	// validate allowed_from
 	$ip_list = array_map('trim', explode(",", $allowed_from));
 	$_check_list = $ip_list;
 	foreach ($_check_list as $idx => $ip) {
 		if (validate_ip2($ip, true, 'invalidip', true, true) == false) {
-			unset ($ip_list[$idx]);
+			unset($ip_list[$idx]);
 		}
 	}
 	$ip_list = array_map('inet_ntop', array_map('inet_pton', $ip_list));
 	$allowed_from = implode(",", array_unique($ip_list));
 
-	if ($valid_until <= 0 || !is_numeric($valid_until)) {
-		$valid_until = -1;
+	if ($valid_until <= 0 || ! is_numeric($valid_until)) {
+		$valid_until = - 1;
 	}
 
 	$upd_stmt = Database::prepare("
@@ -110,8 +109,7 @@ if ($action == 'delete') {
 	");
 	if (AREA == 'admin') {
 		$cid = 0;
-	}
-	elseif (AREA == 'customer') {
+	} elseif (AREA == 'customer') {
 		$cid = $userinfo['customerid'];
 	}
 	Database::pexecute($upd_stmt, array(
@@ -122,7 +120,7 @@ if ($action == 'delete') {
 		'cid' => $cid
 	));
 	echo json_encode(true);
-	exit;
+	exit();
 }
 
 $log->logAction(USR_ACTION, LOG_NOTICE, "viewed api::api_keys");
@@ -179,7 +177,7 @@ if (count($all_keys) == 0) {
 	$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
 	$searchcode = $paging->getHtmlSearchCode($lng);
 	$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
-	
+
 	foreach ($all_keys as $idx => $key) {
 		if ($paging->checkDisplay($idx)) {
 
@@ -206,7 +204,7 @@ if (count($all_keys) == 0) {
 				// customer do not need links
 				$adminCustomerLink = $key['loginname'];
 			}
-			
+
 			// escape stuff
 			$row = htmlentities_array($key);
 

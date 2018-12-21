@@ -5,7 +5,7 @@ input {
 	padding: 4px 4px 0 24px;
 }
 
-input[type="submit"],input[class="nobutton"],input[type="reset"] {
+input[type="submit"], input[class="nobutton"], input[type="reset"] {
 	padding-left: 24px;
 }
 

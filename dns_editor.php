@@ -1,7 +1,7 @@
 <?php
 if (! defined('AREA')) {
 	header("Location: index.php");
-	exit;
+	exit();
 }
 
 /**
@@ -16,7 +16,7 @@ if (! defined('AREA')) {
  * @author Froxlor team <team@froxlor.org> (2016-)
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package Panel
- *
+ *         
  */
 
 use Froxlor\Database\Database;

@@ -16,7 +16,6 @@
  * @package    Panel
  *
  */
-
 define('AREA', 'customer');
 require './lib/init.php';
 
@@ -27,19 +26,19 @@ use Froxlor\Api\Commands\Customers as Customers;
 if ($action == 'logout') {
 	$log->logAction(USR_ACTION, LOG_NOTICE, 'logged out');
 
-	$params = array("customerid" => $userinfo['customerid']);
+	$params = array(
+		"customerid" => $userinfo['customerid']
+	);
 	if (Settings::Get('session.allow_multiple_login') == '1') {
 		$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_SESSIONS . "`
 			WHERE `userid` = :customerid
 			AND `adminsession` = '0'
-			AND `hash` = :hash"
-		);
+			AND `hash` = :hash");
 		$params["hash"] = $s;
 	} else {
 		$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_SESSIONS . "`
 			WHERE `userid` = :customerid
-			AND `adminsession` = '0'"
-		);
+			AND `adminsession` = '0'");
 	}
 	Database::pexecute($stmt, $params);
 
@@ -54,7 +53,10 @@ if ($page == 'overview') {
 		AND `parentdomainid` = '0'
 		AND `id` <> :standardsubdomain
 	");
-	Database::pexecute($domain_stmt, array("customerid" => $userinfo['customerid'], "standardsubdomain" => $userinfo['standardsubdomain']));
+	Database::pexecute($domain_stmt, array(
+		"customerid" => $userinfo['customerid'],
+		"standardsubdomain" => $userinfo['standardsubdomain']
+	));
 
 	$domains = '';
 	$domainArray = array();
@@ -74,7 +76,10 @@ if ($page == 'overview') {
 			WHERE `customerid` = :customerid
 			AND `id` = :standardsubdomain
 		");
-		$std_domain = Database::pexecute_first($std_domain_stmt, array("customerid" => $userinfo['customerid'], "standardsubdomain" => $userinfo['standardsubdomain']));
+		$std_domain = Database::pexecute_first($std_domain_stmt, array(
+			"customerid" => $userinfo['customerid'],
+			"standardsubdomain" => $userinfo['standardsubdomain']
+		));
 		$stdsubdomain = $std_domain['domain'];
 	}
 
@@ -83,8 +88,10 @@ if ($page == 'overview') {
 	$month = date('M Y', $yesterday);
 
 	// get disk-space usages for web, mysql and mail
-	$usages_stmt = Database::prepare("SELECT * FROM `".TABLE_PANEL_DISKSPACE."` WHERE `customerid` = :cid ORDER BY `stamp` DESC LIMIT 1");
-	$usages = Database::pexecute_first($usages_stmt, array('cid' => $userinfo['customerid']));
+	$usages_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_DISKSPACE . "` WHERE `customerid` = :cid ORDER BY `stamp` DESC LIMIT 1");
+	$usages = Database::pexecute_first($usages_stmt, array(
+		'cid' => $userinfo['customerid']
+	));
 
 	$userinfo['diskspace'] = round($userinfo['diskspace'] / 1024, Settings::Get('panel.decimal_places'));
 	$userinfo['diskspace_used'] = round($usages['webspace'] / 1024, Settings::Get('panel.decimal_places'));
@@ -99,17 +106,21 @@ if ($page == 'overview') {
 
 	$services_enabled = "";
 	$se = array();
-	if ($userinfo['imap'] == '1') $se[] = "IMAP";
-	if ($userinfo['pop3'] == '1') $se[] = "POP3";
-	if ($userinfo['phpenabled'] == '1') $se[] = "PHP";
-	if ($userinfo['perlenabled'] == '1') $se[] = "Perl/CGI";
+	if ($userinfo['imap'] == '1')
+		$se[] = "IMAP";
+	if ($userinfo['pop3'] == '1')
+		$se[] = "POP3";
+	if ($userinfo['phpenabled'] == '1')
+		$se[] = "PHP";
+	if ($userinfo['perlenabled'] == '1')
+		$se[] = "Perl/CGI";
 	$services_enabled = implode(", ", $se);
 
 	eval("echo \"" . \Froxlor\UI\Template::getTemplate('index/index') . "\";");
 } elseif ($page == 'change_password') {
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 		$old_password = validate($_POST['old_password'], 'old password');
-		if (!validatePasswordLogin($userinfo,$old_password,TABLE_PANEL_CUSTOMERS,'customerid')) {
+		if (! validatePasswordLogin($userinfo, $old_password, TABLE_PANEL_CUSTOMERS, 'customerid')) {
 			\Froxlor\UI\Response::standard_error('oldpasswordnotcorrect');
 		}
 
@@ -117,17 +128,29 @@ if ($page == 'overview') {
 		$new_password_confirm = validatePassword($_POST['new_password_confirm'], 'new password confirm');
 
 		if ($old_password == '') {
-			\Froxlor\UI\Response::standard_error(array('stringisempty', 'oldpassword'));
+			\Froxlor\UI\Response::standard_error(array(
+				'stringisempty',
+				'oldpassword'
+			));
 		} elseif ($new_password == '') {
-			\Froxlor\UI\Response::standard_error(array('stringisempty', 'newpassword'));
+			\Froxlor\UI\Response::standard_error(array(
+				'stringisempty',
+				'newpassword'
+			));
 		} elseif ($new_password_confirm == '') {
-			\Froxlor\UI\Response::standard_error(array('stringisempty', 'newpasswordconfirm'));
+			\Froxlor\UI\Response::standard_error(array(
+				'stringisempty',
+				'newpasswordconfirm'
+			));
 		} elseif ($new_password != $new_password_confirm) {
 			\Froxlor\UI\Response::standard_error('newpasswordconfirmerror');
 		} else {
 			// Update user password
 			try {
-				Customers::getLocal($userinfo, array('id' => $userinfo['customerid'], 'new_customer_password' => $new_password))->update();
+				Customers::getLocal($userinfo, array(
+					'id' => $userinfo['customerid'],
+					'new_customer_password' => $new_password
+				))->update();
 			} catch (Exception $e) {
 				\Froxlor\UI\Response::dynamic_error($e->getMessage());
 			}
@@ -139,8 +162,7 @@ if ($page == 'overview') {
 				$stmt = Database::prepare("UPDATE `" . TABLE_FTP_USERS . "`
 					SET `password` = :password
 					WHERE `customerid` = :customerid
-					AND `username` = :username"
-				);
+					AND `username` = :username");
 				$params = array(
 					"password" => $cryptPassword,
 					"customerid" => $userinfo['customerid'],
@@ -162,8 +184,7 @@ if ($page == 'overview') {
 				$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_HTPASSWDS . "`
 					SET `password` = :password
 					WHERE `customerid` = :customerid
-					AND `username` = :username"
-				);
+					AND `username` = :username");
 				$params = array(
 					"password" => $new_webalizer_password,
 					"customerid" => $userinfo['customerid'],
@@ -172,7 +193,9 @@ if ($page == 'overview') {
 				Database::pexecute($stmt, $params);
 			}
 
-			\Froxlor\UI\Response::redirectTo($filename, array('s' => $s));
+			\Froxlor\UI\Response::redirectTo($filename, array(
+				's' => $s
+			));
 		}
 	} else {
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate('index/change_password') . "\";");
@@ -182,7 +205,10 @@ if ($page == 'overview') {
 		$def_language = validate($_POST['def_language'], 'default language');
 		if (isset($languages[$def_language])) {
 			try {
-				Customers::getLocal($userinfo, array('id' => $userinfo['customerid'], 'def_language' => $def_language))->update();
+				Customers::getLocal($userinfo, array(
+					'id' => $userinfo['customerid'],
+					'def_language' => $def_language
+				))->update();
 			} catch (Exception $e) {
 				\Froxlor\UI\Response::dynamic_error($e->getMessage());
 			}
@@ -190,12 +216,16 @@ if ($page == 'overview') {
 			// also update current session
 			$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_SESSIONS . "`
 				SET `language` = :lang
-				WHERE `hash` = :hash"
-			);
-			Database::pexecute($stmt, array("lang" => $def_language, "hash" => $s));
+				WHERE `hash` = :hash");
+			Database::pexecute($stmt, array(
+				"lang" => $def_language,
+				"hash" => $s
+			));
 		}
 		$log->logAction(USR_ACTION, LOG_NOTICE, "changed default language to '" . $def_language . "'");
-		\Froxlor\UI\Response::redirectTo($filename, array('s' => $s));
+		\Froxlor\UI\Response::redirectTo($filename, array(
+			's' => $s
+		));
 	} else {
 		$default_lang = Settings::Get('panel.standardlanguage');
 		if ($userinfo['def_language'] != '') {
@@ -213,7 +243,10 @@ if ($page == 'overview') {
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 		$theme = validate($_POST['theme'], 'theme');
 		try {
-			Customers::getLocal($userinfo, array('id' => $userinfo['customerid'], 'theme' => $theme))->update();
+			Customers::getLocal($userinfo, array(
+				'id' => $userinfo['customerid'],
+				'theme' => $theme
+			))->update();
 		} catch (Exception $e) {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
@@ -221,12 +254,16 @@ if ($page == 'overview') {
 		// also update current session
 		$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_SESSIONS . "`
 			SET `theme` = :theme
-			WHERE `hash` = :hash"
-		);
-		Database::pexecute($stmt, array("theme" => $theme, "hash" => $s));
+			WHERE `hash` = :hash");
+		Database::pexecute($stmt, array(
+			"theme" => $theme,
+			"hash" => $s
+		));
 
 		$log->logAction(USR_ACTION, LOG_NOTICE, "changed default theme to '" . $theme . "'");
-		\Froxlor\UI\Response::redirectTo($filename, array('s' => $s));
+		\Froxlor\UI\Response::redirectTo($filename, array(
+			's' => $s
+		));
 	} else {
 		$default_theme = Settings::Get('panel.default_theme');
 		if ($userinfo['theme'] != '') {
@@ -236,12 +273,11 @@ if ($page == 'overview') {
 		$theme_options = '';
 		$themes_avail = getThemes();
 		foreach ($themes_avail as $t => $d) {
-			$theme_options.= makeoption($d, $t, $default_theme, true);
+			$theme_options .= makeoption($d, $t, $default_theme, true);
 		}
 
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate('index/change_theme') . "\";");
 	}
-
 } elseif ($page == 'send_error_report' && Settings::Get('system.allow_error_report_customer') == '1') {
 
 	// only show this if we really have an exception to report
@@ -249,8 +285,8 @@ if ($page == 'overview') {
 
 		$errid = $_GET['errorid'];
 		// read error file
-		$err_dir = \Froxlor\FileDir::makeCorrectDir(FROXLOR_INSTALL_DIR."/logs/");
-		$err_file = \Froxlor\FileDir::makeCorrectFile($err_dir."/".$errid."_sql-error.log");
+		$err_dir = \Froxlor\FileDir::makeCorrectDir(FROXLOR_INSTALL_DIR . "/logs/");
+		$err_file = \Froxlor\FileDir::makeCorrectFile($err_dir . "/" . $errid . "_sql-error.log");
 
 		if (file_exists($err_file)) {
 
@@ -269,19 +305,17 @@ if ($page == 'overview') {
 			$mail_body = "Dear froxlor-team,\n\n";
 			$mail_body .= "the following error has been reported by a user:\n\n";
 			$mail_body .= "-------------------------------------------------------------\n";
-			$mail_body .= $_error['code'].' '.$_error['message']."\n\n";
-			$mail_body .= "File: ".$_error['file'].':'.$_error['line']."\n\n";
-			$mail_body .= "Trace:\n".trim($_error['trace'])."\n\n";
+			$mail_body .= $_error['code'] . ' ' . $_error['message'] . "\n\n";
+			$mail_body .= "File: " . $_error['file'] . ':' . $_error['line'] . "\n\n";
+			$mail_body .= "Trace:\n" . trim($_error['trace']) . "\n\n";
 			$mail_body .= "-------------------------------------------------------------\n\n";
-			$mail_body .= "Froxlor-version: ".$version."\n";
-			$mail_body .= "DB-version: ".$dbversion."\n\n";
+			$mail_body .= "Froxlor-version: " . $version . "\n";
+			$mail_body .= "DB-version: " . $dbversion . "\n\n";
 			$mail_body .= "End of report";
 			$mail_html = str_replace("\n", "<br />", $mail_body);
 
 			// send actual report to dev-team
-			if (isset($_POST['send'])
-				&& $_POST['send'] == 'send'
-			) {
+			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				// send mail and say thanks
 				$_mailerror = false;
 				try {
@@ -290,7 +324,7 @@ if ($page == 'overview') {
 					$mail->MsgHTML($mail_html);
 					$mail->AddAddress('error-reports@froxlor.org', 'Froxlor Developer Team');
 					$mail->Send();
-				} catch(\PHPMailer\PHPMailer\Exception $e) {
+				} catch (\PHPMailer\PHPMailer\Exception $e) {
 					$mailerr_msg = $e->errorMessage();
 					$_mailerror = true;
 				} catch (Exception $e) {
@@ -305,22 +339,25 @@ if ($page == 'overview') {
 
 				// finally remove error from fs
 				@unlink($err_file);
-				\Froxlor\UI\Response::redirectTo($filename, array('s' => $s));
+				\Froxlor\UI\Response::redirectTo($filename, array(
+					's' => $s
+				));
 			}
 			// show a nice summary of the error-report
 			// before actually sending anything
 			eval("echo \"" . \Froxlor\UI\Template::getTemplate("index/send_error_report") . "\";");
-
 		} else {
-			\Froxlor\UI\Response::redirectTo($filename, array('s' => $s));
+			\Froxlor\UI\Response::redirectTo($filename, array(
+				's' => $s
+			));
 		}
 	} else {
-		\Froxlor\UI\Response::redirectTo($filename, array('s' => $s));
+		\Froxlor\UI\Response::redirectTo($filename, array(
+			's' => $s
+		));
 	}
-}
-elseif ($page == 'apikeys' && Settings::Get('api.enabled') == 1) {
+} elseif ($page == 'apikeys' && Settings::Get('api.enabled') == 1) {
 	require_once __DIR__ . '/api_keys.php';
-}
-elseif ($page == 'apihelp' && Settings::Get('api.enabled') == 1) {
+} elseif ($page == 'apihelp' && Settings::Get('api.enabled') == 1) {
 	require_once __DIR__ . '/apihelp.php';
 }

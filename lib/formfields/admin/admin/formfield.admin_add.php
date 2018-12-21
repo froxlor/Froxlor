@@ -14,7 +14,6 @@
  * @package    Formfields
  *
  */
-
 return array(
 	'admin_add' => array(
 		'title' => $lng['admin']['admin_add'],
@@ -39,7 +38,7 @@ return array(
 						'label' => $lng['customer']['generated_pwd'],
 						'type' => 'text',
 						'visible' => (\Froxlor\Settings::Get('panel.password_regex') == ''),
-						'value' => \Froxlor\System\Crypt::generatePassword(),
+						'value' => \Froxlor\System\Crypt::generatePassword()
 					),
 					'def_language' => array(
 						'label' => $lng['login']['language'],
@@ -74,7 +73,10 @@ return array(
 						'label' => $lng['usersettings']['custom_notes']['show'],
 						'type' => 'checkbox',
 						'values' => array(
-							array ('label' => $lng['panel']['yes'], 'value' => '1')
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
 						),
 						'value' => array()
 					)
@@ -93,8 +95,11 @@ return array(
 						'label' => $lng['admin']['change_serversettings'],
 						'type' => 'checkbox',
 						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
 						'value' => array()
 					),
 					'customers' => array(
@@ -109,8 +114,11 @@ return array(
 						'label' => $lng['admin']['customers_see_all'],
 						'type' => 'checkbox',
 						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
 						'value' => array()
 					),
 					'domains' => array(
@@ -125,16 +133,22 @@ return array(
 						'label' => $lng['admin']['domains_see_all'],
 						'type' => 'checkbox',
 						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
 						'value' => array()
 					),
 					'caneditphpsettings' => array(
 						'label' => $lng['admin']['caneditphpsettings'],
 						'type' => 'checkbox',
 						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
 						'value' => array()
 					),
 					'diskspace' => array(

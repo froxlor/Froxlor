@@ -13,7 +13,7 @@ class Cronjob
 	 * Checks if the system's last guid is not higher than the one saved
 	 * in froxlor's database. If it's higher, froxlor needs to
 	 * set its last guid to this one to avoid conflicts with libnss-users
-	 *        	
+	 *
 	 * @return null
 	 */
 	public static function checkLastGuid()

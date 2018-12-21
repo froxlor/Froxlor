@@ -70,8 +70,9 @@ class FroxlorLogger
 	/**
 	 * return FroxlorLogger instance
 	 *
-	 * @param array $userinfo unused
-	 *
+	 * @param array $userinfo
+	 *        	unused
+	 *        	
 	 * @return FroxlorLogger
 	 */
 	public static function getInstanceOf($userinfo = null)

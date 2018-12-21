@@ -14,7 +14,6 @@
  * @package    Formfields
  *
  */
-
 return array(
 	'template_add' => array(
 		'title' => $lng['admin']['templates']['template_add'],

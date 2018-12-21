@@ -21,19 +21,17 @@
  * Returns a double of the given value which isn't negative.
  * Returns -1 if the given value was -1.
  *
- * @param any The value
+ * @param
+ *        	any The value
  * @return double The positive value
  * @author Florian Lippert <flo@syscp.org>
  */
-
 function doubleval_ressource($the_value)
 {
 	$the_value = doubleval($the_value);
 
-	if($the_value < 0
-	   && $the_value != '-1')
-	{
-		$the_value*= - 1;
+	if ($the_value < 0 && $the_value != '-1') {
+		$the_value *= - 1;
 	}
 
 	return $the_value;

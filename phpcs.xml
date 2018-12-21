@@ -10,7 +10,8 @@
 		<exclude name="Generic.WhiteSpace.DisallowTabIndent" />
 		<exclude name="Generic.Files.LineLength" />
 		<exclude name="PSR1.Classes.ClassDeclaration.MissingNamespace" />
-		<exclude name="Squiz.WhiteSpace.ControlStructureSpacing.SpacingAfterOpen" />
+		<exclude
+			name="Squiz.WhiteSpace.ControlStructureSpacing.SpacingAfterOpen" />
 		<exclude name="Squiz.WhiteSpace.SuperfluousWhitespace.EndLine" />
 	</rule>
 </ruleset>

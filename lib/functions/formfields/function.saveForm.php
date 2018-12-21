@@ -16,20 +16,17 @@
  * @package    Functions
  *
  */
-
 function saveForm($fielddata, $newfieldvalue)
 {
 	$returnvalue = '';
-	if(is_array($fielddata) && isset($fielddata['save_method']) && $fielddata['save_method'] != '')
-	{
-		$returnvalue = call_user_func(array('\\Froxlor\\Settings\\Store', $fielddata['save_method']), $fielddata, $newfieldvalue);
-	}
-	elseif(is_array($fielddata) && !isset($fielddata['save_method']))
-	{
+	if (is_array($fielddata) && isset($fielddata['save_method']) && $fielddata['save_method'] != '') {
+		$returnvalue = call_user_func(array(
+			'\\Froxlor\\Settings\\Store',
+			$fielddata['save_method']
+		), $fielddata, $newfieldvalue);
+	} elseif (is_array($fielddata) && ! isset($fielddata['save_method'])) {
 		$returnvalue = true;
-	}
-	else
-	{
+	} else {
 		$returnvalue = false;
 	}
 	return $returnvalue;

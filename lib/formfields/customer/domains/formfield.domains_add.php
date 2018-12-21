@@ -14,7 +14,6 @@
  * @package    Formfields
  *
  */
-
 return array(
 	'domain_add' => array(
 		'title' => $lng['domains']['subdomain_add'],
@@ -43,7 +42,7 @@ return array(
 					),
 					'path' => array(
 						'label' => $lng['panel']['path'],
-						'desc' => (\Froxlor\Settings::Get('panel.pathedit') != 'Dropdown' ? $lng['panel']['pathDescriptionSubdomain'] : null).(isset($pathSelect['note']) ? $pathSelect['note'].'<br />'.$pathSelect['value'] : ''),
+						'desc' => (\Froxlor\Settings::Get('panel.pathedit') != 'Dropdown' ? $lng['panel']['pathDescriptionSubdomain'] : null) . (isset($pathSelect['note']) ? $pathSelect['note'] . '<br />' . $pathSelect['value'] : ''),
 						'type' => $pathSelect['type'],
 						'select_var' => $pathSelect['value'],
 						'value' => $pathSelect['value']
@@ -89,7 +88,10 @@ return array(
 						'desc' => $lng['domains']['ssl_redirect']['description'],
 						'type' => 'checkbox',
 						'values' => array(
-							array ('label' => $lng['panel']['yes'], 'value' => '1')
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
 						),
 						'value' => array()
 					),
@@ -99,7 +101,10 @@ return array(
 						'desc' => $lng['customer']['letsencrypt']['description'],
 						'type' => 'checkbox',
 						'values' => array(
-							array ('label' => $lng['panel']['yes'], 'value' => '1')
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
 						),
 						'value' => array()
 					),
@@ -116,7 +121,10 @@ return array(
 						'desc' => $lng['admin']['domain_hsts_incsub']['description'],
 						'type' => 'checkbox',
 						'values' => array(
-							array ('label' => $lng['panel']['yes'], 'value' => '1')
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
 						),
 						'value' => array()
 					),
@@ -125,12 +133,15 @@ return array(
 						'desc' => $lng['admin']['domain_hsts_preload']['description'],
 						'type' => 'checkbox',
 						'values' => array(
-							array ('label' => $lng['panel']['yes'], 'value' => '1')
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
 						),
 						'value' => array()
-					),
-				),
-			),
+					)
+				)
+			)
 		)
 	)
 );

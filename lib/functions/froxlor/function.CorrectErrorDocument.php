@@ -19,36 +19,33 @@
  * this functions validates a given value as ErrorDocument
  * refs #267
  *
- * @param string error-document-string
+ * @param
+ *        	string error-document-string
  * @param bool $throw_exception
  *
  * @return string error-document-string
- *
+ *        
  */
-function correctErrorDocument($errdoc = null, $throw_exception = false) {
-
+function correctErrorDocument($errdoc = null, $throw_exception = false)
+{
 	$idna_convert = new idna_convert_wrapper();
 
 	if ($errdoc !== null && $errdoc != '') {
 		// not a URL
-		if ((strtoupper(substr($errdoc, 0, 5)) != 'HTTP:'
-				&& strtoupper(substr($errdoc, 0, 6)) != 'HTTPS:')
-				|| !validateUrl($errdoc)
-		) {
+		if ((strtoupper(substr($errdoc, 0, 5)) != 'HTTP:' && strtoupper(substr($errdoc, 0, 6)) != 'HTTPS:') || ! validateUrl($errdoc)) {
 			// a file
 			if (substr($errdoc, 0, 1) != '"') {
 				$errdoc = \Froxlor\FileDir::makeCorrectFile($errdoc);
 				// apache needs a starting-slash (starting at the domains-docroot)
-				if (!substr($errdoc, 0, 1) == '/') {
-					$errdoc = '/'.$errdoc;
+				if (! substr($errdoc, 0, 1) == '/') {
+					$errdoc = '/' . $errdoc;
 				}
-			}
-			// a string (check for ending ")
+			} // a string (check for ending ")
 			else {
 				// string won't work for lighty
 				if (Settings::Get('system.webserver') == 'lighttpd') {
 					\Froxlor\UI\Response::standard_error('stringerrordocumentnotvalidforlighty', '', $throw_exception);
-				} elseif(substr($errdoc, -1) != '"') {
+				} elseif (substr($errdoc, - 1) != '"') {
 					$errdoc .= '"';
 				}
 			}

@@ -20,7 +20,6 @@
 /**
  * Global
  */
-
 $lng['translator'] = 'Sander Klein/Frits Letteboer';
 $lng['panel']['edit'] = 'bewerken';
 $lng['panel']['delete'] = 'verwijderen';
@@ -627,7 +626,6 @@ $lng['dkim']['dkim_dkimkeys']['description'] = '<em>Bestandsnaam</em> van het DK
 $lng['dkim']['dkimrestart_command']['title'] = 'Herstart-commando voor Milter';
 $lng['dkim']['dkimrestart_command']['description'] = 'Geef het commando om de milter-plugin te herstarten';
 
-
 // ADDED IN 1.2.19-svn12
 
 $lng['admin']['allips'] = 'Alle IP\'s';
@@ -746,7 +744,7 @@ $lng['admin']['show_version_footer']['description'] = 'Toont de versie van Froxl
 $lng['admin']['froxlor_graphic']['title'] = 'Kopgrafiek voor Froxlor';
 $lng['admin']['froxlor_graphic']['description'] = 'Afbeelding die getoond wordt in de kop';
 
-//improved froxlor
+// improved froxlor
 
 $lng['menue']['phpsettings']['maintitle'] = 'PHP Configuratie\'s';
 $lng['admin']['phpsettings']['title'] = 'PHP Configuratie';
@@ -786,7 +784,7 @@ $lng['serversettings']['mod_fcgid']['tmpdir']['description'] = 'Waar dienen de t
 $lng['serversettings']['mod_fcgid']['peardir']['title'] = 'Globale PEAR-mappen';
 $lng['serversettings']['mod_fcgid']['peardir']['description'] = 'Welke PEAR-mappen dienen te worden ingesloten in elke php.ini? Bij meerdere mappen dienen deze te worden gescheiden door dubbele punten.';
 
-//improved Froxlor  2
+// improved Froxlor 2
 
 $lng['admin']['templates']['index_html'] = 'Standaardpagina voor nieuwe mappen/domeinen';
 $lng['admin']['templates']['SERVERNAME'] = 'Wordt vervangen door de naam van de server.';
@@ -829,7 +827,6 @@ $lng['serversettings']['mod_fcgid']['maxrequests']['description'] = 'Toegestane 
 
 // fix bug #1124
 $lng['error']['admin_domain_emailsystemhostname'] = 'De naam van de server kan niet gebruikt worden als domein voor e-mail.';
-
 
 // ADDED IN 1.4.2.1-2
 

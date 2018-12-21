@@ -16,7 +16,6 @@
  * @package    \Froxlor\Settings
  *
  */
-
 return array(
 	'groups' => array(
 		'dkim' => array(
@@ -30,7 +29,7 @@ return array(
 					'default' => false,
 					'save_method' => 'storeSettingFieldInsertBindTask',
 					'overview_option' => true
-					),
+				),
 				'dkim_prefix' => array(
 					'label' => $lng['dkim']['dkim_prefix'],
 					'settinggroup' => 'dkim',
@@ -38,8 +37,8 @@ return array(
 					'type' => 'string',
 					'string_type' => 'dir',
 					'default' => '/etc/postfix/dkim/',
-					'save_method' => 'storeSettingField',
-					),
+					'save_method' => 'storeSettingField'
+				),
 				'dkim_domains' => array(
 					'label' => $lng['dkim']['dkim_domains'],
 					'settinggroup' => 'dkim',
@@ -47,8 +46,8 @@ return array(
 					'type' => 'string',
 					'string_regexp' => '/^[a-z0-9\._]+$/i',
 					'default' => 'domains',
-					'save_method' => 'storeSettingField',
-					),
+					'save_method' => 'storeSettingField'
+				),
 				'dkim_dkimkeys' => array(
 					'label' => $lng['dkim']['dkim_dkimkeys'],
 					'settinggroup' => 'dkim',
@@ -56,8 +55,8 @@ return array(
 					'type' => 'string',
 					'string_regexp' => '/^[a-z0-9\._]+$/i',
 					'default' => 'dkim-keys.conf',
-					'save_method' => 'storeSettingField',
-					),
+					'save_method' => 'storeSettingField'
+				),
 				'dkim_algorithm' => array(
 					'label' => $lng['dkim']['dkim_algorithm'],
 					'settinggroup' => 'dkim',
@@ -65,9 +64,13 @@ return array(
 					'type' => 'option',
 					'default' => 'all',
 					'option_mode' => 'multiple',
-					'option_options' => array('all' => 'All', 'sha1' => 'SHA1', 'sha256' => 'SHA256'),
-					'save_method' => 'storeSettingFieldInsertBindTask',
+					'option_options' => array(
+						'all' => 'All',
+						'sha1' => 'SHA1',
+						'sha256' => 'SHA256'
 					),
+					'save_method' => 'storeSettingFieldInsertBindTask'
+				),
 				'dkim_servicetype' => array(
 					'label' => $lng['dkim']['dkim_servicetype'],
 					'settinggroup' => 'dkim',
@@ -75,9 +78,12 @@ return array(
 					'type' => 'option',
 					'default' => '0',
 					'option_mode' => 'one',
-					'option_options' => array('0' => 'All', '1' => 'E-Mail'),
-					'save_method' => 'storeSettingFieldInsertBindTask',
+					'option_options' => array(
+						'0' => 'All',
+						'1' => 'E-Mail'
 					),
+					'save_method' => 'storeSettingFieldInsertBindTask'
+				),
 				'dkim_keylength' => array(
 					'label' => array(
 						'title' => $lng['dkim']['dkim_keylength']['title'],
@@ -88,9 +94,12 @@ return array(
 					'type' => 'option',
 					'default' => '1024',
 					'option_mode' => 'one',
-					'option_options' => array('1024' => '1024 Bit', '2048' => '2048 Bit'),
-					'save_method' => 'storeSettingFieldInsertBindTask',
+					'option_options' => array(
+						'1024' => '1024 Bit',
+						'2048' => '2048 Bit'
 					),
+					'save_method' => 'storeSettingFieldInsertBindTask'
+				),
 				'dkim_notes' => array(
 					'label' => $lng['dkim']['dkim_notes'],
 					'settinggroup' => 'dkim',
@@ -98,16 +107,16 @@ return array(
 					'type' => 'string',
 					'string_regexp' => '/^[a-z0-9\._]+$/i',
 					'default' => '',
-					'save_method' => 'storeSettingFieldInsertBindTask',
-					),
+					'save_method' => 'storeSettingFieldInsertBindTask'
+				),
 				'dkim_add_adsp' => array(
 					'label' => $lng['dkim']['dkim_add_adsp'],
 					'settinggroup' => 'dkim',
 					'varname' => 'dkim_add_adsp',
 					'type' => 'bool',
 					'default' => true,
-					'save_method' => 'storeSettingFieldInsertBindTask',
-					),
+					'save_method' => 'storeSettingFieldInsertBindTask'
+				),
 				'dkim_add_adsppolicy' => array(
 					'label' => $lng['dkim']['dkim_add_adsppolicy'],
 					'settinggroup' => 'dkim',
@@ -115,20 +124,24 @@ return array(
 					'type' => 'option',
 					'default' => '1',
 					'option_mode' => 'one',
-					'option_options' => array('0' => 'Unknown', '1' => 'All', '2' => 'Discardable'),
-					'save_method' => 'storeSettingFieldInsertBindTask',
+					'option_options' => array(
+						'0' => 'Unknown',
+						'1' => 'All',
+						'2' => 'Discardable'
 					),
+					'save_method' => 'storeSettingFieldInsertBindTask'
+				),
 				'dkimrestart_command' => array(
 					'label' => $lng['dkim']['dkimrestart_command'],
 					'settinggroup' => 'dkim',
 					'varname' => 'dkimrestart_command',
 					'type' => 'string',
 					'default' => '/etc/init.d/dkim-filter restart',
-					'save_method' => 'storeSettingField',
-					),
-				),
-			),
-		),
-	);
+					'save_method' => 'storeSettingField'
+				)
+			)
+		)
+	)
+);
 
 ?>

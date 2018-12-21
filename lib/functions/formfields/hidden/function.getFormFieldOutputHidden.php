@@ -16,13 +16,11 @@
  * @package    Functions
  *
  */
-
 function getFormFieldOutputHidden($fieldname, $fielddata)
 {
 	$returnvalue = '<input type="hidden" name="' . $fieldname . '" value="' . htmlentities($fielddata['value']) . '" />';
 
-	if(isset($fielddata['label']) && $fielddata['label'] != '')
-	{
+	if (isset($fielddata['label']) && $fielddata['label'] != '') {
 		$label = $fielddata['label'];
 		$value = htmlentities($fielddata['value']);
 		eval("\$returnvalue .= \"" . \Froxlor\UI\Template::getTemplate("formfields/hidden", true) . "\";");

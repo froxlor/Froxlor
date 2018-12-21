@@ -16,7 +16,6 @@
  * @package    Functions
  *
  */
-
 function validateFormFieldHidden($fieldname, $fielddata, $newfieldvalue)
 {
 	/**
@@ -24,15 +23,9 @@ function validateFormFieldHidden($fieldname, $fielddata, $newfieldvalue)
 	 * because it might be possible that the cronjob ran
 	 * while settings have been edited (bug #52)
 	 */
-	if($newfieldvalue === $fielddata['value']
-		|| $fieldname == 'system_last_tasks_run'
-		|| $fieldname == 'system_last_traffic_run'
-		|| $fieldname == 'system_lastcronrun'
-	) {
+	if ($newfieldvalue === $fielddata['value'] || $fieldname == 'system_last_tasks_run' || $fieldname == 'system_last_traffic_run' || $fieldname == 'system_lastcronrun') {
 		return true;
-	}
-	else
-	{
+	} else {
 		return 'hiddenfieldvaluechanged';
 	}
 }

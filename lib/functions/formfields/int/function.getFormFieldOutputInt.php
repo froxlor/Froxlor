@@ -16,7 +16,6 @@
  * @package    Functions
  *
  */
-
 function getFormFieldOutputInt($fieldname, $fielddata, $do_show = true)
 {
 	return getFormFieldOutputString($fieldname, $fielddata, $do_show);

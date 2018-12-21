@@ -53,21 +53,21 @@ if ($page == 'log') {
 		$searchcode = $paging->getHtmlSearchCode($lng);
 		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
 		$clog = array();
-		
+
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-			
+
 			if (! isset($clog[$row['action']]) || ! is_array($clog[$row['action']])) {
 				$clog[$row['action']] = array();
 			}
 			$clog[$row['action']][$row['logid']] = $row;
 		}
-		
+
 		if ($paging->sortfield == 'date' && $paging->sortorder == 'desc') {
 			krsort($clog);
 		} else {
 			ksort($clog);
 		}
-		
+
 		$i = 0;
 		$count = 0;
 		$log_count = 0;
@@ -78,7 +78,7 @@ if ($page == 'log') {
 				// if ($paging->checkDisplay($i)) {
 				$row = htmlentities_array($row);
 				$row['date'] = date("d.m.y H:i:s", $row['date']);
-				
+
 				if ($_action != $action) {
 					switch ($action) {
 						case USR_ACTION:
@@ -103,11 +103,11 @@ if ($page == 'log') {
 							$_action = $lng['logger']['unknown'];
 							break;
 					}
-					
+
 					$row['action'] = $_action;
 					eval("\$log.=\"" . \Froxlor\UI\Template::getTemplate('logger/logger_action') . "\";");
 				}
-				
+
 				$log_count ++;
 				$row['type'] = getLogLevelDesc($row['type']);
 				eval("\$log.=\"" . \Froxlor\UI\Template::getTemplate('logger/logger_log') . "\";");
@@ -118,7 +118,7 @@ if ($page == 'log') {
 			}
 			$i ++;
 		}
-		
+
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate('logger/logger') . "\";");
 	}
 }

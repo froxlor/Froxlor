@@ -32,6 +32,9 @@ file_put_contents($userdata, $userdata_content);
 // include autoloader / api / etc
 require dirname(__DIR__) . '/vendor/autoload.php';
 
+// include table definitions
+require dirname(__DIR__) . '/lib/tables.inc.php';
+
 use Froxlor\Database\Database;
 use Froxlor\Settings;
 

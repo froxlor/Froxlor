@@ -20,14 +20,21 @@
 /**
  * Create a valid from/to - mailheader (remove carriage-returns)
  *
- * @param string The name of the recipient
- * @param string The mailaddress
+ * @param
+ *        	string The name of the recipient
+ * @param
+ *        	string The mailaddress
  * @return string A valid header-entry
  * @author Florian Aders <eleras@syscp.org>
  */
-
 function buildValidMailFrom($name, $mailaddress)
 {
-	$mailfrom = str_replace(array("\r", "\n"), '', $name) . ' <' . str_replace(array("\r", "\n"), '', $mailaddress) . '>';
+	$mailfrom = str_replace(array(
+		"\r",
+		"\n"
+	), '', $name) . ' <' . str_replace(array(
+		"\r",
+		"\n"
+	), '', $mailaddress) . '>';
 	return $mailfrom;
 }

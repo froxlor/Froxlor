@@ -14,15 +14,15 @@
  * @package    Functions
  *
  */
-
-function getFilesystemQuota() {
+function getFilesystemQuota()
+{
 
 	// enabled at all?
 	if (Settings::Get('system.diskquota_enabled')) {
 
 		// set linux defaults
 		$repquota_params = "-np";
-		//$quota_line_regex = "/^#([0-9]+)\s*[+-]{2}\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)/i";
+		// $quota_line_regex = "/^#([0-9]+)\s*[+-]{2}\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)/i";
 		$quota_line_regex = "/^#([0-9]+)\s+[+-]{2}\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)/i";
 
 		// check for freebsd - which needs other values
@@ -42,18 +42,18 @@ function getFilesystemQuota() {
 
 				// It matches - put it into an array with userid as key (for easy lookup later)
 				$usedquota[$matches[1]] = array(
-						'block' => array(
-								'used' => $matches[2],
-								'soft' => $matches[3],
-								'hard' => $matches[4],
-								'grace' => (isFreeBSD() ? '0' : $matches[5])
-						),
-						'file' => array(
-								'used' => $matches[6],
-								'soft' => $matches[7],
-								'hard' => $matches[8],
-								'grace' => (isFreeBSD() ? '0' : $matches[9])
-						),
+					'block' => array(
+						'used' => $matches[2],
+						'soft' => $matches[3],
+						'hard' => $matches[4],
+						'grace' => (isFreeBSD() ? '0' : $matches[5])
+					),
+					'file' => array(
+						'used' => $matches[6],
+						'soft' => $matches[7],
+						'hard' => $matches[8],
+						'grace' => (isFreeBSD() ? '0' : $matches[9])
+					)
 				);
 			}
 		}

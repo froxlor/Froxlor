@@ -16,11 +16,9 @@
  * @package    Functions
  *
  */
-
 function manipulateFormFieldDataDate($fieldname, $fielddata, $newfieldvalue)
 {
-	if(isset($fielddata['date_timestamp']) && $fielddata['date_timestamp'] === true)
-	{
+	if (isset($fielddata['date_timestamp']) && $fielddata['date_timestamp'] === true) {
 		$newfieldvalue = strtotime($newfieldvalue);
 	}
 

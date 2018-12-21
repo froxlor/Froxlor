@@ -14,7 +14,6 @@
  * @package    Formfields
  *
  */
-
 return array(
 	'emails_addaccount' => array(
 		'title' => $lng['emails']['account_add'],
@@ -38,7 +37,7 @@ return array(
 						'label' => $lng['customer']['generated_pwd'],
 						'type' => 'text',
 						'visible' => (\Froxlor\Settings::Get('panel.password_regex') == ''),
-						'value' => \Froxlor\System\Crypt::generatePassword(),
+						'value' => \Froxlor\System\Crypt::generatePassword()
 					),
 					'email_quota' => array(
 						'visible' => (\Froxlor\Settings::Get('system.mail_quota_enabled') == '1' ? true : false),

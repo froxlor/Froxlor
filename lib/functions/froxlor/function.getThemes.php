@@ -20,20 +20,16 @@
  *
  * @return array
  */
-function getThemes() {
-
-	$themespath = \Froxlor\FileDir::makeCorrectDir(\Froxlor\Froxlor::getInstallDir().'/templates/');
+function getThemes()
+{
+	$themespath = \Froxlor\FileDir::makeCorrectDir(\Froxlor\Froxlor::getInstallDir() . '/templates/');
 	$themes_available = array();
 
 	if (is_dir($themespath)) {
 		$its = new DirectoryIterator($themespath);
 
 		foreach ($its as $it) {
-			if ($it->isDir() 
-				&& $it->getFilename() != '.' 
-				&& $it->getFilename() != '..'
-				&& $it->getFilename() != 'misc'
-			) {
+			if ($it->isDir() && $it->getFilename() != '.' && $it->getFilename() != '..' && $it->getFilename() != 'misc') {
 				$theme = $themespath . $it->getFilename();
 				if (file_exists($theme . '/config.json')) {
 					$themeconfig = json_decode(file_get_contents($theme . '/config.json'), true);

@@ -3,6 +3,7 @@ namespace Froxlor\Api\Commands;
 
 use Froxlor\Database as Database;
 use Froxlor\Settings as Settings;
+
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -11,12 +12,12 @@ use Froxlor\Settings as Settings;
  * file that was distributed with this source code. You can also view the
  * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
- * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    API
- * @since      0.10.0
- *
+ * @copyright (c) the authors
+ * @author Froxlor team <team@froxlor.org> (2010-)
+ * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package API
+ * @since 0.10.0
+ *       
  */
 class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntity
 {

@@ -14,7 +14,6 @@
  * @package    Formfields
  *
  */
-
 return array(
 	'htpasswd_edit' => array(
 		'title' => $lng['extras']['directoryprotection_edit'],
@@ -43,7 +42,7 @@ return array(
 						'label' => $lng['customer']['generated_pwd'],
 						'type' => 'text',
 						'visible' => (\Froxlor\Settings::Get('panel.password_regex') == ''),
-						'value' => \Froxlor\System\Crypt::generatePassword(),
+						'value' => \Froxlor\System\Crypt::generatePassword()
 					),
 					'directory_authname' => array(
 						'label' => $lng['extras']['htpasswdauthname'],

@@ -1,5 +1,4 @@
 <?php
-
 namespace Froxlor\Cli;
 
 /**
@@ -16,7 +15,6 @@ namespace Froxlor\Cli;
  * @package Cron
  *         
  */
-
 class ConfigServicesCmd extends CmdLineHandler
 {
 

@@ -16,7 +16,6 @@
  * @package    Panel
  *
  */
-
 define('AREA', 'customer');
 require './lib/init.php';
 
@@ -27,7 +26,7 @@ use Froxlor\Api\Commands\EmailAccounts as EmailAccounts;
 use Froxlor\Api\Commands\EmailForwarders as EmailForwarders;
 
 // redirect if this customer page is hidden via settings
-if (Settings::IsInList('panel.customer_hide_options','email')) {
+if (Settings::IsInList('panel.customer_hide_options', 'email')) {
 	\Froxlor\UI\Response::redirectTo('customer_index.php');
 }
 
@@ -52,9 +51,10 @@ if ($page == 'overview') {
 		$result_stmt = Database::prepare('SELECT `m`.`id`, `m`.`domainid`, `m`.`email`, `m`.`email_full`, `m`.`iscatchall`, `u`.`quota`, `m`.`destination`, `m`.`popaccountid`, `d`.`domain`, `u`.`mboxsize` FROM `' . TABLE_MAIL_VIRTUAL . '` `m`
 			LEFT JOIN `' . TABLE_PANEL_DOMAINS . '` `d` ON (`m`.`domainid` = `d`.`id`)
 			LEFT JOIN `' . TABLE_MAIL_USERS . '` `u` ON (`m`.`popaccountid` = `u`.`id`)
-			WHERE `m`.`customerid`= :customerid ' . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit()
-		);
-		Database::pexecute($result_stmt, array("customerid" => $userinfo['customerid']));
+			WHERE `m`.`customerid`= :customerid ' . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
+		Database::pexecute($result_stmt, array(
+			"customerid" => $userinfo['customerid']
+		));
 		$emailscount = Database::num_rows();
 		$paging->setEntries($emailscount);
 		$sortcode = $paging->getHtmlSortCode($lng);
@@ -64,7 +64,7 @@ if ($page == 'overview') {
 		$emails = array();
 
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-			if (!isset($emails[$row['domain']]) || !is_array($emails[$row['domain']])) {
+			if (! isset($emails[$row['domain']]) || ! is_array($emails[$row['domain']])) {
 				$emails[$row['domain']] = array();
 			}
 
@@ -96,7 +96,7 @@ if ($page == 'overview') {
 						eval("\$accounts.=\"" . \Froxlor\UI\Template::getTemplate("email/emails_domain") . "\";");
 					}
 
-					$emails_count++;
+					$emails_count ++;
 					$row['email'] = $idna_convert->decode($row['email']);
 					$row['email_full'] = $idna_convert->decode($row['email_full']);
 					$row['destination'] = explode(' ', $row['destination']);
@@ -118,22 +118,23 @@ if ($page == 'overview') {
 						$row['destination'] = substr($row['destination'], 0, 32) . '... (' . $destinations_count . ')';
 					}
 
-					$row['mboxsize'] = \Froxlor\PhpHelper::size_readable($row['mboxsize'], 'GiB', 'bi', '%01.' . (int)Settings::Get('panel.decimal_places') . 'f %s');
+					$row['mboxsize'] = \Froxlor\PhpHelper::size_readable($row['mboxsize'], 'GiB', 'bi', '%01.' . (int) Settings::Get('panel.decimal_places') . 'f %s');
 
 					$row = htmlentities_array($row);
 					eval("\$accounts.=\"" . \Froxlor\UI\Template::getTemplate("email/emails_email") . "\";");
-					$count++;
+					$count ++;
 				}
 
-				$i++;
+				$i ++;
 			}
 		}
 
 		$emaildomains_count_stmt = Database::prepare("SELECT COUNT(`id`) AS `count` FROM `" . TABLE_PANEL_DOMAINS . "`
 			WHERE `customerid`= :customerid
-			AND `isemaildomain`='1' ORDER BY `domain` ASC"
-		);
-		Database::pexecute($emaildomains_count_stmt, array("customerid" => $userinfo['customerid']));
+			AND `isemaildomain`='1' ORDER BY `domain` ASC");
+		Database::pexecute($emaildomains_count_stmt, array(
+			"customerid" => $userinfo['customerid']
+		));
 		$emaildomains_count = $emaildomains_count_stmt->fetch(PDO::FETCH_ASSOC);
 		$emaildomains_count = $emaildomains_count['count'];
 
@@ -157,14 +158,21 @@ if ($page == 'overview') {
 				} catch (Exception $e) {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
-				\Froxlor\UI\Response::redirectTo($filename, array('page' => $page, 's' => $s));
+				\Froxlor\UI\Response::redirectTo($filename, array(
+					'page' => $page,
+					's' => $s
+				));
 			} else {
 				if ($result['popaccountid'] != '0') {
 					$show_checkbox = true;
 				} else {
 					$show_checkbox = false;
 				}
-				ask_yesno_withcheckbox('email_reallydelete', 'admin_customer_alsoremovemail', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $idna_convert->decode($result['email_full']), $show_checkbox);
+				ask_yesno_withcheckbox('email_reallydelete', 'admin_customer_alsoremovemail', $filename, array(
+					'id' => $id,
+					'page' => $page,
+					'action' => $action
+				), $idna_convert->decode($result['email_full']), $show_checkbox);
 			}
 		}
 	} elseif ($action == 'add') {
@@ -176,23 +184,29 @@ if ($page == 'overview') {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
 				$result = json_decode($json_result, true)['data'];
-				\Froxlor\UI\Response::redirectTo($filename, array('page' => $page, 'action' => 'edit', 'id' => $result['id'], 's' => $s));
+				\Froxlor\UI\Response::redirectTo($filename, array(
+					'page' => $page,
+					'action' => 'edit',
+					'id' => $result['id'],
+					's' => $s
+				));
 			} else {
 				$result_stmt = Database::prepare("SELECT `id`, `domain`, `customerid` FROM `" . TABLE_PANEL_DOMAINS . "`
 					WHERE `customerid`= :cid
 					AND `isemaildomain`='1'
-					ORDER BY `domain` ASC"
-				);
-				Database::pexecute($result_stmt, array("cid" => $userinfo['customerid']));
+					ORDER BY `domain` ASC");
+				Database::pexecute($result_stmt, array(
+					"cid" => $userinfo['customerid']
+				));
 				$domains = '';
 
 				while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-					$domains.= makeoption($idna_convert->decode($row['domain']), $row['domain']);
+					$domains .= makeoption($idna_convert->decode($row['domain']), $row['domain']);
 				}
 
-				//$iscatchall = makeyesno('iscatchall', '1', '0', '0');
+				// $iscatchall = makeyesno('iscatchall', '1', '0', '0');
 
-				$email_add_data = include_once dirname(__FILE__).'/lib/formfields/customer/email/formfield.emails_add.php';
+				$email_add_data = include_once dirname(__FILE__) . '/lib/formfields/customer/email/formfield.emails_add.php';
 
 				if (Settings::Get('catchall.catchall_enabled') != '1') {
 					unset($email_add_data['emails_add']['sections']['section_a']['fields']['iscatchall']);
@@ -231,7 +245,7 @@ if ($page == 'overview') {
 
 				if ($destination != $result['email_full'] && $destination != '') {
 					eval("\$forwarders.=\"" . \Froxlor\UI\Template::getTemplate("email/emails_edit_forwarder") . "\";");
-					$forwarders_count++;
+					$forwarders_count ++;
 				}
 
 				$result['destination'][$dest_id] = $destination;
@@ -240,7 +254,7 @@ if ($page == 'overview') {
 			$destinations_count = count($result['destination']);
 			$result = htmlentities_array($result);
 
-			$email_edit_data = include_once dirname(__FILE__).'/lib/formfields/customer/email/formfield.emails_edit.php';
+			$email_edit_data = include_once dirname(__FILE__) . '/lib/formfields/customer/email/formfield.emails_edit.php';
 
 			if (Settings::Get('catchall.catchall_enabled') != '1') {
 				unset($email_edit_data['emails_edit']['sections']['section_a']['fields']['mail_catchall']);
@@ -271,7 +285,12 @@ if ($page == 'overview') {
 		} catch (Exception $e) {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
-		\Froxlor\UI\Response::redirectTo($filename, array('page' => $page, 'action' => 'edit', 'id' => $id, 's' => $s));
+		\Froxlor\UI\Response::redirectTo($filename, array(
+			'page' => $page,
+			'action' => 'edit',
+			'id' => $id,
+			's' => $s
+		));
 	}
 } elseif ($page == 'accounts') {
 	if ($action == 'add' && $id != 0) {
@@ -291,11 +310,18 @@ if ($page == 'overview') {
 				} catch (Exception $e) {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
-				\Froxlor\UI\Response::redirectTo($filename, array('page' => 'emails', 'action' => 'edit', 'id' => $id, 's' => $s));
+				\Froxlor\UI\Response::redirectTo($filename, array(
+					'page' => 'emails',
+					'action' => 'edit',
+					'id' => $id,
+					's' => $s
+				));
 			} else {
 
 				if (\Froxlor\Validate\Check::checkMailAccDeletionState($result['email_full'])) {
-				   \Froxlor\UI\Response::standard_error(array('mailaccistobedeleted'), $result['email_full']);
+					\Froxlor\UI\Response::standard_error(array(
+						'mailaccistobedeleted'
+					), $result['email_full']);
 				}
 
 				$result['email_full'] = $idna_convert->decode($result['email_full']);
@@ -311,11 +337,16 @@ if ($page == 'overview') {
 				eval("echo \"" . \Froxlor\UI\Template::getTemplate("email/account_add") . "\";");
 			}
 		} else {
-			\Froxlor\UI\Response::standard_error(array('allresourcesused', 'allocatetoomuchquota'), $quota);
+			\Froxlor\UI\Response::standard_error(array(
+				'allresourcesused',
+				'allocatetoomuchquota'
+			), $quota);
 		}
 	} elseif ($action == 'changepw' && $id != 0) {
 		try {
-			$json_result = Emails::getLocal($userinfo, array('id' => $id))->get();
+			$json_result = Emails::getLocal($userinfo, array(
+				'id' => $id
+			))->get();
 		} catch (Exception $e) {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
@@ -328,12 +359,17 @@ if ($page == 'overview') {
 				} catch (Exception $e) {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
-				\Froxlor\UI\Response::redirectTo($filename, array('page' => 'emails', 'action' => 'edit', 'id' => $id, 's' => $s));
+				\Froxlor\UI\Response::redirectTo($filename, array(
+					'page' => 'emails',
+					'action' => 'edit',
+					'id' => $id,
+					's' => $s
+				));
 			} else {
 				$result['email_full'] = $idna_convert->decode($result['email_full']);
 				$result = htmlentities_array($result);
 
-				$account_changepw_data = include_once dirname(__FILE__).'/lib/formfields/customer/email/formfield.emails_accountchangepasswd.php';
+				$account_changepw_data = include_once dirname(__FILE__) . '/lib/formfields/customer/email/formfield.emails_accountchangepasswd.php';
 				$account_changepw_form = \Froxlor\UI\HtmlForm::genHTMLForm($account_changepw_data);
 
 				$title = $account_changepw_data['emails_accountchangepasswd']['title'];
@@ -344,7 +380,9 @@ if ($page == 'overview') {
 		}
 	} elseif ($action == 'changequota' && Settings::Get('system.mail_quota_enabled') == '1' && $id != 0) {
 		try {
-			$json_result = Emails::getLocal($userinfo, array('id' => $id))->get();
+			$json_result = Emails::getLocal($userinfo, array(
+				'id' => $id
+			))->get();
 		} catch (Exception $e) {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
@@ -357,12 +395,17 @@ if ($page == 'overview') {
 				} catch (Exception $e) {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
-				\Froxlor\UI\Response::redirectTo($filename, array('page' => 'emails', 'action' => 'edit', 'id' => $id, 's' => $s));
+				\Froxlor\UI\Response::redirectTo($filename, array(
+					'page' => 'emails',
+					'action' => 'edit',
+					'id' => $id,
+					's' => $s
+				));
 			} else {
 				$result['email_full'] = $idna_convert->decode($result['email_full']);
 				$result = htmlentities_array($result);
 
-				$quota_edit_data = include_once dirname(__FILE__).'/lib/formfields/customer/email/formfield.emails_accountchangequota.php';
+				$quota_edit_data = include_once dirname(__FILE__) . '/lib/formfields/customer/email/formfield.emails_accountchangequota.php';
 				$quota_edit_form = \Froxlor\UI\HtmlForm::genHTMLForm($quota_edit_data);
 
 				$title = $quota_edit_data['emails_accountchangequota']['title'];
@@ -373,7 +416,9 @@ if ($page == 'overview') {
 		}
 	} elseif ($action == 'delete' && $id != 0) {
 		try {
-			$json_result = Emails::getLocal($userinfo, array('id' => $id))->get();
+			$json_result = Emails::getLocal($userinfo, array(
+				'id' => $id
+			))->get();
 		} catch (Exception $e) {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
@@ -386,9 +431,18 @@ if ($page == 'overview') {
 				} catch (Exception $e) {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
-				\Froxlor\UI\Response::redirectTo($filename, array('page' => 'emails', 'action' => 'edit', 'id' => $id, 's' => $s));
+				\Froxlor\UI\Response::redirectTo($filename, array(
+					'page' => 'emails',
+					'action' => 'edit',
+					'id' => $id,
+					's' => $s
+				));
 			} else {
-				ask_yesno_withcheckbox('email_reallydelete_account', 'admin_customer_alsoremovemail', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $idna_convert->decode($result['email_full']));
+				ask_yesno_withcheckbox('email_reallydelete_account', 'admin_customer_alsoremovemail', $filename, array(
+					'id' => $id,
+					'page' => $page,
+					'action' => $action
+				), $idna_convert->decode($result['email_full']));
 			}
 		}
 	}
@@ -396,7 +450,9 @@ if ($page == 'overview') {
 	if ($action == 'add' && $id != 0) {
 		if ($userinfo['email_forwarders_used'] < $userinfo['email_forwarders'] || $userinfo['email_forwarders'] == '-1') {
 			try {
-				$json_result = Emails::getLocal($userinfo, array('id' => $id))->get();
+				$json_result = Emails::getLocal($userinfo, array(
+					'id' => $id
+				))->get();
 			} catch (Exception $e) {
 				\Froxlor\UI\Response::dynamic_error($e->getMessage());
 			}
@@ -409,12 +465,17 @@ if ($page == 'overview') {
 					} catch (Exception $e) {
 						\Froxlor\UI\Response::dynamic_error($e->getMessage());
 					}
-					\Froxlor\UI\Response::redirectTo($filename, array('page' => 'emails', 'action' => 'edit', 'id' => $id, 's' => $s));
+					\Froxlor\UI\Response::redirectTo($filename, array(
+						'page' => 'emails',
+						'action' => 'edit',
+						'id' => $id,
+						's' => $s
+					));
 				} else {
 					$result['email_full'] = $idna_convert->decode($result['email_full']);
 					$result = htmlentities_array($result);
 
-					$forwarder_add_data = include_once dirname(__FILE__).'/lib/formfields/customer/email/formfield.emails_addforwarder.php';
+					$forwarder_add_data = include_once dirname(__FILE__) . '/lib/formfields/customer/email/formfield.emails_addforwarder.php';
 					$forwarder_add_form = \Froxlor\UI\HtmlForm::genHTMLForm($forwarder_add_data);
 
 					$title = $forwarder_add_data['emails_addforwarder']['title'];
@@ -428,7 +489,9 @@ if ($page == 'overview') {
 		}
 	} elseif ($action == 'delete' && $id != 0) {
 		try {
-			$json_result = Emails::getLocal($userinfo, array('id' => $id))->get();
+			$json_result = Emails::getLocal($userinfo, array(
+				'id' => $id
+			))->get();
 		} catch (Exception $e) {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
@@ -454,9 +517,19 @@ if ($page == 'overview') {
 					} catch (Exception $e) {
 						\Froxlor\UI\Response::dynamic_error($e->getMessage());
 					}
-					\Froxlor\UI\Response::redirectTo($filename, array('page' => 'emails', 'action' => 'edit', 'id' => $id, 's' => $s));
+					\Froxlor\UI\Response::redirectTo($filename, array(
+						'page' => 'emails',
+						'action' => 'edit',
+						'id' => $id,
+						's' => $s
+					));
 				} else {
-					ask_yesno('email_reallydelete_forwarder', $filename, array('id' => $id, 'forwarderid' => $forwarderid, 'page' => $page, 'action' => $action), $idna_convert->decode($result['email_full']) . ' -> ' . $idna_convert->decode($forwarder));
+					ask_yesno('email_reallydelete_forwarder', $filename, array(
+						'id' => $id,
+						'forwarderid' => $forwarderid,
+						'page' => $page,
+						'action' => $action
+					), $idna_convert->decode($result['email_full']) . ' -> ' . $idna_convert->decode($forwarder));
 				}
 			}
 		}

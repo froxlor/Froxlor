@@ -20,25 +20,23 @@
 /**
  * Returns full style user details "Name, Firstname | Company"
  *
- * @param  array  An array with keys firstname, name and company
+ * @param
+ *        	array An array with keys firstname, name and company
  * @return string The full details
- *
+ *        
  * @author Florian Lippert <flo@syscp.org>
  */
-
-function getCorrectFullUserDetails($userinfo) {
+function getCorrectFullUserDetails($userinfo)
+{
 	$returnval = '';
 
 	if (isset($userinfo['firstname']) && isset($userinfo['name']) && isset($userinfo['company'])) {
 		if ($userinfo['company'] == '') {
 			$returnval = $userinfo['name'] . ', ' . $userinfo['firstname'];
-		}
-		else {
-			if ($userinfo['name'] != ''
-				&& $userinfo['firstname'] != '') {
+		} else {
+			if ($userinfo['name'] != '' && $userinfo['firstname'] != '') {
 				$returnval = $userinfo['name'] . ', ' . $userinfo['firstname'] . ' | ' . $userinfo['company'];
-			}
-			else {
+			} else {
 				$returnval = $userinfo['company'];
 			}
 		}

@@ -20,7 +20,6 @@
 /**
  * Global
  */
-
 $lng['translator'] = 'Staffan Starberg';
 $lng['panel']['edit'] = 'Ändra';
 $lng['panel']['delete'] = 'Radera';

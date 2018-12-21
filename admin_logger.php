@@ -16,15 +16,12 @@
  * @package    Panel
  *
  */
-
 define('AREA', 'admin');
 require './lib/init.php';
 
 use Froxlor\Database\Database;
 
-if ($page == 'log'
-   && $userinfo['change_serversettings'] == '1'
-) {
+if ($page == 'log' && $userinfo['change_serversettings'] == '1') {
 	if ($action == '') {
 		$fields = array(
 			'date' => $lng['logger']['date'],
@@ -46,17 +43,13 @@ if ($page == 'log'
 
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 
-			if (!isset($clog[$row['action']])
-				|| !is_array($clog[$row['action']])
-			) {
+			if (! isset($clog[$row['action']]) || ! is_array($clog[$row['action']])) {
 				$clog[$row['action']] = array();
 			}
 			$clog[$row['action']][$row['logid']] = $row;
 		}
 
-		if ($paging->sortfield == 'date'
-			&& $paging->sortorder == 'desc'
-		) {
+		if ($paging->sortfield == 'date' && $paging->sortorder == 'desc') {
 			krsort($clog);
 		} else {
 			ksort($clog);
@@ -70,65 +63,69 @@ if ($page == 'log'
 			$_action = 0;
 			foreach ($logrows as $row) {
 				// if ($paging->checkDisplay($i)) {
-					$row = htmlentities_array($row);
-					$row['date'] = date("d.m.y H:i:s", $row['date']);
+				$row = htmlentities_array($row);
+				$row['date'] = date("d.m.y H:i:s", $row['date']);
 
-					if ($_action != $action) {
-						switch ($action) {
-							case USR_ACTION:
-								$_action = $lng['admin']['customer'];
-								break;
-							case RES_ACTION:
-								$_action = $lng['logger']['reseller'];
-								break;
-							case ADM_ACTION:
-								$_action = $lng['logger']['admin'];
-								break;
-							case CRON_ACTION:
-								$_action = $lng['logger']['cron'];
-								break;
-							case LOGIN_ACTION:
-								$_action = $lng['logger']['login'];
-								break;
-							case LOG_ERROR:
-								$_action = $lng['logger']['intern'];
-								break;
-							default:
-								$_action = $lng['logger']['unknown'];
-								break;
-						}
-
-						$row['action'] = $_action;
-						eval("\$log.=\"" . \Froxlor\UI\Template::getTemplate('logger/logger_action') . "\";");
+				if ($_action != $action) {
+					switch ($action) {
+						case USR_ACTION:
+							$_action = $lng['admin']['customer'];
+							break;
+						case RES_ACTION:
+							$_action = $lng['logger']['reseller'];
+							break;
+						case ADM_ACTION:
+							$_action = $lng['logger']['admin'];
+							break;
+						case CRON_ACTION:
+							$_action = $lng['logger']['cron'];
+							break;
+						case LOGIN_ACTION:
+							$_action = $lng['logger']['login'];
+							break;
+						case LOG_ERROR:
+							$_action = $lng['logger']['intern'];
+							break;
+						default:
+							$_action = $lng['logger']['unknown'];
+							break;
 					}
 
-					$log_count++;
-					$row['type'] = getLogLevelDesc($row['type']);
-					eval("\$log.=\"" . \Froxlor\UI\Template::getTemplate('logger/logger_log') . "\";");
-					$count++;
-					$_action = $action;
+					$row['action'] = $_action;
+					eval("\$log.=\"" . \Froxlor\UI\Template::getTemplate('logger/logger_action') . "\";");
+				}
+
+				$log_count ++;
+				$row['type'] = getLogLevelDesc($row['type']);
+				eval("\$log.=\"" . \Froxlor\UI\Template::getTemplate('logger/logger_log') . "\";");
+				$count ++;
+				$_action = $action;
 				// }
-				$i++;
+				$i ++;
 			}
-			$i++;
+			$i ++;
 		}
 
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate('logger/logger') . "\";");
-
 	} elseif ($action == 'truncate') {
 
-		if (isset($_POST['send'])
-		   && $_POST['send'] == 'send'
-		) {
+		if (isset($_POST['send']) && $_POST['send'] == 'send') {
 			$truncatedate = time() - (60 * 10);
 			$trunc_stmt = Database::prepare("
-				DELETE FROM `" . TABLE_PANEL_LOG . "` WHERE `date` < :trunc"
-			);
-			Database::pexecute($trunc_stmt, array('trunc' => $truncatedate));
+				DELETE FROM `" . TABLE_PANEL_LOG . "` WHERE `date` < :trunc");
+			Database::pexecute($trunc_stmt, array(
+				'trunc' => $truncatedate
+			));
 			$log->logAction(ADM_ACTION, LOG_WARNING, 'truncated the system-log (mysql)');
-			\Froxlor\UI\Response::redirectTo($filename, array('page' => $page, 's' => $s));
+			\Froxlor\UI\Response::redirectTo($filename, array(
+				'page' => $page,
+				's' => $s
+			));
 		} else {
-			ask_yesno('logger_reallytruncate', $filename, array('page' => $page, 'action' => $action), TABLE_PANEL_LOG);
+			ask_yesno('logger_reallytruncate', $filename, array(
+				'page' => $page,
+				'action' => $action
+			), TABLE_PANEL_LOG);
 		}
 	}
 }

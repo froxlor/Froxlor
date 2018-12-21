@@ -1,4 +1,7 @@
-<?php if (!defined('MASTER_CRONJOB')) die('You cannot access this file directly!');
+<?php
+
+if (! defined('MASTER_CRONJOB'))
+	die('You cannot access this file directly!');
 
 /**
  * This file is part of the Froxlor project.
@@ -8,17 +11,16 @@
  * file that was distributed with this source code. You can also view the
  * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
- * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Cron
- *
+ * @copyright (c) the authors
+ * @author Froxlor team <team@froxlor.org> (2010-)
+ * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package Cron
+ *         
  */
-use \Froxlor\Database;
-use \Froxlor\Settings;
+use Froxlor\Database;
+use Froxlor\Settings;
 
-if ((int)Settings::Get('system.report_webmax') > 0)
-{
+if ((int) Settings::Get('system.report_webmax') > 0) {
 	/**
 	 * report about diskusage for customers
 	 */
@@ -34,11 +36,7 @@ if ((int)Settings::Get('system.report_webmax') > 0)
 
 	while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 
-		if (isset($row['diskspace'])
-			&& $row['diskspace_used'] != null
-			&& $row['diskspace_used'] > 0
-			&& (($row['diskspace_used'] * 100) / $row['diskspace']) >= (int)Settings::Get('system.report_webmax')
-		) {
+		if (isset($row['diskspace']) && $row['diskspace_used'] != null && $row['diskspace_used'] > 0 && (($row['diskspace_used'] * 100) / $row['diskspace']) >= (int) Settings::Get('system.report_webmax')) {
 
 			$rep_userinfo = array(
 				'name' => $row['name'],
@@ -58,12 +56,16 @@ if ((int)Settings::Get('system.report_webmax') > 0)
 				SELECT `file` FROM `" . TABLE_PANEL_LANGUAGE . "`
 				WHERE `language` = :deflang
 			");
-			$lngfile = Database::pexecute_first($lngfile_stmt, array('deflang' => $row['def_language']));
+			$lngfile = Database::pexecute_first($lngfile_stmt, array(
+				'deflang' => $row['def_language']
+			));
 
 			if ($lngfile !== null) {
 				$langfile = $lngfile['file'];
 			} else {
-				$lngfile = Database::pexecute_first($lngfile_stmt, array('deflang' => Settings::Get('panel.standardlanguage')));
+				$lngfile = Database::pexecute_first($lngfile_stmt, array(
+					'deflang' => Settings::Get('panel.standardlanguage')
+				));
 				$langfile = $lngfile['file'];
 			}
 
@@ -99,7 +101,7 @@ if ((int)Settings::Get('system.report_webmax') > 0)
 				$mail->MsgHTML(nl2br($mail_body));
 				$mail->AddAddress($row['email'], $row['name']);
 				$mail->Send();
-			} catch(\PHPMailer\PHPMailer\Exception $e) {
+			} catch (\PHPMailer\PHPMailer\Exception $e) {
 				$mailerr_msg = $e->errorMessage();
 				$_mailerror = true;
 			} catch (Exception $e) {
@@ -117,7 +119,9 @@ if ((int)Settings::Get('system.report_webmax') > 0)
 				UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `reportsent` = '2'
 				WHERE `customerid` = :customerid
 			");
-			Database::pexecute($upd_stmt, array('customerid' => $row['customerid']));
+			Database::pexecute($upd_stmt, array(
+				'customerid' => $row['customerid']
+			));
 		}
 	}
 
@@ -130,11 +134,7 @@ if ((int)Settings::Get('system.report_webmax') > 0)
 
 	while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 
-		if (isset($row['diskspace'])
-			&& $row['diskspace_used'] != null
-			&& $row['diskspace_used'] > 0
-			&& (($row['diskspace_used'] * 100) / $row['diskspace']) >= (int)Settings::Get('system.report_webmax')
-		) {
+		if (isset($row['diskspace']) && $row['diskspace_used'] != null && $row['diskspace_used'] > 0 && (($row['diskspace_used'] * 100) / $row['diskspace']) >= (int) Settings::Get('system.report_webmax')) {
 
 			$replace_arr = array(
 				'NAME' => $row['name'],
@@ -148,12 +148,16 @@ if ((int)Settings::Get('system.report_webmax') > 0)
 				SELECT `file` FROM `" . TABLE_PANEL_LANGUAGE . "`
 				WHERE `language` = :deflang
 			");
-			$lngfile = Database::pexecute_first($lngfile_stmt, array('deflang' => $row['def_language']));
+			$lngfile = Database::pexecute_first($lngfile_stmt, array(
+				'deflang' => $row['def_language']
+			));
 
 			if ($lngfile !== null) {
 				$langfile = $lngfile['file'];
 			} else {
-				$lngfile = Database::pexecute_first($lngfile_stmt, array('deflang' => Settings::Get('panel.standardlanguage')));
+				$lngfile = Database::pexecute_first($lngfile_stmt, array(
+					'deflang' => Settings::Get('panel.standardlanguage')
+				));
 				$langfile = $lngfile['file'];
 			}
 
@@ -189,7 +193,7 @@ if ((int)Settings::Get('system.report_webmax') > 0)
 				$mail->MsgHTML(nl2br($mail_body));
 				$mail->AddAddress($row['email'], $row['name']);
 				$mail->Send();
-			} catch(\PHPMailer\PHPMailer\Exception $e) {
+			} catch (\PHPMailer\PHPMailer\Exception $e) {
 				$mailerr_msg = $e->errorMessage();
 				$_mailerror = true;
 			} catch (Exception $e) {
@@ -207,7 +211,9 @@ if ((int)Settings::Get('system.report_webmax') > 0)
 				UPDATE `" . TABLE_PANEL_ADMINS . "` SET `reportsent` = '2'
 				WHERE `adminid` = :adminid
 			");
-			Database::pexecute($upd_stmt, array('adminid' => $row['adminid']));
+			Database::pexecute($upd_stmt, array(
+				'adminid' => $row['adminid']
+			));
 		}
 	}
 } // webmax > 0

@@ -14,7 +14,6 @@
  * @package    Functions
  *
  */
-
 function validateFormFieldFile($fieldname, $fielddata, $newfieldvalue)
 {
 	return true;

@@ -20,15 +20,14 @@
 /**
  * Calls stripslashes in a loop until the result doesn't differ from original anymore
  *
- * @param string The string in which the slashes should be eliminated.
+ * @param
+ *        	string The string in which the slashes should be eliminated.
  * @return string The cleaned string
  * @author Florian Lippert <flo@syscp.org>
  */
-
 function stripslashes_complete($string)
 {
-	while($string != stripslashes($string))
-	{
+	while ($string != stripslashes($string)) {
 		$string = stripslashes($string);
 	}
 

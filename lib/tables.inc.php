@@ -16,7 +16,6 @@
  * @package    System
  *
  */
-
 define('TABLE_FTP_GROUPS', 'ftp_groups');
 define('TABLE_FTP_USERS', 'ftp_users');
 define('TABLE_FTP_QUOTALIMITS', 'ftp_quotalimits');
@@ -53,4 +52,4 @@ define('TABLE_PANEL_FPMDAEMONS', 'panel_fpmdaemons');
 define('TABLE_PANEL_PLANS', 'panel_plans');
 define('TABLE_API_KEYS', 'api_keys');
 
-require dirname(__FILE__).'/version.inc.php';
+require dirname(__FILE__) . '/version.inc.php';

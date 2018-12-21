@@ -20,43 +20,41 @@
 /**
  * Return HTML Code for an option within a <select>
  *
- * @param string The caption
- * @param string The Value which will be returned
- * @param string Values which will be selected by default.
- * @param bool Whether the title may contain html or not
- * @param bool Whether the value may contain html or not
+ * @param
+ *        	string The caption
+ * @param
+ *        	string The Value which will be returned
+ * @param
+ *        	string Values which will be selected by default.
+ * @param
+ *        	bool Whether the title may contain html or not
+ * @param
+ *        	bool Whether the value may contain html or not
  * @return string HTML Code
  * @author Florian Lippert <flo@syscp.org>
  */
-
 function makeoption($title, $value, $selvalue = NULL, $title_trusted = false, $value_trusted = false, $id = NULL, $disabled = false)
 {
-	if($selvalue !== NULL
-	   && ((is_array($selvalue) && in_array($value, $selvalue)) || $value == $selvalue))
-	{
+	if ($selvalue !== NULL && ((is_array($selvalue) && in_array($value, $selvalue)) || $value == $selvalue)) {
 		$selected = 'selected="selected"';
-	}
-	else
-	{
+	} else {
 		$selected = '';
 	}
-	
+
 	if ($disabled) {
 		$selected .= ' disabled="disabled"';
 	}
 
-	if(!$title_trusted)
-	{
+	if (! $title_trusted) {
 		$title = htmlspecialchars($title);
 	}
 
-	if(!$value_trusted)
-	{
+	if (! $value_trusted) {
 		$value = htmlspecialchars($value);
 	}
 
 	$id_str = ' ';
-	if($id !== NULL) {
+	if ($id !== NULL) {
 		$id_str = 'id="' . $id . '"';
 	}
 

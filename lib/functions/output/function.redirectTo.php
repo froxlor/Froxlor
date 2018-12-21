@@ -20,24 +20,26 @@
 /**
  * Sends an header ( 'Location ...' ) to the browser.
  *
- * @param   string   Destination
- * @param   array    Get-Variables
- * @param   boolean  if the target we are creating for a redirect
- *                   should be a relative or an absolute url
- *
- * @return  boolean  false if params is not an array
- *
- * @author  Florian Lippert <flo@syscp.org>
- * @author  Martin Burchert <eremit@syscp.org>
- *
+ * @param
+ *        	string Destination
+ * @param
+ *        	array Get-Variables
+ * @param
+ *        	boolean if the target we are creating for a redirect
+ *        	should be a relative or an absolute url
+ *        	
+ * @return boolean false if params is not an array
+ *        
+ * @author Florian Lippert <flo@syscp.org>
+ * @author Martin Burchert <eremit@syscp.org>
+ *        
  * @changes martin@2005-01-29
  *          - added isRelative parameter
  *          - speed up the url generation
  *          - fixed bug #91
  */
-
-function redirectTo($destination, $get_variables = null, $isRelative = true) {
-
+function redirectTo($destination, $get_variables = null, $isRelative = true)
+{
 	global $s;
 
 	if (is_array($get_variables)) {
@@ -56,9 +58,7 @@ function redirectTo($destination, $get_variables = null, $isRelative = true) {
 			$linker->hostname = '';
 			$path = './';
 		} else {
-			if (isset($_SERVER['HTTPS'])
-					&& strtolower($_SERVER['HTTPS']) == 'on'
-			) {
+			if (isset($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) == 'on') {
 				$linker->protocol = 'https';
 			} else {
 				$linker->protocol = 'http';
@@ -74,8 +74,7 @@ function redirectTo($destination, $get_variables = null, $isRelative = true) {
 			$linker->filename = $path . $destination;
 		}
 		header('Location: ' . $linker->getLink());
-		exit;
-
+		exit();
 	} elseif ($get_variables == null) {
 		if ($isRelative) {
 			$linker = new linker($destination, $s);
@@ -83,7 +82,7 @@ function redirectTo($destination, $get_variables = null, $isRelative = true) {
 			$linker = new linker($destination);
 		}
 		header('Location: ' . $linker->getLink());
-		exit;
+		exit();
 	}
 
 	return false;

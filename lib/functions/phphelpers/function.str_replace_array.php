@@ -21,30 +21,27 @@
  * Replaces Strings in an array, with the advantage that you
  * can select which fields should be str_replace'd
  *
- * @param mixed String or array of strings to search for
- * @param mixed String or array to replace with
- * @param array The subject array
- * @param string The fields which should be checked for, separated by spaces
+ * @param
+ *        	mixed String or array of strings to search for
+ * @param
+ *        	mixed String or array to replace with
+ * @param
+ *        	array The subject array
+ * @param
+ *        	string The fields which should be checked for, separated by spaces
  * @return array The str_replace'd array
  * @author Florian Lippert <flo@syscp.org>
  */
-
 function str_replace_array($search, $replace, $subject, $fields = '')
 {
-	if(is_array($subject))
-	{
+	if (is_array($subject)) {
 		$fields = array_trim(explode(' ', $fields));
-		foreach($subject as $field => $value)
-		{
-			if((!is_array($fields) || empty($fields))
-			   || (is_array($fields) && !empty($fields) && in_array($field, $fields)))
-			{
+		foreach ($subject as $field => $value) {
+			if ((! is_array($fields) || empty($fields)) || (is_array($fields) && ! empty($fields) && in_array($field, $fields))) {
 				$subject[$field] = str_replace($search, $replace, $subject[$field]);
 			}
 		}
-	}
-	else
-	{
+	} else {
 		$subject = str_replace($search, $replace, $subject);
 	}
 

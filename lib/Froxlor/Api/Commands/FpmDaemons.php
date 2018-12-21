@@ -3,7 +3,6 @@ namespace Froxlor\Api\Commands;
 
 use Froxlor\Database as Database;
 
-
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).

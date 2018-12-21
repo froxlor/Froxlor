@@ -22,8 +22,7 @@ use Froxlor\Settings;
 
 if ($userinfo['change_serversettings'] == '1') {
 
-	if ($action == 'setconfigured')
-	{
+	if ($action == 'setconfigured') {
 		Settings::Set('panel.is_configured', '1', true);
 		\Froxlor\UI\Response::redirectTo('admin_configfiles.php', array(
 			's' => $s
@@ -31,12 +30,9 @@ if ($userinfo['change_serversettings'] == '1') {
 	}
 
 	$customer_tmpdir = '/tmp/';
-	if (Settings::Get('system.mod_fcgid') == '1' && Settings::Get('system.mod_fcgid_tmpdir') != '')
-	{
+	if (Settings::Get('system.mod_fcgid') == '1' && Settings::Get('system.mod_fcgid_tmpdir') != '') {
 		$customer_tmpdir = Settings::Get('system.mod_fcgid_tmpdir');
-	}
-	elseif (Settings::Get('phpfpm.enabled') == '1' && Settings::Get('phpfpm.tmpdir') != '')
-	{
+	} elseif (Settings::Get('phpfpm.enabled') == '1' && Settings::Get('phpfpm.tmpdir') != '') {
 		$customer_tmpdir = Settings::Get('phpfpm.tmpdir');
 	}
 
@@ -93,9 +89,9 @@ if ($userinfo['change_serversettings'] == '1') {
 
 	if ($distribution != "") {
 
-		if (!file_exists($config_dir . '/' . $distribution . ".xml")) {
+		if (! file_exists($config_dir . '/' . $distribution . ".xml")) {
 			trigger_error("Unknown distribution, are you playing around with the URL?");
-			exit;
+			exit();
 		}
 
 		// create configparser object
@@ -109,9 +105,9 @@ if ($userinfo['change_serversettings'] == '1') {
 
 		if ($service != "") {
 
-			if (!isset($services[$service])) {
+			if (! isset($services[$service])) {
 				trigger_error("Unknown service, are you playing around with the URL?");
-				exit;
+				exit();
 			}
 
 			$daemons = $services[$service]->getDaemons();
@@ -157,9 +153,9 @@ if ($userinfo['change_serversettings'] == '1') {
 
 	if ($distribution != "" && $service != "" && $daemon != "") {
 
-		if (!isset($daemons[$daemon])) {
+		if (! isset($daemons[$daemon])) {
 			trigger_error("Unknown daemon, are you playing around with the URL?");
-			exit;
+			exit();
 		}
 
 		$confarr = $daemons[$daemon]->getConfig();

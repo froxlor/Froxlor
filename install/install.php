@@ -15,7 +15,6 @@
  * @package    Install
  *
  */
-
 require 'lib/class.FroxlorInstall.php';
 
 $frxinstall = new FroxlorInstall();

@@ -20,26 +20,21 @@
 /**
  * Calls html_entity_decode in a loop until the result doesn't differ from original anymore
  *
- * @param string The string in which the html entities should be eliminated.
+ * @param
+ *        	string The string in which the html entities should be eliminated.
  * @return string The cleaned string
  * @author Florian Lippert <flo@syscp.org>
  */
-
 function html_entity_decode_complete($string)
 {
 	global $theme;
 
-	if($theme == 'Classic')
-	{
-		while($string != html_entity_decode($string))
-		{
+	if ($theme == 'Classic') {
+		while ($string != html_entity_decode($string)) {
 			$string = html_entity_decode($string);
 		}
-	}
-	else
-	{
-		while($string != html_entity_decode($string, ENT_COMPAT | ENT_HTML5, 'UTF-8'))
-		{
+	} else {
+		while ($string != html_entity_decode($string, ENT_COMPAT | ENT_HTML5, 'UTF-8')) {
 			$string = html_entity_decode($string, ENT_COMPAT | ENT_HTML5, 'UTF-8');
 		}
 	}

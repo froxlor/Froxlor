@@ -14,7 +14,6 @@
  * @package    Formfields
  *
  */
-
 return array(
 	'htaccess_edit' => array(
 		'title' => $lng['extras']['pathoptions_edit'],
@@ -33,9 +32,14 @@ return array(
 						'label' => $lng['extras']['directory_browsing'],
 						'type' => 'checkbox',
 						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
-						'value' => array($result['options_indexes'])
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array(
+							$result['options_indexes']
+						)
 					),
 					'error404path' => array(
 						'label' => $lng['extras']['errordocument404path'],
@@ -62,9 +66,14 @@ return array(
 						'label' => $lng['extras']['execute_perl'],
 						'type' => 'checkbox',
 						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
-						'value' => array($result['options_cgi'])
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array(
+							$result['options_cgi']
+						)
 					)
 				)
 			)

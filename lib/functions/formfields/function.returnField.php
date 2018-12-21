@@ -16,8 +16,9 @@
  * @package    Functions
  *
  */
-
 function returnField($fieldname, $fielddata, $newfieldvalue)
 {
-	return array($fieldname => $newfieldvalue);
+	return array(
+		$fieldname => $newfieldvalue
+	);
 }

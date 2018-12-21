@@ -14,7 +14,6 @@
  * @package    Formfields
  *
  */
-
 return array(
 	'emails_add' => array(
 		'title' => $lng['emails']['emails_add'],
@@ -40,8 +39,11 @@ return array(
 						'label' => $lng['emails']['iscatchall'],
 						'type' => 'checkbox',
 						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
 						'value' => array()
 					)
 				)

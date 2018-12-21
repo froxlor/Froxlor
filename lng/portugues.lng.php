@@ -22,7 +22,6 @@
 /**
  * Global
  */
-
 $lng['translator'] = 'Ricardo Luiz Costa, Rafael Andrade, Thiago Goncalves de Castro';
 $lng['panel']['edit'] = 'Editar';
 $lng['panel']['delete'] = 'Deletar';

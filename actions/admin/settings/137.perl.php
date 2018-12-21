@@ -14,7 +14,6 @@
  * @package    Settings
  *
  */
-
 return array(
 	'groups' => array(
 		'perl' => array(
@@ -27,8 +26,10 @@ return array(
 					'type' => 'string',
 					'default' => '/usr/bin/perl',
 					'save_method' => 'storeSettingField',
-					'websrv_avail' => array('lighttpd')
-					),	
+					'websrv_avail' => array(
+						'lighttpd'
+					)
+				),
 				'system_perl_suexecworkaround' => array(
 					'label' => $lng['serversettings']['perl']['suexecworkaround'],
 					'settinggroup' => 'perl',
@@ -36,8 +37,10 @@ return array(
 					'type' => 'bool',
 					'default' => false,
 					'save_method' => 'storeSettingField',
-					'websrv_avail' => array('apache2')
-					),
+					'websrv_avail' => array(
+						'apache2'
+					)
+				),
 				'system_perl_suexeccgipath' => array(
 					'label' => $lng['serversettings']['perl']['suexeccgipath'],
 					'settinggroup' => 'perl',
@@ -46,8 +49,10 @@ return array(
 					'string_type' => 'dir',
 					'default' => '/var/www/cgi-bin/',
 					'save_method' => 'storeSettingField',
-					'websrv_avail' => array('apache2')
-					),
+					'websrv_avail' => array(
+						'apache2'
+					)
+				),
 				'perl_server' => array(
 					'label' => $lng['serversettings']['perl_server'],
 					'settinggroup' => 'serversettings',
@@ -55,11 +60,13 @@ return array(
 					'type' => 'string',
 					'default' => 'unix:/var/run/nginx/cgiwrap-dispatch.sock',
 					'save_method' => 'storeSettingField',
-					'websrv_avail' => array('nginx')
-					),
-				),
-			),
-		),
-	);
+					'websrv_avail' => array(
+						'nginx'
+					)
+				)
+			)
+		)
+	)
+);
 
 ?>

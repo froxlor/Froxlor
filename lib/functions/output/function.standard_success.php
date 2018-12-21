@@ -29,21 +29,21 @@
 function standard_success($success_message = '', $replacer = '', $params = array(), $throw_exception = false)
 {
 	global $s, $header, $footer, $lng, $theme;
-	
+
 	if (isset($lng['success'][$success_message])) {
 		$success_message = strtr($lng['success'][$success_message], array(
 			'%s' => htmlentities($replacer)
 		));
 	}
-	
+
 	if ($throw_exception) {
 		throw new Exception(strip_tags($success_message), 200);
 	}
-	
+
 	if (is_array($params) && isset($params['filename'])) {
 		$redirect_url = $params['filename'] . '?s=' . $s;
 		unset($params['filename']);
-		
+
 		foreach ($params as $varname => $value) {
 			if ($value != '') {
 				$redirect_url .= '&amp;' . $varname . '=' . $value;
@@ -52,7 +52,7 @@ function standard_success($success_message = '', $replacer = '', $params = array
 	} else {
 		$redirect_url = '';
 	}
-	
+
 	eval("echo \"" . getTemplate('misc/success', '1') . "\";");
 	exit();
 }
