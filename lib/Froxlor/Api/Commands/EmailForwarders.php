@@ -70,7 +70,7 @@ class EmailForwarders extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 			// prepare destination
 			$destination = trim($destination);
 
-			if (! validateEmail($destination)) {
+			if (! \Froxlor\Validate\Validate::validateEmail($destination)) {
 				\Froxlor\UI\Response::standard_error('destinationiswrong', $destination, true);
 			} elseif ($destination == $result['email']) {
 				\Froxlor\UI\Response::standard_error('destinationalreadyexistasmail', $destination, true);

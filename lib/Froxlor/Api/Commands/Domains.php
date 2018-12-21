@@ -246,7 +246,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				), '', \Froxlor\Validate\Validate::validate($p_domain, 'domain')));
 
 				// Check whether domain validation is enabled and if, validate the domain
-				if (Settings::Get('system.validate_domain') && ! validateDomain($domain)) {
+				if (Settings::Get('system.validate_domain') && ! \Froxlor\Validate\Validate::validateDomain($domain)) {
 					\Froxlor\UI\Response::standard_error(array(
 						'stringiswrong',
 						'mydomain'

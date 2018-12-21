@@ -300,7 +300,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 					\Froxlor\UI\Response::standard_error('youcantallocatemorethanyouhave', '', true);
 				}
 
-				if (! validateEmail($email)) {
+				if (! \Froxlor\Validate\Validate::validateEmail($email)) {
 					\Froxlor\UI\Response::standard_error('emailiswrong', $email, true);
 				} else {
 
@@ -342,7 +342,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 
 					if (strtolower($loginname_check['loginname']) == strtolower($loginname) || strtolower($loginname_check_admin['loginname']) == strtolower($loginname)) {
 						\Froxlor\UI\Response::standard_error('loginnameexists', $loginname, true);
-					} elseif (! validateUsername($loginname, Settings::Get('panel.unix_names'), 14 - strlen(Settings::Get('customer.mysqlprefix')))) {
+					} elseif (! \Froxlor\Validate\Validate::validateUsername($loginname, Settings::Get('panel.unix_names'), 14 - strlen(Settings::Get('customer.mysqlprefix')))) {
 						if (strlen($loginname) > 14 - strlen(Settings::Get('customer.mysqlprefix'))) {
 							\Froxlor\UI\Response::standard_error('loginnameiswrong2', 14 - strlen(Settings::Get('customer.mysqlprefix')), true);
 						} else {
@@ -934,7 +934,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 					'stringisempty',
 					'emailadd'
 				), '', true);
-			} elseif (! validateEmail($email)) {
+			} elseif (!\Froxlor\Validate\Validate::validateEmail($email)) {
 				\Froxlor\UI\Response::standard_error('emailiswrong', $email, true);
 			}
 		}

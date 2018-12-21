@@ -100,7 +100,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 			// alternative email address to send info to
 			if (Settings::Get('panel.sendalternativemail') == 1) {
 				$alternative_email = $idna_convert->encode(\Froxlor\Validate\Validate::validate($alternative_email, 'alternative_email', '', '', array(), true));
-				if (! validateEmail($alternative_email)) {
+				if (! \Froxlor\Validate\Validate::validateEmail($alternative_email)) {
 					\Froxlor\UI\Response::standard_error('emailiswrong', $alternative_email, true);
 				}
 			} else {

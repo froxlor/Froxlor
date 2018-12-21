@@ -237,9 +237,9 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			} // Accounts which match systemaccounts are not allowed, filtering them
 			elseif (preg_match('/^' . preg_quote(Settings::Get('customer.accountprefix'), '/') . '([0-9]+)/', $loginname)) {
 				\Froxlor\UI\Response::standard_error('loginnameissystemaccount', Settings::Get('customer.accountprefix'), true);
-			} elseif (! validateUsername($loginname)) {
+			} elseif (! \Froxlor\Validate\Validate::validateUsername($loginname)) {
 				\Froxlor\UI\Response::standard_error('loginnameiswrong', $loginname, true);
-			} elseif (! validateEmail($email)) {
+			} elseif (! \Froxlor\Validate\Validate::validateEmail($email)) {
 				\Froxlor\UI\Response::standard_error('emailiswrong', $email, true);
 			} else {
 
@@ -504,7 +504,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 					$theme = Settings::Get('panel.default_theme');
 				}
 
-				if (! validateEmail($email)) {
+				if (! \Froxlor\Validate\Validate::validateEmail($email)) {
 					\Froxlor\UI\Response::standard_error('emailiswrong', $email, true);
 				} else {
 

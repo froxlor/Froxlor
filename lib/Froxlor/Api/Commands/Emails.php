@@ -86,7 +86,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			$email_full = $email_part . '@' . $domain;
 
 			// validate it
-			if (! validateEmail($email_full)) {
+			if (! \Froxlor\Validate\Validate::validateEmail($email_full)) {
 				\Froxlor\UI\Response::standard_error('emailiswrong', $email_full, true);
 			}
 

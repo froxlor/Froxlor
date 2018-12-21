@@ -91,7 +91,7 @@ if ($action == 'delete') {
 	$ip_list = array_map('trim', explode(",", $allowed_from));
 	$_check_list = $ip_list;
 	foreach ($_check_list as $idx => $ip) {
-		if (validate_ip2($ip, true, 'invalidip', true, true) == false) {
+		if (\Froxlor\Validate\Validate::validate_ip2($ip, true, 'invalidip', true, true) == false) {
 			unset($ip_list[$idx]);
 		}
 	}

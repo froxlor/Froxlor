@@ -186,7 +186,7 @@ class Check
 		}
 
 		$returnvalue = array();
-		if (validateUsername($newfieldvalue, Settings::Get('panel.unix_names'), 14 - strlen($allnewfieldvalues['customer_mysqlprefix'])) === true) {
+		if (Validate::validateUsername($newfieldvalue, Settings::Get('panel.unix_names'), 14 - strlen($allnewfieldvalues['customer_mysqlprefix'])) === true) {
 			$returnvalue = array(
 				FORMFIELDS_PLAUSIBILITY_CHECK_OK
 			);
