@@ -3,7 +3,7 @@
 		<header>
 			<h2>
 				<img src="templates/{$theme}/assets/img/icons/mysql_big.png" alt="" />&nbsp;
-				{$lng['menue']['mysql']['databases']}&nbsp;({$mysqls_count})
+				{\Froxlor\I18N\Lang::getAll()['menue']['mysql']['databases']}&nbsp;({$mysqls_count})
 			</h2>
 		</header>
 
@@ -20,18 +20,18 @@
 				<if (\Froxlor\User::getAll()['mysqls_used'] < \Froxlor\User::getAll()['mysqls'] || \Froxlor\User::getAll()['mysqls'] == '-1') >
 				<div class="overviewadd">
 					<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />&nbsp;
-					<a href="{$linker->getLink(array('section' => 'mysql', 'page' => 'mysqls', 'action' => 'add'))}">{$lng['mysql']['database_create']}</a>
+					<a href="{$linker->getLink(array('section' => 'mysql', 'page' => 'mysqls', 'action' => 'add'))}">{\Froxlor\I18N\Lang::getAll()['mysql']['database_create']}</a>
 				</div>
 				</if>
 	
 				<table class="full hl">
 					<thead>
 						<tr>
-							<th>{$lng['mysql']['databasename']}&nbsp;{$arrowcode['databasename']}</th>
-							<th>{$lng['mysql']['databasedescription']}&nbsp;{$arrowcode['description']}</th>
-							<th>{$lng['mysql']['size']}</th>
-							<if 1 < $count_mysqlservers><th>{$lng['mysql']['mysql_server']}</th></if>
-							<th>{$lng['panel']['options']}</th>
+							<th>{\Froxlor\I18N\Lang::getAll()['mysql']['databasename']}&nbsp;{$arrowcode['databasename']}</th>
+							<th>{\Froxlor\I18N\Lang::getAll()['mysql']['databasedescription']}&nbsp;{$arrowcode['description']}</th>
+							<th>{\Froxlor\I18N\Lang::getAll()['mysql']['size']}</th>
+							<if 1 < $count_mysqlservers><th>{\Froxlor\I18N\Lang::getAll()['mysql']['mysql_server']}</th></if>
+							<th>{\Froxlor\I18N\Lang::getAll()['panel']['options']}</th>
 						</tr>
 					</thead>
 
@@ -52,7 +52,7 @@
 			<if (\Froxlor\User::getAll()['mysqls_used'] < \Froxlor\User::getAll()['mysqls'] || \Froxlor\User::getAll()['mysqls'] == '-1') && 15 < $mysqls_count >
 			<div class="overviewadd">
 				<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />&nbsp;
-				<a href="{$linker->getLink(array('section' => 'mysql', 'page' => 'mysqls', 'action' => 'add'))}">{$lng['mysql']['database_create']}</a>
+				<a href="{$linker->getLink(array('section' => 'mysql', 'page' => 'mysqls', 'action' => 'add'))}">{\Froxlor\I18N\Lang::getAll()['mysql']['database_create']}</a>
 			</div>
 			</if>
 

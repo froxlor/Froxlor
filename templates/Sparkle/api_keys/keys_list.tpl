@@ -3,13 +3,13 @@
 		<header>
 			<h2>
 				<img src="templates/{$theme}/assets/img/icons/lock_big.png" alt="" />&nbsp;
-				{$lng['menue']['main']['apikeys']}
+				{\Froxlor\I18N\Lang::getAll()['menue']['main']['apikeys']}
 			</h2>
 		</header>
 		
 		<if !empty($success_message)>
 			<div class="successcontainer bradius">
-				<div class="successtitle">{$lng['success']['success']}</div>
+				<div class="successtitle">{\Froxlor\I18N\Lang::getAll()['success']['success']}</div>
 				<div class="success">
 					$success_message
 				</div>
@@ -28,18 +28,18 @@
 
 				<div class="overviewadd">
 					<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />
-					<a href="{$linker->getLink(array('section' => 'index', 'page' => $page, 'action' => 'add'))}">{$lng['apikeys']['key_add']}</a>
+					<a href="{$linker->getLink(array('section' => 'index', 'page' => $page, 'action' => 'add'))}">{\Froxlor\I18N\Lang::getAll()['apikeys']['key_add']}</a>
 				</div>
 
 				<table class="full hl">
 					<thead>
 						<tr>
-							<th>{$lng['login']['username']}</th>
+							<th>{\Froxlor\I18N\Lang::getAll()['login']['username']}</th>
 							<th>API-key</th>
 							<th>Secret</th>
-							<th>{$lng['apikeys']['allowed_from']}</th>
-							<th>{$lng['apikeys']['valid_until']}</th>
-							<th>{$lng['panel']['options']}</th>
+							<th>{\Froxlor\I18N\Lang::getAll()['apikeys']['allowed_from']}</th>
+							<th>{\Froxlor\I18N\Lang::getAll()['apikeys']['valid_until']}</th>
+							<th>{\Froxlor\I18N\Lang::getAll()['panel']['options']}</th>
 						</tr>
 					</thead>
 
@@ -60,7 +60,7 @@
 			<if 15 < $count >
 			<div class="overviewadd">
 				<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />
-				<a href="{$linker->getLink(array('section' => 'index', 'page' => $page, 'action' => 'add'))}">{$lng['apikeys']['key_add']}</a>
+				<a href="{$linker->getLink(array('section' => 'index', 'page' => $page, 'action' => 'add'))}">{\Froxlor\I18N\Lang::getAll()['apikeys']['key_add']}</a>
 			</div>
 			</if>
 		</section>

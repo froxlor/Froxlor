@@ -16,39 +16,39 @@
  */
 return array(
 	'emails_addaccount' => array(
-		'title' => $lng['emails']['account_add'],
+		'title' => \Froxlor\I18N\Lang::getAll()['emails']['account_add'],
 		'image' => 'icons/email_add.png',
 		'sections' => array(
 			'section_a' => array(
-				'title' => $lng['emails']['account_add'],
+				'title' => \Froxlor\I18N\Lang::getAll()['emails']['account_add'],
 				'image' => 'icons/email_add.png',
 				'fields' => array(
 					'email_full' => array(
-						'label' => $lng['emails']['emailaddress'],
+						'label' => \Froxlor\I18N\Lang::getAll()['emails']['emailaddress'],
 						'type' => 'label',
 						'value' => $result['email_full']
 					),
 					'email_password' => array(
-						'label' => $lng['login']['password'],
+						'label' => \Froxlor\I18N\Lang::getAll()['login']['password'],
 						'type' => 'password',
 						'autocomplete' => 'off'
 					),
 					'email_password_suggestion' => array(
-						'label' => $lng['customer']['generated_pwd'],
+						'label' => \Froxlor\I18N\Lang::getAll()['customer']['generated_pwd'],
 						'type' => 'text',
 						'visible' => (\Froxlor\Settings::Get('panel.password_regex') == ''),
 						'value' => \Froxlor\System\Crypt::generatePassword()
 					),
 					'email_quota' => array(
 						'visible' => (\Froxlor\Settings::Get('system.mail_quota_enabled') == '1' ? true : false),
-						'label' => $lng['emails']['quota'],
+						'label' => \Froxlor\I18N\Lang::getAll()['emails']['quota'],
 						'desc' => "MiB",
 						'type' => 'text',
 						'value' => $quota
 					),
 					'alternative_email' => array(
 						'visible' => (\Froxlor\Settings::Get('panel.sendalternativemail') == '1' ? true : false),
-						'label' => $lng['emails']['alternative_emailaddress'],
+						'label' => \Froxlor\I18N\Lang::getAll()['emails']['alternative_emailaddress'],
 						'type' => 'text'
 					)
 				)

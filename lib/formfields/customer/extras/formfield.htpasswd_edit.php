@@ -16,36 +16,36 @@
  */
 return array(
 	'htpasswd_edit' => array(
-		'title' => $lng['extras']['directoryprotection_edit'],
+		'title' => \Froxlor\I18N\Lang::getAll()['extras']['directoryprotection_edit'],
 		'image' => 'icons/htpasswd_edit.png',
 		'sections' => array(
 			'section_a' => array(
-				'title' => $lng['extras']['directoryprotection_edit'],
+				'title' => \Froxlor\I18N\Lang::getAll()['extras']['directoryprotection_edit'],
 				'image' => 'icons/htpasswd_edit.png',
 				'fields' => array(
 					'path' => array(
-						'label' => $lng['panel']['path'],
+						'label' => \Froxlor\I18N\Lang::getAll()['panel']['path'],
 						'type' => 'label',
 						'value' => $result['path']
 					),
 					'username' => array(
-						'label' => $lng['login']['username'],
+						'label' => \Froxlor\I18N\Lang::getAll()['login']['username'],
 						'type' => 'label',
 						'value' => $result['username']
 					),
 					'directory_password' => array(
-						'label' => $lng['login']['password'],
+						'label' => \Froxlor\I18N\Lang::getAll()['login']['password'],
 						'type' => 'password',
 						'autocomplete' => 'off'
 					),
 					'directory_password_suggestion' => array(
-						'label' => $lng['customer']['generated_pwd'],
+						'label' => \Froxlor\I18N\Lang::getAll()['customer']['generated_pwd'],
 						'type' => 'text',
 						'visible' => (\Froxlor\Settings::Get('panel.password_regex') == ''),
 						'value' => \Froxlor\System\Crypt::generatePassword()
 					),
 					'directory_authname' => array(
-						'label' => $lng['extras']['htpasswdauthname'],
+						'label' => \Froxlor\I18N\Lang::getAll()['extras']['htpasswdauthname'],
 						'type' => 'text',
 						'value' => $result['authname']
 					)

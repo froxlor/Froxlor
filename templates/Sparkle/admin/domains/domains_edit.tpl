@@ -5,7 +5,7 @@ $header
 				<img src="templates/{$theme}/assets/img/icons/domain_edit_big.png" alt="{$title}" />&nbsp;
 				{$title}
 				<if $result['isbinddomain'] == '1' && \Froxlor\Settings::Get('system.bind_enable') == '1' && \Froxlor\Settings::Get('system.dnsenabled') == '1'>
-					&nbsp;(<small><a href="{$linker->getLink(array('section' => 'domains', 'page' => 'domaindnseditor', 'domain_id' => $id))}">{$lng['dnseditor']['edit']}</a></small>)
+					&nbsp;(<small><a href="{$linker->getLink(array('section' => 'domains', 'page' => 'domaindnseditor', 'domain_id' => $id))}">{\Froxlor\I18N\Lang::getAll()['dnseditor']['edit']}</a></small>)
 				</if>
 			</h2>
 		</header>
@@ -13,7 +13,7 @@ $header
 		<section>
 
 			<form action="{$linker->getLink(array('section' => 'domains'))}" method="post" enctype="application/x-www-form-urlencoded">
-				<input type="hidden" name="delete_statistics_str" id="delete_statistics_str" value="{$lng['admin']['delete_statistics']}">
+				<input type="hidden" name="delete_statistics_str" id="delete_statistics_str" value="{\Froxlor\I18N\Lang::getAll()['admin']['delete_statistics']}">
 				<input type="hidden" name="speciallogverified" id="speciallogverified" value="0" />
 				<input type="hidden" name="s" value="$s" />
 				<input type="hidden" name="page" value="$page" />
@@ -22,12 +22,12 @@ $header
 				<input type="hidden" name="send" value="send" />
 			
 				<div id="speciallogwarningpopup" name="speciallogwarningpopup" align="center">
-					<div class="warningtitle">{$lng['admin']['delete_statistics']}</div>
+					<div class="warningtitle">{\Froxlor\I18N\Lang::getAll()['admin']['delete_statistics']}</div>
 					</p>{$speciallogwarning}</p>
 					<input type="text" name="delete_stats" id="delete_stats"></p>
 					<div>
-						<input type="button" class="yesbutton" name="verifybutton" value="{$lng['panel']['delete']}" id="speciallogyesbutton" />&nbsp;
-						<input type="button" class="nobutton" value="{$lng['panel']['cancel']}" id="speciallognobutton" />
+						<input type="button" class="yesbutton" name="verifybutton" value="{\Froxlor\I18N\Lang::getAll()['panel']['delete']}" id="speciallogyesbutton" />&nbsp;
+						<input type="button" class="nobutton" value="{\Froxlor\I18N\Lang::getAll()['panel']['cancel']}" id="speciallognobutton" />
 					</div>
 				</div>
 
@@ -39,7 +39,7 @@ $header
 		<br />
 		<section>
 			<p>
-				<span class="red">*</span>: {$lng['admin']['valuemandatory']}
+				<span class="red">*</span>: {\Froxlor\I18N\Lang::getAll()['admin']['valuemandatory']}
 			</p>
 		</section>
 	</article>

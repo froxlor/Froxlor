@@ -56,7 +56,7 @@ if ($page == 'overview') {
 				}
 				$count ++;
 				if ($subdomains_count == 0 && empty($domains)) {
-					$domains = $lng['admin']['phpsettings']['notused'];
+					$domains = \Froxlor\I18N\Lang::getAll()['admin']['phpsettings']['notused'];
 				}
 				eval("\$tablecontent.=\"" . \Froxlor\UI\Template::getTemplate("phpconfig/overview_overview") . "\";");
 			}

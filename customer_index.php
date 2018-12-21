@@ -100,7 +100,7 @@ if ($page == 'overview') {
 
 	\Froxlor\User::getAll()['traffic'] = round(\Froxlor\User::getAll()['traffic'] / (1024 * 1024), Settings::Get('panel.decimal_places'));
 	\Froxlor\User::getAll()['traffic_used'] = round(\Froxlor\User::getAll()['traffic_used'] / (1024 * 1024), Settings::Get('panel.decimal_places'));
-	\Froxlor\User::getAll() = \Froxlor\PhpHelper::str_replace_array('-1', $lng['customer']['unlimited'], \Froxlor\User::getAll(), 'diskspace traffic mysqls emails email_accounts email_forwarders email_quota ftps subdomains');
+	\Froxlor\User::getAll() = \Froxlor\PhpHelper::str_replace_array('-1', \Froxlor\I18N\Lang::getAll()['customer']['unlimited'], \Froxlor\User::getAll(), 'diskspace traffic mysqls emails email_accounts email_forwarders email_quota ftps subdomains');
 
 	\Froxlor\User::getAll()['custom_notes'] = (\Froxlor\User::getAll()['custom_notes'] != '') ? nl2br(\Froxlor\User::getAll()['custom_notes']) : '';
 

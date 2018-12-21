@@ -16,24 +16,24 @@
  */
 return array(
 	'htaccess_edit' => array(
-		'title' => $lng['extras']['pathoptions_edit'],
+		'title' => \Froxlor\I18N\Lang::getAll()['extras']['pathoptions_edit'],
 		'image' => 'icons/htpasswd_edit.png',
 		'sections' => array(
 			'section_a' => array(
-				'title' => $lng['extras']['pathoptions_edit'],
+				'title' => \Froxlor\I18N\Lang::getAll()['extras']['pathoptions_edit'],
 				'image' => 'icons/htpasswd_edit.png',
 				'fields' => array(
 					'path' => array(
-						'label' => $lng['panel']['path'],
+						'label' => \Froxlor\I18N\Lang::getAll()['panel']['path'],
 						'type' => 'label',
 						'value' => $result['path']
 					),
 					'options_indexes' => array(
-						'label' => $lng['extras']['directory_browsing'],
+						'label' => \Froxlor\I18N\Lang::getAll()['extras']['directory_browsing'],
 						'type' => 'checkbox',
 						'values' => array(
 							array(
-								'label' => $lng['panel']['yes'],
+								'label' => \Froxlor\I18N\Lang::getAll()['panel']['yes'],
 								'value' => '1'
 							)
 						),
@@ -42,32 +42,32 @@ return array(
 						)
 					),
 					'error404path' => array(
-						'label' => $lng['extras']['errordocument404path'],
-						'desc' => $lng['panel']['descriptionerrordocument'],
+						'label' => \Froxlor\I18N\Lang::getAll()['extras']['errordocument404path'],
+						'desc' => \Froxlor\I18N\Lang::getAll()['panel']['descriptionerrordocument'],
 						'type' => 'text',
 						'value' => $result['error404path']
 					),
 					'error403path' => array(
 						'visible' => (\Froxlor\Settings::Get('system.webserver') == 'apache2'),
-						'label' => $lng['extras']['errordocument403path'],
-						'desc' => $lng['panel']['descriptionerrordocument'],
+						'label' => \Froxlor\I18N\Lang::getAll()['extras']['errordocument403path'],
+						'desc' => \Froxlor\I18N\Lang::getAll()['panel']['descriptionerrordocument'],
 						'type' => 'text',
 						'value' => $result['error403path']
 					),
 					'error500path' => array(
 						'visible' => (\Froxlor\Settings::Get('system.webserver') == 'apache2'),
-						'label' => $lng['extras']['errordocument500path'],
-						'desc' => $lng['panel']['descriptionerrordocument'],
+						'label' => \Froxlor\I18N\Lang::getAll()['extras']['errordocument500path'],
+						'desc' => \Froxlor\I18N\Lang::getAll()['panel']['descriptionerrordocument'],
 						'type' => 'text',
 						'value' => $result['error500path']
 					),
 					'options_cgi' => array(
 						'visible' => ($cperlenabled == 1),
-						'label' => $lng['extras']['execute_perl'],
+						'label' => \Froxlor\I18N\Lang::getAll()['extras']['execute_perl'],
 						'type' => 'checkbox',
 						'values' => array(
 							array(
-								'label' => $lng['panel']['yes'],
+								'label' => \Froxlor\I18N\Lang::getAll()['panel']['yes'],
 								'value' => '1'
 							)
 						),

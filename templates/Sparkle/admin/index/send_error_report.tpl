@@ -3,7 +3,7 @@ $header
 		<header>
 			<h2>
 				<img src="templates/{$theme}/assets/img/icons/error_report_big.png" alt="" />&nbsp;
-				{$lng['error']['send_report_title']}
+				{\Froxlor\I18N\Lang::getAll()['error']['send_report_title']}
 			</h2>
 		</header>
 
@@ -17,7 +17,7 @@ $header
 					<thead>
 					<tr>
 						<th>
-							<p>{$lng['error']['send_report_desc']}</p>
+							<p>{\Froxlor\I18N\Lang::getAll()['error']['send_report_desc']}</p>
 						</th>
 					</tr>
 					</thead>
@@ -31,7 +31,7 @@ $header
 					<tfoot>
 						<tr>
 							<td align="center">					
-								<input class="bottom" type="submit" value="{$lng['error']['send_report']}" />
+								<input class="bottom" type="submit" value="{\Froxlor\I18N\Lang::getAll()['error']['send_report']}" />
 							</td>
 						</tr>
 					</tfoot>

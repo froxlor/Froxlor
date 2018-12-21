@@ -5,6 +5,6 @@
 	<td>{$entry['content']}</td>
 	<td>{$entry['ttl']}</td>
 	<td>
-		<a href="{$linker->getLink(array('section' => 'domains', 'page' => $page, 'action' => 'delete', 'domain_id' => $domain_id, 'id' => $entry['id']))}"><img src="templates/{$theme}/assets/img/icons/delete.png" alt="{$lng['panel']['delete']}" title="{$lng['panel']['delete']}" /></a>
+		<a href="{$linker->getLink(array('section' => 'domains', 'page' => $page, 'action' => 'delete', 'domain_id' => $domain_id, 'id' => $entry['id']))}"><img src="templates/{$theme}/assets/img/icons/delete.png" alt="{\Froxlor\I18N\Lang::getAll()['panel']['delete']}" title="{\Froxlor\I18N\Lang::getAll()['panel']['delete']}" /></a>
 	</td>
 </tr>

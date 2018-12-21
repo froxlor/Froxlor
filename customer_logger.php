@@ -30,10 +30,10 @@ if (Settings::IsInList('panel.customer_hide_options', 'extras.logger')) {
 if ($page == 'log') {
 	if ($action == '') {
 		$fields = array(
-			'date' => $lng['logger']['date'],
-			'type' => $lng['logger']['type'],
-			'user' => $lng['logger']['user'],
-			'text' => $lng['logger']['action']
+			'date' => \Froxlor\I18N\Lang::getAll()['logger']['date'],
+			'type' => \Froxlor\I18N\Lang::getAll()['logger']['type'],
+			'user' => \Froxlor\I18N\Lang::getAll()['logger']['user'],
+			'text' => \Froxlor\I18N\Lang::getAll()['logger']['action']
 		);
 		$paging = new \Froxlor\UI\Paging(\Froxlor\User::getAll(), TABLE_PANEL_LOG, $fields, null, null, 0, 'desc', 30);
 		$query = 'SELECT * FROM `' . TABLE_PANEL_LOG . '` WHERE `user` = :loginname ' . $paging->getSqlWhere(true) . ' ' . $paging->getSqlOrderBy();
@@ -82,25 +82,25 @@ if ($page == 'log') {
 				if ($_action != $action) {
 					switch ($action) {
 						case USR_ACTION:
-							$_action = $lng['admin']['customer'];
+							$_action = \Froxlor\I18N\Lang::getAll()['admin']['customer'];
 							break;
 						case RES_ACTION:
-							$_action = $lng['logger']['reseller'];
+							$_action = \Froxlor\I18N\Lang::getAll()['logger']['reseller'];
 							break;
 						case ADM_ACTION:
-							$_action = $lng['logger']['admin'];
+							$_action = \Froxlor\I18N\Lang::getAll()['logger']['admin'];
 							break;
 						case CRON_ACTION:
-							$_action = $lng['logger']['cron'];
+							$_action = \Froxlor\I18N\Lang::getAll()['logger']['cron'];
 							break;
 						case LOGIN_ACTION:
-							$_action = $lng['logger']['login'];
+							$_action = \Froxlor\I18N\Lang::getAll()['logger']['login'];
 							break;
 						case LOG_ERROR:
-							$_action = $lng['logger']['intern'];
+							$_action = \Froxlor\I18N\Lang::getAll()['logger']['intern'];
 							break;
 						default:
-							$_action = $lng['logger']['unknown'];
+							$_action = \Froxlor\I18N\Lang::getAll()['logger']['unknown'];
 							break;
 					}
 

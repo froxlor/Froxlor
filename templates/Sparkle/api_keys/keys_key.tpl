@@ -1,4 +1,4 @@
-<tr <if $isMyKey>class="primary-entry"</if> id="apikey-{$row['id']}" data-id="{$row['id']}" title="{$lng['apikeys']['clicktoview']}">
+<tr <if $isMyKey>class="primary-entry"</if> id="apikey-{$row['id']}" data-id="{$row['id']}" title="{\Froxlor\I18N\Lang::getAll()['apikeys']['clicktoview']}">
 	<td>
 		{$adminCustomerLink}
 	</td>
@@ -18,7 +18,7 @@
 	</td>
 	<td>
 		<a href="{$linker->getLink(array('section' => 'index', 'page' => $page, 'action' => 'delete', 'id' => $row['id']))}">
-			<img src="templates/{$theme}/assets/img/icons/delete.png" alt="{$lng['panel']['delete']}" title="{$lng['panel']['delete']}" />
+			<img src="templates/{$theme}/assets/img/icons/delete.png" alt="{\Froxlor\I18N\Lang::getAll()['panel']['delete']}" title="{\Froxlor\I18N\Lang::getAll()['panel']['delete']}" />
 		</a>
 		<div id="dialog-{$row['id']}" title="API-key / Secret" class="hidden api-dialog">
 			<form action="{$linker->getLink(array('section' => 'apikeys'))}" method="post" enctype="application/x-www-form-urlencoded">
@@ -32,10 +32,10 @@
 					<th>Secret</th><td><input type="text" value="{$row['secret']}" readonly/></td>
 				</tr>
 				<tr>
-					<th>{$lng['apikeys']['allowed_from']}<br><small>{$lng['apikeys']['allowed_from_help']}</small></th><td><input type="text" name="allowed_from" value="{$row['allowed_from']}"/></td>
+					<th>{\Froxlor\I18N\Lang::getAll()['apikeys']['allowed_from']}<br><small>{\Froxlor\I18N\Lang::getAll()['apikeys']['allowed_from_help']}</small></th><td><input type="text" name="allowed_from" value="{$row['allowed_from']}"/></td>
 				</tr>
 				<tr>
-					<th>{$lng['apikeys']['valid_until']}<br><small>{$lng['apikeys']['valid_until_help']}</small></th><td><input type="text" name="valid_until" value="{$row['valid_until']}"/></td>
+					<th>{\Froxlor\I18N\Lang::getAll()['apikeys']['valid_until']}<br><small>{\Froxlor\I18N\Lang::getAll()['apikeys']['valid_until_help']}</small></th><td><input type="text" name="valid_until" value="{$row['valid_until']}"/></td>
 				</tr>
 			</table>
 			</form>

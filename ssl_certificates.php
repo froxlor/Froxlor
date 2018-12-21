@@ -36,7 +36,7 @@ if ($action == 'delete') {
 			$json_result = Certificates::getLocal(\Froxlor\User::getAll(), array(
 				'id' => $id
 			))->delete();
-			$success_message = sprintf($lng['domains']['ssl_certificate_removed'], $id);
+			$success_message = sprintf(\Froxlor\I18N\Lang::getAll()['domains']['ssl_certificate_removed'], $id);
 		} catch (Exception $e) {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
@@ -45,7 +45,7 @@ if ($action == 'delete') {
 
 $log->logAction(USR_ACTION, LOG_NOTICE, "viewed domains::ssl_certificates");
 $fields = array(
-	'd.domain' => $lng['domains']['domainname']
+	'd.domain' => \Froxlor\I18N\Lang::getAll()['domains']['domainname']
 );
 $paging = new \Froxlor\UI\Paging(\Froxlor\User::getAll(), TABLE_PANEL_DOMAIN_SSL_SETTINGS, $fields);
 
@@ -79,7 +79,7 @@ $all_certs = $certs_stmt->fetchAll(PDO::FETCH_ASSOC);
 $certificates = "";
 
 if (count($all_certs) == 0) {
-	$message = $lng['domains']['no_ssl_certificates'];
+	$message = \Froxlor\I18N\Lang::getAll()['domains']['no_ssl_certificates'];
 	$sortcode = "";
 	$arrowcode = array(
 		'd.domain' => ''
@@ -152,7 +152,7 @@ if (count($all_certs) == 0) {
 				$row = \Froxlor\PhpHelper::htmlentities_array($cert);
 				eval("\$certificates.=\"" . \Froxlor\UI\Template::getTemplate("ssl_certificates/certs_cert", true) . "\";");
 			} else {
-				$message = sprintf($lng['domains']['ssl_certificate_error'], $cert['domain']);
+				$message = sprintf(\Froxlor\I18N\Lang::getAll()['domains']['ssl_certificate_error'], $cert['domain']);
 				eval("\$certificates.=\"" . \Froxlor\UI\Template::getTemplate("ssl_certificates/certs_error", true) . "\";");
 			}
 		} else {

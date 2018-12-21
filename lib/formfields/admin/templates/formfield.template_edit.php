@@ -16,32 +16,32 @@
  */
 return array(
 	'template_edit' => array(
-		'title' => $lng['admin']['templates']['template_edit'],
+		'title' => \Froxlor\I18N\Lang::getAll()['admin']['templates']['template_edit'],
 		'image' => 'icons/templates_edit.png',
 		'sections' => array(
 			'section_a' => array(
-				'title' => $lng['admin']['templates']['template_edit'],
+				'title' => \Froxlor\I18N\Lang::getAll()['admin']['templates']['template_edit'],
 				'image' => 'icons/templates_edit.png',
 				'fields' => array(
 					'language' => array(
-						'label' => $lng['login']['language'],
+						'label' => \Froxlor\I18N\Lang::getAll()['login']['language'],
 						'type' => 'hidden',
 						'value' => $language,
 						'display' => $language
 					),
 					'template' => array(
-						'label' => $lng['admin']['templates']['action'],
+						'label' => \Froxlor\I18N\Lang::getAll()['admin']['templates']['action'],
 						'type' => 'hidden',
 						'value' => $template,
 						'display' => $template
 					),
 					'subject' => array(
-						'label' => $lng['admin']['templates']['subject'],
+						'label' => \Froxlor\I18N\Lang::getAll()['admin']['templates']['subject'],
 						'type' => 'text',
 						'value' => $subject
 					),
 					'mailbody' => array(
-						'label' => $lng['admin']['templates']['mailbody'],
+						'label' => \Froxlor\I18N\Lang::getAll()['admin']['templates']['mailbody'],
 						'type' => 'textarea',
 						'cols' => 60,
 						'rows' => 12,

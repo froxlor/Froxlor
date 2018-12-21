@@ -28,8 +28,8 @@ $header
 	<article>
 		<section>
 			<p>
-				<span class="red">*</span>: {$lng['admin']['valuemandatory']}<br />
-				<span class="red">**</span>: {$lng['admin']['valuemandatorycompany']}
+				<span class="red">*</span>: {\Froxlor\I18N\Lang::getAll()['admin']['valuemandatory']}<br />
+				<span class="red">**</span>: {\Froxlor\I18N\Lang::getAll()['admin']['valuemandatorycompany']}
 			</p>
 		</section>
 	</article>

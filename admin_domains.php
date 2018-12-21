@@ -44,12 +44,12 @@ if ($page == 'domains' || $page == 'overview') {
 
 		$log->logAction(ADM_ACTION, LOG_NOTICE, "viewed admin_domains");
 		$fields = array(
-			'd.domain' => $lng['domains']['domainname'],
-			'c.name' => $lng['customer']['name'],
-			'c.firstname' => $lng['customer']['firstname'],
-			'c.company' => $lng['customer']['company'],
-			'c.loginname' => $lng['login']['username'],
-			'd.aliasdomain' => $lng['domains']['aliasdomain']
+			'd.domain' => \Froxlor\I18N\Lang::getAll()['domains']['domainname'],
+			'c.name' => \Froxlor\I18N\Lang::getAll()['customer']['name'],
+			'c.firstname' => \Froxlor\I18N\Lang::getAll()['customer']['firstname'],
+			'c.company' => \Froxlor\I18N\Lang::getAll()['customer']['company'],
+			'c.loginname' => \Froxlor\I18N\Lang::getAll()['login']['username'],
+			'd.aliasdomain' => \Froxlor\I18N\Lang::getAll()['domains']['aliasdomain']
 		);
 		$paging = new \Froxlor\UI\Paging(\Froxlor\User::getAll(), TABLE_PANEL_DOMAINS, $fields);
 		$domains = "";
@@ -180,7 +180,7 @@ if ($page == 'domains' || $page == 'overview') {
 			));
 		} else {
 
-			$customers = \Froxlor\UI\HTML::makeoption($lng['panel']['please_choose'], 0, 0, true);
+			$customers = \Froxlor\UI\HTML::makeoption(\Froxlor\I18N\Lang::getAll()['panel']['please_choose'], 0, 0, true);
 			$result_customers_stmt = Database::prepare("
 					SELECT `customerid`, `loginname`, `name`, `firstname`, `company`
 					FROM `" . TABLE_PANEL_CUSTOMERS . "` " . (\Froxlor\User::getAll()['customers_see_all'] ? '' : " WHERE `adminid` = '" . (int) \Froxlor\User::getAll()['adminid'] . "' ") . " ORDER BY COALESCE(NULLIF(`name`,''), `company`) ASC");
@@ -279,7 +279,7 @@ if ($page == 'domains' || $page == 'overview') {
 				$standardsubdomains = '';
 			}
 
-			$domains = \Froxlor\UI\HTML::makeoption($lng['domains']['noaliasdomain'], 0, NULL, true);
+			$domains = \Froxlor\UI\HTML::makeoption(\Froxlor\I18N\Lang::getAll()['domains']['noaliasdomain'], 0, NULL, true);
 			$result_domains_stmt = Database::prepare("
 					SELECT `d`.`id`, `d`.`domain`, `c`.`loginname` FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_CUSTOMERS . "` `c`
 					WHERE `d`.`aliasdomain` IS NULL AND `d`.`parentdomainid` = 0" . $standardsubdomains . (\Froxlor\User::getAll()['customers_see_all'] ? '' : " AND `d`.`adminid` = :adminid") . "
@@ -295,7 +295,7 @@ if ($page == 'domains' || $page == 'overview') {
 				$domains .= \Froxlor\UI\HTML::makeoption($idna_convert->decode($row_domain['domain']) . ' (' . $row_domain['loginname'] . ')', $row_domain['id']);
 			}
 
-			$subtodomains = \Froxlor\UI\HTML::makeoption($lng['domains']['nosubtomaindomain'], 0, NULL, true);
+			$subtodomains = \Froxlor\UI\HTML::makeoption(\Froxlor\I18N\Lang::getAll()['domains']['nosubtomaindomain'], 0, NULL, true);
 			$result_domains_stmt = Database::prepare("
 					SELECT `d`.`id`, `d`.`domain`, `c`.`loginname` FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_CUSTOMERS . "` `c`
 					WHERE `d`.`aliasdomain` IS NULL AND `d`.`parentdomainid` = 0 AND `d`.`ismainbutsubto` = 0 " . $standardsubdomains . (\Froxlor\User::getAll()['customers_see_all'] ? '' : " AND `d`.`adminid` = :adminid") . "
@@ -325,14 +325,14 @@ if ($page == 'domains' || $page == 'overview') {
 
 			// create serveralias options
 			$serveraliasoptions = "";
-			$serveraliasoptions .= \Froxlor\UI\HTML::makeoption($lng['domains']['serveraliasoption_wildcard'], '0', '0', true, true);
-			$serveraliasoptions .= \Froxlor\UI\HTML::makeoption($lng['domains']['serveraliasoption_www'], '1', '0', true, true);
-			$serveraliasoptions .= \Froxlor\UI\HTML::makeoption($lng['domains']['serveraliasoption_none'], '2', '0', true, true);
+			$serveraliasoptions .= \Froxlor\UI\HTML::makeoption(\Froxlor\I18N\Lang::getAll()['domains']['serveraliasoption_wildcard'], '0', '0', true, true);
+			$serveraliasoptions .= \Froxlor\UI\HTML::makeoption(\Froxlor\I18N\Lang::getAll()['domains']['serveraliasoption_www'], '1', '0', true, true);
+			$serveraliasoptions .= \Froxlor\UI\HTML::makeoption(\Froxlor\I18N\Lang::getAll()['domains']['serveraliasoption_none'], '2', '0', true, true);
 
-			$subcanemaildomain = \Froxlor\UI\HTML::makeoption($lng['admin']['subcanemaildomain']['never'], '0', '0', true, true);
-			$subcanemaildomain .= \Froxlor\UI\HTML::makeoption($lng['admin']['subcanemaildomain']['choosableno'], '1', '0', true, true);
-			$subcanemaildomain .= \Froxlor\UI\HTML::makeoption($lng['admin']['subcanemaildomain']['choosableyes'], '2', '0', true, true);
-			$subcanemaildomain .= \Froxlor\UI\HTML::makeoption($lng['admin']['subcanemaildomain']['always'], '3', '0', true, true);
+			$subcanemaildomain = \Froxlor\UI\HTML::makeoption(\Froxlor\I18N\Lang::getAll()['admin']['subcanemaildomain']['never'], '0', '0', true, true);
+			$subcanemaildomain .= \Froxlor\UI\HTML::makeoption(\Froxlor\I18N\Lang::getAll()['admin']['subcanemaildomain']['choosableno'], '1', '0', true, true);
+			$subcanemaildomain .= \Froxlor\UI\HTML::makeoption(\Froxlor\I18N\Lang::getAll()['admin']['subcanemaildomain']['choosableyes'], '2', '0', true, true);
+			$subcanemaildomain .= \Froxlor\UI\HTML::makeoption(\Froxlor\I18N\Lang::getAll()['admin']['subcanemaildomain']['always'], '3', '0', true, true);
 
 			$add_date = date('Y-m-d');
 
@@ -489,7 +489,7 @@ if ($page == 'domains' || $page == 'overview') {
 				}
 
 				$result['domain'] = $idna_convert->decode($result['domain']);
-				$domains = \Froxlor\UI\HTML::makeoption($lng['domains']['noaliasdomain'], 0, null, true);
+				$domains = \Froxlor\UI\HTML::makeoption(\Froxlor\I18N\Lang::getAll()['domains']['noaliasdomain'], 0, null, true);
 
 				$result_domains_stmt = Database::prepare("
 					SELECT `d`.`id`, `d`.`domain`  FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_CUSTOMERS . "` `c`
@@ -506,7 +506,7 @@ if ($page == 'domains' || $page == 'overview') {
 					$domains .= \Froxlor\UI\HTML::makeoption($idna_convert->decode($row_domain['domain']), $row_domain['id'], $result['aliasdomain']);
 				}
 
-				$subtodomains = \Froxlor\UI\HTML::makeoption($lng['domains']['nosubtomaindomain'], 0, null, true);
+				$subtodomains = \Froxlor\UI\HTML::makeoption(\Froxlor\I18N\Lang::getAll()['domains']['nosubtomaindomain'], 0, null, true);
 				$result_domains_stmt = Database::prepare("
 					SELECT `d`.`id`, `d`.`domain` FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_CUSTOMERS . "` `c`
 					WHERE `d`.`aliasdomain` IS NULL AND `d`.`parentdomainid` = '0' AND `d`.`id` <> :id
@@ -591,15 +591,15 @@ if ($page == 'domains' || $page == 'overview') {
 				$result['temporary_ssl_redirect'] = $result['ssl_redirect'];
 				$result['ssl_redirect'] = ($result['ssl_redirect'] == 0 ? 0 : 1);
 
-				$serveraliasoptions .= \Froxlor\UI\HTML::makeoption($lng['domains']['serveraliasoption_wildcard'], '0', $_value, true, true);
-				$serveraliasoptions .= \Froxlor\UI\HTML::makeoption($lng['domains']['serveraliasoption_www'], '1', $_value, true, true);
-				$serveraliasoptions .= \Froxlor\UI\HTML::makeoption($lng['domains']['serveraliasoption_none'], '2', $_value, true, true);
+				$serveraliasoptions .= \Froxlor\UI\HTML::makeoption(\Froxlor\I18N\Lang::getAll()['domains']['serveraliasoption_wildcard'], '0', $_value, true, true);
+				$serveraliasoptions .= \Froxlor\UI\HTML::makeoption(\Froxlor\I18N\Lang::getAll()['domains']['serveraliasoption_www'], '1', $_value, true, true);
+				$serveraliasoptions .= \Froxlor\UI\HTML::makeoption(\Froxlor\I18N\Lang::getAll()['domains']['serveraliasoption_none'], '2', $_value, true, true);
 
-				$subcanemaildomain = \Froxlor\UI\HTML::makeoption($lng['admin']['subcanemaildomain']['never'], '0', $result['subcanemaildomain'], true, true);
-				$subcanemaildomain .= \Froxlor\UI\HTML::makeoption($lng['admin']['subcanemaildomain']['choosableno'], '1', $result['subcanemaildomain'], true, true);
-				$subcanemaildomain .= \Froxlor\UI\HTML::makeoption($lng['admin']['subcanemaildomain']['choosableyes'], '2', $result['subcanemaildomain'], true, true);
-				$subcanemaildomain .= \Froxlor\UI\HTML::makeoption($lng['admin']['subcanemaildomain']['always'], '3', $result['subcanemaildomain'], true, true);
-				$speciallogfile = ($result['speciallogfile'] == 1 ? $lng['panel']['yes'] : $lng['panel']['no']);
+				$subcanemaildomain = \Froxlor\UI\HTML::makeoption(\Froxlor\I18N\Lang::getAll()['admin']['subcanemaildomain']['never'], '0', $result['subcanemaildomain'], true, true);
+				$subcanemaildomain .= \Froxlor\UI\HTML::makeoption(\Froxlor\I18N\Lang::getAll()['admin']['subcanemaildomain']['choosableno'], '1', $result['subcanemaildomain'], true, true);
+				$subcanemaildomain .= \Froxlor\UI\HTML::makeoption(\Froxlor\I18N\Lang::getAll()['admin']['subcanemaildomain']['choosableyes'], '2', $result['subcanemaildomain'], true, true);
+				$subcanemaildomain .= \Froxlor\UI\HTML::makeoption(\Froxlor\I18N\Lang::getAll()['admin']['subcanemaildomain']['always'], '3', $result['subcanemaildomain'], true, true);
+				$speciallogfile = ($result['speciallogfile'] == 1 ? \Froxlor\I18N\Lang::getAll()['panel']['yes'] : \Froxlor\I18N\Lang::getAll()['panel']['no']);
 				$result['add_date'] = date('Y-m-d', $result['add_date']);
 
 				$phpconfigs = '';
@@ -632,7 +632,7 @@ if ($page == 'domains' || $page == 'overview') {
 				$title = $domain_edit_data['domain_edit']['title'];
 				$image = $domain_edit_data['domain_edit']['image'];
 
-				$speciallogwarning = sprintf($lng['admin']['speciallogwarning'], $lng['admin']['delete_statistics']);
+				$speciallogwarning = sprintf(\Froxlor\I18N\Lang::getAll()['admin']['speciallogwarning'], \Froxlor\I18N\Lang::getAll()['admin']['delete_statistics']);
 
 				eval("echo \"" . \Froxlor\UI\Template::getTemplate("domains/domains_edit") . "\";");
 			}
@@ -678,7 +678,7 @@ if ($page == 'domains' || $page == 'overview') {
 				'page' => 'domains'
 			));
 		} else {
-			$customers = \Froxlor\UI\HTML::makeoption($lng['panel']['please_choose'], 0, 0, true);
+			$customers = \Froxlor\UI\HTML::makeoption(\Froxlor\I18N\Lang::getAll()['panel']['please_choose'], 0, 0, true);
 			$result_customers_stmt = Database::prepare("
 				SELECT `customerid`, `loginname`, `name`, `firstname`, `company`
 				FROM `" . TABLE_PANEL_CUSTOMERS . "` " . (\Froxlor\User::getAll()['customers_see_all'] ? '' : " WHERE `adminid` = '" . (int) \Froxlor\User::getAll()['adminid'] . "' ") . " ORDER BY `name` ASC");

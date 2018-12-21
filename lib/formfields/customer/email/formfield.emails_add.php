@@ -16,15 +16,15 @@
  */
 return array(
 	'emails_add' => array(
-		'title' => $lng['emails']['emails_add'],
+		'title' => \Froxlor\I18N\Lang::getAll()['emails']['emails_add'],
 		'image' => 'icons/email_add.png',
 		'sections' => array(
 			'section_a' => array(
-				'title' => $lng['emails']['emails_add'],
+				'title' => \Froxlor\I18N\Lang::getAll()['emails']['emails_add'],
 				'image' => 'icons/email_add.png',
 				'fields' => array(
 					'email_part' => array(
-						'label' => $lng['emails']['emailaddress'],
+						'label' => \Froxlor\I18N\Lang::getAll()['emails']['emailaddress'],
 						'type' => 'textul',
 						'ul_field' => '',
 						'has_nextto' => true
@@ -36,11 +36,11 @@ return array(
 						'select_var' => $domains
 					),
 					'iscatchall' => array(
-						'label' => $lng['emails']['iscatchall'],
+						'label' => \Froxlor\I18N\Lang::getAll()['emails']['iscatchall'],
 						'type' => 'checkbox',
 						'values' => array(
 							array(
-								'label' => $lng['panel']['yes'],
+								'label' => \Froxlor\I18N\Lang::getAll()['panel']['yes'],
 								'value' => '1'
 							)
 						),

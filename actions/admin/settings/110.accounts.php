@@ -19,10 +19,10 @@
 return array(
 	'groups' => array(
 		'accounts' => array(
-			'title' => $lng['admin']['accountsettings'],
+			'title' => \Froxlor\I18N\Lang::getAll()['admin']['accountsettings'],
 			'fields' => array(
 				'session_sessiontimeout' => array(
-					'label' => $lng['serversettings']['session_timeout'],
+					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['session_timeout'],
 					'settinggroup' => 'session',
 					'varname' => 'sessiontimeout',
 					'type' => 'int',
@@ -30,7 +30,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'session_allow_multiple_login' => array(
-					'label' => $lng['serversettings']['session_allow_multiple_login'],
+					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['session_allow_multiple_login'],
 					'settinggroup' => 'session',
 					'varname' => 'allow_multiple_login',
 					'type' => 'bool',
@@ -38,7 +38,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'login_domain_login' => array(
-					'label' => $lng['serversettings']['login_domain_login'],
+					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['login_domain_login'],
 					'settinggroup' => 'login',
 					'varname' => 'domain_login',
 					'type' => 'bool',
@@ -46,7 +46,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'login_maxloginattempts' => array(
-					'label' => $lng['serversettings']['maxloginattempts'],
+					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['maxloginattempts'],
 					'settinggroup' => 'login',
 					'varname' => 'maxloginattempts',
 					'type' => 'int',
@@ -54,7 +54,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'login_deactivatetime' => array(
-					'label' => $lng['serversettings']['deactivatetime'],
+					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['deactivatetime'],
 					'settinggroup' => 'login',
 					'varname' => 'deactivatetime',
 					'type' => 'int',
@@ -62,7 +62,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'2fa_enabled' => array(
-					'label' => $lng['2fa']['2fa_enabled'],
+					'label' => \Froxlor\I18N\Lang::getAll()['2fa']['2fa_enabled'],
 					'settinggroup' => '2fa',
 					'varname' => 'enabled',
 					'type' => 'bool',
@@ -70,7 +70,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'panel_password_min_length' => array(
-					'label' => $lng['serversettings']['panel_password_min_length'],
+					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['panel_password_min_length'],
 					'settinggroup' => 'panel',
 					'varname' => 'password_min_length',
 					'type' => 'int',
@@ -78,7 +78,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'panel_password_alpha_lower' => array(
-					'label' => $lng['serversettings']['panel_password_alpha_lower'],
+					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['panel_password_alpha_lower'],
 					'settinggroup' => 'panel',
 					'varname' => 'password_alpha_lower',
 					'type' => 'bool',
@@ -86,7 +86,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'panel_password_alpha_upper' => array(
-					'label' => $lng['serversettings']['panel_password_alpha_upper'],
+					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['panel_password_alpha_upper'],
 					'settinggroup' => 'panel',
 					'varname' => 'password_alpha_upper',
 					'type' => 'bool',
@@ -94,7 +94,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'panel_password_numeric' => array(
-					'label' => $lng['serversettings']['panel_password_numeric'],
+					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['panel_password_numeric'],
 					'settinggroup' => 'panel',
 					'varname' => 'password_numeric',
 					'type' => 'bool',
@@ -102,7 +102,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'panel_password_special_char_required' => array(
-					'label' => $lng['serversettings']['panel_password_special_char_required'],
+					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['panel_password_special_char_required'],
 					'settinggroup' => 'panel',
 					'varname' => 'password_special_char_required',
 					'type' => 'bool',
@@ -110,7 +110,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'panel_password_special_char' => array(
-					'label' => $lng['serversettings']['panel_password_special_char'],
+					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['panel_password_special_char'],
 					'settinggroup' => 'panel',
 					'varname' => 'password_special_char',
 					'type' => 'string',
@@ -118,7 +118,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'panel_password_regex' => array(
-					'label' => $lng['serversettings']['panel_password_regex'],
+					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['panel_password_regex'],
 					'settinggroup' => 'panel',
 					'varname' => 'password_regex',
 					'type' => 'string',
@@ -126,7 +126,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'customer_accountprefix' => array(
-					'label' => $lng['serversettings']['accountprefix'],
+					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['accountprefix'],
 					'settinggroup' => 'customer',
 					'varname' => 'accountprefix',
 					'type' => 'string',
@@ -138,7 +138,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'customer_mysqlprefix' => array(
-					'label' => $lng['serversettings']['mysqlprefix'],
+					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['mysqlprefix'],
 					'settinggroup' => 'customer',
 					'varname' => 'mysqlprefix',
 					'type' => 'string',
@@ -150,7 +150,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'customer_ftpprefix' => array(
-					'label' => $lng['serversettings']['ftpprefix'],
+					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['ftpprefix'],
 					'settinggroup' => 'customer',
 					'varname' => 'ftpprefix',
 					'type' => 'string',
@@ -158,7 +158,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'customer_ftpatdomain' => array(
-					'label' => $lng['serversettings']['ftpdomain'],
+					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['ftpdomain'],
 					'settinggroup' => 'customer',
 					'varname' => 'ftpatdomain',
 					'type' => 'bool',
@@ -166,7 +166,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'panel_allow_preset' => array(
-					'label' => $lng['serversettings']['allow_password_reset'],
+					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['allow_password_reset'],
 					'settinggroup' => 'panel',
 					'varname' => 'allow_preset',
 					'type' => 'bool',
@@ -182,7 +182,7 @@ return array(
 					)
 				),
 				'panel_allow_preset_admin' => array(
-					'label' => $lng['serversettings']['allow_password_reset_admin'],
+					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['allow_password_reset_admin'],
 					'settinggroup' => 'panel',
 					'varname' => 'allow_preset_admin',
 					'type' => 'bool',
@@ -198,7 +198,7 @@ return array(
 					)
 				),
 				'system_backupenabled' => array(
-					'label' => $lng['serversettings']['backupenabled'],
+					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['backupenabled'],
 					'settinggroup' => 'system',
 					'varname' => 'backupenabled',
 					'type' => 'bool',

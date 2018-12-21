@@ -41,7 +41,7 @@ if ($action == 'delete' && function_exists('apcu_clear_cache') && \Froxlor\User:
 }
 
 if (! function_exists('apcu_cache_info') || ! function_exists('apcu_sma_info')) {
-	\Froxlor\UI\Response::standard_error($lng['error']['no_apcuinfo']);
+	\Froxlor\UI\Response::standard_error(\Froxlor\I18N\Lang::getAll()['error']['no_apcuinfo']);
 }
 
 if ($page == 'showinfo') {
@@ -55,7 +55,7 @@ if ($page == 'showinfo') {
 	$mem_avail = $mem['avail_mem'];
 	$mem_used = $mem_size - $mem_avail;
 	$seg_size = bsize($mem['seg_size']);
-	$sharedmem = sprintf($lng['apcuinfo']['sharedmemval'], $mem['num_seg'], $seg_size, $cache['memory_type']);
+	$sharedmem = sprintf(\Froxlor\I18N\Lang::getAll()['apcuinfo']['sharedmemval'], $mem['num_seg'], $seg_size, $cache['memory_type']);
 	$req_rate_user = sprintf("%.2f", $cache['num_hits'] ? (($cache['num_hits'] + $cache['num_misses']) / $passtime) : 0);
 	$hit_rate_user = sprintf("%.2f", $cache['num_hits'] ? (($cache['num_hits']) / $passtime) : 0);
 	$miss_rate_user = sprintf("%.2f", $cache['num_misses'] ? (($cache['num_misses']) / $passtime) : 0);
@@ -69,11 +69,11 @@ if ($page == 'showinfo') {
 
 	// check for possible empty values that are used in the templates
 	if (! isset($cache['file_upload_progress'])) {
-		$cache['file_upload_progress'] = $lng['logger']['unknown'];
+		$cache['file_upload_progress'] = \Froxlor\I18N\Lang::getAll()['logger']['unknown'];
 	}
 
 	if (! isset($cache['num_expunges'])) {
-		$cache['num_expunges'] = $lng['logger']['unknown'];
+		$cache['num_expunges'] = \Froxlor\I18N\Lang::getAll()['logger']['unknown'];
 	}
 
 	$runtimelines = '';

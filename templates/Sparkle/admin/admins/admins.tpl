@@ -3,7 +3,7 @@ $header
 		<header>
 			<h2>
 				<img src="templates/{$theme}/assets/img/icons/group_edit_big.png" alt="" />&nbsp;
-				{$lng['admin']['admins']}&nbsp;({$admincount})
+				{\Froxlor\I18N\Lang::getAll()['admin']['admins']}&nbsp;({$admincount})
 			</h2>
 		</header>
 
@@ -19,17 +19,17 @@ $header
 
 				<div class="overviewadd">
 					<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />
-					<a href="{$linker->getLink(array('section' => 'admins', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['admin_add']}</a>
+					<a href="{$linker->getLink(array('section' => 'admins', 'page' => $page, 'action' => 'add'))}">{\Froxlor\I18N\Lang::getAll()['admin']['admin_add']}</a>
 				</div>
 
 				<table class="full hl">
 					<thead>
 						<tr>
-							<th>{$lng['customer']['name']}&nbsp;{$arrowcode['name']}</th>
-							<th>{$lng['login']['username']}&nbsp;{$arrowcode['loginname']}</th>
-							<th>{$lng['admin']['customers']}</th>
+							<th>{\Froxlor\I18N\Lang::getAll()['customer']['name']}&nbsp;{$arrowcode['name']}</th>
+							<th>{\Froxlor\I18N\Lang::getAll()['login']['username']}&nbsp;{$arrowcode['loginname']}</th>
+							<th>{\Froxlor\I18N\Lang::getAll()['admin']['customers']}</th>
 							<th>&nbsp;</th>
-							<th>{$lng['panel']['options']}</th>
+							<th>{\Froxlor\I18N\Lang::getAll()['panel']['options']}</th>
 						</tr>
 					</thead>
 			
@@ -50,7 +50,7 @@ $header
 			<if 15 < $count >
 			<div class="overviewadd">
 				<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />
-				<a href="{$linker->getLink(array('section' => 'admins', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['admin_add']}</a>
+				<a href="{$linker->getLink(array('section' => 'admins', 'page' => $page, 'action' => 'add'))}">{\Froxlor\I18N\Lang::getAll()['admin']['admin_add']}</a>
 			</div>
 			</if>
 

@@ -3,13 +3,13 @@ $header
 		<header>
 			<h2>
 				<img src="templates/{$theme}/assets/img/icons/settings_big.png" alt="" />&nbsp;
-				{$lng['admin']['configfiles']['importexport']}
+				{\Froxlor\I18N\Lang::getAll()['admin']['configfiles']['importexport']}
 			</h2>
 		</header>
 		
 		<section>
 			<a href="{$linker->getLink(array('section' => 'settings', 'page' => $page, 'action' => 'export'))}">
-				<input class="yesbutton" type="button" value="Download/Export {$lng['admin']['serversettings']}" />
+				<input class="yesbutton" type="button" value="Download/Export {\Froxlor\I18N\Lang::getAll()['admin']['serversettings']}" />
 			</a>
 		</section>
 		<br><br>

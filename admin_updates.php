@@ -83,7 +83,7 @@ if ($page == 'overview') {
 			$new_version = $version;
 			$new_db_version = $dbversion;
 
-			$ui_text = $lng['update']['update_information']['part_a'];
+			$ui_text = \Froxlor\I18N\Lang::getAll()['update']['update_information']['part_a'];
 			if ($version != $current_version) {
 				$ui_text = str_replace('%curversion', $current_version, $ui_text);
 				$ui_text = str_replace('%newversion', $new_version, $ui_text);
@@ -100,12 +100,12 @@ if ($page == 'overview') {
 				$update_information .= '<br />' . $preconfig . $message;
 			}
 
-			$update_information .= $lng['update']['update_information']['part_b'];
+			$update_information .= \Froxlor\I18N\Lang::getAll()['update']['update_information']['part_b'];
 
 			eval("echo \"" . \Froxlor\UI\Template::getTemplate('update/index') . "\";");
 		}
 	} else {
-		$success_message = $lng['update']['noupdatesavail'];
+		$success_message = \Froxlor\I18N\Lang::getAll()['update']['noupdatesavail'];
 		$redirect_url = 'admin_index.php?s=' . $s;
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate('update/noupdatesavail') . "\";");
 	}

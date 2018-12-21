@@ -17,13 +17,13 @@
 return array(
 	'groups' => array(
 		'froxlorvhost' => array(
-			'title' => $lng['admin']['froxlorvhost'],
+			'title' => \Froxlor\I18N\Lang::getAll()['admin']['froxlorvhost'],
 			'fields' => array(
 				/**
 				 * Webserver-Vhost
 				 */
 				'system_froxlordirectlyviahostname' => array(
-					'label' => $lng['serversettings']['froxlordirectlyviahostname'],
+					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['froxlordirectlyviahostname'],
 					'settinggroup' => 'system',
 					'varname' => 'froxlordirectlyviahostname',
 					'type' => 'bool',
@@ -34,7 +34,7 @@ return array(
 				 * SSL / Let's Encrypt
 				 */
 				'system_le_froxlor_enabled' => array(
-					'label' => $lng['serversettings']['le_froxlor_enabled'],
+					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['le_froxlor_enabled'],
 					'settinggroup' => 'system',
 					'varname' => 'le_froxlor_enabled',
 					'type' => 'bool',
@@ -43,7 +43,7 @@ return array(
 					'visible' => \Froxlor\Settings::Get('system.leenabled')
 				),
 				'system_le_froxlor_redirect' => array(
-					'label' => $lng['serversettings']['le_froxlor_redirect'],
+					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['le_froxlor_redirect'],
 					'settinggroup' => 'system',
 					'varname' => 'le_froxlor_redirect',
 					'type' => 'bool',
@@ -52,7 +52,7 @@ return array(
 					'visible' => \Froxlor\Settings::Get('system.use_ssl')
 				),
 				'system_hsts_maxage' => array(
-					'label' => $lng['admin']['domain_hsts_maxage'],
+					'label' => \Froxlor\I18N\Lang::getAll()['admin']['domain_hsts_maxage'],
 					'settinggroup' => 'system',
 					'varname' => 'hsts_maxage',
 					'type' => 'int',
@@ -63,7 +63,7 @@ return array(
 					'visible' => \Froxlor\Settings::Get('system.use_ssl')
 				),
 				'system_hsts_incsub' => array(
-					'label' => $lng['admin']['domain_hsts_incsub'],
+					'label' => \Froxlor\I18N\Lang::getAll()['admin']['domain_hsts_incsub'],
 					'settinggroup' => 'system',
 					'varname' => 'hsts_incsub',
 					'type' => 'bool',
@@ -72,7 +72,7 @@ return array(
 					'visible' => \Froxlor\Settings::Get('system.use_ssl')
 				),
 				'system_hsts_preload' => array(
-					'label' => $lng['admin']['domain_hsts_preload'],
+					'label' => \Froxlor\I18N\Lang::getAll()['admin']['domain_hsts_preload'],
 					'settinggroup' => 'system',
 					'varname' => 'hsts_preload',
 					'type' => 'bool',
@@ -84,7 +84,7 @@ return array(
 				 * FCGID
 				 */
 				'system_mod_fcgid_enabled_ownvhost' => array(
-					'label' => $lng['serversettings']['mod_fcgid_ownvhost'],
+					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['mod_fcgid_ownvhost'],
 					'settinggroup' => 'system',
 					'varname' => 'mod_fcgid_ownvhost',
 					'type' => 'bool',
@@ -96,7 +96,7 @@ return array(
 					'visible' => \Froxlor\Settings::Get('system.mod_fcgid')
 				),
 				'system_mod_fcgid_httpuser' => array(
-					'label' => $lng['admin']['mod_fcgid_user'],
+					'label' => \Froxlor\I18N\Lang::getAll()['admin']['mod_fcgid_user'],
 					'settinggroup' => 'system',
 					'varname' => 'mod_fcgid_httpuser',
 					'type' => 'string',
@@ -108,7 +108,7 @@ return array(
 					'visible' => \Froxlor\Settings::Get('system.mod_fcgid')
 				),
 				'system_mod_fcgid_httpgroup' => array(
-					'label' => $lng['admin']['mod_fcgid_group'],
+					'label' => \Froxlor\I18N\Lang::getAll()['admin']['mod_fcgid_group'],
 					'settinggroup' => 'system',
 					'varname' => 'mod_fcgid_httpgroup',
 					'type' => 'string',
@@ -120,7 +120,7 @@ return array(
 					'visible' => \Froxlor\Settings::Get('system.mod_fcgid')
 				),
 				'system_mod_fcgid_defaultini_ownvhost' => array(
-					'label' => $lng['serversettings']['mod_fcgid']['defaultini_ownvhost'],
+					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['mod_fcgid']['defaultini_ownvhost'],
 					'settinggroup' => 'system',
 					'varname' => 'mod_fcgid_defaultini_ownvhost',
 					'type' => 'option',
@@ -137,7 +137,7 @@ return array(
 				 * php-fpm
 				 */
 				'system_phpfpm_enabled_ownvhost' => array(
-					'label' => $lng['phpfpm']['ownvhost'],
+					'label' => \Froxlor\I18N\Lang::getAll()['phpfpm']['ownvhost'],
 					'settinggroup' => 'phpfpm',
 					'varname' => 'enabled_ownvhost',
 					'type' => 'bool',
@@ -146,7 +146,7 @@ return array(
 					'visible' => \Froxlor\Settings::Get('phpfpm.enabled')
 				),
 				'system_phpfpm_httpuser' => array(
-					'label' => $lng['phpfpm']['vhost_httpuser'],
+					'label' => \Froxlor\I18N\Lang::getAll()['phpfpm']['vhost_httpuser'],
 					'settinggroup' => 'phpfpm',
 					'varname' => 'vhost_httpuser',
 					'type' => 'string',
@@ -155,7 +155,7 @@ return array(
 					'visible' => \Froxlor\Settings::Get('phpfpm.enabled')
 				),
 				'system_phpfpm_httpgroup' => array(
-					'label' => $lng['phpfpm']['vhost_httpgroup'],
+					'label' => \Froxlor\I18N\Lang::getAll()['phpfpm']['vhost_httpgroup'],
 					'settinggroup' => 'phpfpm',
 					'varname' => 'vhost_httpgroup',
 					'type' => 'string',
@@ -164,7 +164,7 @@ return array(
 					'visible' => \Froxlor\Settings::Get('phpfpm.enabled')
 				),
 				'system_phpfpm_defaultini_ownvhost' => array(
-					'label' => $lng['serversettings']['mod_fcgid']['defaultini_ownvhost'],
+					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['mod_fcgid']['defaultini_ownvhost'],
 					'settinggroup' => 'phpfpm',
 					'varname' => 'vhost_defaultini',
 					'type' => 'option',
@@ -178,7 +178,7 @@ return array(
 				 * DNS
 				 */
 				'system_dns_createhostnameentry' => array(
-					'label' => $lng['serversettings']['dns_createhostnameentry'],
+					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['dns_createhostnameentry'],
 					'settinggroup' => 'system',
 					'varname' => 'dns_createhostnameentry',
 					'type' => 'bool',

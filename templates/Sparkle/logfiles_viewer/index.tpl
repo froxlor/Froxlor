@@ -3,7 +3,7 @@ $header
 		<header>
 			<h2>
 				<img src="templates/{$theme}/assets/img/icons/view.png" alt="" />&nbsp;
-				{$lng['panel']['viewlogs']}&nbsp;(<a href="{$linker->getLink(array('section' => 'domains', 'page' => 'domains', 'action' => 'edit', 'id' => $domain_id))}">{$domain['domain']}</a>)&nbsp;[<a href="{$linker->getLink(array('section' => 'domains', 'page' => 'domains'))}">{$lng['menue']['domains']['domains']}</a>]
+				{\Froxlor\I18N\Lang::getAll()['panel']['viewlogs']}&nbsp;(<a href="{$linker->getLink(array('section' => 'domains', 'page' => 'domains', 'action' => 'edit', 'id' => $domain_id))}">{$domain['domain']}</a>)&nbsp;[<a href="{$linker->getLink(array('section' => 'domains', 'page' => 'domains'))}">{\Froxlor\I18N\Lang::getAll()['menue']['domains']['domains']}</a>]
 			</h2>
 		</header>
 

@@ -16,37 +16,37 @@
  */
 return array(
 	'htpasswd_add' => array(
-		'title' => $lng['extras']['directoryprotection_add'],
+		'title' => \Froxlor\I18N\Lang::getAll()['extras']['directoryprotection_add'],
 		'image' => 'icons/htpasswd_add.png',
 		'sections' => array(
 			'section_a' => array(
-				'title' => $lng['extras']['directoryprotection_add'],
+				'title' => \Froxlor\I18N\Lang::getAll()['extras']['directoryprotection_add'],
 				'image' => 'icons/htpasswd_add.png',
 				'fields' => array(
 					'path' => array(
-						'label' => $lng['panel']['path'],
-						'desc' => (\Froxlor\Settings::Get('panel.pathedit') != 'Dropdown' ? $lng['panel']['pathDescription'] : null) . (isset($pathSelect['note']) ? '<br />' . $pathSelect['value'] : ''),
+						'label' => \Froxlor\I18N\Lang::getAll()['panel']['path'],
+						'desc' => (\Froxlor\Settings::Get('panel.pathedit') != 'Dropdown' ? \Froxlor\I18N\Lang::getAll()['panel']['pathDescription'] : null) . (isset($pathSelect['note']) ? '<br />' . $pathSelect['value'] : ''),
 						'type' => $pathSelect['type'],
 						'select_var' => $pathSelect['value'],
 						'value' => $pathSelect['value']
 					),
 					'username' => array(
-						'label' => $lng['login']['username'],
+						'label' => \Froxlor\I18N\Lang::getAll()['login']['username'],
 						'type' => 'text'
 					),
 					'directory_password' => array(
-						'label' => $lng['login']['password'],
+						'label' => \Froxlor\I18N\Lang::getAll()['login']['password'],
 						'type' => 'password',
 						'autocomplete' => 'off'
 					),
 					'directory_password_suggestion' => array(
-						'label' => $lng['customer']['generated_pwd'],
+						'label' => \Froxlor\I18N\Lang::getAll()['customer']['generated_pwd'],
 						'type' => 'text',
 						'visible' => (\Froxlor\Settings::Get('panel.password_regex') == ''),
 						'value' => \Froxlor\System\Crypt::generatePassword()
 					),
 					'directory_authname' => array(
-						'label' => $lng['extras']['htpasswdauthname'],
+						'label' => \Froxlor\I18N\Lang::getAll()['extras']['htpasswdauthname'],
 						'type' => 'text'
 					)
 				)

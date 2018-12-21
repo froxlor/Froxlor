@@ -10,8 +10,8 @@ $header
 		<if !empty($existing_backupJob)>
 			<div class="messagewrapperfull">
 			<div class="warningcontainer bradius">
-				<div class="warningtitle">{$lng['admin']['warning']}</div>
-				<div class="warning">{$lng['error']['customerhasongoingbackupjob']}</div>
+				<div class="warningtitle">{\Froxlor\I18N\Lang::getAll()['admin']['warning']}</div>
+				<div class="warning">{\Froxlor\I18N\Lang::getAll()['error']['customerhasongoingbackupjob']}</div>
 			</div>
 			</div>
 		</if>

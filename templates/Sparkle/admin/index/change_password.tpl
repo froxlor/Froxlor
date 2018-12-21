@@ -3,7 +3,7 @@ $header
 		<header>
 			<h2>
 				<img src="templates/{$theme}/assets/img/icons/lock_big.png" alt="" />&nbsp;
-				{$lng['menue']['main']['changepassword']}
+				{\Froxlor\I18N\Lang::getAll()['menue']['main']['changepassword']}
 			</h2>
 		</header>
 
@@ -15,21 +15,21 @@ $header
 					<input type="hidden" name="send" value="send" />
 					<table class="middle center">
 						<tr>
-							<td><label for="old_password">{$lng['changepassword']['old_password']}:</label></td>
+							<td><label for="old_password">{\Froxlor\I18N\Lang::getAll()['changepassword']['old_password']}:</label></td>
 							<td><input type="password" id="old_password" name="old_password" /></td>
 						</tr>
 						<tr>
-							<td><label for="new_password">{$lng['changepassword']['new_password']}:</label></td>
+							<td><label for="new_password">{\Froxlor\I18N\Lang::getAll()['changepassword']['new_password']}:</label></td>
 							<td><input type="password" id="new_password" name="new_password" /></td>
 						</tr>
 						<tr>
-							<td><label for="new_password_confirm">{$lng['changepassword']['new_password_confirm']}:</label></td>
+							<td><label for="new_password_confirm">{\Froxlor\I18N\Lang::getAll()['changepassword']['new_password_confirm']}:</label></td>
 							<td><input type="password" id="new_password_confirm" name="new_password_confirm" /></td>
 						</tr>
 						<tfoot>
 							<tr>
 								<td colspan="2" align="center">
-									<input type="submit" value="{$lng['menue']['main']['changepassword']}" />
+									<input type="submit" value="{\Froxlor\I18N\Lang::getAll()['menue']['main']['changepassword']}" />
 								</td>
 							</tr>
 						</tfoot>

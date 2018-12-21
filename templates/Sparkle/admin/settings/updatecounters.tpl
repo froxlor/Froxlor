@@ -3,7 +3,7 @@ $header
 		<header>
 			<h2>
 				<img src="templates/{$theme}/assets/img/icons/res_recalculate_big.png" alt="" />&nbsp;
-				{$lng['admin']['updatecounters']}
+				{\Froxlor\I18N\Lang::getAll()['admin']['updatecounters']}
 			</h2>
 		</header>
 
@@ -11,13 +11,13 @@ $header
 			<table class="full">
 				<thead>
 				<tr>
-					<th colspan="3">{$lng['admin']['customers']}</th>
+					<th colspan="3">{\Froxlor\I18N\Lang::getAll()['admin']['customers']}</th>
 				</tr>
 				</thead>
 					{$customers}
 				<thead>
 				<tr>
-					<th colspan="3">{$lng['admin']['admins']}</th>
+					<th colspan="3">{\Froxlor\I18N\Lang::getAll()['admin']['admins']}</th>
 				</tr>
 				</thead>
 					{$admins}

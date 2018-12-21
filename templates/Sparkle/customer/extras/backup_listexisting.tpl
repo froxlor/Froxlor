@@ -1,9 +1,9 @@
 <thead>
 	<tr>
-		<th>{$lng['panel']['path']}</th>
-		<th>{$lng['extras']['backup_web']}</th>
-		<th>{$lng['extras']['backup_mail']}</th>
-		<th>{$lng['extras']['backup_dbs']}</th>
+		<th>{\Froxlor\I18N\Lang::getAll()['panel']['path']}</th>
+		<th>{\Froxlor\I18N\Lang::getAll()['extras']['backup_web']}</th>
+		<th>{\Froxlor\I18N\Lang::getAll()['extras']['backup_mail']}</th>
+		<th>{\Froxlor\I18N\Lang::getAll()['extras']['backup_dbs']}</th>
 	</tr>
 </thead>
 <tbody>
@@ -19,7 +19,7 @@
 		<td colspan="4">
 			<p>
 				<input type="hidden" name="backup_job_entry" value="{$existing_backupJob['id']}" />
-				<input type="submit" value="{$lng['panel']['abort']}" class="nobutton" />
+				<input type="submit" value="{\Froxlor\I18N\Lang::getAll()['panel']['abort']}" class="nobutton" />
 			</p>
 		</td>
 	</tr>

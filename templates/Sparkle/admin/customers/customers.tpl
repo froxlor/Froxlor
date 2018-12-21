@@ -3,7 +3,7 @@ $header
 		<header>
 			<h2>
 				<img src="templates/{$theme}/assets/img/icons/group_edit_big.png" alt="" /> 
-				{$lng['admin']['customers']} ({$customercount})
+				{\Froxlor\I18N\Lang::getAll()['admin']['customers']} ({$customercount})
 			</h2>
 		</header>
 
@@ -20,7 +20,7 @@ $header
 				<if \Froxlor\User::getAll()['customers_used'] < \Froxlor\User::getAll()['customers'] || \Froxlor\User::getAll()['customers'] == '-1'>
 				<div class="overviewadd">
 					<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />&nbsp;
-					<a href="{$linker->getLink(array('section' => 'customers', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['customer_add']}</a>
+					<a href="{$linker->getLink(array('section' => 'customers', 'page' => $page, 'action' => 'add'))}">{\Froxlor\I18N\Lang::getAll()['admin']['customer_add']}</a>
 				</div>
 				</if>
 
@@ -28,18 +28,18 @@ $header
 					<thead>
 						<tr>
 							<th>
-								{$lng['customer']['name']},
-								{$lng['customer']['firstname']}&nbsp;{$arrowcode['c.name']}
+								{\Froxlor\I18N\Lang::getAll()['customer']['name']},
+								{\Froxlor\I18N\Lang::getAll()['customer']['firstname']}&nbsp;{$arrowcode['c.name']}
 							</th>
 							<th>
-								{$lng['login']['username']}&nbsp;{$arrowcode['c.loginname']}
+								{\Froxlor\I18N\Lang::getAll()['login']['username']}&nbsp;{$arrowcode['c.loginname']}
 							</th>
 							<th>
-								{$lng['admin']['admin']}&nbsp;{$arrowcode['a.loginname']}
+								{\Froxlor\I18N\Lang::getAll()['admin']['admin']}&nbsp;{$arrowcode['a.loginname']}
 							</th>
-							<th>{$lng['admin']['lastlogin_succ']}</th>
+							<th>{\Froxlor\I18N\Lang::getAll()['admin']['lastlogin_succ']}</th>
 							<th></th>
-							<th>{$lng['panel']['options']}</th>
+							<th>{\Froxlor\I18N\Lang::getAll()['panel']['options']}</th>
 						</tr>
 					</thead>
 			
@@ -61,7 +61,7 @@ $header
 			<if (\Froxlor\User::getAll()['customers_used'] < \Froxlor\User::getAll()['customers'] || \Froxlor\User::getAll()['customers'] == '-1') && 15 < \Froxlor\User::getAll()['customers_used'] >
 			<div class="overviewadd">
 				<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />&nbsp;
-				<a href="{$linker->getLink(array('section' => 'customers', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['customer_add']}</a>
+				<a href="{$linker->getLink(array('section' => 'customers', 'page' => $page, 'action' => 'add'))}">{\Froxlor\I18N\Lang::getAll()['admin']['customer_add']}</a>
 			</div>
 			</if>
 

@@ -25,7 +25,7 @@ $header
 		<br />
 		<section>
 			<p>
-				<span class="red">*</span>: {$lng['admin']['valuemandatory']}
+				<span class="red">*</span>: {\Froxlor\I18N\Lang::getAll()['admin']['valuemandatory']}
 			</p>
 		</section>
 	</article>

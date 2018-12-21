@@ -45,31 +45,31 @@
 		<ul class="topheadernav">
 			<if \Froxlor\Settings::Get('panel.is_configured') == 0 && \Froxlor\User::getAll()['adminsession'] == 1 && \Froxlor\User::getAll()['change_serversettings'] == 1>
 				<li class="liwarn">
-					<a href="{$linker->getLink(array('section' => 'configfiles', 'page' => 'configfiles'))}">{$lng['panel']['not_configured']}</a>
+					<a href="{$linker->getLink(array('section' => 'configfiles', 'page' => 'configfiles'))}">{\Froxlor\I18N\Lang::getAll()['panel']['not_configured']}</a>
 				</li>
 			</if>
 			<li>{\Froxlor\User::getAll()['loginname']}</li>
-			<li><a href="{$linker->getLink(array('section' => 'index'))}">{$lng['panel']['dashboard']}</a></li>
-			<li><a href="#">{$lng['panel']['options']}&nbsp;&#x25BE;</a>
+			<li><a href="{$linker->getLink(array('section' => 'index'))}">{\Froxlor\I18N\Lang::getAll()['panel']['dashboard']}</a></li>
+			<li><a href="#">{\Froxlor\I18N\Lang::getAll()['panel']['options']}&nbsp;&#x25BE;</a>
 				<ul>
-					<li><a href="{$linker->getLink(array('section' => 'index', 'page' => 'change_password'))}">{$lng['login']['password']}</a></li>
-					<li><a href="{$linker->getLink(array('section' => 'index', 'page' => 'change_language'))}">{$lng['login']['language']}</a></li>
+					<li><a href="{$linker->getLink(array('section' => 'index', 'page' => 'change_password'))}">{\Froxlor\I18N\Lang::getAll()['login']['password']}</a></li>
+					<li><a href="{$linker->getLink(array('section' => 'index', 'page' => 'change_language'))}">{\Froxlor\I18N\Lang::getAll()['login']['language']}</a></li>
 					<if \Froxlor\Settings::Get('2fa.enabled') == 1>
-						<li><a href="{$linker->getLink(array('section' => 'index', 'page' => '2fa'))}">{$lng['2fa']['2fa']}</a></li>
+						<li><a href="{$linker->getLink(array('section' => 'index', 'page' => '2fa'))}">{\Froxlor\I18N\Lang::getAll()['2fa']['2fa']}</a></li>
 					</if>
 					<if \Froxlor\Settings::Get('panel.allow_theme_change_admin') == '1' && \Froxlor\User::getAll()['adminsession'] == 1>
-						<li><a href="{$linker->getLink(array('section' => 'index', 'page' => 'change_theme'))}">{$lng['panel']['theme']}</a></li>
+						<li><a href="{$linker->getLink(array('section' => 'index', 'page' => 'change_theme'))}">{\Froxlor\I18N\Lang::getAll()['panel']['theme']}</a></li>
 					</if>
 					<if \Froxlor\Settings::Get('panel.allow_theme_change_customer') == '1' && \Froxlor\User::getAll()['adminsession'] == 0>
-						<li><a href="{$linker->getLink(array('section' => 'index', 'page' => 'change_theme'))}">{$lng['panel']['theme']}</a></li>
+						<li><a href="{$linker->getLink(array('section' => 'index', 'page' => 'change_theme'))}">{\Froxlor\I18N\Lang::getAll()['panel']['theme']}</a></li>
 					</if>
 					<if \Froxlor\Settings::Get('api.enabled') == 1>
-						<li><a href="{$linker->getLink(array('section' => 'index', 'page' => 'apikeys'))}">{$lng['menue']['main']['apikeys']}</a></li>
-						<li><a href="https://api.froxlor.org/doc/" rel="external">{$lng['menue']['main']['apihelp']}</a></li>
+						<li><a href="{$linker->getLink(array('section' => 'index', 'page' => 'apikeys'))}">{\Froxlor\I18N\Lang::getAll()['menue']['main']['apikeys']}</a></li>
+						<li><a href="https://api.froxlor.org/doc/" rel="external">{\Froxlor\I18N\Lang::getAll()['menue']['main']['apihelp']}</a></li>
 					</if>
 				</ul>
 			</li>
-			<li><a href="{$linker->getLink(array('section' => 'index', 'action' => 'logout'))}" class="logoutlink">{$lng['login']['logout']}</a></li>
+			<li><a href="{$linker->getLink(array('section' => 'index', 'action' => 'logout'))}" class="logoutlink">{\Froxlor\I18N\Lang::getAll()['login']['logout']}</a></li>
 		</ul>
 	</div>
 </header>

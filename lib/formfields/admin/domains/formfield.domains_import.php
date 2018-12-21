@@ -16,35 +16,35 @@
  */
 return array(
 	'domain_import' => array(
-		'title' => $lng['domains']['domain_import'],
+		'title' => \Froxlor\I18N\Lang::getAll()['domains']['domain_import'],
 		'image' => 'icons/domain_add.png',
 		'sections' => array(
 			'section_a' => array(
-				'title' => $lng['domains']['domain_import'],
+				'title' => \Froxlor\I18N\Lang::getAll()['domains']['domain_import'],
 				'image' => 'icons/domain_add.png',
 				'fields' => array(
 					'customerid' => array(
-						'label' => $lng['admin']['customer'],
+						'label' => \Froxlor\I18N\Lang::getAll()['admin']['customer'],
 						'type' => 'select',
 						'select_var' => $customers,
 						'mandatory' => true
 					),
 					'separator' => array(
-						'label' => $lng['domains']['import_separator'],
+						'label' => \Froxlor\I18N\Lang::getAll()['domains']['import_separator'],
 						'type' => 'text',
 						'mandatory' => true,
 						'size' => 5,
 						'value' => ';'
 					),
 					'offset' => array(
-						'label' => $lng['domains']['import_offset'],
+						'label' => \Froxlor\I18N\Lang::getAll()['domains']['import_offset'],
 						'type' => 'text',
 						'mandatory' => true,
 						'size' => 10,
 						'value' => '0'
 					),
 					'file' => array(
-						'label' => $lng['domains']['import_file'],
+						'label' => \Froxlor\I18N\Lang::getAll()['domains']['import_file'],
 						'type' => 'file',
 						'mandatory' => true
 					)

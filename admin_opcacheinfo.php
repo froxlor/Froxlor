@@ -31,7 +31,7 @@ if ($action == 'reset' && function_exists('opcache_reset') && \Froxlor\User::get
 }
 
 if (! function_exists('opcache_get_configuration')) {
-	\Froxlor\UI\Response::standard_error($lng['error']['no_opcacheinfo']);
+	\Froxlor\UI\Response::standard_error(\Froxlor\I18N\Lang::getAll()['error']['no_opcacheinfo']);
 }
 
 if ($page == 'showinfo') {
@@ -52,13 +52,13 @@ if ($page == 'showinfo') {
 				$value = $value / (1024 * 1024);
 			}
 			if ($value === null || $value === '') {
-				$value = $lng['opcacheinfo']['novalue'];
+				$value = \Froxlor\I18N\Lang::getAll()['opcacheinfo']['novalue'];
 			}
 			if ($value === true) {
-				$value = $lng['opcacheinfo']['true'];
+				$value = \Froxlor\I18N\Lang::getAll()['opcacheinfo']['true'];
 			}
 			if ($value === false) {
-				$value = $lng['opcacheinfo']['false'];
+				$value = \Froxlor\I18N\Lang::getAll()['opcacheinfo']['false'];
 			}
 			if (is_integer($value)) {
 				$value = number_format($value, 0, '.', ' ');
@@ -77,11 +77,11 @@ if ($page == 'showinfo') {
 		'version' => (isset($opcache_info['version']['opcache_product_name']) ? $opcache_info['version']['opcache_product_name'] . ' ' : '') . $opcache_info['version']['version'],
 		'phpversion' => phpversion(),
 		'start_time' => @$opcache_status['opcache_statistics']['start_time'] ? date('Y-m-d H:i:s', $opcache_status['opcache_statistics']['start_time']) : '',
-		'last_restart_time' => @$opcache_status['opcache_statistics']['last_restart_time'] ? date('Y-m-d H:i:s', $opcache_status['opcache_statistics']['last_restart_time']) : $lng['opcacheinfo']['never'],
+		'last_restart_time' => @$opcache_status['opcache_statistics']['last_restart_time'] ? date('Y-m-d H:i:s', $opcache_status['opcache_statistics']['last_restart_time']) : \Froxlor\I18N\Lang::getAll()['opcacheinfo']['never'],
 		'oom_restarts' => number_format(@$opcache_status['opcache_statistics']['oom_restarts'] ?: 0, 0, '.', ' '),
 		'hash_restarts' => number_format(@$opcache_status['opcache_statistics']['hash_restarts'] ?: 0, 0, '.', ' '),
 		'manual_restarts' => number_format(@$opcache_status['opcache_statistics']['manual_restarts'] ?: 0, 0, '.', ' '),
-		'status' => (@$opcache_status['restart_in_progress'] ? $lng['opcacheinfo']['restartinprogress'] : (@$opcache_status['restart_pending'] ? $lng['opcacheinfo']['restartpending'] : (@$opcache_status['cache_full'] ? $lng['opcacheinfo']['cachefull'] : (@$opcache_status['opcache_enabled'] ? $lng['opcacheinfo']['enabled'] : $lng['opcacheinfo']['novalue'])))),
+		'status' => (@$opcache_status['restart_in_progress'] ? \Froxlor\I18N\Lang::getAll()['opcacheinfo']['restartinprogress'] : (@$opcache_status['restart_pending'] ? \Froxlor\I18N\Lang::getAll()['opcacheinfo']['restartpending'] : (@$opcache_status['cache_full'] ? \Froxlor\I18N\Lang::getAll()['opcacheinfo']['cachefull'] : (@$opcache_status['opcache_enabled'] ? \Froxlor\I18N\Lang::getAll()['opcacheinfo']['enabled'] : \Froxlor\I18N\Lang::getAll()['opcacheinfo']['novalue'])))),
 		'cachedscripts' => number_format(@$opcache_status['opcache_statistics']['num_cached_scripts'] ?: 0, 0, '.', ' '),
 		'cachehits' => number_format($cachehits, 0, '.', ' ') . ($cachetotal > 0 ? sprintf(" (%.1f %%)", $cachehits / ($cachetotal) * 100) : ''),
 		'cachemiss' => number_format($cachemiss, 0, '.', ' ') . ($cachetotal > 0 ? sprintf(" (%.1f %%)", $cachemiss / ($cachetotal) * 100) : ''),

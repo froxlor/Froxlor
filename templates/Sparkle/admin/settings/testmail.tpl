@@ -3,14 +3,14 @@ $header
 		<header>
 			<h2>
 				<img src="templates/{$theme}/assets/img/icons/email_edit_big.png" alt="" />&nbsp;
-				{$lng['admin']['testmail']}
+				{\Froxlor\I18N\Lang::getAll()['admin']['testmail']}
 			</h2>
 		</header>
 		
 		<if !empty($_mailerror)>
 		<div class="messagewrapperfull">
 			<div class="warningcontainer bradius">
-				<div class="warningtitle">{$lng['admin']['warning']}</div>
+				<div class="warningtitle">{\Froxlor\I18N\Lang::getAll()['admin']['warning']}</div>
 				<div class="warning">{$mailerr_msg}</div>
 			</div>
 		</div>
@@ -19,7 +19,7 @@ $header
 		<section>
 						<table class="full">
 							<tr>
-								<th>{$lng['serversettings']['mail_smtp_user']}</th>
+								<th>{\Froxlor\I18N\Lang::getAll()['serversettings']['mail_smtp_user']}</th>
 								<th>Host</th>
 								<th>Port</th>
 								<th>SMTP Auth</th>

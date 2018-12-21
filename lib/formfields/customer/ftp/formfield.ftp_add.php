@@ -15,52 +15,52 @@
  */
 return array(
 	'ftp_add' => array(
-		'title' => $lng['ftp']['account_add'],
+		'title' => \Froxlor\I18N\Lang::getAll()['ftp']['account_add'],
 		'image' => 'icons/user_add.png',
 		'sections' => array(
 			'section_a' => array(
-				'title' => $lng['ftp']['account_add'],
+				'title' => \Froxlor\I18N\Lang::getAll()['ftp']['account_add'],
 				'image' => 'icons/user_add.png',
 				'fields' => array(
 					'ftp_username' => array(
 						'visible' => (\Froxlor\Settings::Get('customer.ftpatdomain') == '1' ? true : false),
-						'label' => $lng['login']['username'],
+						'label' => \Froxlor\I18N\Lang::getAll()['login']['username'],
 						'type' => 'text'
 					),
 					'ftp_domain' => array(
 						'visible' => (\Froxlor\Settings::Get('customer.ftpatdomain') == '1' ? true : false),
-						'label' => $lng['domains']['domainname'],
+						'label' => \Froxlor\I18N\Lang::getAll()['domains']['domainname'],
 						'type' => 'select',
 						'select_var' => (isset($domains) ? $domains : "")
 					),
 					'ftp_description' => array(
-						'label' => $lng['panel']['ftpdesc'] = 'FTP description',
+						'label' => \Froxlor\I18N\Lang::getAll()['panel']['ftpdesc'] = 'FTP description',
 						'type' => 'text'
 					),
 					'path' => array(
-						'label' => $lng['panel']['path'],
-						'desc' => (\Froxlor\Settings::Get('panel.pathedit') != 'Dropdown' ? $lng['panel']['pathDescription'] : null) . (isset($pathSelect['note']) ? '<br />' . $pathSelect['value'] : ''),
+						'label' => \Froxlor\I18N\Lang::getAll()['panel']['path'],
+						'desc' => (\Froxlor\Settings::Get('panel.pathedit') != 'Dropdown' ? \Froxlor\I18N\Lang::getAll()['panel']['pathDescription'] : null) . (isset($pathSelect['note']) ? '<br />' . $pathSelect['value'] : ''),
 						'type' => $pathSelect['type'],
 						'select_var' => $pathSelect['value'],
 						'value' => $pathSelect['value']
 					),
 					'ftp_password' => array(
-						'label' => $lng['login']['password'],
+						'label' => \Froxlor\I18N\Lang::getAll()['login']['password'],
 						'type' => 'password',
 						'autocomplete' => 'off'
 					),
 					'ftp_password_suggestion' => array(
-						'label' => $lng['customer']['generated_pwd'],
+						'label' => \Froxlor\I18N\Lang::getAll()['customer']['generated_pwd'],
 						'type' => 'text',
 						'visible' => (\Froxlor\Settings::Get('panel.password_regex') == ''),
 						'value' => \Froxlor\System\Crypt::generatePassword()
 					),
 					'sendinfomail' => array(
-						'label' => $lng['customer']['sendinfomail'],
+						'label' => \Froxlor\I18N\Lang::getAll()['customer']['sendinfomail'],
 						'type' => 'checkbox',
 						'values' => array(
 							array(
-								'label' => $lng['panel']['yes'],
+								'label' => \Froxlor\I18N\Lang::getAll()['panel']['yes'],
 								'value' => '1'
 							)
 						),
@@ -68,7 +68,7 @@ return array(
 					),
 					'shell' => array(
 						'visible' => (\Froxlor\Settings::Get('system.allow_customer_shell') == '1' ? true : false),
-						'label' => $lng['panel']['shell'],
+						'label' => \Froxlor\I18N\Lang::getAll()['panel']['shell'],
 						'type' => 'select',
 						'select_var' => (isset($shells) ? $shells : "")
 					)

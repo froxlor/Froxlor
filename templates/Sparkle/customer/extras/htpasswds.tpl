@@ -3,7 +3,7 @@
 		<header>
 			<h2>
 				<img src="templates/{$theme}/assets/img/icons/htpasswd_big.png" alt="" />&nbsp;
-				{$lng['menue']['extras']['directoryprotection']}
+				{\Froxlor\I18N\Lang::getAll()['menue']['extras']['directoryprotection']}
 			</h2>
 		</header>
 
@@ -19,15 +19,15 @@
 
 				<div class="overviewadd">
 					<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />&nbsp;
-					<a href="{$linker->getLink(array('section' => 'extras', 'page' => 'htpasswds', 'action' => 'add'))}">{$lng['extras']['directoryprotection_add']}</a>
+					<a href="{$linker->getLink(array('section' => 'extras', 'page' => 'htpasswds', 'action' => 'add'))}">{\Froxlor\I18N\Lang::getAll()['extras']['directoryprotection_add']}</a>
 				</div>
 
 				<table class="full hl">
 					<thead>
 						<tr>
-							<th>{$lng['login']['username']}&nbsp;{$arrowcode['username']}</th>
-							<th>{$lng['panel']['path']}&nbsp;{$arrowcode['path']}</th>
-							<th>{$lng['panel']['options']}</th>
+							<th>{\Froxlor\I18N\Lang::getAll()['login']['username']}&nbsp;{$arrowcode['username']}</th>
+							<th>{\Froxlor\I18N\Lang::getAll()['panel']['path']}&nbsp;{$arrowcode['path']}</th>
+							<th>{\Froxlor\I18N\Lang::getAll()['panel']['options']}</th>
 						</tr>
 					</thead>
 
@@ -49,7 +49,7 @@
 			<if 15 < $count >
 			<div class="overviewadd">
 				<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />&nbsp;
-				<a href="{$linker->getLink(array('section' => 'extras', 'page' => 'htpasswds', 'action' => 'add'))}">{$lng['extras']['directoryprotection_add']}</a>
+				<a href="{$linker->getLink(array('section' => 'extras', 'page' => 'htpasswds', 'action' => 'add'))}">{\Froxlor\I18N\Lang::getAll()['extras']['directoryprotection_add']}</a>
 			</div>
 			</if>
 			

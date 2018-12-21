@@ -105,9 +105,9 @@ if ($page == 'message') {
 		$sentitems = isset($_GET['sentitems']) ? (int) $_GET['sentitems'] : 0;
 
 		if ($sentitems == 0) {
-			$successmessage = $lng['message']['noreceipients'];
+			$successmessage = \Froxlor\I18N\Lang::getAll()['message']['noreceipients'];
 		} else {
-			$successmessage = str_replace('%s', $sentitems, $lng['message']['success']);
+			$successmessage = str_replace('%s', $sentitems, \Froxlor\I18N\Lang::getAll()['message']['success']);
 		}
 	} else {
 		$success = 0;
@@ -119,9 +119,9 @@ if ($page == 'message') {
 	$receipients = '';
 
 	if (\Froxlor\User::getAll()['customers_see_all'] == '1') {
-		$receipients .= \Froxlor\UI\HTML::makeoption($lng['panel']['reseller'], 0);
+		$receipients .= \Froxlor\UI\HTML::makeoption(\Froxlor\I18N\Lang::getAll()['panel']['reseller'], 0);
 	}
 
-	$receipients .= \Froxlor\UI\HTML::makeoption($lng['panel']['customer'], 1);
+	$receipients .= \Froxlor\UI\HTML::makeoption(\Froxlor\I18N\Lang::getAll()['panel']['customer'], 1);
 	eval("echo \"" . \Froxlor\UI\Template::getTemplate('message/message') . "\";");
 }

@@ -3,6 +3,6 @@
 		{$groupdetails['title']}
 	</th>
 	<th class="right nolbr">
-		<input type="reset" value="{$lng['panel']['reset']}" /><input type="submit" value="{$lng['panel']['save']}" />
+		<input type="reset" value="{\Froxlor\I18N\Lang::getAll()['panel']['reset']}" /><input type="submit" value="{\Froxlor\I18N\Lang::getAll()['panel']['save']}" />
 	</th>
 </tr>

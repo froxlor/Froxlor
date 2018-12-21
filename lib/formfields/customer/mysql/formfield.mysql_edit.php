@@ -15,36 +15,36 @@
  */
 return array(
 	'mysql_edit' => array(
-		'title' => $lng['mysql']['database_edit'],
+		'title' => \Froxlor\I18N\Lang::getAll()['mysql']['database_edit'],
 		'image' => 'icons/mysql_edit.png',
 		'sections' => array(
 			'section_a' => array(
-				'title' => $lng['mysql']['database_edit'],
+				'title' => \Froxlor\I18N\Lang::getAll()['mysql']['database_edit'],
 				'image' => 'icons/mysql_edit.png',
 				'fields' => array(
 					'databasename' => array(
-						'label' => $lng['mysql']['databasename'],
+						'label' => \Froxlor\I18N\Lang::getAll()['mysql']['databasename'],
 						'type' => 'label',
 						'value' => $result['databasename']
 					),
 					'description' => array(
-						'label' => $lng['mysql']['databasedescription'],
+						'label' => \Froxlor\I18N\Lang::getAll()['mysql']['databasedescription'],
 						'type' => 'text',
 						'value' => $result['description']
 					),
 					'mysql_server' => array(
 						'visible' => (1 < $count_mysqlservers ? true : false),
-						'label' => $lng['mysql']['mysql_server'],
+						'label' => \Froxlor\I18N\Lang::getAll()['mysql']['mysql_server'],
 						'type' => 'label',
 						'value' => $sql_root['caption']
 					),
 					'mysql_password' => array(
-						'label' => $lng['changepassword']['new_password_ifnotempty'],
+						'label' => \Froxlor\I18N\Lang::getAll()['changepassword']['new_password_ifnotempty'],
 						'type' => 'password',
 						'autocomplete' => 'off'
 					),
 					'mysql_password_suggestion' => array(
-						'label' => $lng['customer']['generated_pwd'],
+						'label' => \Froxlor\I18N\Lang::getAll()['customer']['generated_pwd'],
 						'type' => 'text',
 						'visible' => (\Froxlor\Settings::Get('panel.password_regex') == ''),
 						'value' => \Froxlor\System\Crypt::generatePassword()

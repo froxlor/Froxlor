@@ -16,19 +16,19 @@
  */
 return array(
 	'plans_add' => array(
-		'title' => $lng['admin']['plans']['add'],
+		'title' => \Froxlor\I18N\Lang::getAll()['admin']['plans']['add'],
 		'image' => 'icons/templates_add_big.png',
 		'sections' => array(
 			'section_a' => array(
-				'title' => $lng['admin']['plans']['plan_details'],
+				'title' => \Froxlor\I18N\Lang::getAll()['admin']['plans']['plan_details'],
 				'image' => 'icons/templates_add_big.png',
 				'fields' => array(
 					'name' => array(
-						'label' => $lng['admin']['plans']['name'],
+						'label' => \Froxlor\I18N\Lang::getAll()['admin']['plans']['name'],
 						'type' => 'text'
 					),
 					'description' => array(
-						'label' => $lng['admin']['plans']['description'],
+						'label' => \Froxlor\I18N\Lang::getAll()['admin']['plans']['description'],
 						'type' => 'textarea',
 						'cols' => 60,
 						'rows' => 12

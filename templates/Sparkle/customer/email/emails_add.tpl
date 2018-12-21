@@ -11,8 +11,8 @@ $header
 	<if $domains == ''>
 		<div class="messagewrapperfull">
 			<div class="warningcontainer bradius">
-				<div class="warningtitle">{$lng['admin']['warning']}</div>
-				<div class="warning"><br /><strong>{$lng['emails']['noemaildomainaddedyet']}</strong></div>
+				<div class="warningtitle">{\Froxlor\I18N\Lang::getAll()['admin']['warning']}</div>
+				<div class="warning"><br /><strong>{\Froxlor\I18N\Lang::getAll()['emails']['noemaildomainaddedyet']}</strong></div>
 			</div>
 		</div>
 	<else>

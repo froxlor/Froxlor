@@ -19,10 +19,10 @@
 return array(
 	'groups' => array(
 		'mail' => array(
-			'title' => $lng['admin']['mailserversettings'],
+			'title' => \Froxlor\I18N\Lang::getAll()['admin']['mailserversettings'],
 			'fields' => array(
 				'system_vmail_uid' => array(
-					'label' => $lng['serversettings']['vmail_uid'],
+					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['vmail_uid'],
 					'settinggroup' => 'system',
 					'varname' => 'vmail_uid',
 					'type' => 'int',
@@ -32,7 +32,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_vmail_gid' => array(
-					'label' => $lng['serversettings']['vmail_gid'],
+					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['vmail_gid'],
 					'settinggroup' => 'system',
 					'varname' => 'vmail_gid',
 					'type' => 'int',
@@ -42,7 +42,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_vmail_homedir' => array(
-					'label' => $lng['serversettings']['vmail_homedir'],
+					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['vmail_homedir'],
 					'settinggroup' => 'system',
 					'varname' => 'vmail_homedir',
 					'type' => 'string',
@@ -51,7 +51,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_vmail_maildirname' => array(
-					'label' => $lng['serversettings']['vmail_maildirname'],
+					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['vmail_maildirname'],
 					'settinggroup' => 'system',
 					'varname' => 'vmail_maildirname',
 					'type' => 'string',
@@ -61,7 +61,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'panel_sendalternativemail' => array(
-					'label' => $lng['serversettings']['sendalternativemail'],
+					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['sendalternativemail'],
 					'settinggroup' => 'panel',
 					'varname' => 'sendalternativemail',
 					'type' => 'bool',
@@ -69,7 +69,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_mail_quota_enabled' => array(
-					'label' => $lng['serversettings']['mail_quota_enabled'],
+					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['mail_quota_enabled'],
 					'settinggroup' => 'system',
 					'varname' => 'mail_quota_enabled',
 					'type' => 'bool',
@@ -77,7 +77,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_mail_quota' => array(
-					'label' => $lng['serversettings']['mail_quota'],
+					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['mail_quota'],
 					'settinggroup' => 'system',
 					'varname' => 'mail_quota',
 					'type' => 'int',
@@ -85,7 +85,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_catchall_enabled' => array(
-					'label' => $lng['serversettings']['catchall_enabled'],
+					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['catchall_enabled'],
 					'settinggroup' => 'catchall',
 					'varname' => 'catchall_enabled',
 					'type' => 'bool',
@@ -93,7 +93,7 @@ return array(
 					'save_method' => 'storeSettingResetCatchall'
 				),
 				'system_mailtraffic_enabled' => array(
-					'label' => $lng['serversettings']['mailtraffic_enabled'],
+					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['mailtraffic_enabled'],
 					'settinggroup' => 'system',
 					'varname' => 'mailtraffic_enabled',
 					'type' => 'bool',
@@ -101,7 +101,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_mdaserver' => array(
-					'label' => $lng['serversettings']['mdaserver'],
+					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['mdaserver'],
 					'settinggroup' => 'system',
 					'varname' => 'mdaserver',
 					'type' => 'option',
@@ -114,7 +114,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_mdalog' => array(
-					'label' => $lng['serversettings']['mdalog'],
+					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['mdalog'],
 					'settinggroup' => 'system',
 					'varname' => 'mdalog',
 					'type' => 'string',
@@ -124,7 +124,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_mtaserver' => array(
-					'label' => $lng['serversettings']['mtaserver'],
+					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['mtaserver'],
 					'settinggroup' => 'system',
 					'varname' => 'mtaserver',
 					'type' => 'option',
@@ -137,7 +137,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_mtalog' => array(
-					'label' => $lng['serversettings']['mtalog'],
+					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['mtalog'],
 					'settinggroup' => 'system',
 					'varname' => 'mtalog',
 					'type' => 'string',

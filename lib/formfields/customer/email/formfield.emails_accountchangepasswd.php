@@ -16,25 +16,25 @@
  */
 return array(
 	'emails_accountchangepasswd' => array(
-		'title' => $lng['menue']['main']['changepassword'],
+		'title' => \Froxlor\I18N\Lang::getAll()['menue']['main']['changepassword'],
 		'image' => 'icons/email_edit.png',
 		'sections' => array(
 			'section_a' => array(
-				'title' => $lng['menue']['main']['changepassword'],
+				'title' => \Froxlor\I18N\Lang::getAll()['menue']['main']['changepassword'],
 				'image' => 'icons/email_edit.png',
 				'fields' => array(
 					'email_full' => array(
-						'label' => $lng['emails']['emailaddress'],
+						'label' => \Froxlor\I18N\Lang::getAll()['emails']['emailaddress'],
 						'type' => 'label',
 						'value' => $result['email_full']
 					),
 					'email_password' => array(
-						'label' => $lng['login']['password'],
+						'label' => \Froxlor\I18N\Lang::getAll()['login']['password'],
 						'type' => 'password',
 						'autocomplete' => 'off'
 					),
 					'email_password_suggestion' => array(
-						'label' => $lng['customer']['generated_pwd'],
+						'label' => \Froxlor\I18N\Lang::getAll()['customer']['generated_pwd'],
 						'type' => 'text',
 						'visible' => (\Froxlor\Settings::Get('panel.password_regex') == ''),
 						'value' => \Froxlor\System\Crypt::generatePassword()

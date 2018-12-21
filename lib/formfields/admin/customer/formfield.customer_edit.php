@@ -16,29 +16,29 @@
  */
 return array(
 	'customer_edit' => array(
-		'title' => $lng['admin']['customer_edit'],
+		'title' => \Froxlor\I18N\Lang::getAll()['admin']['customer_edit'],
 		'image' => 'icons/user_edit.png',
 		'sections' => array(
 			'section_a' => array(
-				'title' => $lng['admin']['accountdata'],
+				'title' => \Froxlor\I18N\Lang::getAll()['admin']['accountdata'],
 				'image' => 'icons/user_edit.png',
 				'fields' => array(
 					'loginname' => array(
-						'label' => $lng['login']['username'],
+						'label' => \Froxlor\I18N\Lang::getAll()['login']['username'],
 						'type' => 'label',
 						'value' => $result['loginname']
 					),
 					'documentroot' => array(
-						'label' => $lng['customer']['documentroot'],
+						'label' => \Froxlor\I18N\Lang::getAll()['customer']['documentroot'],
 						'type' => 'label',
 						'value' => $result['documentroot']
 					),
 					'createstdsubdomain' => array(
-						'label' => $lng['admin']['stdsubdomain_add'] . '?',
+						'label' => \Froxlor\I18N\Lang::getAll()['admin']['stdsubdomain_add'] . '?',
 						'type' => 'checkbox',
 						'values' => array(
 							array(
-								'label' => $lng['panel']['yes'],
+								'label' => \Froxlor\I18N\Lang::getAll()['panel']['yes'],
 								'value' => '1'
 							)
 						),
@@ -47,11 +47,11 @@ return array(
 						)
 					),
 					'deactivated' => array(
-						'label' => $lng['admin']['deactivated_user'],
+						'label' => \Froxlor\I18N\Lang::getAll()['admin']['deactivated_user'],
 						'type' => 'checkbox',
 						'values' => array(
 							array(
-								'label' => $lng['panel']['yes'],
+								'label' => \Froxlor\I18N\Lang::getAll()['panel']['yes'],
 								'value' => '1'
 							)
 						),
@@ -60,101 +60,101 @@ return array(
 						)
 					),
 					'new_customer_password' => array(
-						'label' => $lng['login']['password'] . '&nbsp;(' . $lng['panel']['emptyfornochanges'] . ')',
+						'label' => \Froxlor\I18N\Lang::getAll()['login']['password'] . '&nbsp;(' . \Froxlor\I18N\Lang::getAll()['panel']['emptyfornochanges'] . ')',
 						'type' => 'password',
 						'autocomplete' => 'off'
 					),
 					'new_customer_password_suggestion' => array(
-						'label' => $lng['customer']['generated_pwd'],
+						'label' => \Froxlor\I18N\Lang::getAll()['customer']['generated_pwd'],
 						'type' => 'text',
 						'visible' => (\Froxlor\Settings::Get('panel.password_regex') == ''),
 						'value' => \Froxlor\System\Crypt::generatePassword()
 					),
 					'def_language' => array(
-						'label' => $lng['login']['language'],
+						'label' => \Froxlor\I18N\Lang::getAll()['login']['language'],
 						'type' => 'select',
 						'select_var' => $language_options
 					)
 				)
 			),
 			'section_b' => array(
-				'title' => $lng['admin']['contactdata'],
+				'title' => \Froxlor\I18N\Lang::getAll()['admin']['contactdata'],
 				'image' => 'icons/user_edit.png',
 				'fields' => array(
 					'name' => array(
-						'label' => $lng['customer']['name'],
+						'label' => \Froxlor\I18N\Lang::getAll()['customer']['name'],
 						'type' => 'text',
 						'mandatory_ex' => true,
 						'value' => $result['name']
 					),
 					'firstname' => array(
-						'label' => $lng['customer']['firstname'],
+						'label' => \Froxlor\I18N\Lang::getAll()['customer']['firstname'],
 						'type' => 'text',
 						'mandatory_ex' => true,
 						'value' => $result['firstname']
 					),
 					'gender' => array(
-						'label' => $lng['gender']['title'],
+						'label' => \Froxlor\I18N\Lang::getAll()['gender']['title'],
 						'type' => 'select',
 						'select_var' => $gender_options
 					),
 					'company' => array(
-						'label' => $lng['customer']['company'],
+						'label' => \Froxlor\I18N\Lang::getAll()['customer']['company'],
 						'type' => 'text',
 						'mandatory_ex' => true,
 						'value' => $result['company']
 					),
 					'street' => array(
-						'label' => $lng['customer']['street'],
+						'label' => \Froxlor\I18N\Lang::getAll()['customer']['street'],
 						'type' => 'text',
 						'value' => $result['street']
 					),
 					'zipcode' => array(
-						'label' => $lng['customer']['zipcode'],
+						'label' => \Froxlor\I18N\Lang::getAll()['customer']['zipcode'],
 						'type' => 'text',
 						'value' => $result['zipcode']
 					),
 					'city' => array(
-						'label' => $lng['customer']['city'],
+						'label' => \Froxlor\I18N\Lang::getAll()['customer']['city'],
 						'type' => 'text',
 						'value' => $result['city']
 					),
 					'phone' => array(
-						'label' => $lng['customer']['phone'],
+						'label' => \Froxlor\I18N\Lang::getAll()['customer']['phone'],
 						'type' => 'text',
 						'value' => $result['phone']
 					),
 					'fax' => array(
-						'label' => $lng['customer']['fax'],
+						'label' => \Froxlor\I18N\Lang::getAll()['customer']['fax'],
 						'type' => 'text',
 						'value' => $result['fax']
 					),
 					'email' => array(
-						'label' => $lng['customer']['email'],
+						'label' => \Froxlor\I18N\Lang::getAll()['customer']['email'],
 						'type' => 'text',
 						'mandatory' => true,
 						'value' => $result['email']
 					),
 					'customernumber' => array(
-						'label' => $lng['customer']['customernumber'],
+						'label' => \Froxlor\I18N\Lang::getAll()['customer']['customernumber'],
 						'type' => 'text',
 						'value' => $result['customernumber']
 					),
 					'custom_notes' => array(
 						'style' => 'align-top',
-						'label' => $lng['usersettings']['custom_notes']['title'],
-						'desc' => $lng['usersettings']['custom_notes']['description'],
+						'label' => \Froxlor\I18N\Lang::getAll()['usersettings']['custom_notes']['title'],
+						'desc' => \Froxlor\I18N\Lang::getAll()['usersettings']['custom_notes']['description'],
 						'type' => 'textarea',
 						'cols' => 60,
 						'rows' => 12,
 						'value' => $result['custom_notes']
 					),
 					'custom_notes_show' => array(
-						'label' => $lng['usersettings']['custom_notes']['show'],
+						'label' => \Froxlor\I18N\Lang::getAll()['usersettings']['custom_notes']['show'],
 						'type' => 'checkbox',
 						'values' => array(
 							array(
-								'label' => $lng['panel']['yes'],
+								'label' => \Froxlor\I18N\Lang::getAll()['panel']['yes'],
 								'value' => '1'
 							)
 						),
@@ -166,22 +166,22 @@ return array(
 			),
 			'section_cpre' => array(
 				'visible' => ! empty($hosting_plans),
-				'title' => $lng['admin']['plans']['use_plan'],
+				'title' => \Froxlor\I18N\Lang::getAll()['admin']['plans']['use_plan'],
 				'image' => 'icons/user_add.png',
 				'fields' => array(
 					'use_plan' => array(
-						'label' => $lng['admin']['plans']['use_plan'],
+						'label' => \Froxlor\I18N\Lang::getAll()['admin']['plans']['use_plan'],
 						'type' => 'select',
 						'select_var' => $hosting_plans
 					)
 				)
 			),
 			'section_c' => array(
-				'title' => $lng['admin']['servicedata'],
+				'title' => \Froxlor\I18N\Lang::getAll()['admin']['servicedata'],
 				'image' => 'icons/user_edit.png',
 				'fields' => array(
 					'diskspace' => array(
-						'label' => $lng['customer']['diskspace'],
+						'label' => \Froxlor\I18N\Lang::getAll()['customer']['diskspace'],
 						'type' => 'textul',
 						'value' => $result['diskspace'],
 						'maxlength' => 16,
@@ -189,7 +189,7 @@ return array(
 						'ul_field' => $diskspace_ul
 					),
 					'traffic' => array(
-						'label' => $lng['customer']['traffic'],
+						'label' => \Froxlor\I18N\Lang::getAll()['customer']['traffic'],
 						'type' => 'textul',
 						'value' => $result['traffic'],
 						'maxlength' => 14,
@@ -197,7 +197,7 @@ return array(
 						'ul_field' => $traffic_ul
 					),
 					'subdomains' => array(
-						'label' => $lng['customer']['subdomains'],
+						'label' => \Froxlor\I18N\Lang::getAll()['customer']['subdomains'],
 						'type' => 'textul',
 						'value' => $result['subdomains'],
 						'maxlength' => 9,
@@ -205,7 +205,7 @@ return array(
 						'ul_field' => $subdomains_ul
 					),
 					'emails' => array(
-						'label' => $lng['customer']['emails'],
+						'label' => \Froxlor\I18N\Lang::getAll()['customer']['emails'],
 						'type' => 'textul',
 						'value' => $result['emails'],
 						'maxlength' => 9,
@@ -213,7 +213,7 @@ return array(
 						'ul_field' => $emails_ul
 					),
 					'email_accounts' => array(
-						'label' => $lng['customer']['accounts'],
+						'label' => \Froxlor\I18N\Lang::getAll()['customer']['accounts'],
 						'type' => 'textul',
 						'value' => $result['email_accounts'],
 						'maxlength' => 9,
@@ -221,7 +221,7 @@ return array(
 						'ul_field' => $email_accounts_ul
 					),
 					'email_forwarders' => array(
-						'label' => $lng['customer']['forwarders'],
+						'label' => \Froxlor\I18N\Lang::getAll()['customer']['forwarders'],
 						'type' => 'textul',
 						'value' => $result['email_forwarders'],
 						'maxlength' => 9,
@@ -229,7 +229,7 @@ return array(
 						'ul_field' => $email_forwarders_ul
 					),
 					'email_quota' => array(
-						'label' => $lng['customer']['email_quota'],
+						'label' => \Froxlor\I18N\Lang::getAll()['customer']['email_quota'],
 						'type' => 'textul',
 						'value' => $result['email_quota'],
 						'maxlength' => 9,
@@ -238,11 +238,11 @@ return array(
 						'ul_field' => $email_quota_ul
 					),
 					'email_imap' => array(
-						'label' => $lng['customer']['email_imap'],
+						'label' => \Froxlor\I18N\Lang::getAll()['customer']['email_imap'],
 						'type' => 'checkbox',
 						'values' => array(
 							array(
-								'label' => $lng['panel']['yes'],
+								'label' => \Froxlor\I18N\Lang::getAll()['panel']['yes'],
 								'value' => '1'
 							)
 						),
@@ -252,11 +252,11 @@ return array(
 						'mandatory' => true
 					),
 					'email_pop3' => array(
-						'label' => $lng['customer']['email_pop3'],
+						'label' => \Froxlor\I18N\Lang::getAll()['customer']['email_pop3'],
 						'type' => 'checkbox',
 						'values' => array(
 							array(
-								'label' => $lng['panel']['yes'],
+								'label' => \Froxlor\I18N\Lang::getAll()['panel']['yes'],
 								'value' => '1'
 							)
 						),
@@ -266,14 +266,14 @@ return array(
 						'mandatory' => true
 					),
 					'ftps' => array(
-						'label' => $lng['customer']['ftps'],
+						'label' => \Froxlor\I18N\Lang::getAll()['customer']['ftps'],
 						'type' => 'textul',
 						'value' => $result['ftps'],
 						'maxlength' => 9,
 						'ul_field' => $ftps_ul
 					),
 					'mysqls' => array(
-						'label' => $lng['customer']['mysqls'],
+						'label' => \Froxlor\I18N\Lang::getAll()['customer']['mysqls'],
 						'type' => 'textul',
 						'value' => $result['mysqls'],
 						'maxlength' => 9,
@@ -281,11 +281,11 @@ return array(
 						'ul_field' => $mysqls_ul
 					),
 					'phpenabled' => array(
-						'label' => $lng['admin']['phpenabled'] . '?',
+						'label' => \Froxlor\I18N\Lang::getAll()['admin']['phpenabled'] . '?',
 						'type' => 'checkbox',
 						'values' => array(
 							array(
-								'label' => $lng['panel']['yes'],
+								'label' => \Froxlor\I18N\Lang::getAll()['panel']['yes'],
 								'value' => '1'
 							)
 						),
@@ -295,18 +295,18 @@ return array(
 					),
 					'allowed_phpconfigs' => array(
 						'visible' => (((int) \Froxlor\Settings::Get('system.mod_fcgid') == 1 || (int) \Froxlor\Settings::Get('phpfpm.enabled') == 1) ? true : false),
-						'label' => $lng['admin']['phpsettings']['title'],
+						'label' => \Froxlor\I18N\Lang::getAll()['admin']['phpsettings']['title'],
 						'type' => 'checkbox',
 						'values' => $phpconfigs,
 						'value' => isset($result['allowed_phpconfigs']) && ! empty($result['allowed_phpconfigs']) ? json_decode($result['allowed_phpconfigs'], JSON_OBJECT_AS_ARRAY) : array(),
 						'is_array' => 1
 					),
 					'perlenabled' => array(
-						'label' => $lng['admin']['perlenabled'] . '?',
+						'label' => \Froxlor\I18N\Lang::getAll()['admin']['perlenabled'] . '?',
 						'type' => 'checkbox',
 						'values' => array(
 							array(
-								'label' => $lng['panel']['yes'],
+								'label' => \Froxlor\I18N\Lang::getAll()['panel']['yes'],
 								'value' => '1'
 							)
 						),
@@ -315,11 +315,11 @@ return array(
 						)
 					),
 					'dnsenabled' => array(
-						'label' => $lng['admin']['dnsenabled'] . '?',
+						'label' => \Froxlor\I18N\Lang::getAll()['admin']['dnsenabled'] . '?',
 						'type' => 'checkbox',
 						'values' => array(
 							array(
-								'label' => $lng['panel']['yes'],
+								'label' => \Froxlor\I18N\Lang::getAll()['panel']['yes'],
 								'value' => '1'
 							)
 						),
@@ -329,11 +329,11 @@ return array(
 						'visible' => (\Froxlor\Settings::Get('system.dnsenabled') == '1' ? true : false)
 					),
 					'logviewenabled' => array(
-						'label' => $lng['admin']['logviewenabled'] . '?',
+						'label' => \Froxlor\I18N\Lang::getAll()['admin']['logviewenabled'] . '?',
 						'type' => 'checkbox',
 						'values' => array(
 							array(
-								'label' => $lng['panel']['yes'],
+								'label' => \Froxlor\I18N\Lang::getAll()['panel']['yes'],
 								'value' => '1'
 							)
 						),
@@ -344,12 +344,12 @@ return array(
 				)
 			),
 			'section_d' => array(
-				'title' => $lng['admin']['movetoadmin'],
+				'title' => \Froxlor\I18N\Lang::getAll()['admin']['movetoadmin'],
 				'image' => 'icons/user_edit.png',
 				'visible' => ($admin_select_cnt > 1),
 				'fields' => array(
 					'move_to_admin' => array(
-						'label' => $lng['admin']['movecustomertoadmin'],
+						'label' => \Froxlor\I18N\Lang::getAll()['admin']['movecustomertoadmin'],
 						'type' => 'select',
 						'select_var' => $admin_select
 					)

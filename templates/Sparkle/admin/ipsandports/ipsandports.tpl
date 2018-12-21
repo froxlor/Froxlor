@@ -3,7 +3,7 @@ $header
 		<header>
 			<h2>
 				<img src="templates/{$theme}/assets/img/icons/ipsports_big.png" alt="" />&nbsp;
-				{$lng['admin']['ipsandports']['ipsandports']}
+				{\Froxlor\I18N\Lang::getAll()['admin']['ipsandports']['ipsandports']}
 			</h2>
 		</header>
 
@@ -18,21 +18,21 @@ $header
 
 				<div class="overviewadd">
 					<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />&nbsp;
-					<a href="{$linker->getLink(array('section' => 'ipsandports', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['ipsandports']['add']}</a>
+					<a href="{$linker->getLink(array('section' => 'ipsandports', 'page' => $page, 'action' => 'add'))}">{\Froxlor\I18N\Lang::getAll()['admin']['ipsandports']['add']}</a>
 				</div>
 
 				<table class="full hl">
 					<thead>
 						<tr>
-							<th>{$lng['admin']['ipsandports']['ip']}&nbsp;{$arrowcode['ip']}</th>
-							<th>{$lng['admin']['ipsandports']['port']}&nbsp;{$arrowcode['port']}</th>
+							<th>{\Froxlor\I18N\Lang::getAll()['admin']['ipsandports']['ip']}&nbsp;{$arrowcode['ip']}</th>
+							<th>{\Froxlor\I18N\Lang::getAll()['admin']['ipsandports']['port']}&nbsp;{$arrowcode['port']}</th>
 							<if !$is_nginx><th>Listen</th></if>
 							<if $is_apache && !$is_apache24><th>NameVirtualHost</th></if>
 							<th>vHost-Container</th>
 							<th>Specialsettings</th>
 							<if $is_apache><th>ServerName</th></if>
 							<th>SSL</th>
-							<th>{$lng['panel']['options']}</th>
+							<th>{\Froxlor\I18N\Lang::getAll()['panel']['options']}</th>
 						</tr>
 					</thead>
 
@@ -53,7 +53,7 @@ $header
 			<if 15 < $count>
 			<div class="overviewadd">
 				<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />&nbsp;
-				<a href="{$linker->getLink(array('section' => 'ipsandports', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['ipsandports']['add']}</a>
+				<a href="{$linker->getLink(array('section' => 'ipsandports', 'page' => $page, 'action' => 'add'))}">{\Froxlor\I18N\Lang::getAll()['admin']['ipsandports']['add']}</a>
 			</div>
 			</if>
 

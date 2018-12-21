@@ -3,13 +3,13 @@
 		<header>
 			<h2>
 				<img src="templates/{$theme}/assets/img/icons/lock_big.png" alt="" />&nbsp;
-				{$lng['domains']['ssl_certificates']}
+				{\Froxlor\I18N\Lang::getAll()['domains']['ssl_certificates']}
 			</h2>
 		</header>
 		
 		<if !empty($success_message)>
 			<div class="successcontainer bradius">
-				<div class="successtitle">{$lng['success']['success']}</div>
+				<div class="successtitle">{\Froxlor\I18N\Lang::getAll()['success']['success']}</div>
 				<div class="success">
 					$success_message
 				</div>
@@ -29,12 +29,12 @@
 				<table class="full hl">
 					<thead>
 						<tr>
-							<th>{$lng['domains']['domainname']}&nbsp;{$arrowcode['d.domain']}</th>
+							<th>{\Froxlor\I18N\Lang::getAll()['domains']['domainname']}&nbsp;{$arrowcode['d.domain']}</th>
 							<th>Certificate for</th>
 							<th>Issuer</th>
 							<th>Valid from</th>
 							<th>Valid until</th>
-							<th>{$lng['panel']['options']}</th>
+							<th>{\Froxlor\I18N\Lang::getAll()['panel']['options']}</th>
 						</tr>
 					</thead>
 

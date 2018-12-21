@@ -21,14 +21,14 @@
 	<td>
 		<if $row['letsencrypt'] != 1 && AREA == 'customer'>
 			<a href="{$linker->getLink(array('section' => 'domains', 'page' => 'domainssleditor', 'action' => 'view', 'id' => $row['domainid']))}">
-				<img src="templates/{$theme}/assets/img/icons/edit.png" alt="{$lng['panel']['edit']}" title="{$lng['panel']['edit']}" />
+				<img src="templates/{$theme}/assets/img/icons/edit.png" alt="{\Froxlor\I18N\Lang::getAll()['panel']['edit']}" title="{\Froxlor\I18N\Lang::getAll()['panel']['edit']}" />
 			</a>&nbsp;
 		</if>
 		<if $row['letsencrypt'] == '1'>
-			<img src="templates/{$theme}/assets/img/icons/ssl_letsencrypt.png" alt="{$lng['panel']['letsencrypt']}" title="{$lng['panel']['letsencrypt']}" />
+			<img src="templates/{$theme}/assets/img/icons/ssl_letsencrypt.png" alt="{\Froxlor\I18N\Lang::getAll()['panel']['letsencrypt']}" title="{\Froxlor\I18N\Lang::getAll()['panel']['letsencrypt']}" />
 		</if>
 		<a href="{$linker->getLink(array('section' => 'domains', 'page' => 'sslcertificates', 'action' => 'delete', 'id' => $row['id']))}">
-			<img src="templates/{$theme}/assets/img/icons/delete.png" alt="{$lng['panel']['delete']}" title="{$lng['panel']['delete']}" />
+			<img src="templates/{$theme}/assets/img/icons/delete.png" alt="{\Froxlor\I18N\Lang::getAll()['panel']['delete']}" title="{\Froxlor\I18N\Lang::getAll()['panel']['delete']}" />
 		</a>
 	</td>
 </tr>

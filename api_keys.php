@@ -59,7 +59,7 @@ if ($action == 'delete') {
 			Database::pexecute($del_stmt, array(
 				'id' => $id
 			));
-			$success_message = sprintf($lng['apikeys']['apikey_removed'], $id);
+			$success_message = sprintf(\Froxlor\I18N\Lang::getAll()['apikeys']['apikey_removed'], $id);
 		}
 	}
 } elseif ($action == 'add') {
@@ -81,7 +81,7 @@ if ($action == 'delete') {
 		'aid' => \Froxlor\User::getAll()['adminid'],
 		'cid' => $cid
 	));
-	$success_message = $lng['apikeys']['apikey_added'];
+	$success_message = \Froxlor\I18N\Lang::getAll()['apikeys']['apikey_added'];
 } elseif ($action == 'jqEditApiKey') {
 	$keyid = isset($_POST['id']) ? (int) $_POST['id'] : 0;
 	$allowed_from = isset($_POST['allowed_from']) ? $_POST['allowed_from'] : "";
@@ -138,20 +138,20 @@ if (AREA == 'admin' && \Froxlor\User::getAll()['customers_see_all'] == '0') {
 	$keys_stmt_query .= "ak.adminid = :adminid ";
 	$qry_params['adminid'] = \Froxlor\User::getAll()['adminid'];
 	$fields = array(
-		'a.loginname' => $lng['login']['username']
+		'a.loginname' => \Froxlor\I18N\Lang::getAll()['login']['username']
 	);
 } elseif (AREA == 'customer') {
 	// customer-area
 	$keys_stmt_query .= "ak.customerid = :cid ";
 	$qry_params['cid'] = \Froxlor\User::getAll()['customerid'];
 	$fields = array(
-		'c.loginname' => $lng['login']['username']
+		'c.loginname' => \Froxlor\I18N\Lang::getAll()['login']['username']
 	);
 } else {
 	// admin who can see all customers / reseller / admins
 	$keys_stmt_query .= "1 ";
 	$fields = array(
-		'a.loginname' => $lng['login']['username']
+		'a.loginname' => \Froxlor\I18N\Lang::getAll()['login']['username']
 	);
 }
 
@@ -165,7 +165,7 @@ $apikeys = "";
 
 if (count($all_keys) == 0) {
 	$count = 0;
-	$message = $lng['apikeys']['no_api_keys'];
+	$message = \Froxlor\I18N\Lang::getAll()['apikeys']['no_api_keys'];
 	$sortcode = "";
 	$searchcode = "";
 	$pagingcode = "";

@@ -15,40 +15,40 @@
  */
 return array(
 	'mysql_add' => array(
-		'title' => $lng['mysql']['database_create'],
+		'title' => \Froxlor\I18N\Lang::getAll()['mysql']['database_create'],
 		'image' => 'icons/mysql_add.png',
 		'sections' => array(
 			'section_a' => array(
-				'title' => $lng['mysql']['database_create'],
+				'title' => \Froxlor\I18N\Lang::getAll()['mysql']['database_create'],
 				'image' => 'icons/mysql_add.png',
 				'fields' => array(
 					'description' => array(
-						'label' => $lng['mysql']['databasedescription'],
+						'label' => \Froxlor\I18N\Lang::getAll()['mysql']['databasedescription'],
 						'type' => 'text'
 					),
 					'mysql_server' => array(
 						'visible' => (1 < $count_mysqlservers ? true : false),
-						'label' => $lng['mysql']['mysql_server'],
+						'label' => \Froxlor\I18N\Lang::getAll()['mysql']['mysql_server'],
 						'type' => 'select',
 						'select_var' => $mysql_servers
 					),
 					'mysql_password' => array(
-						'label' => $lng['login']['password'],
+						'label' => \Froxlor\I18N\Lang::getAll()['login']['password'],
 						'type' => 'password',
 						'autocomplete' => 'off'
 					),
 					'mysql_password_suggestion' => array(
-						'label' => $lng['customer']['generated_pwd'],
+						'label' => \Froxlor\I18N\Lang::getAll()['customer']['generated_pwd'],
 						'type' => 'text',
 						'visible' => (\Froxlor\Settings::Get('panel.password_regex') == ''),
 						'value' => \Froxlor\System\Crypt::generatePassword()
 					),
 					'sendinfomail' => array(
-						'label' => $lng['customer']['sendinfomail'],
+						'label' => \Froxlor\I18N\Lang::getAll()['customer']['sendinfomail'],
 						'type' => 'checkbox',
 						'values' => array(
 							array(
-								'label' => $lng['panel']['yes'],
+								'label' => \Froxlor\I18N\Lang::getAll()['panel']['yes'],
 								'value' => '1'
 							)
 						),

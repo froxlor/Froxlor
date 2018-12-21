@@ -135,8 +135,6 @@ abstract class ApiCommand extends ApiParameter
 	 */
 	private function initLang()
 	{
-		global $lng;
-
 		// query the whole table
 		$result_stmt = \Froxlor\Database\Database::query("SELECT * FROM `" . TABLE_PANEL_LANGUAGE . "`");
 
@@ -179,7 +177,7 @@ abstract class ApiCommand extends ApiParameter
 		include_once \Froxlor\FileDir::makeSecurePath(\Froxlor\Froxlor::getInstallDir() . '/lng/lng_references.php');
 
 		// set array for ApiCommand
-		$this->lng = $lng;
+		$this->lng = \Froxlor\I18N\Lang::getAll();
 	}
 
 	/**

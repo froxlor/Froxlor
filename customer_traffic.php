@@ -103,7 +103,7 @@ if (! is_null($month) && ! is_null($year)) {
 		}
 
 		eval("\$traffic.=\"" . \Froxlor\UI\Template::getTemplate('traffic/traffic_month') . "\";");
-		$show = $lng['traffic']['months'][intval($row['month'])] . ' ' . $row['year'];
+		$show = \Froxlor\I18N\Lang::getAll()['traffic']['months'][intval($row['month'])] . ' ' . $row['year'];
 	}
 
 	$traffic_complete['http'] = \Froxlor\PhpHelper::size_readable($traffic_complete['http'] * 1024, 'GiB', 'bi', '%01.' . (int) Settings::Get('panel.decimal_places') . 'f %s');
@@ -134,7 +134,7 @@ if (! is_null($month) && ! is_null($year)) {
 		$traffic_complete['mail'] += $mail;
 		$traf['month'] = $row['month'];
 		$traf['year'] = $row['year'];
-		$traf['monthname'] = $lng['traffic']['months'][intval($row['month'])] . " " . $row['year'];
+		$traf['monthname'] = \Froxlor\I18N\Lang::getAll()['traffic']['months'][intval($row['month'])] . " " . $row['year'];
 		$traf['byte'] = $http + $ftp_up + $ftp_down + $mail;
 
 		if (extension_loaded('bcmath')) {

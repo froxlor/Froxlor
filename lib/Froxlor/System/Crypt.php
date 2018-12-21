@@ -116,11 +116,9 @@ class Crypt
 	 */
 	public static function getAvailablePasswordHashes()
 	{
-		global $lng;
-
 		// get available pwd-hases
 		$available_pwdhashes = array(
-			0 => $lng['serversettings']['systemdefault']
+			0 => \Froxlor\I18N\Lang::getAll()['serversettings']['systemdefault']
 		);
 		if (defined('CRYPT_MD5') && CRYPT_MD5 == 1) {
 			$available_pwdhashes[1] = 'MD5';

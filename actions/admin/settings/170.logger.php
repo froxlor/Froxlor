@@ -19,10 +19,10 @@
 return array(
 	'groups' => array(
 		'logging' => array(
-			'title' => $lng['admin']['loggersettings'],
+			'title' => \Froxlor\I18N\Lang::getAll()['admin']['loggersettings'],
 			'fields' => array(
 				'logger_enabled' => array(
-					'label' => $lng['serversettings']['logger']['enable'],
+					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['logger']['enable'],
 					'settinggroup' => 'logger',
 					'varname' => 'enabled',
 					'type' => 'bool',
@@ -31,20 +31,20 @@ return array(
 					'overview_option' => true
 				),
 				'logger_severity' => array(
-					'label' => $lng['serversettings']['logger']['severity'],
+					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['logger']['severity'],
 					'settinggroup' => 'logger',
 					'varname' => 'severity',
 					'type' => 'option',
 					'default' => 1,
 					'option_mode' => 'one',
 					'option_options' => array(
-						1 => $lng['admin']['logger']['normal'],
-						2 => $lng['admin']['logger']['paranoid']
+						1 => \Froxlor\I18N\Lang::getAll()['admin']['logger']['normal'],
+						2 => \Froxlor\I18N\Lang::getAll()['admin']['logger']['paranoid']
 					),
 					'save_method' => 'storeSettingField'
 				),
 				'logger_logtypes' => array(
-					'label' => $lng['serversettings']['logger']['types'],
+					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['logger']['types'],
 					'settinggroup' => 'logger',
 					'varname' => 'logtypes',
 					'type' => 'option',
@@ -58,7 +58,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'logger_logfile' => array(
-					'label' => $lng['serversettings']['logger']['logfile'],
+					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['logger']['logfile'],
 					'settinggroup' => 'logger',
 					'varname' => 'logfile',
 					'type' => 'string',
@@ -68,16 +68,16 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'logger_log_cron' => array(
-					'label' => $lng['serversettings']['logger']['logcron'],
+					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['logger']['logcron'],
 					'settinggroup' => 'logger',
 					'varname' => 'log_cron',
 					'type' => 'option',
 					'default' => 0,
 					'option_mode' => 'one',
 					'option_options' => array(
-						0 => $lng['serversettings']['logger']['logcronoption']['never'],
-						1 => $lng['serversettings']['logger']['logcronoption']['once'],
-						2 => $lng['serversettings']['logger']['logcronoption']['always']
+						0 => \Froxlor\I18N\Lang::getAll()['serversettings']['logger']['logcronoption']['never'],
+						1 => \Froxlor\I18N\Lang::getAll()['serversettings']['logger']['logcronoption']['once'],
+						2 => \Froxlor\I18N\Lang::getAll()['serversettings']['logger']['logcronoption']['always']
 					),
 					'save_method' => 'storeSettingField'
 				)
