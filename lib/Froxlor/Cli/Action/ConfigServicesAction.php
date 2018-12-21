@@ -16,7 +16,7 @@ class ConfigServicesAction extends \Froxlor\Cli\Action
 
 	public function run()
 	{
-		$this->_\Froxlor\Validate\Validate::validate();
+		$this->_validate();
 	}
 
 	/**
@@ -24,7 +24,7 @@ class ConfigServicesAction extends \Froxlor\Cli\Action
 	 *
 	 * @throws \Exception
 	 */
-	private function _\Froxlor\Validate\Validate::validate()
+	private function _validate()
 	{
 		$this->_checkConfigParam(true);
 		$this->_parseConfig();

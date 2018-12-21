@@ -107,7 +107,7 @@ if ($page == '' || $page == 'overview') {
 
 			$value_arr = array();
 
-			$value_arr['diskspace'] = intval_ressource($_POST['diskspace']);
+			$value_arr['diskspace'] = (int)($_POST['diskspace']);
 			if (isset($_POST['diskspace_ul'])) {
 				$value_arr['diskspace'] = - 1;
 			}
@@ -117,22 +117,22 @@ if ($page == '' || $page == 'overview') {
 				$value_arr['traffic'] = - 1;
 			}
 
-			$value_arr['subdomains'] = intval_ressource($_POST['subdomains']);
+			$value_arr['subdomains'] = (int)($_POST['subdomains']);
 			if (isset($_POST['subdomains_ul'])) {
 				$value_arr['subdomains'] = - 1;
 			}
 
-			$value_arr['emails'] = intval_ressource($_POST['emails']);
+			$value_arr['emails'] = (int)($_POST['emails']);
 			if (isset($_POST['emails_ul'])) {
 				$value_arr['emails'] = - 1;
 			}
 
-			$value_arr['email_accounts'] = intval_ressource($_POST['email_accounts']);
+			$value_arr['email_accounts'] = (int)($_POST['email_accounts']);
 			if (isset($_POST['email_accounts_ul'])) {
 				$value_arr['email_accounts'] = - 1;
 			}
 
-			$value_arr['email_forwarders'] = intval_ressource($_POST['email_forwarders']);
+			$value_arr['email_forwarders'] = (int)($_POST['email_forwarders']);
 			if (isset($_POST['email_forwarders_ul'])) {
 				$value_arr['email_forwarders'] = - 1;
 			}
@@ -151,20 +151,20 @@ if ($page == '' || $page == 'overview') {
 
 			$value_arr['email_imap'] = 0;
 			if (isset($_POST['email_imap'])) {
-				$value_arr['email_imap'] = intval_ressource($_POST['email_imap']);
+				$value_arr['email_imap'] = (int)($_POST['email_imap']);
 			}
 
 			$value_arr['email_pop3'] = 0;
 			if (isset($_POST['email_pop3'])) {
-				$value_arr['email_pop3'] = intval_ressource($_POST['email_pop3']);
+				$value_arr['email_pop3'] = (int)($_POST['email_pop3']);
 			}
 
-			$value_arr['ftps'] = intval_ressource($_POST['ftps']);
+			$value_arr['ftps'] = (int)($_POST['ftps']);
 			if (isset($_POST['ftps_ul'])) {
 				$value_arr['ftps'] = - 1;
 			}
 
-			$value_arr['mysqls'] = intval_ressource($_POST['mysqls']);
+			$value_arr['mysqls'] = (int)($_POST['mysqls']);
 			if (isset($_POST['mysqls_ul'])) {
 				$value_arr['mysqls'] = - 1;
 			}
@@ -285,7 +285,7 @@ if ($page == '' || $page == 'overview') {
 
 				$value_arr = array();
 
-				$value_arr['diskspace'] = intval_ressource($_POST['diskspace']);
+				$value_arr['diskspace'] = (int)($_POST['diskspace']);
 				if (isset($_POST['diskspace_ul'])) {
 					$value_arr['diskspace'] = - 1;
 				}
@@ -295,22 +295,22 @@ if ($page == '' || $page == 'overview') {
 					$value_arr['traffic'] = - 1;
 				}
 
-				$value_arr['subdomains'] = intval_ressource($_POST['subdomains']);
+				$value_arr['subdomains'] = (int)($_POST['subdomains']);
 				if (isset($_POST['subdomains_ul'])) {
 					$value_arr['subdomains'] = - 1;
 				}
 
-				$value_arr['emails'] = intval_ressource($_POST['emails']);
+				$value_arr['emails'] = (int)($_POST['emails']);
 				if (isset($_POST['emails_ul'])) {
 					$value_arr['emails'] = - 1;
 				}
 
-				$value_arr['email_accounts'] = intval_ressource($_POST['email_accounts']);
+				$value_arr['email_accounts'] = (int)($_POST['email_accounts']);
 				if (isset($_POST['email_accounts_ul'])) {
 					$value_arr['email_accounts'] = - 1;
 				}
 
-				$value_arr['email_forwarders'] = intval_ressource($_POST['email_forwarders']);
+				$value_arr['email_forwarders'] = (int)($_POST['email_forwarders']);
 				if (isset($_POST['email_forwarders_ul'])) {
 					$value_arr['email_forwarders'] = - 1;
 				}
@@ -329,20 +329,20 @@ if ($page == '' || $page == 'overview') {
 
 				$value_arr['email_imap'] = 0;
 				if (isset($_POST['email_imap'])) {
-					$value_arr['email_imap'] = intval_ressource($_POST['email_imap']);
+					$value_arr['email_imap'] = (int)($_POST['email_imap']);
 				}
 
 				$value_arr['email_pop3'] = 0;
 				if (isset($_POST['email_pop3'])) {
-					$value_arr['email_pop3'] = intval_ressource($_POST['email_pop3']);
+					$value_arr['email_pop3'] = (int)($_POST['email_pop3']);
 				}
 
-				$value_arr['ftps'] = intval_ressource($_POST['ftps']);
+				$value_arr['ftps'] = (int)($_POST['ftps']);
 				if (isset($_POST['ftps_ul'])) {
 					$value_arr['ftps'] = - 1;
 				}
 
-				$value_arr['mysqls'] = intval_ressource($_POST['mysqls']);
+				$value_arr['mysqls'] = (int)($_POST['mysqls']);
 				if (isset($_POST['mysqls_ul'])) {
 					$value_arr['mysqls'] = - 1;
 				}

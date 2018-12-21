@@ -68,7 +68,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 
 			// validation
 			$password = \Froxlor\Validate\Validate::validate($password, 'password', '', '', array(), true);
-			$password = validatePassword($password, true);
+			$password = \Froxlor\System\Crypt::validatePassword($password, true);
 			$description = \Froxlor\Validate\Validate::validate(trim($description), 'description', '', '', array(), true);
 
 			if (Settings::Get('system.allow_customer_shell') == '1') {
@@ -353,7 +353,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 		// password update?
 		if ($password != '') {
 			// validate password
-			$password = validatePassword($password, true);
+			$password = \Froxlor\System\Crypt::validatePassword($password, true);
 
 			if ($password == $result['username']) {
 				\Froxlor\UI\Response::standard_error('passwordshouldnotbeusername', '', true);

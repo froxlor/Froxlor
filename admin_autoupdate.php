@@ -67,7 +67,7 @@ if ($page == 'overview') {
 				'page' => 'error',
 				'errno' => 3
 			));
-		} elseif (version_compare2($version, $_version) == - 1) {
+		} elseif (\Froxlor\Froxlor::version_compare2($version, $_version) == - 1) {
 			// there is a newer version - yay
 			$isnewerversion = 1;
 		} else {

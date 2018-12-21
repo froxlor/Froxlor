@@ -208,7 +208,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			// only check if not empty,
 			// cause empty == generate password automatically
 			if ($password != '') {
-				$password = validatePassword($password, true);
+				$password = \Froxlor\System\Crypt::validatePassword($password, true);
 			}
 
 			$diskspace = $diskspace * 1024;
@@ -529,7 +529,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 					}
 
 					if ($password != '') {
-						$password = validatePassword($password, true);
+						$password = \Froxlor\System\Crypt::validatePassword($password, true);
 						$password = \Froxlor\System\Crypt::makeCryptPassword($password);
 					} else {
 						$password = $result['password'];

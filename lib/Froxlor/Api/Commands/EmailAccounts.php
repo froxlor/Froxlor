@@ -85,7 +85,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 			$idna_convert = new \Froxlor\Idna\IdnaWrapper();
 			$username = $idna_convert->decode($email_full);
 			$password = \Froxlor\Validate\Validate::validate($email_password, 'password', '', '', array(), true);
-			$password = validatePassword($password, true);
+			$password = \Froxlor\System\Crypt::validatePassword($password, true);
 
 			if ($result['popaccountid'] != 0) {
 				throw new \Exception("Email address '" . $email_full . "' has already an account assigned.", 406);
@@ -346,7 +346,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 			if ($password == $result['email_full']) {
 				\Froxlor\UI\Response::standard_error('passwordshouldnotbeusername', '', true);
 			}
-			$password = validatePassword($password, true);
+			$password = \Froxlor\System\Crypt::validatePassword($password, true);
 			$cryptPassword = \Froxlor\System\Crypt::makeCryptPassword($password);
 			$upd_query .= (Settings::Get('system.mailpwcleartext') == '1' ? "`password` = :password, " : '') . "`password_enc`= :password_enc";
 			$upd_params['password_enc'] = $cryptPassword;

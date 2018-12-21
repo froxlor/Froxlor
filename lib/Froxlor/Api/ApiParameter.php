@@ -123,7 +123,7 @@ abstract class ApiParameter
 	 */
 	protected function getUlParam($param = null, $ul_field = null, $optional = false, $default = 0)
 	{
-		$param_value = intval_ressource($this->getParam($param, $optional, $default));
+		$param_value = (int)$this->getParam($param, $optional, $default);
 		$ul_field_value = $this->getBoolParam($ul_field, true, 0);
 		if ($ul_field_value != '0') {
 			$param_value = - 1;
@@ -169,7 +169,7 @@ abstract class ApiParameter
 			// check one level deeper
 			return $this->getModFunctionString(++ $level, $max_level, $trace);
 		}
-		return $class . ':' . $func;
+		return str_replace("Froxlor\\Api\\Commands\\", "", $class) . ':' . $func;
 	}
 
 	/**

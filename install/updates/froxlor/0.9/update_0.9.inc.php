@@ -1081,7 +1081,7 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.9.12')) {
 	lastStepStatus(0);
 
 	if ((int) Settings::Get('autoresponder.autoresponder_active') == 1) {
-		$update_autoresponder_default = isset($_POST['update_autoresponder_default']) ? intval_ressource($_POST['update_autoresponder_default']) : 0;
+		$update_autoresponder_default = isset($_POST['update_autoresponder_default']) ? (int)($_POST['update_autoresponder_default']) : 0;
 		if (isset($_POST['update_autoresponder_default_ul'])) {
 			$update_autoresponder_default = - 1;
 		}

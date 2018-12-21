@@ -88,7 +88,7 @@ class Crypt
 				$cryptPassword = crypt($password, '$1$' . self::generatePassword(true) . self::generatePassword(true));
 				break;
 			case 2:
-				if (version_compare(phpversion(), '5.3.7', '<')) {
+				if (\Froxlor\Froxlor::version_compare(phpversion(), '5.3.7', '<')) {
 					$cryptPassword = crypt($password, '$2a$' . self::generatePassword(true) . self::generatePassword(true));
 				} else {
 					// Blowfish hashing with a salt as follows: "$2a$", "$2x$" or "$2y$",
@@ -228,7 +228,7 @@ class Crypt
 		if ($pwd_hash == $pwd_check) {
 
 			// check for update of hash (only if our database is ready to handle the bigger string)
-			$is_ready = (version_compare2("0.9.33", \Froxlor\Froxlor::getVersion()) <= 0 ? true : false);
+			$is_ready = (\Froxlor\Froxlor::version_compare2("0.9.33", \Froxlor\Froxlor::getVersion()) <= 0 ? true : false);
 			if ($update_hash && $is_ready) {
 				$upd_stmt = \Froxlor\Database\Database::prepare("
 					UPDATE " . $table . " SET `password` = :newpasswd WHERE `" . $uid . "` = :uid

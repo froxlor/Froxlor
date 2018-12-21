@@ -54,7 +54,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 
 			// validation
 			$password = \Froxlor\Validate\Validate::validate($password, 'password', '', '', array(), true);
-			$password = validatePassword($password, true);
+			$password = \Froxlor\System\Crypt::validatePassword($password, true);
 			$databasedescription = \Froxlor\Validate\Validate::validate(trim($databasedescription), 'description', '', '', array(), true);
 
 			// validate whether the dbserver exists
@@ -315,7 +315,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 
 		if ($password != '') {
 			// validate password
-			$password = validatePassword($password, true);
+			$password = \Froxlor\System\Crypt::validatePassword($password, true);
 
 			if ($password == $result['databasename']) {
 				\Froxlor\UI\Response::standard_error('passwordshouldnotbeusername', '', true);

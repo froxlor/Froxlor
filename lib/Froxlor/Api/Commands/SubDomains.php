@@ -104,7 +104,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			// merge the two parts together
 			$completedomain = $subdomain . '.' . $domain;
 
-			if (Settings::Get('system.validate_domain') && ! validateDomain($completedomain)) {
+			if (Settings::Get('system.validate_domain') && ! \Froxlor\Validate\Validate::validateDomain($completedomain)) {
 				\Froxlor\UI\Response::standard_error(array(
 					'stringiswrong',
 					'mydomain'

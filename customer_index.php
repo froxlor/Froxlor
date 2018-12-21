@@ -120,11 +120,11 @@ if ($page == 'overview') {
 } elseif ($page == 'change_password') {
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 		$old_password = \Froxlor\Validate\Validate::validate($_POST['old_password'], 'old password');
-		if (! validatePasswordLogin($userinfo, $old_password, TABLE_PANEL_CUSTOMERS, 'customerid')) {
+		if (! \Froxlor\System\Crypt::validatePasswordLogin($userinfo, $old_password, TABLE_PANEL_CUSTOMERS, 'customerid')) {
 			\Froxlor\UI\Response::standard_error('oldpasswordnotcorrect');
 		}
 
-		$new_password = validatePassword($_POST['new_password'], 'new password');
+		$new_password = \Froxlor\System\Crypt::validatePassword($_POST['new_password'], 'new password');
 		$new_password_confirm = validatePassword($_POST['new_password_confirm'], 'new password confirm');
 
 		if ($old_password == '') {

@@ -602,8 +602,8 @@ if ($action == 'resetpwd') {
 						$new_password = \Froxlor\Validate\Validate::validate($_POST['new_password'], 'new password');
 						$new_password_confirm = \Froxlor\Validate\Validate::validate($_POST['new_password_confirm'], 'new password confirm');
 					} else {
-						$new_password = validatePassword($_POST['new_password'], 'new password');
-						$new_password_confirm = validatePassword($_POST['new_password_confirm'], 'new password confirm');
+						$new_password = \Froxlor\System\Crypt::validatePassword($_POST['new_password'], 'new password');
+						$new_password_confirm = \Froxlor\System\Crypt::validatePassword($_POST['new_password_confirm'], 'new password confirm');
 					}
 
 					if ($new_password == '') {

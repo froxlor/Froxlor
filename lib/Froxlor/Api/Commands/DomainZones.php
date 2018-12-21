@@ -143,7 +143,7 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 				// remove it for checks
 				$content = substr($content, 0, - 1);
 			}
-			if (! validateDomain($content)) {
+			if (! \Froxlor\Validate\Validate::validateDomain($content)) {
 				$errors[] = $this->lng['error']['dns_mx_needdom'];
 			} else {
 				// check whether there is a CNAME-record for the same resource
@@ -166,7 +166,7 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 				// add domain name
 				$content .= '.' . $domain;
 			}
-			if (! validateDomain($content, true)) {
+			if (! \Froxlor\Validate\Validate::validateDomain($content, true)) {
 				$errors[] = $this->lng['error']['dns_cname_invaliddom'];
 			} else {
 				// check whether there are RR-records for the same resource
@@ -185,7 +185,7 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 				// remove it for checks
 				$content = substr($content, 0, - 1);
 			}
-			if (! validateDomain($content)) {
+			if (! \Froxlor\Validate\Validate::validateDomain($content)) {
 				$errors[] = $this->lng['error']['dns_ns_invaliddom'];
 			}
 			// append trailing dot (again)
@@ -212,7 +212,7 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 					$target = substr($target, 0, - 1);
 				}
 			}
-			if ($target != '.' && ! validateDomain($target, true)) {
+			if ($target != '.' && ! \Froxlor\Validate\Validate::validateDomain($target, true)) {
 				$errors[] = $this->lng['error']['dns_srv_needdom'];
 			} else {
 				// check whether there is a CNAME-record for the same resource

@@ -227,7 +227,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				$fax = $this->getParam('fax', true, '');
 				$customernumber = $this->getParam('customernumber', true, '');
 				$def_language = $this->getParam('def_language', true, Settings::Get('panel.standardlanguage'));
-				$gender = intval_ressource($this->getParam('gender', true, 0));
+				$gender = (int) $this->getParam('gender', true, 0);
 				$custom_notes = $this->getParam('custom_notes', true, '');
 				$custom_notes_show = $this->getBoolParam('custom_notes_show', true, 0);
 
@@ -276,7 +276,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				// only check if not empty,
 				// cause empty == generate password automatically
 				if ($password != '') {
-					$password = validatePassword($password, true);
+					$password = \Froxlor\System\Crypt::validatePassword($password, true);
 				}
 
 				// gender out of range? [0,2]
@@ -846,7 +846,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 
 		if ($this->isAdmin()) {
 			// parameters
-			$move_to_admin = intval_ressource($this->getBoolParam('move_to_admin', true, 0));
+			$move_to_admin = (int) ($this->getBoolParam('move_to_admin', true, 0));
 
 			$idna_convert = new \Froxlor\Idna\IdnaWrapper();
 			$email = $this->getParam('email', true, $idna_convert->decode($result['email']));
@@ -861,7 +861,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 			$fax = $this->getParam('fax', true, $result['fax']);
 			$customernumber = $this->getParam('customernumber', true, $result['customernumber']);
 			$def_language = $this->getParam('def_language', true, $result['def_language']);
-			$gender = intval_ressource($this->getParam('gender', true, $result['gender']));
+			$gender = (int) $this->getParam('gender', true, $result['gender']);
 			$custom_notes = $this->getParam('custom_notes', true, $result['custom_notes']);
 			$custom_notes_show = $this->getBoolParam('custom_notes_show', true, $result['custom_notes_show']);
 
@@ -940,7 +940,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 		}
 
 		if ($password != '') {
-			$password = validatePassword($password, true);
+			$password = \Froxlor\System\Crypt::validatePassword($password, true);
 			$password = \Froxlor\System\Crypt::makeCryptPassword($password);
 		} else {
 			$password = $result['password'];
