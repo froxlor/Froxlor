@@ -205,7 +205,7 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			));
 
 			if ($result_checkfordouble['id'] != '') {
-				standard_error('myipnotdouble', '', true);
+				\Froxlor\UI\Response::standard_error('myipnotdouble', '', true);
 			}
 
 			$ins_stmt = Database::prepare("
@@ -390,9 +390,9 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			}
 
 			if ($result['ip'] != $ip && $result['ip'] == Settings::Get('system.ipaddress') && $result_sameipotherport['id'] == '') {
-				standard_error('cantchangesystemip', '', true);
+				\Froxlor\UI\Response::standard_error('cantchangesystemip', '', true);
 			} elseif ($result_checkfordouble['id'] != '' && $result_checkfordouble['id'] != $id) {
-				standard_error('myipnotdouble', '', true);
+				\Froxlor\UI\Response::standard_error('myipnotdouble', '', true);
 			} else {
 
 				$upd_stmt = Database::prepare("
@@ -506,13 +506,13 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 						$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] deleted IP/port '" . $result['ip'] . ":" . $result['port'] . "'");
 						return $this->response(200, "successfull", $result);
 					} else {
-						standard_error('cantdeletesystemip', '', true);
+						\Froxlor\UI\Response::standard_error('cantdeletesystemip', '', true);
 					}
 				} else {
-					standard_error('cantdeletedefaultip', '', true);
+					\Froxlor\UI\Response::standard_error('cantdeletedefaultip', '', true);
 				}
 			} else {
-				standard_error('ipstillhasdomains', '', true);
+				\Froxlor\UI\Response::standard_error('ipstillhasdomains', '', true);
 			}
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);

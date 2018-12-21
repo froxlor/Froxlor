@@ -25,7 +25,7 @@ if ($userinfo['change_serversettings'] == '1') {
 	if ($action == 'setconfigured')
 	{
 		Settings::Set('panel.is_configured', '1', true);
-		redirectTo('admin_configfiles.php', array(
+		\Froxlor\UI\Response::redirectTo('admin_configfiles.php', array(
 			's' => $s
 		));
 	}
@@ -178,7 +178,7 @@ if ($userinfo['change_serversettings'] == '1') {
 			if ($lasttype != '' && $lasttype != $_action['type']) {
 				$commands = trim($commands);
 				$numbrows = count(explode("\n", $commands));
-				eval("\$configpage.=\"" . getTemplate("configfiles/configfiles_commands") . "\";");
+				eval("\$configpage.=\"" . \Froxlor\UI\Template::getTemplate("configfiles/configfiles_commands") . "\";");
 				$lasttype = '';
 				$commands = '';
 			}
@@ -209,14 +209,14 @@ if ($userinfo['change_serversettings'] == '1') {
 					$commands = trim($commands_pre);
 					if ($commands != "") {
 						$numbrows = count(explode("\n", $commands));
-						eval("\$commands_pre=\"" . getTemplate("configfiles/configfiles_commands") . "\";");
+						eval("\$commands_pre=\"" . \Froxlor\UI\Template::getTemplate("configfiles/configfiles_commands") . "\";");
 					}
 					$commands = trim($commands_post);
 					if ($commands != "") {
 						$numbrows = count(explode("\n", $commands));
-						eval("\$commands_post=\"" . getTemplate("configfiles/configfiles_commands") . "\";");
+						eval("\$commands_post=\"" . \Froxlor\UI\Template::getTemplate("configfiles/configfiles_commands") . "\";");
 					}
-					eval("\$configpage.=\"" . getTemplate("configfiles/configfiles_subfileblock") . "\";");
+					eval("\$configpage.=\"" . \Froxlor\UI\Template::getTemplate("configfiles/configfiles_subfileblock") . "\";");
 					$commands = '';
 					$commands_pre = '';
 					$commands_post = '';
@@ -226,15 +226,15 @@ if ($userinfo['change_serversettings'] == '1') {
 		$commands = trim($commands);
 		if ($commands != '') {
 			$numbrows = count(explode("\n", $commands));
-			eval("\$configpage.=\"" . getTemplate("configfiles/configfiles_commands") . "\";");
+			eval("\$configpage.=\"" . \Froxlor\UI\Template::getTemplate("configfiles/configfiles_commands") . "\";");
 		}
-		eval("echo \"" . getTemplate("configfiles/configfiles") . "\";");
+		eval("echo \"" . \Froxlor\UI\Template::getTemplate("configfiles/configfiles") . "\";");
 	} else {
 		$basedir = FROXLOR_INSTALL_DIR;
-		eval("echo \"" . getTemplate("configfiles/wizard") . "\";");
+		eval("echo \"" . \Froxlor\UI\Template::getTemplate("configfiles/wizard") . "\";");
 	}
 } else {
-	redirectTo('admin_index.php', array(
+	\Froxlor\UI\Response::redirectTo('admin_index.php', array(
 		's' => $s
 	));
 }
@@ -248,7 +248,7 @@ function getFileContentContainer($file_content, &$replace_arr, $realname, $distr
 		$file_content = strtr($file_content, $replace_arr);
 		$file_content = htmlspecialchars($file_content);
 		$numbrows = count(explode("\n", $file_content));
-		eval("\$files=\"" . getTemplate("configfiles/configfiles_file") . "\";");
+		eval("\$files=\"" . \Froxlor\UI\Template::getTemplate("configfiles/configfiles_file") . "\";");
 	}
 	return $files;
 }

@@ -34,7 +34,7 @@ if ($action == 'reset' &&
 
 if (!function_exists('opcache_get_configuration')
 ) {
-    standard_error($lng['error']['no_opcacheinfo']);
+    \Froxlor\UI\Response::standard_error($lng['error']['no_opcacheinfo']);
 }
 
 if ($page == 'showinfo'
@@ -68,7 +68,7 @@ if ($page == 'showinfo'
                 $value=number_format($value,0,'.',' ');
             }
             $name=str_replace('_', ' ', $name);
-            eval("\$runtimelines.=\"" . getTemplate("settings/opcacheinfo/runtime_line") . "\";");
+            eval("\$runtimelines.=\"" . \Froxlor\UI\Template::getTemplate("settings/opcacheinfo/runtime_line") . "\";");
         }
     }
     
@@ -140,11 +140,11 @@ if ($page == 'showinfo'
     $blacklistlines = '';
     if (isset($opcache_info['blacklist']) && is_array($opcache_info['blacklist'])) {
         foreach ($opcache_info['blacklist'] as $value) {
-            eval("\$blacklistlines.=\"" . getTemplate("settings/opcacheinfo/blacklist_line") . "\";");
+            eval("\$blacklistlines.=\"" . \Froxlor\UI\Template::getTemplate("settings/opcacheinfo/blacklist_line") . "\";");
         }
     }
     
-    eval("echo \"" . getTemplate("settings/opcacheinfo/showinfo") . "\";");
+    eval("echo \"" . \Froxlor\UI\Template::getTemplate("settings/opcacheinfo/showinfo") . "\";");
     
 }
 

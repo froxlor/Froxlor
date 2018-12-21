@@ -399,8 +399,7 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 	{
 		\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, 'TasksCron: Task10 started - setting filesystem quota');
 
-		// @fixme
-		$usedquota = getFilesystemQuota();
+		$usedquota = \Froxlor\FileDir::getFilesystemQuota();
 
 		// Check whether we really have entries to check
 		if (is_array($usedquota) && count($usedquota) > 0) {

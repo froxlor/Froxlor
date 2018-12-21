@@ -27,7 +27,7 @@ use Froxlor\Api\Commands\Certificates as Certificates;
 
 // redirect if this customer page is hidden via settings
 if (Settings::IsInList('panel.customer_hide_options','domains')) {
-	redirectTo('customer_index.php');
+	\Froxlor\UI\Response::redirectTo('customer_index.php');
 }
 
 if (isset($_POST['id'])) {
@@ -38,14 +38,14 @@ if (isset($_POST['id'])) {
 
 if ($page == 'overview') {
 	$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_domains");
-	eval("echo \"" . getTemplate("domains/domains") . "\";");
+	eval("echo \"" . \Froxlor\UI\Template::getTemplate("domains/domains") . "\";");
 } elseif ($page == 'domains') {
 	if ($action == '') {
 		$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_domains::domains");
 		$fields = array(
 			'd.domain' => $lng['domains']['domainname']
 		);
-		$paging = new paging($userinfo, TABLE_PANEL_DOMAINS, $fields);
+		$paging = new \Froxlor\UI\Paging($userinfo, TABLE_PANEL_DOMAINS, $fields);
 		$domains_stmt = Database::prepare("SELECT `d`.`id`, `d`.`customerid`, `d`.`domain`, `d`.`documentroot`, `d`.`isbinddomain`, `d`.`isemaildomain`, `d`.`caneditdomain`, `d`.`iswildcarddomain`, `d`.`parentdomainid`, `d`.`letsencrypt`, `d`.`registration_date`, `d`.`termination_date`, `ad`.`id` AS `aliasdomainid`, `ad`.`domain` AS `aliasdomain`, `da`.`id` AS `domainaliasid`, `da`.`domain` AS `domainalias` FROM `" . TABLE_PANEL_DOMAINS . "` `d`
 			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `ad` ON `d`.`aliasdomain`=`ad`.`id`
 			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `da` ON `da`.`aliasdomain`=`d`.`id`
@@ -152,7 +152,7 @@ if ($page == 'overview') {
 					} else {
 						$statsapp = 'webalizer';
 					}
-					eval("\$domains.=\"" . getTemplate("domains/domains_delimiter") . "\";");
+					eval("\$domains.=\"" . \Froxlor\UI\Template::getTemplate("domains/domains_delimiter") . "\";");
 				}
 				
 				if ($paging->sortfield == 'd.domain' && $paging->sortorder == 'asc') {
@@ -172,21 +172,21 @@ if ($page == 'overview') {
 						$show_ssledit = true;
 					}
 					$row = htmlentities_array($row);
-					eval("\$domains.=\"" . getTemplate("domains/domains_domain") . "\";");
+					eval("\$domains.=\"" . \Froxlor\UI\Template::getTemplate("domains/domains_domain") . "\";");
 				}
 			}
 			
 			$i+= count($domain_array);
 		}
 		
-		eval("echo \"" . getTemplate("domains/domainlist") . "\";");
+		eval("echo \"" . \Froxlor\UI\Template::getTemplate("domains/domainlist") . "\";");
 	} elseif ($action == 'delete' && $id != 0) {
 		try {
 			$json_result = SubDomains::getLocal($userinfo, array(
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
-			dynamic_error($e->getMessage());
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 		$result = json_decode($json_result, true)['data'];
 		
@@ -198,14 +198,14 @@ if ($page == 'overview') {
 				try {
 					SubDomains::getLocal($userinfo, $_POST)->delete();
 				} catch (Exception $e) {
-					dynamic_error($e->getMessage());
+					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
-				redirectTo($filename, array('page' => $page, 's' => $s));
+				\Froxlor\UI\Response::redirectTo($filename, array('page' => $page, 's' => $s));
 			} else {
 				ask_yesno('domains_reallydelete', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $idna_convert->decode($result['domain']));
 			}
 		} else {
-			standard_error('domains_cantdeletemaindomain');
+			\Froxlor\UI\Response::standard_error('domains_cantdeletemaindomain');
 		}
 	} elseif ($action == 'add') {
 		if ($userinfo['subdomains_used'] < $userinfo['subdomains'] || $userinfo['subdomains'] == '-1') {
@@ -213,9 +213,9 @@ if ($page == 'overview') {
 				try {
 					SubDomains::getLocal($userinfo, $_POST)->add();
 				} catch (Exception $e) {
-					dynamic_error($e->getMessage());
+					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
-				redirectTo($filename, array('page' => $page, 's' => $s));
+				\Froxlor\UI\Response::redirectTo($filename, array('page' => $page, 's' => $s));
 			} else {
 				$stmt = Database::prepare("SELECT `id`, `domain`, `documentroot`, `ssl_redirect`,`isemaildomain`,`letsencrypt` FROM `" . TABLE_PANEL_DOMAINS . "`
 					WHERE `customerid` = :customerid
@@ -294,12 +294,12 @@ if ($page == 'overview') {
 				}
 				
 				$subdomain_add_data = include_once dirname(__FILE__).'/lib/formfields/customer/domains/formfield.domains_add.php';
-				$subdomain_add_form = htmlform::genHTMLForm($subdomain_add_data);
+				$subdomain_add_form = \Froxlor\UI\HtmlForm::genHTMLForm($subdomain_add_data);
 				
 				$title = $subdomain_add_data['domain_add']['title'];
 				$image = $subdomain_add_data['domain_add']['image'];
 				
-				eval("echo \"" . getTemplate("domains/domains_add") . "\";");
+				eval("echo \"" . \Froxlor\UI\Template::getTemplate("domains/domains_add") . "\";");
 			}
 		}
 	} elseif ($action == 'edit' && $id != 0) {
@@ -309,7 +309,7 @@ if ($page == 'overview') {
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
-			dynamic_error($e->getMessage());
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 		$result = json_decode($json_result, true)['data'];
 		
@@ -318,9 +318,9 @@ if ($page == 'overview') {
 				try {
 					SubDomains::getLocal($userinfo, $_POST)->update();
 				} catch (Exception $e) {
-					dynamic_error($e->getMessage());
+					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
-				redirectTo($filename, array('page' => $page, 's' => $s));
+				\Froxlor\UI\Response::redirectTo($filename, array('page' => $page, 's' => $s));
 			} else {
 				$result['domain'] = $idna_convert->decode($result['domain']);
 				
@@ -437,15 +437,15 @@ if ($page == 'overview') {
 				$result = htmlentities_array($result);
 				
 				$subdomain_edit_data = include_once dirname(__FILE__).'/lib/formfields/customer/domains/formfield.domains_edit.php';
-				$subdomain_edit_form = htmlform::genHTMLForm($subdomain_edit_data);
+				$subdomain_edit_form = \Froxlor\UI\HtmlForm::genHTMLForm($subdomain_edit_data);
 				
 				$title = $subdomain_edit_data['domain_edit']['title'];
 				$image = $subdomain_edit_data['domain_edit']['image'];
 				
-				eval("echo \"" . getTemplate("domains/domains_edit") . "\";");
+				eval("echo \"" . \Froxlor\UI\Template::getTemplate("domains/domains_edit") . "\";");
 			}
 		} else {
-			standard_error('domains_canteditdomain');
+			\Froxlor\UI\Response::standard_error('domains_canteditdomain');
 		}
 	}
 } elseif ($page == 'domainssleditor') {
@@ -460,10 +460,10 @@ if ($page == 'overview') {
 					Certificates::getLocal($userinfo, $_POST)->update();
 				}
 			} catch (Exception $e) {
-				dynamic_error($e->getMessage());
+				\Froxlor\UI\Response::dynamic_error($e->getMessage());
 			}
 			// back to domain overview
-			redirectTo($filename, array('page' => 'domains', 's' => $s));
+			\Froxlor\UI\Response::redirectTo($filename, array('page' => 'domains', 's' => $s));
 		}
 		
 		$stmt = Database::prepare("SELECT * FROM `".TABLE_PANEL_DOMAIN_SSL_SETTINGS."`
@@ -486,12 +486,12 @@ if ($page == 'overview') {
 		$result = htmlentities_array($result);
 		
 		$ssleditor_data = include_once dirname(__FILE__).'/lib/formfields/customer/domains/formfield.domain_ssleditor.php';
-		$ssleditor_form = htmlform::genHTMLForm($ssleditor_data);
+		$ssleditor_form = \Froxlor\UI\HtmlForm::genHTMLForm($ssleditor_data);
 		
 		$title = $ssleditor_data['domain_ssleditor']['title'];
 		$image = $ssleditor_data['domain_ssleditor']['image'];
 		
-		eval("echo \"" . getTemplate("domains/domain_ssleditor") . "\";");
+		eval("echo \"" . \Froxlor\UI\Template::getTemplate("domains/domain_ssleditor") . "\";");
 	}
 } elseif ($page == 'domaindnseditor' && $userinfo['dnsenabled'] == '1' && Settings::Get('system.dnsenabled') == '1') {
 	

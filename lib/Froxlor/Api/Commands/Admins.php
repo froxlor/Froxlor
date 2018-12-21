@@ -233,14 +233,14 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			), true, true);
 
 			if (strtolower($loginname_check['loginname']) == strtolower($loginname) || strtolower($loginname_check_admin['loginname']) == strtolower($loginname)) {
-				standard_error('loginnameexists', $loginname, true);
+				\Froxlor\UI\Response::standard_error('loginnameexists', $loginname, true);
 			} // Accounts which match systemaccounts are not allowed, filtering them
 			elseif (preg_match('/^' . preg_quote(Settings::Get('customer.accountprefix'), '/') . '([0-9]+)/', $loginname)) {
-				standard_error('loginnameissystemaccount', Settings::Get('customer.accountprefix'), true);
+				\Froxlor\UI\Response::standard_error('loginnameissystemaccount', Settings::Get('customer.accountprefix'), true);
 			} elseif (! validateUsername($loginname)) {
-				standard_error('loginnameiswrong', $loginname, true);
+				\Froxlor\UI\Response::standard_error('loginnameiswrong', $loginname, true);
 			} elseif (! validateEmail($email)) {
-				standard_error('emailiswrong', $email, true);
+				\Froxlor\UI\Response::standard_error('emailiswrong', $email, true);
 			} else {
 
 				if ($customers_see_all != '1') {
@@ -505,7 +505,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 				}
 
 				if (! validateEmail($email)) {
-					standard_error('emailiswrong', $email, true);
+					\Froxlor\UI\Response::standard_error('emailiswrong', $email, true);
 				} else {
 
 					if ($deactivated != '1') {
@@ -670,7 +670,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 
 			// don't be stupid
 			if ($id == $this->getUserDetail('adminid')) {
-				standard_error('youcantdeleteyourself', '', true);
+				\Froxlor\UI\Response::standard_error('youcantdeleteyourself', '', true);
 			}
 
 			// delete admin

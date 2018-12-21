@@ -33,12 +33,12 @@ class Dns
 
 		if ($domain) {
 			if ($domain['isbinddomain'] != '1') {
-				standard_error('dns_domain_nodns');
+				\Froxlor\UI\Response::standard_error('dns_domain_nodns');
 			}
 			$idna_convert = new \Froxlor\Idna\IdnaWrapper();
 			return $idna_convert->decode($domain['domain']);
 		}
-		standard_error('dns_notfoundorallowed');
+		\Froxlor\UI\Response::standard_error('dns_notfoundorallowed');
 	}
 
 	public static function createDomainZone($domain_id, $froxlorhostname = false, $isMainButSubTo = false)

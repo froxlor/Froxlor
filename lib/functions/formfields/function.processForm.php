@@ -51,7 +51,7 @@ function processForm(&$form, &$input, $url_params = array())
 					{
 						if(($error = validateFormField($fieldname, $fielddetails, $newfieldvalue)) !== true)
 						{
-							standard_error($error, $fieldname);
+							\Froxlor\UI\Response::standard_error($error, $fieldname);
 						}
 						else
 						{
@@ -85,7 +85,7 @@ function processForm(&$form, &$input, $url_params = array())
 								$error = $plausibility_check[1];
 								unset($plausibility_check[1]);
 								$targetname = implode(' ', $plausibility_check);
-								standard_error($error, $targetname);
+								\Froxlor\UI\Response::standard_error($error, $targetname);
 							}
 							elseif($plausibility_check[0] == FORMFIELDS_PLAUSIBILITY_CHECK_QUESTION)
 							{
@@ -109,7 +109,7 @@ function processForm(&$form, &$input, $url_params = array())
 							}
 							else
 							{
-								standard_error('plausibilitychecknotunderstood');
+								\Froxlor\UI\Response::standard_error('plausibilitychecknotunderstood');
 							}
 						}
 					}
@@ -132,7 +132,7 @@ function processForm(&$form, &$input, $url_params = array())
 						}
 						else
 						{
-							standard_error('errorwhensaving', $fieldname);
+							\Froxlor\UI\Response::standard_error('errorwhensaving', $fieldname);
 						}
 					}
 				}
@@ -193,7 +193,7 @@ function processFormEx(&$form, &$input, $url_params = array(), $part, $settings_
 							{
 								if(($error = validateFormField($fieldname, $fielddetails, $newfieldvalue)) !== true)
 								{
-									standard_error($error, $fieldname);
+									\Froxlor\UI\Response::standard_error($error, $fieldname);
 								}
 								else
 								{
@@ -236,7 +236,7 @@ function processFormEx(&$form, &$input, $url_params = array(), $part, $settings_
 										$error = $plausibility_check[1];
 										unset($plausibility_check[1]);
 										$targetname = implode(' ', $plausibility_check);
-										standard_error($error, $targetname);
+										\Froxlor\UI\Response::standard_error($error, $targetname);
 									}
 									elseif($plausibility_check[0] == FORMFIELDS_PLAUSIBILITY_CHECK_QUESTION)
 									{
@@ -260,7 +260,7 @@ function processFormEx(&$form, &$input, $url_params = array(), $part, $settings_
 									}
 									else
 									{
-										standard_error('plausibilitychecknotunderstood');
+										\Froxlor\UI\Response::standard_error('plausibilitychecknotunderstood');
 									}
 								}
 							}
@@ -292,7 +292,7 @@ function processFormEx(&$form, &$input, $url_params = array(), $part, $settings_
 								}
 								else
 								{
-									standard_error('errorwhensaving', $fieldname);
+									\Froxlor\UI\Response::standard_error('errorwhensaving', $fieldname);
 								}
 							}
 						}

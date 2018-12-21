@@ -280,7 +280,7 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			}
 
 			if (strlen($description) == 0 || strlen($description) > 50) {
-				standard_error('descriptioninvalid', '', true);
+				\Froxlor\UI\Response::standard_error('descriptioninvalid', '', true);
 			}
 
 			$ins_stmt = Database::prepare("
@@ -475,7 +475,7 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			}
 
 			if (strlen($description) == 0 || strlen($description) > 50) {
-				standard_error('descriptioninvalid', '', true);
+				\Froxlor\UI\Response::standard_error('descriptioninvalid', '', true);
 			}
 
 			$upd_stmt = Database::prepare("
@@ -560,11 +560,11 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			));
 
 			if ((Settings::Get('system.mod_fcgid') == '1' && Settings::Get('system.mod_fcgid_defaultini_ownvhost') == $id) || (Settings::Get('phpfpm.enabled') == '1' && Settings::Get('phpfpm.vhost_defaultini') == $id)) {
-				standard_error('cannotdeletehostnamephpconfig', '', true);
+				\Froxlor\UI\Response::standard_error('cannotdeletehostnamephpconfig', '', true);
 			}
 
 			if ((Settings::Get('system.mod_fcgid') == '1' && Settings::Get('system.mod_fcgid_defaultini') == $id) || (Settings::Get('phpfpm.enabled') == '1' && Settings::Get('phpfpm.defaultini') == $id)) {
-				standard_error('cannotdeletedefaultphpconfig', '', true);
+				\Froxlor\UI\Response::standard_error('cannotdeletedefaultphpconfig', '', true);
 			}
 
 			// set php-config to default for all domains using the

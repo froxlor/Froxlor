@@ -150,7 +150,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 
 		// We are using the file-system quota, this will speed up the diskusage - collection
 		if (Settings::Get('system.diskquota_enabled')) {
-			$usedquota = getFilesystemQuota();
+			$usedquota = \Froxlor\FileDir::getFilesystemQuota();
 		}
 
 		/**

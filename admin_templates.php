@@ -87,7 +87,7 @@ if ($action == '') {
 			$subjectid = $email['subject'];
 			$mailbodyid = $email['mailbody'];
 			$template = $lng['admin']['templates'][$action];
-			eval("\$templates.=\"" . getTemplate("templates/templates_template") . "\";");
+			eval("\$templates.=\"" . \Froxlor\UI\Template::getTemplate("templates/templates_template") . "\";");
 		}
 	}
 
@@ -125,9 +125,9 @@ if ($action == '') {
 	}
 
 	while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-		eval("\$filetemplates.=\"" . getTemplate("templates/templates_filetemplate") . "\";");
+		eval("\$filetemplates.=\"" . \Froxlor\UI\Template::getTemplate("templates/templates_filetemplate") . "\";");
 	}
-	eval("echo \"" . getTemplate("templates/templates") . "\";");
+	eval("echo \"" . \Froxlor\UI\Template::getTemplate("templates/templates") . "\";");
 
 } elseif($action == 'delete'
 	&& $subjectid != 0
@@ -156,7 +156,7 @@ if ($action == '') {
 				'idb' => $mailbodyid
 			));
 			$log->logAction(ADM_ACTION, LOG_INFO, "deleted template '" . $result['language'] . ' - ' . $lng['admin']['templates'][str_replace('_subject', '', $result['varname'])] . "'");
-			redirectTo($filename, array('page' => $page, 's' => $s));
+			\Froxlor\UI\Response::redirectTo($filename, array('page' => $page, 's' => $s));
 
 		} else {
 			ask_yesno('admin_template_reallydelete', $filename, array('subjectid' => $subjectid, 'mailbodyid' => $mailbodyid, 'page' => $page, 'action' => $action), $result['language'] . ' - ' . $lng['admin']['templates'][str_replace('_subject', '', $result['varname'])]);
@@ -186,14 +186,14 @@ if ($action == '') {
 			);
 			Database::pexecute($del_stmt, array('adminid' => $userinfo['adminid'], 'id' => $id));
 			$log->logAction(ADM_ACTION, LOG_INFO, "deleted template '" . $lng['admin']['templates'][$row['varname']] . "'");
-			redirectTo($filename, array('page' => $page, 's' => $s));
+			\Froxlor\UI\Response::redirectTo($filename, array('page' => $page, 's' => $s));
 
 		} else {
 			ask_yesno('admin_template_reallydelete', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $lng['admin']['templates'][$row['varname']]);
 		}
 
 	} else {
-		standard_error('templatenotfound');
+		\Froxlor\UI\Response::standard_error('templatenotfound');
 	}
 
 } elseif($action == 'add') {
@@ -225,12 +225,12 @@ if ($action == '') {
 		$lng = $lng_bak;
 
 		$template_add_data = include_once dirname(__FILE__).'/lib/formfields/admin/templates/formfield.template_add.php';
-		$template_add_form = htmlform::genHTMLForm($template_add_data);
+		$template_add_form = \Froxlor\UI\HtmlForm::genHTMLForm($template_add_data);
 
 		$title = $template_add_data['template_add']['title'];
 		$image = $template_add_data['template_add']['image'];
 
-		eval("echo \"" . getTemplate("templates/templates_add_2") . "\";");
+		eval("echo \"" . \Froxlor\UI\Template::getTemplate("templates/templates_add_2") . "\";");
 
 	} elseif(isset($_POST['send'])
 		&& $_POST['send'] == 'send'
@@ -254,7 +254,7 @@ if ($action == '') {
 
 		$templates = array_diff($available_templates, $templates);
 		if (array_search($template, $templates) === false) {
-			standard_error('templatenotfound');
+			\Froxlor\UI\Response::standard_error('templatenotfound');
 
 		} else {
 			$ins_stmt = Database::prepare("
@@ -285,7 +285,7 @@ if ($action == '') {
 			Database::pexecute($ins_stmt, $ins_data);
 
 			$log->logAction(ADM_ACTION, LOG_INFO, "added template '" . $language . ' - ' . $template . "'");
-			redirectTo($filename, array('page' => $page, 's' => $s));
+			\Froxlor\UI\Response::redirectTo($filename, array('page' => $page, 's' => $s));
 		}
 
 	} elseif(isset($_POST['filesend'])
@@ -312,7 +312,7 @@ if ($action == '') {
 		Database::pexecute($ins_stmt, $ins_data);
 
 		$log->logAction(ADM_ACTION, LOG_INFO, "added template '" . $template . "'");
-		redirectTo($filename, array('page' => $page, 's' => $s));
+		\Froxlor\UI\Response::redirectTo($filename, array('page' => $page, 's' => $s));
 
 	} elseif(!isset($_GET['files'])) {
 
@@ -347,9 +347,9 @@ if ($action == '') {
 		}
 
 		if ($add) {
-			eval("echo \"" . getTemplate("templates/templates_add_1") . "\";");
+			eval("echo \"" . \Froxlor\UI\Template::getTemplate("templates/templates_add_1") . "\";");
 		} else {
-			standard_error('alltemplatesdefined');
+			\Froxlor\UI\Response::standard_error('alltemplatesdefined');
 		}
 
 	} else {
@@ -361,7 +361,7 @@ if ($action == '') {
 		Database::pexecute($result_stmt, array('adminid' => $userinfo['adminid']));
 
 		if (Database::num_rows() == count($file_templates)) {
-			standard_error('alltemplatesdefined');
+			\Froxlor\UI\Response::standard_error('alltemplatesdefined');
 
 		} else {
 
@@ -377,12 +377,12 @@ if ($action == '') {
 			}
 
 			$filetemplate_add_data = include_once dirname(__FILE__).'/lib/formfields/admin/templates/formfield.filetemplate_add.php';
-			$filetemplate_add_form = htmlform::genHTMLForm($filetemplate_add_data);
+			$filetemplate_add_form = \Froxlor\UI\HtmlForm::genHTMLForm($filetemplate_add_data);
 
 			$title = $filetemplate_add_data['filetemplate_add']['title'];
 			$image = $filetemplate_add_data['filetemplate_add']['image'];
 
-			eval("echo \"" . getTemplate("templates/filetemplates_add") . "\";");
+			eval("echo \"" . \Froxlor\UI\Template::getTemplate("templates/filetemplates_add") . "\";");
 		}
 	}
 
@@ -425,7 +425,7 @@ if ($action == '') {
 			));
 
 			$log->logAction(ADM_ACTION, LOG_INFO, "edited template '" . $result['varname'] . "'");
-			redirectTo($filename, array('page' => $page, 's' => $s));
+			\Froxlor\UI\Response::redirectTo($filename, array('page' => $page, 's' => $s));
 
 		} else {
 
@@ -448,12 +448,12 @@ if ($action == '') {
 			$mailbody = $result['value'];
 
 			$template_edit_data = include_once dirname(__FILE__).'/lib/formfields/admin/templates/formfield.template_edit.php';
-			$template_edit_form = htmlform::genHTMLForm($template_edit_data);
+			$template_edit_form = \Froxlor\UI\HtmlForm::genHTMLForm($template_edit_data);
 
 			$title = $template_edit_data['template_edit']['title'];
 			$image = $template_edit_data['template_edit']['image'];
 
-			eval("echo \"" . getTemplate("templates/templates_edit") . "\";");
+			eval("echo \"" . \Froxlor\UI\Template::getTemplate("templates/templates_edit") . "\";");
 		}
 	}
 
@@ -488,21 +488,21 @@ if ($action == '') {
 			));
 
 			$log->logAction(ADM_ACTION, LOG_INFO, "edited template '" . $row['varname'] . "'");
-			redirectTo($filename, array('page' => $page, 's' => $s));
+			\Froxlor\UI\Response::redirectTo($filename, array('page' => $page, 's' => $s));
 
 		} else {
 			$row = htmlentities_array($row);
 
 			$filetemplate_edit_data = include_once dirname(__FILE__).'/lib/formfields/admin/templates/formfield.filetemplate_edit.php';
-			$filetemplate_edit_form = htmlform::genHTMLForm($filetemplate_edit_data);
+			$filetemplate_edit_form = \Froxlor\UI\HtmlForm::genHTMLForm($filetemplate_edit_data);
 
 			$title = $filetemplate_edit_data['filetemplate_edit']['title'];
 			$image = $filetemplate_edit_data['filetemplate_edit']['image'];
 
-			eval("echo \"" . getTemplate("templates/filetemplates_edit") . "\";");
+			eval("echo \"" . \Froxlor\UI\Template::getTemplate("templates/filetemplates_edit") . "\";");
 		}
 
 	} else {
-		standard_error('templatenotfound');
+		\Froxlor\UI\Response::standard_error('templatenotfound');
 	}
 }

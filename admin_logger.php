@@ -32,7 +32,7 @@ if ($page == 'log'
 			'user' => $lng['logger']['user'],
 			'text' => $lng['logger']['action']
 		);
-		$paging = new paging($userinfo, TABLE_PANEL_LOG, $fields, null, null, 0, 'desc', 30);
+		$paging = new \Froxlor\UI\Paging($userinfo, TABLE_PANEL_LOG, $fields, null, null, 0, 'desc', 30);
 		$query = 'SELECT * FROM `' . TABLE_PANEL_LOG . '` ' . $paging->getSqlWhere(false) . ' ' . $paging->getSqlOrderBy();
 		$result_stmt = Database::query($query . ' ' . $paging->getSqlLimit());
 		$result_cnt_stmt = Database::query($query);
@@ -99,12 +99,12 @@ if ($page == 'log'
 						}
 
 						$row['action'] = $_action;
-						eval("\$log.=\"" . getTemplate('logger/logger_action') . "\";");
+						eval("\$log.=\"" . \Froxlor\UI\Template::getTemplate('logger/logger_action') . "\";");
 					}
 
 					$log_count++;
 					$row['type'] = getLogLevelDesc($row['type']);
-					eval("\$log.=\"" . getTemplate('logger/logger_log') . "\";");
+					eval("\$log.=\"" . \Froxlor\UI\Template::getTemplate('logger/logger_log') . "\";");
 					$count++;
 					$_action = $action;
 				// }
@@ -113,7 +113,7 @@ if ($page == 'log'
 			$i++;
 		}
 
-		eval("echo \"" . getTemplate('logger/logger') . "\";");
+		eval("echo \"" . \Froxlor\UI\Template::getTemplate('logger/logger') . "\";");
 
 	} elseif ($action == 'truncate') {
 
@@ -126,7 +126,7 @@ if ($page == 'log'
 			);
 			Database::pexecute($trunc_stmt, array('trunc' => $truncatedate));
 			$log->logAction(ADM_ACTION, LOG_WARNING, 'truncated the system-log (mysql)');
-			redirectTo($filename, array('page' => $page, 's' => $s));
+			\Froxlor\UI\Response::redirectTo($filename, array('page' => $page, 's' => $s));
 		} else {
 			ask_yesno('logger_reallytruncate', $filename, array('page' => $page, 'action' => $action), TABLE_PANEL_LOG);
 		}

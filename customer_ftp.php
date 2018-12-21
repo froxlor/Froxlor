@@ -26,7 +26,7 @@ use Froxlor\Api\Commands\Ftps as Ftps;
 
 // redirect if this customer page is hidden via settings
 if (Settings::IsInList('panel.customer_hide_options','ftp')) {
-	redirectTo('customer_index.php');
+	\Froxlor\UI\Response::redirectTo('customer_index.php');
 }
 
 $id = 0;
@@ -38,7 +38,7 @@ if (isset($_POST['id'])) {
 
 if ($page == 'overview') {
 	$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_ftp");
-	eval("echo \"" . getTemplate('ftp/ftp') . "\";");
+	eval("echo \"" . \Froxlor\UI\Template::getTemplate('ftp/ftp') . "\";");
 } elseif ($page == 'accounts') {
 	if ($action == '') {
 		$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_ftp::accounts");
@@ -47,7 +47,7 @@ if ($page == 'overview') {
 			'homedir' => $lng['panel']['path'],
 			'description' => $lng['panel']['ftpdesc']
 		);
-		$paging = new paging($userinfo, TABLE_FTP_USERS, $fields);
+		$paging = new \Froxlor\UI\Paging($userinfo, TABLE_FTP_USERS, $fields);
 
 		$result_stmt = Database::prepare("SELECT `id`, `username`, `description`, `homedir`, `shell` FROM `" . TABLE_FTP_USERS . "`
 			WHERE `customerid`= :customerid " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit()
@@ -74,21 +74,21 @@ if ($page == 'overview') {
 				$row['documentroot'] = \Froxlor\FileDir::makeCorrectDir($row['documentroot']);
 
 				$row = htmlentities_array($row);
-				eval("\$accounts.=\"" . getTemplate('ftp/accounts_account') . "\";");
+				eval("\$accounts.=\"" . \Froxlor\UI\Template::getTemplate('ftp/accounts_account') . "\";");
 				$count++;
 			}
 
 			$i++;
 		}
 
-		eval("echo \"" . getTemplate('ftp/accounts') . "\";");
+		eval("echo \"" . \Froxlor\UI\Template::getTemplate('ftp/accounts') . "\";");
 	} elseif ($action == 'delete' && $id != 0) {
 		try {
 			$json_result = Ftps::getLocal($userinfo, array(
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
-			dynamic_error($e->getMessage());
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 		$result = json_decode($json_result, true)['data'];
 
@@ -97,14 +97,14 @@ if ($page == 'overview') {
 				try {
 					Ftps::getLocal($userinfo, $_POST)->delete();
 				} catch (Exception $e) {
-					dynamic_error($e->getMessage());
+					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
-				redirectTo($filename, array('page' => $page, 's' => $s));
+				\Froxlor\UI\Response::redirectTo($filename, array('page' => $page, 's' => $s));
 			} else {
 				ask_yesno_withcheckbox('ftp_reallydelete', 'admin_customer_alsoremoveftphomedir', $filename, array('id' => $id, 'page' => $page, 'action' => $action), $result['username']);
 			}
 		} else {
-			standard_error('ftp_cantdeletemainaccount');
+			\Froxlor\UI\Response::standard_error('ftp_cantdeletemainaccount');
 		}
 	} elseif ($action == 'add') {
 		if ($userinfo['ftps_used'] < $userinfo['ftps'] || $userinfo['ftps'] == '-1') {
@@ -112,9 +112,9 @@ if ($page == 'overview') {
 				try {
 					Ftps::getLocal($userinfo, $_POST)->add();
 				} catch (Exception $e) {
-					dynamic_error($e->getMessage());
+					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
-				redirectTo($filename, array('page' => $page, 's' => $s));
+				\Froxlor\UI\Response::redirectTo($filename, array('page' => $page, 's' => $s));
 			} else {
 				$pathSelect = \Froxlor\FileDir::makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], '/');
 
@@ -155,12 +155,12 @@ if ($page == 'overview') {
 				//$sendinfomail = makeyesno('sendinfomail', '1', '0', '0');
 
 				$ftp_add_data = include_once dirname(__FILE__).'/lib/formfields/customer/ftp/formfield.ftp_add.php';
-				$ftp_add_form = htmlform::genHTMLForm($ftp_add_data);
+				$ftp_add_form = \Froxlor\UI\HtmlForm::genHTMLForm($ftp_add_data);
 
 				$title = $ftp_add_data['ftp_add']['title'];
 				$image = $ftp_add_data['ftp_add']['image'];
 
-				eval("echo \"" . getTemplate('ftp/accounts_add') . "\";");
+				eval("echo \"" . \Froxlor\UI\Template::getTemplate('ftp/accounts_add') . "\";");
 			}
 		}
 	} elseif ($action == 'edit' && $id != 0) {
@@ -169,7 +169,7 @@ if ($page == 'overview') {
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
-			dynamic_error($e->getMessage());
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 		$result = json_decode($json_result, true)['data'];
 
@@ -178,9 +178,9 @@ if ($page == 'overview') {
 				try {
 					Ftps::getLocal($userinfo, $_POST)->update();
 				} catch (Exception $e) {
-					dynamic_error($e->getMessage());
+					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
-				redirectTo($filename, array('page' => $page, 's' => $s));
+				\Froxlor\UI\Response::redirectTo($filename, array('page' => $page, 's' => $s));
 			} else {
 				if (strpos($result['homedir'], $userinfo['documentroot']) === 0) {
 					$homedir = str_replace($userinfo['documentroot'], "/", $result['homedir']);
@@ -217,12 +217,12 @@ if ($page == 'overview') {
 				}
 
 				$ftp_edit_data = include_once dirname(__FILE__).'/lib/formfields/customer/ftp/formfield.ftp_edit.php';
-				$ftp_edit_form = htmlform::genHTMLForm($ftp_edit_data);
+				$ftp_edit_form = \Froxlor\UI\HtmlForm::genHTMLForm($ftp_edit_data);
 
 				$title = $ftp_edit_data['ftp_edit']['title'];
 				$image = $ftp_edit_data['ftp_edit']['image'];
 
-				eval("echo \"" . getTemplate('ftp/accounts_edit') . "\";");
+				eval("echo \"" . \Froxlor\UI\Template::getTemplate('ftp/accounts_edit') . "\";");
 			}
 		}
 	}

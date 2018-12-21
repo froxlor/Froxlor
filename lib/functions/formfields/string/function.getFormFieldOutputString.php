@@ -21,6 +21,6 @@ function getFormFieldOutputString($fieldname, $fielddata, $do_show = true)
 {
 	$label = $fielddata['label'];
 	$value = htmlentities($fielddata['value']);
-	eval("\$returnvalue = \"" . getTemplate("formfields/string", true) . "\";");
+	eval("\$returnvalue = \"" . \Froxlor\UI\Template::getTemplate("formfields/string", true) . "\";");
 	return $returnvalue;
 }

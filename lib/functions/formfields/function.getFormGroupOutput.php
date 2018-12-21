@@ -20,7 +20,7 @@
 function getFormGroupOutput($groupname, $groupdetails) {
 
 	global $lng, $theme;
-	eval("\$group = \"" . getTemplate("settings/settings_group") . "\";");
+	eval("\$group = \"" . \Froxlor\UI\Template::getTemplate("settings/settings_group") . "\";");
 	return $group;
 }
 
@@ -44,7 +44,7 @@ function getFormOverviewGroupOutput($groupname, $groupdetails) {
 				if($fielddetails['type'] != 'option'
 					&& $fielddetails['type'] != 'bool')
 				{
-					standard_error('overviewsettingoptionisnotavalidfield');
+					\Froxlor\UI\Response::standard_error('overviewsettingoptionisnotavalidfield');
 				}
 
 				if($fielddetails['type'] == 'option')
@@ -87,7 +87,7 @@ function getFormOverviewGroupOutput($groupname, $groupdetails) {
 		}
 	}
 
-	eval("\$group = \"" . getTemplate("settings/settings_overviewgroup") . "\";");
+	eval("\$group = \"" . \Froxlor\UI\Template::getTemplate("settings/settings_overviewgroup") . "\";");
 
 	return $group;
 }

@@ -47,14 +47,14 @@ function correctErrorDocument($errdoc = null, $throw_exception = false) {
 			else {
 				// string won't work for lighty
 				if (Settings::Get('system.webserver') == 'lighttpd') {
-					standard_error('stringerrordocumentnotvalidforlighty', '', $throw_exception);
+					\Froxlor\UI\Response::standard_error('stringerrordocumentnotvalidforlighty', '', $throw_exception);
 				} elseif(substr($errdoc, -1) != '"') {
 					$errdoc .= '"';
 				}
 			}
 		} else {
 			if (Settings::Get('system.webserver') == 'lighttpd') {
-				standard_error('urlerrordocumentnotvalidforlighty', '', $throw_exception);
+				\Froxlor\UI\Response::standard_error('urlerrordocumentnotvalidforlighty', '', $throw_exception);
 			}
 		}
 	}

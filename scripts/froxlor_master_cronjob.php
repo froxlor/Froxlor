@@ -15,19 +15,6 @@
  *
  */
 
+require dirname(__DIR__) . '/vendor/autoload.php';
 
-
-// -- helper function
-function getCronFile($cronname) {
-	return makeCorrectFile(FROXLOR_INSTALL_DIR.'/scripts/jobs/cron_'.$cronname.'.php');
-}
-
-function addToQueue(&$jobs_to_run, $cronname) {
-	if (!in_array($cronname, $jobs_to_run)) {
-		$cronfile = getCronFile($cronname);
-		if (file_exists($cronfile)) {
-			array_unshift($jobs_to_run, $cronname);
-		}
-	}
-}
-
+\Froxlor\Cron\MasterCron::run();

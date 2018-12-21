@@ -71,7 +71,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 
 			// check for imap||pop3 == 1, see #1298
 			if ($customer['imap'] != '1' && $customer['pop3'] != '1') {
-				standard_error('notallowedtouseaccounts', '', true);
+				\Froxlor\UI\Response::standard_error('notallowedtouseaccounts', '', true);
 			}
 
 			// get email address
@@ -91,8 +91,8 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 				throw new \Exception("Email address '" . $email_full . "' has already an account assigned.", 406);
 			}
 
-			if (\Froxlor\Validate\Validate::checkMailAccDeletionState($email_full)) {
-				standard_error(array(
+			if (\Froxlor\Validate\Check::checkMailAccDeletionState($email_full)) {
+				\Froxlor\UI\Response::standard_error(array(
 					'mailaccistobedeleted'
 				), $email_full, true);
 			}
@@ -101,7 +101,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 			if (Settings::Get('panel.sendalternativemail') == 1) {
 				$alternative_email = $idna_convert->encode(validate($alternative_email, 'alternative_email', '', '', array(), true));
 				if (! validateEmail($alternative_email)) {
-					standard_error('emailiswrong', $alternative_email, true);
+					\Froxlor\UI\Response::standard_error('emailiswrong', $alternative_email, true);
 				}
 			} else {
 				$alternative_email = '';
@@ -110,7 +110,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 			// validate quota if enabled
 			if (Settings::Get('system.mail_quota_enabled') == 1) {
 				if ($customer['email_quota'] != '-1' && ($quota == 0 || ($quota + $customer['email_quota_used']) > $customer['email_quota'])) {
-					standard_error('allocatetoomuchquota', $quota, true);
+					\Froxlor\UI\Response::standard_error('allocatetoomuchquota', $quota, true);
 				}
 			} else {
 				// disable
@@ -118,7 +118,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 			}
 
 			if ($password == $email_full) {
-				standard_error('passwordshouldnotbeusername', '', true);
+				\Froxlor\UI\Response::standard_error('passwordshouldnotbeusername', '', true);
 			}
 
 			// encrypt the password
@@ -229,7 +229,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 
 				if ($_mailerror) {
 					$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_ERR, "[API] Error sending mail: " . $mailerr_msg);
-					standard_error('errorsendingmail', $email_full, true);
+					\Froxlor\UI\Response::standard_error('errorsendingmail', $email_full, true);
 				}
 
 				$this->mailer()->clearAddresses();
@@ -259,7 +259,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 
 					if ($_mailerror) {
 						$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_ERR, "[API] Error sending mail: " . $mailerr_msg);
-						standard_error(array(
+						\Froxlor\UI\Response::standard_error(array(
 							'errorsendingmail'
 						), $alternative_email, true);
 					}
@@ -344,7 +344,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 		);
 		if (! empty($password)) {
 			if ($password == $result['email_full']) {
-				standard_error('passwordshouldnotbeusername', '', true);
+				\Froxlor\UI\Response::standard_error('passwordshouldnotbeusername', '', true);
 			}
 			$password = validatePassword($password, true);
 			$cryptPassword = \Froxlor\System\Crypt::makeCryptPassword($password);
@@ -358,7 +358,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 		if (Settings::Get('system.mail_quota_enabled') == 1) {
 			if ($quota != $result['quota']) {
 				if ($customer['email_quota'] != '-1' && ($quota == 0 || ($quota + $customer['email_quota_used'] - $result['quota']) > $customer['email_quota'])) {
-					standard_error('allocatetoomuchquota', $quota, true);
+					\Froxlor\UI\Response::standard_error('allocatetoomuchquota', $quota, true);
 				}
 				if (! empty($upd_query)) {
 					$upd_query .= ", ";

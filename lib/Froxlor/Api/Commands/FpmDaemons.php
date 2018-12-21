@@ -165,7 +165,7 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			$limit_extensions = validate($limit_extensions, 'limit_extensions', '/^(\.[a-z]([a-z0-9]+)\ ?)+$/', '', array(), true);
 
 			if (strlen($description) == 0 || strlen($description) > 50) {
-				standard_error('descriptioninvalid', '', true);
+				\Froxlor\UI\Response::standard_error('descriptioninvalid', '', true);
 			}
 
 			$ins_stmt = Database::prepare("
@@ -281,7 +281,7 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			$limit_extensions = validate($limit_extensions, 'limit_extensions', '/^(\.[a-z]([a-z0-9]+)\ ?)+$/', '', array(), true);
 
 			if (strlen($description) == 0 || strlen($description) > 50) {
-				standard_error('descriptioninvalid', '', true);
+				\Froxlor\UI\Response::standard_error('descriptioninvalid', '', true);
 			}
 
 			$upd_stmt = Database::prepare("
@@ -341,7 +341,7 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			$id = $this->getParam('id');
 
 			if ($id == 1) {
-				standard_error('cannotdeletedefaultphpconfig', '', true);
+				\Froxlor\UI\Response::standard_error('cannotdeletedefaultphpconfig', '', true);
 			}
 
 			$result = $this->apiCall('FpmDaemons.get', array(

@@ -21,6 +21,6 @@ function getFormFieldOutputBool($fieldname, $fielddata, $do_show = true)
 {
 	$label = $fielddata['label'];
 	$boolswitch = makeYesNo($fieldname, '1', '0', $fielddata['value']);
-	eval("\$returnvalue = \"" . getTemplate("formfields/bool", true) . "\";");
+	eval("\$returnvalue = \"" . \Froxlor\UI\Template::getTemplate("formfields/bool", true) . "\";");
 	return $returnvalue;
 }

@@ -40,7 +40,7 @@ function getFormFieldOutputOption($fieldname, $fielddata, $do_show = true)
 		{
 			$options .= makeoption($title, $value, $fielddata['value']);
 		}
-		eval("\$returnvalue = \"" . getTemplate("formfields/option", true) . "\";");
+		eval("\$returnvalue = \"" . \Froxlor\UI\Template::getTemplate("formfields/option", true) . "\";");
 	}
 
 	return $returnvalue;

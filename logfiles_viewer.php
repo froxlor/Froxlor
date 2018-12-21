@@ -32,7 +32,7 @@ $last_n = isset($_GET['number_of_lines']) ? (int) $_GET['number_of_lines'] : 100
 // user's with logviewenabled = false
 if (AREA != 'admin' && $userinfo['logviewenabled'] != '1') {
 	// back to domain overview
-	redirectTo($filename, array(
+	\Froxlor\UI\Response::redirectTo($filename, array(
 		'page' => 'domains',
 		's' => $s
 	));
@@ -46,7 +46,7 @@ if (function_exists('exec')) {
 			'id' => $domain_id
 		))->get();
 	} catch (Exception $e) {
-		dynamic_error($e->getMessage());
+		\Froxlor\UI\Response::dynamic_error($e->getMessage());
 	}
 	$domain = json_decode($json_result, true)['data'];
 
@@ -78,11 +78,11 @@ if (function_exists('exec')) {
 		$access_log_content = "Access-Log" . (AREA == 'admin' ? " '" . $access_log . "'" : "") . " does not seem to exist";
 	}
 
-	eval("echo \"" . getTemplate("logfiles_viewer/index", true) . "\";");
+	eval("echo \"" . \Froxlor\UI\Template::getTemplate("logfiles_viewer/index", true) . "\";");
 } else {
 	if (AREA == 'admin') {
-		dynamic_error('You need to allow the exec() function in the froxlor-vhost php-config');
+		\Froxlor\UI\Response::dynamic_error('You need to allow the exec() function in the froxlor-vhost php-config');
 	} else {
-		dynamic_error('Required function exec() is not allowed. Pllease contact the system administrator.');
+		\Froxlor\UI\Response::dynamic_error('Required function exec() is not allowed. Pllease contact the system administrator.');
 	}
 }

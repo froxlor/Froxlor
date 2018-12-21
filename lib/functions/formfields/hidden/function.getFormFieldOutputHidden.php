@@ -25,7 +25,7 @@ function getFormFieldOutputHidden($fieldname, $fielddata)
 	{
 		$label = $fielddata['label'];
 		$value = htmlentities($fielddata['value']);
-		eval("\$returnvalue .= \"" . getTemplate("formfields/hidden", true) . "\";");
+		eval("\$returnvalue .= \"" . \Froxlor\UI\Template::getTemplate("formfields/hidden", true) . "\";");
 	}
 
 	return $returnvalue;

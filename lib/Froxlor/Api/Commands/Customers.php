@@ -297,11 +297,11 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				$traffic = $traffic * 1024 * 1024;
 
 				if (((($this->getUserDetail('diskspace_used') + $diskspace) > $this->getUserDetail('diskspace')) && ($this->getUserDetail('diskspace') / 1024) != '-1') || ((($this->getUserDetail('mysqls_used') + $mysqls) > $this->getUserDetail('mysqls')) && $this->getUserDetail('mysqls') != '-1') || ((($this->getUserDetail('emails_used') + $emails) > $this->getUserDetail('emails')) && $this->getUserDetail('emails') != '-1') || ((($this->getUserDetail('email_accounts_used') + $email_accounts) > $this->getUserDetail('email_accounts')) && $this->getUserDetail('email_accounts') != '-1') || ((($this->getUserDetail('email_forwarders_used') + $email_forwarders) > $this->getUserDetail('email_forwarders')) && $this->getUserDetail('email_forwarders') != '-1') || ((($this->getUserDetail('email_quota_used') + $email_quota) > $this->getUserDetail('email_quota')) && $this->getUserDetail('email_quota') != '-1' && Settings::Get('system.mail_quota_enabled') == '1') || ((($this->getUserDetail('ftps_used') + $ftps) > $this->getUserDetail('ftps')) && $this->getUserDetail('ftps') != '-1') || ((($this->getUserDetail('subdomains_used') + $subdomains) > $this->getUserDetail('subdomains')) && $this->getUserDetail('subdomains') != '-1') || (($diskspace / 1024) == '-1' && ($this->getUserDetail('diskspace') / 1024) != '-1') || ($mysqls == '-1' && $this->getUserDetail('mysqls') != '-1') || ($emails == '-1' && $this->getUserDetail('emails') != '-1') || ($email_accounts == '-1' && $this->getUserDetail('email_accounts') != '-1') || ($email_forwarders == '-1' && $this->getUserDetail('email_forwarders') != '-1') || ($email_quota == '-1' && $this->getUserDetail('email_quota') != '-1' && Settings::Get('system.mail_quota_enabled') == '1') || ($ftps == '-1' && $this->getUserDetail('ftps') != '-1') || ($subdomains == '-1' && $this->getUserDetail('subdomains') != '-1')) {
-					standard_error('youcantallocatemorethanyouhave', '', true);
+					\Froxlor\UI\Response::standard_error('youcantallocatemorethanyouhave', '', true);
 				}
 
 				if (! validateEmail($email)) {
-					standard_error('emailiswrong', $email, true);
+					\Froxlor\UI\Response::standard_error('emailiswrong', $email, true);
 				} else {
 
 					if ($loginname != '') {
@@ -310,12 +310,12 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 
 						// Accounts which match systemaccounts are not allowed, filtering them
 						if (preg_match('/^' . preg_quote(Settings::Get('customer.accountprefix'), '/') . '([0-9]+)/', $loginname)) {
-							standard_error('loginnameissystemaccount', Settings::Get('customer.accountprefix'), true);
+							\Froxlor\UI\Response::standard_error('loginnameissystemaccount', Settings::Get('customer.accountprefix'), true);
 						}
 
 						// Additional filtering for Bug #962
 						if (function_exists('posix_getpwnam') && ! in_array("posix_getpwnam", explode(",", ini_get('disable_functions'))) && posix_getpwnam($loginname)) {
-							standard_error('loginnameissystemaccount', Settings::Get('customer.accountprefix'), true);
+							\Froxlor\UI\Response::standard_error('loginnameissystemaccount', Settings::Get('customer.accountprefix'), true);
 						}
 					} else {
 						$accountnumber = intval(Settings::Get('system.lastaccountnumber')) + 1;
@@ -341,12 +341,12 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 					), true, true);
 
 					if (strtolower($loginname_check['loginname']) == strtolower($loginname) || strtolower($loginname_check_admin['loginname']) == strtolower($loginname)) {
-						standard_error('loginnameexists', $loginname, true);
+						\Froxlor\UI\Response::standard_error('loginnameexists', $loginname, true);
 					} elseif (! validateUsername($loginname, Settings::Get('panel.unix_names'), 14 - strlen(Settings::Get('customer.mysqlprefix')))) {
 						if (strlen($loginname) > 14 - strlen(Settings::Get('customer.mysqlprefix'))) {
-							standard_error('loginnameiswrong2', 14 - strlen(Settings::Get('customer.mysqlprefix')), true);
+							\Froxlor\UI\Response::standard_error('loginnameiswrong2', 14 - strlen(Settings::Get('customer.mysqlprefix')), true);
 						} else {
-							standard_error('loginnameiswrong', $loginname, true);
+							\Froxlor\UI\Response::standard_error('loginnameiswrong', $loginname, true);
 						}
 					}
 
@@ -354,7 +354,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 					$documentroot = \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.documentroot_prefix') . '/' . $loginname);
 
 					if (file_exists($documentroot)) {
-						standard_error('documentrootexists', $documentroot, true);
+						\Froxlor\UI\Response::standard_error('documentrootexists', $documentroot, true);
 					}
 
 					if ($createstdsubdomain != '1') {
@@ -712,7 +712,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 
 						if ($_mailerror) {
 							$this->logger()->logAction(ADM_ACTION, LOG_ERR, "[API] Error sending mail: " . $mailerr_msg);
-							standard_error('errorsendingmail', $email, true);
+							\Froxlor\UI\Response::standard_error('errorsendingmail', $email, true);
 						}
 
 						$this->mailer()->clearAddresses();
@@ -926,16 +926,16 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 			$traffic = $traffic * 1024 * 1024;
 
 			if (((($this->getUserDetail('diskspace_used') + $diskspace - $result['diskspace']) > $this->getUserDetail('diskspace')) && ($this->getUserDetail('diskspace') / 1024) != '-1') || ((($this->getUserDetail('mysqls_used') + $mysqls - $result['mysqls']) > $this->getUserDetail('mysqls')) && $this->getUserDetail('mysqls') != '-1') || ((($this->getUserDetail('emails_used') + $emails - $result['emails']) > $this->getUserDetail('emails')) && $this->getUserDetail('emails') != '-1') || ((($this->getUserDetail('email_accounts_used') + $email_accounts - $result['email_accounts']) > $this->getUserDetail('email_accounts')) && $this->getUserDetail('email_accounts') != '-1') || ((($this->getUserDetail('email_forwarders_used') + $email_forwarders - $result['email_forwarders']) > $this->getUserDetail('email_forwarders')) && $this->getUserDetail('email_forwarders') != '-1') || ((($this->getUserDetail('email_quota_used') + $email_quota - $result['email_quota']) > $this->getUserDetail('email_quota')) && $this->getUserDetail('email_quota') != '-1' && Settings::Get('system.mail_quota_enabled') == '1') || ((($this->getUserDetail('ftps_used') + $ftps - $result['ftps']) > $this->getUserDetail('ftps')) && $this->getUserDetail('ftps') != '-1') || ((($this->getUserDetail('subdomains_used') + $subdomains - $result['subdomains']) > $this->getUserDetail('subdomains')) && $this->getUserDetail('subdomains') != '-1') || (($diskspace / 1024) == '-1' && ($this->getUserDetail('diskspace') / 1024) != '-1') || ($mysqls == '-1' && $this->getUserDetail('mysqls') != '-1') || ($emails == '-1' && $this->getUserDetail('emails') != '-1') || ($email_accounts == '-1' && $this->getUserDetail('email_accounts') != '-1') || ($email_forwarders == '-1' && $this->getUserDetail('email_forwarders') != '-1') || ($email_quota == '-1' && $this->getUserDetail('email_quota') != '-1' && Settings::Get('system.mail_quota_enabled') == '1') || ($ftps == '-1' && $this->getUserDetail('ftps') != '-1') || ($subdomains == '-1' && $this->getUserDetail('subdomains') != '-1')) {
-				standard_error('youcantallocatemorethanyouhave', '', true);
+				\Froxlor\UI\Response::standard_error('youcantallocatemorethanyouhave', '', true);
 			}
 
 			if ($email == '') {
-				standard_error(array(
+				\Froxlor\UI\Response::standard_error(array(
 					'stringisempty',
 					'emailadd'
 				), '', true);
 			} elseif (! validateEmail($email)) {
-				standard_error('emailiswrong', $email, true);
+				\Froxlor\UI\Response::standard_error('emailiswrong', $email, true);
 			}
 		}
 
@@ -1322,7 +1322,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 					'adminid' => $move_to_admin
 				));
 				if ($move_result != true) {
-					standard_error('moveofcustomerfailed', $move_result, true);
+					\Froxlor\UI\Response::standard_error('moveofcustomerfailed', $move_result, true);
 				}
 			}
 		}

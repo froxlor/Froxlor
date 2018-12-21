@@ -66,7 +66,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 				'domainname' => $domain
 			));
 			if ($domain_check['isemaildomain'] == 0) {
-				standard_error('maindomainnonexist', $domain, true);
+				\Froxlor\UI\Response::standard_error('maindomainnonexist', $domain, true);
 			}
 
 			if (Settings::Get('catchall.catchall_enabled') != '1') {
@@ -87,7 +87,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 
 			// validate it
 			if (! validateEmail($email_full)) {
-				standard_error('emailiswrong', $email_full, true);
+				\Froxlor\UI\Response::standard_error('emailiswrong', $email_full, true);
 			}
 
 			// get needed customer info to reduce the email-address-counter by one
@@ -107,9 +107,9 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			$email_check = Database::pexecute_first($stmt, $params, true, true);
 
 			if (strtolower($email_check['email_full']) == strtolower($email_full)) {
-				standard_error('emailexistalready', $email_full, true);
+				\Froxlor\UI\Response::standard_error('emailexistalready', $email_full, true);
 			} elseif ($email_check['email'] == $email) {
-				standard_error('youhavealreadyacatchallforthisdomain', '', true);
+				\Froxlor\UI\Response::standard_error('youhavealreadyacatchallforthisdomain', '', true);
 			}
 
 			$stmt = Database::prepare("
@@ -209,7 +209,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		// if enabling catchall is not allowed by settings, we do not need
 		// to run update()
 		if (Settings::Get('catchall.catchall_enabled') != '1') {
-			standard_error(array(
+			\Froxlor\UI\Response::standard_error(array(
 				'operationnotpermitted',
 				'featureisdisabled'
 			), 'catchall', true);

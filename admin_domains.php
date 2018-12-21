@@ -51,7 +51,7 @@ if ($page == 'domains' || $page == 'overview') {
 			'c.loginname' => $lng['login']['username'],
 			'd.aliasdomain' => $lng['domains']['aliasdomain']
 		);
-		$paging = new paging($userinfo, TABLE_PANEL_DOMAINS, $fields);
+		$paging = new \Froxlor\UI\Paging($userinfo, TABLE_PANEL_DOMAINS, $fields);
 		$domains = "";
 		$result_stmt = Database::prepare("
 			SELECT `d`.*, `c`.`loginname`, `c`.`deactivated`, `c`.`name`, `c`.`firstname`, `c`.`company`, `c`.`standardsubdomain`, `ad`.`id` AS `aliasdomainid`, `ad`.`domain` AS `aliasdomain`
@@ -109,7 +109,7 @@ if ($page == 'domains' || $page == 'overview') {
 				$row = htmlentities_array($row);
 				// display a nice list of IP's
 				$row['ipandport'] = str_replace("\n", "<br />", $row['ipandport']);
-				eval("\$domains.=\"" . getTemplate("domains/domains_domain") . "\";");
+				eval("\$domains.=\"" . \Froxlor\UI\Template::getTemplate("domains/domains_domain") . "\";");
 				$count ++;
 			}
 			$i ++;
@@ -118,7 +118,7 @@ if ($page == 'domains' || $page == 'overview') {
 		$domainscount = $numrows_domains;
 
 		// Display the list
-		eval("echo \"" . getTemplate("domains/domains") . "\";");
+		eval("echo \"" . \Froxlor\UI\Template::getTemplate("domains/domains") . "\";");
 	} elseif ($action == 'delete' && $id != 0) {
 
 		try {
@@ -127,7 +127,7 @@ if ($page == 'domains' || $page == 'overview') {
 				'no_std_subdomain' => true
 			))->get();
 		} catch (Exception $e) {
-			dynamic_error($e->getMessage());
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 		$result = json_decode($json_result, true)['data'];
 
@@ -144,15 +144,15 @@ if ($page == 'domains' || $page == 'overview') {
 				try {
 					Domains::getLocal($userinfo, $_POST)->delete();
 				} catch (Exception $e) {
-					dynamic_error($e->getMessage());
+					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
 
-				redirectTo($filename, array(
+				\Froxlor\UI\Response::redirectTo($filename, array(
 					'page' => $page,
 					's' => $s
 				));
 			} elseif ($alias_check['count'] > 0) {
-				standard_error('domains_cantdeletedomainwithaliases');
+				\Froxlor\UI\Response::standard_error('domains_cantdeletedomainwithaliases');
 			} else {
 
 				$showcheck = false;
@@ -172,9 +172,9 @@ if ($page == 'domains' || $page == 'overview') {
 			try {
 				Domains::getLocal($userinfo, $_POST)->add();
 			} catch (Exception $e) {
-				dynamic_error($e->getMessage());
+				\Froxlor\UI\Response::dynamic_error($e->getMessage());
 			}
-			redirectTo($filename, array(
+			\Froxlor\UI\Response::redirectTo($filename, array(
 				'page' => $page,
 				's' => $s
 			));
@@ -337,12 +337,12 @@ if ($page == 'domains' || $page == 'overview') {
 			$add_date = date('Y-m-d');
 
 			$domain_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/domains/formfield.domains_add.php';
-			$domain_add_form = htmlform::genHTMLForm($domain_add_data);
+			$domain_add_form = \Froxlor\UI\HtmlForm::genHTMLForm($domain_add_data);
 
 			$title = $domain_add_data['domain_add']['title'];
 			$image = $domain_add_data['domain_add']['image'];
 
-			eval("echo \"" . getTemplate("domains/domains_add") . "\";");
+			eval("echo \"" . \Froxlor\UI\Template::getTemplate("domains/domains_add") . "\";");
 		}
 	} elseif ($action == 'edit' && $id != 0) {
 
@@ -351,7 +351,7 @@ if ($page == 'domains' || $page == 'overview') {
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
-			dynamic_error($e->getMessage());
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 		$result = json_decode($json_result, true)['data'];
 
@@ -418,9 +418,9 @@ if ($page == 'domains' || $page == 'overview') {
 				try {
 					Domains::getLocal($userinfo, $_POST)->update();
 				} catch (Exception $e) {
-					dynamic_error($e->getMessage());
+					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
-				redirectTo($filename, array(
+				\Froxlor\UI\Response::redirectTo($filename, array(
 					'page' => $page,
 					's' => $s
 				));
@@ -627,14 +627,14 @@ if ($page == 'domains' || $page == 'overview') {
 				$result = htmlentities_array($result);
 
 				$domain_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/domains/formfield.domains_edit.php';
-				$domain_edit_form = htmlform::genHTMLForm($domain_edit_data);
+				$domain_edit_form = \Froxlor\UI\HtmlForm::genHTMLForm($domain_edit_data);
 
 				$title = $domain_edit_data['domain_edit']['title'];
 				$image = $domain_edit_data['domain_edit']['image'];
 
 				$speciallogwarning = sprintf($lng['admin']['speciallogwarning'], $lng['admin']['delete_statistics']);
 
-				eval("echo \"" . getTemplate("domains/domains_edit") . "\";");
+				eval("echo \"" . \Froxlor\UI\Template::getTemplate("domains/domains_edit") . "\";");
 			}
 		}
 	} elseif ($action == 'jqGetCustomerPHPConfigs') {
@@ -659,11 +659,11 @@ if ($page == 'domains' || $page == 'overview') {
 				$bulk = new \Froxlor\Bulk\DomainBulkAction($file_name, $customerid);
 				$result = $bulk->doImport($separator, $offset);
 			} catch (Exception $e) {
-				standard_error('domain_import_error', $e->getMessage());
+				\Froxlor\UI\Response::standard_error('domain_import_error', $e->getMessage());
 			}
 
 			if (! empty($bulk->getErrors())) {
-				dynamic_error(implode("<br>", $bulk->getErrors()));
+				\Froxlor\UI\Response::dynamic_error(implode("<br>", $bulk->getErrors()));
 			}
 
 			// update customer/admin counters
@@ -672,7 +672,7 @@ if ($page == 'domains' || $page == 'overview') {
 			\Froxlor\System\Cronjob::inserttask('4');
 
 			$result_str = $result['imported'] . ' / ' . $result['all'] . (! empty($result['note']) ? ' (' . $result['note'] . ')' : '');
-			standard_success('domain_import_successfully', $result_str, array(
+			\Froxlor\UI\Response::standard_success('domain_import_successfully', $result_str, array(
 				'filename' => $filename,
 				'action' => '',
 				'page' => 'domains'
@@ -693,12 +693,12 @@ if ($page == 'domains' || $page == 'overview') {
 			}
 
 			$domain_import_data = include_once dirname(__FILE__) . '/lib/formfields/admin/domains/formfield.domains_import.php';
-			$domain_import_form = htmlform::genHTMLForm($domain_import_data);
+			$domain_import_form = \Froxlor\UI\HtmlForm::genHTMLForm($domain_import_data);
 
 			$title = $domain_import_data['domain_import']['title'];
 			$image = $domain_import_data['domain_import']['image'];
 
-			eval("echo \"" . getTemplate("domains/domains_import") . "\";");
+			eval("echo \"" . \Froxlor\UI\Template::getTemplate("domains/domains_import") . "\";");
 		}
 	}
 } elseif ($page == 'domaindnseditor' && Settings::Get('system.dnsenabled') == '1') {

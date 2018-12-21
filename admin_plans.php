@@ -37,7 +37,7 @@ if ($page == '' || $page == 'overview') {
 			'adminname' => $lng['admin']['admin'],
 			'p.ts' => $lng['admin']['plans']['last_update']
 		);
-		$paging = new paging($userinfo, TABLE_PANEL_PLANS, $fields);
+		$paging = new \Froxlor\UI\Paging($userinfo, TABLE_PANEL_PLANS, $fields);
 		$plans = '';
 		$result_stmt = Database::prepare("
 			SELECT p.*, a.loginname as adminname
@@ -60,13 +60,13 @@ if ($page == '' || $page == 'overview') {
 			if ($paging->checkDisplay($i)) {
 				$row = htmlentities_array($row);
 				$row['ts_format'] = date("d.m.Y H:i", $row['ts']);
-				eval("\$plans.=\"" . getTemplate("plans/plans_plan") . "\";");
+				eval("\$plans.=\"" . \Froxlor\UI\Template::getTemplate("plans/plans_plan") . "\";");
 				$count ++;
 			}
 			$i ++;
 		}
 
-		eval("echo \"" . getTemplate("plans/plans") . "\";");
+		eval("echo \"" . \Froxlor\UI\Template::getTemplate("plans/plans") . "\";");
 	} elseif ($action == 'delete' && $id != 0) {
 
 		$result_stmt = Database::prepare("
@@ -85,7 +85,7 @@ if ($page == '' || $page == 'overview') {
 				));
 
 				$log->logAction(ADM_ACTION, LOG_INFO, "Plan '" . $result['name'] . "' has been deleted by '" . $userinfo['loginname'] . "'");
-				redirectTo($filename, array(
+				\Froxlor\UI\Response::redirectTo($filename, array(
 					'page' => $page,
 					's' => $s
 				));
@@ -97,7 +97,7 @@ if ($page == '' || $page == 'overview') {
 				), $result['name']);
 			}
 		} else {
-			standard_error('nopermissionsorinvalidid');
+			\Froxlor\UI\Response::standard_error('nopermissionsorinvalidid');
 		}
 	} elseif ($action == 'add') {
 
@@ -205,7 +205,7 @@ if ($page == '' || $page == 'overview') {
 			Database::pexecute($ins_stmt, $ins_data);
 
 			$log->logAction(ADM_ACTION, LOG_WARNING, "added plan '" . $name . "'");
-			redirectTo($filename, array(
+			\Froxlor\UI\Response::redirectTo($filename, array(
 				'page' => $page,
 				's' => $s
 			));
@@ -254,12 +254,12 @@ if ($page == '' || $page == 'overview') {
 			unset($cust_add_data['customer_add']['sections']['section_cpre']);
 			// merge
 			$plans_add_data['plans_add']['sections'] = array_merge($plans_add_data['plans_add']['sections'], $cust_add_data['customer_add']['sections']);
-			$plans_add_form = htmlform::genHTMLForm($plans_add_data);
+			$plans_add_form = \Froxlor\UI\HtmlForm::genHTMLForm($plans_add_data);
 
 			$title = $plans_add_data['plans_add']['title'];
 			$image = $plans_add_data['plans_add']['image'];
 
-			eval("echo \"" . getTemplate("plans/plans_add") . "\";");
+			eval("echo \"" . \Froxlor\UI\Template::getTemplate("plans/plans_add") . "\";");
 		}
 	} elseif ($action == 'edit' && $id != 0) {
 		$result_stmt = Database::prepare("
@@ -384,7 +384,7 @@ if ($page == '' || $page == 'overview') {
 				Database::pexecute($ins_stmt, $ins_data);
 
 				$log->logAction(ADM_ACTION, LOG_WARNING, "updated plan '" . $name . "'");
-				redirectTo($filename, array(
+				\Froxlor\UI\Response::redirectTo($filename, array(
 					'page' => $page,
 					's' => $s
 				));
@@ -488,12 +488,12 @@ if ($page == '' || $page == 'overview') {
 				unset($cust_edit_data['customer_edit']['sections']['section_cpre']);
 				// merge
 				$plans_edit_data['plans_edit']['sections'] = array_merge($plans_edit_data['plans_edit']['sections'], $cust_edit_data['customer_edit']['sections']);
-				$plans_edit_form = htmlform::genHTMLForm($plans_edit_data);
+				$plans_edit_form = \Froxlor\UI\HtmlForm::genHTMLForm($plans_edit_data);
 
 				$title = $plans_edit_data['plans_edit']['title'];
 				$image = $plans_edit_data['plans_edit']['image'];
 
-				eval("echo \"" . getTemplate("plans/plans_edit") . "\";");
+				eval("echo \"" . \Froxlor\UI\Template::getTemplate("plans/plans_edit") . "\";");
 			}
 		}
 	} elseif ($action == 'jqGetPlanValues') {

@@ -8,7 +8,7 @@ use Froxlor\Database as Database;
 use Froxlor\Settings as Settings;
 
 if (Settings::Get('2fa.enabled') != '1') {
-	dynamic_error("2FA not activated");
+	\Froxlor\UI\Response::dynamic_error("2FA not activated");
 }
 
 /**
@@ -47,7 +47,7 @@ if ($action == 'delete') {
 		'd2fa' => "",
 		'id' => $uid
 	));
-	standard_success($lng['2fa']['2fa_removed']);
+	\Froxlor\UI\Response::standard_success($lng['2fa']['2fa_removed']);
 } elseif ($action == 'add') {
 	$type = isset($_POST['type_2fa']) ? $_POST['type_2fa'] : '0';
 	
@@ -63,7 +63,7 @@ if ($action == 'delete') {
 		'd2fa' => $data,
 		'id' => $uid
 	));
-	standard_success(sprintf($lng['2fa']['2fa_added'], $filename, $s));
+	\Froxlor\UI\Response::standard_success(sprintf($lng['2fa']['2fa_added'], $filename, $s));
 }
 
 $log->logAction(USR_ACTION, LOG_NOTICE, "viewed 2fa::overview");
@@ -88,4 +88,4 @@ elseif ($userinfo['type_2fa'] == '2') {
 	// authenticator 2fa enabled
 	$ga_qrcode = $tfa->getQRCodeImageAsDataUri($userinfo['loginname'], $userinfo['data_2fa']);
 }
-eval("echo \"" . getTemplate("2fa/overview", true) . "\";");
+eval("echo \"" . \Froxlor\UI\Template::getTemplate("2fa/overview", true) . "\";");

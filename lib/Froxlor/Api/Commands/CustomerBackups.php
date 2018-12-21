@@ -80,7 +80,7 @@ class CustomerBackups extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 
 		// path cannot be the customers docroot
 		if ($path == \Froxlor\FileDir::makeCorrectDir($customer['documentroot'])) {
-			standard_error('backupfoldercannotbedocroot', '', true);
+			\Froxlor\UI\Response::standard_error('backupfoldercannotbedocroot', '', true);
 		}
 
 		if ($backup_dbs != '1') {

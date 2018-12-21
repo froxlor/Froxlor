@@ -34,7 +34,7 @@ $filelog = FroxlorLogger::getInstanceOf(array(
 try {
 	$filelog->logAction(ADM_ACTION, LOG_WARNING, '-------------- START LOG --------------');
 } catch (Exception $e) {
-	standard_error('exception', $e->getMessage());
+	\Froxlor\UI\Response::standard_error('exception', $e->getMessage());
 }
 
 if (\Froxlor\Froxlor::isFroxlor()) {

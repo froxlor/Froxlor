@@ -26,7 +26,7 @@ use Froxlor\Api\Commands\Mysqls as Mysqls;
 
 // redirect if this customer page is hidden via settings
 if (Settings::IsInList('panel.customer_hide_options','mysql')) {
-	redirectTo('customer_index.php');
+	\Froxlor\UI\Response::redirectTo('customer_index.php');
 }
 
 // get sql-root access data
@@ -46,7 +46,7 @@ if ($page == 'overview') {
 	Database::needSqlData();
 	$sql = Database::getSqlData();
 	$lng['mysql']['description'] = str_replace('<SQL_HOST>', $sql['host'], $lng['mysql']['description']);
-	eval("echo \"" . getTemplate('mysql/mysql') . "\";");
+	eval("echo \"" . \Froxlor\UI\Template::getTemplate('mysql/mysql') . "\";");
 } elseif ($page == 'mysqls') {
 	if ($action == '') {
 		$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_mysql::mysqls");
@@ -54,7 +54,7 @@ if ($page == 'overview') {
 			'databasename' => $lng['mysql']['databasename'],
 			'description' => $lng['mysql']['databasedescription']
 		);
-		$paging = new paging($userinfo, TABLE_PANEL_DATABASES, $fields);
+		$paging = new \Froxlor\UI\Paging($userinfo, TABLE_PANEL_DATABASES, $fields);
 		$result_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_DATABASES . "`
 			WHERE `customerid`= :customerid " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit()
 		);
@@ -86,7 +86,7 @@ if ($page == 'overview') {
 				Database::pexecute($mbdata_stmt, array("table_schema" => $row['databasename']));
 				$mbdata = $mbdata_stmt->fetch(PDO::FETCH_ASSOC);
 				$row['size'] = \Froxlor\PhpHelper::size_readable($mbdata['MB'], 'GiB', 'bi', '%01.' . (int)Settings::Get('panel.decimal_places') . 'f %s');
-				eval("\$mysqls.=\"" . getTemplate('mysql/mysqls_database') . "\";");
+				eval("\$mysqls.=\"" . \Froxlor\UI\Template::getTemplate('mysql/mysqls_database') . "\";");
 				$count++;
 			}
 			$i++;
@@ -94,7 +94,7 @@ if ($page == 'overview') {
 		Database::needRoot(false);
 		// End root-session
 
-		eval("echo \"" . getTemplate('mysql/mysqls') . "\";");
+		eval("echo \"" . \Froxlor\UI\Template::getTemplate('mysql/mysqls') . "\";");
 
 	} elseif ($action == 'delete' && $id != 0) {
 
@@ -103,7 +103,7 @@ if ($page == 'overview') {
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
-			dynamic_error($e->getMessage());
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 		$result = json_decode($json_result, true)['data'];
 
@@ -122,9 +122,9 @@ if ($page == 'overview') {
 				try {
 					Mysqls::getLocal($userinfo, $_POST)->delete();
 				} catch (Exception $e) {
-					dynamic_error($e->getMessage());
+					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
-				redirectTo($filename, array('page' => $page, 's' => $s));
+				\Froxlor\UI\Response::redirectTo($filename, array('page' => $page, 's' => $s));
 			} else {
 				$dbnamedesc = $result['databasename'];
 				if (isset($result['description']) && $result['description'] != '') {
@@ -139,9 +139,9 @@ if ($page == 'overview') {
 				try {
 					Mysqls::getLocal($userinfo, $_POST)->add();
 				} catch (Exception $e) {
-					dynamic_error($e->getMessage());
+					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
-				redirectTo($filename, array('page' => $page, 's' => $s));
+				\Froxlor\UI\Response::redirectTo($filename, array('page' => $page, 's' => $s));
 			} else {
 
 				$dbservers_stmt = Database::query("SELECT DISTINCT `dbserver` FROM `".TABLE_PANEL_DATABASES."`");
@@ -157,12 +157,12 @@ if ($page == 'overview') {
 				Database::needRoot(false);
 
 				$mysql_add_data = include_once dirname(__FILE__).'/lib/formfields/customer/mysql/formfield.mysql_add.php';
-				$mysql_add_form = htmlform::genHTMLForm($mysql_add_data);
+				$mysql_add_form = \Froxlor\UI\HtmlForm::genHTMLForm($mysql_add_data);
 
 				$title = $mysql_add_data['mysql_add']['title'];
 				$image = $mysql_add_data['mysql_add']['image'];
 
-				eval("echo \"" . getTemplate('mysql/mysqls_add') . "\";");
+				eval("echo \"" . \Froxlor\UI\Template::getTemplate('mysql/mysqls_add') . "\";");
 			}
 		}
 	} elseif ($action == 'edit' && $id != 0) {
@@ -171,7 +171,7 @@ if ($page == 'overview') {
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
-			dynamic_error($e->getMessage());
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 		$result = json_decode($json_result, true)['data'];
 
@@ -180,9 +180,9 @@ if ($page == 'overview') {
 				try {
 					$json_result = Mysqls::getLocal($userinfo, $_POST)->update();
 				} catch (Exception $e) {
-					dynamic_error($e->getMessage());
+					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
-				redirectTo($filename, array('page' => $page, 's' => $s));
+				\Froxlor\UI\Response::redirectTo($filename, array('page' => $page, 's' => $s));
 			} else {
 
 				$dbservers_stmt = Database::query("SELECT COUNT(DISTINCT `dbserver`) as numservers FROM `".TABLE_PANEL_DATABASES."`");
@@ -195,12 +195,12 @@ if ($page == 'overview') {
 				Database::needRoot(false);
 
 				$mysql_edit_data = include_once dirname(__FILE__).'/lib/formfields/customer/mysql/formfield.mysql_edit.php';
-				$mysql_edit_form = htmlform::genHTMLForm($mysql_edit_data);
+				$mysql_edit_form = \Froxlor\UI\HtmlForm::genHTMLForm($mysql_edit_data);
 
 				$title = $mysql_edit_data['mysql_edit']['title'];
 				$image = $mysql_edit_data['mysql_edit']['image'];
 
-				eval("echo \"" . getTemplate('mysql/mysqls_edit') . "\";");
+				eval("echo \"" . \Froxlor\UI\Template::getTemplate('mysql/mysqls_edit') . "\";");
 			}
 		}
 	}

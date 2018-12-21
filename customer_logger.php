@@ -24,7 +24,7 @@ use Froxlor\Settings;
 
 // redirect if this customer page is hidden via settings
 if (Settings::IsInList('panel.customer_hide_options', 'extras.logger')) {
-	redirectTo('customer_index.php');
+	\Froxlor\UI\Response::redirectTo('customer_index.php');
 }
 
 if ($page == 'log') {
@@ -35,7 +35,7 @@ if ($page == 'log') {
 			'user' => $lng['logger']['user'],
 			'text' => $lng['logger']['action']
 		);
-		$paging = new paging($userinfo, TABLE_PANEL_LOG, $fields, null, null, 0, 'desc', 30);
+		$paging = new \Froxlor\UI\Paging($userinfo, TABLE_PANEL_LOG, $fields, null, null, 0, 'desc', 30);
 		$query = 'SELECT * FROM `' . TABLE_PANEL_LOG . '` WHERE `user` = :loginname ' . $paging->getSqlWhere(true) . ' ' . $paging->getSqlOrderBy();
 		$result_stmt = Database::prepare($query . ' ' . $paging->getSqlLimit());
 		Database::pexecute($result_stmt, array(
@@ -105,12 +105,12 @@ if ($page == 'log') {
 					}
 					
 					$row['action'] = $_action;
-					eval("\$log.=\"" . getTemplate('logger/logger_action') . "\";");
+					eval("\$log.=\"" . \Froxlor\UI\Template::getTemplate('logger/logger_action') . "\";");
 				}
 				
 				$log_count ++;
 				$row['type'] = getLogLevelDesc($row['type']);
-				eval("\$log.=\"" . getTemplate('logger/logger_log') . "\";");
+				eval("\$log.=\"" . \Froxlor\UI\Template::getTemplate('logger/logger_log') . "\";");
 				$count ++;
 				$_action = $action;
 				// }
@@ -119,6 +119,6 @@ if ($page == 'log') {
 			$i ++;
 		}
 		
-		eval("echo \"" . getTemplate('logger/logger') . "\";");
+		eval("echo \"" . \Froxlor\UI\Template::getTemplate('logger/logger') . "\";");
 	}
 }

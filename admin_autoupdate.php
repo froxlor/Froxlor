@@ -29,7 +29,7 @@ define('CHECKSUM_URI', "https://autoupdate.froxlor.org/froxlor-{version}.zip.sha
 
 // check for archive-stuff
 if (! extension_loaded('zip')) {
-	redirectTo($filename, array(
+	\Froxlor\UI\Response::redirectTo($filename, array(
 		's' => $s,
 		'page' => 'error',
 		'errno' => 2
@@ -62,7 +62,7 @@ if ($page == 'overview') {
 		if (! preg_match('/^((\d+\\.)(\d+\\.)(\d+\\.)?(\d+)?(\-(svn|dev|rc)(\d+))?)$/', $_version)) {
 			// check for customized version to not output
 			// "There is a newer version of froxlor" besides the error-message
-			redirectTo($filename, array(
+			\Froxlor\UI\Response::redirectTo($filename, array(
 				's' => $s,
 				'page' => 'error',
 				'errno' => 3
@@ -81,13 +81,13 @@ if ($page == 'overview') {
 			$text = 'There is a newer version available. Update to version <b>' . $_version . '</b> now?<br/>(Your current version is: ' . $version . ')';
 			$hiddenparams = '<input type="hidden" name="newversion" value="' . $_version . '" />';
 			$yesfile = $filename . '?s=' . $s . '&amp;page=getdownload';
-			eval("echo \"" . getTemplate("misc/question_yesno", true) . "\";");
+			eval("echo \"" . \Froxlor\UI\Template::getTemplate("misc/question_yesno", true) . "\";");
 			exit();
 		} elseif ($isnewerversion == 0) {
 			// all good
-			standard_success('noupdatesavail');
+			\Froxlor\UI\Response::standard_success('noupdatesavail');
 		} else {
-			standard_error('customized_version');
+			\Froxlor\UI\Response::standard_error('customized_version');
 		}
 	}
 }// download the new archive
@@ -122,7 +122,7 @@ elseif ($page == 'getdownload') {
 		try {
 			HttpClient::fileGet($toLoad, $localArchive);
 		} catch (Exception $e) {
-			redirectTo($filename, array(
+			\Froxlor\UI\Response::redirectTo($filename, array(
 				's' => $s,
 				'page' => 'error',
 				'errno' => 4
@@ -140,7 +140,7 @@ elseif ($page == 'getdownload') {
 		$filesum = hash_file('sha256', $localArchive);
 		
 		if ($filesum != $shouldsum) {
-			redirectTo($filename, array(
+			\Froxlor\UI\Response::redirectTo($filename, array(
 				's' => $s,
 				'page' => 'error',
 				'errno' => 9
@@ -148,13 +148,13 @@ elseif ($page == 'getdownload') {
 		}
 		
 		// to the next step
-		redirectTo($filename, array(
+		\Froxlor\UI\Response::redirectTo($filename, array(
 			's' => $s,
 			'page' => 'extract',
 			'archive' => basename($localArchive)
 		));
 	}
-	redirectTo($filename, array(
+	\Froxlor\UI\Response::redirectTo($filename, array(
 		's' => $s,
 		'page' => 'error',
 		'errno' => 6
@@ -177,7 +177,7 @@ elseif ($page == 'extract') {
 			@unlink($localArchive);
 		} else {
 			// error
-			redirectTo($filename, array(
+			\Froxlor\UI\Response::redirectTo($filename, array(
 				's' => $s,
 				'page' => 'error',
 				'errno' => 8
@@ -185,13 +185,13 @@ elseif ($page == 'extract') {
 		}
 		
 		// redirect to update-page?
-		redirectTo('admin_updates.php', array(
+		\Froxlor\UI\Response::redirectTo('admin_updates.php', array(
 			's' => $s
 		));
 	}
 	
 	if (! file_exists($localArchive)) {
-		redirectTo($filename, array(
+		\Froxlor\UI\Response::redirectTo($filename, array(
 			's' => $s,
 			'page' => 'error',
 			'errno' => 7
@@ -201,7 +201,7 @@ elseif ($page == 'extract') {
 	$text = 'Extract downloaded archive "' . $toExtract . '"?';
 	$hiddenparams = '';
 	$yesfile = $filename . '?s=' . $s . '&amp;page=extract&amp;archive=' . $toExtract;
-	eval("echo \"" . getTemplate("misc/question_yesno", true) . "\";");
+	eval("echo \"" . \Froxlor\UI\Template::getTemplate("misc/question_yesno", true) . "\";");
 }
 // display error
 elseif ($page == 'error') {
@@ -217,5 +217,5 @@ elseif ($page == 'error') {
 	// 7 = local archive does not exist
 	// 8 = could not extract archive
 	// 9 = checksum mismatch
-	standard_error('autoupdate_' . $errno);
+	\Froxlor\UI\Response::standard_error('autoupdate_' . $errno);
 }

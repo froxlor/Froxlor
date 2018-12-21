@@ -232,11 +232,11 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 
 				// validation
 				if ($p_domain == Settings::Get('system.hostname')) {
-					standard_error('admin_domain_emailsystemhostname', '', true);
+					\Froxlor\UI\Response::standard_error('admin_domain_emailsystemhostname', '', true);
 				}
 
 				if (substr($p_domain, 0, 4) == 'xn--') {
-					standard_error('domain_nopunycode', '', true);
+					\Froxlor\UI\Response::standard_error('domain_nopunycode', '', true);
 				}
 
 				$idna_convert = new \Froxlor\Idna\IdnaWrapper();
@@ -247,7 +247,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 
 				// Check whether domain validation is enabled and if, validate the domain
 				if (Settings::Get('system.validate_domain') && ! validateDomain($domain)) {
-					standard_error(array(
+					\Froxlor\UI\Response::standard_error(array(
 						'stringiswrong',
 						'mydomain'
 					), '', true);
@@ -265,7 +265,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 						'adminid' => $adminid
 					), true, true);
 					if (empty($admin)) {
-						dynamic_error("Selected admin cannot have any more domains or could not be found");
+						\Froxlor\UI\Response::dynamic_error("Selected admin cannot have any more domains or could not be found");
 					}
 					unset($admin);
 				}
@@ -342,7 +342,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 						), true, true);
 
 						if (! isset($phpsettingid_check['id']) || $phpsettingid_check['id'] == '0' || $phpsettingid_check['id'] != $phpsettingid) {
-							standard_error('phpsettingidwrong', '', true);
+							\Froxlor\UI\Response::standard_error('phpsettingidwrong', '', true);
 						}
 
 						if ((int) Settings::Get('system.mod_fcgid') == 1) {
@@ -408,12 +408,12 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 
 				// We can't enable let's encrypt for wildcard - domains if using acme-v1
 				if ($serveraliasoption == '0' && $letsencrypt == '1' && Settings::Get('system.leapiversion') == '1') {
-					standard_error('nowildcardwithletsencrypt', '', true);
+					\Froxlor\UI\Response::standard_error('nowildcardwithletsencrypt', '', true);
 				}
 				// if using acme-v2 we cannot issue wildcard-certificates
 				// because they currently only support the dns-01 challenge
 				if ($serveraliasoption == '0' && $letsencrypt == '1' && Settings::Get('system.leapiversion') == '2') {
-					standard_error('nowildcardwithletsencryptv2', '', true);
+					\Froxlor\UI\Response::standard_error('nowildcardwithletsencryptv2', '', true);
 				}
 
 				// Temporarily deactivate ssl_redirect until Let's Encrypt certificate was generated
@@ -423,7 +423,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 
 				if (! preg_match('/^https?\:\/\//', $documentroot)) {
 					if (strstr($documentroot, ":") !== false) {
-						standard_error('pathmaynotcontaincolon', '', true);
+						\Froxlor\UI\Response::standard_error('pathmaynotcontaincolon', '', true);
 					} else {
 						$documentroot = \Froxlor\FileDir::makeCorrectDir($documentroot);
 					}
@@ -481,7 +481,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				}
 
 				if (count($ipandports) == 0) {
-					standard_error('noipportgiven', '', true);
+					\Froxlor\UI\Response::standard_error('noipportgiven', '', true);
 				}
 
 				if ($email_only == '1') {
@@ -504,21 +504,21 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 
 				$idna_convert = new \Froxlor\Idna\IdnaWrapper();
 				if ($domain == '') {
-					standard_error(array(
+					\Froxlor\UI\Response::standard_error(array(
 						'stringisempty',
 						'mydomain'
 					), '', true);
 				} elseif ($documentroot == '') {
-					standard_error(array(
+					\Froxlor\UI\Response::standard_error(array(
 						'stringisempty',
 						'mydocumentroot'
 					), '', true);
 				} elseif ($customerid == 0) {
-					standard_error('adduserfirst', '', true);
+					\Froxlor\UI\Response::standard_error('adduserfirst', '', true);
 				} elseif (strtolower($domain_check['domain']) == strtolower($domain)) {
-					standard_error('domainalreadyexists', $idna_convert->decode($domain), true);
+					\Froxlor\UI\Response::standard_error('domainalreadyexists', $idna_convert->decode($domain), true);
 				} elseif ($aliasdomain_check['id'] != $aliasdomain) {
-					standard_error('domainisaliasorothercustomer', '', true);
+					\Froxlor\UI\Response::standard_error('domainisaliasorothercustomer', '', true);
 				} else {
 					$wwwserveralias = ($serveraliasoption == '1') ? '1' : '0';
 					$iswildcarddomain = ($serveraliasoption == '0') ? '1' : '0';
@@ -866,7 +866,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				}
 				$customer = Database::pexecute_first($customer_stmt, $params, true, true);
 				if (empty($customer) || $customer['customerid'] != $customerid) {
-					standard_error('customerdoesntexist', '', true);
+					\Froxlor\UI\Response::standard_error('customerdoesntexist', '', true);
 				}
 			} else {
 				$customerid = $result['customerid'];
@@ -891,7 +891,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 					), true, true);
 
 					if (empty($admin) || $admin['adminid'] != $adminid) {
-						standard_error('admindoesntexist', '', true);
+						\Froxlor\UI\Response::standard_error('admindoesntexist', '', true);
 					}
 				} else {
 					$adminid = $result['adminid'];
@@ -966,7 +966,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				}
 
 				if (! preg_match('/^https?\:\/\//', $documentroot) && strstr($documentroot, ":") !== false) {
-					standard_error('pathmaynotcontaincolon', '', true);
+					\Froxlor\UI\Response::standard_error('pathmaynotcontaincolon', '', true);
 				}
 			} else {
 				$isbinddomain = $result['isbinddomain'];
@@ -991,7 +991,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 					), true, true);
 
 					if (! isset($phpsettingid_check['id']) || $phpsettingid_check['id'] == '0' || $phpsettingid_check['id'] != $phpsettingid) {
-						standard_error('phpsettingidwrong', '', true);
+						\Froxlor\UI\Response::standard_error('phpsettingidwrong', '', true);
 					}
 
 					if ((int) Settings::Get('system.mod_fcgid') == 1) {
@@ -1048,12 +1048,12 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 
 			// We can't enable let's encrypt for wildcard domains when using acme-v1
 			if ($serveraliasoption == '0' && $letsencrypt == '1' && Settings::Get('system.leapiversion') == '1') {
-				standard_error('nowildcardwithletsencrypt', '', true);
+				\Froxlor\UI\Response::standard_error('nowildcardwithletsencrypt', '', true);
 			}
 			// if using acme-v2 we cannot issue wildcard-certificates
 			// because they currently only support the dns-01 challenge
 			if ($serveraliasoption == '0' && $letsencrypt == '1' && Settings::Get('system.leapiversion') == '2') {
-				standard_error('nowildcardwithletsencryptv2', '', true);
+				\Froxlor\UI\Response::standard_error('nowildcardwithletsencryptv2', '', true);
 			}
 
 			// Temporarily deactivate ssl_redirect until Let's Encrypt certificate was generated
@@ -1121,11 +1121,11 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 			}
 
 			if (count($ipandports) == 0) {
-				standard_error('noipportgiven', '', true);
+				\Froxlor\UI\Response::standard_error('noipportgiven', '', true);
 			}
 
 			if ($aliasdomain_check['id'] != $aliasdomain) {
-				standard_error('domainisaliasorothercustomer', '', true);
+				\Froxlor\UI\Response::standard_error('domainisaliasorothercustomer', '', true);
 			}
 
 			if ($issubof <= 0) {
@@ -1685,7 +1685,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				), $aip_param);
 				$ipandport_check = Database::pexecute_first($ipandport_check_stmt, $ip_params, true, true);
 				if (! isset($ipandport_check['id']) || $ipandport_check['id'] == '0' || $ipandport_check['id'] != $ipandport) {
-					standard_error('ipportdoesntexist', '', true);
+					\Froxlor\UI\Response::standard_error('ipportdoesntexist', '', true);
 				} else {
 					$ipandports[] = $ipandport;
 				}

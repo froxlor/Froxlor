@@ -34,7 +34,10 @@ return array(
 						'nginx' => 'Nginx'
 					),
 					'save_method' => 'storeSettingField',
-					'plausibility_check_method' => 'checkPhpInterfaceSetting',
+					'plausibility_check_method' => array(
+						'\\Froxlor\\Validate\\Check',
+						'checkPhpInterfaceSetting'
+					),
 					'overview_option' => true
 				),
 				'system_apache_24' => array(

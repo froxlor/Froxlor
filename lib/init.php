@@ -308,7 +308,7 @@ if ($language != 'English') {
 include_once \Froxlor\FileDir::makeSecurePath('lng/lng_references.php');
 
 // Initialize our new link - class
-$linker = new linker('index.php', $s);
+$linker = new \Froxlor\UI\Linker('index.php', $s);
 
 /**
  * global Theme-variable
@@ -359,7 +359,7 @@ if ($nosession == 1 && AREA != 'login') {
 		"script" => basename($_SERVER["SCRIPT_NAME"]),
 		"qrystr" => $_SERVER["QUERY_STRING"]
 	);
-	redirectTo('index.php', $params);
+	\Froxlor\UI\Response::redirectTo('index.php', $params);
 	exit();
 }
 
@@ -441,10 +441,10 @@ if (array_key_exists('css', $_themeoptions['variants'][$themevariant]) && is_arr
 		}
 	}
 }
-eval("\$header = \"" . getTemplate('header', '1') . "\";");
+eval("\$header = \"" . \Froxlor\UI\Template::getTemplate('header', '1') . "\";");
 
 $current_year = date('Y', time());
-eval("\$footer = \"" . getTemplate('footer', '1') . "\";");
+eval("\$footer = \"" . \Froxlor\UI\Template::getTemplate('footer', '1') . "\";");
 
 unset($js);
 unset($css);

@@ -95,7 +95,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 
 			if (Settings::Get('customer.ftpatdomain') == '1') {
 				if ($ftpusername == '') {
-					standard_error(array(
+					\Froxlor\UI\Response::standard_error(array(
 						'stringisempty',
 						'username'
 					), '', true);
@@ -109,7 +109,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 				), true, true);
 
 				if ($ftpdomain_check && $ftpdomain_check['domain'] != $ftpdomain) {
-					standard_error('maindomainnonexist', $ftpdomain, true);
+					\Froxlor\UI\Response::standard_error('maindomainnonexist', $ftpdomain, true);
 				}
 				$username = $ftpusername . "@" . $ftpdomain;
 			} else {
@@ -124,9 +124,9 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 			), true, true);
 
 			if (! empty($username_check) && $username_check['username'] = $username) {
-				standard_error('usernamealreadyexists', $username, true);
+				\Froxlor\UI\Response::standard_error('usernamealreadyexists', $username, true);
 			} elseif ($username == $password) {
-				standard_error('passwordshouldnotbeusername', '', true);
+				\Froxlor\UI\Response::standard_error('passwordshouldnotbeusername', '', true);
 			} else {
 				$path = \Froxlor\FileDir::makeCorrectDir($customer['documentroot'] . '/' . $path);
 				$cryptPassword = \Froxlor\System\Crypt::makeCryptPassword($password);
@@ -216,7 +216,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 
 					if ($_mailerror) {
 						$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_ERR, "[API] Error sending mail: " . $mailerr_msg);
-						standard_error('errorsendingmail', $customer['email'], true);
+						\Froxlor\UI\Response::standard_error('errorsendingmail', $customer['email'], true);
 					}
 
 					$this->mailer()->clearAddresses();
@@ -356,7 +356,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 			$password = validatePassword($password, true);
 
 			if ($password == $result['username']) {
-				standard_error('passwordshouldnotbeusername', '', true);
+				\Froxlor\UI\Response::standard_error('passwordshouldnotbeusername', '', true);
 			}
 			$cryptPassword = \Froxlor\System\Crypt::makeCryptPassword($password);
 

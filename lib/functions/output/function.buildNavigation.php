@@ -80,7 +80,7 @@ function buildNavigation($navigation, $userinfo) {
 						$navlabel = $element['label'];
 					}
 
-					eval("\$navigation_links .= \"" . getTemplate("navigation_link", 1) . "\";");
+					eval("\$navigation_links .= \"" . \Froxlor\UI\Template::getTemplate("navigation_link", 1) . "\";");
 				}
 			}
 
@@ -110,7 +110,7 @@ function buildNavigation($navigation, $userinfo) {
 					$navlabel = $box['label'];
 				}
 
-				eval("\$returnvalue .= \"" . getTemplate("navigation_element", 1) . "\";");
+				eval("\$returnvalue .= \"" . \Froxlor\UI\Template::getTemplate("navigation_element", 1) . "\";");
 			}
 		}
 	}

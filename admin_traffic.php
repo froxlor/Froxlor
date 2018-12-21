@@ -117,7 +117,7 @@ if ($page == 'overview' || $page == 'customers') {
 				$virtual_host[$months[(int)$traffic_month['month']]] = \Froxlor\PhpHelper::size_readable($traffic_month['traffic'], 'GiB', 'bi', '%01.'.(int)Settings::Get('panel.decimal_places').'f %s');
 				$totals[$months[(int)$traffic_month['month']]] += $traffic_month['traffic'];
 			}
-			eval("\$domain_list .= sprintf(\"%s\", \"" . getTemplate("traffic/index_table_row") . "\");");
+			eval("\$domain_list .= sprintf(\"%s\", \"" . \Froxlor\UI\Template::getTemplate("traffic/index_table_row") . "\");");
 		}
 		// sum up totals
 		$virtual_host = array(
@@ -127,8 +127,8 @@ if ($page == 'overview' || $page == 'customers') {
 			$virtual_host[$month] = ($bytes == 0 ? '-' : \Froxlor\PhpHelper::size_readable($bytes, 'GiB', 'bi', '%01.'.(int)Settings::Get('panel.decimal_places').'f %s'));
 		}
 		$customerview = 0;
-		eval("\$total_list = sprintf(\"%s\", \"" . getTemplate("traffic/index_table_row") . "\");");
-		eval("\$stats_tables .= sprintf(\"%s\", \"" . getTemplate("traffic/index_table") . "\");");
+		eval("\$total_list = sprintf(\"%s\", \"" . \Froxlor\UI\Template::getTemplate("traffic/index_table_row") . "\");");
+		eval("\$stats_tables .= sprintf(\"%s\", \"" . \Froxlor\UI\Template::getTemplate("traffic/index_table") . "\");");
 	}
-	eval("echo \"" . getTemplate("traffic/index") . "\";");
+	eval("echo \"" . \Froxlor\UI\Template::getTemplate("traffic/index") . "\";");
 }

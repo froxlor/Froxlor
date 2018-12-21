@@ -48,7 +48,7 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 			'c.traffic_used' => $lng['customer']['traffic'] . ' (' . $lng['panel']['used'] . ')'
 		);
 
-		$paging = new paging($userinfo, TABLE_PANEL_CUSTOMERS, $fields);
+		$paging = new \Froxlor\UI\Paging($userinfo, TABLE_PANEL_CUSTOMERS, $fields);
 		$customers = '';
 		$result_stmt = Database::prepare("
 			SELECT `c`.*, `a`.`loginname` AS `adminname`
@@ -139,7 +139,7 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 
 				$row['custom_notes'] = ($row['custom_notes'] != '') ? nl2br($row['custom_notes']) : '';
 
-				eval("\$customers.=\"" . getTemplate("customers/customers_customer") . "\";");
+				eval("\$customers.=\"" . \Froxlor\UI\Template::getTemplate("customers/customers_customer") . "\";");
 				$count ++;
 			}
 
@@ -147,14 +147,14 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 		}
 
 		$customercount = $num_rows;
-		eval("echo \"" . getTemplate("customers/customers") . "\";");
+		eval("echo \"" . \Froxlor\UI\Template::getTemplate("customers/customers") . "\";");
 	} elseif ($action == 'su' && $id != 0) {
 		try {
 			$json_result = Customers::getLocal($userinfo, array(
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
-			dynamic_error($e->getMessage());
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 		$result = json_decode($json_result, true)['data'];
 
@@ -163,7 +163,7 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 		if ($destination_user != '') {
 
 			if ($result['deactivated'] == '1') {
-				standard_error("usercurrentlydeactivated", $destination_user);
+				\Froxlor\UI\Response::standard_error("usercurrentlydeactivated", $destination_user);
 			}
 			$result_stmt = Database::prepare("
 				SELECT * FROM `" . TABLE_PANEL_SESSIONS . "`
@@ -199,11 +199,11 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 			if (! file_exists(FROXLOR_INSTALL_DIR . "/" . $redirect)) {
 				$redirect = "customer_index.php";
 			}
-			redirectTo($redirect, array(
+			\Froxlor\UI\Response::redirectTo($redirect, array(
 				's' => $s
 			), true);
 		} else {
-			redirectTo('index.php', array(
+			\Froxlor\UI\Response::redirectTo('index.php', array(
 				'action' => 'login'
 			));
 		}
@@ -213,7 +213,7 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
-			dynamic_error($e->getMessage());
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 		$result = json_decode($json_result, true)['data'];
 
@@ -223,9 +223,9 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 					'id' => $id
 				))->unlock();
 			} catch (Exception $e) {
-				dynamic_error($e->getMessage());
+				\Froxlor\UI\Response::dynamic_error($e->getMessage());
 			}
-			redirectTo($filename, array(
+			\Froxlor\UI\Response::redirectTo($filename, array(
 				'page' => $page,
 				's' => $s
 			));
@@ -242,7 +242,7 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
-			dynamic_error($e->getMessage());
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 		$result = json_decode($json_result, true)['data'];
 
@@ -253,9 +253,9 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 					'delete_userfiles' => (isset($_POST['delete_userfiles']) ? (int) $_POST['delete_userfiles'] : 0)
 				))->delete();
 			} catch (Exception $e) {
-				dynamic_error($e->getMessage());
+				\Froxlor\UI\Response::dynamic_error($e->getMessage());
 			}
-			redirectTo($filename, array(
+			\Froxlor\UI\Response::redirectTo($filename, array(
 				'page' => $page,
 				's' => $s
 			));
@@ -272,9 +272,9 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 			try {
 				Customers::getLocal($userinfo, $_POST)->add();
 			} catch (Exception $e) {
-				dynamic_error($e->getMessage());
+				\Froxlor\UI\Response::dynamic_error($e->getMessage());
 			}
-			redirectTo($filename, array(
+			\Froxlor\UI\Response::redirectTo($filename, array(
 				'page' => $page,
 				's' => $s
 			));
@@ -334,12 +334,12 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 			}
 
 			$customer_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/customer/formfield.customer_add.php';
-			$customer_add_form = htmlform::genHTMLForm($customer_add_data);
+			$customer_add_form = \Froxlor\UI\HtmlForm::genHTMLForm($customer_add_data);
 
 			$title = $customer_add_data['customer_add']['title'];
 			$image = $customer_add_data['customer_add']['image'];
 
-			eval("echo \"" . getTemplate("customers/customers_add") . "\";");
+			eval("echo \"" . \Froxlor\UI\Template::getTemplate("customers/customers_add") . "\";");
 		}
 	} elseif ($action == 'edit' && $id != 0) {
 
@@ -348,7 +348,7 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
-			dynamic_error($e->getMessage());
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 		$result = json_decode($json_result, true)['data'];
 
@@ -375,9 +375,9 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 				try {
 					Customers::getLocal($userinfo, $_POST)->update();
 				} catch (Exception $e) {
-					dynamic_error($e->getMessage());
+					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
-				redirectTo($filename, array(
+				\Froxlor\UI\Response::redirectTo($filename, array(
 					'page' => $page,
 					's' => $s
 				));
@@ -479,12 +479,12 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 				}
 
 				$customer_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/customer/formfield.customer_edit.php';
-				$customer_edit_form = htmlform::genHTMLForm($customer_edit_data);
+				$customer_edit_form = \Froxlor\UI\HtmlForm::genHTMLForm($customer_edit_data);
 
 				$title = $customer_edit_data['customer_edit']['title'];
 				$image = $customer_edit_data['customer_edit']['image'];
 
-				eval("echo \"" . getTemplate("customers/customers_edit") . "\";");
+				eval("echo \"" . \Froxlor\UI\Template::getTemplate("customers/customers_edit") . "\";");
 			}
 		}
 	}

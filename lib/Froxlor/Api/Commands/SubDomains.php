@@ -91,7 +91,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 
 			// validation
 			if (substr($subdomain, 0, 4) == 'xn--') {
-				standard_error('domain_nopunycode', '', true);
+				\Froxlor\UI\Response::standard_error('domain_nopunycode', '', true);
 			}
 
 			$idna_convert = new \Froxlor\Idna\IdnaWrapper();
@@ -104,13 +104,13 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			$completedomain = $subdomain . '.' . $domain;
 
 			if (Settings::Get('system.validate_domain') && ! validateDomain($completedomain)) {
-				standard_error(array(
+				\Froxlor\UI\Response::standard_error(array(
 					'stringiswrong',
 					'mydomain'
 				), '', true);
 			}
 			if ($completedomain == Settings::Get('system.hostname')) {
-				standard_error('admin_domain_emailsystemhostname', '', true);
+				\Froxlor\UI\Response::standard_error('admin_domain_emailsystemhostname', '', true);
 			}
 
 			// check whether the domain already exists
@@ -128,7 +128,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 
 			if ($completedomain_check) {
 				// no exception so far - domain exists
-				standard_error('domainexistalready', $completedomain, true);
+				\Froxlor\UI\Response::standard_error('domainexistalready', $completedomain, true);
 			}
 
 			// alias domain checked?
@@ -152,7 +152,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 					"customerid" => $customer['customerid']
 				), true, true);
 				if ($aliasdomain_check['id'] != $aliasdomain) {
-					standard_error('domainisaliasorothercustomer', '', true);
+					\Froxlor\UI\Response::standard_error('domainisaliasorothercustomer', '', true);
 				}
 				\Froxlor\Domain\Domain::triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $this->logger());
 			}
@@ -181,13 +181,13 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 
 			if (! $domain_check) {
 				// the given main-domain
-				standard_error('maindomainnonexist', $domain, true);
+				\Froxlor\UI\Response::standard_error('maindomainnonexist', $domain, true);
 			} elseif ($subdomain == 'www' && $domain_check['wwwserveralias'] == '1') {
 				// you cannot add 'www' as subdomain when the maindomain generates a www-alias
-				standard_error('wwwnotallowed', '', true);
+				\Froxlor\UI\Response::standard_error('wwwnotallowed', '', true);
 			} elseif (strtolower($completedomain_check['domain']) == strtolower($completedomain)) {
 				// the domain does already exist as main-domain
-				standard_error('domainexistalready', $completedomain, true);
+				\Froxlor\UI\Response::standard_error('domainexistalready', $completedomain, true);
 			}
 
 			// if allowed, check for 'is email domain'-flag
@@ -204,7 +204,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 					$ssl_redirect = '1';
 					$_doredirect = true;
 				} else {
-					standard_error('sslredirectonlypossiblewithsslipport', '', true);
+					\Froxlor\UI\Response::standard_error('sslredirectonlypossiblewithsslipport', '', true);
 				}
 			}
 
@@ -214,7 +214,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				if (\Froxlor\Domain\Domain::domainHasSslIpPort($domain_check['id']) == true) {
 					$letsencrypt = '1';
 				} else {
-					standard_error('letsencryptonlypossiblewithsslipport', '', true);
+					\Froxlor\UI\Response::standard_error('letsencryptonlypossiblewithsslipport', '', true);
 				}
 			}
 
@@ -508,7 +508,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				"customerid" => $customer['customerid']
 			), true, true);
 			if ($aliasdomain_check['id'] != $aliasdomain) {
-				standard_error('domainisaliasorothercustomer', '', true);
+				\Froxlor\UI\Response::standard_error('domainisaliasorothercustomer', '', true);
 			}
 			\Froxlor\Domain\Domain::triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $this->logger());
 		}
@@ -540,7 +540,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				$ssl_redirect = '1';
 				$_doredirect = true;
 			} else {
-				standard_error('sslredirectonlypossiblewithsslipport', '', true);
+				\Froxlor\UI\Response::standard_error('sslredirectonlypossiblewithsslipport', '', true);
 			}
 		}
 
@@ -550,18 +550,18 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			if (\Froxlor\Domain\Domain::domainHasSslIpPort($result['id']) == true) {
 				$letsencrypt = '1';
 			} else {
-				standard_error('letsencryptonlypossiblewithsslipport', '', true);
+				\Froxlor\UI\Response::standard_error('letsencryptonlypossiblewithsslipport', '', true);
 			}
 		}
 
 		// We can't enable let's encrypt for wildcard - domains when using acme-v1
 		if ($iswildcarddomain == '1' && $letsencrypt == '1' && Settings::Get('system.leapiversion') == '1') {
-			standard_error('nowildcardwithletsencrypt');
+			\Froxlor\UI\Response::standard_error('nowildcardwithletsencrypt');
 		}
 		// if using acme-v2 we cannot issue wildcard-certificates
 		// because they currently only support the dns-01 challenge
 		if ($iswildcarddomain == '0' && $letsencrypt == '1' && Settings::Get('system.leapiversion') == '2') {
-			standard_error('nowildcardwithletsencryptv2');
+			\Froxlor\UI\Response::standard_error('nowildcardwithletsencryptv2');
 		}
 
 		// Temporarily deactivate ssl_redirect until Let's Encrypt certificate was generated
@@ -772,7 +772,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			), true, true);
 
 			if ($emails['count'] != '0') {
-				standard_error('domains_cantdeletedomainwithemail', '', true);
+				\Froxlor\UI\Response::standard_error('domains_cantdeletedomainwithemail', '', true);
 			}
 		}
 
@@ -864,7 +864,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		// check whether path is a real path
 		if (! preg_match('/^https?\:\/\//', $path) || ! validateUrl($path)) {
 			if (strstr($path, ":") !== false) {
-				standard_error('pathmaynotcontaincolon', '', true);
+				\Froxlor\UI\Response::standard_error('pathmaynotcontaincolon', '', true);
 			}
 			// If path is empty or '/' and 'Use domain name as default value for DocumentRoot path' is enabled in settings,
 			// set default path to subdomain or domain name

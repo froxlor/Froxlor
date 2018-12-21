@@ -124,7 +124,6 @@ return array(
 					'varname' => 'password_regex',
 					'type' => 'string',
 					'default' => '',
-					/* 'plausibility_check_method' => 'checkValidRegEx', */
 					'save_method' => 'storeSettingField',
 					),
 				'customer_accountprefix' => array(
@@ -133,7 +132,8 @@ return array(
 					'varname' => 'accountprefix',
 					'type' => 'string',
 					'default' => '',
-					'plausibility_check_method' => 'checkUsername',
+					'plausibility_check_method' => array(
+						'\\Froxlor\\Validate\\Check', 'checkUsername'),
 					'save_method' => 'storeSettingField',
 					),
 				'customer_mysqlprefix' => array(
@@ -142,7 +142,8 @@ return array(
 					'varname' => 'mysqlprefix',
 					'type' => 'string',
 					'default' => '',
-					'plausibility_check_method' => 'checkUsername',
+					'plausibility_check_method' => array(
+						'\\Froxlor\\Validate\\Check', 'checkUsername'),
 					'save_method' => 'storeSettingField',
 					),
 				'customer_ftpprefix' => array(

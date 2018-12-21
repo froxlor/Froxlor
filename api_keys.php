@@ -157,7 +157,7 @@ if (AREA == 'admin' && $userinfo['customers_see_all'] == '0') {
 	);
 }
 
-$paging = new paging($userinfo, TABLE_API_KEYS, $fields);
+$paging = new \Froxlor\UI\Paging($userinfo, TABLE_API_KEYS, $fields);
 $keys_stmt_query .= $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit();
 
 $keys_stmt = Database::prepare($keys_stmt_query);
@@ -171,7 +171,7 @@ if (count($all_keys) == 0) {
 	$sortcode = "";
 	$searchcode = "";
 	$pagingcode = "";
-	eval("\$apikeys.=\"" . getTemplate("api_keys/keys_error", true) . "\";");
+	eval("\$apikeys.=\"" . \Froxlor\UI\Template::getTemplate("api_keys/keys_error", true) . "\";");
 } else {
 	$count = count($all_keys);
 	$paging->setEntries($count);
@@ -226,10 +226,10 @@ if (count($all_keys) == 0) {
 				// infinity
 				$row['valid_until'] = "";
 			}
-			eval("\$apikeys.=\"" . getTemplate("api_keys/keys_key", true) . "\";");
+			eval("\$apikeys.=\"" . \Froxlor\UI\Template::getTemplate("api_keys/keys_key", true) . "\";");
 		} else {
 			continue;
 		}
 	}
 }
-eval("echo \"" . getTemplate("api_keys/keys_list", true) . "\";");
+eval("echo \"" . \Froxlor\UI\Template::getTemplate("api_keys/keys_list", true) . "\";");

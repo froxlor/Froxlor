@@ -45,7 +45,7 @@ if ($action == 'logout') {
 	}
 	Database::pexecute($stmt, $params);
 
-	redirectTo('index.php');
+	\Froxlor\UI\Response::redirectTo('index.php');
 }
 
 if (isset($_POST['id'])) {
@@ -93,7 +93,7 @@ if ($page == 'overview') {
 		try {
 			$json_result = Froxlor::getLocal($userinfo)->checkUpdate();
 		} catch (Exception $e) {
-			dynamic_error($e->getMessage());
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 		$result = json_decode($json_result, true)['data'];
 
@@ -173,36 +173,36 @@ if ($page == 'overview') {
 		$uptime = '';
 	}
 
-	eval("echo \"" . getTemplate("index/index") . "\";");
+	eval("echo \"" . \Froxlor\UI\Template::getTemplate("index/index") . "\";");
 } elseif ($page == 'change_password') {
 
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 		$old_password = validate($_POST['old_password'], 'old password');
 
 		if (! validatePasswordLogin($userinfo, $old_password, TABLE_PANEL_ADMINS, 'adminid')) {
-			standard_error('oldpasswordnotcorrect');
+			\Froxlor\UI\Response::standard_error('oldpasswordnotcorrect');
 		}
 
 		$new_password = validate($_POST['new_password'], 'new password');
 		$new_password_confirm = validate($_POST['new_password_confirm'], 'new password confirm');
 
 		if ($old_password == '') {
-			standard_error(array(
+			\Froxlor\UI\Response::standard_error(array(
 				'stringisempty',
 				'oldpassword'
 			));
 		} elseif ($new_password == '') {
-			standard_error(array(
+			\Froxlor\UI\Response::standard_error(array(
 				'stringisempty',
 				'newpassword'
 			));
 		} elseif ($new_password_confirm == '') {
-			standard_error(array(
+			\Froxlor\UI\Response::standard_error(array(
 				'stringisempty',
 				'newpasswordconfirm'
 			));
 		} elseif ($new_password != $new_password_confirm) {
-			standard_error('newpasswordconfirmerror');
+			\Froxlor\UI\Response::standard_error('newpasswordconfirmerror');
 		} else {
 			try {
 				Admins::getLocal($userinfo, array(
@@ -210,15 +210,15 @@ if ($page == 'overview') {
 					'admin_password' => $new_password
 				))->update();
 			} catch (Exception $e) {
-				dynamic_error($e->getMessage());
+				\Froxlor\UI\Response::dynamic_error($e->getMessage());
 			}
 			$log->logAction(ADM_ACTION, LOG_NOTICE, 'changed password');
-			redirectTo($filename, Array(
+			\Froxlor\UI\Response::redirectTo($filename, Array(
 				's' => $s
 			));
 		}
 	} else {
-		eval("echo \"" . getTemplate("index/change_password") . "\";");
+		eval("echo \"" . \Froxlor\UI\Template::getTemplate("index/change_password") . "\";");
 	}
 } elseif ($page == 'change_language') {
 
@@ -232,7 +232,7 @@ if ($page == 'overview') {
 					'def_language' => $def_language
 				))->update();
 			} catch (Exception $e) {
-				dynamic_error($e->getMessage());
+				\Froxlor\UI\Response::dynamic_error($e->getMessage());
 			}
 
 			// also update current session
@@ -246,7 +246,7 @@ if ($page == 'overview') {
 			));
 		}
 		$log->logAction(ADM_ACTION, LOG_NOTICE, "changed his/her default language to '" . $def_language . "'");
-		redirectTo($filename, array(
+		\Froxlor\UI\Response::redirectTo($filename, array(
 			's' => $s
 		));
 	} else {
@@ -262,7 +262,7 @@ if ($page == 'overview') {
 			$language_options .= makeoption($language_name, $language_file, $default_lang, true);
 		}
 
-		eval("echo \"" . getTemplate("index/change_language") . "\";");
+		eval("echo \"" . \Froxlor\UI\Template::getTemplate("index/change_language") . "\";");
 	}
 } elseif ($page == 'change_theme') {
 
@@ -274,7 +274,7 @@ if ($page == 'overview') {
 				'theme' => $theme
 			))->update();
 		} catch (Exception $e) {
-			dynamic_error($e->getMessage());
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 
 		// also update current session
@@ -288,7 +288,7 @@ if ($page == 'overview') {
 		));
 
 		$log->logAction(ADM_ACTION, LOG_NOTICE, "changed his/her theme to '" . $theme . "'");
-		redirectTo($filename, array(
+		\Froxlor\UI\Response::redirectTo($filename, array(
 			's' => $s
 		));
 	} else {
@@ -305,7 +305,7 @@ if ($page == 'overview') {
 			$theme_options .= makeoption($d, $t, $default_theme, true);
 		}
 
-		eval("echo \"" . getTemplate("index/change_theme") . "\";");
+		eval("echo \"" . \Froxlor\UI\Template::getTemplate("index/change_theme") . "\";");
 	}
 } elseif ($page == 'send_error_report' && Settings::Get('system.allow_error_report_admin') == '1') {
 
@@ -363,25 +363,25 @@ if ($page == 'overview') {
 
 				if ($_mailerror) {
 					// error when reporting an error...LOLFUQ
-					standard_error('send_report_error', $mailerr_msg);
+					\Froxlor\UI\Response::standard_error('send_report_error', $mailerr_msg);
 				}
 
 				// finally remove error from fs
 				@unlink($err_file);
-				redirectTo($filename, array(
+				\Froxlor\UI\Response::redirectTo($filename, array(
 					's' => $s
 				));
 			}
 			// show a nice summary of the error-report
 			// before actually sending anything
-			eval("echo \"" . getTemplate("index/send_error_report") . "\";");
+			eval("echo \"" . \Froxlor\UI\Template::getTemplate("index/send_error_report") . "\";");
 		} else {
-			redirectTo($filename, array(
+			\Froxlor\UI\Response::redirectTo($filename, array(
 				's' => $s
 			));
 		}
 	} else {
-		redirectTo($filename, array(
+		\Froxlor\UI\Response::redirectTo($filename, array(
 			's' => $s
 		));
 	}

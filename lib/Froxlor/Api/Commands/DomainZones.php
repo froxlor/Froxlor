@@ -73,7 +73,7 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 		}
 
 		if ($result['subisbinddomain'] != '1') {
-			standard_error('dns_domain_nodns', '', true);
+			\Froxlor\UI\Response::standard_error('dns_domain_nodns', '', true);
 		}
 
 		$idna_convert = new \Froxlor\Idna\IdnaWrapper();
@@ -326,7 +326,7 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 		}
 
 		if ($result['subisbinddomain'] != '1') {
-			standard_error('dns_domain_nodns', '', true);
+			\Froxlor\UI\Response::standard_error('dns_domain_nodns', '', true);
 		}
 
 		$zone = createDomainZone($id);

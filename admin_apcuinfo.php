@@ -45,7 +45,7 @@ if ($action == 'delete' &&
 if (!function_exists('apcu_cache_info') ||
         !function_exists('apcu_sma_info')
 ) {
-    standard_error($lng['error']['no_apcuinfo']);
+    \Froxlor\UI\Response::standard_error($lng['error']['no_apcuinfo']);
 }
 
 if ($page == 'showinfo'
@@ -84,7 +84,7 @@ if ($page == 'showinfo'
     $runtimelines = '';
     foreach (ini_get_all('apcu') as $name => $v) {
         $value = $v['local_value'];
-        eval("\$runtimelines.=\"" . getTemplate("settings/apcuinfo/runtime_line") . "\";");
+        eval("\$runtimelines.=\"" . \Froxlor\UI\Template::getTemplate("settings/apcuinfo/runtime_line") . "\";");
     }
 
     $freemem = bsize($mem_avail) . sprintf(" (%.1f%%)", $mem_avail * 100 / $mem_size);
@@ -124,14 +124,14 @@ if ($page == 'showinfo'
     $img_src3 = '';
     if (graphics_avail()) {
         $img_src = $linker->getLink(array('section' => 'apcuinfo', 'page' => 'img1', 'action' => mt_rand(0, 1000000)));
-        eval("\$img_src1=\"" . getTemplate("settings/apcuinfo/img_line") . "\";");
+        eval("\$img_src1=\"" . \Froxlor\UI\Template::getTemplate("settings/apcuinfo/img_line") . "\";");
         $img_src = $linker->getLink(array('section' => 'apcuinfo', 'page' => 'img2', 'action' => mt_rand(0, 1000000)));
-        eval("\$img_src2=\"" . getTemplate("settings/apcuinfo/img_line") . "\";");
+        eval("\$img_src2=\"" . \Froxlor\UI\Template::getTemplate("settings/apcuinfo/img_line") . "\";");
         $img_src = $linker->getLink(array('section' => 'apcuinfo', 'page' => 'img3', 'action' => mt_rand(0, 1000000)));
-        eval("\$img_src3=\"" . getTemplate("settings/apcuinfo/img_line") . "\";");
+        eval("\$img_src3=\"" . \Froxlor\UI\Template::getTemplate("settings/apcuinfo/img_line") . "\";");
     }
 
-    eval("echo \"" . getTemplate("settings/apcuinfo/showinfo") . "\";");
+    eval("echo \"" . \Froxlor\UI\Template::getTemplate("settings/apcuinfo/showinfo") . "\";");
     
 } elseif ($page == 'img1'
 ) {

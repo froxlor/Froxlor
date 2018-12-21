@@ -43,7 +43,7 @@ if ($page == 'ipsandports' || $page == 'overview') {
 			'ip' => $lng['admin']['ipsandports']['ip'],
 			'port' => $lng['admin']['ipsandports']['port']
 		);
-		$paging = new paging($userinfo, TABLE_PANEL_IPSANDPORTS, $fields);
+		$paging = new \Froxlor\UI\Paging($userinfo, TABLE_PANEL_IPSANDPORTS, $fields);
 		$ipsandports = '';
 		$result_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` " . $paging->getSqlWhere(false) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
 		Database::pexecute($result_stmt);
@@ -62,19 +62,19 @@ if ($page == 'ipsandports' || $page == 'overview') {
 				if (filter_var($row['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
 					$row['ip'] = '[' . $row['ip'] . ']';
 				}
-				eval("\$ipsandports.=\"" . getTemplate("ipsandports/ipsandports_ipandport") . "\";");
+				eval("\$ipsandports.=\"" . \Froxlor\UI\Template::getTemplate("ipsandports/ipsandports_ipandport") . "\";");
 				$count ++;
 			}
 			$i ++;
 		}
-		eval("echo \"" . getTemplate("ipsandports/ipsandports") . "\";");
+		eval("echo \"" . \Froxlor\UI\Template::getTemplate("ipsandports/ipsandports") . "\";");
 	} elseif ($action == 'delete' && $id != 0) {
 		try {
 			$json_result = IpsAndPorts::getLocal($userinfo, array(
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
-			dynamic_error($e->getMessage());
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 		$result = json_decode($json_result, true)['data'];
 		
@@ -86,10 +86,10 @@ if ($page == 'ipsandports' || $page == 'overview') {
 						'id' => $id
 					))->delete();
 				} catch (Exception $e) {
-					dynamic_error($e->getMessage());
+					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
 				
-				redirectTo($filename, array(
+				\Froxlor\UI\Response::redirectTo($filename, array(
 					'page' => $page,
 					's' => $s
 				));
@@ -106,21 +106,21 @@ if ($page == 'ipsandports' || $page == 'overview') {
 			try {
 				IpsAndPorts::getLocal($userinfo, $_POST)->add();
 			} catch (Exception $e) {
-				dynamic_error($e->getMessage());
+				\Froxlor\UI\Response::dynamic_error($e->getMessage());
 			}
-			redirectTo($filename, array(
+			\Froxlor\UI\Response::redirectTo($filename, array(
 				'page' => $page,
 				's' => $s
 			));
 		} else {
 			
 			$ipsandports_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/ipsandports/formfield.ipsandports_add.php';
-			$ipsandports_add_form = htmlform::genHTMLForm($ipsandports_add_data);
+			$ipsandports_add_form = \Froxlor\UI\HtmlForm::genHTMLForm($ipsandports_add_data);
 			
 			$title = $ipsandports_add_data['ipsandports_add']['title'];
 			$image = $ipsandports_add_data['ipsandports_add']['image'];
 			
-			eval("echo \"" . getTemplate("ipsandports/ipsandports_add") . "\";");
+			eval("echo \"" . \Froxlor\UI\Template::getTemplate("ipsandports/ipsandports_add") . "\";");
 		}
 	} elseif ($action == 'edit' && $id != 0) {
 		try {
@@ -128,7 +128,7 @@ if ($page == 'ipsandports' || $page == 'overview') {
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
-			dynamic_error($e->getMessage());
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 		$result = json_decode($json_result, true)['data'];
 		
@@ -138,9 +138,9 @@ if ($page == 'ipsandports' || $page == 'overview') {
 				try {
 					IpsAndPorts::getLocal($userinfo, $_POST)->update();
 				} catch (Exception $e) {
-					dynamic_error($e->getMessage());
+					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}			
-				redirectTo($filename, array(
+				\Froxlor\UI\Response::redirectTo($filename, array(
 					'page' => $page,
 					's' => $s
 				));
@@ -149,12 +149,12 @@ if ($page == 'ipsandports' || $page == 'overview') {
 				$result = htmlentities_array($result);
 				
 				$ipsandports_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/ipsandports/formfield.ipsandports_edit.php';
-				$ipsandports_edit_form = htmlform::genHTMLForm($ipsandports_edit_data);
+				$ipsandports_edit_form = \Froxlor\UI\HtmlForm::genHTMLForm($ipsandports_edit_data);
 				
 				$title = $ipsandports_edit_data['ipsandports_edit']['title'];
 				$image = $ipsandports_edit_data['ipsandports_edit']['image'];
 				
-				eval("echo \"" . getTemplate("ipsandports/ipsandports_edit") . "\";");
+				eval("echo \"" . \Froxlor\UI\Template::getTemplate("ipsandports/ipsandports_edit") . "\";");
 			}
 		}
 	}

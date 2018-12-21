@@ -204,7 +204,7 @@ class Cronjob
 			$text = $lng['crondesc'][$row['desc_lng_key']];
 			$value = $lastrun;
 
-			eval("\$cronjobs_last_run .= \"" . getTemplate("index/overview_item") . "\";");
+			eval("\$cronjobs_last_run .= \"" . \Froxlor\UI\Template::getTemplate("index/overview_item") . "\";");
 		}
 
 		return $cronjobs_last_run;
@@ -302,7 +302,7 @@ class Cronjob
 
 		$value .= '</ul>';
 		$text = $lng['tasks']['outstanding_tasks'];
-		eval("\$outstanding_tasks = \"" . getTemplate("index/overview_item") . "\";");
+		eval("\$outstanding_tasks = \"" . \Froxlor\UI\Template::getTemplate("index/overview_item") . "\";");
 
 		return $outstanding_tasks;
 	}

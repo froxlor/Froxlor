@@ -43,7 +43,7 @@ if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
 			'traffic_used' => $lng['customer']['traffic'] . ' (' . $lng['panel']['used'] . ')',
 			'deactivated' => $lng['admin']['deactivated']
 		);
-		$paging = new paging($userinfo, TABLE_PANEL_ADMINS, $fields);
+		$paging = new \Froxlor\UI\Paging($userinfo, TABLE_PANEL_ADMINS, $fields);
 		$admins = '';
 		$result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_ADMINS . "` " . $paging->getSqlWhere(false) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
 		$numrows_admins = Database::num_rows();
@@ -97,14 +97,14 @@ if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
 
 				$row['custom_notes'] = ($row['custom_notes'] != '') ? nl2br($row['custom_notes']) : '';
 
-				eval("\$admins.=\"" . getTemplate("admins/admins_admin") . "\";");
+				eval("\$admins.=\"" . \Froxlor\UI\Template::getTemplate("admins/admins_admin") . "\";");
 				$count ++;
 			}
 			$i ++;
 		}
 
 		$admincount = $numrows_admins;
-		eval("echo \"" . getTemplate("admins/admins") . "\";");
+		eval("echo \"" . \Froxlor\UI\Template::getTemplate("admins/admins") . "\";");
 	} elseif ($action == 'su') {
 
 		try {
@@ -112,7 +112,7 @@ if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
-			dynamic_error($e->getMessage());
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 		$result = json_decode($json_result, true)['data'];
 		$destination_admin = $result['loginname'];
@@ -142,11 +142,11 @@ if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
 			);
 			Database::pexecute($ins_stmt, $ins_data);
 			$log->logAction(ADM_ACTION, LOG_INFO, "switched adminuser and is now '" . $destination_admin . "'");
-			redirectTo('admin_index.php', array(
+			\Froxlor\UI\Response::redirectTo('admin_index.php', array(
 				's' => $s
 			));
 		} else {
-			redirectTo('index.php', array(
+			\Froxlor\UI\Response::redirectTo('index.php', array(
 				'action' => 'login'
 			));
 		}
@@ -156,20 +156,20 @@ if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
-			dynamic_error($e->getMessage());
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 		$result = json_decode($json_result, true)['data'];
 
 		if ($result['loginname'] != '') {
 			if ($result['adminid'] == $userinfo['userid']) {
-				standard_error('youcantdeleteyourself');
+				\Froxlor\UI\Response::standard_error('youcantdeleteyourself');
 			}
 
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				Admins::getLocal($this->getUserData(), array(
 					'id' => $id
 				))->delete();
-				redirectTo($filename, array(
+				\Froxlor\UI\Response::redirectTo($filename, array(
 					'page' => $page,
 					's' => $s
 				));
@@ -187,9 +187,9 @@ if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
 			try {
 				Admins::getLocal($userinfo, $_POST)->add();
 			} catch (Exception $e) {
-				dynamic_error($e->getMessage());
+				\Froxlor\UI\Response::dynamic_error($e->getMessage());
 			}
-			redirectTo($filename, array(
+			\Froxlor\UI\Response::redirectTo($filename, array(
 				'page' => $page,
 				's' => $s
 			));
@@ -222,12 +222,12 @@ if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
 			$mysqls_ul = makecheckbox('mysqls_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 
 			$admin_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/admin/formfield.admin_add.php';
-			$admin_add_form = htmlform::genHTMLForm($admin_add_data);
+			$admin_add_form = \Froxlor\UI\HtmlForm::genHTMLForm($admin_add_data);
 
 			$title = $admin_add_data['admin_add']['title'];
 			$image = $admin_add_data['admin_add']['image'];
 
-			eval("echo \"" . getTemplate("admins/admins_add") . "\";");
+			eval("echo \"" . \Froxlor\UI\Template::getTemplate("admins/admins_add") . "\";");
 		}
 	} elseif ($action == 'edit' && $id != 0) {
 		try {
@@ -235,7 +235,7 @@ if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
-			dynamic_error($e->getMessage());
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 		$result = json_decode($json_result, true)['data'];
 
@@ -245,9 +245,9 @@ if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
 				try {
 					Admins::getLocal($userinfo, $_POST)->update();
 				} catch (Exception $e) {
-					dynamic_error($e->getMessage());
+					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
-				redirectTo($filename, array(
+				\Froxlor\UI\Response::redirectTo($filename, array(
 					'page' => $page,
 					's' => $s
 				));
@@ -330,12 +330,12 @@ if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
 				$result = htmlentities_array($result);
 
 				$admin_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/admin/formfield.admin_edit.php';
-				$admin_edit_form = htmlform::genHTMLForm($admin_edit_data);
+				$admin_edit_form = \Froxlor\UI\HtmlForm::genHTMLForm($admin_edit_data);
 
 				$title = $admin_edit_data['admin_edit']['title'];
 				$image = $admin_edit_data['admin_edit']['image'];
 
-				eval("echo \"" . getTemplate("admins/admins_edit") . "\";");
+				eval("echo \"" . \Froxlor\UI\Template::getTemplate("admins/admins_edit") . "\";");
 			}
 		}
 	}

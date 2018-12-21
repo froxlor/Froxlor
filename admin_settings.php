@@ -56,7 +56,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 
 		// check if the session timeout is too low #815
 		if (isset($_POST['session_sessiontimeout']) && $_POST['session_sessiontimeout'] < 60) {
-			standard_error($lng['error']['session_timeout'], $lng['error']['session_timeout_desc']);
+			\Froxlor\UI\Response::standard_error($lng['error']['session_timeout'], $lng['error']['session_timeout_desc']);
 		}
 
 		if (processFormEx($settings_data, $_POST, array(
@@ -69,7 +69,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 			// Using nameserver, insert a task which rebuilds the server config
 			\Froxlor\System\Cronjob::inserttask('4');
 
-			standard_success('settingssaved', '', array(
+			\Froxlor\UI\Response::standard_success('settingssaved', '', array(
 				'filename' => $filename,
 				'action' => $action,
 				'page' => $page
@@ -86,14 +86,14 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 
 		$settings_page = '';
 		if ($_part == '') {
-			eval("\$settings_page .= \"" . getTemplate("settings/settings_overview") . "\";");
+			eval("\$settings_page .= \"" . \Froxlor\UI\Template::getTemplate("settings/settings_overview") . "\";");
 		} else {
-			eval("\$settings_page .= \"" . getTemplate("settings/settings") . "\";");
+			eval("\$settings_page .= \"" . \Froxlor\UI\Template::getTemplate("settings/settings") . "\";");
 		}
 
-		eval("echo \"" . getTemplate("settings/settings_form_begin") . "\";");
+		eval("echo \"" . \Froxlor\UI\Template::getTemplate("settings/settings_form_begin") . "\";");
 		eval("echo \$settings_page;");
-		eval("echo \"" . getTemplate("settings/settings_form_end") . "\";");
+		eval("echo \"" . \Froxlor\UI\Template::getTemplate("settings/settings_form_end") . "\";");
 	}
 } elseif ($page == 'phpinfo' && $userinfo['change_serversettings'] == '1') {
 	ob_start();
@@ -121,24 +121,24 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 			$phpinfoentries = "";
 			foreach ($section as $key => $val) {
 				if (is_array($val)) {
-					eval("\$phpinfoentries .= \"" . getTemplate("settings/phpinfo/phpinfo_3") . "\";");
+					eval("\$phpinfoentries .= \"" . \Froxlor\UI\Template::getTemplate("settings/phpinfo/phpinfo_3") . "\";");
 				} elseif (is_string($key)) {
-					eval("\$phpinfoentries .= \"" . getTemplate("settings/phpinfo/phpinfo_2") . "\";");
+					eval("\$phpinfoentries .= \"" . \Froxlor\UI\Template::getTemplate("settings/phpinfo/phpinfo_2") . "\";");
 				} else {
-					eval("\$phpinfoentries .= \"" . getTemplate("settings/phpinfo/phpinfo_1") . "\";");
+					eval("\$phpinfoentries .= \"" . \Froxlor\UI\Template::getTemplate("settings/phpinfo/phpinfo_1") . "\";");
 				}
 			}
 			// first header -> show actual php version
 			if (strtolower($name) == "phpinfo") {
 				$name = "PHP " . PHP_VERSION;
 			}
-			eval("\$phpinfohtml .= \"" . getTemplate("settings/phpinfo/phpinfo_table") . "\";");
+			eval("\$phpinfohtml .= \"" . \Froxlor\UI\Template::getTemplate("settings/phpinfo/phpinfo_table") . "\";");
 		}
 		$phpinfo = $phpinfohtml;
 	} else {
-		standard_error($lng['error']['no_phpinfo']);
+		\Froxlor\UI\Response::standard_error($lng['error']['no_phpinfo']);
 	}
-	eval("echo \"" . getTemplate("settings/phpinfo") . "\";");
+	eval("echo \"" . \Froxlor\UI\Template::getTemplate("settings/phpinfo") . "\";");
 } elseif ($page == 'rebuildconfigs' && $userinfo['change_serversettings'] == '1') {
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 
@@ -150,7 +150,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 		// cron.d file
 		\Froxlor\System\Cronjob::inserttask('99');
 
-		standard_success('rebuildingconfigs', '', array(
+		\Froxlor\UI\Response::standard_success('rebuildingconfigs', '', array(
 			'filename' => 'admin_index.php'
 		));
 	} else {
@@ -166,15 +166,15 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 		$updatecounters = updateCounters(true);
 		$customers = '';
 		foreach ($updatecounters['customers'] as $customerid => $customer) {
-			eval("\$customers.=\"" . getTemplate("settings/updatecounters_row_customer") . "\";");
+			eval("\$customers.=\"" . \Froxlor\UI\Template::getTemplate("settings/updatecounters_row_customer") . "\";");
 		}
 
 		$admins = '';
 		foreach ($updatecounters['admins'] as $adminid => $admin) {
-			eval("\$admins.=\"" . getTemplate("settings/updatecounters_row_admin") . "\";");
+			eval("\$admins.=\"" . \Froxlor\UI\Template::getTemplate("settings/updatecounters_row_admin") . "\";");
 		}
 
-		eval("echo \"" . getTemplate("settings/updatecounters") . "\";");
+		eval("echo \"" . \Froxlor\UI\Template::getTemplate("settings/updatecounters") . "\";");
 	} else {
 		ask_yesno('admin_counters_reallyupdate', $filename, array(
 			'page' => $page
@@ -187,7 +187,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 		$log->logAction(ADM_ACTION, LOG_WARNING, "wiped all cleartext mail passwords");
 		Database::query("UPDATE `" . TABLE_MAIL_USERS . "` SET `password` = '';");
 		Database::query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '0' WHERE `settinggroup` = 'system' AND `varname` = 'mailpwcleartext'");
-		redirectTo($filename, array(
+		\Froxlor\UI\Response::redirectTo($filename, array(
 			's' => $s
 		));
 	} else {
@@ -204,7 +204,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 		// Set the quota to 0 which means unlimited
 		Database::query("UPDATE `" . TABLE_MAIL_USERS . "` SET `quota` = '0';");
 		Database::query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `email_quota_used` = '0'");
-		redirectTo($filename, array(
+		\Froxlor\UI\Response::redirectTo($filename, array(
 			's' => $s
 		));
 	} else {
@@ -245,7 +245,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 		// Update the Customer, if the used quota is bigger than the allowed quota
 		Database::query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `email_quota` = `email_quota_used` WHERE `email_quota` < `email_quota_used`");
 		$log->logAction(ADM_ACTION, LOG_WARNING, 'enforcing mailquota to all customers: ' . Settings::Get('system.mail_quota') . ' MB');
-		redirectTo($filename, array(
+		\Froxlor\UI\Response::redirectTo($filename, array(
 			's' => $s
 		));
 	} else {
@@ -268,13 +268,13 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 		$displayid = $id + 1;
 		$result = $integrity->$check();
 		$checkdesc = $lng['integrity_check'][$check];
-		eval("\$integritycheck.=\"" . getTemplate("settings/integritycheck_row") . "\";");
+		eval("\$integritycheck.=\"" . \Froxlor\UI\Template::getTemplate("settings/integritycheck_row") . "\";");
 	}
-	eval("echo \"" . getTemplate("settings/integritycheck") . "\";");
+	eval("echo \"" . \Froxlor\UI\Template::getTemplate("settings/integritycheck") . "\";");
 } elseif ($page == 'importexport' && $userinfo['change_serversettings'] == '1') {
 	// check for json-stuff
 	if (! extension_loaded('json')) {
-		standard_error('jsonextensionnotfound');
+		\Froxlor\UI\Response::standard_error('jsonextensionnotfound');
 	}
 
 	if (isset($_GET['action']) && $_GET['action'] == "export") {
@@ -283,7 +283,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 			$json_result = Froxlor::getLocal($userinfo)->exportSettings();
 			$json_export = json_decode($json_result, true)['data'];
 		} catch (Exception $e) {
-			dynamic_error($e->getMessage());
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 		header('Content-disposition: attachment; filename=Froxlor_settings-' . $version . '-' . $dbversion . '_' . date('d.m.Y') . '.json');
 		header('Content-type: application/json');
@@ -300,16 +300,16 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 						'json_str' => $imp_content
 					))->importSettings();
 				} catch (Exception $e) {
-					dynamic_error($e->getMessage());
+					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
-				standard_success('settingsimported', '', array(
+				\Froxlor\UI\Response::standard_success('settingsimported', '', array(
 					'filename' => 'admin_settings.php'
 				));
 			}
-			dynamic_error("Upload failed");
+			\Froxlor\UI\Response::dynamic_error("Upload failed");
 		}
 	} else {
-		eval("echo \"" . getTemplate("settings/importexport/index") . "\";");
+		eval("echo \"" . \Froxlor\UI\Template::getTemplate("settings/importexport/index") . "\";");
 	}
 } elseif ($page == 'testmail') {
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
@@ -361,7 +361,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 			if (! $_mailerror) {
 				// success
 				$mail->ClearAddresses();
-				standard_success('testmailsent', '', array(
+				\Froxlor\UI\Response::standard_success('testmailsent', '', array(
 					'filename' => 'admin_settings.php',
 					'page' => 'testmail'
 				));
@@ -377,5 +377,5 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 	$mail_smtp_host = Settings::Get('system.mail_smtp_host');
 	$mail_smtp_port = Settings::Get('system.mail_smtp_port');
 
-	eval("echo \"" . getTemplate("settings/testmail") . "\";");
+	eval("echo \"" . \Froxlor\UI\Template::getTemplate("settings/testmail") . "\";");
 }

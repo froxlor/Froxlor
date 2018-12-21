@@ -84,7 +84,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 
 			// we've checked against the password in dbm->createDatabase
 			if ($username == false) {
-				standard_error('passwordshouldnotbeusername', '', true);
+				\Froxlor\UI\Response::standard_error('passwordshouldnotbeusername', '', true);
 			}
 
 			// add database info to froxlor
@@ -159,7 +159,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 
 				if ($_mailerror) {
 					$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_ERR, "[API] Error sending mail: " . $mailerr_msg);
-					standard_error('errorsendingmail', $userinfo['email'], true);
+					\Froxlor\UI\Response::standard_error('errorsendingmail', $userinfo['email'], true);
 				}
 
 				$this->mailer()->clearAddresses();
@@ -318,7 +318,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			$password = validatePassword($password, true);
 
 			if ($password == $result['databasename']) {
-				standard_error('passwordshouldnotbeusername', '', true);
+				\Froxlor\UI\Response::standard_error('passwordshouldnotbeusername', '', true);
 			}
 
 			// Begin root-session

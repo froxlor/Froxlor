@@ -88,9 +88,9 @@ class DirProtections extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Res
 
 		// duplicate check
 		if ($username_path_check['username'] == $username && $username_path_check['path'] == $path) {
-			standard_error('userpathcombinationdupe', '', true);
+			\Froxlor\UI\Response::standard_error('userpathcombinationdupe', '', true);
 		} elseif ($password == $username) {
-			standard_error('passwordshouldnotbeusername', '', true);
+			\Froxlor\UI\Response::standard_error('passwordshouldnotbeusername', '', true);
 		}
 
 		// insert the entry
@@ -236,7 +236,7 @@ class DirProtections extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Res
 		);
 		if (! empty($password)) {
 			if ($password == $result['username']) {
-				standard_error('passwordshouldnotbeusername', '', true);
+				\Froxlor\UI\Response::standard_error('passwordshouldnotbeusername', '', true);
 			}
 			if (CRYPT_STD_DES == 1) {
 				$saltfordescrypt = substr(md5(uniqid(microtime(), 1)), 4, 2);

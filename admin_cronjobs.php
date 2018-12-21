@@ -35,7 +35,7 @@ if ($page == 'cronjobs' || $page == 'overview') {
 			'c.interval' => $lng['cron']['interval'],
 			'c.isactive' => $lng['cron']['isactive']
 		);
-		$paging = new paging($userinfo, TABLE_PANEL_CRONRUNS, $fields);
+		$paging = new \Froxlor\UI\Paging($userinfo, TABLE_PANEL_CRONRUNS, $fields);
 
 		$crons = '';
 		$result_stmt = Database::prepare("SELECT `c`.* FROM `" . TABLE_PANEL_CRONRUNS . "` `c` ORDER BY `module` ASC, `cronfile` ASC");
@@ -54,7 +54,7 @@ if ($page == 'cronjobs' || $page == 'overview') {
 			if ($cmod != $row['module']) {
 				$_mod = explode("/", $row['module']);
 				$module = ucfirst($_mod[1]);
-				eval("\$crons.=\"" . getTemplate('cronjobs/cronjobs_cronjobmodule') . "\";");
+				eval("\$crons.=\"" . \Froxlor\UI\Template::getTemplate('cronjobs/cronjobs_cronjobmodule') . "\";");
 				$cmod = $row['module'];
 			}
 			if ($paging->checkDisplay($i)) {
@@ -65,14 +65,14 @@ if ($page == 'cronjobs' || $page == 'overview') {
 
 				$description = $lng['crondesc'][$row['desc_lng_key']];
 
-				eval("\$crons.=\"" . getTemplate('cronjobs/cronjobs_cronjob') . "\";");
+				eval("\$crons.=\"" . \Froxlor\UI\Template::getTemplate('cronjobs/cronjobs_cronjob') . "\";");
 				$count ++;
 			}
 
 			$i ++;
 		}
 
-		eval("echo \"" . getTemplate('cronjobs/cronjobs') . "\";");
+		eval("echo \"" . \Froxlor\UI\Template::getTemplate('cronjobs/cronjobs') . "\";");
 	} elseif ($action == 'new') {
 		/*
 		 * @TODO later
@@ -83,7 +83,7 @@ if ($page == 'cronjobs' || $page == 'overview') {
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
-			dynamic_error($e->getMessage());
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 		$result = json_decode($json_result, true)['data'];
 		if ($result['cronfile'] != '') {
@@ -91,9 +91,9 @@ if ($page == 'cronjobs' || $page == 'overview') {
 				try {
 					Cronjobs::getLocal($userinfo, $_POST)->update();
 				} catch (Exception $e) {
-					dynamic_error($e->getMessage());
+					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
-				redirectTo($filename, array(
+				\Froxlor\UI\Response::redirectTo($filename, array(
 					'page' => $page,
 					's' => $s
 				));
@@ -117,12 +117,12 @@ if ($page == 'cronjobs' || $page == 'overview') {
 				}
 
 				$cronjobs_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/cronjobs/formfield.cronjobs_edit.php';
-				$cronjobs_edit_form = htmlform::genHTMLForm($cronjobs_edit_data);
+				$cronjobs_edit_form = \Froxlor\UI\HtmlForm::genHTMLForm($cronjobs_edit_data);
 
 				$title = $cronjobs_edit_data['cronjobs_edit']['title'];
 				$image = $cronjobs_edit_data['cronjobs_edit']['image'];
 
-				eval("echo \"" . getTemplate('cronjobs/cronjob_edit') . "\";");
+				eval("echo \"" . \Froxlor\UI\Template::getTemplate('cronjobs/cronjob_edit') . "\";");
 			}
 		}
 	} elseif ($action == 'delete' && $id != 0) {

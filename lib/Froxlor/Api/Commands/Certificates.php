@@ -272,7 +272,7 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 	private function addOrUpdateCertificate($domainid = 0, $ssl_cert_file = '', $ssl_key_file = '', $ssl_ca_file = '', $ssl_cert_chainfile = '', $do_insert = false)
 	{
 		if ($ssl_cert_file != '' && $ssl_key_file == '') {
-			standard_error('sslcertificateismissingprivatekey', '', true);
+			\Froxlor\UI\Response::standard_error('sslcertificateismissingprivatekey', '', true);
 		}
 
 		$do_verify = true;
@@ -295,7 +295,7 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 				// bool openssl_x509_check_private_key ( mixed $cert , mixed $key )
 				// Checks whether the given key is the private key that corresponds to cert.
 				if (openssl_x509_check_private_key($ssl_cert_file, $ssl_key_file) === false) {
-					standard_error('sslcertificateinvalidcertkeypair', '', true);
+					\Froxlor\UI\Response::standard_error('sslcertificateinvalidcertkeypair', '', true);
 				}
 
 				// check optional stuff
@@ -303,18 +303,18 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 					$ca_content = openssl_x509_parse($ssl_ca_file);
 					if (! is_array($ca_content)) {
 						// invalid
-						standard_error('sslcertificateinvalidca', '', true);
+						\Froxlor\UI\Response::standard_error('sslcertificateinvalidca', '', true);
 					}
 				}
 				if ($ssl_cert_chainfile != '') {
 					$chain_content = openssl_x509_parse($ssl_cert_chainfile);
 					if (! is_array($chain_content)) {
 						// invalid
-						standard_error('sslcertificateinvalidchain', '', true);
+						\Froxlor\UI\Response::standard_error('sslcertificateinvalidchain', '', true);
 					}
 				}
 			} else {
-				standard_error('sslcertificateinvalidcert', '', true);
+				\Froxlor\UI\Response::standard_error('sslcertificateinvalidcert', '', true);
 			}
 		}
 

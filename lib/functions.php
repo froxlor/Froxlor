@@ -89,9 +89,7 @@ class Autoloader {
 
 		// define the paths where to look for classes
 		$paths = array(
-				dirname(__FILE__) . '/',
-				dirname(dirname(__FILE__)) . '/scripts/',
-				dirname(dirname(__FILE__)) . '/install/',
+				dirname(dirname(__FILE__)) . '/install/'
 		);
 
 		// don't load anything from a namespace, it's not our responsibility

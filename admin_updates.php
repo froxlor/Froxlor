@@ -69,12 +69,12 @@ if ($page == 'overview') {
 				&& intval($_POST['update_changesagreed']) != 0)
 				|| !isset($_POST['update_preconfig'])
 			) {
-				eval("echo \"" . getTemplate('update/update_start') . "\";");
+				eval("echo \"" . \Froxlor\UI\Template::getTemplate('update/update_start') . "\";");
 
 				include_once './install/updatesql.php';
 
 				$redirect_url = 'admin_index.php?s=' . $s;
-				eval("echo \"" . getTemplate('update/update_end') . "\";");
+				eval("echo \"" . \Froxlor\UI\Template::getTemplate('update/update_end') . "\";");
 
 				updateCounters();
 				\Froxlor\System\Cronjob::inserttask('1');
@@ -114,11 +114,11 @@ if ($page == 'overview') {
 
 			$update_information .= $lng['update']['update_information']['part_b'];
 
-			eval("echo \"" . getTemplate('update/index') . "\";");
+			eval("echo \"" . \Froxlor\UI\Template::getTemplate('update/index') . "\";");
 		}
 	} else {
 		$success_message = $lng['update']['noupdatesavail'];
 		$redirect_url = 'admin_index.php?s=' . $s;
-		eval("echo \"" . getTemplate('update/noupdatesavail') . "\";");
+		eval("echo \"" . \Froxlor\UI\Template::getTemplate('update/noupdatesavail') . "\";");
 	}
 }

@@ -53,7 +53,7 @@ if ($page == 'message') {
 					Database::pexecute($result, array('adminid' => $userinfo['adminid']));
 				}
 			} else {
-				standard_error('noreceipientsgiven');
+				\Froxlor\UI\Response::standard_error('noreceipientsgiven');
 			}
 
 			$subject = $_POST['subject'];
@@ -80,16 +80,16 @@ if ($page == 'message') {
 						}
 
 						$log->logAction(ADM_ACTION, LOG_ERR, 'Error sending mail: ' . $mailerr_msg);
-						standard_error('errorsendingmail', $row['email']);
+						\Froxlor\UI\Response::standard_error('errorsendingmail', $row['email']);
 					}
 
 					$mailcounter++;
 					$mail->ClearAddresses();
 				}
 
-				redirectTo($filename, array('page' => $page, 's' => $s, 'action' => 'showsuccess', 'sentitems' => $mailcounter));
+				\Froxlor\UI\Response::redirectTo($filename, array('page' => $page, 's' => $s, 'action' => 'showsuccess', 'sentitems' => $mailcounter));
 			} else {
-				standard_error('nomessagetosend');
+				\Froxlor\UI\Response::standard_error('nomessagetosend');
 			}
 		}
 	}
@@ -119,5 +119,5 @@ if ($page == 'message') {
 	}
 
 	$receipients .= makeoption($lng['panel']['customer'], 1);
-	eval("echo \"" . getTemplate('message/message') . "\";");
+	eval("echo \"" . \Froxlor\UI\Template::getTemplate('message/message') . "\";");
 }

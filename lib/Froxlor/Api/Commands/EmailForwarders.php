@@ -70,11 +70,11 @@ class EmailForwarders extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 			$destination = trim($destination);
 
 			if (! validateEmail($destination)) {
-				standard_error('destinationiswrong', $destination, true);
+				\Froxlor\UI\Response::standard_error('destinationiswrong', $destination, true);
 			} elseif ($destination == $result['email']) {
-				standard_error('destinationalreadyexistasmail', $destination, true);
+				\Froxlor\UI\Response::standard_error('destinationalreadyexistasmail', $destination, true);
 			} elseif (in_array($destination, $result['destination_array'])) {
-				standard_error('destinationalreadyexist', $destination, true);
+				\Froxlor\UI\Response::standard_error('destinationalreadyexist', $destination, true);
 			}
 
 			// get needed customer info to reduce the email-forwarder-counter by one

@@ -35,16 +35,16 @@ if ($action == '2fa_entercode') {
 	// page for entering the 2FA code after successful login
 	if (! isset($_SESSION) || ! isset($_SESSION['secret_2fa'])) {
 		// no session - redirect to index
-		redirectTo('index.php');
+		\Froxlor\UI\Response::redirectTo('index.php');
 		exit();
 	}
 	// show template to enter code
-	eval("echo \"" . getTemplate('2fa/entercode', true) . "\";");
+	eval("echo \"" . \Froxlor\UI\Template::getTemplate('2fa/entercode', true) . "\";");
 } elseif ($action == '2fa_verify') {
 	// verify code from 2fa code-enter form
 	if (! isset($_SESSION) || ! isset($_SESSION['secret_2fa'])) {
 		// no session - redirect to index
-		redirectTo('index.php');
+		\Froxlor\UI\Response::redirectTo('index.php');
 		exit();
 	}
 	$code = isset($_POST['2fa_code']) ? $_POST['2fa_code'] : null;
@@ -74,7 +74,7 @@ if ($action == '2fa_entercode') {
 		$userinfo = Database::pexecute_first($sel_stmt, $sel_param);
 		// whoops, no (valid) user? Start again
 		if (empty($userinfo)) {
-			redirectTo('index.php', array(
+			\Froxlor\UI\Response::redirectTo('index.php', array(
 				'showmessage' => '2'
 			));
 		}
@@ -84,7 +84,7 @@ if ($action == '2fa_entercode') {
 
 		// if not successful somehow - start again
 		if (! finishLogin($userinfo)) {
-			redirectTo('index.php', array(
+			\Froxlor\UI\Response::redirectTo('index.php', array(
 				'showmessage' => '2'
 			));
 		}
@@ -98,7 +98,7 @@ if ($action == '2fa_entercode') {
 		}
 		exit();
 	}
-	redirectTo('index.php', array(
+	\Froxlor\UI\Response::redirectTo('index.php', array(
 		'showmessage' => '2'
 	));
 	exit();
@@ -154,7 +154,7 @@ if ($action == '2fa_entercode') {
 		}
 
 		if ((\Froxlor\Froxlor::hasUpdates() || \Froxlor\Froxlor::hasDbUpdates()) && $is_admin == false) {
-			redirectTo('index.php');
+			\Froxlor\UI\Response::redirectTo('index.php');
 			exit();
 		}
 
@@ -169,7 +169,7 @@ if ($action == '2fa_entercode') {
 				$row = $stmt->fetch(PDO::FETCH_ASSOC);
 				if (! isset($row['admin'])) {
 					// not an admin who can see updates
-					redirectTo('index.php');
+					\Froxlor\UI\Response::redirectTo('index.php');
 					exit();
 				}
 			} else {
@@ -192,7 +192,7 @@ if ($action == '2fa_entercode') {
 				));
 				$rstlog->logAction(LOGIN_ACTION, LOG_WARNING, "Unknown user '" . $loginname . "' tried to login.");
 
-				redirectTo('index.php', array(
+				\Froxlor\UI\Response::redirectTo('index.php', array(
 					'showmessage' => '2'
 				));
 				exit();
@@ -207,7 +207,7 @@ if ($action == '2fa_entercode') {
 		$userinfo = $userinfo_stmt->fetch(PDO::FETCH_ASSOC);
 
 		if ($userinfo['loginfail_count'] >= Settings::Get('login.maxloginattempts') && $userinfo['lastlogin_fail'] > (time() - Settings::Get('login.deactivatetime'))) {
-			redirectTo('index.php', array(
+			\Froxlor\UI\Response::redirectTo('index.php', array(
 				'showmessage' => '3'
 			));
 			exit();
@@ -216,7 +216,7 @@ if ($action == '2fa_entercode') {
 			// because we don't want to publish that the user does exist
 			if ($userinfo['deactivated']) {
 				unset($userinfo);
-				redirectTo('index.php', array(
+				\Froxlor\UI\Response::redirectTo('index.php', array(
 					'showmessage' => '5'
 				));
 				exit();
@@ -250,7 +250,7 @@ if ($action == '2fa_entercode') {
 			$rstlog->logAction(LOGIN_ACTION, LOG_WARNING, "User '" . $loginname . "' tried to login with wrong password.");
 
 			unset($userinfo);
-			redirectTo('index.php', array(
+			\Froxlor\UI\Response::redirectTo('index.php', array(
 				'showmessage' => '2'
 			));
 			exit();
@@ -302,7 +302,7 @@ if ($action == '2fa_entercode') {
 						'loginname' => '2fa code-sending'
 					));
 					$rstlog->logAction(ADM_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
-					redirectTo('index.php', array(
+					\Froxlor\UI\Response::redirectTo('index.php', array(
 						'showmessage' => '4',
 						'customermail' => $userinfo['email']
 					));
@@ -311,14 +311,14 @@ if ($action == '2fa_entercode') {
 
 				$mail->ClearAddresses();
 			}
-			redirectTo('index.php', array(
+			\Froxlor\UI\Response::redirectTo('index.php', array(
 				'action' => '2fa_entercode'
 			));
 			exit();
 		}
 
 		if (! finishLogin($userinfo)) {
-			redirectTo('index.php', array(
+			\Froxlor\UI\Response::redirectTo('index.php', array(
 				'showmessage' => '2'
 			));
 		}
@@ -382,7 +382,7 @@ if ($action == '2fa_entercode') {
 			$lastqrystr = htmlspecialchars($_REQUEST['qrystr'], ENT_QUOTES);
 		}
 
-		eval("echo \"" . getTemplate('login') . "\";");
+		eval("echo \"" . \Froxlor\UI\Template::getTemplate('login') . "\";");
 	}
 }
 
@@ -422,7 +422,7 @@ if ($action == 'forgotpwd') {
 
 			/* Check whether user is banned */
 			if ($user['deactivated']) {
-				redirectTo('index.php', array(
+				\Froxlor\UI\Response::redirectTo('index.php', array(
 					'showmessage' => '8'
 				));
 				exit();
@@ -531,7 +531,7 @@ if ($action == 'forgotpwd') {
 							'loginname' => 'password_reset'
 						));
 						$rstlog->logAction(ADM_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
-						redirectTo('index.php', array(
+						\Froxlor\UI\Response::redirectTo('index.php', array(
 							'showmessage' => '4',
 							'customermail' => $user['email']
 						));
@@ -539,7 +539,7 @@ if ($action == 'forgotpwd') {
 					}
 
 					$mail->ClearAddresses();
-					redirectTo('index.php', array(
+					\Froxlor\UI\Response::redirectTo('index.php', array(
 						'showmessage' => '1'
 					));
 					exit();
@@ -569,7 +569,7 @@ if ($action == 'forgotpwd') {
 		}
 	}
 
-	eval("echo \"" . getTemplate('fpwd') . "\";");
+	eval("echo \"" . \Froxlor\UI\Template::getTemplate('fpwd') . "\";");
 }
 
 if ($action == 'resetpwd') {
@@ -641,25 +641,25 @@ if ($action == 'resetpwd') {
 							"activationcode" => $activationcode,
 							"userid" => $result['userid']
 						));
-						redirectTo('index.php', array(
+						\Froxlor\UI\Response::redirectTo('index.php', array(
 							"showmessage" => '6'
 						));
 					}
 				} else {
-					redirectTo('index.php', array(
+					\Froxlor\UI\Response::redirectTo('index.php', array(
 						"showmessage" => '7'
 					));
 				}
 			}
 
-			eval("echo \"" . getTemplate('rpwd') . "\";");
+			eval("echo \"" . \Froxlor\UI\Template::getTemplate('rpwd') . "\";");
 		} else {
-			redirectTo('index.php', array(
+			\Froxlor\UI\Response::redirectTo('index.php', array(
 				"showmessage" => '7'
 			));
 		}
 	} else {
-		redirectTo('index.php');
+		\Froxlor\UI\Response::redirectTo('index.php');
 	}
 }
 
@@ -736,27 +736,27 @@ function finishLogin($userinfo)
 
 		if ($userinfo['adminsession'] == '1') {
 			if (hasUpdates($version) || hasDbUpdates($dbversion)) {
-				redirectTo('admin_updates.php', array(
+				\Froxlor\UI\Response::redirectTo('admin_updates.php', array(
 					's' => $s
 				));
 			} else {
 				if (isset($_POST['script']) && $_POST['script'] != "") {
 					if (preg_match("/customer\_/", $_POST['script']) === 1) {
-						redirectTo('admin_customers.php', array(
+						\Froxlor\UI\Response::redirectTo('admin_customers.php', array(
 							"page" => "customers"
 						));
 					} else {
-						redirectTo($_POST['script'], $qryparams);
+						\Froxlor\UI\Response::redirectTo($_POST['script'], $qryparams);
 					}
 				} else {
-					redirectTo('admin_index.php', $qryparams);
+					\Froxlor\UI\Response::redirectTo('admin_index.php', $qryparams);
 				}
 			}
 		} else {
 			if (isset($_POST['script']) && $_POST['script'] != "") {
-				redirectTo($_POST['script'], $qryparams);
+				\Froxlor\UI\Response::redirectTo($_POST['script'], $qryparams);
 			} else {
-				redirectTo('customer_index.php', $qryparams);
+				\Froxlor\UI\Response::redirectTo('customer_index.php', $qryparams);
 			}
 		}
 	}
