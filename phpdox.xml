@@ -1,5 +1,5 @@
 <phpdox xmlns="http://xml.phpdox.net/config">
-	<project name="froxlor" source="${basedir}/lib/classes/api"
+	<project name="froxlor" source="${basedir}/lib/Froxlor"
 		workdir="${basedir}/build/phpdox">
 		<collector publiconly="true" backend="parser">
 			<include mask="*.php" />

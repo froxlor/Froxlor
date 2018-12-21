@@ -65,7 +65,7 @@
 		<apply executable="php" taskname="lint">
 			<arg value="-l" />
 
-			<fileset dir="${basedir}/lib/classes/api">
+			<fileset dir="${basedir}/lib/Froxlor">
 				<include name="**/*.php" />
 				<modified />
 			</fileset>
@@ -83,7 +83,7 @@
 		description="Measure project size using PHPLOC and print human readable output. Intended for usage on the command line.">
 		<exec executable="${phploc}" taskname="phploc">
 			<arg value="--count-tests" />
-			<arg path="${basedir}/lib/classes/api" />
+			<arg path="${basedir}/lib/Froxlor" />
 			<arg path="${basedir}/tests" />
 		</exec>
 
@@ -98,7 +98,7 @@
 			<arg path="${basedir}/build/logs/phploc.csv" />
 			<arg value="--log-xml" />
 			<arg path="${basedir}/build/logs/phploc.xml" />
-			<arg path="${basedir}/lib/classes/api" />
+			<arg path="${basedir}/lib/Froxlor" />
 			<arg path="${basedir}/tests" />
 		</exec>
 
@@ -112,7 +112,7 @@
 			<arg value="--jdepend-chart=${basedir}/build/pdepend/dependencies.svg" />
 			<arg
 				value="--overview-pyramid=${basedir}/build/pdepend/overview-pyramid.svg" />
-			<arg path="${basedir}/lib/classes/api" />
+			<arg path="${basedir}/lib/Froxlor" />
 		</exec>
 
 		<property name="pdepend.done" value="true" />
@@ -121,7 +121,7 @@
 	<target name="phpmd" unless="phpmd.done"
 		description="Perform project mess detection using PHPMD and print human readable output. Intended for usage on the command line before committing.">
 		<exec executable="${phpmd}" taskname="phpmd">
-			<arg path="${basedir}/lib/classes/api" />
+			<arg path="${basedir}/lib/Froxlor" />
 			<arg value="text" />
 			<arg path="${basedir}/phpmd.xml" />
 		</exec>
@@ -132,7 +132,7 @@
 	<target name="phpmd-ci" unless="phpmd.done" depends="prepare"
 		description="Perform project mess detection using PHPMD and log result in XML format. Intended for usage within a continuous integration environment.">
 		<exec executable="${phpmd}" taskname="phpmd">
-			<arg path="${basedir}/lib/classes/api" />
+			<arg path="${basedir}/lib/Froxlor" />
 			<arg value="xml" />
 			<arg path="${basedir}/phpmd.xml" />
 			<arg value="--reportfile" />
@@ -147,7 +147,7 @@
 		<exec executable="${phpcs}" taskname="phpcs">
 			<arg value="--standard=${basedir}/phpcs.xml" />
 			<arg value="--extensions=php" />
-			<arg path="${basedir}/lib/classes/api" />
+			<arg path="${basedir}/lib/Froxlor" />
 			<arg path="${basedir}/tests" />
 		</exec>
 
@@ -161,7 +161,7 @@
 			<arg value="--report-file=${basedir}/build/logs/checkstyle.xml" />
 			<arg value="--standard=${basedir}/phpcs.xml" />
 			<arg value="--extensions=php" />
-			<arg path="${basedir}/lib/classes/api" />
+			<arg path="${basedir}/lib/Froxlor" />
 			<arg path="${basedir}/tests" />
 		</exec>
 
@@ -171,7 +171,7 @@
 	<target name="phpcpd" unless="phpcpd.done"
 		description="Find duplicate code using PHPCPD and print human readable output. Intended for usage on the command line before committing.">
 		<exec executable="${phpcpd}" taskname="phpcpd">
-			<arg path="${basedir}/lib/classes/api" />
+			<arg path="${basedir}/lib/Froxlor" />
 		</exec>
 
 		<property name="phpcpd.done" value="true" />
@@ -182,7 +182,7 @@
 		<exec executable="${phpcpd}" taskname="phpcpd">
 			<arg value="--log-pmd" />
 			<arg path="${basedir}/build/logs/pmd-cpd.xml" />
-			<arg path="${basedir}/lib/classes/api" />
+			<arg path="${basedir}/lib/Froxlor" />
 		</exec>
 
 		<property name="phpcpd.done" value="true" />

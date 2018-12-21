@@ -40,11 +40,7 @@
 
 	<filter>
 		<whitelist processUncoveredFilesFromWhitelist="true">
-			<directory suffix=".php">./lib/classes/api</directory>
-			<exclude>
-				<file>./lib/classes/api/api_includes.inc.php</file>
-				<file>./lib/classes/api/interface.ResourceEntity.php</file>
-			</exclude>
+			<directory suffix=".php">./lib/Froxlor</directory>
 		</whitelist>
 	</filter>
 
