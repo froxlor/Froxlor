@@ -360,4 +360,6 @@ if ($page == 'overview') {
 	require_once __DIR__ . '/api_keys.php';
 } elseif ($page == 'apihelp' && Settings::Get('api.enabled') == 1) {
 	require_once __DIR__ . '/apihelp.php';
+} elseif ($page == '2fa' && Settings::Get('2fa.enabled') == 1) {
+	require_once __DIR__ . '/2fa.php';
 }

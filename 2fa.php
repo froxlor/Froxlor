@@ -77,6 +77,7 @@ if ($userinfo['type_2fa'] == '0') {
 		2 => 'Authenticator'
 	);
 	asort($type_select_values);
+	$type_select = "";
 	foreach ($type_select_values as $_val => $_type) {
 		$type_select .= \Froxlor\UI\HTML::makeoption($_type, $_val);
 	}
