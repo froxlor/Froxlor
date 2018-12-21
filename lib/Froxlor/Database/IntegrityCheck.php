@@ -35,7 +35,7 @@ class IntegrityCheck
 	 */
 	public function __construct()
 	{
-		if (! isset(\Froxlor\User::getAll()) || ! is_array(\Froxlor\User::getAll())) {
+		if (! empty(\Froxlor\User::getAll())) {
 			\Froxlor\User::getAll() = array(
 				'loginname' => 'integrity-check'
 			);
