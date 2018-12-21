@@ -192,7 +192,7 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			$content .= '.';
 		} elseif ($type == 'TXT' && ! empty($content)) {
 			// check that TXT content is enclosed in " "
-			$content = encloseTXTContent($content);
+			$content = \Froxlor\Dns\Dns::encloseTXTContent($content);
 		} elseif ($type == 'SRV') {
 			if ($prio === null || $prio < 0) {
 				$errors[] = $this->lng['error']['dns_srv_prioempty'];
@@ -329,7 +329,7 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			\Froxlor\UI\Response::standard_error('dns_domain_nodns', '', true);
 		}
 
-		$zone = createDomainZone($id);
+		$zone = \Froxlor\Dns\Dns::createDomainZone($id);
 		$zonefile = (string) $zone;
 
 		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_NOTICE, "[API] get dns-zone for '" . $result['domain'] . "'");

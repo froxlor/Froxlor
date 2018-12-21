@@ -155,6 +155,6 @@ Settings::Set('system.use_ssl', '1', true);
 Settings::Set('system.froxlordirectlyviahostname', '1', true);
 Settings::Set('system.dns_createhostnameentry', '1', true);
 Settings::Set('system.dnsenabled', '1', true);
-Settings::Set('system.dns_server', 'pdns', true);
+Settings::Set('system.dns_server', 'PowerDNS', true);
 Settings::Set('phpfpm.enabled', '1', true);
 Settings::Set('phpfpm.enabled_ownvhost', '1', true);

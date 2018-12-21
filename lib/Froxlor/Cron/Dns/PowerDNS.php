@@ -63,7 +63,7 @@ class PowerDNS extends DnsBase
 			}
 
 			if ($domain['ismainbutsubto'] == 0) {
-				$zoneContent = createDomainZone(($domain['id'] == 'none') ? $domain : $domain['id'], $isFroxlorHostname);
+				$zoneContent = \Froxlor\Dns\Dns::createDomainZone(($domain['id'] == 'none') ? $domain : $domain['id'], $isFroxlorHostname);
 				if (count($subzones)) {
 					foreach ($subzones as $subzone) {
 						$zoneContent->records[] = $subzone;
@@ -74,7 +74,7 @@ class PowerDNS extends DnsBase
 				$this->_insertAllowedTransfers($pdnsDomId);
 				$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'DB entries stored for zone `' . $domain['domain'] . '`');
 			} else {
-				return createDomainZone(($domain['id'] == 'none') ? $domain : $domain['id'], $isFroxlorHostname, true);
+				return \Froxlor\Dns\Dns::createDomainZone(($domain['id'] == 'none') ? $domain : $domain['id'], $isFroxlorHostname, true);
 			}
 		} else {
 			$this->_logger->logAction(CRON_ACTION, LOG_ERROR, 'Custom zonefiles are NOT supported when PowerDNS is selected as DNS daemon (triggered by: ' . $domain['domain'] . ')');

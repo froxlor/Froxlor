@@ -78,7 +78,7 @@ class Bind extends DnsBase
 			}
 
 			if ($domain['ismainbutsubto'] == 0) {
-				$zoneContent = (string) createDomainZone(($domain['id'] == 'none') ? $domain : $domain['id'], $isFroxlorHostname);
+				$zoneContent = (string) \Froxlor\Dns\Dns::createDomainZone(($domain['id'] == 'none') ? $domain : $domain['id'], $isFroxlorHostname);
 				$domain['zonefile'] = 'domains/' . $domain['domain'] . '.zone';
 				$zonefile_name = \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.bindconf_directory') . '/' . $domain['zonefile']);
 				$zonefile_handler = fopen($zonefile_name, 'w');
@@ -87,7 +87,7 @@ class Bind extends DnsBase
 				$this->_logger->logAction(CRON_ACTION, LOG_INFO, '`' . $zonefile_name . '` written');
 				$this->_bindconf_file .= $this->_generateDomainConfig($domain);
 			} else {
-				return (string) createDomainZone(($domain['id'] == 'none') ? $domain : $domain['id'], $isFroxlorHostname, true);
+				return (string) \Froxlor\Dns\Dns::createDomainZone(($domain['id'] == 'none') ? $domain : $domain['id'], $isFroxlorHostname, true);
 			}
 		} else {
 			$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'Added zonefile ' . $domain['zonefile'] . ' for domain ' . $domain['domain'] . ' - Note that you will also have to handle ALL records for ALL subdomains.');

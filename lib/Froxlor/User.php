@@ -123,7 +123,7 @@ class User
 				'email_quota',
 				'subdomains'
 			) as $field) {
-				_addResourceCount($admin_resources[$cur_adm], $customer, $field . '_used', $field);
+				self::_addResourceCount($admin_resources[$cur_adm], $customer, $field . '_used', $field);
 			}
 
 			$customer_mysqls_stmt = Database::prepare('SELECT COUNT(*) AS `number_mysqls` FROM `' . TABLE_PANEL_DATABASES . '`

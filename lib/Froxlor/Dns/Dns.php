@@ -329,10 +329,10 @@ class Dns
 		$required[$type][md5($record)] = $record;
 	}
 
-	private static function encloseTXTContent($txt_content, $isMultiLine = false)
+	public static function encloseTXTContent($txt_content, $isMultiLine = false)
 	{
 		// check that TXT content is enclosed in " "
-		if ($isMultiLine == false && Settings::Get('system.dns_server') != 'pdns') {
+		if ($isMultiLine == false && Settings::Get('system.dns_server') != 'PowerDNS') {
 			if (substr($txt_content, 0, 1) != '"') {
 				$txt_content = '"' . $txt_content;
 			}
@@ -340,7 +340,7 @@ class Dns
 				$txt_content .= '"';
 			}
 		}
-		if (Settings::Get('system.dns_server') == 'pdns') {
+		if (Settings::Get('system.dns_server') == 'PowerDNS') {
 			// no quotation for PowerDNS
 			if (substr($txt_content, 0, 1) == '"') {
 				$txt_content = substr($txt_content, 1);
