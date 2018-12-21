@@ -31,45 +31,22 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 		/**
 		 * Initialize the mailingsystem
 		 */
-		$mail = new \PHPMailer\PHPMailer\PHPMailer(true);
-		$mail->CharSet = "UTF-8";
-
-		if (Settings::Get('system.mail_use_smtp')) {
-			$mail->isSMTP();
-			$mail->Host = Settings::Get('system.mail_smtp_host');
-			$mail->SMTPAuth = Settings::Get('system.mail_smtp_auth') == '1' ? true : false;
-			$mail->Username = Settings::Get('system.mail_smtp_user');
-			$mail->Password = Settings::Get('system.mail_smtp_passwd');
-			if (Settings::Get('system.mail_smtp_usetls')) {
-				$mail->SMTPSecure = 'tls';
-			} else {
-				$mail->SMTPAutoTLS = false;
-			}
-			$mail->Port = Settings::Get('system.mail_smtp_port');
-		}
-
-		if (\PHPMailer\PHPMailer\PHPMailer::ValidateAddress(Settings::Get('panel.adminmail')) !== false) {
-			// set return-to address and custom sender-name, see #76
-			$mail->SetFrom(Settings::Get('panel.adminmail'), Settings::Get('panel.adminmail_defname'));
-			if (Settings::Get('panel.adminmail_return') != '') {
-				$mail->AddReplyTo(Settings::Get('panel.adminmail_return'), Settings::Get('panel.adminmail_defname'));
-			}
-		}
+		$mail = new \Froxlor\System\Mailer(true);
 
 		if ((int) Settings::Get('system.report_trafficmax') > 0) {
 			// Warn the customers at xx% traffic-usage
 			$result_stmt = Database::prepare("
-		SELECT `c`.`customerid`, `c`.`adminid`, `c`.`name`, `c`.`firstname`,
-		`c`.`company`, `c`.`traffic`, `c`.`email`, `c`.`def_language`,
-		`a`.`name` AS `adminname`, `a`.`email` AS `adminmail`,
-		(SELECT SUM(`t`.`http` + `t`.`ftp_up` + `t`.`ftp_down` + `t`.`mail`)
-		FROM `" . TABLE_PANEL_TRAFFIC . "` `t`
-		WHERE `t`.`customerid` = `c`.`customerid` AND `t`.`year` = :year AND `t`.`month` = :month
-		) as `traffic_used`
-		FROM `" . TABLE_PANEL_CUSTOMERS . "` AS `c`
-		LEFT JOIN `" . TABLE_PANEL_ADMINS . "` AS `a`
-		ON `a`.`adminid` = `c`.`adminid` WHERE `c`.`reportsent` <> '1'
-	");
+				SELECT `c`.`customerid`, `c`.`adminid`, `c`.`name`, `c`.`firstname`,
+				`c`.`company`, `c`.`traffic`, `c`.`email`, `c`.`def_language`,
+				`a`.`name` AS `adminname`, `a`.`email` AS `adminmail`,
+				(SELECT SUM(`t`.`http` + `t`.`ftp_up` + `t`.`ftp_down` + `t`.`mail`)
+				FROM `" . TABLE_PANEL_TRAFFIC . "` `t`
+				WHERE `t`.`customerid` = `c`.`customerid` AND `t`.`year` = :year AND `t`.`month` = :month
+				) as `traffic_used`
+				FROM `" . TABLE_PANEL_CUSTOMERS . "` AS `c`
+				LEFT JOIN `" . TABLE_PANEL_ADMINS . "` AS `a`
+				ON `a`.`adminid` = `c`.`adminid` WHERE `c`.`reportsent` <> '1'
+			");
 
 			$result_data = array(
 				'year' => date("Y", $yesterday),
@@ -89,8 +66,8 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 						'SALUTATION' => getCorrectUserSalutation($rep_userinfo),
 						'NAME' => $row['name'], // < keep this for compatibility
 						'TRAFFIC' => round(($row['traffic'] / 1024), 2), /* traffic is stored in KB, template uses MB */
-							'TRAFFICUSED' => round(($row['traffic_used'] / 1024), 2), /* traffic is stored in KB, template uses MB */
-							'USAGE_PERCENT' => round(($row['traffic_used'] * 100) / $row['traffic'], 2),
+						'TRAFFICUSED' => round(($row['traffic_used'] / 1024), 2), /* traffic is stored in KB, template uses MB */
+						'USAGE_PERCENT' => round(($row['traffic_used'] * 100) / $row['traffic'], 2),
 						'MAX_PERCENT' => Settings::Get('system.report_trafficmax')
 					);
 
@@ -118,11 +95,11 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 
 					// Get mail templates from database; the ones from 'admin' are fetched for fallback
 					$result2_stmt = Database::prepare("
-				SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
-				WHERE `adminid` = :adminid
-				AND `language` = :lang
-				AND `templategroup` = 'mails' AND `varname` = :varname
-			");
+						SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
+						WHERE `adminid` = :adminid
+						AND `language` = :lang
+						AND `templategroup` = 'mails' AND `varname` = :varname
+					");
 					$result2_data = array(
 						'adminid' => $row['adminid'],
 						'lang' => $row['def_language'],
@@ -159,9 +136,9 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 
 					$mail->ClearAddresses();
 					$upd_stmt = Database::prepare("
-				UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `reportsent` = '1'
-				WHERE `customerid` = :customerid
-			");
+						UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `reportsent` = '1'
+						WHERE `customerid` = :customerid
+					");
 					Database::pexecute($upd_stmt, array(
 						'customerid' => $row['customerid']
 					));
@@ -170,13 +147,13 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 
 			// Warn the admins at xx% traffic-usage
 			$result_stmt = Database::prepare("
-		SELECT `a`.*,
-		(SELECT SUM(`t`.`http` + `t`.`ftp_up` + `t`.`ftp_down` + `t`.`mail`)
-		FROM `" . TABLE_PANEL_TRAFFIC_ADMINS . "` `t`
-		WHERE `t`.`adminid` = `a`.`adminid` AND `t`.`year` = :year AND `t`.`month` = :month
-		) as `traffic_used_total`
-		FROM `" . TABLE_PANEL_ADMINS . "` `a` WHERE `a`.`reportsent` = '0'
-	");
+				SELECT `a`.*,
+				(SELECT SUM(`t`.`http` + `t`.`ftp_up` + `t`.`ftp_down` + `t`.`mail`)
+				FROM `" . TABLE_PANEL_TRAFFIC_ADMINS . "` `t`
+				WHERE `t`.`adminid` = `a`.`adminid` AND `t`.`year` = :year AND `t`.`month` = :month
+				) as `traffic_used_total`
+				FROM `" . TABLE_PANEL_ADMINS . "` `a` WHERE `a`.`reportsent` = '0'
+			");
 
 			$result_data = array(
 				'year' => date("Y", $yesterday),
@@ -197,9 +174,9 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 					);
 
 					$lngfile_stmt = Database::prepare("
-				SELECT `file` FROM `" . TABLE_PANEL_LANGUAGE . "`
-				WHERE `language` = :deflang
-			");
+						SELECT `file` FROM `" . TABLE_PANEL_LANGUAGE . "`
+						WHERE `language` = :deflang
+					");
 					$lngfile = Database::pexecute_first($lngfile_stmt, array(
 						'deflang' => $row['def_language']
 					));
@@ -220,11 +197,11 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 
 					// Get mail templates from database; the ones from 'admin' are fetched for fallback
 					$result2_stmt = Database::prepare("
-				SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
-				WHERE `adminid` = :adminid
-				AND `language` = :lang
-				AND `templategroup` = 'mails' AND `varname` = :varname
-			");
+						SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
+						WHERE `adminid` = :adminid
+						AND `language` = :lang
+						AND `templategroup` = 'mails' AND `varname` = :varname
+					");
 					$resul2_data = array(
 						'adminid' => $row['adminid'],
 						'lang' => $row['def_language'],
@@ -261,9 +238,9 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 
 					$mail->ClearAddresses();
 					$upd_stmt = Database::prepare("
-				UPDATE `" . TABLE_PANEL_ADMINS . "` SET `reportsent` = '1'
-				WHERE `adminid` = :adminid
-			");
+						UPDATE `" . TABLE_PANEL_ADMINS . "` SET `reportsent` = '1'
+						WHERE `adminid` = :adminid
+					");
 					Database::pexecute($upd_stmt, array(
 						'adminid' => $row['adminid']
 					));
@@ -277,13 +254,13 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 					$mail_body .= '---------------------------------------------------------------' . "\n";
 					$mail_body .= 'Loginname       Traffic used  (Percent) | Traffic available' . "\n";
 					$customers_stmt = Database::prepare("
-				SELECT `c`.*,
-				(SELECT SUM(`t`.`http` + `t`.`ftp_up` + `t`.`ftp_down` + `t`.`mail`)
-				FROM `" . TABLE_PANEL_TRAFFIC . "` `t`
-				WHERE `t`.`customerid` = `c`.`customerid` AND `t`.`year` = :year AND `t`.`month` = :month
-				) as `traffic_used_total`
-				FROM `" . TABLE_PANEL_CUSTOMERS . "` `c` WHERE `c`.`adminid` = :adminid
-			");
+						SELECT `c`.*,
+						(SELECT SUM(`t`.`http` + `t`.`ftp_up` + `t`.`ftp_down` + `t`.`mail`)
+						FROM `" . TABLE_PANEL_TRAFFIC . "` `t`
+						WHERE `t`.`customerid` = `c`.`customerid` AND `t`.`year` = :year AND `t`.`month` = :month
+						) as `traffic_used_total`
+						FROM `" . TABLE_PANEL_CUSTOMERS . "` `c` WHERE `c`.`adminid` = :adminid
+					");
 					$customers_data = array(
 						'year' => date("Y", $yesterday),
 						'month' => date("m", $yesterday),
@@ -350,12 +327,215 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 		} // trafficmax > 0
 
 		// include diskspace-usage report, #466
-		include dirname(__FILE__) . '/cron_usage.inc.diskspace.php';
+		self::usageDiskspace();
 
 		// Another month, reset the reportstatus
 		if (date('d') == '01') {
 			Database::query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `reportsent` = '0';");
 			Database::query("UPDATE `" . TABLE_PANEL_ADMINS . "` SET `reportsent` = '0';");
 		}
+	}
+
+	private static function usageDiskspace()
+	{
+		if ((int) Settings::Get('system.report_webmax') > 0) {
+			/**
+			 * report about diskusage for customers
+			 */
+			$result_stmt = Database::query("
+				SELECT `c`.`customerid`, `c`.`adminid`, `c`.`name`, `c`.`firstname`,
+				`c`.`company`, `c`.`diskspace`, `c`.`diskspace_used`, `c`.`email`, `c`.`def_language`,
+				`a`.`name` AS `adminname`, `a`.`email` AS `adminmail`
+				FROM `" . TABLE_PANEL_CUSTOMERS . "` AS `c`
+			    LEFT JOIN `" . TABLE_PANEL_ADMINS . "` AS `a`
+			    ON `a`.`adminid` = `c`.`adminid`
+			    WHERE `c`.`diskspace` > '0' AND `c`.`reportsent` <> '2'
+			");
+
+			while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
+
+				if (isset($row['diskspace']) && $row['diskspace_used'] != null && $row['diskspace_used'] > 0 && (($row['diskspace_used'] * 100) / $row['diskspace']) >= (int) Settings::Get('system.report_webmax')) {
+
+					$rep_userinfo = array(
+						'name' => $row['name'],
+						'firstname' => $row['firstname'],
+						'company' => $row['company']
+					);
+					$replace_arr = array(
+						'SALUTATION' => getCorrectUserSalutation($rep_userinfo),
+						'NAME' => $row['name'], // < keep this for compatibility
+						'DISKAVAILABLE' => round(($row['diskspace'] / 1024), 2), /* traffic is stored in KB, template uses MB */
+						'DISKUSED' => round($row['diskspace_used'] / 1024, 2), /* traffic is stored in KB, template uses MB */
+						'USAGE_PERCENT' => round(($row['diskspace_used'] * 100) / $row['diskspace'], 2),
+						'MAX_PERCENT' => Settings::Get('system.report_webmax')
+					);
+
+					$lngfile_stmt = Database::prepare("
+						SELECT `file` FROM `" . TABLE_PANEL_LANGUAGE . "`
+						WHERE `language` = :deflang
+					");
+					$lngfile = Database::pexecute_first($lngfile_stmt, array(
+						'deflang' => $row['def_language']
+					));
+
+					if ($lngfile !== null) {
+						$langfile = $lngfile['file'];
+					} else {
+						$lngfile = Database::pexecute_first($lngfile_stmt, array(
+							'deflang' => Settings::Get('panel.standardlanguage')
+						));
+						$langfile = $lngfile['file'];
+					}
+
+					// include english language file (fallback)
+					include_once \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/lng/english.lng.php');
+					// include admin/customer language file
+					include_once \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/' . $langfile);
+
+					// Get mail templates from database; the ones from 'admin' are fetched for fallback
+					$result2_stmt = Database::prepare("
+						SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
+						WHERE `adminid` = :adminid
+						AND `language` = :lang
+						AND `templategroup` = 'mails' AND `varname` = :varname
+					");
+					$result2_data = array(
+						'adminid' => $row['adminid'],
+						'lang' => $row['def_language'],
+						'varname' => 'diskmaxpercent_subject'
+					);
+					$result2 = Database::pexecute_first($result2_stmt, $result2_data);
+					$mail_subject = html_entity_decode(\Froxlor\PhpHelper::replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['diskmaxpercent']['subject']), $replace_arr));
+
+					$result2_data['varname'] = 'diskmaxpercent_mailbody';
+					$result2 = Database::pexecute_first($result2_stmt, $result2_data);
+					$mail_body = html_entity_decode(\Froxlor\PhpHelper::replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['diskmaxpercent']['mailbody']), $replace_arr));
+
+					$_mailerror = false;
+					$mailerr_msg = "";
+					try {
+						$mail->SetFrom($row['adminmail'], $row['adminname']);
+						$mail->Subject = $mail_subject;
+						$mail->AltBody = $mail_body;
+						$mail->MsgHTML(nl2br($mail_body));
+						$mail->AddAddress($row['email'], $row['name']);
+						$mail->Send();
+					} catch (\PHPMailer\PHPMailer\Exception $e) {
+						$mailerr_msg = $e->errorMessage();
+						$_mailerror = true;
+					} catch (\Exception $e) {
+						$mailerr_msg = $e->getMessage();
+						$_mailerror = true;
+					}
+
+					if ($_mailerror) {
+						$cronlog->logAction(CRON_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
+						echo "Error sending mail: " . $mailerr_msg . "\n";
+					}
+
+					$mail->ClearAddresses();
+					$upd_stmt = Database::prepare("
+						UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `reportsent` = '2'
+						WHERE `customerid` = :customerid
+					");
+					Database::pexecute($upd_stmt, array(
+						'customerid' => $row['customerid']
+					));
+				}
+			}
+
+			/**
+			 * report about diskusage for admins/reseller
+			 */
+			$result_stmt = Database::query("
+				SELECT `a`.* FROM `" . TABLE_PANEL_ADMINS . "` `a` WHERE `a`.`reportsent` <> '2'
+			");
+
+			while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
+
+				if (isset($row['diskspace']) && $row['diskspace_used'] != null && $row['diskspace_used'] > 0 && (($row['diskspace_used'] * 100) / $row['diskspace']) >= (int) Settings::Get('system.report_webmax')) {
+
+					$replace_arr = array(
+						'NAME' => $row['name'],
+						'DISKAVAILABLE' => ($row['diskspace'] / 1024), /* traffic is stored in KB, template uses MB */
+						'DISKUSED' => round($row['diskspace_used'] / 1024, 2), /* traffic is stored in KB, template uses MB */
+						'USAGE_PERCENT' => ($row['diskspace_used'] * 100) / $row['diskspace'],
+						'MAX_PERCENT' => Settings::Get('system.report_webmax')
+					);
+
+					$lngfile_stmt = Database::prepare("
+						SELECT `file` FROM `" . TABLE_PANEL_LANGUAGE . "`
+						WHERE `language` = :deflang
+					");
+					$lngfile = Database::pexecute_first($lngfile_stmt, array(
+						'deflang' => $row['def_language']
+					));
+
+					if ($lngfile !== null) {
+						$langfile = $lngfile['file'];
+					} else {
+						$lngfile = Database::pexecute_first($lngfile_stmt, array(
+							'deflang' => Settings::Get('panel.standardlanguage')
+						));
+						$langfile = $lngfile['file'];
+					}
+
+					// include english language file (fallback)
+					include_once \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/lng/english.lng.php');
+					// include admin/customer language file
+					include_once \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/' . $langfile);
+
+					// Get mail templates from database; the ones from 'admin' are fetched for fallback
+					$result2_stmt = Database::prepare("
+						SELECT `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
+						WHERE `adminid` = :adminid
+						AND `language` = :lang
+						AND `templategroup` = 'mails' AND `varname` = :varname
+					");
+					$result2_data = array(
+						'adminid' => $row['adminid'],
+						'lang' => $row['def_language'],
+						'varname' => 'diskmaxpercent_subject'
+					);
+					$result2 = Database::pexecute_first($result2_stmt, $result2_data);
+					$mail_subject = html_entity_decode(\Froxlor\PhpHelper::replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['diskmaxpercent']['subject']), $replace_arr));
+
+					$result2_data['varname'] = 'diskmaxpercent_mailbody';
+					$result2 = Database::pexecute_first($result2_stmt, $result2_data);
+					$mail_body = html_entity_decode(\Froxlor\PhpHelper::replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['diskmaxpercent']['mailbody']), $replace_arr));
+
+					$_mailerror = false;
+					$mailerr_msg = "";
+					try {
+						$mail->SetFrom($row['email'], $row['name']);
+						$mail->Subject = $mail_subject;
+						$mail->AltBody = $mail_body;
+						$mail->MsgHTML(nl2br($mail_body));
+						$mail->AddAddress($row['email'], $row['name']);
+						$mail->Send();
+					} catch (\PHPMailer\PHPMailer\Exception $e) {
+						$mailerr_msg = $e->errorMessage();
+						$_mailerror = true;
+					} catch (\Exception $e) {
+						$mailerr_msg = $e->getMessage();
+						$_mailerror = true;
+					}
+
+					if ($_mailerror) {
+						$cronlog->logAction(CRON_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
+						echo "Error sending mail: " . $mailerr_msg . "\n";
+					}
+
+					$mail->ClearAddresses();
+					$upd_stmt = Database::prepare("
+						UPDATE `" . TABLE_PANEL_ADMINS . "` SET `reportsent` = '2'
+						WHERE `adminid` = :adminid
+					");
+					Database::pexecute($upd_stmt, array(
+						'adminid' => $row['adminid']
+					));
+				}
+			}
+		} // webmax > 0
 	}
 }

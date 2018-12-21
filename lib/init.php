@@ -476,27 +476,4 @@ if ($page == '') {
 /**
  * Initialize the mailingsystem
  */
-$mail = new \PHPMailer\PHPMailer\PHPMailer(true);
-$mail->CharSet = "UTF-8";
-
-if (Settings::Get('system.mail_use_smtp')) {
-	$mail->isSMTP();
-	$mail->Host = Settings::Get('system.mail_smtp_host');
-	$mail->SMTPAuth = Settings::Get('system.mail_smtp_auth') == '1' ? true : false;
-	$mail->Username = Settings::Get('system.mail_smtp_user');
-	$mail->Password = Settings::Get('system.mail_smtp_passwd');
-	if (Settings::Get('system.mail_smtp_usetls')) {
-		$mail->SMTPSecure = 'tls';
-	} else {
-		$mail->SMTPAutoTLS = false;
-	}
-	$mail->Port = Settings::Get('system.mail_smtp_port');
-}
-
-if (\PHPMailer\PHPMailer\PHPMailer::ValidateAddress(Settings::Get('panel.adminmail')) !== false) {
-	// set return-to address and custom sender-name, see #76
-	$mail->SetFrom(Settings::Get('panel.adminmail'), Settings::Get('panel.adminmail_defname'));
-	if (Settings::Get('panel.adminmail_return') != '') {
-		$mail->AddReplyTo(Settings::Get('panel.adminmail_return'), Settings::Get('panel.adminmail_defname'));
-	}
-}
+$mail = new \Froxlor\System\Mailer(true);

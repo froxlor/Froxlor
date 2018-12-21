@@ -1,6 +1,7 @@
 <?php
 namespace Froxlor\Api;
 
+
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).

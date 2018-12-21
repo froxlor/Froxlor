@@ -320,31 +320,7 @@ class Cronjob
 	{
 		if (Settings::Get('system.send_cron_errors') == '1') {
 
-			$_mail = new \PHPMailer\PHPMailer\PHPMailer(true);
-			$_mail->CharSet = "UTF-8";
-
-			if (Settings::Get('system.mail_use_smtp')) {
-				$_mail->isSMTP();
-				$_mail->Host = Settings::Get('system.mail_smtp_host');
-				$_mail->SMTPAuth = Settings::Get('system.mail_smtp_auth') == '1' ? true : false;
-				$_mail->Username = Settings::Get('system.mail_smtp_user');
-				$_mail->Password = Settings::Get('system.mail_smtp_passwd');
-				if (Settings::Get('system.mail_smtp_usetls')) {
-					$_mail->SMTPSecure = 'tls';
-				} else {
-					$_mail->SMTPAutoTLS = false;
-				}
-				$_mail->Port = Settings::Get('system.mail_smtp_port');
-			}
-
-			if (\PHPMailer\PHPMailer\PHPMailer::ValidateAddress(Settings::Get('panel.adminmail')) !== false) {
-				// set return-to address and custom sender-name, see #76
-				$_mail->SetFrom(Settings::Get('panel.adminmail'), Settings::Get('panel.adminmail_defname'));
-				if (Settings::Get('panel.adminmail_return') != '') {
-					$_mail->AddReplyTo(Settings::Get('panel.adminmail_return'), Settings::Get('panel.adminmail_defname'));
-				}
-			}
-
+			$_mail = new Mailer(true);
 			$_mailerror = false;
 			$mailerr_msg = "";
 			try {

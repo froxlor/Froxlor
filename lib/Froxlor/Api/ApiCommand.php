@@ -50,7 +50,7 @@ abstract class ApiCommand extends ApiParameter
 	/**
 	 * mail interface
 	 *
-	 * @var \PHPMailer\PHPMailer\PHPMailer
+	 * @var \Froxlor\System\Mailer
 	 */
 	private $mail = null;
 
@@ -95,13 +95,11 @@ abstract class ApiCommand extends ApiParameter
 	 */
 	public function __construct($header = null, $params = null, $userinfo = null)
 	{
-		global $version, $dbversion, $branding;
-
 		parent::__construct($params);
 
-		$this->version = $version;
-		$this->dbversion = $dbversion;
-		$this->branding = $branding;
+		$this->version = \Froxlor\Froxlor::VERSION;
+		$this->dbversion = \Froxlor\Froxlor::DBVERSION;
+		$this->branding = \Froxlor\Froxlor::BRANDING;
 
 		if (! empty($header)) {
 			$this->readUserData($header);
@@ -120,7 +118,11 @@ abstract class ApiCommand extends ApiParameter
 		}
 
 		$this->initLang();
-		$this->initMail();
+
+		/**
+		 * Initialize the mailingsystem
+		 */
+		$this->mail = new \Froxlor\System\Mailer(true);
 
 		if ($this->debug) {
 			$this->logger()->logAction(LOG_ERROR, LOG_DEBUG, "[API] " . get_called_class() . ": " . json_encode($params, JSON_UNESCAPED_SLASHES));
@@ -178,42 +180,6 @@ abstract class ApiCommand extends ApiParameter
 
 		// set array for ApiCommand
 		$this->lng = $lng;
-	}
-
-	/**
-	 * initialize mail interface so an API wide mail-object is available
-	 *
-	 * @throws \PHPMailer\PHPMailer\Exception
-	 */
-	private function initMail()
-	{
-		/**
-		 * Initialize the mailingsystem
-		 */
-		$this->mail = new \PHPMailer\PHPMailer\PHPMailer(true);
-		$this->mail->CharSet = "UTF-8";
-
-		if (\Froxlor\Settings::Get('system.mail_use_smtp')) {
-			$this->mail->isSMTP();
-			$this->mail->Host = \Froxlor\Settings::Get('system.mail_smtp_host');
-			$this->mail->SMTPAuth = \Froxlor\Settings::Get('system.mail_smtp_auth') == '1' ? true : false;
-			$this->mail->Username = \Froxlor\Settings::Get('system.mail_smtp_user');
-			$this->mail->Password = \Froxlor\Settings::Get('system.mail_smtp_passwd');
-			if (\Froxlor\Settings::Get('system.mail_smtp_usetls')) {
-				$this->mail->SMTPSecure = 'tls';
-			} else {
-				$this->mail->SMTPAutoTLS = false;
-			}
-			$this->mail->Port = \Froxlor\Settings::Get('system.mail_smtp_port');
-		}
-
-		if (\PHPMailer\PHPMailer\PHPMailer::validateAddress(\Froxlor\Settings::Get('panel.adminmail')) !== false) {
-			// set return-to address and custom sender-name, see #76
-			$this->mail->setFrom(\Froxlor\Settings::Get('panel.adminmail'), \Froxlor\Settings::Get('panel.adminmail_defname'));
-			if (\Froxlor\Settings::Get('panel.adminmail_return') != '') {
-				$this->mail->addReplyTo(\Froxlor\Settings::Get('panel.adminmail_return'), \Froxlor\Settings::Get('panel.adminmail_defname'));
-			}
-		}
 	}
 
 	/**
@@ -279,7 +245,7 @@ abstract class ApiCommand extends ApiParameter
 	/**
 	 * return mailer instance
 	 *
-	 * @return \PHPMailer\PHPMailer\PHPMailer
+	 * @return \Froxlor\System\Mailer
 	 */
 	protected function mailer()
 	{

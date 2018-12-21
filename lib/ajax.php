@@ -15,7 +15,7 @@
  * @package    AJAX
  *
  */
-require __DIR__ . '/vendor/autoload.php';
+require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 // Load the user settings
 if (! file_exists('./userdata.inc.php')) {
@@ -23,8 +23,6 @@ if (! file_exists('./userdata.inc.php')) {
 }
 require './userdata.inc.php';
 require './tables.inc.php';
-require './functions/validate/function.validate_ip.php';
-require './functions/validate/function.validateDomain.php';
 
 if (isset($_POST['action'])) {
 	$action = $_POST['action'];
