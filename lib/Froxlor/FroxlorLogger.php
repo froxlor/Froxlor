@@ -230,6 +230,9 @@ class FroxlorLogger
 			case LOGIN_ACTION:
 				$_action = 'login';
 				break;
+			default:
+				$_action = 'unknown';
+				break;
 		}
 		return $_action;
 	}

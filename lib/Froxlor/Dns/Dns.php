@@ -261,7 +261,7 @@ class Dns
 			if (array_key_exists("TXT", $required_entries)) {
 
 				if (Settings::Get('dkim.use_dkim') == '1') {
-					$dkim_entries = generateDkimEntries($domain);
+					$dkim_entries = self::generateDkimEntries($domain);
 				}
 
 				foreach ($required_entries as $type => $records) {
@@ -359,7 +359,7 @@ class Dns
 		return $escpd_mail;
 	}
 
-	public static function generateDkimEntries($domain)
+	private static function generateDkimEntries($domain)
 	{
 		$zone_dkim = array();
 
