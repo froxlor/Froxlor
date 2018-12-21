@@ -23,8 +23,6 @@ if (@php_sapi_name() != 'cli' && @php_sapi_name() != 'cgi' && @php_sapi_name() !
 	die('This script will only work in the shell.');
 }
 
-require __DIR__ . '/vendor/autoload.php';
-
 // ensure that default timezone is set
 if (function_exists("date_default_timezone_set") && function_exists("date_default_timezone_get")) {
 	@date_default_timezone_set(@date_default_timezone_get());
@@ -107,7 +105,7 @@ while ($fName = readdir($lockDirHandle)) {
 		if ($lastline == '=== Keep lockfile because of exception ===') {
 			fclose($debugHandler);
 			unlink($lockfile);
-			dieWithMail('Last cron jailed out with an exception. Exiting...' . "\n" . 'Take a look into the contents of ' . $lockdir . $fName . '* for more information!' . "\n");
+			\Froxlor\System\Cronjob::dieWithMail('Last cron jailed out with an exception. Exiting...' . "\n" . 'Take a look into the contents of ' . $lockdir . $fName . '* for more information!' . "\n");
 		}
 
 		// Check if cron is running or has died.
@@ -133,7 +131,7 @@ while ($fName = readdir($lockDirHandle)) {
 
 			// ... and delete it
 			unlink($lockfile);
-			dieWithMail('There is already a Cronjob for ' . $crontype . ' in progress. Exiting...' . "\n" . 'Take a look into the contents of ' . $lockdir . $lockFilename . '* for more information!' . "\n");
+			\Froxlor\System\Cronjob::dieWithMail('There is already a Cronjob for ' . $crontype . ' in progress. Exiting...' . "\n" . 'Take a look into the contents of ' . $lockdir . $lockFilename . '* for more information!' . "\n");
 		}
 	}
 }
@@ -178,9 +176,9 @@ if (\Froxlor\Froxlor::hasUpdates() || \Froxlor\Froxlor::hasDbUpdates()) {
 		unlink($lockfile);
 		$errormessage = "Version of file doesn't match version of database. Exiting...\n\n";
 		$errormessage .= "Possible reason: Froxlor update\n";
-		$errormessage .= "Information: Current version in database: " . \Froxlor\Settings::Get('panel.version') . "-" . \Froxlor\Froxlor::BRANDING . " (DB: " . \Froxlor\Settings::Get('panel.db_version') . ") - version of Froxlor files: " . \Froxlor\Froxlor::getVersionString() . ")\n";
+		$errormessage .= "Information: Current version in database: " . \Froxlor\Settings::Get('panel.version') . (! empty(\Froxlor\Froxlor::BRANDING) ? "-" . \Froxlor\Froxlor::BRANDING : "") . " (DB: " . \Froxlor\Settings::Get('panel.db_version') . ") - version of Froxlor files: " . \Froxlor\Froxlor::getVersionString() . ")\n";
 		$errormessage .= "Solution: Please visit your Foxlor admin interface for further information.\n";
-		dieWithMail($errormessage);
+		\Froxlor\System\Cronjob::dieWithMail($errormessage);
 	}
 
 	if (\Froxlor\Settings::Get('system.cron_allowautoupdate') == 1) {

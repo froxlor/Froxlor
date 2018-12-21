@@ -55,7 +55,7 @@ class FroxlorLogger
 
 			switch ($logger) {
 				case 'syslog':
-					self::$_ml->pushHandler(new SyslogHandler('froxlor', Logger::DEBUG));
+					self::$_ml->pushHandler(new SyslogHandler('froxlor', LOG_USER, Logger::DEBUG));
 					break;
 				case 'file':
 					self::$_ml->pushHandler(new StreamHandler(Settings::Get('logger.logfile'), Logger::DEBUG));
