@@ -51,17 +51,14 @@ class DomainBulkAction extends BulkAction
 	{
 		$this->preImport();
 
-		// get the admins userinfo to check for domains_used, etc.
-		global $userinfo;
-
-		if ($userinfo['domains'] == "-1") {
+		if (\Froxlor\User::getAll()['domains'] == "-1") {
 			$dom_unlimited = true;
 		} else {
 			$dom_unlimited = false;
 		}
 
-		$domains_used = (int) $userinfo['domains_used'];
-		$domains_avail = (int) $userinfo['domains'];
+		$domains_used = (int) \Froxlor\User::getAll()['domains_used'];
+		$domains_avail = (int) \Froxlor\User::getAll()['domains'];
 
 		if (empty($separator) || strlen($separator) != 1) {
 			throw new \Exception("Invalid separator specified: '" . $separator . "'");

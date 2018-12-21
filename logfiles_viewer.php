@@ -30,7 +30,7 @@ $domain_id = isset($_GET['domain_id']) ? (int) $_GET['domain_id'] : null;
 $last_n = isset($_GET['number_of_lines']) ? (int) $_GET['number_of_lines'] : 100;
 
 // user's with logviewenabled = false
-if (AREA != 'admin' && $userinfo['logviewenabled'] != '1') {
+if (AREA != 'admin' && \Froxlor\User::getAll()['logviewenabled'] != '1') {
 	// back to domain overview
 	\Froxlor\UI\Response::redirectTo($filename, array(
 		'page' => 'domains',
@@ -42,7 +42,7 @@ if (function_exists('exec')) {
 
 	// get domain-info
 	try {
-		$json_result = SubDomains::getLocal($userinfo, array(
+		$json_result = SubDomains::getLocal(\Froxlor\User::getAll(), array(
 			'id' => $domain_id
 		))->get();
 	} catch (Exception $e) {

@@ -124,11 +124,11 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 				Database::needSqlData();
 				$sql_root = Database::getSqlData();
 				Database::needRoot(false);
-				$userinfo = $customer;
+				\Froxlor\User::getAll() = $customer;
 
 				$replace_arr = array(
-					'SALUTATION' => \Froxlor\User::getCorrectUserSalutation($userinfo),
-					'CUST_NAME' => \Froxlor\User::getCorrectUserSalutation($userinfo), // < keep this for compatibility
+					'SALUTATION' => \Froxlor\User::getCorrectUserSalutation(\Froxlor\User::getAll()),
+					'CUST_NAME' => \Froxlor\User::getCorrectUserSalutation(\Froxlor\User::getAll()), // < keep this for compatibility
 					'DB_NAME' => $username,
 					'DB_PASS' => $password,
 					'DB_DESC' => $databasedescription,
@@ -137,9 +137,9 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 				);
 
 				// get template for mail subject
-				$mail_subject = $this->getMailTemplate($userinfo, 'mails', 'new_database_by_customer_subject', $replace_arr, $this->lng['mails']['new_database_by_customer']['subject']);
+				$mail_subject = $this->getMailTemplate(\Froxlor\User::getAll(), 'mails', 'new_database_by_customer_subject', $replace_arr, $this->lng['mails']['new_database_by_customer']['subject']);
 				// get template for mail body
-				$mail_body = $this->getMailTemplate($userinfo, 'mails', 'new_database_by_customer_mailbody', $replace_arr, $this->lng['mails']['new_database_by_customer']['mailbody']);
+				$mail_body = $this->getMailTemplate(\Froxlor\User::getAll(), 'mails', 'new_database_by_customer_mailbody', $replace_arr, $this->lng['mails']['new_database_by_customer']['mailbody']);
 
 				$_mailerror = false;
 				$mailerr_msg = "";
@@ -147,7 +147,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 					$this->mailer()->Subject = $mail_subject;
 					$this->mailer()->AltBody = $mail_body;
 					$this->mailer()->msgHTML(str_replace("\n", "<br />", $mail_body));
-					$this->mailer()->addAddress($userinfo['email'], \Froxlor\User::getCorrectUserSalutation($userinfo));
+					$this->mailer()->addAddress(\Froxlor\User::getAll()['email'], \Froxlor\User::getCorrectUserSalutation(\Froxlor\User::getAll()));
 					$this->mailer()->send();
 				} catch (\PHPMailer\PHPMailer\Exception $e) {
 					$mailerr_msg = $e->errorMessage();
@@ -159,7 +159,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 
 				if ($_mailerror) {
 					$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_ERR, "[API] Error sending mail: " . $mailerr_msg);
-					\Froxlor\UI\Response::standard_error('errorsendingmail', $userinfo['email'], true);
+					\Froxlor\UI\Response::standard_error('errorsendingmail', \Froxlor\User::getAll()['email'], true);
 				}
 
 				$this->mailer()->clearAddresses();

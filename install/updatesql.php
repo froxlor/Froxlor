@@ -21,7 +21,7 @@ use Froxlor\FroxlorLogger;
 require_once __DIR__ . '/lib/updateFunctions.php';
 
 if (! defined('_CRON_UPDATE')) {
-	if (! defined('AREA') || (defined('AREA') && AREA != 'admin') || ! isset($userinfo['loginname']) || (isset($userinfo['loginname']) && $userinfo['loginname'] == '')) {
+	if (! defined('AREA') || (defined('AREA') && AREA != 'admin') || ! isset(\Froxlor\User::getAll()['loginname']) || (isset(\Froxlor\User::getAll()['loginname']) && \Froxlor\User::getAll()['loginname'] == '')) {
 		header('Location: ../index.php');
 		exit();
 	}

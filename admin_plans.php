@@ -37,15 +37,15 @@ if ($page == '' || $page == 'overview') {
 			'adminname' => $lng['admin']['admin'],
 			'p.ts' => $lng['admin']['plans']['last_update']
 		);
-		$paging = new \Froxlor\UI\Paging($userinfo, TABLE_PANEL_PLANS, $fields);
+		$paging = new \Froxlor\UI\Paging(\Froxlor\User::getAll(), TABLE_PANEL_PLANS, $fields);
 		$plans = '';
 		$result_stmt = Database::prepare("
 			SELECT p.*, a.loginname as adminname
 			FROM `" . TABLE_PANEL_PLANS . "` p, `" . TABLE_PANEL_ADMINS . "` a
-			WHERE " . ($userinfo['customers_see_all'] ? '' : " `p`.`adminid` = :adminid AND ") . "
+			WHERE " . (\Froxlor\User::getAll()['customers_see_all'] ? '' : " `p`.`adminid` = :adminid AND ") . "
 			`p`.`adminid` = `a`.`adminid` " . $paging->getSqlWhere(false) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
 		Database::pexecute($result_stmt, array(
-			'adminid' => $userinfo['adminid']
+			'adminid' => \Froxlor\User::getAll()['adminid']
 		));
 		$paging->setEntries(Database::num_rows());
 		$sortcode = $paging->getHtmlSortCode($lng);
@@ -75,7 +75,7 @@ if ($page == '' || $page == 'overview') {
 			'id' => $id
 		));
 
-		if ($result['id'] != 0 && $result['id'] == $id && (int) $userinfo['adminid'] == $result['adminid']) {
+		if ($result['id'] != 0 && $result['id'] == $id && (int) \Froxlor\User::getAll()['adminid'] == $result['adminid']) {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 
 				$del_stmt = Database::prepare("
@@ -84,7 +84,7 @@ if ($page == '' || $page == 'overview') {
 					'id' => $id
 				));
 
-				$log->logAction(ADM_ACTION, LOG_INFO, "Plan '" . $result['name'] . "' has been deleted by '" . $userinfo['loginname'] . "'");
+				$log->logAction(ADM_ACTION, LOG_INFO, "Plan '" . $result['name'] . "' has been deleted by '" . \Froxlor\User::getAll()['loginname'] . "'");
 				\Froxlor\UI\Response::redirectTo($filename, array(
 					'page' => $page,
 					's' => $s
@@ -197,7 +197,7 @@ if ($page == '' || $page == 'overview') {
 				SET `adminid` = :adminid, `name` = :name, `description` = :desc, `value` = :valuearr, `ts` = UNIX_TIMESTAMP();
 			");
 			$ins_data = array(
-				'adminid' => $userinfo['adminid'],
+				'adminid' => \Froxlor\User::getAll()['adminid'],
 				'name' => $name,
 				'desc' => $description,
 				'valuearr' => json_encode($value_arr)

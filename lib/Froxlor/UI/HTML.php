@@ -7,10 +7,10 @@ class HTML
 	/**
 	 * Build Navigation Sidebar
 	 *
-	 * @param
-	 *        	array navigation data
-	 * @param
-	 *        	array userinfo the userinfo of the user
+	 * @param array $navigation
+	 *        	data
+	 * @param array $userinfo
+	 *        	the userinfo of the user
 	 * @return string the content of the navigation bar
 	 *        
 	 * @author Florian Lippert <flo@syscp.org>
@@ -254,7 +254,7 @@ class HTML
 	 */
 	public static function ask_yesno($text, $yesfile, $params = array(), $targetname = '', $back_nr = 1)
 	{
-		global $userinfo, $s, $header, $footer, $lng, $theme;
+		global $s, $header, $footer;
 
 		$hiddenparams = '';
 
@@ -277,7 +277,7 @@ class HTML
 
 	public static function ask_yesno_withcheckbox($text, $chk_text, $yesfile, $params = array(), $targetname = '', $show_checkbox = true)
 	{
-		global $userinfo, $s, $header, $footer, $lng, $theme;
+		global $s, $header, $footer, $theme;
 
 		$hiddenparams = '';
 

@@ -20,7 +20,7 @@ $header
 				<tr>
 					<th>{$lng['admin']['phpsettings']['description']}</th>
 					<th>{$lng['admin']['phpsettings']['activedomains']}</th>
-					<if \Froxlor\Settings::Get('phpfpm.enabled')=='1'>
+					<if \Froxlor\Settings::Get('phpfpm.enabled') == '1'>
 					<th>{$lng['admin']['phpsettings']['fpmdesc']}</th>
 					<else>
 					<th>{$lng['admin']['phpsettings']['binary']}</th></if>
@@ -31,7 +31,7 @@ $header
 			</tbody>
 		</table>
 
-		<if15 < $count>
+		<if 15 < $count>
 				<div class="overviewadd">
 					<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />&nbsp;
 					<a href="{$linker->getLink(array('section' => 'phpsettings', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['phpsettings']['addnew']}</a>

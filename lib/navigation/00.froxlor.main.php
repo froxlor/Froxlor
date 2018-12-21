@@ -23,7 +23,7 @@ return array(
 			'label' => $lng['admin']['overview'],
 			'elements' => array(
 				array(
-					'label' => $lng['menue']['main']['username']
+					'label' => $lng['menue']['main']['username'] . (isset(\Froxlor\User::getAll()['loginname']) && \Froxlor\User::getAll()['loginname'] != '' ? " " . \Froxlor\User::getAll()['loginname'] : "")
 				),
 				array(
 					'url' => 'customer_index.php?page=change_password',

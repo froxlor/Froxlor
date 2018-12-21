@@ -71,28 +71,28 @@ if ($action == '2fa_entercode') {
 			// Authenticator-verification has already happened at this point, so just get the user-data
 			$sel_stmt = Database::prepare("SELECT * FROM $table WHERE `" . $field . "` = :uid");
 		}
-		$userinfo = Database::pexecute_first($sel_stmt, $sel_param);
+		\Froxlor\User::getAll() = Database::pexecute_first($sel_stmt, $sel_param);
 		// whoops, no (valid) user? Start again
-		if (empty($userinfo)) {
+		if (empty(\Froxlor\User::getAll())) {
 			\Froxlor\UI\Response::redirectTo('index.php', array(
 				'showmessage' => '2'
 			));
 		}
-		// set fields in $userinfo required for finishLogin()
-		$userinfo['adminsession'] = $isadmin;
-		$userinfo['userid'] = $uid;
+		// set fields in \Froxlor\User::getAll() required for finishLogin()
+		\Froxlor\User::getAll()['adminsession'] = $isadmin;
+		\Froxlor\User::getAll()['userid'] = $uid;
 
 		// if not successful somehow - start again
-		if (! finishLogin($userinfo)) {
+		if (! finishLogin(\Froxlor\User::getAll())) {
 			\Froxlor\UI\Response::redirectTo('index.php', array(
 				'showmessage' => '2'
 			));
 		}
 
 		// when using email-2fa, remove the one-time-code
-		if ($userinfo['type_2fa'] == '1') {
+		if (\Froxlor\User::getAll()['type_2fa'] == '1') {
 			$del_stmt = Database::prepare("UPDATE $table SET `data_2fa` = '' WHERE `" . $field . "` = :uid");
-			$userinfo = Database::pexecute_first($del_stmt, array(
+			\Froxlor\User::getAll() = Database::pexecute_first($del_stmt, array(
 				'uid' => $uid
 			));
 		}
@@ -199,23 +199,23 @@ if ($action == '2fa_entercode') {
 			}
 		}
 
-		$userinfo_stmt = Database::prepare("SELECT * FROM $table
+		\Froxlor\User::getAll()_stmt = Database::prepare("SELECT * FROM $table
 			WHERE `loginname`= :loginname");
-		Database::pexecute($userinfo_stmt, array(
+		Database::pexecute(\Froxlor\User::getAll()_stmt, array(
 			"loginname" => $loginname
 		));
-		$userinfo = $userinfo_stmt->fetch(PDO::FETCH_ASSOC);
+		\Froxlor\User::getAll() = \Froxlor\User::getAll()_stmt->fetch(PDO::FETCH_ASSOC);
 
-		if ($userinfo['loginfail_count'] >= Settings::Get('login.maxloginattempts') && $userinfo['lastlogin_fail'] > (time() - Settings::Get('login.deactivatetime'))) {
+		if (\Froxlor\User::getAll()['loginfail_count'] >= Settings::Get('login.maxloginattempts') && \Froxlor\User::getAll()['lastlogin_fail'] > (time() - Settings::Get('login.deactivatetime'))) {
 			\Froxlor\UI\Response::redirectTo('index.php', array(
 				'showmessage' => '3'
 			));
 			exit();
-		} elseif (\Froxlor\System\Crypt::validatePasswordLogin($userinfo, $password, $table, $uid)) {
+		} elseif (\Froxlor\System\Crypt::validatePasswordLogin(\Froxlor\User::getAll(), $password, $table, $uid)) {
 			// only show "you're banned" if the login was successful
 			// because we don't want to publish that the user does exist
-			if ($userinfo['deactivated']) {
-				unset($userinfo);
+			if (\Froxlor\User::getAll()['deactivated']) {
+				unset(\Froxlor\User::getAll());
 				\Froxlor\UI\Response::redirectTo('index.php', array(
 					'showmessage' => '5'
 				));
@@ -228,10 +228,10 @@ if ($action == '2fa_entercode') {
 		              WHERE `$uid`= :uid");
 				Database::pexecute($stmt, array(
 					"lastlogin_succ" => time(),
-					"uid" => $userinfo[$uid]
+					"uid" => \Froxlor\User::getAll()[$uid]
 				));
-				$userinfo['userid'] = $userinfo[$uid];
-				$userinfo['adminsession'] = $adminsession;
+				\Froxlor\User::getAll()['userid'] = \Froxlor\User::getAll()[$uid];
+				\Froxlor\User::getAll()['adminsession'] = $adminsession;
 			}
 		} else {
 			// login incorrect
@@ -240,7 +240,7 @@ if ($action == '2fa_entercode') {
 				WHERE `$uid`= :uid");
 			Database::pexecute($stmt, array(
 				"lastlogin_fail" => time(),
-				"uid" => $userinfo[$uid]
+				"uid" => \Froxlor\User::getAll()[$uid]
 			));
 
 			// Log failed login
@@ -249,7 +249,7 @@ if ($action == '2fa_entercode') {
 			));
 			$rstlog->logAction(LOGIN_ACTION, LOG_WARNING, "User '" . $loginname . "' tried to login with wrong password.");
 
-			unset($userinfo);
+			unset(\Froxlor\User::getAll());
 			\Froxlor\UI\Response::redirectTo('index.php', array(
 				'showmessage' => '2'
 			));
@@ -257,15 +257,15 @@ if ($action == '2fa_entercode') {
 		}
 
 		// 2FA activated
-		if (Settings::Get('2fa.enabled') == '1' && $userinfo['type_2fa'] > 0) {
+		if (Settings::Get('2fa.enabled') == '1' && \Froxlor\User::getAll()['type_2fa'] > 0) {
 			// redirect to code-enter-page
-			$_SESSION['secret_2fa'] = ($userinfo['type_2fa'] == 2 ? $userinfo['data_2fa'] : 'email');
-			$_SESSION['uid_2fa'] = $userinfo[$uid];
+			$_SESSION['secret_2fa'] = (\Froxlor\User::getAll()['type_2fa'] == 2 ? \Froxlor\User::getAll()['data_2fa'] : 'email');
+			$_SESSION['uid_2fa'] = \Froxlor\User::getAll()[$uid];
 			$_SESSION['uidfield_2fa'] = $uid;
 			$_SESSION['uidtable_2fa'] = $table;
 			$_SESSION['unfo_2fa'] = $is_admin;
 			// send mail if type_2fa = 1 (email)
-			if ($userinfo['type_2fa'] == 1) {
+			if (\Froxlor\User::getAll()['type_2fa'] == 1) {
 				// generate code
 				$tfa = new \Froxlor\FroxlorTwoFactorAuth('Froxlor');
 				$code = $tfa->getCode($tfa->createSecret());
@@ -273,7 +273,7 @@ if ($action == '2fa_entercode') {
 				$stmt = Database::prepare("UPDATE $table SET `data_2fa` = :d2fa WHERE `$uid` = :uid");
 				Database::pexecute($stmt, array(
 					"d2fa" => $code,
-					"uid" => $userinfo[$uid]
+					"uid" => \Froxlor\User::getAll()[$uid]
 				));
 				// build up & send email
 				$_mailerror = false;
@@ -287,7 +287,7 @@ if ($action == '2fa_entercode') {
 					$mail->Subject = $lng['mails']['2fa']['subject'];
 					$mail->AltBody = $mail_body;
 					$mail->MsgHTML(str_replace("\n", "<br />", $mail_body));
-					$mail->AddAddress($userinfo['email'], \Froxlor\User::getCorrectUserSalutation($userinfo));
+					$mail->AddAddress(\Froxlor\User::getAll()['email'], \Froxlor\User::getCorrectUserSalutation(\Froxlor\User::getAll()));
 					$mail->Send();
 				} catch (\PHPMailer\PHPMailer\Exception $e) {
 					$mailerr_msg = $e->errorMessage();
@@ -304,7 +304,7 @@ if ($action == '2fa_entercode') {
 					$rstlog->logAction(ADM_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
 					\Froxlor\UI\Response::redirectTo('index.php', array(
 						'showmessage' => '4',
-						'customermail' => $userinfo['email']
+						'customermail' => \Froxlor\User::getAll()['email']
 					));
 					exit();
 				}
@@ -317,7 +317,7 @@ if ($action == '2fa_entercode') {
 			exit();
 		}
 
-		if (! finishLogin($userinfo)) {
+		if (! finishLogin(\Froxlor\User::getAll())) {
 			\Froxlor\UI\Response::redirectTo('index.php', array(
 				'showmessage' => '2'
 			));
@@ -663,17 +663,17 @@ if ($action == 'resetpwd') {
 	}
 }
 
-function finishLogin($userinfo)
+function finishLogin(\Froxlor\User::getAll())
 {
 	global $version, $dbversion, $remote_addr, $http_user_agent, $languages;
 
-	if (isset($userinfo['userid']) && $userinfo['userid'] != '') {
+	if (isset(\Froxlor\User::getAll()['userid']) && \Froxlor\User::getAll()['userid'] != '') {
 		$s = md5(uniqid(microtime(), 1));
 
 		if (isset($_POST['language'])) {
 			$language = \Froxlor\Validate\Validate::validate($_POST['language'], 'language');
 			if ($language == 'profile') {
-				$language = $userinfo['def_language'];
+				$language = \Froxlor\User::getAll()['def_language'];
 			} elseif (! isset($languages[$language])) {
 				$language = Settings::Get('panel.standardlanguage');
 			}
@@ -681,8 +681,8 @@ function finishLogin($userinfo)
 			$language = Settings::Get('panel.standardlanguage');
 		}
 
-		if (isset($userinfo['theme']) && $userinfo['theme'] != '') {
-			$theme = $userinfo['theme'];
+		if (isset(\Froxlor\User::getAll()['theme']) && \Froxlor\User::getAll()['theme'] != '') {
+			$theme = \Froxlor\User::getAll()['theme'];
 		} else {
 			$theme = Settings::Get('panel.default_theme');
 		}
@@ -692,8 +692,8 @@ function finishLogin($userinfo)
 					WHERE `userid` = :uid
 					AND `adminsession` = :adminsession");
 			Database::pexecute($stmt, array(
-				"uid" => $userinfo['userid'],
-				"adminsession" => $userinfo['adminsession']
+				"uid" => \Froxlor\User::getAll()['userid'],
+				"adminsession" => \Froxlor\User::getAll()['adminsession']
 			));
 		}
 
@@ -708,12 +708,12 @@ function finishLogin($userinfo)
 
 		$params = array(
 			"hash" => $s,
-			"userid" => $userinfo['userid'],
+			"userid" => \Froxlor\User::getAll()['userid'],
 			"ipaddress" => $remote_addr,
 			"useragent" => $http_user_agent,
 			"lastactivity" => time(),
 			"language" => $language,
-			"adminsession" => $userinfo['adminsession']
+			"adminsession" => \Froxlor\User::getAll()['adminsession']
 		);
 
 		if ($has_theme) {
@@ -734,7 +734,7 @@ function finishLogin($userinfo)
 		}
 		$qryparams['s'] = $s;
 
-		if ($userinfo['adminsession'] == '1') {
+		if (\Froxlor\User::getAll()['adminsession'] == '1') {
 			if (\Froxlor\Froxlor::hasUpdates() || \Froxlor\Froxlor::hasDbUpdates()) {
 				\Froxlor\UI\Response::redirectTo('admin_updates.php', array(
 					's' => $s

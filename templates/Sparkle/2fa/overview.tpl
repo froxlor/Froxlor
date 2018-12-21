@@ -8,7 +8,7 @@ $header
 	</header>
 
 	<section>
-		<if $userinfo['type_2fa']=='0'>
+		<if \Froxlor\User::getAll()['type_2fa']=='0'>
 		<form method="post"
 			action="{$linker->getLink(array('section' => 'index', 'page' => $page, 'action' => 'add'))}">
 			<p>{$lng['2fa']['2fa_overview_desc']}</p>
@@ -18,7 +18,7 @@ $header
 		</form>
 		</if>
 
-		<if $userinfo['type_2fa']=='1'>
+		<if \Froxlor\User::getAll()['type_2fa']=='1'>
 		<form method="post"
 			action="{$linker->getLink(array('section' => 'index', 'page' => $page, 'action' => 'delete'))}">
 			<p>{$lng['2fa']['2fa_email_desc']}</p>
@@ -27,7 +27,7 @@ $header
 		</form>
 		</if>
 
-		<if $userinfo['type_2fa']=='2'>
+		<if \Froxlor\User::getAll()['type_2fa']=='2'>
 		<form method="post"
 			action="{$linker->getLink(array('section' => 'index', 'page' => $page, 'action' => 'delete'))}">
 			<p>{$lng['2fa']['2fa_ga_desc']}</p>

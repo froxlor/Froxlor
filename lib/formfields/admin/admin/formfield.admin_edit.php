@@ -40,26 +40,26 @@ return array(
 						'value' => array(
 							$result['deactivated']
 						),
-						'visible' => ($result['adminid'] == $userinfo['userid'] ? false : true)
+						'visible' => ($result['adminid'] == \Froxlor\User::getAll()['userid'] ? false : true)
 					),
 					'admin_password' => array(
 						'label' => $lng['login']['password'] . '&nbsp;(' . $lng['panel']['emptyfornochanges'] . ')',
 						'type' => 'password',
 						'autocomplete' => 'off',
-						'visible' => ($result['adminid'] == $userinfo['userid'] ? false : true)
+						'visible' => ($result['adminid'] == \Froxlor\User::getAll()['userid'] ? false : true)
 					),
 					'admin_password_suggestion' => array(
 						'label' => $lng['customer']['generated_pwd'],
 						'type' => 'text',
 						'visible' => (\Froxlor\Settings::Get('panel.password_regex') == ''),
 						'value' => \Froxlor\System\Crypt::generatePassword(),
-						'visible' => ($result['adminid'] == $userinfo['userid'] ? false : true)
+						'visible' => ($result['adminid'] == \Froxlor\User::getAll()['userid'] ? false : true)
 					),
 					'def_language' => array(
 						'label' => $lng['login']['language'],
 						'type' => 'select',
 						'select_var' => $language_options,
-						'visible' => ($result['adminid'] == $userinfo['userid'] ? false : true)
+						'visible' => ($result['adminid'] == \Froxlor\User::getAll()['userid'] ? false : true)
 					)
 				)
 			),
@@ -106,7 +106,7 @@ return array(
 			'section_c' => array(
 				'title' => $lng['admin']['servicedata'],
 				'image' => 'icons/user_add.png',
-				'visible' => ($result['adminid'] != $userinfo['userid'] ? true : false),
+				'visible' => ($result['adminid'] != \Froxlor\User::getAll()['userid'] ? true : false),
 				'fields' => array(
 					'ipaddress' => array(
 						'label' => $lng['serversettings']['ipaddress']['title'],

@@ -17,7 +17,7 @@
 					{$searchcode}
 				</div>
 	
-				<if ($userinfo['ftps_used'] < $userinfo['ftps'] || $userinfo['ftps'] == '-1') >
+				<if (\Froxlor\User::getAll()['ftps_used'] < \Froxlor\User::getAll()['ftps'] || \Froxlor\User::getAll()['ftps'] == '-1') >
 				<div class="overviewadd">
 					<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />&nbsp;
 					<a href="{$linker->getLink(array('section' => 'ftp', 'page' => 'accounts', 'action' => 'add'))}">{$lng['ftp']['account_add']}</a>
@@ -51,7 +51,7 @@
 				</table>
 			</form>
 
-			<if ($userinfo['ftps_used'] < $userinfo['ftps'] || $userinfo['ftps'] == '-1') && 15 < $ftps_count >
+			<if (\Froxlor\User::getAll()['ftps_used'] < \Froxlor\User::getAll()['ftps'] || \Froxlor\User::getAll()['ftps'] == '-1') && 15 < $ftps_count >
 			<div class="overviewadd">
 				<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />&nbsp;
 				<a href="{$linker->getLink(array('section' => 'ftp', 'page' => 'accounts', 'action' => 'add'))}">{$lng['ftp']['account_add']}</a>

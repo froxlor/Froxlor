@@ -47,13 +47,13 @@ if ($page == 'overview') {
 			'm.email_full' => $lng['emails']['emailaddress'],
 			'm.destination' => $lng['emails']['forwarders']
 		);
-		$paging = new \Froxlor\UI\Paging($userinfo, TABLE_MAIL_VIRTUAL, $fields);
+		$paging = new \Froxlor\UI\Paging(\Froxlor\User::getAll(), TABLE_MAIL_VIRTUAL, $fields);
 		$result_stmt = Database::prepare('SELECT `m`.`id`, `m`.`domainid`, `m`.`email`, `m`.`email_full`, `m`.`iscatchall`, `u`.`quota`, `m`.`destination`, `m`.`popaccountid`, `d`.`domain`, `u`.`mboxsize` FROM `' . TABLE_MAIL_VIRTUAL . '` `m`
 			LEFT JOIN `' . TABLE_PANEL_DOMAINS . '` `d` ON (`m`.`domainid` = `d`.`id`)
 			LEFT JOIN `' . TABLE_MAIL_USERS . '` `u` ON (`m`.`popaccountid` = `u`.`id`)
 			WHERE `m`.`customerid`= :customerid ' . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
 		Database::pexecute($result_stmt, array(
-			"customerid" => $userinfo['customerid']
+			"customerid" => \Froxlor\User::getAll()['customerid']
 		));
 		$emailscount = Database::num_rows();
 		$paging->setEntries($emailscount);
@@ -133,7 +133,7 @@ if ($page == 'overview') {
 			WHERE `customerid`= :customerid
 			AND `isemaildomain`='1' ORDER BY `domain` ASC");
 		Database::pexecute($emaildomains_count_stmt, array(
-			"customerid" => $userinfo['customerid']
+			"customerid" => \Froxlor\User::getAll()['customerid']
 		));
 		$emaildomains_count = $emaildomains_count_stmt->fetch(PDO::FETCH_ASSOC);
 		$emaildomains_count = $emaildomains_count['count'];
@@ -141,7 +141,7 @@ if ($page == 'overview') {
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate("email/emails") . "\";");
 	} elseif ($action == 'delete' && $id != 0) {
 		try {
-			$json_result = Emails::getLocal($userinfo, array(
+			$json_result = Emails::getLocal(\Froxlor\User::getAll(), array(
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
@@ -152,7 +152,7 @@ if ($page == 'overview') {
 		if (isset($result['email']) && $result['email'] != '') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
-					Emails::getLocal($userinfo, array(
+					Emails::getLocal(\Froxlor\User::getAll(), array(
 						'id' => $id
 					))->delete();
 				} catch (Exception $e) {
@@ -176,10 +176,10 @@ if ($page == 'overview') {
 			}
 		}
 	} elseif ($action == 'add') {
-		if ($userinfo['emails_used'] < $userinfo['emails'] || $userinfo['emails'] == '-1') {
+		if (\Froxlor\User::getAll()['emails_used'] < \Froxlor\User::getAll()['emails'] || \Froxlor\User::getAll()['emails'] == '-1') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
-					$json_result = Emails::getLocal($userinfo, $_POST)->add();
+					$json_result = Emails::getLocal(\Froxlor\User::getAll(), $_POST)->add();
 				} catch (Exception $e) {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
@@ -196,7 +196,7 @@ if ($page == 'overview') {
 					AND `isemaildomain`='1'
 					ORDER BY `domain` ASC");
 				Database::pexecute($result_stmt, array(
-					"cid" => $userinfo['customerid']
+					"cid" => \Froxlor\User::getAll()['customerid']
 				));
 				$domains = '';
 
@@ -224,7 +224,7 @@ if ($page == 'overview') {
 		}
 	} elseif ($action == 'edit' && $id != 0) {
 		try {
-			$json_result = Emails::getLocal($userinfo, array(
+			$json_result = Emails::getLocal(\Froxlor\User::getAll(), array(
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
@@ -269,7 +269,7 @@ if ($page == 'overview') {
 		}
 	} elseif ($action == 'togglecatchall' && $id != 0) {
 		try {
-			$json_result = Emails::getLocal($userinfo, array(
+			$json_result = Emails::getLocal(\Froxlor\User::getAll(), array(
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
@@ -278,7 +278,7 @@ if ($page == 'overview') {
 		$result = json_decode($json_result, true)['data'];
 
 		try {
-			Emails::getLocal($userinfo, array(
+			Emails::getLocal(\Froxlor\User::getAll(), array(
 				'id' => $id,
 				'iscatchall' => ($result['iscatchall'] == '1' ? 0 : 1)
 			))->update();
@@ -294,9 +294,9 @@ if ($page == 'overview') {
 	}
 } elseif ($page == 'accounts') {
 	if ($action == 'add' && $id != 0) {
-		if ($userinfo['email_accounts'] == '-1' || ($userinfo['email_accounts_used'] < $userinfo['email_accounts'])) {
+		if (\Froxlor\User::getAll()['email_accounts'] == '-1' || (\Froxlor\User::getAll()['email_accounts_used'] < \Froxlor\User::getAll()['email_accounts'])) {
 			try {
-				$json_result = Emails::getLocal($userinfo, array(
+				$json_result = Emails::getLocal(\Froxlor\User::getAll(), array(
 					'id' => $id
 				))->get();
 			} catch (Exception $e) {
@@ -306,7 +306,7 @@ if ($page == 'overview') {
 
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
-					EmailAccounts::getLocal($userinfo, $_POST)->add();
+					EmailAccounts::getLocal(\Froxlor\User::getAll(), $_POST)->add();
 				} catch (Exception $e) {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
@@ -344,7 +344,7 @@ if ($page == 'overview') {
 		}
 	} elseif ($action == 'changepw' && $id != 0) {
 		try {
-			$json_result = Emails::getLocal($userinfo, array(
+			$json_result = Emails::getLocal(\Froxlor\User::getAll(), array(
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
@@ -355,7 +355,7 @@ if ($page == 'overview') {
 		if (isset($result['popaccountid']) && $result['popaccountid'] != '') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
-					EmailAccounts::getLocal($userinfo, $_POST)->update();
+					EmailAccounts::getLocal(\Froxlor\User::getAll(), $_POST)->update();
 				} catch (Exception $e) {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
@@ -380,7 +380,7 @@ if ($page == 'overview') {
 		}
 	} elseif ($action == 'changequota' && Settings::Get('system.mail_quota_enabled') == '1' && $id != 0) {
 		try {
-			$json_result = Emails::getLocal($userinfo, array(
+			$json_result = Emails::getLocal(\Froxlor\User::getAll(), array(
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
@@ -391,7 +391,7 @@ if ($page == 'overview') {
 		if (isset($result['popaccountid']) && $result['popaccountid'] != '') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
-					EmailAccounts::getLocal($userinfo, $_POST)->update();
+					EmailAccounts::getLocal(\Froxlor\User::getAll(), $_POST)->update();
 				} catch (Exception $e) {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
@@ -416,7 +416,7 @@ if ($page == 'overview') {
 		}
 	} elseif ($action == 'delete' && $id != 0) {
 		try {
-			$json_result = Emails::getLocal($userinfo, array(
+			$json_result = Emails::getLocal(\Froxlor\User::getAll(), array(
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
@@ -427,7 +427,7 @@ if ($page == 'overview') {
 		if (isset($result['popaccountid']) && $result['popaccountid'] != '') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
-					EmailAccounts::getLocal($userinfo, $_POST)->delete();
+					EmailAccounts::getLocal(\Froxlor\User::getAll(), $_POST)->delete();
 				} catch (Exception $e) {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
@@ -448,9 +448,9 @@ if ($page == 'overview') {
 	}
 } elseif ($page == 'forwarders') {
 	if ($action == 'add' && $id != 0) {
-		if ($userinfo['email_forwarders_used'] < $userinfo['email_forwarders'] || $userinfo['email_forwarders'] == '-1') {
+		if (\Froxlor\User::getAll()['email_forwarders_used'] < \Froxlor\User::getAll()['email_forwarders'] || \Froxlor\User::getAll()['email_forwarders'] == '-1') {
 			try {
-				$json_result = Emails::getLocal($userinfo, array(
+				$json_result = Emails::getLocal(\Froxlor\User::getAll(), array(
 					'id' => $id
 				))->get();
 			} catch (Exception $e) {
@@ -461,7 +461,7 @@ if ($page == 'overview') {
 			if (isset($result['email']) && $result['email'] != '') {
 				if (isset($_POST['send']) && $_POST['send'] == 'send') {
 					try {
-						EmailForwarders::getLocal($userinfo, $_POST)->add();
+						EmailForwarders::getLocal(\Froxlor\User::getAll(), $_POST)->add();
 					} catch (Exception $e) {
 						\Froxlor\UI\Response::dynamic_error($e->getMessage());
 					}
@@ -489,7 +489,7 @@ if ($page == 'overview') {
 		}
 	} elseif ($action == 'delete' && $id != 0) {
 		try {
-			$json_result = Emails::getLocal($userinfo, array(
+			$json_result = Emails::getLocal(\Froxlor\User::getAll(), array(
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
@@ -513,7 +513,7 @@ if ($page == 'overview') {
 
 				if (isset($_POST['send']) && $_POST['send'] == 'send') {
 					try {
-						EmailForwarders::getLocal($userinfo, $_POST)->delete();
+						EmailForwarders::getLocal(\Froxlor\User::getAll(), $_POST)->delete();
 					} catch (Exception $e) {
 						\Froxlor\UI\Response::dynamic_error($e->getMessage());
 					}

@@ -29,16 +29,14 @@ class IpAddr
 
 	public static function getIpPortCombinations($ssl = false)
 	{
-		global $userinfo;
-
 		$additional_conditions_params = array();
 		$additional_conditions_array = array();
 
-		if ($userinfo['ip'] != '-1') {
+		if (\Froxlor\User::getAll()['ip'] != '-1') {
 			$admin_ip_stmt = Database::prepare("
 				SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id` = IN (:ipid)
 			");
-			$myips = implode(",", json_decode($userinfo['ip'], true));
+			$myips = implode(",", json_decode(\Froxlor\User::getAll()['ip'], true));
 			Database::pexecute($admin_ip_stmt, array(
 				'ipid' => $myips
 			));

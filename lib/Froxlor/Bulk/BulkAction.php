@@ -145,8 +145,6 @@ abstract class BulkAction
 
 	protected function importEntity($data_array = null)
 	{
-		global $userinfo;
-
 		$module = '\\Froxlor\\Api\\Commands\\' . substr($this->api_call, 0, strpos($this->api_call, "."));
 		$function = substr($this->api_call, strpos($this->api_call, ".") + 1);
 
@@ -159,7 +157,7 @@ abstract class BulkAction
 
 		$result = null;
 		try {
-			$json_result = $module::getLocal($userinfo, $new_data)->$function();
+			$json_result = $module::getLocal(\Froxlor\User::getAll(), $new_data)->$function();
 			$result = json_decode($json_result, true)['data'];
 		} catch (\Exception $e) {
 			$this->errors[] = $e->getMessage();

@@ -7,129 +7,129 @@ $header
 		
 		<div class="grid-g">
 			<div class="grid-u-1-2" id="statsbox">
-				<if $userinfo['subdomains'] != '0'>
+				<if \Froxlor\User::getAll()['subdomains'] != '0'>
 				<div class="canvasbox">
-					<input type="hidden" id="subdomains" class="circular" data-used="{$userinfo['subdomains_used']}" data-available="{$userinfo['subdomains']}">
+					<input type="hidden" id="subdomains" class="circular" data-used="{\Froxlor\User::getAll()['subdomains_used']}" data-available="{\Froxlor\User::getAll()['subdomains']}">
 					<canvas id="subdomains-canvas" width="120" height="76"></canvas><br />
 					{$lng['customer']['subdomains']}<br />
 					<small>
-						{$userinfo['subdomains_used']} {$lng['panel']['used']}<br />
-						<if $userinfo['subdomains'] != '∞'>
-						{$userinfo['subdomains']} {$lng['panel']['available']}
+						{\Froxlor\User::getAll()['subdomains_used']} {$lng['panel']['used']}<br />
+						<if \Froxlor\User::getAll()['subdomains'] != '∞'>
+						{\Froxlor\User::getAll()['subdomains']} {$lng['panel']['available']}
 						</if>
 					</small>
 				</div>
 				</if>
 
-				<if $userinfo['diskspace'] != '0'>
+				<if \Froxlor\User::getAll()['diskspace'] != '0'>
 				<div class="canvasbox">
-					<input type="hidden" id="diskspace" class="circular" data-used="{$userinfo['diskspace_used']}" data-available="{$userinfo['diskspace']}">
+					<input type="hidden" id="diskspace" class="circular" data-used="{\Froxlor\User::getAll()['diskspace_used']}" data-available="{\Froxlor\User::getAll()['diskspace']}">
 					<canvas id="diskspace-canvas" width="120" height="76"></canvas><br />
 					{$lng['customer']['diskspace']}<br />
 					<small>
-						{$userinfo['diskspace_used']} {$lng['panel']['used']}<br />
-						<if $userinfo['diskspace'] != '∞'>
-						{$userinfo['diskspace']} {$lng['panel']['available']}
+						{\Froxlor\User::getAll()['diskspace_used']} {$lng['panel']['used']}<br />
+						<if \Froxlor\User::getAll()['diskspace'] != '∞'>
+						{\Froxlor\User::getAll()['diskspace']} {$lng['panel']['available']}
 						</if>
 					</small>
 				</div>
 				</if>
 
-				<if $userinfo['traffic'] != '0'>
+				<if \Froxlor\User::getAll()['traffic'] != '0'>
 				<div class="canvasbox">
-					<input type="hidden" id="traffic" class="circular" data-used="{$userinfo['traffic_used']}" data-available="{$userinfo['traffic']}">
+					<input type="hidden" id="traffic" class="circular" data-used="{\Froxlor\User::getAll()['traffic_used']}" data-available="{\Froxlor\User::getAll()['traffic']}">
 					<canvas id="traffic-canvas" width="120" height="76"></canvas><br />
 					{$lng['customer']['traffic']}<br />
 					<small>
-						{$userinfo['traffic_used']} {$lng['panel']['used']}<br />
-						<if $userinfo['traffic'] != '∞'>
-						{$userinfo['traffic']} {$lng['panel']['available']}
+						{\Froxlor\User::getAll()['traffic_used']} {$lng['panel']['used']}<br />
+						<if \Froxlor\User::getAll()['traffic'] != '∞'>
+						{\Froxlor\User::getAll()['traffic']} {$lng['panel']['available']}
 						</if>
 					</small>
 				</div>
 				</if>
 
-				<if $userinfo['emails'] != '0'>
+				<if \Froxlor\User::getAll()['emails'] != '0'>
 				<div class="canvasbox">
-					<input type="hidden" id="emails" class="circular" data-used="{$userinfo['emails_used']}" data-available="{$userinfo['emails']}">
+					<input type="hidden" id="emails" class="circular" data-used="{\Froxlor\User::getAll()['emails_used']}" data-available="{\Froxlor\User::getAll()['emails']}">
 					<canvas id="emails-canvas" width="120" height="76"></canvas><br />
 					{$lng['customer']['emails']}<br />
 					<small>
-						{$userinfo['emails_used']} {$lng['panel']['used']}<br />
-						<if $userinfo['emails'] != '∞'>
-						{$userinfo['emails']} {$lng['panel']['available']}
+						{\Froxlor\User::getAll()['emails_used']} {$lng['panel']['used']}<br />
+						<if \Froxlor\User::getAll()['emails'] != '∞'>
+						{\Froxlor\User::getAll()['emails']} {$lng['panel']['available']}
 						</if>
 					</small>
 				</div>
 				</if>
 
-				<if $userinfo['email_accounts'] != '0'>
+				<if \Froxlor\User::getAll()['email_accounts'] != '0'>
 				<div class="canvasbox">
-					<input type="hidden" id="email_accounts" class="circular" data-used="{$userinfo['email_accounts_used']}" data-available="{$userinfo['email_accounts']}">
+					<input type="hidden" id="email_accounts" class="circular" data-used="{\Froxlor\User::getAll()['email_accounts_used']}" data-available="{\Froxlor\User::getAll()['email_accounts']}">
 					<canvas id="email_accounts-canvas" width="120" height="76"></canvas><br />
 					{$lng['customer']['accounts']}<br />
 					<small>
-						{$userinfo['email_accounts_used']} {$lng['panel']['used']}<br />
-						<if $userinfo['email_accounts'] != '∞'>
-						{$userinfo['email_accounts']} {$lng['panel']['available']}<br />
+						{\Froxlor\User::getAll()['email_accounts_used']} {$lng['panel']['used']}<br />
+						<if \Froxlor\User::getAll()['email_accounts'] != '∞'>
+						{\Froxlor\User::getAll()['email_accounts']} {$lng['panel']['available']}<br />
 						</if>
-						{$userinfo['mailspace_used']} {$lng['customer']['mib']}
+						{\Froxlor\User::getAll()['mailspace_used']} {$lng['customer']['mib']}
 					</small>
 				</div>
 				</if>
 
-				<if $userinfo['email_forwarders'] != '0'>
+				<if \Froxlor\User::getAll()['email_forwarders'] != '0'>
 				<div class="canvasbox">
-					<input type="hidden" id="email_forwarders" class="circular" data-used="{$userinfo['email_forwarders_used']}" data-available="{$userinfo['email_forwarders']}">
+					<input type="hidden" id="email_forwarders" class="circular" data-used="{\Froxlor\User::getAll()['email_forwarders_used']}" data-available="{\Froxlor\User::getAll()['email_forwarders']}">
 					<canvas id="email_forwarders-canvas" width="120" height="76"></canvas><br />
 					{$lng['customer']['forwarders']}<br />
 					<small>
-						{$userinfo['email_forwarders_used']} {$lng['panel']['used']}<br />
-						<if $userinfo['email_forwarders'] != '∞'>
-						{$userinfo['email_forwarders']} {$lng['panel']['available']}
+						{\Froxlor\User::getAll()['email_forwarders_used']} {$lng['panel']['used']}<br />
+						<if \Froxlor\User::getAll()['email_forwarders'] != '∞'>
+						{\Froxlor\User::getAll()['email_forwarders']} {$lng['panel']['available']}
 						</if>
 					</small>
 				</div>
 				</if>
 
-				<if \Froxlor\Settings::Get('system.mail_quota_enabled') == 1 && $userinfo['email_quota'] != '0'>
+				<if \Froxlor\Settings::Get('system.mail_quota_enabled') == 1 && \Froxlor\User::getAll()['email_quota'] != '0'>
 				<div class="canvasbox">
-					<input type="hidden" id="email_quota" class="circular" data-used="{$userinfo['email_quota_used']}" data-available="{$userinfo['email_quota']}">
+					<input type="hidden" id="email_quota" class="circular" data-used="{\Froxlor\User::getAll()['email_quota_used']}" data-available="{\Froxlor\User::getAll()['email_quota']}">
 					<canvas id="email_quota-canvas" width="120" height="76"></canvas><br />
 					{$lng['customer']['email_quota']}<br />
 					<small>
-						{$userinfo['email_quota_used']} {$lng['panel']['used']}<br />
-						<if $userinfo['email_quota'] != '∞'>
-						{$userinfo['email_quota']} {$lng['panel']['available']}
+						{\Froxlor\User::getAll()['email_quota_used']} {$lng['panel']['used']}<br />
+						<if \Froxlor\User::getAll()['email_quota'] != '∞'>
+						{\Froxlor\User::getAll()['email_quota']} {$lng['panel']['available']}
 						</if>
 					</small>
 				</div>
 				</if>
 
-				<if $userinfo['mysqls'] != '0'>
+				<if \Froxlor\User::getAll()['mysqls'] != '0'>
 				<div class="canvasbox">
-					<input type="hidden" id="mysqls" class="circular" data-used="{$userinfo['mysqls_used']}" data-available="{$userinfo['mysqls']}">
+					<input type="hidden" id="mysqls" class="circular" data-used="{\Froxlor\User::getAll()['mysqls_used']}" data-available="{\Froxlor\User::getAll()['mysqls']}">
 					<canvas id="mysqls-canvas" width="120" height="76"></canvas><br />
 					{$lng['customer']['mysqls']}<br />
 					<small>
-						{$userinfo['mysqls_used']} {$lng['panel']['used']}<br />
-						<if $userinfo['mysqls'] != '∞'>
-						{$userinfo['mysqls']} {$lng['panel']['available']}<br />
+						{\Froxlor\User::getAll()['mysqls_used']} {$lng['panel']['used']}<br />
+						<if \Froxlor\User::getAll()['mysqls'] != '∞'>
+						{\Froxlor\User::getAll()['mysqls']} {$lng['panel']['available']}<br />
 						</if>
-						{$userinfo['dbspace_used']} {$lng['customer']['mib']}
+						{\Froxlor\User::getAll()['dbspace_used']} {$lng['customer']['mib']}
 					</small>
 				</div>
 				</if>
 
-				<if $userinfo['ftps'] != '0'>
+				<if \Froxlor\User::getAll()['ftps'] != '0'>
 				<div class="canvasbox">
-					<input type="hidden" id="ftps" class="circular" data-used="{$userinfo['ftps_used']}" data-available="{$userinfo['ftps']}">
+					<input type="hidden" id="ftps" class="circular" data-used="{\Froxlor\User::getAll()['ftps_used']}" data-available="{\Froxlor\User::getAll()['ftps']}">
 					<canvas id="ftps-canvas" width="120" height="76"></canvas><br />
 					{$lng['customer']['ftps']}<br />
 					<small>
-						{$userinfo['ftps_used']} {$lng['panel']['used']}<br />
-						<if $userinfo['ftps'] != '∞'>
-						{$userinfo['ftps']} {$lng['panel']['available']}
+						{\Froxlor\User::getAll()['ftps_used']} {$lng['panel']['used']}<br />
+						<if \Froxlor\User::getAll()['ftps'] != '∞'>
+						{\Froxlor\User::getAll()['ftps']} {$lng['panel']['available']}
 						</if>
 					</small>
 				</div>
@@ -163,7 +163,7 @@ $header
 					<tbody>
 						<tr>
 							<td>{$lng['login']['username']}:</td>
-							<td>{$userinfo['loginname']}</td>
+							<td>{\Froxlor\User::getAll()['loginname']}</td>
 						</tr>
 						<tr>
 							<td>{$lng['customer']['domains']}:</td>
@@ -189,45 +189,45 @@ $header
 						</tr>
 					</thead>
 					<tbody>
-						<if $userinfo['customernumber'] >
+						<if \Froxlor\User::getAll()['customernumber'] >
 				        <tr>
 				            <td>{$lng['customer']['customernumber']}:</td>
-				            <td>{$userinfo['customernumber']}</td>
+				            <td>{\Froxlor\User::getAll()['customernumber']}</td>
 				        </tr>
 				        </if>
-				        <if $userinfo['company'] >
+				        <if \Froxlor\User::getAll()['company'] >
 				        <tr>
 				            <td>{$lng['customer']['company']}:</td>
-				            <td>{$userinfo['company']}</td>
+				            <td>{\Froxlor\User::getAll()['company']}</td>
 				        </tr>
 				        </if>
-				        <if $userinfo['name'] >
+				        <if \Froxlor\User::getAll()['name'] >
 				        <tr>
 				            <td>{$lng['customer']['name']}:</td>
-				            <td>{$userinfo['firstname']} {$userinfo['name']}</td>
+				            <td>{\Froxlor\User::getAll()['firstname']} {\Froxlor\User::getAll()['name']}</td>
 				        </tr>
 				        </if>
-				        <if $userinfo['street'] >
+				        <if \Froxlor\User::getAll()['street'] >
 				        <tr>
 				            <td>{$lng['customer']['street']}:</td>
-				            <td>{$userinfo['street']}</td>
+				            <td>{\Froxlor\User::getAll()['street']}</td>
 				        </tr>
 				        </if>
-				        <if $userinfo['city'] >
+				        <if \Froxlor\User::getAll()['city'] >
 				        <tr>
 				            <td>{$lng['customer']['zipcode']}/{$lng['customer']['city']}:</td>
-				            <td>{$userinfo['zipcode']} {$userinfo['city']}</td>
+				            <td>{\Froxlor\User::getAll()['zipcode']} {\Froxlor\User::getAll()['city']}</td>
 				        </tr>
 				        </if>
-				        <if $userinfo['email'] >
+				        <if \Froxlor\User::getAll()['email'] >
 				        <tr>
 				            <td>{$lng['customer']['email']}:</td>
-				            <td>{$userinfo['email']}</td>
+				            <td>{\Froxlor\User::getAll()['email']}</td>
 				        </tr>
 				        </if>
-				        <if $userinfo['custom_notes'] != '' && $userinfo['custom_notes_show'] == '1'>
+				        <if \Froxlor\User::getAll()['custom_notes'] != '' && \Froxlor\User::getAll()['custom_notes_show'] == '1'>
 				        <tr>
-				            <td colspan="2">{$userinfo['custom_notes']}</td>
+				            <td colspan="2">{\Froxlor\User::getAll()['custom_notes']}</td>
 				        </tr>
 				        </if>
 					</tbody>

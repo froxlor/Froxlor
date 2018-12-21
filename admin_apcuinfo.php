@@ -30,7 +30,7 @@ require './lib/init.php';
 
 $horizontal_bar_size = 950; // 1280px window width
 
-if ($action == 'delete' && function_exists('apcu_clear_cache') && $userinfo['change_serversettings'] == '1') {
+if ($action == 'delete' && function_exists('apcu_clear_cache') && \Froxlor\User::getAll()['change_serversettings'] == '1') {
 	apcu_clear_cache();
 	$log->logAction(ADM_ACTION, LOG_INFO, "cleared APCu cache");
 	header('Location: ' . $linker->getLink(array(

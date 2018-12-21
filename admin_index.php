@@ -29,7 +29,7 @@ if ($action == 'logout') {
 	$log->logAction(ADM_ACTION, LOG_NOTICE, "logged out");
 
 	$params = array(
-		'adminid' => (int) $userinfo['adminid']
+		'adminid' => (int) \Froxlor\User::getAll()['adminid']
 	);
 
 	if (Settings::Get('session.allow_multiple_login') == '1') {
@@ -67,9 +67,9 @@ if ($page == 'overview') {
 				SUM(`ftps_used`) AS `ftps_used`,
 				SUM(`subdomains_used`) AS `subdomains_used`,
 				SUM(`traffic_used`) AS `traffic_used`
-				FROM `" . TABLE_PANEL_CUSTOMERS . "`" . ($userinfo['customers_see_all'] ? '' : " WHERE `adminid` = :adminid "));
+				FROM `" . TABLE_PANEL_CUSTOMERS . "`" . (\Froxlor\User::getAll()['customers_see_all'] ? '' : " WHERE `adminid` = :adminid "));
 	$overview = Database::pexecute_first($overview_stmt, array(
-		'adminid' => $userinfo['adminid']
+		'adminid' => \Froxlor\User::getAll()['adminid']
 	));
 
 	$dec_places = Settings::Get('panel.decimal_places');
@@ -78,9 +78,9 @@ if ($page == 'overview') {
 
 	$number_domains_stmt = Database::prepare("
 		SELECT COUNT(*) AS `number_domains` FROM `" . TABLE_PANEL_DOMAINS . "`
-		WHERE `parentdomainid`='0'" . ($userinfo['customers_see_all'] ? '' : " AND `adminid` = :adminid"));
+		WHERE `parentdomainid`='0'" . (\Froxlor\User::getAll()['customers_see_all'] ? '' : " AND `adminid` = :adminid"));
 	$number_domains = Database::pexecute_first($number_domains_stmt, array(
-		'adminid' => $userinfo['adminid']
+		'adminid' => \Froxlor\User::getAll()['adminid']
 	));
 
 	$overview['number_domains'] = $number_domains['number_domains'];
@@ -91,7 +91,7 @@ if ($page == 'overview') {
 
 	if ((isset($_GET['lookfornewversion']) && $_GET['lookfornewversion'] == 'yes') || (isset($lookfornewversion) && $lookfornewversion == 'yes')) {
 		try {
-			$json_result = Froxlor::getLocal($userinfo)->checkUpdate();
+			$json_result = Froxlor::getLocal(\Froxlor\User::getAll())->checkUpdate();
 		} catch (Exception $e) {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
@@ -111,13 +111,13 @@ if ($page == 'overview') {
 	}
 
 	$dec_places = Settings::Get('panel.decimal_places');
-	$userinfo['diskspace'] = round($userinfo['diskspace'] / 1024, $dec_places);
-	$userinfo['diskspace_used'] = round($userinfo['diskspace_used'] / 1024, $dec_places);
-	$userinfo['traffic'] = round($userinfo['traffic'] / (1024 * 1024), $dec_places);
-	$userinfo['traffic_used'] = round($userinfo['traffic_used'] / (1024 * 1024), $dec_places);
-	$userinfo = \Froxlor\PhpHelper::str_replace_array('-1', $lng['customer']['unlimited'], $userinfo, 'customers domains diskspace traffic mysqls emails email_accounts email_forwarders email_quota ftps subdomains');
+	\Froxlor\User::getAll()['diskspace'] = round(\Froxlor\User::getAll()['diskspace'] / 1024, $dec_places);
+	\Froxlor\User::getAll()['diskspace_used'] = round(\Froxlor\User::getAll()['diskspace_used'] / 1024, $dec_places);
+	\Froxlor\User::getAll()['traffic'] = round(\Froxlor\User::getAll()['traffic'] / (1024 * 1024), $dec_places);
+	\Froxlor\User::getAll()['traffic_used'] = round(\Froxlor\User::getAll()['traffic_used'] / (1024 * 1024), $dec_places);
+	\Froxlor\User::getAll() = \Froxlor\PhpHelper::str_replace_array('-1', $lng['customer']['unlimited'], \Froxlor\User::getAll(), 'customers domains diskspace traffic mysqls emails email_accounts email_forwarders email_quota ftps subdomains');
 
-	$userinfo['custom_notes'] = ($userinfo['custom_notes'] != '') ? nl2br($userinfo['custom_notes']) : '';
+	\Froxlor\User::getAll()['custom_notes'] = (\Froxlor\User::getAll()['custom_notes'] != '') ? nl2br(\Froxlor\User::getAll()['custom_notes']) : '';
 
 	$cron_last_runs = \Froxlor\System\Cronjob::getCronjobsLastRun();
 	$outstanding_tasks = \Froxlor\System\Cronjob::getOutstandingTasks();
@@ -179,7 +179,7 @@ if ($page == 'overview') {
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 		$old_password = \Froxlor\Validate\Validate::validate($_POST['old_password'], 'old password');
 
-		if (! validatePasswordLogin($userinfo, $old_password, TABLE_PANEL_ADMINS, 'adminid')) {
+		if (! validatePasswordLogin(\Froxlor\User::getAll(), $old_password, TABLE_PANEL_ADMINS, 'adminid')) {
 			\Froxlor\UI\Response::standard_error('oldpasswordnotcorrect');
 		}
 
@@ -205,8 +205,8 @@ if ($page == 'overview') {
 			\Froxlor\UI\Response::standard_error('newpasswordconfirmerror');
 		} else {
 			try {
-				Admins::getLocal($userinfo, array(
-					'id' => $userinfo['adminid'],
+				Admins::getLocal(\Froxlor\User::getAll(), array(
+					'id' => \Froxlor\User::getAll()['adminid'],
 					'admin_password' => $new_password
 				))->update();
 			} catch (Exception $e) {
@@ -227,8 +227,8 @@ if ($page == 'overview') {
 
 		if (isset($languages[$def_language])) {
 			try {
-				Admins::getLocal($userinfo, array(
-					'id' => $userinfo['adminid'],
+				Admins::getLocal(\Froxlor\User::getAll(), array(
+					'id' => \Froxlor\User::getAll()['adminid'],
 					'def_language' => $def_language
 				))->update();
 			} catch (Exception $e) {
@@ -254,8 +254,8 @@ if ($page == 'overview') {
 		$language_options = '';
 
 		$default_lang = Settings::Get('panel.standardlanguage');
-		if ($userinfo['def_language'] != '') {
-			$default_lang = $userinfo['def_language'];
+		if (\Froxlor\User::getAll()['def_language'] != '') {
+			$default_lang = \Froxlor\User::getAll()['def_language'];
 		}
 
 		foreach ($languages as $language_file => $language_name) {
@@ -269,8 +269,8 @@ if ($page == 'overview') {
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 		$theme = \Froxlor\Validate\Validate::validate($_POST['theme'], 'theme');
 		try {
-			Admins::getLocal($userinfo, array(
-				'id' => $userinfo['adminid'],
+			Admins::getLocal(\Froxlor\User::getAll(), array(
+				'id' => \Froxlor\User::getAll()['adminid'],
 				'theme' => $theme
 			))->update();
 		} catch (Exception $e) {
@@ -296,8 +296,8 @@ if ($page == 'overview') {
 		$theme_options = '';
 
 		$default_theme = Settings::Get('panel.default_theme');
-		if ($userinfo['theme'] != '') {
-			$default_theme = $userinfo['theme'];
+		if (\Froxlor\User::getAll()['theme'] != '') {
+			$default_theme = \Froxlor\User::getAll()['theme'];
 		}
 
 		$themes_avail = getThemes();

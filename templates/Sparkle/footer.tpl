@@ -1,4 +1,4 @@
-<if isset($userinfo['loginname'])>
+<if isset(\Froxlor\User::getAll()['loginname'])>
 	</div>
 	<div class="clear"></div> 
 	</div>

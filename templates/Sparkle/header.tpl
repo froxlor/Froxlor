@@ -29,11 +29,11 @@
 	<link href="templates/{$theme}/assets/img/favicon.ico" rel="icon" type="image/x-icon" />
 	<link href="templates/{$theme}/assets/img/touchicon.png" rel="shortcut" />
 	<link href="templates/{$theme}/assets/img/touchicon.png" rel="apple-touch-icon" />
-	<title><if isset($userinfo['loginname']) && $userinfo['loginname'] != ''>{$userinfo['loginname']} - </if>Froxlor Server Management Panel</title>
+	<title><if isset(\Froxlor\User::getAll()['loginname']) && \Froxlor\User::getAll()['loginname'] != ''>{\Froxlor\User::getAll()['loginname']} - </if>Froxlor Server Management Panel</title>
 </head>
 <body>
 
-<if isset($userinfo['loginname'])>
+<if isset(\Froxlor\User::getAll()['loginname'])>
 <header class="topheader">
 	<hgroup>
 		<h1>Froxlor Server Management Panel</h1>
@@ -43,12 +43,12 @@
 	</a>
 	<div class="topheader_navigation">
 		<ul class="topheadernav">
-			<if \Froxlor\Settings::Get('panel.is_configured') == 0 && $userinfo['adminsession'] == 1 && $userinfo['change_serversettings'] == 1>
+			<if \Froxlor\Settings::Get('panel.is_configured') == 0 && \Froxlor\User::getAll()['adminsession'] == 1 && \Froxlor\User::getAll()['change_serversettings'] == 1>
 				<li class="liwarn">
 					<a href="{$linker->getLink(array('section' => 'configfiles', 'page' => 'configfiles'))}">{$lng['panel']['not_configured']}</a>
 				</li>
 			</if>
-			<li>{$userinfo['loginname']}</li>
+			<li>{\Froxlor\User::getAll()['loginname']}</li>
 			<li><a href="{$linker->getLink(array('section' => 'index'))}">{$lng['panel']['dashboard']}</a></li>
 			<li><a href="#">{$lng['panel']['options']}&nbsp;&#x25BE;</a>
 				<ul>
@@ -57,10 +57,10 @@
 					<if \Froxlor\Settings::Get('2fa.enabled') == 1>
 						<li><a href="{$linker->getLink(array('section' => 'index', 'page' => '2fa'))}">{$lng['2fa']['2fa']}</a></li>
 					</if>
-					<if \Froxlor\Settings::Get('panel.allow_theme_change_admin') == '1' && $userinfo['adminsession'] == 1>
+					<if \Froxlor\Settings::Get('panel.allow_theme_change_admin') == '1' && \Froxlor\User::getAll()['adminsession'] == 1>
 						<li><a href="{$linker->getLink(array('section' => 'index', 'page' => 'change_theme'))}">{$lng['panel']['theme']}</a></li>
 					</if>
-					<if \Froxlor\Settings::Get('panel.allow_theme_change_customer') == '1' && $userinfo['adminsession'] == 0>
+					<if \Froxlor\Settings::Get('panel.allow_theme_change_customer') == '1' && \Froxlor\User::getAll()['adminsession'] == 0>
 						<li><a href="{$linker->getLink(array('section' => 'index', 'page' => 'change_theme'))}">{$lng['panel']['theme']}</a></li>
 					</if>
 					<if \Froxlor\Settings::Get('api.enabled') == 1>

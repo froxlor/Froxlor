@@ -20,7 +20,7 @@
 define('AREA', 'admin');
 require './lib/init.php';
 
-if ($action == 'reset' && function_exists('opcache_reset') && $userinfo['change_serversettings'] == '1') {
+if ($action == 'reset' && function_exists('opcache_reset') && \Froxlor\User::getAll()['change_serversettings'] == '1') {
 	opcache_reset();
 	$log->logAction(ADM_ACTION, LOG_INFO, "reseted OPcache");
 	header('Location: ' . $linker->getLink(array(

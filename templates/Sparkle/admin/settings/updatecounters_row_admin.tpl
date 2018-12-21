@@ -1,6 +1,6 @@
 		<tr class="top">
 			<td>
-				<b><if $admin['adminid'] != $userinfo['userid']><a href="{$linker->getLink(array('section' => 'admins', 'page' => 'admins', 'action' => 'su', 'id' => $admin['adminid']))}" target="_blank">{$admin['loginname']}</a></if><if $admin['adminid'] == $userinfo['userid']>{$admin['loginname']}</if></b>
+				<b><if $admin['adminid'] != \Froxlor\User::getAll()['userid']><a href="{$linker->getLink(array('section' => 'admins', 'page' => 'admins', 'action' => 'su', 'id' => $admin['adminid']))}" target="_blank">{$admin['loginname']}</a></if><if $admin['adminid'] == \Froxlor\User::getAll()['userid']>{$admin['loginname']}</if></b>
 			</td>
 			<td>
 				{$lng['admin']['customers']}: <span <if $admin['customers_used'] == $admin['customers_used_new']>class="green"<else>class="red"</if>><b>{$admin['customers_used']} -&gt; {$admin['customers_used_new']}</b></span><br />

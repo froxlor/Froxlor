@@ -44,7 +44,7 @@ if ($page == 'overview') {
 		$fields = array(
 			'd.domain' => $lng['domains']['domainname']
 		);
-		$paging = new \Froxlor\UI\Paging($userinfo, TABLE_PANEL_DOMAINS, $fields);
+		$paging = new \Froxlor\UI\Paging(\Froxlor\User::getAll(), TABLE_PANEL_DOMAINS, $fields);
 		$domains_stmt = Database::prepare("SELECT `d`.`id`, `d`.`customerid`, `d`.`domain`, `d`.`documentroot`, `d`.`isbinddomain`, `d`.`isemaildomain`, `d`.`caneditdomain`, `d`.`iswildcarddomain`, `d`.`parentdomainid`, `d`.`letsencrypt`, `d`.`registration_date`, `d`.`termination_date`, `ad`.`id` AS `aliasdomainid`, `ad`.`domain` AS `aliasdomain`, `da`.`id` AS `domainaliasid`, `da`.`domain` AS `domainalias` FROM `" . TABLE_PANEL_DOMAINS . "` `d`
 			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `ad` ON `d`.`aliasdomain`=`ad`.`id`
 			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `da` ON `da`.`aliasdomain`=`d`.`id`
@@ -52,8 +52,8 @@ if ($page == 'overview') {
 			AND `d`.`email_only`='0'
 			AND `d`.`id` <> :standardsubdomain " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
 		Database::pexecute($domains_stmt, array(
-			"customerid" => $userinfo['customerid'],
-			"standardsubdomain" => $userinfo['standardsubdomain']
+			"customerid" => \Froxlor\User::getAll()['customerid'],
+			"standardsubdomain" => \Froxlor\User::getAll()['standardsubdomain']
 		));
 		$paging->setEntries(Database::num_rows());
 		$sortcode = $paging->getHtmlSortCode($lng);
@@ -167,8 +167,8 @@ if ($page == 'overview') {
 				}
 
 				foreach ($domain_array as $row) {
-					if (strpos($row['documentroot'], $userinfo['documentroot']) === 0) {
-						$row['documentroot'] = \Froxlor\FileDir::makeCorrectDir(str_replace($userinfo['documentroot'], "/", $row['documentroot']));
+					if (strpos($row['documentroot'], \Froxlor\User::getAll()['documentroot']) === 0) {
+						$row['documentroot'] = \Froxlor\FileDir::makeCorrectDir(str_replace(\Froxlor\User::getAll()['documentroot'], "/", $row['documentroot']));
 					}
 
 					// get ssl-ips if activated
@@ -187,7 +187,7 @@ if ($page == 'overview') {
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate("domains/domainlist") . "\";");
 	} elseif ($action == 'delete' && $id != 0) {
 		try {
-			$json_result = SubDomains::getLocal($userinfo, array(
+			$json_result = SubDomains::getLocal(\Froxlor\User::getAll(), array(
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
@@ -203,7 +203,7 @@ if ($page == 'overview') {
 		if (isset($result['parentdomainid']) && $result['parentdomainid'] != '0' && $alias_check['count'] == 0) {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
-					SubDomains::getLocal($userinfo, $_POST)->delete();
+					SubDomains::getLocal(\Froxlor\User::getAll(), $_POST)->delete();
 				} catch (Exception $e) {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
@@ -222,10 +222,10 @@ if ($page == 'overview') {
 			\Froxlor\UI\Response::standard_error('domains_cantdeletemaindomain');
 		}
 	} elseif ($action == 'add') {
-		if ($userinfo['subdomains_used'] < $userinfo['subdomains'] || $userinfo['subdomains'] == '-1') {
+		if (\Froxlor\User::getAll()['subdomains_used'] < \Froxlor\User::getAll()['subdomains'] || \Froxlor\User::getAll()['subdomains'] == '-1') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
-					SubDomains::getLocal($userinfo, $_POST)->add();
+					SubDomains::getLocal(\Froxlor\User::getAll(), $_POST)->add();
 				} catch (Exception $e) {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
@@ -241,7 +241,7 @@ if ($page == 'overview') {
 					AND `caneditdomain` = '1'
 					ORDER BY `domain` ASC");
 				Database::pexecute($stmt, array(
-					"customerid" => $userinfo['customerid']
+					"customerid" => \Froxlor\User::getAll()['customerid']
 				));
 				$domains = '';
 
@@ -259,7 +259,7 @@ if ($page == 'overview') {
 					AND `d`.`customerid`= :customerid
 					ORDER BY `d`.`domain` ASC");
 				Database::pexecute($domains_stmt, array(
-					"customerid" => $userinfo['customerid']
+					"customerid" => \Froxlor\User::getAll()['customerid']
 				));
 
 				while ($row_domain = $domains_stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -289,13 +289,13 @@ if ($page == 'overview') {
 				}
 
 				$openbasedir = \Froxlor\UI\HTML::makeoption($lng['domain']['docroot'], 0, NULL, true) . \Froxlor\UI\HTML::makeoption($lng['domain']['homedir'], 1, NULL, true);
-				$pathSelect = \Froxlor\FileDir::makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
+				$pathSelect = \Froxlor\FileDir::makePathfield(\Froxlor\User::getAll()['documentroot'], \Froxlor\User::getAll()['guid'], \Froxlor\User::getAll()['guid']);
 
 				$phpconfigs = '';
 				$has_phpconfigs = false;
-				if (isset($userinfo['allowed_phpconfigs']) && ! empty($userinfo['allowed_phpconfigs'])) {
+				if (isset(\Froxlor\User::getAll()['allowed_phpconfigs']) && ! empty(\Froxlor\User::getAll()['allowed_phpconfigs'])) {
 					$has_phpconfigs = true;
-					$allowed_cfg = json_decode($userinfo['allowed_phpconfigs'], JSON_OBJECT_AS_ARRAY);
+					$allowed_cfg = json_decode(\Froxlor\User::getAll()['allowed_phpconfigs'], JSON_OBJECT_AS_ARRAY);
 					$phpconfigs_result_stmt = Database::query("
 						SELECT c.*, fc.description as interpreter
 						FROM `" . TABLE_PANEL_PHPCONFIGS . "` c
@@ -323,7 +323,7 @@ if ($page == 'overview') {
 	} elseif ($action == 'edit' && $id != 0) {
 
 		try {
-			$json_result = SubDomains::getLocal($userinfo, array(
+			$json_result = SubDomains::getLocal(\Froxlor\User::getAll(), array(
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
@@ -331,10 +331,10 @@ if ($page == 'overview') {
 		}
 		$result = json_decode($json_result, true)['data'];
 
-		if (isset($result['customerid']) && $result['customerid'] == $userinfo['customerid']) {
+		if (isset($result['customerid']) && $result['customerid'] == \Froxlor\User::getAll()['customerid']) {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
-					SubDomains::getLocal($userinfo, $_POST)->update();
+					SubDomains::getLocal(\Froxlor\User::getAll(), $_POST)->update();
 				} catch (Exception $e) {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
@@ -362,7 +362,7 @@ if ($page == 'overview') {
 					ORDER BY `d`.`domain` ASC");
 				Database::pexecute($domains_stmt, array(
 					"id" => $result['id'],
-					"customerid" => $userinfo['customerid']
+					"customerid" => \Froxlor\User::getAll()['customerid']
 				));
 
 				while ($row_domain = $domains_stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -372,14 +372,14 @@ if ($page == 'overview') {
 				if (preg_match('/^https?\:\/\//', $result['documentroot']) && \Froxlor\Validate\Form\Strings::validateUrl($result['documentroot'])) {
 					if (Settings::Get('panel.pathedit') == 'Dropdown') {
 						$urlvalue = $result['documentroot'];
-						$pathSelect = \Froxlor\FileDir::makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
+						$pathSelect = \Froxlor\FileDir::makePathfield(\Froxlor\User::getAll()['documentroot'], \Froxlor\User::getAll()['guid'], \Froxlor\User::getAll()['guid']);
 					} else {
 						$urlvalue = '';
-						$pathSelect = \Froxlor\FileDir::makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $result['documentroot'], true);
+						$pathSelect = \Froxlor\FileDir::makePathfield(\Froxlor\User::getAll()['documentroot'], \Froxlor\User::getAll()['guid'], \Froxlor\User::getAll()['guid'], $result['documentroot'], true);
 					}
 				} else {
 					$urlvalue = '';
-					$pathSelect = \Froxlor\FileDir::makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $result['documentroot']);
+					$pathSelect = \Froxlor\FileDir::makePathfield(\Froxlor\User::getAll()['documentroot'], \Froxlor\User::getAll()['guid'], \Froxlor\User::getAll()['guid'], $result['documentroot']);
 				}
 
 				$redirectcode = '';
@@ -440,9 +440,9 @@ if ($page == 'overview') {
 
 				$phpconfigs = '';
 				$has_phpconfigs = false;
-				if (isset($userinfo['allowed_phpconfigs']) && ! empty($userinfo['allowed_phpconfigs'])) {
+				if (isset(\Froxlor\User::getAll()['allowed_phpconfigs']) && ! empty(\Froxlor\User::getAll()['allowed_phpconfigs'])) {
 					$has_phpconfigs = true;
-					$allowed_cfg = json_decode($userinfo['allowed_phpconfigs'], JSON_OBJECT_AS_ARRAY);
+					$allowed_cfg = json_decode(\Froxlor\User::getAll()['allowed_phpconfigs'], JSON_OBJECT_AS_ARRAY);
 					$phpconfigs_result_stmt = Database::query("
 						SELECT c.*, fc.description as interpreter
 						FROM `" . TABLE_PANEL_PHPCONFIGS . "` c
@@ -480,9 +480,9 @@ if ($page == 'overview') {
 			$do_insert = isset($_POST['do_insert']) ? (($_POST['do_insert'] == 1) ? true : false) : false;
 			try {
 				if ($do_insert) {
-					Certificates::getLocal($userinfo, $_POST)->add();
+					Certificates::getLocal(\Froxlor\User::getAll(), $_POST)->add();
 				} else {
-					Certificates::getLocal($userinfo, $_POST)->update();
+					Certificates::getLocal(\Froxlor\User::getAll(), $_POST)->update();
 				}
 			} catch (Exception $e) {
 				\Froxlor\UI\Response::dynamic_error($e->getMessage());
@@ -522,7 +522,7 @@ if ($page == 'overview') {
 
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate("domains/domain_ssleditor") . "\";");
 	}
-} elseif ($page == 'domaindnseditor' && $userinfo['dnsenabled'] == '1' && Settings::Get('system.dnsenabled') == '1') {
+} elseif ($page == 'domaindnseditor' && \Froxlor\User::getAll()['dnsenabled'] == '1' && Settings::Get('system.dnsenabled') == '1') {
 
 	require_once __DIR__ . '/dns_editor.php';
 } elseif ($page == 'sslcertificates') {

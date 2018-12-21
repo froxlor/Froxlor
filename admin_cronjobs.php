@@ -35,7 +35,7 @@ if ($page == 'cronjobs' || $page == 'overview') {
 			'c.interval' => $lng['cron']['interval'],
 			'c.isactive' => $lng['cron']['isactive']
 		);
-		$paging = new \Froxlor\UI\Paging($userinfo, TABLE_PANEL_CRONRUNS, $fields);
+		$paging = new \Froxlor\UI\Paging(\Froxlor\User::getAll(), TABLE_PANEL_CRONRUNS, $fields);
 
 		$crons = '';
 		$result_stmt = Database::prepare("SELECT `c`.* FROM `" . TABLE_PANEL_CRONRUNS . "` `c` ORDER BY `module` ASC, `cronfile` ASC");
@@ -79,7 +79,7 @@ if ($page == 'cronjobs' || $page == 'overview') {
 		 */
 	} elseif ($action == 'edit' && $id != 0) {
 		try {
-			$json_result = Cronjobs::getLocal($userinfo, array(
+			$json_result = Cronjobs::getLocal(\Froxlor\User::getAll(), array(
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
@@ -89,7 +89,7 @@ if ($page == 'cronjobs' || $page == 'overview') {
 		if ($result['cronfile'] != '') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
-					Cronjobs::getLocal($userinfo, $_POST)->update();
+					Cronjobs::getLocal(\Froxlor\User::getAll(), $_POST)->update();
 				} catch (Exception $e) {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}

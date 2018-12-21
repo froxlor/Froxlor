@@ -32,11 +32,11 @@ if ($page == 'message') {
 		$log->logAction(ADM_ACTION, LOG_NOTICE, 'viewed panel_message');
 
 		if (isset($_POST['send']) && $_POST['send'] == 'send') {
-			if ($_POST['receipient'] == 0 && $userinfo['customers_see_all'] == '1') {
+			if ($_POST['receipient'] == 0 && \Froxlor\User::getAll()['customers_see_all'] == '1') {
 				$log->logAction(ADM_ACTION, LOG_NOTICE, 'sending messages to admins');
 				$result = Database::query('SELECT `name`, `email`  FROM `' . TABLE_PANEL_ADMINS . "`");
 			} elseif ($_POST['receipient'] == 1) {
-				if ($userinfo['customers_see_all'] == '1') {
+				if (\Froxlor\User::getAll()['customers_see_all'] == '1') {
 					$log->logAction(ADM_ACTION, LOG_NOTICE, 'sending messages to ALL customers');
 					$result = Database::query('SELECT `firstname`, `name`, `company`, `email`  FROM `' . TABLE_PANEL_CUSTOMERS . "`");
 				} else {
@@ -45,7 +45,7 @@ if ($page == 'message') {
 						SELECT `firstname`, `name`, `company`, `email`  FROM `' . TABLE_PANEL_CUSTOMERS . "`
 						WHERE `adminid` = :adminid");
 					Database::pexecute($result, array(
-						'adminid' => $userinfo['adminid']
+						'adminid' => \Froxlor\User::getAll()['adminid']
 					));
 				}
 			} else {
@@ -69,8 +69,8 @@ if ($page == 'message') {
 						'name' => $row['name'],
 						'company' => $row['company']
 					)));
-					$mail->From = $userinfo['email'];
-					$mail->FromName = (isset($userinfo['firstname']) ? $userinfo['firstname'] . ' ' : '') . $userinfo['name'];
+					$mail->From = \Froxlor\User::getAll()['email'];
+					$mail->FromName = (isset(\Froxlor\User::getAll()['firstname']) ? \Froxlor\User::getAll()['firstname'] . ' ' : '') . \Froxlor\User::getAll()['name'];
 
 					if (! $mail->Send()) {
 						if ($mail->ErrorInfo != '') {
@@ -118,7 +118,7 @@ if ($page == 'message') {
 	$action = '';
 	$receipients = '';
 
-	if ($userinfo['customers_see_all'] == '1') {
+	if (\Froxlor\User::getAll()['customers_see_all'] == '1') {
 		$receipients .= \Froxlor\UI\HTML::makeoption($lng['panel']['reseller'], 0);
 	}
 

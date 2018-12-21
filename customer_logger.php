@@ -35,15 +35,15 @@ if ($page == 'log') {
 			'user' => $lng['logger']['user'],
 			'text' => $lng['logger']['action']
 		);
-		$paging = new \Froxlor\UI\Paging($userinfo, TABLE_PANEL_LOG, $fields, null, null, 0, 'desc', 30);
+		$paging = new \Froxlor\UI\Paging(\Froxlor\User::getAll(), TABLE_PANEL_LOG, $fields, null, null, 0, 'desc', 30);
 		$query = 'SELECT * FROM `' . TABLE_PANEL_LOG . '` WHERE `user` = :loginname ' . $paging->getSqlWhere(true) . ' ' . $paging->getSqlOrderBy();
 		$result_stmt = Database::prepare($query . ' ' . $paging->getSqlLimit());
 		Database::pexecute($result_stmt, array(
-			"loginname" => $userinfo['loginname']
+			"loginname" => \Froxlor\User::getAll()['loginname']
 		));
 		$result_cnt_stmt = Database::prepare($query);
 		Database::pexecute($result_cnt_stmt, array(
-			"loginname" => $userinfo['loginname']
+			"loginname" => \Froxlor\User::getAll()['loginname']
 		));
 		$res_cnt = $result_cnt_stmt->fetch(PDO::FETCH_ASSOC);
 		$logs_count = $result_cnt_stmt->rowCount();

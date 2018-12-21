@@ -67,7 +67,7 @@ if ($action == '') {
 		WHERE `adminid` = :adminid AND `templategroup`='mails'
 		ORDER BY `language`, `varname`");
 	Database::pexecute($result_stmt, array(
-		'adminid' => $userinfo['adminid']
+		'adminid' => \Froxlor\User::getAll()['adminid']
 	));
 
 	while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -95,7 +95,7 @@ if ($action == '') {
 			WHERE `adminid` = :adminid AND `language`= :lang
 			AND `templategroup` = 'mails' AND `varname` LIKE '%_subject'");
 		Database::pexecute($result_stmt, array(
-			'adminid' => $userinfo['adminid'],
+			'adminid' => \Froxlor\User::getAll()['adminid'],
 			'lang' => $language_name
 		));
 
@@ -115,7 +115,7 @@ if ($action == '') {
 		SELECT `id`, `varname` FROM `" . TABLE_PANEL_TEMPLATES . "`
 		WHERE `adminid` = :adminid AND `templategroup`='files'");
 	Database::pexecute($result_stmt, array(
-		'adminid' => $userinfo['adminid']
+		'adminid' => \Froxlor\User::getAll()['adminid']
 	));
 
 	if (Database::num_rows() != count($file_templates)) {
@@ -132,7 +132,7 @@ if ($action == '') {
 		SELECT `language`, `varname` FROM `" . TABLE_PANEL_TEMPLATES . "`
 		WHERE `adminid` = :adminid AND `id` = :id");
 	Database::pexecute($result_stmt, array(
-		'adminid' => $userinfo['adminid'],
+		'adminid' => \Froxlor\User::getAll()['adminid'],
 		'id' => $subjectid
 	));
 	$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
@@ -144,7 +144,7 @@ if ($action == '') {
 				WHERE `adminid` = :adminid
 				AND (`id` = :ida OR `id` = :idb)");
 			Database::pexecute($del_stmt, array(
-				'adminid' => $userinfo['adminid'],
+				'adminid' => \Froxlor\User::getAll()['adminid'],
 				'ida' => $subjectid,
 				'idb' => $mailbodyid
 			));
@@ -168,7 +168,7 @@ if ($action == '') {
 		SELECT * FROM `" . TABLE_PANEL_TEMPLATES . "`
 		WHERE `adminid` = :adminid AND `id` = :id");
 	Database::pexecute($result_stmt, array(
-		'adminid' => $userinfo['adminid'],
+		'adminid' => \Froxlor\User::getAll()['adminid'],
 		'id' => $id
 	));
 
@@ -181,7 +181,7 @@ if ($action == '') {
 				DELETE FROM `" . TABLE_PANEL_TEMPLATES . "`
 				WHERE `adminid` = :adminid AND `id` = :id");
 			Database::pexecute($del_stmt, array(
-				'adminid' => $userinfo['adminid'],
+				'adminid' => \Froxlor\User::getAll()['adminid'],
 				'id' => $id
 			));
 			$log->logAction(ADM_ACTION, LOG_INFO, "deleted template '" . $lng['admin']['templates'][$row['varname']] . "'");
@@ -244,7 +244,7 @@ if ($action == '') {
 			WHERE `adminid` = :adminid AND `language` = :lang
 			AND `templategroup` = 'mails' AND `varname` LIKE '%_subject'");
 		Database::pexecute($result_stmt, array(
-			'adminid' => $userinfo['adminid'],
+			'adminid' => \Froxlor\User::getAll()['adminid'],
 			'lang' => $language
 		));
 
@@ -266,7 +266,7 @@ if ($action == '') {
 
 			// mail-subject
 			$ins_data = array(
-				'adminid' => $userinfo['adminid'],
+				'adminid' => \Froxlor\User::getAll()['adminid'],
 				'lang' => $language,
 				'var' => $template . '_subject',
 				'value' => $subject
@@ -275,7 +275,7 @@ if ($action == '') {
 
 			// mail-body
 			$ins_data = array(
-				'adminid' => $userinfo['adminid'],
+				'adminid' => \Froxlor\User::getAll()['adminid'],
 				'lang' => $language,
 				'var' => $template . '_mailbody',
 				'value' => $mailbody
@@ -302,7 +302,7 @@ if ($action == '') {
 				`value` = :value");
 
 		$ins_data = array(
-			'adminid' => $userinfo['adminid'],
+			'adminid' => \Froxlor\User::getAll()['adminid'],
 			'var' => $template,
 			'value' => $filecontent
 		);
@@ -327,7 +327,7 @@ if ($action == '') {
 				WHERE `adminid` = :adminid AND `language` = :lang
 				AND `templategroup` = 'mails' AND `varname` LIKE '%_subject'");
 			Database::pexecute($result_stmt, array(
-				'adminid' => $userinfo['adminid'],
+				'adminid' => \Froxlor\User::getAll()['adminid'],
 				'lang' => $language_name
 			));
 
@@ -337,7 +337,7 @@ if ($action == '') {
 
 			if (count(array_diff($available_templates, $templates)) > 0) {
 				$add = true;
-				$language_options .= \Froxlor\UI\HTML::makeoption($language_name, $language_file, $userinfo['language'], true, true);
+				$language_options .= \Froxlor\UI\HTML::makeoption($language_name, $language_file, \Froxlor\User::getAll()['language'], true, true);
 
 				$templates = array_diff($available_templates, $templates);
 
@@ -358,7 +358,7 @@ if ($action == '') {
 			SELECT `id`, `varname` FROM `" . TABLE_PANEL_TEMPLATES . "`
 			WHERE `adminid` = :adminid AND `templategroup`='files'");
 		Database::pexecute($result_stmt, array(
-			'adminid' => $userinfo['adminid']
+			'adminid' => \Froxlor\User::getAll()['adminid']
 		));
 
 		if (Database::num_rows() == count($file_templates)) {
@@ -391,7 +391,7 @@ if ($action == '') {
 		SELECT `language`, `varname`, `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
 		WHERE `adminid` = :adminid AND `id` = :subjectid");
 	Database::pexecute($result_stmt, array(
-		'adminid' => $userinfo['adminid'],
+		'adminid' => \Froxlor\User::getAll()['adminid'],
 		'subjectid' => $subjectid
 	));
 	$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
@@ -409,13 +409,13 @@ if ($action == '') {
 			// subject
 			Database::pexecute($upd_stmt, array(
 				'value' => $subject,
-				'adminid' => $userinfo['adminid'],
+				'adminid' => \Froxlor\User::getAll()['adminid'],
 				'id' => $subjectid
 			));
 			// same query but mailbody
 			Database::pexecute($upd_stmt, array(
 				'value' => $mailbody,
-				'adminid' => $userinfo['adminid'],
+				'adminid' => \Froxlor\User::getAll()['adminid'],
 				'id' => $mailbodyid
 			));
 
@@ -460,7 +460,7 @@ if ($action == '') {
 		SELECT * FROM `" . TABLE_PANEL_TEMPLATES . "`
 		WHERE `adminid` = :adminid AND `id` = :id");
 	Database::pexecute($result_stmt, array(
-		'adminid' => $userinfo['adminid'],
+		'adminid' => \Froxlor\User::getAll()['adminid'],
 		'id' => $id
 	));
 
@@ -477,7 +477,7 @@ if ($action == '') {
 				WHERE `adminid` = :adminid AND `id` = :id");
 			Database::pexecute($upd_stmt, array(
 				'value' => $filecontent,
-				'adminid' => $userinfo['adminid'],
+				'adminid' => \Froxlor\User::getAll()['adminid'],
 				'id' => $id
 			));
 

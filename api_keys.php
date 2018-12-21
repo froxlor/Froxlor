@@ -33,7 +33,7 @@ $area = AREA;
 // do the delete and then just show a success-message and the apikeys list again
 if ($action == 'delete') {
 	if ($id > 0) {
-		$chk = (AREA == 'admin' && $userinfo['customers_see_all'] == '1') ? true : false;
+		$chk = (AREA == 'admin' && \Froxlor\User::getAll()['customers_see_all'] == '1') ? true : false;
 		if (AREA == 'customer') {
 			$chk_stmt = Database::prepare("
 				SELECT c.customerid FROM `" . TABLE_PANEL_CUSTOMERS . "` c
@@ -42,9 +42,9 @@ if ($action == 'delete') {
 			");
 			$chk = Database::pexecute_first($chk_stmt, array(
 				'id' => $id,
-				'cid' => $userinfo['customerid']
+				'cid' => \Froxlor\User::getAll()['customerid']
 			));
-		} elseif (AREA == 'admin' && $userinfo['customers_see_all'] == '0') {
+		} elseif (AREA == 'admin' && \Froxlor\User::getAll()['customers_see_all'] == '0') {
 			$chk_stmt = Database::prepare("
 				SELECT a.adminid FROM `" . TABLE_PANEL_ADMINS . "` a
 				LEFT JOIN `" . TABLE_API_KEYS . "` ak ON ak.adminid = a.adminid
@@ -52,7 +52,7 @@ if ($action == 'delete') {
 			");
 			$chk = Database::pexecute_first($chk_stmt, array(
 				'id' => $id,
-				'aid' => $userinfo['adminid']
+				'aid' => \Froxlor\User::getAll()['adminid']
 			));
 		}
 		if ($chk !== false) {
@@ -71,14 +71,14 @@ if ($action == 'delete') {
 	if (AREA == 'admin') {
 		$cid = 0;
 	} elseif (AREA == 'customer') {
-		$cid = $userinfo['customerid'];
+		$cid = \Froxlor\User::getAll()['customerid'];
 	}
 	$key = hash('sha256', openssl_random_pseudo_bytes(64 * 64));
 	$secret = hash('sha512', openssl_random_pseudo_bytes(64 * 64 * 4));
 	Database::pexecute($ins_stmt, array(
 		'key' => $key,
 		'secret' => $secret,
-		'aid' => $userinfo['adminid'],
+		'aid' => \Froxlor\User::getAll()['adminid'],
 		'cid' => $cid
 	));
 	$success_message = $lng['apikeys']['apikey_added'];
@@ -110,13 +110,13 @@ if ($action == 'delete') {
 	if (AREA == 'admin') {
 		$cid = 0;
 	} elseif (AREA == 'customer') {
-		$cid = $userinfo['customerid'];
+		$cid = \Froxlor\User::getAll()['customerid'];
 	}
 	Database::pexecute($upd_stmt, array(
 		'keyid' => $keyid,
 		'af' => $allowed_from,
 		'vu' => $valid_until,
-		'aid' => $userinfo['adminid'],
+		'aid' => \Froxlor\User::getAll()['adminid'],
 		'cid' => $cid
 	));
 	echo json_encode(true);
@@ -133,17 +133,17 @@ $keys_stmt_query = "SELECT ak.*, c.loginname, a.loginname as adminname
 	WHERE ";
 
 $qry_params = array();
-if (AREA == 'admin' && $userinfo['customers_see_all'] == '0') {
+if (AREA == 'admin' && \Froxlor\User::getAll()['customers_see_all'] == '0') {
 	// admin with only customer-specific permissions
 	$keys_stmt_query .= "ak.adminid = :adminid ";
-	$qry_params['adminid'] = $userinfo['adminid'];
+	$qry_params['adminid'] = \Froxlor\User::getAll()['adminid'];
 	$fields = array(
 		'a.loginname' => $lng['login']['username']
 	);
 } elseif (AREA == 'customer') {
 	// customer-area
 	$keys_stmt_query .= "ak.customerid = :cid ";
-	$qry_params['cid'] = $userinfo['customerid'];
+	$qry_params['cid'] = \Froxlor\User::getAll()['customerid'];
 	$fields = array(
 		'c.loginname' => $lng['login']['username']
 	);
@@ -155,7 +155,7 @@ if (AREA == 'admin' && $userinfo['customers_see_all'] == '0') {
 	);
 }
 
-$paging = new \Froxlor\UI\Paging($userinfo, TABLE_API_KEYS, $fields);
+$paging = new \Froxlor\UI\Paging(\Froxlor\User::getAll(), TABLE_API_KEYS, $fields);
 $keys_stmt_query .= $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit();
 
 $keys_stmt = Database::prepare($keys_stmt_query);
@@ -183,7 +183,7 @@ if (count($all_keys) == 0) {
 
 			// my own key
 			$isMyKey = false;
-			if ($key['adminid'] == $userinfo['adminid'] && ((AREA == 'admin' && $key['customerid'] == 0) || (AREA == 'customer' && $key['customerid'] == $userinfo['customerid']))) {
+			if ($key['adminid'] == \Froxlor\User::getAll()['adminid'] && ((AREA == 'admin' && $key['customerid'] == 0) || (AREA == 'customer' && $key['customerid'] == \Froxlor\User::getAll()['customerid']))) {
 				// this is mine
 				$isMyKey = true;
 			}

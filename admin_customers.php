@@ -29,7 +29,7 @@ if (isset($_POST['id'])) {
 	$id = intval($_GET['id']);
 }
 
-if ($page == 'customers' && $userinfo['customers'] != '0') {
+if ($page == 'customers' && \Froxlor\User::getAll()['customers'] != '0') {
 	if ($action == '') {
 		// clear request data
 		unset($_SESSION['requestData']);
@@ -48,15 +48,15 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 			'c.traffic_used' => $lng['customer']['traffic'] . ' (' . $lng['panel']['used'] . ')'
 		);
 
-		$paging = new \Froxlor\UI\Paging($userinfo, TABLE_PANEL_CUSTOMERS, $fields);
+		$paging = new \Froxlor\UI\Paging(\Froxlor\User::getAll(), TABLE_PANEL_CUSTOMERS, $fields);
 		$customers = '';
 		$result_stmt = Database::prepare("
 			SELECT `c`.*, `a`.`loginname` AS `adminname`
 			FROM `" . TABLE_PANEL_CUSTOMERS . "` `c`, `" . TABLE_PANEL_ADMINS . "` `a`
-			WHERE " . ($userinfo['customers_see_all'] ? '' : " `c`.`adminid` = :adminid AND ") . "
+			WHERE " . (\Froxlor\User::getAll()['customers_see_all'] ? '' : " `c`.`adminid` = :adminid AND ") . "
 			`c`.`adminid` = `a`.`adminid` " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
 		Database::pexecute($result_stmt, array(
-			'adminid' => $userinfo['adminid']
+			'adminid' => \Froxlor\User::getAll()['adminid']
 		));
 		$num_rows = Database::num_rows();
 		$paging->setEntries($num_rows);
@@ -150,7 +150,7 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate("customers/customers") . "\";");
 	} elseif ($action == 'su' && $id != 0) {
 		try {
-			$json_result = Customers::getLocal($userinfo, array(
+			$json_result = Customers::getLocal(\Froxlor\User::getAll(), array(
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
@@ -170,7 +170,7 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 				WHERE `userid` = :id
 				AND `hash` = :hash");
 			$result = Database::pexecute_first($result_stmt, array(
-				'id' => $userinfo['userid'],
+				'id' => \Froxlor\User::getAll()['userid'],
 				'hash' => $s
 			));
 
@@ -209,7 +209,7 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 		}
 	} elseif ($action == 'unlock' && $id != 0) {
 		try {
-			$json_result = Customers::getLocal($userinfo, array(
+			$json_result = Customers::getLocal(\Froxlor\User::getAll(), array(
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
@@ -219,7 +219,7 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 
 		if (isset($_POST['send']) && $_POST['send'] == 'send') {
 			try {
-				$json_result = Customers::getLocal($userinfo, array(
+				$json_result = Customers::getLocal(\Froxlor\User::getAll(), array(
 					'id' => $id
 				))->unlock();
 			} catch (Exception $e) {
@@ -238,7 +238,7 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 		}
 	} elseif ($action == 'delete' && $id != 0) {
 		try {
-			$json_result = Customers::getLocal($userinfo, array(
+			$json_result = Customers::getLocal(\Froxlor\User::getAll(), array(
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
@@ -248,7 +248,7 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 
 		if (isset($_POST['send']) && $_POST['send'] == 'send') {
 			try {
-				$json_result = Customers::getLocal($userinfo, array(
+				$json_result = Customers::getLocal(\Froxlor\User::getAll(), array(
 					'id' => $id,
 					'delete_userfiles' => (isset($_POST['delete_userfiles']) ? (int) $_POST['delete_userfiles'] : 0)
 				))->delete();
@@ -270,7 +270,7 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 
 		if (isset($_POST['send']) && $_POST['send'] == 'send') {
 			try {
-				Customers::getLocal($userinfo, $_POST)->add();
+				Customers::getLocal(\Froxlor\User::getAll(), $_POST)->add();
 			} catch (Exception $e) {
 				\Froxlor\UI\Response::dynamic_error($e->getMessage());
 			}
@@ -344,7 +344,7 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 	} elseif ($action == 'edit' && $id != 0) {
 
 		try {
-			$json_result = Customers::getLocal($userinfo, array(
+			$json_result = Customers::getLocal(\Froxlor\User::getAll(), array(
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
@@ -373,7 +373,7 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
-					Customers::getLocal($userinfo, $_POST)->update();
+					Customers::getLocal(\Froxlor\User::getAll(), $_POST)->update();
 				} catch (Exception $e) {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}

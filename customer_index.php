@@ -27,7 +27,7 @@ if ($action == 'logout') {
 	$log->logAction(USR_ACTION, LOG_NOTICE, 'logged out');
 
 	$params = array(
-		"customerid" => $userinfo['customerid']
+		"customerid" => \Froxlor\User::getAll()['customerid']
 	);
 	if (Settings::Get('session.allow_multiple_login') == '1') {
 		$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_SESSIONS . "`
@@ -54,8 +54,8 @@ if ($page == 'overview') {
 		AND `id` <> :standardsubdomain
 	");
 	Database::pexecute($domain_stmt, array(
-		"customerid" => $userinfo['customerid'],
-		"standardsubdomain" => $userinfo['standardsubdomain']
+		"customerid" => \Froxlor\User::getAll()['customerid'],
+		"standardsubdomain" => \Froxlor\User::getAll()['standardsubdomain']
 	));
 
 	$domains = '';
@@ -70,49 +70,49 @@ if ($page == 'overview') {
 
 	// standard-subdomain
 	$stdsubdomain = '';
-	if ($userinfo['standardsubdomain'] != '0') {
+	if (\Froxlor\User::getAll()['standardsubdomain'] != '0') {
 		$std_domain_stmt = Database::prepare("
 			SELECT `domain` FROM `" . TABLE_PANEL_DOMAINS . "`
 			WHERE `customerid` = :customerid
 			AND `id` = :standardsubdomain
 		");
 		$std_domain = Database::pexecute_first($std_domain_stmt, array(
-			"customerid" => $userinfo['customerid'],
-			"standardsubdomain" => $userinfo['standardsubdomain']
+			"customerid" => \Froxlor\User::getAll()['customerid'],
+			"standardsubdomain" => \Froxlor\User::getAll()['standardsubdomain']
 		));
 		$stdsubdomain = $std_domain['domain'];
 	}
 
-	$userinfo['email'] = $idna_convert->decode($userinfo['email']);
+	\Froxlor\User::getAll()['email'] = $idna_convert->decode(\Froxlor\User::getAll()['email']);
 	$yesterday = time() - (60 * 60 * 24);
 	$month = date('M Y', $yesterday);
 
 	// get disk-space usages for web, mysql and mail
 	$usages_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_DISKSPACE . "` WHERE `customerid` = :cid ORDER BY `stamp` DESC LIMIT 1");
 	$usages = Database::pexecute_first($usages_stmt, array(
-		'cid' => $userinfo['customerid']
+		'cid' => \Froxlor\User::getAll()['customerid']
 	));
 
-	$userinfo['diskspace'] = round($userinfo['diskspace'] / 1024, Settings::Get('panel.decimal_places'));
-	$userinfo['diskspace_used'] = round($usages['webspace'] / 1024, Settings::Get('panel.decimal_places'));
-	$userinfo['mailspace_used'] = round($usages['mail'] / 1024, Settings::Get('panel.decimal_places'));
-	$userinfo['dbspace_used'] = round($usages['mysql'] / 1024, Settings::Get('panel.decimal_places'));
+	\Froxlor\User::getAll()['diskspace'] = round(\Froxlor\User::getAll()['diskspace'] / 1024, Settings::Get('panel.decimal_places'));
+	\Froxlor\User::getAll()['diskspace_used'] = round($usages['webspace'] / 1024, Settings::Get('panel.decimal_places'));
+	\Froxlor\User::getAll()['mailspace_used'] = round($usages['mail'] / 1024, Settings::Get('panel.decimal_places'));
+	\Froxlor\User::getAll()['dbspace_used'] = round($usages['mysql'] / 1024, Settings::Get('panel.decimal_places'));
 
-	$userinfo['traffic'] = round($userinfo['traffic'] / (1024 * 1024), Settings::Get('panel.decimal_places'));
-	$userinfo['traffic_used'] = round($userinfo['traffic_used'] / (1024 * 1024), Settings::Get('panel.decimal_places'));
-	$userinfo = \Froxlor\PhpHelper::str_replace_array('-1', $lng['customer']['unlimited'], $userinfo, 'diskspace traffic mysqls emails email_accounts email_forwarders email_quota ftps subdomains');
+	\Froxlor\User::getAll()['traffic'] = round(\Froxlor\User::getAll()['traffic'] / (1024 * 1024), Settings::Get('panel.decimal_places'));
+	\Froxlor\User::getAll()['traffic_used'] = round(\Froxlor\User::getAll()['traffic_used'] / (1024 * 1024), Settings::Get('panel.decimal_places'));
+	\Froxlor\User::getAll() = \Froxlor\PhpHelper::str_replace_array('-1', $lng['customer']['unlimited'], \Froxlor\User::getAll(), 'diskspace traffic mysqls emails email_accounts email_forwarders email_quota ftps subdomains');
 
-	$userinfo['custom_notes'] = ($userinfo['custom_notes'] != '') ? nl2br($userinfo['custom_notes']) : '';
+	\Froxlor\User::getAll()['custom_notes'] = (\Froxlor\User::getAll()['custom_notes'] != '') ? nl2br(\Froxlor\User::getAll()['custom_notes']) : '';
 
 	$services_enabled = "";
 	$se = array();
-	if ($userinfo['imap'] == '1')
+	if (\Froxlor\User::getAll()['imap'] == '1')
 		$se[] = "IMAP";
-	if ($userinfo['pop3'] == '1')
+	if (\Froxlor\User::getAll()['pop3'] == '1')
 		$se[] = "POP3";
-	if ($userinfo['phpenabled'] == '1')
+	if (\Froxlor\User::getAll()['phpenabled'] == '1')
 		$se[] = "PHP";
-	if ($userinfo['perlenabled'] == '1')
+	if (\Froxlor\User::getAll()['perlenabled'] == '1')
 		$se[] = "Perl/CGI";
 	$services_enabled = implode(", ", $se);
 
@@ -120,7 +120,7 @@ if ($page == 'overview') {
 } elseif ($page == 'change_password') {
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 		$old_password = \Froxlor\Validate\Validate::validate($_POST['old_password'], 'old password');
-		if (! \Froxlor\System\Crypt::validatePasswordLogin($userinfo, $old_password, TABLE_PANEL_CUSTOMERS, 'customerid')) {
+		if (! \Froxlor\System\Crypt::validatePasswordLogin(\Froxlor\User::getAll(), $old_password, TABLE_PANEL_CUSTOMERS, 'customerid')) {
 			\Froxlor\UI\Response::standard_error('oldpasswordnotcorrect');
 		}
 
@@ -147,8 +147,8 @@ if ($page == 'overview') {
 		} else {
 			// Update user password
 			try {
-				Customers::getLocal($userinfo, array(
-					'id' => $userinfo['customerid'],
+				Customers::getLocal(\Froxlor\User::getAll(), array(
+					'id' => \Froxlor\User::getAll()['customerid'],
 					'new_customer_password' => $new_password
 				))->update();
 			} catch (Exception $e) {
@@ -165,8 +165,8 @@ if ($page == 'overview') {
 					AND `username` = :username");
 				$params = array(
 					"password" => $cryptPassword,
-					"customerid" => $userinfo['customerid'],
-					"username" => $userinfo['loginname']
+					"customerid" => \Froxlor\User::getAll()['customerid'],
+					"username" => \Froxlor\User::getAll()['loginname']
 				);
 				Database::pexecute($stmt, $params);
 				$log->logAction(USR_ACTION, LOG_NOTICE, 'changed main ftp password');
@@ -187,8 +187,8 @@ if ($page == 'overview') {
 					AND `username` = :username");
 				$params = array(
 					"password" => $new_webalizer_password,
-					"customerid" => $userinfo['customerid'],
-					"username" => $userinfo['loginname']
+					"customerid" => \Froxlor\User::getAll()['customerid'],
+					"username" => \Froxlor\User::getAll()['loginname']
 				);
 				Database::pexecute($stmt, $params);
 			}
@@ -205,8 +205,8 @@ if ($page == 'overview') {
 		$def_language = \Froxlor\Validate\Validate::validate($_POST['def_language'], 'default language');
 		if (isset($languages[$def_language])) {
 			try {
-				Customers::getLocal($userinfo, array(
-					'id' => $userinfo['customerid'],
+				Customers::getLocal(\Froxlor\User::getAll(), array(
+					'id' => \Froxlor\User::getAll()['customerid'],
 					'def_language' => $def_language
 				))->update();
 			} catch (Exception $e) {
@@ -228,8 +228,8 @@ if ($page == 'overview') {
 		));
 	} else {
 		$default_lang = Settings::Get('panel.standardlanguage');
-		if ($userinfo['def_language'] != '') {
-			$default_lang = $userinfo['def_language'];
+		if (\Froxlor\User::getAll()['def_language'] != '') {
+			$default_lang = \Froxlor\User::getAll()['def_language'];
 		}
 
 		$language_options = '';
@@ -243,8 +243,8 @@ if ($page == 'overview') {
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 		$theme = \Froxlor\Validate\Validate::validate($_POST['theme'], 'theme');
 		try {
-			Customers::getLocal($userinfo, array(
-				'id' => $userinfo['customerid'],
+			Customers::getLocal(\Froxlor\User::getAll(), array(
+				'id' => \Froxlor\User::getAll()['customerid'],
 				'theme' => $theme
 			))->update();
 		} catch (Exception $e) {
@@ -266,8 +266,8 @@ if ($page == 'overview') {
 		));
 	} else {
 		$default_theme = Settings::Get('panel.default_theme');
-		if ($userinfo['theme'] != '') {
-			$default_theme = $userinfo['theme'];
+		if (\Froxlor\User::getAll()['theme'] != '') {
+			$default_theme = \Froxlor\User::getAll()['theme'];
 		}
 
 		$theme_options = '';

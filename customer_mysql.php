@@ -53,11 +53,11 @@ if ($page == 'overview') {
 			'databasename' => $lng['mysql']['databasename'],
 			'description' => $lng['mysql']['databasedescription']
 		);
-		$paging = new \Froxlor\UI\Paging($userinfo, TABLE_PANEL_DATABASES, $fields);
+		$paging = new \Froxlor\UI\Paging(\Froxlor\User::getAll(), TABLE_PANEL_DATABASES, $fields);
 		$result_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_DATABASES . "`
 			WHERE `customerid`= :customerid " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
 		Database::pexecute($result_stmt, array(
-			"customerid" => $userinfo['customerid']
+			"customerid" => \Froxlor\User::getAll()['customerid']
 		));
 		$mysqls_count = Database::num_rows();
 		$paging->setEntries($mysqls_count);
@@ -99,7 +99,7 @@ if ($page == 'overview') {
 	} elseif ($action == 'delete' && $id != 0) {
 
 		try {
-			$json_result = Mysqls::getLocal($userinfo, array(
+			$json_result = Mysqls::getLocal(\Froxlor\User::getAll(), array(
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
@@ -120,7 +120,7 @@ if ($page == 'overview') {
 
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
-					Mysqls::getLocal($userinfo, $_POST)->delete();
+					Mysqls::getLocal(\Froxlor\User::getAll(), $_POST)->delete();
 				} catch (Exception $e) {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
@@ -141,10 +141,10 @@ if ($page == 'overview') {
 			}
 		}
 	} elseif ($action == 'add') {
-		if ($userinfo['mysqls_used'] < $userinfo['mysqls'] || $userinfo['mysqls'] == '-1') {
+		if (\Froxlor\User::getAll()['mysqls_used'] < \Froxlor\User::getAll()['mysqls'] || \Froxlor\User::getAll()['mysqls'] == '-1') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
-					Mysqls::getLocal($userinfo, $_POST)->add();
+					Mysqls::getLocal(\Froxlor\User::getAll(), $_POST)->add();
 				} catch (Exception $e) {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
@@ -177,7 +177,7 @@ if ($page == 'overview') {
 		}
 	} elseif ($action == 'edit' && $id != 0) {
 		try {
-			$json_result = Mysqls::getLocal($userinfo, array(
+			$json_result = Mysqls::getLocal(\Froxlor\User::getAll(), array(
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
@@ -188,7 +188,7 @@ if ($page == 'overview') {
 		if (isset($result['databasename']) && $result['databasename'] != '') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
-					$json_result = Mysqls::getLocal($userinfo, $_POST)->update();
+					$json_result = Mysqls::getLocal(\Froxlor\User::getAll(), $_POST)->update();
 				} catch (Exception $e) {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}

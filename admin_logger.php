@@ -21,7 +21,7 @@ require './lib/init.php';
 
 use Froxlor\Database\Database;
 
-if ($page == 'log' && $userinfo['change_serversettings'] == '1') {
+if ($page == 'log' && \Froxlor\User::getAll()['change_serversettings'] == '1') {
 	if ($action == '') {
 		$fields = array(
 			'date' => $lng['logger']['date'],
@@ -29,7 +29,7 @@ if ($page == 'log' && $userinfo['change_serversettings'] == '1') {
 			'user' => $lng['logger']['user'],
 			'text' => $lng['logger']['action']
 		);
-		$paging = new \Froxlor\UI\Paging($userinfo, TABLE_PANEL_LOG, $fields, null, null, 0, 'desc', 30);
+		$paging = new \Froxlor\UI\Paging(\Froxlor\User::getAll(), TABLE_PANEL_LOG, $fields, null, null, 0, 'desc', 30);
 		$query = 'SELECT * FROM `' . TABLE_PANEL_LOG . '` ' . $paging->getSqlWhere(false) . ' ' . $paging->getSqlOrderBy();
 		$result_stmt = Database::query($query . ' ' . $paging->getSqlLimit());
 		$result_cnt_stmt = Database::query($query);

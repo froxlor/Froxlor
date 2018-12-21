@@ -32,10 +32,10 @@ if (isset($_POST['id'])) {
 if ($page == 'domains' || $page == 'overview') {
 	// Let's see how many customers we have
 	$stmt = Database::prepare("
-		SELECT COUNT(`customerid`) as `countcustomers` FROM `" . TABLE_PANEL_CUSTOMERS . "` " . ($userinfo['customers_see_all'] ? '' : " WHERE `adminid` = :adminid"));
+		SELECT COUNT(`customerid`) as `countcustomers` FROM `" . TABLE_PANEL_CUSTOMERS . "` " . (\Froxlor\User::getAll()['customers_see_all'] ? '' : " WHERE `adminid` = :adminid"));
 	$params = array();
-	if ($userinfo['customers_see_all'] == '0') {
-		$params['adminid'] = $userinfo['adminid'];
+	if (\Froxlor\User::getAll()['customers_see_all'] == '0') {
+		$params['adminid'] = \Froxlor\User::getAll()['adminid'];
 	}
 	$countcustomers = Database::pexecute_first($stmt, $params);
 	$countcustomers = (int) $countcustomers['countcustomers'];
@@ -51,17 +51,17 @@ if ($page == 'domains' || $page == 'overview') {
 			'c.loginname' => $lng['login']['username'],
 			'd.aliasdomain' => $lng['domains']['aliasdomain']
 		);
-		$paging = new \Froxlor\UI\Paging($userinfo, TABLE_PANEL_DOMAINS, $fields);
+		$paging = new \Froxlor\UI\Paging(\Froxlor\User::getAll(), TABLE_PANEL_DOMAINS, $fields);
 		$domains = "";
 		$result_stmt = Database::prepare("
 			SELECT `d`.*, `c`.`loginname`, `c`.`deactivated`, `c`.`name`, `c`.`firstname`, `c`.`company`, `c`.`standardsubdomain`, `ad`.`id` AS `aliasdomainid`, `ad`.`domain` AS `aliasdomain`
 			FROM `" . TABLE_PANEL_DOMAINS . "` `d`
 			LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`)
 			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `ad` ON `d`.`aliasdomain`=`ad`.`id`
-			WHERE `d`.`parentdomainid`='0' " . ($userinfo['customers_see_all'] ? '' : " AND `d`.`adminid` = :adminid ") . " " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
+			WHERE `d`.`parentdomainid`='0' " . (\Froxlor\User::getAll()['customers_see_all'] ? '' : " AND `d`.`adminid` = :adminid ") . " " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
 		$params = array();
-		if ($userinfo['customers_see_all'] == '0') {
-			$params['adminid'] = $userinfo['adminid'];
+		if (\Froxlor\User::getAll()['customers_see_all'] == '0') {
+			$params['adminid'] = \Froxlor\User::getAll()['adminid'];
 		}
 		Database::pexecute($result_stmt, $params);
 		$numrows_domains = Database::num_rows();
@@ -122,7 +122,7 @@ if ($page == 'domains' || $page == 'overview') {
 	} elseif ($action == 'delete' && $id != 0) {
 
 		try {
-			$json_result = Domains::getLocal($userinfo, array(
+			$json_result = Domains::getLocal(\Froxlor\User::getAll(), array(
 				'id' => $id,
 				'no_std_subdomain' => true
 			))->get();
@@ -142,7 +142,7 @@ if ($page == 'domains' || $page == 'overview') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send' && $alias_check['count'] == 0) {
 
 				try {
-					Domains::getLocal($userinfo, $_POST)->delete();
+					Domains::getLocal(\Froxlor\User::getAll(), $_POST)->delete();
 				} catch (Exception $e) {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
@@ -170,7 +170,7 @@ if ($page == 'domains' || $page == 'overview') {
 
 		if (isset($_POST['send']) && $_POST['send'] == 'send') {
 			try {
-				Domains::getLocal($userinfo, $_POST)->add();
+				Domains::getLocal(\Froxlor\User::getAll(), $_POST)->add();
 			} catch (Exception $e) {
 				\Froxlor\UI\Response::dynamic_error($e->getMessage());
 			}
@@ -183,10 +183,10 @@ if ($page == 'domains' || $page == 'overview') {
 			$customers = \Froxlor\UI\HTML::makeoption($lng['panel']['please_choose'], 0, 0, true);
 			$result_customers_stmt = Database::prepare("
 					SELECT `customerid`, `loginname`, `name`, `firstname`, `company`
-					FROM `" . TABLE_PANEL_CUSTOMERS . "` " . ($userinfo['customers_see_all'] ? '' : " WHERE `adminid` = '" . (int) $userinfo['adminid'] . "' ") . " ORDER BY COALESCE(NULLIF(`name`,''), `company`) ASC");
+					FROM `" . TABLE_PANEL_CUSTOMERS . "` " . (\Froxlor\User::getAll()['customers_see_all'] ? '' : " WHERE `adminid` = '" . (int) \Froxlor\User::getAll()['adminid'] . "' ") . " ORDER BY COALESCE(NULLIF(`name`,''), `company`) ASC");
 			$params = array();
-			if ($userinfo['customers_see_all'] == '0') {
-				$params['adminid'] = $userinfo['adminid'];
+			if (\Froxlor\User::getAll()['customers_see_all'] == '0') {
+				$params['adminid'] = \Froxlor\User::getAll()['adminid'];
 			}
 			Database::pexecute($result_customers_stmt, $params);
 
@@ -195,7 +195,7 @@ if ($page == 'domains' || $page == 'overview') {
 			}
 
 			$admins = '';
-			if ($userinfo['customers_see_all'] == '1') {
+			if (\Froxlor\User::getAll()['customers_see_all'] == '1') {
 
 				$result_admins_stmt = Database::query("
 						SELECT `adminid`, `loginname`, `name`
@@ -203,11 +203,11 @@ if ($page == 'domains' || $page == 'overview') {
 						WHERE `domains_used` < `domains` OR `domains` = '-1' ORDER BY `name` ASC");
 
 				while ($row_admin = $result_admins_stmt->fetch(PDO::FETCH_ASSOC)) {
-					$admins .= \Froxlor\UI\HTML::makeoption(\Froxlor\User::getCorrectFullUserDetails($row_admin) . ' (' . $row_admin['loginname'] . ')', $row_admin['adminid'], $userinfo['adminid']);
+					$admins .= \Froxlor\UI\HTML::makeoption(\Froxlor\User::getCorrectFullUserDetails($row_admin) . ' (' . $row_admin['loginname'] . ')', $row_admin['adminid'], \Froxlor\User::getAll()['adminid']);
 				}
 			}
 
-			if ($userinfo['ip'] == "-1") {
+			if (\Froxlor\User::getAll()['ip'] == "-1") {
 				$result_ipsandports_stmt = Database::query("
 						SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `ssl`='0' ORDER BY `ip`, `port` ASC
 					");
@@ -219,7 +219,7 @@ if ($page == 'domains' || $page == 'overview') {
 						SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id` = :ipid ORDER BY `ip`, `port` ASC
 					");
 				$admin_ip = Database::pexecute_first($admin_ip_stmt, array(
-					'ipid' => $userinfo['ip']
+					'ipid' => \Froxlor\User::getAll()['ip']
 				));
 
 				$result_ipsandports_stmt = Database::prepare("
@@ -282,12 +282,12 @@ if ($page == 'domains' || $page == 'overview') {
 			$domains = \Froxlor\UI\HTML::makeoption($lng['domains']['noaliasdomain'], 0, NULL, true);
 			$result_domains_stmt = Database::prepare("
 					SELECT `d`.`id`, `d`.`domain`, `c`.`loginname` FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_CUSTOMERS . "` `c`
-					WHERE `d`.`aliasdomain` IS NULL AND `d`.`parentdomainid` = 0" . $standardsubdomains . ($userinfo['customers_see_all'] ? '' : " AND `d`.`adminid` = :adminid") . "
+					WHERE `d`.`aliasdomain` IS NULL AND `d`.`parentdomainid` = 0" . $standardsubdomains . (\Froxlor\User::getAll()['customers_see_all'] ? '' : " AND `d`.`adminid` = :adminid") . "
 					AND `d`.`customerid`=`c`.`customerid` ORDER BY `loginname`, `domain` ASC
 				");
 			$params = array();
-			if ($userinfo['customers_see_all'] == '0') {
-				$params['adminid'] = $userinfo['adminid'];
+			if (\Froxlor\User::getAll()['customers_see_all'] == '0') {
+				$params['adminid'] = \Froxlor\User::getAll()['adminid'];
 			}
 			Database::pexecute($result_domains_stmt, $params);
 
@@ -298,7 +298,7 @@ if ($page == 'domains' || $page == 'overview') {
 			$subtodomains = \Froxlor\UI\HTML::makeoption($lng['domains']['nosubtomaindomain'], 0, NULL, true);
 			$result_domains_stmt = Database::prepare("
 					SELECT `d`.`id`, `d`.`domain`, `c`.`loginname` FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_CUSTOMERS . "` `c`
-					WHERE `d`.`aliasdomain` IS NULL AND `d`.`parentdomainid` = 0 AND `d`.`ismainbutsubto` = 0 " . $standardsubdomains . ($userinfo['customers_see_all'] ? '' : " AND `d`.`adminid` = :adminid") . "
+					WHERE `d`.`aliasdomain` IS NULL AND `d`.`parentdomainid` = 0 AND `d`.`ismainbutsubto` = 0 " . $standardsubdomains . (\Froxlor\User::getAll()['customers_see_all'] ? '' : " AND `d`.`adminid` = :adminid") . "
 					AND `d`.`customerid`=`c`.`customerid` ORDER BY `loginname`, `domain` ASC
 				");
 			// params from above still valid
@@ -347,7 +347,7 @@ if ($page == 'domains' || $page == 'overview') {
 	} elseif ($action == 'edit' && $id != 0) {
 
 		try {
-			$json_result = Domains::getLocal($userinfo, array(
+			$json_result = Domains::getLocal(\Froxlor\User::getAll(), array(
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
@@ -416,7 +416,7 @@ if ($page == 'domains' || $page == 'overview') {
 
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
-					Domains::getLocal($userinfo, $_POST)->update();
+					Domains::getLocal(\Froxlor\User::getAll(), $_POST)->update();
 				} catch (Exception $e) {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
@@ -433,7 +433,7 @@ if ($page == 'domains' || $page == 'overview') {
 						WHERE ( (`subdomains_used` + :subdomains <= `subdomains` OR `subdomains` = '-1' )
 						AND (`emails_used` + :emails <= `emails` OR `emails` = '-1' )
 						AND (`email_forwarders_used` + :forwarders <= `email_forwarders` OR `email_forwarders` = '-1' )
-						AND (`email_accounts_used` + :accounts <= `email_accounts` OR `email_accounts` = '-1' ) " . ($userinfo['customers_see_all'] ? '' : " AND `adminid` = :adminid ") . ")
+						AND (`email_accounts_used` + :accounts <= `email_accounts` OR `email_accounts` = '-1' ) " . (\Froxlor\User::getAll()['customers_see_all'] ? '' : " AND `adminid` = :adminid ") . ")
 						OR `customerid` = :customerid ORDER BY `name` ASC
 					");
 					$params = array(
@@ -443,8 +443,8 @@ if ($page == 'domains' || $page == 'overview') {
 						'accounts' => $email_accounts,
 						'customerid' => $result['customerid']
 					);
-					if ($userinfo['customers_see_all'] == '0') {
-						$params['adminid'] = $userinfo['adminid'];
+					if (\Froxlor\User::getAll()['customers_see_all'] == '0') {
+						$params['adminid'] = \Froxlor\User::getAll()['adminid'];
 					}
 					Database::pexecute($result_customers_stmt, $params);
 
@@ -462,7 +462,7 @@ if ($page == 'domains' || $page == 'overview') {
 					$result['customername'] = \Froxlor\User::getCorrectFullUserDetails($customer) . ' (' . $customer['loginname'] . ')';
 				}
 
-				if ($userinfo['customers_see_all'] == '1') {
+				if (\Froxlor\User::getAll()['customers_see_all'] == '1') {
 					if (Settings::Get('panel.allow_domain_change_admin') == '1') {
 
 						$admins = '';
@@ -510,14 +510,14 @@ if ($page == 'domains' || $page == 'overview') {
 				$result_domains_stmt = Database::prepare("
 					SELECT `d`.`id`, `d`.`domain` FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_CUSTOMERS . "` `c`
 					WHERE `d`.`aliasdomain` IS NULL AND `d`.`parentdomainid` = '0' AND `d`.`id` <> :id
-					AND `c`.`standardsubdomain`<>`d`.`id` AND `c`.`customerid`=`d`.`customerid`" . ($userinfo['customers_see_all'] ? '' : " AND `d`.`adminid` = :adminid") . "
+					AND `c`.`standardsubdomain`<>`d`.`id` AND `c`.`customerid`=`d`.`customerid`" . (\Froxlor\User::getAll()['customers_see_all'] ? '' : " AND `d`.`adminid` = :adminid") . "
 					ORDER BY `d`.`domain` ASC
 				");
 				$params = array(
 					'id' => $result['id']
 				);
-				if ($userinfo['customers_see_all'] == '0') {
-					$params['adminid'] = $userinfo['adminid'];
+				if (\Froxlor\User::getAll()['customers_see_all'] == '0') {
+					$params['adminid'] = \Froxlor\User::getAll()['adminid'];
 				}
 				Database::pexecute($result_domains_stmt, $params);
 
@@ -525,7 +525,7 @@ if ($page == 'domains' || $page == 'overview') {
 					$subtodomains .= \Froxlor\UI\HTML::makeoption($idna_convert->decode($row_domain['domain']), $row_domain['id'], $result['ismainbutsubto']);
 				}
 
-				if ($userinfo['ip'] == "-1") {
+				if (\Froxlor\User::getAll()['ip'] == "-1") {
 					$result_ipsandports_stmt = Database::query("
 						SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `ssl`='0' ORDER BY `ip`, `port` ASC
 					");
@@ -537,7 +537,7 @@ if ($page == 'domains' || $page == 'overview') {
 						SELECT `id`, `ip`, `port` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `id` = :ipid ORDER BY `ip`, `port` ASC
 					");
 					$admin_ip = Database::pexecute_first($admin_ip_stmt, array(
-						'ipid' => $userinfo['ip']
+						'ipid' => \Froxlor\User::getAll()['ip']
 					));
 
 					$result_ipsandports_stmt = Database::prepare("
@@ -681,10 +681,10 @@ if ($page == 'domains' || $page == 'overview') {
 			$customers = \Froxlor\UI\HTML::makeoption($lng['panel']['please_choose'], 0, 0, true);
 			$result_customers_stmt = Database::prepare("
 				SELECT `customerid`, `loginname`, `name`, `firstname`, `company`
-				FROM `" . TABLE_PANEL_CUSTOMERS . "` " . ($userinfo['customers_see_all'] ? '' : " WHERE `adminid` = '" . (int) $userinfo['adminid'] . "' ") . " ORDER BY `name` ASC");
+				FROM `" . TABLE_PANEL_CUSTOMERS . "` " . (\Froxlor\User::getAll()['customers_see_all'] ? '' : " WHERE `adminid` = '" . (int) \Froxlor\User::getAll()['adminid'] . "' ") . " ORDER BY `name` ASC");
 			$params = array();
-			if ($userinfo['customers_see_all'] == '0') {
-				$params['adminid'] = $userinfo['adminid'];
+			if (\Froxlor\User::getAll()['customers_see_all'] == '0') {
+				$params['adminid'] = \Froxlor\User::getAll()['adminid'];
 			}
 			Database::pexecute($result_customers_stmt, $params);
 

@@ -52,11 +52,11 @@ if ($page == 'overview') {
 			'username' => $lng['login']['username'],
 			'path' => $lng['panel']['path']
 		);
-		$paging = new \Froxlor\UI\Paging($userinfo, TABLE_PANEL_HTPASSWDS, $fields);
+		$paging = new \Froxlor\UI\Paging(\Froxlor\User::getAll(), TABLE_PANEL_HTPASSWDS, $fields);
 		$result_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_HTPASSWDS . "`
 			WHERE `customerid`= :customerid " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
 		Database::pexecute($result_stmt, array(
-			"customerid" => $userinfo['customerid']
+			"customerid" => \Froxlor\User::getAll()['customerid']
 		));
 		$paging->setEntries(Database::num_rows());
 		$sortcode = $paging->getHtmlSortCode($lng);
@@ -69,8 +69,8 @@ if ($page == 'overview') {
 
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			if ($paging->checkDisplay($i)) {
-				if (strpos($row['path'], $userinfo['documentroot']) === 0) {
-					$row['path'] = str_replace($userinfo['documentroot'], "/", $row['path']);
+				if (strpos($row['path'], \Froxlor\User::getAll()['documentroot']) === 0) {
+					$row['path'] = str_replace(\Froxlor\User::getAll()['documentroot'], "/", $row['path']);
 				}
 				$row['path'] = \Froxlor\FileDir::makeCorrectDir($row['path']);
 				$row = \Froxlor\PhpHelper::htmlentities_array($row);
@@ -84,7 +84,7 @@ if ($page == 'overview') {
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate("extras/htpasswds") . "\";");
 	} elseif ($action == 'delete' && $id != 0) {
 		try {
-			$json_result = DirProtections::getLocal($userinfo, array(
+			$json_result = DirProtections::getLocal(\Froxlor\User::getAll(), array(
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
@@ -95,7 +95,7 @@ if ($page == 'overview') {
 		if (isset($result['username']) && $result['username'] != '') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
-					DirProtections::getLocal($userinfo, $_POST)->delete();
+					DirProtections::getLocal(\Froxlor\User::getAll(), $_POST)->delete();
 				} catch (Exception $e) {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
@@ -104,8 +104,8 @@ if ($page == 'overview') {
 					's' => $s
 				));
 			} else {
-				if (strpos($result['path'], $userinfo['documentroot']) === 0) {
-					$result['path'] = str_replace($userinfo['documentroot'], "/", $result['path']);
+				if (strpos($result['path'], \Froxlor\User::getAll()['documentroot']) === 0) {
+					$result['path'] = str_replace(\Froxlor\User::getAll()['documentroot'], "/", $result['path']);
 				}
 
 				\Froxlor\UI\HTML::ask_yesno('extras_reallydelete', $filename, array(
@@ -118,7 +118,7 @@ if ($page == 'overview') {
 	} elseif ($action == 'add') {
 		if (isset($_POST['send']) && $_POST['send'] == 'send') {
 			try {
-				DirProtections::getLocal($userinfo, $_POST)->add();
+				DirProtections::getLocal(\Froxlor\User::getAll(), $_POST)->add();
 			} catch (Exception $e) {
 				\Froxlor\UI\Response::dynamic_error($e->getMessage());
 			}
@@ -127,7 +127,7 @@ if ($page == 'overview') {
 				's' => $s
 			));
 		} else {
-			$pathSelect = \Froxlor\FileDir::makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
+			$pathSelect = \Froxlor\FileDir::makePathfield(\Froxlor\User::getAll()['documentroot'], \Froxlor\User::getAll()['guid'], \Froxlor\User::getAll()['guid']);
 
 			$htpasswd_add_data = include_once dirname(__FILE__) . '/lib/formfields/customer/extras/formfield.htpasswd_add.php';
 			$htpasswd_add_form = \Froxlor\UI\HtmlForm::genHTMLForm($htpasswd_add_data);
@@ -139,7 +139,7 @@ if ($page == 'overview') {
 		}
 	} elseif ($action == 'edit' && $id != 0) {
 		try {
-			$json_result = DirProtections::getLocal($userinfo, array(
+			$json_result = DirProtections::getLocal(\Froxlor\User::getAll(), array(
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
@@ -150,7 +150,7 @@ if ($page == 'overview') {
 		if (isset($result['username']) && $result['username'] != '') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
-					DirProtections::getLocal($userinfo, $_POST)->update();
+					DirProtections::getLocal(\Froxlor\User::getAll(), $_POST)->update();
 				} catch (Exception $e) {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
@@ -159,8 +159,8 @@ if ($page == 'overview') {
 					's' => $s
 				));
 			} else {
-				if (strpos($result['path'], $userinfo['documentroot']) === 0) {
-					$result['path'] = str_replace($userinfo['documentroot'], "/", $result['path']);
+				if (strpos($result['path'], \Froxlor\User::getAll()['documentroot']) === 0) {
+					$result['path'] = str_replace(\Froxlor\User::getAll()['documentroot'], "/", $result['path']);
 				}
 
 				$result = \Froxlor\PhpHelper::htmlentities_array($result);
@@ -192,11 +192,11 @@ if ($page == 'overview') {
 			'error500path' => $lng['extras']['error500path'],
 			'options_cgi' => $lng['extras']['execute_perl']
 		);
-		$paging = new \Froxlor\UI\Paging($userinfo, TABLE_PANEL_HTACCESS, $fields);
+		$paging = new \Froxlor\UI\Paging(\Froxlor\User::getAll(), TABLE_PANEL_HTACCESS, $fields);
 		$result_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_HTACCESS . "`
 			WHERE `customerid`= :customerid " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
 		Database::pexecute($result_stmt, array(
-			"customerid" => $userinfo['customerid']
+			"customerid" => \Froxlor\User::getAll()['customerid']
 		));
 		$paging->setEntries(Database::num_rows());
 		$sortcode = $paging->getHtmlSortCode($lng);
@@ -207,12 +207,12 @@ if ($page == 'overview') {
 		$count = 0;
 		$htaccess = '';
 
-		$cperlenabled = customerHasPerlEnabled($userinfo['customerid']);
+		$cperlenabled = customerHasPerlEnabled(\Froxlor\User::getAll()['customerid']);
 
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			if ($paging->checkDisplay($i)) {
-				if (strpos($row['path'], $userinfo['documentroot']) === 0) {
-					$row['path'] = str_replace($userinfo['documentroot'], "/", $row['path']);
+				if (strpos($row['path'], \Froxlor\User::getAll()['documentroot']) === 0) {
+					$row['path'] = str_replace(\Froxlor\User::getAll()['documentroot'], "/", $row['path']);
 				}
 				$row['path'] = \Froxlor\FileDir::makeCorrectDir($row['path']);
 				$row['options_indexes'] = str_replace('1', $lng['panel']['yes'], $row['options_indexes']);
@@ -230,7 +230,7 @@ if ($page == 'overview') {
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate("extras/htaccess") . "\";");
 	} elseif ($action == 'delete' && $id != 0) {
 		try {
-			$json_result = DirOptions::getLocal($userinfo, array(
+			$json_result = DirOptions::getLocal(\Froxlor\User::getAll(), array(
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
@@ -238,10 +238,10 @@ if ($page == 'overview') {
 		}
 		$result = json_decode($json_result, true)['data'];
 
-		if (isset($result['customerid']) && $result['customerid'] != '' && $result['customerid'] == $userinfo['customerid']) {
+		if (isset($result['customerid']) && $result['customerid'] != '' && $result['customerid'] == \Froxlor\User::getAll()['customerid']) {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
-					DirOptions::getLocal($userinfo, $_POST)->delete();
+					DirOptions::getLocal(\Froxlor\User::getAll(), $_POST)->delete();
 				} catch (Exception $e) {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
@@ -254,13 +254,13 @@ if ($page == 'overview') {
 					'id' => $id,
 					'page' => $page,
 					'action' => $action
-				), str_replace($userinfo['documentroot'], '/', $result['path']));
+				), str_replace(\Froxlor\User::getAll()['documentroot'], '/', $result['path']));
 			}
 		}
 	} elseif ($action == 'add') {
 		if (isset($_POST['send']) && $_POST['send'] == 'send') {
 			try {
-				DirOptions::getLocal($userinfo, $_POST)->add();
+				DirOptions::getLocal(\Froxlor\User::getAll(), $_POST)->add();
 			} catch (Exception $e) {
 				\Froxlor\UI\Response::dynamic_error($e->getMessage());
 			}
@@ -269,8 +269,8 @@ if ($page == 'overview') {
 				's' => $s
 			));
 		} else {
-			$pathSelect = \Froxlor\FileDir::makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
-			$cperlenabled = customerHasPerlEnabled($userinfo['customerid']);
+			$pathSelect = \Froxlor\FileDir::makePathfield(\Froxlor\User::getAll()['documentroot'], \Froxlor\User::getAll()['guid'], \Froxlor\User::getAll()['guid']);
+			$cperlenabled = customerHasPerlEnabled(\Froxlor\User::getAll()['customerid']);
 
 			$htaccess_add_data = include_once dirname(__FILE__) . '/lib/formfields/customer/extras/formfield.htaccess_add.php';
 			$htaccess_add_form = \Froxlor\UI\HtmlForm::genHTMLForm($htaccess_add_data);
@@ -282,7 +282,7 @@ if ($page == 'overview') {
 		}
 	} elseif (($action == 'edit') && ($id != 0)) {
 		try {
-			$json_result = DirOptions::getLocal($userinfo, array(
+			$json_result = DirOptions::getLocal(\Froxlor\User::getAll(), array(
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
@@ -290,10 +290,10 @@ if ($page == 'overview') {
 		}
 		$result = json_decode($json_result, true)['data'];
 
-		if ((isset($result['customerid'])) && ($result['customerid'] != '') && ($result['customerid'] == $userinfo['customerid'])) {
+		if ((isset($result['customerid'])) && ($result['customerid'] != '') && ($result['customerid'] == \Froxlor\User::getAll()['customerid'])) {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
-					DirOptions::getLocal($userinfo, $_POST)->update();
+					DirOptions::getLocal(\Froxlor\User::getAll(), $_POST)->update();
 				} catch (Exception $e) {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
@@ -302,14 +302,14 @@ if ($page == 'overview') {
 					's' => $s
 				));
 			} else {
-				if (strpos($result['path'], $userinfo['documentroot']) === 0) {
-					$result['path'] = str_replace($userinfo['documentroot'], "/", $result['path']);
+				if (strpos($result['path'], \Froxlor\User::getAll()['documentroot']) === 0) {
+					$result['path'] = str_replace(\Froxlor\User::getAll()['documentroot'], "/", $result['path']);
 				}
 
 				$result['error404path'] = $result['error404path'];
 				$result['error403path'] = $result['error403path'];
 				$result['error500path'] = $result['error500path'];
-				$cperlenabled = customerHasPerlEnabled($userinfo['customerid']);
+				$cperlenabled = customerHasPerlEnabled(\Froxlor\User::getAll()['customerid']);
 				/*
 				 * $options_indexes = \Froxlor\UI\HTML::makeyesno('options_indexes', '1', '0', $result['options_indexes']);
 				 * $options_cgi = \Froxlor\UI\HTML::makeyesno('options_cgi', '1', '0', $result['options_cgi']);
@@ -337,7 +337,7 @@ if ($page == 'overview') {
 		if ($action == 'abort' && isset($_POST['send']) && $_POST['send'] == 'send') {
 			$log->logAction(USR_ACTION, LOG_NOTICE, "customer_extras::backup - aborted scheduled backupjob");
 			try {
-				CustomerBackups::getLocal($userinfo, $_POST)->delete();
+				CustomerBackups::getLocal(\Froxlor\User::getAll(), $_POST)->delete();
 			} catch (Exception $e) {
 				\Froxlor\UI\Response::dynamic_error($e->getMessage());
 			}
@@ -353,7 +353,7 @@ if ($page == 'overview') {
 
 			// check whether there is a backup-job for this customer
 			try {
-				$json_result = CustomerBackups::getLocal($userinfo)->listing();
+				$json_result = CustomerBackups::getLocal(\Froxlor\User::getAll())->listing();
 			} catch (Exception $e) {
 				\Froxlor\UI\Response::dynamic_error($e->getMessage());
 			}
@@ -365,7 +365,7 @@ if ($page == 'overview') {
 
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
-					CustomerBackups::getLocal($userinfo, $_POST)->add();
+					CustomerBackups::getLocal(\Froxlor\User::getAll(), $_POST)->add();
 				} catch (Exception $e) {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
@@ -376,12 +376,12 @@ if ($page == 'overview') {
 					$action = "abort";
 					$row = $existing_backupJob['data'];
 
-					$row['path'] = \Froxlor\FileDir::makeCorrectDir(str_replace($userinfo['documentroot'], "/", $row['destdir']));
+					$row['path'] = \Froxlor\FileDir::makeCorrectDir(str_replace(\Froxlor\User::getAll()['documentroot'], "/", $row['destdir']));
 					$row['backup_web'] = ($row['backup_web'] == '1') ? $lng['panel']['yes'] : $lng['panel']['no'];
 					$row['backup_mail'] = ($row['backup_mail'] == '1') ? $lng['panel']['yes'] : $lng['panel']['no'];
 					$row['backup_dbs'] = ($row['backup_dbs'] == '1') ? $lng['panel']['yes'] : $lng['panel']['no'];
 				}
-				$pathSelect = \Froxlor\FileDir::makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
+				$pathSelect = \Froxlor\FileDir::makePathfield(\Froxlor\User::getAll()['documentroot'], \Froxlor\User::getAll()['guid'], \Froxlor\User::getAll()['guid']);
 				$backup_data = include_once dirname(__FILE__) . '/lib/formfields/customer/extras/formfield.backup.php';
 				$backup_form = \Froxlor\UI\HtmlForm::genHTMLForm($backup_data);
 				$title = $backup_data['backup']['title'];

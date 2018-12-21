@@ -6,6 +6,26 @@ use Froxlor\Database\Database;
 class User
 {
 
+	private static $userinfo = array();
+
+	/**
+	 *
+	 * @param array $userinfo
+	 */
+	public static function setUserinfoArray($userinfo = array())
+	{
+		self::$userinfo = $userinfo;
+	}
+
+	/**
+	 *
+	 * @return array
+	 */
+	public static function getAll()
+	{
+		return self::$userinfo;
+	}
+
 	/**
 	 * Returns full style user details "Name, Firstname | Company"
 	 *
