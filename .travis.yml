@@ -9,7 +9,8 @@ php:
 
 branches:
   only:
-    master
+  - master
+  - namespaces
 
 matrix:
   include:
