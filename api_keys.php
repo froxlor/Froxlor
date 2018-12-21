@@ -20,7 +20,7 @@ if (! defined('AREA')) {
  *       
  */
 
-use Froxlor\Database as Database;
+use Froxlor\Database\Database;
 
 // This file is being included in admin_index and customer_index
 // and therefore does not need to require lib/init.php

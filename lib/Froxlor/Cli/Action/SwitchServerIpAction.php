@@ -160,11 +160,11 @@ class SwitchServerIpAction extends \Froxlor\Cli\Action
 
 	private function _parseConfig()
 	{
-		define('FROXLOR_INSTALL_DIR', $this->_args['froxlor-dir']);
-		if (! file_exists(FROXLOR_INSTALL_DIR . '/lib/classes/database/class.Database.php')) {
-			throw new \Exception("Could not find froxlor's Database class. Is froxlor really installed to '" . FROXLOR_INSTALL_DIR . "'?");
+		define('\Froxlor\Froxlor::getInstallDir()', $this->_args['froxlor-dir']);
+		if (! file_exists(\Froxlor\Froxlor::getInstallDir() . '/lib/classes/database/class.Database.php')) {
+			throw new \Exception("Could not find froxlor's Database class. Is froxlor really installed to '" . \Froxlor\Froxlor::getInstallDir() . "'?");
 		}
-		if (! file_exists(FROXLOR_INSTALL_DIR . '/lib/userdata.inc.php')) {
+		if (! file_exists(\Froxlor\Froxlor::getInstallDir() . '/lib/userdata.inc.php')) {
 			throw new \Exception("Could not find froxlor's userdata.inc.php file. You should use this script only with a fully installed and setup froxlor system.");
 		}
 	}

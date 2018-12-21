@@ -4,8 +4,8 @@ if (! defined('AREA')) {
 	exit();
 }
 
-use Froxlor\Database as Database;
-use Froxlor\Settings as Settings;
+use Froxlor\Database\Database;
+use Froxlor\Settings;
 
 if (Settings::Get('2fa.enabled') != '1') {
 	\Froxlor\UI\Response::dynamic_error("2FA not activated");

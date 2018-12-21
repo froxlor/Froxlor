@@ -17,8 +17,8 @@
 define('AREA', 'admin');
 require './lib/init.php';
 
-use Froxlor\Database as Database;
-use Froxlor\Settings as Settings;
+use Froxlor\Database\Database;
+use Froxlor\Settings;
 
 if ($page == 'overview') {
 	$log->logAction(ADM_ACTION, LOG_NOTICE, "viewed admin_updates");
@@ -28,7 +28,7 @@ if ($page == 'overview') {
 	 * have any version/dbversion in the database (don't know why)
 	 * so we have to set them both to run a correct upgrade
 	 */
-	if (! isFroxlor()) {
+	if (! \Froxlor\Froxlor::isFroxlor()) {
 		if (Settings::Get('panel.version') == null || Settings::Get('panel.version') == '') {
 			Settings::Set('panel.version', '1.4.2.1');
 		}
@@ -51,7 +51,7 @@ if ($page == 'overview') {
 		}
 	}
 
-	if (hasDbUpdates($dbversion) || hasUpdates($version)) {
+	if (\Froxlor\Froxlor::hasDbUpdates() || \Froxlor\Froxlor::hasUpdates()) {
 		$successful_update = false;
 		$message = '';
 
@@ -59,14 +59,14 @@ if ($page == 'overview') {
 			if ((isset($_POST['update_preconfig']) && isset($_POST['update_changesagreed']) && intval($_POST['update_changesagreed']) != 0) || ! isset($_POST['update_preconfig'])) {
 				eval("echo \"" . \Froxlor\UI\Template::getTemplate('update/update_start') . "\";");
 
-				include_once './install/updatesql.php';
+				include_once \Froxlor\Froxlor::getInstallDir() . 'install/updatesql.php';
 
 				$redirect_url = 'admin_index.php?s=' . $s;
 				eval("echo \"" . \Froxlor\UI\Template::getTemplate('update/update_end') . "\";");
 
 				\Froxlor\User::updateCounters();
 				\Froxlor\System\Cronjob::inserttask('1');
-				@chmod('./lib/userdata.inc.php', 0440);
+				@chmod(\Froxlor\Froxlor::getInstallDir() . '/lib/userdata.inc.php', 0440);
 
 				$successful_update = true;
 			} else {
@@ -94,7 +94,7 @@ if ($page == 'overview') {
 			}
 			$update_information = $ui_text;
 
-			include_once './install/updates/preconfig.php';
+			include_once \Froxlor\Froxlor::getInstallDir() . '/install/updates/preconfig.php';
 			$preconfig = getPreConfig($current_version, $current_db_version);
 			if ($preconfig != '') {
 				$update_information .= '<br />' . $preconfig . $message;

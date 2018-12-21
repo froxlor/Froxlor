@@ -196,7 +196,7 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 
 			$target = (isset($_GET['target']) ? $_GET['target'] : 'index');
 			$redirect = "customer_" . $target . ".php";
-			if (! file_exists(FROXLOR_INSTALL_DIR . "/" . $redirect)) {
+			if (! file_exists(\Froxlor\Froxlor::getInstallDir() . "/" . $redirect)) {
 				$redirect = "customer_index.php";
 			}
 			\Froxlor\UI\Response::redirectTo($redirect, array(

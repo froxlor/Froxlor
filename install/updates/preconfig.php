@@ -47,7 +47,7 @@ function getPreConfig($current_version, $current_db_version)
 
 function versionInUpdate($current_version, $version_to_check)
 {
-	if (! isFroxlor()) {
+	if (! \Froxlor\Froxlor::isFroxlor()) {
 		return true;
 	}
 

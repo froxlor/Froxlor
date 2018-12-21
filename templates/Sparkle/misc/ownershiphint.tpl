@@ -25,7 +25,7 @@
 					<p>&nbsp;</p>
 					<p>This mostly happens due to wrong ownership.<br />Try the following command to correct the ownership:</p>
 					<p>&nbsp;</p>
-					<p><pre>chown -R <USER>:<GROUP> <FROXLOR_INSTALL_DIR></pre></p>
+					<p><pre>chown -R <USER>:<GROUP> <\Froxlor\Froxlor::getInstallDir()></pre></p>
 				</div>
 			</div>
 			<aside class="right">

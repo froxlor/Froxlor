@@ -24,7 +24,7 @@ class PhpHelper
 	{
 		if (is_array($subject)) {
 			if (! is_array($fields)) {
-				$fields = array_trim(explode(' ', $fields));
+				$fields = self::array_trim(explode(' ', $fields));
 			}
 
 			foreach ($subject as $field => $value) {
@@ -58,7 +58,7 @@ class PhpHelper
 	public static function str_replace_array($search, $replace, $subject, $fields = '')
 	{
 		if (is_array($subject)) {
-			$fields = array_trim(explode(' ', $fields));
+			$fields = self::array_trim(explode(' ', $fields));
 			foreach ($subject as $field => $value) {
 				if ((! is_array($fields) || empty($fields)) || (is_array($fields) && ! empty($fields) && in_array($field, $fields))) {
 					$subject[$field] = str_replace($search, $replace, $subject[$field]);
@@ -339,7 +339,7 @@ class PhpHelper
 	 *        	The array to trim
 	 * @return array The trim'med array
 	 */
-	function array_trim($source)
+	public static function array_trim($source)
 	{
 		$returnval = array();
 		if (is_array($source)) {

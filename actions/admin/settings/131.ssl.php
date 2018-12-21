@@ -173,7 +173,7 @@ return array(
 					'varname' => 'letsencryptchallengepath',
 					'type' => 'string',
 					'string_emptyallowed' => false,
-					'default' => FROXLOR_INSTALL_DIR,
+					'default' => \Froxlor\Froxlor::getInstallDir(),
 					'save_method' => 'storeSettingField'
 				),
 				'system_letsencryptkeysize' => array(

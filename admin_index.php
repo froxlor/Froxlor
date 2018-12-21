@@ -314,7 +314,7 @@ if ($page == 'overview') {
 
 		$errid = $_GET['errorid'];
 		// read error file
-		$err_dir = \Froxlor\FileDir::makeCorrectDir(FROXLOR_INSTALL_DIR . "/logs/");
+		$err_dir = \Froxlor\FileDir::makeCorrectDir(\Froxlor\Froxlor::getInstallDir() . "/logs/");
 		$err_file = \Froxlor\FileDir::makeCorrectFile($err_dir . "/" . $errid . "_sql-error.log");
 
 		if (file_exists($err_file)) {
@@ -325,9 +325,9 @@ if ($page == 'overview') {
 			$_error = array(
 				'code' => str_replace("\n", "", substr($error[1], 5)),
 				'message' => str_replace("\n", "", substr($error[2], 4)),
-				'file' => str_replace("\n", "", substr($error[3], 5 + strlen(FROXLOR_INSTALL_DIR))),
+				'file' => str_replace("\n", "", substr($error[3], 5 + strlen(\Froxlor\Froxlor::getInstallDir()))),
 				'line' => str_replace("\n", "", substr($error[4], 5)),
-				'trace' => str_replace(FROXLOR_INSTALL_DIR, "", substr($error[5], 6))
+				'trace' => str_replace(\Froxlor\Froxlor::getInstallDir(), "", substr($error[5], 6))
 			);
 
 			// build mail-content

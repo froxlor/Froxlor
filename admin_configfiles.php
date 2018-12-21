@@ -65,7 +65,7 @@ if ($userinfo['change_serversettings'] == '1') {
 		'<VIRTUAL_GID_MAPS>' => Settings::Get('system.vmail_gid'),
 		'<SSLPROTOCOLS>' => (Settings::Get('system.use_ssl') == '1') ? 'imaps pop3s' : '',
 		'<CUSTOMER_TMP>' => \Froxlor\FileDir::makeCorrectDir($customer_tmpdir),
-		'<BASE_PATH>' => \Froxlor\FileDir::makeCorrectDir(FROXLOR_INSTALL_DIR),
+		'<BASE_PATH>' => \Froxlor\FileDir::makeCorrectDir(\Froxlor\Froxlor::getInstallDir()),
 		'<BIND_CONFIG_PATH>' => \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.bindconf_directory')),
 		'<WEBSERVER_RELOAD_CMD>' => Settings::Get('system.apachereload_command'),
 		'<CUSTOMER_LOGS>' => \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.logfiles_directory')),
@@ -85,7 +85,7 @@ if ($userinfo['change_serversettings'] == '1') {
 	$services = "";
 	$daemons = "";
 
-	$config_dir = \Froxlor\FileDir::makeCorrectDir(FROXLOR_INSTALL_DIR . '/lib/configfiles/');
+	$config_dir = \Froxlor\FileDir::makeCorrectDir(\Froxlor\Froxlor::getInstallDir() . '/lib/configfiles/');
 
 	if ($distribution != "") {
 
@@ -226,7 +226,7 @@ if ($userinfo['change_serversettings'] == '1') {
 		}
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate("configfiles/configfiles") . "\";");
 	} else {
-		$basedir = FROXLOR_INSTALL_DIR;
+		$basedir = \Froxlor\Froxlor::getInstallDir();
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate("configfiles/wizard") . "\";");
 	}
 } else {

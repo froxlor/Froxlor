@@ -30,7 +30,7 @@ $sql_root = Database::getSqlData();
 Database::needRoot(false);
 
 if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
-	$settings_data = loadConfigArrayDir('./actions/admin/settings/');
+	$settings_data = \Froxlor\PhpHelper::loadConfigArrayDir('./actions/admin/settings/');
 
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 

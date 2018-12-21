@@ -3202,7 +3202,7 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.9.35-dev4')) {
 	showUpdateStep("Updating from 0.9.35-dev4 to 0.9.35-dev5", false);
 
 	showUpdateStep("Adding more Let's Encrypt settings");
-	Settings::AddNew("system.letsencryptchallengepath", FROXLOR_INSTALL_DIR);
+	Settings::AddNew("system.letsencryptchallengepath", \Froxlor\Froxlor::getInstallDir());
 	Settings::AddNew("system.letsencryptkeysize", '4096');
 	Settings::AddNew("system.letsencryptreuseold", 0);
 	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` ADD `ssl_csr_file` MEDIUMTEXT AFTER `ssl_cert_chainfile`;");

@@ -211,7 +211,7 @@ if ($action == '2fa_entercode') {
 				'showmessage' => '3'
 			));
 			exit();
-		} elseif (validatePasswordLogin($userinfo, $password, $table, $uid)) {
+		} elseif (\Froxlor\System\Crypt::validatePasswordLogin($userinfo, $password, $table, $uid)) {
 			// only show "you're banned" if the login was successful
 			// because we don't want to publish that the user does exist
 			if ($userinfo['deactivated']) {
@@ -392,7 +392,7 @@ if ($action == 'forgotpwd') {
 
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 		$loginname = \Froxlor\Validate\Validate::validate($_POST['loginname'], 'loginname');
-		$email = validateEmail($_POST['loginemail'], 'email');
+		$email = \Froxlor\Validate\Validate::validateEmail($_POST['loginemail'], 'email');
 		$result_stmt = Database::prepare("SELECT `adminid`, `customerid`, `firstname`, `name`, `company`, `email`, `loginname`, `def_language`, `deactivated` FROM `" . TABLE_PANEL_CUSTOMERS . "`
 			WHERE `loginname`= :loginname
 			AND `email`= :email");
@@ -735,7 +735,7 @@ function finishLogin($userinfo)
 		$qryparams['s'] = $s;
 
 		if ($userinfo['adminsession'] == '1') {
-			if (hasUpdates($version) || hasDbUpdates($dbversion)) {
+			if (\Froxlor\Froxlor::hasUpdates() || \Froxlor\Froxlor::hasDbUpdates()) {
 				\Froxlor\UI\Response::redirectTo('admin_updates.php', array(
 					's' => $s
 				));

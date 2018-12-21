@@ -96,7 +96,7 @@ if ($page == 'log' && $userinfo['change_serversettings'] == '1') {
 				}
 
 				$log_count ++;
-				$row['type'] = getLogLevelDesc($row['type']);
+				$row['type'] = \Froxlor\FroxlorLogger::getInstanceOf()->getLogLevelDesc($row['type']);
 				eval("\$log.=\"" . \Froxlor\UI\Template::getTemplate('logger/logger_log') . "\";");
 				$count ++;
 				$_action = $action;

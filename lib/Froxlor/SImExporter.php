@@ -1,7 +1,7 @@
 <?php
 namespace Froxlor;
 
-use Froxlor\Database as Database;
+use Froxlor\Database\Database;
 
 /**
  * This file is part of the Froxlor project.

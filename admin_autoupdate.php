@@ -104,12 +104,12 @@ elseif ($page == 'getdownload') {
 		$toCheck = str_replace('{version}', $newversion, CHECKSUM_URI);
 
 		// check for local destination folder
-		if (! is_dir(FROXLOR_INSTALL_DIR . '/updates/')) {
-			mkdir(FROXLOR_INSTALL_DIR . '/updates/');
+		if (! is_dir(\Froxlor\Froxlor::getInstallDir() . '/updates/')) {
+			mkdir(\Froxlor\Froxlor::getInstallDir() . '/updates/');
 		}
 
 		// name archive
-		$localArchive = FROXLOR_INSTALL_DIR . '/updates/' . basename($toLoad);
+		$localArchive = \Froxlor\Froxlor::getInstallDir() . '/updates/' . basename($toLoad);
 
 		$log->logAction(ADM_ACTION, LOG_NOTICE, "Downloading " . $toLoad . " to " . $localArchive);
 
@@ -163,15 +163,15 @@ elseif ($page == 'getdownload') {
 elseif ($page == 'extract') {
 
 	$toExtract = isset($_GET['archive']) ? $_GET['archive'] : null;
-	$localArchive = FROXLOR_INSTALL_DIR . '/updates/' . $toExtract;
+	$localArchive = \Froxlor\Froxlor::getInstallDir() . '/updates/' . $toExtract;
 
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 		// decompress from zip
 		$zip = new ZipArchive();
 		$res = $zip->open($localArchive);
 		if ($res === true) {
-			$log->logAction(ADM_ACTION, LOG_NOTICE, "Extracting " . $localArchive . " to " . FROXLOR_INSTALL_DIR);
-			$zip->extractTo(FROXLOR_INSTALL_DIR);
+			$log->logAction(ADM_ACTION, LOG_NOTICE, "Extracting " . $localArchive . " to " . \Froxlor\Froxlor::getInstallDir());
+			$zip->extractTo(\Froxlor\Froxlor::getInstallDir());
 			$zip->close();
 			// success - remove unused archive
 			@unlink($localArchive);

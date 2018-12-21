@@ -19,8 +19,8 @@
 define('AREA', 'admin');
 require './lib/init.php';
 
-use Froxlor\Database as Database;
-use Froxlor\Settings as Settings;
+use Froxlor\Database\Database;
+use Froxlor\Settings;
 
 if (isset($_POST['subjectid'])) {
 	$subjectid = intval($_POST['subjectid']);

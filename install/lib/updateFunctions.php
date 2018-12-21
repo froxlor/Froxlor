@@ -30,8 +30,6 @@
  */
 function showUpdateStep($task = null, $needs_status = true)
 {
-	global $updatelog, $filelog;
-
 	if (! $needs_status)
 		echo "<b>";
 
@@ -42,8 +40,8 @@ function showUpdateStep($task = null, $needs_status = true)
 		echo "</b><br />";
 	}
 
-	$updatelog->logAction(ADM_ACTION, LOG_WARNING, $task);
-	$filelog->logAction(ADM_ACTION, LOG_WARNING, $task);
+	\Froxlor\FroxlorLogger::getInstanceOf()->logAction(ADM_ACTION, LOG_WARNING, $task);
+	\Froxlor\FroxlorLogger::getInstanceOf()->logAction(ADM_ACTION, LOG_WARNING, $task);
 }
 
 /**
@@ -59,8 +57,6 @@ function showUpdateStep($task = null, $needs_status = true)
  */
 function lastStepStatus($status = -1, $message = '')
 {
-	global $updatelog, $filelog;
-
 	switch ($status) {
 
 		case 0:
@@ -85,9 +81,9 @@ function lastStepStatus($status = -1, $message = '')
 	echo "<span class=\"update-step update-step-" . $status_color . "\">" . $status_sign . "</span><br />";
 
 	if ($status == - 1 || $status == 2) {
-		$updatelog->logAction(ADM_ACTION, LOG_WARNING, 'Attention - last update task failed!!!');
-		$filelog->logAction(ADM_ACTION, LOG_WARNING, 'Attention - last update task failed!!!');
+		\Froxlor\FroxlorLogger::getInstanceOf()->logAction(ADM_ACTION, LOG_WARNING, 'Attention - last update task failed!!!');
+		\Froxlor\FroxlorLogger::getInstanceOf()->logAction(ADM_ACTION, LOG_WARNING, 'Attention - last update task failed!!!');
 	} elseif ($status == 0 || $status == 1) {
-		$filelog->logAction(ADM_ACTION, LOG_WARNING, 'Success');
+		\Froxlor\FroxlorLogger::getInstanceOf()->logAction(ADM_ACTION, LOG_WARNING, 'Success');
 	}
 }

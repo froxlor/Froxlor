@@ -23,7 +23,7 @@ final class Froxlor
 	 */
 	public static function getInstallDir()
 	{
-		return dirname(dirname(__DIR__));
+		return dirname(dirname(__DIR__)) . '/';
 	}
 
 	/**

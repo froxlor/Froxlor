@@ -184,7 +184,7 @@ class FroxlorLogger
 		self::$crondebug_flag = (bool) $_flag;
 	}
 
-	private function getLogLevelDesc($type)
+	public function getLogLevelDesc($type)
 	{
 		switch ($type) {
 			case LOG_INFO:

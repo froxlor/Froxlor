@@ -105,7 +105,7 @@ if ($page == 'domains' || $page == 'overview') {
 		foreach ($domain_array as $row) {
 
 			if (isset($row['domain']) && $row['domain'] != '' && $paging->checkDisplay($i)) {
-				$row['customername'] = getCorrectFullUserDetails($row);
+				$row['customername'] = \Froxlor\User::getCorrectFullUserDetails($row);
 				$row = \Froxlor\PhpHelper::htmlentities_array($row);
 				// display a nice list of IP's
 				$row['ipandport'] = str_replace("\n", "<br />", $row['ipandport']);
@@ -191,7 +191,7 @@ if ($page == 'domains' || $page == 'overview') {
 			Database::pexecute($result_customers_stmt, $params);
 
 			while ($row_customer = $result_customers_stmt->fetch(PDO::FETCH_ASSOC)) {
-				$customers .= \Froxlor\UI\HTML::makeoption(getCorrectFullUserDetails($row_customer) . ' (' . $row_customer['loginname'] . ')', $row_customer['customerid']);
+				$customers .= \Froxlor\UI\HTML::makeoption(\Froxlor\User::getCorrectFullUserDetails($row_customer) . ' (' . $row_customer['loginname'] . ')', $row_customer['customerid']);
 			}
 
 			$admins = '';
@@ -203,7 +203,7 @@ if ($page == 'domains' || $page == 'overview') {
 						WHERE `domains_used` < `domains` OR `domains` = '-1' ORDER BY `name` ASC");
 
 				while ($row_admin = $result_admins_stmt->fetch(PDO::FETCH_ASSOC)) {
-					$admins .= \Froxlor\UI\HTML::makeoption(getCorrectFullUserDetails($row_admin) . ' (' . $row_admin['loginname'] . ')', $row_admin['adminid'], $userinfo['adminid']);
+					$admins .= \Froxlor\UI\HTML::makeoption(\Froxlor\User::getCorrectFullUserDetails($row_admin) . ' (' . $row_admin['loginname'] . ')', $row_admin['adminid'], $userinfo['adminid']);
 				}
 			}
 
@@ -449,7 +449,7 @@ if ($page == 'domains' || $page == 'overview') {
 					Database::pexecute($result_customers_stmt, $params);
 
 					while ($row_customer = $result_customers_stmt->fetch(PDO::FETCH_ASSOC)) {
-						$customers .= \Froxlor\UI\HTML::makeoption(getCorrectFullUserDetails($row_customer) . ' (' . $row_customer['loginname'] . ')', $row_customer['customerid'], $result['customerid']);
+						$customers .= \Froxlor\UI\HTML::makeoption(\Froxlor\User::getCorrectFullUserDetails($row_customer) . ' (' . $row_customer['loginname'] . ')', $row_customer['customerid'], $result['customerid']);
 					}
 				} else {
 					$customer_stmt = Database::prepare("
@@ -459,7 +459,7 @@ if ($page == 'domains' || $page == 'overview') {
 					$customer = Database::pexecute_first($customer_stmt, array(
 						'customerid' => $result['customerid']
 					));
-					$result['customername'] = getCorrectFullUserDetails($customer) . ' (' . $customer['loginname'] . ')';
+					$result['customername'] = \Froxlor\User::getCorrectFullUserDetails($customer) . ' (' . $customer['loginname'] . ')';
 				}
 
 				if ($userinfo['customers_see_all'] == '1') {
@@ -475,7 +475,7 @@ if ($page == 'domains' || $page == 'overview') {
 						));
 
 						while ($row_admin = $result_admins_stmt->fetch(PDO::FETCH_ASSOC)) {
-							$admins .= \Froxlor\UI\HTML::makeoption(getCorrectFullUserDetails($row_admin) . ' (' . $row_admin['loginname'] . ')', $row_admin['adminid'], $result['adminid']);
+							$admins .= \Froxlor\UI\HTML::makeoption(\Froxlor\User::getCorrectFullUserDetails($row_admin) . ' (' . $row_admin['loginname'] . ')', $row_admin['adminid'], $result['adminid']);
 						}
 					} else {
 						$admin_stmt = Database::prepare("
@@ -484,7 +484,7 @@ if ($page == 'domains' || $page == 'overview') {
 						$admin = Database::pexecute_first($admin_stmt, array(
 							'adminid' => $result['adminid']
 						));
-						$result['adminname'] = getCorrectFullUserDetails($admin) . ' (' . $admin['loginname'] . ')';
+						$result['adminname'] = \Froxlor\User::getCorrectFullUserDetails($admin) . ' (' . $admin['loginname'] . ')';
 					}
 				}
 
@@ -689,7 +689,7 @@ if ($page == 'domains' || $page == 'overview') {
 			Database::pexecute($result_customers_stmt, $params);
 
 			while ($row_customer = $result_customers_stmt->fetch(PDO::FETCH_ASSOC)) {
-				$customers .= \Froxlor\UI\HTML::makeoption(getCorrectFullUserDetails($row_customer) . ' (' . $row_customer['loginname'] . ')', $row_customer['customerid']);
+				$customers .= \Froxlor\UI\HTML::makeoption(\Froxlor\User::getCorrectFullUserDetails($row_customer) . ' (' . $row_customer['loginname'] . ')', $row_customer['customerid']);
 			}
 
 			$domain_import_data = include_once dirname(__FILE__) . '/lib/formfields/admin/domains/formfield.domains_import.php';
