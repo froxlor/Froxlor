@@ -737,7 +737,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			), true, true);
 
 			$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] deleted admin '" . $result['loginname'] . "'");
-			updateCounters();
+			\Froxlor\User::updateCounters();
 			return $this->response(200, "successfull", $result);
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);

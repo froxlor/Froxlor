@@ -58,7 +58,7 @@ if ($page == 'cronjobs' || $page == 'overview') {
 				$cmod = $row['module'];
 			}
 			if ($paging->checkDisplay($i)) {
-				$row = htmlentities_array($row);
+				$row = \Froxlor\PhpHelper::htmlentities_array($row);
 
 				$row['lastrun'] = date('d.m.Y H:i', $row['lastrun']);
 				$row['isactive'] = ((int) $row['isactive'] == 1) ? $lng['panel']['yes'] : $lng['panel']['no'];

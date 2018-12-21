@@ -63,7 +63,7 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 						'company' => $row['company']
 					);
 					$replace_arr = array(
-						'SALUTATION' => getCorrectUserSalutation($rep_userinfo),
+						'SALUTATION' => \Froxlor\User::getCorrectUserSalutation($rep_userinfo),
 						'NAME' => $row['name'], // < keep this for compatibility
 						'TRAFFIC' => round(($row['traffic'] / 1024), 2), /* traffic is stored in KB, template uses MB */
 						'TRAFFICUSED' => round(($row['traffic_used'] / 1024), 2), /* traffic is stored in KB, template uses MB */
@@ -362,7 +362,7 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 						'company' => $row['company']
 					);
 					$replace_arr = array(
-						'SALUTATION' => getCorrectUserSalutation($rep_userinfo),
+						'SALUTATION' => \Froxlor\User::getCorrectUserSalutation($rep_userinfo),
 						'NAME' => $row['name'], // < keep this for compatibility
 						'DISKAVAILABLE' => round(($row['diskspace'] / 1024), 2), /* traffic is stored in KB, template uses MB */
 						'DISKUSED' => round($row['diskspace_used'] / 1024, 2), /* traffic is stored in KB, template uses MB */

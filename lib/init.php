@@ -110,7 +110,10 @@ if (! isset($sql) || ! is_array($sql)) {
  * Includes the Functions
  */
 require \Froxlor\Froxlor::getInstallDir() . '/lib/functions.php';
-@set_error_handler('phpErrHandler');
+@set_error_handler(array(
+	'\\Froxlor\\PhpHelper',
+	'phpErrHandler'
+));
 
 /**
  * Includes the MySQL-Tabledefinitions etc.
@@ -416,10 +419,10 @@ if (AREA == 'admin' || AREA == 'customer') {
 				)
 			)
 		);
-		$navigation = buildNavigation($navigation_data['admin'], $userinfo);
+		$navigation = \Froxlor\UI\HTML::buildNavigation($navigation_data['admin'], $userinfo);
 	} else {
-		$navigation_data = loadConfigArrayDir('lib/navigation/');
-		$navigation = buildNavigation($navigation_data[AREA], $userinfo);
+		$navigation_data = \Froxlor\PhpHelper::loadConfigArrayDir('lib/navigation/');
+		$navigation = \Froxlor\UI\HTML::buildNavigation($navigation_data[AREA], $userinfo);
 	}
 	unset($navigation_data);
 }

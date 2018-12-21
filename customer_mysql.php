@@ -78,7 +78,7 @@ if ($page == 'overview') {
 		Database::needRoot(true);
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			if ($paging->checkDisplay($i)) {
-				$row = htmlentities_array($row);
+				$row = \Froxlor\PhpHelper::htmlentities_array($row);
 				$mbdata_stmt = Database::prepare("SELECT SUM(data_length + index_length) as MB FROM information_schema.TABLES
 					WHERE table_schema = :table_schema
 					GROUP BY table_schema");

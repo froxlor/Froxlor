@@ -302,7 +302,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			));
 
 			if ($_doredirect) {
-				addRedirectToDomain($subdomain_id, $redirectcode);
+				\Froxlor\Domain\Domain::addRedirectToDomain($subdomain_id, $redirectcode);
 			}
 
 			\Froxlor\System\Cronjob::inserttask('1');
@@ -470,7 +470,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		$isemaildomain = $this->getBoolParam('isemaildomain', true, $result['isemaildomain']);
 		$openbasedir_path = $this->getParam('openbasedir_path', true, $result['openbasedir_path']);
 		$phpsettingid = $this->getParam('phpsettingid', true, $result['phpsettingid']);
-		$redirectcode = $this->getParam('redirectcode', true, getDomainRedirectId($id));
+		$redirectcode = $this->getParam('redirectcode', true, \Froxlor\Domain\Domain::getDomainRedirectId($id));
 		if (Settings::Get('system.use_ssl')) {
 			$ssl_redirect = $this->getBoolParam('ssl_redirect', true, $result['ssl_redirect']);
 			$letsencrypt = $this->getBoolParam('letsencrypt', true, $result['letsencrypt']);
@@ -586,7 +586,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 
 		// handle redirect
 		if ($_doredirect) {
-			updateRedirectOfDomain($id, $redirectcode);
+			\Froxlor\Domain\Domain::updateRedirectOfDomain($id, $redirectcode);
 		}
 
 		if ($path != $result['documentroot'] || $isemaildomain != $result['isemaildomain'] || $wwwserveralias != $result['wwwserveralias'] || $iswildcarddomain != $result['iswildcarddomain'] || $aliasdomain != $result['aliasdomain'] || $openbasedir_path != $result['openbasedir_path'] || $ssl_redirect != $result['ssl_redirect'] || $letsencrypt != $result['letsencrypt'] || $hsts_maxage != $result['hsts'] || $hsts_sub != $result['hsts_sub'] || $hsts_preload != $result['hsts_preload'] || $phpsettingid != $result['phpsettingid']) {
@@ -855,7 +855,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	{
 		// check whether an URL was specified
 		$_doredirect = false;
-		if (! empty($url) && validateUrl($url)) {
+		if (! empty($url) && \Froxlor\Validate\Form\Strings::validateUrl($url)) {
 			$path = $url;
 			$_doredirect = true;
 		} else {
@@ -863,7 +863,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		}
 
 		// check whether path is a real path
-		if (! preg_match('/^https?\:\/\//', $path) || ! validateUrl($path)) {
+		if (! preg_match('/^https?\:\/\//', $path) || ! \Froxlor\Validate\Form\Strings::validateUrl($path)) {
 			if (strstr($path, ":") !== false) {
 				\Froxlor\UI\Response::standard_error('pathmaynotcontaincolon', '', true);
 			}

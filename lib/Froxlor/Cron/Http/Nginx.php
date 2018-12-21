@@ -116,7 +116,7 @@ class Nginx extends HttpConfigBase
 			foreach ($statusCodes as $statusCode) {
 				if (Settings::Get('defaultwebsrverrhandler.err' . $statusCode) != '') {
 					$defhandler = Settings::Get('defaultwebsrverrhandler.err' . $statusCode);
-					if (! validateUrl($defhandler)) {
+					if (! \Froxlor\Validate\Form\Strings::validateUrl($defhandler)) {
 						$defhandler = \Froxlor\FileDir::makeCorrectFile($defhandler);
 					}
 					$this->nginx_data[$vhosts_filename] .= 'error_page ' . $statusCode . ' ' . $defhandler . ';' . "\n";
@@ -499,7 +499,7 @@ class Nginx extends HttpConfigBase
 			}
 
 			// Get domain's redirect code
-			$code = getDomainRedirectCode($domain['id']);
+			$code = \Froxlor\Domain\Domain::getDomainRedirectCode($domain['id']);
 
 			$vhost_content .= "\t" . 'if ($request_uri !~ ^/.well-known/acme-challenge/[-\w]+$) {' . "\n";
 			$vhost_content .= "\t\t" . 'return ' . $code . ' ' . $uri . '$request_uri;' . "\n";
@@ -703,7 +703,7 @@ class Nginx extends HttpConfigBase
 		while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 			if (! empty($row['error404path'])) {
 				$defhandler = $row['error404path'];
-				if (! validateUrl($defhandler)) {
+				if (! \Froxlor\Validate\Form\Strings::validateUrl($defhandler)) {
 					$defhandler = \Froxlor\FileDir::makeCorrectFile($defhandler);
 				}
 				$path_options .= "\t" . 'error_page   404    ' . $defhandler . ';' . "\n";
@@ -711,7 +711,7 @@ class Nginx extends HttpConfigBase
 
 			if (! empty($row['error403path'])) {
 				$defhandler = $row['error403path'];
-				if (! validateUrl($defhandler)) {
+				if (! \Froxlor\Validate\Form\Strings::validateUrl($defhandler)) {
 					$defhandler = \Froxlor\FileDir::makeCorrectFile($defhandler);
 				}
 				$path_options .= "\t" . 'error_page   403    ' . $defhandler . ';' . "\n";
@@ -719,7 +719,7 @@ class Nginx extends HttpConfigBase
 
 			if (! empty($row['error500path'])) {
 				$defhandler = $row['error500path'];
-				if (! validateUrl($defhandler)) {
+				if (! \Froxlor\Validate\Form\Strings::validateUrl($defhandler)) {
 					$defhandler = \Froxlor\FileDir::makeCorrectFile($defhandler);
 				}
 				$path_options .= "\t" . 'error_page   500 502 503 504    ' . $defhandler . ';' . "\n";

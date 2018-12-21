@@ -18,6 +18,8 @@
  */
 use Froxlor\FroxlorLogger;
 
+require_once __DIR__ . '/lib/updateFunctions.php';
+
 if (! defined('_CRON_UPDATE')) {
 	if (! defined('AREA') || (defined('AREA') && AREA != 'admin') || ! isset($userinfo['loginname']) || (isset($userinfo['loginname']) && $userinfo['loginname'] == '')) {
 		header('Location: ../index.php');

@@ -127,8 +127,8 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 				$userinfo = $customer;
 
 				$replace_arr = array(
-					'SALUTATION' => getCorrectUserSalutation($userinfo),
-					'CUST_NAME' => getCorrectUserSalutation($userinfo), // < keep this for compatibility
+					'SALUTATION' => \Froxlor\User::getCorrectUserSalutation($userinfo),
+					'CUST_NAME' => \Froxlor\User::getCorrectUserSalutation($userinfo), // < keep this for compatibility
 					'DB_NAME' => $username,
 					'DB_PASS' => $password,
 					'DB_DESC' => $databasedescription,
@@ -147,7 +147,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 					$this->mailer()->Subject = $mail_subject;
 					$this->mailer()->AltBody = $mail_body;
 					$this->mailer()->msgHTML(str_replace("\n", "<br />", $mail_body));
-					$this->mailer()->addAddress($userinfo['email'], getCorrectUserSalutation($userinfo));
+					$this->mailer()->addAddress($userinfo['email'], \Froxlor\User::getCorrectUserSalutation($userinfo));
 					$this->mailer()->send();
 				} catch (\PHPMailer\PHPMailer\Exception $e) {
 					$mailerr_msg = $e->errorMessage();

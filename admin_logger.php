@@ -63,7 +63,7 @@ if ($page == 'log' && $userinfo['change_serversettings'] == '1') {
 			$_action = 0;
 			foreach ($logrows as $row) {
 				// if ($paging->checkDisplay($i)) {
-				$row = htmlentities_array($row);
+				$row = \Froxlor\PhpHelper::htmlentities_array($row);
 				$row['date'] = date("d.m.y H:i:s", $row['date']);
 
 				if ($_action != $action) {

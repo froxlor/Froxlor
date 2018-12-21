@@ -426,7 +426,7 @@ if ($action == '') {
 			));
 		} else {
 
-			$result = htmlentities_array($result);
+			$result = \Froxlor\PhpHelper::htmlentities_array($result);
 			$template = $lng['admin']['templates'][str_replace('_subject', '', $result['varname'])];
 			$subject = $result['value'];
 			$result_stmt = Database::prepare("
@@ -442,7 +442,7 @@ if ($action == '') {
 
 			// don't escape the already escaped language-string so save up before htmlentities()
 			$language = $result['language'];
-			$result = htmlentities_array($result);
+			$result = \Froxlor\PhpHelper::htmlentities_array($result);
 			$mailbody = $result['value'];
 
 			$template_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/templates/formfield.template_edit.php';
@@ -487,7 +487,7 @@ if ($action == '') {
 				's' => $s
 			));
 		} else {
-			$row = htmlentities_array($row);
+			$row = \Froxlor\PhpHelper::htmlentities_array($row);
 
 			$filetemplate_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/templates/formfield.filetemplate_edit.php';
 			$filetemplate_edit_form = \Froxlor\UI\HtmlForm::genHTMLForm($filetemplate_edit_data);

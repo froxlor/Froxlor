@@ -45,7 +45,7 @@ function validateFormFieldHiddenString($fieldname, $fielddata, $newfieldvalue)
 		if (isset($fielddata['string_type']) && $fielddata['string_type'] == 'mail') {
 			$returnvalue = (filter_var($newfieldvalue, FILTER_VALIDATE_EMAIL) == $newfieldvalue);
 		} elseif (isset($fielddata['string_type']) && $fielddata['string_type'] == 'url') {
-			$returnvalue = validateUrl($newfieldvalue);
+			$returnvalue = \Froxlor\Validate\Form\Strings::validateUrl($newfieldvalue);
 		} elseif (isset($fielddata['string_type']) && $fielddata['string_type'] == 'dir') {
 			// add trailing slash to validate path if needed
 			// refs #331

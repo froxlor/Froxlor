@@ -151,7 +151,7 @@ if ($page == 'overview') {
 			if ($paging->checkDisplay($i)) {
 
 				if (isset($domain_array[$sortkey])) {
-					$row = htmlentities_array($domain_array[$sortkey]);
+					$row = \Froxlor\PhpHelper::htmlentities_array($domain_array[$sortkey]);
 					if (Settings::Get('system.awstats_enabled') == '1') {
 						$statsapp = 'awstats';
 					} else {
@@ -176,7 +176,7 @@ if ($page == 'overview') {
 					if (Settings::Get('system.use_ssl') == '1' && \Froxlor\Domain\Domain::domainHasSslIpPort($row['id']) && $row['caneditdomain'] == '1' && $row['letsencrypt'] == 0) {
 						$show_ssledit = true;
 					}
-					$row = htmlentities_array($row);
+					$row = \Froxlor\PhpHelper::htmlentities_array($row);
 					eval("\$domains.=\"" . \Froxlor\UI\Template::getTemplate("domains/domains_domain") . "\";");
 				}
 			}
@@ -263,12 +263,12 @@ if ($page == 'overview') {
 				));
 
 				while ($row_domain = $domains_stmt->fetch(PDO::FETCH_ASSOC)) {
-					$aliasdomains .= makeoption($idna_convert->decode($row_domain['domain']), $row_domain['id']);
+					$aliasdomains .= \Froxlor\UI\HTML::makeoption($idna_convert->decode($row_domain['domain']), $row_domain['id']);
 				}
 
 				$redirectcode = '';
 				if (Settings::Get('customredirect.enabled') == '1') {
-					$codes = getRedirectCodesArray();
+					$codes = \Froxlor\Domain\Domain::getRedirectCodesArray();
 					foreach ($codes as $rc) {
 						$redirectcode .= makeoption($rc['code'] . ' (' . $lng['redirect_desc'][$rc['desc']] . ')', $rc['id']);
 					}
@@ -369,7 +369,7 @@ if ($page == 'overview') {
 					$domains .= makeoption($idna_convert->decode($row_domain['domain']), $row_domain['id'], $result['aliasdomain']);
 				}
 
-				if (preg_match('/^https?\:\/\//', $result['documentroot']) && validateUrl($result['documentroot'])) {
+				if (preg_match('/^https?\:\/\//', $result['documentroot']) && \Froxlor\Validate\Form\Strings::validateUrl($result['documentroot'])) {
 					if (Settings::Get('panel.pathedit') == 'Dropdown') {
 						$urlvalue = $result['documentroot'];
 						$pathSelect = \Froxlor\FileDir::makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
@@ -384,8 +384,8 @@ if ($page == 'overview') {
 
 				$redirectcode = '';
 				if (Settings::Get('customredirect.enabled') == '1') {
-					$def_code = getDomainRedirectId($id);
-					$codes = getRedirectCodesArray();
+					$def_code = \Froxlor\Domain\Domain::getDomainRedirectId($id);
+					$codes = \Froxlor\Domain\Domain::getRedirectCodesArray();
 					foreach ($codes as $rc) {
 						$redirectcode .= makeoption($rc['code'] . ' (' . $lng['redirect_desc'][$rc['desc']] . ')', $rc['id'], $def_code);
 					}
@@ -411,7 +411,7 @@ if ($page == 'overview') {
 				$result['temporary_ssl_redirect'] = $result['ssl_redirect'];
 				$result['ssl_redirect'] = ($result['ssl_redirect'] == 0 ? 0 : 1);
 
-				$openbasedir = makeoption($lng['domain']['docroot'], 0, $result['openbasedir_path'], true) . makeoption($lng['domain']['homedir'], 1, $result['openbasedir_path'], true);
+				$openbasedir = \Froxlor\UI\HTML::makeoption($lng['domain']['docroot'], 0, $result['openbasedir_path'], true) . makeoption($lng['domain']['homedir'], 1, $result['openbasedir_path'], true);
 
 				// create serveralias options
 				$serveraliasoptions = "";
@@ -459,7 +459,7 @@ if ($page == 'overview') {
 				}
 
 				$domainip = $result_ipandport['ip'];
-				$result = htmlentities_array($result);
+				$result = \Froxlor\PhpHelper::htmlentities_array($result);
 
 				$subdomain_edit_data = include_once dirname(__FILE__) . '/lib/formfields/customer/domains/formfield.domains_edit.php';
 				$subdomain_edit_form = \Froxlor\UI\HtmlForm::genHTMLForm($subdomain_edit_data);
@@ -512,7 +512,7 @@ if ($page == 'overview') {
 			$do_insert = true;
 		}
 
-		$result = htmlentities_array($result);
+		$result = \Froxlor\PhpHelper::htmlentities_array($result);
 
 		$ssleditor_data = include_once dirname(__FILE__) . '/lib/formfields/customer/domains/formfield.domain_ssleditor.php';
 		$ssleditor_form = \Froxlor\UI\HtmlForm::genHTMLForm($ssleditor_data);

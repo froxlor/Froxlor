@@ -149,7 +149,7 @@ if (count($all_certs) == 0) {
 					}
 				}
 
-				$row = htmlentities_array($cert);
+				$row = \Froxlor\PhpHelper::htmlentities_array($cert);
 				eval("\$certificates.=\"" . \Froxlor\UI\Template::getTemplate("ssl_certificates/certs_cert", true) . "\";");
 			} else {
 				$message = sprintf($lng['domains']['ssl_certificate_error'], $cert['domain']);

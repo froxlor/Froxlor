@@ -106,7 +106,7 @@ if ($page == 'domains' || $page == 'overview') {
 
 			if (isset($row['domain']) && $row['domain'] != '' && $paging->checkDisplay($i)) {
 				$row['customername'] = getCorrectFullUserDetails($row);
-				$row = htmlentities_array($row);
+				$row = \Froxlor\PhpHelper::htmlentities_array($row);
 				// display a nice list of IP's
 				$row['ipandport'] = str_replace("\n", "<br />", $row['ipandport']);
 				eval("\$domains.=\"" . \Froxlor\UI\Template::getTemplate("domains/domains_domain") . "\";");
@@ -624,7 +624,7 @@ if ($page == 'domains' || $page == 'overview') {
 					}
 				}
 
-				$result = htmlentities_array($result);
+				$result = \Froxlor\PhpHelper::htmlentities_array($result);
 
 				$domain_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/domains/formfield.domains_edit.php';
 				$domain_edit_form = \Froxlor\UI\HtmlForm::genHTMLForm($domain_edit_data);
@@ -667,7 +667,7 @@ if ($page == 'domains' || $page == 'overview') {
 			}
 
 			// update customer/admin counters
-			updateCounters(false);
+			\Froxlor\User::updateCounters(false);
 			\Froxlor\System\Cronjob::inserttask('1');
 			\Froxlor\System\Cronjob::inserttask('4');
 

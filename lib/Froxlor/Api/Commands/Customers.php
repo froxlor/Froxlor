@@ -666,7 +666,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 							'FIRSTNAME' => $firstname,
 							'NAME' => $name,
 							'COMPANY' => $company,
-							'SALUTATION' => getCorrectUserSalutation(array(
+							'SALUTATION' => \Froxlor\User::getCorrectUserSalutation(array(
 								'firstname' => $firstname,
 								'name' => $name,
 								'company' => $company
@@ -696,7 +696,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 							$this->mailer()->Subject = $mail_subject;
 							$this->mailer()->AltBody = $mail_body;
 							$this->mailer()->msgHTML(str_replace("\n", "<br />", $mail_body));
-							$this->mailer()->addAddress($email, getCorrectUserSalutation(array(
+							$this->mailer()->addAddress($email, \Froxlor\User::getCorrectUserSalutation(array(
 								'firstname' => $firstname,
 								'name' => $name,
 								'company' => $company
@@ -1662,7 +1662,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 			), true, true);
 
 			// now, recalculate the resource-usage for the old and the new admin
-			updateCounters(false);
+			\Froxlor\User::updateCounters(false);
 
 			$this->logger()->logAction(ADM_ACTION, LOG_INFO, "[API] moved user '" . $c_result['loginname'] . "' from admin/reseller '" . $c_result['adminname'] . " to admin/reseller '" . $a_result['loginname'] . "'");
 

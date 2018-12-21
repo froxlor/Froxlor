@@ -213,7 +213,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 				$_mailerror = false;
 				$mailerr_msg = "";
 				try {
-					$this->mailer()->setFrom($admin['email'], getCorrectUserSalutation($admin));
+					$this->mailer()->setFrom($admin['email'], \Froxlor\User::getCorrectUserSalutation($admin));
 					$this->mailer()->Subject = $mail_subject;
 					$this->mailer()->AltBody = $mail_body;
 					$this->mailer()->msgHTML(str_replace("\n", "<br />", $mail_body));
@@ -243,11 +243,11 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 
 					$_mailerror = false;
 					try {
-						$this->mailer()->setFrom($admin['email'], getCorrectUserSalutation($admin));
+						$this->mailer()->setFrom($admin['email'], \Froxlor\User::getCorrectUserSalutation($admin));
 						$this->mailer()->Subject = $mail_subject;
 						$this->mailer()->AltBody = $mail_body;
 						$this->mailer()->msgHTML(str_replace("\n", "<br />", $mail_body));
-						$this->mailer()->addAddress($idna_convert->encode($alternative_email), getCorrectUserSalutation($customer));
+						$this->mailer()->addAddress($idna_convert->encode($alternative_email), \Froxlor\User::getCorrectUserSalutation($customer));
 						$this->mailer()->send();
 					} catch (\PHPMailer\PHPMailer\Exception $e) {
 						$mailerr_msg = $e->errorMessage();

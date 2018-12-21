@@ -64,7 +64,7 @@ if ($page == 'overview') {
 				$redirect_url = 'admin_index.php?s=' . $s;
 				eval("echo \"" . \Froxlor\UI\Template::getTemplate('update/update_end') . "\";");
 
-				updateCounters();
+				\Froxlor\User::updateCounters();
 				\Froxlor\System\Cronjob::inserttask('1');
 				@chmod('./lib/userdata.inc.php', 0440);
 

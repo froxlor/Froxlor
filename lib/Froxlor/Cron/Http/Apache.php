@@ -144,7 +144,7 @@ class Apache extends HttpConfigBase
 			foreach ($statusCodes as $statusCode) {
 				if (Settings::Get('defaultwebsrverrhandler.err' . $statusCode) != '') {
 					$defhandler = Settings::Get('defaultwebsrverrhandler.err' . $statusCode);
-					if (! validateUrl($defhandler)) {
+					if (! \Froxlor\Validate\Form\Strings::validateUrl($defhandler)) {
 						if (substr($defhandler, 0, 1) != '"' && substr($defhandler, - 1, 1) != '"') {
 							$defhandler = '"' . \Froxlor\FileDir::makeCorrectFile($defhandler) . '"';
 						}
@@ -1025,7 +1025,7 @@ class Apache extends HttpConfigBase
 			$corrected_docroot = $domain['documentroot'];
 
 			// Get domain's redirect code
-			$code = getDomainRedirectCode($domain['id']);
+			$code = \Froxlor\Domain\Domain::getDomainRedirectCode($domain['id']);
 			$modrew_red = '';
 			if ($code != '') {
 				$modrew_red = ' [R=' . $code . ';L,NE]';
@@ -1190,7 +1190,7 @@ class Apache extends HttpConfigBase
 				foreach ($statusCodes as $statusCode) {
 					if (isset($row_diroptions['error' . $statusCode . 'path']) && $row_diroptions['error' . $statusCode . 'path'] != '') {
 						$defhandler = $row_diroptions['error' . $statusCode . 'path'];
-						if (! validateUrl($defhandler)) {
+						if (! \Froxlor\Validate\Form\Strings::validateUrl($defhandler)) {
 							if (substr($defhandler, 0, 1) != '"' && substr($defhandler, - 1, 1) != '"') {
 								$defhandler = '"' . \Froxlor\FileDir::makeCorrectFile($defhandler) . '"';
 							}

@@ -58,7 +58,7 @@ if ($page == '' || $page == 'overview') {
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 			if ($paging->checkDisplay($i)) {
-				$row = htmlentities_array($row);
+				$row = \Froxlor\PhpHelper::htmlentities_array($row);
 				$row['ts_format'] = date("d.m.Y H:i", $row['ts']);
 				eval("\$plans.=\"" . \Froxlor\UI\Template::getTemplate("plans/plans_plan") . "\";");
 				$count ++;
@@ -112,7 +112,7 @@ if ($page == '' || $page == 'overview') {
 				$value_arr['diskspace'] = - 1;
 			}
 
-			$value_arr['traffic'] = doubleval_ressource($_POST['traffic']);
+			$value_arr['traffic'] = $_POST['traffic'];
 			if (isset($_POST['traffic_ul'])) {
 				$value_arr['traffic'] = - 1;
 			}
@@ -271,7 +271,7 @@ if ($page == '' || $page == 'overview') {
 		if ($result['name'] != '') {
 
 			$result['value'] = json_decode($result['value'], true);
-			$result = htmlentities_array($result);
+			$result = \Froxlor\PhpHelper::htmlentities_array($result);
 
 			foreach ($result['value'] as $index => $value) {
 				$result[$index] = $value;
@@ -290,7 +290,7 @@ if ($page == '' || $page == 'overview') {
 					$value_arr['diskspace'] = - 1;
 				}
 
-				$value_arr['traffic'] = doubleval_ressource($_POST['traffic']);
+				$value_arr['traffic'] = $_POST['traffic'];
 				if (isset($_POST['traffic_ul'])) {
 					$value_arr['traffic'] = - 1;
 				}

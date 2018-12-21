@@ -1617,7 +1617,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 			\Froxlor\System\Cronjob::inserttask('11', $result['domain']);
 
 			$this->logger()->logAction(ADM_ACTION, LOG_INFO, "[API] deleted domain/subdomains (#" . $result['id'] . ")");
-			updateCounters();
+			\Froxlor\User::updateCounters();
 			\Froxlor\System\Cronjob::inserttask('1');
 			// Using nameserver, insert a task which rebuilds the server config
 			\Froxlor\System\Cronjob::inserttask('4');

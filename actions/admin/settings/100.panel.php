@@ -31,7 +31,7 @@ return array(
 					'type' => 'option',
 					'default' => 'English',
 					'option_mode' => 'one',
-					'option_options_method' => 'getLanguages',
+					'option_options_method' => array('\\Froxlor\\User', 'getLanguages'),
 					'save_method' => 'storeSettingField'
 				),
 				'panel_default_theme' => array(

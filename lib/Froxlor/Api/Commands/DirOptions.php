@@ -74,15 +74,15 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		$path = \Froxlor\FileDir::makeCorrectDir($customer['documentroot'] . '/' . $path);
 
 		if (! empty($error404path)) {
-			$error404path = correctErrorDocument($error404path, true);
+			$error404path = $this->correctErrorDocument($error404path, true);
 		}
 
 		if (! empty($error403path)) {
-			$error403path = correctErrorDocument($error403path, true);
+			$error403path = $this->correctErrorDocument($error403path, true);
 		}
 
 		if (! empty($error500path)) {
-			$error500path = correctErrorDocument($error500path, true);
+			$error500path = $this->correctErrorDocument($error500path, true);
 		}
 
 		// check for duplicate path
@@ -236,15 +236,15 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		$error500path = $this->getParam('error500path', true, $result['error500path']);
 
 		if (! empty($error404path)) {
-			$error404path = correctErrorDocument($error404path, true);
+			$error404path = $this->correctErrorDocument($error404path, true);
 		}
 
 		if (! empty($error403path)) {
-			$error403path = correctErrorDocument($error403path, true);
+			$error403path = $this->correctErrorDocument($error403path, true);
 		}
 
 		if (! empty($error500path)) {
-			$error500path = correctErrorDocument($error500path, true);
+			$error500path = $this->correctErrorDocument($error500path, true);
 		}
 
 		if (($options_indexes != $result['options_indexes']) || ($error404path != $result['error404path']) || ($error403path != $result['error403path']) || ($error500path != $result['error500path']) || ($options_cgi != $result['options_cgi'])) {
@@ -378,4 +378,46 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		\Froxlor\System\Cronjob::inserttask('1');
 		return $this->response(200, "successfull", $result);
 	}
+	
+	/**
+	 * this functions validates a given value as ErrorDocument
+	 * refs #267
+	 *
+	 * @param
+	 *        	string error-document-string
+	 * @param bool $throw_exception
+	 *
+	 * @return string error-document-string
+	 *
+	 */
+	private function correctErrorDocument($errdoc = null, $throw_exception = false)
+	{
+		if ($errdoc !== null && $errdoc != '') {
+			// not a URL
+			if ((strtoupper(substr($errdoc, 0, 5)) != 'HTTP:' && strtoupper(substr($errdoc, 0, 6)) != 'HTTPS:') || ! \Froxlor\Validate\Form\Strings::validateUrl($errdoc)) {
+				// a file
+				if (substr($errdoc, 0, 1) != '"') {
+					$errdoc = \Froxlor\FileDir::makeCorrectFile($errdoc);
+					// apache needs a starting-slash (starting at the domains-docroot)
+					if (! substr($errdoc, 0, 1) == '/') {
+						$errdoc = '/' . $errdoc;
+					}
+				} // a string (check for ending ")
+				else {
+					// string won't work for lighty
+					if (Settings::Get('system.webserver') == 'lighttpd') {
+						\Froxlor\UI\Response::standard_error('stringerrordocumentnotvalidforlighty', '', $throw_exception);
+					} elseif (substr($errdoc, - 1) != '"') {
+						$errdoc .= '"';
+					}
+				}
+			} else {
+				if (Settings::Get('system.webserver') == 'lighttpd') {
+					\Froxlor\UI\Response::standard_error('urlerrordocumentnotvalidforlighty', '', $throw_exception);
+				}
+			}
+		}
+		return $errdoc;
+	}
+	
 }

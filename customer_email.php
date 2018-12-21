@@ -120,7 +120,7 @@ if ($page == 'overview') {
 
 					$row['mboxsize'] = \Froxlor\PhpHelper::size_readable($row['mboxsize'], 'GiB', 'bi', '%01.' . (int) Settings::Get('panel.decimal_places') . 'f %s');
 
-					$row = htmlentities_array($row);
+					$row = \Froxlor\PhpHelper::htmlentities_array($row);
 					eval("\$accounts.=\"" . \Froxlor\UI\Template::getTemplate("email/emails_email") . "\";");
 					$count ++;
 				}
@@ -252,7 +252,7 @@ if ($page == 'overview') {
 			}
 
 			$destinations_count = count($result['destination']);
-			$result = htmlentities_array($result);
+			$result = \Froxlor\PhpHelper::htmlentities_array($result);
 
 			$email_edit_data = include_once dirname(__FILE__) . '/lib/formfields/customer/email/formfield.emails_edit.php';
 
@@ -325,7 +325,7 @@ if ($page == 'overview') {
 				}
 
 				$result['email_full'] = $idna_convert->decode($result['email_full']);
-				$result = htmlentities_array($result);
+				$result = \Froxlor\PhpHelper::htmlentities_array($result);
 				$quota = Settings::Get('system.mail_quota');
 
 				$account_add_data = include_once dirname(__FILE__) . '/lib/formfields/customer/email/formfield.emails_addaccount.php';
@@ -367,7 +367,7 @@ if ($page == 'overview') {
 				));
 			} else {
 				$result['email_full'] = $idna_convert->decode($result['email_full']);
-				$result = htmlentities_array($result);
+				$result = \Froxlor\PhpHelper::htmlentities_array($result);
 
 				$account_changepw_data = include_once dirname(__FILE__) . '/lib/formfields/customer/email/formfield.emails_accountchangepasswd.php';
 				$account_changepw_form = \Froxlor\UI\HtmlForm::genHTMLForm($account_changepw_data);
@@ -403,7 +403,7 @@ if ($page == 'overview') {
 				));
 			} else {
 				$result['email_full'] = $idna_convert->decode($result['email_full']);
-				$result = htmlentities_array($result);
+				$result = \Froxlor\PhpHelper::htmlentities_array($result);
 
 				$quota_edit_data = include_once dirname(__FILE__) . '/lib/formfields/customer/email/formfield.emails_accountchangequota.php';
 				$quota_edit_form = \Froxlor\UI\HtmlForm::genHTMLForm($quota_edit_data);
@@ -473,7 +473,7 @@ if ($page == 'overview') {
 					));
 				} else {
 					$result['email_full'] = $idna_convert->decode($result['email_full']);
-					$result = htmlentities_array($result);
+					$result = \Froxlor\PhpHelper::htmlentities_array($result);
 
 					$forwarder_add_data = include_once dirname(__FILE__) . '/lib/formfields/customer/email/formfield.emails_addforwarder.php';
 					$forwarder_add_form = \Froxlor\UI\HtmlForm::genHTMLForm($forwarder_add_data);

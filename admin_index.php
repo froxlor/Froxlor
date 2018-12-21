@@ -115,7 +115,7 @@ if ($page == 'overview') {
 	$userinfo['diskspace_used'] = round($userinfo['diskspace_used'] / 1024, $dec_places);
 	$userinfo['traffic'] = round($userinfo['traffic'] / (1024 * 1024), $dec_places);
 	$userinfo['traffic_used'] = round($userinfo['traffic_used'] / (1024 * 1024), $dec_places);
-	$userinfo = str_replace_array('-1', $lng['customer']['unlimited'], $userinfo, 'customers domains diskspace traffic mysqls emails email_accounts email_forwarders email_quota ftps subdomains');
+	$userinfo = \Froxlor\PhpHelper::str_replace_array('-1', $lng['customer']['unlimited'], $userinfo, 'customers domains diskspace traffic mysqls emails email_accounts email_forwarders email_quota ftps subdomains');
 
 	$userinfo['custom_notes'] = ($userinfo['custom_notes'] != '') ? nl2br($userinfo['custom_notes']) : '';
 

@@ -73,7 +73,7 @@ if ($page == 'overview') {
 					$row['path'] = str_replace($userinfo['documentroot'], "/", $row['path']);
 				}
 				$row['path'] = \Froxlor\FileDir::makeCorrectDir($row['path']);
-				$row = htmlentities_array($row);
+				$row = \Froxlor\PhpHelper::htmlentities_array($row);
 				eval("\$htpasswds.=\"" . \Froxlor\UI\Template::getTemplate("extras/htpasswds_htpasswd") . "\";");
 				$count ++;
 			}
@@ -163,7 +163,7 @@ if ($page == 'overview') {
 					$result['path'] = str_replace($userinfo['documentroot'], "/", $result['path']);
 				}
 
-				$result = htmlentities_array($result);
+				$result = \Froxlor\PhpHelper::htmlentities_array($result);
 
 				$htpasswd_edit_data = include_once dirname(__FILE__) . '/lib/formfields/customer/extras/formfield.htpasswd_edit.php';
 				$htpasswd_edit_form = \Froxlor\UI\HtmlForm::genHTMLForm($htpasswd_edit_data);
@@ -219,7 +219,7 @@ if ($page == 'overview') {
 				$row['options_indexes'] = str_replace('0', $lng['panel']['no'], $row['options_indexes']);
 				$row['options_cgi'] = str_replace('1', $lng['panel']['yes'], $row['options_cgi']);
 				$row['options_cgi'] = str_replace('0', $lng['panel']['no'], $row['options_cgi']);
-				$row = htmlentities_array($row);
+				$row = \Froxlor\PhpHelper::htmlentities_array($row);
 				eval("\$htaccess.=\"" . \Froxlor\UI\Template::getTemplate("extras/htaccess_htaccess") . "\";");
 				$count ++;
 			}
@@ -314,7 +314,7 @@ if ($page == 'overview') {
 				 * $options_indexes = makeyesno('options_indexes', '1', '0', $result['options_indexes']);
 				 * $options_cgi = makeyesno('options_cgi', '1', '0', $result['options_cgi']);
 				 */
-				$result = htmlentities_array($result);
+				$result = \Froxlor\PhpHelper::htmlentities_array($result);
 
 				$htaccess_edit_data = include_once dirname(__FILE__) . '/lib/formfields/customer/extras/formfield.htaccess_edit.php';
 				$htaccess_edit_form = \Froxlor\UI\HtmlForm::genHTMLForm($htaccess_edit_data);

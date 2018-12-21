@@ -348,7 +348,7 @@ return array(
 					'type' => 'option',
 					'default' => '1',
 					'option_mode' => 'one',
-					'option_options_method' => 'getRedirectCodes',
+					'option_options_method' => array('\\Froxlor\\Domain\\Domain', 'getRedirectCodes'),
 					'save_method' => 'storeSettingField'
 				)
 			)

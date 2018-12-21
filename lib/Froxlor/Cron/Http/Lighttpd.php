@@ -316,7 +316,7 @@ class Lighttpd extends HttpConfigBase
 			}
 
 			$defhandler = Settings::Get('defaultwebsrverrhandler.err404');
-			if (! validateUrl($defhandler)) {
+			if (! \Froxlor\Validate\Form\Strings::validateUrl($defhandler)) {
 				$defhandler = \Froxlor\FileDir::makeCorrectFile($defhandler);
 			}
 			$this->lighttpd_data[$vhost_filename] = 'server.error-handler-404 = "' . $defhandler . '"';
@@ -483,7 +483,7 @@ class Lighttpd extends HttpConfigBase
 			$uri = $domain['documentroot'];
 
 			// Get domain's redirect code
-			$code = getDomainRedirectCode($domain['id']);
+			$code = \Froxlor\Domain\Domain::getDomainRedirectCode($domain['id']);
 
 			$vhost_content .= '  url.redirect-code = ' . $code . "\n";
 			$vhost_content .= '  url.redirect = (' . "\n";
@@ -701,7 +701,7 @@ class Lighttpd extends HttpConfigBase
 
 			if (! empty($row['error404path'])) {
 				$defhandler = $row['error404path'];
-				if (! validateUrl($defhandler)) {
+				if (! \Froxlor\Validate\Form\Strings::validateUrl($defhandler)) {
 					$defhandler = \Froxlor\FileDir::makeCorrectFile($domain['documentroot'] . '/' . $defhandler);
 				}
 				$error_string .= '  server.error-handler-404 = "' . $defhandler . '"' . "\n\n";

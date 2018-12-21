@@ -287,7 +287,7 @@ if ($action == '2fa_entercode') {
 					$mail->Subject = $lng['mails']['2fa']['subject'];
 					$mail->AltBody = $mail_body;
 					$mail->MsgHTML(str_replace("\n", "<br />", $mail_body));
-					$mail->AddAddress($userinfo['email'], getCorrectUserSalutation($userinfo));
+					$mail->AddAddress($userinfo['email'], \Froxlor\User::getCorrectUserSalutation($userinfo));
 					$mail->Send();
 				} catch (\PHPMailer\PHPMailer\Exception $e) {
 					$mailerr_msg = $e->errorMessage();
@@ -480,7 +480,7 @@ if ($action == 'forgotpwd') {
 					$activationlink = $protocol . '://' . $host . $port . $script . '?action=resetpwd&resetcode=' . $activationcode;
 
 					$replace_arr = array(
-						'SALUTATION' => getCorrectUserSalutation($user),
+						'SALUTATION' => \Froxlor\User::getCorrectUserSalutation($user),
 						'USERNAME' => $loginname,
 						'LINK' => $activationlink
 					);
@@ -516,7 +516,7 @@ if ($action == 'forgotpwd') {
 						$mail->Subject = $mail_subject;
 						$mail->AltBody = $mail_body;
 						$mail->MsgHTML(str_replace("\n", "<br />", $mail_body));
-						$mail->AddAddress($user['email'], getCorrectUserSalutation($user));
+						$mail->AddAddress($user['email'], \Froxlor\User::getCorrectUserSalutation($user));
 						$mail->Send();
 					} catch (\PHPMailer\PHPMailer\Exception $e) {
 						$mailerr_msg = $e->errorMessage();

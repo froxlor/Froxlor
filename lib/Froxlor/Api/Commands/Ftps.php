@@ -187,8 +187,8 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 
 				if ($sendinfomail == 1) {
 					$replace_arr = array(
-						'SALUTATION' => getCorrectUserSalutation($customer),
-						'CUST_NAME' => getCorrectUserSalutation($customer), // < keep this for compatibility
+						'SALUTATION' => \Froxlor\User::getCorrectUserSalutation($customer),
+						'CUST_NAME' => \Froxlor\User::getCorrectUserSalutation($customer), // < keep this for compatibility
 						'USR_NAME' => $username,
 						'USR_PASS' => $password,
 						'USR_PATH' => \Froxlor\FileDir::makeCorrectDir(str_replace($customer['documentroot'], "/", $path))
@@ -204,7 +204,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 						$this->mailer()->Subject = $mail_subject;
 						$this->mailer()->AltBody = $mail_body;
 						$this->mailer()->msgHTML(str_replace("\n", "<br />", $mail_body));
-						$this->mailer()->addAddress($customer['email'], getCorrectUserSalutation($customer));
+						$this->mailer()->addAddress($customer['email'], \Froxlor\User::getCorrectUserSalutation($customer));
 						$this->mailer()->send();
 					} catch (\PHPMailer\PHPMailer\Exception $e) {
 						$mailerr_msg = $e->errorMessage();

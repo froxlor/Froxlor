@@ -64,7 +64,7 @@ if ($page == 'message') {
 
 					$row['firstname'] = isset($row['firstname']) ? $row['firstname'] : '';
 					$row['company'] = isset($row['company']) ? $row['company'] : '';
-					$mail->AddAddress($row['email'], getCorrectUserSalutation(array(
+					$mail->AddAddress($row['email'], \Froxlor\User::getCorrectUserSalutation(array(
 						'firstname' => $row['firstname'],
 						'name' => $row['name'],
 						'company' => $row['company']

@@ -92,8 +92,8 @@ if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
 					$traffic_percent = 100;
 				}
 
-				$row = str_replace_array('-1', 'UL', $row, 'customers domains diskspace traffic mysqls emails email_accounts email_forwarders email_quota ftps subdomains');
-				$row = htmlentities_array($row);
+				$row = \Froxlor\PhpHelper::str_replace_array('-1', 'UL', $row, 'customers domains diskspace traffic mysqls emails email_accounts email_forwarders email_quota ftps subdomains');
+				$row = \Froxlor\PhpHelper::htmlentities_array($row);
 
 				$row['custom_notes'] = ($row['custom_notes'] != '') ? nl2br($row['custom_notes']) : '';
 
@@ -327,7 +327,7 @@ if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
 					$ipaddress .= makeoption($row['ip'], $row['id'], $result['ip']);
 				}
 
-				$result = htmlentities_array($result);
+				$result = \Froxlor\PhpHelper::htmlentities_array($result);
 
 				$admin_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/admin/formfield.admin_edit.php';
 				$admin_edit_form = \Froxlor\UI\HtmlForm::genHTMLForm($admin_edit_data);

@@ -163,7 +163,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 
 		$log->logAction(ADM_ACTION, LOG_INFO, "updated resource-counters");
-		$updatecounters = updateCounters(true);
+		$updatecounters = \Froxlor\User::updateCounters(true);
 		$customers = '';
 		foreach ($updatecounters['customers'] as $customerid => $customer) {
 			eval("\$customers.=\"" . \Froxlor\UI\Template::getTemplate("settings/updatecounters_row_customer") . "\";");

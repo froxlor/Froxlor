@@ -126,8 +126,8 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 					$islocked = 1;
 				}
 
-				$row = str_replace_array('-1', 'UL', $row, 'diskspace traffic mysqls emails email_accounts email_forwarders ftps subdomains');
-				$row = htmlentities_array($row);
+				$row = \Froxlor\PhpHelper::str_replace_array('-1', 'UL', $row, 'diskspace traffic mysqls emails email_accounts email_forwarders ftps subdomains');
+				$row = \Froxlor\PhpHelper::htmlentities_array($row);
 
 				// fix progress-bars if value is >100%
 				if ($disk_percent > 100) {
@@ -438,7 +438,7 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 					$result['mysqls'] = '';
 				}
 
-				$result = htmlentities_array($result);
+				$result = \Froxlor\PhpHelper::htmlentities_array($result);
 
 				$gender_options = makeoption($lng['gender']['undef'], 0, ($result['gender'] == '0' ? true : false), true, true);
 				$gender_options .= makeoption($lng['gender']['male'], 1, ($result['gender'] == '1' ? true : false), true, true);
