@@ -271,7 +271,7 @@ if ($page == 'overview') {
 		}
 
 		$theme_options = '';
-		$themes_avail = getThemes();
+		$themes_avail = \Froxlor\UI\Template::getThemes();
 		foreach ($themes_avail as $t => $d) {
 			$theme_options .= \Froxlor\UI\HTML::makeoption($d, $t, $default_theme, true);
 		}

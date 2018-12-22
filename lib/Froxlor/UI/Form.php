@@ -10,13 +10,13 @@ class Form
 	{
 		$fields = '';
 
-		if (validateFormDefinition($form)) {
+		if (\Froxlor\Validate\Form::validateFormDefinition($form)) {
 			foreach ($form['groups'] as $groupname => $groupdetails) {
 				if (isset($groupdetails['title']) && $groupdetails['title'] != '') {
 					$fields .= self::getFormGroupOutput($groupname, $groupdetails);
 				}
 
-				if (validateFieldDefinition($groupdetails)) {
+				if (\Froxlor\Validate\Form::validateFieldDefinition($groupdetails)) {
 					// Prefetch form fields
 					foreach ($groupdetails['fields'] as $fieldname => $fielddetails) {
 						$groupdetails['fields'][$fieldname] = self::array_merge_prefix($fielddetails, $fielddetails['type'], prefetchFormFieldData($fieldname, $fielddetails));
@@ -38,7 +38,7 @@ class Form
 	{
 		$fields = '';
 
-		if (validateFormDefinition($form)) {
+		if (\Froxlor\Validate\Form::validateFormDefinition($form)) {
 			foreach ($form['groups'] as $groupname => $groupdetails) {
 				// show overview
 				if ($part == '') {
@@ -73,10 +73,10 @@ class Form
 						$fields .= self::getFormGroupOutput($groupname, $groupdetails);
 					}
 
-					if (validateFieldDefinition($groupdetails)) {
+					if (\Froxlor\Validate\Form::validateFieldDefinition($groupdetails)) {
 						// Prefetch form fields
 						foreach ($groupdetails['fields'] as $fieldname => $fielddetails) {
-							$groupdetails['fields'][$fieldname] = self::array_merge_prefix($fielddetails, $fielddetails['type'], prefetchFormFieldData($fieldname, $fielddetails));
+							$groupdetails['fields'][$fieldname] = self::array_merge_prefix($fielddetails, $fielddetails['type'], self::prefetchFormFieldData($fieldname, $fielddetails));
 							$form['groups'][$groupname]['fields'][$fieldname] = $groupdetails['fields'][$fieldname];
 						}
 
@@ -93,7 +93,7 @@ class Form
 		return $fields;
 	}
 
-	function processForm(&$form, &$input, $url_params = array())
+	public static function processForm(&$form, &$input, $url_params = array())
 	{
 		if (\Froxlor\Validate\Form::validateFormDefinition($form)) {
 			$submitted_fields = array();
@@ -188,9 +188,9 @@ class Form
 		}
 	}
 
-	function processFormEx(&$form, &$input, $url_params = array(), $part, $settings_all, $settings_part, $only_enabledisable)
+	public static function processFormEx(&$form, &$input, $url_params = array(), $part, $settings_all, $settings_part, $only_enabledisable)
 	{
-		if (validateFormDefinition($form)) {
+		if (\Froxlor\Validate\Form::validateFormDefinition($form)) {
 			$submitted_fields = array();
 			$changed_fields = array();
 			$saved_fields = array();
@@ -201,7 +201,7 @@ class Form
 						// Prefetch form fields
 						foreach ($groupdetails['fields'] as $fieldname => $fielddetails) {
 							if (! $only_enabledisable || ($only_enabledisable && isset($fielddetails['overview_option']))) {
-								$groupdetails['fields'][$fieldname] = self::array_merge_prefix($fielddetails, $fielddetails['type'], prefetchFormFieldData($fieldname, $fielddetails));
+								$groupdetails['fields'][$fieldname] = self::array_merge_prefix($fielddetails, $fielddetails['type'], self::prefetchFormFieldData($fieldname, $fielddetails));
 								$form['groups'][$groupname]['fields'][$fieldname] = $groupdetails['fields'][$fieldname];
 							}
 						}
@@ -233,7 +233,7 @@ class Form
 
 			foreach ($form['groups'] as $groupname => $groupdetails) {
 				if (($settings_part && $part == $groupname) || $settings_all || $only_enabledisable) {
-					if (validateFieldDefinition($groupdetails)) {
+					if (\Froxlor\Validate\Form::validateFieldDefinition($groupdetails)) {
 						// Check fields for plausibility
 						foreach ($groupdetails['fields'] as $fieldname => $fielddetails) {
 							if (! $only_enabledisable || ($only_enabledisable && isset($fielddetails['overview_option']))) {
@@ -276,7 +276,7 @@ class Form
 
 			foreach ($form['groups'] as $groupname => $groupdetails) {
 				if (($settings_part && $part == $groupname) || $settings_all || $only_enabledisable) {
-					if (validateFieldDefinition($groupdetails)) {
+					if (\Froxlor\Validate\Form::validateFieldDefinition($groupdetails)) {
 						// Save fields
 						foreach ($groupdetails['fields'] as $fieldname => $fielddetails) {
 							if (! $only_enabledisable || ($only_enabledisable && isset($fielddetails['overview_option']))) {

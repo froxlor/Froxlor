@@ -31,7 +31,10 @@ return array(
 					'type' => 'option',
 					'default' => 'English',
 					'option_mode' => 'one',
-					'option_options_method' => array('\\Froxlor\\User', 'getLanguages'),
+					'option_options_method' => array(
+						'\\Froxlor\\User',
+						'getLanguages'
+					),
 					'save_method' => 'storeSettingField'
 				),
 				'panel_default_theme' => array(
@@ -44,7 +47,10 @@ return array(
 					'type' => 'option',
 					'default' => 'Froxlor',
 					'option_mode' => 'one',
-					'option_options_method' => 'getThemes',
+					'option_options_method' => array(
+						'\\Froxlor\\UI\\Template',
+						'getThemes'
+					),
 					'save_method' => 'storeSettingDefaultTheme'
 				),
 				'panel_allow_theme_change_customer' => array(

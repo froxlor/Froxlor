@@ -382,7 +382,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 		$description = 'As you can (obviously) see, Froxlor now comes with a new theme. You also have the possibility to switch back to "Classic" if you want to.';
 		$question = '<strong>Select default panel theme:</strong>&nbsp;';
 		$question .= '<select name="update_default_theme">';
-		$themes = getThemes();
+		$themes = \Froxlor\UI\Template::getThemes();
 		foreach ($themes as $cur_theme) // $theme is already in use
 		{
 			$question .= makeoption($cur_theme, $cur_theme, 'Froxlor');
@@ -401,7 +401,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 
 		$question = '<strong>Select your preferred Classic Theme replacement:</strong>&nbsp;';
 		$question .= '<select name="classic_theme_replacement">';
-		$themes = getThemes();
+		$themes = \Froxlor\UI\Template::getThemes();
 		foreach ($themes as $cur_theme) {
 			$question .= makeoption($cur_theme, $cur_theme, 'Froxlor');
 		}

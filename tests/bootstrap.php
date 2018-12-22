@@ -36,7 +36,8 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 require dirname(__DIR__) . '/lib/tables.inc.php';
 
 // include consts
-require dirname(__DIR__) . '/lib/functions/logger/constant.logger.php';
+require dirname(__DIR__) . '/lib/functions/constant.formfields.php';
+require dirname(__DIR__) . '/lib/functions/constant.logger.php';
 
 use Froxlor\Database\Database;
 use Froxlor\Settings;
