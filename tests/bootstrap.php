@@ -43,6 +43,11 @@ use Froxlor\Database\Database;
 use Froxlor\Settings;
 
 Database::needRoot(true);
+if (TRAVIS_CI == 0) {
+	Database::query("DROP DATABASE IF EXISTS `froxlor010`;");
+	Database::query("CREATE DATABASE `froxlor010`;");
+	exec("mysql -u root -p" . $rpwd . " froxlor010 < " . dirname(__DIR__) . "/install/froxlor.sql");
+}
 Database::query("DROP DATABASE IF EXISTS `test1sql1`;");
 Database::needRoot(false);
 
