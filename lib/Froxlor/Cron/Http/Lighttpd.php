@@ -337,7 +337,7 @@ class Lighttpd extends HttpConfigBase
 		$htaccess_text = '';
 		while ($row_htpasswds = $result_htpasswds_stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$row_htpasswds['path'] = \Froxlor\FileDir::makeCorrectDir($row_htpasswds['path']);
-			mkDirWithCorrectOwnership($domain['documentroot'], $row_htpasswds['path'], $domain['guid'], $domain['guid']);
+			\Froxlor\FileDir::mkDirWithCorrectOwnership($domain['documentroot'], $row_htpasswds['path'], $domain['guid'], $domain['guid']);
 
 			$filename = $row_htpasswds['customerid'] . '-' . md5($row_htpasswds['path']) . '.htpasswd';
 
@@ -491,7 +491,7 @@ class Lighttpd extends HttpConfigBase
 			$vhost_content .= '  )' . "\n";
 		} else {
 
-			mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true, true);
+			\Froxlor\FileDir::mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true, true);
 
 			$only_webroot = false;
 			if ($ssl_vhost === false && $domain['ssl_redirect'] == '1') {
@@ -677,7 +677,7 @@ class Lighttpd extends HttpConfigBase
 				// be sure to build the awstats conf file as well
 				// and chown it using $awstats_params, #258
 				// Bug 960 + Bug 970 : Use full $domain instead of custom $awstats_params as following classes depend on the informations
-				createAWStatsConf(Settings::Get('system.logfiles_directory') . $domain['loginname'] . $speciallogfile . '-access.log', $domain['domain'], $alias . $server_alias, $domain['customerroot'], $domain);
+				\Froxlor\Http\Statistics::createAWStatsConf(Settings::Get('system.logfiles_directory') . $domain['loginname'] . $speciallogfile . '-access.log', $domain['domain'], $alias . $server_alias, $domain['customerroot'], $domain);
 			}
 		}
 
@@ -715,7 +715,7 @@ class Lighttpd extends HttpConfigBase
 				}
 
 				$path = \Froxlor\FileDir::makeCorrectDir(substr($row['path'], strlen($domain['documentroot']) - 1));
-				mkDirWithCorrectOwnership($domain['documentroot'], $row['path'], $domain['guid'], $domain['guid']);
+				\Froxlor\FileDir::mkDirWithCorrectOwnership($domain['documentroot'], $row['path'], $domain['guid'], $domain['guid']);
 
 				// We need to remove the last slash, otherwise the regex wouldn't work
 				if ($row['path'] != $domain['documentroot']) {
@@ -728,9 +728,9 @@ class Lighttpd extends HttpConfigBase
 				$path_options = $error_string;
 			}
 
-			if (customerHasPerlEnabled($domain['customerid']) && $row['options_cgi'] != '0') {
+			if (\Froxlor\Customer\Customer::customerHasPerlEnabled($domain['customerid']) && $row['options_cgi'] != '0') {
 				$path = \Froxlor\FileDir::makeCorrectDir(substr($row['path'], strlen($domain['documentroot']) - 1));
-				mkDirWithCorrectOwnership($domain['documentroot'], $row['path'], $domain['guid'], $domain['guid']);
+				\Froxlor\FileDir::mkDirWithCorrectOwnership($domain['documentroot'], $row['path'], $domain['guid'], $domain['guid']);
 
 				// We need to remove the last slash, otherwise the regex wouldn't work
 				if ($row['path'] != $domain['documentroot']) {

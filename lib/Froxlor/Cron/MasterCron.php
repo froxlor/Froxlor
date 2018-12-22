@@ -20,6 +20,13 @@ use Froxlor\Database\Database;
 class MasterCron extends \Froxlor\Cron\FroxlorCron
 {
 
+	private static $argv = null;
+
+	public static function setArguments($argv = null)
+	{
+		self::$argv = $argv;
+	}
+
 	public static function run()
 	{
 		define('MASTER_CRONJOB', 1);
@@ -28,6 +35,7 @@ class MasterCron extends \Froxlor\Cron\FroxlorCron
 
 		$jobs_to_run = array();
 
+		$argv = self::$argv;
 		/**
 		 * check for --help
 		 */
@@ -61,7 +69,7 @@ class MasterCron extends \Froxlor\Cron\FroxlorCron
 					\Froxlor\System\Cronjob::inserttask('10');
 					// also regenerate cron.d-file
 					\Froxlor\System\Cronjob::inserttask('99');
-					addToQueue($jobs_to_run, 'tasks');
+					array_push($jobs_to_run, 'tasks');
 				} elseif (strtolower($argv[$x]) == '--debug') {
 					define('CRON_DEBUG_FLAG', 1);
 				} elseif (strtolower($argv[$x]) == '--no-fork') {
@@ -70,11 +78,13 @@ class MasterCron extends \Froxlor\Cron\FroxlorCron
 				elseif (substr(strtolower($argv[$x]), 0, 2) == '--') {
 					if (strlen($argv[$x]) > 3) {
 						$cronname = substr(strtolower($argv[$x]), 2);
-						addToQueue($jobs_to_run, $cronname);
+						array_push($jobs_to_run, $cronname);
 					}
 				}
 			}
 		}
+		
+		$jobs_to_run = array_unique($jobs_to_run);
 
 		$cronlog->setCronDebugFlag(defined('CRON_DEBUG_FLAG'));
 

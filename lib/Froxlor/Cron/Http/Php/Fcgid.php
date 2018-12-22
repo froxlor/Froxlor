@@ -1,7 +1,7 @@
 <?php
 namespace Froxlor\Cron\Http\Php;
 
-use Froxlor\Database;
+use Froxlor\Database\Database;
 use Froxlor\Settings;
 
 /**
@@ -124,21 +124,21 @@ class Fcgid
 
 			$_custom_openbasedir = explode(':', Settings::Get('system.mod_fcgid_peardir'));
 			foreach ($_custom_openbasedir as $cobd) {
-				$_phpappendopenbasedir .= appendOpenBasedirPath($cobd);
+				$_phpappendopenbasedir .= \Froxlor\Domain\Domain::appendOpenBasedirPath($cobd);
 			}
 
 			$_custom_openbasedir = explode(':', Settings::Get('system.phpappendopenbasedir'));
 			foreach ($_custom_openbasedir as $cobd) {
-				$_phpappendopenbasedir .= appendOpenBasedirPath($cobd);
+				$_phpappendopenbasedir .= \Froxlor\Domain\Domain::appendOpenBasedirPath($cobd);
 			}
 
 			if ($this->_domain['openbasedir_path'] == '0' && strstr($this->_domain['documentroot'], ":") === false) {
-				$openbasedir = appendOpenBasedirPath($this->_domain['documentroot'], true);
+				$openbasedir = \Froxlor\Domain\Domain::appendOpenBasedirPath($this->_domain['documentroot'], true);
 			} else {
-				$openbasedir = appendOpenBasedirPath($this->_domain['customerroot'], true);
+				$openbasedir = \Froxlor\Domain\Domain::appendOpenBasedirPath($this->_domain['customerroot'], true);
 			}
 
-			$openbasedir .= appendOpenBasedirPath($this->getTempDir());
+			$openbasedir .= \Froxlor\Domain\Domain::appendOpenBasedirPath($this->getTempDir());
 			$openbasedir .= $_phpappendopenbasedir;
 		} else {
 			$openbasedir = 'none';

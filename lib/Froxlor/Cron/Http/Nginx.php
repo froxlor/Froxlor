@@ -505,7 +505,7 @@ class Nginx extends HttpConfigBase
 			$vhost_content .= "\t\t" . 'return ' . $code . ' ' . $uri . '$request_uri;' . "\n";
 			$vhost_content .= "\t" . '}' . "\n";
 		} else {
-			mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true);
+			\Froxlor\FileDir::mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true);
 
 			$vhost_content .= $this->getLogFiles($domain);
 			$vhost_content .= $this->getWebroot($domain, $ssl_vhost);
@@ -728,7 +728,7 @@ class Nginx extends HttpConfigBase
 			// if ($row['options_indexes'] != '0') {
 			$path = \Froxlor\FileDir::makeCorrectDir(substr($row['path'], strlen($domain['documentroot']) - 1));
 
-			mkDirWithCorrectOwnership($domain['documentroot'], $row['path'], $domain['guid'], $domain['guid']);
+			\Froxlor\FileDir::mkDirWithCorrectOwnership($domain['documentroot'], $row['path'], $domain['guid'], $domain['guid']);
 
 			$path_options .= "\t" . '# ' . $path . "\n";
 			if ($path == '/') {
@@ -786,9 +786,9 @@ class Nginx extends HttpConfigBase
 			 * Perl support
 			 * required the fastCGI wrapper to be running to receive the CGI requests.
 			 */
-			if (customerHasPerlEnabled($domain['customerid']) && $row['options_cgi'] != '0') {
+			if (\Froxlor\Customer\Customer::customerHasPerlEnabled($domain['customerid']) && $row['options_cgi'] != '0') {
 				$path = \Froxlor\FileDir::makeCorrectDir(substr($row['path'], strlen($domain['documentroot']) - 1));
-				mkDirWithCorrectOwnership($domain['documentroot'], $row['path'], $domain['guid'], $domain['guid']);
+				\Froxlor\FileDir::mkDirWithCorrectOwnership($domain['documentroot'], $row['path'], $domain['guid'], $domain['guid']);
 
 				// We need to remove the last slash, otherwise the regex wouldn't work
 				if ($row['path'] != $domain['documentroot']) {
@@ -1082,7 +1082,7 @@ class Nginx extends HttpConfigBase
 				// be sure to build the awstats conf file as well
 				// and chown it using $awstats_params, #258
 				// Bug 960 + Bug 970 : Use full $domain instead of custom $awstats_params as following classes depend on the informations
-				createAWStatsConf(Settings::Get('system.logfiles_directory') . $domain['loginname'] . $speciallogfile . '-access.log', $domain['domain'], $alias . $server_alias, $domain['customerroot'], $domain);
+				\Froxlor\Http\Statistics::createAWStatsConf(Settings::Get('system.logfiles_directory') . $domain['loginname'] . $speciallogfile . '-access.log', $domain['domain'], $alias . $server_alias, $domain['customerroot'], $domain);
 			}
 		}
 

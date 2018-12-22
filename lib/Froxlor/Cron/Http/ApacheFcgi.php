@@ -39,7 +39,7 @@ class ApacheFcgi extends Apache
 				}
 				// #1317 - perl is executed via apache and therefore, when using fpm, does not know the user
 				// which perl is supposed to run as, hence the need for Suexec need
-				if (customerHasPerlEnabled($domain['customerid'])) {
+				if (\Froxlor\Customer\Customer::customerHasPerlEnabled($domain['customerid'])) {
 					$php_options_text .= '  SuexecUserGroup "' . $domain['loginname'] . '" "' . $domain['loginname'] . '"' . "\n";
 				}
 

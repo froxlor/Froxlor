@@ -1,7 +1,7 @@
 <?php
 namespace Froxlor\Cron\Http\Php;
 
-use Froxlor\Database;
+use Froxlor\Database\Database;
 use Froxlor\Settings;
 
 /**

@@ -207,7 +207,7 @@ if ($page == 'overview') {
 		$count = 0;
 		$htaccess = '';
 
-		$cperlenabled = customerHasPerlEnabled($userinfo['customerid']);
+		$cperlenabled = \Froxlor\Customer\Customer::customerHasPerlEnabled($userinfo['customerid']);
 
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			if ($paging->checkDisplay($i)) {
@@ -270,7 +270,7 @@ if ($page == 'overview') {
 			));
 		} else {
 			$pathSelect = \Froxlor\FileDir::makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
-			$cperlenabled = customerHasPerlEnabled($userinfo['customerid']);
+			$cperlenabled = \Froxlor\Customer\Customer::customerHasPerlEnabled($userinfo['customerid']);
 
 			$htaccess_add_data = include_once dirname(__FILE__) . '/lib/formfields/customer/extras/formfield.htaccess_add.php';
 			$htaccess_add_form = \Froxlor\UI\HtmlForm::genHTMLForm($htaccess_add_data);
@@ -309,7 +309,7 @@ if ($page == 'overview') {
 				$result['error404path'] = $result['error404path'];
 				$result['error403path'] = $result['error403path'];
 				$result['error500path'] = $result['error500path'];
-				$cperlenabled = customerHasPerlEnabled($userinfo['customerid']);
+				$cperlenabled = \Froxlor\Customer\Customer::customerHasPerlEnabled($userinfo['customerid']);
 				/*
 				 * $options_indexes = \Froxlor\UI\HTML::makeyesno('options_indexes', '1', '0', $result['options_indexes']);
 				 * $options_cgi = \Froxlor\UI\HTML::makeyesno('options_cgi', '1', '0', $result['options_cgi']);

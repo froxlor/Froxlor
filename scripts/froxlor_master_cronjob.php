@@ -16,4 +16,5 @@
  */
 require dirname(__DIR__) . '/vendor/autoload.php';
 
+\Froxlor\Cron\MasterCron::setArguments($argv);
 \Froxlor\Cron\MasterCron::run();

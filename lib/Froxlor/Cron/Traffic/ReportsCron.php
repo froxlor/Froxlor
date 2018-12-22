@@ -202,7 +202,7 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 						AND `language` = :lang
 						AND `templategroup` = 'mails' AND `varname` = :varname
 					");
-					$resul2_data = array(
+					$result2_data = array(
 						'adminid' => $row['adminid'],
 						'lang' => $row['def_language'],
 						'varname' => 'trafficmaxpercent_subject'
@@ -210,7 +210,7 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 					$result2 = Database::pexecute_first($result2_stmt, $result2_data);
 					$mail_subject = html_entity_decode(\Froxlor\PhpHelper::replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['trafficmaxpercent']['subject']), $replace_arr));
 
-					$resul2_data['varname'] = 'trafficmaxpercent_mailbody';
+					$result2_data['varname'] = 'trafficmaxpercent_mailbody';
 					$result2 = Database::pexecute_first($result2_stmt, $result2_data);
 					$mail_body = html_entity_decode(\Froxlor\PhpHelper::replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['trafficmaxpercent']['mailbody']), $replace_arr));
 
@@ -352,6 +352,8 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 			    WHERE `c`.`diskspace` > '0' AND `c`.`reportsent` <> '2'
 			");
 
+			$mail = new \Froxlor\System\Mailer(true);
+
 			while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 
 				if (isset($row['diskspace']) && $row['diskspace_used'] != null && $row['diskspace_used'] > 0 && (($row['diskspace_used'] * 100) / $row['diskspace']) >= (int) Settings::Get('system.report_webmax')) {
@@ -429,7 +431,7 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 					}
 
 					if ($_mailerror) {
-						$cronlog->logAction(CRON_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
+						\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
 						echo "Error sending mail: " . $mailerr_msg . "\n";
 					}
 
@@ -522,7 +524,7 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 					}
 
 					if ($_mailerror) {
-						$cronlog->logAction(CRON_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
+						\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
 						echo "Error sending mail: " . $mailerr_msg . "\n";
 					}
 

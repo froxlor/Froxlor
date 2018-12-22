@@ -28,7 +28,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 
 		// Check Traffic-Lock
 		if (function_exists('pcntl_fork') && ! defined('CRON_NOFORK_FLAG')) {
-			$TrafficLock = \Froxlor\FileDir::makeCorrectFile(dirname($lockfile) . "/froxlor_cron_traffic.lock");
+			$TrafficLock = \Froxlor\FileDir::makeCorrectFile("/var/run/froxlor_cron_traffic.lock");
 			if (file_exists($TrafficLock) && is_numeric($TrafficPid = file_get_contents($TrafficLock))) {
 				if (function_exists('posix_kill')) {
 					$TrafficPidStatus = @posix_kill($TrafficPid, 0);
@@ -37,7 +37,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 					$TrafficPidStatus = $TrafficPidStatus ? false : true;
 				}
 				if ($TrafficPidStatus) {
-					$cronlog->logAction(CRON_ACTION, LOG_INFO, 'Traffic Run already in progress');
+					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, 'Traffic Run already in progress');
 					return 1;
 				}
 			}
@@ -53,7 +53,6 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 			} // Child
 			elseif ($TrafficPid == 0) {
 				posix_setsid();
-				fclose($debugHandler);
 				// re-create db
 				Database::needRoot(false);
 			} // Fork failed
@@ -66,13 +65,13 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 			} else {
 				$msg = "PHP compiled without pcntl.";
 			}
-			$cronlog->logAction(CRON_ACTION, LOG_INFO, $msg . " Not forking traffic-cron, this may take a long time!");
+			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, $msg . " Not forking traffic-cron, this may take a long time!");
 		}
 
 		/**
 		 * TRAFFIC AND DISKUSAGE MESSURE
 		 */
-		$cronlog->logAction(CRON_ACTION, LOG_INFO, 'Traffic run started...');
+		\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, 'Traffic run started...');
 		$admin_traffic = array();
 		$domainlist = array();
 		$speciallogfile_domainlist = array();
@@ -124,11 +123,11 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 			if (in_array(strtolower($row_database['databasename']), $databases_list)) {
 				// sum up data_length and index_length
 				$mysql_usage_result_stmt = Database::prepare("
-			SELECT SUM(data_length + index_length) AS customerusage
-			FROM information_schema.TABLES
-			WHERE table_schema = :database
-			GROUP BY table_schema;
-		");
+					SELECT SUM(data_length + index_length) AS customerusage
+					FROM information_schema.TABLES
+					WHERE table_schema = :database
+					GROUP BY table_schema;
+				");
 				// get the result
 				$mysql_usage_row = Database::pexecute_first($mysql_usage_result_stmt, array(
 					'database' => $row_database['databasename']
@@ -140,7 +139,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 				// sum up result
 				$mysqlusage_all[$row_database['customerid']] += floatval($mysql_usage_row['customerusage']);
 			} else {
-				$cronlog->logAction(CRON_ACTION, LOG_WARNING, "Seems like the database " . $row_database['databasename'] . " had been removed manually.");
+				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_WARNING, "Seems like the database " . $row_database['databasename'] . " had been removed manually.");
 			}
 		}
 
@@ -164,7 +163,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 			/**
 			 * HTTP-Traffic
 			 */
-			$cronlog->logAction(CRON_ACTION, LOG_INFO, 'http traffic for ' . $row['loginname'] . ' started...');
+			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, 'http traffic for ' . $row['loginname'] . ' started...');
 			$httptraffic = 0;
 
 			if (isset($domainlist[$row['customerid']]) && is_array($domainlist[$row['customerid']]) && count($domainlist[$row['customerid']]) != 0) {
@@ -193,7 +192,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 					reset($speciallogfile_domainlist[$row['customerid']]);
 					if (Settings::Get('system.awstats_enabled') == '0') {
 						foreach ($speciallogfile_domainlist[$row['customerid']] as $domainid => $domain) {
-							$httptraffic += floatval(callWebalizerGetTraffic($row['loginname'] . '-' . $domain, $row['documentroot'] . '/webalizer/' . $domain . '/', $domain, $domainlist[$row['customerid']]));
+							$httptraffic += floatval(self::callWebalizerGetTraffic($row['loginname'] . '-' . $domain, $row['documentroot'] . '/webalizer/' . $domain . '/', $domain, $domainlist[$row['customerid']]));
 						}
 					}
 				}
@@ -205,23 +204,23 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 				// will iterate through all customer-domains and the awstats-configs
 				// know the logfile-name, #246
 				if (Settings::Get('system.awstats_enabled') == '1') {
-					$httptraffic += floatval(callAwstatsGetTraffic($row['customerid'], $row['documentroot'] . '/awstats/', $domainlist[$row['customerid']]));
+					$httptraffic += floatval(self::callAwstatsGetTraffic($row['customerid'], $row['documentroot'] . '/awstats/', $domainlist[$row['customerid']]));
 				} else {
-					$httptraffic += floatval(callWebalizerGetTraffic($row['loginname'], $row['documentroot'] . '/webalizer/', $caption, $domainlist[$row['customerid']]));
+					$httptraffic += floatval(self::callWebalizerGetTraffic($row['loginname'], $row['documentroot'] . '/webalizer/', $caption, $domainlist[$row['customerid']]));
 				}
 
 				// make the stuff readable for the customer, #258
-				makeChownWithNewStats($row);
+				\Froxlor\Http\Statistics::makeChownWithNewStats($row);
 			}
 
 			/**
 			 * FTP-Traffic
 			 */
-			$cronlog->logAction(CRON_ACTION, LOG_INFO, 'ftp traffic for ' . $row['loginname'] . ' started...');
+			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, 'ftp traffic for ' . $row['loginname'] . ' started...');
 			$ftptraffic_stmt = Database::prepare("
-		SELECT SUM(`up_bytes`) AS `up_bytes_sum`, SUM(`down_bytes`) AS `down_bytes_sum`
-		FROM `" . TABLE_FTP_USERS . "` WHERE `customerid` = :customerid
-	");
+				SELECT SUM(`up_bytes`) AS `up_bytes_sum`, SUM(`down_bytes`) AS `down_bytes_sum`
+				FROM `" . TABLE_FTP_USERS . "` WHERE `customerid` = :customerid
+			");
 			$ftptraffic = Database::pexecute_first($ftptraffic_stmt, array(
 				'customerid' => $row['customerid']
 			));
@@ -234,8 +233,8 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 			}
 
 			$upd_stmt = Database::prepare("
-		UPDATE `" . TABLE_FTP_USERS . "` SET `up_bytes` = '0', `down_bytes` = '0' WHERE `customerid` = :customerid
-	");
+				UPDATE `" . TABLE_FTP_USERS . "` SET `up_bytes` = '0', `down_bytes` = '0' WHERE `customerid` = :customerid
+			");
 			Database::pexecute($upd_stmt, array(
 				'customerid' => $row['customerid']
 			));
@@ -245,7 +244,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 			 */
 			$mailtraffic = 0;
 			if (Settings::Get("system.mailtraffic_enabled")) {
-				$cronlog->logAction(CRON_ACTION, LOG_INFO, 'mail traffic usage for ' . $row['loginname'] . " started...");
+				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, 'mail traffic usage for ' . $row['loginname'] . " started...");
 
 				$currentDate = date("Y-m-d");
 
@@ -268,10 +267,11 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 						} else {
 							// Check if an entry for the given day exists
 							$stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_TRAFFIC . "`
-						WHERE `customerid` = :cid
-						AND `year` = :year
-						AND `month` = :month
-						AND `day` = :day");
+								WHERE `customerid` = :cid
+								AND `year` = :year
+								AND `month` = :month
+								AND `day` = :day
+							");
 							$params = array(
 								"cid" => $row['customerid'],
 								"year" => $year,
@@ -282,8 +282,9 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 							if ($stmt->rowCount() > 0) {
 								$updRow = $stmt->fetch(\PDO::FETCH_ASSOC);
 								$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_TRAFFIC . "` SET
-							`mail` = :mail
-							WHERE `id` = :id");
+									`mail` = :mail
+									WHERE `id` = :id
+								");
 								Database::pexecute($upd_stmt, array(
 									"mail" => $updRow['mail'] + $dayTraffic,
 									"id" => $updRow['id']
@@ -297,7 +298,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 			/**
 			 * Total Traffic
 			 */
-			$cronlog->logAction(CRON_ACTION, LOG_INFO, 'total traffic for ' . $row['loginname'] . ' started');
+			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, 'total traffic for ' . $row['loginname'] . ' started');
 			$current_traffic = array();
 			$current_traffic['http'] = floatval($httptraffic);
 			$current_traffic['ftp_up'] = floatval(($ftptraffic['up_bytes_sum'] / 1024));
@@ -317,23 +318,23 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 				'mail' => $current_traffic['mail']
 			);
 			$ins_stmt = Database::prepare("
-		INSERT INTO `" . TABLE_PANEL_TRAFFIC . "` SET
-		`customerid` = :customerid,
-		`year` = :year,
-		`month` = :month,
-		`day` = :day,
-		`stamp` = :stamp,
-		`http` = :http,
-		`ftp_up` = :ftp_up,
-		`ftp_down` = :ftp_down,
-		`mail` = :mail
-	");
+				INSERT INTO `" . TABLE_PANEL_TRAFFIC . "` SET
+				`customerid` = :customerid,
+				`year` = :year,
+				`month` = :month,
+				`day` = :day,
+				`stamp` = :stamp,
+				`http` = :http,
+				`ftp_up` = :ftp_up,
+				`ftp_down` = :ftp_down,
+				`mail` = :mail
+			");
 			Database::pexecute($ins_stmt, $ins_data);
 
 			$sum_month_traffic_stmt = Database::prepare("
-		SELECT SUM(`http`) AS `http`, SUM(`ftp_up`) AS `ftp_up`, SUM(`ftp_down`) AS `ftp_down`, SUM(`mail`) AS `mail`
-		FROM `" . TABLE_PANEL_TRAFFIC . "` WHERE `year` = :year AND `month` = :month AND `customerid` = :customerid
-	");
+				SELECT SUM(`http`) AS `http`, SUM(`ftp_up`) AS `ftp_up`, SUM(`ftp_down`) AS `ftp_down`, SUM(`mail`) AS `mail`
+				FROM `" . TABLE_PANEL_TRAFFIC . "` WHERE `year` = :year AND `month` = :month AND `customerid` = :customerid
+			");
 			$sum_month_traffic = Database::pexecute_first($sum_month_traffic_stmt, array(
 				'year' => date('Y', time()),
 				'month' => date('m', time()),
@@ -360,7 +361,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 			/**
 			 * WebSpace-Usage
 			 */
-			$cronlog->logAction(CRON_ACTION, LOG_INFO, 'calculating webspace usage for ' . $row['loginname']);
+			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, 'calculating webspace usage for ' . $row['loginname']);
 			$webspaceusage = 0;
 
 			// Using repquota, it's faster using this tool than using du traversing the complete directory
@@ -379,14 +380,14 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 					$webspaceusage = floatval($webspaceusage['0']);
 					unset($back);
 				} else {
-					$cronlog->logAction(CRON_ACTION, LOG_WARNING, 'documentroot ' . $row['documentroot'] . ' does not exist');
+					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_WARNING, 'documentroot ' . $row['documentroot'] . ' does not exist');
 				}
 			}
 
 			/**
 			 * MailSpace-Usage
 			 */
-			$cronlog->logAction(CRON_ACTION, LOG_INFO, 'calculating mailspace usage for ' . $row['loginname']);
+			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, 'calculating mailspace usage for ' . $row['loginname']);
 			$emailusage = 0;
 
 			$maildir = \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.vmail_homedir') . $row['loginname']);
@@ -399,13 +400,13 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 				$emailusage = floatval($emailusage['0']);
 				unset($back);
 			} else {
-				$cronlog->logAction(CRON_ACTION, LOG_WARNING, 'maildir ' . $maildir . ' does not exist');
+				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_WARNING, 'maildir ' . $maildir . ' does not exist');
 			}
 
 			/**
 			 * MySQLSpace-Usage
 			 */
-			$cronlog->logAction(CRON_ACTION, LOG_INFO, 'calculating mysqlspace usage for ' . $row['loginname']);
+			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, 'calculating mysqlspace usage for ' . $row['loginname']);
 			$mysqlusage = 0;
 
 			if (isset($mysqlusage_all[$row['customerid']])) {
@@ -429,16 +430,16 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 				'mysql' => $current_diskspace['mysql']
 			);
 			$ins_stmt = Database::prepare("
-		INSERT INTO `" . TABLE_PANEL_DISKSPACE . "` SET
-		`customerid` = :customerid,
-		`year` = :year,
-		`month` = :month,
-		`day` = :day,
-		`stamp` = :stamp,
-		`webspace` = :webspace,
-		`mail` = :mail,
-		`mysql` = :mysql
-	");
+				INSERT INTO `" . TABLE_PANEL_DISKSPACE . "` SET
+				`customerid` = :customerid,
+				`year` = :year,
+				`month` = :month,
+				`day` = :day,
+				`stamp` = :stamp,
+				`webspace` = :webspace,
+				`mail` = :mail,
+				`mysql` = :mysql
+			");
 			Database::pexecute($ins_stmt, $ins_data);
 
 			if (! isset($admin_diskspace[$row['adminid']]) || ! is_array($admin_diskspace[$row['adminid']])) {
@@ -465,11 +466,11 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 				'customerid' => $row['customerid']
 			);
 			$upd_stmt = Database::prepare("
-		UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET
-		`diskspace_used` = :diskspace,
-		`traffic_used` = :traffic
-		WHERE `customerid` = :customerid
-	");
+				UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET
+				`diskspace_used` = :diskspace,
+				`traffic_used` = :traffic
+				WHERE `customerid` = :customerid
+			");
 			Database::pexecute($upd_stmt, $upd_data);
 
 			/**
@@ -481,9 +482,9 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 				'loginnamelike' => $row['loginname'] . Settings::Get('customer.ftpprefix') . "%"
 			);
 			$upd_stmt = Database::prepare("
-		UPDATE `" . TABLE_FTP_QUOTATALLIES . "` SET
-		`bytes_in_used` = :biu WHERE `name` = :loginname OR `name` LIKE :loginnamelike
-	");
+				UPDATE `" . TABLE_FTP_QUOTATALLIES . "` SET
+				`bytes_in_used` = :biu WHERE `name` = :loginname OR `name` LIKE :loginnamelike
+			");
 			Database::pexecute($upd_stmt, $upd_data);
 
 			/**
@@ -492,8 +493,8 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 			if (Settings::Get('system.ftpserver') == "pureftpd") {
 
 				$result_quota_stmt = Database::prepare("
-			SELECT homedir FROM `" . TABLE_FTP_USERS . "` WHERE customerid = :customerid
-		");
+					SELECT homedir FROM `" . TABLE_FTP_USERS . "` WHERE customerid = :customerid
+				");
 				Database::pexecute($result_quota_stmt, array(
 					'customerid' => $row['customerid']
 				));
@@ -539,17 +540,17 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 					'mail' => $admin_traffic[$row['adminid']]['mail']
 				);
 				$ins_stmt = Database::prepare("
-			INSERT INTO `" . TABLE_PANEL_TRAFFIC_ADMINS . "` SET
-			`adminid` = :adminid,
-			`year` = :year,
-			`month` = :month,
-			`day` = :day,
-			`stamp` = :stamp,
-			`http` = :http,
-			`ftp_up` = :ftp_up,
-			`ftp_down` = :ftp_down,
-			`mail` = :mail
-		");
+					INSERT INTO `" . TABLE_PANEL_TRAFFIC_ADMINS . "` SET
+					`adminid` = :adminid,
+					`year` = :year,
+					`month` = :month,
+					`day` = :day,
+					`stamp` = :stamp,
+					`http` = :http,
+					`ftp_up` = :ftp_up,
+					`ftp_down` = :ftp_down,
+					`mail` = :mail
+				");
 				Database::pexecute($ins_stmt, $ins_data);
 
 				$upd_data = array(
@@ -557,10 +558,10 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 					'adminid' => $row['adminid']
 				);
 				$upd_stmt = Database::prepare("
-			UPDATE `" . TABLE_PANEL_ADMINS . "` SET
-			`traffic_used` = :traffic
-			WHERE `adminid` = :adminid
-		");
+					UPDATE `" . TABLE_PANEL_ADMINS . "` SET
+					`traffic_used` = :traffic
+					WHERE `adminid` = :adminid
+				");
 				Database::pexecute($upd_stmt, $upd_data);
 			}
 
@@ -577,26 +578,26 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 					'mysql' => $admin_diskspace[$row['adminid']]['mysql']
 				);
 				$ins_stmt = Database::prepare("
-			INSERT INTO `" . TABLE_PANEL_DISKSPACE_ADMINS . "` SET
-			`adminid` = :adminid,
-			`year` = :year,
-			`month` = :month,
-			`day` = :day,
-			`stamp` = :stamp,
-			`webspace` = :webspace,
-			`mail` = :mail,
-			`mysql` = :mysql
-		");
+					INSERT INTO `" . TABLE_PANEL_DISKSPACE_ADMINS . "` SET
+					`adminid` = :adminid,
+					`year` = :year,
+					`month` = :month,
+					`day` = :day,
+					`stamp` = :stamp,
+					`webspace` = :webspace,
+					`mail` = :mail,
+					`mysql` = :mysql
+				");
 
 				$upd_data = array(
 					'diskspace' => $admin_diskspace[$row['adminid']]['all'],
 					'adminid' => $row['adminid']
 				);
 				$upd_stmt = Database::prepare("
-			UPDATE `" . TABLE_PANEL_ADMINS . "` SET
-			`diskspace_used` = :diskspace
-			WHERE `adminid` = :adminid
-		");
+					UPDATE `" . TABLE_PANEL_ADMINS . "` SET
+					`diskspace_used` = :diskspace
+					WHERE `adminid` = :adminid
+				");
 				Database::pexecute($upd_stmt, $upd_data);
 			}
 		}
@@ -609,7 +610,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 		}
 	}
 
-	public static function awstatsDoSingleDomain($domain, $outputdir)
+	private static function awstatsDoSingleDomain($domain, $outputdir)
 	{
 		$returnval = 0;
 
@@ -630,15 +631,15 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 
 			if (! file_exists($awbsp)) {
 				echo "WANRING: Necessary awstats_buildstaticpages.pl script could not be found, no traffic is being calculated and no stats are generated. Please check your AWStats-Path setting";
-				$cronlog->logAction(CRON_ACTION, LOG_WARNING, "Necessary awstats_buildstaticpages.pl script could not be found, no traffic is being calculated and no stats are generated. Please check your AWStats-Path setting");
+				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_WARNING, "Necessary awstats_buildstaticpages.pl script could not be found, no traffic is being calculated and no stats are generated. Please check your AWStats-Path setting");
 				exit();
 			}
 
-			$cronlog->logAction(CRON_ACTION, LOG_INFO, "Running awstats_buildstaticpages.pl for domain '" . $domain . "' (Output: '" . $staticOutputdir . "')");
+			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, "Running awstats_buildstaticpages.pl for domain '" . $domain . "' (Output: '" . $staticOutputdir . "')");
 			\Froxlor\FileDir::safe_exec($awbsp . ' -awstatsprog=' . escapeshellarg($awprog) . ' -update -month=' . date('m') . ' -year=' . date('Y') . ' -config=' . $domain . ' -dir=' . escapeshellarg($staticOutputdir));
 
 			// update our awstats index files
-			awstatsGenerateIndex($domain, $outputdir);
+			self::awstatsGenerateIndex($domain, $outputdir);
 
 			// the default selection is 'current',
 			// so link the latest dir to it
@@ -647,7 +648,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 
 			// statistics file looks like: 'awstats[month][year].[domain].txt'
 			$file = \Froxlor\FileDir::makeCorrectFile($outputdir . '/awstats' . date('mY', time()) . '.' . $domain . '.txt');
-			$cronlog->logAction(CRON_ACTION, LOG_INFO, "Gathering traffic information from '" . $file . "'");
+			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, "Gathering traffic information from '" . $file . "'");
 
 			if (file_exists($file)) {
 
@@ -683,7 +684,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 		return $returnval;
 	}
 
-	public static function awstatsGenerateIndex($domain, $outputdir)
+	private static function awstatsGenerateIndex($domain, $outputdir)
 	{
 
 		// Generation header
@@ -756,17 +757,15 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 		return;
 	}
 
-	public static function callAwstatsGetTraffic($customerid, $outputdir, $usersdomainlist)
+	private static function callAwstatsGetTraffic($customerid, $outputdir, $usersdomainlist)
 	{
-		global $cronlog;
-
 		$returnval = 0;
 
-		foreach ($usersdomainlist as $domainid => $singledomain) {
+		foreach ($usersdomainlist as $singledomain) {
 			// as we check for the config-model awstats will only parse
 			// 'real' domains and no subdomains which are aliases in the
 			// model-config-file.
-			$returnval += awstatsDoSingleDomain($singledomain, $outputdir);
+			$returnval += self::awstatsDoSingleDomain($singledomain, $outputdir);
 		}
 
 		/**
@@ -784,10 +783,10 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 		if ($customerid !== false) {
 
 			$result_stmt = Database::prepare("
-			SELECT SUM(`http`) as `trafficmonth` FROM `" . TABLE_PANEL_TRAFFIC . "`
-			WHERE `customerid` = :customerid
-			AND `year` = :year AND `month` = :month
-		");
+				SELECT SUM(`http`) as `trafficmonth` FROM `" . TABLE_PANEL_TRAFFIC . "`
+				WHERE `customerid` = :customerid
+				AND `year` = :year AND `month` = :month
+			");
 			$result_data = array(
 				'customerid' => $customerid,
 				'year' => date('Y', time()),
@@ -815,16 +814,14 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 	 * @return int Used traffic
 	 * @author Florian Lippert <flo@syscp.org>
 	 */
-	public static function callWebalizerGetTraffic($logfile, $outputdir, $caption, $usersdomainlist)
+	private static function callWebalizerGetTraffic($logfile, $outputdir, $caption, $usersdomainlist)
 	{
-		global $cronlog;
-
 		$returnval = 0;
 
 		$logfile = \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.logfiles_directory') . $logfile . '-access.log');
 		if (file_exists($logfile)) {
 			$domainargs = '';
-			foreach ($usersdomainlist as $domainid => $domain) {
+			foreach ($usersdomainlist as $domain) {
 				// hide referer
 				$domainargs .= ' -r ' . escapeshellarg($domain);
 			}
@@ -856,7 +853,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 				$we = '/usr/local/bin/webalizer';
 			}
 
-			$cronlog->logAction(CRON_ACTION, LOG_INFO, "Running webalizer for domain '" . $caption . "'");
+			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, "Running webalizer for domain '" . $caption . "'");
 			\Froxlor\FileDir::safe_exec($we . ' ' . $verbosity . ' -p -o ' . escapeshellarg($outputdir) . ' -n ' . escapeshellarg($caption) . $domainargs . ' ' . escapeshellarg($logfile));
 
 			/**
@@ -867,7 +864,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 			 */
 			$httptraffic = array();
 			$webalizer_hist = @file_get_contents($outputdir . 'webalizer.hist');
-			$cronlog->logAction(CRON_ACTION, LOG_INFO, "Gathering traffic information from '" . $webalizer_hist . "'");
+			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, "Gathering traffic information from '" . $webalizer_hist . "'");
 
 			$webalizer_hist_rows = explode("\n", $webalizer_hist);
 			foreach ($webalizer_hist_rows as $webalizer_hist_row) {
@@ -892,7 +889,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 			reset($httptraffic);
 			$httptrafficlast = array();
 			$webalizer_lasthist = @file_get_contents($outputdir . 'webalizer.hist.1');
-			$cronlog->logAction(CRON_ACTION, LOG_INFO, "Gathering traffic information from '" . $webalizer_lasthist . "'");
+			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, "Gathering traffic information from '" . $webalizer_lasthist . "'");
 
 			$webalizer_lasthist_rows = explode("\n", $webalizer_lasthist);
 			foreach ($webalizer_lasthist_rows as $webalizer_lasthist_row) {

@@ -61,9 +61,9 @@ class HttpConfigBase
 	{
 		if (! empty($ip_port) && $ip_port['docroot'] == '') {
 			if (Settings::Get('system.froxlordirectlyviahostname')) {
-				$mypath = \Froxlor\FileDir::makeCorrectDir(dirname(dirname(dirname(__FILE__))));
+				$mypath = \Froxlor\FileDir::makeCorrectDir(\Froxlor\Froxlor::getInstallDir());
 			} else {
-				$mypath = \Froxlor\FileDir::makeCorrectDir(dirname(dirname(dirname(dirname(__FILE__)))));
+				$mypath = \Froxlor\FileDir::makeCorrectDir(dirname(\Froxlor\Froxlor::getInstallDir()));
 			}
 		} else {
 			// user-defined docroot, #417
