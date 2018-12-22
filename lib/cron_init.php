@@ -73,7 +73,8 @@ if (isset($sql['root_user']) && isset($sql['root_password']) && (! isset($sql_ro
 }
 
 // Includes the Functions
-require \Froxlor\Froxlor::getInstallDir() . '/lib/functions.php';
+require \Froxlor\Froxlor::getInstallDir() . '/lib/functions/constant.formfields.php';
+require \Froxlor\Froxlor::getInstallDir() . '/lib/functions/constant.logger.php';
 
 // Includes the MySQL-Tabledefinitions etc.
 require \Froxlor\Froxlor::getInstallDir() . '/lib/tables.inc.php';

@@ -394,7 +394,7 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	{
 		if ($errdoc !== null && $errdoc != '') {
 			// not a URL
-			if ((strtoupper(substr($errdoc, 0, 5)) != 'HTTP:' && strtoupper(substr($errdoc, 0, 6)) != 'HTTPS:') || ! \Froxlor\Validate\Form\Strings::validateUrl($errdoc)) {
+			if ((strtoupper(substr($errdoc, 0, 5)) != 'HTTP:' && strtoupper(substr($errdoc, 0, 6)) != 'HTTPS:') || ! \Froxlor\Validate\Form\Data::validateUrl($errdoc)) {
 				// a file
 				if (substr($errdoc, 0, 1) != '"') {
 					$errdoc = \Froxlor\FileDir::makeCorrectFile($errdoc);

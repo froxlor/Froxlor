@@ -369,7 +369,7 @@ if ($page == 'overview') {
 					$domains .= \Froxlor\UI\HTML::makeoption($idna_convert->decode($row_domain['domain']), $row_domain['id'], $result['aliasdomain']);
 				}
 
-				if (preg_match('/^https?\:\/\//', $result['documentroot']) && \Froxlor\Validate\Form\Strings::validateUrl($result['documentroot'])) {
+				if (preg_match('/^https?\:\/\//', $result['documentroot']) && \Froxlor\Validate\Form\Data::validateUrl($result['documentroot'])) {
 					if (Settings::Get('panel.pathedit') == 'Dropdown') {
 						$urlvalue = $result['documentroot'];
 						$pathSelect = \Froxlor\FileDir::makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);

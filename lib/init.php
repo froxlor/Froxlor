@@ -109,7 +109,8 @@ if (! isset($sql) || ! is_array($sql)) {
 /**
  * Includes the Functions
  */
-require \Froxlor\Froxlor::getInstallDir() . '/lib/functions.php';
+require \Froxlor\Froxlor::getInstallDir() . '/lib/functions/constant.formfields.php';
+require \Froxlor\Froxlor::getInstallDir() . '/lib/functions/constant.logger.php';
 @set_error_handler(array(
 	'\\Froxlor\\PhpHelper',
 	'phpErrHandler'

@@ -144,7 +144,7 @@ class Apache extends HttpConfigBase
 			foreach ($statusCodes as $statusCode) {
 				if (Settings::Get('defaultwebsrverrhandler.err' . $statusCode) != '') {
 					$defhandler = Settings::Get('defaultwebsrverrhandler.err' . $statusCode);
-					if (! \Froxlor\Validate\Form\Strings::validateUrl($defhandler)) {
+					if (! \Froxlor\Validate\Form\Data::validateUrl($defhandler)) {
 						if (substr($defhandler, 0, 1) != '"' && substr($defhandler, - 1, 1) != '"') {
 							$defhandler = '"' . \Froxlor\FileDir::makeCorrectFile($defhandler) . '"';
 						}
@@ -1190,7 +1190,7 @@ class Apache extends HttpConfigBase
 				foreach ($statusCodes as $statusCode) {
 					if (isset($row_diroptions['error' . $statusCode . 'path']) && $row_diroptions['error' . $statusCode . 'path'] != '') {
 						$defhandler = $row_diroptions['error' . $statusCode . 'path'];
-						if (! \Froxlor\Validate\Form\Strings::validateUrl($defhandler)) {
+						if (! \Froxlor\Validate\Form\Data::validateUrl($defhandler)) {
 							if (substr($defhandler, 0, 1) != '"' && substr($defhandler, - 1, 1) != '"') {
 								$defhandler = '"' . \Froxlor\FileDir::makeCorrectFile($defhandler) . '"';
 							}

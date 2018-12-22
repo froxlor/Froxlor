@@ -69,8 +69,6 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 			$cronlog->logAction(CRON_ACTION, LOG_INFO, $msg . " Not forking traffic-cron, this may take a long time!");
 		}
 
-		require_once \Froxlor\FileDir::makeCorrectFile(dirname(__FILE__) . '/TrafficCron.inc.functions.php');
-
 		/**
 		 * TRAFFIC AND DISKUSAGE MESSURE
 		 */
@@ -79,9 +77,9 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 		$domainlist = array();
 		$speciallogfile_domainlist = array();
 		$result_domainlist_stmt = Database::query("
-	SELECT `id`, `domain`, `customerid`, `parentdomainid`, `speciallogfile`
-	FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `aliasdomain` IS NULL AND `email_only` <> '1';
-");
+			SELECT `id`, `domain`, `customerid`, `parentdomainid`, `speciallogfile`
+			FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `aliasdomain` IS NULL AND `email_only` <> '1';
+		");
 
 		while ($row_domainlist = $result_domainlist_stmt->fetch(\PDO::FETCH_ASSOC)) {
 
