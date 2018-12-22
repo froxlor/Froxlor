@@ -29,8 +29,8 @@ class ConfigServicesAction extends \Froxlor\Cli\Action
 		$this->_checkConfigParam(true);
 		$this->_parseConfig();
 
-		require \Froxlor\Froxlor::getInstallDir() . '/lib/tables.inc.php';
-		require \Froxlor\Froxlor::getInstallDir() . '/lib/functions.php';
+		require FROXLOR_INSTALL_DIR . '/lib/tables.inc.php';
+		require FROXLOR_INSTALL_DIR . '/lib/functions.php';
 
 		if (array_key_exists("import-settings", $this->_args)) {
 			$this->_importSettings();
@@ -74,7 +74,7 @@ class ConfigServicesAction extends \Froxlor\Cli\Action
 			'distro' => ""
 		);
 
-		$config_dir = \Froxlor\Froxlor::getInstallDir() . '/lib/configfiles/';
+		$config_dir = FROXLOR_INSTALL_DIR . '/lib/configfiles/';
 		// show list of available distro's
 		$distros = glob($config_dir . '*.xml');
 		// tmp array
@@ -162,11 +162,11 @@ class ConfigServicesAction extends \Froxlor\Cli\Action
 		file_put_contents($output, $daemons_config);
 		ConfigServicesCmd::printsucc("Successfully generated service-configfile '" . $output . "'");
 		echo PHP_EOL;
-		ConfigServicesCmd::printsucc("You can now apply this config running:" . PHP_EOL . "php " . __FILE__ . " --froxlor-dir=" . dirname(dirname(__DIR__)) . " --apply=" . $output);
+		ConfigServicesCmd::printsucc("You can now apply this config running:" . PHP_EOL . "php " . FROXLOR_INSTALL_DIR . "/install/scripts/config-services.php --apply=" . $output);
 		echo PHP_EOL;
 		$proceed = ConfigServicesCmd::getYesNo("Do you want to apply the config now? [y/N]", 0);
 		if ($proceed) {
-			passthru("php " . __FILE__ . " --froxlor-dir=" . dirname(dirname(__DIR__)) . " --apply=" . $output);
+			passthru("php " . FROXLOR_INSTALL_DIR . "/install/scripts/config-services.php --apply=" . $output);
 		}
 	}
 
@@ -236,7 +236,7 @@ class ConfigServicesAction extends \Froxlor\Cli\Action
 		}
 
 		if (! empty($decoded_config)) {
-			$config_dir = \Froxlor\Froxlor::getInstallDir() . '/lib/configfiles/';
+			$config_dir = FROXLOR_INSTALL_DIR . '/lib/configfiles/';
 			$configfiles = new \Froxlor\Config\ConfigParser($config_dir . '/' . $decoded_config['distro'] . ".xml");
 			$services = $configfiles->getServices();
 			$replace_arr = $this->_getReplacerArray();
@@ -298,7 +298,7 @@ class ConfigServicesAction extends \Froxlor\Cli\Action
 			// set is_configured flag
 			Settings::Set('panel.is_configured', '1', true);
 			// run cronjob at the end to ensure configs are all up to date
-			exec('php ' . \Froxlor\Froxlor::getInstallDir() . '/scripts/froxlor_master_cronjob.php --force');
+			exec('php ' . FROXLOR_INSTALL_DIR . '/scripts/froxlor_master_cronjob.php --force');
 			// and done
 			ConfigServicesCmd::printsucc("All services have been configured");
 		} else {
@@ -347,7 +347,7 @@ class ConfigServicesAction extends \Froxlor\Cli\Action
 			'<VIRTUAL_GID_MAPS>' => Settings::Get('system.vmail_gid'),
 			'<SSLPROTOCOLS>' => (Settings::Get('system.use_ssl') == '1') ? 'imaps pop3s' : '',
 			'<CUSTOMER_TMP>' => \Froxlor\FileDir::makeCorrectDir($customer_tmpdir),
-			'<BASE_PATH>' => \Froxlor\FileDir::makeCorrectDir(\Froxlor\Froxlor::getInstallDir()),
+			'<BASE_PATH>' => \Froxlor\FileDir::makeCorrectDir(FROXLOR_INSTALL_DIR),
 			'<BIND_CONFIG_PATH>' => \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.bindconf_directory')),
 			'<WEBSERVER_RELOAD_CMD>' => Settings::Get('system.apachereload_command'),
 			'<CUSTOMER_LOGS>' => \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.logfiles_directory')),
@@ -359,11 +359,11 @@ class ConfigServicesAction extends \Froxlor\Cli\Action
 
 	private function _parseConfig()
 	{
-		define('\Froxlor\Froxlor::getInstallDir()', $this->_args['froxlor-dir']);
-		if (! file_exists(\Froxlor\Froxlor::getInstallDir() . '/lib/classes/database/class.Database.php')) {
-			throw new \Exception("Could not find froxlor's Database class. Is froxlor really installed to '" . \Froxlor\Froxlor::getInstallDir() . "'?");
+		define('FROXLOR_INSTALL_DIR', $this->_args['froxlor-dir']);
+		if (! class_exists('\\Froxlor\\Database\\Database')) {
+			throw new \Exception("Could not find froxlor's Database class. Is froxlor really installed to '" . FROXLOR_INSTALL_DIR . "'?");
 		}
-		if (! file_exists(\Froxlor\Froxlor::getInstallDir() . '/lib/userdata.inc.php')) {
+		if (! file_exists(FROXLOR_INSTALL_DIR . '/lib/userdata.inc.php')) {
 			throw new \Exception("Could not find froxlor's userdata.inc.php file. You should use this script only with a fully installed and setup froxlor system.");
 		}
 	}
@@ -372,7 +372,7 @@ class ConfigServicesAction extends \Froxlor\Cli\Action
 	{
 		if ($needed) {
 			if (! isset($this->_args["froxlor-dir"])) {
-				throw new \Exception("No configuration given (missing --froxlor-dir parameter?)");
+				$this->_args["froxlor-dir"] = \Froxlor\Froxlor::getInstallDir();
 			} elseif (! is_dir($this->_args["froxlor-dir"])) {
 				throw new \Exception("Given --froxlor-dir parameter is not a directory");
 			} elseif (! file_exists($this->_args["froxlor-dir"])) {

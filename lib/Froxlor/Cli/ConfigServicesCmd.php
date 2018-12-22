@@ -42,7 +42,7 @@ class ConfigServicesCmd extends CmdLineHandler
 		'help'
 	);
 
-	public static $action_class = 'ConfigServicesAction';
+	public static $action_class = '\\Froxlor\\Cli\\Action\\ConfigServicesAction';
 
 	public static function printHelp()
 	{

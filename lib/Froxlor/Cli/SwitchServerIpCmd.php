@@ -39,7 +39,7 @@ class SwitchServerIpCmd extends CmdLineHandler
 		'help'
 	);
 
-	public static $action_class = 'SwitchServerIpAction';
+	public static $action_class = '\\Froxlor\\Cli\\Action\\SwitchServerIpAction';
 
 	public static function printHelp()
 	{
