@@ -30,7 +30,6 @@ class ConfigServicesAction extends \Froxlor\Cli\Action
 		$this->_parseConfig();
 
 		require FROXLOR_INSTALL_DIR . '/lib/tables.inc.php';
-		require FROXLOR_INSTALL_DIR . '/lib/functions.php';
 
 		if (array_key_exists("import-settings", $this->_args)) {
 			$this->_importSettings();
@@ -162,11 +161,11 @@ class ConfigServicesAction extends \Froxlor\Cli\Action
 		file_put_contents($output, $daemons_config);
 		ConfigServicesCmd::printsucc("Successfully generated service-configfile '" . $output . "'");
 		echo PHP_EOL;
-		ConfigServicesCmd::printsucc("You can now apply this config running:" . PHP_EOL . "php " . FROXLOR_INSTALL_DIR . "/install/scripts/config-services.php --apply=" . $output);
+		ConfigServicesCmd::printsucc("You can now apply this config running:" . PHP_EOL . "php " . FROXLOR_INSTALL_DIR . "install/scripts/config-services.php --apply=" . $output);
 		echo PHP_EOL;
 		$proceed = ConfigServicesCmd::getYesNo("Do you want to apply the config now? [y/N]", 0);
 		if ($proceed) {
-			passthru("php " . FROXLOR_INSTALL_DIR . "/install/scripts/config-services.php --apply=" . $output);
+			passthru("php " . FROXLOR_INSTALL_DIR . "install/scripts/config-services.php --apply=" . $output);
 		}
 	}
 
