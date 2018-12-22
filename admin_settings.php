@@ -68,6 +68,10 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 			\Froxlor\System\Cronjob::inserttask('1');
 			// Using nameserver, insert a task which rebuilds the server config
 			\Froxlor\System\Cronjob::inserttask('4');
+			// Using nameserver, insert a task which rebuilds the server config
+			\Froxlor\System\Cronjob::inserttask('4');
+			// cron.d file
+			\Froxlor\System\Cronjob::inserttask('99');
 
 			\Froxlor\UI\Response::standard_success('settingssaved', '', array(
 				'filename' => $filename,
