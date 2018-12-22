@@ -64,7 +64,7 @@ if (! is_null($month) && ! is_null($year)) {
 		GROUP BY `day`
 		ORDER BY `day` DESC");
 	$params = array(
-		"customerid" => \Froxlor\User::getAll()['customerid'],
+		"customerid" => $userinfo['customerid'],
 		"month" => $month,
 		"year" => $year
 	);
@@ -118,7 +118,7 @@ if (! is_null($month) && ! is_null($year)) {
 		GROUP BY `year` DESC, `month` DESC
 		LIMIT 12");
 	Database::pexecute($result_stmt, array(
-		"customerid" => \Froxlor\User::getAll()['customerid']
+		"customerid" => $userinfo['customerid']
 	));
 	$traffic_complete['http'] = 0;
 	$traffic_complete['ftp'] = 0;

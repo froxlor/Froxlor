@@ -20,7 +20,7 @@ require './lib/init.php';
 
 use Froxlor\Settings;
 
-if (\Froxlor\User::getAll()['change_serversettings'] == '1') {
+if ($userinfo['change_serversettings'] == '1') {
 
 	if ($action == 'setconfigured') {
 		Settings::Set('panel.is_configured', '1', true);

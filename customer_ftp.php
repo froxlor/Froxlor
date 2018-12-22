@@ -46,12 +46,12 @@ if ($page == 'overview') {
 			'homedir' => $lng['panel']['path'],
 			'description' => $lng['panel']['ftpdesc']
 		);
-		$paging = new \Froxlor\UI\Paging(\Froxlor\User::getAll(), TABLE_FTP_USERS, $fields);
+		$paging = new \Froxlor\UI\Paging($userinfo, TABLE_FTP_USERS, $fields);
 
 		$result_stmt = Database::prepare("SELECT `id`, `username`, `description`, `homedir`, `shell` FROM `" . TABLE_FTP_USERS . "`
 			WHERE `customerid`= :customerid " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
 		Database::pexecute($result_stmt, array(
-			"customerid" => \Froxlor\User::getAll()['customerid']
+			"customerid" => $userinfo['customerid']
 		));
 		$ftps_count = Database::num_rows();
 		$paging->setEntries($ftps_count);
@@ -65,8 +65,8 @@ if ($page == 'overview') {
 
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			if ($paging->checkDisplay($i)) {
-				if (strpos($row['homedir'], \Froxlor\User::getAll()['documentroot']) === 0) {
-					$row['documentroot'] = str_replace(\Froxlor\User::getAll()['documentroot'], "/", $row['homedir']);
+				if (strpos($row['homedir'], $userinfo['documentroot']) === 0) {
+					$row['documentroot'] = str_replace($userinfo['documentroot'], "/", $row['homedir']);
 				} else {
 					$row['documentroot'] = $row['homedir'];
 				}
@@ -84,7 +84,7 @@ if ($page == 'overview') {
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate('ftp/accounts') . "\";");
 	} elseif ($action == 'delete' && $id != 0) {
 		try {
-			$json_result = Ftps::getLocal(\Froxlor\User::getAll(), array(
+			$json_result = Ftps::getLocal($userinfo, array(
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
@@ -92,10 +92,10 @@ if ($page == 'overview') {
 		}
 		$result = json_decode($json_result, true)['data'];
 
-		if (isset($result['username']) && $result['username'] != \Froxlor\User::getAll()['loginname']) {
+		if (isset($result['username']) && $result['username'] != $userinfo['loginname']) {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
-					Ftps::getLocal(\Froxlor\User::getAll(), $_POST)->delete();
+					Ftps::getLocal($userinfo, $_POST)->delete();
 				} catch (Exception $e) {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
@@ -114,10 +114,10 @@ if ($page == 'overview') {
 			\Froxlor\UI\Response::standard_error('ftp_cantdeletemainaccount');
 		}
 	} elseif ($action == 'add') {
-		if (\Froxlor\User::getAll()['ftps_used'] < \Froxlor\User::getAll()['ftps'] || \Froxlor\User::getAll()['ftps'] == '-1') {
+		if ($userinfo['ftps_used'] < $userinfo['ftps'] || $userinfo['ftps'] == '-1') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
-					Ftps::getLocal(\Froxlor\User::getAll(), $_POST)->add();
+					Ftps::getLocal($userinfo, $_POST)->add();
 				} catch (Exception $e) {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
@@ -126,7 +126,7 @@ if ($page == 'overview') {
 					's' => $s
 				));
 			} else {
-				$pathSelect = \Froxlor\FileDir::makePathfield(\Froxlor\User::getAll()['documentroot'], \Froxlor\User::getAll()['guid'], \Froxlor\User::getAll()['guid'], '/');
+				$pathSelect = \Froxlor\FileDir::makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], '/');
 
 				if (Settings::Get('customer.ftpatdomain') == '1') {
 					$domainlist = array();
@@ -135,7 +135,7 @@ if ($page == 'overview') {
 					$result_domains_stmt = Database::prepare("SELECT `domain` FROM `" . TABLE_PANEL_DOMAINS . "`
 						WHERE `customerid`= :customerid");
 					Database::pexecute($result_domains_stmt, array(
-						"customerid" => \Froxlor\User::getAll()['customerid']
+						"customerid" => $userinfo['customerid']
 					));
 
 					while ($row_domain = $result_domains_stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -176,7 +176,7 @@ if ($page == 'overview') {
 		}
 	} elseif ($action == 'edit' && $id != 0) {
 		try {
-			$json_result = Ftps::getLocal(\Froxlor\User::getAll(), array(
+			$json_result = Ftps::getLocal($userinfo, array(
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
@@ -187,7 +187,7 @@ if ($page == 'overview') {
 		if (isset($result['username']) && $result['username'] != '') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
-					Ftps::getLocal(\Froxlor\User::getAll(), $_POST)->update();
+					Ftps::getLocal($userinfo, $_POST)->update();
 				} catch (Exception $e) {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
@@ -196,14 +196,14 @@ if ($page == 'overview') {
 					's' => $s
 				));
 			} else {
-				if (strpos($result['homedir'], \Froxlor\User::getAll()['documentroot']) === 0) {
-					$homedir = str_replace(\Froxlor\User::getAll()['documentroot'], "/", $result['homedir']);
+				if (strpos($result['homedir'], $userinfo['documentroot']) === 0) {
+					$homedir = str_replace($userinfo['documentroot'], "/", $result['homedir']);
 				} else {
 					$homedir = $result['homedir'];
 				}
 				$homedir = \Froxlor\FileDir::makeCorrectDir($homedir);
 
-				$pathSelect = \Froxlor\FileDir::makePathfield(\Froxlor\User::getAll()['documentroot'], \Froxlor\User::getAll()['guid'], \Froxlor\User::getAll()['guid'], $homedir);
+				$pathSelect = \Froxlor\FileDir::makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $homedir);
 
 				if (Settings::Get('customer.ftpatdomain') == '1') {
 					$domains = '';
@@ -211,7 +211,7 @@ if ($page == 'overview') {
 					$result_domains_stmt = Database::prepare("SELECT `domain` FROM `" . TABLE_PANEL_DOMAINS . "`
 						WHERE `customerid` = :customerid");
 					Database::pexecute($result_domains_stmt, array(
-						"customerid" => \Froxlor\User::getAll()['customerid']
+						"customerid" => $userinfo['customerid']
 					));
 
 					while ($row_domain = $result_domains_stmt->fetch(PDO::FETCH_ASSOC)) {

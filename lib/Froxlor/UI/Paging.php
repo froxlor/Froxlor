@@ -27,6 +27,13 @@ class Paging
 {
 
 	/**
+	 * Userinfo
+	 *
+	 * @var array
+	 */
+	private $userinfo = array();
+
+	/**
 	 * MySQL-Table
 	 *
 	 * @var string
@@ -102,15 +109,16 @@ class Paging
 	 * Class constructor.
 	 * Loads settings from request or from userdata and saves them to session.
 	 *
-	 * @param array $userinfo
-	 * @param string $table
-	 *        	Name of Table
-	 * @param array $fields
-	 *        	Fields, in format array( 'fieldname_in_mysql' => 'field_caption' )
-	 * @param int $entriesperpage
-	 *        	*deprecated* entries per page
-	 * @param bool $natSorting
-	 *        	*deprecated* Switch natsorting on/off (global, affects all calls of sort)
+	 * @param
+	 *        	array userinfo
+	 * @param
+	 *        	string Name of Table
+	 * @param
+	 *        	array Fields, in format array( 'fieldname_in_mysql' => 'field_caption' )
+	 * @param
+	 *        	int *deprecated* entries per page
+	 * @param
+	 *        	bool *deprecated* Switch natsorting on/off (global, affects all calls of sort)
 	 * @param int $default_field
 	 *        	default sorting-field-index
 	 * @param string $default_order

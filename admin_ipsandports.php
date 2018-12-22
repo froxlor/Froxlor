@@ -43,7 +43,7 @@ if ($page == 'ipsandports' || $page == 'overview') {
 			'ip' => $lng['admin']['ipsandports']['ip'],
 			'port' => $lng['admin']['ipsandports']['port']
 		);
-		$paging = new \Froxlor\UI\Paging(\Froxlor\User::getAll(), TABLE_PANEL_IPSANDPORTS, $fields);
+		$paging = new \Froxlor\UI\Paging($userinfo, TABLE_PANEL_IPSANDPORTS, $fields);
 		$ipsandports = '';
 		$result_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` " . $paging->getSqlWhere(false) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
 		Database::pexecute($result_stmt);
@@ -70,7 +70,7 @@ if ($page == 'ipsandports' || $page == 'overview') {
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate("ipsandports/ipsandports") . "\";");
 	} elseif ($action == 'delete' && $id != 0) {
 		try {
-			$json_result = IpsAndPorts::getLocal(\Froxlor\User::getAll(), array(
+			$json_result = IpsAndPorts::getLocal($userinfo, array(
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
@@ -82,7 +82,7 @@ if ($page == 'ipsandports' || $page == 'overview') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 
 				try {
-					IpsAndPorts::getLocal(\Froxlor\User::getAll(), array(
+					IpsAndPorts::getLocal($userinfo, array(
 						'id' => $id
 					))->delete();
 				} catch (Exception $e) {
@@ -104,7 +104,7 @@ if ($page == 'ipsandports' || $page == 'overview') {
 	} elseif ($action == 'add') {
 		if (isset($_POST['send']) && $_POST['send'] == 'send') {
 			try {
-				IpsAndPorts::getLocal(\Froxlor\User::getAll(), $_POST)->add();
+				IpsAndPorts::getLocal($userinfo, $_POST)->add();
 			} catch (Exception $e) {
 				\Froxlor\UI\Response::dynamic_error($e->getMessage());
 			}
@@ -124,7 +124,7 @@ if ($page == 'ipsandports' || $page == 'overview') {
 		}
 	} elseif ($action == 'edit' && $id != 0) {
 		try {
-			$json_result = IpsAndPorts::getLocal(\Froxlor\User::getAll(), array(
+			$json_result = IpsAndPorts::getLocal($userinfo, array(
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
@@ -136,7 +136,7 @@ if ($page == 'ipsandports' || $page == 'overview') {
 
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
-					IpsAndPorts::getLocal(\Froxlor\User::getAll(), $_POST)->update();
+					IpsAndPorts::getLocal($userinfo, $_POST)->update();
 				} catch (Exception $e) {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}

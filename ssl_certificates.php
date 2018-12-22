@@ -33,7 +33,7 @@ if ($action == 'delete') {
 	$id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 	if ($id > 0) {
 		try {
-			$json_result = Certificates::getLocal(\Froxlor\User::getAll(), array(
+			$json_result = Certificates::getLocal($userinfo, array(
 				'id' => $id
 			))->delete();
 			$success_message = sprintf($lng['domains']['ssl_certificate_removed'], $id);
@@ -47,7 +47,7 @@ $log->logAction(USR_ACTION, LOG_NOTICE, "viewed domains::ssl_certificates");
 $fields = array(
 	'd.domain' => $lng['domains']['domainname']
 );
-$paging = new \Froxlor\UI\Paging(\Froxlor\User::getAll(), TABLE_PANEL_DOMAIN_SSL_SETTINGS, $fields);
+$paging = new \Froxlor\UI\Paging($userinfo, TABLE_PANEL_DOMAIN_SSL_SETTINGS, $fields);
 
 // select all my (accessable) certificates
 $certs_stmt_query = "SELECT s.*, d.domain, d.letsencrypt, c.customerid, c.loginname
@@ -58,14 +58,14 @@ $certs_stmt_query = "SELECT s.*, d.domain, d.letsencrypt, c.customerid, c.loginn
 
 $qry_params = array();
 
-if (AREA == 'admin' && \Froxlor\User::getAll()['customers_see_all'] == '0') {
+if (AREA == 'admin' && $userinfo['customers_see_all'] == '0') {
 	// admin with only customer-specific permissions
 	$certs_stmt_query .= "d.adminid = :adminid ";
-	$qry_params['adminid'] = \Froxlor\User::getAll()['adminid'];
+	$qry_params['adminid'] = $userinfo['adminid'];
 } elseif (AREA == 'customer') {
 	// customer-area
 	$certs_stmt_query .= "d.customerid = :cid ";
-	$qry_params['cid'] = \Froxlor\User::getAll()['customerid'];
+	$qry_params['cid'] = $userinfo['customerid'];
 } else {
 	$certs_stmt_query .= "1 ";
 }

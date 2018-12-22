@@ -17,7 +17,7 @@ $header
 					{$searchcode}
 				</div>
 			
-				<if \Froxlor\User::getAll()['customers_used'] < \Froxlor\User::getAll()['customers'] || \Froxlor\User::getAll()['customers'] == '-1'>
+				<if $userinfo['customers_used'] < $userinfo['customers'] || $userinfo['customers'] == '-1'>
 				<div class="overviewadd">
 					<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />&nbsp;
 					<a href="{$linker->getLink(array('section' => 'customers', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['customer_add']}</a>
@@ -58,7 +58,7 @@ $header
 
 			</form>
 
-			<if (\Froxlor\User::getAll()['customers_used'] < \Froxlor\User::getAll()['customers'] || \Froxlor\User::getAll()['customers'] == '-1') && 15 < \Froxlor\User::getAll()['customers_used'] >
+			<if ($userinfo['customers_used'] < $userinfo['customers'] || $userinfo['customers'] == '-1') && 15 < $userinfo['customers_used'] >
 			<div class="overviewadd">
 				<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />&nbsp;
 				<a href="{$linker->getLink(array('section' => 'customers', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['customer_add']}</a>

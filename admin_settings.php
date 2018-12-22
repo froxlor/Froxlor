@@ -29,7 +29,7 @@ Database::needSqlData();
 $sql_root = Database::getSqlData();
 Database::needRoot(false);
 
-if ($page == 'overview' && \Froxlor\User::getAll()['change_serversettings'] == '1') {
+if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 	$settings_data = \Froxlor\PhpHelper::loadConfigArrayDir('./actions/admin/settings/');
 
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
@@ -95,7 +95,7 @@ if ($page == 'overview' && \Froxlor\User::getAll()['change_serversettings'] == '
 		eval("echo \$settings_page;");
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate("settings/settings_form_end") . "\";");
 	}
-} elseif ($page == 'phpinfo' && \Froxlor\User::getAll()['change_serversettings'] == '1') {
+} elseif ($page == 'phpinfo' && $userinfo['change_serversettings'] == '1') {
 	ob_start();
 	phpinfo();
 	$phpinfo = array(
@@ -139,7 +139,7 @@ if ($page == 'overview' && \Froxlor\User::getAll()['change_serversettings'] == '
 		\Froxlor\UI\Response::standard_error($lng['error']['no_phpinfo']);
 	}
 	eval("echo \"" . \Froxlor\UI\Template::getTemplate("settings/phpinfo") . "\";");
-} elseif ($page == 'rebuildconfigs' && \Froxlor\User::getAll()['change_serversettings'] == '1') {
+} elseif ($page == 'rebuildconfigs' && $userinfo['change_serversettings'] == '1') {
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 
 		$log->logAction(ADM_ACTION, LOG_INFO, "rebuild configfiles");
@@ -158,7 +158,7 @@ if ($page == 'overview' && \Froxlor\User::getAll()['change_serversettings'] == '
 			'page' => $page
 		));
 	}
-} elseif ($page == 'updatecounters' && \Froxlor\User::getAll()['change_serversettings'] == '1') {
+} elseif ($page == 'updatecounters' && $userinfo['change_serversettings'] == '1') {
 
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 
@@ -180,7 +180,7 @@ if ($page == 'overview' && \Froxlor\User::getAll()['change_serversettings'] == '
 			'page' => $page
 		));
 	}
-} elseif ($page == 'wipecleartextmailpws' && \Froxlor\User::getAll()['change_serversettings'] == '1') {
+} elseif ($page == 'wipecleartextmailpws' && $userinfo['change_serversettings'] == '1') {
 
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 
@@ -195,7 +195,7 @@ if ($page == 'overview' && \Froxlor\User::getAll()['change_serversettings'] == '
 			'page' => $page
 		));
 	}
-} elseif ($page == 'wipequotas' && \Froxlor\User::getAll()['change_serversettings'] == '1') {
+} elseif ($page == 'wipequotas' && $userinfo['change_serversettings'] == '1') {
 
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 
@@ -212,7 +212,7 @@ if ($page == 'overview' && \Froxlor\User::getAll()['change_serversettings'] == '
 			'page' => $page
 		));
 	}
-} elseif ($page == 'enforcequotas' && \Froxlor\User::getAll()['change_serversettings'] == '1') {
+} elseif ($page == 'enforcequotas' && $userinfo['change_serversettings'] == '1') {
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 		// Fetch all accounts
 		$result_stmt = Database::query("SELECT `quota`, `customerid` FROM `" . TABLE_MAIL_USERS . "`");
@@ -253,7 +253,7 @@ if ($page == 'overview' && \Froxlor\User::getAll()['change_serversettings'] == '
 			'page' => $page
 		));
 	}
-} elseif ($page == 'integritycheck' && \Froxlor\User::getAll()['change_serversettings'] == '1') {
+} elseif ($page == 'integritycheck' && $userinfo['change_serversettings'] == '1') {
 	$integrity = new \Froxlor\Database\IntegrityCheck();
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 		$integrity->fixAll();
@@ -271,7 +271,7 @@ if ($page == 'overview' && \Froxlor\User::getAll()['change_serversettings'] == '
 		eval("\$integritycheck.=\"" . \Froxlor\UI\Template::getTemplate("settings/integritycheck_row") . "\";");
 	}
 	eval("echo \"" . \Froxlor\UI\Template::getTemplate("settings/integritycheck") . "\";");
-} elseif ($page == 'importexport' && \Froxlor\User::getAll()['change_serversettings'] == '1') {
+} elseif ($page == 'importexport' && $userinfo['change_serversettings'] == '1') {
 	// check for json-stuff
 	if (! extension_loaded('json')) {
 		\Froxlor\UI\Response::standard_error('jsonextensionnotfound');
@@ -280,7 +280,7 @@ if ($page == 'overview' && \Froxlor\User::getAll()['change_serversettings'] == '
 	if (isset($_GET['action']) && $_GET['action'] == "export") {
 		// export
 		try {
-			$json_result = Froxlor::getLocal(\Froxlor\User::getAll())->exportSettings();
+			$json_result = Froxlor::getLocal($userinfo)->exportSettings();
 			$json_export = json_decode($json_result, true)['data'];
 		} catch (Exception $e) {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
@@ -296,7 +296,7 @@ if ($page == 'overview' && \Froxlor\User::getAll()['change_serversettings'] == '
 			if (isset($_FILES["import_file"]["tmp_name"])) {
 				$imp_content = file_get_contents($_FILES["import_file"]["tmp_name"]);
 				try {
-					Froxlor::getLocal(\Froxlor\User::getAll(), array(
+					Froxlor::getLocal($userinfo, array(
 						'json_str' => $imp_content
 					))->importSettings();
 				} catch (Exception $e) {

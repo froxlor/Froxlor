@@ -3,10 +3,10 @@
 		{$row['name']}
 	</td>
 	<td>
-		<if $row['adminid'] != \Froxlor\User::getAll()['userid']>
+		<if $row['adminid'] != $userinfo['userid']>
 		<a href="{$linker->getLink(array('section' => 'admins', 'page' => $page, 'action' => 'su', 'id' => $row['adminid']))}" rel="external">{$row['loginname']}</a>
 		</if>
-		<if $row['adminid'] == \Froxlor\User::getAll()['userid']>
+		<if $row['adminid'] == $userinfo['userid']>
 		{$row['loginname']}
 		</if>
 	</td>

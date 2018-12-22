@@ -6,7 +6,7 @@ $header
 			</h2>
 		</header>
 
-		<if $result['adminid'] == \Froxlor\User::getAll()['userid']>
+		<if $result['adminid'] == $userinfo['userid']>
 			<div class="warningcontainer bradius">
 				<div class="warning">{$lng['error']['youcanteditallfieldsofyourself']}</div>
 			</div>

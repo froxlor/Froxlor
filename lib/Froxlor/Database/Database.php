@@ -350,7 +350,7 @@ class Database
 	 */
 	private static function _showerror($error, $showerror = true, $json_response = false, \PDOStatement $stmt = null)
 	{
-		global $theme;
+		global $userinfo, $theme, $linker;
 
 		// include userdata.inc.php
 		require \Froxlor\Froxlor::getInstallDir() . "/lib/userdata.inc.php";
@@ -445,7 +445,7 @@ class Database
 					$err_hint = str_replace("<CURRENT_YEAR>", date('Y', time()), $err_hint);
 
 					$err_report_html = '';
-					if (is_array(\Froxlor\User::getAll()) && ((\Froxlor\User::getAll()['adminsession'] == '1' && \Froxlor\Settings::Get('system.allow_error_report_admin') == '1') || (\Froxlor\User::getAll()['adminsession'] == '0' && \Froxlor\Settings::Get('system.allow_error_report_customer') == '1'))) {
+					if (is_array($userinfo) && (($userinfo['adminsession'] == '1' && \Froxlor\Settings::Get('system.allow_error_report_admin') == '1') || ($userinfo['adminsession'] == '0' && \Froxlor\Settings::Get('system.allow_error_report_customer') == '1'))) {
 						$err_report_html = '<a href="<LINK>" title="Click here to report error">Report error</a>';
 						$err_report_html = str_replace("<LINK>", $linker->getLink(array(
 							'section' => 'index',

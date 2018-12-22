@@ -81,7 +81,7 @@ class Response
 	 */
 	public static function standard_error($errors = '', $replacer = '', $throw_exception = false)
 	{
-		global $s, $header, $footer, $theme;
+		global $userinfo, $s, $header, $footer, $lng, $theme;
 
 		$_SESSION['requestData'] = $_POST;
 		$replacer = htmlentities($replacer);
@@ -125,7 +125,7 @@ class Response
 
 	public static function dynamic_error($message)
 	{
-		global $s, $header, $footer, $theme;
+		global $userinfo, $s, $header, $footer, $lng, $theme;
 		$_SESSION['requestData'] = $_POST;
 		$link = '';
 		if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $_SERVER['HTTP_HOST']) !== false) {
@@ -150,7 +150,7 @@ class Response
 	 */
 	public static function standard_success($success_message = '', $replacer = '', $params = array(), $throw_exception = false)
 	{
-		global $s, $header, $footer, $theme;
+		global $s, $header, $footer, $lng, $theme;
 
 		if (isset($lng['success'][$success_message])) {
 			$success_message = strtr($lng['success'][$success_message], array(

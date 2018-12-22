@@ -35,7 +35,7 @@ return array(
 						'mandatory' => true
 					),
 					'adminid' => array(
-						'visible' => (\Froxlor\User::getAll()['customers_see_all'] == '1' ? true : false),
+						'visible' => ($userinfo['customers_see_all'] == '1' ? true : false),
 						'label' => $lng['admin']['admin'],
 						'type' => 'select',
 						'select_var' => $admins,
@@ -91,7 +91,7 @@ return array(
 				'image' => 'icons/domain_add.png',
 				'fields' => array(
 					'documentroot' => array(
-						'visible' => (\Froxlor\User::getAll()['change_serversettings'] == '1' ? true : false),
+						'visible' => ($userinfo['change_serversettings'] == '1' ? true : false),
 						'label' => 'DocumentRoot',
 						'desc' => $lng['panel']['emptyfordefault'],
 						'type' => 'text'
@@ -124,7 +124,7 @@ return array(
 						'value' => array()
 					),
 					'specialsettings' => array(
-						'visible' => (\Froxlor\User::getAll()['change_serversettings'] == '1' ? true : false),
+						'visible' => ($userinfo['change_serversettings'] == '1' ? true : false),
 						'style' => 'align-top',
 						'label' => $lng['admin']['ownvhostsettings'],
 						'desc' => $lng['serversettings']['default_vhostconf']['description'],
@@ -133,7 +133,7 @@ return array(
 						'rows' => 12
 					),
 					'notryfiles' => array(
-						'visible' => (\Froxlor\Settings::Get('system.webserver') == 'nginx' && \Froxlor\User::getAll()['change_serversettings'] == '1'),
+						'visible' => (\Froxlor\Settings::Get('system.webserver') == 'nginx' && $userinfo['change_serversettings'] == '1'),
 						'label' => $lng['admin']['notryfiles']['title'],
 						'desc' => $lng['admin']['notryfiles']['description'],
 						'type' => 'checkbox',
@@ -286,7 +286,7 @@ return array(
 			'section_c' => array(
 				'title' => $lng['admin']['phpserversettings'],
 				'image' => 'icons/domain_add.png',
-				'visible' => ((\Froxlor\User::getAll()['change_serversettings'] == '1' || \Froxlor\User::getAll()['caneditphpsettings'] == '1') ? true : false),
+				'visible' => (($userinfo['change_serversettings'] == '1' || $userinfo['caneditphpsettings'] == '1') ? true : false),
 				'fields' => array(
 					'openbasedir' => array(
 						'label' => 'OpenBasedir',
@@ -335,7 +335,7 @@ return array(
 			'section_d' => array(
 				'title' => $lng['admin']['nameserversettings'],
 				'image' => 'icons/domain_add.png',
-				'visible' => (\Froxlor\Settings::Get('system.bind_enable') == '1' && \Froxlor\User::getAll()['change_serversettings'] == '1' ? true : false),
+				'visible' => (\Froxlor\Settings::Get('system.bind_enable') == '1' && $userinfo['change_serversettings'] == '1' ? true : false),
 				'fields' => array(
 					'isbinddomain' => array(
 						'label' => 'Nameserver',

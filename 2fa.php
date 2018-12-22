@@ -31,10 +31,10 @@ if (Settings::Get('2fa.enabled') != '1') {
 // and therefore does not need to require lib/init.php
 if (AREA == 'admin') {
 	$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_ADMINS . "` SET `type_2fa` = :t2fa, `data_2fa` = :d2fa WHERE adminid = :id");
-	$uid = \Froxlor\User::getAll()['adminid'];
+	$uid = $userinfo['adminid'];
 } elseif (AREA == 'customer') {
 	$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `type_2fa` = :t2fa, `data_2fa` = :d2fa WHERE customerid = :id");
-	$uid = \Froxlor\User::getAll()['customerid'];
+	$uid = $userinfo['customerid'];
 }
 $success_message = "";
 
@@ -68,7 +68,7 @@ if ($action == 'delete') {
 
 $log->logAction(USR_ACTION, LOG_NOTICE, "viewed 2fa::overview");
 
-if (\Froxlor\User::getAll()['type_2fa'] == '0') {
+if ($userinfo['type_2fa'] == '0') {
 
 	// available types
 	$type_select_values = array(
@@ -81,10 +81,10 @@ if (\Froxlor\User::getAll()['type_2fa'] == '0') {
 	foreach ($type_select_values as $_val => $_type) {
 		$type_select .= \Froxlor\UI\HTML::makeoption($_type, $_val);
 	}
-} elseif (\Froxlor\User::getAll()['type_2fa'] == '1') {
+} elseif ($userinfo['type_2fa'] == '1') {
 	// email 2fa enabled
-} elseif (\Froxlor\User::getAll()['type_2fa'] == '2') {
+} elseif ($userinfo['type_2fa'] == '2') {
 	// authenticator 2fa enabled
-	$ga_qrcode = $tfa->getQRCodeImageAsDataUri(\Froxlor\User::getAll()['loginname'], \Froxlor\User::getAll()['data_2fa']);
+	$ga_qrcode = $tfa->getQRCodeImageAsDataUri($userinfo['loginname'], $userinfo['data_2fa']);
 }
 eval("echo \"" . \Froxlor\UI\Template::getTemplate("2fa/overview", true) . "\";");

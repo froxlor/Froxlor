@@ -79,10 +79,10 @@ if ($page == 'overview' || $page == 'customers') {
 		$customer_name_list_stmt = Database::prepare("
 			SELECT `customerid`,`company`,`name`,`firstname`
 			FROM `" . TABLE_PANEL_CUSTOMERS . "`
-			WHERE `deactivated`='0'" . (\Froxlor\User::getAll()['customers_see_all'] ? '' : " AND `adminid` = :id") . "
+			WHERE `deactivated`='0'" . ($userinfo['customers_see_all'] ? '' : " AND `adminid` = :id") . "
 			ORDER BY name");
 		Database::pexecute($customer_name_list_stmt, array(
-			'id' => \Froxlor\User::getAll()['adminid']
+			'id' => $userinfo['adminid']
 		));
 
 		while ($customer_name = $customer_name_list_stmt->fetch(PDO::FETCH_ASSOC)) {

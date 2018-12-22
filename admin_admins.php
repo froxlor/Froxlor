@@ -29,7 +29,7 @@ if (isset($_POST['id'])) {
 	$id = intval($_GET['id']);
 }
 
-if ($page == 'admins' && \Froxlor\User::getAll()['change_serversettings'] == '1') {
+if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
 
 	if ($action == '') {
 
@@ -43,7 +43,7 @@ if ($page == 'admins' && \Froxlor\User::getAll()['change_serversettings'] == '1'
 			'traffic_used' => $lng['customer']['traffic'] . ' (' . $lng['panel']['used'] . ')',
 			'deactivated' => $lng['admin']['deactivated']
 		);
-		$paging = new \Froxlor\UI\Paging(\Froxlor\User::getAll(), TABLE_PANEL_ADMINS, $fields);
+		$paging = new \Froxlor\UI\Paging($userinfo, TABLE_PANEL_ADMINS, $fields);
 		$admins = '';
 		$result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_ADMINS . "` " . $paging->getSqlWhere(false) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
 		$numrows_admins = Database::num_rows();
@@ -108,7 +108,7 @@ if ($page == 'admins' && \Froxlor\User::getAll()['change_serversettings'] == '1'
 	} elseif ($action == 'su') {
 
 		try {
-			$json_result = Admins::getLocal(\Froxlor\User::getAll(), array(
+			$json_result = Admins::getLocal($userinfo, array(
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
@@ -117,12 +117,12 @@ if ($page == 'admins' && \Froxlor\User::getAll()['change_serversettings'] == '1'
 		$result = json_decode($json_result, true)['data'];
 		$destination_admin = $result['loginname'];
 
-		if ($destination_admin != '' && $result['adminid'] != \Froxlor\User::getAll()['userid']) {
+		if ($destination_admin != '' && $result['adminid'] != $userinfo['userid']) {
 			$result_stmt = Database::prepare("
 				SELECT * FROM `" . TABLE_PANEL_SESSIONS . "` WHERE `userid` = :userid
 			");
 			$result = Database::pexecute_first($result_stmt, array(
-				'userid' => \Froxlor\User::getAll()['userid']
+				'userid' => $userinfo['userid']
 			));
 
 			$s = md5(uniqid(microtime(), 1));
@@ -152,7 +152,7 @@ if ($page == 'admins' && \Froxlor\User::getAll()['change_serversettings'] == '1'
 		}
 	} elseif ($action == 'delete' && $id != 0) {
 		try {
-			$json_result = Admins::getLocal(\Froxlor\User::getAll(), array(
+			$json_result = Admins::getLocal($userinfo, array(
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
@@ -161,7 +161,7 @@ if ($page == 'admins' && \Froxlor\User::getAll()['change_serversettings'] == '1'
 		$result = json_decode($json_result, true)['data'];
 
 		if ($result['loginname'] != '') {
-			if ($result['adminid'] == \Froxlor\User::getAll()['userid']) {
+			if ($result['adminid'] == $userinfo['userid']) {
 				\Froxlor\UI\Response::standard_error('youcantdeleteyourself');
 			}
 
@@ -185,7 +185,7 @@ if ($page == 'admins' && \Froxlor\User::getAll()['change_serversettings'] == '1'
 
 		if (isset($_POST['send']) && $_POST['send'] == 'send') {
 			try {
-				Admins::getLocal(\Froxlor\User::getAll(), $_POST)->add();
+				Admins::getLocal($userinfo, $_POST)->add();
 			} catch (Exception $e) {
 				\Froxlor\UI\Response::dynamic_error($e->getMessage());
 			}
@@ -197,7 +197,7 @@ if ($page == 'admins' && \Froxlor\User::getAll()['change_serversettings'] == '1'
 
 			$language_options = '';
 			foreach ($languages as $language_file => $language_name) {
-				$language_options .= \Froxlor\UI\HTML::makeoption($language_name, $language_file, \Froxlor\User::getAll()['language'], true);
+				$language_options .= \Froxlor\UI\HTML::makeoption($language_name, $language_file, $userinfo['language'], true);
 			}
 
 			$ipaddress = \Froxlor\UI\HTML::makeoption($lng['admin']['allips'], "-1");
@@ -231,7 +231,7 @@ if ($page == 'admins' && \Froxlor\User::getAll()['change_serversettings'] == '1'
 		}
 	} elseif ($action == 'edit' && $id != 0) {
 		try {
-			$json_result = Admins::getLocal(\Froxlor\User::getAll(), array(
+			$json_result = Admins::getLocal($userinfo, array(
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
@@ -243,7 +243,7 @@ if ($page == 'admins' && \Froxlor\User::getAll()['change_serversettings'] == '1'
 
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
-					Admins::getLocal(\Froxlor\User::getAll(), $_POST)->update();
+					Admins::getLocal($userinfo, $_POST)->update();
 				} catch (Exception $e) {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}

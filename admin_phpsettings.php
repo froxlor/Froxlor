@@ -34,7 +34,7 @@ if ($page == 'overview') {
 	if ($action == '') {
 
 		try {
-			$json_result = PhpSettings::getLocal(\Froxlor\User::getAll(), array(
+			$json_result = PhpSettings::getLocal($userinfo, array(
 				'with_subdomains' => true
 			))->listing();
 		} catch (Exception $e) {
@@ -67,11 +67,11 @@ if ($page == 'overview') {
 
 	if ($action == 'add') {
 
-		if ((int) \Froxlor\User::getAll()['change_serversettings'] == 1) {
+		if ((int) $userinfo['change_serversettings'] == 1) {
 
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
-					PhpSettings::getLocal(\Froxlor\User::getAll(), $_POST)->add();
+					PhpSettings::getLocal($userinfo, $_POST)->add();
 				} catch (Exception $e) {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
@@ -110,7 +110,7 @@ if ($page == 'overview') {
 	if ($action == 'delete') {
 
 		try {
-			$json_result = PhpSettings::getLocal(\Froxlor\User::getAll(), array(
+			$json_result = PhpSettings::getLocal($userinfo, array(
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
@@ -118,12 +118,12 @@ if ($page == 'overview') {
 		}
 		$result = json_decode($json_result, true)['data'];
 
-		if ($result['id'] != 0 && $result['id'] == $id && (int) \Froxlor\User::getAll()['change_serversettings'] == 1 && $id != 1) // cannot delete the default php.config
+		if ($result['id'] != 0 && $result['id'] == $id && (int) $userinfo['change_serversettings'] == 1 && $id != 1) // cannot delete the default php.config
 		{
 
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
-					PhpSettings::getLocal(\Froxlor\User::getAll(), array(
+					PhpSettings::getLocal($userinfo, array(
 						'id' => $id
 					))->delete();
 				} catch (Exception $e) {
@@ -148,7 +148,7 @@ if ($page == 'overview') {
 	if ($action == 'edit') {
 
 		try {
-			$json_result = PhpSettings::getLocal(\Froxlor\User::getAll(), array(
+			$json_result = PhpSettings::getLocal($userinfo, array(
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
@@ -156,11 +156,11 @@ if ($page == 'overview') {
 		}
 		$result = json_decode($json_result, true)['data'];
 
-		if ($result['id'] != 0 && $result['id'] == $id && (int) \Froxlor\User::getAll()['change_serversettings'] == 1) {
+		if ($result['id'] != 0 && $result['id'] == $id && (int) $userinfo['change_serversettings'] == 1) {
 
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
-					PhpSettings::getLocal(\Froxlor\User::getAll(), $_POST)->update();
+					PhpSettings::getLocal($userinfo, $_POST)->update();
 				} catch (Exception $e) {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
@@ -197,7 +197,7 @@ if ($page == 'overview') {
 	if ($action == '') {
 
 		try {
-			$json_result = FpmDaemons::getLocal(\Froxlor\User::getAll())->listing();
+			$json_result = FpmDaemons::getLocal($userinfo)->listing();
 		} catch (Exception $e) {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
@@ -220,11 +220,11 @@ if ($page == 'overview') {
 
 	if ($action == 'add') {
 
-		if ((int) \Froxlor\User::getAll()['change_serversettings'] == 1) {
+		if ((int) $userinfo['change_serversettings'] == 1) {
 
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
-					FpmDaemons::getLocal(\Froxlor\User::getAll(), $_POST)->add();
+					FpmDaemons::getLocal($userinfo, $_POST)->add();
 				} catch (Exception $e) {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
@@ -254,7 +254,7 @@ if ($page == 'overview') {
 	if ($action == 'delete') {
 
 		try {
-			$json_result = FpmDaemons::getLocal(\Froxlor\User::getAll(), array(
+			$json_result = FpmDaemons::getLocal($userinfo, array(
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
@@ -266,11 +266,11 @@ if ($page == 'overview') {
 			\Froxlor\UI\Response::standard_error('cannotdeletedefaultphpconfig');
 		}
 
-		if ($result['id'] != 0 && $result['id'] == $id && (int) \Froxlor\User::getAll()['change_serversettings'] == 1 && $id != 1) // cannot delete the default php.config
+		if ($result['id'] != 0 && $result['id'] == $id && (int) $userinfo['change_serversettings'] == 1 && $id != 1) // cannot delete the default php.config
 		{
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
-					FpmDaemons::getLocal(\Froxlor\User::getAll(), $_POST)->delete();
+					FpmDaemons::getLocal($userinfo, $_POST)->delete();
 				} catch (Exception $e) {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
@@ -293,7 +293,7 @@ if ($page == 'overview') {
 	if ($action == 'edit') {
 
 		try {
-			$json_result = FpmDaemons::getLocal(\Froxlor\User::getAll(), array(
+			$json_result = FpmDaemons::getLocal($userinfo, array(
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
@@ -301,11 +301,11 @@ if ($page == 'overview') {
 		}
 		$result = json_decode($json_result, true)['data'];
 
-		if ($result['id'] != 0 && $result['id'] == $id && (int) \Froxlor\User::getAll()['change_serversettings'] == 1) {
+		if ($result['id'] != 0 && $result['id'] == $id && (int) $userinfo['change_serversettings'] == 1) {
 
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
-					FpmDaemons::getLocal(\Froxlor\User::getAll(), $_POST)->update();
+					FpmDaemons::getLocal($userinfo, $_POST)->update();
 				} catch (Exception $e) {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}

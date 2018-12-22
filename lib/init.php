@@ -210,10 +210,8 @@ if (isset($s) && $s != "" && $nosession != 1) {
 	);
 	$userinfo_stmt = Database::prepare($query);
 	$userinfo = Database::pexecute_first($userinfo_stmt, $userinfo_data);
-	\Froxlor\User::setUserinfoArray($userinfo);
-	unset($userinfo);
 
-	if (((\Froxlor\User::getAll()['adminsession'] == '1' && AREA == 'admin' && isset(\Froxlor\User::getAll()['adminid'])) || (\Froxlor\User::getAll()['adminsession'] == '0' && (AREA == 'customer' || AREA == 'login') && isset(\Froxlor\User::getAll()['customerid']))) && (! isset(\Froxlor\User::getAll()['deactivated']) || \Froxlor\User::getAll()['deactivated'] != '1')) {
+	if ((($userinfo['adminsession'] == '1' && AREA == 'admin' && isset($userinfo['adminid'])) || ($userinfo['adminsession'] == '0' && (AREA == 'customer' || AREA == 'login') && isset($userinfo['customerid']))) && (! isset($userinfo['deactivated']) || $userinfo['deactivated'] != '1')) {
 		$upd_stmt = Database::prepare("
 			UPDATE `" . TABLE_PANEL_SESSIONS . "` SET
 			`lastactivity` = :lastactive
@@ -264,11 +262,11 @@ foreach ($langs as $key => $value) {
 // ensure that we can display messages
 $language = Settings::Get('panel.standardlanguage');
 
-if (isset(\Froxlor\User::getAll()['language']) && isset($languages[\Froxlor\User::getAll()['language']])) {
+if (isset($userinfo['language']) && isset($languages[$userinfo['language']])) {
 	// default: use language from session, #277
-	$language = \Froxlor\User::getAll()['language'];
+	$language = $userinfo['language'];
 } else {
-	if (! isset(\Froxlor\User::getAll()['def_language']) || ! isset($languages[\Froxlor\User::getAll()['def_language']])) // this will always evaluat true, since it is the above statement inverted. @todo remove
+	if (! isset($userinfo['def_language']) || ! isset($languages[$userinfo['def_language']])) // this will always evaluat true, since it is the above statement inverted. @todo remove
 	{
 		if (isset($_GET['language']) && isset($languages[$_GET['language']])) {
 			$language = $_GET['language'];
@@ -293,7 +291,7 @@ if (isset(\Froxlor\User::getAll()['language']) && isset($languages[\Froxlor\User
 			}
 		}
 	} else {
-		$language = \Froxlor\User::getAll()['def_language'];
+		$language = $userinfo['def_language'];
 	}
 }
 
@@ -312,10 +310,6 @@ if ($language != 'English') {
 // last but not least include language references file
 include_once \Froxlor\FileDir::makeSecurePath('lng/lng_references.php');
 
-// set language array
-\Froxlor\I18N\Lang::setLanguageArray($lng);
-unset($lng);
-
 // Initialize our new link - class
 $linker = new \Froxlor\UI\Linker('index.php', $s);
 
@@ -327,8 +321,8 @@ $theme = (Settings::Get('panel.default_theme') !== null) ? Settings::Get('panel.
 /**
  * overwrite with customer/admin theme if defined
  */
-if (isset(\Froxlor\User::getAll()['theme']) && \Froxlor\User::getAll()['theme'] != $theme) {
-	$theme = \Froxlor\User::getAll()['theme'];
+if (isset($userinfo['theme']) && $userinfo['theme'] != $theme) {
+	$theme = $userinfo['theme'];
 }
 
 // Check if a different variant of the theme is used
@@ -363,7 +357,7 @@ if (file_exists($hl_path . '/logo_custom.png')) {
  * Redirects to index.php (login page) if no session exists
  */
 if ($nosession == 1 && AREA != 'login') {
-	\Froxlor\User::setUserinfoArray(array());
+	unset($userinfo);
 	$params = array(
 		"script" => basename($_SERVER["SCRIPT_NAME"]),
 		"qrystr" => $_SERVER["QUERY_STRING"]
@@ -377,9 +371,13 @@ if ($nosession == 1 && AREA != 'login') {
  */
 $templatecache = array();
 
-if (isset(\Froxlor\User::getAll()['loginname']) && \Froxlor\User::getAll()['loginname'] != '') {
+/**
+ * Logic moved out of lng-file
+ */
+if (isset($userinfo['loginname']) && $userinfo['loginname'] != '') {
+	$lng['menue']['main']['username'] .= $userinfo['loginname'];
 	// Initialize logging
-	$log = \Froxlor\FroxlorLogger::getInstanceOf(\Froxlor\User::getAll());
+	$log = \Froxlor\FroxlorLogger::getInstanceOf($userinfo);
 }
 
 /**
@@ -421,10 +419,10 @@ if (AREA == 'admin' || AREA == 'customer') {
 				)
 			)
 		);
-		$navigation = \Froxlor\UI\HTML::buildNavigation($navigation_data['admin'], \Froxlor\User::getAll());
+		$navigation = \Froxlor\UI\HTML::buildNavigation($navigation_data['admin'], $userinfo);
 	} else {
 		$navigation_data = \Froxlor\PhpHelper::loadConfigArrayDir('lib/navigation/');
-		$navigation = \Froxlor\UI\HTML::buildNavigation($navigation_data[AREA], \Froxlor\User::getAll());
+		$navigation = \Froxlor\UI\HTML::buildNavigation($navigation_data[AREA], $userinfo);
 	}
 	unset($navigation_data);
 }

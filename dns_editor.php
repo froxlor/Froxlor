@@ -34,7 +34,7 @@ $content = isset($_POST['record']['content']) ? trim($_POST['record']['content']
 $ttl = isset($_POST['record']['ttl']) ? (int) $_POST['record']['ttl'] : 18000;
 
 // get domain-name
-$domain = \Froxlor\Dns\Dns::getAllowedDomainEntry($domain_id, AREA, \Froxlor\User::getAll());
+$domain = \Froxlor\Dns\Dns::getAllowedDomainEntry($domain_id, AREA, $userinfo);
 
 // select all entries
 $sel_stmt = Database::prepare("SELECT * FROM `" . TABLE_DOMAIN_DNS . "` WHERE domain_id = :did");
@@ -49,7 +49,7 @@ $success_message = "";
 // action for adding a new entry
 if ($action == 'add_record' && ! empty($_POST)) {
 	try {
-		DomainZones::getLocal(\Froxlor\User::getAll(), array(
+		DomainZones::getLocal($userinfo, array(
 			'id' => $domain_id,
 			'record' => $record,
 			'type' => $type,
@@ -66,7 +66,7 @@ if ($action == 'add_record' && ! empty($_POST)) {
 	$entry_id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 	if ($entry_id > 0) {
 		try {
-			DomainZones::getLocal(\Froxlor\User::getAll(), array(
+			DomainZones::getLocal($userinfo, array(
 				'entry_id' => $entry_id,
 				'id' => $domain_id
 			))->delete();
@@ -122,7 +122,7 @@ foreach ($type_select_values as $_type) {
 eval("\$record_list=\"" . \Froxlor\UI\Template::getTemplate("dns_editor/list", true) . "\";");
 
 try {
-	$json_result = DomainZones::getLocal(\Froxlor\User::getAll(), array(
+	$json_result = DomainZones::getLocal($userinfo, array(
 		'id' => $domain_id
 	))->get();
 } catch (Exception $e) {

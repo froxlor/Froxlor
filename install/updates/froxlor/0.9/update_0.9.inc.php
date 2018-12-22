@@ -17,7 +17,7 @@ use Froxlor\Settings;
  *         
  */
 if (! defined('_CRON_UPDATE')) {
-	if (! defined('AREA') || (defined('AREA') && AREA != 'admin') || ! isset(\Froxlor\User::getAll()['loginname']) || (isset(\Froxlor\User::getAll()['loginname']) && \Froxlor\User::getAll()['loginname'] == '')) {
+	if (! defined('AREA') || (defined('AREA') && AREA != 'admin') || ! isset($userinfo['loginname']) || (isset($userinfo['loginname']) && $userinfo['loginname'] == '')) {
 		header('Location: ../../../../index.php');
 		exit();
 	}
@@ -1091,7 +1091,7 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.9.12')) {
 
 	showUpdateStep("Setting default amount of autoresponders");
 	// admin gets unlimited
-	Database::query("UPDATE `" . TABLE_PANEL_ADMINS . "` SET `email_autoresponder`='-1' WHERE `adminid` = '" . (int) \Froxlor\User::getAll()['adminid'] . "'");
+	Database::query("UPDATE `" . TABLE_PANEL_ADMINS . "` SET `email_autoresponder`='-1' WHERE `adminid` = '" . (int) $userinfo['adminid'] . "'");
 	// customers
 	Database::query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `email_autoresponder`='" . (int) $update_autoresponder_default . "' WHERE `deactivated` = '0'");
 	lastStepStatus(0);
@@ -2151,7 +2151,7 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.9.28-svn5')) {
 		`tickets_see_all` = '1'
 		WHERE `adminid` = :adminid");
 	Database::pexecute($stmt, array(
-		'adminid' => \Froxlor\User::getAll()['adminid']
+		'adminid' => $userinfo['adminid']
 	));
 	lastStepStatus(0);
 
