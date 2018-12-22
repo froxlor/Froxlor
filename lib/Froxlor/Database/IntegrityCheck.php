@@ -35,13 +35,12 @@ class IntegrityCheck
 	 */
 	public function __construct()
 	{
-		$userinfo = \Froxlor\User::getAll();
-		if (! empty($userinfo)) {
-			$userinfo = array(
+		if (! empty(\Froxlor\User::getAll())) {
+			\Froxlor\User::getAll() = array(
 				'loginname' => 'integrity-check'
 			);
 		}
-		$this->_log = \Froxlor\FroxlorLogger::getInstanceOf($userinfo);
+		$this->_log = \Froxlor\FroxlorLogger::getInstanceOf(\Froxlor\User::getAll());
 		$this->available = get_class_methods($this);
 		unset($this->available[array_search('__construct', $this->available)]);
 		unset($this->available[array_search('checkAll', $this->available)]);
