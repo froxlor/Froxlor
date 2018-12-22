@@ -4,7 +4,7 @@ namespace Froxlor\UI;
 class Data
 {
 
-	public static function getFormFieldDataText($fieldname, $fielddata, &$input)
+	public static function getFormFieldDataText($fieldname, $fielddata, $input)
 	{
 		if (isset($input[$fieldname])) {
 			$newfieldvalue = str_replace("\r\n", "\n", $input[$fieldname]);
@@ -15,7 +15,7 @@ class Data
 		return $newfieldvalue;
 	}
 
-	public static function getFormFieldDataOption($fieldname, $fielddata, &$input)
+	public static function getFormFieldDataOption($fieldname, $fielddata, $input)
 	{
 		if (isset($input[$fieldname])) {
 			$newfieldvalue = $input[$fieldname];
@@ -30,7 +30,7 @@ class Data
 		return $newfieldvalue;
 	}
 
-	public static function getFormFieldDataInt($fieldname, $fielddata, &$input)
+	public static function getFormFieldDataInt($fieldname, $fielddata, $input)
 	{
 		if (isset($input[$fieldname])) {
 			$newfieldvalue = (int) $input[$fieldname];
@@ -41,7 +41,7 @@ class Data
 		return $newfieldvalue;
 	}
 
-	public static function getFormFieldDataBool($fieldname, $fielddata, &$input)
+	public static function getFormFieldDataBool($fieldname, $fielddata, $input)
 	{
 		if (isset($input[$fieldname]) && ($input[$fieldname] === '1' || $input[$fieldname] === 1 || $input[$fieldname] === true || strtolower($input[$fieldname]) === 'yes' || strtolower($input[$fieldname]) === 'ja')) {
 			$newfieldvalue = '1';

@@ -19,7 +19,7 @@ class Form
 				if (\Froxlor\Validate\Form::validateFieldDefinition($groupdetails)) {
 					// Prefetch form fields
 					foreach ($groupdetails['fields'] as $fieldname => $fielddetails) {
-						$groupdetails['fields'][$fieldname] = self::array_merge_prefix($fielddetails, $fielddetails['type'], prefetchFormFieldData($fieldname, $fielddetails));
+						$groupdetails['fields'][$fieldname] = self::array_merge_prefix($fielddetails, $fielddetails['type'], self::prefetchFormFieldData($fieldname, $fielddetails));
 						$form['groups'][$groupname]['fields'][$fieldname] = $groupdetails['fields'][$fieldname];
 					}
 
@@ -281,7 +281,7 @@ class Form
 						foreach ($groupdetails['fields'] as $fieldname => $fielddetails) {
 							if (! $only_enabledisable || ($only_enabledisable && isset($fielddetails['overview_option']))) {
 								if (isset($changed_fields[$fieldname])) {
-									if (($saved_field = self::saveFormField($fieldname, $fielddetails, manipulateFormFieldData($fieldname, $fielddetails, $changed_fields[$fieldname]))) !== false) {
+									if (($saved_field = self::saveFormField($fieldname, $fielddetails, self::manipulateFormFieldData($fieldname, $fielddetails, $changed_fields[$fieldname]))) !== false) {
 										$saved_fields = array_merge($saved_fields, $saved_field);
 									} else {
 										\Froxlor\UI\Response::standard_error('errorwhensaving', $fieldname);
@@ -294,7 +294,7 @@ class Form
 			}
 
 			// Save form
-			return saveForm($form, $saved_fields);
+			return self::saveForm($form, $saved_fields);
 		}
 	}
 
@@ -468,8 +468,10 @@ class Form
 	public static function getFormFieldData($fieldname, $fielddata, &$input)
 	{
 		if (is_array($fielddata) && isset($fielddata['type']) && $fielddata['type'] != '' && method_exists('\\Froxlor\\UI\\Data', 'getFormFieldData' . ucfirst($fielddata['type']))) {
-			$gfdFunc = '\\Froxlor\\UI\\Data::getFormFieldData' . ucfirst($fielddata['type']);
-			$newfieldvalue = $gfdFunc($fieldname, $fielddata, $input);
+			$newfieldvalue = call_user_func(array(
+				'\\Froxlor\\UI\\Data',
+				'getFormFieldData' . ucfirst($fielddata['type'])
+			), $fieldname, $fielddata, $input);
 		} else {
 			if (isset($input[$fieldname])) {
 				$newfieldvalue = $input[$fieldname];
