@@ -12,14 +12,14 @@ $header
 
 		<if $successmessage != ''>
 			<div class="successcontainer bradius">
-				<div class="successtitle">{\Froxlor\I18N\Lang::getAll()['success']['success']}</div>
+				<div class="successtitle">{$lng['success']['success']}</div>
 				<div class="success">$successmessage</div>
 			</div>
 		</if>
 
 		<if $message != ''>
 			<div class="errorcontainer bradius">
-				<div class="errortitle">{\Froxlor\I18N\Lang::getAll()['error']['error']}</div>
+				<div class="errortitle">{$lng['error']['error']}</div>
 				<div class="error">$message</div>
 			</div>
 		</if>
@@ -31,27 +31,27 @@ $header
 				<fieldset>
 				<legend>Froxlor&nbsp;-&nbsp;Login</legend>
 				<p>
-					<label for="loginname">{\Froxlor\I18N\Lang::getAll()['login']['username']}:</label>&nbsp;
+					<label for="loginname">{$lng['login']['username']}:</label>&nbsp;
 					<input type="text" name="loginname" id="loginname" value="" required/>
 				</p>
 				<p>
-					<label for="password">{\Froxlor\I18N\Lang::getAll()['login']['password']}:</label>&nbsp;
+					<label for="password">{$lng['login']['password']}:</label>&nbsp;
 					<input type="password" name="password" id="password" required/>
 				</p>
 				<p>
-					<label for="language">{\Froxlor\I18N\Lang::getAll()['login']['language']}:</label>&nbsp;
+					<label for="language">{$lng['login']['language']}:</label>&nbsp;
 					<select name="language" id="language">$language_options</select>
 				</p>
 				<p class="submit">
 					<input type="hidden" name="send" value="send" />
-					<input type="submit" value="{\Froxlor\I18N\Lang::getAll()['login']['login']}" />
+					<input type="submit" value="{$lng['login']['login']}" />
 				</p>
 				</fieldset>
 			</form>
 
 			<aside>
 				<if \Froxlor\Settings::Get('panel.allow_preset') == '1'>
-					<a href="$filename?action=forgotpwd">{\Froxlor\I18N\Lang::getAll()['login']['forgotpwd']}</a>
+					<a href="$filename?action=forgotpwd">{$lng['login']['forgotpwd']}</a>
 				<else>
 					&nbsp;
 				</if>

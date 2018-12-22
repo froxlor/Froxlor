@@ -19,10 +19,10 @@
 return array(
 	'groups' => array(
 		'system' => array(
-			'title' => \Froxlor\I18N\Lang::getAll()['admin']['systemsettings'],
+			'title' => $lng['admin']['systemsettings'],
 			'fields' => array(
 				'system_documentroot_prefix' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['documentroot_prefix'],
+					'label' => $lng['serversettings']['documentroot_prefix'],
 					'settinggroup' => 'system',
 					'varname' => 'documentroot_prefix',
 					'type' => 'string',
@@ -35,7 +35,7 @@ return array(
 					)
 				),
 				'system_documentroot_use_default_value' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['documentroot_use_default_value'],
+					'label' => $lng['serversettings']['documentroot_use_default_value'],
 					'settinggroup' => 'system',
 					'varname' => 'documentroot_use_default_value',
 					'type' => 'bool',
@@ -43,7 +43,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_ipaddress' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['ipaddress'],
+					'label' => $lng['serversettings']['ipaddress'],
 					'settinggroup' => 'system',
 					'varname' => 'ipaddress',
 					'type' => 'option',
@@ -56,7 +56,7 @@ return array(
 					'save_method' => 'storeSettingIpAddress'
 				),
 				'system_defaultip' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['defaultip'],
+					'label' => $lng['serversettings']['defaultip'],
 					'settinggroup' => 'system',
 					'varname' => 'defaultip',
 					'type' => 'option',
@@ -69,7 +69,7 @@ return array(
 					'save_method' => 'storeSettingDefaultIp'
 				),
 				'system_defaultsslip' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['defaultsslip'],
+					'label' => $lng['serversettings']['defaultsslip'],
 					'settinggroup' => 'system',
 					'varname' => 'defaultsslip',
 					'type' => 'option',
@@ -82,7 +82,7 @@ return array(
 					'save_method' => 'storeSettingDefaultSslIp'
 				),
 				'system_hostname' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['hostname'],
+					'label' => $lng['serversettings']['hostname'],
 					'settinggroup' => 'system',
 					'varname' => 'hostname',
 					'type' => 'string',
@@ -94,7 +94,7 @@ return array(
 					)
 				),
 				'api_enabled' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['enable_api'],
+					'label' => $lng['serversettings']['enable_api'],
 					'settinggroup' => 'api',
 					'varname' => 'enabled',
 					'type' => 'bool',
@@ -102,7 +102,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_validatedomain' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['validate_domain'],
+					'label' => $lng['serversettings']['validate_domain'],
 					'settinggroup' => 'system',
 					'varname' => 'validate_domain',
 					'type' => 'bool',
@@ -110,7 +110,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_stdsubdomain' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['stdsubdomainhost'],
+					'label' => $lng['serversettings']['stdsubdomainhost'],
 					'settinggroup' => 'system',
 					'varname' => 'stdsubdomain',
 					'type' => 'string',
@@ -118,7 +118,7 @@ return array(
 					'save_method' => 'storeSettingHostname'
 				),
 				'system_mysql_access_host' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['mysql_access_host'],
+					'label' => $lng['serversettings']['mysql_access_host'],
 					'settinggroup' => 'system',
 					'varname' => 'mysql_access_host',
 					'type' => 'string',
@@ -130,7 +130,7 @@ return array(
 					'save_method' => 'storeSettingMysqlAccessHost'
 				),
 				'system_nssextrausers' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['nssextrausers'],
+					'label' => $lng['serversettings']['nssextrausers'],
 					'settinggroup' => 'system',
 					'varname' => 'nssextrausers',
 					'type' => 'bool',
@@ -138,7 +138,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_index_file_extension' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['index_file_extension'],
+					'label' => $lng['serversettings']['index_file_extension'],
 					'settinggroup' => 'system',
 					'varname' => 'index_file_extension',
 					'type' => 'string',
@@ -147,7 +147,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_store_index_file_subs' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['system_store_index_file_subs'],
+					'label' => $lng['serversettings']['system_store_index_file_subs'],
 					'settinggroup' => 'system',
 					'varname' => 'store_index_file_subs',
 					'type' => 'bool',
@@ -167,7 +167,7 @@ return array(
 					'default' => 'www-data'
 				),
 				'system_report_enable' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['report']['report'],
+					'label' => $lng['serversettings']['report']['report'],
 					'settinggroup' => 'system',
 					'varname' => 'report_enable',
 					'type' => 'bool',
@@ -176,7 +176,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_report_webmax' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['report']['webmax'],
+					'label' => $lng['serversettings']['report']['webmax'],
 					'settinggroup' => 'system',
 					'varname' => 'report_webmax',
 					'type' => 'int',
@@ -186,7 +186,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_report_trafficmax' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['report']['trafficmax'],
+					'label' => $lng['serversettings']['report']['trafficmax'],
 					'settinggroup' => 'system',
 					'varname' => 'report_trafficmax',
 					'type' => 'int',
@@ -197,7 +197,7 @@ return array(
 				),
 
 				'system_mail_use_smtp' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['mail_use_smtp'],
+					'label' => $lng['serversettings']['mail_use_smtp'],
 					'settinggroup' => 'system',
 					'varname' => 'mail_use_smtp',
 					'type' => 'bool',
@@ -205,7 +205,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_mail_smtp_host' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['mail_smtp_host'],
+					'label' => $lng['serversettings']['mail_smtp_host'],
 					'settinggroup' => 'system',
 					'varname' => 'mail_smtp_host',
 					'type' => 'string',
@@ -213,7 +213,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_mail_smtp_port' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['mail_smtp_port'],
+					'label' => $lng['serversettings']['mail_smtp_port'],
 					'settinggroup' => 'system',
 					'varname' => 'mail_smtp_port',
 					'type' => 'int',
@@ -223,7 +223,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_mail_smtp_usetls' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['mail_smtp_usetls'],
+					'label' => $lng['serversettings']['mail_smtp_usetls'],
 					'settinggroup' => 'system',
 					'varname' => 'mail_smtp_usetls',
 					'type' => 'bool',
@@ -231,7 +231,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_mail_smtp_auth' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['mail_smtp_auth'],
+					'label' => $lng['serversettings']['mail_smtp_auth'],
 					'settinggroup' => 'system',
 					'varname' => 'mail_smtp_auth',
 					'type' => 'bool',
@@ -239,7 +239,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_mail_smtp_user' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['mail_smtp_user'],
+					'label' => $lng['serversettings']['mail_smtp_user'],
 					'settinggroup' => 'system',
 					'varname' => 'mail_smtp_user',
 					'type' => 'string',
@@ -247,7 +247,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_mail_smtp_passwd' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['mail_smtp_passwd'],
+					'label' => $lng['serversettings']['mail_smtp_passwd'],
 					'settinggroup' => 'system',
 					'varname' => 'mail_smtp_passwd',
 					'type' => 'hiddenString',

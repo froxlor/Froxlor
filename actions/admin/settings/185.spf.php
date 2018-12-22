@@ -17,10 +17,10 @@
 return array(
 	'groups' => array(
 		'spf' => array(
-			'title' => \Froxlor\I18N\Lang::getAll()['admin']['spfsettings'],
+			'title' => $lng['admin']['spfsettings'],
 			'fields' => array(
 				'spf_enabled' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['spf']['use_spf'],
+					'label' => $lng['spf']['use_spf'],
 					'settinggroup' => 'spf',
 					'varname' => 'use_spf',
 					'type' => 'bool',
@@ -29,7 +29,7 @@ return array(
 					'overview_option' => true
 				),
 				'spf_entry' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['spf']['spf_entry'],
+					'label' => $lng['spf']['spf_entry'],
 					'settinggroup' => 'spf',
 					'varname' => 'spf_entry',
 					'type' => 'string',

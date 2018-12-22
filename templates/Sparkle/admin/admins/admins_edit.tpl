@@ -8,7 +8,7 @@ $header
 
 		<if $result['adminid'] == \Froxlor\User::getAll()['userid']>
 			<div class="warningcontainer bradius">
-				<div class="warning">{\Froxlor\I18N\Lang::getAll()['error']['youcanteditallfieldsofyourself']}</div>
+				<div class="warning">{$lng['error']['youcanteditallfieldsofyourself']}</div>
 			</div>
 		</if>
 
@@ -33,7 +33,7 @@ $header
 	<article>
 		<section>
 			<p>
-				<span class="red">*</span>: {\Froxlor\I18N\Lang::getAll()['admin']['valuemandatory']}
+				<span class="red">*</span>: {$lng['admin']['valuemandatory']}
 			</p>
 		</section>
 	</article>

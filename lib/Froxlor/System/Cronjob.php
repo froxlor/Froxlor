@@ -188,18 +188,20 @@ class Cronjob
 
 	public static function getCronjobsLastRun()
 	{
+		global $lng;
+
 		$query = "SELECT `lastrun`, `desc_lng_key` FROM `" . TABLE_PANEL_CRONRUNS . "` WHERE `isactive` = '1' ORDER BY `cronfile` ASC";
 		$result = Database::query($query);
 
 		$cronjobs_last_run = '';
 		while ($row = $result->fetch(\PDO::FETCH_ASSOC)) {
 
-			$lastrun = \Froxlor\I18N\Lang::getAll()['cronjobs']['notyetrun'];
+			$lastrun = $lng['cronjobs']['notyetrun'];
 			if ($row['lastrun'] > 0) {
 				$lastrun = date('d.m.Y H:i:s', $row['lastrun']);
 			}
 
-			$text = \Froxlor\I18N\Lang::getAll()['crondesc'][$row['desc_lng_key']];
+			$text = $lng['crondesc'][$row['desc_lng_key']];
 			$value = $lastrun;
 
 			eval("\$cronjobs_last_run .= \"" . \Froxlor\UI\Template::getTemplate("index/overview_item") . "\";");
@@ -224,6 +226,8 @@ class Cronjob
 
 	public static function getOutstandingTasks()
 	{
+		global $lng;
+
 		$query = "SELECT * FROM `" . TABLE_PANEL_TASKS . "` ORDER BY `type` ASC";
 		$result = Database::query($query);
 
@@ -237,49 +241,49 @@ class Cronjob
 
 			// rebuilding webserver-configuration
 			if ($row['type'] == '1') {
-				$task_desc = \Froxlor\I18N\Lang::getAll()['tasks']['rebuild_webserverconfig'];
+				$task_desc = $lng['tasks']['rebuild_webserverconfig'];
 			} // adding new user/
 			elseif ($row['type'] == '2') {
 				$loginname = '';
 				if (is_array($row['data'])) {
 					$loginname = $row['data']['loginname'];
 				}
-				$task_desc = \Froxlor\I18N\Lang::getAll()['tasks']['adding_customer'];
+				$task_desc = $lng['tasks']['adding_customer'];
 				$task_desc = str_replace('%loginname%', $loginname, $task_desc);
 			} // rebuilding bind-configuration
 			elseif ($row['type'] == '4') {
-				$task_desc = \Froxlor\I18N\Lang::getAll()['tasks']['rebuild_bindconfig'];
+				$task_desc = $lng['tasks']['rebuild_bindconfig'];
 			} // creating ftp-user directory
 			elseif ($row['type'] == '5') {
-				$task_desc = \Froxlor\I18N\Lang::getAll()['tasks']['creating_ftpdir'];
+				$task_desc = $lng['tasks']['creating_ftpdir'];
 			} // deleting user-files
 			elseif ($row['type'] == '6') {
 				$loginname = '';
 				if (is_array($row['data'])) {
 					$loginname = $row['data']['loginname'];
 				}
-				$task_desc = \Froxlor\I18N\Lang::getAll()['tasks']['deleting_customerfiles'];
+				$task_desc = $lng['tasks']['deleting_customerfiles'];
 				$task_desc = str_replace('%loginname%', $loginname, $task_desc);
 			} // deleting email-account
 			elseif ($row['type'] == '7') {
-				$task_desc = \Froxlor\I18N\Lang::getAll()['tasks']['remove_emailacc_files'];
+				$task_desc = $lng['tasks']['remove_emailacc_files'];
 			} // deleting ftp-account
 			elseif ($row['type'] == '8') {
-				$task_desc = \Froxlor\I18N\Lang::getAll()['tasks']['remove_ftpacc_files'];
+				$task_desc = $lng['tasks']['remove_ftpacc_files'];
 			} // Set FS - quota
 			elseif ($row['type'] == '10') {
-				$task_desc = \Froxlor\I18N\Lang::getAll()['tasks']['diskspace_set_quota'];
+				$task_desc = $lng['tasks']['diskspace_set_quota'];
 			} // deleting user-files
 			elseif ($row['type'] == '20') {
 				$loginname = '';
 				if (is_array($row['data'])) {
 					$loginname = $row['data']['loginname'];
 				}
-				$task_desc = \Froxlor\I18N\Lang::getAll()['tasks']['backup_customerfiles'];
+				$task_desc = $lng['tasks']['backup_customerfiles'];
 				$task_desc = str_replace('%loginname%', $loginname, $task_desc);
 			} // re-generating of cron.d-file
 			elseif ($row['type'] == '99') {
-				$task_desc = \Froxlor\I18N\Lang::getAll()['tasks']['regenerating_crond'];
+				$task_desc = $lng['tasks']['regenerating_crond'];
 			} // unknown
 			else {
 				$task_desc = "ERROR: Unknown task type '" . $row['type'] . "'";
@@ -291,13 +295,13 @@ class Cronjob
 		}
 
 		if (trim($tasks) == '') {
-			$value .= '<li>' . \Froxlor\I18N\Lang::getAll()['tasks']['noneoutstanding'] . '</li>';
+			$value .= '<li>' . $lng['tasks']['noneoutstanding'] . '</li>';
 		} else {
 			$value .= $tasks;
 		}
 
 		$value .= '</ul>';
-		$text = \Froxlor\I18N\Lang::getAll()['tasks']['outstanding_tasks'];
+		$text = $lng['tasks']['outstanding_tasks'];
 		eval("\$outstanding_tasks = \"" . \Froxlor\UI\Template::getTemplate("index/overview_item") . "\";");
 
 		return $outstanding_tasks;

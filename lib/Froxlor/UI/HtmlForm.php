@@ -29,7 +29,7 @@ class HtmlForm
 
 	public static function genHTMLForm($data = array())
 	{
-		global $theme;
+		global $lng, $theme;
 		$nob = false;
 
 		self::$_form = '';
@@ -233,7 +233,7 @@ class HtmlForm
 	 *
 	 * <code>
 	 * $data = array(
-	 * 'label' => \Froxlor\I18N\Lang::getAll()['customer']['email_imap'],
+	 * 'label' => $lng['customer']['email_imap'],
 	 * 'type' => 'checkbox',
 	 * 'values' => array(
 	 * array( 'label' => 'active',

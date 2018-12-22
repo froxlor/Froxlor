@@ -17,7 +17,7 @@ $header
 				{$email_edit_form}
 				<tfoot>
 					<tr>
-						<td colspan="2"><a href="{$linker->getLink(array('section' => 'email', 'page' => 'emails'))}">{\Froxlor\I18N\Lang::getAll()['emails']['back_to_overview']}</a></td>
+						<td colspan="2"><a href="{$linker->getLink(array('section' => 'email', 'page' => 'emails'))}">{$lng['emails']['back_to_overview']}</a></td>
 					</tr>
 				</tfoot>
 			</table>

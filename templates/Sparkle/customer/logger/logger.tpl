@@ -3,7 +3,7 @@ $header
 		<header>
 			<h2>
 				<img src="templates/{$theme}/assets/img/icons/syslog_big.png" alt="" />&nbsp;
-				{\Froxlor\I18N\Lang::getAll()['menue']['logger']['logger']}
+				{$lng['menue']['logger']['logger']}
 			</h2>
 		</header>
 
@@ -25,9 +25,9 @@ $header
 				<table class="full hl">
 					<thead>
 						<tr>
-							<th>{\Froxlor\I18N\Lang::getAll()['logger']['date']}&nbsp;{$arrowcode['date']}</th>
-							<th>{\Froxlor\I18N\Lang::getAll()['logger']['type']}&nbsp;{$arrowcode['type']}</th>
-							<th>{\Froxlor\I18N\Lang::getAll()['logger']['action']}</th>
+							<th>{$lng['logger']['date']}&nbsp;{$arrowcode['date']}</th>
+							<th>{$lng['logger']['type']}&nbsp;{$arrowcode['type']}</th>
+							<th>{$lng['logger']['action']}</th>
 						</tr>
 					</thead>
 					<tbody>

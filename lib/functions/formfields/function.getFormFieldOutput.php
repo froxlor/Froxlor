@@ -18,6 +18,8 @@
  */
 function getFormFieldOutput($fieldname, $fielddata)
 {
+	global $lng;
+
 	$returnvalue = '';
 	if (is_array($fielddata) && isset($fielddata['type']) && $fielddata['type'] != '' && function_exists('getFormFieldOutput' . ucfirst($fielddata['type']))) {
 		if (isset($fielddata['label']) && is_array($fielddata['label'])) {
@@ -47,7 +49,7 @@ function getFormFieldOutput($fieldname, $fielddata)
 			$websrv = Settings::Get('system.webserver');
 			if (! in_array($websrv, $fielddata['websrv_avail'])) {
 				$do_show = false;
-				$fielddata['label'] .= sprintf(\Froxlor\I18N\Lang::getAll()['serversettings']['option_unavailable_websrv'], implode(", ", $fielddata['websrv_avail']));
+				$fielddata['label'] .= sprintf($lng['serversettings']['option_unavailable_websrv'], implode(", ", $fielddata['websrv_avail']));
 			}
 		}
 
@@ -57,7 +59,7 @@ function getFormFieldOutput($fieldname, $fielddata)
 		if (isset($fielddata['visible']) && $do_show) {
 			$do_show = $fielddata['visible'];
 			if (! $do_show) {
-				$fielddata['label'] .= \Froxlor\I18N\Lang::getAll()['serversettings']['option_unavailable'];
+				$fielddata['label'] .= $lng['serversettings']['option_unavailable'];
 			}
 		}
 

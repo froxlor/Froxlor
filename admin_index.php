@@ -103,7 +103,7 @@ if ($page == 'overview') {
 		$lookfornewversion_addinfo = $result['additional_info'];
 		$isnewerversion = $result['isnewerversion'];
 	} else {
-		$lookfornewversion_lable = \Froxlor\I18N\Lang::getAll()['admin']['lookfornewversion']['clickhere'];
+		$lookfornewversion_lable = $lng['admin']['lookfornewversion']['clickhere'];
 		$lookfornewversion_link = htmlspecialchars($filename . '?s=' . urlencode($s) . '&page=' . urlencode($page) . '&lookfornewversion=yes');
 		$lookfornewversion_message = '';
 		$lookfornewversion_addinfo = '';
@@ -115,7 +115,7 @@ if ($page == 'overview') {
 	\Froxlor\User::getAll()['diskspace_used'] = round(\Froxlor\User::getAll()['diskspace_used'] / 1024, $dec_places);
 	\Froxlor\User::getAll()['traffic'] = round(\Froxlor\User::getAll()['traffic'] / (1024 * 1024), $dec_places);
 	\Froxlor\User::getAll()['traffic_used'] = round(\Froxlor\User::getAll()['traffic_used'] / (1024 * 1024), $dec_places);
-	\Froxlor\User::getAll() = \Froxlor\PhpHelper::str_replace_array('-1', \Froxlor\I18N\Lang::getAll()['customer']['unlimited'], \Froxlor\User::getAll(), 'customers domains diskspace traffic mysqls emails email_accounts email_forwarders email_quota ftps subdomains');
+	\Froxlor\User::getAll() = \Froxlor\PhpHelper::str_replace_array('-1', $lng['customer']['unlimited'], \Froxlor\User::getAll(), 'customers domains diskspace traffic mysqls emails email_accounts email_forwarders email_quota ftps subdomains');
 
 	\Froxlor\User::getAll()['custom_notes'] = (\Froxlor\User::getAll()['custom_notes'] != '') ? nl2br(\Froxlor\User::getAll()['custom_notes']) : '';
 
@@ -138,7 +138,7 @@ if ($page == 'overview') {
 		$load = @file_get_contents('/proc/loadavg');
 
 		if (! $load) {
-			$load = \Froxlor\I18N\Lang::getAll()['admin']['noloadavailable'];
+			$load = $lng['admin']['noloadavailable'];
 		}
 	}
 

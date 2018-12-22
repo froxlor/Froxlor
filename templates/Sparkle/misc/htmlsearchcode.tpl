@@ -1,4 +1,4 @@
-{\Froxlor\I18N\Lang::getAll()['panel']['search']}:&nbsp;
+{$lng['panel']['search']}:&nbsp;
 <select name="searchfield">
 {$fieldoptions}
 </select>&nbsp;

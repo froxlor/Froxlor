@@ -16,20 +16,20 @@
  */
 return array(
 	'emails_addforwarder' => array(
-		'title' => \Froxlor\I18N\Lang::getAll()['emails']['forwarder_add'],
+		'title' => $lng['emails']['forwarder_add'],
 		'image' => 'icons/autoresponder_add.png',
 		'sections' => array(
 			'section_a' => array(
-				'title' => \Froxlor\I18N\Lang::getAll()['emails']['forwarder_add'],
+				'title' => $lng['emails']['forwarder_add'],
 				'image' => 'icons/autoresponder_add.png',
 				'fields' => array(
 					'email_full' => array(
-						'label' => \Froxlor\I18N\Lang::getAll()['emails']['from'],
+						'label' => $lng['emails']['from'],
 						'type' => 'label',
 						'value' => $result['email_full']
 					),
 					'destination' => array(
-						'label' => \Froxlor\I18N\Lang::getAll()['emails']['to'],
+						'label' => $lng['emails']['to'],
 						'type' => 'text'
 					)
 				)

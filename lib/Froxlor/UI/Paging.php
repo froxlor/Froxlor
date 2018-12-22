@@ -405,8 +405,8 @@ class Paging
 
 		$breakorws = ($break ? '<br />' : '&nbsp;');
 		foreach (array(
-			'asc' => \Froxlor\I18N\Lang::getAll()['panel']['ascending'],
-			'desc' => \Froxlor\I18N\Lang::getAll()['panel']['descending']
+			'asc' => $lng['panel']['ascending'],
+			'desc' => $lng['panel']['descending']
 		) as $sortordertype => $sortorderdescription) {
 			$orderoptions .= HTML::makeoption($sortorderdescription, $sortordertype, $this->sortorder, true, true);
 		}

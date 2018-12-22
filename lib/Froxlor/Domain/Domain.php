@@ -35,6 +35,8 @@ class Domain
 	 */
 	public static function getRedirectCodes($add_desc = true)
 	{
+		global $lng;
+
 		$sql = "SELECT * FROM `" . TABLE_PANEL_REDIRECTCODES . "` WHERE `enabled` = '1' ORDER BY `id` ASC";
 		$result_stmt = Database::query($sql);
 
@@ -42,7 +44,7 @@ class Domain
 		while ($rc = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$codes[$rc['id']] = $rc['code'];
 			if ($add_desc) {
-				$codes[$rc['id']] .= ' (' . \Froxlor\I18N\Lang::getAll()['redirect_desc'][$rc['desc']] . ')';
+				$codes[$rc['id']] .= ' (' . $lng['redirect_desc'][$rc['desc']] . ')';
 			}
 		}
 

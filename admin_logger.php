@@ -24,10 +24,10 @@ use Froxlor\Database\Database;
 if ($page == 'log' && \Froxlor\User::getAll()['change_serversettings'] == '1') {
 	if ($action == '') {
 		$fields = array(
-			'date' => \Froxlor\I18N\Lang::getAll()['logger']['date'],
-			'type' => \Froxlor\I18N\Lang::getAll()['logger']['type'],
-			'user' => \Froxlor\I18N\Lang::getAll()['logger']['user'],
-			'text' => \Froxlor\I18N\Lang::getAll()['logger']['action']
+			'date' => $lng['logger']['date'],
+			'type' => $lng['logger']['type'],
+			'user' => $lng['logger']['user'],
+			'text' => $lng['logger']['action']
 		);
 		$paging = new \Froxlor\UI\Paging(\Froxlor\User::getAll(), TABLE_PANEL_LOG, $fields, null, null, 0, 'desc', 30);
 		$query = 'SELECT * FROM `' . TABLE_PANEL_LOG . '` ' . $paging->getSqlWhere(false) . ' ' . $paging->getSqlOrderBy();
@@ -69,25 +69,25 @@ if ($page == 'log' && \Froxlor\User::getAll()['change_serversettings'] == '1') {
 				if ($_action != $action) {
 					switch ($action) {
 						case USR_ACTION:
-							$_action = \Froxlor\I18N\Lang::getAll()['admin']['customer'];
+							$_action = $lng['admin']['customer'];
 							break;
 						case RES_ACTION:
-							$_action = \Froxlor\I18N\Lang::getAll()['logger']['reseller'];
+							$_action = $lng['logger']['reseller'];
 							break;
 						case ADM_ACTION:
-							$_action = \Froxlor\I18N\Lang::getAll()['logger']['admin'];
+							$_action = $lng['logger']['admin'];
 							break;
 						case CRON_ACTION:
-							$_action = \Froxlor\I18N\Lang::getAll()['logger']['cron'];
+							$_action = $lng['logger']['cron'];
 							break;
 						case LOGIN_ACTION:
-							$_action = \Froxlor\I18N\Lang::getAll()['logger']['login'];
+							$_action = $lng['logger']['login'];
 							break;
 						case LOG_ERROR:
-							$_action = \Froxlor\I18N\Lang::getAll()['logger']['intern'];
+							$_action = $lng['logger']['intern'];
 							break;
 						default:
-							$_action = \Froxlor\I18N\Lang::getAll()['logger']['unknown'];
+							$_action = $lng['logger']['unknown'];
 							break;
 					}
 

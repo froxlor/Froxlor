@@ -73,8 +73,9 @@ class IpAddr
 
 	public static function getSslIpPortCombinations()
 	{
+		global $lng;
 		return array(
-			'' => \Froxlor\I18N\Lang::getAll()['panel']['none_value']
+			'' => $lng['panel']['none_value']
 		) + self::getIpPortCombinations(true);
 	}
 }

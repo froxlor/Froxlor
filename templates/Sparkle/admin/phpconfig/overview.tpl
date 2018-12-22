@@ -3,7 +3,7 @@ $header
 	<header>
 		<h2>
 			<img src="templates/{$theme}/assets/img/icons/phpsettings_big.png"
-				alt="" />&nbsp; {\Froxlor\I18N\Lang::getAll()['menue']['phpsettings']['maintitle']}
+				alt="" />&nbsp; {$lng['menue']['phpsettings']['maintitle']}
 		</h2>
 	</header>
 
@@ -12,20 +12,20 @@ $header
 		<div class="overviewadd">
 			<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />&nbsp;
 			<a
-				href="{$linker->getLink(array('section' => 'phpsettings', 'page' => $page, 'action' => 'add'))}">{\Froxlor\I18N\Lang::getAll()['admin']['phpsettings']['addnew']}</a>
+				href="{$linker->getLink(array('section' => 'phpsettings', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['phpsettings']['addnew']}</a>
 		</div>
 
 		<table class="full hl">
 			<thead>
 				<tr>
-					<th>{\Froxlor\I18N\Lang::getAll()['admin']['phpsettings']['description']}</th>
-					<th>{\Froxlor\I18N\Lang::getAll()['admin']['phpsettings']['activedomains']}</th>
+					<th>{$lng['admin']['phpsettings']['description']}</th>
+					<th>{$lng['admin']['phpsettings']['activedomains']}</th>
 					<if \Froxlor\Settings::Get('phpfpm.enabled') == '1'>
-					<th>{\Froxlor\I18N\Lang::getAll()['admin']['phpsettings']['fpmdesc']}</th>
+					<th>{$lng['admin']['phpsettings']['fpmdesc']}</th>
 					<else>
-					<th>{\Froxlor\I18N\Lang::getAll()['admin']['phpsettings']['binary']}</th></if>
-					<th>{\Froxlor\I18N\Lang::getAll()['admin']['phpsettings']['file_extensions']}</th>
-					<th>{\Froxlor\I18N\Lang::getAll()['panel']['options']}</th>
+					<th>{$lng['admin']['phpsettings']['binary']}</th></if>
+					<th>{$lng['admin']['phpsettings']['file_extensions']}</th>
+					<th>{$lng['panel']['options']}</th>
 			</thead>
 			<tbody>$tablecontent
 			</tbody>
@@ -34,7 +34,7 @@ $header
 		<if 15 < $count>
 				<div class="overviewadd">
 					<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />&nbsp;
-					<a href="{$linker->getLink(array('section' => 'phpsettings', 'page' => $page, 'action' => 'add'))}">{\Froxlor\I18N\Lang::getAll()['admin']['phpsettings']['addnew']}</a>
+					<a href="{$linker->getLink(array('section' => 'phpsettings', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['phpsettings']['addnew']}</a>
 				</div>
 			</if>
 

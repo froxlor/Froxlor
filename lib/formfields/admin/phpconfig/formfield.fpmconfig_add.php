@@ -16,74 +16,74 @@
  */
 return array(
 	'fpmconfig_add' => array(
-		'title' => \Froxlor\I18N\Lang::getAll()['admin']['phpsettings']['addsettings'],
+		'title' => $lng['admin']['phpsettings']['addsettings'],
 		'image' => 'icons/phpsettings_add.png',
 		'sections' => array(
 			'section_a' => array(
-				'title' => \Froxlor\I18N\Lang::getAll()['admin']['phpsettings']['addsettings'],
+				'title' => $lng['admin']['phpsettings']['addsettings'],
 				'image' => 'icons/phpsettings_add.png',
 				'fields' => array(
 					'description' => array(
-						'label' => \Froxlor\I18N\Lang::getAll()['admin']['phpsettings']['description'],
+						'label' => $lng['admin']['phpsettings']['description'],
 						'type' => 'text',
 						'maxlength' => 50
 					),
 					'reload_cmd' => array(
-						'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['phpfpm_settings']['reload'],
+						'label' => $lng['serversettings']['phpfpm_settings']['reload'],
 						'type' => 'text',
 						'maxlength' => 255,
 						'value' => 'service php7.0-fpm restart'
 					),
 					'config_dir' => array(
-						'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['phpfpm_settings']['configdir'],
+						'label' => $lng['serversettings']['phpfpm_settings']['configdir'],
 						'type' => 'text',
 						'maxlength' => 255,
 						'value' => '/etc/php/7.0/fpm/pool.d/'
 					),
 					'pm' => array(
-						'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['phpfpm_settings']['pm'],
+						'label' => $lng['serversettings']['phpfpm_settings']['pm'],
 						'type' => 'select',
 						'select_var' => $pm_select
 					),
 					'max_children' => array(
-						'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['phpfpm_settings']['max_children']['title'],
-						'desc' => \Froxlor\I18N\Lang::getAll()['serversettings']['phpfpm_settings']['max_children']['description'],
+						'label' => $lng['serversettings']['phpfpm_settings']['max_children']['title'],
+						'desc' => $lng['serversettings']['phpfpm_settings']['max_children']['description'],
 						'type' => 'int',
 						'value' => 1
 					),
 					'start_servers' => array(
-						'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['phpfpm_settings']['start_servers']['title'],
-						'desc' => \Froxlor\I18N\Lang::getAll()['serversettings']['phpfpm_settings']['start_servers']['description'],
+						'label' => $lng['serversettings']['phpfpm_settings']['start_servers']['title'],
+						'desc' => $lng['serversettings']['phpfpm_settings']['start_servers']['description'],
 						'type' => 'int',
 						'value' => 20
 					),
 					'min_spare_servers' => array(
-						'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['phpfpm_settings']['min_spare_servers']['title'],
-						'desc' => \Froxlor\I18N\Lang::getAll()['serversettings']['phpfpm_settings']['min_spare_servers']['description'],
+						'label' => $lng['serversettings']['phpfpm_settings']['min_spare_servers']['title'],
+						'desc' => $lng['serversettings']['phpfpm_settings']['min_spare_servers']['description'],
 						'type' => 'int',
 						'value' => 5
 					),
 					'max_spare_servers' => array(
-						'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['phpfpm_settings']['max_spare_servers']['title'],
-						'desc' => \Froxlor\I18N\Lang::getAll()['serversettings']['phpfpm_settings']['max_spare_servers']['description'],
+						'label' => $lng['serversettings']['phpfpm_settings']['max_spare_servers']['title'],
+						'desc' => $lng['serversettings']['phpfpm_settings']['max_spare_servers']['description'],
 						'type' => 'int',
 						'value' => 35
 					),
 					'max_requests' => array(
-						'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['phpfpm_settings']['max_requests']['title'],
-						'desc' => \Froxlor\I18N\Lang::getAll()['serversettings']['phpfpm_settings']['max_requests']['description'],
+						'label' => $lng['serversettings']['phpfpm_settings']['max_requests']['title'],
+						'desc' => $lng['serversettings']['phpfpm_settings']['max_requests']['description'],
 						'type' => 'int',
 						'value' => 0
 					),
 					'idle_timeout' => array(
-						'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['phpfpm_settings']['idle_timeout']['title'],
-						'desc' => \Froxlor\I18N\Lang::getAll()['serversettings']['phpfpm_settings']['idle_timeout']['description'],
+						'label' => $lng['serversettings']['phpfpm_settings']['idle_timeout']['title'],
+						'desc' => $lng['serversettings']['phpfpm_settings']['idle_timeout']['description'],
 						'type' => 'int',
 						'value' => 30
 					),
 					'limit_extensions' => array(
-						'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['phpfpm_settings']['limit_extensions']['title'],
-						'desc' => \Froxlor\I18N\Lang::getAll()['serversettings']['phpfpm_settings']['limit_extensions']['description'],
+						'label' => $lng['serversettings']['phpfpm_settings']['limit_extensions']['title'],
+						'desc' => $lng['serversettings']['phpfpm_settings']['limit_extensions']['description'],
 						'type' => 'text',
 						'value' => '.php'
 					)

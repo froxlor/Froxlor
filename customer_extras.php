@@ -49,8 +49,8 @@ if ($page == 'overview') {
 	if ($action == '') {
 		$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_extras::htpasswds");
 		$fields = array(
-			'username' => \Froxlor\I18N\Lang::getAll()['login']['username'],
-			'path' => \Froxlor\I18N\Lang::getAll()['panel']['path']
+			'username' => $lng['login']['username'],
+			'path' => $lng['panel']['path']
 		);
 		$paging = new \Froxlor\UI\Paging(\Froxlor\User::getAll(), TABLE_PANEL_HTPASSWDS, $fields);
 		$result_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_HTPASSWDS . "`
@@ -185,12 +185,12 @@ if ($page == 'overview') {
 	if ($action == '') {
 		$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_extras::htaccess");
 		$fields = array(
-			'path' => \Froxlor\I18N\Lang::getAll()['panel']['path'],
-			'options_indexes' => \Froxlor\I18N\Lang::getAll()['extras']['view_directory'],
-			'error404path' => \Froxlor\I18N\Lang::getAll()['extras']['error404path'],
-			'error403path' => \Froxlor\I18N\Lang::getAll()['extras']['error403path'],
-			'error500path' => \Froxlor\I18N\Lang::getAll()['extras']['error500path'],
-			'options_cgi' => \Froxlor\I18N\Lang::getAll()['extras']['execute_perl']
+			'path' => $lng['panel']['path'],
+			'options_indexes' => $lng['extras']['view_directory'],
+			'error404path' => $lng['extras']['error404path'],
+			'error403path' => $lng['extras']['error403path'],
+			'error500path' => $lng['extras']['error500path'],
+			'options_cgi' => $lng['extras']['execute_perl']
 		);
 		$paging = new \Froxlor\UI\Paging(\Froxlor\User::getAll(), TABLE_PANEL_HTACCESS, $fields);
 		$result_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_HTACCESS . "`
@@ -215,10 +215,10 @@ if ($page == 'overview') {
 					$row['path'] = str_replace(\Froxlor\User::getAll()['documentroot'], "/", $row['path']);
 				}
 				$row['path'] = \Froxlor\FileDir::makeCorrectDir($row['path']);
-				$row['options_indexes'] = str_replace('1', \Froxlor\I18N\Lang::getAll()['panel']['yes'], $row['options_indexes']);
-				$row['options_indexes'] = str_replace('0', \Froxlor\I18N\Lang::getAll()['panel']['no'], $row['options_indexes']);
-				$row['options_cgi'] = str_replace('1', \Froxlor\I18N\Lang::getAll()['panel']['yes'], $row['options_cgi']);
-				$row['options_cgi'] = str_replace('0', \Froxlor\I18N\Lang::getAll()['panel']['no'], $row['options_cgi']);
+				$row['options_indexes'] = str_replace('1', $lng['panel']['yes'], $row['options_indexes']);
+				$row['options_indexes'] = str_replace('0', $lng['panel']['no'], $row['options_indexes']);
+				$row['options_cgi'] = str_replace('1', $lng['panel']['yes'], $row['options_cgi']);
+				$row['options_cgi'] = str_replace('0', $lng['panel']['no'], $row['options_cgi']);
 				$row = \Froxlor\PhpHelper::htmlentities_array($row);
 				eval("\$htaccess.=\"" . \Froxlor\UI\Template::getTemplate("extras/htaccess_htaccess") . "\";");
 				$count ++;
@@ -377,9 +377,9 @@ if ($page == 'overview') {
 					$row = $existing_backupJob['data'];
 
 					$row['path'] = \Froxlor\FileDir::makeCorrectDir(str_replace(\Froxlor\User::getAll()['documentroot'], "/", $row['destdir']));
-					$row['backup_web'] = ($row['backup_web'] == '1') ? \Froxlor\I18N\Lang::getAll()['panel']['yes'] : \Froxlor\I18N\Lang::getAll()['panel']['no'];
-					$row['backup_mail'] = ($row['backup_mail'] == '1') ? \Froxlor\I18N\Lang::getAll()['panel']['yes'] : \Froxlor\I18N\Lang::getAll()['panel']['no'];
-					$row['backup_dbs'] = ($row['backup_dbs'] == '1') ? \Froxlor\I18N\Lang::getAll()['panel']['yes'] : \Froxlor\I18N\Lang::getAll()['panel']['no'];
+					$row['backup_web'] = ($row['backup_web'] == '1') ? $lng['panel']['yes'] : $lng['panel']['no'];
+					$row['backup_mail'] = ($row['backup_mail'] == '1') ? $lng['panel']['yes'] : $lng['panel']['no'];
+					$row['backup_dbs'] = ($row['backup_dbs'] == '1') ? $lng['panel']['yes'] : $lng['panel']['no'];
 				}
 				$pathSelect = \Froxlor\FileDir::makePathfield(\Froxlor\User::getAll()['documentroot'], \Froxlor\User::getAll()['guid'], \Froxlor\User::getAll()['guid']);
 				$backup_data = include_once dirname(__FILE__) . '/lib/formfields/customer/extras/formfield.backup.php';

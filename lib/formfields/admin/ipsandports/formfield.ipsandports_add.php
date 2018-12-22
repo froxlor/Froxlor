@@ -16,35 +16,35 @@
  */
 return array(
 	'ipsandports_add' => array(
-		'title' => \Froxlor\I18N\Lang::getAll()['admin']['ipsandports']['add'],
+		'title' => $lng['admin']['ipsandports']['add'],
 		'image' => 'icons/ipsports_add.png',
 		'sections' => array(
 			'section_a' => array(
-				'title' => \Froxlor\I18N\Lang::getAll()['admin']['ipsandports']['ipandport'],
+				'title' => $lng['admin']['ipsandports']['ipandport'],
 				'image' => 'icons/ipsports_add.png',
 				'fields' => array(
 					'ip' => array(
-						'label' => \Froxlor\I18N\Lang::getAll()['admin']['ipsandports']['ip'],
+						'label' => $lng['admin']['ipsandports']['ip'],
 						'type' => 'text'
 					),
 					'port' => array(
-						'label' => \Froxlor\I18N\Lang::getAll()['admin']['ipsandports']['port'],
+						'label' => $lng['admin']['ipsandports']['port'],
 						'type' => 'text',
 						'size' => 5
 					)
 				)
 			),
 			'section_b' => array(
-				'title' => \Froxlor\I18N\Lang::getAll()['admin']['ipsandports']['webserverdefaultconfig'],
+				'title' => $lng['admin']['ipsandports']['webserverdefaultconfig'],
 				'image' => 'icons/ipsports_add.png',
 				'fields' => array(
 					'listen_statement' => array(
 						'visible' => ! $is_nginx,
-						'label' => \Froxlor\I18N\Lang::getAll()['admin']['ipsandports']['create_listen_statement'],
+						'label' => $lng['admin']['ipsandports']['create_listen_statement'],
 						'type' => 'checkbox',
 						'values' => array(
 							array(
-								'label' => \Froxlor\I18N\Lang::getAll()['panel']['yes'],
+								'label' => $lng['panel']['yes'],
 								'value' => '1'
 							)
 						),
@@ -54,11 +54,11 @@ return array(
 					),
 					'namevirtualhost_statement' => array(
 						'visible' => $is_apache && ! $is_apache24,
-						'label' => \Froxlor\I18N\Lang::getAll()['admin']['ipsandports']['create_namevirtualhost_statement'],
+						'label' => $lng['admin']['ipsandports']['create_namevirtualhost_statement'],
 						'type' => 'checkbox',
 						'values' => array(
 							array(
-								'label' => \Froxlor\I18N\Lang::getAll()['panel']['yes'],
+								'label' => $lng['panel']['yes'],
 								'value' => '1'
 							)
 						),
@@ -67,11 +67,11 @@ return array(
 						)
 					),
 					'vhostcontainer' => array(
-						'label' => \Froxlor\I18N\Lang::getAll()['admin']['ipsandports']['create_vhostcontainer'],
+						'label' => $lng['admin']['ipsandports']['create_vhostcontainer'],
 						'type' => 'checkbox',
 						'values' => array(
 							array(
-								'label' => \Froxlor\I18N\Lang::getAll()['panel']['yes'],
+								'label' => $lng['panel']['yes'],
 								'value' => '1'
 							)
 						),
@@ -80,25 +80,25 @@ return array(
 						)
 					),
 					'docroot' => array(
-						'label' => \Froxlor\I18N\Lang::getAll()['admin']['ipsandports']['docroot']['title'],
-						'desc' => \Froxlor\I18N\Lang::getAll()['admin']['ipsandports']['docroot']['description'],
+						'label' => $lng['admin']['ipsandports']['docroot']['title'],
+						'desc' => $lng['admin']['ipsandports']['docroot']['description'],
 						'type' => 'text'
 					),
 					'specialsettings' => array(
 						'style' => 'align-top',
-						'label' => \Froxlor\I18N\Lang::getAll()['admin']['ownvhostsettings'],
-						'desc' => \Froxlor\I18N\Lang::getAll()['serversettings']['default_vhostconf']['description'],
+						'label' => $lng['admin']['ownvhostsettings'],
+						'desc' => $lng['serversettings']['default_vhostconf']['description'],
 						'type' => 'textarea',
 						'cols' => 60,
 						'rows' => 12
 					),
 					'vhostcontainer_servername_statement' => array(
 						'visible' => $is_apache,
-						'label' => \Froxlor\I18N\Lang::getAll()['admin']['ipsandports']['create_vhostcontainer_servername_statement'],
+						'label' => $lng['admin']['ipsandports']['create_vhostcontainer_servername_statement'],
 						'type' => 'checkbox',
 						'values' => array(
 							array(
-								'label' => \Froxlor\I18N\Lang::getAll()['panel']['yes'],
+								'label' => $lng['panel']['yes'],
 								'value' => '1'
 							)
 						),
@@ -109,13 +109,13 @@ return array(
 				)
 			),
 			'section_c' => array(
-				'title' => \Froxlor\I18N\Lang::getAll()['admin']['ipsandports']['webserverdomainconfig'],
+				'title' => $lng['admin']['ipsandports']['webserverdomainconfig'],
 				'image' => 'icons/ipsports_add.png',
 				'fields' => array(
 					'default_vhostconf_domain' => array(
 						'style' => 'align-top',
-						'label' => \Froxlor\I18N\Lang::getAll()['admin']['ipsandports']['default_vhostconf_domain'],
-						'desc' => \Froxlor\I18N\Lang::getAll()['serversettings']['default_vhostconf_domain']['description'],
+						'label' => $lng['admin']['ipsandports']['default_vhostconf_domain'],
+						'desc' => $lng['serversettings']['default_vhostconf_domain']['description'],
 						'type' => 'textarea',
 						'cols' => 60,
 						'rows' => 12
@@ -123,36 +123,36 @@ return array(
 				)
 			),
 			'section_d' => array(
-				'title' => \Froxlor\I18N\Lang::getAll()['admin']['ipsandports']['webserverssldomainconfig'],
+				'title' => $lng['admin']['ipsandports']['webserverssldomainconfig'],
 				'image' => 'icons/ipsports_add.png',
 				'visible' => (\Froxlor\Settings::Get('system.use_ssl') == 1 ? true : false),
 				'fields' => array(
 					'ssl' => array(
-						'label' => \Froxlor\I18N\Lang::getAll()['admin']['ipsandports']['enable_ssl'],
+						'label' => $lng['admin']['ipsandports']['enable_ssl'],
 						'type' => 'checkbox',
 						'values' => array(
 							array(
-								'label' => \Froxlor\I18N\Lang::getAll()['panel']['yes'],
+								'label' => $lng['panel']['yes'],
 								'value' => '1'
 							)
 						),
 						'value' => array()
 					),
 					'ssl_cert_file' => array(
-						'label' => \Froxlor\I18N\Lang::getAll()['admin']['ipsandports']['ssl_cert_file'],
+						'label' => $lng['admin']['ipsandports']['ssl_cert_file'],
 						'type' => 'text'
 					),
 					'ssl_key_file' => array(
-						'label' => \Froxlor\I18N\Lang::getAll()['admin']['ipsandports']['ssl_key_file'],
+						'label' => $lng['admin']['ipsandports']['ssl_key_file'],
 						'type' => 'text'
 					),
 					'ssl_ca_file' => array(
-						'label' => \Froxlor\I18N\Lang::getAll()['admin']['ipsandports']['ssl_ca_file'],
+						'label' => $lng['admin']['ipsandports']['ssl_ca_file'],
 						'type' => 'text'
 					),
 					'ssl_cert_chainfile' => array(
-						'label' => \Froxlor\I18N\Lang::getAll()['admin']['ipsandports']['ssl_cert_chainfile']['title'],
-						'desc' => \Froxlor\I18N\Lang::getAll()['admin']['ipsandports']['ssl_cert_chainfile']['description'],
+						'label' => $lng['admin']['ipsandports']['ssl_cert_chainfile']['title'],
+						'desc' => $lng['admin']['ipsandports']['ssl_cert_chainfile']['description'],
 						'type' => 'text'
 					)
 				)

@@ -17,10 +17,10 @@
 return array(
 	'groups' => array(
 		'crond' => array(
-			'title' => \Froxlor\I18N\Lang::getAll()['admin']['cronsettings'],
+			'title' => $lng['admin']['cronsettings'],
 			'fields' => array(
 				'system_cronconfig' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['system_cronconfig'],
+					'label' => $lng['serversettings']['system_cronconfig'],
 					'settinggroup' => 'system',
 					'varname' => 'cronconfig',
 					'type' => 'string',
@@ -29,7 +29,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_croncmdline' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['system_croncmdline'],
+					'label' => $lng['serversettings']['system_croncmdline'],
 					'settinggroup' => 'system',
 					'varname' => 'croncmdline',
 					'type' => 'string',
@@ -37,7 +37,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_crondreload' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['system_crondreload'],
+					'label' => $lng['serversettings']['system_crondreload'],
 					'settinggroup' => 'system',
 					'varname' => 'crondreload',
 					'type' => 'string',
@@ -45,7 +45,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_cron_allowautoupdate' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['system_cron_allowautoupdate'],
+					'label' => $lng['serversettings']['system_cron_allowautoupdate'],
 					'settinggroup' => 'system',
 					'varname' => 'cron_allowautoupdate',
 					'type' => 'bool',
@@ -53,7 +53,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_debug_cron' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['cron']['debug'],
+					'label' => $lng['serversettings']['cron']['debug'],
 					'settinggroup' => 'system',
 					'varname' => 'debug_cron',
 					'type' => 'bool',

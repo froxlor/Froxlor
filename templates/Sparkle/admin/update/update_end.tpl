@@ -1,6 +1,6 @@
 		</section>
 		<aside>
-			<a href="{$redirect_url}">{\Froxlor\I18N\Lang::getAll()['success']['clickheretocontinue']}</a>
+			<a href="{$redirect_url}">{$lng['success']['clickheretocontinue']}</a>
 		</aside>
 	</article>
 $footer

@@ -57,7 +57,7 @@ if ($action == 'add_record' && ! empty($_POST)) {
 			'content' => $content,
 			'ttl' => $ttl
 		))->add();
-		$success_message = \Froxlor\I18N\Lang::getAll()['success']['dns_record_added'];
+		$success_message = $lng['success']['dns_record_added'];
 	} catch (Exception $e) {
 		\Froxlor\UI\Response::dynamic_error($e->getMessage());
 	}
@@ -85,7 +85,7 @@ if ($action == 'add_record' && ! empty($_POST)) {
 			}
 			unset($_t);
 			// success message (inline)
-			$success_message = \Froxlor\I18N\Lang::getAll()['success']['dns_record_deleted'];
+			$success_message = $lng['success']['dns_record_deleted'];
 		}
 	}
 }

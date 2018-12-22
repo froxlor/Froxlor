@@ -19,10 +19,10 @@
 return array(
 	'groups' => array(
 		'ftpserver' => array(
-			'title' => \Froxlor\I18N\Lang::getAll()['admin']['ftpserversettings'],
+			'title' => $lng['admin']['ftpserversettings'],
 			'fields' => array(
 				'ftpserver' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['admin']['ftpserver'],
+					'label' => $lng['admin']['ftpserver'],
 					'settinggroup' => 'system',
 					'varname' => 'ftpserver',
 					'type' => 'option',

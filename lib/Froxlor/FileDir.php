@@ -381,6 +381,8 @@ class FileDir
 	 */
 	public static function makePathfield($path, $uid, $gid, $value = '', $dom = false)
 	{
+		global $lng;
+
 		$value = str_replace($path, '', $value);
 		$field = array();
 
@@ -427,20 +429,20 @@ class FileDir
 					// remove starting slash we added
 					// for the Dropdown, #225
 					$value = substr($value, 1);
-					// $field = \Froxlor\I18N\Lang::getAll()['panel']['toomanydirs'];
+					// $field = $lng['panel']['toomanydirs'];
 					$field = array(
 						'type' => 'text',
 						'value' => htmlspecialchars($value),
-						'note' => \Froxlor\I18N\Lang::getAll()['panel']['toomanydirs']
+						'note' => $lng['panel']['toomanydirs']
 					);
 				}
 			} else {
-				// $field = \Froxlor\I18N\Lang::getAll()['panel']['dirsmissing'];
+				// $field = $lng['panel']['dirsmissing'];
 				// $field = '<input type="hidden" name="path" value="/" />';
 				$field = array(
 					'type' => 'hidden',
 					'value' => '/',
-					'note' => \Froxlor\I18N\Lang::getAll()['panel']['dirsmissing']
+					'note' => $lng['panel']['dirsmissing']
 				);
 			}
 		}

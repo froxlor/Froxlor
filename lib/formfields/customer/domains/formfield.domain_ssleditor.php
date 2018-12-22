@@ -16,7 +16,7 @@
  */
 return array(
 	'domain_ssleditor' => array(
-		'title' => \Froxlor\I18N\Lang::getAll()['panel']['ssleditor'],
+		'title' => $lng['panel']['ssleditor'],
 		'image' => 'icons/ssl.png',
 		'sections' => array(
 			'section_a' => array(
@@ -25,8 +25,8 @@ return array(
 				'fields' => array(
 					'ssl_cert_file' => array(
 						'style' => 'align-top',
-						'label' => \Froxlor\I18N\Lang::getAll()['admin']['ipsandports']['ssl_cert_file_content'],
-						'desc' => \Froxlor\I18N\Lang::getAll()['admin']['ipsandports']['ssl_paste_description'],
+						'label' => $lng['admin']['ipsandports']['ssl_cert_file_content'],
+						'desc' => $lng['admin']['ipsandports']['ssl_paste_description'],
 						'type' => 'textarea',
 						'cols' => 100,
 						'rows' => 15,
@@ -34,8 +34,8 @@ return array(
 					),
 					'ssl_key_file' => array(
 						'style' => 'align-top',
-						'label' => \Froxlor\I18N\Lang::getAll()['admin']['ipsandports']['ssl_key_file_content'],
-						'desc' => \Froxlor\I18N\Lang::getAll()['admin']['ipsandports']['ssl_paste_description'],
+						'label' => $lng['admin']['ipsandports']['ssl_key_file_content'],
+						'desc' => $lng['admin']['ipsandports']['ssl_paste_description'],
 						'type' => 'textarea',
 						'cols' => 100,
 						'rows' => 15,
@@ -43,8 +43,8 @@ return array(
 					),
 					'ssl_cert_chainfile' => array(
 						'style' => 'align-top',
-						'label' => \Froxlor\I18N\Lang::getAll()['admin']['ipsandports']['ssl_cert_chainfile_content'],
-						'desc' => \Froxlor\I18N\Lang::getAll()['admin']['ipsandports']['ssl_paste_description'] . \Froxlor\I18N\Lang::getAll()['admin']['ipsandports']['ssl_cert_chainfile_content_desc'],
+						'label' => $lng['admin']['ipsandports']['ssl_cert_chainfile_content'],
+						'desc' => $lng['admin']['ipsandports']['ssl_paste_description'] . $lng['admin']['ipsandports']['ssl_cert_chainfile_content_desc'],
 						'type' => 'textarea',
 						'cols' => 100,
 						'rows' => 15,
@@ -52,8 +52,8 @@ return array(
 					),
 					'ssl_ca_file' => array(
 						'style' => 'align-top',
-						'label' => \Froxlor\I18N\Lang::getAll()['admin']['ipsandports']['ssl_ca_file_content'],
-						'desc' => \Froxlor\I18N\Lang::getAll()['admin']['ipsandports']['ssl_paste_description'] . \Froxlor\I18N\Lang::getAll()['admin']['ipsandports']['ssl_ca_file_content_desc'],
+						'label' => $lng['admin']['ipsandports']['ssl_ca_file_content'],
+						'desc' => $lng['admin']['ipsandports']['ssl_paste_description'] . $lng['admin']['ipsandports']['ssl_ca_file_content_desc'],
 						'type' => 'textarea',
 						'cols' => 100,
 						'rows' => 15,

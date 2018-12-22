@@ -43,9 +43,9 @@ if ($page == 'overview') {
 	if ($action == '') {
 		$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_email::emails");
 		$fields = array(
-			'd.domain' => \Froxlor\I18N\Lang::getAll()['domains']['domainname'],
-			'm.email_full' => \Froxlor\I18N\Lang::getAll()['emails']['emailaddress'],
-			'm.destination' => \Froxlor\I18N\Lang::getAll()['emails']['forwarders']
+			'd.domain' => $lng['domains']['domainname'],
+			'm.email_full' => $lng['emails']['emailaddress'],
+			'm.destination' => $lng['emails']['forwarders']
 		);
 		$paging = new \Froxlor\UI\Paging(\Froxlor\User::getAll(), TABLE_MAIL_VIRTUAL, $fields);
 		$result_stmt = Database::prepare('SELECT `m`.`id`, `m`.`domainid`, `m`.`email`, `m`.`email_full`, `m`.`iscatchall`, `u`.`quota`, `m`.`destination`, `m`.`popaccountid`, `d`.`domain`, `u`.`mboxsize` FROM `' . TABLE_MAIL_VIRTUAL . '` `m`

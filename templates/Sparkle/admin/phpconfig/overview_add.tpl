@@ -25,7 +25,7 @@ $header
 	<article>
 		<header>
 			<h3>
-				{\Froxlor\I18N\Lang::getAll()['admin']['templates']['template_replace_vars']}
+				{$lng['admin']['templates']['template_replace_vars']}
 			</h3>
 		</header>
 		
@@ -34,63 +34,63 @@ $header
 			<table class="full">
 			<thead>
 				<tr>
-					<th>{\Froxlor\I18N\Lang::getAll()['panel']['variable']}</th>
-					<th>{\Froxlor\I18N\Lang::getAll()['panel']['description']}</th>
+					<th>{$lng['panel']['variable']}</th>
+					<th>{$lng['panel']['description']}</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
 					<td colspan="2">
-						<strong>{\Froxlor\I18N\Lang::getAll()['admin']['phpconfig']['template_replace_vars']}</strong>
+						<strong>{$lng['admin']['phpconfig']['template_replace_vars']}</strong>
 					</td>
 				</tr>
 				<tr>
 					<td><em>{PEAR_DIR}</em></td>
-					<td>{\Froxlor\I18N\Lang::getAll()['admin']['phpconfig']['pear_dir']}</td>
+					<td>{$lng['admin']['phpconfig']['pear_dir']}</td>
 				</tr>
 				<tr>
 					<td><em>{OPEN_BASEDIR_C}</em></td>
-					<td>{\Froxlor\I18N\Lang::getAll()['admin']['phpconfig']['open_basedir_c']}</td>
+					<td>{$lng['admin']['phpconfig']['open_basedir_c']}</td>
 				</tr>
 				<tr>
 					<td><em>{OPEN_BASEDIR}</em></td>
-					<td>{\Froxlor\I18N\Lang::getAll()['admin']['phpconfig']['open_basedir']}</td>
+					<td>{$lng['admin']['phpconfig']['open_basedir']}</td>
 				</tr>
 				<tr>
 					<td><em>{OPEN_BASEDIR_GLOBAL}</em></td>
-					<td>{\Froxlor\I18N\Lang::getAll()['admin']['phpconfig']['open_basedir_global']}</td>
+					<td>{$lng['admin']['phpconfig']['open_basedir_global']}</td>
 				</tr>
 				<tr>
 					<td><em>{TMP_DIR}</em></td>
-					<td>{\Froxlor\I18N\Lang::getAll()['admin']['phpconfig']['tmp_dir']}</td>
+					<td>{$lng['admin']['phpconfig']['tmp_dir']}</td>
 				</tr>
 				<tr>
 					<td><em>{CUSTOMER_EMAIL}</em></td>
-					<td>{\Froxlor\I18N\Lang::getAll()['admin']['phpconfig']['customer_email']}</td>
+					<td>{$lng['admin']['phpconfig']['customer_email']}</td>
 				</tr>
 				<tr>
 					<td><em>{ADMIN_EMAIL}</em></td>
-					<td>{\Froxlor\I18N\Lang::getAll()['admin']['phpconfig']['admin_email']}</td>
+					<td>{$lng['admin']['phpconfig']['admin_email']}</td>
 				</tr>
 				<tr>
 					<td><em>{DOMAIN}</em></td>
-					<td>{\Froxlor\I18N\Lang::getAll()['admin']['phpconfig']['domain']}</td>
+					<td>{$lng['admin']['phpconfig']['domain']}</td>
 				</tr>
 				<tr>
 					<td><em>{CUSTOMER}</em></td>
-					<td>{\Froxlor\I18N\Lang::getAll()['admin']['phpconfig']['customer']}</td>
+					<td>{$lng['admin']['phpconfig']['customer']}</td>
 				</tr>
 				<tr>
 					<td><em>{ADMIN}</em></td>
-					<td>{\Froxlor\I18N\Lang::getAll()['admin']['phpconfig']['admin']}</td>
+					<td>{$lng['admin']['phpconfig']['admin']}</td>
 				</tr>
 				<tr>
 					<td><em>{DOCUMENT_ROOT}</em></td>
-					<td>{\Froxlor\I18N\Lang::getAll()['admin']['phpconfig']['docroot']}</td>
+					<td>{$lng['admin']['phpconfig']['docroot']}</td>
 				</tr>
 				<tr>
 					<td><em>{CUSTOMER_HOMEDIR}</em></td>
-					<td>{\Froxlor\I18N\Lang::getAll()['admin']['phpconfig']['homedir']}</td>
+					<td>{$lng['admin']['phpconfig']['homedir']}</td>
 				</tr>
 			</tbody>
 			</table>

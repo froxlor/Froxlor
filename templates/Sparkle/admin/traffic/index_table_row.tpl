@@ -1,5 +1,5 @@
 		<tr>
-			<td>{$virtual_host['name']}<if $customerview == 1>&nbsp;<a href="{$linker->getLink(array('section' => 'customers', 'target' => 'traffic', 'page' => $page, 'action' => 'su', 'id' => $virtual_host['customerid']))}" rel="external">[{\Froxlor\I18N\Lang::getAll()['traffic']['details']}]</a></if></td>
+			<td>{$virtual_host['name']}<if $customerview == 1>&nbsp;<a href="{$linker->getLink(array('section' => 'customers', 'target' => 'traffic', 'page' => $page, 'action' => 'su', 'id' => $virtual_host['customerid']))}" rel="external">[{$lng['traffic']['details']}]</a></if></td>
 			<td><small>{$virtual_host['jan']}</small></td>
 			<td><small>{$virtual_host['feb']}</small></td>
 			<td><small>{$virtual_host['mar']}</small></td>

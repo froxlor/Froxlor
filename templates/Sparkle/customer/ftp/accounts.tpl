@@ -3,7 +3,7 @@
 		<header>
 			<h2>
 				<img src="templates/{$theme}/assets/img/icons/group_edit_big.png" alt="" />&nbsp;
-				{\Froxlor\I18N\Lang::getAll()['menue']['ftp']['accounts']}&nbsp;({$ftps_count})
+				{$lng['menue']['ftp']['accounts']}&nbsp;({$ftps_count})
 			</h2>
 		</header>
 
@@ -20,20 +20,20 @@
 				<if (\Froxlor\User::getAll()['ftps_used'] < \Froxlor\User::getAll()['ftps'] || \Froxlor\User::getAll()['ftps'] == '-1') >
 				<div class="overviewadd">
 					<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />&nbsp;
-					<a href="{$linker->getLink(array('section' => 'ftp', 'page' => 'accounts', 'action' => 'add'))}">{\Froxlor\I18N\Lang::getAll()['ftp']['account_add']}</a>
+					<a href="{$linker->getLink(array('section' => 'ftp', 'page' => 'accounts', 'action' => 'add'))}">{$lng['ftp']['account_add']}</a>
 				</div>
 				</if>
 
 				<table class="full hl">
 					<thead>
 						<tr>
-							<th>{\Froxlor\I18N\Lang::getAll()['login']['username']}&nbsp;{$arrowcode['username']}</th>
-							<th>{\Froxlor\I18N\Lang::getAll()['panel']['ftpdesc']}&nbsp;{$arrowcode['description']}</th>
-							<th>{\Froxlor\I18N\Lang::getAll()['panel']['path']}&nbsp;{$arrowcode['homedir']}</th>
+							<th>{$lng['login']['username']}&nbsp;{$arrowcode['username']}</th>
+							<th>{$lng['panel']['ftpdesc']}&nbsp;{$arrowcode['description']}</th>
+							<th>{$lng['panel']['path']}&nbsp;{$arrowcode['homedir']}</th>
 							<if \Froxlor\Settings::Get('system.allow_customer_shell') == '1' >
-							<th>{\Froxlor\I18N\Lang::getAll()['panel']['shell']}</th>
+							<th>{$lng['panel']['shell']}</th>
 							</if>
-							<th>{\Froxlor\I18N\Lang::getAll()['panel']['options']}</th>
+							<th>{$lng['panel']['options']}</th>
 						</tr>
 					</thead>
 
@@ -54,7 +54,7 @@
 			<if (\Froxlor\User::getAll()['ftps_used'] < \Froxlor\User::getAll()['ftps'] || \Froxlor\User::getAll()['ftps'] == '-1') && 15 < $ftps_count >
 			<div class="overviewadd">
 				<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />&nbsp;
-				<a href="{$linker->getLink(array('section' => 'ftp', 'page' => 'accounts', 'action' => 'add'))}">{\Froxlor\I18N\Lang::getAll()['ftp']['account_add']}</a>
+				<a href="{$linker->getLink(array('section' => 'ftp', 'page' => 'accounts', 'action' => 'add'))}">{$lng['ftp']['account_add']}</a>
 			</div>
 			</if>
 

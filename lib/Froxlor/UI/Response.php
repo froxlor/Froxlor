@@ -94,13 +94,13 @@ class Response
 
 		$link = '';
 		if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $_SERVER['HTTP_HOST']) !== false) {
-			$link = '<a href="' . htmlentities($_SERVER['HTTP_REFERER']) . '">' . \Froxlor\I18N\Lang::getAll()['panel']['back'] . '</a>';
+			$link = '<a href="' . htmlentities($_SERVER['HTTP_REFERER']) . '">' . $lng['panel']['back'] . '</a>';
 		}
 
 		$error = '';
 		foreach ($errors as $single_error) {
-			if (isset(\Froxlor\I18N\Lang::getAll()['error'][$single_error])) {
-				$single_error = \Froxlor\I18N\Lang::getAll()['error'][$single_error];
+			if (isset($lng['error'][$single_error])) {
+				$single_error = $lng['error'][$single_error];
 				$single_error = strtr($single_error, array(
 					'%s' => $replacer
 				));
@@ -129,7 +129,7 @@ class Response
 		$_SESSION['requestData'] = $_POST;
 		$link = '';
 		if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $_SERVER['HTTP_HOST']) !== false) {
-			$link = '<a href="' . htmlentities($_SERVER['HTTP_REFERER']) . '">' . \Froxlor\I18N\Lang::getAll()['panel']['back'] . '</a>';
+			$link = '<a href="' . htmlentities($_SERVER['HTTP_REFERER']) . '">' . $lng['panel']['back'] . '</a>';
 		}
 		$error = $message;
 		eval("echo \"" . Template::getTemplate('misc/error', '1') . "\";");
@@ -152,8 +152,8 @@ class Response
 	{
 		global $s, $header, $footer, $theme;
 
-		if (isset(\Froxlor\I18N\Lang::getAll()['success'][$success_message])) {
-			$success_message = strtr(\Froxlor\I18N\Lang::getAll()['success'][$success_message], array(
+		if (isset($lng['success'][$success_message])) {
+			$success_message = strtr($lng['success'][$success_message], array(
 				'%s' => htmlentities($replacer)
 			));
 		}

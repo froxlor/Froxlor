@@ -19,16 +19,16 @@
 				<span>Webspace:</span>
 				<if $row['diskspace'] != 'UL'>
 					<if (($row['diskspace']/100)*(int)\Froxlor\Settings::Get('system.report_webmax')) < $row['diskspace_used']>
-						<div class="progress progress-danger tipper" title="{$row['diskspace_used']} MiB {\Froxlor\I18N\Lang::getAll()['panel']['used']}, {$row['diskspace']} MiB {\Froxlor\I18N\Lang::getAll()['panel']['assigned']}">
+						<div class="progress progress-danger tipper" title="{$row['diskspace_used']} MiB {$lng['panel']['used']}, {$row['diskspace']} MiB {$lng['panel']['assigned']}">
 							<div class="bar" aria-valuenow="{$disk_percent}" aria-valuemin="0" aria-valuemax="100"></div>
 						</div>
 					<else>
 						<if (($row['diskspace']/100)*((int)\Froxlor\Settings::Get('system.report_webmax') - 15)) < $row['diskspace_used']>
-							<div class="progress progress-warn tipper" title="{$row['diskspace_used']} MiB {\Froxlor\I18N\Lang::getAll()['panel']['used']}, {$row['diskspace']} MiB {\Froxlor\I18N\Lang::getAll()['panel']['assigned']}">
+							<div class="progress progress-warn tipper" title="{$row['diskspace_used']} MiB {$lng['panel']['used']}, {$row['diskspace']} MiB {$lng['panel']['assigned']}">
 								<div class="bar" aria-valuenow="{$disk_percent}" aria-valuemin="0" aria-valuemax="100"></div>
 							</div>
 						<else>
-							<div class="progress tipper" title="{$row['diskspace_used']} MiB {\Froxlor\I18N\Lang::getAll()['panel']['used']}, {$row['diskspace']} MiB {\Froxlor\I18N\Lang::getAll()['panel']['assigned']}">
+							<div class="progress tipper" title="{$row['diskspace_used']} MiB {$lng['panel']['used']}, {$row['diskspace']} MiB {$lng['panel']['assigned']}">
 								<div class="bar" aria-valuenow="{$disk_percent}" aria-valuemin="0" aria-valuemax="100"></div>
 							</div>
 						</if>
@@ -43,16 +43,16 @@
 				<span>Traffic:</span>
 				<if $row['traffic'] != 'UL'>
 					<if (($row['traffic']/100)*(int)\Froxlor\Settings::Get('system.report_trafficmax')) < $row['traffic_used']>
-						<div class="progress progress-danger tipper" title="{$row['traffic_used']} GiB {\Froxlor\I18N\Lang::getAll()['panel']['used']}, {$row['traffic']} GiB {\Froxlor\I18N\Lang::getAll()['panel']['assigned']}">
+						<div class="progress progress-danger tipper" title="{$row['traffic_used']} GiB {$lng['panel']['used']}, {$row['traffic']} GiB {$lng['panel']['assigned']}">
 							<div class="bar" aria-valuenow="{$traffic_percent}" aria-valuemin="0" aria-valuemax="100"></div>
 						</div>
 					<else>
 						<if (($row['traffic']/100)*((int)\Froxlor\Settings::Get('system.report_trafficmax') - 15)) < $row['traffic_used']>
-							<div class="progress progress-warn tipper" title="{$row['traffic_used']} GiB {\Froxlor\I18N\Lang::getAll()['panel']['used']}, {$row['traffic']} GiB {\Froxlor\I18N\Lang::getAll()['panel']['assigned']}">
+							<div class="progress progress-warn tipper" title="{$row['traffic_used']} GiB {$lng['panel']['used']}, {$row['traffic']} GiB {$lng['panel']['assigned']}">
 								<div class="bar" aria-valuenow="{$traffic_percent}" aria-valuemin="0" aria-valuemax="100"></div>
 							</div>
 						<else>
-							<div class="progress tipper" title="{$row['traffic_used']} GiB {\Froxlor\I18N\Lang::getAll()['panel']['used']}, {$row['traffic']} GiB {\Froxlor\I18N\Lang::getAll()['panel']['assigned']}">
+							<div class="progress tipper" title="{$row['traffic_used']} GiB {$lng['panel']['used']}, {$row['traffic']} GiB {$lng['panel']['assigned']}">
 								<div class="bar" aria-valuenow="{$traffic_percent}" aria-valuemin="0" aria-valuemax="100"></div>
 							</div>
 						</if>
@@ -67,13 +67,13 @@
 	</td>
 	<td>
 		<a href="{$linker->getLink(array('section' => 'admins', 'page' => $page, 'action' => 'edit', 'id' => $row['adminid']))}">
-			<img src="templates/{$theme}/assets/img/icons/edit.png" alt="{\Froxlor\I18N\Lang::getAll()['panel']['edit']}" title="{\Froxlor\I18N\Lang::getAll()['panel']['edit']}" />
+			<img src="templates/{$theme}/assets/img/icons/edit.png" alt="{$lng['panel']['edit']}" title="{$lng['panel']['edit']}" />
 		</a>&nbsp;
 		<a href="{$linker->getLink(array('section' => 'admins', 'page' => $page, 'action' => 'delete', 'id' => $row['adminid']))}">
-			<img src="templates/{$theme}/assets/img/icons/delete.png" alt="{\Froxlor\I18N\Lang::getAll()['panel']['delete']}" title="{\Froxlor\I18N\Lang::getAll()['panel']['delete']}" />
+			<img src="templates/{$theme}/assets/img/icons/delete.png" alt="{$lng['panel']['delete']}" title="{$lng['panel']['delete']}" />
 		</a>
 		<if $row['custom_notes'] != ''>
-			&nbsp;<img src="templates/{$theme}/assets/img/icons/info.png" class="notes" data-id="{$row['loginname']}" alt="{\Froxlor\I18N\Lang::getAll()['usersettings']['custom_notes']['title']}" title="{\Froxlor\I18N\Lang::getAll()['usersettings']['custom_notes']['title']}" />
+			&nbsp;<img src="templates/{$theme}/assets/img/icons/info.png" class="notes" data-id="{$row['loginname']}" alt="{$lng['usersettings']['custom_notes']['title']}" title="{$lng['usersettings']['custom_notes']['title']}" />
 		</if>
 	</td>
 </tr>

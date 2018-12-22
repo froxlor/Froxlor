@@ -16,20 +16,20 @@
  */
 return array(
 	'emails_accountchangequota' => array(
-		'title' => \Froxlor\I18N\Lang::getAll()['emails']['quota_edit'],
+		'title' => $lng['emails']['quota_edit'],
 		'image' => 'icons/email_edit.png',
 		'sections' => array(
 			'section_a' => array(
-				'title' => \Froxlor\I18N\Lang::getAll()['emails']['quota_edit'],
+				'title' => $lng['emails']['quota_edit'],
 				'image' => 'icons/email_edit.png',
 				'fields' => array(
 					'email_full' => array(
-						'label' => \Froxlor\I18N\Lang::getAll()['emails']['emailaddress'],
+						'label' => $lng['emails']['emailaddress'],
 						'type' => 'label',
 						'value' => $result['email_full']
 					),
 					'email_quota' => array(
-						'label' => \Froxlor\I18N\Lang::getAll()['emails']['quota'] . ' (MiB)',
+						'label' => $lng['emails']['quota'] . ' (MiB)',
 						'type' => 'text',
 						'value' => $result['quota']
 					)

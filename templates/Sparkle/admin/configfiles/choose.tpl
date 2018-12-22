@@ -2,9 +2,9 @@ $header
 	<article>
 		<header>
 			<h2>
-				<img src="templates/{$theme}/assets/img/icons/settings_big.png" alt="{\Froxlor\I18N\Lang::getAll()['admin']['configfiles']['serverconfiguration']}" />&nbsp;
-				{\Froxlor\I18N\Lang::getAll()['admin']['configfiles']['serverconfiguration']} &nbsp;
-				[<a href="{$linker->getLink(array('section' => 'configfiles', 'page' => 'configfiles'))}">{\Froxlor\I18N\Lang::getAll()['admin']['configfiles']['wizard']}</a>]
+				<img src="templates/{$theme}/assets/img/icons/settings_big.png" alt="{$lng['admin']['configfiles']['serverconfiguration']}" />&nbsp;
+				{$lng['admin']['configfiles']['serverconfiguration']} &nbsp;
+				[<a href="{$linker->getLink(array('section' => 'configfiles', 'page' => 'configfiles'))}">{$lng['admin']['configfiles']['wizard']}</a>]
 			</h2>
 		</header>
 

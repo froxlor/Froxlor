@@ -56,7 +56,7 @@ if ($page == 'overview' && \Froxlor\User::getAll()['change_serversettings'] == '
 
 		// check if the session timeout is too low #815
 		if (isset($_POST['session_sessiontimeout']) && $_POST['session_sessiontimeout'] < 60) {
-			\Froxlor\UI\Response::standard_error(\Froxlor\I18N\Lang::getAll()['error']['session_timeout'], \Froxlor\I18N\Lang::getAll()['error']['session_timeout_desc']);
+			\Froxlor\UI\Response::standard_error($lng['error']['session_timeout'], $lng['error']['session_timeout_desc']);
 		}
 
 		if (processFormEx($settings_data, $_POST, array(
@@ -136,7 +136,7 @@ if ($page == 'overview' && \Froxlor\User::getAll()['change_serversettings'] == '
 		}
 		$phpinfo = $phpinfohtml;
 	} else {
-		\Froxlor\UI\Response::standard_error(\Froxlor\I18N\Lang::getAll()['error']['no_phpinfo']);
+		\Froxlor\UI\Response::standard_error($lng['error']['no_phpinfo']);
 	}
 	eval("echo \"" . \Froxlor\UI\Template::getTemplate("settings/phpinfo") . "\";");
 } elseif ($page == 'rebuildconfigs' && \Froxlor\User::getAll()['change_serversettings'] == '1') {
@@ -267,7 +267,7 @@ if ($page == 'overview' && \Froxlor\User::getAll()['change_serversettings'] == '
 	foreach ($integrity->available as $id => $check) {
 		$displayid = $id + 1;
 		$result = $integrity->$check();
-		$checkdesc = \Froxlor\I18N\Lang::getAll()['integrity_check'][$check];
+		$checkdesc = $lng['integrity_check'][$check];
 		eval("\$integritycheck.=\"" . \Froxlor\UI\Template::getTemplate("settings/integritycheck_row") . "\";");
 	}
 	eval("echo \"" . \Froxlor\UI\Template::getTemplate("settings/integritycheck") . "\";");

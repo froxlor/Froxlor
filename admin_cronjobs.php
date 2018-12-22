@@ -31,9 +31,9 @@ if ($page == 'cronjobs' || $page == 'overview') {
 		$log->logAction(ADM_ACTION, LOG_NOTICE, 'viewed admin_cronjobs');
 
 		$fields = array(
-			'c.lastrun' => \Froxlor\I18N\Lang::getAll()['cron']['lastrun'],
-			'c.interval' => \Froxlor\I18N\Lang::getAll()['cron']['interval'],
-			'c.isactive' => \Froxlor\I18N\Lang::getAll()['cron']['isactive']
+			'c.lastrun' => $lng['cron']['lastrun'],
+			'c.interval' => $lng['cron']['interval'],
+			'c.isactive' => $lng['cron']['isactive']
 		);
 		$paging = new \Froxlor\UI\Paging(\Froxlor\User::getAll(), TABLE_PANEL_CRONRUNS, $fields);
 
@@ -61,9 +61,9 @@ if ($page == 'cronjobs' || $page == 'overview') {
 				$row = \Froxlor\PhpHelper::htmlentities_array($row);
 
 				$row['lastrun'] = date('d.m.Y H:i', $row['lastrun']);
-				$row['isactive'] = ((int) $row['isactive'] == 1) ? \Froxlor\I18N\Lang::getAll()['panel']['yes'] : \Froxlor\I18N\Lang::getAll()['panel']['no'];
+				$row['isactive'] = ((int) $row['isactive'] == 1) ? $lng['panel']['yes'] : $lng['panel']['no'];
 
-				$description = \Froxlor\I18N\Lang::getAll()['crondesc'][$row['desc_lng_key']];
+				$description = $lng['crondesc'][$row['desc_lng_key']];
 
 				eval("\$crons.=\"" . \Froxlor\UI\Template::getTemplate('cronjobs/cronjobs_cronjob') . "\";");
 				$count ++;
@@ -104,11 +104,11 @@ if ($page == 'cronjobs' || $page == 'overview') {
 				$interval_value = $interval_nfo[0];
 
 				$interval_interval = '';
-				$interval_interval .= \Froxlor\UI\HTML::makeoption(\Froxlor\I18N\Lang::getAll()['cronmgmt']['minutes'], 'MINUTE', $interval_nfo[1]);
-				$interval_interval .= \Froxlor\UI\HTML::makeoption(\Froxlor\I18N\Lang::getAll()['cronmgmt']['hours'], 'HOUR', $interval_nfo[1]);
-				$interval_interval .= \Froxlor\UI\HTML::makeoption(\Froxlor\I18N\Lang::getAll()['cronmgmt']['days'], 'DAY', $interval_nfo[1]);
-				$interval_interval .= \Froxlor\UI\HTML::makeoption(\Froxlor\I18N\Lang::getAll()['cronmgmt']['weeks'], 'WEEK', $interval_nfo[1]);
-				$interval_interval .= \Froxlor\UI\HTML::makeoption(\Froxlor\I18N\Lang::getAll()['cronmgmt']['months'], 'MONTH', $interval_nfo[1]);
+				$interval_interval .= \Froxlor\UI\HTML::makeoption($lng['cronmgmt']['minutes'], 'MINUTE', $interval_nfo[1]);
+				$interval_interval .= \Froxlor\UI\HTML::makeoption($lng['cronmgmt']['hours'], 'HOUR', $interval_nfo[1]);
+				$interval_interval .= \Froxlor\UI\HTML::makeoption($lng['cronmgmt']['days'], 'DAY', $interval_nfo[1]);
+				$interval_interval .= \Froxlor\UI\HTML::makeoption($lng['cronmgmt']['weeks'], 'WEEK', $interval_nfo[1]);
+				$interval_interval .= \Froxlor\UI\HTML::makeoption($lng['cronmgmt']['months'], 'MONTH', $interval_nfo[1]);
 				// end of interval
 
 				$change_cronfile = false;

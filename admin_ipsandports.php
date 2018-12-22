@@ -40,8 +40,8 @@ if ($page == 'ipsandports' || $page == 'overview') {
 
 		$log->logAction(ADM_ACTION, LOG_NOTICE, "viewed admin_ipsandports");
 		$fields = array(
-			'ip' => \Froxlor\I18N\Lang::getAll()['admin']['ipsandports']['ip'],
-			'port' => \Froxlor\I18N\Lang::getAll()['admin']['ipsandports']['port']
+			'ip' => $lng['admin']['ipsandports']['ip'],
+			'port' => $lng['admin']['ipsandports']['port']
 		);
 		$paging = new \Froxlor\UI\Paging(\Froxlor\User::getAll(), TABLE_PANEL_IPSANDPORTS, $fields);
 		$ipsandports = '';

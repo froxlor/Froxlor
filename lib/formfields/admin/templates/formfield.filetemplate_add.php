@@ -16,20 +16,20 @@
  */
 return array(
 	'filetemplate_add' => array(
-		'title' => \Froxlor\I18N\Lang::getAll()['admin']['templates']['template_add'],
+		'title' => $lng['admin']['templates']['template_add'],
 		'image' => 'icons/templates_add.png',
 		'sections' => array(
 			'section_a' => array(
-				'title' => \Froxlor\I18N\Lang::getAll()['admin']['templates']['template_add'],
+				'title' => $lng['admin']['templates']['template_add'],
 				'image' => 'icons/templates_add.png',
 				'fields' => array(
 					'template' => array(
-						'label' => \Froxlor\I18N\Lang::getAll()['admin']['templates']['action'],
+						'label' => $lng['admin']['templates']['action'],
 						'type' => 'select',
 						'select_var' => $free_templates
 					),
 					'filecontent' => array(
-						'label' => \Froxlor\I18N\Lang::getAll()['admin']['templates']['filecontent'],
+						'label' => $lng['admin']['templates']['filecontent'],
 						'type' => 'textarea',
 						'cols' => 60,
 						'rows' => 12

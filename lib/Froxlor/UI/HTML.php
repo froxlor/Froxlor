@@ -217,7 +217,7 @@ class HTML
 	 */
 	public static function makeyesno($name, $yesvalue, $novalue = '', $yesselected = '', $disabled = false)
 	{
-		global $theme;
+		global $lng, $theme;
 
 		if ($disabled) {
 			$d = ' disabled="disabled"';
@@ -230,7 +230,7 @@ class HTML
 		}
 
 		return '<select class="dropdown_noborder" id="' . $name . '" name="' . $name . '"' . $d . '>
-	<option value="' . $yesvalue . '"' . ($yesselected ? ' selected="selected"' : '') . '>' . \Froxlor\I18N\Lang::getAll()['panel']['yes'] . '</option><option value="' . $novalue . '"' . ($yesselected ? '' : ' selected="selected"') . '>' . \Froxlor\I18N\Lang::getAll()['panel']['no'] . '</option></select>';
+	<option value="' . $yesvalue . '"' . ($yesselected ? ' selected="selected"' : '') . '>' . $lng['panel']['yes'] . '</option><option value="' . $novalue . '"' . ($yesselected ? '' : ' selected="selected"') . '>' . $lng['panel']['no'] . '</option></select>';
 	}
 
 	/**
@@ -264,8 +264,8 @@ class HTML
 			}
 		}
 
-		if (isset(\Froxlor\I18N\Lang::getAll()['question'][$text])) {
-			$text = \Froxlor\I18N\Lang::getAll()['question'][$text];
+		if (isset($lng['question'][$text])) {
+			$text = $lng['question'][$text];
 		}
 
 		$text = strtr($text, array(
@@ -287,12 +287,12 @@ class HTML
 			}
 		}
 
-		if (isset(\Froxlor\I18N\Lang::getAll()['question'][$text])) {
-			$text = \Froxlor\I18N\Lang::getAll()['question'][$text];
+		if (isset($lng['question'][$text])) {
+			$text = $lng['question'][$text];
 		}
 
-		if (isset(\Froxlor\I18N\Lang::getAll()['question'][$chk_text])) {
-			$chk_text = \Froxlor\I18N\Lang::getAll()['question'][$chk_text];
+		if (isset($lng['question'][$chk_text])) {
+			$chk_text = $lng['question'][$chk_text];
 		}
 
 		if ($show_checkbox) {

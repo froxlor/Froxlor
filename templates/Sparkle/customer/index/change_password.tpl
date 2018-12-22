@@ -3,7 +3,7 @@ $header
 		<header>
 			<h2>
 				<img src="templates/{$theme}/assets/img/icons/lock_big.png" alt="" />&nbsp;
-				{\Froxlor\I18N\Lang::getAll()['menue']['main']['changepassword']}
+				{$lng['menue']['main']['changepassword']}
 			</h2>
 		</header>
 
@@ -15,35 +15,35 @@ $header
 					<input type="hidden" name="send" value="send" />
 					<table class="middle center">
 						<tr>
-							<td width="50%"><label for="old_password">{\Froxlor\I18N\Lang::getAll()['changepassword']['old_password']}:</label></td>
+							<td width="50%"><label for="old_password">{$lng['changepassword']['old_password']}:</label></td>
 							<td><input type="password" id="old_password" name="old_password" /></td>
 						</tr>
 						<tr>
-							<td><label for="new_password">{\Froxlor\I18N\Lang::getAll()['changepassword']['new_password']}:</label></td>
+							<td><label for="new_password">{$lng['changepassword']['new_password']}:</label></td>
 							<td><input type="password" id="new_password" name="new_password" /></td>
 						</tr>
 						<tr>
-							<td><label for="new_password_confirm">{\Froxlor\I18N\Lang::getAll()['changepassword']['new_password_confirm']}:</label></td>
+							<td><label for="new_password_confirm">{$lng['changepassword']['new_password_confirm']}:</label></td>
 							<td><input type="password" id="new_password_confirm" name="new_password_confirm" /></td>
 						</tr>
 						<tr>
 							<td>&nbsp;</td>
 							<td>
 								<input type="checkbox" name="change_main_ftp" id="change_main_ftp" value="true" />
-								<label for="change_main_ftp">{\Froxlor\I18N\Lang::getAll()['changepassword']['also_change_ftp']}</label>
+								<label for="change_main_ftp">{$lng['changepassword']['also_change_ftp']}</label>
 							</td>
 						</tr>
 						<tr>
 							<td>&nbsp;</td>
 							<td>
 								<input type="checkbox" name="change_webalizer" id="change_webalizer" value="true" />
-								<label for="change_webalizer">{\Froxlor\I18N\Lang::getAll()['changepassword']['also_change_webalizer']}</label>
+								<label for="change_webalizer">{$lng['changepassword']['also_change_webalizer']}</label>
 							</td>
 						</tr>
 						<tfoot>
 							<tr>
 								<td colspan="2" align="center">
-									<input type="submit" value="{\Froxlor\I18N\Lang::getAll()['menue']['main']['changepassword']}" />
+									<input type="submit" value="{$lng['menue']['main']['changepassword']}" />
 								</td>
 							</tr>
 						</tfoot>

@@ -424,12 +424,13 @@ class ConfigDaemon
 			if (preg_match('/^settings\.(.*)$/', $matches[1], $match)) {
 				return \Froxlor\Settings::Get($match[1]);
 			} elseif (preg_match('/^lng\.(.*)(?:\.(.*)(?:\.(.*)))$/U', $matches[1], $match)) {
+				global $lng;
 				if (isset($match[1]) && $match[1] != '' && isset($match[2]) && $match[2] != '' && isset($match[3]) && $match[3] != '') {
-					return \Froxlor\I18N\Lang::getAll()[$match[1]][$match[2]][$match[3]];
+					return $lng[$match[1]][$match[2]][$match[3]];
 				} elseif (isset($match[1]) && $match[1] != '' && isset($match[2]) && $match[2] != '') {
-					return \Froxlor\I18N\Lang::getAll()[$match[1]][$match[2]];
+					return $lng[$match[1]][$match[2]];
 				} elseif (isset($match[1]) && $match[1] != '') {
-					return \Froxlor\I18N\Lang::getAll()[$match[1]];
+					return $lng[$match[1]];
 				}
 				return '';
 			} elseif (preg_match('/^const\.(.*)$/', $matches[1], $match)) {

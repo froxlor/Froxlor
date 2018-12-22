@@ -26,7 +26,7 @@ $header
 	<article>
 		<header>
 			<h3>
-				{\Froxlor\I18N\Lang::getAll()['admin']['templates']['template_replace_vars']}
+				{$lng['admin']['templates']['template_replace_vars']}
 			</h3>
 		</header>
 		
@@ -35,35 +35,35 @@ $header
 			<table class="full">
 			<thead>
 				<tr>
-					<th>{\Froxlor\I18N\Lang::getAll()['panel']['variable']}</th>
-					<th>{\Froxlor\I18N\Lang::getAll()['panel']['description']}</th>
+					<th>{$lng['panel']['variable']}</th>
+					<th>{$lng['panel']['description']}</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
 					<td colspan="2">
-						<strong>{\Froxlor\I18N\Lang::getAll()['admin']['templates']['index_html']}</strong>
+						<strong>{$lng['admin']['templates']['index_html']}</strong>
 					</td>
 				</tr>
 				<tr>
 					<td><em>{SERVERNAME}</em></td>
-					<td>{\Froxlor\I18N\Lang::getAll()['admin']['templates']['SERVERNAME']}</td>
+					<td>{$lng['admin']['templates']['SERVERNAME']}</td>
 				</tr>
 				<tr>
 					<td><em>{CUSTOMER}</em></td>
-					<td>{\Froxlor\I18N\Lang::getAll()['admin']['templates']['CUSTOMER']}</td>
+					<td>{$lng['admin']['templates']['CUSTOMER']}</td>
 				</tr>
 				<tr>
 					<td><em>{ADMIN}</em></td>
-					<td>{\Froxlor\I18N\Lang::getAll()['admin']['templates']['ADMIN']}</td>
+					<td>{$lng['admin']['templates']['ADMIN']}</td>
 				</tr>
 				<tr>
 					<td><em>{CUSTOMER_EMAIL}</em></td>
-					<td>{\Froxlor\I18N\Lang::getAll()['admin']['templates']['CUSTOMER_EMAIL']}</td>
+					<td>{$lng['admin']['templates']['CUSTOMER_EMAIL']}</td>
 				</tr>
 				<tr>
 					<td><em>{ADMIN_EMAIL}</em></td>
-					<td>{\Froxlor\I18N\Lang::getAll()['admin']['templates']['ADMIN_EMAIL']}</td>
+					<td>{$lng['admin']['templates']['ADMIN_EMAIL']}</td>
 				</tr>
 			</tbody>
 			</table>

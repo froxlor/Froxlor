@@ -16,31 +16,31 @@
  */
 return array(
 	'backup' => array(
-		'title' => \Froxlor\I18N\Lang::getAll()['extras']['backup'],
+		'title' => $lng['extras']['backup'],
 		'image' => 'icons/backup_big.png',
 		'sections' => array(
 			'section_a' => array(
-				'title' => \Froxlor\I18N\Lang::getAll()['extras']['backup'],
+				'title' => $lng['extras']['backup'],
 				'image' => 'icons/backup_big.png',
 				'fields' => array(
 					'path' => array(
-						'label' => \Froxlor\I18N\Lang::getAll()['panel']['backuppath']['title'],
-						'desc' => \Froxlor\I18N\Lang::getAll()['panel']['backuppath']['description'] . '<br>' . (\Froxlor\Settings::Get('panel.pathedit') != 'Dropdown' ? \Froxlor\I18N\Lang::getAll()['panel']['pathDescription'] : null) . (isset($pathSelect['note']) ? '<br />' . $pathSelect['value'] : ''),
+						'label' => $lng['panel']['backuppath']['title'],
+						'desc' => $lng['panel']['backuppath']['description'] . '<br>' . (\Froxlor\Settings::Get('panel.pathedit') != 'Dropdown' ? $lng['panel']['pathDescription'] : null) . (isset($pathSelect['note']) ? '<br />' . $pathSelect['value'] : ''),
 						'type' => $pathSelect['type'],
 						'select_var' => $pathSelect['value'],
 						'value' => $pathSelect['value']
 					),
 					'path_protection_info' => array(
-						'label' => \Froxlor\I18N\Lang::getAll()['extras']['path_protection_label'],
+						'label' => $lng['extras']['path_protection_label'],
 						'type' => 'label',
-						'value' => \Froxlor\I18N\Lang::getAll()['extras']['path_protection_info']
+						'value' => $lng['extras']['path_protection_info']
 					),
 					'backup_web' => array(
-						'label' => \Froxlor\I18N\Lang::getAll()['extras']['backup_web'],
+						'label' => $lng['extras']['backup_web'],
 						'type' => 'checkbox',
 						'values' => array(
 							array(
-								'label' => \Froxlor\I18N\Lang::getAll()['panel']['yes'],
+								'label' => $lng['panel']['yes'],
 								'value' => '1'
 							)
 						),
@@ -49,11 +49,11 @@ return array(
 						)
 					),
 					'backup_mail' => array(
-						'label' => \Froxlor\I18N\Lang::getAll()['extras']['backup_mail'],
+						'label' => $lng['extras']['backup_mail'],
 						'type' => 'checkbox',
 						'values' => array(
 							array(
-								'label' => \Froxlor\I18N\Lang::getAll()['panel']['yes'],
+								'label' => $lng['panel']['yes'],
 								'value' => '1'
 							)
 						),
@@ -62,11 +62,11 @@ return array(
 						)
 					),
 					'backup_dbs' => array(
-						'label' => \Froxlor\I18N\Lang::getAll()['extras']['backup_dbs'],
+						'label' => $lng['extras']['backup_dbs'],
 						'type' => 'checkbox',
 						'values' => array(
 							array(
-								'label' => \Froxlor\I18N\Lang::getAll()['panel']['yes'],
+								'label' => $lng['panel']['yes'],
 								'value' => '1'
 							)
 						),

@@ -397,24 +397,24 @@ if (AREA == 'admin' || AREA == 'customer') {
 			'admin' => array(
 				'index' => array(
 					'url' => 'admin_index.php',
-					'label' => \Froxlor\I18N\Lang::getAll()['admin']['overview'],
+					'label' => $lng['admin']['overview'],
 					'elements' => array(
 						array(
-							'label' => \Froxlor\I18N\Lang::getAll()['menue']['main']['username']
+							'label' => $lng['menue']['main']['username']
 						),
 						array(
 							'url' => 'admin_index.php?action=logout',
-							'label' => \Froxlor\I18N\Lang::getAll()['login']['logout']
+							'label' => $lng['login']['logout']
 						)
 					)
 				),
 				'server' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['admin']['server'],
+					'label' => $lng['admin']['server'],
 					'required_resources' => 'change_serversettings',
 					'elements' => array(
 						array(
 							'url' => 'admin_updates.php?page=overview',
-							'label' => \Froxlor\I18N\Lang::getAll()['update']['update'],
+							'label' => $lng['update']['update'],
 							'required_resources' => 'change_serversettings'
 						)
 					)

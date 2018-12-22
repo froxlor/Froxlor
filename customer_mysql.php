@@ -44,14 +44,14 @@ if ($page == 'overview') {
 	$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_mysql");
 	Database::needSqlData();
 	$sql = Database::getSqlData();
-	\Froxlor\I18N\Lang::getAll()['mysql']['description'] = str_replace('<SQL_HOST>', $sql['host'], \Froxlor\I18N\Lang::getAll()['mysql']['description']);
+	$lng['mysql']['description'] = str_replace('<SQL_HOST>', $sql['host'], $lng['mysql']['description']);
 	eval("echo \"" . \Froxlor\UI\Template::getTemplate('mysql/mysql') . "\";");
 } elseif ($page == 'mysqls') {
 	if ($action == '') {
 		$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_mysql::mysqls");
 		$fields = array(
-			'databasename' => \Froxlor\I18N\Lang::getAll()['mysql']['databasename'],
-			'description' => \Froxlor\I18N\Lang::getAll()['mysql']['databasedescription']
+			'databasename' => $lng['mysql']['databasename'],
+			'description' => $lng['mysql']['databasedescription']
 		);
 		$paging = new \Froxlor\UI\Paging(\Froxlor\User::getAll(), TABLE_PANEL_DATABASES, $fields);
 		$result_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_DATABASES . "`

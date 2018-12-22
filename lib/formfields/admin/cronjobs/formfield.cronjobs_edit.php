@@ -16,11 +16,11 @@
  */
 return array(
 	'cronjobs_edit' => array(
-		'title' => \Froxlor\I18N\Lang::getAll()['admin']['cronjob_edit'],
+		'title' => $lng['admin']['cronjob_edit'],
 		'image' => 'icons/clock_edit.png',
 		'sections' => array(
 			'section_a' => array(
-				'title' => \Froxlor\I18N\Lang::getAll()['cronjob']['cronjobsettings'],
+				'title' => $lng['cronjob']['cronjobsettings'],
 				'image' => 'icons/clock_edit.png',
 				'fields' => array(
 					'cronfile' => array(
@@ -29,11 +29,11 @@ return array(
 						'value' => $result['cronfile']
 					),
 					'isactive' => array(
-						'label' => \Froxlor\I18N\Lang::getAll()['admin']['activated'],
+						'label' => $lng['admin']['activated'],
 						'type' => 'checkbox',
 						'values' => array(
 							array(
-								'label' => \Froxlor\I18N\Lang::getAll()['panel']['yes'],
+								'label' => $lng['panel']['yes'],
 								'value' => '1'
 							)
 						),
@@ -42,12 +42,12 @@ return array(
 						)
 					),
 					'interval_value' => array(
-						'label' => \Froxlor\I18N\Lang::getAll()['cronjob']['cronjobintervalv'],
+						'label' => $lng['cronjob']['cronjobintervalv'],
 						'type' => 'text',
 						'value' => $interval_value
 					),
 					'interval_interval' => array(
-						'label' => \Froxlor\I18N\Lang::getAll()['cronjob']['cronjobinterval'],
+						'label' => $lng['cronjob']['cronjobinterval'],
 						'type' => 'select',
 						'select_var' => $interval_interval
 					)

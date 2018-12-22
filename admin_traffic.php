@@ -59,7 +59,7 @@ if ($page == 'overview' || $page == 'customers') {
 	for ($years = 0; $years <= $maxyears; $years ++) {
 
 		$overview['year'] = date("Y") - $years;
-		$overview['type'] = \Froxlor\I18N\Lang::getAll()['traffic']['customer'];
+		$overview['type'] = $lng['traffic']['customer'];
 		$domain_list = '';
 		$totals = array(
 			'jan' => 0,
@@ -122,7 +122,7 @@ if ($page == 'overview' || $page == 'customers') {
 		}
 		// sum up totals
 		$virtual_host = array(
-			'name' => \Froxlor\I18N\Lang::getAll()['traffic']['months']['total']
+			'name' => $lng['traffic']['months']['total']
 		);
 		foreach ($totals as $month => $bytes) {
 			$virtual_host[$month] = ($bytes == 0 ? '-' : \Froxlor\PhpHelper::size_readable($bytes, 'GiB', 'bi', '%01.' . (int) Settings::Get('panel.decimal_places') . 'f %s'));

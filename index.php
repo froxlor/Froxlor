@@ -281,10 +281,10 @@ if ($action == '2fa_entercode') {
 				$replace_arr = array(
 					'CODE' => $code
 				);
-				$mail_body = html_entity_decode(\Froxlor\PhpHelper::replace_variables(\Froxlor\I18N\Lang::getAll()['mails']['2fa']['mailbody'], $replace_arr));
+				$mail_body = html_entity_decode(\Froxlor\PhpHelper::replace_variables($lng['mails']['2fa']['mailbody'], $replace_arr));
 
 				try {
-					$mail->Subject = \Froxlor\I18N\Lang::getAll()['mails']['2fa']['subject'];
+					$mail->Subject = $lng['mails']['2fa']['subject'];
 					$mail->AltBody = $mail_body;
 					$mail->MsgHTML(str_replace("\n", "<br />", $mail_body));
 					$mail->AddAddress(\Froxlor\User::getAll()['email'], \Froxlor\User::getCorrectUserSalutation(\Froxlor\User::getAll()));
@@ -325,7 +325,7 @@ if ($action == '2fa_entercode') {
 		exit();
 	} else {
 		$language_options = '';
-		$language_options .= \Froxlor\UI\HTML::makeoption(\Froxlor\I18N\Lang::getAll()['login']['profile_lng'], 'profile', 'profile', true, true);
+		$language_options .= \Froxlor\UI\HTML::makeoption($lng['login']['profile_lng'], 'profile', 'profile', true, true);
 
 		foreach ($languages as $language_file => $language_name) {
 			$language_options .= \Froxlor\UI\HTML::makeoption($language_name, $language_file, 'profile', true);
@@ -337,35 +337,35 @@ if ($action == '2fa_entercode') {
 
 		switch ($smessage) {
 			case 1:
-				$successmessage = \Froxlor\I18N\Lang::getAll()['pwdreminder']['success'];
+				$successmessage = $lng['pwdreminder']['success'];
 				break;
 			case 2:
-				$message = \Froxlor\I18N\Lang::getAll()['error']['login'];
+				$message = $lng['error']['login'];
 				break;
 			case 3:
-				$message = sprintf(\Froxlor\I18N\Lang::getAll()['error']['login_blocked'], Settings::Get('login.deactivatetime'));
+				$message = sprintf($lng['error']['login_blocked'], Settings::Get('login.deactivatetime'));
 				break;
 			case 4:
 				$cmail = isset($_GET['customermail']) ? $_GET['customermail'] : 'unknown';
-				$message = str_replace('%s', $cmail, \Froxlor\I18N\Lang::getAll()['error']['errorsendingmail']);
+				$message = str_replace('%s', $cmail, $lng['error']['errorsendingmail']);
 				break;
 			case 5:
-				$message = \Froxlor\I18N\Lang::getAll()['error']['user_banned'];
+				$message = $lng['error']['user_banned'];
 				break;
 			case 6:
-				$successmessage = \Froxlor\I18N\Lang::getAll()['pwdreminder']['changed'];
+				$successmessage = $lng['pwdreminder']['changed'];
 				break;
 			case 7:
-				$message = \Froxlor\I18N\Lang::getAll()['pwdreminder']['wrongcode'];
+				$message = $lng['pwdreminder']['wrongcode'];
 				break;
 			case 8:
-				$message = \Froxlor\I18N\Lang::getAll()['pwdreminder']['notallowed'];
+				$message = $lng['pwdreminder']['notallowed'];
 				break;
 		}
 
 		$update_in_progress = '';
 		if (\Froxlor\Froxlor::hasUpdates() || \Froxlor\Froxlor::hasDbUpdates()) {
-			$update_in_progress = \Froxlor\I18N\Lang::getAll()['update']['updateinprogress_onlyadmincanlogin'];
+			$update_in_progress = $lng['update']['updateinprogress_onlyadmincanlogin'];
 		}
 
 		// Pass the last used page if needed
@@ -496,7 +496,7 @@ if ($action == 'forgotpwd') {
 						"lang" => $def_language
 					));
 					$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
-					$mail_subject = html_entity_decode(\Froxlor\PhpHelper::replace_variables((($result['value'] != '') ? $result['value'] : \Froxlor\I18N\Lang::getAll()['mails']['password_reset']['subject']), $replace_arr));
+					$mail_subject = html_entity_decode(\Froxlor\PhpHelper::replace_variables((($result['value'] != '') ? $result['value'] : $lng['mails']['password_reset']['subject']), $replace_arr));
 
 					$result_stmt = Database::prepare('SELECT `value` FROM `' . TABLE_PANEL_TEMPLATES . '`
 						WHERE `adminid`= :adminid
@@ -508,7 +508,7 @@ if ($action == 'forgotpwd') {
 						"lang" => $def_language
 					));
 					$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
-					$mail_body = html_entity_decode(\Froxlor\PhpHelper::replace_variables((($result['value'] != '') ? $result['value'] : \Froxlor\I18N\Lang::getAll()['mails']['password_reset']['mailbody']), $replace_arr));
+					$mail_body = html_entity_decode(\Froxlor\PhpHelper::replace_variables((($result['value'] != '') ? $result['value'] : $lng['mails']['password_reset']['mailbody']), $replace_arr));
 
 					$_mailerror = false;
 					$mailerr_msg = "";
@@ -548,24 +548,24 @@ if ($action == 'forgotpwd') {
 						'loginname' => 'password_reset'
 					));
 					$rstlog->logAction(USR_ACTION, LOG_WARNING, "User '" . $loginname . "' requested to set a new password, but was not found in database!");
-					$message = \Froxlor\I18N\Lang::getAll()['login']['combination_not_found'];
+					$message = $lng['login']['combination_not_found'];
 				}
 
 				unset($user);
 			}
 		} else {
-			$message = \Froxlor\I18N\Lang::getAll()['login']['usernotfound'];
+			$message = $lng['login']['usernotfound'];
 		}
 	}
 
 	if ($adminchecked) {
 		if (Settings::Get('panel.allow_preset_admin') != '1') {
-			$message = \Froxlor\I18N\Lang::getAll()['pwdreminder']['notallowed'];
+			$message = $lng['pwdreminder']['notallowed'];
 			unset($adminchecked);
 		}
 	} else {
 		if (Settings::Get('panel.allow_preset') != '1') {
-			$message = \Froxlor\I18N\Lang::getAll()['pwdreminder']['notallowed'];
+			$message = $lng['pwdreminder']['notallowed'];
 		}
 	}
 

@@ -47,7 +47,7 @@ if ($action == 'delete') {
 		'd2fa' => "",
 		'id' => $uid
 	));
-	\Froxlor\UI\Response::standard_success(\Froxlor\I18N\Lang::getAll()['2fa']['2fa_removed']);
+	\Froxlor\UI\Response::standard_success($lng['2fa']['2fa_removed']);
 } elseif ($action == 'add') {
 	$type = isset($_POST['type_2fa']) ? $_POST['type_2fa'] : '0';
 
@@ -63,7 +63,7 @@ if ($action == 'delete') {
 		'd2fa' => $data,
 		'id' => $uid
 	));
-	\Froxlor\UI\Response::standard_success(sprintf(\Froxlor\I18N\Lang::getAll()['2fa']['2fa_added'], $filename, $s));
+	\Froxlor\UI\Response::standard_success(sprintf($lng['2fa']['2fa_added'], $filename, $s));
 }
 
 $log->logAction(USR_ACTION, LOG_NOTICE, "viewed 2fa::overview");

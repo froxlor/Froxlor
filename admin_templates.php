@@ -81,7 +81,7 @@ if ($action == '') {
 		foreach ($template_defs as $action => $email) {
 			$subjectid = $email['subject'];
 			$mailbodyid = $email['mailbody'];
-			$template = \Froxlor\I18N\Lang::getAll()['admin']['templates'][$action];
+			$template = $lng['admin']['templates'][$action];
 			eval("\$templates.=\"" . \Froxlor\UI\Template::getTemplate("templates/templates_template") . "\";");
 		}
 	}
@@ -148,7 +148,7 @@ if ($action == '') {
 				'ida' => $subjectid,
 				'idb' => $mailbodyid
 			));
-			$log->logAction(ADM_ACTION, LOG_INFO, "deleted template '" . $result['language'] . ' - ' . \Froxlor\I18N\Lang::getAll()['admin']['templates'][str_replace('_subject', '', $result['varname'])] . "'");
+			$log->logAction(ADM_ACTION, LOG_INFO, "deleted template '" . $result['language'] . ' - ' . $lng['admin']['templates'][str_replace('_subject', '', $result['varname'])] . "'");
 			\Froxlor\UI\Response::redirectTo($filename, array(
 				'page' => $page,
 				's' => $s
@@ -159,7 +159,7 @@ if ($action == '') {
 				'mailbodyid' => $mailbodyid,
 				'page' => $page,
 				'action' => $action
-			), $result['language'] . ' - ' . \Froxlor\I18N\Lang::getAll()['admin']['templates'][str_replace('_subject', '', $result['varname'])]);
+			), $result['language'] . ' - ' . $lng['admin']['templates'][str_replace('_subject', '', $result['varname'])]);
 		}
 	}
 } elseif ($action == 'deletef' && $id != 0) {
@@ -184,7 +184,7 @@ if ($action == '') {
 				'adminid' => \Froxlor\User::getAll()['adminid'],
 				'id' => $id
 			));
-			$log->logAction(ADM_ACTION, LOG_INFO, "deleted template '" . \Froxlor\I18N\Lang::getAll()['admin']['templates'][$row['varname']] . "'");
+			$log->logAction(ADM_ACTION, LOG_INFO, "deleted template '" . $lng['admin']['templates'][$row['varname']] . "'");
 			\Froxlor\UI\Response::redirectTo($filename, array(
 				'page' => $page,
 				's' => $s
@@ -194,7 +194,7 @@ if ($action == '') {
 				'id' => $id,
 				'page' => $page,
 				'action' => $action
-			), \Froxlor\I18N\Lang::getAll()['admin']['templates'][$row['varname']]);
+			), $lng['admin']['templates'][$row['varname']]);
 		}
 	} else {
 		\Froxlor\UI\Response::standard_error('templatenotfound');
@@ -220,8 +220,8 @@ if ($action == '') {
 			}
 		}
 
-		$subject = \Froxlor\I18N\Lang::getAll()['mails'][$template]['subject'];
-		$body = str_replace('\n', "\n", \Froxlor\I18N\Lang::getAll()['mails'][$template]['mailbody']);
+		$subject = $lng['mails'][$template]['subject'];
+		$body = str_replace('\n', "\n", $lng['mails'][$template]['mailbody']);
 
 		$lng = $lng_bak;
 
@@ -342,7 +342,7 @@ if ($action == '') {
 				$templates = array_diff($available_templates, $templates);
 
 				foreach ($templates as $template) {
-					$template_options .= \Froxlor\UI\HTML::makeoption(\Froxlor\I18N\Lang::getAll()['admin']['templates'][$template], $template, NULL, true, true, $language_file) . "\n";
+					$template_options .= \Froxlor\UI\HTML::makeoption($lng['admin']['templates'][$template], $template, NULL, true, true, $language_file) . "\n";
 				}
 			}
 		}
@@ -373,7 +373,7 @@ if ($action == '') {
 			}
 
 			foreach (array_diff($file_templates, $templatesdefined) as $template) {
-				$free_templates .= \Froxlor\UI\HTML::makeoption(\Froxlor\I18N\Lang::getAll()['admin']['templates'][$template], $template, '', true);
+				$free_templates .= \Froxlor\UI\HTML::makeoption($lng['admin']['templates'][$template], $template, '', true);
 			}
 
 			$filetemplate_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/templates/formfield.filetemplate_add.php';
@@ -427,7 +427,7 @@ if ($action == '') {
 		} else {
 
 			$result = \Froxlor\PhpHelper::htmlentities_array($result);
-			$template = \Froxlor\I18N\Lang::getAll()['admin']['templates'][str_replace('_subject', '', $result['varname'])];
+			$template = $lng['admin']['templates'][str_replace('_subject', '', $result['varname'])];
 			$subject = $result['value'];
 			$result_stmt = Database::prepare("
 				SELECT `language`, `varname`, `value`

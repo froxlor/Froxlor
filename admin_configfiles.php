@@ -116,7 +116,7 @@ if (\Froxlor\User::getAll()['change_serversettings'] == '1') {
 				foreach ($daemons as $di => $dd) {
 					$title = $dd->title;
 					if ($dd->default) {
-						$title = $title . " (" . strtolower(\Froxlor\I18N\Lang::getAll()['panel']['default']) . ")";
+						$title = $title . " (" . strtolower($lng['panel']['default']) . ")";
 					}
 					$daemons_select .= \Froxlor\UI\HTML::makeoption($title, $di);
 				}

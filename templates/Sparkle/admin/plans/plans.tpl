@@ -3,7 +3,7 @@ $header
 		<header>
 			<h2>
 				<img src="templates/{$theme}/assets/img/icons/templates_big.png" alt="" />&nbsp;
-				{\Froxlor\I18N\Lang::getAll()['admin']['plans']['plans']}
+				{$lng['admin']['plans']['plans']}
 			</h2>
 		</header>
 
@@ -18,17 +18,17 @@ $header
 
 				<div class="overviewadd">
 					<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />&nbsp;
-					<a href="{$linker->getLink(array('section' => 'plans', 'page' => $page, 'action' => 'add'))}">{\Froxlor\I18N\Lang::getAll()['admin']['plans']['add']}</a>
+					<a href="{$linker->getLink(array('section' => 'plans', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['plans']['add']}</a>
 				</div>
 
 				<table class="full hl">
 					<thead>
 						<tr>
-							<th>{\Froxlor\I18N\Lang::getAll()['admin']['plans']['name']}&nbsp;{$arrowcode['p.name']}</th>
-							<th>{\Froxlor\I18N\Lang::getAll()['admin']['plans']['description']}&nbsp;{$arrowcode['p.description']}</th>
-							<th>{\Froxlor\I18N\Lang::getAll()['admin']['admin']}&nbsp;{$arrowcode['adminname']}</th>
-							<th>{\Froxlor\I18N\Lang::getAll()['admin']['plans']['last_update']}&nbsp;{$arrowcode['p.ts']}</th>
-							<th>{\Froxlor\I18N\Lang::getAll()['panel']['options']}</th>
+							<th>{$lng['admin']['plans']['name']}&nbsp;{$arrowcode['p.name']}</th>
+							<th>{$lng['admin']['plans']['description']}&nbsp;{$arrowcode['p.description']}</th>
+							<th>{$lng['admin']['admin']}&nbsp;{$arrowcode['adminname']}</th>
+							<th>{$lng['admin']['plans']['last_update']}&nbsp;{$arrowcode['p.ts']}</th>
+							<th>{$lng['panel']['options']}</th>
 						</tr>
 					</thead>
 
@@ -49,7 +49,7 @@ $header
 			<if 15 < $count>
 			<div class="overviewadd">
 				<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />&nbsp;
-				<a href="{$linker->getLink(array('section' => 'plans', 'page' => $page, 'action' => 'add'))}">{\Froxlor\I18N\Lang::getAll()['admin']['plans']['add']}</a>
+				<a href="{$linker->getLink(array('section' => 'plans', 'page' => $page, 'action' => 'add'))}">{$lng['admin']['plans']['add']}</a>
 			</div>
 			</if>
 

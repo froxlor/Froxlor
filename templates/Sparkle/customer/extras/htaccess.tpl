@@ -3,7 +3,7 @@
 		<header>
 			<h2>
 				<img src="templates/{$theme}/assets/img/icons/htaccess_big.png" alt="" />&nbsp;
-				{\Froxlor\I18N\Lang::getAll()['menue']['extras']['pathoptions']}
+				{$lng['menue']['extras']['pathoptions']}
 			</h2>
 		</header>
 
@@ -19,21 +19,21 @@
 
 				<div class="overviewadd">
 					<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />&nbsp;
-					<a href="{$linker->getLink(array('section' => 'extras', 'page' => 'htaccess', 'action' => 'add'))}">{\Froxlor\I18N\Lang::getAll()['extras']['pathoptions_add']}</a>
+					<a href="{$linker->getLink(array('section' => 'extras', 'page' => 'htaccess', 'action' => 'add'))}">{$lng['extras']['pathoptions_add']}</a>
 				</div>
 		
 				<table class="full hl">
 					<thead>
 						<tr>
-							<th>{\Froxlor\I18N\Lang::getAll()['panel']['path']}&nbsp;{$arrowcode['path']}</th>
-							<th>{\Froxlor\I18N\Lang::getAll()['extras']['view_directory']}&nbsp;{$arrowcode['options_indexes']}</th>
-							<th>{\Froxlor\I18N\Lang::getAll()['extras']['error404path']}&nbsp;{$arrowcode['error404path']}</th>
-							<th>{\Froxlor\I18N\Lang::getAll()['extras']['error403path']}&nbsp;{$arrowcode['error403path']}</th>
-							<th>{\Froxlor\I18N\Lang::getAll()['extras']['error500path']}&nbsp;{$arrowcode['error500path']}</th>
+							<th>{$lng['panel']['path']}&nbsp;{$arrowcode['path']}</th>
+							<th>{$lng['extras']['view_directory']}&nbsp;{$arrowcode['options_indexes']}</th>
+							<th>{$lng['extras']['error404path']}&nbsp;{$arrowcode['error404path']}</th>
+							<th>{$lng['extras']['error403path']}&nbsp;{$arrowcode['error403path']}</th>
+							<th>{$lng['extras']['error500path']}&nbsp;{$arrowcode['error500path']}</th>
 							<if $cperlenabled == 1 >
-							<th>{\Froxlor\I18N\Lang::getAll()['extras']['execute_perl']}&nbsp;{$arrowcode['options_cgi']}</th>
+							<th>{$lng['extras']['execute_perl']}&nbsp;{$arrowcode['options_cgi']}</th>
 							</if>
-							<th>{\Froxlor\I18N\Lang::getAll()['panel']['options']}</th>
+							<th>{$lng['panel']['options']}</th>
 						</tr>
 					</thead>
 
@@ -53,7 +53,7 @@
 				<if 15 < $count >
 				<div class="overviewadd">
 					<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />&nbsp;
-					<a href="{$linker->getLink(array('section' => 'extras', 'page' => 'htaccess', 'action' => 'add'))}">{\Froxlor\I18N\Lang::getAll()['extras']['pathoptions_add']}</a>
+					<a href="{$linker->getLink(array('section' => 'extras', 'page' => 'htaccess', 'action' => 'add'))}">{$lng['extras']['pathoptions_add']}</a>
 				</div>
 				</if>
 			</form>

@@ -42,9 +42,9 @@ if ($page == 'overview') {
 	if ($action == '') {
 		$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_ftp::accounts");
 		$fields = array(
-			'username' => \Froxlor\I18N\Lang::getAll()['login']['username'],
-			'homedir' => \Froxlor\I18N\Lang::getAll()['panel']['path'],
-			'description' => \Froxlor\I18N\Lang::getAll()['panel']['ftpdesc']
+			'username' => $lng['login']['username'],
+			'homedir' => $lng['panel']['path'],
+			'description' => $lng['panel']['ftpdesc']
 		);
 		$paging = new \Froxlor\UI\Paging(\Froxlor\User::getAll(), TABLE_FTP_USERS, $fields);
 

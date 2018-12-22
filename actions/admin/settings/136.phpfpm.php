@@ -17,10 +17,10 @@
 return array(
 	'groups' => array(
 		'phpfpm' => array(
-			'title' => \Froxlor\I18N\Lang::getAll()['admin']['phpfpm_settings'],
+			'title' => $lng['admin']['phpfpm_settings'],
 			'fields' => array(
 				'system_phpfpm_enabled' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['phpfpm'],
+					'label' => $lng['serversettings']['phpfpm'],
 					'settinggroup' => 'phpfpm',
 					'varname' => 'enabled',
 					'type' => 'bool',
@@ -33,7 +33,7 @@ return array(
 					'overview_option' => true
 				),
 				'system_phpfpm_defaultini' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['mod_fcgid']['defaultini'],
+					'label' => $lng['serversettings']['mod_fcgid']['defaultini'],
 					'settinggroup' => 'phpfpm',
 					'varname' => 'defaultini',
 					'type' => 'option',
@@ -43,7 +43,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_phpfpm_aliasconfigdir' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['phpfpm_settings']['aliasconfigdir'],
+					'label' => $lng['serversettings']['phpfpm_settings']['aliasconfigdir'],
 					'settinggroup' => 'phpfpm',
 					'varname' => 'aliasconfigdir',
 					'type' => 'string',
@@ -52,7 +52,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_phpfpm_tmpdir' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['mod_fcgid']['tmpdir'],
+					'label' => $lng['serversettings']['mod_fcgid']['tmpdir'],
 					'settinggroup' => 'phpfpm',
 					'varname' => 'tmpdir',
 					'type' => 'string',
@@ -61,7 +61,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_phpfpm_peardir' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['mod_fcgid']['peardir'],
+					'label' => $lng['serversettings']['mod_fcgid']['peardir'],
 					'settinggroup' => 'phpfpm',
 					'varname' => 'peardir',
 					'type' => 'string',
@@ -72,7 +72,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_phpfpm_envpath' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['phpfpm_settings']['envpath'],
+					'label' => $lng['serversettings']['phpfpm_settings']['envpath'],
 					'settinggroup' => 'phpfpm',
 					'varname' => 'envpath',
 					'type' => 'string',
@@ -83,7 +83,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_phpfpm_fastcgi_ipcdir' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['phpfpm_settings']['ipcdir'],
+					'label' => $lng['serversettings']['phpfpm_settings']['ipcdir'],
 					'settinggroup' => 'phpfpm',
 					'varname' => 'fastcgi_ipcdir',
 					'type' => 'string',
@@ -92,7 +92,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_phpfpm_use_mod_proxy' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['phpfpm']['use_mod_proxy'],
+					'label' => $lng['phpfpm']['use_mod_proxy'],
 					'settinggroup' => 'phpfpm',
 					'varname' => 'use_mod_proxy',
 					'type' => 'bool',
@@ -101,7 +101,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_phpfpm_ini_flags' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['phpfpm']['ini_flags'],
+					'label' => $lng['phpfpm']['ini_flags'],
 					'settinggroup' => 'phpfpm',
 					'varname' => 'ini_flags',
 					'type' => 'text',
@@ -109,7 +109,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_phpfpm_ini_values' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['phpfpm']['ini_values'],
+					'label' => $lng['phpfpm']['ini_values'],
 					'settinggroup' => 'phpfpm',
 					'varname' => 'ini_values',
 					'type' => 'text',
@@ -117,7 +117,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_phpfpm_ini_admin_flags' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['phpfpm']['ini_admin_flags'],
+					'label' => $lng['phpfpm']['ini_admin_flags'],
 					'settinggroup' => 'phpfpm',
 					'varname' => 'ini_admin_flags',
 					'type' => 'text',
@@ -125,7 +125,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_phpfpm_ini_admin_values' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['phpfpm']['ini_admin_values'],
+					'label' => $lng['phpfpm']['ini_admin_values'],
 					'settinggroup' => 'phpfpm',
 					'varname' => 'ini_admin_values',
 					'type' => 'text',

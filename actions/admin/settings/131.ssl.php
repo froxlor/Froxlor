@@ -19,10 +19,10 @@
 return array(
 	'groups' => array(
 		'ssl' => array(
-			'title' => \Froxlor\I18N\Lang::getAll()['admin']['sslsettings'],
+			'title' => $lng['admin']['sslsettings'],
 			'fields' => array(
 				'system_ssl_enabled' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['ssl']['use_ssl'],
+					'label' => $lng['serversettings']['ssl']['use_ssl'],
 					'settinggroup' => 'system',
 					'varname' => 'use_ssl',
 					'type' => 'bool',
@@ -31,7 +31,7 @@ return array(
 					'overview_option' => true
 				),
 				'system_ssl_protocols' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['ssl']['ssl_protocols'],
+					'label' => $lng['serversettings']['ssl']['ssl_protocols'],
 					'settinggroup' => 'system',
 					'varname' => 'ssl_protocols',
 					'type' => 'option',
@@ -46,7 +46,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_ssl_cipher_list' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['ssl']['ssl_cipher_list'],
+					'label' => $lng['serversettings']['ssl']['ssl_cipher_list'],
 					'settinggroup' => 'system',
 					'varname' => 'ssl_cipher_list',
 					'type' => 'string',
@@ -55,7 +55,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_ssl_cert_file' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['ssl']['ssl_cert_file'],
+					'label' => $lng['serversettings']['ssl']['ssl_cert_file'],
 					'settinggroup' => 'system',
 					'varname' => 'ssl_cert_file',
 					'type' => 'string',
@@ -65,7 +65,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_ssl_key_file' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['ssl']['ssl_key_file'],
+					'label' => $lng['serversettings']['ssl']['ssl_key_file'],
 					'settinggroup' => 'system',
 					'varname' => 'ssl_key_file',
 					'type' => 'string',
@@ -75,7 +75,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_ssl_cert_chainfile' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['admin']['ipsandports']['ssl_cert_chainfile'],
+					'label' => $lng['admin']['ipsandports']['ssl_cert_chainfile'],
 					'settinggroup' => 'system',
 					'varname' => 'ssl_cert_chainfile',
 					'type' => 'string',
@@ -85,7 +85,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_ssl_ca_file' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['ssl']['ssl_ca_file'],
+					'label' => $lng['serversettings']['ssl']['ssl_ca_file'],
 					'settinggroup' => 'system',
 					'varname' => 'ssl_ca_file',
 					'type' => 'string',
@@ -95,7 +95,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_apache24_ocsp_cache_path' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['ssl']['apache24_ocsp_cache_path'],
+					'label' => $lng['serversettings']['ssl']['apache24_ocsp_cache_path'],
 					'settinggroup' => 'system',
 					'varname' => 'apache24_ocsp_cache_path',
 					'type' => 'string',
@@ -106,7 +106,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_leenabled' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['leenabled'],
+					'label' => $lng['serversettings']['leenabled'],
 					'settinggroup' => 'system',
 					'varname' => 'leenabled',
 					'type' => 'bool',
@@ -115,7 +115,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_letsencryptacmeconf' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['letsencryptacmeconf'],
+					'label' => $lng['serversettings']['letsencryptacmeconf'],
 					'settinggroup' => 'system',
 					'varname' => 'letsencryptacmeconf',
 					'type' => 'string',
@@ -124,7 +124,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_leapiversion' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['leapiversion'],
+					'label' => $lng['serversettings']['leapiversion'],
 					'settinggroup' => 'system',
 					'varname' => 'leapiversion',
 					'type' => 'option',
@@ -137,7 +137,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_letsencryptca' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['letsencryptca'],
+					'label' => $lng['serversettings']['letsencryptca'],
 					'settinggroup' => 'system',
 					'varname' => 'letsencryptca',
 					'type' => 'option',
@@ -150,7 +150,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_letsencryptcountrycode' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['letsencryptcountrycode'],
+					'label' => $lng['serversettings']['letsencryptcountrycode'],
 					'settinggroup' => 'system',
 					'varname' => 'letsencryptcountrycode',
 					'type' => 'string',
@@ -159,7 +159,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_letsencryptstate' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['letsencryptstate'],
+					'label' => $lng['serversettings']['letsencryptstate'],
 					'settinggroup' => 'system',
 					'varname' => 'letsencryptstate',
 					'type' => 'string',
@@ -168,7 +168,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_letsencryptchallengepath' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['letsencryptchallengepath'],
+					'label' => $lng['serversettings']['letsencryptchallengepath'],
 					'settinggroup' => 'system',
 					'varname' => 'letsencryptchallengepath',
 					'type' => 'string',
@@ -177,7 +177,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_letsencryptkeysize' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['letsencryptkeysize'],
+					'label' => $lng['serversettings']['letsencryptkeysize'],
 					'settinggroup' => 'system',
 					'varname' => 'letsencryptkeysize',
 					'type' => 'int',
@@ -186,7 +186,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_letsencryptreuseold' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['letsencryptreuseold'],
+					'label' => $lng['serversettings']['letsencryptreuseold'],
 					'settinggroup' => 'system',
 					'varname' => 'letsencryptreuseold',
 					'type' => 'bool',
@@ -194,7 +194,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_disable_le_selfcheck' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['disable_le_selfcheck'],
+					'label' => $lng['serversettings']['disable_le_selfcheck'],
 					'settinggroup' => 'system',
 					'varname' => 'disable_le_selfcheck',
 					'type' => 'bool',

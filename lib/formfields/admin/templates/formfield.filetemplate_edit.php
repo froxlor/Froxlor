@@ -16,21 +16,21 @@
  */
 return array(
 	'filetemplate_edit' => array(
-		'title' => \Froxlor\I18N\Lang::getAll()['admin']['templates']['template_edit'],
+		'title' => $lng['admin']['templates']['template_edit'],
 		'image' => 'icons/templates_edit.png',
 		'sections' => array(
 			'section_a' => array(
-				'title' => \Froxlor\I18N\Lang::getAll()['admin']['templates']['template_edit'],
+				'title' => $lng['admin']['templates']['template_edit'],
 				'image' => 'icons/templates_edit.png',
 				'fields' => array(
 					'template' => array(
-						'label' => \Froxlor\I18N\Lang::getAll()['admin']['templates']['action'],
+						'label' => $lng['admin']['templates']['action'],
 						'type' => 'hidden',
-						'value' => \Froxlor\I18N\Lang::getAll()['admin']['templates'][$row['varname']],
-						'display' => \Froxlor\I18N\Lang::getAll()['admin']['templates'][$row['varname']]
+						'value' => $lng['admin']['templates'][$row['varname']],
+						'display' => $lng['admin']['templates'][$row['varname']]
 					),
 					'filecontent' => array(
-						'label' => \Froxlor\I18N\Lang::getAll()['admin']['templates']['filecontent'],
+						'label' => $lng['admin']['templates']['filecontent'],
 						'type' => 'textarea',
 						'cols' => 60,
 						'rows' => 12,

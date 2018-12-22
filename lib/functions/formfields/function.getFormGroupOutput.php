@@ -18,14 +18,14 @@
  */
 function getFormGroupOutput($groupname, $groupdetails)
 {
-	global $theme;
+	global $lng, $theme;
 	eval("\$group = \"" . \Froxlor\UI\Template::getTemplate("settings/settings_group") . "\";");
 	return $group;
 }
 
 function getFormOverviewGroupOutput($groupname, $groupdetails)
 {
-	global $filename, $s, $theme;
+	global $lng, $filename, $s, $theme;
 
 	$group = '';
 	$title = $groupdetails['title'];
@@ -52,7 +52,7 @@ function getFormOverviewGroupOutput($groupname, $groupdetails)
 					$option .= '</select>';
 					$activated = true;
 				} else {
-					$option .= \Froxlor\I18N\Lang::getAll()['admin']['activated'] . ':&nbsp;';
+					$option .= $lng['admin']['activated'] . ':&nbsp;';
 					$option .= \Froxlor\UI\HTML::makeyesno($fieldname, '1', '0', Settings::Get($fielddetails['settinggroup'] . '.' . $fielddetails['varname']));
 					$activated = (int) Settings::Get($fielddetails['settinggroup'] . '.' . $fielddetails['varname']);
 				}
@@ -71,7 +71,7 @@ function getFormOverviewGroupOutput($groupname, $groupdetails)
 		$websrv = Settings::Get('system.webserver');
 		if (! in_array($websrv, $groupdetails['websrv_avail'])) {
 			$do_show = false;
-			$title .= sprintf(\Froxlor\I18N\Lang::getAll()['serversettings']['option_unavailable_websrv'], implode(", ", $groupdetails['websrv_avail']));
+			$title .= sprintf($lng['serversettings']['option_unavailable_websrv'], implode(", ", $groupdetails['websrv_avail']));
 			// hack disabled flag into select-box
 			$option = str_replace('<select class', '<select disabled="disabled" class', $option);
 		}

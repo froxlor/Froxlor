@@ -10,8 +10,8 @@
 		</if>
 		&copy; 2009-{$current_year} by <a href="http://www.froxlor.org/" rel="external">the Froxlor Team</a><br />
 	</span>
-	<if \Froxlor\I18N\Lang::getAll()['translator'] != ''>
-		<br /><span>{\Froxlor\I18N\Lang::getAll()['panel']['translator']}: {\Froxlor\I18N\Lang::getAll()['translator']}
+	<if $lng['translator'] != ''>
+		<br /><span>{$lng['panel']['translator']}: {$lng['translator']}
 	</if>
 </footer>
 <a href="#" class="scrollup">Scroll</a>

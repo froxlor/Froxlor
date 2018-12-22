@@ -5,7 +5,7 @@ $header
 			<img src="templates/{$theme}/assets/img/icons/domain_edit_big.png" alt="{$title}" />&nbsp;
 			{$title}
 			<if $result['isbinddomain'] == '1' && \Froxlor\User::getAll()['dnsenabled'] == '1' && \Froxlor\Settings::Get('system.bind_enable') == '1' && \Froxlor\Settings::Get('system.dnsenabled') == '1'>
-				&nbsp;(<small><a href="{$linker->getLink(array('section' => 'domains', 'page' => 'domaindnseditor', 'domain_id' => $id))}">{\Froxlor\I18N\Lang::getAll()['dnseditor']['edit']}</a></small>)
+				&nbsp;(<small><a href="{$linker->getLink(array('section' => 'domains', 'page' => 'domaindnseditor', 'domain_id' => $id))}">{$lng['dnseditor']['edit']}</a></small>)
 			</if>
 		</h2>
 	</header>

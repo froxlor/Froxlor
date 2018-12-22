@@ -17,14 +17,14 @@
 return array(
 	'groups' => array(
 		'fcgid' => array(
-			'title' => \Froxlor\I18N\Lang::getAll()['admin']['fcgid_settings'],
+			'title' => $lng['admin']['fcgid_settings'],
 			'websrv_avail' => array(
 				'apache2',
 				'lighttpd'
 			),
 			'fields' => array(
 				'system_mod_fcgid_enabled' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['mod_fcgid'],
+					'label' => $lng['serversettings']['mod_fcgid'],
 					'settinggroup' => 'system',
 					'varname' => 'mod_fcgid',
 					'type' => 'bool',
@@ -37,7 +37,7 @@ return array(
 					'overview_option' => true
 				),
 				'system_mod_fcgid_configdir' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['mod_fcgid']['configdir'],
+					'label' => $lng['serversettings']['mod_fcgid']['configdir'],
 					'settinggroup' => 'system',
 					'varname' => 'mod_fcgid_configdir',
 					'type' => 'string',
@@ -50,7 +50,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_mod_fcgid_tmpdir' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['mod_fcgid']['tmpdir'],
+					'label' => $lng['serversettings']['mod_fcgid']['tmpdir'],
 					'settinggroup' => 'system',
 					'varname' => 'mod_fcgid_tmpdir',
 					'type' => 'string',
@@ -59,7 +59,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_mod_fcgid_peardir' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['mod_fcgid']['peardir'],
+					'label' => $lng['serversettings']['mod_fcgid']['peardir'],
 					'settinggroup' => 'system',
 					'varname' => 'mod_fcgid_peardir',
 					'type' => 'string',
@@ -70,7 +70,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_mod_fcgid_wrapper' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['mod_fcgid']['wrapper'],
+					'label' => $lng['serversettings']['mod_fcgid']['wrapper'],
 					'settinggroup' => 'system',
 					'varname' => 'mod_fcgid_wrapper',
 					'type' => 'option',
@@ -85,7 +85,7 @@ return array(
 					)
 				),
 				'system_mod_fcgid_starter' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['mod_fcgid']['starter'],
+					'label' => $lng['serversettings']['mod_fcgid']['starter'],
 					'settinggroup' => 'system',
 					'varname' => 'mod_fcgid_starter',
 					'type' => 'int',
@@ -93,7 +93,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_mod_fcgid_maxrequests' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['mod_fcgid']['maxrequests'],
+					'label' => $lng['serversettings']['mod_fcgid']['maxrequests'],
 					'settinggroup' => 'system',
 					'varname' => 'mod_fcgid_maxrequests',
 					'type' => 'int',
@@ -101,7 +101,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_mod_fcgid_defaultini' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['mod_fcgid']['defaultini'],
+					'label' => $lng['serversettings']['mod_fcgid']['defaultini'],
 					'settinggroup' => 'system',
 					'varname' => 'mod_fcgid_defaultini',
 					'type' => 'option',
@@ -111,7 +111,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_mod_fcgid_idle_timeout' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['mod_fcgid']['idle_timeout'],
+					'label' => $lng['serversettings']['mod_fcgid']['idle_timeout'],
 					'settinggroup' => 'system',
 					'varname' => 'mod_fcgid_idle_timeout',
 					'type' => 'int',

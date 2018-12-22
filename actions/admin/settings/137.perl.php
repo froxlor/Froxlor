@@ -17,10 +17,10 @@
 return array(
 	'groups' => array(
 		'perl' => array(
-			'title' => \Froxlor\I18N\Lang::getAll()['admin']['perl_settings'],
+			'title' => $lng['admin']['perl_settings'],
 			'fields' => array(
 				'perl_path' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['perl_path'],
+					'label' => $lng['serversettings']['perl_path'],
 					'settinggroup' => 'system',
 					'varname' => 'perl_path',
 					'type' => 'string',
@@ -31,7 +31,7 @@ return array(
 					)
 				),
 				'system_perl_suexecworkaround' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['perl']['suexecworkaround'],
+					'label' => $lng['serversettings']['perl']['suexecworkaround'],
 					'settinggroup' => 'perl',
 					'varname' => 'suexecworkaround',
 					'type' => 'bool',
@@ -42,7 +42,7 @@ return array(
 					)
 				),
 				'system_perl_suexeccgipath' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['perl']['suexeccgipath'],
+					'label' => $lng['serversettings']['perl']['suexeccgipath'],
 					'settinggroup' => 'perl',
 					'varname' => 'suexecpath',
 					'type' => 'string',
@@ -54,7 +54,7 @@ return array(
 					)
 				),
 				'perl_server' => array(
-					'label' => \Froxlor\I18N\Lang::getAll()['serversettings']['perl_server'],
+					'label' => $lng['serversettings']['perl_server'],
 					'settinggroup' => 'serversettings',
 					'varname' => 'perl_server',
 					'type' => 'string',
