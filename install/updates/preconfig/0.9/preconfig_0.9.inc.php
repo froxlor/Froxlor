@@ -85,7 +85,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 		$description = 'If you have more than one PHP configurations defined in Froxlor you can now set a default one which will be used for every domain.';
 		$question = '<strong>Select default PHP configuration:</strong>&nbsp;';
 		$question .= '<select name="update_defsys_phpconfig">';
-		$configs_array = getPhpConfigs();
+		$configs_array = \Froxlor\Http\PhpConfig::getPhpConfigs();
 		$configs = '';
 		foreach ($configs_array as $idx => $desc) {
 			$configs .= makeoption($desc, $idx, '1');
@@ -272,7 +272,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 			$description = 'You have FCGID for Froxlor itself activated. You can now specify a PHP-configuration for this.';
 			$question = '<strong>Select Froxlor-vhost PHP configuration:</strong>&nbsp;';
 			$question .= '<select name="update_defaultini_ownvhost">';
-			$configs_array = getPhpConfigs();
+			$configs_array = \Froxlor\Http\PhpConfig::getPhpConfigs();
 			$configs = '';
 			foreach ($configs_array as $idx => $desc) {
 				$configs .= makeoption($desc, $idx, '1');

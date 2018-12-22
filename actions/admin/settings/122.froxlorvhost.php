@@ -126,7 +126,10 @@ return array(
 					'type' => 'option',
 					'default' => '2',
 					'option_mode' => 'one',
-					'option_options_method' => 'getPhpConfigs',
+					'option_options_method' => array(
+						'\\Froxlor\\Http\\PhpConfig',
+						'getPhpConfigs'
+					),
 					'save_method' => 'storeSettingField',
 					'websrv_avail' => array(
 						'apache2'
@@ -170,7 +173,10 @@ return array(
 					'type' => 'option',
 					'default' => '2',
 					'option_mode' => 'one',
-					'option_options_method' => 'getPhpConfigs',
+					'option_options_method' => array(
+						'\\Froxlor\\Http\\PhpConfig',
+						'getPhpConfigs'
+					),
 					'save_method' => 'storeSettingField',
 					'visible' => \Froxlor\Settings::Get('phpfpm.enabled')
 				),

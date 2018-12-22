@@ -82,7 +82,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 			$_part = isset($_POST['part']) ? $_POST['part'] : '';
 		}
 
-		$fields = buildFormEx($settings_data, $_part);
+		$fields = \Froxlor\UI\Form::buildFormEx($settings_data, $_part);
 
 		$settings_page = '';
 		if ($_part == '') {

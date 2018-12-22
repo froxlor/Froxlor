@@ -107,7 +107,9 @@ return array(
 					'type' => 'option',
 					'default' => '1',
 					'option_mode' => 'one',
-					'option_options_method' => 'getPhpConfigs',
+					'option_options_method' => array(
+						'\\Froxlor\\Http\\PhpConfig',
+						'getPhpConfigs'),
 					'save_method' => 'storeSettingField'
 				),
 				'system_mod_fcgid_idle_timeout' => array(
