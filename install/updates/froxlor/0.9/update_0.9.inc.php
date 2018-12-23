@@ -477,7 +477,7 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.9.6-svn1')) {
 
 	showUpdateStep("Updating from 0.9.6-svn1 to 0.9.6-svn2", false);
 
-	$update_adminmail = isset($_POST['update_adminmail']) ? validate($_POST['update_adminmail'], 'update_adminmail') : false;
+	$update_adminmail = isset($_POST['update_adminmail']) ? Froxlor\Validate\Validate::validate($_POST['update_adminmail'], 'update_adminmail') : false;
 	$do_update = true;
 
 	if ($update_adminmail !== false) {

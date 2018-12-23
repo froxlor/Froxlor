@@ -134,7 +134,7 @@ if ($action == '2fa_entercode') {
 				$row2 = $stmt->fetch(PDO::FETCH_ASSOC);
 
 				if (isset($row2['customerid']) && $row2['customerid'] > 0) {
-					$loginname = getCustomerDetail($row2['customerid'], 'loginname');
+					$loginname = \Froxlor\Customer\Customer::getCustomerDetail($row2['customerid'], 'loginname');
 					if ($loginname !== false) {
 						$stmt = Database::prepare("SELECT `loginname` AS `customer` FROM `" . TABLE_PANEL_CUSTOMERS . "`
 							WHERE `loginname`= :loginname");

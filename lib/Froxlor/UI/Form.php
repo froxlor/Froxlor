@@ -173,7 +173,7 @@ class Form
 					// Save fields
 					foreach ($groupdetails['fields'] as $fieldname => $fielddetails) {
 						if (isset($changed_fields[$fieldname])) {
-							if (($saved_field = self::saveFormField($fieldname, $fielddetails, manipulateFormFieldData($fieldname, $fielddetails, $changed_fields[$fieldname]))) !== false) {
+							if (($saved_field = self::saveFormField($fieldname, $fielddetails, self::manipulateFormFieldData($fieldname, $fielddetails, $changed_fields[$fieldname]))) !== false) {
 								$saved_fields = array_merge($saved_fields, $saved_field);
 							} else {
 								\Froxlor\UI\Response::standard_error('errorwhensaving', $fieldname);

@@ -608,7 +608,7 @@ if ($page == 'domains' || $page == 'overview') {
 					FROM `" . TABLE_PANEL_PHPCONFIGS . "` c
 					LEFT JOIN `" . TABLE_PANEL_FPMDAEMONS . "` fc ON fc.id = c.fpmsettingid
 				");
-				$c_allowed_configs = getCustomerDetail($result['customerid'], 'allowed_phpconfigs');
+				$c_allowed_configs = \Froxlor\Customer\Customer::getCustomerDetail($result['customerid'], 'allowed_phpconfigs');
 				if (! empty($c_allowed_configs)) {
 					$c_allowed_configs = json_decode($c_allowed_configs, true);
 				} else {
@@ -640,7 +640,7 @@ if ($page == 'domains' || $page == 'overview') {
 	} elseif ($action == 'jqGetCustomerPHPConfigs') {
 
 		$customerid = intval($_POST['customerid']);
-		$allowed_phpconfigs = getCustomerDetail($customerid, 'allowed_phpconfigs');
+		$allowed_phpconfigs = \Froxlor\Customer\Customer::getCustomerDetail($customerid, 'allowed_phpconfigs');
 		echo ! empty($allowed_phpconfigs) ? $allowed_phpconfigs : json_encode(array());
 		exit();
 	} elseif ($action == 'import') {

@@ -179,7 +179,7 @@ if ($page == 'overview') {
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 		$old_password = \Froxlor\Validate\Validate::validate($_POST['old_password'], 'old password');
 
-		if (! validatePasswordLogin($userinfo, $old_password, TABLE_PANEL_ADMINS, 'adminid')) {
+		if (! \Froxlor\System\Crypt::validatePasswordLogin($userinfo, $old_password, TABLE_PANEL_ADMINS, 'adminid')) {
 			\Froxlor\UI\Response::standard_error('oldpasswordnotcorrect');
 		}
 

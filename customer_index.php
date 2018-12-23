@@ -125,7 +125,7 @@ if ($page == 'overview') {
 		}
 
 		$new_password = \Froxlor\System\Crypt::validatePassword($_POST['new_password'], 'new password');
-		$new_password_confirm = validatePassword($_POST['new_password_confirm'], 'new password confirm');
+		$new_password_confirm = \Froxlor\System\Crypt::validatePassword($_POST['new_password_confirm'], 'new password confirm');
 
 		if ($old_password == '') {
 			\Froxlor\UI\Response::standard_error(array(

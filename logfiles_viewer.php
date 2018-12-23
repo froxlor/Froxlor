@@ -59,8 +59,8 @@ if (function_exists('exec')) {
 		}
 	}
 	// The normal access/error - logging is enabled
-	$error_log = \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.logfiles_directory') . getCustomerDetail($domain['customerid'], 'loginname') . $speciallogfile . '-error.log');
-	$access_log = \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.logfiles_directory') . getCustomerDetail($domain['customerid'], 'loginname') . $speciallogfile . '-access.log');
+	$error_log = \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.logfiles_directory') . \Froxlor\Customer\Customer::getCustomerDetail($domain['customerid'], 'loginname') . $speciallogfile . '-error.log');
+	$access_log = \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.logfiles_directory') . \Froxlor\Customer\Customer::getCustomerDetail($domain['customerid'], 'loginname') . $speciallogfile . '-access.log');
 
 	// error log
 	if (file_exists($error_log)) {

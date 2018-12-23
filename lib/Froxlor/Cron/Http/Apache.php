@@ -561,7 +561,7 @@ class Apache extends HttpConfigBase
 
 		if ($domain['phpenabled_customer'] == 1 && $domain['phpenabled_vhost'] == '1') {
 			// This vHost has PHP enabled and we are using the regular mod_php
-			$cmail = getCustomerDetail($domain['customerid'], 'email');
+			$cmail = \Froxlor\Customer\Customer::getCustomerDetail($domain['customerid'], 'email');
 			$php_options_text .= '  php_admin_value sendmail_path "/usr/sbin/sendmail -t -f ' . $cmail . '"' . PHP_EOL;
 
 			if ($domain['openbasedir'] == '1') {
@@ -1220,7 +1220,7 @@ class Apache extends HttpConfigBase
 					// check for suexec-workaround, #319
 					if ((int) Settings::Get('perl.suexecworkaround') == 1) {
 						// symlink this directory to suexec-safe-path
-						$loginname = getCustomerDetail($row_diroptions['customerid'], 'loginname');
+						$loginname = \Froxlor\Customer\Customer::getCustomerDetail($row_diroptions['customerid'], 'loginname');
 						$suexecpath = \Froxlor\FileDir::makeCorrectDir(Settings::Get('perl.suexecpath') . '/' . $loginname . '/' . md5($row_diroptions['path']) . '/');
 
 						if (! file_exists($suexecpath)) {
@@ -1240,7 +1240,7 @@ class Apache extends HttpConfigBase
 					// if no perl-execution is enabled but the workaround is,
 					// we have to remove the symlink and folder in suexecpath
 					if ((int) Settings::Get('perl.suexecworkaround') == 1) {
-						$loginname = getCustomerDetail($row_diroptions['customerid'], 'loginname');
+						$loginname = \Froxlor\Customer\Customer::getCustomerDetail($row_diroptions['customerid'], 'loginname');
 						$suexecpath = \Froxlor\FileDir::makeCorrectDir(Settings::Get('perl.suexecpath') . '/' . $loginname . '/' . md5($row_diroptions['path']) . '/');
 						$perlsymlink = \Froxlor\FileDir::makeCorrectFile($row_diroptions['path'] . '/cgi-bin');
 

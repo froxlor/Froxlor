@@ -96,7 +96,7 @@ class Fcgid
 
 		// remove +i attibute, so starter can be overwritten
 		if (file_exists($this->getStarterFile())) {
-			removeImmutable($this->getStarterFile());
+			\Froxlor\FileDir::removeImmutable($this->getStarterFile());
 		}
 
 		$starter_file_handler = fopen($this->getStarterFile(), 'w');
@@ -104,7 +104,7 @@ class Fcgid
 		fclose($starter_file_handler);
 		\Froxlor\FileDir::safe_exec('chmod 750 ' . escapeshellarg($this->getStarterFile()));
 		\Froxlor\FileDir::safe_exec('chown ' . $this->_domain['guid'] . ':' . $this->_domain['guid'] . ' ' . escapeshellarg($this->getStarterFile()));
-		setImmutable($this->getStarterFile());
+		\Froxlor\FileDir::setImmutable($this->getStarterFile());
 	}
 
 	/**

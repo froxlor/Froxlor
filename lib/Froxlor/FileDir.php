@@ -419,7 +419,7 @@ class FileDir
 							}
 							$dir = self::makeCorrectDir($dir);
 						}
-						$_field .= makeoption($dir, $dir, $value);
+						$_field .= \Froxlor\UI\HTML::makeoption($dir, $dir, $value);
 					}
 					$field = array(
 						'type' => 'select',
