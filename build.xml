@@ -2,29 +2,29 @@
 
 <project name="froxlor" default="build">
 
-	<!-- By default, we assume all tools to be on the $PATH -->
-	<property name="pdepend" value="pdepend" />
-	<property name="phpcpd" value="phpcpd" />
-	<property name="phpcs" value="phpcs" />
-	<property name="phpdox" value="phpdox" />
-	<property name="phploc" value="phploc" />
-	<property name="phpmd" value="phpmd" />
-	<property name="phpunit" value="phpunit6" />
+	<!-- Use this when the tools are managed by Composer in ${basedir}/vendor/bin -->
+	<property name="pdepend" value="${basedir}/vendor/bin/pdepend" />
+	<property name="phpcpd" value="${basedir}/vendor/bin/phpcpd" />
+	<property name="phpcs" value="${basedir}/vendor/bin/phpcs" />
+	<property name="phpdox" value="${basedir}/vendor/bin/phpdox" />
+	<property name="phploc" value="${basedir}/vendor/bin/phploc" />
+	<property name="phpmd" value="${basedir}/vendor/bin/phpmd" />
+	<property name="phpunit" value="${basedir}/vendor/bin/phpunit" />
 
 	<target name="full-build"
-		depends="prepare,static-analysis,phpunit,phpdox,-check-failure"
+		depends="prepare,composer,static-analysis,phpunit,phpdox,-check-failure"
 		description="Performs static analysis, runs the tests, and generates project documentation" />
 
 	<target name="full-build-parallel"
-		depends="prepare,static-analysis-parallel,phpunit,phpdox,-check-failure"
+		depends="prepare,composer,static-analysis-parallel,phpunit,phpdox,-check-failure"
 		description="Performs static analysis (executing the tools in parallel), runs the tests, and generates project documentation" />
 
 	<target name="quick-build"
-		depends="prepare,lint,phpunit-no-coverage"
+		depends="prepare,composer,lint,phpunit-no-coverage"
 		description="Performs a lint check and runs the tests (without generating code coverage reports)" />
 
 	<target name="static-analysis"
-		depends="lint,phploc-ci,pdepend,phpmd-ci,phpcs-ci,phpcpd-ci"
+		depends="composer,lint,phploc-ci,pdepend,phpmd-ci,phpcs-ci,phpcompat-ci,phpcpd-ci"
 		description="Performs static analysis" />
 
 	<!-- Adjust the threadCount attribute's value to the number of CPUs -->
@@ -38,6 +38,7 @@
 			<antcall target="lint" />
 			<antcall target="phpcpd-ci" />
 			<antcall target="phpcs-ci" />
+			<antcall target="phpcompat-ci" />
 			<antcall target="phploc-ci" />
 		</parallel>
 	</target>
@@ -59,7 +60,17 @@
 		<mkdir dir="${basedir}/build/logs" />
 		<mkdir dir="${basedir}/build/pdepend" />
 		<mkdir dir="${basedir}/build/phpdox" />
+
 		<property name="prepare.done" value="true" />
+	</target>
+
+	<target name="composer"
+		description="Installing composer dependencies" depends="prepare">
+		<exec executable="composer" failonerror="true">
+			<arg value="install" />
+			<arg value="--prefer-dist" />
+			<arg value="--no-progress" />
+		</exec>
 	</target>
 
 	<target name="lint" unless="lint.done"
@@ -161,7 +172,8 @@
 		description="Find coding standard violations using PHP_CodeSniffer and log result in XML format. Intended for usage within a continuous integration environment.">
 		<exec executable="${phpcs}" output="/dev/null" taskname="phpcs">
 			<arg value="--report=checkstyle" />
-			<arg value="--report-file=${basedir}/build/logs/checkstyle.xml" />
+			<arg
+				value="--report-file=${basedir}/build/logs/checkstyle-standard.xml" />
 			<arg value="--standard=${basedir}/phpcs.xml" />
 			<arg value="--extensions=php" />
 			<arg path="${basedir}/lib/Froxlor" />
@@ -169,6 +181,29 @@
 		</exec>
 
 		<property name="phpcs.done" value="true" />
+	</target>
+
+	<target name="phpcompat" unless="phpcompat.done"
+		depends="composer"
+		description="Find php violations using PHP_CodeSniffer and print human readable output. Intended for usage on the command line before committing.">
+		<exec executable="${phpcs}" taskname="phpcompat">
+			<arg
+				line="--standard=PHPCompatibility --runtime-set testVersion 5.6 ${basedir}/lib/Froxlor ${basedir}/tests" />
+		</exec>
+
+		<property name="phpcompat.done" value="true" />
+	</target>
+
+	<target name="phpcompat-ci" unless="phpcompat.done"
+		depends="composer"
+		description="Find php violations using PHP_CodeSniffer and log result in XML format. Intended for usage within a continuous integration environment.">
+		<exec executable="${phpcs}" output="/dev/null"
+			taskname="phpcompat">
+			<arg
+				line="--standard=PHPCompatibility --runtime-set testVersion 5.6 --report=checkstyle --report-file=${basedir}/build/logs/checkstyle-compat.xml ${basedir}/lib/Froxlor ${basedir}/tests" />
+		</exec>
+
+		<property name="phpcompat.done" value="true" />
 	</target>
 
 	<target name="phpcpd" unless="phpcpd.done"
@@ -191,7 +226,7 @@
 		<property name="phpcpd.done" value="true" />
 	</target>
 
-	<target name="phpunit" unless="phpunit.done" depends="prepare"
+	<target name="phpunit" unless="phpunit.done" depends="composer"
 		description="Run unit tests with PHPUnit">
 		<exec executable="${phpunit}" resultproperty="result.phpunit"
 			taskname="phpunit">
@@ -205,7 +240,7 @@
 	</target>
 
 	<target name="phpunit-no-coverage" unless="phpunit.done"
-		depends="prepare"
+		depends="composer"
 		description="Run unit tests with PHPUnit (without generating code coverage reports)">
 		<exec executable="${phpunit}" failonerror="true"
 			taskname="phpunit">
@@ -220,7 +255,7 @@
 	</target>
 
 	<target name="phpdox" unless="phpdox.done"
-		depends="phploc-ci,phpcs-ci,phpmd-ci"
+		depends="phploc-ci,phpcs-ci,phpcompat-ci,phpmd-ci"
 		description="Generate project documentation using phpDox">
 		<exec executable="${phpdox}" dir="${basedir}/build"
 			taskname="phpdox">
