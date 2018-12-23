@@ -99,7 +99,7 @@ class Settings
 	 * @param string $varname
 	 * @param string $value
 	 */
-	private function _storeSetting($group = null, $varname = null, $value = null)
+	private static function _storeSetting($group = null, $varname = null, $value = null)
 	{
 		$upd_data = array(
 			'group' => $group,
@@ -117,7 +117,7 @@ class Settings
 	 *        	
 	 * @return mixed
 	 */
-	public function Get($setting = null)
+	public static function Get($setting = null)
 	{
 		self::init();
 		$sstr = explode(".", $setting);
@@ -142,7 +142,7 @@ class Settings
 	 *        	
 	 * @return boolean true, if the list contains $entry
 	 */
-	public function IsInList($setting = null, $entry = null)
+	public static function IsInList($setting = null, $entry = null)
 	{
 		self::init();
 		$s = self::Get($setting);
@@ -163,7 +163,7 @@ class Settings
 	 *
 	 * @return bool
 	 */
-	public function Set($setting = null, $value = null, $instant_save = true)
+	public static function Set($setting = null, $value = null, $instant_save = true)
 	{
 		self::init();
 		// check whether the setting exists
@@ -203,7 +203,7 @@ class Settings
 	 *
 	 * @return boolean
 	 */
-	public function AddNew($setting = null, $value = null)
+	public static function AddNew($setting = null, $value = null)
 	{
 		self::init();
 		// first check if it doesn't exist
