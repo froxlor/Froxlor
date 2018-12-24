@@ -16,7 +16,7 @@ class ConfigServicesAction extends \Froxlor\Cli\Action
 
 	public function run()
 	{
-		$this->_validate();
+		$this->validate();
 	}
 
 	/**
@@ -24,27 +24,27 @@ class ConfigServicesAction extends \Froxlor\Cli\Action
 	 *
 	 * @throws \Exception
 	 */
-	private function _validate()
+	private function validate()
 	{
-		$this->_checkConfigParam(true);
-		$this->_parseConfig();
+		$this->checkConfigParam(true);
+		$this->parseConfig();
 
 		require FROXLOR_INSTALL_DIR . '/lib/tables.inc.php';
 
 		if (array_key_exists("import-settings", $this->_args)) {
-			$this->_importSettings();
+			$this->importSettings();
 		}
 
 		if (array_key_exists("create", $this->_args)) {
-			$this->_createConfig();
+			$this->createConfig();
 		} elseif (array_key_exists("apply", $this->_args)) {
-			$this->_applyConfig();
+			$this->applyConfig();
 		} elseif (array_key_exists("list-daemons", $this->_args) || array_key_exists("daemon", $this->_args)) {
 			ConfigServicesCmd::printwarn("--list-daemons and --daemon only work together with --apply");
 		}
 	}
 
-	private function _importSettings()
+	private function importSettings()
 	{
 		if (strtoupper(substr($this->_args["import-settings"], 0, 4)) == 'HTTP') {
 			echo "Settings file seems to be an URL, trying to download" . PHP_EOL;
@@ -67,7 +67,7 @@ class ConfigServicesAction extends \Froxlor\Cli\Action
 		ConfigServicesCmd::printsucc("Successfully imported settings from '" . $this->_args["import-settings"] . "'");
 	}
 
-	private function _createConfig()
+	private function createConfig()
 	{
 		$_daemons_config = array(
 			'distro' => ""
@@ -185,7 +185,7 @@ class ConfigServicesAction extends \Froxlor\Cli\Action
 		return $dist_display;
 	}
 
-	private function _applyConfig()
+	private function applyConfig()
 	{
 		if (strtoupper(substr($this->_args["apply"], 0, 4)) == 'HTTP') {
 			echo "Config file seems to be an URL, trying to download" . PHP_EOL;
@@ -238,7 +238,7 @@ class ConfigServicesAction extends \Froxlor\Cli\Action
 			$config_dir = FROXLOR_INSTALL_DIR . '/lib/configfiles/';
 			$configfiles = new \Froxlor\Config\ConfigParser($config_dir . '/' . $decoded_config['distro'] . ".xml");
 			$services = $configfiles->getServices();
-			$replace_arr = $this->_getReplacerArray();
+			$replace_arr = $this->getReplacerArray();
 
 			foreach ($services as $si => $service) {
 				echo PHP_EOL . "--- Configuring: " . strtoupper($si) . " ---" . PHP_EOL . PHP_EOL;
@@ -305,7 +305,7 @@ class ConfigServicesAction extends \Froxlor\Cli\Action
 		}
 	}
 
-	private function _getReplacerArray()
+	private function getReplacerArray()
 	{
 		$customer_tmpdir = '/tmp/';
 		if (Settings::Get('system.mod_fcgid') == '1' && Settings::Get('system.mod_fcgid_tmpdir') != '') {
@@ -356,7 +356,7 @@ class ConfigServicesAction extends \Froxlor\Cli\Action
 		return $replace_arr;
 	}
 
-	private function _parseConfig()
+	private function parseConfig()
 	{
 		define('FROXLOR_INSTALL_DIR', $this->_args['froxlor-dir']);
 		if (! class_exists('\\Froxlor\\Database\\Database')) {
@@ -367,7 +367,7 @@ class ConfigServicesAction extends \Froxlor\Cli\Action
 		}
 	}
 
-	private function _checkConfigParam($needed = false)
+	private function checkConfigParam($needed = false)
 	{
 		if ($needed) {
 			if (! isset($this->_args["froxlor-dir"])) {

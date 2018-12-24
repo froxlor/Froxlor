@@ -94,7 +94,7 @@ class ConfigDaemon
 		$this->daemon = $this->fullxml->xpath($this->xpath);
 		$attributes = $this->daemon[0]->attributes();
 		if ($attributes['title'] != '') {
-			$this->title = $this->_parseContent((string) $attributes['title']);
+			$this->title = $this->parseContent((string) $attributes['title']);
 		}
 		if (isset($attributes['default'])) {
 			$this->default = ($attributes['default'] == true);
@@ -106,7 +106,7 @@ class ConfigDaemon
 	 *
 	 * @return bool
 	 */
-	private function _parse()
+	private function parse()
 	{
 		// We only want to parse the stuff one time
 		if ($this->isparsed == true) {
@@ -143,7 +143,7 @@ class ConfigDaemon
 					foreach ($order->children() as $child) {
 						switch ((string) $child->getName()) {
 							case "visibility":
-								$visibility += $this->_checkVisibility($child);
+								$visibility += $this->checkVisibility($child);
 								break;
 							case "install":
 							case "file":
@@ -171,7 +171,7 @@ class ConfigDaemon
 
 		// Go through every preparsed order and evaluate what should happen to it
 		foreach ($preparsed as $order) {
-			$parsedorder = $this->_parseOrder($order);
+			$parsedorder = $this->parseOrder($order);
 			// We got an array (= valid order) and the array already has a type -> add to stack
 			if (is_array($parsedorder) && array_key_exists('type', $parsedorder)) {
 				$this->orders[] = $parsedorder;
@@ -200,7 +200,7 @@ class ConfigDaemon
 	 */
 	public function getConfig()
 	{
-		$this->_parse();
+		$this->parse();
 		return $this->orders;
 	}
 
@@ -211,7 +211,7 @@ class ConfigDaemon
 	 *        	SimpleXMLElement object holding a single order from the distribution - XML
 	 * @return array|string
 	 */
-	private function _parseOrder($order)
+	private function parseOrder($order)
 	{
 		$attributes = array();
 		foreach ($order->attributes() as $key => $value) {
@@ -221,13 +221,13 @@ class ConfigDaemon
 		$parsedorder = '';
 		switch ((string) $order->getName()) {
 			case "file":
-				$parsedorder = $this->_parseFile($order, $attributes);
+				$parsedorder = $this->parseFile($order, $attributes);
 				break;
 			case "command":
-				$parsedorder = $this->_parseCommand($order, $attributes);
+				$parsedorder = $this->parseCommand($order, $attributes);
 				break;
 			case "install":
-				$parsedorder = $this->_parseInstall($order, $attributes);
+				$parsedorder = $this->parseInstall($order, $attributes);
 				break;
 			default:
 				throw new \Exception('Invalid order: ' . (string) $order->getName());
@@ -243,13 +243,13 @@ class ConfigDaemon
 	 *        	SimpleXMLElement object holding a single install from the distribution - XML
 	 * @return array|string
 	 */
-	private function _parseInstall($order, $attributes)
+	private function parseInstall($order, $attributes)
 	{
 		// No sub - elements, so the content can be returned directly
 		if ($order->count() == 0) {
 			return array(
 				'type' => 'install',
-				'content' => $this->_parseContent(trim((string) $order))
+				'content' => $this->parseContent(trim((string) $order))
 			);
 		}
 
@@ -259,7 +259,7 @@ class ConfigDaemon
 		foreach ($order->children() as $child) {
 			switch ((string) $child->getName()) {
 				case "visibility":
-					$visibility += $this->_checkVisibility($child);
+					$visibility += $this->checkVisibility($child);
 					break;
 				case "content":
 					$content = trim((string) $child);
@@ -270,7 +270,7 @@ class ConfigDaemon
 		if ($visibility > 0) {
 			return array(
 				'type' => 'install',
-				'content' => $this->_parseContent($content)
+				'content' => $this->parseContent($content)
 			);
 		} else {
 			return '';
@@ -284,13 +284,13 @@ class ConfigDaemon
 	 *        	SimpleXMLElement object holding a single command from the distribution - XML
 	 * @return array|string
 	 */
-	private function _parseCommand($order, $attributes)
+	private function parseCommand($order, $attributes)
 	{
 		// No sub - elements, so the content can be returned directly
 		if ($order->count() == 0) {
 			return array(
 				'type' => 'command',
-				'content' => $this->_parseContent(trim((string) $order))
+				'content' => $this->parseContent(trim((string) $order))
 			);
 		}
 
@@ -300,7 +300,7 @@ class ConfigDaemon
 		foreach ($order->children() as $child) {
 			switch ((string) $child->getName()) {
 				case "visibility":
-					$visibility += $this->_checkVisibility($child);
+					$visibility += $this->checkVisibility($child);
 					break;
 				case "content":
 					$content = trim((string) $child);
@@ -311,7 +311,7 @@ class ConfigDaemon
 		if ($visibility > 0) {
 			return array(
 				'type' => 'command',
-				'content' => $this->_parseContent($content)
+				'content' => $this->parseContent($content)
 			);
 		} else {
 			return '';
@@ -325,7 +325,7 @@ class ConfigDaemon
 	 *        	SimpleXMLElement object holding a single file from the distribution - XML
 	 * @return array|string
 	 */
-	private function _parseFile($order, $attributes)
+	private function parseFile($order, $attributes)
 	{
 		$visibility = 1;
 		// No sub - elements, so the content can be returned directly
@@ -336,7 +336,7 @@ class ConfigDaemon
 			foreach ($order->children() as $child) {
 				switch ((string) $child->getName()) {
 					case "visibility":
-						$visibility += $this->_checkVisibility($child);
+						$visibility += $this->checkVisibility($child);
 						break;
 					case "content":
 						$content = (string) $child;
@@ -357,7 +357,7 @@ class ConfigDaemon
 			}
 			$return[] = array(
 				'type' => 'command',
-				'content' => $cmd . ' "' . $this->_parseContent($attributes['name']) . '" "' . $this->_parseContent($attributes['name']) . '.frx.bak"',
+				'content' => $cmd . ' "' . $this->parseContent($attributes['name']) . '" "' . $this->parseContent($attributes['name']) . '.frx.bak"',
 				'execute' => "pre"
 			);
 		}
@@ -366,15 +366,15 @@ class ConfigDaemon
 		if (isset($attributes['mode'])) {
 			$return[] = array(
 				'type' => 'file',
-				'content' => $this->_parseContent($content),
-				'name' => $this->_parseContent($attributes['name']),
-				'mode' => $this->_parseContent($attributes['mode'])
+				'content' => $this->parseContent($content),
+				'name' => $this->parseContent($attributes['name']),
+				'mode' => $this->parseContent($attributes['mode'])
 			);
 		} else {
 			$return[] = array(
 				'type' => 'file',
-				'content' => $this->_parseContent($content),
-				'name' => $this->_parseContent($attributes['name'])
+				'content' => $this->parseContent($content),
+				'name' => $this->parseContent($attributes['name'])
 			);
 		}
 
@@ -382,7 +382,7 @@ class ConfigDaemon
 		if (array_key_exists('chmod', $attributes)) {
 			$return[] = array(
 				'type' => 'command',
-				'content' => 'chmod ' . $attributes['chmod'] . ' "' . $this->_parseContent($attributes['name']) . '"',
+				'content' => 'chmod ' . $attributes['chmod'] . ' "' . $this->parseContent($attributes['name']) . '"',
 				'execute' => "post"
 			);
 		}
@@ -391,7 +391,7 @@ class ConfigDaemon
 		if (array_key_exists('chown', $attributes)) {
 			$return[] = array(
 				'type' => 'command',
-				'content' => 'chown ' . $attributes['chown'] . ' "' . $this->_parseContent($attributes['name']) . '"',
+				'content' => 'chown ' . $attributes['chown'] . ' "' . $this->parseContent($attributes['name']) . '"',
 				'execute' => "post"
 			);
 		}
@@ -401,7 +401,7 @@ class ConfigDaemon
 			$return = array(
 				'type' => 'file',
 				'subcommands' => $return,
-				'name' => $this->_parseContent($attributes['name'])
+				'name' => $this->parseContent($attributes['name'])
 			);
 		}
 
@@ -418,9 +418,10 @@ class ConfigDaemon
 	 * @param string $content
 	 * @return string $content w/o placeholder
 	 */
-	private function _parseContent($content)
+	private function parseContent($content)
 	{
 		$content = preg_replace_callback('/\{\{(.*)\}\}/Ui', function ($matches) {
+			$match = null;
 			if (preg_match('/^settings\.(.*)$/', $matches[1], $match)) {
 				return \Froxlor\Settings::Get($match[1]);
 			} elseif (preg_match('/^lng\.(.*)(?:\.(.*)(?:\.(.*)))$/U', $matches[1], $match)) {
@@ -460,14 +461,14 @@ class ConfigDaemon
 	 * @param \SimpleXMLElement $order
 	 * @return int 0|-1
 	 */
-	private function _checkVisibility($order)
+	private function checkVisibility($order)
 	{
 		$attributes = array();
 		foreach ($order->attributes() as $key => $value) {
-			$attributes[(string) $key] = $this->_parseContent(trim((string) $value));
+			$attributes[(string) $key] = $this->parseContent(trim((string) $value));
 		}
 
-		$order = $this->_parseContent(trim((string) $order));
+		$order = $this->parseContent(trim((string) $order));
 		if (! array_key_exists('mode', $attributes)) {
 			throw new \Exception('"<visibility>' . $order . '</visibility>" is missing mode');
 		}

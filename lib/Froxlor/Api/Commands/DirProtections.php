@@ -78,13 +78,7 @@ class DirProtections extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Res
 		);
 		$username_path_check = Database::pexecute_first($username_path_check_stmt, $params, true, true);
 
-		// check whether we can used salted passwords
-		if (CRYPT_STD_DES == 1) {
-			$saltfordescrypt = substr(md5(uniqid(microtime(), 1)), 4, 2);
-			$password_enc = crypt($password, $saltfordescrypt);
-		} else {
-			$password_enc = crypt($password);
-		}
+		$password_enc = \Froxlor\System\Crypt::makeCryptPassword($password, true);
 
 		// duplicate check
 		if ($username_path_check['username'] == $username && $username_path_check['path'] == $path) {
@@ -238,12 +232,8 @@ class DirProtections extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Res
 			if ($password == $result['username']) {
 				\Froxlor\UI\Response::standard_error('passwordshouldnotbeusername', '', true);
 			}
-			if (CRYPT_STD_DES == 1) {
-				$saltfordescrypt = substr(md5(uniqid(microtime(), 1)), 4, 2);
-				$password_enc = crypt($password, $saltfordescrypt);
-			} else {
-				$password_enc = crypt($password);
-			}
+			$password_enc = \Froxlor\System\Crypt::makeCryptPassword($password, true);
+
 			$upd_query .= "`password`= :password_enc";
 			$upd_params['password_enc'] = $password_enc;
 		}

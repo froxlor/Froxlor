@@ -511,7 +511,7 @@ $lng['admin']['subcanemaildomain']['never'] = 'Never';
 $lng['admin']['subcanemaildomain']['choosableno'] = 'Choosable, default no';
 $lng['admin']['subcanemaildomain']['choosableyes'] = 'Choosable, default yes';
 $lng['admin']['subcanemaildomain']['always'] = 'Always';
-$lng['changepassword']['also_change_webalizer'] = ' also change password for the statistics page';
+$lng['changepassword']['also_change_stats'] = ' also change password for the statistics page';
 
 // ADDED IN 1.2.16-svn8
 

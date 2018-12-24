@@ -14,7 +14,7 @@ class SwitchServerIpAction extends \Froxlor\Cli\Action
 
 	public function run()
 	{
-		$this->_validate();
+		$this->validate();
 	}
 
 	/**
@@ -22,26 +22,26 @@ class SwitchServerIpAction extends \Froxlor\Cli\Action
 	 *
 	 * @throws \Exception
 	 */
-	private function _validate()
+	private function validate()
 	{
 		$need_config = false;
 		if (array_key_exists("list", $this->_args) || array_key_exists("switch", $this->_args)) {
 			$need_config = true;
 		}
 
-		$this->_checkConfigParam($need_config);
+		$this->checkConfigParam($need_config);
 
-		$this->_parseConfig();
+		$this->parseConfig();
 
 		if (array_key_exists("list", $this->_args)) {
-			$this->_listIPs();
+			$this->listIPs();
 		}
 		if (array_key_exists("switch", $this->_args)) {
-			$this->_switchIPs();
+			$this->switchIPs();
 		}
 	}
 
-	private function _listIPs()
+	private function listIPs()
 	{
 		$sel_stmt = Database::prepare("SELECT * FROM panel_ipsandports ORDER BY ip ASC, port ASC");
 		Database::pexecute($sel_stmt);
@@ -57,7 +57,7 @@ class SwitchServerIpAction extends \Froxlor\Cli\Action
 		echo PHP_EOL . PHP_EOL;
 	}
 
-	private function _switchIPs()
+	private function switchIPs()
 	{
 		$ip_list = $this->_args['switch'];
 
@@ -158,7 +158,7 @@ class SwitchServerIpAction extends \Froxlor\Cli\Action
 		SwitchServerIpCmd::printsucc("IP addresses updated");
 	}
 
-	private function _parseConfig()
+	private function parseConfig()
 	{
 		define('FROXLOR_INSTALL_DIR', $this->_args['froxlor-dir']);
 		if (! class_exists('\\Froxlor\\Database\\Database')) {
@@ -169,7 +169,7 @@ class SwitchServerIpAction extends \Froxlor\Cli\Action
 		}
 	}
 
-	private function _checkConfigParam($needed = false)
+	private function checkConfigParam($needed = false)
 	{
 		if ($needed) {
 			if (! isset($this->_args["froxlor-dir"])) {

@@ -67,34 +67,33 @@ class Crypt
 	 *        
 	 *         0 - default crypt (depenend on system configuration)
 	 *         1 - MD5 $1$
-	 *         2 - BLOWFISH $2a$ | $2y$07$ (on php 5.3.7+)
+	 *         2 - BLOWFISH $2y$07$
 	 *         3 - SHA-256 $5$ (default)
 	 *         4 - SHA-512 $6$
 	 *        
 	 * @param string $password
 	 *        	Password to be crypted
+	 * @param bool $htpasswd
+	 *        	optional whether to generate a SHA1 password for directory protection
 	 *        	
 	 * @return string encrypted password
 	 */
-	public static function makeCryptPassword($password)
+	public static function makeCryptPassword($password, $htpasswd = false)
 	{
+		if ($htpasswd) {
+			return '{SHA}' . base64_encode(sha1($password, true));
+		}
+
 		$type = Settings::Get('system.passwordcryptfunc') !== null ? (int) Settings::Get('system.passwordcryptfunc') : 3;
 
 		switch ($type) {
-			case 0:
-				$cryptPassword = crypt($password);
-				break;
 			case 1:
 				$cryptPassword = crypt($password, '$1$' . self::generatePassword(true) . self::generatePassword(true));
 				break;
 			case 2:
-				if (\Froxlor\Froxlor::version_compare(phpversion(), '5.3.7', '<')) {
-					$cryptPassword = crypt($password, '$2a$' . self::generatePassword(true) . self::generatePassword(true));
-				} else {
-					// Blowfish hashing with a salt as follows: "$2a$", "$2x$" or "$2y$",
-					// a two digit cost parameter, "$", and 22 characters from the alphabet "./0-9A-Za-z"
-					$cryptPassword = crypt($password, '$2y$07$' . substr(self::generatePassword(true) . self::generatePassword(true) . self::generatePassword(true), 0, 22));
-				}
+				// Blowfish hashing with a salt as follows: "$2a$", "$2x$" or "$2y$",
+				// a two digit cost parameter, "$", and 22 characters from the alphabet "./0-9A-Za-z"
+				$cryptPassword = crypt($password, '$2y$07$' . substr(self::generatePassword(true) . self::generatePassword(true) . self::generatePassword(true), 0, 22));
 				break;
 			case 3:
 				$cryptPassword = crypt($password, '$5$' . self::generatePassword(true) . self::generatePassword(true));
@@ -103,7 +102,7 @@ class Crypt
 				$cryptPassword = crypt($password, '$6$' . self::generatePassword(true) . self::generatePassword(true));
 				break;
 			default:
-				$cryptPassword = crypt($password);
+				$cryptPassword = crypt($password, self::generatePassword(true) . self::generatePassword(true));
 				break;
 		}
 		return $cryptPassword;

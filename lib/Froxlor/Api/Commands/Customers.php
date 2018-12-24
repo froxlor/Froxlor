@@ -523,12 +523,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 					\Froxlor\System\Cronjob::inserttask('10');
 
 					// Add htpasswd for the stats-pages
-					if (CRYPT_STD_DES == 1) {
-						$saltfordescrypt = substr(md5(uniqid(microtime(), 1)), 4, 2);
-						$htpasswdPassword = crypt($password, $saltfordescrypt);
-					} else {
-						$htpasswdPassword = crypt($password);
-					}
+					$htpasswdPassword = \Froxlor\System\Crypt::makeCryptPassword($password, true);
 
 					$ins_stmt = Database::prepare("
 						INSERT INTO `" . TABLE_PANEL_HTPASSWDS . "` SET
@@ -934,7 +929,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 					'stringisempty',
 					'emailadd'
 				), '', true);
-			} elseif (!\Froxlor\Validate\Validate::validateEmail($email)) {
+			} elseif (! \Froxlor\Validate\Validate::validateEmail($email)) {
 				\Froxlor\UI\Response::standard_error('emailiswrong', $email, true);
 			}
 		}

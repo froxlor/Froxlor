@@ -33,21 +33,21 @@ abstract class BulkAction
 	 *
 	 * @var string
 	 */
-	private $_impFile = null;
+	private $impFile = null;
 
 	/**
 	 * customer id of the user the entity is being added to
 	 *
 	 * @var int
 	 */
-	private $_custId = null;
+	private $custId = null;
 
 	/**
 	 * array of customer data read from the database
 	 *
 	 * @var array
 	 */
-	private $_custData = null;
+	private $custData = null;
 
 	/**
 	 * api-function to call for addingg entity
@@ -81,9 +81,9 @@ abstract class BulkAction
 	protected function __construct($import_file = null, $customer_id = 0)
 	{
 		if (! empty($import_file)) {
-			$this->_impFile = \Froxlor\FileDir::makeCorrectFile($import_file);
+			$this->impFile = \Froxlor\FileDir::makeCorrectFile($import_file);
 		}
-		$this->_custId = $customer_id;
+		$this->custId = $customer_id;
 	}
 
 	/**
@@ -106,7 +106,7 @@ abstract class BulkAction
 	 */
 	public function setImportFile($import_file = null)
 	{
-		$this->_impFile = \Froxlor\FileDir::makeCorrectFile($import_file);
+		$this->impFile = \Froxlor\FileDir::makeCorrectFile($import_file);
 	}
 
 	/**
@@ -118,7 +118,7 @@ abstract class BulkAction
 	 */
 	public function setCustomer($customer_id = 0)
 	{
-		$this->_custId = $customer_id;
+		$this->custId = $customer_id;
 	}
 
 	/**
@@ -177,21 +177,21 @@ abstract class BulkAction
 	 */
 	protected function _parseImportFile($separator = ";")
 	{
-		if (empty($this->_impFile)) {
+		if (empty($this->impFile)) {
 			throw new \Exception("No file was given for import");
 		}
 
-		if (! file_exists($this->_impFile)) {
-			throw new \Exception("The file '" . $this->_impFile . "' could not be found");
+		if (! file_exists($this->impFile)) {
+			throw new \Exception("The file '" . $this->impFile . "' could not be found");
 		}
 
-		if (! is_readable($this->_impFile)) {
-			throw new \Exception("Unable to read file '" . $this->_impFile . "'");
+		if (! is_readable($this->impFile)) {
+			throw new \Exception("Unable to read file '" . $this->impFile . "'");
 		}
 
 		$file_data = array();
 		$is_params_line = true;
-		$fh = @fopen($this->_impFile, "r");
+		$fh = @fopen($this->impFile, "r");
 		if ($fh) {
 			while (($line = fgets($fh)) !== false) {
 				$tmp_arr = explode($separator, $line);
@@ -211,7 +211,7 @@ abstract class BulkAction
 			}
 			$this->api_params = array_map("trim", $this->api_params);
 		} else {
-			throw new \Exception("Unable to open file '" . $this->_impFile . "'");
+			throw new \Exception("Unable to open file '" . $this->impFile . "'");
 		}
 		fclose($fh);
 
@@ -225,11 +225,11 @@ abstract class BulkAction
 	{
 		$this->_readCustomerData();
 
-		if ($this->_custId <= 0) {
+		if ($this->custId <= 0) {
 			throw new \Exception("Invalid customer selected");
 		}
 
-		if (is_null($this->_custData)) {
+		if (is_null($this->custData)) {
 			throw new \Exception("Failed to read customer data");
 		}
 	}
@@ -242,13 +242,13 @@ abstract class BulkAction
 	protected function _readCustomerData()
 	{
 		$cust_stmt = \Froxlor\Database\Database::prepare("SELECT * FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `customerid` = :cid");
-		$this->_custData = \Froxlor\Database\Database::pexecute_first($cust_stmt, array(
-			'cid' => $this->_custId
+		$this->custData = \Froxlor\Database\Database::pexecute_first($cust_stmt, array(
+			'cid' => $this->custId
 		));
-		if (is_array($this->_custData) && isset($this->_custData['customerid']) && $this->_custData['customerid'] == $this->_custId) {
+		if (is_array($this->custData) && isset($this->custData['customerid']) && $this->custData['customerid'] == $this->custId) {
 			return true;
 		}
-		$this->_custData = null;
+		$this->custData = null;
 		return false;
 	}
 }

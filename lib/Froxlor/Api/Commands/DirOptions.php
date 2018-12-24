@@ -378,7 +378,7 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		\Froxlor\System\Cronjob::inserttask('1');
 		return $this->response(200, "successfull", $result);
 	}
-	
+
 	/**
 	 * this functions validates a given value as ErrorDocument
 	 * refs #267
@@ -388,7 +388,7 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	 * @param bool $throw_exception
 	 *
 	 * @return string error-document-string
-	 *
+	 *        
 	 */
 	private function correctErrorDocument($errdoc = null, $throw_exception = false)
 	{
@@ -419,5 +419,4 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		}
 		return $errdoc;
 	}
-	
 }

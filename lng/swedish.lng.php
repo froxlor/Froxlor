@@ -474,7 +474,7 @@ $lng['admin']['subcanemaildomain']['never'] = 'Aldrig';
 $lng['admin']['subcanemaildomain']['choosableno'] = 'Valbar, standardvärdet är Nej';
 $lng['admin']['subcanemaildomain']['choosableyes'] = 'Valbar, standardvärdet är Ja';
 $lng['admin']['subcanemaildomain']['always'] = 'Alltid';
-$lng['changepassword']['also_change_webalizer'] = ' Ändra även lösenord för webalizer statistik';
+$lng['changepassword']['also_change_stats'] = ' Ändra även lösenord för statistik';
 
 // ADDED IN 1.2.16-svn8
 

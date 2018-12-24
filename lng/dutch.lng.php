@@ -454,7 +454,7 @@ $lng['admin']['subcanemaildomain']['never'] = 'Nooit';
 $lng['admin']['subcanemaildomain']['choosableno'] = 'Kiesbaar, standaard nee';
 $lng['admin']['subcanemaildomain']['choosableyes'] = 'Kiesbaar, standaard ja';
 $lng['admin']['subcanemaildomain']['always'] = 'Altijd';
-$lng['changepassword']['also_change_webalizer'] = ' wijzig ook het wachtwoord van de webalizer-statistieken';
+$lng['changepassword']['also_change_stats'] = ' wijzig ook het wachtwoord van de statistieken';
 
 // ADDED IN 1.2.16-svn8
 

@@ -1,7 +1,6 @@
 <?php
 namespace Froxlor\Api;
 
-
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -123,7 +122,7 @@ abstract class ApiParameter
 	 */
 	protected function getUlParam($param = null, $ul_field = null, $optional = false, $default = 0)
 	{
-		$param_value = (int)$this->getParam($param, $optional, $default);
+		$param_value = (int) $this->getParam($param, $optional, $default);
 		$ul_field_value = $this->getBoolParam($ul_field, true, 0);
 		if ($ul_field_value != '0') {
 			$param_value = - 1;

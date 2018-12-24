@@ -21,15 +21,15 @@ class PowerDNS extends DnsBase
 	public function writeConfigs()
 	{
 		// tell the world what we are doing
-		$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'Task4 started - Refreshing DNS database');
+		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Task4 started - Refreshing DNS database');
 
 		$domains = $this->getDomainList();
 
 		// clean up
-		$this->_clearZoneTables($domains);
+		$this->clearZoneTables($domains);
 
 		if (empty($domains)) {
-			$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'No domains found for nameserver-config, skipping...');
+			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'No domains found for nameserver-config, skipping...');
 			return;
 		}
 
@@ -41,9 +41,9 @@ class PowerDNS extends DnsBase
 			$this->walkDomainList($domain, $domains);
 		}
 
-		$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'PowerDNS database updated');
+		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'PowerDNS database updated');
 		$this->reloadDaemon();
-		$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'Task4 finished');
+		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Task4 finished');
 	}
 
 	private function walkDomainList($domain, $domains)
@@ -69,21 +69,21 @@ class PowerDNS extends DnsBase
 						$zoneContent->records[] = $subzone;
 					}
 				}
-				$pdnsDomId = $this->_insertZone($zoneContent->origin, $zoneContent->serial);
-				$this->_insertRecords($pdnsDomId, $zoneContent->records, $zoneContent->origin);
-				$this->_insertAllowedTransfers($pdnsDomId);
-				$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'DB entries stored for zone `' . $domain['domain'] . '`');
+				$pdnsDomId = $this->insertZone($zoneContent->origin, $zoneContent->serial);
+				$this->insertRecords($pdnsDomId, $zoneContent->records, $zoneContent->origin);
+				$this->insertAllowedTransfers($pdnsDomId);
+				$this->logger->logAction(CRON_ACTION, LOG_INFO, 'DB entries stored for zone `' . $domain['domain'] . '`');
 			} else {
 				return \Froxlor\Dns\Dns::createDomainZone(($domain['id'] == 'none') ? $domain : $domain['id'], $isFroxlorHostname, true);
 			}
 		} else {
-			$this->_logger->logAction(CRON_ACTION, LOG_ERROR, 'Custom zonefiles are NOT supported when PowerDNS is selected as DNS daemon (triggered by: ' . $domain['domain'] . ')');
+			$this->logger->logAction(CRON_ACTION, LOG_ERROR, 'Custom zonefiles are NOT supported when PowerDNS is selected as DNS daemon (triggered by: ' . $domain['domain'] . ')');
 		}
 	}
 
-	private function _clearZoneTables($domains = null)
+	private function clearZoneTables($domains = null)
 	{
-		$this->_logger->logAction(CRON_ACTION, LOG_INFO, 'Cleaning dns zone entries from database');
+		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Cleaning dns zone entries from database');
 
 		$pdns_domains_stmt = \Froxlor\Dns\PowerDNS::getDB()->prepare("SELECT `id`, `name` FROM `domains` WHERE `name` = :domain");
 
@@ -109,7 +109,7 @@ class PowerDNS extends DnsBase
 		}
 	}
 
-	private function _insertZone($domainname, $serial = 0)
+	private function insertZone($domainname, $serial = 0)
 	{
 		$ins_stmt = PowerDNS::getDB()->prepare("
 			INSERT INTO domains set `name` = :domainname, `notified_serial` = :serial, `type` = 'NATIVE'
@@ -122,7 +122,7 @@ class PowerDNS extends DnsBase
 		return $lastid;
 	}
 
-	private function _insertRecords($domainid = 0, $records, $origin)
+	private function insertRecords($domainid = 0, $records, $origin)
 	{
 		$changedate = date('Ymds', time());
 
@@ -140,7 +140,7 @@ class PowerDNS extends DnsBase
 
 		foreach ($records as $record) {
 			if ($record instanceof \Froxlor\Dns\DnsZone) {
-				$this->_insertRecords($domainid, $record->records, $record->origin);
+				$this->insertRecords($domainid, $record->records, $record->origin);
 				continue;
 			}
 
@@ -163,7 +163,7 @@ class PowerDNS extends DnsBase
 		}
 	}
 
-	private function _insertAllowedTransfers($domainid)
+	private function insertAllowedTransfers($domainid)
 	{
 		$ins_stmt = PowerDNS::getDB()->prepare("
 			INSERT INTO domainmetadata set `domain_id` = :did, `kind` = 'ALLOW-AXFR-FROM', `content` = :value
@@ -173,10 +173,10 @@ class PowerDNS extends DnsBase
 			'did' => $domainid
 		);
 
-		if (count($this->_ns) > 0 || count($this->_axfr) > 0) {
+		if (count($this->ns) > 0 || count($this->axfr) > 0) {
 			// put nameservers in allow-transfer
-			if (count($this->_ns) > 0) {
-				foreach ($this->_ns as $ns) {
+			if (count($this->ns) > 0) {
+				foreach ($this->ns as $ns) {
 					foreach ($ns["ips"] as $ip) {
 						$ins_data['value'] = $ip;
 						$ins_stmt->execute($ins_data);
@@ -184,8 +184,8 @@ class PowerDNS extends DnsBase
 				}
 			}
 			// AXFR server #100
-			if (count($this->_axfr) > 0) {
-				foreach ($this->_axfr as $axfrserver) {
+			if (count($this->axfr) > 0) {
+				foreach ($this->axfr as $axfrserver) {
 					$ins_data['value'] = $axfrserver;
 					$ins_stmt->execute($ins_data);
 				}

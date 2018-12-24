@@ -83,7 +83,7 @@ class MasterCron extends \Froxlor\Cron\FroxlorCron
 				}
 			}
 		}
-		
+
 		$jobs_to_run = array_unique($jobs_to_run);
 
 		$cronlog->setCronDebugFlag(defined('CRON_DEBUG_FLAG'));

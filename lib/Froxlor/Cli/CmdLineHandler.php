@@ -59,8 +59,8 @@ abstract class CmdLineHandler
 	 */
 	private function __construct($argc, $argv)
 	{
-		self::$args = $this->_parseArgs($argv);
-		$this->_action = $this->_createAction();
+		self::$args = $this->parseArgs($argv);
+		$this->_action = $this->createAction();
 		$this->_action->run();
 	}
 
@@ -83,7 +83,7 @@ abstract class CmdLineHandler
 	 *
 	 * @return array
 	 */
-	private function _parseArgs($argv)
+	private function parseArgs($argv)
 	{
 		array_shift($argv);
 		$o = array();
@@ -98,7 +98,7 @@ abstract class CmdLineHandler
 						$o[$k] = true;
 					}
 				}
-			} else if (substr($a, 0, 1) == '-') {
+			} elseif (substr($a, 0, 1) == '-') {
 				if (substr($a, 2, 1) == '=') {
 					$o[substr($a, 1, 1)] = substr($a, 3);
 				} else {
@@ -121,7 +121,7 @@ abstract class CmdLineHandler
 	 * @return \Froxlor\Cli\Action
 	 * @throws \Exception
 	 */
-	private function _createAction()
+	private function createAction()
 	{
 
 		// Test for help-switch
@@ -194,23 +194,23 @@ abstract class CmdLineHandler
 		print $msg . PHP_EOL;
 	}
 
-	private static function _printcolor($msg = "", $color = "0")
+	private static function printcolor($msg = "", $color = "0")
 	{
 		print "\033[" . $color . "m" . $msg . "\033[0m" . PHP_EOL;
 	}
 
 	public static function printerr($msg = "")
 	{
-		self::_printcolor($msg, "31");
+		self::printcolor($msg, "31");
 	}
 
 	public static function printsucc($msg = "")
 	{
-		self::_printcolor($msg, "32");
+		self::printcolor($msg, "32");
 	}
 
 	public static function printwarn($msg = "")
 	{
-		self::_printcolor($msg, "33");
+		self::printcolor($msg, "33");
 	}
 }

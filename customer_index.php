@@ -172,21 +172,16 @@ if ($page == 'overview') {
 				$log->logAction(USR_ACTION, LOG_NOTICE, 'changed main ftp password');
 			}
 
-			// Update webalizer password
-			if (isset($_POST['change_webalizer']) && $_POST['change_webalizer'] == 'true') {
-				if (CRYPT_STD_DES == 1) {
-					$saltfordescrypt = substr(md5(uniqid(microtime(), 1)), 4, 2);
-					$new_webalizer_password = crypt($new_password, $saltfordescrypt);
-				} else {
-					$new_webalizer_password = crypt($new_password);
-				}
+			// Update statistics password
+			if (isset($_POST['change_stats']) && $_POST['change_stats'] == 'true') {
+				$new_stats_password = \Froxlor\System\Crypt::makeCryptPassword($new_password, true);
 
 				$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_HTPASSWDS . "`
 					SET `password` = :password
 					WHERE `customerid` = :customerid
 					AND `username` = :username");
 				$params = array(
-					"password" => $new_webalizer_password,
+					"password" => $new_stats_password,
 					"customerid" => $userinfo['customerid'],
 					"username" => $userinfo['loginname']
 				);

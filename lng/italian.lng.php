@@ -482,7 +482,7 @@ $lng['admin']['subcanemaildomain']['never'] = 'Mai';
 $lng['admin']['subcanemaildomain']['choosableno'] = 'Selezionabile, predefinito no';
 $lng['admin']['subcanemaildomain']['choosableyes'] = 'Selezionabile, predefinito si';
 $lng['admin']['subcanemaildomain']['always'] = 'Sempre';
-$lng['changepassword']['also_change_webalizer'] = ' modificare anche la password di webalizer';
+$lng['changepassword']['also_change_stats'] = ' modificare anche la password di statistic';
 
 // ADDED IN 1.2.16-svn8
 
