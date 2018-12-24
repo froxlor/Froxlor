@@ -119,7 +119,7 @@ class LeScriptV2
 			$response = $this->postNewReg();
 			if ($this->client->getLastCode() == 409) {
 				$this->log('The key was already registered. Using existing account.');
-			} else if ($this->client->getLastCode() == 201) {
+			} elseif ($this->client->getLastCode() == 201) {
 				$this->log('New account registered.');
 			} else {
 				throw new \RuntimeException("Account not initialized, probably due to rate limiting. Whole response: " . json_encode($response));

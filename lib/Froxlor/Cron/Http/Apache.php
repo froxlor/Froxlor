@@ -386,8 +386,8 @@ class Apache extends HttpConfigBase
 							'customerroot' => $mypath
 						);
 					}
-				} // end of ssl-redirect check
-				else {
+					// end of ssl-redirect check
+				} else {
 					// fallback of froxlor domain-data for processSpecialConfigTemplate()
 					$domain = array(
 						'domain' => Settings::Get('system.hostname'),
@@ -597,7 +597,9 @@ class Apache extends HttpConfigBase
 	}
 
 	public function createOwnVhostStarter()
-	{}
+	{
+		return;
+	}
 
 	/**
 	 * We collect all servernames and Aliases
@@ -698,11 +700,11 @@ class Apache extends HttpConfigBase
 				} else {
 					$stats_text .= '  Alias /webalizer "' . \Froxlor\FileDir::makeCorrectFile($domain['customerroot'] . '/webalizer') . '"' . "\n";
 				}
-			} // if the docroots are equal, we still have to set an alias for awstats
-			  // because the stats are in /awstats/[domain], not just /awstats/
-			  // also, the awstats-icons are someplace else too!
-			  // -> webalizer does not need this!
-			elseif (Settings::Get('system.awstats_enabled') == '1') {
+			} elseif (Settings::Get('system.awstats_enabled') == '1') {
+				// if the docroots are equal, we still have to set an alias for awstats
+				// because the stats are in /awstats/[domain], not just /awstats/
+				// also, the awstats-icons are someplace else too!
+				// -> webalizer does not need this!
 				$stats_text .= '  Alias /awstats "' . \Froxlor\FileDir::makeCorrectFile($domain['documentroot'] . '/awstats/' . $domain['domain']) . '"' . "\n";
 				$stats_text .= '  Alias /awstats-icon "' . \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.awstats_icons')) . '"' . "\n";
 			}

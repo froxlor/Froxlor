@@ -374,16 +374,24 @@ class Lighttpd extends HttpConfigBase
 	}
 
 	public function createVirtualHosts()
-	{}
+	{
+		return;
+	}
 
 	public function createFileDirOptions()
-	{}
+	{
+		return;
+	}
 
 	protected function composePhpOptions($domain)
-	{}
+	{
+		return;
+	}
 
 	public function createOwnVhostStarter()
-	{}
+	{
+		return;
+	}
 
 	protected function createLighttpdHosts($ipid, $ssl, $vhost_filename)
 	{
@@ -441,7 +449,7 @@ class Lighttpd extends HttpConfigBase
 		return $included_vhosts;
 	}
 
-	protected function getVhostContent($domain, $ssl_vhost = false, $ipid)
+	protected function getVhostContent($domain, $ssl_vhost = false, $ipid = 0)
 	{
 		if ($ssl_vhost === true && $domain['ssl'] != '1' && $domain['ssl_redirect'] != '1') {
 			return '';
@@ -924,11 +932,11 @@ class Lighttpd extends HttpConfigBase
 				} else {
 					$stats_text .= '  alias.url = ( "/webalizer/" => "' . \Froxlor\FileDir::makeCorrectFile($domain['customerroot'] . '/webalizer/') . '" )' . "\n";
 				}
-			} // if the docroots are equal, we still have to set an alias for awstats
-			  // because the stats are in /awstats/[domain], not just /awstats/
-			  // also, the awstats-icons are someplace else too!
-			  // -> webalizer does not need this!
-			elseif (Settings::Get('system.awstats_enabled') == '1') {
+			} elseif (Settings::Get('system.awstats_enabled') == '1') {
+				// if the docroots are equal, we still have to set an alias for awstats
+				// because the stats are in /awstats/[domain], not just /awstats/
+				// also, the awstats-icons are someplace else too!
+				// -> webalizer does not need this!
 				$stats_text .= '  alias.url = ( "/awstats/" => "' . \Froxlor\FileDir::makeCorrectFile($domain['documentroot'] . '/awstats/' . $domain['domain']) . '" )' . "\n";
 				$stats_text .= '  alias.url += ( "/awstats-icon" => "' . \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.awstats_icons')) . '" )' . "\n";
 			}

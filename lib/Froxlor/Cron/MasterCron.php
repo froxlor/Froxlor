@@ -74,8 +74,7 @@ class MasterCron extends \Froxlor\Cron\FroxlorCron
 					define('CRON_DEBUG_FLAG', 1);
 				} elseif (strtolower($argv[$x]) == '--no-fork') {
 					define('CRON_NOFORK_FLAG', 1);
-				}
-				elseif (substr(strtolower($argv[$x]), 0, 2) == '--') {
+				} elseif (substr(strtolower($argv[$x]), 0, 2) == '--') {
 					// --[cronname]
 					if (strlen($argv[$x]) > 3) {
 						$cronname = substr(strtolower($argv[$x]), 2);

@@ -81,7 +81,7 @@ class IntegrityCheck
 	 *        	
 	 * @return boolean
 	 */
-	public function DatabaseCharset($fix = false)
+	public function databaseCharset($fix = false)
 	{
 
 		// get characterset
@@ -108,7 +108,7 @@ class IntegrityCheck
 		}
 
 		if ($fix) {
-			return $this->DatabaseCharset();
+			return $this->databaseCharset();
 		}
 		return true;
 	}
@@ -119,7 +119,7 @@ class IntegrityCheck
 	 * @param bool $fix
 	 *        	Fix everything found directly
 	 */
-	public function DomainIpTable($fix = false)
+	public function domainIpTable($fix = false)
 	{
 		$ips = array();
 		$domains = array();
@@ -217,7 +217,7 @@ class IntegrityCheck
 		}
 
 		if ($fix) {
-			return $this->DomainIpTable();
+			return $this->domainIpTable();
 		} else {
 			return true;
 		}
@@ -313,7 +313,7 @@ class IntegrityCheck
 	 * @param bool $fix
 	 *        	Fix everything found directly
 	 */
-	public function SubdomainLetsencrypt($fix = false)
+	public function subdomainLetsencrypt($fix = false)
 	{
 		$ips = array();
 		$parentdomains = array();
@@ -385,7 +385,7 @@ class IntegrityCheck
 		}
 
 		if ($fix) {
-			return $this->SubdomainLetsencrypt();
+			return $this->subdomainLetsencrypt();
 		} else {
 			return true;
 		}
@@ -400,7 +400,7 @@ class IntegrityCheck
 	 *        	
 	 * @return boolean
 	 */
-	public function WebserverGroupMemberForFcgidPhpFpm($fix = false)
+	public function webserverGroupMemberForFcgidPhpFpm($fix = false)
 	{
 		if (Settings::Get('system.mod_fcgid') == 0 && Settings::Get('phpfpm.enabled') == 0) {
 			return true;
@@ -437,7 +437,7 @@ class IntegrityCheck
 		}
 
 		if ($fix) {
-			return $this->WebserverGroupMemberForFcgidPhpFpm();
+			return $this->webserverGroupMemberForFcgidPhpFpm();
 		}
 		return true;
 	}
@@ -452,7 +452,7 @@ class IntegrityCheck
 	 *        	
 	 * @return boolean
 	 */
-	public function FroxlorLocalGroupMemberForFcgidPhpFpm($fix = false)
+	public function froxlorLocalGroupMemberForFcgidPhpFpm($fix = false)
 	{
 		if (Settings::Get('system.mod_fcgid') == 0 && Settings::Get('phpfpm.enabled') == 0) {
 			return true;
@@ -505,7 +505,7 @@ class IntegrityCheck
 		}
 
 		if ($fix) {
-			return $this->FroxlorLocalGroupMemberForFcgidPhpFpm();
+			return $this->froxlorLocalGroupMemberForFcgidPhpFpm();
 		}
 		return true;
 	}

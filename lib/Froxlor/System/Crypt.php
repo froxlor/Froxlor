@@ -215,11 +215,8 @@ class Crypt
 			$pwd_check = crypt($password, $pwd_salt);
 			// check whether the hash needs to be updated
 			$hash_type_chk = substr($pwd_hash, 0, 3);
-			if (($systype == 1 && $hash_type_chk != '$1$') || // MD5
-			($systype == 2 && $hash_type_chk != '$2$') || // BLOWFISH
-			($systype == 3 && $hash_type_chk != '$5$') || // SHA256
-			($systype == 4 && $hash_type_chk != '$6$')) // SHA512
-			{
+			// MD5 || BLOWFISH || SHA256 || SHA512
+			if (($systype == 1 && $hash_type_chk != '$1$') || ($systype == 2 && $hash_type_chk != '$2$') || ($systype == 3 && $hash_type_chk != '$5$') || ($systype == 4 && $hash_type_chk != '$6$')) {
 				$update_hash = true;
 			}
 		}

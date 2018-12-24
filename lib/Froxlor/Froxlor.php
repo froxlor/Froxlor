@@ -264,11 +264,12 @@ final class Froxlor
 				$arr[] = '1'; // svn < dev < rc
 				              // number of dev
 				$arr[] = substr($x[1], 3);
-			} // -svn version are deprecated
-			elseif (stripos($x[1], 'svn') !== false) {
+			} elseif (stripos($x[1], 'svn') !== false) {
+				// -svn version are deprecated
 				$arr[] = '-1';
-				$arr[] = '0'; // svn < dev < rc
-				              // number of svn
+				// svn < dev < rc
+				$arr[] = '0';
+				// number of svn
 				$arr[] = substr($x[1], 3);
 			}
 		}

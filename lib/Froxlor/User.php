@@ -337,7 +337,7 @@ class User
 	 *
 	 * @return void
 	 */
-	private static function initArrField($field = null, &$arr, $init_value = 0)
+	private static function initArrField($field = null, &$arr = array(), $init_value = 0)
 	{
 		if (! isset($arr[$field])) {
 			$arr[$field] = $init_value;

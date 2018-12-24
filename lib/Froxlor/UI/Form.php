@@ -19,7 +19,7 @@ class Form
 				if (\Froxlor\Validate\Form::validateFieldDefinition($groupdetails)) {
 					// Prefetch form fields
 					foreach ($groupdetails['fields'] as $fieldname => $fielddetails) {
-						$groupdetails['fields'][$fieldname] = self::array_merge_prefix($fielddetails, $fielddetails['type'], self::prefetchFormFieldData($fieldname, $fielddetails));
+						$groupdetails['fields'][$fieldname] = self::arrayMergePrefix($fielddetails, $fielddetails['type'], self::prefetchFormFieldData($fieldname, $fielddetails));
 						$form['groups'][$groupname]['fields'][$fieldname] = $groupdetails['fields'][$fieldname];
 					}
 
@@ -76,7 +76,7 @@ class Form
 					if (\Froxlor\Validate\Form::validateFieldDefinition($groupdetails)) {
 						// Prefetch form fields
 						foreach ($groupdetails['fields'] as $fieldname => $fielddetails) {
-							$groupdetails['fields'][$fieldname] = self::array_merge_prefix($fielddetails, $fielddetails['type'], self::prefetchFormFieldData($fieldname, $fielddetails));
+							$groupdetails['fields'][$fieldname] = self::arrayMergePrefix($fielddetails, $fielddetails['type'], self::prefetchFormFieldData($fieldname, $fielddetails));
 							$form['groups'][$groupname]['fields'][$fieldname] = $groupdetails['fields'][$fieldname];
 						}
 
@@ -104,7 +104,7 @@ class Form
 				if (\Froxlor\Validate\Form::validateFieldDefinition($groupdetails)) {
 					// Prefetch form fields
 					foreach ($groupdetails['fields'] as $fieldname => $fielddetails) {
-						$groupdetails['fields'][$fieldname] = self::array_merge_prefix($fielddetails, $fielddetails['type'], self::prefetchFormFieldData($fieldname, $fielddetails));
+						$groupdetails['fields'][$fieldname] = self::arrayMergePrefix($fielddetails, $fielddetails['type'], self::prefetchFormFieldData($fieldname, $fielddetails));
 						$form['groups'][$groupname]['fields'][$fieldname] = $groupdetails['fields'][$fieldname];
 					}
 				}
@@ -201,7 +201,7 @@ class Form
 						// Prefetch form fields
 						foreach ($groupdetails['fields'] as $fieldname => $fielddetails) {
 							if (! $only_enabledisable || ($only_enabledisable && isset($fielddetails['overview_option']))) {
-								$groupdetails['fields'][$fieldname] = self::array_merge_prefix($fielddetails, $fielddetails['type'], self::prefetchFormFieldData($fieldname, $fielddetails));
+								$groupdetails['fields'][$fieldname] = self::arrayMergePrefix($fielddetails, $fielddetails['type'], self::prefetchFormFieldData($fieldname, $fielddetails));
 								$form['groups'][$groupname]['fields'][$fieldname] = $groupdetails['fields'][$fieldname];
 							}
 						}
@@ -508,7 +508,7 @@ class Form
 		return $returnvalue;
 	}
 
-	private static function array_merge_prefix($array1, $key_prefix, $array2)
+	private static function arrayMergePrefix($array1, $key_prefix, $array2)
 	{
 		if (is_array($array1) && is_array($array2)) {
 			if ($key_prefix != '') {
