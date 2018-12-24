@@ -210,7 +210,7 @@ final class Froxlor
 	 *
 	 * @return integer 0 if equal, 1 if a>b and -1 if b>a
 	 */
-	public static function version_compare2($a, $b)
+	public static function versionCompare2($a, $b)
 	{
 
 		// split version into pieces and remove trailing .0

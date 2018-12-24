@@ -73,7 +73,7 @@ if ($page == 'overview') {
 					$row['path'] = str_replace($userinfo['documentroot'], "/", $row['path']);
 				}
 				$row['path'] = \Froxlor\FileDir::makeCorrectDir($row['path']);
-				$row = \Froxlor\PhpHelper::htmlentities_array($row);
+				$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
 				eval("\$htpasswds.=\"" . \Froxlor\UI\Template::getTemplate("extras/htpasswds_htpasswd") . "\";");
 				$count ++;
 			}
@@ -108,7 +108,7 @@ if ($page == 'overview') {
 					$result['path'] = str_replace($userinfo['documentroot'], "/", $result['path']);
 				}
 
-				\Froxlor\UI\HTML::ask_yesno('extras_reallydelete', $filename, array(
+				\Froxlor\UI\HTML::askYesNo('extras_reallydelete', $filename, array(
 					'id' => $id,
 					'page' => $page,
 					'action' => $action
@@ -163,7 +163,7 @@ if ($page == 'overview') {
 					$result['path'] = str_replace($userinfo['documentroot'], "/", $result['path']);
 				}
 
-				$result = \Froxlor\PhpHelper::htmlentities_array($result);
+				$result = \Froxlor\PhpHelper::htmlentitiesArray($result);
 
 				$htpasswd_edit_data = include_once dirname(__FILE__) . '/lib/formfields/customer/extras/formfield.htpasswd_edit.php';
 				$htpasswd_edit_form = \Froxlor\UI\HtmlForm::genHTMLForm($htpasswd_edit_data);
@@ -219,7 +219,7 @@ if ($page == 'overview') {
 				$row['options_indexes'] = str_replace('0', $lng['panel']['no'], $row['options_indexes']);
 				$row['options_cgi'] = str_replace('1', $lng['panel']['yes'], $row['options_cgi']);
 				$row['options_cgi'] = str_replace('0', $lng['panel']['no'], $row['options_cgi']);
-				$row = \Froxlor\PhpHelper::htmlentities_array($row);
+				$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
 				eval("\$htaccess.=\"" . \Froxlor\UI\Template::getTemplate("extras/htaccess_htaccess") . "\";");
 				$count ++;
 			}
@@ -250,7 +250,7 @@ if ($page == 'overview') {
 					's' => $s
 				));
 			} else {
-				\Froxlor\UI\HTML::ask_yesno('extras_reallydelete_pathoptions', $filename, array(
+				\Froxlor\UI\HTML::askYesNo('extras_reallydelete_pathoptions', $filename, array(
 					'id' => $id,
 					'page' => $page,
 					'action' => $action
@@ -314,7 +314,7 @@ if ($page == 'overview') {
 				 * $options_indexes = \Froxlor\UI\HTML::makeyesno('options_indexes', '1', '0', $result['options_indexes']);
 				 * $options_cgi = \Froxlor\UI\HTML::makeyesno('options_cgi', '1', '0', $result['options_cgi']);
 				 */
-				$result = \Froxlor\PhpHelper::htmlentities_array($result);
+				$result = \Froxlor\PhpHelper::htmlentitiesArray($result);
 
 				$htaccess_edit_data = include_once dirname(__FILE__) . '/lib/formfields/customer/extras/formfield.htaccess_edit.php';
 				$htaccess_edit_form = \Froxlor\UI\HtmlForm::genHTMLForm($htaccess_edit_data);

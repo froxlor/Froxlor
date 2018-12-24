@@ -252,7 +252,7 @@ class HTML
 	 *        
 	 * @return string outputs parsed question_yesno template
 	 */
-	public static function ask_yesno($text, $yesfile, $params = array(), $targetname = '', $back_nr = 1)
+	public static function askYesNo($text, $yesfile, $params = array(), $targetname = '', $back_nr = 1)
 	{
 		global $userinfo, $s, $header, $footer, $lng, $theme;
 
@@ -275,7 +275,7 @@ class HTML
 		exit();
 	}
 
-	public static function ask_yesno_withcheckbox($text, $chk_text, $yesfile, $params = array(), $targetname = '', $show_checkbox = true)
+	public static function askYesNoWithCheckbox($text, $chk_text, $yesfile, $params = array(), $targetname = '', $show_checkbox = true)
 	{
 		global $userinfo, $s, $header, $footer, $lng, $theme;
 

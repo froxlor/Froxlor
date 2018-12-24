@@ -51,5 +51,5 @@ function versionInUpdate($current_version, $version_to_check)
 		return true;
 	}
 
-	return (\Froxlor\Froxlor::version_compare2($current_version, $version_to_check) == - 1 ? true : false);
+	return (\Froxlor\Froxlor::versionCompare2($current_version, $version_to_check) == - 1 ? true : false);
 }

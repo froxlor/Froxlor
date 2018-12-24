@@ -118,9 +118,9 @@ if ($page == 'overview') {
 						$row['destination'] = substr($row['destination'], 0, 32) . '... (' . $destinations_count . ')';
 					}
 
-					$row['mboxsize'] = \Froxlor\PhpHelper::size_readable($row['mboxsize'], 'GiB', 'bi', '%01.' . (int) Settings::Get('panel.decimal_places') . 'f %s');
+					$row['mboxsize'] = \Froxlor\PhpHelper::sizeReadable($row['mboxsize'], 'GiB', 'bi', '%01.' . (int) Settings::Get('panel.decimal_places') . 'f %s');
 
-					$row = \Froxlor\PhpHelper::htmlentities_array($row);
+					$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
 					eval("\$accounts.=\"" . \Froxlor\UI\Template::getTemplate("email/emails_email") . "\";");
 					$count ++;
 				}
@@ -168,7 +168,7 @@ if ($page == 'overview') {
 				} else {
 					$show_checkbox = false;
 				}
-				\Froxlor\UI\HTML::ask_yesno_withcheckbox('email_reallydelete', 'admin_customer_alsoremovemail', $filename, array(
+				\Froxlor\UI\HTML::askYesNoWithCheckbox('email_reallydelete', 'admin_customer_alsoremovemail', $filename, array(
 					'id' => $id,
 					'page' => $page,
 					'action' => $action
@@ -252,7 +252,7 @@ if ($page == 'overview') {
 			}
 
 			$destinations_count = count($result['destination']);
-			$result = \Froxlor\PhpHelper::htmlentities_array($result);
+			$result = \Froxlor\PhpHelper::htmlentitiesArray($result);
 
 			$email_edit_data = include_once dirname(__FILE__) . '/lib/formfields/customer/email/formfield.emails_edit.php';
 
@@ -325,7 +325,7 @@ if ($page == 'overview') {
 				}
 
 				$result['email_full'] = $idna_convert->decode($result['email_full']);
-				$result = \Froxlor\PhpHelper::htmlentities_array($result);
+				$result = \Froxlor\PhpHelper::htmlentitiesArray($result);
 				$quota = Settings::Get('system.mail_quota');
 
 				$account_add_data = include_once dirname(__FILE__) . '/lib/formfields/customer/email/formfield.emails_addaccount.php';
@@ -367,7 +367,7 @@ if ($page == 'overview') {
 				));
 			} else {
 				$result['email_full'] = $idna_convert->decode($result['email_full']);
-				$result = \Froxlor\PhpHelper::htmlentities_array($result);
+				$result = \Froxlor\PhpHelper::htmlentitiesArray($result);
 
 				$account_changepw_data = include_once dirname(__FILE__) . '/lib/formfields/customer/email/formfield.emails_accountchangepasswd.php';
 				$account_changepw_form = \Froxlor\UI\HtmlForm::genHTMLForm($account_changepw_data);
@@ -403,7 +403,7 @@ if ($page == 'overview') {
 				));
 			} else {
 				$result['email_full'] = $idna_convert->decode($result['email_full']);
-				$result = \Froxlor\PhpHelper::htmlentities_array($result);
+				$result = \Froxlor\PhpHelper::htmlentitiesArray($result);
 
 				$quota_edit_data = include_once dirname(__FILE__) . '/lib/formfields/customer/email/formfield.emails_accountchangequota.php';
 				$quota_edit_form = \Froxlor\UI\HtmlForm::genHTMLForm($quota_edit_data);
@@ -438,7 +438,7 @@ if ($page == 'overview') {
 					's' => $s
 				));
 			} else {
-				\Froxlor\UI\HTML::ask_yesno_withcheckbox('email_reallydelete_account', 'admin_customer_alsoremovemail', $filename, array(
+				\Froxlor\UI\HTML::askYesNoWithCheckbox('email_reallydelete_account', 'admin_customer_alsoremovemail', $filename, array(
 					'id' => $id,
 					'page' => $page,
 					'action' => $action
@@ -473,7 +473,7 @@ if ($page == 'overview') {
 					));
 				} else {
 					$result['email_full'] = $idna_convert->decode($result['email_full']);
-					$result = \Froxlor\PhpHelper::htmlentities_array($result);
+					$result = \Froxlor\PhpHelper::htmlentitiesArray($result);
 
 					$forwarder_add_data = include_once dirname(__FILE__) . '/lib/formfields/customer/email/formfield.emails_addforwarder.php';
 					$forwarder_add_form = \Froxlor\UI\HtmlForm::genHTMLForm($forwarder_add_data);
@@ -524,7 +524,7 @@ if ($page == 'overview') {
 						's' => $s
 					));
 				} else {
-					\Froxlor\UI\HTML::ask_yesno('email_reallydelete_forwarder', $filename, array(
+					\Froxlor\UI\HTML::askYesNo('email_reallydelete_forwarder', $filename, array(
 						'id' => $id,
 						'forwarderid' => $forwarderid,
 						'page' => $page,

@@ -157,7 +157,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 			'filename' => 'admin_index.php'
 		));
 	} else {
-		\Froxlor\UI\HTML::ask_yesno('admin_configs_reallyrebuild', $filename, array(
+		\Froxlor\UI\HTML::askYesNo('admin_configs_reallyrebuild', $filename, array(
 			'page' => $page
 		));
 	}
@@ -179,7 +179,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate("settings/updatecounters") . "\";");
 	} else {
-		\Froxlor\UI\HTML::ask_yesno('admin_counters_reallyupdate', $filename, array(
+		\Froxlor\UI\HTML::askYesNo('admin_counters_reallyupdate', $filename, array(
 			'page' => $page
 		));
 	}
@@ -194,7 +194,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 			's' => $s
 		));
 	} else {
-		\Froxlor\UI\HTML::ask_yesno('admin_cleartextmailpws_reallywipe', $filename, array(
+		\Froxlor\UI\HTML::askYesNo('admin_cleartextmailpws_reallywipe', $filename, array(
 			'page' => $page
 		));
 	}
@@ -211,7 +211,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 			's' => $s
 		));
 	} else {
-		\Froxlor\UI\HTML::ask_yesno('admin_quotas_reallywipe', $filename, array(
+		\Froxlor\UI\HTML::askYesNo('admin_quotas_reallywipe', $filename, array(
 			'page' => $page
 		));
 	}
@@ -252,7 +252,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 			's' => $s
 		));
 	} else {
-		\Froxlor\UI\HTML::ask_yesno('admin_quotas_reallyenforce', $filename, array(
+		\Froxlor\UI\HTML::askYesNo('admin_quotas_reallyenforce', $filename, array(
 			'page' => $page
 		));
 	}
@@ -261,7 +261,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 		$integrity->fixAll();
 	} elseif (isset($_GET['action']) && $_GET['action'] == "fix") {
-		\Froxlor\UI\HTML::ask_yesno('admin_integritycheck_reallyfix', $filename, array(
+		\Froxlor\UI\HTML::askYesNo('admin_integritycheck_reallyfix', $filename, array(
 			'page' => $page
 		));
 	}

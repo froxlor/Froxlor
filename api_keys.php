@@ -206,7 +206,7 @@ if (count($all_keys) == 0) {
 			}
 
 			// escape stuff
-			$row = \Froxlor\PhpHelper::htmlentities_array($key);
+			$row = \Froxlor\PhpHelper::htmlentitiesArray($key);
 
 			// shorten keys
 			$row['_apikey'] = substr($row['apikey'], 0, 20) . '...';

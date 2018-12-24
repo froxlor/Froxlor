@@ -106,7 +106,7 @@ if ($page == 'domains' || $page == 'overview') {
 
 			if (isset($row['domain']) && $row['domain'] != '' && $paging->checkDisplay($i)) {
 				$row['customername'] = \Froxlor\User::getCorrectFullUserDetails($row);
-				$row = \Froxlor\PhpHelper::htmlentities_array($row);
+				$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
 				// display a nice list of IP's
 				$row['ipandport'] = str_replace("\n", "<br />", $row['ipandport']);
 				eval("\$domains.=\"" . \Froxlor\UI\Template::getTemplate("domains/domains_domain") . "\";");
@@ -159,7 +159,7 @@ if ($page == 'domains' || $page == 'overview') {
 				if (\Froxlor\Domain\Domain::domainHasMainSubDomains($id)) {
 					$showcheck = true;
 				}
-				\Froxlor\UI\HTML::ask_yesno_withcheckbox('admin_domain_reallydelete', 'remove_subbutmain_domains', $filename, array(
+				\Froxlor\UI\HTML::askYesNoWithCheckbox('admin_domain_reallydelete', 'remove_subbutmain_domains', $filename, array(
 					'id' => $id,
 					'page' => $page,
 					'action' => $action
@@ -624,7 +624,7 @@ if ($page == 'domains' || $page == 'overview') {
 					}
 				}
 
-				$result = \Froxlor\PhpHelper::htmlentities_array($result);
+				$result = \Froxlor\PhpHelper::htmlentitiesArray($result);
 
 				$domain_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/domains/formfield.domains_edit.php';
 				$domain_edit_form = \Froxlor\UI\HtmlForm::genHTMLForm($domain_edit_data);

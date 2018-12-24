@@ -58,7 +58,7 @@ if ($page == '' || $page == 'overview') {
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 			if ($paging->checkDisplay($i)) {
-				$row = \Froxlor\PhpHelper::htmlentities_array($row);
+				$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
 				$row['ts_format'] = date("d.m.Y H:i", $row['ts']);
 				eval("\$plans.=\"" . \Froxlor\UI\Template::getTemplate("plans/plans_plan") . "\";");
 				$count ++;
@@ -90,7 +90,7 @@ if ($page == '' || $page == 'overview') {
 					's' => $s
 				));
 			} else {
-				\Froxlor\UI\HTML::ask_yesno('plan_reallydelete', $filename, array(
+				\Froxlor\UI\HTML::askYesNo('plan_reallydelete', $filename, array(
 					'id' => $id,
 					'page' => $page,
 					'action' => $action
@@ -271,7 +271,7 @@ if ($page == '' || $page == 'overview') {
 		if ($result['name'] != '') {
 
 			$result['value'] = json_decode($result['value'], true);
-			$result = \Froxlor\PhpHelper::htmlentities_array($result);
+			$result = \Froxlor\PhpHelper::htmlentitiesArray($result);
 
 			foreach ($result['value'] as $index => $value) {
 				$result[$index] = $value;

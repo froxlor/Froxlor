@@ -151,7 +151,7 @@ if ($page == 'overview') {
 			if ($paging->checkDisplay($i)) {
 
 				if (isset($domain_array[$sortkey])) {
-					$row = \Froxlor\PhpHelper::htmlentities_array($domain_array[$sortkey]);
+					$row = \Froxlor\PhpHelper::htmlentitiesArray($domain_array[$sortkey]);
 					if (Settings::Get('system.awstats_enabled') == '1') {
 						$statsapp = 'awstats';
 					} else {
@@ -176,7 +176,7 @@ if ($page == 'overview') {
 					if (Settings::Get('system.use_ssl') == '1' && \Froxlor\Domain\Domain::domainHasSslIpPort($row['id']) && $row['caneditdomain'] == '1' && $row['letsencrypt'] == 0) {
 						$show_ssledit = true;
 					}
-					$row = \Froxlor\PhpHelper::htmlentities_array($row);
+					$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
 					eval("\$domains.=\"" . \Froxlor\UI\Template::getTemplate("domains/domains_domain") . "\";");
 				}
 			}
@@ -212,7 +212,7 @@ if ($page == 'overview') {
 					's' => $s
 				));
 			} else {
-				\Froxlor\UI\HTML::ask_yesno('domains_reallydelete', $filename, array(
+				\Froxlor\UI\HTML::askYesNo('domains_reallydelete', $filename, array(
 					'id' => $id,
 					'page' => $page,
 					'action' => $action
@@ -459,7 +459,7 @@ if ($page == 'overview') {
 				}
 
 				$domainip = $result_ipandport['ip'];
-				$result = \Froxlor\PhpHelper::htmlentities_array($result);
+				$result = \Froxlor\PhpHelper::htmlentitiesArray($result);
 
 				$subdomain_edit_data = include_once dirname(__FILE__) . '/lib/formfields/customer/domains/formfield.domains_edit.php';
 				$subdomain_edit_form = \Froxlor\UI\HtmlForm::genHTMLForm($subdomain_edit_data);
@@ -512,7 +512,7 @@ if ($page == 'overview') {
 			$do_insert = true;
 		}
 
-		$result = \Froxlor\PhpHelper::htmlentities_array($result);
+		$result = \Froxlor\PhpHelper::htmlentitiesArray($result);
 
 		$ssleditor_data = include_once dirname(__FILE__) . '/lib/formfields/customer/domains/formfield.domain_ssleditor.php';
 		$ssleditor_form = \Froxlor\UI\HtmlForm::genHTMLForm($ssleditor_data);

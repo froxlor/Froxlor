@@ -229,7 +229,7 @@ class IntegrityCheck
 	 * @param bool $fix
 	 *        	Fix everything found directly
 	 */
-	public function SubdomainSslRedirect($fix = false)
+	public function subdomainSslRedirect($fix = false)
 	{
 		$ips = array();
 		$parentdomains = array();
@@ -301,7 +301,7 @@ class IntegrityCheck
 		}
 
 		if ($fix) {
-			return $this->SubdomainSslRedirect();
+			return $this->subdomainSslRedirect();
 		} else {
 			return true;
 		}

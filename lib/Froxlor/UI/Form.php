@@ -155,7 +155,7 @@ class Form
 										} else {
 											$filename = '';
 										}
-										\Froxlor\UI\HTML::ask_yesno($question, $filename, array_merge($url_params, $submitted_fields, array(
+										\Froxlor\UI\HTML::askYesNo($question, $filename, array_merge($url_params, $submitted_fields, array(
 											$question => $question
 										)), $targetname);
 									}
@@ -259,7 +259,7 @@ class Form
 												} else {
 													$filename = '';
 												}
-												\Froxlor\UI\HTML::ask_yesno($question, $filename, array_merge($url_params, $submitted_fields, array(
+												\Froxlor\UI\HTML::askYesNo($question, $filename, array_merge($url_params, $submitted_fields, array(
 													$question => $question
 												)), $targetname);
 											}

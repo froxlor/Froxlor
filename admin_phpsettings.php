@@ -134,7 +134,7 @@ if ($page == 'overview') {
 					's' => $s
 				));
 			} else {
-				\Froxlor\UI\HTML::ask_yesno('phpsetting_reallydelete', $filename, array(
+				\Froxlor\UI\HTML::askYesNo('phpsetting_reallydelete', $filename, array(
 					'id' => $id,
 					'page' => $page,
 					'action' => $action
@@ -279,7 +279,7 @@ if ($page == 'overview') {
 					's' => $s
 				));
 			} else {
-				\Froxlor\UI\HTML::ask_yesno('fpmsetting_reallydelete', $filename, array(
+				\Froxlor\UI\HTML::askYesNo('fpmsetting_reallydelete', $filename, array(
 					'id' => $id,
 					'page' => $page,
 					'action' => $action

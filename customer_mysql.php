@@ -78,7 +78,7 @@ if ($page == 'overview') {
 		Database::needRoot(true);
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			if ($paging->checkDisplay($i)) {
-				$row = \Froxlor\PhpHelper::htmlentities_array($row);
+				$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
 				$mbdata_stmt = Database::prepare("SELECT SUM(data_length + index_length) as MB FROM information_schema.TABLES
 					WHERE table_schema = :table_schema
 					GROUP BY table_schema");
@@ -86,7 +86,7 @@ if ($page == 'overview') {
 					"table_schema" => $row['databasename']
 				));
 				$mbdata = $mbdata_stmt->fetch(PDO::FETCH_ASSOC);
-				$row['size'] = \Froxlor\PhpHelper::size_readable($mbdata['MB'], 'GiB', 'bi', '%01.' . (int) Settings::Get('panel.decimal_places') . 'f %s');
+				$row['size'] = \Froxlor\PhpHelper::sizeReadable($mbdata['MB'], 'GiB', 'bi', '%01.' . (int) Settings::Get('panel.decimal_places') . 'f %s');
 				eval("\$mysqls.=\"" . \Froxlor\UI\Template::getTemplate('mysql/mysqls_database') . "\";");
 				$count ++;
 			}
@@ -133,7 +133,7 @@ if ($page == 'overview') {
 				if (isset($result['description']) && $result['description'] != '') {
 					$dbnamedesc .= ' (' . $result['description'] . ')';
 				}
-				\Froxlor\UI\HTML::ask_yesno('mysql_reallydelete', $filename, array(
+				\Froxlor\UI\HTML::askYesNo('mysql_reallydelete', $filename, array(
 					'id' => $id,
 					'page' => $page,
 					'action' => $action

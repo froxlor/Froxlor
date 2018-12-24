@@ -762,14 +762,14 @@ class Apache extends HttpConfigBase
 
 		if (Settings::Get('system.logfiles_piped') == '1' && Settings::Get('system.logfiles_script') != '') {
 			// replace for error_log
-			$command = \Froxlor\PhpHelper::replace_variables(Settings::Get('system.logfiles_script'), array(
+			$command = \Froxlor\PhpHelper::replaceVariables(Settings::Get('system.logfiles_script'), array(
 				'LOGFILE' => $error_log,
 				'DOMAIN' => $domain['domain'],
 				'CUSTOMER' => $domain['loginname']
 			));
 			$logfiles_text .= '  ErrorLog "| ' . $command . "\"\n";
 			// replace for access_log
-			$command = \Froxlor\PhpHelper::replace_variables(Settings::Get('system.logfiles_script'), array(
+			$command = \Froxlor\PhpHelper::replaceVariables(Settings::Get('system.logfiles_script'), array(
 				'LOGFILE' => $access_log,
 				'DOMAIN' => $domain['domain'],
 				'CUSTOMER' => $domain['loginname']

@@ -76,7 +76,7 @@ if ($page == 'log') {
 			$_action = 0;
 			foreach ($logrows as $row) {
 				// if ($paging->checkDisplay($i)) {
-				$row = \Froxlor\PhpHelper::htmlentities_array($row);
+				$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
 				$row['date'] = date("d.m.y H:i:s", $row['date']);
 
 				if ($_action != $action) {

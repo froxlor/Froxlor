@@ -281,7 +281,7 @@ if ($action == '2fa_entercode') {
 				$replace_arr = array(
 					'CODE' => $code
 				);
-				$mail_body = html_entity_decode(\Froxlor\PhpHelper::replace_variables($lng['mails']['2fa']['mailbody'], $replace_arr));
+				$mail_body = html_entity_decode(\Froxlor\PhpHelper::replaceVariables($lng['mails']['2fa']['mailbody'], $replace_arr));
 
 				try {
 					$mail->Subject = $lng['mails']['2fa']['subject'];
@@ -496,7 +496,7 @@ if ($action == 'forgotpwd') {
 						"lang" => $def_language
 					));
 					$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
-					$mail_subject = html_entity_decode(\Froxlor\PhpHelper::replace_variables((($result['value'] != '') ? $result['value'] : $lng['mails']['password_reset']['subject']), $replace_arr));
+					$mail_subject = html_entity_decode(\Froxlor\PhpHelper::replaceVariables((($result['value'] != '') ? $result['value'] : $lng['mails']['password_reset']['subject']), $replace_arr));
 
 					$result_stmt = Database::prepare('SELECT `value` FROM `' . TABLE_PANEL_TEMPLATES . '`
 						WHERE `adminid`= :adminid
@@ -508,7 +508,7 @@ if ($action == 'forgotpwd') {
 						"lang" => $def_language
 					));
 					$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
-					$mail_body = html_entity_decode(\Froxlor\PhpHelper::replace_variables((($result['value'] != '') ? $result['value'] : $lng['mails']['password_reset']['mailbody']), $replace_arr));
+					$mail_body = html_entity_decode(\Froxlor\PhpHelper::replaceVariables((($result['value'] != '') ? $result['value'] : $lng['mails']['password_reset']['mailbody']), $replace_arr));
 
 					$_mailerror = false;
 					$mailerr_msg = "";

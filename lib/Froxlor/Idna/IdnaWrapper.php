@@ -55,14 +55,8 @@ class IdnaWrapper
 	 */
 	public function encode($to_encode)
 	{
-		$to_encode = $this->is_utf8($to_encode) ? $to_encode : utf8_encode($to_encode);
+		$to_encode = $this->isUtf8($to_encode) ? $to_encode : utf8_encode($to_encode);
 		return $this->idna_converter->encode($to_encode);
-	}
-
-	public function encode_uri($to_encode)
-	{
-		$to_encode = $this->is_utf8($to_encode) ? $to_encode : utf8_encode($to_encode);
-		return $this->idna_converter->encodeUri($to_encode);
 	}
 
 	/**
@@ -87,7 +81,7 @@ class IdnaWrapper
 	 *
 	 * @return boolean
 	 */
-	private function is_utf8($string = null)
+	private function isUtf8($string = null)
 	{
 		if (function_exists("mb_detect_encoding")) {
 			if (mb_detect_encoding($string, 'UTF-8, ISO-8859-1') === 'UTF-8') {

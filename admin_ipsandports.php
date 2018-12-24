@@ -58,7 +58,7 @@ if ($page == 'ipsandports' || $page == 'overview') {
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 
 			if ($paging->checkDisplay($i)) {
-				$row = \Froxlor\PhpHelper::htmlentities_array($row);
+				$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
 				if (filter_var($row['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
 					$row['ip'] = '[' . $row['ip'] . ']';
 				}
@@ -94,7 +94,7 @@ if ($page == 'ipsandports' || $page == 'overview') {
 					's' => $s
 				));
 			} else {
-				\Froxlor\UI\HTML::ask_yesno('admin_ip_reallydelete', $filename, array(
+				\Froxlor\UI\HTML::askYesNo('admin_ip_reallydelete', $filename, array(
 					'id' => $id,
 					'page' => $page,
 					'action' => $action
@@ -146,7 +146,7 @@ if ($page == 'ipsandports' || $page == 'overview') {
 				));
 			} else {
 
-				$result = \Froxlor\PhpHelper::htmlentities_array($result);
+				$result = \Froxlor\PhpHelper::htmlentitiesArray($result);
 
 				$ipsandports_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/ipsandports/formfield.ipsandports_edit.php';
 				$ipsandports_edit_form = \Froxlor\UI\HtmlForm::genHTMLForm($ipsandports_edit_data);

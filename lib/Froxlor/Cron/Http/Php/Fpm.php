@@ -237,7 +237,7 @@ class Fpm
 				'CUSTOMER_HOMEDIR' => \Froxlor\FileDir::makeCorrectDir($this->domain['customerroot'])
 			);
 
-			$phpini = \Froxlor\PhpHelper::replace_variables($phpconfig['phpsettings'], $php_ini_variables);
+			$phpini = \Froxlor\PhpHelper::replaceVariables($phpconfig['phpsettings'], $php_ini_variables);
 			$phpini_array = explode("\n", $phpini);
 
 			$fpm_config .= "\n\n";

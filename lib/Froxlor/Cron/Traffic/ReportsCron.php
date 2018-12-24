@@ -106,11 +106,11 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 						'varname' => 'trafficmaxpercent_subject'
 					);
 					$result2 = Database::pexecute_first($result2_stmt, $result2_data);
-					$mail_subject = html_entity_decode(\Froxlor\PhpHelper::replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['trafficmaxpercent']['subject']), $replace_arr));
+					$mail_subject = html_entity_decode(\Froxlor\PhpHelper::replaceVariables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['trafficmaxpercent']['subject']), $replace_arr));
 
 					$result2_data['varname'] = 'trafficmaxpercent_mailbody';
 					$result2 = Database::pexecute_first($result2_stmt, $result2_data);
-					$mail_body = html_entity_decode(\Froxlor\PhpHelper::replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['trafficmaxpercent']['mailbody']), $replace_arr));
+					$mail_body = html_entity_decode(\Froxlor\PhpHelper::replaceVariables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['trafficmaxpercent']['mailbody']), $replace_arr));
 
 					$_mailerror = false;
 					$mailerr_msg = "";
@@ -208,11 +208,11 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 						'varname' => 'trafficmaxpercent_subject'
 					);
 					$result2 = Database::pexecute_first($result2_stmt, $result2_data);
-					$mail_subject = html_entity_decode(\Froxlor\PhpHelper::replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['trafficmaxpercent']['subject']), $replace_arr));
+					$mail_subject = html_entity_decode(\Froxlor\PhpHelper::replaceVariables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['trafficmaxpercent']['subject']), $replace_arr));
 
 					$result2_data['varname'] = 'trafficmaxpercent_mailbody';
 					$result2 = Database::pexecute_first($result2_stmt, $result2_data);
-					$mail_body = html_entity_decode(\Froxlor\PhpHelper::replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['trafficmaxpercent']['mailbody']), $replace_arr));
+					$mail_body = html_entity_decode(\Froxlor\PhpHelper::replaceVariables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['trafficmaxpercent']['mailbody']), $replace_arr));
 
 					$_mailerror = false;
 					$mailerr_msg = "";
@@ -407,11 +407,11 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 						'varname' => 'diskmaxpercent_subject'
 					);
 					$result2 = Database::pexecute_first($result2_stmt, $result2_data);
-					$mail_subject = html_entity_decode(\Froxlor\PhpHelper::replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['diskmaxpercent']['subject']), $replace_arr));
+					$mail_subject = html_entity_decode(\Froxlor\PhpHelper::replaceVariables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['diskmaxpercent']['subject']), $replace_arr));
 
 					$result2_data['varname'] = 'diskmaxpercent_mailbody';
 					$result2 = Database::pexecute_first($result2_stmt, $result2_data);
-					$mail_body = html_entity_decode(\Froxlor\PhpHelper::replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['diskmaxpercent']['mailbody']), $replace_arr));
+					$mail_body = html_entity_decode(\Froxlor\PhpHelper::replaceVariables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['diskmaxpercent']['mailbody']), $replace_arr));
 
 					$_mailerror = false;
 					$mailerr_msg = "";
@@ -500,11 +500,11 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 						'varname' => 'diskmaxpercent_subject'
 					);
 					$result2 = Database::pexecute_first($result2_stmt, $result2_data);
-					$mail_subject = html_entity_decode(\Froxlor\PhpHelper::replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['diskmaxpercent']['subject']), $replace_arr));
+					$mail_subject = html_entity_decode(\Froxlor\PhpHelper::replaceVariables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['diskmaxpercent']['subject']), $replace_arr));
 
 					$result2_data['varname'] = 'diskmaxpercent_mailbody';
 					$result2 = Database::pexecute_first($result2_stmt, $result2_data);
-					$mail_body = html_entity_decode(\Froxlor\PhpHelper::replace_variables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['diskmaxpercent']['mailbody']), $replace_arr));
+					$mail_body = html_entity_decode(\Froxlor\PhpHelper::replaceVariables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['diskmaxpercent']['mailbody']), $replace_arr));
 
 					$_mailerror = false;
 					$mailerr_msg = "";

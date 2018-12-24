@@ -126,8 +126,8 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 					$islocked = 1;
 				}
 
-				$row = \Froxlor\PhpHelper::str_replace_array('-1', 'UL', $row, 'diskspace traffic mysqls emails email_accounts email_forwarders ftps subdomains');
-				$row = \Froxlor\PhpHelper::htmlentities_array($row);
+				$row = \Froxlor\PhpHelper::strReplaceArray('-1', 'UL', $row, 'diskspace traffic mysqls emails email_accounts email_forwarders ftps subdomains');
+				$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
 
 				// fix progress-bars if value is >100%
 				if ($disk_percent > 100) {
@@ -230,7 +230,7 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 				's' => $s
 			));
 		} else {
-			\Froxlor\UI\HTML::ask_yesno('customer_reallyunlock', $filename, array(
+			\Froxlor\UI\HTML::askYesNo('customer_reallyunlock', $filename, array(
 				'id' => $id,
 				'page' => $page,
 				'action' => $action
@@ -260,7 +260,7 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 				's' => $s
 			));
 		} else {
-			\Froxlor\UI\HTML::ask_yesno_withcheckbox('admin_customer_reallydelete', 'admin_customer_alsoremovefiles', $filename, array(
+			\Froxlor\UI\HTML::askYesNoWithCheckbox('admin_customer_reallydelete', 'admin_customer_alsoremovefiles', $filename, array(
 				'id' => $id,
 				'page' => $page,
 				'action' => $action
@@ -438,7 +438,7 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 					$result['mysqls'] = '';
 				}
 
-				$result = \Froxlor\PhpHelper::htmlentities_array($result);
+				$result = \Froxlor\PhpHelper::htmlentitiesArray($result);
 
 				$gender_options = \Froxlor\UI\HTML::makeoption($lng['gender']['undef'], 0, ($result['gender'] == '0' ? true : false), true, true);
 				$gender_options .= \Froxlor\UI\HTML::makeoption($lng['gender']['male'], 1, ($result['gender'] == '1' ? true : false), true, true);

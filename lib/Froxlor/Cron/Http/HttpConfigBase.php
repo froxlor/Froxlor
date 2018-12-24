@@ -54,7 +54,7 @@ class HttpConfigBase
 			'SCHEME' => ($is_ssl_vhost) ? 'https' : 'http',
 			'DOCROOT' => $domain['documentroot']
 		);
-		return \Froxlor\PhpHelper::replace_variables($template, $templateVars);
+		return \Froxlor\PhpHelper::replaceVariables($template, $templateVars);
 	}
 
 	protected function getMyPath($ip_port = null)

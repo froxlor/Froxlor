@@ -20,7 +20,7 @@ class PhpHelper
 	 * @return array The array with htmlentitie'd strings
 	 * @author Florian Lippert <flo@syscp.org>
 	 */
-	public static function htmlentities_array($subject, $fields = '', $quote_style = ENT_QUOTES, $charset = 'UTF-8')
+	public static function htmlentitiesArray($subject, $fields = '', $quote_style = ENT_QUOTES, $charset = 'UTF-8')
 	{
 		if (is_array($subject)) {
 			if (! is_array($fields)) {
@@ -30,7 +30,7 @@ class PhpHelper
 			foreach ($subject as $field => $value) {
 				if ((! is_array($fields) || empty($fields)) || (is_array($fields) && ! empty($fields) && in_array($field, $fields))) {
 					// Just call ourselve to manage multi-dimensional arrays
-					$subject[$field] = self::htmlentities_array($subject[$field], $fields, $quote_style, $charset);
+					$subject[$field] = self::htmlentitiesArray($subject[$field], $fields, $quote_style, $charset);
 				}
 			}
 		} else {
@@ -55,7 +55,7 @@ class PhpHelper
 	 * @return array The str_replace'd array
 	 * @author Florian Lippert <flo@syscp.org>
 	 */
-	public static function str_replace_array($search, $replace, $subject, $fields = '')
+	public static function strReplaceArray($search, $replace, $subject, $fields = '')
 	{
 		if (is_array($subject)) {
 			$fields = self::array_trim(explode(' ', $fields));
@@ -162,7 +162,7 @@ class PhpHelper
 		if ($has_data) {
 			sort($data_files);
 			foreach ($data_files as $data_filename) {
-				$data = array_merge_recursive($data, include ($data_filename));
+				$data = array_merge_recursive($data, include $data_filename);
 			}
 		}
 
@@ -257,7 +257,7 @@ class PhpHelper
 	 * @param
 	 *        	string
 	 */
-	public static function size_readable($size, $max = null, $system = 'si', $retstring = '%01.2f %s')
+	public static function sizeReadable($size, $max = null, $system = 'si', $retstring = '%01.2f %s')
 	{
 		// Pick units
 		$systems = array(
@@ -312,7 +312,7 @@ class PhpHelper
 	 *        	
 	 * @return string The submitted string with the variables replaced.
 	 */
-	public static function replace_variables($text, $vars)
+	public static function replaceVariables($text, $vars)
 	{
 		$pattern = "/\{([a-zA-Z0-9\-_]+)\}/";
 		$matches = array();

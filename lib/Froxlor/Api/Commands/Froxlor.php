@@ -58,7 +58,7 @@ class Froxlor extends \Froxlor\Api\ApiCommand
 						// check for customized version to not output
 						// "There is a newer version of froxlor" besides the error-message
 						$isnewerversion = - 1;
-					} elseif (\Froxlor\Froxlor::version_compare2($this->version, $_version) == - 1) {
+					} elseif (\Froxlor\Froxlor::versionCompare2($this->version, $_version) == - 1) {
 						// there is a newer version - yay
 						$isnewerversion = 1;
 					} else {

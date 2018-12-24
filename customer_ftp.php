@@ -73,7 +73,7 @@ if ($page == 'overview') {
 
 				$row['documentroot'] = \Froxlor\FileDir::makeCorrectDir($row['documentroot']);
 
-				$row = \Froxlor\PhpHelper::htmlentities_array($row);
+				$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
 				eval("\$accounts.=\"" . \Froxlor\UI\Template::getTemplate('ftp/accounts_account') . "\";");
 				$count ++;
 			}
@@ -104,7 +104,7 @@ if ($page == 'overview') {
 					's' => $s
 				));
 			} else {
-				\Froxlor\UI\HTML::ask_yesno_withcheckbox('ftp_reallydelete', 'admin_customer_alsoremoveftphomedir', $filename, array(
+				\Froxlor\UI\HTML::askYesNoWithCheckbox('ftp_reallydelete', 'admin_customer_alsoremoveftphomedir', $filename, array(
 					'id' => $id,
 					'page' => $page,
 					'action' => $action

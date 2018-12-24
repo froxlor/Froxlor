@@ -63,7 +63,7 @@ if ($page == 'log' && $userinfo['change_serversettings'] == '1') {
 			$_action = 0;
 			foreach ($logrows as $row) {
 				// if ($paging->checkDisplay($i)) {
-				$row = \Froxlor\PhpHelper::htmlentities_array($row);
+				$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
 				$row['date'] = date("d.m.y H:i:s", $row['date']);
 
 				if ($_action != $action) {
@@ -122,7 +122,7 @@ if ($page == 'log' && $userinfo['change_serversettings'] == '1') {
 				's' => $s
 			));
 		} else {
-			\Froxlor\UI\HTML::ask_yesno('logger_reallytruncate', $filename, array(
+			\Froxlor\UI\HTML::askYesNo('logger_reallytruncate', $filename, array(
 				'page' => $page,
 				'action' => $action
 			), TABLE_PANEL_LOG);
