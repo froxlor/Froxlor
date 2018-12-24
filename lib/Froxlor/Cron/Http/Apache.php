@@ -44,7 +44,7 @@ class Apache extends HttpConfigBase
 	 *
 	 * @var bool
 	 */
-	private $_deactivated = false;
+	private $deactivated = false;
 
 	public function reload()
 	{
@@ -73,7 +73,7 @@ class Apache extends HttpConfigBase
 	/**
 	 * define a standard <Directory>-statement, bug #32
 	 */
-	private function _createStandardDirectoryEntry()
+	private function createStandardDirectoryEntry()
 	{
 		$vhosts_folder = '';
 		if (is_dir(Settings::Get('system.apacheconf_vhost'))) {
@@ -119,7 +119,7 @@ class Apache extends HttpConfigBase
 	/**
 	 * define a default ErrorDocument-statement, bug #unknown-yet
 	 */
-	private function _createStandardErrorHandler()
+	private function createStandardErrorHandler()
 	{
 		if (Settings::Get('defaultwebsrverrhandler.enabled') == '1' && (Settings::Get('defaultwebsrverrhandler.err401') != '' || Settings::Get('defaultwebsrverrhandler.err403') != '' || Settings::Get('defaultwebsrverrhandler.err404') != '' || Settings::Get('defaultwebsrverrhandler.err500') != '')) {
 			$vhosts_folder = '';
@@ -539,12 +539,12 @@ class Apache extends HttpConfigBase
 		/**
 		 * bug #32
 		 */
-		$this->_createStandardDirectoryEntry();
+		$this->createStandardDirectoryEntry();
 
 		/**
 		 * bug #unknown-yet
 		 */
-		$this->_createStandardErrorHandler();
+		$this->createStandardErrorHandler();
 	}
 
 	/**
@@ -666,10 +666,10 @@ class Apache extends HttpConfigBase
 				$webroot_text .= '    allow from all' . "\n";
 			}
 			$webroot_text .= '  </Directory>' . "\n";
-			$this->_deactivated = true;
+			$this->deactivated = true;
 		} else {
 			$webroot_text .= '  DocumentRoot "' . $domain['documentroot'] . "\"\n";
-			$this->_deactivated = false;
+			$this->deactivated = false;
 		}
 
 		return $webroot_text;
@@ -1049,7 +1049,7 @@ class Apache extends HttpConfigBase
 
 			\Froxlor\FileDir::mkDirWithCorrectOwnership($domain['customerroot'], $domain['documentroot'], $domain['guid'], $domain['guid'], true, true);
 			$vhost_content .= $this->getWebroot($domain);
-			if ($this->_deactivated == false) {
+			if ($this->deactivated == false) {
 				$vhost_content .= $this->composePhpOptions($domain, $ssl_vhost);
 				$vhost_content .= $this->getStats($domain);
 			}

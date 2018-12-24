@@ -147,7 +147,7 @@ class ConfigParser
 	 *
 	 * @return bool
 	 */
-	private function _parse()
+	private function parse()
 	{
 		// We only want to parse the stuff one time
 		if ($this->isparsed == true) {
@@ -184,7 +184,7 @@ class ConfigParser
 	public function getServices()
 	{
 		// Let's parse this shit(!)
-		$this->_parse();
+		$this->parse();
 
 		// Return our carefully searched for services
 		return $this->services;

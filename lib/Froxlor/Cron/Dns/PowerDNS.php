@@ -122,7 +122,7 @@ class PowerDNS extends DnsBase
 		return $lastid;
 	}
 
-	private function insertRecords($domainid = 0, $records, $origin)
+	private function insertRecords($domainid = 0, $records = array(), $origin = "")
 	{
 		$changedate = date('Ymds', time());
 

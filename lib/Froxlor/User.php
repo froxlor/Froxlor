@@ -111,8 +111,8 @@ class User
 				$admin_resources[$cur_adm] = array();
 			}
 
-			self::_addResourceCountEx($admin_resources[$cur_adm], $customer, 'diskspace_used', 'diskspace');
-			self::_addResourceCountEx($admin_resources[$cur_adm], $customer, 'traffic_used', 'traffic_used'); // !!! yes, USED and USED
+			self::addResourceCountEx($admin_resources[$cur_adm], $customer, 'diskspace_used', 'diskspace');
+			self::addResourceCountEx($admin_resources[$cur_adm], $customer, 'traffic_used', 'traffic_used'); // !!! yes, USED and USED
 
 			foreach (array(
 				'mysqls',
@@ -123,7 +123,7 @@ class User
 				'email_quota',
 				'subdomains'
 			) as $field) {
-				self::_addResourceCount($admin_resources[$cur_adm], $customer, $field . '_used', $field);
+				self::addResourceCount($admin_resources[$cur_adm], $customer, $field . '_used', $field);
 			}
 
 			$customer_mysqls_stmt = Database::prepare('SELECT COUNT(*) AS `number_mysqls` FROM `' . TABLE_PANEL_DATABASES . '`
@@ -241,7 +241,7 @@ class User
 				'email_quota_used',
 				'subdomains_used'
 			) as $field) {
-				self::_initArrField($field, $admin_resources[$cur_adm], 0);
+				self::initArrField($field, $admin_resources[$cur_adm], 0);
 				$admin[$field . '_new'] = $admin_resources[$cur_adm][$field];
 			}
 
@@ -295,9 +295,9 @@ class User
 	 *
 	 * @return void
 	 */
-	private static function _addResourceCount(&$arr, $customer_arr, $used_field = null, $field = null)
+	private static function addResourceCount(&$arr, $customer_arr, $used_field = null, $field = null)
 	{
-		self::_initArrField($used_field, $arr, 0);
+		self::initArrField($used_field, $arr, 0);
 		if ($customer_arr[$field] != '-1') {
 			$arr[$used_field] += intval($customer_arr[$used_field]);
 		}
@@ -317,9 +317,9 @@ class User
 	 *
 	 * @return void
 	 */
-	private static function _addResourceCountEx(&$arr, $customer_arr, $used_field = null, $field = null)
+	private static function addResourceCountEx(&$arr, $customer_arr, $used_field = null, $field = null)
 	{
-		self::_initArrField($used_field, $arr, 0);
+		self::initArrField($used_field, $arr, 0);
 		if ($field == 'diskspace' && ($customer_arr[$field] / 1024) != '-1') {
 			$arr[$used_field] += intval($customer_arr[$used_field]);
 		} elseif ($field == 'traffic_used') {
@@ -337,7 +337,7 @@ class User
 	 *
 	 * @return void
 	 */
-	private static function _initArrField($field = null, &$arr, $init_value = 0)
+	private static function initArrField($field = null, &$arr, $init_value = 0)
 	{
 		if (! isset($arr[$field])) {
 			$arr[$field] = $init_value;

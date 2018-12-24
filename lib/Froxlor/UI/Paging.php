@@ -103,7 +103,7 @@ class Paging
 	 */
 	private $natSorting = false;
 
-	private $_limit = 0;
+	private $limit = 0;
 
 	/**
 	 * Class constructor.
@@ -226,7 +226,7 @@ class Paging
 		);
 		\Froxlor\Database\Database::pexecute($upd_stmt, $upd_data);
 
-		$this->_limit = $limit;
+		$this->limit = $limit;
 	}
 
 	/**
@@ -384,9 +384,9 @@ class Paging
 	 */
 	public function getSqlLimit()
 	{
-		if ($this->_limit > 0) {
-			$_offset = ($this->pageno - 1) * $this->_limit;
-			return ' LIMIT ' . $_offset . ',' . $this->_limit;
+		if ($this->limit > 0) {
+			$_offset = ($this->pageno - 1) * $this->limit;
+			return ' LIMIT ' . $_offset . ',' . $this->limit;
 		}
 		/**
 		 * currently not in use

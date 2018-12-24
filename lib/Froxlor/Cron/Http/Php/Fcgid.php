@@ -145,7 +145,7 @@ class Fcgid
 			$openbasedirc = ';';
 		}
 
-		$admin = $this->_getAdminData($this->_domain['adminid']);
+		$admin = $this->getAdminData($this->_domain['adminid']);
 		$php_ini_variables = array(
 			'SAFE_MODE' => 'Off', // keep this for compatibility, just in case
 			'PEAR_DIR' => Settings::Get('system.mod_fcgid_peardir'),
@@ -248,7 +248,7 @@ class Fcgid
 	 *        	
 	 * @return array
 	 */
-	private function _getAdminData($adminid)
+	private function getAdminData($adminid)
 	{
 		$adminid = intval($adminid);
 

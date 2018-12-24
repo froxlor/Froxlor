@@ -71,17 +71,17 @@ class Template
 			$filename = \Froxlor\Froxlor::getInstallDir() . 'templates/' . $theme . '/' . $template . '.tpl';
 
 			// check the current selected theme for the template
-			$templatefile = self::_checkAndParseTpl($filename);
+			$templatefile = self::checkAndParseTpl($filename);
 
 			if ($templatefile == false && $theme != $fallback_theme) {
 				// check fallback
 				$_filename = \Froxlor\Froxlor::getInstallDir() . 'templates/' . $fallback_theme . '/' . $template . '.tpl';
-				$templatefile = self::_checkAndParseTpl($_filename);
+				$templatefile = self::checkAndParseTpl($_filename);
 
 				if ($templatefile == false) {
 					// check for old layout
 					$_filename = \Froxlor\Froxlor::getInstallDir() . 'templates/' . $template . '.tpl';
-					$templatefile = self::_checkAndParseTpl($_filename);
+					$templatefile = self::checkAndParseTpl($_filename);
 
 					if ($templatefile == false) {
 						// not found
@@ -104,7 +104,7 @@ class Template
 	 *
 	 * @return string|bool content on success, else false
 	 */
-	private static function _checkAndParseTpl($filename)
+	private static function checkAndParseTpl($filename)
 	{
 		$templatefile = "";
 

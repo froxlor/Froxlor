@@ -54,19 +54,19 @@ class MailLogParser
 
 		// Parse MTA traffic
 		if (Settings::Get("system.mtaserver") == "postfix") {
-			$this->_parsePostfixLog(Settings::Get("system.mtalog"));
-			$this->_parsePostfixLog(Settings::Get("system.mtalog") . ".1");
+			$this->parsePostfixLog(Settings::Get("system.mtalog"));
+			$this->parsePostfixLog(Settings::Get("system.mtalog") . ".1");
 		} elseif (Settings::Get("system.mtaserver") == "exim4") {
-			$this->_parseExim4Log(Settings::Get("system.mtalog"));
+			$this->parseExim4Log(Settings::Get("system.mtalog"));
 		}
 
 		// Parse MDA traffic
 		if (Settings::Get("system.mdaserver") == "dovecot") {
-			$this->_parseDovecotLog(Settings::Get("system.mdalog"));
-			$this->_parsePostfixLog(Settings::Get("system.mdalog") . ".1");
+			$this->parseDovecotLog(Settings::Get("system.mdalog"));
+			$this->parsePostfixLog(Settings::Get("system.mdalog") . ".1");
 		} elseif (Settings::Get("system.mdaserver") == "courier") {
-			$this->_parseCourierLog(Settings::Get("system.mdalog"));
-			$this->_parsePostfixLog(Settings::Get("system.mdalog") . ".1");
+			$this->parseCourierLog(Settings::Get("system.mdalog"));
+			$this->parsePostfixLog(Settings::Get("system.mdalog") . ".1");
 		}
 	}
 
@@ -74,10 +74,10 @@ class MailLogParser
 	 * parsePostfixLog
 	 * parses the traffic from a postfix logfile
 	 *
-	 * @param
+	 * @param string $logFile
 	 *        	logFile
 	 */
-	private function _parsePostfixLog($logFile)
+	private function parsePostfixLog($logFile)
 	{
 		// Check if file exists
 		if (! file_exists($logFile)) {
@@ -99,7 +99,7 @@ class MailLogParser
 			unset($matches);
 			$line = fgets($file_handle);
 
-			$timestamp = $this->_getLogTimestamp($line);
+			$timestamp = $this->getLogTimestamp($line);
 			if ($this->startTime < $timestamp) {
 				if (preg_match("/postfix\/qmgr.*(?::|\])\s([A-Z\d]+).*from=<?(?:.*\@([a-z\A-Z\d\.\-]+))?>?, size=(\d+),/", $line, $matches)) {
 					// Postfix from
@@ -117,12 +117,12 @@ class MailLogParser
 						if (in_array($mail["domainFrom"], $this->myDomains) || in_array($mail["domainTo"], $this->myDomains)) {
 							// Outgoing traffic
 							if (array_key_exists("domainFrom", $mail)) {
-								$this->_addDomainTraffic($mail["domainFrom"], $mail["size"], $timestamp);
+								$this->addDomainTraffic($mail["domainFrom"], $mail["size"], $timestamp);
 							}
 
 							// Incoming traffic
 							if (array_key_exists("domainTo", $mail) && in_array($mail["domainTo"], $this->myDomains)) {
-								$this->_addDomainTraffic($mail["domainTo"], $mail["size"], $timestamp);
+								$this->addDomainTraffic($mail["domainTo"], $mail["size"], $timestamp);
 							}
 						}
 						unset($mail);
@@ -138,10 +138,10 @@ class MailLogParser
 	 * parseExim4Log
 	 * parses the smtp traffic from a exim4 logfile
 	 *
-	 * @param
+	 * @param string $logFile
 	 *        	logFile
 	 */
-	private function _parseExim4Log($logFile)
+	private function parseExim4Log($logFile)
 	{
 		// Check if file exists
 		if (! file_exists($logFile)) {
@@ -163,14 +163,14 @@ class MailLogParser
 			unset($matches);
 			$line = fgets($file_handle);
 
-			$timestamp = $this->_getLogTimestamp($line);
+			$timestamp = $this->getLogTimestamp($line);
 			if ($this->startTime < $timestamp) {
 				if (preg_match("/<= .*@([a-z0-9.\-]+) .*S=(\d+)/i", $line, $matches)) {
 					// Outgoing traffic
-					$this->_addDomainTraffic($matches[1], $matches[2], $timestamp);
+					$this->addDomainTraffic($matches[1], $matches[2], $timestamp);
 				} elseif (preg_match("/=> .*<?.*@([a-z0-9.\-]+)>? .*S=(\d+)/i", $line, $matches)) {
 					// Incoming traffic
-					$this->_addDomainTraffic($matches[1], $matches[2], $timestamp);
+					$this->addDomainTraffic($matches[1], $matches[2], $timestamp);
 				}
 			}
 		}
@@ -182,10 +182,10 @@ class MailLogParser
 	 * parseDovecotLog
 	 * parses the dovecot imap/pop3 traffic from logfile
 	 *
-	 * @param
+	 * @param string $logFile
 	 *        	logFile
 	 */
-	private function _parseDovecotLog($logFile)
+	private function parseDovecotLog($logFile)
 	{
 		// Check if file exists
 		if (! file_exists($logFile)) {
@@ -207,14 +207,14 @@ class MailLogParser
 			unset($matches);
 			$line = fgets($file_handle);
 
-			$timestamp = $this->_getLogTimestamp($line);
+			$timestamp = $this->getLogTimestamp($line);
 			if ($this->startTime < $timestamp) {
 				if (preg_match("/dovecot.*(?::|\]) imap\(.*@([a-z0-9\.\-]+)\):.*(?:in=(\d+) out=(\d+)|bytes=(\d+)\/(\d+))/i", $line, $matches)) {
 					// Dovecot IMAP
-					$this->_addDomainTraffic($matches[1], (int) $matches[2] + (int) $matches[3], $timestamp);
+					$this->addDomainTraffic($matches[1], (int) $matches[2] + (int) $matches[3], $timestamp);
 				} elseif (preg_match("/dovecot.*(?::|\]) pop3\(.*@([a-z0-9\.\-]+)\):.*in=(\d+).*out=(\d+)/i", $line, $matches)) {
 					// Dovecot POP3
-					$this->_addDomainTraffic($matches[1], (int) $matches[2] + (int) $matches[3], $timestamp);
+					$this->addDomainTraffic($matches[1], (int) $matches[2] + (int) $matches[3], $timestamp);
 				}
 			}
 		}
@@ -226,10 +226,10 @@ class MailLogParser
 	 * parseCourierLog
 	 * parses the dovecot imap/pop3 traffic from logfile
 	 *
-	 * @param
+	 * @param string $logFile
 	 *        	logFile
 	 */
-	private function _parseCourierLog($logFile)
+	private function parseCourierLog($logFile)
 	{
 		// Check if file exists
 		if (! file_exists($logFile)) {
@@ -251,11 +251,11 @@ class MailLogParser
 			unset($matches);
 			$line = fgets($file_handle);
 
-			$timestamp = $this->_getLogTimestamp($line);
+			$timestamp = $this->getLogTimestamp($line);
 			if ($this->startTime < $timestamp) {
 				if (preg_match("/(?:imapd|pop3d)(?:-ssl)?.*(?::|\]).*user=.*@([a-z0-9\.\-]+),.*rcvd=(\d+), sent=(\d+),/i", $line, $matches)) {
 					// Courier IMAP & POP3
-					$this->_addDomainTraffic($matches[1], (int) $matches[2] + (int) $matches[3], $timestamp);
+					$this->addDomainTraffic($matches[1], (int) $matches[2] + (int) $matches[3], $timestamp);
 				}
 			}
 		}
@@ -272,7 +272,7 @@ class MailLogParser
 	 * @param
 	 *        	int traffic
 	 */
-	private function _addDomainTraffic($domain, $traffic, $timestamp)
+	private function addDomainTraffic($domain, $traffic, $timestamp)
 	{
 		$date = date("Y-m-d", $timestamp);
 		if (in_array($domain, $this->myDomains)) {
@@ -294,8 +294,9 @@ class MailLogParser
 	 *        	string line
 	 *        	return int
 	 */
-	private function _getLogTimestamp($line)
+	private function getLogTimestamp($line)
 	{
+		$matches = null;
 		if (preg_match("/((?:[A-Z]{3}\s{1,2}\d{1,2}|\d{4}-\d{2}-\d{2}) \d{2}:\d{2}:\d{2})/i", $line, $matches)) {
 			$timestamp = strtotime($matches[1]);
 			if ($timestamp > ($this->startTime + 60 * 60 * 24)) {

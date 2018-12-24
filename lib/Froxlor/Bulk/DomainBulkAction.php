@@ -72,7 +72,7 @@ class DomainBulkAction extends BulkAction
 		}
 
 		try {
-			$domain_array = $this->_parseImportFile($separator);
+			$domain_array = $this->parseImportFile($separator);
 		} catch (\Exception $e) {
 			throw $e;
 		}

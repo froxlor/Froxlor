@@ -217,8 +217,8 @@ final class Froxlor
 		$a = explode(".", $a);
 		$b = explode(".", $b);
 
-		self::_parseVersionArray($a);
-		self::_parseVersionArray($b);
+		self::parseVersionArray($a);
+		self::parseVersionArray($b);
 
 		while (count($a) != count($b)) {
 			if (count($a) < count($b)) {
@@ -248,7 +248,7 @@ final class Froxlor
 		return (count($a) < count($b)) ? - 1 : 0;
 	}
 
-	private static function _parseVersionArray(&$arr = null)
+	private static function parseVersionArray(&$arr = null)
 	{
 		// -svn or -dev or -rc ?
 		if (stripos($arr[count($arr) - 1], '-') !== false) {

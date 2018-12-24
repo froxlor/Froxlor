@@ -52,7 +52,7 @@ class PhpInterface
 	public function __construct($domain)
 	{
 		$this->_domain = $domain;
-		$this->_setInterface();
+		$this->setInterface();
 	}
 
 	/**
@@ -69,7 +69,7 @@ class PhpInterface
 	 * php-interface: fcgid or php-fpm
 	 * sets private $_interface variable
 	 */
-	private function _setInterface()
+	private function setInterface()
 	{
 		// php-fpm
 		if ((int) Settings::Get('phpfpm.enabled') == 1) {

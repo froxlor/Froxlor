@@ -16,7 +16,7 @@ class FroxlorLogger
 	 *
 	 * @var \Monolog\Logger
 	 */
-	private static $_ml = null;
+	private static $ml = null;
 
 	/**
 	 * LogTypes Array
@@ -55,10 +55,10 @@ class FroxlorLogger
 
 			switch ($logger) {
 				case 'syslog':
-					self::$_ml->pushHandler(new SyslogHandler('froxlor', LOG_USER, Logger::DEBUG));
+					self::$ml->pushHandler(new SyslogHandler('froxlor', LOG_USER, Logger::DEBUG));
 					break;
 				case 'file':
-					self::$_ml->pushHandler(new StreamHandler(Settings::Get('logger.logfile'), Logger::DEBUG));
+					self::$ml->pushHandler(new StreamHandler(Settings::Get('logger.logfile'), Logger::DEBUG));
 					break;
 				case 'mysql':
 					// @fixme add MySQL-Handler
@@ -87,11 +87,11 @@ class FroxlorLogger
 	 */
 	private function initMonolog()
 	{
-		if (empty(self::$_ml)) {
+		if (empty(self::$ml)) {
 			// get Theme object
-			self::$_ml = new Logger('froxlor');
+			self::$ml = new Logger('froxlor');
 		}
-		return self::$_ml;
+		return self::$ml;
 	}
 
 	/**
@@ -108,7 +108,7 @@ class FroxlorLogger
 			return;
 		}
 
-		if (empty(self::$_ml)) {
+		if (empty(self::$ml)) {
 			$this->initMonolog();
 		}
 
@@ -123,32 +123,32 @@ class FroxlorLogger
 
 		switch ($type) {
 			case LOG_DEBUG:
-				self::$_ml->addDebug($text, array(
+				self::$ml->addDebug($text, array(
 					'source' => $this->getActionTypeDesc($action)
 				));
 				break;
 			case LOG_INFO:
-				self::$_ml->addInfo($text, array(
+				self::$ml->addInfo($text, array(
 					'source' => $this->getActionTypeDesc($action)
 				));
 				break;
 			case LOG_NOTICE:
-				self::$_ml->addNotice($text, array(
+				self::$ml->addNotice($text, array(
 					'source' => $this->getActionTypeDesc($action)
 				));
 				break;
 			case LOG_WARNING:
-				self::$_ml->addWarning($text, array(
+				self::$ml->addWarning($text, array(
 					'source' => $this->getActionTypeDesc($action)
 				));
 				break;
 			case LOG_ERR:
-				self::$_ml->addError($text, array(
+				self::$ml->addError($text, array(
 					'source' => $this->getActionTypeDesc($action)
 				));
 				break;
 			default:
-				self::$_ml->addDebug($text, array(
+				self::$ml->addDebug($text, array(
 					'source' => $this->getActionTypeDesc($action)
 				));
 		}

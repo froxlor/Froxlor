@@ -40,7 +40,7 @@ class SImExporter
 	 *
 	 * @var array
 	 */
-	private static $_no_export = [
+	private static $no_export = [
 		'panel.adminmail',
 		'admin.show_news_feed',
 		'system.lastaccountnumber',
@@ -66,7 +66,7 @@ class SImExporter
 		$_data = array();
 		while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$index = $row['settinggroup'] . "." . $row['varname'];
-			if (! in_array($index, self::$_no_export)) {
+			if (! in_array($index, self::$no_export)) {
 				$_data[$index] = $row['value'];
 			}
 		}

@@ -63,11 +63,11 @@ class Fpm
 			$domain['fpm_config_id'] = 1;
 		}
 		$this->_domain = $domain;
-		$this->_readFpmConfig($domain['fpm_config_id']);
-		$this->_buildIniMapping();
+		$this->readFpmConfig($domain['fpm_config_id']);
+		$this->buildIniMapping();
 	}
 
-	private function _buildIniMapping()
+	private function buildIniMapping()
 	{
 		$this->_ini = array(
 			'php_flag' => explode("\n", Settings::Get('phpfpm.ini_flags')),
@@ -77,7 +77,7 @@ class Fpm
 		);
 	}
 
-	private function _readFpmConfig($fpm_config_id)
+	private function readFpmConfig($fpm_config_id)
 	{
 		$stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_FPMDAEMONS . "` WHERE `id` = :id");
 		$this->_fpm_cfg = Database::pexecute_first($stmt, array(
@@ -220,7 +220,7 @@ class Fpm
 			$fpm_config .= 'php_admin_value[session.save_path] = ' . \Froxlor\FileDir::makeCorrectDir(Settings::Get('phpfpm.tmpdir') . '/' . $this->_domain['loginname'] . '/') . "\n";
 			$fpm_config .= 'php_admin_value[upload_tmp_dir] = ' . \Froxlor\FileDir::makeCorrectDir(Settings::Get('phpfpm.tmpdir') . '/' . $this->_domain['loginname'] . '/') . "\n";
 
-			$admin = $this->_getAdminData($this->_domain['adminid']);
+			$admin = $this->getAdminData($this->_domain['adminid']);
 			$php_ini_variables = array(
 				'SAFE_MODE' => 'Off', // keep this for compatibility, just in case
 				'PEAR_DIR' => Settings::Get('phpfpm.peardir'),
@@ -393,7 +393,7 @@ pm.max_children = 1
 	 *        	
 	 * @return array
 	 */
-	private function _getAdminData($adminid)
+	private function getAdminData($adminid)
 	{
 		$adminid = intval($adminid);
 

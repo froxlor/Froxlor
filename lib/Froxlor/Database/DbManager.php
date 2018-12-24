@@ -41,14 +41,14 @@ class DbManager
 	 *
 	 * @var object
 	 */
-	private $_log = null;
+	private $log = null;
 
 	/**
 	 * Manager object
 	 *
 	 * @var object
 	 */
-	private $_manager = null;
+	private $manager = null;
 
 	/**
 	 * main constructor
@@ -57,8 +57,8 @@ class DbManager
 	 */
 	public function __construct($log = null)
 	{
-		$this->_log = $log;
-		$this->_setManager();
+		$this->log = $log;
+		$this->setManager();
 	}
 
 	/**
@@ -98,12 +98,12 @@ class DbManager
 
 		// now create the database itself
 		$this->getManager()->createDatabase($username);
-		$this->_log->logAction(USR_ACTION, LOG_INFO, "created database '" . $username . "'");
+		$this->log->logAction(USR_ACTION, LOG_INFO, "created database '" . $username . "'");
 
 		// and give permission to the user on every access-host we have
 		foreach (array_map('trim', explode(',', Settings::Get('system.mysql_access_host'))) as $mysql_access_host) {
 			$this->getManager()->grantPrivilegesTo($username, $password, $mysql_access_host);
-			$this->_log->logAction(USR_ACTION, LOG_NOTICE, "grant all privileges for '" . $username . "'@'" . $mysql_access_host . "'");
+			$this->log->logAction(USR_ACTION, LOG_NOTICE, "grant all privileges for '" . $username . "'@'" . $mysql_access_host . "'");
 		}
 
 		$this->getManager()->flushPrivileges();
@@ -119,7 +119,7 @@ class DbManager
 	 */
 	public function getManager()
 	{
-		return $this->_manager;
+		return $this->manager;
 	}
 
 	/**
@@ -128,10 +128,10 @@ class DbManager
 	 *
 	 * sets private $_manager variable
 	 */
-	private function _setManager()
+	private function setManager()
 	{
 		// TODO read different dbms from settings later
-		$this->_manager = new \Froxlor\Database\Manager\DbManagerMySQL($this->_log);
+		$this->manager = new \Froxlor\Database\Manager\DbManagerMySQL($this->log);
 	}
 
 	public static function correctMysqlUsers($mysql_access_host_array)

@@ -25,17 +25,17 @@ class Extrausers
 		// passwd
 		$passwd = '/var/lib/extrausers/passwd';
 		$sql = "SELECT username,'x' as password,uid,gid,'Froxlor User' as comment,homedir,shell, login_enabled FROM ftp_users ORDER BY uid ASC";
-		self::_generateFile($passwd, $sql, $cronlog);
+		self::generateFile($passwd, $sql, $cronlog);
 
 		// group
 		$group = '/var/lib/extrausers/group';
 		$sql = "SELECT groupname,'x' as password,gid,members FROM ftp_groups ORDER BY gid ASC";
-		self::_generateFile($group, $sql, $cronlog);
+		self::generateFile($group, $sql, $cronlog);
 
 		// shadow
 		$shadow = '/var/lib/extrausers/shadow';
 		$sql = "SELECT username,password FROM ftp_users ORDER BY gid ASC";
-		self::_generateFile($shadow, $sql, $cronlog);
+		self::generateFile($shadow, $sql, $cronlog);
 
 		// set correct permissions
 		@chmod('/var/lib/extrausers/', 0755);
@@ -44,7 +44,7 @@ class Extrausers
 		@chmod('/var/lib/extrausers/shadow', 0640);
 	}
 
-	private static function _generateFile($file, $query, &$cronlog)
+	private static function generateFile($file, $query, &$cronlog)
 	{
 		$type = basename($file);
 		$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Creating ' . $type . ' file');

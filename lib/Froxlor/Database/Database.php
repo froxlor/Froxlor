@@ -43,29 +43,29 @@ class Database
 	 *
 	 * @var object
 	 */
-	private static $_link = null;
+	private static $link = null;
 
 	/**
 	 * indicator whether to use root-connection or not
 	 */
-	private static $_needroot = false;
+	private static $needroot = false;
 
 	/**
 	 * indicator which database-server we're on (not really used)
 	 */
-	private static $_dbserver = 0;
+	private static $dbserver = 0;
 
 	/**
 	 * used database-name
 	 */
-	private static $_dbname = null;
+	private static $dbname = null;
 
 	/**
 	 * sql-access data
 	 */
-	private static $_needsqldata = false;
+	private static $needsqldata = false;
 
-	private static $_sqldata = null;
+	private static $sqldata = null;
 
 	/**
 	 * Wrapper for PDOStatement::execute so we can catch the PDOException
@@ -82,7 +82,7 @@ class Database
 		try {
 			$stmt->execute($params);
 		} catch (\PDOException $e) {
-			self::_showerror($e, $showerror, $json_response, $stmt);
+			self::showerror($e, $showerror, $json_response, $stmt);
 		}
 	}
 
@@ -122,7 +122,7 @@ class Database
 	 */
 	public static function getDbName()
 	{
-		return self::$_dbname;
+		return self::$dbname;
 	}
 
 	/**
@@ -139,8 +139,8 @@ class Database
 	{
 		// force re-connecting to the db with corresponding user
 		// and set the $dbserver (mostly to 0 = default)
-		self::_setServer($dbserver);
-		self::$_needroot = $needroot;
+		self::setServer($dbserver);
+		self::$needroot = $needroot;
 	}
 
 	/**
@@ -153,9 +153,9 @@ class Database
 	 */
 	public static function needSqlData()
 	{
-		self::$_needsqldata = true;
-		self::$_sqldata = array();
-		self::$_link = null;
+		self::$needsqldata = true;
+		self::$sqldata = array();
+		self::$link = null;
 		// we need a connection here because
 		// if getSqlData() is called RIGHT after
 		// this function and no "real" PDO
@@ -174,11 +174,11 @@ class Database
 	public static function getSqlData()
 	{
 		$return = false;
-		if (self::$_sqldata !== null && is_array(self::$_sqldata) && isset(self::$_sqldata['user'])) {
-			$return = self::$_sqldata;
+		if (self::$sqldata !== null && is_array(self::$sqldata) && isset(self::$sqldata['user'])) {
+			$return = self::$sqldata;
 			// automatically disable sql-data
-			self::$_sqldata = null;
-			self::$_needsqldata = false;
+			self::$sqldata = null;
+			self::$needsqldata = false;
 		}
 		return $return;
 	}
@@ -202,7 +202,7 @@ class Database
 		try {
 			$result = call_user_func_array($callback, $args);
 		} catch (\PDOException $e) {
-			self::_showerror($e);
+			self::showerror($e);
 		}
 		return $result;
 	}
@@ -212,10 +212,10 @@ class Database
 	 *
 	 * @param int $dbserver
 	 */
-	private static function _setServer($dbserver = 0)
+	private static function setServer($dbserver = 0)
 	{
-		self::$_dbserver = $dbserver;
-		self::$_link = null;
+		self::$dbserver = $dbserver;
+		self::$link = null;
 	}
 
 	/**
@@ -229,20 +229,20 @@ class Database
 	private static function getDB()
 	{
 		if (! extension_loaded('pdo') || in_array("mysql", \PDO::getAvailableDrivers()) == false) {
-			self::_showerror(new \Exception("The php PDO extension or PDO-MySQL driver is not available"));
+			self::showerror(new \Exception("The php PDO extension or PDO-MySQL driver is not available"));
 		}
 
 		// do we got a connection already?
-		if (self::$_link) {
+		if (self::$link) {
 			// return it
-			return self::$_link;
+			return self::$link;
 		}
 
 		// include userdata.inc.php
 		require \Froxlor\Froxlor::getInstallDir() . "/lib/userdata.inc.php";
 
 		// le format
-		if (self::$_needroot == true && isset($sql['root_user']) && isset($sql['root_password']) && (! isset($sql_root) || ! is_array($sql_root))) {
+		if (self::$needroot == true && isset($sql['root_user']) && isset($sql['root_password']) && (! isset($sql_root) || ! is_array($sql_root))) {
 			$sql_root = array(
 				0 => array(
 					'caption' => 'Default',
@@ -257,13 +257,13 @@ class Database
 		}
 
 		// either root or unprivileged user
-		if (self::$_needroot) {
-			$caption = $sql_root[self::$_dbserver]['caption'];
-			$user = $sql_root[self::$_dbserver]['user'];
-			$password = $sql_root[self::$_dbserver]['password'];
-			$host = $sql_root[self::$_dbserver]['host'];
-			$socket = isset($sql_root[self::$_dbserver]['socket']) ? $sql_root[self::$_dbserver]['socket'] : null;
-			$port = isset($sql_root[self::$_dbserver]['port']) ? $sql_root[self::$_dbserver]['port'] : '3306';
+		if (self::$needroot) {
+			$caption = $sql_root[self::$dbserver]['caption'];
+			$user = $sql_root[self::$dbserver]['user'];
+			$password = $sql_root[self::$dbserver]['password'];
+			$host = $sql_root[self::$dbserver]['host'];
+			$socket = isset($sql_root[self::$dbserver]['socket']) ? $sql_root[self::$dbserver]['socket'] : null;
+			$port = isset($sql_root[self::$dbserver]['port']) ? $sql_root[self::$dbserver]['port'] : '3306';
 		} else {
 			$caption = 'localhost';
 			$user = $sql["user"];
@@ -274,8 +274,8 @@ class Database
 		}
 
 		// save sql-access-data if needed
-		if (self::$_needsqldata) {
-			self::$_sqldata = array(
+		if (self::$needsqldata) {
+			self::$sqldata = array(
 				'user' => $user,
 				'passwd' => $password,
 				'host' => $host,
@@ -308,7 +308,7 @@ class Database
 			$dbconf["dsn"]['port'] = $port;
 		}
 
-		self::$_dbname = $sql["db"];
+		self::$dbname = $sql["db"];
 
 		// add options to dsn-string
 		foreach ($dbconf["dsn"] as $k => $v) {
@@ -320,25 +320,25 @@ class Database
 
 		// try to connect
 		try {
-			self::$_link = new \PDO($dsn, $user, $password, $options);
+			self::$link = new \PDO($dsn, $user, $password, $options);
 		} catch (\PDOException $e) {
-			self::_showerror($e);
+			self::showerror($e);
 		}
 
 		// set attributes
 		foreach ($attributes as $k => $v) {
-			self::$_link->setAttribute(constant("PDO::" . $k), constant("PDO::" . $v));
+			self::$link->setAttribute(constant("PDO::" . $k), constant("PDO::" . $v));
 		}
 
-		$version_server = self::$_link->getAttribute(\PDO::ATTR_SERVER_VERSION);
+		$version_server = self::$link->getAttribute(\PDO::ATTR_SERVER_VERSION);
 		$sql_mode = 'NO_ENGINE_SUBSTITUTION';
 		if (version_compare($version_server, '8.0.11', '<')) {
 			$sql_mode .= ',NO_AUTO_CREATE_USER';
 		}
-		self::$_link->exec('SET sql_mode = "' . $sql_mode . '"');
+		self::$link->exec('SET sql_mode = "' . $sql_mode . '"');
 
 		// return PDO instance
-		return self::$_link;
+		return self::$link;
 	}
 
 	/**
@@ -348,7 +348,7 @@ class Database
 	 * @param bool $showerror
 	 *        	if set to false, the error will be logged but we go on
 	 */
-	private static function _showerror($error, $showerror = true, $json_response = false, \PDOStatement $stmt = null)
+	private static function showerror($error, $showerror = true, $json_response = false, \PDOStatement $stmt = null)
 	{
 		global $userinfo, $theme, $linker;
 
@@ -377,9 +377,9 @@ class Database
 		$error_message = $error->getMessage();
 		$error_trace = $error->getTraceAsString();
 		// error-message
-		$error_message = self::_substitute($error_message, $substitutions);
+		$error_message = self::substitute($error_message, $substitutions);
 		// error-trace
-		$error_trace = self::_substitute($error_trace, $substitutions);
+		$error_trace = self::substitute($error_trace, $substitutions);
 
 		if ($error->getCode() == 2003) {
 			$error_message = "Unable to connect to database. Either the mysql-server is not running or your user/password is wrong.";
@@ -471,12 +471,12 @@ class Database
 	 * @param int $minLength
 	 * @return string
 	 */
-	private static function _substitute($content, array $substitutions, $minLength = 6)
+	private static function substitute($content, array $substitutions, $minLength = 6)
 	{
 		$replacements = array();
 
 		foreach ($substitutions as $search => $replace) {
-			$replacements = $replacements + self::_createShiftedSubstitutions($search, $replace, $minLength);
+			$replacements = $replacements + self::createShiftedSubstitutions($search, $replace, $minLength);
 		}
 
 		$content = str_replace(array_keys($replacements), array_values($replacements), $content);
@@ -501,7 +501,7 @@ class Database
 	 * @param int $minLength
 	 * @return array
 	 */
-	private static function _createShiftedSubstitutions($search, $replace, $minLength)
+	private static function createShiftedSubstitutions($search, $replace, $minLength)
 	{
 		$substitutions = array();
 		$length = strlen($search);

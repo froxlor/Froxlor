@@ -48,7 +48,7 @@ class Nginx extends HttpConfigBase
 	 *
 	 * @var bool
 	 */
-	private $_deactivated = false;
+	private $deactivated = false;
 
 	public function __construct($nginx_server = array())
 	{
@@ -91,7 +91,7 @@ class Nginx extends HttpConfigBase
 	/**
 	 * define a default ErrorDocument-statement, bug #unknown-yet
 	 */
-	private function _createStandardErrorHandler()
+	private function createStandardErrorHandler()
 	{
 		if (Settings::Get('defaultwebsrverrhandler.enabled') == '1' && (Settings::Get('defaultwebsrverrhandler.err401') != '' || Settings::Get('defaultwebsrverrhandler.err403') != '' || Settings::Get('defaultwebsrverrhandler.err404') != '' || Settings::Get('defaultwebsrverrhandler.err500') != '')) {
 			$vhosts_folder = '';
@@ -327,7 +327,7 @@ class Nginx extends HttpConfigBase
 		/**
 		 * standard error pages
 		 */
-		$this->_createStandardErrorHandler();
+		$this->createStandardErrorHandler();
 	}
 
 	/**
@@ -510,7 +510,7 @@ class Nginx extends HttpConfigBase
 			$vhost_content .= $this->getLogFiles($domain);
 			$vhost_content .= $this->getWebroot($domain, $ssl_vhost);
 
-			if ($this->_deactivated == false) {
+			if ($this->deactivated == false) {
 
 				$vhost_content = $this->mergeVhostCustom($vhost_content, $this->create_pathOptions($domain)) . "\n";
 				$vhost_content .= $this->composePhpOptions($domain, $ssl_vhost);
@@ -928,10 +928,10 @@ class Nginx extends HttpConfigBase
 		if ($domain['deactivated'] == '1' && Settings::Get('system.deactivateddocroot') != '') {
 			$webroot_text .= "\t" . '# Using docroot for deactivated users...' . "\n";
 			$webroot_text .= "\t" . 'root     ' . \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.deactivateddocroot')) . ';' . "\n";
-			$this->_deactivated = true;
+			$this->deactivated = true;
 		} else {
 			$webroot_text .= "\t" . 'root     ' . \Froxlor\FileDir::makeCorrectDir($domain['documentroot']) . ';' . "\n";
-			$this->_deactivated = false;
+			$this->deactivated = false;
 		}
 
 		$webroot_text .= "\n\t" . 'location / {' . "\n";

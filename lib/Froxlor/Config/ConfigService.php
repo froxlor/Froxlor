@@ -75,7 +75,7 @@ class ConfigService
 		$service = $this->fullxml->xpath($this->xpath);
 		$attributes = $service[0]->attributes();
 		if ($attributes['title'] != '') {
-			$this->title = $this->_parseContent((string) $attributes['title']);
+			$this->title = $this->parseContent((string) $attributes['title']);
 		}
 	}
 
@@ -84,7 +84,7 @@ class ConfigService
 	 *
 	 * @return bool
 	 */
-	private function _parse()
+	private function parse()
 	{
 		// We only want to parse the stuff one time
 		if ($this->isparsed == true) {
@@ -131,9 +131,10 @@ class ConfigService
 	 * @param string $content
 	 * @return string $content w/o placeholder
 	 */
-	private function _parseContent($content)
+	private function parseContent($content)
 	{
 		$content = preg_replace_callback('/\{\{(.*)\}\}/Ui', function ($matches) {
+			$match = null;
 			if (preg_match('/^settings\.(.*)$/', $matches[1], $match)) {
 				return \Froxlor\Settings::Get($match[1]);
 			} elseif (preg_match('/^lng\.(.*)(?:\.(.*)(?:\.(.*)))$/U', $matches[1], $match)) {
@@ -153,7 +154,7 @@ class ConfigService
 
 	public function getDaemons()
 	{
-		$this->_parse();
+		$this->parse();
 		return $this->daemons;
 	}
 }

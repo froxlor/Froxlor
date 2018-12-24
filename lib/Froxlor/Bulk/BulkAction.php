@@ -175,7 +175,7 @@ abstract class BulkAction
 	 *
 	 * @return array
 	 */
-	protected function _parseImportFile($separator = ";")
+	protected function parseImportFile($separator = ";")
 	{
 		if (empty($this->impFile)) {
 			throw new \Exception("No file was given for import");
@@ -223,7 +223,7 @@ abstract class BulkAction
 	 */
 	protected function preImport()
 	{
-		$this->_readCustomerData();
+		$this->readCustomerData();
 
 		if ($this->custId <= 0) {
 			throw new \Exception("Invalid customer selected");
@@ -239,7 +239,7 @@ abstract class BulkAction
 	 *
 	 * @return bool
 	 */
-	protected function _readCustomerData()
+	protected function readCustomerData()
 	{
 		$cust_stmt = \Froxlor\Database\Database::prepare("SELECT * FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `customerid` = :cid");
 		$this->custData = \Froxlor\Database\Database::pexecute_first($cust_stmt, array(

@@ -41,14 +41,14 @@ class Settings
 	 *
 	 * @var array
 	 */
-	private static $_data = null;
+	private static $data = null;
 
 	/**
 	 * changed and unsaved settings data
 	 *
 	 * @var array
 	 */
-	private static $_updatedata = null;
+	private static $updatedata = null;
 
 	/**
 	 * prepared statement for updating the
@@ -56,19 +56,19 @@ class Settings
 	 *
 	 * @var \PDOStatement
 	 */
-	private static $_updstmt = null;
+	private static $updstmt = null;
 
 	/**
 	 * private constructor, reads in all settings
 	 */
 	private static function init()
 	{
-		if (empty(self::$_data)) {
-			self::_readSettings();
-			self::$_updatedata = array();
+		if (empty(self::$data)) {
+			self::readSettings();
+			self::$updatedata = array();
 
 			// prepare statement
-			self::$_updstmt = Database::prepare("
+			self::$updstmt = Database::prepare("
 				UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = :value
 				WHERE `settinggroup` = :group AND `varname` = :varname
 			");
@@ -79,15 +79,15 @@ class Settings
 	 * Read in all settings from the database
 	 * and set the internal $_data array
 	 */
-	private static function _readSettings()
+	private static function readSettings()
 	{
 		$result_stmt = Database::query("
 			SELECT `settingid`, `settinggroup`, `varname`, `value`
 			FROM `" . TABLE_PANEL_SETTINGS . "`
 		");
-		self::$_data = array();
+		self::$data = array();
 		while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
-			self::$_data[$row['settinggroup']][$row['varname']] = $row['value'];
+			self::$data[$row['settinggroup']][$row['varname']] = $row['value'];
 		}
 		return true;
 	}
@@ -99,14 +99,14 @@ class Settings
 	 * @param string $varname
 	 * @param string $value
 	 */
-	private static function _storeSetting($group = null, $varname = null, $value = null)
+	private static function storeSetting($group = null, $varname = null, $value = null)
 	{
 		$upd_data = array(
 			'group' => $group,
 			'varname' => $varname,
 			'value' => $value
 		);
-		Database::pexecute(self::$_updstmt, $upd_data);
+		Database::pexecute(self::$updstmt, $upd_data);
 	}
 
 	/**
@@ -126,8 +126,8 @@ class Settings
 			return null;
 		}
 		$result = null;
-		if (isset(self::$_data[$sstr[0]][$sstr[1]])) {
-			$result = self::$_data[$sstr[0]][$sstr[1]];
+		if (isset(self::$data[$sstr[0]][$sstr[1]])) {
+			$result = self::$data[$sstr[0]][$sstr[1]];
 		}
 		return $result;
 	}
@@ -173,21 +173,21 @@ class Settings
 			if (! isset($sstr[1])) {
 				return false;
 			}
-			self::$_data[$sstr[0]][$sstr[1]] = $value;
+			self::$data[$sstr[0]][$sstr[1]] = $value;
 			// should we store to db instantly?
 			if ($instant_save) {
-				self::_storeSetting($sstr[0], $sstr[1], $value);
+				self::storeSetting($sstr[0], $sstr[1], $value);
 			} else {
 				// set temporary data for usage
-				if (! isset(self::$_data[$sstr[0]]) || ! is_array(self::$_data[$sstr[0]])) {
-					self::$_data[$sstr[0]] = array();
+				if (! isset(self::$data[$sstr[0]]) || ! is_array(self::$data[$sstr[0]])) {
+					self::$data[$sstr[0]] = array();
 				}
-				self::$_data[$sstr[0]][$sstr[1]] = $value;
+				self::$data[$sstr[0]][$sstr[1]] = $value;
 				// set update-data when invoking Flush()
-				if (! isset(self::$_updatedata[$sstr[0]]) || ! is_array(self::$_updatedata[$sstr[0]])) {
-					self::$_updatedata[$sstr[0]] = array();
+				if (! isset(self::$updatedata[$sstr[0]]) || ! is_array(self::$updatedata[$sstr[0]])) {
+					self::$updatedata[$sstr[0]] = array();
 				}
-				self::$_updatedata[$sstr[0]][$sstr[1]] = $value;
+				self::$updatedata[$sstr[0]][$sstr[1]] = $value;
 			}
 			return true;
 		}
@@ -227,7 +227,7 @@ class Settings
 			);
 			Database::pexecute($ins_stmt, $ins_data);
 			// also set new value to internal array and make it available
-			self::$_data[$sstr[0]][$sstr[1]] = $value;
+			self::$data[$sstr[0]][$sstr[1]] = $value;
 			return true;
 		}
 		return false;
@@ -240,17 +240,17 @@ class Settings
 	public static function Flush()
 	{
 		self::init();
-		if (is_array(self::$_updatedata) && count(self::$_updatedata) > 0) {
+		if (is_array(self::$updatedata) && count(self::$updatedata) > 0) {
 			// save all un-saved changes to the settings
-			foreach (self::$_updatedata as $group => $vargroup) {
+			foreach (self::$updatedata as $group => $vargroup) {
 				foreach ($vargroup as $varname => $value) {
-					self::_storeSetting($group, $varname, $value);
+					self::storeSetting($group, $varname, $value);
 				}
 			}
 			// now empty the array
-			self::$_updatedata = array();
+			self::$updatedata = array();
 			// re-read in all settings
-			return self::_readSettings();
+			return self::readSettings();
 		}
 		return false;
 	}
@@ -262,7 +262,7 @@ class Settings
 	{
 		self::init();
 		// empty update array
-		self::$_updatedata = array();
+		self::$updatedata = array();
 	}
 
 	public static function loadSettingsInto(&$settings_data)

@@ -23,16 +23,16 @@ class HtmlForm
 	 *
 	 * @var string
 	 */
-	private static $_form = '';
+	private static $form = '';
 
-	private static $_filename = '';
+	private static $filename = '';
 
 	public static function genHTMLForm($data = array())
 	{
 		global $lng, $theme;
 		$nob = false;
 
-		self::$_form = '';
+		self::$form = '';
 
 		foreach ($data as $fdata) {
 			$sections = $fdata['sections'];
@@ -64,8 +64,8 @@ class HtmlForm
 						$label = $fielddata['label'];
 						$desc = (isset($fielddata['desc']) ? $fielddata['desc'] : '');
 						$style = (isset($fielddata['style']) ? ' class="' . $fielddata['style'] . '"' : '');
-						$mandatory = self::_getMandatoryFlag($fielddata);
-						$data_field = self::_parseDataField($fieldname, $fielddata);
+						$mandatory = self::getMandatoryFlag($fielddata);
+						$data_field = self::parseDataField($fieldname, $fielddata);
 						if (isset($fielddata['has_nextto'])) {
 							$nexto = array(
 								'field' => $fieldname
@@ -76,10 +76,10 @@ class HtmlForm
 						}
 						eval("self::\$_form .= \"" . Template::getTemplate("misc/form/table_row", "1") . "\";");
 					} else {
-						$data_field = self::_parseDataField($fieldname, $fielddata);
+						$data_field = self::parseDataField($fieldname, $fielddata);
 						$data_field = str_replace("\t", "", $data_field);
 						$data_field = $fielddata['next_to_prefix'] . $data_field;
-						self::$_form = str_replace('{NEXTTOFIELD_' . $fielddata['next_to'] . '}', $data_field, self::$_form);
+						self::$form = str_replace('{NEXTTOFIELD_' . $fielddata['next_to'] . '}', $data_field, self::$form);
 						$nexto = false;
 					}
 				}
@@ -91,49 +91,49 @@ class HtmlForm
 			eval("self::\$_form .= \"" . Template::getTemplate("misc/form/table_end", "1") . "\";");
 		}
 
-		return self::$_form;
+		return self::$form;
 	}
 
-	private static function _parseDataField($fieldname, $data = array())
+	private static function parseDataField($fieldname, $data = array())
 	{
 		switch ($data['type']) {
 			case 'text':
-				return self::_textBox($fieldname, $data);
+				return self::textBox($fieldname, $data);
 				break;
 			case 'textul':
-				return self::_textBox($fieldname, $data, 'text', true);
+				return self::textBox($fieldname, $data, 'text', true);
 				break;
 			case 'password':
-				return self::_textBox($fieldname, $data, 'password');
+				return self::textBox($fieldname, $data, 'password');
 				break;
 			case 'hidden':
-				return self::_textBox($fieldname, $data, 'hidden');
+				return self::textBox($fieldname, $data, 'hidden');
 				break;
 			case 'yesno':
-				return self::_yesnoBox($data);
+				return self::yesnoBox($data);
 				break;
 			case 'select':
-				return self::_selectBox($fieldname, $data);
+				return self::selectBox($fieldname, $data);
 				break;
 			case 'label':
-				return self::_labelField($data);
+				return self::labelField($data);
 				break;
 			case 'textarea':
-				return self::_textArea($fieldname, $data);
+				return self::textArea($fieldname, $data);
 				break;
 			case 'checkbox':
 				return self::_checkbox($fieldname, $data);
 				break;
 			case 'file':
-				return self::_file($fieldname, $data);
+				return self::file($fieldname, $data);
 				break;
 			case 'int':
-				return self::_int($fieldname, $data);
+				return self::int($fieldname, $data);
 				break;
 		}
 	}
 
-	private static function _getMandatoryFlag($data = array())
+	private static function getMandatoryFlag($data = array())
 	{
 		if (isset($data['mandatory'])) {
 			return '&nbsp;<span class="red">*</span>';
@@ -143,7 +143,7 @@ class HtmlForm
 		return '';
 	}
 
-	private static function _textBox($fieldname = '', $data = array(), $type = 'text', $unlimited = false)
+	private static function textBox($fieldname = '', $data = array(), $type = 'text', $unlimited = false)
 	{
 		$return = '';
 		$extras = '';
@@ -175,7 +175,7 @@ class HtmlForm
 		return $return;
 	}
 
-	private static function _textArea($fieldname = '', $data = array())
+	private static function textArea($fieldname = '', $data = array())
 	{
 		$return = '';
 		$extras = '';
@@ -200,17 +200,17 @@ class HtmlForm
 		return $return;
 	}
 
-	private static function _yesnoBox($data = array())
+	private static function yesnoBox($data = array())
 	{
 		return $data['yesno_var'];
 	}
 
-	private static function _labelField($data = array())
+	private static function labelField($data = array())
 	{
 		return $data['value'];
 	}
 
-	private static function _selectBox($fieldname = '', $data = array())
+	private static function selectBox($fieldname = '', $data = array())
 	{
 		// add support to save reloaded forms
 		if (isset($data['select_var'])) {
@@ -298,7 +298,7 @@ class HtmlForm
 		return $output;
 	}
 
-	private static function _file($fieldname = '', $data = array())
+	private static function file($fieldname = '', $data = array())
 	{
 		$return = '';
 		$extras = '';
@@ -323,7 +323,7 @@ class HtmlForm
 		return $return;
 	}
 
-	private static function _int($fieldname = '', $data = array())
+	private static function int($fieldname = '', $data = array())
 	{
 		$return = '';
 		$extras = '';

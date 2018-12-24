@@ -43,7 +43,7 @@ class Lighttpd extends HttpConfigBase
 	 *
 	 * @var bool
 	 */
-	private $_deactivated = false;
+	private $deactivated = false;
 
 	public function reload()
 	{
@@ -300,13 +300,13 @@ class Lighttpd extends HttpConfigBase
 		/**
 		 * bug #unknown-yet
 		 */
-		$this->_createStandardErrorHandler();
+		$this->createStandardErrorHandler();
 	}
 
 	/**
 	 * define a default server.error-handler-404-statement, bug #unknown-yet
 	 */
-	private function _createStandardErrorHandler()
+	private function createStandardErrorHandler()
 	{
 		if (Settings::Get('defaultwebsrverrhandler.enabled') == '1' && Settings::Get('defaultwebsrverrhandler.err404') != '') {
 			$vhost_filename = \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.apacheconf_vhost') . '/05_froxlor_default_errorhandler.conf');
@@ -500,7 +500,7 @@ class Lighttpd extends HttpConfigBase
 
 			$vhost_content .= $this->getWebroot($domain, $ssl_vhost);
 			if (! $only_webroot) {
-				if ($this->_deactivated == false) {
+				if ($this->deactivated == false) {
 					$vhost_content .= $this->create_htaccess($domain);
 					$vhost_content .= $this->create_pathOptions($domain);
 					$vhost_content .= $this->composePhpOptions($domain);
@@ -870,7 +870,7 @@ class Lighttpd extends HttpConfigBase
 		if ($domain['deactivated'] == '1' && Settings::Get('system.deactivateddocroot') != '') {
 			$webroot_text .= '  # Using docroot for deactivated users...' . "\n";
 			$webroot_text .= '  server.document-root = "' . \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.deactivateddocroot')) . "\"\n";
-			$this->_deactivated = true;
+			$this->deactivated = true;
 		} else {
 			if ($ssl === false && $domain['ssl_redirect'] == '1') {
 				$redirect_domain = $this->idnaConvert->encode('https://' . $domain['domain']);
@@ -889,7 +889,7 @@ class Lighttpd extends HttpConfigBase
 			} else {
 				$webroot_text .= '  server.document-root = "' . \Froxlor\FileDir::makeCorrectDir($domain['documentroot']) . "\"\n";
 			}
-			$this->_deactivated = false;
+			$this->deactivated = false;
 		}
 
 		return $webroot_text;
