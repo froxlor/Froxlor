@@ -323,7 +323,7 @@ class Lighttpd extends HttpConfigBase
 		}
 	}
 
-	protected function create_htaccess($domain)
+	protected function createHtaccess($domain)
 	{
 		$needed_htpasswds = array();
 		$result_htpasswds_stmt = Database::prepare("
@@ -403,11 +403,11 @@ class Lighttpd extends HttpConfigBase
 				// maindomain
 				if ((int) $domain['parentdomainid'] == 0 && \Froxlor\Domain\Domain::isCustomerStdSubdomain((int) $domain['id']) == false && ((int) $domain['ismainbutsubto'] == 0 || \Froxlor\Domain\Domain::domainMainToSubExists($domain['ismainbutsubto']) == false)) {
 					$vhost_no = '50';
-				} // sub-but-main-domain
-				elseif ((int) $domain['parentdomainid'] == 0 && \Froxlor\Domain\Domain::isCustomerStdSubdomain((int) $domain['id']) == false && (int) $domain['ismainbutsubto'] > 0) {
+				} elseif ((int) $domain['parentdomainid'] == 0 && \Froxlor\Domain\Domain::isCustomerStdSubdomain((int) $domain['id']) == false && (int) $domain['ismainbutsubto'] > 0) {
+					// sub-but-main-domain
 					$vhost_no = '51';
-				} // subdomains
-				else {
+				} else {
+					// subdomains
 					// number of dots in a domain specifies it's position (and depth of subdomain) starting at 89 going downwards on higher depth
 					$vhost_no = (string) (90 - substr_count($domain['domain'], ".") + 1);
 				}
@@ -427,10 +427,8 @@ class Lighttpd extends HttpConfigBase
 			if ((! empty($this->lighttpd_data[$vhost_filename]) && ! is_dir(Settings::Get('system.apacheconf_vhost'))) || is_dir(Settings::Get('system.apacheconf_vhost'))) {
 				if ($ssl == '1') {
 					$ssl_vhost = true;
-					$ips_and_ports_index = 'ssl_ipandport';
 				} else {
 					$ssl_vhost = false;
-					$ips_and_ports_index = 'ipandport';
 				}
 
 				// FIXME we get duplicate entries of a vhost if it has assigned more than one IP
@@ -501,8 +499,8 @@ class Lighttpd extends HttpConfigBase
 			$vhost_content .= $this->getWebroot($domain, $ssl_vhost);
 			if (! $only_webroot) {
 				if ($this->deactivated == false) {
-					$vhost_content .= $this->create_htaccess($domain);
-					$vhost_content .= $this->create_pathOptions($domain);
+					$vhost_content .= $this->createHtaccess($domain);
+					$vhost_content .= $this->createPathOptions($domain);
 					$vhost_content .= $this->composePhpOptions($domain);
 					$vhost_content .= $this->getStats($domain);
 
@@ -684,7 +682,7 @@ class Lighttpd extends HttpConfigBase
 		return $logfiles_text;
 	}
 
-	protected function create_pathOptions($domain)
+	protected function createPathOptions($domain)
 	{
 		$result_stmt = Database::prepare("
 			SELECT * FROM " . TABLE_PANEL_HTACCESS . "

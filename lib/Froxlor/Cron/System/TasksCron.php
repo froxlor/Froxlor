@@ -416,8 +416,8 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 						} else {
 							\Froxlor\FileDir::safe_exec(Settings::Get('system.diskquota_quotatool_path') . " -u " . $row['guid'] . " -bl 0 -q 0 " . escapeshellarg(Settings::Get('system.diskquota_customer_partition')));
 						}
-					} // The user quota in Froxlor is different than on the filesystem
-					elseif ($row['diskspace'] != $usedquota[$row['guid']]['block']['hard'] && $row['diskspace'] != - 1024) {
+					} elseif ($row['diskspace'] != $usedquota[$row['guid']]['block']['hard'] && $row['diskspace'] != - 1024) {
+						// The user quota in Froxlor is different than on the filesystem
 						\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_NOTICE, "Setting quota for " . $row['loginname'] . " from " . $usedquota[$row['guid']]['block']['hard'] . " to " . $row['diskspace']);
 						if (\Froxlor\FileDir::isFreeBSD()) {
 							\Froxlor\FileDir::safe_exec(Settings::Get('system.diskquota_quotatool_path') . " -e " . escapeshellarg(Settings::Get('system.diskquota_customer_partition')) . ":" . $row['diskspace'] . ":" . $row['diskspace'] . " " . $row['guid']);

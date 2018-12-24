@@ -30,28 +30,28 @@ class PhpInterface
 	 *
 	 * @var array
 	 */
-	private $_domain = array();
+	private $domain = array();
 
 	/**
 	 * Interface object
 	 *
 	 * @var object
 	 */
-	private $_interface = null;
+	private $interface = null;
 
 	/**
 	 * Admin-User data array
 	 *
 	 * @var array
 	 */
-	private $_admin_cache = array();
+	private $admin_cache = array();
 
 	/**
 	 * main constructor
 	 */
 	public function __construct($domain)
 	{
-		$this->_domain = $domain;
+		$this->domain = $domain;
 		$this->setInterface();
 	}
 
@@ -61,7 +61,7 @@ class PhpInterface
 	 */
 	public function getInterface()
 	{
-		return $this->_interface;
+		return $this->interface;
 	}
 
 	/**
@@ -73,9 +73,9 @@ class PhpInterface
 	{
 		// php-fpm
 		if ((int) Settings::Get('phpfpm.enabled') == 1) {
-			$this->_interface = new Fpm($this->_domain);
+			$this->interface = new Fpm($this->domain);
 		} elseif ((int) Settings::Get('system.mod_fcgid') == 1) {
-			$this->_interface = new Fcgid($this->_domain);
+			$this->interface = new Fcgid($this->domain);
 		}
 	}
 

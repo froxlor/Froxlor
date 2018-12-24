@@ -51,13 +51,13 @@ class BackupCron extends \Froxlor\Cron\FroxlorCron
 				file_put_contents($BackupLock, $BackupPid);
 				// unnecessary to recreate database connection here
 				return 0;
-			} // Child
-			elseif ($BackupPid == 0) {
+			} elseif ($BackupPid == 0) {
+				// Child
 				posix_setsid();
 				// re-create db
 				Database::needRoot(false);
-			} // Fork failed
-			else {
+			} else {
+				// Fork failed
 				return 1;
 			}
 		} else {
@@ -120,7 +120,7 @@ class BackupCron extends \Froxlor\Cron\FroxlorCron
 	 * @return void
 	 *
 	 */
-	private static function createCustomerBackup($data = null, $customerdocroot = null, &$cronlog)
+	private static function createCustomerBackup($data = null, $customerdocroot = null, &$cronlog = null)
 	{
 		$cronlog->logAction(CRON_ACTION, LOG_INFO, 'Creating Backup for user "' . $data['loginname'] . '"');
 

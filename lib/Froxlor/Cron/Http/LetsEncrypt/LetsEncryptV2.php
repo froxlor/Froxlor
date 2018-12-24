@@ -22,7 +22,7 @@ use Froxlor\Settings;
  * @since 0.9.35
  *       
  */
-class LetsEncrypt_v2 extends \Froxlor\Cron\FroxlorCron
+class LetsEncryptV2 extends \Froxlor\Cron\FroxlorCron
 {
 
 	public static function run()
@@ -169,7 +169,7 @@ class LetsEncrypt_v2 extends \Froxlor\Cron\FroxlorCron
 
 				try {
 					// Initialize Lescript with documentroot
-					$le = new \Froxlor\Http\LetsEncrypt\LeScript_v2($cronlog, \Froxlor\Froxlor::getVersion());
+					$le = new \Froxlor\Http\LetsEncrypt\LeScriptV2($cronlog, \Froxlor\Froxlor::getVersion());
 
 					// Initialize Lescript
 					$le->initAccount($certrow, true);
@@ -251,7 +251,7 @@ class LetsEncrypt_v2 extends \Froxlor\Cron\FroxlorCron
 
 				try {
 					// Initialize Lescript with documentroot
-					$le = new \Froxlor\Http\LetsEncrypt\LeScript_v2($cronlog, \Froxlor\Froxlor::getVersion());
+					$le = new \Froxlor\Http\LetsEncrypt\LeScriptV2($cronlog, \Froxlor\Froxlor::getVersion());
 
 					// Initialize Lescript
 					$le->initAccount($certrow);

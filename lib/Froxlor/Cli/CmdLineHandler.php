@@ -30,7 +30,7 @@ abstract class CmdLineHandler
 	 *
 	 * @var \Froxlor\Cli\Action
 	 */
-	private $_action = null;
+	private $action = null;
 
 	/**
 	 * Returns a CmdLineHandler object with given
@@ -60,8 +60,8 @@ abstract class CmdLineHandler
 	private function __construct($argc, $argv)
 	{
 		self::$args = $this->parseArgs($argv);
-		$this->_action = $this->createAction();
-		$this->_action->run();
+		$this->action = $this->createAction();
+		$this->action->run();
 	}
 
 	/**

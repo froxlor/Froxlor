@@ -31,7 +31,7 @@ use Froxlor\Settings;
 
 // This file is copied from https://github.com/analogic/lescript
 // and modified to work without files and integrate in Froxlor
-class LeScript_v2
+class LeScriptV2
 {
 
 	// https://letsencrypt.org/repository/
@@ -49,9 +49,9 @@ class LeScript_v2
 
 	private $version;
 
-	private $_req_uris = array();
+	private $req_uris = array();
 
-	private $_acc_location = null;
+	private $acc_location = null;
 
 	public function __construct($logger, $version = '2')
 	{
@@ -67,10 +67,10 @@ class LeScript_v2
 
 		// get request-uris from /directory
 		$response = $this->client->get('/directory');
-		$this->_req_uris['newAccount'] = $response['newAccount'];
-		$this->_req_uris['newOrder'] = $response['newOrder'];
-		$this->_req_uris['newNonce'] = $response['newNonce'];
-		$this->_req_uris['revokeCert'] = $response['revokeCert'];
+		$this->req_uris['newAccount'] = $response['newAccount'];
+		$this->req_uris['newOrder'] = $response['newOrder'];
+		$this->req_uris['newNonce'] = $response['newNonce'];
+		$this->req_uris['revokeCert'] = $response['revokeCert'];
 	}
 
 	public function initAccount($certrow, $isFroxlorVhost = false)
@@ -80,7 +80,7 @@ class LeScript_v2
 		$this->customerId = (! $isFroxlorVhost ? $certrow['customerid'] : null);
 		$this->isFroxlorVhost = $isFroxlorVhost;
 		$this->isLeProduction = (Settings::Get('system.letsencryptca') == 'production');
-		$this->_acc_location = $certrow['leaccount'];
+		$this->acc_location = $certrow['leaccount'];
 
 		$leregistered = $certrow['leregistered'];
 
@@ -124,7 +124,7 @@ class LeScript_v2
 			} else {
 				throw new \RuntimeException("Account not initialized, probably due to rate limiting. Whole response: " . json_encode($response));
 			}
-			$this->_acc_location = $this->client->getLastLocation();
+			$this->acc_location = $this->client->getLastLocation();
 
 			$leregistered = 1;
 			$this->setLeRegisteredState($leregistered);
@@ -165,13 +165,13 @@ class LeScript_v2
 		}
 
 		// Send new-order request
-		$response = $this->signedRequest($this->_req_uris['newOrder'], array(
+		$response = $this->signedRequest($this->req_uris['newOrder'], array(
 			"identifiers" => $domains_in_order
 		), false);
 
 		if ($this->client->getLastCode() == 403) {
 			$this->log("Got status 403 - setting LE status to unregistered.");
-			$this->_acc_location = '';
+			$this->acc_location = '';
 			$this->setLeRegisteredState(0);
 			throw new \RuntimeException("Got 'unauthorized' response - we need to re-register at next run.  Whole response: " . json_encode($response));
 		}
@@ -353,12 +353,12 @@ class LeScript_v2
 		if ($this->isLeProduction) {
 			if ($this->isFroxlorVhost) {
 				Settings::Set('system.leregistered', $state);
-				Settings::Set('system.leaccount', $this->_acc_location);
+				Settings::Set('system.leaccount', $this->acc_location);
 			} else {
 				$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `leregistered` = :registered, `leaccount` = :kid WHERE `customerid` = :customerid;");
 				Database::pexecute($upd_stmt, array(
 					'registered' => $state,
-					'kid' => $this->_acc_location,
+					'kid' => $this->acc_location,
 					'customerid' => $this->customerId
 				));
 			}
@@ -380,7 +380,7 @@ class LeScript_v2
 		}
 		$this->log('Sending registration to letsencrypt server');
 
-		return $this->signedRequest($this->_req_uris['newAccount'], array(
+		return $this->signedRequest($this->req_uris['newAccount'], array(
 			'termsOfServiceAgreed' => true
 		));
 	}
@@ -467,7 +467,7 @@ keyUsage = nonRepudiation, digitalSignature, keyEncipherment');
 			);
 		} else {
 			// need account-url
-			$header["kid"] = $this->_acc_location;
+			$header["kid"] = $this->acc_location;
 		}
 
 		$protected = $header;

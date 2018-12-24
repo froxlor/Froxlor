@@ -41,8 +41,8 @@ class LighttpdFcgi extends Lighttpd
 				$php_options_text .= "\t" . ')' . "\n";
 				$php_options_text .= "\t" . ')' . "\n";
 				$php_options_text .= '  )' . "\n";
-			} // vhost data for fcgid
-			elseif ((int) Settings::Get('system.mod_fcgid') == 1) {
+			} elseif ((int) Settings::Get('system.mod_fcgid') == 1) {
+				// vhost data for fcgid
 				$php_options_text = '  fastcgi.server = ( ' . "\n";
 				$file_extensions = explode(' ', $phpconfig['file_extensions']);
 				foreach ($file_extensions as $f_extension) {

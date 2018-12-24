@@ -242,50 +242,50 @@ class Cronjob
 			// rebuilding webserver-configuration
 			if ($row['type'] == '1') {
 				$task_desc = $lng['tasks']['rebuild_webserverconfig'];
-			} // adding new user/
-			elseif ($row['type'] == '2') {
+			} elseif ($row['type'] == '2') {
+				// adding new user/
 				$loginname = '';
 				if (is_array($row['data'])) {
 					$loginname = $row['data']['loginname'];
 				}
 				$task_desc = $lng['tasks']['adding_customer'];
 				$task_desc = str_replace('%loginname%', $loginname, $task_desc);
-			} // rebuilding bind-configuration
-			elseif ($row['type'] == '4') {
+			} elseif ($row['type'] == '4') {
+				// rebuilding bind-configuration
 				$task_desc = $lng['tasks']['rebuild_bindconfig'];
-			} // creating ftp-user directory
-			elseif ($row['type'] == '5') {
+			} elseif ($row['type'] == '5') {
+				// creating ftp-user directory
 				$task_desc = $lng['tasks']['creating_ftpdir'];
-			} // deleting user-files
-			elseif ($row['type'] == '6') {
+			} elseif ($row['type'] == '6') {
+				// deleting user-files
 				$loginname = '';
 				if (is_array($row['data'])) {
 					$loginname = $row['data']['loginname'];
 				}
 				$task_desc = $lng['tasks']['deleting_customerfiles'];
 				$task_desc = str_replace('%loginname%', $loginname, $task_desc);
-			} // deleting email-account
-			elseif ($row['type'] == '7') {
+			} elseif ($row['type'] == '7') {
+				// deleting email-account
 				$task_desc = $lng['tasks']['remove_emailacc_files'];
-			} // deleting ftp-account
-			elseif ($row['type'] == '8') {
+			} elseif ($row['type'] == '8') {
+				// deleting ftp-account
 				$task_desc = $lng['tasks']['remove_ftpacc_files'];
-			} // Set FS - quota
-			elseif ($row['type'] == '10') {
+			} elseif ($row['type'] == '10') {
+				// Set FS - quota
 				$task_desc = $lng['tasks']['diskspace_set_quota'];
-			} // deleting user-files
-			elseif ($row['type'] == '20') {
+			} elseif ($row['type'] == '20') {
+				// deleting user-files
 				$loginname = '';
 				if (is_array($row['data'])) {
 					$loginname = $row['data']['loginname'];
 				}
 				$task_desc = $lng['tasks']['backup_customerfiles'];
 				$task_desc = str_replace('%loginname%', $loginname, $task_desc);
-			} // re-generating of cron.d-file
-			elseif ($row['type'] == '99') {
+			} elseif ($row['type'] == '99') {
+				// re-generating of cron.d-file
 				$task_desc = $lng['tasks']['regenerating_crond'];
-			} // unknown
-			else {
+			} else {
+				// unknown
 				$task_desc = "ERROR: Unknown task type '" . $row['type'] . "'";
 			}
 

@@ -74,8 +74,9 @@ class MasterCron extends \Froxlor\Cron\FroxlorCron
 					define('CRON_DEBUG_FLAG', 1);
 				} elseif (strtolower($argv[$x]) == '--no-fork') {
 					define('CRON_NOFORK_FLAG', 1);
-				} // --[cronname]
+				}
 				elseif (substr(strtolower($argv[$x]), 0, 2) == '--') {
+					// --[cronname]
 					if (strlen($argv[$x]) > 3) {
 						$cronname = substr(strtolower($argv[$x]), 2);
 						array_push($jobs_to_run, $cronname);
@@ -86,7 +87,7 @@ class MasterCron extends \Froxlor\Cron\FroxlorCron
 
 		$jobs_to_run = array_unique($jobs_to_run);
 
-		$cronlog->setCronDebugFlag(defined('CRON_DEBUG_FLAG'));
+		\Froxlor\FroxlorLogger::getInstanceOf()->setCronDebugFlag(defined('CRON_DEBUG_FLAG'));
 
 		$tasks_cnt_stmt = \Froxlor\Database\Database::query("SELECT COUNT(*) as jobcnt FROM `panel_tasks`");
 		$tasks_cnt = $tasks_cnt_stmt->fetch(\PDO::FETCH_ASSOC);
@@ -125,7 +126,7 @@ class MasterCron extends \Froxlor\Cron\FroxlorCron
 		 * in case the admin installed new software which added a new user
 		 * so users in the database don't conflict with system users
 		 */
-		$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Checking system\'s last guid');
+		\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_NOTICE, 'Checking system\'s last guid');
 		\Froxlor\System\Cronjob::checkLastGuid();
 
 		// shutdown cron

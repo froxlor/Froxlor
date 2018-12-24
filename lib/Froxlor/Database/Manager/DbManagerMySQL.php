@@ -41,7 +41,7 @@ class DbManagerMySQL
 	 *
 	 * @var object
 	 */
-	private $_log = null;
+	private $log = null;
 
 	/**
 	 * main constructor
@@ -50,7 +50,7 @@ class DbManagerMySQL
 	 */
 	public function __construct(&$log = null)
 	{
-		$this->_log = $log;
+		$this->log = $log;
 	}
 
 	/**

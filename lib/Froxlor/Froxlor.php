@@ -234,7 +234,7 @@ final class Froxlor
 				// if B matches A to this depth, compare the values
 				if ($aVal > $b[$depth]) {
 					return 1; // A > B
-				} else if ($aVal < $b[$depth]) {
+				} elseif ($aVal < $b[$depth]) {
 					return - 1; // B > A
 				}
 				// an equal result is inconclusive at this point
@@ -259,13 +259,13 @@ final class Froxlor
 				$arr[] = '2'; // rc > dev > svn
 				              // number of rc
 				$arr[] = substr($x[1], 2);
-			} else if (stripos($x[1], 'dev') !== false) {
+			} elseif (stripos($x[1], 'dev') !== false) {
 				$arr[] = '-1';
 				$arr[] = '1'; // svn < dev < rc
 				              // number of dev
 				$arr[] = substr($x[1], 3);
 			} // -svn version are deprecated
-			else if (stripos($x[1], 'svn') !== false) {
+			elseif (stripos($x[1], 'svn') !== false) {
 				$arr[] = '-1';
 				$arr[] = '0'; // svn < dev < rc
 				              // number of svn

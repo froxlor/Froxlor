@@ -25,12 +25,6 @@ class DomainSSL
 {
 
 	/**
-	 * constructor
-	 */
-	public function __construct()
-	{}
-
-	/**
 	 * read domain-related (or if empty, parentdomain-related) ssl-certificates from the database
 	 * and (if not empty) set the corresponding array-indices (ssl_cert_file, ssl_key_file,
 	 * ssl_ca_file and ssl_cert_chainfile).

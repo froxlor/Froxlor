@@ -45,8 +45,8 @@ class Form
 					if (isset($groupdetails['title']) && $groupdetails['title'] != '') {
 						$fields .= self::getFormOverviewGroupOutput($groupname, $groupdetails);
 					}
-				} // only show one section
-				elseif ($part != '' && ($groupname == $part || $part == 'all')) {
+				} elseif ($part != '' && ($groupname == $part || $part == 'all')) {
+					// only show one section
 					/**
 					 * this part checks for the 'websrv_avail' entry in the settings-array
 					 * if found, we check if the current webserver is in the array.
@@ -188,7 +188,7 @@ class Form
 		}
 	}
 
-	public static function processFormEx(&$form, &$input, $url_params = array(), $part, $settings_all, $settings_part, $only_enabledisable)
+	public static function processFormEx(&$form, &$input, $url_params = array(), $part = null, $settings_all = array(), $settings_part = null, $only_enabledisable = false)
 	{
 		if (\Froxlor\Validate\Form::validateFormDefinition($form)) {
 			$submitted_fields = array();

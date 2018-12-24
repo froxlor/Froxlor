@@ -20,24 +20,24 @@ class Crypt
 		$special = Settings::Get('panel.password_special_char');
 		$length = Settings::Get('panel.password_min_length') > 3 ? Settings::Get('panel.password_min_length') : 10;
 
-		$pw = self::special_shuffle($alpha_lower);
+		$pw = self::specialShuffle($alpha_lower);
 		$n = floor(($length) / 4);
 
 		if (Settings::Get('panel.password_alpha_upper')) {
-			$pw .= mb_substr(self::special_shuffle($alpha_upper), 0, $n);
+			$pw .= mb_substr(self::specialShuffle($alpha_upper), 0, $n);
 		}
 
 		if (Settings::Get('panel.password_numeric')) {
-			$pw .= mb_substr(self::special_shuffle($numeric), 0, $n);
+			$pw .= mb_substr(self::specialShuffle($numeric), 0, $n);
 		}
 
 		if (Settings::Get('panel.password_special_char_required') && ! $isSalt) {
-			$pw .= mb_substr(self::special_shuffle($special), 0, $n);
+			$pw .= mb_substr(self::specialShuffle($special), 0, $n);
 		}
 
 		$pw = mb_substr($pw, - $length);
 
-		return self::special_shuffle($pw);
+		return self::specialShuffle($pw);
 	}
 
 	/**
@@ -47,7 +47,7 @@ class Crypt
 	 *
 	 * @return string
 	 */
-	private static function special_shuffle($str = null)
+	private static function specialShuffle($str = null)
 	{
 		$len = mb_strlen($str);
 		$sploded = array();

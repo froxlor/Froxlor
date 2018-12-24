@@ -494,7 +494,7 @@ class FileDir
 			};
 
 			// create RecursiveIteratorIterator
-			$its = new \RecursiveIteratorIterator(new \RecursiveCallbackFilterIterator(new IgnorantRecursiveDirectoryIterator($path, \RecursiveDirectoryIterator::SKIP_DOTS), $filter));
+			$its = new \RecursiveIteratorIterator(new \RecursiveCallbackFilterIterator(new System\IgnorantRecursiveDirectoryIterator($path, \RecursiveDirectoryIterator::SKIP_DOTS), $filter));
 			// we can limit the recursion-depth, but will it be helpful or
 			// will people start asking "why do I only see 2 subdirectories, i want to use /a/b/c"
 			// let's keep this in mind and see whether it will be useful
@@ -595,11 +595,12 @@ class FileDir
 			}
 
 			// Fetch all quota in the desired partition
+			$repquota = array();
 			exec(Settings::Get('system.diskquota_repquota_path') . " " . $repquota_params . " " . escapeshellarg(Settings::Get('system.diskquota_customer_partition')), $repquota);
 
 			$usedquota = array();
 			foreach ($repquota as $tmpquota) {
-
+				$matches = null;
 				// Let's see if the line matches a quota - line
 				if (preg_match($quota_line_regex, $tmpquota, $matches)) {
 
@@ -624,24 +625,5 @@ class FileDir
 			return $usedquota;
 		}
 		return false;
-	}
-}
-
-/**
- * If you use RecursiveDirectoryIterator with RecursiveIteratorIterator and run
- * into UnexpectedValueException you may use this little hack to ignore those
- * directories, such as lost+found on linux.
- * (User "antennen" @ http://php.net/manual/en/class.recursivedirectoryiterator.php#101654)
- */
-class IgnorantRecursiveDirectoryIterator extends \RecursiveDirectoryIterator
-{
-
-	function getChildren()
-	{
-		try {
-			return new IgnorantRecursiveDirectoryIterator($this->getPathname());
-		} catch (\UnexpectedValueException $e) {
-			return new \RecursiveArrayIterator(array());
-		}
 	}
 }

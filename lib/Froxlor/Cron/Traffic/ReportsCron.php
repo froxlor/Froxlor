@@ -275,7 +275,7 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 							$tg = $customer['traffic'] / 1048576;
 							$str = sprintf('%00.1f GB  ( %00.1f %% )', $t, $p);
 							$mail_body .= sprintf('%-15s', $customer['loginname']) . ' ' . sprintf('%-25s', $str) . ' ' . sprintf('%00.1f GB', $tg) . "\n";
-						} else if ($customer['traffic'] == 0) {
+						} elseif ($customer['traffic'] == 0) {
 							$str = sprintf('%00.1f GB  (   -   )', $t);
 							$mail_body .= sprintf('%-15s', $customer['loginname']) . ' ' . sprintf('%-25s', $str) . ' ' . '0' . "\n";
 						} else {
@@ -292,7 +292,7 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 						$tg = $row['traffic'] / 1048576;
 						$str = sprintf('%00.1f GB  ( %00.1f %% )', $t, $p);
 						$mail_body .= sprintf('%-15s', $row['loginname']) . ' ' . sprintf('%-25s', $str) . ' ' . sprintf('%00.1f GB', $tg) . "\n";
-					} else if ($row['traffic'] == 0) {
+					} elseif ($row['traffic'] == 0) {
 						$str = sprintf('%00.1f GB  (   -   )', $t);
 						$mail_body .= sprintf('%-15s', $row['loginname']) . ' ' . sprintf('%-25s', $str) . ' ' . '0' . "\n";
 					} else {

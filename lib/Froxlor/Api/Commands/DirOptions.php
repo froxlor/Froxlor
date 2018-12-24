@@ -402,8 +402,8 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 					if (! substr($errdoc, 0, 1) == '/') {
 						$errdoc = '/' . $errdoc;
 					}
-				} // a string (check for ending ")
-				else {
+				} else {
+					// a string (check for ending ")
 					// string won't work for lighty
 					if (Settings::Get('system.webserver') == 'lighttpd') {
 						\Froxlor\UI\Response::standard_error('stringerrordocumentnotvalidforlighty', '', $throw_exception);

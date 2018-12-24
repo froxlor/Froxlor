@@ -140,10 +140,8 @@ class Validate
 				$char_validation = '([a-z\d\_](-*[a-z\d\_])*)(\.([a-z\d\_](-*[a-z\d])*))*(\.?([a-z\d](-*[a-z\d])*))+\.([a-z\d])+';
 			}
 
-			if (preg_match("/^" . $char_validation . "$/i", $domainname) && // valid chars check
-			preg_match("/^.{1,253}$/", $domainname) && // overall length check
-			preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domainname)) // length of each label
-			{
+			// valid chars check && overall length check && length of each label
+			if (preg_match("/^" . $char_validation . "$/i", $domainname) && preg_match("/^.{1,253}$/", $domainname) && preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domainname)) {
 				return $domainname;
 			}
 		}

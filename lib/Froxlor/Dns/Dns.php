@@ -7,7 +7,7 @@ use Froxlor\Settings;
 class Dns
 {
 
-	public static function getAllowedDomainEntry($domain_id, $area = 'customer', $userinfo)
+	public static function getAllowedDomainEntry($domain_id, $area = 'customer', $userinfo = array())
 	{
 		$dom_data = array(
 			'did' => $domain_id
@@ -321,7 +321,7 @@ class Dns
 		return $zone;
 	}
 
-	private static function addRequiredEntry($record = '@', $type = 'A', &$required)
+	private static function addRequiredEntry($record = '@', $type = 'A', &$required = array())
 	{
 		if (! isset($required[$type])) {
 			$required[$type] = array();

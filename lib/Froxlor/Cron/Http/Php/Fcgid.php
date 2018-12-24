@@ -30,21 +30,21 @@ class Fcgid
 	 *
 	 * @var array
 	 */
-	private $_domain = array();
+	private $domain = array();
 
 	/**
 	 * Admin-Date cache array
 	 *
 	 * @var array
 	 */
-	private $_admin_cache = array();
+	private $admin_cache = array();
 
 	/**
 	 * main constructor
 	 */
 	public function __construct($domain)
 	{
-		$this->_domain = $domain;
+		$this->domain = $domain;
 	}
 
 	/**
@@ -58,7 +58,7 @@ class Fcgid
 		// create starter
 		$starter_file = "#!/bin/sh\n\n";
 		$starter_file .= "#\n";
-		$starter_file .= "# starter created/changed on " . date("Y.m.d H:i:s") . " for domain '" . $this->_domain['domain'] . "' with id #" . $this->_domain['id'] . " from php template '" . $phpconfig['description'] . "' with id #" . $phpconfig['id'] . "\n";
+		$starter_file .= "# starter created/changed on " . date("Y.m.d H:i:s") . " for domain '" . $this->domain['domain'] . "' with id #" . $this->domain['id'] . " from php template '" . $phpconfig['description'] . "' with id #" . $phpconfig['id'] . "\n";
 		$starter_file .= "# Do not change anything in this file, it will be overwritten by the Froxlor Cronjob!\n";
 		$starter_file .= "#\n\n";
 		$starter_file .= "umask " . $phpconfig['mod_fcgid_umask'] . "\n";
@@ -66,8 +66,8 @@ class Fcgid
 		$starter_file .= "export PHPRC\n";
 
 		// set number of processes for one domain
-		if ((int) $this->_domain['mod_fcgid_starter'] != - 1) {
-			$starter_file .= "PHP_FCGI_CHILDREN=" . (int) $this->_domain['mod_fcgid_starter'] . "\n";
+		if ((int) $this->domain['mod_fcgid_starter'] != - 1) {
+			$starter_file .= "PHP_FCGI_CHILDREN=" . (int) $this->domain['mod_fcgid_starter'] . "\n";
 		} else {
 			if ((int) $phpconfig['mod_fcgid_starter'] != - 1) {
 				$starter_file .= "PHP_FCGI_CHILDREN=" . (int) $phpconfig['mod_fcgid_starter'] . "\n";
@@ -79,8 +79,8 @@ class Fcgid
 		$starter_file .= "export PHP_FCGI_CHILDREN\n";
 
 		// set number of maximum requests for one domain
-		if ((int) $this->_domain['mod_fcgid_maxrequests'] != - 1) {
-			$starter_file .= "PHP_FCGI_MAX_REQUESTS=" . (int) $this->_domain['mod_fcgid_maxrequests'] . "\n";
+		if ((int) $this->domain['mod_fcgid_maxrequests'] != - 1) {
+			$starter_file .= "PHP_FCGI_MAX_REQUESTS=" . (int) $this->domain['mod_fcgid_maxrequests'] . "\n";
 		} else {
 			if ((int) $phpconfig['mod_fcgid_maxrequests'] != - 1) {
 				$starter_file .= "PHP_FCGI_MAX_REQUESTS=" . (int) $phpconfig['mod_fcgid_maxrequests'] . "\n";
@@ -103,7 +103,7 @@ class Fcgid
 		fwrite($starter_file_handler, $starter_file);
 		fclose($starter_file_handler);
 		\Froxlor\FileDir::safe_exec('chmod 750 ' . escapeshellarg($this->getStarterFile()));
-		\Froxlor\FileDir::safe_exec('chown ' . $this->_domain['guid'] . ':' . $this->_domain['guid'] . ' ' . escapeshellarg($this->getStarterFile()));
+		\Froxlor\FileDir::safe_exec('chown ' . $this->domain['guid'] . ':' . $this->domain['guid'] . ' ' . escapeshellarg($this->getStarterFile()));
 		\Froxlor\FileDir::setImmutable($this->getStarterFile());
 	}
 
@@ -117,7 +117,7 @@ class Fcgid
 		$openbasedir = '';
 		$openbasedirc = ';';
 
-		if ($this->_domain['openbasedir'] == '1') {
+		if ($this->domain['openbasedir'] == '1') {
 
 			$openbasedirc = '';
 			$_phpappendopenbasedir = '';
@@ -132,10 +132,10 @@ class Fcgid
 				$_phpappendopenbasedir .= \Froxlor\Domain\Domain::appendOpenBasedirPath($cobd);
 			}
 
-			if ($this->_domain['openbasedir_path'] == '0' && strstr($this->_domain['documentroot'], ":") === false) {
-				$openbasedir = \Froxlor\Domain\Domain::appendOpenBasedirPath($this->_domain['documentroot'], true);
+			if ($this->domain['openbasedir_path'] == '0' && strstr($this->domain['documentroot'], ":") === false) {
+				$openbasedir = \Froxlor\Domain\Domain::appendOpenBasedirPath($this->domain['documentroot'], true);
 			} else {
-				$openbasedir = \Froxlor\Domain\Domain::appendOpenBasedirPath($this->_domain['customerroot'], true);
+				$openbasedir = \Froxlor\Domain\Domain::appendOpenBasedirPath($this->domain['customerroot'], true);
 			}
 
 			$openbasedir .= \Froxlor\Domain\Domain::appendOpenBasedirPath($this->getTempDir());
@@ -145,26 +145,26 @@ class Fcgid
 			$openbasedirc = ';';
 		}
 
-		$admin = $this->getAdminData($this->_domain['adminid']);
+		$admin = $this->getAdminData($this->domain['adminid']);
 		$php_ini_variables = array(
 			'SAFE_MODE' => 'Off', // keep this for compatibility, just in case
 			'PEAR_DIR' => Settings::Get('system.mod_fcgid_peardir'),
 			'TMP_DIR' => $this->getTempDir(),
-			'CUSTOMER_EMAIL' => $this->_domain['email'],
+			'CUSTOMER_EMAIL' => $this->domain['email'],
 			'ADMIN_EMAIL' => $admin['email'],
-			'DOMAIN' => $this->_domain['domain'],
-			'CUSTOMER' => $this->_domain['loginname'],
+			'DOMAIN' => $this->domain['domain'],
+			'CUSTOMER' => $this->domain['loginname'],
 			'ADMIN' => $admin['loginname'],
 			'OPEN_BASEDIR' => $openbasedir,
 			'OPEN_BASEDIR_C' => $openbasedirc,
 			'OPEN_BASEDIR_GLOBAL' => Settings::Get('system.phpappendopenbasedir'),
-			'DOCUMENT_ROOT' => \Froxlor\FileDir::makeCorrectDir($this->_domain['documentroot']),
-			'CUSTOMER_HOMEDIR' => \Froxlor\FileDir::makeCorrectDir($this->_domain['customerroot'])
+			'DOCUMENT_ROOT' => \Froxlor\FileDir::makeCorrectDir($this->domain['documentroot']),
+			'CUSTOMER_HOMEDIR' => \Froxlor\FileDir::makeCorrectDir($this->domain['customerroot'])
 		);
 
 		// insert a small header for the file
 		$phpini_file = ";\n";
-		$phpini_file .= "; php.ini created/changed on " . date("Y.m.d H:i:s") . " for domain '" . $this->_domain['domain'] . "' with id #" . $this->_domain['id'] . " from php template '" . $phpconfig['description'] . "' with id #" . $phpconfig['id'] . "\n";
+		$phpini_file .= "; php.ini created/changed on " . date("Y.m.d H:i:s") . " for domain '" . $this->domain['domain'] . "' with id #" . $this->domain['id'] . " from php template '" . $phpconfig['description'] . "' with id #" . $phpconfig['id'] . "\n";
 		$phpini_file .= "; Do not change anything in this file, it will be overwritten by the Froxlor Cronjob!\n";
 		$phpini_file .= ";\n\n";
 		$phpini_file .= \Froxlor\PhpHelper::replace_variables($phpconfig['phpsettings'], $php_ini_variables);
@@ -187,11 +187,11 @@ class Fcgid
 	 */
 	public function getConfigDir($createifnotexists = true)
 	{
-		$configdir = \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.mod_fcgid_configdir') . '/' . $this->_domain['loginname'] . '/' . $this->_domain['domain'] . '/');
+		$configdir = \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.mod_fcgid_configdir') . '/' . $this->domain['loginname'] . '/' . $this->domain['domain'] . '/');
 
 		if (! is_dir($configdir) && $createifnotexists) {
 			\Froxlor\FileDir::safe_exec('mkdir -p ' . escapeshellarg($configdir));
-			\Froxlor\FileDir::safe_exec('chown ' . $this->_domain['guid'] . ':' . $this->_domain['guid'] . ' ' . escapeshellarg($configdir));
+			\Froxlor\FileDir::safe_exec('chown ' . $this->domain['guid'] . ':' . $this->domain['guid'] . ' ' . escapeshellarg($configdir));
 		}
 
 		return $configdir;
@@ -207,11 +207,11 @@ class Fcgid
 	 */
 	public function getTempDir($createifnotexists = true)
 	{
-		$tmpdir = \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.mod_fcgid_tmpdir') . '/' . $this->_domain['loginname'] . '/');
+		$tmpdir = \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.mod_fcgid_tmpdir') . '/' . $this->domain['loginname'] . '/');
 
 		if (! is_dir($tmpdir) && $createifnotexists) {
 			\Froxlor\FileDir::safe_exec('mkdir -p ' . escapeshellarg($tmpdir));
-			\Froxlor\FileDir::safe_exec('chown -R ' . $this->_domain['guid'] . ':' . $this->_domain['guid'] . ' ' . escapeshellarg($tmpdir));
+			\Froxlor\FileDir::safe_exec('chown -R ' . $this->domain['guid'] . ':' . $this->domain['guid'] . ' ' . escapeshellarg($tmpdir));
 			\Froxlor\FileDir::safe_exec('chmod 0750 ' . escapeshellarg($tmpdir));
 		}
 
@@ -252,13 +252,13 @@ class Fcgid
 	{
 		$adminid = intval($adminid);
 
-		if (! isset($this->_admin_cache[$adminid])) {
+		if (! isset($this->admin_cache[$adminid])) {
 			$stmt = Database::prepare("
 					SELECT `email`, `loginname` FROM `" . TABLE_PANEL_ADMINS . "` WHERE `adminid` = :id");
-			$this->_admin_cache[$adminid] = Database::pexecute_first($stmt, array(
+			$this->admin_cache[$adminid] = Database::pexecute_first($stmt, array(
 				'id' => $adminid
 			));
 		}
-		return $this->_admin_cache[$adminid];
+		return $this->admin_cache[$adminid];
 	}
 }

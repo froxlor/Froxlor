@@ -20,17 +20,27 @@ class HostingPlans extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 {
 
 	public function add()
-	{}
+	{
+		throw new \Exception('noop', 303);
+	}
 
 	public function get()
-	{}
+	{
+		throw new \Exception('noop', 303);
+	}
 
 	public function update()
-	{}
+	{
+		throw new \Exception('noop', 303);
+	}
 
 	public function listing()
-	{}
+	{
+		throw new \Exception('noop', 303);
+	}
 
 	public function delete()
-	{}
+	{
+		throw new \Exception('noop', 303);
+	}
 }

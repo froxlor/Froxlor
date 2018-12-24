@@ -122,7 +122,7 @@ class HtmlForm
 				return self::textArea($fieldname, $data);
 				break;
 			case 'checkbox':
-				return self::_checkbox($fieldname, $data);
+				return self::checkbox($fieldname, $data);
 				break;
 			case 'file':
 				return self::file($fieldname, $data);
@@ -250,7 +250,7 @@ class HtmlForm
 	 * @param array $data
 	 *        	contains the data array
 	 */
-	public static function _checkbox($fieldname = '', $data = array())
+	private static function checkbox($fieldname = '', $data = array())
 	{
 		// $data['value'] contains checked items
 		$checked = array();

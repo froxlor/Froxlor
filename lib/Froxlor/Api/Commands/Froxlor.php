@@ -340,8 +340,8 @@ class Froxlor extends \Froxlor\Api\ApiCommand
 						'desc' => (isset($r[3]) ? trim($r['3']) : '')
 					);
 					$param_desc = true;
-				} // check access-section
-				elseif (strpos($c, '@access')) {
+				} elseif (strpos($c, '@access')) {
+					// check access-section
 					preg_match('/^\*\s\@access\s(.*)/', $c, $r);
 					if (! isset($r[0]) || empty($r[0])) {
 						$r[1] = 'This function has no restrictions';
@@ -349,8 +349,8 @@ class Froxlor extends \Froxlor\Api\ApiCommand
 					$result['access'] = array(
 						'groups' => (isset($r[1]) ? trim($r[1]) : '')
 					);
-				} // check return-section
-				elseif (strpos($c, '@return')) {
+				} elseif (strpos($c, '@return')) {
+					// check return-section
 					preg_match('/^\*\s\@return\s(\w+)(\s.*)?/', $c, $r);
 					if (! isset($r[0]) || empty($r[0])) {
 						$r[1] = 'null';
@@ -360,8 +360,8 @@ class Froxlor extends \Froxlor\Api\ApiCommand
 						'type' => $r[1],
 						'desc' => (isset($r[2]) ? trim($r[2]) : '')
 					);
-				} // check throws-section
-				elseif (! empty($c) && strpos($c, '@throws') === false) {
+				} elseif (! empty($c) && strpos($c, '@throws') === false) {
+					// check throws-section
 					if (substr($c, 0, 3) == "/**") {
 						continue;
 					}

@@ -36,7 +36,7 @@ class Directory
 	 *
 	 * @var string
 	 */
-	private $_dir = null;
+	private $dir = null;
 
 	/**
 	 * class constructor, optionally set directory
@@ -45,7 +45,7 @@ class Directory
 	 */
 	public function __construct($dir = null)
 	{
-		$this->_dir = $dir;
+		$this->dir = $dir;
 	}
 
 	/**
@@ -57,7 +57,7 @@ class Directory
 			SELECT COUNT(`id`) as `usropts` FROM `" . TABLE_PANEL_HTACCESS . "` WHERE `path` = :dir
 		");
 		$uo_res = Database::pexecute_first($uo_stmt, array(
-			'dir' => FileDir::makeCorrectDir($this->_dir)
+			'dir' => FileDir::makeCorrectDir($this->dir)
 		));
 		if ($uo_res != false && isset($uo_res['usropts'])) {
 			return ($uo_res['usropts'] > 0 ? true : false);
@@ -74,7 +74,7 @@ class Directory
 			SELECT COUNT(`id`) as `usrprot` FROM `" . TABLE_PANEL_HTPASSWDS . "` WHERE `path` = :dir
 		");
 		$up_res = Database::pexecute_first($up_stmt, array(
-			'dir' => FileDir::makeCorrectDir($this->_dir)
+			'dir' => FileDir::makeCorrectDir($this->dir)
 		));
 		if ($up_res != false && isset($up_res['usrprot'])) {
 			return ($up_res['usrprot'] > 0 ? true : false);
@@ -93,20 +93,20 @@ class Directory
 	 */
 	public function isConfigDir($ifexists = false)
 	{
-		if (is_null($this->_dir)) {
+		if (is_null($this->dir)) {
 			trigger_error(__CLASS__ . '::' . __FUNCTION__ . ' has been called with a null value', E_USER_WARNING);
 			return false;
 		}
 
-		if (file_exists($this->_dir)) {
-			if (is_dir($this->_dir)) {
+		if (file_exists($this->dir)) {
+			if (is_dir($this->dir)) {
 				$returnval = true;
 			} else {
 				$returnval = false;
 			}
 		} else {
 			if (! $ifexists) {
-				if (substr($this->_dir, - 1) == '/') {
+				if (substr($this->dir, - 1) == '/') {
 					$returnval = true;
 				} else {
 					$returnval = false;

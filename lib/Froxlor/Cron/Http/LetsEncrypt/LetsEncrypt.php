@@ -29,7 +29,7 @@ class LetsEncrypt extends \Froxlor\Cron\FroxlorCron
 	{
 		if (Settings::Get('system.leapiversion') == '2') {
 			// use ACME v2 is specified
-			\Froxlor\Cron\Http\LetsEncrypt\LetsEncrypt_v2::run();
+			\Froxlor\Cron\Http\LetsEncrypt\LetsEncryptV2::run();
 			exit();
 		}
 

@@ -116,8 +116,8 @@ class FroxlorLogger
 			echo "[" . $this->getLogLevelDesc($type) . "] " . $text . PHP_EOL;
 		}
 
-		if (Settings::Get('logger.log_cron') == '0' && $action == CRON_ACTION && $type > LOG_WARNING) // warnings, errors and critical mesages WILL be logged
-		{
+		// warnings, errors and critical mesages WILL be logged
+		if (Settings::Get('logger.log_cron') == '0' && $action == CRON_ACTION && $type > LOG_WARNING) {
 			return;
 		}
 

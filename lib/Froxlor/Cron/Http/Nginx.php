@@ -126,10 +126,14 @@ class Nginx extends HttpConfigBase
 	}
 
 	public function createVirtualHosts()
-	{}
+	{
+		return;
+	}
 
 	public function createFileDirOptions()
-	{}
+	{
+		return;
+	}
 
 	public function createIpPort()
 	{
@@ -512,7 +516,7 @@ class Nginx extends HttpConfigBase
 
 			if ($this->deactivated == false) {
 
-				$vhost_content = $this->mergeVhostCustom($vhost_content, $this->create_pathOptions($domain)) . "\n";
+				$vhost_content = $this->mergeVhostCustom($vhost_content, $this->createPathOptions($domain)) . "\n";
 				$vhost_content .= $this->composePhpOptions($domain, $ssl_vhost);
 
 				$vhost_content .= isset($this->needed_htpasswds[$domain['id']]) ? $this->needed_htpasswds[$domain['id']] . "\n" : '';
@@ -686,7 +690,7 @@ class Nginx extends HttpConfigBase
 		return $sslsettings;
 	}
 
-	protected function create_pathOptions($domain)
+	protected function createPathOptions($domain)
 	{
 		$result_stmt = Database::prepare("
 			SELECT * FROM " . TABLE_PANEL_HTACCESS . "
@@ -1090,7 +1094,9 @@ class Nginx extends HttpConfigBase
 	}
 
 	public function createOwnVhostStarter()
-	{}
+	{
+		return;
+	}
 
 	protected function getServerNames($domain)
 	{

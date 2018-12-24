@@ -24,12 +24,6 @@ class ConfigIO
 {
 
 	/**
-	 * constructor
-	 */
-	public function __construct()
-	{}
-
-	/**
 	 * clean up former created configs, including (if enabled)
 	 * awstats, fcgid, php-fpm and of course automatically created
 	 * webserver vhost and diroption files

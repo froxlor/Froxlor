@@ -134,8 +134,8 @@ class Check
 			if ($fieldname == "system_mod_fcgid_configdir") {
 				$newdir = \Froxlor\FileDir::makeCorrectDir($newfieldvalue);
 				$cdir = \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.documentroot_prefix'));
-			} // customer-doc-prefix has changed -> check against fcgid-configdir
-			elseif ($fieldname == "system_documentroot_prefix") {
+			} elseif ($fieldname == "system_documentroot_prefix") {
+				// customer-doc-prefix has changed -> check against fcgid-configdir
 				$newdir = \Froxlor\FileDir::makeCorrectDir($newfieldvalue);
 				$cdir = \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.mod_fcgid_configdir'));
 			}

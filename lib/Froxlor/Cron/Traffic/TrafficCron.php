@@ -50,13 +50,13 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 				file_put_contents($TrafficLock, $TrafficPid);
 				// unnecessary to recreate database connection here
 				return 0;
-			} // Child
-			elseif ($TrafficPid == 0) {
+			} elseif ($TrafficPid == 0) {
+				// Child
 				posix_setsid();
 				// re-create db
 				Database::needRoot(false);
-			} // Fork failed
-			else {
+			} else {
+				// Fork failed
 				return 1;
 			}
 		} else {
@@ -716,43 +716,39 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 		$nav_file = \Froxlor\FileDir::makeCorrectFile($nav_file);
 
 		// Write the index file
-		{
-			// 'index.html' used to be a symlink (ignore errors in case this is the first run and no index.html exists yet)
-			@unlink(\Froxlor\FileDir::makeCorrectFile($outputdir . '/' . 'index.html'));
+		// 'index.html' used to be a symlink (ignore errors in case this is the first run and no index.html exists yet)
+		@unlink(\Froxlor\FileDir::makeCorrectFile($outputdir . '/' . 'index.html'));
 
-			$awstats_index_file = fopen(\Froxlor\FileDir::makeCorrectFile($outputdir . '/' . 'index.html'), 'w');
-			$awstats_index_tpl = fopen($index_file, 'r');
+		$awstats_index_file = fopen(\Froxlor\FileDir::makeCorrectFile($outputdir . '/' . 'index.html'), 'w');
+		$awstats_index_tpl = fopen($index_file, 'r');
 
-			// Write the header
-			fwrite($awstats_index_file, $header);
+		// Write the header
+		fwrite($awstats_index_file, $header);
 
-			// Write the configuration file
-			while (($line = fgets($awstats_index_tpl, 4096)) !== false) {
-				if (! preg_match('/^#/', $line) && trim($line) != '') {
-					fwrite($awstats_index_file, preg_replace($regex, $replace, $line));
-				}
+		// Write the configuration file
+		while (($line = fgets($awstats_index_tpl, 4096)) !== false) {
+			if (! preg_match('/^#/', $line) && trim($line) != '') {
+				fwrite($awstats_index_file, preg_replace($regex, $replace, $line));
 			}
-			fclose($awstats_index_file);
-			fclose($awstats_index_tpl);
 		}
+		fclose($awstats_index_file);
+		fclose($awstats_index_tpl);
 
 		// Write the nav file
-		{
-			$awstats_nav_file = fopen(\Froxlor\FileDir::makeCorrectFile($outputdir . '/' . 'nav.html'), 'w');
-			$awstats_nav_tpl = fopen($nav_file, 'r');
+		$awstats_nav_file = fopen(\Froxlor\FileDir::makeCorrectFile($outputdir . '/' . 'nav.html'), 'w');
+		$awstats_nav_tpl = fopen($nav_file, 'r');
 
-			// Write the header
-			fwrite($awstats_nav_file, $header);
+		// Write the header
+		fwrite($awstats_nav_file, $header);
 
-			// Write the configuration file
-			while (($line = fgets($awstats_nav_tpl, 4096)) !== false) {
-				if (! preg_match('/^#/', $line) && trim($line) != '') {
-					fwrite($awstats_nav_file, preg_replace($regex, $replace, $line));
-				}
+		// Write the configuration file
+		while (($line = fgets($awstats_nav_tpl, 4096)) !== false) {
+			if (! preg_match('/^#/', $line) && trim($line) != '') {
+				fwrite($awstats_nav_file, preg_replace($regex, $replace, $line));
 			}
-			fclose($awstats_nav_file);
-			fclose($awstats_nav_tpl);
 		}
+		fclose($awstats_nav_file);
+		fclose($awstats_nav_tpl);
 
 		return;
 	}
