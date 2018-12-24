@@ -80,6 +80,6 @@ if (function_exists('exec')) {
 	if (AREA == 'admin') {
 		dynamic_error('You need to allow the exec() function in the froxlor-vhost php-config');
 	} else {
-		dynamic_error('Required function exec() is not allowed. Pllease contact the system administrator.');
+		dynamic_error('Required function exec() is not allowed. Please contact the system administrator.');
 	}
 }
