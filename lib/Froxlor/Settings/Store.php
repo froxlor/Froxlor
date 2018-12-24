@@ -259,7 +259,7 @@ class Store
 		if ($returnvalue !== false && is_array($fielddata) && isset($fielddata['settinggroup']) && $fielddata['settinggroup'] == 'system' && isset($fielddata['varname']) && $fielddata['varname'] == 'ipaddress') {
 			$mysql_access_host_array = array_map('trim', explode(',', Settings::Get('system.mysql_access_host')));
 			$mysql_access_host_array[] = $newfieldvalue;
-			$mysql_access_host_array = array_unique(\Froxlor\PhpHelper::array_trim($mysql_access_host_array));
+			$mysql_access_host_array = array_unique(\Froxlor\PhpHelper::arrayTrim($mysql_access_host_array));
 			$mysql_access_host = implode(',', $mysql_access_host_array);
 			\Froxlor\Database\DbManager::correctMysqlUsers($mysql_access_host_array);
 			Settings::Set('system.mysql_access_host', $mysql_access_host);
@@ -289,7 +289,7 @@ class Store
 				'cleanMySQLAccessHost'
 			), $mysql_access_host_array);
 
-			$mysql_access_host_array = array_unique(\Froxlor\PhpHelper::array_trim($mysql_access_host_array));
+			$mysql_access_host_array = array_unique(\Froxlor\PhpHelper::arrayTrim($mysql_access_host_array));
 			$newfieldvalue = implode(',', $mysql_access_host_array);
 			\Froxlor\Database\DbManager::correctMysqlUsers($mysql_access_host_array);
 		}
