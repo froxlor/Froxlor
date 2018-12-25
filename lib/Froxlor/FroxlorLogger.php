@@ -4,6 +4,7 @@ namespace Froxlor;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogHandler;
+use Froxlor\System\MysqlHandler;
 
 /**
  * Class FroxlorLogger
@@ -33,11 +34,19 @@ class FroxlorLogger
 	private static $crondebug_flag = false;
 
 	/**
+	 * user info of logged in user
+	 *
+	 * @var array
+	 */
+	private static $userinfo = array();
+
+	/**
 	 * Class constructor.
 	 */
-	protected function __construct()
+	protected function __construct($userinfo = array())
 	{
 		$this->initMonolog();
+		self::$userinfo = $userinfo;
 		self::$logtypes = array();
 
 		if ((Settings::Get('logger.logtypes') == null || Settings::Get('logger.logtypes') == '') && (Settings::Get('logger.enabled') !== null && Settings::Get('logger.enabled'))) {
@@ -61,7 +70,7 @@ class FroxlorLogger
 					self::$ml->pushHandler(new StreamHandler(Settings::Get('logger.logfile'), Logger::DEBUG));
 					break;
 				case 'mysql':
-					// @fixme add MySQL-Handler
+					self::$ml->pushHandler(new MysqlHandler(Logger::DEBUG));
 					break;
 			}
 		}
@@ -71,13 +80,17 @@ class FroxlorLogger
 	 * return FroxlorLogger instance
 	 *
 	 * @param array $userinfo
-	 *        	unused
-	 *        	
+	 *
 	 * @return FroxlorLogger
 	 */
-	public static function getInstanceOf($userinfo = null)
+	public static function getInstanceOf($userinfo = array())
 	{
-		return new FroxlorLogger();
+		if (empty($userinfo)) {
+			$userinfo = array(
+				'loginname' => 'system'
+			);
+		}
+		return new FroxlorLogger($userinfo);
 	}
 
 	/**
@@ -121,36 +134,30 @@ class FroxlorLogger
 			return;
 		}
 
+		$logExtra = array(
+			'source' => $this->getActionTypeDesc($action),
+			'action' => $action,
+			'user' => self::$userinfo['loginname']
+		);
+
 		switch ($type) {
 			case LOG_DEBUG:
-				self::$ml->addDebug($text, array(
-					'source' => $this->getActionTypeDesc($action)
-				));
+				self::$ml->addDebug($text, $logExtra);
 				break;
 			case LOG_INFO:
-				self::$ml->addInfo($text, array(
-					'source' => $this->getActionTypeDesc($action)
-				));
+				self::$ml->addInfo($text, $logExtra);
 				break;
 			case LOG_NOTICE:
-				self::$ml->addNotice($text, array(
-					'source' => $this->getActionTypeDesc($action)
-				));
+				self::$ml->addNotice($text, $logExtra);
 				break;
 			case LOG_WARNING:
-				self::$ml->addWarning($text, array(
-					'source' => $this->getActionTypeDesc($action)
-				));
+				self::$ml->addWarning($text, $logExtra);
 				break;
 			case LOG_ERR:
-				self::$ml->addError($text, array(
-					'source' => $this->getActionTypeDesc($action)
-				));
+				self::$ml->addError($text, $logExtra);
 				break;
 			default:
-				self::$ml->addDebug($text, array(
-					'source' => $this->getActionTypeDesc($action)
-				));
+				self::$ml->addDebug($text, $logExtra);
 		}
 	}
 
