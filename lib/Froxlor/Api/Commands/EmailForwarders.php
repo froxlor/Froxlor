@@ -100,7 +100,7 @@ class EmailForwarders extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 			// update admin usage
 			Admins::increaseUsage($customer['adminid'], 'email_forwarders_used');
 
-			$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] added email forwarder for '" . $result['email_full'] . "'");
+			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] added email forwarder for '" . $result['email_full'] . "'");
 
 			$result = $this->apiCall('Emails.get', array(
 				'emailaddr' => $result['email_full']
@@ -202,7 +202,7 @@ class EmailForwarders extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 			// update admin usage
 			Admins::decreaseUsage($customer['adminid'], 'email_forwarders_used');
 
-			$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] deleted email forwarder for '" . $result['email_full'] . "'");
+			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] deleted email forwarder for '" . $result['email_full'] . "'");
 
 			$result = $this->apiCall('Emails.get', array(
 				'emailaddr' => $result['email_full']

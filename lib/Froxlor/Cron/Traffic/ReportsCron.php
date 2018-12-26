@@ -25,7 +25,7 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 
 	public static function run()
 	{
-		\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, 'Web- and Traffic-usage reporting started...');
+		\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'Web- and Traffic-usage reporting started...');
 		$yesterday = time() - (60 * 60 * 24);
 
 		/**
@@ -130,7 +130,7 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 					}
 
 					if ($_mailerror) {
-						\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_ERR, 'Error sending mail: ' . $mailerr_msg);
+						\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_ERR, 'Error sending mail: ' . $mailerr_msg);
 						echo 'Error sending mail: ' . $mailerr_msg . "\n";
 					}
 
@@ -232,7 +232,7 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 					}
 
 					if ($_mailerror) {
-						\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
+						\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
 						echo "Error sending mail: " . $mailerr_msg . "\n";
 					}
 
@@ -317,7 +317,7 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 					}
 
 					if ($_mailerror) {
-						\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_ERR, 'Error sending mail: ' . $mailerr_msg);
+						\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_ERR, 'Error sending mail: ' . $mailerr_msg);
 						echo 'Error sending mail: ' . $mailerr_msg . "\n";
 					}
 
@@ -431,7 +431,7 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 					}
 
 					if ($_mailerror) {
-						\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
+						\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
 						echo "Error sending mail: " . $mailerr_msg . "\n";
 					}
 
@@ -524,7 +524,7 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 					}
 
 					if ($_mailerror) {
-						\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
+						\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
 						echo "Error sending mail: " . $mailerr_msg . "\n";
 					}
 

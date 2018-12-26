@@ -41,14 +41,14 @@ if (isset($_POST['id'])) {
 }
 
 if ($page == 'overview') {
-	$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_mysql");
+	$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_mysql");
 	Database::needSqlData();
 	$sql = Database::getSqlData();
 	$lng['mysql']['description'] = str_replace('<SQL_HOST>', $sql['host'], $lng['mysql']['description']);
 	eval("echo \"" . \Froxlor\UI\Template::getTemplate('mysql/mysql') . "\";");
 } elseif ($page == 'mysqls') {
 	if ($action == '') {
-		$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_mysql::mysqls");
+		$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_mysql::mysqls");
 		$fields = array(
 			'databasename' => $lng['mysql']['databasename'],
 			'description' => $lng['mysql']['databasedescription']

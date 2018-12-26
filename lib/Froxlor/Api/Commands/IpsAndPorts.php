@@ -32,7 +32,7 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 	public function listing()
 	{
 		if ($this->isAdmin() && ($this->getUserDetail('change_serversettings') || ! empty($this->getUserDetail('ip')))) {
-			$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] list ips and ports");
+			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] list ips and ports");
 			$ip_where = "";
 			if (! empty($this->getUserDetail('ip')) && $this->getUserDetail('ip') != - 1) {
 				$ip_where = "WHERE `id` IN (" . implode(", ", json_decode($this->getUserDetail('ip'), true)) . ")";
@@ -80,7 +80,7 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 				'id' => $id
 			), true, true);
 			if ($result) {
-				$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] get ip " . $result['ip'] . " " . $result['port']);
+				$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] get ip " . $result['ip'] . " " . $result['port']);
 				return $this->response(200, "successfull", $result);
 			}
 			throw new \Exception("IP/port with id #" . $id . " could not be found", 404);
@@ -245,7 +245,7 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
 				$ip = '[' . $ip . ']';
 			}
-			$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] added IP/port '" . $ip . ":" . $port . "'");
+			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_WARNING, "[API] added IP/port '" . $ip . ":" . $port . "'");
 			// get ip for return-array
 			$result = $this->apiCall('IpsAndPorts.get', array(
 				'id' => $ins_data['id']
@@ -430,7 +430,7 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 				// Using nameserver, insert a task which rebuilds the server config
 				\Froxlor\System\Cronjob::inserttask('4');
 
-				$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] changed IP/port from '" . $result['ip'] . ":" . $result['port'] . "' to '" . $ip . ":" . $port . "'");
+				$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_WARNING, "[API] changed IP/port from '" . $result['ip'] . ":" . $result['port'] . "' to '" . $ip . ":" . $port . "'");
 
 				$result = $this->apiCall('IpsAndPorts.get', array(
 					'id' => $result['id']
@@ -503,7 +503,7 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 						// Using nameserver, insert a task which rebuilds the server config
 						\Froxlor\System\Cronjob::inserttask('4');
 
-						$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] deleted IP/port '" . $result['ip'] . ":" . $result['port'] . "'");
+						$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_WARNING, "[API] deleted IP/port '" . $result['ip'] . ":" . $result['port'] . "'");
 						return $this->response(200, "successfull", $result);
 					} else {
 						\Froxlor\UI\Response::standard_error('cantdeletesystemip', '', true);

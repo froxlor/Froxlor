@@ -125,7 +125,7 @@ class MasterCron extends \Froxlor\Cron\FroxlorCron
 		 * in case the admin installed new software which added a new user
 		 * so users in the database don't conflict with system users
 		 */
-		self::$cronlog->logAction(CRON_ACTION, LOG_NOTICE, 'Checking system\'s last guid');
+		self::$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Checking system\'s last guid');
 		\Froxlor\System\Cronjob::checkLastGuid();
 
 		// shutdown cron
@@ -191,7 +191,6 @@ class MasterCron extends \Froxlor\Cron\FroxlorCron
 
 		// Includes the Functions
 		require \Froxlor\Froxlor::getInstallDir() . '/lib/functions/constant.formfields.php';
-		require \Froxlor\Froxlor::getInstallDir() . '/lib/functions/constant.logger.php';
 
 		// Includes the MySQL-Tabledefinitions etc.
 		require \Froxlor\Froxlor::getInstallDir() . '/lib/tables.inc.php';
@@ -304,9 +303,9 @@ class MasterCron extends \Froxlor\Cron\FroxlorCron
 				/**
 				 * let's walk the walk - do the dangerous shit
 				 */
-				self::$cronlog->logAction(CRON_ACTION, LOG_WARNING, 'Automatic update is activated and we are going to proceed without any notices');
-				self::$cronlog->logAction(CRON_ACTION, LOG_WARNING, 'all new settings etc. will be stored with the default value, that might not always be right for your system!');
-				self::$cronlog->logAction(CRON_ACTION, LOG_WARNING, "If you don't want this to happen in the future consider removing the --allow-autoupdate flag from the cronjob");
+				self::$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_WARNING, 'Automatic update is activated and we are going to proceed without any notices');
+				self::$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_WARNING, 'all new settings etc. will be stored with the default value, that might not always be right for your system!');
+				self::$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_WARNING, "If you don't want this to happen in the future consider removing the --allow-autoupdate flag from the cronjob");
 				fwrite(self::$debugHandler, '*** WARNING *** - Automatic update is activated and we are going to proceed without any notices' . "\n");
 				fwrite(self::$debugHandler, '*** WARNING *** - all new settings etc. will be stored with the default value, that might not always be right for your system!' . "\n");
 				fwrite(self::$debugHandler, "*** WARNING *** - If you don't want this to happen in the future consider removing the --allow-autoupdate flag from the cronjob\n");
@@ -314,7 +313,7 @@ class MasterCron extends \Froxlor\Cron\FroxlorCron
 				define('_CRON_UPDATE', 1);
 				include_once \Froxlor\Froxlor::getInstallDir() . '/install/updatesql.php';
 				// pew - everything went better than expected
-				self::$cronlog->logAction(CRON_ACTION, LOG_WARNING, 'Automatic update done - you should check your settings to be sure everything is fine');
+				self::$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_WARNING, 'Automatic update done - you should check your settings to be sure everything is fine');
 				fwrite(self::$debugHandler, '*** WARNING *** - Automatic update done - you should check your settings to be sure everything is fine' . "\n");
 			}
 		}
@@ -360,7 +359,7 @@ class MasterCron extends \Froxlor\Cron\FroxlorCron
 		if ($cron) {
 			return $cron['cronclass'];
 		}
-		self::$cronlog->logAction(CRON_ACTION, LOG_ERROR, "Requested cronjob '" . $cronname . "' could not be found.");
+		self::$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_ERR, "Requested cronjob '" . $cronname . "' could not be found.");
 		return false;
 	}
 }

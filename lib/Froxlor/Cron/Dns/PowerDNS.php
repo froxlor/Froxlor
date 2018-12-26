@@ -21,7 +21,7 @@ class PowerDNS extends DnsBase
 	public function writeConfigs()
 	{
 		// tell the world what we are doing
-		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Task4 started - Refreshing DNS database');
+		$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'Task4 started - Refreshing DNS database');
 
 		$domains = $this->getDomainList();
 
@@ -29,7 +29,7 @@ class PowerDNS extends DnsBase
 		$this->clearZoneTables($domains);
 
 		if (empty($domains)) {
-			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'No domains found for nameserver-config, skipping...');
+			$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'No domains found for nameserver-config, skipping...');
 			return;
 		}
 
@@ -41,9 +41,9 @@ class PowerDNS extends DnsBase
 			$this->walkDomainList($domain, $domains);
 		}
 
-		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'PowerDNS database updated');
+		$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'PowerDNS database updated');
 		$this->reloadDaemon();
-		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Task4 finished');
+		$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'Task4 finished');
 	}
 
 	private function walkDomainList($domain, $domains)
@@ -72,18 +72,18 @@ class PowerDNS extends DnsBase
 				$pdnsDomId = $this->insertZone($zoneContent->origin, $zoneContent->serial);
 				$this->insertRecords($pdnsDomId, $zoneContent->records, $zoneContent->origin);
 				$this->insertAllowedTransfers($pdnsDomId);
-				$this->logger->logAction(CRON_ACTION, LOG_INFO, 'DB entries stored for zone `' . $domain['domain'] . '`');
+				$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'DB entries stored for zone `' . $domain['domain'] . '`');
 			} else {
 				return \Froxlor\Dns\Dns::createDomainZone(($domain['id'] == 'none') ? $domain : $domain['id'], $isFroxlorHostname, true);
 			}
 		} else {
-			$this->logger->logAction(CRON_ACTION, LOG_ERROR, 'Custom zonefiles are NOT supported when PowerDNS is selected as DNS daemon (triggered by: ' . $domain['domain'] . ')');
+			$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_ERR, 'Custom zonefiles are NOT supported when PowerDNS is selected as DNS daemon (triggered by: ' . $domain['domain'] . ')');
 		}
 	}
 
 	private function clearZoneTables($domains = null)
 	{
-		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Cleaning dns zone entries from database');
+		$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'Cleaning dns zone entries from database');
 
 		$pdns_domains_stmt = \Froxlor\Dns\PowerDNS::getDB()->prepare("SELECT `id`, `name` FROM `domains` WHERE `name` = :domain");
 

@@ -33,10 +33,10 @@ class LetsEncrypt extends \Froxlor\Cron\FroxlorCron
 			exit();
 		}
 
-		FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, "Updating Let's Encrypt certificates");
+		FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, "Updating Let's Encrypt certificates");
 
 		if (! extension_loaded('curl')) {
-			FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_ERR, "Let's Encrypt requires the php cURL extension to be installed.");
+			FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_ERR, "Let's Encrypt requires the php cURL extension to be installed.");
 			exit();
 		}
 
@@ -163,7 +163,7 @@ class LetsEncrypt extends \Froxlor\Cron\FroxlorCron
 
 				// Only renew let's encrypt certificate if no broken ssl_redirect is enabled
 				// - this temp. deactivation of the ssl-redirect is handled by the webserver-cronjob
-				$cronlog->logAction(CRON_ACTION, LOG_INFO, "Updating " . $certrow['domain']);
+				$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, "Updating " . $certrow['domain']);
 
 				$cronlog = FroxlorLogger::getInstanceOf(array(
 					'loginname' => $certrow['loginname']
@@ -199,11 +199,11 @@ class LetsEncrypt extends \Froxlor\Cron\FroxlorCron
 						Settings::Set('system.le_froxlor_redirect', '1');
 					}
 
-					$cronlog->logAction(CRON_ACTION, LOG_INFO, "Updated Let's Encrypt certificate for " . $certrow['domain']);
+					$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, "Updated Let's Encrypt certificate for " . $certrow['domain']);
 
 					$changedetected = 1;
 				} catch (\Exception $e) {
-					$cronlog->logAction(CRON_ACTION, LOG_ERR, "Could not get Let's Encrypt certificate for " . $certrow['domain'] . ": " . $e->getMessage());
+					$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_ERR, "Could not get Let's Encrypt certificate for " . $certrow['domain'] . ": " . $e->getMessage());
 				}
 			}
 		}
@@ -219,15 +219,15 @@ class LetsEncrypt extends \Froxlor\Cron\FroxlorCron
 
 			// Only renew let's encrypt certificate if no broken ssl_redirect is enabled
 			if ($certrow['ssl_redirect'] != 2) {
-				$cronlog->logAction(CRON_ACTION, LOG_INFO, "Updating " . $certrow['domain']);
+				$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, "Updating " . $certrow['domain']);
 
-				$cronlog->logAction(CRON_ACTION, LOG_INFO, "Adding SAN entry: " . $certrow['domain']);
+				$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, "Adding SAN entry: " . $certrow['domain']);
 				$domains = array(
 					$certrow['domain']
 				);
 				// add www.<domain> to SAN list
 				if ($certrow['wwwserveralias'] == 1) {
-					$cronlog->logAction(CRON_ACTION, LOG_INFO, "Adding SAN entry: www." . $certrow['domain']);
+					$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, "Adding SAN entry: www." . $certrow['domain']);
 					$domains[] = 'www.' . $certrow['domain'];
 				}
 
@@ -237,10 +237,10 @@ class LetsEncrypt extends \Froxlor\Cron\FroxlorCron
 				));
 				$aliasdomains = $aliasdomains_stmt->fetchAll(\PDO::FETCH_ASSOC);
 				foreach ($aliasdomains as $aliasdomain) {
-					$cronlog->logAction(CRON_ACTION, LOG_INFO, "Adding SAN entry: " . $aliasdomain['domain']);
+					$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, "Adding SAN entry: " . $aliasdomain['domain']);
 					$domains[] = $aliasdomain['domain'];
 					if ($aliasdomain['wwwserveralias'] == 1) {
-						$cronlog->logAction(CRON_ACTION, LOG_INFO, "Adding SAN entry: www." . $aliasdomain['domain']);
+						$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, "Adding SAN entry: www." . $aliasdomain['domain']);
 						$domains[] = 'www.' . $aliasdomain['domain'];
 					}
 				}
@@ -277,14 +277,14 @@ class LetsEncrypt extends \Froxlor\Cron\FroxlorCron
 						));
 					}
 
-					$cronlog->logAction(CRON_ACTION, LOG_INFO, "Updated Let's Encrypt certificate for " . $certrow['domain']);
+					$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, "Updated Let's Encrypt certificate for " . $certrow['domain']);
 
 					$changedetected = 1;
 				} catch (\Exception $e) {
-					$cronlog->logAction(CRON_ACTION, LOG_ERR, "Could not get Let's Encrypt certificate for " . $certrow['domain'] . ": " . $e->getMessage());
+					$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_ERR, "Could not get Let's Encrypt certificate for " . $certrow['domain'] . ": " . $e->getMessage());
 				}
 			} else {
-				$cronlog->logAction(CRON_ACTION, LOG_WARNING, "Skipping Let's Encrypt generation for " . $certrow['domain'] . " due to an enabled ssl_redirect");
+				$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_WARNING, "Skipping Let's Encrypt generation for " . $certrow['domain'] . " due to an enabled ssl_redirect");
 			}
 		}
 
@@ -298,6 +298,6 @@ class LetsEncrypt extends \Froxlor\Cron\FroxlorCron
 		$cronlog = FroxlorLogger::getInstanceOf(array(
 			'loginname' => 'cronjob'
 		));
-		$cronlog->logAction(CRON_ACTION, LOG_INFO, "Let's Encrypt certificates have been updated");
+		$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, "Let's Encrypt certificates have been updated");
 	}
 }

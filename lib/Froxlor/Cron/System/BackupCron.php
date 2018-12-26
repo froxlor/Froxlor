@@ -38,7 +38,7 @@ class BackupCron extends \Froxlor\Cron\FroxlorCron
 					$BackupPidStatus = $BackupPidStatus ? false : true;
 				}
 				if ($BackupPidStatus) {
-					FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, 'Backup run already in progress');
+					FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'Backup run already in progress');
 					return 1;
 				}
 			}
@@ -66,10 +66,10 @@ class BackupCron extends \Froxlor\Cron\FroxlorCron
 			} else {
 				$msg = "PHP compiled without pcntl.";
 			}
-			FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_WARNING, $msg . " Not forking backup-cron, this may take a long time!");
+			FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_WARNING, $msg . " Not forking backup-cron, this may take a long time!");
 		}
 
-		FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, 'BackupCron: started - creating customer backup');
+		FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'BackupCron: started - creating customer backup');
 
 		$result_tasks_stmt = Database::query("
 			SELECT * FROM `" . TABLE_PANEL_TASKS . "` WHERE `type` = '20' ORDER BY `id` ASC
@@ -92,7 +92,7 @@ class BackupCron extends \Froxlor\Cron\FroxlorCron
 
 					// create folder if not exists
 					if (! file_exists($row['data']['destdir']) && $row['data']['destdir'] != '/' && $row['data']['destdir'] != Settings::Get('system.documentroot_prefix') && $row['data']['destdir'] != $customerdocroot) {
-						FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_NOTICE, 'Creating backup-destination path for customer: ' . escapeshellarg($row['data']['destdir']));
+						FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Creating backup-destination path for customer: ' . escapeshellarg($row['data']['destdir']));
 						\Froxlor\FileDir::safe_exec('mkdir -p ' . escapeshellarg($row['data']['destdir']));
 					}
 
@@ -122,20 +122,20 @@ class BackupCron extends \Froxlor\Cron\FroxlorCron
 	 */
 	private static function createCustomerBackup($data = null, $customerdocroot = null, &$cronlog = null)
 	{
-		$cronlog->logAction(CRON_ACTION, LOG_INFO, 'Creating Backup for user "' . $data['loginname'] . '"');
+		$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'Creating Backup for user "' . $data['loginname'] . '"');
 
 		// create tmp folder
 		$tmpdir = \Froxlor\FileDir::makeCorrectDir($data['destdir'] . '/.tmp/');
-		$cronlog->logAction(CRON_ACTION, LOG_DEBUG, 'Creating tmp-folder "' . $tmpdir . '"');
-		$cronlog->logAction(CRON_ACTION, LOG_DEBUG, 'shell> mkdir -p ' . escapeshellarg($tmpdir));
+		$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'Creating tmp-folder "' . $tmpdir . '"');
+		$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'shell> mkdir -p ' . escapeshellarg($tmpdir));
 		\Froxlor\FileDir::safe_exec('mkdir -p ' . escapeshellarg($tmpdir));
 		$create_backup_tar_data = "";
 
 		// MySQL databases
 		if ($data['backup_dbs'] == 1) {
 
-			$cronlog->logAction(CRON_ACTION, LOG_DEBUG, 'Creating mysql-folder "' . \Froxlor\FileDir::makeCorrectDir($tmpdir . '/mysql') . '"');
-			$cronlog->logAction(CRON_ACTION, LOG_DEBUG, 'shell> mkdir -p ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir($tmpdir . '/mysql')));
+			$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'Creating mysql-folder "' . \Froxlor\FileDir::makeCorrectDir($tmpdir . '/mysql') . '"');
+			$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'shell> mkdir -p ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir($tmpdir . '/mysql')));
 			\Froxlor\FileDir::safe_exec('mkdir -p ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir($tmpdir . '/mysql')));
 
 			// get all customer database-names
@@ -151,7 +151,7 @@ class BackupCron extends \Froxlor\Cron\FroxlorCron
 
 			$has_dbs = false;
 			while ($row = $sel_stmt->fetch()) {
-				$cronlog->logAction(CRON_ACTION, LOG_DEBUG, 'shell> mysqldump -u ' . escapeshellarg($sql_root['user']) . ' -pXXXXX ' . $row['databasename'] . ' > ' . \Froxlor\FileDir::makeCorrectFile($tmpdir . '/mysql/' . $row['databasename'] . '_' . date('YmdHi', time()) . '.sql'));
+				$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'shell> mysqldump -u ' . escapeshellarg($sql_root['user']) . ' -pXXXXX ' . $row['databasename'] . ' > ' . \Froxlor\FileDir::makeCorrectFile($tmpdir . '/mysql/' . $row['databasename'] . '_' . date('YmdHi', time()) . '.sql'));
 				$bool_false = false;
 				\Froxlor\FileDir::safe_exec('mysqldump -u ' . escapeshellarg($sql_root['user']) . ' -p' . $sql_root['passwd'] . ' ' . $row['databasename'] . ' > ' . \Froxlor\FileDir::makeCorrectFile($tmpdir . '/mysql/' . $row['databasename'] . '_' . date('YmdHi', time()) . '.sql'), $bool_false, array(
 					'>'
@@ -169,7 +169,7 @@ class BackupCron extends \Froxlor\Cron\FroxlorCron
 		// E-mail data
 		if ($data['backup_mail'] == 1) {
 
-			$cronlog->logAction(CRON_ACTION, LOG_DEBUG, 'Creating mail-folder "' . \Froxlor\FileDir::makeCorrectDir($tmpdir . '/mail') . '"');
+			$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'Creating mail-folder "' . \Froxlor\FileDir::makeCorrectDir($tmpdir . '/mail') . '"');
 			\Froxlor\FileDir::safe_exec('mkdir -p ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir($tmpdir . '/mail')));
 
 			// get all customer mail-accounts
@@ -186,7 +186,7 @@ class BackupCron extends \Froxlor\Cron\FroxlorCron
 			}
 
 			if (! empty($tar_file_list)) {
-				$cronlog->logAction(CRON_ACTION, LOG_DEBUG, 'shell> tar cfvz ' . escapeshellarg(\Froxlor\FileDir::makeCorrectFile($tmpdir . '/mail/' . $data['loginname'] . '-mail.tar.gz')) . ' -C ' . escapeshellarg($mail_homedir) . ' ' . trim($tar_file_list));
+				$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'shell> tar cfvz ' . escapeshellarg(\Froxlor\FileDir::makeCorrectFile($tmpdir . '/mail/' . $data['loginname'] . '-mail.tar.gz')) . ' -C ' . escapeshellarg($mail_homedir) . ' ' . trim($tar_file_list));
 				\Froxlor\FileDir::safe_exec('tar cfz ' . escapeshellarg(\Froxlor\FileDir::makeCorrectFile($tmpdir . '/mail/' . $data['loginname'] . '-mail.tar.gz')) . ' -C ' . escapeshellarg($mail_homedir) . ' ' . trim($tar_file_list));
 				$create_backup_tar_data .= './mail ';
 			}
@@ -195,27 +195,27 @@ class BackupCron extends \Froxlor\Cron\FroxlorCron
 		// Web data
 		if ($data['backup_web'] == 1) {
 
-			$cronlog->logAction(CRON_ACTION, LOG_DEBUG, 'Creating web-folder "' . \Froxlor\FileDir::makeCorrectDir($tmpdir . '/web') . '"');
+			$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'Creating web-folder "' . \Froxlor\FileDir::makeCorrectDir($tmpdir . '/web') . '"');
 			\Froxlor\FileDir::safe_exec('mkdir -p ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir($tmpdir . '/web')));
-			$cronlog->logAction(CRON_ACTION, LOG_DEBUG, 'shell> tar cfz ' . escapeshellarg(\Froxlor\FileDir::makeCorrectFile($tmpdir . '/web/' . $data['loginname'] . '-web.tar.gz')) . ' --exclude=' . escapeshellarg(str_replace($customerdocroot, "./", \Froxlor\FileDir::makeCorrectFile($tmpdir . '/*'))) . ' --exclude=' . escapeshellarg(str_replace($customerdocroot, "./", substr(\Froxlor\FileDir::makeCorrectDir($tmpdir), 0, - 1))) . ' -C ' . escapeshellarg($customerdocroot) . ' .');
+			$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'shell> tar cfz ' . escapeshellarg(\Froxlor\FileDir::makeCorrectFile($tmpdir . '/web/' . $data['loginname'] . '-web.tar.gz')) . ' --exclude=' . escapeshellarg(str_replace($customerdocroot, "./", \Froxlor\FileDir::makeCorrectFile($tmpdir . '/*'))) . ' --exclude=' . escapeshellarg(str_replace($customerdocroot, "./", substr(\Froxlor\FileDir::makeCorrectDir($tmpdir), 0, - 1))) . ' -C ' . escapeshellarg($customerdocroot) . ' .');
 			\Froxlor\FileDir::safe_exec('tar cfz ' . escapeshellarg(\Froxlor\FileDir::makeCorrectFile($tmpdir . '/web/' . $data['loginname'] . '-web.tar.gz')) . ' --exclude=' . escapeshellarg(str_replace($customerdocroot, "./", \Froxlor\FileDir::makeCorrectFile($tmpdir . '/*'))) . ' --exclude=' . escapeshellarg(str_replace($customerdocroot, "./", substr(\Froxlor\FileDir::makeCorrectFile($tmpdir), 0, - 1))) . ' -C ' . escapeshellarg($customerdocroot) . ' .');
 			$create_backup_tar_data .= './web ';
 		}
 
 		if (! empty($create_backup_tar_data)) {
 			$backup_file = \Froxlor\FileDir::makeCorrectFile($tmpdir . '/' . $data['loginname'] . '-backup_' . date('YmdHi', time()) . '.tar.gz');
-			$cronlog->logAction(CRON_ACTION, LOG_INFO, 'Creating backup-file "' . $backup_file . '"');
+			$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'Creating backup-file "' . $backup_file . '"');
 			// pack all archives in tmp-dir to one
-			$cronlog->logAction(CRON_ACTION, LOG_DEBUG, 'shell> tar cfz ' . escapeshellarg($backup_file) . ' -C ' . escapeshellarg($tmpdir) . ' ' . trim($create_backup_tar_data));
+			$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'shell> tar cfz ' . escapeshellarg($backup_file) . ' -C ' . escapeshellarg($tmpdir) . ' ' . trim($create_backup_tar_data));
 			\Froxlor\FileDir::safe_exec('tar cfz ' . escapeshellarg($backup_file) . ' -C ' . escapeshellarg($tmpdir) . ' ' . trim($create_backup_tar_data));
 			// move to destination directory
-			$cronlog->logAction(CRON_ACTION, LOG_DEBUG, 'shell> mv ' . escapeshellarg($backup_file) . ' ' . escapeshellarg($data['destdir']));
+			$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'shell> mv ' . escapeshellarg($backup_file) . ' ' . escapeshellarg($data['destdir']));
 			\Froxlor\FileDir::safe_exec('mv ' . escapeshellarg($backup_file) . ' ' . escapeshellarg($data['destdir']));
 			// remove tmp-files
-			$cronlog->logAction(CRON_ACTION, LOG_DEBUG, 'shell> rm -rf ' . escapeshellarg($tmpdir));
+			$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'shell> rm -rf ' . escapeshellarg($tmpdir));
 			\Froxlor\FileDir::safe_exec('rm -rf ' . escapeshellarg($tmpdir));
 			// set owner to customer
-			$cronlog->logAction(CRON_ACTION, LOG_DEBUG, 'shell> chown -R ' . (int) $data['uid'] . ':' . (int) $data['gid'] . ' ' . escapeshellarg($data['destdir']));
+			$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'shell> chown -R ' . (int) $data['uid'] . ':' . (int) $data['gid'] . ' ' . escapeshellarg($data['destdir']));
 			\Froxlor\FileDir::safe_exec('chown -R ' . (int) $data['uid'] . ':' . (int) $data['gid'] . ' ' . escapeshellarg($data['destdir']));
 		}
 	}

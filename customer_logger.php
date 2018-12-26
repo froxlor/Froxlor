@@ -81,19 +81,19 @@ if ($page == 'log') {
 
 				if ($_action != $action) {
 					switch ($action) {
-						case USR_ACTION:
+						case \Froxlor\FroxlorLogger::USR_ACTION:
 							$_action = $lng['admin']['customer'];
 							break;
-						case RES_ACTION:
+						case \Froxlor\FroxlorLogger::RES_ACTION:
 							$_action = $lng['logger']['reseller'];
 							break;
-						case ADM_ACTION:
+						case \Froxlor\FroxlorLogger::ADM_ACTION:
 							$_action = $lng['logger']['admin'];
 							break;
-						case CRON_ACTION:
+						case \Froxlor\FroxlorLogger::CRON_ACTION:
 							$_action = $lng['logger']['cron'];
 							break;
-						case LOGIN_ACTION:
+						case \Froxlor\FroxlorLogger::LOGIN_ACTION:
 							$_action = $lng['logger']['login'];
 							break;
 						case LOG_ERROR:

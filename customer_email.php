@@ -37,11 +37,11 @@ if (isset($_POST['id'])) {
 }
 
 if ($page == 'overview') {
-	$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_email");
+	$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_email");
 	eval("echo \"" . \Froxlor\UI\Template::getTemplate("email/email") . "\";");
 } elseif ($page == 'emails') {
 	if ($action == '') {
-		$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_email::emails");
+		$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_email::emails");
 		$fields = array(
 			'd.domain' => $lng['domains']['domainname'],
 			'm.email_full' => $lng['emails']['emailaddress'],

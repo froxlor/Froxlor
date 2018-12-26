@@ -26,7 +26,7 @@ use Froxlor\Api\Commands\Admins as Admins;
 
 if ($action == 'logout') {
 
-	$log->logAction(ADM_ACTION, LOG_NOTICE, "logged out");
+	$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "logged out");
 
 	$params = array(
 		'adminid' => (int) $userinfo['adminid']
@@ -56,7 +56,7 @@ if (isset($_POST['id'])) {
 
 if ($page == 'overview') {
 
-	$log->logAction(ADM_ACTION, LOG_NOTICE, "viewed admin_index");
+	$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_index");
 	$overview_stmt = Database::prepare("SELECT COUNT(*) AS `number_customers`,
 				SUM(`diskspace_used`) AS `diskspace_used`,
 				SUM(`mysqls_used`) AS `mysqls_used`,
@@ -212,7 +212,7 @@ if ($page == 'overview') {
 			} catch (Exception $e) {
 				\Froxlor\UI\Response::dynamic_error($e->getMessage());
 			}
-			$log->logAction(ADM_ACTION, LOG_NOTICE, 'changed password');
+			$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, 'changed password');
 			\Froxlor\UI\Response::redirectTo($filename, Array(
 				's' => $s
 			));
@@ -245,7 +245,7 @@ if ($page == 'overview') {
 				'hash' => $s
 			));
 		}
-		$log->logAction(ADM_ACTION, LOG_NOTICE, "changed his/her default language to '" . $def_language . "'");
+		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "changed his/her default language to '" . $def_language . "'");
 		\Froxlor\UI\Response::redirectTo($filename, array(
 			's' => $s
 		));
@@ -287,7 +287,7 @@ if ($page == 'overview') {
 			'hash' => $s
 		));
 
-		$log->logAction(ADM_ACTION, LOG_NOTICE, "changed his/her theme to '" . $theme . "'");
+		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "changed his/her theme to '" . $theme . "'");
 		\Froxlor\UI\Response::redirectTo($filename, array(
 			's' => $s
 		));

@@ -32,7 +32,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	public function listing()
 	{
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings') == 1) {
-			$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] list admins");
+			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] list admins");
 			$result_stmt = Database::prepare("
 				SELECT *
 				FROM `" . TABLE_PANEL_ADMINS . "`
@@ -78,7 +78,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			);
 			$result = Database::pexecute_first($result_stmt, $params, true, true);
 			if ($result) {
-				$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] get admin '" . $result['loginname'] . "'");
+				$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] get admin '" . $result['loginname'] . "'");
 				return $this->response(200, "successfull", $result);
 			}
 			$key = ($id > 0 ? "id #" . $id : "loginname '" . $loginname . "'");
@@ -323,7 +323,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 
 				$adminid = Database::lastInsertId();
 				$ins_data['adminid'] = $adminid;
-				$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] added admin '" . $loginname . "'");
+				$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_WARNING, "[API] added admin '" . $loginname . "'");
 
 				// get all admin-data for return-array
 				$result = $this->apiCall('Admins.get', array(
@@ -630,7 +630,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 						WHERE `adminid` = :adminid
 					");
 					Database::pexecute($upd_stmt, $upd_data, true, true);
-					$this->logger()->logAction(ADM_ACTION, LOG_INFO, "[API] edited admin '" . $result['loginname'] . "'");
+					$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] edited admin '" . $result['loginname'] . "'");
 
 					// get all admin-data for return-array
 					$result = $this->apiCall('Admins.get', array(
@@ -736,7 +736,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 				'adminid' => $id
 			), true, true);
 
-			$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] deleted admin '" . $result['loginname'] . "'");
+			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_WARNING, "[API] deleted admin '" . $result['loginname'] . "'");
 			\Froxlor\User::updateCounters();
 			return $this->response(200, "successfull", $result);
 		}
@@ -779,7 +779,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			// set the new value for result-array
 			$result['loginfail_count'] = 0;
 
-			$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] unlocked admin '" . $result['loginname'] . "'");
+			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_WARNING, "[API] unlocked admin '" . $result['loginname'] . "'");
 			return $this->response(200, "successfull", $result);
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);

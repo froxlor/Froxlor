@@ -36,11 +36,11 @@ if (isset($_POST['id'])) {
 }
 
 if ($page == 'overview') {
-	$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_ftp");
+	$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_ftp");
 	eval("echo \"" . \Froxlor\UI\Template::getTemplate('ftp/ftp') . "\";");
 } elseif ($page == 'accounts') {
 	if ($action == '') {
-		$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_ftp::accounts");
+		$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_ftp::accounts");
 		$fields = array(
 			'username' => $lng['login']['username'],
 			'homedir' => $lng['panel']['path'],

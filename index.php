@@ -190,7 +190,7 @@ if ($action == '2fa_entercode') {
 				$rstlog = FroxlorLogger::getInstanceOf(array(
 					'loginname' => $_SERVER['REMOTE_ADDR']
 				));
-				$rstlog->logAction(LOGIN_ACTION, LOG_WARNING, "Unknown user '" . $loginname . "' tried to login.");
+				$rstlog->logAction(\Froxlor\FroxlorLogger::LOGIN_ACTION, LOG_WARNING, "Unknown user '" . $loginname . "' tried to login.");
 
 				\Froxlor\UI\Response::redirectTo('index.php', array(
 					'showmessage' => '2'
@@ -247,7 +247,7 @@ if ($action == '2fa_entercode') {
 			$rstlog = FroxlorLogger::getInstanceOf(array(
 				'loginname' => $_SERVER['REMOTE_ADDR']
 			));
-			$rstlog->logAction(LOGIN_ACTION, LOG_WARNING, "User '" . $loginname . "' tried to login with wrong password.");
+			$rstlog->logAction(\Froxlor\FroxlorLogger::LOGIN_ACTION, LOG_WARNING, "User '" . $loginname . "' tried to login with wrong password.");
 
 			unset($userinfo);
 			\Froxlor\UI\Response::redirectTo('index.php', array(
@@ -301,7 +301,7 @@ if ($action == '2fa_entercode') {
 					$rstlog = FroxlorLogger::getInstanceOf(array(
 						'loginname' => '2fa code-sending'
 					));
-					$rstlog->logAction(ADM_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
+					$rstlog->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
 					\Froxlor\UI\Response::redirectTo('index.php', array(
 						'showmessage' => '4',
 						'customermail' => $userinfo['email']
@@ -461,7 +461,7 @@ if ($action == 'forgotpwd') {
 					$rstlog = FroxlorLogger::getInstanceOf(array(
 						'loginname' => 'password_reset'
 					));
-					$rstlog->logAction(USR_ACTION, LOG_WARNING, "User '" . $user['loginname'] . "' requested a link for setting a new password.");
+					$rstlog->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_WARNING, "User '" . $user['loginname'] . "' requested a link for setting a new password.");
 
 					// Set together our activation link
 					$protocol = empty($_SERVER['HTTPS']) ? 'http' : 'https';
@@ -530,7 +530,7 @@ if ($action == 'forgotpwd') {
 						$rstlog = FroxlorLogger::getInstanceOf(array(
 							'loginname' => 'password_reset'
 						));
-						$rstlog->logAction(ADM_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
+						$rstlog->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_ERR, "Error sending mail: " . $mailerr_msg);
 						\Froxlor\UI\Response::redirectTo('index.php', array(
 							'showmessage' => '4',
 							'customermail' => $user['email']
@@ -547,7 +547,7 @@ if ($action == 'forgotpwd') {
 					$rstlog = FroxlorLogger::getInstanceOf(array(
 						'loginname' => 'password_reset'
 					));
-					$rstlog->logAction(USR_ACTION, LOG_WARNING, "User '" . $loginname . "' requested to set a new password, but was not found in database!");
+					$rstlog->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_WARNING, "User '" . $loginname . "' requested to set a new password, but was not found in database!");
 					$message = $lng['login']['combination_not_found'];
 				}
 
@@ -631,7 +631,7 @@ if ($action == 'resetpwd') {
 						$rstlog = FroxlorLogger::getInstanceOf(array(
 							'loginname' => 'password_reset'
 						));
-						$rstlog->logAction(USR_ACTION, LOG_NOTICE, "changed password using password reset.");
+						$rstlog->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "changed password using password reset.");
 
 						// Remove activation code from DB
 						$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_ACTIVATION . "`

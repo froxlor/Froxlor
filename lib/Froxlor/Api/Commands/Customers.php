@@ -32,7 +32,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 	public function listing()
 	{
 		if ($this->isAdmin()) {
-			$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] list customers");
+			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] list customers");
 			$result_stmt = Database::prepare("
 				SELECT `c`.*, `a`.`loginname` AS `adminname`
 				FROM `" . TABLE_PANEL_CUSTOMERS . "` `c`, `" . TABLE_PANEL_ADMINS . "` `a`
@@ -105,7 +105,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 			if (! $this->isAdmin() && $result['custom_notes_show'] != 1) {
 				$result['custom_notes'] = "";
 			}
-			$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_NOTICE, "[API] get customer '" . $result['loginname'] . "'");
+			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] get customer '" . $result['loginname'] . "'");
 			return $this->response(200, "successfull", $result);
 		}
 		$key = ($id > 0 ? "id #" . $id : "loginname '" . $loginname . "'");
@@ -513,7 +513,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 						Settings::Set('system.lastaccountnumber', $accountnumber, true);
 					}
 
-					$this->logger()->logAction(ADM_ACTION, LOG_INFO, "[API] added customer '" . $loginname . "'");
+					$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] added customer '" . $loginname . "'");
 					unset($ins_data);
 
 					// insert task to create homedir etc.
@@ -543,7 +543,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 						$stats_folder = 'awstats';
 					}
 					$ins_data['path'] = \Froxlor\FileDir::makeCorrectDir($documentroot . '/' . $stats_folder . '/');
-					$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] automatically added " . $stats_folder . " htpasswd for user '" . $loginname . "'");
+					$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] automatically added " . $stats_folder . " htpasswd for user '" . $loginname . "'");
 					Database::pexecute($ins_stmt, $ins_data, true, true);
 
 					\Froxlor\System\Cronjob::inserttask('1');
@@ -601,7 +601,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 					Database::pexecute($ins_stmt, array(
 						'name' => $loginname
 					), true, true);
-					$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] automatically added ftp-account for user '" . $loginname . "'");
+					$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] automatically added ftp-account for user '" . $loginname . "'");
 
 					$_stdsubdomain = '';
 					if ($createstdsubdomain == '1') {
@@ -624,7 +624,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 							$std_domain = $this->apiCall('Domains.add', $ins_data);
 							$domainid = $std_domain['id'];
 						} catch (\Exception $e) {
-							$this->logger()->logAction(ADM_ACTION, LOG_ERR, "[API] Unable to add standard-subdomain: " . $e->getMessage());
+							$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_ERR, "[API] Unable to add standard-subdomain: " . $e->getMessage());
 						}
 
 						if ($domainid > 0) {
@@ -635,7 +635,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 								'domainid' => $domainid,
 								'customerid' => $customerid
 							), true, true);
-							$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] automatically added standardsubdomain for user '" . $loginname . "'");
+							$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] automatically added standardsubdomain for user '" . $loginname . "'");
 							\Froxlor\System\Cronjob::inserttask('1');
 						}
 					}
@@ -706,15 +706,15 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 						}
 
 						if ($_mailerror) {
-							$this->logger()->logAction(ADM_ACTION, LOG_ERR, "[API] Error sending mail: " . $mailerr_msg);
+							$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_ERR, "[API] Error sending mail: " . $mailerr_msg);
 							\Froxlor\UI\Response::standard_error('errorsendingmail', $email, true);
 						}
 
 						$this->mailer()->clearAddresses();
-						$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] automatically sent password to user '" . $loginname . "'");
+						$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] automatically sent password to user '" . $loginname . "'");
 					}
 				}
-				$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] added customer '" . $loginname . "'");
+				$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_WARNING, "[API] added customer '" . $loginname . "'");
 
 				$result = $this->apiCall('Customers.get', array(
 					'loginname' => $loginname
@@ -967,7 +967,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 					$std_domain = $this->apiCall('Domains.add', $ins_data);
 					$domainid = $std_domain['id'];
 				} catch (\Exception $e) {
-					$this->logger()->logAction(ADM_ACTION, LOG_ERR, "[API] Unable to add standard-subdomain: " . $e->getMessage());
+					$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_ERR, "[API] Unable to add standard-subdomain: " . $e->getMessage());
 				}
 
 				if ($domainid > 0) {
@@ -978,7 +978,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 						'domainid' => $domainid,
 						'customerid' => $result['customerid']
 					), true, true);
-					$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] automatically added standardsubdomain for user '" . $result['loginname'] . "'");
+					$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] automatically added standardsubdomain for user '" . $result['loginname'] . "'");
 					\Froxlor\System\Cronjob::inserttask('1');
 				}
 			}
@@ -990,9 +990,9 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 						'is_stdsubdomain' => 1
 					));
 				} catch (\Exception $e) {
-					$this->logger()->logAction(ADM_ACTION, LOG_ERR, "[API] Unable to delete standard-subdomain: " . $e->getMessage());
+					$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_ERR, "[API] Unable to delete standard-subdomain: " . $e->getMessage());
 				}
-				$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] automatically deleted standardsubdomain for user '" . $result['loginname'] . "'");
+				$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] automatically deleted standardsubdomain for user '" . $result['loginname'] . "'");
 				\Froxlor\System\Cronjob::inserttask('1');
 			}
 
@@ -1098,7 +1098,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 					'vu' => $valid_until
 				), true, true);
 
-				$this->logger()->logAction(ADM_ACTION, LOG_INFO, "[API] " . ($deactivated ? 'deactivated' : 'reactivated') . " user '" . $result['loginname'] . "'");
+				$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] " . ($deactivated ? 'deactivated' : 'reactivated') . " user '" . $result['loginname'] . "'");
 				\Froxlor\System\Cronjob::inserttask('1');
 			}
 
@@ -1305,7 +1305,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 			Database::query($admin_update_query);
 		}
 
-		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] edited user '" . $result['loginname'] . "'");
+		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] edited user '" . $result['loginname'] . "'");
 
 		/*
 		 * move customer to another admin/reseller; #1166
@@ -1551,7 +1551,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 			// Using filesystem - quota, insert a task which cleans the filesystem - quota
 			\Froxlor\System\Cronjob::inserttask('10');
 
-			$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] deleted customer '" . $result['loginname'] . "'");
+			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_WARNING, "[API] deleted customer '" . $result['loginname'] . "'");
 			return $this->response(200, "successfull", $result);
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
@@ -1593,7 +1593,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 			// set the new value for result-array
 			$result['loginfail_count'] = 0;
 
-			$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] unlocked customer '" . $result['loginname'] . "'");
+			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_WARNING, "[API] unlocked customer '" . $result['loginname'] . "'");
 			return $this->response(200, "successfull", $result);
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
@@ -1659,7 +1659,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 			// now, recalculate the resource-usage for the old and the new admin
 			\Froxlor\User::updateCounters(false);
 
-			$this->logger()->logAction(ADM_ACTION, LOG_INFO, "[API] moved user '" . $c_result['loginname'] . "' from admin/reseller '" . $c_result['adminname'] . " to admin/reseller '" . $a_result['loginname'] . "'");
+			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] moved user '" . $c_result['loginname'] . "' from admin/reseller '" . $c_result['adminname'] . " to admin/reseller '" . $a_result['loginname'] . "'");
 
 			$result = $this->apiCall('Customers.get', array(
 				'id' => $c_result['customerid']

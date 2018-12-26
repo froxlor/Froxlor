@@ -37,7 +37,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 					$TrafficPidStatus = $TrafficPidStatus ? false : true;
 				}
 				if ($TrafficPidStatus) {
-					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, 'Traffic Run already in progress');
+					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'Traffic Run already in progress');
 					return 1;
 				}
 			}
@@ -65,13 +65,13 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 			} else {
 				$msg = "PHP compiled without pcntl.";
 			}
-			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, $msg . " Not forking traffic-cron, this may take a long time!");
+			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, $msg . " Not forking traffic-cron, this may take a long time!");
 		}
 
 		/**
 		 * TRAFFIC AND DISKUSAGE MESSURE
 		 */
-		\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, 'Traffic run started...');
+		\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'Traffic run started...');
 		$admin_traffic = array();
 		$domainlist = array();
 		$speciallogfile_domainlist = array();
@@ -139,7 +139,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 				// sum up result
 				$mysqlusage_all[$row_database['customerid']] += floatval($mysql_usage_row['customerusage']);
 			} else {
-				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_WARNING, "Seems like the database " . $row_database['databasename'] . " had been removed manually.");
+				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_WARNING, "Seems like the database " . $row_database['databasename'] . " had been removed manually.");
 			}
 		}
 
@@ -163,7 +163,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 			/**
 			 * HTTP-Traffic
 			 */
-			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, 'http traffic for ' . $row['loginname'] . ' started...');
+			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'http traffic for ' . $row['loginname'] . ' started...');
 			$httptraffic = 0;
 
 			if (isset($domainlist[$row['customerid']]) && is_array($domainlist[$row['customerid']]) && count($domainlist[$row['customerid']]) != 0) {
@@ -216,7 +216,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 			/**
 			 * FTP-Traffic
 			 */
-			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, 'ftp traffic for ' . $row['loginname'] . ' started...');
+			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'ftp traffic for ' . $row['loginname'] . ' started...');
 			$ftptraffic_stmt = Database::prepare("
 				SELECT SUM(`up_bytes`) AS `up_bytes_sum`, SUM(`down_bytes`) AS `down_bytes_sum`
 				FROM `" . TABLE_FTP_USERS . "` WHERE `customerid` = :customerid
@@ -244,7 +244,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 			 */
 			$mailtraffic = 0;
 			if (Settings::Get("system.mailtraffic_enabled")) {
-				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, 'mail traffic usage for ' . $row['loginname'] . " started...");
+				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'mail traffic usage for ' . $row['loginname'] . " started...");
 
 				$currentDate = date("Y-m-d");
 
@@ -298,7 +298,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 			/**
 			 * Total Traffic
 			 */
-			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, 'total traffic for ' . $row['loginname'] . ' started');
+			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'total traffic for ' . $row['loginname'] . ' started');
 			$current_traffic = array();
 			$current_traffic['http'] = floatval($httptraffic);
 			$current_traffic['ftp_up'] = floatval(($ftptraffic['up_bytes_sum'] / 1024));
@@ -361,7 +361,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 			/**
 			 * WebSpace-Usage
 			 */
-			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, 'calculating webspace usage for ' . $row['loginname']);
+			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'calculating webspace usage for ' . $row['loginname']);
 			$webspaceusage = 0;
 
 			// Using repquota, it's faster using this tool than using du traversing the complete directory
@@ -380,14 +380,14 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 					$webspaceusage = floatval($webspaceusage['0']);
 					unset($back);
 				} else {
-					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_WARNING, 'documentroot ' . $row['documentroot'] . ' does not exist');
+					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_WARNING, 'documentroot ' . $row['documentroot'] . ' does not exist');
 				}
 			}
 
 			/**
 			 * MailSpace-Usage
 			 */
-			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, 'calculating mailspace usage for ' . $row['loginname']);
+			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'calculating mailspace usage for ' . $row['loginname']);
 			$emailusage = 0;
 
 			$maildir = \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.vmail_homedir') . $row['loginname']);
@@ -400,13 +400,13 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 				$emailusage = floatval($emailusage['0']);
 				unset($back);
 			} else {
-				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_WARNING, 'maildir ' . $maildir . ' does not exist');
+				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_WARNING, 'maildir ' . $maildir . ' does not exist');
 			}
 
 			/**
 			 * MySQLSpace-Usage
 			 */
-			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, 'calculating mysqlspace usage for ' . $row['loginname']);
+			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'calculating mysqlspace usage for ' . $row['loginname']);
 			$mysqlusage = 0;
 
 			if (isset($mysqlusage_all[$row['customerid']])) {
@@ -631,11 +631,11 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 
 			if (! file_exists($awbsp)) {
 				echo "WANRING: Necessary awstats_buildstaticpages.pl script could not be found, no traffic is being calculated and no stats are generated. Please check your AWStats-Path setting";
-				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_WARNING, "Necessary awstats_buildstaticpages.pl script could not be found, no traffic is being calculated and no stats are generated. Please check your AWStats-Path setting");
+				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_WARNING, "Necessary awstats_buildstaticpages.pl script could not be found, no traffic is being calculated and no stats are generated. Please check your AWStats-Path setting");
 				exit();
 			}
 
-			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, "Running awstats_buildstaticpages.pl for domain '" . $domain . "' (Output: '" . $staticOutputdir . "')");
+			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, "Running awstats_buildstaticpages.pl for domain '" . $domain . "' (Output: '" . $staticOutputdir . "')");
 			\Froxlor\FileDir::safe_exec($awbsp . ' -awstatsprog=' . escapeshellarg($awprog) . ' -update -month=' . date('m') . ' -year=' . date('Y') . ' -config=' . $domain . ' -dir=' . escapeshellarg($staticOutputdir));
 
 			// update our awstats index files
@@ -648,7 +648,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 
 			// statistics file looks like: 'awstats[month][year].[domain].txt'
 			$file = \Froxlor\FileDir::makeCorrectFile($outputdir . '/awstats' . date('mY', time()) . '.' . $domain . '.txt');
-			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, "Gathering traffic information from '" . $file . "'");
+			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, "Gathering traffic information from '" . $file . "'");
 
 			if (file_exists($file)) {
 
@@ -849,7 +849,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 				$we = '/usr/local/bin/webalizer';
 			}
 
-			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, "Running webalizer for domain '" . $caption . "'");
+			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, "Running webalizer for domain '" . $caption . "'");
 			\Froxlor\FileDir::safe_exec($we . ' ' . $verbosity . ' -p -o ' . escapeshellarg($outputdir) . ' -n ' . escapeshellarg($caption) . $domainargs . ' ' . escapeshellarg($logfile));
 
 			/**
@@ -860,7 +860,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 			 */
 			$httptraffic = array();
 			$webalizer_hist = @file_get_contents($outputdir . 'webalizer.hist');
-			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, "Gathering traffic information from '" . $webalizer_hist . "'");
+			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, "Gathering traffic information from '" . $webalizer_hist . "'");
 
 			$webalizer_hist_rows = explode("\n", $webalizer_hist);
 			foreach ($webalizer_hist_rows as $webalizer_hist_row) {
@@ -885,7 +885,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 			reset($httptraffic);
 			$httptrafficlast = array();
 			$webalizer_lasthist = @file_get_contents($outputdir . 'webalizer.hist.1');
-			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, "Gathering traffic information from '" . $webalizer_lasthist . "'");
+			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, "Gathering traffic information from '" . $webalizer_lasthist . "'");
 
 			$webalizer_lasthist_rows = explode("\n", $webalizer_lasthist);
 			foreach ($webalizer_lasthist_rows as $webalizer_lasthist_row) {

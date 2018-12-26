@@ -36,7 +36,7 @@ class Froxlor extends \Froxlor\Api\ApiCommand
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
 			if (function_exists('curl_version')) {
 				// log our actions
-				$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] checking for updates");
+				$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] checking for updates");
 
 				// check for new version
 				$latestversion = \Froxlor\Http\HttpClient::urlGet(UPDATE_URI);
@@ -116,7 +116,7 @@ class Froxlor extends \Froxlor\Api\ApiCommand
 	{
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
 			$json_str = $this->getParam('json_str');
-			$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "User " . $this->getUserDetail('loginname') . " imported settings");
+			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "User " . $this->getUserDetail('loginname') . " imported settings");
 			try {
 				\Froxlor\SImExporter::import($json_str);
 				\Froxlor\System\Cronjob::inserttask('1');
@@ -143,7 +143,7 @@ class Froxlor extends \Froxlor\Api\ApiCommand
 	public function exportSettings()
 	{
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
-			$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "User " . $this->getUserDetail('loginname') . " exported settings");
+			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "User " . $this->getUserDetail('loginname') . " exported settings");
 			$json_export = \Froxlor\SImExporter::export();
 			return $this->response(200, "successfull", $json_export);
 		}
@@ -222,7 +222,7 @@ class Froxlor extends \Froxlor\Api\ApiCommand
 			if (is_null($oldvalue)) {
 				throw new \Exception("Setting '" . $setting . "' could not be found");
 			}
-			$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] Changing setting '" . $setting . "' from '" . $oldvalue . "' to '" . $value . "'");
+			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_WARNING, "[API] Changing setting '" . $setting . "' from '" . $oldvalue . "' to '" . $value . "'");
 			return $this->response(200, "successfull", Settings::Set($setting, $value, true));
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);

@@ -68,7 +68,7 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 		));
 		if (empty($result)) {
 			$this->addOrUpdateCertificate($domain['id'], $ssl_cert_file, $ssl_key_file, $ssl_ca_file, $ssl_cert_chainfile, true);
-			$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] added ssl-certificate for '" . $domain['domain'] . "'");
+			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] added ssl-certificate for '" . $domain['domain'] . "'");
 			$result = $this->apiCall('Certificates.get', array(
 				'id' => $domain['id']
 			));
@@ -106,7 +106,7 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 		$domainid = $domain['id'];
 
 		$stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` WHERE `domainid`= :domainid");
-		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] get ssl-certificate for '" . $domain['domain'] . "'");
+		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] get ssl-certificate for '" . $domain['domain'] . "'");
 		$result = Database::pexecute_first($stmt, array(
 			"domainid" => $domainid
 		));
@@ -152,7 +152,7 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 		$ssl_ca_file = $this->getParam('ssl_ca_file', true, '');
 		$ssl_cert_chainfile = $this->getParam('ssl_cert_chainfile', true, '');
 		$this->addOrUpdateCertificate($domain['id'], $ssl_cert_file, $ssl_key_file, $ssl_ca_file, $ssl_cert_chainfile, false);
-		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] updated ssl-certificate for '" . $domain['domain'] . "'");
+		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] updated ssl-certificate for '" . $domain['domain'] . "'");
 		$result = $this->apiCall('Certificates.get', array(
 			'id' => $domain['id']
 		));
@@ -250,7 +250,7 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 			Database::pexecute($del_stmt, array(
 				'id' => $id
 			));
-			$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] removed ssl-certificate for '" . $chk['domain'] . "'");
+			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] removed ssl-certificate for '" . $chk['domain'] . "'");
 			return $this->response(200, "successfull", $result);
 		}
 	}

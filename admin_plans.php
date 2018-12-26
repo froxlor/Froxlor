@@ -30,7 +30,7 @@ if ($page == '' || $page == 'overview') {
 
 	if ($action == '') {
 
-		$log->logAction(ADM_ACTION, LOG_NOTICE, "viewed admin_plans");
+		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_plans");
 		$fields = array(
 			'p.name' => $lng['admin']['plans']['name'],
 			'p.description' => $lng['admin']['plans']['description'],
@@ -84,7 +84,7 @@ if ($page == '' || $page == 'overview') {
 					'id' => $id
 				));
 
-				$log->logAction(ADM_ACTION, LOG_INFO, "Plan '" . $result['name'] . "' has been deleted by '" . $userinfo['loginname'] . "'");
+				$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "Plan '" . $result['name'] . "' has been deleted by '" . $userinfo['loginname'] . "'");
 				\Froxlor\UI\Response::redirectTo($filename, array(
 					'page' => $page,
 					's' => $s
@@ -204,7 +204,7 @@ if ($page == '' || $page == 'overview') {
 			);
 			Database::pexecute($ins_stmt, $ins_data);
 
-			$log->logAction(ADM_ACTION, LOG_WARNING, "added plan '" . $name . "'");
+			$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_WARNING, "added plan '" . $name . "'");
 			\Froxlor\UI\Response::redirectTo($filename, array(
 				'page' => $page,
 				's' => $s
@@ -383,7 +383,7 @@ if ($page == '' || $page == 'overview') {
 				);
 				Database::pexecute($ins_stmt, $ins_data);
 
-				$log->logAction(ADM_ACTION, LOG_WARNING, "updated plan '" . $name . "'");
+				$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_WARNING, "updated plan '" . $name . "'");
 				\Froxlor\UI\Response::redirectTo($filename, array(
 					'page' => $page,
 					's' => $s

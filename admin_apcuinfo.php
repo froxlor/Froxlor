@@ -32,7 +32,7 @@ $horizontal_bar_size = 950; // 1280px window width
 
 if ($action == 'delete' && function_exists('apcu_clear_cache') && $userinfo['change_serversettings'] == '1') {
 	apcu_clear_cache();
-	$log->logAction(ADM_ACTION, LOG_INFO, "cleared APCu cache");
+	$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "cleared APCu cache");
 	header('Location: ' . $linker->getLink(array(
 		'section' => 'apcuinfo',
 		'page' => 'showinfo'
@@ -48,7 +48,7 @@ if ($page == 'showinfo') {
 	$cache = apcu_cache_info();
 	$mem = apcu_sma_info();
 	$time = time();
-	$log->logAction(ADM_ACTION, LOG_NOTICE, "viewed admin_apcuinfo");
+	$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_apcuinfo");
 
 	$passtime = $time - $cache['start_time'] > 0 ? $time - $cache['start_time'] : 1; // zero division
 	$mem_size = $mem['num_seg'] * $mem['seg_size'];

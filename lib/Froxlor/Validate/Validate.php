@@ -48,7 +48,7 @@ class Validate
 				// everything else is removed from the string.
 				$allowed = "/[^a-z0-9\\040\\.\\-\\_\\\\]/i";
 				$str = preg_replace($allowed, "", $str);
-				$log->logAction(USR_ACTION, LOG_WARNING, "cleaned bad formatted string (" . $str . ")");
+				$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_WARNING, "cleaned bad formatted string (" . $str . ")");
 			}
 		}
 

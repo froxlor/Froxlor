@@ -158,13 +158,13 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 				}
 
 				if ($_mailerror) {
-					$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_ERR, "[API] Error sending mail: " . $mailerr_msg);
+					$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_ERR, "[API] Error sending mail: " . $mailerr_msg);
 					\Froxlor\UI\Response::standard_error('errorsendingmail', $userinfo['email'], true);
 				}
 
 				$this->mailer()->clearAddresses();
 			}
-			$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_WARNING, "[API] added mysql-database '" . $username . "'");
+			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_WARNING, "[API] added mysql-database '" . $username . "'");
 
 			$result = $this->apiCall('Mysqls.get', array(
 				'dbname' => $username
@@ -259,7 +259,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			$mbdata = $mbdata_stmt->fetch(\PDO::FETCH_ASSOC);
 			Database::needRoot(false);
 			$result['size'] = $mbdata['MB'];
-			$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_NOTICE, "[API] get database '" . $result['databasename'] . "'");
+			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] get database '" . $result['databasename'] . "'");
 			return $this->response(200, "successfull", $result);
 		}
 		$key = ($id > 0 ? "id #" . $id : "dbname '" . $dbname . "'");
@@ -351,7 +351,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		);
 		Database::pexecute($stmt, $params, true, true);
 
-		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_WARNING, "[API] updated mysql-database '" . $result['databasename'] . "'");
+		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_WARNING, "[API] updated mysql-database '" . $result['databasename'] . "'");
 		$result = $this->apiCall('Mysqls.get', array(
 			'dbname' => $result['databasename']
 		));
@@ -479,7 +479,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		// update admin usage
 		Admins::decreaseUsage(($this->isAdmin() ? $customer['adminid'] : $this->getUserDetail('adminid')), 'mysqls_used');
 
-		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_WARNING, "[API] deleted database '" . $result['databasename'] . "'");
+		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_WARNING, "[API] deleted database '" . $result['databasename'] . "'");
 		return $this->response(200, "successfull", $result);
 	}
 }

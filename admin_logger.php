@@ -68,19 +68,19 @@ if ($page == 'log' && $userinfo['change_serversettings'] == '1') {
 
 				if ($_action != $action) {
 					switch ($action) {
-						case USR_ACTION:
+						case \Froxlor\FroxlorLogger::USR_ACTION:
 							$_action = $lng['admin']['customer'];
 							break;
-						case RES_ACTION:
+						case \Froxlor\FroxlorLogger::RES_ACTION:
 							$_action = $lng['logger']['reseller'];
 							break;
-						case ADM_ACTION:
+						case \Froxlor\FroxlorLogger::ADM_ACTION:
 							$_action = $lng['logger']['admin'];
 							break;
-						case CRON_ACTION:
+						case \Froxlor\FroxlorLogger::CRON_ACTION:
 							$_action = $lng['logger']['cron'];
 							break;
-						case LOGIN_ACTION:
+						case \Froxlor\FroxlorLogger::LOGIN_ACTION:
 							$_action = $lng['logger']['login'];
 							break;
 						case LOG_ERROR:
@@ -116,7 +116,7 @@ if ($page == 'log' && $userinfo['change_serversettings'] == '1') {
 			Database::pexecute($trunc_stmt, array(
 				'trunc' => $truncatedate
 			));
-			$log->logAction(ADM_ACTION, LOG_WARNING, 'truncated the system-log (mysql)');
+			$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_WARNING, 'truncated the system-log (mysql)');
 			\Froxlor\UI\Response::redirectTo($filename, array(
 				'page' => $page,
 				's' => $s

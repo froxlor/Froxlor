@@ -115,7 +115,7 @@ class Cronjobs extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceE
 
 			// insert task to re-generate the cron.d-file
 			\Froxlor\System\Cronjob::inserttask('99');
-			$this->logger()->logAction(ADM_ACTION, LOG_INFO, "[API] cronjob with description '" . $result['module'] . '/' . $result['cronfile'] . "' has been updated by '" . $this->getUserDetail('loginname') . "'");
+			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] cronjob with description '" . $result['module'] . '/' . $result['cronfile'] . "' has been updated by '" . $this->getUserDetail('loginname') . "'");
 			$result = $this->apiCall('Cronjobs.get', array(
 				'id' => $id
 			));
@@ -134,7 +134,7 @@ class Cronjobs extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceE
 	public function listing()
 	{
 		if ($this->isAdmin()) {
-			$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] list cronjobs");
+			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] list cronjobs");
 			$result_stmt = Database::prepare("
 				SELECT `c`.* FROM `" . TABLE_PANEL_CRONRUNS . "` `c` ORDER BY `module` ASC, `cronfile` ASC
 			");

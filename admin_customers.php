@@ -34,7 +34,7 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 		// clear request data
 		unset($_SESSION['requestData']);
 
-		$log->logAction(ADM_ACTION, LOG_NOTICE, "viewed admin_customers");
+		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_customers");
 		$fields = array(
 			'c.loginname' => $lng['login']['username'],
 			'a.loginname' => $lng['admin']['admin'],
@@ -192,7 +192,7 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 				'lastact' => time(),
 				'lang' => $result['language']
 			));
-			$log->logAction(ADM_ACTION, LOG_INFO, "switched user and is now '" . $destination_user . "'");
+			$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "switched user and is now '" . $destination_user . "'");
 
 			$target = (isset($_GET['target']) ? $_GET['target'] : 'index');
 			$redirect = "customer_" . $target . ".php";

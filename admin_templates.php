@@ -55,7 +55,7 @@ $file_templates = array(
 
 if ($action == '') {
 	// email templates
-	$log->logAction(ADM_ACTION, LOG_NOTICE, "viewed admin_templates");
+	$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_templates");
 
 	if (Settings::Get('panel.sendalternativemail') == 1) {
 		$available_templates[] = 'pop_success_alternative';
@@ -148,7 +148,7 @@ if ($action == '') {
 				'ida' => $subjectid,
 				'idb' => $mailbodyid
 			));
-			$log->logAction(ADM_ACTION, LOG_INFO, "deleted template '" . $result['language'] . ' - ' . $lng['admin']['templates'][str_replace('_subject', '', $result['varname'])] . "'");
+			$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "deleted template '" . $result['language'] . ' - ' . $lng['admin']['templates'][str_replace('_subject', '', $result['varname'])] . "'");
 			\Froxlor\UI\Response::redirectTo($filename, array(
 				'page' => $page,
 				's' => $s
@@ -184,7 +184,7 @@ if ($action == '') {
 				'adminid' => $userinfo['adminid'],
 				'id' => $id
 			));
-			$log->logAction(ADM_ACTION, LOG_INFO, "deleted template '" . $lng['admin']['templates'][$row['varname']] . "'");
+			$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "deleted template '" . $lng['admin']['templates'][$row['varname']] . "'");
 			\Froxlor\UI\Response::redirectTo($filename, array(
 				'page' => $page,
 				's' => $s
@@ -282,7 +282,7 @@ if ($action == '') {
 			);
 			Database::pexecute($ins_stmt, $ins_data);
 
-			$log->logAction(ADM_ACTION, LOG_INFO, "added template '" . $language . ' - ' . $template . "'");
+			$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "added template '" . $language . ' - ' . $template . "'");
 			\Froxlor\UI\Response::redirectTo($filename, array(
 				'page' => $page,
 				's' => $s
@@ -308,7 +308,7 @@ if ($action == '') {
 		);
 		Database::pexecute($ins_stmt, $ins_data);
 
-		$log->logAction(ADM_ACTION, LOG_INFO, "added template '" . $template . "'");
+		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "added template '" . $template . "'");
 		\Froxlor\UI\Response::redirectTo($filename, array(
 			'page' => $page,
 			's' => $s
@@ -419,7 +419,7 @@ if ($action == '') {
 				'id' => $mailbodyid
 			));
 
-			$log->logAction(ADM_ACTION, LOG_INFO, "edited template '" . $result['varname'] . "'");
+			$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "edited template '" . $result['varname'] . "'");
 			\Froxlor\UI\Response::redirectTo($filename, array(
 				'page' => $page,
 				's' => $s
@@ -481,7 +481,7 @@ if ($action == '') {
 				'id' => $id
 			));
 
-			$log->logAction(ADM_ACTION, LOG_INFO, "edited template '" . $row['varname'] . "'");
+			$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "edited template '" . $row['varname'] . "'");
 			\Froxlor\UI\Response::redirectTo($filename, array(
 				'page' => $page,
 				's' => $s

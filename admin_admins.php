@@ -33,7 +33,7 @@ if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
 
 	if ($action == '') {
 
-		$log->logAction(ADM_ACTION, LOG_NOTICE, "viewed admin_admins");
+		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_admins");
 		$fields = array(
 			'loginname' => $lng['login']['username'],
 			'name' => $lng['customer']['name'],
@@ -141,7 +141,7 @@ if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
 				'lang' => $result['language']
 			);
 			Database::pexecute($ins_stmt, $ins_data);
-			$log->logAction(ADM_ACTION, LOG_INFO, "switched adminuser and is now '" . $destination_admin . "'");
+			$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "switched adminuser and is now '" . $destination_admin . "'");
 			\Froxlor\UI\Response::redirectTo('admin_index.php', array(
 				's' => $s
 			));

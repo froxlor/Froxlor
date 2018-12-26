@@ -98,12 +98,12 @@ class DbManager
 
 		// now create the database itself
 		$this->getManager()->createDatabase($username);
-		$this->log->logAction(USR_ACTION, LOG_INFO, "created database '" . $username . "'");
+		$this->log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "created database '" . $username . "'");
 
 		// and give permission to the user on every access-host we have
 		foreach (array_map('trim', explode(',', Settings::Get('system.mysql_access_host'))) as $mysql_access_host) {
 			$this->getManager()->grantPrivilegesTo($username, $password, $mysql_access_host);
-			$this->log->logAction(USR_ACTION, LOG_NOTICE, "grant all privileges for '" . $username . "'@'" . $mysql_access_host . "'");
+			$this->log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "grant all privileges for '" . $username . "'@'" . $mysql_access_host . "'");
 		}
 
 		$this->getManager()->flushPrivileges();

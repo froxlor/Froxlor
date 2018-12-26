@@ -113,7 +113,7 @@ abstract class ApiCommand extends ApiParameter
 
 		// check whether the user is deactivated
 		if ($this->getUserDetail('deactivated') == 1) {
-			$this->logger()->logAction(LOG_ERROR, LOG_INFO, "[API] User '" . $this->getUserDetail('loginnname') . "' tried to use API but is deactivated");
+			$this->logger()->logAction(\Froxlor\FroxlorLogger::LOG_ERROR, LOG_INFO, "[API] User '" . $this->getUserDetail('loginnname') . "' tried to use API but is deactivated");
 			throw new \Exception("Account suspended", 406);
 		}
 
@@ -125,7 +125,7 @@ abstract class ApiCommand extends ApiParameter
 		$this->mail = new \Froxlor\System\Mailer(true);
 
 		if ($this->debug) {
-			$this->logger()->logAction(LOG_ERROR, LOG_DEBUG, "[API] " . get_called_class() . ": " . json_encode($params, JSON_UNESCAPED_SLASHES));
+			$this->logger()->logAction(\Froxlor\FroxlorLogger::LOG_ERROR, LOG_DEBUG, "[API] " . get_called_class() . ": " . json_encode($params, JSON_UNESCAPED_SLASHES));
 		}
 	}
 
@@ -170,7 +170,7 @@ abstract class ApiCommand extends ApiParameter
 				}
 			} else {
 				if ($this->debug) {
-					$this->logger()->logAction(LOG_ERROR, LOG_DEBUG, "[API] unable to include user-language '" . $language . "'. Not found in database.", 404);
+					$this->logger()->logAction(\Froxlor\FroxlorLogger::LOG_ERROR, LOG_DEBUG, "[API] unable to include user-language '" . $language . "'. Not found in database.", 404);
 				}
 			}
 		}

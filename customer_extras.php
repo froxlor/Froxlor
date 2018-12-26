@@ -37,7 +37,7 @@ if (isset($_POST['id'])) {
 }
 
 if ($page == 'overview') {
-	$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_extras");
+	$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_extras");
 	eval("echo \"" . \Froxlor\UI\Template::getTemplate("extras/extras") . "\";");
 } elseif ($page == 'htpasswds') {
 
@@ -47,7 +47,7 @@ if ($page == 'overview') {
 	}
 
 	if ($action == '') {
-		$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_extras::htpasswds");
+		$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_extras::htpasswds");
 		$fields = array(
 			'username' => $lng['login']['username'],
 			'path' => $lng['panel']['path']
@@ -183,7 +183,7 @@ if ($page == 'overview') {
 	}
 
 	if ($action == '') {
-		$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_extras::htaccess");
+		$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_extras::htaccess");
 		$fields = array(
 			'path' => $lng['panel']['path'],
 			'options_indexes' => $lng['extras']['view_directory'],
@@ -335,7 +335,7 @@ if ($page == 'overview') {
 
 	if (Settings::Get('system.backupenabled') == 1) {
 		if ($action == 'abort' && isset($_POST['send']) && $_POST['send'] == 'send') {
-			$log->logAction(USR_ACTION, LOG_NOTICE, "customer_extras::backup - aborted scheduled backupjob");
+			$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "customer_extras::backup - aborted scheduled backupjob");
 			try {
 				CustomerBackups::getLocal($userinfo, $_POST)->delete();
 			} catch (Exception $e) {
@@ -349,7 +349,7 @@ if ($page == 'overview') {
 			));
 		}
 		if ($action == '') {
-			$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_extras::backup");
+			$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_extras::backup");
 
 			// check whether there is a backup-job for this customer
 			try {

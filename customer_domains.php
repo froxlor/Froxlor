@@ -36,11 +36,11 @@ if (isset($_POST['id'])) {
 }
 
 if ($page == 'overview') {
-	$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_domains");
+	$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_domains");
 	eval("echo \"" . \Froxlor\UI\Template::getTemplate("domains/domains") . "\";");
 } elseif ($page == 'domains') {
 	if ($action == '') {
-		$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_domains::domains");
+		$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_domains::domains");
 		$fields = array(
 			'd.domain' => $lng['domains']['domainname']
 		);

@@ -38,7 +38,7 @@ if ($page == 'ipsandports' || $page == 'overview') {
 
 	if ($action == '') {
 
-		$log->logAction(ADM_ACTION, LOG_NOTICE, "viewed admin_ipsandports");
+		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_ipsandports");
 		$fields = array(
 			'ip' => $lng['admin']['ipsandports']['ip'],
 			'port' => $lng['admin']['ipsandports']['port']

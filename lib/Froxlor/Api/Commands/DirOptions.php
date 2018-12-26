@@ -122,7 +122,7 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		);
 		Database::pexecute($stmt, $params, true, true);
 		$id = Database::lastInsertId();
-		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] added directory-option for '" . $userpath . "'");
+		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] added directory-option for '" . $userpath . "'");
 		\Froxlor\System\Cronjob::inserttask('1');
 
 		$result = $this->apiCall('DirOptions.get', array(
@@ -185,7 +185,7 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		$params['id'] = $id;
 		$result = Database::pexecute_first($result_stmt, $params, true, true);
 		if ($result) {
-			$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_NOTICE, "[API] get directory options for '" . $result['path'] . "'");
+			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] get directory options for '" . $result['path'] . "'");
 			return $this->response(200, "successfull", $result);
 		}
 		$key = "id #" . $id;
@@ -269,7 +269,7 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				"id" => $id
 			);
 			Database::pexecute($stmt, $params, true, true);
-			$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] edited directory options for '" . str_replace($customer['documentroot'], '/', $result['path']) . "'");
+			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] edited directory options for '" . str_replace($customer['documentroot'], '/', $result['path']) . "'");
 		}
 
 		$result = $this->apiCall('DirOptions.get', array(
@@ -306,7 +306,7 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$result[] = $row;
 		}
-		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_NOTICE, "[API] list directory-options");
+		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] list directory-options");
 		return $this->response(200, "successfull", array(
 			'count' => count($result),
 			'list' => $result
@@ -357,12 +357,12 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			// remove symlink
 			if (file_exists($perlsymlink)) {
 				\Froxlor\FileDir::safe_exec('rm -f ' . escapeshellarg($perlsymlink));
-				$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_DEBUG, "[API] deleted suexecworkaround symlink '" . $perlsymlink . "'");
+				$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_DEBUG, "[API] deleted suexecworkaround symlink '" . $perlsymlink . "'");
 			}
 			// remove folder in suexec-path
 			if (file_exists($suexecpath)) {
 				\Froxlor\FileDir::safe_exec('rm -rf ' . escapeshellarg($suexecpath));
-				$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_DEBUG, "[API] deleted suexecworkaround path '" . $suexecpath . "'");
+				$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_DEBUG, "[API] deleted suexecworkaround path '" . $suexecpath . "'");
 			}
 		}
 		$stmt = Database::prepare("
@@ -374,7 +374,7 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			"customerid" => $customer_data['customerid'],
 			"id" => $id
 		));
-		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] deleted directory-option for '" . str_replace($customer_data['documentroot'], '/', $result['path']) . "'");
+		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] deleted directory-option for '" . str_replace($customer_data['documentroot'], '/', $result['path']) . "'");
 		\Froxlor\System\Cronjob::inserttask('1');
 		return $this->response(200, "successfull", $result);
 	}

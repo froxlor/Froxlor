@@ -21,7 +21,7 @@ use Froxlor\Database\Database;
 use Froxlor\Settings;
 
 if ($page == 'overview') {
-	$log->logAction(ADM_ACTION, LOG_NOTICE, "viewed admin_updates");
+	$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_updates");
 
 	/**
 	 * this is a dirty hack but syscp 1.4.2.1 does not

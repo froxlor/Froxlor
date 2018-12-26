@@ -123,7 +123,7 @@ if ($action == 'delete') {
 	exit();
 }
 
-$log->logAction(USR_ACTION, LOG_NOTICE, "viewed api::api_keys");
+$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed api::api_keys");
 
 // select all my (accessable) certificates
 $keys_stmt_query = "SELECT ak.*, c.loginname, a.loginname as adminname

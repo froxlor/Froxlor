@@ -24,7 +24,7 @@ use Froxlor\Settings;
 use Froxlor\Api\Commands\Customers as Customers;
 
 if ($action == 'logout') {
-	$log->logAction(USR_ACTION, LOG_NOTICE, 'logged out');
+	$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, 'logged out');
 
 	$params = array(
 		"customerid" => $userinfo['customerid']
@@ -46,7 +46,7 @@ if ($action == 'logout') {
 }
 
 if ($page == 'overview') {
-	$log->logAction(USR_ACTION, LOG_NOTICE, "viewed customer_index");
+	$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_index");
 
 	$domain_stmt = Database::prepare("SELECT `domain` FROM `" . TABLE_PANEL_DOMAINS . "`
 		WHERE `customerid` = :customerid
@@ -154,7 +154,7 @@ if ($page == 'overview') {
 			} catch (Exception $e) {
 				\Froxlor\UI\Response::dynamic_error($e->getMessage());
 			}
-			$log->logAction(USR_ACTION, LOG_NOTICE, 'changed password');
+			$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, 'changed password');
 
 			// Update ftp password
 			if (isset($_POST['change_main_ftp']) && $_POST['change_main_ftp'] == 'true') {
@@ -169,7 +169,7 @@ if ($page == 'overview') {
 					"username" => $userinfo['loginname']
 				);
 				Database::pexecute($stmt, $params);
-				$log->logAction(USR_ACTION, LOG_NOTICE, 'changed main ftp password');
+				$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, 'changed main ftp password');
 			}
 
 			// Update statistics password
@@ -217,7 +217,7 @@ if ($page == 'overview') {
 				"hash" => $s
 			));
 		}
-		$log->logAction(USR_ACTION, LOG_NOTICE, "changed default language to '" . $def_language . "'");
+		$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "changed default language to '" . $def_language . "'");
 		\Froxlor\UI\Response::redirectTo($filename, array(
 			's' => $s
 		));
@@ -255,7 +255,7 @@ if ($page == 'overview') {
 			"hash" => $s
 		));
 
-		$log->logAction(USR_ACTION, LOG_NOTICE, "changed default theme to '" . $theme . "'");
+		$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "changed default theme to '" . $theme . "'");
 		\Froxlor\UI\Response::redirectTo($filename, array(
 			's' => $s
 		));

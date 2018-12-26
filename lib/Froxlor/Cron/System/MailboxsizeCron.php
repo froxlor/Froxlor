@@ -23,7 +23,7 @@ class MailboxsizeCron extends \Froxlor\Cron\FroxlorCron
 
 	public static function run()
 	{
-		\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_NOTICE, 'calculating mailspace usage');
+		\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'calculating mailspace usage');
 
 		$maildirs_stmt = \Froxlor\Database\Database::query("
 			SELECT `id`, CONCAT(`homedir`, `maildir`) AS `maildirpath` FROM `" . TABLE_MAIL_USERS . "` ORDER BY `id`
@@ -63,7 +63,7 @@ class MailboxsizeCron extends \Froxlor\Cron\FroxlorCron
 					'id' => $maildir['id']
 				));
 			} else {
-				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_WARNING, 'maildir ' . $_maildir . ' does not exist');
+				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_WARNING, 'maildir ' . $_maildir . ' does not exist');
 			}
 		}
 	}

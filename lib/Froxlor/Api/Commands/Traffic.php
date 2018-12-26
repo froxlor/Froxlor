@@ -109,7 +109,7 @@ class Traffic extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 		while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$result[] = $row;
 		}
-		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_NOTICE, "[API] list traffic");
+		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] list traffic");
 		return $this->response(200, "successfull", array(
 			'count' => count($result),
 			'list' => $result

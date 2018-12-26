@@ -42,7 +42,7 @@ if ($page == 'domains' || $page == 'overview') {
 
 	if ($action == '') {
 
-		$log->logAction(ADM_ACTION, LOG_NOTICE, "viewed admin_domains");
+		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_domains");
 		$fields = array(
 			'd.domain' => $lng['domains']['domainname'],
 			'c.name' => $lng['customer']['name'],

@@ -59,14 +59,14 @@ class Apache extends HttpConfigBase
 				// so we need to create a dummy
 				$_conffiles = glob(\Froxlor\FileDir::makeCorrectFile($restart_cmd['config_dir'] . "/*.conf"));
 				if ($_conffiles === false || empty($_conffiles)) {
-					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, 'apache::reload: fpm config directory "' . $restart_cmd['config_dir'] . '" is empty. Creating dummy.');
+					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'apache::reload: fpm config directory "' . $restart_cmd['config_dir'] . '" is empty. Creating dummy.');
 					Fpm::createDummyPool($restart_cmd['config_dir']);
 				}
-				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, 'apache::reload: running ' . $restart_cmd['reload_cmd']);
+				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'apache::reload: running ' . $restart_cmd['reload_cmd']);
 				\Froxlor\FileDir::safe_exec(escapeshellcmd($restart_cmd['reload_cmd']));
 			}
 		}
-		\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, 'apache::reload: reloading apache');
+		\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'apache::reload: reloading apache');
 		\Froxlor\FileDir::safe_exec(escapeshellcmd(Settings::Get('system.apachereload_command')));
 	}
 
@@ -110,7 +110,7 @@ class Apache extends HttpConfigBase
 			$this->virtualhosts_data[$ocsp_cache_filename] = 'SSLStaplingCache ' . Settings::Get('system.apache24_ocsp_cache_path') . "\n";
 		} else {
 			if (file_exists($ocsp_cache_filename)) {
-				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_NOTICE, 'apache::_createStandardDirectoryEntry: unlinking ' . basename($ocsp_cache_filename));
+				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'apache::_createStandardDirectoryEntry: unlinking ' . basename($ocsp_cache_filename));
 				unlink(\Froxlor\FileDir::makeCorrectFile($ocsp_cache_filename));
 			}
 		}
@@ -166,7 +166,7 @@ class Apache extends HttpConfigBase
 				$ipport = $row_ipsandports['ip'] . ':' . $row_ipsandports['port'];
 			}
 
-			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, 'apache::createIpPort: creating ip/port settings for  ' . $ipport);
+			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'apache::createIpPort: creating ip/port settings for  ' . $ipport);
 			$vhosts_filename = \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.apacheconf_vhost') . '/10_froxlor_ipandport_' . trim(str_replace(':', '.', $row_ipsandports['ip']), '.') . '.' . $row_ipsandports['port'] . '.conf');
 
 			if (! isset($this->virtualhosts_data[$vhosts_filename])) {
@@ -175,16 +175,16 @@ class Apache extends HttpConfigBase
 
 			if ($row_ipsandports['listen_statement'] == '1') {
 				$this->virtualhosts_data[$vhosts_filename] .= 'Listen ' . $ipport . "\n";
-				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_DEBUG, $ipport . ' :: inserted listen-statement');
+				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_DEBUG, $ipport . ' :: inserted listen-statement');
 			}
 
 			if ($row_ipsandports['namevirtualhost_statement'] == '1') {
 				// >=apache-2.4 enabled?
 				if (Settings::Get('system.apache24') == '1') {
-					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_NOTICE, $ipport . ' :: namevirtualhost-statement no longer needed for apache-2.4');
+					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, $ipport . ' :: namevirtualhost-statement no longer needed for apache-2.4');
 				} else {
 					$this->virtualhosts_data[$vhosts_filename] .= 'NameVirtualHost ' . $ipport . "\n";
-					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_DEBUG, $ipport . ' :: inserted namevirtualhost-statement');
+					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_DEBUG, $ipport . ' :: inserted namevirtualhost-statement');
 				}
 			}
 
@@ -423,7 +423,7 @@ class Apache extends HttpConfigBase
 						if (! file_exists($row_ipsandports['ssl_cert_file'])) {
 							// explicitly disable ssl for this vhost
 							$row_ipsandports['ssl_cert_file'] = "";
-							\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_DEBUG, 'System certificate file "' . Settings::Get('system.ssl_cert_file') . '" does not seem to exist. Disabling SSL-vhost for "' . Settings::Get('system.hostname') . '"');
+							\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'System certificate file "' . Settings::Get('system.ssl_cert_file') . '" does not seem to exist. Disabling SSL-vhost for "' . Settings::Get('system.hostname') . '"');
 						}
 					}
 
@@ -466,7 +466,7 @@ class Apache extends HttpConfigBase
 
 						// check for existence, #1485
 						if (! file_exists($domain['ssl_cert_file'])) {
-							\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_ERR, $ipport . ' :: certificate file "' . $domain['ssl_cert_file'] . '" does not exist! Cannot create ssl-directives');
+							\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_ERR, $ipport . ' :: certificate file "' . $domain['ssl_cert_file'] . '" does not exist! Cannot create ssl-directives');
 						} else {
 
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLEngine On' . "\n";
@@ -493,7 +493,7 @@ class Apache extends HttpConfigBase
 							if ($domain['ssl_key_file'] != '') {
 								// check for existence, #1485
 								if (! file_exists($domain['ssl_key_file'])) {
-									\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_ERR, $ipport . ' :: certificate key file "' . $domain['ssl_key_file'] . '" does not exist! Cannot create ssl-directives');
+									\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_ERR, $ipport . ' :: certificate key file "' . $domain['ssl_key_file'] . '" does not exist! Cannot create ssl-directives');
 								} else {
 									$this->virtualhosts_data[$vhosts_filename] .= ' SSLCertificateKeyFile ' . \Froxlor\FileDir::makeCorrectFile($domain['ssl_key_file']) . "\n";
 								}
@@ -502,7 +502,7 @@ class Apache extends HttpConfigBase
 							if ($domain['ssl_ca_file'] != '') {
 								// check for existence, #1485
 								if (! file_exists($domain['ssl_ca_file'])) {
-									\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_ERR, $ipport . ' :: certificate CA file "' . $domain['ssl_ca_file'] . '" does not exist! Cannot create ssl-directives');
+									\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_ERR, $ipport . ' :: certificate CA file "' . $domain['ssl_ca_file'] . '" does not exist! Cannot create ssl-directives');
 								} else {
 									$this->virtualhosts_data[$vhosts_filename] .= ' SSLCACertificateFile ' . \Froxlor\FileDir::makeCorrectFile($domain['ssl_ca_file']) . "\n";
 								}
@@ -512,7 +512,7 @@ class Apache extends HttpConfigBase
 							if ($domain['ssl_cert_chainfile'] != '') {
 								// check for existence, #1485
 								if (! file_exists($domain['ssl_cert_chainfile'])) {
-									\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_ERR, $ipport . ' :: certificate chain file "' . $domain['ssl_cert_chainfile'] . '" does not exist! Cannot create ssl-directives');
+									\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_ERR, $ipport . ' :: certificate chain file "' . $domain['ssl_cert_chainfile'] . '" does not exist! Cannot create ssl-directives');
 								} else {
 									$this->virtualhosts_data[$vhosts_filename] .= ' SSLCertificateChainFile ' . \Froxlor\FileDir::makeCorrectFile($domain['ssl_cert_chainfile']) . "\n";
 								}
@@ -521,7 +521,7 @@ class Apache extends HttpConfigBase
 					} else {
 						// if there is no cert-file specified but we are generating a ssl-vhost,
 						// we should return an empty string because this vhost would suck dick, ref #1583
-						\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_ERR, $domain['domain'] . ' :: empty certificate file! Cannot create ssl-directives');
+						\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_ERR, $domain['domain'] . ' :: empty certificate file! Cannot create ssl-directives');
 						$this->virtualhosts_data[$vhosts_filename] = $without_vhost;
 						$this->virtualhosts_data[$vhosts_filename] .= '# no ssl-certificate was specified for this domain, therefore no explicit vhost-container is being generated';
 						$close_vhost = false;
@@ -531,7 +531,7 @@ class Apache extends HttpConfigBase
 				if ($close_vhost) {
 					$this->virtualhosts_data[$vhosts_filename] .= '</VirtualHost>' . "\n";
 				}
-				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_DEBUG, $ipport . ' :: inserted vhostcontainer');
+				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_DEBUG, $ipport . ' :: inserted vhostcontainer');
 			}
 			unset($vhosts_filename);
 		}
@@ -946,7 +946,7 @@ class Apache extends HttpConfigBase
 				if (! file_exists($domain['ssl_cert_file'])) {
 					// explicitly disable ssl for this vhost
 					$domain['ssl_cert_file'] = "";
-					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_DEBUG, 'System certificate file "' . Settings::Get('system.ssl_cert_file') . '" does not seem to exist. Disabling SSL-vhost for "' . $domain['domain'] . '"');
+					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'System certificate file "' . Settings::Get('system.ssl_cert_file') . '" does not seem to exist. Disabling SSL-vhost for "' . $domain['domain'] . '"');
 				}
 			}
 
@@ -1015,7 +1015,7 @@ class Apache extends HttpConfigBase
 			} else {
 				// if there is no cert-file specified but we are generating a ssl-vhost,
 				// we should return an empty string because this vhost would suck dick, ref #1583
-				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_ERR, $domain['domain'] . ' :: empty certificate file! Cannot create ssl-directives');
+				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_ERR, $domain['domain'] . ' :: empty certificate file! Cannot create ssl-directives');
 				return '# no ssl-certificate was specified for this domain, therefore no explicit vhost is being generated';
 			}
 		}
@@ -1083,7 +1083,7 @@ class Apache extends HttpConfigBase
 		$domains = WebserverBase::getVhostsToCreate();
 		foreach ($domains as $domain) {
 
-			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, 'apache::createVirtualHosts: creating vhost container for domain ' . $domain['id'] . ', customer ' . $domain['loginname']);
+			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'apache::createVirtualHosts: creating vhost container for domain ' . $domain['id'] . ', customer ' . $domain['loginname']);
 			$vhosts_filename = $this->getVhostFilename($domain);
 
 			// Apply header
@@ -1169,7 +1169,7 @@ class Apache extends HttpConfigBase
 					} else {
 						$this->diroptions_data[$diroptions_filename] .= "\n";
 					}
-					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, 'Setting Options +Indexes for ' . $row_diroptions['path']);
+					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'Setting Options +Indexes for ' . $row_diroptions['path']);
 				}
 
 				if (isset($row_diroptions['options_indexes']) && $row_diroptions['options_indexes'] == '0') {
@@ -1181,7 +1181,7 @@ class Apache extends HttpConfigBase
 					} else {
 						$this->diroptions_data[$diroptions_filename] .= "\n";
 					}
-					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, 'Setting Options -Indexes for ' . $row_diroptions['path']);
+					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'Setting Options -Indexes for ' . $row_diroptions['path']);
 				}
 
 				$statusCodes = array(
@@ -1217,7 +1217,7 @@ class Apache extends HttpConfigBase
 						$this->diroptions_data[$diroptions_filename] .= '  Order allow,deny' . "\n";
 						$this->diroptions_data[$diroptions_filename] .= '  Allow from all' . "\n";
 					}
-					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, 'Enabling perl execution for ' . $row_diroptions['path']);
+					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'Enabling perl execution for ' . $row_diroptions['path']);
 
 					// check for suexec-workaround, #319
 					if ((int) Settings::Get('perl.suexecworkaround') == 1) {
@@ -1285,7 +1285,7 @@ class Apache extends HttpConfigBase
 	public function writeConfigs()
 	{
 		// Write diroptions
-		\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, "apache::writeConfigs: rebuilding " . Settings::Get('system.apacheconf_diroptions'));
+		\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, "apache::writeConfigs: rebuilding " . Settings::Get('system.apacheconf_diroptions'));
 
 		if (count($this->diroptions_data) > 0) {
 			$optsDir = new \Froxlor\Http\Directory(Settings::Get('system.apacheconf_diroptions'));
@@ -1306,7 +1306,7 @@ class Apache extends HttpConfigBase
 				fclose($diroptions_file_handler);
 			} else {
 				if (! file_exists(Settings::Get('system.apacheconf_diroptions'))) {
-					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_NOTICE, 'apache::writeConfigs: mkdir ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir(Settings::Get('system.apacheconf_diroptions'))));
+					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'apache::writeConfigs: mkdir ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir(Settings::Get('system.apacheconf_diroptions'))));
 					\Froxlor\FileDir::safe_exec('mkdir ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir(Settings::Get('system.apacheconf_diroptions'))));
 				}
 
@@ -1324,7 +1324,7 @@ class Apache extends HttpConfigBase
 		}
 
 		// Write htpasswds
-		\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, "apache::writeConfigs: rebuilding " . Settings::Get('system.apacheconf_htpasswddir'));
+		\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, "apache::writeConfigs: rebuilding " . Settings::Get('system.apacheconf_htpasswddir'));
 
 		if (count($this->htpasswds_data) > 0) {
 			if (! file_exists(Settings::Get('system.apacheconf_htpasswddir'))) {
@@ -1343,12 +1343,12 @@ class Apache extends HttpConfigBase
 					fclose($htpasswd_file_handler);
 				}
 			} else {
-				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_WARNING, 'WARNING!!! ' . Settings::Get('system.apacheconf_htpasswddir') . ' is not a directory. htpasswd directory protection is disabled!!!');
+				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_WARNING, 'WARNING!!! ' . Settings::Get('system.apacheconf_htpasswddir') . ' is not a directory. htpasswd directory protection is disabled!!!');
 			}
 		}
 
 		// Write virtualhosts
-		\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, "apache::writeConfigs: rebuilding " . Settings::Get('system.apacheconf_vhost'));
+		\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, "apache::writeConfigs: rebuilding " . Settings::Get('system.apacheconf_vhost'));
 
 		if (count($this->virtualhosts_data) > 0) {
 			$vhostDir = new \Froxlor\Http\Directory(Settings::Get('system.apacheconf_vhost'));
@@ -1381,7 +1381,7 @@ class Apache extends HttpConfigBase
 				fclose($vhosts_file_handler);
 			} else {
 				if (! file_exists(Settings::Get('system.apacheconf_vhost'))) {
-					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_NOTICE, 'apache::writeConfigs: mkdir ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir(Settings::Get('system.apacheconf_vhost'))));
+					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'apache::writeConfigs: mkdir ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir(Settings::Get('system.apacheconf_vhost'))));
 					\Froxlor\FileDir::safe_exec('mkdir ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir(Settings::Get('system.apacheconf_vhost'))));
 				}
 

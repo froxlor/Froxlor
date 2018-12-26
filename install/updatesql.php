@@ -34,7 +34,7 @@ $filelog = FroxlorLogger::getInstanceOf(array(
 // if first writing does not work we'll stop, tell the user to fix it
 // and then let him try again.
 try {
-	$filelog->logAction(ADM_ACTION, LOG_WARNING, '-------------- START LOG --------------');
+	$filelog->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_WARNING, '-------------- START LOG --------------');
 } catch (Exception $e) {
 	\Froxlor\UI\Response::standard_error('exception', $e->getMessage());
 }
@@ -59,6 +59,6 @@ if (\Froxlor\Froxlor::isFroxlor()) {
 		lastStepStatus(0);
 	}
 
-	$filelog->logAction(ADM_ACTION, LOG_WARNING, '--------------- END LOG ---------------');
+	$filelog->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_WARNING, '--------------- END LOG ---------------');
 	unset($filelog);
 }

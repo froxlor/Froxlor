@@ -182,7 +182,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 				// update admin usage
 				Admins::increaseUsage($customer['adminid'], 'ftps_used');
 
-				$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] added ftp-account '" . $username . " (" . $path . ")'");
+				$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] added ftp-account '" . $username . " (" . $path . ")'");
 				\Froxlor\System\Cronjob::inserttask(5);
 
 				if ($sendinfomail == 1) {
@@ -215,13 +215,13 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 					}
 
 					if ($_mailerror) {
-						$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_ERR, "[API] Error sending mail: " . $mailerr_msg);
+						$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_ERR, "[API] Error sending mail: " . $mailerr_msg);
 						\Froxlor\UI\Response::standard_error('errorsendingmail', $customer['email'], true);
 					}
 
 					$this->mailer()->clearAddresses();
 				}
-				$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_WARNING, "[API] added ftp-user '" . $username . "'");
+				$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_WARNING, "[API] added ftp-user '" . $username . "'");
 
 				$result = $this->apiCall('Ftps.get', array(
 					'username' => $username
@@ -286,7 +286,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 		$params['idun'] = ($id <= 0 ? $username : $id);
 		$result = Database::pexecute_first($result_stmt, $params, true, true);
 		if ($result) {
-			$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_NOTICE, "[API] get ftp-user '" . $result['username'] . "'");
+			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] get ftp-user '" . $result['username'] . "'");
 			return $this->response(200, "successfull", $result);
 		}
 		$key = ($id > 0 ? "id #" . $id : "username '" . $username . "'");
@@ -370,7 +370,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 				"id" => $id,
 				"password" => $cryptPassword
 			), true, true);
-			$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] updated ftp-account password for '" . $result['username'] . "'");
+			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] updated ftp-account password for '" . $result['username'] . "'");
 		}
 
 		// path update?
@@ -388,7 +388,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 					"customerid" => $customer['customerid'],
 					"id" => $id
 				), true, true);
-				$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] updated ftp-account homdir for '" . $result['username'] . "'");
+				$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] updated ftp-account homdir for '" . $result['username'] . "'");
 			}
 		}
 		// it's the task for "new ftp" but that will
@@ -411,7 +411,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 		$result = $this->apiCall('Ftps.get', array(
 			'username' => $result['username']
 		));
-		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_NOTICE, "[API] updated ftp-user '" . $result['username'] . "'");
+		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] updated ftp-user '" . $result['username'] . "'");
 		return $this->response(200, "successfull", $result);
 	}
 
@@ -439,7 +439,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 		while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$result[] = $row;
 		}
-		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_NOTICE, "[API] list ftp-users");
+		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] list ftp-users");
 		return $this->response(200, "successfull", array(
 			'count' => count($result),
 			'list' => $result
@@ -548,7 +548,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 		// update admin usage
 		Admins::decreaseUsage(($this->isAdmin() ? $customer_data['adminid'] : $this->getUserDetail('adminid')), 'ftps_used');
 
-		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_WARNING, "[API] deleted ftp-user '" . $result['username'] . "'");
+		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_WARNING, "[API] deleted ftp-user '" . $result['username'] . "'");
 		return $this->response(200, "successfull", $result);
 	}
 }

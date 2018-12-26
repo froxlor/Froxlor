@@ -66,7 +66,7 @@ if ($action == 'delete') {
 	\Froxlor\UI\Response::standard_success(sprintf($lng['2fa']['2fa_added'], $filename, $s));
 }
 
-$log->logAction(USR_ACTION, LOG_NOTICE, "viewed 2fa::overview");
+$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed 2fa::overview");
 
 if ($userinfo['type_2fa'] == '0') {
 

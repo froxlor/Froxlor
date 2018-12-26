@@ -105,7 +105,7 @@ class DirProtections extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Res
 		);
 		Database::pexecute($stmt, $params, true, true);
 		$id = Database::lastInsertId();
-		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] added directory-protection for '" . $username . " (" . $path . ")'");
+		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] added directory-protection for '" . $username . " (" . $path . ")'");
 		\Froxlor\System\Cronjob::inserttask('1');
 
 		$result = $this->apiCall('DirProtections.get', array(
@@ -172,7 +172,7 @@ class DirProtections extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Res
 		$params['idun'] = ($id <= 0 ? $username : $id);
 		$result = Database::pexecute_first($result_stmt, $params, true, true);
 		if ($result) {
-			$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_NOTICE, "[API] get directory protection for '" . $result['path'] . "'");
+			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] get directory protection for '" . $result['path'] . "'");
 			return $this->response(200, "successfull", $result);
 		}
 		$key = ($id > 0 ? "id #" . $id : "username '" . $username . "'");
@@ -254,7 +254,7 @@ class DirProtections extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Res
 			\Froxlor\System\Cronjob::inserttask('1');
 		}
 
-		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] updated directory-protection '" . $result['username'] . " (" . $result['path'] . ")'");
+		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] updated directory-protection '" . $result['username'] . " (" . $result['path'] . ")'");
 		$result = $this->apiCall('DirProtections.get', array(
 			'id' => $result['id']
 		));
@@ -289,7 +289,7 @@ class DirProtections extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Res
 		while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$result[] = $row;
 		}
-		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_NOTICE, "[API] list directory-protections");
+		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] list directory-protections");
 		return $this->response(200, "successfull", array(
 			'count' => count($result),
 			'list' => $result
@@ -346,7 +346,7 @@ class DirProtections extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Res
 			"id" => $id
 		));
 
-		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] deleted htpasswd for '" . $result['username'] . " (" . $result['path'] . ")'");
+		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] deleted htpasswd for '" . $result['username'] . " (" . $result['path'] . ")'");
 		\Froxlor\System\Cronjob::inserttask('1');
 		return $this->response(200, "successfull", $result);
 	}

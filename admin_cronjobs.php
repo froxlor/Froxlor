@@ -28,7 +28,7 @@ if (isset($_POST['id'])) {
 
 if ($page == 'cronjobs' || $page == 'overview') {
 	if ($action == '') {
-		$log->logAction(ADM_ACTION, LOG_NOTICE, 'viewed admin_cronjobs');
+		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, 'viewed admin_cronjobs');
 
 		$fields = array(
 			'c.lastrun' => $lng['cron']['lastrun'],

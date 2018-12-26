@@ -25,21 +25,21 @@ class Bind extends DnsBase
 	public function writeConfigs()
 	{
 		// tell the world what we are doing
-		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Task4 started - Rebuilding froxlor_bind.conf');
+		$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'Task4 started - Rebuilding froxlor_bind.conf');
 
 		// clean up
 		$this->cleanZonefiles();
 
 		// check for subfolder in bind-config-directory
 		if (! file_exists(\Froxlor\FileDir::makeCorrectDir(Settings::Get('system.bindconf_directory') . '/domains/'))) {
-			$this->logger->logAction(CRON_ACTION, LOG_NOTICE, 'mkdir ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir(Settings::Get('system.bindconf_directory') . '/domains/')));
+			$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'mkdir ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir(Settings::Get('system.bindconf_directory') . '/domains/')));
 			\Froxlor\FileDir::safe_exec('mkdir -p ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir(Settings::Get('system.bindconf_directory') . '/domains/')));
 		}
 
 		$domains = $this->getDomainList();
 
 		if (empty($domains)) {
-			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'No domains found for nameserver-config, skipping...');
+			$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'No domains found for nameserver-config, skipping...');
 			return;
 		}
 
@@ -56,9 +56,9 @@ class Bind extends DnsBase
 		$bindconf_file_handler = fopen(\Froxlor\FileDir::makeCorrectFile(Settings::Get('system.bindconf_directory') . '/froxlor_bind.conf'), 'w');
 		fwrite($bindconf_file_handler, $this->bindconf_file);
 		fclose($bindconf_file_handler);
-		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'froxlor_bind.conf written');
+		$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'froxlor_bind.conf written');
 		$this->reloadDaemon();
-		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Task4 finished');
+		$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'Task4 finished');
 	}
 
 	private function walkDomainList($domain, $domains)
@@ -84,20 +84,20 @@ class Bind extends DnsBase
 				$zonefile_handler = fopen($zonefile_name, 'w');
 				fwrite($zonefile_handler, $zoneContent . $subzones);
 				fclose($zonefile_handler);
-				$this->logger->logAction(CRON_ACTION, LOG_INFO, '`' . $zonefile_name . '` written');
+				$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, '`' . $zonefile_name . '` written');
 				$this->bindconf_file .= $this->generateDomainConfig($domain);
 			} else {
 				return (string) \Froxlor\Dns\Dns::createDomainZone(($domain['id'] == 'none') ? $domain : $domain['id'], $isFroxlorHostname, true);
 			}
 		} else {
-			$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Added zonefile ' . $domain['zonefile'] . ' for domain ' . $domain['domain'] . ' - Note that you will also have to handle ALL records for ALL subdomains.');
+			$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'Added zonefile ' . $domain['zonefile'] . ' for domain ' . $domain['domain'] . ' - Note that you will also have to handle ALL records for ALL subdomains.');
 			$this->bindconf_file .= $this->generateDomainConfig($domain);
 		}
 	}
 
 	private function generateDomainConfig($domain = array())
 	{
-		$this->logger->logAction(CRON_ACTION, LOG_DEBUG, 'Generating dns config for ' . $domain['domain']);
+		$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'Generating dns config for ' . $domain['domain']);
 
 		$bindconf_file = '# Domain ID: ' . $domain['id'] . ' - CustomerID: ' . $domain['customerid'] . ' - CustomerLogin: ' . $domain['loginname'] . "\n";
 		$bindconf_file .= 'zone "' . $domain['domain'] . '" in {' . "\n";
@@ -136,7 +136,7 @@ class Bind extends DnsBase
 	{
 		$config_dir = \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.bindconf_directory') . '/domains/');
 
-		$this->logger->logAction(CRON_ACTION, LOG_INFO, 'Cleaning dns zone files from ' . $config_dir);
+		$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'Cleaning dns zone files from ' . $config_dir);
 
 		// check directory
 		if (@is_dir($config_dir)) {

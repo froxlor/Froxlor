@@ -43,7 +43,7 @@ if ($action == 'delete') {
 	}
 }
 
-$log->logAction(USR_ACTION, LOG_NOTICE, "viewed domains::ssl_certificates");
+$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed domains::ssl_certificates");
 $fields = array(
 	'd.domain' => $lng['domains']['domainname']
 );

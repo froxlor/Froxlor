@@ -32,7 +32,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	public function listing()
 	{
 		if ($this->isAdmin()) {
-			$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] list domains");
+			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] list domains");
 			$result_stmt = Database::prepare("
 				SELECT
 				`d`.*, `c`.`loginname`, `c`.`deactivated`, `c`.`name`, `c`.`firstname`, `c`.`company`, `c`.`standardsubdomain`,
@@ -100,7 +100,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 			}
 			$result = Database::pexecute_first($result_stmt, $params, true, true);
 			if ($result) {
-				$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] get domain '" . $result['domain'] . "'");
+				$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] get domain '" . $result['domain'] . "'");
 				return $this->response(200, "successfull", $result);
 			}
 			$key = ($id > 0 ? "id #" . $id : "domainname '" . $domainname . "'");
@@ -644,7 +644,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 					// Using nameserver, insert a task which rebuilds the server config
 					\Froxlor\System\Cronjob::inserttask('4');
 
-					$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] added domain '" . $domain . "'");
+					$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_WARNING, "[API] added domain '" . $domain . "'");
 
 					$result = $this->apiCall('Domains.get', array(
 						'domainname' => $domain
@@ -1169,7 +1169,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				Database::pexecute($del_stmt, array(
 					'id' => $id
 				), true, true);
-				$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] deleted domain #" . $id . " from mail-tables as is-email-domain was set to 0");
+				$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] deleted domain #" . $id . " from mail-tables as is-email-domain was set to 0");
 			}
 
 			// check whether LE has been disabled, so we remove the certificate
@@ -1262,7 +1262,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				Database::pexecute($upd_stmt, array(
 					'id' => $id
 				), true, true);
-				$this->logger()->logAction(ADM_ACTION, LOG_INFO, "[API] removed specialsettings on all subdomains of domain #" . $id);
+				$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] removed specialsettings on all subdomains of domain #" . $id);
 			}
 
 			$wwwserveralias = ($serveraliasoption == '1') ? '1' : '0';
@@ -1462,7 +1462,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				}
 			}
 
-			$this->logger()->logAction(ADM_ACTION, LOG_WARNING, "[API] updated domain '" . $result['domain'] . "'");
+			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_WARNING, "[API] updated domain '" . $result['domain'] . "'");
 			return $this->response(200, "successfull", $update_data);
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
@@ -1526,7 +1526,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				$del_stmt = Database::prepare("
 						DELETE FROM `" . TABLE_MAIL_VIRTUAL . "` WHERE " . $idString);
 				Database::pexecute($del_stmt, $paramString, true, true);
-				$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] deleted domain/s from mail-tables");
+				$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] deleted domain/s from mail-tables");
 			}
 
 			// if mainbutsubto-domains are not to be deleted, re-assign the (ismainbutsubto value of the main
@@ -1616,7 +1616,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 			// remove domains DNS from powerDNS if used, #581
 			\Froxlor\System\Cronjob::inserttask('11', $result['domain']);
 
-			$this->logger()->logAction(ADM_ACTION, LOG_INFO, "[API] deleted domain/subdomains (#" . $result['id'] . ")");
+			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] deleted domain/subdomains (#" . $result['id'] . ")");
 			\Froxlor\User::updateCounters();
 			\Froxlor\System\Cronjob::inserttask('1');
 			// Using nameserver, insert a task which rebuilds the server config

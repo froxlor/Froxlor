@@ -28,7 +28,7 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 		/**
 		 * LOOK INTO TASKS TABLE TO SEE IF THERE ARE ANY UNDONE JOBS
 		 */
-		self::$cronlog->logAction(CRON_ACTION, LOG_INFO, "TasksCron: Searching for tasks to do");
+		self::$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, "TasksCron: Searching for tasks to do");
 		// no type 99 (regenerate cron.d-file) and no type 20 (customer backup)
 		$result_tasks_stmt = Database::query("
 			SELECT `id`, `type`, `data` FROM `" . TABLE_PANEL_TASKS . "` WHERE `type` <> '99' AND `type` <> '20' ORDER BY `id` ASC
@@ -90,7 +90,7 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 				/**
 				 * TYPE=11 domain has been deleted, remove from pdns database if used
 				 */
-				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_NOTICE, "Removing PowerDNS entries for domain " . $row['data']['domain']);
+				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, "Removing PowerDNS entries for domain " . $row['data']['domain']);
 				\Froxlor\Dns\PowerDNS::cleanDomainZone($row['data']['domain']);
 			}
 		}
@@ -173,7 +173,7 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 
 	private static function createNewHome($row = null)
 	{
-		\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, 'TasksCron: Task2 started - create new home');
+		\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'TasksCron: Task2 started - create new home');
 
 		if (is_array($row['data'])) {
 			// define paths
@@ -182,7 +182,7 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 
 			// stats directory
 			if (Settings::Get('system.awstats_enabled') == '1') {
-				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_NOTICE, 'Running: mkdir -p ' . escapeshellarg($userhomedir . 'awstats'));
+				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Running: mkdir -p ' . escapeshellarg($userhomedir . 'awstats'));
 				\Froxlor\FileDir::safe_exec('mkdir -p ' . escapeshellarg($userhomedir . 'awstats'));
 				// in case we changed from the other stats -> remove old
 				// (yes i know, the stats are lost - that's why you should not change all the time!)
@@ -190,7 +190,7 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 					\Froxlor\FileDir::safe_exec('rm -rf ' . escapeshellarg($userhomedir . 'webalizer'));
 				}
 			} else {
-				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_NOTICE, 'Running: mkdir -p ' . escapeshellarg($userhomedir . 'webalizer'));
+				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Running: mkdir -p ' . escapeshellarg($userhomedir . 'webalizer'));
 				\Froxlor\FileDir::safe_exec('mkdir -p ' . escapeshellarg($userhomedir . 'webalizer'));
 				// in case we changed from the other stats -> remove old
 				// (yes i know, the stats are lost - that's why you should not change all the time!)
@@ -200,7 +200,7 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 			}
 
 			// maildir
-			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_NOTICE, 'Running: mkdir -p ' . escapeshellarg($usermaildir));
+			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Running: mkdir -p ' . escapeshellarg($usermaildir));
 			\Froxlor\FileDir::safe_exec('mkdir -p ' . escapeshellarg($usermaildir));
 
 			// check if admin of customer has added template for new customer directories
@@ -212,7 +212,7 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 			$userhomedir = (substr($userhomedir, 0, - 1) == '/') ? substr($userhomedir, 0, - 1) : $userhomedir;
 			$usermaildir = (substr($usermaildir, 0, - 1) == '/') ? substr($usermaildir, 0, - 1) : $usermaildir;
 
-			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_NOTICE, 'Running: chown -R ' . (int) $row['data']['uid'] . ':' . (int) $row['data']['gid'] . ' ' . escapeshellarg($userhomedir));
+			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Running: chown -R ' . (int) $row['data']['uid'] . ':' . (int) $row['data']['gid'] . ' ' . escapeshellarg($userhomedir));
 			\Froxlor\FileDir::safe_exec('chown -R ' . (int) $row['data']['uid'] . ':' . (int) $row['data']['gid'] . ' ' . escapeshellarg($userhomedir));
 			// don't allow others to access the directory (webserver will be the group via libnss-mysql)
 			if (Settings::Get('system.mod_fcgid') == 1 || Settings::Get('phpfpm.enabled') == 1) {
@@ -222,7 +222,7 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 				// mod_php -> no libnss-mysql -> no webserver-user in group
 				\Froxlor\FileDir::safe_exec('chmod 0755 ' . escapeshellarg($userhomedir));
 			}
-			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_NOTICE, 'Running: chown -R ' . (int) Settings::Get('system.vmail_uid') . ':' . (int) Settings::Get('system.vmail_gid') . ' ' . escapeshellarg($usermaildir));
+			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Running: chown -R ' . (int) Settings::Get('system.vmail_uid') . ':' . (int) Settings::Get('system.vmail_gid') . ' ' . escapeshellarg($usermaildir));
 			\Froxlor\FileDir::safe_exec('chown -R ' . (int) Settings::Get('system.vmail_uid') . ':' . (int) Settings::Get('system.vmail_gid') . ' ' . escapeshellarg($usermaildir));
 
 			if (Settings::Get('system.nssextrausers') == 1) {
@@ -258,7 +258,7 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 
 	private static function createNewFtpHome($row = null)
 	{
-		\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, 'Creating new FTP-home');
+		\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'Creating new FTP-home');
 		$result_directories_stmt = Database::query("
 			SELECT `f`.`homedir`, `f`.`uid`, `f`.`gid`, `c`.`documentroot` AS `customerroot`
 			FROM `" . TABLE_FTP_USERS . "` `f` LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING (`customerid`)
@@ -271,7 +271,7 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 
 	private static function deleteCustomerData($row = null)
 	{
-		\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, 'TasksCron: Task6 started - deleting customer data');
+		\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'TasksCron: Task6 started - deleting customer data');
 
 		if (is_array($row['data'])) {
 			if (isset($row['data']['loginname'])) {
@@ -279,7 +279,7 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 				$homedir = \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.documentroot_prefix') . '/' . $row['data']['loginname']);
 
 				if (file_exists($homedir) && $homedir != '/' && $homedir != Settings::Get('system.documentroot_prefix') && substr($homedir, 0, strlen(Settings::Get('system.documentroot_prefix'))) == Settings::Get('system.documentroot_prefix')) {
-					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_NOTICE, 'Running: rm -rf ' . escapeshellarg($homedir));
+					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Running: rm -rf ' . escapeshellarg($homedir));
 					\Froxlor\FileDir::safe_exec('rm -rf ' . escapeshellarg($homedir));
 				}
 
@@ -287,7 +287,7 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 				$maildir = \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.vmail_homedir') . '/' . $row['data']['loginname']);
 
 				if (file_exists($maildir) && $maildir != '/' && $maildir != Settings::Get('system.vmail_homedir') && substr($maildir, 0, strlen(Settings::Get('system.vmail_homedir'))) == Settings::Get('system.vmail_homedir') && is_dir($maildir) && fileowner($maildir) == Settings::Get('system.vmail_uid') && filegroup($maildir) == Settings::Get('system.vmail_gid')) {
-					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_NOTICE, 'Running: rm -rf ' . escapeshellarg($maildir));
+					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Running: rm -rf ' . escapeshellarg($maildir));
 					// mail-address allows many special characters, see http://en.wikipedia.org/wiki/Email_address#Local_part
 					$return = false;
 					\Froxlor\FileDir::safe_exec('rm -rf ' . escapeshellarg($maildir), $return, array(
@@ -303,7 +303,7 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 				$tmpdir = \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.mod_fcgid_tmpdir') . '/' . $row['data']['loginname'] . '/');
 
 				if (file_exists($tmpdir) && is_dir($tmpdir) && $tmpdir != "/" && $tmpdir != Settings::Get('system.mod_fcgid_tmpdir') && substr($tmpdir, 0, strlen(Settings::Get('system.mod_fcgid_tmpdir'))) == Settings::Get('system.mod_fcgid_tmpdir')) {
-					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_NOTICE, 'Running: rm -rf ' . escapeshellarg($tmpdir));
+					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Running: rm -rf ' . escapeshellarg($tmpdir));
 					\Froxlor\FileDir::safe_exec('rm -rf ' . escapeshellarg($tmpdir));
 				}
 
@@ -321,7 +321,7 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 
 	private static function deleteEmailData($row = null)
 	{
-		\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, 'TasksCron: Task7 started - deleting customer e-mail data');
+		\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'TasksCron: Task7 started - deleting customer e-mail data');
 
 		if (is_array($row['data'])) {
 
@@ -329,7 +329,7 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 				// remove specific maildir
 				$email_full = $row['data']['email'];
 				if (empty($email_full)) {
-					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_ERROR, 'FATAL: Task7 asks to delete a email account but email field is empty!');
+					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_ERR, 'FATAL: Task7 asks to delete a email account but email field is empty!');
 				}
 				$email_user = substr($email_full, 0, strrpos($email_full, "@"));
 				$email_domain = substr($email_full, strrpos($email_full, "@") + 1);
@@ -343,7 +343,7 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 				$maildir = \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.vmail_homedir') . '/' . $row['data']['loginname'] . '/' . $email_domain . '/' . $email_user);
 
 				if ($maildir != '/' && ! empty($maildir) && ! empty($email_full) && $maildir != Settings::Get('system.vmail_homedir') && substr($maildir, 0, strlen(Settings::Get('system.vmail_homedir'))) == Settings::Get('system.vmail_homedir') && is_dir($maildir) && is_dir(\Froxlor\FileDir::makeCorrectDir($maildir . '/' . $maildirpath)) && fileowner($maildir) == Settings::Get('system.vmail_uid') && filegroup($maildir) == Settings::Get('system.vmail_gid')) {
-					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_NOTICE, 'Running: rm -rf ' . escapeshellarg($maildir));
+					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Running: rm -rf ' . escapeshellarg($maildir));
 					// mail-address allows many special characters, see http://en.wikipedia.org/wiki/Email_address#Local_part
 					$return = false;
 					\Froxlor\FileDir::safe_exec('rm -rf ' . escapeshellarg($maildir), $return, array(
@@ -359,7 +359,7 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 					$maildir_old = \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.vmail_homedir') . '/' . $row['data']['loginname'] . '/' . $row['data']['email']);
 
 					if ($maildir_old != '/' && ! empty($maildir_old) && $maildir_old != Settings::Get('system.vmail_homedir') && substr($maildir_old, 0, strlen(Settings::Get('system.vmail_homedir'))) == Settings::Get('system.vmail_homedir') && is_dir($maildir_old) && fileowner($maildir_old) == Settings::Get('system.vmail_uid') && filegroup($maildir_old) == Settings::Get('system.vmail_gid')) {
-						\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_NOTICE, 'Running: rm -rf ' . escapeshellarg($maildir_old));
+						\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Running: rm -rf ' . escapeshellarg($maildir_old));
 						// mail-address allows many special characters, see http://en.wikipedia.org/wiki/Email_address#Local_part
 						$return = false;
 						\Froxlor\FileDir::safe_exec('rm -rf ' . escapeshellarg($maildir_old), $return, array(
@@ -378,7 +378,7 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 
 	private static function deleteFtpData($row = null)
 	{
-		\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, 'TasksCron: Task8 started - deleting customer ftp homedir');
+		\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'TasksCron: Task8 started - deleting customer ftp homedir');
 
 		if (is_array($row['data'])) {
 
@@ -388,7 +388,7 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 				$customerdocroot = \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.documentroot_prefix') . '/' . $row['data']['loginname'] . '/');
 
 				if (file_exists($ftphomedir) && $ftphomedir != '/' && $ftphomedir != Settings::Get('system.documentroot_prefix') && $ftphomedir != $customerdocroot) {
-					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_NOTICE, 'Running: rm -rf ' . escapeshellarg($ftphomedir));
+					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Running: rm -rf ' . escapeshellarg($ftphomedir));
 					\Froxlor\FileDir::safe_exec('rm -rf ' . escapeshellarg($ftphomedir));
 				}
 			}
@@ -397,7 +397,7 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 
 	private static function setFilesystemQuota()
 	{
-		\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_INFO, 'TasksCron: Task10 started - setting filesystem quota');
+		\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'TasksCron: Task10 started - setting filesystem quota');
 
 		$usedquota = \Froxlor\FileDir::getFilesystemQuota();
 
@@ -410,7 +410,7 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 				if ($row['guid'] != 0) {
 					// The user has no quota in Froxlor, but on the filesystem
 					if (($row['diskspace'] == 0 || $row['diskspace'] == - 1024) && $usedquota[$row['guid']]['block']['hard'] != 0) {
-						\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_NOTICE, "Disabling quota for " . $row['loginname']);
+						\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, "Disabling quota for " . $row['loginname']);
 						if (\Froxlor\FileDir::isFreeBSD()) {
 							\Froxlor\FileDir::safe_exec(Settings::Get('system.diskquota_quotatool_path') . " -e " . escapeshellarg(Settings::Get('system.diskquota_customer_partition')) . ":0:0 " . $row['guid']);
 						} else {
@@ -418,7 +418,7 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 						}
 					} elseif ($row['diskspace'] != $usedquota[$row['guid']]['block']['hard'] && $row['diskspace'] != - 1024) {
 						// The user quota in Froxlor is different than on the filesystem
-						\Froxlor\FroxlorLogger::getInstanceOf()->logAction(CRON_ACTION, LOG_NOTICE, "Setting quota for " . $row['loginname'] . " from " . $usedquota[$row['guid']]['block']['hard'] . " to " . $row['diskspace']);
+						\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, "Setting quota for " . $row['loginname'] . " from " . $usedquota[$row['guid']]['block']['hard'] . " to " . $row['diskspace']);
 						if (\Froxlor\FileDir::isFreeBSD()) {
 							\Froxlor\FileDir::safe_exec(Settings::Get('system.diskquota_quotatool_path') . " -e " . escapeshellarg(Settings::Get('system.diskquota_customer_partition')) . ":" . $row['diskspace'] . ":" . $row['diskspace'] . " " . $row['guid']);
 						} else {

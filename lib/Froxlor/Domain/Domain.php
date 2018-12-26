@@ -277,7 +277,7 @@ class Domain
 	public static function triggerLetsEncryptCSRForAliasDestinationDomain($aliasDestinationDomainID, $log)
 	{
 		if (isset($aliasDestinationDomainID) && $aliasDestinationDomainID > 0) {
-			$log->logAction(ADM_ACTION, LOG_INFO, "LetsEncrypt CSR triggered for domain ID " . $aliasDestinationDomainID);
+			$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "LetsEncrypt CSR triggered for domain ID " . $aliasDestinationDomainID);
 			$upd_stmt = Database::prepare("UPDATE
 					`" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "`
 				SET

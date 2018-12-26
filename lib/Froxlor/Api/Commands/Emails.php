@@ -135,7 +135,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			// update admin usage
 			Admins::increaseUsage($customer['adminid'], 'emails_used');
 
-			$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] added email address '" . $email_full . "'");
+			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] added email address '" . $email_full . "'");
 
 			$result = $this->apiCall('Emails.get', array(
 				'emailaddr' => $email_full
@@ -175,7 +175,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		");
 		$result = Database::pexecute_first($result_stmt, $params, true, true);
 		if ($result) {
-			$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_NOTICE, "[API] get email address '" . $result['email_full'] . "'");
+			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] get email address '" . $result['email_full'] . "'");
 			return $this->response(200, "successfull", $result);
 		}
 		$key = ($id > 0 ? "id #" . $id : "emailaddr '" . $emailaddr . "'");
@@ -253,7 +253,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			"id" => $id
 		);
 		Database::pexecute($stmt, $params, true, true);
-		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] toggled catchall-flag for email address '" . $result['email_full'] . "'");
+		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] toggled catchall-flag for email address '" . $result['email_full'] . "'");
 
 		$result = $this->apiCall('Emails.get', array(
 			'emailaddr' => $result['email_full']
@@ -288,7 +288,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$result[] = $row;
 		}
-		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_NOTICE, "[API] list email-addresses");
+		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] list email-addresses");
 		return $this->response(200, "successfull", array(
 			'count' => count($result),
 			'list' => $result
@@ -352,7 +352,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 				), true, true);
 				Customers::decreaseUsage($customer['customerid'], 'email_quota_used', '', $res_quota['quota']);
 				Admins::decreaseUsage($customer['customerid'], 'email_quota_used', '', $res_quota['quota']);
-				$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] deleted quota entries for email address '" . $result['email_full'] . "'");
+				$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] deleted quota entries for email address '" . $result['email_full'] . "'");
 			}
 			// delete account
 			$stmt = Database::prepare("DELETE FROM `" . TABLE_MAIL_USERS . "` WHERE `customerid`= :customerid AND `id`= :id");
@@ -362,7 +362,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			), true, true);
 			Customers::decreaseUsage($customer['customerid'], 'email_accounts_used');
 			Admins::decreaseUsage($customer['customerid'], 'email_accounts_used');
-			$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] deleted email account '" . $result['email_full'] . "'");
+			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] deleted email account '" . $result['email_full'] . "'");
 			$number_forwarders --;
 		}
 
@@ -383,7 +383,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		Customers::decreaseUsage($customer['customerid'], 'emails_used');
 		Admins::decreaseUsage($customer['customerid'], 'emails_used');
 
-		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] deleted email address '" . $result['email_full'] . "'");
+		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] deleted email address '" . $result['email_full'] . "'");
 		return $this->response(200, "successfull", $result);
 	}
 }

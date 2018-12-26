@@ -40,7 +40,7 @@ if (! extension_loaded('zip')) {
 if ($page == 'overview') {
 
 	// log our actions
-	$log->logAction(ADM_ACTION, LOG_NOTICE, "checking auto-update");
+	$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "checking auto-update");
 
 	// check for new version
 	$latestversion = HttpClient::urlGet(UPDATE_URI);
@@ -111,7 +111,7 @@ elseif ($page == 'getdownload') {
 		// name archive
 		$localArchive = \Froxlor\Froxlor::getInstallDir() . '/updates/' . basename($toLoad);
 
-		$log->logAction(ADM_ACTION, LOG_NOTICE, "Downloading " . $toLoad . " to " . $localArchive);
+		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "Downloading " . $toLoad . " to " . $localArchive);
 
 		// remove old archive
 		if (file_exists($localArchive)) {
@@ -170,7 +170,7 @@ elseif ($page == 'extract') {
 		$zip = new ZipArchive();
 		$res = $zip->open($localArchive);
 		if ($res === true) {
-			$log->logAction(ADM_ACTION, LOG_NOTICE, "Extracting " . $localArchive . " to " . \Froxlor\Froxlor::getInstallDir());
+			$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "Extracting " . $localArchive . " to " . \Froxlor\Froxlor::getInstallDir());
 			$zip->extractTo(\Froxlor\Froxlor::getInstallDir());
 			$zip->close();
 			// success - remove unused archive

@@ -65,7 +65,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 			'action' => $action,
 			'page' => $page
 		), $_part, $settings_all, $settings_part, $only_enabledisable)) {
-			$log->logAction(ADM_ACTION, LOG_INFO, "rebuild configfiles due to changed setting");
+			$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "rebuild configfiles due to changed setting");
 			\Froxlor\System\Cronjob::inserttask('1');
 			// Using nameserver, insert a task which rebuilds the server config
 			\Froxlor\System\Cronjob::inserttask('4');
@@ -145,7 +145,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 } elseif ($page == 'rebuildconfigs' && $userinfo['change_serversettings'] == '1') {
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 
-		$log->logAction(ADM_ACTION, LOG_INFO, "rebuild configfiles");
+		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "rebuild configfiles");
 		\Froxlor\System\Cronjob::inserttask('1');
 		\Froxlor\System\Cronjob::inserttask('10');
 		// Using nameserver, insert a task which rebuilds the server config
@@ -165,7 +165,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 
-		$log->logAction(ADM_ACTION, LOG_INFO, "updated resource-counters");
+		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "updated resource-counters");
 		$updatecounters = \Froxlor\User::updateCounters(true);
 		$customers = '';
 		foreach ($updatecounters['customers'] as $customerid => $customer) {
@@ -187,7 +187,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 
-		$log->logAction(ADM_ACTION, LOG_WARNING, "wiped all cleartext mail passwords");
+		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_WARNING, "wiped all cleartext mail passwords");
 		Database::query("UPDATE `" . TABLE_MAIL_USERS . "` SET `password` = '';");
 		Database::query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '0' WHERE `settinggroup` = 'system' AND `varname` = 'mailpwcleartext'");
 		\Froxlor\UI\Response::redirectTo($filename, array(
@@ -202,7 +202,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 
-		$log->logAction(ADM_ACTION, LOG_WARNING, "wiped all mailquotas");
+		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_WARNING, "wiped all mailquotas");
 
 		// Set the quota to 0 which means unlimited
 		Database::query("UPDATE `" . TABLE_MAIL_USERS . "` SET `quota` = '0';");
@@ -247,7 +247,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 
 		// Update the Customer, if the used quota is bigger than the allowed quota
 		Database::query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `email_quota` = `email_quota_used` WHERE `email_quota` < `email_quota_used`");
-		$log->logAction(ADM_ACTION, LOG_WARNING, 'enforcing mailquota to all customers: ' . Settings::Get('system.mail_quota') . ' MB');
+		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_WARNING, 'enforcing mailquota to all customers: ' . Settings::Get('system.mail_quota') . ' MB');
 		\Froxlor\UI\Response::redirectTo($filename, array(
 			's' => $s
 		));

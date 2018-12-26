@@ -35,7 +35,7 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 	public function listing()
 	{
 		if ($this->isAdmin()) {
-			$this->logger()->logAction(ADM_ACTION, LOG_NOTICE, "[API] list php-configs");
+			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] list php-configs");
 
 			$with_subdomains = $this->getBoolParam('with_subdomains', true, false);
 
@@ -334,7 +334,7 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			$ins_data['id'] = Database::lastInsertId();
 
 			\Froxlor\System\Cronjob::inserttask('1');
-			$this->logger()->logAction(ADM_ACTION, LOG_INFO, "[API] php setting with description '" . $description . "' has been created by '" . $this->getUserDetail('loginname') . "'");
+			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] php setting with description '" . $description . "' has been created by '" . $this->getUserDetail('loginname') . "'");
 
 			$result = $this->apiCall('PhpSettings.get', array(
 				'id' => $ins_data['id']
@@ -530,7 +530,7 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			Database::pexecute($upd_stmt, $upd_data, true, true);
 
 			\Froxlor\System\Cronjob::inserttask('1');
-			$this->logger()->logAction(ADM_ACTION, LOG_INFO, "[API] php setting with description '" . $description . "' has been updated by '" . $this->getUserDetail('loginname') . "'");
+			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] php setting with description '" . $description . "' has been updated by '" . $this->getUserDetail('loginname') . "'");
 
 			$result = $this->apiCall('PhpSettings.get', array(
 				'id' => $id
@@ -585,7 +585,7 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			), true, true);
 
 			\Froxlor\System\Cronjob::inserttask('1');
-			$this->logger()->logAction(ADM_ACTION, LOG_INFO, "[API] php setting '" . $result['description'] . "' has been deleted by '" . $this->getUserDetail('loginname') . "'");
+			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] php setting '" . $result['description'] . "' has been deleted by '" . $this->getUserDetail('loginname') . "'");
 			return $this->response(200, "successfull", $result);
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);

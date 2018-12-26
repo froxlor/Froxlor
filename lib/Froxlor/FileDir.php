@@ -224,12 +224,12 @@ class FileDir
 				fwrite($index_html_handler, $htmlcontent);
 				fclose($index_html_handler);
 				if ($logger !== null) {
-					$logger->logAction(CRON_ACTION, LOG_NOTICE, 'Creating \'index.' . Settings::Get('system.index_file_extension') . '\' for Customer \'' . $template['customer_login'] . '\' based on template in directory ' . escapeshellarg($indexhtmlpath));
+					$logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Creating \'index.' . Settings::Get('system.index_file_extension') . '\' for Customer \'' . $template['customer_login'] . '\' based on template in directory ' . escapeshellarg($indexhtmlpath));
 				}
 			} else {
 				$destination = self::makeCorrectDir($destination);
 				if ($logger !== null) {
-					$logger->logAction(CRON_ACTION, LOG_NOTICE, 'Running: cp -a ' . \Froxlor\Froxlor::getInstallDir() . '/templates/misc/standardcustomer/* ' . escapeshellarg($destination));
+					$logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Running: cp -a ' . \Froxlor\Froxlor::getInstallDir() . '/templates/misc/standardcustomer/* ' . escapeshellarg($destination));
 				}
 				self::safe_exec('cp -a ' . \Froxlor\Froxlor::getInstallDir() . '/templates/misc/standardcustomer/* ' . escapeshellarg($destination));
 			}

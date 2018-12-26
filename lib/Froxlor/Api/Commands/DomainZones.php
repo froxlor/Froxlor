@@ -332,7 +332,7 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 		$zone = \Froxlor\Dns\Dns::createDomainZone($id);
 		$zonefile = (string) $zone;
 
-		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_NOTICE, "[API] get dns-zone for '" . $result['domain'] . "'");
+		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] get dns-zone for '" . $result['domain'] . "'");
 		return $this->response(200, "successfull", explode("\n", $zonefile));
 	}
 

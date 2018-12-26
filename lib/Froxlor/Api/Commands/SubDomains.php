@@ -312,7 +312,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			Customers::increaseUsage($customer['customerid'], 'subdomains_used');
 			Admins::increaseUsage(($this->isAdmin() ? $customer['adminid'] : $this->getUserDetail('adminid')), 'subdomains_used');
 
-			$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] added subdomain '" . $completedomain . "'");
+			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] added subdomain '" . $completedomain . "'");
 
 			$result = $this->apiCall('SubDomains.get', array(
 				'id' => $subdomain_id
@@ -397,7 +397,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		}
 		$result = Database::pexecute_first($result_stmt, $params, true, true);
 		if ($result) {
-			$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_NOTICE, "[API] get subdomain '" . $result['domain'] . "'");
+			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] get subdomain '" . $result['domain'] . "'");
 			return $this->response(200, "successfull", $result);
 		}
 		$key = ($id > 0 ? "id #" . $id : "domainname '" . $domainname . "'");
@@ -581,7 +581,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			$stmt = Database::prepare("DELETE FROM `" . TABLE_MAIL_VIRTUAL . "` WHERE `customerid`= :customerid AND `domainid`= :domainid");
 			Database::pexecute($stmt, $params, true, true);
 			$idna_convert = new \Froxlor\Idna\IdnaWrapper();
-			$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_NOTICE, "[API] automatically deleted mail-table entries for '" . $idna_convert->decode($result['domain']) . "'");
+			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] automatically deleted mail-table entries for '" . $idna_convert->decode($result['domain']) . "'");
 		}
 
 		// handle redirect
@@ -646,7 +646,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			\Froxlor\System\Cronjob::inserttask('1');
 			\Froxlor\System\Cronjob::inserttask('4');
 			$idna_convert = new \Froxlor\Idna\IdnaWrapper();
-			$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] edited domain '" . $idna_convert->decode($result['domain']) . "'");
+			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] edited domain '" . $idna_convert->decode($result['domain']) . "'");
 		}
 		$result = $this->apiCall('SubDomains.get', array(
 			'id' => $id
@@ -835,7 +835,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		// update admin usage
 		Admins::decreaseUsage(($this->isAdmin() ? $customer['adminid'] : $this->getUserDetail('adminid')), 'subdomains_used');
 
-		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_WARNING, "[API] deleted subdomain '" . $result['domain'] . "'");
+		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_WARNING, "[API] deleted subdomain '" . $result['domain'] . "'");
 		return $this->response(200, "successfull", $result);
 	}
 

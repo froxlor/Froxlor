@@ -228,7 +228,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 				}
 
 				if ($_mailerror) {
-					$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_ERR, "[API] Error sending mail: " . $mailerr_msg);
+					$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_ERR, "[API] Error sending mail: " . $mailerr_msg);
 					\Froxlor\UI\Response::standard_error('errorsendingmail', $email_full, true);
 				}
 
@@ -258,7 +258,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 					}
 
 					if ($_mailerror) {
-						$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_ERR, "[API] Error sending mail: " . $mailerr_msg);
+						$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_ERR, "[API] Error sending mail: " . $mailerr_msg);
 						\Froxlor\UI\Response::standard_error(array(
 							'errorsendingmail'
 						), $alternative_email, true);
@@ -268,7 +268,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 				}
 			}
 
-			$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] added email account for '" . $result['email_full'] . "'");
+			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] added email account for '" . $result['email_full'] . "'");
 			$result = $this->apiCall('Emails.get', array(
 				'emailaddr' => $result['email_full']
 			));
@@ -384,7 +384,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 			Admins::increaseUsage($customer['adminid'], 'email_quota_used', '', ($quota - $result['quota']));
 		}
 
-		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] updated email account '" . $result['email_full'] . "'");
+		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] updated email account '" . $result['email_full'] . "'");
 		$result = $this->apiCall('Emails.get', array(
 			'emailaddr' => $result['email_full']
 		));
@@ -484,7 +484,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 		Admins::decreaseUsage($customer['adminid'], 'email_accounts_used');
 		Admins::decreaseUsage($customer['adminid'], 'email_quota_used', '', $quota);
 
-		$this->logger()->logAction($this->isAdmin() ? ADM_ACTION : USR_ACTION, LOG_INFO, "[API] deleted email account for '" . $result['email_full'] . "'");
+		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] deleted email account for '" . $result['email_full'] . "'");
 		return $this->response(200, "successfull", $result);
 	}
 }

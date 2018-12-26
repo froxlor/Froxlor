@@ -40,6 +40,18 @@ class FroxlorLogger
 	 */
 	private static $userinfo = array();
 
+	const USR_ACTION = '10';
+
+	const RES_ACTION = '20';
+
+	const ADM_ACTION = '30';
+
+	const CRON_ACTION = '40';
+
+	const LOGIN_ACTION = '50';
+
+	const LOG_ERROR = '99';
+
 	/**
 	 * Class constructor.
 	 */
@@ -114,10 +126,10 @@ class FroxlorLogger
 	 * @param int $type
 	 * @param string $text
 	 */
-	public function logAction($action = USR_ACTION, $type = LOG_NOTICE, $text = null)
+	public function logAction($action = \Froxlor\FroxlorLogger::USR_ACTION, $type = LOG_NOTICE, $text = null)
 	{
 		// not logging normal stuff if not set to "paranoid" logging
-		if (!self::$crondebug_flag && Settings::Get('logger.severity') == '1' && $type > LOG_NOTICE) {
+		if (! self::$crondebug_flag && Settings::Get('logger.severity') == '1' && $type > LOG_NOTICE) {
 			return;
 		}
 
@@ -125,12 +137,12 @@ class FroxlorLogger
 			$this->initMonolog();
 		}
 
-		if (self::$crondebug_flag || ($action == CRON_ACTION && $type <= LOG_WARNING)) {
+		if (self::$crondebug_flag || ($action == \Froxlor\FroxlorLogger::CRON_ACTION && $type <= LOG_WARNING)) {
 			echo "[" . $this->getLogLevelDesc($type) . "] " . $text . PHP_EOL;
 		}
 
 		// warnings, errors and critical mesages WILL be logged
-		if (Settings::Get('logger.log_cron') == '0' && $action == CRON_ACTION && $type > LOG_WARNING) {
+		if (Settings::Get('logger.log_cron') == '0' && $action == \Froxlor\FroxlorLogger::CRON_ACTION && $type > LOG_WARNING) {
 			return;
 		}
 
@@ -222,19 +234,19 @@ class FroxlorLogger
 	private function getActionTypeDesc($action)
 	{
 		switch ($action) {
-			case USR_ACTION:
+			case \Froxlor\FroxlorLogger::USR_ACTION:
 				$_action = 'user';
 				break;
-			case ADM_ACTION:
+			case \Froxlor\FroxlorLogger::ADM_ACTION:
 				$_action = 'admin';
 				break;
-			case RES_ACTION:
+			case \Froxlor\FroxlorLogger::RES_ACTION:
 				$_action = 'reseller';
 				break;
-			case CRON_ACTION:
+			case \Froxlor\FroxlorLogger::CRON_ACTION:
 				$_action = 'cron';
 				break;
-			case LOGIN_ACTION:
+			case \Froxlor\FroxlorLogger::LOGIN_ACTION:
 				$_action = 'login';
 				break;
 			default:
