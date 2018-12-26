@@ -23,7 +23,9 @@ abstract class FroxlorCron
 
 	abstract public static function run();
 
-	private static $lockfile = null;
+	protected static $cronlog = null;
+
+	protected static $lockfile = null;
 
 	public static function getLockfile()
 	{
