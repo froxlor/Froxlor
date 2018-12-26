@@ -11,10 +11,9 @@
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Settings
+ * @package    \Froxlor\Settings
  *
  */
-
 return array(
 	'groups' => array(
 		'phpfpm' => array(
@@ -27,9 +26,12 @@ return array(
 					'type' => 'bool',
 					'default' => false,
 					'save_method' => 'storeSettingField',
-					'plausibility_check_method' => 'checkFcgidPhpFpm',
-					'overview_option' => true
+					'plausibility_check_method' => array(
+						'\\Froxlor\\Validate\\Check',
+						'checkFcgidPhpFpm'
 					),
+					'overview_option' => true
+				),
 				'system_phpfpm_defaultini' => array(
 					'label' => $lng['serversettings']['mod_fcgid']['defaultini'],
 					'settinggroup' => 'phpfpm',
@@ -37,9 +39,12 @@ return array(
 					'type' => 'option',
 					'default' => '1',
 					'option_mode' => 'one',
-					'option_options_method' => 'getPhpConfigs',
-					'save_method' => 'storeSettingField'
+					'option_options_method' => array(
+						'\\Froxlor\\Http\\PhpConfig',
+						'getPhpConfigs'
 					),
+					'save_method' => 'storeSettingField'
+				),
 				'system_phpfpm_aliasconfigdir' => array(
 					'label' => $lng['serversettings']['phpfpm_settings']['aliasconfigdir'],
 					'settinggroup' => 'phpfpm',
@@ -48,7 +53,7 @@ return array(
 					'string_type' => 'confdir',
 					'default' => '/var/www/php-fpm/',
 					'save_method' => 'storeSettingField'
-					),
+				),
 				'system_phpfpm_tmpdir' => array(
 					'label' => $lng['serversettings']['mod_fcgid']['tmpdir'],
 					'settinggroup' => 'phpfpm',
@@ -57,7 +62,7 @@ return array(
 					'string_type' => 'dir',
 					'default' => '/var/customers/tmp/',
 					'save_method' => 'storeSettingField'
-					),
+				),
 				'system_phpfpm_peardir' => array(
 					'label' => $lng['serversettings']['mod_fcgid']['peardir'],
 					'settinggroup' => 'phpfpm',
@@ -68,7 +73,7 @@ return array(
 					'string_emptyallowed' => true,
 					'default' => '/usr/share/php/:/usr/share/php5/',
 					'save_method' => 'storeSettingField'
-					),
+				),
 				'system_phpfpm_envpath' => array(
 					'label' => $lng['serversettings']['phpfpm_settings']['envpath'],
 					'settinggroup' => 'phpfpm',
@@ -88,16 +93,16 @@ return array(
 					'string_type' => 'dir',
 					'default' => '/var/lib/apache2/fastcgi/',
 					'save_method' => 'storeSettingField'
-					),
+				),
 				'system_phpfpm_use_mod_proxy' => array(
 					'label' => $lng['phpfpm']['use_mod_proxy'],
 					'settinggroup' => 'phpfpm',
 					'varname' => 'use_mod_proxy',
 					'type' => 'bool',
 					'default' => false,
-					'visible' => Settings::Get('system.apache24'),
+					'visible' => \Froxlor\Settings::Get('system.apache24'),
 					'save_method' => 'storeSettingField'
-					),
+				),
 				'system_phpfpm_ini_flags' => array(
 					'label' => $lng['phpfpm']['ini_flags'],
 					'settinggroup' => 'phpfpm',
@@ -130,7 +135,7 @@ return array(
 					'default' => '',
 					'save_method' => 'storeSettingField'
 				)
-				),
-			),
-		),
-	);
+			)
+		)
+	)
+);

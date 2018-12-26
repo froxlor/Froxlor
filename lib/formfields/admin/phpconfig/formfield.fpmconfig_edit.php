@@ -14,7 +14,6 @@
  * @package    Formfields
  *
  */
-
 return array(
 	'fpmconfig_edit' => array(
 		'title' => $lng['admin']['phpsettings']['editsettings'],

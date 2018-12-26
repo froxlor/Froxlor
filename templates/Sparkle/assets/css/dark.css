@@ -1,34 +1,41 @@
 .content, nav {
 	background-color: #11171c;
 }
+
 nav div:first-child {
-	display:inherit;
+	display: inherit;
 }
+
 nav a {
 	color: #424a51;
 }
+
 nav a:hover {
 	color: #fff;
 }
+
 nav .active {
 	color: #fff;
 }
+
 .menuelement {
 	border: none;
 	color: #424a51;
 	margin: 15px 0 25px 10px;
 	padding: 0;
 }
+
 .menuelement h4 {
 	background: none;
 	color: #088ecc;
 	font-weight: 900;
 	text-transform: uppercase;
 }
+
 .menuelement h4 a {
 	color: #088ecc;
 }
 
 .topheader {
-	background:#f0f2f4;
+	background: #f0f2f4;
 }

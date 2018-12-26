@@ -89,47 +89,47 @@ class FroxlorAPI
 	 */
 	public function request(string $command, array $params = array()): FroxlorAPI
 	{
-		// build request array
-		$request = [
-			'header' => [
-				'apikey' => $this->api_key,
-				'secret' => $this->api_secret
-			],
-			'body' => [
-				'command' => $command
-			]
-		];
+	// build request array
+	$request = [
+		'header' => [
+			'apikey' => $this->api_key,
+			'secret' => $this->api_secret
+		],
+		'body' => [
+			'command' => $command
+		]
+	];
 
-		// add parameter to request-body if any
-		if (! empty($params)) {
-			$request['body']['params'] = $params;
-		}
-
-		// reset last data
-		$this->last_header = array();
-		$this->last_body = array();
-
-		// send actual request
-		$response = $this->requestCurl(json_encode($request));
-
-		// decode response
-		$resp = json_decode($response[1], true);
-		// set body to data-part of response
-		$this->last_body = $resp['data'];
-		// set header of response
-		$this->last_header = [
-			'status' => $resp['status'],
-			'status_message' => $resp['status_message']
-		];
-
-		// check for error in api response
-		if (isset($this->last_header['status']) && $this->last_header['status'] >= 400) {
-			// set last-error message
-			$this->last_error .= "[" . $this->last_header['status'] . "] " . $this->last_header['status_message'];
-		}
-
-		return $this;
+	// add parameter to request-body if any
+	if (! empty($params)) {
+		$request['body']['params'] = $params;
 	}
+
+	// reset last data
+	$this->last_header = array();
+	$this->last_body = array();
+
+	// send actual request
+	$response = $this->requestCurl(json_encode($request));
+
+	// decode response
+	$resp = json_decode($response[1], true);
+	// set body to data-part of response
+	$this->last_body = $resp['data'];
+	// set header of response
+	$this->last_header = [
+		'status' => $resp['status'],
+		'status_message' => $resp['status_message']
+	];
+
+	// check for error in api response
+	if (isset($this->last_header['status']) && $this->last_header['status'] >= 400) {
+		// set last-error message
+		$this->last_error .= "[" . $this->last_header['status'] . "] " . $this->last_header['status_message'];
+	}
+
+	return $this;
+}
 
 	/**
 	 * returns last response header

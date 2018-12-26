@@ -25,7 +25,7 @@ return array(
 				'fields' => array(
 					'path' => array(
 						'label' => $lng['panel']['backuppath']['title'],
-						'desc' => $lng['panel']['backuppath']['description'].'<br>'.(Settings::Get('panel.pathedit') != 'Dropdown' ? $lng['panel']['pathDescription'] : null).(isset($pathSelect['note']) ? '<br />'.$pathSelect['value'] : ''),
+						'desc' => $lng['panel']['backuppath']['description'] . '<br>' . (\Froxlor\Settings::Get('panel.pathedit') != 'Dropdown' ? $lng['panel']['pathDescription'] : null) . (isset($pathSelect['note']) ? '<br />' . $pathSelect['value'] : ''),
 						'type' => $pathSelect['type'],
 						'select_var' => $pathSelect['value'],
 						'value' => $pathSelect['value']
@@ -44,7 +44,9 @@ return array(
 								'value' => '1'
 							)
 						),
-						'value' => array('1')
+						'value' => array(
+							'1'
+						)
 					),
 					'backup_mail' => array(
 						'label' => $lng['extras']['backup_mail'],
@@ -55,7 +57,9 @@ return array(
 								'value' => '1'
 							)
 						),
-						'value' => array('1')
+						'value' => array(
+							'1'
+						)
 					),
 					'backup_dbs' => array(
 						'label' => $lng['extras']['backup_dbs'],
@@ -66,7 +70,9 @@ return array(
 								'value' => '1'
 							)
 						),
-						'value' => array('1')
+						'value' => array(
+							'1'
+						)
 					)
 				)
 			)

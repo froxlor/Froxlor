@@ -16,7 +16,6 @@
  * @package    Settings
  *
  */
-
 return array(
 	'groups' => array(
 		'mail' => array(
@@ -30,8 +29,8 @@ return array(
 					'default' => 2000,
 					'int_min' => 1,
 					'int_max' => 65535,
-					'save_method' => 'storeSettingField',
-					),
+					'save_method' => 'storeSettingField'
+				),
 				'system_vmail_gid' => array(
 					'label' => $lng['serversettings']['vmail_gid'],
 					'settinggroup' => 'system',
@@ -40,8 +39,8 @@ return array(
 					'default' => 2000,
 					'int_min' => 1,
 					'int_max' => 65535,
-					'save_method' => 'storeSettingField',
-					),
+					'save_method' => 'storeSettingField'
+				),
 				'system_vmail_homedir' => array(
 					'label' => $lng['serversettings']['vmail_homedir'],
 					'settinggroup' => 'system',
@@ -49,8 +48,8 @@ return array(
 					'type' => 'string',
 					'string_type' => 'dir',
 					'default' => '/var/customers/mail/',
-					'save_method' => 'storeSettingField',
-					),
+					'save_method' => 'storeSettingField'
+				),
 				'system_vmail_maildirname' => array(
 					'label' => $lng['serversettings']['vmail_maildirname'],
 					'settinggroup' => 'system',
@@ -59,48 +58,48 @@ return array(
 					'string_type' => 'dir',
 					'default' => 'Maildir',
 					'string_emptyallowed' => true,
-					'save_method' => 'storeSettingField',
-					),
+					'save_method' => 'storeSettingField'
+				),
 				'panel_sendalternativemail' => array(
 					'label' => $lng['serversettings']['sendalternativemail'],
 					'settinggroup' => 'panel',
 					'varname' => 'sendalternativemail',
 					'type' => 'bool',
 					'default' => false,
-					'save_method' => 'storeSettingField',
-					),
+					'save_method' => 'storeSettingField'
+				),
 				'system_mail_quota_enabled' => array(
 					'label' => $lng['serversettings']['mail_quota_enabled'],
 					'settinggroup' => 'system',
 					'varname' => 'mail_quota_enabled',
 					'type' => 'bool',
 					'default' => false,
-					'save_method' => 'storeSettingField',
-					),
+					'save_method' => 'storeSettingField'
+				),
 				'system_mail_quota' => array(
 					'label' => $lng['serversettings']['mail_quota'],
 					'settinggroup' => 'system',
 					'varname' => 'mail_quota',
 					'type' => 'int',
 					'default' => 100,
-					'save_method' => 'storeSettingField',
-					),
+					'save_method' => 'storeSettingField'
+				),
 				'system_catchall_enabled' => array(
 					'label' => $lng['serversettings']['catchall_enabled'],
 					'settinggroup' => 'catchall',
 					'varname' => 'catchall_enabled',
 					'type' => 'bool',
 					'default' => true,
-					'save_method' => 'storeSettingResetCatchall',
-					),
+					'save_method' => 'storeSettingResetCatchall'
+				),
 				'system_mailtraffic_enabled' => array(
 					'label' => $lng['serversettings']['mailtraffic_enabled'],
 					'settinggroup' => 'system',
 					'varname' => 'mailtraffic_enabled',
 					'type' => 'bool',
 					'default' => true,
-					'save_method' => 'storeSettingField',
-					),
+					'save_method' => 'storeSettingField'
+				),
 				'system_mdaserver' => array(
 					'label' => $lng['serversettings']['mdaserver'],
 					'settinggroup' => 'system',
@@ -108,9 +107,12 @@ return array(
 					'type' => 'option',
 					'option_mode' => 'one',
 					'default' => 'dovecot',
-					'option_options' => array('courier' => 'Courier', 'dovecot' => 'Dovecot'),
-					'save_method' => 'storeSettingField',
+					'option_options' => array(
+						'courier' => 'Courier',
+						'dovecot' => 'Dovecot'
 					),
+					'save_method' => 'storeSettingField'
+				),
 				'system_mdalog' => array(
 					'label' => $lng['serversettings']['mdalog'],
 					'settinggroup' => 'system',
@@ -119,8 +121,8 @@ return array(
 					'string_type' => 'file',
 					'default' => '/var/log/mail.log',
 					'string_emptyallowed' => true,
-					'save_method' => 'storeSettingField',
-					),
+					'save_method' => 'storeSettingField'
+				),
 				'system_mtaserver' => array(
 					'label' => $lng['serversettings']['mtaserver'],
 					'settinggroup' => 'system',
@@ -128,9 +130,12 @@ return array(
 					'type' => 'option',
 					'option_mode' => 'one',
 					'default' => 'postfix',
-					'option_options' => array('exim4' => 'Exim4', 'postfix' => 'Postfix'),
-					'save_method' => 'storeSettingField',
+					'option_options' => array(
+						'exim4' => 'Exim4',
+						'postfix' => 'Postfix'
 					),
+					'save_method' => 'storeSettingField'
+				),
 				'system_mtalog' => array(
 					'label' => $lng['serversettings']['mtalog'],
 					'settinggroup' => 'system',
@@ -139,11 +144,11 @@ return array(
 					'string_type' => 'file',
 					'default' => '/var/log/mail.log',
 					'string_emptyallowed' => true,
-					'save_method' => 'storeSettingField',
-					),
-				),
-			),
-		),
-	);
+					'save_method' => 'storeSettingField'
+				)
+			)
+		)
+	)
+);
 
 ?>

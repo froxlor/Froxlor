@@ -1,7 +1,7 @@
 <?php
 if (! defined('AREA')) {
 	header("Location: index.php");
-	exit;
+	exit();
 }
 
 /**
@@ -16,8 +16,11 @@ if (! defined('AREA')) {
  * @author Froxlor team <team@froxlor.org> (2016-)
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package Panel
- *
+ *         
  */
+
+use Froxlor\Database\Database;
+use Froxlor\Api\Commands\DomainZones as DomainZones;
 
 // This file is being included in admin_domains and customer_domains
 // and therefore does not need to require lib/init.php
@@ -31,7 +34,7 @@ $content = isset($_POST['record']['content']) ? trim($_POST['record']['content']
 $ttl = isset($_POST['record']['ttl']) ? (int) $_POST['record']['ttl'] : 18000;
 
 // get domain-name
-$domain = getAllowedDomainEntry($domain_id, AREA, $userinfo, $idna_convert);
+$domain = \Froxlor\Dns\Dns::getAllowedDomainEntry($domain_id, AREA, $userinfo);
 
 // select all entries
 $sel_stmt = Database::prepare("SELECT * FROM `" . TABLE_DOMAIN_DNS . "` WHERE domain_id = :did");
@@ -56,7 +59,7 @@ if ($action == 'add_record' && ! empty($_POST)) {
 		))->add();
 		$success_message = $lng['success']['dns_record_added'];
 	} catch (Exception $e) {
-		dynamic_error($e->getMessage());
+		\Froxlor\UI\Response::dynamic_error($e->getMessage());
 	}
 } elseif ($action == 'delete') {
 	// remove entry
@@ -97,7 +100,7 @@ if (! empty($dom_entries)) {
 	$entriescount = count($dom_entries);
 	foreach ($dom_entries as $entry) {
 		$entry['content'] = wordwrap($entry['content'], 100, '<br>', true);
-		eval("\$existing_entries.=\"" . getTemplate("dns_editor/entry_bit", true) . "\";");
+		eval("\$existing_entries.=\"" . \Froxlor\UI\Template::getTemplate("dns_editor/entry_bit", true) . "\";");
 	}
 }
 
@@ -113,19 +116,19 @@ $type_select_values = array(
 );
 asort($type_select_values);
 foreach ($type_select_values as $_type) {
-	$type_select .= makeoption($_type, $_type, $type);
+	$type_select .= \Froxlor\UI\HTML::makeoption($_type, $_type, $type);
 }
 
-eval("\$record_list=\"" . getTemplate("dns_editor/list", true) . "\";");
+eval("\$record_list=\"" . \Froxlor\UI\Template::getTemplate("dns_editor/list", true) . "\";");
 
 try {
 	$json_result = DomainZones::getLocal($userinfo, array(
 		'id' => $domain_id
 	))->get();
 } catch (Exception $e) {
-	dynamic_error($e->getMessage());
+	\Froxlor\UI\Response::dynamic_error($e->getMessage());
 }
 $result = json_decode($json_result, true)['data'];
 $zonefile = implode("\n", $result);
 
-eval("echo \"" . getTemplate("dns_editor/index", true) . "\";");
+eval("echo \"" . \Froxlor\UI\Template::getTemplate("dns_editor/index", true) . "\";");

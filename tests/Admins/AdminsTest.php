@@ -1,10 +1,14 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
+use Froxlor\Database\Database;
+use Froxlor\Api\Commands\Admins;
+
 /**
- * @covers ApiCommand
- * @covers ApiParameter
- * @covers Admins
+ *
+ * @covers \Froxlor\Api\ApiCommand
+ * @covers \Froxlor\Api\ApiParameter
+ * @covers \Froxlor\Api\Commands\Admins
  */
 class AdminsTest extends TestCase
 {
@@ -12,7 +16,7 @@ class AdminsTest extends TestCase
 	public function testAdminAdminsAdd()
 	{
 		global $admin_userdata;
-		
+
 		$data = [
 			'new_loginname' => 'reseller',
 			'email' => 'testreseller@froxlor.org',
@@ -29,28 +33,27 @@ class AdminsTest extends TestCase
 			'email_imap' => 1,
 			'email_pop3' => 0,
 			'ftps' => 15,
-			'tickets' => 15,
 			'mysqls' => 15,
 			'sendpassword' => 0,
 			'phpenabled' => 1,
 			'ip' => array()
 		];
-		
+
 		$json_result = Admins::getLocal($admin_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
 		$admin_id = $result['adminid'];
-		
+
 		// get admin and check results
 		$json_result = Admins::getLocal($admin_userdata, array(
 			'id' => $admin_id
 		))->get();
 		$result = json_decode($json_result, true)['data'];
-		
+
 		$this->assertEquals('reseller', $result['loginname']);
 		$this->assertEquals('testreseller@froxlor.org', $result['email']);
 		$this->assertEquals(0, $result['customers_see_all']);
 	}
-	
+
 	/**
 	 *
 	 * @depends testAdminAdminsAdd
@@ -58,17 +61,17 @@ class AdminsTest extends TestCase
 	public function testAdminAdminsAddLoginnameExists()
 	{
 		global $admin_userdata;
-		
+
 		$data = [
 			'new_loginname' => 'reseller',
 			'email' => 'testreseller@froxlor.org',
 			'name' => 'Testreseller'
 		];
-		
+
 		$this->expectExceptionMessage('Loginname reseller already exists');
 		Admins::getLocal($admin_userdata, $data)->add();
 	}
-	
+
 	/**
 	 *
 	 * @depends testAdminAdminsAddLoginnameExists
@@ -76,13 +79,13 @@ class AdminsTest extends TestCase
 	public function testAdminAdminsAddLoginnameIsSystemaccount()
 	{
 		global $admin_userdata;
-		
+
 		$data = [
 			'new_loginname' => 'web2',
 			'email' => 'testreseller@froxlor.org',
 			'name' => 'Testreseller'
 		];
-		
+
 		$this->expectExceptionMessage('You cannot create accounts which are similar to system accounts (as for example begin with "web"). Please enter another account name.');
 		Admins::getLocal($admin_userdata, $data)->add();
 	}
@@ -94,13 +97,13 @@ class AdminsTest extends TestCase
 	public function testAdminAdminsAddLoginnameInvalid()
 	{
 		global $admin_userdata;
-		
+
 		$data = [
 			'new_loginname' => 'reslr-',
 			'email' => 'testreseller@froxlor.org',
 			'name' => 'Testreseller'
 		];
-		
+
 		$this->expectExceptionMessage('Loginname "reslr-" contains illegal characters.');
 		Admins::getLocal($admin_userdata, $data)->add();
 	}
@@ -112,13 +115,13 @@ class AdminsTest extends TestCase
 	public function testAdminAdminsAddLoginnameInvalidEmail()
 	{
 		global $admin_userdata;
-		
+
 		$data = [
 			'new_loginname' => 'reslr',
 			'email' => 'testreseller.froxlor.org',
 			'name' => 'Testreseller'
 		];
-		
+
 		$this->expectExceptionMessage('Email-address testreseller.froxlor.org contains invalid characters or is incomplete');
 		Admins::getLocal($admin_userdata, $data)->add();
 	}
@@ -128,7 +131,7 @@ class AdminsTest extends TestCase
 		global $admin_userdata;
 		$testadmin_userdata = $admin_userdata;
 		$testadmin_userdata['adminsession'] = 0;
-		
+
 		$this->expectExceptionCode(403);
 		$this->expectExceptionMessage("Not allowed to execute given command.");
 		Admins::getLocal($testadmin_userdata, array())->add();
@@ -137,7 +140,7 @@ class AdminsTest extends TestCase
 	public function testAdminAdminsGetNotFound()
 	{
 		global $admin_userdata;
-		
+
 		$this->expectExceptionCode(404);
 		$this->expectExceptionMessage("Admin with loginname 'unknown' could not be found");
 		// get unknown admin
@@ -149,7 +152,7 @@ class AdminsTest extends TestCase
 	public function testAdminAdminsList()
 	{
 		global $admin_userdata;
-		
+
 		$json_result = Admins::getLocal($admin_userdata)->listing();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(2, $result['count']);
@@ -164,11 +167,11 @@ class AdminsTest extends TestCase
 		))->get();
 		$reseller_userdata = json_decode($json_result, true)['data'];
 		$reseller_userdata['adminsession'] = 1;
-		
+
 		// try to read superadmin with an access-less reseller account
 		$this->expectException(Exception::class);
 		$this->expectExceptionCode(403);
-		
+
 		$json_result = Admins::getLocal($reseller_userdata, array(
 			'loginname' => 'admin'
 		))->get();
@@ -183,10 +186,10 @@ class AdminsTest extends TestCase
 		))->get();
 		$reseller_userdata = json_decode($json_result, true)['data'];
 		$reseller_userdata['adminsession'] = 1;
-		
+
 		$this->expectExceptionCode(403);
 		$this->expectExceptionMessage("Not allowed to execute given command.");
-		
+
 		Admins::getLocal($reseller_userdata)->listing();
 	}
 
@@ -207,7 +210,7 @@ class AdminsTest extends TestCase
 		global $admin_userdata;
 		$testadmin_userdata = $admin_userdata;
 		$testadmin_userdata['adminsession'] = 0;
-		
+
 		$this->expectExceptionCode(403);
 		$this->expectExceptionMessage("Not allowed to execute given command.");
 		Admins::getLocal($testadmin_userdata, array(
@@ -234,9 +237,9 @@ class AdminsTest extends TestCase
 			'email' => 'testreseller@froxlor.org',
 			'name' => 'Testreseller'
 		];
-		
+
 		$json_result = Admins::getLocal($admin_userdata, $data)->add();
-		
+
 		$json_result = Admins::getLocal($admin_userdata, array(
 			'loginname' => 'resellertest'
 		))->delete();
@@ -287,7 +290,7 @@ class AdminsTest extends TestCase
 		))->update();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(1, $result['deactivated']);
-		
+
 		// reactivate
 		Admins::getLocal($admin_userdata, array(
 			'loginname' => 'reseller',

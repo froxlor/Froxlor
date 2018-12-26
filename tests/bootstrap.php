@@ -1,5 +1,4 @@
 <?php
-
 if (file_exists('/etc/froxlor-test.pwd') && file_exists('/etc/froxlor-test.rpwd')) {
 	// froxlor jenkins test-system
 	$pwd = trim(file_get_contents('/etc/froxlor-test.pwd'));
@@ -31,9 +30,23 @@ if (file_exists($userdata)) {
 file_put_contents($userdata, $userdata_content);
 
 // include autoloader / api / etc
-require dirname(__DIR__) . '/lib/classes/api/api_includes.inc.php';
+require dirname(__DIR__) . '/vendor/autoload.php';
+
+// include table definitions
+require dirname(__DIR__) . '/lib/tables.inc.php';
+
+// include consts
+require dirname(__DIR__) . '/lib/functions/constant.formfields.php';
+
+use Froxlor\Database\Database;
+use Froxlor\Settings;
 
 Database::needRoot(true);
+if (TRAVIS_CI == 0) {
+	Database::query("DROP DATABASE IF EXISTS `froxlor010`;");
+	Database::query("CREATE DATABASE `froxlor010`;");
+	exec("mysql -u root -p" . $rpwd . " froxlor010 < " . dirname(__DIR__) . "/install/froxlor.sql");
+}
 Database::query("DROP DATABASE IF EXISTS `test1sql1`;");
 Database::needRoot(false);
 
@@ -51,7 +64,6 @@ Database::query("TRUNCATE TABLE `" . TABLE_PANEL_DISKSPACE . "`;");
 Database::query("TRUNCATE TABLE `" . TABLE_PANEL_DISKSPACE_ADMINS . "`;");
 Database::query("TRUNCATE TABLE `" . TABLE_PANEL_TRAFFIC . "`;");
 Database::query("TRUNCATE TABLE `" . TABLE_PANEL_TRAFFIC_ADMINS . "`;");
-Database::query("TRUNCATE TABLE `" . TABLE_PANEL_TICKETS . "`;");
 Database::query("TRUNCATE TABLE `" . TABLE_PANEL_TASKS . "`;");
 Database::query("TRUNCATE TABLE `" . TABLE_PANEL_SESSIONS . "`;");
 Database::query("TRUNCATE TABLE `" . TABLE_PANEL_LOG . "`;");
@@ -68,7 +80,7 @@ Database::query("ALTER TABLE `" . TABLE_PANEL_FPMDAEMONS . "` AUTO_INCREMENT=2;"
 // add superadmin
 Database::query("INSERT INTO `" . TABLE_PANEL_ADMINS . "` SET
 	`loginname` = 'admin',
-	`password` = '".makeCryptPassword('admin')."',
+	`password` = '" . \Froxlor\System\Crypt::makeCryptPassword('admin') . "',
 	`name` = 'Froxlor-Administrator',
 	`email` = 'admin@dev.froxlor.org',
 	`def_language` = 'English',
@@ -85,8 +97,6 @@ Database::query("INSERT INTO `" . TABLE_PANEL_ADMINS . "` SET
 	`email_forwarders` = -1,
 	`email_quota` = -1,
 	`ftps` = -1,
-	`tickets` = -1,
-	`tickets_see_all` = 1,
 	`subdomains` = -1,
 	`traffic` = -1048576,
 	`ip` = -1
@@ -150,6 +160,6 @@ Settings::Set('system.use_ssl', '1', true);
 Settings::Set('system.froxlordirectlyviahostname', '1', true);
 Settings::Set('system.dns_createhostnameentry', '1', true);
 Settings::Set('system.dnsenabled', '1', true);
-Settings::Set('system.dns_server', 'pdns', true);
+Settings::Set('system.dns_server', 'PowerDNS', true);
 Settings::Set('phpfpm.enabled', '1', true);
 Settings::Set('phpfpm.enabled_ownvhost', '1', true);

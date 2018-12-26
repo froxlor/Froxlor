@@ -13,7 +13,6 @@
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Formfields
  */
-
 return array(
 	'ftp_edit' => array(
 		'title' => $lng['ftp']['account_edit'],
@@ -26,7 +25,7 @@ return array(
 					'username' => array(
 						'label' => $lng['login']['username'],
 						'type' => 'label',
-						'value' => $result['username'],
+						'value' => $result['username']
 					),
 					'ftp_description' => array(
 						'label' => $lng['panel']['ftpdesc'] = 'FTP description',
@@ -35,7 +34,7 @@ return array(
 					),
 					'path' => array(
 						'label' => $lng['panel']['path'],
-						'desc' => (Settings::Get('panel.pathedit') != 'Dropdown' ? $lng['panel']['pathDescription'] : null).(isset($pathSelect['note']) ? '<br />'.$pathSelect['value'] : ''),
+						'desc' => (\Froxlor\Settings::Get('panel.pathedit') != 'Dropdown' ? $lng['panel']['pathDescription'] : null) . (isset($pathSelect['note']) ? '<br />' . $pathSelect['value'] : ''),
 						'type' => $pathSelect['type'],
 						'select_var' => $pathSelect['value'],
 						'value' => $pathSelect['value']
@@ -49,14 +48,14 @@ return array(
 					'ftp_password_suggestion' => array(
 						'label' => $lng['customer']['generated_pwd'],
 						'type' => 'text',
-						'visible' => (Settings::Get('panel.password_regex') == ''),
-						'value' => generatePassword(),
+						'visible' => (\Froxlor\Settings::Get('panel.password_regex') == ''),
+						'value' => \Froxlor\System\Crypt::generatePassword()
 					),
 					'shell' => array(
-						'visible' => (Settings::Get('system.allow_customer_shell') == '1' ? true : false),
+						'visible' => (\Froxlor\Settings::Get('system.allow_customer_shell') == '1' ? true : false),
 						'label' => $lng['panel']['shell'],
 						'type' => 'select',
-						'select_var' => (isset($shells) ? $shells : ""),
+						'select_var' => (isset($shells) ? $shells : "")
 					)
 				)
 			)

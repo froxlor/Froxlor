@@ -19,6 +19,10 @@
 define('AREA', 'admin');
 require './lib/init.php';
 
+use Froxlor\Database\Database;
+use Froxlor\Settings;
+use Froxlor\Api\Commands\IpsAndPorts as IpsAndPorts;
+
 if (isset($_POST['id'])) {
 	$id = intval($_POST['id']);
 } elseif (isset($_GET['id'])) {
@@ -31,15 +35,15 @@ if ($page == 'ipsandports' || $page == 'overview') {
 	$is_nginx = ($websrv == 'nginx');
 	$is_apache = ($websrv == 'apache2');
 	$is_apache24 = $is_apache && (Settings::Get('system.apache24') === '1');
-	
+
 	if ($action == '') {
-		
-		$log->logAction(ADM_ACTION, LOG_NOTICE, "viewed admin_ipsandports");
+
+		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_ipsandports");
 		$fields = array(
 			'ip' => $lng['admin']['ipsandports']['ip'],
 			'port' => $lng['admin']['ipsandports']['port']
 		);
-		$paging = new paging($userinfo, TABLE_PANEL_IPSANDPORTS, $fields);
+		$paging = new \Froxlor\UI\Paging($userinfo, TABLE_PANEL_IPSANDPORTS, $fields);
 		$ipsandports = '';
 		$result_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` " . $paging->getSqlWhere(false) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
 		Database::pexecute($result_stmt);
@@ -50,47 +54,47 @@ if ($page == 'ipsandports' || $page == 'overview') {
 		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
 		$i = 0;
 		$count = 0;
-		
+
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-			
+
 			if ($paging->checkDisplay($i)) {
-				$row = htmlentities_array($row);
+				$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
 				if (filter_var($row['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
 					$row['ip'] = '[' . $row['ip'] . ']';
 				}
-				eval("\$ipsandports.=\"" . getTemplate("ipsandports/ipsandports_ipandport") . "\";");
+				eval("\$ipsandports.=\"" . \Froxlor\UI\Template::getTemplate("ipsandports/ipsandports_ipandport") . "\";");
 				$count ++;
 			}
 			$i ++;
 		}
-		eval("echo \"" . getTemplate("ipsandports/ipsandports") . "\";");
+		eval("echo \"" . \Froxlor\UI\Template::getTemplate("ipsandports/ipsandports") . "\";");
 	} elseif ($action == 'delete' && $id != 0) {
 		try {
 			$json_result = IpsAndPorts::getLocal($userinfo, array(
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
-			dynamic_error($e->getMessage());
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 		$result = json_decode($json_result, true)['data'];
-		
+
 		if (isset($result['id']) && $result['id'] == $id) {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
-				
+
 				try {
 					IpsAndPorts::getLocal($userinfo, array(
 						'id' => $id
 					))->delete();
 				} catch (Exception $e) {
-					dynamic_error($e->getMessage());
+					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
-				
-				redirectTo($filename, array(
+
+				\Froxlor\UI\Response::redirectTo($filename, array(
 					'page' => $page,
 					's' => $s
 				));
 			} else {
-				ask_yesno('admin_ip_reallydelete', $filename, array(
+				\Froxlor\UI\HTML::askYesNo('admin_ip_reallydelete', $filename, array(
 					'id' => $id,
 					'page' => $page,
 					'action' => $action
@@ -102,21 +106,21 @@ if ($page == 'ipsandports' || $page == 'overview') {
 			try {
 				IpsAndPorts::getLocal($userinfo, $_POST)->add();
 			} catch (Exception $e) {
-				dynamic_error($e->getMessage());
+				\Froxlor\UI\Response::dynamic_error($e->getMessage());
 			}
-			redirectTo($filename, array(
+			\Froxlor\UI\Response::redirectTo($filename, array(
 				'page' => $page,
 				's' => $s
 			));
 		} else {
-			
+
 			$ipsandports_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/ipsandports/formfield.ipsandports_add.php';
-			$ipsandports_add_form = htmlform::genHTMLForm($ipsandports_add_data);
-			
+			$ipsandports_add_form = \Froxlor\UI\HtmlForm::genHTMLForm($ipsandports_add_data);
+
 			$title = $ipsandports_add_data['ipsandports_add']['title'];
 			$image = $ipsandports_add_data['ipsandports_add']['image'];
-			
-			eval("echo \"" . getTemplate("ipsandports/ipsandports_add") . "\";");
+
+			eval("echo \"" . \Froxlor\UI\Template::getTemplate("ipsandports/ipsandports_add") . "\";");
 		}
 	} elseif ($action == 'edit' && $id != 0) {
 		try {
@@ -124,33 +128,33 @@ if ($page == 'ipsandports' || $page == 'overview') {
 				'id' => $id
 			))->get();
 		} catch (Exception $e) {
-			dynamic_error($e->getMessage());
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 		$result = json_decode($json_result, true)['data'];
-		
+
 		if ($result['ip'] != '') {
-			
+
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
 					IpsAndPorts::getLocal($userinfo, $_POST)->update();
 				} catch (Exception $e) {
-					dynamic_error($e->getMessage());
-				}			
-				redirectTo($filename, array(
+					\Froxlor\UI\Response::dynamic_error($e->getMessage());
+				}
+				\Froxlor\UI\Response::redirectTo($filename, array(
 					'page' => $page,
 					's' => $s
 				));
 			} else {
-				
-				$result = htmlentities_array($result);
-				
+
+				$result = \Froxlor\PhpHelper::htmlentitiesArray($result);
+
 				$ipsandports_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/ipsandports/formfield.ipsandports_edit.php';
-				$ipsandports_edit_form = htmlform::genHTMLForm($ipsandports_edit_data);
-				
+				$ipsandports_edit_form = \Froxlor\UI\HtmlForm::genHTMLForm($ipsandports_edit_data);
+
 				$title = $ipsandports_edit_data['ipsandports_edit']['title'];
 				$image = $ipsandports_edit_data['ipsandports_edit']['image'];
-				
-				eval("echo \"" . getTemplate("ipsandports/ipsandports_edit") . "\";");
+
+				eval("echo \"" . \Froxlor\UI\Template::getTemplate("ipsandports/ipsandports_edit") . "\";");
 			}
 		}
 	}

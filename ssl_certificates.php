@@ -1,7 +1,7 @@
 <?php
 if (! defined('AREA')) {
 	header("Location: index.php");
-	exit;
+	exit();
 }
 
 /**
@@ -16,8 +16,12 @@ if (! defined('AREA')) {
  * @author Froxlor team <team@froxlor.org> (2016-)
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package Panel
- *
+ *         
  */
+
+use Froxlor\Database\Database;
+use Froxlor\Settings;
+use Froxlor\Api\Commands\Certificates as Certificates;
 
 // This file is being included in admin_domains and customer_domains
 // and therefore does not need to require lib/init.php
@@ -34,16 +38,16 @@ if ($action == 'delete') {
 			))->delete();
 			$success_message = sprintf($lng['domains']['ssl_certificate_removed'], $id);
 		} catch (Exception $e) {
-			dynamic_error($e->getMessage());
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 	}
 }
 
-$log->logAction(USR_ACTION, LOG_NOTICE, "viewed domains::ssl_certificates");
+$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed domains::ssl_certificates");
 $fields = array(
 	'd.domain' => $lng['domains']['domainname']
 );
-$paging = new paging($userinfo, TABLE_PANEL_DOMAIN_SSL_SETTINGS, $fields);
+$paging = new \Froxlor\UI\Paging($userinfo, TABLE_PANEL_DOMAIN_SSL_SETTINGS, $fields);
 
 // select all my (accessable) certificates
 $certs_stmt_query = "SELECT s.*, d.domain, d.letsencrypt, c.customerid, c.loginname
@@ -82,7 +86,7 @@ if (count($all_certs) == 0) {
 	);
 	$searchcode = "";
 	$pagingcode = "";
-	eval("\$certificates.=\"" . getTemplate("ssl_certificates/certs_error", true) . "\";");
+	eval("\$certificates.=\"" . \Froxlor\UI\Template::getTemplate("ssl_certificates/certs_error", true) . "\";");
 } else {
 	$paging->setEntries(count($all_certs));
 	$sortcode = $paging->getHtmlSortCode($lng);
@@ -145,15 +149,15 @@ if (count($all_certs) == 0) {
 					}
 				}
 
-				$row = htmlentities_array($cert);
-				eval("\$certificates.=\"" . getTemplate("ssl_certificates/certs_cert", true) . "\";");
+				$row = \Froxlor\PhpHelper::htmlentitiesArray($cert);
+				eval("\$certificates.=\"" . \Froxlor\UI\Template::getTemplate("ssl_certificates/certs_cert", true) . "\";");
 			} else {
 				$message = sprintf($lng['domains']['ssl_certificate_error'], $cert['domain']);
-				eval("\$certificates.=\"" . getTemplate("ssl_certificates/certs_error", true) . "\";");
+				eval("\$certificates.=\"" . \Froxlor\UI\Template::getTemplate("ssl_certificates/certs_error", true) . "\";");
 			}
 		} else {
 			continue;
 		}
 	}
 }
-eval("echo \"" . getTemplate("ssl_certificates/certs_list", true) . "\";");
+eval("echo \"" . \Froxlor\UI\Template::getTemplate("ssl_certificates/certs_list", true) . "\";");

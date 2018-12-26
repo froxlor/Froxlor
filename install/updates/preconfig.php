@@ -31,14 +31,14 @@ function getPreConfig($current_version, $current_db_version)
 	$has_preconfig = false;
 	$return = '<div class="preconfig"><h3 class="red">PLEASE NOTE - Important update notifications</h3>';
 
-	include_once makeCorrectFile(dirname(__FILE__).'/preconfig/0.9/preconfig_0.9.inc.php');
+	include_once \Froxlor\FileDir::makeCorrectFile(dirname(__FILE__) . '/preconfig/0.9/preconfig_0.9.inc.php');
 	parseAndOutputPreconfig($has_preconfig, $return, $current_version, $current_db_version);
 
-	$return .= '<br /><br />'.makecheckbox('update_changesagreed', '<strong>I have read the update notifications above and I am aware of the changes made to my system.</strong>', '1', true, '0', true);
+	$return .= '<br /><br />' . \Froxlor\UI\HTML::makecheckbox('update_changesagreed', '<strong>I have read the update notifications above and I am aware of the changes made to my system.</strong>', '1', true, '0', true);
 	$return .= '</div>';
 	$return .= '<input type="hidden" name="update_preconfig" value="1" />';
 
-	if($has_preconfig) {
+	if ($has_preconfig) {
 		return $return;
 	} else {
 		return '';
@@ -47,9 +47,9 @@ function getPreConfig($current_version, $current_db_version)
 
 function versionInUpdate($current_version, $version_to_check)
 {
-	if (!isFroxlor()) {
+	if (! \Froxlor\Froxlor::isFroxlor()) {
 		return true;
 	}
 
-	return (version_compare2($current_version, $version_to_check) == -1 ? true : false);
+	return (\Froxlor\Froxlor::versionCompare2($current_version, $version_to_check) == - 1 ? true : false);
 }

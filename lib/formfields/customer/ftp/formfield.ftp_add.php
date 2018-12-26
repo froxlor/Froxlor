@@ -13,7 +13,6 @@
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Formfields
  */
-
 return array(
 	'ftp_add' => array(
 		'title' => $lng['ftp']['account_add'],
@@ -24,15 +23,15 @@ return array(
 				'image' => 'icons/user_add.png',
 				'fields' => array(
 					'ftp_username' => array(
-						'visible' => (Settings::Get('customer.ftpatdomain') == '1' ? true : false),
+						'visible' => (\Froxlor\Settings::Get('customer.ftpatdomain') == '1' ? true : false),
 						'label' => $lng['login']['username'],
 						'type' => 'text'
 					),
 					'ftp_domain' => array(
-						'visible' => (Settings::Get('customer.ftpatdomain') == '1' ? true : false),
+						'visible' => (\Froxlor\Settings::Get('customer.ftpatdomain') == '1' ? true : false),
 						'label' => $lng['domains']['domainname'],
 						'type' => 'select',
-						'select_var' => (isset($domains) ? $domains : ""),
+						'select_var' => (isset($domains) ? $domains : "")
 					),
 					'ftp_description' => array(
 						'label' => $lng['panel']['ftpdesc'] = 'FTP description',
@@ -40,7 +39,7 @@ return array(
 					),
 					'path' => array(
 						'label' => $lng['panel']['path'],
-						'desc' => (Settings::Get('panel.pathedit') != 'Dropdown' ? $lng['panel']['pathDescription'] : null).(isset($pathSelect['note']) ? '<br />'.$pathSelect['value'] : ''),
+						'desc' => (\Froxlor\Settings::Get('panel.pathedit') != 'Dropdown' ? $lng['panel']['pathDescription'] : null) . (isset($pathSelect['note']) ? '<br />' . $pathSelect['value'] : ''),
 						'type' => $pathSelect['type'],
 						'select_var' => $pathSelect['value'],
 						'value' => $pathSelect['value']
@@ -53,22 +52,25 @@ return array(
 					'ftp_password_suggestion' => array(
 						'label' => $lng['customer']['generated_pwd'],
 						'type' => 'text',
-						'visible' => (Settings::Get('panel.password_regex') == ''),
-						'value' => generatePassword(),
+						'visible' => (\Froxlor\Settings::Get('panel.password_regex') == ''),
+						'value' => \Froxlor\System\Crypt::generatePassword()
 					),
 					'sendinfomail' => array(
 						'label' => $lng['customer']['sendinfomail'],
 						'type' => 'checkbox',
 						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
 						'value' => array()
 					),
 					'shell' => array(
-						'visible' => (Settings::Get('system.allow_customer_shell') == '1' ? true : false),
+						'visible' => (\Froxlor\Settings::Get('system.allow_customer_shell') == '1' ? true : false),
 						'label' => $lng['panel']['shell'],
 						'type' => 'select',
-						'select_var' => (isset($shells) ? $shells : ""),
+						'select_var' => (isset($shells) ? $shells : "")
 					)
 				)
 			)

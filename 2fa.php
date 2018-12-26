@@ -3,8 +3,12 @@ if (! defined('AREA')) {
 	header("Location: index.php");
 	exit();
 }
+
+use Froxlor\Database\Database;
+use Froxlor\Settings;
+
 if (Settings::Get('2fa.enabled') != '1') {
-	dynamic_error("2FA not activated");
+	\Froxlor\UI\Response::dynamic_error("2FA not activated");
 }
 
 /**
@@ -34,7 +38,7 @@ if (AREA == 'admin') {
 }
 $success_message = "";
 
-$tfa = new FroxlorTwoFactorAuth('Froxlor');
+$tfa = new \Froxlor\FroxlorTwoFactorAuth('Froxlor');
 
 // do the delete and then just show a success-message
 if ($action == 'delete') {
@@ -43,10 +47,10 @@ if ($action == 'delete') {
 		'd2fa' => "",
 		'id' => $uid
 	));
-	standard_success($lng['2fa']['2fa_removed']);
+	\Froxlor\UI\Response::standard_success($lng['2fa']['2fa_removed']);
 } elseif ($action == 'add') {
 	$type = isset($_POST['type_2fa']) ? $_POST['type_2fa'] : '0';
-	
+
 	if ($type == 0 || $type == 1) {
 		$data = "";
 	}
@@ -59,13 +63,13 @@ if ($action == 'delete') {
 		'd2fa' => $data,
 		'id' => $uid
 	));
-	standard_success(sprintf($lng['2fa']['2fa_added'], $filename, $s));
+	\Froxlor\UI\Response::standard_success(sprintf($lng['2fa']['2fa_added'], $filename, $s));
 }
 
-$log->logAction(USR_ACTION, LOG_NOTICE, "viewed 2fa::overview");
+$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed 2fa::overview");
 
 if ($userinfo['type_2fa'] == '0') {
-	
+
 	// available types
 	$type_select_values = array(
 		0 => '-',
@@ -73,15 +77,14 @@ if ($userinfo['type_2fa'] == '0') {
 		2 => 'Authenticator'
 	);
 	asort($type_select_values);
+	$type_select = "";
 	foreach ($type_select_values as $_val => $_type) {
-		$type_select .= makeoption($_type, $_val);
+		$type_select .= \Froxlor\UI\HTML::makeoption($_type, $_val);
 	}
-}
-elseif ($userinfo['type_2fa'] == '1') {
+} elseif ($userinfo['type_2fa'] == '1') {
 	// email 2fa enabled
-}
-elseif ($userinfo['type_2fa'] == '2') {
+} elseif ($userinfo['type_2fa'] == '2') {
 	// authenticator 2fa enabled
 	$ga_qrcode = $tfa->getQRCodeImageAsDataUri($userinfo['loginname'], $userinfo['data_2fa']);
 }
-eval("echo \"" . getTemplate("2fa/overview", true) . "\";");
+eval("echo \"" . \Froxlor\UI\Template::getTemplate("2fa/overview", true) . "\";");

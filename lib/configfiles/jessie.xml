@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <froxlor>
-	<distribution name="Debian" codename="Jessie" version="8.x" defaulteditor="/usr/bin/nano">
+	<distribution name="Debian" codename="Jessie"
+		version="8.x" defaulteditor="/usr/bin/nano">
 		<services>
 			<!-- HTTP -->
 			<service type="http" title="{{lng.admin.configfiles.http}}">
@@ -43,7 +44,8 @@
 					</commands>
 				</general>
 				<!-- HTTP Apache -->
-				<daemon name="apache" version="2.4" title="Apache 2.4" default="true">
+				<daemon name="apache" version="2.4" title="Apache 2.4"
+					default="true">
 					<install><![CDATA[apt-get install apache2]]></install>
 					<include>//service[@type='http']/general/commands</include>
 					<command><![CDATA[a2dismod userdir]]></command>
@@ -904,8 +906,8 @@ include-dir=/etc/powerdns/froxlor/
 						</content>
 					</file>
 					<command><![CDATA[mkdir -p /etc/powerdns/froxlor/]]></command>
-					<file name="/etc/powerdns/froxlor/pdns_froxlor.conf" chown="root:root"
-						chmod="600">
+					<file name="/etc/powerdns/froxlor/pdns_froxlor.conf"
+						chown="root:root" chmod="600">
 						<content><![CDATA[
 # mysql-settings / you need to create the power-dns database for yourself!
 launch=gmysql
@@ -920,7 +922,8 @@ gmysql-password=
 					</file>
 					<command><![CDATA[/etc/init.d/pdns restart]]></command>
 				</daemon>
-				<daemon name="powerdns_bind" title="PowerDNS via bind-backend">
+				<daemon name="powerdns_bind"
+					title="PowerDNS via bind-backend">
 					<install><![CDATA[apt-get install pdns-server]]></install>
 					<file name="/etc/powerdns/pdns.conf" backup="true" chmod="600">
 						<content><![CDATA[
@@ -1447,8 +1450,8 @@ include-dir=/etc/powerdns/froxlor/
 						</content>
 					</file>
 					<command><![CDATA[mkdir -p /etc/powerdns/froxlor/]]></command>
-					<file name="/etc/powerdns/froxlor/pdns_froxlor.conf" chown="root:root"
-						chmod="600">
+					<file name="/etc/powerdns/froxlor/pdns_froxlor.conf"
+						chown="root:root" chmod="600">
 						<content><![CDATA[
 # Bind backend configuration
 
@@ -1494,8 +1497,8 @@ bind-check-interval=180
 						<command><![CDATA[chmod 0750  {{settings.system.vmail_homedir}}]]></command>
 					</commands>
 					<files index="0">
-						<file name="/etc/postfix/mysql-virtual_alias_maps.cf" chown="root:postfix"
-							chmod="0640">
+						<file name="/etc/postfix/mysql-virtual_alias_maps.cf"
+							chown="root:postfix" chmod="0640">
 							<content><![CDATA[
 user = <SQL_UNPRIVILEGED_USER>
 password = <SQL_UNPRIVILEGED_PASSWORD>
@@ -1539,8 +1542,8 @@ query = SELECT DISTINCT username FROM mail_users WHERE email in ((SELECT mail_vi
 ]]>
 							</content>
 						</file>
-						<file name="/etc/postfix/mysql-virtual_uid_maps.cf" chown="root:postfix"
-							chmod="0640">
+						<file name="/etc/postfix/mysql-virtual_uid_maps.cf"
+							chown="root:postfix" chmod="0640">
 							<content><![CDATA[
 user = <SQL_UNPRIVILEGED_USER>
 password = <SQL_UNPRIVILEGED_PASSWORD>
@@ -1551,8 +1554,8 @@ query = SELECT uid FROM mail_users WHERE email = '%s'
 ]]>
 							</content>
 						</file>
-						<file name="/etc/postfix/mysql-virtual_gid_maps.cf" chown="root:postfix"
-							chmod="0640">
+						<file name="/etc/postfix/mysql-virtual_gid_maps.cf"
+							chown="root:postfix" chmod="0640">
 							<content><![CDATA[
 user = <SQL_UNPRIVILEGED_USER>
 password = <SQL_UNPRIVILEGED_PASSWORD>
@@ -1599,8 +1602,8 @@ root:               root@<SERVERNAME>
 					</include>
 					<include>//service[@type='smtp']/general/commands[@index=2]
 					</include>
-					<file name="/etc/postfix/main.cf" chown="root:root" chmod="0644"
-						backup="true">
+					<file name="/etc/postfix/main.cf" chown="root:root"
+						chmod="0644" backup="true">
 						<content><![CDATA[
 # Global Postfix configuration file. This file lists only a subset
 # of all parameters. For the syntax, and for a complete parameter
@@ -2325,8 +2328,8 @@ virtual_mailbox_limit = 0
 						</content>
 					</file>
 					<include>//service[@type='smtp']/general/files[@index=0]</include>
-					<file name="/etc/postfix/master.cf" chown="root:root" chmod="0644"
-						backup="true">
+					<file name="/etc/postfix/master.cf" chown="root:root"
+						chmod="0644" backup="true">
 						<content><![CDATA[
 #
 # Postfix master process configuration file.  For details on the format
@@ -2577,8 +2580,8 @@ dict {
 ]]>
 							</content>
 						</file>
-						<file name="/etc/dovecot/dovecot-sql.conf.ext" chown="root:root"
-							chmod="0600" backup="true">
+						<file name="/etc/dovecot/dovecot-sql.conf.ext"
+							chown="root:root" chmod="0600" backup="true">
 							<content><![CDATA[
 # This file is commonly accessed via passdb {} or userdb {} section in
 # conf.d/auth-sql.conf.ext
@@ -3237,8 +3240,8 @@ mail_access_groups = vmail
 ]]>
 							</content>
 						</file>
-						<file name="/etc/dovecot/conf.d/10-master.conf" chown="root:0"
-							chmod="0644" backup="true">
+						<file name="/etc/dovecot/conf.d/10-master.conf"
+							chown="root:0" chmod="0644" backup="true">
 							<content><![CDATA[
 #default_process_limit = 100
 #default_client_limit = 1000
@@ -3492,8 +3495,8 @@ protocol imap {
 ]]>
 							</content>
 						</file>
-						<file name="/etc/dovecot/conf.d/20-managesieve.conf" chown="root:0"
-							chmod="0644" backup="true">
+						<file name="/etc/dovecot/conf.d/20-managesieve.conf"
+							chown="root:0" chmod="0644" backup="true">
 							<content><![CDATA[
 ##
 ## ManageSieve specific settings
@@ -3795,8 +3798,8 @@ plugin {
 					</commands>
 				</general>
 				<!-- Dovecot with postfix -->
-				<daemon name="dovecot_postfix" version="2" title="Dovecot with postfix"
-					default="true">
+				<daemon name="dovecot_postfix" version="2"
+					title="Dovecot with postfix" default="true">
 					<include>//service[@type='mail']/general/installs[@index=1]
 					</include>
 					<include>//service[@type='mail']/general/files[@index=1]
@@ -3805,7 +3808,8 @@ plugin {
 					</include>
 				</daemon>
 				<!-- Dovecot with exim4 -->
-				<daemon name="dovecot_exim4" version="2" title="Dovecot with exim4">
+				<daemon name="dovecot_exim4" version="2"
+					title="Dovecot with exim4">
 					<include>//service[@type='mail']/general/installs[@index=1]
 					</include>
 					<include>//service[@type='mail']/general/files[@index=1]
@@ -3819,7 +3823,8 @@ plugin {
 				<!-- Proftpd -->
 				<daemon name="proftpd" title="ProFTPd" default="true">
 					<install><![CDATA[apt-get install proftpd-basic proftpd-mod-mysql]]></install>
-					<file name="/etc/proftpd/create-cert.sh" chown="root:0" chmod="0700">
+					<file name="/etc/proftpd/create-cert.sh" chown="root:0"
+						chmod="0700">
 						<content><![CDATA[#!/bin/bash
 [ -f /etc/ssl/certs/proftpd.crt ] || openssl req -new -x509 -newkey rsa:4096 -days 3650 -nodes -out /etc/ssl/certs/proftpd.crt -keyout /etc/ssl/private/proftpd.key -subj "/C=US/ST=Some-State/O=Internet Widgits Pty Ltd/CN=<SERVERNAME>"
 [ -f /etc/ssl/certs/proftpd_ec.crt ] || openssl req -new -x509 -nodes -newkey ec:<(openssl ecparam -name secp521r1) -keyout /etc/ssl/private/proftpd_ec.key -out /etc/ssl/certs/proftpd_ec.crt -days 3650 -subj "/C=US/ST=Some-State/O=Internet Widgits Pty Ltd/CN=<SERVERNAME>"
@@ -3831,8 +3836,8 @@ chmod 0600 /etc/ssl/private/proftpd.key /etc/ssl/private/proftpd_ec.key
 						<command><![CDATA[/etc/proftpd/create-cert.sh]]></command>
 						<command><![CDATA[rm -f /etc/proftpd/create-cert.sh]]></command>
 					</commands>
-					<file name="/etc/proftpd/proftpd.conf" chown="root:0" chmod="0600"
-						backup="true">
+					<file name="/etc/proftpd/proftpd.conf" chown="root:0"
+						chmod="0600" backup="true">
 						<content><![CDATA[
 #
 # /etc/proftpd/proftpd.conf -- This is a basic ProFTPD configuration file.
@@ -4026,8 +4031,8 @@ Include /etc/proftpd/conf.d/
 ]]>
 						</content>
 					</file>
-					<file name="/etc/proftpd/modules.conf" chown="root:0" chmod="0644"
-						backup="true">
+					<file name="/etc/proftpd/modules.conf" chown="root:0"
+						chmod="0644" backup="true">
 						<content><![CDATA[
 #
 # This file is used to manage DSO modules and features.
@@ -4194,7 +4199,8 @@ SQLNamedQuery insert-quota-tally INSERT "%{0}, %{1}, %{2}, %{3}, %{4},%{5}, %{6}
 ]]>
 						</content>
 					</file>
-					<file name="/etc/proftpd/tls.conf" chown="root:root" chmod="0644" backup="true">
+					<file name="/etc/proftpd/tls.conf" chown="root:root"
+						chmod="0644" backup="true">
 						<content><![CDATA[
 <IfModule mod_tls.c>
 TLSEngine                               on
@@ -4226,14 +4232,15 @@ TLSVerifyClient                         off
 				<!-- Pureftpd -->
 				<daemon name="pureftpd" title="PureFTPd">
 					<install><![CDATA[apt-get install pure-ftpd-common pure-ftpd-mysql]]></install>
-					<file name="/etc/pure-ftpd/conf/MinUID" chown="root:0" chmod="0644">
+					<file name="/etc/pure-ftpd/conf/MinUID" chown="root:0"
+						chmod="0644">
 						<content><![CDATA[
 1000
 ]]>
 						</content>
 					</file>
-					<file name="/etc/pure-ftpd/conf/MySQLConfigFile" chown="root:0"
-						chmod="0644">
+					<file name="/etc/pure-ftpd/conf/MySQLConfigFile"
+						chown="root:0" chmod="0644">
 						<content><![CDATA[
 /etc/pure-ftpd/db/mysql.conf
 ]]>
@@ -4260,8 +4267,8 @@ yes
 ]]>
 						</content>
 					</file>
-					<file name="/etc/pure-ftpd/conf/PAMAuthentication" chown="root:0"
-						chmod="0644">
+					<file name="/etc/pure-ftpd/conf/PAMAuthentication"
+						chown="root:0" chmod="0644">
 						<content><![CDATA[
 no
 ]]>
@@ -4407,7 +4414,8 @@ MySQLGetQTASZ  SELECT panel_customers.diskspace/1024 AS QuotaSize FROM panel_cus
 ]]>
 						</content>
 					</file>
-					<file name="/etc/pure-ftpd/conf/Bind" chown="root:0" chmod="0644">
+					<file name="/etc/pure-ftpd/conf/Bind" chown="root:0"
+						chmod="0644">
 						<content><![CDATA[
 21
 ]]>
@@ -4451,7 +4459,8 @@ UPLOADGID=
 			<!-- System tools/services -->
 			<service type="system" title="{{lng.admin.configfiles.etc}}">
 				<!-- Cronjob -->
-				<daemon name="cron" title="Cronjob for froxlor" mandatory="true">
+				<daemon name="cron" title="Cronjob for froxlor"
+					mandatory="true">
 					<file name="/etc/cron.d/froxlor" chown="root:0" chmod="0640">
 						<content><![CDATA[
 #
@@ -4470,7 +4479,8 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 					<command><![CDATA[{{settings.system.crondreload}}]]></command>
 				</daemon>
 				<!-- AWstats -->
-				<daemon name="awstats" title="Awstats (webalizer alternative)">
+				<daemon name="awstats"
+					title="Awstats (webalizer alternative)">
 					<install><![CDATA[apt-get install awstats]]></install>
 					<command><![CDATA[cp /usr/share/awstats/tools/awstats_buildstaticpages.pl {{settings.system.awstats_path}}]]></command>
 					<command><![CDATA[mv {{settings.system.awstats_conf}}/awstats.conf {{settings.system.awstats_conf}}/awstats.model.conf]]></command>
@@ -4479,14 +4489,15 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 					<command><![CDATA[rm /etc/cron.d/awstats]]></command>
 				</daemon>
 				<!-- libnss-mysql -->
-				<daemon name="libnss" title="libnss-mysql (required for FCGID/php-fpm/mpm-itk)">
+				<daemon name="libnss"
+					title="libnss-mysql (required for FCGID/php-fpm/mpm-itk)">
 					<install><![CDATA[apt-get install nscd
 wget http://debian.froxlor.org/pool/main/libn/libnss-mysql-bg/libnss-mysql-bg_1.5-3+frx1_amd64.deb
 dpkg -i libnss-mysql-bg_1.5-3+frx1_amd64.deb
 rm libnss-mysql-bg_1.5-3+frx1_amd64.deb
 ]]></install>
-					<file name="/etc/libnss-mysql.cfg" chown="root:root" chmod="0600"
-						backup="true">
+					<file name="/etc/libnss-mysql.cfg" chown="root:root"
+						chmod="0600" backup="true">
 						<content><![CDATA[
 getpwnam    SELECT username,'x',uid,gid,'Froxlor Customer',homedir,shell \
             FROM ftp_users \
@@ -4584,7 +4595,8 @@ aliases:     files
 						<visibility mode="notisdir">/etc/insserv/overrides</visibility>
 						<content><![CDATA[mkdir -p /etc/insserv/overrides]]></content>
 					</command>
-					<file name="/etc/insserv/overrides/apache2" chown="root:root" chmod="0644">
+					<file name="/etc/insserv/overrides/apache2" chown="root:root"
+						chmod="0644">
 						<visibility mode="equals" value="apache2">{{settings.system.webserver}}</visibility>
 						<content><![CDATA[
 #!/bin/sh
@@ -4599,7 +4611,8 @@ aliases:     files
 ]]>
 						</content>
 					</file>
-					<file name="/etc/insserv/overrides/lighttpd" chown="root:root" chmod="0644">
+					<file name="/etc/insserv/overrides/lighttpd" chown="root:root"
+						chmod="0644">
 						<visibility mode="equals" value="lighttpd">{{settings.system.webserver}}</visibility>
 						<content><![CDATA[
 #!/bin/sh
@@ -4616,7 +4629,8 @@ aliases:     files
 ]]>
 						</content>
 					</file>
-					<file name="/etc/insserv/overrides/nginx" chown="root:root" chmod="0644">
+					<file name="/etc/insserv/overrides/nginx" chown="root:root"
+						chmod="0644">
 						<visibility mode="equals" value="nginx">{{settings.system.webserver}}</visibility>
 						<content><![CDATA[
 #!/bin/sh
@@ -4631,7 +4645,8 @@ aliases:     files
 ]]>
 						</content>
 					</file>
-					<file name="/etc/insserv/overrides/nscd" chown="root:root" chmod="0644">
+					<file name="/etc/insserv/overrides/nscd" chown="root:root"
+						chmod="0644">
 						<content><![CDATA[
 #!/bin/sh
 ### BEGIN INIT INFO
@@ -4647,7 +4662,8 @@ aliases:     files
 					</file>
 				</daemon>
 				<!-- libnss-extrausers -->
-				<daemon name="libnssextrausers" title="libnss-extrausers (alternative to libnss-mysql, required for FCGID/php-fpm/mpm-itk)">
+				<daemon name="libnssextrausers"
+					title="libnss-extrausers (alternative to libnss-mysql, required for FCGID/php-fpm/mpm-itk)">
 					<install><![CDATA[apt-get install nscd libnss-extrausers]]></install>
 					<commands index="1">
 						<command><![CDATA[mkdir -p /var/lib/extrausers]]></command>
@@ -4687,7 +4703,8 @@ aliases:     files
 				<!-- Logrotate -->
 				<daemon name="logrotate" title="Logrotate">
 					<install><![CDATA[apt-get install logrotate]]></install>
-					<file name="/etc/logrotate.d/froxlor" chown="root:root" chmod="0644">
+					<file name="/etc/logrotate.d/froxlor" chown="root:root"
+						chmod="0644">
 						<content><![CDATA[
 #
 # Froxlor logrotate snipet
@@ -4722,12 +4739,13 @@ aliases:     files
 						<command><![CDATA[mkdir -p {{settings.system.mod_fcgid_tmpdir}}]]></command>
 						<command><![CDATA[a2dismod php5]]></command>
 					</commands>
-					<!-- instead of just restarting apache, we let the cronjob do all the
+					<!-- instead of just restarting apache, we let the cronjob do all the 
 						dirty work -->
-					<command><![CDATA[php {{const.FROXLOR_INSTALL_DIR}}/scripts/froxlor_master_cronjob.php --force]]></command>
+					<command><![CDATA[php {{const.\Froxlor\Froxlor::getInstallDir()}}/scripts/froxlor_master_cronjob.php --force]]></command>
 				</daemon>
 				<!-- PHP-FPM -->
-				<daemon name="php-fpm" title="PHP-FPM (alternative to mod_php)">
+				<daemon name="php-fpm"
+					title="PHP-FPM (alternative to mod_php)">
 					<commands index="1">
 						<visibility mode="equals" value="apache2">{{settings.system.webserver}}
 						</visibility>
@@ -4765,9 +4783,9 @@ aliases:     files
 						</visibility>
 						<command><![CDATA[/etc/init.d/apache2 restart]]></command>
 					</commands>
-					<!-- instead of just restarting apache, we let the cronjob do all the
+					<!-- instead of just restarting apache, we let the cronjob do all the 
 						dirty work -->
-					<command><![CDATA[php {{const.FROXLOR_INSTALL_DIR}}/scripts/froxlor_master_cronjob.php --force]]></command>
+					<command><![CDATA[php {{const.\Froxlor\Froxlor::getInstallDir()}}/scripts/froxlor_master_cronjob.php --force]]></command>
 				</daemon>
 			</service>
 		</services>

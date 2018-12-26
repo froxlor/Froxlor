@@ -1,11 +1,16 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
+use Froxlor\Settings;
+use Froxlor\Database\Database;
+use Froxlor\Api\Commands\Customers;
+use Froxlor\Api\Commands\CustomerBackups;
+
 /**
  *
- * @covers ApiCommand
- * @covers ApiParameter
- * @covers CustomerBackups
+ * @covers \Froxlor\Api\ApiCommand
+ * @covers \Froxlor\Api\ApiParameter
+ * @covers \Froxlor\Api\Commands\CustomerBackups
  */
 class CustomerBackupsTest extends TestCase
 {
@@ -13,7 +18,7 @@ class CustomerBackupsTest extends TestCase
 	public function testAdminCustomerBackupsNotEnabled()
 	{
 		global $admin_userdata;
-		
+
 		Settings::Set('system.backupenabled', 0, true);
 
 		// get customer
@@ -27,15 +32,16 @@ class CustomerBackupsTest extends TestCase
 	}
 
 	/**
+	 *
 	 * @depends testAdminCustomerBackupsNotEnabled
 	 */
 	public function testAdminCustomerBackupsExtrasHidden()
 	{
 		global $admin_userdata;
-		
+
 		Settings::Set('system.backupenabled', 1, true);
 		Settings::Set('panel.customer_hide_options', 'extras', true);
-		
+
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
@@ -47,14 +53,15 @@ class CustomerBackupsTest extends TestCase
 	}
 
 	/**
+	 *
 	 * @depends testAdminCustomerBackupsExtrasHidden
 	 */
 	public function testAdminCustomerBackupsExtrasBackupHidden()
 	{
 		global $admin_userdata;
-		
+
 		Settings::Set('panel.customer_hide_options', 'extras.backup', true);
-		
+
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
@@ -64,23 +71,24 @@ class CustomerBackupsTest extends TestCase
 		$this->expectExceptionMessage("You cannot access this resource");
 		CustomerBackups::getLocal($customer_userdata)->add();
 	}
-	
+
 	/**
+	 *
 	 * @depends testAdminCustomerBackupsExtrasBackupHidden
 	 */
 	public function testCustomerCustomerBackupsAdd()
 	{
 		global $admin_userdata;
-		
+
 		Settings::Set('panel.customer_hide_options', '', true);
 		Database::query("TRUNCATE TABLE `panel_tasks`;");
-		
+
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
 		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
-		
+
 		$data = [
 			'path' => '/my-backup',
 			'backup_dbs' => 2,
@@ -96,6 +104,7 @@ class CustomerBackupsTest extends TestCase
 	}
 
 	/**
+	 *
 	 * @depends testCustomerCustomerBackupsAdd
 	 */
 	public function testCustomerCustomerBackupsAddPathNotDocroot()
@@ -138,7 +147,7 @@ class CustomerBackupsTest extends TestCase
 	public function testAdminCustomerBackupsListing()
 	{
 		global $admin_userdata;
-		
+
 		$json_result = CustomerBackups::getLocal($admin_userdata)->listing();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(1, $result['count']);
@@ -154,13 +163,13 @@ class CustomerBackupsTest extends TestCase
 	public function testCustomerCustomerBackupsDelete()
 	{
 		global $admin_userdata;
-		
+
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
 		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
-		
+
 		$data = [
 			'backup_job_entry' => 1
 		];
@@ -176,13 +185,13 @@ class CustomerBackupsTest extends TestCase
 	public function testCustomerCustomerBackupsDeleteNotFound()
 	{
 		global $admin_userdata;
-		
+
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
 		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
-		
+
 		$data = [
 			'backup_job_entry' => 1337
 		];

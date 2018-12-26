@@ -18,23 +18,21 @@
 define('AREA', 'admin');
 require './lib/init.php';
 
+use Froxlor\Settings;
+
 if ($userinfo['change_serversettings'] == '1') {
 
-	if ($action == 'setconfigured')
-	{
+	if ($action == 'setconfigured') {
 		Settings::Set('panel.is_configured', '1', true);
-		redirectTo('admin_configfiles.php', array(
+		\Froxlor\UI\Response::redirectTo('admin_configfiles.php', array(
 			's' => $s
 		));
 	}
 
 	$customer_tmpdir = '/tmp/';
-	if (Settings::Get('system.mod_fcgid') == '1' && Settings::Get('system.mod_fcgid_tmpdir') != '')
-	{
+	if (Settings::Get('system.mod_fcgid') == '1' && Settings::Get('system.mod_fcgid_tmpdir') != '') {
 		$customer_tmpdir = Settings::Get('system.mod_fcgid_tmpdir');
-	}
-	elseif (Settings::Get('phpfpm.enabled') == '1' && Settings::Get('phpfpm.tmpdir') != '')
-	{
+	} elseif (Settings::Get('phpfpm.enabled') == '1' && Settings::Get('phpfpm.tmpdir') != '') {
 		$customer_tmpdir = Settings::Get('phpfpm.tmpdir');
 	}
 
@@ -44,7 +42,7 @@ if ($userinfo['change_serversettings'] == '1') {
 		$nameservers = explode(',', Settings::Get('system.nameservers'));
 		foreach ($nameservers as $nameserver) {
 			$nameserver = trim($nameserver);
-			$nameserver_ips = gethostbynamel6($nameserver);
+			$nameserver_ips = \Froxlor\PhpHelper::gethostbynamel6($nameserver);
 			if (is_array($nameserver_ips) && count($nameserver_ips) > 0) {
 				$ns_ips .= implode(",", $nameserver_ips);
 			}
@@ -66,12 +64,12 @@ if ($userinfo['change_serversettings'] == '1') {
 		'<VIRTUAL_UID_MAPS>' => Settings::Get('system.vmail_uid'),
 		'<VIRTUAL_GID_MAPS>' => Settings::Get('system.vmail_gid'),
 		'<SSLPROTOCOLS>' => (Settings::Get('system.use_ssl') == '1') ? 'imaps pop3s' : '',
-		'<CUSTOMER_TMP>' => makeCorrectDir($customer_tmpdir),
-		'<BASE_PATH>' => makeCorrectDir(FROXLOR_INSTALL_DIR),
-		'<BIND_CONFIG_PATH>' => makeCorrectDir(Settings::Get('system.bindconf_directory')),
+		'<CUSTOMER_TMP>' => \Froxlor\FileDir::makeCorrectDir($customer_tmpdir),
+		'<BASE_PATH>' => \Froxlor\FileDir::makeCorrectDir(\Froxlor\Froxlor::getInstallDir()),
+		'<BIND_CONFIG_PATH>' => \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.bindconf_directory')),
 		'<WEBSERVER_RELOAD_CMD>' => Settings::Get('system.apachereload_command'),
-		'<CUSTOMER_LOGS>' => makeCorrectDir(Settings::Get('system.logfiles_directory')),
-		'<FPM_IPCDIR>' => makeCorrectDir(Settings::Get('phpfpm.fastcgi_ipcdir')),
+		'<CUSTOMER_LOGS>' => \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.logfiles_directory')),
+		'<FPM_IPCDIR>' => \Froxlor\FileDir::makeCorrectDir(Settings::Get('phpfpm.fastcgi_ipcdir')),
 		'<WEBSERVER_GROUP>' => Settings::Get('system.httpgroup')
 	);
 
@@ -87,17 +85,17 @@ if ($userinfo['change_serversettings'] == '1') {
 	$services = "";
 	$daemons = "";
 
-	$config_dir = makeCorrectDir(FROXLOR_INSTALL_DIR . '/lib/configfiles/');
+	$config_dir = \Froxlor\FileDir::makeCorrectDir(\Froxlor\Froxlor::getInstallDir() . '/lib/configfiles/');
 
 	if ($distribution != "") {
 
-		if (!file_exists($config_dir . '/' . $distribution . ".xml")) {
+		if (! file_exists($config_dir . '/' . $distribution . ".xml")) {
 			trigger_error("Unknown distribution, are you playing around with the URL?");
-			exit;
+			exit();
 		}
 
 		// create configparser object
-		$configfiles = new ConfigParser($config_dir . '/' . $distribution . ".xml");
+		$configfiles = new \Froxlor\Config\ConfigParser($config_dir . '/' . $distribution . ".xml");
 
 		// get distro-info
 		$dist_display = getCompleteDistroName($configfiles);
@@ -107,9 +105,9 @@ if ($userinfo['change_serversettings'] == '1') {
 
 		if ($service != "") {
 
-			if (!isset($services[$service])) {
+			if (! isset($services[$service])) {
 				trigger_error("Unknown service, are you playing around with the URL?");
-				exit;
+				exit();
 			}
 
 			$daemons = $services[$service]->getDaemons();
@@ -120,12 +118,12 @@ if ($userinfo['change_serversettings'] == '1') {
 					if ($dd->default) {
 						$title = $title . " (" . strtolower($lng['panel']['default']) . ")";
 					}
-					$daemons_select .= makeoption($title, $di);
+					$daemons_select .= \Froxlor\UI\HTML::makeoption($title, $di);
 				}
 			}
 		} else {
 			foreach ($services as $si => $sd) {
-				$services_select .= makeoption($sd->title, $si);
+				$services_select .= \Froxlor\UI\HTML::makeoption($sd->title, $si);
 			}
 		}
 	} else {
@@ -137,7 +135,7 @@ if ($userinfo['change_serversettings'] == '1') {
 		// read in all the distros
 		foreach ($distros as $_distribution) {
 			// get configparser object
-			$dist = new ConfigParser($_distribution);
+			$dist = new \Froxlor\Config\ConfigParser($_distribution);
 			// get distro-info
 			$dist_display = getCompleteDistroName($dist);
 			// store in tmp array
@@ -149,15 +147,15 @@ if ($userinfo['change_serversettings'] == '1') {
 
 		foreach ($distributions_select_data as $dist_display => $dist_index) {
 			// create select-box-option
-			$distributions_select .= makeoption($dist_display, $dist_index);
+			$distributions_select .= \Froxlor\UI\HTML::makeoption($dist_display, $dist_index);
 		}
 	}
 
 	if ($distribution != "" && $service != "" && $daemon != "") {
 
-		if (!isset($daemons[$daemon])) {
+		if (! isset($daemons[$daemon])) {
 			trigger_error("Unknown daemon, are you playing around with the URL?");
-			exit;
+			exit();
 		}
 
 		$confarr = $daemons[$daemon]->getConfig();
@@ -176,7 +174,7 @@ if ($userinfo['change_serversettings'] == '1') {
 			if ($lasttype != '' && $lasttype != $_action['type']) {
 				$commands = trim($commands);
 				$numbrows = count(explode("\n", $commands));
-				eval("\$configpage.=\"" . getTemplate("configfiles/configfiles_commands") . "\";");
+				eval("\$configpage.=\"" . \Froxlor\UI\Template::getTemplate("configfiles/configfiles_commands") . "\";");
 				$lasttype = '';
 				$commands = '';
 			}
@@ -207,14 +205,14 @@ if ($userinfo['change_serversettings'] == '1') {
 					$commands = trim($commands_pre);
 					if ($commands != "") {
 						$numbrows = count(explode("\n", $commands));
-						eval("\$commands_pre=\"" . getTemplate("configfiles/configfiles_commands") . "\";");
+						eval("\$commands_pre=\"" . \Froxlor\UI\Template::getTemplate("configfiles/configfiles_commands") . "\";");
 					}
 					$commands = trim($commands_post);
 					if ($commands != "") {
 						$numbrows = count(explode("\n", $commands));
-						eval("\$commands_post=\"" . getTemplate("configfiles/configfiles_commands") . "\";");
+						eval("\$commands_post=\"" . \Froxlor\UI\Template::getTemplate("configfiles/configfiles_commands") . "\";");
 					}
-					eval("\$configpage.=\"" . getTemplate("configfiles/configfiles_subfileblock") . "\";");
+					eval("\$configpage.=\"" . \Froxlor\UI\Template::getTemplate("configfiles/configfiles_subfileblock") . "\";");
 					$commands = '';
 					$commands_pre = '';
 					$commands_post = '';
@@ -224,15 +222,15 @@ if ($userinfo['change_serversettings'] == '1') {
 		$commands = trim($commands);
 		if ($commands != '') {
 			$numbrows = count(explode("\n", $commands));
-			eval("\$configpage.=\"" . getTemplate("configfiles/configfiles_commands") . "\";");
+			eval("\$configpage.=\"" . \Froxlor\UI\Template::getTemplate("configfiles/configfiles_commands") . "\";");
 		}
-		eval("echo \"" . getTemplate("configfiles/configfiles") . "\";");
+		eval("echo \"" . \Froxlor\UI\Template::getTemplate("configfiles/configfiles") . "\";");
 	} else {
-		$basedir = FROXLOR_INSTALL_DIR;
-		eval("echo \"" . getTemplate("configfiles/wizard") . "\";");
+		$basedir = \Froxlor\Froxlor::getInstallDir();
+		eval("echo \"" . \Froxlor\UI\Template::getTemplate("configfiles/wizard") . "\";");
 	}
 } else {
-	redirectTo('admin_index.php', array(
+	\Froxlor\UI\Response::redirectTo('admin_index.php', array(
 		's' => $s
 	));
 }
@@ -246,7 +244,7 @@ function getFileContentContainer($file_content, &$replace_arr, $realname, $distr
 		$file_content = strtr($file_content, $replace_arr);
 		$file_content = htmlspecialchars($file_content);
 		$numbrows = count(explode("\n", $file_content));
-		eval("\$files=\"" . getTemplate("configfiles/configfiles_file") . "\";");
+		eval("\$files=\"" . \Froxlor\UI\Template::getTemplate("configfiles/configfiles_file") . "\";");
 	}
 	return $files;
 }

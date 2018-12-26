@@ -14,7 +14,6 @@
  * @package    Formfields
  *
  */
-
 return array(
 	'domain_import' => array(
 		'title' => $lng['domains']['domain_import'],
@@ -28,7 +27,7 @@ return array(
 						'label' => $lng['admin']['customer'],
 						'type' => 'select',
 						'select_var' => $customers,
-						'mandatory' => true,
+						'mandatory' => true
 					),
 					'separator' => array(
 						'label' => $lng['domains']['import_separator'],

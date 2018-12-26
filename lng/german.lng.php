@@ -20,7 +20,6 @@
 /**
  * Global
  */
-
 $lng['translator'] = '';
 $lng['panel']['edit'] = 'bearbeiten';
 $lng['panel']['delete'] = 'löschen';
@@ -226,7 +225,6 @@ $lng['error']['destinationnonexist'] = 'Bitte geben Sie Ihre Weiterleitungsadres
 $lng['error']['destinationalreadyexistasmail'] = 'Die Weiterleitung zu "%s" existiert bereits als aktive E-Mail-Adresse.';
 $lng['error']['destinationalreadyexist'] = 'Es existiert bereits eine Weiterleitung nach "%s".';
 $lng['error']['destinationiswrong'] = 'Die Weiterleitungsadresse "%s" enthält ungültige Zeichen oder ist nicht vollständig.';
-$lng['error']['ticketnotaccessible'] = 'Sie können sich das Ticket nicht ansehen.';
 $lng['error']['backupfoldercannotbedocroot'] = 'Der Ordner für Backups darf nicht das Heimatverzeichnis sein, wählen Sie einen Ordner unterhalb des Heimatverzeichnisses, z.B. /backups';
 
 /**
@@ -495,7 +493,7 @@ $lng['admin']['updatecounters'] = 'Ressourcenverbrauch';
 $lng['question']['admin_counters_reallyupdate'] = 'Wollen Sie den Ressourcenverbrauch neu berechnen?';
 $lng['panel']['pathDescription'] = 'Sollte das Verzeichnis nicht existieren, wird es automatisch erstellt.';
 $lng['panel']['pathDescriptionEx'] = '<br />Sollte eine Weiterleitung auf eine andere Domain gewünscht sein, muss der Eintrag mit http:// oder https:// beginnen.';
-$lng['panel']['pathDescriptionSubdomain'] = $lng['panel']['pathDescription'].$lng['panel']['pathDescriptionEx']."<br />Endet die URL mit einem / (Slash) geht Froxlor von einem Ordner aus, wenn nicht, wird es wie eine Datei behandelt.";
+$lng['panel']['pathDescriptionSubdomain'] = $lng['panel']['pathDescription'] . $lng['panel']['pathDescriptionEx'] . "<br />Endet die URL mit einem / (Slash) geht Froxlor von einem Ordner aus, wenn nicht, wird es wie eine Datei behandelt.";
 
 // ADDED IN 1.2.16-svn6
 
@@ -508,7 +506,7 @@ $lng['admin']['subcanemaildomain']['never'] = 'Nie';
 $lng['admin']['subcanemaildomain']['choosableno'] = 'Wählbar, Standardwert: Nein';
 $lng['admin']['subcanemaildomain']['choosableyes'] = 'Wählbar, Standardwert: Ja';
 $lng['admin']['subcanemaildomain']['always'] = 'Immer';
-$lng['changepassword']['also_change_webalizer'] = ' Auch Passwort der Statistikseite ändern';
+$lng['changepassword']['also_change_stats'] = ' Auch Passwort der Statistikseite ändern';
 
 // ADDED IN 1.2.16-svn8
 
@@ -584,126 +582,15 @@ $lng['admin']['webalizer']['veryquiet'] = 'Keine Ausgaben';
 $lng['serversettings']['webalizer_quiet']['title'] = 'Webalizerausgabe';
 $lng['serversettings']['webalizer_quiet']['description'] = 'Ausgabefreudigkeit des Webalizer-Programms';
 
-// ADDED IN 1.2.18-svn3
-
-$lng['ticket']['admin_email'] = 'root@localhost';
-$lng['ticket']['noreply_email'] = 'tickets@froxlor';
-$lng['admin']['ticketsystem'] = 'Support-Tickets';
-$lng['menue']['ticket']['ticket'] = 'Support-Tickets';
-$lng['menue']['ticket']['categories'] = 'Support-Kategorien';
-$lng['menue']['ticket']['archive'] = 'Ticket-Archiv';
-$lng['ticket']['description'] = 'Hier können Sie Hilfe-Anfragen an Ihren zuständigen Administrator senden.<br />Benachrichtigungen werden per E-Mail verschickt.';
-$lng['ticket']['ticket_new'] = 'Neues Support-Ticket erstellen';
-$lng['ticket']['ticket_reply'] = 'Auf Support-Ticket antworten';
-$lng['ticket']['ticket_reopen'] = 'Ticket wiedereröffnen';
-$lng['ticket']['ticket_newcateory'] = 'Neue Support-Kategorie erstellen';
-$lng['ticket']['ticket_editcateory'] = 'Support-Kategorie bearbeiten';
-$lng['ticket']['ticket_view'] = 'Ticketverlauf ansehen';
-$lng['ticket']['ticketcount'] = 'Anzahl Tickets';
-$lng['ticket']['ticket_answers'] = 'Antworten';
-$lng['ticket']['subject'] = 'Betreff';
-$lng['ticket']['status'] = 'Status';
-$lng['ticket']['lastreplier'] = 'Letzte Antwort';
-$lng['ticket']['priority'] = 'Priorität';
-$lng['ticket']['low'] = 'Niedrig';
-$lng['ticket']['normal'] = 'Normal';
-$lng['ticket']['high'] = 'Hoch';
-$lng['ticket']['lastchange'] = 'Letzte Änderung';
-$lng['ticket']['lastchange_from'] = 'Anfangsdatum (tt.mm.jjjj)';
-$lng['ticket']['lastchange_to'] = 'Enddatum (tt.mm.jjjj)';
-$lng['ticket']['category'] = 'Kategorie';
-$lng['ticket']['no_cat'] = 'Keine';
-$lng['ticket']['message'] = 'Nachricht';
-$lng['ticket']['show'] = 'Anschauen';
-$lng['ticket']['answer'] = 'Antworten';
-$lng['ticket']['close'] = 'Schließen';
-$lng['ticket']['reopen'] = 'Wiedereröffnen';
-$lng['ticket']['archive'] = 'Archivieren';
-$lng['ticket']['ticket_delete'] = 'Ticket löschen';
-$lng['ticket']['lastarchived'] = 'Zuletzt archivierte Tickets';
-$lng['ticket']['archivedtime'] = 'Archiviert';
-$lng['ticket']['open'] = 'Offen';
-$lng['ticket']['wait_reply'] = 'Warte auf Antwort';
-$lng['ticket']['replied'] = 'Beantwortet';
-$lng['ticket']['closed'] = 'Geschlossen';
-$lng['ticket']['staff'] = 'Mitarbeiter';
-$lng['ticket']['customer'] = 'Kunde';
-$lng['ticket']['old_tickets'] = 'Bisheriger Ticketverlauf';
-$lng['ticket']['search'] = 'Archiv durchsuchen';
-$lng['ticket']['nocustomer'] = 'Keine Angabe';
-$lng['ticket']['archivesearch'] = 'Archiv Suchergebnis';
-$lng['ticket']['noresults'] = 'Keine Tickets gefunden';
-$lng['ticket']['notmorethanxopentickets'] = 'Zum Schutz gegen Spam können Sie nicht mehr als "%s" offene Tickets haben';
-$lng['ticket']['supportstatus'] = 'Support-Status';
-$lng['ticket']['supportavailable'] = '<span class="ticket_low">Der Support ist besetzt und steht zu Ihrer Verfügung.</span>';
-$lng['ticket']['supportnotavailable'] = '<span class="ticket_high">Der Support ist zur Zeit nicht besetzt.</span>';
-$lng['admin']['templates']['ticket'] = 'Benachrichtigungs-Mails für Support-Tickets';
-$lng['admin']['templates']['SUBJECT'] = 'Wird mit dem Betreff des Support-Tickets ersetzt';
-$lng['admin']['templates']['new_ticket_for_customer'] = 'Kunden-Information, dass das Ticket übermittelt wurde';
-$lng['admin']['templates']['new_ticket_by_customer'] = 'Admin-Benachrichtigung für ein Ticket eines Kunden';
-$lng['admin']['templates']['new_reply_ticket_by_customer'] = 'Admin-Benachrichtigung für ein beantwortetes Ticket';
-$lng['admin']['templates']['new_ticket_by_staff'] = 'Kunden-Benachrichtigung für ein Ticket eines Mitarbeiters';
-$lng['admin']['templates']['new_reply_ticket_by_staff'] = 'Kunden-Benachrichtigung für ein beantwortetes Ticket';
-$lng['mails']['new_ticket_for_customer']['mailbody'] = 'Hallo {FIRSTNAME} {NAME},\n\nihr Support-Ticket mit dem Betreff "{SUBJECT}" wurde erfolgreich gesendet.\n\nSobald ihr Ticket beantwortet wurde, werden Sie per E-Mail benachrichtigt.\n\nVielen Dank,\nIhr Administrator';
-$lng['mails']['new_ticket_for_customer']['subject'] = 'Wir haben Ihr Support-Ticket erhalten.';
-$lng['mails']['new_ticket_by_customer']['mailbody'] = 'Hallo Admin,\n\nein neues Support-Ticket wurde uebermittelt.\n\nBitte melde Dich an um es aufzurufen.\n\nVielen Dank,\nIhr Administrator';
-$lng['mails']['new_ticket_by_customer']['subject'] = 'Neues Support-Ticket';
-$lng['mails']['new_reply_ticket_by_customer']['mailbody'] = 'Hallo Admin,\n\ndas Support-Ticket "{SUBJECT}" wurde von einem Kunden beantwortet.\n\nBitte melde Dich an um es aufzurufen.\n\nVielen Dank,\nIhr Administrator';
-$lng['mails']['new_reply_ticket_by_customer']['subject'] = 'Neue Antwort zu einem Support-Ticket';
-$lng['mails']['new_ticket_by_staff']['mailbody'] = 'Hallo {FIRSTNAME} {NAME},\n\nein Support-Ticket mit dem Betreff "{SUBJECT}" wurde an Sie übermittelt.\n\nBitte melden Sie sich an, um das Ticket aufzurufen.\n\nVielen Dank,\nIhr Administrator';
-$lng['mails']['new_ticket_by_staff']['subject'] = 'Neues Support-Ticket';
-$lng['mails']['new_reply_ticket_by_staff']['mailbody'] = 'Hallo {FIRSTNAME} {NAME},\n\ndas Support-Ticket mit dem Betreff "{SUBJECT}" wurde von einem Mitarbeiter beantwortet.\n\nBitte melden Sie sich an, um das Ticket aufzurufen.\n\nVielen Dank,\nIhr Administrator';
-$lng['mails']['new_reply_ticket_by_staff']['subject'] = 'Neue Antwort zu einem Support-Ticket';
-$lng['question']['ticket_reallyclose'] = 'Wollen Sie das Ticket "%s" wirklich schließen?';
-$lng['question']['ticket_reallydelete'] = 'Wollen Sie das Ticket "%s" wirklich löschen?';
-$lng['question']['ticket_reallydeletecat'] = 'Wollen Sie die Kategorie "%s" wirklich löschen?';
-$lng['question']['ticket_reallyarchive'] = 'Wollen Sie das Ticket "%s" wirklich in das Archiv verschieben?';
-$lng['error']['nomoreticketsavailable'] = 'Sie haben Ihr Ticketkontingent aufgebraucht. Bitte kontaktieren Sie ihren Administrator.';
-$lng['error']['nocustomerforticket'] = 'Keine Kunden vorhanden, um ein Ticket zu erstellen.';
-$lng['error']['categoryhastickets'] = 'In dieser Kategorie befinden sich noch Tickets.<br />Bitte löschen Sie diese, um die Kategorie zu löschen';
-$lng['admin']['ticketsettings'] = 'Support-Ticket-Einstellungen';
-$lng['admin']['archivelastrun'] = 'Letzte Ticket-Archivierung';
-$lng['serversettings']['ticket']['noreply_email']['title'] = 'Absender-Adresse';
-$lng['serversettings']['ticket']['noreply_email']['description'] = 'Die Absender-Adresse der Support-Tickets. Meist sowas wie keine-antwort@domain.tld';
-$lng['serversettings']['ticket']['worktime_begin']['title'] = 'Beginn Support-Zeit (hh:mm)';
-$lng['serversettings']['ticket']['worktime_begin']['description'] = 'Beginn der Zeit in der der Support besetzt ist.';
-$lng['serversettings']['ticket']['worktime_end']['title'] = 'Ende Support-Zeit (hh:mm)';
-$lng['serversettings']['ticket']['worktime_end']['description'] = 'Ende der Zeit in der der Support besetzt ist.';
-$lng['serversettings']['ticket']['worktime_sat'] = 'Support an Samstagen besetzt?';
-$lng['serversettings']['ticket']['worktime_sun'] = 'Support an Sonntagen besetzt?';
-$lng['serversettings']['ticket']['worktime_all']['title'] = 'Kein zeitlich begrenzter Support';
-$lng['serversettings']['ticket']['worktime_all']['description'] = 'Wenn "Ja" überschreibt diese Option Start- und Endzeit des Supports';
-$lng['serversettings']['ticket']['archiving_days'] = 'Nach wievielen Tagen sollen abgeschlossene Tickets archiviert werden?';
-$lng['customer']['tickets'] = 'Support-Tickets';
-
 // ADDED IN 1.2.18-svn4
 
 $lng['admin']['domain_nocustomeraddingavailable'] = 'Es können derzeit keine Domains angelegt werden. Sie müssen zuerst einen Kunden anlegen';
-$lng['serversettings']['ticket']['enable'] = 'Ticketsystem aktivieren';
-$lng['serversettings']['ticket']['concurrentlyopen'] = 'Wieviele Tickets kann ein Kunde gleichzeitig öffnen?';
-$lng['error']['norepymailiswrong'] = 'Die "Keine-Antwort-Adresse" ist fehlerhaft. Es ist nur eine gültige E-Mail-Adresse erlaubt';
-$lng['error']['tadminmailiswrong'] = 'Die "Ticket-Admin-Adresse" ist fehlerhaft. Es ist nur eine gültige E-Mail-Adresse erlaubt';
-$lng['ticket']['awaitingticketreply'] = 'Sie haben "%s" unbeantwortete(s) Support-Ticket(s)';
-
-// ADDED IN 1.2.18-svn5
-
-$lng['serversettings']['ticket']['noreply_name'] = 'E-Mail-Absendername für Tickets';
 
 // ADDED IN 1.2.19-svn
 
 $lng['serversettings']['mod_fcgid']['configdir']['title'] = 'Konfigurations-Verzeichnis';
 $lng['serversettings']['mod_fcgid']['configdir']['description'] = 'Wo sollen alle Konfigurationsdateien von fcgid liegen? Wenn Sie keine selbst kompilierte suexec Binary benutzen, was in der Regel der Fall ist, muss dieser Pfad unter /var/www/ liegen.<br /><br /><div class="red">ACHTUNG: Der Inhalt dieses Ordners wird regelmäßig geleert, daher sollten dort keinerlei Daten manuell abgelegt werden.</div>';
 $lng['serversettings']['mod_fcgid']['tmpdir']['title'] = 'Temporäres Verzeichnis';
-
-// ADDED IN 1.2.19-svn3
-
-$lng['serversettings']['ticket']['reset_cycle']['title'] = 'Turnus verbrauchte Tickets zurücksetzen';
-$lng['serversettings']['ticket']['reset_cycle']['description'] = 'Setzt die Anzahl der vom Kunden verbrauchten Tickets in dem angegebenen Turnus auf 0';
-$lng['admin']['tickets']['daily'] = 'Täglich';
-$lng['admin']['tickets']['weekly'] = 'Wöchentlich';
-$lng['admin']['tickets']['monthly'] = 'Monatlich';
-$lng['admin']['tickets']['yearly'] = 'Jährlich';
-$lng['error']['ticketresetcycleiswrong'] = 'Der Turnus des Ticket-Zurücksetzen muss "Täglich", "Wöchentlich", "Monatlich" oder "Jährlich" sein.';
 
 // ADDED IN 1.2.19-svn4
 
@@ -787,8 +674,8 @@ $lng['admin']['sslsettings'] = 'SSL-Einstellungen';
 $lng['cronjobs']['notyetrun'] = 'Bisher nicht gestartet';
 $lng['serversettings']['default_vhostconf']['title'] = 'Standard vHost-Einstellungen';
 $lng['admin']['specialsettings_replacements'] = "Die folgenden Variablen können verwendet werden:<br/><code>{DOMAIN}</code>, <code>{DOCROOT}</code>, <code>{CUSTOMER}</code>, <code>{IP}</code>, <code>{PORT}</code>, <code>{SCHEME}</code><br/>";
-$lng['serversettings']['default_vhostconf']['description'] = 'Der Inhalt dieses Feldes wird direkt in den IP/Port-vHost-Container übernommen. '.$lng['admin']['specialsettings_replacements'].'<br /><strong>ACHTUNG:</strong> Der Code wird nicht auf Fehler geprüft. Etwaige Fehler werden also auch übernommen. Der Webserver könnte nicht mehr starten!';
-$lng['serversettings']['default_vhostconf_domain']['description'] = 'Der Inhalt dieses Feldes wird direkt in jeden Domain-vHost-Container übernommen. '. $lng['admin']['specialsettings_replacements'].'<strong>ACHTUNG:</strong> Der Code wird nicht auf Fehler geprüft. Etwaige Fehler werden also auch übernommen. Der Webserver könnte nicht mehr starten!';
+$lng['serversettings']['default_vhostconf']['description'] = 'Der Inhalt dieses Feldes wird direkt in den IP/Port-vHost-Container übernommen. ' . $lng['admin']['specialsettings_replacements'] . '<br /><strong>ACHTUNG:</strong> Der Code wird nicht auf Fehler geprüft. Etwaige Fehler werden also auch übernommen. Der Webserver könnte nicht mehr starten!';
+$lng['serversettings']['default_vhostconf_domain']['description'] = 'Der Inhalt dieses Feldes wird direkt in jeden Domain-vHost-Container übernommen. ' . $lng['admin']['specialsettings_replacements'] . '<strong>ACHTUNG:</strong> Der Code wird nicht auf Fehler geprüft. Etwaige Fehler werden also auch übernommen. Der Webserver könnte nicht mehr starten!';
 $lng['serversettings']['apache_globaldiropt']['title'] = 'Kunden-Prefix Ordner-Optionen';
 $lng['serversettings']['apache_globaldiropt']['description'] = 'Der Inhalt dieses Feldes wird in die 05_froxlor_dirfix_nofcgid.conf Apache Konfigurationsdatei eingefügt. Wenn leer werden folgende Standardwerte verwendet:<br><br>apache >=2.4<br><code>Require all granted<br>AllowOverride All</code><br><br>apache <=2.2<br><code>Order allow,deny<br>allow from all</code>';
 $lng['error']['invalidip'] = 'Ungültige IP-Adresse: "%s"';
@@ -814,7 +701,6 @@ $lng['admin']['caneditphpsettings'] = 'Kann PHP-bezogene Domaineinstellungen vor
 
 $lng['admin']['allips'] = 'Alle IP-Adressen';
 $lng['panel']['nosslipsavailable'] = 'Für diesen Server wurden noch keine SSL IP/Port Kombinationen eingetragen';
-$lng['ticket']['by'] = 'von';
 $lng['dkim']['use_dkim']['title'] = 'DKIM-Support aktivieren?';
 $lng['dkim']['use_dkim']['description'] = 'Wollen Sie das Domain-Keys-System (DKIM) benutzen?<br/><em class="red">Hinweis: Derzeit wird DKIM nur via dkim-filter unterstützt, nicht opendkim.</em>';
 $lng['error']['invalidmysqlhost'] = 'Ungültige MySQL-Host-Adresse: "%s"';
@@ -929,7 +815,7 @@ $lng['admin']['show_version_footer']['description'] = 'Zeige Froxlor Version in 
 $lng['admin']['froxlor_graphic']['title'] = 'Grafik im Kopfbereich des Panels';
 $lng['admin']['froxlor_graphic']['description'] = 'Welche Grafik soll im Kopfbereich des Panels anstatt des Froxlor Logos angezeigt werden?';
 
-//improved froxlor
+// improved froxlor
 
 $lng['menue']['phpsettings']['maintitle'] = 'PHP-Konfigurationen';
 $lng['admin']['phpsettings']['title'] = 'PHP-Konfiguration';
@@ -973,7 +859,7 @@ $lng['admin']['know_what_youre_doing'] = 'Ändern Sie diese Einstellungen nur, w
 $lng['serversettings']['mod_fcgid']['peardir']['title'] = 'Globale PEAR Verzeichnisse';
 $lng['serversettings']['mod_fcgid']['peardir']['description'] = 'Welche globalen PEAR Verzeichnisse sollen in den php.ini-Einstellungen ersetzt werden? Einzelne Verzeichnisse sind mit einem Doppelpunkt zu trennen.';
 
-//improved Froxlor 2
+// improved Froxlor 2
 
 $lng['admin']['templates']['index_html'] = 'index.html Datei für neu erzeugte Kundenverzeichnisse';
 $lng['admin']['templates']['SERVERNAME'] = 'Wird mit dem Servernamen ersetzt.';
@@ -1046,8 +932,6 @@ $lng['tasks']['rebuild_bindconfig'] = 'Neuerstellung der Bind-Konfiguration';
 $lng['tasks']['creating_ftpdir'] = 'Erstelle Verzeichnis für neuen FTP-Benutzer';
 $lng['tasks']['deleting_customerfiles'] = 'Löschen von Kunden-Dateien %loginname%';
 $lng['tasks']['noneoutstanding'] = 'Zur Zeit gibt es keine ausstehenden Aufgaben für Froxlor';
-$lng['ticket']['nonexistingcustomer'] = '(gelöschter Kunde)';
-$lng['admin']['ticket_nocustomeraddingavailable'] = 'Es können derzeit keine neuen Support-Tickets eröffnet werden. Sie müssen zuerst einen Kunden anlegen';
 
 // ADDED IN FROXLOR 0.9.1
 
@@ -1102,8 +986,6 @@ $lng['admin']['cron']['add'] = 'Cronjob hinzufügen';
 $lng['crondesc']['cron_tasks'] = 'Erstellen von Konfigurationsdateien';
 $lng['crondesc']['cron_legacy'] = 'Legacy (alter) Cronjob';
 $lng['crondesc']['cron_traffic'] = 'Traffic-Berechnung';
-$lng['crondesc']['cron_ticketsreset'] = 'Zurücksetzen der Ticket-Zähler';
-$lng['crondesc']['cron_ticketarchive'] = 'Archivieren alter Tickets';
 $lng['cronmgmt']['minutes'] = 'Minuten';
 $lng['cronmgmt']['hours'] = 'Stunden';
 $lng['cronmgmt']['days'] = 'Tage';
@@ -1153,8 +1035,6 @@ $lng['panel']['neverloggedin'] = 'Keine Anmeldung bisher';
 
 // ADDED IN FROXLOR 0.9.6-svn1
 $lng['serversettings']['defaultttl'] = 'Domain TTL für Bind in Sekunden (default \'604800\' = 1 Woche)';
-$lng['ticket']['logicalorder'] = 'Logische Sortierung';
-$lng['ticket']['orderdesc'] = 'Hier kann eine logische Sortierung für die Ticket-Kategorien angegeben werden. Benutzen Sie 1 - 999, niedrigere Zahlen werden zuerst angezeigt.';
 
 // ADDED IN FROXLOR 0.9.6-svn3
 $lng['serversettings']['defaultwebsrverrhandler_enabled'] = 'Verwende Standard-Fehlerdokumente für alle Kunden';
@@ -1165,9 +1045,6 @@ $lng['serversettings']['defaultwebsrverrhandler_err403']['description'] = '<div 
 $lng['serversettings']['defaultwebsrverrhandler_err404'] = 'Datei/URL für Fehler 404';
 $lng['serversettings']['defaultwebsrverrhandler_err500']['title'] = 'Datei/URL für Fehler 500';
 $lng['serversettings']['defaultwebsrverrhandler_err500']['description'] = '<div class="red">Nicht unterstützt in: lighttpd</div>';
-
-// ADDED IN FROXLOR 0.9.6-svn4
-$lng['serversettings']['ticket']['default_priority'] = 'Voreingestellte Support-Ticket Priorität';
 
 // ADDED IN FROXLOR 0.9.6-svn5
 $lng['serversettings']['mod_fcgid']['defaultini'] = 'Voreingestellte PHP-Konfiguration für neue Domains';
@@ -1417,7 +1294,6 @@ $lng['serversettings']['catchall_enabled']['description'] = 'Möchten Sie Ihren 
 // ADDED IN 0.9.28.svn6
 $lng['serversettings']['apache_24']['title'] = 'Anpassungen für Apache 2.4 verwenden';
 $lng['serversettings']['apache_24']['description'] = '<div class="red">Achtung: Bitte nur verwenden, wenn wirklich Apache mit Version 2.4 oder höher installiert ist, ansonsten wird der Webserver nicht starten.</div>';
-$lng['admin']['tickets_see_all'] = 'Kann alle Ticket-Kategorien sehen?';
 $lng['serversettings']['nginx_fastcgiparams']['title'] = 'Pfad zur fastcgi_params Datei';
 $lng['serversettings']['nginx_fastcgiparams']['description'] = 'Geben Sie den Pfad zu nginx\'s fastcgi_params Datei an. Inklusive Dateiname!';
 
@@ -1815,8 +1691,8 @@ $lng['2fa']['2fa_verify'] = 'Code verifizieren';
 $lng['mails']['2fa']['mailbody'] = 'Hallo,\n\nihr 2FA-Login Code lautet: {CODE}\n\nDies ist eine automatisch generierte\neMail, bitte antworten Sie nicht auf\ndiese Mitteilung.\n\nIhr Administrator';
 $lng['mails']['2fa']['subject'] = 'Froxlor - 2FA Code';
 $lng['2fa']['2fa_overview_desc'] = 'Hier kann für das Konto eine Zwei-Faktor-Authentisierung aktiviert werden.<br><br>Es kann entweder eine Authenticator-App (time-based one-time password / TOTP) genutzt werden oder ein Einmalpasswort, welches nach erfolgreichem Login an die hinterlegte E-Mail Adresse gesendet wird.';
-$lng['2fa']['2fa_email_desc'] = 'Das Konto ist eingerichtet, um Einmalpasswörter per E-Mail zu erhalten. Zum Deaktivieren, klicke auf "'.$lng['2fa']['2fa_delete'].'"';
-$lng['2fa']['2fa_ga_desc'] = 'Das Konto ist eingerichtet, um zeitbasierte Einmalpasswörter via Authenticator-App zu erhalten. Um die gewünschte Authenticator-App einzurichten, scanne bitte den untenstehenden QR-Code. Zum Deaktivieren, klicke auf "'.$lng['2fa']['2fa_delete'].'"';
+$lng['2fa']['2fa_email_desc'] = 'Das Konto ist eingerichtet, um Einmalpasswörter per E-Mail zu erhalten. Zum Deaktivieren, klicke auf "' . $lng['2fa']['2fa_delete'] . '"';
+$lng['2fa']['2fa_ga_desc'] = 'Das Konto ist eingerichtet, um zeitbasierte Einmalpasswörter via Authenticator-App zu erhalten. Um die gewünschte Authenticator-App einzurichten, scanne bitte den untenstehenden QR-Code. Zum Deaktivieren, klicke auf "' . $lng['2fa']['2fa_delete'] . '"';
 $lng['admin']['logviewenabled'] = 'Zugriff auf access/error-Logdateien';
 $lng['panel']['viewlogs'] = 'Logdateien einsehen';
 $lng['panel']['not_configured'] = 'Das System wurde noch nicht konfiguriert. Hier klicken für Konfiguration.';

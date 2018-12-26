@@ -1,4 +1,6 @@
 <?php
+use Froxlor\Database\Database;
+use Froxlor\Settings;
 
 /**
  * This file is part of the Froxlor project.
@@ -8,20 +10,20 @@
  * file that was distributed with this source code. You can also view the
  * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
- * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Install
- *
+ * @copyright (c) the authors
+ * @author Froxlor team <team@froxlor.org> (2010-)
+ * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package Install
+ *         
  */
-if (!defined('_CRON_UPDATE')) {
+if (! defined('_CRON_UPDATE')) {
 	if (! defined('AREA') || (defined('AREA') && AREA != 'admin') || ! isset($userinfo['loginname']) || (isset($userinfo['loginname']) && $userinfo['loginname'] == '')) {
 		header('Location: ../../../../index.php');
 		exit();
 	}
 }
 
-if (isFroxlorVersion('0.9-r0')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9-r0')) {
 
 	showUpdateStep("Updating from 0.9-r0 to 0.9-r1", false);
 	showUpdateStep("Performing database updates");
@@ -180,10 +182,10 @@ if (isFroxlorVersion('0.9-r0')) {
 
 	lastStepStatus(0);
 
-	updateToVersion('0.9-r1');
+	\Froxlor\Froxlor::updateToVersion('0.9-r1');
 }
 
-if (isFroxlorVersion('0.9-r1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9-r1')) {
 	showUpdateStep("Updating from 0.9-r1 to 0.9-r2", false);
 
 	showUpdateStep("Updating settings table");
@@ -198,10 +200,10 @@ if (isFroxlorVersion('0.9-r1')) {
 	}
 	lastStepStatus(0);
 
-	updateToVersion('0.9-r2');
+	\Froxlor\Froxlor::updateToVersion('0.9-r2');
 }
 
-if (isFroxlorVersion('0.9-r2')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9-r2')) {
 
 	showUpdateStep("Updating from 0.9-r2 to 0.9-r3", false);
 	showUpdateStep("Updating tables");
@@ -212,10 +214,10 @@ if (isFroxlorVersion('0.9-r2')) {
 
 	lastStepStatus(0);
 
-	updateToVersion('0.9-r3');
+	\Froxlor\Froxlor::updateToVersion('0.9-r3');
 }
 
-if (isFroxlorVersion('0.9-r3')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9-r3')) {
 	showUpdateStep("Updating from 0.9-r3 to 0.9-r4", false);
 	showUpdateStep("Creating new table 'cronjobs_run'");
 
@@ -266,16 +268,16 @@ if (isFroxlorVersion('0.9-r3')) {
 	Database::query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = 'Froxlor Support' WHERE `settinggroup`='ticket' AND `varname`='noreply_name' AND `value`='SysCP Support'");
 
 	lastStepStatus(0);
-	updateToVersion('0.9-r4');
+	\Froxlor\Froxlor::updateToVersion('0.9-r4');
 }
 
-if (isFroxlorVersion('0.9-r4')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9-r4')) {
 	showUpdateStep("Updating from 0.9-r4 to 0.9 final");
 	lastStepStatus(0);
-	updateToVersion('0.9');
+	\Froxlor\Froxlor::updateToVersion('0.9');
 }
 
-if (isFroxlorVersion('0.9')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9')) {
 
 	showUpdateStep("Updating from 0.9 to 0.9.1", false);
 
@@ -283,10 +285,10 @@ if (isFroxlorVersion('0.9')) {
 	Database::query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = 'images/header.gif' WHERE `varname` = 'froxlor_graphic' AND `value` = 'images/header.png'");
 
 	lastStepStatus(0);
-	updateToVersion('0.9.1');
+	\Froxlor\Froxlor::updateToVersion('0.9.1');
 }
 
-if (isFroxlorVersion('0.9.1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.1')) {
 
 	showUpdateStep("Updating from 0.9.1 to 0.9.2", false);
 
@@ -295,21 +297,21 @@ if (isFroxlorVersion('0.9.1')) {
 	$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
 
 	if (isset($result['latestguid']) && (int) $result['latestguid'] > 0 && $result['latestguid'] != Settings::Get('system.lastguid')) {
-		checkLastGuid();
+		\Froxlor\System\Cronjob::checkLastGuid();
 		lastStepStatus(1, 'fixed');
 	} else {
 		lastStepStatus(0);
 	}
-	updateToVersion('0.9.2');
+	\Froxlor\Froxlor::updateToVersion('0.9.2');
 }
 
-if (isFroxlorVersion('0.9.2')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.2')) {
 	showUpdateStep("Updating from 0.9.2 to 0.9.3");
 	lastStepStatus(0);
-	updateToVersion('0.9.3');
+	\Froxlor\Froxlor::updateToVersion('0.9.3');
 }
 
-if (isFroxlorVersion('0.9.3')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.3')) {
 
 	showUpdateStep("Updating from 0.9.3 to 0.9.3-svn1", false);
 
@@ -318,10 +320,10 @@ if (isFroxlorVersion('0.9.3')) {
 	Database::query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'store_index_file_subs', '1');");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.3-svn1');
+	\Froxlor\Froxlor::updateToVersion('0.9.3-svn1');
 }
 
-if (isFroxlorVersion('0.9.3-svn1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.3-svn1')) {
 
 	showUpdateStep("Updating from 0.9.3-svn1 to 0.9.3-svn2", false);
 
@@ -330,10 +332,10 @@ if (isFroxlorVersion('0.9.3-svn1')) {
 	Database::query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('panel', 'adminmail_return', '');");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.3-svn2');
+	\Froxlor\Froxlor::updateToVersion('0.9.3-svn2');
 }
 
-if (isFroxlorVersion('0.9.3-svn2')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.3-svn2')) {
 
 	showUpdateStep("Updating from 0.9.3-svn2 to 0.9.3-svn3", false);
 
@@ -350,10 +352,10 @@ if (isFroxlorVersion('0.9.3-svn2')) {
 	Database::query("INSERT INTO `" . TABLE_PANEL_LANGUAGE . "` SET `language` = 'Polski', `file` = 'lng/polish.lng.php'");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.3-svn3');
+	\Froxlor\Froxlor::updateToVersion('0.9.3-svn3');
 }
 
-if (isFroxlorVersion('0.9.3-svn3')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.3-svn3')) {
 
 	showUpdateStep("Updating from 0.9.3-svn3 to 0.9.3-svn4", false);
 
@@ -366,10 +368,10 @@ if (isFroxlorVersion('0.9.3-svn3')) {
 	Database::query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('dkim', 'dkim_notes', '');");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.3-svn4');
+	\Froxlor\Froxlor::updateToVersion('0.9.3-svn4');
 }
 
-if (isFroxlorVersion('0.9.3-svn4')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.3-svn4')) {
 
 	showUpdateStep("Updating from 0.9.3-svn4 to 0.9.3-svn5", false);
 
@@ -377,16 +379,16 @@ if (isFroxlorVersion('0.9.3-svn4')) {
 	Database::query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'stdsubdomain', '');");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.3-svn5');
+	\Froxlor\Froxlor::updateToVersion('0.9.3-svn5');
 }
 
-if (isFroxlorVersion('0.9.3-svn5')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.3-svn5')) {
 	showUpdateStep("Updating from 0.9.3-svn5 to 0.9.4 final");
 	lastStepStatus(0);
-	updateToVersion('0.9.4');
+	\Froxlor\Froxlor::updateToVersion('0.9.4');
 }
 
-if (isFroxlorVersion('0.9.4')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.4')) {
 
 	showUpdateStep("Updating from 0.9.4 to 0.9.4-svn1", false);
 
@@ -414,10 +416,10 @@ if (isFroxlorVersion('0.9.4')) {
 	}
 	lastStepStatus(0);
 
-	updateToVersion('0.9.4-svn1');
+	\Froxlor\Froxlor::updateToVersion('0.9.4-svn1');
 }
 
-if (isFroxlorVersion('0.9.4-svn1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.4-svn1')) {
 
 	showUpdateStep("Updating from 0.9.4-svn1 to 0.9.4-svn2", false);
 
@@ -447,16 +449,16 @@ if (isFroxlorVersion('0.9.4-svn1')) {
 	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` MODIFY `iswildcarddomain` tinyint(1) NOT NULL default '1';");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.4-svn2');
+	\Froxlor\Froxlor::updateToVersion('0.9.4-svn2');
 }
 
-if (isFroxlorVersion('0.9.4-svn2')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.4-svn2')) {
 	showUpdateStep("Updating from 0.9.4-svn2 to 0.9.5 final");
 	lastStepStatus(0);
-	updateToVersion('0.9.5');
+	\Froxlor\Froxlor::updateToVersion('0.9.5');
 }
 
-if (isFroxlorVersion('0.9.5')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.5')) {
 
 	showUpdateStep("Updating from 0.9.5 to 0.9.6-svn1", false);
 
@@ -468,19 +470,19 @@ if (isFroxlorVersion('0.9.5')) {
 	Database::query("ALTER TABLE `" . TABLE_PANEL_TICKET_CATS . "` ADD `logicalorder` int(3) NOT NULL default '1' AFTER `adminid`;");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.6-svn1');
+	\Froxlor\Froxlor::updateToVersion('0.9.6-svn1');
 }
 
-if (isFroxlorVersion('0.9.6-svn1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.6-svn1')) {
 
 	showUpdateStep("Updating from 0.9.6-svn1 to 0.9.6-svn2", false);
 
-	$update_adminmail = isset($_POST['update_adminmail']) ? validate($_POST['update_adminmail'], 'update_adminmail') : false;
+	$update_adminmail = isset($_POST['update_adminmail']) ? Froxlor\Validate\Validate::validate($_POST['update_adminmail'], 'update_adminmail') : false;
 	$do_update = true;
 
 	if ($update_adminmail !== false) {
 		showUpdateStep("Checking newly entered admin-mail");
-		if (! PHPMailer::ValidateAddress($update_adminmail)) {
+		if (! \PHPMailer\PHPMailer\PHPMailer::ValidateAddress($update_adminmail)) {
 			$do_update = false;
 			lastStepStatus(2, 'E-Mail still not valid, go back and try again');
 		} else {
@@ -495,11 +497,11 @@ if (isFroxlorVersion('0.9.6-svn1')) {
 	}
 
 	if ($do_update) {
-		updateToVersion('0.9.6-svn2');
+		\Froxlor\Froxlor::updateToVersion('0.9.6-svn2');
 	}
 }
 
-if (isFroxlorVersion('0.9.6-svn2')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.6-svn2')) {
 
 	showUpdateStep("Updating from 0.9.6-svn2 to 0.9.6-svn3", false);
 
@@ -571,10 +573,10 @@ if (isFroxlorVersion('0.9.6-svn2')) {
 
 	lastStepStatus(0);
 
-	updateToVersion('0.9.6-svn3');
+	\Froxlor\Froxlor::updateToVersion('0.9.6-svn3');
 }
 
-if (isFroxlorVersion('0.9.6-svn3')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.6-svn3')) {
 
 	showUpdateStep("Updating from 0.9.6-svn3 to 0.9.6-svn4", false);
 
@@ -584,10 +586,10 @@ if (isFroxlorVersion('0.9.6-svn3')) {
 	Database::query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('ticket', 'default_priority', '" . (int) $update_deftic_priority . "');");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.6-svn4');
+	\Froxlor\Froxlor::updateToVersion('0.9.6-svn4');
 }
 
-if (isFroxlorVersion('0.9.6-svn4')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.6-svn4')) {
 
 	showUpdateStep("Updating from 0.9.6-svn4 to 0.9.6-svn5", false);
 
@@ -602,10 +604,10 @@ if (isFroxlorVersion('0.9.6-svn4')) {
 	Database::query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'mod_fcgid_defaultini', '" . (int) $update_defsys_phpconfig . "');");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.6-svn5');
+	\Froxlor\Froxlor::updateToVersion('0.9.6-svn5');
 }
 
-if (isFroxlorVersion('0.9.6-svn5')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.6-svn5')) {
 
 	showUpdateStep("Updating from 0.9.6-svn5 to 0.9.6-svn6", false);
 
@@ -636,16 +638,16 @@ if (isFroxlorVersion('0.9.6-svn5')) {
 
 	lastStepStatus(0);
 
-	updateToVersion('0.9.6-svn6');
+	\Froxlor\Froxlor::updateToVersion('0.9.6-svn6');
 }
 
-if (isFroxlorVersion('0.9.6-svn6')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.6-svn6')) {
 	showUpdateStep("Updating from 0.9.6-svn6 to 0.9.6 final");
 	lastStepStatus(0);
-	updateToVersion('0.9.6');
+	\Froxlor\Froxlor::updateToVersion('0.9.6');
 }
 
-if (isFroxlorVersion('0.9.6')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.6')) {
 	showUpdateStep("Updating from 0.9.6 to 0.9.7-svn1", false);
 
 	$update_customredirect_enable = isset($_POST['update_customredirect_enable']) ? 1 : 0;
@@ -701,10 +703,10 @@ if (isFroxlorVersion('0.9.6')) {
 	}
 	lastStepStatus(0);
 
-	updateToVersion('0.9.7-svn1');
+	\Froxlor\Froxlor::updateToVersion('0.9.7-svn1');
 }
 
-if (isFroxlorVersion('0.9.7-svn1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.7-svn1')) {
 
 	showUpdateStep("Updating from 0.9.7-svn1 to 0.9.7-svn2", false);
 
@@ -715,10 +717,10 @@ if (isFroxlorVersion('0.9.7-svn1')) {
 	}
 	lastStepStatus(0);
 
-	updateToVersion('0.9.7-svn2');
+	\Froxlor\Froxlor::updateToVersion('0.9.7-svn2');
 }
 
-if (isFroxlorVersion('0.9.7-svn2')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.7-svn2')) {
 
 	showUpdateStep("Updating from 0.9.7-svn2 to 0.9.7-svn3", false);
 
@@ -734,22 +736,22 @@ if (isFroxlorVersion('0.9.7-svn2')) {
 	Database::query("UPDATE `redirect_codes` SET `desc` = 'rc_tempred' WHERE `code` = '307';");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.7-svn3');
+	\Froxlor\Froxlor::updateToVersion('0.9.7-svn3');
 }
 
-if (isFroxlorVersion('0.9.7-svn3')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.7-svn3')) {
 	showUpdateStep("Updating from 0.9.7-svn3 to 0.9.7 final");
 	lastStepStatus(0);
-	updateToVersion('0.9.7');
+	\Froxlor\Froxlor::updateToVersion('0.9.7');
 }
 
-if (isFroxlorVersion('0.9.7')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.7')) {
 	showUpdateStep("Updating from 0.9.7 to 0.9.8 final");
 	lastStepStatus(0);
-	updateToVersion('0.9.8');
+	\Froxlor\Froxlor::updateToVersion('0.9.8');
 }
 
-if (isFroxlorVersion('0.9.8')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.8')) {
 
 	showUpdateStep("Updating from 0.9.8 to 0.9.9-svn1", false);
 
@@ -758,16 +760,16 @@ if (isFroxlorVersion('0.9.8')) {
 	Database::query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'dns_createmailentry', '" . (int) $update_defdns_mailentry . "');");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.9-svn1');
+	\Froxlor\Froxlor::updateToVersion('0.9.9-svn1');
 }
 
-if (isFroxlorVersion('0.9.9-svn1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.9-svn1')) {
 	showUpdateStep("Updating from 0.9.9-svn1 to 0.9.9 final");
 	lastStepStatus(0);
-	updateToVersion('0.9.9');
+	\Froxlor\Froxlor::updateToVersion('0.9.9');
 }
 
-if (isFroxlorVersion('0.9.9')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.9')) {
 
 	showUpdateStep("Updating from 0.9.9 to 0.9.10-svn1", false);
 
@@ -822,10 +824,10 @@ if (isFroxlorVersion('0.9.9')) {
 		lastStepStatus(0);
 	}
 
-	updateToVersion('0.9.10-svn1');
+	\Froxlor\Froxlor::updateToVersion('0.9.10-svn1');
 }
 
-if (isFroxlorVersion('0.9.10-svn1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.10-svn1')) {
 
 	showUpdateStep("Updating from 0.9.10-svn1 to 0.9.10-svn2", false);
 
@@ -867,10 +869,10 @@ if (isFroxlorVersion('0.9.10-svn1')) {
 		lastStepStatus(0, "None found");
 	}
 
-	updateToVersion('0.9.10-svn2');
+	\Froxlor\Froxlor::updateToVersion('0.9.10-svn2');
 }
 
-if (isFroxlorVersion('0.9.10-svn2')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.10-svn2')) {
 
 	showUpdateStep("Updating from 0.9.10-svn2 to 0.9.10", false);
 
@@ -880,10 +882,10 @@ if (isFroxlorVersion('0.9.10-svn2')) {
 	Database::query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'froxlordirectlyviahostname', '" . (int) $update_directlyviahostname . "');");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.10');
+	\Froxlor\Froxlor::updateToVersion('0.9.10');
 }
 
-if (isFroxlorVersion('0.9.10')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.10')) {
 	showUpdateStep("Updating from 0.9.10 to 0.9.11-svn1", false);
 
 	$update_pwdregex = isset($_POST['update_pwdregex']) ? $_POST['update_pwdregex'] : '';
@@ -899,10 +901,10 @@ if (isFroxlorVersion('0.9.10')) {
 	));
 	lastStepStatus(0);
 
-	updateToVersion('0.9.11-svn1');
+	\Froxlor\Froxlor::updateToVersion('0.9.11-svn1');
 }
 
-if (isFroxlorVersion('0.9.11-svn1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.11-svn1')) {
 	showUpdateStep("Updating from 0.9.11-svn1 to 0.9.11-svn2", false);
 
 	showUpdateStep("Adding perl/CGI directory fields");
@@ -910,10 +912,10 @@ if (isFroxlorVersion('0.9.11-svn1')) {
 	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` ADD `perlenabled` tinyint(1) NOT NULL default '0' AFTER `aps_packages_used`;");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.11-svn2');
+	\Froxlor\Froxlor::updateToVersion('0.9.11-svn2');
 }
 
-if (isFroxlorVersion('0.9.11-svn2')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.11-svn2')) {
 	showUpdateStep("Updating from 0.9.11-svn2 to 0.9.11-svn3", false);
 
 	$update_perlpath = isset($_POST['update_perlpath']) ? $_POST['update_perlpath'] : '/usr/bin/perl';
@@ -929,16 +931,16 @@ if (isFroxlorVersion('0.9.11-svn2')) {
 	));
 	lastStepStatus(0);
 
-	updateToVersion('0.9.11-svn3');
+	\Froxlor\Froxlor::updateToVersion('0.9.11-svn3');
 }
 
-if (isFroxlorVersion('0.9.11-svn3')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.11-svn3')) {
 	showUpdateStep("Updating from 0.9.11-svn3 to 0.9.11 final");
 	lastStepStatus(0);
-	updateToVersion('0.9.11');
+	\Froxlor\Froxlor::updateToVersion('0.9.11');
 }
 
-if (isFroxlorVersion('0.9.11')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.11')) {
 	showUpdateStep("Updating from 0.9.11 to 0.9.12-svn1", false);
 
 	$update_fcgid_ownvhost = isset($_POST['update_fcgid_ownvhost']) ? (int) $_POST['update_fcgid_ownvhost'] : '0';
@@ -972,15 +974,15 @@ if (isFroxlorVersion('0.9.11')) {
 	));
 	lastStepStatus(0);
 
-	updateToVersion('0.9.12-svn1');
+	\Froxlor\Froxlor::updateToVersion('0.9.12-svn1');
 }
 
-if (isFroxlorVersion('0.9.12-svn1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.12-svn1')) {
 
 	showUpdateStep("Updating from 0.9.12-svn1 to 0.9.12-svn2", false);
 
 	$update_perl_suexecworkaround = isset($_POST['update_perl_suexecworkaround']) ? (int) $_POST['update_perl_suexecworkaround'] : '0';
-	$update_perl_suexecpath = isset($_POST['update_perl_suexecpath']) ? makeCorrectDir($_POST['update_perl_suexecpath']) : '/var/www/cgi-bin/';
+	$update_perl_suexecpath = isset($_POST['update_perl_suexecpath']) ? \Froxlor\FileDir::makeCorrectDir($_POST['update_perl_suexecpath']) : '/var/www/cgi-bin/';
 
 	if ($update_perl_suexecpath == '') {
 		$update_perl_suexecpath = '/var/www/cgi-bin/';
@@ -1002,10 +1004,10 @@ if (isFroxlorVersion('0.9.12-svn1')) {
 	));
 	lastStepStatus(0);
 
-	updateToVersion('0.9.12-svn2');
+	\Froxlor\Froxlor::updateToVersion('0.9.12-svn2');
 }
 
-if (isFroxlorVersion('0.9.12-svn2')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.12-svn2')) {
 
 	showUpdateStep("Updating from 0.9.12-svn2 to 0.9.12-svn3", false);
 
@@ -1013,14 +1015,14 @@ if (isFroxlorVersion('0.9.12-svn2')) {
 	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `ismainbutsubto` int(11) unsigned NOT NULL default '0' AFTER `mod_fcgid_maxrequests`;");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.12-svn3');
+	\Froxlor\Froxlor::updateToVersion('0.9.12-svn3');
 }
 
-if (isFroxlorVersion('0.9.12-svn3')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.12-svn3')) {
 
 	showUpdateStep("Updating from 0.9.12-svn3 to 0.9.12-svn4", false);
 
-	$update_awstats_awstatspath = isset($_POST['update_awstats_awstatspath']) ? makeCorrectDir($_POST['update_awstats_awstatspath']) : Settings::Get('system.awstats_path');
+	$update_awstats_awstatspath = isset($_POST['update_awstats_awstatspath']) ? \Froxlor\FileDir::makeCorrectDir($_POST['update_awstats_awstatspath']) : Settings::Get('system.awstats_path');
 
 	showUpdateStep("Adding new settings for awstats");
 	$stmt = Database::prepare("
@@ -1033,10 +1035,10 @@ if (isFroxlorVersion('0.9.12-svn3')) {
 	));
 	lastStepStatus(0);
 
-	updateToVersion('0.9.12-svn4');
+	\Froxlor\Froxlor::updateToVersion('0.9.12-svn4');
 }
 
-if (isFroxlorVersion('0.9.12-svn4')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.12-svn4')) {
 
 	showUpdateStep("Updating from 0.9.12-svn4 to 0.9.12-svn5", false);
 
@@ -1044,10 +1046,10 @@ if (isFroxlorVersion('0.9.12-svn4')) {
 	Database::query("UPDATE `cronjobs_run` SET `interval`='1 DAY' WHERE `cronfile`='cron_used_tickets_reset.php';");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.12-svn5');
+	\Froxlor\Froxlor::updateToVersion('0.9.12-svn5');
 }
 
-if (isFroxlorVersion('0.9.12-svn5')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.12-svn5')) {
 
 	showUpdateStep("Updating from 0.9.12-svn5 to 0.9.12-svn6", false);
 
@@ -1055,16 +1057,16 @@ if (isFroxlorVersion('0.9.12-svn5')) {
 	Database::query("ALTER TABLE `" . TABLE_PANEL_HTPASSWDS . "` ADD `authname` varchar(255) NOT NULL default 'Restricted Area' AFTER `password`;");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.12-svn6');
+	\Froxlor\Froxlor::updateToVersion('0.9.12-svn6');
 }
 
-if (isFroxlorVersion('0.9.12-svn6')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.12-svn6')) {
 	showUpdateStep("Updating from 0.9.12-svn6 to 0.9.12 final");
 	lastStepStatus(0);
-	updateToVersion('0.9.12');
+	\Froxlor\Froxlor::updateToVersion('0.9.12');
 }
 
-if (isFroxlorVersion('0.9.12')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.12')) {
 
 	showUpdateStep("Updating from 0.9.12 to 0.9.13-svn1", false);
 
@@ -1079,7 +1081,7 @@ if (isFroxlorVersion('0.9.12')) {
 	lastStepStatus(0);
 
 	if ((int) Settings::Get('autoresponder.autoresponder_active') == 1) {
-		$update_autoresponder_default = isset($_POST['update_autoresponder_default']) ? intval_ressource($_POST['update_autoresponder_default']) : 0;
+		$update_autoresponder_default = isset($_POST['update_autoresponder_default']) ? (int)($_POST['update_autoresponder_default']) : 0;
 		if (isset($_POST['update_autoresponder_default_ul'])) {
 			$update_autoresponder_default = - 1;
 		}
@@ -1094,16 +1096,16 @@ if (isFroxlorVersion('0.9.12')) {
 	Database::query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `email_autoresponder`='" . (int) $update_autoresponder_default . "' WHERE `deactivated` = '0'");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.13-svn1');
+	\Froxlor\Froxlor::updateToVersion('0.9.13-svn1');
 }
 
-if (isFroxlorVersion('0.9.13-svn1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.13-svn1')) {
 	showUpdateStep("Updating from 0.9.13-svn1 to 0.9.13 final");
 	lastStepStatus(0);
-	updateToVersion('0.9.13');
+	\Froxlor\Froxlor::updateToVersion('0.9.13');
 }
 
-if (isFroxlorVersion('0.9.13')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.13')) {
 	showUpdateStep("Updating from 0.9.13 to 0.9.13.1 final", false);
 
 	$update_defaultini_ownvhost = isset($_POST['update_defaultini_ownvhost']) ? (int) $_POST['update_defaultini_ownvhost'] : 1;
@@ -1119,33 +1121,35 @@ if (isFroxlorVersion('0.9.13')) {
 	));
 	lastStepStatus(0);
 
-	updateToVersion('0.9.13.1');
+	\Froxlor\Froxlor::updateToVersion('0.9.13.1');
 }
 
 /**
  * be compatible with the few who already use 0.9.14-svn1
  */
-if (isFroxlorVersion('0.9.14-svn1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.14-svn1')) {
 	showUpdateStep("Resetting version 0.9.14-svn1 to 0.9.13.1");
 	lastStepStatus(0);
-	updateToVersion('0.9.13.1');
+	\Froxlor\Froxlor::updateToVersion('0.9.13.1');
 }
 
-if (isFroxlorVersion('0.9.13.1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.13.1')) {
 	showUpdateStep("Updating from 0.9.13.1 to 0.9.14-svn2", false);
 
 	if (Settings::Get('ticket.enabled') == '1') {
 		showUpdateStep("Setting INTERVAL for used-tickets cronjob");
-		setCycleOfCronjob(null, null, Settings::Get('ticket.reset_cycle'), null);
+		if (function_exists("setCycleOfCronjob")) {
+			setCycleOfCronjob(null, null, Settings::Get('ticket.reset_cycle'), null);
+		}
 		lastStepStatus(0);
 	}
-	updateToVersion('0.9.14-svn2');
+	\Froxlor\Froxlor::updateToVersion('0.9.14-svn2');
 }
 
-if (isFroxlorVersion('0.9.14-svn2')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.14-svn2')) {
 	showUpdateStep("Updating from 0.9.14-svn2 to 0.9.14-svn3", false);
 
-	$update_awstats_icons = isset($_POST['update_awstats_icons']) ? makeCorrectDir($_POST['update_awstats_icons']) : Settings::Get('system.awstats_icons');
+	$update_awstats_icons = isset($_POST['update_awstats_icons']) ? \Froxlor\FileDir::makeCorrectDir($_POST['update_awstats_icons']) : Settings::Get('system.awstats_icons');
 
 	showUpdateStep("Adding AWStats icons path to the settings");
 	$stmt = Database::prepare("
@@ -1158,17 +1162,17 @@ if (isFroxlorVersion('0.9.14-svn2')) {
 	));
 	lastStepStatus(0);
 
-	updateToVersion('0.9.14-svn3');
+	\Froxlor\Froxlor::updateToVersion('0.9.14-svn3');
 }
 
-if (isFroxlorVersion('0.9.14-svn3')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.14-svn3')) {
 
 	showUpdateStep("Updating from 0.9.14-svn3 to 0.9.14-svn4", false);
 
 	$update_ssl_cert_chainfile = isset($_POST['update_ssl_cert_chainfile']) ? $_POST['update_ssl_cert_chainfile'] : '';
 
 	if ($update_ssl_cert_chainfile != '') {
-		$update_ssl_cert_chainfile = makeCorrectFile($update_ssl_cert_chainfile);
+		$update_ssl_cert_chainfile = \Froxlor\FileDir::makeCorrectFile($update_ssl_cert_chainfile);
 	}
 
 	showUpdateStep("Adding SSLCertificateChainFile to the settings");
@@ -1186,20 +1190,20 @@ if (isFroxlorVersion('0.9.14-svn3')) {
 	Database::query("ALTER TABLE `" . TABLE_PANEL_IPSANDPORTS . "` ADD `ssl_cert_chainfile` varchar(255) NOT NULL AFTER `default_vhostconf_domain`;");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.14-svn4');
+	\Froxlor\Froxlor::updateToVersion('0.9.14-svn4');
 }
 
-if (isFroxlorVersion('0.9.14-svn4')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.14-svn4')) {
 	showUpdateStep("Updating from 0.9.14-svn4 to 0.9.14-svn5", false);
 
 	showUpdateStep("Adding docroot-field to IPs and ports for custom-docroot settings");
 	Database::query("ALTER TABLE `" . TABLE_PANEL_IPSANDPORTS . "` ADD `docroot` varchar(255) NOT NULL default '' AFTER `ssl_cert_chainfile`;");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.14-svn5');
+	\Froxlor\Froxlor::updateToVersion('0.9.14-svn5');
 }
 
-if (isFroxlorVersion('0.9.14-svn5')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.14-svn5')) {
 
 	showUpdateStep("Updating from 0.9.14-svn5 to 0.9.14-svn6", false);
 
@@ -1216,10 +1220,10 @@ if (isFroxlorVersion('0.9.14-svn5')) {
 	));
 	lastStepStatus(0);
 
-	updateToVersion('0.9.14-svn6');
+	\Froxlor\Froxlor::updateToVersion('0.9.14-svn6');
 }
 
-if (isFroxlorVersion('0.9.14-svn6')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.14-svn6')) {
 	showUpdateStep("Updating from 0.9.14-svn6 to 0.9.14-svn10", false);
 
 	// remove deprecated realtime-feature
@@ -1246,14 +1250,14 @@ if (isFroxlorVersion('0.9.14-svn6')) {
 	Database::query("DELETE FROM `" . TABLE_PANEL_CRONRUNS . "` WHERE `cronfile` ='cron_legacy.php';");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.14-svn10');
+	\Froxlor\Froxlor::updateToVersion('0.9.14-svn10');
 }
 
 /*
  * revert database changes we did for multiserver-support
  * before branching - sorry guys :/
  */
-if (isFroxlorVersion('0.9.14-svn9')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.14-svn9')) {
 	showUpdateStep("Reverting multiserver-patches (svn)", false);
 
 	$update_allow_domain_login = isset($_POST['update_allow_domain_login']) ? (int) $_POST['update_allow_domain_login'] : '0';
@@ -1287,16 +1291,16 @@ if (isFroxlorVersion('0.9.14-svn9')) {
 	Database::query("DROP TABLE IF EXISTS `froxlor_clients`");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.14-svn10');
+	\Froxlor\Froxlor::updateToVersion('0.9.14-svn10');
 }
 
-if (isFroxlorVersion('0.9.14-svn10')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.14-svn10')) {
 	showUpdateStep("Updating from 0.9.14-svn10 to 0.9.14 final");
 	lastStepStatus(0);
-	updateToVersion('0.9.14');
+	\Froxlor\Froxlor::updateToVersion('0.9.14');
 }
 
-if (isFroxlorVersion('0.9.14')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.14')) {
 	showUpdateStep("Updating from 0.9.14 to 0.9.15-svn1", false);
 
 	showUpdateStep("Adding new settings for Nginx support");
@@ -1319,22 +1323,22 @@ if (isFroxlorVersion('0.9.14')) {
 	));
 	lastStepStatus(0);
 
-	updateToVersion('0.9.15-svn1');
+	\Froxlor\Froxlor::updateToVersion('0.9.15-svn1');
 }
 
-if (isFroxlorVersion('0.9.15-svn1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.15-svn1')) {
 	showUpdateStep("Updating from 0.9.15-svn1 to 0.9.15 final");
 	lastStepStatus(0);
-	updateToVersion('0.9.15');
+	\Froxlor\Froxlor::updateToVersion('0.9.15');
 }
 
-if (isFroxlorVersion('0.9.15')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.15')) {
 	showUpdateStep("Updating from 0.9.15 to 0.9.16-svn1", false);
 
 	$update_phpfpm_enabled = isset($_POST['update_phpfpm_enabled']) ? (int) $_POST['update_phpfpm_enabled'] : '0';
-	$update_phpfpm_configdir = isset($_POST['update_phpfpm_configdir']) ? makeCorrectDir($_POST['update_phpfpm_configdir']) : '/etc/php-fpm.d/';
-	$update_phpfpm_tmpdir = isset($_POST['update_phpfpm_tmpdir']) ? makeCorrectDir($_POST['update_phpfpm_tmpdir']) : '/var/customers/tmp';
-	$update_phpfpm_peardir = isset($_POST['update_phpfpm_peardir']) ? makeCorrectDir($_POST['update_phpfpm_peardir']) : '/usr/share/php/:/usr/share/php5/';
+	$update_phpfpm_configdir = isset($_POST['update_phpfpm_configdir']) ? \Froxlor\FileDir::makeCorrectDir($_POST['update_phpfpm_configdir']) : '/etc/php-fpm.d/';
+	$update_phpfpm_tmpdir = isset($_POST['update_phpfpm_tmpdir']) ? \Froxlor\FileDir::makeCorrectDir($_POST['update_phpfpm_tmpdir']) : '/var/customers/tmp';
+	$update_phpfpm_peardir = isset($_POST['update_phpfpm_peardir']) ? \Froxlor\FileDir::makeCorrectDir($_POST['update_phpfpm_peardir']) : '/usr/share/php/:/usr/share/php5/';
 	$update_phpfpm_reload = isset($_POST['update_phpfpm_reload']) ? $_POST['update_phpfpm_reload'] : '/etc/init.d/php-fpm restart';
 
 	$update_phpfpm_pm = isset($_POST['update_phpfpm_pm']) ? $_POST['update_phpfpm_pm'] : 'static';
@@ -1410,10 +1414,10 @@ if (isFroxlorVersion('0.9.15')) {
 	));
 	lastStepStatus(0);
 
-	updateToVersion('0.9.16-svn1');
+	\Froxlor\Froxlor::updateToVersion('0.9.16-svn1');
 }
 
-if (isFroxlorVersion('0.9.16-svn1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.16-svn1')) {
 	showUpdateStep("Updating from 0.9.16-svn1 to 0.9.16-svn2", false);
 
 	$update_phpfpm_enabled_ownvhost = isset($_POST['update_phpfpm_enabled_ownvhost']) ? (int) $_POST['update_phpfpm_enabled_ownvhost'] : '0';
@@ -1447,16 +1451,16 @@ if (isFroxlorVersion('0.9.16-svn1')) {
 	));
 	lastStepStatus(0);
 
-	updateToVersion('0.9.16-svn2');
+	\Froxlor\Froxlor::updateToVersion('0.9.16-svn2');
 }
 
-if (isFroxlorVersion('0.9.16-svn2')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.16-svn2')) {
 	showUpdateStep("Updating from 0.9.16-svn2 to 0.9.16 final");
 	lastStepStatus(0);
-	updateToVersion('0.9.16');
+	\Froxlor\Froxlor::updateToVersion('0.9.16');
 }
 
-if (isFroxlorVersion('0.9.16')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.16')) {
 
 	showUpdateStep("Updating from 0.9.16 to 0.9.17-svn1", false);
 
@@ -1522,10 +1526,10 @@ if (isFroxlorVersion('0.9.16')) {
 	}
 	lastStepStatus(0);
 
-	updateToVersion('0.9.17-svn1');
+	\Froxlor\Froxlor::updateToVersion('0.9.17-svn1');
 }
 
-if (isFroxlorVersion('0.9.17-svn1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.17-svn1')) {
 
 	showUpdateStep("Updating from 0.9.17-svn1 to 0.9.17-svn2", false);
 
@@ -1544,16 +1548,16 @@ if (isFroxlorVersion('0.9.17-svn1')) {
 	) ENGINE=MyISAM;");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.17-svn2');
+	\Froxlor\Froxlor::updateToVersion('0.9.17-svn2');
 }
 
-if (isFroxlorVersion('0.9.17-svn2')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.17-svn2')) {
 	showUpdateStep("Updating from 0.9.17-svn2 to 0.9.17 final");
 	lastStepStatus(0);
-	updateToVersion('0.9.17');
+	\Froxlor\Froxlor::updateToVersion('0.9.17');
 }
 
-if (isFroxlorVersion('0.9.17')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.17')) {
 
 	showUpdateStep("Updating from 0.9.17 to 0.9.18-svn1", false);
 
@@ -1582,10 +1586,10 @@ if (isFroxlorVersion('0.9.17')) {
 		lastStepStatus(0);
 	}
 
-	updateToVersion('0.9.18-svn1');
+	\Froxlor\Froxlor::updateToVersion('0.9.18-svn1');
 }
 
-if (isFroxlorVersion('0.9.18-svn1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.18-svn1')) {
 
 	showUpdateStep("Updating from 0.9.18-svn1 to 0.9.18-svn2", false);
 
@@ -1612,28 +1616,28 @@ if (isFroxlorVersion('0.9.18-svn1')) {
 	Database::query("ALTER TABLE `" . TABLE_PANEL_SESSIONS . "` ADD `theme` varchar(255) NOT NULL default '' AFTER `adminsession`;");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.18-svn2');
+	\Froxlor\Froxlor::updateToVersion('0.9.18-svn2');
 }
 
-if (isFroxlorVersion('0.9.18-svn2')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.18-svn2')) {
 	showUpdateStep("Updating from 0.9.18-svn2 to 0.9.18 final");
 	lastStepStatus(0);
-	updateToVersion('0.9.18');
+	\Froxlor\Froxlor::updateToVersion('0.9.18');
 }
 
-if (isFroxlorVersion('0.9.18')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.18')) {
 	showUpdateStep("Updating from 0.9.18 to 0.9.18.1");
 	lastStepStatus(0);
-	updateToVersion('0.9.18.1');
+	\Froxlor\Froxlor::updateToVersion('0.9.18.1');
 }
 
-if (isFroxlorVersion('0.9.18.1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.18.1')) {
 	showUpdateStep("Updating from 0.9.18.1 to 0.9.19");
 	lastStepStatus(0);
-	updateToVersion('0.9.19');
+	\Froxlor\Froxlor::updateToVersion('0.9.19');
 }
 
-if (isFroxlorVersion('0.9.19')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.19')) {
 	showUpdateStep("Updating from 0.9.19 to 0.9.20-svn1");
 	lastStepStatus(0);
 
@@ -1645,10 +1649,10 @@ if (isFroxlorVersion('0.9.19')) {
 			`value` = '1'");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.20-svn1');
+	\Froxlor\Froxlor::updateToVersion('0.9.20-svn1');
 }
 
-if (isFroxlorVersion('0.9.20-svn1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.20-svn1')) {
 
 	showUpdateStep("Updating from 0.9.20-svn1 to 0.9.20-svn2");
 
@@ -1667,22 +1671,22 @@ if (isFroxlorVersion('0.9.20-svn1')) {
 	Database::query("INSERT INTO `" . TABLE_PANEL_CRONRUNS . "` (`module`, `cronfile`, `interval`, `isactive`, `desc_lng_key`) VALUES ('froxlor/backup', 'cron_backup.php', '1 DAY', '1', 'cron_backup');");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.20-svn2');
+	\Froxlor\Froxlor::updateToVersion('0.9.20-svn2');
 }
 
-if (isFroxlorVersion('0.9.20-svn2')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.20-svn2')) {
 	showUpdateStep("Updating from 0.9.20-svn2 to 0.9.20");
 	lastStepStatus(0);
-	updateToVersion('0.9.20');
+	\Froxlor\Froxlor::updateToVersion('0.9.20');
 }
 
-if (isFroxlorVersion('0.9.20')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.20')) {
 	showUpdateStep("Updating from 0.9.20 to 0.9.20.1");
 	lastStepStatus(0);
-	updateToVersion('0.9.20.1');
+	\Froxlor\Froxlor::updateToVersion('0.9.20.1');
 }
 
-if (isFroxlorVersion('0.9.20.1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.20.1')) {
 
 	showUpdateStep("Updating from 0.9.20.1 to 0.9.20.1-svn1");
 	lastStepStatus(0);
@@ -1716,10 +1720,10 @@ if (isFroxlorVersion('0.9.20.1')) {
 	}
 	lastStepStatus(0);
 
-	updateToVersion('0.9.20.1-svn1');
+	\Froxlor\Froxlor::updateToVersion('0.9.20.1-svn1');
 }
 
-if (isFroxlorVersion('0.9.20.1-svn1') || isFroxlorVersion('0.9.20.2-svn1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.20.1-svn1') || \Froxlor\Froxlor::isFroxlorVersion('0.9.20.2-svn1')) {
 
 	showUpdateStep("Updating from 0.9.20.1-svn1 to 0.9.21-svn1");
 	lastStepStatus(0);
@@ -1729,10 +1733,10 @@ if (isFroxlorVersion('0.9.20.1-svn1') || isFroxlorVersion('0.9.20.2-svn1')) {
 	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` ADD `gender` INT( 1 ) NOT NULL DEFAULT '0' AFTER `firstname`");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.21-svn1');
+	\Froxlor\Froxlor::updateToVersion('0.9.21-svn1');
 }
 
-if (isFroxlorVersion('0.9.21-svn1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.21-svn1')) {
 
 	showUpdateStep("Updating from 0.9.21-svn1 to 0.9.21-svn2");
 	lastStepStatus(0);
@@ -1742,16 +1746,16 @@ if (isFroxlorVersion('0.9.21-svn1')) {
 	Database::query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'backup_ftp_passive', '1')");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.21-svn2');
+	\Froxlor\Froxlor::updateToVersion('0.9.21-svn2');
 }
 
-if (isFroxlorVersion('0.9.21-svn2')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.21-svn2')) {
 	showUpdateStep("Updating from 0.9.21-svn2 to 0.9.21");
 	lastStepStatus(0);
-	updateToVersion('0.9.21');
+	\Froxlor\Froxlor::updateToVersion('0.9.21');
 }
 
-if (isFroxlorVersion('0.9.21')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.21')) {
 
 	showUpdateStep("Updating from 0.9.21 to 0.9.22-svn1");
 	lastStepStatus(0);
@@ -1764,10 +1768,10 @@ if (isFroxlorVersion('0.9.21')) {
 	Database::query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'diskquota_customer_partition', '/dev/root');");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.22-svn1');
+	\Froxlor\Froxlor::updateToVersion('0.9.22-svn1');
 }
 
-if (isFroxlorVersion('0.9.22-svn1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.22-svn1')) {
 
 	showUpdateStep("Updating from 0.9.22-svn1 to 0.9.22-svn2");
 	lastStepStatus(0);
@@ -1775,34 +1779,34 @@ if (isFroxlorVersion('0.9.22-svn1')) {
 	/* fix backup_dir for #186 */
 	Database::query("UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = '/var/customers/backups/' WHERE `varname` = 'backup_dir';");
 
-	updateToVersion('0.9.22-svn2');
+	\Froxlor\Froxlor::updateToVersion('0.9.22-svn2');
 }
 
-if (isFroxlorVersion('0.9.22-svn2')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.22-svn2')) {
 	showUpdateStep("Updating from 0.9.22-svn2 to 0.9.22-rc1");
 	lastStepStatus(0);
-	updateToVersion('0.9.22-rc1');
+	\Froxlor\Froxlor::updateToVersion('0.9.22-rc1');
 }
 
-if (isFroxlorVersion('0.9.22-rc1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.22-rc1')) {
 	showUpdateStep("Updating from 0.9.22-rc1 to 0.9.22");
 	lastStepStatus(0);
-	updateToVersion('0.9.22');
+	\Froxlor\Froxlor::updateToVersion('0.9.22');
 }
 
-if (isFroxlorVersion('0.9.22')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.22')) {
 	showUpdateStep("Updating from 0.9.22 to 0.9.23-rc1");
 	lastStepStatus(0);
-	updateToVersion('0.9.23-rc1');
+	\Froxlor\Froxlor::updateToVersion('0.9.23-rc1');
 }
 
-if (isFroxlorVersion('0.9.23-rc1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.23-rc1')) {
 	showUpdateStep("Updating from 0.9.23-rc1 to 0.9.23");
 	lastStepStatus(0);
-	updateToVersion('0.9.23');
+	\Froxlor\Froxlor::updateToVersion('0.9.23');
 }
 
-if (isFroxlorVersion('0.9.23')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.23')) {
 
 	showUpdateStep("Updating from 0.9.23 to 0.9.24-svn1");
 	lastStepStatus(0);
@@ -1815,54 +1819,54 @@ if (isFroxlorVersion('0.9.23')) {
 	Database::query("INSERT INTO `" . TABLE_PANEL_SETTINGS . "` (`settinggroup`, `varname`, `value`) VALUES ('system', 'logrotate_keep', '4');");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.24-svn1');
+	\Froxlor\Froxlor::updateToVersion('0.9.24-svn1');
 }
 
-if (isFroxlorVersion('0.9.24-svn1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.24-svn1')) {
 	showUpdateStep("Updating from 0.9.24-svn1 to 0.9.24-rc1");
 	lastStepStatus(0);
-	updateToVersion('0.9.24-rc1');
+	\Froxlor\Froxlor::updateToVersion('0.9.24-rc1');
 }
 
-if (isFroxlorVersion('0.9.24-rc1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.24-rc1')) {
 	showUpdateStep("Updating from 0.9.24-rc1 to 0.9.24");
 	lastStepStatus(0);
-	updateToVersion('0.9.24');
+	\Froxlor\Froxlor::updateToVersion('0.9.24');
 }
 
-if (isFroxlorVersion('0.9.24')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.24')) {
 	showUpdateStep("Updating from 0.9.24 to 0.9.25-rc1");
 	lastStepStatus(0);
-	updateToVersion('0.9.25-rc1');
+	\Froxlor\Froxlor::updateToVersion('0.9.25-rc1');
 }
 
-if (isFroxlorVersion('0.9.25-rc1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.25-rc1')) {
 	showUpdateStep("Updating from 0.9.25-rc1 to 0.9.25");
 	lastStepStatus(0);
-	updateToVersion('0.9.25');
+	\Froxlor\Froxlor::updateToVersion('0.9.25');
 }
 
-if (isFroxlorVersion('0.9.25')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.25')) {
 	showUpdateStep("Updating from 0.9.25 to 0.9.26-svn1");
 	lastStepStatus(0);
 	// enable bind by default
 	Database::query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'bind_enable', '1')");
-	updateToVersion('0.9.26-svn1');
+	\Froxlor\Froxlor::updateToVersion('0.9.26-svn1');
 }
 
-if (isFroxlorVersion('0.9.26-svn1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.26-svn1')) {
 	showUpdateStep("Updating from 0.9.26-svn1 to 0.9.26-rc1");
 	lastStepStatus(0);
-	updateToVersion('0.9.26-rc1');
+	\Froxlor\Froxlor::updateToVersion('0.9.26-rc1');
 }
 
-if (isFroxlorVersion('0.9.26-rc1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.26-rc1')) {
 	showUpdateStep("Updating from 0.9.26-rc1 to 0.9.26");
 	lastStepStatus(0);
-	updateToVersion('0.9.26');
+	\Froxlor\Froxlor::updateToVersion('0.9.26');
 }
 
-if (isFroxlorVersion('0.9.26')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.26')) {
 
 	showUpdateStep("Updating from 0.9.26 to 0.9.27-svn1");
 	lastStepStatus(0);
@@ -1895,10 +1899,10 @@ if (isFroxlorVersion('0.9.26')) {
 		));
 	}
 
-	updateToVersion('0.9.27-svn1');
+	\Froxlor\Froxlor::updateToVersion('0.9.27-svn1');
 }
 
-if (isFroxlorVersion('0.9.27-svn1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.27-svn1')) {
 
 	showUpdateStep("Updating from 0.9.27-svn1 to 0.9.27-svn2");
 	lastStepStatus(0);
@@ -1919,22 +1923,22 @@ if (isFroxlorVersion('0.9.27-svn1')) {
 		Database::query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'idle_timeout', '30');");
 	}
 
-	updateToVersion('0.9.27-svn2');
+	\Froxlor\Froxlor::updateToVersion('0.9.27-svn2');
 }
 
-if (isFroxlorVersion('0.9.27-svn2')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.27-svn2')) {
 	showUpdateStep("Updating from 0.9.27-svn2 to 0.9.27-rc1");
 	lastStepStatus(0);
-	updateToVersion('0.9.27-rc1');
+	\Froxlor\Froxlor::updateToVersion('0.9.27-rc1');
 }
 
-if (isFroxlorVersion('0.9.27-rc1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.27-rc1')) {
 	showUpdateStep("Updating from 0.9.27-rc1 to 0.9.27");
 	lastStepStatus(0);
-	updateToVersion('0.9.27');
+	\Froxlor\Froxlor::updateToVersion('0.9.27');
 }
 
-if (isFroxlorVersion('0.9.27')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.27')) {
 
 	showUpdateStep("Updating from 0.9.27 to 0.9.28-svn1");
 	lastStepStatus(0);
@@ -1947,10 +1951,10 @@ if (isFroxlorVersion('0.9.27')) {
 		Database::query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('phpfpm', 'aliasconfigdir', '/var/www/php-fpm/');");
 	}
 
-	updateToVersion('0.9.28-svn1');
+	\Froxlor\Froxlor::updateToVersion('0.9.28-svn1');
 }
 
-if (isFroxlorVersion('0.9.28-svn1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.28-svn1')) {
 
 	showUpdateStep("Updating from 0.9.28-svn1 to 0.9.28-svn2");
 	lastStepStatus(0);
@@ -2018,10 +2022,10 @@ if (isFroxlorVersion('0.9.28-svn1')) {
 		}
 	}
 
-	updateToVersion('0.9.28-svn2');
+	\Froxlor\Froxlor::updateToVersion('0.9.28-svn2');
 }
 
-if (isFroxlorVersion('0.9.28-svn2')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.28-svn2')) {
 
 	showUpdateStep("Updating from 0.9.28-svn2 to 0.9.28-svn3");
 	lastStepStatus(0);
@@ -2036,10 +2040,10 @@ if (isFroxlorVersion('0.9.28-svn2')) {
 		Database::query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('system', 'vmail_maildirname', 'Maildir');");
 	}
 
-	updateToVersion('0.9.28-svn3');
+	\Froxlor\Froxlor::updateToVersion('0.9.28-svn3');
 }
 
-if (isFroxlorVersion('0.9.28-svn3')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.28-svn3')) {
 
 	showUpdateStep("Updating from 0.9.28-svn3 to 0.9.28-svn4", true);
 	lastStepStatus(0);
@@ -2104,10 +2108,10 @@ if (isFroxlorVersion('0.9.28-svn3')) {
 
 	lastStepStatus(0);
 
-	updateToVersion('0.9.28-svn4');
+	\Froxlor\Froxlor::updateToVersion('0.9.28-svn4');
 }
 
-if (isFroxlorVersion('0.9.28-svn4')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.28-svn4')) {
 
 	showUpdateStep("Updating from 0.9.28-svn4 to 0.9.28-svn5");
 
@@ -2116,10 +2120,10 @@ if (isFroxlorVersion('0.9.28-svn4')) {
 	Database::query("INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES ('catchall', 'catchall_enabled', '1');");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.28-svn5');
+	\Froxlor\Froxlor::updateToVersion('0.9.28-svn5');
 }
 
-if (isFroxlorVersion('0.9.28-svn5')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.28-svn5')) {
 
 	showUpdateStep("Updating from 0.9.28-svn5 to 0.9.28-svn6", true);
 	lastStepStatus(0);
@@ -2159,7 +2163,7 @@ if (isFroxlorVersion('0.9.28-svn5')) {
 	showUpdateStep("Inserting settings for nginx fastcgi-params file", true);
 	$fastcgiparams = '/etc/nginx/fastcgi_params';
 	if (isset($_POST['nginx_fastcgi_params']) && $_POST['nginx_fastcgi_params'] != '') {
-		$fastcgiparams = makeCorrectFile($_POST['nginx_fastcgi_params']);
+		$fastcgiparams = \Froxlor\FileDir::makeCorrectFile($_POST['nginx_fastcgi_params']);
 	}
 	$stmt = Database::prepare("
 		INSERT INTO `" . TABLE_PANEL_SETTINGS . "` SET
@@ -2171,16 +2175,16 @@ if (isFroxlorVersion('0.9.28-svn5')) {
 	));
 	lastStepStatus(0);
 
-	updateToVersion('0.9.28-svn6');
+	\Froxlor\Froxlor::updateToVersion('0.9.28-svn6');
 }
 
-if (isFroxlorVersion('0.9.28-svn6')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.28-svn6')) {
 	showUpdateStep("Updating from 0.9.28-svn6 to 0.9.28 release candidate 1");
 	lastStepStatus(0);
-	updateToVersion('0.9.28-rc1');
+	\Froxlor\Froxlor::updateToVersion('0.9.28-rc1');
 }
 
-if (isFroxlorVersion('0.9.28-rc1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.28-rc1')) {
 
 	showUpdateStep("Updating from 0.9.28-rc1 to 0.9.28-rc2", true);
 	lastStepStatus(0);
@@ -2197,26 +2201,26 @@ if (isFroxlorVersion('0.9.28-rc1')) {
 	));
 	lastStepStatus(0);
 
-	updateToVersion('0.9.28-rc2');
+	\Froxlor\Froxlor::updateToVersion('0.9.28-rc2');
 }
 
-if (isFroxlorVersion('0.9.28-rc2')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.28-rc2')) {
 	showUpdateStep("Updating from 0.9.28-rc2 to 0.9.28 final", true);
 	Database::query("DELETE FROM `panel_settings` WHERE `settinggroup`='system' AND `varname`='mod_log_sql'");
 	Database::query("DELETE FROM `panel_settings` WHERE `settinggroup`='system' AND `varname`='openssl_cnf'");
 	Database::query("ALTER TABLE `panel_domains` DROP `safemode`");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.28');
+	\Froxlor\Froxlor::updateToVersion('0.9.28');
 }
 
-if (isFroxlorVersion('0.9.28')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.28')) {
 	showUpdateStep("Updating from 0.9.28 final to 0.9.28.1");
 	lastStepStatus(0);
-	updateToVersion('0.9.28.1');
+	\Froxlor\Froxlor::updateToVersion('0.9.28.1');
 }
 
-if (isFroxlorVersion('0.9.28.1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.28.1')) {
 
 	showUpdateStep("Updating from 0.9.28.1 to 0.9.29-dev1", true);
 	lastStepStatus(0);
@@ -2239,7 +2243,7 @@ if (isFroxlorVersion('0.9.28.1')) {
 	$fastcgiparams = Settings::Get('nginx.fastcgiparams');
 	// check the faulty value explicitly
 	if ($fastcgiparams == '/etc/nginx/fastcgi_params/') {
-		$fastcgiparams = makeCorrectFile(substr($fastcgiparams, 0, - 1));
+		$fastcgiparams = \Froxlor\FileDir::makeCorrectFile(substr($fastcgiparams, 0, - 1));
 		$stmt = Database::prepare("
 		UPDATE `" . TABLE_PANEL_SETTINGS . "` SET
 			`value` = :value
@@ -2248,10 +2252,10 @@ if (isFroxlorVersion('0.9.28.1')) {
 			'value' => $fastcgiparams
 		));
 	}
-	updateToVersion('0.9.29-dev1');
+	\Froxlor\Froxlor::updateToVersion('0.9.29-dev1');
 }
 
-if (isFroxlorVersion('0.9.29-dev1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.29-dev1')) {
 
 	showUpdateStep("Updating from 0.9.29-dev1 to 0.9.29-dev2", true);
 	lastStepStatus(0);
@@ -2274,10 +2278,10 @@ if (isFroxlorVersion('0.9.29-dev1')) {
 	));
 	lastStepStatus(0);
 
-	updateToVersion('0.9.29-dev2');
+	\Froxlor\Froxlor::updateToVersion('0.9.29-dev2');
 }
 
-if (isFroxlorVersion('0.9.29-dev2')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.29-dev2')) {
 
 	showUpdateStep("Updating from 0.9.29-dev2 to 0.9.29-dev3", true);
 	lastStepStatus(0);
@@ -2304,10 +2308,10 @@ if (isFroxlorVersion('0.9.29-dev2')) {
 	));
 	lastStepStatus(0);
 
-	updateToVersion('0.9.29-dev3');
+	\Froxlor\Froxlor::updateToVersion('0.9.29-dev3');
 }
 
-if (isFroxlorVersion('0.9.29-dev3')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.29-dev3')) {
 
 	showUpdateStep("Updating from 0.9.29-dev3 to 0.9.29-dev4", true);
 	lastStepStatus(0);
@@ -2324,7 +2328,7 @@ if (isFroxlorVersion('0.9.29-dev3')) {
 	) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;");
 	lastStepStatus(0);
 
-	$system_customersslpath = isset($_POST['system_customersslpath']) ? makeCorrectDir($_POST['system_customersslpath']) : '/etc/ssl/froxlor-custom/';
+	$system_customersslpath = isset($_POST['system_customersslpath']) ? \Froxlor\FileDir::makeCorrectDir($_POST['system_customersslpath']) : '/etc/ssl/froxlor-custom/';
 	if (trim($system_customersslpath) == '/') {
 		// prevent users from specifying nonsense here
 		$system_customersslpath = '/etc/ssl/froxlor-custom/';
@@ -2337,10 +2341,10 @@ if (isFroxlorVersion('0.9.29-dev3')) {
 	Database::pexecute($stmt, array(
 		'value' => $system_customersslpath
 	));
-	updateToVersion('0.9.29-dev4');
+	\Froxlor\Froxlor::updateToVersion('0.9.29-dev4');
 }
 
-if (isFroxlorVersion('0.9.29-dev4')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.29-dev4')) {
 
 	showUpdateStep("Updating from 0.9.29-dev4 to 0.9.29-rc1", true);
 	lastStepStatus(0);
@@ -2368,16 +2372,16 @@ if (isFroxlorVersion('0.9.29-dev4')) {
 	));
 	lastStepStatus(0);
 
-	updateToVersion('0.9.29-rc1');
+	\Froxlor\Froxlor::updateToVersion('0.9.29-rc1');
 }
 
-if (isFroxlorVersion('0.9.29-rc1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.29-rc1')) {
 	showUpdateStep("Updating from 0.9.29-rc1 to 0.9.29 final", true);
 	lastStepStatus(0);
-	updateToVersion('0.9.29');
+	\Froxlor\Froxlor::updateToVersion('0.9.29');
 }
 
-if (isFroxlorVersion('0.9.29')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.29')) {
 
 	showUpdateStep("Updating from 0.9.29 to 0.9.29.1-dev1", true);
 	lastStepStatus(0);
@@ -2406,7 +2410,7 @@ if (isFroxlorVersion('0.9.29')) {
 			Database::query("INSERT INTO `" . TABLE_DOMAINTOIP . "` SET
 					`id_domain` = " . (int) $row['id'] . ",
 					`id_ipandports` = " . (int) $row['ssl_ipandport']);
-		}		// Subdomains also have ssl ports if the parent has
+		} // Subdomains also have ssl ports if the parent has
 		elseif ((int) $row['ssl_ipandport'] == 0 && (int) $row['ssl_redirect'] != 0 && (int) $row['parentdomainid'] != 0) {
 			Database::query("INSERT INTO `" . TABLE_DOMAINTOIP . "` SET
 					`id_domain` = " . (int) $row['id'] . ",
@@ -2423,10 +2427,10 @@ if (isFroxlorVersion('0.9.29')) {
 	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` DROP `ssl_ipandport`;");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.29.1-dev1');
+	\Froxlor\Froxlor::updateToVersion('0.9.29.1-dev1');
 }
 
-if (isFroxlorVersion('0.9.29.1-dev1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.29.1-dev1')) {
 
 	showUpdateStep("Updating from 0.9.29.1-dev1 to 0.9.29.1-dev2", true);
 	lastStepStatus(0);
@@ -2436,10 +2440,10 @@ if (isFroxlorVersion('0.9.29.1-dev1')) {
 	Database::query("INSERT INTO `cronjobs_run` SET `module` = 'froxlor/core', `cronfile` = 'cron_mailboxsize.php', `interval` = '6 HOUR', `isactive` = '1', `desc_lng_key` = 'cron_mailboxsize';");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.29.1-dev2');
+	\Froxlor\Froxlor::updateToVersion('0.9.29.1-dev2');
 }
 
-if (isFroxlorVersion('0.9.29.1-dev2')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.29.1-dev2')) {
 
 	showUpdateStep("Updating from 0.9.29.1-dev2 to 0.9.29.1-dev3", true);
 	lastStepStatus(0);
@@ -2451,10 +2455,10 @@ if (isFroxlorVersion('0.9.29.1-dev2')) {
 	Database::query("DELETE FROM `panel_settings` WHERE `varname` = 'logrotate_keep';");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.29.1-dev3');
+	\Froxlor\Froxlor::updateToVersion('0.9.29.1-dev3');
 }
 
-if (isFroxlorVersion('0.9.29.1-dev3')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.29.1-dev3')) {
 
 	showUpdateStep("Updating from 0.9.29.1-dev3 to 0.9.29.1-dev4", true);
 	lastStepStatus(0);
@@ -2469,22 +2473,22 @@ if (isFroxlorVersion('0.9.29.1-dev3')) {
 		lastStepStatus(0);
 	}
 
-	updateToVersion('0.9.29.1-dev4');
+	\Froxlor\Froxlor::updateToVersion('0.9.29.1-dev4');
 }
 
-if (isFroxlorVersion('0.9.29.1-dev4')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.29.1-dev4')) {
 	showUpdateStep("Updating from 0.9.29.1-dev4 to 0.9.30-dev1", true);
 	lastStepStatus(0);
-	updateToVersion('0.9.30-dev1');
+	\Froxlor\Froxlor::updateToVersion('0.9.30-dev1');
 }
 
-if (isFroxlorVersion('0.9.30-dev1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.30-dev1')) {
 	showUpdateStep("Updating from 0.9.30-dev1 to 0.9.30-rc1", true);
 	lastStepStatus(0);
-	updateToVersion('0.9.30-rc1');
+	\Froxlor\Froxlor::updateToVersion('0.9.30-rc1');
 }
 
-if (isFroxlorVersion('0.9.30-rc1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.30-rc1')) {
 
 	showUpdateStep("Updating from 0.9.30-rc1 to 0.9.30 final", true);
 	lastStepStatus(0);
@@ -2493,10 +2497,10 @@ if (isFroxlorVersion('0.9.30-rc1')) {
 	Database::query("INSERT INTO `panel_settings` SET `settinggroup` = 'system', `varname` = 'ssl_cipher_list', `value` = 'ECDHE-RSA-AES128-SHA256:AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH'");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.30');
+	\Froxlor\Froxlor::updateToVersion('0.9.30');
 }
 
-if (isFroxlorVersion('0.9.30')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.30')) {
 
 	showUpdateStep("Updating from 0.9.30 to 0.9.31-dev1", true);
 	lastStepStatus(0);
@@ -2506,10 +2510,10 @@ if (isFroxlorVersion('0.9.30')) {
 	Database::query("DROP TABLE IF EXISTS `domain_docrootsettings`;");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.31-dev1');
+	\Froxlor\Froxlor::updateToVersion('0.9.31-dev1');
 }
 
-if (isFroxlorVersion('0.9.31-dev1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.31-dev1')) {
 
 	showUpdateStep("Updating from 0.9.31-dev1 to 0.9.31-dev2", true);
 	lastStepStatus(0);
@@ -2529,16 +2533,16 @@ if (isFroxlorVersion('0.9.31-dev1')) {
 	Database::pexecute($ins_stmt, $params);
 	lastStepStatus(0);
 
-	updateToVersion('0.9.31-dev2');
+	\Froxlor\Froxlor::updateToVersion('0.9.31-dev2');
 }
 
-if (isFroxlorVersion('0.9.31-dev2')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.31-dev2')) {
 	showUpdateStep("Updating from 0.9.31-dev2 to 0.9.31-dev3", true);
 	lastStepStatus(0);
-	updateToVersion('0.9.31-dev3');
+	\Froxlor\Froxlor::updateToVersion('0.9.31-dev3');
 }
 
-if (isFroxlorVersion('0.9.31-dev3')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.31-dev3')) {
 	showUpdateStep("Updating from 0.9.31-dev3 to 0.9.31-dev4", true);
 	lastStepStatus(0);
 
@@ -2555,10 +2559,10 @@ if (isFroxlorVersion('0.9.31-dev3')) {
 	Database::query($sql);
 	lastStepStatus(0);
 
-	updateToVersion('0.9.31-dev4');
+	\Froxlor\Froxlor::updateToVersion('0.9.31-dev4');
 }
 
-if (isFroxlorVersion('0.9.31-dev4')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.31-dev4')) {
 
 	showUpdateStep("Updating from 0.9.31-dev4 to 0.9.31-dev5", true);
 	lastStepStatus(0);
@@ -2582,10 +2586,10 @@ if (isFroxlorVersion('0.9.31-dev4')) {
 
 	lastStepStatus(0);
 
-	updateToVersion('0.9.31-dev5');
+	\Froxlor\Froxlor::updateToVersion('0.9.31-dev5');
 }
 
-if (isFroxlorVersion('0.9.31-dev5')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.31-dev5')) {
 
 	showUpdateStep("Updating from 0.9.31-dev5 to 0.9.31-dev6", true);
 	lastStepStatus(0);
@@ -2596,16 +2600,16 @@ if (isFroxlorVersion('0.9.31-dev5')) {
 	Database::query("ALTER TABLE `" . TABLE_PANEL_PHPCONFIGS . "` ADD `fpm_reqslow` varchar(15) NOT NULL default '5s' AFTER `fpm_reqterm`;");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.31-dev6');
+	\Froxlor\Froxlor::updateToVersion('0.9.31-dev6');
 }
 
-if (isFroxlorVersion('0.9.31-dev6')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.31-dev6')) {
 	showUpdateStep("Updating from 0.9.31-dev6 to 0.9.31-rc1");
 	lastStepStatus(0);
-	updateToVersion('0.9.31-rc1');
+	\Froxlor\Froxlor::updateToVersion('0.9.31-rc1');
 }
 
-if (isFroxlorVersion('0.9.31-rc1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.31-rc1')) {
 	showUpdateStep("Updating from 0.9.31-rc1 to 0.9.31-rc2");
 	lastStepStatus(0);
 
@@ -2619,10 +2623,10 @@ if (isFroxlorVersion('0.9.31-rc1')) {
 	));
 	lastStepStatus(0);
 
-	updateToVersion('0.9.31-rc2');
+	\Froxlor\Froxlor::updateToVersion('0.9.31-rc2');
 }
 
-if (isFroxlorVersion('0.9.31-rc2')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.31-rc2')) {
 	showUpdateStep("Updating from 0.9.31-rc2 to 0.9.31-rc3");
 	lastStepStatus(0);
 
@@ -2653,28 +2657,28 @@ if (isFroxlorVersion('0.9.31-rc2')) {
 	}
 	lastStepStatus(0);
 
-	updateToVersion('0.9.31-rc3');
+	\Froxlor\Froxlor::updateToVersion('0.9.31-rc3');
 }
 
-if (isFroxlorVersion('0.9.31-rc3')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.31-rc3')) {
 	showUpdateStep("Updating from 0.9.31-rc3 to 0.9.31 final", true);
 	lastStepStatus(0);
-	updateToVersion('0.9.31');
+	\Froxlor\Froxlor::updateToVersion('0.9.31');
 }
 
-if (isFroxlorVersion('0.9.31')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.31')) {
 	showUpdateStep("Updating from 0.9.31 to 0.9.31.1 final", true);
 	lastStepStatus(0);
-	updateToVersion('0.9.31.1');
+	\Froxlor\Froxlor::updateToVersion('0.9.31.1');
 }
 
-if (isFroxlorVersion('0.9.31.1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.31.1')) {
 	showUpdateStep("Updating from 0.9.31.1 to 0.9.31.2 final", true);
 	lastStepStatus(0);
-	updateToVersion('0.9.31.2');
+	\Froxlor\Froxlor::updateToVersion('0.9.31.2');
 }
 
-if (isFroxlorVersion('0.9.31.2')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.31.2')) {
 
 	showUpdateStep("Updating from 0.9.31.2 to 0.9.32-dev1");
 	lastStepStatus(0);
@@ -2724,10 +2728,10 @@ if (isFroxlorVersion('0.9.31.2')) {
 	Database::query("UPDATE `" . TABLE_FTP_GROUPS . "` SET `members` = CONCAT(`members`, '," . Settings::Get('system.httpuser') . "');");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.32-dev1');
+	\Froxlor\Froxlor::updateToVersion('0.9.32-dev1');
 }
 
-if (isFroxlorVersion('0.9.32-dev1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.32-dev1')) {
 
 	showUpdateStep("Updating from 0.9.32-dev1 to 0.9.32-dev2");
 	lastStepStatus(0);
@@ -2759,10 +2763,10 @@ if (isFroxlorVersion('0.9.32-dev1')) {
 	));
 	lastStepStatus(0);
 
-	updateToVersion('0.9.32-dev2');
+	\Froxlor\Froxlor::updateToVersion('0.9.32-dev2');
 }
 
-if (isFroxlorVersion('0.9.32-dev2')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.32-dev2')) {
 
 	showUpdateStep("Updating from 0.9.32-dev2 to 0.9.32-dev3");
 	lastStepStatus(0);
@@ -2776,10 +2780,10 @@ if (isFroxlorVersion('0.9.32-dev2')) {
 	}
 	lastStepStatus(0);
 
-	updateToVersion('0.9.32-dev3');
+	\Froxlor\Froxlor::updateToVersion('0.9.32-dev3');
 }
 
-if (isFroxlorVersion('0.9.32-dev3')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.32-dev3')) {
 
 	showUpdateStep("Updating from 0.9.32-dev3 to 0.9.32-dev4");
 	lastStepStatus(0);
@@ -2788,10 +2792,10 @@ if (isFroxlorVersion('0.9.32-dev3')) {
 	Database::query("ALTER TABLE `" . TABLE_FTP_USERS . "` ADD `description` varchar(255) NOT NULL DEFAULT '' AFTER `customerid`;");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.32-dev4');
+	\Froxlor\Froxlor::updateToVersion('0.9.32-dev4');
 }
 
-if (isFroxlorVersion('0.9.32-dev4')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.32-dev4')) {
 
 	showUpdateStep("Updating from 0.9.32-dev4 to 0.9.32-dev5");
 	lastStepStatus(0);
@@ -2803,16 +2807,16 @@ if (isFroxlorVersion('0.9.32-dev4')) {
 	showUpdateStep("Adding new settings for cron");
 	// get user-chosen value
 	$crondfile = isset($_POST['crondfile']) ? $_POST['crondfile'] : "/etc/cron.d/froxlor";
-	$crondfile = makeCorrectFile($crondfile);
+	$crondfile = \Froxlor\FileDir::makeCorrectFile($crondfile);
 	Settings::AddNew("system.cronconfig", $crondfile);
 	// add task to generate cron.d-file
-	inserttask('99');
+	\Froxlor\System\Cronjob::inserttask('99');
 	lastStepStatus(0);
 
-	updateToVersion('0.9.32-dev5');
+	\Froxlor\Froxlor::updateToVersion('0.9.32-dev5');
 }
 
-if (isFroxlorVersion('0.9.32-dev5')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.32-dev5')) {
 
 	showUpdateStep("Updating from 0.9.32-dev5 to 0.9.32-dev6", false);
 
@@ -2821,13 +2825,13 @@ if (isFroxlorVersion('0.9.32-dev5')) {
 	$crondreload = isset($_POST['crondreload']) ? $_POST['crondreload'] : "/etc/init.d/cron reload";
 	Settings::AddNew("system.crondreload", $crondreload);
 	// add task to generate cron.d-file
-	inserttask('99');
+	\Froxlor\System\Cronjob::inserttask('99');
 	lastStepStatus(0);
 
-	updateToVersion('0.9.32-dev6');
+	\Froxlor\Froxlor::updateToVersion('0.9.32-dev6');
 }
 
-if (isFroxlorVersion('0.9.32-dev6')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.32-dev6')) {
 
 	showUpdateStep("Updating from 0.9.32-dev6 to 0.9.32-rc1", false);
 
@@ -2835,10 +2839,10 @@ if (isFroxlorVersion('0.9.32-dev6')) {
 	Database::query("ALTER TABLE `" . TABLE_PANEL_TASKS . "` MODIFY `data` text NOT NULL default ''");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.32-rc1');
+	\Froxlor\Froxlor::updateToVersion('0.9.32-rc1');
 }
 
-if (isFroxlorVersion('0.9.32-rc1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.32-rc1')) {
 
 	showUpdateStep("Updating from 0.9.32-rc1 to 0.9.32-rc2", false);
 
@@ -2851,7 +2855,7 @@ if (isFroxlorVersion('0.9.32-rc1')) {
 	$croncmdline = isset($_POST['croncmdline']) ? $_POST['croncmdline'] : "/usr/bin/nice -n 5 /usr/bin/php5 -q";
 	Settings::AddNew("system.croncmdline", $croncmdline);
 	// add task to generate cron.d-file
-	inserttask('99');
+	\Froxlor\System\Cronjob::inserttask('99');
 	// silenty add the auto-update setting - we do not want everybody to know and use this
 	// as it is a very dangerous setting
 	Settings::AddNew("system.cron_allowautoupdate", 0);
@@ -2861,10 +2865,10 @@ if (isFroxlorVersion('0.9.32-rc1')) {
 	Database::query("DELETE FROM `" . TABLE_FTP_USERS . "` WHERE `username` LIKE '%_backup';");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.32-rc2');
+	\Froxlor\Froxlor::updateToVersion('0.9.32-rc2');
 }
 
-if (isFroxlorVersion('0.9.32-rc2')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.32-rc2')) {
 	showUpdateStep("Updating from 0.9.32-rc2 to 0.9.32-rc3", false);
 
 	showUpdateStep("Removing outdated languages");
@@ -2873,15 +2877,15 @@ if (isFroxlorVersion('0.9.32-rc2')) {
 	Database::query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `def_language` = 'English' WHERE `def_language` NOT REGEXP '(Dutch|English|Français|Deutsch|Italian|Portugu&ecirc;s|Swedish)';");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.32-rc3');
+	\Froxlor\Froxlor::updateToVersion('0.9.32-rc3');
 }
 
-if (isFroxlorVersion('0.9.32-rc3')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.32-rc3')) {
 	showUpdateStep("Updating from 0.9.32-rc3 to 0.9.32 final", false);
-	updateToVersion('0.9.32');
+	\Froxlor\Froxlor::updateToVersion('0.9.32');
 }
 
-if (isFroxlorVersion('0.9.32')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.32')) {
 	showUpdateStep("Updating from 0.9.32 to 0.9.33-dev1", false);
 
 	showUpdateStep("Adding settings for custom newsfeed on customer-dashboard");
@@ -2889,20 +2893,20 @@ if (isFroxlorVersion('0.9.32')) {
 	Settings::AddNew("customer.news_feed_url", isset($_POST['customer_news_feed_url']) ? $_POST['customer_news_feed_url'] : '');
 	lastStepStatus(0);
 
-	updateToVersion('0.9.33-dev1');
+	\Froxlor\Froxlor::updateToVersion('0.9.33-dev1');
 }
 
-if (isFroxlorVersion('0.9.33-dev1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.33-dev1')) {
 	showUpdateStep("Updating from 0.9.33-dev1 to 0.9.33-dev2", false);
 
 	showUpdateStep("Adding settings for hostname-dns-entry");
 	Settings::AddNew("system.dns_createhostnameentry", isset($_POST['dns_createhostnameentry']) ? (int) $_POST['dns_createhostnameentry'] : '0');
 	lastStepStatus(0);
 
-	updateToVersion('0.9.33-dev2');
+	\Froxlor\Froxlor::updateToVersion('0.9.33-dev2');
 }
 
-if (isFroxlorVersion('0.9.33-dev2')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.33-dev2')) {
 	showUpdateStep("Updating from 0.9.33-dev2 to 0.9.33-dev3", false);
 
 	showUpdateStep("Adding settings for password-generation options");
@@ -2917,10 +2921,10 @@ if (isFroxlorVersion('0.9.33-dev2')) {
 	Settings::AddNew("phpfpm.use_mod_proxy", '0');
 	lastStepStatus(0);
 
-	updateToVersion('0.9.33-dev3');
+	\Froxlor\Froxlor::updateToVersion('0.9.33-dev3');
 }
 
-if (isFroxlorVersion('0.9.33-dev3')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.33-dev3')) {
 	showUpdateStep("Updating from 0.9.33-dev3 to 0.9.33-rc1", false);
 
 	showUpdateStep("Updating database-scheme");
@@ -2951,10 +2955,10 @@ if (isFroxlorVersion('0.9.33-dev3')) {
 		lastStepStatus(1, "not needed");
 	}
 
-	updateToVersion('0.9.33-rc1');
+	\Froxlor\Froxlor::updateToVersion('0.9.33-rc1');
 }
 
-if (isFroxlorVersion('0.9.33-rc1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.33-rc1')) {
 	showUpdateStep("Updating from 0.9.33-rc1 to 0.9.33-rc2", false);
 
 	showUpdateStep("Add new setting for sending cron-errors via mail");
@@ -2975,38 +2979,38 @@ if (isFroxlorVersion('0.9.33-rc1')) {
 	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` MODIFY `password` varchar(255) NOT NULL default ''");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.33-rc2');
+	\Froxlor\Froxlor::updateToVersion('0.9.33-rc2');
 }
 
-if (isFroxlorVersion('0.9.33-rc2')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.33-rc2')) {
 
 	showUpdateStep("Updating from 0.9.33-rc2 to 0.9.33-rc3");
 	lastStepStatus(0);
-	updateToVersion('0.9.33-rc3');
+	\Froxlor\Froxlor::updateToVersion('0.9.33-rc3');
 }
 
-if (isFroxlorVersion('0.9.33-rc3')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.33-rc3')) {
 
 	showUpdateStep("Updating from 0.9.33-rc3 to 0.9.33 final");
 	lastStepStatus(0);
-	updateToVersion('0.9.33');
+	\Froxlor\Froxlor::updateToVersion('0.9.33');
 }
 
-if (isFroxlorVersion('0.9.33')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.33')) {
 
 	showUpdateStep("Updating from 0.9.33 to 0.9.33.1");
 	lastStepStatus(0);
-	updateToVersion('0.9.33.1');
+	\Froxlor\Froxlor::updateToVersion('0.9.33.1');
 }
 
-if (isFroxlorVersion('0.9.33.1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.33.1')) {
 
 	showUpdateStep("Updating from 0.9.33.1 to 0.9.33.2");
 	lastStepStatus(0);
-	updateToVersion('0.9.33.2');
+	\Froxlor\Froxlor::updateToVersion('0.9.33.2');
 }
 
-if (isFroxlorVersion('0.9.33.2')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.33.2')) {
 
 	showUpdateStep("Updating from 0.9.33.2 to 0.9.34-dev1", false);
 
@@ -3057,10 +3061,10 @@ if (isFroxlorVersion('0.9.33.2')) {
 	), false);
 	lastStepStatus(0);
 
-	updateToVersion('0.9.34-dev1');
+	\Froxlor\Froxlor::updateToVersion('0.9.34-dev1');
 }
 
-if (isFroxlorVersion('0.9.34-dev1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.34-dev1')) {
 
 	showUpdateStep("Updating from 0.9.34-dev1 to 0.9.34-dev2", false);
 
@@ -3075,10 +3079,10 @@ if (isFroxlorVersion('0.9.34-dev1')) {
 	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` MODIFY `ssl_cert_chainfile` mediumtext NOT NULL");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.34-dev2');
+	\Froxlor\Froxlor::updateToVersion('0.9.34-dev2');
 }
 
-if (isFroxlorVersion('0.9.34-dev2')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.34-dev2')) {
 
 	showUpdateStep("Updating from 0.9.34-dev2 to 0.9.34-dev3", false);
 
@@ -3092,11 +3096,11 @@ if (isFroxlorVersion('0.9.34-dev2')) {
 	}
 
 	if ($do_update) {
-		updateToVersion('0.9.34-dev3');
+		\Froxlor\Froxlor::updateToVersion('0.9.34-dev3');
 	}
 }
 
-if (isFroxlorVersion('0.9.34-dev3')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.34-dev3')) {
 
 	showUpdateStep("Updating from 0.9.34-dev3 to 0.9.34-dev4", false);
 
@@ -3104,34 +3108,34 @@ if (isFroxlorVersion('0.9.34-dev3')) {
 	Database::query("ALTER TABLE `" . TABLE_PANEL_PHPCONFIGS . "` ADD `mod_fcgid_umask` varchar(15) NOT NULL DEFAULT '022' AFTER `mod_fcgid_maxrequests`");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.34-dev4');
+	\Froxlor\Froxlor::updateToVersion('0.9.34-dev4');
 }
 
-if (isFroxlorVersion('0.9.34-dev4')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.34-dev4')) {
 
 	showUpdateStep("Updating from 0.9.34-dev4 to 0.9.34 final");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.34');
+	\Froxlor\Froxlor::updateToVersion('0.9.34');
 }
 
-if (isFroxlorVersion('0.9.34')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.34')) {
 
 	showUpdateStep("Updating from 0.9.34 to 0.9.34.1");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.34.1');
+	\Froxlor\Froxlor::updateToVersion('0.9.34.1');
 }
 
-if (isFroxlorVersion('0.9.34.1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.34.1')) {
 
 	showUpdateStep("Updating from 0.9.34.1 to 0.9.34.2");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.34.2');
+	\Froxlor\Froxlor::updateToVersion('0.9.34.2');
 }
 
-if (isFroxlorVersion('0.9.34.2')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.34.2')) {
 
 	showUpdateStep("Updating from 0.9.34.2 to 0.9.35-dev1", false);
 
@@ -3154,10 +3158,10 @@ if (isFroxlorVersion('0.9.34.2')) {
 	Database::pexecute($stmt);
 	lastStepStatus(0);
 
-	updateToVersion('0.9.35-dev1');
+	\Froxlor\Froxlor::updateToVersion('0.9.35-dev1');
 }
 
-if (isFroxlorVersion('0.9.35-dev1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.35-dev1')) {
 
 	showUpdateStep("Updating from 0.9.35-dev1 to 0.9.35-dev2", false);
 
@@ -3167,10 +3171,10 @@ if (isFroxlorVersion('0.9.35-dev1')) {
 	Settings::AddNew("system.letsencryptstate", 'Germany');
 	lastStepStatus(0);
 
-	updateToVersion('0.9.35-dev2');
+	\Froxlor\Froxlor::updateToVersion('0.9.35-dev2');
 }
 
-if (isFroxlorVersion('0.9.35-dev2')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.35-dev2')) {
 
 	showUpdateStep("Updating from 0.9.35-dev2 to 0.9.35-dev3", false);
 
@@ -3178,10 +3182,10 @@ if (isFroxlorVersion('0.9.35-dev2')) {
 	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `termination_date` date NOT NULL AFTER `registration_date`");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.35-dev3');
+	\Froxlor\Froxlor::updateToVersion('0.9.35-dev3');
 }
 
-if (isFroxlorVersion('0.9.35-dev3')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.35-dev3')) {
 
 	showUpdateStep("Updating from 0.9.35-dev3 to 0.9.35-dev4", false);
 
@@ -3190,15 +3194,15 @@ if (isFroxlorVersion('0.9.35-dev3')) {
 	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'system' AND `varname` = 'send_cron_errors';");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.35-dev4');
+	\Froxlor\Froxlor::updateToVersion('0.9.35-dev4');
 }
 
-if (isFroxlorVersion('0.9.35-dev4')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.35-dev4')) {
 
 	showUpdateStep("Updating from 0.9.35-dev4 to 0.9.35-dev5", false);
 
 	showUpdateStep("Adding more Let's Encrypt settings");
-	Settings::AddNew("system.letsencryptchallengepath", FROXLOR_INSTALL_DIR);
+	Settings::AddNew("system.letsencryptchallengepath", \Froxlor\Froxlor::getInstallDir());
 	Settings::AddNew("system.letsencryptkeysize", '4096');
 	Settings::AddNew("system.letsencryptreuseold", 0);
 	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` ADD `ssl_csr_file` MEDIUMTEXT AFTER `ssl_cert_chainfile`;");
@@ -3207,10 +3211,10 @@ if (isFroxlorVersion('0.9.35-dev4')) {
 	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `hsts_preload` TINYINT(1) NOT NULL DEFAULT '1' AFTER `hsts_sub`");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.35-dev5');
+	\Froxlor\Froxlor::updateToVersion('0.9.35-dev5');
 }
 
-if (isFroxlorVersion('0.9.35-dev5')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.35-dev5')) {
 
 	showUpdateStep("Updating from 0.9.35-dev5 to 0.9.35-dev6", false);
 
@@ -3230,10 +3234,10 @@ if (isFroxlorVersion('0.9.35-dev5')) {
 	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `vhostsettingid` tinyint(11) NOT NULL default '0' AFTER `vhost_usedefaultlocation`;");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.35-dev6');
+	\Froxlor\Froxlor::updateToVersion('0.9.35-dev6');
 }
 
-if (isFroxlorVersion('0.9.35-dev6')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.35-dev6')) {
 
 	showUpdateStep("Updating from 0.9.35-dev6 to 0.9.35-dev7", false);
 
@@ -3242,18 +3246,18 @@ if (isFroxlorVersion('0.9.35-dev6')) {
 	Database::query("ALTER TABLE `panel_vhostconfigs` ADD `webserver` VARCHAR(255) NOT NULL DEFAULT '" . $webserver . "' AFTER `vhostsettings`;");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.35-dev7');
+	\Froxlor\Froxlor::updateToVersion('0.9.35-dev7');
 }
 
-if (isFroxlorVersion('0.9.35-dev7')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.35-dev7')) {
 
 	showUpdateStep("Updating from 0.9.35-dev7 to 0.9.35-rc1");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.35-rc1');
+	\Froxlor\Froxlor::updateToVersion('0.9.35-rc1');
 }
 
-if (isFroxlorVersion('0.9.35-rc1') && isDatabaseVersion(null)) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.35-rc1') && \Froxlor\Froxlor::isDatabaseVersion(null)) {
 
 	Settings::AddNew("panel.db_version", "201603070");
 
@@ -3270,32 +3274,32 @@ if (isFroxlorVersion('0.9.35-rc1') && isDatabaseVersion(null)) {
 	lastStepStatus(0);
 }
 
-if (isDatabaseVersion('201603070')) {
+if (\Froxlor\Froxlor::isDatabaseVersion('201603070')) {
 
 	showUpdateStep("Adding new php.ini directive to php-configurations: opcache.restrict_api");
 	Database::query("UPDATE `" . TABLE_PANEL_PHPCONFIGS . "` SET `phpsettings` = CONCAT(`phpsettings`, '\r\nopcache.restrict_api = \"{DOCUMENT_ROOT}\"\r\n');");
 	lastStepStatus(0);
 
-	updateToDbVersion('201603150');
+	\Froxlor\Froxlor::updateToDbVersion('201603150');
 }
 
-if (isFroxlorVersion('0.9.35-rc1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.35-rc1')) {
 
 	showUpdateStep("Updating from 0.9.35-rc1 to 0.9.35 final");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.35');
+	\Froxlor\Froxlor::updateToVersion('0.9.35');
 }
 
-if (isFroxlorVersion('0.9.35')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.35')) {
 
 	showUpdateStep("Updating from 0.9.35 to 0.9.35.1");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.35.1');
+	\Froxlor\Froxlor::updateToVersion('0.9.35.1');
 }
 
-if (isFroxlorVersion('0.9.35.1') && isDatabaseVersion('201603150')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.35.1') && \Froxlor\Froxlor::isDatabaseVersion('201603150')) {
 
 	showUpdateStep("Adding new backup settings and cron");
 	$enable_backup = isset($_POST['enable_backup']) ? (int) $_POST['enable_backup'] : "0";
@@ -3307,23 +3311,24 @@ if (isFroxlorVersion('0.9.35.1') && isDatabaseVersion('201603150')) {
 		`interval` = '1 DAY',
 		`desc_lng_key` = 'cron_backup',
 		`lastrun` = 0,
-		`isactive` = :isactive"
-	);
-	Database::pexecute($stmt, array('isactive' => $enable_backup));
+		`isactive` = :isactive");
+	Database::pexecute($stmt, array(
+		'isactive' => $enable_backup
+	));
 	lastStepStatus(0);
 
-	updateToDbVersion('201604270');
+	\Froxlor\Froxlor::updateToDbVersion('201604270');
 }
 
-if (isFroxlorVersion('0.9.35.1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.35.1')) {
 
 	showUpdateStep("Updating from 0.9.35.1 to 0.9.36 final");
 	lastStepStatus(0);
 
-	updateToVersion('0.9.36');
+	\Froxlor\Froxlor::updateToVersion('0.9.36');
 }
 
-if (isDatabaseVersion('201604270')) {
+if (\Froxlor\Froxlor::isDatabaseVersion('201604270')) {
 
 	showUpdateStep("Adding new dns related tables and settings");
 	$enable_dns = isset($_POST['enable_dns']) ? (int) $_POST['enable_dns'] : "0";
@@ -3343,102 +3348,102 @@ if (isDatabaseVersion('201604270')) {
 	Database::query($sql);
 	lastStepStatus(0);
 
-	updateToDbVersion('201605090');
+	\Froxlor\Froxlor::updateToDbVersion('201605090');
 }
 
-if (isDatabaseVersion('201605090')) {
+if (\Froxlor\Froxlor::isDatabaseVersion('201605090')) {
 
 	showUpdateStep("Adjusting SPF record setting");
 	$current_spf = Settings::Get('spf.spf_entry');
-	// @	IN	TXT	"v=spf1 a mx -all"
+	// @ IN TXT "v=spf1 a mx -all"
 	$new_spf = substr($current_spf, strpos($current_spf, '"'));
 	Settings::Set('spf.spf_entry', $new_spf, true);
 	lastStepStatus(0);
 
-	updateToDbVersion('201605120');
+	\Froxlor\Froxlor::updateToDbVersion('201605120');
 }
 
-if (isDatabaseVersion('201605120')) {
+if (\Froxlor\Froxlor::isDatabaseVersion('201605120')) {
 
 	showUpdateStep("Adding new dns-server setting");
 	$new_dns_daemon = isset($_POST['new_dns_daemon']) ? $_POST['new_dns_daemon'] : "bind";
 	Settings::AddNew("system.dns_server", $new_dns_daemon);
 	lastStepStatus(0);
 
-	updateToDbVersion('201605170');
+	\Froxlor\Froxlor::updateToDbVersion('201605170');
 }
 
-if (isDatabaseVersion('201605170')) {
+if (\Froxlor\Froxlor::isDatabaseVersion('201605170')) {
 
 	showUpdateStep("Adding new dns-editor setting for customers");
-	Database::query("ALTER TABLE `".TABLE_PANEL_CUSTOMERS."` ADD `dnsenabled` tinyint(1) NOT NULL default '0' AFTER `perlenabled`;");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` ADD `dnsenabled` tinyint(1) NOT NULL default '0' AFTER `perlenabled`;");
 	lastStepStatus(0);
 
-	updateToDbVersion('201605180');
+	\Froxlor\Froxlor::updateToDbVersion('201605180');
 }
 
-if (isDatabaseVersion('201605180')) {
+if (\Froxlor\Froxlor::isDatabaseVersion('201605180')) {
 
 	showUpdateStep("Changing tables to be more mysql strict-mode compatible");
-	Database::query("ALTER TABLE `".TABLE_FTP_USERS."` CHANGE `last_login` `last_login` DATETIME NULL DEFAULT NULL;");
-	Database::query("ALTER TABLE `".TABLE_PANEL_IPSANDPORTS."` CHANGE `specialsettings` `specialsettings` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;");
-	Database::query("ALTER TABLE `".TABLE_PANEL_TASKS."` CHANGE `data` `data` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;");
+	Database::query("ALTER TABLE `" . TABLE_FTP_USERS . "` CHANGE `last_login` `last_login` DATETIME NULL DEFAULT NULL;");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_IPSANDPORTS . "` CHANGE `specialsettings` `specialsettings` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_TASKS . "` CHANGE `data` `data` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;");
 	lastStepStatus(0);
 
-	updateToDbVersion('201606190');
+	\Froxlor\Froxlor::updateToDbVersion('201606190');
 }
 
-if (isDatabaseVersion('201606190')) {
+if (\Froxlor\Froxlor::isDatabaseVersion('201606190')) {
 
 	showUpdateStep("Adding new setting for mod_php users to specify content of the global directory options file");
 	Settings::AddNew("system.apacheglobaldiropt", "");
 	lastStepStatus(0);
 
-	updateToDbVersion('201607140');
+	\Froxlor\Froxlor::updateToDbVersion('201607140');
 }
 
-if (isFroxlorVersion('0.9.36')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.36')) {
 
 	showUpdateStep("Updating from 0.9.36 to 0.9.37-rc1", false);
-	updateToVersion('0.9.37-rc1');
+	\Froxlor\Froxlor::updateToVersion('0.9.37-rc1');
 }
 
-if (isDatabaseVersion('201607140')) {
+if (\Froxlor\Froxlor::isDatabaseVersion('201607140')) {
 
 	showUpdateStep("Adding new setting to hide certain options in customer panel");
 	Settings::AddNew("panel.customer_hide_options", "");
 	lastStepStatus(0);
 
-	updateToDbVersion('201607210');
+	\Froxlor\Froxlor::updateToDbVersion('201607210');
 }
 
-if (isFroxlorVersion('0.9.37-rc1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.37-rc1')) {
 
 	showUpdateStep("Updating from 0.9.37-rc1 to 0.9.37 final", false);
-	updateToVersion('0.9.37');
+	\Froxlor\Froxlor::updateToVersion('0.9.37');
 }
 
-if (isDatabaseVersion('201607210')) {
+if (\Froxlor\Froxlor::isDatabaseVersion('201607210')) {
 
 	showUpdateStep("Adding new settings for customer shell option");
 	Settings::AddNew("system.allow_customer_shell", "0");
 	Settings::AddNew("system.available_shells", "");
 	lastStepStatus(0);
 
-	updateToDbVersion('201608260');
+	\Froxlor\Froxlor::updateToDbVersion('201608260');
 }
 
-if (isDatabaseVersion('201608260')) {
+if (\Froxlor\Froxlor::isDatabaseVersion('201608260')) {
 
 	showUpdateStep("Adding new settings to use Let's Encrypt for froxlor");
 	Settings::AddNew("system.le_froxlor_enabled", "0");
 	Settings::AddNew("system.le_froxlor_redirect", "0");
 	lastStepStatus(0);
 
-	updateToDbVersion('201609050');
+	\Froxlor\Froxlor::updateToDbVersion('201609050');
 }
 
-if (isDatabaseVersion('201609050')) {
+if (\Froxlor\Froxlor::isDatabaseVersion('201609050')) {
 
 	showUpdateStep("Adding new settings for acme.conf (Let's Encrypt)");
 	// get user-chosen value
@@ -3447,20 +3452,20 @@ if (isDatabaseVersion('201609050')) {
 		$websrv_default = "/etc/nginx/acme.conf";
 	}
 	$acmeconffile = isset($_POST['acmeconffile']) ? $_POST['acmeconffile'] : $websrv_default;
-	$acmeconffile = makeCorrectFile($acmeconffile);
+	$acmeconffile = \Froxlor\FileDir::makeCorrectFile($acmeconffile);
 	Settings::AddNew("system.letsencryptacmeconf", $acmeconffile);
 	lastStepStatus(0);
 
-	updateToDbVersion('201609120');
+	\Froxlor\Froxlor::updateToDbVersion('201609120');
 }
 
-if (isDatabaseVersion('201609120')) {
+if (\Froxlor\Froxlor::isDatabaseVersion('201609120')) {
 
 	showUpdateStep("Adding new SMTP settings for emails sent by froxlor");
 	// get user-chosen value
 	$smtp_enable = isset($_POST['smtp_enable']) ? (int) $_POST['smtp_enable'] : 0;
 	$smtp_host = isset($_POST['smtp_host']) ? $_POST['smtp_host'] : "localhost";
-	$smtp_port = isset($_POST['smtp_port']) ? (int)$_POST['smtp_port'] : 25;
+	$smtp_port = isset($_POST['smtp_port']) ? (int) $_POST['smtp_port'] : 25;
 	$smtp_usetls = isset($_POST['smtp_usetls']) ? (int) $_POST['smtp_usetls'] : 1;
 	$smtp_useauth = isset($_POST['smtp_auth']) ? (int) $_POST['smtp_auth'] : 1;
 	$smtp_user = isset($_POST['smtp_user']) ? $_POST['smtp_user'] : "";
@@ -3475,21 +3480,21 @@ if (isDatabaseVersion('201609120')) {
 	Settings::AddNew("system.mail_smtp_passwd", $smtp_passwd);
 	lastStepStatus(0);
 
-	updateToDbVersion('201609200');
+	\Froxlor\Froxlor::updateToDbVersion('201609200');
 }
 
-if (isDatabaseVersion('201609200')) {
+if (\Froxlor\Froxlor::isDatabaseVersion('201609200')) {
 
 	showUpdateStep("Changing tables to be more mysql strict-mode compatible");
-	Database::query("ALTER TABLE `".TABLE_MAIL_VIRTUAL."` CHANGE `destination` `destination` TEXT NOT NULL DEFAULT '';");
-	Database::query("ALTER TABLE `".TABLE_PANEL_DOMAINS."` CHANGE `registration_date` `registration_date` DATE NULL DEFAULT NULL;");
-	Database::query("ALTER TABLE `".TABLE_PANEL_DOMAINS."` CHANGE `termination_date` `termination_date` DATE NULL DEFAULT NULL;");
+	Database::query("ALTER TABLE `" . TABLE_MAIL_VIRTUAL . "` CHANGE `destination` `destination` TEXT NOT NULL DEFAULT '';");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` CHANGE `registration_date` `registration_date` DATE NULL DEFAULT NULL;");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` CHANGE `termination_date` `termination_date` DATE NULL DEFAULT NULL;");
 	lastStepStatus(0);
 
-	updateToDbVersion('201609240');
+	\Froxlor\Froxlor::updateToDbVersion('201609240');
 }
 
-if (isDatabaseVersion('201609240')) {
+if (\Froxlor\Froxlor::isDatabaseVersion('201609240')) {
 
 	showUpdateStep("Add HSTS settings for froxlor-vhost");
 	Settings::AddNew("system.hsts_maxage", 0);
@@ -3498,127 +3503,126 @@ if (isDatabaseVersion('201609240')) {
 	lastStepStatus(0);
 
 	showUpdateStep("Settings HSTS default values for all domains (deactivated)");
-	Database::query("UPDATE `".TABLE_PANEL_DOMAINS."` SET `hsts_sub` = '0', `hsts_preload` = '0';");
+	Database::query("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `hsts_sub` = '0', `hsts_preload` = '0';");
 	lastStepStatus(0);
 
-	updateToDbVersion('201610070');
+	\Froxlor\Froxlor::updateToDbVersion('201610070');
 }
 
-if (isFroxlorVersion('0.9.37')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.37')) {
 
 	showUpdateStep("Updating from 0.9.37 to 0.9.38-rc1", false);
-	updateToVersion('0.9.38-rc1');
+	\Froxlor\Froxlor::updateToVersion('0.9.38-rc1');
 }
 
-if (isFroxlorVersion('0.9.38-rc1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.38-rc1')) {
 
 	showUpdateStep("Updating from 0.9.38-rc1 to 0.9.38-rc2", false);
-	updateToVersion('0.9.38-rc2');
+	\Froxlor\Froxlor::updateToVersion('0.9.38-rc2');
 }
 
-if (isFroxlorVersion('0.9.38-rc2')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.38-rc2')) {
 
 	showUpdateStep("Updating from 0.9.38-rc2 to 0.9.38 final", false);
-	updateToVersion('0.9.38');
+	\Froxlor\Froxlor::updateToVersion('0.9.38');
 }
 
-if (isDatabaseVersion('201610070')) {
+if (\Froxlor\Froxlor::isDatabaseVersion('201610070')) {
 
 	showUpdateStep("Add Nginx http2 setting");
 	Settings::AddNew("system.nginx_http2_support", 0);
 	lastStepStatus(0);
 
-	updateToDbVersion('201611180');
+	\Froxlor\Froxlor::updateToDbVersion('201611180');
 }
 
-if (isFroxlorVersion('0.9.38')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.38')) {
 
 	showUpdateStep("Updating from 0.9.38 to 0.9.38.1", false);
-	updateToVersion('0.9.38.1');
+	\Froxlor\Froxlor::updateToVersion('0.9.38.1');
 }
 
-if (isFroxlorVersion('0.9.38.1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.38.1')) {
 
 	showUpdateStep("Updating from 0.9.38.1 to 0.9.38.2", false);
-	updateToVersion('0.9.38.2');
+	\Froxlor\Froxlor::updateToVersion('0.9.38.2');
 }
 
-if (isFroxlorVersion('0.9.38.2')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.38.2')) {
 
 	showUpdateStep("Updating from 0.9.38.2 to 0.9.38.3", false);
-	updateToVersion('0.9.38.3');
+	\Froxlor\Froxlor::updateToVersion('0.9.38.3');
 }
 
-if (isFroxlorVersion('0.9.38.3')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.38.3')) {
 
 	showUpdateStep("Updating from 0.9.38.3 to 0.9.38.4", false);
-	updateToVersion('0.9.38.4');
+	\Froxlor\Froxlor::updateToVersion('0.9.38.4');
 }
 
-if (isDatabaseVersion('201611180')) {
+if (\Froxlor\Froxlor::isDatabaseVersion('201611180')) {
 
 	showUpdateStep("Updating database table definition for panel_domains");
 	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `phpenabled` tinyint(1) NOT NULL default '1' AFTER `parentdomainid`;");
 	lastStepStatus(0);
 
 	showUpdateStep("Adding field for let's-encrypt registration status");
-	Database::query("ALTER TABLE `".TABLE_PANEL_CUSTOMERS."` add `leregistered` TINYINT(1) NOT NULL DEFAULT 0;");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` add `leregistered` TINYINT(1) NOT NULL DEFAULT 0;");
 	lastStepStatus(0);
 
 	showUpdateStep("Adding system setting for let's-encrypt registration status");
 	Settings::AddNew('system.leregistered', '0');
 	lastStepStatus(0);
 
-  showUpdateStep("Adding unique key to ipsandports table");
+	showUpdateStep("Adding unique key to ipsandports table");
 	Database::query("ALTER TABLE `" . TABLE_PANEL_IPSANDPORTS . "` ADD UNIQUE KEY `ip_port` (`ip`,`port`)");
 	lastStepStatus(0);
 
-	updateToDbVersion('201612110');
+	\Froxlor\Froxlor::updateToDbVersion('201612110');
 }
 
-if (isFroxlorVersion('0.9.38.4')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.38.4')) {
 
 	showUpdateStep("Updating from 0.9.38.4 to 0.9.38.5", false);
-	updateToVersion('0.9.38.5');
+	\Froxlor\Froxlor::updateToVersion('0.9.38.5');
 }
 
-if (isFroxlorVersion('0.9.38.5')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.38.5')) {
 
 	showUpdateStep("Updating from 0.9.38.5 to 0.9.38.6", false);
-	updateToVersion('0.9.38.6');
+	\Froxlor\Froxlor::updateToVersion('0.9.38.6');
 }
 
-if (isFroxlorVersion('0.9.38.6')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.38.6')) {
 
 	showUpdateStep("Updating from 0.9.38.6 to 0.9.38.7", false);
-	updateToVersion('0.9.38.7');
+	\Froxlor\Froxlor::updateToVersion('0.9.38.7');
 }
 
-if (isDatabaseVersion('201612110')) {
+if (\Froxlor\Froxlor::isDatabaseVersion('201612110')) {
 
 	showUpdateStep("Adding field for OCSP stapling");
-	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS .
-		"` ADD `ocsp_stapling` TINYINT(1) NOT NULL DEFAULT '0';");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `ocsp_stapling` TINYINT(1) NOT NULL DEFAULT '0';");
 	lastStepStatus(0);
 
 	showUpdateStep("Adding default setting for Apache 2.4 OCSP cache path");
 	Settings::AddNew('system.apache24_ocsp_cache_path', 'shmcb:/var/run/apache2/ocsp-stapling.cache(131072)');
 	lastStepStatus(0);
 
-	updateToDbVersion('201704100');
+	\Froxlor\Froxlor::updateToDbVersion('201704100');
 }
 
-if (isDatabaseVersion('201704100')) {
+if (\Froxlor\Froxlor::isDatabaseVersion('201704100')) {
 
 	showUpdateStep("Adding new setting for libnss-extrausers");
-	$system_nssextrausers= isset($_POST['system_nssextrausers']) ? (int) $_POST['system_nssextrausers'] : 0;
+	$system_nssextrausers = isset($_POST['system_nssextrausers']) ? (int) $_POST['system_nssextrausers'] : 0;
 	Settings::AddNew('system.nssextrausers', $system_nssextrausers);
 	lastStepStatus(0);
 
-	updateToDbVersion('201705050');
+	\Froxlor\Froxlor::updateToDbVersion('201705050');
 }
 
-if (isDatabaseVersion('201705050')) {
+if (\Froxlor\Froxlor::isDatabaseVersion('201705050')) {
 
 	showUpdateStep("Updating HTTP2 setting");
 	if (Settings::Get('system.nginx_http2_support') != null) {
@@ -3631,23 +3635,23 @@ if (isDatabaseVersion('201705050')) {
 	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `http2` TINYINT(1) NOT NULL DEFAULT '0';");
 	lastStepStatus(0);
 
-	updateToDbVersion('201708240');
+	\Froxlor\Froxlor::updateToDbVersion('201708240');
 }
 
-if (isDatabaseVersion('201708240')) {
-	
+if (\Froxlor\Froxlor::isDatabaseVersion('201708240')) {
+
 	showUpdateStep("Adding new 'disable LE self-check' setting");
 	$system_disable_le_selfcheck = isset($_POST['system_disable_le_selfcheck']) ? (int) $_POST['system_disable_le_selfcheck'] : 0;
 	Settings::AddNew('system.disable_le_selfcheck', $system_disable_le_selfcheck);
 	lastStepStatus(0);
 
-	updateToDbVersion('201712310');
+	\Froxlor\Froxlor::updateToDbVersion('201712310');
 
 	showUpdateStep("Updating from 0.9.38.7 to 0.9.38.8", false);
-	updateToVersion('0.9.38.8');
+	\Froxlor\Froxlor::updateToVersion('0.9.38.8');
 }
 
-if (isDatabaseVersion('201712310')) {
+if (\Froxlor\Froxlor::isDatabaseVersion('201712310')) {
 
 	showUpdateStep("Adding field for fpm-daemon configs");
 	Database::query("ALTER TABLE `" . TABLE_PANEL_PHPCONFIGS . "` ADD `fpmsettingid` int(11) NOT NULL DEFAULT '1';");
@@ -3703,66 +3707,66 @@ if (isDatabaseVersion('201712310')) {
 	lastStepStatus(0);
 
 	showUpdateStep("Deleting unneeded settings");
-	Database::query("DELETE FROM `".TABLE_PANEL_SETTINGS."` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'reload'");
-	Database::query("DELETE FROM `".TABLE_PANEL_SETTINGS."` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'configdir'");
-	Database::query("DELETE FROM `".TABLE_PANEL_SETTINGS."` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'pm'");
-	Database::query("DELETE FROM `".TABLE_PANEL_SETTINGS."` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'max_children'");
-	Database::query("DELETE FROM `".TABLE_PANEL_SETTINGS."` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'start_servers'");
-	Database::query("DELETE FROM `".TABLE_PANEL_SETTINGS."` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'min_spare_servers'");
-	Database::query("DELETE FROM `".TABLE_PANEL_SETTINGS."` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'max_spare_servers'");
-	Database::query("DELETE FROM `".TABLE_PANEL_SETTINGS."` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'max_requests'");
-	Database::query("DELETE FROM `".TABLE_PANEL_SETTINGS."` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'idle_timeout'");
+	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'reload'");
+	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'configdir'");
+	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'pm'");
+	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'max_children'");
+	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'start_servers'");
+	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'min_spare_servers'");
+	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'max_spare_servers'");
+	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'max_requests'");
+	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'phpfpm' AND `varname` = 'idle_timeout'");
 	lastStepStatus(0);
 
-	updateToDbVersion('201801070');
+	\Froxlor\Froxlor::updateToDbVersion('201801070');
 }
 
-if (isDatabaseVersion('201801070')) {
+if (\Froxlor\Froxlor::isDatabaseVersion('201801070')) {
 
 	showUpdateStep("Adding field allowed_phpconfigs for customers");
 	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` ADD `allowed_phpconfigs` varchar(500) NOT NULL default '';");
 	lastStepStatus(0);
 
-	updateToDbVersion('201801080');
+	\Froxlor\Froxlor::updateToDbVersion('201801080');
 }
 
-if (isDatabaseVersion('201801080')) {
+if (\Froxlor\Froxlor::isDatabaseVersion('201801080')) {
 
 	showUpdateStep("Adding new setting for Let's Encrypt ACME version");
 	Settings::AddNew('system.leapiversion', '1');
 	lastStepStatus(0);
 
-	updateToDbVersion('201801090');
+	\Froxlor\Froxlor::updateToDbVersion('201801090');
 }
 
-if (isDatabaseVersion('201801090')) {
+if (\Froxlor\Froxlor::isDatabaseVersion('201801090')) {
 
 	showUpdateStep("Adding field pass_authorizationheader for php-configs");
 	Database::query("ALTER TABLE `" . TABLE_PANEL_PHPCONFIGS . "` ADD `pass_authorizationheader` tinyint(1) NOT NULL default '0';");
 	lastStepStatus(0);
 
-	updateToDbVersion('201801091');
+	\Froxlor\Froxlor::updateToDbVersion('201801091');
 }
 
-if (isDatabaseVersion('201801091')) {
+if (\Froxlor\Froxlor::isDatabaseVersion('201801091')) {
 
 	showUpdateStep("Adding new setting for SSL protocols");
 	Settings::AddNew('system.ssl_protocols', 'TLSv1,TLSv1.2');
 	lastStepStatus(0);
 
-	updateToDbVersion('201801100');
+	\Froxlor\Froxlor::updateToDbVersion('201801100');
 }
 
-if (isDatabaseVersion('201801100')) {
+if (\Froxlor\Froxlor::isDatabaseVersion('201801100')) {
 
 	showUpdateStep("Adding field for security.limit_extensions fpm-setting");
 	Database::query("ALTER TABLE `" . TABLE_PANEL_FPMDAEMONS . "` ADD `limit_extensions` varchar(255) NOT NULL default '.php';");
 	lastStepStatus(0);
 
-	updateToDbVersion('201801101');
+	\Froxlor\Froxlor::updateToDbVersion('201801101');
 }
 
-if (isDatabaseVersion('201801101')) {
+if (\Froxlor\Froxlor::isDatabaseVersion('201801101')) {
 
 	showUpdateStep("Adding dynamic php-fpm php.ini settings");
 	Settings::AddNew('phpfpm.ini_flags', 'asp_tags
@@ -3863,37 +3867,37 @@ opcache.memory_consumption
 opcache.interned_strings_buffer');
 	lastStepStatus(0);
 
-	updateToDbVersion('201801110');
+	\Froxlor\Froxlor::updateToDbVersion('201801110');
 }
 
-if (isDatabaseVersion('201801110')) {
+if (\Froxlor\Froxlor::isDatabaseVersion('201801110')) {
 
 	showUpdateStep("Adding php-fpm php PATH setting for envrironment");
-	Settings::AddNew("phpfpm.envpath",  '/usr/local/bin:/usr/bin:/bin');
+	Settings::AddNew("phpfpm.envpath", '/usr/local/bin:/usr/bin:/bin');
 	lastStepStatus(0);
 
-	updateToDbVersion('201801260');
+	\Froxlor\Froxlor::updateToDbVersion('201801260');
 }
 
-if (isFroxlorVersion('0.9.38.8')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.38.8')) {
 
 	showUpdateStep("Updating from 0.9.38.8 to 0.9.39 final", false);
-	updateToVersion('0.9.39');
+	\Froxlor\Froxlor::updateToVersion('0.9.39');
 }
 
-if (isFroxlorVersion('0.9.39')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.39')) {
 
 	showUpdateStep("Updating from 0.9.39 to 0.9.39.1", false);
-	updateToVersion('0.9.39.1');
+	\Froxlor\Froxlor::updateToVersion('0.9.39.1');
 }
 
-if (isFroxlorVersion('0.9.39.1')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.39.1')) {
 
 	showUpdateStep("Updating from 0.9.39.1 to 0.9.39.2", false);
-	updateToVersion('0.9.39.2');
+	\Froxlor\Froxlor::updateToVersion('0.9.39.2');
 }
 
-if (isDatabaseVersion('201801260')) {
+if (\Froxlor\Froxlor::isDatabaseVersion('201801260')) {
 
 	showUpdateStep("Adding new plans table");
 	Database::query("DROP TABLE IF EXISTS `panel_plans`;");
@@ -3910,66 +3914,66 @@ if (isDatabaseVersion('201801260')) {
 	Database::query($sql);
 	lastStepStatus(0);
 
-	updateToDbVersion('201802120');
+	\Froxlor\Froxlor::updateToDbVersion('201802120');
 }
 
-if (isDatabaseVersion('201802120')) {
+if (\Froxlor\Froxlor::isDatabaseVersion('201802120')) {
 
 	showUpdateStep("Adding domain field for try_files flag");
 	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `notryfiles` tinyint(1) DEFAULT '0';");
 	lastStepStatus(0);
 
-	updateToDbVersion('201802130');
+	\Froxlor\Froxlor::updateToDbVersion('201802130');
 }
 
-if (isFroxlorVersion('0.9.39.2')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.39.2')) {
 
 	showUpdateStep("Updating from 0.9.39.2 to 0.9.39.3", false);
-	updateToVersion('0.9.39.3');
+	\Froxlor\Froxlor::updateToVersion('0.9.39.3');
 }
 
-if (isFroxlorVersion('0.9.39.3')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.39.3')) {
 
 	showUpdateStep("Updating from 0.9.39.3 to 0.9.39.4", false);
-	updateToVersion('0.9.39.4');
+	\Froxlor\Froxlor::updateToVersion('0.9.39.4');
 }
 
-if (isFroxlorVersion('0.9.39.4')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.39.4')) {
 
 	showUpdateStep("Updating from 0.9.39.4 to 0.9.39.5", false);
-	updateToVersion('0.9.39.5');
+	\Froxlor\Froxlor::updateToVersion('0.9.39.5');
 }
 
-if (isDatabaseVersion('201802130')) {
+if (\Froxlor\Froxlor::isDatabaseVersion('201802130')) {
 
 	showUpdateStep("Adding fullchain field to ssl certificates");
 	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` ADD `ssl_fullchain_file` mediumtext AFTER `ssl_csr_file`;");
 	lastStepStatus(0);
 
-	updateToDbVersion('201802250');
+	\Froxlor\Froxlor::updateToDbVersion('201802250');
 }
 
-if (isDatabaseVersion('201802250')) {
+if (\Froxlor\Froxlor::isDatabaseVersion('201802250')) {
 
 	showUpdateStep("Adding webserver logfile settings");
-	Settings::AddNew("system.logfiles_format",  '');
-	Settings::AddNew("system.logfiles_type",  '1');
-	Settings::AddNew("system.logfiles_piped",  '0');
+	Settings::AddNew("system.logfiles_format", '');
+	Settings::AddNew("system.logfiles_type", '1');
+	Settings::AddNew("system.logfiles_piped", '0');
 	lastStepStatus(0);
 
-	updateToDbVersion('201805240');
+	\Froxlor\Froxlor::updateToDbVersion('201805240');
 }
 
-if (isDatabaseVersion('201805240')) {
+if (\Froxlor\Froxlor::isDatabaseVersion('201805240')) {
 
 	showUpdateStep("Adding webserver logfile-script settings");
-	Settings::AddNew("system.logfiles_script",  '');
+	Settings::AddNew("system.logfiles_script", '');
 	lastStepStatus(0);
 
-	updateToDbVersion('201805241');
+	\Froxlor\Froxlor::updateToDbVersion('201805241');
 }
 
-if (isDatabaseVersion('201805241')) {
+if (\Froxlor\Froxlor::isDatabaseVersion('201805241')) {
 
 	$do_update = true;
 	showUpdateStep("Checking for required PHP json-extension");
@@ -3995,11 +3999,11 @@ if (isDatabaseVersion('201805241')) {
 		}
 		lastStepStatus(0);
 
-		updateToDbVersion('201805290');
+		\Froxlor\Froxlor::updateToDbVersion('201805290');
 	}
 }
 
-if (isDatabaseVersion('201805290')) {
+if (\Froxlor\Froxlor::isDatabaseVersion('201805290')) {
 
 	showUpdateStep("Adding leaccount field to panel customers");
 	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` ADD COLUMN `leaccount` varchar(255) default '' AFTER `leregistered`;");
@@ -4009,11 +4013,11 @@ if (isDatabaseVersion('201805290')) {
 	Settings::AddNew('system.leaccount', "");
 	lastStepStatus(0);
 
-	updateToDbVersion('201809180');
+	\Froxlor\Froxlor::updateToDbVersion('201809180');
 }
 
-if (isDatabaseVersion('201809180')) {
-	
+if (\Froxlor\Froxlor::isDatabaseVersion('201809180')) {
+
 	showUpdateStep("Adding new fields for php configs");
 	Database::query("ALTER TABLE `" . TABLE_PANEL_PHPCONFIGS . "` ADD `override_fpmconfig` tinyint(1) NOT NULL DEFAULT '0';");
 	Database::query("ALTER TABLE `" . TABLE_PANEL_PHPCONFIGS . "` ADD `pm` varchar(15) NOT NULL DEFAULT 'static';");
@@ -4025,7 +4029,7 @@ if (isDatabaseVersion('201809180')) {
 	Database::query("ALTER TABLE `" . TABLE_PANEL_PHPCONFIGS . "` ADD `idle_timeout` int(4) NOT NULL DEFAULT '30';");
 	Database::query("ALTER TABLE `" . TABLE_PANEL_PHPCONFIGS . "` ADD `limit_extensions` varchar(255) NOT NULL default '.php';");
 	lastStepStatus(0);
-	
+
 	showUpdateStep("Synchronize fpm-daemon process manager settings with php-configs");
 	// get all fpm-daemons
 	$sel_stmt = Database::prepare("SELECT * FROM `panel_fpmdaemons`;");
@@ -4057,17 +4061,17 @@ if (isDatabaseVersion('201809180')) {
 		));
 	}
 	lastStepStatus(0);
-	
-	updateToDbVersion('201809280');
+
+	\Froxlor\Froxlor::updateToDbVersion('201809280');
 }
 
-if (isFroxlorVersion('0.9.39.5')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.39.5')) {
 	showUpdateStep("Updating from 0.9.39.5 to 0.9.40", false);
-	updateToVersion('0.9.40');
+	\Froxlor\Froxlor::updateToVersion('0.9.40');
 }
 
-if (isFroxlorVersion('0.9.40')) {
+if (\Froxlor\Froxlor::isFroxlorVersion('0.9.40')) {
 
 	showUpdateStep("Updating from 0.9.40 to 0.9.40.1", false);
-	updateToVersion('0.9.40.1');
+	\Froxlor\Froxlor::updateToVersion('0.9.40.1');
 }

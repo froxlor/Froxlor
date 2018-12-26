@@ -14,7 +14,6 @@
  * @package    Formfields
  *
  */
-
 return array(
 	'plans_add' => array(
 		'title' => $lng['admin']['plans']['add'],

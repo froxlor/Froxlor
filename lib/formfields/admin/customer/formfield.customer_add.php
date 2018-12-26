@@ -61,8 +61,8 @@ return array(
 					'new_customer_password_suggestion' => array(
 						'label' => $lng['customer']['generated_pwd'],
 						'type' => 'text',
-						'visible' => (Settings::Get('panel.password_regex') == ''),
-						'value' => generatePassword()
+						'visible' => (\Froxlor\Settings::Get('panel.password_regex') == ''),
+						'value' => \Froxlor\System\Crypt::generatePassword()
 					),
 					'sendpassword' => array(
 						'label' => $lng['admin']['sendpassword'],
@@ -159,7 +159,7 @@ return array(
 				)
 			),
 			'section_cpre' => array(
-				'visible' => !empty($hosting_plans),
+				'visible' => ! empty($hosting_plans),
 				'title' => $lng['admin']['plans']['use_plan'],
 				'image' => 'icons/user_add.png',
 				'fields' => array(
@@ -227,7 +227,7 @@ return array(
 						'type' => 'textul',
 						'value' => 0,
 						'maxlength' => 9,
-						'visible' => (Settings::Get('system.mail_quota_enabled') == '1' ? true : false),
+						'visible' => (\Froxlor\Settings::Get('system.mail_quota_enabled') == '1' ? true : false),
 						'mandatory' => true,
 						'ul_field' => $email_quota_ul
 					),
@@ -266,14 +266,6 @@ return array(
 						'maxlength' => 9,
 						'ul_field' => $ftps_ul
 					),
-					'tickets' => array(
-						'label' => $lng['customer']['tickets'],
-						'type' => 'textul',
-						'value' => 0,
-						'maxlength' => 9,
-						'visible' => (Settings::Get('ticket.enabled') == '1' ? true : false),
-						'ul_field' => $tickets_ul
-					),
 					'mysqls' => array(
 						'label' => $lng['customer']['mysqls'],
 						'type' => 'textul',
@@ -296,14 +288,14 @@ return array(
 						)
 					),
 					'allowed_phpconfigs' => array(
-						'visible' => (((int) Settings::Get('system.mod_fcgid') == 1 || (int) Settings::Get('phpfpm.enabled') == 1) ? true : false),
+						'visible' => (((int) \Froxlor\Settings::Get('system.mod_fcgid') == 1 || (int) \Froxlor\Settings::Get('phpfpm.enabled') == 1) ? true : false),
 						'label' => $lng['admin']['phpsettings']['title'],
 						'type' => 'checkbox',
 						'values' => $phpconfigs,
-						'value' => ((int) Settings::Get('system.mod_fcgid') == 1 ? array(
-							Settings::Get('system.mod_fcgid_defaultini')
-						) : (int) Settings::Get('phpfpm.enabled') == 1 ? array(
-							Settings::Get('phpfpm.defaultini')
+						'value' => ((int) \Froxlor\Settings::Get('system.mod_fcgid') == 1 ? array(
+							\Froxlor\Settings::Get('system.mod_fcgid_defaultini')
+						) : (int) \Froxlor\Settings::Get('phpfpm.enabled') == 1 ? array(
+							\Froxlor\Settings::Get('phpfpm.defaultini')
 						) : array()),
 						'is_array' => 1
 					),
@@ -326,7 +318,7 @@ return array(
 								'value' => '1'
 							)
 						),
-						'visible' => (Settings::Get('system.dnsenabled') == '1' ? true : false)
+						'visible' => (\Froxlor\Settings::Get('system.dnsenabled') == '1' ? true : false)
 					),
 					'logviewenabled' => array(
 						'label' => $lng['admin']['logviewenabled'] . '?',

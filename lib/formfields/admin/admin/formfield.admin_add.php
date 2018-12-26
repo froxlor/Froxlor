@@ -14,7 +14,6 @@
  * @package    Formfields
  *
  */
-
 return array(
 	'admin_add' => array(
 		'title' => $lng['admin']['admin_add'],
@@ -38,8 +37,8 @@ return array(
 					'admin_password_suggestion' => array(
 						'label' => $lng['customer']['generated_pwd'],
 						'type' => 'text',
-						'visible' => (Settings::Get('panel.password_regex') == ''),
-						'value' => generatePassword(),
+						'visible' => (\Froxlor\Settings::Get('panel.password_regex') == ''),
+						'value' => \Froxlor\System\Crypt::generatePassword()
 					),
 					'def_language' => array(
 						'label' => $lng['login']['language'],
@@ -74,7 +73,10 @@ return array(
 						'label' => $lng['usersettings']['custom_notes']['show'],
 						'type' => 'checkbox',
 						'values' => array(
-							array ('label' => $lng['panel']['yes'], 'value' => '1')
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
 						),
 						'value' => array()
 					)
@@ -93,8 +95,11 @@ return array(
 						'label' => $lng['admin']['change_serversettings'],
 						'type' => 'checkbox',
 						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
 						'value' => array()
 					),
 					'customers' => array(
@@ -109,8 +114,11 @@ return array(
 						'label' => $lng['admin']['customers_see_all'],
 						'type' => 'checkbox',
 						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
 						'value' => array()
 					),
 					'domains' => array(
@@ -125,16 +133,22 @@ return array(
 						'label' => $lng['admin']['domains_see_all'],
 						'type' => 'checkbox',
 						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
 						'value' => array()
 					),
 					'caneditphpsettings' => array(
 						'label' => $lng['admin']['caneditphpsettings'],
 						'type' => 'checkbox',
 						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
 						'value' => array()
 					),
 					'diskspace' => array(
@@ -190,7 +204,7 @@ return array(
 						'type' => 'textul',
 						'value' => 0,
 						'maxlength' => 9,
-						'visible' => (Settings::Get('system.mail_quota_enabled') == '1' ? true : false),
+						'visible' => (\Froxlor\Settings::Get('system.mail_quota_enabled') == '1' ? true : false),
 						'mandatory' => true,
 						'ul_field' => $email_quota_ul
 					),
@@ -200,22 +214,6 @@ return array(
 						'value' => 0,
 						'maxlength' => 9,
 						'ul_field' => $ftps_ul
-					),
-					'tickets' => array(
-						'label' => $lng['customer']['tickets'],
-						'type' => 'textul',
-						'value' => 0,
-						'maxlength' => 9,
-						'visible' => (Settings::Get('ticket.enabled') == '1' ? true : false),
-						'ul_field' => $tickets_ul
-					),
-					'tickets_see_all' => array(
-						'label' => $lng['admin']['tickets_see_all'],
-						'type' => 'checkbox',
-						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
-						'value' => array()
 					),
 					'mysqls' => array(
 						'label' => $lng['customer']['mysqls'],

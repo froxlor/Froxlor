@@ -1,13 +1,18 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
+use Froxlor\Api\Commands\Admins;
+use Froxlor\Api\Commands\Customers;
+use Froxlor\Api\Commands\SubDomains;
+
 /**
- * @covers ApiCommand
- * @covers ApiParameter
- * @covers SubDomains
- * @covers Domains
- * @covers Customers
- * @covers Admins
+ *
+ * @covers \Froxlor\Api\ApiCommand
+ * @covers \Froxlor\Api\ApiParameter
+ * @covers \Froxlor\Api\Commands\SubDomains
+ * @covers \Froxlor\Api\Commands\Domains
+ * @covers \Froxlor\Api\Commands\Customers
+ * @covers \Froxlor\Api\Commands\Admins
  */
 class SubDomainsTest extends TestCase
 {
@@ -15,13 +20,13 @@ class SubDomainsTest extends TestCase
 	public function testCustomerSubDomainsAdd()
 	{
 		global $admin_userdata;
-		
+
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
 		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
-		
+
 		$data = [
 			'subdomain' => 'mysub',
 			'domain' => 'test2.local'
@@ -40,7 +45,7 @@ class SubDomainsTest extends TestCase
 		))->get();
 		$reseller_userdata = json_decode($json_result, true)['data'];
 		$reseller_userdata['adminsession'] = 1;
-		
+
 		$data = [
 			'subdomain' => 'mysub2',
 			'domain' => 'test2.local',
@@ -54,13 +59,13 @@ class SubDomainsTest extends TestCase
 	public function testCustomerSubDomainsAddNoPunycode()
 	{
 		global $admin_userdata;
-		
+
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
 		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
-		
+
 		$data = [
 			'subdomain' => 'xn--asd',
 			'domain' => 'unknown.froxlor.org'
@@ -72,13 +77,13 @@ class SubDomainsTest extends TestCase
 	public function testCustomerSubDomainsAddMainDomainUnknown()
 	{
 		global $admin_userdata;
-		
+
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
 		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
-		
+
 		$data = [
 			'subdomain' => 'wohoo',
 			'domain' => 'unknown.froxlor.org'
@@ -90,13 +95,13 @@ class SubDomainsTest extends TestCase
 	public function testCustomerSubDomainsAddInvalidDomain()
 	{
 		global $admin_userdata;
-		
+
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
 		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
-		
+
 		$data = [
 			'subdomain' => '#+?',
 			'domain' => 'unknown.froxlor.org'
@@ -106,18 +111,13 @@ class SubDomainsTest extends TestCase
 	}
 
 	/**
+	 *
 	 * @depends testCustomerSubDomainsAdd
 	 */
 	public function testAdminSubDomainsGet()
 	{
 		global $admin_userdata;
-		
-		// get customer
-		$json_result = Customers::getLocal($admin_userdata, array(
-			'loginname' => 'test1'
-		))->get();
-		$customer_userdata = json_decode($json_result, true)['data'];
-		
+
 		$data = [
 			'domainname' => 'mysub.test2.local'
 		];
@@ -128,18 +128,13 @@ class SubDomainsTest extends TestCase
 	}
 
 	/**
+	 *
 	 * @depends testCustomerSubDomainsAdd
 	 */
 	public function testAdminSubDomainsGetMainDomain()
 	{
 		global $admin_userdata;
-		
-		// get customer
-		$json_result = Customers::getLocal($admin_userdata, array(
-			'loginname' => 'test1'
-		))->get();
-		$customer_userdata = json_decode($json_result, true)['data'];
-		
+
 		$data = [
 			'domainname' => 'test2.local'
 		];
@@ -150,6 +145,7 @@ class SubDomainsTest extends TestCase
 	}
 
 	/**
+	 *
 	 * @depends testCustomerSubDomainsAdd
 	 */
 	public function testAdminSubDomainsUpdate()
@@ -172,6 +168,7 @@ class SubDomainsTest extends TestCase
 	}
 
 	/**
+	 *
 	 * @depends testAdminSubDomainsUpdate
 	 */
 	public function testCustomerSubDomainsUpdate()
@@ -185,7 +182,7 @@ class SubDomainsTest extends TestCase
 		$data = [
 			'domainname' => 'mysub.test2.local',
 			'url' => 'https://www.froxlor.org/',
-			'isemaildomain' => 0,
+			'isemaildomain' => 0
 		];
 		$json_result = SubDomains::getLocal($customer_userdata, $data)->update();
 		$result = json_decode($json_result, true)['data'];
@@ -195,7 +192,7 @@ class SubDomainsTest extends TestCase
 	public function testCustomerSubDomainsList()
 	{
 		global $admin_userdata;
-		
+
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
@@ -231,6 +228,7 @@ class SubDomainsTest extends TestCase
 	}
 
 	/**
+	 *
 	 * @depends testCustomerSubDomainsList
 	 */
 	public function testCustomerSubDomainsDelete()

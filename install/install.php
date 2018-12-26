@@ -15,8 +15,8 @@
  * @package    Install
  *
  */
-
-require 'lib/class.FroxlorInstall.php';
+require dirname(__DIR__) . '/vendor/autoload.php';
+require __DIR__ . '/lib/class.FroxlorInstall.php';
 
 $frxinstall = new FroxlorInstall();
 $frxinstall->run();

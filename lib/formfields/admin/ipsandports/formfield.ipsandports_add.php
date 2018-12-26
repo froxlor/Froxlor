@@ -14,7 +14,6 @@
  * @package    Formfields
  *
  */
-
 return array(
 	'ipsandports_add' => array(
 		'title' => $lng['admin']['ipsandports']['add'],
@@ -40,30 +39,45 @@ return array(
 				'image' => 'icons/ipsports_add.png',
 				'fields' => array(
 					'listen_statement' => array(
-						'visible' => !$is_nginx,
+						'visible' => ! $is_nginx,
 						'label' => $lng['admin']['ipsandports']['create_listen_statement'],
 						'type' => 'checkbox',
 						'values' => array(
-							array ('label' => $lng['panel']['yes'], 'value' => '1')
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
 						),
-						'value' => array('1')
+						'value' => array(
+							'1'
+						)
 					),
 					'namevirtualhost_statement' => array(
-						'visible' => $is_apache && !$is_apache24,
+						'visible' => $is_apache && ! $is_apache24,
 						'label' => $lng['admin']['ipsandports']['create_namevirtualhost_statement'],
 						'type' => 'checkbox',
 						'values' => array(
-							array ('label' => $lng['panel']['yes'], 'value' => '1')
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
 						),
-						'value' => array('1')
+						'value' => array(
+							'1'
+						)
 					),
 					'vhostcontainer' => array(
 						'label' => $lng['admin']['ipsandports']['create_vhostcontainer'],
 						'type' => 'checkbox',
 						'values' => array(
-							array ('label' => $lng['panel']['yes'], 'value' => '1')
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
 						),
-						'value' => array('1')
+						'value' => array(
+							'1'
+						)
 					),
 					'docroot' => array(
 						'label' => $lng['admin']['ipsandports']['docroot']['title'],
@@ -83,9 +97,14 @@ return array(
 						'label' => $lng['admin']['ipsandports']['create_vhostcontainer_servername_statement'],
 						'type' => 'checkbox',
 						'values' => array(
-							array ('label' => $lng['panel']['yes'], 'value' => '1')
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
 						),
-						'value' => array('1')
+						'value' => array(
+							'1'
+						)
 					)
 				)
 			),
@@ -106,13 +125,16 @@ return array(
 			'section_d' => array(
 				'title' => $lng['admin']['ipsandports']['webserverssldomainconfig'],
 				'image' => 'icons/ipsports_add.png',
-				'visible' => (Settings::Get('system.use_ssl') == 1 ? true : false),
+				'visible' => (\Froxlor\Settings::Get('system.use_ssl') == 1 ? true : false),
 				'fields' => array(
 					'ssl' => array(
 						'label' => $lng['admin']['ipsandports']['enable_ssl'],
 						'type' => 'checkbox',
 						'values' => array(
-							array ('label' => $lng['panel']['yes'], 'value' => '1')
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
 						),
 						'value' => array()
 					),

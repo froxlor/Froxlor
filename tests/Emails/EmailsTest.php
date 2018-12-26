@@ -1,15 +1,22 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
+use Froxlor\Settings;
+use Froxlor\Database\Database;
+use Froxlor\Api\Commands\Customers;
+use Froxlor\Api\Commands\Emails;
+use Froxlor\Api\Commands\EmailForwarders;
+use Froxlor\Api\Commands\EmailAccounts;
+
 /**
  *
- * @covers ApiCommand
- * @covers ApiParameter
- * @covers Emails
- * @covers EmailForwarders
- * @covers EmailAccounts
- * @covers Customers
- * @covers Admins
+ * @covers \Froxlor\Api\ApiCommand
+ * @covers \Froxlor\Api\ApiParameter
+ * @covers \Froxlor\Api\Commands\Emails
+ * @covers \Froxlor\Api\Commands\EmailForwarders
+ * @covers \Froxlor\Api\Commands\EmailAccounts
+ * @covers \Froxlor\Api\Commands\Customers
+ * @covers \Froxlor\Api\Commands\Admins
  */
 class MailsTest extends TestCase
 {
@@ -370,7 +377,7 @@ class MailsTest extends TestCase
 
 		$data = [
 			'emailaddr' => 'info@test2.local',
-			'email_password' => generatePassword(),
+			'email_password' => \Froxlor\System\Crypt::generatePassword(),
 			'alternative_email' => 'noone@example.com',
 			'email_quota' => 1337,
 			'sendinfomail' => TRAVIS_CI == 1 ? 0 : 1
@@ -392,7 +399,7 @@ class MailsTest extends TestCase
 
 		$data = [
 			'emailaddr' => 'info@test2.local',
-			'email_password' => generatePassword(),
+			'email_password' => \Froxlor\System\Crypt::generatePassword(),
 			'alternative_email' => 'noone@example.com',
 			'email_quota' => 1338
 		];
@@ -452,7 +459,7 @@ class MailsTest extends TestCase
 		// add account
 		$data = [
 			'emailaddr' => 'info@test2.local',
-			'email_password' => generatePassword(),
+			'email_password' => \Froxlor\System\Crypt::generatePassword(),
 			'alternative_email' => 'noone@example.com',
 			'sendinfomail' => TRAVIS_CI == 1 ? 0 : 1
 		];

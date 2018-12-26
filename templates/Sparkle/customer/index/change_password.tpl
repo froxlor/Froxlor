@@ -36,8 +36,8 @@ $header
 						<tr>
 							<td>&nbsp;</td>
 							<td>
-								<input type="checkbox" name="change_webalizer" id="change_webalizer" value="true" />
-								<label for="change_webalizer">{$lng['changepassword']['also_change_webalizer']}</label>
+								<input type="checkbox" name="change_stats" id="change_stats" value="true" />
+								<label for="change_stats">{$lng['changepassword']['also_change_stats']}</label>
 							</td>
 						</tr>
 						<tfoot>

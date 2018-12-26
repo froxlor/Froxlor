@@ -1,8 +1,12 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
+use Froxlor\Database\Database;
+use Froxlor\Api\FroxlorRPC;
+
 /**
- * @covers FroxlorRPC
+ *
+ * @covers \Froxlor\Api\FroxlorRPC
  */
 class FroxlorRpcTest extends TestCase
 {
@@ -84,7 +88,9 @@ class FroxlorRpcTest extends TestCase
 				'apikey' => 'test',
 				'secret' => 'test'
 			],
-			'body' => ['command' => 'Froxlor']
+			'body' => [
+				'command' => 'Froxlor'
+			]
 		));
 	}
 
@@ -97,7 +103,9 @@ class FroxlorRpcTest extends TestCase
 				'apikey' => 'test',
 				'secret' => 'test'
 			],
-			'body' => ['command' => 'SomeModule.cmd']
+			'body' => [
+				'command' => 'SomeModule.cmd'
+			]
 		));
 	}
 
@@ -108,7 +116,9 @@ class FroxlorRpcTest extends TestCase
 				'apikey' => 'test',
 				'secret' => 'test'
 			],
-			'body' => ['command' => 'Froxlor.listFunctions']
+			'body' => [
+				'command' => 'Froxlor.listFunctions'
+			]
 		));
 		$this->assertEquals('Froxlor', $result['command']['class']);
 		$this->assertEquals('listFunctions', $result['command']['method']);

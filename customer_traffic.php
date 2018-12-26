@@ -16,14 +16,16 @@
  * @package    Panel
  *
  */
-
 define('AREA', 'customer');
 $intrafficpage = 1;
 require './lib/init.php';
 
+use Froxlor\Database\Database;
+use Froxlor\Settings;
+
 // redirect if this customer page is hidden via settings
-if (Settings::IsInList('panel.customer_hide_options','traffic')) {
-	redirectTo('customer_index.php');
+if (Settings::IsInList('panel.customer_hide_options', 'traffic')) {
+	\Froxlor\UI\Response::redirectTo('customer_index.php');
 }
 
 $traffic = '';
@@ -36,8 +38,7 @@ if (isset($_POST['month']) && isset($_POST['year'])) {
 } elseif (isset($_GET['month']) && isset($_GET['year'])) {
 	$month = intval($_GET['month']);
 	$year = intval($_GET['year']);
-}
-//BAM! $_GET???
+} // BAM! $_GET???
 elseif (isset($_GET['page']) && $_GET['page'] == 'current') {
 	if (date('d') != '01') {
 		$month = date('m');
@@ -53,7 +54,7 @@ elseif (isset($_GET['page']) && $_GET['page'] == 'current') {
 	}
 }
 
-if (!is_null($month) && !is_null($year)) {
+if (! is_null($month) && ! is_null($year)) {
 	$traf['byte'] = 0;
 	$result_stmt = Database::prepare("SELECT SUM(`http`) as 'http', SUM(`ftp_up`) AS 'ftp_up', SUM(`ftp_down`) as 'ftp_down', SUM(`mail`) as 'mail', `day`, `month`, `year`
 		FROM `" . TABLE_PANEL_TRAFFIC . "`
@@ -61,8 +62,7 @@ if (!is_null($month) && !is_null($year)) {
 		AND `month` = :month
 		AND `year` = :year
 		GROUP BY `day`
-		ORDER BY `day` DESC"
-	);
+		ORDER BY `day` DESC");
 	$params = array(
 		"customerid" => $userinfo['customerid'],
 		"month" => $month,
@@ -102,23 +102,24 @@ if (!is_null($month) && !is_null($year)) {
 			$traf['byte'] = round($traf['byte'] / 1024, Settings::Get('panel.decimal_places'));
 		}
 
-		eval("\$traffic.=\"" . getTemplate('traffic/traffic_month') . "\";");
+		eval("\$traffic.=\"" . \Froxlor\UI\Template::getTemplate('traffic/traffic_month') . "\";");
 		$show = $lng['traffic']['months'][intval($row['month'])] . ' ' . $row['year'];
 	}
 
-	$traffic_complete['http'] = size_readable($traffic_complete['http'] * 1024, 'GiB', 'bi', '%01.'.(int)Settings::Get('panel.decimal_places').'f %s');
-	$traffic_complete['ftp'] = size_readable($traffic_complete['ftp'] * 1024, 'GiB', 'bi', '%01.'.(int)Settings::Get('panel.decimal_places').'f %s');
-	$traffic_complete['mail'] = size_readable($traffic_complete['mail'] * 1024, 'GiB', 'bi', '%01.'.(int)Settings::Get('panel.decimal_places').'f %s');
+	$traffic_complete['http'] = \Froxlor\PhpHelper::sizeReadable($traffic_complete['http'] * 1024, 'GiB', 'bi', '%01.' . (int) Settings::Get('panel.decimal_places') . 'f %s');
+	$traffic_complete['ftp'] = \Froxlor\PhpHelper::sizeReadable($traffic_complete['ftp'] * 1024, 'GiB', 'bi', '%01.' . (int) Settings::Get('panel.decimal_places') . 'f %s');
+	$traffic_complete['mail'] = \Froxlor\PhpHelper::sizeReadable($traffic_complete['mail'] * 1024, 'GiB', 'bi', '%01.' . (int) Settings::Get('panel.decimal_places') . 'f %s');
 
-	eval("echo \"" . getTemplate('traffic/traffic_details') . "\";");
+	eval("echo \"" . \Froxlor\UI\Template::getTemplate('traffic/traffic_details') . "\";");
 } else {
 	$result_stmt = Database::prepare("SELECT `month`, `year`, SUM(`http`) AS http, SUM(`ftp_up`) AS ftp_up, SUM(`ftp_down`) AS ftp_down, SUM(`mail`) AS mail
 		FROM `" . TABLE_PANEL_TRAFFIC . "`
 		WHERE `customerid` = :customerid
 		GROUP BY `year` DESC, `month` DESC
-		LIMIT 12"
-	);
-	Database::pexecute($result_stmt, array("customerid" => $userinfo['customerid']));
+		LIMIT 12");
+	Database::pexecute($result_stmt, array(
+		"customerid" => $userinfo['customerid']
+	));
 	$traffic_complete['http'] = 0;
 	$traffic_complete['ftp'] = 0;
 	$traffic_complete['mail'] = 0;
@@ -154,12 +155,12 @@ if (!is_null($month) && !is_null($year)) {
 			$traf['byte'] = round($traf['byte'] / (1024 * 1024), Settings::Get('panel.decimal_places'));
 		}
 
-		eval("\$traffic.=\"" . getTemplate('traffic/traffic_traffic') . "\";");
+		eval("\$traffic.=\"" . \Froxlor\UI\Template::getTemplate('traffic/traffic_traffic') . "\";");
 	}
 
-	$traffic_complete['http'] = size_readable($traffic_complete['http'] * 1024, 'GiB', 'bi', '%01.'.(int)Settings::Get('panel.decimal_places').'f %s');
-	$traffic_complete['ftp'] = size_readable($traffic_complete['ftp'] * 1024, 'GiB', 'bi', '%01.'.(int)Settings::Get('panel.decimal_places').'f %s');
-	$traffic_complete['mail'] = size_readable($traffic_complete['mail'] * 1024, 'GiB', 'bi', '%01.'.(int)Settings::Get('panel.decimal_places').'f %s');
+	$traffic_complete['http'] = \Froxlor\PhpHelper::sizeReadable($traffic_complete['http'] * 1024, 'GiB', 'bi', '%01.' . (int) Settings::Get('panel.decimal_places') . 'f %s');
+	$traffic_complete['ftp'] = \Froxlor\PhpHelper::sizeReadable($traffic_complete['ftp'] * 1024, 'GiB', 'bi', '%01.' . (int) Settings::Get('panel.decimal_places') . 'f %s');
+	$traffic_complete['mail'] = \Froxlor\PhpHelper::sizeReadable($traffic_complete['mail'] * 1024, 'GiB', 'bi', '%01.' . (int) Settings::Get('panel.decimal_places') . 'f %s');
 
-	eval("echo \"" . getTemplate('traffic/traffic') . "\";");
+	eval("echo \"" . \Froxlor\UI\Template::getTemplate('traffic/traffic') . "\";");
 }

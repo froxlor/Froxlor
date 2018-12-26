@@ -30,8 +30,9 @@ addons:
   apt:
     update: true
 
-install:
-  - composer install
+# build.xml includes that
+#install:
+#  - composer install
 
 service:
   - mysql
@@ -44,14 +45,16 @@ before_script:
   - mysql -u root -pfr0xl0r.TravisCI -e "GRANT ALL ON froxlor010.* TO 'froxlor010'@'localhost';"
 
 script:
-  - ant full-build-parallel
-      -Dpdepend=$(pwd)/vendor/bin/pdepend
-      -Dphpmd=$(pwd)/vendor/bin/phpmd
-      -Dphpcpd=$(pwd)/vendor/bin/phpcpd
-      -Dphpcs=$(pwd)/vendor/bin/phpcs
-      -Dphploc=$(pwd)/vendor/bin/phploc
-      -Dphpdox=$(pwd)/vendor/bin/phpdox
-      -Dphpunit=$(pwd)/vendor/bin/phpunit
+# sufficient for travis
+   - ant phpunit-no-coverage
+#  - ant full-build-parallel
+#      -Dpdepend=$(pwd)/vendor/bin/pdepend
+#      -Dphpmd=$(pwd)/vendor/bin/phpmd
+#      -Dphpcpd=$(pwd)/vendor/bin/phpcpd
+#      -Dphpcs=$(pwd)/vendor/bin/phpcs
+#      -Dphploc=$(pwd)/vendor/bin/phploc
+#      -Dphpdox=$(pwd)/vendor/bin/phpdox
+#      -Dphpunit=$(pwd)/vendor/bin/phpunit
 
 notifications:
   irc: "irc.freenode.org#froxlor"

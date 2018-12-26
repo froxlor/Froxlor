@@ -20,7 +20,6 @@
 /**
  * Global
  */
-
 $lng['translator'] = 'Staffan Starberg';
 $lng['panel']['edit'] = 'Ändra';
 $lng['panel']['delete'] = 'Radera';
@@ -475,7 +474,7 @@ $lng['admin']['subcanemaildomain']['never'] = 'Aldrig';
 $lng['admin']['subcanemaildomain']['choosableno'] = 'Valbar, standardvärdet är Nej';
 $lng['admin']['subcanemaildomain']['choosableyes'] = 'Valbar, standardvärdet är Ja';
 $lng['admin']['subcanemaildomain']['always'] = 'Alltid';
-$lng['changepassword']['also_change_webalizer'] = ' Ändra även lösenord för webalizer statistik';
+$lng['changepassword']['also_change_stats'] = ' Ändra även lösenord för statistik';
 
 // ADDED IN 1.2.16-svn8
 
@@ -538,127 +537,15 @@ $lng['admin']['webalizer']['normal'] = 'Normal';
 $lng['admin']['webalizer']['quiet'] = 'Tyst';
 $lng['admin']['webalizer']['veryquiet'] = 'Väldigt tyst';
 
-// ADDED IN 1.2.18-svn3
-
-$lng['ticket']['admin_email'] = 'root@localhost';
-$lng['ticket']['noreply_email'] = 'tickets@Froxlor';
-$lng['admin']['ticketsystem'] = 'Support';
-$lng['menue']['ticket']['ticket'] = 'Supportärenden';
-$lng['menue']['ticket']['categories'] = 'Kategorier';
-$lng['menue']['ticket']['archive'] = 'Arkivet';
-$lng['ticket']['description'] = 'Skriv en beskrivning av ärendet här!';
-$lng['ticket']['ticket_new'] = '[Skapa ett nytt ärende]';
-$lng['ticket']['ticket_reply'] = 'Svara ärende';
-$lng['ticket']['ticket_reopen'] = 'Återöppna ärende';
-$lng['ticket']['ticket_newcateory'] = '[Skapa ny kategori]';
-$lng['ticket']['ticket_editcateory'] = 'Ändra kategori';
-$lng['ticket']['ticket_view'] = 'View ticketcourse';
-$lng['ticket']['ticketcount'] = 'Ärendenummer';
-$lng['ticket']['ticket_answers'] = 'Svar';
-// $lng['ticket']['lastchange'] = 'Senaste ändring';
-$lng['ticket']['lastchange'] = 'Ändrad';
-$lng['ticket']['subject'] = 'Rubrik';
-$lng['ticket']['status'] = 'Status';
-$lng['ticket']['lastreplier'] = 'Ägare';
-$lng['ticket']['priority'] = 'Prioritet';
-$lng['ticket']['low'] = '<span class="Ärende_låg">Låg</span>';
-$lng['ticket']['normal'] = '<span class="Ärende_norm">Normal</span>';
-$lng['ticket']['high'] = '<span class="Ärende_hög">Hög</span>';
-$lng['ticket']['lastchange_from'] = 'Från datum (dd.mm.yyyy)';
-$lng['ticket']['lastchange_to'] = 'Till datum (dd.mm.yyyy)';
-$lng['ticket']['category'] = 'Kategori';
-$lng['ticket']['no_cat'] = 'None';
-$lng['ticket']['message'] = 'Meddeland';
-$lng['ticket']['show'] = 'Visa';
-$lng['ticket']['answer'] = 'Svara';
-$lng['ticket']['close'] = 'Stäng';
-$lng['ticket']['reopen'] = 'Öppna igen';
-$lng['ticket']['archive'] = 'Arkivera';
-$lng['ticket']['ticket_delete'] = 'Radera ett ärende';
-$lng['ticket']['lastarchived'] = 'Recently archived tickets';
-$lng['ticket']['archivedtime'] = 'Arkiverad';
-$lng['ticket']['open'] = 'Öppnad';
-$lng['ticket']['wait_reply'] = 'Väntar på svar';
-$lng['ticket']['replied'] = 'Besvarad';
-$lng['ticket']['closed'] = 'Stängd';
-$lng['ticket']['staff'] = 'Staff';
-$lng['ticket']['customer'] = 'Kund';
-$lng['ticket']['old_tickets'] = 'Ärende meddelanden';
-$lng['ticket']['search'] = 'Sök i arkivet';
-$lng['ticket']['nocustomer'] = 'Inget val';
-$lng['ticket']['archivesearch'] = 'Arkiv sökresultat';
-$lng['ticket']['noresults'] = 'Inget ärende funnet';
-$lng['ticket']['notmorethanxopentickets'] = 'På grund av spamhanteringen kan du inte ha mer än %s öppna ärenden';
-$lng['ticket']['supportstatus'] = 'Support-Status';
-$lng['ticket']['supportavailable'] = '<span class="ticket_low">Våra supporttekniker tar nu gärna emot era supportärenden.</span>';
-$lng['ticket']['supportnotavailable'] = '<span class="ticket_high">Våra supporttekniker är inte tillgängliga just nu.</span>';
-$lng['admin']['templates']['ticket'] = 'Informations E-post för supportärenden';
-$lng['admin']['templates']['SUBJECT'] = 'Ersatt med supportärendet rubrik';
-$lng['admin']['templates']['new_ticket_for_customer'] = 'Kundinformation som ärendet har skickat';
-$lng['admin']['templates']['new_ticket_by_customer'] = 'Admininformation för ett ärende öppnat av kund';
-$lng['admin']['templates']['new_reply_ticket_by_customer'] = 'Admininformation för ett svar från kund';
-$lng['admin']['templates']['new_ticket_by_staff'] = 'Kundinformation för ett ärende öppnat av ledningen';
-$lng['admin']['templates']['new_reply_ticket_by_staff'] = 'Kundinformation för ett ärende besvarat av ledningen';
-$lng['mails']['new_ticket_for_customer']['mailbody'] = 'Hej {FIRSTNAME} {NAME},\n\nDitt supportärende med rubriken "{SUBJECT}" har skickats till supporten.\n\nVi meddelar dig när ditt ärende har blivit besvarat.\n\nMed vänliga hälsningar,\n Froxlor';
-$lng['mails']['new_ticket_for_customer']['subject'] = 'Ditt supportärende har nu skickats';
-$lng['mails']['new_ticket_by_customer']['mailbody'] = 'Hej admin,\n\nEtt nytt supportärende med rubriken "{SUBJECT}" har nu skapats.\n\nVänligen logga in för att öppna ärendet.\n\nMed vänliga hälsningar,\n Froxlor';
-$lng['mails']['new_ticket_by_customer']['subject'] = 'Nytt supportärende skapat';
-$lng['mails']['new_reply_ticket_by_customer']['mailbody'] = 'Hej admin,\n\nDitt supportärende "{SUBJECT}" har blivit besvarat an en kund.\n\nVänligen logga in för att öppna ärendet.\n\nMed vänliga hälsningar,\n Froxlor';
-$lng['mails']['new_reply_ticket_by_customer']['subject'] = 'Nytt svar för supportärendet';
-$lng['mails']['new_ticket_by_staff']['mailbody'] = 'Hej {FIRSTNAME} {NAME},\n\nEtt nytt supportärende har öppnats med rubriken "{SUBJECT}".\n\nVänligen logga in för att öppna ärendet.\n\nMed vänliga hälsningar,\n Froxlor';
-$lng['mails']['new_ticket_by_staff']['subject'] = 'Nytt supportärede behandlat';
-$lng['mails']['new_reply_ticket_by_staff']['mailbody'] = 'Hej {FIRSTNAME} {NAME},\n\nSupportärendet med rubriken "{SUBJECT}" har besvarats av vår personal.\n\nVänligen logga in för att öppna ärendet.\n\nMed vänliga hälsningar,\n Froxlor';
-$lng['mails']['new_reply_ticket_by_staff']['subject'] = 'Svar på ert supportärende';
-$lng['question']['ticket_reallyclose'] = 'Är du säker på att du vill stänga supportärendet "%s"?';
-$lng['question']['ticket_reallydelete'] = 'Är du säker på att du vill radera supportärendet "%s"?';
-$lng['question']['ticket_reallydeletecat'] = 'Är du säker på att du vill radera kategorin "%s"?';
-$lng['question']['ticket_reallyarchive'] = 'Är du säker på att du vill flytta supportärendet "%s" till arkivet?';
-$lng['error']['nomoreticketsavailable'] = 'Du har redan använt alla supportärenden som du fått tilldelade. Kontakta administratören om du behöver fler.';
-$lng['error']['nocustomerforticket'] = 'Det går inte att skapa ett supportärende utan kunder';
-$lng['error']['categoryhastickets'] = 'Denna kategori har fortfarande supportärenden.<br />Du måste radera dessa ärenden innan du kan radera denna kategori';
-$lng['admin']['ticketsettings'] = 'Supportärende inställningar';
-$lng['admin']['archivelastrun'] = 'Sista supportärende som arkiverats';
-$lng['serversettings']['ticket']['noreply_email']['title'] = 'Svara-Inte E-post adress';
-$lng['serversettings']['ticket']['noreply_email']['description'] = 'Avsändaradressen för support-ticket, exempel: inget-svar@Froxlor.se';
-$lng['serversettings']['ticket']['worktime_begin']['title'] = 'Start av support-tid (hh:mm)';
-$lng['serversettings']['ticket']['worktime_begin']['description'] = 'Start-tid, när supporten är tillgänglig';
-$lng['serversettings']['ticket']['worktime_end']['title'] = 'Slut på support-tid (hh:mm)';
-$lng['serversettings']['ticket']['worktime_end']['description'] = 'Slut-tid, när supporten inte längre är tillgänglig';
-$lng['serversettings']['ticket']['worktime_sat'] = 'Supporten har öppet på lördagar?';
-$lng['serversettings']['ticket']['worktime_sun'] = 'Supporten har öppet på söndagar?';
-$lng['serversettings']['ticket']['worktime_all']['title'] = 'Supporten är tillgänglig dygnet runt';
-$lng['serversettings']['ticket']['worktime_all']['description'] = 'Om du väljer "Ja" så kommer start och stopp tiderna att skrivas över';
-$lng['serversettings']['ticket']['archiving_days'] = 'Efter hur många dagar skall stängda tickets arkiveras?';
-$lng['customer']['tickets'] = 'Support ärenden';
-
 // ADDED IN 1.2.18-svn4
 
 $lng['admin']['domain_nocustomeraddingavailable'] = 'Det går inte att skapa en ny domän innan det finns mins en upplagd kund.';
-$lng['serversettings']['ticket']['enable'] = 'Tillåt användninga av ticketsystemet';
-$lng['serversettings']['ticket']['concurrentlyopen'] = 'Maximalt antal tickets som kan öppnas samtidigt?';
-$lng['error']['norepymailiswrong'] = 'Den här adressen  &quot;Noreply-address&quot; är felaktig. Bara giltiga E-post adresser är tillåtna.';
-$lng['error']['tadminmailiswrong'] = 'Den här adressen &quot;Ticketadmin-address&quot; är felaktig. Bara giltiga E-post adresser är tillåtna.';
-$lng['ticket']['awaitingticketreply'] = 'Du har %s obesvarade support-ticket(s)';
-
-// ADDED IN 1.2.18-svn5
-
-$lng['serversettings']['ticket']['noreply_name'] = 'Supportärendes namn på E-postadressen';
 
 // ADDED IN 1.2.19-svn1
 
 $lng['serversettings']['mod_fcgid']['configdir']['title'] = 'FCGI konfigurationskatalog';
 $lng['serversettings']['mod_fcgid']['configdir']['description'] = 'I vilken katalog skall alla fcgi-konfigurationfiler lagras?';
 $lng['serversettings']['mod_fcgid']['tmpdir']['title'] = 'FCGI temporärkatalog';
-
-// ADDED IN 1.2.19-svn3
-
-$lng['serversettings']['ticket']['reset_cycle']['title'] = 'Återställ cykeln för använda supportärenden';
-$lng['serversettings']['ticket']['reset_cycle']['description'] = 'Återställ kundens räknare för använda supportärenden. Vald cykel = 0';
-$lng['admin']['tickets']['daily'] = 'Dagligen';
-$lng['admin']['tickets']['weekly'] = 'Varje vecka';
-$lng['admin']['tickets']['monthly'] = 'Varje månad';
-$lng['admin']['tickets']['yearly'] = 'Varje år';
-$lng['error']['ticketresetcycleiswrong'] = 'Cykeln för återställning av supportärenden måste vara "Dagligen", "Varje vecka", "varje månad" or "varje år".';
 
 // ADDED IN 1.2.19-svn4
 

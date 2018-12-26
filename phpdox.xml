@@ -1,5 +1,5 @@
 <phpdox xmlns="http://xml.phpdox.net/config">
-	<project name="froxlor" source="${basedir}/lib/classes/api"
+	<project name="froxlor" source="${basedir}/lib/Froxlor"
 		workdir="${basedir}/build/phpdox">
 		<collector publiconly="true" backend="parser">
 			<include mask="*.php" />
@@ -14,18 +14,20 @@
 
 				<!-- PHP Code Sniffer findings -->
 				<source type="phpcs">
-					<file name="logs/checkstyle.xml" />
+					<file name="logs/checkstyle-standard.xml" />
 				</source>
+
+                                <!-- PHP Code Sniffer PHPCompatibility -->
+                                <source type="phpcs">
+                                        <file name="logs/checkstyle-compat.xml" />
+                                </source>
 
 				<!-- PHPMessDetector -->
 				<source type="pmd">
 					<file name="logs/pmd.xml" />
 				</source>
 
-				<!-- PHPUnit Coverage XML
-				<source type="phpunit">
-				</source>
-				 -->
+				<!-- PHPUnit Coverage XML <source type="phpunit"> </source> -->
 			</enrich>
 			<build engine="html" enabled="true" output="api">
 				<file extension="html" />

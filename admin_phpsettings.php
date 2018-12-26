@@ -19,6 +19,10 @@
 define('AREA', 'admin');
 require './lib/init.php';
 
+use Froxlor\Database\Database;
+use Froxlor\Api\Commands\PhpSettings as PhpSettings;
+use Froxlor\Api\Commands\FpmDaemons as FpmDaemons;
+
 if (isset($_POST['id'])) {
 	$id = intval($_POST['id']);
 } elseif (isset($_GET['id'])) {
@@ -26,15 +30,15 @@ if (isset($_POST['id'])) {
 }
 
 if ($page == 'overview') {
-	
+
 	if ($action == '') {
-		
+
 		try {
 			$json_result = PhpSettings::getLocal($userinfo, array(
 				'with_subdomains' => true
 			))->listing();
 		} catch (Exception $e) {
-			dynamic_error($e->getMessage());
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 		$result = json_decode($json_result, true)['data'];
 
@@ -50,149 +54,155 @@ if ($page == 'overview') {
 				foreach ($row['domains'] as $configdomain) {
 					$domains .= $configdomain . "<br>";
 				}
-				$count++;
+				$count ++;
 				if ($subdomains_count == 0 && empty($domains)) {
 					$domains = $lng['admin']['phpsettings']['notused'];
 				}
-				eval("\$tablecontent.=\"" . getTemplate("phpconfig/overview_overview") . "\";");
+				eval("\$tablecontent.=\"" . \Froxlor\UI\Template::getTemplate("phpconfig/overview_overview") . "\";");
 			}
 		}
-		
-		eval("echo \"" . getTemplate("phpconfig/overview") . "\";");
+
+		eval("echo \"" . \Froxlor\UI\Template::getTemplate("phpconfig/overview") . "\";");
 	}
-	
+
 	if ($action == 'add') {
-		
+
 		if ((int) $userinfo['change_serversettings'] == 1) {
-			
+
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
 					PhpSettings::getLocal($userinfo, $_POST)->add();
 				} catch (Exception $e) {
-					dynamic_error($e->getMessage());
+					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
-				redirectTo($filename, array(
+				\Froxlor\UI\Response::redirectTo($filename, array(
 					'page' => $page,
 					's' => $s
 				));
 			} else {
-				
+
 				$result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "` WHERE `id` = 1");
 				$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
-				
+
 				$fpmconfigs = '';
 				$configs = Database::query("SELECT * FROM `" . TABLE_PANEL_FPMDAEMONS . "` ORDER BY `description` ASC");
 				while ($row = $configs->fetch(PDO::FETCH_ASSOC)) {
-					$fpmconfigs .= makeoption($row['description'], $row['id'], 1, true, true);
+					$fpmconfigs .= \Froxlor\UI\HTML::makeoption($row['description'], $row['id'], 1, true, true);
 				}
 
-				$pm_select = makeoption('static', 'static', 'static', true, true);
-				$pm_select.= makeoption('dynamic', 'dynamic', 'static', true, true);
-				$pm_select.= makeoption('ondemand', 'ondemand', 'static', true, true);
-				
+				$pm_select = \Froxlor\UI\HTML::makeoption('static', 'static', 'static', true, true);
+				$pm_select .= \Froxlor\UI\HTML::makeoption('dynamic', 'dynamic', 'static', true, true);
+				$pm_select .= \Froxlor\UI\HTML::makeoption('ondemand', 'ondemand', 'static', true, true);
+
 				$phpconfig_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/phpconfig/formfield.phpconfig_add.php';
-				$phpconfig_add_form = htmlform::genHTMLForm($phpconfig_add_data);
-				
+				$phpconfig_add_form = \Froxlor\UI\HtmlForm::genHTMLForm($phpconfig_add_data);
+
 				$title = $phpconfig_add_data['phpconfig_add']['title'];
 				$image = $phpconfig_add_data['phpconfig_add']['image'];
-				
-				eval("echo \"" . getTemplate("phpconfig/overview_add") . "\";");
+
+				eval("echo \"" . \Froxlor\UI\Template::getTemplate("phpconfig/overview_add") . "\";");
 			}
 		} else {
-			standard_error('nopermissionsorinvalidid');
+			\Froxlor\UI\Response::standard_error('nopermissionsorinvalidid');
 		}
 	}
-	
+
 	if ($action == 'delete') {
 
 		try {
-			$json_result = PhpSettings::getLocal($userinfo, array('id' => $id))->get();
+			$json_result = PhpSettings::getLocal($userinfo, array(
+				'id' => $id
+			))->get();
 		} catch (Exception $e) {
-			dynamic_error($e->getMessage());
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 		$result = json_decode($json_result, true)['data'];
-		
+
 		if ($result['id'] != 0 && $result['id'] == $id && (int) $userinfo['change_serversettings'] == 1 && $id != 1) // cannot delete the default php.config
 		{
-			
+
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
-					PhpSettings::getLocal($userinfo, array('id' => $id))->delete();
+					PhpSettings::getLocal($userinfo, array(
+						'id' => $id
+					))->delete();
 				} catch (Exception $e) {
-					dynamic_error($e->getMessage());
+					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
-				redirectTo($filename, array(
+				\Froxlor\UI\Response::redirectTo($filename, array(
 					'page' => $page,
 					's' => $s
 				));
 			} else {
-				ask_yesno('phpsetting_reallydelete', $filename, array(
+				\Froxlor\UI\HTML::askYesNo('phpsetting_reallydelete', $filename, array(
 					'id' => $id,
 					'page' => $page,
 					'action' => $action
 				), $result['description']);
 			}
 		} else {
-			standard_error('nopermissionsorinvalidid');
+			\Froxlor\UI\Response::standard_error('nopermissionsorinvalidid');
 		}
 	}
-	
+
 	if ($action == 'edit') {
-		
+
 		try {
-			$json_result = PhpSettings::getLocal($userinfo, array('id' => $id))->get();
+			$json_result = PhpSettings::getLocal($userinfo, array(
+				'id' => $id
+			))->get();
 		} catch (Exception $e) {
-			dynamic_error($e->getMessage());
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 		$result = json_decode($json_result, true)['data'];
-		
+
 		if ($result['id'] != 0 && $result['id'] == $id && (int) $userinfo['change_serversettings'] == 1) {
-			
+
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
 					PhpSettings::getLocal($userinfo, $_POST)->update();
 				} catch (Exception $e) {
-					dynamic_error($e->getMessage());
+					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
-				redirectTo($filename, array(
+				\Froxlor\UI\Response::redirectTo($filename, array(
 					'page' => $page,
 					's' => $s
 				));
 			} else {
-				
+
 				$fpmconfigs = '';
 				$configs = Database::query("SELECT * FROM `" . TABLE_PANEL_FPMDAEMONS . "` ORDER BY `description` ASC");
 				while ($row = $configs->fetch(PDO::FETCH_ASSOC)) {
-					$fpmconfigs .= makeoption($row['description'], $row['id'], $result['fpmsettingid'], true, true);
+					$fpmconfigs .= \Froxlor\UI\HTML::makeoption($row['description'], $row['id'], $result['fpmsettingid'], true, true);
 				}
 
-				$pm_select = makeoption('static', 'static', $result['pm'], true, true);
-				$pm_select.= makeoption('dynamic', 'dynamic', $result['pm'], true, true);
-				$pm_select.= makeoption('ondemand', 'ondemand', $result['pm'], true, true);
+				$pm_select = \Froxlor\UI\HTML::makeoption('static', 'static', $result['pm'], true, true);
+				$pm_select .= \Froxlor\UI\HTML::makeoption('dynamic', 'dynamic', $result['pm'], true, true);
+				$pm_select .= \Froxlor\UI\HTML::makeoption('ondemand', 'ondemand', $result['pm'], true, true);
 
 				$phpconfig_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/phpconfig/formfield.phpconfig_edit.php';
-				$phpconfig_edit_form = htmlform::genHTMLForm($phpconfig_edit_data);
-				
+				$phpconfig_edit_form = \Froxlor\UI\HtmlForm::genHTMLForm($phpconfig_edit_data);
+
 				$title = $phpconfig_edit_data['phpconfig_edit']['title'];
 				$image = $phpconfig_edit_data['phpconfig_edit']['image'];
-				
-				eval("echo \"" . getTemplate("phpconfig/overview_edit") . "\";");
+
+				eval("echo \"" . \Froxlor\UI\Template::getTemplate("phpconfig/overview_edit") . "\";");
 			}
 		} else {
-			standard_error('nopermissionsorinvalidid');
+			\Froxlor\UI\Response::standard_error('nopermissionsorinvalidid');
 		}
 	}
 } elseif ($page == 'fpmdaemons') {
-	
+
 	if ($action == '') {
 
 		try {
 			$json_result = FpmDaemons::getLocal($userinfo)->listing();
 		} catch (Exception $e) {
-			dynamic_error($e->getMessage());
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 		$result = json_decode($json_result, true)['data'];
-		
+
 		$tablecontent = '';
 		$count = 0;
 		if (isset($result['count']) && $result['count'] > 0) {
@@ -201,120 +211,124 @@ if ($page == 'overview') {
 				foreach ($row['configs'] as $configused) {
 					$configs .= $configused . "<br>";
 				}
-				$count++;
-				eval("\$tablecontent.=\"" . getTemplate("phpconfig/fpmdaemons_overview") . "\";");
+				$count ++;
+				eval("\$tablecontent.=\"" . \Froxlor\UI\Template::getTemplate("phpconfig/fpmdaemons_overview") . "\";");
 			}
 		}
-		eval("echo \"" . getTemplate("phpconfig/fpmdaemons") . "\";");
+		eval("echo \"" . \Froxlor\UI\Template::getTemplate("phpconfig/fpmdaemons") . "\";");
 	}
-	
+
 	if ($action == 'add') {
-		
+
 		if ((int) $userinfo['change_serversettings'] == 1) {
-			
+
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
 					FpmDaemons::getLocal($userinfo, $_POST)->add();
 				} catch (Exception $e) {
-					dynamic_error($e->getMessage());
+					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
-				redirectTo($filename, array(
+				\Froxlor\UI\Response::redirectTo($filename, array(
 					'page' => $page,
 					's' => $s
 				));
 			} else {
-				
-				$pm_select = makeoption('static', 'static', 'static', true, true);
-				$pm_select .= makeoption('dynamic', 'dynamic', 'static', true, true);
-				$pm_select .= makeoption('ondemand', 'ondemand', 'static', true, true);
-				
+
+				$pm_select = \Froxlor\UI\HTML::makeoption('static', 'static', 'static', true, true);
+				$pm_select .= \Froxlor\UI\HTML::makeoption('dynamic', 'dynamic', 'static', true, true);
+				$pm_select .= \Froxlor\UI\HTML::makeoption('ondemand', 'ondemand', 'static', true, true);
+
 				$fpmconfig_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/phpconfig/formfield.fpmconfig_add.php';
-				$fpmconfig_add_form = htmlform::genHTMLForm($fpmconfig_add_data);
-				
+				$fpmconfig_add_form = \Froxlor\UI\HtmlForm::genHTMLForm($fpmconfig_add_data);
+
 				$title = $fpmconfig_add_data['fpmconfig_add']['title'];
 				$image = $fpmconfig_add_data['fpmconfig_add']['image'];
-				
-				eval("echo \"" . getTemplate("phpconfig/fpmconfig_add") . "\";");
+
+				eval("echo \"" . \Froxlor\UI\Template::getTemplate("phpconfig/fpmconfig_add") . "\";");
 			}
 		} else {
-			standard_error('nopermissionsorinvalidid');
+			\Froxlor\UI\Response::standard_error('nopermissionsorinvalidid');
 		}
 	}
-	
+
 	if ($action == 'delete') {
-		
+
 		try {
-			$json_result = FpmDaemons::getLocal($userinfo, array('id' => $id))->get();
+			$json_result = FpmDaemons::getLocal($userinfo, array(
+				'id' => $id
+			))->get();
 		} catch (Exception $e) {
-			dynamic_error($e->getMessage());
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 		$result = json_decode($json_result, true)['data'];
-		
+
 		if ($id == 1) {
-			standard_error('cannotdeletedefaultphpconfig');
+			\Froxlor\UI\Response::standard_error('cannotdeletedefaultphpconfig');
 		}
-		
+
 		if ($result['id'] != 0 && $result['id'] == $id && (int) $userinfo['change_serversettings'] == 1 && $id != 1) // cannot delete the default php.config
 		{
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
 					FpmDaemons::getLocal($userinfo, $_POST)->delete();
 				} catch (Exception $e) {
-					dynamic_error($e->getMessage());
+					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
-				redirectTo($filename, array(
+				\Froxlor\UI\Response::redirectTo($filename, array(
 					'page' => $page,
 					's' => $s
 				));
 			} else {
-				ask_yesno('fpmsetting_reallydelete', $filename, array(
+				\Froxlor\UI\HTML::askYesNo('fpmsetting_reallydelete', $filename, array(
 					'id' => $id,
 					'page' => $page,
 					'action' => $action
 				), $result['description']);
 			}
 		} else {
-			standard_error('nopermissionsorinvalidid');
+			\Froxlor\UI\Response::standard_error('nopermissionsorinvalidid');
 		}
 	}
-	
+
 	if ($action == 'edit') {
-		
+
 		try {
-			$json_result = FpmDaemons::getLocal($userinfo, array('id' => $id))->get();
+			$json_result = FpmDaemons::getLocal($userinfo, array(
+				'id' => $id
+			))->get();
 		} catch (Exception $e) {
-			dynamic_error($e->getMessage());
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 		$result = json_decode($json_result, true)['data'];
-		
+
 		if ($result['id'] != 0 && $result['id'] == $id && (int) $userinfo['change_serversettings'] == 1) {
-			
+
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
 					FpmDaemons::getLocal($userinfo, $_POST)->update();
 				} catch (Exception $e) {
-					dynamic_error($e->getMessage());
+					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
-				redirectTo($filename, array(
+				\Froxlor\UI\Response::redirectTo($filename, array(
 					'page' => $page,
 					's' => $s
 				));
 			} else {
-				
-				$pm_select = makeoption('static', 'static', $result['pm'], true, true);
-				$pm_select .= makeoption('dynamic', 'dynamic', $result['pm'], true, true);
-				$pm_select .= makeoption('ondemand', 'ondemand', $result['pm'], true, true);
-				
+
+				$pm_select = \Froxlor\UI\HTML::makeoption('static', 'static', $result['pm'], true, true);
+				$pm_select .= \Froxlor\UI\HTML::makeoption('dynamic', 'dynamic', $result['pm'], true, true);
+				$pm_select .= \Froxlor\UI\HTML::makeoption('ondemand', 'ondemand', $result['pm'], true, true);
+
 				$fpmconfig_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/phpconfig/formfield.fpmconfig_edit.php';
-				$fpmconfig_edit_form = htmlform::genHTMLForm($fpmconfig_edit_data);
-				
+				$fpmconfig_edit_form = \Froxlor\UI\HtmlForm::genHTMLForm($fpmconfig_edit_data);
+
 				$title = $fpmconfig_edit_data['fpmconfig_edit']['title'];
 				$image = $fpmconfig_edit_data['fpmconfig_edit']['image'];
-				
-				eval("echo \"" . getTemplate("phpconfig/fpmconfig_edit") . "\";");
+
+				eval("echo \"" . \Froxlor\UI\Template::getTemplate("phpconfig/fpmconfig_edit") . "\";");
 			}
 		} else {
-			standard_error('nopermissionsorinvalidid');
+			\Froxlor\UI\Response::standard_error('nopermissionsorinvalidid');
 		}
 	}
 }

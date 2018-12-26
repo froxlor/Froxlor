@@ -1,8 +1,8 @@
 <?php
-require __DIR__ . '/lib/classes/api/api_includes.inc.php';
+require __DIR__ . '/vendor/autoload.php';
 
 // check whether API interface is enabled after all
-if (Settings::Get('api.enabled') != 1) {
+if (\Froxlor\Settings::Get('api.enabled') != 1) {
 	// not enabled
 	header("Status: 404 Not found", 404);
 	header($_SERVER["SERVER_PROTOCOL"] . " 404 Not found", 404);
@@ -30,9 +30,9 @@ if (is_null($decoded_request)) {
 
 // validate content
 try {
-	$request = FroxlorRPC::validateRequest($decoded_request);
+	$request = \Froxlor\Api\FroxlorRPC::validateRequest($decoded_request);
 	// now actually do it
-	$cls = $request['command']['class'];
+	$cls = "\\Froxlor\\Api\\Commands\\" . $request['command']['class'];
 	$method = $request['command']['method'];
 	$apiObj = new $cls($decoded_request['header'], $request['params']);
 	// call the method with the params if any
@@ -65,7 +65,7 @@ function json_response($status, $status_message = '', $data = null)
 	$response['status'] = $status;
 	$response['status_message'] = $status_message;
 	$response['data'] = $data;
-	
+
 	$json_response = json_encode($response, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
 	echo $json_response;
 	exit();

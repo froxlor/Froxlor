@@ -1,10 +1,15 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
+use Froxlor\Api\Commands\Admins;
+use Froxlor\Api\Commands\Customers;
+use Froxlor\Api\Commands\DirProtections;
+
 /**
- * @covers ApiCommand
- * @covers ApiParameter
- * @covers DirProtections
+ *
+ * @covers \Froxlor\Api\ApiCommand
+ * @covers \Froxlor\Api\ApiParameter
+ * @covers \Froxlor\Api\Commands\DirProtections
  */
 class DirProtectionsTest extends TestCase
 {
@@ -12,17 +17,17 @@ class DirProtectionsTest extends TestCase
 	public function testCustomerDirProtectionsAdd()
 	{
 		global $admin_userdata;
-		
+
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
 		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
-		
+
 		$data = [
 			'path' => '/test',
 			'username' => 'testing',
-			'directory_password' => generatePassword(),
+			'directory_password' => \Froxlor\System\Crypt::generatePassword(),
 			'directory_authname' => 'test1'
 		];
 		$json_result = DirProtections::getLocal($customer_userdata, $data)->add();
@@ -30,37 +35,37 @@ class DirProtectionsTest extends TestCase
 		$this->assertEquals($customer_userdata['documentroot'] . 'test/', $result['path']);
 		$this->assertEquals('test1', $result['authname']);
 	}
-	
+
 	public function testCustomerDirProtectionsAddSameUserPath()
 	{
 		global $admin_userdata;
-		
+
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
 		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
-		
+
 		$data = [
 			'path' => '/test',
 			'username' => 'testing',
-			'directory_password' => generatePassword(),
+			'directory_password' => \Froxlor\System\Crypt::generatePassword(),
 			'directory_authname' => 'test2'
 		];
 		$this->expectExceptionMessage("Combination of username and path already exists");
 		DirProtections::getLocal($customer_userdata, $data)->add();
 	}
-	
+
 	public function testCustomerDirProtectionsAddPasswordEqualsUsername()
 	{
 		global $admin_userdata;
-		
+
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
 		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
-		$up = generatePassword();
+		$up = \Froxlor\System\Crypt::generatePassword();
 		$data = [
 			'path' => '/test',
 			'username' => $up,
@@ -70,8 +75,9 @@ class DirProtectionsTest extends TestCase
 		$this->expectExceptionMessage("The password should not be the same as the username.");
 		DirProtections::getLocal($customer_userdata, $data)->add();
 	}
-	
+
 	/**
+	 *
 	 * @depends testCustomerDirProtectionsAdd
 	 */
 	public function testAdminDirProtectionsGet()
@@ -91,8 +97,9 @@ class DirProtectionsTest extends TestCase
 		$this->assertEquals($customer_userdata['documentroot'] . 'test/', $result['path']);
 		$this->assertEquals('test1', $result['authname']);
 	}
-	
+
 	/**
+	 *
 	 * @depends testCustomerDirProtectionsAdd
 	 */
 	public function testResellerDirProtectionsGet()
@@ -117,26 +124,29 @@ class DirProtectionsTest extends TestCase
 		$this->assertEquals($customer_userdata['documentroot'] . 'test/', $result['path']);
 		$this->assertEquals('test1', $result['authname']);
 	}
-	
+
 	/**
+	 *
 	 * @depends testCustomerDirProtectionsAdd
 	 */
 	public function testCustomerDirProtectionsUpdate()
 	{
 		global $admin_userdata;
-		
+
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
 		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
-		
-		$json_result = DirProtections::getLocal($customer_userdata, array('id' => 1))->get();
+
+		$json_result = DirProtections::getLocal($customer_userdata, array(
+			'id' => 1
+		))->get();
 		$data_old = json_decode($json_result, true)['data'];
 
 		$data = [
 			'id' => 1,
-			'directory_password' => generatePassword(),
+			'directory_password' => \Froxlor\System\Crypt::generatePassword(),
 			'directory_authname' => 'test1337'
 		];
 		$json_result = DirProtections::getLocal($customer_userdata, $data)->update();
@@ -145,14 +155,15 @@ class DirProtectionsTest extends TestCase
 		$this->assertTrue($data_old['authname'] != $result['authname']);
 		$this->assertEquals('test1337', $result['authname']);
 	}
-	
+
 	/**
+	 *
 	 * @depends testCustomerDirProtectionsAdd
 	 */
 	public function testCustomerDirProtectionsList()
 	{
 		global $admin_userdata;
-		
+
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
@@ -165,21 +176,24 @@ class DirProtectionsTest extends TestCase
 		$this->assertEquals('test1', $result['list'][0]['username']);
 		$this->assertEquals('testing', $result['list'][1]['username']);
 	}
-	
+
 	/**
+	 *
 	 * @depends testCustomerDirProtectionsList
 	 */
 	public function testCustomerDirProtectionsDelete()
 	{
 		global $admin_userdata;
-		
+
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
 		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
-		
-		DirProtections::getLocal($customer_userdata, array('username' => 'testing'))->delete();
+
+		DirProtections::getLocal($customer_userdata, array(
+			'username' => 'testing'
+		))->delete();
 
 		$json_result = DirProtections::getLocal($customer_userdata)->listing();
 		$result = json_decode($json_result, true)['data'];

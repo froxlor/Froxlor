@@ -1,10 +1,15 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
+use Froxlor\Api\Commands\Admins;
+use Froxlor\Api\Commands\Customers;
+use Froxlor\Api\Commands\DirOptions;
+
 /**
- * @covers ApiCommand
- * @covers ApiParameter
- * @covers DirOptions
+ *
+ * @covers \Froxlor\Api\ApiCommand
+ * @covers \Froxlor\Api\ApiParameter
+ * @covers \Froxlor\Api\Commands\DirOptions
  */
 class DirOptionsTest extends TestCase
 {
@@ -12,13 +17,13 @@ class DirOptionsTest extends TestCase
 	public function testCustomerDirOptionsAdd()
 	{
 		global $admin_userdata;
-		
+
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
 		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
-		
+
 		$data = [
 			'path' => '/test',
 			'options_indexes' => 1,
@@ -33,17 +38,17 @@ class DirOptionsTest extends TestCase
 		$this->assertEquals('1', $result['options_cgi']);
 		$this->assertEquals('/403.html', $result['error403path']);
 	}
-	
+
 	public function testCustomerDirOptionsAddDuplicatePath()
 	{
 		global $admin_userdata;
-		
+
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
 		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
-		
+
 		$data = [
 			'path' => '/test',
 			'options_indexes' => 0,
@@ -59,13 +64,13 @@ class DirOptionsTest extends TestCase
 	public function testAdminDirOptionsGet()
 	{
 		global $admin_userdata;
-		
+
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
 		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
-		
+
 		$data = [
 			'id' => 1,
 			'loginname' => 'test1'
@@ -74,7 +79,7 @@ class DirOptionsTest extends TestCase
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals($customer_userdata['documentroot'] . 'test/', $result['path']);
 	}
-	
+
 	public function testResellerDirOptionsGet()
 	{
 		global $admin_userdata;
@@ -89,7 +94,7 @@ class DirOptionsTest extends TestCase
 			'loginname' => 'test1'
 		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
-		
+
 		$data = [
 			'id' => 1,
 			'loginname' => 'test1'
@@ -98,17 +103,17 @@ class DirOptionsTest extends TestCase
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals($customer_userdata['documentroot'] . 'test/', $result['path']);
 	}
-	
+
 	public function testCustomerDirOptionsGetNotFound()
 	{
 		global $admin_userdata;
-		
+
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
 		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
-		
+
 		$data = [
 			'id' => 1337
 		];
@@ -119,13 +124,13 @@ class DirOptionsTest extends TestCase
 	public function testCustomerDirOptionsUpdate()
 	{
 		global $admin_userdata;
-		
+
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
 		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
-		
+
 		$data = [
 			'id' => 1,
 			'options_indexes' => 0,
@@ -142,7 +147,7 @@ class DirOptionsTest extends TestCase
 	public function testAdminDirOptionsList()
 	{
 		global $admin_userdata;
-		
+
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
@@ -154,27 +159,28 @@ class DirOptionsTest extends TestCase
 		$this->assertEquals(1, $result['count']);
 		$this->assertEquals($customer_userdata['documentroot'] . 'test/', $result['list'][0]['path']);
 	}
-	
+
 	/**
+	 *
 	 * @depends testAdminDirOptionsList
 	 */
 	public function testCustomerDirOptionsDelete()
 	{
 		global $admin_userdata;
-		
+
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
 		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
-		
+
 		$data = [
 			'id' => 1
 		];
 		$json_result = DirOptions::getLocal($customer_userdata, $data)->delete();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals($customer_userdata['documentroot'] . 'test/', $result['path']);
-		
+
 		$data = [
 			'id' => 1
 		];

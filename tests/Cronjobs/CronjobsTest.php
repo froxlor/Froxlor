@@ -1,10 +1,15 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
+use Froxlor\Api\Commands\Admins;
+use Froxlor\Api\Commands\Customers;
+use Froxlor\Api\Commands\Cronjobs;
+
 /**
- * @covers ApiCommand
- * @covers ApiParameter
- * @covers Cronjobs
+ *
+ * @covers \Froxlor\Api\ApiCommand
+ * @covers \Froxlor\Api\ApiParameter
+ * @covers \Froxlor\Api\Commands\Cronjobs
  */
 class CronjobsTest extends TestCase
 {
@@ -17,7 +22,7 @@ class CronjobsTest extends TestCase
 		$this->assertTrue(isset($result['list'][0]['module']));
 		$this->assertTrue(isset($result['list'][0]['cronfile']));
 	}
-	
+
 	public function testCustomerCronjobsListNotAllowed()
 	{
 		global $admin_userdata;
@@ -30,7 +35,7 @@ class CronjobsTest extends TestCase
 		$this->expectExceptionMessage("Not allowed to execute given command.");
 		Cronjobs::getLocal($customer_userdata)->listing();
 	}
-	
+
 	public function testAdminCronjobsAdd()
 	{
 		global $admin_userdata;
@@ -45,9 +50,11 @@ class CronjobsTest extends TestCase
 		global $admin_userdata;
 		$this->expectExceptionCode(404);
 		$this->expectExceptionMessage("cronjob with id #999 could not be found");
-		Cronjobs::getLocal($admin_userdata, array('id' => 999))->get();
+		Cronjobs::getLocal($admin_userdata, array(
+			'id' => 999
+		))->get();
 	}
-	
+
 	public function testCustomerCronjobsGetNotAllowed()
 	{
 		global $admin_userdata;
@@ -58,9 +65,11 @@ class CronjobsTest extends TestCase
 		$customer_userdata = json_decode($json_result, true)['data'];
 		$this->expectExceptionCode(403);
 		$this->expectExceptionMessage("Not allowed to execute given command.");
-		Cronjobs::getLocal($customer_userdata, array('id' => 1))->get();
+		Cronjobs::getLocal($customer_userdata, array(
+			'id' => 1
+		))->get();
 	}
-	
+
 	public function testAdminCronjobsEdit()
 	{
 		global $admin_userdata;

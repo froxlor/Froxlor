@@ -13,7 +13,7 @@
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Settings
+ * @package    \Froxlor\Settings
  *
  */
 return array(
@@ -34,7 +34,10 @@ return array(
 						'nginx' => 'Nginx'
 					),
 					'save_method' => 'storeSettingField',
-					'plausibility_check_method' => 'checkPhpInterfaceSetting',
+					'plausibility_check_method' => array(
+						'\\Froxlor\\Validate\\Check',
+						'checkPhpInterfaceSetting'
+					),
 					'overview_option' => true
 				),
 				'system_apache_24' => array(
@@ -55,7 +58,7 @@ return array(
 					'type' => 'bool',
 					'default' => false,
 					'save_method' => 'storeSettingField',
-					'visible' => (Settings::Get('system.mod_fcgid') == 0 && Settings::Get('phpfpm.enabled') == 0),
+					'visible' => (\Froxlor\Settings::Get('system.mod_fcgid') == 0 && \Froxlor\Settings::Get('phpfpm.enabled') == 0),
 					'websrv_avail' => array(
 						'apache2'
 					)
@@ -71,7 +74,7 @@ return array(
 						'apache2',
 						'nginx'
 					),
-					'visible' => Settings::Get('system.use_ssl')
+					'visible' => \Froxlor\Settings::Get('system.use_ssl')
 				),
 				'system_dhparams_file' => array(
 					'label' => $lng['serversettings']['dhparams_file'],
@@ -82,7 +85,7 @@ return array(
 					'string_emptyallowed' => true,
 					'default' => '',
 					'save_method' => 'storeSettingField',
-					'visible' => Settings::Get('system.use_ssl')
+					'visible' => \Froxlor\Settings::Get('system.use_ssl')
 				),
 				'system_httpuser' => array(
 					'label' => $lng['admin']['webserver_user'],
@@ -231,7 +234,7 @@ return array(
 					'type' => 'text',
 					'default' => '',
 					'save_method' => 'storeSettingField',
-					'visible' => (Settings::Get('system.mod_fcgid') == 0 && Settings::Get('phpfpm.enabled') == 0),
+					'visible' => (\Froxlor\Settings::Get('system.mod_fcgid') == 0 && \Froxlor\Settings::Get('phpfpm.enabled') == 0),
 					'websrv_avail' => array(
 						'apache2'
 					)
@@ -345,7 +348,7 @@ return array(
 					'type' => 'option',
 					'default' => '1',
 					'option_mode' => 'one',
-					'option_options_method' => 'getRedirectCodes',
+					'option_options_method' => array('\\Froxlor\\Domain\\Domain', 'getRedirectCodes'),
 					'save_method' => 'storeSettingField'
 				)
 			)

@@ -2,7 +2,7 @@
 	<td>{$row['username']}</td>
 	<td>{$row['description']}</td>
 	<td>{$row['documentroot']}</td>
-	<if Settings::Get('system.allow_customer_shell') == '1' >
+	<if \Froxlor\Settings::Get('system.allow_customer_shell') == '1' >
 		<td>{$row['shell']}</td>
 	</if>
 	<td>

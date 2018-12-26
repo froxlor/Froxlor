@@ -29,8 +29,8 @@ $header
 								<td>{$mail_smtp_user}</td>
 								<td>{$mail_smtp_host}</td>
 								<td>{$mail_smtp_port}</td>
-								<td><img src="templates/{$theme}/assets/img/icons/<if Settings::Get('system.mail_use_smtp') == '1'>button_ok<else>cancel</if>.png" alt="" /></td>
-								<td><img src="templates/{$theme}/assets/img/icons/<if Settings::Get('system.mail_smtp_usetls') == '1'>button_ok<else>cancel</if>.png" alt="" /></td>
+								<td><img src="templates/{$theme}/assets/img/icons/<if \Froxlor\Settings::Get('system.mail_use_smtp') == '1'>button_ok<else>cancel</if>.png" alt="" /></td>
+								<td><img src="templates/{$theme}/assets/img/icons/<if \Froxlor\Settings::Get('system.mail_smtp_usetls') == '1'>button_ok<else>cancel</if>.png" alt="" /></td>
 							</tr>
 						</table>
 			<br>

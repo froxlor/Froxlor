@@ -122,7 +122,7 @@ $header
 					</small>
 				</div>
 
-				<if Settings::Get('system.mail_quota_enabled') == 1>
+				<if \Froxlor\Settings::Get('system.mail_quota_enabled') == 1>
 				<div class="canvasbox">
 					<input type="hidden" id="email_quota" class="circular" data-used="{$overview['email_quota_used']}" data-available="{$userinfo['email_quota']}" data-assigned="{$userinfo['email_quota_used']}">
 					<canvas id="email_quota-canvas" width="120" height="76"></canvas><br/>
@@ -149,25 +149,10 @@ $header
 						</if>
 					</small>
 				</div>
-
-				<if Settings::Get('ticket.enabled') == 1>
-				<div class="canvasbox">
-					<input type="hidden" id="tickets" class="circular" data-used="{$overview['tickets_used']}" data-available="{$userinfo['tickets']}" data-assigned="{$userinfo['tickets_used']}">
-					<canvas id="tickets-canvas" width="120" height="76"></canvas><br/>
-					{$lng['customer']['tickets']}<br />
-					<small>
-						{$overview['tickets_used']} {$lng['panel']['used']}<br />
-						{$userinfo['tickets_used']} {$lng['panel']['assigned']}<br />
-						<if $userinfo['tickets'] != '∞'>
-						{$userinfo['tickets']} {$lng['panel']['available']}
-						</if>
-					</small>
-				</div>
-				</if>
 			</div>
 
 			<div class="grid-u-1-2">
-				<if Settings::Get('admin.show_news_feed') == '1'>
+				<if \Froxlor\Settings::Get('admin.show_news_feed') == '1'>
 				<table class="dboarditem full" id="newsfeed">
 					<thead>
 						<tr>
