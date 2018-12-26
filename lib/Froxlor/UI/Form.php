@@ -135,15 +135,15 @@ class Form
 					foreach ($groupdetails['fields'] as $fieldname => $fielddetails) {
 						if (($plausibility_check = self::checkPlausibilityFormField($fieldname, $fielddetails, $submitted_fields[$fieldname], $submitted_fields)) !== false) {
 							if (is_array($plausibility_check) && isset($plausibility_check[0])) {
-								if ($plausibility_check[0] == FORMFIELDS_PLAUSIBILITY_CHECK_OK) {
+								if ($plausibility_check[0] == \Froxlor\Validate\Check::FORMFIELDS_PLAUSIBILITY_CHECK_OK) {
 									// Nothing to do here, everything's okay
-								} elseif ($plausibility_check[0] == FORMFIELDS_PLAUSIBILITY_CHECK_ERROR) {
+								} elseif ($plausibility_check[0] == \Froxlor\Validate\Check::FORMFIELDS_PLAUSIBILITY_CHECK_ERROR) {
 									unset($plausibility_check[0]);
 									$error = $plausibility_check[1];
 									unset($plausibility_check[1]);
 									$targetname = implode(' ', $plausibility_check);
 									\Froxlor\UI\Response::standard_error($error, $targetname);
-								} elseif ($plausibility_check[0] == FORMFIELDS_PLAUSIBILITY_CHECK_QUESTION) {
+								} elseif ($plausibility_check[0] == \Froxlor\Validate\Check::FORMFIELDS_PLAUSIBILITY_CHECK_QUESTION) {
 									unset($plausibility_check[0]);
 									$question = $plausibility_check[1];
 									unset($plausibility_check[1]);
@@ -239,15 +239,15 @@ class Form
 							if (! $only_enabledisable || ($only_enabledisable && isset($fielddetails['overview_option']))) {
 								if (($plausibility_check = self::checkPlausibilityFormField($fieldname, $fielddetails, $submitted_fields[$fieldname], $submitted_fields)) !== false) {
 									if (is_array($plausibility_check) && isset($plausibility_check[0])) {
-										if ($plausibility_check[0] == FORMFIELDS_PLAUSIBILITY_CHECK_OK) {
+										if ($plausibility_check[0] == \Froxlor\Validate\Check::FORMFIELDS_PLAUSIBILITY_CHECK_OK) {
 											// Nothing to do here, everything's okay
-										} elseif ($plausibility_check[0] == FORMFIELDS_PLAUSIBILITY_CHECK_ERROR) {
+										} elseif ($plausibility_check[0] == \Froxlor\Validate\Check::FORMFIELDS_PLAUSIBILITY_CHECK_ERROR) {
 											unset($plausibility_check[0]);
 											$error = $plausibility_check[1];
 											unset($plausibility_check[1]);
 											$targetname = implode(' ', $plausibility_check);
 											\Froxlor\UI\Response::standard_error($error, $targetname);
-										} elseif ($plausibility_check[0] == FORMFIELDS_PLAUSIBILITY_CHECK_QUESTION) {
+										} elseif ($plausibility_check[0] == \Froxlor\Validate\Check::FORMFIELDS_PLAUSIBILITY_CHECK_QUESTION) {
 											unset($plausibility_check[0]);
 											$question = $plausibility_check[1];
 											unset($plausibility_check[1]);

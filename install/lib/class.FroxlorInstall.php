@@ -103,9 +103,6 @@ class FroxlorInstall
 		$this->_sendHeaders();
 		// check if we have a valid installation already
 		$this->_checkUserdataFile();
-		// include the functions
-		require $this->_basepath . '/lib/functions/constant.formfields.php';
-		require $this->_basepath . '/lib/functions/constant.logger.php';
 		// include the MySQL-Table-Definitions
 		require $this->_basepath . '/lib/tables.inc.php';
 		// include language

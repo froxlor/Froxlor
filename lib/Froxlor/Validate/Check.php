@@ -6,10 +6,16 @@ use Froxlor\Settings;
 class Check
 {
 
+	const FORMFIELDS_PLAUSIBILITY_CHECK_OK = 0;
+
+	const FORMFIELDS_PLAUSIBILITY_CHECK_ERROR = 1;
+
+	const FORMFIELDS_PLAUSIBILITY_CHECK_QUESTION = 2;
+
 	public static function checkFcgidPhpFpm($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues)
 	{
 		$returnvalue = array(
-			FORMFIELDS_PLAUSIBILITY_CHECK_OK
+			self::FORMFIELDS_PLAUSIBILITY_CHECK_OK
 		);
 
 		$check_array = array(
@@ -38,7 +44,7 @@ class Check
 				// the other interface is activated already and STAYS activated
 				if ((int) Settings::Get($check_array[$fieldname]['other_enabled']) == 1) {
 					$returnvalue = array(
-						FORMFIELDS_PLAUSIBILITY_CHECK_ERROR,
+						self::FORMFIELDS_PLAUSIBILITY_CHECK_ERROR,
 						$check_array[$fieldname]['other_enabled_lng']
 					);
 				} else {
@@ -48,7 +54,7 @@ class Check
 					} else {
 						// not, bot are nogo
 						$returnvalue = $returnvalue = array(
-							FORMFIELDS_PLAUSIBILITY_CHECK_ERROR,
+							self::FORMFIELDS_PLAUSIBILITY_CHECK_ERROR,
 							'fcgidandphpfpmnogoodtogether'
 						);
 					}
@@ -74,7 +80,7 @@ class Check
 
 			if (Validate::validate_ip2($host_entry, true, 'invalidip', true, true) == false && Validate::validateDomain($host_entry) == false && Validate::validateLocalHostname($host_entry) == false && $host_entry != '%') {
 				return array(
-					FORMFIELDS_PLAUSIBILITY_CHECK_ERROR,
+					self::FORMFIELDS_PLAUSIBILITY_CHECK_ERROR,
 					'invalidmysqlhost',
 					$host_entry
 				);
@@ -82,7 +88,7 @@ class Check
 		}
 
 		return array(
-			FORMFIELDS_PLAUSIBILITY_CHECK_OK
+			self::FORMFIELDS_PLAUSIBILITY_CHECK_OK
 		);
 	}
 
@@ -90,12 +96,12 @@ class Check
 	{
 		if (0 == strlen(trim($newfieldvalue)) || Validate::validateDomain($newfieldvalue) === false) {
 			return array(
-				FORMFIELDS_PLAUSIBILITY_CHECK_ERROR,
+				self::FORMFIELDS_PLAUSIBILITY_CHECK_ERROR,
 				'invalidhostname'
 			);
 		} else {
 			return array(
-				FORMFIELDS_PLAUSIBILITY_CHECK_OK
+				self::FORMFIELDS_PLAUSIBILITY_CHECK_OK
 			);
 		}
 	}
@@ -143,17 +149,17 @@ class Check
 			// neither dir can be within the other nor can they be equal
 			if (substr($newdir, 0, strlen($cdir)) == $cdir || substr($cdir, 0, strlen($newdir)) == $newdir || $newdir == $cdir) {
 				$returnvalue = array(
-					FORMFIELDS_PLAUSIBILITY_CHECK_ERROR,
+					self::FORMFIELDS_PLAUSIBILITY_CHECK_ERROR,
 					'fcgidpathcannotbeincustomerdoc'
 				);
 			} else {
 				$returnvalue = array(
-					FORMFIELDS_PLAUSIBILITY_CHECK_OK
+					self::FORMFIELDS_PLAUSIBILITY_CHECK_OK
 				);
 			}
 		} else {
 			$returnvalue = array(
-				FORMFIELDS_PLAUSIBILITY_CHECK_OK
+				self::FORMFIELDS_PLAUSIBILITY_CHECK_OK
 			);
 		}
 
@@ -163,14 +169,14 @@ class Check
 	public static function checkPhpInterfaceSetting($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues)
 	{
 		$returnvalue = array(
-			FORMFIELDS_PLAUSIBILITY_CHECK_OK
+			self::FORMFIELDS_PLAUSIBILITY_CHECK_OK
 		);
 
 		if ((int) Settings::Get('system.mod_fcgid') == 1) {
 			// fcgid only works for apache and lighttpd
 			if (strtolower($newfieldvalue) != 'apache2' && strtolower($newfieldvalue) != 'lighttpd') {
 				$returnvalue = array(
-					FORMFIELDS_PLAUSIBILITY_CHECK_ERROR,
+					self::FORMFIELDS_PLAUSIBILITY_CHECK_ERROR,
 					'fcgidstillenableddeadlock'
 				);
 			}
@@ -188,7 +194,7 @@ class Check
 		$returnvalue = array();
 		if (Validate::validateUsername($newfieldvalue, Settings::Get('panel.unix_names'), 14 - strlen($allnewfieldvalues['customer_mysqlprefix'])) === true) {
 			$returnvalue = array(
-				FORMFIELDS_PLAUSIBILITY_CHECK_OK
+				self::FORMFIELDS_PLAUSIBILITY_CHECK_OK
 			);
 		} else {
 			$errmsg = 'accountprefixiswrong';
@@ -196,7 +202,7 @@ class Check
 				$errmsg = 'mysqlprefixiswrong';
 			}
 			$returnvalue = array(
-				FORMFIELDS_PLAUSIBILITY_CHECK_ERROR,
+				self::FORMFIELDS_PLAUSIBILITY_CHECK_ERROR,
 				$errmsg
 			);
 		}

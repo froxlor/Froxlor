@@ -189,9 +189,6 @@ class MasterCron extends \Froxlor\Cron\FroxlorCron
 			unset($sql['root_password']);
 		}
 
-		// Includes the Functions
-		require \Froxlor\Froxlor::getInstallDir() . '/lib/functions/constant.formfields.php';
-
 		// Includes the MySQL-Tabledefinitions etc.
 		require \Froxlor\Froxlor::getInstallDir() . '/lib/tables.inc.php';
 		fwrite(self::$debugHandler, 'Table definitions included' . "\n");
