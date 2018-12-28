@@ -49,7 +49,7 @@ class HtmlForm
 				}
 
 				if (! isset($section['nobuttons']) || $section['nobuttons'] == false) {
-					eval("self::\$_form .= \"" . Template::getTemplate("misc/form/table_section", "1") . "\";");
+					eval("self::\$form .= \"" . Template::getTemplate("misc/form/table_section", "1") . "\";");
 				} else {
 					$nob = true;
 				}
@@ -74,7 +74,7 @@ class HtmlForm
 						} else {
 							$nexto = false;
 						}
-						eval("self::\$_form .= \"" . Template::getTemplate("misc/form/table_row", "1") . "\";");
+						eval("self::\$form .= \"" . Template::getTemplate("misc/form/table_row", "1") . "\";");
 					} else {
 						$data_field = self::parseDataField($fieldname, $fielddata);
 						$data_field = str_replace("\t", "", $data_field);
@@ -88,7 +88,7 @@ class HtmlForm
 
 		// add save/reset buttons at the end of the form
 		if (! $nob) {
-			eval("self::\$_form .= \"" . Template::getTemplate("misc/form/table_end", "1") . "\";");
+			eval("self::\$form .= \"" . Template::getTemplate("misc/form/table_end", "1") . "\";");
 		}
 
 		return self::$form;
