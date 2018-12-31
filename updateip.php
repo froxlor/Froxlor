@@ -4,21 +4,6 @@ define('AREA', 'login');
 require './lib/init.php';
 
 /**
- * Includes the Usersettings eg. MySQL-Username/Passwort etc.
- */
-//require FROXLOR_INSTALL_DIR.'/lib/userdata.inc.php';
-
-/**
- * Includes the Functions
- */
-//require FROXLOR_INSTALL_DIR.'/lib/functions.php';
-
-/**
- * Includes the MySQL-Tabledefinitions etc.
- */
-//require FROXLOR_INSTALL_DIR.'/lib/tables.inc.php';
-
-/**
  * Require authentication.
  */
 if (!isset($_SERVER['PHP_AUTH_USER']) && !isset($_REQUEST['username']) && !isset($_REQUEST['password'])) {
