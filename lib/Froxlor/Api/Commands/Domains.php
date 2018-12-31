@@ -216,9 +216,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				$caneditdomain = $this->getBoolParam('caneditdomain', true, 0);
 				$isdynamicdomain = $this->getBoolParam('isdynamicdomain', true, 0);
 				$dynamicipv4 = $this->getParam('dynamicipv4', true, '');
-				$dynamicipv4 = ($dynamicipv4 == '') ? null : \Froxlor\Validate\Validate::validate_ip2($dynamicipv4, false, 'invalidip', true, true);
 				$dynamicipv6 = $this->getParam('dynamicipv6', true, '');
-				$dynamicipv6 = ($dynamicipv6 == '') ? null : \Froxlor\Validate\Validate::validate_ip2($dynamicipv6, false, 'invalidip', true, true);
 				$isbinddomain = $this->getBoolParam('isbinddomain', true, 0);
 				$zonefile = $this->getParam('zonefile', true, '');
 				$dkim = $this->getBoolParam('dkim', true, 0);
@@ -249,6 +247,9 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				if (substr($p_domain, 0, 4) == 'xn--') {
 					\Froxlor\UI\Response::standard_error('domain_nopunycode', '', true);
 				}
+
+				$dynamicipv4 = ($dynamicipv4 == '') ? null : \Froxlor\Validate\Validate::validate_ip2($dynamicipv4, false, 'invalidip', true, true);
+				$dynamicipv6 = ($dynamicipv6 == '') ? null : \Froxlor\Validate\Validate::validate_ip2($dynamicipv6, false, 'invalidip', true, true);
 
 				if ($isdynamicdomain == 1 && $this->getUserDetail('dynamicdomains') != -1 && $this->getUserDetail('dynamicdomains_used') + 1 > $this->getUserDetail('dynamicdomains') ) {
 					standard_error('dynamicdomainslimit');
