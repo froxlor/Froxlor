@@ -3,11 +3,57 @@
 define('AREA', 'login');
 require './lib/init.php';
 
+use Froxlor\Database\Database;
+use Froxlor\Api\Commands\DomainZones as DomainZones;
+use Froxlor\Api\Commands\SubDomains as SubDomains;
+
+
 function response($code, $code_desc, $text) {
 	header("HTTP/1.1 $code $code_desc");
 	header('Content-Type: text/plain');
 	echo $text;
 	exit;
+}
+
+// workaround for DomainZones::get not returning all info
+function domainZoneGet($domainid, $type) {
+	$sel_stmt = Database::prepare("SELECT * FROM `" . TABLE_DOMAIN_DNS . "` WHERE domain_id = :did AND record = :record AND type = :type");
+	Database::pexecute($sel_stmt, array(
+		'did' => $domainid,
+		'record' => '@',
+		'type' => $type
+	));
+	$entries = $sel_stmt->fetchAll(PDO::FETCH_ASSOC);
+
+	return count($entries) > 0 ? $entries[0] : null;
+}
+
+function update_record($domaininfo, $ip, $record, $type, $userinfo) {
+	$changed = false;
+	$entry = domainZoneGet($domaininfo['id'], $type);
+
+	if ($entry === null || $ip != $entry['content']) {
+		$changed = true;
+
+		if ($entry !== null) {
+			// Domain zones can't be updated, only deleted and added again.
+			$params = array(
+				'entry_id' => $entry['id'],
+				'id' => $domaininfo['id']
+			);
+			DomainZones::getLocal($userinfo, $params)->delete();
+		}
+
+		$params = array(
+			'id' => $domaininfo['id'],
+			'type' => $type,
+			'record' => $record,
+			'content' => $ip
+		);
+		DomainZones::getLocal($userinfo, $params)->add();
+	}
+
+	return $changed;
 }
 
 /**
@@ -56,21 +102,21 @@ if (!isset($_REQUEST['domain'])) {
 $domains = explode(',', $_REQUEST['domain']);
 $domaininfos = array();
 
-foreach ($domains as $domain) {
-
+foreach ($domains as $domain_name) {
 	/**
 	 * Check if domain is dynamically updatable.
 	 */
-	$domain_stmt = \Froxlor\Database\Database::prepare("SELECT * FROM `" . TABLE_PANEL_DOMAINS . "`
-		WHERE `domain`= :domain AND `customerid` = :customerid"
-	);
-	\Froxlor\Database\Database::pexecute($domain_stmt, array("domain" => $domain, "customerid" => $userinfo["customerid"]));
+	try {
+		$domain = SubDomains::getLocal($userinfo, array(
+			'domainname' => $domain_name
+		))->get();
+		$domain = json_decode($domain, true)['data'];
 
-	if ($domain_stmt->rowCount() != 0) {
-		$domaininfo = $domain_stmt->fetch(PDO::FETCH_ASSOC);
-		if ($domaininfo['isdynamicdomain']) {
-			$domaininfos[$domain] = $domaininfo;
+		if ($domain['isdynamicdomain'] == '1') {
+			$domaininfos[$domain_name] = $domain;
 		}
+	} catch (\Exception $e) {
+		// Nonexisting domains raise an exception. Ignore it here.
 	}
 }
 
@@ -116,23 +162,24 @@ $changed_ipv4 = false;
 $changed_ipv6 = false;
 
 foreach ($domaininfos as $domain => $domaininfo) {
-	$perform_update = false;
-	if ($ipv4 != $domaininfo['dynamicipv4']) {
-		$changed_ipv4 = true;
-		$perform_update = true;
-	}
-	if ($ipv6 != $domaininfo['dynamicipv6']) {
-		$changed_ipv6 = true;
-		$perform_update = true;
+
+	$domainid = $domaininfo['id'];
+	$record = '@';
+
+	// Record must be set on the domain, not on the subdomain.
+	if ($domaininfo['parentdomainid'] != 0) {
+		$domainid = $domaininfo['parentdomainid'];
+		$parentdomain = SubDomains::getLocal($userinfo, array(
+			'id' => $domainid
+		))->get();
+		$record = str_replace('.' . $parentdomain['domain'], '', $domaininfo['domain']);
 	}
 
-	if ($perform_update) {
-		$update_stmt = \Froxlor\Database\Database::prepare("UPDATE `" . TABLE_PANEL_DOMAINS . "`
-			SET `dynamicipv4` = :dynamicipv4,
-			`dynamicipv6` = :dynamicipv6
-			WHERE `domain` = :domain"
-		);
-		\Froxlor\Database\Database::pexecute($update_stmt, array("dynamicipv4" => $ipv4, "dynamicipv6" => $ipv6, "domain" => $domain));
+	if ($ipv4 !== null) {
+		$changed_ipv4 = update_record($domaininfo, $ipv4, $record, 'A', $userinfo);
+	}
+	if ($ipv6 !== null) {
+		$changed_ipv6 = update_record($domaininfo, $ipv6, $record, 'AAAA', $userinfo);
 	}
 }
 
