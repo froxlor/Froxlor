@@ -501,10 +501,6 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 						$admin_update_query .= ", `subdomains_used` = `subdomains_used` + 0" . (int) $subdomains;
 					}
 
-					if ($dynamicdomains != '-1') {
-						$admin_update_query .= ", `dynamicdomains_used` = `dynamicdomains_used` + 0" . (int) $dynamicdomains;
-					}
-
 					if ($ftps != '-1') {
 						$admin_update_query .= ", `ftps_used` = `ftps_used` + 0" . (int) $ftps;
 					}
@@ -1297,17 +1293,6 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				}
 			}
 
-			if ($dynamicdomains != '-1' || $result['dynamicdomains'] != '-1') {
-				$admin_update_query .= ", `dynamicdomains_used` = `dynamicdomains_used` ";
-
-				if ($dynamicdomains != '-1') {
-					$admin_update_query .= " + 0" . (int) $dynamicdomains . " ";
-				}
-				if ($result['dynamicdomains'] != '-1') {
-					$admin_update_query .= " - 0" . (int) $result['dynamicdomains'] . " ";
-				}
-			}
-
 			if ($ftps != '-1' || $result['ftps'] != '-1') {
 				$admin_update_query .= ", `ftps_used` = `ftps_used` ";
 
@@ -1553,10 +1538,6 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 
 			if ($result['subdomains'] != '-1') {
 				$admin_update_query .= ", `subdomains_used` = `subdomains_used` - 0" . (int) $result['subdomains'];
-			}
-
-			if ($result['dynamicdomains'] != '-1') {
-				$admin_update_query .= ", `dynamicdomains_used` = `dynamicdomains_used` - 0" . (int) $result['dynamicdomains'];
 			}
 
 			if ($result['ftps'] != '-1') {

@@ -92,12 +92,6 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				$hsts_preload = 0;
 			}
 
-			if ($isdynamicdomain &&
-				$this->getUserDetail('dynamicdomains') != '-1' &&
-				$this->getUserDetail('dynamicdomains_used') + 1 > $this->getUserDetail('dynamicdomains')) {
-				standard_error('dynamicdomainslimit', '', true);
-			}
-
 			// get needed customer info to reduce the subdomain-usage-counter by one
 			$customer = $this->getCustomerData('subdomains');
 
@@ -324,11 +318,6 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 
 			Customers::increaseUsage($customer['customerid'], 'subdomains_used');
 			Admins::increaseUsage(($this->isAdmin() ? $customer['adminid'] : $this->getUserDetail('adminid')), 'subdomains_used');
-
-			if ($isdynamicdomain) {
-				Customers::increaseUsage($customer['customerid'], 'dynamicdomains_used');
-				Admins::increaseUsage(($this->isAdmin() ? $customer['adminid'] : $this->getUserDetail('adminid')), 'dynamicdomains_used');
-			}
 
 			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] added subdomain '" . $completedomain . "'");
 
@@ -557,13 +546,6 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			$openbasedir_path = 0;
 		}
 
-		if ($isdynamicdomain && $result['isdynamicdomain'] == '0') {
-			if ($this->getUserDetail('dynamicdomains') != '-1' &&
-				$this->getUserDetail('dynamicdomains_used') + 1 > $this->getUserDetail('dynamicdomains')) {
-				standard_error('dynamicdomainslimit', '', true);
-			}
-		}
-
 		if ($ssl_redirect != 0) {
 			// a ssl-redirect only works if there actually is a
 			// ssl ip/port assigned to the domain
@@ -655,16 +637,6 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				"id" => $id
 			);
 			Database::pexecute($stmt, $params, true, true);
-
-			if ($isdynamicdomain != $result['isdynamicdomain']) {
-				if ($isdynamicdomain) {
-					Customers::increaseUsage($customer['customerid'], 'dynamicdomains_used');
-					Admins::increaseUsage(($this->isAdmin() ? $customer['adminid'] : $this->getUserDetail('adminid')), 'dynamicdomains_used');
-				} else {
-					Customers::decreaseUsage($customer['customerid'], 'dynamicdomains_used');
-					Admins::decreaseUsage(($this->isAdmin() ? $customer['adminid'] : $this->getUserDetail('adminid')), 'dynamicdomains_used');
-				}
-			}
 
 			if ($result['aliasdomain'] != $aliasdomain) {
 				// trigger when domain id for alias destination has changed: both for old and new destination
@@ -876,11 +848,6 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		Customers::decreaseUsage($customer['customerid'], 'subdomains_used');
 		// update admin usage
 		Admins::decreaseUsage(($this->isAdmin() ? $customer['adminid'] : $this->getUserDetail('adminid')), 'subdomains_used');
-
-		if ($result['isdynamicdomain']) {
-			Customers::decreaseUsage($customer['customerid'], 'dynamicdomains_used');
-			Admins::decreaseUsage(($this->isAdmin() ? $customer['adminid'] : $this->getUserDetail('adminid')), 'dynamicdomains_used');
-		}
 
 		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_WARNING, "[API] deleted subdomain '" . $result['domain'] . "'");
 		return $this->response(200, "successfull", $result);

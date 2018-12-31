@@ -242,10 +242,6 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 					\Froxlor\UI\Response::standard_error('domain_nopunycode', '', true);
 				}
 
-				if ($isdynamicdomain == 1 && $this->getUserDetail('dynamicdomains') != -1 && $this->getUserDetail('dynamicdomains_used') + 1 > $this->getUserDetail('dynamicdomains') ) {
-					standard_error('dynamicdomainslimit');
-				}
-
 				$idna_convert = new \Froxlor\Idna\IdnaWrapper();
 				$domain = $idna_convert->encode(preg_replace(array(
 					'/\:(\d)+$/',
@@ -623,15 +619,6 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 						'adminid' => $adminid
 					), true, true);
 
-					if ($isdynamicdomain == 1) {
-						$upd_stmt = Database::prepare("
-							UPDATE `" . TABLE_PANEL_ADMINS . "` SET `dynamicdomains_used` = `dynamicdomains_used` + 1
-							WHERE `adminid` = :adminid");
-						Database::pexecute($upd_stmt, array(
-							'adminid' => $adminid
-						), true, true);
-					}
-
 					$ins_stmt = Database::prepare("
 						INSERT INTO `" . TABLE_DOMAINTOIP . "` SET
 						`id_domain` = :domainid,
@@ -919,10 +906,6 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				}
 			} else {
 				$adminid = $result['adminid'];
-			}
-
-			if ($isdynamicdomain == 1 && $result['isdynamicdomain'] == 0 && $this->getUserDetail('dynamicdomains') != -1 && $this->getUserDetail('dynamicdomains_used') + 1 > $this->getUserDetail('dynamicdomains') ) {
-				standard_error('dynamicdomainslimit');
 			}
 
 			$registration_date = \Froxlor\Validate\Validate::validate($registration_date, 'registration_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', array(
@@ -1273,16 +1256,6 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				), true, true);
 			}
 
-			if ($isdynamicdomain != $result['isdynamicdomain']) {
-				$upd_stmt = Database::prepare("
-					UPDATE `" . TABLE_PANEL_ADMINS . "` SET `dynamicdomains_used` = `dynamicdomains_used` + :usage WHERE `adminid` = :adminid
-				");
-				Database::pexecute($upd_stmt, array(
-					'adminid' => $adminid,
-					'usage' => $isdynamicdomain ? 1 : -1
-				), true, true);
-			}
-
 			$_update_data = array();
 
 			if ($ssfs == 1) {
@@ -1616,16 +1589,6 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				'id' => $result['id'],
 				'customerid' => $result['customerid']
 			), true, true);
-
-			if ($result['isdynamicdomain']) {
-				$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_ADMINS . "`
-					SET `dynamicdomains_used` = `dynamicdomains_used` - 1
-					WHERE `adminid` = :adminid"
-				);
-				Database::pexecute($stmt, array(
-					'adminid' => $this->getUserDetail('adminid')
-				), true, true);
-			}
 
 			$del_stmt = Database::prepare("
 					DELETE FROM `" . TABLE_DOMAINTOIP . "`
