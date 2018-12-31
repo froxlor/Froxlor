@@ -55,10 +55,6 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	 *        	required when called as admin, not needed when called as customer
 	 * @param bool $isdynamicdomain
 	 *        	optional, whether to allow the customer to dynamically update the IP, default 0 (false)
-	 * @param bool $dynamicipv4
-	 *        	optional, the dynamic IPv4, default ''
-	 * @param bool $dynamicipv6
-	 *        	optional, the dynamic IPv6, default ''
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
@@ -81,10 +77,6 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			$isemaildomain = $this->getParam('isemaildomain', true, 0);
 
 			$isdynamicdomain = $this->getBoolParam('isdynamicdomain', true, 0);
-			$dynamicipv4 = $this->getParam('dynamicipv4', true, '');
-			$dynamicipv4 = ($dynamicipv4 == '') ? null : \Froxlor\Validate\Validate::validate_ip2($dynamicipv4, false, 'invalidip', true, true);
-			$dynamicipv6 = $this->getParam('dynamicipv6', true, '');
-			$dynamicipv6 = ($dynamicipv6 == '') ? null : \Froxlor\Validate\Validate::validate_ip2($dynamicipv6, false, 'invalidip', true, true);
 
 			if (Settings::Get('system.use_ssl')) {
 				$ssl_redirect = $this->getBoolParam('ssl_redirect', true, 0);
@@ -280,8 +272,6 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				`ssl_redirect` = :ssl_redirect,
 				`phpsettingid` = :phpsettingid,
 				`isdynamicdomain` = :isdynamicdomain,
-				`dynamicipv4` = :dynamicipv4,
-				`dynamicipv6` = :dynamicipv6,
 				`letsencrypt` = :letsencrypt,
 				`hsts` = :hsts,
 				`hsts_sub` = :hsts_sub,
@@ -305,8 +295,6 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				"ssl_redirect" => $ssl_redirect,
 				"phpsettingid" => $phpsid_result['phpsettingid'],
 				"isdynamicdomain" => $isdynamicdomain,
-				"dynamicipv4" => $dynamicipv4,
-				"dynamicipv6" => $dynamicipv6,
 				"letsencrypt" => $letsencrypt,
 				"hsts" => $hsts_maxage,
 				"hsts_sub" => $hsts_sub,
@@ -471,10 +459,6 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	 *        	required when called as admin, not needed when called as customer
 	 * @param bool $isdynamicdomain
 	 *        	optional, whether to allow the customer to dynamically update the IP, default 0 (false)
-	 * @param bool $dynamicipv4
-	 *        	optional, the dynamic IPv4, default ''
-	 * @param bool $dynamicipv6
-	 *        	optional, the dynamic IPv6, default ''
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
@@ -509,10 +493,6 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		$redirectcode = $this->getParam('redirectcode', true, \Froxlor\Domain\Domain::getDomainRedirectId($id));
 
 		$isdynamicdomain = $this->getBoolParam('isdynamicdomain', true, 0);
-		$dynamicipv4 = $this->getParam('dynamicipv4', true, '');
-		$dynamicipv4 = ($dynamicipv4 == '') ? null : \Froxlor\Validate\Validate::validate_ip2($dynamicipv4, false, 'invalidip', true, true);
-		$dynamicipv6 = $this->getParam('dynamicipv6', true, '');
-		$dynamicipv6 = ($dynamicipv6 == '') ? null : \Froxlor\Validate\Validate::validate_ip2($dynamicipv6, false, 'invalidip', true, true);
 
 		if (Settings::Get('system.use_ssl')) {
 			$ssl_redirect = $this->getBoolParam('ssl_redirect', true, $result['ssl_redirect']);
@@ -639,7 +619,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			\Froxlor\Domain\Domain::updateRedirectOfDomain($id, $redirectcode);
 		}
 
-		if ($path != $result['documentroot'] || $isemaildomain != $result['isemaildomain'] || $wwwserveralias != $result['wwwserveralias'] || $iswildcarddomain != $result['iswildcarddomain'] || $aliasdomain != $result['aliasdomain'] || $openbasedir_path != $result['openbasedir_path'] || $ssl_redirect != $result['ssl_redirect'] || $letsencrypt != $result['letsencrypt'] || $hsts_maxage != $result['hsts'] || $hsts_sub != $result['hsts_sub'] || $hsts_preload != $result['hsts_preload'] || $phpsettingid != $result['phpsettingid'] || $isdynamicdomain != $result['isdynamicdomain'] || $dynamicipv4 != $result['dynamicipv4'] || $dynamicipv6 != $result['dynamicipv6']) {
+		if ($path != $result['documentroot'] || $isemaildomain != $result['isemaildomain'] || $wwwserveralias != $result['wwwserveralias'] || $iswildcarddomain != $result['iswildcarddomain'] || $aliasdomain != $result['aliasdomain'] || $openbasedir_path != $result['openbasedir_path'] || $ssl_redirect != $result['ssl_redirect'] || $letsencrypt != $result['letsencrypt'] || $hsts_maxage != $result['hsts'] || $hsts_sub != $result['hsts_sub'] || $hsts_preload != $result['hsts_preload'] || $phpsettingid != $result['phpsettingid'] || $isdynamicdomain != $result['isdynamicdomain']) {
 			$stmt = Database::prepare("
 					UPDATE `" . TABLE_PANEL_DOMAINS . "` SET
 					`documentroot`= :documentroot,
@@ -654,9 +634,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 					`hsts_sub` = :hsts_sub,
 					`hsts_preload` = :hsts_preload,
 					`phpsettingid` = :phpsettingid,
-					`isdynamicdomain` = :isdynamicdomain,
-					`dynamicipv4` = :dynamicipv4,
-					`dynamicipv6` = :dynamicipv6
+					`isdynamicdomain` = :isdynamicdomain
 					WHERE `customerid`= :customerid AND `id`= :id
 				");
 			$params = array(
@@ -673,8 +651,6 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				"hsts_preload" => $hsts_preload,
 				"phpsettingid" => $phpsettingid,
 				"isdynamicdomain" => $isdynamicdomain,
-				"dynamicipv4" => $dynamicipv4,
-				"dynamicipv6" => $dynamicipv6,
 				"customerid" => $customer['customerid'],
 				"id" => $id
 			);

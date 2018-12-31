@@ -238,8 +238,6 @@ CREATE TABLE `panel_domains` (
   `subcanemaildomain` tinyint(1) NOT NULL default '0',
   `caneditdomain` tinyint(1) NOT NULL default '1',
   `isdynamicdomain` tinyint(1) NOT NULL default '0',
-  `dynamicipv4` varchar(15) NULL default NULL,
-  `dynamicipv6` varchar(39) NULL default NULL,
   `zonefile` varchar(255) NOT NULL default '',
   `dkim` tinyint(1) NOT NULL default '0',
   `dkim_id` int(11) unsigned NOT NULL default '0',

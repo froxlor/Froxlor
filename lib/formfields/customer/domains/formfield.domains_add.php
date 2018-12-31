@@ -155,16 +155,6 @@ return array(
 							array ('label' => $lng['panel']['yes'], 'value' => '1')
 						),
 						'value' => array(0)
-					),
-					'dynamicipv4' => array(
-						'label' => $lng['domain']['dynamic_ipv4'],
-						'type' => 'text',
-						'size' => 10
-					),
-					'dynamicipv6' => array(
-						'label' => $lng['domain']['dynamic_ipv6'],
-						'type' => 'text',
-						'size' => 10
 					)
 				)
 			)

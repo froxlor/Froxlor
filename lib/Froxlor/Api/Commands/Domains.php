@@ -141,10 +141,6 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	 *        	optional, whether to allow the customer to edit domain settings, default 0 (false)
 	 * @param bool $isdynamicdomain
 	 *        	optional, whether to allow the customer to dynamically update the IP, default 0 (false)
-	 * @param bool $dynamicipv4
-	 *        	optional, the dynamic IPv4, default ''
-	 * @param bool $dynamicipv6
-	 *        	optional, the dynamic IPv6, default ''
 	 * @param bool $isbinddomain
 	 *        	optional, whether to generate a dns-zone or not (only of nameserver is activated), default 0 (false)
 	 * @param string $zonefile
@@ -215,8 +211,6 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				$termination_date = $this->getParam('termination_date', true, '');
 				$caneditdomain = $this->getBoolParam('caneditdomain', true, 0);
 				$isdynamicdomain = $this->getBoolParam('isdynamicdomain', true, 0);
-				$dynamicipv4 = $this->getParam('dynamicipv4', true, '');
-				$dynamicipv6 = $this->getParam('dynamicipv6', true, '');
 				$isbinddomain = $this->getBoolParam('isbinddomain', true, 0);
 				$zonefile = $this->getParam('zonefile', true, '');
 				$dkim = $this->getBoolParam('dkim', true, 0);
@@ -247,9 +241,6 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				if (substr($p_domain, 0, 4) == 'xn--') {
 					\Froxlor\UI\Response::standard_error('domain_nopunycode', '', true);
 				}
-
-				$dynamicipv4 = ($dynamicipv4 == '') ? null : \Froxlor\Validate\Validate::validate_ip2($dynamicipv4, false, 'invalidip', true, true);
-				$dynamicipv6 = ($dynamicipv6 == '') ? null : \Froxlor\Validate\Validate::validate_ip2($dynamicipv6, false, 'invalidip', true, true);
 
 				if ($isdynamicdomain == 1 && $this->getUserDetail('dynamicdomains') != -1 && $this->getUserDetail('dynamicdomains_used') + 1 > $this->getUserDetail('dynamicdomains') ) {
 					standard_error('dynamicdomainslimit');
@@ -555,8 +546,6 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 						'subcanemaildomain' => $subcanemaildomain,
 						'caneditdomain' => $caneditdomain,
 						'isdynamicdomain' => $isdynamicdomain,
-						'dynamicipv4' => $dynamicipv4,
-						'dynamicipv6' => $dynamicipv6,
 						'phpenabled' => $phpenabled,
 						'openbasedir' => $openbasedir,
 						'speciallogfile' => $speciallogfile,
@@ -600,8 +589,6 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 						`subcanemaildomain` = :subcanemaildomain,
 						`caneditdomain` = :caneditdomain,
 						`isdynamicdomain` = :isdynamicdomain,
-						`dynamicipv4` = :dynamicipv4,
-						`dynamicipv6` = :dynamicipv6,
 						`phpenabled` = :phpenabled,
 						`openbasedir` = :openbasedir,
 						`speciallogfile` = :speciallogfile,
@@ -725,10 +712,6 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	 *        	optional, whether to allow the customer to edit domain settings, default 0 (false)
 	 * @param bool $isdynamicdomain
 	 *        	optional, whether to allow the customer to dynamically update the IP, default 0 (false)
-	 * @param bool $dynamicipv4
-	 *        	optional, the dynamic IPv4, default ''
-	 * @param bool $dynamicipv6
-	 *        	optional, the dynamic IPv6, default ''
 	 * @param bool $isbinddomain
 	 *        	optional, whether to generate a dns-zone or not (only of nameserver is activated), default 0 (false)
 	 * @param string $zonefile
@@ -813,10 +796,6 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 			$termination_date = $this->getParam('termination_date', true, $result['termination_date']);
 			$caneditdomain = $this->getBoolParam('caneditdomain', true, $result['caneditdomain']);
 			$isdynamicdomain = $this->getBoolParam('isdynamicdomain', true, $result['isdynamicdomain']);
-			$dynamicipv4 = $this->getParam('dynamicipv4', true, '');
-			$dynamicipv4 = ($dynamicipv4 == '') ? null : \Froxlor\Validate\Validate::validate_ip2($dynamicipv4, false, 'invalidip', true, true);
-			$dynamicipv6 = $this->getParam('dynamicipv6', true, '');
-			$dynamicipv6 = ($dynamicipv6 == '') ? null : \Froxlor\Validate\Validate::validate_ip2($dynamicipv6, false, 'invalidip', true, true);
 			$isbinddomain = $this->getBoolParam('isbinddomain', true, $result['isbinddomain']);
 			$zonefile = $this->getParam('zonefile', true, $result['zonefile']);
 			$dkim = $this->getBoolParam('dkim', true, $result['dkim']);
@@ -1337,8 +1316,6 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 			$update_data['dkim'] = $dkim;
 			$update_data['caneditdomain'] = $caneditdomain;
 			$update_data['isdynamicdomain'] = $isdynamicdomain;
-			$update_data['dynamicipv4'] = $dynamicipv4;
-			$update_data['dynamicipv6'] = $dynamicipv6;
 			$update_data['zonefile'] = $zonefile;
 			$update_data['wwwserveralias'] = $wwwserveralias;
 			$update_data['iswildcarddomain'] = $iswildcarddomain;
@@ -1377,8 +1354,6 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				`dkim` = :dkim,
 				`caneditdomain` = :caneditdomain,
 				`isdynamicdomain` = :isdynamicdomain,
-				`dynamicipv4` = :dynamicipv4,
-				`dynamicipv6` = :dynamicipv6,
 				`zonefile` = :zonefile,
 				`wwwserveralias` = :wwwserveralias,
 				`iswildcarddomain` = :iswildcarddomain,

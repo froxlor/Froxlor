@@ -483,19 +483,7 @@ return array(
 							array ('label' => $lng['panel']['yes'], 'value' => '1')
 						),
 						'value' => array($result['isdynamicdomain'])
-					),
-					'dynamicipv4' => array(
-						'label' => $lng['domain']['dynamic_ipv4'],
-						'type' => 'text',
-						'value' => $result['dynamicipv4'],
-						'size' => 10
-					),
-					'dynamicipv6' => array(
-						'label' => $lng['domain']['dynamic_ipv6'],
-						'type' => 'text',
-						'value' => $result['dynamicipv6'],
-						'size' => 10
-					),
+					)
 				)
 			)
 		)

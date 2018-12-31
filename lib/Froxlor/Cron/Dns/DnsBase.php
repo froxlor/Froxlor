@@ -103,9 +103,7 @@ abstract class DnsBase
 				`d`.`ismainbutsubto`,
 				`c`.`loginname`,
 				`c`.`guid`,
-				`d`.`isdynamicdomain`,
-				`d`.`dynamicipv4`,
-				`d`.`dynamicipv6`
+				`d`.`isdynamicdomain`
 			FROM
 				`" . TABLE_PANEL_DOMAINS . "` `d`
 			LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`)
