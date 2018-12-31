@@ -3,15 +3,19 @@
 define('AREA', 'login');
 require './lib/init.php';
 
+function response($code, $code_desc, $text) {
+	header("HTTP/1.1 $code $code_desc");
+	header('Content-Type: text/plain');
+	echo $text;
+	exit;
+}
+
 /**
  * Require authentication.
  */
 if (!isset($_SERVER['PHP_AUTH_USER']) && !isset($_REQUEST['username']) && !isset($_REQUEST['password'])) {
 	header('WWW-Authenticate: Basic realm="Dynamic IP Update"');
-	header('HTTP/1.1 401 Unauthorized');
-	header('Content-Type: text/plain');
-	echo 'No username and password parameter set, HTTP authentication required.';
-	exit;
+	response(401, 'Unauthorized', 'No username and password parameter set, HTTP authentication required.');
 }
 
 /**
@@ -39,20 +43,14 @@ $userinfo = $userinfo_stmt->fetch(PDO::FETCH_ASSOC);
  * Validate password.
  */
 if (!\Froxlor\System\Crypt::validatePasswordLogin($userinfo, $password)) {
-	header('HTTP/1.1 403 Forbidden');
-	header('Content-Type: text/plain');
-	echo 'badauth';
-	exit;
+	response(403, 'Forbidden', 'badauth');
 }
 
 /**
  * Get domain.
  */
 if (!isset($_REQUEST['domain'])) {
-	header('HTTP/1.1 400 Bad Request');
-	header('Content-Type: text/plain');
-	echo 'nohost';
-	exit;
+	response(400, 'Bad Request', 'nohost');
 }
 
 $domains = explode(',', $_REQUEST['domain']);
@@ -78,11 +76,7 @@ foreach ($domains as $domain) {
 
 $unavailable_domains = array_diff($domains, array_keys($domaininfos));
 if (count($unavailable_domains) > 0) {
-	header('HTTP/1.1 400 Bad Request');
-	header('Content-Type: text/plain');
-	echo 'nohost';
-	echo implode(',', $unavailable_domains);
-	exit;
+	response(400, 'Bad Request', 'nohost ' . implode(',', $unavailable_domains));
 }
 
 
@@ -95,19 +89,13 @@ $ipv6 = null;
 if (isset($_REQUEST['ipv4'])) {
 	$ipv4 = $_REQUEST['ipv4'];
 	if (!filter_var($ipv4, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-		header('HTTP/1.1 400 Bad Request');
-		header('Content-Type: text/plain');
-		echo 'Invalid IPv4.';
-		exit;
+		response(400, 'Bad Request', 'Invalid IPv4.');
 	}
 }
 if (isset($_REQUEST['ipv6'])) {
 	$ipv6 = $_REQUEST['ipv6'];
 	if (!filter_var($ipv6, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-		header('HTTP/1.1 400 Bad Request');
-		header('Content-Type: text/plain');
-		echo 'Invalid IPv6.';
-		exit;
+		response(400, 'Bad Request', 'Invalid IPv6.');
 	}
 }
 
@@ -120,10 +108,7 @@ if (isset($_REQUEST['detect'])) {
 	else if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6))
 		$ipv6 = $ip;
 	else {
-		header('HTTP/1.1 500 Internal Server Error');
-		header('Content-Type: text/plain');
-		echo 'Unable to detect IP. It must be provided.';
-		exit;
+		response(500, 'Internal Server Error', 'Unable to detect IP. It must be provided.');
 	}
 }
 
@@ -154,8 +139,6 @@ foreach ($domaininfos as $domain => $domaininfo) {
 /**
  * Build response.
  */
-header('HTTP/1.1 200 OK');
-header('Content-Type: text/plain');
 $messages = array();
 if (!$changed_ipv4) {
 	$messages[] = "nochg $ipv4";
@@ -170,7 +153,6 @@ if (!$changed_ipv6) {
 else {
 	$messages[] ="good $ipv6";
 }
-echo implode($messages, "\n");
 
 if ($changed_ipv4 || $changed_ipv6)
 {
@@ -179,4 +161,6 @@ if ($changed_ipv4 || $changed_ipv6)
 	 */
 	\Froxlor\System\Cronjob::inserttask('4');
 }
+
+response(200, 'OK', implode($messages, "\n"));
 ?>
