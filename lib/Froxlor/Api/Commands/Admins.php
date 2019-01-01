@@ -121,10 +121,6 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	optional, default 0
 	 * @param bool $subdomains_ul
 	 *        	optional, default false
-	 * @param int $dynamicdomains
-	 *        	optional, default 0
-	 * @param bool $dynamicdomains_ul
-	 *        	optional, default false
 	 * @param int $emails
 	 *        	optional, default 0
 	 * @param bool $emails_ul
@@ -184,7 +180,6 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			$customers = $this->getUlParam('customers', 'customers_ul', true, 0);
 			$domains = $this->getUlParam('domains', 'domains_ul', true, 0);
 			$subdomains = $this->getUlParam('subdomains', 'subdomains_ul', true, 0);
-			$dynamicdomains = $this->getUlParam('dynamicdomains', 'dynamicdomains_ul', true, 0);
 			$emails = $this->getUlParam('emails', 'emails_ul', true, 0);
 			$email_accounts = $this->getUlParam('email_accounts', 'email_accounts_ul', true, 0);
 			$email_forwarders = $this->getUlParam('email_forwarders', 'email_forwarders_ul', true, 0);
@@ -285,7 +280,6 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 					'diskspace' => $diskspace,
 					'traffic' => $traffic,
 					'subdomains' => $subdomains,
-					'dynamicdomains' => $dynamicdomains,
 					'emails' => $emails,
 					'accounts' => $email_accounts,
 					'forwarders' => $email_forwarders,
@@ -314,7 +308,6 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 					`diskspace` = :diskspace,
 					`traffic` = :traffic,
 					`subdomains` = :subdomains,
-					`dynamicdomains` = :dynamicdomains,
 					`emails` = :emails,
 					`email_accounts` = :accounts,
 					`email_forwarders` = :forwarders,
@@ -384,10 +377,6 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 * @param int $subdomains
 	 *        	optional, default 0
 	 * @param bool $subdomains_ul
-	 *        	optional, default false
-	 * @param int $dynamicdomains
-	 *        	optional, default 0
-	 * @param bool $dynamicdomains_ul
 	 *        	optional, default false
 	 * @param int $emails
 	 *        	optional, default 0
@@ -459,7 +448,6 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 					$customers = $result['customers'];
 					$domains = $result['domains'];
 					$subdomains = $result['subdomains'];
-					$dynamicdomains = $result['dynamicdomains'];
 					$emails = $result['emails'];
 					$email_accounts = $result['email_accounts'];
 					$email_forwarders = $result['email_forwarders'];
@@ -482,7 +470,6 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 					$customers = $this->getUlParam('customers', 'customers_ul', true, $result['customers']);
 					$domains = $this->getUlParam('domains', 'domains_ul', true, $result['domains']);
 					$subdomains = $this->getUlParam('subdomains', 'subdomains_ul', true, $result['subdomains']);
-					$dynamicdomains = $this->getUlParam('dynamicdomains', 'dynamicdomains_ul', true, $result['dynamicdomains']);
 					$emails = $this->getUlParam('emails', 'emails_ul', true, $result['emails']);
 					$email_accounts = $this->getUlParam('email_accounts', 'email_accounts_ul', true, $result['email_accounts']);
 					$email_forwarders = $this->getUlParam('email_forwarders', 'email_forwarders_ul', true, $result['email_forwarders']);
@@ -600,7 +587,6 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 						'diskspace' => $diskspace,
 						'traffic' => $traffic,
 						'subdomains' => $subdomains,
-						'dynamicdomains' => $dynamicdomains,
 						'emails' => $emails,
 						'accounts' => $email_accounts,
 						'forwarders' => $email_forwarders,
@@ -630,7 +616,6 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 						`diskspace` = :diskspace,
 						`traffic` = :traffic,
 						`subdomains` = :subdomains,
-						`dynamicdomains` = :dynamicdomains,
 						`emails` = :emails,
 						`email_accounts` = :accounts,
 						`email_forwarders` = :forwarders,

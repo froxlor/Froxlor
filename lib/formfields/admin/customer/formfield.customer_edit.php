@@ -204,14 +204,6 @@ return array(
 						'mandatory' => true,
 						'ul_field' => $subdomains_ul
 					),
-					'dynamicdomains' => array(
-						'label' => $lng['customer']['dynamicdomains'],
-						'type' => 'textul',
-						'value' => $result['dynamicdomains'],
-						'maxlength' => 9,
-						'mandatory' => true,
-						'ul_field' => $dynamicdomains_ul
-					),
 					'emails' => array(
 						'label' => $lng['customer']['emails'],
 						'type' => 'textul',
@@ -347,6 +339,19 @@ return array(
 						),
 						'value' => array(
 							$result['logviewenabled']
+						)
+					),
+					'dynamicdnsenabled' => array(
+						'label' => $lng['customer']['dynamicdnsenabled'],
+						'type' => 'checkbox',
+						'values' => array(
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array(
+							$result['dynamicdnsenabled']
 						)
 					)
 				)

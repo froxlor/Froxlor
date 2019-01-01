@@ -160,10 +160,6 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 	 *        	optional amount of subdomains available for customer, default 0
 	 * @param bool $subdomains_ul
 	 *        	optional, whether customer should have unlimited subdomains, default 0 (false)
-	 * @param int $dynamicdomains
-	 *        	optional amount of dynamicdomains available for customer, default 0
-	 * @param bool $dynamicdomains_ul
-	 *        	optional, whether customer should have unlimited dynamicdomains, default 0 (false)
 	 * @param int $emails
 	 *        	optional amount of emails available for customer, default 0
 	 * @param bool $emails_ul
@@ -204,6 +200,8 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 	 *        	optional, ether to allow usage of the DNS editor (requires activated nameserver in settings), default 0 (false)
 	 * @param bool $logviewenabled
 	 *        	optional, ether to allow acccess to webserver access/error-logs, default 0 (false)
+	 * @param int $dynamicdnsenabled
+	 *        	optional, wether to allow dynamic DNS updates, default 0 (false)
 	 * @param bool $store_defaultindex
 	 *        	optional, whether to store the default index file to customers homedir
 	 *        	
@@ -238,7 +236,6 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				$diskspace = $this->getUlParam('diskspace', 'diskspace_ul', true, 0);
 				$traffic = $this->getUlParam('traffic', 'traffic_ul', true, 0);
 				$subdomains = $this->getUlParam('subdomains', 'subdomains_ul', true, 0);
-				$dynamicdomains = $this->getUlParam('dynamicdomains', 'dynamicdomains_ul', true, 0);
 				$emails = $this->getUlParam('emails', 'emails_ul', true, 0);
 				$email_accounts = $this->getUlParam('email_accounts', 'email_accounts_ul', true, 0);
 				$email_forwarders = $this->getUlParam('email_forwarders', 'email_forwarders_ul', true, 0);
@@ -255,6 +252,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				$perlenabled = $this->getBoolParam('perlenabled', true, 0);
 				$dnsenabled = $this->getBoolParam('dnsenabled', true, 0);
 				$logviewenabled = $this->getBoolParam('logviewenabled', true, 0);
+				$dynamicdnsenabled = $this->getBoolParam('dynamicdnsenabled', true, 0);
 				$store_defaultindex = $this->getBoolParam('store_defaultindex', true, 0);
 				$loginname = $this->getParam('new_loginname', true, '');
 
@@ -301,7 +299,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				$diskspace = $diskspace * 1024;
 				$traffic = $traffic * 1024 * 1024;
 
-				if (((($this->getUserDetail('diskspace_used') + $diskspace) > $this->getUserDetail('diskspace')) && ($this->getUserDetail('diskspace') / 1024) != '-1') || ((($this->getUserDetail('mysqls_used') + $mysqls) > $this->getUserDetail('mysqls')) && $this->getUserDetail('mysqls') != '-1') || ((($this->getUserDetail('emails_used') + $emails) > $this->getUserDetail('emails')) && $this->getUserDetail('emails') != '-1') || ((($this->getUserDetail('email_accounts_used') + $email_accounts) > $this->getUserDetail('email_accounts')) && $this->getUserDetail('email_accounts') != '-1') || ((($this->getUserDetail('email_forwarders_used') + $email_forwarders) > $this->getUserDetail('email_forwarders')) && $this->getUserDetail('email_forwarders') != '-1') || ((($this->getUserDetail('email_quota_used') + $email_quota) > $this->getUserDetail('email_quota')) && $this->getUserDetail('email_quota') != '-1' && Settings::Get('system.mail_quota_enabled') == '1') || ((($this->getUserDetail('ftps_used') + $ftps) > $this->getUserDetail('ftps')) && $this->getUserDetail('ftps') != '-1') || ((($this->getUserDetail('subdomains_used') + $subdomains) > $this->getUserDetail('subdomains')) && $this->getUserDetail('subdomains') != '-1') || (($diskspace / 1024) == '-1' && ($this->getUserDetail('diskspace') / 1024) != '-1') || ($mysqls == '-1' && $this->getUserDetail('mysqls') != '-1') || ($emails == '-1' && $this->getUserDetail('emails') != '-1') || ($email_accounts == '-1' && $this->getUserDetail('email_accounts') != '-1') || ($email_forwarders == '-1' && $this->getUserDetail('email_forwarders') != '-1') || ($email_quota == '-1' && $this->getUserDetail('email_quota') != '-1' && Settings::Get('system.mail_quota_enabled') == '1') || ($ftps == '-1' && $this->getUserDetail('ftps') != '-1') || ($subdomains == '-1' && $this->getUserDetail('subdomains') != '-1') || ($dynamicdomains == '-1' && $this->getUserDetail('dynamicdomains') != '-1')) {
+				if (((($this->getUserDetail('diskspace_used') + $diskspace) > $this->getUserDetail('diskspace')) && ($this->getUserDetail('diskspace') / 1024) != '-1') || ((($this->getUserDetail('mysqls_used') + $mysqls) > $this->getUserDetail('mysqls')) && $this->getUserDetail('mysqls') != '-1') || ((($this->getUserDetail('emails_used') + $emails) > $this->getUserDetail('emails')) && $this->getUserDetail('emails') != '-1') || ((($this->getUserDetail('email_accounts_used') + $email_accounts) > $this->getUserDetail('email_accounts')) && $this->getUserDetail('email_accounts') != '-1') || ((($this->getUserDetail('email_forwarders_used') + $email_forwarders) > $this->getUserDetail('email_forwarders')) && $this->getUserDetail('email_forwarders') != '-1') || ((($this->getUserDetail('email_quota_used') + $email_quota) > $this->getUserDetail('email_quota')) && $this->getUserDetail('email_quota') != '-1' && Settings::Get('system.mail_quota_enabled') == '1') || ((($this->getUserDetail('ftps_used') + $ftps) > $this->getUserDetail('ftps')) && $this->getUserDetail('ftps') != '-1') || ((($this->getUserDetail('subdomains_used') + $subdomains) > $this->getUserDetail('subdomains')) && $this->getUserDetail('subdomains') != '-1') || (($diskspace / 1024) == '-1' && ($this->getUserDetail('diskspace') / 1024) != '-1') || ($mysqls == '-1' && $this->getUserDetail('mysqls') != '-1') || ($emails == '-1' && $this->getUserDetail('emails') != '-1') || ($email_accounts == '-1' && $this->getUserDetail('email_accounts') != '-1') || ($email_forwarders == '-1' && $this->getUserDetail('email_forwarders') != '-1') || ($email_quota == '-1' && $this->getUserDetail('email_quota') != '-1' && Settings::Get('system.mail_quota_enabled') == '1') || ($ftps == '-1' && $this->getUserDetail('ftps') != '-1') || ($subdomains == '-1' && $this->getUserDetail('subdomains') != '-1')) {
 					\Froxlor\UI\Response::standard_error('youcantallocatemorethanyouhave', '', true);
 				}
 
@@ -382,6 +380,10 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 						$logviewenabled = '1';
 					}
 
+					if ($dynamicdnsenabled != '0') {
+						$dynamicdnsenabled = '1';
+					}
+
 					if ($password == '') {
 						$password = \Froxlor\System\Crypt::generatePassword();
 					}
@@ -409,7 +411,6 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 						'diskspace' => $diskspace,
 						'traffic' => $traffic,
 						'subdomains' => $subdomains,
-						'dynamicdomains' => $dynamicdomains,
 						'emails' => $emails,
 						'email_accounts' => $email_accounts,
 						'email_forwarders' => $email_forwarders,
@@ -423,6 +424,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 						'perlenabled' => $perlenabled,
 						'dnsenabled' => $dnsenabled,
 						'logviewenabled' => $logviewenabled,
+						'dynamicdnsenabled' => $dynamicdnsenabled,
 						'theme' => $_theme,
 						'custom_notes' => $custom_notes,
 						'custom_notes_show' => $custom_notes_show
@@ -450,7 +452,6 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 						`diskspace` = :diskspace,
 						`traffic` = :traffic,
 						`subdomains` = :subdomains,
-						`dynamicdomains` = :dynamicdomains,
 						`emails` = :emails,
 						`email_accounts` = :email_accounts,
 						`email_forwarders` = :email_forwarders,
@@ -465,6 +466,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 						`perlenabled` = :perlenabled,
 						`dnsenabled` = :dnsenabled,
 						`logviewenabled` = :logviewenabled,
+						`dynamicdnsenabled` = :dynamicdnsenabled,
 						`theme` = :theme,
 						`custom_notes` = :custom_notes,
 						`custom_notes_show` = :custom_notes_show
@@ -787,10 +789,6 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 	 *        	optional amount of subdomains available for customer, default 0
 	 * @param bool $subdomains_ul
 	 *        	optional, whether customer should have unlimited subdomains, default 0 (false)
-	 * @param int $dynamicdomains
-	 *        	optional amount of dynamicdomains available for customer, default 0
-	 * @param bool $dynamicdomains_ul
-	 *        	optional, whether customer should have unlimited dynamicdomains, default 0 (false)
 	 * @param int $emails
 	 *        	optional amount of emails available for customer, default 0
 	 * @param bool $emails_ul
@@ -831,6 +829,8 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 	 *        	optional, ether to allow usage of the DNS editor (requires activated nameserver in settings), default 0 (false)
 	 * @param bool $logviewenabled
 	 *        	optional, ether to allow acccess to webserver access/error-logs, default 0 (false)
+	 * @param int $dynamicdnsenabled
+	 *        	optional, whether to allow dynamic DNS updates, default 0 (false)
 	 * @param string $theme
 	 *        	optional, change theme
 	 *        	
@@ -875,7 +875,6 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 			$diskspace = $this->getUlParam('diskspace', 'diskspace_ul', true, round($result['diskspace'] / 1024, $dec_places));
 			$traffic = $this->getUlParam('traffic', 'traffic_ul', true, round($result['traffic'] / (1024 * 1024), $dec_places));
 			$subdomains = $this->getUlParam('subdomains', 'subdomains_ul', true, $result['subdomains']);
-			$dynamicdomains = $this->getUlParam('dynamicdomains', 'dynamicdomains_ul', true, $result['dynamicdomains']);
 			$emails = $this->getUlParam('emails', 'emails_ul', true, $result['emails']);
 			$email_accounts = $this->getUlParam('email_accounts', 'email_accounts_ul', true, $result['email_accounts']);
 			$email_forwarders = $this->getUlParam('email_forwarders', 'email_forwarders_ul', true, $result['email_forwarders']);
@@ -891,6 +890,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 			$perlenabled = $this->getBoolParam('perlenabled', true, $result['perlenabled']);
 			$dnsenabled = $this->getBoolParam('dnsenabled', true, $result['dnsenabled']);
 			$logviewenabled = $this->getBoolParam('logviewenabled', true, $result['logviewenabled']);
+			$dynamicdnsenabled = $this->getBoolParam('dynamicdnsenabled', true, $result['dynamicdnsenabled']);
 			$deactivated = $this->getBoolParam('deactivated', true, $result['deactivated']);
 			$theme = $this->getParam('theme', true, $result['theme']);
 		} else {
@@ -932,7 +932,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 			$diskspace = $diskspace * 1024;
 			$traffic = $traffic * 1024 * 1024;
 
-			if (((($this->getUserDetail('diskspace_used') + $diskspace - $result['diskspace']) > $this->getUserDetail('diskspace')) && ($this->getUserDetail('diskspace') / 1024) != '-1') || ((($this->getUserDetail('mysqls_used') + $mysqls - $result['mysqls']) > $this->getUserDetail('mysqls')) && $this->getUserDetail('mysqls') != '-1') || ((($this->getUserDetail('emails_used') + $emails - $result['emails']) > $this->getUserDetail('emails')) && $this->getUserDetail('emails') != '-1') || ((($this->getUserDetail('email_accounts_used') + $email_accounts - $result['email_accounts']) > $this->getUserDetail('email_accounts')) && $this->getUserDetail('email_accounts') != '-1') || ((($this->getUserDetail('email_forwarders_used') + $email_forwarders - $result['email_forwarders']) > $this->getUserDetail('email_forwarders')) && $this->getUserDetail('email_forwarders') != '-1') || ((($this->getUserDetail('email_quota_used') + $email_quota - $result['email_quota']) > $this->getUserDetail('email_quota')) && $this->getUserDetail('email_quota') != '-1' && Settings::Get('system.mail_quota_enabled') == '1') || ((($this->getUserDetail('ftps_used') + $ftps - $result['ftps']) > $this->getUserDetail('ftps')) && $this->getUserDetail('ftps') != '-1') || ((($this->getUserDetail('subdomains_used') + $subdomains - $result['subdomains']) > $this->getUserDetail('subdomains')) && $this->getUserDetail('subdomains') != '-1') || (($diskspace / 1024) == '-1' && ($this->getUserDetail('diskspace') / 1024) != '-1') || ($mysqls == '-1' && $this->getUserDetail('mysqls') != '-1') || ($emails == '-1' && $this->getUserDetail('emails') != '-1') || ($email_accounts == '-1' && $this->getUserDetail('email_accounts') != '-1') || ($email_forwarders == '-1' && $this->getUserDetail('email_forwarders') != '-1') || ($email_quota == '-1' && $this->getUserDetail('email_quota') != '-1' && Settings::Get('system.mail_quota_enabled') == '1') || ($ftps == '-1' && $this->getUserDetail('ftps') != '-1') || ($subdomains == '-1' && $this->getUserDetail('subdomains') != '-1') || ($dynamicdomains == '-1' && $this->getUserDetail('dynamicdomains') != '-1')) {
+			if (((($this->getUserDetail('diskspace_used') + $diskspace - $result['diskspace']) > $this->getUserDetail('diskspace')) && ($this->getUserDetail('diskspace') / 1024) != '-1') || ((($this->getUserDetail('mysqls_used') + $mysqls - $result['mysqls']) > $this->getUserDetail('mysqls')) && $this->getUserDetail('mysqls') != '-1') || ((($this->getUserDetail('emails_used') + $emails - $result['emails']) > $this->getUserDetail('emails')) && $this->getUserDetail('emails') != '-1') || ((($this->getUserDetail('email_accounts_used') + $email_accounts - $result['email_accounts']) > $this->getUserDetail('email_accounts')) && $this->getUserDetail('email_accounts') != '-1') || ((($this->getUserDetail('email_forwarders_used') + $email_forwarders - $result['email_forwarders']) > $this->getUserDetail('email_forwarders')) && $this->getUserDetail('email_forwarders') != '-1') || ((($this->getUserDetail('email_quota_used') + $email_quota - $result['email_quota']) > $this->getUserDetail('email_quota')) && $this->getUserDetail('email_quota') != '-1' && Settings::Get('system.mail_quota_enabled') == '1') || ((($this->getUserDetail('ftps_used') + $ftps - $result['ftps']) > $this->getUserDetail('ftps')) && $this->getUserDetail('ftps') != '-1') || ((($this->getUserDetail('subdomains_used') + $subdomains - $result['subdomains']) > $this->getUserDetail('subdomains')) && $this->getUserDetail('subdomains') != '-1') || (($diskspace / 1024) == '-1' && ($this->getUserDetail('diskspace') / 1024) != '-1') || ($mysqls == '-1' && $this->getUserDetail('mysqls') != '-1') || ($emails == '-1' && $this->getUserDetail('emails') != '-1') || ($email_accounts == '-1' && $this->getUserDetail('email_accounts') != '-1') || ($email_forwarders == '-1' && $this->getUserDetail('email_forwarders') != '-1') || ($email_quota == '-1' && $this->getUserDetail('email_quota') != '-1' && Settings::Get('system.mail_quota_enabled') == '1') || ($ftps == '-1' && $this->getUserDetail('ftps') != '-1') || ($subdomains == '-1' && $this->getUserDetail('subdomains') != '-1')) {
 				\Froxlor\UI\Response::standard_error('youcantallocatemorethanyouhave', '', true);
 			}
 
@@ -1030,6 +1030,10 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 
 			if ($logviewenabled != '0') {
 				$logviewenabled = '1';
+			}
+
+			if ($dynamicdnsenabled != '0') {
+				$dynamicdnsenabled = '1';
 			}
 
 			// activate/deactivate customer services
@@ -1156,7 +1160,6 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				'diskspace' => $diskspace,
 				'traffic' => $traffic,
 				'subdomains' => $subdomains,
-				'dynamicdomains' => $dynamicdomains,
 				'emails' => $emails,
 				'email_accounts' => $email_accounts,
 				'email_forwarders' => $email_forwarders,
@@ -1171,6 +1174,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				'perlenabled' => $perlenabled,
 				'dnsenabled' => $dnsenabled,
 				'logviewenabled' => $logviewenabled,
+				'dynamicdnsenabled' => $dynamicdnsenabled,
 				'custom_notes' => $custom_notes,
 				'custom_notes_show' => $custom_notes_show
 			);
@@ -1198,7 +1202,6 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				`diskspace` = :diskspace,
 				`traffic` = :traffic,
 				`subdomains` = :subdomains,
-				`dynamicdomains` = :dynamicdomains,
 				`emails` = :emails,
 				`email_accounts` = :email_accounts,
 				`email_forwarders` = :email_forwarders,
@@ -1213,6 +1216,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				`perlenabled` = :perlenabled,
 				`dnsenabled` = :dnsenabled,
 				`logviewenabled` = :logviewenabled,
+				`dynamicdnsenabled` = :dynamicdnsenabled,
 				`custom_notes` = :custom_notes,
 				`custom_notes_show` = :custom_notes_show";
 			$upd_query .= $admin_upd_query;

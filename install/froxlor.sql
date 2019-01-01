@@ -120,7 +120,6 @@ CREATE TABLE `panel_admins` (
   `ftps_used` int(15) NOT NULL default '0',
   `subdomains` int(15) NOT NULL default '0',
   `subdomains_used` int(15) NOT NULL default '0',
-  `dynamicdomains` int(15) NOT NULL default '0',
   `traffic` bigint(30) NOT NULL default '0',
   `traffic_used` bigint(30) NOT NULL default '0',
   `deactivated` tinyint(1) NOT NULL default '0',
@@ -173,7 +172,6 @@ CREATE TABLE `panel_customers` (
   `ftps_used` int(15) NOT NULL default '0',
   `subdomains` int(15) NOT NULL default '0',
   `subdomains_used` int(15) NOT NULL default '0',
-  `dynamicdomains` int(15) NOT NULL default '0',
   `traffic` bigint(30) NOT NULL default '0',
   `traffic_used` bigint(30) NOT NULL default '0',
   `documentroot` varchar(255) NOT NULL default '',
@@ -202,6 +200,7 @@ CREATE TABLE `panel_customers` (
   `type_2fa` tinyint(1) NOT NULL default '0',
   `data_2fa` varchar(500) NOT NULL default '',
   `logviewenabled` tinyint(1) NOT NULL default '0',
+  `dynamicdnsenabled` tinyint(1) NOT NULL default '0',
    PRIMARY KEY  (`customerid`),
    UNIQUE KEY `loginname` (`loginname`)
 ) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;

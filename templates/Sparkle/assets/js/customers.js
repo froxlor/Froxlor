@@ -31,7 +31,7 @@ $(document).ready(function() {
 		        dataType: "json",
 		        success: function(json) {
 				for (var i in json) {
-		        		if (i == 'email_imap' || i == 'email_pop3' || i == 'perlenabled' || i == 'phpenabled' || i == 'dnsenabled') {
+		        		if (i == 'email_imap' || i == 'email_pop3' || i == 'perlenabled' || i == 'phpenabled' || i == 'dnsenabled' || i == 'dynamicdnsenabled') {
 		        			/** handle checkboxes **/
 		        			if (json[i] == 1) {
 		        				$("input[name='"+i+"']").prop('checked', true);

@@ -204,14 +204,6 @@ return array(
 						'mandatory' => true,
 						'ul_field' => $subdomains_ul
 					),
-					'dynamicdomains' => array(
-						'label' => $lng['customer']['dynamicdomains'],
-						'type' => 'textul',
-						'value' => $result['dynamicdomains'],
-						'maxlength' => 9,
-						'mandatory' => true,
-						'ul_field' => $dynamicdomains_ul
-					),
 					'emails' => array(
 						'label' => $lng['customer']['emails'],
 						'type' => 'textul',

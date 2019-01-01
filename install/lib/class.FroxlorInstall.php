@@ -421,7 +421,6 @@ class FroxlorInstall
 				`email_quota` = -1,
 				`ftps` = -1,
 				`subdomains` = -1,
-				`dynamicdomains` = -1,
 				`traffic` = -1048576
 				");
 

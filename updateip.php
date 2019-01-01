@@ -112,8 +112,16 @@ foreach ($domains as $domain_name) {
 		))->get();
 		$domain = json_decode($domain, true)['data'];
 
-		if ($domain['isdynamicdomain'] == '1') {
-			$domaininfos[$domain_name] = $domain;
+		if ($domain['parentdomainid'] == '0') {
+			// second level domains allowed if enabled for them
+			if ($domain['isdynamicdomain'] == '1') {
+				$domaininfos[$domain_name] = $domain;
+			}
+		} else {
+			// subdomains allowed if enabled for the customer
+			if ($userinfo['dynamicdnsenabled'] == '1') {
+				$domaininfos[$domain_name] = $domain;
+			}
 		}
 	} catch (\Exception $e) {
 		// Nonexisting domains raise an exception. Ignore it here.

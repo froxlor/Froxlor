@@ -122,11 +122,6 @@ if ($page == '' || $page == 'overview') {
 				$value_arr['subdomains'] = - 1;
 			}
 
-			$value_arr['dynamicdomains'] = (int)($_POST['dynamicdomains']);
-			if (isset($_POST['dynamicdomains_ul'])) {
-				$value_arr['dynamicdomains'] = - 1;
-			}
-
 			$value_arr['emails'] = (int)($_POST['emails']);
 			if (isset($_POST['emails_ul'])) {
 				$value_arr['emails'] = - 1;
@@ -197,6 +192,11 @@ if ($page == '' || $page == 'overview') {
 				$value_arr['dnsenabled'] = intval($_POST['dnsenabled']);
 			}
 
+			$value_arr['dynamicdnsenabled'] = 0;
+			if (isset($_POST['dynamicdnsenabled'])) {
+				$value_arr['dynamicdnsenabled'] = intval($_POST['dynamicdnsenabled']);
+			}
+
 			$ins_stmt = Database::prepare("
 				INSERT INTO `" . TABLE_PANEL_PLANS . "`
 				SET `adminid` = :adminid, `name` = :name, `description` = :desc, `value` = :valuearr, `ts` = UNIX_TIMESTAMP();
@@ -219,7 +219,6 @@ if ($page == '' || $page == 'overview') {
 			$diskspace_ul = \Froxlor\UI\HTML::makecheckbox('diskspace_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 			$traffic_ul = \Froxlor\UI\HTML::makecheckbox('traffic_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 			$subdomains_ul = \Froxlor\UI\HTML::makecheckbox('subdomains_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
-			$dynamicdomains_ul = \Froxlor\UI\HTML::makecheckbox('dynamicdomains_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 			$emails_ul = \Froxlor\UI\HTML::makecheckbox('emails_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 			$email_accounts_ul = \Froxlor\UI\HTML::makecheckbox('email_accounts_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 			$email_forwarders_ul = \Froxlor\UI\HTML::makecheckbox('email_forwarders_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
@@ -306,11 +305,6 @@ if ($page == '' || $page == 'overview') {
 					$value_arr['subdomains'] = - 1;
 				}
 
-				$value_arr['dynamicdomains'] = (int)($_POST['dynamicdomains']);
-				if (isset($_POST['dynamicdomains_ul'])) {
-					$value_arr['dynamicdomains'] = - 1;
-				}
-
 				$value_arr['emails'] = (int)($_POST['emails']);
 				if (isset($_POST['emails_ul'])) {
 					$value_arr['emails'] = - 1;
@@ -381,6 +375,11 @@ if ($page == '' || $page == 'overview') {
 					$value_arr['dnsenabled'] = intval($_POST['dnsenabled']);
 				}
 
+				$value_arr['dynamicdnsenabled'] = 0;
+				if (isset($_POST['dynamicdnsenabled'])) {
+					$value_arr['dynamicdnsenabled'] = intval($_POST['dynamicdnsenabled']);
+				}
+
 				$ins_stmt = Database::prepare("
 					UPDATE `" . TABLE_PANEL_PLANS . "`
 					SET `name` = :name, `description` = :desc, `value` = :valuearr, `ts` = UNIX_TIMESTAMP()
@@ -414,11 +413,6 @@ if ($page == '' || $page == 'overview') {
 				$subdomains_ul = \Froxlor\UI\HTML::makecheckbox('subdomains_ul', $lng['customer']['unlimited'], '-1', false, $result['subdomains'], true, true);
 				if ($result['subdomains'] == '-1') {
 					$result['subdomains'] = '';
-				}
-
-				$dynamicdomains_ul = \Froxlor\UI\HTML::makecheckbox('dynamicdomains_ul', $lng['customer']['unlimited'], '-1', false, $result['dynamicdomains'], true, true);
-				if ($result['dynamicdomains'] == '-1') {
-					$result['dynamicdomains'] = '';
 				}
 
 				$emails_ul = \Froxlor\UI\HTML::makecheckbox('emails_ul', $lng['customer']['unlimited'], '-1', false, $result['emails'], true, true);
