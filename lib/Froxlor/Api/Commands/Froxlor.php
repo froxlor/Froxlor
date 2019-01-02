@@ -247,10 +247,10 @@ class Froxlor extends \Froxlor\Api\ApiCommand
 			// check existence
 			$this->requireModules($module);
 			// now get all static functions
-			$reflection = new \ReflectionClass($module);
+			$reflection = new \ReflectionClass(__NAMESPACE__ . '\\' . $module);
 			$_functions = $reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
 			foreach ($_functions as $func) {
-				if ($func->class == $module && $func->isPublic()) {
+				if ($func->class == __NAMESPACE__ . '\\' . $module && $func->isPublic()) {
 					array_push($functions, array_merge(array(
 						'module' => $module,
 						'function' => $func->name
@@ -279,10 +279,10 @@ class Froxlor extends \Froxlor\Api\ApiCommand
 							continue;
 						}
 						// now get all static functions
-						$reflection = new \ReflectionClass($mod);
+						$reflection = new \ReflectionClass(__NAMESPACE__ . '\\' . $mod);
 						$_functions = $reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
 						foreach ($_functions as $func) {
-							if ($func->class == $mod && $func->isPublic() && ! $func->isStatic()) {
+							if ($func->class == __NAMESPACE__ . '\\' . $mod && $func->isPublic() && ! $func->isStatic()) {
 								array_push($functions, array_merge(array(
 									'module' => $matches[1],
 									'function' => $func->name
@@ -414,7 +414,7 @@ class Froxlor extends \Froxlor\Api\ApiCommand
 			// check all the modules
 			foreach ($modules as $module) {
 				try {
-					$module = "\Froxlor\Api\Commands\\" . $module;
+					$module = __NAMESPACE__ . '\\' . $module;
 					// can we use the class?
 					if (class_exists($module)) {
 						continue;
