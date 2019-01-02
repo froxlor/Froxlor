@@ -1,6 +1,8 @@
 <?php
 require __DIR__ . '/vendor/autoload.php';
 
+require \Froxlor\Froxlor::getInstallDir() . '/lib/tables.inc.php';
+
 // check whether API interface is enabled after all
 if (\Froxlor\Settings::Get('api.enabled') != 1) {
 	// not enabled
