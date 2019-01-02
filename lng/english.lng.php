@@ -2053,9 +2053,6 @@ $lng['panel']['alternative_cmdline_config'] = 'Alternatively, just run the follo
 
 // Dynamic DNS
 $lng['domain']['dynamic_domain']['title'] = 'Domain with dynamically changing IP';
-$lng['domain']['dynamic_domain']['desc'] = 'When yes, the IP address associated with the domain can be changed dynamically. If the option is enabled but no ip addresses are given the ip addresses of the server are used.';
-$lng['domain']['dynamic_ipv4'] = 'Dynamically assigned IPv4';
-$lng['domain']['dynamic_ipv6'] = 'Dynamically assigned IPv6';
-$lng['customer']['dynamicdomains'] = 'Dynamic domain(s)';
-$lng['error']['dynamicdomainslimit'] = "You can not have more dynamic domains.";
-$lng['admin']['dynamicdns'] = "Dynamic DNS";
+$lng['domain']['dynamic_domain']['desc'] = 'When yes, the IP address associated with the domain can be changed dynamically. If the option is enabled but no ip addresses are given the ip add
+resses of the server are used.';
+$lng['customer']['dynamicdnsenabled'] = 'Dynamic DNS allowed?';

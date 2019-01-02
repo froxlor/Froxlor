@@ -1701,8 +1701,4 @@ $lng['panel']['alternative_cmdline_config'] = 'Alternativ, führe den folgenden 
 // Dynamic DNS
 $lng['domain']['dynamic_domain']['title'] = 'Domain mit dynamisch änderbarer IP';
 $lng['domain']['dynamic_domain']['desc'] = 'Wenn ja kann die IP Adresse der Domain dynamisch geändert werden. Ist die Option aktiv aber keine IP Adresse eingetragen werden die IP Adressen des Servers verwendet.';
-$lng['domain']['dynamic_ipv4'] = 'Dynamisch zugewiesene IPv4';
-$lng['domain']['dynamic_ipv6'] = 'Dynamisch zugewiesene IPv6';
-$lng['customer']['dynamicdomains'] = 'Dynamische Domain(s)';
-$lng['error']['dynamicdomainslimit'] = "Sie dürfen keine weiteren dynamischen Domains verwenden.";
-$lng['admin']['dynamicdns'] = "Dynamisches DNS";
+$lng['customer']['dynamicdnsenabled'] = 'Dynamische DNS-Updates erlaubt?';
