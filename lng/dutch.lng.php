@@ -910,10 +910,6 @@ $lng['dkim']['dkim_keylength']['title'] = 'Lengte sleutel';
 $lng['dkim']['dkim_keylength']['description'] = 'Let op: Indien u deze waarde wijzigt, dient u allen geheime en publieke sleutels in "%s" te verwijderen';
 $lng['dkim']['dkim_notes']['title'] = 'Notities voor DKIM';
 $lng['dkim']['dkim_notes']['description'] = 'Notities die van belang kunnen zijn voor mensen, bijvoorbeeld een URL als http://www.dnswatch.info. Geen enkel programma zal deze informatie verwerken. Deze informatie dient schaars te zijn gezien de beperkte ruimte in DNS. Dit is bedoeld voor beheerders, niet voor eindgebruikers.';
-$lng['dkim']['dkim_add_adsp']['title'] = 'DKIM ADSP toevoegen';
-$lng['dkim']['dkim_add_adsp']['description'] = 'Indien u niet weet wat dit is, laat het op "actief" staan.';
-$lng['dkim']['dkim_add_adsppolicy']['title'] = 'ADSP beleid';
-$lng['dkim']['dkim_add_adsppolicy']['description'] = 'Voor meer informatie inzake deze instelling zie <a target="blank" href="https://en.wikipedia.org/wiki/Author_Domain_Signing_Practices">DKIM ADSP policies</a>';
 
 $lng['admin']['cron']['cronsettings'] = 'Instellingen cron-taken';
 $lng['cron']['cronname'] = 'naam cron-taak';

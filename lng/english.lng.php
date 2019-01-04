@@ -998,10 +998,6 @@ $lng['dkim']['dkim_keylength']['title'] = 'Key-length';
 $lng['dkim']['dkim_keylength']['description'] = 'Attention: If you change this values, you need to delete all the private/public keys in "%s"';
 $lng['dkim']['dkim_notes']['title'] = 'DKIM Notes';
 $lng['dkim']['dkim_notes']['description'] = 'Notes that might be of interest to a human, e.g. a URL like http://www.dnswatch.info. No interpretation is made by any program. This tag should be used sparingly due to space limitations in DNS. This is intended for use by administrators, not end users.';
-$lng['dkim']['dkim_add_adsp']['title'] = 'Add DKIM ADSP entry';
-$lng['dkim']['dkim_add_adsp']['description'] = 'If you don\'t know what this is, leave it "enabled"';
-$lng['dkim']['dkim_add_adsppolicy']['title'] = 'ADSP policy';
-$lng['dkim']['dkim_add_adsppolicy']['description'] = 'For more information about this setting see <a target="blank" href="https://en.wikipedia.org/wiki/Author_Domain_Signing_Practices">DKIM ADSP policies</a>';
 
 $lng['admin']['cron']['cronsettings'] = 'Cronjob settings';
 $lng['cron']['cronname'] = 'cronjob-name';

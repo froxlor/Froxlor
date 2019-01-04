@@ -109,28 +109,6 @@ return array(
 					'default' => '',
 					'save_method' => 'storeSettingFieldInsertBindTask'
 				),
-				'dkim_add_adsp' => array(
-					'label' => $lng['dkim']['dkim_add_adsp'],
-					'settinggroup' => 'dkim',
-					'varname' => 'dkim_add_adsp',
-					'type' => 'bool',
-					'default' => true,
-					'save_method' => 'storeSettingFieldInsertBindTask'
-				),
-				'dkim_add_adsppolicy' => array(
-					'label' => $lng['dkim']['dkim_add_adsppolicy'],
-					'settinggroup' => 'dkim',
-					'varname' => 'dkim_add_adsppolicy',
-					'type' => 'option',
-					'default' => '1',
-					'option_mode' => 'one',
-					'option_options' => array(
-						'0' => 'Unknown',
-						'1' => 'All',
-						'2' => 'Discardable'
-					),
-					'save_method' => 'storeSettingFieldInsertBindTask'
-				),
 				'dkimrestart_command' => array(
 					'label' => $lng['dkim']['dkimrestart_command'],
 					'settinggroup' => 'dkim',

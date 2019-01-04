@@ -139,10 +139,6 @@ class Dns
 			if (Settings::Get('dkim.use_dkim') == '1') {
 				// check for DKIM content later
 				self::addRequiredEntry('dkim_' . $domain['dkim_id'] . '._domainkey', 'TXT', $required_entries);
-				// check for ASDP
-				if (Settings::Get('dkim.dkim_add_adsp') == "1") {
-					self::addRequiredEntry('_adsp._domainkey', 'TXT', $required_entries);
-				}
 			}
 		}
 
@@ -277,8 +273,6 @@ class Dns
 									$multiline = true;
 								}
 								$zonerecords[] = new DnsEntry($record, 'TXT', self::encloseTXTContent($dkim_entries[0], $multiline));
-							} elseif ($record == '_adsp._domainkey' && ! empty($dkim_entries) && isset($dkim_entries[1])) {
-								$zonerecords[] = new DnsEntry($record, 'TXT', self::encloseTXTContent($dkim_entries[1]));
 							}
 						}
 					}
@@ -401,23 +395,6 @@ class Dns
 
 			// dkim-entry
 			$zone_dkim[] = $dkim_txt;
-
-			// adsp-entry
-			if (Settings::Get('dkim.dkim_add_adsp') == "1") {
-				$adsp = '"dkim=';
-				switch ((int) Settings::Get('dkim.dkim_add_adsppolicy')) {
-					case 0:
-						$adsp .= 'unknown"';
-						break;
-					case 1:
-						$adsp .= 'all"';
-						break;
-					case 2:
-						$adsp .= 'discardable"';
-						break;
-				}
-				$zone_dkim[] = $adsp;
-			}
 		}
 
 		return $zone_dkim;
