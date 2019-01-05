@@ -63,7 +63,9 @@
 	},
 	"suggest": {
 		"ext-bcmath": "*",
-		"ext-zip": "*"
+		"ext-zip": "*",
+		"ext-apcu": "*",
+		"ext-readline": "*"
 	},
 	"autoload": {
 		"psr-4": {
