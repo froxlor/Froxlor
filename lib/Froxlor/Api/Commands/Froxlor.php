@@ -315,7 +315,7 @@ class Froxlor extends \Froxlor\Api\ApiCommand
 	{
 		try {
 			// set the module
-			$cls = new \ReflectionMethod($module, $function);
+			$cls = new \ReflectionMethod(__NAMESPACE__ . '\\' . $module, $function);
 			$comment = $cls->getDocComment();
 			if ($comment == false) {
 				return array(
