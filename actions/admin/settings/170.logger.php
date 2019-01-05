@@ -85,5 +85,3 @@ return array(
 		)
 	)
 );
-
-?>

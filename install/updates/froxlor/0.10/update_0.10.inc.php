@@ -83,7 +83,7 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201809280')) {
 if (\Froxlor\Froxlor::isDatabaseVersion('201811180')) {
 
 	showUpdateStep("Adding new settings for 2FA");
-	Settings::AddNew('2fa.enabled', '1', true);
+	Settings::AddNew('2fa.enabled', '1');
 	lastStepStatus(0);
 
 	showUpdateStep("Adding new fields to admin-table for 2FA");
@@ -112,7 +112,7 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201812010')) {
 
 	showUpdateStep("Adding new is_configured-flag");
 	// updated systems are already configured (most likely :P)
-	Settings::AddNew('panel.is_configured', '1', true);
+	Settings::AddNew('panel.is_configured', '1');
 	lastStepStatus(0);
 
 	\Froxlor\Froxlor::updateToDbVersion('201812100');

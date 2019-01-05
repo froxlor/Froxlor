@@ -68,5 +68,3 @@ return array(
 		)
 	)
 );
-
-?>

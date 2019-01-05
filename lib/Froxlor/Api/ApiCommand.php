@@ -170,7 +170,7 @@ abstract class ApiCommand extends ApiParameter
 				}
 			} else {
 				if ($this->debug) {
-					$this->logger()->logAction(\Froxlor\FroxlorLogger::LOG_ERROR, LOG_DEBUG, "[API] unable to include user-language '" . $language . "'. Not found in database.", 404);
+					$this->logger()->logAction(\Froxlor\FroxlorLogger::LOG_ERROR, LOG_DEBUG, "[API] unable to include user-language '" . $language . "'. Not found in database.");
 				}
 			}
 		}

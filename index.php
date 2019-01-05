@@ -392,7 +392,7 @@ if ($action == 'forgotpwd') {
 
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 		$loginname = \Froxlor\Validate\Validate::validate($_POST['loginname'], 'loginname');
-		$email = \Froxlor\Validate\Validate::validateEmail($_POST['loginemail'], 'email');
+		$email = \Froxlor\Validate\Validate::validateEmail($_POST['loginemail']);
 		$result_stmt = Database::prepare("SELECT `adminid`, `customerid`, `firstname`, `name`, `company`, `email`, `loginname`, `def_language`, `deactivated` FROM `" . TABLE_PANEL_CUSTOMERS . "`
 			WHERE `loginname`= :loginname
 			AND `email`= :email");
