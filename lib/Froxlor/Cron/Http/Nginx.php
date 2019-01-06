@@ -555,7 +555,10 @@ class Nginx extends HttpConfigBase
 			"\n}"
 		), $vhost_usr); // Break blocks into lines
 		$vhost_usr = explode("\n", preg_replace('/[ \t]+/', ' ', trim(preg_replace('/\t+/', '', $vhost_usr)))); // Break into array items
-		$vhost_usr = array_filter($vhost_usr, create_function('$a', 'return preg_match("#\S#", $a);')); // Remove empty lines
+		// Remove empty lines
+		$vhost_usr = array_filter($vhost_usr, function ($a) {
+			return preg_match("#\S#", $a);
+		});
 
 		// Cycle through the user defined settings
 		$currentBlock = array();
