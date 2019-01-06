@@ -792,10 +792,12 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 * @param string $resource
 	 * @param string $extra
 	 *        	optional, default empty
+	 * @param int $increase_by
+	 *              optional, default 1
 	 */
-	public static function increaseUsage($adminid = 0, $resource = null, $extra = '')
+	public static function increaseUsage($adminid = 0, $resource = null, $extra = '', $increasae_by = 1)
 	{
-		self::updateResourceUsage(TABLE_PANEL_ADMINS, 'adminid', $adminid, '+', $resource, $extra);
+		self::updateResourceUsage(TABLE_PANEL_ADMINS, 'adminid', $adminid, '+', $resource, $extra, $increase_by);
 	}
 
 	/**
@@ -805,9 +807,11 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 * @param string $resource
 	 * @param string $extra
 	 *        	optional, default empty
+	 * @param int $decrease_by
+	 *              optional, default 1
 	 */
-	public static function decreaseUsage($adminid = 0, $resource = null, $extra = '')
+	public static function decreaseUsage($adminid = 0, $resource = null, $extra = '', $decrease_by = 1)
 	{
-		self::updateResourceUsage(TABLE_PANEL_ADMINS, 'adminid', $adminid, '-', $resource, $extra);
+		self::updateResourceUsage(TABLE_PANEL_ADMINS, 'adminid', $adminid, '-', $resource, $extra, $decrease_by);
 	}
 }

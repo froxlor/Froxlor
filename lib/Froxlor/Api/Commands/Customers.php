@@ -1677,6 +1677,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 	 * @param string $extra
 	 *        	optional, default empty
 	 * @param int $increase_by
+	 *              optional, default 1
 	 */
 	public static function increaseUsage($customerid = 0, $resource = null, $extra = '', $increase_by = 1)
 	{
@@ -1691,6 +1692,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 	 * @param string $extra
 	 *        	optional, default empty
 	 * @param int $decrease_by
+	 *              optional, default 1
 	 */
 	public static function decreaseUsage($customerid = 0, $resource = null, $extra = '', $decrease_by = 1)
 	{
