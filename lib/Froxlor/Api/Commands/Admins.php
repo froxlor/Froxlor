@@ -795,7 +795,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 * @param int $increase_by
 	 *              optional, default 1
 	 */
-	public static function increaseUsage($adminid = 0, $resource = null, $extra = '', $increasae_by = 1)
+	public static function increaseUsage($adminid = 0, $resource = null, $extra = '', $increase_by = 1)
 	{
 		self::updateResourceUsage(TABLE_PANEL_ADMINS, 'adminid', $adminid, '+', $resource, $extra, $increase_by);
 	}
