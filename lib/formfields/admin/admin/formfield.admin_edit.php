@@ -51,9 +51,8 @@ return array(
 					'admin_password_suggestion' => array(
 						'label' => $lng['customer']['generated_pwd'],
 						'type' => 'text',
-						'visible' => (\Froxlor\Settings::Get('panel.password_regex') == ''),
 						'value' => \Froxlor\System\Crypt::generatePassword(),
-						'visible' => ($result['adminid'] == $userinfo['userid'] ? false : true)
+						'visible' => (\Froxlor\Settings::Get('panel.password_regex') == '' && ($result['adminid'] == $userinfo['userid'] ? false : true))
 					),
 					'def_language' => array(
 						'label' => $lng['login']['language'],
