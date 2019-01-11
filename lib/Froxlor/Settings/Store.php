@@ -225,22 +225,22 @@ class Store
 			$idna_convert = new \Froxlor\Idna\IdnaWrapper();
 			$newfieldvalue = $idna_convert->encode($newfieldvalue);
 
-			if (($fielddata['varname'] == 'hostname' && Settings::Get('system.stdsubdomain') == '') || $fielddata['varname'] == 'stdsubdomain')
-			{
+			if (($fielddata['varname'] == 'hostname' && Settings::Get('system.stdsubdomain') == '') || $fielddata['varname'] == 'stdsubdomain') {
 				if ($fielddata['varname'] == 'stdsubdomain' && $newfieldvalue == '') {
 					// clear field, reset stdsubdomain to system-hostname
-					$oldhost = Settings::Get('system.stdsubdomain');
-					$newhost = Settings::Get('system.hostname');
+					$oldhost = $idna_convert->encode(Settings::Get('system.stdsubdomain'));
+					$newhost = $idna_convert->encode(Settings::Get('system.hostname'));
 				} elseif ($fielddata['varname'] == 'stdsubdomain' && Settings::Get('system.stdsubdomain') == '') {
 					// former std-subdomain was system-hostname
-					$oldhost = Settings::Get('system.hostname');
-					$newhost = Settings::Get('system.stdsubdomain');
+					$oldhost = $idna_convert->encode(Settings::Get('system.hostname'));
+					$newhost = $newfieldvalue;
 				} elseif ($fielddata['varname'] == 'stdsubdomain') {
 					// std-subdomain just changed
-					$oldhost = Settings::Get('system.stdsubdomain');
+					$oldhost = $idna_convert->encode(Settings::Get('system.stdsubdomain'));
 					$newhost = $newfieldvalue;
 				} elseif ($fielddata['varname'] == 'hostname' && Settings::Get('system.stdsubdomain') == '') {
-					$oldhost = Settings::Get('system.hostname');
+					// system-hostname has changed and no system-stdsubdomain is not set
+					$oldhost = $idna_convert->encode(Settings::Get('system.hostname'));
 					$newhost = $newfieldvalue;
 				}
 

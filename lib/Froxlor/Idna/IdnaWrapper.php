@@ -56,7 +56,16 @@ class IdnaWrapper
 	public function encode($to_encode)
 	{
 		$to_encode = $this->isUtf8($to_encode) ? $to_encode : utf8_encode($to_encode);
-		return $this->idna_converter->encode($to_encode);
+		try {
+			return $this->idna_converter->encode($to_encode);
+		} catch (\InvalidArgumentException $iae) {
+			// dirty hack because Mso\IdnaConvert does not specify error-numbers
+			// see https://github.com/phlylabs/idna-convert/issues/11
+			if (strtolower($iae->getMessage()) == 'this is already a punycode string') {
+				return $to_encode;
+			}
+			throw $iae;
+		}
 	}
 
 	/**
