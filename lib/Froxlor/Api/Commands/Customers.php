@@ -468,42 +468,37 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 					$ins_data['customerid'] = $customerid;
 
 					// update admin resource-usage
-					$admin_update_query = "UPDATE `" . TABLE_PANEL_ADMINS . "` SET `customers_used` = `customers_used` + 1";
-
 					if ($mysqls != '-1') {
-						$admin_update_query .= ", `mysqls_used` = `mysqls_used` + 0" . (int) $mysqls;
+						Admins::increaseUsage($this->getUserDetail('adminid'), 'mysqls_used', '', (int) $mysqls);
 					}
 
 					if ($emails != '-1') {
-						$admin_update_query .= ", `emails_used` = `emails_used` + 0" . (int) $emails;
+						Admins::increaseUsage($this->getUserDetail('adminid'), 'emails_used', '', (int) $emails);
 					}
 
 					if ($email_accounts != '-1') {
-						$admin_update_query .= ", `email_accounts_used` = `email_accounts_used` + 0" . (int) $email_accounts;
+						Admins::increaseUsage($this->getUserDetail('adminid'), 'email_accounts_used', '', (int) $email_accounts);
 					}
 
 					if ($email_forwarders != '-1') {
-						$admin_update_query .= ", `email_forwarders_used` = `email_forwarders_used` + 0" . (int) $email_forwarders;
+						Admins::increaseUsage($this->getUserDetail('adminid'), 'email_forwarders_used', '', (int) $email_forwarders);
 					}
 
 					if ($email_quota != '-1') {
-						$admin_update_query .= ", `email_quota_used` = `email_quota_used` + 0" . (int) $email_quota;
+						Admins::increaseUsage($this->getUserDetail('adminid'), 'email_quota_used', '', (int) $email_quota);
 					}
 
 					if ($subdomains != '-1') {
-						$admin_update_query .= ", `subdomains_used` = `subdomains_used` + 0" . (int) $subdomains;
+						Admins::increaseUsage($this->getUserDetail('adminid'), 'subdomains_used', '', (int) $subdomains);
 					}
 
 					if ($ftps != '-1') {
-						$admin_update_query .= ", `ftps_used` = `ftps_used` + 0" . (int) $ftps;
+						Admins::increaseUsage($this->getUserDetail('adminid'), 'ftps_used', '', (int) $ftps);
 					}
 
 					if (($diskspace / 1024) != '-1') {
-						$admin_update_query .= ", `diskspace_used` = `diskspace_used` + 0" . (int) $diskspace;
+						Admins::increaseUsage($this->getUserDetail('adminid'), 'diskspace_used', '', (int) $diskspace);
 					}
-
-					$admin_update_query .= " WHERE `adminid` = '" . (int) $this->getUserDetail('adminid') . "'";
-					Database::query($admin_update_query);
 
 					// update last guid
 					Settings::Set('system.lastguid', $guid, true);
@@ -1499,43 +1494,40 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 			), true, true);
 
 			// update admin-resource-usage
-			$admin_update_query = "UPDATE `" . TABLE_PANEL_ADMINS . "` SET `customers_used` = `customers_used` - 1 ";
-			$admin_update_query .= ", `domains_used` = `domains_used` - 0" . (int) ($domains_deleted - $result['subdomains_used']);
+			Admins::decreaseUsage($this->getUserDetail('adminid'), 'customers_used');
+			Admins::decreaseUsage($this->getUserDetail('adminid'), 'domains_used', '', (int) ($domains_deleted - $result['subdomains_used']));
 
 			if ($result['mysqls'] != '-1') {
-				$admin_update_query .= ", `mysqls_used` = `mysqls_used` - 0" . (int) $result['mysqls'];
+				Admins::decreaseUsage($this->getUserDetail('adminid'), 'mysqls_used', '', (int) $result['mysqls']);
 			}
 
 			if ($result['emails'] != '-1') {
-				$admin_update_query .= ", `emails_used` = `emails_used` - 0" . (int) $result['emails'];
+				Admins::decreaseUsage($this->getUserDetail('adminid'), 'emails_used', '', (int) $result['emails']);
 			}
 
 			if ($result['email_accounts'] != '-1') {
-				$admin_update_query .= ", `email_accounts_used` = `email_accounts_used` - 0" . (int) $result['email_accounts'];
+				Admins::decreaseUsage($this->getUserDetail('adminid'), 'email_accounts_used', '', (int) $result['email_accounts']);
 			}
 
 			if ($result['email_forwarders'] != '-1') {
-				$admin_update_query .= ", `email_forwarders_used` = `email_forwarders_used` - 0" . (int) $result['email_forwarders'];
+				Admins::decreaseUsage($this->getUserDetail('adminid'), 'email_forwarders_used', '', (int) $result['email_forwarders']);
 			}
 
 			if ($result['email_quota'] != '-1') {
-				$admin_update_query .= ", `email_quota_used` = `email_quota_used` - 0" . (int) $result['email_quota'];
+				Admins::decreaseUsage($this->getUserDetail('adminid'), 'email_quota_used', '', (int) $result['email_quota']);
 			}
 
 			if ($result['subdomains'] != '-1') {
-				$admin_update_query .= ", `subdomains_used` = `subdomains_used` - 0" . (int) $result['subdomains'];
+				Admins::decreaseUsage($this->getUserDetail('adminid'), 'subdomains_used', '', (int) $result['subdomains']);
 			}
 
 			if ($result['ftps'] != '-1') {
-				$admin_update_query .= ", `ftps_used` = `ftps_used` - 0" . (int) $result['ftps'];
+				Admins::decreaseUsage($this->getUserDetail('adminid'), 'ftps_used', '', (int) $result['ftps']);
 			}
 
 			if (($result['diskspace'] / 1024) != '-1') {
-				$admin_update_query .= ", `diskspace_used` = `diskspace_used` - 0" . (int) $result['diskspace'];
+				Admins::decreaseUsage($this->getUserDetail('adminid'), 'diskspace_used', '', (int) $result['diskspace']);
 			}
-
-			$admin_update_query .= " WHERE `adminid` = '" . (int) $result['adminid'] . "'";
-			Database::query($admin_update_query);
 
 			// rebuild configs
 			\Froxlor\System\Cronjob::inserttask('1');

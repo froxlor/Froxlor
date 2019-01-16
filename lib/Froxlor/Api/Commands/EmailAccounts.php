@@ -187,10 +187,6 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 			Customers::increaseUsage($customer['customerid'], 'email_accounts_used');
 			Customers::increaseUsage($customer['customerid'], 'email_quota_used', '', $quota);
 
-			// update admin usage
-			Admins::increaseUsage($customer['adminid'], 'email_accounts_used');
-			Admins::increaseUsage($customer['adminid'], 'email_quota_used', '', $quota);
-
 			if ($sendinfomail) {
 				// replacer array for mail to create account on server
 				$replace_arr = array(
@@ -480,9 +476,6 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 		// decrease usage for customer
 		Customers::decreaseUsage($customer['customerid'], 'email_accounts_used');
 		Customers::decreaseUsage($customer['customerid'], 'email_quota_used', '', $quota);
-		// decrease admin usage
-		Admins::decreaseUsage($customer['adminid'], 'email_accounts_used');
-		Admins::decreaseUsage($customer['adminid'], 'email_quota_used', '', $quota);
 
 		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] deleted email account for '" . $result['email_full'] . "'");
 		return $this->response(200, "successfull", $result);

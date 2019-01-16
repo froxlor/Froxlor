@@ -110,9 +110,6 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			Customers::increaseUsage($customer['customerid'], 'mysqls_used');
 			Customers::increaseUsage($customer['customerid'], 'mysql_lastaccountnumber');
 
-			// update admin usage
-			Admins::increaseUsage($this->getUserDetail('adminid'), 'mysqls_used');
-
 			// send info-mail?
 			if ($sendinfomail == 1) {
 				$pma = $this->lng['admin']['notgiven'];
@@ -476,8 +473,6 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		// reduce mysql-usage-counter
 		$resetaccnumber = ($mysql_used == '1') ? " , `mysql_lastaccountnumber` = '0' " : '';
 		Customers::decreaseUsage($customer['customerid'], 'mysqls_used', $resetaccnumber);
-		// update admin usage
-		Admins::decreaseUsage(($this->isAdmin() ? $customer['adminid'] : $this->getUserDetail('adminid')), 'mysqls_used');
 
 		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_WARNING, "[API] deleted database '" . $result['databasename'] . "'");
 		return $this->response(200, "successfull", $result);

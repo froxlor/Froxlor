@@ -212,16 +212,18 @@ class User
 		Database::pexecute($admins_stmt, array());
 
 		while ($admin = $admins_stmt->fetch(\PDO::FETCH_ASSOC)) {
-			$admin_customers_stmt = Database::prepare('SELECT COUNT(*) AS `number_customers` FROM `' . TABLE_PANEL_CUSTOMERS . '` WHERE `adminid` = :aid');
-			$admin_customers = Database::pexecute_first($admin_customers_stmt, array(
+			$admin_customers_stmt = Database::prepare('SELECT * FROM `' . TABLE_PANEL_CUSTOMERS . '` WHERE `adminid` = :aid');
+			Database::pexecute($admin_customers_stmt, array(
 				"aid" => $admin['adminid']
 			));
-			$admin['customers_used_new'] = $admin_customers['number_customers'];
+			$admin_customers = $admin_customers_stmt->fetchAll(\PDO::FETCH_ASSOC);
+			$admin['customers_used_new'] = count($admin_customers);
 
-			$admin_domains_stmt = Database::prepare('SELECT COUNT(*) AS `number_domains` FROM `' . TABLE_PANEL_DOMAINS . '` WHERE `adminid` = :aid AND `isemaildomain` = "1"');
+			$admin_domains_stmt = Database::prepare('SELECT COUNT(*) AS `number_domains` FROM `' . TABLE_PANEL_DOMAINS . '` WHERE `adminid` = :aid');
 			$admin_domains = Database::pexecute_first($admin_domains_stmt, array(
 				"aid" => $admin['adminid']
 			));
+			// substract the amount of domains that are std-subdomains later when we iterated through all customers and now for sure
 			$admin['domains_used_new'] = $admin_domains['number_domains'];
 
 			$cur_adm = $admin['adminid'];
@@ -243,6 +245,27 @@ class User
 			) as $field) {
 				self::initArrField($field, $admin_resources[$cur_adm], 0);
 				$admin[$field . '_new'] = $admin_resources[$cur_adm][$field];
+			}
+
+			foreach ($admin_customers as $acustomer) {
+				foreach (array(
+					'diskspace_used',
+					'traffic_used',
+					'mysqls_used',
+					'ftps_used',
+					'emails_used',
+					'email_accounts_used',
+					'email_forwarders_used',
+					'email_quota_used',
+					'subdomains_used'
+				) as $field) {
+					$admin[$field . '_new'] += $acustomer[$field];
+				}
+				// check for std-subdomain
+				if ($acustomer['standardsubdomain'] > 0) {
+					// std-subdomain does not count to assign resource
+					$admin['domains_used_new']--;
+				}
 			}
 
 			$stmt = Database::prepare('UPDATE `' . TABLE_PANEL_ADMINS . '`
