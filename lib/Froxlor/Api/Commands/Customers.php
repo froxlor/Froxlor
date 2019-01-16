@@ -836,7 +836,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 
 		if ($this->isAdmin()) {
 			// parameters
-			$move_to_admin = (int) ($this->getBoolParam('move_to_admin', true, 0));
+			$move_to_admin = (int) ($this->getParam('move_to_admin', true, 0));
 
 			$idna_convert = new \Froxlor\Idna\IdnaWrapper();
 			$email = $this->getParam('email', true, $idna_convert->decode($result['email']));
