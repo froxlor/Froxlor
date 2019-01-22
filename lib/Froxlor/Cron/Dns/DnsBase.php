@@ -151,7 +151,7 @@ abstract class DnsBase
 				if (isset($domains[$domains[$key]['ismainbutsubto']])) {
 					$domains[$domains[$key]['ismainbutsubto']]['children'][] = $domains[$key]['id'];
 				} else {
-					$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_ERR, 'Database inconsistency: domain ' . $domain['domain'] . ' (ID #' . $key . ') is set to to be subdomain to non-existent domain ID #' . $domains[$key]['ismainbutsubto'] . '. No DNS record(s) will be created for this domain.');
+					$domains[$key]['ismainbutsubto'] = 0;
 				}
 			}
 		}

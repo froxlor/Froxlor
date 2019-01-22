@@ -132,9 +132,6 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			// update customer usage
 			Customers::increaseUsage($customer['customerid'], 'emails_used');
 
-			// update admin usage
-			Admins::increaseUsage($customer['adminid'], 'emails_used');
-
 			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] added email address '" . $email_full . "'");
 
 			$result = $this->apiCall('Emails.get', array(
@@ -381,7 +378,6 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			"id" => $id
 		), true, true);
 		Customers::decreaseUsage($customer['customerid'], 'emails_used');
-		Admins::decreaseUsage($customer['customerid'], 'emails_used');
 
 		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] deleted email address '" . $result['email_full'] . "'");
 		return $this->response(200, "successfull", $result);

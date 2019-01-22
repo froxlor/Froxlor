@@ -166,7 +166,7 @@ if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
 			}
 
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
-				Admins::getLocal($this->getUserData(), array(
+				Admins::getLocal($userinfo, array(
 					'id' => $id
 				))->delete();
 				\Froxlor\UI\Response::redirectTo($filename, array(

@@ -221,31 +221,51 @@ class Store
 	{
 		$returnvalue = self::storeSettingField($fieldname, $fielddata, $newfieldvalue);
 
-		if ($returnvalue !== false && is_array($fielddata) && isset($fielddata['settinggroup']) && $fielddata['settinggroup'] == 'system' && isset($fielddata['varname']) && $fielddata['varname'] == 'hostname') {
+		if ($returnvalue !== false && is_array($fielddata) && isset($fielddata['settinggroup']) && $fielddata['settinggroup'] == 'system' && isset($fielddata['varname']) && ($fielddata['varname'] == 'hostname' || $fielddata['varname'] == 'stdsubdomain')) {
 			$idna_convert = new \Froxlor\Idna\IdnaWrapper();
 			$newfieldvalue = $idna_convert->encode($newfieldvalue);
 
-			$customerstddomains_result_stmt = Database::prepare("
-			SELECT `standardsubdomain` FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `standardsubdomain` <> '0'
-		");
-			Database::pexecute($customerstddomains_result_stmt);
+			if (($fielddata['varname'] == 'hostname' && Settings::Get('system.stdsubdomain') == '') || $fielddata['varname'] == 'stdsubdomain') {
+				if ($fielddata['varname'] == 'stdsubdomain' && $newfieldvalue == '') {
+					// clear field, reset stdsubdomain to system-hostname
+					$oldhost = $idna_convert->encode(Settings::Get('system.stdsubdomain'));
+					$newhost = $idna_convert->encode(Settings::Get('system.hostname'));
+				} elseif ($fielddata['varname'] == 'stdsubdomain' && Settings::Get('system.stdsubdomain') == '') {
+					// former std-subdomain was system-hostname
+					$oldhost = $idna_convert->encode(Settings::Get('system.hostname'));
+					$newhost = $newfieldvalue;
+				} elseif ($fielddata['varname'] == 'stdsubdomain') {
+					// std-subdomain just changed
+					$oldhost = $idna_convert->encode(Settings::Get('system.stdsubdomain'));
+					$newhost = $newfieldvalue;
+				} elseif ($fielddata['varname'] == 'hostname' && Settings::Get('system.stdsubdomain') == '') {
+					// system-hostname has changed and no system-stdsubdomain is not set
+					$oldhost = $idna_convert->encode(Settings::Get('system.hostname'));
+					$newhost = $newfieldvalue;
+				}
 
-			$ids = array();
+				$customerstddomains_result_stmt = Database::prepare("
+					SELECT `standardsubdomain` FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `standardsubdomain` <> '0'
+				");
+				Database::pexecute($customerstddomains_result_stmt);
 
-			while ($customerstddomains_row = $customerstddomains_result_stmt->fetch(\PDO::FETCH_ASSOC)) {
-				$ids[] = (int) $customerstddomains_row['standardsubdomain'];
-			}
+				$ids = array();
 
-			if (count($ids) > 0) {
-				$upd_stmt = Database::prepare("
-				UPDATE `" . TABLE_PANEL_DOMAINS . "` SET
-				`domain` = REPLACE(`domain`, :host, :newval)
-				WHERE `id` IN ('" . implode(', ', $ids) . "')
-			");
-				Database::pexecute($upd_stmt, array(
-					'host' => Settings::Get('system.hostname'),
-					'newval' => $newfieldvalue
-				));
+				while ($customerstddomains_row = $customerstddomains_result_stmt->fetch(\PDO::FETCH_ASSOC)) {
+					$ids[] = (int) $customerstddomains_row['standardsubdomain'];
+				}
+
+				if (count($ids) > 0) {
+					$upd_stmt = Database::prepare("
+						UPDATE `" . TABLE_PANEL_DOMAINS . "` SET
+						`domain` = REPLACE(`domain`, :host, :newval)
+						WHERE `id` IN ('" . implode(', ', $ids) . "')
+					");
+					Database::pexecute($upd_stmt, array(
+						'host' => $oldhost,
+						'newval' => $newhost
+					));
+				}
 			}
 		}
 

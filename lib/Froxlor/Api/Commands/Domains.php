@@ -204,7 +204,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				$serveraliasoption = $this->getParam('selectserveralias', true, 0);
 				$speciallogfile = $this->getBoolParam('speciallogfile', true, 0);
 				$aliasdomain = intval($this->getParam('alias', true, 0));
-				$issubof = $this->getBoolParam('issubof', true, 0);
+				$issubof = $this->getParam('issubof', true, 0);
 				$registration_date = $this->getParam('registration_date', true, '');
 				$termination_date = $this->getParam('termination_date', true, '');
 				$caneditdomain = $this->getBoolParam('caneditdomain', true, 0);
@@ -771,7 +771,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 			$speciallogfile = $this->getBoolParam('speciallogfile', true, $result['speciallogfile']);
 			$speciallogverified = $this->getBoolParam('speciallogverified', true, 0);
 			$aliasdomain = intval($this->getParam('alias', true, $result['aliasdomain']));
-			$issubof = $this->getBoolParam('issubof', true, $result['ismainbutsubto']);
+			$issubof = $this->getParam('issubof', true, $result['ismainbutsubto']);
 			$registration_date = $this->getParam('registration_date', true, $result['registration_date']);
 			$termination_date = $this->getParam('termination_date', true, $result['termination_date']);
 			$caneditdomain = $this->getBoolParam('caneditdomain', true, $result['caneditdomain']);
@@ -929,7 +929,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 
 			if ($this->getUserDetail('change_serversettings') == '1') {
 
-				if (Settings::Get('system.bind_enable') != '1') {
+				if (Settings::Get('system.bind_enable') == '1') {
 					$zonefile = \Froxlor\Validate\Validate::validate($zonefile, 'zonefile', '', '', array(), true);
 				} else {
 					$isbinddomain = $result['isbinddomain'];

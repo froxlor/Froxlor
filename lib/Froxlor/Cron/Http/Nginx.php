@@ -849,6 +849,7 @@ class Nginx extends HttpConfigBase
 			FROM `" . TABLE_PANEL_HTPASSWDS . "` AS a
 			JOIN `" . TABLE_PANEL_DOMAINS . "` AS b USING (`customerid`)
 			WHERE b.customerid = :customerid AND b.domain = :domain
+			AND path LIKE CONCAT(b.documentroot, '%')
 		");
 		Database::pexecute($result_stmt, array(
 			'customerid' => $domain['customerid'],

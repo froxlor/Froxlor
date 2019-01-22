@@ -32,13 +32,13 @@ class DnsEntry
 
 	public $content;
 
-	public function __construct($record = '', $type = 'A', $content = null, $prio = 0, $ttl = 18000, $class = 'IN')
+	public function __construct($record = '', $type = 'A', $content = null, $prio = 0, $ttl = 0, $class = 'IN')
 	{
 		$this->record = $record;
 		$this->type = $type;
 		$this->content = $content;
 		$this->priority = $prio;
-		$this->ttl = $ttl;
+		$this->ttl = ($ttl <= 0 ? Settings::Get('system.defaultttl') : $ttl);
 		$this->class = $class;
 	}
 

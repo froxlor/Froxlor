@@ -1,6 +1,8 @@
 <?php
 namespace Froxlor\Dns;
 
+use Froxlor\Settings;
+
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2016 the Froxlor Team (see authors).
@@ -26,9 +28,9 @@ class DnsZone
 
 	public $records;
 
-	public function __construct($ttl = 18000, $origin = '', $serial = '', $records = null)
+	public function __construct($ttl = 0, $origin = '', $serial = '', $records = null)
 	{
-		$this->ttl = $ttl;
+		$this->ttl = ($ttl <= 0 ? Settings::Get('system.defaultttl') : $ttl);
 		$this->origin = $origin;
 		$this->serial = $serial;
 		$this->records = $records;

@@ -458,6 +458,10 @@ if ($page == 'overview') {
 					}
 				}
 
+				$alias_stmt = Database::prepare("SELECT COUNT(`id`) AS count FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `aliasdomain`= :aliasdomain");
+				$alias_check = Database::pexecute_first($alias_stmt, array("aliasdomain" => $result['id']));
+				$alias_check = $alias_check['count'];
+
 				$domainip = $result_ipandport['ip'];
 				$result = \Froxlor\PhpHelper::htmlentitiesArray($result);
 
