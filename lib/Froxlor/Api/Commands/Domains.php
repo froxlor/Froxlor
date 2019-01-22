@@ -929,7 +929,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 
 			if ($this->getUserDetail('change_serversettings') == '1') {
 
-				if (Settings::Get('system.bind_enable') != '1') {
+				if (Settings::Get('system.bind_enable') == '1') {
 					$zonefile = \Froxlor\Validate\Validate::validate($zonefile, 'zonefile', '', '', array(), true);
 				} else {
 					$isbinddomain = $result['isbinddomain'];
