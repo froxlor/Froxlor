@@ -311,11 +311,11 @@ $lng['admin']['templates']['createcustomer'] = 'Welcome mail for new customers';
 $lng['admin']['templates']['pop_success'] = 'Welcome mail for new email accounts';
 $lng['admin']['templates']['template_replace_vars'] = 'Variables to be replaced in the template:';
 $lng['admin']['templates']['SALUTATION'] = 'Replaced with a correct salutation (name or company)';
-$lng['admin']['templates']['FIRSTNAME'] = 'Replaced with the customers firstname.';
+$lng['admin']['templates']['FIRSTNAME'] = 'Replaced with the customer\'s first name.';
 $lng['admin']['templates']['NAME'] = 'Replaced with the customers name.';
-$lng['admin']['templates']['COMPANY'] = 'Replaces with the customers company name';
-$lng['admin']['templates']['USERNAME'] = 'Replaced with the customers account username.';
-$lng['admin']['templates']['PASSWORD'] = 'Replaced with the customers account password.';
+$lng['admin']['templates']['COMPANY'] = 'Replaces with the customer\'s company name';
+$lng['admin']['templates']['USERNAME'] = 'Replaced with the customer\'s account username.';
+$lng['admin']['templates']['PASSWORD'] = 'Replaced with the customer\'s account password.';
 $lng['admin']['templates']['EMAIL'] = 'Replaced with the address of the POP3/IMAP account.';
 $lng['admin']['webserver'] = 'Webserver';
 $lng['admin']['bindzonewarning'] = $lng['panel']['emptyfordefault'] . '<br /><strong class="red">ATTENTION:</strong> If you use a zonefile you will have to manage all required records for all sub-zones manually as well.';
@@ -351,9 +351,9 @@ $lng['serversettings']['hostname']['description'] = 'What\'s the Hostname of thi
 $lng['serversettings']['apachereload_command']['title'] = 'Webserver reload command';
 $lng['serversettings']['apachereload_command']['description'] = 'What\'s the webserver command to reload configfiles?';
 $lng['serversettings']['bindenable']['title'] = 'Enable Nameserver';
-$lng['serversettings']['bindenable']['description'] = 'Here the Nameserver can be enabled and disabled globaly.';
+$lng['serversettings']['bindenable']['description'] = 'Here the Nameserver can be enabled and disabled globally.';
 $lng['serversettings']['bindconf_directory']['title'] = 'Dns server config directory';
-$lng['serversettings']['bindconf_directory']['description'] = 'Where should dns-server configfiles be saved?';
+$lng['serversettings']['bindconf_directory']['description'] = 'Where should dns-server config files be saved?';
 $lng['serversettings']['bindreload_command']['title'] = 'DNS server reload command';
 $lng['serversettings']['bindreload_command']['description'] = 'What\'s the command to reload the dns server daemon?';
 $lng['serversettings']['vmail_uid']['title'] = 'Mails-UID';
@@ -543,7 +543,7 @@ $lng['panel']['back'] = 'Back';
 // ADDED IN 1.2.16-svn12
 
 $lng['serversettings']['mod_fcgid']['title'] = 'Enable FCGID';
-$lng['serversettings']['mod_fcgid']['description'] = 'Use this to run PHP with the corresponding useraccount.<br /><br /><b>This needs a special webserver configuration for Apache, see <a target="blank" href="https://github.com/Froxlor/Froxlor/wiki/apache2-with-fcgid">FCGID - handbook</a></b>';
+$lng['serversettings']['mod_fcgid']['description'] = 'Use this to run PHP with the corresponding user account.<br /><br /><b>This needs a special webserver configuration for Apache, see <a target="blank" href="https://github.com/Froxlor/Froxlor/wiki/apache2-with-fcgid">FCGID - handbook</a></b>';
 $lng['serversettings']['sendalternativemail']['title'] = 'Use alternative email-address';
 $lng['serversettings']['sendalternativemail']['description'] = 'Send the password-email to a different address during email-account-creation';
 $lng['emails']['alternative_emailaddress'] = 'Alternative e-mail-address';
@@ -595,7 +595,7 @@ $lng['error']['norepymailiswrong'] = 'The "Noreply-address" is wrong. Only a val
 // ADDED IN 1.2.19-svn1
 
 $lng['serversettings']['mod_fcgid']['configdir']['title'] = 'Configuration directory';
-$lng['serversettings']['mod_fcgid']['configdir']['description'] = 'Where should all fcgid-configuration files be stored? If you don\'t use a self compiled suexec binary, which is the normal situation, this path must be under /var/www/<br /><br /><div class="red">NOTE: This folder\'s content gets deleted regulary so avoid storing data in there manually.</div>';
+$lng['serversettings']['mod_fcgid']['configdir']['description'] = 'Where should all fcgid-configuration files be stored? If you don\'t use a self compiled suexec binary, which is the normal situation, this path must be under /var/www/<br /><br /><div class="red">NOTE: This folder\'s content gets deleted regularly so avoid storing data in there manually.</div>';
 $lng['serversettings']['mod_fcgid']['tmpdir']['title'] = 'Temp directory';
 
 // ADDED IN 1.2.19-svn4
@@ -660,7 +660,7 @@ $lng['panel']['reseller'] = 'reseller';
 $lng['panel']['admin'] = 'admin';
 $lng['panel']['customer'] = 'customer/s';
 $lng['error']['nomessagetosend'] = 'You did not enter a message.';
-$lng['error']['noreceipientsgiven'] = 'You did not specify any receipient';
+$lng['error']['noreceipientsgiven'] = 'You did not specify any recipient';
 $lng['admin']['emaildomain'] = 'Emaildomain';
 $lng['admin']['email_only'] = 'Only email?';
 $lng['admin']['wwwserveralias'] = 'Add a "www." ServerAlias';
@@ -723,7 +723,7 @@ $lng['dns']['standardip'] = 'Server standard IP';
 $lng['dns']['a_record'] = 'A-Record (IPv6 optional)';
 $lng['dns']['cname_record'] = 'CNAME-Record';
 $lng['dns']['mxrecords'] = 'Define MX records';
-$lng['dns']['standardmx'] = 'Server tandard MX record';
+$lng['dns']['standardmx'] = 'Server standard MX record';
 $lng['dns']['mxconfig'] = 'Custom MX records';
 $lng['dns']['priority10'] = 'Priority 10';
 $lng['dns']['priority20'] = 'Priority 20';
@@ -1034,7 +1034,7 @@ $lng['mails']['new_database_by_customer']['subject'] = '[Froxlor] New database c
 $lng['mails']['new_database_by_customer']['mailbody'] = "Hello {CUST_NAME},\n\nyou have just added a new database. Here is the entered information:\n\nDatabasename: {DB_NAME}\nPassword: {DB_PASS}\nDescription: {DB_DESC}\nDB-Hostname: {DB_SRV}\nphpMyAdmin: {PMA_URI}\nYours sincerely, your administrator";
 $lng['serversettings']['awstats_path'] = 'Path to AWStats \'awstats_buildstaticpages.pl\'';
 $lng['serversettings']['awstats_conf'] = 'AWStats configuration path';
-$lng['error']['overviewsettingoptionisnotavalidfield'] = 'Woops, a field that should be displayed as an option in the settings-overview is not an excepted type. You can blame the developers for this. This should not happen!';
+$lng['error']['overviewsettingoptionisnotavalidfield'] = 'Whoops, a field that should be displayed as an option in the settings-overview is not an excepted type. You can blame the developers for this. This should not happen!';
 $lng['admin']['configfiles']['compactoverview'] = 'Compact-overview';
 $lng['admin']['lastlogin_succ'] = 'Last login';
 $lng['panel']['neverloggedin'] = 'No login yet';
@@ -1121,7 +1121,7 @@ $lng['admin']['perl_settings'] = 'Perl/CGI';
 $lng['serversettings']['perl']['suexecworkaround']['title'] = 'Enable SuExec workaround';
 $lng['serversettings']['perl']['suexecworkaround']['description'] = 'Enable only if customer docroots are not within the apache suexec path.<br />If enabled, Froxlor will generate a symlink from the customers perl-enabled directory + /cgi-bin/ to the given path.<br />Note that perl will then only work in the folders subdirectory /cgi-bin/ and not in the folder itself (as it does without this fix!)';
 $lng['serversettings']['perl']['suexeccgipath']['title'] = 'Path for customer perl-enabled directory symlinks';
-$lng['serversettings']['perl']['suexeccgipath']['description'] = 'You only need to set this if the SuExec-workaround is enabled.<br />ATTENTION: Be sure this path is within the suexec path or else this workaround is uselsess';
+$lng['serversettings']['perl']['suexeccgipath']['description'] = 'You only need to set this if the SuExec-workaround is enabled.<br />ATTENTION: Be sure this path is within the suexec path or else this workaround is useless';
 $lng['panel']['descriptionerrordocument'] = 'Can be an URL, path to a file or just a string wrapped around " "<br />Leave empty to use server default value.';
 $lng['error']['stringerrordocumentnotvalidforlighty'] = 'A string as ErrorDocument does not work in lighttpd, please specify a path to a file';
 $lng['error']['urlerrordocumentnotvalidforlighty'] = 'An URL as ErrorDocument does not work in lighttpd, please specify a path to a file';
@@ -1534,7 +1534,7 @@ $lng['admin']['usedmax'] = 'Used / Max';
 $lng['admin']['used'] = 'Used';
 $lng['mysql']['size'] = 'Size';
 
-$lng['error']['invalidhostname'] = 'Hostname needs to be avalid domain. It can\'t be empty nor can it consist only of whitespaces';
+$lng['error']['invalidhostname'] = 'Hostname needs to be a valid domain. It can\'t be empty nor can it consist only of whitespaces';
 
 $lng['traffic']['http'] = 'HTTP (MiB)';
 $lng['traffic']['ftp'] = 'FTP (MiB)';
@@ -1564,7 +1564,7 @@ $lng['serversettings']['catchall_enabled']['description'] = 'Do you want to prov
 
 // ADDED IN 0.9.28.svn6
 $lng['serversettings']['apache_24']['title'] = 'Use modifications for Apache 2.4';
-$lng['serversettings']['apache_24']['description'] = '<strong class="red">ATTENTION:</strong> use only if you acutally have apache version 2.4 or higher installed<br />otherwise your webserver will not be able to start';
+$lng['serversettings']['apache_24']['description'] = '<strong class="red">ATTENTION:</strong> use only if you actually have apache version 2.4 or higher installed<br />otherwise your webserver will not be able to start';
 $lng['serversettings']['nginx_fastcgiparams']['title'] = 'Path to fastcgi_params file';
 $lng['serversettings']['nginx_fastcgiparams']['description'] = 'Specify the path to nginx\'s fastcgi_params file including filename';
 
@@ -1599,7 +1599,7 @@ $lng['admin']['ipsandports']['ssl_cert_file_content'] = 'Content of the ssl cert
 $lng['admin']['ipsandports']['ssl_key_file_content'] = 'Content of the ssl (private-) key file';
 $lng['admin']['ipsandports']['ssl_ca_file_content'] = 'Content of the ssl CA file (optional)';
 $lng['admin']['ipsandports']['ssl_ca_file_content_desc'] = '<br /><br />Client authentification, set this only if you know what it is.';
-$lng['admin']['ipsandports']['ssl_cert_chainfile_content'] = 'Content of the certificate chainfile (optional)';
+$lng['admin']['ipsandports']['ssl_cert_chainfile_content'] = 'Content of the certificate chain file (optional)';
 $lng['admin']['ipsandports']['ssl_cert_chainfile_content_desc'] = '<br /><br />Mostly CA_Bundle, or similar, you probably want to set this if you bought a SSL certificate.';
 $lng['error']['sslcertificateismissingprivatekey'] = 'You need to specify a private key for your certificate';
 $lng['error']['sslcertificatewrongdomain'] = 'The given certificate does not belong to this domain';
@@ -1639,7 +1639,7 @@ $lng['panel']['news'] = 'News';
 $lng['error']['sslredirectonlypossiblewithsslipport'] = 'Using the SSL redirect is only possible when the domain has at least one ssl-enabled IP/port combination assigned.';
 $lng['error']['fcgidstillenableddeadlock'] = 'FCGID is currently active.<br />Please deactivate it before switching to another webserver than Apache2 or lighttpd';
 $lng['error']['send_report_title'] = 'Send error report';
-$lng['error']['send_report_desc'] = 'Thank you for reporting this error and helping us to froxlor improve froxlor.<br />This is the email which will be sent to the froxlor developer team:';
+$lng['error']['send_report_desc'] = 'Thank you for reporting this error and helping us to improve Froxlor.<br />This is the email which will be sent to the Froxlor developer team:';
 $lng['error']['send_report'] = 'Send report';
 $lng['error']['send_report_error'] = 'Error when sending report: <br />%s';
 $lng['error']['notallowedtouseaccounts'] = 'Your account does not allow using IMAP/POP3. You cannot add email accounts.';
@@ -1659,7 +1659,7 @@ $lng['admin']['templates']['SERVER_IP'] = 'Replaces the default server ip-addres
 $lng['admin']['templates']['SERVER_PORT'] = 'Replaces the default server port';
 $lng['admin']['templates']['DOMAINNAME'] = 'Replaces the customers standard-subdomain (can be empty if none is generated)';
 $lng['admin']['show_news_feed']['title'] = 'Show news-feed on admin-dashboard';
-$lng['admin']['show_news_feed']['description'] = 'Enable this to show the official froxlor newsfeed (https://inside.froxlor.org/news/) on your dashboard and never miss important information or release-announcements.';
+$lng['admin']['show_news_feed']['description'] = 'Enable this to show the official Froxlor newsfeed (https://inside.froxlor.org/news/) on your dashboard and never miss important information or release-announcements.';
 $lng['panel']['newsfeed_disabled'] = 'The newsfeed is disabled. Click the edit icon to go to the settings.';
 
 // Added in Froxlor 0.9.32
@@ -1740,10 +1740,10 @@ $lng['error']['fcgidandphpfpmnogoodtogether'] = 'FCGID and PHP-FPM cannot be act
 // Added in Froxlor 0.9.34
 $lng['admin']['configfiles']['legend'] = '<h3>You are about to configure a service/daemon</h3>';
 $lng['admin']['configfiles']['commands'] = '<span class="red">Commands:</span> These commands are to be executed line by line as root-user in a shell. It is safe to copy the whole block and paste it into the shell.';
-$lng['admin']['configfiles']['files'] = '<span class="red">Configfiles:</span> The commands before the textfields should open an editor with the target file. Just copy and paste the contents into the editor and save the file.<br><span class="red">Please note:</span> The MySQL-password has not been replaced for security reasons. Please replace "FROXLOR_MYSQL_PASSWORD" on your own or use the javascript form below to replace it on-site. If you forgot your MySQL-password you\'ll find it in "lib/userdata.inc.php"';
+$lng['admin']['configfiles']['files'] = '<span class="red">Config files:</span> The commands before the textfields should open an editor with the target file. Just copy and paste the contents into the editor and save the file.<br><span class="red">Please note:</span> The MySQL-password has not been replaced for security reasons. Please replace "FROXLOR_MYSQL_PASSWORD" on your own or use the javascript form below to replace it on-site. If you forgot your MySQL-password you\'ll find it in "lib/userdata.inc.php"';
 $lng['serversettings']['apache_itksupport']['title'] = 'Use modifications for Apache ITK-MPM';
-$lng['serversettings']['apache_itksupport']['description'] = '<strong class="red">ATTENTION:</strong> use only if you acutally have apache itk-mpm enabled<br />otherwise your webserver will not be able to start';
-$lng['integrity_check']['DatabaseCharset'] = 'Characterset of database (should be UTF-8)';
+$lng['serversettings']['apache_itksupport']['description'] = '<strong class="red">ATTENTION:</strong> use only if you actually have apache itk-mpm enabled<br />otherwise your webserver will not be able to start';
+$lng['integrity_check']['DatabaseCharset'] = 'Character set of database (should be UTF-8)';
 $lng['integrity_check']['DomainIpTable'] = 'IP &lt;&dash;&gt; domain references';
 $lng['integrity_check']['SubdomainSslRedirect'] = 'False SSL-redirect flag for non-ssl domains';
 $lng['integrity_check']['FroxlorLocalGroupMemberForFcgidPhpFpm'] = 'froxlor-user in the customer groups (for FCGID/php-fpm)';
@@ -1845,18 +1845,18 @@ $lng['serversettings']['letsencryptkeysize']['description'] = "Size of the key i
 $lng['serversettings']['letsencryptreuseold']['title'] = "Re-use Let's Encrypt key";
 $lng['serversettings']['letsencryptreuseold']['description'] = "If activated, the same key will be used for every renew, otherwise a new key will be generated every time.<br><strong class=\"red\">ATTENTION:</strong> Let's Encrypt is still in beta</strong>";
 $lng['serversettings']['leenabled']['title'] = "Enable Let's Encrypt";
-$lng['serversettings']['leenabled']['description'] = "If activated, customers are able to let froxlor automatically generate and renew Let's Encrypt ssl-certificates for domains with a ssl IP/port.<br /><br />Please remember that you need to go through the webserver-configuration when eabled because this feature needs a special configuration.";
+$lng['serversettings']['leenabled']['description'] = "If activated, customers are able to let froxlor automatically generate and renew Let's Encrypt ssl-certificates for domains with a ssl IP/port.<br /><br />Please remember that you need to go through the webserver-configuration when enabled because this feature needs a special configuration.";
 $lng['domains']['ssl_redirect_temporarilydisabled'] = "<br>The SSL redirect is temporarily deactivated while a new Let's Encrypt certificate is generated. It will be activated again after the certificate was generated.";
 
 // Autoupdate
 $lng['admin']['autoupdate'] = 'Auto-Update';
-$lng['error']['customized_version'] = 'It looks like your Froxlor installation has been customized, no support sorry.';
+$lng['error']['customized_version'] = 'It looks like your Froxlor installation has been modified, no support sorry.';
 $lng['error']['autoupdate_0'] = 'Unknown error';
 $lng['error']['autoupdate_1'] = 'PHP setting allow_url_fopen is disabled. Autoupdate needs this setting to be enabled in php.ini';
 $lng['error']['autoupdate_2'] = 'PHP zip extension not found, please ensure it is installed and activated';
 $lng['error']['autoupdate_4'] = 'The froxlor archive could not be stored to the disk :(';
 $lng['error']['autoupdate_5'] = 'version.froxlor.org returned inacceptable values :(';
-$lng['error']['autoupdate_6'] = 'Woops, there was no (valid) version given to download :(';
+$lng['error']['autoupdate_6'] = 'Whoops, there was no (valid) version given to download :(';
 $lng['error']['autoupdate_7'] = 'The downloaded archive could not be found :(';
 $lng['error']['autoupdate_8'] = 'The archive could not be extracted :(';
 $lng['error']['autoupdate_9'] = 'The downloaded file did not pass the integrity check. Please try to update again.';
@@ -1892,7 +1892,7 @@ $lng['error']['dns_mx_prioempty'] = 'Invalid MX priority given';
 $lng['error']['dns_mx_needdom'] = 'The MX content value must be a valid domain-name';
 $lng['error']['dns_mx_noalias'] = 'The MX-content value cannot be an CNAME entry.';
 $lng['error']['dns_cname_invaliddom'] = 'Invalid domain-name for CNAME record';
-$lng['error']['dns_cname_nomorerr'] = 'There already exists a resource-record with the same record-name. It cannot be used as CNAME.';
+$lng['error']['dns_cname_nomorerr'] = 'There already exists a resource-record with the same record-name. It can not be used as CNAME.';
 $lng['error']['dns_ns_invaliddom'] = 'Invalid domain-name for NS record';
 $lng['error']['dns_srv_prioempty'] = 'Invalid SRV priority given';
 $lng['error']['dns_srv_invalidcontent'] = 'Invalid SRV content, must contain of fields weight, port and target, e.g.: 5 5060 sipserver.example.com.';
@@ -1922,7 +1922,7 @@ $lng['serversettings']['panel_customer_hide_options']['description'] = 'Select i
 $lng['serversettings']['allow_allow_customer_shell']['title'] = 'Allow customers to enable shell access for ftp-users';
 $lng['serversettings']['allow_allow_customer_shell']['description'] = '<strong class="red">Please note: Shell access allows the user to execute various binaries on your system. Use with extrem caution. Please only activate this if you REALLY know what you are doing!!!</strong>';
 $lng['serversettings']['available_shells']['title'] = 'List of available shells';
-$lng['serversettings']['available_shells']['description'] = 'Comma seperated list of shells that are available for the customer to chose from for their ftp-users.<br><br>Note that the default shell <strong>/bin/false</strong> will always be a choice (if enabled), even if this setting is empty. It is the default value for ftp-users in any case';
+$lng['serversettings']['available_shells']['description'] = 'Comma separated list of shells that are available for the customer to chose from for their ftp-users.<br><br>Note that the default shell <strong>/bin/false</strong> will always be a choice (if enabled), even if this setting is empty. It is the default value for ftp-users in any case';
 $lng['panel']['shell'] = 'Shell';
 $lng['serversettings']['le_froxlor_enabled']['title'] = "Enable Let's Encrypt for the froxlor vhost";
 $lng['serversettings']['le_froxlor_enabled']['description'] = "If activated, the froxlor vhost will automatically be secured using a Let's Encrypt certificate.";
@@ -1972,7 +1972,7 @@ $lng['admin']['domain_http2']['description'] = 'See <a target="_blank" href="htt
 $lng['admin']['testmail'] = 'SMTP test';
 $lng['success']['testmailsent'] = 'Test mail sent successfully';
 $lng['serversettings']['disable_le_selfcheck']['title'] = "Disable Let's Encrypt local self-check";
-$lng['serversettings']['disable_le_selfcheck']['description'] = "If activated, froxlor will <strong>not</strong> perform its self-check for token accessability. Needed for NATed IP's or similar.";
+$lng['serversettings']['disable_le_selfcheck']['description'] = "If activated, froxlor will <strong>not</strong> perform its self-check for token accessibility. Needed for NATed IP's or similar.";
 $lng['menue']['phpsettings']['fpmdaemons'] = 'PHP-FPM versions';
 $lng['admin']['phpsettings']['activephpconfigs'] = 'In use for php-config(s)';
 $lng['admin']['phpsettingsforsubdomains'] = 'Apply php-config to all subdomains:';
@@ -2021,7 +2021,7 @@ $lng['apikeys']['apikey_removed'] = 'The api key with the id #%s has been remove
 $lng['apikeys']['apikey_added'] = 'A new api key has been generated successfully';
 $lng['apikeys']['clicktoview'] = 'Click to view';
 $lng['apikeys']['allowed_from'] = 'Allowed from';
-$lng['apikeys']['allowed_from_help'] = 'Comma separated list of ip addresses. Default empty.<br>Specifying a subgnet e.g. 192.168.1.1/24 is currently not supported.';
+$lng['apikeys']['allowed_from_help'] = 'Comma separated list of ip addresses. Default empty.<br>Specifying a subnet e.g. 192.168.1.1/24 is currently not supported.';
 $lng['apikeys']['valid_until'] = 'Valid until';
 $lng['apikeys']['valid_until_help'] = 'Date until valid, format YYYY-MM-DD';
 $lng['serversettings']['enable_api']['title'] = 'Enable external API usage';
