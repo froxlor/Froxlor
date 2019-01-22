@@ -94,6 +94,10 @@ class Dns
 			}
 		}
 
+		// ftp
+		self::addRequiredEntry('ftp', 'A', $required_entries);
+		self::addRequiredEntry('ftp', 'AAAA', $required_entries);
+
 		// additional required records by setting
 		if ($domain['iswildcarddomain'] == '1') {
 			self::addRequiredEntry('*', 'A', $required_entries);
