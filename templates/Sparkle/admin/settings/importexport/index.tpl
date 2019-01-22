@@ -18,7 +18,7 @@ $header
 				<input type="hidden" name="s" value="$s" />
 				<input type="hidden" name="send" value="send" />
 
-				<input type="file" name="import_file" id="import_file" placeholder="Chose file for import" />
+				<input type="file" name="import_file" id="import_file" placeholder="Choose file for import" />
 				<input type="submit" value="Import">
 			</form>
 		</section>
