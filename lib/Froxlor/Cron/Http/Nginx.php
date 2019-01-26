@@ -68,22 +68,22 @@ class Nginx extends HttpConfigBase
 				// so we need to create a dummy
 				$_conffiles = glob(\Froxlor\FileDir::makeCorrectFile($restart_cmd['config_dir'] . "/*.conf"));
 				if ($_conffiles === false || empty($_conffiles)) {
-					$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'nginx::reload: fpm config directory "' . $restart_cmd['config_dir'] . '" is empty. Creating dummy.');
+					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'nginx::reload: fpm config directory "' . $restart_cmd['config_dir'] . '" is empty. Creating dummy.');
 					Fpm::createDummyPool($restart_cmd['config_dir']);
 				}
-				$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'nginx::reload: running ' . $restart_cmd['reload_cmd']);
+				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'nginx::reload: running ' . $restart_cmd['reload_cmd']);
 				\Froxlor\FileDir::safe_exec(escapeshellcmd($restart_cmd['reload_cmd']));
 			}
 		}
 
-		$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'nginx::reload: reloading nginx');
+		\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'nginx::reload: reloading nginx');
 		\Froxlor\FileDir::safe_exec(Settings::Get('system.apachereload_command'));
 
 		/**
 		 * nginx does not auto-spawn fcgi-processes
 		 */
 		if (Settings::Get('system.phpreload_command') != '' && (int) Settings::Get('phpfpm.enabled') == 0) {
-			$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'nginx::reload: restarting php processes');
+			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'nginx::reload: restarting php processes');
 			\Froxlor\FileDir::safe_exec(Settings::Get('system.phpreload_command'));
 		}
 	}
@@ -149,7 +149,7 @@ class Nginx extends HttpConfigBase
 			}
 			$port = $row_ipsandports['port'];
 
-			$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'nginx::createIpPort: creating ip/port settings for  ' . $ip . ":" . $port);
+			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'nginx::createIpPort: creating ip/port settings for  ' . $ip . ":" . $port);
 			$vhost_filename = \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.apacheconf_vhost') . '/10_froxlor_ipandport_' . trim(str_replace(':', '.', $row_ipsandports['ip']), '.') . '.' . $row_ipsandports['port'] . '.conf');
 
 			if (! isset($this->nginx_data[$vhost_filename])) {
@@ -171,7 +171,7 @@ class Nginx extends HttpConfigBase
 						if (! file_exists($row_ipsandports['ssl_cert_file'])) {
 							// explicitly disable ssl for this vhost
 							$row_ipsandports['ssl_cert_file'] = "";
-							$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'System certificate file "' . Settings::Get('system.ssl_cert_file') . '" does not seem to exist. Disabling SSL-vhost for "' . Settings::Get('system.hostname') . '"');
+							\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'System certificate file "' . Settings::Get('system.ssl_cert_file') . '" does not seem to exist. Disabling SSL-vhost for "' . Settings::Get('system.hostname') . '"');
 						}
 					}
 					if ($row_ipsandports['ssl_key_file'] == '') {
@@ -624,7 +624,7 @@ class Nginx extends HttpConfigBase
 			if (! file_exists($domain_or_ip['ssl_cert_file'])) {
 				// explicitly disable ssl for this vhost
 				$domain_or_ip['ssl_cert_file'] = "";
-				$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'System certificate file "' . Settings::Get('system.ssl_cert_file') . '" does not seem to exist. Disabling SSL-vhost for "' . $domain_or_ip['domain'] . '"');
+				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'System certificate file "' . Settings::Get('system.ssl_cert_file') . '" does not seem to exist. Disabling SSL-vhost for "' . $domain_or_ip['domain'] . '"');
 			}
 		}
 
@@ -645,7 +645,7 @@ class Nginx extends HttpConfigBase
 
 			// check for existence, #1485
 			if (! file_exists($domain_or_ip['ssl_cert_file'])) {
-				$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_ERR, $domain_or_ip['domain'] . ' :: certificate file "' . $domain_or_ip['ssl_cert_file'] . '" does not exist! Cannot create ssl-directives');
+				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_ERR, $domain_or_ip['domain'] . ' :: certificate file "' . $domain_or_ip['ssl_cert_file'] . '" does not exist! Cannot create ssl-directives');
 			} else {
 				// obsolete: ssl on now belongs to the listen block as 'ssl' at the end
 				// $sslsettings .= "\t" . 'ssl on;' . "\n";
@@ -665,7 +665,7 @@ class Nginx extends HttpConfigBase
 				if ($domain_or_ip['ssl_key_file'] != '') {
 					// check for existence, #1485
 					if (! file_exists($domain_or_ip['ssl_key_file'])) {
-						$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_ERR, $domain_or_ip['domain'] . ' :: certificate key file "' . $domain_or_ip['ssl_key_file'] . '" does not exist! Cannot create ssl-directives');
+						\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_ERR, $domain_or_ip['domain'] . ' :: certificate key file "' . $domain_or_ip['ssl_key_file'] . '" does not exist! Cannot create ssl-directives');
 					} else {
 						$sslsettings .= "\t" . 'ssl_certificate_key ' . \Froxlor\FileDir::makeCorrectFile($domain_or_ip['ssl_key_file']) . ';' . "\n";
 					}
@@ -1142,7 +1142,7 @@ class Nginx extends HttpConfigBase
 
 	public function writeConfigs()
 	{
-		$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, "nginx::writeConfigs: rebuilding " . Settings::Get('system.apacheconf_vhost'));
+		\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, "nginx::writeConfigs: rebuilding " . Settings::Get('system.apacheconf_vhost'));
 
 		$vhostDir = new \Froxlor\Http\Directory(Settings::Get('system.apacheconf_vhost'));
 		if (! $vhostDir->isConfigDir()) {
@@ -1168,7 +1168,7 @@ class Nginx extends HttpConfigBase
 			fclose($vhosts_file_handler);
 		} else {
 			if (! file_exists(Settings::Get('system.apacheconf_vhost'))) {
-				$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'nginx::writeConfigs: mkdir ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir(Settings::Get('system.apacheconf_vhost'))));
+				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'nginx::writeConfigs: mkdir ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir(Settings::Get('system.apacheconf_vhost'))));
 				\Froxlor\FileDir::safe_exec('mkdir -p ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir(Settings::Get('system.apacheconf_vhost'))));
 			}
 
@@ -1195,7 +1195,7 @@ class Nginx extends HttpConfigBase
 				mkdir(Settings::Get('system.apacheconf_htpasswddir'), 0751);
 				umask($umask);
 			} elseif (! is_dir(Settings::Get('system.apacheconf_htpasswddir'))) {
-				$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_WARNING, 'WARNING!!! ' . Settings::Get('system.apacheconf_htpasswddir') . ' is not a directory. htpasswd directory protection is disabled!!!');
+				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_WARNING, 'WARNING!!! ' . Settings::Get('system.apacheconf_htpasswddir') . ' is not a directory. htpasswd directory protection is disabled!!!');
 			}
 
 			if (is_dir(Settings::Get('system.apacheconf_htpasswddir'))) {
