@@ -60,7 +60,7 @@ class Check
 					}
 				}
 			}
-			if (in_array(FORMFIELDS_PLAUSIBILITY_CHECK_OK, $returnvalue)) {
+			if (in_array(self::FORMFIELDS_PLAUSIBILITY_CHECK_OK, $returnvalue)) {
 				// be sure to deactivate the other one for the froxlor-vhost
 				// to avoid having a settings-deadlock
 				foreach ($check_array[$fieldname]['deactivate'] as $setting => $value) {
