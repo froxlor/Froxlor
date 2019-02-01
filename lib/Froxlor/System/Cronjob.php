@@ -273,6 +273,9 @@ class Cronjob
 			} elseif ($row['type'] == '10') {
 				// Set FS - quota
 				$task_desc = $lng['tasks']['diskspace_set_quota'];
+			} elseif ($row['type'] == '11') {
+				// remove domain from pdns database if used
+				$task_desc = sprintf($lng['tasks']['remove_pdns_domain'], $row['data']['domain']);
 			} elseif ($row['type'] == '20') {
 				// deleting user-files
 				$loginname = '';
