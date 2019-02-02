@@ -72,7 +72,7 @@ class Check
 		return $returnvalue;
 	}
 
-	public function checkMysqlAccessHost($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues)
+	public static function checkMysqlAccessHost($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues)
 	{
 		$mysql_access_host_array = array_map('trim', explode(',', $newfieldvalue));
 
