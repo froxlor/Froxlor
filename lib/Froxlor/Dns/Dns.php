@@ -72,7 +72,6 @@ class Dns
 
 		self::addRequiredEntry('@', 'A', $required_entries);
 		self::addRequiredEntry('@', 'AAAA', $required_entries);
-
 		if (! $isMainButSubTo) {
 			self::addRequiredEntry('@', 'NS', $required_entries);
 		}

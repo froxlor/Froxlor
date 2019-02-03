@@ -157,11 +157,11 @@ if (isset($_REQUEST['detect'])) {
 	// No ip provided, detect IP.
 
 	$ip = $_SERVER['REMOTE_ADDR'];
-	if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4))
+	if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
 		$ipv4 = $ip;
-	else if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6))
+	} else if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
 		$ipv6 = $ip;
-	else {
+	} else {
 		response(500, 'Internal Server Error', 'Unable to detect IP. It must be provided.');
 	}
 }
