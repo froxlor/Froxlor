@@ -35,6 +35,9 @@ if (isset($_POST['action'])) {
 if ($action == "newsfeed") {
 	if (isset($_GET['role']) && $_GET['role'] == "customer") {
 		$feed = \Froxlor\Settings::Get("customer.news_feed_url");
+		if (empty(trim($feed))) {
+			$feed = "https://inside.froxlor.org/news/";
+		}
 	} else {
 		$feed = "https://inside.froxlor.org/news/";
 	}
