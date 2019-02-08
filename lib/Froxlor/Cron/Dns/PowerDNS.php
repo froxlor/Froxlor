@@ -124,8 +124,6 @@ class PowerDNS extends DnsBase
 
 	private function insertRecords($domainid = 0, $records = array(), $origin = "")
 	{
-		$changedate = date('Ymds', time());
-
 		$ins_stmt = PowerDNS::getDB()->prepare("
 			INSERT INTO records set
 			`domain_id` = :did,
@@ -134,8 +132,7 @@ class PowerDNS extends DnsBase
 			`content` = :content,
 			`ttl` = :ttl,
 			`prio` = :prio,
-			`disabled` = '0',
-			`change_date` = :changedate
+			`disabled` = '0'
 		");
 
 		foreach ($records as $record) {
@@ -156,8 +153,7 @@ class PowerDNS extends DnsBase
 				'type' => $record->type,
 				'content' => $record->content,
 				'ttl' => $record->ttl,
-				'prio' => $record->priority,
-				'changedate' => $changedate
+				'prio' => $record->priority
 			);
 			$ins_stmt->execute($ins_data);
 		}
