@@ -169,7 +169,8 @@ class Cronjob
 				'type' => '8',
 				'data' => $data
 			));
-		} elseif ($type == '11' && $param1 != '') {
+		} elseif ($type == '11' && $param1 != '' && Settings::Get('system.bind_enable') == '1' && Settings::Get('system.dns_server') == 'PowerDNS') {
+			// -> if bind disabled or dns-server not PowerDNS -> no task
 			$data = array();
 			$data['domain'] = $param1;
 			$data = json_encode($data);
