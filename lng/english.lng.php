@@ -2051,3 +2051,4 @@ $lng['panel']['system_is_configured'] = 'System is already set as configured';
 $lng['panel']['settings_before_configuration'] = 'Please be sure you adjusted the settings prior to configuring the services here';
 $lng['panel']['alternative_cmdline_config'] = 'Alternatively, just run the following command as root-user in you shell to configure the services automatically';
 $lng['tasks']['remove_pdns_domain'] = 'Delete domain %s from PowerDNS database';
+$lng['admin']['novhostcontainer'] = '<br><br><small class="red">None of the IPs and ports has the "' . $lng['admin']['ipsandports']['create_vhostcontainer'] . '" option enabled, many settings here will not be available</small>';
