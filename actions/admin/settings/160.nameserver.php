@@ -43,7 +43,7 @@ return array(
 					'settinggroup' => 'system',
 					'varname' => 'dns_server',
 					'type' => 'option',
-					'default' => 'bind',
+					'default' => 'Bind',
 					'option_mode' => 'one',
 					'option_options' => array(
 						'Bind' => 'Bind9',

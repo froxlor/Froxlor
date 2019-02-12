@@ -643,6 +643,7 @@ opcache.interned_strings_buffer'),
 	('system', 'logfiles_piped', '0'),
 	('system', 'logfiles_script', ''),
 	('system', 'dhparams_file', ''),
+	('system', 'errorlog_level', 'warn'),
 	('api', 'enabled', '0'),
 	('2fa', 'enabled', '1'),
 	('panel', 'decimal_places', '4'),
@@ -678,7 +679,7 @@ opcache.interned_strings_buffer'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'is_configured', '0'),
 	('panel', 'version', '0.10.0'),
-	('panel', 'db_version', '201812190');
+	('panel', 'db_version', '201901120');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

@@ -187,3 +187,12 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201812180')) {
 
 	\Froxlor\Froxlor::updateToDbVersion('201812190');
 }
+
+if (\Froxlor\Froxlor::isDatabaseVersion('201812190')) {
+
+	showUpdateStep("Adding new webserver error-log-level setting");
+	Settings::AddNew('system.errorlog_level', (\Froxlor\Settings::Get('system.webserver') == 'nginx' ? 'error' : 'warn'));
+	lastStepStatus(0);
+
+	\Froxlor\Froxlor::updateToDbVersion('201901120');
+}

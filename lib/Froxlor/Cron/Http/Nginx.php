@@ -1050,7 +1050,7 @@ class Nginx extends HttpConfigBase
 		}
 
 		$logfiles_text .= "\t" . 'access_log    ' . $access_log . ' ' . $logtype . ';' . "\n";
-		$logfiles_text .= "\t" . 'error_log    ' . $error_log . ' error;' . "\n";
+		$logfiles_text .= "\t" . 'error_log    ' . $error_log . ' ' . \Froxlor\Settings::Get('system.errorlog_level') . ';' . "\n";
 
 		if (Settings::Get('system.awstats_enabled') == '1') {
 			if ((int) $domain['parentdomainid'] == 0) {

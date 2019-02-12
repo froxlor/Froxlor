@@ -191,6 +191,29 @@ return array(
 						'apache2'
 					)
 				),
+				'system_errorlog_level' => array(
+					'label' => $lng['serversettings']['errorlog_level'],
+					'settinggroup' => 'system',
+					'varname' => 'errorlog_level',
+					'type' => 'option',
+					'default' => (\Froxlor\Settings::Get('system.webserver') == 'nginx' ? 'error' : 'warn'),
+					'option_mode' => 'one',
+					'option_options' => array(
+						'emerg' => 'emerg',
+						'alert' => 'alert',
+						'crit' => 'crit',
+						'error' => 'error',
+						'warn' => 'warn',
+						'notice' => 'notice',
+						'info' => 'info',
+						'debug' => 'debug'
+					),
+					'save_method' => 'storeSettingField',
+					'websrv_avail' => array(
+						'apache2',
+						'nginx'
+					)
+				),
 				'system_customersslpath' => array(
 					'label' => $lng['serversettings']['customerssl_directory'],
 					'settinggroup' => 'system',

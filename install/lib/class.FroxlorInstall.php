@@ -493,6 +493,7 @@ class FroxlorInstall
 			$this->_updateSetting($upd_stmt, '/etc/init.d/nginx reload', 'system', 'apachereload_command');
 			$this->_updateSetting($upd_stmt, '/etc/nginx/nginx.pem', 'system', 'ssl_cert_file');
 			$this->_updateSetting($upd_stmt, '/var/run/', 'phpfpm', 'fastcgi_ipcdir');
+			$this->_updateSetting($upd_stmt, 'error', 'system', 'errorlog_level');
 		}
 
 		$this->_updateSetting($upd_stmt, $this->_data['activate_newsfeed'], 'admin', 'show_news_feed');
