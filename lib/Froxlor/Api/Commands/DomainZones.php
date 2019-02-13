@@ -47,7 +47,11 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 	public function add()
 	{
 		if (Settings::Get('system.dnsenabled') != '1') {
-			throw new \Exception("DNS server not enabled on this system", 405);
+			throw new \Exception("DNS service not enabled on this system", 405);
+		}
+
+		if ($this->isAdmin() == false && $this->getUserDetail('dnsenabled') != '1') {
+			throw new \Exception("You cannot access this resource", 405);
 		}
 
 		$id = $this->getParam('id', true, 0);
@@ -307,7 +311,11 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 	public function get()
 	{
 		if (Settings::Get('system.dnsenabled') != '1') {
-			throw new \Exception("DNS server not enabled on this system", 405);
+			throw new \Exception("DNS service not enabled on this system", 405);
+		}
+
+		if ($this->isAdmin() == false && $this->getUserDetail('dnsenabled') != '1') {
+			throw new \Exception("You cannot access this resource", 405);
 		}
 
 		$id = $this->getParam('id', true, 0);
@@ -370,7 +378,11 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 	public function delete()
 	{
 		if (Settings::Get('system.dnsenabled') != '1') {
-			throw new \Exception("DNS server not enabled on this system", 405);
+			throw new \Exception("DNS service not enabled on this system", 405);
+		}
+
+		if ($this->isAdmin() == false && $this->getUserDetail('dnsenabled') != '1') {
+			throw new \Exception("You cannot access this resource", 405);
 		}
 
 		$entry_id = $this->getParam('entry_id');
