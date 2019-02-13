@@ -41,6 +41,7 @@ class CustomersTest extends TestCase
 			'new_customer_password' => 'h0lYmo1y',
 			'sendpassword' => TRAVIS_CI == 1 ? 0 : 1,
 			'phpenabled' => 1,
+			'dnsenabled' => 1,
 			'store_defaultindex' => 1,
 			'custom_notes' => 'secret',
 			'custom_notes_show' => 0,
