@@ -738,7 +738,7 @@ class Apache extends HttpConfigBase
 			chown($error_log, Settings::Get('system.httpuser'));
 			chgrp($error_log, Settings::Get('system.httpgroup'));
 			// set error log log-level
-			$logfiles_text .= '  LogLevel ' . \Froxlor\Settings::Get('system.errorlog_level');
+			$logfiles_text .= '  LogLevel ' . \Froxlor\Settings::Get('system.errorlog_level') . "\n";
 		} else {
 			$error_log = '/dev/null';
 		}
