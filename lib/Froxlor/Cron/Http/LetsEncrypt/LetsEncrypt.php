@@ -163,7 +163,7 @@ class LetsEncrypt extends \Froxlor\Cron\FroxlorCron
 
 				// Only renew let's encrypt certificate if no broken ssl_redirect is enabled
 				// - this temp. deactivation of the ssl-redirect is handled by the webserver-cronjob
-				$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, "Updating " . $certrow['domain']);
+				FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, "Updating " . $certrow['domain']);
 
 				$cronlog = FroxlorLogger::getInstanceOf(array(
 					'loginname' => $certrow['loginname']
