@@ -892,7 +892,7 @@ INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `cronclass`, `interval`,
 	(2, 'froxlor/core', 'traffic', '\\Froxlor\\Cron\\Traffic\\TrafficCron', '1 DAY', '1', 'cron_traffic'),
 	(3, 'froxlor/reports', 'usage_report', '\\Froxlor\\Cron\\Traffic\\ReportsCron', '1 DAY', '1', 'cron_usage_report'),
 	(4, 'froxlor/core', 'mailboxsize', '\\Froxlor\\Cron\\System\\MailboxsizeCron', '6 HOUR', '1', 'cron_mailboxsize'),
-	(5, 'froxlor/letsencrypt', 'letsencrypt', '\\Froxlor\\Cron\\Http\\LetsEncrypt\\LetsEncrypt', '5 MINUTE', '0', 'cron_letsencrypt'),
+	(5, 'froxlor/letsencrypt', 'letsencrypt', '\\Froxlor\\Cron\\Http\\LetsEncrypt\\AcmeSh', '5 MINUTE', '0', 'cron_letsencrypt'),
 	(6, 'froxlor/backup', 'backup', '\\Froxlor\\Cron\\System\\BackupCron', '1 DAY', '1', 'cron_backup');
 
 
