@@ -207,12 +207,14 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201902120')) {
 	showUpdateStep("Removing current Let's Encrypt certificates due to new implementation of acme.sh");
 	$sel_result = Database::query("SELECT id FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `letsencrypt` = '1'");
 	$domain_ids = $sel_result->fetchAll(\PDO::FETCH_ASSOC);
-	$domain_in = "";
-	foreach ($domain_ids as $domain_id) {
-		$domain_in .= "'".$domain_id['id']."',";
+	if (count($domain_ids) > 0) {
+		$domain_in = "";
+		foreach ($domain_ids as $domain_id) {
+			$domain_in .= "'" . $domain_id['id'] . "',";
+		}
+		$domain_in = substr($domain_in, 0, - 1);
+		Database::query("DELETE FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` WHERE `domainid` IN (" . $domain_in . ")");
 	}
-	$domain_in = substr($domain_in, 0, -1);
-	Database::query("DELETE FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` WHERE `domainid` IN (". $domain_in . ")");
 	lastStepStatus(0);
 
 	\Froxlor\Froxlor::updateToDbVersion('201902170');
