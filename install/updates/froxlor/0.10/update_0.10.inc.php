@@ -201,7 +201,11 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201902120')) {
 
 	showUpdateStep("Adding new ECC / ECDSA setting for Let's Encrypt");
 	Settings::AddNew('system.leecc', '0');
-	Database::query("UPDATE `" . TABLE_PANEL_CRONRUNS . "` SET `cronclass` = '\\Froxlor\\Cron\\Http\\LetsEncrypt\\AcmeSh' WHERE `cronfile` = 'letsencrypt'");
+	$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CRONRUNS . "` SET `cronclass`  = :cc WHERE `cronfile` = :cf");
+	Database::pexecute($upd_stmt, array(
+		'cc' => '\\Froxlor\\Cron\\Http\\LetsEncrypt\\AcmeSh',
+		'cf' => 'letsencrypt'
+	));
 	Settings::Set('system.letsencryptkeysize', '2048', true);
 	lastStepStatus(0);
 
