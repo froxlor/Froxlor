@@ -202,6 +202,7 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201902120')) {
 	showUpdateStep("Adding new ECC / ECDSA setting for Let's Encrypt");
 	Settings::AddNew('system.leecc', '0');
 	Database::query("UPDATE `" . TABLE_PANEL_CRONRUNS . "` SET `cronclass` = '\\Froxlor\\Cron\\Http\\LetsEncrypt\\AcmeSh' WHERE `cronfile` = 'letsencrypt'");
+	Settings::Set('system.letsencryptkeysize', '2048', true);
 	lastStepStatus(0);
 
 	showUpdateStep("Removing current Let's Encrypt certificates due to new implementation of acme.sh");

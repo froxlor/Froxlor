@@ -180,9 +180,15 @@ return array(
 					'label' => $lng['serversettings']['letsencryptkeysize'],
 					'settinggroup' => 'system',
 					'varname' => 'letsencryptkeysize',
-					'type' => 'int',
-					'int_min' => 2048,
-					'default' => 4096,
+					'type' => 'option',
+					'default' => '2048',
+					'option_mode' => 'one',
+					'option_options' => array(
+						'2048' => '2048',
+						'3072' => '3072',
+						'4096' => '4096',
+						'8192' => '8192'
+					),
 					'save_method' => 'storeSettingField'
 				),
 				'system_leecc' => array(
