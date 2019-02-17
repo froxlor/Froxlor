@@ -332,7 +332,16 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 
 	private static function checkUpgrade()
 	{
-		$acmesh_result = \Froxlor\FileDir::safe_exec(self::$acmesh . " --upgrade");
-		FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, "Checking for LetsEncrypt client upgrades before renewing certificates:\n" . implode("\n", $acmesh_result));
+		$lastcheck = \Froxlor\FileDir::makeCorrectFile(dirname(self::$acmesh) . '/.froxlor.lastupdate');
+		if (! file_exists($lastcheck)) {
+			file_put_contents($lastcheck, time());
+		}
+
+		$updatets = file_get_contents($lastcheck);
+		if ((int) trim($updatets) < (time() - 24 * 60 * 60)) {
+			$acmesh_result = \Froxlor\FileDir::safe_exec(self::$acmesh . " --upgrade");
+			FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, "Checking for LetsEncrypt client upgrades before renewing certificates:\n" . implode("\n", $acmesh_result));
+			file_put_contents($lastcheck, time());
+		}
 	}
 }

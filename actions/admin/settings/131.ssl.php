@@ -149,24 +149,6 @@ return array(
 					),
 					'save_method' => 'storeSettingField'
 				),
-				'system_letsencryptcountrycode' => array(
-					'label' => $lng['serversettings']['letsencryptcountrycode'],
-					'settinggroup' => 'system',
-					'varname' => 'letsencryptcountrycode',
-					'type' => 'string',
-					'string_emptyallowed' => false,
-					'default' => 'DE',
-					'save_method' => 'storeSettingField'
-				),
-				'system_letsencryptstate' => array(
-					'label' => $lng['serversettings']['letsencryptstate'],
-					'settinggroup' => 'system',
-					'varname' => 'letsencryptstate',
-					'type' => 'string',
-					'string_emptyallowed' => false,
-					'default' => 'Hessen',
-					'save_method' => 'storeSettingField'
-				),
 				'system_letsencryptchallengepath' => array(
 					'label' => $lng['serversettings']['letsencryptchallengepath'],
 					'settinggroup' => 'system',
