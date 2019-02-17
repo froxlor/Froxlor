@@ -41,10 +41,11 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 	 */
 	private static $upddom_stmt = null;
 
+	private static $do_update = true;
+
 	public static function run()
 	{
 		self::checkInstall();
-		self::checkUpgrade();
 
 		self::$apiserver = 'https://acme-v0' . \Froxlor\Settings::Get('system.leapiversion') . '.api.letsencrypt.org/directory';
 
@@ -252,6 +253,12 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 	private static function runAcmeSh($certrow = array(), $domains = array(), $cert_mode = 'issue', &$cronlog = null, &$changedetected = 0)
 	{
 		if (! empty($domains)) {
+
+			if (self::$do_update) {
+				self::checkUpgrade();
+				self::$do_update = false;
+			}
+
 			$acmesh_cmd = self::$acmesh . " --auto-upgrade 0 --server " . self::$apiserver . " --" . $cert_mode . " -d " . implode(" -d ", $domains);
 
 			if ($cert_mode == 'issue') {
@@ -332,16 +339,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 
 	private static function checkUpgrade()
 	{
-		$lastcheck = \Froxlor\FileDir::makeCorrectFile(dirname(self::$acmesh) . '/.froxlor.lastupdate');
-		if (! file_exists($lastcheck)) {
-			file_put_contents($lastcheck, time());
-		}
-
-		$updatets = file_get_contents($lastcheck);
-		if ((int) trim($updatets) < (time() - 24 * 60 * 60)) {
-			$acmesh_result = \Froxlor\FileDir::safe_exec(self::$acmesh . " --upgrade");
-			FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, "Checking for LetsEncrypt client upgrades before renewing certificates:\n" . implode("\n", $acmesh_result));
-			file_put_contents($lastcheck, time());
-		}
+		$acmesh_result = \Froxlor\FileDir::safe_exec(self::$acmesh . " --upgrade");
+		FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, "Checking for LetsEncrypt client upgrades before renewing certificates:\n" . implode("\n", $acmesh_result));
 	}
 }
