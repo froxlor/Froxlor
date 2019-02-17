@@ -340,7 +340,8 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 	{
 		if (! file_exists(self::$acmesh)) {
 			FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, "Could not find acme.sh - installing it to /root/.acme.sh/");
-			\Froxlor\FileDir::safe_exec("wget -O -  https://get.acme.sh | sh", false, array(
+			$return = false;
+			\Froxlor\FileDir::safe_exec("wget -O -  https://get.acme.sh | sh", $return, array(
 				'|'
 			));
 		}
