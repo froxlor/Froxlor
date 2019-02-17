@@ -199,6 +199,14 @@ return array(
 					),
 					'save_method' => 'storeSettingField'
 				),
+				'system_letsencryptreuseold' => array(
+					'label' => $lng['serversettings']['letsencryptreuseold'],
+					'settinggroup' => 'system',
+					'varname' => 'letsencryptreuseold',
+					'type' => 'bool',
+					'default' => true,
+					'save_method' => 'storeSettingField'
+				),
 				'system_disable_le_selfcheck' => array(
 					'label' => $lng['serversettings']['disable_le_selfcheck'],
 					'settinggroup' => 'system',

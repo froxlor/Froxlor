@@ -271,6 +271,9 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 				if (Settings::Get('system.leecc') > 0) {
 					$acmesh_cmd .= " --keylength ec-" . Settings::Get('system.leecc');
 				}
+				if (Settings::Get('system.letsencryptreuseold') != '1') {
+					$acmesh_cmd .= " --always-force-new-domain-key";
+				}
 
 				$acme_result = \Froxlor\FileDir::safe_exec($acmesh_cmd);
 
