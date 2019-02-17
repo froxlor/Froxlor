@@ -32,6 +32,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 	public static function run()
 	{
 		self::checkInstall();
+		self::checkUpgrade();
 
 		self::$apiserver = 'https://acme-v0' . \Froxlor\Settings::Get('system.leapiversion') . '.api.letsencrypt.org/directory';
 
@@ -173,7 +174,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 				));
 
 				// Initialize Lescript with documentroot
-				$acmesh_cmd = self::$acmesh . " --server " . self::$apiserver . " --" . $cert_mode . " -d " . implode(" -d ", $domains);
+				$acmesh_cmd = self::$acmesh . " --auto-upgrade 0 --server " . self::$apiserver . " --" . $cert_mode . " -d " . implode(" -d ", $domains);
 
 				if ($cert_mode == 'issue') {
 					$acmesh_cmd .= " -w " . \Froxlor\Froxlor::getInstallDir();
@@ -263,7 +264,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 				}
 
 				// Initialize Lescript with documentroot
-				$acmesh_cmd = self::$acmesh . " --server " . self::$apiserver . " --" . $cert_mode . " -d " . implode(" -d ", $domains);
+				$acmesh_cmd = self::$acmesh . " --auto-upgrade 0 --server " . self::$apiserver . " --" . $cert_mode . " -d " . implode(" -d ", $domains);
 
 				if ($cert_mode == 'issue') {
 					$acmesh_cmd .= " -w " . \Froxlor\Froxlor::getInstallDir();
@@ -341,9 +342,15 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 		if (! file_exists(self::$acmesh)) {
 			FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, "Could not find acme.sh - installing it to /root/.acme.sh/");
 			$return = false;
-			\Froxlor\FileDir::safe_exec("wget -O -  https://get.acme.sh | sh", $return, array(
+			\Froxlor\FileDir::safe_exec("wget -O - https://get.acme.sh | sh", $return, array(
 				'|'
 			));
 		}
+	}
+
+	private static function checkUpgrade()
+	{
+		$acmesh_result = \Froxlor\FileDir::safe_exec(self::$acmesh . " --upgrade");
+		FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, "Checking for LetsEncrypt client upgrades before renewing certificates:\n" . implode("\n", $acmesh_result));
 	}
 }
