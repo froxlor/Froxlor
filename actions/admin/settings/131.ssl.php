@@ -185,12 +185,18 @@ return array(
 					'default' => 4096,
 					'save_method' => 'storeSettingField'
 				),
-				'system_letsencryptreuseold' => array(
-					'label' => $lng['serversettings']['letsencryptreuseold'],
+				'system_leecc' => array(
+					'label' => $lng['serversettings']['letsencryptecc'],
 					'settinggroup' => 'system',
-					'varname' => 'letsencryptreuseold',
-					'type' => 'bool',
-					'default' => false,
+					'varname' => 'leecc',
+					'type' => 'option',
+					'default' => '0',
+					'option_mode' => 'one',
+					'option_options' => array(
+						'0' => '-',
+						'256' => 'ec-256',
+						'384' => 'ec-384'
+					),
 					'save_method' => 'storeSettingField'
 				),
 				'system_disable_le_selfcheck' => array(
