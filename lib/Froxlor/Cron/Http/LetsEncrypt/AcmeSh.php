@@ -29,6 +29,18 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 
 	private static $acmesh = "/root/.acme.sh/acme.sh";
 
+	/**
+	 *
+	 * @var \PDOStatement
+	 */
+	private static $updcert_stmt = null;
+
+	/**
+	 *
+	 * @var \PDOStatement
+	 */
+	private static $upddom_stmt = null;
+
 	public static function run()
 	{
 		self::checkInstall();
@@ -87,7 +99,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 				AND dom.`iswildcarddomain` = 0
 		");
 
-		$updcert_stmt = Database::prepare("
+		self::$updcert_stmt = Database::prepare("
 			REPLACE INTO
 				`" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "`
 			SET
@@ -102,7 +114,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 				`expirationdate` = :expirationdate
 		");
 
-		$upddom_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `ssl_redirect` = '1' WHERE `id` = :domainid");
+		self::$upddom_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `ssl_redirect` = '1' WHERE `id` = :domainid");
 
 		// flag for re-generation of vhost files
 		$changedetected = 0;
@@ -173,48 +185,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 					'adminsession' => 0
 				));
 
-				// Initialize Lescript with documentroot
-				$acmesh_cmd = self::$acmesh . " --auto-upgrade 0 --server " . self::$apiserver . " --" . $cert_mode . " -d " . implode(" -d ", $domains);
-
-				if ($cert_mode == 'issue') {
-					$acmesh_cmd .= " -w " . \Froxlor\Froxlor::getInstallDir();
-				}
-				if (Settings::Get('system.leecc') > 0) {
-					$acmesh_cmd .= " --keylength ec-" . Settings::Get('system.leecc');
-				}
-				
-				FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_DEBUG, $acmesh_cmd);
-
-				$acme_result = \Froxlor\FileDir::safe_exec($acmesh_cmd);
-
-				$return = array();
-				self::readCertificateToVar(array_pop($domains), $return);
-
-				if (! empty($return['crt'])) {
-
-					$newcert = openssl_x509_parse($return['crt']);
-
-					// Store the new data
-					Database::pexecute($updcert_stmt, array(
-						'id' => $certrow['id'],
-						'domainid' => $certrow['domainid'],
-						'crt' => $return['crt'],
-						'key' => $return['key'],
-						'ca' => $return['chain'],
-						'chain' => $return['chain'],
-						'csr' => $return['csr'],
-						'fullchain' => $return['fullchain'],
-						'expirationdate' => date('Y-m-d H:i:s', $newcert['validTo_time_t'])
-					));
-
-					if ($certrow['ssl_redirect'] == 3) {
-						Settings::Set('system.le_froxlor_redirect', '1');
-					}
-					FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, "Updated Let's Encrypt certificate for " . $certrow['domain']);
-					$changedetected = 1;
-				} else {
-					FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_ERR, "Could not get Let's Encrypt certificate for " . $certrow['domain'] . ":\n" . implode("\n", $acme_result));
-				}
+				self::runAcmeSh($certrow, $domains, $cert_mode, $cronlog, $changedetected);
 			}
 		}
 
@@ -231,8 +202,8 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 
 			// Only renew let's encrypt certificate if no broken ssl_redirect is enabled
 			if ($certrow['ssl_redirect'] != 2) {
-				
-				if (!empty($certrow['ssl_cert_file'])) {
+
+				if (! empty($certrow['ssl_cert_file'])) {
 					$cert_mode = 'renew';
 					$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, "Updating certificate for " . $certrow['domain']);
 				} else {
@@ -263,52 +234,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 					}
 				}
 
-				// Initialize Lescript with documentroot
-				$acmesh_cmd = self::$acmesh . " --auto-upgrade 0 --server " . self::$apiserver . " --" . $cert_mode . " -d " . implode(" -d ", $domains);
-
-				if ($cert_mode == 'issue') {
-					$acmesh_cmd .= " -w " . \Froxlor\Froxlor::getInstallDir();
-				}
-				if (Settings::Get('system.leecc') > 0) {
-					$acmesh_cmd .= " --keylength ec-" . Settings::Get('system.leecc');
-				}
-				if (Settings::Get('system.letsencryptreuseold') != '1') {
-					$acmesh_cmd .= " --always-force-new-domain-key";
-				}
-
-				$acme_result = \Froxlor\FileDir::safe_exec($acmesh_cmd);
-
-				$return = array();
-				self::readCertificateToVar($certrow['domain'], $return);
-
-				if (! empty($return['crt'])) {
-
-					$newcert = openssl_x509_parse($return['crt']);
-
-					// Store the new data
-					Database::pexecute($updcert_stmt, array(
-						'id' => $certrow['id'],
-						'domainid' => $certrow['domainid'],
-						'crt' => $return['crt'],
-						'key' => $return['key'],
-						'ca' => $return['chain'],
-						'chain' => $return['chain'],
-						'csr' => $return['csr'],
-						'fullchain' => $return['fullchain'],
-						'expirationdate' => date('Y-m-d H:i:s', $newcert['validTo_time_t'])
-					));
-
-					if ($certrow['ssl_redirect'] == 3) {
-						Database::pexecute($upddom_stmt, array(
-							'domainid' => $certrow['domainid']
-						));
-					}
-
-					$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, "Updated Let's Encrypt certificate for " . $certrow['domain']);
-					$changedetected = 1;
-				} else {
-					$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_ERR, "Could not get Let's Encrypt certificate for " . $certrow['domain'] . ":\n" . implode("\n", $acme_result));
-				}
+				self::runAcmeSh($certrow, $domains, $cert_mode, $cronlog, $changedetected);
 			} else {
 				$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_WARNING, "Skipping Let's Encrypt generation for " . $certrow['domain'] . " due to an enabled ssl_redirect");
 			}
@@ -321,6 +247,57 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 		}
 
 		FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, "Let's Encrypt certificates have been updated");
+	}
+
+	private static function runAcmeSh($certrow = array(), $domains = array(), $cert_mode = 'issue', &$cronlog = null, &$changedetected = 0)
+	{
+		if (! empty($domains)) {
+			$acmesh_cmd = self::$acmesh . " --auto-upgrade 0 --server " . self::$apiserver . " --" . $cert_mode . " -d " . implode(" -d ", $domains);
+
+			if ($cert_mode == 'issue') {
+				$acmesh_cmd .= " -w " . \Froxlor\Froxlor::getInstallDir();
+			}
+			if (Settings::Get('system.leecc') > 0) {
+				$acmesh_cmd .= " --keylength ec-" . Settings::Get('system.leecc');
+			}
+			if (Settings::Get('system.letsencryptreuseold') != '1') {
+				$acmesh_cmd .= " --always-force-new-domain-key";
+			}
+
+			$acme_result = \Froxlor\FileDir::safe_exec($acmesh_cmd);
+
+			$return = array();
+			self::readCertificateToVar($certrow['domain'], $return);
+
+			if (! empty($return['crt'])) {
+
+				$newcert = openssl_x509_parse($return['crt']);
+
+				// Store the new data
+				Database::pexecute(self::$updcert_stmt, array(
+					'id' => $certrow['id'],
+					'domainid' => $certrow['domainid'],
+					'crt' => $return['crt'],
+					'key' => $return['key'],
+					'ca' => $return['chain'],
+					'chain' => $return['chain'],
+					'csr' => $return['csr'],
+					'fullchain' => $return['fullchain'],
+					'expirationdate' => date('Y-m-d H:i:s', $newcert['validTo_time_t'])
+				));
+
+				if ($certrow['ssl_redirect'] == 3) {
+					Database::pexecute(self::$upddom_stmt, array(
+						'domainid' => $certrow['domainid']
+					));
+				}
+
+				$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, "Updated Let's Encrypt certificate for " . $certrow['domain']);
+				$changedetected = 1;
+			} else {
+				$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_ERR, "Could not get Let's Encrypt certificate for " . $certrow['domain'] . ":\n" . implode("\n", $acme_result));
+			}
+		}
 	}
 
 	private static function readCertificateToVar($domain, &$return)
