@@ -3409,7 +3409,7 @@ ssl = no
 # root. Included doc/mkcert.sh can be used to easily generate self-signed
 # certificate, just make sure to update the domains in dovecot-openssl.cnf
 #ssl_cert = </etc/dovecot/dovecot.pem
-ssl_key = #ssl_key = </etc/dovecot/private/dovecot.pem
+#ssl_key = </etc/dovecot/private/dovecot.pem
 
 # If key file is password protected, give the password here. Alternatively
 # give it when starting dovecot with -p parameter. Since this file is often
