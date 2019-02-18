@@ -107,6 +107,10 @@ if ($page == '' || $page == 'overview') {
 
 			$value_arr = array();
 
+			if (empty($name)) {
+				\Froxlor\UI\Response::standard_error('stringmustntbeempty', 'name');
+			}
+
 			$value_arr['diskspace'] = (int)($_POST['diskspace']);
 			if (isset($_POST['diskspace_ul'])) {
 				$value_arr['diskspace'] = - 1;
