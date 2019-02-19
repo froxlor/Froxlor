@@ -206,7 +206,7 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201902120')) {
 		'cc' => '\\Froxlor\\Cron\\Http\\LetsEncrypt\\AcmeSh',
 		'cf' => 'letsencrypt'
 	));
-	Settings::Set('system.letsencryptkeysize', '2048', true);
+	Settings::Set('system.letsencryptkeysize', '4096', true);
 	lastStepStatus(0);
 
 	showUpdateStep("Removing current Let's Encrypt certificates due to new implementation of acme.sh");
