@@ -177,7 +177,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 				if (!empty($froxlor_aliases)) {
 					$froxlor_aliases = explode(",", $froxlor_aliases);
 					foreach ($froxlor_aliases as $falias) {
-						if (\Froxlor\Validate\Validate::validateDomain($falias)) {
+						if (\Froxlor\Validate\Validate::validateDomain(trim($falias))) {
 							$domains[] = trim($falias);
 						}
 					}
