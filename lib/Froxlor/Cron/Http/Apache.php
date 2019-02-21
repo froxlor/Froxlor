@@ -207,8 +207,8 @@ class Apache extends HttpConfigBase
 						$froxlor_aliases = explode(",", $froxlor_aliases);
 						$aliases = "";
 						foreach ($froxlor_aliases as $falias) {
-							if (\Froxlor\Validate\Validate::validateDomain($falias)) {
-								$aliases = trim($falias) . " ";
+							if (\Froxlor\Validate\Validate::validateDomain(trim($falias))) {
+								$aliases .= trim($falias) . " ";
 							}
 						}
 						$aliases = trim($aliases);

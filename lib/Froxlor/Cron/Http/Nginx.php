@@ -230,8 +230,8 @@ class Nginx extends HttpConfigBase
 				if (!empty($froxlor_aliases)) {
 					$froxlor_aliases = explode(",", $froxlor_aliases);
 					foreach ($froxlor_aliases as $falias) {
-						if (\Froxlor\Validate\Validate::validateDomain($falias)) {
-							$aliases = trim($falias) . " ";
+						if (\Froxlor\Validate\Validate::validateDomain(trim($falias))) {
+							$aliases .= trim($falias) . " ";
 						}
 					}
 					$aliases = " " . trim($aliases);
