@@ -2056,3 +2056,5 @@ $lng['serversettings']['errorlog_level']['title'] = 'Error log-level';
 $lng['serversettings']['errorlog_level']['description'] = 'Specify the error log level. Default is "warn" for apache-users and "error" for nginx-users.';
 $lng['serversettings']['letsencryptecc']['title'] = "Issue ECC / ECDSA certificate";
 $lng['serversettings']['letsencryptecc']['description'] = "If set to a valid key-size the certificate issued will use ECC / ECDSA";
+$lng['serversettings']['froxloraliases']['title'] = "Domain aliases for froxlor vhost";
+$lng['serversettings']['froxloraliases']['description'] = "Comma separated list of domains to add as server alias to the froxlor vhost";

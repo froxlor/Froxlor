@@ -1703,3 +1703,5 @@ $lng['serversettings']['errorlog_level']['title'] = 'Ausführlichkeit des Fehler
 $lng['serversettings']['errorlog_level']['description'] = 'Steuert die Ausführlichkeit des Fehlerprotokolls. Voreinstellung ist "warn" bei Apache und "error" bei Nginx.';
 $lng['serversettings']['letsencryptecc']['title'] = "ECC / ECDSA Zertifikate ausstellen";
 $lng['serversettings']['letsencryptecc']['description'] = "Wenn eine Schlüsselgröße ausgewählt wird, werden ECC / ECDSA Zertifikate erstellt";
+$lng['serversettings']['froxloraliases']['title'] = "Domain Aliase für Froxlor Vhost";
+$lng['serversettings']['froxloraliases']['description'] = "Komma getrennte Liste von Domains, welche als Server Alias zum Froxlor Vhost hinzugefügt werden";

@@ -201,6 +201,21 @@ class Apache extends HttpConfigBase
 
 				if ($row_ipsandports['vhostcontainer_servername_statement'] == '1') {
 					$this->virtualhosts_data[$vhosts_filename] .= ' ServerName ' . Settings::Get('system.hostname') . "\n";
+
+					$froxlor_aliases = Settings::Get('system.froxloraliases');
+					if (!empty($froxlor_aliases)) {
+						$froxlor_aliases = explode(",", $froxlor_aliases);
+						$aliases = "";
+						foreach ($froxlor_aliases as $falias) {
+							if (\Froxlor\Validate\Validate::validateDomain($falias)) {
+								$aliases = trim($falias) . " ";
+							}
+						}
+						$aliases = trim($aliases);
+						if (!empty($aliases)) {
+							$this->virtualhosts_data[$vhosts_filename] .= ' ServerAlias ' . $aliases . "\n";
+						}
+					}
 				}
 
 				$is_redirect = false;

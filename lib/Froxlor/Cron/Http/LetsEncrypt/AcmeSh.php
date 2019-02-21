@@ -173,6 +173,16 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 					$certrow['domain']
 				);
 
+				$froxlor_aliases = Settings::Get('system.froxloraliases');
+				if (!empty($froxlor_aliases)) {
+					$froxlor_aliases = explode(",", $froxlor_aliases);
+					foreach ($froxlor_aliases as $falias) {
+						if (\Froxlor\Validate\Validate::validateDomain($falias)) {
+							$domains[] = trim($falias);
+						}
+					}
+				}
+
 				// Only renew let's encrypt certificate if no broken ssl_redirect is enabled
 				// - this temp. deactivation of the ssl-redirect is handled by the webserver-cronjob
 				if ($cert_mode == 'renew') {

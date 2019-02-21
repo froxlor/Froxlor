@@ -30,6 +30,16 @@ return array(
 					'default' => false,
 					'save_method' => 'storeSettingField'
 				),
+				'system_froxloraliases' => array(
+					'label' => $lng['serversettings']['froxloraliases'],
+					'settinggroup' => 'system',
+					'varname' => 'froxloraliases',
+					'type' => 'string',
+					'string_regexp' => '/^(([a-z0-9\-\._]+, ?)*[a-z0-9\-\._]+)?$/i',
+					'string_emptyallowed' => true,
+					'default' => '',
+					'save_method' => 'storeSettingField'
+				),
 				/**
 				 * SSL / Let's Encrypt
 				 */

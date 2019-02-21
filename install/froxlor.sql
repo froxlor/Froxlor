@@ -645,6 +645,7 @@ opcache.interned_strings_buffer'),
 	('system', 'dhparams_file', ''),
 	('system', 'errorlog_level', 'warn'),
 	('system', 'leecc', '0'),
+	('system', 'froxloraliases', ''),
 	('api', 'enabled', '0'),
 	('2fa', 'enabled', '1'),
 	('panel', 'decimal_places', '4'),
@@ -680,7 +681,7 @@ opcache.interned_strings_buffer'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'is_configured', '0'),
 	('panel', 'version', '0.10.0'),
-	('panel', 'db_version', '201902170');
+	('panel', 'db_version', '201902210');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

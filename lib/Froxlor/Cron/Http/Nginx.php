@@ -224,7 +224,19 @@ class Nginx extends HttpConfigBase
 				$this->nginx_data[$vhost_filename] .= "\t" . 'listen    ' . $ip . ':' . $port . ' default_server' . ($ssl_vhost == true ? ' ssl' : '') . ($http2 == true ? ' http2' : '') . ';' . "\n";
 
 				$this->nginx_data[$vhost_filename] .= "\t" . '# Froxlor default vhost' . "\n";
-				$this->nginx_data[$vhost_filename] .= "\t" . 'server_name    ' . Settings::Get('system.hostname') . ';' . "\n";
+
+				$aliases = "";
+				$froxlor_aliases = Settings::Get('system.froxloraliases');
+				if (!empty($froxlor_aliases)) {
+					$froxlor_aliases = explode(",", $froxlor_aliases);
+					foreach ($froxlor_aliases as $falias) {
+						if (\Froxlor\Validate\Validate::validateDomain($falias)) {
+							$aliases = trim($falias) . " ";
+						}
+					}
+					$aliases = " " . trim($aliases);
+				}
+				$this->nginx_data[$vhost_filename] .= "\t" . 'server_name    ' . Settings::Get('system.hostname') . $aliases . ';' . "\n";
 				$this->nginx_data[$vhost_filename] .= "\t" . 'access_log      /var/log/nginx/access.log;' . "\n";
 
 				if (Settings::Get('system.use_ssl') == '1' && Settings::Get('system.leenabled') == '1' && Settings::Get('system.le_froxlor_enabled') == '1') {

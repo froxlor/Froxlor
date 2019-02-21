@@ -224,3 +224,12 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201902120')) {
 
 	\Froxlor\Froxlor::updateToDbVersion('201902170');
 }
+
+if (\Froxlor\Froxlor::isDatabaseVersion('201902170')) {
+
+	showUpdateStep("Adding new froxlor vhost domain alias setting");
+	Settings::AddNew('system.froxloraliases', "");
+	lastStepStatus(0);
+
+	\Froxlor\Froxlor::updateToDbVersion('201902210');
+}
