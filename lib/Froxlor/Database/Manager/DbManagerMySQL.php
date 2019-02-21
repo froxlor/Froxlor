@@ -192,8 +192,13 @@ class DbManagerMySQL
 	 */
 	public function enableUser($username = null, $host = null)
 	{
-		Database::query('GRANT ALL PRIVILEGES ON `' . $username . '`.* TO `' . $username . '`@`' . $host . '`');
-		Database::query('GRANT ALL PRIVILEGES ON `' . str_replace('_', '\_', $username) . '` . * TO `' . $username . '`@`' . $host . '`');
+		// check whether user exists to avoid errors
+		$exist_check_stmt = Database::prepare("SELECT EXISTS(SELECT 1 FROM mysql.user WHERE user = '" . $username . "' AND host = '" . $host . "')");
+		$exist_check = Database::pexecute_first($exist_check_stmt);
+		if ($exist_check && array_pop($exist_check) == '1') {
+			Database::query('GRANT ALL PRIVILEGES ON `' . $username . '`.* TO `' . $username . '`@`' . $host . '`');
+			Database::query('GRANT ALL PRIVILEGES ON `' . str_replace('_', '\_', $username) . '` . * TO `' . $username . '`@`' . $host . '`');
+		}
 	}
 
 	/**

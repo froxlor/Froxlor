@@ -305,11 +305,11 @@ class Store
 
 			// be aware that ipv6 addresses are enclosed in [ ] when passed here
 			$mysql_access_host_array = array_map(array(
-				self,
+				'\\Froxlor\\Settings\\Store',
 				'cleanMySQLAccessHost'
 			), $mysql_access_host_array);
 
-			$mysql_access_host_array = array_unique(\Froxlor\PhpHelper::arrayTrim($mysql_access_host_array));
+			$mysql_access_host_array = array_unique($mysql_access_host_array);
 			$newfieldvalue = implode(',', $mysql_access_host_array);
 			\Froxlor\Database\DbManager::correctMysqlUsers($mysql_access_host_array);
 		}
