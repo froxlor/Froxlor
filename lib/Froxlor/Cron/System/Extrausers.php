@@ -24,7 +24,7 @@ class Extrausers
 	{
 		// passwd
 		$passwd = '/var/lib/extrausers/passwd';
-		$sql = "SELECT username,'x' as password,uid,gid,'Froxlor User' as comment,homedir,shell, login_enabled FROM ftp_users ORDER BY uid ASC";
+		$sql = "SELECT customerid,username,'x' as password,uid,gid,'Froxlor User' as comment,homedir,shell, login_enabled FROM ftp_users ORDER BY uid ASC";
 		self::generateFile($passwd, $sql, $cronlog);
 
 		// group
@@ -61,6 +61,13 @@ class Extrausers
 		while ($u = $data_sel_stmt->fetch(\PDO::FETCH_ASSOC)) {
 			switch ($type) {
 				case 'passwd':
+					// get user real name
+					$salutation_array = array(
+						'firstname' => \Froxlor\Customer\Customer::getCustomerDetail($u['customerid'], 'firstname'),
+						'name' => \Froxlor\Customer\Customer::getCustomerDetail($u['customerid'], 'name'),
+						'company' => \Froxlor\Customer\Customer::getCustomerDetail($u['customerid'], 'company')
+					);
+					$u['comment'] = \Froxlor\User::getCorrectUserSalutation($salutation_array);
 					if ($u['login_enabled'] != 'Y') {
 						$u['password'] = '*';
 						$u['shell'] = '/bin/false';
