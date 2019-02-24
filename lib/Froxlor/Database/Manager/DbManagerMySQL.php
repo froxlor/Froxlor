@@ -72,33 +72,37 @@ class DbManagerMySQL
 	 * @param string $access_host
 	 * @param bool $p_encrypted
 	 *        	optional, whether the password is encrypted or not, default false
+	 * @param bool $update
+	 *        	optional, whether to update the password only (not create user)
 	 */
-	public function grantPrivilegesTo($username = null, $password = null, $access_host = null, $p_encrypted = false)
+	public function grantPrivilegesTo($username = null, $password = null, $access_host = null, $p_encrypted = false, $update = false)
 	{
-		// mysql8 compatibility
-		if (version_compare(Database::getAttribute(\PDO::ATTR_SERVER_VERSION), '8.0.11', '>=')) {
-			// create user
-			$stmt = Database::prepare("
-				CREATE USER '" . $username . "'@'" . $access_host . "' IDENTIFIED BY 'password'
-			");
-			Database::pexecute($stmt);
-			// grant privileges
-			$stmt = Database::prepare("
-				GRANT ALL ON `" . $username . "`.* TO :username@:host
-			");
-			Database::pexecute($stmt, array(
-				"username" => $username,
-				"host" => $access_host
-			));
-		} else {
-			// grant privileges
-			$stmt = Database::prepare("
-				GRANT ALL PRIVILEGES ON `" . $username . "`.* TO :username@:host IDENTIFIED BY 'password'
-			");
-			Database::pexecute($stmt, array(
-				"username" => $username,
-				"host" => $access_host
-			));
+		if (! $update) {
+			// mysql8 compatibility
+			if (version_compare(Database::getAttribute(\PDO::ATTR_SERVER_VERSION), '8.0.11', '>=')) {
+				// create user
+				$stmt = Database::prepare("
+					CREATE USER '" . $username . "'@'" . $access_host . "' IDENTIFIED BY 'password'
+				");
+				Database::pexecute($stmt);
+				// grant privileges
+				$stmt = Database::prepare("
+					GRANT ALL ON `" . $username . "`.* TO :username@:host
+				");
+				Database::pexecute($stmt, array(
+					"username" => $username,
+					"host" => $access_host
+				));
+			} else {
+				// grant privileges
+				$stmt = Database::prepare("
+					GRANT ALL PRIVILEGES ON `" . $username . "`.* TO :username@:host IDENTIFIED BY 'password'
+				");
+				Database::pexecute($stmt, array(
+					"username" => $username,
+					"host" => $access_host
+				));
+			}
 		}
 		// set passoword
 		if (version_compare(Database::getAttribute(\PDO::ATTR_SERVER_VERSION), '5.7.6', '<')) {

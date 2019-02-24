@@ -320,14 +320,9 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 
 			// Begin root-session
 			Database::needRoot(true, $result['dbserver']);
+			$dbmgr = new \Froxlor\Database\DbManager($this->logger());
 			foreach (array_map('trim', explode(',', Settings::Get('system.mysql_access_host'))) as $mysql_access_host) {
-				$stmt = Database::prepare("SET PASSWORD FOR :dbname@:host = PASSWORD(:password)");
-				$params = array(
-					"dbname" => $result['databasename'],
-					"host" => $mysql_access_host,
-					"password" => $password
-				);
-				Database::pexecute($stmt, $params, true, true);
+				$dbmgr->getManager()->grantPrivilegesTo($result['databasename'], $password, $mysql_access_host, false, true);
 			}
 
 			$stmt = Database::prepare("FLUSH PRIVILEGES");
