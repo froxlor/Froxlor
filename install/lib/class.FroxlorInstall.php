@@ -739,7 +739,7 @@ class FroxlorInstall
 		// language selection
 		$language_options = '';
 		foreach ($this->_languages as $language_name => $language_file) {
-			$language_options .= makeoption($language_name, $language_file, $this->_activelng, true, true);
+			$language_options .= \Froxlor\UI\HTML::makeoption($language_name, $language_file, $this->_activelng, true, true);
 		}
 		// get language-form-template
 		eval("\$content .= \"" . $this->_getTemplate("lngform") . "\";");
