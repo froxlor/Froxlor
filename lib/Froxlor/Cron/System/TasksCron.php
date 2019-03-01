@@ -227,7 +227,8 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 
 			if (Settings::Get('system.nssextrausers') == 1) {
 				// explicitly create files after user has been created to avoid unknown user issues for apache/php-fpm when task#1 runs after this
-				Extrausers::generateFiles(\Froxlor\FroxlorLogger::getInstanceOf());
+				$extrausers_log = \Froxlor\FroxlorLogger::getInstanceOf();
+				Extrausers::generateFiles($extrausers_log);
 			}
 
 			// clear NSCD cache if using fcgid or fpm, #1570
