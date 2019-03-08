@@ -88,6 +88,27 @@ class Nginx extends HttpConfigBase
 		}
 	}
 
+	private function createLogformatEntry()
+	{
+		if (Settings::Get('system.logfiles_format') != '') {
+			$vhosts_folder = '';
+			if (is_dir(Settings::Get('system.apacheconf_vhost'))) {
+				$vhosts_folder = \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.apacheconf_vhost'));
+			} else {
+				$vhosts_folder = \Froxlor\FileDir::makeCorrectDir(dirname(Settings::Get('system.apacheconf_vhost')));
+			}
+
+			$vhosts_filename = \Froxlor\FileDir::makeCorrectFile($vhosts_folder . '/02_froxlor_logfiles_format.conf');
+
+			if (! isset($this->nginx_data[$vhosts_filename])) {
+				$this->nginx_data[$vhosts_filename] = '';
+			}
+
+			$logtype = 'frx_custom';
+			$this->nginx_data[$vhosts_filename] = 'log_format ' . $logtype . ' "' . Settings::Get('system.logfiles_format') . '";' . "\n";
+		}
+	}
+
 	/**
 	 * define a default ErrorDocument-statement, bug #unknown-yet
 	 */
@@ -137,6 +158,8 @@ class Nginx extends HttpConfigBase
 
 	public function createIpPort()
 	{
+		$this->createLogformatEntry();
+
 		$result_ipsandports_stmt = Database::query("
 			SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` ORDER BY `ip` ASC, `port` ASC
 		");
@@ -1058,7 +1081,6 @@ class Nginx extends HttpConfigBase
 		$logtype = 'combined';
 		if (Settings::Get('system.logfiles_format') != '') {
 			$logtype = 'frx_custom';
-			$logfiles_text .= "\t" . 'log_format ' . $logtype . ' "' . Settings::Get('system.logfiles_format') . '";' . "\n";
 		}
 
 		$logfiles_text .= "\t" . 'access_log    ' . $access_log . ' ' . $logtype . ';' . "\n";
