@@ -57,7 +57,7 @@
 		"phploc/phploc": "3.0.1",
 		"theseer/phpdox": "0.11.2",
 		"phpunit/php-invoker": "1.1.4",
-		"php": ">=7.0",
+		"php": ">=7.1",
 		"ext-pcntl": "*",
 		"phpcompatibility/php-compatibility": "*"
 	},
