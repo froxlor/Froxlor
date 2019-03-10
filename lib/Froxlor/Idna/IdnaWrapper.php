@@ -40,7 +40,7 @@ class IdnaWrapper
 	public function __construct()
 	{
 		// Instantiate it
-		$this->idna_converter = new \Mso\IdnaConvert\IdnaConvert();
+		$this->idna_converter = new \Algo26\IdnaConvert\IdnaConvert();
 	}
 
 	/**
@@ -59,9 +59,7 @@ class IdnaWrapper
 		try {
 			return $this->idna_converter->encode($to_encode);
 		} catch (\InvalidArgumentException $iae) {
-			// dirty hack because Mso\IdnaConvert does not specify error-numbers
-			// see https://github.com/phlylabs/idna-convert/issues/11
-			if (strtolower($iae->getMessage()) == 'this is already a punycode string') {
+			if ($iae->getCode() == 100) {
 				return $to_encode;
 			}
 			throw $iae;
