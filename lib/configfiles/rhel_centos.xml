@@ -2427,8 +2427,8 @@ aliases:	files nisplus
 #
 <CUSTOMER_LOGS>*.log {
   missingok
-  weekly
-  rotate 4
+  daily
+  rotate 7
   compress
   delaycompress
   notifempty
