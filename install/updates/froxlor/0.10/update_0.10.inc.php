@@ -24,7 +24,7 @@ if (! defined('_CRON_UPDATE')) {
 }
 
 if (\Froxlor\Froxlor::isFroxlorVersion('0.9.40.1')) {
-	showUpdateStep("Updating from 0.9.40.1 to 0.10.0", false);
+	showUpdateStep("Updating from 0.9.40.1 to 0.10.0-rc1", false);
 
 	showUpdateStep("Adding new api keys table");
 	Database::query("DROP TABLE IF EXISTS `api_keys`;");
@@ -68,7 +68,7 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.9.40.1')) {
 	}
 	lastStepStatus(0);
 
-	\Froxlor\Froxlor::updateToVersion('0.10.0');
+	\Froxlor\Froxlor::updateToVersion('0.10.0-rc1');
 }
 
 if (\Froxlor\Froxlor::isDatabaseVersion('201809280')) {
@@ -232,4 +232,11 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201902170')) {
 	lastStepStatus(0);
 
 	\Froxlor\Froxlor::updateToDbVersion('201902210');
+}
+
+if (\Froxlor\Froxlor::isDatabaseVersion('201902210')) {
+
+	// set correct version for people that have tested 0.10.0 before
+	\Froxlor\Froxlor::updateToVersion('0.10.0-rc1');
+        \Froxlor\Froxlor::updateToDbVersion('201904100');
 }

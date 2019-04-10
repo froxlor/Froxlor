@@ -784,14 +784,14 @@ class Apache extends HttpConfigBase
 				'DOMAIN' => $domain['domain'],
 				'CUSTOMER' => $domain['loginname']
 			));
-			$logfiles_text .= '  ErrorLog "| ' . $command . "\"\n";
+			$logfiles_text .= '  ErrorLog "|' . $command . "\"\n";
 			// replace for access_log
 			$command = \Froxlor\PhpHelper::replaceVariables(Settings::Get('system.logfiles_script'), array(
 				'LOGFILE' => $access_log,
 				'DOMAIN' => $domain['domain'],
 				'CUSTOMER' => $domain['loginname']
 			));
-			$logfiles_text .= '  CustomLog "| ' . $command . '" ' . $logtype . "\n";
+			$logfiles_text .= '  CustomLog "|' . $command . '" ' . $logtype . "\n";
 		} else {
 			// Create the logfile if it does not exist (fixes #46)
 			touch($error_log);
