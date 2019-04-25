@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <froxlor>
 	<distribution name="Ubuntu" codename="Xenial"
-		version="16.04.x" defaulteditor="/bin/nano">
+		version="16.04" defaulteditor="/bin/nano">
 		<services>
 			<!-- HTTP -->
 			<service type="http" title="{{lng.admin.configfiles.http}}">
