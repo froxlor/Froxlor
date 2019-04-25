@@ -238,5 +238,20 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201902210')) {
 
 	// set correct version for people that have tested 0.10.0 before
 	\Froxlor\Froxlor::updateToVersion('0.10.0-rc1');
-        \Froxlor\Froxlor::updateToDbVersion('201904100');
+	\Froxlor\Froxlor::updateToDbVersion('201904100');
+}
+
+if (\Froxlor\Froxlor::isDatabaseVersion('201904100')) {
+
+	showUpdateStep("Converting all MyISAM tables to InnoDB");
+	Database::needRoot(true);
+	Database::needSqlData();
+	$sql_data = Database::getSqlData();
+	$result = Database::query("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '" . $sql_data['db'] . "' AND ENGINE = 'MyISAM'");
+	while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+		Database::query("ALTER TABLE `" . $row['TABLE_NAME'] . "` ENGINE=INNODB");
+	}
+	lastStepStatus(0);
+
+	\Froxlor\Froxlor::updateToDbVersion('201904250');
 }
