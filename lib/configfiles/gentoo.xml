@@ -406,11 +406,6 @@ allow-axfr-ips=127.0.0.0/8,::1,<NAMESERVERS_IP>
 # allow-dnsupdate-from=127.0.0.0/8,::1
 
 #################################
-# allow-recursion	List of subnets that are allowed to recurse
-#
-allow-recursion=127.0.0.1
-
-#################################
 # also-notify	When notifying a domain, also notify these nameservers
 #
 # also-notify=
@@ -751,16 +746,6 @@ module-dir=/usr/lib/powerdns/pdns/
 # receiver-threads=1
 
 #################################
-# recursive-cache-ttl	Seconds to store packets for recursive queries in the PacketCache
-#
-# recursive-cache-ttl=10
-
-#################################
-# recursor	If recursion is desired, IP address of a recursing nameserver
-#
-# recursor=no
-
-#################################
 # retrieval-threads	Number of AXFR-retrieval threads for slave operation
 #
 # retrieval-threads=2
@@ -948,11 +933,6 @@ allow-axfr-ips=127.0.0.0/8,::1,<NAMESERVERS_IP>
 # allow-dnsupdate-from	A global setting to allow DNS updates from these IP ranges.
 #
 # allow-dnsupdate-from=127.0.0.0/8,::1
-
-#################################
-# allow-recursion	List of subnets that are allowed to recurse
-#
-allow-recursion=127.0.0.1
 
 #################################
 # also-notify	When notifying a domain, also notify these nameservers
@@ -1293,16 +1273,6 @@ module-dir=/usr/lib/powerdns/pdns/
 # receiver-threads	Default number of receiver threads to start
 #
 # receiver-threads=1
-
-#################################
-# recursive-cache-ttl	Seconds to store packets for recursive queries in the PacketCache
-#
-# recursive-cache-ttl=10
-
-#################################
-# recursor	If recursion is desired, IP address of a recursing nameserver
-#
-# recursor=no
 
 #################################
 # retrieval-threads	Number of AXFR-retrieval threads for slave operation
