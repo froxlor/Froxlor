@@ -55,8 +55,8 @@ class CustomerBackups extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 	 *        	required when called as admin, not needed when called as customer
 	 *        	
 	 * @access admin, customer
-	 * @return array
 	 * @throws \Exception
+	 * @return string json-encoded array
 	 */
 	public function add()
 	{
@@ -140,7 +140,7 @@ class CustomerBackups extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
-	 * @return array count|list
+	 * @return string json-encoded array count|list
 	 */
 	public function listing()
 	{

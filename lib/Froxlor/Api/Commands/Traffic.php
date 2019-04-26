@@ -69,7 +69,7 @@ class Traffic extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
-	 * @return array count|list
+	 * @return string json-encoded array count|list
 	 */
 	public function listing()
 	{

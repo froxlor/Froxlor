@@ -37,7 +37,7 @@ class Cronjobs extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceE
 	 *        	
 	 * @access admin
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function get()
 	{
@@ -71,7 +71,7 @@ class Cronjobs extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceE
 	 *        	
 	 * @access admin
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function update()
 	{
@@ -129,7 +129,7 @@ class Cronjobs extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceE
 	 *
 	 * @access admin
 	 * @throws \Exception
-	 * @return array count|list
+	 * @return string json-encoded array count|list
 	 */
 	public function listing()
 	{
