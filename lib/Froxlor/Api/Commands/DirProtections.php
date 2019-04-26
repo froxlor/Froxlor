@@ -37,7 +37,7 @@ class DirProtections extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Res
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function add()
 	{
@@ -124,7 +124,7 @@ class DirProtections extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Res
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function get()
 	{
@@ -197,7 +197,7 @@ class DirProtections extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Res
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function update()
 	{
@@ -271,7 +271,7 @@ class DirProtections extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Res
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
-	 * @return array count|list
+	 * @return string json-encoded array count|list
 	 */
 	public function listing()
 	{
@@ -306,7 +306,7 @@ class DirProtections extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Res
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function delete()
 	{

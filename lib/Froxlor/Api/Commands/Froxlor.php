@@ -27,7 +27,7 @@ class Froxlor extends \Froxlor\Api\ApiCommand
 	 *
 	 * @access admin
 	 * @throws \Exception
-	 * @return string
+	 * @return string json-encoded array
 	 */
 	public function checkUpdate()
 	{
@@ -110,7 +110,7 @@ class Froxlor extends \Froxlor\Api\ApiCommand
 	 *        	
 	 * @access admin
 	 * @throws \Exception
-	 * @return bool
+	 * @return string json-encoded bool
 	 */
 	public function importSettings()
 	{
@@ -155,7 +155,7 @@ class Froxlor extends \Froxlor\Api\ApiCommand
 	 *
 	 * @access admin
 	 * @throws \Exception
-	 * @return array count|list
+	 * @return string json-encoded array count|list
 	 */
 	public function listSettings()
 	{
@@ -236,7 +236,7 @@ class Froxlor extends \Froxlor\Api\ApiCommand
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function listFunctions()
 	{

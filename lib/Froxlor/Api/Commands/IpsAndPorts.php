@@ -27,7 +27,7 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 	 *
 	 * @access admin
 	 * @throws \Exception
-	 * @return array count|list
+	 * @return string json-encoded array count|list
 	 */
 	public function listing()
 	{
@@ -61,7 +61,7 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 	 *        	
 	 * @access admin
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function get()
 	{
@@ -121,7 +121,7 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 	 *        	
 	 * @access admin
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function add()
 	{
@@ -291,7 +291,7 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 	 *        	
 	 * @access admin
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function update()
 	{
@@ -449,7 +449,7 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 	 *        	
 	 * @access admin
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function delete()
 	{

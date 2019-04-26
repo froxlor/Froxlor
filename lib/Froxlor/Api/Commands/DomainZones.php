@@ -42,7 +42,7 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function add()
 	{
@@ -306,7 +306,7 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function get()
 	{

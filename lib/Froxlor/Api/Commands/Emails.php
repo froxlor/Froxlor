@@ -38,7 +38,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function add()
 	{
@@ -152,7 +152,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function get()
 	{
@@ -195,7 +195,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function update()
 	{
@@ -268,7 +268,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
-	 * @return array count|list
+	 * @return string json-encoded array count|list
 	 */
 	public function listing()
 	{
@@ -308,7 +308,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function delete()
 	{

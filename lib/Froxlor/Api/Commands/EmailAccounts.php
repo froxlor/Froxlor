@@ -44,7 +44,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function add()
 	{
@@ -300,7 +300,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function update()
 	{
@@ -412,7 +412,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function delete()
 	{

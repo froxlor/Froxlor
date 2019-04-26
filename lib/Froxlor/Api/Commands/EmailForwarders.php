@@ -38,7 +38,7 @@ class EmailForwarders extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 	 *        	
 	 * @access admin,customer
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function add()
 	{
@@ -150,7 +150,7 @@ class EmailForwarders extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 	 *        	
 	 * @access admin,customer
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function delete()
 	{
