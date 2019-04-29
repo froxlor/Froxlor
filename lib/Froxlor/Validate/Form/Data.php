@@ -174,7 +174,7 @@ class Data
 				$ip = substr($ip, 0, strpos($ip, ':'));
 			}
 
-			if (validate_ip($ip, true) !== false) {
+			if (\Froxlor\Validate\Validate::validate_ip2($ip, true) !== false) {
 				return true;
 			} else {
 				return false;
