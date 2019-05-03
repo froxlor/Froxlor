@@ -564,7 +564,7 @@ $lng['serversettings']['apacheconf_htpasswddir']['description'] = 'Wo sollen die
 
 $lng['error']['formtokencompromised'] = 'Das Formular scheint manipuliert worden zu sein. Aus Sicherheitsgründen wurden Sie ausgelogged.';
 $lng['serversettings']['mysql_access_host']['title'] = 'MySQL-Access-Hosts';
-$lng['serversettings']['mysql_access_host']['description'] = 'Eine durch Komma getrennte Liste mit den Hostnamen aller Hostnames/IP-Adressen, von denen sich die Benutzer einloggen dürfen. Um ein Subnetz zu erlauben, die lange CIDR Schreibweise (Beispiel 100.127.0.0/255.255.0.0) ist erlaubt.';
+$lng['serversettings']['mysql_access_host']['description'] = 'Eine durch Komma getrennte Liste mit den Hostnamen aller Hostnames/IP-Adressen, von denen sich die Benutzer einloggen dürfen. Um ein Subnetz zu erlauben ist die Netzmaske oder CIDR Syntax erlaubt.';
 
 // ADDED IN 1.2.18-svn1
 

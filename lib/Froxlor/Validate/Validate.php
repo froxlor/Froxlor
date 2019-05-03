@@ -16,10 +16,10 @@ class Validate
 	 * @param
 	 *        	string language id for the error
 	 * @return string the clean string
-	 *        
+	 *
 	 *         If the default pattern is used and the string does not match, we try to replace the
 	 *         'bad' values and log the action.
-	 *        
+	 *
 	 */
 	public static function validate($str, $fieldname, $pattern = '', $lng = '', $emptydefault = array(), $throw_exception = false)
 	{
@@ -64,6 +64,26 @@ class Validate
 		exit();
 	}
 
+    /**
+     * Converts CIDR to a netmask address
+     *
+     * @thx to https://stackoverflow.com/a/5711080/3020926
+     * @param string $cidr
+     *
+     * @return string
+     */
+    public static function cidr2NetmaskAddr ($cidr) {
+
+        $ta = substr ($cidr, strpos ($cidr, '/') + 1) * 1;
+        $netmask = str_split (str_pad (str_pad ('', $ta, '1'), 32, '0'), 8);
+
+        foreach ($netmask as &$element) {
+            $element = bindec ($element);
+        }
+
+        return join ('.', $netmask);
+    }
+
 	/**
 	 * Checks whether it is a valid ip
 	 *
@@ -79,7 +99,7 @@ class Validate
 	 *        	whether to allow private network addresses
 	 * @param bool $allow_cidr
 	 *        	whether to allow CIDR values e.g. 10.10.10.10/16
-	 *        	
+	 *
 	 * @return string|bool ip address on success, false on failure
 	 */
 	public static function validate_ip2($ip, $return_bool = false, $lng = 'invalidip', $allow_localhost = false, $allow_priv = false, $allow_cidr = false, $throw_exception = false)
@@ -90,6 +110,9 @@ class Validate
 			$ip_cidr = explode("/", $ip);
 			if (count($ip_cidr) == 2) {
 				$ip = $ip_cidr[0];
+				if(in_array((int)strlen((string)$ip_cidr[1]),array(1,2))) {
+				    $ip_cidr[1] = self::cidr2NetmaskAddr($org_ip);
+                }
 				$cidr = "/" . $ip_cidr[1];
 			} else {
 				$ip = $org_ip;
@@ -129,7 +152,7 @@ class Validate
 	 *        	The domainname which should be checked.
 	 * @param bool $allow_underscore
 	 *        	optional if true, allowes the underscore character in a domain label (DKIM etc.)
-	 *        	
+	 *
 	 * @return string|boolean the domain-name if the domain is valid, false otherwise
 	 */
 	public static function validateDomain($domainname, $allow_underscore = false)
@@ -184,7 +207,7 @@ class Validate
 	 *        	string The username to check
 	 * @return bool Correct or not
 	 * @author Michael Duergner <michael@duergner.com>
-	 *        
+	 *
 	 */
 	public static function validateUsername($username, $unix_names = 1, $mysql_max = '')
 	{
