@@ -79,14 +79,17 @@ class DbManager
 
 		// check whether we shall create a random username
 		if (strtoupper(Settings::Get('customer.mysqlprefix')) == 'RANDOM') {
-			// get all usernames from db-manager
-			$allsqlusers = $this->getManager()->getAllSqlUsers();
-			// generate random username
-			$username = $loginname . '-' . substr(md5(uniqid(microtime(), 1)), 20, 3);
-			// check whether it exists on the DBMS
-			while (in_array($username, $allsqlusers)) {
-				$username = $loginname . '-' . substr(md5(uniqid(microtime(), 1)), 20, 3);
-			}
+            // get all usernames from db-manager
+            $allsqlusers = $this->getManager()->getAllSqlUsers();
+            // generate random username
+            $username = $loginname . '-' . substr(md5(uniqid(microtime(), 1)), 20, 3);
+            // check whether it exists on the DBMS
+            while (in_array($username, $allsqlusers)) {
+                $username = $loginname . '-' . substr(md5(uniqid(microtime(), 1)), 20, 3);
+            }
+        }
+        if (strtoupper(Settings::Get('customer.mysqlprefix')) == 'DBNAME') {
+            $username = $GLOBALS['userinfo']['loginname'] . $GLOBALS['userinfo']['customerid'] . '_' . $GLOBALS['_POST']['description'];
 		} else {
 			$username = $loginname . Settings::Get('customer.mysqlprefix') . (intval($last_accnumber) + 1);
 		}

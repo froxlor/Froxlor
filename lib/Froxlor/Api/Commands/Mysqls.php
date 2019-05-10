@@ -49,13 +49,23 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 
 			// parameters
 			$dbserver = $this->getParam('mysql_server', true, 0);
-			$databasedescription = $this->getParam('description', true, '');
+			$databasedescription = $originaldatabasedescription = $this->getParam('description', strtoupper(Settings::Get('customer.mysqlprefix')) == 'DBNAME' ? false : true, '');
 			$sendinfomail = $this->getBoolParam('sendinfomail', true, 0);
 
 			// validation
 			$password = \Froxlor\Validate\Validate::validate($password, 'password', '', '', array(), true);
 			$password = \Froxlor\System\Crypt::validatePassword($password, true);
-			$databasedescription = \Froxlor\Validate\Validate::validate(trim($databasedescription), 'description', '', '', array(), true);
+			if(strtoupper(Settings::Get('customer.mysqlprefix')) == 'DBNAME') {
+			    //If DBNAME is used for prefix, we add customername + id + fieldescription to the validator.
+                //Also we pass in a regex, so we prevent invalid dbnames for mysql.
+                //read more @ https://dev.mysql.com/doc/refman/8.0/en/identifiers.html
+                $databasedescription = \Froxlor\Validate\Validate::validate($GLOBALS['userinfo']['loginname'] . $GLOBALS['userinfo']['customerid'] . '_' . trim($databasedescription), 'description', '/^[0-9a-zA-Z$_]{1,64}$/', '', array(), true);
+                //If it validates correctly, we set the old value
+                /** @noinspection */
+                $databasedescription = trim($originaldatabasedescription);
+            } else {
+                $databasedescription = \Froxlor\Validate\Validate::validate(trim($databasedescription), 'description', '', '', array(), true);
+            }
 
 			// validate whether the dbserver exists
 			$dbserver = \Froxlor\Validate\Validate::validate($dbserver, html_entity_decode($this->lng['mysql']['mysql_server']), '', '', 0, true);
