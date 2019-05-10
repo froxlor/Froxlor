@@ -58,8 +58,14 @@ class DbManagerMySQL
 	 *
 	 * @param string $dbname
 	 */
-	public function createDatabase($dbname = null)
+	public function createDatabase($dbname)
 	{
+        if (!is_string($dbname)) {
+            throw new \InvalidArgumentException('Parameter must be of type string.', 1557449868);
+        }
+	    if (is_string($dbname) && empty(trim($dbname))) {
+            throw new \InvalidArgumentException('Databasename cannot be empty.', 1557444946);
+        }
 		Database::query("CREATE DATABASE `" . $dbname . "`");
 	}
 
