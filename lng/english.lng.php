@@ -1743,12 +1743,12 @@ $lng['admin']['configfiles']['commands'] = '<span class="red">Commands:</span> T
 $lng['admin']['configfiles']['files'] = '<span class="red">Config files:</span> The commands before the textfields should open an editor with the target file. Just copy and paste the contents into the editor and save the file.<br><span class="red">Please note:</span> The MySQL-password has not been replaced for security reasons. Please replace "FROXLOR_MYSQL_PASSWORD" on your own or use the javascript form below to replace it on-site. If you forgot your MySQL-password you\'ll find it in "lib/userdata.inc.php"';
 $lng['serversettings']['apache_itksupport']['title'] = 'Use modifications for Apache ITK-MPM';
 $lng['serversettings']['apache_itksupport']['description'] = '<strong class="red">ATTENTION:</strong> use only if you actually have apache itk-mpm enabled<br />otherwise your webserver will not be able to start';
-$lng['integrity_check']['DatabaseCharset'] = 'Character set of database (should be UTF-8)';
-$lng['integrity_check']['DomainIpTable'] = 'IP &lt;&dash;&gt; domain references';
-$lng['integrity_check']['SubdomainSslRedirect'] = 'False SSL-redirect flag for non-ssl domains';
-$lng['integrity_check']['FroxlorLocalGroupMemberForFcgidPhpFpm'] = 'froxlor-user in the customer groups (for FCGID/php-fpm)';
-$lng['integrity_check']['WebserverGroupMemberForFcgidPhpFpm'] = 'Webserver-user in the customer groups (for FCGID/php-fpm)';
-$lng['integrity_check']['SubdomainLetsencrypt'] = 'Main domains with no SSL-Port assigned don\'t have any subdomains with active SSL redirect';
+$lng['integrity_check']['databaseCharset'] = 'Character set of database (should be UTF-8)';
+$lng['integrity_check']['domainIpTable'] = 'IP &lt;&dash;&gt; domain references';
+$lng['integrity_check']['subdomainSslRedirect'] = 'False SSL-redirect flag for non-ssl domains';
+$lng['integrity_check']['froxlorLocalGroupMemberForFcgidPhpFpm'] = 'froxlor-user in the customer groups (for FCGID/php-fpm)';
+$lng['integrity_check']['webserverGroupMemberForFcgidPhpFpm'] = 'Webserver-user in the customer groups (for FCGID/php-fpm)';
+$lng['integrity_check']['subdomainLetsencrypt'] = 'Main domains with no SSL-Port assigned don\'t have any subdomains with active SSL redirect';
 $lng['admin']['mod_fcgid_umask']['title'] = 'Umask (default: 022)';
 
 // Added for apcuinfo
