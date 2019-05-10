@@ -89,7 +89,7 @@ class DbManager
             }
         }
         if (strtoupper(Settings::Get('customer.mysqlprefix')) == 'DBNAME') {
-            $username = $GLOBALS['userinfo']['loginname'] . $GLOBALS['userinfo']['customerid'] . '_' . $GLOBALS['_POST']['description'];
+            $username = $loginname;
 		} else {
 			$username = $loginname . Settings::Get('customer.mysqlprefix') . (intval($last_accnumber) + 1);
 		}

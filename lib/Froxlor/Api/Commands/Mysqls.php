@@ -55,11 +55,16 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			// validation
 			$password = \Froxlor\Validate\Validate::validate($password, 'password', '', '', array(), true);
 			$password = \Froxlor\System\Crypt::validatePassword($password, true);
+
+            // get needed customer info to reduce the mysql-usage-counter by one
+            $customer = $this->getCustomerData('mysqls');
+			$newdbname = '';
 			if(strtoupper(Settings::Get('customer.mysqlprefix')) == 'DBNAME') {
 			    //If DBNAME is used for prefix, we add customername + id + fieldescription to the validator.
                 //Also we pass in a regex, so we prevent invalid dbnames for mysql.
                 //read more @ https://dev.mysql.com/doc/refman/8.0/en/identifiers.html
-                $databasedescription = \Froxlor\Validate\Validate::validate($GLOBALS['userinfo']['loginname'] . $GLOBALS['userinfo']['customerid'] . '_' . trim($databasedescription), 'description', '/^[0-9a-zA-Z$_]{1,64}$/', '', array(), true);
+                $newdbname = ($this->isAdmin() ? $customer['loginname'] : $this->getUserDetail('loginname')) . '_' . trim($databasedescription);
+                $databasedescription = \Froxlor\Validate\Validate::validate($newdbname, 'description', '/^[0-9a-zA-Z$_]{1,64}$/', '', array(), true);
                 //If it validates correctly, we set the old value
                 /** @noinspection */
                 $databasedescription = trim($originaldatabasedescription);
@@ -81,16 +86,17 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 				$sendinfomail = 0;
 			}
 
-			// get needed customer info to reduce the mysql-usage-counter by one
-			$customer = $this->getCustomerData('mysqls');
-
 			$newdb_params = array(
 				'loginname' => ($this->isAdmin() ? $customer['loginname'] : $this->getUserDetail('loginname')),
 				'mysql_lastaccountnumber' => ($this->isAdmin() ? $customer['mysql_lastaccountnumber'] : $this->getUserDetail('mysql_lastaccountnumber'))
 			);
 			// create database, user, set permissions, etc.pp.
 			$dbm = new \Froxlor\Database\DbManager($this->logger());
-			$username = $dbm->createDatabase($newdb_params['loginname'], $password, $newdb_params['mysql_lastaccountnumber']);
+            if (strtoupper(Settings::Get('customer.mysqlprefix')) == 'DBNAME' && !empty($newdbname)) {
+                $username = $dbm->createDatabase($newdbname, $password);
+            } else {
+                $username = $dbm->createDatabase($newdb_params['loginname'], $password, $newdb_params['mysql_lastaccountnumber']);
+            }
 
 			// we've checked against the password in dbm->createDatabase
 			if ($username == false) {
