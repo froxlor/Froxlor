@@ -101,13 +101,13 @@ class MailLogParser
 
 			$timestamp = $this->getLogTimestamp($line);
 			if ($this->startTime < $timestamp) {
-				if (preg_match("/postfix\/qmgr.*(?::|\])\s([A-Z\d]+).*from=<?(?:.*\@([a-z\A-Z\d\.\-]+))?>?, size=(\d+),/", $line, $matches)) {
+				if (preg_match("/postfix\/qmgr.*(?::|\])\s([A-Z\d]+).*from=<?(?:.*\@([a-zA-Z\d\.\-]+))?>?, size=(\d+),/", $line, $matches)) {
 					// Postfix from
 					$this->mails[$matches[1]] = array(
 						"domainFrom" => strtolower($matches[2]),
 						"size" => $matches[3]
 					);
-				} elseif (preg_match("/postfix\/(?:pipe|smtp).*(?::|\])\s([A-Z\d]+).*to=<?(?:.*\@([a-z\A-Z\d\.\-]+))?>?,/", $line, $matches)) {
+				} elseif (preg_match("/postfix\/(?:pipe|smtp).*(?::|\])\s([A-Z\d]+).*to=<?(?:.*\@([a-zA-Z\d\.\-]+))?>?,/", $line, $matches)) {
 					// Postfix to
 					if (array_key_exists($matches[1], $this->mails)) {
 						$this->mails[$matches[1]]["domainTo"] = strtolower($matches[2]);
