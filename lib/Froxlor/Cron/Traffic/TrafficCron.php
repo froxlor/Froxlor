@@ -477,7 +477,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 			 * Proftpd Quota
 			 */
 			$upd_data = array(
-				'biu' => ($current_diskspace['all'] * 1024),
+				'biu' => ($sum_month_traffic['all'] * 1024),
 				'loginname' => $row['loginname'],
 				'loginnamelike' => $row['loginname'] . Settings::Get('customer.ftpprefix') . "%"
 			);
@@ -511,7 +511,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 				while ($row_quota = $result_quota_stmt->fetch(\PDO::FETCH_ASSOC)) {
 					$quotafile = "" . $row_quota['homedir'] . ".ftpquota";
 					$fh = fopen($quotafile, 'w');
-					$stringdata = "0 " . $current_diskspace['all'] * 1024 . "";
+					$stringdata = "0 " . $sum_month_traffic['all'] * 1024 . "";
 					fwrite($fh, $stringdata);
 					fclose($fh);
 					\Froxlor\FileDir::safe_exec('chown ' . $user . ':' . $group . ' ' . escapeshellarg($quotafile) . '');
