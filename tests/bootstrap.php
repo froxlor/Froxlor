@@ -11,6 +11,11 @@ if (file_exists('/etc/froxlor-test.pwd') && file_exists('/etc/froxlor-test.rpwd'
 	define('TRAVIS_CI', 1);
 }
 
+if (@php_sapi_name() !== 'cli') {
+	// not to be called via browser
+	die;
+}
+
 $userdata_content = "<?php
 \$sql['user'] = 'froxlor010';
 \$sql['password'] = '$pwd';
