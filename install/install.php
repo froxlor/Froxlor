@@ -15,6 +15,9 @@
  * @package    Install
  *
  */
+if(!file_exists(dirname(__DIR__) . '/vendor/autoload.php')){
+    die('Vendor does not exist. Please run "Composer install". For more informationen https://github.com/Froxlor/Froxlor/wiki');
+}
 require dirname(__DIR__) . '/vendor/autoload.php';
 require __DIR__ . '/lib/class.FroxlorInstall.php';
 
