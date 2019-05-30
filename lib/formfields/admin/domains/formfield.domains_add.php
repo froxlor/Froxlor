@@ -185,7 +185,7 @@ return array(
 						'desc' => $lng['domains']['ipandport_ssl_multi']['description'],
 						'type' => 'checkbox',
 						'values' => $ssl_ipsandports,
-						'value' => '',
+						'value' => explode(',', \Froxlor\Settings::Get('system.defaultsslip')),
 						'is_array' => 1
 					),
 					'ssl_redirect' => array(
