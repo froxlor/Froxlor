@@ -123,6 +123,62 @@ class Validate
 	}
 
 	/**
+	 * Returns whether a URL is in a correct format or not
+	 *
+	 * @param string $url
+	 *        	URL to be tested
+	 * @return bool
+	 * @author Christian Hoffmann
+	 * @author Froxlor team <team@froxlor.org> (2010-)
+	 *
+	 */
+	public static function validateUrl($url)
+	{
+		if (strtolower(substr($url, 0, 7)) != "http://" && strtolower(substr($url, 0, 8)) != "https://") {
+			$url = 'http://' . $url;
+		}
+
+		// needs converting
+		try {
+			$idna_convert = new \Froxlor\Idna\IdnaWrapper();
+			$url = $idna_convert->encode($url);
+		} catch (\Exception $e) {
+			return false;
+		}
+
+		$pattern = '%^(?:(?:https?)://)(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\x{00a1}-\x{ffff}0-9]+-?)*[a-z\x{00a1}-\x{ffff}0-9]+)(?:\.(?:[a-z\x{00a1}-\x{ffff}0-9]+-?)*[a-z\x{00a1}-\x{ffff}0-9]+)*(?:\.(?:[a-z\x{00a1}-\x{ffff}]{2,})))(?::\d{2,5})?(?:/[^\s]*)?$%iuS';
+		if (preg_match($pattern, $url)) {
+			return true;
+		}
+
+		// not an fqdn
+		if (strtolower(substr($url, 0, 7)) == "http://" || strtolower(substr($url, 0, 8)) == "https://") {
+			if (strtolower(substr($url, 0, 7)) == "http://") {
+				$ip = strtolower(substr($url, 7));
+			}
+
+			if (strtolower(substr($url, 0, 8)) == "https://") {
+				$ip = strtolower(substr($url, 8));
+			}
+
+			$ip = substr($ip, 0, strpos($ip, '/'));
+			// possible : in IP (when a port is given), #1173
+			// but only if there actually IS ONE
+			if (strpos($ip, ':') !== false) {
+				$ip = substr($ip, 0, strpos($ip, ':'));
+			}
+
+			if (\Froxlor\Validate\Validate::validate_ip2($ip, true) !== false) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
+
+	/**
 	 * Check if the submitted string is a valid domainname
 	 *
 	 * @param string $domainname

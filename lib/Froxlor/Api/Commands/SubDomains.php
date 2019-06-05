@@ -852,7 +852,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	{
 		// check whether an URL was specified
 		$_doredirect = false;
-		if (! empty($url) && \Froxlor\Validate\Form\Data::validateUrl($url)) {
+		if (! empty($url) && \Froxlor\Validate\Validate::validateUrl($url)) {
 			$path = $url;
 			$_doredirect = true;
 		} else {
@@ -860,7 +860,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		}
 
 		// check whether path is a real path
-		if (! preg_match('/^https?\:\/\//', $path) || ! \Froxlor\Validate\Form\Data::validateUrl($path)) {
+		if (! preg_match('/^https?\:\/\//', $path) || ! \Froxlor\Validate\Validate::validateUrl($path)) {
 			if (strstr($path, ":") !== false) {
 				\Froxlor\UI\Response::standard_error('pathmaynotcontaincolon', '', true);
 			}
