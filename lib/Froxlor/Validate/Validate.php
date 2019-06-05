@@ -124,10 +124,8 @@ class Validate
 	 *
 	 * @param string $url
 	 *        	URL to be tested
+	 *        	
 	 * @return bool
-	 * @author Christian Hoffmann
-	 * @author Froxlor team <team@froxlor.org> (2010-)
-	 *
 	 */
 	public static function validateUrl($url)
 	{
@@ -148,31 +146,7 @@ class Validate
 			return true;
 		}
 
-		// not an fqdn
-		if (strtolower(substr($url, 0, 7)) == "http://" || strtolower(substr($url, 0, 8)) == "https://") {
-			if (strtolower(substr($url, 0, 7)) == "http://") {
-				$ip = strtolower(substr($url, 7));
-			}
-
-			if (strtolower(substr($url, 0, 8)) == "https://") {
-				$ip = strtolower(substr($url, 8));
-			}
-
-			$ip = substr($ip, 0, strpos($ip, '/'));
-			// possible : in IP (when a port is given), #1173
-			// but only if there actually IS ONE
-			if (strpos($ip, ':') !== false) {
-				$ip = substr($ip, 0, strpos($ip, ':'));
-			}
-
-			if (\Froxlor\Validate\Validate::validate_ip2($ip, true) !== false) {
-				return true;
-			} else {
-				return false;
-			}
-		} else {
-			return false;
-		}
+		return false;
 	}
 
 	/**
@@ -210,7 +184,7 @@ class Validate
 	 */
 	public static function validateLocalHostname($hostname)
 	{
-		$pattern = '/^([a-zA-Z0-9\-])+$/i';
+		$pattern = '/^[a-z0-9][a-z0-9\-]{0,62}$/i';
 		if (preg_match($pattern, $hostname)) {
 			return $hostname;
 		}
@@ -233,52 +207,59 @@ class Validate
 	/**
 	 * Returns if an username is in correct format or not.
 	 *
-	 * @param
-	 *        	string The username to check
-	 * @return bool Correct or not
-	 * @author Michael Duergner <michael@duergner.com>
-	 *        
+	 * @param string $username
+	 *        	The username to check
+	 * @param bool $unix_names
+	 *        	optional, default true, checks whether it must be UNIX compatible
+	 * @param int $mysql_max
+	 *        	optional, number of max mysql username characters, default empty
+	 *        	
+	 * @return bool
 	 */
 	public static function validateUsername($username, $unix_names = 1, $mysql_max = '')
 	{
+		if (empty($mysql_max) || ! is_numeric($mysql_max) || $mysql_max <= 0) {
+			$mysql_max = \Froxlor\Database\Database::getSqlUsernameLength() - 1;
+		} else {
+			$mysql_max --;
+		}
 		if ($unix_names == 0) {
 			if (strpos($username, '--') === false) {
-				return (preg_match('/^[a-z][a-z0-9\-_]{0,' . (int) ($mysql_max - 1) . '}[a-z0-9]{1}$/Di', $username) != false);
-			} else {
-				return false;
+				return (preg_match('/^[a-z][a-z0-9\-_]{0,' . $mysql_max . '}[a-z0-9]{1}$/Di', $username) != false);
 			}
-		} else {
-			return (preg_match('/^[a-z][a-z0-9]{0,' . $mysql_max . '}$/Di', $username) != false);
+			return false;
 		}
+		return (preg_match('/^[a-z][a-z0-9]{0,' . $mysql_max . '}$/Di', $username) != false);
 	}
 
+	/**
+	 * validate sql interval string
+	 *
+	 * @param string $interval
+	 *
+	 * @return boolean
+	 */
 	public static function validateSqlInterval($interval = null)
 	{
-		if (! $interval === null || $interval != '') {
-			if (strstr($interval, ' ') !== false) {
-				/*
-				 * [0] = ([0-9]+)
-				 * [1] = valid SQL-Interval expression
-				 */
-				$valid_expr = array(
-					'SECOND',
-					'MINUTE',
-					'HOUR',
-					'DAY',
-					'WEEK',
-					'MONTH',
-					'YEAR'
-				);
+		if (! empty($interval) && strstr($interval, ' ') !== false) {
+			/*
+			 * [0] = ([0-9]+)
+			 * [1] = valid SQL-Interval expression
+			 */
+			$valid_expr = array(
+				'SECOND',
+				'MINUTE',
+				'HOUR',
+				'DAY',
+				'WEEK',
+				'MONTH',
+				'YEAR'
+			);
 
-				$interval_parts = explode(' ', $interval);
+			$interval_parts = explode(' ', $interval);
 
-				if (is_array($interval_parts) && isset($interval_parts[0]) && isset($interval_parts[1])) {
-					if (preg_match('/([0-9]+)/i', $interval_parts[0])) {
-						if (in_array(strtoupper($interval_parts[1]), $valid_expr)) {
-							return true;
-						}
-					}
-				}
+			if (count($interval_parts) == 2 && preg_match('/[0-9]+/', $interval_parts[0]) && in_array(strtoupper($interval_parts[1]), $valid_expr)) {
+				return true;
 			}
 		}
 		return false;
