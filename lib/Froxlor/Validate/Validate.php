@@ -35,8 +35,8 @@ class Validate
 		}
 
 		// Check if the $str is one of the values which represent the default for an 'empty' value
-		if (is_array($emptydefault) && ! empty($emptydefault) && in_array($str, $emptydefault) && isset($emptydefault[0])) {
-			return $emptydefault[0];
+		if (is_array($emptydefault) && ! empty($emptydefault) && in_array($str, $emptydefault)) {
+			return $str;
 		}
 
 		if ($pattern == '') {
@@ -61,7 +61,6 @@ class Validate
 		}
 
 		\Froxlor\UI\Response::standard_error($lng, $fieldname, $throw_exception);
-		exit();
 	}
 
 	/**
@@ -99,7 +98,6 @@ class Validate
 				return false;
 			} else {
 				\Froxlor\UI\Response::standard_error($lng, $ip, $throw_exception);
-				exit();
 			}
 		}
 
@@ -118,7 +116,6 @@ class Validate
 			return false;
 		} else {
 			\Froxlor\UI\Response::standard_error($lng, $ip, $throw_exception);
-			exit();
 		}
 	}
 
