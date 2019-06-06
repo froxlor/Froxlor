@@ -8,7 +8,8 @@ use PHPUnit\Framework\TestCase;
 class SettingsTest extends TestCase
 {
 
-	protected function setUp() {
+	protected function setUp(): void
+	{
 		// start fresh
 		\Froxlor\Settings::Stash();
 	}

@@ -2,7 +2,7 @@
 <phpunit backupGlobals="false" backupStaticAttributes="false"
 	colors="false" convertErrorsToExceptions="true"
 	convertNoticesToExceptions="true" convertWarningsToExceptions="true"
-	processIsolation="false" stopOnFailure="false" syntaxCheck="false"
+	processIsolation="false" stopOnFailure="false"
 	bootstrap="tests/bootstrap.php">
 
 	<testsuites>
@@ -29,13 +29,11 @@
 	</testsuites>
 
 	<logging>
-		<log type="coverage-html" target="build/coverage" title="froxlor"
-			charset="UTF-8" yui="true" highlight="true" lowUpperBound="35"
-			highLowerBound="70" />
+		<log type="coverage-html" target="build/coverage"
+			lowUpperBound="35" highLowerBound="70" />
 		<log type="coverage-clover" target="build/logs/clover.xml" />
 		<log type="coverage-crap4j" target="build/logs/crap4j.xml" />
-		<log type="junit" target="build/logs/junit.xml"
-			logIncompleteSkipped="false" />
+		<log type="junit" target="build/logs/junit.xml" />
 	</logging>
 
 	<filter>

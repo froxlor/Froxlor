@@ -193,7 +193,7 @@ class Database
 		// MySQL user names can be up to 32 characters long (16 characters before MySQL 5.7.8).
 		$mysql_max = 32;
 		if (version_compare(Database::getAttribute(\PDO::ATTR_SERVER_VERSION), '5.7.8', '<')) {
-			$mysql_max -= 16;
+			$mysql_max = 16;
 		}
 		return $mysql_max;
 	}

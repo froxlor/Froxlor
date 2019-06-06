@@ -226,7 +226,20 @@
 		<property name="phpcpd.done" value="true" />
 	</target>
 
-	<target name="phpunit" unless="phpunit.done" depends="composer"
+	<target name="phpunit-prepare" unless="phpunit-prepare.done" depends="composer"
+		description="prepare xdebug unit tests">
+		<exec executable="${phpunit}" resultproperty="result.phpunit-prepare"
+			taskname="phpunit">
+			<arg value="--configuration" />
+			<arg path="${basedir}/phpunit.xml" />
+			<arg value="--dump-xdebug-filter" />
+			<arg path="${basedir}/tests/xdebug-filter.php" />
+		</exec>
+
+		<property name="phpunit-prepare.done" value="true" />
+	</target>
+
+	<target name="phpunit" unless="phpunit.done" depends="phpunit-prepare"
 		description="Run unit tests with PHPUnit">
 		<exec executable="${phpunit}" resultproperty="result.phpunit"
 			taskname="phpunit">
@@ -234,6 +247,8 @@
 			<arg path="${basedir}/phpunit.xml" />
 			<arg value="--testsuite" />
 			<arg value="froxlor" />
+			<arg value="--prepend" />
+			<arg path="${basedir}/tests/xdebug-filter.php" />
 		</exec>
 
 		<property name="phpunit.done" value="true" />

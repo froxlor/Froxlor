@@ -545,7 +545,7 @@ class CustomersTest extends TestCase
 			'customernumber' => 1339
 		];
 
-		$this->expectExceptionMessage('Loginname contains too many characters. Only ' . (14 - strlen(Settings::Get('customer.mysqlprefix'))) . ' characters are allowed.');
+		$this->expectExceptionMessage('Loginname contains too many characters. Only ' . (\Froxlor\Database\Database::getSqlUsernameLength() - strlen(Settings::Get('customer.mysqlprefix'))) . ' characters are allowed.');
 		Customers::getLocal($admin_userdata, $data)->add();
 	}
 }
