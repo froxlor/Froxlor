@@ -4,6 +4,7 @@ use PHPUnit\Framework\TestCase;
 /**
  *
  * @covers \Froxlor\Settings
+ * @covers \Froxlor\Settings\FroxlorVhostSettings
  */
 class SettingsTest extends TestCase
 {
@@ -91,5 +92,22 @@ class SettingsTest extends TestCase
 		$this->assertTrue($result);
 		$result = \Froxlor\Settings::IsInList("system.mysql_access_host", "my-super-domain.de");
 		$this->assertFalse($result);
+	}
+	
+	public function testFroxlorVhostSettings()
+	{
+		// bootstrap.php adds two IPs, one ssl one non-ssl both with vhostcontainer = 1
+		$result = \Froxlor\Settings\FroxlorVhostSettings::hasVhostContainerEnabled(false);
+		$this->assertTrue($result);
+		$result = \Froxlor\Settings\FroxlorVhostSettings::hasVhostContainerEnabled(true);
+		$this->assertTrue($result);
+		// now disable both
+		\Froxlor\Database\Database::query("UPDATE `". TABLE_PANEL_IPSANDPORTS . "` SET `vhostcontainer` = '0'");
+		$result = \Froxlor\Settings\FroxlorVhostSettings::hasVhostContainerEnabled(false);
+		$this->assertFalse($result);
+		$result = \Froxlor\Settings\FroxlorVhostSettings::hasVhostContainerEnabled(true);
+		$this->assertFalse($result);
+		// and change back
+		\Froxlor\Database\Database::query("UPDATE `". TABLE_PANEL_IPSANDPORTS . "` SET `vhostcontainer` = '1'");
 	}
 }
