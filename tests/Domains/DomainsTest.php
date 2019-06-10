@@ -119,7 +119,7 @@ class DomainsTest extends TestCase
 			'customerid' => 1
 		];
 		$this->expectExceptionMessage('The server-hostname cannot be used as customer-domain.');
-		$json_result = Domains::getLocal($admin_userdata, $data)->add();
+		Domains::getLocal($admin_userdata, $data)->add();
 	}
 
 	public function testAdminDomainsAddNoPunycode()

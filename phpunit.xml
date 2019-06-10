@@ -9,7 +9,6 @@
 		<testsuite name="froxlor">
 			<!-- we need to specify the order of the tests for dependency-reasons -->
 			<directory>tests/Global</directory>
-			<directory>tests/Froxlor</directory>
 			<directory>tests/Admins</directory>
 			<directory>tests/Customers</directory>
 			<directory>tests/IpsAndPorts</directory>
@@ -25,6 +24,7 @@
 			<directory>tests/Mysqls</directory>
 			<directory>tests/PhpAndFpm</directory>
 			<directory>tests/Traffic</directory>
+			<directory>tests/Froxlor</directory>
 		</testsuite>
 	</testsuites>
 

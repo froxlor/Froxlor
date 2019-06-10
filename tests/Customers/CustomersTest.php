@@ -5,6 +5,7 @@ use Froxlor\Settings;
 use Froxlor\Database\Database;
 use Froxlor\Api\Commands\Admins;
 use Froxlor\Api\Commands\Customers;
+use Froxlor\Api\Commands\SubDomains;
 
 /**
  *
@@ -58,6 +59,11 @@ class CustomersTest extends TestCase
 		$this->assertEquals(1337, $result['customernumber']);
 		$this->assertEquals(15, $result['subdomains']);
 		$this->assertEquals('secret', $result['custom_notes']);
+
+		// validate that the std-subdomain has been added
+		$json_result = SubDomains::getLocal($admin_userdata, array('id' => $result['standardsubdomain']))->get();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals('test1.dev.froxlor.org', $result['domain']);
 	}
 
 	public function testAdminCustomersAddEmptyMail()
@@ -447,7 +453,7 @@ class CustomersTest extends TestCase
 			'mysqls' => 15,
 			'createstdsubdomain' => 1,
 			'new_customer_password' => 'h0lYmo1y',
-			'sendpassword' => 1,
+			'sendpassword' => TRAVIS_CI == 1 ? 0 : 1,
 			'phpenabled' => 1,
 			'store_defaultindex' => 1,
 			'custom_notes' => 'secret',
