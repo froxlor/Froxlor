@@ -230,7 +230,7 @@ class CustomersTest extends TestCase
 
 	/**
 	 *
-	 * @depends testAdminCustomersAdd
+	 * @depends testAdminCustomerUpdateDeactivate
 	 */
 	public function testCustomerCustomersGetWhenDeactivated()
 	{
@@ -252,7 +252,7 @@ class CustomersTest extends TestCase
 
 	/**
 	 *
-	 * @depends testAdminCustomersAdd
+	 * @depends testCustomerCustomersGetWhenDeactivated
 	 */
 	public function testCustomerCustomersUpdate()
 	{
