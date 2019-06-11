@@ -115,20 +115,20 @@ class Store
 		$returnvalue = self::storeSettingField($fieldname, $fielddata, $newfieldvalue);
 
 		if ($returnvalue !== false && is_array($fielddata) && isset($fielddata['settinggroup']) && $fielddata['settinggroup'] == 'panel' && isset($fielddata['varname']) && $fielddata['varname'] == 'default_theme') {
-			// now, if changing themes is disabled we recursivly set
+			// now, if changing themes is disabled we manually set
 			// the new theme (customers and admin, depending on settings)
 			if (Settings::Get('panel.allow_theme_change_customer') == '0') {
 				$upd_stmt = Database::prepare("
-				UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `theme` = :theme
-			");
+					UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `theme` = :theme
+				");
 				Database::pexecute($upd_stmt, array(
 					'theme' => $newfieldvalue
 				));
 			}
 			if (Settings::Get('panel.allow_theme_change_admin') == '0') {
 				$upd_stmt = Database::prepare("
-				UPDATE `" . TABLE_PANEL_ADMINS . "` SET `theme` = :theme
-			");
+					UPDATE `" . TABLE_PANEL_ADMINS . "` SET `theme` = :theme
+				");
 				Database::pexecute($upd_stmt, array(
 					'theme' => $newfieldvalue
 				));
@@ -171,17 +171,13 @@ class Store
 
 	public static function storeSettingFieldInsertBindTask($fieldname, $fielddata, $newfieldvalue)
 	{
-		if (is_array($fielddata) && isset($fielddata['settinggroup']) && $fielddata['settinggroup'] != '' && isset($fielddata['varname']) && $fielddata['varname'] != '') {
-			if (Settings::Set($fielddata['settinggroup'] . '.' . $fielddata['varname'], $newfieldvalue) !== false) {
-				return array(
-					$fielddata['settinggroup'] . '.' . $fielddata['varname'] => $newfieldvalue
-				);
-			} else {
-				return false;
-			}
-		} else {
-			return false;
+		// first save the setting itself
+		$returnvalue = self::storeSettingField($fieldname, $fielddata, $newfieldvalue);
+
+		if ($returnvalue !== false) {
+			\Froxlor\System\Cronjob::inserttask('4');
 		}
+		return false;
 	}
 
 	public static function storeSettingHostname($fieldname, $fielddata, $newfieldvalue)
@@ -297,25 +293,9 @@ class Store
 		$returnvalue = self::storeSettingField($fieldname, $fielddata, $newfieldvalue);
 
 		if ($returnvalue !== false && is_array($fielddata) && isset($fielddata['settinggroup']) && $fielddata['settinggroup'] == 'catchall' && isset($fielddata['varname']) && $fielddata['varname'] == 'catchall_enabled' && $newfieldvalue == '0') {
-
-			$result_stmt = Database::query("
-				SELECT `id`, `email`, `email_full`, `iscatchall`  FROM `" . TABLE_MAIL_VIRTUAL . "`
-				WHERE `iscatchall` = '1'
+			Database::query("
+				UPDATE `" . TABLE_MAIL_VIRTUAL . "` SET `iscatchall` = '0' WHERE `iscatchall` = '1'
 			");
-
-			if (Database::num_rows() > 0) {
-
-				$upd_stmt = Database::prepare("
-					UPDATE `" . TABLE_MAIL_VIRTUAL . "` SET `email` = :email, `iscatchall` = '0' WHERE `id` = :id
-				");
-
-				while ($result_row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
-					Database::pexecute($upd_stmt, array(
-						'email' => $result_row['email_full'],
-						'id' => $result_row['id']
-					));
-				}
-			}
 		}
 
 		return $returnvalue;

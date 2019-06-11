@@ -94,4 +94,61 @@ class StoreTest extends TestCase
 		// we assume there are entries
 		$this->assertTrue(count($current_result) > 0);
 	}
+	
+	public function testStoreSettingDefaultTheme()
+	{
+		$current_theme = Settings::Get('panel.default_theme');
+		// allow theme changing for admins/customers so a new default won't overwrite
+		Settings::Set('panel.allow_theme_change_customer', 1);
+		Settings::Set('panel.allow_theme_change_admin', 1);
+		$fielddata = array(
+			'label' => 'panel_default_theme',
+			'settinggroup' => 'panel',
+			'varname' => 'default_theme'
+		);
+		Store::storeSettingDefaultTheme('panel_default_theme', $fielddata, "newTheme");
+		$this->assertTrue($current_theme != Settings::Get('panel.default_theme'));
+		$this->assertEquals("newTheme", Settings::Get('panel.default_theme'));
+		// validate admin/customer field did not change
+		$sel_stmt = Database::prepare("
+			SELECT * FROM `" . TABLE_PANEL_ADMINS . "`
+			WHERE `theme` = :newtheme
+		");
+		Database::pexecute($sel_stmt, array('newtheme' => "newTheme"));
+		$current_result = $sel_stmt->fetchAll(\PDO::FETCH_ASSOC);
+		// we assume there are entries
+		$this->assertTrue(count($current_result) == 0);
+		$sel_stmt = Database::prepare("
+			SELECT * FROM `" . TABLE_PANEL_CUSTOMERS . "`
+			WHERE `theme` = :newtheme
+		");
+		Database::pexecute($sel_stmt, array('newtheme' => "newTheme"));
+		$current_result = $sel_stmt->fetchAll(\PDO::FETCH_ASSOC);
+		// we assume there are entries
+		$this->assertTrue(count($current_result) == 0);
+		// now do not allow changing of themes so the theme should get updated for all admins/customers
+		// allow theme changing for admins/customers so a new default won't overwrite
+		Settings::Set('panel.allow_theme_change_customer', 0);
+		Settings::Set('panel.allow_theme_change_admin', 0);
+		Store::storeSettingDefaultTheme('panel_default_theme', $fielddata, "newTheme");
+		// validate admin/customer field did change
+		$sel_stmt = Database::prepare("
+			SELECT * FROM `" . TABLE_PANEL_ADMINS . "`
+			WHERE `theme` = :newtheme
+		");
+		Database::pexecute($sel_stmt, array('newtheme' => "newTheme"));
+		$current_result = $sel_stmt->fetchAll(\PDO::FETCH_ASSOC);
+		// we assume there are entries
+		$this->assertTrue(count($current_result) > 0);
+		$sel_stmt = Database::prepare("
+			SELECT * FROM `" . TABLE_PANEL_CUSTOMERS . "`
+			WHERE `theme` = :newtheme
+		");
+		Database::pexecute($sel_stmt, array('newtheme' => "newTheme"));
+		$current_result = $sel_stmt->fetchAll(\PDO::FETCH_ASSOC);
+		// we assume there are entries
+		$this->assertTrue(count($current_result) > 0);
+		// set back to default
+		Store::storeSettingDefaultTheme('panel_default_theme', $fielddata, $current_theme);
+	}
 }
