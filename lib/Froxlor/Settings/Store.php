@@ -110,7 +110,6 @@ class Store
 	 */
 	public static function storeSettingDefaultTheme($fieldname, $fielddata, $newfieldvalue)
 	{
-
 		// first save the setting itself
 		$returnvalue = self::storeSettingField($fieldname, $fielddata, $newfieldvalue);
 
