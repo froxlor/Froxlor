@@ -16,8 +16,17 @@
  * @package    System
  *
  */
-if(!file_exists(dirname(__DIR__) . '/vendor/autoload.php')){
-    die('Vendor does not exist. Please run "composer install". For more informationen https://github.com/Froxlor/Froxlor/wiki');
+
+// define default theme for configurehint, etc.
+$_deftheme = 'Sparkle';
+
+if (! file_exists(dirname(__DIR__) . '/vendor/autoload.php')) {
+	// get hint-template
+	$vendor_hint = file_get_contents(dirname(__DIR__) . '/templates/' . $_deftheme . '/misc/vendormissinghint.tpl');
+	// replace values
+	$vendor_hint = str_replace("<FROXLOR_INSTALL_DIR>", dirname(__DIR__), $vendor_hint);
+	$vendor_hint = str_replace("<CURRENT_YEAR>", date('Y', time()), $vendor_hint);
+	die($vendor_hint);
 }
 
 require dirname(__DIR__) . '/vendor/autoload.php';
@@ -72,9 +81,6 @@ unset($key);
 
 $filename = htmlentities(basename($_SERVER['PHP_SELF']));
 
-// define default theme for configurehint, etc.
-$_deftheme = 'Sparkle';
-
 // check whether the userdata file exists
 if (! file_exists(\Froxlor\Froxlor::getInstallDir() . '/lib/userdata.inc.php')) {
 	$config_hint = file_get_contents(\Froxlor\Froxlor::getInstallDir() . '/templates/' . $_deftheme . '/misc/configurehint.tpl');
@@ -92,7 +98,7 @@ if (! is_readable(\Froxlor\Froxlor::getInstallDir() . '/lib/userdata.inc.php')) 
 	// replace values
 	$owner_hint = str_replace("<USER>", $posixusername['name'], $owner_hint);
 	$owner_hint = str_replace("<GROUP>", $posixgroup['name'], $owner_hint);
-	$owner_hint = str_replace("<\Froxlor\Froxlor::getInstallDir()>", \Froxlor\Froxlor::getInstallDir(), $owner_hint);
+	$owner_hint = str_replace("<FROXLOR_INSTALL_DIR>", \Froxlor\Froxlor::getInstallDir(), $owner_hint);
 	$owner_hint = str_replace("<CURRENT_YEAR>", date('Y', time()), $owner_hint);
 	// show
 	die($owner_hint);
