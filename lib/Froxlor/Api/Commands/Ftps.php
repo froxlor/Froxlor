@@ -41,6 +41,10 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 	 *        	optional if customer.ftpatdomain is allowed, specify a domain (customer must be owner)
 	 * @param int $customerid
 	 *        	required when called as admin, not needed when called as customer
+	 * @param array $additional_members
+	 *        	optional whether to add additional usernames to the group
+	 * @param bool $is_defaultuser
+	 *        	optional whether this is the standard default ftp user which is being added so no usage is decreased
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
@@ -66,6 +70,9 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 			$ftpusername = $this->getParam('ftp_username', true, '');
 			$ftpdomain = $this->getParam('ftp_domain', true, '');
 
+			$additional_members = $this->getParam('additional_members', true, array());
+			$is_defaultuser = $this->getBoolParam('is_defaultuser', true, 0);
+
 			// validation
 			$password = \Froxlor\Validate\Validate::validate($password, 'password', '', '', array(), true);
 			$password = \Froxlor\System\Crypt::validatePassword($password, true);
@@ -87,7 +94,12 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 
 			$params = array();
 			// get needed customer info to reduce the ftp-user-counter by one
-			$customer = $this->getCustomerData('ftps');
+			if ($is_defaultuser) {
+				// no resource check for default user
+				$customer = $this->getCustomerData();
+			} else {
+				$customer = $this->getCustomerData('ftps');
+			}
 
 			if ($sendinfomail != 1) {
 				$sendinfomail = 0;
@@ -113,7 +125,11 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 				}
 				$username = $ftpusername . "@" . $ftpdomain;
 			} else {
-				$username = $customer['loginname'] . Settings::Get('customer.ftpprefix') . (intval($customer['ftp_lastaccountnumber']) + 1);
+				if ($is_defaultuser) {
+					$username = $customer['loginname'];
+				} else {
+					$username = $customer['loginname'] . Settings::Get('customer.ftpprefix') . (intval($customer['ftp_lastaccountnumber']) + 1);
+				}
 			}
 
 			$username_check_stmt = Database::prepare("
@@ -175,10 +191,22 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 				);
 				Database::pexecute($stmt, $params, true, true);
 
-				// update customer usage
-				Customers::increaseUsage($customer['customerid'], 'ftps_used');
-				Customers::increaseUsage($customer['customerid'], 'ftp_lastaccountnumber');
+				if (count($additional_members) > 0) {
+					foreach ($additional_members as $add_member) {
+						$params = array(
+							"username" => $add_member,
+							"customerid" => $customer['customerid'],
+							"guid" => $customer['guid']
+						);
+						Database::pexecute($stmt, $params, true, true);
+					}
+				}
 
+				// update customer usage
+				if (! $is_defaultuser) {
+					Customers::increaseUsage($customer['customerid'], 'ftps_used');
+					Customers::increaseUsage($customer['customerid'], 'ftp_lastaccountnumber');
+				}
 
 				$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] added ftp-account '" . $username . " (" . $path . ")'");
 				\Froxlor\System\Cronjob::inserttask(5);

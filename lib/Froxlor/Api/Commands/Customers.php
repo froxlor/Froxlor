@@ -543,37 +543,14 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 					Database::pexecute($ins_stmt, $ins_data, true, true);
 
 					\Froxlor\System\Cronjob::inserttask('1');
-					$cryptPassword = \Froxlor\System\Crypt::makeCryptPassword($password);
-					// add FTP-User
-					// @fixme use Ftp-ApiCommand later
-					$ins_stmt = Database::prepare("
-						INSERT INTO `" . TABLE_FTP_USERS . "` SET `customerid` = :customerid, `username` = :username, `description` = :desc,
-						`password` = :passwd, `homedir` = :homedir, `login_enabled` = 'y', `uid` = :guid, `gid` = :guid
-					");
-					$ins_data = array(
-						'customerid' => $customerid,
-						'username' => $loginname,
-						'passwd' => $cryptPassword,
-						'homedir' => $documentroot,
-						'guid' => $guid,
-						'desc' => "Default"
-					);
-					Database::pexecute($ins_stmt, $ins_data, true, true);
-					// add FTP-Group
-					// @fixme use Ftp-ApiCommand later
-					$ins_stmt = Database::prepare("
-						INSERT INTO `" . TABLE_FTP_GROUPS . "` SET `customerid` = :customerid, `groupname` = :groupname, `gid` = :guid, `members` = :members
-					");
-					$ins_data = array(
-						'customerid' => $customerid,
-						'groupname' => $loginname,
-						'guid' => $guid,
-						'members' => $loginname . ',' . Settings::Get('system.httpuser')
-					);
 
+					// add default FTP-User
 					// also, add froxlor-local user to ftp-group (if exists!) to
 					// allow access to customer-directories from within the panel, which
 					// is necessary when pathedit = Dropdown
+					$local_users = array(
+						Settings::Get('system.httpuser')
+					);
 					if ((int) Settings::Get('system.mod_fcgid_ownvhost') == 1 || (int) Settings::Get('phpfpm.enabled_ownvhost') == 1) {
 						if ((int) Settings::Get('system.mod_fcgid') == 1) {
 							$local_user = Settings::Get('system.mod_fcgid_httpuser');
@@ -582,22 +559,20 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 						}
 						// check froxlor-local user membership in ftp-group
 						// without this check addition may duplicate user in list if httpuser == local_user
-						if (strpos($ins_data['members'], $local_user) == false) {
-							$ins_data['members'] .= ',' . $local_user;
+						if (in_array($local_user, $local_users) == false) {
+							$local_users[] = $local_user;
 						}
 					}
-					Database::pexecute($ins_stmt, $ins_data, true, true);
-
-					// FTP-Quotatallies
-					// @fixme use Ftp-ApiCommand later
-					$ins_stmt = Database::prepare("
-						INSERT INTO `" . TABLE_FTP_QUOTATALLIES . "` SET `name` = :name, `quota_type` = 'user', `bytes_in_used` = '0',
-						`bytes_out_used` = '0', `bytes_xfer_used` = '0', `files_in_used` = '0', `files_out_used` = '0', `files_xfer_used` = '0'
-					");
-					Database::pexecute($ins_stmt, array(
-						'name' => $loginname
-					), true, true);
-					$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] automatically added ftp-account for user '" . $loginname . "'");
+					$this->apiCall('Ftps.add', array(
+						'customerid' => $customerid,
+						'path' => $documentroot,
+						'ftp_password' => $password,
+						'ftp_description' => "Default",
+						'sendinfomail' => 0,
+						'ftp_username' => $loginname,
+						'additional_members' => $local_users,
+						'is_defaultuser' => 1
+					));
 
 					$_stdsubdomain = '';
 					if ($createstdsubdomain == '1') {
@@ -898,7 +873,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 			$email = $idna_convert->encode(\Froxlor\Validate\Validate::validate($email, 'email', '', '', array(), true));
 			$customernumber = \Froxlor\Validate\Validate::validate($customernumber, 'customer number', '/^[A-Za-z0-9 \-]*$/Di', '', array(), true);
 			$custom_notes = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $custom_notes), 'custom_notes', '/^[^\0]*$/', '', array(), true);
-			if (!empty($allowed_phpconfigs)) {
+			if (! empty($allowed_phpconfigs)) {
 				$allowed_phpconfigs = array_map('intval', $allowed_phpconfigs);
 			}
 		}
