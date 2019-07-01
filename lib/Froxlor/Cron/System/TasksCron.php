@@ -92,6 +92,12 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 				 */
 				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, "Removing PowerDNS entries for domain " . $row['data']['domain']);
 				\Froxlor\Dns\PowerDNS::cleanDomainZone($row['data']['domain']);
+			} elseif ($row['type'] == '12') {
+				/**
+				 * TYPE=12 domain has been deleted, remove from acme.sh/let's encrypt directory if used
+				 */
+				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, "Removing Let's Encrypt entries for domain " . $row['data']['domain']);
+				\Froxlor\Domain\Domain::doLetsEncryptCleanUp($row['data']['domain']);
 			}
 		}
 

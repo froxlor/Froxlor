@@ -291,6 +291,30 @@ class Domain
 		}
 	}
 
+	public static function doLetsEncryptCleanUp($domainname = null)
+	{
+		// @ see \Froxlor\Cron\Http\LetsEncrypt\AcmeSh.php
+		$acmesh = "/root/.acme.sh/acme.sh";
+		if (file_exists($acmesh)) {
+			$certificate_folder = dirname($acmesh) . "/" . $domainname;
+			if (\Froxlor\Settings::Get('system.leecc') > 0) {
+				$certificate_folder .= "_ecc";
+			}
+			$certificate_folder = \Froxlor\FileDir::makeCorrectDir($certificate_folder);
+			if (file_exists($certificate_folder)) {
+				$params = " --remove -d " . $domainname;
+				if (\Froxlor\Settings::Get('system.leecc') > 0) {
+					$params .= " -ecc";
+				}
+				// run remove command
+				\Froxlor\FileDir::safe_exec($acmesh . $params);
+				// remove certificates directory
+				@unlink($certificate_folder);
+			}
+		}
+		return true;
+	}
+
 	/**
 	 * checks give path for security issues
 	 * and returns a string that can be appended

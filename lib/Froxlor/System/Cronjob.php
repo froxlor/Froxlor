@@ -178,6 +178,14 @@ class Cronjob
 				'type' => '11',
 				'data' => $data
 			));
+		} elseif ($type == '12' && $param1 != '') {
+			$data = array();
+			$data['domain'] = $param1;
+			$data = json_encode($data);
+			Database::pexecute($ins_stmt, array(
+				'type' => '12',
+				'data' => $data
+			));
 		} elseif ($type == '20' && is_array($param1)) {
 			$data = json_encode($param1);
 			Database::pexecute($ins_stmt, array(

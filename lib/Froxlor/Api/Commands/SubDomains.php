@@ -828,6 +828,8 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		\Froxlor\System\Cronjob::inserttask('4');
 		// remove domains DNS from powerDNS if used, #581
 		\Froxlor\System\Cronjob::inserttask('11', $result['domain']);
+		// remove domain from acme.sh / lets encrypt if used
+		\Froxlor\System\Cronjob::inserttask('12', $result['domain']);
 
 		// reduce subdomain-usage-counter
 		Customers::decreaseUsage($customer['customerid'], 'subdomains_used');

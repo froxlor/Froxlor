@@ -1619,6 +1619,9 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 			// remove domains DNS from powerDNS if used, #581
 			\Froxlor\System\Cronjob::inserttask('11', $result['domain']);
 
+			// remove domain from acme.sh / lets encrypt if used
+			\Froxlor\System\Cronjob::inserttask('12', $result['domain']);
+
 			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] deleted domain/subdomains (#" . $result['id'] . ")");
 			\Froxlor\User::updateCounters();
 			\Froxlor\System\Cronjob::inserttask('1');
