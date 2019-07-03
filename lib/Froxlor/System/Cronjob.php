@@ -285,6 +285,9 @@ class Cronjob
 			} elseif ($row['type'] == '11') {
 				// remove domain from pdns database if used
 				$task_desc = sprintf($lng['tasks']['remove_pdns_domain'], $row['data']['domain']);
+			} elseif ($row['type'] == '12') {
+				// remove domains ssl files
+				$task_desc = sprintf($lng['tasks']['remove_ssl_domain'], $row['data']['domain']);
 			} elseif ($row['type'] == '20') {
 				// deleting user-files
 				$loginname = '';

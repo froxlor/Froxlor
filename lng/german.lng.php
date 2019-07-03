@@ -1698,6 +1698,7 @@ $lng['panel']['system_is_configured'] = 'Das System ist bereits konfiguriert';
 $lng['panel']['settings_before_configuration'] = 'Stelle sicher, dass die Einstellungen angepasst wurden bevor die Dienste konfiguriert werden.';
 $lng['panel']['alternative_cmdline_config'] = 'Alternativ, führe den folgenden Befehl als root-Benutzer auf der Shell aus, um die Dienste automatisch zu konfigurieren.';
 $lng['tasks']['remove_pdns_domain'] = 'Lösche Domain %s von PowerDNS Datenbank';
+$lng['tasks']['remove_ssl_domain'] = 'Lösche SSL Dateien von Domain %s';
 $lng['admin']['novhostcontainer'] = '<br><br><small class="red">Keine der IPs und Ports hat die Option "' . $lng['admin']['ipsandports']['create_vhostcontainer'] . '" aktiviert, einige Einstellungen sind daher nicht verfügbar.</small>';
 $lng['serversettings']['errorlog_level']['title'] = 'Ausführlichkeit des Fehlerprotokolls';
 $lng['serversettings']['errorlog_level']['description'] = 'Steuert die Ausführlichkeit des Fehlerprotokolls. Voreinstellung ist "warn" bei Apache und "error" bei Nginx.';
