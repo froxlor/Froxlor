@@ -237,8 +237,8 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 				Extrausers::generateFiles($extrausers_log);
 			}
 
-			// clear NSCD cache if using fcgid or fpm, #1570
-			if (Settings::Get('system.mod_fcgid') == 1 || (int) Settings::Get('phpfpm.enabled') == 1) {
+			// clear NSCD cache if using fcgid or fpm, #1570 - not needed for nss-extrausers
+			if ((Settings::Get('system.mod_fcgid') == 1 || (int) Settings::Get('phpfpm.enabled') == 1) && Settings::Get('system.nssextrausers') == 0) {
 				$false_val = false;
 				\Froxlor\FileDir::safe_exec('nscd -i passwd 1> /dev/null', $false_val, array(
 					'>'

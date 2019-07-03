@@ -4490,7 +4490,7 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 				</daemon>
 				<!-- libnss-mysql -->
 				<daemon name="libnss"
-					title="libnss-mysql (required for FCGID/php-fpm/mpm-itk)">
+					title="libnss-mysql (alternative for libnss-extrausers, required for FCGID/php-fpm/mpm-itk)">
 					<install><![CDATA[apt-get install nscd
 wget http://debian.froxlor.org/pool/main/libn/libnss-mysql-bg/libnss-mysql-bg_1.5-3+frx1_amd64.deb
 dpkg -i libnss-mysql-bg_1.5-3+frx1_amd64.deb
@@ -4663,8 +4663,8 @@ aliases:     files
 				</daemon>
 				<!-- libnss-extrausers -->
 				<daemon name="libnssextrausers"
-					title="libnss-extrausers (alternative to libnss-mysql, required for FCGID/php-fpm/mpm-itk)">
-					<install><![CDATA[apt-get install nscd libnss-extrausers]]></install>
+					title="libnss-extrausers (required for FCGID/php-fpm/mpm-itk)">
+					<install><![CDATA[apt-get install libnss-extrausers]]></install>
 					<commands index="1">
 						<command><![CDATA[mkdir -p /var/lib/extrausers]]></command>
 						<command><![CDATA[touch /var/lib/extrausers/passwd]]></command>
@@ -4696,9 +4696,6 @@ aliases:     files
 ]]>
 						</content>
 					</file>
-					<command><![CDATA[/etc/init.d/nscd restart]]></command>
-					<!-- clear group chache -->
-					<command><![CDATA[nscd --invalidate=group]]></command>
 				</daemon>
 				<!-- Logrotate -->
 				<daemon name="logrotate" title="Logrotate">

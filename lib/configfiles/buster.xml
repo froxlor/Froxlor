@@ -4763,8 +4763,8 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 				</daemon>
 				<!-- libnss-extrausers -->
 				<daemon name="libnssextrausers"
-					title="libnss-extrausers (alternative to libnss-mysql, required for FCGID/php-fpm/mpm-itk)">
-					<install><![CDATA[apt-get install nscd libnss-extrausers]]></install>
+					title="libnss-extrausers (required for FCGID/php-fpm/mpm-itk)">
+					<install><![CDATA[apt-get install libnss-extrausers]]></install>
 					<commands index="1">
 						<command><![CDATA[mkdir -p /var/lib/extrausers]]></command>
 						<command><![CDATA[touch /var/lib/extrausers/passwd]]></command>
@@ -4796,9 +4796,6 @@ aliases:     files
 ]]>
 						</content>
 					</file>
-					<command><![CDATA[/etc/init.d/nscd restart]]></command>
-					<!-- clear group chache -->
-					<command><![CDATA[nscd --invalidate=group]]></command>
 				</daemon>
 				<!-- Logrotate -->
 				<daemon name="logrotate" title="Logrotate">

@@ -90,7 +90,7 @@ class MasterCron extends \Froxlor\Cron\FroxlorCron
 
 		$tasks_cnt_stmt = \Froxlor\Database\Database::query("SELECT COUNT(*) as jobcnt FROM `panel_tasks`");
 		$tasks_cnt = $tasks_cnt_stmt->fetch(\PDO::FETCH_ASSOC);
-		
+
 		// do we have anything to include?
 		if (count($jobs_to_run) > 0) {
 			// include all jobs we want to execute
@@ -107,8 +107,8 @@ class MasterCron extends \Froxlor\Cron\FroxlorCron
 					\Froxlor\Cron\System\Extrausers::generateFiles(self::$cronlog);
 				}
 
-				// clear NSCD cache if using fcgid or fpm, #1570
-				if (\Froxlor\Settings::Get('system.mod_fcgid') == 1 || (int) \Froxlor\Settings::Get('phpfpm.enabled') == 1) {
+				// clear NSCD cache if using fcgid or fpm, #1570 - not needed for nss-extrausers
+				if ((\Froxlor\Settings::Get('system.mod_fcgid') == 1 || (int) \Froxlor\Settings::Get('phpfpm.enabled') == 1) && \Froxlor\Settings::Get('system.nssextrausers') == 0) {
 					$false_val = false;
 					\Froxlor\FileDir::safe_exec('nscd -i passwd 1> /dev/null', $false_val, array(
 						'>'
