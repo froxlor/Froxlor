@@ -70,6 +70,7 @@ class MasterCron extends \Froxlor\Cron\FroxlorCron
 					// also regenerate cron.d-file
 					\Froxlor\System\Cronjob::inserttask('99');
 					array_push($jobs_to_run, 'tasks');
+					define('CRON_IS_FORCED', 1);
 				} elseif (strtolower($argv[$x]) == '--debug') {
 					define('CRON_DEBUG_FLAG', 1);
 				} elseif (strtolower($argv[$x]) == '--no-fork') {

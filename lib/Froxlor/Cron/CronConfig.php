@@ -61,6 +61,7 @@ class CronConfig
 			$month_delay = 7;
 			while ($row_cronentry = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 				// create cron.d-entry
+				$matches = array();
 				if (preg_match("/(\d+) (MINUTE|HOUR|DAY|WEEK|MONTH)/", $row_cronentry['interval'], $matches)) {
 					if ($matches[1] == 1) {
 						$minvalue = "*";

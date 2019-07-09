@@ -28,6 +28,16 @@ use Froxlor\Cron\Http\Php\Fpm;
 class HttpConfigBase
 {
 
+	public function init()
+	{
+		// if Let's Encrypt is activated, run it before regeneration of webserver configfiles
+		if (Settings::Get('system.leenabled') == 1) {
+			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'Running Let\'s Encrypt cronjob prior to regenerating webserver config files');
+			\Froxlor\Cron\Http\LetsEncrypt\AcmeSh::$no_inserttask = true;
+			\Froxlor\Cron\Http\LetsEncrypt\AcmeSh::run();
+		}
+	}
+
 	public function reload()
 	{
 		$called_class = get_called_class();
