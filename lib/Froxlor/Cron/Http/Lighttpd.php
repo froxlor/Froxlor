@@ -3,7 +3,6 @@ namespace Froxlor\Cron\Http;
 
 use Froxlor\Database\Database;
 use Froxlor\Settings;
-use Froxlor\Cron\Http\Php\Fpm;
 use Froxlor\Cron\Http\Php\PhpInterface;
 
 /**
@@ -44,30 +43,6 @@ class Lighttpd extends HttpConfigBase
 	 * @var bool
 	 */
 	private $deactivated = false;
-
-	public function reload()
-	{
-		if ((int) Settings::Get('phpfpm.enabled') == 1) {
-			// get all start/stop commands
-			$startstop_sel = Database::prepare("SELECT reload_cmd, config_dir FROM `" . TABLE_PANEL_FPMDAEMONS . "`");
-			Database::pexecute($startstop_sel);
-			$restart_cmds = $startstop_sel->fetchAll(\PDO::FETCH_ASSOC);
-			// restart all php-fpm instances
-			foreach ($restart_cmds as $restart_cmd) {
-				// check whether the config dir is empty (no domains uses this daemon)
-				// so we need to create a dummy
-				$_conffiles = glob(\Froxlor\FileDir::makeCorrectFile($restart_cmd['config_dir'] . "/*.conf"));
-				if ($_conffiles === false || empty($_conffiles)) {
-					$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'lighttpd::reload: fpm config directory "' . $restart_cmd['config_dir'] . '" is empty. Creating dummy.');
-					Fpm::createDummyPool($restart_cmd['config_dir']);
-				}
-				$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'lighttpd::reload: running ' . $restart_cmd['reload_cmd']);
-				\Froxlor\FileDir::safe_exec(escapeshellcmd($restart_cmd['reload_cmd']));
-			}
-		}
-		$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'lighttpd::reload: reloading lighttpd');
-		\Froxlor\FileDir::safe_exec(escapeshellcmd(Settings::Get('system.apachereload_command')));
-	}
 
 	public function createIpPort()
 	{
@@ -396,6 +371,7 @@ class Lighttpd extends HttpConfigBase
 	protected function createLighttpdHosts($ipid, $ssl, $vhost_filename)
 	{
 		$domains = WebserverBase::getVhostsToCreate();
+		$included_vhosts = array();
 		foreach ($domains as $domain) {
 
 			if (is_dir(Settings::Get('system.apacheconf_vhost'))) {
@@ -765,23 +741,21 @@ class Lighttpd extends HttpConfigBase
 		));
 
 		while ($row_htpasswds = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
-			if ($auth_backend_loaded[$domain['ipandport']] != 'yes' && $auth_backend_loaded[$domain['ssl_ipandport']] != 'yes') {
+			if ($this->auth_backend_loaded[$domain['ipandport']] != 'yes' && $this->auth_backend_loaded[$domain['ssl_ipandport']] != 'yes') {
 				$filename = $domain['customerid'] . '.htpasswd';
 
 				if ($this->auth_backend_loaded[$domain['ipandport']] != 'yes') {
-					$auth_backend_loaded[$domain['ipandport']] = 'yes';
+					$this->auth_backend_loaded[$domain['ipandport']] = 'yes';
 					$diroption_text .= 'auth.backend = "htpasswd"' . "\n";
 					$diroption_text .= 'auth.backend.htpasswd.userfile = "' . \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.apacheconf_htpasswddir') . '/' . $filename) . '"' . "\n";
 					$this->needed_htpasswds[$filename] = $row_htpasswds['username'] . ':' . $row_htpasswds['password'] . "\n";
 					$diroption_text .= 'auth.require = ( ' . "\n";
-					$previous_domain_id = '1';
 				} elseif ($this->auth_backend_loaded[$domain['ssl_ipandport']] != 'yes') {
-					$auth_backend_loaded[$domain['ssl_ipandport']] = 'yes';
+					$this->auth_backend_loaded[$domain['ssl_ipandport']] = 'yes';
 					$diroption_text .= 'auth.backend= "htpasswd"' . "\n";
 					$diroption_text .= 'auth.backend.htpasswd.userfile = "' . \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.apacheconf_htpasswddir') . '/' . $filename) . '"' . "\n";
 					$this->needed_htpasswds[$filename] = $row_htpasswds['username'] . ':' . $row_htpasswds['password'] . "\n";
 					$diroption_text .= 'auth.require = ( ' . "\n";
-					$previous_domain_id = '1';
 				}
 			}
 

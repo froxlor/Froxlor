@@ -128,7 +128,7 @@ class ConfigIO
 				// iterate through all subdirs,
 				// look for vhost/diroption files
 				// and delete them
-				foreach ($its as $fullFileName => $it) {
+				foreach ($its as $it) {
 					if ($it->isFile() && preg_match($pattern, $it->getFilename())) {
 						// remove file
 						\Froxlor\FileDir::safe_exec('rm -f ' . escapeshellarg(\Froxlor\FileDir::makeCorrectFile($its->getPathname())));
@@ -232,7 +232,7 @@ class ConfigIO
 				// look for php-fcgi-starter files
 				// and take immutable-flag away from them
 				// so we can delete them :)
-				foreach ($its as $fullFileName => $it) {
+				foreach ($its as $it) {
 					if ($it->isFile() && $it->getFilename() == 'php-fcgi-starter') {
 						// set chattr -i
 						\Froxlor\FileDir::removeImmutable($its->getPathname());

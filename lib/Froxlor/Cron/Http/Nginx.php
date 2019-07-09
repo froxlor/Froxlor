@@ -3,7 +3,6 @@ namespace Froxlor\Cron\Http;
 
 use Froxlor\Database\Database;
 use Froxlor\Settings;
-use Froxlor\Cron\Http\Php\Fpm;
 use Froxlor\Cron\Http\Php\PhpInterface;
 
 /**
@@ -53,39 +52,6 @@ class Nginx extends HttpConfigBase
 	public function __construct($nginx_server = array())
 	{
 		$this->nginx_server = $nginx_server;
-	}
-
-	public function reload()
-	{
-		if ((int) Settings::Get('phpfpm.enabled') == 1) {
-			// get all start/stop commands
-			$startstop_sel = Database::prepare("SELECT reload_cmd, config_dir FROM `" . TABLE_PANEL_FPMDAEMONS . "`");
-			Database::pexecute($startstop_sel);
-			$restart_cmds = $startstop_sel->fetchAll(\PDO::FETCH_ASSOC);
-			// restart all php-fpm instances
-			foreach ($restart_cmds as $restart_cmd) {
-				// check whether the config dir is empty (no domains uses this daemon)
-				// so we need to create a dummy
-				$_conffiles = glob(\Froxlor\FileDir::makeCorrectFile($restart_cmd['config_dir'] . "/*.conf"));
-				if ($_conffiles === false || empty($_conffiles)) {
-					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'nginx::reload: fpm config directory "' . $restart_cmd['config_dir'] . '" is empty. Creating dummy.');
-					Fpm::createDummyPool($restart_cmd['config_dir']);
-				}
-				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'nginx::reload: running ' . $restart_cmd['reload_cmd']);
-				\Froxlor\FileDir::safe_exec(escapeshellcmd($restart_cmd['reload_cmd']));
-			}
-		}
-
-		\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'nginx::reload: reloading nginx');
-		\Froxlor\FileDir::safe_exec(Settings::Get('system.apachereload_command'));
-
-		/**
-		 * nginx does not auto-spawn fcgi-processes
-		 */
-		if (Settings::Get('system.phpreload_command') != '' && (int) Settings::Get('phpfpm.enabled') == 0) {
-			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'nginx::reload: restarting php processes');
-			\Froxlor\FileDir::safe_exec(Settings::Get('system.phpreload_command'));
-		}
 	}
 
 	private function createLogformatEntry()
@@ -923,6 +889,7 @@ class Nginx extends HttpConfigBase
 					$path = \Froxlor\FileDir::makeCorrectDir(substr($row_htpasswds['path'], strlen($domain['documentroot']) - 1));
 				} else {
 					// if the website contents is located in a subdirectory of the user
+					$matches = array();
 					preg_match('/^([\/[:print:]]*\/)([[:print:]\/]+){1}$/i', $row_htpasswds['path'], $matches);
 					$path = \Froxlor\FileDir::makeCorrectDir(substr($row_htpasswds['path'], strlen($matches[1]) - 1));
 				}
