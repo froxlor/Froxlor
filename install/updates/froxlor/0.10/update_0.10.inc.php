@@ -222,6 +222,10 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201902120')) {
 	}
 	lastStepStatus(0);
 
+	showUpdateStep("Inserting job to regenerate configfiles");
+	\Froxlor\System\Cronjob::inserttask('1');
+	lastStepStatus(0);
+
 	\Froxlor\Froxlor::updateToDbVersion('201902170');
 }
 
