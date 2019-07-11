@@ -96,7 +96,7 @@ class MasterCron extends \Froxlor\Cron\FroxlorCron
 		if (count($jobs_to_run) > 0) {
 			// include all jobs we want to execute
 			foreach ($jobs_to_run as $cron) {
-				self::updateLastRunOfCron($cron);
+				\Froxlor\System\Cronjob::updateLastRunOfCron($cron);
 				$cronfile = self::getCronModule($cron);
 				if ($cronfile && class_exists($cronfile)) {
 					$cronfile::run();
@@ -334,16 +334,6 @@ class MasterCron extends \Froxlor\Cron\FroxlorCron
 		if (\Froxlor\Settings::Get('system.debug_cron') != '1') {
 			unlink(self::getLockfile());
 		}
-	}
-
-	private static function updateLastRunOfCron($cronname)
-	{
-		$upd_stmt = Database::prepare("
-			UPDATE `" . TABLE_PANEL_CRONRUNS . "` SET `lastrun` = UNIX_TIMESTAMP() WHERE `cronfile` = :cron;
-		");
-		Database::pexecute($upd_stmt, array(
-			'cron' => $cronname
-		));
 	}
 
 	private static function getCronModule($cronname)

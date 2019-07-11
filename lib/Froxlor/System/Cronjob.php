@@ -361,4 +361,14 @@ class Cronjob
 
 		die($message);
 	}
+
+	public static function updateLastRunOfCron($cronname)
+	{
+		$upd_stmt = Database::prepare("
+			UPDATE `" . TABLE_PANEL_CRONRUNS . "` SET `lastrun` = UNIX_TIMESTAMP() WHERE `cronfile` = :cron;
+		");
+		Database::pexecute($upd_stmt, array(
+			'cron' => $cronname
+		));
+	}
 }

@@ -35,6 +35,8 @@ class HttpConfigBase
 			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'Running Let\'s Encrypt cronjob prior to regenerating webserver config files');
 			\Froxlor\Cron\Http\LetsEncrypt\AcmeSh::$no_inserttask = true;
 			\Froxlor\Cron\Http\LetsEncrypt\AcmeSh::run();
+			// set last run timestamp of cronjob
+			\Froxlor\System\Cronjob::updateLastRunOfCron('letsencrypt');
 		}
 	}
 
