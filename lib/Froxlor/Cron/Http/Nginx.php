@@ -671,8 +671,13 @@ class Nginx extends HttpConfigBase
 					}
 					$sslsettings .= 'ssl_dhparam ' . $dhparams . ';' . "\n";
 				}
-				$sslsettings .= "\t" . 'ssl_ecdh_curve secp384r1;' . "\n";
+				// When <1.11.0: Defaults to prime256v1, similar to first curve recommendation by Mozilla.
+				// (When specifyng just one, there's no fallback when specific curve is not supported by client.)
+				// When >1.11.0: Defaults to auto, using recommended curves provided by OpenSSL.
+				// see https://github.com/Froxlor/Froxlor/issues/652
+				//$sslsettings .= "\t" . 'ssl_ecdh_curve secp384r1;' . "\n";
 				$sslsettings .= "\t" . 'ssl_prefer_server_ciphers on;' . "\n";
+				$sslsettings .= "\t" . 'ssl_session_cache shared:SSL:10m;' . "\n";
 				$sslsettings .= "\t" . 'ssl_certificate ' . \Froxlor\FileDir::makeCorrectFile($domain_or_ip['ssl_cert_file']) . ';' . "\n";
 
 				if ($domain_or_ip['ssl_key_file'] != '') {
