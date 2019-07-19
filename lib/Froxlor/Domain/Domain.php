@@ -304,7 +304,7 @@ class Domain
 			if (file_exists($certificate_folder)) {
 				$params = " --remove -d " . $domainname;
 				if (\Froxlor\Settings::Get('system.leecc') > 0) {
-					$params .= " -ecc";
+					$params .= " --ecc";
 				}
 				// run remove command
 				\Froxlor\FileDir::safe_exec($acmesh . $params);
