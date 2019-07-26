@@ -82,9 +82,11 @@ class DbManagerMySQL
 			if (version_compare(Database::getAttribute(\PDO::ATTR_SERVER_VERSION), '8.0.11', '>=')) {
 				// create user
 				$stmt = Database::prepare("
-					CREATE USER '" . $username . "'@'" . $access_host . "' IDENTIFIED BY 'password'
+					CREATE USER '" . $username . "'@'" . $access_host . "' IDENTIFIED BY :password
 				");
-				Database::pexecute($stmt);
+				Database::pexecute($stmt, array(
+					"password" => $password
+				));
 				// grant privileges
 				$stmt = Database::prepare("
 					GRANT ALL ON `" . $username . "`.* TO :username@:host
@@ -96,29 +98,31 @@ class DbManagerMySQL
 			} else {
 				// grant privileges
 				$stmt = Database::prepare("
-					GRANT ALL PRIVILEGES ON `" . $username . "`.* TO :username@:host IDENTIFIED BY 'password'
+					GRANT ALL PRIVILEGES ON `" . $username . "`.* TO :username@:host IDENTIFIED BY :password
 				");
 				Database::pexecute($stmt, array(
 					"username" => $username,
-					"host" => $access_host
+					"host" => $access_host,
+					"password" => $password
 				));
 			}
-		}
-		// set passoword
-		if (version_compare(Database::getAttribute(\PDO::ATTR_SERVER_VERSION), '5.7.6', '<')) {
-			if ($p_encrypted) {
-				$stmt = Database::prepare("SET PASSWORD FOR :username@:host = :password");
-			} else {
-				$stmt = Database::prepare("SET PASSWORD FOR :username@:host = PASSWORD(:password)");
-			}
 		} else {
-			$stmt = Database::prepare("ALTER USER :username@:host IDENTIFIED BY :password");
+			// set passoword
+			if (version_compare(Database::getAttribute(\PDO::ATTR_SERVER_VERSION), '5.7.6', '<')) {
+				if ($p_encrypted) {
+					$stmt = Database::prepare("SET PASSWORD FOR :username@:host = :password");
+				} else {
+					$stmt = Database::prepare("SET PASSWORD FOR :username@:host = PASSWORD(:password)");
+				}
+			} else {
+				$stmt = Database::prepare("ALTER USER :username@:host IDENTIFIED BY :password");
+			}
+			Database::pexecute($stmt, array(
+				"username" => $username,
+				"host" => $access_host,
+				"password" => $password
+			));
 		}
-		Database::pexecute($stmt, array(
-			"username" => $username,
-			"host" => $access_host,
-			"password" => $password
-		));
 	}
 
 	/**
