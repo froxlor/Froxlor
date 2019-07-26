@@ -179,7 +179,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 					), true, true);
 				}
 
-				$stmt = Database::prepare("
+				$group_upd_stmt = Database::prepare("
 					UPDATE `" . TABLE_FTP_GROUPS . "`
 					SET `members` = CONCAT_WS(',',`members`, :username)
 					WHERE `customerid`= :customerid AND `gid`= :guid
@@ -189,7 +189,18 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 					"customerid" => $customer['customerid'],
 					"guid" => $customer['guid']
 				);
-				Database::pexecute($stmt, $params, true, true);
+
+				if ($is_defaultuser) {
+					// add the new group
+					$group_ins_stmt = Database::prepare("
+						INSERT INTO `" . TABLE_FTP_GROUPS . "`
+						SET `customerid`= :customerid, `gid`= :guid, `groupname` = :username, `members` = :username
+					");
+					Database::pexecute($group_ins_stmt, $params, true, true);
+				} else {
+					// just update
+					Database::pexecute($group_upd_stmt, $params, true, true);
+				}
 
 				if (count($additional_members) > 0) {
 					foreach ($additional_members as $add_member) {
@@ -198,12 +209,12 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 							"customerid" => $customer['customerid'],
 							"guid" => $customer['guid']
 						);
-						Database::pexecute($stmt, $params, true, true);
+						Database::pexecute($group_upd_stmt, $params, true, true);
 					}
 				}
 
-				// update customer usage
 				if (! $is_defaultuser) {
+					// update customer usage
 					Customers::increaseUsage($customer['customerid'], 'ftps_used');
 					Customers::increaseUsage($customer['customerid'], 'ftp_lastaccountnumber');
 				}
