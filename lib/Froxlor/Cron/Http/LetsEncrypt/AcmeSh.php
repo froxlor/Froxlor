@@ -45,10 +45,11 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 
 	public static $no_inserttask = false;
 
-	public static function run()
+	public static function run($internal = false)
 	{
-		if (! defined('CRON_IS_FORCED') && ! defined('CRON_DEBUG_FLAG')) {
-			FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_WARNING, "Let's Encrypt cronjob is combined with regeneration of webserver configuration files.\nFor debugging purposes you can use the --debug switch and/or the --force switch to run the cron manually.");
+		if (! defined('CRON_IS_FORCED') && ! defined('CRON_DEBUG_FLAG') && $internal == false) {
+			//FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_WARNING, "Let's Encrypt cronjob is combined with regeneration of webserver configuration files.\nFor debugging purposes you can use the --debug switch and/or the --force switch to run the cron manually.");
+			return 0;
 		}
 
 		self::checkInstall();

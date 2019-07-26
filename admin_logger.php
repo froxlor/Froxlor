@@ -83,7 +83,7 @@ if ($page == 'log' && $userinfo['change_serversettings'] == '1') {
 						case \Froxlor\FroxlorLogger::LOGIN_ACTION:
 							$_action = $lng['logger']['login'];
 							break;
-						case LOG_ERROR:
+						case \Froxlor\FroxlorLogger::LOG_ERROR:
 							$_action = $lng['logger']['intern'];
 							break;
 						default:

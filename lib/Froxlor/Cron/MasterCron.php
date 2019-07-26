@@ -102,23 +102,7 @@ class MasterCron extends \Froxlor\Cron\FroxlorCron
 					$cronfile::run();
 				}
 			}
-
-			if ($tasks_cnt['jobcnt'] > 0) {
-				if (\Froxlor\Settings::Get('system.nssextrausers') == 1) {
-					\Froxlor\Cron\System\Extrausers::generateFiles(self::$cronlog);
-				}
-
-				// clear NSCD cache if using fcgid or fpm, #1570 - not needed for nss-extrausers
-				if ((\Froxlor\Settings::Get('system.mod_fcgid') == 1 || (int) \Froxlor\Settings::Get('phpfpm.enabled') == 1) && \Froxlor\Settings::Get('system.nssextrausers') == 0) {
-					$false_val = false;
-					\Froxlor\FileDir::safe_exec('nscd -i passwd 1> /dev/null', $false_val, array(
-						'>'
-					));
-					\Froxlor\FileDir::safe_exec('nscd -i group 1> /dev/null', $false_val, array(
-						'>'
-					));
-				}
-			}
+			self::refreshUsers($tasks_cnt['jobcnt']);
 		}
 
 		/**
@@ -131,6 +115,26 @@ class MasterCron extends \Froxlor\Cron\FroxlorCron
 
 		// shutdown cron
 		self::shutdown();
+	}
+
+	private static function refreshUsers($jobcount = 0)
+	{
+		if ($jobcount > 0) {
+			if (\Froxlor\Settings::Get('system.nssextrausers') == 1) {
+				\Froxlor\Cron\System\Extrausers::generateFiles(self::$cronlog);
+			}
+
+			// clear NSCD cache if using fcgid or fpm, #1570 - not needed for nss-extrausers
+			if ((\Froxlor\Settings::Get('system.mod_fcgid') == 1 || (int) \Froxlor\Settings::Get('phpfpm.enabled') == 1) && \Froxlor\Settings::Get('system.nssextrausers') == 0) {
+				$false_val = false;
+				\Froxlor\FileDir::safe_exec('nscd -i passwd 1> /dev/null', $false_val, array(
+					'>'
+				));
+				\Froxlor\FileDir::safe_exec('nscd -i group 1> /dev/null', $false_val, array(
+					'>'
+				));
+			}
+		}
 	}
 
 	private static function init()
