@@ -130,6 +130,12 @@ class Dns
 			}
 		}
 
+		// additional required records for CAA if activated
+		if ($domain['caa'] == '1') {
+			// check for CAA content later
+			self::addRequiredEntry('@', 'CAA', $required_entries);
+		}
+
 		// additional required records for SPF and DKIM if activated
 		if ($domain['isemaildomain'] == '1') {
 			if (Settings::Get('spf.use_spf') == '1') {
@@ -277,6 +283,11 @@ class Dns
 						}
 					}
 				}
+			}
+
+			// CAA
+			if (array_key_exists("CAA", $required_entries)) {
+				$zonerecords[] = new DnsEntry('@', 'CAA', '0 issue "letsencrypt.org"');
 			}
 		}
 

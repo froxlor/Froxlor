@@ -1848,6 +1848,12 @@ $lng['serversettings']['leenabled']['title'] = "Enable Let's Encrypt";
 $lng['serversettings']['leenabled']['description'] = "If activated, customers are able to let froxlor automatically generate and renew Let's Encrypt ssl-certificates for domains with a ssl IP/port.<br /><br />Please remember that you need to go through the webserver-configuration when enabled because this feature needs a special configuration.";
 $lng['domains']['ssl_redirect_temporarilydisabled'] = "<br>The SSL redirect is temporarily deactivated while a new Let's Encrypt certificate is generated. It will be activated again after the certificate was generated.";
 
+// Added for CAA record support
+$lng['admin']['caa']['title'] = 'Use CAA DNS record';
+$lng['admin']['caa']['description'] = 'DNS Certification Authority Authorization (CAA) is an Internet security policy mechanism which allows domain name holders to indicate to certificate authorities whether they are authorized to issue digital certificates for a particular domain name. It does this by means of a new "CAA" Domain Name System (DNS) resource record. Currently it only supports Let\'s Encrypt. This feature is still in beta.';
+$lng['customer']['caa']['title'] = 'Use CAA DNS record';
+$lng['customer']['caa']['description'] = 'DNS Certification Authority Authorization (CAA) is an Internet security policy mechanism which allows domain name holders to indicate to certificate authorities whether they are authorized to issue digital certificates for a particular domain name. It does this by means of a new "CAA" Domain Name System (DNS) resource record. Currently it only supports Let\'s Encrypt. This feature is still in beta.';
+
 // Autoupdate
 $lng['admin']['autoupdate'] = 'Auto-Update';
 $lng['error']['customized_version'] = 'It looks like your Froxlor installation has been modified, no support sorry.';

@@ -108,6 +108,19 @@ return array(
 						),
 						'value' => array()
 					),
+					'caa' => array(
+						'visible' => \Froxlor\Settings::Get('system.leenabled') == '1' ? true : false,
+						'label' => $lng['customer']['caa']['title'],
+						'desc' => $lng['customer']['caa']['description'],
+						'type' => 'checkbox',
+						'values' => array(
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array()
+					),
 					'hsts_maxage' => array(
 						'label' => $lng['admin']['domain_hsts_maxage']['title'],
 						'desc' => $lng['admin']['domain_hsts_maxage']['description'],
