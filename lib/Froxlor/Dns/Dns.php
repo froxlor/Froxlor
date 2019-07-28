@@ -131,9 +131,15 @@ class Dns
 		}
 
 		// additional required records for CAA if activated
-		if ($domain['caa'] == '1') {
+		if (!is_null($domain['caa'])) {
 			// check for CAA content later
 			self::addRequiredEntry('@', 'CAA', $required_entries);
+			// additional required records by subdomain setting
+			if ($domain['iswildcarddomain'] == '1') {
+				self::addRequiredEntry('*', 'CAA', $required_entries);
+			} elseif ($domain['wwwserveralias'] == '1') {
+				self::addRequiredEntry('www', 'CAA', $required_entries);
+			}
 		}
 
 		// additional required records for SPF and DKIM if activated
@@ -287,7 +293,16 @@ class Dns
 
 			// CAA
 			if (array_key_exists("CAA", $required_entries)) {
-				$zonerecords[] = new DnsEntry('@', 'CAA', '0 issue "letsencrypt.org"');
+				foreach ($required_entries as $type => $records) {
+					if ($type == 'CAA') {
+						foreach ($records as $record) {
+							$caa_entries = explode(PHP_EOL, $domain['caa']);
+							foreach ($caa_entries as $entry) {
+								$zonerecords[] = new DnsEntry($record, 'CAA', self::encloseTXTContent($entry));
+							}
+						}
+					}
+				}
 			}
 		}
 

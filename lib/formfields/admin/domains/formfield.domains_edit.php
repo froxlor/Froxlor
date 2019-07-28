@@ -251,19 +251,14 @@ return array(
 						)
 					),
 					'caa' => array(
-						'visible' => (\Froxlor\Settings::Get('system.leenabled') == '1' ? ($ssl_ipsandports != '' ? true : false) : false),
+						'visible' => $ssl_ipsandports != '' ? true : false,
+						'style' => 'align-top',
 						'label' => $lng['admin']['caa']['title'],
 						'desc' => $lng['admin']['caa']['description'],
-						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['caa']
-						)
+						'type' => 'textarea',
+						'value' => $result['caa'],
+						'cols' => 60,
+						'rows' => 5
 					),
 					'http2' => array(
 						'visible' => ($ssl_ipsandports != '' ? true : false) && \Froxlor\Settings::Get('system.webserver') != 'lighttpd' && \Froxlor\Settings::Get('system.http2_support') == '1',

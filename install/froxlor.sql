@@ -256,7 +256,7 @@ CREATE TABLE `panel_domains` (
   `mod_fcgid_maxrequests` int(4) default '-1',
   `ismainbutsubto` int(11) unsigned NOT NULL default '0',
   `letsencrypt` tinyint(1) NOT NULL default '0',
-  `caa` tinyint(1) NOT NULL default '0',
+  `caa` text default NULL,
   `hsts` varchar(10) NOT NULL default '0',
   `hsts_sub` tinyint(1) NOT NULL default '0',
   `hsts_preload` tinyint(1) NOT NULL default '0',

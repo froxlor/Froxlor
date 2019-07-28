@@ -129,19 +129,14 @@ return array(
 						)
 					),
 					'caa' => array(
-						'visible' => \Froxlor\Settings::Get('system.leenabled') == '1' ? true : false,
+						'visible' => $ssl_ipsandports != '' ? true : false,
+						'style' => 'align-top',
 						'label' => $lng['customer']['caa']['title'],
 						'desc' => $lng['customer']['caa']['description'],
-						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['caa']
-						)
+						'type' => 'textarea',
+						'value' => $result['caa'],
+						'cols' => 60,
+						'rows' => 5
 					),
 					'hsts_maxage' => array(
 						'label' => $lng['admin']['domain_hsts_maxage']['title'],

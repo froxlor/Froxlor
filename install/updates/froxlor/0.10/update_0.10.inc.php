@@ -266,6 +266,6 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.0-rc1')) {
 
 if (\Froxlor\Froxlor::isDatabaseVersion('201904250')) {
 
-	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `caa` TINYINT(1) NOT NULL DEFAULT '0' AFTER `letsencrypt`;");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `caa` text default NULL AFTER `letsencrypt`;");
 	\Froxlor\Froxlor::updateToDbVersion('201907270');
 }
