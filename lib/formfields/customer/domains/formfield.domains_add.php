@@ -108,16 +108,6 @@ return array(
 						),
 						'value' => array()
 					),
-					'caa' => array(
-						'visible' => $ssl_ipsandports != '' ? true : false,
-						'style' => 'align-top',
-						'label' => $lng['customer']['caa']['title'],
-						'desc' => $lng['customer']['caa']['description'],
-						'type' => 'textarea',
-						'value' => (\Froxlor\Settings::Get('system.leenabled') == '1' ? ($ssl_ipsandports != '' ? '0 issue "letsencrypt.org"' : '') : ''),
-						'cols' => 60,
-						'rows' => 5
-					),
 					'hsts_maxage' => array(
 						'label' => $lng['admin']['domain_hsts_maxage']['title'],
 						'desc' => $lng['admin']['domain_hsts_maxage']['description'],

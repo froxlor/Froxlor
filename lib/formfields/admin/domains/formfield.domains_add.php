@@ -214,16 +214,6 @@ return array(
 						),
 						'value' => array()
 					),
-					'caa' => array(
-						'visible' => $ssl_ipsandports != '' ? true : false,
-						'style' => 'align-top',
-						'label' => $lng['admin']['caa']['title'],
-						'desc' => $lng['admin']['caa']['description'],
-						'type' => 'textarea',
-						'value' => (\Froxlor\Settings::Get('system.leenabled') == '1' ? ($ssl_ipsandports != '' ? '0 issue "letsencrypt.org"' : '') : ''),
-						'cols' => 60,
-						'rows' => 5
-					),
 					'http2' => array(
 						'visible' => ($ssl_ipsandports != '' ? true : false) && \Froxlor\Settings::Get('system.webserver') != 'lighttpd' && \Froxlor\Settings::Get('system.http2_support') == '1',
 						'label' => $lng['admin']['domain_http2']['title'],

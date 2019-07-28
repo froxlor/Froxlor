@@ -128,16 +128,6 @@ return array(
 							$result['letsencrypt']
 						)
 					),
-					'caa' => array(
-						'visible' => $ssl_ipsandports != '' ? true : false,
-						'style' => 'align-top',
-						'label' => $lng['customer']['caa']['title'],
-						'desc' => $lng['customer']['caa']['description'],
-						'type' => 'textarea',
-						'value' => $result['caa'],
-						'cols' => 60,
-						'rows' => 5
-					),
 					'hsts_maxage' => array(
 						'label' => $lng['admin']['domain_hsts_maxage']['title'],
 						'desc' => $lng['admin']['domain_hsts_maxage']['description'],
