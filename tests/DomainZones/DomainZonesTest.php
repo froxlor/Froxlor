@@ -277,6 +277,30 @@ class DomainZonesTest extends TestCase
 		DomainZones::getLocal($admin_userdata, $data)->add();
 	}
 
+	public function testAdminDomainZonesAddCAA()
+	{
+		global $admin_userdata;
+
+		$data = [
+			'domainname' => 'test2.local',
+			'record' => '@',
+			'type' => 'CAA',
+			'content' => '0 issue "letsencrypt.org"'
+		];
+		$json_result = DomainZones::getLocal($admin_userdata, $data)->add();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertTrue(count($result) > 1);
+		$found = false;
+		foreach ($result as $entry) {
+			if (substr($entry, strlen('0 issue "letsencrypt.org"') * - 1) == '0 issue "letsencrypt.org"') {
+				$found = true;
+				break;
+			}
+		}
+		$this->assertTrue($found);
+		$this->assertEquals('@	18000	IN	CAA	0 issue "letsencrypt.org"', $entry);
+	}
+
 	public function testAdminDomainZonesAddCname()
 	{
 		global $admin_userdata;
