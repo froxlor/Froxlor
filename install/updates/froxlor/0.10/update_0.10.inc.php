@@ -266,6 +266,9 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.0-rc1')) {
 
 if (\Froxlor\Froxlor::isDatabaseVersion('201904250')) {
 
+	showUpdateStep("Adding field caa for domains");
 	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `caa` text default NULL AFTER `letsencrypt`;");
+	lastStepStatus(0);
+
 	\Froxlor\Froxlor::updateToDbVersion('201907270');
 }
