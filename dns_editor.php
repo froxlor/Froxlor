@@ -108,11 +108,22 @@ if (! empty($dom_entries)) {
 $type_select_values = array(
 	'A',
 	'AAAA',
-	'NS',
+	'CAA',
+	'CNAME',
+	'DNAME',
+	'DNSKEY',
+	'DS',
+	'LOC',
 	'MX',
+	'NS',
+	'NSEC',
+	'NSEC3',
+	'PTR',
+	'RP',
+	'RRSIG',
 	'SRV',
+	'SSHFP',
 	'TXT',
-	'CNAME'
 );
 asort($type_select_values);
 foreach ($type_select_values as $_type) {
