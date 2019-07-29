@@ -115,7 +115,7 @@ return array(
 					'default' => true,
 					'save_method' => 'storeSettingField'
 				),
-				'caa.caa_entry' => array(
+				'caa_caa_entry' => array(
 					'label' => $lng['serversettings']['caa_entry_custom'],
 					'settinggroup' => 'caa',
 					'varname' => 'caa_entry',
