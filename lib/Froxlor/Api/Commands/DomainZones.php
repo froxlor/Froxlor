@@ -139,8 +139,15 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 		} elseif ($type == 'AAAA' && filter_var($content, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) === false) {
 			$errors[] = $this->lng['error']['dns_aaaarec_noipv6'];
 		} elseif ($type == 'CAA' && ! empty($content)) {
-			// check that CAA content is enclosed in " "
-			$content = \Froxlor\Dns\Dns::encloseTXTContent($content);
+			$re = '/(?\'critical\'\d)\h*(?\'type\'iodef|issue|issuewild)\h*(?\'value\'(?\'issuevalue\'"(?\'domain\'(?=.{3,128}$)(?>(?>[a-zA-Z0-9]+[a-zA-Z0-9-]*[a-zA-Z0-9]+|[a-zA-Z0-9]+)\.)*(?>[a-zA-Z]{2,}|[a-zA-Z0-9]{2,}\.[a-zA-Z]{2,}))[;\h]*(?\'parameters\'(?>[a-zA-Z0-9]{1,60}=[a-zA-Z0-9]{1,60}\h*)+)?")|(?\'iodefvalue\'"(?\'url\'(mailto:.*|http:\/\/.*|https:\/\/.*))"))/';
+			preg_match($re, $content, $matches);
+
+			if (empty($matches)) {
+				$errors[] = $this->lng['error']['dns_content_invalid'];
+			} else {
+				// check that CAA content is enclosed in " "
+				$content = \Froxlor\Dns\Dns::encloseTXTContent($matches[0]);
+			}
 		} elseif ($type == 'CNAME' || $type == 'DNAME') {
 			// check for trailing dot
 			if (substr($content, - 1) == '.') {

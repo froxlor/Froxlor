@@ -1892,6 +1892,7 @@ $lng['tasks']['backup_customerfiles'] = 'Backup job for customer %loginname%';
 
 $lng['error']['dns_domain_nodns'] = 'DNS is not enabled for this domain';
 $lng['error']['dns_content_empty'] = 'No content given';
+$lng['error']['dns_content_invalid'] = 'DNS content invalid';
 $lng['error']['dns_arec_noipv4'] = 'No valid IP address for A-record given';
 $lng['error']['dns_aaaarec_noipv6'] = 'No valid IP address for AAAA-record given';
 $lng['error']['dns_mx_prioempty'] = 'Invalid MX priority given';

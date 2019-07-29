@@ -1543,6 +1543,7 @@ $lng['tasks']['backup_customerfiles'] = 'Datensicherung für Kunde %loginname%';
 
 $lng['error']['dns_domain_nodns'] = 'DNS ist für diese Domain nicht aktiviert';
 $lng['error']['dns_content_empty'] = 'Keinen Inhalt angegeben';
+$lng['error']['dns_content_invalid'] = 'DNS Eintrag ungültig';
 $lng['error']['dns_arec_noipv4'] = 'Keine gültige IP-Adresse für A-Eintrag angegeben';
 $lng['error']['dns_aaaarec_noipv6'] = 'Keine gültige IP-Adresse für AAAA-Eintrag angegeben';
 $lng['error']['dns_mx_prioempty'] = 'Ungültige MX Priorität angegeben';
