@@ -17,7 +17,7 @@ matrix:
     - php: 7.3
       env: "DOCKER_MYSQL_TYPE=mysql DOCKER_MYSQL_VERSION=5.7"
     - php: 7.3
-      env: "DOCKER_MYSQL_TYPE=mysql DOCKER_MYSQL_VERSION=8.0"
+      env: "DOCKER_MYSQL_TYPE=mysql DOCKER_MYSQL_VERSION=8.0 STARTCMD='mysqld --default-authentication-plugin=mysql_native_password'"
     - php: 7.3
       env: "DOCKER_MYSQL_TYPE=mariadb DOCKER_MYSQL_VERSION=10.3"
     - php: 7.3
@@ -29,7 +29,7 @@ addons:
 
 before_install:
   - export MYSQL_DATABASE=froxlor010
-  - docker run -d --name mysql -e MYSQL_ROOT_PASSWORD=fr0xl0r.TravisCI -e MYSQL_DATABASE=$MYSQL_DATABASE -p 3306:3306 $DOCKER_MYSQL_TYPE:$DOCKER_MYSQL_VERSION
+  - docker run -d --name mysql -e MYSQL_ROOT_PASSWORD=fr0xl0r.TravisCI -e MYSQL_DATABASE=$MYSQL_DATABASE -p 3306:3306 $DOCKER_MYSQL_TYPE:$DOCKER_MYSQL_VERSION $STARTCMD
   - sudo apt-get install -y ant
   - >
     export tries=0;
