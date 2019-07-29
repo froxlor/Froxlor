@@ -281,18 +281,19 @@ class DomainZonesTest extends TestCase
 	{
 		global $admin_userdata;
 
+		$content = '0 issue "letsencrypt.org"';
 		$data = [
 			'domainname' => 'test2.local',
 			'record' => '@',
 			'type' => 'CAA',
-			'content' => '0 issue "letsencrypt.org"'
+			'content' => $content,
 		];
 		$json_result = DomainZones::getLocal($admin_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertTrue(count($result) > 1);
 		$found = false;
 		foreach ($result as $entry) {
-			if (substr($entry, strlen('0 issue "letsencrypt.org"') * - 1) == '0 issue "letsencrypt.org"') {
+			if (substr($entry, -strlen($content)) == $content) {
 				$found = true;
 				break;
 			}
@@ -305,59 +306,62 @@ class DomainZonesTest extends TestCase
 	{
 		global $admin_userdata;
 
+		$content = '0 issue "letsencrypt.org; account=230123"';
 		$data = [
 			'domainname' => 'test2.local',
 			'record' => '@',
 			'type' => 'CAA',
-			'content' => '0 issue "letsencrypt.org; account=230123"'
+			'content' => $content,
 		];
 		$json_result = DomainZones::getLocal($admin_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertTrue(count($result) > 1);
 		$found = false;
 		foreach ($result as $entry) {
-			if (substr($entry, strlen('0 issue "letsencrypt.org; account=230123"') * - 1) == '0 issue "letsencrypt.org; account=230123"') {
+			if (substr($entry, strlen($content) * - 1) == $content) {
 				$found = true;
 				break;
 			}
 		}
 		$this->assertTrue($found);
-		$this->assertEquals('@	18000	IN	CAA	0 issue "letsencrypt.org; account=230123"', $entry);
+		$this->assertEquals('@	18000	IN	CAA	'.$content, $entry);
 	}
 
 	public function testAdminDomainZonesAddCAAIssueWithTwoParameters()
 	{
 		global $admin_userdata;
 
+		$content = '0 issue "letsencrypt.org; account=230123 policy=ev"';
 		$data = [
 			'domainname' => 'test2.local',
 			'record' => '@',
 			'type' => 'CAA',
-			'content' => '0 issue "letsencrypt.org; account=230123 policy=ev"'
+			'content' => $content,
 		];
 		$json_result = DomainZones::getLocal($admin_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertTrue(count($result) > 1);
 		$found = false;
 		foreach ($result as $entry) {
-			if (substr($entry, strlen('0 issue "letsencrypt.org; account=230123 policy=ev"') * - 1) == '0 issue "letsencrypt.org; account=230123 policy=ev"') {
+			if (substr($entry, strlen($content) * - 1) == $content) {
 				$found = true;
 				break;
 			}
 		}
 		$this->assertTrue($found);
-		$this->assertEquals('@	18000	IN	CAA	0 issue "letsencrypt.org; account=230123 policy=ev"', $entry);
+		$this->assertEquals('@	18000	IN	CAA	'.$content, $entry);
 	}
 
 	public function testAdminDomainZonesAddCAAInvalidIssueValue()
 	{
 		global $admin_userdata;
 
+		$content = '0 issue ""letsencrypt.org"';
 		$data = [
 			'domainname' => 'test2.local',
 			'record' => '@',
 			'type' => 'CAA',
-			'content' => '0 issue ""letsencrypt.org"'
+			'content' => $content,
 		];
 		$this->expectExceptionMessage("DNS content invalid");
 		DomainZones::getLocal($admin_userdata, $data)->add();
@@ -367,11 +371,12 @@ class DomainZonesTest extends TestCase
 	{
 		global $admin_userdata;
 
+		$content = '0 issue "no-valid-domain"';
 		$data = [
 			'domainname' => 'test2.local',
 			'record' => '@',
 			'type' => 'CAA',
-			'content' => '0 issue "no-valid-domain"'
+			'content' => $content,
 		];
 		$this->expectExceptionMessage("DNS content invalid");
 		DomainZones::getLocal($admin_userdata, $data)->add();
@@ -381,11 +386,12 @@ class DomainZonesTest extends TestCase
 	{
 		global $admin_userdata;
 
+		$content = '0 issue "no-valid-domai.n"';
 		$data = [
 			'domainname' => 'test2.local',
 			'record' => '@',
 			'type' => 'CAA',
-			'content' => '0 issue "no-valid-domai.n"'
+			'content' => $content,
 		];
 		$this->expectExceptionMessage("DNS content invalid");
 		DomainZones::getLocal($admin_userdata, $data)->add();
@@ -395,83 +401,87 @@ class DomainZonesTest extends TestCase
 	{
 		global $admin_userdata;
 
+		$content = '0 issue "letsencrypt.org"';
 		$data = [
 			'domainname' => 'test2.local',
 			'record' => '@',
 			'type' => 'CAA',
-			'content' => '0 issuewild "letsencrypt.org"'
+			'content' => $content,
 		];
 		$json_result = DomainZones::getLocal($admin_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertTrue(count($result) > 1);
 		$found = false;
 		foreach ($result as $entry) {
-			if (substr($entry, strlen('0 issuewild "letsencrypt.org"') * - 1) == '0 issuewild "letsencrypt.org"') {
+			if (substr($entry, strlen($content) * - 1) == $content) {
 				$found = true;
 				break;
 			}
 		}
 		$this->assertTrue($found);
-		$this->assertEquals('@	18000	IN	CAA	0 issuewild "letsencrypt.org"', $entry);
+		$this->assertEquals('@	18000	IN	CAA	'.$content, $entry);
 	}
 
 	public function testAdminDomainZonesAddCAAIssueWildWithParameters()
 	{
 		global $admin_userdata;
 
+		$content = '0 issuewild "letsencrypt.org; account=230123"';
 		$data = [
 			'domainname' => 'test2.local',
 			'record' => '@',
 			'type' => 'CAA',
-			'content' => '0 issuewild "letsencrypt.org; account=230123"'
+			'content' => $content,
 		];
 		$json_result = DomainZones::getLocal($admin_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertTrue(count($result) > 1);
 		$found = false;
 		foreach ($result as $entry) {
-			if (substr($entry, strlen('0 issuewild "letsencrypt.org; account=230123"') * - 1) == '0 issuewild "letsencrypt.org; account=230123"') {
+			if (substr($entry, strlen($content) * - 1) == $content) {
 				$found = true;
 				break;
 			}
 		}
 		$this->assertTrue($found);
-		$this->assertEquals('@	18000	IN	CAA	0 issuewild "letsencrypt.org; account=230123"', $entry);
+		$this->assertEquals('@	18000	IN	CAA	'.$content, $entry);
 	}
 
 	public function testAdminDomainZonesAddCAAIssueWildWithTwoParameters()
 	{
 		global $admin_userdata;
 
+		$content = '0 issuewild "letsencrypt.org; account=230123 policy=ev"';
 		$data = [
 			'domainname' => 'test2.local',
 			'record' => '@',
 			'type' => 'CAA',
-			'content' => '0 issuewild "letsencrypt.org; account=230123 policy=ev"'
+			'content' => $content,
 		];
 		$json_result = DomainZones::getLocal($admin_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertTrue(count($result) > 1);
 		$found = false;
 		foreach ($result as $entry) {
-			if (substr($entry, strlen('0 issuewild "letsencrypt.org; account=230123 policy=ev"') * - 1) == '0 issuewild "letsencrypt.org; account=230123 policy=ev"') {
+			if (substr($entry, strlen($content) * - 1) == $content) {
 				$found = true;
 				break;
 			}
 		}
 		$this->assertTrue($found);
-		$this->assertEquals('@	18000	IN	CAA	0 issuewild "letsencrypt.org; account=230123 policy=ev"', $entry);
+		$this->assertEquals('@	18000	IN	CAA	'.$content, $entry);
 	}
 
 	public function testAdminDomainZonesAddCAAInvalidIssueWildValue()
 	{
 		global $admin_userdata;
 
+		$content = '0 issuewild ""letsencrypt.org"';
 		$data = [
 			'domainname' => 'test2.local',
 			'record' => '@',
 			'type' => 'CAA',
-			'content' => '0 issuewild ""letsencrypt.org"'
+			'content' => $content,
 		];
 		$this->expectExceptionMessage("DNS content invalid");
 		DomainZones::getLocal($admin_userdata, $data)->add();
@@ -481,11 +491,12 @@ class DomainZonesTest extends TestCase
 	{
 		global $admin_userdata;
 
+		$content = '0 issuewild "no-valid-domain"';
 		$data = [
 			'domainname' => 'test2.local',
 			'record' => '@',
 			'type' => 'CAA',
-			'content' => '0 issuewild "no-valid-domain"'
+			'content' => $content,
 		];
 		$this->expectExceptionMessage("DNS content invalid");
 		DomainZones::getLocal($admin_userdata, $data)->add();
@@ -495,11 +506,12 @@ class DomainZonesTest extends TestCase
 	{
 		global $admin_userdata;
 
+		$content = '0 issuewild "no-valid-domai.n"';
 		$data = [
 			'domainname' => 'test2.local',
 			'record' => '@',
 			'type' => 'CAA',
-			'content' => '0 issuewild "no-valid-domai.n"'
+			'content' => $content,
 		];
 		$this->expectExceptionMessage("DNS content invalid");
 		DomainZones::getLocal($admin_userdata, $data)->add();
@@ -509,35 +521,37 @@ class DomainZonesTest extends TestCase
 	{
 		global $admin_userdata;
 
+		$content = '0 iodef "mailto:security@example.com"';
 		$data = [
 			'domainname' => 'test2.local',
 			'record' => '@',
 			'type' => 'CAA',
-			'content' => '0 iodef "mailto:security@example.com"'
+			'content' => $content,
 		];
 		$json_result = DomainZones::getLocal($admin_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertTrue(count($result) > 1);
 		$found = false;
 		foreach ($result as $entry) {
-			if (substr($entry, strlen('0 iodef "mailto:security@example.com"') * - 1) == '0 iodef "mailto:security@example.com"') {
+			if (substr($entry, strlen($content) * - 1) == $content) {
 				$found = true;
 				break;
 			}
 		}
 		$this->assertTrue($found);
-		$this->assertEquals('@	18000	IN	CAA	0 iodef "mailto:security@example.com"', $entry);
+		$this->assertEquals('@	18000	IN	CAA	'.$content, $entry);
 	}
 
 	public function testAdminDomainZonesAddCAAIodefMailInvalid()
 	{
 		global $admin_userdata;
 
+		$content = '0 iodef "mailtosecurity@example.com"';
 		$data = [
 			'domainname' => 'test2.local',
 			'record' => '@',
 			'type' => 'CAA',
-			'content' => '0 iodef "mailtosecurity@example.com"'
+			'content' => $content,
 		];
 		$this->expectExceptionMessage("DNS content invalid");
 		DomainZones::getLocal($admin_userdata, $data)->add();
@@ -547,35 +561,37 @@ class DomainZonesTest extends TestCase
 	{
 		global $admin_userdata;
 
+		$content = '0 iodef "http://iodef.example.com/"';
 		$data = [
 			'domainname' => 'test2.local',
 			'record' => '@',
 			'type' => 'CAA',
-			'content' => '0 iodef "http://iodef.example.com/"'
+			'content' => $content,
 		];
 		$json_result = DomainZones::getLocal($admin_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertTrue(count($result) > 1);
 		$found = false;
 		foreach ($result as $entry) {
-			if (substr($entry, strlen('0 iodef "http://iodef.example.com/"') * - 1) == '0 iodef "http://iodef.example.com/"') {
+			if (substr($entry, strlen($content) * - 1) == $content) {
 				$found = true;
 				break;
 			}
 		}
 		$this->assertTrue($found);
-		$this->assertEquals('@	18000	IN	CAA	0 iodef "http://iodef.example.com/"', $entry);
+		$this->assertEquals('@	18000	IN	CAA	'.$content, $entry);
 	}
 
 	public function testAdminDomainZonesAddCAAIodefHttpInvalid()
 	{
 		global $admin_userdata;
 
+		$content = '0 iodef "http:/iodef.example.com/"';
 		$data = [
 			'domainname' => 'test2.local',
 			'record' => '@',
 			'type' => 'CAA',
-			'content' => '0 iodef "http:/iodef.example.com/"'
+			'content' => $content,
 		];
 		$this->expectExceptionMessage("DNS content invalid");
 		DomainZones::getLocal($admin_userdata, $data)->add();
@@ -585,35 +601,37 @@ class DomainZonesTest extends TestCase
 	{
 		global $admin_userdata;
 
+		$content = '0 iodef "https://iodef.example.com/"';
 		$data = [
 			'domainname' => 'test2.local',
 			'record' => '@',
 			'type' => 'CAA',
-			'content' => '0 iodef "https://iodef.example.com/"'
+			'content' => $content,
 		];
 		$json_result = DomainZones::getLocal($admin_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertTrue(count($result) > 1);
 		$found = false;
 		foreach ($result as $entry) {
-			if (substr($entry, strlen('0 iodef "https://iodef.example.com/"') * - 1) == '0 iodef "https://iodef.example.com/"') {
+			if (substr($entry, strlen($content) * - 1) == $content) {
 				$found = true;
 				break;
 			}
 		}
 		$this->assertTrue($found);
-		$this->assertEquals('@	18000	IN	CAA	0 iodef "https://iodef.example.com/"', $entry);
+		$this->assertEquals('@	18000	IN	CAA	'.$content, $entry);
 	}
 
 	public function testAdminDomainZonesAddCAAIodefHttpsInvalid()
 	{
 		global $admin_userdata;
 
+		$content = '0 iodef "https:/iodef.example.com/"';
 		$data = [
 			'domainname' => 'test2.local',
 			'record' => '@',
 			'type' => 'CAA',
-			'content' => '0 iodef "https:/iodef.example.com/"'
+			'content' => $content,
 		];
 		$this->expectExceptionMessage("DNS content invalid");
 		DomainZones::getLocal($admin_userdata, $data)->add();
