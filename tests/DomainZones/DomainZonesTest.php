@@ -401,7 +401,7 @@ class DomainZonesTest extends TestCase
 	{
 		global $admin_userdata;
 
-		$content = '0 issue "letsencrypt.org"';
+		$content = '0 issuewild "letsencrypt.org"';
 		$data = [
 			'domainname' => 'test2.local',
 			'record' => '@',

@@ -144,6 +144,10 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 
 			if (empty($matches)) {
 				$errors[] = $this->lng['error']['dns_content_invalid'];
+			} elseif (($matches['type'] == 'issue' || $matches['type'] == 'issuewild') && !\Froxlor\Validate\Validate::validateDomain($matches['domain'])) {
+				$errors[] = $this->lng['error']['dns_content_invalid'];
+			} elseif ($matches['type'] == 'iodef' && !\Froxlor\Validate\Validate::validateUrl($matches['url'])) {
+				$errors[] = $this->lng['error']['dns_content_invalid'];
 			} else {
 				$content = $matches[0];
 			}
