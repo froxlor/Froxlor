@@ -145,8 +145,7 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			if (empty($matches)) {
 				$errors[] = $this->lng['error']['dns_content_invalid'];
 			} else {
-				// check that CAA content is enclosed in " "
-				$content = \Froxlor\Dns\Dns::encloseTXTContent($matches[0]);
+				$content = $matches[0];
 			}
 		} elseif ($type == 'CNAME' || $type == 'DNAME') {
 			// check for trailing dot
@@ -171,8 +170,7 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			// append trailing dot (again)
 			$content .= '.';
 		} elseif ($type == 'LOC' && ! empty($content)) {
-			// check that LOC content is enclosed in " "
-			$content = \Froxlor\Dns\Dns::encloseTXTContent($content);
+			$content = $content;
 		} elseif ($type == 'MX') {
 			if ($prio === null || $prio < 0) {
 				$errors[] = $this->lng['error']['dns_mx_prioempty'];
@@ -208,8 +206,7 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			// append trailing dot (again)
 			$content .= '.';
 		} elseif ($type == 'RP' && ! empty($content)) {
-			// check that RP content is enclosed in " "
-			$content = \Froxlor\Dns\Dns::encloseTXTContent($content);
+			$content = $content;
 		} elseif ($type == 'SRV') {
 			if ($prio === null || $prio < 0) {
 				$errors[] = $this->lng['error']['dns_srv_prioempty'];
@@ -246,8 +243,7 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 				$content .= '.';
 			}
 		} elseif ($type == 'SSHFP' && ! empty($content)) {
-			// check that SSHFP content is enclosed in " "
-			$content = \Froxlor\Dns\Dns::encloseTXTContent($content);
+			$content = $content;
 		} elseif ($type == 'TXT' && ! empty($content)) {
 			// check that TXT content is enclosed in " "
 			$content = \Froxlor\Dns\Dns::encloseTXTContent($content);

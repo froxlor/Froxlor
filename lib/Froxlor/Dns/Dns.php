@@ -302,10 +302,10 @@ class Dns
 								}
 
 								foreach ($caa_entries as $entry) {
-									$zonerecords[] = new DnsEntry('@', 'CAA', self::encloseTXTContent($entry));
+									$zonerecords[] = new DnsEntry('@', 'CAA', $entry);
 									// additional required records by subdomain setting
 									if ($domain['wwwserveralias'] == '1') {
-										$zonerecords[] = new DnsEntry('www', 'CAA', self::encloseTXTContent($entry));
+										$zonerecords[] = new DnsEntry('www', 'CAA', $entry);
 									}
 								}
 							}
