@@ -263,3 +263,13 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201904100')) {
 if (\Froxlor\Froxlor::isFroxlorVersion('0.10.0-rc1')) {
 	\Froxlor\Froxlor::updateToVersion('0.10.0-rc2');
 }
+
+if (\Froxlor\Froxlor::isDatabaseVersion('201904250')) {
+
+	showUpdateStep("Adding new settings for CAA");
+	Settings::AddNew('caa.caa_entry', '', true);
+	Settings::AddNew('system.dns_createcaaentry', 1, true);
+	lastStepStatus(0);
+
+	\Froxlor\Froxlor::updateToDbVersion('201907270');
+}

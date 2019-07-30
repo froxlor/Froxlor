@@ -1500,6 +1500,12 @@ $lng['serversettings']['leenabled']['title'] = "Let's Encrypt verwenden";
 $lng['serversettings']['leenabled']['description'] = "Wenn dies aktiviert ist, können Kunden durch Froxlor automatisch generierte und verlängerbare Let's Encrypt SSL-Zertifikate für Domains mit SSL IP/Port nutzen.<br /><br />Bitte die Webserver-Konfiguration beachten wenn aktiviert, da dieses Feature eine spezielle Konfiguration benötigt.";
 $lng['domains']['ssl_redirect_temporarilydisabled'] = "<br>Die SSL-Umleitung ist, während ein neues Let's Encrypt - Zertifikat erstellt wird, temporär deaktiviert. Die Umleitung wird nach der Zertifikatserstellung wieder aktiviert.";
 
+// Added for CAA record support
+$lng['serversettings']['caa_entry']['title'] = 'CAA DNS Einträge generieren';
+$lng['serversettings']['caa_entry']['description'] = 'Generiert CAA Einträge automatisch für alle Domains mit aktiviertem SSL und Let\'s Encrypt';
+$lng['serversettings']['caa_custom']['title'] = 'Zusätzliche CAA DNS Einträge';
+$lng['serversettings']['caa_custom']['description'] = 'DNS Certification Authority Authorization (CAA) verwendet das Domain Name System, um dem Besitzer einer Domain die Möglichkeit zu bieten, gewisse Zertifizierungsstellen (CAs) dazu zu berechtigen, ein Zertifikat für die betroffene Domain auszustellen. CAA Records sollen verhindern, dass Zertifikate fälschlicherweise für eine Domain ausgestellt werden.<br>Der Inhalt dieses Feldes wird direkt in die DNS Zone übernommen (eine Zeile pro CAA Record). Wenn Let\'s Encrypt für eine Domain aktiviert wurde und die obige Option aktiviert wurde, wird immer automatisch dieser Eintrag angefügt und muss nicht selber angegeben werden:<br><code>0 issue "letsencrypt.org"</code> (Wenn wildcard aktiviert ist, wird statdessen issuewild benutzt).<br>Um Incident Reporting per Mail zu aktivieren, muss eine <code>iodef</code> Zeile angefügt werden. Ein Beispiel für einen Report an <code>me@example.com</code> wäre:<br><code>0 iodef "mailto:me@example.com"</code><br><strong>ACHTUNG:</strong> Der Code wird nicht auf Fehler geprüft. Etwaige Fehler werden also auch übernommen. Die CAA finalen Einträge könnten daher falsch sein!';
+
 // Autoupdate
 $lng['admin']['autoupdate'] = 'Auto-Update';
 $lng['error']['customized_version'] = 'Es scheint als wäre die Froxlor Installation angepasst worden. Kein Support, sorry.';
@@ -1537,6 +1543,7 @@ $lng['tasks']['backup_customerfiles'] = 'Datensicherung für Kunde %loginname%';
 
 $lng['error']['dns_domain_nodns'] = 'DNS ist für diese Domain nicht aktiviert';
 $lng['error']['dns_content_empty'] = 'Keinen Inhalt angegeben';
+$lng['error']['dns_content_invalid'] = 'DNS Eintrag ungültig';
 $lng['error']['dns_arec_noipv4'] = 'Keine gültige IP-Adresse für A-Eintrag angegeben';
 $lng['error']['dns_aaaarec_noipv6'] = 'Keine gültige IP-Adresse für AAAA-Eintrag angegeben';
 $lng['error']['dns_mx_prioempty'] = 'Ungültige MX Priorität angegeben';

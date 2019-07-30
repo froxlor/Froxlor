@@ -375,6 +375,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('admin', 'show_news_feed', '0'),
 	('admin', 'show_version_login', '0'),
 	('admin', 'show_version_footer', '0'),
+	('caa', 'caa_entry', ''),
 	('spf', 'use_spf', '0'),
 	('spf', 'spf_entry', '"v=spf1 a mx -all"'),
 	('dkim', 'dkim_algorithm', 'all'),
@@ -561,6 +562,7 @@ opcache.interned_strings_buffer'),
 	('system', 'mod_fcgid_defaultini', '1'),
 	('system', 'ftpserver', 'proftpd'),
 	('system', 'dns_createmailentry', '0'),
+	('system', 'dns_createcaaentry', '1'),
 	('system', 'froxlordirectlyviahostname', '0'),
 	('system', 'report_enable', '1'),
 	('system', 'report_webmax', '90'),
@@ -681,7 +683,7 @@ opcache.interned_strings_buffer'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'is_configured', '0'),
 	('panel', 'version', '0.10.0-rc2'),
-	('panel', 'db_version', '201904250');
+	('panel', 'db_version', '201907270');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

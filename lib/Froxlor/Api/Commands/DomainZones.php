@@ -138,6 +138,43 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			$errors[] = $this->lng['error']['dns_arec_noipv4'];
 		} elseif ($type == 'AAAA' && filter_var($content, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) === false) {
 			$errors[] = $this->lng['error']['dns_aaaarec_noipv6'];
+		} elseif ($type == 'CAA' && ! empty($content)) {
+			$re = '/(?\'critical\'\d)\h*(?\'type\'iodef|issue|issuewild)\h*(?\'value\'(?\'issuevalue\'"(?\'domain\'(?=.{3,128}$)(?>(?>[a-zA-Z0-9]+[a-zA-Z0-9-]*[a-zA-Z0-9]+|[a-zA-Z0-9]+)\.)*(?>[a-zA-Z]{2,}|[a-zA-Z0-9]{2,}\.[a-zA-Z]{2,}))[;\h]*(?\'parameters\'(?>[a-zA-Z0-9]{1,60}=[a-zA-Z0-9]{1,60}\h*)+)?")|(?\'iodefvalue\'"(?\'url\'(mailto:.*|http:\/\/.*|https:\/\/.*))"))/';
+			preg_match($re, $content, $matches);
+
+			if (empty($matches)) {
+				$errors[] = $this->lng['error']['dns_content_invalid'];
+			} elseif (($matches['type'] == 'issue' || $matches['type'] == 'issuewild') && !\Froxlor\Validate\Validate::validateDomain($matches['domain'])) {
+				$errors[] = $this->lng['error']['dns_content_invalid'];
+			} elseif ($matches['type'] == 'iodef' && !\Froxlor\Validate\Validate::validateUrl($matches['url'])) {
+				$errors[] = $this->lng['error']['dns_content_invalid'];
+			} else {
+				$content = $matches[0];
+			}
+		} elseif ($type == 'CNAME' || $type == 'DNAME') {
+			// check for trailing dot
+			if (substr($content, - 1) == '.') {
+				// remove it for checks
+				$content = substr($content, 0, - 1);
+			} else {
+				// add domain name
+				$content .= '.' . $domain;
+			}
+			if (! \Froxlor\Validate\Validate::validateDomain($content, true)) {
+				$errors[] = $this->lng['error']['dns_cname_invaliddom'];
+			} else {
+				// check whether there are RR-records for the same resource
+				foreach ($dom_entries as $existing_entries) {
+					if (($existing_entries['type'] == 'A' || $existing_entries['type'] == 'AAAA' || $existing_entries['type'] == 'MX' || $existing_entries['type'] == 'NS') && $existing_entries['record'] == $record) {
+						$errors[] = $this->lng['error']['dns_cname_nomorerr'];
+						break;
+					}
+				}
+			}
+			// append trailing dot (again)
+			$content .= '.';
+		} elseif ($type == 'LOC' && ! empty($content)) {
+			$content = $content;
 		} elseif ($type == 'MX') {
 			if ($prio === null || $prio < 0) {
 				$errors[] = $this->lng['error']['dns_mx_prioempty'];
@@ -161,28 +198,6 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			}
 			// append trailing dot (again)
 			$content .= '.';
-		} elseif ($type == 'CNAME') {
-			// check for trailing dot
-			if (substr($content, - 1) == '.') {
-				// remove it for checks
-				$content = substr($content, 0, - 1);
-			} else {
-				// add domain name
-				$content .= '.' . $domain;
-			}
-			if (! \Froxlor\Validate\Validate::validateDomain($content, true)) {
-				$errors[] = $this->lng['error']['dns_cname_invaliddom'];
-			} else {
-				// check whether there are RR-records for the same resource
-				foreach ($dom_entries as $existing_entries) {
-					if (($existing_entries['type'] == 'A' || $existing_entries['type'] == 'AAAA' || $existing_entries['type'] == 'MX' || $existing_entries['type'] == 'NS') && $existing_entries['record'] == $record) {
-						$errors[] = $this->lng['error']['dns_cname_nomorerr'];
-						break;
-					}
-				}
-			}
-			// append trailing dot (again)
-			$content .= '.';
 		} elseif ($type == 'NS') {
 			// check for trailing dot
 			if (substr($content, - 1) == '.') {
@@ -194,9 +209,8 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			}
 			// append trailing dot (again)
 			$content .= '.';
-		} elseif ($type == 'TXT' && ! empty($content)) {
-			// check that TXT content is enclosed in " "
-			$content = \Froxlor\Dns\Dns::encloseTXTContent($content);
+		} elseif ($type == 'RP' && ! empty($content)) {
+			$content = $content;
 		} elseif ($type == 'SRV') {
 			if ($prio === null || $prio < 0) {
 				$errors[] = $this->lng['error']['dns_srv_prioempty'];
@@ -232,6 +246,11 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			if (substr($content, - 1) != '.') {
 				$content .= '.';
 			}
+		} elseif ($type == 'SSHFP' && ! empty($content)) {
+			$content = $content;
+		} elseif ($type == 'TXT' && ! empty($content)) {
+			// check that TXT content is enclosed in " "
+			$content = \Froxlor\Dns\Dns::encloseTXTContent($content);
 		}
 
 		$new_entry = array(
