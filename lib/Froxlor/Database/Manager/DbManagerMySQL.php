@@ -146,7 +146,11 @@ class DbManagerMySQL
 		));
 
 		// as of MySQL 5.0.2 this also revokes privileges. (requires MySQL 4.1.2+)
-		$drop_stmt = Database::prepare("DROP USER IF EXISTS :dbname@:host");
+		if (version_compare(Database::getAttribute(\PDO::ATTR_SERVER_VERSION), '5.7.0', '<')) {
+			$drop_stmt = Database::prepare("DROP USER IF EXISTS :dbname@:host");
+		} else {
+			$drop_stmt = Database::prepare("DROP USER :dbname@:host");
+		}
 		while ($host = $host_res_stmt->fetch(\PDO::FETCH_ASSOC)) {
 			Database::pexecute($drop_stmt, array(
 				'dbname' => $dbname,
@@ -154,6 +158,7 @@ class DbManagerMySQL
 			), false);
 		}
 
+		
 		$drop_stmt = Database::prepare("DROP DATABASE IF EXISTS `" . $dbname . "`");
 		Database::pexecute($drop_stmt);
 	}
@@ -172,7 +177,11 @@ class DbManagerMySQL
 			Database::pexecute($stmt);
 		}
 		// as of MySQL 5.0.2 this also revokes privileges. (requires MySQL 4.1.2+)
-		$stmt = Database::prepare("DROP USER :username@:host");
+		if (version_compare(Database::getAttribute(\PDO::ATTR_SERVER_VERSION), '5.7.0', '<')) {
+			$stmt = Database::prepare("DROP USER IF EXISTS :username@:host");
+		} else {
+			$stmt = Database::prepare("DROP USER :username@:host");
+		}
 		Database::pexecute($stmt, array(
 			"username" => $username,
 			"host" => $host
