@@ -543,8 +543,9 @@ class CustomersTest extends TestCase
 	{
 		global $admin_userdata;
 
+		$loginname = str_repeat("x", \Froxlor\Database\Database::getSqlUsernameLength() + 1);
 		$data = [
-			'new_loginname' => 'useruseruseruseruseruserX',
+			'new_loginname' => $loginname,
 			'email' => 'team@froxlor.org',
 			'firstname' => 'Test2',
 			'name' => 'Testman2',
