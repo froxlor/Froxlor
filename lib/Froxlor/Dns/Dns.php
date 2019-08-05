@@ -144,7 +144,7 @@ class Dns
 			}
 			if (Settings::Get('dkim.use_dkim') == '1') {
 				// check for DKIM content later
-				self::addRequiredEntry('dkim_' . $domain['dkim_id'] . '._domainkey', 'TXT', $required_entries);
+				self::addRequiredEntry('main._domainkey', 'TXT', $required_entries);
 			}
 		}
 
@@ -276,7 +276,7 @@ class Dns
 							if ($record == '@SPF@') {
 								$txt_content = Settings::Get('spf.spf_entry');
 								$zonerecords[] = new DnsEntry('@', 'TXT', self::encloseTXTContent($txt_content));
-							} elseif ($record == 'dkim_' . $domain['dkim_id'] . '._domainkey' && ! empty($dkim_entries)) {
+							} elseif ($record == 'main._domainkey' && ! empty($dkim_entries)) {
 								// check for multiline entry
 								$multiline = false;
 								if (substr($dkim_entries[0], 0, 1) == '(') {
@@ -394,7 +394,7 @@ class Dns
 
 		if (Settings::Get('dkim.use_dkim') == '1' && $domain['dkim'] == '1' && $domain['dkim_pubkey'] != '') {
 			// start
-			$dkim_txt = 'v=DKIM1;';
+			$dkim_txt = 'v=DKIM1;k=rsa;';
 
 			// algorithm
 			$algorithm = explode(',', Settings::Get('dkim.dkim_algorithm'));
@@ -418,15 +418,10 @@ class Dns
 			}
 
 			// key
-			$dkim_txt .= 'k=rsa;p=' . trim(preg_replace('/-----BEGIN PUBLIC KEY-----(.+)-----END PUBLIC KEY-----/s', '$1', str_replace("\n", '', $domain['dkim_pubkey']))) . ';';
-
-			// service-type
-			if (Settings::Get('dkim.dkim_servicetype') == '1') {
-				$dkim_txt .= 's=email;';
-			}
+			$dkim_txt .= 'p=' . trim(preg_replace('/-----BEGIN PUBLIC KEY-----(.+)-----END PUBLIC KEY-----/s', '$1', str_replace("\n", '', $domain['dkim_pubkey']))) . ';';
 
 			// end-part
-			$dkim_txt .= 't=s';
+//			$dkim_txt .= 't=s';	// obsolete??!! DF8OE
 
 			// dkim-entry
 			$zone_dkim[] = $dkim_txt;
@@ -435,3 +430,4 @@ class Dns
 		return $zone_dkim;
 	}
 }
+?>

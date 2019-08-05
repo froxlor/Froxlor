@@ -690,12 +690,12 @@ $lng['serversettings']['decimal_places'] = 'Number of decimal places in traffic/
 // ADDED IN 1.2.19-svn8
 
 $lng['admin']['dkimsettings'] = 'DomainKey settings';
-$lng['dkim']['dkim_prefix']['title'] = 'Prefix';
-$lng['dkim']['dkim_prefix']['description'] = 'Please specify the path to the DKIM RSA-files as well as to the configuration files for the Milter-plugin';
+$lng['dkim']['dkim_prefix']['title'] = 'DKIM-Config';
+$lng['dkim']['dkim_prefix']['description'] = 'Please specify the path to the configuration files for the Milter-plugin';	// DF8OE
 $lng['dkim']['dkim_domains']['title'] = 'Domains filename';
 $lng['dkim']['dkim_domains']['description'] = '<em>Filename</em> of the DKIM Domains parameter specified in the dkim-milter configuration';
-$lng['dkim']['dkim_dkimkeys']['title'] = 'KeyList filename';
-$lng['dkim']['dkim_dkimkeys']['description'] = '<em>Filename</em> of the  DKIM KeyList parameter specified in the dkim-milter configuration';
+$lng['dkim']['dkim_dkimkeys']['title'] = 'DKIM-Keys';	// DF8OE
+$lng['dkim']['dkim_dkimkeys']['description'] = 'Please specify the path to the folder where all DKIM-Keys will reside<br>(will be created if does not exist)';
 $lng['dkim']['dkimrestart_command']['title'] = 'Milter restart command';
 $lng['dkim']['dkimrestart_command']['description'] = 'Please specify the restart command for the DKIM milter service';
 
@@ -708,7 +708,7 @@ $lng['admin']['caneditphpsettings'] = 'Can change php-related domain settings?';
 $lng['admin']['allips'] = 'All IP\'s';
 $lng['panel']['nosslipsavailable'] = 'There are currently no ssl ip/port combinations for this server';
 $lng['dkim']['use_dkim']['title'] = 'Activate DKIM support?';
-$lng['dkim']['use_dkim']['description'] = 'Would you like to use the Domain Keys (DKIM) system?<br/><em class="red">Note: DKIM is only supported using dkim-filter, not opendkim (yet)</em>';
+$lng['dkim']['use_dkim']['description'] = 'Would you like to use the Domain Keys (DKIM) system?';	// DF8OE, removed warning
 $lng['error']['invalidmysqlhost'] = 'Invalid MySQL host address: %s';
 $lng['error']['cannotuseawstatsandwebalizeratonetime'] = 'You cannot enable Webalizer and AWstats at the same time, please chose one of them';
 $lng['serversettings']['webalizer_enabled'] = 'Enable webalizer statistics';

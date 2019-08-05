@@ -36,10 +36,10 @@ return array(
 					'varname' => 'dkim_prefix',
 					'type' => 'string',
 					'string_type' => 'dir',
-					'default' => '/etc/postfix/dkim/',
+					'default' => '/etc/dkim-froxlor/',
 					'save_method' => 'storeSettingField'
 				),
-				'dkim_domains' => array(
+/*				'dkim_domains' => array(
 					'label' => $lng['dkim']['dkim_domains'],
 					'settinggroup' => 'dkim',
 					'varname' => 'dkim_domains',
@@ -47,14 +47,14 @@ return array(
 					'string_regexp' => '/^[a-z0-9\._]+$/i',
 					'default' => 'domains',
 					'save_method' => 'storeSettingField'
-				),
+				), */
 				'dkim_dkimkeys' => array(
 					'label' => $lng['dkim']['dkim_dkimkeys'],
 					'settinggroup' => 'dkim',
 					'varname' => 'dkim_dkimkeys',
 					'type' => 'string',
-					'string_regexp' => '/^[a-z0-9\._]+$/i',
-					'default' => 'dkim-keys.conf',
+					'string_type' => 'dir',				// DF8OE
+					'default' => '/etc/dkim_keys_froxlor/',
 					'save_method' => 'storeSettingField'
 				),
 				'dkim_algorithm' => array(
@@ -79,8 +79,8 @@ return array(
 					'default' => '0',
 					'option_mode' => 'one',
 					'option_options' => array(
-						'0' => 'All',
-						'1' => 'E-Mail'
+						'0' => 'Amavis',		// DF8OE
+						'1' => 'OpenDKIM'		// DF8OE
 					),
 					'save_method' => 'storeSettingFieldInsertBindTask'
 				),
@@ -92,11 +92,12 @@ return array(
 					'settinggroup' => 'dkim',
 					'varname' => 'dkim_keylength',
 					'type' => 'option',
-					'default' => '1024',
+					'default' => '2048',		// DF8OE
 					'option_mode' => 'one',
 					'option_options' => array(
 						'1024' => '1024 Bit',
-						'2048' => '2048 Bit'
+						'2048' => '2048 Bit',
+						'4096' => '4096 Bit'	// DF8OE
 					),
 					'save_method' => 'storeSettingFieldInsertBindTask'
 				),
@@ -105,7 +106,7 @@ return array(
 					'settinggroup' => 'dkim',
 					'varname' => 'dkim_notes',
 					'type' => 'string',
-					'string_regexp' => '/^[a-z0-9\._]+$/i',
+					'string_regexp' => '/^[a-z0-9\._]+$/i',	// DF8OE
 					'default' => '',
 					'save_method' => 'storeSettingFieldInsertBindTask'
 				),
@@ -114,7 +115,7 @@ return array(
 					'settinggroup' => 'dkim',
 					'varname' => 'dkimrestart_command',
 					'type' => 'string',
-					'default' => '/etc/init.d/dkim-filter restart',
+					'default' => '/etc/init.d/amavis restart',	// DF8OE
 					'save_method' => 'storeSettingField'
 				)
 			)

@@ -543,6 +543,9 @@ if ($page == 'overview') {
 } elseif ($page == 'sslcertificates') {
 
 	require_once __DIR__ . '/ssl_certificates.php';
+} elseif ($page == 'dkim_keys') {			// DF8OE
+
+	require_once __DIR__ . '/dkim_keys.php';
 } elseif ($page == 'logfiles') {
 
 	require_once __DIR__ . '/logfiles_viewer.php';

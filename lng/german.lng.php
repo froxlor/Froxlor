@@ -684,12 +684,12 @@ $lng['serversettings']['decimal_places'] = 'Nachkommastellen bei der Ausgabe von
 // ADDED IN 1.2.19-svn8
 
 $lng['admin']['dkimsettings'] = 'DomainKey-Einstellungen';
-$lng['dkim']['dkim_prefix']['title'] = 'Prefix';
-$lng['dkim']['dkim_prefix']['description'] = 'Wie lautet der Pfad zu den DKIM-RSA-Dateien sowie den Einstellungsdateien des Milter-Plugins?';
+$lng['dkim']['dkim_prefix']['title'] = 'DKIM-Konfig';
+$lng['dkim']['dkim_prefix']['description'] = 'Wie lautet der Pfad zu den Einstellungsdateien des Milter-Plugins?';	// DF8OE
 $lng['dkim']['dkim_domains']['title'] = 'Domains-Dateiname';
 $lng['dkim']['dkim_domains']['description'] = 'Dateiname der DKIM-Domains-Angabe aus der DKIM-Milter-Konfigurationsdatei.';
-$lng['dkim']['dkim_dkimkeys']['title'] = 'KeyList Dateiname';
-$lng['dkim']['dkim_dkimkeys']['description'] = 'Dateiname der DKIM-KeyList-Angabe aus der DKIM-Milter-Konfigurationsdatei.';
+$lng['dkim']['dkim_dkimkeys']['title'] = 'DKIM-Keys';
+$lng['dkim']['dkim_dkimkeys']['description'] = 'Wie lautet der Pfad zum Ordner für die DKIM-Keys-Dateien?<br>(wird angelegt wenn er nicht existiert)';	// DF8OE
 $lng['dkim']['dkimrestart_command']['title'] = 'Milter-Restart-Kommando';
 $lng['dkim']['dkimrestart_command']['description'] = 'Wie lautet das Kommando zum Neustarten des DKIM-Milter-Dienstes?';
 
@@ -702,7 +702,7 @@ $lng['admin']['caneditphpsettings'] = 'Kann PHP-bezogene Domaineinstellungen vor
 $lng['admin']['allips'] = 'Alle IP-Adressen';
 $lng['panel']['nosslipsavailable'] = 'Für diesen Server wurden noch keine SSL IP/Port Kombinationen eingetragen';
 $lng['dkim']['use_dkim']['title'] = 'DKIM-Support aktivieren?';
-$lng['dkim']['use_dkim']['description'] = 'Wollen Sie das Domain-Keys-System (DKIM) benutzen?<br/><em class="red">Hinweis: Derzeit wird DKIM nur via dkim-filter unterstützt, nicht opendkim.</em>';
+$lng['dkim']['use_dkim']['description'] = 'Wollen Sie das Domain-Keys-System (DKIM) benutzen?';		// DF8OE, removed warning
 $lng['error']['invalidmysqlhost'] = 'Ungültige MySQL-Host-Adresse: "%s"';
 $lng['error']['cannotuseawstatsandwebalizeratonetime'] = 'Webalizer und AWstats können nicht zur gleichen Zeit aktiviert werden, bitte wählen Sie eines aus.';
 $lng['serversettings']['webalizer_enabled'] = 'Nutze Webalizer-Statistiken';

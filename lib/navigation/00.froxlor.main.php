@@ -229,6 +229,11 @@ return array(
 					'label' => $lng['domains']['ssl_certificates'],
 					'required_resources' => 'domains'
 				),
+				array(							// DF8OE
+					'url' => 'admin_domains.php?page=dkim_keys',
+					'label' => $lng['domains']['ssl_certificates'],
+					'required_resources' => 'domains'
+				),
 				array(
 					'url' => 'admin_ipsandports.php?page=ipsandports',
 					'label' => $lng['admin']['ipsandports']['ipsandports'],

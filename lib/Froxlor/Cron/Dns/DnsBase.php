@@ -181,13 +181,28 @@ abstract class DnsBase
 	public function writeDKIMconfigs()
 	{
 		if (Settings::Get('dkim.use_dkim') == '1') {
+			shell_exec('rm -rf ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir(Settings::Get('dkim.dkim_dkimkeys'))) . 'dkim_*');	// deletes all keys, DF8OE
+
+			shell_exec('rm -rf ' . \Froxlor\FileDir::makeCorrectFile(Settings::Get('dkim.dkim_prefix') . '/signing.table'));	// deletes OpenDKIM domains list, DF8OE
+			shell_exec('rm -rf ' . \Froxlor\FileDir::makeCorrectFile(Settings::Get('dkim.dkim_prefix') . '/key.table'));		// deletes OpenDKIM keytable list, DF8OE
+			shell_exec('rm -rf ' . \Froxlor\FileDir::makeCorrectFile(Settings::Get('dkim.dkim_prefix') . '/66-froxlor-dkim'));	// deletes Amavis keytable list, DF8OE
+
 			if (! file_exists(\Froxlor\FileDir::makeCorrectDir(Settings::Get('dkim.dkim_prefix')))) {
 				$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'mkdir -p ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir(Settings::Get('dkim.dkim_prefix'))));
 				\Froxlor\FileDir::safe_exec('mkdir -p ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir(Settings::Get('dkim.dkim_prefix'))));
 			}
+			if (! file_exists(\Froxlor\FileDir::makeCorrectDir(Settings::Get('dkim.dkim_dkimkeys')))) {		// DF8OE
+				$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'mkdir -p ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir(Settings::Get('dkim.dkim_dkimkeys'))));
+				\Froxlor\FileDir::safe_exec('mkdir -p ' . escapeshellarg(\Froxlor\FileDir::makeCorrectDir(Settings::Get('dkim.dkim_dkimkeys'))));
+			}
 
 			$dkimdomains = '';
-			$dkimkeys = '';
+			if(Settings::Get('dkim.dkim_servicetype') == 0){	// Amavis, DF8OE
+			    $dkimkeys = "use strict;\n\n";	// DF8OE
+			}
+			if(Settings::Get('dkim.dkim_servicetype') == 1){	// OpenDKIM, DF8OE
+			    $dkimkeys = "";	// DF8OE
+			}
 			$result_domains_stmt = Database::query("
 				SELECT `id`, `domain`, `dkim`, `dkim_id`, `dkim_pubkey`, `dkim_privkey`
 				FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `dkim` = '1' ORDER BY `id` ASC
@@ -195,8 +210,8 @@ abstract class DnsBase
 
 			while ($domain = $result_domains_stmt->fetch(\PDO::FETCH_ASSOC)) {
 
-				$privkey_filename = \Froxlor\FileDir::makeCorrectFile(Settings::Get('dkim.dkim_prefix') . '/dkim_' . $domain['dkim_id']);
-				$pubkey_filename = \Froxlor\FileDir::makeCorrectFile(Settings::Get('dkim.dkim_prefix') . '/dkim_' . $domain['dkim_id'] . '.public');
+				$privkey_filename = \Froxlor\FileDir::makeCorrectFile(Settings::Get('dkim.dkim_dkimkeys') . '/dkim_' . $domain['dkim_id']);	// DF8OE
+				$pubkey_filename = \Froxlor\FileDir::makeCorrectFile(Settings::Get('dkim.dkim_dkimkeys') . '/dkim_' . $domain['dkim_id'] . '.public');	// DF8OE
 
 				if ($domain['dkim_privkey'] == '' || $domain['dkim_pubkey'] == '') {
 					$max_dkim_id_stmt = Database::query("SELECT MAX(`dkim_id`) as `max_dkim_id` FROM `" . TABLE_PANEL_DOMAINS . "`");
@@ -240,15 +255,34 @@ abstract class DnsBase
 					\Froxlor\FileDir::safe_exec("chmod 0644 " . escapeshellarg($pubkey_filename));
 				}
 
-				$dkimdomains .= $domain['domain'] . "\n";
-				$dkimkeys .= "*@" . $domain['domain'] . ":" . $domain['domain'] . ":" . $privkey_filename . "\n";
+				$dkimdomains .= '*@' . $domain['domain'] . ' ' . substr($domain['domain'], 0, strrpos($domain['domain'],".")) . "\n";
+
+				if(Settings::Get('dkim.dkim_servicetype') == 0){	// Amavis, DF8OE
+				    $dkimkeys .= "dkim_key('" . $domain['domain'] . "','main','" . $privkey_filename . "');\n";	// DF8OE
+				}
+				if(Settings::Get('dkim.dkim_servicetype') == 1){	// OpenDKIM, DF8OE
+				    $dkimkeys .= substr($domain['domain'], 0, strrpos($domain['domain'],".")) . ' ' . $domain['domain'] . ':main:'. $privkey_filename.";\n";	// DF8OE
+				}
 			}
 
-			$dkimdomains_filename = \Froxlor\FileDir::makeCorrectFile(Settings::Get('dkim.dkim_prefix') . '/' . Settings::Get('dkim.dkim_domains'));
-			$dkimdomains_file_handler = fopen($dkimdomains_filename, "w");
-			fwrite($dkimdomains_file_handler, $dkimdomains);
-			fclose($dkimdomains_file_handler);
-			$dkimkeys_filename = \Froxlor\FileDir::makeCorrectFile(Settings::Get('dkim.dkim_prefix') . '/' . Settings::Get('dkim.dkim_dkimkeys'));
+			if(Settings::Get('dkim.dkim_servicetype') == 0){	// Amavis, DF8OE
+			    $dkimkeys .= "\n\n## this list was automatically created by Froxlor ##\n1; # ensure a defined return";	// DF8OE
+			}
+
+			$dkimdomains_filename = \Froxlor\FileDir::makeCorrectFile(Settings::Get('dkim.dkim_prefix') . '/signing.table');
+
+			if(Settings::Get('dkim.dkim_servicetype') == 1){	// OpenDKIM, DF8OE
+			    $dkimdomains_file_handler = fopen($dkimdomains_filename, "w");
+			    fwrite($dkimdomains_file_handler, $dkimdomains);
+			    fclose($dkimdomains_file_handler);
+			    }
+
+			if(Settings::Get('dkim.dkim_servicetype') == 0){	// Amavis, DF8OE
+			    $dkimkeys_filename = \Froxlor\FileDir::makeCorrectFile(Settings::Get('dkim.dkim_prefix') . '/66-froxlor-dkim');
+			}
+			if(Settings::Get('dkim.dkim_servicetype') == 1){	// OpenDKIM, DF8OE
+			    $dkimkeys_filename = \Froxlor\FileDir::makeCorrectFile(Settings::Get('dkim.dkim_prefix') . '/key.table');
+			}
 			$dkimkeys_file_handler = fopen($dkimkeys_filename, "w");
 			fwrite($dkimkeys_file_handler, $dkimkeys);
 			fclose($dkimkeys_file_handler);
