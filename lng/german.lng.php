@@ -684,12 +684,12 @@ $lng['serversettings']['decimal_places'] = 'Nachkommastellen bei der Ausgabe von
 // ADDED IN 1.2.19-svn8
 
 $lng['admin']['dkimsettings'] = 'DomainKey-Einstellungen';
-$lng['dkim']['dkim_prefix']['title'] = 'DKIM-Konfig';
-$lng['dkim']['dkim_prefix']['description'] = 'Wie lautet der Pfad zu den Einstellungsdateien des Milter-Plugins?';	// DF8OE
+$lng['dkim']['dkim_prefix']['title'] = 'Pfad zu den DKIM Konfigurations-Dateien';
+$lng['dkim']['dkim_prefix']['description'] = 'Wie lautet der Pfad zu den Einstellungsdateien des Milter-Plugins?';
 $lng['dkim']['dkim_domains']['title'] = 'Domains-Dateiname';
 $lng['dkim']['dkim_domains']['description'] = 'Dateiname der DKIM-Domains-Angabe aus der DKIM-Milter-Konfigurationsdatei.';
-$lng['dkim']['dkim_dkimkeys']['title'] = 'DKIM-Keys';
-$lng['dkim']['dkim_dkimkeys']['description'] = 'Wie lautet der Pfad zum Ordner für die DKIM-Keys-Dateien?<br>(wird angelegt wenn er nicht existiert)';	// DF8OE
+$lng['dkim']['dkim_dkimkeys']['title'] = 'Pfad zu den DKIM-Schlüssel-Dateien';
+$lng['dkim']['dkim_dkimkeys']['description'] = 'Wie lautet der Pfad zum Ordner für die DKIM-Schlüssel-Dateien?<br>(wird angelegt wenn er nicht existiert)';
 $lng['dkim']['dkimrestart_command']['title'] = 'Milter-Restart-Kommando';
 $lng['dkim']['dkimrestart_command']['description'] = 'Wie lautet das Kommando zum Neustarten des DKIM-Milter-Dienstes?';
 
@@ -702,7 +702,7 @@ $lng['admin']['caneditphpsettings'] = 'Kann PHP-bezogene Domaineinstellungen vor
 $lng['admin']['allips'] = 'Alle IP-Adressen';
 $lng['panel']['nosslipsavailable'] = 'Für diesen Server wurden noch keine SSL IP/Port Kombinationen eingetragen';
 $lng['dkim']['use_dkim']['title'] = 'DKIM-Support aktivieren?';
-$lng['dkim']['use_dkim']['description'] = 'Wollen Sie das Domain-Keys-System (DKIM) benutzen?';		// DF8OE, removed warning
+$lng['dkim']['use_dkim']['description'] = 'Wollen Sie das Domain-Keys-System (DKIM) benutzen?';	
 $lng['error']['invalidmysqlhost'] = 'Ungültige MySQL-Host-Adresse: "%s"';
 $lng['error']['cannotuseawstatsandwebalizeratonetime'] = 'Webalizer und AWstats können nicht zur gleichen Zeit aktiviert werden, bitte wählen Sie eines aus.';
 $lng['serversettings']['webalizer_enabled'] = 'Nutze Webalizer-Statistiken';
@@ -1713,3 +1713,6 @@ $lng['serversettings']['letsencryptecc']['title'] = "ECC / ECDSA Zertifikate aus
 $lng['serversettings']['letsencryptecc']['description'] = "Wenn eine Schlüsselgröße ausgewählt wird, werden ECC / ECDSA Zertifikate erstellt";
 $lng['serversettings']['froxloraliases']['title'] = "Domain Aliase für Froxlor Vhost";
 $lng['serversettings']['froxloraliases']['description'] = "Komma getrennte Liste von Domains, welche als Server Alias zum Froxlor Vhost hinzugefügt werden";
+$lng['dkim']['key_under_construction'] = "Die Schlüssel werden erstellt, das dauert maximal 5 Minuten...";
+$lng['dkim']['key_length'] = "Schlüssellänge";
+$lng['dkim']['new_key'] = "Soll ein neuer Schlüssel erstellt werden?";

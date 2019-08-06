@@ -165,6 +165,56 @@ return array(
 						)
 					)
 				)
+			),
+			'section_e' => array(
+				'title' => $lng['admin']['mailserversettings'],
+				'image' => 'icons/domain_edit.png',
+				'fields' => array(
+					'dkim' => array(
+						'visible' => (\Froxlor\Settings::Get('dkim.use_dkim') == '1' ? true : false),
+						'label' => 'DomainKeys',
+						'type' => 'checkbox',
+						'values' => array(
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array(
+							$result['dkim']
+						)
+					),
+					'dkim_keylength' => array(
+						'visible' => 'true',
+						'label' => $lng['dkim']['key_length'],
+						'type' => 'select',
+						'select_var' =>  $keylengthoptions,
+						'value' => array(
+//							$result['dkim']
+						)
+					),
+					'dkim_newkey' => array(
+						'visible' => (\Froxlor\Settings::Get('dkim.use_dkim') == '1' ? true : false),
+						'label' => $lng['dkim']['new_key'],
+						'type' => 'checkbox',
+						'values' => array(
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array(
+//							$result['dkim']
+						)
+					),
+					'dkiminfo' => array(
+						'visible' => (\Froxlor\Settings::Get('dkim.use_dkim') == '1' && $result['dkim'] && !$result['isbinddomain'] ? true : false),
+						'visible' => ($result['dkim'] && !$result['isbinddomain'] ? true : false),
+						'label' => 'add to DNS Zonefile:',
+						'type' => 'label',
+						'value' => ($dnsrec == "" ? $lng['dkim']['key_under_construction'] : nl2br($dnsrec))
+					)
+				)
 			)
 		)
 	)

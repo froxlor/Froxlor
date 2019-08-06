@@ -15,27 +15,6 @@
  *
  */
 
-
-// DF8OE
-$dmk = $result['dkim_pubkey'];
-if ($dmk != ""){
-    $idna_convert = new \Froxlor\Idna\IdnaWrapper();
-    $ndomain = $idna_convert -> encode(html_entity_decode($result['domain']));
-    $dnsrec = "main._domainkey.".$ndomain.". 18000 IN TXT \"v=DKIM1;k=rsa;p=\n";
-    $dmk = substr($dmk, strpos($dmk, "\n")+1);
-    $dmk = substr($dmk, 0, strrpos($dmk, "\n")-5);
-    $dmk = substr($dmk, 0, strrpos($dmk, "\n"));
-    $dmk = str_replace("\r", "", $dmk);
-    $dmk = str_replace("\n", "\"\n\"", $dmk);
-    $dnsrec .= $dmk;
-    $dnsrec .= '"'."\n";
-    }
-else{
-    $dnsrec = "pending key construction...";
-    }
-
-
-
 return array(
 	'domain_edit' => array(
 		'title' => $lng['admin']['domain_edit'],
@@ -490,12 +469,35 @@ return array(
 							$result['dkim']
 						)
 					),
-					'dkiminfo' => array(				// DF8OE
+					'dkim_keylength' => array(
+						'visible' => 'true',
+						'label' => $lng['dkim']['key_length'],
+						'type' => 'select',
+						'select_var' =>  $keylengthoptions,
+						'value' => array(
+//							$result['dkim']
+						)
+					),
+					'dkim_newkey' => array(
+						'visible' => (\Froxlor\Settings::Get('dkim.use_dkim') == '1' ? true : false),
+						'label' => $lng['dkim']['new_key'],
+						'type' => 'checkbox',
+						'values' => array(
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array(
+//							$result['dkim']
+						)
+					),
+					'dkiminfo' => array(
 						'visible' => (\Froxlor\Settings::Get('dkim.use_dkim') == '1' && $result['dkim'] && !$result['isbinddomain'] ? true : false),
 						'visible' => ($result['dkim'] && !$result['isbinddomain'] ? true : false),
 						'label' => 'add to DNS Zonefile:',
 						'type' => 'label',
-						'value' => nl2br($dnsrec).'<br><br>'
+						'value' => ($dnsrec == "" ? $lng['dkim']['key_under_construction'] : nl2br($dnsrec))
 					)
 				)
 			)

@@ -465,6 +465,43 @@ if ($page == 'overview') {
 				$domainip = $result_ipandport['ip'];
 				$result = \Froxlor\PhpHelper::htmlentitiesArray($result);
 
+				$dmk = $result['dkim_pubkey'];
+				if((strlen($dmk) > 0 && strlen($dmk) < 400) || ($dmk == 0 && (\Froxlor\Settings::Get('dkim_keylength') == '1024'))){
+				$a = '0';
+				$b = '0';
+				$c = '0';
+				}
+				if((strlen($dmk) > 400 && strlen($dmk) < 600) || ($dmk == 0 && (\Froxlor\Settings::Get('dkim_keylength') == '2048'))){
+				$a = '0';
+				$b = '1';
+				$c = '0';
+				}
+				if((strlen($dmk) > 600) || ($dmk == 0 && (\Froxlor\Settings::Get('dkim_keylength') == '4096'))){
+				$a = '0';
+				$b = '0';
+				$c = '2';
+				}
+				$keylengthoptions = \Froxlor\UI\HTML::makeoption('1024 Bit', '0', $a, true, true);
+				$keylengthoptions .= \Froxlor\UI\HTML::makeoption('2048 Bit', '1', $b, true, true);
+				$keylengthoptions .= \Froxlor\UI\HTML::makeoption('4096 Bit', '2', $c, true, true);
+
+				if ($dmk != ""){
+				    $idna_convert = new \Froxlor\Idna\IdnaWrapper();
+				    $ndomain = $idna_convert -> encode(html_entity_decode($result['domain']));
+				    $dnsrec = 'dkim_' . $result['dkim_id'] . '._domainkey.' . $ndomain . '. 18000 IN TXT "v=DKIM1;k=rsa;p=\n';
+				    $dmk = substr($dmk, strpos($dmk, "\n")+1);
+				    $dmk = substr($dmk, 0, strrpos($dmk, "\n")-5);
+				    $dmk = substr($dmk, 0, strrpos($dmk, "\n"));
+				    $dmk = str_replace("\r", "", $dmk);
+				    $dmk = str_replace("\n", "\"\n\"", $dmk);
+				    $dnsrec .= $dmk;
+				    $dnsrec .= '"'."\n";
+			        }
+				else{
+				    $dnsrec = "";
+			        }
+
+
 				$subdomain_edit_data = include_once dirname(__FILE__) . '/lib/formfields/customer/domains/formfield.domains_edit.php';
 				$subdomain_edit_form = \Froxlor\UI\HtmlForm::genHTMLForm($subdomain_edit_data);
 
@@ -543,9 +580,6 @@ if ($page == 'overview') {
 } elseif ($page == 'sslcertificates') {
 
 	require_once __DIR__ . '/ssl_certificates.php';
-} elseif ($page == 'dkim_keys') {			// DF8OE
-
-	require_once __DIR__ . '/dkim_keys.php';
 } elseif ($page == 'logfiles') {
 
 	require_once __DIR__ . '/logfiles_viewer.php';
