@@ -457,7 +457,7 @@ return array(
 					),
 					'dkim' => array(
 						'visible' => (\Froxlor\Settings::Get('dkim.use_dkim') == '1' ? true : false),
-						'label' => 'DomainKeys',
+						'label' => $lng['dkim']['use_dkim']['title'],
 						'type' => 'checkbox',
 						'values' => array(
 							array(
@@ -475,7 +475,7 @@ return array(
 						'type' => 'select',
 						'select_var' =>  $keylengthoptions,
 						'value' => array(
-//							$result['dkim']
+//							$result['dkim_kl']
 						)
 					),
 					'dkim_newkey' => array(
@@ -495,7 +495,7 @@ return array(
 					'dkiminfo' => array(
 						'visible' => (\Froxlor\Settings::Get('dkim.use_dkim') == '1' && $result['dkim'] && !$result['isbinddomain'] ? true : false),
 						'visible' => ($result['dkim'] && !$result['isbinddomain'] ? true : false),
-						'label' => 'add to DNS Zonefile:',
+						'label' => $lng['dkim']['show_dns_add'],
 						'type' => 'label',
 						'value' => ($dnsrec == "" ? $lng['dkim']['key_under_construction'] : nl2br($dnsrec))
 					)
