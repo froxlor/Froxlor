@@ -474,27 +474,23 @@ return array(
 						'label' => $lng['dkim']['key_length'],
 						'type' => 'select',
 						'select_var' =>  $keylengthoptions,
-						'value' => array(
-//							$result['dkim_kl']
-						)
 					),
 					'dkim_newkey' => array(
-						'visible' => (\Froxlor\Settings::Get('dkim.use_dkim') == '1' ? true : false),
+						'visible' => (\Froxlor\Settings::Get('dkim.use_dkim') == '1' && strlen($result['dkim_pubkey']) != 0  ? true : false),
 						'label' => $lng['dkim']['new_key'],
 						'type' => 'checkbox',
 						'values' => array(
 							array(
 								'label' => $lng['panel']['yes'],
-								'value' => '1'
+								'value' => '0'
 							)
 						),
 						'value' => array(
-//							$result['dkim']
+							'create_new_key' => '1'
 						)
 					),
 					'dkiminfo' => array(
 						'visible' => (\Froxlor\Settings::Get('dkim.use_dkim') == '1' && $result['dkim'] && !$result['isbinddomain'] ? true : false),
-						'visible' => ($result['dkim'] && !$result['isbinddomain'] ? true : false),
 						'label' => $lng['dkim']['show_dns_add'],
 						'type' => 'label',
 						'value' => ($dnsrec == "" ? $lng['dkim']['key_under_construction'] : nl2br($dnsrec))

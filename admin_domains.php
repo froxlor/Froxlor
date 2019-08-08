@@ -626,27 +626,34 @@ if ($page == 'domains' || $page == 'overview') {
 
 				$result = \Froxlor\PhpHelper::htmlentitiesArray($result);
 
-				$dmk = $result['dkim_pubkey'];
-				if((strlen($dmk) > 0 && strlen($dmk) < 400) || ($dmk == 0 && (\Froxlor\Settings::Get('dkim_keylength') == '1024'))){
-				$sel_value = 0;
-				}
-				else if((strlen($dmk) > 400 && strlen($dmk) < 600) || ($dmk == 0 && (\Froxlor\Settings::Get('dkim_keylength') == '2048'))){
+				$pubkey = $result['dkim_pubkey'];
+				if((strlen($pubkey) > 0 && strlen($pubkey) < 400) || (strlen($pubkey) == 0 && (\Froxlor\Settings::Get('dkim.dkim_keylength') == 1024))){
 				$sel_value = 1;
 				}
-				else if((strlen($dmk) > 600) || ($dmk == 0 && (\Froxlor\Settings::Get('dkim_keylength') == '4096'))){
+				else if((strlen($pubkey) > 400 && strlen($pubkey) < 600) || (strlen($pubkey) == 0 && (\Froxlor\Settings::Get('dkim.dkim_keylength') == 2048))){
 				$sel_value = 2;
 				}
+				else if((strlen($pubkey) > 600) || (strlen($pubkey) == 0 && ((string)\Froxlor\Settings::Get('dkim.dkim_keylength') == 4096))){
+				$sel_value = 3;
+				}
+				$keylengthoptions = \Froxlor\UI\HTML::makeoption('1024 Bit', '1', $sel_value, true, true);
+				$keylengthoptions .= \Froxlor\UI\HTML::makeoption('2048 Bit', '2', $sel_value, true, true);
+				$keylengthoptions .= \Froxlor\UI\HTML::makeoption('4096 Bit', '3', $sel_value, true, true);
 
-				$keylengthoptions = \Froxlor\UI\HTML::makeoption('1024 Bit', '0', $sel_value, true, true);
-				$keylengthoptions .= \Froxlor\UI\HTML::makeoption('2048 Bit', '1', $sel_value, true, true);
-				$keylengthoptions .= \Froxlor\UI\HTML::makeoption('4096 Bit', '2', $sel_value, true, true);
-
-				if ($dmk != ""){
+				if ($pubkey != ""){
 				    $idna_convert = new \Froxlor\Idna\IdnaWrapper();
 				    $ndomain = $idna_convert -> encode(html_entity_decode($result['domain']));
-				    $dnsrec = new \Froxlor\Dns\DnsEntry('dkim_' . $result['dkim_id'] . '._domainkey.' . $ndomain . '.', 'TXT', '"v=DKIM1;k=rsa;');
-				    $dnsrec .= 'p=' . trim(preg_replace('/-----BEGIN PUBLIC KEY-----(.+)-----END PUBLIC KEY-----/s', '$1', $dmk)) . ';';
-				    $dnsrec .= '"'."\n";
+/* Lines are too long and destroy usability of input mask
+				    preg_match('/-----BEGIN PUBLIC KEY-----\n(.+)-----END PUBLIC KEY-----/s', $pubkey, $pubkey);
+				    $pubkey = str_replace("\n", "", $pubkey[1]);
+				    $dnsrec = (string) new \Froxlor\Dns\DnsEntry('dkim_' . $result['dkim_id'] . '._domainkey.' . $ndomain . '.', 'TXT', '"v=DKIM1;k=rsa;p=' .$pubkey);
+*/
+				    $pubkey = substr($pubkey, strpos($pubkey, "\n")+1);
+				    $pubkey = substr($pubkey, 0, strrpos($pubkey, "\n")-5);
+				    $pubkey = substr($pubkey, 0, strrpos($pubkey, "\n"));
+				    $pubkey = str_replace("\r","",$pubkey);
+				    $pubkey = str_replace("\n","\"\n\"",$pubkey);
+				    $dnsrec = 'dkim_' . $result['dkim_id'] . '._domainkey.' . $ndomain . '.' . " 18000 IN TXT (\"v=DKIM1;k=rsa;p=\"\n\"" . $pubkey . "\")";
 			        }
 				else{
 				    $dnsrec = "";
