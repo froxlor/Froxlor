@@ -1256,15 +1256,9 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				), true, true);
 			}
 
-// DF8OE $dkim_newkey enthält immer "0" - egal was mit der Checkbox ist. Daher zum Testen
-// der Funktion hier manuell setzbar::
-			$dkim_newkey = true;
-			$dkim_newkey = false;
-
-			if ($dkim_newkey == true){
+			if ($dkim_newkey == '1'){
 			    $dkim_pubkey = $dkim_keylength;
 			}
-
 
 			$_update_data = array();
 

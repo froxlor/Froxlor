@@ -481,6 +481,7 @@ return array(
 						)
 					),
 					'dkim_keylength' => array(
+						'visible' => ((strlen($result['dkim_pubkey']) > 20 || strlen($result['dkim_pubkey']) == 0)  ? true : false),
 						'label' => $lng['dkim']['key_length'],
 						'type' => 'select',
 						'select_var' =>  $keylengthoptions,

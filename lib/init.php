@@ -180,12 +180,14 @@ if (isset($_POST['s'])) {
 }
 
 $timediff = time() - Settings::Get('session.sessiontimeout');
+
 $del_stmt = Database::prepare("
 	DELETE FROM `" . TABLE_PANEL_SESSIONS . "` WHERE `lastactivity` < :timediff
 ");
 Database::pexecute($del_stmt, array(
 	'timediff' => $timediff
 ));
+
 
 $userinfo = array();
 
