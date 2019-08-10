@@ -403,6 +403,11 @@ return array(
 						'value' => array(
 							'1'
 						)
+					),
+					'dkim_keylength' => array(
+						'label' => $lng['dkim']['key_length'],
+						'type' => 'select',
+						'select_var' =>  $keylengthoptions,
 					)
 				)
 			)

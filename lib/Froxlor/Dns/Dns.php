@@ -392,7 +392,7 @@ class Dns
 	{
 		$zone_dkim = array();
 
-		if (Settings::Get('dkim.use_dkim') == '1' && $domain['dkim'] == '1' && $domain['dkim_pubkey'] != '') {
+		if (Settings::Get('dkim.use_dkim') == '1' && $domain['dkim'] == '1' && strlen($domain['dkim_pubkey']) > 20) {
 			// start
 			$dkim_txt = 'v=DKIM1;k=rsa;';
 

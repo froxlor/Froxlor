@@ -213,6 +213,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				$isbinddomain = $this->getBoolParam('isbinddomain', true, 0);
 				$zonefile = $this->getParam('zonefile', true, '');
 				$dkim = $this->getBoolParam('dkim', true, 0);
+				$dkim_keylength = $this->getParam('dkim_keylength', true, 0);
 				$specialsettings = $this->getParam('specialsettings', true, '');
 				$notryfiles = $this->getBoolParam('notryfiles', true, 0);
 				$writeaccesslog = $this->getBoolParam('writeaccesslog', true, 1);
@@ -534,6 +535,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 						'aliasdomain' => ($aliasdomain != 0 ? $aliasdomain : null),
 						'zonefile' => $zonefile,
 						'dkim' => $dkim,
+						'dkim_pubkey' => $dkim_keylength,
 						'wwwserveralias' => $wwwserveralias,
 						'iswildcarddomain' => $iswildcarddomain,
 						'isbinddomain' => $isbinddomain,
@@ -575,7 +577,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 						`dkim` = :dkim,
 						`dkim_id` = '0',
 						`dkim_privkey` = '',
-						`dkim_pubkey` = '',
+						`dkim_pubkey` = :dkim_pubkey,
 						`wwwserveralias` = :wwwserveralias,
 						`iswildcarddomain` = :iswildcarddomain,
 						`isbinddomain` = :isbinddomain,
@@ -767,7 +769,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 			$customerid = intval($this->getParam('customerid', true, $result['customerid']));
 			$adminid = intval($this->getParam('adminid', true, $result['adminid']));
 
-			$subcanemaildomain = $this->getBoolParam('subcanemaildomain', true, $result['subcanemaildomain']);
+			$subcanemaildomain = $this->getParam('subcanemaildomain', true, $result['subcanemaildomain']);
 			$isemaildomain = $this->getBoolParam('isemaildomain', true, $result['isemaildomain']);
 			$email_only = $this->getBoolParam('email_only', true, $result['email_only']);
 			$p_serveraliasoption = $this->getParam('selectserveralias', true, - 1);
@@ -781,6 +783,9 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 			$isbinddomain = $this->getBoolParam('isbinddomain', true, $result['isbinddomain']);
 			$zonefile = $this->getParam('zonefile', true, $result['zonefile']);
 			$dkim = $this->getBoolParam('dkim', true, $result['dkim']);
+			$dkim_newkey = $this->getBoolParam('dkim_newkey', true, 0);
+			$dkim_keylength = $this->getParam('dkim_keylength', true, 0);
+			$dkim_pubkey = $this->getParam('dkim_pubkey', true, $result['dkim_pubkey']);
 			$specialsettings = $this->getParam('specialsettings', true, $result['specialsettings']);
 			$ssfs = $this->getBoolParam('specialsettingsforsubdomains', true, 0);
 			$notryfiles = $this->getBoolParam('notryfiles', true, $result['notryfiles']);
@@ -1251,6 +1256,16 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				), true, true);
 			}
 
+// DF8OE $dkim_newkey enthält immer "0" - egal was mit der Checkbox ist. Daher zum Testen
+// der Funktion hier manuell setzbar::
+			$dkim_newkey = true;
+			$dkim_newkey = false;
+
+			if ($dkim_newkey == true){
+			    $dkim_pubkey = $dkim_keylength;
+			}
+
+
 			$_update_data = array();
 
 			if ($ssfs == 1) {
@@ -1282,6 +1297,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 			$update_data['email_only'] = $email_only;
 			$update_data['subcanemaildomain'] = $subcanemaildomain;
 			$update_data['dkim'] = $dkim;
+			$update_data['dkim_pubkey'] = $dkim_pubkey;
 			$update_data['caneditdomain'] = $caneditdomain;
 			$update_data['zonefile'] = $zonefile;
 			$update_data['wwwserveralias'] = $wwwserveralias;
@@ -1319,6 +1335,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				`email_only` = :email_only,
 				`subcanemaildomain` = :subcanemaildomain,
 				`dkim` = :dkim,
+				`dkim_pubkey` = :dkim_pubkey,
 				`caneditdomain` = :caneditdomain,
 				`zonefile` = :zonefile,
 				`wwwserveralias` = :wwwserveralias,

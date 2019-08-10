@@ -73,6 +73,8 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			$phpsettingid = $this->getParam('phpsettingid', true, 0);
 			$redirectcode = $this->getParam('redirectcode', true, Settings::Get('customredirect.default'));
 			$isemaildomain = $this->getParam('isemaildomain', true, 0);
+//			$dkim = $this->getParam('dkim', true, 0);
+//			$dkim_keylength = $this->getParam('dkim_keylength', true, 0);
 			if (Settings::Get('system.use_ssl')) {
 				$ssl_redirect = $this->getBoolParam('ssl_redirect', true, 0);
 				$letsencrypt = $this->getBoolParam('letsencrypt', true, 0);
@@ -467,6 +469,10 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		$_serveraliasdefault = $result['iswildcarddomain'] == '1' ? 0 : ($result['wwwserveralias'] == '1' ? 1 : 2);
 		$selectserveralias = $this->getParam('selectserveralias', true, $_serveraliasdefault);
 		$isemaildomain = $this->getBoolParam('isemaildomain', true, $result['isemaildomain']);
+		$dkim = $this->getBoolParam('dkim', true, $result['dkim']);
+		$dkim_newkey = $this->getParam('dkim_newkey', true, 0);
+		$dkim_keylength = $this->getParam('dkim_keylength', true, 0);
+		$dkim_pubkey = $this->getParam('dkim_pubkey', true, $result['dkim_pubkey']);
 		$openbasedir_path = $this->getParam('openbasedir_path', true, $result['openbasedir_path']);
 		$phpsettingid = $this->getParam('phpsettingid', true, $result['phpsettingid']);
 		$redirectcode = $this->getParam('redirectcode', true, \Froxlor\Domain\Domain::getDomainRedirectId($id));
@@ -482,6 +488,15 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			$hsts_maxage = 0;
 			$hsts_sub = 0;
 			$hsts_preload = 0;
+		}
+
+// DF8OE $dkim_newkey enthält immer "0" - egal was mit der Checkbox ist. Daher zum Testen
+// der Funktion hier manuell setzbar::
+		$dkim_newkey = true;
+		$dkim_newkey = false;
+
+		if ($dkim_newkey == true){
+		    $dkim_pubkey = $dkim_keylength;
 		}
 
 		// get needed customer info to reduce the subdomain-usage-counter by one
@@ -525,7 +540,12 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		if ($result['parentdomainid'] != '0' && ($result['subcanemaildomain'] == '1' || $result['subcanemaildomain'] == '2') && $isemaildomain != $result['isemaildomain']) {
 			$isemaildomain = intval($isemaildomain);
 		} elseif ($result['parentdomainid'] != '0') {
-			$isemaildomain = $result['subcanemaildomain'] == '3' ? 1 : 0;
+// DF8OE			$isemaildomain = $result['subcanemaildomain'] == '3' ? 1 : 0;
+// wenn das ausgeführt wird bei gesetztem "Ist Emaildomain" wird die Emaildomain
+// wieder zurückgesetzt, wenn das Domain-Edit-Fenster mit speichern verlassen wird - egal, was mit der Checkbox "ist Emaildomain?" ist
+// gewollt ist doch sicher, dass, wenn "Subdomains IMMER als Emaildomains" der Customer das nicht deaktivieren kann. Das funktioniert
+// aber so nicht... Entweder man muss subcanemaildomain von der Domain selbst nehmen (nicht von der Subdomain) oder beim Anlagen der Subdomain
+// muss subcanemaildomain von der Domain in die Subdomain übertragen werden - richtig verstanden?
 		}
 
 		// check changes of openbasedir-path variable
@@ -581,6 +601,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			Database::pexecute($stmt, $params, true, true);
 			$idna_convert = new \Froxlor\Idna\IdnaWrapper();
 			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] automatically deleted mail-table entries for '" . $idna_convert->decode($result['domain']) . "'");
+			$dkim = 0;	// disable DKIM if domain is no longer email domain
 		}
 
 		// handle redirect
@@ -588,11 +609,13 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			\Froxlor\Domain\Domain::updateRedirectOfDomain($id, $redirectcode);
 		}
 
-		if ($path != $result['documentroot'] || $isemaildomain != $result['isemaildomain'] || $wwwserveralias != $result['wwwserveralias'] || $iswildcarddomain != $result['iswildcarddomain'] || $aliasdomain != $result['aliasdomain'] || $openbasedir_path != $result['openbasedir_path'] || $ssl_redirect != $result['ssl_redirect'] || $letsencrypt != $result['letsencrypt'] || $hsts_maxage != $result['hsts'] || $hsts_sub != $result['hsts_sub'] || $hsts_preload != $result['hsts_preload'] || $phpsettingid != $result['phpsettingid']) {
+		if ($path != $result['documentroot'] || $isemaildomain != $result['isemaildomain'] || $dkim != $result['dkim'] || $wwwserveralias != $result['wwwserveralias'] || $iswildcarddomain != $result['iswildcarddomain'] || $aliasdomain != $result['aliasdomain'] || $openbasedir_path != $result['openbasedir_path'] || $ssl_redirect != $result['ssl_redirect'] || $letsencrypt != $result['letsencrypt'] || $hsts_maxage != $result['hsts'] || $hsts_sub != $result['hsts_sub'] || $hsts_preload != $result['hsts_preload'] || $phpsettingid != $result['phpsettingid']) {
 			$stmt = Database::prepare("
 					UPDATE `" . TABLE_PANEL_DOMAINS . "` SET
 					`documentroot`= :documentroot,
 					`isemaildomain`= :isemaildomain,
+					`dkim`= :dkim,
+					`dkim_pubkey`= :dkim_pubkey,
 					`wwwserveralias`= :wwwserveralias,
 					`iswildcarddomain`= :iswildcarddomain,
 					`aliasdomain`= :aliasdomain,
@@ -608,6 +631,8 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			$params = array(
 				"documentroot" => $path,
 				"isemaildomain" => $isemaildomain,
+				"dkim" => $dkim,
+				"dkim_pubkey" => $dkim_pubkey,
 				"wwwserveralias" => $wwwserveralias,
 				"iswildcarddomain" => $iswildcarddomain,
 				"aliasdomain" => ($aliasdomain != 0 && $alias_check == 0) ? $aliasdomain : null,

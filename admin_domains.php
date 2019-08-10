@@ -336,6 +336,20 @@ if ($page == 'domains' || $page == 'overview') {
 
 			$add_date = date('Y-m-d');
 
+			if( (string)\Froxlor\Settings::Get('dkim.dkim_keylength') == 1024){
+			$sel_value = 1024;
+			}
+			else if( (string)\Froxlor\Settings::Get('dkim.dkim_keylength') == 2048){
+			$sel_value = 2048;
+			}
+			else if( (string)\Froxlor\Settings::Get('dkim.dkim_keylength') == 4096){
+			$sel_value = 4096;
+			}
+
+			$keylengthoptions = \Froxlor\UI\HTML::makeoption('1024 Bit', '1024', $sel_value, true, true);
+			$keylengthoptions .= \Froxlor\UI\HTML::makeoption('2048 Bit', '2048', $sel_value, true, true);
+			$keylengthoptions .= \Froxlor\UI\HTML::makeoption('4096 Bit', '4096', $sel_value, true, true);
+
 			$domain_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/domains/formfield.domains_add.php';
 			$domain_add_form = \Froxlor\UI\HtmlForm::genHTMLForm($domain_add_data);
 
@@ -627,20 +641,20 @@ if ($page == 'domains' || $page == 'overview') {
 				$result = \Froxlor\PhpHelper::htmlentitiesArray($result);
 
 				$pubkey = $result['dkim_pubkey'];
-				if((strlen($pubkey) > 0 && strlen($pubkey) < 400) || (strlen($pubkey) == 0 && (\Froxlor\Settings::Get('dkim.dkim_keylength') == 1024))){
-				$sel_value = 1;
+				if((strlen($pubkey) > 20 && strlen($pubkey) < 400) || (strlen($pubkey) < 20 && ((string)\Froxlor\Settings::Get('dkim.dkim_keylength') == 1024))){
+				$sel_value = 1024;
 				}
-				else if((strlen($pubkey) > 400 && strlen($pubkey) < 600) || (strlen($pubkey) == 0 && (\Froxlor\Settings::Get('dkim.dkim_keylength') == 2048))){
-				$sel_value = 2;
+				else if((strlen($pubkey) > 400 && strlen($pubkey) < 600) || (strlen($pubkey) < 20 && ((string)\Froxlor\Settings::Get('dkim.dkim_keylength') == 2048))){
+				$sel_value = 2048;
 				}
-				else if((strlen($pubkey) > 600) || (strlen($pubkey) == 0 && ((string)\Froxlor\Settings::Get('dkim.dkim_keylength') == 4096))){
-				$sel_value = 3;
+				else if((strlen($pubkey) > 600) || (strlen($pubkey) < 20 && ((string)\Froxlor\Settings::Get('dkim.dkim_keylength') == 4096))){
+				$sel_value = 4096;
 				}
-				$keylengthoptions = \Froxlor\UI\HTML::makeoption('1024 Bit', '1', $sel_value, true, true);
-				$keylengthoptions .= \Froxlor\UI\HTML::makeoption('2048 Bit', '2', $sel_value, true, true);
-				$keylengthoptions .= \Froxlor\UI\HTML::makeoption('4096 Bit', '3', $sel_value, true, true);
+				$keylengthoptions = \Froxlor\UI\HTML::makeoption('1024 Bit', '1024', $sel_value, true, true);
+				$keylengthoptions .= \Froxlor\UI\HTML::makeoption('2048 Bit', '2048', $sel_value, true, true);
+				$keylengthoptions .= \Froxlor\UI\HTML::makeoption('4096 Bit', '4096', $sel_value, true, true);
 
-				if ($pubkey != ""){
+				if (strlen($pubkey) > 20){
 				    $idna_convert = new \Froxlor\Idna\IdnaWrapper();
 				    $ndomain = $idna_convert -> encode(html_entity_decode($result['domain']));
 /* Lines are too long and destroy usability of input mask
@@ -668,6 +682,7 @@ if ($page == 'domains' || $page == 'overview') {
 				$speciallogwarning = sprintf($lng['admin']['speciallogwarning'], $lng['admin']['delete_statistics']);
 
 				eval("echo \"" . \Froxlor\UI\Template::getTemplate("domains/domains_edit") . "\";");
+
 			}
 		}
 	} elseif ($action == 'jqGetCustomerPHPConfigs') {
@@ -675,7 +690,6 @@ if ($page == 'domains' || $page == 'overview') {
 		$customerid = intval($_POST['customerid']);
 		$allowed_phpconfigs = \Froxlor\Customer\Customer::getCustomerDetail($customerid, 'allowed_phpconfigs');
 		echo ! empty($allowed_phpconfigs) ? $allowed_phpconfigs : json_encode(array());
-		exit();
 	} elseif ($action == 'import') {
 
 		if (isset($_POST['send']) && $_POST['send'] == 'send') {

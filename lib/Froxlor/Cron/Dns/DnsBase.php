@@ -213,12 +213,13 @@ abstract class DnsBase
 				$privkey_filename = \Froxlor\FileDir::makeCorrectFile(Settings::Get('dkim.dkim_dkimkeys') . '/dkim_' . $domain['dkim_id']);
 				$pubkey_filename = \Froxlor\FileDir::makeCorrectFile(Settings::Get('dkim.dkim_dkimkeys') . '/dkim_' . $domain['dkim_id'] . '.public');
 
-				if ($domain['dkim_privkey'] == '' || $domain['dkim_pubkey'] == '') {
+				if ($domain['dkim_privkey'] == '' || (strlen($domain['dkim_pubkey']) > 0 && strlen($domain['dkim_pubkey']) < 20)) {
 					$max_dkim_id_stmt = Database::query("SELECT MAX(`dkim_id`) as `max_dkim_id` FROM `" . TABLE_PANEL_DOMAINS . "`");
 					$max_dkim_id = $max_dkim_id_stmt->fetch(\PDO::FETCH_ASSOC);
 					$domain['dkim_id'] = (int) $max_dkim_id['max_dkim_id'] + 1;
 					$privkey_filename = \Froxlor\FileDir::makeCorrectFile(Settings::Get('dkim.dkim_dkimkeys') . '/dkim_' . $domain['dkim_id']);
-					\Froxlor\FileDir::safe_exec('openssl genrsa -out ' . escapeshellarg($privkey_filename) . ' ' . Settings::Get('dkim.dkim_keylength'));
+
+					\Froxlor\FileDir::safe_exec('openssl genrsa -out ' . escapeshellarg($privkey_filename) . ' ' . $domain['dkim_pubkey']);	// key is only generated if there is a keylength in $domain['dkim_pubkey']
 					$domain['dkim_privkey'] = file_get_contents($privkey_filename);
 					\Froxlor\FileDir::safe_exec("chmod 0640 " . escapeshellarg($privkey_filename));
 					$pubkey_filename = \Froxlor\FileDir::makeCorrectFile(Settings::Get('dkim.dkim_dkimkeys') . '/dkim_' . $domain['dkim_id'] . '.public');

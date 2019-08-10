@@ -329,6 +329,8 @@ if ($page == 'overview') {
 		} catch (Exception $e) {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
+
+
 		$result = json_decode($json_result, true)['data'];
 
 		if (isset($result['customerid']) && $result['customerid'] == $userinfo['customerid']) {
@@ -466,20 +468,20 @@ if ($page == 'overview') {
 				$result = \Froxlor\PhpHelper::htmlentitiesArray($result);
 
 				$pubkey = $result['dkim_pubkey'];
-				if((strlen($pubkey) > 0 && strlen($pubkey) < 400) || (strlen($pubkey) == 0 && (\Froxlor\Settings::Get('dkim.dkim_keylength') == 1024))){
-				$sel_value = 1;
+				if((strlen($pubkey) > 20 && strlen($pubkey) < 400) || (strlen($pubkey) < 20 && (\Froxlor\Settings::Get('dkim.dkim_keylength') == 1024))){
+				$sel_value = 1024;
 				}
-				else if((strlen($pubkey) > 400 && strlen($pubkey) < 600) || (strlen($pubkey) == 0 && (\Froxlor\Settings::Get('dkim.dkim_keylength') == 2048))){
-				$sel_value = 2;
+				else if((strlen($pubkey) > 400 && strlen($pubkey) < 600) || (strlen($pubkey) < 20 && (\Froxlor\Settings::Get('dkim.dkim_keylength') == 2048))){
+				$sel_value = 2048;
 				}
-				else if((strlen($pubkey) > 600) || (strlen($pubkey) == 0 && ((string)\Froxlor\Settings::Get('dkim.dkim_keylength') == 4096))){
-				$sel_value = 3;
+				else if((strlen($pubkey) > 600) || (strlen($pubkey) < 20 && ((string)\Froxlor\Settings::Get('dkim.dkim_keylength') == 4096))){
+				$sel_value = 4096;
 				}
-				$keylengthoptions = \Froxlor\UI\HTML::makeoption('1024 Bit', '1', $sel_value, true, true);
-				$keylengthoptions .= \Froxlor\UI\HTML::makeoption('2048 Bit', '2', $sel_value, true, true);
-				$keylengthoptions .= \Froxlor\UI\HTML::makeoption('4096 Bit', '3', $sel_value, true, true);
+				$keylengthoptions = \Froxlor\UI\HTML::makeoption('1024 Bit', '1024', $sel_value, true, true);
+				$keylengthoptions .= \Froxlor\UI\HTML::makeoption('2048 Bit', '2048', $sel_value, true, true);
+				$keylengthoptions .= \Froxlor\UI\HTML::makeoption('4096 Bit', '4096', $sel_value, true, true);
 
-				if ($pubkey != ""){
+				if (strlen($pubkey) > 20){
 				    $idna_convert = new \Froxlor\Idna\IdnaWrapper();
 				    $ndomain = $idna_convert -> encode(html_entity_decode($result['domain']));
 /* Lines are too long and destroy usability of input mask

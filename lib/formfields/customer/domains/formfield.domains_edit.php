@@ -169,9 +169,9 @@ return array(
 			'section_e' => array(
 				'title' => $lng['admin']['mailserversettings'],
 				'image' => 'icons/domain_edit.png',
+				'visible' => (\Froxlor\Settings::Get('dkim.use_dkim') == '1' && $result['isemaildomain'] == '1' ? true : false),
 				'fields' => array(
 					'dkim' => array(
-						'visible' => (\Froxlor\Settings::Get('dkim.use_dkim') == '1' ? true : false),
 						'label' => $lng['dkim']['use_dkim']['title'],
 						'type' => 'checkbox',
 						'values' => array(
@@ -184,14 +184,8 @@ return array(
 							$result['dkim']
 						)
 					),
-					'dkim_keylength' => array(
-						'visible' => 'true',
-						'label' => $lng['dkim']['key_length'],
-						'type' => 'select',
-						'select_var' =>  $keylengthoptions,
-					),
 					'dkim_newkey' => array(
-						'visible' => (\Froxlor\Settings::Get('dkim.use_dkim') == '1' && strlen($result['dkim_pubkey']) != 0 ? true : false),
+						'visible' => (strlen($result['dkim_pubkey']) > 20 ? true : false),
 						'label' => $lng['dkim']['new_key'],
 						'type' => 'checkbox',
 						'values' => array(
@@ -199,14 +193,15 @@ return array(
 								'label' => $lng['panel']['yes'],
 								'value' => '0'
 							)
-						),
-						'value' => array(
-							'create_new_key' => '1'
 						)
 					),
+					'dkim_keylength' => array(
+						'label' => $lng['dkim']['key_length'],
+						'type' => 'select',
+						'select_var' =>  $keylengthoptions
+					),
 					'dkiminfo' => array(
-						'visible' => (\Froxlor\Settings::Get('dkim.use_dkim') == '1' && $result['dkim'] && !$result['isbinddomain'] ? true : false),
-						'visible' => ($result['dkim'] && !$result['isbinddomain'] ? true : false),
+						'visible' => ($result['dkim']),
 						'label' => $lng['dkim']['show_dns_add'],
 						'type' => 'label',
 						'value' => ($dnsrec == "" ? $lng['dkim']['key_under_construction'] : nl2br($dnsrec))
