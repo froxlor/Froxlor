@@ -468,13 +468,13 @@ if ($page == 'overview') {
 				$result = \Froxlor\PhpHelper::htmlentitiesArray($result);
 
 				$pubkey = $result['dkim_pubkey'];
-				if((strlen($pubkey) > 20 && strlen($pubkey) < 400) || (strlen($pubkey) < 20 && (\Froxlor\Settings::Get('dkim.dkim_keylength') == 1024))){
+				if((strlen($pubkey) > 20 && strlen($pubkey) < 400) || (strlen($pubkey) < 20 && ((int)\Froxlor\Settings::Get('dkim.dkim_keylength') == 1024))){
 				$sel_value = 1024;
 				}
-				else if((strlen($pubkey) > 400 && strlen($pubkey) < 600) || (strlen($pubkey) < 20 && (\Froxlor\Settings::Get('dkim.dkim_keylength') == 2048))){
+				else if((strlen($pubkey) > 400 && strlen($pubkey) < 600) || (strlen($pubkey) < 20 && ((int)\Froxlor\Settings::Get('dkim.dkim_keylength') == 2048))){
 				$sel_value = 2048;
 				}
-				else if((strlen($pubkey) > 600) || (strlen($pubkey) < 20 && ((string)\Froxlor\Settings::Get('dkim.dkim_keylength') == 4096))){
+				else if((strlen($pubkey) > 600) || (strlen($pubkey) < 20 && ((int)\Froxlor\Settings::Get('dkim.dkim_keylength') == 4096))){
 				$sel_value = 4096;
 				}
 				$keylengthoptions = \Froxlor\UI\HTML::makeoption('1024 Bit', '1024', $sel_value, true, true);

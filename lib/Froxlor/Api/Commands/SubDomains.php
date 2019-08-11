@@ -535,12 +535,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		if ($result['parentdomainid'] != '0' && ($result['subcanemaildomain'] == '1' || $result['subcanemaildomain'] == '2') && $isemaildomain != $result['isemaildomain']) {
 			$isemaildomain = intval($isemaildomain);
 		} elseif ($result['parentdomainid'] != '0') {
-// DF8OE			$isemaildomain = $result['subcanemaildomain'] == '3' ? 1 : 0;
-// wenn das ausgeführt wird bei gesetztem "Ist Emaildomain" wird die Emaildomain
-// wieder zurückgesetzt, wenn das Domain-Edit-Fenster mit speichern verlassen wird - egal, was mit der Checkbox "ist Emaildomain?" ist
-// gewollt ist doch sicher, dass, wenn "Subdomains IMMER als Emaildomains" der Customer das nicht deaktivieren kann. Das funktioniert
-// aber so nicht... Entweder man muss subcanemaildomain von der Domain selbst nehmen (nicht von der Subdomain) oder beim Anlagen der Subdomain
-// muss subcanemaildomain von der Domain in die Subdomain übertragen werden - richtig verstanden?
+			$isemaildomain = $result['subcanemaildomain'] == '3' ? 1 : 0;
 		}
 
 		// check changes of openbasedir-path variable

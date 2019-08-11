@@ -336,13 +336,13 @@ if ($page == 'domains' || $page == 'overview') {
 
 			$add_date = date('Y-m-d');
 
-			if( (string)\Froxlor\Settings::Get('dkim.dkim_keylength') == 1024){
+			if( (int)\Froxlor\Settings::Get('dkim.dkim_keylength') == 1024){
 			$sel_value = 1024;
 			}
-			else if( (string)\Froxlor\Settings::Get('dkim.dkim_keylength') == 2048){
+			else if( (int)\Froxlor\Settings::Get('dkim.dkim_keylength') == 2048){
 			$sel_value = 2048;
 			}
-			else if( (string)\Froxlor\Settings::Get('dkim.dkim_keylength') == 4096){
+			else if( (int)\Froxlor\Settings::Get('dkim.dkim_keylength') == 4096){
 			$sel_value = 4096;
 			}
 
@@ -641,13 +641,13 @@ if ($page == 'domains' || $page == 'overview') {
 				$result = \Froxlor\PhpHelper::htmlentitiesArray($result);
 
 				$pubkey = $result['dkim_pubkey'];
-				if((strlen($pubkey) > 20 && strlen($pubkey) < 400) || (strlen($pubkey) < 20 && ((string)\Froxlor\Settings::Get('dkim.dkim_keylength') == 1024))){
+				if((strlen($pubkey) > 20 && strlen($pubkey) < 400) || (strlen($pubkey) < 20 && ((int)\Froxlor\Settings::Get('dkim.dkim_keylength') == 1024))){
 				$sel_value = 1024;
 				}
-				else if((strlen($pubkey) > 400 && strlen($pubkey) < 600) || (strlen($pubkey) < 20 && ((string)\Froxlor\Settings::Get('dkim.dkim_keylength') == 2048))){
+				else if((strlen($pubkey) > 400 && strlen($pubkey) < 600) || (strlen($pubkey) < 20 && ((int)\Froxlor\Settings::Get('dkim.dkim_keylength') == 2048))){
 				$sel_value = 2048;
 				}
-				else if((strlen($pubkey) > 600) || (strlen($pubkey) < 20 && ((string)\Froxlor\Settings::Get('dkim.dkim_keylength') == 4096))){
+				else if((strlen($pubkey) > 600) || (strlen($pubkey) < 20 && ((int)\Froxlor\Settings::Get('dkim.dkim_keylength') == 4096))){
 				$sel_value = 4096;
 				}
 				$keylengthoptions = \Froxlor\UI\HTML::makeoption('1024 Bit', '1024', $sel_value, true, true);
@@ -690,6 +690,7 @@ if ($page == 'domains' || $page == 'overview') {
 		$customerid = intval($_POST['customerid']);
 		$allowed_phpconfigs = \Froxlor\Customer\Customer::getCustomerDetail($customerid, 'allowed_phpconfigs');
 		echo ! empty($allowed_phpconfigs) ? $allowed_phpconfigs : json_encode(array());
+		exit();
 	} elseif ($action == 'import') {
 
 		if (isset($_POST['send']) && $_POST['send'] == 'send') {
