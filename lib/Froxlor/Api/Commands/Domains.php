@@ -119,8 +119,8 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	 *        	optional, default is the calling admin's ID
 	 * @param array $ipandport
 	 *        	optional list of ip/ports to assign to domain, default is system-default-ips
-	 * @param bool $subcanemaildomain
-	 *        	optional, allow subdomains of this domain as email domains, default 0 (false)
+	 * @param int $subcanemaildomain
+	 *        	optional, allow subdomains of this domain as email domains, 1 = choosable (default no), 2 = choosable (default yes), 3 = always, default 0 (never)
 	 * @param bool $isemaildomain
 	 *        	optional, allow email usage with this domain, default 0 (false)
 	 * @param bool $email_only
@@ -673,8 +673,8 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	 *        	optional, default is the calling admin's ID
 	 * @param array $ipandport
 	 *        	optional list of ip/ports to assign to domain, default is system-default-ips
-	 * @param bool $subcanemaildomain
-	 *        	optional, allow subdomains of this domain as email domains, default 0 (false)
+	 * @param int $subcanemaildomain
+	 *        	optional, allow subdomains of this domain as email domains, 1 = choosable (default no), 2 = choosable (default yes), 3 = always, default 0 (never)
 	 * @param bool $isemaildomain
 	 *        	optional, allow email usage with this domain, default 0 (false)
 	 * @param bool $email_only
@@ -767,7 +767,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 			$customerid = intval($this->getParam('customerid', true, $result['customerid']));
 			$adminid = intval($this->getParam('adminid', true, $result['adminid']));
 
-			$subcanemaildomain = $this->getBoolParam('subcanemaildomain', true, $result['subcanemaildomain']);
+			$subcanemaildomain = $this->getParam('subcanemaildomain', true, $result['subcanemaildomain']);
 			$isemaildomain = $this->getBoolParam('isemaildomain', true, $result['isemaildomain']);
 			$email_only = $this->getBoolParam('email_only', true, $result['email_only']);
 			$p_serveraliasoption = $this->getParam('selectserveralias', true, - 1);
