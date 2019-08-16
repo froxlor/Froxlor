@@ -565,7 +565,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 					}
 					$this->apiCall('Ftps.add', array(
 						'customerid' => $customerid,
-						'path' => $documentroot,
+						'path' => '/',
 						'ftp_password' => $password,
 						'ftp_description' => "Default",
 						'sendinfomail' => 0,
