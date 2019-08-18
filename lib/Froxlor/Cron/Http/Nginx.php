@@ -244,7 +244,7 @@ class Nginx extends HttpConfigBase
 						$is_redirect = false;
 					} else {
 						$_sslport = $this->checkAlternativeSslPort();
-						$mypath = 'https://' . Settings::Get('system.hostname') . $_sslport . '/';
+						$mypath = 'https://' . Settings::Get('system.hostname') . $_sslport;
 						$this->nginx_data[$vhost_filename] .= "\t" . 'location / {' . "\n";
 						$this->nginx_data[$vhost_filename] .= "\t\t" . 'return 301 ' . $mypath . '$request_uri;' . "\n";
 						$this->nginx_data[$vhost_filename] .= "\t" . '}' . "\n";
