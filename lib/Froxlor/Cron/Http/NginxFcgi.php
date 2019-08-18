@@ -38,7 +38,7 @@ class NginxFcgi extends Nginx
 			$php_options_text .= "\t\t" . 'try_files $1 = 404;' . "\n\n";
 			$php_options_text .= "\t\t" . 'include ' . Settings::Get('nginx.fastcgiparams') . ";\n";
 			$php_options_text .= "\t\t" . 'fastcgi_split_path_info ^(.+\.php)(/.+)\$;' . "\n";
-			$php_options_text .= "\t\t" . 'fastcgi_param SCRIPT_FILENAME $document_root$1;' . "\n";
+			$php_options_text .= "\t\t" . 'fastcgi_param SCRIPT_FILENAME $request_filename;' . "\n";
 			$php_options_text .= "\t\t" . 'fastcgi_param PATH_INFO $2;' . "\n";
 			if ($domain['ssl'] == '1' && $ssl_vhost) {
 				$php_options_text .= "\t\t" . 'fastcgi_param HTTPS on;' . "\n";
