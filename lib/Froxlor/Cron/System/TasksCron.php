@@ -49,6 +49,7 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 				 * TYPE=1 MEANS TO REBUILD APACHE VHOSTS.CONF
 				 */
 				self::rebuildWebserverConfigs();
+				self::rebuildDKIMConfigs();
 			} elseif ($row['type'] == '2') {
 				/**
 				 * TYPE=2 MEANS TO CREATE A NEW HOME AND CHOWN
@@ -257,11 +258,18 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 
 		$nameserver = new $dnssrv(\Froxlor\FroxlorLogger::getInstanceOf());
 
+		$nameserver->writeConfigs();
+	}
+
+	private static function rebuildDKIMConfigs()
+	{
+		$dnssrv = '\\Froxlor\\Cron\\Dns\\' . Settings::Get('system.dns_server');
+
+		$nameserver = new $dnssrv(\Froxlor\FroxlorLogger::getInstanceOf());
+
 		if (Settings::Get('dkim.use_dkim') == '1') {
 			$nameserver->writeDKIMconfigs();
 		}
-
-		$nameserver->writeConfigs();
 	}
 
 	private static function createNewFtpHome($row = null)
