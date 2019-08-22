@@ -59,3 +59,9 @@ after_success:
 
 notifications:
   irc: "irc.freenode.org#froxlor"
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/bdf91d1c3f745e51f796
+    on_success: always
+    on_failure: always
+    on_start: never
