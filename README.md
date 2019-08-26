@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.com/Froxlor/Froxlor.svg?branch=master)](https://travis-ci.com/Froxlor/Froxlor)
+[![Gitter](https://badges.gitter.im/Froxlor/community.svg)](https://gitter.im/Froxlor/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 # Froxlor
 
