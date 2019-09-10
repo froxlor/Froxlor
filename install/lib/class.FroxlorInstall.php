@@ -104,7 +104,7 @@ class FroxlorInstall
 		// check if we have a valid installation already
 		$this->_checkUserdataFile();
 		// include the MySQL-Table-Definitions
-		require $this->_basepath . '/lib/tables.inc.php';
+		require_once $this->_basepath . '/lib/tables.inc.php';
 		// include language
 		$this->_includeLanguageFile();
 		// show the action
@@ -643,21 +643,8 @@ class FroxlorInstall
 
 		$mysql_access_host_array[] = $this->_data['serverip'];
 		foreach ($mysql_access_host_array as $mysql_access_host) {
-			$_db = str_replace('`', '', $this->_data['mysql_database']);
-			$stmt = $db_root->prepare("
-					GRANT ALL PRIVILEGES ON `" . $_db . "`.*
-					TO :username@:host
-					IDENTIFIED BY 'password'");
-			$stmt->execute(array(
-				"username" => $this->_data['mysql_unpriv_user'],
-				"host" => $mysql_access_host
-			));
-			$stmt = $db_root->prepare("SET PASSWORD FOR :username@:host = PASSWORD(:password)");
-			$stmt->execute(array(
-				"username" => $this->_data['mysql_unpriv_user'],
-				"host" => $mysql_access_host,
-				"password" => $this->_data['mysql_unpriv_pass']
-			));
+			$frox_db = str_replace('`', '', $this->_data['mysql_database']);
+			$this->_grantDbPrivilegesTo($db_root, $frox_db, $this->_data['mysql_unpriv_user'], $this->_data['mysql_unpriv_pass'], $mysql_access_host);
 		}
 
 		$db_root->query("FLUSH PRIVILEGES;");
@@ -665,6 +652,38 @@ class FroxlorInstall
 		$content .= $this->_status_message('green', 'OK');
 
 		return $content;
+	}
+
+	private function _grantDbPrivilegesTo(&$db_root, $database, $username, $password, $access_host)
+	{
+		// mysql8 compatibility
+		if (version_compare($db_root->getAttribute(\PDO::ATTR_SERVER_VERSION), '8.0.11', '>=')) {
+			// create user
+			$stmt = $db_root->prepare("
+				CREATE USER '" . $username . "'@'" . $access_host . "' IDENTIFIED BY :password
+			");
+			$stmt->execute(array(
+				"password" => $password
+			));
+			// grant privileges
+			$stmt = $db_root->prepare("
+				GRANT ALL ON `" . $database . "`.* TO :username@:host
+			");
+			$stmt->execute(array(
+				"username" => $username,
+				"host" => $access_host
+			));
+		} else {
+			// grant privileges
+			$stmt = $db_root->prepare("
+				GRANT ALL PRIVILEGES ON `" . $database . "`.* TO :username@:host IDENTIFIED BY :password
+			");
+			$stmt->execute(array(
+				"username" => $username,
+				"host" => $access_host,
+				"password" => $password
+			));
+		}
 	}
 
 	/**
@@ -1060,12 +1079,13 @@ class FroxlorInstall
 	 */
 	private function _sendHeaders()
 	{
-		// no caching
-		header("Cache-Control: no-store, no-cache, must-revalidate");
-		header("Pragma: no-cache");
-		header('Last-Modified: ' . gmdate('D, d M Y H:i:s \G\M\T', time()));
-		header('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time()));
-
+		if (@php_sapi_name() !== 'cli') {
+			// no caching
+			header("Cache-Control: no-store, no-cache, must-revalidate");
+			header("Pragma: no-cache");
+			header('Last-Modified: ' . gmdate('D, d M Y H:i:s \G\M\T', time()));
+			header('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time()));
+		}
 		// ensure that default timezone is set
 		if (function_exists("date_default_timezone_set") && function_exists("date_default_timezone_get")) {
 			@date_default_timezone_set(@date_default_timezone_get());
@@ -1082,7 +1102,7 @@ class FroxlorInstall
 		if (file_exists($userdata)) {
 			// includes the usersettings (MySQL-Username/Passwort)
 			// to test if Froxlor is already installed
-			require $this->_basepath . '/lib/userdata.inc.php';
+			require_once $this->_basepath . '/lib/userdata.inc.php';
 
 			if (isset($sql) && is_array($sql)) {
 				// use sparkle theme for the notice
@@ -1126,7 +1146,7 @@ class FroxlorInstall
 		$lngfile = $this->_basepath . '/install/lng/' . $standardlanguage . '.lng.php';
 		if (file_exists($lngfile)) {
 			// includes file /lng/$language.lng.php if it exists
-			require $lngfile;
+			require_once $lngfile;
 			$this->_lng = $lng;
 		}
 
@@ -1135,7 +1155,7 @@ class FroxlorInstall
 			$lngfile = $this->_basepath . '/install/lng/' . $this->_activelng . '.lng.php';
 			if (file_exists($lngfile)) {
 				// includes file /lng/$language.lng.php if it exists
-				require $lngfile;
+				require_once $lngfile;
 				$this->_lng = $lng;
 			}
 		}

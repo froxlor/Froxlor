@@ -220,6 +220,10 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201902120')) {
 		$domain_in = substr($domain_in, 0, - 1);
 		Database::query("DELETE FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` WHERE `domainid` IN (" . $domain_in . ")");
 	}
+	// check for froxlor domain using let's encrypt
+	if (Settings::Get('system.le_froxlor_enabled') == 1) {
+		Database::query("DELETE FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` WHERE `domainid` = '0'");
+	}
 	lastStepStatus(0);
 
 	showUpdateStep("Inserting job to regenerate configfiles");
