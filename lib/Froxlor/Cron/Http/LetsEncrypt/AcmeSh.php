@@ -62,7 +62,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 			SELECT
 				domssl.`id`,
 				domssl.`domainid`,
-				domssl.expirationdate,
+				domssl.`expirationdate`,
 				domssl.`ssl_cert_file`,
 				domssl.`ssl_key_file`,
 				domssl.`ssl_ca_file`,
@@ -221,9 +221,14 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 			// Only renew let's encrypt certificate if no broken ssl_redirect is enabled
 			if ($certrow['ssl_redirect'] != 2) {
 
-				if (! empty($certrow['ssl_cert_file'])) {
+				$do_force = false;
+				if (! empty($certrow['ssl_cert_file']) && !empty($certrow['expirationdate'])) {
 					$cert_mode = 'renew';
 					$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, "Updating certificate for " . $certrow['domain']);
+				} else if (! empty($certrow['ssl_cert_file']) && empty($certrow['expirationdate'])) {
+					// domain changed (SAN or similar)
+					$do_force = true;
+					$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, "Re-creating certificate for " . $certrow['domain']);
 				} else {
 					$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, "Creating certificate for " . $certrow['domain']);
 				}
@@ -252,7 +257,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 					}
 				}
 
-				self::runAcmeSh($certrow, $domains, $cert_mode, $cronlog, $changedetected);
+				self::runAcmeSh($certrow, $domains, $cert_mode, $cronlog, $changedetected, $do_force);
 			} else {
 				$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_WARNING, "Skipping Let's Encrypt generation for " . $certrow['domain'] . " due to an enabled ssl_redirect");
 			}
@@ -270,7 +275,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 		}
 	}
 
-	private static function runAcmeSh($certrow = array(), $domains = array(), $cert_mode = 'issue', &$cronlog = null, &$changedetected = 0)
+	private static function runAcmeSh($certrow = array(), $domains = array(), $cert_mode = 'issue', &$cronlog = null, &$changedetected = 0, $force = false)
 	{
 		if (! empty($domains)) {
 
@@ -294,6 +299,9 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 			}
 			if (Settings::Get('system.letsencryptca') == 'testing') {
 				$acmesh_cmd .= " --staging";
+			}
+			if ($force) {
+				$acmesh_cmd .= " --force";
 			}
 
 			$acme_result = \Froxlor\FileDir::safe_exec($acmesh_cmd);
