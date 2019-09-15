@@ -304,7 +304,7 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201907270')) {
 	);
 	foreach ($to_clean as $filedir) {
 		$complete_filedir = \Froxlor\Froxlor::getInstallDir() . $filedir;
-		if (file_exsts($complete_filedir)) {
+		if (file_exists($complete_filedir)) {
 			Froxlor\FileDir::safe_exec("rm -rf " . escapeshellarg($complete_filedir));
 		}
 	}
