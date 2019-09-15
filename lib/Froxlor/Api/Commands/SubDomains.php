@@ -623,13 +623,20 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			);
 			Database::pexecute($stmt, $params, true, true);
 
-			if ($result['aliasdomain'] != $aliasdomain) {
+			if ($result['aliasdomain'] != $aliasdomain && is_numeric($result['aliasdomain'])) {
 				// trigger when domain id for alias destination has changed: both for old and new destination
 				\Froxlor\Domain\Domain::triggerLetsEncryptCSRForAliasDestinationDomain($result['aliasdomain'], $this->logger());
 				\Froxlor\Domain\Domain::triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $this->logger());
-			} elseif ($result['wwwserveralias'] != $wwwserveralias || $result['letsencrypt'] != $letsencrypt) {
+			}
+			if ($result['wwwserveralias'] != $wwwserveralias || $result['letsencrypt'] != $letsencrypt) {
 				// or when wwwserveralias or letsencrypt was changed
 				\Froxlor\Domain\Domain::triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $this->logger());
+				if ((int) $aliasdomain === 0) {
+					// in case the wwwserveralias is set on a main domain, $aliasdomain is 0
+					// --> the call just above to triggerLetsEncryptCSRForAliasDestinationDomain
+					// is a noop...let's repeat it with the domain id of the main domain
+					\Froxlor\Domain\Domain::triggerLetsEncryptCSRForAliasDestinationDomain($id, $this->logger());
+				}
 			}
 
 			// check whether LE has been disabled, so we remove the certificate

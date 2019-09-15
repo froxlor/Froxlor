@@ -192,10 +192,12 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 
 				// Only renew let's encrypt certificate if no broken ssl_redirect is enabled
 				// - this temp. deactivation of the ssl-redirect is handled by the webserver-cronjob
+				$do_force = false;
 				if ($cert_mode == 'renew') {
-					FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, "Creating certificate for " . $certrow['domain']);
-				} else {
 					FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, "Updating certificate for " . $certrow['domain']);
+				} else {
+					$do_force = true;
+					FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, "Creating certificate for " . $certrow['domain']);
 				}
 
 				$cronlog = FroxlorLogger::getInstanceOf(array(
@@ -203,7 +205,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 					'adminsession' => 0
 				));
 
-				self::runAcmeSh($certrow, $domains, $cert_mode, $cronlog, $changedetected);
+				self::runAcmeSh($certrow, $domains, $cert_mode, $cronlog, $changedetected, $do_force);
 			}
 		}
 
