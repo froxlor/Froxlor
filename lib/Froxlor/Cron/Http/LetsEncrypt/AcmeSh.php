@@ -307,6 +307,8 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 			}
 
 			$acme_result = \Froxlor\FileDir::safe_exec($acmesh_cmd);
+			// debug output of acme.sh run
+			$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_DEBUG, implode("\n", $acme_result));
 
 			$return = array();
 			self::readCertificateToVar($certrow['domain'], $return);
@@ -315,27 +317,31 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 
 				$newcert = openssl_x509_parse($return['crt']);
 
-				// Store the new data
-				Database::pexecute(self::$updcert_stmt, array(
-					'id' => $certrow['id'],
-					'domainid' => $certrow['domainid'],
-					'crt' => $return['crt'],
-					'key' => $return['key'],
-					'ca' => $return['chain'],
-					'chain' => $return['chain'],
-					'csr' => $return['csr'],
-					'fullchain' => $return['fullchain'],
-					'expirationdate' => date('Y-m-d H:i:s', $newcert['validTo_time_t'])
-				));
-
-				if ($certrow['ssl_redirect'] == 3) {
-					Database::pexecute(self::$upddom_stmt, array(
-						'domainid' => $certrow['domainid']
+				if ($newcert) {
+					// Store the new data
+					Database::pexecute(self::$updcert_stmt, array(
+						'id' => $certrow['id'],
+						'domainid' => $certrow['domainid'],
+						'crt' => $return['crt'],
+						'key' => $return['key'],
+						'ca' => $return['chain'],
+						'chain' => $return['chain'],
+						'csr' => $return['csr'],
+						'fullchain' => $return['fullchain'],
+						'expirationdate' => date('Y-m-d H:i:s', $newcert['validTo_time_t'])
 					));
-				}
 
-				$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, "Updated Let's Encrypt certificate for " . $certrow['domain']);
-				$changedetected = 1;
+					if ($certrow['ssl_redirect'] == 3) {
+						Database::pexecute(self::$upddom_stmt, array(
+							'domainid' => $certrow['domainid']
+						));
+					}
+
+					$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, "Updated Let's Encrypt certificate for " . $certrow['domain']);
+					$changedetected = 1;
+				} else {
+					$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_ERR, "Got non-successful Let's Encrypt response for " . $certrow['domain'] . ":\n" . implode("\n", $acme_result));
+				}
 			} else {
 				$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_ERR, "Could not get Let's Encrypt certificate for " . $certrow['domain'] . ":\n" . implode("\n", $acme_result));
 			}
