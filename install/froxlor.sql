@@ -405,7 +405,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('phpfpm', 'defaultini', '1'),
 	('phpfpm', 'vhost_defaultini', '2'),
 	('phpfpm', 'fastcgi_ipcdir', '/var/lib/apache2/fastcgi/'),
-	('phpfpm', 'use_mod_proxy', '0'),
+	('phpfpm', 'use_mod_proxy', '1'),
 	('phpfpm', 'ini_flags', 'asp_tags
 display_errors
 display_startup_errors
@@ -615,7 +615,7 @@ opcache.interned_strings_buffer'),
 	('system', 'letsencryptkeysize', '4096'),
 	('system', 'letsencryptreuseold', 0),
 	('system', 'leenabled', '0'),
-	('system', 'leapiversion', '1'),
+	('system', 'leapiversion', '2'),
 	('system', 'backupenabled', '0'),
 	('system', 'dnsenabled', '0'),
 	('system', 'dns_server', 'Bind'),
@@ -683,7 +683,7 @@ opcache.interned_strings_buffer'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'is_configured', '0'),
 	('panel', 'version', '0.10.0-rc2'),
-	('panel', 'db_version', '201907270');
+	('panel', 'db_version', '201909150');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

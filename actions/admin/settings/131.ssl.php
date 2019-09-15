@@ -128,7 +128,7 @@ return array(
 					'settinggroup' => 'system',
 					'varname' => 'leapiversion',
 					'type' => 'option',
-					'default' => '1',
+					'default' => '2',
 					'option_mode' => 'one',
 					'option_options' => array(
 						'1' => 'ACME v1',

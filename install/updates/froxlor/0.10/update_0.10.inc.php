@@ -277,3 +277,38 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201904250')) {
 
 	\Froxlor\Froxlor::updateToDbVersion('201907270');
 }
+
+if (\Froxlor\Froxlor::isDatabaseVersion('201907270')) {
+
+	showUpdateStep("Cleaning up old files");
+	$to_clean = array(
+		"actions/admin/settings/000.version.php",
+		"actions/admin/settings/190.ticket.php",
+		"admin_tickets.php",
+		"customer_tickets.php",
+		"install/scripts/language-check.php",
+		"install/updates/froxlor/upgrade_syscp.inc.php",
+		"lib/classes",
+		"lib/configfiles/precise.xml",
+		"lib/cron_init.php",
+		"lib/cron_shutdown.php",
+		"lib/formfields/admin/tickets",
+		"lib/formfields/customer/tickets",
+		"lib/functions.php",
+		"lib/functions",
+		"lib/navigation/10.tickets.php",
+		"scripts/classes",
+		"scripts/jobs",
+		"templates/Sparkle/admin/tickets",
+		"templates/Sparkle/customer/tickets"
+	);
+	foreach ($to_clean as $filedir) {
+		$complete_filedir = \Froxlor\Froxlor::getInstallDir() . $filedir;
+		if (file_exsts($complete_filedir)) {
+			Froxlor\FileDir::safe_exec("rm -rf " . escapeshellarg($complete_filedir));
+		}
+	}
+	lastStepStatus(0);
+
+	\Froxlor\Froxlor::updateToDbVersion('201909150');
+}
