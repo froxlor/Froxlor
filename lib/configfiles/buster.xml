@@ -3838,7 +3838,7 @@ protocol sieve {
 #  %m - number of messages (before deletion)
 #  %s - mailbox size in bytes (before deletion)
 #  %u - old/new UIDL hash. may help finding out if UIDLs changed unexpectedly
-#pop3_logout_format = top=%t/%p, retr=%r/%b, del=%d/%m, size=%s
+pop3_logout_format = in=%i out=%o top=%t/%p, retr=%r/%b, del=%d/%m, size=%s
 
 # Workarounds for various client bugs:
 #   outlook-no-nuls:
