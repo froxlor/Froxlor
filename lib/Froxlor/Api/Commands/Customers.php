@@ -197,11 +197,13 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 	 * @param bool $perlenabled
 	 *        	optional, whether to allow usage of Perl/CGI, default 0 (false)
 	 * @param bool $dnsenabled
-	 *        	optional, ether to allow usage of the DNS editor (requires activated nameserver in settings), default 0 (false)
+	 *        	optional, wether to allow usage of the DNS editor (requires activated nameserver in settings), default 0 (false)
 	 * @param bool $logviewenabled
-	 *        	optional, ether to allow acccess to webserver access/error-logs, default 0 (false)
+	 *        	optional, wether to allow acccess to webserver access/error-logs, default 0 (false)
 	 * @param bool $store_defaultindex
 	 *        	optional, whether to store the default index file to customers homedir
+	 * @param int $hosting_plan_id
+	 *        	optional, specify a hosting-plan to set certain resource-values from the plan instead of specifying them
 	 *        	
 	 * @access admin
 	 * @throws \Exception
@@ -230,28 +232,56 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				$gender = (int) $this->getParam('gender', true, 0);
 				$custom_notes = $this->getParam('custom_notes', true, '');
 				$custom_notes_show = $this->getBoolParam('custom_notes_show', true, 0);
-
-				$diskspace = $this->getUlParam('diskspace', 'diskspace_ul', true, 0);
-				$traffic = $this->getUlParam('traffic', 'traffic_ul', true, 0);
-				$subdomains = $this->getUlParam('subdomains', 'subdomains_ul', true, 0);
-				$emails = $this->getUlParam('emails', 'emails_ul', true, 0);
-				$email_accounts = $this->getUlParam('email_accounts', 'email_accounts_ul', true, 0);
-				$email_forwarders = $this->getUlParam('email_forwarders', 'email_forwarders_ul', true, 0);
-				$email_quota = $this->getUlParam('email_quota', 'email_quota_ul', true, Settings::Get('system.mail_quota'));
-				$email_imap = $this->getBoolParam('email_imap', true, 0);
-				$email_pop3 = $this->getBoolParam('email_pop3', true, 0);
-				$ftps = $this->getUlParam('ftps', 'ftps_ul', true, 0);
-				$mysqls = $this->getUlParam('mysqls', 'mysqls_ul', true, 0);
 				$createstdsubdomain = $this->getBoolParam('createstdsubdomain', true, 0);
 				$password = $this->getParam('new_customer_password', true, '');
 				$sendpassword = $this->getBoolParam('sendpassword', true, 0);
-				$phpenabled = $this->getBoolParam('phpenabled', true, 0);
-				$p_allowed_phpconfigs = $this->getParam('allowed_phpconfigs', true, array());
-				$perlenabled = $this->getBoolParam('perlenabled', true, 0);
-				$dnsenabled = $this->getBoolParam('dnsenabled', true, 0);
-				$logviewenabled = $this->getBoolParam('logviewenabled', true, 0);
 				$store_defaultindex = $this->getBoolParam('store_defaultindex', true, 0);
 				$loginname = $this->getParam('new_loginname', true, '');
+
+				// hosting-plan values
+				$hosting_plan_id = $this->getParam('hosting_plan_id', true, 0);
+				if ($hosting_plan_id > 0) {
+					$hp_result = $this->apiCall('HostingPlans.get', array(
+						'id' => $hosting_plan_id
+					));
+					$hp_result['value'] = json_decode($hp_result['value'], true);
+					foreach ($hp_result['value'] as $index => $value) {
+						$hp_result[$index] = $value;
+					}
+					$diskspace = $hp_result['diskspace'] ?? 0;
+					$traffic = $hp_result['traffic'] ?? 0;
+					$subdomains = $hp_result['subdomains'] ?? 0;
+					$emails = $hp_result['emails'] ?? 0;
+					$email_accounts = $hp_result['email_accounts'] ?? 0;
+					$email_forwarders = $hp_result['email_forwarders'] ?? 0;
+					$email_quota = $hp_result['email_quota'] ?? Settings::Get('system.mail_quota');
+					$email_imap = $hp_result['email_imap'] ?? 0;
+					$email_pop3 = $hp_result['email_pop3'] ?? 0;
+					$ftps = $hp_result['ftps'] ?? 0;
+					$mysqls = $hp_result['mysqls'] ?? 0;
+					$phpenabled = $hp_result['phpenabled'] ?? 0;
+					$p_allowed_phpconfigs = $hp_result['allowed_phpconfigs'] ?? 0;
+					$perlenabled = $hp_result['perlenabled'] ?? 0;
+					$dnsenabled = $hp_result['dnsenabled'] ?? 0;
+					$logviewenabled = $hp_result['logviewenabled'] ?? 0;
+				} else {
+					$diskspace = $this->getUlParam('diskspace', 'diskspace_ul', true, 0);
+					$traffic = $this->getUlParam('traffic', 'traffic_ul', true, 0);
+					$subdomains = $this->getUlParam('subdomains', 'subdomains_ul', true, 0);
+					$emails = $this->getUlParam('emails', 'emails_ul', true, 0);
+					$email_accounts = $this->getUlParam('email_accounts', 'email_accounts_ul', true, 0);
+					$email_forwarders = $this->getUlParam('email_forwarders', 'email_forwarders_ul', true, 0);
+					$email_quota = $this->getUlParam('email_quota', 'email_quota_ul', true, Settings::Get('system.mail_quota'));
+					$email_imap = $this->getBoolParam('email_imap', true, 0);
+					$email_pop3 = $this->getBoolParam('email_pop3', true, 0);
+					$ftps = $this->getUlParam('ftps', 'ftps_ul', true, 0);
+					$mysqls = $this->getUlParam('mysqls', 'mysqls_ul', true, 0);
+					$phpenabled = $this->getBoolParam('phpenabled', true, 0);
+					$p_allowed_phpconfigs = $this->getParam('allowed_phpconfigs', true, array());
+					$perlenabled = $this->getBoolParam('perlenabled', true, 0);
+					$dnsenabled = $this->getBoolParam('dnsenabled', true, 0);
+					$logviewenabled = $this->getBoolParam('logviewenabled', true, 0);
+				}
 
 				// validation
 				$name = \Froxlor\Validate\Validate::validate($name, 'name', '', '', array(), true);
