@@ -62,7 +62,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 			SELECT
 				domssl.`id`,
 				domssl.`domainid`,
-				domssl.expirationdate,
+				domssl.`expirationdate`,
 				domssl.`ssl_cert_file`,
 				domssl.`ssl_key_file`,
 				domssl.`ssl_ca_file`,
@@ -192,10 +192,12 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 
 				// Only renew let's encrypt certificate if no broken ssl_redirect is enabled
 				// - this temp. deactivation of the ssl-redirect is handled by the webserver-cronjob
+				$do_force = false;
 				if ($cert_mode == 'renew') {
-					FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, "Creating certificate for " . $certrow['domain']);
-				} else {
 					FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, "Updating certificate for " . $certrow['domain']);
+				} else {
+					$do_force = true;
+					FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, "Creating certificate for " . $certrow['domain']);
 				}
 
 				$cronlog = FroxlorLogger::getInstanceOf(array(
@@ -203,7 +205,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 					'adminsession' => 0
 				));
 
-				self::runAcmeSh($certrow, $domains, $cert_mode, $cronlog, $changedetected);
+				self::runAcmeSh($certrow, $domains, $cert_mode, $cronlog, $changedetected, $do_force);
 			}
 		}
 
@@ -221,9 +223,14 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 			// Only renew let's encrypt certificate if no broken ssl_redirect is enabled
 			if ($certrow['ssl_redirect'] != 2) {
 
-				if (! empty($certrow['ssl_cert_file'])) {
+				$do_force = false;
+				if (! empty($certrow['ssl_cert_file']) && !empty($certrow['expirationdate'])) {
 					$cert_mode = 'renew';
 					$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, "Updating certificate for " . $certrow['domain']);
+				} else if (! empty($certrow['ssl_cert_file']) && empty($certrow['expirationdate'])) {
+					// domain changed (SAN or similar)
+					$do_force = true;
+					$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, "Re-creating certificate for " . $certrow['domain']);
 				} else {
 					$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, "Creating certificate for " . $certrow['domain']);
 				}
@@ -252,7 +259,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 					}
 				}
 
-				self::runAcmeSh($certrow, $domains, $cert_mode, $cronlog, $changedetected);
+				self::runAcmeSh($certrow, $domains, $cert_mode, $cronlog, $changedetected, $do_force);
 			} else {
 				$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_WARNING, "Skipping Let's Encrypt generation for " . $certrow['domain'] . " due to an enabled ssl_redirect");
 			}
@@ -270,7 +277,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 		}
 	}
 
-	private static function runAcmeSh($certrow = array(), $domains = array(), $cert_mode = 'issue', &$cronlog = null, &$changedetected = 0)
+	private static function runAcmeSh($certrow = array(), $domains = array(), $cert_mode = 'issue', &$cronlog = null, &$changedetected = 0, $force = false)
 	{
 		if (! empty($domains)) {
 
@@ -295,8 +302,13 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 			if (Settings::Get('system.letsencryptca') == 'testing') {
 				$acmesh_cmd .= " --staging";
 			}
+			if ($force) {
+				$acmesh_cmd .= " --force";
+			}
 
 			$acme_result = \Froxlor\FileDir::safe_exec($acmesh_cmd);
+			// debug output of acme.sh run
+			$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_DEBUG, implode("\n", $acme_result));
 
 			$return = array();
 			self::readCertificateToVar($certrow['domain'], $return);
@@ -305,27 +317,31 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 
 				$newcert = openssl_x509_parse($return['crt']);
 
-				// Store the new data
-				Database::pexecute(self::$updcert_stmt, array(
-					'id' => $certrow['id'],
-					'domainid' => $certrow['domainid'],
-					'crt' => $return['crt'],
-					'key' => $return['key'],
-					'ca' => $return['chain'],
-					'chain' => $return['chain'],
-					'csr' => $return['csr'],
-					'fullchain' => $return['fullchain'],
-					'expirationdate' => date('Y-m-d H:i:s', $newcert['validTo_time_t'])
-				));
-
-				if ($certrow['ssl_redirect'] == 3) {
-					Database::pexecute(self::$upddom_stmt, array(
-						'domainid' => $certrow['domainid']
+				if ($newcert) {
+					// Store the new data
+					Database::pexecute(self::$updcert_stmt, array(
+						'id' => $certrow['id'],
+						'domainid' => $certrow['domainid'],
+						'crt' => $return['crt'],
+						'key' => $return['key'],
+						'ca' => $return['chain'],
+						'chain' => $return['chain'],
+						'csr' => $return['csr'],
+						'fullchain' => $return['fullchain'],
+						'expirationdate' => date('Y-m-d H:i:s', $newcert['validTo_time_t'])
 					));
-				}
 
-				$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, "Updated Let's Encrypt certificate for " . $certrow['domain']);
-				$changedetected = 1;
+					if ($certrow['ssl_redirect'] == 3) {
+						Database::pexecute(self::$upddom_stmt, array(
+							'domainid' => $certrow['domainid']
+						));
+					}
+
+					$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, "Updated Let's Encrypt certificate for " . $certrow['domain']);
+					$changedetected = 1;
+				} else {
+					$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_ERR, "Got non-successful Let's Encrypt response for " . $certrow['domain'] . ":\n" . implode("\n", $acme_result));
+				}
 			} else {
 				$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_ERR, "Could not get Let's Encrypt certificate for " . $certrow['domain'] . ":\n" . implode("\n", $acme_result));
 			}

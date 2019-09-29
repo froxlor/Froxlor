@@ -502,7 +502,7 @@ $lng['panel']['pathDescriptionSubdomain'] = $lng['panel']['pathDescription'] . $
 
 // ADDED IN 1.2.16-svn6
 
-$lng['admin']['templates']['TRAFFIC'] = 'Replaced with the traffic in mB, which was assigned to the customer.';
+$lng['admin']['templates']['TRAFFIC'] = 'Replaced with the traffic in MB, which was assigned to the customer.';
 $lng['admin']['templates']['TRAFFICUSED'] = 'Replaced with the traffic in MB, which was exhausted by the customer.';
 
 // ADDED IN 1.2.16-svn7
