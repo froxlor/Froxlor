@@ -316,3 +316,12 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201907270')) {
 if (\Froxlor\Froxlor::isFroxlorVersion('0.10.0-rc2')) {
 	\Froxlor\Froxlor::updateToVersion('0.10.0');
 }
+
+if (\Froxlor\Froxlor::isDatabaseVersion('201909150')) {
+
+	showUpdateStep("Adding TLSv1.3-cipherlist setting");
+	Settings::AddNew("system.tlsv13_cipher_list", '');
+	lastStepStatus(0);
+
+	\Froxlor\Froxlor::updateToDbVersion('201910030');
+}

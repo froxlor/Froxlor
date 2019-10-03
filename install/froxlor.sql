@@ -640,6 +640,7 @@ opcache.interned_strings_buffer'),
 	('system', 'nssextrausers', '0'),
 	('system', 'disable_le_selfcheck', '0'),
 	('system', 'ssl_protocols', 'TLSv1,TLSv1.2'),
+	('system', 'tlsv13_cipher_list', ''),
 	('system', 'logfiles_format', ''),
 	('system', 'logfiles_type', '1'),
 	('system', 'logfiles_piped', '0'),
@@ -683,7 +684,7 @@ opcache.interned_strings_buffer'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'is_configured', '0'),
 	('panel', 'version', '0.10.0'),
-	('panel', 'db_version', '201909150');
+	('panel', 'db_version', '201910030');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
