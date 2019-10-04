@@ -1571,7 +1571,7 @@ $lng['domains']['serveraliasoption_www'] = 'WWW (www.dominio.tld)';
 $lng['domains']['serveraliasoption_none'] = 'Nessun alias';
 $lng['error']['givendirnotallowed'] = 'La cartella fornita nel campo %s non è permessa.';
 $lng['serversettings']['ssl']['ssl_cipher_list']['title'] = 'Configura le cifrature SSL permesse';
-$lng['serversettings']['ssl']['ssl_cipher_list']['description'] = 'Questa è una lista di cifrature che vuoi (o non vuoi) usare nelle communicazioni SSL. Per una lista delle cifrature e come includerle od escluderle, vedi le sezioni "CIPHER LIST FORMAT" e "CIPHER STRINGS" sulla <a href="http://openssl.org/docs/apps/ciphers.html">man-page per le cifrature</a>.<br /><br /><b>Il valore predefinito è:</b><pre>ECDHE-RSA-AES128-SHA256:AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH</pre>';
+$lng['serversettings']['ssl']['ssl_cipher_list']['description'] = 'Questa è una lista di cifrature che vuoi (o non vuoi) usare nelle communicazioni SSL. Per una lista delle cifrature e come includerle od escluderle, vedi le sezioni "CIPHER LIST FORMAT" e "CIPHER STRINGS" sulla <a href="https://www.openssl.org/docs/manmaster/man1/openssl-ciphers.html">man-page per le cifrature</a>.<br /><br /><b>Il valore predefinito è:</b><pre>ECDHE-RSA-AES128-SHA256:AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH</pre>';
 $lng['panel']['dashboard'] = 'Cruscotto';
 $lng['panel']['assigned'] = 'Assegnato';
 $lng['panel']['available'] = 'Disponibile';
