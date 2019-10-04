@@ -979,7 +979,7 @@ class Apache extends HttpConfigBase
 				$vhost_content .= '  SSLCipherSuite ' . Settings::Get('system.ssl_cipher_list') . "\n";
 				$protocols = array_map('trim', explode(",", Settings::Get('system.ssl_protocols')));
 				if (in_array("TLSv1.3", $protocols) && !empty(Settings::Get('system.tlsv13_cipher_list')) && Settings::Get('system.apache24') == 1) {
-					$vhost_content .= ' SSLCipherSuite TLSv1.3 ' . Settings::Get('system.tlsv13_cipher_list') . "\n";
+					$vhost_content .= '  SSLCipherSuite TLSv1.3 ' . Settings::Get('system.tlsv13_cipher_list') . "\n";
 				}
 				$vhost_content .= '  SSLVerifyDepth 10' . "\n";
 				$vhost_content .= '  SSLCertificateFile ' . \Froxlor\FileDir::makeCorrectFile($domain['ssl_cert_file']) . "\n";
