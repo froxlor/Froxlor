@@ -43,8 +43,11 @@ if ($page == 'overview') {
 	$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "checking auto-update");
 
 	// check for new version
-	$latestversion = HttpClient::urlGet(UPDATE_URI);
-
+	try {
+		$latestversion = HttpClient::urlGet(UPDATE_URI, true, 3);
+	} catch (\Exception $e) {
+		\Froxlor\UI\Response::dynamic_error("Version-check currently unavailable, please try again later");
+	}
 	$latestversion = explode('|', $latestversion);
 
 	if (is_array($latestversion) && count($latestversion) >= 1) {
