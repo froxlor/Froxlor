@@ -1067,6 +1067,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				$dbm = new \Froxlor\Database\DbManager($this->logger());
 
 				// For each of them
+				$priv_changed = false;
 				while ($row_database = $databases_stmt->fetch(\PDO::FETCH_ASSOC)) {
 
 					if ($last_dbserver != $row_database['dbserver']) {
@@ -1087,10 +1088,13 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 							$dbm->getManager()->enableUser($row_database['databasename'], $mysql_access_host);
 						}
 					}
+					$priv_changed = true;
 				}
 
 				// At last flush the new privileges
-				$dbm->getManager()->flushPrivileges();
+				if ($priv_changed) {
+					$dbm->getManager()->flushPrivileges();
+				}
 				Database::needRoot(false);
 
 				// reactivate/deactivate api-keys
@@ -1371,6 +1375,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 
 			$dbm = new \Froxlor\Database\DbManager($this->logger());
 
+			$priv_changed = false;
 			while ($row_database = $databases_stmt->fetch(\PDO::FETCH_ASSOC)) {
 				if ($last_dbserver != $row_database['dbserver']) {
 					Database::needRoot(true, $row_database['dbserver']);
@@ -1378,8 +1383,11 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 					$last_dbserver = $row_database['dbserver'];
 				}
 				$dbm->getManager()->deleteDatabase($row_database['databasename']);
+				$priv_changed = true;
 			}
-			$dbm->getManager()->flushPrivileges();
+			if ($priv_changed) {
+				$dbm->getManager()->flushPrivileges();
+			}
 			Database::needRoot(false);
 
 			// delete customer itself
