@@ -63,10 +63,19 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 		$ssl_cert_chainfile = $this->getParam('ssl_cert_chainfile', true, '');
 
 		// validate whether the domain does not already have an entry
-		$result = $this->apiCall('Certificates.get', array(
-			'id' => $domainid
-		));
-		if (empty($result)) {
+		$has_cert = true;
+		try {
+			$this->apiCall('Certificates.get', array(
+				'id' => $domainid
+			));
+		} catch (\Exception $e) {
+			if ($e->getCode() == 412) {
+				$has_cert = false;
+			} else {
+				throw $e;
+			}
+		}
+		if (!$has_cert) {
 			$this->addOrUpdateCertificate($domain['id'], $ssl_cert_file, $ssl_key_file, $ssl_ca_file, $ssl_cert_chainfile, true);
 			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] added ssl-certificate for '" . $domain['domain'] . "'");
 			$result = $this->apiCall('Certificates.get', array(
@@ -111,7 +120,7 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 			"domainid" => $domainid
 		));
 		if (! $result) {
-			throw new \Exception("Domain '" . $domain['domain'] . "' does not have a certificate.", 404);
+			throw new \Exception("Domain '" . $domain['domain'] . "' does not have a certificate.", 412);
 		}
 		return $this->response(200, "successfull", $result);
 	}
