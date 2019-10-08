@@ -110,6 +110,9 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 		$result = Database::pexecute_first($stmt, array(
 			"domainid" => $domainid
 		));
+		if (! $result) {
+			throw new \Exception("Domain '" . $domain['domain'] . "' does not have a certificate.", 404);
+		}
 		return $this->response(200, "successfull", $result);
 	}
 
