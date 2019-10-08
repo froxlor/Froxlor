@@ -105,7 +105,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 				$sendinfomail = 0;
 			}
 
-			if (Settings::Get('customer.ftpatdomain') == '1') {
+			if (Settings::Get('customer.ftpatdomain') == '1' && !$is_defaultuser) {
 				if ($ftpusername == '') {
 					\Froxlor\UI\Response::standard_error(array(
 						'stringisempty',
