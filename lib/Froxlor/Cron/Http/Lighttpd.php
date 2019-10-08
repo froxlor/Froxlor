@@ -451,7 +451,7 @@ class Lighttpd extends HttpConfigBase
 				'domainid' => $domain['id']
 			));
 
-			if ($ssldestport['port'] != '') {
+			if ($ssldestport && $ssldestport['port'] != '') {
 				$_sslport = ":" . $ssldestport['port'];
 			}
 
