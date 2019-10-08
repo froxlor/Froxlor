@@ -93,11 +93,17 @@ if ($page == 'overview') {
 		'cid' => $userinfo['customerid']
 	));
 
+	if ($usages)
+	{
+		$userinfo['diskspace_used'] = round($usages['webspace'] / 1024, Settings::Get('panel.decimal_places'));
+		$userinfo['mailspace_used'] = round($usages['mail'] / 1024, Settings::Get('panel.decimal_places'));
+		$userinfo['dbspace_used'] = round($usages['mysql'] / 1024, Settings::Get('panel.decimal_places'));
+	} else {
+		$userinfo['diskspace_used'] = 0;
+		$userinfo['mailspace_used'] = 0;
+		$userinfo['dbspace_used'] = 0;
+	}
 	$userinfo['diskspace'] = round($userinfo['diskspace'] / 1024, Settings::Get('panel.decimal_places'));
-	$userinfo['diskspace_used'] = round($usages['webspace'] / 1024, Settings::Get('panel.decimal_places'));
-	$userinfo['mailspace_used'] = round($usages['mail'] / 1024, Settings::Get('panel.decimal_places'));
-	$userinfo['dbspace_used'] = round($usages['mysql'] / 1024, Settings::Get('panel.decimal_places'));
-
 	$userinfo['traffic'] = round($userinfo['traffic'] / (1024 * 1024), Settings::Get('panel.decimal_places'));
 	$userinfo['traffic_used'] = round($userinfo['traffic_used'] / (1024 * 1024), Settings::Get('panel.decimal_places'));
 	$userinfo = \Froxlor\PhpHelper::strReplaceArray('-1', $lng['customer']['unlimited'], $userinfo, 'diskspace traffic mysqls emails email_accounts email_forwarders email_quota ftps subdomains');
