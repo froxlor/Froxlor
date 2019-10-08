@@ -191,7 +191,7 @@ class ConfigIO
 				/**
 				 * don't do anything if the file does not exist
 				 */
-				if (@file_exists($awstatsclean['fullentry'])) {
+				if (@file_exists($awstatsclean['fullentry']) && $awstatsclean['entry'] != '.' && $awstatsclean['entry'] != '..') {
 					$awstatsclean['fh'] = fopen($awstatsclean['fullentry'], 'r');
 					$awstatsclean['headerRead'] = fgets($awstatsclean['fh'], strlen($awstatsclean['header']) + 1);
 					fclose($awstatsclean['fh']);

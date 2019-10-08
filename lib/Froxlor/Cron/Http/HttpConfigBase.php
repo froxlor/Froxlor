@@ -133,7 +133,7 @@ class HttpConfigBase
 		");
 		$ssldestport = Database::pexecute_first($ssldestport_stmt);
 
-		if ($ssldestport['port'] != '') {
+		if ($ssldestport && $ssldestport['port'] != '') {
 			$_sslport = ":" . $ssldestport['port'];
 		}
 

@@ -265,6 +265,7 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201904100')) {
 }
 
 if (\Froxlor\Froxlor::isFroxlorVersion('0.10.0-rc1')) {
+	showUpdateStep("Updating from 0.10.0-rc1 to 0.10.0-rc2", false);
 	\Froxlor\Froxlor::updateToVersion('0.10.0-rc2');
 }
 
@@ -302,18 +303,31 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201907270')) {
 		"templates/Sparkle/admin/tickets",
 		"templates/Sparkle/customer/tickets"
 	);
+	$disabled = explode(',', ini_get('disable_functions'));
+	$exec_allowed = !in_array('exec', $disabled);
+	$del_list = "";
 	foreach ($to_clean as $filedir) {
 		$complete_filedir = \Froxlor\Froxlor::getInstallDir() . $filedir;
 		if (file_exists($complete_filedir)) {
-			Froxlor\FileDir::safe_exec("rm -rf " . escapeshellarg($complete_filedir));
+			if ($exec_allowed) {
+				Froxlor\FileDir::safe_exec("rm -rf " . escapeshellarg($complete_filedir));
+			} else {
+				$del_list .= "rm -rf " . escapeshellarg($complete_filedir) . PHP_EOL;
+			}
 		}
 	}
-	lastStepStatus(0);
+	if ($exec_allowed) {
+		lastStepStatus(0);
+	} else {
+		lastStepStatus(1, 'manual commands needed');
+		echo '<span class="update-step update-step-err">Please run the following commands manually:</span><br><pre>'.$del_list.'</pre><br>';
+	}
 
 	\Froxlor\Froxlor::updateToDbVersion('201909150');
 }
 
 if (\Froxlor\Froxlor::isFroxlorVersion('0.10.0-rc2')) {
+	showUpdateStep("Updating from 0.10.0-rc2 to 0.10.0 final", false);
 	\Froxlor\Froxlor::updateToVersion('0.10.0');
 }
 
