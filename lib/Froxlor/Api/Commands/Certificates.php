@@ -334,7 +334,7 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 			} else {
 				\Froxlor\UI\Response::standard_error('sslcertificateinvalidcert', '', true);
 			}
-			$expirationdate = empty($cert_content['validTo_time_t']) ? null : $date("Y-m-d H:i:s", $cert_content['validTo_time_t']);
+			$expirationdate = empty($cert_content['validTo_time_t']) ? null : date("Y-m-d H:i:s", $cert_content['validTo_time_t']);
 		}
 
 		// Add/Update database entry
