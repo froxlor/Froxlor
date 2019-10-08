@@ -271,6 +271,7 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 		throw new \Exception("Unable to determine SSL certificate. Maybe no access?", 406);
 	}
 
+
 	/**
 	 * insert or update certificates entry
 	 *
@@ -292,6 +293,7 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 		}
 
 		$do_verify = true;
+		$expirationdate = NULL;
 		// no cert-file given -> forget everything
 		if ($ssl_cert_file == '') {
 			$ssl_key_file = '';
@@ -332,6 +334,7 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 			} else {
 				\Froxlor\UI\Response::standard_error('sslcertificateinvalidcert', '', true);
 			}
+			$expirationdate = $cert_content['validTo_time_t'];
 		}
 
 		// Add/Update database entry
@@ -345,7 +348,8 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 			`ssl_cert_file` = :ssl_cert_file,
 			`ssl_key_file` = :ssl_key_file,
 			`ssl_ca_file` = :ssl_ca_file,
-			`ssl_cert_chainfile` = :ssl_cert_chainfile
+			`ssl_cert_chainfile` = :ssl_cert_chainfile,
+			`expirationdate` = :expirationdate
 			" . $qrywhere . " `domainid`= :domainid
 		");
 		$params = array(
@@ -353,6 +357,7 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 			"ssl_key_file" => $ssl_key_file,
 			"ssl_ca_file" => $ssl_ca_file,
 			"ssl_cert_chainfile" => $ssl_cert_chainfile,
+			"expirationdate" => date("Y-m-d H:i:s", $expirationdate),
 			"domainid" => $domainid
 		);
 		Database::pexecute($stmt, $params, true, true);
