@@ -339,3 +339,13 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201909150')) {
 
 	\Froxlor\Froxlor::updateToDbVersion('201910030');
 }
+
+if (\Froxlor\Froxlor::isDatabaseVersion('201910030')) {
+
+	showUpdateStep("Adding field api_allowed to admins and customers");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_ADMINS . "` ADD `api_allowed` tinyint(1) NOT NULL default '1';");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` ADD `api_allowed` tinyint(1) NOT NULL default '1';");
+	lastStepStatus(0);
+
+	\Froxlor\Froxlor::updateToDbVersion('201910090');
+}

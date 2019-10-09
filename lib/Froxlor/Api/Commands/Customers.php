@@ -136,6 +136,8 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 	 *        	optional
 	 * @param string $def_language,
 	 *        	optional, default is system-default language
+	 * @param bool $api_allowed
+	 *        	optional, default is true if system setting api.enabled is true, else false
 	 * @param int $gender
 	 *        	optional, 0 = no-gender, 1 = male, 2 = female
 	 * @param string $custom_notes
@@ -229,6 +231,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				$fax = $this->getParam('fax', true, '');
 				$customernumber = $this->getParam('customernumber', true, '');
 				$def_language = $this->getParam('def_language', true, Settings::Get('panel.standardlanguage'));
+				$api_allowed = $this->getBoolParam('api_allowed', true, Settings::Get('api.enabled'));
 				$gender = (int) $this->getParam('gender', true, 0);
 				$custom_notes = $this->getParam('custom_notes', true, '');
 				$custom_notes_show = $this->getBoolParam('custom_notes_show', true, 0);
@@ -388,26 +391,6 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 						\Froxlor\UI\Response::standard_error('documentrootexists', $documentroot, true);
 					}
 
-					if ($createstdsubdomain != '1') {
-						$createstdsubdomain = '0';
-					}
-
-					if ($phpenabled != '0') {
-						$phpenabled = '1';
-					}
-
-					if ($perlenabled != '0') {
-						$perlenabled = '1';
-					}
-
-					if ($dnsenabled != '0') {
-						$dnsenabled = '1';
-					}
-
-					if ($logviewenabled != '0') {
-						$logviewenabled = '1';
-					}
-
 					if ($password == '') {
 						$password = \Froxlor\System\Crypt::generatePassword();
 					}
@@ -430,6 +413,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 						'email' => $email,
 						'customerno' => $customernumber,
 						'lang' => $def_language,
+						'api_allowed' => $api_allowed,
 						'docroot' => $documentroot,
 						'guid' => $guid,
 						'diskspace' => $diskspace,
@@ -470,6 +454,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 						`email` = :email,
 						`customernumber` = :customerno,
 						`def_language` = :lang,
+						`api_allowed` = :api_allowed,
 						`documentroot` = :docroot,
 						`guid` = :guid,
 						`diskspace` = :diskspace,
@@ -755,6 +740,8 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 	 *        	optional
 	 * @param string $def_language,
 	 *        	optional, default is system-default language
+	 * @param bool $api_allowed
+	 *        	optional, default is true if system setting api.enabled is true, else false
 	 * @param int $gender
 	 *        	optional, 0 = no-gender, 1 = male, 2 = female
 	 * @param string $custom_notes
@@ -857,6 +844,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 			$fax = $this->getParam('fax', true, $result['fax']);
 			$customernumber = $this->getParam('customernumber', true, $result['customernumber']);
 			$def_language = $this->getParam('def_language', true, $result['def_language']);
+			$api_allowed = $this->getBoolParam('api_allowed', true, $result['api_allowed']);
 			$gender = (int) $this->getParam('gender', true, $result['gender']);
 			$custom_notes = $this->getParam('custom_notes', true, $result['custom_notes']);
 			$custom_notes_show = $this->getBoolParam('custom_notes_show', true, $result['custom_notes_show']);
@@ -999,28 +987,8 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				\Froxlor\System\Cronjob::inserttask('1');
 			}
 
-			if ($deactivated != '1') {
-				$deactivated = '0';
-			}
-
-			if ($phpenabled != '0') {
-				$phpenabled = '1';
-			}
-
-			if ($perlenabled != '0') {
-				$perlenabled = '1';
-			}
-
-			if ($dnsenabled != '0') {
-				$dnsenabled = '1';
-			}
-
 			if ($phpenabled != $result['phpenabled'] || $perlenabled != $result['perlenabled']) {
 				\Froxlor\System\Cronjob::inserttask('1');
-			}
-
-			if ($logviewenabled != '0') {
-				$logviewenabled = '1';
 			}
 
 			// activate/deactivate customer services
@@ -1166,7 +1134,8 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				'dnsenabled' => $dnsenabled,
 				'logviewenabled' => $logviewenabled,
 				'custom_notes' => $custom_notes,
-				'custom_notes_show' => $custom_notes_show
+				'custom_notes_show' => $custom_notes_show,
+				'api_allowed' => $api_allowed
 			);
 			$upd_data = $upd_data + $admin_upd_data;
 		}
@@ -1207,7 +1176,8 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				`dnsenabled` = :dnsenabled,
 				`logviewenabled` = :logviewenabled,
 				`custom_notes` = :custom_notes,
-				`custom_notes_show` = :custom_notes_show";
+				`custom_notes_show` = :custom_notes_show,
+				`api_allowed` = :api_allowed";
 			$upd_query .= $admin_upd_query;
 		}
 		$upd_query .= " WHERE `customerid` = :customerid";

@@ -407,6 +407,7 @@ class FroxlorInstall
 				`name` = 'Froxlor-Administrator',
 				`email` = :email,
 				`def_language` = :deflang,
+				`api_allowed` = 1,
 				`customers` = -1,
 				`customers_see_all` = 1,
 				`caneditphpsettings` = 1,

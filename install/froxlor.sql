@@ -132,6 +132,7 @@ CREATE TABLE `panel_admins` (
   `custom_notes_show` tinyint(1) NOT NULL default '0',
   `type_2fa` tinyint(1) NOT NULL default '0',
   `data_2fa` varchar(500) NOT NULL default '',
+  `api_allowed` tinyint(1) NOT NULL default '1',
    PRIMARY KEY  (`adminid`),
    UNIQUE KEY `loginname` (`loginname`)
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
@@ -199,6 +200,7 @@ CREATE TABLE `panel_customers` (
   `allowed_phpconfigs` varchar(500) NOT NULL default '',
   `type_2fa` tinyint(1) NOT NULL default '0',
   `data_2fa` varchar(500) NOT NULL default '',
+  `api_allowed` tinyint(1) NOT NULL default '1',
   `logviewenabled` tinyint(1) NOT NULL default '0',
    PRIMARY KEY  (`customerid`),
    UNIQUE KEY `loginname` (`loginname`)
@@ -684,7 +686,7 @@ opcache.interned_strings_buffer'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'is_configured', '0'),
 	('panel', 'version', '0.10.0'),
-	('panel', 'db_version', '201910030');
+	('panel', 'db_version', '201910090');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
