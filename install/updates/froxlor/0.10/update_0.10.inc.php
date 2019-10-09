@@ -319,8 +319,13 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201907270')) {
 	if ($exec_allowed) {
 		lastStepStatus(0);
 	} else {
-		lastStepStatus(1, 'manual commands needed');
-		echo '<span class="update-step update-step-err">Please run the following commands manually:</span><br><pre>'.$del_list.'</pre><br>';
+		if (empty($del_list)) {
+			// non of the files existed
+			lastStepStatus(0);
+		} else {
+			lastStepStatus(1, 'manual commands needed');
+			echo '<span class="update-step update-step-err">Please run the following commands manually:</span><br><pre>'.$del_list.'</pre><br>';
+		}
 	}
 
 	\Froxlor\Froxlor::updateToDbVersion('201909150');
