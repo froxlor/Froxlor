@@ -320,7 +320,7 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201907270')) {
 		lastStepStatus(0);
 	} else {
 		if (empty($del_list)) {
-			// non of the files existed
+			// none of the files existed
 			lastStepStatus(0);
 		} else {
 			lastStepStatus(1, 'manual commands needed');
@@ -353,4 +353,9 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201910030')) {
 	lastStepStatus(0);
 
 	\Froxlor\Froxlor::updateToDbVersion('201910090');
+}
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.0')) {
+        showUpdateStep("Updating from 0.10.0 to 0.10.1 final", false);
+        \Froxlor\Froxlor::updateToVersion('0.10.1');
 }

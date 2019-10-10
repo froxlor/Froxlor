@@ -178,6 +178,8 @@ elseif ($page == 'extract') {
 			$zip->close();
 			// success - remove unused archive
 			@unlink($localArchive);
+			// wait a bit before we redirect to be sure
+			sleep(2);
 		} else {
 			// error
 			\Froxlor\UI\Response::redirectTo($filename, array(

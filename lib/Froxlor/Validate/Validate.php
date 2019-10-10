@@ -23,8 +23,6 @@ class Validate
 	 */
 	public static function validate($str, $fieldname, $pattern = '', $lng = '', $emptydefault = array(), $throw_exception = false)
 	{
-		global $log;
-
 		if (! is_array($emptydefault)) {
 			$emptydefault_array = array(
 				$emptydefault
@@ -48,6 +46,7 @@ class Validate
 				// everything else is removed from the string.
 				$allowed = "/[^a-z0-9\\040\\.\\-\\_\\\\]/i";
 				$str = preg_replace($allowed, "", $str);
+				$log = \Froxlor\FroxlorLogger::getInstanceOf();
 				$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_WARNING, "cleaned bad formatted string (" . $str . ")");
 			}
 		}
