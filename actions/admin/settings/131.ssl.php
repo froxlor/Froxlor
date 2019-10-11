@@ -141,7 +141,6 @@ return array(
 					'default' => '2',
 					'option_mode' => 'one',
 					'option_options' => array(
-						'1' => 'ACME v1',
 						'2' => 'ACME v2'
 					),
 					'save_method' => 'storeSettingField'

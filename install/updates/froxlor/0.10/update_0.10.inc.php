@@ -359,3 +359,12 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.0')) {
         showUpdateStep("Updating from 0.10.0 to 0.10.1 final", false);
         \Froxlor\Froxlor::updateToVersion('0.10.1');
 }
+
+if (\Froxlor\Froxlor::isDatabaseVersion('201910090')) {
+
+	showUpdateStep("Adjusting Let's Encrypt API setting");
+	Settings::AddNew("system.leapiversion", '2');
+	lastStepStatus(0);
+
+	\Froxlor\Froxlor::updateToDbVersion('201910110');
+}
