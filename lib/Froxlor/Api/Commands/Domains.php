@@ -409,14 +409,9 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 					$ocsp_stapling = 0;
 				}
 
-				// We can't enable let's encrypt for wildcard - domains if using acme-v1
-				if ($serveraliasoption == '0' && $letsencrypt == '1' && Settings::Get('system.leapiversion') == '1') {
+				// We can't enable let's encrypt for wildcard-domains
+				if ($serveraliasoption == '0' && $letsencrypt == '1') {
 					\Froxlor\UI\Response::standard_error('nowildcardwithletsencrypt', '', true);
-				}
-				// if using acme-v2 we cannot issue wildcard-certificates
-				// because they currently only support the dns-01 challenge
-				if ($serveraliasoption == '0' && $letsencrypt == '1' && Settings::Get('system.leapiversion') == '2') {
-					\Froxlor\UI\Response::standard_error('nowildcardwithletsencryptv2', '', true);
 				}
 
 				// Temporarily deactivate ssl_redirect until Let's Encrypt certificate was generated
@@ -1049,14 +1044,9 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				$ocsp_stapling = 0;
 			}
 
-			// We can't enable let's encrypt for wildcard domains when using acme-v1
-			if ($serveraliasoption == '0' && $letsencrypt == '1' && Settings::Get('system.leapiversion') == '1') {
+			// We can't enable let's encrypt for wildcard-domains
+			if ($serveraliasoption == '0' && $letsencrypt == '1') {
 				\Froxlor\UI\Response::standard_error('nowildcardwithletsencrypt', '', true);
-			}
-			// if using acme-v2 we cannot issue wildcard-certificates
-			// because they currently only support the dns-01 challenge
-			if ($serveraliasoption == '0' && $letsencrypt == '1' && Settings::Get('system.leapiversion') == '2') {
-				\Froxlor\UI\Response::standard_error('nowildcardwithletsencryptv2', '', true);
 			}
 
 			// Temporarily deactivate ssl_redirect until Let's Encrypt certificate was generated

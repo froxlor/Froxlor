@@ -564,14 +564,9 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			}
 		}
 
-		// We can't enable let's encrypt for wildcard - domains when using acme-v1
-		if ($iswildcarddomain == '1' && $letsencrypt == '1' && Settings::Get('system.leapiversion') == '1') {
+		// We can't enable let's encrypt for wildcard-domains
+		if ($iswildcarddomain == '1' && $letsencrypt == '1') {
 			\Froxlor\UI\Response::standard_error('nowildcardwithletsencrypt');
-		}
-		// if using acme-v2 we cannot issue wildcard-certificates
-		// because they currently only support the dns-01 challenge
-		if ($iswildcarddomain == '1' && $letsencrypt == '1' && Settings::Get('system.leapiversion') == '2') {
-			\Froxlor\UI\Response::standard_error('nowildcardwithletsencryptv2');
 		}
 
 		// Temporarily deactivate ssl_redirect until Let's Encrypt certificate was generated
