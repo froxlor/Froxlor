@@ -1866,6 +1866,7 @@ $lng['error']['autoupdate_6'] = 'Whoops, there was no (valid) version given to d
 $lng['error']['autoupdate_7'] = 'The downloaded archive could not be found :(';
 $lng['error']['autoupdate_8'] = 'The archive could not be extracted :(';
 $lng['error']['autoupdate_9'] = 'The downloaded file did not pass the integrity check. Please try to update again.';
+$lng['error']['autoupdate_10'] = 'Minimum supported version of PHP is 7.0';
 
 $lng['admin']['server_php'] = 'PHP';
 $lng['domains']['termination_date'] = 'Date of termination';

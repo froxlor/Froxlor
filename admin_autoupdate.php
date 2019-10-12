@@ -36,6 +36,15 @@ if (! extension_loaded('zip')) {
 	));
 }
 
+// 0.10.x requires 7.0 at least
+if (version_compare("7.0.0", PHP_VERSION, ">=")) {
+	\Froxlor\UI\Response::redirectTo($filename, array(
+		's' => $s,
+		'page' => 'error',
+		'errno' => 10
+	));
+}
+
 // display initial version check
 if ($page == 'overview') {
 
@@ -221,5 +230,6 @@ elseif ($page == 'error') {
 	// 7 = local archive does not exist
 	// 8 = could not extract archive
 	// 9 = checksum mismatch
+	// 10 = <php-7.0
 	\Froxlor\UI\Response::standard_error('autoupdate_' . $errno);
 }
