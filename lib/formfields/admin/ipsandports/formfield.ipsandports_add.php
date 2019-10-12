@@ -119,6 +119,26 @@ return array(
 						'type' => 'textarea',
 						'cols' => 60,
 						'rows' => 12
+					),
+					'ssl_default_vhostconf_domain' => array(
+						'visible' => (\Froxlor\Settings::Get('system.use_ssl') == 1 ? true : false),
+						'style' => 'align-top',
+						'label' => $lng['admin']['ipsandports']['ssl_default_vhostconf_domain'],
+						'desc' => $lng['serversettings']['default_vhostconf_domain']['description'],
+						'type' => 'textarea',
+						'cols' => 60,
+						'rows' => 12
+					),
+					'include_default_vhostconf_domain' => array(
+						'label' => $lng['admin']['include_ownvhostsettings'],
+						'type' => 'checkbox',
+						'values' => array(
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array()
 					)
 				)
 			),

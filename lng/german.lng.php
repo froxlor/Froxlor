@@ -1722,3 +1722,4 @@ $lng['usersettings']['api_allowed']['notice'] = 'API Zugriff ist für dieses Kon
 $lng['serversettings']['default_sslvhostconf']['title'] = 'Standard SSL vHost-Einstellungen';
 $lng['serversettings']['includedefault_sslvhostconf'] = 'Nicht-SSL vHost-Einstellungen in SSL-vHost inkludieren';
 $lng['admin']['ownsslvhostsettings'] = 'Eigene SSL vHost-Einstellungen';
+$lng['admin']['ipsandports']['ssl_default_vhostconf_domain'] = 'Standard SSL vHost-Einstellungen für jeden Domain-Container';
