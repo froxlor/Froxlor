@@ -258,7 +258,7 @@ class Nginx extends HttpConfigBase
 					$this->nginx_data[$vhost_filename] .= "\t" . '}' . "\n";
 				}
 
-				if ($row_ipsandports['specialsettings'] != '') {
+				if ($row_ipsandports['specialsettings'] != '' && ($row_ipsandports['ssl'] == '0' || ($row_ipsandports['ssl'] == '1' && Settings::Get('system.use_ssl') == '1' && $row_ipsandports['include_specialsettings'] == '1'))) {
 					$this->nginx_data[$vhost_filename] .= $this->processSpecialConfigTemplate($row_ipsandports['specialsettings'], array(
 						'domain' => Settings::Get('system.hostname'),
 						'loginname' => Settings::Get('phpfpm.vhost_httpuser'),
@@ -273,6 +273,14 @@ class Nginx extends HttpConfigBase
 				if ($row_ipsandports['ssl'] == '1') {
 					$row_ipsandports['domain'] = Settings::Get('system.hostname');
 					$this->nginx_data[$vhost_filename] .= $this->composeSslSettings($row_ipsandports);
+					if ($row_ipsandports['ssl_specialsettings'] != '') {
+						$this->nginx_data[$vhost_filename] .= $this->processSpecialConfigTemplate($row_ipsandports['ssl_specialsettings'], array(
+							'domain' => Settings::Get('system.hostname'),
+							'loginname' => Settings::Get('phpfpm.vhost_httpuser'),
+							'documentroot' => $mypath,
+							'customerroot' => $mypath
+						), $row_ipsandports['ip'], $row_ipsandports['port'], $row_ipsandports['ssl'] == '1') . "\n";
+					}
 				}
 
 				if (! $is_redirect) {
@@ -447,10 +455,12 @@ class Nginx extends HttpConfigBase
 				$ipport = $domain['ip'] . ':' . $domain['port'];
 			}
 
-			if ($ipandport['default_vhostconf_domain'] != '') {
+			if ($ipandport['default_vhostconf_domain'] != '' && ($ssl_vhost == false || ($ssl_vhost == true && $ipandport['include_default_vhostconf_domain'] == '1'))) {
 				$_vhost_content .= $this->processSpecialConfigTemplate($ipandport['default_vhostconf_domain'], $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
 			}
-
+			if ($ipandport['ssl_default_vhostconf_domain'] != '' && $ssl_vhost == true) {
+				$_vhost_content .= $this->processSpecialConfigTemplate($ipandport['ssl_default_vhostconf_domain'], $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
+			}
 			$http2 = $ssl_vhost == true && (isset($domain['http2']) && $domain['http2'] == '1' && Settings::Get('system.http2_support') == '1');
 
 			$vhost_content .= "\t" . 'listen ' . $ipport . ($ssl_vhost == true ? ' ssl' : '') . ($http2 == true ? ' http2' : '') . ';' . "\n";
@@ -522,16 +532,24 @@ class Nginx extends HttpConfigBase
 
 				$vhost_content .= isset($this->needed_htpasswds[$domain['id']]) ? $this->needed_htpasswds[$domain['id']] . "\n" : '';
 
-				if ($domain['specialsettings'] != "") {
+				if ($domain['specialsettings'] != '' && ($ssl_vhost == false || ($ssl_vhost == true && $domain['include_specialsettings'] == 1))) {
 					$vhost_content = $this->mergeVhostCustom($vhost_content, $this->processSpecialConfigTemplate($domain['specialsettings'], $domain, $domain['ip'], $domain['port'], $ssl_vhost));
+				}
+
+				if ($domain['ssl_specialsettings'] != '' && $ssl_vhost == true) {
+					$vhost_content .= $this->processSpecialConfigTemplate($domain['ssl_specialsettings'], $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
 				}
 
 				if ($_vhost_content != '') {
 					$vhost_content = $this->mergeVhostCustom($vhost_content, $_vhost_content);
 				}
 
-				if (Settings::Get('system.default_vhostconf') != '') {
+				if (Settings::Get('system.default_vhostconf') != '' && ($ssl_vhost == false || ($ssl_vhost == true && Settings::Get('system.include_default_vhostconf') == 1))) {
 					$vhost_content = $this->mergeVhostCustom($vhost_content, $this->processSpecialConfigTemplate(Settings::Get('system.default_vhostconf'), $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n");
+				}
+
+				if (Settings::Get('system.default_sslvhostconf') != '' && $ssl_vhost == true) {
+					$vhost_content .= $this->processSpecialConfigTemplate(Settings::Get('system.default_sslvhostconf'), $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
 				}
 			}
 		}
@@ -675,7 +693,7 @@ class Nginx extends HttpConfigBase
 				// (When specifyng just one, there's no fallback when specific curve is not supported by client.)
 				// When >1.11.0: Defaults to auto, using recommended curves provided by OpenSSL.
 				// see https://github.com/Froxlor/Froxlor/issues/652
-				//$sslsettings .= "\t" . 'ssl_ecdh_curve secp384r1;' . "\n";
+				// $sslsettings .= "\t" . 'ssl_ecdh_curve secp384r1;' . "\n";
 				$sslsettings .= "\t" . 'ssl_prefer_server_ciphers on;' . "\n";
 				$sslsettings .= "\t" . 'ssl_session_cache shared:SSL:10m;' . "\n";
 				$sslsettings .= "\t" . 'ssl_certificate ' . \Froxlor\FileDir::makeCorrectFile($domain_or_ip['ssl_cert_file']) . ';' . "\n";

@@ -220,6 +220,29 @@ return array(
 						'value' => $usedips,
 						'is_array' => 1
 					),
+					'ssl_specialsettings' => array(
+						'visible' => ($userinfo['change_serversettings'] == '1' ? true : false),
+						'style' => 'align-top',
+						'label' => $lng['admin']['ownsslvhostsettings'],
+						'desc' => $lng['serversettings']['default_vhostconf']['description'],
+						'type' => 'textarea',
+						'cols' => 60,
+						'rows' => 12,
+						'value' => $result['ssl_specialsettings']
+					),
+					'include_specialsettings' => array(
+						'label' => $lng['admin']['include_ownvhostsettings'],
+						'type' => 'checkbox',
+						'values' => array(
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array(
+							$result['include_specialsettings']
+						)
+					),
 					'ssl_redirect' => array(
 						'visible' => ($ssl_ipsandports != '' ? true : false),
 						'label' => $lng['domains']['ssl_redirect']['title'],

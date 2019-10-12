@@ -147,6 +147,10 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	 *        	optional, currently not in use, default 0 (false)
 	 * @param string $specialsettings
 	 *        	optional, custom webserver vhost-content which is added to the generated vhost, default empty
+	 * @param string $ssl_specialsettings
+	 *        	optional, custom webserver vhost-content which is added to the generated ssl-vhost, default empty
+	 * @param bool $include_specialsettings
+	 *        	optional, whether or not to include non-ssl specialsettings in the generated ssl-vhost, default false
 	 * @param bool $notryfiles
 	 *        	optional, [nginx only] do not generate the default try-files directive, default 0 (false)
 	 * @param bool $writeaccesslog
@@ -214,6 +218,8 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				$zonefile = $this->getParam('zonefile', true, '');
 				$dkim = $this->getBoolParam('dkim', true, 0);
 				$specialsettings = $this->getParam('specialsettings', true, '');
+				$ssl_specialsettings = $this->getParam('ssl_specialsettings', true, '');
+				$include_specialsettings = $this->getBoolParam('include_specialsettings', true, 0);
 				$notryfiles = $this->getBoolParam('notryfiles', true, 0);
 				$writeaccesslog = $this->getBoolParam('writeaccesslog', true, 1);
 				$writeerrorlog = $this->getBoolParam('writeerrorlog', true, 1);
@@ -328,6 +334,8 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 					$zonefile = '';
 					$dkim = '0';
 					$specialsettings = '';
+					$ssl_specialsettings = '';
+					$include_specialsettings = 0;
 					$notryfiles = '0';
 					$writeaccesslog = '1';
 					$writeerrorlog = '1';
@@ -391,6 +399,10 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				$ssl_ipandports = array();
 				if (Settings::Get('system.use_ssl') == "1" && ! empty($p_ssl_ipandports)) {
 					$ssl_ipandports = $this->validateIpAddresses($p_ssl_ipandports, true);
+
+					if ($this->getUserDetail('change_serversettings') == '1') {
+						$ssl_specialsettings = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $ssl_specialsettings), 'ssl_specialsettings', '/^[^\0]*$/', '', array(), true);
+					}
 				}
 				if (Settings::Get('system.use_ssl') == "0" || empty($ssl_ipandports)) {
 					$ssl_redirect = 0;
@@ -407,6 +419,10 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 
 					// OCSP stapling
 					$ocsp_stapling = 0;
+
+					// vhost container settings
+					$ssl_specialsettings = '';
+					$include_specialsettings = 0;
 				}
 
 				// We can't enable let's encrypt for wildcard-domains
@@ -540,6 +556,8 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 						'openbasedir' => $openbasedir,
 						'speciallogfile' => $speciallogfile,
 						'specialsettings' => $specialsettings,
+						'ssl_specialsettings' => $ssl_specialsettings,
+						'include_specialsettings' => $include_specialsettings,
 						'notryfiles' => $notryfiles,
 						'writeaccesslog' => $writeaccesslog,
 						'writeerrorlog' => $writeerrorlog,
@@ -582,6 +600,8 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 						`openbasedir` = :openbasedir,
 						`speciallogfile` = :speciallogfile,
 						`specialsettings` = :specialsettings,
+						`ssl_specialsettings` = :ssl_specialsettings,
+						`include_specialsettings` = :include_specialsettings,
 						`notryfiles` = :notryfiles,
 						`writeaccesslog` = :writeaccesslog,
 						`writeerrorlog` = :writeerrorlog,
@@ -698,6 +718,10 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	 *        	optional, currently not in use, default 0 (false)
 	 * @param string $specialsettings
 	 *        	optional, custom webserver vhost-content which is added to the generated vhost, default empty
+	 * @param string $ssl_specialsettings
+	 *        	optional, custom webserver vhost-content which is added to the generated ssl-vhost, default empty
+	 * @param bool $include_specialsettings
+	 *        	optional, whether or not to include non-ssl specialsettings in the generated ssl-vhost, default false
 	 * @param bool $specialsettingsforsubdomains
 	 *        	optional, whether to apply specialsettings to all subdomains of this domain, default 0 (false)
 	 * @param bool $notryfiles
@@ -777,6 +801,8 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 			$zonefile = $this->getParam('zonefile', true, $result['zonefile']);
 			$dkim = $this->getBoolParam('dkim', true, $result['dkim']);
 			$specialsettings = $this->getParam('specialsettings', true, $result['specialsettings']);
+			$ssl_specialsettings = $this->getParam('ssl_specialsettings', true, $result['ssl_specialsettings']);
+			$include_specialsettings = $this->getBoolParam('include_specialsettings', true, $result['include_specialsettings']);
 			$ssfs = $this->getBoolParam('specialsettingsforsubdomains', true, 0);
 			$notryfiles = $this->getBoolParam('notryfiles', true, $result['notryfiles']);
 			$writeaccesslog = $this->getBoolParam('writeaccesslog', true, $result['writeaccesslog']);
@@ -971,6 +997,8 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				$zonefile = $result['zonefile'];
 				$dkim = $result['dkim'];
 				$specialsettings = $result['specialsettings'];
+				$ssl_specialsettings = $result['ssl_specialsettings'];
+				$include_specialsettings = $result['include_specialsettings'];
 				$ssfs = (empty($specialsettings) ? 0 : 1);
 				$notryfiles = $result['notryfiles'];
 				$writeaccesslog = $result['writeaccesslog'];
@@ -1026,6 +1054,10 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 			$ssl_ipandports = array();
 			if (Settings::Get('system.use_ssl') == "1" && ! empty($p_ssl_ipandports)) {
 				$ssl_ipandports = $this->validateIpAddresses($p_ssl_ipandports, true, $result['id']);
+
+				if ($this->getUserDetail('change_serversettings') == '1') {
+					$ssl_specialsettings = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $ssl_specialsettings), 'ssl_specialsettings', '/^[^\0]*$/', '', array(), true);
+				}
 			}
 			if (Settings::Get('system.use_ssl') == "0" || empty($ssl_ipandports)) {
 				$ssl_redirect = 0;
@@ -1042,6 +1074,10 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 
 				// OCSP stapling
 				$ocsp_stapling = 0;
+
+				// vhost container settings
+				$ssl_specialsettings = '';
+				$include_specialsettings = 0;
 			}
 
 			// We can't enable let's encrypt for wildcard-domains
@@ -1245,12 +1281,16 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 
 			if ($ssfs == 1) {
 				$_update_data['specialsettings'] = $specialsettings;
-				$upd_specialsettings = ", `specialsettings` = :specialsettings ";
+				$_update_data['ssl_specialsettings'] = $ssl_specialsettings;
+				$_update_data['include_specialsettings'] = $include_specialsettings;
+				$upd_specialsettings = ", `specialsettings` = :specialsettings, `ssl_specialsettings` = :ssl_specialsettings, `include_specialsettings` = :include_specialsettings ";
 			} else {
 				$upd_specialsettings = '';
 				unset($_update_data['specialsettings']);
+				unset($_update_data['ssl_specialsettings']);
+				unset($_update_data['include_specialsettings']);
 				$upd_stmt = Database::prepare("
-					UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `specialsettings`='' WHERE `parentdomainid` = :id
+					UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `specialsettings`='', `ssl_specialsettings`='', `include_specialsettings`='0' WHERE `parentdomainid` = :id
 				");
 				Database::pexecute($upd_stmt, array(
 					'id' => $id
@@ -1283,6 +1323,8 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 			$update_data['mod_fcgid_starter'] = $mod_fcgid_starter;
 			$update_data['mod_fcgid_maxrequests'] = $mod_fcgid_maxrequests;
 			$update_data['specialsettings'] = $specialsettings;
+			$update_data['ssl_specialsettings'] = $ssl_specialsettings;
+			$update_data['include_specialsettings'] = $include_specialsettings;
 			$update_data['notryfiles'] = $notryfiles;
 			$update_data['writeaccesslog'] = $writeaccesslog;
 			$update_data['writeerrorlog'] = $writeerrorlog;
@@ -1320,6 +1362,8 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				`mod_fcgid_starter` = :mod_fcgid_starter,
 				`mod_fcgid_maxrequests` = :mod_fcgid_maxrequests,
 				`specialsettings` = :specialsettings,
+				`ssl_specialsettings` = :ssl_specialsettings,
+				`include_specialsettings` = :include_specialsettings,
 				`notryfiles` = :notryfiles,
 				`writeaccesslog` = :writeaccesslog,
 				`writeerrorlog` = :writeerrorlog,

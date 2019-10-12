@@ -304,7 +304,7 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201907270')) {
 		"templates/Sparkle/customer/tickets"
 	);
 	$disabled = explode(',', ini_get('disable_functions'));
-	$exec_allowed = !in_array('exec', $disabled);
+	$exec_allowed = ! in_array('exec', $disabled);
 	$del_list = "";
 	foreach ($to_clean as $filedir) {
 		$complete_filedir = \Froxlor\Froxlor::getInstallDir() . $filedir;
@@ -324,7 +324,7 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201907270')) {
 			lastStepStatus(0);
 		} else {
 			lastStepStatus(1, 'manual commands needed');
-			echo '<span class="update-step update-step-err">Please run the following commands manually:</span><br><pre>'.$del_list.'</pre><br>';
+			echo '<span class="update-step update-step-err">Please run the following commands manually:</span><br><pre>' . $del_list . '</pre><br>';
 		}
 	}
 
@@ -356,8 +356,8 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201910030')) {
 }
 
 if (\Froxlor\Froxlor::isFroxlorVersion('0.10.0')) {
-        showUpdateStep("Updating from 0.10.0 to 0.10.1 final", false);
-        \Froxlor\Froxlor::updateToVersion('0.10.1');
+	showUpdateStep("Updating from 0.10.0 to 0.10.1 final", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.1');
 }
 
 if (\Froxlor\Froxlor::isDatabaseVersion('201910090')) {
@@ -367,4 +367,26 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201910090')) {
 	lastStepStatus(0);
 
 	\Froxlor\Froxlor::updateToDbVersion('201910110');
+}
+
+if (\Froxlor\Froxlor::isDatabaseVersion('201910110')) {
+
+	showUpdateStep("Adding new settings for ssl-vhost default content");
+	Settings::AddNew("system.default_sslvhostconf", '');
+	Settings::AddNew("system.include_default_vhostconf", '0');
+	lastStepStatus(0);
+
+	showUpdateStep("Adding new fields to ips and ports-table");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_IPSANDPORTS . "` ADD `ssl_specialsettings` text AFTER `docroot`;");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_IPSANDPORTS . "` ADD `include_specialsettings` tinyint(1) NOT NULL default '0' AFTER `ssl_specialsettings`;");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_IPSANDPORTS . "` ADD `ssl_default_vhostconf_domain` text AFTER `include_specialsettings`;");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_IPSANDPORTS . "` ADD `include_default_vhostconf_domain` tinyint(1) NOT NULL default '0' AFTER `ssl_default_vhostconf_domain`;");
+	lastStepStatus(0);
+
+	showUpdateStep("Adding new fields to domains-table");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `ssl_specialsettings` text AFTER `specialsettings`;");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `include_specialsettings` tinyint(1) NOT NULL default '0', AFTER `ssl_specialsettings`;");
+	lastStepStatus(0);
+
+	\Froxlor\Froxlor::updateToDbVersion('201910120');
 }

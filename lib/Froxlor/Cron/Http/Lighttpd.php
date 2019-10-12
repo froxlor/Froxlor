@@ -175,7 +175,7 @@ class Lighttpd extends HttpConfigBase
 					);
 				}
 
-				if ($row_ipsandports['specialsettings'] != '') {
+				if ($row_ipsandports['specialsettings'] != '' && ($row_ipsandports['ssl'] == '0' || ($row_ipsandports['ssl'] == '1' && Settings::Get('system.use_ssl') == '1' && $row_ipsandports['include_specialsettings'] == '1'))) {
 					$this->lighttpd_data[$vhost_filename] .= $this->processSpecialConfigTemplate($row_ipsandports['specialsettings'], $domain, $row_ipsandports['ip'], $row_ipsandports['port'], $row_ipsandports['ssl'] == '1') . "\n";
 				}
 
@@ -183,6 +183,11 @@ class Lighttpd extends HttpConfigBase
 			}
 
 			if ($row_ipsandports['ssl'] == '1') {
+
+				if ($row_ipsandports['ssl_specialsettings'] != '') {
+					$this->lighttpd_data[$vhost_filename] .= $this->processSpecialConfigTemplate($row_ipsandports['ssl_specialsettings'], $domain, $row_ipsandports['ip'], $row_ipsandports['port'], $row_ipsandports['ssl'] == '1') . "\n";
+				}
+
 				if ($row_ipsandports['ssl_cert_file'] == '') {
 					$row_ipsandports['ssl_cert_file'] = Settings::Get('system.ssl_cert_file');
 					if (! file_exists($row_ipsandports['ssl_cert_file'])) {
@@ -512,16 +517,28 @@ class Lighttpd extends HttpConfigBase
 
 					$vhost_content .= $this->getSslSettings($domain, $ssl_vhost);
 
-					if ($domain['specialsettings'] != "") {
+					if ($domain['specialsettings'] != '' && ($ssl_vhost == false || ($ssl_vhost == true && $domain['include_specialsettings'] == 1))) {
 						$vhost_content .= $this->processSpecialConfigTemplate($domain['specialsettings'], $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
 					}
 
-					if ($ipandport['default_vhostconf_domain'] != '') {
+					if ($domain['ssl_specialsettings'] != '' && $ssl_vhost == true) {
+						$vhost_content .= $this->processSpecialConfigTemplate($domain['ssl_specialsettings'], $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
+					}
+
+					if ($ipandport['default_vhostconf_domain'] != '' && ($ssl_vhost == false || ($ssl_vhost == true && $ipandport['include_default_vhostconf_domain'] == '1'))) {
 						$vhost_content .= $this->processSpecialConfigTemplate($ipandport['default_vhostconf_domain'], $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
 					}
 
-					if (Settings::Get('system.default_vhostconf') != '') {
+					if ($ipandport['ssl_default_vhostconf_domain'] != '' && $ssl_vhost == true) {
+						$vhost_content .= $this->processSpecialConfigTemplate($ipandport['ssl_default_vhostconf_domain'], $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
+					}
+
+					if (Settings::Get('system.default_vhostconf') != '' && ($ssl_vhost == false || ($ssl_vhost == true && Settings::Get('system.include_default_vhostconf') == 1))) {
 						$vhost_content .= $this->processSpecialConfigTemplate(Settings::Get('system.default_vhostconf'), $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
+					}
+
+					if (Settings::Get('system.default_sslvhostconf') != '' && $ssl_vhost == true) {
+						$vhost_content .= $this->processSpecialConfigTemplate(Settings::Get('system.default_sslvhostconf'), $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
 					}
 				}
 				$vhost_content .= $this->getLogFiles($domain);

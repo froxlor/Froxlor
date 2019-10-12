@@ -2072,3 +2072,6 @@ $lng['serversettings']['ssl']['tlsv13_cipher_list']['description'] = 'This is a 
 $lng['usersettings']['api_allowed']['title'] = 'Allow API access';
 $lng['usersettings']['api_allowed']['description'] = 'When enabled in the settings, this user can create API keys and access the froxlor API';
 $lng['usersettings']['api_allowed']['notice'] = 'API access is not allowed for your account.';
+$lng['serversettings']['default_sslvhostconf']['title'] = 'Default SSL vHost-settings';
+$lng['serversettings']['includedefault_sslvhostconf'] = 'Include non-SSL vHost-settings in SSL-vHost';
+$lng['admin']['ownsslvhostsettings'] = 'Own SSL vHost-settings';

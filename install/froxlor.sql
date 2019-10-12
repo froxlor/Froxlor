@@ -248,6 +248,8 @@ CREATE TABLE `panel_domains` (
   `speciallogfile` tinyint(1) NOT NULL default '0',
   `ssl_redirect` tinyint(4) NOT NULL default '0',
   `specialsettings` text,
+  `ssl_specialsettings` text,
+  `include_specialsettings` tinyint(1) NOT NULL default '0',
   `deactivated` tinyint(1) NOT NULL default '0',
   `bindserial` varchar(10) NOT NULL default '2000010100',
   `add_date` int( 11 ) NOT NULL default '0',
@@ -291,6 +293,10 @@ CREATE TABLE `panel_ipsandports` (
   `default_vhostconf_domain` text,
   `ssl_cert_chainfile` varchar(255) NOT NULL default '',
   `docroot` varchar(255) NOT NULL default '',
+  `ssl_specialsettings` text,
+  `include_specialsettings` tinyint(1) NOT NULL default '0',
+  `ssl_default_vhostconf_domain` text,
+  `include_default_vhostconf_domain` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `ip_port` (`ip`,`port`)
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
@@ -686,7 +692,7 @@ opcache.interned_strings_buffer'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'is_configured', '0'),
 	('panel', 'version', '0.10.1'),
-	('panel', 'db_version', '201910110');
+	('panel', 'db_version', '201910120');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
