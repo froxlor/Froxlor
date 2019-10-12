@@ -108,7 +108,7 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 				$where[] = "`id` = :id_" . (int) $id;
 				$where_data['id_' . $id] = $id;
 			}
-			$where = implode($where, ' OR ');
+			$where = implode(' OR ', $where);
 			$del_stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_TASKS . "` WHERE " . $where);
 			Database::pexecute($del_stmt, $where_data);
 			unset($resultIDs);
