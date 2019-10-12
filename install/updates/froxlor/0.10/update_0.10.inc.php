@@ -385,7 +385,7 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201910110')) {
 
 	showUpdateStep("Adding new fields to domains-table");
 	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `ssl_specialsettings` text AFTER `specialsettings`;");
-	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `include_specialsettings` tinyint(1) NOT NULL default '0', AFTER `ssl_specialsettings`;");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `include_specialsettings` tinyint(1) NOT NULL default '0' AFTER `ssl_specialsettings`;");
 	lastStepStatus(0);
 
 	\Froxlor\Froxlor::updateToDbVersion('201910120');
