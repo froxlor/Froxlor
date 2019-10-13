@@ -144,9 +144,9 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 
 			if (empty($matches)) {
 				$errors[] = $this->lng['error']['dns_content_invalid'];
-			} elseif (($matches['type'] == 'issue' || $matches['type'] == 'issuewild') && !\Froxlor\Validate\Validate::validateDomain($matches['domain'])) {
+			} elseif (($matches['type'] == 'issue' || $matches['type'] == 'issuewild') && ! \Froxlor\Validate\Validate::validateDomain($matches['domain'])) {
 				$errors[] = $this->lng['error']['dns_content_invalid'];
-			} elseif ($matches['type'] == 'iodef' && !\Froxlor\Validate\Validate::validateUrl($matches['url'])) {
+			} elseif ($matches['type'] == 'iodef' && ! \Froxlor\Validate\Validate::validateUrl($matches['url'])) {
 				$errors[] = $this->lng['error']['dns_content_invalid'];
 			} else {
 				$content = $matches[0];
@@ -373,12 +373,50 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 	}
 
 	/**
-	 * You cannot list dns zones.
-	 * To get all domains use Domains.listing() or SubDomains.listing()
+	 * List all entry records of a given domain by either id or domainname
+	 *
+	 * @param int $id
+	 *        	optional, the domain id
+	 * @param string $domainname
+	 *        	optional, the domain name
+	 *
+	 * @access admin, customer
+	 * @throws \Exception
+	 * @return bool
 	 */
 	public function listing()
 	{
-		throw new \Exception('You cannot list dns zones. To get all domains use Domains.listing() or SubDomains.listing()', 303);
+		if (Settings::Get('system.dnsenabled') != '1') {
+			throw new \Exception("DNS service not enabled on this system", 405);
+		}
+
+		if ($this->isAdmin() == false && $this->getUserDetail('dnsenabled') != '1') {
+			throw new \Exception("You cannot access this resource", 405);
+		}
+
+		$id = $this->getParam('id', true, 0);
+		$dn_optional = ($id <= 0 ? false : true);
+		$domainname = $this->getParam('domainname', $dn_optional, '');
+
+		// get requested domain
+		$result = $this->apiCall('SubDomains.get', array(
+			'id' => $id,
+			'domainname' => $domainname
+		));
+		$id = $result['id'];
+
+		$sel_stmt = Database::prepare("SELECT * FROM `" . TABLE_DOMAIN_DNS . "` WHERE `domain_id` = :did");
+		Database::pexecute($sel_stmt, array(
+			'did' => $id
+		), true, true);
+		$result = [];
+		while ($row = $sel_stmt->fetch(\PDO::FETCH_ASSOC)) {
+			$result[] = $row;
+		}
+		return $this->response(200, "successfull", array(
+			'count' => count($result),
+			'list' => $result
+		));
 	}
 
 	/**
