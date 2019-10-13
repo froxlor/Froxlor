@@ -58,13 +58,6 @@ class DomainZonesTest extends TestCase
 		DomainZones::getLocal($customer_userdata, $data)->get();
 	}
 
-	public function testAdminDomainZonesListing()
-	{
-		global $admin_userdata;
-		$this->expectExceptionCode(303);
-		DomainZones::getLocal($admin_userdata)->listing();
-	}
-
 	public function testAdminDomainZonesUpdate()
 	{
 		global $admin_userdata;
@@ -104,6 +97,25 @@ class DomainZonesTest extends TestCase
 		}
 		$this->assertTrue($found);
 		$this->assertEquals('www2	18000	IN	A	127.0.0.1', $entry);
+	}
+
+	/**
+	 * @depends testCustomerDomainZonesAddA
+	 */
+	public function testAdminDomainZonesListing()
+	{
+		global $admin_userdata;
+
+		$data = [
+			'domainname' => 'test2.local',
+			'record' => 'www2',
+			'type' => 'A',
+			'content' => '127.0.0.1'
+		];
+		$json_result = DomainZones::getLocal($admin_userdata, $data)->listing();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(1, $result['count']);
+		$this->assertEquals('www2', $result['list'][0]['record']);
 	}
 
 	/**
