@@ -30,8 +30,9 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 		 */
 		self::$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, "TasksCron: Searching for tasks to do");
 		// no type 99 (regenerate cron.d-file) and no type 20 (customer backup)
+		// order by type descending to re-create bind and then webserver at the end
 		$result_tasks_stmt = Database::query("
-			SELECT `id`, `type`, `data` FROM `" . TABLE_PANEL_TASKS . "` WHERE `type` <> '99' AND `type` <> '20' ORDER BY `id` ASC
+			SELECT `id`, `type`, `data` FROM `" . TABLE_PANEL_TASKS . "` WHERE `type` <> '99' AND `type` <> '20' ORDER BY `type` DESC, `id` ASC
 		");
 		$num_results = Database::num_rows();
 		$resultIDs = array();
@@ -120,10 +121,6 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 
 	private static function rebuildWebserverConfigs()
 	{
-		// get configuration-I/O object
-		$configio = new \Froxlor\Cron\Http\ConfigIO();
-		// clean up old configs
-		$configio->cleanUp();
 
 		if (Settings::Get('system.webserver') == "apache2") {
 			$websrv = '\\Froxlor\\Cron\\Http\\Apache';
@@ -142,10 +139,15 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 			}
 		}
 
+		// get configuration-I/O object
+		$configio = new \Froxlor\Cron\Http\ConfigIO();
+		// get webserver object
 		$webserver = new $websrv();
 
 		if (isset($webserver)) {
 			$webserver->init();
+			// clean up old configs
+			$configio->cleanUp();
 			$webserver->createIpPort();
 			$webserver->createVirtualHosts();
 			$webserver->createFileDirOptions();
