@@ -388,5 +388,20 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201910110')) {
 	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `include_specialsettings` tinyint(1) NOT NULL default '0' AFTER `ssl_specialsettings`;");
 	lastStepStatus(0);
 
+	// select all ips/ports with specialsettings and SSL enabled to include the specialsettings in the ssl-vhost
+	// because the former implementation included it and users might rely on that, see https://github.com/Froxlor/Froxlor/issues/727
+	$sel_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `specialsettings` <> '' AND `ssl` = '1'");
+	Database::pexecute($sel_stmt);
+	$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_IPSANDPORTS . "` SET `include_specialsettings` = '1' WHERE `id` = :id");
+	if ($sel_stmt->columnCount() > 0) {
+		showUpdateStep("Adjusting IP/port settings for downward compatibility");
+		while ($row = $sel_result->fetch(\PDO::FETCH_ASSOC)) {
+			Database::pexecute($upd_stmt, [
+				'id' => $row['id']
+			]);
+		}
+		lastStepStatus(0);
+	}
+
 	\Froxlor\Froxlor::updateToDbVersion('201910120');
 }
