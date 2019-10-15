@@ -395,7 +395,7 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201910110')) {
 	$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_IPSANDPORTS . "` SET `include_specialsettings` = '1' WHERE `id` = :id");
 	if ($sel_stmt->columnCount() > 0) {
 		showUpdateStep("Adjusting IP/port settings for downward compatibility");
-		while ($row = $sel_result->fetch(\PDO::FETCH_ASSOC)) {
+		while ($row = $sel_stmt->fetch(PDO::FETCH_ASSOC)) {
 			Database::pexecute($upd_stmt, [
 				'id' => $row['id']
 			]);
