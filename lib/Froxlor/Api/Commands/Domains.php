@@ -175,8 +175,8 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	 *        	optional, whether to generate a Let's Encrypt certificate for this domain, default false; requires SSL to be enabled
 	 * @param array $ssl_ipandport
 	 *        	optional, list of ssl-enabled ip/port id's to assign to this domain, default empty
-	 * @param bool $use_default_ssl_ipandport_if_empty
-	 *        	optional, set the systems default ssl ip addresses if none are given via $ssl_ipandport parameter
+	 * @param bool $dont_use_default_ssl_ipandport_if_empty
+	 *        	optional, do NOT set the systems default ssl ip addresses if none are given via $ssl_ipandport parameter
 	 * @param bool $http2
 	 *        	optional, whether to enable http/2 for this domain (requires to be enabled in the settings), default 0 (false)
 	 * @param int $hsts_maxage
@@ -231,8 +231,8 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				$mod_fcgid_maxrequests = $this->getParam('mod_fcgid_maxrequests', true, - 1);
 				$ssl_redirect = $this->getBoolParam('ssl_redirect', true, 0);
 				$letsencrypt = $this->getBoolParam('letsencrypt', true, 0);
-				$use_default_ssl_ipandport_if_empty = $this->getBoolParam('use_default_ssl_ipandport_if_empty', true, 0);
-				$p_ssl_ipandports = $this->getParam('ssl_ipandport', true, $use_default_ssl_ipandport_if_empty ? explode(',', Settings::Get('system.defaultsslip')) : array());
+				$dont_use_default_ssl_ipandport_if_empty = $this->getBoolParam('dont_use_default_ssl_ipandport_if_empty', true, 0);
+				$p_ssl_ipandports = $this->getParam('ssl_ipandport', true, $dont_use_default_ssl_ipandport_if_empty ? array() : explode(',', Settings::Get('system.defaultsslip')));
 				$http2 = $this->getBoolParam('http2', true, 0);
 				$hsts_maxage = $this->getParam('hsts_maxage', true, 0);
 				$hsts_sub = $this->getBoolParam('hsts_sub', true, 0);
