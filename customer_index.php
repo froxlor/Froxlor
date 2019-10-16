@@ -98,10 +98,12 @@ if ($page == 'overview') {
 		$userinfo['diskspace_used'] = round($usages['webspace'] / 1024, Settings::Get('panel.decimal_places'));
 		$userinfo['mailspace_used'] = round($usages['mail'] / 1024, Settings::Get('panel.decimal_places'));
 		$userinfo['dbspace_used'] = round($usages['mysql'] / 1024, Settings::Get('panel.decimal_places'));
+		$userinfo['total_used'] = round(($usages['webspace'] + $usages['mail'] + $usages['mysql']) / 1024, Settings::Get('panel.decimal_places'));
 	} else {
 		$userinfo['diskspace_used'] = 0;
 		$userinfo['mailspace_used'] = 0;
 		$userinfo['dbspace_used'] = 0;
+		$userinfo['total_used'] = 0;
 	}
 	$userinfo['diskspace'] = round($userinfo['diskspace'] / 1024, Settings::Get('panel.decimal_places'));
 	$userinfo['traffic'] = round($userinfo['traffic'] / (1024 * 1024), Settings::Get('panel.decimal_places'));
@@ -120,6 +122,8 @@ if ($page == 'overview') {
 		$se[] = "PHP";
 	if ($userinfo['perlenabled'] == '1')
 		$se[] = "Perl/CGI";
+	if ($userinfo['api_allowed'] == '1')
+		$se[] = '<a href="customer_index.php?s='.$s.'&page=apikeys">API</a>';
 	$services_enabled = implode(", ", $se);
 
 	eval("echo \"" . \Froxlor\UI\Template::getTemplate('index/index') . "\";");

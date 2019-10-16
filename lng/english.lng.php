@@ -2076,3 +2076,4 @@ $lng['serversettings']['default_sslvhostconf']['title'] = 'Default SSL vHost-set
 $lng['serversettings']['includedefault_sslvhostconf'] = 'Include non-SSL vHost-settings in SSL-vHost';
 $lng['admin']['ownsslvhostsettings'] = 'Own SSL vHost-settings';
 $lng['admin']['ipsandports']['ssl_default_vhostconf_domain'] = 'Default SSL vHost-settings for every domain container';
+$lng['customer']['total_diskspace'] = 'Total diskspace (MiB)';
