@@ -292,7 +292,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 					'0',
 					''
 				), true);
-				if ($registration_date == '0000-00-00') {
+				if ($registration_date == '0000-00-00' || empty($registration_date)) {
 					$registration_date = null;
 				}
 
@@ -301,7 +301,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 					'0',
 					''
 				), true);
-				if ($termination_date == '0000-00-00') {
+				if ($termination_date == '0000-00-00' || empty($termination_date)) {
 					$termination_date = null;
 				}
 
@@ -929,7 +929,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				'0',
 				''
 			), true);
-			if ($registration_date == '0000-00-00') {
+			if ($registration_date == '0000-00-00' || empty($registration_date)) {
 				$registration_date = null;
 			}
 			$termination_date = \Froxlor\Validate\Validate::validate($termination_date, 'termination_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', array(
@@ -937,7 +937,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				'0',
 				''
 			), true);
-			if ($termination_date == '0000-00-00') {
+			if ($termination_date == '0000-00-00' || empty($termination_date)) {
 				$termination_date = null;
 			}
 
