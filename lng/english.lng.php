@@ -839,7 +839,8 @@ $lng['error']['nopermissionsorinvalidid'] = 'You don\'t have enough permissions 
 $lng['panel']['view'] = 'view';
 $lng['question']['phpsetting_reallydelete'] = 'Do you really want to delete these settings? All domains which use these settings currently will be changed to the default config.';
 $lng['question']['fpmsetting_reallydelete'] = 'Do you really want to delete these php-fpm settings? All php configurations which use these settings currently will be changed to the default config.';
-$lng['admin']['phpsettings']['addnew'] = 'Create new settings';
+$lng['admin']['phpsettings']['addnew'] = 'Create new PHP configuration';
+$lng['admin']['fpmsettings']['addnew'] = 'Create new PHP version';
 $lng['error']['phpsettingidwrong'] = 'A PHP Configuration with this id doesn\'t exist';
 $lng['error']['descriptioninvalid'] = 'The description is too short, too long or contains illegal characters.';
 $lng['error']['info'] = 'Info';
@@ -1829,7 +1830,7 @@ $lng['admin']['letsencrypt']['description'] = 'Get a free certificate from <a hr
 $lng['customer']['letsencrypt']['title'] = 'Use Let\'s Encrypt';
 $lng['customer']['letsencrypt']['description'] = 'Get a free certificate from <a href="https://letsencrypt.org">Let\'s Encrypt</a>. The certificate will be created and renewed automatically.<br><strong class="red">ATTENTION:</strong> This feature is still in beta.';
 $lng['error']['sslredirectonlypossiblewithsslipport'] = 'Using Let\'s Encrypt is only possible when the domain has at least one ssl-enabled IP/port combination assigned.';
-$lng['error']['nowildcardwithletsencrypt'] = 'Let\'s Encrypt cannot handle wildcard-domains using ACME v1. Please set the ServerAlias to WWW or disable it completely';
+$lng['error']['nowildcardwithletsencrypt'] = 'Let\'s Encrypt cannot handle wildcard-domains using ACME in froxlor (requires dns-challenge), sorry. Please set the ServerAlias to WWW or disable it completely';
 $lng['panel']['letsencrypt'] = 'Using Let\'s encrypt';
 $lng['crondesc']['cron_letsencrypt'] = 'updating Let\'s Encrypt certificates';
 $lng['serversettings']['letsencryptca']['title'] = "Let's Encrypt environment";
@@ -1866,6 +1867,7 @@ $lng['error']['autoupdate_6'] = 'Whoops, there was no (valid) version given to d
 $lng['error']['autoupdate_7'] = 'The downloaded archive could not be found :(';
 $lng['error']['autoupdate_8'] = 'The archive could not be extracted :(';
 $lng['error']['autoupdate_9'] = 'The downloaded file did not pass the integrity check. Please try to update again.';
+$lng['error']['autoupdate_10'] = 'Minimum supported version of PHP is 7.0';
 
 $lng['admin']['server_php'] = 'PHP';
 $lng['domains']['termination_date'] = 'Date of termination';
@@ -1985,8 +1987,7 @@ $lng['admin']['phpsettings']['activephpconfigs'] = 'In use for php-config(s)';
 $lng['admin']['phpsettingsforsubdomains'] = 'Apply php-config to all subdomains:';
 $lng['serversettings']['phpsettingsforsubdomains']['description'] = 'If yes the chosen php-config will be updated to all subdomains';
 $lng['serversettings']['leapiversion']['title'] = "Choose Let's Encrypt ACME implementation";
-$lng['serversettings']['leapiversion']['description'] = "Choose between ACME v1 and ACME v2 implementation for Let's Encrypt.";
-$lng['error']['nowildcardwithletsencryptv2'] = 'Let\'s Encrypt can only validate wildcard-domains by DNS with ACME v2, sorry. Please set the ServerAlias to WWW or disable it completely';
+$lng['serversettings']['leapiversion']['description'] = "Currently only ACME v2 implementation for Let's Encrypt is supported.";
 $lng['admin']['phpsettings']['pass_authorizationheader'] = 'Add "-pass-header Authorization" / "CGIPassAuth On" to vhosts';
 $lng['serversettings']['ssl']['ssl_protocols']['title'] = 'Configure the TLS protocol version';
 $lng['serversettings']['ssl']['ssl_protocols']['description'] = 'This is a list of ssl protocols that you want (or don\'t want) to use when using SSL. <b>Notice:</b> Some older browsers may not support the newest protcol versions.<br /><br /><b>Default value is:</b><pre>TLSv1, TLSv1.2</pre>';
@@ -2066,7 +2067,19 @@ $lng['serversettings']['letsencryptecc']['title'] = "Issue ECC / ECDSA certifica
 $lng['serversettings']['letsencryptecc']['description'] = "If set to a valid key-size the certificate issued will use ECC / ECDSA";
 $lng['serversettings']['froxloraliases']['title'] = "Domain aliases for froxlor vhost";
 $lng['serversettings']['froxloraliases']['description'] = "Comma separated list of domains to add as server alias to the froxlor vhost";
+
 $lng['dkim']['key_under_construction'] = "Keys are under construction.";
 $lng['dkim']['key_length'] = "Key length";
 $lng['dkim']['new_key'] = "Shall a new key be created?";
 $lng['dkim']['show_dns_add'] = "Add to DNS record:";
+
+$lng['serversettings']['ssl']['tlsv13_cipher_list']['title'] = 'Configure explicit TLSv1.3 ciphers if used';
+$lng['serversettings']['ssl']['tlsv13_cipher_list']['description'] = 'This is a list of ciphers that you want (or don\'t want) to use when talking TLSv1.3. For a list of ciphers and how to include/exclude them, see <a href="https://wiki.openssl.org/index.php/TLS1.3">the docs for TLSv1.3</a>.<br /><br /><b>Default value is empty</b>';
+$lng['usersettings']['api_allowed']['title'] = 'Allow API access';
+$lng['usersettings']['api_allowed']['description'] = 'When enabled in the settings, this user can create API keys and access the froxlor API';
+$lng['usersettings']['api_allowed']['notice'] = 'API access is not allowed for your account.';
+$lng['serversettings']['default_sslvhostconf']['title'] = 'Default SSL vHost-settings';
+$lng['serversettings']['includedefault_sslvhostconf'] = 'Include non-SSL vHost-settings in SSL-vHost';
+$lng['admin']['ownsslvhostsettings'] = 'Own SSL vHost-settings';
+$lng['admin']['ipsandports']['ssl_default_vhostconf_domain'] = 'Default SSL vHost-settings for every domain container';
+$lng['customer']['total_diskspace'] = 'Total diskspace (MiB)';

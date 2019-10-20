@@ -222,7 +222,7 @@ if (isset($s) && $s != "" && $nosession != 1) {
 	$userinfo_stmt = Database::prepare($query);
 	$userinfo = Database::pexecute_first($userinfo_stmt, $userinfo_data);
 
-	if ((($userinfo['adminsession'] == '1' && AREA == 'admin' && isset($userinfo['adminid'])) || ($userinfo['adminsession'] == '0' && (AREA == 'customer' || AREA == 'login') && isset($userinfo['customerid']))) && (! isset($userinfo['deactivated']) || $userinfo['deactivated'] != '1')) {
+	if ($userinfo && (($userinfo['adminsession'] == '1' && AREA == 'admin' && isset($userinfo['adminid'])) || ($userinfo['adminsession'] == '0' && (AREA == 'customer' || AREA == 'login') && isset($userinfo['customerid']))) && (! isset($userinfo['deactivated']) || $userinfo['deactivated'] != '1')) {
 		$upd_stmt = Database::prepare("
 			UPDATE `" . TABLE_PANEL_SESSIONS . "` SET
 			`lastactivity` = :lastactive

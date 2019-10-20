@@ -832,7 +832,8 @@ $lng['error']['nopermissionsorinvalidid'] = 'Entweder fehlen Ihnen die nötigen 
 $lng['panel']['view'] = 'ansehen';
 $lng['question']['phpsetting_reallydelete'] = 'Wollen Sie diese PHP-Einstellungen wirklich löschen? Alle Domains die diese Einstellungen bis jetzt verwendet haben, werden dann auf die Standardeinstellungen umgestellt.';
 $lng['question']['fpmsetting_reallydelete'] = 'Wollen Sie diese PHP-FPM Einstellungen wirklich löschen? Alle PHP Konfigurationen die diese Einstellungen bis jetzt verwendet haben, werden dann auf die Standardeinstellungen umgestellt.';
-$lng['admin']['phpsettings']['addnew'] = 'Neue Konfiguration erstellen';
+$lng['admin']['phpsettings']['addnew'] = 'Neue PHP Konfiguration erstellen';
+$lng['admin']['fpmsettings']['addnew'] = 'Neue PHP Version erstellen';
 $lng['error']['phpsettingidwrong'] = 'Eine PHP-Konfiguration mit dieser ID existiert nicht';
 $lng['error']['descriptioninvalid'] = 'Der Beschreibungstext ist zu kurz, zu lang oder enthält ungültige Zeichen';
 $lng['error']['info'] = 'Info';
@@ -1481,7 +1482,7 @@ $lng['admin']['letsencrypt']['description'] = 'Holt ein kostenloses Zertifikat v
 $lng['customer']['letsencrypt']['title'] = 'SSL Zertifikat erstellen (Let\'s Encrypt)';
 $lng['customer']['letsencrypt']['description'] = 'Holt ein kostenloses Zertifikat von <a href="https://letsencrypt.org">Let\'s Encrypt</a>. Das Zertifikat wird automatisch erstellt und verlängert.<br><strong class="red">ACHTUNG:</strong> Dieses Feature befindet sich noch im Test.';
 $lng['error']['sslredirectonlypossiblewithsslipport'] = 'Die Nutzung von Let\'s Encrypt ist nur möglich, wenn die Domain mindestens eine IP/Port - Kombination mit aktiviertem SSL zugewiesen hat.';
-$lng['error']['nowildcardwithletsencrypt'] = 'Let\'s Encrypt kann in ACME v1 nicht mit Wildcard-Domains umgehen. Bitte den ServerAlias auf WWW setzen oder deaktivieren';
+$lng['error']['nowildcardwithletsencrypt'] = 'Let\'s Encrypt kann mittels ACME Wildcard-Domains nur via DNS validieren, sorry. Bitte den ServerAlias auf WWW setzen oder deaktivieren';
 $lng['panel']['letsencrypt'] = 'Benutzt Let\'s encrypt';
 $lng['crondesc']['cron_letsencrypt'] = 'Aktualisierung der Let\'s Encrypt Zertifikate';
 $lng['serversettings']['letsencryptca']['title'] = "Let's Encrypt Umgebung";
@@ -1518,6 +1519,7 @@ $lng['error']['autoupdate_6'] = 'Woops, keine (gültige) Version angegeben für 
 $lng['error']['autoupdate_7'] = 'Das heruntergeladene Archiv konnte nicht gefunden werden :(';
 $lng['error']['autoupdate_8'] = 'Das Archiv konnte nicht entpackt werden :(';
 $lng['error']['autoupdate_9'] = 'Die heruntergeladene Datei konnte nicht verifiziert werden. Bitte erneut versuchen zu aktualisieren.';
+$lng['error']['autoupdate_10'] = 'Minimum unterstützte Version von PHP ist 7.0';
 
 $lng['domains']['termination_date'] = 'Kündigungsdatum';
 $lng['domains']['termination_date_overview'] = 'gekündigt zum ';
@@ -1635,8 +1637,7 @@ $lng['admin']['phpsettings']['activephpconfigs'] = 'In Verwendung für PHP-Konfi
 $lng['admin']['phpsettingsforsubdomains'] = 'PHP-Config für alle Subdomains übernehmen:';
 $lng['serversettings']['phpsettingsforsubdomains']['description'] = 'Wenn ja, wird die gewählte PHP-Config für alle Subdomains übernommen';
 $lng['serversettings']['leapiversion']['title'] = "Wählen Sie die Let's Encrypt ACME Implementierung";
-$lng['serversettings']['leapiversion']['description'] = "Wählen Sie zwischen ACME v1 und ACME v2 Implementierung von Let's Encrypt.";
-$lng['error']['nowildcardwithletsencryptv2'] = 'Let\'s Encrypt kann in ACME v2 Wildcard-Domains nur via DNS validieren, sorry. Bitte den ServerAlias auf WWW setzen oder deaktivieren';
+$lng['serversettings']['leapiversion']['description'] = "Aktuell unterstützt froxlor lediglich die ACME v2 Implementierung von Let's Encrypt.";
 $lng['admin']['phpsettings']['pass_authorizationheader'] = 'Füge "-pass-header Authorization" / "CGIPassAuth On" in Vhosts ein';
 $lng['serversettings']['ssl']['ssl_protocols']['title'] = 'SSL Protokollversion festlegen';
 $lng['serversettings']['ssl']['ssl_protocols']['description'] = 'Dies ist eine Liste von SSL/TLS Protokollversionen die genutzt werden sollen (oder auch nicht genutzt werden sollen), wenn SSL verwendet wird. <b>Hinweis:</b> Ältere Browser sind möglicherweise nicht vollständig zum neusten Protokoll kompatibel.<br /><br /><b>Standard-Wert ist:</b><pre>TLSv1, TLSv1.2</pre>';
@@ -1713,7 +1714,20 @@ $lng['serversettings']['letsencryptecc']['title'] = "ECC / ECDSA Zertifikate aus
 $lng['serversettings']['letsencryptecc']['description'] = "Wenn eine Schlüsselgröße ausgewählt wird, werden ECC / ECDSA Zertifikate erstellt";
 $lng['serversettings']['froxloraliases']['title'] = "Domain Aliase für Froxlor Vhost";
 $lng['serversettings']['froxloraliases']['description'] = "Komma getrennte Liste von Domains, welche als Server Alias zum Froxlor Vhost hinzugefügt werden";
+
 $lng['dkim']['key_under_construction'] = "Die Schlüssel werden erstellt...";
 $lng['dkim']['key_length'] = "Schlüssellänge";
 $lng['dkim']['new_key'] = "Soll ein neuer Schlüssel erstellt werden?";
 $lng['dkim']['show_dns_add'] = "An das Ende des DNS Records hinzufügen:";
+
+
+$lng['serversettings']['ssl']['tlsv13_cipher_list']['title'] = 'Explizite TLSv1.3 Ciphers, wenn genutzt';
+$lng['serversettings']['ssl']['tlsv13_cipher_list']['description'] = 'Dies ist eine Liste von Ciphers, die genutzt werden sollen (oder auch nicht genutzt werden sollen), wenn eine TLSv1.3 Verbindung hergestellt werden soll. Eine Liste aller Ciphers und wie diese hinzugefügt/ausgeschlossen werden ist <a href="https://wiki.openssl.org/index.php/TLS1.3">der Dokumentation für TLSv1.3</a> zu entnehmen.<br /><br /><b>Standard-Wert ist leer</b>';
+$lng['usersettings']['api_allowed']['title'] = 'Erlaube API Zugriff';
+$lng['usersettings']['api_allowed']['description'] = 'Wenn in den Einstellungen aktiviert, kann der Benutzer API Schlüssel erstellen und auf die froxlor API Zugreifen';
+$lng['usersettings']['api_allowed']['notice'] = 'API Zugriff ist für dieses Konto deaktiviert.';
+$lng['serversettings']['default_sslvhostconf']['title'] = 'Standard SSL vHost-Einstellungen';
+$lng['serversettings']['includedefault_sslvhostconf'] = 'Nicht-SSL vHost-Einstellungen in SSL-vHost inkludieren';
+$lng['admin']['ownsslvhostsettings'] = 'Eigene SSL vHost-Einstellungen';
+$lng['admin']['ipsandports']['ssl_default_vhostconf_domain'] = 'Standard SSL vHost-Einstellungen für jeden Domain-Container';
+$lng['customer']['total_diskspace'] = 'Gesamtspeicherplatz (MiB)';

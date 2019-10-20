@@ -403,11 +403,16 @@ class Apache extends HttpConfigBase
 				 *       end of dirprotection
 				 */
 
-				if ($row_ipsandports['specialsettings'] != '') {
+				if ($row_ipsandports['specialsettings'] != '' && ($row_ipsandports['ssl'] == '0' || ($row_ipsandports['ssl'] == '1' && Settings::Get('system.use_ssl') == '1' && $row_ipsandports['include_specialsettings'] == '1'))) {
 					$this->virtualhosts_data[$vhosts_filename] .= $this->processSpecialConfigTemplate($row_ipsandports['specialsettings'], $domain, $row_ipsandports['ip'], $row_ipsandports['port'], $row_ipsandports['ssl'] == '1') . "\n";
 				}
 
 				if ($row_ipsandports['ssl'] == '1' && Settings::Get('system.use_ssl') == '1') {
+
+					if ($row_ipsandports['ssl_specialsettings'] != '') {
+						$this->virtualhosts_data[$vhosts_filename] .= $this->processSpecialConfigTemplate($row_ipsandports['ssl_specialsettings'], $domain, $row_ipsandports['ip'], $row_ipsandports['port'], $row_ipsandports['ssl'] == '1') . "\n";
+					}
+
 					if ($row_ipsandports['ssl_cert_file'] == '') {
 						$row_ipsandports['ssl_cert_file'] = Settings::Get('system.ssl_cert_file');
 						if (! file_exists($row_ipsandports['ssl_cert_file'])) {
@@ -477,6 +482,10 @@ class Apache extends HttpConfigBase
 							// this makes it more secure, thx to Marcel (08/2013)
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLHonorCipherOrder On' . "\n";
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLCipherSuite ' . Settings::Get('system.ssl_cipher_list') . "\n";
+							$protocols = array_map('trim', explode(",", Settings::Get('system.ssl_protocols')));
+							if (in_array("TLSv1.3", $protocols) && !empty(Settings::Get('system.tlsv13_cipher_list')) && Settings::Get('system.apache24') == 1) {
+								$this->virtualhosts_data[$vhosts_filename] .= ' SSLCipherSuite TLSv1.3 ' . Settings::Get('system.tlsv13_cipher_list') . "\n";
+							}
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLVerifyDepth 10' . "\n";
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLCertificateFile ' . \Froxlor\FileDir::makeCorrectFile($domain['ssl_cert_file']) . "\n";
 
@@ -896,8 +905,11 @@ class Apache extends HttpConfigBase
 				$ipport = $domain['ip'] . ':' . $domain['port'] . ' ';
 			}
 
-			if ($ipandport['default_vhostconf_domain'] != '') {
+			if ($ipandport['default_vhostconf_domain'] != '' && ($ssl_vhost == false || ($ssl_vhost == true && $ipandport['include_default_vhostconf_domain'] == '1'))) {
 				$_vhost_content .= $this->processSpecialConfigTemplate($ipandport['default_vhostconf_domain'], $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
+			}
+			if ($ipandport['ssl_default_vhostconf_domain'] != '' && $ssl_vhost == true) {
+				$_vhost_content .= $this->processSpecialConfigTemplate($ipandport['ssl_default_vhostconf_domain'], $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
 			}
 			$ipportlist .= $ipport;
 		}
@@ -924,7 +936,7 @@ class Apache extends HttpConfigBase
 				'domainid' => $domain['id']
 			));
 
-			if ($ssldestport['port'] != '') {
+			if ($ssldestport && $ssldestport['port'] != '') {
 				$_sslport = ":" . $ssldestport['port'];
 			}
 
@@ -959,7 +971,7 @@ class Apache extends HttpConfigBase
 				$vhost_content .= '  SSLProtocol -ALL +' . str_replace(",", " +", Settings::Get('system.ssl_protocols')) . "\n";
 				if (Settings::Get('system.apache24') == '1') {
 					if (isset($domain['http2']) && $domain['http2'] == '1' && Settings::Get('system.http2_support') == '1') {
-						$vhost_content .= ' Protocols h2 http/1.1' . "\n";
+						$vhost_content .= '  Protocols h2 http/1.1' . "\n";
 					}
 					if (! empty(Settings::Get('system.dhparams_file'))) {
 						$dhparams = \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.dhparams_file'));
@@ -973,6 +985,10 @@ class Apache extends HttpConfigBase
 				// this makes it more secure, thx to Marcel (08/2013)
 				$vhost_content .= '  SSLHonorCipherOrder On' . "\n";
 				$vhost_content .= '  SSLCipherSuite ' . Settings::Get('system.ssl_cipher_list') . "\n";
+				$protocols = array_map('trim', explode(",", Settings::Get('system.ssl_protocols')));
+				if (in_array("TLSv1.3", $protocols) && !empty(Settings::Get('system.tlsv13_cipher_list')) && Settings::Get('system.apache24') == 1) {
+					$vhost_content .= '  SSLCipherSuite TLSv1.3 ' . Settings::Get('system.tlsv13_cipher_list') . "\n";
+				}
 				$vhost_content .= '  SSLVerifyDepth 10' . "\n";
 				$vhost_content .= '  SSLCertificateFile ' . \Froxlor\FileDir::makeCorrectFile($domain['ssl_cert_file']) . "\n";
 
@@ -1049,16 +1065,24 @@ class Apache extends HttpConfigBase
 			}
 			$vhost_content .= $this->getLogfiles($domain);
 
-			if ($domain['specialsettings'] != '') {
+			if ($domain['specialsettings'] != '' && ($ssl_vhost == false || ($ssl_vhost == true && $domain['include_specialsettings'] == 1))) {
 				$vhost_content .= $this->processSpecialConfigTemplate($domain['specialsettings'], $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
+			}
+
+			if ($domain['ssl_specialsettings'] != '' && $ssl_vhost == true) {
+				$vhost_content .= $this->processSpecialConfigTemplate($domain['ssl_specialsettings'], $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
 			}
 
 			if ($_vhost_content != '') {
 				$vhost_content .= $_vhost_content;
 			}
 
-			if (Settings::Get('system.default_vhostconf') != '') {
+			if (Settings::Get('system.default_vhostconf') != '' && ($ssl_vhost == false || ($ssl_vhost == true && Settings::Get('system.include_default_vhostconf') == 1))) {
 				$vhost_content .= $this->processSpecialConfigTemplate(Settings::Get('system.default_vhostconf'), $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
+			}
+
+			if (Settings::Get('system.default_sslvhostconf') != '' && $ssl_vhost == true) {
+				$vhost_content .= $this->processSpecialConfigTemplate(Settings::Get('system.default_sslvhostconf'), $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
 			}
 		}
 

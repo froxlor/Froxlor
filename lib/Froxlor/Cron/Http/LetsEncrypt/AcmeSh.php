@@ -48,7 +48,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 	public static function run($internal = false)
 	{
 		if (! defined('CRON_IS_FORCED') && ! defined('CRON_DEBUG_FLAG') && $internal == false) {
-			//FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_WARNING, "Let's Encrypt cronjob is combined with regeneration of webserver configuration files.\nFor debugging purposes you can use the --debug switch and/or the --force switch to run the cron manually.");
+			// FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_WARNING, "Let's Encrypt cronjob is combined with regeneration of webserver configuration files.\nFor debugging purposes you can use the --debug switch and/or the --force switch to run the cron manually.");
 			return 0;
 		}
 
@@ -224,7 +224,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 			if ($certrow['ssl_redirect'] != 2) {
 
 				$do_force = false;
-				if (! empty($certrow['ssl_cert_file']) && !empty($certrow['expirationdate'])) {
+				if (! empty($certrow['ssl_cert_file']) && ! empty($certrow['expirationdate'])) {
 					$cert_mode = 'renew';
 					$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, "Updating certificate for " . $certrow['domain']);
 				} else if (! empty($certrow['ssl_cert_file']) && empty($certrow['expirationdate'])) {
@@ -357,11 +357,20 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 		$certificate_folder = \Froxlor\FileDir::makeCorrectDir($certificate_folder);
 
 		if (is_dir($certificate_folder)) {
-			$return['crt'] = file_get_contents(\Froxlor\FileDir::makeCorrectFile($certificate_folder . '/' . $domain . '.cer'));
-			$return['key'] = file_get_contents(\Froxlor\FileDir::makeCorrectFile($certificate_folder . '/' . $domain . '.key'));
-			$return['chain'] = file_get_contents(\Froxlor\FileDir::makeCorrectFile($certificate_folder . '/ca.cer'));
-			$return['fullchain'] = file_get_contents(\Froxlor\FileDir::makeCorrectFile($certificate_folder . '/fullchain.cer'));
-			$return['csr'] = file_get_contents(\Froxlor\FileDir::makeCorrectFile($certificate_folder . '/' . $domain . '.csr'));
+			foreach ([
+				'crt' => $domain . '.cer',
+				'key' => $domain . '.key',
+				'chain' => 'ca.cer',
+				'fullchain' => 'fullchain.cer',
+				'csr' => $domain . '.csr'
+			] as $index => $sslfile) {
+				$ssl_file = \Froxlor\FileDir::makeCorrectFile($certificate_folder . '/' . $sslfile);
+				if (file_exists($ssl_file)) {
+					$return[$index] = file_get_contents($ssl_file);
+				} else {
+					$return[$index] = null;
+				}
+			}
 		}
 	}
 
@@ -379,6 +388,8 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 	private static function checkUpgrade()
 	{
 		$acmesh_result = \Froxlor\FileDir::safe_exec(self::$acmesh . " --upgrade");
-		FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, "Checking for LetsEncrypt client upgrades before renewing certificates:\n" . implode("\n", $acmesh_result));
+		// check for activated cron (which is installed automatically) but we don't need it
+		$acmesh_result2 = \Froxlor\FileDir::safe_exec(self::$acmesh . " --uninstall-cronjob");
+		FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, "Checking for LetsEncrypt client upgrades before renewing certificates:\n" . implode("\n", $acmesh_result)."\n".implode("\n", $acmesh_result2));
 	}
 }

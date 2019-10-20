@@ -54,6 +54,16 @@ return array(
 					'default' => 'ECDH+AESGCM:ECDH+AES256:!aNULL:!MD5:!DSS:!DH:!AES128',
 					'save_method' => 'storeSettingField'
 				),
+				'system_tlsv13_cipher_list' => array(
+					'label' => $lng['serversettings']['ssl']['tlsv13_cipher_list'],
+					'settinggroup' => 'system',
+					'varname' => 'tlsv13_cipher_list',
+					'type' => 'string',
+					'string_emptyallowed' => true,
+					'default' => '',
+					'visible' => \Froxlor\Settings::Get('system.webserver') == "apache2" && \Froxlor\Settings::Get('system.apache24') == 1,
+					'save_method' => 'storeSettingField',
+				),
 				'system_ssl_cert_file' => array(
 					'label' => $lng['serversettings']['ssl']['ssl_cert_file'],
 					'settinggroup' => 'system',
@@ -131,7 +141,6 @@ return array(
 					'default' => '2',
 					'option_mode' => 'one',
 					'option_options' => array(
-						'1' => 'ACME v1',
 						'2' => 'ACME v2'
 					),
 					'save_method' => 'storeSettingField'

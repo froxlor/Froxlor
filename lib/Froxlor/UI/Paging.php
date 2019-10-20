@@ -282,7 +282,7 @@ class Paging
 					$field .= '`';
 				}
 
-				if ($field{0} != '`') {
+				if ($field[0] != '`') {
 					$field = '`' . $field;
 				}
 
@@ -352,7 +352,7 @@ class Paging
 				$field .= '`';
 			}
 
-			if ($field{0} != '`') {
+			if ($field[0] != '`') {
 				$field = '`' . $field;
 			}
 

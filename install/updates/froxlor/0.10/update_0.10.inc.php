@@ -265,6 +265,7 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201904100')) {
 }
 
 if (\Froxlor\Froxlor::isFroxlorVersion('0.10.0-rc1')) {
+	showUpdateStep("Updating from 0.10.0-rc1 to 0.10.0-rc2", false);
 	\Froxlor\Froxlor::updateToVersion('0.10.0-rc2');
 }
 
@@ -302,17 +303,110 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201907270')) {
 		"templates/Sparkle/admin/tickets",
 		"templates/Sparkle/customer/tickets"
 	);
+	$disabled = explode(',', ini_get('disable_functions'));
+	$exec_allowed = ! in_array('exec', $disabled);
+	$del_list = "";
 	foreach ($to_clean as $filedir) {
 		$complete_filedir = \Froxlor\Froxlor::getInstallDir() . $filedir;
 		if (file_exists($complete_filedir)) {
-			Froxlor\FileDir::safe_exec("rm -rf " . escapeshellarg($complete_filedir));
+			if ($exec_allowed) {
+				Froxlor\FileDir::safe_exec("rm -rf " . escapeshellarg($complete_filedir));
+			} else {
+				$del_list .= "rm -rf " . escapeshellarg($complete_filedir) . PHP_EOL;
+			}
 		}
 	}
-	lastStepStatus(0);
+	if ($exec_allowed) {
+		lastStepStatus(0);
+	} else {
+		if (empty($del_list)) {
+			// none of the files existed
+			lastStepStatus(0);
+		} else {
+			lastStepStatus(1, 'manual commands needed');
+			echo '<span class="update-step update-step-err">Please run the following commands manually:</span><br><pre>' . $del_list . '</pre><br>';
+		}
+	}
 
 	\Froxlor\Froxlor::updateToDbVersion('201909150');
 }
 
 if (\Froxlor\Froxlor::isFroxlorVersion('0.10.0-rc2')) {
+	showUpdateStep("Updating from 0.10.0-rc2 to 0.10.0 final", false);
 	\Froxlor\Froxlor::updateToVersion('0.10.0');
+}
+
+if (\Froxlor\Froxlor::isDatabaseVersion('201909150')) {
+
+	showUpdateStep("Adding TLSv1.3-cipherlist setting");
+	Settings::AddNew("system.tlsv13_cipher_list", '');
+	lastStepStatus(0);
+
+	\Froxlor\Froxlor::updateToDbVersion('201910030');
+}
+
+if (\Froxlor\Froxlor::isDatabaseVersion('201910030')) {
+
+	showUpdateStep("Adding field api_allowed to admins and customers");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_ADMINS . "` ADD `api_allowed` tinyint(1) NOT NULL default '1';");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` ADD `api_allowed` tinyint(1) NOT NULL default '1';");
+	lastStepStatus(0);
+
+	\Froxlor\Froxlor::updateToDbVersion('201910090');
+}
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.0')) {
+	showUpdateStep("Updating from 0.10.0 to 0.10.1 final", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.1');
+}
+
+if (\Froxlor\Froxlor::isDatabaseVersion('201910090')) {
+
+	showUpdateStep("Adjusting Let's Encrypt API setting");
+	Settings::Set("system.leapiversion", '2');
+	lastStepStatus(0);
+
+	\Froxlor\Froxlor::updateToDbVersion('201910110');
+}
+
+if (\Froxlor\Froxlor::isDatabaseVersion('201910110')) {
+
+	showUpdateStep("Adding new settings for ssl-vhost default content");
+	Settings::AddNew("system.default_sslvhostconf", '');
+	Settings::AddNew("system.include_default_vhostconf", '0');
+	lastStepStatus(0);
+
+	showUpdateStep("Adding new fields to ips and ports-table");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_IPSANDPORTS . "` ADD `ssl_specialsettings` text AFTER `docroot`;");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_IPSANDPORTS . "` ADD `include_specialsettings` tinyint(1) NOT NULL default '0' AFTER `ssl_specialsettings`;");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_IPSANDPORTS . "` ADD `ssl_default_vhostconf_domain` text AFTER `include_specialsettings`;");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_IPSANDPORTS . "` ADD `include_default_vhostconf_domain` tinyint(1) NOT NULL default '0' AFTER `ssl_default_vhostconf_domain`;");
+	lastStepStatus(0);
+
+	showUpdateStep("Adding new fields to domains-table");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `ssl_specialsettings` text AFTER `specialsettings`;");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `include_specialsettings` tinyint(1) NOT NULL default '0' AFTER `ssl_specialsettings`;");
+	lastStepStatus(0);
+
+	// select all ips/ports with specialsettings and SSL enabled to include the specialsettings in the ssl-vhost
+	// because the former implementation included it and users might rely on that, see https://github.com/Froxlor/Froxlor/issues/727
+	$sel_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `specialsettings` <> '' AND `ssl` = '1'");
+	Database::pexecute($sel_stmt);
+	$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_IPSANDPORTS . "` SET `include_specialsettings` = '1' WHERE `id` = :id");
+	if ($sel_stmt->columnCount() > 0) {
+		showUpdateStep("Adjusting IP/port settings for downward compatibility");
+		while ($row = $sel_stmt->fetch(PDO::FETCH_ASSOC)) {
+			Database::pexecute($upd_stmt, [
+				'id' => $row['id']
+			]);
+		}
+		lastStepStatus(0);
+	}
+
+	\Froxlor\Froxlor::updateToDbVersion('201910120');
+}
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.1')) {
+	showUpdateStep("Updating from 0.10.1 to 0.10.2", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.2');
 }

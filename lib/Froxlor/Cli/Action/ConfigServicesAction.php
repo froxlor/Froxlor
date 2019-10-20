@@ -103,7 +103,7 @@ class ConfigServicesAction extends \Froxlor\Cli\Action
 		echo PHP_EOL;
 
 		while (! in_array($_daemons_config['distro'], $distributions_select_data)) {
-			$_daemons_config['distro'] = ConfigServicesCmd::getInput("choose distribution", "stretch");
+			$_daemons_config['distro'] = ConfigServicesCmd::getInput("choose distribution", "buster");
 		}
 
 		// go through all services and let user check whether to include it or not

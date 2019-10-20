@@ -44,8 +44,9 @@ class MasterCron extends \Froxlor\Cron\FroxlorCron
 			echo "Below are possible parameters for this file\n\n";
 			echo "--[cronname]\t\tincludes the given cron-file\n";
 			echo "--force\t\t\tforces re-generating of config-files (webserver, nameserver, etc.)\n";
+			echo "--run-task\t\trun a specific task [1 = re-generate configs, 4 = re-generate dns zones, 10 = re-set quotas, 99 = re-create cron.d-file]\n";
 			echo "--debug\t\t\toutput debug information about what is going on to STDOUT.\n";
-			echo "--no-fork\t\t\tdo not fork to backkground (traffic cron only).\n\n";
+			echo "--no-fork\t\tdo not fork to backkground (traffic cron only).\n\n";
 		}
 
 		/**
@@ -75,6 +76,14 @@ class MasterCron extends \Froxlor\Cron\FroxlorCron
 					define('CRON_DEBUG_FLAG', 1);
 				} elseif (strtolower($argv[$x]) == '--no-fork') {
 					define('CRON_NOFORK_FLAG', 1);
+				} elseif (strtolower($argv[$x]) == '--run-task') {
+					if (isset($argv[$x+1]) && in_array($argv[$x+1], [1,4,10,99])) {
+						\Froxlor\System\Cronjob::inserttask($argv[$x+1]);
+						array_push($jobs_to_run, 'tasks');
+					} else {
+						echo "Invalid argument for --run-task\n";
+						exit;
+					}
 				} elseif (substr(strtolower($argv[$x]), 0, 2) == '--') {
 					// --[cronname]
 					if (strlen($argv[$x]) > 3) {
