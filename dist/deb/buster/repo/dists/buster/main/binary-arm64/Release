@@ -1,6 +1,6 @@
-Archive: oldstable
+Archive: stable
 Component: main
 Origin: froxlor.org
 Label: Froxlor
-Architecture: i386
+Architecture: arm64
 Description: Froxlor repository
