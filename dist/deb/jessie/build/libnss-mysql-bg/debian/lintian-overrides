@@ -1,2 +1,0 @@
-# This shared library is only for NSS.
-libnss-mysql-bg binary: package-name-doesnt-match-sonames libnss-mysql2
