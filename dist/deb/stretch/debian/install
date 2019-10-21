@@ -2,6 +2,7 @@
 
 actions     var/www/froxlor
 css         var/www/froxlor
+doc         var/www/froxlor
 install     var/www/froxlor
 js          var/www/froxlor
 lib         var/www/froxlor
@@ -9,3 +10,5 @@ lng         var/www/froxlor
 logs        var/www/froxlor
 scripts     var/www/froxlor
 templates   var/www/froxlor
+tests       var/www/froxlor
+vendor      var/www/froxlor

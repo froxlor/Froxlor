@@ -17,6 +17,7 @@ Depends:
  php-cli,
  php-bcmath,
  php-curl,
+ php-json,
  php-mbstring,
  php-mysqlnd | php-mysql,
  php-xml,
