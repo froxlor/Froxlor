@@ -1,5 +1,5 @@
-froxlor (0.10.2-1) unstable; urgency=medium
+froxlor (0.10.2-1) stable; urgency=medium
 
-  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+  * Initial release
 
- -- Froxlor Release Team <release@froxlor.org>  Mon, 21 Oct 2019 13:06:35 +0200
+ -- Froxlor Release Team <release@froxlor.org>  Mon, 21 Oct 2019 16:01:22 +0200
