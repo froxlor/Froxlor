@@ -410,3 +410,15 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.1')) {
 	showUpdateStep("Updating from 0.10.1 to 0.10.2", false);
 	\Froxlor\Froxlor::updateToVersion('0.10.2');
 }
+
+if (\Froxlor\Froxlor::isDatabaseVersion('201910120')) {
+
+	showUpdateStep("Adding new TLS options to domains-table");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `override_tls` tinyint(1) DEFAULT '0' AFTER `writeerrorlog`;");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `ssl_protocols` text AFTER `override_tls`;");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `ssl_cipher_list` text AFTER `ssl_protocols`;");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `tlsv13_cipher_list` text AFTER `ssl_cipher_list`;");
+	lastStepStatus(0);
+
+	\Froxlor\Froxlor::updateToDbVersion('201910200');
+}

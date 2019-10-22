@@ -26,11 +26,17 @@ class DomainsTest extends TestCase
 		$customer_userdata = json_decode($json_result, true)['data'];
 		$data = [
 			'domain' => 'test.local',
-			'customerid' => $customer_userdata['customerid']
+			'customerid' => $customer_userdata['customerid'],
+			'override_tls' => 1,
+			'ssl_protocols' => array(
+				'TLSv1.2',
+				'TLSv1.3'
+			)
 		];
 		$json_result = Domains::getLocal($admin_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals($customer_userdata['documentroot'] . 'test.local/', $result['documentroot']);
+		$this->assertTrue(in_array('TLSv1.3', explode(",", $result['ssl_protocols'])));
 	}
 
 	/**
@@ -153,11 +159,13 @@ class DomainsTest extends TestCase
 		global $admin_userdata;
 		$data = [
 			'domainname' => 'test.local',
-			'email_only' => 1
+			'email_only' => 1,
+			'override_tls' => 0
 		];
 		$json_result = Domains::getLocal($admin_userdata, $data)->update();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(1, $result['email_only']);
+		$this->assertFalse(in_array('TLSv1.3', explode(",", $result['ssl_protocols'])));
 	}
 
 	/**
