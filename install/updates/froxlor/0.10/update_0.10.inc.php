@@ -403,6 +403,26 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201910110')) {
 		lastStepStatus(0);
 	}
 
+	// select all domains with an ssl IP connected and specialsettings content to include these in the ssl-vhost
+	// to maintain former behavior
+	$sel_stmt = Database::prepare("
+		SELECT d.id FROM `". TABLE_PANEL_DOMAINS . "` d
+		LEFT JOIN `". TABLE_DOMAINTOIP . "` d2i ON d2i.id_domain = d.id
+		LEFT JOIN `". TABLE_PANEL_IPSANDPORTS."` i ON i.id = d2i.id_ipandports
+		WHERE d.specialsettings <> '' AND i.ssl = '1'
+	");
+	Database::pexecute($sel_stmt);
+	$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `include_specialsettings` = '1' WHERE `id` = :id");
+	if ($sel_stmt->columnCount() > 0) {
+		showUpdateStep("Adjusting domain settings for downward compatibility");
+		while ($row = $sel_stmt->fetch(PDO::FETCH_ASSOC)) {
+			Database::pexecute($upd_stmt, [
+				'id' => $row['id']
+			]);
+		}
+		lastStepStatus(0);
+	}
+
 	\Froxlor\Froxlor::updateToDbVersion('201910120');
 }
 
