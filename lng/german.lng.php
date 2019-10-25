@@ -1731,3 +1731,4 @@ $lng['serversettings']['includedefault_sslvhostconf'] = 'Nicht-SSL vHost-Einstel
 $lng['admin']['ownsslvhostsettings'] = 'Eigene SSL vHost-Einstellungen';
 $lng['admin']['ipsandports']['ssl_default_vhostconf_domain'] = 'Standard SSL vHost-Einstellungen für jeden Domain-Container';
 $lng['customer']['total_diskspace'] = 'Gesamtspeicherplatz (MiB)';
+$lng['admin']['domain_override_tls'] = 'Überschreibe System TLS Einstellungen';

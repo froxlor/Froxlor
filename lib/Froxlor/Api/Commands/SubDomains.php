@@ -272,7 +272,12 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				`http2` = :http2,
 				`hsts` = :hsts,
 				`hsts_sub` = :hsts_sub,
-				`hsts_preload` = :hsts_preload
+				`hsts_preload` = :hsts_preload,
+				`ocsp_stapling` = :ocsp_stapling,
+				`override_tls` = :override_tls,
+				`ssl_protocols` = :ssl_protocols,
+				`ssl_cipher_list` = :ssl_cipher_list,
+				`tlsv13_cipher_list` = :tlsv13_cipher_list
 			");
 			$params = array(
 				"customerid" => $customer['customerid'],
@@ -297,7 +302,12 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				"http2" => $http2,
 				"hsts" => $hsts_maxage,
 				"hsts_sub" => $hsts_sub,
-				"hsts_preload" => $hsts_preload
+				"hsts_preload" => $hsts_preload,
+				"ocsp_stapling" => $domain_check['ocsp_stapling'],
+				"override_tls" => $domain_check['override_tls'],
+				"ssl_protocols" => $domain_check['ssl_protocols'],
+				"ssl_cipher_list" => $domain_check['ssl_cipher_list'],
+				"tlsv13_cipher_list" => $domain_check['tlsv13_cipher_list']
 			);
 			Database::pexecute($stmt, $params, true, true);
 			$subdomain_id = Database::lastInsertId();

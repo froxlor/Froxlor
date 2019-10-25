@@ -178,7 +178,7 @@ class Apache extends HttpConfigBase
 					$this->virtualhosts_data[$vhosts_filename] .= ' ServerName ' . Settings::Get('system.hostname') . "\n";
 
 					$froxlor_aliases = Settings::Get('system.froxloraliases');
-					if (!empty($froxlor_aliases)) {
+					if (! empty($froxlor_aliases)) {
 						$froxlor_aliases = explode(",", $froxlor_aliases);
 						$aliases = "";
 						foreach ($froxlor_aliases as $falias) {
@@ -187,7 +187,7 @@ class Apache extends HttpConfigBase
 							}
 						}
 						$aliases = trim($aliases);
-						if (!empty($aliases)) {
+						if (! empty($aliases)) {
 							$this->virtualhosts_data[$vhosts_filename] .= ' ServerAlias ' . $aliases . "\n";
 						}
 					}
@@ -483,7 +483,7 @@ class Apache extends HttpConfigBase
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLHonorCipherOrder On' . "\n";
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLCipherSuite ' . Settings::Get('system.ssl_cipher_list') . "\n";
 							$protocols = array_map('trim', explode(",", Settings::Get('system.ssl_protocols')));
-							if (in_array("TLSv1.3", $protocols) && !empty(Settings::Get('system.tlsv13_cipher_list')) && Settings::Get('system.apache24') == 1) {
+							if (in_array("TLSv1.3", $protocols) && ! empty(Settings::Get('system.tlsv13_cipher_list')) && Settings::Get('system.apache24') == 1) {
 								$this->virtualhosts_data[$vhosts_filename] .= ' SSLCipherSuite TLSv1.3 ' . Settings::Get('system.tlsv13_cipher_list') . "\n";
 							}
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLVerifyDepth 10' . "\n";
@@ -967,8 +967,13 @@ class Apache extends HttpConfigBase
 			}
 
 			if ($domain['ssl_cert_file'] != '') {
+
+				$ssl_protocols = ($domain['override_tls'] == '1' && ! empty($domain['ssl_protocols'])) ? $domain['ssl_protocols'] : Settings::Get('system.ssl_protocols');
+				$ssl_cipher_list = ($domain['override_tls'] == '1' && ! empty($domain['ssl_cipher_list'])) ? $domain['ssl_cipher_list'] : Settings::Get('system.ssl_cipher_list');
+				$tlsv13_cipher_list = ($domain['override_tls'] == '1' && ! empty($domain['tlsv13_cipher_list'])) ? $domain['tlsv13_cipher_list'] : Settings::Get('system.tlsv13_cipher_list');
+
 				$vhost_content .= '  SSLEngine On' . "\n";
-				$vhost_content .= '  SSLProtocol -ALL +' . str_replace(",", " +", Settings::Get('system.ssl_protocols')) . "\n";
+				$vhost_content .= '  SSLProtocol -ALL +' . str_replace(",", " +", $ssl_protocols) . "\n";
 				if (Settings::Get('system.apache24') == '1') {
 					if (isset($domain['http2']) && $domain['http2'] == '1' && Settings::Get('system.http2_support') == '1') {
 						$vhost_content .= '  Protocols h2 http/1.1' . "\n";
@@ -984,10 +989,10 @@ class Apache extends HttpConfigBase
 				}
 				// this makes it more secure, thx to Marcel (08/2013)
 				$vhost_content .= '  SSLHonorCipherOrder On' . "\n";
-				$vhost_content .= '  SSLCipherSuite ' . Settings::Get('system.ssl_cipher_list') . "\n";
-				$protocols = array_map('trim', explode(",", Settings::Get('system.ssl_protocols')));
-				if (in_array("TLSv1.3", $protocols) && !empty(Settings::Get('system.tlsv13_cipher_list')) && Settings::Get('system.apache24') == 1) {
-					$vhost_content .= '  SSLCipherSuite TLSv1.3 ' . Settings::Get('system.tlsv13_cipher_list') . "\n";
+				$vhost_content .= '  SSLCipherSuite ' . $ssl_cipher_list . "\n";
+				$protocols = array_map('trim', explode(",", $ssl_protocols));
+				if (in_array("TLSv1.3", $protocols) && ! empty($tlsv13_cipher_list) && Settings::Get('system.apache24') == 1) {
+					$vhost_content .= '  SSLCipherSuite TLSv1.3 ' . $tlsv13_cipher_list . "\n";
 				}
 				$vhost_content .= '  SSLVerifyDepth 10' . "\n";
 				$vhost_content .= '  SSLCertificateFile ' . \Froxlor\FileDir::makeCorrectFile($domain['ssl_cert_file']) . "\n";

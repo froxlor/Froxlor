@@ -268,6 +268,10 @@ CREATE TABLE `panel_domains` (
   `notryfiles` tinyint(1) DEFAULT '0',
   `writeaccesslog` tinyint(1) DEFAULT '1',
   `writeerrorlog` tinyint(1) DEFAULT '1',
+  `override_tls` tinyint(1) DEFAULT '0',
+  `ssl_protocols` text,
+  `ssl_cipher_list` text,
+  `tlsv13_cipher_list` text,
   PRIMARY KEY  (`id`),
   KEY `customerid` (`customerid`),
   KEY `parentdomain` (`parentdomainid`),
@@ -691,8 +695,8 @@ opcache.interned_strings_buffer'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'is_configured', '0'),
-	('panel', 'version', '0.10.2'),
-	('panel', 'db_version', '201910120');
+	('panel', 'version', '0.10.3'),
+	('panel', 'db_version', '201910200');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

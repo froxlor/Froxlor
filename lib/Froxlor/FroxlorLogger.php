@@ -87,6 +87,9 @@ class FroxlorLogger
 						self::$ml->pushHandler(new SyslogHandler('froxlor', LOG_USER, Logger::DEBUG));
 						break;
 					case 'file':
+						if (empty(Settings::Get('logger.logfile')) || ! is_writeable(Settings::Get('logger.logfile'))) {
+							Settings::Set('logger.logfile', '/tmp/froxlor.log');
+						}
 						self::$ml->pushHandler(new StreamHandler(Settings::Get('logger.logfile'), Logger::DEBUG));
 						break;
 					case 'mysql':

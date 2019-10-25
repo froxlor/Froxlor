@@ -180,6 +180,12 @@ return array(
 				'image' => 'icons/domain_add.png',
 				'visible' => \Froxlor\Settings::Get('system.use_ssl') == '1' ? true : false,
 				'fields' => array(
+					'no_ssl_available_info' => array(
+						'visible' => ($ssl_ipsandports == '' ? true : false),
+						'label' => 'SSL',
+						'type' => 'label',
+						'value' => $lng['panel']['nosslipsavailable']
+					),
 					'ssl_ipandport' => array(
 						'label' => $lng['domains']['ipandport_ssl_multi']['title'],
 						'desc' => $lng['domains']['ipandport_ssl_multi']['description'],
@@ -187,26 +193,6 @@ return array(
 						'values' => $ssl_ipsandports,
 						'value' => explode(',', \Froxlor\Settings::Get('system.defaultsslip')),
 						'is_array' => 1
-					),
-					'ssl_specialsettings' => array(
-						'visible' => ($userinfo['change_serversettings'] == '1' ? true : false),
-						'style' => 'align-top',
-						'label' => $lng['admin']['ownsslvhostsettings'],
-						'desc' => $lng['serversettings']['default_vhostconf']['description'],
-						'type' => 'textarea',
-						'cols' => 60,
-						'rows' => 12
-					),
-					'include_specialsettings' => array(
-						'label' => $lng['admin']['include_ownvhostsettings'],
-						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array()
 					),
 					'ssl_redirect' => array(
 						'visible' => ($ssl_ipsandports != '' ? true : false),
@@ -247,11 +233,81 @@ return array(
 						),
 						'value' => array()
 					),
-					'no_ssl_available_info' => array(
-						'visible' => ($ssl_ipsandports == '' ? true : false),
-						'label' => 'SSL',
-						'type' => 'label',
-						'value' => $lng['panel']['nosslipsavailable']
+					'override_tls' => array(
+						'visible' => (($ssl_ipsandports != '' ? true : false) && $userinfo['change_serversettings'] == '1' ? true : false),
+						'label' => $lng['admin']['domain_override_tls'],
+						'type' => 'checkbox',
+						'values' => array(
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array()
+					),
+					'ssl_protocols' => array(
+						'visible' => (($ssl_ipsandports != '' ? true : false) && $userinfo['change_serversettings'] == '1' && \Froxlor\Settings::Get('system.webserver') != 'lighttpd' ? true : false),
+						'label' => $lng['serversettings']['ssl']['ssl_protocols']['title'],
+						'desc' => $lng['serversettings']['ssl']['ssl_protocols']['description'],
+						'type' => 'checkbox',
+						'value' => array(
+							'TLSv1',
+							'TLSv1.2'
+						),
+						'values' => array(
+							array(
+								'value' => 'TLSv1',
+								'label' => 'TLSv1<br />'
+							),
+							array(
+								'value' => 'TLSv1.1',
+								'label' => 'TLSv1.1<br />'
+							),
+							array(
+								'value' => 'TLSv1.2',
+								'label' => 'TLSv1.2<br />'
+							),
+							array(
+								'value' => 'TLSv1.3',
+								'label' => 'TLSv1.3<br />'
+							)
+						),
+						'is_array' => 1
+					),
+					'ssl_cipher_list' => array(
+						'visible' => (($ssl_ipsandports != '' ? true : false) && $userinfo['change_serversettings'] == '1' ? true : false),
+						'label' => $lng['serversettings']['ssl']['ssl_cipher_list']['title'],
+						'desc' => $lng['serversettings']['ssl']['ssl_cipher_list']['description'],
+						'type' => 'text',
+						'value' => \Froxlor\Settings::Get('system.ssl_cipher_list')
+					),
+					'tlsv13_cipher_list' => array(
+						'visible' => (($ssl_ipsandports != '' ? true : false) && $userinfo['change_serversettings'] == '1' && \Froxlor\Settings::Get('system.webserver') == "apache2" && \Froxlor\Settings::Get('system.apache24') == 1 ? true : false),
+						'label' => $lng['serversettings']['ssl']['tlsv13_cipher_list']['title'],
+						'desc' => $lng['serversettings']['ssl']['tlsv13_cipher_list']['description'],
+						'type' => 'text',
+						'value' => \Froxlor\Settings::Get('system.tlsv13_cipher_list')
+					),
+					'ssl_specialsettings' => array(
+						'visible' => (($ssl_ipsandports != '' ? true : false) && $userinfo['change_serversettings'] == '1' ? true : false),
+						'style' => 'align-top',
+						'label' => $lng['admin']['ownsslvhostsettings'],
+						'desc' => $lng['serversettings']['default_vhostconf']['description'],
+						'type' => 'textarea',
+						'cols' => 60,
+						'rows' => 12
+					),
+					'include_specialsettings' => array(
+						'visible' => (($ssl_ipsandports != '' ? true : false) && $userinfo['change_serversettings'] == '1' ? true : false),
+						'label' => $lng['admin']['include_ownvhostsettings'],
+						'type' => 'checkbox',
+						'values' => array(
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array()
 					),
 					'hsts_maxage' => array(
 						'visible' => ($ssl_ipsandports != '' ? true : false),

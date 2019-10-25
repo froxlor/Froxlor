@@ -570,6 +570,8 @@ class Lighttpd extends HttpConfigBase
 
 			if ($domain['ssl_cert_file'] != '') {
 
+				$ssl_cipher_list = ($domain['override_tls'] == '1' && ! empty($domain['ssl_cipher_list'])) ? $domain['ssl_cipher_list'] : Settings::Get('system.ssl_cipher_list');
+
 				// ssl.engine only necessary once in the ip/port vhost (SERVER['socket'] condition)
 				// $ssl_settings .= 'ssl.engine = "enable"' . "\n";
 				$ssl_settings .= 'ssl.use-compression = "disable"' . "\n";
@@ -583,7 +585,7 @@ class Lighttpd extends HttpConfigBase
 				}
 				$ssl_settings .= 'ssl.use-sslv2 = "disable"' . "\n";
 				$ssl_settings .= 'ssl.use-sslv3 = "disable"' . "\n";
-				$ssl_settings .= 'ssl.cipher-list = "' . Settings::Get('system.ssl_cipher_list') . '"' . "\n";
+				$ssl_settings .= 'ssl.cipher-list = "' . $ssl_cipher_list . '"' . "\n";
 				$ssl_settings .= 'ssl.honor-cipher-order = "enable"' . "\n";
 				$ssl_settings .= 'ssl.pemfile = "' . \Froxlor\FileDir::makeCorrectFile($domain['ssl_cert_file']) . '"' . "\n";
 
