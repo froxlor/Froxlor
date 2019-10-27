@@ -541,6 +541,9 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 				"username" => $customer_data['loginname']
 			);
 			Database::pexecute($stmt, $params, true, true);
+		} else {
+			// do not allow removing default ftp-account
+			\Froxlor\UI\Response::standard_error('ftp_cantdeletemainaccount', '', true);
 		}
 
 		// remove all quotatallies
