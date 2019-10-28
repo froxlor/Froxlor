@@ -7,6 +7,20 @@ $header
 		
 		<div class="grid-g">
 			<div class="grid-u-1-2" id="statsbox">
+				<if $userinfo['diskspace'] != '0'>
+				<div class="canvasbox">
+					<input type="hidden" id="totalspace" class="circular" data-used="{$userinfo['total_used']}" data-available="{$userinfo['diskspace']}">
+					<canvas id="totalspace-canvas" width="120" height="76"></canvas><br />
+					{$lng['customer']['total_diskspace']}<br />
+					<small>
+						{$userinfo['total_used']} {$lng['panel']['used']}<br />
+						<if $userinfo['diskspace'] != '∞'>
+						{$userinfo['diskspace']} {$lng['panel']['available']}
+						</if>
+					</small>
+				</div>
+				</if>
+
 				<if $userinfo['subdomains'] != '0'>
 				<div class="canvasbox">
 					<input type="hidden" id="subdomains" class="circular" data-used="{$userinfo['subdomains_used']}" data-available="{$userinfo['subdomains']}">

@@ -1504,7 +1504,7 @@ user = <SQL_UNPRIVILEGED_USER>
 password = <SQL_UNPRIVILEGED_PASSWORD>
 dbname = <SQL_DB>
 hosts = <SQL_HOST>
-query = SELECT destination FROM mail_virtual WHERE email = '%s' AND trim(destination) <> ''
+query = SELECT destination FROM mail_virtual AS v, panel_customers AS c WHERE c.customerid = v.customerid AND c.deactivated = 0 AND v.email = '%s' AND trim(v.destination) <> '' 
 ]]>
 							</content>
 						</file>
@@ -3658,7 +3658,7 @@ protocol sieve {
 #  %m - number of messages (before deletion)
 #  %s - mailbox size in bytes (before deletion)
 #  %u - old/new UIDL hash. may help finding out if UIDLs changed unexpectedly
-#pop3_logout_format = top=%t/%p, retr=%r/%b, del=%d/%m, size=%s
+pop3_logout_format = in=%i out=%o top=%t/%p, retr=%r/%b, del=%d/%m, size=%s
 
 # Workarounds for various client bugs:
 #   outlook-no-nuls:
@@ -4461,21 +4461,7 @@ UPLOADGID=
 				<!-- Cronjob -->
 				<daemon name="cron" title="Cronjob for froxlor"
 					mandatory="true">
-					<file name="/etc/cron.d/froxlor" chown="root:0" chmod="0640">
-						<content><![CDATA[
-#
-# Set PATH, otherwise restart-scripts won't find start-stop-daemon
-#
-PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-#
-# Regular cron jobs for the froxlor package
-#
-# Please check that all following paths are correct
-#
-*/5 * * * *	root	/usr/bin/nice -n 5 /usr/bin/php -q <BASE_PATH>scripts/froxlor_master_cronjob.php
-]]>
-						</content>
-					</file>
+					<command><![CDATA[/usr/bin/php <BASE_PATH>scripts/froxlor_master_cronjob.php --run-task 99]]></command>
 					<command><![CDATA[{{settings.system.crondreload}}]]></command>
 				</daemon>
 				<!-- AWstats -->
@@ -4490,7 +4476,7 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 				</daemon>
 				<!-- libnss-mysql -->
 				<daemon name="libnss"
-					title="libnss-mysql (required for FCGID/php-fpm/mpm-itk)">
+					title="libnss-mysql (alternative for libnss-extrausers, required for FCGID/php-fpm/mpm-itk)">
 					<install><![CDATA[apt-get install nscd
 wget http://debian.froxlor.org/pool/main/libn/libnss-mysql-bg/libnss-mysql-bg_1.5-3+frx1_amd64.deb
 dpkg -i libnss-mysql-bg_1.5-3+frx1_amd64.deb
@@ -4663,8 +4649,8 @@ aliases:     files
 				</daemon>
 				<!-- libnss-extrausers -->
 				<daemon name="libnssextrausers"
-					title="libnss-extrausers (alternative to libnss-mysql, required for FCGID/php-fpm/mpm-itk)">
-					<install><![CDATA[apt-get install nscd libnss-extrausers]]></install>
+					title="libnss-extrausers (required for FCGID/php-fpm/mpm-itk)">
+					<install><![CDATA[apt-get install libnss-extrausers]]></install>
 					<commands index="1">
 						<command><![CDATA[mkdir -p /var/lib/extrausers]]></command>
 						<command><![CDATA[touch /var/lib/extrausers/passwd]]></command>
@@ -4696,9 +4682,6 @@ aliases:     files
 ]]>
 						</content>
 					</file>
-					<command><![CDATA[/etc/init.d/nscd restart]]></command>
-					<!-- clear group chache -->
-					<command><![CDATA[nscd --invalidate=group]]></command>
 				</daemon>
 				<!-- Logrotate -->
 				<daemon name="logrotate" title="Logrotate">

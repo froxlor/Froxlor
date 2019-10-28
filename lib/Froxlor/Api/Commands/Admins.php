@@ -97,6 +97,8 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	optional, default auto-generated
 	 * @param string $def_language
 	 *        	optional, default is system-default language
+	 * @param bool $api_allowed
+	 *        	optional, default is true if system setting api.enabled is true, else false
 	 * @param string $custom_notes
 	 *        	optional, default empty
 	 * @param bool $custom_notes_show
@@ -171,6 +173,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 
 			// parameters
 			$def_language = $this->getParam('def_language', true, Settings::Get('panel.standardlanguage'));
+			$api_allowed = $this->getBoolParam('api_allowed', true, Settings::Get('api.enabled'));
 			$custom_notes = $this->getParam('custom_notes', true, '');
 			$custom_notes_show = $this->getBoolParam('custom_notes_show', true, 0);
 			$password = $this->getParam('admin_password', true, '');
@@ -271,6 +274,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 					'name' => $name,
 					'email' => $email,
 					'lang' => $def_language,
+					'api_allowed' => $api_allowed,
 					'change_serversettings' => $change_serversettings,
 					'customers' => $customers,
 					'customers_see_all' => $customers_see_all,
@@ -299,6 +303,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 					`name` = :name,
 					`email` = :email,
 					`def_language` = :lang,
+					`api_allowed` = :api_allowed,
 					`change_serversettings` = :change_serversettings,
 					`customers` = :customers,
 					`customers_see_all` = :customers_see_all,
@@ -350,6 +355,8 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	optional, default auto-generated
 	 * @param string $def_language
 	 *        	optional, default is system-default language
+	 * @param bool $api_allowed
+	 *        	optional, default is true if system setting api.enabled is true, else false
 	 * @param string $custom_notes
 	 *        	optional, default empty
 	 * @param string $theme
@@ -444,6 +451,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 
 				// you cannot edit some of the details of yourself
 				if ($result['adminid'] == $this->getUserDetail('adminid')) {
+					$api_allowed = $result['api_allowed'];
 					$deactivated = $result['deactivated'];
 					$customers = $result['customers'];
 					$domains = $result['domains'];
@@ -462,6 +470,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 					$traffic = $result['traffic'];
 					$ipaddress = ($result['ip'] != - 1 ? json_decode($result['ip'], true) : - 1);
 				} else {
+					$api_allowed = $this->getBoolParam('api_allowed', true, $result['api_allowed']);
 					$deactivated = $this->getBoolParam('deactivated', true, $result['deactivated']);
 
 					$dec_places = Settings::Get('panel.decimal_places');
@@ -578,6 +587,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 						'name' => $name,
 						'email' => $email,
 						'lang' => $def_language,
+						'api_allowed' => $api_allowed,
 						'change_serversettings' => $change_serversettings,
 						'customers' => $customers,
 						'customers_see_all' => $customers_see_all,
@@ -607,6 +617,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 						`name` = :name,
 						`email` = :email,
 						`def_language` = :lang,
+						`api_allowed` = :api_allowed,
 						`change_serversettings` = :change_serversettings,
 						`customers` = :customers,
 						`customers_see_all` = :customers_see_all,
@@ -793,7 +804,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 * @param string $extra
 	 *        	optional, default empty
 	 * @param int $increase_by
-	 *              optional, default 1
+	 *        	optional, default 1
 	 */
 	public static function increaseUsage($adminid = 0, $resource = null, $extra = '', $increase_by = 1)
 	{
@@ -808,7 +819,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 * @param string $extra
 	 *        	optional, default empty
 	 * @param int $decrease_by
-	 *              optional, default 1
+	 *        	optional, default 1
 	 */
 	public static function decreaseUsage($adminid = 0, $resource = null, $extra = '', $decrease_by = 1)
 	{

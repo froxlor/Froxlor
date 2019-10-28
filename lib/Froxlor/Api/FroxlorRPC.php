@@ -55,13 +55,20 @@ class FroxlorRPC
 	 */
 	private static function validateAuth($key, $secret)
 	{
-		$sel_stmt = \Froxlor\Database\Database::prepare("SELECT * FROM `api_keys` WHERE `apikey` = :ak AND `secret` = :as");
+		$sel_stmt = \Froxlor\Database\Database::prepare("
+			SELECT ak.*, a.api_allowed as admin_api_allowed, c.api_allowed as cust_api_allowed
+			FROM `api_keys` ak
+			LEFT JOIN `panel_admins` a ON a.adminid = ak.adminid
+			LEFT JOIN `panel_customers` c ON c.customerid = ak.customerid
+			WHERE `apikey` = :ak AND `secret` = :as
+		");
 		$result = \Froxlor\Database\Database::pexecute_first($sel_stmt, array(
 			'ak' => $key,
 			'as' => $secret
 		), true, true);
 		if ($result) {
-			if ($result['apikey'] == $key && $result['secret'] == $secret && ($result['valid_until'] == - 1 || $result['valid_until'] >= time())) {
+			if ($result['apikey'] == $key && $result['secret'] == $secret && ($result['valid_until'] == - 1 || $result['valid_until'] >= time()) && (($result['customerid'] == 0 && $result['admin_api_allowed'] == 1) || ($result['customerid'] > 0 && $result['cust_api_allowed'] == 1))) {
+				// get user to check whether api call is allowed
 				if (! empty($result['allowed_from'])) {
 					// @todo allow specification and validating of whole subnets later
 					$ip_list = explode(",", $result['allowed_from']);

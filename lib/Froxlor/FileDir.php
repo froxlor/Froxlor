@@ -217,7 +217,7 @@ class FileDir
 					'ADMIN_EMAIL' => $template['admin_email']
 				);
 
-				// @fixme replaceVariables
+				// replaceVariables
 				$htmlcontent = PhpHelper::replaceVariables($template['value'], $replace_arr);
 				$indexhtmlpath = self::makeCorrectFile($destination . '/index.' . Settings::Get('system.index_file_extension'));
 				$index_html_handler = fopen($indexhtmlpath, 'w');

@@ -3,7 +3,6 @@ namespace Froxlor\Cron\Http;
 
 use Froxlor\Database\Database;
 use Froxlor\Settings;
-use Froxlor\Cron\Http\Php\Fpm;
 use Froxlor\Cron\Http\Php\PhpInterface;
 
 /**
@@ -44,30 +43,6 @@ class Lighttpd extends HttpConfigBase
 	 * @var bool
 	 */
 	private $deactivated = false;
-
-	public function reload()
-	{
-		if ((int) Settings::Get('phpfpm.enabled') == 1) {
-			// get all start/stop commands
-			$startstop_sel = Database::prepare("SELECT reload_cmd, config_dir FROM `" . TABLE_PANEL_FPMDAEMONS . "`");
-			Database::pexecute($startstop_sel);
-			$restart_cmds = $startstop_sel->fetchAll(\PDO::FETCH_ASSOC);
-			// restart all php-fpm instances
-			foreach ($restart_cmds as $restart_cmd) {
-				// check whether the config dir is empty (no domains uses this daemon)
-				// so we need to create a dummy
-				$_conffiles = glob(\Froxlor\FileDir::makeCorrectFile($restart_cmd['config_dir'] . "/*.conf"));
-				if ($_conffiles === false || empty($_conffiles)) {
-					$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'lighttpd::reload: fpm config directory "' . $restart_cmd['config_dir'] . '" is empty. Creating dummy.');
-					Fpm::createDummyPool($restart_cmd['config_dir']);
-				}
-				$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'lighttpd::reload: running ' . $restart_cmd['reload_cmd']);
-				\Froxlor\FileDir::safe_exec(escapeshellcmd($restart_cmd['reload_cmd']));
-			}
-		}
-		$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'lighttpd::reload: reloading lighttpd');
-		\Froxlor\FileDir::safe_exec(escapeshellcmd(Settings::Get('system.apachereload_command')));
-	}
 
 	public function createIpPort()
 	{
@@ -200,7 +175,7 @@ class Lighttpd extends HttpConfigBase
 					);
 				}
 
-				if ($row_ipsandports['specialsettings'] != '') {
+				if ($row_ipsandports['specialsettings'] != '' && ($row_ipsandports['ssl'] == '0' || ($row_ipsandports['ssl'] == '1' && Settings::Get('system.use_ssl') == '1' && $row_ipsandports['include_specialsettings'] == '1'))) {
 					$this->lighttpd_data[$vhost_filename] .= $this->processSpecialConfigTemplate($row_ipsandports['specialsettings'], $domain, $row_ipsandports['ip'], $row_ipsandports['port'], $row_ipsandports['ssl'] == '1') . "\n";
 				}
 
@@ -208,6 +183,11 @@ class Lighttpd extends HttpConfigBase
 			}
 
 			if ($row_ipsandports['ssl'] == '1') {
+
+				if ($row_ipsandports['ssl_specialsettings'] != '') {
+					$this->lighttpd_data[$vhost_filename] .= $this->processSpecialConfigTemplate($row_ipsandports['ssl_specialsettings'], $domain, $row_ipsandports['ip'], $row_ipsandports['port'], $row_ipsandports['ssl'] == '1') . "\n";
+				}
+
 				if ($row_ipsandports['ssl_cert_file'] == '') {
 					$row_ipsandports['ssl_cert_file'] = Settings::Get('system.ssl_cert_file');
 					if (! file_exists($row_ipsandports['ssl_cert_file'])) {
@@ -316,7 +296,7 @@ class Lighttpd extends HttpConfigBase
 			}
 
 			$defhandler = Settings::Get('defaultwebsrverrhandler.err404');
-			if (! \Froxlor\Validate\Form\Data::validateUrl($defhandler)) {
+			if (! \Froxlor\Validate\Validate::validateUrl($defhandler)) {
 				$defhandler = \Froxlor\FileDir::makeCorrectFile($defhandler);
 			}
 			$this->lighttpd_data[$vhost_filename] = 'server.error-handler-404 = "' . $defhandler . '"';
@@ -396,6 +376,7 @@ class Lighttpd extends HttpConfigBase
 	protected function createLighttpdHosts($ipid, $ssl, $vhost_filename)
 	{
 		$domains = WebserverBase::getVhostsToCreate();
+		$included_vhosts = array();
 		foreach ($domains as $domain) {
 
 			if (is_dir(Settings::Get('system.apacheconf_vhost'))) {
@@ -475,7 +456,7 @@ class Lighttpd extends HttpConfigBase
 				'domainid' => $domain['id']
 			));
 
-			if ($ssldestport['port'] != '') {
+			if ($ssldestport && $ssldestport['port'] != '') {
 				$_sslport = ":" . $ssldestport['port'];
 			}
 
@@ -536,16 +517,28 @@ class Lighttpd extends HttpConfigBase
 
 					$vhost_content .= $this->getSslSettings($domain, $ssl_vhost);
 
-					if ($domain['specialsettings'] != "") {
+					if ($domain['specialsettings'] != '' && ($ssl_vhost == false || ($ssl_vhost == true && $domain['include_specialsettings'] == 1))) {
 						$vhost_content .= $this->processSpecialConfigTemplate($domain['specialsettings'], $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
 					}
 
-					if ($ipandport['default_vhostconf_domain'] != '') {
+					if ($domain['ssl_specialsettings'] != '' && $ssl_vhost == true) {
+						$vhost_content .= $this->processSpecialConfigTemplate($domain['ssl_specialsettings'], $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
+					}
+
+					if ($ipandport['default_vhostconf_domain'] != '' && ($ssl_vhost == false || ($ssl_vhost == true && $ipandport['include_default_vhostconf_domain'] == '1'))) {
 						$vhost_content .= $this->processSpecialConfigTemplate($ipandport['default_vhostconf_domain'], $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
 					}
 
-					if (Settings::Get('system.default_vhostconf') != '') {
+					if ($ipandport['ssl_default_vhostconf_domain'] != '' && $ssl_vhost == true) {
+						$vhost_content .= $this->processSpecialConfigTemplate($ipandport['ssl_default_vhostconf_domain'], $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
+					}
+
+					if (Settings::Get('system.default_vhostconf') != '' && ($ssl_vhost == false || ($ssl_vhost == true && Settings::Get('system.include_default_vhostconf') == 1))) {
 						$vhost_content .= $this->processSpecialConfigTemplate(Settings::Get('system.default_vhostconf'), $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
+					}
+
+					if (Settings::Get('system.default_sslvhostconf') != '' && $ssl_vhost == true) {
+						$vhost_content .= $this->processSpecialConfigTemplate(Settings::Get('system.default_sslvhostconf'), $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
 					}
 				}
 				$vhost_content .= $this->getLogFiles($domain);
@@ -577,6 +570,8 @@ class Lighttpd extends HttpConfigBase
 
 			if ($domain['ssl_cert_file'] != '') {
 
+				$ssl_cipher_list = ($domain['override_tls'] == '1' && ! empty($domain['ssl_cipher_list'])) ? $domain['ssl_cipher_list'] : Settings::Get('system.ssl_cipher_list');
+
 				// ssl.engine only necessary once in the ip/port vhost (SERVER['socket'] condition)
 				// $ssl_settings .= 'ssl.engine = "enable"' . "\n";
 				$ssl_settings .= 'ssl.use-compression = "disable"' . "\n";
@@ -590,7 +585,7 @@ class Lighttpd extends HttpConfigBase
 				}
 				$ssl_settings .= 'ssl.use-sslv2 = "disable"' . "\n";
 				$ssl_settings .= 'ssl.use-sslv3 = "disable"' . "\n";
-				$ssl_settings .= 'ssl.cipher-list = "' . Settings::Get('system.ssl_cipher_list') . '"' . "\n";
+				$ssl_settings .= 'ssl.cipher-list = "' . $ssl_cipher_list . '"' . "\n";
 				$ssl_settings .= 'ssl.honor-cipher-order = "enable"' . "\n";
 				$ssl_settings .= 'ssl.pemfile = "' . \Froxlor\FileDir::makeCorrectFile($domain['ssl_cert_file']) . '"' . "\n";
 
@@ -707,7 +702,7 @@ class Lighttpd extends HttpConfigBase
 
 			if (! empty($row['error404path'])) {
 				$defhandler = $row['error404path'];
-				if (! \Froxlor\Validate\Form\Data::validateUrl($defhandler)) {
+				if (! \Froxlor\Validate\Validate::validateUrl($defhandler)) {
 					$defhandler = \Froxlor\FileDir::makeCorrectFile($domain['documentroot'] . '/' . $defhandler);
 				}
 				$error_string .= '  server.error-handler-404 = "' . $defhandler . '"' . "\n\n";
@@ -765,23 +760,21 @@ class Lighttpd extends HttpConfigBase
 		));
 
 		while ($row_htpasswds = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
-			if ($auth_backend_loaded[$domain['ipandport']] != 'yes' && $auth_backend_loaded[$domain['ssl_ipandport']] != 'yes') {
+			if ($this->auth_backend_loaded[$domain['ipandport']] != 'yes' && $this->auth_backend_loaded[$domain['ssl_ipandport']] != 'yes') {
 				$filename = $domain['customerid'] . '.htpasswd';
 
 				if ($this->auth_backend_loaded[$domain['ipandport']] != 'yes') {
-					$auth_backend_loaded[$domain['ipandport']] = 'yes';
+					$this->auth_backend_loaded[$domain['ipandport']] = 'yes';
 					$diroption_text .= 'auth.backend = "htpasswd"' . "\n";
 					$diroption_text .= 'auth.backend.htpasswd.userfile = "' . \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.apacheconf_htpasswddir') . '/' . $filename) . '"' . "\n";
 					$this->needed_htpasswds[$filename] = $row_htpasswds['username'] . ':' . $row_htpasswds['password'] . "\n";
 					$diroption_text .= 'auth.require = ( ' . "\n";
-					$previous_domain_id = '1';
 				} elseif ($this->auth_backend_loaded[$domain['ssl_ipandport']] != 'yes') {
-					$auth_backend_loaded[$domain['ssl_ipandport']] = 'yes';
+					$this->auth_backend_loaded[$domain['ssl_ipandport']] = 'yes';
 					$diroption_text .= 'auth.backend= "htpasswd"' . "\n";
 					$diroption_text .= 'auth.backend.htpasswd.userfile = "' . \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.apacheconf_htpasswddir') . '/' . $filename) . '"' . "\n";
 					$this->needed_htpasswds[$filename] = $row_htpasswds['username'] . ':' . $row_htpasswds['password'] . "\n";
 					$diroption_text .= 'auth.require = ( ' . "\n";
-					$previous_domain_id = '1';
 				}
 			}
 

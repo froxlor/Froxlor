@@ -148,6 +148,11 @@ class FroxlorAPI
 	 */
 	public function getLastResponse(): array
 	{
+		if (!empty($this->getLastError())) {
+			// nothing is returned when the last call
+			// was not successful
+			return [];
+		}
 		return $this->last_body;
 	}
 

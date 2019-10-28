@@ -45,7 +45,7 @@ return array(
 					'settinggroup' => 'panel',
 					'varname' => 'default_theme',
 					'type' => 'option',
-					'default' => 'Froxlor',
+					'default' => 'Sparkle',
 					'option_mode' => 'one',
 					'option_options_method' => array(
 						'\\Froxlor\\UI\\Template',

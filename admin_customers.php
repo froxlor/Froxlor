@@ -91,10 +91,16 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 					'cid' => $row['customerid']
 				));
 
-				$row['webspace_used'] = round($usages['webspace'] / 1024, $dec_places);
-				$row['mailspace_used'] = round($usages['mail'] / 1024, $dec_places);
-				$row['dbspace_used'] = round($usages['mysql'] / 1024, $dec_places);
-
+				if ($usages)
+				{
+					$row['webspace_used'] = round($usages['webspace'] / 1024, $dec_places);
+					$row['mailspace_used'] = round($usages['mail'] / 1024, $dec_places);
+					$row['dbspace_used'] = round($usages['mysql'] / 1024, $dec_places);
+				} else {
+					$row['webspace_used'] = 0;
+					$row['mailspace_used'] = 0;
+					$row['dbspace_used'] = 0;
+				}
 				$row['traffic_used'] = round($row['traffic_used'] / (1024 * 1024), $dec_places);
 				$row['traffic'] = round($row['traffic'] / (1024 * 1024), $dec_places);
 				$row['diskspace_used'] = round($row['diskspace_used'] / 1024, $dec_places);

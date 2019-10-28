@@ -82,9 +82,11 @@ class DbManagerMySQL
 			if (version_compare(Database::getAttribute(\PDO::ATTR_SERVER_VERSION), '8.0.11', '>=')) {
 				// create user
 				$stmt = Database::prepare("
-					CREATE USER '" . $username . "'@'" . $access_host . "' IDENTIFIED BY 'password'
+					CREATE USER '" . $username . "'@'" . $access_host . "' IDENTIFIED BY :password
 				");
-				Database::pexecute($stmt);
+				Database::pexecute($stmt, array(
+					"password" => $password
+				));
 				// grant privileges
 				$stmt = Database::prepare("
 					GRANT ALL ON `" . $username . "`.* TO :username@:host
@@ -96,29 +98,31 @@ class DbManagerMySQL
 			} else {
 				// grant privileges
 				$stmt = Database::prepare("
-					GRANT ALL PRIVILEGES ON `" . $username . "`.* TO :username@:host IDENTIFIED BY 'password'
+					GRANT ALL PRIVILEGES ON `" . $username . "`.* TO :username@:host IDENTIFIED BY :password
 				");
 				Database::pexecute($stmt, array(
 					"username" => $username,
-					"host" => $access_host
+					"host" => $access_host,
+					"password" => $password
 				));
 			}
-		}
-		// set passoword
-		if (version_compare(Database::getAttribute(\PDO::ATTR_SERVER_VERSION), '5.7.6', '<')) {
-			if ($p_encrypted) {
-				$stmt = Database::prepare("SET PASSWORD FOR :username@:host = :password");
-			} else {
-				$stmt = Database::prepare("SET PASSWORD FOR :username@:host = PASSWORD(:password)");
-			}
 		} else {
-			$stmt = Database::prepare("ALTER USER :username@:host IDENTIFIED BY :password");
+			// set passoword
+			if (version_compare(Database::getAttribute(\PDO::ATTR_SERVER_VERSION), '5.7.6', '<')) {
+				if ($p_encrypted) {
+					$stmt = Database::prepare("SET PASSWORD FOR :username@:host = :password");
+				} else {
+					$stmt = Database::prepare("SET PASSWORD FOR :username@:host = PASSWORD(:password)");
+				}
+			} else {
+				$stmt = Database::prepare("ALTER USER :username@:host IDENTIFIED BY :password");
+			}
+			Database::pexecute($stmt, array(
+				"username" => $username,
+				"host" => $access_host,
+				"password" => $password
+			));
 		}
-		Database::pexecute($stmt, array(
-			"username" => $username,
-			"host" => $access_host,
-			"password" => $password
-		));
 	}
 
 	/**
@@ -142,7 +146,11 @@ class DbManagerMySQL
 		));
 
 		// as of MySQL 5.0.2 this also revokes privileges. (requires MySQL 4.1.2+)
-		$drop_stmt = Database::prepare("DROP USER IF EXISTS :dbname@:host");
+		if (version_compare(Database::getAttribute(\PDO::ATTR_SERVER_VERSION), '5.7.0', '<')) {
+			$drop_stmt = Database::prepare("DROP USER :dbname@:host");
+		} else {
+			$drop_stmt = Database::prepare("DROP USER IF EXISTS :dbname@:host");
+		}
 		while ($host = $host_res_stmt->fetch(\PDO::FETCH_ASSOC)) {
 			Database::pexecute($drop_stmt, array(
 				'dbname' => $dbname,
@@ -150,6 +158,7 @@ class DbManagerMySQL
 			), false);
 		}
 
+		
 		$drop_stmt = Database::prepare("DROP DATABASE IF EXISTS `" . $dbname . "`");
 		Database::pexecute($drop_stmt);
 	}
@@ -168,7 +177,11 @@ class DbManagerMySQL
 			Database::pexecute($stmt);
 		}
 		// as of MySQL 5.0.2 this also revokes privileges. (requires MySQL 4.1.2+)
-		$stmt = Database::prepare("DROP USER :username@:host");
+		if (version_compare(Database::getAttribute(\PDO::ATTR_SERVER_VERSION), '5.7.0', '<')) {
+			$stmt = Database::prepare("DROP USER :username@:host");
+		} else {
+			$stmt = Database::prepare("DROP USER IF EXISTS :username@:host");
+		}
 		Database::pexecute($stmt, array(
 			"username" => $username,
 			"host" => $host

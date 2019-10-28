@@ -21,11 +21,11 @@
 			<div class="errorcontainer bradius">
 				<div class="errortitle">Whoops!</div>
 				<div class="error">
-					<p>The configuration file <b>lib/userdata.inc.php</b> cannot be read from the webserver.</p>
+					<p>It seems you are missing some required files.</p>
 					<p>&nbsp;</p>
-					<p>This mostly happens due to wrong ownership.<br />Try the following command to correct the ownership:</p>
+					<p>Froxlor uses composer for its external requirements.<br />Try the following command to install them:</p>
 					<p>&nbsp;</p>
-					<p><pre>chown -R <USER>:<GROUP> <FROXLOR_INSTALL_DIR></pre></p>
+					<p><pre>cd <FROXLOR_INSTALL_DIR> && composer install --no-dev</pre></p>
 				</div>
 			</div>
 			<aside class="right">
@@ -38,7 +38,7 @@
 </div>
 <footer>
 	<span>
-		Froxlor &copy; 2009-<CURRENT_YEAR> by <a href="http://www.froxlor.org/" rel="external">the Froxlor Team</a>
+		Froxlor &copy; 2009-<CURRENT_YEAR> by <a href="https://www.froxlor.org/" rel="external">the Froxlor Team</a>
 	</span>
 </footer>
 </body>

@@ -37,3 +37,6 @@ $lng['domains']['ipandport_ssl_multi']['description'] = $lng['domains']['ipandpo
 $lng['success']['noupdatesavail'] = $lng['update']['noupdatesavail'];
 $lng['error']['autoupdate_3'] = $lng['error']['customized_version'];
 $lng['menue']['logger']['logger'] = $lng['admin']['loggersystem'];
+
+$lng['serversettings']['default_sslvhostconf']['description'] = $lng['serversettings']['default_vhostconf']['description'];
+$lng['admin']['include_ownvhostsettings'] = $lng['serversettings']['includedefault_sslvhostconf'];

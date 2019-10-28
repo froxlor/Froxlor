@@ -220,6 +220,14 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201902120')) {
 		$domain_in = substr($domain_in, 0, - 1);
 		Database::query("DELETE FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` WHERE `domainid` IN (" . $domain_in . ")");
 	}
+	// check for froxlor domain using let's encrypt
+	if (Settings::Get('system.le_froxlor_enabled') == 1) {
+		Database::query("DELETE FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` WHERE `domainid` = '0'");
+	}
+	lastStepStatus(0);
+
+	showUpdateStep("Inserting job to regenerate configfiles");
+	\Froxlor\System\Cronjob::inserttask('1');
 	lastStepStatus(0);
 
 	\Froxlor\Froxlor::updateToDbVersion('201902170');
@@ -254,4 +262,188 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201904100')) {
 	lastStepStatus(0);
 
 	\Froxlor\Froxlor::updateToDbVersion('201904250');
+}
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.0-rc1')) {
+	showUpdateStep("Updating from 0.10.0-rc1 to 0.10.0-rc2", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.0-rc2');
+}
+
+if (\Froxlor\Froxlor::isDatabaseVersion('201904250')) {
+
+	showUpdateStep("Adding new settings for CAA");
+	Settings::AddNew('caa.caa_entry', '', true);
+	Settings::AddNew('system.dns_createcaaentry', 1, true);
+	lastStepStatus(0);
+
+	\Froxlor\Froxlor::updateToDbVersion('201907270');
+}
+
+if (\Froxlor\Froxlor::isDatabaseVersion('201907270')) {
+
+	showUpdateStep("Cleaning up old files");
+	$to_clean = array(
+		"actions/admin/settings/000.version.php",
+		"actions/admin/settings/190.ticket.php",
+		"admin_tickets.php",
+		"customer_tickets.php",
+		"install/scripts/language-check.php",
+		"install/updates/froxlor/upgrade_syscp.inc.php",
+		"lib/classes",
+		"lib/configfiles/precise.xml",
+		"lib/cron_init.php",
+		"lib/cron_shutdown.php",
+		"lib/formfields/admin/tickets",
+		"lib/formfields/customer/tickets",
+		"lib/functions.php",
+		"lib/functions",
+		"lib/navigation/10.tickets.php",
+		"scripts/classes",
+		"scripts/jobs",
+		"templates/Sparkle/admin/tickets",
+		"templates/Sparkle/customer/tickets"
+	);
+	$disabled = explode(',', ini_get('disable_functions'));
+	$exec_allowed = ! in_array('exec', $disabled);
+	$del_list = "";
+	foreach ($to_clean as $filedir) {
+		$complete_filedir = \Froxlor\Froxlor::getInstallDir() . $filedir;
+		if (file_exists($complete_filedir)) {
+			if ($exec_allowed) {
+				Froxlor\FileDir::safe_exec("rm -rf " . escapeshellarg($complete_filedir));
+			} else {
+				$del_list .= "rm -rf " . escapeshellarg($complete_filedir) . PHP_EOL;
+			}
+		}
+	}
+	if ($exec_allowed) {
+		lastStepStatus(0);
+	} else {
+		if (empty($del_list)) {
+			// none of the files existed
+			lastStepStatus(0);
+		} else {
+			lastStepStatus(1, 'manual commands needed');
+			echo '<span class="update-step update-step-err">Please run the following commands manually:</span><br><pre>' . $del_list . '</pre><br>';
+		}
+	}
+
+	\Froxlor\Froxlor::updateToDbVersion('201909150');
+}
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.0-rc2')) {
+	showUpdateStep("Updating from 0.10.0-rc2 to 0.10.0 final", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.0');
+}
+
+if (\Froxlor\Froxlor::isDatabaseVersion('201909150')) {
+
+	showUpdateStep("Adding TLSv1.3-cipherlist setting");
+	Settings::AddNew("system.tlsv13_cipher_list", '');
+	lastStepStatus(0);
+
+	\Froxlor\Froxlor::updateToDbVersion('201910030');
+}
+
+if (\Froxlor\Froxlor::isDatabaseVersion('201910030')) {
+
+	showUpdateStep("Adding field api_allowed to admins and customers");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_ADMINS . "` ADD `api_allowed` tinyint(1) NOT NULL default '1';");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` ADD `api_allowed` tinyint(1) NOT NULL default '1';");
+	lastStepStatus(0);
+
+	\Froxlor\Froxlor::updateToDbVersion('201910090');
+}
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.0')) {
+	showUpdateStep("Updating from 0.10.0 to 0.10.1 final", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.1');
+}
+
+if (\Froxlor\Froxlor::isDatabaseVersion('201910090')) {
+
+	showUpdateStep("Adjusting Let's Encrypt API setting");
+	Settings::Set("system.leapiversion", '2');
+	lastStepStatus(0);
+
+	\Froxlor\Froxlor::updateToDbVersion('201910110');
+}
+
+if (\Froxlor\Froxlor::isDatabaseVersion('201910110')) {
+
+	showUpdateStep("Adding new settings for ssl-vhost default content");
+	Settings::AddNew("system.default_sslvhostconf", '');
+	Settings::AddNew("system.include_default_vhostconf", '0');
+	lastStepStatus(0);
+
+	showUpdateStep("Adding new fields to ips and ports-table");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_IPSANDPORTS . "` ADD `ssl_specialsettings` text AFTER `docroot`;");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_IPSANDPORTS . "` ADD `include_specialsettings` tinyint(1) NOT NULL default '0' AFTER `ssl_specialsettings`;");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_IPSANDPORTS . "` ADD `ssl_default_vhostconf_domain` text AFTER `include_specialsettings`;");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_IPSANDPORTS . "` ADD `include_default_vhostconf_domain` tinyint(1) NOT NULL default '0' AFTER `ssl_default_vhostconf_domain`;");
+	lastStepStatus(0);
+
+	showUpdateStep("Adding new fields to domains-table");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `ssl_specialsettings` text AFTER `specialsettings`;");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `include_specialsettings` tinyint(1) NOT NULL default '0' AFTER `ssl_specialsettings`;");
+	lastStepStatus(0);
+
+	// select all ips/ports with specialsettings and SSL enabled to include the specialsettings in the ssl-vhost
+	// because the former implementation included it and users might rely on that, see https://github.com/Froxlor/Froxlor/issues/727
+	$sel_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE `specialsettings` <> '' AND `ssl` = '1'");
+	Database::pexecute($sel_stmt);
+	$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_IPSANDPORTS . "` SET `include_specialsettings` = '1' WHERE `id` = :id");
+	if ($sel_stmt->columnCount() > 0) {
+		showUpdateStep("Adjusting IP/port settings for downward compatibility");
+		while ($row = $sel_stmt->fetch(PDO::FETCH_ASSOC)) {
+			Database::pexecute($upd_stmt, [
+				'id' => $row['id']
+			]);
+		}
+		lastStepStatus(0);
+	}
+
+	// select all domains with an ssl IP connected and specialsettings content to include these in the ssl-vhost
+	// to maintain former behavior
+	$sel_stmt = Database::prepare("
+		SELECT d.id FROM `". TABLE_PANEL_DOMAINS . "` d
+		LEFT JOIN `". TABLE_DOMAINTOIP . "` d2i ON d2i.id_domain = d.id
+		LEFT JOIN `". TABLE_PANEL_IPSANDPORTS."` i ON i.id = d2i.id_ipandports
+		WHERE d.specialsettings <> '' AND i.ssl = '1'
+	");
+	Database::pexecute($sel_stmt);
+	$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `include_specialsettings` = '1' WHERE `id` = :id");
+	if ($sel_stmt->columnCount() > 0) {
+		showUpdateStep("Adjusting domain settings for downward compatibility");
+		while ($row = $sel_stmt->fetch(PDO::FETCH_ASSOC)) {
+			Database::pexecute($upd_stmt, [
+				'id' => $row['id']
+			]);
+		}
+		lastStepStatus(0);
+	}
+
+	\Froxlor\Froxlor::updateToDbVersion('201910120');
+}
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.1')) {
+	showUpdateStep("Updating from 0.10.1 to 0.10.2", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.2');
+}
+
+if (\Froxlor\Froxlor::isDatabaseVersion('201910120')) {
+
+	showUpdateStep("Adding new TLS options to domains-table");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `override_tls` tinyint(1) DEFAULT '0' AFTER `writeerrorlog`;");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `ssl_protocols` text AFTER `override_tls`;");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `ssl_cipher_list` text AFTER `ssl_protocols`;");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `tlsv13_cipher_list` text AFTER `ssl_cipher_list`;");
+	lastStepStatus(0);
+
+	\Froxlor\Froxlor::updateToDbVersion('201910200');
+}
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.2')) {
+        showUpdateStep("Updating from 0.10.2 to 0.10.3", false);
+        \Froxlor\Froxlor::updateToVersion('0.10.3');
 }

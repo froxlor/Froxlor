@@ -111,7 +111,7 @@ class PowerDNS extends DnsBase
 
 	private function insertZone($domainname, $serial = 0)
 	{
-		$ins_stmt = PowerDNS::getDB()->prepare("
+		$ins_stmt = \Froxlor\Dns\PowerDNS::getDB()->prepare("
 			INSERT INTO domains set `name` = :domainname, `notified_serial` = :serial, `type` = 'NATIVE'
 		");
 		$ins_stmt->execute(array(
@@ -124,7 +124,7 @@ class PowerDNS extends DnsBase
 
 	private function insertRecords($domainid = 0, $records = array(), $origin = "")
 	{
-		$ins_stmt = PowerDNS::getDB()->prepare("
+		$ins_stmt = \Froxlor\Dns\PowerDNS::getDB()->prepare("
 			INSERT INTO records set
 			`domain_id` = :did,
 			`name` = :rec,
@@ -161,7 +161,7 @@ class PowerDNS extends DnsBase
 
 	private function insertAllowedTransfers($domainid)
 	{
-		$ins_stmt = PowerDNS::getDB()->prepare("
+		$ins_stmt = \Froxlor\Dns\PowerDNS::getDB()->prepare("
 			INSERT INTO domainmetadata set `domain_id` = :did, `kind` = 'ALLOW-AXFR-FROM', `content` = :value
 		");
 

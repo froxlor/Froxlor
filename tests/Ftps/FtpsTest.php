@@ -277,4 +277,21 @@ class FtpsTest extends TestCase
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals('test1ftp2', $result['username']);
 	}
+
+	public function testCustomerFtpsDeleteDefaultUser()
+	{
+		global $admin_userdata;
+
+		// get customer
+		$json_result = Customers::getLocal($admin_userdata, array(
+			'loginname' => 'test1'
+		))->get();
+		$customer_userdata = json_decode($json_result, true)['data'];
+		$data = [
+			'username' => 'test1'
+		];
+		$this->expectExceptionCode(400);
+		$this->expectExceptionMessage('You cannot delete your main FTP account');
+		Ftps::getLocal($customer_userdata, $data)->delete();
+	}
 }
