@@ -126,11 +126,9 @@ class Validate
 			    if(strlen($ip_cidr[1]) <= 2 && in_array((int)$ip_cidr[1], array_values(range(1, 32)), TRUE) === false) {
                     \Froxlor\UI\Response::standard_error($lng, $ip, $throw_exception);
                 }
-			    if (self::is_ipv6($ip)) {
+                if ($cidr_as_netmask && self::is_ipv6($ip)) {
                     //MySQL does not handle CIDR of IPv6 addresses, return error
-                    if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) === false) {
-                        \Froxlor\UI\Response::standard_error($lng, $ip, $throw_exception);
-                    }
+                    \Froxlor\UI\Response::standard_error($lng, $ip, $throw_exception);
                 }
 				$ip = $ip_cidr[0];
 				if ($cidr_as_netmask && strlen($ip_cidr[1]) <= 2) {
