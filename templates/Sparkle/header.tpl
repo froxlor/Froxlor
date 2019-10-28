@@ -65,7 +65,7 @@
 					</if>
 					<if \Froxlor\Settings::Get('api.enabled') == 1>
 						<li><a href="{$linker->getLink(array('section' => 'index', 'page' => 'apikeys'))}">{$lng['menue']['main']['apikeys']}</a></li>
-						<li><a href="https://api.froxlor.org/doc/" rel="external">{$lng['menue']['main']['apihelp']}</a></li>
+						<li><a href="https://api.froxlor.org/doc/?v={$version}" rel="external">{$lng['menue']['main']['apihelp']}</a></li>
 					</if>
 				</ul>
 			</li>

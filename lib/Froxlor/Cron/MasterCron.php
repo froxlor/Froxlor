@@ -44,8 +44,9 @@ class MasterCron extends \Froxlor\Cron\FroxlorCron
 			echo "Below are possible parameters for this file\n\n";
 			echo "--[cronname]\t\tincludes the given cron-file\n";
 			echo "--force\t\t\tforces re-generating of config-files (webserver, nameserver, etc.)\n";
+			echo "--run-task\t\trun a specific task [1 = re-generate configs, 4 = re-generate dns zones, 10 = re-set quotas, 99 = re-create cron.d-file]\n";
 			echo "--debug\t\t\toutput debug information about what is going on to STDOUT.\n";
-			echo "--no-fork\t\t\tdo not fork to backkground (traffic cron only).\n\n";
+			echo "--no-fork\t\tdo not fork to backkground (traffic cron only).\n\n";
 		}
 
 		/**
@@ -70,10 +71,19 @@ class MasterCron extends \Froxlor\Cron\FroxlorCron
 					// also regenerate cron.d-file
 					\Froxlor\System\Cronjob::inserttask('99');
 					array_push($jobs_to_run, 'tasks');
+					define('CRON_IS_FORCED', 1);
 				} elseif (strtolower($argv[$x]) == '--debug') {
 					define('CRON_DEBUG_FLAG', 1);
 				} elseif (strtolower($argv[$x]) == '--no-fork') {
 					define('CRON_NOFORK_FLAG', 1);
+				} elseif (strtolower($argv[$x]) == '--run-task') {
+					if (isset($argv[$x+1]) && in_array($argv[$x+1], [1,4,10,99])) {
+						\Froxlor\System\Cronjob::inserttask($argv[$x+1]);
+						array_push($jobs_to_run, 'tasks');
+					} else {
+						echo "Invalid argument for --run-task\n";
+						exit;
+					}
 				} elseif (substr(strtolower($argv[$x]), 0, 2) == '--') {
 					// --[cronname]
 					if (strlen($argv[$x]) > 3) {
@@ -90,34 +100,18 @@ class MasterCron extends \Froxlor\Cron\FroxlorCron
 
 		$tasks_cnt_stmt = \Froxlor\Database\Database::query("SELECT COUNT(*) as jobcnt FROM `panel_tasks`");
 		$tasks_cnt = $tasks_cnt_stmt->fetch(\PDO::FETCH_ASSOC);
-		
+
 		// do we have anything to include?
 		if (count($jobs_to_run) > 0) {
 			// include all jobs we want to execute
 			foreach ($jobs_to_run as $cron) {
-				self::updateLastRunOfCron($cron);
+				\Froxlor\System\Cronjob::updateLastRunOfCron($cron);
 				$cronfile = self::getCronModule($cron);
 				if ($cronfile && class_exists($cronfile)) {
 					$cronfile::run();
 				}
 			}
-
-			if ($tasks_cnt['jobcnt'] > 0) {
-				if (\Froxlor\Settings::Get('system.nssextrausers') == 1) {
-					\Froxlor\Cron\System\Extrausers::generateFiles(self::$cronlog);
-				}
-
-				// clear NSCD cache if using fcgid or fpm, #1570
-				if (\Froxlor\Settings::Get('system.mod_fcgid') == 1 || (int) \Froxlor\Settings::Get('phpfpm.enabled') == 1) {
-					$false_val = false;
-					\Froxlor\FileDir::safe_exec('nscd -i passwd 1> /dev/null', $false_val, array(
-						'>'
-					));
-					\Froxlor\FileDir::safe_exec('nscd -i group 1> /dev/null', $false_val, array(
-						'>'
-					));
-				}
-			}
+			self::refreshUsers($tasks_cnt['jobcnt']);
 		}
 
 		/**
@@ -130,6 +124,26 @@ class MasterCron extends \Froxlor\Cron\FroxlorCron
 
 		// shutdown cron
 		self::shutdown();
+	}
+
+	private static function refreshUsers($jobcount = 0)
+	{
+		if ($jobcount > 0) {
+			if (\Froxlor\Settings::Get('system.nssextrausers') == 1) {
+				\Froxlor\Cron\System\Extrausers::generateFiles(self::$cronlog);
+			}
+
+			// clear NSCD cache if using fcgid or fpm, #1570 - not needed for nss-extrausers
+			if ((\Froxlor\Settings::Get('system.mod_fcgid') == 1 || (int) \Froxlor\Settings::Get('phpfpm.enabled') == 1) && \Froxlor\Settings::Get('system.nssextrausers') == 0) {
+				$false_val = false;
+				\Froxlor\FileDir::safe_exec('nscd -i passwd 1> /dev/null', $false_val, array(
+					'>'
+				));
+				\Froxlor\FileDir::safe_exec('nscd -i group 1> /dev/null', $false_val, array(
+					'>'
+				));
+			}
+		}
 	}
 
 	private static function init()
@@ -333,16 +347,6 @@ class MasterCron extends \Froxlor\Cron\FroxlorCron
 		if (\Froxlor\Settings::Get('system.debug_cron') != '1') {
 			unlink(self::getLockfile());
 		}
-	}
-
-	private static function updateLastRunOfCron($cronname)
-	{
-		$upd_stmt = Database::prepare("
-			UPDATE `" . TABLE_PANEL_CRONRUNS . "` SET `lastrun` = UNIX_TIMESTAMP() WHERE `cronfile` = :cron;
-		");
-		Database::pexecute($upd_stmt, array(
-			'cron' => $cronname
-		));
 	}
 
 	private static function getCronModule($cronname)

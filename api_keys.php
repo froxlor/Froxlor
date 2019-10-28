@@ -88,15 +88,17 @@ if ($action == 'delete') {
 	$valid_until = isset($_POST['valid_until']) ? (int) $_POST['valid_until'] : - 1;
 
 	// validate allowed_from
-	$ip_list = array_map('trim', explode(",", $allowed_from));
-	$_check_list = $ip_list;
-	foreach ($_check_list as $idx => $ip) {
-		if (\Froxlor\Validate\Validate::validate_ip2($ip, true, 'invalidip', true, true) == false) {
-			unset($ip_list[$idx]);
+	if (! empty($allowed_from)) {
+		$ip_list = array_map('trim', explode(",", $allowed_from));
+		$_check_list = $ip_list;
+		foreach ($_check_list as $idx => $ip) {
+			if (\Froxlor\Validate\Validate::validate_ip2($ip, true, 'invalidip', true, true) == false) {
+				unset($ip_list[$idx]);
+			}
 		}
+		$ip_list = array_map('inet_ntop', array_map('inet_pton', $ip_list));
+		$allowed_from = implode(",", array_unique($ip_list));
 	}
-	$ip_list = array_map('inet_ntop', array_map('inet_pton', $ip_list));
-	$allowed_from = implode(",", array_unique($ip_list));
 
 	if ($valid_until <= 0 || ! is_numeric($valid_until)) {
 		$valid_until = - 1;

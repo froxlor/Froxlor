@@ -124,6 +124,29 @@ return array(
 						'cols' => 60,
 						'rows' => 12,
 						'value' => $result['default_vhostconf_domain']
+					),
+					'ssl_default_vhostconf_domain' => array(
+						'visible' => (\Froxlor\Settings::Get('system.use_ssl') == 1 ? true : false),
+						'style' => 'align-top',
+						'label' => $lng['admin']['ipsandports']['ssl_default_vhostconf_domain'],
+						'desc' => $lng['serversettings']['default_vhostconf_domain']['description'],
+						'type' => 'textarea',
+						'cols' => 60,
+						'rows' => 12,
+						'value' => $result['ssl_default_vhostconf_domain']
+					),
+					'include_default_vhostconf_domain' => array(
+						'label' => $lng['admin']['include_ownvhostsettings'],
+						'type' => 'checkbox',
+						'values' => array(
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array(
+							$result['include_default_vhostconf_domain']
+						)
 					)
 				)
 			),
@@ -165,6 +188,28 @@ return array(
 						'desc' => $lng['admin']['ipsandports']['ssl_cert_chainfile']['description'],
 						'type' => 'text',
 						'value' => $result['ssl_cert_chainfile']
+					),
+					'ssl_specialsettings' => array(
+						'style' => 'align-top',
+						'label' => $lng['admin']['ownsslvhostsettings'],
+						'desc' => $lng['serversettings']['default_vhostconf']['description'],
+						'type' => 'textarea',
+						'cols' => 60,
+						'rows' => 12,
+						'value' => $result['ssl_specialsettings']
+					),
+					'include_specialsettings' => array(
+						'label' => $lng['admin']['include_ownvhostsettings'],
+						'type' => 'checkbox',
+						'values' => array(
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array(
+							$result['include_specialsettings']
+						)
 					)
 				)
 			)

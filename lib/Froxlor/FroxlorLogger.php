@@ -40,6 +40,13 @@ class FroxlorLogger
 	 */
 	private static $userinfo = array();
 
+	/**
+	 * whether the logger object has already been initialized
+	 *
+	 * @var bool
+	 */
+	private static $is_initialized = false;
+
 	const USR_ACTION = '10';
 
 	const RES_ACTION = '20';
@@ -72,19 +79,25 @@ class FroxlorLogger
 			}
 		}
 
-		foreach (self::$logtypes as $logger) {
+		if (self::$is_initialized == false) {
+			foreach (self::$logtypes as $logger) {
 
-			switch ($logger) {
-				case 'syslog':
-					self::$ml->pushHandler(new SyslogHandler('froxlor', LOG_USER, Logger::DEBUG));
-					break;
-				case 'file':
-					self::$ml->pushHandler(new StreamHandler(Settings::Get('logger.logfile'), Logger::DEBUG));
-					break;
-				case 'mysql':
-					self::$ml->pushHandler(new MysqlHandler(Logger::DEBUG));
-					break;
+				switch ($logger) {
+					case 'syslog':
+						self::$ml->pushHandler(new SyslogHandler('froxlor', LOG_USER, Logger::DEBUG));
+						break;
+					case 'file':
+						if (empty(Settings::Get('logger.logfile')) || ! is_writeable(Settings::Get('logger.logfile'))) {
+							Settings::Set('logger.logfile', '/tmp/froxlor.log');
+						}
+						self::$ml->pushHandler(new StreamHandler(Settings::Get('logger.logfile'), Logger::DEBUG));
+						break;
+					case 'mysql':
+						self::$ml->pushHandler(new MysqlHandler(Logger::DEBUG));
+						break;
+				}
 			}
+			self::$is_initialized = true;
 		}
 	}
 

@@ -11,7 +11,7 @@ class HttpClient
 	 *
 	 * @return array
 	 */
-	public static function urlGet($url, $follow_location = true)
+	public static function urlGet($url, $follow_location = true, $timeout = 10)
 	{
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $url);
@@ -19,6 +19,7 @@ class HttpClient
 		if ($follow_location) {
 			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 		}
+		curl_setopt($ch, CURLOPT_TIMEOUT, (int)$timeout);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		$output = curl_exec($ch);
 		if ($output === false) {

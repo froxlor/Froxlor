@@ -16,7 +16,7 @@ use Froxlor\Api\Commands\Traffic;
 class TrafficTest extends TestCase
 {
 
-	public static function setUpBeforeClass()
+	public static function setUpBeforeClass(): void
 	{
 		$ins_stmt = Database::prepare("
 			INSERT INTO `" . TABLE_PANEL_TRAFFIC . "` SET

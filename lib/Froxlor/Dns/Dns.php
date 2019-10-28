@@ -130,6 +130,12 @@ class Dns
 			}
 		}
 
+		// additional required records for CAA if activated
+		if (Settings::Get('system.dns_createcaaentry') && Settings::Get('system.use_ssl') == "1" && !empty($domain['p_ssl_ipandports'])) {
+			// check for CAA content later
+			self::addRequiredEntry('@CAA@', 'CAA', $required_entries);
+		}
+
 		// additional required records for SPF and DKIM if activated
 		if ($domain['isemaildomain'] == '1') {
 			if (Settings::Get('spf.use_spf') == '1') {
@@ -149,6 +155,10 @@ class Dns
 		foreach ($dom_entries as $entry) {
 			if (array_key_exists($entry['type'], $required_entries) && array_key_exists(md5($entry['record']), $required_entries[$entry['type']])) {
 				unset($required_entries[$entry['type']][md5($entry['record'])]);
+			}
+			if (Settings::Get('system.dns_createcaaentry') == '1' && $entry['type'] == 'CAA' && strtolower(substr($entry['content'], 0, 7)) == '"v=caa1') {
+				// unset special CAA required-entry
+				unset($required_entries[$entry['type']][md5("@CAA@")]);
 			}
 			if (Settings::Get('spf.use_spf') == '1' && $entry['type'] == 'TXT' && $entry['record'] == '@' && strtolower(substr($entry['content'], 0, 7)) == '"v=spf1') {
 				// unset special spf required-entry
@@ -273,6 +283,31 @@ class Dns
 									$multiline = true;
 								}
 								$zonerecords[] = new DnsEntry($record, 'TXT', self::encloseTXTContent($dkim_entries[0], $multiline));
+							}
+						}
+					}
+				}
+			}
+
+			// CAA
+			if (array_key_exists("CAA", $required_entries)) {
+				foreach ($required_entries as $type => $records) {
+					if ($type == 'CAA') {
+						foreach ($records as $record) {
+							if ($record == '@CAA@') {
+								$caa_entries = explode(PHP_EOL, Settings::Get('caa.caa_entry'));
+								if ($domain['letsencrypt'] == 1) {
+									$le_entry = $domain['iswildcarddomain'] == '1' ? '0 issuewild "letsencrypt.org"' : '0 issue "letsencrypt.org"';
+									array_push($caa_entries, $le_entry);
+								}
+
+								foreach ($caa_entries as $entry) {
+									$zonerecords[] = new DnsEntry('@', 'CAA', $entry);
+									// additional required records by subdomain setting
+									if ($domain['wwwserveralias'] == '1') {
+										$zonerecords[] = new DnsEntry('www', 'CAA', $entry);
+									}
+								}
 							}
 						}
 					}

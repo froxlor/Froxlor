@@ -81,6 +81,21 @@ return array(
 						'label' => $lng['login']['language'],
 						'type' => 'select',
 						'select_var' => $language_options
+					),
+					'api_allowed' => array(
+						'label' => $lng['usersettings']['api_allowed']['title'],
+						'desc' => $lng['usersettings']['api_allowed']['description'],
+						'type' => 'checkbox',
+						'values' => array(
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array(
+							'1'
+						),
+						'visible' => (\Froxlor\Settings::Get('api.enabled') == '1' ? true : false)
 					)
 				)
 			),
@@ -294,9 +309,9 @@ return array(
 						'values' => $phpconfigs,
 						'value' => ((int) \Froxlor\Settings::Get('system.mod_fcgid') == 1 ? array(
 							\Froxlor\Settings::Get('system.mod_fcgid_defaultini')
-						) : (int) \Froxlor\Settings::Get('phpfpm.enabled') == 1 ? array(
+						) : ((int) \Froxlor\Settings::Get('phpfpm.enabled') == 1 ? array(
 							\Froxlor\Settings::Get('phpfpm.defaultini')
-						) : array()),
+						) : array())),
 						'is_array' => 1
 					),
 					'perlenabled' => array(

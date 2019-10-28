@@ -17,6 +17,7 @@
 define('AREA', 'admin');
 require './lib/init.php';
 
+use Froxlor\Api\Commands\HostingPlans;
 use Froxlor\Database\Database;
 use Froxlor\Settings;
 
@@ -69,22 +70,26 @@ if ($page == '' || $page == 'overview') {
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate("plans/plans") . "\";");
 	} elseif ($action == 'delete' && $id != 0) {
 
-		$result_stmt = Database::prepare("
-			SELECT * FROM `" . TABLE_PANEL_PLANS . "` WHERE `id` = :id");
-		$result = Database::pexecute_first($result_stmt, array(
-			'id' => $id
-		));
+		try {
+			$json_result = HostingPlans::getLocal($userinfo, array(
+				'id' => $id
+			))->get();
+		} catch (Exception $e) {
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
 
 		if ($result['id'] != 0 && $result['id'] == $id && (int) $userinfo['adminid'] == $result['adminid']) {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 
-				$del_stmt = Database::prepare("
-					DELETE FROM `" . TABLE_PANEL_PLANS . "` WHERE `id` = :id");
-				Database::pexecute($del_stmt, array(
-					'id' => $id
-				));
+				try {
+					HostingPlans::getLocal($userinfo, array(
+						'id' => $id
+					))->delete();
+				} catch (Exception $e) {
+					\Froxlor\UI\Response::dynamic_error($e->getMessage());
+				}
 
-				$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "Plan '" . $result['name'] . "' has been deleted by '" . $userinfo['loginname'] . "'");
 				\Froxlor\UI\Response::redirectTo($filename, array(
 					'page' => $page,
 					's' => $s
@@ -102,113 +107,11 @@ if ($page == '' || $page == 'overview') {
 	} elseif ($action == 'add') {
 
 		if (isset($_POST['send']) && $_POST['send'] == 'send') {
-			$name = \Froxlor\Validate\Validate::validate($_POST['name'], 'name');
-			$description = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $_POST['description']), 'description', '/^[^\0]*$/');
-
-			$value_arr = array();
-
-			if (empty($name)) {
-				\Froxlor\UI\Response::standard_error('stringmustntbeempty', 'name');
+			try {
+				HostingPlans::getLocal($userinfo, $_POST)->add();
+			} catch (Exception $e) {
+				\Froxlor\UI\Response::dynamic_error($e->getMessage());
 			}
-
-			$value_arr['diskspace'] = (int)($_POST['diskspace']);
-			if (isset($_POST['diskspace_ul'])) {
-				$value_arr['diskspace'] = - 1;
-			}
-
-			$value_arr['traffic'] = $_POST['traffic'];
-			if (isset($_POST['traffic_ul'])) {
-				$value_arr['traffic'] = - 1;
-			}
-
-			$value_arr['subdomains'] = (int)($_POST['subdomains']);
-			if (isset($_POST['subdomains_ul'])) {
-				$value_arr['subdomains'] = - 1;
-			}
-
-			$value_arr['emails'] = (int)($_POST['emails']);
-			if (isset($_POST['emails_ul'])) {
-				$value_arr['emails'] = - 1;
-			}
-
-			$value_arr['email_accounts'] = (int)($_POST['email_accounts']);
-			if (isset($_POST['email_accounts_ul'])) {
-				$value_arr['email_accounts'] = - 1;
-			}
-
-			$value_arr['email_forwarders'] = (int)($_POST['email_forwarders']);
-			if (isset($_POST['email_forwarders_ul'])) {
-				$value_arr['email_forwarders'] = - 1;
-			}
-
-			if (Settings::Get('system.mail_quota_enabled') == '1') {
-				$value_arr['email_quota'] = \Froxlor\Validate\Validate::validate($_POST['email_quota'], 'email_quota', '/^\d+$/', 'vmailquotawrong', array(
-					'0',
-					''
-				));
-				if (isset($_POST['email_quota_ul'])) {
-					$value_arr['email_quota'] = - 1;
-				}
-			} else {
-				$value_arr['email_quota'] = - 1;
-			}
-
-			$value_arr['email_imap'] = 0;
-			if (isset($_POST['email_imap'])) {
-				$value_arr['email_imap'] = (int)($_POST['email_imap']);
-			}
-
-			$value_arr['email_pop3'] = 0;
-			if (isset($_POST['email_pop3'])) {
-				$value_arr['email_pop3'] = (int)($_POST['email_pop3']);
-			}
-
-			$value_arr['ftps'] = (int)($_POST['ftps']);
-			if (isset($_POST['ftps_ul'])) {
-				$value_arr['ftps'] = - 1;
-			}
-
-			$value_arr['mysqls'] = (int)($_POST['mysqls']);
-			if (isset($_POST['mysqls_ul'])) {
-				$value_arr['mysqls'] = - 1;
-			}
-
-			$value_arr['phpenabled'] = 0;
-			if (isset($_POST['phpenabled'])) {
-				$value_arr['phpenabled'] = intval($_POST['phpenabled']);
-			}
-
-			$value_arr['allowed_phpconfigs'] = array();
-			if (isset($_POST['allowed_phpconfigs']) && is_array($_POST['allowed_phpconfigs'])) {
-				foreach ($_POST['allowed_phpconfigs'] as $allowed_phpconfig) {
-					$allowed_phpconfig = intval($allowed_phpconfig);
-					$value_arr['allowed_phpconfigs'][] = $allowed_phpconfig;
-				}
-			}
-
-			$value_arr['perlenabled'] = 0;
-			if (isset($_POST['perlenabled'])) {
-				$value_arr['perlenabled'] = intval($_POST['perlenabled']);
-			}
-
-			$value_arr['dnsenabled'] = 0;
-			if (isset($_POST['dnsenabled'])) {
-				$value_arr['dnsenabled'] = intval($_POST['dnsenabled']);
-			}
-
-			$ins_stmt = Database::prepare("
-				INSERT INTO `" . TABLE_PANEL_PLANS . "`
-				SET `adminid` = :adminid, `name` = :name, `description` = :desc, `value` = :valuearr, `ts` = UNIX_TIMESTAMP();
-			");
-			$ins_data = array(
-				'adminid' => $userinfo['adminid'],
-				'name' => $name,
-				'desc' => $description,
-				'valuearr' => json_encode($value_arr)
-			);
-			Database::pexecute($ins_stmt, $ins_data);
-
-			$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_WARNING, "added plan '" . $name . "'");
 			\Froxlor\UI\Response::redirectTo($filename, array(
 				'page' => $page,
 				's' => $s
@@ -266,11 +169,14 @@ if ($page == '' || $page == 'overview') {
 			eval("echo \"" . \Froxlor\UI\Template::getTemplate("plans/plans_add") . "\";");
 		}
 	} elseif ($action == 'edit' && $id != 0) {
-		$result_stmt = Database::prepare("
-			SELECT * FROM `" . TABLE_PANEL_PLANS . "` WHERE `id` = :id");
-		$result = Database::pexecute_first($result_stmt, array(
-			'id' => $id
-		));
+		try {
+			$json_result = HostingPlans::getLocal($userinfo, array(
+				'id' => $id
+			))->get();
+		} catch (Exception $e) {
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
 
 		if ($result['name'] != '') {
 
@@ -284,110 +190,13 @@ if ($page == '' || $page == 'overview') {
 
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 
-				$name = \Froxlor\Validate\Validate::validate($_POST['name'], 'name');
-				$description = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $_POST['description']), 'description', '/^[^\0]*$/');
-
-				$value_arr = array();
-
-				$value_arr['diskspace'] = (int)($_POST['diskspace']);
-				if (isset($_POST['diskspace_ul'])) {
-					$value_arr['diskspace'] = - 1;
+				try {
+					HostingPlans::getLocal($userinfo, array(
+						'id' => $id
+					))->update();
+				} catch (Exception $e) {
+					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
-
-				$value_arr['traffic'] = $_POST['traffic'];
-				if (isset($_POST['traffic_ul'])) {
-					$value_arr['traffic'] = - 1;
-				}
-
-				$value_arr['subdomains'] = (int)($_POST['subdomains']);
-				if (isset($_POST['subdomains_ul'])) {
-					$value_arr['subdomains'] = - 1;
-				}
-
-				$value_arr['emails'] = (int)($_POST['emails']);
-				if (isset($_POST['emails_ul'])) {
-					$value_arr['emails'] = - 1;
-				}
-
-				$value_arr['email_accounts'] = (int)($_POST['email_accounts']);
-				if (isset($_POST['email_accounts_ul'])) {
-					$value_arr['email_accounts'] = - 1;
-				}
-
-				$value_arr['email_forwarders'] = (int)($_POST['email_forwarders']);
-				if (isset($_POST['email_forwarders_ul'])) {
-					$value_arr['email_forwarders'] = - 1;
-				}
-
-				if (Settings::Get('system.mail_quota_enabled') == '1') {
-					$value_arr['email_quota'] = \Froxlor\Validate\Validate::validate($_POST['email_quota'], 'email_quota', '/^\d+$/', 'vmailquotawrong', array(
-						'0',
-						''
-					));
-					if (isset($_POST['email_quota_ul'])) {
-						$value_arr['email_quota'] = - 1;
-					}
-				} else {
-					$value_arr['email_quota'] = - 1;
-				}
-
-				$value_arr['email_imap'] = 0;
-				if (isset($_POST['email_imap'])) {
-					$value_arr['email_imap'] = (int)($_POST['email_imap']);
-				}
-
-				$value_arr['email_pop3'] = 0;
-				if (isset($_POST['email_pop3'])) {
-					$value_arr['email_pop3'] = (int)($_POST['email_pop3']);
-				}
-
-				$value_arr['ftps'] = (int)($_POST['ftps']);
-				if (isset($_POST['ftps_ul'])) {
-					$value_arr['ftps'] = - 1;
-				}
-
-				$value_arr['mysqls'] = (int)($_POST['mysqls']);
-				if (isset($_POST['mysqls_ul'])) {
-					$value_arr['mysqls'] = - 1;
-				}
-
-				$value_arr['phpenabled'] = 0;
-				if (isset($_POST['phpenabled'])) {
-					$value_arr['phpenabled'] = intval($_POST['phpenabled']);
-				}
-
-				$value_arr['allowed_phpconfigs'] = array();
-				if (isset($_POST['allowed_phpconfigs']) && is_array($_POST['allowed_phpconfigs'])) {
-					foreach ($_POST['allowed_phpconfigs'] as $allowed_phpconfig) {
-						$allowed_phpconfig = intval($allowed_phpconfig);
-						$value_arr['allowed_phpconfigs'][] = $allowed_phpconfig;
-					}
-				}
-
-				$value_arr['perlenabled'] = 0;
-				if (isset($_POST['perlenabled'])) {
-					$value_arr['perlenabled'] = intval($_POST['perlenabled']);
-				}
-
-				$value_arr['dnsenabled'] = 0;
-				if (isset($_POST['dnsenabled'])) {
-					$value_arr['dnsenabled'] = intval($_POST['dnsenabled']);
-				}
-
-				$ins_stmt = Database::prepare("
-					UPDATE `" . TABLE_PANEL_PLANS . "`
-					SET `name` = :name, `description` = :desc, `value` = :valuearr, `ts` = UNIX_TIMESTAMP()
-					WHERE `id` = :id
-				");
-				$ins_data = array(
-					'name' => $name,
-					'desc' => $description,
-					'valuearr' => json_encode($value_arr),
-					'id' => $id
-				);
-				Database::pexecute($ins_stmt, $ins_data);
-
-				$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_WARNING, "updated plan '" . $name . "'");
 				\Froxlor\UI\Response::redirectTo($filename, array(
 					'page' => $page,
 					's' => $s
@@ -502,11 +311,14 @@ if ($page == '' || $page == 'overview') {
 		}
 	} elseif ($action == 'jqGetPlanValues') {
 		$planid = isset($_POST['planid']) ? (int) $_POST['planid'] : 0;
-		$result_stmt = Database::prepare("
-			SELECT * FROM `" . TABLE_PANEL_PLANS . "` WHERE `id` = :id");
-		$result = Database::pexecute_first($result_stmt, array(
-			'id' => $planid
-		));
+		try {
+			$json_result = HostingPlans::getLocal($userinfo, array(
+				'id' => $planid
+			))->get();
+		} catch (Exception $e) {
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
 		echo $result['value'];
 		exit();
 	}

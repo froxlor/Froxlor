@@ -23,8 +23,6 @@ class Validate
 	 */
 	public static function validate($str, $fieldname, $pattern = '', $lng = '', $emptydefault = array(), $throw_exception = false)
 	{
-		global $log;
-
 		if (! is_array($emptydefault)) {
 			$emptydefault_array = array(
 				$emptydefault
@@ -35,8 +33,8 @@ class Validate
 		}
 
 		// Check if the $str is one of the values which represent the default for an 'empty' value
-		if (is_array($emptydefault) && ! empty($emptydefault) && in_array($str, $emptydefault) && isset($emptydefault[0])) {
-			return $emptydefault[0];
+		if (is_array($emptydefault) && ! empty($emptydefault) && in_array($str, $emptydefault)) {
+			return $str;
 		}
 
 		if ($pattern == '') {
@@ -48,6 +46,7 @@ class Validate
 				// everything else is removed from the string.
 				$allowed = "/[^a-z0-9\\040\\.\\-\\_\\\\]/i";
 				$str = preg_replace($allowed, "", $str);
+				$log = \Froxlor\FroxlorLogger::getInstanceOf();
 				$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_WARNING, "cleaned bad formatted string (" . $str . ")");
 			}
 		}
@@ -61,7 +60,6 @@ class Validate
 		}
 
 		\Froxlor\UI\Response::standard_error($lng, $fieldname, $throw_exception);
-		exit();
 	}
 
 	/**
@@ -99,7 +97,6 @@ class Validate
 				return false;
 			} else {
 				\Froxlor\UI\Response::standard_error($lng, $ip, $throw_exception);
-				exit();
 			}
 		}
 
@@ -118,8 +115,37 @@ class Validate
 			return false;
 		} else {
 			\Froxlor\UI\Response::standard_error($lng, $ip, $throw_exception);
-			exit();
 		}
+	}
+
+	/**
+	 * Returns whether a URL is in a correct format or not
+	 *
+	 * @param string $url
+	 *        	URL to be tested
+	 *        	
+	 * @return bool
+	 */
+	public static function validateUrl($url)
+	{
+		if (strtolower(substr($url, 0, 7)) != "http://" && strtolower(substr($url, 0, 8)) != "https://") {
+			$url = 'http://' . $url;
+		}
+
+		// needs converting
+		try {
+			$idna_convert = new \Froxlor\Idna\IdnaWrapper();
+			$url = $idna_convert->encode($url);
+		} catch (\Exception $e) {
+			return false;
+		}
+
+		$pattern = '%^(?:(?:https?)://)(?:\S+(?::\S*)?@)?(?:(?!10(?:\.\d{1,3}){3})(?!127(?:\.\d{1,3}){3})(?!169\.254(?:\.\d{1,3}){2})(?!192\.168(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\x{00a1}-\x{ffff}0-9]+-?)*[a-z\x{00a1}-\x{ffff}0-9]+)(?:\.(?:[a-z\x{00a1}-\x{ffff}0-9]+-?)*[a-z\x{00a1}-\x{ffff}0-9]+)*(?:\.(?:[a-z\x{00a1}-\x{ffff}]{2,})))(?::\d{2,5})?(?:/[^\s]*)?$%iuS';
+		if (preg_match($pattern, $url)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -157,7 +183,7 @@ class Validate
 	 */
 	public static function validateLocalHostname($hostname)
 	{
-		$pattern = '/^([a-zA-Z0-9\-])+$/i';
+		$pattern = '/^[a-z0-9][a-z0-9\-]{0,62}$/i';
 		if (preg_match($pattern, $hostname)) {
 			return $hostname;
 		}
@@ -180,52 +206,59 @@ class Validate
 	/**
 	 * Returns if an username is in correct format or not.
 	 *
-	 * @param
-	 *        	string The username to check
-	 * @return bool Correct or not
-	 * @author Michael Duergner <michael@duergner.com>
-	 *        
+	 * @param string $username
+	 *        	The username to check
+	 * @param bool $unix_names
+	 *        	optional, default true, checks whether it must be UNIX compatible
+	 * @param int $mysql_max
+	 *        	optional, number of max mysql username characters, default empty
+	 *        	
+	 * @return bool
 	 */
 	public static function validateUsername($username, $unix_names = 1, $mysql_max = '')
 	{
+		if (empty($mysql_max) || ! is_numeric($mysql_max) || $mysql_max <= 0) {
+			$mysql_max = \Froxlor\Database\Database::getSqlUsernameLength() - 1;
+		} else {
+			$mysql_max --;
+		}
 		if ($unix_names == 0) {
 			if (strpos($username, '--') === false) {
-				return (preg_match('/^[a-z][a-z0-9\-_]{0,' . (int) ($mysql_max - 1) . '}[a-z0-9]{1}$/Di', $username) != false);
-			} else {
-				return false;
+				return (preg_match('/^[a-z][a-z0-9\-_]{0,' . $mysql_max . '}[a-z0-9]{1}$/Di', $username) != false);
 			}
-		} else {
-			return (preg_match('/^[a-z][a-z0-9]{0,' . $mysql_max . '}$/Di', $username) != false);
+			return false;
 		}
+		return (preg_match('/^[a-z][a-z0-9]{0,' . $mysql_max . '}$/Di', $username) != false);
 	}
 
+	/**
+	 * validate sql interval string
+	 *
+	 * @param string $interval
+	 *
+	 * @return boolean
+	 */
 	public static function validateSqlInterval($interval = null)
 	{
-		if (! $interval === null || $interval != '') {
-			if (strstr($interval, ' ') !== false) {
-				/*
-				 * [0] = ([0-9]+)
-				 * [1] = valid SQL-Interval expression
-				 */
-				$valid_expr = array(
-					'SECOND',
-					'MINUTE',
-					'HOUR',
-					'DAY',
-					'WEEK',
-					'MONTH',
-					'YEAR'
-				);
+		if (! empty($interval) && strstr($interval, ' ') !== false) {
+			/*
+			 * [0] = ([0-9]+)
+			 * [1] = valid SQL-Interval expression
+			 */
+			$valid_expr = array(
+				'SECOND',
+				'MINUTE',
+				'HOUR',
+				'DAY',
+				'WEEK',
+				'MONTH',
+				'YEAR'
+			);
 
-				$interval_parts = explode(' ', $interval);
+			$interval_parts = explode(' ', $interval);
 
-				if (is_array($interval_parts) && isset($interval_parts[0]) && isset($interval_parts[1])) {
-					if (preg_match('/([0-9]+)/i', $interval_parts[0])) {
-						if (in_array(strtoupper($interval_parts[1]), $valid_expr)) {
-							return true;
-						}
-					}
-				}
+			if (count($interval_parts) == 2 && preg_match('/[0-9]+/', $interval_parts[0]) && in_array(strtoupper($interval_parts[1]), $valid_expr)) {
+				return true;
 			}
 		}
 		return false;

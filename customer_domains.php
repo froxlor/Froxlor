@@ -369,7 +369,7 @@ if ($page == 'overview') {
 					$domains .= \Froxlor\UI\HTML::makeoption($idna_convert->decode($row_domain['domain']), $row_domain['id'], $result['aliasdomain']);
 				}
 
-				if (preg_match('/^https?\:\/\//', $result['documentroot']) && \Froxlor\Validate\Form\Data::validateUrl($result['documentroot'])) {
+				if (preg_match('/^https?\:\/\//', $result['documentroot']) && \Froxlor\Validate\Validate::validateUrl($result['documentroot'])) {
 					if (Settings::Get('panel.pathedit') == 'Dropdown') {
 						$urlvalue = $result['documentroot'];
 						$pathSelect = \Froxlor\FileDir::makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
@@ -480,6 +480,17 @@ if ($page == 'overview') {
 } elseif ($page == 'domainssleditor') {
 
 	if ($action == '' || $action == 'view') {
+
+		// get domain
+		try {
+			$json_result = SubDomains::getLocal($userinfo, array(
+				'id' => $id
+			))->get();
+		} catch (Exception $e) {
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
+		}
+		$result_domain = json_decode($json_result, true)['data'];
+
 		if (isset($_POST['send']) && $_POST['send'] == 'send') {
 			$do_insert = isset($_POST['do_insert']) ? (($_POST['do_insert'] == 1) ? true : false) : false;
 			try {

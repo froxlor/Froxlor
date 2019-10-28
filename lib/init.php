@@ -16,6 +16,19 @@
  * @package    System
  *
  */
+
+// define default theme for configurehint, etc.
+$_deftheme = 'Sparkle';
+
+if (! file_exists(dirname(__DIR__) . '/vendor/autoload.php')) {
+	// get hint-template
+	$vendor_hint = file_get_contents(dirname(__DIR__) . '/templates/' . $_deftheme . '/misc/vendormissinghint.tpl');
+	// replace values
+	$vendor_hint = str_replace("<FROXLOR_INSTALL_DIR>", dirname(__DIR__), $vendor_hint);
+	$vendor_hint = str_replace("<CURRENT_YEAR>", date('Y', time()), $vendor_hint);
+	die($vendor_hint);
+}
+
 require dirname(__DIR__) . '/vendor/autoload.php';
 
 use Froxlor\Database\Database;
@@ -68,9 +81,6 @@ unset($key);
 
 $filename = htmlentities(basename($_SERVER['PHP_SELF']));
 
-// define default theme for configurehint, etc.
-$_deftheme = 'Sparkle';
-
 // check whether the userdata file exists
 if (! file_exists(\Froxlor\Froxlor::getInstallDir() . '/lib/userdata.inc.php')) {
 	$config_hint = file_get_contents(\Froxlor\Froxlor::getInstallDir() . '/templates/' . $_deftheme . '/misc/configurehint.tpl');
@@ -88,7 +98,7 @@ if (! is_readable(\Froxlor\Froxlor::getInstallDir() . '/lib/userdata.inc.php')) 
 	// replace values
 	$owner_hint = str_replace("<USER>", $posixusername['name'], $owner_hint);
 	$owner_hint = str_replace("<GROUP>", $posixgroup['name'], $owner_hint);
-	$owner_hint = str_replace("<\Froxlor\Froxlor::getInstallDir()>", \Froxlor\Froxlor::getInstallDir(), $owner_hint);
+	$owner_hint = str_replace("<FROXLOR_INSTALL_DIR>", \Froxlor\Froxlor::getInstallDir(), $owner_hint);
 	$owner_hint = str_replace("<CURRENT_YEAR>", date('Y', time()), $owner_hint);
 	// show
 	die($owner_hint);
@@ -210,7 +220,7 @@ if (isset($s) && $s != "" && $nosession != 1) {
 	$userinfo_stmt = Database::prepare($query);
 	$userinfo = Database::pexecute_first($userinfo_stmt, $userinfo_data);
 
-	if ((($userinfo['adminsession'] == '1' && AREA == 'admin' && isset($userinfo['adminid'])) || ($userinfo['adminsession'] == '0' && (AREA == 'customer' || AREA == 'login') && isset($userinfo['customerid']))) && (! isset($userinfo['deactivated']) || $userinfo['deactivated'] != '1')) {
+	if ($userinfo && (($userinfo['adminsession'] == '1' && AREA == 'admin' && isset($userinfo['adminid'])) || ($userinfo['adminsession'] == '0' && (AREA == 'customer' || AREA == 'login') && isset($userinfo['customerid']))) && (! isset($userinfo['deactivated']) || $userinfo['deactivated'] != '1')) {
 		$upd_stmt = Database::prepare("
 			UPDATE `" . TABLE_PANEL_SESSIONS . "` SET
 			`lastactivity` = :lastactive

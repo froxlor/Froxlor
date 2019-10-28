@@ -1463,7 +1463,7 @@ user = <SQL_UNPRIVILEGED_USER>
 password = <SQL_UNPRIVILEGED_PASSWORD>
 dbname = <SQL_DB>
 hosts = <SQL_HOST>
-query = SELECT destination FROM mail_virtual WHERE email = '%s' AND trim(destination) <> ''
+query = SELECT destination FROM mail_virtual AS v, panel_customers AS c WHERE c.customerid = v.customerid AND c.deactivated = 0 AND v.email = '%s' AND trim(v.destination) <> '' 
 ]]>
 							</content>
 						</file>
@@ -2593,7 +2593,7 @@ dict {
 # );
 
 # Database driver: mysql, pgsql, sqlite
-driver = mysql 
+driver = mysql
 
 # Database connection string. This is driver-specific setting.
 #
@@ -2707,11 +2707,7 @@ user_query = SELECT CONCAT(homedir, maildir) AS home, CONCAT('maildir:', homedir
 password_query = SELECT username AS user, password_enc AS password, CONCAT(homedir, maildir) AS userdb_home, uid AS userdb_uid, gid AS userdb_gid,  CONCAT('maildir:', homedir, maildir) AS userdb_mail, CONCAT('*:storage=', quota, 'M') as userdb_quota_rule FROM mail_users WHERE (username = '%u' OR email = '%u') AND ((imap = 1 AND '%Ls' = 'imap') OR (pop3 = 1 AND '%Ls' = 'pop3') OR ((postfix = 'Y' AND '%Ls' = 'smtp') OR (postfix = 'Y' AND '%Ls' = 'sieve')))
 
 # Query to get a list of all usernames.
-#iterate_query = SELECT username AS user FROM users
-
-
-# This file is commonly accessed via passdb {} or userdb {} section in
-# conf.d/auth-sql.conf.ext
+#iterate_query = SELECT username AS user FROM mail_users
 ]]>
 							</content>
 						</file>
@@ -3394,7 +3390,7 @@ service auth {
   unix_listener auth-client {
     mode = 0660
     user = mail
-  #  group = Debian-exim
+    #group = Debian-exim
   }
 
   # Auth process is run as this user.
@@ -3417,6 +3413,17 @@ service dict {
     #group = 
   }
 }
+
+service stats {
+  unix_listener stats-reader {
+    group = vmail
+    mode = 0666
+  }
+  unix_listener stats-writer {
+    group = vmail
+    mode = 0666
+  }
+}
 ]]>
 							</content>
 						</file>
@@ -3428,14 +3435,14 @@ service dict {
 ##
 
 # SSL/TLS support: yes, no, required. <doc/wiki/SSL.txt>
-ssl = no
+ssl = yes
 
 # PEM encoded X.509 SSL/TLS certificate and private key. They're opened before
 # dropping root privileges, so keep the key file unreadable by anyone but
 # root. Included doc/mkcert.sh can be used to easily generate self-signed
 # certificate, just make sure to update the domains in dovecot-openssl.cnf
-#ssl_cert = </etc/dovecot/private/dovecot.pem
-#ssl_key = </etc/dovecot/private/dovecot.key
+ssl_cert = </etc/dovecot/private/dovecot.pem
+ssl_key = </etc/dovecot/private/dovecot.key
 
 # If key file is password protected, give the password here. Alternatively
 # give it when starting dovecot with -p parameter. Since this file is often
@@ -3831,7 +3838,7 @@ protocol sieve {
 #  %m - number of messages (before deletion)
 #  %s - mailbox size in bytes (before deletion)
 #  %u - old/new UIDL hash. may help finding out if UIDLs changed unexpectedly
-#pop3_logout_format = top=%t/%p, retr=%r/%b, del=%d/%m, size=%s
+pop3_logout_format = in=%i out=%o top=%t/%p, retr=%r/%b, del=%d/%m, size=%s
 
 # Workarounds for various client bugs:
 #   outlook-no-nuls:
@@ -4734,21 +4741,7 @@ UPLOADGID=
 				<!-- Cronjob -->
 				<daemon name="cron" title="Cronjob for froxlor"
 					mandatory="true">
-					<file name="/etc/cron.d/froxlor" chown="root:0" chmod="0640">
-						<content><![CDATA[
-#
-# Set PATH, otherwise restart-scripts won't find start-stop-daemon
-#
-PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-#
-# Regular cron jobs for the froxlor package
-#
-# Please check that all following paths are correct
-#
-*/5 * * * *	root	/usr/bin/nice -n 5 /usr/bin/php -q <BASE_PATH>scripts/froxlor_master_cronjob.php
-]]>
-						</content>
-					</file>
+					<command><![CDATA[/usr/bin/php <BASE_PATH>scripts/froxlor_master_cronjob.php --run-task 99]]></command>
 					<command><![CDATA[{{settings.system.crondreload}}]]></command>
 				</daemon>
 				<!-- AWstats -->
@@ -4763,8 +4756,8 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 				</daemon>
 				<!-- libnss-extrausers -->
 				<daemon name="libnssextrausers"
-					title="libnss-extrausers (alternative to libnss-mysql, required for FCGID/php-fpm/mpm-itk)">
-					<install><![CDATA[apt-get install nscd libnss-extrausers]]></install>
+					title="libnss-extrausers (required for FCGID/php-fpm/mpm-itk)">
+					<install><![CDATA[apt-get install libnss-extrausers]]></install>
 					<commands index="1">
 						<command><![CDATA[mkdir -p /var/lib/extrausers]]></command>
 						<command><![CDATA[touch /var/lib/extrausers/passwd]]></command>
@@ -4796,9 +4789,6 @@ aliases:     files
 ]]>
 						</content>
 					</file>
-					<command><![CDATA[/etc/init.d/nscd restart]]></command>
-					<!-- clear group chache -->
-					<command><![CDATA[nscd --invalidate=group]]></command>
 				</daemon>
 				<!-- Logrotate -->
 				<daemon name="logrotate" title="Logrotate">
