@@ -114,9 +114,12 @@ class Validate
      * @param bool   $cidr_as_netmask
      *            whether to format CIDR nodation to netmask notation
      *
+     * @param bool   $throw_exception
+     *            whether to throw an exception on failure
+     *
      * @return string|bool ip address on success, false on failure
      */
-	public static function validate_ip2($ip, $return_bool = false, $lng = 'invalidip', $allow_localhost = false, $allow_priv = false, $allow_cidr = false, $throw_exception = false, $cidr_as_netmask = false)
+	public static function validate_ip2($ip, $return_bool = false, $lng = 'invalidip', $allow_localhost = false, $allow_priv = false, $allow_cidr = false, $cidr_as_netmask = false, $throw_exception = false)
 	{
 		$cidr = "";
 		if ($allow_cidr) {

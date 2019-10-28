@@ -50,7 +50,7 @@ class ValidateTest extends TestCase
 
 	public function testValidateIp()
 	{
-		$result = Validate::validate_ip2("12.34.56.78", false, 'invalidip', false, false, false, true);
+		$result = Validate::validate_ip2("12.34.56.78", false, 'invalidip', false, false, false, false, true);
 		$this->assertEquals("12.34.56.78", $result);
 	}
 
@@ -58,12 +58,12 @@ class ValidateTest extends TestCase
 	{
 		$this->expectException("Exception");
 		$this->expectExceptionCode(400);
-		Validate::validate_ip2("10.0.0.1", false, 'invalidip', false, false, false, true);
+		Validate::validate_ip2("10.0.0.1", false, 'invalidip', false, false, false, false, true);
 	}
 
 	public function testValidateIpPrivNotAllowedBool()
 	{
-		$result = Validate::validate_ip2("10.0.0.1", true, 'invalidip', false, false, false, true);
+		$result = Validate::validate_ip2("10.0.0.1", true, 'invalidip', false, false, false, false, true);
 		$this->assertFalse($result);
 	}
 
@@ -71,18 +71,18 @@ class ValidateTest extends TestCase
 	{
 		$this->expectException("Exception");
 		$this->expectExceptionCode(400);
-		Validate::validate_ip2("12.34.56.78/24", false, 'invalidip', false, false, false, true);
+		Validate::validate_ip2("12.34.56.78/24", false, 'invalidip', false, false, false, false, true);
 	}
 
 	public function testValidateIpCidrNotAllowedBool()
 	{
-		$result = Validate::validate_ip2("12.34.56.78/24", true, 'invalidip', false, false, false, true);
+		$result = Validate::validate_ip2("12.34.56.78/24", true, 'invalidip', false, false, false, false, true);
 		$this->assertFalse($result);
 	}
 
 	public function testValidateIpCidr()
 	{
-		$result = Validate::validate_ip2("12.34.56.78/24", false, 'invalidip', false, false, true, true);
+		$result = Validate::validate_ip2("12.34.56.78/24", false, 'invalidip', false, false, true, false, true);
 		$this->assertEquals("12.34.56.78/24", $result);
 	}
 
@@ -90,12 +90,12 @@ class ValidateTest extends TestCase
     {
         $this->expectException("Exception");
         $this->expectExceptionCode(400);
-        Validate::validate_ip2("2620:0:2d0:200::7/32", false, 'invalidip', false, false, true, true);
+        Validate::validate_ip2("2620:0:2d0:200::7/32", false, 'invalidip', false, false, true, true, true);
     }
 
 	public function testValidateIpLocalhostAllowed()
 	{
-		$result = Validate::validate_ip2("127.0.0.1/32", false, 'invalidip', true, false, true, true);
+		$result = Validate::validate_ip2("127.0.0.1/32", false, 'invalidip', true, false, true, false, true);
 		$this->assertEquals("127.0.0.1/32", $result);
 	}
 
@@ -113,7 +113,7 @@ class ValidateTest extends TestCase
 	{
 		$this->expectException("Exception");
 		$this->expectExceptionCode(400);
-		Validate::validate_ip2("127.0.0.2", false, 'invalidip', true, false, false, true);
+		Validate::validate_ip2("127.0.0.2", false, 'invalidip', true, false, false, false, true);
 	}
 	
 	public function testValidateUrl()
