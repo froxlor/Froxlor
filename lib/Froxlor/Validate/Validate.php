@@ -123,7 +123,7 @@ class Validate
 			$org_ip = $ip;
 			$ip_cidr = explode("/", $ip);
 			if (count($ip_cidr) === 2) {
-			    if(in_array((int)$ip_cidr[1], array_values(range(1, 32)), TRUE) === false) {
+			    if(strlen($ip_cidr[1]) <= 2 && in_array((int)$ip_cidr[1], array_values(range(1, 32)), TRUE) === false) {
                     \Froxlor\UI\Response::standard_error($lng, $ip, $throw_exception);
                 }
 			    if (self::is_ipv6($ip)) {
