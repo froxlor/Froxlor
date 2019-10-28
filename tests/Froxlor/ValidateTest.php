@@ -99,6 +99,16 @@ class ValidateTest extends TestCase
 		$this->assertEquals("127.0.0.1/32", $result);
 	}
 
+    public function testValidateCidrNoationToNetmaskNotationIPv4()
+    {
+        $result = Validate::validate_ip2("1.1.1.1/4", false, 'invalidip', true, false, true, true, true);
+        $this->assertEquals("1.1.1.1/240.0.0.0", $result);
+        $result = Validate::validate_ip2("8.8.8.8/18", false, 'invalidip', true, false, true, true, true);
+        $this->assertEquals("8.8.8.8/255.255.192.0", $result);
+        $result = Validate::validate_ip2("8.8.8.8/1", false, 'invalidip', true, false, true, true, true);
+        $this->assertEquals("8.8.8.8/128.0.0.0", $result);
+    }
+
 	public function testValidateIpLocalhostAllowedWrongIp()
 	{
 		$this->expectException("Exception");

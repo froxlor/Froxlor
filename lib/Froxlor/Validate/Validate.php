@@ -96,25 +96,27 @@ class Validate
             ($ipv4_mapped_ipv6 === FALSE || $ipv4_mapped_ipv6 != 0);
     }
 
-	/**
-	 * Checks whether it is a valid ip
-	 *
-	 * @param string $ip
-	 *        	ip-address to check
-	 * @param bool $return_bool
-	 *        	whether to return bool or call \Froxlor\UI\Response::standard_error()
-	 * @param string $lng
-	 *        	index for error-message (if $return_bool is false)
-	 * @param bool $allow_localhost
-	 *        	whether to allow 127.0.0.1
-	 * @param bool $allow_priv
-	 *        	whether to allow private network addresses
-	 * @param bool $allow_cidr
-	 *        	whether to allow CIDR values e.g. 10.10.10.10/16
-	 *
-	 * @return string|bool ip address on success, false on failure
-	 */
-	public static function validate_ip2($ip, $return_bool = false, $lng = 'invalidip', $allow_localhost = false, $allow_priv = false, $allow_cidr = false, $throw_exception = false)
+    /**
+     * Checks whether it is a valid ip
+     *
+     * @param string $ip
+     *            ip-address to check
+     * @param bool   $return_bool
+     *            whether to return bool or call \Froxlor\UI\Response::standard_error()
+     * @param string $lng
+     *            index for error-message (if $return_bool is false)
+     * @param bool   $allow_localhost
+     *            whether to allow 127.0.0.1
+     * @param bool   $allow_priv
+     *            whether to allow private network addresses
+     * @param bool   $allow_cidr
+     *            whether to allow CIDR values e.g. 10.10.10.10/16
+     * @param bool   $cidr_as_netmask
+     *            whether to format CIDR nodation to netmask notation
+     *
+     * @return string|bool ip address on success, false on failure
+     */
+	public static function validate_ip2($ip, $return_bool = false, $lng = 'invalidip', $allow_localhost = false, $allow_priv = false, $allow_cidr = false, $throw_exception = false, $cidr_as_netmask = false)
 	{
 		$cidr = "";
 		if ($allow_cidr) {
@@ -128,7 +130,7 @@ class Validate
                     }
                 }
 				$ip = $ip_cidr[0];
-				if (strlen($ip_cidr[1]) <= 2) {
+				if ($cidr_as_netmask && strlen($ip_cidr[1]) <= 2) {
 				    $ip_cidr[1] = self::cidr2NetmaskAddr($org_ip);
                 }
 				$cidr = "/" . $ip_cidr[1];
