@@ -88,12 +88,9 @@ class Validate
      * @param $address
      *
      * @return bool
-     * @thx https://stackoverflow.com/a/13677565/3020926
      */
     public static function is_ipv6($address) {
-        $ipv4_mapped_ipv6 = strpos($address, "::ffff:");
-        return (strpos($address, ":") !== FALSE) &&
-            ($ipv4_mapped_ipv6 === FALSE || $ipv4_mapped_ipv6 != 0);
+        return filter_var($address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
     }
 
     /**
@@ -129,7 +126,7 @@ class Validate
 			    if(strlen($ip_cidr[1]) <= 2 && in_array((int)$ip_cidr[1], array_values(range(1, 32)), TRUE) === false) {
                     \Froxlor\UI\Response::standard_error($lng, $ip, $throw_exception);
                 }
-                if ($cidr_as_netmask && self::is_ipv6($ip)) {
+                if ($cidr_as_netmask && self::is_ipv6($ip_cidr[0])) {
                     //MySQL does not handle CIDR of IPv6 addresses, return error
                     \Froxlor\UI\Response::standard_error($lng, $ip, $throw_exception);
                 }
