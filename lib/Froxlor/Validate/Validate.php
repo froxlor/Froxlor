@@ -125,7 +125,7 @@ class Validate
 			if (count($ip_cidr) === 2) {
 			    if (self::is_ipv6($ip)) {
                     //MySQL does not handle CIDR of IPv6 addresses, return error
-                    if (false === filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+                    if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) === false) {
                         \Froxlor\UI\Response::standard_error($lng, $ip, $throw_exception);
                     }
                 }
