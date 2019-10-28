@@ -86,6 +86,13 @@ class ValidateTest extends TestCase
 		$this->assertEquals("12.34.56.78/24", $result);
 	}
 
+    public function testValidateIpv6Disallowed()
+    {
+        $this->expectException("Exception");
+        $this->expectExceptionCode(400);
+        $result = Validate::validate_ip2("2620:0:2d0:200::7/32", false, 'invalidip', false, false, true, true);
+    }
+
 	public function testValidateIpLocalhostAllowed()
 	{
 		$result = Validate::validate_ip2("127.0.0.1/32", false, 'invalidip', true, false, true, true);

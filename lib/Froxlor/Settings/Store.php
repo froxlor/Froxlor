@@ -262,9 +262,9 @@ class Store
             foreach ($ips as $ip) {
                 $org_ip = $ip;
                 $ip_cidr = explode("/", $ip);
-                if (count($ip_cidr) == 2) {
+                if (count($ip_cidr) === 2) {
                     $ip = $ip_cidr[0];
-                    if(in_array((int)strlen((string)$ip_cidr[1]),array(1,2))) {
+                    if (strlen($ip_cidr[1]) <= 2) {
                         $ip_cidr[1] = \Froxlor\Validate\Validate::cidr2NetmaskAddr($org_ip);
                     }
                     $newfieldvalue[] = $ip . '/' . $ip_cidr[1];
