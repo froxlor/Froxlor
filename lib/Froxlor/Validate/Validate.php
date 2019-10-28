@@ -106,7 +106,11 @@ class Validate
 		if ($allow_cidr) {
 			$org_ip = $ip;
 			$ip_cidr = explode("/", $ip);
-			if (count($ip_cidr) == 2) {
+			if (count($ip_cidr) === 2) {
+			    //MySQL does not handle CIDR of IPv6 addresses, return error
+                if (false === filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+                    \Froxlor\UI\Response::standard_error($lng, $ip, $throw_exception);
+                }
 				$ip = $ip_cidr[0];
 				if (strlen($ip_cidr[1]) <= 2) {
 				    $ip_cidr[1] = self::cidr2NetmaskAddr($org_ip);
