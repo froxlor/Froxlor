@@ -192,7 +192,7 @@ class Check
 		}
 
 		$returnvalue = array();
-		if (Validate::validateUsername($newfieldvalue, Settings::Get('panel.unix_names'), 14 - strlen($allnewfieldvalues['customer_mysqlprefix'])) === true) {
+		if (Validate::validateUsername($newfieldvalue, Settings::Get('panel.unix_names'), \Froxlor\Database\Database::getSqlUsernameLength() - strlen($allnewfieldvalues['customer_mysqlprefix'])) === true) {
 			$returnvalue = array(
 				self::FORMFIELDS_PLAUSIBILITY_CHECK_OK
 			);

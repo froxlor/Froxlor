@@ -26,8 +26,9 @@ class MysqlsTest extends TestCase
 		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
 
+		$newPwd = \Froxlor\System\Crypt::generatePassword();
 		$data = [
-			'mysql_password' => \Froxlor\System\Crypt::generatePassword(),
+			'mysql_password' => $newPwd,
 			'description' => 'testdb',
 			'sendinfomail' => TRAVIS_CI == 1 ? 0 : 1
 		];
@@ -35,6 +36,14 @@ class MysqlsTest extends TestCase
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals('testdb', $result['description']);
 		$this->assertEquals(0, $result['dbserver']);
+		
+		// test connection
+		try {
+			$test_conn = new \PDO("mysql:host=127.0.0.1", 'test1sql1', $newPwd);
+			unset($test_conn);
+		} catch (PDOException $e) {
+			$this->fail($e->getMessage());
+		}
 	}
 
 	/**

@@ -36,6 +36,15 @@ if (! extension_loaded('zip')) {
 	));
 }
 
+// 0.10.x requires 7.0 at least
+if (version_compare("7.0.0", PHP_VERSION, ">=")) {
+	\Froxlor\UI\Response::redirectTo($filename, array(
+		's' => $s,
+		'page' => 'error',
+		'errno' => 10
+	));
+}
+
 // display initial version check
 if ($page == 'overview') {
 
@@ -43,8 +52,11 @@ if ($page == 'overview') {
 	$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "checking auto-update");
 
 	// check for new version
-	$latestversion = HttpClient::urlGet(UPDATE_URI);
-
+	try {
+		$latestversion = HttpClient::urlGet(UPDATE_URI, true, 3);
+	} catch (\Exception $e) {
+		\Froxlor\UI\Response::dynamic_error("Version-check currently unavailable, please try again later");
+	}
 	$latestversion = explode('|', $latestversion);
 
 	if (is_array($latestversion) && count($latestversion) >= 1) {
@@ -175,6 +187,8 @@ elseif ($page == 'extract') {
 			$zip->close();
 			// success - remove unused archive
 			@unlink($localArchive);
+			// wait a bit before we redirect to be sure
+			sleep(2);
 		} else {
 			// error
 			\Froxlor\UI\Response::redirectTo($filename, array(
@@ -216,5 +230,6 @@ elseif ($page == 'error') {
 	// 7 = local archive does not exist
 	// 8 = could not extract archive
 	// 9 = checksum mismatch
+	// 10 = <php-7.0
 	\Froxlor\UI\Response::standard_error('autoupdate_' . $errno);
 }

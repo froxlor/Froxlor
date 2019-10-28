@@ -30,8 +30,9 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 		 */
 		self::$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, "TasksCron: Searching for tasks to do");
 		// no type 99 (regenerate cron.d-file) and no type 20 (customer backup)
+		// order by type descending to re-create bind and then webserver at the end
 		$result_tasks_stmt = Database::query("
-			SELECT `id`, `type`, `data` FROM `" . TABLE_PANEL_TASKS . "` WHERE `type` <> '99' AND `type` <> '20' ORDER BY `id` ASC
+			SELECT `id`, `type`, `data` FROM `" . TABLE_PANEL_TASKS . "` WHERE `type` <> '99' AND `type` <> '20' ORDER BY `type` DESC, `id` ASC
 		");
 		$num_results = Database::num_rows();
 		$resultIDs = array();
@@ -92,6 +93,12 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 				 */
 				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, "Removing PowerDNS entries for domain " . $row['data']['domain']);
 				\Froxlor\Dns\PowerDNS::cleanDomainZone($row['data']['domain']);
+			} elseif ($row['type'] == '12') {
+				/**
+				 * TYPE=12 domain has been deleted, remove from acme.sh/let's encrypt directory if used
+				 */
+				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, "Removing Let's Encrypt entries for domain " . $row['data']['domain']);
+				\Froxlor\Domain\Domain::doLetsEncryptCleanUp($row['data']['domain']);
 			}
 		}
 
@@ -102,7 +109,7 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 				$where[] = "`id` = :id_" . (int) $id;
 				$where_data['id_' . $id] = $id;
 			}
-			$where = implode($where, ' OR ');
+			$where = implode(' OR ', $where);
 			$del_stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_TASKS . "` WHERE " . $where);
 			Database::pexecute($del_stmt, $where_data);
 			unset($resultIDs);
@@ -114,10 +121,6 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 
 	private static function rebuildWebserverConfigs()
 	{
-		// get configuration-I/O object
-		$configio = new \Froxlor\Cron\Http\ConfigIO();
-		// clean up old configs
-		$configio->cleanUp();
 
 		if (Settings::Get('system.webserver') == "apache2") {
 			$websrv = '\\Froxlor\\Cron\\Http\\Apache';
@@ -136,9 +139,15 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 			}
 		}
 
+		// get configuration-I/O object
+		$configio = new \Froxlor\Cron\Http\ConfigIO();
+		// get webserver object
 		$webserver = new $websrv();
 
 		if (isset($webserver)) {
+			$webserver->init();
+			// clean up old configs
+			$configio->cleanUp();
 			$webserver->createIpPort();
 			$webserver->createVirtualHosts();
 			$webserver->createFileDirOptions();
@@ -231,8 +240,8 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 				Extrausers::generateFiles($extrausers_log);
 			}
 
-			// clear NSCD cache if using fcgid or fpm, #1570
-			if (Settings::Get('system.mod_fcgid') == 1 || (int) Settings::Get('phpfpm.enabled') == 1) {
+			// clear NSCD cache if using fcgid or fpm, #1570 - not needed for nss-extrausers
+			if ((Settings::Get('system.mod_fcgid') == 1 || (int) Settings::Get('phpfpm.enabled') == 1) && Settings::Get('system.nssextrausers') == 0) {
 				$false_val = false;
 				\Froxlor\FileDir::safe_exec('nscd -i passwd 1> /dev/null', $false_val, array(
 					'>'

@@ -118,6 +118,14 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 	 *        	optional, requires $ssl = 1, default empty
 	 * @param string $ssl_cert_chainfile
 	 *        	optional, requires $ssl = 1, default empty
+	 * @param string $ssl_specialsettings
+	 *        	optional, requires $ssl = 1, default empty
+	 * @param bool $include_specialsettings
+	 *        	optional, requires $ssl = 1, whether or not to include non-ssl specialsettings, default false
+	 * @param string $ssl_default_vhostconf_domain
+	 *        	optional, requires $ssl = 1, defatul empty
+	 * @param bool $include_default_vhostconf_domain
+	 *        	optional, requires $ssl = 1, whether or not to include non-ssl default_vhostconf_domain, default false
 	 *        	
 	 * @access admin
 	 * @throws \Exception
@@ -146,12 +154,20 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 				$ssl_key_file = \Froxlor\Validate\Validate::validate($this->getParam('ssl_key_file', $ssl, ''), 'ssl_key_file', '', '', array(), true);
 				$ssl_ca_file = \Froxlor\Validate\Validate::validate($this->getParam('ssl_ca_file', true, ''), 'ssl_ca_file', '', '', array(), true);
 				$ssl_cert_chainfile = \Froxlor\Validate\Validate::validate($this->getParam('ssl_cert_chainfile', true, ''), 'ssl_cert_chainfile', '', '', array(), true);
+				$ssl_specialsettings = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $this->getParam('ssl_specialsettings', true, '')), 'ssl_specialsettings', '/^[^\0]*$/', '', array(), true);
+				$include_specialsettings = ! empty($this->getBoolParam('include_specialsettings', true, 0)) ? 1 : 0;
+				$ssl_default_vhostconf_domain = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $this->getParam('ssl_default_vhostconf_domain', true, '')), 'ssl_default_vhostconf_domain', '/^[^\0]*$/', '', array(), true);
+				$include_default_vhostconf_domain = ! empty($this->getBoolParam('include_default_vhostconf_domain', true, 0)) ? 1 : 0;
 			} else {
 				$ssl = 0;
 				$ssl_cert_file = '';
 				$ssl_key_file = '';
 				$ssl_ca_file = '';
 				$ssl_cert_chainfile = '';
+				$ssl_specialsettings = '';
+				$include_specialsettings = 0;
+				$ssl_default_vhostconf_domain = '';
+				$include_default_vhostconf_domain = 0;
 			}
 
 			if ($listen_statement != '1') {
@@ -217,7 +233,9 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 				`specialsettings` = :ss, `ssl` = :ssl,
 				`ssl_cert_file` = :ssl_cert, `ssl_key_file` = :ssl_key,
 				`ssl_ca_file` = :ssl_ca, `ssl_cert_chainfile` = :ssl_chain,
-				`default_vhostconf_domain` = :dvhd, `docroot` = :docroot;
+				`default_vhostconf_domain` = :dvhd, `docroot` = :docroot,
+				`ssl_specialsettings` = :ssl_ss, `include_specialsettings` = :incss,
+				`ssl_default_vhostconf_domain` = :ssl_dvhd, `include_default_vhostconf_domain` = :incdvhd;
 			");
 			$ins_data = array(
 				'ip' => $ip,
@@ -233,7 +251,11 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 				'ssl_ca' => $ssl_ca_file,
 				'ssl_chain' => $ssl_cert_chainfile,
 				'dvhd' => $default_vhostconf_domain,
-				'docroot' => $docroot
+				'docroot' => $docroot,
+				'ssl_ss' => $ssl_specialsettings,
+				'incss' => $include_specialsettings,
+				'ssl_dvhd' => $ssl_default_vhostconf_domain,
+				'incdvhd' => $include_default_vhostconf_domain
 			);
 			Database::pexecute($ins_stmt, $ins_data);
 			$ins_data['id'] = Database::lastInsertId();
@@ -287,6 +309,14 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 	 *        	optional, requires $ssl = 1, default empty
 	 * @param string $ssl_cert_chainfile
 	 *        	optional, requires $ssl = 1, default empty
+	 * @param string $ssl_specialsettings
+	 *        	optional, requires $ssl = 1, default empty
+	 * @param bool $include_specialsettings
+	 *        	optional, requires $ssl = 1, whether or not to include non-ssl specialsettings, default false
+	 * @param string $ssl_default_vhostconf_domain
+	 *        	optional, requires $ssl = 1, defatul empty
+	 * @param bool $include_default_vhostconf_domain
+	 *        	optional, requires $ssl = 1, whether or not to include non-ssl default_vhostconf_domain, default false
 	 *        	
 	 *        	
 	 * @access admin
@@ -321,12 +351,20 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 				$ssl_key_file = \Froxlor\Validate\Validate::validate($this->getParam('ssl_key_file', $ssl, $result['ssl_key_file']), 'ssl_key_file', '', '', array(), true);
 				$ssl_ca_file = \Froxlor\Validate\Validate::validate($this->getParam('ssl_ca_file', true, $result['ssl_ca_file']), 'ssl_ca_file', '', '', array(), true);
 				$ssl_cert_chainfile = \Froxlor\Validate\Validate::validate($this->getParam('ssl_cert_chainfile', true, $result['ssl_cert_chainfile']), 'ssl_cert_chainfile', '', '', array(), true);
+				$ssl_specialsettings = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $this->getParam('ssl_specialsettings', true, $result['ssl_specialsettings'])), 'ssl_specialsettings', '/^[^\0]*$/', '', array(), true);
+				$include_specialsettings = $this->getBoolParam('include_specialsettings', true, $result['include_specialsettings']);
+				$ssl_default_vhostconf_domain = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $this->getParam('ssl_default_vhostconf_domain', true, $result['ssl_default_vhostconf_domain'])), 'ssl_default_vhostconf_domain', '/^[^\0]*$/', '', array(), true);
+				$include_default_vhostconf_domain = $this->getBoolParam('include_default_vhostconf_domain', true, $result['include_default_vhostconf_domain']);
 			} else {
 				$ssl = 0;
 				$ssl_cert_file = '';
 				$ssl_key_file = '';
 				$ssl_ca_file = '';
 				$ssl_cert_chainfile = '';
+				$ssl_specialsettings = '';
+				$include_specialsettings = 0;
+				$ssl_default_vhostconf_domain = '';
+				$include_default_vhostconf_domain = 0;
 			}
 
 			$result_checkfordouble_stmt = Database::prepare("
@@ -404,7 +442,9 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 					`specialsettings` = :ss, `ssl` = :ssl,
 					`ssl_cert_file` = :ssl_cert, `ssl_key_file` = :ssl_key,
 					`ssl_ca_file` = :ssl_ca, `ssl_cert_chainfile` = :ssl_chain,
-					`default_vhostconf_domain` = :dvhd, `docroot` = :docroot
+					`default_vhostconf_domain` = :dvhd, `docroot` = :docroot,
+					`ssl_specialsettings` = :ssl_ss, `include_specialsettings` = :incss,
+					`ssl_default_vhostconf_domain` = :ssl_dvhd, `include_default_vhostconf_domain` = :incdvhd
 					WHERE `id` = :id;
 				");
 				$upd_data = array(
@@ -422,6 +462,10 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 					'ssl_chain' => $ssl_cert_chainfile,
 					'dvhd' => $default_vhostconf_domain,
 					'docroot' => $docroot,
+					'ssl_ss' => $ssl_specialsettings,
+					'incss' => $include_specialsettings,
+					'ssl_dvhd' => $ssl_default_vhostconf_domain,
+					'incdvhd' => $include_default_vhostconf_domain,
 					'id' => $id
 				);
 				Database::pexecute($upd_stmt, $upd_data);

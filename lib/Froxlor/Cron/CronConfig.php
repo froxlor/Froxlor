@@ -61,6 +61,7 @@ class CronConfig
 			$month_delay = 7;
 			while ($row_cronentry = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 				// create cron.d-entry
+				$matches = array();
 				if (preg_match("/(\d+) (MINUTE|HOUR|DAY|WEEK|MONTH)/", $row_cronentry['interval'], $matches)) {
 					if ($matches[1] == 1) {
 						$minvalue = "*";
@@ -101,7 +102,7 @@ class CronConfig
 						$binpath = "/usr/bin/nice -n 5 /usr/bin/php5 -q";
 					}
 
-					$cronfile .= "root " . $binpath . " " . \Froxlor\Froxlor::getInstallDir() . "/scripts/froxlor_master_cronjob.php --" . $row_cronentry['cronfile'] . " 1> /dev/null\n";
+					$cronfile .= "root " . $binpath . " " . \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . "/scripts/froxlor_master_cronjob.php") . " --" . $row_cronentry['cronfile'] . " 1> /dev/null\n";
 				}
 			}
 

@@ -45,6 +45,8 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	 *        	optional, whether to generate a https-redirect or not, default false; requires SSL to be enabled
 	 * @param bool $letsencrypt
 	 *        	optional, whether to generate a Let's Encrypt certificate for this domain, default false; requires SSL to be enabled
+	 * @param bool $http2
+	 *        	optional, whether to enable http/2 for this subdomain (requires to be enabled in the settings), default 0 (false)
 	 * @param int $hsts_maxage
 	 *        	optional max-age value for HSTS header, default 0
 	 * @param bool $hsts_sub
@@ -76,12 +78,14 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			if (Settings::Get('system.use_ssl')) {
 				$ssl_redirect = $this->getBoolParam('ssl_redirect', true, 0);
 				$letsencrypt = $this->getBoolParam('letsencrypt', true, 0);
+				$http2 = $this->getBoolParam('http2', true, 0);
 				$hsts_maxage = $this->getParam('hsts_maxage', true, 0);
 				$hsts_sub = $this->getBoolParam('hsts_sub', true, 0);
 				$hsts_preload = $this->getBoolParam('hsts_preload', true, 0);
 			} else {
 				$ssl_redirect = 0;
 				$letsencrypt = 0;
+				$http2 = 0;
 				$hsts_maxage = 0;
 				$hsts_sub = 0;
 				$hsts_preload = 0;
@@ -241,7 +245,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				$phpsid_result['phpsettingid'] = intval($phpsettingid);
 			}
 
-			// acutall insert domain
+			// actually insert domain
 			$stmt = Database::prepare("
 				INSERT INTO `" . TABLE_PANEL_DOMAINS . "` SET
 				`customerid` = :customerid,
@@ -258,12 +262,20 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				`openbasedir_path` = :openbasedir_path,
 				`speciallogfile` = :speciallogfile,
 				`specialsettings` = :specialsettings,
+				`ssl_specialsettings` = :ssl_specialsettings,
+				`include_specialsettings` = :include_specialsettings,
 				`ssl_redirect` = :ssl_redirect,
 				`phpsettingid` = :phpsettingid,
 				`letsencrypt` = :letsencrypt,
+				`http2` = :http2,
 				`hsts` = :hsts,
 				`hsts_sub` = :hsts_sub,
-				`hsts_preload` = :hsts_preload
+				`hsts_preload` = :hsts_preload,
+				`ocsp_stapling` = :ocsp_stapling,
+				`override_tls` = :override_tls,
+				`ssl_protocols` = :ssl_protocols,
+				`ssl_cipher_list` = :ssl_cipher_list,
+				`tlsv13_cipher_list` = :tlsv13_cipher_list
 			");
 			$params = array(
 				"customerid" => $customer['customerid'],
@@ -280,12 +292,20 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				"phpenabled" => $domain_check['phpenabled'],
 				"speciallogfile" => $domain_check['speciallogfile'],
 				"specialsettings" => $domain_check['specialsettings'],
+				"ssl_specialsettings" => $domain_check['ssl_specialsettings'],
+				"include_specialsettings" => $domain_check['include_specialsettings'],
 				"ssl_redirect" => $ssl_redirect,
 				"phpsettingid" => $phpsid_result['phpsettingid'],
 				"letsencrypt" => $letsencrypt,
+				"http2" => $http2,
 				"hsts" => $hsts_maxage,
 				"hsts_sub" => $hsts_sub,
-				"hsts_preload" => $hsts_preload
+				"hsts_preload" => $hsts_preload,
+				"ocsp_stapling" => $domain_check['ocsp_stapling'],
+				"override_tls" => $domain_check['override_tls'],
+				"ssl_protocols" => $domain_check['ssl_protocols'],
+				"ssl_cipher_list" => $domain_check['ssl_cipher_list'],
+				"tlsv13_cipher_list" => $domain_check['tlsv13_cipher_list']
 			);
 			Database::pexecute($stmt, $params, true, true);
 			$subdomain_id = Database::lastInsertId();
@@ -430,6 +450,8 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	 *        	optional, whether to generate a https-redirect or not, default false; requires SSL to be enabled
 	 * @param bool $letsencrypt
 	 *        	optional, whether to generate a Let's Encrypt certificate for this domain, default false; requires SSL to be enabled
+	 * @param bool $http2
+	 *        	optional, whether to enable http/2 for this domain (requires to be enabled in the settings), default 0 (false)
 	 * @param int $hsts_maxage
 	 *        	optional max-age value for HSTS header
 	 * @param bool $hsts_sub
@@ -473,12 +495,14 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		if (Settings::Get('system.use_ssl')) {
 			$ssl_redirect = $this->getBoolParam('ssl_redirect', true, $result['ssl_redirect']);
 			$letsencrypt = $this->getBoolParam('letsencrypt', true, $result['letsencrypt']);
+			$http2 = $this->getBoolParam('http2', true, $result['http2']);
 			$hsts_maxage = $this->getParam('hsts_maxage', true, $result['hsts']);
 			$hsts_sub = $this->getBoolParam('hsts_sub', true, $result['hsts_sub']);
 			$hsts_preload = $this->getBoolParam('hsts_preload', true, $result['hsts_preload']);
 		} else {
 			$ssl_redirect = 0;
 			$letsencrypt = 0;
+			$http2 = 0;
 			$hsts_maxage = 0;
 			$hsts_sub = 0;
 			$hsts_preload = 0;
@@ -554,14 +578,9 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			}
 		}
 
-		// We can't enable let's encrypt for wildcard - domains when using acme-v1
-		if ($iswildcarddomain == '1' && $letsencrypt == '1' && Settings::Get('system.leapiversion') == '1') {
+		// We can't enable let's encrypt for wildcard-domains
+		if ($iswildcarddomain == '1' && $letsencrypt == '1') {
 			\Froxlor\UI\Response::standard_error('nowildcardwithletsencrypt');
-		}
-		// if using acme-v2 we cannot issue wildcard-certificates
-		// because they currently only support the dns-01 challenge
-		if ($iswildcarddomain == '1' && $letsencrypt == '1' && Settings::Get('system.leapiversion') == '2') {
-			\Froxlor\UI\Response::standard_error('nowildcardwithletsencryptv2');
 		}
 
 		// Temporarily deactivate ssl_redirect until Let's Encrypt certificate was generated
@@ -599,6 +618,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 					`openbasedir_path`= :openbasedir_path,
 					`ssl_redirect`= :ssl_redirect,
 					`letsencrypt`= :letsencrypt,
+					`http2` = :http2,
 					`hsts` = :hsts,
 					`hsts_sub` = :hsts_sub,
 					`hsts_preload` = :hsts_preload,
@@ -614,6 +634,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				"openbasedir_path" => $openbasedir_path,
 				"ssl_redirect" => $ssl_redirect,
 				"letsencrypt" => $letsencrypt,
+				"http2" => $http2,
 				"hsts" => $hsts_maxage,
 				"hsts_sub" => $hsts_sub,
 				"hsts_preload" => $hsts_preload,
@@ -623,13 +644,20 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			);
 			Database::pexecute($stmt, $params, true, true);
 
-			if ($result['aliasdomain'] != $aliasdomain) {
+			if ($result['aliasdomain'] != $aliasdomain && is_numeric($result['aliasdomain'])) {
 				// trigger when domain id for alias destination has changed: both for old and new destination
 				\Froxlor\Domain\Domain::triggerLetsEncryptCSRForAliasDestinationDomain($result['aliasdomain'], $this->logger());
 				\Froxlor\Domain\Domain::triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $this->logger());
-			} elseif ($result['wwwserveralias'] != $wwwserveralias || $result['letsencrypt'] != $letsencrypt) {
+			}
+			if ($result['wwwserveralias'] != $wwwserveralias || $result['letsencrypt'] != $letsencrypt) {
 				// or when wwwserveralias or letsencrypt was changed
 				\Froxlor\Domain\Domain::triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $this->logger());
+				if ((int) $aliasdomain === 0) {
+					// in case the wwwserveralias is set on a main domain, $aliasdomain is 0
+					// --> the call just above to triggerLetsEncryptCSRForAliasDestinationDomain
+					// is a noop...let's repeat it with the domain id of the main domain
+					\Froxlor\Domain\Domain::triggerLetsEncryptCSRForAliasDestinationDomain($id, $this->logger());
+				}
 			}
 
 			// check whether LE has been disabled, so we remove the certificate
@@ -828,6 +856,8 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		\Froxlor\System\Cronjob::inserttask('4');
 		// remove domains DNS from powerDNS if used, #581
 		\Froxlor\System\Cronjob::inserttask('11', $result['domain']);
+		// remove domain from acme.sh / lets encrypt if used
+		\Froxlor\System\Cronjob::inserttask('12', $result['domain']);
 
 		// reduce subdomain-usage-counter
 		Customers::decreaseUsage($customer['customerid'], 'subdomains_used');
@@ -852,7 +882,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	{
 		// check whether an URL was specified
 		$_doredirect = false;
-		if (! empty($url) && \Froxlor\Validate\Form\Data::validateUrl($url)) {
+		if (! empty($url) && \Froxlor\Validate\Validate::validateUrl($url)) {
 			$path = $url;
 			$_doredirect = true;
 		} else {
@@ -860,7 +890,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		}
 
 		// check whether path is a real path
-		if (! preg_match('/^https?\:\/\//', $path) || ! \Froxlor\Validate\Form\Data::validateUrl($path)) {
+		if (! preg_match('/^https?\:\/\//', $path) || ! \Froxlor\Validate\Validate::validateUrl($path)) {
 			if (strstr($path, ":") !== false) {
 				\Froxlor\UI\Response::standard_error('pathmaynotcontaincolon', '', true);
 			}

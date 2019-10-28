@@ -3,7 +3,6 @@ namespace Froxlor\Cron\Http;
 
 use Froxlor\Database\Database;
 use Froxlor\Settings;
-use Froxlor\Cron\Http\Php\Fpm;
 use Froxlor\Cron\Http\Php\PhpInterface;
 
 /**
@@ -45,30 +44,6 @@ class Apache extends HttpConfigBase
 	 * @var bool
 	 */
 	private $deactivated = false;
-
-	public function reload()
-	{
-		if ((int) Settings::Get('phpfpm.enabled') == 1) {
-			// get all start/stop commands
-			$startstop_sel = Database::prepare("SELECT reload_cmd, config_dir FROM `" . TABLE_PANEL_FPMDAEMONS . "`");
-			Database::pexecute($startstop_sel);
-			$restart_cmds = $startstop_sel->fetchAll(\PDO::FETCH_ASSOC);
-			// restart all php-fpm instances
-			foreach ($restart_cmds as $restart_cmd) {
-				// check whether the config dir is empty (no domains uses this daemon)
-				// so we need to create a dummy
-				$_conffiles = glob(\Froxlor\FileDir::makeCorrectFile($restart_cmd['config_dir'] . "/*.conf"));
-				if ($_conffiles === false || empty($_conffiles)) {
-					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'apache::reload: fpm config directory "' . $restart_cmd['config_dir'] . '" is empty. Creating dummy.');
-					Fpm::createDummyPool($restart_cmd['config_dir']);
-				}
-				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'apache::reload: running ' . $restart_cmd['reload_cmd']);
-				\Froxlor\FileDir::safe_exec(escapeshellcmd($restart_cmd['reload_cmd']));
-			}
-		}
-		\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'apache::reload: reloading apache');
-		\Froxlor\FileDir::safe_exec(escapeshellcmd(Settings::Get('system.apachereload_command')));
-	}
 
 	/**
 	 * define a standard <Directory>-statement, bug #32
@@ -144,7 +119,7 @@ class Apache extends HttpConfigBase
 			foreach ($statusCodes as $statusCode) {
 				if (Settings::Get('defaultwebsrverrhandler.err' . $statusCode) != '') {
 					$defhandler = Settings::Get('defaultwebsrverrhandler.err' . $statusCode);
-					if (! \Froxlor\Validate\Form\Data::validateUrl($defhandler)) {
+					if (! \Froxlor\Validate\Validate::validateUrl($defhandler)) {
 						if (substr($defhandler, 0, 1) != '"' && substr($defhandler, - 1, 1) != '"') {
 							$defhandler = '"' . \Froxlor\FileDir::makeCorrectFile($defhandler) . '"';
 						}
@@ -203,7 +178,7 @@ class Apache extends HttpConfigBase
 					$this->virtualhosts_data[$vhosts_filename] .= ' ServerName ' . Settings::Get('system.hostname') . "\n";
 
 					$froxlor_aliases = Settings::Get('system.froxloraliases');
-					if (!empty($froxlor_aliases)) {
+					if (! empty($froxlor_aliases)) {
 						$froxlor_aliases = explode(",", $froxlor_aliases);
 						$aliases = "";
 						foreach ($froxlor_aliases as $falias) {
@@ -212,7 +187,7 @@ class Apache extends HttpConfigBase
 							}
 						}
 						$aliases = trim($aliases);
-						if (!empty($aliases)) {
+						if (! empty($aliases)) {
 							$this->virtualhosts_data[$vhosts_filename] .= ' ServerAlias ' . $aliases . "\n";
 						}
 					}
@@ -428,11 +403,16 @@ class Apache extends HttpConfigBase
 				 *       end of dirprotection
 				 */
 
-				if ($row_ipsandports['specialsettings'] != '') {
+				if ($row_ipsandports['specialsettings'] != '' && ($row_ipsandports['ssl'] == '0' || ($row_ipsandports['ssl'] == '1' && Settings::Get('system.use_ssl') == '1' && $row_ipsandports['include_specialsettings'] == '1'))) {
 					$this->virtualhosts_data[$vhosts_filename] .= $this->processSpecialConfigTemplate($row_ipsandports['specialsettings'], $domain, $row_ipsandports['ip'], $row_ipsandports['port'], $row_ipsandports['ssl'] == '1') . "\n";
 				}
 
 				if ($row_ipsandports['ssl'] == '1' && Settings::Get('system.use_ssl') == '1') {
+
+					if ($row_ipsandports['ssl_specialsettings'] != '') {
+						$this->virtualhosts_data[$vhosts_filename] .= $this->processSpecialConfigTemplate($row_ipsandports['ssl_specialsettings'], $domain, $row_ipsandports['ip'], $row_ipsandports['port'], $row_ipsandports['ssl'] == '1') . "\n";
+					}
+
 					if ($row_ipsandports['ssl_cert_file'] == '') {
 						$row_ipsandports['ssl_cert_file'] = Settings::Get('system.ssl_cert_file');
 						if (! file_exists($row_ipsandports['ssl_cert_file'])) {
@@ -502,6 +482,10 @@ class Apache extends HttpConfigBase
 							// this makes it more secure, thx to Marcel (08/2013)
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLHonorCipherOrder On' . "\n";
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLCipherSuite ' . Settings::Get('system.ssl_cipher_list') . "\n";
+							$protocols = array_map('trim', explode(",", Settings::Get('system.ssl_protocols')));
+							if (in_array("TLSv1.3", $protocols) && ! empty(Settings::Get('system.tlsv13_cipher_list')) && Settings::Get('system.apache24') == 1) {
+								$this->virtualhosts_data[$vhosts_filename] .= ' SSLCipherSuite TLSv1.3 ' . Settings::Get('system.tlsv13_cipher_list') . "\n";
+							}
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLVerifyDepth 10' . "\n";
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLCertificateFile ' . \Froxlor\FileDir::makeCorrectFile($domain['ssl_cert_file']) . "\n";
 
@@ -921,8 +905,11 @@ class Apache extends HttpConfigBase
 				$ipport = $domain['ip'] . ':' . $domain['port'] . ' ';
 			}
 
-			if ($ipandport['default_vhostconf_domain'] != '') {
+			if ($ipandport['default_vhostconf_domain'] != '' && ($ssl_vhost == false || ($ssl_vhost == true && $ipandport['include_default_vhostconf_domain'] == '1'))) {
 				$_vhost_content .= $this->processSpecialConfigTemplate($ipandport['default_vhostconf_domain'], $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
+			}
+			if ($ipandport['ssl_default_vhostconf_domain'] != '' && $ssl_vhost == true) {
+				$_vhost_content .= $this->processSpecialConfigTemplate($ipandport['ssl_default_vhostconf_domain'], $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
 			}
 			$ipportlist .= $ipport;
 		}
@@ -949,7 +936,7 @@ class Apache extends HttpConfigBase
 				'domainid' => $domain['id']
 			));
 
-			if ($ssldestport['port'] != '') {
+			if ($ssldestport && $ssldestport['port'] != '') {
 				$_sslport = ":" . $ssldestport['port'];
 			}
 
@@ -980,11 +967,16 @@ class Apache extends HttpConfigBase
 			}
 
 			if ($domain['ssl_cert_file'] != '') {
+
+				$ssl_protocols = ($domain['override_tls'] == '1' && ! empty($domain['ssl_protocols'])) ? $domain['ssl_protocols'] : Settings::Get('system.ssl_protocols');
+				$ssl_cipher_list = ($domain['override_tls'] == '1' && ! empty($domain['ssl_cipher_list'])) ? $domain['ssl_cipher_list'] : Settings::Get('system.ssl_cipher_list');
+				$tlsv13_cipher_list = ($domain['override_tls'] == '1' && ! empty($domain['tlsv13_cipher_list'])) ? $domain['tlsv13_cipher_list'] : Settings::Get('system.tlsv13_cipher_list');
+
 				$vhost_content .= '  SSLEngine On' . "\n";
-				$vhost_content .= '  SSLProtocol -ALL +' . str_replace(",", " +", Settings::Get('system.ssl_protocols')) . "\n";
+				$vhost_content .= '  SSLProtocol -ALL +' . str_replace(",", " +", $ssl_protocols) . "\n";
 				if (Settings::Get('system.apache24') == '1') {
 					if (isset($domain['http2']) && $domain['http2'] == '1' && Settings::Get('system.http2_support') == '1') {
-						$vhost_content .= ' Protocols h2 http/1.1' . "\n";
+						$vhost_content .= '  Protocols h2 http/1.1' . "\n";
 					}
 					if (! empty(Settings::Get('system.dhparams_file'))) {
 						$dhparams = \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.dhparams_file'));
@@ -997,7 +989,11 @@ class Apache extends HttpConfigBase
 				}
 				// this makes it more secure, thx to Marcel (08/2013)
 				$vhost_content .= '  SSLHonorCipherOrder On' . "\n";
-				$vhost_content .= '  SSLCipherSuite ' . Settings::Get('system.ssl_cipher_list') . "\n";
+				$vhost_content .= '  SSLCipherSuite ' . $ssl_cipher_list . "\n";
+				$protocols = array_map('trim', explode(",", $ssl_protocols));
+				if (in_array("TLSv1.3", $protocols) && ! empty($tlsv13_cipher_list) && Settings::Get('system.apache24') == 1) {
+					$vhost_content .= '  SSLCipherSuite TLSv1.3 ' . $tlsv13_cipher_list . "\n";
+				}
 				$vhost_content .= '  SSLVerifyDepth 10' . "\n";
 				$vhost_content .= '  SSLCertificateFile ' . \Froxlor\FileDir::makeCorrectFile($domain['ssl_cert_file']) . "\n";
 
@@ -1074,16 +1070,24 @@ class Apache extends HttpConfigBase
 			}
 			$vhost_content .= $this->getLogfiles($domain);
 
-			if ($domain['specialsettings'] != '') {
+			if ($domain['specialsettings'] != '' && ($ssl_vhost == false || ($ssl_vhost == true && $domain['include_specialsettings'] == 1))) {
 				$vhost_content .= $this->processSpecialConfigTemplate($domain['specialsettings'], $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
+			}
+
+			if ($domain['ssl_specialsettings'] != '' && $ssl_vhost == true) {
+				$vhost_content .= $this->processSpecialConfigTemplate($domain['ssl_specialsettings'], $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
 			}
 
 			if ($_vhost_content != '') {
 				$vhost_content .= $_vhost_content;
 			}
 
-			if (Settings::Get('system.default_vhostconf') != '') {
+			if (Settings::Get('system.default_vhostconf') != '' && ($ssl_vhost == false || ($ssl_vhost == true && Settings::Get('system.include_default_vhostconf') == 1))) {
 				$vhost_content .= $this->processSpecialConfigTemplate(Settings::Get('system.default_vhostconf'), $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
+			}
+
+			if (Settings::Get('system.default_sslvhostconf') != '' && $ssl_vhost == true) {
+				$vhost_content .= $this->processSpecialConfigTemplate(Settings::Get('system.default_sslvhostconf'), $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
 			}
 		}
 
@@ -1209,7 +1213,7 @@ class Apache extends HttpConfigBase
 				foreach ($statusCodes as $statusCode) {
 					if (isset($row_diroptions['error' . $statusCode . 'path']) && $row_diroptions['error' . $statusCode . 'path'] != '') {
 						$defhandler = $row_diroptions['error' . $statusCode . 'path'];
-						if (! \Froxlor\Validate\Form\Data::validateUrl($defhandler)) {
+						if (! \Froxlor\Validate\Validate::validateUrl($defhandler)) {
 							if (substr($defhandler, 0, 1) != '"' && substr($defhandler, - 1, 1) != '"') {
 								$defhandler = '"' . \Froxlor\FileDir::makeCorrectFile($defhandler) . '"';
 							}

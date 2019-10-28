@@ -33,7 +33,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	optional, description for database
 	 * @param bool $sendinfomail
 	 *        	optional, send created resource-information to customer, default: false
-	 * @param int $customer_id
+	 * @param int $customerid
 	 *        	required when called as admin, not needed when called as customer
 	 *        	
 	 * @access admin, customer

@@ -107,6 +107,22 @@ return array(
 					'default' => false,
 					'save_method' => 'storeSettingField'
 				),
+				'system_dns_createcaaentry' => array(
+					'label' => $lng['serversettings']['caa_entry'],
+					'settinggroup' => 'system',
+					'varname' => 'dns_createcaaentry',
+					'type' => 'bool',
+					'default' => true,
+					'save_method' => 'storeSettingField'
+				),
+				'caa_caa_entry' => array(
+					'label' => $lng['serversettings']['caa_entry_custom'],
+					'settinggroup' => 'caa',
+					'varname' => 'caa_entry',
+					'type' => 'text',
+					'default' => '',
+					'save_method' => 'storeSettingField'
+				),
 				'system_defaultttl' => array(
 					'label' => $lng['serversettings']['defaultttl'],
 					'settinggroup' => 'system',
