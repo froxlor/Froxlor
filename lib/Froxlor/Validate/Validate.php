@@ -79,7 +79,7 @@ class Validate
             $element = bindec ($element);
         }
 
-        return join ('.', $netmask);
+        return implode ('.', $netmask);
     }
 
 	/**
