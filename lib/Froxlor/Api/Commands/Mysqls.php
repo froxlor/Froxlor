@@ -49,7 +49,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 
 			// parameters
 			$dbserver = $this->getParam('mysql_server', true, 0);
-			$databasedescription = $originaldatabasedescription = $this->getParam('description', strtoupper(Settings::Get('customer.mysqlprefix')) == 'DBNAME' ? false : true, '');
+			$databasedescription = $this->getParam('description', strtoupper(Settings::Get('customer.mysqlprefix')) == 'DBNAME' ? false : true, '');
 			$sendinfomail = $this->getBoolParam('sendinfomail', true, 0);
 
 			// validation
@@ -65,9 +65,6 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
                 //read more @ https://dev.mysql.com/doc/refman/8.0/en/identifiers.html
                 $newdbname = ($this->isAdmin() ? $customer['loginname'] : $this->getUserDetail('loginname')) . '_' . trim($databasedescription);
                 $databasedescription = \Froxlor\Validate\Validate::validate($newdbname, 'description', '/^[0-9a-zA-Z$_]{1,64}$/', '', array(), true);
-                //If it validates correctly, we set the old value
-                /** @noinspection */
-                $databasedescription = trim($originaldatabasedescription);
             } else {
                 $databasedescription = \Froxlor\Validate\Validate::validate(trim($databasedescription), 'description', '', '', array(), true);
             }
