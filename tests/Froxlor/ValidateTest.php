@@ -90,7 +90,7 @@ class ValidateTest extends TestCase
     {
         $this->expectException("Exception");
         $this->expectExceptionCode(400);
-        $result = Validate::validate_ip2("2620:0:2d0:200::7/32", false, 'invalidip', false, false, true, true);
+        Validate::validate_ip2("2620:0:2d0:200::7/32", false, 'invalidip', false, false, true, true);
     }
 
 	public function testValidateIpLocalhostAllowed()
