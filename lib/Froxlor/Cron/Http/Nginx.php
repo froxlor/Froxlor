@@ -285,7 +285,7 @@ class Nginx extends HttpConfigBase
 
 				if (! $is_redirect) {
 					$this->nginx_data[$vhost_filename] .= "\tlocation ~ \.php {\n";
-					$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_split_path_info ^(.+\.php)(/.+)\$;\n";
+					$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_split_path_info ^(.+?\.php)(/.*)$;\n";
 					$this->nginx_data[$vhost_filename] .= "\t\tinclude " . Settings::Get('nginx.fastcgiparams') . ";\n";
 					$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_param SCRIPT_FILENAME \$request_filename;\n";
 					$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_param PATH_INFO \$fastcgi_path_info;\n";
@@ -955,7 +955,7 @@ class Nginx extends HttpConfigBase
 			$phpopts .= "\t" . '}' . "\n\n";
 
 			$phpopts .= "\tlocation @php {\n";
-			$phpopts .= "\t\tfastcgi_split_path_info ^(.+\.php)(/.+)\$;\n";
+			$phpopts .= "\t\tfastcgi_split_path_info ^(.+?\.php)(/.*)$;\n";
 			$phpopts .= "\t\tinclude " . Settings::Get('nginx.fastcgiparams') . ";\n";
 			$phpopts .= "\t\tfastcgi_param SCRIPT_FILENAME \$request_filename;\n";
 			$phpopts .= "\t\tfastcgi_param PATH_INFO \$fastcgi_path_info;\n";
