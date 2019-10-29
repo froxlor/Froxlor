@@ -6,6 +6,7 @@ use Froxlor\Database\Database;
 use Froxlor\Api\Commands\Admins;
 use Froxlor\Api\Commands\Customers;
 use Froxlor\Api\Commands\SubDomains;
+use Froxlor\Api\Commands\Ftps;
 
 /**
  *
@@ -61,7 +62,9 @@ class CustomersTest extends TestCase
 		$this->assertEquals('secret', $result['custom_notes']);
 
 		// validate that the std-subdomain has been added
-		$json_result = SubDomains::getLocal($admin_userdata, array('id' => $result['standardsubdomain']))->get();
+		$json_result = SubDomains::getLocal($admin_userdata, array(
+			'id' => $result['standardsubdomain']
+		))->get();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals('test1.dev.froxlor.org', $result['domain']);
 	}
@@ -554,5 +557,50 @@ class CustomersTest extends TestCase
 
 		$this->expectExceptionMessage('Loginname contains too many characters. Only ' . (\Froxlor\Database\Database::getSqlUsernameLength() - strlen(Settings::Get('customer.mysqlprefix'))) . ' characters are allowed.');
 		Customers::getLocal($admin_userdata, $data)->add();
+	}
+
+	/**
+	 *
+	 * @depends testAdminCustomersAddAutoLoginname
+	 */
+	public function testResellerCustomersAddNoFtpValidateDefaultUserExists()
+	{
+		global $admin_userdata;
+		// get reseller
+		$json_result = Admins::getLocal($admin_userdata, array(
+			'loginname' => 'reseller'
+		))->get();
+		$reseller_userdata = json_decode($json_result, true)['data'];
+		$reseller_userdata['adminsession'] = 1;
+
+		// set available ftp resources to 0 to validate that when the customer
+		// is added the default ftp user for the customer is created too regardless of
+		// available resource of the reseller/admin
+		$reseller_userdata['ftps'] = 0;
+
+		// add new customer
+		$data = [
+			'new_loginname' => 'testftpx',
+			'email' => 'testftp@froxlor.org',
+			'firstname' => 'Test',
+			'name' => 'Ftpman',
+			'customernumber' => 1339,
+			'new_customer_password' => 'h0lYmo1y'
+		];
+		Customers::getLocal($reseller_userdata, $data)->add();
+
+		// get FTP user
+		$json_result = Ftps::getLocal($reseller_userdata, [
+			'username' => 'testftpx'
+		])->get();
+		$ftp_data = json_decode($json_result, true)['data'];
+		$this->assertEquals("testftpx", $ftp_data['username']);
+
+		// now get rid of the customer again
+		$json_result = Customers::getLocal($reseller_userdata, array(
+			'loginname' => 'testftpx'
+		))->delete();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals('testftpx', $result['loginname']);
 	}
 }
