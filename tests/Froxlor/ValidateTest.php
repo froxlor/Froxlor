@@ -109,7 +109,7 @@ class ValidateTest extends TestCase
         $this->assertEquals("8.8.8.8/128.0.0.0", $result);
     }
 
-    public function testIPv6Checks()
+    public function testValidateIPv6()
     {
         $result = Validate::is_ipv6('1.1.1.1/4');
         $this->assertFalse($result);
