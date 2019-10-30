@@ -109,13 +109,27 @@ class ValidateTest extends TestCase
         $this->assertEquals("8.8.8.8/128.0.0.0", $result);
     }
 
+    public function testIPv6Checks()
+    {
+        $result = Validate::is_ipv6('1.1.1.1/4');
+        $this->assertFalse($result);
+        $result = Validate::is_ipv6('1.1.1.1');
+        $this->assertFalse($result);
+        $result = Validate::is_ipv6('::ffff:10.20.30.40');
+        $this->assertEquals('::ffff:10.20.30.40', $result);
+        $result = Validate::is_ipv6('2620:0:2d0:200::7/32');
+        $this->assertFalse($result);
+        $result = Validate::is_ipv6('2620:0:2d0:200::7');
+        $this->assertEquals('2620:0:2d0:200::7', $result);
+    }
+
 	public function testValidateIpLocalhostAllowedWrongIp()
 	{
 		$this->expectException("Exception");
 		$this->expectExceptionCode(400);
 		Validate::validate_ip2("127.0.0.2", false, 'invalidip', true, false, false, false, true);
 	}
-	
+
 	public function testValidateUrl()
 	{
 		$result = Validate::validateUrl("https://froxlor.org/");
