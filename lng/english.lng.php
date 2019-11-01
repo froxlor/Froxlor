@@ -569,7 +569,7 @@ $lng['serversettings']['apacheconf_htpasswddir']['description'] = 'Where should 
 
 $lng['error']['formtokencompromised'] = 'The request seems to be compromised. For security reasons you were logged out.';
 $lng['serversettings']['mysql_access_host']['title'] = 'MySQL-Access-Hosts';
-$lng['serversettings']['mysql_access_host']['description'] = 'A comma separated list of hosts from which users should be allowed to connect to the MySQL-Server.';
+$lng['serversettings']['mysql_access_host']['description'] = 'A comma separated list of hosts from which users should be allowed to connect to the MySQL-Server. To allow a subnet the netmask or cidr syntax is valid.';
 
 // ADDED IN 1.2.18-svn1
 

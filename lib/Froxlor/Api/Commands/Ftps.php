@@ -56,7 +56,9 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 			throw new \Exception("You cannot access this resource", 405);
 		}
 
-		if ($this->getUserDetail('ftps_used') < $this->getUserDetail('ftps') || $this->getUserDetail('ftps') == '-1') {
+		$is_defaultuser = $this->getBoolParam('is_defaultuser', true, 0);
+
+		if (($this->getUserDetail('ftps_used') < $this->getUserDetail('ftps') || $this->getUserDetail('ftps') == '-1') || $this->isAdmin() && $is_defaultuser == 1) {
 
 			// required paramters
 			$path = $this->getParam('path');
@@ -71,7 +73,6 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 			$ftpdomain = $this->getParam('ftp_domain', true, '');
 
 			$additional_members = $this->getParam('additional_members', true, array());
-			$is_defaultuser = $this->getBoolParam('is_defaultuser', true, 0);
 
 			// validation
 			$password = \Froxlor\Validate\Validate::validate($password, 'password', '', '', array(), true);
@@ -105,7 +106,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 				$sendinfomail = 0;
 			}
 
-			if (Settings::Get('customer.ftpatdomain') == '1' && !$is_defaultuser) {
+			if (Settings::Get('customer.ftpatdomain') == '1' && ! $is_defaultuser) {
 				if ($ftpusername == '') {
 					\Froxlor\UI\Response::standard_error(array(
 						'stringisempty',
@@ -541,6 +542,9 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 				"username" => $customer_data['loginname']
 			);
 			Database::pexecute($stmt, $params, true, true);
+		} else {
+			// do not allow removing default ftp-account
+			\Froxlor\UI\Response::standard_error('ftp_cantdeletemainaccount', '', true);
 		}
 
 		// remove all quotatallies

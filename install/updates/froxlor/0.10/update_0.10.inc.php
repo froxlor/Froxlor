@@ -406,9 +406,9 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201910110')) {
 	// select all domains with an ssl IP connected and specialsettings content to include these in the ssl-vhost
 	// to maintain former behavior
 	$sel_stmt = Database::prepare("
-		SELECT d.id FROM `". TABLE_PANEL_DOMAINS . "` d
-		LEFT JOIN `". TABLE_DOMAINTOIP . "` d2i ON d2i.id_domain = d.id
-		LEFT JOIN `". TABLE_PANEL_IPSANDPORTS."` i ON i.id = d2i.id_ipandports
+		SELECT d.id FROM `" . TABLE_PANEL_DOMAINS . "` d
+		LEFT JOIN `" . TABLE_DOMAINTOIP . "` d2i ON d2i.id_domain = d.id
+		LEFT JOIN `" . TABLE_PANEL_IPSANDPORTS . "` i ON i.id = d2i.id_ipandports
 		WHERE d.specialsettings <> '' AND i.ssl = '1'
 	");
 	Database::pexecute($sel_stmt);
@@ -444,6 +444,16 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201910120')) {
 }
 
 if (\Froxlor\Froxlor::isFroxlorVersion('0.10.2')) {
-        showUpdateStep("Updating from 0.10.2 to 0.10.3", false);
-        \Froxlor\Froxlor::updateToVersion('0.10.3');
+	showUpdateStep("Updating from 0.10.2 to 0.10.3", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.3');
+}
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.3')) {
+	showUpdateStep("Updating from 0.10.3 to 0.10.4", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.4');
+}
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.4')) {
+        showUpdateStep("Updating from 0.10.4 to 0.10.5", false);
+        \Froxlor\Froxlor::updateToVersion('0.10.5');
 }

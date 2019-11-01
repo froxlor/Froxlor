@@ -252,6 +252,28 @@ class Store
 
 	public static function storeSettingMysqlAccessHost($fieldname, $fielddata, $newfieldvalue)
 	{
+		$ips = $newfieldvalue;
+		// Convert cidr to netmask for mysql, if needed be
+		if (strpos($ips, ',') !== false) {
+			$ips = explode(',', $ips);
+		}
+		if (is_array($ips) && count($ips) > 0) {
+			$newfieldvalue = [];
+			foreach ($ips as $ip) {
+				$org_ip = $ip;
+				$ip_cidr = explode("/", $ip);
+				if (count($ip_cidr) === 2) {
+					$ip = $ip_cidr[0];
+					if (strlen($ip_cidr[1]) <= 2) {
+						$ip_cidr[1] = \Froxlor\Validate\Validate::cidr2NetmaskAddr($org_ip);
+					}
+					$newfieldvalue[] = $ip . '/' . $ip_cidr[1];
+				} else {
+					$newfieldvalue[] = $org_ip;
+				}
+			}
+			$newfieldvalue = implode(',', $newfieldvalue);
+		}
 		$returnvalue = self::storeSettingField($fieldname, $fielddata, $newfieldvalue);
 
 		if ($returnvalue !== false && is_array($fielddata) && isset($fielddata['settinggroup']) && $fielddata['settinggroup'] == 'system' && isset($fielddata['varname']) && $fielddata['varname'] == 'mysql_access_host') {

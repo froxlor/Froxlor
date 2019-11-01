@@ -289,6 +289,7 @@ if ($page == '' || $page == 'overview') {
 				$result['customernumber'] = null;
 				$result['custom_notes'] = null;
 				$result['custom_notes_show'] = null;
+				$result['api_allowed'] = null;
 				$hosting_plans = null;
 				$admin_select_cnt = null;
 				$admin_select = null;

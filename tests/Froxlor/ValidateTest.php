@@ -50,7 +50,7 @@ class ValidateTest extends TestCase
 
 	public function testValidateIp()
 	{
-		$result = Validate::validate_ip2("12.34.56.78", false, 'invalidip', false, false, false, true);
+		$result = Validate::validate_ip2("12.34.56.78", false, 'invalidip', false, false, false, false, true);
 		$this->assertEquals("12.34.56.78", $result);
 	}
 
@@ -58,12 +58,12 @@ class ValidateTest extends TestCase
 	{
 		$this->expectException("Exception");
 		$this->expectExceptionCode(400);
-		Validate::validate_ip2("10.0.0.1", false, 'invalidip', false, false, false, true);
+		Validate::validate_ip2("10.0.0.1", false, 'invalidip', false, false, false, false, true);
 	}
 
 	public function testValidateIpPrivNotAllowedBool()
 	{
-		$result = Validate::validate_ip2("10.0.0.1", true, 'invalidip', false, false, false, true);
+		$result = Validate::validate_ip2("10.0.0.1", true, 'invalidip', false, false, false, false, true);
 		$this->assertFalse($result);
 	}
 
@@ -71,34 +71,65 @@ class ValidateTest extends TestCase
 	{
 		$this->expectException("Exception");
 		$this->expectExceptionCode(400);
-		Validate::validate_ip2("12.34.56.78/24", false, 'invalidip', false, false, false, true);
+		Validate::validate_ip2("12.34.56.78/24", false, 'invalidip', false, false, false, false, true);
 	}
 
 	public function testValidateIpCidrNotAllowedBool()
 	{
-		$result = Validate::validate_ip2("12.34.56.78/24", true, 'invalidip', false, false, false, true);
+		$result = Validate::validate_ip2("12.34.56.78/24", true, 'invalidip', false, false, false, false, true);
 		$this->assertFalse($result);
 	}
 
 	public function testValidateIpCidr()
 	{
-		$result = Validate::validate_ip2("12.34.56.78/24", false, 'invalidip', false, false, true, true);
+		$result = Validate::validate_ip2("12.34.56.78/24", false, 'invalidip', false, false, true, false, true);
 		$this->assertEquals("12.34.56.78/24", $result);
 	}
 
+    public function testValidateIpv6Disallowed()
+    {
+        $this->expectException("Exception");
+        $this->expectExceptionCode(400);
+        Validate::validate_ip2("2620:0:2d0:200::7/32", false, 'invalidip', false, false, true, true, true);
+    }
+
 	public function testValidateIpLocalhostAllowed()
 	{
-		$result = Validate::validate_ip2("127.0.0.1/32", false, 'invalidip', true, false, true, true);
+		$result = Validate::validate_ip2("127.0.0.1/32", false, 'invalidip', true, false, true, false, true);
 		$this->assertEquals("127.0.0.1/32", $result);
 	}
+
+    public function testValidateCidrNoationToNetmaskNotationIPv4()
+    {
+        $result = Validate::validate_ip2("1.1.1.1/4", false, 'invalidip', true, false, true, true, true);
+        $this->assertEquals("1.1.1.1/240.0.0.0", $result);
+        $result = Validate::validate_ip2("8.8.8.8/18", false, 'invalidip', true, false, true, true, true);
+        $this->assertEquals("8.8.8.8/255.255.192.0", $result);
+        $result = Validate::validate_ip2("8.8.8.8/1", false, 'invalidip', true, false, true, true, true);
+        $this->assertEquals("8.8.8.8/128.0.0.0", $result);
+    }
+
+    public function testValidateIPv6()
+    {
+        $result = Validate::is_ipv6('1.1.1.1/4');
+        $this->assertFalse($result);
+        $result = Validate::is_ipv6('1.1.1.1');
+        $this->assertFalse($result);
+        $result = Validate::is_ipv6('::ffff:10.20.30.40');
+        $this->assertEquals('::ffff:10.20.30.40', $result);
+        $result = Validate::is_ipv6('2620:0:2d0:200::7/32');
+        $this->assertFalse($result);
+        $result = Validate::is_ipv6('2620:0:2d0:200::7');
+        $this->assertEquals('2620:0:2d0:200::7', $result);
+    }
 
 	public function testValidateIpLocalhostAllowedWrongIp()
 	{
 		$this->expectException("Exception");
 		$this->expectExceptionCode(400);
-		Validate::validate_ip2("127.0.0.2", false, 'invalidip', true, false, false, true);
+		Validate::validate_ip2("127.0.0.2", false, 'invalidip', true, false, false, false, true);
 	}
-	
+
 	public function testValidateUrl()
 	{
 		$result = Validate::validateUrl("https://froxlor.org/");

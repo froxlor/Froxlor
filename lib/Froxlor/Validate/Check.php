@@ -77,8 +77,7 @@ class Check
 		$mysql_access_host_array = array_map('trim', explode(',', $newfieldvalue));
 
 		foreach ($mysql_access_host_array as $host_entry) {
-
-			if (Validate::validate_ip2($host_entry, true, 'invalidip', true, true) == false && Validate::validateDomain($host_entry) == false && Validate::validateLocalHostname($host_entry) == false && $host_entry != '%') {
+			if (Validate::validate_ip2($host_entry, true, 'invalidip', true, true, true, true, false) == false && Validate::validateDomain($host_entry) == false && Validate::validateLocalHostname($host_entry) == false && $host_entry != '%') {
 				return array(
 					self::FORMFIELDS_PLAUSIBILITY_CHECK_ERROR,
 					'invalidmysqlhost',

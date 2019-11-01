@@ -63,6 +63,38 @@ class Validate
 	}
 
 	/**
+	 * Converts CIDR to a netmask address
+	 *
+	 * @thx to https://stackoverflow.com/a/5711080/3020926
+	 * @param string $cidr
+	 *
+	 * @return string
+	 */
+	public static function cidr2NetmaskAddr($cidr)
+	{
+		$ta = substr($cidr, strpos($cidr, '/') + 1) * 1;
+		$netmask = str_split(str_pad(str_pad('', $ta, '1'), 32, '0'), 8);
+
+		foreach ($netmask as &$element) {
+			$element = bindec($element);
+		}
+
+		return implode('.', $netmask);
+	}
+
+	/**
+	 * Checks if an $address (IP) is IPv6
+	 *
+	 * @param string $address
+	 *
+	 * @return string|bool ip address on success, false on failure
+	 */
+	public static function is_ipv6($address)
+	{
+		return filter_var($address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
+	}
+
+	/**
 	 * Checks whether it is a valid ip
 	 *
 	 * @param string $ip
@@ -77,17 +109,35 @@ class Validate
 	 *        	whether to allow private network addresses
 	 * @param bool $allow_cidr
 	 *        	whether to allow CIDR values e.g. 10.10.10.10/16
+	 * @param bool $cidr_as_netmask
+	 *        	whether to format CIDR nodation to netmask notation
+	 * @param bool $throw_exception
+	 *        	whether to throw an exception on failure
 	 *        	
 	 * @return string|bool ip address on success, false on failure
 	 */
-	public static function validate_ip2($ip, $return_bool = false, $lng = 'invalidip', $allow_localhost = false, $allow_priv = false, $allow_cidr = false, $throw_exception = false)
+	public static function validate_ip2($ip, $return_bool = false, $lng = 'invalidip', $allow_localhost = false, $allow_priv = false, $allow_cidr = false, $cidr_as_netmask = false, $throw_exception = false)
 	{
 		$cidr = "";
 		if ($allow_cidr) {
 			$org_ip = $ip;
 			$ip_cidr = explode("/", $ip);
-			if (count($ip_cidr) == 2) {
+			if (count($ip_cidr) === 2) {
+				if (strlen($ip_cidr[1]) <= 2 && in_array((int) $ip_cidr[1], array_values(range(1, 32)), true) === false) {
+					\Froxlor\UI\Response::standard_error($lng, $ip, $throw_exception);
+				}
+				if ($cidr_as_netmask && self::is_ipv6($ip_cidr[0])) {
+					// MySQL does not handle CIDR of IPv6 addresses, return error
+					if ($return_bool) {
+						return false;
+					} else {
+						\Froxlor\UI\Response::standard_error($lng, $ip, $throw_exception);
+					}
+				}
 				$ip = $ip_cidr[0];
+				if ($cidr_as_netmask && strlen($ip_cidr[1]) <= 2) {
+					$ip_cidr[1] = self::cidr2NetmaskAddr($org_ip);
+				}
 				$cidr = "/" . $ip_cidr[1];
 			} else {
 				$ip = $org_ip;
