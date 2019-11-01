@@ -124,4 +124,63 @@ class FroxlorRpcTest extends TestCase
 		$this->assertEquals('listFunctions', $result['command']['method']);
 		$this->assertNull($result['params']);
 	}
+
+	public function testApiPhpEscaping()
+	{
+		$key = $this->generateKey();
+		$request = array(
+			'body' => [
+				'command' => 'Froxlor.listFunctions',
+				'params' => $key
+			]
+		);
+		$json_request = json_encode($request);
+		$decoded_request = json_decode($json_request, true);
+		$decoded_request = $this->stripcslashes_deep($decoded_request);
+		$this->assertEquals($key['key'], $decoded_request['body']['params']['key']);
+		$this->assertEquals($key['cert'], $decoded_request['body']['params']['cert']);
+	}
+
+	private function stripcslashes_deep($value)
+	{
+		return is_array($value) ? array_map([$this, 'stripcslashes_deep'], $value) : stripcslashes($value);
+	}
+
+	private function generateKey()
+	{
+		$dn = array(
+			"countryName" => "DE",
+			"stateOrProvinceName" => "Hessen",
+			"localityName" => "Frankfurt",
+			"organizationName" => "Froxlor",
+			"organizationalUnitName" => "Testing",
+			"commonName" => "test2.local",
+			"emailAddress" => "team@froxlor.org"
+		);
+
+		// generate key pair
+		$privkey = openssl_pkey_new(array(
+			"private_key_bits" => 2048,
+			"private_key_type" => OPENSSL_KEYTYPE_RSA
+		));
+
+		// generate csr
+		$csr = openssl_csr_new($dn, $privkey, array(
+			'digest_alg' => 'sha256'
+		));
+
+		// generate self-signed certificate
+		$sscert = openssl_csr_sign($csr, null, $privkey, 365, array(
+			'digest_alg' => 'sha256'
+		));
+
+		// export
+		openssl_x509_export($sscert, $certout);
+		openssl_pkey_export($privkey, $pkeyout, null);
+
+		return array(
+			'cert' => $certout,
+			'key' => $pkeyout
+		);
+	}
 }

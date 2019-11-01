@@ -189,7 +189,6 @@ class CertificatesTest extends TestCase
 		));
 
 		// export
-		openssl_csr_export($csr, $csrout);
 		openssl_x509_export($sscert, $certout);
 		openssl_pkey_export($privkey, $pkeyout, null);
 
