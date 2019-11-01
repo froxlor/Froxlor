@@ -84,6 +84,9 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 				)
 		");
 		$customer_ssl = $certificates_stmt->fetchAll(\PDO::FETCH_ASSOC);
+		if (!$customer_ssl) {
+			$customer_ssl = array();
+		}
 
 		$froxlor_ssl = array();
 		if (Settings::Get('system.le_froxlor_enabled') == '1') {
@@ -93,6 +96,9 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 				(`expirationdate` < DATE_ADD(NOW(), INTERVAL 30 DAY) OR `expirationdate` IS NULL)
 			");
 			$froxlor_ssl = Database::pexecute_first($froxlor_ssl_settings_stmt);
+			if (!$froxlor_ssl) {
+				$froxlor_ssl = array();
+			}
 		}
 
 		if (count($customer_ssl) > 0 || count($froxlor_ssl) > 0) {
@@ -178,10 +184,10 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 				'id' => null
 			);
 
-			$froxlor_ssl = $needRenew['froxlor_ssl'];
+			$froxlor_ssl = $needRenew ? $needRenew['froxlor_ssl'] : array();
 
 			$cert_mode = 'issue';
-			if ($froxlor_ssl) {
+			if (count($froxlor_ssl) > 0) {
 				$cert_mode = 'renew';
 				$certrow['id'] = $froxlor_ssl['id'];
 				$certrow['expirationdate'] = $froxlor_ssl['expirationdate'];
@@ -236,7 +242,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 		}
 
 		// customer domains
-		$certrows = $needRenew['customer_ssl'];
+		$certrows = $needRenew ? $needRenew['customer_ssl'] : array();
 		$cert_mode = 'issue';
 		foreach ($certrows as $certrow) {
 

@@ -452,3 +452,8 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.3')) {
 	showUpdateStep("Updating from 0.10.3 to 0.10.4", false);
 	\Froxlor\Froxlor::updateToVersion('0.10.4');
 }
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.4')) {
+        showUpdateStep("Updating from 0.10.4 to 0.10.5", false);
+        \Froxlor\Froxlor::updateToVersion('0.10.5');
+}
