@@ -133,7 +133,7 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 	{
 		if ($this->isAdmin()) {
 			$result_stmt = Database::prepare("
-				SELECT COUNT(c.*) as num_phps
+				SELECT COUNT(*) as num_phps
 				FROM `" . TABLE_PANEL_PHPCONFIGS . "` c
 			");
 			$result = Database::pexecute_first($result_stmt, null, true, true);

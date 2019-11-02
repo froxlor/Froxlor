@@ -33,7 +33,7 @@ class HostingPlans extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 	 *        	optional specify offset for resultset
 	 * @param array $sql_orderby
 	 *        	optional array with index = fieldname and value = ASC|DESC to order the resultset by one or more fields
-	 *
+	 *        	
 	 * @access admin
 	 * @throws \Exception
 	 * @return string json-encoded array count|list
@@ -76,7 +76,7 @@ class HostingPlans extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 	{
 		if ($this->isAdmin()) {
 			$result_stmt = Database::prepare("
-				SELECT COUNT(p.*) as num_plans
+				SELECT COUNT(*) as num_plans
 				FROM `" . TABLE_PANEL_PLANS . "` p, `" . TABLE_PANEL_ADMINS . "` a
 				WHERE `p`.`adminid` = `a`.`adminid`" . ($this->getUserDetail('customers_see_all') ? '' : " AND `p`.`adminid` = :adminid "));
 			$params = array();

@@ -238,7 +238,7 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 	public function listingCount()
 	{
 		// select all my (accessable) certificates
-		$certs_stmt_query = "SELECT COUNT(s.*) as num_certs
+		$certs_stmt_query = "SELECT COUNT(*) as num_certs
 			FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` s
 			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` d ON `d`.`id` = `s`.`domainid`
 			LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` c ON `c`.`customerid` = `d`.`customerid`

@@ -171,7 +171,7 @@ class Cronjobs extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceE
 	{
 		if ($this->isAdmin()) {
 			$result_stmt = Database::prepare("
-				SELECT COUNT(`c`.*) as num_crons FROM `" . TABLE_PANEL_CRONRUNS . "` `c`
+				SELECT COUNT(*) as num_crons FROM `" . TABLE_PANEL_CRONRUNS . "` `c`
 			");
 			$result = Database::pexecute_first($result_stmt, null, true, true);
 			if ($result) {

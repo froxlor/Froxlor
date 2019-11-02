@@ -316,7 +316,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	{
 		$customer_ids = $this->getAllowedCustomerIds('email');
 		$result_stmt = Database::prepare("
-			SELECT COUNT(m.*) as num_emails
+			SELECT COUNT(*) as num_emails
 			FROM `" . TABLE_MAIL_VIRTUAL . "` m
 			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` d ON (m.`domainid` = d.`id`)
 			LEFT JOIN `" . TABLE_MAIL_USERS . "` u ON (m.`popaccountid` = u.`id`)

@@ -82,7 +82,7 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 				SELECT COUNT(*) as num_ips FROM `" . TABLE_PANEL_IPSANDPORTS . "` " . $ip_where);
 			$result = Database::pexecute_first($result_stmt, null, true, true);
 			if ($result) {
-				return $this->response(200, "successfull", $result['num_plans']);
+				return $this->response(200, "successfull", $result['num_ips']);
 			}
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
