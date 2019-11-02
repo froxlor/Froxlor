@@ -117,6 +117,16 @@ class Traffic extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	}
 
 	/**
+	 * You cannot count the traffic data list
+	 *
+	 * @throws \Exception
+	 */
+	public function listingCount()
+	{
+		throw new \Exception('You cannot count the traffic data list', 303);
+	}
+
+	/**
 	 * You cannot delete traffic data
 	 *
 	 * @throws \Exception

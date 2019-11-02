@@ -154,6 +154,10 @@ class CustomerBackupsTest extends TestCase
 		$this->assertEquals('1', $result['list'][0]['data']['backup_dbs']);
 		$this->assertEquals('1', $result['list'][0]['data']['backup_mail']);
 		$this->assertEquals('1', $result['list'][0]['data']['backup_web']);
+
+		$json_result = CustomerBackups::getLocal($admin_userdata)->listingCount();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(1, $result);
 	}
 
 	/**

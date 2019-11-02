@@ -158,6 +158,10 @@ class DirOptionsTest extends TestCase
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(1, $result['count']);
 		$this->assertEquals($customer_userdata['documentroot'] . 'test/', $result['list'][0]['path']);
+
+		$json_result = DirOptions::getLocal($admin_userdata)->listingCount();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(1, $result);
 	}
 
 	/**

@@ -135,6 +135,15 @@ class EmailForwarders extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 	}
 
 	/**
+	 * You cannot directly count email forwarders.
+	 * You need to call Emails.listingCount()
+	 */
+	public function listingCount()
+	{
+		throw new \Exception('You cannot directly count email forwarders. You need to call Emails.listingCount()', 303);
+	}
+
+	/**
 	 * delete email-forwarder entry for given email-address by either id or email-address and forwarder-id
 	 *
 	 * @param int $id

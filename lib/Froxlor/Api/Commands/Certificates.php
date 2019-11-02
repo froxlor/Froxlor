@@ -174,6 +174,15 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 	/**
 	 * lists all certificate entries
 	 *
+	 * @param array $sql_search
+	 *        	optional array with index = fieldname, and value = array with 'op' => operator (one of <, > or =), LIKE is used if left empty and 'value' => searchvalue
+	 * @param int $sql_limit
+	 *        	optional specify number of results to be returned
+	 * @param int $sql_offset
+	 *        	optional specify offset for resultset
+	 * @param array $sql_orderby
+	 *        	optional array with index = fieldname and value = ASC|DESC to order the resultset by one or more fields
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array count|list
@@ -188,7 +197,7 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 			WHERE ";
 
 		$qry_params = array();
-
+		$query_fields = array();
 		if ($this->isAdmin() && $this->getUserDetail('customers_see_all') == '0') {
 			// admin with only customer-specific permissions
 			$certs_stmt_query .= "d.adminid = :adminid ";
@@ -200,7 +209,8 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 		} else {
 			$certs_stmt_query .= "1 ";
 		}
-		$certs_stmt = Database::prepare($certs_stmt_query);
+		$certs_stmt = Database::prepare($certs_stmt_query . $this->getSearchWhere($query_fields) . $this->getOrderBy() . $this->getLimit());
+		$qry_params = array_merge($qry_params, $query_fields);
 		Database::pexecute($certs_stmt, $qry_params, true, true);
 		$result = array();
 		while ($cert = $certs_stmt->fetch(\PDO::FETCH_ASSOC)) {
@@ -216,6 +226,40 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 			'count' => count($result),
 			'list' => $result
 		));
+	}
+
+	/**
+	 * returns the total number of certificates for the given user
+	 *
+	 * @access admin, customer
+	 * @throws \Exception
+	 * @return string json-encoded array
+	 */
+	public function listingCount()
+	{
+		// select all my (accessable) certificates
+		$certs_stmt_query = "SELECT COUNT(s.*) as num_certs
+			FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` s
+			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` d ON `d`.`id` = `s`.`domainid`
+			LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` c ON `c`.`customerid` = `d`.`customerid`
+			WHERE ";
+		$qry_params = array();
+		if ($this->isAdmin() && $this->getUserDetail('customers_see_all') == '0') {
+			// admin with only customer-specific permissions
+			$certs_stmt_query .= "d.adminid = :adminid ";
+			$qry_params['adminid'] = $this->getUserDetail('adminid');
+		} elseif ($this->isAdmin() == false) {
+			// customer-area
+			$certs_stmt_query .= "d.customerid = :cid ";
+			$qry_params['cid'] = $this->getUserDetail('customerid');
+		} else {
+			$certs_stmt_query .= "1 ";
+		}
+		$certs_stmt = Database::prepare($certs_stmt_query);
+		$result = Database::pexecute_first($certs_stmt, $qry_params, true, true);
+		if ($result) {
+			return $this->response(200, "successfull", $result['num_certs']);
+		}
 	}
 
 	/**

@@ -88,6 +88,10 @@ class FtpsTest extends TestCase
 		$json_result = Ftps::getLocal($admin_userdata)->listing();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(2, $result['count']);
+
+		$json_result = Ftps::getLocal($admin_userdata)->listingCount();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(2, $result);
 	}
 
 	public function testAdminFtpsListSpecificCustomer()
@@ -115,6 +119,10 @@ class FtpsTest extends TestCase
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(1, $result['count']);
 		$this->assertEquals('test1', $result['list'][0]['username']);
+
+		$json_result = Ftps::getLocal($reseller_userdata)->listingCount();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(1, $result);
 	}
 
 	public function testCustomerFtpsList()
@@ -129,6 +137,10 @@ class FtpsTest extends TestCase
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(1, $result['count']);
 		$this->assertEquals('test1', $result['list'][0]['username']);
+
+		$json_result = Ftps::getLocal($customer_userdata)->listingCount();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(1, $result);
 	}
 
 	public function testCustomerFtpsAdd()

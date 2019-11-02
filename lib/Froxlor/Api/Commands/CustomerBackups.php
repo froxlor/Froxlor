@@ -137,7 +137,15 @@ class CustomerBackups extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 	 *        	optional, admin-only, select backup-jobs of a specific customer by id
 	 * @param string $loginname
 	 *        	optional, admin-only, select backup-jobs of a specific customer by loginname
-	 *        	
+	 * @param array $sql_search
+	 *        	optional array with index = fieldname, and value = array with 'op' => operator (one of <, > or =), LIKE is used if left empty and 'value' => searchvalue
+	 * @param int $sql_limit
+	 *        	optional specify number of results to be returned
+	 * @param int $sql_offset
+	 *        	optional specify offset for resultset
+	 * @param array $sql_orderby
+	 *        	optional array with index = fieldname and value = ASC|DESC to order the resultset by one or more fields
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array count|list
@@ -149,8 +157,9 @@ class CustomerBackups extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 		$customer_ids = $this->getAllowedCustomerIds('extras.backup');
 
 		// check whether there is a backup-job for this customer
-		$sel_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_TASKS . "` WHERE `type` = '20'");
-		Database::pexecute($sel_stmt);
+		$query_fields = array();
+		$sel_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_TASKS . "` WHERE `type` = '20'" . $this->getSearchWhere($query_fields, true) . $this->getOrderBy() . $this->getLimit());
+		Database::pexecute($sel_stmt, $query_fields, true, true);
 		$result = array();
 		while ($entry = $sel_stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$entry['data'] = json_decode($entry['data'], true);
@@ -163,6 +172,37 @@ class CustomerBackups extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 			'count' => count($result),
 			'list' => $result
 		));
+	}
+
+	/**
+	 * returns the total number of planned backups
+	 *
+	 * @param int $customerid
+	 *        	optional, admin-only, select backup-jobs of a specific customer by id
+	 * @param string $loginname
+	 *        	optional, admin-only, select backup-jobs of a specific customer by loginname
+	 *        	
+	 * @access admin, customer
+	 * @throws \Exception
+	 * @return string json-encoded array
+	 */
+	public function listingCount()
+	{
+		$this->validateAccess();
+
+		$customer_ids = $this->getAllowedCustomerIds('extras.backup');
+
+		// check whether there is a backup-job for this customer
+		$result_count = 0;
+		$sel_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_TASKS . "` WHERE `type` = '20'");
+		Database::pexecute($sel_stmt, null, true, true);
+		while ($entry = $sel_stmt->fetch(\PDO::FETCH_ASSOC)) {
+			$entry['data'] = json_decode($entry['data'], true);
+			if (in_array($entry['data']['customerid'], $customer_ids)) {
+				$result_count ++;
+			}
+		}
+		return $this->response(200, "successfull", $result_count);
 	}
 
 	/**
@@ -195,7 +235,7 @@ class CustomerBackups extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 				if ($backupjob['id'] == $entry && in_array($backupjob['data']['customerid'], $customer_ids)) {
 					Database::pexecute($del_stmt, array(
 						'tid' => $entry
-					));
+					), true, true);
 					$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] deleted planned customer-backup #" . $entry);
 					return $this->response(200, "successfull", true);
 				}

@@ -25,6 +25,15 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 	/**
 	 * lists all customer entries
 	 *
+	 * @param array $sql_search
+	 *        	optional array with index = fieldname, and value = array with 'op' => operator (one of <, > or =), LIKE is used if left empty and 'value' => searchvalue
+	 * @param int $sql_limit
+	 *        	optional specify number of results to be returned
+	 * @param int $sql_offset
+	 *        	optional specify offset for resultset
+	 * @param array $sql_orderby
+	 *        	optional array with index = fieldname and value = ASC|DESC to order the resultset by one or more fields
+	 *
 	 * @access admin
 	 * @throws \Exception
 	 * @return string json-encoded array count|list
@@ -33,19 +42,19 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 	{
 		if ($this->isAdmin()) {
 			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] list customers");
+			$query_fields = array();
 			$result_stmt = Database::prepare("
 				SELECT `c`.*, `a`.`loginname` AS `adminname`
 				FROM `" . TABLE_PANEL_CUSTOMERS . "` `c`, `" . TABLE_PANEL_ADMINS . "` `a`
 				WHERE " . ($this->getUserDetail('customers_see_all') ? '' : " `c`.`adminid` = :adminid AND ") . "
-				`c`.`adminid` = `a`.`adminid`
-				ORDER BY `c`.`loginname` ASC
-			");
+				`c`.`adminid` = `a`.`adminid`" . $this->getSearchWhere($query_fields, true) . $this->getOrderBy() . $this->getLimit());
 			$params = array();
 			if ($this->getUserDetail('customers_see_all') == '0') {
 				$params = array(
 					'adminid' => $this->getUserDetail('adminid')
 				);
 			}
+			$params = array_merge($params, $query_fields);
 			Database::pexecute($result_stmt, $params, true, true);
 			$result = array();
 			while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
@@ -55,6 +64,34 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				'count' => count($result),
 				'list' => $result
 			));
+		}
+		throw new \Exception("Not allowed to execute given command.", 403);
+	}
+
+	/**
+	 * returns the total number of customers for the given admin
+	 *
+	 * @access admin
+	 * @throws \Exception
+	 * @return string json-encoded array
+	 */
+	public function listingCount()
+	{
+		if ($this->isAdmin()) {
+			$result_stmt = Database::prepare("
+				SELECT COUNT(*) as num_customers
+				FROM `" . TABLE_PANEL_CUSTOMERS . "`
+				WHERE " . ($this->getUserDetail('customers_see_all') ? "1" : " `adminid` = :adminid "));
+			$params = array();
+			if ($this->getUserDetail('customers_see_all') == '0') {
+				$params = array(
+					'adminid' => $this->getUserDetail('adminid')
+				);
+			}
+			$result = Database::pexecute_first($result_stmt, $params, true, true);
+			if ($result) {
+				return $this->response(200, "successfull", $result['num_customers']);
+			}
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
 	}

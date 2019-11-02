@@ -74,6 +74,10 @@ class CertificatesTest extends TestCase
 		$json_result = Certificates::getLocal($admin_userdata)->listing();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(2, $result['count']);
+
+		$json_result = Certificates::getLocal($admin_userdata)->listingCount();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(2, $result);
 	}
 
 	public function testResellerCertificatesList()
@@ -89,6 +93,10 @@ class CertificatesTest extends TestCase
 		$json_result = Certificates::getLocal($reseller_userdata)->listing();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(2, $result['count']);
+
+		$json_result = Certificates::getLocal($reseller_userdata)->listingCount();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(2, $result);
 	}
 
 	public function testCustomerCertificatesList()
@@ -103,6 +111,10 @@ class CertificatesTest extends TestCase
 		$json_result = Certificates::getLocal($customer_userdata)->listing();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(2, $result['count']);
+
+		$json_result = Certificates::getLocal($customer_userdata)->listingCount();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(2, $result);
 	}
 
 	public function testAdminCertificatesUpdate()

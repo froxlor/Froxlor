@@ -175,6 +175,10 @@ class DirProtectionsTest extends TestCase
 		$this->assertEquals(2, $result['count']);
 		$this->assertEquals('test1', $result['list'][0]['username']);
 		$this->assertEquals('testing', $result['list'][1]['username']);
+
+		$json_result = DirProtections::getLocal($customer_userdata)->listingCount();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(2, $result);
 	}
 
 	/**

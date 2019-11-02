@@ -379,6 +379,14 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 	 *        	optional, the domain id
 	 * @param string $domainname
 	 *        	optional, the domain name
+	 * @param array $sql_search
+	 *        	optional array with index = fieldname, and value = array with 'op' => operator (one of <, > or =), LIKE is used if left empty and 'value' => searchvalue
+	 * @param int $sql_limit
+	 *        	optional specify number of results to be returned
+	 * @param int $sql_offset
+	 *        	optional specify offset for resultset
+	 * @param array $sql_orderby
+	 *        	optional array with index = fieldname and value = ASC|DESC to order the resultset by one or more fields
 	 *
 	 * @access admin, customer
 	 * @throws \Exception
@@ -404,11 +412,10 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			'domainname' => $domainname
 		));
 		$id = $result['id'];
-
-		$sel_stmt = Database::prepare("SELECT * FROM `" . TABLE_DOMAIN_DNS . "` WHERE `domain_id` = :did");
-		Database::pexecute($sel_stmt, array(
-			'did' => $id
-		), true, true);
+		$query_fields = array();
+		$sel_stmt = Database::prepare("SELECT * FROM `" . TABLE_DOMAIN_DNS . "` WHERE `domain_id` = :did" . $this->getSearchWhere($query_fields, true) . $this->getOrderBy() . $this->getLimit());
+		$query_fields['did'] = $id;
+		Database::pexecute($sel_stmt, $query_fields, true, true);
 		$result = [];
 		while ($row = $sel_stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$result[] = $row;
@@ -417,6 +424,48 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			'count' => count($result),
 			'list' => $result
 		));
+	}
+
+	/**
+	 * returns the total number of domainzone-entries for given domain
+	 *
+	 * @param int $id
+	 *        	optional, the domain id
+	 * @param string $domainname
+	 *        	optional, the domain name
+	 *        	
+	 * @access admin, customer
+	 * @throws \Exception
+	 * @return bool
+	 */
+	public function listingCount()
+	{
+		if (Settings::Get('system.dnsenabled') != '1') {
+			throw new \Exception("DNS service not enabled on this system", 405);
+		}
+
+		if ($this->isAdmin() == false && $this->getUserDetail('dnsenabled') != '1') {
+			throw new \Exception("You cannot access this resource", 405);
+		}
+
+		$id = $this->getParam('id', true, 0);
+		$dn_optional = ($id <= 0 ? false : true);
+		$domainname = $this->getParam('domainname', $dn_optional, '');
+
+		// get requested domain
+		$result = $this->apiCall('SubDomains.get', array(
+			'id' => $id,
+			'domainname' => $domainname
+		));
+		$id = $result['id'];
+
+		$sel_stmt = Database::prepare("SELECT COUNT(*) as num_dns FROM `" . TABLE_DOMAIN_DNS . "` WHERE `domain_id` = :did");
+		$result = Database::pexecute_first($sel_stmt, array(
+			'did' => $id
+		), true, true);
+		if ($result) {
+			return $this->response(200, "successfull", $result['num_dns']);
+		}
 	}
 
 	/**

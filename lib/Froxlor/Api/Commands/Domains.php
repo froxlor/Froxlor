@@ -25,6 +25,15 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	/**
 	 * lists all domain entries
 	 *
+	 * @param array $sql_search
+	 *        	optional array with index = fieldname, and value = array with 'op' => operator (one of <, > or =), LIKE is used if left empty and 'value' => searchvalue
+	 * @param int $sql_limit
+	 *        	optional specify number of results to be returned
+	 * @param int $sql_offset
+	 *        	optional specify offset for resultset
+	 * @param array $sql_orderby
+	 *        	optional array with index = fieldname and value = ASC|DESC to order the resultset by one or more fields
+	 *
 	 * @access admin
 	 * @throws \Exception
 	 * @return string json-encoded array count|list
@@ -33,6 +42,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	{
 		if ($this->isAdmin()) {
 			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] list domains");
+			$query_fields = array();
 			$result_stmt = Database::prepare("
 				SELECT
 				`d`.*, `c`.`loginname`, `c`.`deactivated`, `c`.`name`, `c`.`firstname`, `c`.`company`, `c`.`standardsubdomain`,
@@ -40,12 +50,13 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				FROM `" . TABLE_PANEL_DOMAINS . "` `d`
 				LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`)
 				LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `ad` ON `d`.`aliasdomain`=`ad`.`id`
-				WHERE `d`.`parentdomainid`='0' " . ($this->getUserDetail('customers_see_all') ? '' : " AND `d`.`adminid` = :adminid "));
+				WHERE `d`.`parentdomainid`='0' " . ($this->getUserDetail('customers_see_all') ? '' : " AND `d`.`adminid` = :adminid ") . $this->getSearchWhere($query_fields, true) . $this->getOrderBy() . $this->getLimit());
 			$params = array();
 			if ($this->getUserDetail('customers_see_all') == '0') {
 				$params['adminid'] = $this->getUserDetail('adminid');
 			}
-			Database::pexecute($result_stmt, $params);
+			$params = array_merge($params, $query_fields);
+			Database::pexecute($result_stmt, $params, true, true);
 			$result = array();
 			while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 				$result[] = $row;
@@ -54,6 +65,36 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				'count' => count($result),
 				'list' => $result
 			));
+		}
+		throw new \Exception("Not allowed to execute given command.", 403);
+	}
+
+	/**
+	 * returns the total number of accessable domains
+	 *
+	 * @access admin
+	 * @throws \Exception
+	 * @return string json-encoded array count|list
+	 */
+	public function listingCount()
+	{
+		if ($this->isAdmin()) {
+			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] list domains");
+			$result_stmt = Database::prepare("
+				SELECT
+				COUNT(`d`.*) as num_domains
+				FROM `" . TABLE_PANEL_DOMAINS . "` `d`
+				LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`)
+				LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `ad` ON `d`.`aliasdomain`=`ad`.`id`
+				WHERE `d`.`parentdomainid`='0' " . ($this->getUserDetail('customers_see_all') ? '' : " AND `d`.`adminid` = :adminid "));
+			$params = array();
+			if ($this->getUserDetail('customers_see_all') == '0') {
+				$params['adminid'] = $this->getUserDetail('adminid');
+			}
+			$result = Database::pexecute_first($result_stmt, $params, true, true);
+			if ($result) {
+				return $this->response(200, "successfull", $result['num_domains']);
+			}
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
 	}

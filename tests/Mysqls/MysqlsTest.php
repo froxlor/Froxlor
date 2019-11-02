@@ -139,6 +139,10 @@ class MysqlsTest extends TestCase
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(1, $result['count']);
 		$this->assertEquals('test1sql1', $result['list'][0]['databasename']);
+
+		$json_result = Mysqls::getLocal($customer_userdata)->listingCount();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(1, $result);
 	}
 
 	/**
