@@ -696,7 +696,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	 *        	optional specify offset for resultset
 	 * @param array $sql_orderby
 	 *        	optional array with index = fieldname and value = ASC|DESC to order the resultset by one or more fields
-	 *
+	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array count|list
@@ -727,6 +727,16 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				$customer_ids[] = $customer['customerid'];
 				$customer_stdsubs[$customer['customerid']] = $customer['standardsubdomain'];
 			}
+			if (empty($customer_ids)) {
+				throw new \Exception("Required resource unsatisfied.", 405);
+			}
+			if (empty($customer_stdsubs)) {
+				throw new \Exception("Required resource unsatisfied.", 405);
+			}
+
+			$select_fields = [
+				'`d`.*'
+			];
 		} else {
 			if (Settings::IsInList('panel.customer_hide_options', 'domains')) {
 				throw new \Exception("You cannot access this resource", 405);
@@ -737,11 +747,27 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			$customer_stdsubs = array(
 				$this->getUserDetail('customerid') => $this->getUserDetail('standardsubdomain')
 			);
+
+			$select_fields = [
+				'`d`.`id`',
+				'`d`.`customerid`',
+				'`d`.`domain`',
+				'`d`.`documentroot`',
+				'`d`.`isbinddomain`',
+				'`d`.`isemaildomain`',
+				'`d`.`caneditdomain`',
+				'`d`.`iswildcarddomain`',
+				'`d`.`parentdomainid`',
+				'`d`.`letsencrypt`',
+				'`d`.`registration_date`',
+				'`d`.`termination_date`'
+			];
 		}
 		$query_fields = array();
+
 		// prepare select statement
 		$domains_stmt = Database::prepare("
-			SELECT `d`.`id`, `d`.`customerid`, `d`.`domain`, `d`.`documentroot`, `d`.`isbinddomain`, `d`.`isemaildomain`, `d`.`caneditdomain`, `d`.`iswildcarddomain`, `d`.`parentdomainid`, `d`.`letsencrypt`, `d`.`termination_date`, `ad`.`id` AS `aliasdomainid`, `ad`.`domain` AS `aliasdomain`, `da`.`id` AS `domainaliasid`, `da`.`domain` AS `domainalias`
+			SELECT " . implode(",", $select_fields) . ", `ad`.`id` AS `aliasdomainid`, `ad`.`domain` AS `aliasdomain`, `da`.`id` AS `domainaliasid`, `da`.`domain` AS `domainalias`
 			FROM `" . TABLE_PANEL_DOMAINS . "` `d`
 			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `ad` ON `d`.`aliasdomain`=`ad`.`id`
 			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `da` ON `da`.`aliasdomain`=`d`.`id`
@@ -767,7 +793,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	 *        	optional, admin-only, select (sub)domains of a specific customer by id
 	 * @param string $loginname
 	 *        	optional, admin-only, select (sub)domains of a specific customer by loginname
-	 *
+	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -779,7 +805,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			// or optionally for one specific customer identified by id or loginname
 			$customerid = $this->getParam('customerid', true, 0);
 			$loginname = $this->getParam('loginname', true, '');
-			
+
 			if (! empty($customerid) || ! empty($loginname)) {
 				$result = $this->apiCall('Customers.get', array(
 					'id' => $customerid,
