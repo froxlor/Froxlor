@@ -243,8 +243,10 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 
 		// customer domains
 		$certrows = $needRenew ? $needRenew['customer_ssl'] : array();
-		$cert_mode = 'issue';
 		foreach ($certrows as $certrow) {
+
+			// initialize mode to 'issue'
+			$cert_mode = 'issue';
 
 			// set logger to corresponding loginname for the log to appear in the users system-log
 			$cronlog = FroxlorLogger::getInstanceOf(array(
