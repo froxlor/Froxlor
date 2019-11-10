@@ -19,7 +19,6 @@ if (! defined('AREA')) {
  *         
  */
 
-use Froxlor\Database\Database;
 use Froxlor\Settings;
 use Froxlor\Api\Commands\Certificates as Certificates;
 
@@ -47,35 +46,20 @@ $log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed domains:
 $fields = array(
 	'd.domain' => $lng['domains']['domainname']
 );
-$paging = new \Froxlor\UI\Paging($userinfo, TABLE_PANEL_DOMAIN_SSL_SETTINGS, $fields);
-
-// select all my (accessable) certificates
-$certs_stmt_query = "SELECT s.*, d.domain, d.letsencrypt, c.customerid, c.loginname
-	FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` s
-	LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` d ON `d`.`id` = `s`.`domainid`
-	LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` c ON `c`.`customerid` = `d`.`customerid`
-	WHERE ";
-
-$qry_params = array();
-
-if (AREA == 'admin' && $userinfo['customers_see_all'] == '0') {
-	// admin with only customer-specific permissions
-	$certs_stmt_query .= "d.adminid = :adminid ";
-	$qry_params['adminid'] = $userinfo['adminid'];
-} elseif (AREA == 'customer') {
-	// customer-area
-	$certs_stmt_query .= "d.customerid = :cid ";
-	$qry_params['cid'] = $userinfo['customerid'];
-} else {
-	$certs_stmt_query .= "1 ";
+try {
+	// get total count
+	$json_result = Certificates::getLocal($userinfo)->listingCount();
+	$result = json_decode($json_result, true)['data'];
+	// initialize pagination and filtering
+	$paging = new \Froxlor\UI\Pagination($userinfo, $fields, $result);
+	// get list
+	$json_result = Certificates::getLocal($userinfo, $paging->getApiCommandParams())->listing();
+} catch (Exception $e) {
+	\Froxlor\UI\Response::dynamic_error($e->getMessage());
 }
+$result = json_decode($json_result, true)['data'];
 
-// sorting by domain-name
-$certs_stmt_query .= $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit();
-
-$certs_stmt = Database::prepare($certs_stmt_query);
-Database::pexecute($certs_stmt, $qry_params);
-$all_certs = $certs_stmt->fetchAll(PDO::FETCH_ASSOC);
+$all_certs = $result['list'];
 $certificates = "";
 
 if (count($all_certs) == 0) {
@@ -88,79 +72,73 @@ if (count($all_certs) == 0) {
 	$pagingcode = "";
 	eval("\$certificates.=\"" . \Froxlor\UI\Template::getTemplate("ssl_certificates/certs_error", true) . "\";");
 } else {
-	$paging->setEntries(count($all_certs));
 	$sortcode = $paging->getHtmlSortCode($lng);
 	$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
 	$searchcode = $paging->getHtmlSearchCode($lng);
 	$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
 
 	foreach ($all_certs as $idx => $cert) {
-		if ($paging->checkDisplay($idx)) {
+		// respect froxlor-hostname
+		if ($cert['domainid'] == 0) {
+			$cert['domain'] = Settings::Get('system.hostname');
+			$cert['letsencrypt'] = Settings::Get('system.le_froxlor_enabled');
+			$cert['loginname'] = 'froxlor.panel';
+		}
 
-			// respect froxlor-hostname
-			if ($cert['domainid'] == 0) {
-				$cert['domain'] = Settings::Get('system.hostname');
-				$cert['letsencrypt'] = Settings::Get('system.le_froxlor_enabled');
-				$cert['loginname'] = 'froxlor.panel';
+		if (empty($cert['domain']) || empty($cert['ssl_cert_file'])) {
+			// no domain found to the entry or empty entry - safely delete it from the DB
+			try {
+				Certificates::getLocal($userinfo, array(
+					'id' => $cert['id']
+				))->delete();
+			} catch (Exception $e) {
+				// do nothing
+			}
+			continue;
+		}
+
+		$cert_data = openssl_x509_parse($cert['ssl_cert_file']);
+
+		$cert['domain'] = $idna_convert->decode($cert['domain']);
+
+		$adminCustomerLink = "";
+		if (AREA == 'admin' && $cert['domainid'] > 0) {
+			if (! empty($cert['loginname'])) {
+				$adminCustomerLink = '&nbsp;(<a href="' . $linker->getLink(array(
+					'section' => 'customers',
+					'page' => 'customers',
+					'action' => 'su',
+					'id' => $cert['customerid']
+				)) . '" rel="external">' . $cert['loginname'] . '</a>)';
+			}
+		}
+
+		if ($cert_data) {
+			$validFrom = date('d.m.Y H:i:s', $cert_data['validFrom_time_t']);
+			$validTo = date('d.m.Y H:i:s', $cert_data['validTo_time_t']);
+
+			$isValid = true;
+			if ($cert_data['validTo_time_t'] < time()) {
+				$isValid = false;
 			}
 
-			if (empty($cert['domain']) || empty($cert['ssl_cert_file'])) {
-				// no domain found to the entry or empty entry - safely delete it from the DB
-				try {
-					Certificates::getLocal($userinfo, array(
-						'id' => $cert['id']
-					))->delete();
-				} catch (Exception $e) {
-					// do nothing
-				}
-				continue;
-			}
-
-			$cert_data = openssl_x509_parse($cert['ssl_cert_file']);
-
-			$cert['domain'] = $idna_convert->decode($cert['domain']);
-
-			$adminCustomerLink = "";
-			if (AREA == 'admin' && $cert['domainid'] > 0) {
-				if (! empty($cert['loginname'])) {
-					$adminCustomerLink = '&nbsp;(<a href="' . $linker->getLink(array(
-						'section' => 'customers',
-						'page' => 'customers',
-						'action' => 'su',
-						'id' => $cert['customerid']
-					)) . '" rel="external">' . $cert['loginname'] . '</a>)';
-				}
-			}
-
-			if ($cert_data) {
-				$validFrom = date('d.m.Y H:i:s', $cert_data['validFrom_time_t']);
-				$validTo = date('d.m.Y H:i:s', $cert_data['validTo_time_t']);
-
-				$isValid = true;
-				if ($cert_data['validTo_time_t'] < time()) {
-					$isValid = false;
-				}
-
-				$san_list = "";
-				if (isset($cert_data['extensions']['subjectAltName']) && ! empty($cert_data['extensions']['subjectAltName'])) {
-					$SANs = explode(",", $cert_data['extensions']['subjectAltName']);
-					$SANs = array_map('trim', $SANs);
-					foreach ($SANs as $san) {
-						$san = str_replace("DNS:", "", $san);
-						if ($san != $cert_data['subject']['CN'] && strpos($san, "othername:") === false) {
-							$san_list .= $san . "<br>";
-						}
+			$san_list = "";
+			if (isset($cert_data['extensions']['subjectAltName']) && ! empty($cert_data['extensions']['subjectAltName'])) {
+				$SANs = explode(",", $cert_data['extensions']['subjectAltName']);
+				$SANs = array_map('trim', $SANs);
+				foreach ($SANs as $san) {
+					$san = str_replace("DNS:", "", $san);
+					if ($san != $cert_data['subject']['CN'] && strpos($san, "othername:") === false) {
+						$san_list .= $san . "<br>";
 					}
 				}
-
-				$row = \Froxlor\PhpHelper::htmlentitiesArray($cert);
-				eval("\$certificates.=\"" . \Froxlor\UI\Template::getTemplate("ssl_certificates/certs_cert", true) . "\";");
-			} else {
-				$message = sprintf($lng['domains']['ssl_certificate_error'], $cert['domain']);
-				eval("\$certificates.=\"" . \Froxlor\UI\Template::getTemplate("ssl_certificates/certs_error", true) . "\";");
 			}
+
+			$row = \Froxlor\PhpHelper::htmlentitiesArray($cert);
+			eval("\$certificates.=\"" . \Froxlor\UI\Template::getTemplate("ssl_certificates/certs_cert", true) . "\";");
 		} else {
-			continue;
+			$message = sprintf($lng['domains']['ssl_certificate_error'], $cert['domain']);
+			eval("\$certificates.=\"" . \Froxlor\UI\Template::getTemplate("ssl_certificates/certs_error", true) . "\";");
 		}
 	}
 }

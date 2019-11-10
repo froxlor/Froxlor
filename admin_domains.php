@@ -21,6 +21,7 @@ require './lib/init.php';
 
 use Froxlor\Database\Database;
 use Froxlor\Settings;
+use Froxlor\Api\Commands\Customers as Customers;
 use Froxlor\Api\Commands\Domains as Domains;
 
 if (isset($_POST['id'])) {
@@ -31,14 +32,8 @@ if (isset($_POST['id'])) {
 
 if ($page == 'domains' || $page == 'overview') {
 	// Let's see how many customers we have
-	$stmt = Database::prepare("
-		SELECT COUNT(`customerid`) as `countcustomers` FROM `" . TABLE_PANEL_CUSTOMERS . "` " . ($userinfo['customers_see_all'] ? '' : " WHERE `adminid` = :adminid"));
-	$params = array();
-	if ($userinfo['customers_see_all'] == '0') {
-		$params['adminid'] = $userinfo['adminid'];
-	}
-	$countcustomers = Database::pexecute_first($stmt, $params);
-	$countcustomers = (int) $countcustomers['countcustomers'];
+	$json_result = Customers::getLocal($userinfo)->listingCount();
+	$countcustomers = json_decode($json_result, true)['data'];
 
 	if ($action == '') {
 
@@ -51,28 +46,27 @@ if ($page == 'domains' || $page == 'overview') {
 			'c.loginname' => $lng['login']['username'],
 			'd.aliasdomain' => $lng['domains']['aliasdomain']
 		);
-		$paging = new \Froxlor\UI\Paging($userinfo, TABLE_PANEL_DOMAINS, $fields);
-		$domains = "";
-		$result_stmt = Database::prepare("
-			SELECT `d`.*, `c`.`loginname`, `c`.`deactivated`, `c`.`name`, `c`.`firstname`, `c`.`company`, `c`.`standardsubdomain`, `ad`.`id` AS `aliasdomainid`, `ad`.`domain` AS `aliasdomain`
-			FROM `" . TABLE_PANEL_DOMAINS . "` `d`
-			LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`)
-			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `ad` ON `d`.`aliasdomain`=`ad`.`id`
-			WHERE `d`.`parentdomainid`='0' " . ($userinfo['customers_see_all'] ? '' : " AND `d`.`adminid` = :adminid ") . " " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
-		$params = array();
-		if ($userinfo['customers_see_all'] == '0') {
-			$params['adminid'] = $userinfo['adminid'];
+		try {
+			// get total count
+			$json_result = Domains::getLocal($userinfo)->listingCount();
+			$result = json_decode($json_result, true)['data'];
+			// initialize pagination and filtering
+			$paging = new \Froxlor\UI\Pagination($userinfo, $fields, $result);
+			// get list
+			$json_result = Domains::getLocal($userinfo, $paging->getApiCommandParams())->listing();
+		} catch (Exception $e) {
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
-		Database::pexecute($result_stmt, $params);
-		$numrows_domains = Database::num_rows();
-		$paging->setEntries($numrows_domains);
+		$result = json_decode($json_result, true)['data'];
+
+		$domains = '';
 		$sortcode = $paging->getHtmlSortCode($lng);
 		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
 		$searchcode = $paging->getHtmlSearchCode($lng);
 		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
 		$domain_array = array();
 
-		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+		foreach ($result['list'] as $row) {
 
 			formatDomainEntry($row, $idna_convert);
 
@@ -100,11 +94,10 @@ if ($page == 'domains' || $page == 'overview') {
 			krsort($domain_array);
 		}
 
-		$i = 0;
 		$count = 0;
 		foreach ($domain_array as $row) {
 
-			if (isset($row['domain']) && $row['domain'] != '' && $paging->checkDisplay($i)) {
+			if (isset($row['domain']) && $row['domain'] != '') {
 				$row['customername'] = \Froxlor\User::getCorrectFullUserDetails($row);
 				$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
 				// display a nice list of IP's
@@ -112,10 +105,9 @@ if ($page == 'domains' || $page == 'overview') {
 				eval("\$domains.=\"" . \Froxlor\UI\Template::getTemplate("domains/domains_domain") . "\";");
 				$count ++;
 			}
-			$i ++;
 		}
 
-		$domainscount = $numrows_domains;
+		$domainscount = $paging->getEntries();
 
 		// Display the list
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate("domains/domains") . "\";");

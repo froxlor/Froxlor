@@ -46,39 +46,36 @@ if ($page == 'overview') {
 			'homedir' => $lng['panel']['path'],
 			'description' => $lng['panel']['ftpdesc']
 		);
-		$paging = new \Froxlor\UI\Paging($userinfo, TABLE_FTP_USERS, $fields);
-
-		$result_stmt = Database::prepare("SELECT `id`, `username`, `description`, `homedir`, `shell` FROM `" . TABLE_FTP_USERS . "`
-			WHERE `customerid`= :customerid " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
-		Database::pexecute($result_stmt, array(
-			"customerid" => $userinfo['customerid']
-		));
-		$ftps_count = Database::num_rows();
-		$paging->setEntries($ftps_count);
+		try {
+			// get total count
+			$json_result = Ftps::getLocal($userinfo)->listingCount();
+			$result = json_decode($json_result, true)['data'];
+			// initialize pagination and filtering
+			$paging = new \Froxlor\UI\Pagination($userinfo, $fields, $result);
+			// get list
+			$json_result = Ftps::getLocal($userinfo, $paging->getApiCommandParams())->listing();
+		} catch (Exception $e) {
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
+		$ftps_count = $paging->getEntries();
 		$sortcode = $paging->getHtmlSortCode($lng);
 		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
 		$searchcode = $paging->getHtmlSearchCode($lng);
 		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
-		$i = 0;
 		$count = 0;
 		$accounts = '';
 
-		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-			if ($paging->checkDisplay($i)) {
-				if (strpos($row['homedir'], $userinfo['documentroot']) === 0) {
-					$row['documentroot'] = str_replace($userinfo['documentroot'], "/", $row['homedir']);
-				} else {
-					$row['documentroot'] = $row['homedir'];
-				}
-
-				$row['documentroot'] = \Froxlor\FileDir::makeCorrectDir($row['documentroot']);
-
-				$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
-				eval("\$accounts.=\"" . \Froxlor\UI\Template::getTemplate('ftp/accounts_account') . "\";");
-				$count ++;
+		foreach ($result['list'] as $row) {
+			if (strpos($row['homedir'], $userinfo['documentroot']) === 0) {
+				$row['documentroot'] = str_replace($userinfo['documentroot'], "/", $row['homedir']);
+			} else {
+				$row['documentroot'] = $row['homedir'];
 			}
-
-			$i ++;
+			$row['documentroot'] = \Froxlor\FileDir::makeCorrectDir($row['documentroot']);
+			$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
+			eval("\$accounts.=\"" . \Froxlor\UI\Template::getTemplate('ftp/accounts_account') . "\";");
+			$count ++;
 		}
 
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate('ftp/accounts') . "\";");

@@ -17,8 +17,7 @@
 define('AREA', 'admin');
 require './lib/init.php';
 
-use Froxlor\Database\Database;
-use Froxlor\Api\Commands\Cronjobs as Cronjobs;
+use Froxlor\Api\Commands\Cronjobs;
 
 if (isset($_POST['id'])) {
 	$id = intval($_POST['id']);
@@ -31,45 +30,47 @@ if ($page == 'cronjobs' || $page == 'overview') {
 		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, 'viewed admin_cronjobs');
 
 		$fields = array(
+			'c.module' => 'Module',
 			'c.lastrun' => $lng['cron']['lastrun'],
 			'c.interval' => $lng['cron']['interval'],
 			'c.isactive' => $lng['cron']['isactive']
 		);
-		$paging = new \Froxlor\UI\Paging($userinfo, TABLE_PANEL_CRONRUNS, $fields);
+		try {
+			// get total count
+			$json_result = Cronjobs::getLocal($userinfo)->listingCount();
+			$result = json_decode($json_result, true)['data'];
+			// initialize pagination and filtering
+			$paging = new \Froxlor\UI\Pagination($userinfo, $fields, $result);
+			// get list
+			$json_result = Cronjobs::getLocal($userinfo, $paging->getApiCommandParams())->listing();
+		} catch (Exception $e) {
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
 
 		$crons = '';
-		$result_stmt = Database::prepare("SELECT `c`.* FROM `" . TABLE_PANEL_CRONRUNS . "` `c` ORDER BY `module` ASC, `cronfile` ASC");
-		Database::pexecute($result_stmt);
-		$paging->setEntries(Database::num_rows());
 		$sortcode = $paging->getHtmlSortCode($lng);
 		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
 		$searchcode = $paging->getHtmlSearchCode($lng);
 		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
 
-		$i = 0;
 		$count = 0;
 		$cmod = '';
 
-		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+		foreach ($result['list'] as $row) {
 			if ($cmod != $row['module']) {
 				$_mod = explode("/", $row['module']);
 				$module = ucfirst($_mod[1]);
 				eval("\$crons.=\"" . \Froxlor\UI\Template::getTemplate('cronjobs/cronjobs_cronjobmodule') . "\";");
 				$cmod = $row['module'];
 			}
-			if ($paging->checkDisplay($i)) {
-				$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
+			$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
+			$row['lastrun'] = date('d.m.Y H:i', $row['lastrun']);
+			$row['isactive'] = ((int) $row['isactive'] == 1) ? $lng['panel']['yes'] : $lng['panel']['no'];
+			$description = $lng['crondesc'][$row['desc_lng_key']];
 
-				$row['lastrun'] = date('d.m.Y H:i', $row['lastrun']);
-				$row['isactive'] = ((int) $row['isactive'] == 1) ? $lng['panel']['yes'] : $lng['panel']['no'];
-
-				$description = $lng['crondesc'][$row['desc_lng_key']];
-
-				eval("\$crons.=\"" . \Froxlor\UI\Template::getTemplate('cronjobs/cronjobs_cronjob') . "\";");
-				$count ++;
-			}
-
-			$i ++;
+			eval("\$crons.=\"" . \Froxlor\UI\Template::getTemplate('cronjobs/cronjobs_cronjob') . "\";");
+			$count ++;
 		}
 
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate('cronjobs/cronjobs') . "\";");

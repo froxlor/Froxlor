@@ -43,67 +43,71 @@ if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
 			'traffic_used' => $lng['customer']['traffic'] . ' (' . $lng['panel']['used'] . ')',
 			'deactivated' => $lng['admin']['deactivated']
 		);
-		$paging = new \Froxlor\UI\Paging($userinfo, TABLE_PANEL_ADMINS, $fields);
+		try {
+			// get total count
+			$json_result = Admins::getLocal($userinfo)->listingCount();
+			$result = json_decode($json_result, true)['data'];
+			// initialize pagination and filtering
+			$paging = new \Froxlor\UI\Pagination($userinfo, $fields, $result);
+			// get list
+			$json_result = Admins::getLocal($userinfo, $paging->getApiCommandParams())->listing();
+		} catch (Exception $e) {
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
+
 		$admins = '';
-		$result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_ADMINS . "` " . $paging->getSqlWhere(false) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
-		$numrows_admins = Database::num_rows();
-		$paging->setEntries($numrows_admins);
 		$sortcode = $paging->getHtmlSortCode($lng, true);
 		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
 		$searchcode = $paging->getHtmlSearchCode($lng);
 		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
-		$i = 0;
 		$count = 0;
 
 		$dec_places = Settings::Get('panel.decimal_places');
 
-		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+		foreach ($result['list'] as $row) {
 
-			if ($paging->checkDisplay($i)) {
+			$row['traffic_used'] = round($row['traffic_used'] / (1024 * 1024), $dec_places);
+			$row['traffic'] = round($row['traffic'] / (1024 * 1024), $dec_places);
+			$row['diskspace_used'] = round($row['diskspace_used'] / 1024, $dec_places);
+			$row['diskspace'] = round($row['diskspace'] / 1024, $dec_places);
 
-				$row['traffic_used'] = round($row['traffic_used'] / (1024 * 1024), $dec_places);
-				$row['traffic'] = round($row['traffic'] / (1024 * 1024), $dec_places);
-				$row['diskspace_used'] = round($row['diskspace_used'] / 1024, $dec_places);
-				$row['diskspace'] = round($row['diskspace'] / 1024, $dec_places);
-
-				// percent-values for progressbar
-				// For Disk usage
-				if ($row['diskspace'] > 0) {
-					$disk_percent = round(($row['diskspace_used'] * 100) / $row['diskspace'], 0);
-					$disk_doublepercent = round($disk_percent * 2, 2);
-				} else {
-					$disk_percent = 0;
-					$disk_doublepercent = 0;
-				}
-				// For Traffic usage
-				if ($row['traffic'] > 0) {
-					$traffic_percent = round(($row['traffic_used'] * 100) / $row['traffic'], 0);
-					$traffic_doublepercent = round($traffic_percent * 2, 2);
-				} else {
-					$traffic_percent = 0;
-					$traffic_doublepercent = 0;
-				}
-
-				// fix progress-bars if value is >100%
-				if ($disk_percent > 100) {
-					$disk_percent = 100;
-				}
-				if ($traffic_percent > 100) {
-					$traffic_percent = 100;
-				}
-
-				$row = \Froxlor\PhpHelper::strReplaceArray('-1', 'UL', $row, 'customers domains diskspace traffic mysqls emails email_accounts email_forwarders email_quota ftps subdomains');
-				$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
-
-				$row['custom_notes'] = ($row['custom_notes'] != '') ? nl2br($row['custom_notes']) : '';
-
-				eval("\$admins.=\"" . \Froxlor\UI\Template::getTemplate("admins/admins_admin") . "\";");
-				$count ++;
+			// percent-values for progressbar
+			// For Disk usage
+			if ($row['diskspace'] > 0) {
+				$disk_percent = round(($row['diskspace_used'] * 100) / $row['diskspace'], 0);
+				$disk_doublepercent = round($disk_percent * 2, 2);
+			} else {
+				$disk_percent = 0;
+				$disk_doublepercent = 0;
 			}
-			$i ++;
+			// For Traffic usage
+			if ($row['traffic'] > 0) {
+				$traffic_percent = round(($row['traffic_used'] * 100) / $row['traffic'], 0);
+				$traffic_doublepercent = round($traffic_percent * 2, 2);
+			} else {
+				$traffic_percent = 0;
+				$traffic_doublepercent = 0;
+			}
+
+			// fix progress-bars if value is >100%
+			if ($disk_percent > 100) {
+				$disk_percent = 100;
+			}
+			if ($traffic_percent > 100) {
+				$traffic_percent = 100;
+			}
+
+			$row = \Froxlor\PhpHelper::strReplaceArray('-1', 'UL', $row, 'customers domains diskspace traffic mysqls emails email_accounts email_forwarders email_quota ftps subdomains');
+			$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
+
+			$row['custom_notes'] = ($row['custom_notes'] != '') ? nl2br($row['custom_notes']) : '';
+
+			eval("\$admins.=\"" . \Froxlor\UI\Template::getTemplate("admins/admins_admin") . "\";");
+			$count ++;
 		}
 
-		$admincount = $numrows_admins;
+		$admincount = $paging->getEntries();
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate("admins/admins") . "\";");
 	} elseif ($action == 'su') {
 

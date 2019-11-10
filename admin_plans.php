@@ -38,33 +38,31 @@ if ($page == '' || $page == 'overview') {
 			'adminname' => $lng['admin']['admin'],
 			'p.ts' => $lng['admin']['plans']['last_update']
 		);
-		$paging = new \Froxlor\UI\Paging($userinfo, TABLE_PANEL_PLANS, $fields);
+		try {
+			// get total count
+			$json_result = HostingPlans::getLocal($userinfo)->listingCount();
+			$result = json_decode($json_result, true)['data'];
+			// initialize pagination and filtering
+			$paging = new \Froxlor\UI\Pagination($userinfo, $fields, $result);
+			// get list
+			$json_result = HostingPlans::getLocal($userinfo, $paging->getApiCommandParams())->listing();
+		} catch (Exception $e) {
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
+
 		$plans = '';
-		$result_stmt = Database::prepare("
-			SELECT p.*, a.loginname as adminname
-			FROM `" . TABLE_PANEL_PLANS . "` p, `" . TABLE_PANEL_ADMINS . "` a
-			WHERE " . ($userinfo['customers_see_all'] ? '' : " `p`.`adminid` = :adminid AND ") . "
-			`p`.`adminid` = `a`.`adminid` " . $paging->getSqlWhere(false) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
-		Database::pexecute($result_stmt, array(
-			'adminid' => $userinfo['adminid']
-		));
-		$paging->setEntries(Database::num_rows());
 		$sortcode = $paging->getHtmlSortCode($lng);
 		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
 		$searchcode = $paging->getHtmlSearchCode($lng);
 		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
-		$i = 0;
 		$count = 0;
 
-		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-
-			if ($paging->checkDisplay($i)) {
-				$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
-				$row['ts_format'] = date("d.m.Y H:i", $row['ts']);
-				eval("\$plans.=\"" . \Froxlor\UI\Template::getTemplate("plans/plans_plan") . "\";");
-				$count ++;
-			}
-			$i ++;
+		foreach ($result['list'] as $row) {
+			$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
+			$row['ts_format'] = date("d.m.Y H:i", $row['ts']);
+			eval("\$plans.=\"" . \Froxlor\UI\Template::getTemplate("plans/plans_plan") . "\";");
+			$count ++;
 		}
 
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate("plans/plans") . "\";");

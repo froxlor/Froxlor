@@ -4,6 +4,36 @@ namespace Froxlor;
 class PhpHelper
 {
 
+	private static $sort_key = 'id';
+
+	private static $sort_type = SORT_STRING;
+
+	/**
+	 * sort an array by either natural or string sort and a given index where the value for comparison is found
+	 *
+	 * @param array $list
+	 * @param string $key
+	 *
+	 * @return boolean
+	 */
+	public static function sortListBy(&$list, $key = 'id')
+	{
+		self::$sort_type = Settings::Get('panel.natsorting') == 1 ? SORT_NATURAL : SORT_STRING;
+		self::$sort_key = $key;
+		return usort($list, array(
+			'self',
+			'sortListByGivenKey'
+		));
+	}
+
+	private static function sortListByGivenKey($a, $b)
+	{
+		if (self::$sort_type == SORT_NATURAL) {
+			return strnatcasecmp($a[self::$sort_key], $b[self::$sort_key]);
+		}
+		return strcasecmp($a[self::$sort_key], $b[self::$sort_key]);
+	}
+
 	/**
 	 * Wrapper around htmlentities to handle arrays, with the advantage that you
 	 * can select which fields should be handled by htmlentities

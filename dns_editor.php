@@ -37,11 +37,16 @@ $ttl = isset($_POST['record']['ttl']) ? (int) $_POST['record']['ttl'] : 18000;
 $domain = \Froxlor\Dns\Dns::getAllowedDomainEntry($domain_id, AREA, $userinfo);
 
 // select all entries
-$sel_stmt = Database::prepare("SELECT * FROM `" . TABLE_DOMAIN_DNS . "` WHERE domain_id = :did");
-Database::pexecute($sel_stmt, array(
-	'did' => $domain_id
-));
-$dom_entries = $sel_stmt->fetchAll(PDO::FETCH_ASSOC);
+try {
+	// get list
+	$json_result = DomainZones::getLocal($userinfo, [
+		'id' => $domain_id
+	])->listing();
+} catch (Exception $e) {
+	\Froxlor\UI\Response::dynamic_error($e->getMessage());
+}
+$result = json_decode($json_result, true)['data'];
+$dom_entries = $result['list'];
 
 $errors = "";
 $success_message = "";
@@ -117,7 +122,7 @@ $type_select_values = array(
 	'RP',
 	'SRV',
 	'SSHFP',
-	'TXT',
+	'TXT'
 );
 asort($type_select_values);
 foreach ($type_select_values as $_type) {
