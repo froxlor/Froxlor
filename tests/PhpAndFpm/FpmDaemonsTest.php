@@ -141,6 +141,10 @@ class FpmDaemonsTest extends TestCase
 		$this->assertEquals(2, $result['count']);
 		$this->assertEquals('System default', $result['list'][0]['description']);
 		$this->assertEquals('test2 fpm edit', $result['list'][1]['description']);
+
+		$json_result = FpmDaemons::getLocal($admin_userdata)->listingCount();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(2, $result);
 	}
 
 	public function testAdminFpmDaemonsGetNotFound()
@@ -190,6 +194,10 @@ class FpmDaemonsTest extends TestCase
 		$this->expectExceptionCode(403);
 		$this->expectExceptionMessage("Not allowed to execute given command.");
 		FpmDaemons::getLocal($customer_userdata)->listing();
+
+		$this->expectExceptionCode(403);
+		$this->expectExceptionMessage("Not allowed to execute given command.");
+		FpmDaemons::getLocal($customer_userdata)->listingCount();
 	}
 
 	public function testCustomerFpmDaemonsUpdate()

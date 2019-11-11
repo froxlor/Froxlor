@@ -699,11 +699,121 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	/**
 	 * lists all subdomain entries
 	 *
+	 * @param int $customerid
+	 *        	optional, admin-only, select (sub)domains of a specific customer by id
+	 * @param string $loginname
+	 *        	optional, admin-only, select (sub)domains of a specific customer by loginname
+	 * @param array $sql_search
+	 *        	optional array with index = fieldname, and value = array with 'op' => operator (one of <, > or =), LIKE is used if left empty and 'value' => searchvalue
+	 * @param int $sql_limit
+	 *        	optional specify number of results to be returned
+	 * @param int $sql_offset
+	 *        	optional specify offset for resultset
+	 * @param array $sql_orderby
+	 *        	optional array with index = fieldname and value = ASC|DESC to order the resultset by one or more fields
+	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array count|list
 	 */
 	public function listing()
+	{
+		if ($this->isAdmin()) {
+			// if we're an admin, list all databases of all the admins customers
+			// or optionally for one specific customer identified by id or loginname
+			$customerid = $this->getParam('customerid', true, 0);
+			$loginname = $this->getParam('loginname', true, '');
+
+			if (! empty($customerid) || ! empty($loginname)) {
+				$result = $this->apiCall('Customers.get', array(
+					'id' => $customerid,
+					'loginname' => $loginname
+				));
+				$custom_list_result = array(
+					$result
+				);
+			} else {
+				$_custom_list_result = $this->apiCall('Customers.listing');
+				$custom_list_result = $_custom_list_result['list'];
+			}
+			$customer_ids = array();
+			$customer_stdsubs = array();
+			foreach ($custom_list_result as $customer) {
+				$customer_ids[] = $customer['customerid'];
+				$customer_stdsubs[$customer['customerid']] = $customer['standardsubdomain'];
+			}
+			if (empty($customer_ids)) {
+				throw new \Exception("Required resource unsatisfied.", 405);
+			}
+			if (empty($customer_stdsubs)) {
+				throw new \Exception("Required resource unsatisfied.", 405);
+			}
+
+			$select_fields = [
+				'`d`.*'
+			];
+		} else {
+			if (Settings::IsInList('panel.customer_hide_options', 'domains')) {
+				throw new \Exception("You cannot access this resource", 405);
+			}
+			$customer_ids = array(
+				$this->getUserDetail('customerid')
+			);
+			$customer_stdsubs = array(
+				$this->getUserDetail('customerid') => $this->getUserDetail('standardsubdomain')
+			);
+
+			$select_fields = [
+				'`d`.`id`',
+				'`d`.`customerid`',
+				'`d`.`domain`',
+				'`d`.`documentroot`',
+				'`d`.`isbinddomain`',
+				'`d`.`isemaildomain`',
+				'`d`.`caneditdomain`',
+				'`d`.`iswildcarddomain`',
+				'`d`.`parentdomainid`',
+				'`d`.`letsencrypt`',
+				'`d`.`registration_date`',
+				'`d`.`termination_date`'
+			];
+		}
+		$query_fields = array();
+
+		// prepare select statement
+		$domains_stmt = Database::prepare("
+			SELECT " . implode(",", $select_fields) . ", `ad`.`id` AS `aliasdomainid`, `ad`.`domain` AS `aliasdomain`, `da`.`id` AS `domainaliasid`, `da`.`domain` AS `domainalias`
+			FROM `" . TABLE_PANEL_DOMAINS . "` `d`
+			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `ad` ON `d`.`aliasdomain`=`ad`.`id`
+			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `da` ON `da`.`aliasdomain`=`d`.`id`
+			WHERE `d`.`customerid` IN (" . implode(', ', $customer_ids) . ")
+			AND `d`.`email_only` = '0'
+			AND `d`.`id` NOT IN (" . implode(', ', $customer_stdsubs) . ")" . $this->getSearchWhere($query_fields, true) . $this->getOrderBy() . $this->getLimit());
+
+		$result = array();
+		Database::pexecute($domains_stmt, $query_fields, true, true);
+		while ($row = $domains_stmt->fetch(\PDO::FETCH_ASSOC)) {
+			$result[] = $row;
+		}
+		return $this->response(200, "successfull", array(
+			'count' => count($result),
+			'list' => $result
+		));
+	}
+
+	/**
+	 * returns the total number of accessable subdomain entries
+	 *
+	 * @param int $customerid
+	 *        	optional, admin-only, select (sub)domains of a specific customer by id
+	 * @param string $loginname
+	 *        	optional, admin-only, select (sub)domains of a specific customer by loginname
+	 *        	
+	 * @access admin, customer
+	 * @throws \Exception
+	 * @return string json-encoded array
+	 */
+	public function listingCount()
 	{
 		if ($this->isAdmin()) {
 			// if we're an admin, list all databases of all the admins customers
@@ -740,32 +850,20 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				$this->getUserDetail('customerid') => $this->getUserDetail('standardsubdomain')
 			);
 		}
-
 		// prepare select statement
 		$domains_stmt = Database::prepare("
-			SELECT `d`.`id`, `d`.`customerid`, `d`.`domain`, `d`.`documentroot`, `d`.`isbinddomain`, `d`.`isemaildomain`, `d`.`caneditdomain`, `d`.`iswildcarddomain`, `d`.`parentdomainid`, `d`.`letsencrypt`, `d`.`termination_date`, `ad`.`id` AS `aliasdomainid`, `ad`.`domain` AS `aliasdomain`, `da`.`id` AS `domainaliasid`, `da`.`domain` AS `domainalias`
+			SELECT COUNT(*) as num_subdom
 			FROM `" . TABLE_PANEL_DOMAINS . "` `d`
 			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `ad` ON `d`.`aliasdomain`=`ad`.`id`
 			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `da` ON `da`.`aliasdomain`=`d`.`id`
-			WHERE `d`.`customerid`= :customerid
-			AND `d`.`email_only`='0'
-			AND `d`.`id` <> :standardsubdomain
+			WHERE `d`.`customerid` IN (" . implode(', ', $customer_ids) . ")
+			AND `d`.`email_only` = '0'
+			AND `d`.`id` NOT IN (" . implode(', ', $customer_stdsubs) . ")
 		");
-
-		$result = array();
-		foreach ($customer_ids as $customer_id) {
-			Database::pexecute($domains_stmt, array(
-				"customerid" => $customer_id,
-				"standardsubdomain" => $customer_stdsubs[$customer_id]
-			), true, true);
-			while ($row = $domains_stmt->fetch(\PDO::FETCH_ASSOC)) {
-				$result[] = $row;
-			}
+		$result = Database::pexecute_first($domains_stmt, null, true, true);
+		if ($result) {
+			return $this->response(200, "successfull", $result['num_subdom']);
 		}
-		return $this->response(200, "successfull", array(
-			'count' => count($result),
-			'list' => $result
-		));
 	}
 
 	/**

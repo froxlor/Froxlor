@@ -388,12 +388,21 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 	}
 
 	/**
-	 * You cannot directly list email forwarders.
+	 * You cannot directly list email accounts.
 	 * You need to call Emails.listing()
 	 */
 	public function listing()
 	{
-		throw new \Exception('You cannot directly list email forwarders. You need to call Emails.listing()', 303);
+		throw new \Exception('You cannot directly list email accounts. You need to call Emails.listing()', 303);
+	}
+
+	/**
+	 * You cannot directly count email accounts.
+	 * You need to call Emails.listingCount()
+	 */
+	public function listingCount()
+	{
+		throw new \Exception('You cannot directly count email accounts. You need to call Emails.listingCount()', 303);
 	}
 
 	/**

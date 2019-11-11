@@ -44,144 +44,74 @@ if ($page == 'overview') {
 		$fields = array(
 			'd.domain' => $lng['domains']['domainname']
 		);
-		$paging = new \Froxlor\UI\Paging($userinfo, TABLE_PANEL_DOMAINS, $fields);
-		$domains_stmt = Database::prepare("SELECT `d`.`id`, `d`.`customerid`, `d`.`domain`, `d`.`documentroot`, `d`.`isbinddomain`, `d`.`isemaildomain`, `d`.`caneditdomain`, `d`.`iswildcarddomain`, `d`.`parentdomainid`, `d`.`letsencrypt`, `d`.`registration_date`, `d`.`termination_date`, `ad`.`id` AS `aliasdomainid`, `ad`.`domain` AS `aliasdomain`, `da`.`id` AS `domainaliasid`, `da`.`domain` AS `domainalias` FROM `" . TABLE_PANEL_DOMAINS . "` `d`
-			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `ad` ON `d`.`aliasdomain`=`ad`.`id`
-			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `da` ON `da`.`aliasdomain`=`d`.`id`
-			WHERE `d`.`customerid`= :customerid
-			AND `d`.`email_only`='0'
-			AND `d`.`id` <> :standardsubdomain " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
-		Database::pexecute($domains_stmt, array(
-			"customerid" => $userinfo['customerid'],
-			"standardsubdomain" => $userinfo['standardsubdomain']
-		));
-		$paging->setEntries(Database::num_rows());
+		try {
+			// get total count
+			$json_result = SubDomains::getLocal($userinfo)->listingCount();
+			$result = json_decode($json_result, true)['data'];
+			// initialize pagination and filtering
+			$paging = new \Froxlor\UI\Pagination($userinfo, $fields, $result);
+			// get list
+			$json_result = SubDomains::getLocal($userinfo, $paging->getApiCommandParams())->listing();
+		} catch (Exception $e) {
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
+
 		$sortcode = $paging->getHtmlSortCode($lng);
 		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
 		$searchcode = $paging->getHtmlSearchCode($lng);
 		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
 		$domains = '';
 		$parentdomains_count = 0;
-		$domains_count = 0;
+		$domains_count = $paging->getEntries();
 		$domain_array = array();
 
-		while ($row = $domains_stmt->fetch(PDO::FETCH_ASSOC)) {
-			$row['domain'] = $idna_convert->decode($row['domain']);
-			$row['aliasdomain'] = $idna_convert->decode($row['aliasdomain']);
-			$row['domainalias'] = $idna_convert->decode($row['domainalias']);
-
+		foreach ($result['list'] as $row) {
+			formatDomainEntry($row, $idna_convert);
 			if ($row['parentdomainid'] == '0' && $row['caneditdomain'] == '1') {
 				$parentdomains_count ++;
 			}
+			$domain_array[$row['parentdomainid']][] = $row;
+		}
 
-			/**
-			 * check for set ssl-certs to show different state-icons
-			 */
-			// nothing (ssl_global)
-			$row['domain_hascert'] = 0;
-			$ssl_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` WHERE `domainid` = :domainid");
-			Database::pexecute($ssl_stmt, array(
-				"domainid" => $row['id']
-			));
-			$ssl_result = $ssl_stmt->fetch(PDO::FETCH_ASSOC);
-			if (is_array($ssl_result) && isset($ssl_result['ssl_cert_file']) && $ssl_result['ssl_cert_file'] != '') {
-				// own certificate (ssl_customer_green)
-				$row['domain_hascert'] = 1;
-			} else {
-				// check if it's parent has one set (shared)
-				if ($row['parentdomainid'] != 0) {
-					$ssl_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` WHERE `domainid` = :domainid");
-					Database::pexecute($ssl_stmt, array(
-						"domainid" => $row['parentdomainid']
-					));
-					$ssl_result = $ssl_stmt->fetch(PDO::FETCH_ASSOC);
-					if (is_array($ssl_result) && isset($ssl_result['ssl_cert_file']) && $ssl_result['ssl_cert_file'] != '') {
-						// parent has a certificate (ssl_shared)
-						$row['domain_hascert'] = 2;
-					}
-				}
-			}
-
-			$row['termination_date'] = str_replace("0000-00-00", "", $row['termination_date']);
-			if ($row['termination_date'] != "") {
-				$cdate = strtotime($row['termination_date'] . " 23:59:59");
-				$today = time();
-
-				if ($cdate < $today) {
-					$row['termination_css'] = 'domain-expired';
+		if (isset($domain_array[0])) {
+			foreach ($domain_array[0] as $pdomain) {
+				// PARENTDOMAIN
+				$row = \Froxlor\PhpHelper::htmlentitiesArray($pdomain);
+				if (Settings::Get('system.awstats_enabled') == '1') {
+					$statsapp = 'awstats';
 				} else {
-					$row['termination_css'] = 'domain-canceled';
+					$statsapp = 'webalizer';
+				}
+				eval("\$domains.=\"" . \Froxlor\UI\Template::getTemplate("domains/domains_delimiter") . "\";");
+				// show docroot nicely
+				if (strpos($row['documentroot'], $userinfo['documentroot']) === 0) {
+					$row['documentroot'] = \Froxlor\FileDir::makeCorrectDir(str_replace($userinfo['documentroot'], "/", $row['documentroot']));
+				}
+				// get ssl-ips if activated
+				$show_ssledit = false;
+				if (Settings::Get('system.use_ssl') == '1' && \Froxlor\Domain\Domain::domainHasSslIpPort($row['id']) && $row['caneditdomain'] == '1' && $row['letsencrypt'] == 0) {
+					$show_ssledit = true;
+				}
+				eval("\$domains.=\"" . \Froxlor\UI\Template::getTemplate("domains/domains_domain") . "\";");
+
+				// every domain below the parentdomain
+				if (isset($domain_array[$pdomain['id']])) {
+					$mydomains = $domain_array[$pdomain['id']];
+					foreach ($mydomains as $row) {
+						// show docroot nicely
+						if (strpos($row['documentroot'], $userinfo['documentroot']) === 0) {
+							$row['documentroot'] = \Froxlor\FileDir::makeCorrectDir(str_replace($userinfo['documentroot'], "/", $row['documentroot']));
+						}
+						// get ssl-ips if activated
+						$show_ssledit = false;
+						if (Settings::Get('system.use_ssl') == '1' && \Froxlor\Domain\Domain::domainHasSslIpPort($row['id']) && $row['caneditdomain'] == '1' && $row['letsencrypt'] == 0) {
+							$show_ssledit = true;
+						}
+						eval("\$domains.=\"" . \Froxlor\UI\Template::getTemplate("domains/domains_domain") . "\";");
+					}
 				}
 			}
-
-			$domains_count ++;
-			$domain_array[$row['domain']] = $row;
-		}
-
-		ksort($domain_array);
-		$domain_id_array = array();
-		foreach ($domain_array as $sortkey => $row) {
-			$domain_id_array[$row['id']] = $sortkey;
-		}
-
-		$domain_sort_array = array();
-		foreach ($domain_array as $sortkey => $row) {
-			if ($row['parentdomainid'] == 0) {
-				$domain_sort_array[$sortkey][$sortkey] = $row;
-			} else {
-				// when searching and the results are subdomains only, we need to get
-				// the parent domain to this subdomain
-				if (! isset($domain_id_array[$row['parentdomainid']])) {
-					$domain_id_array[$row['parentdomainid']] = "[parent-domain]";
-				}
-				$domain_sort_array[$domain_id_array[$row['parentdomainid']]][$sortkey] = $row;
-			}
-		}
-
-		$domain_array = array();
-
-		if ($paging->sortfield == 'd.domain' && $paging->sortorder == 'asc') {
-			ksort($domain_sort_array);
-		} elseif ($paging->sortfield == 'd.domain' && $paging->sortorder == 'desc') {
-			krsort($domain_sort_array);
-		}
-
-		$i = 0;
-		foreach ($domain_sort_array as $sortkey => $domain_array) {
-			if ($paging->checkDisplay($i)) {
-
-				if (isset($domain_array[$sortkey])) {
-					$row = \Froxlor\PhpHelper::htmlentitiesArray($domain_array[$sortkey]);
-					if (Settings::Get('system.awstats_enabled') == '1') {
-						$statsapp = 'awstats';
-					} else {
-						$statsapp = 'webalizer';
-					}
-					eval("\$domains.=\"" . \Froxlor\UI\Template::getTemplate("domains/domains_delimiter") . "\";");
-				}
-
-				if ($paging->sortfield == 'd.domain' && $paging->sortorder == 'asc') {
-					ksort($domain_array);
-				} elseif ($paging->sortfield == 'd.domain' && $paging->sortorder == 'desc') {
-					krsort($domain_array);
-				}
-
-				foreach ($domain_array as $row) {
-					if (strpos($row['documentroot'], $userinfo['documentroot']) === 0) {
-						$row['documentroot'] = \Froxlor\FileDir::makeCorrectDir(str_replace($userinfo['documentroot'], "/", $row['documentroot']));
-					}
-
-					// get ssl-ips if activated
-					$show_ssledit = false;
-					if (Settings::Get('system.use_ssl') == '1' && \Froxlor\Domain\Domain::domainHasSslIpPort($row['id']) && $row['caneditdomain'] == '1' && $row['letsencrypt'] == 0) {
-						$show_ssledit = true;
-					}
-					$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
-					eval("\$domains.=\"" . \Froxlor\UI\Template::getTemplate("domains/domains_domain") . "\";");
-				}
-			}
-
-			$i += count($domain_array);
 		}
 
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate("domains/domainlist") . "\";");
@@ -461,7 +391,9 @@ if ($page == 'overview') {
 				}
 
 				$alias_stmt = Database::prepare("SELECT COUNT(`id`) AS count FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `aliasdomain`= :aliasdomain");
-				$alias_check = Database::pexecute_first($alias_stmt, array("aliasdomain" => $result['id']));
+				$alias_check = Database::pexecute_first($alias_stmt, array(
+					"aliasdomain" => $result['id']
+				));
 				$alias_check = $alias_check['count'];
 
 				$domainip = $result_ipandport['ip'];
@@ -582,3 +514,53 @@ if ($page == 'overview') {
 
 	require_once __DIR__ . '/logfiles_viewer.php';
 }
+
+function formatDomainEntry(&$row, &$idna_convert)
+{
+	$row['domain'] = $idna_convert->decode($row['domain']);
+	$row['aliasdomain'] = $idna_convert->decode($row['aliasdomain']);
+	$row['domainalias'] = $idna_convert->decode($row['domainalias']);
+
+	/**
+	 * check for set ssl-certs to show different state-icons
+	 */
+	// nothing (ssl_global)
+	$row['domain_hascert'] = 0;
+	$ssl_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` WHERE `domainid` = :domainid");
+	Database::pexecute($ssl_stmt, array(
+		"domainid" => $row['id']
+	));
+	$ssl_result = $ssl_stmt->fetch(PDO::FETCH_ASSOC);
+	if (is_array($ssl_result) && isset($ssl_result['ssl_cert_file']) && $ssl_result['ssl_cert_file'] != '') {
+		// own certificate (ssl_customer_green)
+		$row['domain_hascert'] = 1;
+	} else {
+		// check if it's parent has one set (shared)
+		if ($row['parentdomainid'] != 0) {
+			$ssl_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` WHERE `domainid` = :domainid");
+			Database::pexecute($ssl_stmt, array(
+				"domainid" => $row['parentdomainid']
+			));
+			$ssl_result = $ssl_stmt->fetch(PDO::FETCH_ASSOC);
+			if (is_array($ssl_result) && isset($ssl_result['ssl_cert_file']) && $ssl_result['ssl_cert_file'] != '') {
+				// parent has a certificate (ssl_shared)
+				$row['domain_hascert'] = 2;
+			}
+		}
+	}
+
+	$row['termination_date'] = str_replace("0000-00-00", "", $row['termination_date']);
+
+	$row['termination_css'] = "";
+	if ($row['termination_date'] != "") {
+		$cdate = strtotime($row['termination_date'] . " 23:59:59");
+		$today = time();
+
+		if ($cdate < $today) {
+			$row['termination_css'] = 'domain-expired';
+		} else {
+			$row['termination_css'] = 'domain-canceled';
+		}
+	}
+}
+

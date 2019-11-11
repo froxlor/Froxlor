@@ -79,6 +79,10 @@ class TrafficTest extends TestCase
 		$this->assertEquals(1, $result['count']);
 		$http = 2 * (5 * 1024 * 1024 * 1024); // 2x 5 GB
 		$this->assertEquals($http, $result['list'][0]['http']);
+
+		$this->expectExceptionCode(303);
+		$this->expectExceptionMessage("You cannot count the traffic data list");
+		Traffic::getLocal($admin_userdata)->listingCount();
 	}
 
 	public function testAdminTrafficListSpecificDate()
@@ -120,6 +124,10 @@ class TrafficTest extends TestCase
 		$this->assertEquals(1, $result['count']);
 		$mail = 250 * 1024 * 1024; // 250 MB
 		$this->assertEquals($mail, $result['list'][0]['mail']);
+
+		$this->expectExceptionCode(303);
+		$this->expectExceptionMessage("You cannot count the traffic data list");
+		Traffic::getLocal($admin_userdata)->listingCount();
 	}
 
 	public function testAdminTrafficAdd()

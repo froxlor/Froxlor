@@ -53,20 +53,24 @@ if ($page == 'overview') {
 			'databasename' => $lng['mysql']['databasename'],
 			'description' => $lng['mysql']['databasedescription']
 		);
-		$paging = new \Froxlor\UI\Paging($userinfo, TABLE_PANEL_DATABASES, $fields);
-		$result_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_DATABASES . "`
-			WHERE `customerid`= :customerid " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
-		Database::pexecute($result_stmt, array(
-			"customerid" => $userinfo['customerid']
-		));
-		$mysqls_count = Database::num_rows();
-		$paging->setEntries($mysqls_count);
+		try {
+			// get total count
+			$json_result = Mysqls::getLocal($userinfo)->listingCount();
+			$result = json_decode($json_result, true)['data'];
+			// initialize pagination and filtering
+			$paging = new \Froxlor\UI\Pagination($userinfo, $fields, $result);
+			// get list
+			$json_result = Mysqls::getLocal($userinfo, $paging->getApiCommandParams())->listing();
+		} catch (Exception $e) {
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
 
+		$mysqls_count = $paging->getEntries();
 		$sortcode = $paging->getHtmlSortCode($lng);
 		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
 		$searchcode = $paging->getHtmlSearchCode($lng);
 		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
-		$i = 0;
 		$count = 0;
 		$mysqls = '';
 
@@ -76,21 +80,18 @@ if ($page == 'overview') {
 
 		// Begin root-session
 		Database::needRoot(true);
-		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-			if ($paging->checkDisplay($i)) {
-				$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
-				$mbdata_stmt = Database::prepare("SELECT SUM(data_length + index_length) as MB FROM information_schema.TABLES
+		foreach ($result['list'] as $row) {
+			$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
+			$mbdata_stmt = Database::prepare("SELECT SUM(data_length + index_length) as MB FROM information_schema.TABLES
 					WHERE table_schema = :table_schema
 					GROUP BY table_schema");
-				Database::pexecute($mbdata_stmt, array(
-					"table_schema" => $row['databasename']
-				));
-				$mbdata = $mbdata_stmt->fetch(PDO::FETCH_ASSOC);
-				$row['size'] = \Froxlor\PhpHelper::sizeReadable($mbdata['MB'], 'GiB', 'bi', '%01.' . (int) Settings::Get('panel.decimal_places') . 'f %s');
-				eval("\$mysqls.=\"" . \Froxlor\UI\Template::getTemplate('mysql/mysqls_database') . "\";");
-				$count ++;
-			}
-			$i ++;
+			Database::pexecute($mbdata_stmt, array(
+				"table_schema" => $row['databasename']
+			));
+			$mbdata = $mbdata_stmt->fetch(PDO::FETCH_ASSOC);
+			$row['size'] = \Froxlor\PhpHelper::sizeReadable($mbdata['MB'], 'GiB', 'bi', '%01.' . (int) Settings::Get('panel.decimal_places') . 'f %s');
+			eval("\$mysqls.=\"" . \Froxlor\UI\Template::getTemplate('mysql/mysqls_database') . "\";");
+			$count ++;
 		}
 		Database::needRoot(false);
 		// End root-session

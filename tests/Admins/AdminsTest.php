@@ -156,6 +156,51 @@ class AdminsTest extends TestCase
 		$json_result = Admins::getLocal($admin_userdata)->listing();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(2, $result['count']);
+
+		$json_result = Admins::getLocal($admin_userdata)->listingCount();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(2, $result);
+	}
+
+	public function testAdminAdminsListLimitOffsetOrderSearch()
+	{
+		global $admin_userdata;
+
+		$json_result = Admins::getLocal($admin_userdata, [
+			'sql_orderby' => [
+				'loginname' => 'DESC'
+			]
+		])->listing();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(2, $result['count']);
+		$this->assertEquals('reseller', $result['list'][0]['loginname']);
+
+		$json_result = Admins::getLocal($admin_userdata, [
+			'sql_limit' => 1
+		])->listing();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(1, $result['count']);
+		$this->assertEquals('admin', $result['list'][0]['loginname']);
+
+		$json_result = Admins::getLocal($admin_userdata, [
+			'sql_limit' => 1,
+			'sql_offset' => 1
+		])->listing();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(1, $result['count']);
+		$this->assertEquals('reseller', $result['list'][0]['loginname']);
+
+		$json_result = Admins::getLocal($admin_userdata, [
+			'sql_search' => [
+				'loginname' => [
+					'value' => 'adm',
+					'op' => null /* LIKE */
+				]
+			]
+		])->listing();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(1, $result['count']);
+		$this->assertEquals('admin', $result['list'][0]['loginname']);
 	}
 
 	public function testResellerAdminsGet()

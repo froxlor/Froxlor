@@ -21,6 +21,10 @@ class CronjobsTest extends TestCase
 		$result = json_decode($json_result, true)['data'];
 		$this->assertTrue(isset($result['list'][0]['module']));
 		$this->assertTrue(isset($result['list'][0]['cronfile']));
+
+		$json_result = Cronjobs::getLocal($admin_userdata)->listingCount();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(6, $result);
 	}
 
 	public function testCustomerCronjobsListNotAllowed()

@@ -52,7 +52,7 @@ if ($page == 'overview') {
 				$domains = "";
 				$subdomains_count = count($row['subdomains']);
 				foreach ($row['domains'] as $configdomain) {
-					$domains .= $configdomain . "<br>";
+					$domains .= $idna_convert->decode($configdomain) . "<br>";
 				}
 				$count ++;
 				if ($subdomains_count == 0 && empty($domains)) {

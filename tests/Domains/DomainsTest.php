@@ -50,6 +50,10 @@ class DomainsTest extends TestCase
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(1, $result['count']);
 		$this->assertEquals('test.local', $result['list'][0]['domain']);
+
+		$json_result = Domains::getLocal($admin_userdata)->listingCount();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(1, $result);
 	}
 
 	/**
@@ -68,6 +72,10 @@ class DomainsTest extends TestCase
 		$json_result = Domains::getLocal($reseller_userdata)->listing();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(0, $result['count']);
+
+		$json_result = Domains::getLocal($reseller_userdata)->listingCount();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(0, $result);
 	}
 
 	public function testResellerDomainsAddWithCanEditPhpSettingsDefaultIp()
@@ -233,5 +241,23 @@ class DomainsTest extends TestCase
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test3'
 		))->delete();
+	}
+
+	public function testCustomerDomainsList()
+	{
+		global $admin_userdata;
+		// get customer
+		$json_result = Customers::getLocal($admin_userdata, array(
+			'id' => 1
+		))->get();
+		$customer_userdata = json_decode($json_result, true)['data'];
+		
+		$this->expectExceptionCode(403);
+		$this->expectExceptionMessage("Not allowed to execute given command.");
+		$json_result = Domains::getLocal($customer_userdata)->listing();
+		
+		$this->expectExceptionCode(403);
+		$this->expectExceptionMessage("Not allowed to execute given command.");
+		$json_result = Domains::getLocal($customer_userdata)->listingCount();
 	}
 }

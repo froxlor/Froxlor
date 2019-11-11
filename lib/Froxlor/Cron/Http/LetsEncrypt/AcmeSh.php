@@ -209,7 +209,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 
 			if ($cert_mode) {
 				$domains = array(
-					$certrow['domain']
+					strtolower($certrow['domain'])
 				);
 
 				$froxlor_aliases = Settings::Get('system.froxloraliases');
@@ -217,7 +217,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 					$froxlor_aliases = explode(",", $froxlor_aliases);
 					foreach ($froxlor_aliases as $falias) {
 						if (\Froxlor\Validate\Validate::validateDomain(trim($falias))) {
-							$domains[] = trim($falias);
+							$domains[] = strtolower(trim($falias));
 						}
 					}
 				}
@@ -243,8 +243,10 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 
 		// customer domains
 		$certrows = $needRenew ? $needRenew['customer_ssl'] : array();
-		$cert_mode = 'issue';
 		foreach ($certrows as $certrow) {
+
+			// initialize mode to 'issue'
+			$cert_mode = 'issue';
 
 			// set logger to corresponding loginname for the log to appear in the users system-log
 			$cronlog = FroxlorLogger::getInstanceOf(array(
@@ -269,12 +271,12 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 
 				$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, "Adding SAN entry: " . $certrow['domain']);
 				$domains = array(
-					$certrow['domain']
+					strtolower($certrow['domain'])
 				);
 				// add www.<domain> to SAN list
 				if ($certrow['wwwserveralias'] == 1) {
 					$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, "Adding SAN entry: www." . $certrow['domain']);
-					$domains[] = 'www.' . $certrow['domain'];
+					$domains[] = strtolower('www.' . $certrow['domain']);
 				}
 
 				// add alias domains (and possibly www.<aliasdomain>) to SAN list
@@ -284,10 +286,10 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 				$aliasdomains = $aliasdomains_stmt->fetchAll(\PDO::FETCH_ASSOC);
 				foreach ($aliasdomains as $aliasdomain) {
 					$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, "Adding SAN entry: " . $aliasdomain['domain']);
-					$domains[] = $aliasdomain['domain'];
+					$domains[] = strtolower($aliasdomain['domain']);
 					if ($aliasdomain['wwwserveralias'] == 1) {
 						$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, "Adding SAN entry: www." . $aliasdomain['domain']);
-						$domains[] = 'www.' . $aliasdomain['domain'];
+						$domains[] = strtolower('www.' . $aliasdomain['domain']);
 					}
 				}
 

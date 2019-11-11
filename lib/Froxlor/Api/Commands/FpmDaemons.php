@@ -24,6 +24,15 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	/**
 	 * lists all fpm-daemon entries
 	 *
+	 * @param array $sql_search
+	 *        	optional array with index = fieldname, and value = array with 'op' => operator (one of <, > or =), LIKE is used if left empty and 'value' => searchvalue
+	 * @param int $sql_limit
+	 *        	optional specify number of results to be returned
+	 * @param int $sql_offset
+	 *        	optional specify offset for resultset
+	 * @param array $sql_orderby
+	 *        	optional array with index = fieldname and value = ASC|DESC to order the resultset by one or more fields
+	 *
 	 * @access admin
 	 * @throws \Exception
 	 * @return string json-encoded array count|list
@@ -32,21 +41,18 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	{
 		if ($this->isAdmin()) {
 			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] list fpm-daemons");
-
-			$result = Database::query("
-				SELECT * FROM `" . TABLE_PANEL_FPMDAEMONS . "` ORDER BY `description` ASC
-			");
-
+			$query_fields = array();
+			$result_stmt = Database::prepare("
+				SELECT * FROM `" . TABLE_PANEL_FPMDAEMONS . "`" . $this->getSearchWhere($query_fields) . $this->getOrderBy() . $this->getLimit());
+			Database::pexecute($result_stmt, $query_fields, true, true);
 			$fpmdaemons = array();
-			while ($row = $result->fetch(\PDO::FETCH_ASSOC)) {
+			while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 
 				$query_params = array(
 					'id' => $row['id']
 				);
 
-				$query = "SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "` WHERE `fpmsettingid` = :id";
-
-				$configresult_stmt = Database::prepare($query);
+				$configresult_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "` WHERE `fpmsettingid` = :id");
 				Database::pexecute($configresult_stmt, $query_params, true, true);
 
 				$configs = array();
@@ -68,6 +74,27 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				'count' => count($fpmdaemons),
 				'list' => $fpmdaemons
 			));
+		}
+		throw new \Exception("Not allowed to execute given command.", 403);
+	}
+
+	/**
+	 * returns the total number of accessable fpm daemons
+	 *
+	 * @access admin
+	 * @throws \Exception
+	 * @return string json-encoded array
+	 */
+	public function listingCount()
+	{
+		if ($this->isAdmin()) {
+			$result_stmt = Database::prepare("
+				SELECT COUNT(*) as num_fpms FROM `" . TABLE_PANEL_FPMDAEMONS . "`
+			");
+			$result = Database::pexecute_first($result_stmt, null, true, true);
+			if ($result) {
+				return $this->response(200, "successfull", $result['num_fpms']);
+			}
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
 	}

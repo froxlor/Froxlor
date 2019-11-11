@@ -362,6 +362,10 @@ class MailsTest extends TestCase
 		$this->assertEquals(2, $result['count']);
 		$this->assertEquals("info@test2.local", $result['list'][0]['email']);
 		$this->assertEquals("@test2.local", $result['list'][1]['email']);
+
+		$json_result = Emails::getLocal($customer_userdata)->listingCount();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(2, $result);
 	}
 
 	public function testCustomerEmailAccountsAdd()

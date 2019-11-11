@@ -265,7 +265,15 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	optional, admin-only, select email addresses of a specific customer by id
 	 * @param string $loginname
 	 *        	optional, admin-only, select email addresses of a specific customer by loginname
-	 *        	
+	 * @param array $sql_search
+	 *        	optional array with index = fieldname, and value = array with 'op' => operator (one of <, > or =), LIKE is used if left empty and 'value' => searchvalue
+	 * @param int $sql_limit
+	 *        	optional specify number of results to be returned
+	 * @param int $sql_offset
+	 *        	optional specify offset for resultset
+	 * @param array $sql_orderby
+	 *        	optional array with index = fieldname and value = ASC|DESC to order the resultset by one or more fields
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array count|list
@@ -274,14 +282,14 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	{
 		$customer_ids = $this->getAllowedCustomerIds('email');
 		$result = array();
+		$query_fields = array();
 		$result_stmt = Database::prepare("
 			SELECT m.`id`, m.`domainid`, m.`email`, m.`email_full`, m.`iscatchall`, u.`quota`, m.`destination`, m.`popaccountid`, d.`domain`, u.`mboxsize`
 			FROM `" . TABLE_MAIL_VIRTUAL . "` m
 			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` d ON (m.`domainid` = d.`id`)
 			LEFT JOIN `" . TABLE_MAIL_USERS . "` u ON (m.`popaccountid` = u.`id`)
-			WHERE m.`customerid` IN (" . implode(", ", $customer_ids) . ")
-		");
-		Database::pexecute($result_stmt, null, true, true);
+			WHERE m.`customerid` IN (" . implode(", ", $customer_ids) . ")" . $this->getSearchWhere($query_fields, true) . $this->getOrderBy() . $this->getLimit());
+		Database::pexecute($result_stmt, $query_fields, true, true);
 		while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$result[] = $row;
 		}
@@ -290,6 +298,34 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			'count' => count($result),
 			'list' => $result
 		));
+	}
+
+	/**
+	 * returns the total number of accessable email addresses
+	 *
+	 * @param int $customerid
+	 *        	optional, admin-only, select email addresses of a specific customer by id
+	 * @param string $loginname
+	 *        	optional, admin-only, select email addresses of a specific customer by loginname
+	 *        	
+	 * @access admin, customer
+	 * @throws \Exception
+	 * @return string json-encoded array
+	 */
+	public function listingCount()
+	{
+		$customer_ids = $this->getAllowedCustomerIds('email');
+		$result_stmt = Database::prepare("
+			SELECT COUNT(*) as num_emails
+			FROM `" . TABLE_MAIL_VIRTUAL . "` m
+			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` d ON (m.`domainid` = d.`id`)
+			LEFT JOIN `" . TABLE_MAIL_USERS . "` u ON (m.`popaccountid` = u.`id`)
+			WHERE m.`customerid` IN (" . implode(", ", $customer_ids) . ")
+		");
+		$result = Database::pexecute_first($result_stmt, null, true, true);
+		if ($result) {
+			return $this->response(200, "successfull", $result['num_emails']);
+		}
 	}
 
 	/**

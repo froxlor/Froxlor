@@ -19,6 +19,7 @@
 define('AREA', 'customer');
 require './lib/init.php';
 
+use Froxlor\Api\Commands\SysLog;
 use Froxlor\Database\Database;
 use Froxlor\Settings;
 
@@ -35,26 +36,25 @@ if ($page == 'log') {
 			'user' => $lng['logger']['user'],
 			'text' => $lng['logger']['action']
 		);
-		$paging = new \Froxlor\UI\Paging($userinfo, TABLE_PANEL_LOG, $fields, null, null, 0, 'desc', 30);
-		$query = 'SELECT * FROM `' . TABLE_PANEL_LOG . '` WHERE `user` = :loginname ' . $paging->getSqlWhere(true) . ' ' . $paging->getSqlOrderBy();
-		$result_stmt = Database::prepare($query . ' ' . $paging->getSqlLimit());
-		Database::pexecute($result_stmt, array(
-			"loginname" => $userinfo['loginname']
-		));
-		$result_cnt_stmt = Database::prepare($query);
-		Database::pexecute($result_cnt_stmt, array(
-			"loginname" => $userinfo['loginname']
-		));
-		$res_cnt = $result_cnt_stmt->fetch(PDO::FETCH_ASSOC);
-		$logs_count = $result_cnt_stmt->rowCount();
-		$paging->setEntries($logs_count);
+		try {
+			// get total count
+			$json_result = SysLog::getLocal($userinfo)->listingCount();
+			$result = json_decode($json_result, true)['data'];
+			// initialize pagination and filtering
+			$paging = new \Froxlor\UI\Pagination($userinfo, $fields, $result);
+			// get list
+			$json_result = SysLog::getLocal($userinfo, $paging->getApiCommandParams())->listing();
+		} catch (Exception $e) {
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
 		$sortcode = $paging->getHtmlSortCode($lng);
 		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
 		$searchcode = $paging->getHtmlSearchCode($lng);
 		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
 		$clog = array();
 
-		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+		foreach ($result['list'] as $row) {
 
 			if (! isset($clog[$row['action']]) || ! is_array($clog[$row['action']])) {
 				$clog[$row['action']] = array();
@@ -68,7 +68,6 @@ if ($page == 'log') {
 			ksort($clog);
 		}
 
-		$i = 0;
 		$count = 0;
 		$log_count = 0;
 		$log = '';
@@ -113,10 +112,7 @@ if ($page == 'log') {
 				eval("\$log.=\"" . \Froxlor\UI\Template::getTemplate('logger/logger_log') . "\";");
 				$count ++;
 				$_action = $action;
-				// }
-				$i ++;
 			}
-			$i ++;
 		}
 
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate('logger/logger') . "\";");

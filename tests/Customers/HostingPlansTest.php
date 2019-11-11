@@ -83,6 +83,10 @@ class HostingPlansTest extends TestCase
 		$json_result = HostingPlans::getLocal($admin_userdata)->listing();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(1, $result['count']);
+
+		$json_result = HostingPlans::getLocal($admin_userdata)->listingCount();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(1, $result);
 	}
 
 	/**
@@ -101,6 +105,10 @@ class HostingPlansTest extends TestCase
 		$json_result = HostingPlans::getLocal($reseller_userdata)->listing();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(0, $result['count']);
+
+		$json_result = HostingPlans::getLocal($reseller_userdata)->listingCount();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(0, $result);
 	}
 
 	/**
@@ -118,8 +126,11 @@ class HostingPlansTest extends TestCase
 
 		$this->expectExceptionCode(403);
 		$this->expectExceptionMessage("Not allowed to execute given command.");
-
 		$json_result = HostingPlans::getLocal($customer_userdata)->listing();
+
+		$this->expectExceptionCode(403);
+		$this->expectExceptionMessage("Not allowed to execute given command.");
+		$json_result = HostingPlans::getLocal($customer_userdata)->listingCount();
 	}
 
 	public function testCustomerPlanAdd()

@@ -23,6 +23,10 @@ class PhpSettingsText extends TestCase
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals("Default Config", $result['list'][0]['description']);
 		$this->assertEquals("/usr/bin/php-cgi", $result['list'][0]['binary']);
+
+		$json_result = PhpSettings::getLocal($admin_userdata)->listingCount();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(2, $result);
 	}
 
 	public function testCustomerPhpSettingsListNotAllowed()
@@ -36,6 +40,10 @@ class PhpSettingsText extends TestCase
 		$this->expectExceptionCode(403);
 		$this->expectExceptionMessage("Not allowed to execute given command.");
 		PhpSettings::getLocal($customer_userdata)->listing();
+
+		$this->expectExceptionCode(403);
+		$this->expectExceptionMessage("Not allowed to execute given command.");
+		PhpSettings::getLocal($customer_userdata)->listingCount();
 	}
 
 	public function testAdminPhpSettingsAdd()

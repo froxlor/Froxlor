@@ -116,6 +116,10 @@ class DomainZonesTest extends TestCase
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(1, $result['count']);
 		$this->assertEquals('www2', $result['list'][0]['record']);
+
+		$json_result = DomainZones::getLocal($admin_userdata, $data)->listingCount();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(1, $result);
 	}
 
 	/**

@@ -19,7 +19,6 @@
 define('AREA', 'customer');
 require './lib/init.php';
 
-use Froxlor\Database\Database;
 use Froxlor\Settings;
 use Froxlor\Api\Commands\DirOptions as DirOptions;
 use Froxlor\Api\Commands\DirProtections as DirProtections;
@@ -52,33 +51,34 @@ if ($page == 'overview') {
 			'username' => $lng['login']['username'],
 			'path' => $lng['panel']['path']
 		);
-		$paging = new \Froxlor\UI\Paging($userinfo, TABLE_PANEL_HTPASSWDS, $fields);
-		$result_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_HTPASSWDS . "`
-			WHERE `customerid`= :customerid " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
-		Database::pexecute($result_stmt, array(
-			"customerid" => $userinfo['customerid']
-		));
-		$paging->setEntries(Database::num_rows());
+		try {
+			// get total count
+			$json_result = DirProtections::getLocal($userinfo)->listingCount();
+			$result = json_decode($json_result, true)['data'];
+			// initialize pagination and filtering
+			$paging = new \Froxlor\UI\Pagination($userinfo, $fields, $result);
+			// get list
+			$json_result = DirProtections::getLocal($userinfo, $paging->getApiCommandParams())->listing();
+		} catch (Exception $e) {
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
+
 		$sortcode = $paging->getHtmlSortCode($lng);
 		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
 		$searchcode = $paging->getHtmlSearchCode($lng);
 		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
-		$i = 0;
 		$count = 0;
 		$htpasswds = '';
 
-		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-			if ($paging->checkDisplay($i)) {
-				if (strpos($row['path'], $userinfo['documentroot']) === 0) {
-					$row['path'] = str_replace($userinfo['documentroot'], "/", $row['path']);
-				}
-				$row['path'] = \Froxlor\FileDir::makeCorrectDir($row['path']);
-				$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
-				eval("\$htpasswds.=\"" . \Froxlor\UI\Template::getTemplate("extras/htpasswds_htpasswd") . "\";");
-				$count ++;
+		foreach ($result['list'] as $row) {
+			if (strpos($row['path'], $userinfo['documentroot']) === 0) {
+				$row['path'] = str_replace($userinfo['documentroot'], "/", $row['path']);
 			}
-
-			$i ++;
+			$row['path'] = \Froxlor\FileDir::makeCorrectDir($row['path']);
+			$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
+			eval("\$htpasswds.=\"" . \Froxlor\UI\Template::getTemplate("extras/htpasswds_htpasswd") . "\";");
+			$count ++;
 		}
 
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate("extras/htpasswds") . "\";");
@@ -192,39 +192,40 @@ if ($page == 'overview') {
 			'error500path' => $lng['extras']['error500path'],
 			'options_cgi' => $lng['extras']['execute_perl']
 		);
-		$paging = new \Froxlor\UI\Paging($userinfo, TABLE_PANEL_HTACCESS, $fields);
-		$result_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_HTACCESS . "`
-			WHERE `customerid`= :customerid " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
-		Database::pexecute($result_stmt, array(
-			"customerid" => $userinfo['customerid']
-		));
-		$paging->setEntries(Database::num_rows());
+		try {
+			// get total count
+			$json_result = DirOptions::getLocal($userinfo)->listingCount();
+			$result = json_decode($json_result, true)['data'];
+			// initialize pagination and filtering
+			$paging = new \Froxlor\UI\Pagination($userinfo, $fields, $result);
+			// get list
+			$json_result = DirOptions::getLocal($userinfo, $paging->getApiCommandParams())->listing();
+		} catch (Exception $e) {
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
+
 		$sortcode = $paging->getHtmlSortCode($lng);
 		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
 		$searchcode = $paging->getHtmlSearchCode($lng);
 		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
-		$i = 0;
 		$count = 0;
 		$htaccess = '';
 
 		$cperlenabled = \Froxlor\Customer\Customer::customerHasPerlEnabled($userinfo['customerid']);
 
-		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-			if ($paging->checkDisplay($i)) {
-				if (strpos($row['path'], $userinfo['documentroot']) === 0) {
-					$row['path'] = str_replace($userinfo['documentroot'], "/", $row['path']);
-				}
-				$row['path'] = \Froxlor\FileDir::makeCorrectDir($row['path']);
-				$row['options_indexes'] = str_replace('1', $lng['panel']['yes'], $row['options_indexes']);
-				$row['options_indexes'] = str_replace('0', $lng['panel']['no'], $row['options_indexes']);
-				$row['options_cgi'] = str_replace('1', $lng['panel']['yes'], $row['options_cgi']);
-				$row['options_cgi'] = str_replace('0', $lng['panel']['no'], $row['options_cgi']);
-				$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
-				eval("\$htaccess.=\"" . \Froxlor\UI\Template::getTemplate("extras/htaccess_htaccess") . "\";");
-				$count ++;
+		foreach ($result['list'] as $row) {
+			if (strpos($row['path'], $userinfo['documentroot']) === 0) {
+				$row['path'] = str_replace($userinfo['documentroot'], "/", $row['path']);
 			}
-
-			$i ++;
+			$row['path'] = \Froxlor\FileDir::makeCorrectDir($row['path']);
+			$row['options_indexes'] = str_replace('1', $lng['panel']['yes'], $row['options_indexes']);
+			$row['options_indexes'] = str_replace('0', $lng['panel']['no'], $row['options_indexes']);
+			$row['options_cgi'] = str_replace('1', $lng['panel']['yes'], $row['options_cgi']);
+			$row['options_cgi'] = str_replace('0', $lng['panel']['no'], $row['options_cgi']);
+			$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
+			eval("\$htaccess.=\"" . \Froxlor\UI\Template::getTemplate("extras/htaccess_htaccess") . "\";");
+			$count ++;
 		}
 
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate("extras/htaccess") . "\";");

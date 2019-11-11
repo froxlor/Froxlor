@@ -34,7 +34,9 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 * @param bool $sendinfomail
 	 *        	optional, send created resource-information to customer, default: false
 	 * @param int $customerid
-	 *        	required when called as admin, not needed when called as customer
+	 *        	optional, admin-only, the customer-id
+	 * @param string $loginname
+	 *        	optional, admin-only, the loginname
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
@@ -42,53 +44,50 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 */
 	public function add()
 	{
-		if ($this->getUserDetail('mysqls_used') < $this->getUserDetail('mysqls') || $this->getUserDetail('mysqls') == '-1') {
+		// required paramters
+		$password = $this->getParam('mysql_password');
 
-			// required paramters
-			$password = $this->getParam('mysql_password');
+		// parameters
+		$dbserver = $this->getParam('mysql_server', true, 0);
+		$databasedescription = $this->getParam('description', true, '');
+		$sendinfomail = $this->getBoolParam('sendinfomail', true, 0);
+		// get needed customer info to reduce the mysql-usage-counter by one
+		$customer = $this->getCustomerData('mysqls');
 
-			// parameters
-			$dbserver = $this->getParam('mysql_server', true, 0);
-			$databasedescription = $this->getParam('description', true, '');
-			$sendinfomail = $this->getBoolParam('sendinfomail', true, 0);
+		// validation
+		$password = \Froxlor\Validate\Validate::validate($password, 'password', '', '', array(), true);
+		$password = \Froxlor\System\Crypt::validatePassword($password, true);
+		$databasedescription = \Froxlor\Validate\Validate::validate(trim($databasedescription), 'description', '', '', array(), true);
 
-			// validation
-			$password = \Froxlor\Validate\Validate::validate($password, 'password', '', '', array(), true);
-			$password = \Froxlor\System\Crypt::validatePassword($password, true);
-			$databasedescription = \Froxlor\Validate\Validate::validate(trim($databasedescription), 'description', '', '', array(), true);
+		// validate whether the dbserver exists
+		$dbserver = \Froxlor\Validate\Validate::validate($dbserver, html_entity_decode($this->lng['mysql']['mysql_server']), '', '', 0, true);
+		Database::needRoot(true, $dbserver);
+		Database::needSqlData();
+		$sql_root = Database::getSqlData();
+		Database::needRoot(false);
+		if (! isset($sql_root) || ! is_array($sql_root)) {
+			throw new \Exception("Database server with index #" . $dbserver . " is unknown", 404);
+		}
 
-			// validate whether the dbserver exists
-			$dbserver = \Froxlor\Validate\Validate::validate($dbserver, html_entity_decode($this->lng['mysql']['mysql_server']), '', '', 0, true);
-			Database::needRoot(true, $dbserver);
-			Database::needSqlData();
-			$sql_root = Database::getSqlData();
-			Database::needRoot(false);
-			if (! isset($sql_root) || ! is_array($sql_root)) {
-				throw new \Exception("Database server with index #" . $dbserver . " is unknown", 404);
-			}
+		if ($sendinfomail != 1) {
+			$sendinfomail = 0;
+		}
 
-			if ($sendinfomail != 1) {
-				$sendinfomail = 0;
-			}
+		$newdb_params = array(
+			'loginname' => ($this->isAdmin() ? $customer['loginname'] : $this->getUserDetail('loginname')),
+			'mysql_lastaccountnumber' => ($this->isAdmin() ? $customer['mysql_lastaccountnumber'] : $this->getUserDetail('mysql_lastaccountnumber'))
+		);
+		// create database, user, set permissions, etc.pp.
+		$dbm = new \Froxlor\Database\DbManager($this->logger());
+		$username = $dbm->createDatabase($newdb_params['loginname'], $password, $newdb_params['mysql_lastaccountnumber']);
 
-			// get needed customer info to reduce the mysql-usage-counter by one
-			$customer = $this->getCustomerData('mysqls');
+		// we've checked against the password in dbm->createDatabase
+		if ($username == false) {
+			\Froxlor\UI\Response::standard_error('passwordshouldnotbeusername', '', true);
+		}
 
-			$newdb_params = array(
-				'loginname' => ($this->isAdmin() ? $customer['loginname'] : $this->getUserDetail('loginname')),
-				'mysql_lastaccountnumber' => ($this->isAdmin() ? $customer['mysql_lastaccountnumber'] : $this->getUserDetail('mysql_lastaccountnumber'))
-			);
-			// create database, user, set permissions, etc.pp.
-			$dbm = new \Froxlor\Database\DbManager($this->logger());
-			$username = $dbm->createDatabase($newdb_params['loginname'], $password, $newdb_params['mysql_lastaccountnumber']);
-
-			// we've checked against the password in dbm->createDatabase
-			if ($username == false) {
-				\Froxlor\UI\Response::standard_error('passwordshouldnotbeusername', '', true);
-			}
-
-			// add database info to froxlor
-			$stmt = Database::prepare("
+		// add database info to froxlor
+		$stmt = Database::prepare("
 				INSERT INTO `" . TABLE_PANEL_DATABASES . "`
 				SET
 				`customerid` = :customerid,
@@ -96,79 +95,77 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 				`description` = :description,
 				`dbserver` = :dbserver
 			");
-			$params = array(
-				"customerid" => $customer['customerid'],
-				"databasename" => $username,
-				"description" => $databasedescription,
-				"dbserver" => $dbserver
-			);
-			Database::pexecute($stmt, $params, true, true);
-			$databaseid = Database::lastInsertId();
-			$params['id'] = $databaseid;
+		$params = array(
+			"customerid" => $customer['customerid'],
+			"databasename" => $username,
+			"description" => $databasedescription,
+			"dbserver" => $dbserver
+		);
+		Database::pexecute($stmt, $params, true, true);
+		$databaseid = Database::lastInsertId();
+		$params['id'] = $databaseid;
 
-			// update customer usage
-			Customers::increaseUsage($customer['customerid'], 'mysqls_used');
-			Customers::increaseUsage($customer['customerid'], 'mysql_lastaccountnumber');
+		// update customer usage
+		Customers::increaseUsage($customer['customerid'], 'mysqls_used');
+		Customers::increaseUsage($customer['customerid'], 'mysql_lastaccountnumber');
 
-			// send info-mail?
-			if ($sendinfomail == 1) {
-				$pma = $this->lng['admin']['notgiven'];
-				if (Settings::Get('panel.phpmyadmin_url') != '') {
-					$pma = Settings::Get('panel.phpmyadmin_url');
-				}
-
-				Database::needRoot(true, $dbserver);
-				Database::needSqlData();
-				$sql_root = Database::getSqlData();
-				Database::needRoot(false);
-				$userinfo = $customer;
-
-				$replace_arr = array(
-					'SALUTATION' => \Froxlor\User::getCorrectUserSalutation($userinfo),
-					'CUST_NAME' => \Froxlor\User::getCorrectUserSalutation($userinfo), // < keep this for compatibility
-					'DB_NAME' => $username,
-					'DB_PASS' => $password,
-					'DB_DESC' => $databasedescription,
-					'DB_SRV' => $sql_root['host'],
-					'PMA_URI' => $pma
-				);
-
-				// get template for mail subject
-				$mail_subject = $this->getMailTemplate($userinfo, 'mails', 'new_database_by_customer_subject', $replace_arr, $this->lng['mails']['new_database_by_customer']['subject']);
-				// get template for mail body
-				$mail_body = $this->getMailTemplate($userinfo, 'mails', 'new_database_by_customer_mailbody', $replace_arr, $this->lng['mails']['new_database_by_customer']['mailbody']);
-
-				$_mailerror = false;
-				$mailerr_msg = "";
-				try {
-					$this->mailer()->Subject = $mail_subject;
-					$this->mailer()->AltBody = $mail_body;
-					$this->mailer()->msgHTML(str_replace("\n", "<br />", $mail_body));
-					$this->mailer()->addAddress($userinfo['email'], \Froxlor\User::getCorrectUserSalutation($userinfo));
-					$this->mailer()->send();
-				} catch (\PHPMailer\PHPMailer\Exception $e) {
-					$mailerr_msg = $e->errorMessage();
-					$_mailerror = true;
-				} catch (\Exception $e) {
-					$mailerr_msg = $e->getMessage();
-					$_mailerror = true;
-				}
-
-				if ($_mailerror) {
-					$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_ERR, "[API] Error sending mail: " . $mailerr_msg);
-					\Froxlor\UI\Response::standard_error('errorsendingmail', $userinfo['email'], true);
-				}
-
-				$this->mailer()->clearAddresses();
+		// send info-mail?
+		if ($sendinfomail == 1) {
+			$pma = $this->lng['admin']['notgiven'];
+			if (Settings::Get('panel.phpmyadmin_url') != '') {
+				$pma = Settings::Get('panel.phpmyadmin_url');
 			}
-			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_WARNING, "[API] added mysql-database '" . $username . "'");
 
-			$result = $this->apiCall('Mysqls.get', array(
-				'dbname' => $username
-			));
-			return $this->response(200, "successfull", $result);
+			Database::needRoot(true, $dbserver);
+			Database::needSqlData();
+			$sql_root = Database::getSqlData();
+			Database::needRoot(false);
+			$userinfo = $customer;
+
+			$replace_arr = array(
+				'SALUTATION' => \Froxlor\User::getCorrectUserSalutation($userinfo),
+				'CUST_NAME' => \Froxlor\User::getCorrectUserSalutation($userinfo), // < keep this for compatibility
+				'DB_NAME' => $username,
+				'DB_PASS' => $password,
+				'DB_DESC' => $databasedescription,
+				'DB_SRV' => $sql_root['host'],
+				'PMA_URI' => $pma
+			);
+
+			// get template for mail subject
+			$mail_subject = $this->getMailTemplate($userinfo, 'mails', 'new_database_by_customer_subject', $replace_arr, $this->lng['mails']['new_database_by_customer']['subject']);
+			// get template for mail body
+			$mail_body = $this->getMailTemplate($userinfo, 'mails', 'new_database_by_customer_mailbody', $replace_arr, $this->lng['mails']['new_database_by_customer']['mailbody']);
+
+			$_mailerror = false;
+			$mailerr_msg = "";
+			try {
+				$this->mailer()->Subject = $mail_subject;
+				$this->mailer()->AltBody = $mail_body;
+				$this->mailer()->msgHTML(str_replace("\n", "<br />", $mail_body));
+				$this->mailer()->addAddress($userinfo['email'], \Froxlor\User::getCorrectUserSalutation($userinfo));
+				$this->mailer()->send();
+			} catch (\PHPMailer\PHPMailer\Exception $e) {
+				$mailerr_msg = $e->errorMessage();
+				$_mailerror = true;
+			} catch (\Exception $e) {
+				$mailerr_msg = $e->getMessage();
+				$_mailerror = true;
+			}
+
+			if ($_mailerror) {
+				$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_ERR, "[API] Error sending mail: " . $mailerr_msg);
+				\Froxlor\UI\Response::standard_error('errorsendingmail', $userinfo['email'], true);
+			}
+
+			$this->mailer()->clearAddresses();
 		}
-		throw new \Exception("No more resources available", 406);
+		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_WARNING, "[API] added mysql-database '" . $username . "'");
+
+		$result = $this->apiCall('Mysqls.get', array(
+			'dbname' => $username
+		));
+		return $this->response(200, "successfull", $result);
 	}
 
 	/**
@@ -276,6 +273,10 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	optional, update password for the database
 	 * @param string $description
 	 *        	optional, description for database
+	 * @param int $customerid
+	 *        	optional, admin-only, the customer-id
+	 * @param string $loginname
+	 *        	optional, admin-only, the loginname
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
@@ -287,6 +288,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		$dn_optional = ($id <= 0 ? false : true);
 		$dbname = $this->getParam('dbname', $dn_optional, '');
 		$dbserver = $this->getParam('mysql_server', true, - 1);
+		$customer = $this->getCustomerData();
 
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'mysql')) {
 			throw new \Exception("You cannot access this resource", 405);
@@ -306,9 +308,6 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		// validation
 		$password = \Froxlor\Validate\Validate::validate($password, 'password', '', '', array(), true);
 		$databasedescription = \Froxlor\Validate\Validate::validate(trim($databasedescription), 'description', '', '', array(), true);
-
-		// get needed customer info to reduce the mysql-usage-counter by one
-		$customer = $this->getCustomerData();
 
 		if ($password != '') {
 			// validate password
@@ -359,6 +358,14 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	optional, admin-only, select dbs of a specific customer by id
 	 * @param string $loginname
 	 *        	optional, admin-only, select dbs of a specific customer by loginname
+	 * @param array $sql_search
+	 *        	optional array with index = fieldname, and value = array with 'op' => operator (one of <, > or =), LIKE is used if left empty and 'value' => searchvalue
+	 * @param int $sql_limit
+	 *        	optional specify number of results to be returned
+	 * @param int $sql_offset
+	 *        	optional specify offset for resultset
+	 * @param array $sql_orderby
+	 *        	optional array with index = fieldname and value = ASC|DESC to order the resultset by one or more fields
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
@@ -369,10 +376,10 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		$result = array();
 		$dbserver = $this->getParam('mysql_server', true, - 1);
 		$customer_ids = $this->getAllowedCustomerIds('mysql');
+		$query_fields = array();
 		$result_stmt = Database::prepare("
 			SELECT * FROM `" . TABLE_PANEL_DATABASES . "`
-			WHERE `customerid`= :customerid AND `dbserver` = :dbserver
-		");
+			WHERE `customerid`= :customerid AND `dbserver` = :dbserver" . $this->getSearchWhere($query_fields, true) . $this->getOrderBy() . $this->getLimit());
 		if ($dbserver < 0) {
 			// use all dbservers
 			$dbservers_stmt = Database::query("SELECT DISTINCT `dbserver` FROM `" . TABLE_PANEL_DATABASES . "`");
@@ -388,10 +395,10 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 
 		foreach ($customer_ids as $customer_id) {
 			foreach ($dbservers as $_dbserver) {
-				Database::pexecute($result_stmt, array(
+				Database::pexecute($result_stmt, array_merge(array(
 					'customerid' => $customer_id,
 					'dbserver' => $_dbserver['dbserver']
-				), true, true);
+				), $query_fields), true, true);
 				// Begin root-session
 				Database::needRoot(true, $_dbserver['dbserver']);
 				while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
@@ -417,6 +424,31 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	}
 
 	/**
+	 * returns the total number of accessable databases
+	 *
+	 * @param int $customerid
+	 *        	optional, admin-only, select dbs of a specific customer by id
+	 * @param string $loginname
+	 *        	optional, admin-only, select dbs of a specific customer by loginname
+	 *        	
+	 * @access admin, customer
+	 * @throws \Exception
+	 * @return string json-encoded array
+	 */
+	public function listingCount()
+	{
+		$customer_ids = $this->getAllowedCustomerIds('mysql');
+		$result_stmt = Database::prepare("
+			SELECT COUNT(*) as num_dbs FROM `" . TABLE_PANEL_DATABASES . "`
+			WHERE `customerid` IN (" . implode(", ", $customer_ids) . ")
+		");
+		$result = Database::pexecute_first($result_stmt, null, true, true);
+		if ($result) {
+			return $this->response(200, "successfull", $result['num_dbs']);
+		}
+	}
+
+	/**
 	 * delete a mysql database by either id or dbname
 	 *
 	 * @param int $id
@@ -425,6 +457,10 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	optional, the databasename
 	 * @param int $mysql_server
 	 *        	optional, specify database-server, default is none
+	 * @param int $customerid
+	 *        	optional, admin-only, the customer-id
+	 * @param string $loginname
+	 *        	optional, admin-only, the loginname
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
@@ -436,6 +472,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		$dn_optional = ($id <= 0 ? false : true);
 		$dbname = $this->getParam('dbname', $dn_optional, '');
 		$dbserver = $this->getParam('mysql_server', true, - 1);
+		$customer = $this->getCustomerData();
 
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'mysql')) {
 			throw new \Exception("You cannot access this resource", 405);
@@ -462,7 +499,6 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		), true, true);
 
 		// get needed customer info to reduce the mysql-usage-counter by one
-		$customer = $this->getCustomerData();
 		$mysql_used = $customer['mysqls_used'];
 
 		// reduce mysql-usage-counter

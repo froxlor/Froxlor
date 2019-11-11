@@ -285,7 +285,15 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	 *        	optional, admin-only, select directory-protections of a specific customer by id
 	 * @param string $loginname
 	 *        	optional, admin-only, select directory-protections of a specific customer by loginname
-	 *        	
+	 * @param array $sql_search
+	 *        	optional array with index = fieldname, and value = array with 'op' => operator (one of <, > or =), LIKE is used if left empty and 'value' => searchvalue
+	 * @param int $sql_limit
+	 *        	optional specify number of results to be returned
+	 * @param int $sql_offset
+	 *        	optional specify offset for resultset
+	 * @param array $sql_orderby
+	 *        	optional array with index = fieldname and value = ASC|DESC to order the resultset by one or more fields
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array count|list
@@ -298,11 +306,12 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		$customer_ids = $this->getAllowedCustomerIds('extras.pathoptions');
 
 		$result = array();
+		$query_fields = array();
 		$result_stmt = Database::prepare("
 			SELECT * FROM `" . TABLE_PANEL_HTACCESS . "`
-			WHERE `customerid` IN (" . implode(', ', $customer_ids) . ")
-		");
-		Database::pexecute($result_stmt, null, true, true);
+			WHERE `customerid` IN (" . implode(', ', $customer_ids) . ")" . $this->getSearchWhere($query_fields, true) . $this->getOrderBy() . $this->getLimit()
+		);
+		Database::pexecute($result_stmt, $query_fields, true, true);
 		while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$result[] = $row;
 		}
@@ -311,6 +320,36 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			'count' => count($result),
 			'list' => $result
 		));
+	}
+
+	/**
+	 * returns the total number of accessable directory options
+	 *
+	 * @param int $customerid
+	 *        	optional, admin-only, select directory-protections of a specific customer by id
+	 * @param string $loginname
+	 *        	optional, admin-only, select directory-protections of a specific customer by loginname
+	 *
+	 * @access admin, customer
+	 * @throws \Exception
+	 * @return string json-encoded array count|list
+	 */
+	public function listingCount()
+	{
+		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'extras')) {
+			throw new \Exception("You cannot access this resource", 405);
+		}
+		$customer_ids = $this->getAllowedCustomerIds('extras.pathoptions');
+		
+		$result = array();
+		$result_stmt = Database::prepare("
+			SELECT COUNT(*) as num_htaccess FROM `" . TABLE_PANEL_HTACCESS . "`
+			WHERE `customerid` IN (" . implode(', ', $customer_ids) . ")
+		");
+		$result = Database::pexecute_first($result_stmt, null, true, true);
+		if ($result) {
+			return $this->response(200, "successfull", $result['num_htaccess']);
+		}
 	}
 
 	/**
@@ -373,7 +412,7 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		Database::pexecute($stmt, array(
 			"customerid" => $customer_data['customerid'],
 			"id" => $id
-		));
+		), true, true);
 		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] deleted directory-option for '" . str_replace($customer_data['documentroot'], '/', $result['path']) . "'");
 		\Froxlor\System\Cronjob::inserttask('1');
 		return $this->response(200, "successfull", $result);
