@@ -68,7 +68,8 @@ if (count($all_certs) == 0) {
 	$arrowcode = array(
 		'd.domain' => ''
 	);
-	$searchcode = "";
+	// keep searching code if something was searched and no results were returned
+	$searchcode = $paging->getHtmlSearchCode($lng);
 	$pagingcode = "";
 	eval("\$certificates.=\"" . \Froxlor\UI\Template::getTemplate("ssl_certificates/certs_error", true) . "\";");
 } else {
