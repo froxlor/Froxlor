@@ -69,7 +69,6 @@ class SysLog extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			WHERE `user` = :loginname AND `action` <> 99 " . $this->getSearchWhere($query_fields, true) . $this->getOrderBy() . $this->getLimit());
 			$query_fields['loginname'] = $this->getUserDetail('loginname');
 		}
-		var_dump($result_stmt->queryString);
 		Database::pexecute($result_stmt, $query_fields, true, true);
 		while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$result[] = $row;
