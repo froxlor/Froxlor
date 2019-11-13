@@ -454,6 +454,26 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.3')) {
 }
 
 if (\Froxlor\Froxlor::isFroxlorVersion('0.10.4')) {
-        showUpdateStep("Updating from 0.10.4 to 0.10.5", false);
-        \Froxlor\Froxlor::updateToVersion('0.10.5');
+	showUpdateStep("Updating from 0.10.4 to 0.10.5", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.5');
+}
+
+if (\Froxlor\Froxlor::isDatabaseVersion('201910200')) {
+
+	showUpdateStep("Optimizing customer and admin table for size");
+	// ALTER TABLE `panel_customers` CHANGE `name` `name` VARCHAR(250) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';
+	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` CHANGE `zipcode` `zipcode` varchar(25) NOT NULL default '';");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` CHANGE `phone` `phone` varchar(50) NOT NULL default '';");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` CHANGE `fax` `fax` varchar(50) NOT NULL default '';");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` CHANGE `def_language` `def_language` varchar(100) NOT NULL default '';");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` CHANGE `theme` `theme` varchar(50) NOT NULL default 'Sparkle';");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` CHANGE `data_2fa` `data_2fa` varchar(25) NOT NULL default '';");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` CHANGE `def_language` `def_language` varchar(100) NOT NULL default '';");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` DROP `leaccount`;");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_ADMINS . "` CHANGE `def_language` `def_language` varchar(100) NOT NULL default '';");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_ADMINS . "` CHANGE `theme` `theme` varchar(50) NOT NULL default 'Sparkle';");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_ADMINS . "` CHANGE `data_2fa` `data_2fa` varchar(25) NOT NULL default '';");
+	lastStepStatus(0);
+
+	\Froxlor\Froxlor::updateToDbVersion('201911130');
 }

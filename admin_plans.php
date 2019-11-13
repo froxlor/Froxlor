@@ -189,9 +189,7 @@ if ($page == '' || $page == 'overview') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 
 				try {
-					HostingPlans::getLocal($userinfo, array(
-						'id' => $id
-					))->update();
+					HostingPlans::getLocal($userinfo, $_POST)->update();
 				} catch (Exception $e) {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
