@@ -435,11 +435,7 @@ class ConfigDaemon
 				}
 				return '';
 			} elseif (preg_match('/^const\.(.*)$/', $matches[1], $match)) {
-				if (defined($match[1])) {
-					return constant($match[1]);
-				} else {
-					return '';
-				}
+				return $this->returnDynamic($match[1]);
 			} elseif (preg_match('/^sql\.(.*)$/', $matches[1], $match)) {
 				if (is_null($this->sqldata_cache)) {
 					// read in sql-data (if exists)
@@ -453,6 +449,14 @@ class ConfigDaemon
 			}
 		}, $content);
 		return $content;
+	}
+
+	private function returnDynamic($key = null)
+	{
+		$dynamics = [
+			'install_dir' => \Froxlor\Froxlor::getInstallDir()
+		];
+		return $dynamics[$key] ?? '';
 	}
 
 	/**

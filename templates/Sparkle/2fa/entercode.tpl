@@ -9,7 +9,7 @@ $header
 					<legend>Froxlor&nbsp;-&nbsp;{$lng['login']['2fa']}</legend>
 					<p>
 						<label for="2fa_code">{$lng['login']['2facode']}:</label>&nbsp;
-						<input type="text" name="2fa_code" id="2fa_code" value="" required/>
+						<input type="text" name="2fa_code" id="2fa_code" value="" autofocus required/>
 					</p>
 					<p class="submit">
 						<input type="hidden" name="action" value="2fa_verify" />

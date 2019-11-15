@@ -1732,7 +1732,7 @@ aliases:     files
 					</commands>
 					<!-- instead of just restarting apache, we let the cronjob do all the 
 						dirty work -->
-					<command><![CDATA[php {{const.\Froxlor\Froxlor::getInstallDir()}}/scripts/froxlor_master_cronjob.php --force]]></command>
+					<command><![CDATA[php {{const.install_dir}}scripts/froxlor_master_cronjob.php --force]]></command>
 				</daemon>
 				<!-- PHP-FPM -->
 				<daemon name="php-fpm"
@@ -1776,7 +1776,7 @@ aliases:     files
 					</commands>
 					<!-- instead of just restarting apache, we let the cronjob do all the 
 						dirty work -->
-					<command><![CDATA[php {{const.\Froxlor\Froxlor::getInstallDir()}}/scripts/froxlor_master_cronjob.php --force]]></command>
+					<command><![CDATA[php {{const.install_dir}}scripts/froxlor_master_cronjob.php --force]]></command>
 				</daemon>
 			</service>
 		</services>
