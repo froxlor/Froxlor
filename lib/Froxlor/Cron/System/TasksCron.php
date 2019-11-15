@@ -418,17 +418,18 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 			while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 				// We do not want to set a quota for root by accident
 				if ($row['guid'] != 0) {
+					$used_quota = isset($usedquota[$row['guid']]) ? $usedquota[$row['guid']]['block']['hard'] : 0;
 					// The user has no quota in Froxlor, but on the filesystem
-					if (($row['diskspace'] == 0 || $row['diskspace'] == - 1024) && $usedquota[$row['guid']]['block']['hard'] != 0) {
+					if (($row['diskspace'] == 0 || $row['diskspace'] == - 1024) && $used_quota != 0) {
 						\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, "Disabling quota for " . $row['loginname']);
 						if (\Froxlor\FileDir::isFreeBSD()) {
 							\Froxlor\FileDir::safe_exec(Settings::Get('system.diskquota_quotatool_path') . " -e " . escapeshellarg(Settings::Get('system.diskquota_customer_partition')) . ":0:0 " . $row['guid']);
 						} else {
 							\Froxlor\FileDir::safe_exec(Settings::Get('system.diskquota_quotatool_path') . " -u " . $row['guid'] . " -bl 0 -q 0 " . escapeshellarg(Settings::Get('system.diskquota_customer_partition')));
 						}
-					} elseif ($row['diskspace'] != $usedquota[$row['guid']]['block']['hard'] && $row['diskspace'] != - 1024) {
+					} elseif ($row['diskspace'] != $used_quota && $row['diskspace'] != - 1024) {
 						// The user quota in Froxlor is different than on the filesystem
-						\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, "Setting quota for " . $row['loginname'] . " from " . $usedquota[$row['guid']]['block']['hard'] . " to " . $row['diskspace']);
+						\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, "Setting quota for " . $row['loginname'] . " from " . $used_quota . " to " . $row['diskspace']);
 						if (\Froxlor\FileDir::isFreeBSD()) {
 							\Froxlor\FileDir::safe_exec(Settings::Get('system.diskquota_quotatool_path') . " -e " . escapeshellarg(Settings::Get('system.diskquota_customer_partition')) . ":" . $row['diskspace'] . ":" . $row['diskspace'] . " " . $row['guid']);
 						} else {
