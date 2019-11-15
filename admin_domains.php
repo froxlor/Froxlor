@@ -709,18 +709,8 @@ function formatDomainEntry(&$row, &$idna_convert)
 	$row['domain'] = $idna_convert->decode($row['domain']);
 	$row['aliasdomain'] = $idna_convert->decode($row['aliasdomain']);
 
-	$resultips_stmt = Database::prepare("
-		SELECT `ips`.* FROM `" . TABLE_DOMAINTOIP . "` AS `dti`, `" . TABLE_PANEL_IPSANDPORTS . "` AS `ips`
-		WHERE `dti`.`id_ipandports` = `ips`.`id` AND `dti`.`id_domain` = :domainid
-	");
-
-	Database::pexecute($resultips_stmt, array(
-		'domainid' => $row['id']
-	));
-
 	$row['ipandport'] = '';
-	while ($rowip = $resultips_stmt->fetch(PDO::FETCH_ASSOC)) {
-
+	foreach ($row['ipsandports'] as $rowip) {
 		if (filter_var($rowip['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
 			$row['ipandport'] .= '[' . $rowip['ip'] . ']:' . $rowip['port'] . "\n";
 		} else {
