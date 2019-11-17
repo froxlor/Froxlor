@@ -247,7 +247,7 @@ class DbManagerMySQL
 			if ($user_only == false) {
 				if (! isset($allsqlusers[$row['User']]) || ! is_array($allsqlusers[$row['User']])) {
 					$allsqlusers[$row['User']] = array(
-						'password' => $row['Password'],
+						'password' => $row['Password'] ?? $row['authentication_string'],
 						'hosts' => array()
 					);
 				}
