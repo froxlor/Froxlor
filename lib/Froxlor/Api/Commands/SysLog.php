@@ -203,7 +203,7 @@ class SysLog extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 				];
 			}
 			$params['trunc'] = $truncatedate;
-			Database::execute($result_stmt, $params, true, true);
+			Database::pexecute($result_stmt, $params, true, true);
 			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_WARNING, "[API] truncated the froxlor syslog");
 			return $this->response(200, "successfull", true);
 		}
