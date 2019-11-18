@@ -81,9 +81,15 @@ class DbManagerMySQL
 			// mysql8 compatibility
 			if (version_compare(Database::getAttribute(\PDO::ATTR_SERVER_VERSION), '8.0.11', '>=')) {
 				// create user
-				$stmt = Database::prepare("
-					CREATE USER '" . $username . "'@'" . $access_host . "' IDENTIFIED BY :password
-				");
+				if ($p_encrypted) {
+					$stmt = Database::prepare("
+						CREATE USER '" . $username . "'@'" . $access_host . "' IDENTIFIED WITH mysql_native_password AS :password
+					");
+				} else {
+					$stmt = Database::prepare("
+						CREATE USER '" . $username . "'@'" . $access_host . "' IDENTIFIED BY :password
+					");
+				}
 				Database::pexecute($stmt, array(
 					"password" => $password
 				));
@@ -97,9 +103,15 @@ class DbManagerMySQL
 				));
 			} else {
 				// grant privileges
-				$stmt = Database::prepare("
-					GRANT ALL PRIVILEGES ON `" . $username . "`.* TO :username@:host IDENTIFIED BY :password
-				");
+				if ($p_encrypted) {
+					$stmt = Database::prepare("
+						GRANT ALL PRIVILEGES ON `" . $username . "`.* TO :username@:host IDENTIFIED WITH mysql_native_password AS :password
+					");
+				} else {
+					$stmt = Database::prepare("
+						GRANT ALL PRIVILEGES ON `" . $username . "`.* TO :username@:host IDENTIFIED BY :password
+					");
+				}
 				Database::pexecute($stmt, array(
 					"username" => $username,
 					"host" => $access_host,
@@ -115,7 +127,11 @@ class DbManagerMySQL
 					$stmt = Database::prepare("SET PASSWORD FOR :username@:host = PASSWORD(:password)");
 				}
 			} else {
-				$stmt = Database::prepare("ALTER USER :username@:host IDENTIFIED BY :password");
+				if ($p_encrypted) {
+					$stmt = Database::prepare("ALTER USER :username@:host IDENTIFIED WITH mysql_native_password AS :password");
+				} else {
+					$stmt = Database::prepare("ALTER USER :username@:host IDENTIFIED BY :password");
+				}
 			}
 			Database::pexecute($stmt, array(
 				"username" => $username,

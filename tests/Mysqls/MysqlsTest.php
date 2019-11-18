@@ -4,6 +4,7 @@ use PHPUnit\Framework\TestCase;
 use Froxlor\Api\Commands\Admins;
 use Froxlor\Api\Commands\Customers;
 use Froxlor\Api\Commands\Mysqls;
+use Froxlor\Database\Database;
 
 /**
  *
@@ -180,6 +181,19 @@ class MysqlsTest extends TestCase
 		$users = $dbm->getManager()->getAllSqlUsers(false);
 		foreach ($users as $user => $data) {
 			$this->assertNotEmpty($data['password'], 'No password for user "' . $user . '"');
+		}
+
+		// grant privileges to another host
+		$testdata = $users['froxlor010'];
+		$dbm->getManager()->grantPrivilegesTo('froxlor010', $testdata['password'], '10.0.0.10', true);
+
+		// select all entries from mysql.user for froxlor010 to compare password-hashes
+		$sel_stmt = Database::prepare("SELECT * FROM mysql.user WHERE `User` = :usr");
+		Database::pexecute($sel_stmt, ['usr' => 'froxlor010']);
+		$results = $sel_stmt->fetchAll(\PDO::FETCH_ASSOC);
+		foreach ($results as $user) {
+			$passwd = $user['Password'] ?? $user['authentication_string'];
+			$this->assertEquals($testdata['password'], $passwd);
 		}
 	}
 }
