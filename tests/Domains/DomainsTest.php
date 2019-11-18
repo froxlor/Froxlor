@@ -5,6 +5,7 @@ use Froxlor\Settings;
 use Froxlor\Api\Commands\Admins;
 use Froxlor\Api\Commands\Customers;
 use Froxlor\Api\Commands\Domains;
+use Froxlor\Database\Database;
 
 /**
  *
@@ -50,10 +51,18 @@ class DomainsTest extends TestCase
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(1, $result['count']);
 		$this->assertEquals('test.local', $result['list'][0]['domain']);
+		$this->assertEquals(2, count($result['list'][0]['ipsandports']));
+		$this->assertEquals("82.149.225.56", $result['list'][0]['ipsandports'][1]['ip']);
 
 		$json_result = Domains::getLocal($admin_userdata)->listingCount();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(1, $result);
+
+		$json_result = Domains::getLocal($admin_userdata, [
+			'with_ips' => false
+		])->listing();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEmpty($result['list'][0]['ipsandports']);
 	}
 
 	/**
@@ -178,6 +187,61 @@ class DomainsTest extends TestCase
 
 	/**
 	 *
+	 * @depends testAdminDomainsAdd
+	 */
+	public function testAdminDomainsUpdateIssue756()
+	{
+		global $admin_userdata;
+		$data = [
+			'domainname' => 'test.local',
+			'ssl_redirect' => 1
+		];
+		$json_result = Domains::getLocal($admin_userdata, $data)->update();
+		$result = json_decode($json_result, true)['data'];
+
+		// get ssl ip/port for domain which should still exist
+		$sel_stmt = Database::prepare("
+			SELECT COUNT(*) as numips
+			FROM `" . TABLE_DOMAINTOIP . "` di
+			LEFT JOIN `" . TABLE_PANEL_IPSANDPORTS . "` i ON i.id = di.id_ipandports
+			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` d ON d.id = di.id_domain
+			WHERE d.id = :did AND i.ssl = 1
+		");
+		$result_ips = Database::pexecute_first($sel_stmt, [
+			'did' => $result['id']
+		], true, true);
+		$this->assertEquals(1, $result_ips['numips']);
+
+		// test clearing
+		$data = [
+			'domainname' => 'test.local',
+			'ssl_ipandport' => array()
+		];
+		$json_result = Domains::getLocal($admin_userdata, $data)->update();
+		$result = json_decode($json_result, true)['data'];
+
+		// get ssl ip/port for domain which should still exist
+		$result_ips = Database::pexecute_first($sel_stmt, [
+			'did' => $result['id']
+		], true, true);
+		$this->assertEquals(1, $result_ips['numips']);
+
+		$data = [
+			'domainname' => 'test.local',
+			'remove_ssl_ipandport' => 1
+		];
+		$json_result = Domains::getLocal($admin_userdata, $data)->update();
+		$result = json_decode($json_result, true)['data'];
+
+		// get ssl ip/port for domain which should still exist
+		$result_ips = Database::pexecute_first($sel_stmt, [
+			'did' => $result['id']
+		], true, true);
+		$this->assertEquals(0, $result_ips['numips']);
+	}
+
+	/**
+	 *
 	 * @depends testAdminDomainsUpdate
 	 */
 	public function testAdminDomainsMoveButUnknownCustomer()
@@ -251,11 +315,11 @@ class DomainsTest extends TestCase
 			'id' => 1
 		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
-		
+
 		$this->expectExceptionCode(403);
 		$this->expectExceptionMessage("Not allowed to execute given command.");
 		$json_result = Domains::getLocal($customer_userdata)->listing();
-		
+
 		$this->expectExceptionCode(403);
 		$this->expectExceptionMessage("Not allowed to execute given command.");
 		$json_result = Domains::getLocal($customer_userdata)->listingCount();

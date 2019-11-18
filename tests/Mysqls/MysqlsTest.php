@@ -12,6 +12,8 @@ use Froxlor\Api\Commands\Mysqls;
  * @covers \Froxlor\Api\Commands\Mysqls
  * @covers \Froxlor\Api\Commands\Customers
  * @covers \Froxlor\Api\Commands\Admins
+ * @covers \Froxlor\Database\DbManager
+ * @covers \Froxlor\Database\Manager\DbManagerMySQL
  */
 class MysqlsTest extends TestCase
 {
@@ -36,7 +38,7 @@ class MysqlsTest extends TestCase
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals('testdb', $result['description']);
 		$this->assertEquals(0, $result['dbserver']);
-		
+
 		// test connection
 		try {
 			$test_conn = new \PDO("mysql:host=127.0.0.1", 'test1sql1', $newPwd);
@@ -165,5 +167,19 @@ class MysqlsTest extends TestCase
 		$json_result = Mysqls::getLocal($customer_userdata, $data)->delete();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals('test1sql1', $result['databasename']);
+	}
+
+	/**
+	 *
+	 * @depends testCustomerMysqlsAdd
+	 */
+	public function testGetAllSqlUsers()
+	{
+		\Froxlor\Database\Database::needRoot(true);
+		$dbm = new \Froxlor\Database\DbManager(\Froxlor\FroxlorLogger::getInstanceOf());
+		$users = $dbm->getManager()->getAllSqlUsers(false);
+		foreach ($users as $user => $data) {
+			$this->assertNotEmpty($data['password'], 'No password for user "' . $user . '"');
+		}
 	}
 }
