@@ -82,7 +82,8 @@ class Pagination
 			// add default ordering by given fields
 			if (count($fields) > 0) {
 				$orderfields = array_keys($fields);
-				$this->addOrderBy($orderfields[0]);
+				$this->sortfield = $orderfields[0];
+				$this->addOrderBy($orderfields[0], $this->sortorder);
 			}
 		}
 
@@ -287,8 +288,8 @@ class Pagination
 
 			// check for possible sorting values and keep it
 			$orderstr = '';
-			foreach ($this->fields as $fieldname => $fieldcaption) {
-				$fieldname = htmlspecialchars($fieldname);
+			if (!empty($this->sortfield)) {
+				$fieldname = htmlspecialchars($this->sortfield);
 				$orderstr .= '&amp;sortfield=' . $fieldname . '&amp;sortorder=' . $this->sortorder;
 			}
 
