@@ -64,47 +64,20 @@ if ($page == 'domains' || $page == 'overview') {
 		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
 		$searchcode = $paging->getHtmlSearchCode($lng);
 		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
-		$domain_array = array();
-
-		foreach ($result['list'] as $row) {
-
-			formatDomainEntry($row, $idna_convert);
-
-			if (! isset($domain_array[$row['domain']])) {
-				$domain_array[$row['domain']] = $row;
-			} else {
-				$domain_array[$row['domain']] = array_merge($row, $domain_array[$row['domain']]);
-			}
-
-			if (isset($row['aliasdomainid']) && $row['aliasdomainid'] != null && isset($row['aliasdomain']) && $row['aliasdomain'] != '') {
-				if (! isset($domain_array[$row['aliasdomain']])) {
-					$domain_array[$row['aliasdomain']] = array();
-				}
-				$domain_array[$row['aliasdomain']]['domainaliasid'] = $row['id'];
-				$domain_array[$row['aliasdomain']]['domainalias'] = $row['domain'];
-			}
-		}
-
-		/**
-		 * We need ksort/krsort here to make sure idna-domains are also sorted correctly
-		 */
-		if ($paging->sortfield == 'd.domain' && $paging->sortorder == 'asc') {
-			ksort($domain_array);
-		} elseif ($paging->sortfield == 'd.domain' && $paging->sortorder == 'desc') {
-			krsort($domain_array);
-		}
 
 		$count = 0;
-		foreach ($domain_array as $row) {
-
-			if (isset($row['domain']) && $row['domain'] != '') {
-				$row['customername'] = \Froxlor\User::getCorrectFullUserDetails($row);
-				$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
-				// display a nice list of IP's
+		foreach ($result['list'] as $row) {
+			formatDomainEntry($row, $idna_convert);
+			$row['customername'] = \Froxlor\User::getCorrectFullUserDetails($row);
+			$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
+			// display a nice list of IP's if it's not an alias for another domain
+			if (isset($row['aliasdomainid']) && $row['aliasdomainid'] != null && isset($row['aliasdomain']) && $row['aliasdomain'] != '') {
+				$row['ipandport'] = sprintf($lng['domains']['isaliasdomainof'], $row['aliasdomain']);
+			} else {
 				$row['ipandport'] = str_replace("\n", "<br />", $row['ipandport']);
-				eval("\$domains.=\"" . \Froxlor\UI\Template::getTemplate("domains/domains_domain") . "\";");
-				$count ++;
 			}
+			eval("\$domains.=\"" . \Froxlor\UI\Template::getTemplate("domains/domains_domain") . "\";");
+			$count++;
 		}
 
 		$domainscount = $paging->getEntries();

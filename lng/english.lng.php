@@ -2079,3 +2079,4 @@ $lng['admin']['ownsslvhostsettings'] = 'Own SSL vHost-settings';
 $lng['admin']['ipsandports']['ssl_default_vhostconf_domain'] = 'Default SSL vHost-settings for every domain container';
 $lng['customer']['total_diskspace'] = 'Total diskspace (MiB)';
 $lng['admin']['domain_override_tls'] = 'Override system TLS settings';
+$lng['domains']['isaliasdomainof'] = 'Is aliasdomain for %s';

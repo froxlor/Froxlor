@@ -540,7 +540,7 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			));
 
 			$result_checkdomain_stmt = Database::prepare("
-				SELECT `id_domain` as `id` FROM `" . TABLE_DOMAINTOIP . "` WHERE `id_ipandports` = :id
+				SELECT `id_domain` FROM `" . TABLE_DOMAINTOIP . "` WHERE `id_ipandports` = :id
 			");
 			$result_checkdomain = Database::pexecute_first($result_checkdomain_stmt, array(
 				'id' => $id

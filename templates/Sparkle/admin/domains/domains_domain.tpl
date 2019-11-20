@@ -41,8 +41,5 @@
 				</a>
 			</if>
 		</if>
-		<if isset($row['domainaliasid']) && $row['domainaliasid'] != 0>
-			&nbsp;<a href="{$linker->getLink(array('section' => 'domains', 'page' => $page, 'searchfield' => 'd.aliasdomain', 'searchtext' => $row['id']))}">{$lng['domains']['hasaliasdomains']}</a>
-		</if>
 	</td>
 </tr>
