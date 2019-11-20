@@ -285,15 +285,22 @@ class Pagination
 				$stop = $pages;
 			}
 
-			$pagingcode = '<a href="' . htmlspecialchars($baseurl) . '&amp;pageno=1">&laquo;</a> <a href="' . htmlspecialchars($baseurl) . '&amp;pageno=' . ((intval($this->pageno) - 1) == 0 ? '1' : intval($this->pageno) - 1) . '">&lt;</a>&nbsp;';
+			// check for possible sorting values and keep it
+			$orderstr = '';
+			foreach ($this->fields as $fieldname => $fieldcaption) {
+				$fieldname = htmlspecialchars($fieldname);
+				$orderstr .= '&amp;sortfield=' . $fieldname . '&amp;sortorder=' . $this->sortorder;
+			}
+
+			$pagingcode = '<a href="' . htmlspecialchars($baseurl) . '&amp;pageno=1' . $orderstr . '">&laquo;</a> <a href="' . htmlspecialchars($baseurl) . '&amp;pageno=' . ((intval($this->pageno) - 1) == 0 ? '1' : intval($this->pageno) - 1) . $orderstr . '">&lt;</a>&nbsp;';
 			for ($i = $start; $i <= $stop; $i ++) {
 				if ($i != $this->pageno) {
-					$pagingcode .= ' <a href="' . htmlspecialchars($baseurl) . '&amp;pageno=' . $i . '">' . $i . '</a>&nbsp;';
+					$pagingcode .= ' <a href="' . htmlspecialchars($baseurl) . '&amp;pageno=' . $i . $orderstr . '">' . $i . '</a>&nbsp;';
 				} else {
 					$pagingcode .= ' <strong>' . $i . '</strong>&nbsp;';
 				}
 			}
-			$pagingcode .= ' <a href="' . htmlspecialchars($baseurl) . '&amp;pageno=' . ((intval($this->pageno) + 1) > $pages ? $pages : intval($this->pageno) + 1) . '">&gt;</a> <a href="' . $baseurl . '&amp;pageno=' . $pages . '">&raquo;</a>';
+			$pagingcode .= ' <a href="' . htmlspecialchars($baseurl) . '&amp;pageno=' . ((intval($this->pageno) + 1) > $pages ? $pages : intval($this->pageno) + 1) . $orderstr . '">&gt;</a> <a href="' . $baseurl . '&amp;pageno=' . $pages . $orderstr . '">&raquo;</a>';
 		} else {
 			$pagingcode = '';
 		}

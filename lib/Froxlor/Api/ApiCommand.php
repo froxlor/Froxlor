@@ -331,15 +331,21 @@ abstract class ApiCommand extends ApiParameter
 	 *
 	 * @param array $sql_orderby
 	 *        	optional array with index = fieldname and value = ASC|DESC
+	 * @param boolean $append
+	 *        	optional append to ORDER BY clause rather then create new one, default false [internal]
 	 *
 	 * @return string
 	 */
-	protected function getOrderBy()
+	protected function getOrderBy($append = false)
 	{
 		$orderby = $this->getParam('sql_orderby', true, array());
 		$order = "";
 		if (! empty($orderby)) {
-			$order .= " ORDER BY ";
+			if ($append) {
+				$order .= ", ";
+			} else {
+				$order .= " ORDER BY ";
+			}
 			foreach ($orderby as $field => $by) {
 				$sortfield = explode('.', $field);
 				foreach ($sortfield as $id => $sfield) {

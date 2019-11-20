@@ -71,19 +71,24 @@ if ($page == 'overview') {
 			if ($row['parentdomainid'] == '0' && $row['caneditdomain'] == '1') {
 				$parentdomains_count ++;
 			}
-			$domain_array[$row['parentdomainid']][] = $row;
+			$domain_array[$row['parentdomainname']][] = $row;
 		}
 
-		if (isset($domain_array[0])) {
-			foreach ($domain_array[0] as $pdomain) {
-				// PARENTDOMAIN
-				$row = \Froxlor\PhpHelper::htmlentitiesArray($pdomain);
-				if (Settings::Get('system.awstats_enabled') == '1') {
-					$statsapp = 'awstats';
-				} else {
-					$statsapp = 'webalizer';
-				}
-				eval("\$domains.=\"" . \Froxlor\UI\Template::getTemplate("domains/domains_delimiter") . "\";");
+		foreach ($domain_array as $parentdomain => $sdomains) {
+			// PARENTDOMAIN
+			if (Settings::Get('system.awstats_enabled') == '1') {
+				$statsapp = 'awstats';
+			} else {
+				$statsapp = 'webalizer';
+			}
+			$row = [
+				'domain' => $idna_convert->decode($parentdomain)
+			];
+			eval("\$domains.=\"" . \Froxlor\UI\Template::getTemplate("domains/domains_delimiter") . "\";");
+
+			foreach ($sdomains as $domain) {
+				$row = \Froxlor\PhpHelper::htmlentitiesArray($domain);
+
 				// show docroot nicely
 				if (strpos($row['documentroot'], $userinfo['documentroot']) === 0) {
 					$row['documentroot'] = \Froxlor\FileDir::makeCorrectDir(str_replace($userinfo['documentroot'], "/", $row['documentroot']));
@@ -94,23 +99,6 @@ if ($page == 'overview') {
 					$show_ssledit = true;
 				}
 				eval("\$domains.=\"" . \Froxlor\UI\Template::getTemplate("domains/domains_domain") . "\";");
-
-				// every domain below the parentdomain
-				if (isset($domain_array[$pdomain['id']])) {
-					$mydomains = $domain_array[$pdomain['id']];
-					foreach ($mydomains as $row) {
-						// show docroot nicely
-						if (strpos($row['documentroot'], $userinfo['documentroot']) === 0) {
-							$row['documentroot'] = \Froxlor\FileDir::makeCorrectDir(str_replace($userinfo['documentroot'], "/", $row['documentroot']));
-						}
-						// get ssl-ips if activated
-						$show_ssledit = false;
-						if (Settings::Get('system.use_ssl') == '1' && \Froxlor\Domain\Domain::domainHasSslIpPort($row['id']) && $row['caneditdomain'] == '1' && $row['letsencrypt'] == 0) {
-							$show_ssledit = true;
-						}
-						eval("\$domains.=\"" . \Froxlor\UI\Template::getTemplate("domains/domains_domain") . "\";");
-					}
-				}
 			}
 		}
 

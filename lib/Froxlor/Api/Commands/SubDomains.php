@@ -767,13 +767,14 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 
 		// prepare select statement
 		$domains_stmt = Database::prepare("
-			SELECT " . implode(",", $select_fields) . ", `ad`.`id` AS `aliasdomainid`, `ad`.`domain` AS `aliasdomain`, `da`.`id` AS `domainaliasid`, `da`.`domain` AS `domainalias`
+			SELECT " . implode(",", $select_fields) . ", IF(`d`.`parentdomainid` > 0, `pd`.`domain`, `d`.`domain`) AS `parentdomainname`, `ad`.`id` AS `aliasdomainid`, `ad`.`domain` AS `aliasdomain`, `da`.`id` AS `domainaliasid`, `da`.`domain` AS `domainalias`
 			FROM `" . TABLE_PANEL_DOMAINS . "` `d`
 			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `ad` ON `d`.`aliasdomain`=`ad`.`id`
 			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `da` ON `da`.`aliasdomain`=`d`.`id`
+			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `pd` ON `pd`.`id`=`d`.`parentdomainid`
 			WHERE `d`.`customerid` IN (" . implode(', ', $customer_ids) . ")
 			AND `d`.`email_only` = '0'
-			AND `d`.`id` NOT IN (" . implode(', ', $customer_stdsubs) . ")" . $this->getSearchWhere($query_fields, true) . $this->getOrderBy() . $this->getLimit());
+			AND `d`.`id` NOT IN (" . implode(', ', $customer_stdsubs) . ")" . $this->getSearchWhere($query_fields, true) . " ORDER BY `parentdomainname` " . $this->getOrderBy(true) . $this->getLimit());
 
 		$result = array();
 		Database::pexecute($domains_stmt, $query_fields, true, true);
