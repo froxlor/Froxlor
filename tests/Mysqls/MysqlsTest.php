@@ -183,13 +183,21 @@ class MysqlsTest extends TestCase
 			$this->assertNotEmpty($data['password'], 'No password for user "' . $user . '"');
 		}
 
+		if (TRAVIS_CI == 0) {
+			// just to be sure, not required for travis as the vm is fresh every time
+			Database::needRoot(true);
+			Database::query("DROP USER IF EXISTS froxlor010@10.0.0.10;");
+		}
+
 		// grant privileges to another host
 		$testdata = $users['froxlor010'];
 		$dbm->getManager()->grantPrivilegesTo('froxlor010', $testdata['password'], '10.0.0.10', true);
 
 		// select all entries from mysql.user for froxlor010 to compare password-hashes
 		$sel_stmt = Database::prepare("SELECT * FROM mysql.user WHERE `User` = :usr");
-		Database::pexecute($sel_stmt, ['usr' => 'froxlor010']);
+		Database::pexecute($sel_stmt, [
+			'usr' => 'froxlor010'
+		]);
 		$results = $sel_stmt->fetchAll(\PDO::FETCH_ASSOC);
 		foreach ($results as $user) {
 			$passwd = $user['Password'] ?? $user['authentication_string'];
