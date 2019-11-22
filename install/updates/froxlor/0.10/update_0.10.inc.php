@@ -490,3 +490,8 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201911130')) {
 	lastStepStatus(0);
 	\Froxlor\Froxlor::updateToDbVersion('201911220');
 }
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.6')) {
+	showUpdateStep("Updating from 0.10.6 to 0.10.7", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.7');
+}
