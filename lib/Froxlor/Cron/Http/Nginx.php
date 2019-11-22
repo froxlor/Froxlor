@@ -537,7 +537,7 @@ class Nginx extends HttpConfigBase
 				}
 
 				if ($domain['ssl_specialsettings'] != '' && $ssl_vhost == true) {
-					$vhost_content .= $this->processSpecialConfigTemplate($domain['ssl_specialsettings'], $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
+					$vhost_content = $this->mergeVhostCustom($vhost_content, $this->processSpecialConfigTemplate($domain['ssl_specialsettings'], $domain, $domain['ip'], $domain['port'], $ssl_vhost));
 				}
 
 				if ($_vhost_content != '') {
@@ -549,7 +549,7 @@ class Nginx extends HttpConfigBase
 				}
 
 				if (Settings::Get('system.default_sslvhostconf') != '' && $ssl_vhost == true) {
-					$vhost_content .= $this->processSpecialConfigTemplate(Settings::Get('system.default_sslvhostconf'), $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
+					$vhost_content = $this->mergeVhostCustom($vhost_content, $this->processSpecialConfigTemplate(Settings::Get('system.default_sslvhostconf'), $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n");
 				}
 			}
 		}
@@ -562,6 +562,8 @@ class Nginx extends HttpConfigBase
 	{
 		// Remove windows linebreaks
 		$vhost = str_replace("\r", "\n", $vhost);
+		// remove comments
+		$vhost = implode("\n", preg_replace('/^(\s+)?#(.*)$/', '', explode("\n", $vhost)));
 		// Break blocks into lines
 		$vhost = str_replace(array(
 			"{",
