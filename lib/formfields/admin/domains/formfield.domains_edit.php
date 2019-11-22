@@ -159,7 +159,7 @@ return array(
 							)
 						),
 						'value' => array(
-							'1'
+							\Froxlor\Settings::Get('system.apply_specialsettings_default') == 1 ? '1' : ''
 						)
 					),
 					'notryfiles' => array(
@@ -453,7 +453,7 @@ return array(
 							)
 						),
 						'value' => array(
-							'1'
+							\Froxlor\Settings::Get('system.apply_phpconfigs_default') == 1 ? '1' : ''
 						)
 					),
 					'mod_fcgid_starter' => array(

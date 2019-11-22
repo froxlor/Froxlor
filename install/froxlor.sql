@@ -660,6 +660,8 @@ opcache.interned_strings_buffer'),
 	('system', 'errorlog_level', 'warn'),
 	('system', 'leecc', '0'),
 	('system', 'froxloraliases', ''),
+	('system', 'apply_specialsettings_default', '1'),
+	('system', 'apply_phpconfigs_default', '1'),
 	('api', 'enabled', '0'),
 	('2fa', 'enabled', '1'),
 	('panel', 'decimal_places', '4'),
@@ -695,7 +697,7 @@ opcache.interned_strings_buffer'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'is_configured', '0'),
 	('panel', 'version', '0.10.6'),
-	('panel', 'db_version', '201911130');
+	('panel', 'db_version', '201911220');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

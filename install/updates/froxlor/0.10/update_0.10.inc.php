@@ -482,3 +482,11 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.5')) {
 	showUpdateStep("Updating from 0.10.5 to 0.10.6", false);
 	\Froxlor\Froxlor::updateToVersion('0.10.6');
 }
+
+if (\Froxlor\Froxlor::isDatabaseVersion('201911130')) {
+	showUpdateStep("Adding new settings for domain edit form default values");
+	Settings::AddNew("system.apply_specialsettings_default", '1');
+	Settings::AddNew("system.apply_phpconfigs_default", '1');
+	lastStepStatus(0);
+	\Froxlor\Froxlor::updateToDbVersion('201911220');
+}
