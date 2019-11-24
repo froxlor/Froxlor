@@ -867,7 +867,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	 * @param bool $include_specialsettings
 	 *        	optional, whether or not to include non-ssl specialsettings in the generated ssl-vhost, default false
 	 * @param bool $specialsettingsforsubdomains
-	 *        	optional, whether to apply specialsettings to all subdomains of this domain, default 0 (false)
+	 *        	optional, whether to apply specialsettings to all subdomains of this domain, default is read from setting system.apply_specialsettings_default
 	 * @param bool $notryfiles
 	 *        	optional, [nginx only] do not generate the default try-files directive, default 0 (false)
 	 * @param bool $writeaccesslog
@@ -879,7 +879,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	 * @param bool $phpenabled
 	 *        	optional, whether php is enabled for this domain, default 0 (false)
 	 * @param bool $phpsettingsforsubdomains
-	 *        	optional, whether to apply php-setting to apply to all subdomains of this domain, default 0 (false)
+	 *        	optional, whether to apply php-setting to apply to all subdomains of this domain, default is read from setting system.apply_phpconfigs_default
 	 * @param bool $openbasedir
 	 *        	optional, whether to activate openbasedir restriction for this domain, default 0 (false)
 	 * @param int $phpsettingid
@@ -952,13 +952,13 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 			$specialsettings = $this->getParam('specialsettings', true, $result['specialsettings']);
 			$ssl_specialsettings = $this->getParam('ssl_specialsettings', true, $result['ssl_specialsettings']);
 			$include_specialsettings = $this->getBoolParam('include_specialsettings', true, $result['include_specialsettings']);
-			$ssfs = $this->getBoolParam('specialsettingsforsubdomains', true, 0);
+			$ssfs = $this->getBoolParam('specialsettingsforsubdomains', true, \Froxlor\Settings::Get('system.apply_specialsettings_default'));
 			$notryfiles = $this->getBoolParam('notryfiles', true, $result['notryfiles']);
 			$writeaccesslog = $this->getBoolParam('writeaccesslog', true, $result['writeaccesslog']);
 			$writeerrorlog = $this->getBoolParam('writeerrorlog', true, $result['writeerrorlog']);
 			$documentroot = $this->getParam('documentroot', true, $result['documentroot']);
 			$phpenabled = $this->getBoolParam('phpenabled', true, $result['phpenabled']);
-			$phpfs = $this->getBoolParam('phpsettingsforsubdomains', true, 0);
+			$phpfs = $this->getBoolParam('phpsettingsforsubdomains', true, \Froxlor\Settings::Get('system.apply_phpconfigs_default'));
 			$openbasedir = $this->getBoolParam('openbasedir', true, $result['openbasedir']);
 			$phpsettingid = $this->getParam('phpsettingid', true, $result['phpsettingid']);
 			$mod_fcgid_starter = $this->getParam('mod_fcgid_starter', true, $result['mod_fcgid_starter']);

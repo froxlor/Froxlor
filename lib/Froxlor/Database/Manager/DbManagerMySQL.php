@@ -78,36 +78,35 @@ class DbManagerMySQL
 	public function grantPrivilegesTo($username = null, $password = null, $access_host = null, $p_encrypted = false, $update = false)
 	{
 		if (! $update) {
-			// mysql8 compatibility
-			if (version_compare(Database::getAttribute(\PDO::ATTR_SERVER_VERSION), '8.0.11', '>=')) {
-				// create user
+			// create user
+			if ($p_encrypted) {
+				if (version_compare(Database::getAttribute(\PDO::ATTR_SERVER_VERSION), '5.7.0', '<')) {
+					$stmt = Database::prepare("
+						CREATE USER '" . $username . "'@'" . $access_host . "' IDENTIFIED BY PASSWORD :password
+					");
+				} else {
+					$stmt = Database::prepare("
+						CREATE USER '" . $username . "'@'" . $access_host . "' IDENTIFIED WITH mysql_native_password AS :password
+					");
+				}
+			} else {
 				$stmt = Database::prepare("
 					CREATE USER '" . $username . "'@'" . $access_host . "' IDENTIFIED BY :password
 				");
-				Database::pexecute($stmt, array(
-					"password" => $password
-				));
-				// grant privileges
-				$stmt = Database::prepare("
-					GRANT ALL ON `" . $username . "`.* TO :username@:host
-				");
-				Database::pexecute($stmt, array(
-					"username" => $username,
-					"host" => $access_host
-				));
-			} else {
-				// grant privileges
-				$stmt = Database::prepare("
-					GRANT ALL PRIVILEGES ON `" . $username . "`.* TO :username@:host IDENTIFIED BY :password
-				");
-				Database::pexecute($stmt, array(
-					"username" => $username,
-					"host" => $access_host,
-					"password" => $password
-				));
 			}
+			Database::pexecute($stmt, array(
+				"password" => $password
+			));
+			// grant privileges
+			$stmt = Database::prepare("
+				GRANT ALL ON `" . $username . "`.* TO :username@:host
+			");
+			Database::pexecute($stmt, array(
+				"username" => $username,
+				"host" => $access_host
+			));
 		} else {
-			// set passoword
+			// set password
 			if (version_compare(Database::getAttribute(\PDO::ATTR_SERVER_VERSION), '5.7.6', '<')) {
 				if ($p_encrypted) {
 					$stmt = Database::prepare("SET PASSWORD FOR :username@:host = :password");
@@ -115,7 +114,11 @@ class DbManagerMySQL
 					$stmt = Database::prepare("SET PASSWORD FOR :username@:host = PASSWORD(:password)");
 				}
 			} else {
-				$stmt = Database::prepare("ALTER USER :username@:host IDENTIFIED BY :password");
+				if ($p_encrypted) {
+					$stmt = Database::prepare("ALTER USER :username@:host IDENTIFIED WITH mysql_native_password AS :password");
+				} else {
+					$stmt = Database::prepare("ALTER USER :username@:host IDENTIFIED BY :password");
+				}
 			}
 			Database::pexecute($stmt, array(
 				"username" => $username,
@@ -158,7 +161,6 @@ class DbManagerMySQL
 			), false);
 		}
 
-		
 		$drop_stmt = Database::prepare("DROP DATABASE IF EXISTS `" . $dbname . "`");
 		Database::pexecute($drop_stmt);
 	}
