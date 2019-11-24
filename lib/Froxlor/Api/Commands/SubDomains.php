@@ -774,7 +774,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `pd` ON `pd`.`id`=`d`.`parentdomainid`
 			WHERE `d`.`customerid` IN (" . implode(', ', $customer_ids) . ")
 			AND `d`.`email_only` = '0'
-			AND `d`.`id` NOT IN (" . implode(', ', $customer_stdsubs) . ")" . $this->getSearchWhere($query_fields, true) . " ORDER BY `parentdomainname` " . $this->getOrderBy(true) . $this->getLimit());
+			AND `d`.`id` NOT IN (" . implode(', ', $customer_stdsubs) . ")" . $this->getSearchWhere($query_fields, true) . " GROUP BY `d`.`id` ORDER BY `parentdomainname` " . $this->getOrderBy(true) . $this->getLimit());
 
 		$result = array();
 		Database::pexecute($domains_stmt, $query_fields, true, true);
@@ -840,8 +840,6 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		$domains_stmt = Database::prepare("
 			SELECT COUNT(*) as num_subdom
 			FROM `" . TABLE_PANEL_DOMAINS . "` `d`
-			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `ad` ON `d`.`aliasdomain`=`ad`.`id`
-			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `da` ON `da`.`aliasdomain`=`d`.`id`
 			WHERE `d`.`customerid` IN (" . implode(', ', $customer_ids) . ")
 			AND `d`.`email_only` = '0'
 			AND `d`.`id` NOT IN (" . implode(', ', $customer_stdsubs) . ")
