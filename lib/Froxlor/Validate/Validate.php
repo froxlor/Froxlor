@@ -161,6 +161,12 @@ class Validate
 			return $ip . $cidr;
 		}
 
+		// special case: 0.0.0.0 and 0.0.0.0/0 are used for 'any ip' but it's filtered out by FILTER_FLAG_NO_RES_RANGE
+		if ($ip == '0.0.0.0' && ($cidr == '' || $cidr == '/0.0.0.0')) {
+			return $ip. $cidr;
+		}
+
+
 		if ($return_bool) {
 			return false;
 		} else {

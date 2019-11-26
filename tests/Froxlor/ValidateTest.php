@@ -67,6 +67,18 @@ class ValidateTest extends TestCase
 		$this->assertFalse($result);
 	}
 
+	public function testValidateAnyIpBool()
+	{
+		$result = Validate::validate_ip2("0.0.0.0", true, 'invalidip', false, false, false, false, true);
+		$this->assertEquals("0.0.0.0",$result);
+	}
+
+	public function testValidateAnyIpWithNetmaskBool()
+	{
+		$result = Validate::validate_ip2("0.0.0.0/0.0.0.0", true, 'invalidip', false, false, true, true, true);
+		$this->assertEquals("0.0.0.0/0.0.0.0",$result);
+	}
+
 	public function testValidateIpCidrNotAllowed()
 	{
 		$this->expectException("Exception");
