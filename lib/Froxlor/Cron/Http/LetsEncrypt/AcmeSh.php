@@ -84,7 +84,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 				)
 		");
 		$customer_ssl = $certificates_stmt->fetchAll(\PDO::FETCH_ASSOC);
-		if (!$customer_ssl) {
+		if (! $customer_ssl) {
 			$customer_ssl = array();
 		}
 
@@ -96,7 +96,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 				(`expirationdate` < DATE_ADD(NOW(), INTERVAL 30 DAY) OR `expirationdate` IS NULL)
 			");
 			$froxlor_ssl = Database::pexecute_first($froxlor_ssl_settings_stmt);
-			if (!$froxlor_ssl) {
+			if (! $froxlor_ssl) {
 				$froxlor_ssl = array();
 			}
 		}
@@ -126,7 +126,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 
 		self::checkInstall();
 
-		self::$apiserver = 'https://acme-v0' . \Froxlor\Settings::Get('system.leapiversion') . '.api.letsencrypt.org/directory';
+		self::$apiserver = 'https://acme-'.(Settings::Get('system.letsencryptca') == 'testing' ? 'staging-' : '').'v0' . \Froxlor\Settings::Get('system.leapiversion') . '.api.letsencrypt.org/directory';
 
 		FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, "Requesting/renewing Let's Encrypt certificates");
 
@@ -338,6 +338,9 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 			}
 			if ($force) {
 				$acmesh_cmd .= " --force";
+			}
+			if (defined('CRON_DEBUG_FLAG')) {
+				$acmesh_cmd .= " --debug";
 			}
 
 			$acme_result = \Froxlor\FileDir::safe_exec($acmesh_cmd);
