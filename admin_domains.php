@@ -382,7 +382,7 @@ if ($page == 'domains' || $page == 'overview') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
 					// remove ssl ip/ports if set is empty
-					if (isset($_POST['ssl_ipandport']) && empty($_POST['ssl_ipandport'])) {
+					if (!isset($_POST['ssl_ipandport']) || empty($_POST['ssl_ipandport'])) {
 						$_POST['remove_ssl_ipandport'] = true;
 					}
 					Domains::getLocal($userinfo, $_POST)->update();
