@@ -209,7 +209,7 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 		} else {
 			$certs_stmt_query .= "1 ";
 		}
-		$certs_stmt = Database::prepare($certs_stmt_query . $this->getSearchWhere($query_fields) . $this->getOrderBy() . $this->getLimit());
+		$certs_stmt = Database::prepare($certs_stmt_query . $this->getSearchWhere($query_fields, true) . $this->getOrderBy() . $this->getLimit());
 		$qry_params = array_merge($qry_params, $query_fields);
 		Database::pexecute($certs_stmt, $qry_params, true, true);
 		$result = array();
