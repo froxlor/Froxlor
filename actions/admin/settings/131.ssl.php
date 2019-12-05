@@ -150,10 +150,10 @@ return array(
 					'settinggroup' => 'system',
 					'varname' => 'letsencryptca',
 					'type' => 'option',
-					'default' => 'testing',
+					'default' => 'production',
 					'option_mode' => 'one',
 					'option_options' => array(
-						'testing' => 'https://acme-staging' . (\Froxlor\Settings::Get('system.leapiversion') == '2' ? '-v02' : '') . '.api.letsencrypt.org (Test)',
+						'testing' => 'https://acme-staging-v0' . \Froxlor\Settings::Get('system.leapiversion') . '.api.letsencrypt.org (Test)',
 						'production' => 'https://acme-v0' . \Froxlor\Settings::Get('system.leapiversion') . '.api.letsencrypt.org (Live)'
 					),
 					'save_method' => 'storeSettingField'
