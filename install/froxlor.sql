@@ -696,7 +696,7 @@ opcache.interned_strings_buffer'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'is_configured', '0'),
-	('panel', 'version', '0.10.8'),
+	('panel', 'version', '0.10.9'),
 	('panel', 'db_version', '201911220');
 
 

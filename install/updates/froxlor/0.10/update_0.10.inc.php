@@ -500,3 +500,8 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.7')) {
 	showUpdateStep("Updating from 0.10.7 to 0.10.8", false);
 	\Froxlor\Froxlor::updateToVersion('0.10.8');
 }
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.8')) {
+	showUpdateStep("Updating from 0.10.8 to 0.10.9", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.9');
+}
