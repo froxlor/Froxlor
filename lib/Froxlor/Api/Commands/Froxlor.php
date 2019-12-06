@@ -42,7 +42,7 @@ class Froxlor extends \Froxlor\Api\ApiCommand
 				try {
 					$latestversion = \Froxlor\Http\HttpClient::urlGet(UPDATE_URI, true, 3);
 				} catch (\Exception $e) {
-					$latestversion = \Froxlor\Froxlor::getVersion()."|Version-check currently unavailable, please try again later";
+					$latestversion = \Froxlor\Froxlor::getVersion() . "|Version-check currently unavailable, please try again later";
 				}
 				$latestversion = explode('|', $latestversion);
 
@@ -216,7 +216,7 @@ class Froxlor extends \Froxlor\Api\ApiCommand
 	 */
 	public function updateSetting()
 	{
-		// currently not implemented as it required validation too so no wrong settings are being stored via API
+		// currently not implemented as it requires validation too so no wrong settings are being stored via API
 		throw new \Exception("Not available yet.", 501);
 
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
@@ -230,6 +230,17 @@ class Froxlor extends \Froxlor\Api\ApiCommand
 			return $this->response(200, "successfull", Settings::Set($setting, $value, true));
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
+	}
+
+	/**
+	 * returns a random password based on froxlor settings for min-length, included characters, etc.
+	 *
+	 * @access admin, customer
+	 * @return string
+	 */
+	public function generatePassword()
+	{
+		return $this->response(200, "successfull", \Froxlor\System\Crypt::generatePassword());
 	}
 
 	/**
