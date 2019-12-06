@@ -346,6 +346,15 @@ abstract class ApiCommand extends ApiParameter
 			} else {
 				$order .= " ORDER BY ";
 			}
+
+			$nat_fields = [
+				'`c`.`loginname`',
+				'`a`.`loginname`',
+				'`adminname`',
+				'`databasename`',
+				'`username`'
+			];
+
 			foreach ($orderby as $field => $by) {
 				$sortfield = explode('.', $field);
 				foreach ($sortfield as $id => $sfield) {
@@ -365,7 +374,7 @@ abstract class ApiCommand extends ApiParameter
 				])) {
 					$by = 'ASC';
 				}
-				if (\Froxlor\Settings::Get('panel.natsorting') == 1) {
+				if (\Froxlor\Settings::Get('panel.natsorting') == 1 && in_array($field, $nat_fields)) {
 					// Acts similar to php's natsort(), found in one comment at http://my.opera.com/cpr/blog/show.dml/160556
 					$order .= "CONCAT( IF( ASCII( LEFT( " . $field . ", 5 ) ) > 57,
 					LEFT( " . $field . ", 1 ), 0 ),

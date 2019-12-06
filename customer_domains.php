@@ -42,7 +42,8 @@ if ($page == 'overview') {
 	if ($action == '') {
 		$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_domains::domains");
 		$fields = array(
-			'd.domain' => $lng['domains']['domainname']
+			'd.domain' => $lng['domains']['domainname'],
+			'd.aliasdomain' => $lng['domains']['aliasdomain']
 		);
 		try {
 			// get total count
