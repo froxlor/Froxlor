@@ -432,7 +432,7 @@ class Lighttpd extends HttpConfigBase
 
 	protected function getVhostContent($domain, $ssl_vhost = false, $ipid = 0)
 	{
-		if ($ssl_vhost === true && $domain['ssl'] != '1' && $domain['ssl_redirect'] != '1') {
+		if ($ssl_vhost === true && $domain['ssl'] != '1' && $domain['ssl_enabled'] != '1'  && $domain['ssl_redirect'] != '1') {
 			return '';
 		}
 
@@ -586,7 +586,7 @@ class Lighttpd extends HttpConfigBase
 				$ssl_settings .= 'ssl.use-sslv2 = "disable"' . "\n";
 				$ssl_settings .= 'ssl.use-sslv3 = "disable"' . "\n";
 				$ssl_settings .= 'ssl.cipher-list = "' . $ssl_cipher_list . '"' . "\n";
-				$ssl_settings .= 'ssl.honor-cipher-order = "enable"' . "\n";
+				$ssl_settings .= 'ssl.honor-cipher-order = ' . ($domain['ssl_honorcipherorder'] == '1' ? '"enable"' : '"disable"') . "\n";
 				$ssl_settings .= 'ssl.pemfile = "' . \Froxlor\FileDir::makeCorrectFile($domain['ssl_cert_file']) . '"' . "\n";
 
 				if ($domain['ssl_ca_file'] != '') {

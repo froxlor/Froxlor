@@ -212,6 +212,20 @@ return array(
 				'image' => 'icons/domain_edit.png',
 				'visible' => \Froxlor\Settings::Get('system.use_ssl') == '1' ? true : false,
 				'fields' => array(
+					'sslenabled' => array(
+						'visible' => ($ssl_ipsandports != '' ? true : false),
+						'label' => $lng['admin']['domain_sslenabled'],
+						'type' => 'checkbox',
+						'values' => array(
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array(
+							$result['ssl_enabled']
+						)
+					),
 					'no_ssl_available_info' => array(
 						'visible' => ($ssl_ipsandports == '' ? true : false),
 						'label' => 'SSL',
@@ -290,7 +304,7 @@ return array(
 						'label' => $lng['serversettings']['ssl']['ssl_protocols']['title'],
 						'desc' => $lng['serversettings']['ssl']['ssl_protocols']['description'],
 						'type' => 'checkbox',
-						'value' => !empty($result['ssl_protocols']) ? explode(",", $result['ssl_protocols']) : explode(",", \Froxlor\Settings::Get('system.ssl_protocols')),
+						'value' => ! empty($result['ssl_protocols']) ? explode(",", $result['ssl_protocols']) : explode(",", \Froxlor\Settings::Get('system.ssl_protocols')),
 						'values' => array(
 							array(
 								'value' => 'TLSv1',
@@ -316,14 +330,14 @@ return array(
 						'label' => $lng['serversettings']['ssl']['ssl_cipher_list']['title'],
 						'desc' => $lng['serversettings']['ssl']['ssl_cipher_list']['description'],
 						'type' => 'text',
-						'value' => !empty($result['ssl_cipher_list']) ? $result['ssl_cipher_list'] : \Froxlor\Settings::Get('system.ssl_cipher_list')
+						'value' => ! empty($result['ssl_cipher_list']) ? $result['ssl_cipher_list'] : \Froxlor\Settings::Get('system.ssl_cipher_list')
 					),
 					'tlsv13_cipher_list' => array(
 						'visible' => (($ssl_ipsandports != '' ? true : false) && $userinfo['change_serversettings'] == '1' && \Froxlor\Settings::Get('system.webserver') == "apache2" && \Froxlor\Settings::Get('system.apache24') == 1 ? true : false),
 						'label' => $lng['serversettings']['ssl']['tlsv13_cipher_list']['title'],
 						'desc' => $lng['serversettings']['ssl']['tlsv13_cipher_list']['description'],
 						'type' => 'text',
-						'value' => !empty($result['tlsv13_cipher_list']) ? $result['tlsv13_cipher_list'] : \Froxlor\Settings::Get('system.tlsv13_cipher_list')
+						'value' => ! empty($result['tlsv13_cipher_list']) ? $result['tlsv13_cipher_list'] : \Froxlor\Settings::Get('system.tlsv13_cipher_list')
 					),
 					'ssl_specialsettings' => array(
 						'visible' => ($userinfo['change_serversettings'] == '1' ? true : false),
@@ -400,6 +414,34 @@ return array(
 						),
 						'value' => array(
 							$result['ocsp_stapling']
+						)
+					),
+					'honorcipherorder' => array(
+						'visible' => ($ssl_ipsandports != '' ? true : false),
+						'label' => $lng['admin']['domain_honorcipherorder'],
+						'type' => 'checkbox',
+						'values' => array(
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array(
+							$result['ssl_honorcipherorder']
+						)
+					),
+					'sessiontickets' => array(
+						'visible' => ($ssl_ipsandports != '' ? true : false) && \Froxlor\Settings::Get('system.webserver') != 'lighttpd',
+						'label' => $lng['admin']['domain_sessiontickets'],
+						'type' => 'checkbox',
+						'values' => array(
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array(
+							$result['ssl_sessiontickets']
 						)
 					)
 				)

@@ -41,6 +41,8 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	 *        	optional, php-settings-id, if empty the $domain value is used
 	 * @param int $redirectcode
 	 *        	optional, redirect-code-id from TABLE_PANEL_REDIRECTCODES
+	 * @param bool $sslenabled
+	 *        	optional, whether or not SSL is enabled for this domain, regardless of the assigned ssl-ips, default 1 (true)
 	 * @param bool $ssl_redirect
 	 *        	optional, whether to generate a https-redirect or not, default false; requires SSL to be enabled
 	 * @param bool $letsencrypt
@@ -76,6 +78,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			$redirectcode = $this->getParam('redirectcode', true, Settings::Get('customredirect.default'));
 			$isemaildomain = $this->getParam('isemaildomain', true, 0);
 			if (Settings::Get('system.use_ssl')) {
+				$sslenabled = $this->getBoolParam('sslenabled', true, 1);
 				$ssl_redirect = $this->getBoolParam('ssl_redirect', true, 0);
 				$letsencrypt = $this->getBoolParam('letsencrypt', true, 0);
 				$http2 = $this->getBoolParam('http2', true, 0);
@@ -83,6 +86,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				$hsts_sub = $this->getBoolParam('hsts_sub', true, 0);
 				$hsts_preload = $this->getBoolParam('hsts_preload', true, 0);
 			} else {
+				$sslenabled = 0;
 				$ssl_redirect = 0;
 				$letsencrypt = 0;
 				$http2 = 0;
@@ -275,7 +279,8 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				`override_tls` = :override_tls,
 				`ssl_protocols` = :ssl_protocols,
 				`ssl_cipher_list` = :ssl_cipher_list,
-				`tlsv13_cipher_list` = :tlsv13_cipher_list
+				`tlsv13_cipher_list` = :tlsv13_cipher_list,
+				`ssl_enabled` = :sslenabled
 			");
 			$params = array(
 				"customerid" => $customer['customerid'],
@@ -305,7 +310,8 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				"override_tls" => $domain_check['override_tls'],
 				"ssl_protocols" => $domain_check['ssl_protocols'],
 				"ssl_cipher_list" => $domain_check['ssl_cipher_list'],
-				"tlsv13_cipher_list" => $domain_check['tlsv13_cipher_list']
+				"tlsv13_cipher_list" => $domain_check['tlsv13_cipher_list'],
+				"sslenabled" => $sslenabled
 			);
 			Database::pexecute($stmt, $params, true, true);
 			$subdomain_id = Database::lastInsertId();
@@ -446,6 +452,8 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	 *        	optional, php-settings-id, if empty the $domain value is used
 	 * @param int $redirectcode
 	 *        	optional, redirect-code-id from TABLE_PANEL_REDIRECTCODES
+	 * @param bool $sslenabled
+	 *        	optional, whether or not SSL is enabled for this domain, regardless of the assigned ssl-ips, default 1 (true)
 	 * @param bool $ssl_redirect
 	 *        	optional, whether to generate a https-redirect or not, default false; requires SSL to be enabled
 	 * @param bool $letsencrypt
@@ -493,6 +501,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		$phpsettingid = $this->getParam('phpsettingid', true, $result['phpsettingid']);
 		$redirectcode = $this->getParam('redirectcode', true, \Froxlor\Domain\Domain::getDomainRedirectId($id));
 		if (Settings::Get('system.use_ssl')) {
+			$sslenabled = $this->getBoolParam('sslenabled', true, $result['ssl_enabled']);
 			$ssl_redirect = $this->getBoolParam('ssl_redirect', true, $result['ssl_redirect']);
 			$letsencrypt = $this->getBoolParam('letsencrypt', true, $result['letsencrypt']);
 			$http2 = $this->getBoolParam('http2', true, $result['http2']);
@@ -500,6 +509,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			$hsts_sub = $this->getBoolParam('hsts_sub', true, $result['hsts_sub']);
 			$hsts_preload = $this->getBoolParam('hsts_preload', true, $result['hsts_preload']);
 		} else {
+			$sslenabled = 0;
 			$ssl_redirect = 0;
 			$letsencrypt = 0;
 			$http2 = 0;
@@ -610,14 +620,15 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		if ($path != $result['documentroot'] || $isemaildomain != $result['isemaildomain'] || $wwwserveralias != $result['wwwserveralias'] || $iswildcarddomain != $result['iswildcarddomain'] || $aliasdomain != $result['aliasdomain'] || $openbasedir_path != $result['openbasedir_path'] || $ssl_redirect != $result['ssl_redirect'] || $letsencrypt != $result['letsencrypt'] || $hsts_maxage != $result['hsts'] || $hsts_sub != $result['hsts_sub'] || $hsts_preload != $result['hsts_preload'] || $phpsettingid != $result['phpsettingid']) {
 			$stmt = Database::prepare("
 					UPDATE `" . TABLE_PANEL_DOMAINS . "` SET
-					`documentroot`= :documentroot,
-					`isemaildomain`= :isemaildomain,
-					`wwwserveralias`= :wwwserveralias,
-					`iswildcarddomain`= :iswildcarddomain,
-					`aliasdomain`= :aliasdomain,
-					`openbasedir_path`= :openbasedir_path,
-					`ssl_redirect`= :ssl_redirect,
-					`letsencrypt`= :letsencrypt,
+					`documentroot` = :documentroot,
+					`isemaildomain` = :isemaildomain,
+					`wwwserveralias` = :wwwserveralias,
+					`iswildcarddomain` = :iswildcarddomain,
+					`aliasdomain` = :aliasdomain,
+					`openbasedir_path` = :openbasedir_path,
+					`ssl_enabled` = :sslenabled,
+					`ssl_redirect` = :ssl_redirect,
+					`letsencrypt` = :letsencrypt,
 					`http2` = :http2,
 					`hsts` = :hsts,
 					`hsts_sub` = :hsts_sub,
@@ -632,6 +643,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				"iswildcarddomain" => $iswildcarddomain,
 				"aliasdomain" => ($aliasdomain != 0 && $alias_check == 0) ? $aliasdomain : null,
 				"openbasedir_path" => $openbasedir_path,
+				"sslenabled" => $sslenabled,
 				"ssl_redirect" => $ssl_redirect,
 				"letsencrypt" => $letsencrypt,
 				"http2" => $http2,

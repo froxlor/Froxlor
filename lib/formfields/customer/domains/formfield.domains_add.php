@@ -83,6 +83,19 @@ return array(
 				'image' => 'icons/domain_add.png',
 				'visible' => \Froxlor\Settings::Get('system.use_ssl') == '1' ? ($ssl_ipsandports != '' ? true : false) : false,
 				'fields' => array(
+					'sslenabled' => array(
+						'label' => $lng['admin']['domain_sslenabled'],
+						'type' => 'checkbox',
+						'values' => array(
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array(
+							'1'
+						)
+					),
 					'ssl_redirect' => array(
 						'label' => $lng['domains']['ssl_redirect']['title'],
 						'desc' => $lng['domains']['ssl_redirect']['description'],

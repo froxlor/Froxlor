@@ -168,14 +168,15 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	 * get ips connected to given domain as array
 	 *
 	 * @param number $domain_id
+	 * @param bool $ssl_only
+	 *        	optional, return only ssl enabled ip's, default false
 	 * @return array
 	 */
-	private function getIpsForDomain($domain_id = 0)
+	private function getIpsForDomain($domain_id = 0, $ssl_only = false)
 	{
 		$resultips_stmt = Database::prepare("
 			SELECT `ips`.* FROM `" . TABLE_DOMAINTOIP . "` AS `dti`, `" . TABLE_PANEL_IPSANDPORTS . "` AS `ips`
-			WHERE `dti`.`id_ipandports` = `ips`.`id` AND `dti`.`id_domain` = :domainid
-		");
+			WHERE `dti`.`id_ipandports` = `ips`.`id` AND `dti`.`id_domain` = :domainid " . ($ssl_only ? " AND `ips`.`ssl` = '1'" : ""));
 
 		Database::pexecute($resultips_stmt, array(
 			'domainid' => $domain_id
@@ -260,6 +261,8 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	 *        	optional, list of ssl-enabled ip/port id's to assign to this domain, default empty
 	 * @param bool $dont_use_default_ssl_ipandport_if_empty
 	 *        	optional, do NOT set the systems default ssl ip addresses if none are given via $ssl_ipandport parameter
+	 * @param bool $sslenabled
+	 *        	optional, whether or not SSL is enabled for this domain, regardless of the assigned ssl-ips, default 1 (true)
 	 * @param bool $http2
 	 *        	optional, whether to enable http/2 for this domain (requires to be enabled in the settings), default 0 (false)
 	 * @param int $hsts_maxage
@@ -270,6 +273,10 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	 *        	optional whether or not to preload HSTS header value
 	 * @param bool $ocsp_stapling
 	 *        	optional whether to enable ocsp-stapling for this domain. default 0 (false), requires SSL
+	 * @param bool $honorcipherorder
+	 *        	optional whether to honor the (server) cipher order for this domain. default 0 (false), requires SSL
+	 * @param bool $sessiontickets
+	 *        	optional whether to enable or disable TLS sessiontickets (RFC 5077) for this domain. default 1 (true), requires SSL
 	 * @param bool $override_tls
 	 *        	optional whether or not to override system-tls settings like protocol, ssl-ciphers and if applicable tls-1.3 ciphers, requires change_serversettings flag for the admin, default false
 	 * @param array $ssl_protocols
@@ -324,11 +331,14 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				$letsencrypt = $this->getBoolParam('letsencrypt', true, 0);
 				$dont_use_default_ssl_ipandport_if_empty = $this->getBoolParam('dont_use_default_ssl_ipandport_if_empty', true, 0);
 				$p_ssl_ipandports = $this->getParam('ssl_ipandport', true, $dont_use_default_ssl_ipandport_if_empty ? array() : explode(',', Settings::Get('system.defaultsslip')));
+				$sslenabled = $this->getBoolParam('sslenabled', true, 1);
 				$http2 = $this->getBoolParam('http2', true, 0);
 				$hsts_maxage = $this->getParam('hsts_maxage', true, 0);
 				$hsts_sub = $this->getBoolParam('hsts_sub', true, 0);
 				$hsts_preload = $this->getBoolParam('hsts_preload', true, 0);
 				$ocsp_stapling = $this->getBoolParam('ocsp_stapling', true, 0);
+				$honorcipherorder = $this->getBoolParam('honorcipherorder', true, 0);
+				$sessiontickets = $this->getBoolParam('sessiontickets', true, 1);
 
 				$override_tls = $this->getBoolParam('override_tls', true, 0);
 				$p_ssl_protocols = array();
@@ -712,7 +722,10 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 						'override_tls' => $override_tls,
 						'ssl_protocols' => implode(",", $ssl_protocols),
 						'ssl_cipher_list' => $ssl_cipher_list,
-						'tlsv13_cipher_list' => $tlsv13_cipher_list
+						'tlsv13_cipher_list' => $tlsv13_cipher_list,
+						'sslenabled' => $sslenabled,
+						'honorcipherorder' => $honorcipherorder,
+						'sessiontickets' => $sessiontickets
 					);
 
 					$ins_stmt = Database::prepare("
@@ -760,7 +773,10 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 						`override_tls` = :override_tls,
 						`ssl_protocols` = :ssl_protocols,
 						`ssl_cipher_list` = :ssl_cipher_list,
-						`tlsv13_cipher_list` = :tlsv13_cipher_list
+						`tlsv13_cipher_list` = :tlsv13_cipher_list,
+						`ssl_enabled` = :sslenabled,
+						`ssl_honorcipherorder` = :honorcipherorder,
+						`ssl_sessiontickets`= :sessiontickets
 					");
 					Database::pexecute($ins_stmt, $ins_data, true, true);
 					$domainid = Database::lastInsertId();
@@ -894,6 +910,8 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	 *        	optional, list of ssl-enabled ip/port id's to assign to this domain, if left empty, the current set value is being used, to remove all ssl ips use $remove_ssl_ipandport
 	 * @param bool $remove_ssl_ipandport
 	 *        	optional, if set to true and no $ssl_ipandport value is given, the ip's get removed, otherwise, the currently set value is used, default false
+	 * @param bool $sslenabled
+	 *        	optional, whether or not SSL is enabled for this domain, regardless of the assigned ssl-ips, default 1 (true)
 	 * @param bool $http2
 	 *        	optional, whether to enable http/2 for this domain (requires to be enabled in the settings), default 0 (false)
 	 * @param int $hsts_maxage
@@ -904,6 +922,10 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	 *        	optional whether or not to preload HSTS header value
 	 * @param bool $ocsp_stapling
 	 *        	optional whether to enable ocsp-stapling for this domain. default 0 (false), requires SSL
+	 * @param bool $honorcipherorder
+	 *        	optional whether to honor the (server) cipher order for this domain. default 0 (false), requires SSL
+	 * @param bool $sessiontickets
+	 *        	optional whether to enable or disable TLS sessiontickets (RFC 5077) for this domain. default 1 (true), requires SSL
 	 *        	
 	 * @access admin
 	 * @throws \Exception
@@ -964,11 +986,14 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 			$p_ssl_ipandports = $this->getParam('ssl_ipandport', true, $remove_ssl_ipandport ? array(
 				- 1
 			) : null);
+			$sslenabled = $this->getBoolParam('sslenabled', true, $result['ssl_enabled']);
 			$http2 = $this->getBoolParam('http2', true, $result['http2']);
 			$hsts_maxage = $this->getParam('hsts_maxage', true, $result['hsts']);
 			$hsts_sub = $this->getBoolParam('hsts_sub', true, $result['hsts_sub']);
 			$hsts_preload = $this->getBoolParam('hsts_preload', true, $result['hsts_preload']);
 			$ocsp_stapling = $this->getBoolParam('ocsp_stapling', true, $result['ocsp_stapling']);
+			$honorcipherorder = $this->getBoolParam('honorcipherorder', true, $result['ssl_honorcipherorder']);
+			$sessiontickets = $this->getBoolParam('sessiontickets', true, $result['ssl_sessiontickets']);
 
 			$override_tls = $this->getBoolParam('override_tls', true, $result['override_tls']);
 
@@ -1546,6 +1571,9 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 			$update_data['ssl_protocols'] = implode(",", $ssl_protocols);
 			$update_data['ssl_cipher_list'] = $ssl_cipher_list;
 			$update_data['tlsv13_cipher_list'] = $tlsv13_cipher_list;
+			$update_data['sslenabled'] = $sslenabled;
+			$update_data['honorcipherorder'] = $honorcipherorder;
+			$update_data['sessiontickets'] = $sessiontickets;
 			$update_data['id'] = $id;
 
 			$update_stmt = Database::prepare("
@@ -1588,7 +1616,10 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				`override_tls` = :override_tls,
 				`ssl_protocols` = :ssl_protocols,
 				`ssl_cipher_list` = :ssl_cipher_list,
-				`tlsv13_cipher_list` = :tlsv13_cipher_list
+				`tlsv13_cipher_list` = :tlsv13_cipher_list,
+				`ssl_enabled` = :sslenabled,
+				`ssl_honorcipherorder` = :honorcipherorder,
+				`ssl_sessiontickets` = :sessiontickets
 				WHERE `id` = :id
 			");
 			Database::pexecute($update_stmt, $update_data, true, true);
@@ -1603,6 +1634,8 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 			$_update_data['ssl_protocols'] = implode(",", $ssl_protocols);
 			$_update_data['ssl_cipher_list'] = $ssl_cipher_list;
 			$_update_data['tlsv13_cipher_list'] = $tlsv13_cipher_list;
+			$_update_data['honorcipherorder'] = $honorcipherorder;
+			$_update_data['sessiontickets'] = $sessiontickets;
 			$_update_data['parentdomainid'] = $id;
 
 			// if php config is to be set for all subdomains, check here
@@ -1630,7 +1663,9 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				`override_tls` = :override_tls,
 				`ssl_protocols` = :ssl_protocols,
 				`ssl_cipher_list` = :ssl_cipher_list,
-				`tlsv13_cipher_list` = :tlsv13_cipher_list
+				`tlsv13_cipher_list` = :tlsv13_cipher_list,
+				`ssl_honorcipherorder` = :honorcipherorder,
+				`ssl_sessiontickets` = :sessiontickets
 				" . $update_phpconfig . $upd_specialsettings . $updatechildren . $update_sslredirect . "
 				WHERE `parentdomainid` = :parentdomainid
 			");

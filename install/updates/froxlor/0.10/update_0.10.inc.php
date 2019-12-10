@@ -505,3 +505,16 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.8')) {
 	showUpdateStep("Updating from 0.10.8 to 0.10.9", false);
 	\Froxlor\Froxlor::updateToVersion('0.10.9');
 }
+
+if (\Froxlor\Froxlor::isDatabaseVersion('201911220')) {
+	showUpdateStep("Adding enhanced SSL control over domains");
+	// customer domains
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `ssl_enabled` tinyint(1) DEFAULT '1';");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `ssl_honorcipherorder` tinyint(1) DEFAULT '0' AFTER `ssl_enabled`;");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `ssl_sessiontickets` tinyint(1) DEFAULT '1' AFTER `ssl_honorcipherorder`;");
+	// as setting for froxlor vhost
+	Settings::AddNew("system.honorcipherorder", '0');
+	Settings::AddNew("system.sessiontickets", '1');
+	lastStepStatus(0);
+	\Froxlor\Froxlor::updateToDbVersion('201912100');
+}

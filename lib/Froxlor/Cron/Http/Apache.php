@@ -442,7 +442,9 @@ class Apache extends HttpConfigBase
 						'loginname' => 'froxlor.panel',
 						'documentroot' => $mypath,
 						'customerroot' => $mypath,
-						'parentdomainid' => 0
+						'parentdomainid' => 0,
+						'ssl_honorcipherorder' => Settings::Get('system.honorcipherorder'),
+						'ssl_sessiontickets' => Settings::Get('system.sessiontickets')
 					);
 
 					// override corresponding array values
@@ -478,9 +480,10 @@ class Apache extends HttpConfigBase
 									$this->virtualhosts_data[$vhosts_filename] .= ' SSLOpenSSLConfCmd DHParameters "' . $dhparams . '"' . "\n";
 								}
 								$this->virtualhosts_data[$vhosts_filename] .= ' SSLCompression Off' . "\n";
+								$this->virtualhosts_data[$vhosts_filename] .= ' SSLSessionTickets ' .  ($domain['ssl_sessiontickets'] == '1' ? 'on' : 'off') . "\n";
 							}
-							// this makes it more secure, thx to Marcel (08/2013)
-							$this->virtualhosts_data[$vhosts_filename] .= ' SSLHonorCipherOrder On' . "\n";
+
+							$this->virtualhosts_data[$vhosts_filename] .= ' SSLHonorCipherOrder ' .  ($domain['ssl_honorcipherorder'] == '1' ? 'on' : 'off') . "\n";
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLCipherSuite ' . Settings::Get('system.ssl_cipher_list') . "\n";
 							$protocols = array_map('trim', explode(",", Settings::Get('system.ssl_protocols')));
 							if (in_array("TLSv1.3", $protocols) && ! empty(Settings::Get('system.tlsv13_cipher_list')) && Settings::Get('system.apache24') == 1) {
@@ -986,9 +989,9 @@ class Apache extends HttpConfigBase
 						$vhost_content .= '  SSLOpenSSLConfCmd DHParameters "' . $dhparams . '"' . "\n";
 					}
 					$vhost_content .= '  SSLCompression Off' . "\n";
+					$vhost_content .= '  SSLSessionTickets ' .  ($domain['ssl_sessiontickets'] == '1' ? 'on' : 'off') . "\n";
 				}
-				// this makes it more secure, thx to Marcel (08/2013)
-				$vhost_content .= '  SSLHonorCipherOrder On' . "\n";
+				$vhost_content .= '  SSLHonorCipherOrder ' .  ($domain['ssl_honorcipherorder'] == '1' ? 'on' : 'off') . "\n";
 				$vhost_content .= '  SSLCipherSuite ' . $ssl_cipher_list . "\n";
 				$protocols = array_map('trim', explode(",", $ssl_protocols));
 				if (in_array("TLSv1.3", $protocols) && ! empty($tlsv13_cipher_list) && Settings::Get('system.apache24') == 1) {
@@ -1114,7 +1117,7 @@ class Apache extends HttpConfigBase
 				// Create vhost without ssl
 				$this->virtualhosts_data[$vhosts_filename] .= $this->getVhostContent($domain, false);
 
-				if ($domain['ssl'] == '1' || $domain['ssl_redirect'] == '1') {
+				if ($domain['ssl_enabled'] == '1' && ($domain['ssl'] == '1' || $domain['ssl_redirect'] == '1')) {
 					// Adding ssl stuff if enabled
 					$vhosts_filename_ssl = $this->getVhostFilename($domain, true);
 					$this->virtualhosts_data[$vhosts_filename_ssl] = '# Domain ID: ' . $domain['id'] . ' (SSL) - CustomerID: ' . $domain['customerid'] . ' - CustomerLogin: ' . $domain['loginname'] . "\n";
