@@ -354,7 +354,8 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				}
 
 				// validation
-				if ($p_domain == Settings::Get('system.hostname')) {
+				$p_domain = strtolower($p_domain);
+				if ($p_domain == strtolower(Settings::Get('system.hostname'))) {
 					\Froxlor\UI\Response::standard_error('admin_domain_emailsystemhostname', '', true);
 				}
 

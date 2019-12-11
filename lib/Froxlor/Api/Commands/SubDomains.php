@@ -99,6 +99,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			$customer = $this->getCustomerData('subdomains');
 
 			// validation
+			$subdomain = strtolower($subdomain);
 			if (substr($subdomain, 0, 4) == 'xn--') {
 				\Froxlor\UI\Response::standard_error('domain_nopunycode', '', true);
 			}
@@ -118,7 +119,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 					'mydomain'
 				), '', true);
 			}
-			if ($completedomain == Settings::Get('system.hostname')) {
+			if ($completedomain == strtolower(Settings::Get('system.hostname'))) {
 				\Froxlor\UI\Response::standard_error('admin_domain_emailsystemhostname', '', true);
 			}
 

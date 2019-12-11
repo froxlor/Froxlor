@@ -28,7 +28,7 @@ class SubDomainsTest extends TestCase
 		$customer_userdata = json_decode($json_result, true)['data'];
 
 		$data = [
-			'subdomain' => 'mysub',
+			'subdomain' => 'mySub',
 			'domain' => 'test2.local'
 		];
 		$json_result = SubDomains::getLocal($customer_userdata, $data)->add();
@@ -47,7 +47,7 @@ class SubDomainsTest extends TestCase
 		$reseller_userdata['adminsession'] = 1;
 
 		$data = [
-			'subdomain' => 'mysub2',
+			'subdomain' => 'mySub2',
 			'domain' => 'test2.local',
 			'customerid' => 1
 		];
