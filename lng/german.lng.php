@@ -1735,3 +1735,6 @@ $lng['admin']['domain_override_tls'] = 'Überschreibe System TLS Einstellungen';
 $lng['domains']['isaliasdomainof'] = 'Ist Aliasdomain für %s';
 $lng['serversettings']['apply_specialsettings_default']['title'] = 'Standardwert für "' . $lng['admin']['specialsettingsforsubdomains'] . "' Einstellung beim Bearbeiten einer Domain";
 $lng['serversettings']['apply_phpconfigs_default']['title'] = 'Standardwert für "' . $lng['admin']['phpsettingsforsubdomains'] . "' Einstellung beim Bearbeiten einer Domain";
+$lng['admin']['domain_sslenabled'] = 'Aktiviere Nutzung von SSL';
+$lng['admin']['domain_honorcipherorder'] = 'Bevorzuge die serverseitige Cipher Reihenfolge, Standardwert <strong>nein</strong>';
+$lng['admin']['domain_sessiontickets'] = 'Aktiviere TLS Sessiontickets (RFC 5077), Standardwert <strong>ja</strong>';

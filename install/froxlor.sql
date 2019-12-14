@@ -271,6 +271,9 @@ CREATE TABLE `panel_domains` (
   `ssl_protocols` text,
   `ssl_cipher_list` text,
   `tlsv13_cipher_list` text,
+  `ssl_enabled` tinyint(1) DEFAULT '1',
+  `ssl_honorcipherorder` tinyint(1) DEFAULT '0',
+  `ssl_sessiontickets` tinyint(1) DEFAULT '1',
   PRIMARY KEY  (`id`),
   KEY `customerid` (`customerid`),
   KEY `parentdomain` (`parentdomainid`),
@@ -652,6 +655,8 @@ opcache.interned_strings_buffer'),
 	('system', 'disable_le_selfcheck', '0'),
 	('system', 'ssl_protocols', 'TLSv1,TLSv1.2'),
 	('system', 'tlsv13_cipher_list', ''),
+	('system', 'honorcipherorder', '0'),
+	('system', 'sessiontickets', '1'),
 	('system', 'logfiles_format', ''),
 	('system', 'logfiles_type', '1'),
 	('system', 'logfiles_piped', '0'),
@@ -696,8 +701,8 @@ opcache.interned_strings_buffer'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'is_configured', '0'),
-	('panel', 'version', '0.10.9'),
-	('panel', 'db_version', '201911220');
+	('panel', 'version', '0.10.10'),
+	('panel', 'db_version', '201912100');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

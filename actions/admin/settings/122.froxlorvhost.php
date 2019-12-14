@@ -105,6 +105,30 @@ return array(
 						'hasVhostContainerEnabled'
 					), true)
 				),
+				'system_honorcipherorder' => array(
+					'label' => $lng['admin']['domain_honorcipherorder'],
+					'settinggroup' => 'system',
+					'varname' => 'honorcipherorder',
+					'type' => 'bool',
+					'default' => false,
+					'save_method' => 'storeSettingField',
+					'visible' => \Froxlor\Settings::Get('system.use_ssl') && call_user_func(array(
+						'\Froxlor\Settings\FroxlorVhostSettings',
+						'hasVhostContainerEnabled'
+					), true)
+				),
+				'system_sessiontickets' => array(
+					'label' => $lng['admin']['domain_sessiontickets'],
+					'settinggroup' => 'system',
+					'varname' => 'sessiontickets',
+					'type' => 'bool',
+					'default' => true,
+					'save_method' => 'storeSettingField',
+					'visible' => \Froxlor\Settings::Get('system.use_ssl') && call_user_func(array(
+						'\Froxlor\Settings\FroxlorVhostSettings',
+						'hasVhostContainerEnabled'
+					), true)
+				),
 				/**
 				 * FCGID
 				 */

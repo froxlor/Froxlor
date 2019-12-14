@@ -26,7 +26,7 @@ class DomainsTest extends TestCase
 		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
 		$data = [
-			'domain' => 'test.local',
+			'domain' => 'TEST.local',
 			'customerid' => $customer_userdata['customerid'],
 			'override_tls' => 1,
 			'ssl_protocols' => array(

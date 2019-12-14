@@ -180,6 +180,20 @@ return array(
 				'image' => 'icons/domain_add.png',
 				'visible' => \Froxlor\Settings::Get('system.use_ssl') == '1' ? true : false,
 				'fields' => array(
+					'sslenabled' => array(
+						'visible' => ($ssl_ipsandports != '' ? true : false),
+						'label' => $lng['admin']['domain_sslenabled'],
+						'type' => 'checkbox',
+						'values' => array(
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array(
+							'1'
+						)
+					),
 					'no_ssl_available_info' => array(
 						'visible' => ($ssl_ipsandports == '' ? true : false),
 						'label' => 'SSL',
@@ -356,6 +370,32 @@ return array(
 							)
 						),
 						'value' => array()
+					),
+					'honorcipherorder' => array(
+						'visible' => ($ssl_ipsandports != '' ? true : false),
+						'label' => $lng['admin']['domain_honorcipherorder'],
+						'type' => 'checkbox',
+						'values' => array(
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array()
+					),
+					'sessiontickets' => array(
+						'visible' => ($ssl_ipsandports != '' ? true : false) && \Froxlor\Settings::Get('system.webserver') != 'lighttpd',
+						'label' => $lng['admin']['domain_sessiontickets'],
+						'type' => 'checkbox',
+						'values' => array(
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array(
+							'1'
+						)
 					)
 				)
 			),

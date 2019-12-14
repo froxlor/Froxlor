@@ -272,6 +272,8 @@ class Nginx extends HttpConfigBase
 				 */
 				if ($row_ipsandports['ssl'] == '1') {
 					$row_ipsandports['domain'] = Settings::Get('system.hostname');
+					$row_ipsandports['ssl_honorcipherorder'] = Settings::Get('system.honorcipherorder');
+					$row_ipsandports['ssl_sessiontickets'] = Settings::Get('system.sessiontickets');
 					$this->nginx_data[$vhost_filename] .= $this->composeSslSettings($row_ipsandports);
 					if ($row_ipsandports['ssl_specialsettings'] != '') {
 						$this->nginx_data[$vhost_filename] .= $this->processSpecialConfigTemplate($row_ipsandports['ssl_specialsettings'], array(
@@ -700,7 +702,8 @@ class Nginx extends HttpConfigBase
 				// When >1.11.0: Defaults to auto, using recommended curves provided by OpenSSL.
 				// see https://github.com/Froxlor/Froxlor/issues/652
 				// $sslsettings .= "\t" . 'ssl_ecdh_curve secp384r1;' . "\n";
-				$sslsettings .= "\t" . 'ssl_prefer_server_ciphers on;' . "\n";
+				$sslsettings .= "\t" . 'ssl_prefer_server_ciphers ' .  (isset($domain_or_ip['ssl_honorcipherorder']) && $domain_or_ip['ssl_honorcipherorder'] == '1' ? 'on' : 'off') . ';' . "\n";
+				$sslsettings .= "\t" . 'ssl_session_tickets ' .  (isset($domain_or_ip['ssl_sessiontickets']) && $domain_or_ip['ssl_sessiontickets'] == '1' ? 'on' : 'off') . ';' . "\n";
 				$sslsettings .= "\t" . 'ssl_session_cache shared:SSL:10m;' . "\n";
 				$sslsettings .= "\t" . 'ssl_certificate ' . \Froxlor\FileDir::makeCorrectFile($domain_or_ip['ssl_cert_file']) . ';' . "\n";
 
