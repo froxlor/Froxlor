@@ -1631,6 +1631,9 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 			$_update_data['openbasedir'] = $openbasedir;
 			$_update_data['mod_fcgid_starter'] = $mod_fcgid_starter;
 			$_update_data['mod_fcgid_maxrequests'] = $mod_fcgid_maxrequests;
+			$_update_data['notryfiles'] = $notryfiles;
+			$_update_data['writeaccesslog'] = $writeaccesslog;
+			$_update_data['writeerrorlog'] = $writeerrorlog;
 			$_update_data['override_tls'] = $override_tls;
 			$_update_data['ssl_protocols'] = implode(",", $ssl_protocols);
 			$_update_data['ssl_cipher_list'] = $ssl_cipher_list;
@@ -1661,6 +1664,9 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				`openbasedir` = :openbasedir,
 				`mod_fcgid_starter` = :mod_fcgid_starter,
 				`mod_fcgid_maxrequests` = :mod_fcgid_maxrequests,
+				`notryfiles` = :notryfiles,
+				`writeaccesslog` = :writeaccesslog,
+				`writeerrorlog` = :writeerrorlog,
 				`override_tls` = :override_tls,
 				`ssl_protocols` = :ssl_protocols,
 				`ssl_cipher_list` = :ssl_cipher_list,
