@@ -86,5 +86,6 @@ if ($userinfo['type_2fa'] == '0') {
 } elseif ($userinfo['type_2fa'] == '2') {
 	// authenticator 2fa enabled
 	$ga_qrcode = $tfa->getQRCodeImageAsDataUri($userinfo['loginname'], $userinfo['data_2fa']);
+        $ga_secret = &$userinfo['data_2fa'];
 }
 eval("echo \"" . \Froxlor\UI\Template::getTemplate("2fa/overview", true) . "\";");

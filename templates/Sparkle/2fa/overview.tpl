@@ -32,6 +32,7 @@ $header
 			action="{$linker->getLink(array('section' => 'index', 'page' => $page, 'action' => 'delete'))}">
 			<p>{$lng['2fa']['2fa_ga_desc']}</p>
 			<br> <img src="{$ga_qrcode}" alt="QRCode" /><br>
+      <br> <p>Secret: <strong>{$ga_secret}</strong> </p>
 			<br> <input type="submit" class="cancel"
 				value="{$lng['2fa']['2fa_delete']}" name="delete" />
 		</form>
