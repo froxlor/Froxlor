@@ -695,7 +695,7 @@ class Nginx extends HttpConfigBase
 					if (! file_exists($dhparams)) {
 						\Froxlor\FileDir::safe_exec('openssl dhparam -out ' . escapeshellarg($dhparams) . ' 4096');
 					}
-					$sslsettings .= 'ssl_dhparam ' . $dhparams . ';' . "\n";
+					$sslsettings .= "\t" . 'ssl_dhparam ' . $dhparams . ';' . "\n";
 				}
 				// When <1.11.0: Defaults to prime256v1, similar to first curve recommendation by Mozilla.
 				// (When specifyng just one, there's no fallback when specific curve is not supported by client.)
