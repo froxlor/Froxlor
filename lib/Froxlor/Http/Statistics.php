@@ -42,6 +42,7 @@ class Statistics
 			// if LogFormat is NOT numeric (e.g. 1,2,3,4), we quote it.
 			// 1-4 are pre-defined formats by awstats which must not be quoted to work properly. So if
 			// it is not a integer, it is something customized and we simply quote it.
+			// Only escaping double-quote should be fine, as we only put the whole string under double-quote.
 			$logformat = '"' . str_replace('"', '\"', Settings::Get('system.awstats_logformat')) . '"';
 		}
 
