@@ -126,7 +126,7 @@ class MysqlsTest extends TestCase
 
 		// test connection
 		try {
-			$test_conn = new \PDO("mysql:host=localhost", 'test1sql1', $newPwd);
+			$test_conn = new \PDO("mysql:host=127.0.0.1", 'test1sql1', $newPwd);
 			unset($test_conn);
 		} catch (PDOException $e) {
 			$this->fail($e->getMessage());
