@@ -62,7 +62,7 @@ return array(
 					'string_emptyallowed' => true,
 					'default' => '',
 					'visible' => \Froxlor\Settings::Get('system.webserver') == "apache2" && \Froxlor\Settings::Get('system.apache24') == 1,
-					'save_method' => 'storeSettingField',
+					'save_method' => 'storeSettingField'
 				),
 				'system_ssl_cert_file' => array(
 					'label' => $lng['serversettings']['ssl']['ssl_cert_file'],
@@ -114,6 +114,18 @@ return array(
 					'default' => 'shmcb:/var/run/apache2/ocsp-stapling.cache(131072)',
 					'visible' => \Froxlor\Settings::Get('system.webserver') == "apache2" && \Froxlor\Settings::Get('system.apache24') == 1,
 					'save_method' => 'storeSettingField'
+				),
+				'system_sessionticketsenabled' => array(
+					'label' => $lng['admin']['domain_sessionticketsenabled'],
+					'settinggroup' => 'system',
+					'varname' => 'sessionticketsenabled',
+					'type' => 'bool',
+					'default' => true,
+					'save_method' => 'storeSettingField',
+					'visible' => \Froxlor\Settings::Get('system.use_ssl') && (\Froxlor\Settings::Get('system.webserver') == "nginx" || (\Froxlor\Settings::Get('system.webserver') == "apache2" && \Froxlor\Settings::Get('system.apache24') == 1)) && call_user_func(array(
+						'\Froxlor\Settings\FroxlorVhostSettings',
+						'hasVhostContainerEnabled'
+					), true)
 				),
 				'system_leenabled' => array(
 					'label' => $lng['serversettings']['leenabled'],

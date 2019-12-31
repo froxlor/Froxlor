@@ -2085,3 +2085,5 @@ $lng['serversettings']['apply_phpconfigs_default']['title'] = 'Default value for
 $lng['admin']['domain_sslenabled'] = 'Enable usage of SSL';
 $lng['admin']['domain_honorcipherorder'] = 'Honor the (server) cipher order, default <strong>no</strong>';
 $lng['admin']['domain_sessiontickets'] = 'Enable TLS sessiontickets (RFC 5077), default <strong>yes</strong>';
+$lng['admin']['domain_sessionticketsenabled']['title'] = 'Enable usage of TLS sessiontickets globally';
+$lng['admin']['domain_sessionticketsenabled']['description'] = 'Default <strong>yes</strong><br>Requires apache-2.4.11+ or nginx-1.5.9+';

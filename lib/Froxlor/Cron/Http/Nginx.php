@@ -703,7 +703,9 @@ class Nginx extends HttpConfigBase
 				// see https://github.com/Froxlor/Froxlor/issues/652
 				// $sslsettings .= "\t" . 'ssl_ecdh_curve secp384r1;' . "\n";
 				$sslsettings .= "\t" . 'ssl_prefer_server_ciphers ' .  (isset($domain_or_ip['ssl_honorcipherorder']) && $domain_or_ip['ssl_honorcipherorder'] == '1' ? 'on' : 'off') . ';' . "\n";
-				$sslsettings .= "\t" . 'ssl_session_tickets ' .  (isset($domain_or_ip['ssl_sessiontickets']) && $domain_or_ip['ssl_sessiontickets'] == '1' ? 'on' : 'off') . ';' . "\n";
+				if (Settings::Get('system.sessionticketsenabled') == '1') {
+					$sslsettings .= "\t" . 'ssl_session_tickets ' .  (isset($domain_or_ip['ssl_sessiontickets']) && $domain_or_ip['ssl_sessiontickets'] == '1' ? 'on' : 'off') . ';' . "\n";
+				}
 				$sslsettings .= "\t" . 'ssl_session_cache shared:SSL:10m;' . "\n";
 				$sslsettings .= "\t" . 'ssl_certificate ' . \Froxlor\FileDir::makeCorrectFile($domain_or_ip['ssl_cert_file']) . ';' . "\n";
 
