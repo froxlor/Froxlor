@@ -115,6 +115,7 @@ class Fpm
 			$fpm_requests = (int) $this->fpm_cfg['max_requests'];
 			$fpm_process_idle_timeout = (int) $this->fpm_cfg['idle_timeout'];
 			$fpm_limit_extensions = $this->fpm_cfg['limit_extensions'];
+			$fpm_custom_config = $this->fpm_cfg['custom_config'];
 
 			if ($fpm_children == 0) {
 				$fpm_children = 1;
@@ -258,6 +259,12 @@ class Fpm
 			// if not we use our fallback-default as usual
 			if (strpos($fpm_config, 'php_admin_value[sendmail_path]') === false) {
 				$fpm_config .= 'php_admin_value[sendmail_path] = /usr/sbin/sendmail -t -i -f ' . $this->domain['email'] . "\n";
+			}
+
+			// append custom phpfpm configuration
+			if (! empty($fpm_custom_config)) {
+				$fpm_config .= "\n; Custom Configuration\n";
+				$fpm_config .= \Froxlor\PhpHelper::replaceVariables($fpm_custom_config, $php_ini_variables);
 			}
 
 			fwrite($fh, $fpm_config, strlen($fpm_config));

@@ -2085,3 +2085,6 @@ $lng['serversettings']['apply_phpconfigs_default']['title'] = 'Default value for
 $lng['admin']['domain_sslenabled'] = 'Enable usage of SSL';
 $lng['admin']['domain_honorcipherorder'] = 'Honor the (server) cipher order, default <strong>no</strong>';
 $lng['admin']['domain_sessiontickets'] = 'Enable TLS sessiontickets (RFC 5077), default <strong>yes</strong>';
+
+$lng['serversettings']['phpfpm_settings']['custom_config']['title'] = 'Custom Configuration';
+$lng['serversettings']['phpfpm_settings']['custom_config']['description'] = 'Add custom configuration to each PHP-FPM version instance, for example <i>pm.status_path = /status</i> for monitoring. Variables below can be used here.';

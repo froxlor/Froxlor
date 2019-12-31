@@ -523,3 +523,10 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.9')) {
 	showUpdateStep("Updating from 0.10.9 to 0.10.10", false);
 	\Froxlor\Froxlor::updateToVersion('0.10.10');
 }
+
+if (\Froxlor\Froxlor::isDatabaseVersion('201912100')) {
+	showUpdateStep("Adding custom phpfpm configuration field");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_PHPDAEMONS . "` ADD `custom_config` text NOT NULL DEFAULT '' AFTER `limit_extensions`;");
+	lastStepStatus(0);
+	\Froxlor\Froxlor::updateToDbVersion('201912310');
+}
