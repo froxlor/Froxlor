@@ -226,7 +226,12 @@ class Nginx extends HttpConfigBase
 					$aliases = " " . trim($aliases);
 				}
 				$this->nginx_data[$vhost_filename] .= "\t" . 'server_name    ' . Settings::Get('system.hostname') . $aliases . ';' . "\n";
-				$this->nginx_data[$vhost_filename] .= "\t" . 'access_log      /var/log/nginx/access.log;' . "\n";
+
+				$logtype = 'combined';
+				if (Settings::Get('system.logfiles_format') != '') {
+					$logtype = 'frx_custom';
+				}
+				$this->nginx_data[$vhost_filename] .= "\t" . 'access_log     /var/log/nginx/access.log ' . $logtype . ';' . "\n";
 
 				if (Settings::Get('system.use_ssl') == '1' && Settings::Get('system.leenabled') == '1' && Settings::Get('system.le_froxlor_enabled') == '1') {
 					$acmeConfFilename = Settings::Get('system.letsencryptacmeconf');
