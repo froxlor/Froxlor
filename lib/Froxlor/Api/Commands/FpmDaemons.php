@@ -151,7 +151,7 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	 * @param string $limit_extensions
 	 *        	optional, limit execution to the following extensions, default '.php'
 	 * @param string $custom_config
-	 *        	optional, custom settings appended to phpfpm configuration
+	 *        	optional, custom settings appended to phpfpm pool configuration
 	 *        	
 	 * @access admin
 	 * @throws \Exception
@@ -267,7 +267,7 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	 * @param string $limit_extensions
 	 *        	optional, limit execution to the following extensions, default '.php'
 	 * @param string $custom_config
-	 *        	optional, custom settings appended to phpfpm configuration
+	 *        	optional, custom settings appended to phpfpm pool configuration
 	 *        	
 	 * @access admin
 	 * @throws \Exception
