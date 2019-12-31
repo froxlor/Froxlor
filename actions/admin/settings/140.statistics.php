@@ -78,6 +78,14 @@ return array(
 					'string_type' => 'dir',
 					'default' => '/usr/share/awstats/icon/',
 					'save_method' => 'storeSettingField'
+				),
+				'system_awstats_logformat' => array(
+					'label' => $lng['serversettings']['awstats']['logformat'],
+					'settinggroup' => 'system',
+					'varname' => 'awstats_logformat',
+					'type' => 'string',
+					'default' => '1',
+					'save_method' => 'storeSettingField'
 				)
 			)
 		)

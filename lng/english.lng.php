@@ -2087,3 +2087,6 @@ $lng['admin']['domain_honorcipherorder'] = 'Honor the (server) cipher order, def
 $lng['admin']['domain_sessiontickets'] = 'Enable TLS sessiontickets (RFC 5077), default <strong>yes</strong>';
 $lng['admin']['domain_sessionticketsenabled']['title'] = 'Enable usage of TLS sessiontickets globally';
 $lng['admin']['domain_sessionticketsenabled']['description'] = 'Default <strong>yes</strong><br>Requires apache-2.4.11+ or nginx-1.5.9+';
+
+$lng['serversettings']['awstats']['logformat']['title'] = 'LogFormat setting';
+$lng['serversettings']['awstats']['logformat']['description'] = 'If you use customized logformat for your webserver, you need change the awstats LogFormat too.<br/>Default is 1. For more information check documentation <a target="_blank" href="https://awstats.sourceforge.io/docs/awstats_config.html#LogFormat">here</a>.';
