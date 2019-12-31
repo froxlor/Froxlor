@@ -68,6 +68,11 @@ class DomainSSL
 				'ssl_key_file' => \Froxlor\FileDir::makeCorrectFile($sslcertpath . '/' . $domain['domain'] . '.key')
 			);
 
+			if (! $this->validateCertificate($dom_certs)) {
+				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_ERR, 'Given SSL private key for ' . $domain['domain'] . ' does not seem to match the certificate. Cannot create ssl-directives');
+				return;
+			}
+
 			if (Settings::Get('system.webserver') == 'lighttpd') {
 				// put my.crt and my.key together for lighty.
 				$dom_certs['ssl_cert_file'] = trim($dom_certs['ssl_cert_file']) . "\n" . trim($dom_certs['ssl_key_file']) . "\n";
@@ -111,5 +116,10 @@ class DomainSSL
 		}
 
 		return;
+	}
+
+	private function validateCertificate($dom_certs = array())
+	{
+		return openssl_x509_check_private_key($dom_certs['ssl_cert_file'], $dom_certs['ssl_key_file']);
 	}
 }
