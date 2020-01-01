@@ -480,7 +480,9 @@ class Apache extends HttpConfigBase
 									$this->virtualhosts_data[$vhosts_filename] .= ' SSLOpenSSLConfCmd DHParameters "' . $dhparams . '"' . "\n";
 								}
 								$this->virtualhosts_data[$vhosts_filename] .= ' SSLCompression Off' . "\n";
-								$this->virtualhosts_data[$vhosts_filename] .= ' SSLSessionTickets ' .  ($domain['ssl_sessiontickets'] == '1' ? 'on' : 'off') . "\n";
+								if (Settings::Get('system.sessionticketsenabled') == '1') {
+									$this->virtualhosts_data[$vhosts_filename] .= ' SSLSessionTickets ' .  ($domain['ssl_sessiontickets'] == '1' ? 'on' : 'off') . "\n";
+								}
 							}
 
 							$this->virtualhosts_data[$vhosts_filename] .= ' SSLHonorCipherOrder ' .  ($domain['ssl_honorcipherorder'] == '1' ? 'on' : 'off') . "\n";
@@ -989,7 +991,9 @@ class Apache extends HttpConfigBase
 						$vhost_content .= '  SSLOpenSSLConfCmd DHParameters "' . $dhparams . '"' . "\n";
 					}
 					$vhost_content .= '  SSLCompression Off' . "\n";
-					$vhost_content .= '  SSLSessionTickets ' .  ($domain['ssl_sessiontickets'] == '1' ? 'on' : 'off') . "\n";
+					if (Settings::Get('system.sessionticketsenabled') == '1') {
+						$vhost_content .= '  SSLSessionTickets ' .  ($domain['ssl_sessiontickets'] == '1' ? 'on' : 'off') . "\n";
+					}
 				}
 				$vhost_content .= '  SSLHonorCipherOrder ' .  ($domain['ssl_honorcipherorder'] == '1' ? 'on' : 'off') . "\n";
 				$vhost_content .= '  SSLCipherSuite ' . $ssl_cipher_list . "\n";

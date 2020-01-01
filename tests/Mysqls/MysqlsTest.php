@@ -113,15 +113,24 @@ class MysqlsTest extends TestCase
 	{
 		global $admin_userdata;
 
+		$newPwd = \Froxlor\System\Crypt::generatePassword();
 		$data = [
 			'dbname' => 'test1sql1',
-			'mysql_password' => \Froxlor\System\Crypt::generatePassword(),
+			'mysql_password' => $newPwd,
 			'description' => 'testdb-upd',
 			'loginname' => 'test1'
 		];
 		$json_result = Mysqls::getLocal($admin_userdata, $data)->update();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals('testdb-upd', $result['description']);
+
+		// test connection
+		try {
+			$test_conn = new \PDO("mysql:host=127.0.0.1", 'test1sql1', $newPwd);
+			unset($test_conn);
+		} catch (PDOException $e) {
+			$this->fail($e->getMessage());
+		}
 	}
 
 	/**

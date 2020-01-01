@@ -523,3 +523,10 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.9')) {
 	showUpdateStep("Updating from 0.10.9 to 0.10.10", false);
 	\Froxlor\Froxlor::updateToVersion('0.10.10');
 }
+
+if (\Froxlor\Froxlor::isDatabaseVersion('201912100')) {
+	showUpdateStep("Adding option to disable SSL sessiontickets for older systems");
+	Settings::AddNew("system.sessionticketsenabled", '1');
+	lastStepStatus(0);
+	\Froxlor\Froxlor::updateToDbVersion('201912310');
+}

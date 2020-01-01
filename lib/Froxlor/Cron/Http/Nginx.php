@@ -226,7 +226,12 @@ class Nginx extends HttpConfigBase
 					$aliases = " " . trim($aliases);
 				}
 				$this->nginx_data[$vhost_filename] .= "\t" . 'server_name    ' . Settings::Get('system.hostname') . $aliases . ';' . "\n";
-				$this->nginx_data[$vhost_filename] .= "\t" . 'access_log      /var/log/nginx/access.log;' . "\n";
+
+				$logtype = 'combined';
+				if (Settings::Get('system.logfiles_format') != '') {
+					$logtype = 'frx_custom';
+				}
+				$this->nginx_data[$vhost_filename] .= "\t" . 'access_log     /var/log/nginx/access.log ' . $logtype . ';' . "\n";
 
 				if (Settings::Get('system.use_ssl') == '1' && Settings::Get('system.leenabled') == '1' && Settings::Get('system.le_froxlor_enabled') == '1') {
 					$acmeConfFilename = Settings::Get('system.letsencryptacmeconf');
@@ -695,7 +700,7 @@ class Nginx extends HttpConfigBase
 					if (! file_exists($dhparams)) {
 						\Froxlor\FileDir::safe_exec('openssl dhparam -out ' . escapeshellarg($dhparams) . ' 4096');
 					}
-					$sslsettings .= 'ssl_dhparam ' . $dhparams . ';' . "\n";
+					$sslsettings .= "\t" . 'ssl_dhparam ' . $dhparams . ';' . "\n";
 				}
 				// When <1.11.0: Defaults to prime256v1, similar to first curve recommendation by Mozilla.
 				// (When specifyng just one, there's no fallback when specific curve is not supported by client.)
@@ -703,7 +708,9 @@ class Nginx extends HttpConfigBase
 				// see https://github.com/Froxlor/Froxlor/issues/652
 				// $sslsettings .= "\t" . 'ssl_ecdh_curve secp384r1;' . "\n";
 				$sslsettings .= "\t" . 'ssl_prefer_server_ciphers ' .  (isset($domain_or_ip['ssl_honorcipherorder']) && $domain_or_ip['ssl_honorcipherorder'] == '1' ? 'on' : 'off') . ';' . "\n";
-				$sslsettings .= "\t" . 'ssl_session_tickets ' .  (isset($domain_or_ip['ssl_sessiontickets']) && $domain_or_ip['ssl_sessiontickets'] == '1' ? 'on' : 'off') . ';' . "\n";
+				if (Settings::Get('system.sessionticketsenabled') == '1') {
+					$sslsettings .= "\t" . 'ssl_session_tickets ' .  (isset($domain_or_ip['ssl_sessiontickets']) && $domain_or_ip['ssl_sessiontickets'] == '1' ? 'on' : 'off') . ';' . "\n";
+				}
 				$sslsettings .= "\t" . 'ssl_session_cache shared:SSL:10m;' . "\n";
 				$sslsettings .= "\t" . 'ssl_certificate ' . \Froxlor\FileDir::makeCorrectFile($domain_or_ip['ssl_cert_file']) . ';' . "\n";
 

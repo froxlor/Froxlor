@@ -657,6 +657,7 @@ opcache.interned_strings_buffer'),
 	('system', 'tlsv13_cipher_list', ''),
 	('system', 'honorcipherorder', '0'),
 	('system', 'sessiontickets', '1'),
+	('system', 'sessionticketsenabled', '1'),
 	('system', 'logfiles_format', ''),
 	('system', 'logfiles_type', '1'),
 	('system', 'logfiles_piped', '0'),
@@ -702,7 +703,7 @@ opcache.interned_strings_buffer'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'is_configured', '0'),
 	('panel', 'version', '0.10.10'),
-	('panel', 'db_version', '201912100');
+	('panel', 'db_version', '201912310');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
