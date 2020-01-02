@@ -53,14 +53,21 @@ https://files.froxlor.org/releases/froxlor-latest.tar.gz [MD5](https://files.fro
 
 [HowTo](https://github.com/Froxlor/Froxlor/wiki/Install-froxlor-on-debian)
 
-/etc/apt/sources.list.d/froxlor.list
-> deb http://debian.froxlor.org {stretch|buster} main
+```
+apt-get -y install apt-transport-https lsb-release ca-certificates
+wget -O - https://deb.froxlor.org/froxlor.gpg | apt-key add -
+echo "deb https://deb.froxlor.org/debian $(lsb_release -sc) main" > /etc/apt/sources.list.d/froxlor.list
+```
 
-### Gentoo repository
+### Ubuntu repository
 
-[HowTo](https://github.com/Froxlor/Froxlor/wiki/Install-froxlor-on-gentoo)
+[HowTo](https://github.com/Froxlor/Froxlor/wiki/Install-froxlor-on-ubuntu)
 
-https://files.froxlor.org/gentoo/repositories.xml
+```
+apt-get -y install apt-transport-https lsb-release ca-certificates
+wget -O - https://deb.froxlor.org/froxlor.gpg | apt-key add -
+echo "deb https://deb.froxlor.org/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/froxlor.list
+```
 
 ## Contributing
 
