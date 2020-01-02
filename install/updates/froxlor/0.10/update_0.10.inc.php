@@ -531,6 +531,13 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201912100')) {
 	\Froxlor\Froxlor::updateToDbVersion('201912310');
 }
 
+if (\Froxlor\Froxlor::isDatabaseVersion('201912310')) {
+	showUpdateStep("Adding custom phpfpm pool configuration field");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_FPMDAEMONS . "` ADD `custom_config` text AFTER `limit_extensions`;");
+	lastStepStatus(0);
+	\Froxlor\Froxlor::updateToDbVersion('201912311');
+}
+
 if (\Froxlor\Froxlor::isDatabaseVersion('201912311')) {
 	showUpdateStep("Migrate logfiles_format setting");
 	Settings::Set('system.logfiles_format', '"' . Settings::Get('system.logfiles_format') . '"');
