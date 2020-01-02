@@ -2085,8 +2085,13 @@ $lng['serversettings']['apply_phpconfigs_default']['title'] = 'Default value for
 $lng['admin']['domain_sslenabled'] = 'Enable usage of SSL';
 $lng['admin']['domain_honorcipherorder'] = 'Honor the (server) cipher order, default <strong>no</strong>';
 $lng['admin']['domain_sessiontickets'] = 'Enable TLS sessiontickets (RFC 5077), default <strong>yes</strong>';
+
 $lng['admin']['domain_sessionticketsenabled']['title'] = 'Enable usage of TLS sessiontickets globally';
 $lng['admin']['domain_sessionticketsenabled']['description'] = 'Default <strong>yes</strong><br>Requires apache-2.4.11+ or nginx-1.5.9+';
+
+$lng['serversettings']['phpfpm_settings']['restart_note'] = 'Attention: The config won\'t be checked for any errors. If it contains errors, PHP-FPM might not start again!';
+$lng['serversettings']['phpfpm_settings']['custom_config']['title'] = 'Custom configuration';
+$lng['serversettings']['phpfpm_settings']['custom_config']['description'] = 'Add custom configuration to each PHP-FPM version instance, for example <i>pm.status_path = /status</i> for monitoring. Variables below can be used here. ' . ' <strong>' . $lng['serversettings']['phpfpm_settings']['restart_note'] . '</strong>';
 
 $lng['serversettings']['awstats']['logformat']['title'] = 'LogFormat setting';
 $lng['serversettings']['awstats']['logformat']['description'] = 'If you use customized logformat for your webserver, you need change the awstats LogFormat too.<br/>Default is 1. For more information check documentation <a target="_blank" href="https://awstats.sourceforge.io/docs/awstats_config.html#LogFormat">here</a>.';

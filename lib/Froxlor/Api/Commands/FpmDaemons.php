@@ -150,6 +150,8 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	 *        	optional, default 0
 	 * @param string $limit_extensions
 	 *        	optional, limit execution to the following extensions, default '.php'
+	 * @param string $custom_config
+	 *        	optional, custom settings appended to phpfpm pool configuration
 	 *        	
 	 * @access admin
 	 * @throws \Exception
@@ -173,6 +175,7 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			$max_requests = $this->getParam('max_requests', true, 0);
 			$idle_timeout = $this->getParam('idle_timeout', true, 0);
 			$limit_extensions = $this->getParam('limit_extensions', true, '.php');
+			$custom_config = $this->getParam('custom_config', true, '');
 
 			// validation
 			$description = \Froxlor\Validate\Validate::validate($description, 'description', '', '', array(), true);
@@ -206,7 +209,8 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				`max_spare_servers` = :max_spare_servers,
 				`max_requests` = :max_requests,
 				`idle_timeout` = :idle_timeout,
-				`limit_extensions` = :limit_extensions
+				`limit_extensions` = :limit_extensions,
+				`custom_config` = :custom_config
 			");
 			$ins_data = array(
 				'desc' => $description,
@@ -219,7 +223,8 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				'max_spare_servers' => $max_spare_servers,
 				'max_requests' => $max_requests,
 				'idle_timeout' => $idle_timeout,
-				'limit_extensions' => $limit_extensions
+				'limit_extensions' => $limit_extensions,
+				'custom_config' => $custom_config
 			);
 			Database::pexecute($ins_stmt, $ins_data);
 			$id = Database::lastInsertId();
@@ -261,6 +266,8 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	 *        	optional, default 0
 	 * @param string $limit_extensions
 	 *        	optional, limit execution to the following extensions, default '.php'
+	 * @param string $custom_config
+	 *        	optional, custom settings appended to phpfpm pool configuration
 	 *        	
 	 * @access admin
 	 * @throws \Exception
@@ -289,6 +296,7 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			$max_requests = $this->getParam('max_requests', true, $result['max_requests']);
 			$idle_timeout = $this->getParam('idle_timeout', true, $result['idle_timeout']);
 			$limit_extensions = $this->getParam('limit_extensions', true, $result['limit_extensions']);
+			$custom_config = $this->getParam('custom_config', true, $result['custom_config']);
 
 			// validation
 			$description = \Froxlor\Validate\Validate::validate($description, 'description', '', '', array(), true);
@@ -322,7 +330,8 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				`max_spare_servers` = :max_spare_servers,
 				`max_requests` = :max_requests,
 				`idle_timeout` = :idle_timeout,
-				`limit_extensions` = :limit_extensions
+				`limit_extensions` = :limit_extensions,
+				`custom_config` = :custom_config
 				WHERE `id` = :id
 			");
 			$upd_data = array(
@@ -337,6 +346,7 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				'max_requests' => $max_requests,
 				'idle_timeout' => $idle_timeout,
 				'limit_extensions' => $limit_extensions,
+				'custom_config' => $custom_config,
 				'id' => $id
 			);
 			Database::pexecute($upd_stmt, $upd_data, true, true);

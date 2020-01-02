@@ -86,6 +86,13 @@ return array(
 						'desc' => $lng['serversettings']['phpfpm_settings']['limit_extensions']['description'],
 						'type' => 'text',
 						'value' => '.php'
+					),
+					'custom_config' => array(
+						'label' => $lng['serversettings']['phpfpm_settings']['custom_config']['title'],
+						'desc' => $lng['serversettings']['phpfpm_settings']['custom_config']['description'],
+						'type' => 'textarea',
+						'cols' => 50,
+						'rows' => 7
 					)
 				)
 			)
