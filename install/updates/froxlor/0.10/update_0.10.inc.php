@@ -538,6 +538,11 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201912310')) {
 	\Froxlor\Froxlor::updateToDbVersion('201912311');
 }
 
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.10')) {
+	showUpdateStep("Updating from 0.10.10 to 0.10.11", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.11');
+}
+
 if (\Froxlor\Froxlor::isDatabaseVersion('201912311')) {
 	showUpdateStep("Migrate logfiles_format setting");
 	Settings::Set('system.logfiles_format', '"' . Settings::Get('system.logfiles_format') . '"');

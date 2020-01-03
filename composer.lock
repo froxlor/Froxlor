@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5699c65bbdcd2a61a9ced0ac7be84d64",
+    "content-hash": "a7ba15333ffb4a758ea65039b589545b",
     "packages": [
         {
-            "name": "algo26-matthias/idna-convert",
-            "version": "v2.1.0",
+            "name": "froxlor/idna-convert-legacy",
+            "version": "v2.1.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/algo26-matthias/idna-convert.git",
-                "reference": "2717d05713454991936bc581d068c6cea0d84e3b"
+                "url": "https://github.com/Froxlor/idna-convert-legacy.git",
+                "reference": "09c1db623ba19e1ed8f2f9dabc15eeda9dc713b7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/algo26-matthias/idna-convert/zipball/2717d05713454991936bc581d068c6cea0d84e3b",
-                "reference": "2717d05713454991936bc581d068c6cea0d84e3b",
+                "url": "https://api.github.com/repos/Froxlor/idna-convert-legacy/zipball/09c1db623ba19e1ed8f2f9dabc15eeda9dc713b7",
+                "reference": "09c1db623ba19e1ed8f2f9dabc15eeda9dc713b7",
                 "shasum": ""
             },
             "require": {
@@ -43,6 +43,11 @@
                     "name": "Matthias Sommerfeld",
                     "email": "matthias.sommerfeld@algo26.de",
                     "role": "Developer"
+                },
+                {
+                    "name": "Michael Kaufmann (d00p)",
+                    "email": "d00p@froxlor.org",
+                    "role": "Developer"
                 }
             ],
             "description": "A library for encoding and decoding internationalized domain names",
@@ -52,7 +57,7 @@
                 "idna",
                 "php"
             ],
-            "time": "2019-03-04T17:07:46+00:00"
+            "time": "2019-12-31T12:16:30+00:00"
         },
         {
             "name": "monolog/monolog",
