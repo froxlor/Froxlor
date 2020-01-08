@@ -173,7 +173,8 @@ return array(
 					'websrv_avail' => array(
 						'apache2',
 						'nginx'
-					)
+					),
+					'visible' => \Froxlor\Settings::Get('system.awstats_enabled') == 1
 				),
 				'system_logfiles_type' => array(
 					'label' => $lng['serversettings']['logfiles_type'],

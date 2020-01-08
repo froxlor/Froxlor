@@ -33,7 +33,8 @@ return array(
 						1 => $lng['admin']['webalizer']['quiet'],
 						2 => $lng['admin']['webalizer']['veryquiet']
 					),
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'visible' => \Froxlor\Settings::Get('system.awstats_enabled') == 1
 				),
 				'system_awstats_enabled' => array(
 					'label' => $lng['serversettings']['awstats_enabled'],
