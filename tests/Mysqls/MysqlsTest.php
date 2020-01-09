@@ -1,10 +1,12 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
+use Froxlor\Settings;
 use Froxlor\Api\Commands\Admins;
 use Froxlor\Api\Commands\Customers;
 use Froxlor\Api\Commands\Mysqls;
 use Froxlor\Database\Database;
+use Froxlor\Settings\Store;
 
 /**
  *
@@ -15,6 +17,7 @@ use Froxlor\Database\Database;
  * @covers \Froxlor\Api\Commands\Admins
  * @covers \Froxlor\Database\DbManager
  * @covers \Froxlor\Database\Manager\DbManagerMySQL
+ * @covers \Froxlor\Settings\Store
  */
 class MysqlsTest extends TestCase
 {
@@ -182,6 +185,24 @@ class MysqlsTest extends TestCase
 	/**
 	 *
 	 * @depends testCustomerMysqlsAdd
+	 */
+	public function testStoreSettingIpAddress()
+	{
+		// this settings test is here because it directly changes mysql users / privileges
+		$fielddata = array(
+			'label' => 'serversettings.ipaddress',
+			'settinggroup' => 'system',
+			'varname' => 'ipaddress'
+		);
+		Store::storeSettingIpAddress('system_system_ipaddress', $fielddata, '82.149.225.47');
+
+		$mysql_access_hosts = Settings::Get('system.mysql_access_host');
+		$this->assertTrue(strpos($mysql_access_hosts, '82.149.225.47') !== false);
+	}
+
+	/**
+	 *
+	 * @depends testStoreSettingIpAddress
 	 */
 	public function testGetAllSqlUsers()
 	{

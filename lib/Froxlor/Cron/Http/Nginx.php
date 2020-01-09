@@ -71,7 +71,7 @@ class Nginx extends HttpConfigBase
 			}
 
 			$logtype = 'frx_custom';
-			$this->nginx_data[$vhosts_filename] = 'log_format ' . $logtype . ' "' . Settings::Get('system.logfiles_format') . '";' . "\n";
+			$this->nginx_data[$vhosts_filename] = 'log_format ' . $logtype . ' ' . Settings::Get('system.logfiles_format') . ';' . "\n";
 		}
 	}
 
