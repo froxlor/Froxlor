@@ -545,7 +545,12 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.10')) {
 
 if (\Froxlor\Froxlor::isDatabaseVersion('201912311')) {
 	showUpdateStep("Migrate logfiles_format setting");
-	Settings::Set('system.logfiles_format', '"' . Settings::Get('system.logfiles_format') . '"');
-	lastStepStatus(0);
+	$current_format = Settings::Set('system.logfiles_format');
+	if (!empty($current_format)) {
+		Settings::Set('system.logfiles_format', '"' . Settings::Get('system.logfiles_format') . '"');
+		lastStepStatus(0);
+	} else {
+		lastStepStatus(0, 'not needed');
+	}
 	\Froxlor\Froxlor::updateToDbVersion('201912312');
 }
