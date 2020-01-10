@@ -38,6 +38,7 @@ class DomainsTest extends TestCase
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals($customer_userdata['documentroot'] . 'test.local/', $result['documentroot']);
 		$this->assertTrue(in_array('TLSv1.3', explode(",", $result['ssl_protocols'])));
+		$this->assertEquals('0', $result['isemaildomain']);
 	}
 
 	/**
