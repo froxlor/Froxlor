@@ -572,6 +572,7 @@ opcache.interned_strings_buffer'),
 	('system', 'stdsubdomain', ''),
 	('system', 'awstats_path', '/usr/bin/'),
 	('system', 'awstats_conf', '/etc/awstats/'),
+	('system', 'awstats_logformat', '1'),
 	('system', 'defaultttl', '604800'),
 	('system', 'mod_fcgid_defaultini', '1'),
 	('system', 'ftpserver', 'proftpd'),
@@ -703,7 +704,7 @@ opcache.interned_strings_buffer'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'is_configured', '0'),
 	('panel', 'version', '0.10.11'),
-	('panel', 'db_version', '201912312');
+	('panel', 'db_version', '201912313');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

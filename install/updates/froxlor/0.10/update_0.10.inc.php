@@ -554,3 +554,10 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201912311')) {
 	}
 	\Froxlor\Froxlor::updateToDbVersion('201912312');
 }
+
+if (\Froxlor\Froxlor::isDatabaseVersion('201912312')) {
+	showUpdateStep("Adding option change awstats LogFormat");
+	Settings::AddNew("system.awstats_logformat", '1');
+	lastStepStatus(0);
+	\Froxlor\Froxlor::updateToDbVersion('201912313');
+}
