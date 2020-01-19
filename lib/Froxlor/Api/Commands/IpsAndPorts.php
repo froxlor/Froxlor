@@ -462,7 +462,7 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 				$docroot = '';
 			}
 
-			if ($result['ip'] != $ip && $result['ip'] == Settings::Get('system.ipaddress') && ($result_sameipotherport && $result_sameipotherport['id'] == '')) {
+			if ($result['ip'] != $ip && $result['ip'] == Settings::Get('system.ipaddress') && $result_sameipotherport == false) {
 				\Froxlor\UI\Response::standard_error('cantchangesystemip', '', true);
 			} elseif ($result_checkfordouble && $result_checkfordouble['id'] != '' && $result_checkfordouble['id'] != $id) {
 				\Froxlor\UI\Response::standard_error('myipnotdouble', '', true);
@@ -560,7 +560,7 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 						'ip' => $result['ip']
 					));
 
-					if (($result['ip'] != Settings::Get('system.ipaddress')) || ($result['ip'] == Settings::Get('system.ipaddress') && ($result_sameipotherport && $result_sameipotherport['id'] != ''))) {
+					if (($result['ip'] != Settings::Get('system.ipaddress')) || ($result['ip'] == Settings::Get('system.ipaddress') && $result_sameipotherport == false)) {
 
 						$del_stmt = Database::prepare("
 							DELETE FROM `" . TABLE_PANEL_IPSANDPORTS . "`
