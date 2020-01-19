@@ -411,7 +411,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 					), true, true);
 
 					$mysql_maxlen = \Froxlor\Database\Database::getSqlUsernameLength() - strlen(Settings::Get('customer.mysqlprefix'));
-					if (strtolower($loginname_check['loginname']) == strtolower($loginname) || strtolower($loginname_check_admin['loginname']) == strtolower($loginname)) {
+					if (($loginname_check && strtolower($loginname_check['loginname']) == strtolower($loginname)) || ($loginname_check_admin && strtolower($loginname_check_admin['loginname']) == strtolower($loginname))) {
 						\Froxlor\UI\Response::standard_error('loginnameexists', $loginname, true);
 					} elseif (! \Froxlor\Validate\Validate::validateUsername($loginname, Settings::Get('panel.unix_names'), $mysql_maxlen)) {
 						if (strlen($loginname) > $mysql_maxlen) {

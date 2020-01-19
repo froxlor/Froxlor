@@ -252,7 +252,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			), true, true);
 			$mbdata = $mbdata_stmt->fetch(\PDO::FETCH_ASSOC);
 			Database::needRoot(false);
-			$result['size'] = $mbdata['MB'];
+			$result['size'] = $mbdata['MB'] ?? 0;
 			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] get database '" . $result['databasename'] . "'");
 			return $this->response(200, "successfull", $result);
 		}
@@ -411,7 +411,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 						"table_schema" => $row['databasename']
 					), true, true);
 					$mbdata = $mbdata_stmt->fetch(\PDO::FETCH_ASSOC);
-					$row['size'] = $mbdata['MB'];
+					$row['size'] = $mbdata['MB'] ?? 0;
 					$result[] = $row;
 				}
 				Database::needRoot(false);

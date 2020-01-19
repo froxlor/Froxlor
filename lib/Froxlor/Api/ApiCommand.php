@@ -583,8 +583,12 @@ abstract class ApiCommand extends ApiParameter
 			"group" => $group,
 			"var" => $varname
 		), true, true);
+		$content = $default;
+		if ($result) {
+			$content = $result['value'] ?? $default;
+		}
 		// @fixme html_entity_decode
-		$content = html_entity_decode(\Froxlor\PhpHelper::replaceVariables((($result['value'] != '') ? $result['value'] : $default), $replace_arr));
+		$content = html_entity_decode(\Froxlor\PhpHelper::replaceVariables($content, $replace_arr));
 		return $content;
 	}
 

@@ -195,7 +195,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			} elseif ($subdomain == 'www' && $domain_check['wwwserveralias'] == '1') {
 				// you cannot add 'www' as subdomain when the maindomain generates a www-alias
 				\Froxlor\UI\Response::standard_error('wwwnotallowed', '', true);
-			} elseif (strtolower($completedomain_check['domain']) == strtolower($completedomain)) {
+			} elseif ($completedomain_check && strtolower($completedomain_check['domain']) == strtolower($completedomain)) {
 				// the domain does already exist as main-domain
 				\Froxlor\UI\Response::standard_error('domainexistalready', $completedomain, true);
 			}

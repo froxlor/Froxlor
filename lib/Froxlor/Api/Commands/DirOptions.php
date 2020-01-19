@@ -96,7 +96,7 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		), true, true);
 
 		// duplicate check
-		if ($path_dupe_check['path'] == $path) {
+		if ($path_dupe_check && $path_dupe_check['path'] == $path) {
 			\Froxlor\UI\Response::standard_error('errordocpathdupe', $userpath, true);
 		}
 
@@ -309,8 +309,7 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		$query_fields = array();
 		$result_stmt = Database::prepare("
 			SELECT * FROM `" . TABLE_PANEL_HTACCESS . "`
-			WHERE `customerid` IN (" . implode(', ', $customer_ids) . ")" . $this->getSearchWhere($query_fields, true) . $this->getOrderBy() . $this->getLimit()
-		);
+			WHERE `customerid` IN (" . implode(', ', $customer_ids) . ")" . $this->getSearchWhere($query_fields, true) . $this->getOrderBy() . $this->getLimit());
 		Database::pexecute($result_stmt, $query_fields, true, true);
 		while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$result[] = $row;
