@@ -112,7 +112,10 @@ class Bind extends DnsBase
 			if (count($this->ns) > 0) {
 				foreach ($this->ns as $ns) {
 					foreach ($ns["ips"] as $ip) {
-						$bindconf_file .= '		' . $ip . ";\n";
+						$ip = \Froxlor\Validate\Validate::validate_ip2($ip, true, 'invalidip', true, true, true);
+						if ($ip) {
+							$bindconf_file .= '		' . $ip . ";\n";
+						}
 					}
 				}
 			}
