@@ -1223,7 +1223,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				$writeaccesslog = $result['writeaccesslog'];
 				$writeerrorlog = $result['writeerrorlog'];
 				$documentroot = $result['documentroot'];
-
+				$ssl_protocols = $p_ssl_protocols;
 				$override_tls = $result['override_tls'];
 			}
 

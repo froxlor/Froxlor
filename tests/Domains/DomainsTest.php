@@ -135,6 +135,28 @@ class DomainsTest extends TestCase
 		$this->assertEquals(2, $result['subcanemaildomain']);
 	}
 
+	/**
+	 *
+	 * @depends testAdminDomainsAdd
+	 */
+	public function testResellerDomainsUpdate()
+	{
+		global $admin_userdata;
+		// get reseller
+		$json_result = Admins::getLocal($admin_userdata, array(
+			'loginname' => 'reseller'
+		))->get();
+		$reseller_userdata = json_decode($json_result, true)['data'];
+		$reseller_userdata['adminsession'] = 1;
+		$data = [
+			'domainname' => 'test2.local',
+			'ssl_protocols' => 'TLSv1'
+		];
+		$json_result = Domains::getLocal($reseller_userdata, $data)->update();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEmpty($result['ssl_protocols']);
+	}
+
 	public function testAdminDomainsAddSysHostname()
 	{
 		global $admin_userdata;
