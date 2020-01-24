@@ -160,7 +160,7 @@ class Dns
 				// unset special CAA required-entry
 				unset($required_entries[$entry['type']][md5("@CAA@")]);
 			}
-			if (Settings::Get('spf.use_spf') == '1' && $entry['type'] == 'TXT' && $entry['record'] == '@' && strtolower(substr($entry['content'], 0, 7)) == '"v=spf1') {
+			if (Settings::Get('spf.use_spf') == '1' && $entry['type'] == 'TXT' && $entry['record'] == '@' && (strtolower(substr($entry['content'], 0, 7)) == '"v=spf1' || strtolower(substr($entry['content'], 0, 6)) == 'v=spf1') ) {
 				// unset special spf required-entry
 				unset($required_entries[$entry['type']][md5("@SPF@")]);
 			}
