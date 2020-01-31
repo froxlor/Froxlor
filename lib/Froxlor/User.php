@@ -79,8 +79,8 @@ class User
 	/**
 	 * Function which updates all counters of used ressources in panel_admins and panel_customers
 	 *
-	 * @param
-	 *        	bool Set to true to get an array with debug information
+	 * @param bool $returndebuginfo
+	 *        	Set to true to get an array with debug information
 	 * @return array Contains debug information if parameter 'returndebuginfo' is set to true
 	 *        
 	 * @author Florian Lippert <flo@syscp.org> (2003-2009)
@@ -100,17 +100,17 @@ class User
 		// Customers
 		$customers_stmt = Database::prepare('SELECT * FROM `' . TABLE_PANEL_CUSTOMERS . '` ORDER BY `customerid`');
 		Database::pexecute($customers_stmt);
-
+		// array to store currently used resources per admin
 		$admin_resources = array();
 		while ($customer = $customers_stmt->fetch(\PDO::FETCH_ASSOC)) {
-
+			// set current admin
 			$cur_adm = $customer['adminid'];
-
 			// initialize admin-resources array for admin $customer['adminid']
 			if (! isset($admin_resources[$cur_adm])) {
 				$admin_resources[$cur_adm] = array();
 			}
 
+			// fill admin resource usage array with customer data
 			self::addResourceCountEx($admin_resources[$cur_adm], $customer, 'diskspace_used', 'diskspace');
 			self::addResourceCountEx($admin_resources[$cur_adm], $customer, 'traffic_used', 'traffic_used'); // !!! yes, USED and USED
 
@@ -126,6 +126,7 @@ class User
 				self::addResourceCount($admin_resources[$cur_adm], $customer, $field . '_used', $field);
 			}
 
+			// calculate real usage
 			$customer_mysqls_stmt = Database::prepare('SELECT COUNT(*) AS `number_mysqls` FROM `' . TABLE_PANEL_DATABASES . '`
 			WHERE `customerid` = :cid');
 			$customer_mysqls = Database::pexecute_first($customer_mysqls_stmt, array(
@@ -181,6 +182,7 @@ class User
 			));
 			$customer['email_quota_used_new'] = (int) $customer_email_quota['email_quota'];
 
+			// update database accordingly
 			$stmt = Database::prepare('UPDATE `' . TABLE_PANEL_CUSTOMERS . '`
 			SET `mysqls_used` = :mysqls_used,
 				`emails_used` = :emails_used,
@@ -211,63 +213,56 @@ class User
 		$admins_stmt = Database::prepare('SELECT * FROM `' . TABLE_PANEL_ADMINS . '` ORDER BY `adminid`');
 		Database::pexecute($admins_stmt, array());
 
+		$resource_fields = array(
+			'diskspace_used',
+			'traffic_used',
+			'mysqls_used',
+			'ftps_used',
+			'emails_used',
+			'email_accounts_used',
+			'email_forwarders_used',
+			'email_quota_used',
+			'subdomains_used'
+		);
+
+		$admin_customers_stmt = Database::prepare('SELECT * FROM `' . TABLE_PANEL_CUSTOMERS . '` WHERE `adminid` = :aid');
 		while ($admin = $admins_stmt->fetch(\PDO::FETCH_ASSOC)) {
-			$admin_customers_stmt = Database::prepare('SELECT * FROM `' . TABLE_PANEL_CUSTOMERS . '` WHERE `adminid` = :aid');
 			Database::pexecute($admin_customers_stmt, array(
 				"aid" => $admin['adminid']
 			));
 			$admin_customers = $admin_customers_stmt->fetchAll(\PDO::FETCH_ASSOC);
 			$admin['customers_used_new'] = count($admin_customers);
 
-			$admin_domains_stmt = Database::prepare('SELECT COUNT(*) AS `number_domains` FROM `' . TABLE_PANEL_DOMAINS . '` WHERE `adminid` = :aid');
+			$admin_domains_stmt = Database::prepare('SELECT COUNT(*) AS `number_domains` FROM `' . TABLE_PANEL_DOMAINS . '` WHERE `adminid` = :aid AND `parentdomainid` = "0"');
 			$admin_domains = Database::pexecute_first($admin_domains_stmt, array(
 				"aid" => $admin['adminid']
 			));
-			// substract the amount of domains that are std-subdomains later when we iterated through all customers and now for sure
+			// substract the amount of domains that are std-subdomains later when we iterated through all customers and know for sure
 			$admin['domains_used_new'] = $admin_domains['number_domains'];
-
+			// set current admin
 			$cur_adm = $admin['adminid'];
-
+			// if there's an admin without any customers it might be possible that the id is not yet known in $admin_resources
 			if (! isset($admin_resources[$cur_adm])) {
 				$admin_resources[$cur_adm] = array();
 			}
-
-			foreach (array(
-				'diskspace_used',
-				'traffic_used',
-				'mysqls_used',
-				'ftps_used',
-				'emails_used',
-				'email_accounts_used',
-				'email_forwarders_used',
-				'email_quota_used',
-				'subdomains_used'
-			) as $field) {
+			// be sure that all fields are set in the array
+			foreach ($resource_fields as $field) {
 				self::initArrField($field, $admin_resources[$cur_adm], 0);
-				$admin[$field . '_new'] = $admin_resources[$cur_adm][$field];
+				// initialize new values
+				$admin[$field . '_new'] = 0;
 			}
-
+			// now get the customer resource usage which we have re-calculated previously
 			foreach ($admin_customers as $acustomer) {
-				foreach (array(
-					'diskspace_used',
-					'traffic_used',
-					'mysqls_used',
-					'ftps_used',
-					'emails_used',
-					'email_accounts_used',
-					'email_forwarders_used',
-					'email_quota_used',
-					'subdomains_used'
-				) as $field) {
+				foreach ($resource_fields as $field) {
 					$admin[$field . '_new'] += $acustomer[$field];
 				}
 				// check for std-subdomain
 				if ($acustomer['standardsubdomain'] > 0) {
-					// std-subdomain does not count to assign resource
-					$admin['domains_used_new']--;
+					// std-subdomain does not count as assigned resource
+					$admin['domains_used_new'] --;
 				}
 			}
-
+			// update database entry accordingly
 			$stmt = Database::prepare('UPDATE `' . TABLE_PANEL_ADMINS . '`
 			SET `customers_used` = :customers_used,
 				`domains_used` = :domains_used,
