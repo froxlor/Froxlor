@@ -842,13 +842,13 @@ CREATE TABLE `panel_fpmdaemons` (
   `description` varchar(50) NOT NULL,
   `reload_cmd` varchar(255) NOT NULL,
   `config_dir` varchar(255) NOT NULL,
-  `pm` varchar(15) NOT NULL DEFAULT 'static',
-  `max_children` int(4) NOT NULL DEFAULT '1',
-  `start_servers` int(4) NOT NULL DEFAULT '20',
-  `min_spare_servers` int(4) NOT NULL DEFAULT '5',
-  `max_spare_servers` int(4) NOT NULL DEFAULT '35',
+  `pm` varchar(15) NOT NULL DEFAULT 'dynamic',
+  `max_children` int(4) NOT NULL DEFAULT '5',
+  `start_servers` int(4) NOT NULL DEFAULT '2',
+  `min_spare_servers` int(4) NOT NULL DEFAULT '1',
+  `max_spare_servers` int(4) NOT NULL DEFAULT '3',
   `max_requests` int(4) NOT NULL DEFAULT '0',
-  `idle_timeout` int(4) NOT NULL DEFAULT '30',
+  `idle_timeout` int(4) NOT NULL DEFAULT '10',
   `limit_extensions` varchar(255) NOT NULL default '.php',
   `custom_config` text,
   PRIMARY KEY  (`id`),
@@ -859,7 +859,7 @@ CREATE TABLE `panel_fpmdaemons` (
 
 
 INSERT INTO `panel_fpmdaemons` (`id`, `description`, `reload_cmd`, `config_dir`) VALUES
-(1, 'System default', 'service php7.0-fpm restart', '/etc/php/7.0/fpm/pool.d/');
+(1, 'System default', 'service php7.3-fpm restart', '/etc/php/7.3/fpm/pool.d/');
 
 
 
@@ -879,13 +879,13 @@ CREATE TABLE `panel_phpconfigs` (
   `fpmsettingid` int(11) NOT NULL DEFAULT '1',
   `pass_authorizationheader` tinyint(1) NOT NULL default '0',
   `override_fpmconfig` tinyint(1) NOT NULL DEFAULT '0',
-  `pm` varchar(15) NOT NULL DEFAULT 'static',
-  `max_children` int(4) NOT NULL DEFAULT '1',
-  `start_servers` int(4) NOT NULL DEFAULT '20',
-  `min_spare_servers` int(4) NOT NULL DEFAULT '5',
-  `max_spare_servers` int(4) NOT NULL DEFAULT '35',
+  `pm` varchar(15) NOT NULL DEFAULT 'dynamic',
+  `max_children` int(4) NOT NULL DEFAULT '5',
+  `start_servers` int(4) NOT NULL DEFAULT '2',
+  `min_spare_servers` int(4) NOT NULL DEFAULT '1',
+  `max_spare_servers` int(4) NOT NULL DEFAULT '3',
   `max_requests` int(4) NOT NULL DEFAULT '0',
-  `idle_timeout` int(4) NOT NULL DEFAULT '30',
+  `idle_timeout` int(4) NOT NULL DEFAULT '10',
   `limit_extensions` varchar(255) NOT NULL default '.php',
   PRIMARY KEY  (`id`),
   KEY `fpmsettingid` (`fpmsettingid`)
@@ -894,8 +894,8 @@ CREATE TABLE `panel_phpconfigs` (
 
 
 INSERT INTO `panel_phpconfigs` (`id`, `description`, `binary`, `file_extensions`, `mod_fcgid_starter`, `mod_fcgid_maxrequests`, `phpsettings`) VALUES
-(1, 'Default Config', '/usr/bin/php-cgi', 'php', '-1', '-1', 'allow_call_time_pass_reference = Off\r\nallow_url_fopen = Off\r\nasp_tags = Off\r\ndisable_classes =\r\ndisable_functions = curl_exec,curl_multi_exec,exec,parse_ini_file,passthru,popen,proc_close,proc_get_status,proc_nice,proc_open,proc_terminate,shell_exec,show_source,system\r\ndisplay_errors = Off\r\ndisplay_startup_errors = Off\r\nenable_dl = Off\r\nerror_reporting = E_ALL & ~E_NOTICE\r\nexpose_php = Off\r\nfile_uploads = On\r\ncgi.force_redirect = 1\r\ngpc_order = "GPC"\r\nhtml_errors = Off\r\nignore_repeated_errors = Off\r\nignore_repeated_source = Off\r\ninclude_path = ".:{PEAR_DIR}"\r\nlog_errors = On\r\nlog_errors_max_len = 1024\r\nmagic_quotes_gpc = Off\r\nmagic_quotes_runtime = Off\r\nmagic_quotes_sybase = Off\r\nmax_execution_time = 30\r\nmax_input_time = 60\r\nmemory_limit = 128M\r\n{OPEN_BASEDIR_C}open_basedir = "{OPEN_BASEDIR}"\r\noutput_buffering = 4096\r\npost_max_size = 16M\r\nprecision = 14\r\nregister_argc_argv = Off\r\nregister_globals = Off\r\nreport_memleaks = On\r\nsendmail_path = "/usr/sbin/sendmail -t -i -f {CUSTOMER_EMAIL}"\r\nsession.auto_start = 0\r\nsession.bug_compat_42 = 0\r\nsession.bug_compat_warn = 1\r\nsession.cache_expire = 180\r\nsession.cache_limiter = nocache\r\nsession.cookie_domain =\r\nsession.cookie_lifetime = 0\r\nsession.cookie_path = /\r\nsession.entropy_file = /dev/urandom\r\nsession.entropy_length = 16\r\nsession.gc_divisor = 1000\r\nsession.gc_maxlifetime = 1440\r\nsession.gc_probability = 1\r\nsession.name = PHPSESSID\r\nsession.referer_check =\r\nsession.save_handler = files\r\nsession.save_path = "{TMP_DIR}"\r\nsession.serialize_handler = php\r\nsession.use_cookies = 1\r\nsession.use_trans_sid = 0\r\nshort_open_tag = On\r\nsuhosin.mail.protect = 1\r\nsuhosin.simulation = Off\r\ntrack_errors = Off\r\nupload_max_filesize = 32M\r\nupload_tmp_dir = "{TMP_DIR}"\r\nvariables_order = "GPCS"\r\n;mail.add_x_header = On\r\n;mail.log = "/var/log/phpmail.log"\r\nopcache.restrict_api = "{DOCUMENT_ROOT}"\r\n'),
-(2, 'Froxlor Vhost Config', '/usr/bin/php-cgi', 'php', '-1', '-1', 'allow_call_time_pass_reference = Off\r\nallow_url_fopen = On\r\nasp_tags = Off\r\ndisable_classes =\r\ndisable_functions = curl_multi_exec,parse_ini_file,passthru,popen,proc_close,proc_get_status,proc_nice,proc_open,proc_terminate,shell_exec,show_source,system\r\ndisplay_errors = Off\r\ndisplay_startup_errors = Off\r\nenable_dl = Off\r\nerror_reporting = E_ALL & ~E_NOTICE\r\nexpose_php = Off\r\nfile_uploads = On\r\ncgi.force_redirect = 1\r\ngpc_order = "GPC"\r\nhtml_errors = Off\r\nignore_repeated_errors = Off\r\nignore_repeated_source = Off\r\ninclude_path = ".:{PEAR_DIR}"\r\nlog_errors = On\r\nlog_errors_max_len = 1024\r\nmagic_quotes_gpc = Off\r\nmagic_quotes_runtime = Off\r\nmagic_quotes_sybase = Off\r\nmax_execution_time = 60\r\nmax_input_time = 60\r\nmemory_limit = 128M\r\noutput_buffering = 4096\r\npost_max_size = 16M\r\nprecision = 14\r\nregister_argc_argv = Off\r\nregister_globals = Off\r\nreport_memleaks = On\r\nsendmail_path = "/usr/sbin/sendmail -t -i -f {CUSTOMER_EMAIL}"\r\nsession.auto_start = 0\r\nsession.bug_compat_42 = 0\r\nsession.bug_compat_warn = 1\r\nsession.cache_expire = 180\r\nsession.cache_limiter = nocache\r\nsession.cookie_domain =\r\nsession.cookie_lifetime = 0\r\nsession.cookie_path = /\r\nsession.entropy_file = /dev/urandom\r\nsession.entropy_length = 16\r\nsession.gc_divisor = 1000\r\nsession.gc_maxlifetime = 1440\r\nsession.gc_probability = 1\r\nsession.name = PHPSESSID\r\nsession.referer_check =\r\nsession.save_handler = files\r\nsession.save_path = "{TMP_DIR}"\r\nsession.serialize_handler = php\r\nsession.use_cookies = 1\r\nsession.use_trans_sid = 0\r\nshort_open_tag = On\r\nsuhosin.mail.protect = 1\r\nsuhosin.simulation = Off\r\ntrack_errors = Off\r\nupload_max_filesize = 32M\r\nupload_tmp_dir = "{TMP_DIR}"\r\nvariables_order = "GPCS"\r\n;mail.add_x_header = On\r\n;mail.log = "/var/log/phpmail.log"\r\nopcache.restrict_api = ""\r\n');
+(1, 'Default Config', '/usr/bin/php-cgi', 'php', '-1', '-1', 'allow_url_fopen = Off\r\nallow_url_include = Off\r\nauto_append_file =\r\nauto_globals_jit = On\r\nauto_prepend_file =\r\nbcmath.scale = 0\r\ncli_server.color = On\r\ndefault_charset = "UTF-8"\r\ndefault_mimetype = "text/html"\r\ndefault_socket_timeout = 60\r\nasp_tags = Off\r\ndisable_functions = pcntl_alarm,pcntl_fork,pcntl_waitpid,pcntl_wait,pcntl_wifexited,pcntl_wifstopped,pcntl_wifsignaled,pcntl_wifcontinued,pcntl_wexitstatus,pcntl_wtermsig,pcntl_wstopsig,pcntl_signal,pcntl_signal_get_handler,pcntl_signal_dispatch,pcntl_get_last_error,pcntl_strerror,pcntl_sigprocmask,pcntl_sigwaitinfo,pcntl_sigtimedwait,pcntl_exec,pcntl_getpriority,pcntl_setpriority,pcntl_async_signals,curl_exec,curl_multi_exec,exec,parse_ini_file,passthru,popen,proc_close,proc_get_status,proc_nice,proc_open,proc_terminate,shell_exec,show_source,system\r\ndisplay_errors = Off\r\ndisplay_startup_errors = Off\r\ndoc_root =\r\nenable_dl = Off\r\nerror_reporting = E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_NOTICE\r\nexpose_php = Off\r\nfile_uploads = On\r\nhtml_errors = On\r\nignore_repeated_errors = Off\r\nignore_repeated_source = Off\r\ninclude_path = ".:{PEAR_DIR}"\r\nimplicit_flush = Off\r\nldap.max_links = -1\r\nlog_errors = On\r\nlog_errors_max_len = 1024\r\nmail.add_x_header = Off\r\nmax_execution_time = 30\r\nmax_file_uploads = 20\r\nmax_input_time = 60\r\nmemory_limit = 128M\r\n{OPEN_BASEDIR_C}open_basedir = "{OPEN_BASEDIR}"\r\noutput_buffering = 4096\r\npost_max_size = 16M\r\nprecision = 14\r\nregister_argc_argv = Off\r\nreport_memleaks = On\r\nrequest_order = "GP"\r\nsendmail_path = "/usr/sbin/sendmail -t -i -f {CUSTOMER_EMAIL}"\r\nserialize_precision = -1\r\nsession.auto_start = 0\r\nsession.cache_expire = 180\r\nsession.cache_limiter = nocache\r\nsession.cookie_domain =\r\nsession.cookie_httponly =\r\nsession.cookie_lifetime = 0\r\nsession.cookie_path = /\r\nsession.cookie_samesite =\r\nsession.gc_divisor = 1000\r\nsession.gc_maxlifetime = 1440\r\nsession.gc_probability = 0\r\nsession.name = PHPSESSID\r\nsession.referer_check =\r\nsession.save_handler = files\r\nsession.save_path = "{TMP_DIR}"\r\nsession.serialize_handler = php\r\nsession.sid_bits_per_character = 5\r\nsession.sid_length = 26\r\nsession.trans_sid_tags = "a=href,area=href,frame=src,form="\r\nsession.use_cookies = 1\r\nsession.use_only_cookies = 1\r\nsession.use_strict_mode = 0\r\nsession.use_trans_sid = 0\r\nshort_open_tag = On\r\nupload_max_filesize = 32M\r\nupload_tmp_dir = "{TMP_DIR}"\r\nvariables_order = "GPCS"\r\nopcache.restrict_api = "{DOCUMENT_ROOT}"\r\n'),
+(2, 'Froxlor Vhost Config', '/usr/bin/php-cgi', 'php', '-1', '-1', 'allow_url_fopen = On\r\nallow_url_include = Off\r\nauto_append_file =\r\nauto_globals_jit = On\r\nauto_prepend_file =\r\nbcmath.scale = 0\r\ncli_server.color = On\r\ndefault_charset = "UTF-8"\r\ndefault_mimetype = "text/html"\r\ndefault_socket_timeout = 60\r\nasp_tags = Off\r\ndisable_functions = pcntl_alarm,pcntl_fork,pcntl_waitpid,pcntl_wait,pcntl_wifexited,pcntl_wifstopped,pcntl_wifsignaled,pcntl_wifcontinued,pcntl_wexitstatus,pcntl_wtermsig,pcntl_wstopsig,pcntl_signal,pcntl_signal_get_handler,pcntl_signal_dispatch,pcntl_get_last_error,pcntl_strerror,pcntl_sigprocmask,pcntl_sigwaitinfo,pcntl_sigtimedwait,pcntl_exec,pcntl_getpriority,pcntl_setpriority,pcntl_async_signals,curl_multi_exec,parse_ini_file,passthru,popen,proc_close,proc_get_status,proc_nice,proc_open,proc_terminate,shell_exec,show_source,system\r\ndisplay_errors = Off\r\ndisplay_startup_errors = Off\r\ndoc_root =\r\nenable_dl = Off\r\nerror_reporting = E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_NOTICE\r\nexpose_php = Off\r\nfile_uploads = On\r\nhtml_errors = On\r\nignore_repeated_errors = Off\r\nignore_repeated_source = Off\r\ninclude_path = ".:{PEAR_DIR}"\r\nimplicit_flush = Off\r\nldap.max_links = -1\r\nlog_errors = On\r\nlog_errors_max_len = 1024\r\nmail.add_x_header = Off\r\nmax_execution_time = 60\r\nmax_file_uploads = 20\r\nmax_input_time = 60\r\nmemory_limit = 128M\r\noutput_buffering = 4096\r\npost_max_size = 16M\r\nprecision = 14\r\nregister_argc_argv = Off\r\nreport_memleaks = On\r\nrequest_order = "GP"\r\nsendmail_path = "/usr/sbin/sendmail -t -i -f {CUSTOMER_EMAIL}"\r\nserialize_precision = -1\r\nsession.auto_start = 0\r\nsession.cache_expire = 180\r\nsession.cache_limiter = nocache\r\nsession.cookie_domain =\r\nsession.cookie_httponly =\r\nsession.cookie_lifetime = 0\r\nsession.cookie_path = /\r\nsession.cookie_samesite =\r\nsession.gc_divisor = 1000\r\nsession.gc_maxlifetime = 1440\r\nsession.gc_probability = 0\r\nsession.name = PHPSESSID\r\nsession.referer_check =\r\nsession.save_handler = files\r\nsession.save_path = "{TMP_DIR}"\r\nsession.serialize_handler = php\r\nsession.sid_bits_per_character = 5\r\nsession.sid_length = 26\r\nsession.trans_sid_tags = "a=href,area=href,frame=src,form="\r\nsession.use_cookies = 1\r\nsession.use_only_cookies = 1\r\nsession.use_strict_mode = 0\r\nsession.use_trans_sid = 0\r\nshort_open_tag = On\r\nupload_max_filesize = 32M\r\nupload_tmp_dir = "{TMP_DIR}"\r\nvariables_order = "GPCS"\r\nopcache.restrict_api = ""\r\n');
 
 
 DROP TABLE IF EXISTS `cronjobs_run`;

@@ -81,8 +81,16 @@ if ($page == 'overview') {
 				));
 			} else {
 
-				$result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "` WHERE `id` = 1");
-				$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+				if (file_exists(\Froxlor\Froxlor::getInstallDir() . '/templates/misc/php/default.ini.php')) {
+					require_once \Froxlor\Froxlor::getInstallDir() . '/templates/misc/php/default.ini.php';
+					$result = [
+						'phpsettings' => DEFAULT_PHPINI
+					];
+				} else {
+					// use first php-config as fallback
+					$result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "` WHERE `id` = 1");
+					$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+				}
 
 				$fpmconfigs = '';
 				$configs = Database::query("SELECT * FROM `" . TABLE_PANEL_FPMDAEMONS . "` ORDER BY `description` ASC");
@@ -90,9 +98,9 @@ if ($page == 'overview') {
 					$fpmconfigs .= \Froxlor\UI\HTML::makeoption($row['description'], $row['id'], 1, true, true);
 				}
 
-				$pm_select = \Froxlor\UI\HTML::makeoption('static', 'static', 'static', true, true);
-				$pm_select .= \Froxlor\UI\HTML::makeoption('dynamic', 'dynamic', 'static', true, true);
-				$pm_select .= \Froxlor\UI\HTML::makeoption('ondemand', 'ondemand', 'static', true, true);
+				$pm_select = \Froxlor\UI\HTML::makeoption('static', 'static', 'dynamic', true, true);
+				$pm_select .= \Froxlor\UI\HTML::makeoption('dynamic', 'dynamic', 'dynamic', true, true);
+				$pm_select .= \Froxlor\UI\HTML::makeoption('ondemand', 'ondemand', 'dynamic', true, true);
 
 				$phpconfig_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/phpconfig/formfield.phpconfig_add.php';
 				$phpconfig_add_form = \Froxlor\UI\HtmlForm::genHTMLForm($phpconfig_add_data);
@@ -234,9 +242,9 @@ if ($page == 'overview') {
 				));
 			} else {
 
-				$pm_select = \Froxlor\UI\HTML::makeoption('static', 'static', 'static', true, true);
-				$pm_select .= \Froxlor\UI\HTML::makeoption('dynamic', 'dynamic', 'static', true, true);
-				$pm_select .= \Froxlor\UI\HTML::makeoption('ondemand', 'ondemand', 'static', true, true);
+				$pm_select = \Froxlor\UI\HTML::makeoption('static', 'static', 'dynamic', true, true);
+				$pm_select .= \Froxlor\UI\HTML::makeoption('dynamic', 'dynamic', 'dynamic', true, true);
+				$pm_select .= \Froxlor\UI\HTML::makeoption('ondemand', 'ondemand', 'dynamic', true, true);
 
 				$fpmconfig_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/phpconfig/formfield.fpmconfig_add.php';
 				$fpmconfig_add_form = \Froxlor\UI\HtmlForm::genHTMLForm($fpmconfig_add_data);

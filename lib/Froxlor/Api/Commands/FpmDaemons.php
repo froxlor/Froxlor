@@ -32,7 +32,7 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	 *        	optional specify offset for resultset
 	 * @param array $sql_orderby
 	 *        	optional array with index = fieldname and value = ASC|DESC to order the resultset by one or more fields
-	 *
+	 *        	
 	 * @access admin
 	 * @throws \Exception
 	 * @return string json-encoded array count|list
@@ -135,19 +135,19 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	 * @param string $reload_cmd
 	 * @param string $config_dir
 	 * @param string $pm
-	 *        	optional, process-manager, one of 'static', 'dynamic' or 'ondemand', default 'static'
+	 *        	optional, process-manager, one of 'static', 'dynamic' or 'ondemand', default 'dynamic'
 	 * @param int $max_children
-	 *        	optional, default 0
+	 *        	optional, default 5
 	 * @param int $start_servers
-	 *        	optional, default 0
+	 *        	optional, default 2
 	 * @param int $min_spare_servers
-	 *        	optional, default 0
+	 *        	optional, default 1
 	 * @param int $max_spare_servers
-	 *        	optional, default 0
+	 *        	optional, default 3
 	 * @param int $max_requests
 	 *        	optional, default 0
 	 * @param int $idle_timeout
-	 *        	optional, default 0
+	 *        	optional, default 10
 	 * @param string $limit_extensions
 	 *        	optional, limit execution to the following extensions, default '.php'
 	 * @param string $custom_config
@@ -167,13 +167,13 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			$config_dir = $this->getParam('config_dir');
 
 			// parameters
-			$pmanager = $this->getParam('pm', true, 'static');
-			$max_children = $this->getParam('max_children', true, 0);
-			$start_servers = $this->getParam('start_servers', true, 0);
-			$min_spare_servers = $this->getParam('min_spare_servers', true, 0);
-			$max_spare_servers = $this->getParam('max_spare_servers', true, 0);
+			$pmanager = $this->getParam('pm', true, 'dynamic');
+			$max_children = $this->getParam('max_children', true, 5);
+			$start_servers = $this->getParam('start_servers', true, 2);
+			$min_spare_servers = $this->getParam('min_spare_servers', true, 1);
+			$max_spare_servers = $this->getParam('max_spare_servers', true, 3);
 			$max_requests = $this->getParam('max_requests', true, 0);
-			$idle_timeout = $this->getParam('idle_timeout', true, 0);
+			$idle_timeout = $this->getParam('idle_timeout', true, 10);
 			$limit_extensions = $this->getParam('limit_extensions', true, '.php');
 			$custom_config = $this->getParam('custom_config', true, '');
 
@@ -251,19 +251,19 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	 * @param string $config_dir
 	 *        	optional
 	 * @param string $pm
-	 *        	optional, process-manager, one of 'static', 'dynamic' or 'ondemand', default 'static'
+	 *        	optional, process-manager, one of 'static', 'dynamic' or 'ondemand', default 'dynamic'
 	 * @param int $max_children
-	 *        	optional, default 0
+	 *        	optional, default 5
 	 * @param int $start_servers
-	 *        	optional, default 0
+	 *        	optional, default 2
 	 * @param int $min_spare_servers
-	 *        	optional, default 0
+	 *        	optional, default 1
 	 * @param int $max_spare_servers
-	 *        	optional, default 0
+	 *        	optional, default 3
 	 * @param int $max_requests
 	 *        	optional, default 0
 	 * @param int $idle_timeout
-	 *        	optional, default 0
+	 *        	optional, default 10
 	 * @param string $limit_extensions
 	 *        	optional, limit execution to the following extensions, default '.php'
 	 * @param string $custom_config
