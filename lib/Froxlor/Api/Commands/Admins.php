@@ -265,7 +265,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 				'login' => $loginname
 			), true, true);
 
-			if (strtolower($loginname_check['loginname']) == strtolower($loginname) || strtolower($loginname_check_admin['loginname']) == strtolower($loginname)) {
+			if (($loginname_check && strtolower($loginname_check['loginname']) == strtolower($loginname)) || ($loginname_check_admin && strtolower($loginname_check_admin['loginname']) == strtolower($loginname))) {
 				\Froxlor\UI\Response::standard_error('loginnameexists', $loginname, true);
 			} elseif (preg_match('/^' . preg_quote(Settings::Get('customer.accountprefix'), '/') . '([0-9]+)/', $loginname)) {
 				// Accounts which match systemaccounts are not allowed, filtering them

@@ -12,5 +12,4 @@ class FroxlorVhostSettings
 		$result = Database::pexecute_first($sel_stmt);
 		return $result['vcentries'] > 0 ? true : false;
 	}
-
 }

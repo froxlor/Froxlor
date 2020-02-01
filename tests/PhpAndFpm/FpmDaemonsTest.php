@@ -27,7 +27,8 @@ class FpmDaemonsTest extends TestCase
 		$json_result = FpmDaemons::getLocal($admin_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals('/etc/php/7.1/fpm/pool.d/', $result['config_dir']);
-		$this->assertEquals(0, $result['max_children']);
+		$this->assertEquals('dynamic', $result['pm']);
+		$this->assertEquals(5, $result['max_children']);
 		$this->assertEquals('.php', $result['limit_extensions']);
 		self::$id = $result['id'];
 	}

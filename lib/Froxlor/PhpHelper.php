@@ -374,7 +374,7 @@ class PhpHelper
 		$returnval = array();
 		if (is_array($source)) {
 			$source = array_map('trim', $source);
-			$source = array_filter($source, function ($value) {
+			$returnval = array_filter($source, function ($value) {
 				return $value !== '';
 			});
 		} else {

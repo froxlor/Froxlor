@@ -675,9 +675,9 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 					), '', true);
 				} elseif ($customerid == 0) {
 					\Froxlor\UI\Response::standard_error('adduserfirst', '', true);
-				} elseif (strtolower($domain_check['domain']) == strtolower($domain)) {
+				} elseif ($domain_check && strtolower($domain_check['domain']) == strtolower($domain)) {
 					\Froxlor\UI\Response::standard_error('domainalreadyexists', $idna_convert->decode($domain), true);
-				} elseif ($aliasdomain_check['id'] != $aliasdomain) {
+				} elseif ($aliasdomain_check && $aliasdomain_check['id'] != $aliasdomain) {
 					\Froxlor\UI\Response::standard_error('domainisaliasorothercustomer', '', true);
 				} else {
 					$wwwserveralias = ($serveraliasoption == '1') ? '1' : '0';
@@ -1228,7 +1228,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				$writeaccesslog = $result['writeaccesslog'];
 				$writeerrorlog = $result['writeerrorlog'];
 				$documentroot = $result['documentroot'];
-
+				$ssl_protocols = $p_ssl_protocols;
 				$override_tls = $result['override_tls'];
 			}
 

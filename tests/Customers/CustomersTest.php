@@ -61,12 +61,17 @@ class CustomersTest extends TestCase
 		$this->assertEquals(15, $result['subdomains']);
 		$this->assertEquals('secret', $result['custom_notes']);
 
-		// validate that the std-subdomain has been added
-		$json_result = SubDomains::getLocal($admin_userdata, array(
-			'id' => $result['standardsubdomain']
-		))->get();
-		$result = json_decode($json_result, true)['data'];
-		$this->assertEquals('test1.dev.froxlor.org', $result['domain']);
+		$stdsubdomain = $result['standardsubdomain'] ?? false;
+		if (! $stdsubdomain) {
+			$this->fail('No standardsubdomain where there should be one');
+		} else {
+			// validate that the std-subdomain has been added
+			$json_result = SubDomains::getLocal($admin_userdata, array(
+				'id' => $result['standardsubdomain']
+			))->get();
+			$result = json_decode($json_result, true)['data'];
+			$this->assertEquals('test1.dev.froxlor.org', $result['domain']);
+		}
 	}
 
 	public function testAdminCustomersAddEmptyMail()

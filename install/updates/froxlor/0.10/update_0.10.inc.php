@@ -530,3 +530,39 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201912100')) {
 	lastStepStatus(0);
 	\Froxlor\Froxlor::updateToDbVersion('201912310');
 }
+
+if (\Froxlor\Froxlor::isDatabaseVersion('201912310')) {
+	showUpdateStep("Adding custom phpfpm pool configuration field");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_FPMDAEMONS . "` ADD `custom_config` text AFTER `limit_extensions`;");
+	lastStepStatus(0);
+	\Froxlor\Froxlor::updateToDbVersion('201912311');
+}
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.10')) {
+	showUpdateStep("Updating from 0.10.10 to 0.10.11", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.11');
+}
+
+if (\Froxlor\Froxlor::isDatabaseVersion('201912311')) {
+	showUpdateStep("Migrate logfiles_format setting");
+	$current_format = Settings::Set('system.logfiles_format');
+	if (!empty($current_format)) {
+		Settings::Set('system.logfiles_format', '"' . Settings::Get('system.logfiles_format') . '"');
+		lastStepStatus(0);
+	} else {
+		lastStepStatus(0, 'not needed');
+	}
+	\Froxlor\Froxlor::updateToDbVersion('201912312');
+}
+
+if (\Froxlor\Froxlor::isDatabaseVersion('201912312')) {
+	showUpdateStep("Adding option change awstats LogFormat");
+	Settings::AddNew("system.awstats_logformat", '1');
+	lastStepStatus(0);
+	\Froxlor\Froxlor::updateToDbVersion('201912313');
+}
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.11')) {
+	showUpdateStep("Updating from 0.10.11 to 0.10.12", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.12');
+}

@@ -50,8 +50,7 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			$result_stmt = Database::prepare("
 				SELECT c.*, fd.description as fpmdesc
 				FROM `" . TABLE_PANEL_PHPCONFIGS . "` c
-				LEFT JOIN `" . TABLE_PANEL_FPMDAEMONS . "` fd ON fd.id = c.fpmsettingid" . $this->getSearchWhere($query_fields) . $this->getOrderBy() . $this->getLimit()
-			);
+				LEFT JOIN `" . TABLE_PANEL_FPMDAEMONS . "` fd ON fd.id = c.fpmsettingid" . $this->getSearchWhere($query_fields) . $this->getOrderBy() . $this->getLimit());
 			Database::pexecute($result_stmt, $query_fields, true, true);
 			$phpconfigs = array();
 			while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {

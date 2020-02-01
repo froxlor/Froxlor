@@ -81,7 +81,7 @@ class DirProtections extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Res
 		$password_enc = \Froxlor\System\Crypt::makeCryptPassword($password, true);
 
 		// duplicate check
-		if ($username_path_check['username'] == $username && $username_path_check['path'] == $path) {
+		if ($username_path_check && $username_path_check['username'] == $username && $username_path_check['path'] == $path) {
 			\Froxlor\UI\Response::standard_error('userpathcombinationdupe', '', true);
 		} elseif ($password == $username) {
 			\Froxlor\UI\Response::standard_error('passwordshouldnotbeusername', '', true);

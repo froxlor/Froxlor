@@ -335,7 +335,7 @@ $lng['serversettings']['logfiles_directory']['description'] = 'Wo sollen die Log
 $lng['serversettings']['logfiles_script']['title'] = 'Eigenes Script zu dem Log-Files übergeben werden';
 $lng['serversettings']['logfiles_script']['description'] = 'Hier kann ein Script an das die Loginhalte übergeben werden hinterlegt und die Platzhalter <strong>{LOGFILE}, {DOMAIN} und {CUSTOMER}</strong> genutzt werden, sofern nötig. Falls ein Script angegeben wird, muss die Option <strong>Webserver Logdateien umleiten</strong> gesetzt werden';
 $lng['serversettings']['logfiles_format']['title'] = 'Access-Log Format';
-$lng['serversettings']['logfiles_format']['description'] = 'Hier kann ein angepasstes Log-format entsprechend der Webserver-Dokumentation angegeben werden, leer lassen für Standard';
+$lng['serversettings']['logfiles_format']['description'] = 'Hier kann ein angepasstes Log-format entsprechend der Webserver-Dokumentation angegeben werden, leer lassen für Standard. Abhängig vom LogFormat muss die Angabe unter Anführungszeichen stehen.<br/>Wenn verwendet mit nginx, so kann es wie folgt aussehen: <i>log_format frx_custom {EINGESTELLTES_FORMAT}</i>.<br/>Wenn verwendet mit Apache, so kann es wie folgt aussehen: <i>LogFormat {EINGESTELLTES_FORMAT} frx_custom</i>.<br /><strong>ACHTUNG:</strong> Der Code wird nicht auf Fehler geprüft. Etwaige Fehler werden auch übernommen und der Webserver könnte nicht mehr starten!';
 $lng['serversettings']['logfiles_type']['title'] = 'Access-Log Typ';
 $lng['serversettings']['logfiles_type']['description'] = 'Wähle zwischen <strong>combined</strong> oder <strong>vhost_combined</strong>.';
 $lng['serversettings']['logfiles_piped']['title'] = 'Webserver Logdateien zu eigenem Script umleiten (siehe oben)';
@@ -1738,5 +1738,13 @@ $lng['serversettings']['apply_phpconfigs_default']['title'] = 'Standardwert für
 $lng['admin']['domain_sslenabled'] = 'Aktiviere Nutzung von SSL';
 $lng['admin']['domain_honorcipherorder'] = 'Bevorzuge die serverseitige Cipher Reihenfolge, Standardwert <strong>nein</strong>';
 $lng['admin']['domain_sessiontickets'] = 'Aktiviere TLS Sessiontickets (RFC 5077), Standardwert <strong>ja</strong>';
+
 $lng['admin']['domain_sessionticketsenabled']['title'] = 'Aktiviere Nutzung von TLS Sessiontickets systemweit';
 $lng['admin']['domain_sessionticketsenabled']['description'] = 'Standardwert <strong>yes</strong><br>Erfordert apache-2.4.11+ oder nginx-1.5.9+';
+
+$lng['serversettings']['phpfpm_settings']['restart_note'] = 'Achtung: Der Code wird nicht auf Fehler geprüft. Bei etwaigen Fehlern könnte der PHP-FPM-Prozess nicht mehr starten!';
+$lng['serversettings']['phpfpm_settings']['custom_config']['title'] = 'Benutzerdefinierte Konfiguration';
+$lng['serversettings']['phpfpm_settings']['custom_config']['description'] = 'Füge eine benutzerdefinierte Einstellungen zur PHP-FPM Instanz hinzu, beispielsweise <i>pm.status_path = /status</i> für Monitoring. Unten ersichtliche Variablen können verwendet werden.' . ' <strong>' . $lng['serversettings']['phpfpm_settings']['restart_note'] . '</strong>';
+
+$lng['serversettings']['awstats']['logformat']['title'] = 'LogFormat Einstellung';
+$lng['serversettings']['awstats']['logformat']['description'] = 'Wenn ein benutzerdefiniertes LogFormat beim Webserver verwendet wird, muss LogFormat von awstats ebenso angepasst werden.<br/>Standard ist 1. Für weitere Informationen siehe Dokumentation unter <a target="_blank" href="https://awstats.sourceforge.io/docs/awstats_config.html#LogFormat">hier</a>.';

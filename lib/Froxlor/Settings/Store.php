@@ -242,8 +242,8 @@ class Store
 			$mysql_access_host_array = array_map('trim', explode(',', Settings::Get('system.mysql_access_host')));
 			$mysql_access_host_array[] = $newfieldvalue;
 			$mysql_access_host_array = array_unique(\Froxlor\PhpHelper::arrayTrim($mysql_access_host_array));
-			$mysql_access_host = implode(',', $mysql_access_host_array);
 			\Froxlor\Database\DbManager::correctMysqlUsers($mysql_access_host_array);
+			$mysql_access_host = implode(',', $mysql_access_host_array);
 			Settings::Set('system.mysql_access_host', $mysql_access_host);
 		}
 
@@ -293,9 +293,11 @@ class Store
 				'cleanMySQLAccessHost'
 			), $mysql_access_host_array);
 
-			$mysql_access_host_array = array_unique($mysql_access_host_array);
+			$mysql_access_host_array = array_unique(\Froxlor\PhpHelper::arrayTrim($mysql_access_host_array));
 			$newfieldvalue = implode(',', $mysql_access_host_array);
 			\Froxlor\Database\DbManager::correctMysqlUsers($mysql_access_host_array);
+			$mysql_access_host = implode(',', $mysql_access_host_array);
+			Settings::Set('system.mysql_access_host', $mysql_access_host);
 		}
 
 		return $returnvalue;

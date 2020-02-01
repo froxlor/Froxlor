@@ -760,7 +760,7 @@ class Apache extends HttpConfigBase
 		$logtype = 'combined';
 		if (Settings::Get('system.logfiles_format') != '') {
 			$logtype = 'frx_custom';
-			$logfiles_text .= '  LogFormat "' . Settings::Get('system.logfiles_format') . '" ' . $logtype . "\n";
+			$logfiles_text .= '  LogFormat ' . Settings::Get('system.logfiles_format') . ' ' . $logtype . "\n";
 		}
 		if (Settings::Get('system.logfiles_type') == '2' && Settings::Get('system.logfiles_format') == '') {
 			$logtype = 'vhost_combined';
