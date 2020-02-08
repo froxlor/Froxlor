@@ -598,21 +598,18 @@ if ($action == 'resetpwd') {
 				));
 
 				if ($result !== false) {
-					if ($result['admin'] == 1) {
-						$new_password = \Froxlor\Validate\Validate::validate($_POST['new_password'], 'new password');
-						$new_password_confirm = \Froxlor\Validate\Validate::validate($_POST['new_password_confirm'], 'new password confirm');
-					} else {
-						$new_password = \Froxlor\System\Crypt::validatePassword($_POST['new_password'], 'new password');
-						$new_password_confirm = \Froxlor\System\Crypt::validatePassword($_POST['new_password_confirm'], 'new password confirm');
+					try {
+						$new_password = \Froxlor\System\Crypt::validatePassword($_POST['new_password'], true);
+						$new_password_confirm = \Froxlor\System\Crypt::validatePassword($_POST['new_password_confirm'], true);
+					} catch (Exception $e) {
+						$message = $e->getMessage();
 					}
 
-					if ($new_password == '') {
-						$message = $new_password;
-					} elseif ($new_password_confirm == '') {
-						$message = $new_password_confirm;
-					} elseif ($new_password != $new_password_confirm) {
-						$message = $new_password . " != " . $new_password_confirm;
-					} else {
+					if (empty($message) && (empty($new_password) || $new_password != $new_password_confirm)) {
+						$message = $lng['error']['newpasswordconfirmerror'];
+					}
+
+					if (empty($message)) {
 						// Update user password
 						if ($result['admin'] == 1) {
 							$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_ADMINS . "`
