@@ -122,10 +122,7 @@ return array(
 					'type' => 'bool',
 					'default' => true,
 					'save_method' => 'storeSettingField',
-					'visible' => \Froxlor\Settings::Get('system.use_ssl') && (\Froxlor\Settings::Get('system.webserver') == "nginx" || (\Froxlor\Settings::Get('system.webserver') == "apache2" && \Froxlor\Settings::Get('system.apache24') == 1)) && call_user_func(array(
-						'\Froxlor\Settings\FroxlorVhostSettings',
-						'hasVhostContainerEnabled'
-					), true)
+					'visible' => \Froxlor\Settings::Get('system.use_ssl') && (\Froxlor\Settings::Get('system.webserver') == "nginx" || (\Froxlor\Settings::Get('system.webserver') == "apache2" && \Froxlor\Settings::Get('system.apache24') == 1))
 				),
 				'system_leenabled' => array(
 					'label' => $lng['serversettings']['leenabled'],
