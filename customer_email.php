@@ -129,16 +129,15 @@ if ($page == 'overview') {
 			}
 		}
 
-		$json_result = SubDomains::getLocal($userinfo, [
-			'sql_search' => [
-				'd.isemaildomain' => [
-					'value' => 1,
-					'op' => '='
-				]
-			]
-		])->listing();
-		$result = json_decode($json_result, true)['data'];
-		$emaildomains_count = $result['count'];
+		$result_stmt = Database::prepare("
+			SELECT COUNT(`id`) as emaildomains
+			FROM `" . TABLE_PANEL_DOMAINS . "`
+			WHERE `customerid`= :cid AND `isemaildomain` = '1'
+		");
+		$result = Database::pexecute_first($result_stmt, array(
+			"cid" => $userinfo['customerid']
+		));
+		$emaildomains_count = $result['emaildomains'];
 
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate("email/emails") . "\";");
 	} elseif ($action == 'delete' && $id != 0) {
