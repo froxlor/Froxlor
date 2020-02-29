@@ -40,23 +40,27 @@ $header
 				</tr>
 			</thead>
 			<tbody>
+				<tr>
+					<td><em>{SALUTATION}</em></td>
+					<td>{$lng['admin']['templates']['SALUTATION']}</td>
+				</tr>
+				<tr>
+					<td><em>{FIRSTNAME}</em></td>
+					<td>{$lng['admin']['templates']['FIRSTNAME']}</td>
+				</tr>
+				<tr>
+					<td><em>{NAME}</em></td>
+					<td>{$lng['admin']['templates']['NAME']}</td>
+				</tr>
+				<tr>
+					<td><em>{COMPANY}</em></td>
+					<td>{$lng['admin']['templates']['COMPANY']}</td>
+				</tr>
+				<tr>
+					<td><em>{CUSTOMER_NO}</em></td>
+					<td>{$lng['admin']['templates']['CUSTOMER_NO']}</td>
+				</tr>
 				<if ($template == 'createcustomer')>
-					<tr>
-						<td><em>{SALUTATION}</em></td>
-						<td>{$lng['admin']['templates']['SALUTATION']}</td>
-					</tr>
-					<tr>
-						<td><em>{FIRSTNAME}</em></td>
-						<td>{$lng['admin']['templates']['FIRSTNAME']}</td>
-					</tr>
-					<tr>
-						<td><em>{NAME}</em></td>
-						<td>{$lng['admin']['templates']['NAME']}</td>
-					</tr>
-					<tr>
-						<td><em>{COMPANY}</em></td>
-						<td>{$lng['admin']['templates']['COMPANY']}</td>
-					</tr>
 					<tr>
 						<td><em>{USERNAME}</em></td>
 						<td>{$lng['admin']['templates']['USERNAME']}</td>
@@ -88,10 +92,6 @@ $header
 					</if>
 				</if>
 				<if ($template == 'password_reset')>
-					<tr>
-						<td><em>{SALUTATION}</em></td>
-						<td>{$lng['admin']['templates']['SALUTATION']}</td>
-					</tr>
 					<tr>
 						<td><em>{USERNAME}</em></td>
 						<td>{$lng['admin']['templates']['USERNAME']}</td>
@@ -139,10 +139,6 @@ $header
 				</if>
 				<if ($template == 'new_database_by_customer')>
 					<tr>
-						<td><em>{SALUTATION}</em></td>
-						<td>{$lng['admin']['templates']['SALUTATION']}</td>
-					</tr>
-					<tr>
 						<td><em>{DB_NAME}</em></td>
 						<td>{$lng['admin']['templates']['DB_NAME']}</td>
 					</tr>
@@ -164,10 +160,6 @@ $header
 					</tr>
 				</if>
 				<if ($template == 'new_ftpaccount_by_customer')>
-					<tr>
-						<td><em>{SALUTATION}</em></td>
-						<td>{$lng['admin']['templates']['SALUTATION']}</td>
-					</tr>
 					<tr>
 						<td><em>{USR_NAME}</em></td>
 						<td>{$lng['admin']['templates']['USR_NAME']}</td>

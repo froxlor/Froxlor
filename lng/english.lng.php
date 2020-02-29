@@ -317,6 +317,7 @@ $lng['admin']['templates']['COMPANY'] = 'Replaces with the customer\'s company n
 $lng['admin']['templates']['USERNAME'] = 'Replaced with the customer\'s account username.';
 $lng['admin']['templates']['PASSWORD'] = 'Replaced with the customer\'s account password.';
 $lng['admin']['templates']['EMAIL'] = 'Replaced with the address of the POP3/IMAP account.';
+$lng['admin']['templates']['CUSTOMER_NO'] = 'Replaces with the customer number';
 $lng['admin']['webserver'] = 'Webserver';
 $lng['admin']['bindzonewarning'] = $lng['panel']['emptyfordefault'] . '<br /><strong class="red">ATTENTION:</strong> If you use a zonefile you will have to manage all required records for all sub-zones manually as well.';
 

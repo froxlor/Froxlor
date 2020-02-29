@@ -192,7 +192,12 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 				$replace_arr = array(
 					'EMAIL' => $email_full,
 					'USERNAME' => $username,
-					'PASSWORD' => $password
+					'PASSWORD' => $password,
+					'SALUTATION' => \Froxlor\User::getCorrectUserSalutation($customer),
+					'NAME' => $customer['name'],
+					'FIRSTNAME' => $customer['firstname'],
+					'COMPANY' => $customer['company'],
+					'CUSTOMER_NO' => $customer['customernumber']
 				);
 
 				// get the customers admin

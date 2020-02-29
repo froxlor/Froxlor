@@ -689,6 +689,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 								'name' => $name,
 								'company' => $company
 							)),
+							'CUSTOMER_NO' => $customernumber,
 							'USERNAME' => $loginname,
 							'PASSWORD' => $password,
 							'SERVER_HOSTNAME' => $srv_hostname,
