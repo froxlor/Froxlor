@@ -546,7 +546,7 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.10')) {
 if (\Froxlor\Froxlor::isDatabaseVersion('201912311')) {
 	showUpdateStep("Migrate logfiles_format setting");
 	$current_format = Settings::Set('system.logfiles_format');
-	if (!empty($current_format)) {
+	if (! empty($current_format)) {
 		Settings::Set('system.logfiles_format', '"' . Settings::Get('system.logfiles_format') . '"');
 		lastStepStatus(0);
 	} else {
@@ -570,4 +570,25 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.11')) {
 if (\Froxlor\Froxlor::isFroxlorVersion('0.10.12')) {
 	showUpdateStep("Updating from 0.10.12 to 0.10.13", false);
 	\Froxlor\Froxlor::updateToVersion('0.10.13');
+}
+
+if (\Froxlor\Froxlor::isDatabaseVersion('201912313')) {
+	showUpdateStep("Adding new field to domains table");
+	Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `domain_ace` varchar(255) NOT NULL default '' AFTER `domain`;");
+	lastStepStatus(0);
+
+	showUpdateStep("Updating domain entries");
+	$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `domain_ace` = :ace WHERE `id` = :domainid");
+	$sel_stmt = Database::prepare("SELECT id, domain FROM `" . TABLE_PANEL_DOMAINS . "` ORDER BY id ASC");
+	Database::pexecute($sel_stmt);
+	$idna_convert = new \Froxlor\Idna\IdnaWrapper();
+	while ($domain = $sel_stmt->fetch(\PDO::FETCH_ASSOC)) {
+		Database::pexecute($upd_stmt, [
+			'ace' => $idna_convert->decode($domain['domain']),
+			'domainid' => $domain['id']
+		]);
+	}
+	lastStepStatus(0);
+
+	\Froxlor\Froxlor::updateToDbVersion('202002290');
 }

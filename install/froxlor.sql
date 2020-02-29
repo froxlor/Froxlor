@@ -224,6 +224,7 @@ DROP TABLE IF EXISTS `panel_domains`;
 CREATE TABLE `panel_domains` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `domain` varchar(255) NOT NULL default '',
+  `domain_ace` varchar(255) NOT NULL default '',
   `adminid` int(11) unsigned NOT NULL default '0',
   `customerid` int(11) unsigned NOT NULL default '0',
   `aliasdomain` int(11) unsigned NULL,
@@ -704,7 +705,7 @@ opcache.interned_strings_buffer'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'is_configured', '0'),
 	('panel', 'version', '0.10.13'),
-	('panel', 'db_version', '201912313');
+	('panel', 'db_version', '202002290');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

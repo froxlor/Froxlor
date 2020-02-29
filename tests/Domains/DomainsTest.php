@@ -347,4 +347,27 @@ class DomainsTest extends TestCase
 		$this->expectExceptionMessage("Not allowed to execute given command.");
 		$json_result = Domains::getLocal($customer_userdata)->listingCount();
 	}
+
+	public function testAdminIdnDomainsAdd()
+	{
+		global $admin_userdata;
+		// get customer
+		$json_result = Customers::getLocal($admin_userdata, array(
+			'loginname' => 'test1'
+		))->get();
+		$customer_userdata = json_decode($json_result, true)['data'];
+		$data = [
+			'domain' => 'täst.local',
+			'customerid' => $customer_userdata['customerid']
+		];
+		$json_result = Domains::getLocal($admin_userdata, $data)->add();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals($customer_userdata['documentroot'] . 'xn--tst-qla.local/', $result['documentroot']);
+		$this->assertEquals('xn--tst-qla.local', $result['domain']);
+		$this->assertEquals('täst.local', $result['domain_ace']);
+
+		Domains::getLocal($admin_userdata, [
+			'domainname' => 'täst.local'
+		])->delete();
+	}
 }

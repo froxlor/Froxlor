@@ -684,6 +684,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 
 					$ins_data = array(
 						'domain' => $domain,
+						'domain_ace' => $idna_convert->decode($domain),
 						'customerid' => $customerid,
 						'adminid' => $adminid,
 						'documentroot' => $documentroot,
@@ -732,6 +733,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 					$ins_stmt = Database::prepare("
 						INSERT INTO `" . TABLE_PANEL_DOMAINS . "` SET
 						`domain` = :domain,
+						`domain_ace` = :domain_ace,
 						`customerid` = :customerid,
 						`adminid` = :adminid,
 						`documentroot` = :documentroot,

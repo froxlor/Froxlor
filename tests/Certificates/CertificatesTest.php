@@ -64,7 +64,7 @@ class CertificatesTest extends TestCase
 			'ssl_key_file' => $certdata['key']
 		))->add();
 		$result = json_decode($json_result, true)['data'];
-		$this->assertEquals(5, $result['domainid']);
+		$this->assertEquals(6, $result['domainid']);
 	}
 
 	public function testAdminCertificatesList()
@@ -148,7 +148,7 @@ class CertificatesTest extends TestCase
 			'ssl_key_file' => $certdata['key']
 		))->update();
 		$result = json_decode($json_result, true)['data'];
-		$this->assertEquals(5, $result['domainid']);
+		$this->assertEquals(6, $result['domainid']);
 		$this->assertEquals(str_replace("\n", "", $certdata['cert']), str_replace("\n", "", $result['ssl_cert_file']));
 	}
 

@@ -44,7 +44,7 @@ if ($page == 'overview') {
 	if ($action == '') {
 		$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_email::emails");
 		$fields = array(
-			'd.domain' => $lng['domains']['domainname'],
+			'd.domain_ace' => $lng['domains']['domainname'],
 			'm.email_full' => $lng['emails']['emailaddress'],
 			'm.destination' => $lng['emails']['forwarders']
 		);
@@ -76,7 +76,7 @@ if ($page == 'overview') {
 			$emails[$row['domain']][$row['email_full']] = $row;
 		}
 
-		if ($paging->sortfield == 'd.domain' && $paging->sortorder == 'desc') {
+		if ($paging->sortfield == 'd.domain_ace' && $paging->sortorder == 'desc') {
 			krsort($emails);
 		} else {
 			ksort($emails);
@@ -195,7 +195,7 @@ if ($page == 'overview') {
 				$result_stmt = Database::prepare("SELECT `id`, `domain`, `customerid` FROM `" . TABLE_PANEL_DOMAINS . "`
 					WHERE `customerid`= :cid
 					AND `isemaildomain`='1'
-					ORDER BY `domain` ASC");
+					ORDER BY `domain_ace` ASC");
 				Database::pexecute($result_stmt, array(
 					"cid" => $userinfo['customerid']
 				));
