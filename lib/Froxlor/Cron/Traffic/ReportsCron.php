@@ -347,7 +347,7 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 			 * report about diskusage for customers
 			 */
 			$result_stmt = Database::query("
-				SELECT `c`.`customerid`, `c`.`customernumber`,, `c`.`adminid`, `c`.`name`, `c`.`firstname`,
+				SELECT `c`.`customerid`, `c`.`customernumber`, `c`.`adminid`, `c`.`name`, `c`.`firstname`,
 				`c`.`company`, `c`.`diskspace`, `c`.`diskspace_used`, `c`.`email`, `c`.`def_language`,
 				`a`.`name` AS `adminname`, `a`.`email` AS `adminmail`
 				FROM `" . TABLE_PANEL_CUSTOMERS . "` AS `c`
