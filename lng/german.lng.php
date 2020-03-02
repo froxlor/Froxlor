@@ -404,6 +404,7 @@ $lng['admin']['ipsandports']['add'] = 'IP-Adresse/Port hinzufügen';
 $lng['admin']['ipsandports']['edit'] = 'IP-Adresse/Port bearbeiten';
 $lng['admin']['ipsandports']['ipandport'] = 'IP-Adresse/Port';
 $lng['admin']['ipsandports']['ip'] = 'IP-Adresse';
+$lng['admin']['ipsandports']['ipnote'] = '<div id="ipnote" class="red">Hinweis: Obwohl private IP Adressen erlaubt sind, kann es bei manchen Features wie DNS zu ungewolltem Verhalten kommen.<br>Verwende private Adressen nur wenn du sicher bist.</div>';
 $lng['admin']['ipsandports']['port'] = 'Port';
 
 // ADDED IN 1.2.13-rc3

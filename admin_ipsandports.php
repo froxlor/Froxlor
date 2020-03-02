@@ -160,5 +160,14 @@ if ($page == 'ipsandports' || $page == 'overview') {
 				eval("echo \"" . \Froxlor\UI\Template::getTemplate("ipsandports/ipsandports_edit") . "\";");
 			}
 		}
+	} elseif ($action == 'jqCheckIP') {
+		$ip = $_POST['ip'] ?? "";
+		if ((filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) || filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) && filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE | FILTER_FLAG_NO_PRIV_RANGE) == false) {
+			// returns notice if private network detected so we can display it
+			echo json_encode($lng['admin']['ipsandports']['ipnote']);
+		} else {
+			echo 0;
+		}
+		exit();
 	}
 }
