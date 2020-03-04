@@ -338,15 +338,20 @@ class FroxlorInstall
 			@fclose($fp);
 			$content .= $this->_status_message('green', 'OK');
 			chmod($userdata_file, 0440);
-		} elseif ($fp = @fopen('/tmp/userdata.inc.php', 'w')) {
-			$result = @fputs($fp, $userdata, strlen($userdata));
-			@fclose($fp);
-			$content .= $this->_status_message('orange', $this->_lng['install']['creating_configfile_temp']);
-			chmod('/tmp/userdata.inc.php', 0440);
 		} else {
-			$content .= $this->_status_message('red', $this->_lng['install']['creating_configfile_failed']);
-			$escpduserdata = nl2br(htmlspecialchars($userdata));
-			eval("\$content .= \"" . $this->_getTemplate("textarea") . "\";");
+			// try creating it in a temporary file
+			$temp_file = tempnam(sys_get_temp_dir(), 'fx');
+			if (touch($temp_file)) {
+				chmod($temp_file, 0400);
+				$fp = @fopen($temp_file, 'w');
+				$result = @fputs($fp, $userdata, strlen($userdata));
+				@fclose($fp);
+				$content .= $this->_status_message('orange', sprintf($this->_lng['install']['creating_configfile_temp'], $temp_file));
+			} else {
+				$content .= $this->_status_message('red', $this->_lng['install']['creating_configfile_failed']);
+				$escpduserdata = nl2br(htmlspecialchars($userdata));
+				eval("\$content .= \"" . $this->_getTemplate("textarea") . "\";");
+			}
 		}
 
 		return $content;

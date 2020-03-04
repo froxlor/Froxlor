@@ -86,7 +86,7 @@ $lng['install']['changing_data'] = 'Einstellungen anpassen...';
 $lng['install']['creating_entries'] = 'Trage neue Werte ein...';
 $lng['install']['adding_admin_user'] = 'Erstelle Admin-Benutzer...';
 $lng['install']['creating_configfile'] = 'Erstelle Konfigurationsdatei...';
-$lng['install']['creating_configfile_temp'] = 'Datei wurde in /tmp/userdata.inc.php gespeichert, bitte nach ' . dirname(dirname(__DIR__)) . '/lib/ verschieben.';
+$lng['install']['creating_configfile_temp'] = 'Datei wurde in %s gespeichert, bitte nach ' . dirname(dirname(__DIR__)) . '/lib/userdata.inc.php verschieben.';
 $lng['install']['creating_configfile_failed'] = 'Konnte ' . dirname(dirname(__DIR__)) . '/lib/userdata.inc.php nicht erstellen, bitte manuell mit folgendem Inhalt anlegen:';
 $lng['install']['froxlor_succ_installed'] = 'Froxlor wurde erfolgreich installiert.';
 
