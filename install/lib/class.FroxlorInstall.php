@@ -735,7 +735,7 @@ class FroxlorInstall
 			}
 
 			if ($do_backup) {
-				$command = $mysql_dump . " " . $this->_data['mysql_database'] . " -u " . $this->_data['mysql_root_user'] . " --password='" . $this->_data['mysql_root_pass'] . "' --result-file=" . $filename;
+				$command = $mysql_dump . " " . escapeshellarg($this->_data['mysql_database']) . " -u " . escapeshellarg($this->_data['mysql_root_user']) . " --password='" . $this->_data['mysql_root_pass'] . "' --result-file=" . $filename;
 				$output = exec($command);
 				if (stristr($output, "error")) {
 					$content .= $this->_status_message('red', $this->_lng['install']['backup_failed']);
