@@ -60,7 +60,7 @@ class FroxlorRPC
 			FROM `api_keys` ak
 			LEFT JOIN `panel_admins` a ON a.adminid = ak.adminid
 			LEFT JOIN `panel_customers` c ON c.customerid = ak.customerid
-			WHERE `apikey` = :ak AND `secret` = :as
+			WHERE `apikey` = :ak AND `secret` = :as AND c.deactivated = 0
 		");
 		$result = \Froxlor\Database\Database::pexecute_first($sel_stmt, array(
 			'ak' => $key,
