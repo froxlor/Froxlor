@@ -592,3 +592,8 @@ if (\Froxlor\Froxlor::isDatabaseVersion('201912313')) {
 
 	\Froxlor\Froxlor::updateToDbVersion('202002290');
 }
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.13')) {
+	showUpdateStep("Updating from 0.10.13 to 0.10.14", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.14');
+}

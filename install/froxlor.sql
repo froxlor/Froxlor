@@ -84,7 +84,7 @@ CREATE TABLE `panel_activation` (
   `creation` int(11) unsigned NOT NULL default '0',
   `activationcode` varchar(50) default NULL,
   PRIMARY KEY (id)
-) ENGINE=InnoDB  CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 DROP TABLE IF EXISTS `panel_admins`;
@@ -704,7 +704,7 @@ opcache.interned_strings_buffer'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'is_configured', '0'),
-	('panel', 'version', '0.10.13'),
+	('panel', 'version', '0.10.14'),
 	('panel', 'db_version', '202002290');
 
 
