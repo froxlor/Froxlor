@@ -1744,3 +1744,5 @@ $lng['serversettings']['phpfpm_settings']['custom_config']['description'] = 'Fü
 
 $lng['serversettings']['awstats']['logformat']['title'] = 'LogFormat Einstellung';
 $lng['serversettings']['awstats']['logformat']['description'] = 'Wenn ein benutzerdefiniertes LogFormat beim Webserver verwendet wird, muss LogFormat von awstats ebenso angepasst werden.<br/>Standard ist 1. Für weitere Informationen siehe Dokumentation unter <a target="_blank" href="https://awstats.sourceforge.io/docs/awstats_config.html#LogFormat">hier</a>.';
+
+$lng['admin']['phpdisabled'] = 'PHP nicht verfügbar';

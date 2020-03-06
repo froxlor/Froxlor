@@ -38,7 +38,7 @@ if (AREA == 'admin') {
 }
 $success_message = "";
 
-$tfa = new \Froxlor\FroxlorTwoFactorAuth('Froxlor');
+$tfa = new \Froxlor\FroxlorTwoFactorAuth('Froxlor '.(Settings::Get('system.hostname')));
 
 // do the delete and then just show a success-message
 if ($action == 'delete') {

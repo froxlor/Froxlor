@@ -775,6 +775,8 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				'`d`.`iswildcarddomain`',
 				'`d`.`parentdomainid`',
 				'`d`.`letsencrypt`',
+				'`d`.`phpenabled`',
+				'`d`.`phpsettingid`',
 				'`d`.`registration_date`',
 				'`d`.`termination_date`'
 			];
@@ -783,11 +785,12 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 
 		// prepare select statement
 		$domains_stmt = Database::prepare("
-			SELECT " . implode(",", $select_fields) . ", IF(`d`.`parentdomainid` > 0, `pd`.`domain_ace`, `d`.`domain_ace`) AS `parentdomainname`, `ad`.`id` AS `aliasdomainid`, `ad`.`domain` AS `aliasdomain`, `da`.`id` AS `domainaliasid`, `da`.`domain` AS `domainalias`
+			SELECT " . implode(",", $select_fields) . ", IF(`d`.`parentdomainid` > 0, `pd`.`domain_ace`, `d`.`domain_ace`) AS `parentdomainname`, `ad`.`id` AS `aliasdomainid`, `ad`.`domain` AS `aliasdomain`, `da`.`id` AS `domainaliasid`, `da`.`domain` AS `domainalias`, `pc`.`description` AS `phpconfig`
 			FROM `" . TABLE_PANEL_DOMAINS . "` `d`
 			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `ad` ON `d`.`aliasdomain`=`ad`.`id`
 			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `da` ON `da`.`aliasdomain`=`d`.`id`
 			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `pd` ON `pd`.`id`=`d`.`parentdomainid`
+			LEFT JOIN `" . TABLE_PANEL_PHPCONFIGS . "` `pc` ON `pc`.`id`=`d`.`phpsettingid`
 			WHERE `d`.`customerid` IN (" . implode(', ', $customer_ids) . ")
 			AND `d`.`email_only` = '0'
 			AND `d`.`id` NOT IN (" . implode(', ', $customer_stdsubs) . ")" . $this->getSearchWhere($query_fields, true) . " GROUP BY `d`.`id` ORDER BY `parentdomainname` " . $this->getOrderBy(true) . $this->getLimit());

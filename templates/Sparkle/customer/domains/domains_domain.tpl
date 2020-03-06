@@ -18,6 +18,13 @@
 		<if isset($row['aliasdomainid']) && $row['aliasdomainid'] != 0>{$lng['domains']['aliasdomain']} {$row['aliasdomain']}</if>
 	</td>
 	<td>
+		<if isset($row['phpenabled']) && $row['phpenabled'] != 0>
+		{row['phpconfig']}
+		<else>
+		{$lng['admin']['phpdisabled']}
+		</if>
+	</td>
+	<td>
 		<if $row['caneditdomain'] == '1'>
 			<a href="{$linker->getLink(array('section' => 'domains', 'page' => 'domains', 'action' => 'edit', 'id' => $row['id']))}">
 				<img src="templates/{$theme}/assets/img/icons/edit.png" alt="{$lng['panel']['edit']}" title="{$lng['panel']['edit']}" />

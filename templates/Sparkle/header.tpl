@@ -63,7 +63,7 @@
 					<if \Froxlor\Settings::Get('panel.allow_theme_change_customer') == '1' && $userinfo['adminsession'] == 0>
 						<li><a href="{$linker->getLink(array('section' => 'index', 'page' => 'change_theme'))}">{$lng['panel']['theme']}</a></li>
 					</if>
-					<if \Froxlor\Settings::Get('api.enabled') == 1>
+					<if \Froxlor\Settings::Get('api.enabled') == 1 && $userinfo['api_allowed'] == 1>
 						<li><a href="{$linker->getLink(array('section' => 'index', 'page' => 'apikeys'))}">{$lng['menue']['main']['apikeys']}</a></li>
 						<li><a href="https://api.froxlor.org/doc/?v={$version}" rel="external">{$lng['menue']['main']['apihelp']}</a></li>
 					</if>
