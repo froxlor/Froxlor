@@ -333,16 +333,17 @@ class FroxlorInstall
 
 		// test if we can store the userdata.inc.php in ../lib
 		$userdata_file = dirname(dirname(dirname(__FILE__))) . '/lib/userdata.inc.php';
-		if (@touch($userdata_file) && @chmod($userdata_file, 0400) && @is_writable($userdata_file)) {
+		if (@touch($userdata_file) && @chmod($userdata_file, 0600) && @is_writable($userdata_file)) {
 			$fp = @fopen($userdata_file, 'w');
 			@fputs($fp, $userdata, strlen($userdata));
 			@fclose($fp);
 			$content .= $this->_status_message('green', 'OK');
 		} else {
+			@unlink($userdata_file);
 			// try creating it in a temporary file
 			$temp_file = @tempnam(sys_get_temp_dir(), 'fx');
 			if ($temp_file) {
-				chmod($temp_file, 0400);
+				chmod($temp_file, 0600);
 				$fp = @fopen($temp_file, 'w');
 				@fputs($fp, $userdata, strlen($userdata));
 				@fclose($fp);

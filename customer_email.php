@@ -19,7 +19,6 @@
 define('AREA', 'customer');
 require './lib/init.php';
 
-use Froxlor\Api\Commands\SubDomains;
 use Froxlor\Database\Database;
 use Froxlor\Settings;
 use Froxlor\Api\Commands\Emails as Emails;
