@@ -332,8 +332,9 @@ class FroxlorInstall
 		$userdata .= "?>";
 
 		// test if we can store the userdata.inc.php in ../lib
+		$umask = @umask(077);
 		$userdata_file = dirname(dirname(dirname(__FILE__))) . '/lib/userdata.inc.php';
-		if (@touch($userdata_file) && @chmod($userdata_file, 0600) && @is_writable($userdata_file)) {
+		if (@touch($userdata_file) && @is_writable($userdata_file)) {
 			$fp = @fopen($userdata_file, 'w');
 			@fputs($fp, $userdata, strlen($userdata));
 			@fclose($fp);
@@ -343,7 +344,6 @@ class FroxlorInstall
 			// try creating it in a temporary file
 			$temp_file = @tempnam(sys_get_temp_dir(), 'fx');
 			if ($temp_file) {
-				chmod($temp_file, 0600);
 				$fp = @fopen($temp_file, 'w');
 				@fputs($fp, $userdata, strlen($userdata));
 				@fclose($fp);
@@ -354,6 +354,7 @@ class FroxlorInstall
 				eval("\$content .= \"" . $this->_getTemplate("textarea") . "\";");
 			}
 		}
+		@umask($umask);
 
 		return $content;
 	}
