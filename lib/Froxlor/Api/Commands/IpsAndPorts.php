@@ -560,7 +560,7 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 						'ip' => $result['ip']
 					));
 
-					if (($result['ip'] != Settings::Get('system.ipaddress')) || ($result['ip'] == Settings::Get('system.ipaddress') && $result_sameipotherport == false)) {
+					if (($result['ip'] != Settings::Get('system.ipaddress')) || ($result['ip'] == Settings::Get('system.ipaddress') && $result_sameipotherport != false)) {
 
 						$del_stmt = Database::prepare("
 							DELETE FROM `" . TABLE_PANEL_IPSANDPORTS . "`
