@@ -42,7 +42,7 @@ if ($page == 'overview') {
 	if ($action == '') {
 		$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_domains::domains");
 		$fields = array(
-			'd.domain' => $lng['domains']['domainname'],
+			'd.domain_ace' => $lng['domains']['domainname'],
 			'd.aliasdomain' => $lng['domains']['aliasdomain']
 		);
 		try {

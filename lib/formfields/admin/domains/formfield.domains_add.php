@@ -384,7 +384,7 @@ return array(
 						'value' => array()
 					),
 					'sessiontickets' => array(
-						'visible' => ($ssl_ipsandports != '' ? true : false) && \Froxlor\Settings::Get('system.webserver') != 'lighttpd',
+						'visible' => ($ssl_ipsandports != '' ? true : false) && \Froxlor\Settings::Get('system.webserver') != 'lighttpd' && \Froxlor\Settings::Get('system.sessionticketsenabled' != '1'),
 						'label' => $lng['admin']['domain_sessiontickets'],
 						'type' => 'checkbox',
 						'values' => array(

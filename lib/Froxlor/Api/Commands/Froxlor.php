@@ -244,6 +244,26 @@ class Froxlor extends \Froxlor\Api\ApiCommand
 	}
 
 	/**
+	 * can be used to remotely run the integritiy checks froxlor implements
+	 *
+	 * @access admin
+	 * @throws \Exception
+	 * @return string
+	 */
+	public function integrityCheck()
+	{
+		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
+			$integrity = new \Froxlor\Database\IntegrityCheck();
+			$result = $integrity->checkAll();
+			if ($result) {
+				return $this->response(200, "successfull", "OK");
+			}
+			throw new \Exception("Some checks failed.", 406);
+		}
+		throw new \Exception("Not allowed to execute given command.", 403);
+	}
+
+	/**
 	 * returns a list of all available api functions
 	 *
 	 * @param string $module

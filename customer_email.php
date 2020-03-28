@@ -19,7 +19,6 @@
 define('AREA', 'customer');
 require './lib/init.php';
 
-use Froxlor\Api\Commands\SubDomains;
 use Froxlor\Database\Database;
 use Froxlor\Settings;
 use Froxlor\Api\Commands\Emails as Emails;
@@ -44,7 +43,7 @@ if ($page == 'overview') {
 	if ($action == '') {
 		$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_email::emails");
 		$fields = array(
-			'd.domain' => $lng['domains']['domainname'],
+			'd.domain_ace' => $lng['domains']['domainname'],
 			'm.email_full' => $lng['emails']['emailaddress'],
 			'm.destination' => $lng['emails']['forwarders']
 		);
@@ -76,7 +75,7 @@ if ($page == 'overview') {
 			$emails[$row['domain']][$row['email_full']] = $row;
 		}
 
-		if ($paging->sortfield == 'd.domain' && $paging->sortorder == 'desc') {
+		if ($paging->sortfield == 'd.domain_ace' && $paging->sortorder == 'desc') {
 			krsort($emails);
 		} else {
 			ksort($emails);
@@ -129,16 +128,15 @@ if ($page == 'overview') {
 			}
 		}
 
-		$json_result = SubDomains::getLocal($userinfo, [
-			'sql_search' => [
-				'd.isemaildomain' => [
-					'value' => 1,
-					'op' => '='
-				]
-			]
-		])->listing();
-		$result = json_decode($json_result, true)['data'];
-		$emaildomains_count = $result['count'];
+		$result_stmt = Database::prepare("
+			SELECT COUNT(`id`) as emaildomains
+			FROM `" . TABLE_PANEL_DOMAINS . "`
+			WHERE `customerid`= :cid AND `isemaildomain` = '1'
+		");
+		$result = Database::pexecute_first($result_stmt, array(
+			"cid" => $userinfo['customerid']
+		));
+		$emaildomains_count = $result['emaildomains'];
 
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate("email/emails") . "\";");
 	} elseif ($action == 'delete' && $id != 0) {
@@ -196,7 +194,7 @@ if ($page == 'overview') {
 				$result_stmt = Database::prepare("SELECT `id`, `domain`, `customerid` FROM `" . TABLE_PANEL_DOMAINS . "`
 					WHERE `customerid`= :cid
 					AND `isemaildomain`='1'
-					ORDER BY `domain` ASC");
+					ORDER BY `domain_ace` ASC");
 				Database::pexecute($result_stmt, array(
 					"cid" => $userinfo['customerid']
 				));

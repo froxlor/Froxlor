@@ -84,7 +84,7 @@ CREATE TABLE `panel_activation` (
   `creation` int(11) unsigned NOT NULL default '0',
   `activationcode` varchar(50) default NULL,
   PRIMARY KEY (id)
-) ENGINE=InnoDB  CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 DROP TABLE IF EXISTS `panel_admins`;
@@ -224,6 +224,7 @@ DROP TABLE IF EXISTS `panel_domains`;
 CREATE TABLE `panel_domains` (
   `id` int(11) unsigned NOT NULL auto_increment,
   `domain` varchar(255) NOT NULL default '',
+  `domain_ace` varchar(255) NOT NULL default '',
   `adminid` int(11) unsigned NOT NULL default '0',
   `customerid` int(11) unsigned NOT NULL default '0',
   `aliasdomain` int(11) unsigned NULL,
@@ -703,8 +704,8 @@ opcache.interned_strings_buffer'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'is_configured', '0'),
-	('panel', 'version', '0.10.12'),
-	('panel', 'db_version', '201912313');
+	('panel', 'version', '0.10.15'),
+	('panel', 'db_version', '202002290');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

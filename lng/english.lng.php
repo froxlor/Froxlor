@@ -317,6 +317,7 @@ $lng['admin']['templates']['COMPANY'] = 'Replaces with the customer\'s company n
 $lng['admin']['templates']['USERNAME'] = 'Replaced with the customer\'s account username.';
 $lng['admin']['templates']['PASSWORD'] = 'Replaced with the customer\'s account password.';
 $lng['admin']['templates']['EMAIL'] = 'Replaced with the address of the POP3/IMAP account.';
+$lng['admin']['templates']['CUSTOMER_NO'] = 'Replaces with the customer number';
 $lng['admin']['webserver'] = 'Webserver';
 $lng['admin']['bindzonewarning'] = $lng['panel']['emptyfordefault'] . '<br /><strong class="red">ATTENTION:</strong> If you use a zonefile you will have to manage all required records for all sub-zones manually as well.';
 
@@ -408,6 +409,7 @@ $lng['admin']['ipsandports']['add'] = 'Add IP/Port';
 $lng['admin']['ipsandports']['edit'] = 'Edit IP/Port';
 $lng['admin']['ipsandports']['ipandport'] = 'IP/Port';
 $lng['admin']['ipsandports']['ip'] = 'IP';
+$lng['admin']['ipsandports']['ipnote'] = '<div id="ipnote" class="red">Note: Although private ip addresses are allowed, some features like DNS might not behave correctly.<br>Only use private ip addresses if you are sure.</div>';
 $lng['admin']['ipsandports']['port'] = 'Port';
 
 // ADDED IN 1.2.13-rc3
@@ -1695,7 +1697,7 @@ $lng['admin']['integrityresult'] = 'Result';
 $lng['admin']['integrityfix'] = 'Fix problems automatically';
 $lng['question']['admin_integritycheck_reallyfix'] = 'Do you really want to try fixing all database integrity problems automatically?';
 $lng['serversettings']['system_croncmdline']['title'] = 'Cron execution command (php-binary)';
-$lng['serversettings']['system_croncmdline']['description'] = 'Command to execute our cronjobs. Change this only if you know what you are doing (default: "/usr/bin/nice -n 5 /usr/bin/php5 -q")!';
+$lng['serversettings']['system_croncmdline']['description'] = 'Command to execute our cronjobs. Change this only if you know what you are doing (default: "/usr/bin/nice -n 5 /usr/bin/php -q")!';
 $lng['error']['cannotdeletehostnamephpconfig'] = 'This PHP-configuration is used by the Froxlor-vhost and cannot be deleted.';
 $lng['error']['cannotdeletedefaultphpconfig'] = 'This PHP-configuration is set as default and cannot be deleted.';
 $lng['serversettings']['system_cron_allowautoupdate']['title'] = 'Allow automatic database updates';

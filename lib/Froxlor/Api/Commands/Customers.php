@@ -689,6 +689,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 								'name' => $name,
 								'company' => $company
 							)),
+							'CUSTOMER_NO' => $customernumber,
 							'USERNAME' => $loginname,
 							'PASSWORD' => $password,
 							'SERVER_HOSTNAME' => $srv_hostname,
@@ -1409,7 +1410,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				'id' => $id
 			), true, true);
 
-			// first gather all domain-id's to clean up panel_domaintoip and dns-entries accordingly
+			// first gather all domain-id's to clean up panel_domaintoip, dns-entries and certificates accordingly
 			$did_stmt = Database::prepare("SELECT `id` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `customerid` = :id");
 			Database::pexecute($did_stmt, array(
 				'id' => $id
@@ -1422,6 +1423,11 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				), true, true);
 				// remove domain->dns entries
 				$stmt = Database::prepare("DELETE FROM `" . TABLE_DOMAIN_DNS . "` WHERE `domain_id` = :did");
+				Database::pexecute($stmt, array(
+					'did' => $row['id']
+				), true, true);
+				// remove domain->certificates entries
+				$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` WHERE `domainid` = :did");
 				Database::pexecute($stmt, array(
 					'did' => $row['id']
 				), true, true);

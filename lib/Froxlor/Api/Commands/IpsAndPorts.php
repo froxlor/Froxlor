@@ -170,7 +170,7 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 	{
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
 
-			$ip = \Froxlor\Validate\Validate::validate_ip2($this->getParam('ip'), false, 'invalidip', false, false, false, false, true);
+			$ip = \Froxlor\Validate\Validate::validate_ip2($this->getParam('ip'), false, 'invalidip', false, true, false, false, true);
 			$port = \Froxlor\Validate\Validate::validate($this->getParam('port', true, 80), 'port', '/^(([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9])|([1-5][0-9][0-9][0-9][0-9])|(6[0-4][0-9][0-9][0-9])|(65[0-4][0-9][0-9])|(655[0-2][0-9])|(6553[0-5]))$/Di', array(
 				'stringisempty',
 				'myport'
@@ -367,7 +367,7 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 				'id' => $id
 			));
 
-			$ip = \Froxlor\Validate\Validate::validate_ip2($this->getParam('ip', true, $result['ip']), false, 'invalidip', false, false, false, false, true);
+			$ip = \Froxlor\Validate\Validate::validate_ip2($this->getParam('ip', true, $result['ip']), false, 'invalidip', false, true, false, false, true);
 			$port = \Froxlor\Validate\Validate::validate($this->getParam('port', true, $result['port']), 'port', '/^(([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9])|([1-5][0-9][0-9][0-9][0-9])|(6[0-4][0-9][0-9][0-9])|(65[0-4][0-9][0-9])|(655[0-2][0-9])|(6553[0-5]))$/Di', array(
 				'stringisempty',
 				'myport'
@@ -560,7 +560,7 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 						'ip' => $result['ip']
 					));
 
-					if (($result['ip'] != Settings::Get('system.ipaddress')) || ($result['ip'] == Settings::Get('system.ipaddress') && $result_sameipotherport == false)) {
+					if (($result['ip'] != Settings::Get('system.ipaddress')) || ($result['ip'] == Settings::Get('system.ipaddress') && $result_sameipotherport != false)) {
 
 						$del_stmt = Database::prepare("
 							DELETE FROM `" . TABLE_PANEL_IPSANDPORTS . "`

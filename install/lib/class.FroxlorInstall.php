@@ -332,22 +332,29 @@ class FroxlorInstall
 		$userdata .= "?>";
 
 		// test if we can store the userdata.inc.php in ../lib
+		$umask = @umask(077);
 		$userdata_file = dirname(dirname(dirname(__FILE__))) . '/lib/userdata.inc.php';
-		if ($fp = @fopen($userdata_file, 'w')) {
-			$result = @fputs($fp, $userdata, strlen($userdata));
+		if (@touch($userdata_file) && @is_writable($userdata_file)) {
+			$fp = @fopen($userdata_file, 'w');
+			@fputs($fp, $userdata, strlen($userdata));
 			@fclose($fp);
 			$content .= $this->_status_message('green', 'OK');
-			chmod($userdata_file, 0440);
-		} elseif ($fp = @fopen('/tmp/userdata.inc.php', 'w')) {
-			$result = @fputs($fp, $userdata, strlen($userdata));
-			@fclose($fp);
-			$content .= $this->_status_message('orange', $this->_lng['install']['creating_configfile_temp']);
-			chmod('/tmp/userdata.inc.php', 0440);
 		} else {
-			$content .= $this->_status_message('red', $this->_lng['install']['creating_configfile_failed']);
-			$escpduserdata = nl2br(htmlspecialchars($userdata));
-			eval("\$content .= \"" . $this->_getTemplate("textarea") . "\";");
+			@unlink($userdata_file);
+			// try creating it in a temporary file
+			$temp_file = @tempnam(sys_get_temp_dir(), 'fx');
+			if ($temp_file) {
+				$fp = @fopen($temp_file, 'w');
+				@fputs($fp, $userdata, strlen($userdata));
+				@fclose($fp);
+				$content .= $this->_status_message('orange', sprintf($this->_lng['install']['creating_configfile_temp'], $temp_file));
+			} else {
+				$content .= $this->_status_message('red', $this->_lng['install']['creating_configfile_failed']);
+				$escpduserdata = nl2br(htmlspecialchars($userdata));
+				eval("\$content .= \"" . $this->_getTemplate("textarea") . "\";");
+			}
 		}
+		@umask($umask);
 
 		return $content;
 	}
@@ -563,7 +570,7 @@ class FroxlorInstall
 			for ($i = 0; $i < sizeof($sql_query); $i ++) {
 				if (trim($sql_query[$i]) != '') {
 					try {
-						$result = $db->query($sql_query[$i]);
+						$db->query($sql_query[$i]);
 					} catch (\PDOException $e) {
 						$content .= $this->_status_message('red', $e->getMessage());
 						$fatal_fail = true;
@@ -730,7 +737,7 @@ class FroxlorInstall
 			}
 
 			if ($do_backup) {
-				$command = $mysql_dump . " " . $this->_data['mysql_database'] . " -u " . $this->_data['mysql_root_user'] . " --password='" . $this->_data['mysql_root_pass'] . "' --result-file=" . $filename;
+				$command = $mysql_dump . " " . escapeshellarg($this->_data['mysql_database']) . " -u " . escapeshellarg($this->_data['mysql_root_user']) . " --password='" . escapeshellarg($this->_data['mysql_root_pass']) . "' --result-file=" . $filename;
 				$output = exec($command);
 				if (stristr($output, "error")) {
 					$content .= $this->_status_message('red', $this->_lng['install']['backup_failed']);

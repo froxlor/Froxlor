@@ -258,6 +258,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				`customerid` = :customerid,
 				`adminid` = :adminid,
 				`domain` = :domain,
+				`domain_ace` = :domain_ace,
 				`documentroot` = :documentroot,
 				`aliasdomain` = :aliasdomain,
 				`parentdomainid` = :parentdomainid,
@@ -289,6 +290,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				"customerid" => $customer['customerid'],
 				"adminid" => $customer['adminid'],
 				"domain" => $completedomain,
+				"domain_ace" => $idna_convert->decode($completedomain),
 				"documentroot" => $path,
 				"aliasdomain" => $aliasdomain != 0 ? $aliasdomain : null,
 				"parentdomainid" => $domain_check['id'],
@@ -780,6 +782,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				'`d`.`id`',
 				'`d`.`customerid`',
 				'`d`.`domain`',
+				'`d`.`domain_ace`',
 				'`d`.`documentroot`',
 				'`d`.`isbinddomain`',
 				'`d`.`isemaildomain`',
@@ -795,7 +798,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 
 		// prepare select statement
 		$domains_stmt = Database::prepare("
-			SELECT " . implode(",", $select_fields) . ", IF(`d`.`parentdomainid` > 0, `pd`.`domain`, `d`.`domain`) AS `parentdomainname`, `ad`.`id` AS `aliasdomainid`, `ad`.`domain` AS `aliasdomain`, `da`.`id` AS `domainaliasid`, `da`.`domain` AS `domainalias`
+			SELECT " . implode(",", $select_fields) . ", IF(`d`.`parentdomainid` > 0, `pd`.`domain_ace`, `d`.`domain_ace`) AS `parentdomainname`, `ad`.`id` AS `aliasdomainid`, `ad`.`domain` AS `aliasdomain`, `da`.`id` AS `domainaliasid`, `da`.`domain` AS `domainalias`
 			FROM `" . TABLE_PANEL_DOMAINS . "` `d`
 			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `ad` ON `d`.`aliasdomain`=`ad`.`id`
 			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `da` ON `da`.`aliasdomain`=`d`.`id`
