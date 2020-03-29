@@ -327,6 +327,9 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 			}
 			if (Settings::Get('system.leecc') > 0) {
 				$acmesh_cmd .= " --keylength ec-" . Settings::Get('system.leecc');
+				if ($cert_mode != 'issue') {
+					$acmesh_cmd .= " --ecc";
+				}
 			} else {
 				$acmesh_cmd .= " --keylength " . Settings::Get('system.letsencryptkeysize');
 			}
