@@ -130,7 +130,30 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 
 		// compare file-system certificates with the ones in our database
 		// and update if needed
+		$renew_froxlor = self::renewFroxlorVhost();
 		$renew_domains = self::renewDomains();
+
+		if ($renew_froxlor) {
+			// build row
+			$certrow = array(
+				'loginname' => 'froxlor.panel',
+				'domain' => Settings::Get('system.hostname'),
+				'domainid' => 0,
+				'documentroot' => \Froxlor\Froxlor::getInstallDir(),
+				'leprivatekey' => Settings::Get('system.leprivatekey'),
+				'lepublickey' => Settings::Get('system.lepublickey'),
+				'leregistered' => Settings::Get('system.leregistered'),
+				'ssl_redirect' => Settings::Get('system.le_froxlor_redirect'),
+				'expirationdate' => is_array($renew_froxlor) ? $renew_froxlor['expirationdate'] : date('Y-m-d H:i:s', 0),
+				'ssl_cert_file' => is_array($renew_froxlor) ? $renew_froxlor['ssl_cert_file'] : null,
+				'ssl_key_file' => is_array($renew_froxlor) ? $renew_froxlor['ssl_key_file'] : null,
+				'ssl_ca_file' => is_array($renew_froxlor) ? $renew_froxlor['ssl_ca_file'] : null,
+				'ssl_csr_file' => is_array($renew_froxlor) ? $renew_froxlor['ssl_csr_file'] : null,
+				'id' => is_array($renew_froxlor) ? $renew_froxlor['id'] : null
+			);
+			$renew_domains[] = $certrow;
+		}
+
 		foreach ($renew_domains as $domain) {
 			$cronlog = FroxlorLogger::getInstanceOf(array(
 				'loginname' => $domain['loginname'],
@@ -308,20 +331,44 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 	}
 
 	/**
-	 * check whether we need to issue a new certificat for froxlor itself
+	 * check whether we need to issue a new certificate for froxlor itself
 	 *
 	 * @return boolean
 	 */
 	private static function issueFroxlorVhost()
 	{
 		if (Settings::Get('system.le_froxlor_enabled') == '1') {
+			// let's encrypt is enabled, now check whether we have a certificate
 			$froxlor_ssl_settings_stmt = Database::prepare("
 				SELECT * FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "`
-				WHERE `domainid` = '0' AND `expirationdate` IS NULL
+				WHERE `domainid` = '0'
 			");
 			$froxlor_ssl = Database::pexecute_first($froxlor_ssl_settings_stmt);
-			if ($froxlor_ssl) {
+			// also check for possible existing certificate
+			if (! $froxlor_ssl && ! self::checkFsFilesAreNewer(Settings::Get('system.hostname'), date('Y-m-d H:i:s'))) {
 				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * check whether we need to renew-check the certificate for froxlor itself
+	 *
+	 * @return boolean
+	 */
+	private static function renewFroxlorVhost()
+	{
+		if (Settings::Get('system.le_froxlor_enabled') == '1') {
+			// let's encrypt is enabled, now check whether we have a certificate
+			$froxlor_ssl_settings_stmt = Database::prepare("
+				SELECT * FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "`
+				WHERE `domainid` = '0'
+			");
+			$froxlor_ssl = Database::pexecute_first($froxlor_ssl_settings_stmt);
+			// also check for possible existing certificate
+			if ($froxlor_ssl || (! $froxlor_ssl && ! self::checkFsFilesAreNewer(Settings::Get('system.hostname'), date('Y-m-d H:i:s', 0)))) {
+				return ($froxlor_ssl ? $froxlor_ssl : true);
 			}
 		}
 		return false;
@@ -357,6 +404,9 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 				AND dom.`iswildcarddomain` = 0
 		");
 		$renew_certs = $certificates_stmt->fetchAll(\PDO::FETCH_ASSOC);
+		if (self::renewFroxlorVhost()) {
+			// add froxlor to the list of renews
+		}
 		if ($renew_certs) {
 			return $renew_certs;
 		}
@@ -455,7 +505,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 				if (file_exists($ssl_file)) {
 					$return[$index] = file_get_contents($ssl_file);
 				} else {
-					if (!empty($certificate_folder_noecc)) {
+					if (! empty($certificate_folder_noecc)) {
 						$ssl_file_fb = \Froxlor\FileDir::makeCorrectFile($certificate_folder_noecc . '/' . $sslfile);
 						if (file_exists($ssl_file_fb)) {
 							$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_WARNING, "ECC certificates activated but found only non-ecc file");
