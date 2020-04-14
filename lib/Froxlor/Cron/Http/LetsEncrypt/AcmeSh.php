@@ -70,7 +70,9 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 		self::$apiserver = 'https://acme-' . (Settings::Get('system.letsencryptca') == 'testing' ? 'staging-' : '') . 'v0' . \Froxlor\Settings::Get('system.leapiversion') . '.api.letsencrypt.org/directory';
 
 		// validate acme.sh installation
-		self::checkInstall();
+		if (! self::checkInstall()) {
+			return - 1;
+		}
 
 		// flag for re-generation of vhost files
 		$changedetected = 0;
@@ -525,15 +527,22 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 	/**
 	 * install acme.sh if not found yet
 	 */
-	private static function checkInstall()
+	private static function checkInstall($tries = 0)
 	{
-		if (! file_exists(self::$acmesh)) {
+		if (! file_exists(self::$acmesh) && $tries > 0) {
+			FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_ERR, "Download/installation of acme.sh seems to have failed. Re-run cronjob to try again or install manually to '" . self::$acmesh . "'");
+			echo PHP_EOL . "Download/installation of acme.sh seems to have failed. Re-run cronjob to try again or install manually to '" . self::$acmesh . "'" . PHP_EOL;
+			return false;
+		} else if (! file_exists(self::$acmesh)) {
 			FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, "Could not find acme.sh - installing it to /root/.acme.sh/");
 			$return = false;
 			\Froxlor\FileDir::safe_exec("wget -O - https://get.acme.sh | sh", $return, array(
 				'|'
 			));
+			// check whether the installation worked
+			return self::checkInstall(++ $tries);
 		}
+		return true;
 	}
 
 	/**
