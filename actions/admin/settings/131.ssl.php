@@ -214,11 +214,11 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_disable_le_selfcheck' => array(
-					'label' => $lng['serversettings']['disable_le_selfcheck'],
+					'label' => $lng['serversettings']['le_domain_dnscheck'],
 					'settinggroup' => 'system',
-					'varname' => 'disable_le_selfcheck',
+					'varname' => 'le_domain_dnscheck',
 					'type' => 'bool',
-					'default' => false,
+					'default' => true,
 					'save_method' => 'storeSettingField'
 				)
 			)

@@ -4,6 +4,8 @@ namespace Froxlor\Cron\Http\LetsEncrypt;
 use Froxlor\FroxlorLogger;
 use Froxlor\Settings;
 use Froxlor\Database\Database;
+use Froxlor\PhpHelper;
+use Froxlor\Domain\Domain;
 
 /**
  * This file is part of the Froxlor project.
@@ -248,9 +250,38 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 						}
 					}
 				}
+
+				self::validateDns($domains, $certrow['domainid'], $cronlog);
+
 				self::runAcmeSh($certrow, $domains, $cronlog, $do_force);
 			} else {
 				$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_WARNING, "Skipping Let's Encrypt generation for " . $certrow['domain'] . " due to an enabled ssl_redirect");
+			}
+		}
+	}
+
+	/**
+	 * validate dns (A / AAAA record) of domain against known system ips
+	 *
+	 * @param array $domains
+	 * @param int $domain_id
+	 * @param FroxlorLogger $cronlog
+	 */
+	private static function validateDns(&$domains = array(), $domain_id, &$cronlog)
+	{
+		if (Settings::Get('system.le_domain_dnscheck') == '1' && ! empty($domains)) {
+			$loop_domains = $domains;
+			// ips according to our system
+			$our_ips = Domain::getIpsOfDomain($domain_id);
+			foreach ($loop_domains as $idx => $domain) {
+				$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, "Validating DNS of " . $domain);
+				// ips accordint to NS
+				$domain_ips = PhpHelper::gethostbynamel6($domain);
+				if (count(array_intersect($our_ips, $domain_ips)) <= 0) {
+					// no common ips...
+					$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_WARNING, "Skipping Let's Encrypt generation for " . $domain . " due to no system known IP address via DNS check");
+					unset($domains[$idx]);
+				}
 			}
 		}
 	}
