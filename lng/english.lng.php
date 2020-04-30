@@ -204,6 +204,7 @@ $lng['error']['mydomain'] = '\'Domain\'';
 $lng['error']['mydocumentroot'] = '\'Documentroot\'';
 $lng['error']['loginnameexists'] = 'Loginname %s already exists';
 $lng['error']['emailiswrong'] = 'Email-address %s contains invalid characters or is incomplete';
+$lng['error']['alternativeemailiswrong'] = 'The given alternative email address %s to send the credentials to seems to be invalid';
 $lng['error']['loginnameiswrong'] = 'Loginname "%s" contains illegal characters.';
 $lng['error']['loginnameiswrong2'] = 'Loginname contains too many characters. Only %s characters are allowed.';
 $lng['error']['userpathcombinationdupe'] = 'Combination of username and path already exists';
