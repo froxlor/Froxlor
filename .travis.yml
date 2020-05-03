@@ -58,7 +58,7 @@ after_success:
   - bash <(curl -s https://codecov.io/bash) -f "build/logs/clover.xml"
 
 notifications:
-  irc: "irc.freenode.org#froxlor"
+  irc: "chat.freenode.net#froxlor"
   webhooks:
     urls:
       - https://webhooks.gitter.im/e/bdf91d1c3f745e51f796

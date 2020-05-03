@@ -100,8 +100,8 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 			// alternative email address to send info to
 			if (Settings::Get('panel.sendalternativemail') == 1) {
 				$alternative_email = $idna_convert->encode(\Froxlor\Validate\Validate::validate($alternative_email, 'alternative_email', '', '', array(), true));
-				if (! \Froxlor\Validate\Validate::validateEmail($alternative_email)) {
-					\Froxlor\UI\Response::standard_error('emailiswrong', $alternative_email, true);
+				if (!empty($alternative_email) && ! \Froxlor\Validate\Validate::validateEmail($alternative_email)) {
+					\Froxlor\UI\Response::standard_error('alternativeemailiswrong', $alternative_email, true);
 				}
 			} else {
 				$alternative_email = '';
@@ -236,7 +236,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 				$this->mailer()->clearAddresses();
 
 				// customer wants to send the e-mail to an alternative email address too
-				if (Settings::Get('panel.sendalternativemail') == 1) {
+				if (Settings::Get('panel.sendalternativemail') == 1 && !empty($alternative_email)) {
 					// get template for mail subject
 					$mail_subject = $this->getMailTemplate($customer, 'mails', 'pop_success_alternative_subject', $replace_arr, $this->lng['mails']['pop_success_alternative']['subject']);
 					// get template for mail body

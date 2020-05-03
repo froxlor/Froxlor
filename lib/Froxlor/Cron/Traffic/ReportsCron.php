@@ -394,13 +394,15 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 						$lngfile = Database::pexecute_first($lngfile_stmt, array(
 							'deflang' => Settings::Get('panel.standardlanguage')
 						));
-						$langfile = $lngfile['file'];
+						$langfile = $lngfile['file'] ?? 'lng/english.lng.php';
 					}
 
 					// include english language file (fallback)
 					include_once \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/lng/english.lng.php');
 					// include admin/customer language file
-					include_once \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/' . $langfile);
+					if ($lngfile != 'lng/english.lng.php') {
+						include_once \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/' . $langfile);
+					}
 
 					// Get mail templates from database; the ones from 'admin' are fetched for fallback
 					$result2_stmt = Database::prepare("

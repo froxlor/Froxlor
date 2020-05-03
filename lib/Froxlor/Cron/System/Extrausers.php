@@ -67,7 +67,7 @@ class Extrausers
 						'name' => \Froxlor\Customer\Customer::getCustomerDetail($u['customerid'], 'name'),
 						'company' => \Froxlor\Customer\Customer::getCustomerDetail($u['customerid'], 'company')
 					);
-					$u['comment'] = \Froxlor\User::getCorrectUserSalutation($salutation_array);
+					$u['comment'] = self::cleanString(\Froxlor\User::getCorrectUserSalutation($salutation_array));
 					if ($u['login_enabled'] != 'Y') {
 						$u['password'] = '*';
 						$u['shell'] = '/bin/false';
@@ -89,5 +89,11 @@ class Extrausers
 		} else {
 			$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Error when writing ' . $type . ' file entries');
 		}
+	}
+
+	private static function cleanString($string = null)
+	{
+		$allowed = "/[^a-z0-9\\.\\-\\_\\ ]/i";
+		return preg_replace($allowed, "", $string);
 	}
 }

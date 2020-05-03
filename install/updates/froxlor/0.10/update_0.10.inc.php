@@ -602,3 +602,18 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.14')) {
 	showUpdateStep("Updating from 0.10.14 to 0.10.15", false);
 	\Froxlor\Froxlor::updateToVersion('0.10.15');
 }
+
+if (\Froxlor\Froxlor::isDatabaseVersion('202002290')) {
+	showUpdateStep("Adding new setting to validate DNS when using Let's Encrypt");
+	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'system' AND `varname` = 'disable_le_selfcheck'");
+	$le_domain_dnscheck = isset($_POST['system_le_domain_dnscheck']) ? (int) $_POST['system_le_domain_dnscheck'] : '1';
+	Settings::AddNew("system.le_domain_dnscheck", $le_domain_dnscheck);
+	lastStepStatus(0);
+
+	\Froxlor\Froxlor::updateToDbVersion('202004140');
+}
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.15')) {
+	showUpdateStep("Updating from 0.10.15 to 0.10.16", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.16');
+}
