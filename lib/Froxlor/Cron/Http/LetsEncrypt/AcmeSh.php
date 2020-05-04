@@ -20,9 +20,9 @@ use Froxlor\Domain\Domain;
  * @author Froxlor team <team@froxlor.org> (2016-)
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package Cron
- *         
+ *
  * @since 0.9.35
- *       
+ *
  */
 class AcmeSh extends \Froxlor\Cron\FroxlorCron
 {
@@ -328,7 +328,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 	private static function certToDb($certrow, &$cronlog, $acme_result)
 	{
 		$return = array();
-		self::readCertificateToVar($certrow['domain'], $return, $cronlog);
+		self::readCertificateToVar(strtolower($certrow['domain']), $return, $cronlog);
 
 		if (! empty($return['crt'])) {
 
