@@ -62,9 +62,10 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			}
 
 			// check domain and whether it's an email-enabled domain
+			// use internal call because the customer might have 'domains' in customer_hide_options
 			$domain_check = $this->apiCall('SubDomains.get', array(
 				'domainname' => $domain
-			));
+			), true);
 			if ($domain_check['isemaildomain'] == 0) {
 				\Froxlor\UI\Response::standard_error('maindomainnonexist', $domain, true);
 			}

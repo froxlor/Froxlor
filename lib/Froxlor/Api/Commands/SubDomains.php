@@ -409,7 +409,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				);
 			}
 		} else {
-			if (Settings::IsInList('panel.customer_hide_options', 'domains')) {
+			if (! $this->isInternal() && Settings::IsInList('panel.customer_hide_options', 'domains')) {
 				throw new \Exception("You cannot access this resource", 405);
 			}
 			$result_stmt = Database::prepare("

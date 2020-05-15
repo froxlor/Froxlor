@@ -25,6 +25,9 @@ class MailsTest extends TestCase
 	{
 		global $admin_userdata;
 
+		// set domains as hidden to test whether the internal flag works
+		Settings::Set('panel.customer_hide_options', 'domains', true);
+
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
@@ -39,6 +42,9 @@ class MailsTest extends TestCase
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals("info@test2.local", $result['email_full']);
 		$this->assertEquals(0, $result['iscatchall']);
+
+		// reset setting
+		Settings::Set('panel.customer_hide_options', '', true);
 	}
 
 	public function testAdminEmailsAdd()

@@ -437,9 +437,6 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 				AND dom.`iswildcarddomain` = 0
 		");
 		$renew_certs = $certificates_stmt->fetchAll(\PDO::FETCH_ASSOC);
-		if (self::renewFroxlorVhost()) {
-			// add froxlor to the list of renews
-		}
 		if ($renew_certs) {
 			return $renew_certs;
 		}

@@ -55,6 +55,13 @@ abstract class ApiCommand extends ApiParameter
 	private $mail = null;
 
 	/**
+	 * whether the call is an internal one or not
+	 *
+	 * @var boolean
+	 */
+	private $internal_call = false;
+
+	/**
 	 * language strings array
 	 *
 	 * @var array
@@ -90,10 +97,12 @@ abstract class ApiCommand extends ApiParameter
 	 *        	optional, array of parameters (var=>value) for the command
 	 * @param array $userinfo
 	 *        	optional, passed via WebInterface (instead of $header)
+	 * @param boolean $internal
+	 *        	optional whether called internally, default false
 	 *        	
 	 * @throws \Exception
 	 */
-	public function __construct($header = null, $params = null, $userinfo = null)
+	public function __construct($header = null, $params = null, $userinfo = null, $internal = false)
 	{
 		parent::__construct($params);
 
@@ -127,6 +136,9 @@ abstract class ApiCommand extends ApiParameter
 		if ($this->debug) {
 			$this->logger()->logAction(\Froxlor\FroxlorLogger::LOG_ERROR, LOG_DEBUG, "[API] " . get_called_class() . ": " . json_encode($params, JSON_UNESCAPED_SLASHES));
 		}
+
+		// set internal call flag
+		$this->internal_call = $internal;
 	}
 
 	/**
@@ -191,13 +203,15 @@ abstract class ApiCommand extends ApiParameter
 	 *        	array of user-data
 	 * @param array $params
 	 *        	array of parameters for the command
+	 * @param boolean $internal
+	 *        	optional whether called internally, default false
 	 *        	
 	 * @return ApiCommand
 	 * @throws \Exception
 	 */
-	public static function getLocal($userinfo = null, $params = null)
+	public static function getLocal($userinfo = null, $params = null, $internal = false)
 	{
-		return new static(null, $params, $userinfo);
+		return new static(null, $params, $userinfo, $internal);
 	}
 
 	/**
@@ -208,6 +222,16 @@ abstract class ApiCommand extends ApiParameter
 	protected function isAdmin()
 	{
 		return $this->is_admin;
+	}
+
+	/**
+	 * internal call flag
+	 *
+	 * @return boolean
+	 */
+	protected function isInternal()
+	{
+		return $this->internal_call;
 	}
 
 	/**
@@ -241,7 +265,7 @@ abstract class ApiCommand extends ApiParameter
 	 *        	optional array of placeholders mapped to the actual value which is used in the API commands when executing the statement [internal]
 	 * @param boolean $append
 	 *        	optional append to WHERE clause rather then create new one, default false [internal]
-	 *
+	 *        	
 	 * @return string
 	 */
 	protected function getSearchWhere(&$query_fields = array(), $append = false)
@@ -304,7 +328,7 @@ abstract class ApiCommand extends ApiParameter
 	 *        	optional, limit resultset, default 0
 	 * @param int $sql_offset
 	 *        	optional, offset for limitation, default 0
-	 *
+	 *        	
 	 * @return string
 	 */
 	protected function getLimit()
@@ -333,7 +357,7 @@ abstract class ApiCommand extends ApiParameter
 	 *        	optional array with index = fieldname and value = ASC|DESC
 	 * @param boolean $append
 	 *        	optional append to ORDER BY clause rather then create new one, default false [internal]
-	 *
+	 *        	
 	 * @return string
 	 */
 	protected function getOrderBy($append = false)
@@ -417,15 +441,18 @@ abstract class ApiCommand extends ApiParameter
 	 *
 	 * @param string $command
 	 * @param array|null $params
-	 *
+	 * @param boolean $internal
+	 *        	optional whether called internally, default false
+	 *        	
+	 *        	
 	 * @return array
 	 */
-	protected function apiCall($command = null, $params = null)
+	protected function apiCall($command = null, $params = null, $internal = false)
 	{
 		$_command = explode(".", $command);
 		$module = __NAMESPACE__ . "\Commands\\" . $_command[0];
 		$function = $_command[1];
-		$json_result = $module::getLocal($this->getUserData(), $params)->{$function}();
+		$json_result = $module::getLocal($this->getUserData(), $params, $internal)->{$function}();
 		return json_decode($json_result, true)['data'];
 	}
 
@@ -491,7 +518,7 @@ abstract class ApiCommand extends ApiParameter
 				$customer_ids[] = $customer['customerid'];
 			}
 		} else {
-			if (! empty($customer_hide_option) && \Froxlor\Settings::IsInList('panel.customer_hide_options', $customer_hide_option)) {
+			if (!$this->isInternal() && ! empty($customer_hide_option) && \Froxlor\Settings::IsInList('panel.customer_hide_options', $customer_hide_option)) {
 				throw new \Exception("You cannot access this resource", 405);
 			}
 			$customer_ids = array(
