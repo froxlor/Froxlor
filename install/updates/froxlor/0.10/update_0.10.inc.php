@@ -627,7 +627,6 @@ if (\Froxlor\Froxlor::isDatabaseVersion('202004140')) {
 		LEFT JOIN domain_ssl_settings AS b ON UNIX_TIMESTAMP(b.`expirationdate`) > UNIX_TIMESTAMP(a.`expirationdate`)
 		AND (b.`domainid`=a.`domainid` OR (UNIX_TIMESTAMP(b.`expirationdate`) = UNIX_TIMESTAMP(a.`expirationdate`) AND b.`id`>a.`id`))
 		WHERE b.`id` IS NOT NULL
-		GROUP BY a.`id`
 	");
 	Database::query("ALTER TABLE `domain_ssl_settings` ADD UNIQUE(`domainid`)");
 	lastStepStatus(0);
