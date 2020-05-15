@@ -617,3 +617,20 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.15')) {
 	showUpdateStep("Updating from 0.10.15 to 0.10.16", false);
 	\Froxlor\Froxlor::updateToVersion('0.10.16');
 }
+
+if (\Froxlor\Froxlor::isDatabaseVersion('202004140')) {
+
+	showUpdateStep("Adding unique key on domainid field in domain ssl table");
+	// check for duplicate entries prior to set a unique key to avoid errors on update
+	Database::query("
+		DELETE a.* FROM domain_ssl_settings AS a
+		LEFT JOIN domain_ssl_settings AS b ON UNIX_TIMESTAMP(b.`expirationdate`) > UNIX_TIMESTAMP(a.`expirationdate`)
+		AND (b.`domainid`=a.`domainid` OR (UNIX_TIMESTAMP(b.`expirationdate`) = UNIX_TIMESTAMP(a.`expirationdate`) AND b.`id`>a.`id`))
+		WHERE b.`id` IS NOT NULL
+		GROUP BY a.`id`
+	");
+	Database::query("ALTER TABLE `domain_ssl_settings` ADD UNIQUE(`domainid`)");
+	lastStepStatus(0);
+
+	\Froxlor\Froxlor::updateToDbVersion('202005150');
+}

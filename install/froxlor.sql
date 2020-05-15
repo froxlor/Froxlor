@@ -705,7 +705,7 @@ opcache.interned_strings_buffer'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'is_configured', '0'),
 	('panel', 'version', '0.10.16'),
-	('panel', 'db_version', '202004140');
+	('panel', 'db_version', '202005150');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
@@ -997,7 +997,8 @@ CREATE TABLE IF NOT EXISTS `domain_ssl_settings` (
   `ssl_csr_file` mediumtext,
   `ssl_fullchain_file` mediumtext,
   `expirationdate` datetime DEFAULT NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY (`domainid`)
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
