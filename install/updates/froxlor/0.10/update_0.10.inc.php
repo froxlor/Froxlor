@@ -624,8 +624,9 @@ if (\Froxlor\Froxlor::isDatabaseVersion('202004140')) {
 	// check for duplicate entries prior to set a unique key to avoid errors on update
 	Database::query("
 		DELETE a.* FROM domain_ssl_settings AS a
-		LEFT JOIN domain_ssl_settings AS b ON UNIX_TIMESTAMP(b.`expirationdate`) > UNIX_TIMESTAMP(a.`expirationdate`)
-		AND (b.`domainid`=a.`domainid` OR (UNIX_TIMESTAMP(b.`expirationdate`) = UNIX_TIMESTAMP(a.`expirationdate`) AND b.`id`>a.`id`))
+		LEFT JOIN domain_ssl_settings AS b ON
+		((b.`domainid`=a.`domainid` AND UNIX_TIMESTAMP(b.`expirationdate`) > UNIX_TIMESTAMP(a.`expirationdate`))
+		OR (UNIX_TIMESTAMP(b.`expirationdate`) = UNIX_TIMESTAMP(a.`expirationdate`) AND b.`id`>a.`id`))
 		WHERE b.`id` IS NOT NULL
 	");
 	Database::query("ALTER TABLE `domain_ssl_settings` ADD UNIQUE(`domainid`)");
