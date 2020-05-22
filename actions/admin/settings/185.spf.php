@@ -14,7 +14,6 @@
  * @package    Settings
  *
  */
-
 return array(
 	'groups' => array(
 		'spf' => array(
@@ -28,18 +27,18 @@ return array(
 					'default' => false,
 					'save_method' => 'storeSettingField',
 					'overview_option' => true
-					),
+				),
 				'spf_entry' => array(
 					'label' => $lng['spf']['spf_entry'],
 					'settinggroup' => 'spf',
 					'varname' => 'spf_entry',
 					'type' => 'string',
-					'default' => '@	IN	TXT	"v=spf1 a mx -all"',
+					'default' => '"v=spf1 a mx -all"',
 					'save_method' => 'storeSettingField'
-					)
 				)
 			)
 		)
-	);
+	)
+);
 
 ?>

@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8" />
 	<meta http-equiv="Default-Style" content="text/css" />
-	<if Settings::Get('panel.no_robots') == '0'>
+	<if \Froxlor\Settings::Get('panel.no_robots') == '0'>
 	<meta name="robots" content="noindex, nofollow, noarchive" />
 	<meta name="GOOGLEBOT" content="nosnippet" />
 	</if>
@@ -21,6 +21,7 @@
 	<script type="text/javascript" src="templates/{$theme}/assets/js/tipper.min.js"></script>
 	<script type="text/javascript" src="templates/{$theme}/assets/js/jcanvas.min.js"></script>
 	<script type="text/javascript" src="templates/{$theme}/assets/js/circular.js"></script>
+	<script type="text/javascript" src="templates/{$theme}/assets/js/autosize.min.js"></script>
 	{$css}
 	<!--[if IE]><link rel="stylesheet" href="templates/{$theme}/assets/css/main_ie.css" type="text/css" /><![endif]-->
 	<link href="css/jquery-ui.min.css" rel="stylesheet" type="text/css"/>
@@ -42,16 +43,9 @@
 	</a>
 	<div class="topheader_navigation">
 		<ul class="topheadernav">
-			<if Settings::Get('ticket.enabled') == 1>
-				<li>
-					<a href="{$linker->getLink(array('section' => 'tickets', 'page' => 'tickets'))}">
-						<if 0 < $awaitingtickets>
-							<img src="templates/{$theme}/assets/img/icons/menubar_tickets.png" alt="{$lng['menue']['ticket']['ticket']}" />
-							<span class="countbubble">{$awaitingtickets}</span>
-						<else>
-							<img src="templates/{$theme}/assets/img/icons/menubar_tickets_null.png" alt="{$lng['menue']['ticket']['ticket']}" />
-						</if>
-					</a>
+			<if \Froxlor\Settings::Get('panel.is_configured') == 0 && $userinfo['adminsession'] == 1 && $userinfo['change_serversettings'] == 1>
+				<li class="liwarn">
+					<a href="{$linker->getLink(array('section' => 'configfiles', 'page' => 'configfiles'))}">{$lng['panel']['not_configured']}</a>
 				</li>
 			</if>
 			<li>{$userinfo['loginname']}</li>
@@ -60,11 +54,18 @@
 				<ul>
 					<li><a href="{$linker->getLink(array('section' => 'index', 'page' => 'change_password'))}">{$lng['login']['password']}</a></li>
 					<li><a href="{$linker->getLink(array('section' => 'index', 'page' => 'change_language'))}">{$lng['login']['language']}</a></li>
-					<if Settings::Get('panel.allow_theme_change_admin') == '1' && $userinfo['adminsession'] == 1>
+					<if \Froxlor\Settings::Get('2fa.enabled') == 1>
+						<li><a href="{$linker->getLink(array('section' => 'index', 'page' => '2fa'))}">{$lng['2fa']['2fa']}</a></li>
+					</if>
+					<if \Froxlor\Settings::Get('panel.allow_theme_change_admin') == '1' && $userinfo['adminsession'] == 1>
 						<li><a href="{$linker->getLink(array('section' => 'index', 'page' => 'change_theme'))}">{$lng['panel']['theme']}</a></li>
 					</if>
-					<if Settings::Get('panel.allow_theme_change_customer') == '1' && $userinfo['adminsession'] == 0>
+					<if \Froxlor\Settings::Get('panel.allow_theme_change_customer') == '1' && $userinfo['adminsession'] == 0>
 						<li><a href="{$linker->getLink(array('section' => 'index', 'page' => 'change_theme'))}">{$lng['panel']['theme']}</a></li>
+					</if>
+					<if \Froxlor\Settings::Get('api.enabled') == 1>
+						<li><a href="{$linker->getLink(array('section' => 'index', 'page' => 'apikeys'))}">{$lng['menue']['main']['apikeys']}</a></li>
+						<li><a href="https://api.froxlor.org/doc/?v={$version}" rel="external">{$lng['menue']['main']['apihelp']}</a></li>
 					</if>
 				</ul>
 			</li>

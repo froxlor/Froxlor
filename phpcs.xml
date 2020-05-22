@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<ruleset name="PSR2-Froxlor">
+	<description>PSR2 with tabs instead of spaces.</description>
+	<config name="show_progress" value="1" />
+	<config name="ignore_warnings_on_exit" value="1" />
+	<arg name="tab-width" value="4" />
+	<!-- Show sniff codes in all reports -->
+	<arg value="s" />
+	<rule ref="PSR2">
+		<exclude name="Generic.WhiteSpace.DisallowTabIndent" />
+		<exclude name="Generic.Files.LineLength" />
+		<exclude
+			name="Generic.ControlStructures.InlineControlStructure" />
+		<exclude
+			name="Squiz.WhiteSpace.ControlStructureSpacing.SpacingAfterOpen" />
+		<exclude name="Squiz.WhiteSpace.SuperfluousWhitespace.EndLine" />
+	</rule>
+
+	<rule ref="PSR1.Classes.ClassDeclaration.MissingNamespace">
+		<exclude-pattern>tests/</exclude-pattern>
+	</rule>
+
+	<rule ref="PSR1.Methods.CamelCapsMethodName.NotCamelCaps">
+		<exclude-pattern>lib/Froxlor/Settings.php</exclude-pattern>
+		<exclude-pattern>lib/Froxlor/FileDir.php</exclude-pattern>
+		<exclude-pattern>lib/Froxlor/Validate/Validate.php</exclude-pattern>
+		<exclude-pattern>lib/Froxlor/Database/Database.php</exclude-pattern>
+		<exclude-pattern>lib/Froxlor/UI/Response.php</exclude-pattern>
+	</rule>
+
+	<rule ref="PSR1.Files.SideEffects.FoundWithSymbols">
+		<exclude-pattern>tests/bootstrap.php</exclude-pattern>
+	</rule>
+</ruleset>

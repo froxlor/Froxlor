@@ -14,7 +14,6 @@
  * @package    Formfields
  *
  */
-
 return array(
 	'emails_accountchangepasswd' => array(
 		'title' => $lng['menue']['main']['changepassword'],
@@ -37,8 +36,8 @@ return array(
 					'email_password_suggestion' => array(
 						'label' => $lng['customer']['generated_pwd'],
 						'type' => 'text',
-						'visible' => (Settings::Get('panel.password_regex') == ''),
-						'value' => generatePassword(),
+						'visible' => (\Froxlor\Settings::Get('panel.password_regex') == ''),
+						'value' => \Froxlor\System\Crypt::generatePassword()
 					)
 				)
 			)

@@ -282,7 +282,7 @@ $lng['admin']['admin_edit'] = 'Modifica admin';
 $lng['admin']['customers_see_all'] = 'Può vedere tutti i clienti?';
 $lng['admin']['domains_see_all'] = 'Può vedere tutti i domini?';
 $lng['admin']['change_serversettings'] = 'Può cambiare le impostazioni del server?';
-$lng['admin']['server'] = 'Server';
+$lng['admin']['server'] = 'Sistema';
 $lng['admin']['serversettings'] = 'Opzioni';
 $lng['admin']['rebuildconf'] = 'Rigenera configurazione';
 $lng['admin']['stdsubdomain'] = 'Sottodominio standard';
@@ -336,8 +336,6 @@ $lng['serversettings']['bindconf_directory']['title'] = 'Cartella configurazione
 $lng['serversettings']['bindconf_directory']['description'] = 'Dove sono i file di configurazione per Bind?';
 $lng['serversettings']['bindreload_command']['title'] = 'Comando riavvio Bind';
 $lng['serversettings']['bindreload_command']['description'] = 'Qual\'è il comando per riavviare Bind?';
-$lng['serversettings']['binddefaultzone']['title'] = 'Zona di default Bind';
-$lng['serversettings']['binddefaultzone']['description'] = 'Qual\'è il nome della zona di default Bind?';
 $lng['serversettings']['vmail_uid']['title'] = 'UID Email';
 $lng['serversettings']['vmail_uid']['description'] = 'Che UserID dovrebbe avere l\'utente che gestisce le Email?';
 $lng['serversettings']['vmail_gid']['title'] = 'GID Email';
@@ -424,7 +422,7 @@ $lng['serversettings']['defaultip']['title'] = 'IP/Porta default';
 $lng['serversettings']['defaultip']['description'] = 'Qual\'è la combinazione IP/Porta default?';
 $lng['domains']['statstics'] = 'Statistiche d\'utilizzo';
 $lng['panel']['ascending'] = 'ascendente';
-$lng['panel']['decending'] = 'discendente';
+$lng['panel']['descending'] = 'discendente';
 $lng['panel']['search'] = 'Cerca';
 $lng['panel']['used'] = 'utilizzato';
 
@@ -437,7 +435,7 @@ $lng['panel']['translator'] = 'Traduttore';
 $lng['error']['stringformaterror'] = 'Il valore per il campo "%s" non è nel formato atteso.';
 
 // ADDED IN 1.2.15-rc1
-// Translated by marone42@googlemail.com on 03/15/2007 (see https://trac.froxlor.org/ticket/126#comment:21)
+// Translated by marone42@googlemail.com on 03/15/2007
 
 $lng['admin']['phpversion'] = 'Versione PHP';
 $lng['admin']['mysqlserverversion'] = 'Versione MySQL Server';
@@ -484,7 +482,7 @@ $lng['admin']['subcanemaildomain']['never'] = 'Mai';
 $lng['admin']['subcanemaildomain']['choosableno'] = 'Selezionabile, predefinito no';
 $lng['admin']['subcanemaildomain']['choosableyes'] = 'Selezionabile, predefinito si';
 $lng['admin']['subcanemaildomain']['always'] = 'Sempre';
-$lng['changepassword']['also_change_webalizer'] = ' modificare anche la password di webalizer';
+$lng['changepassword']['also_change_stats'] = ' modificare anche la password di statistic';
 
 // ADDED IN 1.2.16-svn8
 
@@ -552,127 +550,15 @@ $lng['admin']['webalizer']['quiet'] = 'Modesto';
 $lng['admin']['webalizer']['veryquiet'] = 'Niente';
 $lng['serversettings']['webalizer_quiet']['description'] = 'Verbosità del programma webalizer';
 
-// ADDED IN 1.2.18-svn3
-
-$lng['ticket']['admin_email'] = 'root@localhost';
-$lng['ticket']['noreply_email'] = 'tickets@froxlor';
-$lng['admin']['ticketsystem'] = 'Supporto tecnico';
-$lng['menue']['ticket']['ticket'] = 'Supporto ticket';
-$lng['menue']['ticket']['categories'] = 'Categorie di supporto';
-$lng['menue']['ticket']['archive'] = 'Archivio Ticket';
-$lng['ticket']['description'] = 'Qui puoi inviare richieste di aiuto al supporto tecnico<br />La Notifica ti sarà spedita via e-mail.';
-$lng['ticket']['ticket_new'] = 'Apri un nuovo ticket';
-$lng['ticket']['ticket_reply'] = 'Rispondi al ticket';
-$lng['ticket']['ticket_reopen'] = 'Riapri il ticket';
-$lng['ticket']['ticket_newcateory'] = 'Crea una nuova categoria';
-$lng['ticket']['ticket_editcateory'] = 'Modifica categoria';
-$lng['ticket']['ticket_view'] = 'Visualizza il corso del ticket';
-$lng['ticket']['ticketcount'] = 'Ticket';
-$lng['ticket']['ticket_answers'] = 'Risposte';
-// $lng['ticket']['lastchange'] = 'Ultima azione';
-$lng['ticket']['lastchange'] = 'Ultima modifica';
-$lng['ticket']['subject'] = 'Soggetto';
-$lng['ticket']['status'] = 'Stato';
-$lng['ticket']['lastreplier'] = 'Ultimo che ha risposto';
-$lng['ticket']['priority'] = 'Priorità';
-$lng['ticket']['low'] = 'Bassa';
-$lng['ticket']['normal'] = 'Normale';
-$lng['ticket']['high'] = 'Alta';
-$lng['ticket']['lastchange_from'] = 'Dalla data (dd.mm.yyyy)';
-$lng['ticket']['lastchange_to'] = 'Alla data (dd.mm.yyyy)';
-$lng['ticket']['category'] = 'Categoria';
-$lng['ticket']['no_cat'] = 'Niente';
-$lng['ticket']['message'] = 'Messaggio';
-$lng['ticket']['show'] = 'Mostra';
-$lng['ticket']['answer'] = 'Risposta';
-$lng['ticket']['close'] = 'Chiudi';
-$lng['ticket']['reopen'] = 'Riapri';
-$lng['ticket']['archive'] = 'Archivio';
-$lng['ticket']['ticket_delete'] = 'Cancella ticket';
-$lng['ticket']['lastarchived'] = 'Ticket archiviati recentemente';
-$lng['ticket']['archivedtime'] = 'Archiviato';
-$lng['ticket']['open'] = 'Apri';
-$lng['ticket']['wait_reply'] = 'In attesa di risposta';
-$lng['ticket']['replied'] = 'Risposto';
-$lng['ticket']['closed'] = 'Chiuso';
-$lng['ticket']['staff'] = 'Staff';
-$lng['ticket']['customer'] = 'Cliente';
-$lng['ticket']['old_tickets'] = 'Messaggi Ticket';
-$lng['ticket']['search'] = 'Ricerca Archivio';
-$lng['ticket']['nocustomer'] = 'Nessuna scalta';
-$lng['ticket']['archivesearch'] = 'Risultati della ricerca in archivio';
-$lng['ticket']['noresults'] = 'Nessun ticket trovato';
-$lng['ticket']['notmorethanxopentickets'] = 'Causa protezione antispam non si possono aprire più di %s ticket';
-$lng['ticket']['supportstatus'] = 'Stato-Supporto';
-$lng['ticket']['supportavailable'] = '<span class="ticket_low">I nostri tecnici sono disponibili ad aiutarti.</span>';
-$lng['ticket']['supportnotavailable'] = '<span class="ticket_high">I nostri tecnici non sono al momento disponibili</span>';
-$lng['admin']['templates']['ticket'] = 'Email di notifica del ticket';
-$lng['admin']['templates']['SUBJECT'] = 'Sostituito con l\'oggetto del ticket';
-$lng['admin']['templates']['new_ticket_for_customer'] = 'Informazioni clienti il ticket è stato inviato';
-$lng['admin']['templates']['new_ticket_by_customer'] = 'Notifica Admin per un ticket aperto da un cliente';
-$lng['admin']['templates']['new_reply_ticket_by_customer'] = 'Notifica Admin per una risposta di un ticket da un cliente';
-$lng['admin']['templates']['new_ticket_by_staff'] = 'Notifica cliente per un ticket aperto dallo Staff';
-$lng['admin']['templates']['new_reply_ticket_by_staff'] = 'Notifica cliente per una risposta di un ticket dallo Staff';
-$lng['mails']['new_ticket_for_customer']['mailbody'] = 'Salve {FIRSTNAME} {NAME},\n\nil suo ticket con oggetto "{SUBJECT}" è stato spedito.\n\nRiceverai una notifica quando verrà data una risposta al tuo ticket.\n\nGrazie,\n Team Froxlor';
-$lng['mails']['new_ticket_for_customer']['subject'] = 'Il tuo ticket è stato spedito al support';
-$lng['mails']['new_ticket_by_customer']['mailbody'] = 'Salve amministratore,\n\nun nuovo ticket è stato aperto con oggetto: "{SUBJECT}".\n\nEffettua l\'accesso per aprire il ticket.\n\nGrazie,\n Team Froxlor';
-$lng['mails']['new_ticket_by_customer']['subject'] = 'Il nuovo ticket è stato inviato';
-$lng['mails']['new_reply_ticket_by_customer']['mailbody'] = 'Salve amministratore,\n\nil ticket con oggetto "{SUBJECT}" è stato replicato da un cliente.\n\nEffettua l\'accesso per aprire il ticket.\n\nGrazie,\n Team Froxlor';
-$lng['mails']['new_reply_ticket_by_customer']['subject'] = 'È stato risposto ad un ticket';
-$lng['mails']['new_ticket_by_staff']['mailbody'] = 'Salve {FIRSTNAME} {NAME},\n\nun nuovo ticket con oggetto "{SUBJECT}" è stato aperto a te.\n\nEffettua l\'accesso per aprire il ticket.\n\nGrazie,\n Team Froxlor';
-$lng['mails']['new_ticket_by_staff']['subject'] = 'Il nuovo ticket è stato inviato';
-$lng['mails']['new_reply_ticket_by_staff']['mailbody'] = 'Salve {FIRSTNAME} {NAME},\n\nil ticket con oggetto "{SUBJECT}" è stato replicato dal nostro Staff.\n\nEffettua l\'accesso per aprire il ticket.\n\nGrazie,\n Team Froxlor';
-$lng['mails']['new_reply_ticket_by_staff']['subject'] = 'È stato risposto ad un ticket';
-$lng['question']['ticket_reallyclose'] = 'Vuoi veramente chiudere il ticket"%s"?';
-$lng['question']['ticket_reallydelete'] = 'Vuoi veramente cancellare il ticket"%s"?';
-$lng['question']['ticket_reallydeletecat'] = 'Vuoi veramente eliminare la categoria "%s"?';
-$lng['question']['ticket_reallyarchive'] = 'Vuoi veramente spostare il ticket "%s" in archivio?';
-$lng['error']['nomoreticketsavailable'] = 'Sono stati usati tutti i ticket disponibili. Si prega di contattare l\'amministratore.';
-$lng['error']['nocustomerforticket'] = 'Impossibile creare ticket senza clienti';
-$lng['error']['categoryhastickets'] = 'La categoria contiene ancora ticket.<br />Si prega di cancellare i ticket per eliminare la categoria';
-$lng['admin']['ticketsettings'] = 'Impostazioni Gestione Ticket';
-$lng['admin']['archivelastrun'] = 'Ultimo ticket archiviato';
-$lng['serversettings']['ticket']['noreply_email']['title'] = 'Non rispondere a questo indirizzo email';
-$lng['serversettings']['ticket']['noreply_email']['description'] = 'L\'indirizzo email del mittente dei ticket di solito è no-reply@domain.tld';
-$lng['serversettings']['ticket']['worktime_begin']['title'] = 'Ora inizio(hh:mm)';
-$lng['serversettings']['ticket']['worktime_begin']['description'] = 'Ora di inizio quando il supporto è disponibile';
-$lng['serversettings']['ticket']['worktime_end']['title'] = 'Ora fine (hh:mm)';
-$lng['serversettings']['ticket']['worktime_end']['description'] = 'Ora di fine quando il supporto è online';
-$lng['serversettings']['ticket']['worktime_sat'] = 'Il supporto è disponibile al sabato?';
-$lng['serversettings']['ticket']['worktime_sun'] = 'Il supporto è disponibile la domenica?';
-$lng['serversettings']['ticket']['worktime_all']['title'] = 'Nessun limite di tempo per il supporto ';
-$lng['serversettings']['ticket']['worktime_all']['description'] = 'Se "Si" verranno sovrascritti gli orari di inizio e fine supporto';
-$lng['serversettings']['ticket']['archiving_days'] = 'Dopo quanti giorni vengono archiviati automaticamente i ticket chiusi?';
-$lng['customer']['tickets'] = 'Supporto tecnico - ticket';
-
 // ADDED IN 1.2.18-svn4
 
 $lng['admin']['domain_nocustomeraddingavailable'] = 'Adesso non è possibile aggiungere un dominio. Prima è necessario aggiungere almeno un cliente.';
-$lng['serversettings']['ticket']['enable'] = 'Abilita il sistema ticket';
-$lng['serversettings']['ticket']['concurrentlyopen'] = 'Quanti ticket si possono aprire in una sola volta?';
-$lng['error']['norepymailiswrong'] = '"Noreply-address" è errato. È ammesso solo un indirizzo email corretto.';
-$lng['error']['tadminmailiswrong'] = '"Ticketadmin-address" è errato. È ammesso solo un indirizzo email corretto.';
-$lng['ticket']['awaitingticketreply'] = 'Hai %s ticket senza risposta';
-
-// ADDED IN 1.2.18-svn5
-
-$lng['serversettings']['ticket']['noreply_name'] = 'Email del mittente del ticket';
 
 // ADDED IN 1.2.19-svn1
 
 $lng['serversettings']['mod_fcgid']['configdir']['title'] = 'Cartella della configurazione';
 $lng['serversettings']['mod_fcgid']['configdir']['description'] = 'Dove vuoi che venga salvata la configurazione di fcgid? Se non ti sei compilato suexec da solo, di solito questo percorso è /var/www';
 $lng['serversettings']['mod_fcgid']['tmpdir']['title'] = 'Cartella Temp';
-
-// ADDED IN 1.2.19-svn3
-
-$lng['serversettings']['ticket']['reset_cycle']['title'] = 'Resetta il numero di ticker per un determinato periodo';
-$lng['serversettings']['ticket']['reset_cycle']['description'] = 'Resetta il numero di ticket che hanno usato i clienti per un determinato periodo';
-$lng['admin']['tickets']['daily'] = 'Giornaliero';
-$lng['admin']['tickets']['weekly'] = 'Settimanale';
-$lng['admin']['tickets']['monthly'] = 'Mensile';
-$lng['admin']['tickets']['yearly'] = 'Annuale';
-$lng['error']['ticketresetcycleiswrong'] = 'Il periodo di reset del numero ticket può essere "Giornaliero", "Settimanale", "Mensile" or "Annuale".';
 
 // ADDED IN 1.2.19-svn4
 
@@ -716,7 +602,6 @@ $lng['error']['logerror'] = 'Errore Log: %s';
 $lng['serversettings']['logger']['logcron'] = 'Log cronjobs (one run)';
 $lng['question']['logger_reallytruncate'] = 'Sei sicuro di voler troncare la tabella "%s"?';
 $lng['admin']['loggersystem'] = 'Log di Sistema';
-$lng['menue']['logger']['logger'] = 'Log di Sistema';
 $lng['logger']['date'] = 'Data';
 $lng['logger']['type'] = 'Tipo';
 $lng['logger']['action'] = 'Azione';
@@ -772,7 +657,6 @@ $lng['admin']['caneditphpsettings'] = 'È possibile modificare le impostazioni d
 
 $lng['admin']['allips'] = 'Tutti gli IP';
 $lng['panel']['nosslipsavailable'] = 'Attualmente non ci sono combinazioni ssl ip/porta per questo server';
-$lng['ticket']['by'] = 'da';
 $lng['dkim']['use_dkim']['title'] = 'Attivare il supporto DKIM?';
 $lng['dkim']['use_dkim']['description'] = 'Vuoi utilizzare il sistema Domain Keys (DKIM)?';
 $lng['error']['invalidmysqlhost'] = 'Indirizzo MySQL non valido: %s';
@@ -1010,8 +894,6 @@ $lng['tasks']['rebuild_bindconfig'] = 'Ricostruzione della configurazione di bin
 $lng['tasks']['creating_ftpdir'] = 'Creazione delle cartelle per i nuovi utenti ftp';
 $lng['tasks']['deleting_customerfiles'] = 'Eliminazione dei file del cliente %loginname%';
 $lng['tasks']['noneoutstanding'] = 'Attualmente non ci sono processi in sospeso per Froxlor';
-$lng['ticket']['nonexistingcustomer'] = '(cliente cancellato)';
-$lng['admin']['ticket_nocustomeraddingavailable'] = 'Non è possibile aprire un nuovo ticket di supporto, al momento. Prima è necessario aggiungere almeno un cliente.';
 
 // ADDED IN FROXLOR 0.9.1
 
@@ -1050,10 +932,6 @@ $lng['dkim']['dkim_keylength']['title'] = 'Lunghezza Chiave';
 $lng['dkim']['dkim_keylength']['description'] = 'Attenzione: Se si modifica questo valore è necessario eliminare tutte le chiavi private/pubbliche in "%s"';
 $lng['dkim']['dkim_notes']['title'] = 'Note DKIM';
 $lng['dkim']['dkim_notes']['description'] = 'Nota potrebbe essere di interesse, es. un URL come http://www.dnswatch.info. Nessuna interpretazione è fatta da nessun programma. Questo tag deve essere usato con parsimonia per ragioni di spazio nel DNS. Questo è destinato ad essere utilizzato dagli amministratori e non dagli utenti finali.';
-$lng['dkim']['dkim_add_adsp']['title'] = 'Aggiungi un valore DKIM ADSP';
-$lng['dkim']['dkim_add_adsp']['description'] = 'Se non si sa di cosa si tratta, lasciare "enabled"';
-$lng['dkim']['dkim_add_adsppolicy']['title'] = 'Regola ADSP';
-$lng['dkim']['dkim_add_adsppolicy']['description'] = 'Per ulteriori informazioni su questa impostazione leggere <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/En-dkim-adsp-policies">DKIM ADSP policies</a>';
 
 $lng['admin']['cron']['cronsettings'] = 'Impostazioni Cronjob';
 $lng['cron']['cronname'] = 'Nome cronjob';
@@ -1066,8 +944,6 @@ $lng['admin']['cron']['add'] = 'Aggiungi cronjob';
 $lng['crondesc']['cron_tasks'] = 'generazione del file di configurazione';
 $lng['crondesc']['cron_legacy'] = 'legacy (vecchi) cronjob';
 $lng['crondesc']['cron_traffic'] = 'calcolo del traffico';
-$lng['crondesc']['cron_ticketsreset'] = 'reset dei contatori dei ticket';
-$lng['crondesc']['cron_ticketarchive'] = 'archiviazione vecchi ticket';
 $lng['cronmgmt']['minutes'] = 'minuti';
 $lng['cronmgmt']['hours'] = 'ore';
 $lng['cronmgmt']['days'] = 'giorni';
@@ -1098,8 +974,6 @@ $lng['panel']['neverloggedin'] = 'Nessun login effettuato';
 
 // ADDED IN FROXLOR 0.9.6-svn1
 $lng['serversettings']['defaultttl'] = 'Dominio TTL per impegnare in secondi (predefinito \'604800\' = 1 settimana)';
-$lng['ticket']['logicalorder'] = 'Ordine logico';
-$lng['ticket']['orderdesc'] = 'Qui è possibile definire il tuo ordine logico per le categorie dei ticket. Usa 1 - 999, i numeri più bassi sono mostrati prima.';
 
 // ADDED IN FROXLOR 0.9.6-svn3
 $lng['serversettings']['defaultwebsrverrhandler_enabled'] = 'Abilita errordocuments in automatico per tutti i clienti';
@@ -1110,9 +984,6 @@ $lng['serversettings']['defaultwebsrverrhandler_err403']['description'] = '<div 
 $lng['serversettings']['defaultwebsrverrhandler_err404'] = 'File/URL per l\'errore 404';
 $lng['serversettings']['defaultwebsrverrhandler_err500']['title'] = 'File/URL per l\'errore 500';
 $lng['serversettings']['defaultwebsrverrhandler_err500']['description'] = '<div class="red">Non supportato in: lighttpd</div>';
-
-// ADDED IN FROXLOR 0.9.6-svn4
-$lng['serversettings']['ticket']['default_priority'] = 'Priorità predefinita per il supporto ticket';
 
 // ADDED IN FROXLOR 0.9.6-svn5
 $lng['serversettings']['mod_fcgid']['defaultini'] = 'Configurazione di default di PHP per i nuovi domini';
@@ -1174,7 +1045,7 @@ $lng['serversettings']['perl_path']['description'] = 'Rilevante solo se si utili
 // ADDED IN FROXLOR 0.9.12-svn1
 $lng['admin']['fcgid_settings'] = 'FCGID';
 $lng['serversettings']['mod_fcgid_ownvhost']['title'] = 'Abilita FCGID per i vhost Froxlor';
-$lng['serversettings']['mod_fcgid_ownvhost']['description'] = 'Se attivato, Froxlor verrà eseguito con un utente locale<br /><strong>ATTENZIONE:</strong>Questo richiede una configurazione manuale, vedi <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/HandbookApache2_fcgid">FCGID - handbook</a>';
+$lng['serversettings']['mod_fcgid_ownvhost']['description'] = 'Se attivato, Froxlor verrà eseguito con un utente locale<br /><strong>ATTENZIONE:</strong>Questo richiede una configurazione manuale, vedi <a target="blank" href="https://github.com/Froxlor/Froxlor/wiki/apache2-with-fcgid">FCGID - handbook</a>';
 $lng['admin']['mod_fcgid_user'] = 'Utente locale per FCGID (Froxlor vhost)';
 $lng['admin']['mod_fcgid_group'] = 'Gruppo locale per FCGID (Froxlor vhost)';
 
@@ -1326,11 +1197,10 @@ $lng['traffic']['details'] = 'Dettagli';
 $lng['menue']['traffic']['table'] = 'Traffico';
 
 $lng['error']['loginnameiswrong2'] = 'Il nome utente contiente troppi caratteri. Sono permessi soltanto %s caratteri.';
-$lng['error']['ticketnotaccessible'] = 'Non puoi accedere a questo ticket.';
 $lng['question']['admin_customer_alsoremovemail'] = 'Eliminare completamente i dati della posta elettronica dal filesystem??';
 $lng['question']['admin_customer_alsoremoveftphomedir'] = 'Rimuovere anche la cartella homedir dell\'utente FTP?';
 $lng['admin']['templates']['SALUTATION'] = 'Sostituito con un saluto corretto (nome o azienda)';
-$$lng['admin']['templates']['COMPANY'] = 'Sostituisce con il nome dell \'azienda del cliente';
+$lng['admin']['templates']['COMPANY'] = 'Sostituisce con il nome dell \'azienda del cliente';
 $lng['serversettings']['bindenable']['title'] = 'Abilita Nameserver';
 $lng['serversettings']['bindenable']['description'] = 'Qui il Nameserver può essere abilitato e disabilitato globalmente.';
 $lng['admin']['serversoftware'] = 'Software per Server';
@@ -1364,7 +1234,7 @@ $lng['admin']['store_defaultindex'] = 'Archivio del file indice predefinito al p
 $lng['admin']['ipsandports']['ssl_cert_chainfile']['title'] = 'Percorso al file catena dei certificati SSL';
 $lng['admin']['ipsandports']['ssl_cert_chainfile']['description'] = 'Principalmente Bundle CA, o similare, presubilmente vuoi impostare questo se hai acquistato un certificato SSL.';
 $lng['serversettings']['phpfpm']['title'] = 'Abilita php-fpm';
-$lng['serversettings']['phpfpm']['description'] = '<b>Questa impostazione richiede una configurazione speciale del server web. Vedi il manuale FPM per <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/HandbookApache2_phpfpm">Apache2</a> o <a target="blank" href="http://redmine.froxlor.org/projects/froxlor/wiki/HandbookNginx_phpfpm">nginx</a></b>';
+$lng['serversettings']['phpfpm']['description'] = '<b>Questa impostazione richiede una configurazione speciale del server web. Vedi il manuale FPM per <a target="blank" href="https://github.com/Froxlor/Froxlor/wiki/apache2-with-php-fpm">Apache2</a> o <a target="blank" href="https://github.com/Froxlor/Froxlor/wiki/nginx-with-php-fpm">nginx</a></b>';
 $lng['serversettings']['phpfpm_settings']['aliasconfigdir'] = 'Configurazione cartella Alias per php-fpm';
 $lng['gender']['title'] = 'Titolo';
 $lng['gender']['male'] = 'Sig.';
@@ -1650,7 +1520,6 @@ $lng['serversettings']['catchall_enabled']['title'] = 'Usa Catchall';
 $lng['serversettings']['catchall_enabled']['description'] = 'Vuoi offrire ai tuoi clienti la funzionalità di catchall?';
 $lng['serversettings']['apache_24']['title'] = 'Usa impostazioni per Apache 2.4';
 $lng['serversettings']['apache_24']['description'] = '<strong class="red">ATTENZIONE:</strong> spunta soltanto se hai installato la versione 2.4 o superiore di Apache<br />altrimenti il tuo server Web non si avvierà';
-$lng['admin']['tickets_see_all'] = 'Può vedere tutte le categorie di ticket?';
 $lng['serversettings']['nginx_fastcgiparams']['title'] = 'Percorso al file fastcgi_params';
 $lng['serversettings']['nginx_fastcgiparams']['description'] = 'Specifica il percorso al file fastcgi_params di nginx includendo il nome del file';
 $lng['serversettings']['documentroot_use_default_value']['title'] = 'Usa il nome del dominio come valore predefinito per il percorso DocumentRoot (radice dei documenti)';
@@ -1702,7 +1571,7 @@ $lng['domains']['serveraliasoption_www'] = 'WWW (www.dominio.tld)';
 $lng['domains']['serveraliasoption_none'] = 'Nessun alias';
 $lng['error']['givendirnotallowed'] = 'La cartella fornita nel campo %s non è permessa.';
 $lng['serversettings']['ssl']['ssl_cipher_list']['title'] = 'Configura le cifrature SSL permesse';
-$lng['serversettings']['ssl']['ssl_cipher_list']['description'] = 'Questa è una lista di cifrature che vuoi (o non vuoi) usare nelle communicazioni SSL. Per una lista delle cifrature e come includerle od escluderle, vedi le sezioni "CIPHER LIST FORMAT" e "CIPHER STRINGS" sulla <a href="http://openssl.org/docs/apps/ciphers.html">man-page per le cifrature</a>.<br /><br /><b>Il valore predefinito è:</b><pre>ECDHE-RSA-AES128-SHA256:AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH</pre>';
+$lng['serversettings']['ssl']['ssl_cipher_list']['description'] = 'Questa è una lista di cifrature che vuoi (o non vuoi) usare nelle communicazioni SSL. Per una lista delle cifrature e come includerle od escluderle, vedi le sezioni "CIPHER LIST FORMAT" e "CIPHER STRINGS" sulla <a href="https://www.openssl.org/docs/manmaster/man1/openssl-ciphers.html">man-page per le cifrature</a>.<br /><br /><b>Il valore predefinito è:</b><pre>ECDHE-RSA-AES128-SHA256:AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH</pre>';
 $lng['panel']['dashboard'] = 'Cruscotto';
 $lng['panel']['assigned'] = 'Assegnato';
 $lng['panel']['available'] = 'Disponibile';
@@ -1766,7 +1635,7 @@ $lng['admin']['integrityresult'] = 'Risultato';
 $lng['admin']['integrityfix'] = 'Risolvi problemi automaticamente';
 $lng['question']['admin_integritycheck_reallyfix'] = 'Vuoi veramente provare a risolvere i problemi di integrità del database automaticamente?';
 $lng['serversettings']['system_croncmdline']['title'] = 'Commando di esecuzione Cron (binario php)';
-$lng['serversettings']['system_croncmdline']['description'] = 'Commando per eseguire i nostri cronjob. Modificalo soltanto se sai cosa stai facendo (predefinito: "/usr/bin/nice -n 5 /usr/bin/php5 -q")!';
+$lng['serversettings']['system_croncmdline']['description'] = 'Commando per eseguire i nostri cronjob. Modificalo soltanto se sai cosa stai facendo (predefinito: "/usr/bin/nice -n 5 /usr/bin/php -q")!';
 $lng['error']['cannotdeletehostnamephpconfig'] = 'Questa configurazione PHP è utilizzata dal vhost Froxlor e non può essere eliminata.';
 $lng['error']['cannotdeletedefaultphpconfig'] = 'Questa configurazione PHP è impostata come predefinita e non può essere eliminata.';
 $lng['serversettings']['system_cron_allowautoupdate']['title'] = 'Permetti aggiornamenti automatici del database';
@@ -1798,9 +1667,7 @@ $lng['domains']['import_file'] = 'File CSV';
 $lng['success']['domain_import_successfully'] = 'Importato %s dominii con successo.';
 $lng['error']['domain_import_error'] = 'Il seguente errore è occorsonell \'importazione di dominii: %s';
 $lng['admin']['note'] = 'Nota';
-$lng['domains']['import_description'] = 'Per ottenere informazioni dettagliate sulla struttura del file di importazione e  su come importare con successo, visita <a href="http://redmine.froxlor.org/projects/froxlor/wiki/DomainBulkActionDoc" target="_blank">http://redmine.froxlor.org/projects/froxlor/wiki/DomainBulkActionDoc</a>';
+$lng['domains']['import_description'] = 'Per ottenere informazioni dettagliate sulla struttura del file di importazione e  su come importare con successo, visita <a href="https://github.com/Froxlor/Froxlor/wiki/Domain-import-documenation" target="_blank">https://github.com/Froxlor/Froxlor/wiki/Domain-import-documenation</a>';
 $lng['usersettings']['custom_notes']['title'] = 'Note personali';
 $lng['usersettings']['custom_notes']['description'] = 'Sentiti libero di inserire qualsi nota vuoi o necessiti qui. Apparirano nel riepilogo dell\'amministratore/cliente perl \'utente corrispondente.';
 $lng['usersettings']['custom_notes']['show'] = 'Mostra le tue note nel cruscotto dell\'utente';
-$lng['serversettings']['system_send_cron_errors']['title'] = 'Inviaa gli errori cron all \'amministratore di froxlor via e-mail';
-$lng['serversettings']['system_send_cron_errors']['description'] = 'Scegli se ricevere una email sugli errori di cronjob. Ricorda che questo potrebbe causare l\'invio di una mail ogni 5 minuti in dipendenza all \'errore e alle tue impostazioni di cronjob.';

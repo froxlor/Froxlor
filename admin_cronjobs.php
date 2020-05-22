@@ -14,107 +14,102 @@
  * @package    Panel
  *
  */
-
 define('AREA', 'admin');
 require './lib/init.php';
 
+use Froxlor\Api\Commands\Cronjobs;
+
 if (isset($_POST['id'])) {
 	$id = intval($_POST['id']);
-} elseif(isset($_GET['id'])) {
+} elseif (isset($_GET['id'])) {
 	$id = intval($_GET['id']);
 }
 
 if ($page == 'cronjobs' || $page == 'overview') {
 	if ($action == '') {
-		$log->logAction(ADM_ACTION, LOG_NOTICE, 'viewed admin_cronjobs');
+		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, 'viewed admin_cronjobs');
 
 		$fields = array(
+			'c.module' => 'Module',
 			'c.lastrun' => $lng['cron']['lastrun'],
 			'c.interval' => $lng['cron']['interval'],
 			'c.isactive' => $lng['cron']['isactive']
 		);
-		$paging = new paging($userinfo, TABLE_PANEL_CRONRUNS, $fields);
+		try {
+			// get total count
+			$json_result = Cronjobs::getLocal($userinfo)->listingCount();
+			$result = json_decode($json_result, true)['data'];
+			// initialize pagination and filtering
+			$paging = new \Froxlor\UI\Pagination($userinfo, $fields, $result);
+			// get list
+			$json_result = Cronjobs::getLocal($userinfo, $paging->getApiCommandParams())->listing();
+		} catch (Exception $e) {
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
 
 		$crons = '';
-		$result_stmt = Database::prepare("SELECT `c`.* FROM `" . TABLE_PANEL_CRONRUNS . "` `c` ORDER BY `module` ASC, `cronfile` ASC");
-		Database::pexecute($result_stmt);
-		$paging->setEntries(Database::num_rows());
 		$sortcode = $paging->getHtmlSortCode($lng);
 		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
 		$searchcode = $paging->getHtmlSearchCode($lng);
 		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
 
-		$i = 0;
 		$count = 0;
 		$cmod = '';
 
-		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+		foreach ($result['list'] as $row) {
 			if ($cmod != $row['module']) {
 				$_mod = explode("/", $row['module']);
 				$module = ucfirst($_mod[1]);
-				eval("\$crons.=\"" . getTemplate('cronjobs/cronjobs_cronjobmodule') . "\";");
+				eval("\$crons.=\"" . \Froxlor\UI\Template::getTemplate('cronjobs/cronjobs_cronjobmodule') . "\";");
 				$cmod = $row['module'];
 			}
-			if ($paging->checkDisplay($i)) {
-				$row = htmlentities_array($row);
+			$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
+			$row['lastrun'] = date('d.m.Y H:i', $row['lastrun']);
+			$row['isactive'] = ((int) $row['isactive'] == 1) ? $lng['panel']['yes'] : $lng['panel']['no'];
+			$description = $lng['crondesc'][$row['desc_lng_key']];
 
-				$row['lastrun'] = date('d.m.Y H:i', $row['lastrun']);
-				$row['isactive'] = ((int)$row['isactive'] == 1) ? $lng['panel']['yes'] : $lng['panel']['no'];
-
-				$description = $lng['crondesc'][$row['desc_lng_key']];
-
-				eval("\$crons.=\"" . getTemplate('cronjobs/cronjobs_cronjob') . "\";");
-				$count++;
-			}
-
-			$i++;
+			eval("\$crons.=\"" . \Froxlor\UI\Template::getTemplate('cronjobs/cronjobs_cronjob') . "\";");
+			$count ++;
 		}
 
-		eval("echo \"" . getTemplate('cronjobs/cronjobs') . "\";");
-
+		eval("echo \"" . \Froxlor\UI\Template::getTemplate('cronjobs/cronjobs') . "\";");
 	} elseif ($action == 'new') {
 		/*
 		 * @TODO later
 		 */
 	} elseif ($action == 'edit' && $id != 0) {
-		$result_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_CRONRUNS . "` WHERE `id`= :id");
-		Database::pexecute($result_stmt, array('id' => $id));
-		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
+		try {
+			$json_result = Cronjobs::getLocal($userinfo, array(
+				'id' => $id
+			))->get();
+		} catch (Exception $e) {
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
 		if ($result['cronfile'] != '') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
-				$isactive = isset($_POST['isactive']) ? 1 : 0;
-				$interval_value = validate($_POST['interval_value'], 'interval_value', '/^([0-9]+)$/Di', 'stringisempty');
-				$interval_interval = validate($_POST['interval_interval'], 'interval_interval');
-
-				if ($isactive != 1) {
-					$isactive = 0;
+				try {
+					Cronjobs::getLocal($userinfo, $_POST)->update();
+				} catch (Exception $e) {
+					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
-
-				$interval = $interval_value . ' ' . strtoupper($interval_interval);
-
-				$upd = Database::prepare("
-					UPDATE `" . TABLE_PANEL_CRONRUNS . "`
-					SET `isactive` = :isactive, `interval` = :int
-					WHERE `id` = :id"
-				);
-				Database::pexecute($upd, array('isactive' => $isactive, 'int' => $interval, 'id' => $id));
-
-				// insert task to re-generate the cron.d-file
-				inserttask('99');
-
-				redirectTo($filename, array('page' => $page, 's' => $s));
+				\Froxlor\UI\Response::redirectTo($filename, array(
+					'page' => $page,
+					's' => $s
+				));
 			} else {
 
 				// interval
 				$interval_nfo = explode(' ', $result['interval']);
-				$result['interval_value'] = $interval_nfo[0];
+				$interval_value = $interval_nfo[0];
 
 				$interval_interval = '';
-				$interval_interval .= makeoption($lng['cronmgmt']['minutes'], 'MINUTE', $interval_nfo[1]);
-				$interval_interval .= makeoption($lng['cronmgmt']['hours'], 'HOUR', $interval_nfo[1]);
-				$interval_interval .= makeoption($lng['cronmgmt']['days'], 'DAY', $interval_nfo[1]);
-				$interval_interval .= makeoption($lng['cronmgmt']['weeks'], 'WEEK', $interval_nfo[1]);
-				$interval_interval .= makeoption($lng['cronmgmt']['months'], 'MONTH', $interval_nfo[1]);
+				$interval_interval .= \Froxlor\UI\HTML::makeoption($lng['cronmgmt']['minutes'], 'MINUTE', $interval_nfo[1]);
+				$interval_interval .= \Froxlor\UI\HTML::makeoption($lng['cronmgmt']['hours'], 'HOUR', $interval_nfo[1]);
+				$interval_interval .= \Froxlor\UI\HTML::makeoption($lng['cronmgmt']['days'], 'DAY', $interval_nfo[1]);
+				$interval_interval .= \Froxlor\UI\HTML::makeoption($lng['cronmgmt']['weeks'], 'WEEK', $interval_nfo[1]);
+				$interval_interval .= \Froxlor\UI\HTML::makeoption($lng['cronmgmt']['months'], 'MONTH', $interval_nfo[1]);
 				// end of interval
 
 				$change_cronfile = false;
@@ -122,14 +117,16 @@ if ($page == 'cronjobs' || $page == 'overview') {
 					$change_cronfile = true;
 				}
 
-				$cronjobs_edit_data = include_once dirname(__FILE__).'/lib/formfields/admin/formfield.cronjobs.php';
-				$cronjobs_edit_form = HTMLform2::genHTMLForm($cronjobs_edit_data, $result);
+				$cronjobs_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/cronjobs/formfield.cronjobs_edit.php';
+				$cronjobs_edit_form = \Froxlor\UI\HtmlForm::genHTMLForm($cronjobs_edit_data);
 
-				eval("echo \"" . getTemplate('cronjobs/cronjob_edit') . "\";");
+				$title = $cronjobs_edit_data['cronjobs_edit']['title'];
+				$image = $cronjobs_edit_data['cronjobs_edit']['image'];
+
+				eval("echo \"" . \Froxlor\UI\Template::getTemplate('cronjobs/cronjob_edit') . "\";");
 			}
 		}
-	}
-	elseif ($action == 'delete' && $id != 0) {
+	} elseif ($action == 'delete' && $id != 0) {
 		/*
 		 * @TODO later
 		 */

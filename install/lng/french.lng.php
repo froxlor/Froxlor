@@ -16,16 +16,13 @@
  * @package    Language
  *
  */
-
 $lng['requirements']['title'] = 'Vérification des prérequis système...';
 $lng['requirements']['installed'] = 'installé';
 $lng['requirements']['not_true'] = 'non';
 $lng['requirements']['notfound'] = 'introuvable';
 $lng['requirements']['notinstalled'] = 'non installé';
 $lng['requirements']['activated'] = 'activé';
-$lng['requirements']['phpversion'] = 'PHP version >= 5.3';
-$lng['requirements']['phpmagic_quotes_runtime'] = 'magic_quotes_runtime...';
-$lng['requirements']['phpmagic_quotes_runtime_description'] = 'Le réglage PHP "magic_quotes_runtime" doit être positionné à "Off". Nous l\'avons désactivé temporairement pour l\'instant; merci de corriger le php.ini correspondant.';
+$lng['requirements']['phpversion'] = 'PHP version >= 7.0';
 $lng['requirements']['phppdo'] = 'extension PHP PDO et pilote PDO-MySQL ...';
 $lng['requirements']['phpxml'] = 'extension PHP XML...';
 $lng['requirements']['phpfilter'] = 'extension PHP filter ...';
@@ -34,7 +31,6 @@ $lng['requirements']['phpbcmath'] = 'extension PHP bcmath ...';
 $lng['requirements']['phpcurl'] = 'extension PHP curl...';
 $lng['requirements']['phpmbstring'] = 'extension PHP mbstring...';
 $lng['requirements']['bcmathdescription'] = 'Les fonctions de calcul de traffic ne fonctionneront pas correctement!';
-$lng['requirements']['curldescription'] = 'Les vérifications de version et les flux d\'information peuvent ne pas fonctionner correctement!';
 $lng['requirements']['openbasedir'] = 'open_basedir...';
 $lng['requirements']['openbasedirenabled'] = 'Froxlor ne fonctionnera pas correctement avec open_basedir activé. Merci de désactiver open_basedir pour Froxlor dans le php.ini correspondant';
 $lng['requirements']['diedbecauseofrequirements'] = 'Impossible d\'installer Froxlor sans ces prérequis! Essayez de les corriger et essayez à nouveau.';
@@ -61,6 +57,7 @@ $lng['install']['servername'] = 'Nom du serveur (FQDN, pas d\'adresse IP)';
 $lng['install']['serverip'] = 'Adresse IP du serveur';
 $lng['install']['webserver'] = 'Serveur Web';
 $lng['install']['apache2'] = 'Apache 2';
+$lng['install']['apache24'] = 'Apache 2.4';
 $lng['install']['lighttpd'] = 'LigHTTPd';
 $lng['install']['nginx'] = 'NGINX';
 $lng['install']['httpuser'] = 'Nom d\'utilisateur HTTP';
@@ -79,8 +76,8 @@ $lng['install']['changing_data'] = 'Ajustement des paramètres...';
 $lng['install']['creating_entries'] = 'Insertion des nouvelles valeurs...';
 $lng['install']['adding_admin_user'] = 'Création du compte administrateur...';
 $lng['install']['creating_configfile'] = 'Création du fichier de configuration...';
-$lng['install']['creating_configfile_temp'] = 'Le fichier a été enregistré dans /tmp/userdata.inc.php, merci de le déplacer dans lib/.';
-$lng['install']['creating_configfile_failed'] = 'Impossible de créer lib/userdata.inc.php, merci de le créer manuellement avec le contenu suivant:';
+$lng['install']['creating_configfile_temp'] = 'Le fichier a été enregistré dans %s, merci de le déplacer dans ' . dirname(dirname(__DIR__)) . '/lib/userdata.inc.php';
+$lng['install']['creating_configfile_failed'] = 'Impossible de créer ' . dirname(dirname(__DIR__)) . '/lib/userdata.inc.php, merci de le créer manuellement avec le contenu suivant:';
 $lng['install']['froxlor_succ_installed'] = 'Froxlor a été installé avec succès.';
 
 $lng['click_here_to_refresh'] = 'Cliquez ici pour vérifier à nouveau';

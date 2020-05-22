@@ -1,4 +1,0 @@
-zone "default.zone" {
-	type master;
-	file "/etc/namedb/master/default.zone";
-};

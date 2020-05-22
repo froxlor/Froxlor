@@ -2,10 +2,11 @@ $header
 	<article>
 		<header>
 			<h2>
-				<img src="templates/{$theme}/assets/img/icons/user_edit_big.png" />&nbsp;
-				{$lng['admin']['customer_edit']}
+				<img src="templates/{$theme}/assets/img/icons/user_edit_big.png" alt="{$title}" />&nbsp;
+				{$title}
 			</h2>
 		</header>
+		<script type="text/javascript" src="templates/{$theme}/assets/js/customers.js"></script>
 
 		<section>
 

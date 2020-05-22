@@ -30,8 +30,8 @@
 							<th>{$lng['emails']['emailaddress']}&nbsp;{$arrowcode['m.email_full']}</th>
 							<th>{$lng['emails']['forwarders']}&nbsp;{$arrowcode['m.destination']}</th>
 							<th>{$lng['emails']['account']}</th>
-							<if Settings::Get('catchall.catchall_enabled') == '1'><th>{$lng['emails']['catchall']}</th></if>
-							<if Settings::Get('system.mail_quota_enabled') == '1'>
+							<if \Froxlor\Settings::Get('catchall.catchall_enabled') == '1'><th>{$lng['emails']['catchall']}</th></if>
+							<if \Froxlor\Settings::Get('system.mail_quota_enabled') == '1'>
 							<th>{$lng['emails']['quota']}</th>
 							</if>
 							<th>{$lng['panel']['options']}</th>

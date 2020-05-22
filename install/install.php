@@ -15,8 +15,16 @@
  * @package    Install
  *
  */
-
-require 'lib/class.FroxlorInstall.php';
+if (! file_exists(dirname(__DIR__) . '/vendor/autoload.php')) {
+	// get hint-template
+	$vendor_hint = file_get_contents(dirname(__DIR__) . '/templates/Sparkle/misc/vendormissinghint.tpl');
+	// replace values
+	$vendor_hint = str_replace("<FROXLOR_INSTALL_DIR>", dirname(__DIR__), $vendor_hint);
+	$vendor_hint = str_replace("<CURRENT_YEAR>", date('Y', time()), $vendor_hint);
+	die($vendor_hint);
+}
+require dirname(__DIR__) . '/vendor/autoload.php';
+require __DIR__ . '/lib/class.FroxlorInstall.php';
 
 $frxinstall = new FroxlorInstall();
 $frxinstall->run();

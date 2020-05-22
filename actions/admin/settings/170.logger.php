@@ -16,7 +16,6 @@
  * @package    Settings
  *
  */
-
 return array(
 	'groups' => array(
 		'logging' => array(
@@ -30,7 +29,7 @@ return array(
 					'default' => false,
 					'save_method' => 'storeSettingField',
 					'overview_option' => true
-					),
+				),
 				'logger_severity' => array(
 					'label' => $lng['serversettings']['logger']['severity'],
 					'settinggroup' => 'logger',
@@ -38,9 +37,12 @@ return array(
 					'type' => 'option',
 					'default' => 1,
 					'option_mode' => 'one',
-					'option_options' => array(1 => $lng['admin']['logger']['normal'], 2 => $lng['admin']['logger']['paranoid']),
-					'save_method' => 'storeSettingField',
+					'option_options' => array(
+						1 => $lng['admin']['logger']['normal'],
+						2 => $lng['admin']['logger']['paranoid']
 					),
+					'save_method' => 'storeSettingField'
+				),
 				'logger_logtypes' => array(
 					'label' => $lng['serversettings']['logger']['types'],
 					'settinggroup' => 'logger',
@@ -48,9 +50,13 @@ return array(
 					'type' => 'option',
 					'default' => 'syslog,mysql',
 					'option_mode' => 'multiple',
-					'option_options' => array('syslog' => 'syslog', 'file' => 'file', 'mysql' => 'mysql'),
-					'save_method' => 'storeSettingField',
+					'option_options' => array(
+						'syslog' => 'syslog',
+						'file' => 'file',
+						'mysql' => 'mysql'
 					),
+					'save_method' => 'storeSettingField'
+				),
 				'logger_logfile' => array(
 					'label' => $lng['serversettings']['logger']['logfile'],
 					'settinggroup' => 'logger',
@@ -59,19 +65,25 @@ return array(
 					'string_type' => 'file',
 					'string_emptyallowed' => true,
 					'default' => '',
-					'save_method' => 'storeSettingField',
-					),
+					'save_method' => 'storeSettingField'
+				),
 				'logger_log_cron' => array(
 					'label' => $lng['serversettings']['logger']['logcron'],
 					'settinggroup' => 'logger',
 					'varname' => 'log_cron',
-					'type' => 'bool',
-					'default' => false,
-					'save_method' => 'storeSettingField',
+					'type' => 'option',
+					'default' => 0,
+					'option_mode' => 'one',
+					'option_options' => array(
+						0 => $lng['serversettings']['logger']['logcronoption']['never'],
+						1 => $lng['serversettings']['logger']['logcronoption']['once'],
+						2 => $lng['serversettings']['logger']['logcronoption']['always']
 					),
-				),
-			),
+					'save_method' => 'storeSettingField'
+				)
+			)
 		)
-	);
+	)
+);
 
 ?>

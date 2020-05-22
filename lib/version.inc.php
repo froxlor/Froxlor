@@ -16,10 +16,10 @@
  */
 
 // Main version variable
-$version = '0.9.34-dev3';
+$version = \Froxlor\Froxlor::VERSION;
 
-// Database version (unused, old stuff from SysCP)
-$dbversion = '2';
+// Database version (YYYYMMDDC where C is a daily counter)
+$dbversion = \Froxlor\Froxlor::DBVERSION;
 
 // Distribution branding-tag (used for Debian etc.)
-$branding = '';
+$branding = \Froxlor\Froxlor::BRANDING;

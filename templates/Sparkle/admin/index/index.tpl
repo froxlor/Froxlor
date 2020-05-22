@@ -122,7 +122,7 @@ $header
 					</small>
 				</div>
 
-				<if Settings::Get('system.mail_quota_enabled') == 1>
+				<if \Froxlor\Settings::Get('system.mail_quota_enabled') == 1>
 				<div class="canvasbox">
 					<input type="hidden" id="email_quota" class="circular" data-used="{$overview['email_quota_used']}" data-available="{$userinfo['email_quota']}" data-assigned="{$userinfo['email_quota_used']}">
 					<canvas id="email_quota-canvas" width="120" height="76"></canvas><br/>
@@ -149,25 +149,10 @@ $header
 						</if>
 					</small>
 				</div>
-
-				<if Settings::Get('ticket.enabled') == 1>
-				<div class="canvasbox">
-					<input type="hidden" id="tickets" class="circular" data-used="{$overview['tickets_used']}" data-available="{$userinfo['tickets']}" data-assigned="{$userinfo['tickets_used']}">
-					<canvas id="tickets-canvas" width="120" height="76"></canvas><br/>
-					{$lng['customer']['tickets']}<br />
-					<small>
-						{$overview['tickets_used']} {$lng['panel']['used']}<br />
-						{$userinfo['tickets_used']} {$lng['panel']['assigned']}<br />
-						<if $userinfo['tickets'] != '∞'>
-						{$userinfo['tickets']} {$lng['panel']['available']}
-						</if>
-					</small>
-				</div>
-				</if>
 			</div>
 
 			<div class="grid-u-1-2">
-				<if Settings::Get('admin.show_news_feed') == '1'>
+				<if \Froxlor\Settings::Get('admin.show_news_feed') == '1'>
 				<table class="dboarditem full" id="newsfeed">
 					<thead>
 						<tr>
@@ -180,6 +165,18 @@ $header
 								<ul class="newsfeed" id="newsfeeditems"></ul>
 							</td>
 						</tr>
+					</tbody>
+				</table>
+				<else>
+				<table class="dboarditem full">
+					<tbody>
+						<tr><td>
+							<img src="templates/{$theme}/assets/img/icons/warning_big.png" alt="" />&nbsp;
+							{$lng['panel']['newsfeed_disabled']}&nbsp;
+							<a href="{$linker->getLink(array('section' => 'settings', 'part' => 'panel'))}">
+								<img src="templates/{$theme}/assets/img/icons/edit_20.png" alt="" />
+							</a>
+						</td></tr>
 					</tbody>
 				</table>
 				</if>
@@ -200,6 +197,10 @@ $header
 					</thead>
 					<tbody>
 						<tr>
+							<td>{$lng['admin']['hostname']}:</td>
+							<td>{$system_hostname}</td>
+						</tr>
+						<tr>
 							<td>{$lng['admin']['serversoftware']}:</td>
 							<td>{$_SERVER['SERVER_SOFTWARE']}</td>
 						</tr>
@@ -214,6 +215,10 @@ $header
 						<tr>
 							<td>{$lng['admin']['webserverinterface']}:</td>
 							<td>$webserverinterface</td>
+						</tr>
+						<tr>
+							<td>{$lng['admin']['memory']}:</td>
+							<td><pre>$memory</pre></td>
 						</tr>
 						<tr>
 							<td>{$lng['admin']['sysload']}:</td>
@@ -245,7 +250,7 @@ $header
 						{$cron_last_runs}
 						<tr>
 							<td>{$lng['admin']['installedversion']}:</td>
-							<td>{$version}{$branding}</td>
+							<td>{$version}{$branding} (DB: {$dbversion})</td>
 						</tr>
 						<tr>
 							<td>{$lng['admin']['latestversion']}:</td>
@@ -255,15 +260,15 @@ $header
 								<td><a href="$lookfornewversion_link">$lookfornewversion_lable</a></td>
 							</if>
 						</tr>
-						<if $isnewerversion == 1 >
+						<if $lookfornewversion_message != ''>
 						<tr>
-							<td colspan="2"><strong>{$lng['admin']['newerversionavailable']}</strong></td>
+							<td colspan="2"><strong>$lookfornewversion_message</strong></td>
 						</tr>
-							<if $lookfornewversion_addinfo != ''>
-							<tr>
-								<td colspan="2">$lookfornewversion_addinfo</td>
-							</tr>
-							</if>
+						</if>
+						<if $lookfornewversion_addinfo != ''>
+						<tr>
+							<td colspan="2">$lookfornewversion_addinfo</td>
+						</tr>
 						</if>
 					</tbody>
 				</table>
@@ -272,4 +277,3 @@ $header
 
 	</article>
 $footer
-

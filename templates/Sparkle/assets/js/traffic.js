@@ -93,9 +93,9 @@ $(document).ready(function() {
 	};
 
 
-	$.plot('#ftpchart', ftpdata, options);
-	$.plot('#httpchart', httpdata, options);
-	$.plot('#mailchart', maildata, options);
+	$('#ftpchart').plot(ftpdata, options);
+	$('#httpchart').plot(httpdata, options);
+	$('#mailchart').plot(maildata, options);
 
 	$("<div id='tooltip'></div>").css({
 		position: "absolute",

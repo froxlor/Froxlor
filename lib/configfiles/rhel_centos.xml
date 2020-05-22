@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <froxlor>
-	<distribution name="RHEL / CentOS" version="7">
+	<distribution name="RHEL / CentOS" version="7"
+		defaulteditor="/usr/bin/nano">
 		<services>
 			<!-- HTTP -->
 			<service type="http" title="{{lng.admin.configfiles.http}}">
@@ -38,15 +39,25 @@
 						<command>
 							<visibility mode="notempty">{{settings.system.deactivateddocroot}}
 							</visibility>
-							<content><![CDATA['mkdir -p {{settings.system.deactivateddocroot}}]]></content>
+							<content><![CDATA[mkdir -p {{settings.system.deactivateddocroot}}]]></content>
 						</command>
-						<command><![CDATA[a2dismod userdir]]></command>
 					</commands>
 				</general>
 				<!-- HTTP Apache -->
 				<daemon name="apache" version="2.4" title="Apache 2.4"
 					default="true">
 					<include>//service[@type='http']/general/commands</include>
+					<file name="{{settings.system.letsencryptacmeconf}}">
+						<visibility mode="true">{{settings.system.leenabled}}
+						</visibility>
+						<content><![CDATA[
+Alias "/.well-known/acme-challenge" "{{settings.system.letsencryptchallengepath}}/.well-known/acme-challenge"
+<Directory "{{settings.system.letsencryptchallengepath}}/.well-known/acme-challenge">
+	Require all granted
+</Directory>
+]]>
+						</content>
+					</file>
 					<command><![CDATA[systemctl reload-or-restart httpd.service]]></command>
 				</daemon>
 			</service>
@@ -77,14 +88,14 @@
 						<command><![CDATA[chmod 0750  {{settings.system.vmail_homedir}}]]></command>
 					</commands>
 					<files index="0">
-						<file name="/etc/postfix/mysql-virtual_alias_maps.cf" chown="root:postfix"
-							chmod="0640">
+						<file name="/etc/postfix/mysql-virtual_alias_maps.cf"
+							chown="root:postfix" chmod="0640">
 							<content><![CDATA[
 user = <SQL_UNPRIVILEGED_USER>
 password = <SQL_UNPRIVILEGED_PASSWORD>
 dbname = <SQL_DB>
 hosts = <SQL_HOST>
-query = SELECT destination FROM mail_virtual WHERE email = '%s' AND trim(destination) <> ''
+query = SELECT destination FROM mail_virtual AS v, panel_customers AS c WHERE c.customerid = v.customerid AND c.deactivated = 0 AND v.email = '%s' AND trim(v.destination) <> '' 
 ]]>
 							</content>
 						</file>
@@ -122,8 +133,8 @@ query = SELECT DISTINCT username FROM mail_users WHERE email in ((SELECT mail_vi
 ]]>
 							</content>
 						</file>
-						<file name="/etc/postfix/mysql-virtual_uid_maps.cf" chown="root:postfix"
-							chmod="0640">
+						<file name="/etc/postfix/mysql-virtual_uid_maps.cf"
+							chown="root:postfix" chmod="0640">
 							<content><![CDATA[
 user = <SQL_UNPRIVILEGED_USER>
 password = <SQL_UNPRIVILEGED_PASSWORD>
@@ -134,8 +145,8 @@ query = SELECT uid FROM mail_users WHERE email = '%s'
 ]]>
 							</content>
 						</file>
-						<file name="/etc/postfix/mysql-virtual_gid_maps.cf" chown="root:postfix"
-							chmod="0640">
+						<file name="/etc/postfix/mysql-virtual_gid_maps.cf"
+							chown="root:postfix" chmod="0640">
 							<content><![CDATA[
 user = <SQL_UNPRIVILEGED_USER>
 password = <SQL_UNPRIVILEGED_PASSWORD>
@@ -154,23 +165,23 @@ query = SELECT gid FROM mail_users WHERE email = '%s'
 					</commands>
 				</general>
 				<!-- postfix with dovecot -->
-				<daemon name="postfix_dovecot" version="2.10" title="Postfix with dovecot"
-					default="true">
+				<daemon name="postfix_dovecot" version="2.10"
+					title="Postfix with dovecot" default="true">
 					<include>//service[@type='smtp']/general/commands[@index=1]
 					</include>
 					<include>//service[@type='smtp']/general/installs[@index=1]
 					</include>
 					<include>//service[@type='smtp']/general/commands[@index=2]
 					</include>
-					<file name="/etc/postfix/main.cf" chown="root:root" chmod="0644"
-						backup="true">
+					<file name="/etc/postfix/main.cf" chown="root:root"
+						chmod="0644" backup="true">
 						<content><![CDATA[
 ## General Postfix configuration
-
+# FQDN from Froxlor
 mydomain = <SERVERNAME>
 
-# should be different from $mydomain eg. "mail.$mydomain"
-myhostname = mail.$mydomain
+# set myhostname to $mydomain because Froxlor alrady uses a FQDN
+myhostname = $mydomain
 
 mydestination = $myhostname,
 	$mydomain,
@@ -252,8 +263,8 @@ debugger_command =
 						</content>
 					</file>
 					<include>//service[@type='smtp']/general/files[@index=0]</include>
-					<file name="/etc/postfix/master.cf" chown="root:root" chmod="0644"
-						backup="true" mode="append">
+					<file name="/etc/postfix/master.cf" chown="root:root"
+						chmod="0644" backup="true" mode="append">
 						<content><![CDATA[
 # added for Froxlor
 dovecot			unix	-	n	n	-	-	pipe flags=DRhu user=vmail:vmail argv=/usr/libexec/dovecot/deliver -f ${sender} -d ${recipient}
@@ -267,10 +278,11 @@ dovecot			unix	-	n	n	-	-	pipe flags=DRhu user=vmail:vmail argv=/usr/libexec/dove
 			<!-- IMAP/POP3 services -->
 			<service type="mail" title="{{lng.admin.configfiles.mail}}">
 				<!-- Dovecot -->
-				<daemon name="dovecot" version="2.2" title="Dovecot" default="true">
+				<daemon name="dovecot" version="2.2" title="Dovecot"
+					default="true">
 					<install><![CDATA[yum install dovecot dovecot-mysql dovecot-pigeonhole]]></install>
 					<file name="/etc/dovecot/dovecot.conf" chown="root:root"
-						chmod="0640" backup="true">
+						chmod="0644" backup="true">
 						<content><![CDATA[
 ## Dovecot configuration file
 
@@ -360,7 +372,7 @@ dict {
 						</content>
 					</file>
 					<file name="/etc/dovecot/conf.d/10-auth.conf" chown="root:0"
-						chmod="0640" backup="true">
+						chmod="0644" backup="true">
 						<content><![CDATA[
 ##
 ## Authentication processes
@@ -494,8 +506,8 @@ auth_mechanisms = plain
 ]]>
 						</content>
 					</file>
-					<file name="/etc/dovecot/conf.d/10-logging.conf" chown="root:0"
-						chmod="0640" backup="true">
+					<file name="/etc/dovecot/conf.d/10-logging.conf"
+						chown="root:0" chmod="0644" backup="true">
 						<content><![CDATA[
 ##
 ## Log destination.
@@ -585,7 +597,7 @@ plugin {
 						</content>
 					</file>
 					<file name="/etc/dovecot/conf.d/10-mail.conf" chown="root:0"
-						chmod="0640" backup="true">
+						chmod="0644" backup="true">
 						<content><![CDATA[
 ##
 ## Mailbox locations and namespaces
@@ -961,7 +973,7 @@ mbox_write_locks = fcntl
 						</content>
 					</file>
 					<file name="/etc/dovecot/conf.d/10-master.conf" chown="root:0"
-						chmod="0640" backup="true">
+						chmod="0644" backup="true">
 						<content><![CDATA[
 #default_process_limit = 100
 #default_client_limit = 1000
@@ -1086,7 +1098,7 @@ service dict {
 						</content>
 					</file>
 					<file name="/etc/dovecot/conf.d/10-ssl.conf" chown="root:0"
-						chmod="0640" backup="true">
+						chmod="0644" backup="true">
 						<content><![CDATA[
 ##
 ## SSL settings
@@ -1152,7 +1164,7 @@ ssl = no
 						</content>
 					</file>
 					<file name="/etc/dovecot/conf.d/15-lda.conf" chown="root:0"
-						chmod="0640" backup="true">
+						chmod="0644" backup="true">
 						<content><![CDATA[
 ##
 ## LDA specific settings (also used by LMTP)
@@ -1205,8 +1217,8 @@ protocol lda {
 ]]>
 						</content>
 					</file>
-					<file name="/etc/dovecot/conf.d/15-mailboxes.conf" chown="root:0"
-						chmod="0640" backup="true">
+					<file name="/etc/dovecot/conf.d/15-mailboxes.conf"
+						chown="root:0" chmod="0644" backup="true">
 						<content><![CDATA[
 ##
 ## Mailbox definitions
@@ -1263,7 +1275,7 @@ namespace inbox {
 						</content>
 					</file>
 					<file name="/etc/dovecot/conf.d/20-imap.conf" chown="root:0"
-						chmod="0640" backup="true">
+						chmod="0644" backup="true">
 						<content><![CDATA[
 ##
 ## IMAP specific settings
@@ -1330,7 +1342,7 @@ protocol imap {
 						</content>
 					</file>
 					<file name="/etc/dovecot/conf.d/20-lmtp.conf" chown="root:0"
-						chmod="0640" backup="true">
+						chmod="0644" backup="true">
 						<content><![CDATA[
 ##
 ## LMTP specific settings
@@ -1354,8 +1366,8 @@ protocol lmtp {
 ]]>
 						</content>
 					</file>
-					<file name="/etc/dovecot/conf.d/20-managesieve.conf" chown="root:0"
-						chmod="0640" backup="true">
+					<file name="/etc/dovecot/conf.d/20-managesieve.conf"
+						chown="root:0" chmod="0644" backup="true">
 						<content><![CDATA[
 ##
 ## ManageSieve specific settings
@@ -1437,7 +1449,7 @@ protocol sieve {
 						</content>
 					</file>
 					<file name="/etc/dovecot/conf.d/20-pop3.conf" chown="root:0"
-						chmod="0640" backup="true">
+						chmod="0644" backup="true">
 						<content><![CDATA[
 ##
 ## POP3 specific settings
@@ -1517,7 +1529,7 @@ protocol sieve {
 #  %m - number of messages (before deletion)
 #  %s - mailbox size in bytes (before deletion)
 #  %u - old/new UIDL hash. may help finding out if UIDLs changed unexpectedly
-#pop3_logout_format = top=%t/%p, retr=%r/%b, del=%d/%m, size=%s
+pop3_logout_format = in=%i out=%o top=%t/%p, retr=%r/%b, del=%d/%m, size=%s
 
 # Workarounds for various client bugs:
 #   outlook-no-nuls:
@@ -1541,7 +1553,7 @@ protocol pop3 {
 						</content>
 					</file>
 					<file name="/etc/dovecot/conf.d/90-sieve.conf" chown="root:0"
-						chmod="0640" backup="true">
+						chmod="0644" backup="true">
 						<content><![CDATA[
 ##
 ## Settings for the Sieve interpreter
@@ -1764,7 +1776,7 @@ default_pass_scheme = CRYPT
 #password_query = \
 #  SELECT username, domain, password \
 #  FROM users WHERE username = '%n' AND domain = '%d'
-password_query = SELECT username AS user, password_enc AS password, CONCAT(homedir, maildir) AS userdb_home, uid AS userdb_uid, gid AS userdb_gid, CONCAT('maildir:', homedir, maildir) AS userdb_mail, CONCAT('*:storage=', (quota*1024)) as userdb_quota_rule FROM mail_users WHERE (username = '%u' OR email = '%u') AND ((imap = 1 AND '%Ls' = 'imap') OR (pop3 = 1 AND '%Ls' = 'pop3') OR '%Ls' = 'smtp' OR '%Ls' = 'sieve')
+password_query = SELECT username AS user, password_enc AS password, CONCAT(homedir, maildir) AS userdb_home, uid AS userdb_uid, gid AS userdb_gid, CONCAT('maildir:', homedir, maildir) AS userdb_mail, CONCAT('*:storage=', quota, 'M') as userdb_quota_rule FROM mail_users WHERE (username = '%u' OR email = '%u') AND ((imap = 1 AND '%Ls' = 'imap') OR (pop3 = 1 AND '%Ls' = 'pop3') OR ((postfix = 'Y' AND '%Ls' = 'smtp') OR (postfix = 'Y' AND '%Ls' = 'sieve')))
 #password_query = SELECT username as user, password, '/var/vmail/%d/%n' as userdb_home, 'maildir:/var/vmail/%d/%n' as userdb_mail, 150 as userdb_uid, 12 as userdb_gid FROM mailbox WHERE username = '%u' AND active = '1'
 
 # userdb query to retrieve the user information. It can return fields:
@@ -1786,7 +1798,7 @@ password_query = SELECT username AS user, password_enc AS password, CONCAT(homed
 #user_query = \
 #  SELECT home, uid, gid \
 #  FROM users WHERE username = '%n' AND domain = '%d'
-user_query = SELECT CONCAT(homedir, maildir) AS home, CONCAT('maildir:', homedir, maildir) AS mail, uid, gid, CONCAT('*:storage=', (quota*1024)) as quota_rule FROM mail_users WHERE (username = '%u' OR email = '%u')
+user_query = SELECT CONCAT(homedir, maildir) AS home, CONCAT('maildir:', homedir, maildir) AS mail, uid, gid, CONCAT('*:storage=', quota, 'M') as quota_rule FROM mail_users WHERE (username = '%u' OR email = '%u')
 #user_query = SELECT '/var/vmail/%d/%n' as home, 'maildir:/var/vmail/%d/%n' as mail, 150 AS uid, 12 AS gid FROM mailbox WHERE username = '%u' AND active = '1'
 
 # If you wish to avoid two SQL lookups (passdb + userdb), you can use
@@ -1811,10 +1823,11 @@ iterate_query = SELECT username AS user FROM mail_users
 			<!-- FTP services -->
 			<service type="ftp" title="{{lng.admin.configfiles.ftp}}">
 				<!-- Proftpd -->
-				<daemon name="proftpd" version="1.3" title="ProFTPd" default="true">
+				<daemon name="proftpd" version="1.3" title="ProFTPd"
+					default="true">
 					<install><![CDATA[yum install proftpd proftpd-mysql]]></install>
-					<file name="/etc/proftpd/proftpd.conf" chown="root:0" chmod="0600"
-						backup="true">
+					<file name="/etc/proftpd.conf" chown="root:0"
+						chmod="0600" backup="true">
 						<content><![CDATA[
 # This is the ProFTPD configuration file
 #
@@ -2079,7 +2092,7 @@ LoadModule mod_ctrls_admin.c
 # (http://www.castaglia.org/proftpd/modules/mod_vroot.html)
 # Using this module rather than the kernel's chroot() system call works
 # around issues with PAM and chroot (http://bugzilla.redhat.com/506735)
-LoadModule mod_vroot.c
+# LoadModule mod_vroot.c
 #
 # Provide a flexible way of specifying that certain configuration directives
 # only apply to certain sessions, based on credentials such as connection
@@ -2274,51 +2287,43 @@ ControlsLog			/var/log/proftpd/controls.log
 			<!-- System tools/services -->
 			<service type="system" title="{{lng.admin.configfiles.etc}}">
 				<!-- Cronjob -->
-				<daemon name="cron" title="Cronjob for froxlor" mandatory="true">
-					<file name="/etc/cron.d/froxlor" chown="root:0" chmod="0640">
-						<content><![CDATA[
-#
-# Set PATH, otherwise restart-scripts won't find start-stop-daemon
-#
-PATH=/sbin:/bin:/usr/sbin:/usr/bin
-#
-# Regular cron jobs for the froxlor package
-#
-# Please check that all following paths are correct
-#
-*/1 * * * *	root	/usr/bin/php -q <BASE_PATH>scripts/froxlor_master_cronjob.php
-]]>
-						</content>
-					</file>
+				<daemon name="cron" title="Cronjob for froxlor"
+					mandatory="true">
+					<command><![CDATA[/usr/bin/php <BASE_PATH>scripts/froxlor_master_cronjob.php --run-task 99]]></command>
 					<command><![CDATA[{{settings.system.crondreload}}]]></command>
 				</daemon>
 				<!-- AWstats -->
-				<daemon name="awstats" title="Awstats (webalizer alternative)">
+				<daemon name="awstats"
+					title="Awstats (webalizer alternative)">
 					<command><![CDATA[sed -i.bak 's/^DirData/# DirData/' {{settings.system.awstats_conf}}/awstats.model.conf]]></command>
 					<command><![CDATA[sed -i.bak 's|^\\(DirIcons=\\).*$|\\1\\"/awstats-icon\\"|' {{settings.system.awstats_conf}}/awstats.model.conf]]></command>
 					<command><![CDATA[rm /etc/cron.d/awstats]]></command>
 				</daemon>
 				<!-- libnss-mysql -->
-				<daemon name="libnss" title="libnss-mysql (required for FCGID/php-fpm)">
+				<daemon name="libnss"
+					title="libnss-mysql (required for FCGID/php-fpm/mpm-itk)">
 					<install><![CDATA[yum --enablerepo=extras install epel-release]]></install>
 					<install><![CDATA[yum install libnss-mysql nscd]]></install>
-					<file name="/etc/libnss-mysql.cfg" chown="root:root" chmod="0600"
-						backup="true">
+					<file name="/etc/libnss-mysql.cfg" chown="root:root"
+						chmod="0600" backup="true">
 						<content><![CDATA[
 getpwnam    SELECT username,'x',uid,gid,'Froxlor Customer',homedir,shell \
             FROM ftp_users \
             WHERE username='%1$s' \
             AND login_enabled = 'Y' \
+            ORDER BY LENGTH(username) \
             LIMIT 1
 getpwuid    SELECT username,'x',uid,gid,'Froxlor Customer',homedir,shell \
             FROM ftp_users \
             WHERE uid='%1$u' \
             AND login_enabled = 'Y' \
+            ORDER BY LENGTH(username) \
             LIMIT 1
 getspnam    SELECT username,password,FLOOR(UNIX_TIMESTAMP()/86400-1),'1','99999','7','-1','-1','0' \
             FROM ftp_users \
             WHERE username='%1$s' \
             AND login_enabled = 'Y' \
+            ORDER BY LENGTH(username) \
             LIMIT 1
 getpwent    SELECT username,'x',uid,gid,'Froxlor Customer',homedir,shell \
             FROM ftp_users
@@ -2400,15 +2405,16 @@ aliases:	files nisplus
 				<!-- Logrotate -->
 				<daemon name="logrotate" title="Logrotate">
 					<install><![CDATA[yum install logrotate]]></install>
-					<file name="/etc/logrotate.d/froxlor" chown="root:root" chmod="0644">
+					<file name="/etc/logrotate.d/froxlor" chown="root:root"
+						chmod="0644">
 						<content><![CDATA[
 #
 # Froxlor logrotate snipet
 #
 <CUSTOMER_LOGS>*.log {
   missingok
-  weekly
-  rotate 4
+  daily
+  rotate 7
   compress
   delaycompress
   notifempty

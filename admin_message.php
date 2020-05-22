@@ -16,9 +16,10 @@
  * @package    Panel
  *
  */
-
 define('AREA', 'admin');
 require './lib/init.php';
+
+use Froxlor\Database\Database;
 
 if (isset($_POST['id'])) {
 	$id = intval($_POST['id']);
@@ -28,36 +29,33 @@ if (isset($_POST['id'])) {
 
 if ($page == 'message') {
 	if ($action == '') {
-		$log->logAction(ADM_ACTION, LOG_NOTICE, 'viewed panel_message');
+		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, 'viewed panel_message');
 
-		if (isset($_POST['send'])
-		   && $_POST['send'] == 'send'
-		) {
-			if ($_POST['receipient'] == 0
-			   && $userinfo['customers_see_all'] == '1'
-			) {
-				$log->logAction(ADM_ACTION, LOG_NOTICE, 'sending messages to admins');
+		if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			if ($_POST['receipient'] == 0 && $userinfo['customers_see_all'] == '1') {
+				$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, 'sending messages to admins');
 				$result = Database::query('SELECT `name`, `email`  FROM `' . TABLE_PANEL_ADMINS . "`");
 			} elseif ($_POST['receipient'] == 1) {
 				if ($userinfo['customers_see_all'] == '1') {
-					$log->logAction(ADM_ACTION, LOG_NOTICE, 'sending messages to ALL customers');
+					$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, 'sending messages to ALL customers');
 					$result = Database::query('SELECT `firstname`, `name`, `company`, `email`  FROM `' . TABLE_PANEL_CUSTOMERS . "`");
 				} else {
-					$log->logAction(ADM_ACTION, LOG_NOTICE, 'sending messages to customers');
+					$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, 'sending messages to customers');
 					$result = Database::prepare('
 						SELECT `firstname`, `name`, `company`, `email`  FROM `' . TABLE_PANEL_CUSTOMERS . "`
-						WHERE `adminid` = :adminid"
-					);
-					Database::pexecute($result, array('adminid' => $userinfo['adminid']));
+						WHERE `adminid` = :adminid");
+					Database::pexecute($result, array(
+						'adminid' => $userinfo['adminid']
+					));
 				}
 			} else {
-				standard_error('noreceipientsgiven');
+				\Froxlor\UI\Response::standard_error('noreceipientsgiven');
 			}
 
 			$subject = $_POST['subject'];
 			$message = wordwrap($_POST['message'], 70);
 
-			if (!empty($message)) {
+			if (! empty($message)) {
 				$mailcounter = 0;
 				$mail->Body = $message;
 				$mail->Subject = $subject;
@@ -66,28 +64,37 @@ if ($page == 'message') {
 
 					$row['firstname'] = isset($row['firstname']) ? $row['firstname'] : '';
 					$row['company'] = isset($row['company']) ? $row['company'] : '';
-					$mail->AddAddress($row['email'], getCorrectUserSalutation(array('firstname' => $row['firstname'], 'name' => $row['name'], 'company' => $row['company'])));
+					$mail->AddAddress($row['email'], \Froxlor\User::getCorrectUserSalutation(array(
+						'firstname' => $row['firstname'],
+						'name' => $row['name'],
+						'company' => $row['company']
+					)));
 					$mail->From = $userinfo['email'];
 					$mail->FromName = (isset($userinfo['firstname']) ? $userinfo['firstname'] . ' ' : '') . $userinfo['name'];
 
-					if (!$mail->Send()) {
+					if (! $mail->Send()) {
 						if ($mail->ErrorInfo != '') {
 							$mailerr_msg = $mail->ErrorInfo;
 						} else {
 							$mailerr_msg = $row['email'];
 						}
 
-						$log->logAction(ADM_ACTION, LOG_ERR, 'Error sending mail: ' . $mailerr_msg);
-						standard_error('errorsendingmail', $row['email']);
+						$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_ERR, 'Error sending mail: ' . $mailerr_msg);
+						\Froxlor\UI\Response::standard_error('errorsendingmail', $row['email']);
 					}
 
-					$mailcounter++;
+					$mailcounter ++;
 					$mail->ClearAddresses();
 				}
 
-				redirectTo($filename, array('page' => $page, 's' => $s, 'action' => 'showsuccess', 'sentitems' => $mailcounter));
+				\Froxlor\UI\Response::redirectTo($filename, array(
+					'page' => $page,
+					's' => $s,
+					'action' => 'showsuccess',
+					'sentitems' => $mailcounter
+				));
 			} else {
-				standard_error('nomessagetosend');
+				\Froxlor\UI\Response::standard_error('nomessagetosend');
 			}
 		}
 	}
@@ -95,14 +102,13 @@ if ($page == 'message') {
 	if ($action == 'showsuccess') {
 
 		$success = 1;
-		$sentitems = isset($_GET['sentitems']) ? (int)$_GET['sentitems'] : 0;
+		$sentitems = isset($_GET['sentitems']) ? (int) $_GET['sentitems'] : 0;
 
 		if ($sentitems == 0) {
 			$successmessage = $lng['message']['noreceipients'];
 		} else {
 			$successmessage = str_replace('%s', $sentitems, $lng['message']['success']);
 		}
-
 	} else {
 		$success = 0;
 		$sentitems = 0;
@@ -113,9 +119,9 @@ if ($page == 'message') {
 	$receipients = '';
 
 	if ($userinfo['customers_see_all'] == '1') {
-		$receipients.= makeoption($lng['panel']['reseller'], 0);
+		$receipients .= \Froxlor\UI\HTML::makeoption($lng['panel']['reseller'], 0);
 	}
 
-	$receipients .= makeoption($lng['panel']['customer'], 1);
-	eval("echo \"" . getTemplate('message/message') . "\";");
+	$receipients .= \Froxlor\UI\HTML::makeoption($lng['panel']['customer'], 1);
+	eval("echo \"" . \Froxlor\UI\Template::getTemplate('message/message') . "\";");
 }

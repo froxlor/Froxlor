@@ -5,6 +5,7 @@ function twoDigits(value) {
 	return value;
 }
 $(document).ready(function() {
+
 	// Scroll to top
 	$(window).scroll(function() {
 		if ($(this).scrollTop() > 100) {
@@ -53,13 +54,13 @@ $(document).ready(function() {
 	$("input[name$='_ul']").each(function() {
 		var fieldname = $(this).attr("name").substring(0, $(this).attr("name").length - 3);
 		$("input[name='" + fieldname + "']").prop({
-			disabled: $(this).is(":checked")
+			readonly: $(this).is(":checked")
 		});
 	});
 	$("input[name$='_ul']").change(function() {
 		var fieldname = $(this).attr("name").substring(0, $(this).attr("name").length - 3);
 		$("input[name='" + fieldname + "']").prop({
-			disabled: $(this).is(":checked")
+			readonly: $(this).is(":checked")
 		}).focus();
 	});
 	// Enable autoselect in configfules
@@ -70,7 +71,7 @@ $(document).ready(function() {
 	var snheight = $('#sidenavigation').height();
 	var mainheight = $('#maincontent').height();
 	if (snheight > mainheight && !$('#newsfeed').length) {
-		$('#maincontent').height(snheight);
+		$('#maincontent').css("min-height", snheight);
 	}
 	// this is necessary for the special setting feature (ref #1010)
 	$.getQueryVariable = function(key) {
@@ -202,4 +203,21 @@ $(document).ready(function() {
 		$("#mailTemplate").html(mailOptions);
 	});
 	$("#mailLanguage").trigger("change");
+
+	// Config files
+	var configfileTextareas = $("textarea.filecontent, textarea.shell");
+	var lastPw = "FROXLOR_MYSQL_PASSWORD";
+	$("#configfiles_setmysqlpw").submit(function(event) {
+		event.preventDefault();
+		var inputVal = $("#configfiles_mysqlpw").val();
+		if (!inputVal.trim()) {
+			inputVal = "FROXLOR_MYSQL_PASSWORD";
+		}
+		configfileTextareas.each(function() {
+			this.value = this.value.replace(lastPw, inputVal);
+		});
+		lastPw = inputVal;
+	});
+
+	autosize($('textarea.shell'));
 });

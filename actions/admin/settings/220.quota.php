@@ -13,7 +13,6 @@
  * @package    Settings
  *
  */
-
 return array(
 	'groups' => array(
 		'diskquota' => array(
@@ -34,7 +33,7 @@ return array(
 					'varname' => 'diskquota_repquota_path',
 					'type' => 'string',
 					'default' => '/usr/sbin/repquota',
-					'save_method' => 'storeSettingField',
+					'save_method' => 'storeSettingField'
 				),
 				'diskquota_quotatool_path' => array(
 					'label' => $lng['serversettings']['diskquota_quotatool_path']['description'],
@@ -42,7 +41,7 @@ return array(
 					'varname' => 'diskquota_quotatool_path',
 					'type' => 'string',
 					'default' => '/usr/bin/quotatool',
-					'save_method' => 'storeSettingField',
+					'save_method' => 'storeSettingField'
 				),
 				'diskquota_customer_partition' => array(
 					'label' => $lng['serversettings']['diskquota_customer_partition']['description'],
@@ -50,11 +49,11 @@ return array(
 					'varname' => 'diskquota_customer_partition',
 					'type' => 'string',
 					'default' => '/dev/root',
-					'save_method' => 'storeSettingField',
-				),
-				),
-			),
-		),
-	);
+					'save_method' => 'storeSettingField'
+				)
+			)
+		)
+	)
+);
 
 ?>

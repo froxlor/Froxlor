@@ -19,6 +19,7 @@ $header
 				</div>	
 
 				<div class="overviewadd">
+					{$pagingcode}&nbsp;&nbsp;
 					<img src="templates/{$theme}/assets/img/icons/delete.png" alt="" />&nbsp;
 					<a href="{$linker->getLink(array('section' => 'logger', 'page' => 'log', 'action' => 'truncate'))}">{$lng['logger']['truncate']}</a>
 				</div>
@@ -40,6 +41,7 @@ $header
 
 			<if 15 < $log_count >
 			<div class="overviewadd">
+				{$pagingcode}&nbsp;&nbsp;
 				<img src="templates/{$theme}/assets/img/icons/delete.png" alt="" />&nbsp;
 				<a href="{$linker->getLink(array('section' => 'logger', 'page' => 'log', 'action' => 'truncate'))}">{$lng['logger']['truncate']}</a>
 			</div>

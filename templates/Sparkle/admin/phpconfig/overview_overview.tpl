@@ -1,7 +1,11 @@
 <tr class="top">
 	<td><strong>{$row['description']}</strong></td>
-	<td>{$domains}</td>
-	<td>{$row['binary']}</td>
+	<td>{$domains}<if 0 < $subdomains_count><if !empty($domains)>+ </if>{$subdomains_count} {$lng['customer']['subdomains']}</if></td>
+	<if \Froxlor\Settings::Get('phpfpm.enabled') == '1'>
+		<td>{$row['fpmdesc']}</td>
+	<else>
+		<td>{$row['binary']}</td>
+	</if>
 	<td>{$row['file_extensions']}</td>
 	<td>
 		<a href="{$linker->getLink(array('section' => 'phpsettings', 'page' => $page, 'action' => 'edit', 'id' => $row['id']))}">

@@ -14,7 +14,6 @@
  * @package    Formfields
  *
  */
-
 return array(
 	'emails_accountchangequota' => array(
 		'title' => $lng['emails']['quota_edit'],
@@ -30,7 +29,7 @@ return array(
 						'value' => $result['email_full']
 					),
 					'email_quota' => array(
-						'label' => $lng['emails']['quota'].' (MiB)',
+						'label' => $lng['emails']['quota'] . ' (MiB)',
 						'type' => 'text',
 						'value' => $result['quota']
 					)
