@@ -491,7 +491,7 @@ class FroxlorInstall
 				$this->_updateSetting($upd_stmt, '/etc/httpd/conf.d/', 'system', 'apacheconf_vhost');
 				$this->_updateSetting($upd_stmt, '/etc/httpd/conf.d/', 'system', 'apacheconf_diroptions');
 				$this->_updateSetting($upd_stmt, '/etc/httpd/froxlor-htpasswd/', 'system', 'apacheconf_htpasswddir');
-				$this->_updateSetting($upd_stmt, 'systemctl restart httpd.service', 'system', 'apachereload_command');
+				$this->_updateSetting($upd_stmt, 'systemctl reload-or-restart httpd.service', 'system', 'apachereload_command');
 			}
 		} elseif ($this->_data['webserver'] == "lighttpd") {
 			$this->_updateSetting($upd_stmt, '/etc/lighttpd/conf-enabled/', 'system', 'apacheconf_vhost');
