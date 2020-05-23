@@ -487,6 +487,12 @@ class FroxlorInstall
 		if ($this->_data['webserver'] == "apache24") {
 			$this->_updateSetting($upd_stmt, 'apache2', 'system', 'webserver');
 			$this->_updateSetting($upd_stmt, '1', 'system', 'apache24');
+			if(file_exists('/etc/redhat-release')) {
+				$this->_updateSetting($upd_stmt, '/etc/httpd/conf.d/', 'system', 'apacheconf_vhost');
+				$this->_updateSetting($upd_stmt, '/etc/httpd/conf.d/', 'system', 'apacheconf_diroptions');
+				$this->_updateSetting($upd_stmt, '/etc/httpd/froxlor-htpasswd/', 'system', 'apacheconf_htpasswddir');
+				$this->_updateSetting($upd_stmt, 'systemctl restart httpd.service', 'system', 'apachereload_command');
+			}
 		} elseif ($this->_data['webserver'] == "lighttpd") {
 			$this->_updateSetting($upd_stmt, '/etc/lighttpd/conf-enabled/', 'system', 'apacheconf_vhost');
 			$this->_updateSetting($upd_stmt, '/etc/lighttpd/froxlor-diroptions/', 'system', 'apacheconf_diroptions');
@@ -502,6 +508,11 @@ class FroxlorInstall
 			$this->_updateSetting($upd_stmt, '/etc/nginx/nginx.pem', 'system', 'ssl_cert_file');
 			$this->_updateSetting($upd_stmt, '/var/run/', 'phpfpm', 'fastcgi_ipcdir');
 			$this->_updateSetting($upd_stmt, 'error', 'system', 'errorlog_level');
+		}
+
+		if(file_exists('/etc/redhat-release')) {
+			$this->_updateSetting($upd_stmt, 'systemctl restart named.service', 'system', 'bindreload_command');
+			$this->_updateSetting($upd_stmt, 'systemctl restart crond.service', 'system', 'crondreload');
 		}
 
 		$this->_updateSetting($upd_stmt, $this->_data['activate_newsfeed'], 'admin', 'show_news_feed');
