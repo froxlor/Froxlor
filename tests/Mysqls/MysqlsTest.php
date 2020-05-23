@@ -210,6 +210,11 @@ class MysqlsTest extends TestCase
 		$dbm = new \Froxlor\Database\DbManager(\Froxlor\FroxlorLogger::getInstanceOf());
 		$users = $dbm->getManager()->getAllSqlUsers(false);
 		foreach ($users as $user => $data) {
+			if (TRAVIS_CI == 1 && strtolower($user) == 'mariadb.sys') {
+				// travis seems to have a user for mariadb on version 10.4
+				// we do not want to test that one
+				continue;
+			}
 			$this->assertNotEmpty($data['password'], 'No password for user "' . $user . '"');
 		}
 
