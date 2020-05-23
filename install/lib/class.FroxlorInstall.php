@@ -487,6 +487,8 @@ class FroxlorInstall
 		if ($this->_data['webserver'] == "apache24") {
 			$this->_updateSetting($upd_stmt, 'apache2', 'system', 'webserver');
 			$this->_updateSetting($upd_stmt, '1', 'system', 'apache24');
+			
+			// on redhat systems set different defaults
 			if(file_exists('/etc/redhat-release')) {
 				$this->_updateSetting($upd_stmt, '/etc/httpd/conf.d/', 'system', 'apacheconf_vhost');
 				$this->_updateSetting($upd_stmt, '/etc/httpd/conf.d/', 'system', 'apacheconf_diroptions');
@@ -510,6 +512,7 @@ class FroxlorInstall
 			$this->_updateSetting($upd_stmt, 'error', 'system', 'errorlog_level');
 		}
 
+		// on redhat systems set different defaults
 		if(file_exists('/etc/redhat-release')) {
 			$this->_updateSetting($upd_stmt, 'systemctl restart named.service', 'system', 'bindreload_command');
 			$this->_updateSetting($upd_stmt, 'systemctl restart crond.service', 'system', 'crondreload');
