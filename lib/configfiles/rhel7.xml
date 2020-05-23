@@ -67,7 +67,7 @@ Alias "/.well-known/acme-challenge" "{{settings.system.letsencryptchallengepath}
 				<daemon name="bind" title="Bind9 nameserver" default="true">
 					<install><![CDATA[yum install bind]]></install>
 					<command><![CDATA[ln -sv /etc/named /etc/bind]]></command>
-					<command><![CDATA[echo "include /etc/named.conf.local;" >> /etc/named.conf]]></command>
+					<command><![CDATA[echo "include \"/etc/named.conf.local\";" >> /etc/named.conf]]></command>
 					<command><![CDATA[echo "include \"{{settings.system.bindconf_directory}}froxlor_bind.conf\";" >> /etc/named.conf.local]]></command>
 					<command><![CDATA[touch {{settings.system.bindconf_directory}}froxlor_bind.conf]]></command>
 					<command><![CDATA[chown named:0 {{settings.system.bindconf_directory}}froxlor_bind.conf]]></command>
