@@ -483,6 +483,8 @@ class FroxlorInstall
 		$this->_updateSetting($upd_stmt, $this->_data['httpuser'], 'system', 'httpuser');
 		$this->_updateSetting($upd_stmt, $this->_data['httpgroup'], 'system', 'httpgroup');
 
+		exec('command -v systemctl', $systemd_output, $systemd_return);
+
 		// necessary changes for webservers != apache2
 		if ($this->_data['webserver'] == "apache24") {
 			$this->_updateSetting($upd_stmt, 'apache2', 'system', 'webserver');
@@ -493,6 +495,9 @@ class FroxlorInstall
 				$this->_updateSetting($upd_stmt, '/etc/httpd/conf.d/', 'system', 'apacheconf_vhost');
 				$this->_updateSetting($upd_stmt, '/etc/httpd/conf.d/', 'system', 'apacheconf_diroptions');
 				$this->_updateSetting($upd_stmt, '/etc/httpd/froxlor-htpasswd/', 'system', 'apacheconf_htpasswddir');
+			}
+			// if systemd exists set different defaults
+			if ($systemd_return == 0) {
 				$this->_updateSetting($upd_stmt, 'systemctl reload-or-restart httpd.service', 'system', 'apachereload_command');
 			}
 		} elseif ($this->_data['webserver'] == "lighttpd") {
@@ -512,8 +517,8 @@ class FroxlorInstall
 			$this->_updateSetting($upd_stmt, 'error', 'system', 'errorlog_level');
 		}
 
-		// on redhat systems set different defaults
-		if(file_exists('/etc/redhat-release')) {
+		// if systemd exists set different defaults
+		if ($systemd_return == 0) {
 			$this->_updateSetting($upd_stmt, 'systemctl restart named.service', 'system', 'bindreload_command');
 			$this->_updateSetting($upd_stmt, 'systemctl restart crond.service', 'system', 'crondreload');
 		}
