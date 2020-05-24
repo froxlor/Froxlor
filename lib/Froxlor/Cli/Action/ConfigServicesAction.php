@@ -26,10 +26,15 @@ class ConfigServicesAction extends \Froxlor\Cli\Action
 	 */
 	private function validate()
 	{
+		global $lng;
+
 		$this->checkConfigParam(true);
 		$this->parseConfig();
 
 		require FROXLOR_INSTALL_DIR . '/lib/tables.inc.php';
+
+		include_once FROXLOR_INSTALL_DIR . '/lng/english.lng.php';
+		include_once FROXLOR_INSTALL_DIR . '/lng/lng_references.php';
 
 		if (array_key_exists("import-settings", $this->_args)) {
 			$this->importSettings();
