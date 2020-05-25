@@ -34,7 +34,7 @@
 						</if>
 					</if>
 				<else>
-					<div class="progress">∞
+					<div class="progress tipper" title="{$row['diskspace_used']} MiB {$lng['panel']['used']}">∞
 							<div class="bar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
 					</div>
 				</if>
@@ -58,7 +58,7 @@
 						</if>
 					</if>
 				<else>
-					<div class="progress">∞
+					<div class="progress tipper" title="{$row['traffic_used']} GiB {$lng['panel']['used']}">∞
 						<div class="bar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
 					</div>
 				</if>
