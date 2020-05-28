@@ -6,6 +6,7 @@ use Froxlor\Settings;
 use Froxlor\Database\Database;
 use Froxlor\PhpHelper;
 use Froxlor\Domain\Domain;
+use Froxlor\FileDir;
 
 /**
  * This file is part of the Froxlor project.
@@ -490,7 +491,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 
 	private static function checkFsFilesAreNewer($domain, $cert_date = 0)
 	{
-		$certificate_folder = dirname(self::$acmesh) . "/" . $domain;
+		$certificate_folder = self::getWorkingDirFromEnv($domain);
 		if (Settings::Get('system.leecc') > 0) {
 			$certificate_folder .= "_ecc";
 		}
@@ -506,6 +507,27 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 		return false;
 	}
 
+	public static function getWorkingDirFromEnv($domain = "")
+	{
+		$env_file = FileDir::makeCorrectFile(dirname(self::$acmesh) . '/acme.sh.env');
+		if (file_exists($env_file)) {
+			$output = [];
+			$cut = <<<EOC
+			cut -d'"' -f2
+			EOC;
+			exec('grep "LE_WORKING_DIR" ' . escapeshellarg($env_file) . ' | ' . $cut, $output);
+			if (is_array($output) && ! empty($output) && isset($output[0]) && ! empty($output[0])) {
+				return FileDir::makeCorrectDir($output[0] . "/" . $domain);
+			}
+		}
+		return FileDir::makeCorrectDir(dirname(self::$acmesh) . "/" . $domain);
+	}
+
+	public static function getAcmeSh()
+	{
+		return self::$acmesh;
+	}
+
 	/**
 	 * get certificate files from filesystem and store in $return array
 	 *
@@ -515,7 +537,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 	 */
 	private static function readCertificateToVar($domain, &$return, &$cronlog)
 	{
-		$certificate_folder = dirname(self::$acmesh) . "/" . $domain;
+		$certificate_folder = self::getWorkingDirFromEnv($domain);
 		$certificate_folder_noecc = null;
 		if (Settings::Get('system.leecc') > 0) {
 			$certificate_folder_noecc = \Froxlor\FileDir::makeCorrectDir($certificate_folder);
