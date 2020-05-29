@@ -159,6 +159,7 @@ class FroxlorInstall
 		$this->_guessServerName();
 		$this->_guessServerIP();
 		$this->_guessWebserver();
+		$this->_guessDistribution();
 
 		$this->_getPostField('mysql_host', '127.0.0.1');
 		$this->_getPostField('mysql_database', 'froxlor');
@@ -840,6 +841,20 @@ class FroxlorInstall
 		 */
 		$section = $this->_lng['install']['serversettings'];
 		eval("\$formdata .= \"" . $this->_getTemplate("datasection") . "\";");
+		// distribution
+		if (! empty($_POST['installstep']) && $this->_data['distribution'] == '') {
+			$diststyle = 'color:red;';
+		} else {
+			$diststyle = '';
+		}
+		$formdata .= $this->_GETsectionItemCheckbox('distribution', 'jessie', ($this->_data['distribution'] == 'jessie'), $diststyle);
+		$formdata .= $this->_getSectionItemCheckbox('distribution', 'stretch', ($this->_data['distribution'] == 'stretch'), $diststyle);
+		$formdata .= $this->_getSectionItemCheckbox('distribution', 'buster', ($this->_data['distribution'] == 'buster'), $diststyle);
+		$formdata .= $this->_getSectionItemCheckbox('distribution', 'xenial', ($this->_data['distribution'] == 'xenial'), $diststyle);
+		$formdata .= $this->_getSectionItemCheckbox('distribution', 'bionic', ($this->_data['distribution'] == 'bionic'), $diststyle);
+		$formdata .= $this->_getSectionItemCheckbox('distribution', 'focal', ($this->_data['distribution'] == 'focal'), $diststyle);
+		$formdata .= $this->_getSectionItemCheckbox('distribution', 'rhel7', ($this->_data['distribution'] == 'rhel7'), $diststyle);
+		$formdata .= $this->_getSectionItemCheckbox('distribution', 'rhel8', ($this->_data['distribution'] == 'rhel8'), $diststyle);
 		// servername
 		if (! empty($_POST['installstep']) && $this->_data['servername'] == '') {
 			$style = 'color:red;';
@@ -861,12 +876,12 @@ class FroxlorInstall
 			$websrvstyle = '';
 		}
 		// apache
-		$formdata .= $this->_getSectionItemCheckbox('apache2', ($this->_data['webserver'] == 'apache2'), $websrvstyle);
-		$formdata .= $this->_getSectionItemCheckbox('apache24', ($this->_data['webserver'] == 'apache24'), $websrvstyle);
+		$formdata .= $this->_getSectionItemCheckbox('webserver', 'apache2', ($this->_data['webserver'] == 'apache2'), $websrvstyle);
+		$formdata .= $this->_getSectionItemCheckbox('webserver', 'apache24', ($this->_data['webserver'] == 'apache24'), $websrvstyle);
 		// lighttpd
-		$formdata .= $this->_getSectionItemCheckbox('lighttpd', ($this->_data['webserver'] == 'lighttpd'), $websrvstyle);
+		$formdata .= $this->_getSectionItemCheckbox('webserver', 'lighttpd', ($this->_data['webserver'] == 'lighttpd'), $websrvstyle);
 		// nginx
-		$formdata .= $this->_getSectionItemCheckbox('nginx', ($this->_data['webserver'] == 'nginx'), $websrvstyle);
+		$formdata .= $this->_getSectionItemCheckbox('webserver', 'NGINx', ($this->_data['webserver'] == 'nginx'), $websrvstyle);
 		// webserver-user
 		if (! empty($_POST['installstep']) && $this->_data['httpuser'] == '') {
 			$style = 'color:red;';
@@ -918,7 +933,7 @@ class FroxlorInstall
 	}
 
 	/**
-	 * generate form radio field for webserver-selection
+	 * generate form radio field 
 	 *
 	 * @param string $fieldname
 	 * @param boolean $checked
@@ -926,8 +941,9 @@ class FroxlorInstall
 	 *
 	 * @return string
 	 */
-	private function _getSectionItemCheckbox($fieldname = null, $checked = false, $style = "")
+	private function _getSectionItemCheckbox($groupname = null, $fieldname = null, $checked = false, $style = "")
 	{
+		$groupname = $this->_lng['install'][$groupname];
 		$fieldlabel = $this->_lng['install'][$fieldname];
 		if ($checked) {
 			$checked = 'checked="checked"';
@@ -1269,6 +1285,48 @@ class FroxlorInstall
 			} else {
 				// we don't need to bail out, since unknown does not affect any critical installation routines
 				$this->_data['webserver'] = 'unknown';
+			}
+		}
+	}
+
+
+	/**
+	 * get/guess linux distribution
+	 */
+	private function _guessDistribution()
+	{
+		// post
+		if (! empty($_POST['distribution'])) {
+			$this->_data['distribution'] = $_POST['distribution'];
+		} else {
+			$os_version = parse_ini_file('/etc/os-release', false);
+			if ($os_version['ID'] == 'debian') {
+
+			} elseif ($os_version['ID'] == 'debian') {
+                                if(explode('.',$os_version['VERSION_ID'])[0] == '8') {
+                                        $this->_data['distribution'] = 'jessie';
+                                } elseif(explode('.',$os_version['VERSION_ID'])[0] == '9') {
+                                        $this->_data['distribution'] = 'stretch';
+                                } elseif(explode('.',$os_version['VERSION_ID'])[0] == '10') {
+                                        $this->_data['distribution'] = 'buster';
+                                }
+			} elseif ($os_version['ID'] == 'ubuntu') {
+                                if(explode('.',$os_version['VERSION_ID'])[0] == '16') {
+                                        $this->_data['distribution'] = 'xenial';
+                                } elseif(explode('.',$os_version['VERSION_ID'])[0] == '18') {
+                                        $this->_data['distribution'] = 'bionic';
+                                } elseif(explode('.',$os_version['VERSION_ID'])[0] == '20') {
+                                        $this->_data['distribution'] = 'focal';
+                                }
+			} elseif($os_version['ID'] == 'rhel' || $os_version['ID'] == 'centos' || $os_version['ID'] == 'fedora') {
+				if(explode('.',$os_version['VERSION_ID'])[0] == '7') {
+					$this->_data['distribution'] = 'rhel7';
+				} elseif(explode('.',$os_version['VERSION_ID'])[0] == '8') {
+					$this->_data['distribution'] = 'rhel8';
+				}
+			} else {
+				// we don't need to bail out, since unknown does not affect any critical installation routines
+				$this->_data['distribution'] = 'unknown';
 			}
 		}
 	}
