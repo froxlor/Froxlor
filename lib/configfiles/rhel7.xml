@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <froxlor>
-	<distribution name="RHEL" version="7"
+	<distribution name="CentOS" version="7"
 		defaulteditor="/usr/bin/nano">
       <defaults>
         <property>
