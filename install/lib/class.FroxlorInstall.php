@@ -507,7 +507,7 @@ class FroxlorInstall
 
 		if (file_exists(dirname(__DIR__).'/../lib/configfiles/'.$this->_data['distribution'].'.xml')) {
 			$xml = simplexml_load_file(dirname(__DIR__).'/../lib/configfiles/'.$this->_data['distribution'].'.xml');
-			foreach($xml->distribution->defaults->propery as $property) {
+			foreach($xml->distribution->defaults->property as $property) {
 				$this->_updateSetting($upd_stmt, $property->value[0], $property->group[0], $property->name[0]);
 			}
 		} else {
@@ -1308,7 +1308,7 @@ class FroxlorInstall
 		// post
 		if (! empty($_POST['distribution'])) {
 			$this->_data['distribution'] = $_POST['distribution'];
-		} else {
+		} else { 
 			$os_version = parse_ini_file('/etc/os-release', false);
 			if ($os_version['ID'] == 'debian') {
 
