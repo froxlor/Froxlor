@@ -881,7 +881,7 @@ class FroxlorInstall
 		// lighttpd
 		$formdata .= $this->_getSectionItemCheckbox('webserver', 'lighttpd', ($this->_data['webserver'] == 'lighttpd'), $websrvstyle);
 		// nginx
-		$formdata .= $this->_getSectionItemCheckbox('webserver', 'NGINx', ($this->_data['webserver'] == 'nginx'), $websrvstyle);
+		$formdata .= $this->_getSectionItemCheckbox('webserver', 'nginx', ($this->_data['webserver'] == 'nginx'), $websrvstyle);
 		// webserver-user
 		if (! empty($_POST['installstep']) && $this->_data['httpuser'] == '') {
 			$style = 'color:red;';
