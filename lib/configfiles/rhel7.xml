@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <froxlor>
-	<distribution name="RHEL / CentOS" version="7"
+	<distribution name="RHEL" version="7"
 		defaulteditor="/usr/bin/nano">
 		<services>
 			<!-- HTTP -->
@@ -59,6 +59,20 @@ Alias "/.well-known/acme-challenge" "{{settings.system.letsencryptchallengepath}
 						</content>
 					</file>
 					<command><![CDATA[systemctl reload-or-restart httpd.service]]></command>
+				</daemon>
+			</service>
+			<!--DNS -->
+			<service type="dns" title="{{lng.admin.configfiles.dns}}">
+				<!--Bind9 -->
+				<daemon name="bind" title="Bind9 nameserver" default="true">
+					<install><![CDATA[yum install bind]]></install>
+					<command><![CDATA[ln -sv /etc/named /etc/bind]]></command>
+					<command><![CDATA[echo "include \"/etc/named.conf.local\";" >> /etc/named.conf]]></command>
+					<command><![CDATA[echo "include \"{{settings.system.bindconf_directory}}froxlor_bind.conf\";" >> /etc/named.conf.local]]></command>
+					<command><![CDATA[touch {{settings.system.bindconf_directory}}froxlor_bind.conf]]></command>
+					<command><![CDATA[chown named:0 {{settings.system.bindconf_directory}}froxlor_bind.conf]]></command>
+					<command><![CDATA[chmod 0644 {{settings.system.bindconf_directory}}froxlor_bind.conf]]></command>
+					<command><![CDATA[systemctl restart named]]></command>
 				</daemon>
 			</service>
 			<!-- SMTP services -->
