@@ -1,0 +1,2480 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<froxlor>
+	<distribution name="RHEL" version="8"
+		defaulteditor="/usr/bin/nano">
+      <defaults>
+        <propery>
+          <name>apacheconf_vhost</name>
+          <category>system</category>
+          <value>/etc/httpd/conf.d/</value>
+        </propery>
+        <propery>
+          <name>apacheconf_diroptions</name>
+          <category>system</category>
+          <value>/etc/httpd/conf.d/</value>
+        </propery>
+        <propery>
+          <name>apacheconf_htpasswddir</name>
+          <category>system</category>
+          <value>/etc/httpd/froxlor-htpasswd/</value>
+        </propery>
+        <propery>
+          <name>apachereload_command</name>
+          <category>system</category>
+          <value>systemctl reload-or-restart httpd.service</value>
+        </propery>
+        <propery>
+          <name>bindreload_command</name>
+          <category>system</category>
+          <value>systemctl reload-or-restart named.service</value>
+        </propery>
+        <propery>
+          <name>crondreload</name>
+          <category>system</category>
+          <value>systemctl reload-or-restart crond.service</value>
+        </propery>
+      </defaults>
+		<services>
+			<!-- HTTP -->
+			<service type="http" title="{{lng.admin.configfiles.http}}">
+				<!-- general HTTP commands -->
+				<general>
+					<commands index="1">
+						<command>
+							<visibility mode="isdir">{{settings.system.apacheconf_vhost}}
+							</visibility>
+							<content><![CDATA[mkdir -p {{settings.system.apacheconf_vhost}}]]></content>
+						</command>
+						<command>
+							<visibility mode="isfile">{{settings.system.apacheconf_vhost}}
+							</visibility>
+							<content><![CDATA[touch {{settings.system.apacheconf_vhost}}]]></content>
+						</command>
+						<command><![CDATA[chown root:0 {{settings.system.apacheconf_vhost}}]]></command>
+						<command><![CDATA[chmod 0600 {{settings.system.apacheconf_vhost}}]]></command>
+						<command>
+							<visibility mode="isdir">{{settings.system.apacheconf_diroptions}}
+							</visibility>
+							<content><![CDATA[mkdir -p {{settings.system.apacheconf_diroptions}}]]></content>
+						</command>
+						<command>
+							<visibility mode="isfile">{{settings.system.apacheconf_diroptions}}
+							</visibility>
+							<content><![CDATA[touch {{settings.system.apacheconf_diroptions}}]]></content>
+						</command>
+						<command><![CDATA[chown root:0 {{settings.system.apacheconf_diroptions}}]]></command>
+						<command><![CDATA[chmod 0600 {{settings.system.apacheconf_diroptions}}]]></command>
+						<command><![CDATA[mkdir -p {{settings.system.documentroot_prefix}}]]></command>
+						<command><![CDATA[mkdir -p {{settings.system.logfiles_directory}}]]></command>
+						<command><![CDATA[mkdir -p {{settings.system.mod_fcgid_tmpdir}}]]></command>
+						<command><![CDATA[chmod 1777 {{settings.system.mod_fcgid_tmpdir}}]]></command>
+						<command>
+							<visibility mode="notempty">{{settings.system.deactivateddocroot}}
+							</visibility>
+							<content><![CDATA[mkdir -p {{settings.system.deactivateddocroot}}]]></content>
+						</command>
+					</commands>
+				</general>
+				<!-- HTTP Apache -->
+				<daemon name="apache" version="2.4" title="Apache 2.4"
+					default="true">
+					<include>//service[@type='http']/general/commands</include>
+					<file name="{{settings.system.letsencryptacmeconf}}">
+						<visibility mode="true">{{settings.system.leenabled}}
+						</visibility>
+						<content><![CDATA[
+Alias "/.well-known/acme-challenge" "{{settings.system.letsencryptchallengepath}}/.well-known/acme-challenge"
+<Directory "{{settings.system.letsencryptchallengepath}}/.well-known/acme-challenge">
+	Require all granted
+</Directory>
+]]>
+						</content>
+					</file>
+					<command><![CDATA[systemctl reload-or-restart httpd.service]]></command>
+				</daemon>
+			</service>
+			<!--DNS -->
+			<service type="dns" title="{{lng.admin.configfiles.dns}}">
+				<!--Bind9 -->
+				<daemon name="bind" title="Bind9 nameserver" default="true">
+					<install><![CDATA[yum install bind]]></install>
+					<command><![CDATA[ln -sv /etc/named /etc/bind]]></command>
+					<command><![CDATA[echo "include \"/etc/named.conf.local\";" >> /etc/named.conf]]></command>
+					<command><![CDATA[echo "include \"{{settings.system.bindconf_directory}}froxlor_bind.conf\";" >> /etc/named.conf.local]]></command>
+					<command><![CDATA[touch {{settings.system.bindconf_directory}}froxlor_bind.conf]]></command>
+					<command><![CDATA[chown named:0 {{settings.system.bindconf_directory}}froxlor_bind.conf]]></command>
+					<command><![CDATA[chmod 0644 {{settings.system.bindconf_directory}}froxlor_bind.conf]]></command>
+					<command><![CDATA[systemctl restart named]]></command>
+				</daemon>
+			</service>
+			<!-- SMTP services -->
+			<service type="smtp" title="{{lng.admin.configfiles.smtp}}">
+				<!-- general SMTP commands -->
+				<general>
+					<commands index="1">
+						<command>
+							<visibility mode="groupnotexists">{{settings.system.vmail_gid}}
+							</visibility>
+							<content><![CDATA[groupadd -g {{settings.system.vmail_gid}} vmail]]></content>
+						</command>
+						<command>
+							<visibility mode="usernotexists">{{settings.system.vmail_uid}}
+							</visibility>
+							<content><![CDATA[useradd -u {{settings.system.vmail_uid}} -g vmail vmail]]></content>
+						</command>
+					</commands>
+					<installs index="1">
+						<install><![CDATA[yum install postfix]]></install>
+					</installs>
+					<commands index="2">
+						<command><![CDATA[mkdir -p /var/spool/postfix/etc/pam.d]]></command>
+						<command><![CDATA[mkdir -p /var/spool/postfix/var/run/mysqld]]></command>
+						<command><![CDATA[mkdir -p {{settings.system.vmail_homedir}}]]></command>
+						<command><![CDATA[chown -R {{settings.system.vmail_uid}}:{{settings.system.vmail_gid}} {{settings.system.vmail_homedir}}]]></command>
+						<command><![CDATA[chmod 0750  {{settings.system.vmail_homedir}}]]></command>
+					</commands>
+					<files index="0">
+						<file name="/etc/postfix/mysql-virtual_alias_maps.cf"
+							chown="root:postfix" chmod="0640">
+							<content><![CDATA[
+user = <SQL_UNPRIVILEGED_USER>
+password = <SQL_UNPRIVILEGED_PASSWORD>
+dbname = <SQL_DB>
+hosts = <SQL_HOST>
+query = SELECT destination FROM mail_virtual AS v, panel_customers AS c WHERE c.customerid = v.customerid AND c.deactivated = 0 AND v.email = '%s' AND trim(v.destination) <> '' 
+]]>
+							</content>
+						</file>
+						<file name="/etc/postfix/mysql-virtual_mailbox_domains.cf"
+							chown="root:postfix" chmod="0640">
+							<content><![CDATA[
+user = <SQL_UNPRIVILEGED_USER>
+password = <SQL_UNPRIVILEGED_PASSWORD>
+dbname = <SQL_DB>
+hosts = <SQL_HOST>
+query = SELECT domain FROM panel_domains WHERE domain = '%s' AND isemaildomain = '1'
+]]>
+							</content>
+						</file>
+						<file name="/etc/postfix/mysql-virtual_mailbox_maps.cf"
+							chown="root:postfix" chmod="0640">
+							<content><![CDATA[
+user = <SQL_UNPRIVILEGED_USER>
+password = <SQL_UNPRIVILEGED_PASSWORD>
+dbname = <SQL_DB>
+expansion_limit = 1
+hosts = <SQL_HOST>
+query = SELECT CONCAT(homedir,maildir) FROM mail_users WHERE email = '%s'
+]]>
+							</content>
+						</file>
+						<file name="/etc/postfix/mysql-virtual_sender_permissions.cf"
+							chown="root:postfix" chmod="0640">
+							<content><![CDATA[
+user = <SQL_UNPRIVILEGED_USER>
+password = <SQL_UNPRIVILEGED_PASSWORD>
+dbname = <SQL_DB>
+hosts = <SQL_HOST>
+query = SELECT DISTINCT username FROM mail_users WHERE email in ((SELECT mail_virtual.email_full FROM mail_virtual WHERE mail_virtual.email = '%s' UNION SELECT mail_virtual.destination FROM mail_virtual WHERE mail_virtual.email = '%s'));
+]]>
+							</content>
+						</file>
+						<file name="/etc/postfix/mysql-virtual_uid_maps.cf"
+							chown="root:postfix" chmod="0640">
+							<content><![CDATA[
+user = <SQL_UNPRIVILEGED_USER>
+password = <SQL_UNPRIVILEGED_PASSWORD>
+dbname = <SQL_DB>
+expansion_limit = 1
+hosts = <SQL_HOST>
+query = SELECT uid FROM mail_users WHERE email = '%s'
+]]>
+							</content>
+						</file>
+						<file name="/etc/postfix/mysql-virtual_gid_maps.cf"
+							chown="root:postfix" chmod="0640">
+							<content><![CDATA[
+user = <SQL_UNPRIVILEGED_USER>
+password = <SQL_UNPRIVILEGED_PASSWORD>
+dbname = <SQL_DB>
+expansion_limit = 1
+hosts = <SQL_HOST>
+query = SELECT gid FROM mail_users WHERE email = '%s'
+]]>
+							</content>
+						</file>
+					</files>
+					<commands index="3">
+						<command><![CDATA[newaliases]]></command>
+						<command><![CDATA[systemctl enable postfix.service]]></command>
+						<command><![CDATA[systemctl reload-or-restart postfix.service]]></command>
+					</commands>
+				</general>
+				<!-- postfix with dovecot -->
+				<daemon name="postfix_dovecot" version="2.10"
+					title="Postfix with dovecot" default="true">
+					<include>//service[@type='smtp']/general/commands[@index=1]
+					</include>
+					<include>//service[@type='smtp']/general/installs[@index=1]
+					</include>
+					<include>//service[@type='smtp']/general/commands[@index=2]
+					</include>
+					<file name="/etc/postfix/main.cf" chown="root:root"
+						chmod="0644" backup="true">
+						<content><![CDATA[
+## General Postfix configuration
+# FQDN from Froxlor
+mydomain = <SERVERNAME>
+
+# set myhostname to $mydomain because Froxlor alrady uses a FQDN
+myhostname = $mydomain
+
+mydestination = $myhostname,
+	$mydomain,
+	localhost.$myhostname,
+	localhost.$mydomain,
+	localhost
+mynetworks = 127.0.0.0/8
+inet_interfaces = all
+append_dot_mydomain = no
+biff = no
+
+# Postfix performance settings
+default_destination_concurrency_limit = 20
+local_destination_concurrency_limit = 2
+
+# SMTPD Settings
+smtpd_banner = $myhostname ESMTP $mail_name
+smtpd_helo_required = yes
+smtpd_recipient_restrictions = permit_mynetworks,
+	permit_sasl_authenticated,
+	reject_unauth_destination,
+	reject_unauth_pipelining,
+	reject_non_fqdn_recipient
+smtpd_sender_restrictions = permit_mynetworks,
+	reject_sender_login_mismatch,
+	permit_sasl_authenticated, 
+	reject_unknown_helo_hostname, 
+	reject_unknown_recipient_domain, 
+	reject_unknown_sender_domain
+smtpd_client_restrictions = permit_mynetworks,
+	permit_sasl_authenticated,
+	reject_unknown_client_hostname
+
+# Postfix 2.10 requires this option. Postfix < 2.10 ignores this.
+# The option is intentionally left empty.
+smtpd_relay_restrictions = 
+
+# Maximum size of Message in bytes (50MB)
+message_size_limit = 52428800
+mailbox_size_limit = 0
+
+## SASL Auth Settings
+smtpd_sasl_auth_enable = yes
+smtpd_sasl_local_domain = $myhostname
+broken_sasl_auth_clients = yes
+## Dovecot Settings for deliver, SASL Auth and virtual transport
+smtpd_sasl_type = dovecot
+mailbox_command = /usr/lib/dovecot/deliver
+virtual_transport = dovecot
+dovecot_destination_recipient_limit = 1
+smtpd_sasl_path = private/auth
+
+# Virtual delivery settings
+virtual_mailbox_maps = mysql:/etc/postfix/mysql-virtual_mailbox_maps.cf
+virtual_mailbox_domains = mysql:/etc/postfix/mysql-virtual_mailbox_domains.cf
+virtual_alias_maps = mysql:/etc/postfix/mysql-virtual_alias_maps.cf
+smtpd_sender_login_maps = mysql:/etc/postfix/mysql-virtual_sender_permissions.cf
+
+# Local delivery settings
+local_transport = local
+alias_maps = $alias_database
+
+### TLS settings
+###
+## TLS for outgoing mails from the server to another server
+#smtp_tls_security_level = may
+#smtp_tls_note_starttls_offer = yes
+## TLS for incoming connections (clients or other mail servers)
+#smtpd_tls_security_level = may
+#smtpd_tls_cert_file = /etc/ssl/server/<SERVERNAME>.pem
+#smtpd_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
+#smtpd_tls_loglevel = 1
+#smtpd_tls_received_header = yes
+
+debugger_command =
+         PATH=/bin:/usr/bin:/usr/local/bin:/usr/X11R6/bin
+         ddd $daemon_directory/$process_name $process_id & sleep 5
+]]>
+						</content>
+					</file>
+					<include>//service[@type='smtp']/general/files[@index=0]</include>
+					<file name="/etc/postfix/master.cf" chown="root:root"
+						chmod="0644" backup="true" mode="append">
+						<content><![CDATA[
+# added for Froxlor
+dovecot			unix	-	n	n	-	-	pipe flags=DRhu user=vmail:vmail argv=/usr/libexec/dovecot/deliver -f ${sender} -d ${recipient}
+]]>
+						</content>
+					</file>
+					<include>//service[@type='smtp']/general/commands[@index=3]
+					</include>
+				</daemon>
+			</service>
+			<!-- IMAP/POP3 services -->
+			<service type="mail" title="{{lng.admin.configfiles.mail}}">
+				<!-- Dovecot -->
+				<daemon name="dovecot" version="2.2" title="Dovecot"
+					default="true">
+					<install><![CDATA[yum install dovecot dovecot-mysql dovecot-pigeonhole]]></install>
+					<file name="/etc/dovecot/dovecot.conf" chown="root:root"
+						chmod="0644" backup="true">
+						<content><![CDATA[
+## Dovecot configuration file
+
+# If you're in a hurry, see http://wiki.dovecot.org/QuickConfiguration
+
+# "doveconf -n" command gives a clean output of the changed settings. Use it
+# instead of copy&pasting files when posting to the Dovecot mailing list.
+
+# '#' character and everything after it is treated as comments. Extra spaces
+# and tabs are ignored. If you want to use either of these explicitly, put the
+# value inside quotes, eg.: key = "# char and trailing whitespace  "
+
+# Default values are shown for each setting, it's not required to uncomment
+# those. These are exceptions to this though: No sections (e.g. namespace {})
+# or plugin settings are added by default, they're listed only as examples.
+# Paths are also just examples with the real defaults being based on configure
+# options. The paths listed here are for configure --prefix=/usr
+# --sysconfdir=/etc --localstatedir=/var
+
+# Protocols we want to be serving.
+protocols = imap pop3 sieve <SSLPROTOCOLS>
+#protocols = imap pop3 lmtp
+#protocols = imap pop3 lmtp sieve
+
+# A comma separated list of IPs or hosts where to listen in for connections. 
+# "*" listens in all IPv4 interfaces, "::" listens in all IPv6 interfaces.
+# If you want to specify non-default ports or anything more complex,
+# edit conf.d/master.conf.
+listen = *, ::
+
+# Base directory where to store runtime data.
+base_dir = /var/run/dovecot/
+
+# Greeting message for clients.
+login_greeting = Dovecot ready.
+
+# Space separated list of trusted network ranges. Connections from these
+# IPs are allowed to override their IP addresses and ports (for logging and
+# for authentication checks). disable_plaintext_auth is also ignored for
+# these networks. Typically you'd specify your IMAP proxy servers here.
+#login_trusted_networks =
+
+# Sepace separated list of login access check sockets (e.g. tcpwrap)
+#login_access_sockets = 
+
+# Show more verbose process titles (in ps). Currently shows user name and
+# IP address. Useful for seeing who are actually using the IMAP processes
+# (eg. shared mailboxes or if same uid is used for multiple accounts).
+#verbose_proctitle = no
+
+# Should all processes be killed when Dovecot master process shuts down.
+# Setting this to "no" means that Dovecot can be upgraded without
+# forcing existing client connections to close (although that could also be
+# a problem if the upgrade is e.g. because of a security fix).
+shutdown_clients = yes
+
+# If non-zero, run mail commands via this many connections to doveadm server,
+# instead of running them directly in the same process.
+#doveadm_worker_count = 0
+# UNIX socket or host:port used for connecting to doveadm server
+#doveadm_socket_path = doveadm-server
+
+##
+## Dictionary server settings
+##
+
+# Dictionary can be used to store key=value lists. This is used by several
+# plugins. The dictionary can be accessed either directly or though a
+# dictionary server. The following dict block maps dictionary names to URIs
+# when the server is used. These can then be referenced using URIs in format
+# "proxy::<name>".
+
+dict {
+  #quota = mysql:/etc/dovecot/dovecot-dict-sql.conf.ext
+  #expire = sqlite:/etc/dovecot/dovecot-dict-sql.conf.ext
+}
+
+# Most of the actual configuration gets included below. The filenames are
+# first sorted by their ASCII value and parsed in that order. The 00-prefixes
+# in filenames are intended to make it easier to understand the ordering.
+!include conf.d/*.conf
+
+# A config file can also tried to be included without giving an error if
+# it's not found:
+#!include_try /etc/dovecot/local.conf
+]]>
+						</content>
+					</file>
+					<file name="/etc/dovecot/conf.d/10-auth.conf" chown="root:0"
+						chmod="0644" backup="true">
+						<content><![CDATA[
+##
+## Authentication processes
+##
+
+# Disable LOGIN command and all other plaintext authentications unless
+# SSL/TLS is used (LOGINDISABLED capability). Note that if the remote IP
+# matches the local IP (ie. you're connecting from the same computer), the
+# connection is considered secure and plaintext authentication is allowed.
+# See also ssl=required setting.
+#disable_plaintext_auth = yes
+disable_plaintext_auth = no
+
+# Authentication cache size (e.g. 10M). 0 means it's disabled. Note that
+# bsdauth, PAM and vpopmail require cache_key to be set for caching to be used.
+#auth_cache_size = 0
+# Time to live for cached data. After TTL expires the cached record is no
+# longer used, *except* if the main database lookup returns internal failure.
+# We also try to handle password changes automatically: If user's previous
+# authentication was successful, but this one wasn't, the cache isn't used.
+# For now this works only with plaintext authentication.
+#auth_cache_ttl = 1 hour
+# TTL for negative hits (user not found, password mismatch).
+# 0 disables caching them completely.
+#auth_cache_negative_ttl = 1 hour
+
+# Space separated list of realms for SASL authentication mechanisms that need
+# them. You can leave it empty if you don't want to support multiple realms.
+# Many clients simply use the first one listed here, so keep the default realm
+# first.
+#auth_realms =
+
+# Default realm/domain to use if none was specified. This is used for both
+# SASL realms and appending @domain to username in plaintext logins.
+#auth_default_realm = 
+
+# List of allowed characters in username. If the user-given username contains
+# a character not listed in here, the login automatically fails. This is just
+# an extra check to make sure user can't exploit any potential quote escaping
+# vulnerabilities with SQL/LDAP databases. If you want to allow all characters,
+# set this value to empty.
+auth_username_chars = abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890.-_@
+
+# Username character translations before it's looked up from databases. The
+# value contains series of from -> to characters. For example "#@/@" means
+# that '#' and '/' characters are translated to '@'.
+#auth_username_translation =
+
+# Username formatting before it's looked up from databases. You can use
+# the standard variables here, eg. %Lu would lowercase the username, %n would
+# drop away the domain if it was given, or "%n-AT-%d" would change the '@' into
+# "-AT-". This translation is done after auth_username_translation changes.
+#auth_username_format = %Lu
+
+# If you want to allow master users to log in by specifying the master
+# username within the normal username string (ie. not using SASL mechanism's
+# support for it), you can specify the separator character here. The format
+# is then <username><separator><master username>. UW-IMAP uses "*" as the
+# separator, so that could be a good choice.
+#auth_master_user_separator =
+
+# Username to use for users logging in with ANONYMOUS SASL mechanism
+#auth_anonymous_username = anonymous
+
+# Maximum number of dovecot-auth worker processes. They're used to execute
+# blocking passdb and userdb queries (eg. MySQL and PAM). They're
+# automatically created and destroyed as needed.
+#auth_worker_max_count = 30
+
+# Host name to use in GSSAPI principal names. The default is to use the
+# name returned by gethostname(). Use "$ALL" (with quotes) to allow all keytab
+# entries.
+#auth_gssapi_hostname =
+
+# Kerberos keytab to use for the GSSAPI mechanism. Will use the system
+# default (usually /etc/krb5.keytab) if not specified. You may need to change
+# the auth service to run as root to be able to read this file.
+#auth_krb5_keytab = 
+
+# Do NTLM and GSS-SPNEGO authentication using Samba's winbind daemon and
+# ntlm_auth helper. <doc/wiki/Authentication/Mechanisms/Winbind.txt>
+#auth_use_winbind = no
+
+# Path for Samba's ntlm_auth helper binary.
+#auth_winbind_helper_path = /usr/bin/ntlm_auth
+
+# Time to delay before replying to failed authentications.
+#auth_failure_delay = 2 secs
+
+# Require a valid SSL client certificate or the authentication fails.
+#auth_ssl_require_client_cert = no
+
+# Take the username from client's SSL certificate, using 
+# X509_NAME_get_text_by_NID() which returns the subject's DN's
+# CommonName. 
+#auth_ssl_username_from_cert = no
+
+# Space separated list of wanted authentication mechanisms:
+#   plain login digest-md5 cram-md5 ntlm rpa apop anonymous gssapi otp skey
+#   gss-spnego
+# NOTE: See also disable_plaintext_auth setting.
+auth_mechanisms = plain
+
+##
+## Password and user databases
+##
+
+#
+# Password database is used to verify user's password (and nothing more).
+# You can have multiple passdbs and userdbs. This is useful if you want to
+# allow both system users (/etc/passwd) and virtual users to login without
+# duplicating the system users into virtual database.
+#
+# <doc/wiki/PasswordDatabase.txt>
+#
+# User database specifies where mails are located and what user/group IDs
+# own them. For single-UID configuration use "static" userdb.
+#
+# <doc/wiki/UserDatabase.txt>
+
+#!include auth-deny.conf.ext
+#!include auth-master.conf.ext
+
+#!include auth-system.conf.ext
+!include auth-sql.conf.ext
+#!include auth-ldap.conf.ext
+#!include auth-passwdfile.conf.ext
+#!include auth-checkpassword.conf.ext
+#!include auth-vpopmail.conf.ext
+#!include auth-static.conf.ext
+]]>
+						</content>
+					</file>
+					<file name="/etc/dovecot/conf.d/10-logging.conf"
+						chown="root:0" chmod="0644" backup="true">
+						<content><![CDATA[
+##
+## Log destination.
+##
+
+# Log file to use for error messages. "syslog" logs to syslog,
+# /dev/stderr logs to stderr.
+log_path = syslog
+
+# Log file to use for informational messages. Defaults to log_path.
+#info_log_path = 
+# Log file to use for debug messages. Defaults to info_log_path.
+#debug_log_path = 
+
+# Syslog facility to use if you're logging to syslog. Usually if you don't
+# want to use "mail", you'll use local0..local7. Also other standard
+# facilities are supported.
+syslog_facility = mail
+
+##
+## Logging verbosity and debugging.
+##
+
+# Log unsuccessful authentication attempts and the reasons why they failed.
+#auth_verbose = no
+
+# In case of password mismatches, log the attempted password. Valid values are
+# no, plain and sha1. sha1 can be useful for detecting brute force password
+# attempts vs. user simply trying the same password over and over again.
+# You can also truncate the value to n chars by appending ":n" (e.g. sha1:6).
+#auth_verbose_passwords = no
+
+# Even more verbose logging for debugging purposes. Shows for example SQL
+# queries.
+#auth_debug = no
+
+# In case of password mismatches, log the passwords and used scheme so the
+# problem can be debugged. Enabling this also enables auth_debug.
+#auth_debug_passwords = no
+
+# Enable mail process debugging. This can help you figure out why Dovecot
+# isn't finding your mails.
+#mail_debug = no
+
+# Show protocol level SSL errors.
+#verbose_ssl = no
+
+# mail_log plugin provides more event logging for mail processes.
+plugin {
+  # Events to log. Also available: flag_change append
+  #mail_log_events = delete undelete expunge copy mailbox_delete mailbox_rename
+  # Available fields: uid, box, msgid, from, subject, size, vsize, flags
+  # size and vsize are available only for expunge and copy events.
+  #mail_log_fields = uid box msgid size
+}
+
+##
+## Log formatting.
+##
+
+# Prefix for each line written to log file. % codes are in strftime(3)
+# format.
+#log_timestamp = "%b %d %H:%M:%S "
+
+# Space-separated list of elements we want to log. The elements which have
+# a non-empty variable value are joined together to form a comma-separated
+# string.
+#login_log_format_elements = user=<%u> method=%m rip=%r lip=%l mpid=%e %c
+
+# Login log format. %s contains login_log_format_elements string, %$ contains
+# the data we want to log.
+#login_log_format = %$: %s
+ 
+# Log prefix for mail processes. See doc/wiki/Variables.txt for list of
+# possible variables you can use.
+#mail_log_prefix = "%s(%u): "
+
+# Format to use for logging mail deliveries. You can use variables:
+#  %$ - Delivery status message (e.g. "saved to INBOX")
+#  %m - Message-ID
+#  %s - Subject
+#  %f - From address
+#  %p - Physical size
+#  %w - Virtual size
+#deliver_log_format = msgid=%m: %$
+]]>
+						</content>
+					</file>
+					<file name="/etc/dovecot/conf.d/10-mail.conf" chown="root:0"
+						chmod="0644" backup="true">
+						<content><![CDATA[
+##
+## Mailbox locations and namespaces
+##
+
+# Location for users' mailboxes. The default is empty, which means that Dovecot
+# tries to find the mailboxes automatically. This won't work if the user
+# doesn't yet have any mail, so you should explicitly tell Dovecot the full
+# location.
+#
+# If you're using mbox, giving a path to the INBOX file (eg. /var/mail/%u)
+# isn't enough. You'll also need to tell Dovecot where the other mailboxes are
+# kept. This is called the "root mail directory", and it must be the first
+# path given in the mail_location setting.
+#
+# There are a few special variables you can use, eg.:
+#
+#   %u - username
+#   %n - user part in user@domain, same as %u if there's no domain
+#   %d - domain part in user@domain, empty if there's no domain
+#   %h - home directory
+#
+# See doc/wiki/Variables.txt for full list. Some examples:
+#
+#   mail_location = maildir:~/Maildir
+#   mail_location = mbox:~/mail:INBOX=/var/mail/%u
+#   mail_location = mbox:/var/mail/%d/%1n/%n:INDEX=/var/indexes/%d/%1n/%n
+#
+# <doc/wiki/MailLocation.txt>
+#
+mail_location = maildir:/var/vmail/%d/%u
+#																																										########################## TODO
+
+# If you need to set multiple mailbox locations or want to change default
+# namespace settings, you can do it by defining namespace sections.
+#
+# You can have private, shared and public namespaces. Private namespaces
+# are for user's personal mails. Shared namespaces are for accessing other
+# users' mailboxes that have been shared. Public namespaces are for shared
+# mailboxes that are managed by sysadmin. If you create any shared or public
+# namespaces you'll typically want to enable ACL plugin also, otherwise all
+# users can access all the shared mailboxes, assuming they have permissions
+# on filesystem level to do so.
+namespace inbox {
+  # Namespace type: private, shared or public
+  #type = private
+
+  # Hierarchy separator to use. You should use the same separator for all
+  # namespaces or some clients get confused. '/' is usually a good one.
+  # The default however depends on the underlying mail storage format.
+  #separator = 
+
+  # Prefix required to access this namespace. This needs to be different for
+  # all namespaces. For example "Public/".
+  #prefix = 
+
+  # Physical location of the mailbox. This is in same format as
+  # mail_location, which is also the default for it.
+  #location =
+
+  # There can be only one INBOX, and this setting defines which namespace
+  # has it.
+  inbox = yes
+
+  # If namespace is hidden, it's not advertised to clients via NAMESPACE
+  # extension. You'll most likely also want to set list=no. This is mostly
+  # useful when converting from another server with different namespaces which
+  # you want to deprecate but still keep working. For example you can create
+  # hidden namespaces with prefixes "~/mail/", "~%u/mail/" and "mail/".
+  #hidden = no
+
+  # Show the mailboxes under this namespace with LIST command. This makes the
+  # namespace visible for clients that don't support NAMESPACE extension.
+  # "children" value lists child mailboxes, but hides the namespace prefix.
+  #list = yes
+
+  # Namespace handles its own subscriptions. If set to "no", the parent
+  # namespace handles them (empty prefix should always have this as "yes")
+  #subscriptions = yes
+}
+
+# Example shared namespace configuration
+#namespace {
+  #type = shared
+  #separator = /
+
+  # Mailboxes are visible under "shared/user@domain/"
+  # %%n, %%d and %%u are expanded to the destination user.
+  #prefix = shared/%%u/
+
+  # Mail location for other users' mailboxes. Note that %variables and ~/
+  # expands to the logged in user's data. %%n, %%d, %%u and %%h expand to the
+  # destination user's data.
+  #location = maildir:%%h/Maildir:INDEX=~/Maildir/shared/%%u
+
+  # Use the default namespace for saving subscriptions.
+  #subscriptions = no
+
+  # List the shared/ namespace only if there are visible shared mailboxes.
+  #list = children
+#}
+# Should shared INBOX be visible as "shared/user" or "shared/user/INBOX"?
+#mail_shared_explicit_inbox = no
+
+# System user and group used to access mails. If you use multiple, userdb
+# can override these by returning uid or gid fields. You can use either numbers
+# or names. <doc/wiki/UserIds.txt>
+#mail_uid =
+#mail_gid =
+
+# Group to enable temporarily for privileged operations. Currently this is
+# used only with INBOX when either its initial creation or dotlocking fails.
+# Typically this is set to "mail" to give access to /var/mail.
+#mail_privileged_group =
+
+# Grant access to these supplementary groups for mail processes. Typically
+# these are used to set up access to shared mailboxes. Note that it may be
+# dangerous to set these if users can create symlinks (e.g. if "mail" group is
+# set here, ln -s /var/mail ~/mail/var could allow a user to delete others'
+# mailboxes, or ln -s /secret/shared/box ~/mail/mybox would allow reading it).
+#mail_access_groups = vmail
+
+# Allow full filesystem access to clients. There's no access checks other than
+# what the operating system does for the active UID/GID. It works with both
+# maildir and mboxes, allowing you to prefix mailboxes names with eg. /path/
+# or ~user/.
+#mail_full_filesystem_access = no
+
+# Dictionary for key=value mailbox attributes. Currently used by URLAUTH, but
+# soon intended to be used by METADATA as well.
+#mail_attribute_dict =
+
+##
+## Mail processes
+##
+
+# Don't use mmap() at all. This is required if you store indexes to shared
+# filesystems (NFS or clustered filesystem).
+#mmap_disable = no
+
+# Rely on O_EXCL to work when creating dotlock files. NFS supports O_EXCL
+# since version 3, so this should be safe to use nowadays by default.
+#dotlock_use_excl = yes
+
+# When to use fsync() or fdatasync() calls:
+#   optimized (default): Whenever necessary to avoid losing important data
+#   always: Useful with e.g. NFS when write()s are delayed
+#   never: Never use it (best performance, but crashes can lose data)
+#mail_fsync = optimized
+
+# Mail storage exists in NFS. Set this to yes to make Dovecot flush NFS caches
+# whenever needed. If you're using only a single mail server this isn't needed.
+#mail_nfs_storage = no
+# Mail index files also exist in NFS. Setting this to yes requires
+# mmap_disable=yes and fsync_disable=no.
+#mail_nfs_index = no
+
+# Locking method for index files. Alternatives are fcntl, flock and dotlock.
+# Dotlocking uses some tricks which may create more disk I/O than other locking
+# methods. NFS users: flock doesn't work, remember to change mmap_disable.
+#lock_method = fcntl
+
+# Directory in which LDA/LMTP temporarily stores incoming mails >128 kB.
+#mail_temp_dir = /tmp
+
+# Valid UID range for users, defaults to 500 and above. This is mostly
+# to make sure that users can't log in as daemons or other system users.
+# Note that denying root logins is hardcoded to dovecot binary and can't
+# be done even if first_valid_uid is set to 0.
+first_valid_uid = 150
+last_valid_uid = 150
+
+# Valid GID range for users, defaults to non-root/wheel. Users having
+# non-valid GID as primary group ID aren't allowed to log in. If user
+# belongs to supplementary groups with non-valid GIDs, those groups are
+# not set.
+first_valid_gid = 12
+last_valid_gid = 12
+
+# Maximum allowed length for mail keyword name. It's only forced when trying
+# to create new keywords.
+#mail_max_keyword_length = 50
+
+# ':' separated list of directories under which chrooting is allowed for mail
+# processes (ie. /var/mail will allow chrooting to /var/mail/foo/bar too).
+# This setting doesn't affect login_chroot, mail_chroot or auth chroot
+# settings. If this setting is empty, "/./" in home dirs are ignored.
+# WARNING: Never add directories here which local users can modify, that
+# may lead to root exploit. Usually this should be done only if you don't
+# allow shell access for users. <doc/wiki/Chrooting.txt>
+#valid_chroot_dirs = 
+
+# Default chroot directory for mail processes. This can be overridden for
+# specific users in user database by giving /./ in user's home directory
+# (eg. /home/./user chroots into /home). Note that usually there is no real
+# need to do chrooting, Dovecot doesn't allow users to access files outside
+# their mail directory anyway. If your home directories are prefixed with
+# the chroot directory, append "/." to mail_chroot. <doc/wiki/Chrooting.txt>
+#mail_chroot = 
+
+# UNIX socket path to master authentication server to find users.
+# This is used by imap (for shared users) and lda.
+#auth_socket_path = /var/run/dovecot/auth-userdb
+
+# Directory where to look up mail plugins.
+#mail_plugin_dir = /usr/lib/dovecot
+
+# Space separated list of plugins to load for all services. Plugins specific to
+# IMAP, LDA, etc. are added to this list in their own .conf files.
+#mail_plugins = 
+
+##
+## Mailbox handling optimizations
+##
+
+# Mailbox list indexes can be used to optimize IMAP STATUS commands. They are
+# also required for IMAP NOTIFY extension to be enabled.
+#mailbox_list_index = no
+
+# The minimum number of mails in a mailbox before updates are done to cache
+# file. This allows optimizing Dovecot's behavior to do less disk writes at
+# the cost of more disk reads.
+#mail_cache_min_mail_count = 0
+
+# When IDLE command is running, mailbox is checked once in a while to see if
+# there are any new mails or other changes. This setting defines the minimum
+# time to wait between those checks. Dovecot can also use dnotify, inotify and
+# kqueue to find out immediately when changes occur.
+#mailbox_idle_check_interval = 30 secs
+
+# Save mails with CR+LF instead of plain LF. This makes sending those mails
+# take less CPU, especially with sendfile() syscall with Linux and FreeBSD.
+# But it also creates a bit more disk I/O which may just make it slower.
+# Also note that if other software reads the mboxes/maildirs, they may handle
+# the extra CRs wrong and cause problems.
+#mail_save_crlf = no
+
+# Max number of mails to keep open and prefetch to memory. This only works with
+# some mailbox formats and/or operating systems.
+#mail_prefetch_count = 0
+
+# How often to scan for stale temporary files and delete them (0 = never).
+# These should exist only after Dovecot dies in the middle of saving mails.
+#mail_temp_scan_interval = 1w
+
+##
+## Maildir-specific settings
+##
+
+# By default LIST command returns all entries in maildir beginning with a dot.
+# Enabling this option makes Dovecot return only entries which are directories.
+# This is done by stat()ing each entry, so it causes more disk I/O.
+# (For systems setting struct dirent->d_type, this check is free and it's
+# done always regardless of this setting)
+#maildir_stat_dirs = no
+
+# When copying a message, do it with hard links whenever possible. This makes
+# the performance much better, and it's unlikely to have any side effects.
+#maildir_copy_with_hardlinks = yes
+
+# Assume Dovecot is the only MUA accessing Maildir: Scan cur/ directory only
+# when its mtime changes unexpectedly or when we can't find the mail otherwise.
+#maildir_very_dirty_syncs = no
+
+# If enabled, Dovecot doesn't use the S=<size> in the Maildir filenames for
+# getting the mail's physical size, except when recalculating Maildir++ quota.
+# This can be useful in systems where a lot of the Maildir filenames have a
+# broken size. The performance hit for enabling this is very small.
+#maildir_broken_filename_sizes = no
+
+##
+## mbox-specific settings
+##
+
+# Which locking methods to use for locking mbox. There are four available:
+#  dotlock: Create <mailbox>.lock file. This is the oldest and most NFS-safe
+#           solution. If you want to use /var/mail/ like directory, the users
+#           will need write access to that directory.
+#  dotlock_try: Same as dotlock, but if it fails because of permissions or
+#               because there isn't enough disk space, just skip it.
+#  fcntl  : Use this if possible. Works with NFS too if lockd is used.
+#  flock  : May not exist in all systems. Doesn't work with NFS.
+#  lockf  : May not exist in all systems. Doesn't work with NFS.
+#
+# You can use multiple locking methods; if you do the order they're declared
+# in is important to avoid deadlocks if other MTAs/MUAs are using multiple
+# locking methods as well. Some operating systems don't allow using some of
+# them simultaneously.
+#mbox_read_locks = fcntl
+#mbox_write_locks = dotlock fcntl
+mbox_write_locks = fcntl
+
+# Maximum time to wait for lock (all of them) before aborting.
+#mbox_lock_timeout = 5 mins
+
+# If dotlock exists but the mailbox isn't modified in any way, override the
+# lock file after this much time.
+#mbox_dotlock_change_timeout = 2 mins
+
+# When mbox changes unexpectedly we have to fully read it to find out what
+# changed. If the mbox is large this can take a long time. Since the change
+# is usually just a newly appended mail, it'd be faster to simply read the
+# new mails. If this setting is enabled, Dovecot does this but still safely
+# fallbacks to re-reading the whole mbox file whenever something in mbox isn't
+# how it's expected to be. The only real downside to this setting is that if
+# some other MUA changes message flags, Dovecot doesn't notice it immediately.
+# Note that a full sync is done with SELECT, EXAMINE, EXPUNGE and CHECK 
+# commands.
+#mbox_dirty_syncs = yes
+
+# Like mbox_dirty_syncs, but don't do full syncs even with SELECT, EXAMINE,
+# EXPUNGE or CHECK commands. If this is set, mbox_dirty_syncs is ignored.
+#mbox_very_dirty_syncs = no
+
+# Delay writing mbox headers until doing a full write sync (EXPUNGE and CHECK
+# commands and when closing the mailbox). This is especially useful for POP3
+# where clients often delete all mails. The downside is that our changes
+# aren't immediately visible to other MUAs.
+#mbox_lazy_writes = yes
+
+# If mbox size is smaller than this (e.g. 100k), don't write index files.
+# If an index file already exists it's still read, just not updated.
+#mbox_min_index_size = 0
+
+# Mail header selection algorithm to use for MD5 POP3 UIDLs when
+# pop3_uidl_format=%m. For backwards compatibility we use apop3d inspired
+# algorithm, but it fails if the first Received: header isn't unique in all
+# mails. An alternative algorithm is "all" that selects all headers.
+#mbox_md5 = apop3d
+
+##
+## mdbox-specific settings
+##
+
+# Maximum dbox file size until it's rotated.
+#mdbox_rotate_size = 2M
+
+# Maximum dbox file age until it's rotated. Typically in days. Day begins
+# from midnight, so 1d = today, 2d = yesterday, etc. 0 = check disabled.
+#mdbox_rotate_interval = 0
+
+# When creating new mdbox files, immediately preallocate their size to
+# mdbox_rotate_size. This setting currently works only in Linux with some
+# filesystems (ext4, xfs).
+#mdbox_preallocate_space = no
+
+##
+## Mail attachments
+##
+
+# sdbox and mdbox support saving mail attachments to external files, which
+# also allows single instance storage for them. Other backends don't support
+# this for now.
+
+# Directory root where to store mail attachments. Disabled, if empty.
+#mail_attachment_dir =
+
+# Attachments smaller than this aren't saved externally. It's also possible to
+# write a plugin to disable saving specific attachments externally.
+#mail_attachment_min_size = 128k
+
+# Filesystem backend to use for saving attachments:
+#  posix : No SiS done by Dovecot (but this might help FS's own deduplication)
+#  sis posix : SiS with immediate byte-by-byte comparison during saving
+#  sis-queue posix : SiS with delayed comparison and deduplication
+#mail_attachment_fs = sis posix
+
+# Hash format to use in attachment filenames. You can add any text and
+# variables: %{md4}, %{md5}, %{sha1}, %{sha256}, %{sha512}, %{size}.
+# Variables can be truncated, e.g. %{sha256:80} returns only first 80 bits
+#mail_attachment_hash = %{sha1}
+]]>
+						</content>
+					</file>
+					<file name="/etc/dovecot/conf.d/10-master.conf" chown="root:0"
+						chmod="0644" backup="true">
+						<content><![CDATA[
+#default_process_limit = 100
+#default_client_limit = 1000
+
+# Default VSZ (virtual memory size) limit for service processes. This is mainly
+# intended to catch and kill processes that leak memory before they eat up
+# everything.
+#default_vsz_limit = 256M
+
+# Login user is internally used by login processes. This is the most untrusted
+# user in Dovecot system. It shouldn't have access to anything at all.
+#default_login_user = dovenull
+
+# Internal user is used by unprivileged processes. It should be separate from
+# login user, so that login processes can't disturb other processes.
+#default_internal_user = dovecot
+
+service imap-login {
+  inet_listener imap {
+    #port = 143
+  }
+  inet_listener imaps {
+    #port = 993
+    #ssl = yes
+  }
+
+  # Number of connections to handle before starting a new process. Typically
+  # the only useful values are 0 (unlimited) or 1. 1 is more secure, but 0
+  # is faster. <doc/wiki/LoginProcess.txt>
+  #service_count = 1
+
+  # Number of processes to always keep waiting for more connections.
+  #process_min_avail = 0
+
+  # If you set service_count=0, you probably need to grow this.
+  #vsz_limit = $default_vsz_limit
+}
+
+service pop3-login {
+  inet_listener pop3 {
+    #port = 110
+  }
+  inet_listener pop3s {
+    #port = 995
+    #ssl = yes
+  }
+}
+
+service lmtp {
+  unix_listener lmtp {
+    #mode = 0666
+  }
+
+  # Create inet listener only if you can't use the above UNIX socket
+  #inet_listener lmtp {
+    # Avoid making LMTP visible for the entire internet
+    #address =
+    #port = 
+  #}
+}
+
+service imap {
+  # Most of the memory goes to mmap()ing files. You may need to increase this
+  # limit if you have huge mailboxes.
+  #vsz_limit = $default_vsz_limit
+
+  # Max. number of IMAP processes (connections)
+  #process_limit = 1024
+}
+
+service pop3 {
+  # Max. number of POP3 processes (connections)
+  #process_limit = 1024
+}
+
+service auth {
+  # auth_socket_path points to this userdb socket by default. It's typically
+  # used by dovecot-lda, doveadm, possibly imap process, etc. Users that have
+  # full permissions to this socket are able to get a list of all usernames and
+  # get the results of everyone's userdb lookups.
+  #
+  # The default 0666 mode allows anyone to connect to the socket, but the
+  # userdb lookups will succeed only if the userdb returns an "uid" field that
+  # matches the caller process's UID. Also if caller's uid or gid matches the
+  # socket's uid or gid the lookup succeeds. Anything else causes a failure.
+  #
+  # To give the caller full permissions to lookup all users, set the mode to
+  # something else than 0666 and Dovecot lets the kernel enforce the
+  # permissions (e.g. 0777 allows everyone full permissions).
+  unix_listener auth-userdb {
+    #mode = 0666
+    #user = 
+    #group = 
+  }
+
+  # Postfix smtp-auth
+  unix_listener /var/spool/postfix/private/auth {
+    mode = 0666
+  }
+
+  # Auth process is run as this user.
+  #user = $default_internal_user
+}
+
+service auth-worker {
+  # Auth worker process is run as root by default, so that it can access
+  # /etc/shadow. If this isn't necessary, the user should be changed to
+  # $default_internal_user.
+  #user = root
+}
+
+service dict {
+  # If dict proxy is used, mail processes should have access to its socket.
+  # For example: mode=0660, group=vmail and global mail_access_groups=vmail
+  unix_listener dict {
+    #mode = 0600
+    #user = 
+    #group = 
+  }
+}
+]]>
+						</content>
+					</file>
+					<file name="/etc/dovecot/conf.d/10-ssl.conf" chown="root:0"
+						chmod="0644" backup="true">
+						<content><![CDATA[
+##
+## SSL settings
+##
+
+# SSL/TLS support: yes, no, required. <doc/wiki/SSL.txt>
+# disable plain pop3 and imap, allowed are only pop3+TLS, pop3s, imap+TLS and imaps
+# plain imap and pop3 are still allowed for local connections
+ssl = no
+
+# PEM encoded X.509 SSL/TLS certificate and private key. They're opened before
+# dropping root privileges, so keep the key file unreadable by anyone but
+# root. Included doc/mkcert.sh can be used to easily generate self-signed
+# certificate, just make sure to update the domains in dovecot-openssl.cnf
+#ssl_cert = </etc/pki/dovecot/certs/dovecot.pem
+#ssl_key = </etc/pki/dovecot/private/dovecot.pem
+
+# If key file is password protected, give the password here. Alternatively
+# give it when starting dovecot with -p parameter. Since this file is often
+# world-readable, you may want to place this setting instead to a different
+# root owned 0600 file by using ssl_key_password = <path.
+#ssl_key_password =
+
+# PEM encoded trusted certificate authority. Set this only if you intend to use
+# ssl_verify_client_cert=yes. The file should contain the CA certificate(s)
+# followed by the matching CRL(s). (e.g. ssl_ca = </etc/pki/dovecot/certs/ca.pem)
+#ssl_ca = 
+
+# Require that CRL check succeeds for client certificates.
+#ssl_require_crl = yes
+
+# Directory and/or file for trusted SSL CA certificates. These are used only
+# when Dovecot needs to act as an SSL client (e.g. imapc backend). The
+# directory is usually /etc/pki/dovecot/certs in Debian-based systems and the file is
+# /etc/pki/tls/cert.pem in RedHat-based systems.
+#ssl_client_ca_dir =
+#ssl_client_ca_file =
+
+# Request client to send a certificate. If you also want to require it, set
+# auth_ssl_require_client_cert=yes in auth section.
+#ssl_verify_client_cert = no
+
+# Which field from certificate to use for username. commonName and
+# x500UniqueIdentifier are the usual choices. You'll also need to set
+# auth_ssl_username_from_cert=yes.
+#ssl_cert_username_field = commonName
+
+# DH parameters length to use.
+#ssl_dh_parameters_length = 1024
+
+# SSL protocols to use
+#ssl_protocols = !SSLv2
+
+# SSL ciphers to use
+#ssl_cipher_list = ALL:!LOW:!SSLv2:!EXP:!aNULL
+
+# Prefer the server's order of ciphers over client's.
+#ssl_prefer_server_ciphers = no
+
+# SSL crypto device to use, for valid values run "openssl engine"
+#ssl_crypto_device =
+]]>
+						</content>
+					</file>
+					<file name="/etc/dovecot/conf.d/15-lda.conf" chown="root:0"
+						chmod="0644" backup="true">
+						<content><![CDATA[
+##
+## LDA specific settings (also used by LMTP)
+##
+
+# Address to use when sending rejection mails.
+# Default is postmaster@<your domain>. %d expands to recipient domain.
+postmaster_address = postmaster@<SERVERNAME>
+
+# Hostname to use in various parts of sent mails (e.g. in Message-Id) and
+# in LMTP replies. Default is the system's real hostname@domain.
+#hostname = 
+
+# If user is over quota, return with temporary failure instead of
+# bouncing the mail.
+#quota_full_tempfail = no
+
+# Binary to use for sending mails.
+#sendmail_path = /usr/sbin/sendmail
+
+# If non-empty, send mails via this SMTP host[:port] instead of sendmail.
+#submission_host =
+
+# Subject: header to use for rejection mails. You can use the same variables
+# as for rejection_reason below.
+#rejection_subject = Rejected: %s
+
+# Human readable error message for rejection mails. You can use variables:
+#  %n = CRLF, %r = reason, %s = original subject, %t = recipient
+#rejection_reason = Your message to <%t> was automatically rejected:%n%r
+
+# Delimiter character between local-part and detail in email address.
+#recipient_delimiter = +
+
+# Header where the original recipient address (SMTP's RCPT TO: address) is taken
+# from if not available elsewhere. With dovecot-lda -a parameter overrides this. 
+# A commonly used header for this is X-Original-To.
+#lda_original_recipient_header =
+
+# Should saving a mail to a nonexistent mailbox automatically create it?
+#lda_mailbox_autocreate = no
+
+# Should automatically created mailboxes be also automatically subscribed?
+#lda_mailbox_autosubscribe = no
+
+protocol lda {
+  # Space separated list of plugins to load (default is global mail_plugins).
+  mail_plugins = $mail_plugins quota sieve
+}
+]]>
+						</content>
+					</file>
+					<file name="/etc/dovecot/conf.d/15-mailboxes.conf"
+						chown="root:0" chmod="0644" backup="true">
+						<content><![CDATA[
+##
+## Mailbox definitions
+##
+
+# NOTE: Assumes "namespace inbox" has been defined in 10-mail.conf.
+namespace inbox {
+
+  #mailbox name {
+    # auto=create will automatically create this mailbox.
+    # auto=subscribe will both create and subscribe to the mailbox.
+    #auto = no
+
+    # Space separated list of IMAP SPECIAL-USE attributes as specified by
+    # RFC 6154: \All \Archive \Drafts \Flagged \Junk \Sent \Trash
+    #special_use =
+  #}
+
+  # These mailboxes are widely used and could perhaps be created automatically:
+  mailbox Drafts {
+    special_use = \Drafts
+    auto=subscribe
+  }
+  mailbox Junk {
+    special_use = \Junk
+    auto=subscribe
+  }
+  mailbox Trash {
+    special_use = \Trash
+    auto=subscribe
+  }
+
+  # For \Sent mailboxes there are two widely used names. We'll mark both of
+  # them as \Sent. User typically deletes one of them if duplicates are created.
+  mailbox Sent {
+    special_use = \Sent
+    auto=subscribe
+  }
+  #mailbox "Sent Messages" {
+  #  special_use = \Sent
+  #}
+
+  # If you have a virtual "All messages" mailbox:
+  #mailbox virtual/All {
+  #  special_use = \All
+  #}
+
+  # If you have a virtual "Flagged" mailbox:
+  #mailbox virtual/Flagged {
+  #  special_use = \Flagged
+  #}
+}
+]]>
+						</content>
+					</file>
+					<file name="/etc/dovecot/conf.d/20-imap.conf" chown="root:0"
+						chmod="0644" backup="true">
+						<content><![CDATA[
+##
+## IMAP specific settings
+##
+
+# Maximum IMAP command line length. Some clients generate very long command
+# lines with huge mailboxes, so you may need to raise this if you get
+# "Too long argument" or "IMAP command line too large" errors often.
+#imap_max_line_length = 64k
+
+# IMAP logout format string:
+#  %i - total number of bytes read from client
+#  %o - total number of bytes sent to client
+imap_logout_format = in=%i out=%o
+
+# Override the IMAP CAPABILITY response. If the value begins with '+',
+# add the given capabilities on top of the defaults (e.g. +XFOO XBAR).
+#imap_capability = 
+
+# How long to wait between "OK Still here" notifications when client is
+# IDLEing.
+#imap_idle_notify_interval = 2 mins
+
+# ID field names and values to send to clients. Using * as the value makes
+# Dovecot use the default value. The following fields have default values
+# currently: name, version, os, os-version, support-url, support-email.
+#imap_id_send = 
+
+# ID fields sent by client to log. * means everything.
+#imap_id_log =
+
+# Workarounds for various client bugs:
+#   delay-newmail:
+#     Send EXISTS/RECENT new mail notifications only when replying to NOOP
+#     and CHECK commands. Some clients ignore them otherwise, for example OSX
+#     Mail (<v2.1). Outlook Express breaks more badly though, without this it
+#     may show user "Message no longer in server" errors. Note that OE6 still
+#     breaks even with this workaround if synchronization is set to
+#     "Headers Only".
+#   tb-extra-mailbox-sep:
+#     Thunderbird gets somehow confused with LAYOUT=fs (mbox and dbox) and
+#     adds extra '/' suffixes to mailbox names. This option causes Dovecot to
+#     ignore the extra '/' instead of treating it as invalid mailbox name.
+#   tb-lsub-flags:
+#     Show \Noselect flags for LSUB replies with LAYOUT=fs (e.g. mbox).
+#     This makes Thunderbird realize they aren't selectable and show them
+#     greyed out, instead of only later giving "not selectable" popup error.
+#
+# The list is space-separated.
+#imap_client_workarounds = 
+
+# Host allowed in URLAUTH URLs sent by client. "*" allows all.
+#imap_urlauth_host =
+
+protocol imap {
+  # Space separated list of plugins to load (default is global mail_plugins).
+  mail_plugins = $mail_plugins quota imap_quota 
+
+  # Maximum number of IMAP connections allowed for a user from each IP address.
+  # NOTE: The username is compared case-sensitively.
+  #mail_max_userip_connections = 10
+}
+]]>
+						</content>
+					</file>
+					<file name="/etc/dovecot/conf.d/20-lmtp.conf" chown="root:0"
+						chmod="0644" backup="true">
+						<content><![CDATA[
+##
+## LMTP specific settings
+##
+
+# Support proxying to other LMTP/SMTP servers by performing passdb lookups.
+#lmtp_proxy = no
+
+# When recipient address includes the detail (e.g. user+detail), try to save
+# the mail to the detail mailbox. See also recipient_delimiter and
+# lda_mailbox_autocreate settings.
+#lmtp_save_to_detail_mailbox = no
+
+# Verify quota before replying to RCPT TO. This adds a small overhead.
+#lmtp_rcpt_check_quota = no
+
+protocol lmtp {
+  # Space separated list of plugins to load (default is global mail_plugins).
+  mail_plugins = $mail_plugins sieve
+}
+]]>
+						</content>
+					</file>
+					<file name="/etc/dovecot/conf.d/20-managesieve.conf"
+						chown="root:0" chmod="0644" backup="true">
+						<content><![CDATA[
+##
+## ManageSieve specific settings
+##
+
+# Uncomment to enable managesieve protocol:
+#protocols = $protocols sieve
+
+# Service definitions
+
+#service managesieve-login {
+  #inet_listener sieve {
+  #  port = 4190
+  #}
+
+  #inet_listener sieve_deprecated {
+  #  port = 2000
+  #}
+
+  # Number of connections to handle before starting a new process. Typically
+  # the only useful values are 0 (unlimited) or 1. 1 is more secure, but 0
+  # is faster. <doc/wiki/LoginProcess.txt>
+  #service_count = 1
+
+  # Number of processes to always keep waiting for more connections.
+  #process_min_avail = 0
+
+  # If you set service_count=0, you probably need to grow this.
+  #vsz_limit = 64M
+#}
+
+#service managesieve {
+  # Max. number of ManageSieve processes (connections)
+  #process_limit = 1024
+#}
+
+# Service configuration
+
+protocol sieve {
+  # Maximum ManageSieve command line length in bytes. ManageSieve usually does
+  # not involve overly long command lines, so this setting will not normally
+  # need adjustment
+  #managesieve_max_line_length = 65536
+
+  # Maximum number of ManageSieve connections allowed for a user from each IP
+  # address.
+  # NOTE: The username is compared case-sensitively.
+  #mail_max_userip_connections = 10
+
+  # Space separated list of plugins to load (none known to be useful so far).
+  # Do NOT try to load IMAP plugins here.
+  #mail_plugins =
+
+  # MANAGESIEVE logout format string:
+  #  %i - total number of bytes read from client
+  #  %o - total number of bytes sent to client
+  #managesieve_logout_format = bytes=%i/%o
+
+  # To fool ManageSieve clients that are focused on CMU's timesieved you can
+  # specify the IMPLEMENTATION capability that Dovecot reports to clients.
+  # For example: 'Cyrus timsieved v2.2.13'
+  #managesieve_implementation_string = Dovecot Pigeonhole
+
+  # Explicitly specify the SIEVE and NOTIFY capability reported by the server
+  # before login. If left unassigned these will be reported dynamically
+  # according to what the Sieve interpreter supports by default (after login
+  # this may differ depending on the user).
+  #managesieve_sieve_capability =
+  #managesieve_notify_capability =
+
+  # The maximum number of compile errors that are returned to the client upon
+  # script upload or script verification.
+  #managesieve_max_compile_errors = 5
+
+  # Refer to 90-sieve.conf for script quota configuration and configuration of
+  # Sieve execution limits.
+}
+]]>
+						</content>
+					</file>
+					<file name="/etc/dovecot/conf.d/20-pop3.conf" chown="root:0"
+						chmod="0644" backup="true">
+						<content><![CDATA[
+##
+## POP3 specific settings
+##
+
+# Don't try to set mails non-recent or seen with POP3 sessions. This is
+# mostly intended to reduce disk I/O. With maildir it doesn't move files
+# from new/ to cur/, with mbox it doesn't write Status-header.
+#pop3_no_flag_updates = no
+
+# Support LAST command which exists in old POP3 specs, but has been removed
+# from new ones. Some clients still wish to use this though. Enabling this
+# makes RSET command clear all \Seen flags from messages.
+#pop3_enable_last = no
+
+# If mail has X-UIDL header, use it as the mail's UIDL.
+#pop3_reuse_xuidl = no
+
+# Allow only one POP3 session to run simultaneously for the same user.
+#pop3_lock_session = no
+
+# POP3 requires message sizes to be listed as if they had CR+LF linefeeds.
+# Many POP3 servers violate this by returning the sizes with LF linefeeds,
+# because it's faster to get. When this setting is enabled, Dovecot still
+# tries to do the right thing first, but if that requires opening the
+# message, it fallbacks to the easier (but incorrect) size.
+#pop3_fast_size_lookups = no
+
+# POP3 UIDL (unique mail identifier) format to use. You can use following
+# variables, along with the variable modifiers described in
+# doc/wiki/Variables.txt (e.g. %Uf for the filename in uppercase)
+#
+#  %v - Mailbox's IMAP UIDVALIDITY
+#  %u - Mail's IMAP UID
+#  %m - MD5 sum of the mailbox headers in hex (mbox only)
+#  %f - filename (maildir only)
+#  %g - Mail's GUID
+#
+# If you want UIDL compatibility with other POP3 servers, use:
+#  UW's ipop3d         : %08Xv%08Xu
+#  Courier             : %f or %v-%u (both might be used simultaneosly)
+#  Cyrus (<= 2.1.3)    : %u
+#  Cyrus (>= 2.1.4)    : %v.%u
+#  Dovecot v0.99.x     : %v.%u
+#  tpop3d              : %Mf
+#
+# Note that Outlook 2003 seems to have problems with %v.%u format which was
+# Dovecot's default, so if you're building a new server it would be a good
+# idea to change this. %08Xu%08Xv should be pretty fail-safe.
+#
+#pop3_uidl_format = %08Xu%08Xv
+
+# Permanently save UIDLs sent to POP3 clients, so pop3_uidl_format changes
+# won't change those UIDLs. Currently this works only with Maildir.
+#pop3_save_uidl = no
+
+# What to do about duplicate UIDLs if they exist?
+#   allow: Show duplicates to clients.
+#   rename: Append a temporary -2, -3, etc. counter after the UIDL.
+#pop3_uidl_duplicates = allow
+
+# This option changes POP3 behavior so that it's not possible to actually
+# delete mails via POP3, only hide them from future POP3 sessions. The mails
+# will still be counted towards user's quota until actually deleted via IMAP.
+# Use e.g. "$POP3Deleted" as the value (it will be visible as IMAP keyword).
+# Make sure you can legally archive mails before enabling this setting.
+#pop3_deleted_flag =
+
+# POP3 logout format string:
+#  %i - total number of bytes read from client
+#  %o - total number of bytes sent to client
+#  %t - number of TOP commands
+#  %p - number of bytes sent to client as a result of TOP command
+#  %r - number of RETR commands
+#  %b - number of bytes sent to client as a result of RETR command
+#  %d - number of deleted messages
+#  %m - number of messages (before deletion)
+#  %s - mailbox size in bytes (before deletion)
+#  %u - old/new UIDL hash. may help finding out if UIDLs changed unexpectedly
+pop3_logout_format = in=%i out=%o top=%t/%p, retr=%r/%b, del=%d/%m, size=%s
+
+# Workarounds for various client bugs:
+#   outlook-no-nuls:
+#     Outlook and Outlook Express hang if mails contain NUL characters.
+#     This setting replaces them with 0x80 character.
+#   oe-ns-eoh:
+#     Outlook Express and Netscape Mail breaks if end of headers-line is
+#     missing. This option simply sends it if it's missing.
+# The list is space-separated.
+#pop3_client_workarounds = 
+
+protocol pop3 {
+  # Space separated list of plugins to load (default is global mail_plugins).
+  mail_plugins = $mail_plugins quota
+
+  # Maximum number of POP3 connections allowed for a user from each IP address.
+  # NOTE: The username is compared case-sensitively.
+  #mail_max_userip_connections = 10
+}
+]]>
+						</content>
+					</file>
+					<file name="/etc/dovecot/conf.d/90-sieve.conf" chown="root:0"
+						chmod="0644" backup="true">
+						<content><![CDATA[
+##
+## Settings for the Sieve interpreter
+##
+
+# Do not forget to enable the Sieve plugin in 15-lda.conf and 20-lmtp.conf
+# by adding it to the respective mail_plugins= settings.
+
+plugin {
+  # The path to the user's main active script. If ManageSieve is used, this the
+  # location of the symbolic link controlled by ManageSieve.
+  #sieve = ~/.dovecot.sieve
+  sieve = /var/sieve-userscripts/script-%u.sieve
+
+  # The default Sieve script when the user has none. This is a path to a global
+  # sieve script file, which gets executed ONLY if user's private Sieve script
+  # doesn't exist. Be sure to pre-compile this script manually using the sievec
+  # command line tool.
+  # --> See sieve_before fore executing scripts before the user's personal
+  #     script.
+  #sieve_default = /var/lib/dovecot/sieve/default.sieve
+  sieve_global_path = /var/lib/dovecot/sieve/default.sieve
+
+  # Directory for :personal include scripts for the include extension. This
+  # is also where the ManageSieve service stores the user's scripts.
+  #sieve_dir = ~/sieve
+  sieve_dir = /var/sieve-userscripts/%u
+
+  # Directory for :global include scripts for the include extension.
+  #sieve_global_dir =
+  sieve_global_dir = /var/lib/dovecot/sieve/global
+
+  # Path to a script file or a directory containing script files that need to be
+  # executed before the user's script. If the path points to a directory, all
+  # the Sieve scripts contained therein (with the proper .sieve extension) are
+  # executed. The order of execution within a directory is determined by the
+  # file names, using a normal 8bit per-character comparison. Multiple script
+  # file or directory paths can be specified by appending an increasing number.
+  #sieve_before =
+  #sieve_before2 =
+  #sieve_before3 = (etc...)
+  sieve_before = /var/lib/dovecot/sieve/before/
+
+  # Identical to sieve_before, only the specified scripts are executed after the
+  # user's script (only when keep is still in effect!). Multiple script file or
+  # directory paths can be specified by appending an increasing number.
+  #sieve_after =
+  #sieve_after2 =
+  #sieve_after2 = (etc...)
+
+  # Which Sieve language extensions are available to users. By default, all
+  # supported extensions are available, except for deprecated extensions or
+  # those that are still under development. Some system administrators may want
+  # to disable certain Sieve extensions or enable those that are not available
+  # by default. This setting can use '+' and '-' to specify differences relative
+  # to the default. For example `sieve_extensions = +imapflags' will enable the
+	# deprecated imapflags extension in addition to all extensions were already
+  # enabled by default.
+  #sieve_extensions = +notify +imapflags
+  sieve_extensions = +spamtest +spamtestplus +relational +comparator-i;ascii-numeric +notify +imapflags
+
+  # Which Sieve language extensions are ONLY available in global scripts. This
+  # can be used to restrict the use of certain Sieve extensions to administrator
+  # control, for instance when these extensions can cause security concerns.
+  # This setting has higher precedence than the `sieve_extensions' setting
+  # (above), meaning that the extensions enabled with this setting are never
+  # available to the user's personal script no matter what is specified for the
+  # `sieve_extensions' setting. The syntax of this setting is similar to the
+  # `sieve_extensions' setting, with the difference that extensions are
+  # enabled or disabled for exclusive use in global scripts. Currently, no
+  # extensions are marked as such by default.
+  #sieve_global_extensions =
+
+  # The Pigeonhole Sieve interpreter can have plugins of its own. Using this
+  # setting, the used plugins can be specified. Check the Dovecot wiki
+  # (wiki2.dovecot.org) or the pigeonhole website
+  # (http://pigeonhole.dovecot.org) for available plugins.
+	# The sieve_extprograms plugin is included in this release.
+  #sieve_plugins =
+
+  # The separator that is expected between the :user and :detail
+  # address parts introduced by the subaddress extension. This may
+  # also be a sequence of characters (e.g. '--'). The current
+  # implementation looks for the separator from the left of the
+  # localpart and uses the first one encountered. The :user part is
+  # left of the separator and the :detail part is right. This setting
+  # is also used by Dovecot's LMTP service.
+  #recipient_delimiter = +
+
+  # The maximum size of a Sieve script. The compiler will refuse to compile any
+  # script larger than this limit. If set to 0, no limit on the script size is
+  # enforced.
+  #sieve_max_script_size = 1M
+
+  # The maximum number of actions that can be performed during a single script
+  # execution. If set to 0, no limit on the total number of actions is enforced.
+  #sieve_max_actions = 32
+
+  # The maximum number of redirect actions that can be performed during a single
+  # script execution. If set to 0, no redirect actions are allowed.
+  #sieve_max_redirects = 4
+
+  # The maximum number of personal Sieve scripts a single user can have. If set
+  # to 0, no limit on the number of scripts is enforced.
+  # (Currently only relevant for ManageSieve)
+  #sieve_quota_max_scripts = 0
+
+  # The maximum amount of disk storage a single user's scripts may occupy. If
+  # set to 0, no limit on the used amount of disk storage is enforced.
+  # (Currently only relevant for ManageSieve)
+  #sieve_quota_max_storage = 0
+}
+]]>
+						</content>
+					</file>
+					<file name="/etc/dovecot/dovecot-sql.conf.ext" chown="root:0"
+						chmod="0640">
+						<content><![CDATA[
+# This file is opened as root, so it should be owned by root and mode 0600.
+#
+# http://wiki.dovecot.org/AuthDatabase/SQL
+#
+# For the sql passdb module, you'll need a database with a table that
+# contains fields for at least the username and password. If you want to
+# use the user@domain syntax, you might want to have a separate domain
+# field as well.
+#
+# If your users all have the same uig/gid, and have predictable home
+# directories, you can use the static userdb module to generate the home
+# dir based on the username and domain. In this case, you won't need fields
+# for home, uid, or gid in the database.
+#
+# If you prefer to use the sql userdb module, you'll want to add fields
+# for home, uid, and gid. Here is an example table:
+#
+# CREATE TABLE users (
+#     username VARCHAR(128) NOT NULL,
+#     domain VARCHAR(128) NOT NULL,
+#     password VARCHAR(64) NOT NULL,
+#     home VARCHAR(255) NOT NULL,
+#     uid INTEGER NOT NULL,
+#     gid INTEGER NOT NULL,
+#     active CHAR(1) DEFAULT 'Y' NOT NULL
+# );
+
+# Database driver: mysql, pgsql, sqlite
+driver = mysql
+
+# Database connection string. This is driver-specific setting.
+#
+# HA / round-robin load-balancing is supported by giving multiple host
+# settings, like: host=sql1.host.org host=sql2.host.org
+#
+# pgsql:
+#   For available options, see the PostgreSQL documention for the
+#   PQconnectdb function of libpq.
+#   Use maxconns=n (default 5) to change how many connections Dovecot can
+#   create to pgsql.
+#
+# mysql:
+#   Basic options emulate PostgreSQL option names:
+#     host, port, user, password, dbname
+#
+#   But also adds some new settings:
+#     client_flags        - See MySQL manual
+#     ssl_ca, ssl_ca_path - Set either one or both to enable SSL
+#     ssl_cert, ssl_key   - For sending client-side certificates to server
+#     ssl_cipher          - Set minimum allowed cipher security (default: HIGH)
+#     option_file         - Read options from the given file instead of
+#                           the default my.cnf location
+#     option_group        - Read options from the given group (default: client)
+# 
+#   You can connect to UNIX sockets by using host: host=/var/run/mysql.sock
+#   Note that currently you can't use spaces in parameters.
+#
+# sqlite:
+#   The path to the database file.
+#
+# Examples:
+#   connect = host=192.168.1.1 dbname=users
+#   connect = host=sql.example.com dbname=virtual user=virtual password=blarg
+#   connect = /etc/dovecot/authdb.sqlite
+#
+connect = host=<SQL_HOST> dbname=<SQL_DB> user=<SQL_UNPRIVILEGED_USER> password=<SQL_UNPRIVILEGED_PASSWORD>
+
+# Default password scheme.
+#
+# List of supported schemes is in
+# http://wiki.dovecot.org/Authentication/PasswordSchemes
+#
+default_pass_scheme = CRYPT
+
+# passdb query to retrieve the password. It can return fields:
+#   password - The user's password. This field must be returned.
+#   user - user@domain from the database. Needed with case-insensitive lookups.
+#   username and domain - An alternative way to represent the "user" field.
+#
+# The "user" field is often necessary with case-insensitive lookups to avoid
+# e.g. "name" and "nAme" logins creating two different mail directories. If
+# your user and domain names are in separate fields, you can return "username"
+# and "domain" fields instead of "user".
+#
+# The query can also return other fields which have a special meaning, see
+# http://wiki.dovecot.org/PasswordDatabase/ExtraFields
+#
+# Commonly used available substitutions (see http://wiki.dovecot.org/Variables
+# for full list):
+#   %u = entire user@domain
+#   %n = user part of user@domain
+#   %d = domain part of user@domain
+# 
+# Note that these can be used only as input to SQL query. If the query outputs
+# any of these substitutions, they're not touched. Otherwise it would be
+# difficult to have eg. usernames containing '%' characters.
+#
+# Example:
+#   password_query = SELECT userid AS user, pw AS password \
+#     FROM users WHERE userid = '%u' AND active = 'Y'
+#
+#password_query = \
+#  SELECT username, domain, password \
+#  FROM users WHERE username = '%n' AND domain = '%d'
+password_query = SELECT username AS user, password_enc AS password, CONCAT(homedir, maildir) AS userdb_home, uid AS userdb_uid, gid AS userdb_gid, CONCAT('maildir:', homedir, maildir) AS userdb_mail, CONCAT('*:storage=', quota, 'M') as userdb_quota_rule FROM mail_users WHERE (username = '%u' OR email = '%u') AND ((imap = 1 AND '%Ls' = 'imap') OR (pop3 = 1 AND '%Ls' = 'pop3') OR ((postfix = 'Y' AND '%Ls' = 'smtp') OR (postfix = 'Y' AND '%Ls' = 'sieve')))
+#password_query = SELECT username as user, password, '/var/vmail/%d/%n' as userdb_home, 'maildir:/var/vmail/%d/%n' as userdb_mail, 150 as userdb_uid, 12 as userdb_gid FROM mailbox WHERE username = '%u' AND active = '1'
+
+# userdb query to retrieve the user information. It can return fields:
+#   uid - System UID (overrides mail_uid setting)
+#   gid - System GID (overrides mail_gid setting)
+#   home - Home directory
+#   mail - Mail location (overrides mail_location setting)
+#
+# None of these are strictly required. If you use a single UID and GID, and
+# home or mail directory fits to a template string, you could use userdb static
+# instead. For a list of all fields that can be returned, see
+# http://wiki.dovecot.org/UserDatabase/ExtraFields
+#
+# Examples:
+#   user_query = SELECT home, uid, gid FROM users WHERE userid = '%u'
+#   user_query = SELECT dir AS home, user AS uid, group AS gid FROM users where userid = '%u'
+#   user_query = SELECT home, 501 AS uid, 501 AS gid FROM users WHERE userid = '%u'
+#
+#user_query = \
+#  SELECT home, uid, gid \
+#  FROM users WHERE username = '%n' AND domain = '%d'
+user_query = SELECT CONCAT(homedir, maildir) AS home, CONCAT('maildir:', homedir, maildir) AS mail, uid, gid, CONCAT('*:storage=', quota, 'M') as quota_rule FROM mail_users WHERE (username = '%u' OR email = '%u')
+#user_query = SELECT '/var/vmail/%d/%n' as home, 'maildir:/var/vmail/%d/%n' as mail, 150 AS uid, 12 AS gid FROM mailbox WHERE username = '%u' AND active = '1'
+
+# If you wish to avoid two SQL lookups (passdb + userdb), you can use
+# userdb prefetch instead of userdb sql in dovecot.conf. In that case you'll
+# also have to return userdb fields in password_query prefixed with "userdb_"
+# string. For example:
+#password_query = \
+#  SELECT userid AS user, password, \
+#    home AS userdb_home, uid AS userdb_uid, gid AS userdb_gid \
+#  FROM users WHERE userid = '%u'
+
+# Query to get a list of all usernames.
+#iterate_query = SELECT username AS user FROM users
+iterate_query = SELECT username AS user FROM mail_users
+]]>
+						</content>
+					</file>
+					<command><![CDATA[systemctl enable dovecot.service]]></command>
+					<command><![CDATA[systemctl reload-or-restart dovecot.service]]></command>
+				</daemon>
+			</service>
+			<!-- FTP services -->
+			<service type="ftp" title="{{lng.admin.configfiles.ftp}}">
+				<!-- Proftpd -->
+				<daemon name="proftpd" version="1.3" title="ProFTPd"
+					default="true">
+					<install><![CDATA[yum install proftpd proftpd-mysql]]></install>
+					<file name="/etc/proftpd.conf" chown="root:0"
+						chmod="0600" backup="true">
+						<content><![CDATA[
+# This is the ProFTPD configuration file
+#
+# See: http://www.proftpd.org/docs/directives/linked/by-name.html
+
+# Security-Enhanced Linux (SELinux) Notes:
+#
+# In Fedora and Red Hat Enterprise Linux, ProFTPD runs confined by SELinux
+# in order to mitigate the effects of an attacker taking advantage of an
+# unpatched vulnerability and getting control of the ftp server. By default,
+# ProFTPD cannot read or write most files on a system nor connect to many
+# external network services, but these restrictions can be relaxed by
+# setting SELinux booleans as follows:
+#
+# setsebool -P allow_ftpd_anon_write=1
+#   This allows the ftp daemon to write to files and directories labelled
+#   with the public_content_rw_t context type; the daemon would only have
+#   read access to these files normally. Files to be made available by ftp
+#   but not writeable should be labelled public_content_t.
+#
+# setsebool -P allow_ftpd_full_access=1
+#   This allows the ftp daemon to read and write all files on the system.
+#
+# setsebool -P allow_ftpd_use_cifs=1
+#   This allows the ftp daemon to read and write files on CIFS-mounted
+#   filesystems.
+#
+# setsebool -P allow_ftpd_use_nfs=1
+#   This allows the ftp daemon to read and write files on NFS-mounted
+#   filesystems.
+#
+# setsebool -P ftp_home_dir=1
+#   This allows the ftp daemon to read and write files in users' home
+#   directories.
+#
+# setsebool -P ftpd_connect_all_unreserved=1
+#   This setting is only available from Fedora 16/RHEL-7 onwards, and is
+#   necessary for active-mode ftp transfers to work reliably with non-Linux
+#   clients (see http://bugzilla.redhat.com/782177), which may choose to
+#   use port numbers outside the "ephemeral port" range of 32768-61000.
+#
+# setsebool -P ftpd_connect_db=1
+#   This setting allows the ftp daemon to connect to commonly-used database
+#   ports over the network, which is necessary if you are using a database
+#   back-end for user authentication, etc.
+#
+# setsebool -P ftpd_is_daemon=1
+#   This setting is available only in Fedora releases 4 to 6 and Red Hat
+#   Enterprise Linux 5. It should be set if ProFTPD is running in standalone
+#   mode, and unset if running in inetd mode.
+#
+# setsebool -P ftpd_disable_trans=1
+#   This setting is available only in Fedora releases 4 to 6 and Red Hat
+#   Enterprise Linux 5, and when set it removes the SELinux confinement of the
+#   ftp daemon. Needless to say, its use is not recommended.
+#
+# All of these booleans are unset by default.
+#
+# See also the "ftpd_selinux" manpage.
+#
+# Note that the "-P" option to setsebool makes the setting permanent, i.e.
+# it will still be in effect after a reboot; without the "-P" option, the
+# effect only lasts until the next reboot.
+#
+# Restrictions imposed by SELinux are on top of those imposed by ordinary
+# file ownership and access permissions; in normal operation, the ftp daemon
+# will not be able to read and/or write a file unless *all* of the ownership,
+# permission and SELinux restrictions allow it.
+
+# Server Config - config used for anything outside a <VirtualHost> or <Global> context
+# See: http://www.proftpd.org/docs/howto/Vhost.html
+
+# Trace logging, disabled by default for performance reasons
+# (http://www.proftpd.org/docs/howto/Tracing.html)
+#TraceLog			/var/log/proftpd/trace.log
+#Trace				DEFAULT:0
+
+ServerName			"<SERVERNAME> FTP server"
+ServerIdent			on "FTP Server ready."
+ServerAdmin			root@<SERVERNAME>
+DefaultServer			on
+
+# The DebugLevel directive configures the debugging level the server will use when logging.
+# The level parameter must be between 0 and 9.
+# This configuration directive will take precedence over any command-line debugging options used.
+#DebugLevel			9
+
+# Cause every FTP user except adm to be chrooted into their home directory
+DefaultRoot			~ !adm
+
+# Use pam to authenticate (default) and be authoritative
+AuthPAMConfig			proftpd
+AuthOrder 			mod_sql.c
+#AuthOrder			mod_auth_pam.c* mod_auth_unix.c
+# If you use NIS/YP/LDAP you may need to disable PersistentPasswd
+#PersistentPasswd		off
+
+# Don't do reverse DNS lookups (hangs on DNS problems)
+UseReverseDNS			off
+
+# Set the user and group that the server runs as
+User				nobody
+Group				nobody
+
+# To prevent DoS attacks, set the maximum number of child processes
+# to 20.  If you need to allow more than 20 concurrent connections
+# at once, simply increase this value.  Note that this ONLY works
+# in standalone mode; in inetd mode you should use an inetd server
+# that allows you to limit maximum number of processes per service
+# (such as xinetd)
+MaxInstances			20
+
+# Disable sendfile by default since it breaks displaying the download speeds in
+# ftptop and ftpwho
+UseSendfile			off
+
+# Define the log formats
+LogFormat			default	"%h %l %u %t \"%r\" %s %b"
+LogFormat			auth	"%v [%P] %h %t \"%r\" %s"
+
+# Dynamic Shared Object (DSO) loading
+# See README.DSO and howto/DSO.html for more details
+#
+# General database support (http://www.proftpd.org/docs/contrib/mod_sql.html)
+   LoadModule mod_sql.c
+#
+# Support for base-64 or hex encoded MD5 and SHA1 passwords from SQL tables
+# (contrib/mod_sql_passwd.html)
+#   LoadModule mod_sql_passwd.c
+#
+# Mysql support (requires proftpd-mysql package)
+# (http://www.proftpd.org/docs/contrib/mod_sql.html)
+   LoadModule mod_sql_mysql.c
+#
+# Postgresql support (requires proftpd-postgresql package)
+# (http://www.proftpd.org/docs/contrib/mod_sql.html)
+#   LoadModule mod_sql_postgres.c
+#
+# Quota support (http://www.proftpd.org/docs/contrib/mod_quotatab.html)
+   LoadModule mod_quotatab.c
+#
+# File-specific "driver" for storing quota table information in files
+# (http://www.proftpd.org/docs/contrib/mod_quotatab_file.html)
+#   LoadModule mod_quotatab_file.c
+#
+# SQL database "driver" for storing quota table information in SQL tables
+# (http://www.proftpd.org/docs/contrib/mod_quotatab_sql.html)
+   LoadModule mod_quotatab_sql.c
+#
+# LDAP support (requires proftpd-ldap package)
+# (http://www.proftpd.org/docs/directives/linked/config_ref_mod_ldap.html)
+#   LoadModule mod_ldap.c
+#
+# LDAP quota support (requires proftpd-ldap package)
+# (http://www.proftpd.org/docs/contrib/mod_quotatab_ldap.html)
+#   LoadModule mod_quotatab_ldap.c
+#
+# Support for authenticating users using the RADIUS protocol
+# (http://www.proftpd.org/docs/contrib/mod_radius.html)
+#   LoadModule mod_radius.c
+#
+# Retrieve quota limit table information from a RADIUS server
+# (http://www.proftpd.org/docs/contrib/mod_quotatab_radius.html)
+#   LoadModule mod_quotatab_radius.c
+#
+# SITE CPFR and SITE CPTO commands (analogous to RNFR and RNTO), which can be
+# used to copy files/directories from one place to another on the server
+# without having to transfer the data to the client and back
+# (http://www.castaglia.org/proftpd/modules/mod_copy.html)
+#   LoadModule mod_copy.c
+#
+# Administrative control actions for the ftpdctl program
+# (http://www.proftpd.org/docs/contrib/mod_ctrls_admin.html)
+LoadModule mod_ctrls_admin.c
+#
+# Support for MODE Z commands, which allows FTP clients and servers to
+# compress data for transfer
+# (http://www.castaglia.org/proftpd/modules/mod_deflate.html)
+#   LoadModule mod_deflate.c
+#
+# Execute external programs or scripts at various points in the process
+# of handling FTP commands
+# (http://www.castaglia.org/proftpd/modules/mod_exec.html)
+#   LoadModule mod_exec.c
+#
+# Support for POSIX ACLs
+# (http://www.proftpd.org/docs/modules/mod_facl.html)
+#   LoadModule mod_facl.c
+#
+# Support for using the GeoIP library to look up geographical information on
+# the connecting client and using that to set access controls for the server
+# (http://www.castaglia.org/proftpd/modules/mod_geoip.html)
+#   LoadModule mod_geoip.c
+#
+# Allow for version-specific configuration sections of the proftpd config file,
+# useful for using the same proftpd config across multiple servers where
+# different proftpd versions may be in use
+# (http://www.castaglia.org/proftpd/modules/mod_ifversion.html)
+#   LoadModule mod_ifversion.c
+#
+# Configure server availability based on system load
+# (http://www.proftpd.org/docs/contrib/mod_load.html)
+#   LoadModule mod_load.c
+#
+# Limit downloads to a multiple of upload volume (see README.ratio)
+#   LoadModule mod_ratio.c
+#
+# Rewrite FTP commands sent by clients on-the-fly,
+# using regular expression matching and substitution 
+# (http://www.proftpd.org/docs/contrib/mod_rewrite.html)
+#   LoadModule mod_rewrite.c
+#
+# Support for the SSH2, SFTP, and SCP protocols, for secure file transfer over
+# an SSH2 connection (http://www.castaglia.org/proftpd/modules/mod_sftp.html)
+#   LoadModule mod_sftp.c
+#
+# Use PAM to provide a 'keyboard-interactive' SSH2 authentication method for
+# mod_sftp (http://www.castaglia.org/proftpd/modules/mod_sftp_pam.html)
+#   LoadModule mod_sftp_pam.c
+#
+# Use SQL (via mod_sql) for looking up authorized SSH2 public keys for user
+# and host based authentication
+# (http://www.castaglia.org/proftpd/modules/mod_sftp_sql.html)
+#   LoadModule mod_sftp_sql.c
+#
+# Provide data transfer rate "shaping" across the entire server
+# (http://www.castaglia.org/proftpd/modules/mod_shaper.html)
+#   LoadModule mod_shaper.c
+#
+# Support for miscellaneous SITE commands such as SITE MKDIR, SITE SYMLINK,
+# and SITE UTIME (http://www.proftpd.org/docs/contrib/mod_site_misc.html)
+#   LoadModule mod_site_misc.c
+#
+# Provide an external SSL session cache using shared memory
+# (contrib/mod_tls_shmcache.html)
+#   LoadModule mod_tls_shmcache.c
+#
+# Provide a memcached-based implementation of an external SSL session cache
+# (contrib/mod_tls_memcache.html)
+#   LoadModule mod_tls_memcache.c
+#
+# Use the /etc/hosts.allow and /etc/hosts.deny files, or other allow/deny
+# files, for IP-based access control
+# (http://www.proftpd.org/docs/contrib/mod_wrap.html)
+#   LoadModule mod_wrap.c
+#
+# Use the /etc/hosts.allow and /etc/hosts.deny files, or other allow/deny
+# files, as well as SQL-based access rules, for IP-based access control
+# (http://www.proftpd.org/docs/contrib/mod_wrap2.html)
+#   LoadModule mod_wrap2.c
+#
+# Support module for mod_wrap2 that handles access rules stored in specially
+# formatted files on disk
+# (http://www.proftpd.org/docs/contrib/mod_wrap2_file.html)
+#   LoadModule mod_wrap2_file.c
+#
+# Support module for mod_wrap2 that handles access rules stored in SQL
+# database tables (http://www.proftpd.org/docs/contrib/mod_wrap2_sql.html)
+#   LoadModule mod_wrap2_sql.c
+#
+# Implement a virtual chroot capability that does not require root privileges
+# (http://www.castaglia.org/proftpd/modules/mod_vroot.html)
+# Using this module rather than the kernel's chroot() system call works
+# around issues with PAM and chroot (http://bugzilla.redhat.com/506735)
+# LoadModule mod_vroot.c
+#
+# Provide a flexible way of specifying that certain configuration directives
+# only apply to certain sessions, based on credentials such as connection
+# class, user, or group membership
+# (http://www.proftpd.org/docs/contrib/mod_ifsession.html)
+#   LoadModule mod_ifsession.c
+
+# Allow only user root to load and unload modules, but allow everyone
+# to see which modules have been loaded
+# (http://www.proftpd.org/docs/modules/mod_dso.html#ModuleControlsACLs)
+ModuleControlsACLs		insmod,rmmod allow user root
+ModuleControlsACLs		lsmod allow user *
+
+# Enable basic controls via ftpdctl
+# (http://www.proftpd.org/docs/modules/mod_ctrls.html)
+ControlsEngine			on
+ControlsACLs			all allow user root
+ControlsSocketACL		allow user *
+ControlsLog			/var/log/proftpd/controls.log
+
+# Enable admin controls via ftpdctl
+# (http://www.proftpd.org/docs/contrib/mod_ctrls_admin.html)
+<IfModule mod_ctrls_admin.c>
+  AdminControlsEngine		on
+  AdminControlsACLs		all allow user root
+</IfModule>
+
+# Enable mod_vroot by default for better compatibility with PAM
+# (http://bugzilla.redhat.com/506735)
+<IfModule mod_vroot.c>
+  VRootEngine			on
+</IfModule>
+
+# TLS (http://www.castaglia.org/proftpd/modules/mod_tls.html)
+<IfDefine TLS>
+  TLSEngine			on
+  TLSRequired			on
+  TLSRSACertificateFile		/etc/pki/tls/certs/proftpd.pem
+  TLSRSACertificateKeyFile	/etc/pki/tls/certs/proftpd.pem
+  TLSCipherSuite		ALL:!ADH:!DES
+  TLSOptions			NoCertRequest NoSessionReuseRequired
+  TLSVerifyClient		off
+  #TLSRenegotiate		ctrl 3600 data 512000 required off timeout 300
+  TLSLog			/var/log/proftpd/tls.log
+  <IfModule mod_tls_shmcache.c>
+    TLSSessionCache		shm:/file=/var/run/proftpd/sesscache
+  </IfModule>
+</IfDefine>
+
+# Dynamic ban lists (http://www.proftpd.org/docs/contrib/mod_ban.html)
+# Enable this with PROFTPD_OPTIONS=-DDYNAMIC_BAN_LISTS in /etc/sysconfig/proftpd
+<IfDefine DYNAMIC_BAN_LISTS>
+  LoadModule			mod_ban.c
+  BanEngine			on
+  BanLog			/var/log/proftpd/ban.log
+  BanTable			/var/run/proftpd/ban.tab
+
+  # If the same client reaches the MaxLoginAttempts limit 2 times
+  # within 10 minutes, automatically add a ban for that client that
+  # will expire after one hour.
+  BanOnEvent			MaxLoginAttempts 2/00:10:00 01:00:00
+
+  # Inform the user that it's not worth persisting
+  BanMessage			"Host %a has been banned"
+
+  # Allow the FTP admin to manually add/remove bans
+  BanControlsACLs		all allow user ftpadm
+</IfDefine>
+
+# Set networking-specific "Quality of Service" (QoS) bits on the packets used
+# by the server (contrib/mod_qos.html)
+<IfDefine QOS>
+  LoadModule			mod_qos.c
+  # RFC791 TOS parameter compatibility
+  QoSOptions			dataqos throughput ctrlqos lowdelay
+  # For a DSCP environment (may require tweaking)
+  #QoSOptions			dataqos CS2 ctrlqos AF41
+</IfDefine>
+
+# Global Config - config common to Server Config and all virtual hosts
+# See: http://www.proftpd.org/docs/howto/Vhost.html
+<Global>
+
+  # Umask 022 is a good standard umask to prevent new dirs and files
+  # from being group and world writable
+  Umask				077
+
+  # Allow users to overwrite files and change permissions
+  AllowOverwrite		yes
+  <Limit ALL SITE_CHMOD>
+    AllowAll
+  </Limit>
+
+# CH-Root all users
+  DefaultRoot ~
+# Reject rootlogin (just for security)
+  RootLogin off
+# Noo need to require valid shell, because user is virtual
+  RequireValidShell off
+</Global>
+
+# A basic anonymous configuration, with an upload directory
+# Enable this with PROFTPD_OPTIONS=-DANONYMOUS_FTP in /etc/sysconfig/proftpd
+<IfDefine ANONYMOUS_FTP>
+  #<Anonymous ~ftp>
+    #User			ftp
+    #Group			ftp
+    #AccessGrantMsg		"Anonymous login ok, restrictions apply."
+
+    ## We want clients to be able to login with "anonymous" as well as "ftp"
+    #UserAlias			anonymous ftp
+
+    ## Limit the maximum number of anonymous logins
+    #MaxClients			10 "Sorry, max %m users -- try again later"
+
+    ## Put the user into /pub right after login
+    ##DefaultChdir		/pub
+
+    ## We want 'welcome.msg' displayed at login, '.message' displayed in
+    ## each newly chdired directory and tell users to read README* files. 
+    #DisplayLogin		/welcome.msg
+    #DisplayChdir		.message
+    #DisplayReadme		README*
+
+    ## Cosmetic option to make all files appear to be owned by user "ftp"
+    #DirFakeUser			on ftp
+    #DirFakeGroup		on ftp
+
+    ## Limit WRITE everywhere in the anonymous chroot
+    #<Limit WRITE SITE_CHMOD>
+      #DenyAll
+    #</Limit>
+
+    ## An upload directory that allows storing files but not retrieving
+    ## or creating directories.
+    #<Directory uploads/*>
+      #AllowOverwrite		no
+      #<Limit READ>
+        #DenyAll
+      #</Limit>
+
+      #<Limit STOR>
+        #AllowAll
+      #</Limit>
+    #</Directory>
+
+    ## Don't write anonymous accesses to the system wtmp file (good idea!)
+    #WtmpLog			off
+
+    ## Logging for the anonymous transfers
+    #ExtendedLog			/var/log/proftpd/access.log WRITE,READ default
+    #ExtendedLog			/var/log/proftpd/auth.log AUTH auth
+
+  #</Anonymous>
+</IfDefine>
+
+<IfModule mod_sql_mysql.c>
+	SQLLogFile			/var/log/proftpd/sql.log
+	SQLAuthTypes 			Crypt
+	SQLAuthenticate			users* groups*
+	SQLConnectInfo			<SQL_DB>@<SQL_HOST> <SQL_UNPRIVILEGED_USER> <SQL_UNPRIVILEGED_PASSWORD>
+	SQLUserInfo			ftp_users username password uid gid homedir shell
+	SQLGroupInfo			ftp_groups groupname gid members
+	SQLUserWhereClause		"login_enabled = 'y'"
+
+	SQLLog				PASS login
+	#SQLNamedQuery			login UPDATE "last_login=now(), login_count=login_count+1 WHERE username='%u'" ftp_users
+
+	SQLLog				RETR download
+	#SQLNamedQuery			download UPDATE "down_count=down_count+1, down_bytes=down_bytes+%b WHERE username='%u'" ftp_users
+
+	SQLLog				STOR upload
+	#SQLNamedQuery			upload UPDATE "up_count=up_count+1, up_bytes=up_bytes+%b WHERE username='%u'" ftp_users
+	#QuotaEngine			on
+	#QuotaShowQuotas		on
+	#QuotaDisplayUnits		Mb
+	#QuotaLock			/var/lock/ftpd.quotatab.lock
+	#QuotaLimitTable 		sql:/get-quota-limit
+	#QuotaTallyTable 		sql:/get-quota-tally/update-quota-tally/insert-quota-tally
+	#SQLNamedQuery 			get-quota-limit SELECT "ftp_users.username AS name, ftp_quotalimits.quota_type, ftp_quotalimits.per_session, ftp_quotalimits.limit_type, panel_customers.diskspace*1024 AS bytes_in_avail, ftp_quotalimits.bytes_out_avail, ftp_quotalimits.bytes_xfer_avail, ftp_quotalimits.files_in_avail, ftp_quotalimits.files_out_avail, ftp_quotalimits.files_xfer_avail FROM ftp_users, ftp_quotalimits, panel_customers WHERE ftp_users.username = '%{0}' AND panel_customers.loginname = SUBSTRING_INDEX('%{0}', 'ftp', 1) AND quota_type ='%{1}'"
+	#SQLNamedQuery 			get-quota-tally SELECT "name, quota_type, bytes_in_used,bytes_out_used, bytes_xfer_used, files_in_used, files_out_used,files_xfer_used FROM ftp_quotatallies WHERE name = '%{0}' AND quota_type = '%{1}'"
+	#SQLNamedQuery			update-quota-tally UPDATE "bytes_in_used = bytes_in_used + %{0}, bytes_out_used = bytes_out_used + %{1}, bytes_xfer_used = bytes_xfer_used + %{2}, files_in_used = files_in_used + %{3}, files_out_used= files_out_used + %{4}, files_xfer_used = files_xfer_used + %{5} WHERE name= '%{6}' AND quota_type = '%{7}'" ftp_quotatallies
+	#SQLNamedQuery 			insert-quota-tally INSERT "%{0}, %{1}, %{2}, %{3}, %{4},%{5}, %{6}, %{7}" ftp_quotatallies
+</IfModule>
+]]>
+						</content>
+					</file>
+					<command><![CDATA[systemctl enable proftpd.service]]></command>
+					<command><![CDATA[systemctl reload-or-restart proftpd.service]]></command>
+				</daemon>
+			</service>
+			<!-- System tools/services -->
+			<service type="system" title="{{lng.admin.configfiles.etc}}">
+				<!-- Cronjob -->
+				<daemon name="cron" title="Cronjob for froxlor"
+					mandatory="true">
+					<command><![CDATA[/usr/bin/php <BASE_PATH>scripts/froxlor_master_cronjob.php --run-task 99]]></command>
+					<command><![CDATA[{{settings.system.crondreload}}]]></command>
+				</daemon>
+				<!-- AWstats -->
+				<daemon name="awstats"
+					title="Awstats (webalizer alternative)">
+					<command><![CDATA[sed -i.bak 's/^DirData/# DirData/' {{settings.system.awstats_conf}}/awstats.model.conf]]></command>
+					<command><![CDATA[sed -i.bak 's|^\\(DirIcons=\\).*$|\\1\\"/awstats-icon\\"|' {{settings.system.awstats_conf}}/awstats.model.conf]]></command>
+					<command><![CDATA[rm /etc/cron.d/awstats]]></command>
+				</daemon>
+				<!-- libnss-mysql -->
+				<daemon name="libnss"
+					title="libnss-mysql (required for FCGID/php-fpm/mpm-itk)">
+					<install><![CDATA[yum --enablerepo=extras install epel-release]]></install>
+					<install><![CDATA[yum install libnss-mysql nscd]]></install>
+					<file name="/etc/libnss-mysql.cfg" chown="root:root"
+						chmod="0600" backup="true">
+						<content><![CDATA[
+getpwnam    SELECT username,'x',uid,gid,'Froxlor Customer',homedir,shell \
+            FROM ftp_users \
+            WHERE username='%1$s' \
+            AND login_enabled = 'Y' \
+            ORDER BY LENGTH(username) \
+            LIMIT 1
+getpwuid    SELECT username,'x',uid,gid,'Froxlor Customer',homedir,shell \
+            FROM ftp_users \
+            WHERE uid='%1$u' \
+            AND login_enabled = 'Y' \
+            ORDER BY LENGTH(username) \
+            LIMIT 1
+getspnam    SELECT username,password,FLOOR(UNIX_TIMESTAMP()/86400-1),'1','99999','7','-1','-1','0' \
+            FROM ftp_users \
+            WHERE username='%1$s' \
+            AND login_enabled = 'Y' \
+            ORDER BY LENGTH(username) \
+            LIMIT 1
+getpwent    SELECT username,'x',uid,gid,'Froxlor Customer',homedir,shell \
+            FROM ftp_users
+getspent    SELECT username,password,FLOOR(UNIX_TIMESTAMP()/86400-1),'1','99999','7','-1','-1','0' \
+            FROM ftp_users
+getgrnam    SELECT groupname,'x',gid \
+            FROM ftp_groups \
+            WHERE groupname='%1$s' \
+            LIMIT 1
+getgrgid    SELECT groupname,'x',gid \
+            FROM ftp_groups \
+            WHERE gid='%1$u' \
+            LIMIT 1
+getgrent    SELECT groupname,'x',gid \
+            FROM ftp_groups
+memsbygid   SELECT members \
+            FROM ftp_groups \
+            WHERE gid='%1$u'
+gidsbymem   SELECT CONCAT_WS(',', gid) as gid \
+            FROM ftp_groups \
+            WHERE FIND_IN_SET('%1$s', members)
+
+host		<SQL_HOST>
+database	<SQL_DB>
+username	<SQL_UNPRIVILEGED_USER>
+password	<SQL_UNPRIVILEGED_PASSWORD>
+#socket		/var/lib/mysql/mysql.sock
+#port        3306
+]]>
+						</content>
+					</file>
+					<commands>
+						<!-- if a socket is set for the db-server use it -->
+						<visibility mode="notempty">{{sql.socket}}</visibility>
+						<command><![CDATA[sed -i.bak 's/^#socket/socket/' /etc/libnss-mysql.cfg]]></command>
+						<command><![CDATA[sed -i.bak 's|^\\(socket\\).*$|\\1\\"{{sql.socket}}\\"|' /etc/libnss-mysql.cfg]]></command>
+					</commands>
+					<file name="/etc/libnss-mysql-root.cfg" chown="root:root"
+						chmod="0600" backup="true">
+						<content><![CDATA[
+username	<SQL_UNPRIVILEGED_USER>
+password	<SQL_UNPRIVILEGED_PASSWORD>
+]]>
+						</content>
+					</file>
+					<file name="/etc/nsswitch.conf" backup="true">
+						<content><![CDATA[
+# Make sure that `passwd`, `group` and `shadow` have mysql in their lines 
+# You should place mysql at the end, so that it is queried after the other mechanisams
+#
+passwd:         files sss mysql
+group:          files sss mysql
+shadow:         files sss mysql
+
+hosts:       files dns
+
+bootparams:  nisplus [NOTFOUND=return] files
+
+ethers:      files
+netmasks:    files
+networks:	 files
+protocols:   files
+rpc:     files
+services:     files sss
+
+netgroup:	files sss
+
+publickey: nisplus
+
+automount:	files
+aliases:	files nisplus
+]]>
+						</content>
+					</file>
+					<command><![CDATA[systemctl reload-or-restart nscd.service]]></command>
+					<!-- clear group chache -->
+					<command><![CDATA[nscd --invalidate=group]]></command>
+				</daemon>
+				<!-- Logrotate -->
+				<daemon name="logrotate" title="Logrotate">
+					<install><![CDATA[yum install logrotate]]></install>
+					<file name="/etc/logrotate.d/froxlor" chown="root:root"
+						chmod="0644">
+						<content><![CDATA[
+#
+# Froxlor logrotate snipet
+#
+<CUSTOMER_LOGS>*.log {
+  missingok
+  daily
+  rotate 7
+  compress
+  delaycompress
+  notifempty
+  create
+  sharedscripts
+  postrotate
+  <WEBSERVER_RELOAD_CMD> > /dev/null 2>&1 || true
+  endscript
+}
+]]>
+						</content>
+					</file>
+				</daemon>
+			</service>
+		</services>
+	</distribution>
+</froxlor>
