@@ -511,7 +511,8 @@ class FroxlorInstall
 				$this->_updateSetting($upd_stmt, $property->value[0], $property->group[0], $property->name[0]);
 			}
 		} else {
-			exit('Failed to open distribution XML file.');
+			$content .= $this->_status_message('red', 'Failed setting distribution defaults.');
+			return $content;
 		}
 
 		$this->_updateSetting($upd_stmt, $this->_data['activate_newsfeed'], 'admin', 'show_news_feed');
