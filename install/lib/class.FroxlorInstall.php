@@ -857,14 +857,26 @@ class FroxlorInstall
 		} else {
 			$diststyle = '';
 		}
-		$formdata .= $this->_GETsectionItemCheckbox('distribution', 'jessie', ($this->_data['distribution'] == 'jessie'), $diststyle);
-		$formdata .= $this->_getSectionItemCheckbox('distribution', 'stretch', ($this->_data['distribution'] == 'stretch'), $diststyle);
-		$formdata .= $this->_getSectionItemCheckbox('distribution', 'buster', ($this->_data['distribution'] == 'buster'), $diststyle);
-		$formdata .= $this->_getSectionItemCheckbox('distribution', 'xenial', ($this->_data['distribution'] == 'xenial'), $diststyle);
-		$formdata .= $this->_getSectionItemCheckbox('distribution', 'bionic', ($this->_data['distribution'] == 'bionic'), $diststyle);
-		$formdata .= $this->_getSectionItemCheckbox('distribution', 'focal', ($this->_data['distribution'] == 'focal'), $diststyle);
-		$formdata .= $this->_getSectionItemCheckbox('distribution', 'rhel7', ($this->_data['distribution'] == 'rhel7'), $diststyle);
-		$formdata .= $this->_getSectionItemCheckbox('distribution', 'rhel8', ($this->_data['distribution'] == 'rhel8'), $diststyle);
+
+		// show list of available distro's
+		$distros = glob(\Froxlor\FileDir::makeCorrectDir(\Froxlor\Froxlor::getInstallDir() . '/lib/configfiles/') . '*.xml');
+		foreach ($distros as $_distribution) {
+			$dist = new \Froxlor\Config\ConfigParser($_distribution);
+			$dist_display = $dist->distributionName." ".$dist->distributionCodename." (" . $dist->distributionVersion . ")";
+			$distributions_select_data[$dist_display] .= str_replace(".xml", "", strtolower(basename($_distribution)));
+		}
+
+		// sort by distribution name
+		ksort($distributions_select_data);
+
+		foreach ($distributions_select_data as $dist_display => $dist_index) {
+			// create select-box-option
+			$distributions_select .= \Froxlor\UI\HTML::makeoption($dist_display, $dist_index, $this->_data['distribution']);
+			//$this->_data['distribution']
+		}
+
+		$formdata .= $this->_getSectionItemSelectbox('distribution', $distributions_select, $diststyle);
+
 		// servername
 		if (! empty($_POST['installstep']) && $this->_data['servername'] == '') {
 			$style = 'color:red;';
@@ -960,6 +972,25 @@ class FroxlorInstall
 		}
 		$sectionitem = "";
 		eval("\$sectionitem .= \"" . $this->_getTemplate("dataitemchk") . "\";");
+		return $sectionitem;
+	}
+
+	/**
+	 * generate form selectbox
+	 *
+	 * @param string $fieldname
+	 * @param boolean $options
+	 * @param string $style
+	 *
+	 * @return string
+	 */
+	private function _getSectionItemSelectbox($fieldname = null, $options = null, $style = "")
+	{
+		$groupname = $this->_lng['install'][$groupname];
+		$fieldlabel = $this->_lng['install'][$fieldname];
+
+		$sectionitem = "";
+		eval("\$sectionitem .= \"" . $this->_getTemplate("dataitemselect") . "\";");
 		return $sectionitem;
 	}
 
@@ -1309,34 +1340,16 @@ class FroxlorInstall
 		if (! empty($_POST['distribution'])) {
 			$this->_data['distribution'] = $_POST['distribution'];
 		} else { 
-			$os_version = parse_ini_file('/etc/os-release', false);
-			if ($os_version['ID'] == 'debian') {
+			$os_dist = parse_ini_file('/etc/os-release', false);
+			$os_version = explode('.',$os_version['VERSION_ID'])[0];
 
-			} elseif ($os_version['ID'] == 'debian') {
-                                if(explode('.',$os_version['VERSION_ID'])[0] == '8') {
-                                        $this->_data['distribution'] = 'jessie';
-                                } elseif(explode('.',$os_version['VERSION_ID'])[0] == '9') {
-                                        $this->_data['distribution'] = 'stretch';
-                                } elseif(explode('.',$os_version['VERSION_ID'])[0] == '10') {
-                                        $this->_data['distribution'] = 'buster';
-                                }
-			} elseif ($os_version['ID'] == 'ubuntu') {
-                                if(explode('.',$os_version['VERSION_ID'])[0] == '16') {
-                                        $this->_data['distribution'] = 'xenial';
-                                } elseif(explode('.',$os_version['VERSION_ID'])[0] == '18') {
-                                        $this->_data['distribution'] = 'bionic';
-                                } elseif(explode('.',$os_version['VERSION_ID'])[0] == '20') {
-                                        $this->_data['distribution'] = 'focal';
-                                }
-			} elseif($os_version['ID'] == 'rhel' || $os_version['ID'] == 'centos' || $os_version['ID'] == 'fedora') {
-				if(explode('.',$os_version['VERSION_ID'])[0] == '7') {
-					$this->_data['distribution'] = 'rhel7';
-				} elseif(explode('.',$os_version['VERSION_ID'])[0] == '8') {
-					$this->_data['distribution'] = 'rhel8';
+			$distros = glob(\Froxlor\FileDir::makeCorrectDir(\Froxlor\Froxlor::getInstallDir() . '/lib/configfiles/') . '*.xml');
+			foreach ($distros as $_distribution) {
+				$dist = new \Froxlor\Config\ConfigParser($_distribution);
+				$ver = explode('.', $dist->distributionVersion)[0];
+				if (strtolower($os_dist['ID']) == strtolower($dist->distributionName) && $os_version = $ver) {	// && && $os_version == explode('.', $dist->distributionVersion)[0])
+					$this->_data['distribution'] = str_replace(".xml", "", strtolower(basename($_distribution)));
 				}
-			} else {
-				// we don't need to bail out, since unknown does not affect any critical installation routines
-				$this->_data['distribution'] = 'unknown';
 			}
 		}
 	}
