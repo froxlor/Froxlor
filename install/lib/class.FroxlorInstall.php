@@ -505,6 +505,17 @@ class FroxlorInstall
 			$this->_updateSetting($upd_stmt, 'error', 'system', 'errorlog_level');
 		}
 
+		$distros = glob(\Froxlor\FileDir::makeCorrectDir(\Froxlor\Froxlor::getInstallDir() . '/lib/configfiles/') . '*.xml');
+		foreach ($distros as $_distribution) {
+			if($this->_data['distribution'] == str_replace(".xml", "", strtolower(basename($_distribution)))) {
+				$dist = new \Froxlor\Config\ConfigParser($_distribution);
+				$defaults = $dist->getDefaults();
+				foreach ($defaults->property as $property) {
+					$this->_updateSetting($upd_stmt, $property->value, $property->settinggroup, $property->varname);
+				}
+			}
+		}
+
 		if (file_exists(dirname(__DIR__).'/../lib/configfiles/'.$this->_data['distribution'].'.xml')) {
 			$xml = simplexml_load_file(dirname(__DIR__).'/../lib/configfiles/'.$this->_data['distribution'].'.xml');
 			foreach($xml->distribution->defaults->property as $property) {
