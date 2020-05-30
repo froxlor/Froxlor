@@ -516,16 +516,6 @@ class FroxlorInstall
 			}
 		}
 
-		if (file_exists(dirname(__DIR__).'/../lib/configfiles/'.$this->_data['distribution'].'.xml')) {
-			$xml = simplexml_load_file(dirname(__DIR__).'/../lib/configfiles/'.$this->_data['distribution'].'.xml');
-			foreach($xml->distribution->defaults->property as $property) {
-				$this->_updateSetting($upd_stmt, $property->value[0], $property->group[0], $property->name[0]);
-			}
-		} else {
-			$content .= $this->_status_message('red', 'Failed setting distribution defaults.');
-			return $content;
-		}
-
 		$this->_updateSetting($upd_stmt, $this->_data['activate_newsfeed'], 'admin', 'show_news_feed');
 		$this->_updateSetting($upd_stmt, dirname(dirname(dirname(__FILE__))), 'system', 'letsencryptchallengepath');
 
