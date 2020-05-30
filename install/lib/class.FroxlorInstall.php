@@ -1347,7 +1347,7 @@ class FroxlorInstall
 			foreach ($distros as $_distribution) {
 				$dist = new \Froxlor\Config\ConfigParser($_distribution);
 				$ver = explode('.', $dist->distributionVersion)[0];
-				if (strtolower($os_dist['ID']) == strtolower($dist->distributionName) && $os_version = $ver) {	// && && $os_version == explode('.', $dist->distributionVersion)[0])
+				if (strtolower($os_dist['ID']) == strtolower($dist->distributionName) && $os_version = $ver) {
 					$this->_data['distribution'] = str_replace(".xml", "", strtolower(basename($_distribution)));
 				}
 			}
