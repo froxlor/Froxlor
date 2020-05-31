@@ -64,6 +64,7 @@
 						</command>
 						<command><![CDATA[chown root:0 {{settings.system.apacheconf_diroptions}}]]></command>
 						<command><![CDATA[chmod 0600 {{settings.system.apacheconf_diroptions}}]]></command>
+            <command><![CDATA[mkdir -p {{settings.system.apacheconf_htpasswddir}}]]></command>
 						<command><![CDATA[mkdir -p {{settings.system.documentroot_prefix}}]]></command>
 						<command><![CDATA[mkdir -p {{settings.system.logfiles_directory}}]]></command>
 						<command><![CDATA[mkdir -p {{settings.system.mod_fcgid_tmpdir}}]]></command>
