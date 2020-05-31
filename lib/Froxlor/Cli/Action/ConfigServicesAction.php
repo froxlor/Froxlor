@@ -84,10 +84,17 @@ class ConfigServicesAction extends \Froxlor\Cli\Action
 		// tmp array
 		$distributions_select_data = array();
 
+		//set default os.
+		$os_dist = array('ID' => 'buster');
+		$os_version = array('0' => '10');
+		$os_default = $os_dist['ID'];
+
 		//read os-release
-		$os_dist = parse_ini_file('/etc/os-release', false);
-		$os_version = explode('.',$os_dist['VERSION_ID'])[0];
-		$os_default = "";
+		if(file_exists('/etc/os-release')) {
+			$os_dist = parse_ini_file('/etc/os-release', false);
+			if(is_array($os_dist) && array_key_exists('ID', $os_dist) && array_key_exists('VERSION_ID', $os_dist))
+			$os_version = explode('.',$os_dist['VERSION_ID'])[0];
+		}
 
 		// read in all the distros
 		foreach ($distros as $_distribution) {
