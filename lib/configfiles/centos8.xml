@@ -64,6 +64,7 @@
 						</command>
 						<command><![CDATA[chown root:0 {{settings.system.apacheconf_diroptions}}]]></command>
 						<command><![CDATA[chmod 0600 {{settings.system.apacheconf_diroptions}}]]></command>
+            <command><![CDATA[mkdir -p {{settings.system.apacheconf_htpasswddir}}]]></command>
 						<command><![CDATA[mkdir -p {{settings.system.documentroot_prefix}}]]></command>
 						<command><![CDATA[mkdir -p {{settings.system.logfiles_directory}}]]></command>
 						<command><![CDATA[mkdir -p {{settings.system.mod_fcgid_tmpdir}}]]></command>
@@ -97,7 +98,7 @@ Alias "/.well-known/acme-challenge" "{{settings.system.letsencryptchallengepath}
 			<service type="dns" title="{{lng.admin.configfiles.dns}}">
 				<!--Bind9 -->
 				<daemon name="bind" title="Bind9 nameserver" default="true">
-					<install><![CDATA[yum install bind]]></install>
+					<install><![CDATA[dnf install bind]]></install>
 					<command><![CDATA[ln -sv /etc/named /etc/bind]]></command>
 					<command><![CDATA[echo "include \"/etc/named.conf.local\";" >> /etc/named.conf]]></command>
 					<command><![CDATA[echo "include \"{{settings.system.bindconf_directory}}froxlor_bind.conf\";" >> /etc/named.conf.local]]></command>
@@ -124,7 +125,7 @@ Alias "/.well-known/acme-challenge" "{{settings.system.letsencryptchallengepath}
 						</command>
 					</commands>
 					<installs index="1">
-						<install><![CDATA[yum install postfix]]></install>
+						<install><![CDATA[dnf install postfix]]></install>
 					</installs>
 					<commands index="2">
 						<command><![CDATA[mkdir -p /var/spool/postfix/etc/pam.d]]></command>
@@ -326,7 +327,7 @@ dovecot			unix	-	n	n	-	-	pipe flags=DRhu user=vmail:vmail argv=/usr/libexec/dove
 				<!-- Dovecot -->
 				<daemon name="dovecot" version="2.2" title="Dovecot"
 					default="true">
-					<install><![CDATA[yum install dovecot dovecot-mysql dovecot-pigeonhole]]></install>
+					<install><![CDATA[dnf install dovecot dovecot-mysql dovecot-pigeonhole]]></install>
 					<file name="/etc/dovecot/dovecot.conf" chown="root:root"
 						chmod="0644" backup="true">
 						<content><![CDATA[
@@ -1871,7 +1872,8 @@ iterate_query = SELECT username AS user FROM mail_users
 				<!-- Proftpd -->
 				<daemon name="proftpd" version="1.3" title="ProFTPd"
 					default="true">
-					<install><![CDATA[yum install proftpd proftpd-mysql]]></install>
+          <install><![CDATA[dnf --enablerepo=extras install epel-release]]></install>
+					<install><![CDATA[dnf install proftpd proftpd-mysql]]></install>
 					<file name="/etc/proftpd.conf" chown="root:0"
 						chmod="0600" backup="true">
 						<content><![CDATA[
@@ -2341,15 +2343,17 @@ ControlsLog			/var/log/proftpd/controls.log
 				<!-- AWstats -->
 				<daemon name="awstats"
 					title="Awstats (webalizer alternative)">
+					<install><![CDATA[dnf config-manager --set-enabled PowerTools]]></install>
+          <install><![CDATA[dnf install awstats]]></install>
 					<command><![CDATA[sed -i.bak 's/^DirData/# DirData/' {{settings.system.awstats_conf}}/awstats.model.conf]]></command>
 					<command><![CDATA[sed -i.bak 's|^\\(DirIcons=\\).*$|\\1\\"/awstats-icon\\"|' {{settings.system.awstats_conf}}/awstats.model.conf]]></command>
-					<command><![CDATA[rm /etc/cron.d/awstats]]></command>
+					<command><![CDATA[rm /etc/cron.hourly/awstats]]></command>
 				</daemon>
 				<!-- libnss-mysql -->
 				<daemon name="libnss"
 					title="libnss-mysql (required for FCGID/php-fpm/mpm-itk)">
-					<install><![CDATA[yum --enablerepo=extras install epel-release]]></install>
-					<install><![CDATA[yum install libnss-mysql nscd]]></install>
+					<install><![CDATA[dnf --enablerepo=extras install epel-release]]></install>
+					<install><![CDATA[dnf install libnss-mysql nscd]]></install>
 					<file name="/etc/libnss-mysql.cfg" chown="root:root"
 						chmod="0600" backup="true">
 						<content><![CDATA[
@@ -2450,7 +2454,7 @@ aliases:	files nisplus
 				</daemon>
 				<!-- Logrotate -->
 				<daemon name="logrotate" title="Logrotate">
-					<install><![CDATA[yum install logrotate]]></install>
+					<install><![CDATA[dnf install logrotate]]></install>
 					<file name="/etc/logrotate.d/froxlor" chown="root:root"
 						chmod="0644">
 						<content><![CDATA[
