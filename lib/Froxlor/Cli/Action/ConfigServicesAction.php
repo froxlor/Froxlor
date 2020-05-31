@@ -92,8 +92,9 @@ class ConfigServicesAction extends \Froxlor\Cli\Action
 		//read os-release
 		if(file_exists('/etc/os-release')) {
 			$os_dist = parse_ini_file('/etc/os-release', false);
-			if(is_array($os_dist) && array_key_exists('ID', $os_dist) && array_key_exists('VERSION_ID', $os_dist))
-			$os_version = explode('.',$os_dist['VERSION_ID'])[0];
+			if(is_array($os_dist) && array_key_exists('ID', $os_dist) && array_key_exists('VERSION_ID', $os_dist)) {
+				$os_version = explode('.',$os_dist['VERSION_ID'])[0];
+			}
 		}
 
 		// read in all the distros
