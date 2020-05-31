@@ -1872,6 +1872,7 @@ iterate_query = SELECT username AS user FROM mail_users
 				<!-- Proftpd -->
 				<daemon name="proftpd" version="1.3" title="ProFTPd"
 					default="true">
+          <install><![CDATA[dnf --enablerepo=extras install epel-release]]></install>
 					<install><![CDATA[dnf install proftpd proftpd-mysql]]></install>
 					<file name="/etc/proftpd.conf" chown="root:0"
 						chmod="0600" backup="true">
