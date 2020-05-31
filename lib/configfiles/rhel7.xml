@@ -1,7 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <froxlor>
-	<distribution name="RHEL" version="7"
+	<distribution name="CentOS" version="7"
 		defaulteditor="/usr/bin/nano">
+      <defaults>
+        <property>
+          <varname>apacheconf_vhost</varname>
+          <settinggroup>system</settinggroup>
+          <value>/etc/httpd/conf.d/</value>
+        </property>
+        <property>
+          <varname>apacheconf_diroptions</varname>
+          <settinggroup>system</settinggroup>
+          <value>/etc/httpd/conf.d/</value>
+        </property>
+        <property>
+          <varname>apacheconf_htpasswddir</varname>
+          <settinggroup>system</settinggroup>
+          <value>/etc/httpd/froxlor-htpasswd/</value>
+        </property>
+        <property>
+          <varname>apachereload_command</varname>
+          <settinggroup>system</settinggroup>
+          <value>systemctl reload-or-restart httpd.service</value>
+        </property>
+        <property>
+          <varname>bindreload_command</varname>
+          <settinggroup>system</settinggroup>
+          <value>systemctl reload-or-restart named.service</value>
+        </property>
+        <property>
+          <varname>crondreload</varname>
+          <settinggroup>system</settinggroup>
+          <value>systemctl reload-or-restart crond.service</value>
+        </property>
+      </defaults>
 		<services>
 			<!-- HTTP -->
 			<service type="http" title="{{lng.admin.configfiles.http}}">
