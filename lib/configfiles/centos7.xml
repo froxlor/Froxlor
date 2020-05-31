@@ -1871,6 +1871,7 @@ iterate_query = SELECT username AS user FROM mail_users
 				<!-- Proftpd -->
 				<daemon name="proftpd" version="1.3" title="ProFTPd"
 					default="true">
+          <install><![CDATA[yum --enablerepo=extras install epel-release]]></install>
 					<install><![CDATA[yum install proftpd proftpd-mysql]]></install>
 					<file name="/etc/proftpd.conf" chown="root:0"
 						chmod="0600" backup="true">
@@ -2341,9 +2342,10 @@ ControlsLog			/var/log/proftpd/controls.log
 				<!-- AWstats -->
 				<daemon name="awstats"
 					title="Awstats (webalizer alternative)">
+          <install><![CDATA[yum install awstats]]></install>
 					<command><![CDATA[sed -i.bak 's/^DirData/# DirData/' {{settings.system.awstats_conf}}/awstats.model.conf]]></command>
 					<command><![CDATA[sed -i.bak 's|^\\(DirIcons=\\).*$|\\1\\"/awstats-icon\\"|' {{settings.system.awstats_conf}}/awstats.model.conf]]></command>
-					<command><![CDATA[rm /etc/cron.d/awstats]]></command>
+					<command><![CDATA[rm /etc/cron.hourly/awstats]]></command>
 				</daemon>
 				<!-- libnss-mysql -->
 				<daemon name="libnss"
