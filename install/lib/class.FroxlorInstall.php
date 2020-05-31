@@ -1340,9 +1340,18 @@ class FroxlorInstall
 		// post
 		if (! empty($_POST['distribution'])) {
 			$this->_data['distribution'] = $_POST['distribution'];
-		} else { 
-			$os_dist = parse_ini_file('/etc/os-release', false);
-			$os_version = explode('.',$os_dist['VERSION_ID'])[0];
+		} else {
+			//set default os.
+			$os_dist = array('ID' => 'buster');
+			$os_version = array('0' => '10');
+
+			//read os-release
+			if(file_exists('/etc/os-release')) {
+				$os_dist = parse_ini_file('/etc/os-release', false);
+				if(is_array($os_dist) && array_key_exists('ID', $os_dist) && array_key_exists('VERSION_ID', $os_dist)) {
+					$os_version = explode('.',$os_dist['VERSION_ID'])[0];
+				}
+			}
 
 			$distros = glob(\Froxlor\FileDir::makeCorrectDir(\Froxlor\Froxlor::getInstallDir() . '/lib/configfiles/') . '*.xml');
 			foreach ($distros as $_distribution) {

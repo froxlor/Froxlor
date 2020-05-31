@@ -83,6 +83,20 @@ class ConfigServicesAction extends \Froxlor\Cli\Action
 		$distros = glob($config_dir . '*.xml');
 		// tmp array
 		$distributions_select_data = array();
+
+		//set default os.
+		$os_dist = array('ID' => 'buster');
+		$os_version = array('0' => '10');
+		$os_default = $os_dist['ID'];
+
+		//read os-release
+		if(file_exists('/etc/os-release')) {
+			$os_dist = parse_ini_file('/etc/os-release', false);
+			if(is_array($os_dist) && array_key_exists('ID', $os_dist) && array_key_exists('VERSION_ID', $os_dist)) {
+				$os_version = explode('.',$os_dist['VERSION_ID'])[0];
+			}
+		}
+
 		// read in all the distros
 		foreach ($distros as $_distribution) {
 			// get configparser object
@@ -91,6 +105,12 @@ class ConfigServicesAction extends \Froxlor\Cli\Action
 			$dist_display = $this->getCompleteDistroName($dist);
 			// store in tmp array
 			$distributions_select_data[$dist_display] = str_replace(".xml", "", strtolower(basename($_distribution)));
+			
+			//guess if this is the current distro.
+			$ver = explode('.', $dist->distributionVersion)[0];
+			if (strtolower($os_dist['ID']) == strtolower($dist->distributionName) && $os_version == $ver) {
+				$os_default = str_replace(".xml", "", strtolower(basename($_distribution)));
+			}
 		}
 
 		// sort by distribution name
@@ -108,7 +128,7 @@ class ConfigServicesAction extends \Froxlor\Cli\Action
 		echo PHP_EOL;
 
 		while (! in_array($_daemons_config['distro'], $distributions_select_data)) {
-			$_daemons_config['distro'] = ConfigServicesCmd::getInput("choose distribution", "buster");
+			$_daemons_config['distro'] = ConfigServicesCmd::getInput("choose distribution", $os_default);
 		}
 
 		// go through all services and let user check whether to include it or not
