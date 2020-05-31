@@ -98,6 +98,7 @@ class ConfigServicesAction extends \Froxlor\Cli\Action
 			// store in tmp array
 			$distributions_select_data[$dist_display] = str_replace(".xml", "", strtolower(basename($_distribution)));
 			
+			//guess if this is the current distro.
 			$ver = explode('.', $dist->distributionVersion)[0];
 			if (strtolower($os_dist['ID']) == strtolower($dist->distributionName) && $os_version == $ver) {
 				$os_default = str_replace(".xml", "", strtolower(basename($_distribution)));
