@@ -492,10 +492,6 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 	private static function checkFsFilesAreNewer($domain, $cert_date = 0)
 	{
 		$certificate_folder = self::getWorkingDirFromEnv($domain);
-		if (Settings::Get('system.leecc') > 0) {
-			$certificate_folder .= "_ecc";
-		}
-		$certificate_folder = \Froxlor\FileDir::makeCorrectDir($certificate_folder);
 		$ssl_file = \Froxlor\FileDir::makeCorrectFile($certificate_folder . '/' . $domain . '.cer');
 
 		if (is_dir($certificate_folder) && file_exists($ssl_file) && is_readable($ssl_file)) {
@@ -509,6 +505,9 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 
 	public static function getWorkingDirFromEnv($domain = "")
 	{
+		if (Settings::Get('system.leecc') > 0) {
+			$domain .= "_ecc";
+		}
 		$env_file = FileDir::makeCorrectFile(dirname(self::$acmesh) . '/acme.sh.env');
 		if (file_exists($env_file)) {
 			$output = [];
