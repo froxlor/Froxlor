@@ -2343,6 +2343,8 @@ ControlsLog			/var/log/proftpd/controls.log
 				<!-- AWstats -->
 				<daemon name="awstats"
 					title="Awstats (webalizer alternative)">
+					<install><![CDATA[dnf config-manager --set-enabled PowerTools]]></install>
+          <install><![CDATA[dnf -y install awstats]]></install>
 					<command><![CDATA[sed -i.bak 's/^DirData/# DirData/' {{settings.system.awstats_conf}}/awstats.model.conf]]></command>
 					<command><![CDATA[sed -i.bak 's|^\\(DirIcons=\\).*$|\\1\\"/awstats-icon\\"|' {{settings.system.awstats_conf}}/awstats.model.conf]]></command>
 					<command><![CDATA[rm /etc/cron.d/awstats]]></command>
