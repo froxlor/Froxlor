@@ -503,9 +503,9 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 		return false;
 	}
 
-	public static function getWorkingDirFromEnv($domain = "")
+	public static function getWorkingDirFromEnv($domain = "", $forced_noecc = false)
 	{
-		if (Settings::Get('system.leecc') > 0) {
+		if (Settings::Get('system.leecc') > 0 && !$forced_noecc) {
 			$domain .= "_ecc";
 		}
 		$env_file = FileDir::makeCorrectFile(dirname(self::$acmesh) . '/acme.sh.env');
@@ -539,8 +539,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 		$certificate_folder = self::getWorkingDirFromEnv($domain);
 		$certificate_folder_noecc = null;
 		if (Settings::Get('system.leecc') > 0) {
-			$certificate_folder_noecc = \Froxlor\FileDir::makeCorrectDir($certificate_folder);
-			$certificate_folder .= "_ecc";
+			$certificate_folder_noecc = self::getWorkingDirFromEnv($domain, true);
 		}
 		$certificate_folder = \Froxlor\FileDir::makeCorrectDir($certificate_folder);
 
