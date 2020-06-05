@@ -339,7 +339,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 	 * update a given ftp-user by id or username
 	 *
 	 * @param int $id
-	 *        	optional, the customer-id
+	 *        	optional, the ftp-user-id
 	 * @param string $username
 	 *        	optional, the username
 	 * @param string $ftp_password
