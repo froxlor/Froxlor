@@ -183,7 +183,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 	 *        	optional, whether to show the content of custom_notes to the customer, default 0 (false)
 	 * @param string $new_loginname
 	 *        	optional, if empty generated automatically using customer-prefix and increasing number
-	 * @param string $password
+	 * @param string $new_customer_password
 	 *        	optional, if empty generated automatically and send to the customer's email if $sendpassword is 1
 	 * @param bool $sendpassword
 	 *        	optional, whether to send the password to the customer after creation, default 0 (false)
