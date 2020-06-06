@@ -505,15 +505,15 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 
 	public static function getWorkingDirFromEnv($domain = "", $forced_noecc = false)
 	{
-		if (Settings::Get('system.leecc') > 0 && !$forced_noecc) {
+		if (Settings::Get('system.leecc') > 0 && ! $forced_noecc) {
 			$domain .= "_ecc";
 		}
 		$env_file = FileDir::makeCorrectFile(dirname(self::$acmesh) . '/acme.sh.env');
 		if (file_exists($env_file)) {
 			$output = [];
 			$cut = <<<EOC
-			cut -d'"' -f2
-			EOC;
+cut -d'"' -f2
+EOC;
 			exec('grep "LE_WORKING_DIR" ' . escapeshellarg($env_file) . ' | ' . $cut, $output);
 			if (is_array($output) && ! empty($output) && isset($output[0]) && ! empty($output[0])) {
 				return FileDir::makeCorrectDir($output[0] . "/" . $domain);
