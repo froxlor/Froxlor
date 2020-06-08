@@ -60,7 +60,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 			while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 				$result[] = $row;
 			}
-			return $this->response(200, "successfull", array(
+			return $this->response(200, "successful", array(
 				'count' => count($result),
 				'list' => $result
 			));
@@ -90,7 +90,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 			}
 			$result = Database::pexecute_first($result_stmt, $params, true, true);
 			if ($result) {
-				return $this->response(200, "successfull", $result['num_customers']);
+				return $this->response(200, "successful", $result['num_customers']);
 			}
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
@@ -143,7 +143,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				$result['custom_notes'] = "";
 			}
 			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] get customer '" . $result['loginname'] . "'");
-			return $this->response(200, "successfull", $result);
+			return $this->response(200, "successful", $result);
 		}
 		$key = ($id > 0 ? "id #" . $id : "loginname '" . $loginname . "'");
 		throw new \Exception("Customer with " . $key . " could not be found", 404);
@@ -743,7 +743,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				$result = $this->apiCall('Customers.get', array(
 					'loginname' => $loginname
 				));
-				return $this->response(200, "successfull", $result);
+				return $this->response(200, "successful", $result);
 			}
 			throw new \Exception("No more resources available", 406);
 		}
@@ -1340,7 +1340,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 		$result = $this->apiCall('Customers.get', array(
 			'id' => $result['customerid']
 		));
-		return $this->response(200, "successfull", $result);
+		return $this->response(200, "successful", $result);
 	}
 
 	/**
@@ -1573,7 +1573,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 			\Froxlor\System\Cronjob::inserttask('10');
 
 			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_WARNING, "[API] deleted customer '" . $result['loginname'] . "'");
-			return $this->response(200, "successfull", $result);
+			return $this->response(200, "successful", $result);
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
 	}
@@ -1615,7 +1615,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 			$result['loginfail_count'] = 0;
 
 			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_WARNING, "[API] unlocked customer '" . $result['loginname'] . "'");
-			return $this->response(200, "successfull", $result);
+			return $this->response(200, "successful", $result);
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
 	}
@@ -1685,7 +1685,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 			$result = $this->apiCall('Customers.get', array(
 				'id' => $c_result['customerid']
 			));
-			return $this->response(200, "successfull", $result);
+			return $this->response(200, "successful", $result);
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
 	}

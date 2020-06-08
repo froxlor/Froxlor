@@ -51,7 +51,7 @@ class Cronjobs extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceE
 				'id' => $id
 			), true, true);
 			if ($result) {
-				return $this->response(200, "successfull", $result);
+				return $this->response(200, "successful", $result);
 			}
 			throw new \Exception("cronjob with id #" . $id . " could not be found", 404);
 		}
@@ -119,7 +119,7 @@ class Cronjobs extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceE
 			$result = $this->apiCall('Cronjobs.get', array(
 				'id' => $id
 			));
-			return $this->response(200, "successfull", $result);
+			return $this->response(200, "successful", $result);
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
 	}
@@ -152,7 +152,7 @@ class Cronjobs extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceE
 			while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 				$result[] = $row;
 			}
-			return $this->response(200, "successfull", array(
+			return $this->response(200, "successful", array(
 				'count' => count($result),
 				'list' => $result
 			));
@@ -175,7 +175,7 @@ class Cronjobs extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceE
 			");
 			$result = Database::pexecute_first($result_stmt, null, true, true);
 			if ($result) {
-				return $this->response(200, "successfull", $result['num_crons']);
+				return $this->response(200, "successful", $result['num_crons']);
 			}
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);

@@ -169,7 +169,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		$result = $this->apiCall('Mysqls.get', array(
 			'dbname' => $username
 		));
-		return $this->response(200, "successfull", $result);
+		return $this->response(200, "successful", $result);
 	}
 
 	/**
@@ -258,7 +258,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			Database::needRoot(false);
 			$result['size'] = $mbdata['MB'] ?? 0;
 			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] get database '" . $result['databasename'] . "'");
-			return $this->response(200, "successfull", $result);
+			return $this->response(200, "successful", $result);
 		}
 		$key = ($id > 0 ? "id #" . $id : "dbname '" . $dbname . "'");
 		throw new \Exception("MySQL database with " . $key . " could not be found", 404);
@@ -350,7 +350,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		$result = $this->apiCall('Mysqls.get', array(
 			'dbname' => $result['databasename']
 		));
-		return $this->response(200, "successfull", $result);
+		return $this->response(200, "successful", $result);
 	}
 
 	/**
@@ -421,7 +421,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 				Database::needRoot(false);
 			}
 		}
-		return $this->response(200, "successfull", array(
+		return $this->response(200, "successful", array(
 			'count' => count($result),
 			'list' => $result
 		));
@@ -448,7 +448,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		");
 		$result = Database::pexecute_first($result_stmt, null, true, true);
 		if ($result) {
-			return $this->response(200, "successfull", $result['num_dbs']);
+			return $this->response(200, "successful", $result['num_dbs']);
 		}
 	}
 
@@ -510,6 +510,6 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		Customers::decreaseUsage($customer['customerid'], 'mysqls_used', $resetaccnumber);
 
 		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_WARNING, "[API] deleted database '" . $result['databasename'] . "'");
-		return $this->response(200, "successfull", $result);
+		return $this->response(200, "successful", $result);
 	}
 }

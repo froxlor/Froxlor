@@ -51,7 +51,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 				$result[] = $row;
 			}
-			return $this->response(200, "successfull", array(
+			return $this->response(200, "successful", array(
 				'count' => count($result),
 				'list' => $result
 			));
@@ -75,7 +75,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			");
 			$result = Database::pexecute_first($result_stmt, null, true, true);
 			if ($result) {
-				return $this->response(200, "successfull", $result['num_admins']);
+				return $this->response(200, "successful", $result['num_admins']);
 			}
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
@@ -109,7 +109,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			$result = Database::pexecute_first($result_stmt, $params, true, true);
 			if ($result) {
 				$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] get admin '" . $result['loginname'] . "'");
-				return $this->response(200, "successfull", $result);
+				return $this->response(200, "successful", $result);
 			}
 			$key = ($id > 0 ? "id #" . $id : "loginname '" . $loginname . "'");
 			throw new \Exception("Admin with " . $key . " could not be found", 404);
@@ -364,7 +364,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 				$result = $this->apiCall('Admins.get', array(
 					'id' => $adminid
 				));
-				return $this->response(200, "successfull", $result);
+				return $this->response(200, "successful", $result);
 			}
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
@@ -677,7 +677,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 					$result = $this->apiCall('Admins.get', array(
 						'id' => $result['adminid']
 					));
-					return $this->response(200, "successfull", $result);
+					return $this->response(200, "successful", $result);
 				}
 			}
 		}
@@ -779,7 +779,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 
 			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_WARNING, "[API] deleted admin '" . $result['loginname'] . "'");
 			\Froxlor\User::updateCounters();
-			return $this->response(200, "successfull", $result);
+			return $this->response(200, "successful", $result);
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
 	}
@@ -821,7 +821,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			$result['loginfail_count'] = 0;
 
 			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_WARNING, "[API] unlocked admin '" . $result['loginname'] . "'");
-			return $this->response(200, "successfull", $result);
+			return $this->response(200, "successful", $result);
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
 	}
