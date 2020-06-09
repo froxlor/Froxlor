@@ -70,7 +70,7 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				$fpmdaemons[] = $row;
 			}
 
-			return $this->response(200, "successfull", array(
+			return $this->response(200, "successful", array(
 				'count' => count($fpmdaemons),
 				'list' => $fpmdaemons
 			));
@@ -93,7 +93,7 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			");
 			$result = Database::pexecute_first($result_stmt, null, true, true);
 			if ($result) {
-				return $this->response(200, "successfull", $result['num_fpms']);
+				return $this->response(200, "successful", $result['num_fpms']);
 			}
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
@@ -121,7 +121,7 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				'id' => $id
 			), true, true);
 			if ($result) {
-				return $this->response(200, "successfull", $result);
+				return $this->response(200, "successful", $result);
 			}
 			throw new \Exception("fpm-daemon with id #" . $id . " could not be found", 404);
 		}
@@ -234,7 +234,7 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			$result = $this->apiCall('FpmDaemons.get', array(
 				'id' => $id
 			));
-			return $this->response(200, "successfull", $result);
+			return $this->response(200, "successful", $result);
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
 	}
@@ -356,7 +356,7 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			$result = $this->apiCall('FpmDaemons.get', array(
 				'id' => $id
 			));
-			return $this->response(200, "successfull", $result);
+			return $this->response(200, "successful", $result);
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
 	}
@@ -402,7 +402,7 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 
 			\Froxlor\System\Cronjob::inserttask('1');
 			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] fpm-daemon setting '" . $result['description'] . "' has been deleted by '" . $this->getUserDetail('loginname') . "'");
-			return $this->response(200, "successfull", $result);
+			return $this->response(200, "successful", $result);
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
 	}

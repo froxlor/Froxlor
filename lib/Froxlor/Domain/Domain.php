@@ -329,9 +329,9 @@ class Domain
 	public static function doLetsEncryptCleanUp($domainname = null)
 	{
 		// @ see \Froxlor\Cron\Http\LetsEncrypt\AcmeSh.php
-		$acmesh = "/root/.acme.sh/acme.sh";
+		$acmesh = \Froxlor\Cron\Http\LetsEncrypt\AcmeSh::getAcmeSh();
 		if (file_exists($acmesh)) {
-			$certificate_folder = dirname($acmesh) . "/" . $domainname;
+			$certificate_folder = \Froxlor\Cron\Http\LetsEncrypt\AcmeSh::getWorkingDirFromEnv($domainname);
 			if (\Froxlor\Settings::Get('system.leecc') > 0) {
 				$certificate_folder .= "_ecc";
 			}

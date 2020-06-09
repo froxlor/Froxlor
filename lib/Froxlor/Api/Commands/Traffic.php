@@ -110,7 +110,7 @@ class Traffic extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 			$result[] = $row;
 		}
 		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] list traffic");
-		return $this->response(200, "successfull", array(
+		return $this->response(200, "successful", array(
 			'count' => count($result),
 			'list' => $result
 		));

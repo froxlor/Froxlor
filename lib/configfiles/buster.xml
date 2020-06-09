@@ -4860,7 +4860,7 @@ aliases:     files
 						</visibility>
 						<visibility mode="true">{{settings.phpfpm.enabled_ownvhost}}
 						</visibility>
-						<command><![CDATA[a2dismod php7.0]]></command>
+						<command><![CDATA[a2dismod php7.3]]></command>
 					</commands>
 					<commands index="5">
 						<visibility mode="equals" value="apache2">{{settings.system.webserver}}

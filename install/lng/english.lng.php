@@ -63,6 +63,7 @@ $lng['install']['admin_pass1'] = 'Administrator Password';
 $lng['install']['admin_pass2'] = 'Administrator-Password (confirm)';
 $lng['install']['activate_newsfeed'] = 'Enable the official newsfeed<br><small>(https://inside.froxlor.org/news/)</small>';
 $lng['install']['serversettings'] = 'Server settings';
+$lng['install']['distribution'] = 'Distribution';
 $lng['install']['servername'] = 'Server name (FQDN, no ip-address)';
 $lng['install']['serverip'] = 'Server IP';
 $lng['install']['webserver'] = 'Webserver';

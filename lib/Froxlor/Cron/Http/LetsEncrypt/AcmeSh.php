@@ -6,6 +6,7 @@ use Froxlor\Settings;
 use Froxlor\Database\Database;
 use Froxlor\PhpHelper;
 use Froxlor\Domain\Domain;
+use Froxlor\FileDir;
 
 /**
  * This file is part of the Froxlor project.
@@ -20,9 +21,9 @@ use Froxlor\Domain\Domain;
  * @author Froxlor team <team@froxlor.org> (2016-)
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package Cron
- *         
+ *
  * @since 0.9.35
- *       
+ *
  */
 class AcmeSh extends \Froxlor\Cron\FroxlorCron
 {
@@ -277,7 +278,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 				$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, "Validating DNS of " . $domain);
 				// ips accordint to NS
 				$domain_ips = PhpHelper::gethostbynamel6($domain);
-				if (count(array_intersect($our_ips, $domain_ips)) <= 0) {
+				if ($domain_ips == false || count(array_intersect($our_ips, $domain_ips)) <= 0) {
 					// no common ips...
 					$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_WARNING, "Skipping Let's Encrypt generation for " . $domain . " due to no system known IP address via DNS check");
 					unset($domains[$idx]);
@@ -328,7 +329,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 	private static function certToDb($certrow, &$cronlog, $acme_result)
 	{
 		$return = array();
-		self::readCertificateToVar($certrow['domain'], $return, $cronlog);
+		self::readCertificateToVar(strtolower($certrow['domain']), $return, $cronlog);
 
 		if (! empty($return['crt'])) {
 
@@ -437,9 +438,6 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 				AND dom.`iswildcarddomain` = 0
 		");
 		$renew_certs = $certificates_stmt->fetchAll(\PDO::FETCH_ASSOC);
-		if (self::renewFroxlorVhost()) {
-			// add froxlor to the list of renews
-		}
 		if ($renew_certs) {
 			return $renew_certs;
 		}
@@ -493,11 +491,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 
 	private static function checkFsFilesAreNewer($domain, $cert_date = 0)
 	{
-		$certificate_folder = dirname(self::$acmesh) . "/" . $domain;
-		if (Settings::Get('system.leecc') > 0) {
-			$certificate_folder .= "_ecc";
-		}
-		$certificate_folder = \Froxlor\FileDir::makeCorrectDir($certificate_folder);
+		$certificate_folder = self::getWorkingDirFromEnv($domain);
 		$ssl_file = \Froxlor\FileDir::makeCorrectFile($certificate_folder . '/' . $domain . '.cer');
 
 		if (is_dir($certificate_folder) && file_exists($ssl_file) && is_readable($ssl_file)) {
@@ -509,6 +503,30 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 		return false;
 	}
 
+	public static function getWorkingDirFromEnv($domain = "", $forced_noecc = false)
+	{
+		if (Settings::Get('system.leecc') > 0 && ! $forced_noecc) {
+			$domain .= "_ecc";
+		}
+		$env_file = FileDir::makeCorrectFile(dirname(self::$acmesh) . '/acme.sh.env');
+		if (file_exists($env_file)) {
+			$output = [];
+			$cut = <<<EOC
+cut -d'"' -f2
+EOC;
+			exec('grep "LE_WORKING_DIR" ' . escapeshellarg($env_file) . ' | ' . $cut, $output);
+			if (is_array($output) && ! empty($output) && isset($output[0]) && ! empty($output[0])) {
+				return FileDir::makeCorrectDir($output[0] . "/" . $domain);
+			}
+		}
+		return FileDir::makeCorrectDir(dirname(self::$acmesh) . "/" . $domain);
+	}
+
+	public static function getAcmeSh()
+	{
+		return self::$acmesh;
+	}
+
 	/**
 	 * get certificate files from filesystem and store in $return array
 	 *
@@ -518,11 +536,10 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 	 */
 	private static function readCertificateToVar($domain, &$return, &$cronlog)
 	{
-		$certificate_folder = dirname(self::$acmesh) . "/" . $domain;
+		$certificate_folder = self::getWorkingDirFromEnv($domain);
 		$certificate_folder_noecc = null;
 		if (Settings::Get('system.leecc') > 0) {
-			$certificate_folder_noecc = \Froxlor\FileDir::makeCorrectDir($certificate_folder);
-			$certificate_folder .= "_ecc";
+			$certificate_folder_noecc = self::getWorkingDirFromEnv($domain, true);
 		}
 		$certificate_folder = \Froxlor\FileDir::makeCorrectDir($certificate_folder);
 

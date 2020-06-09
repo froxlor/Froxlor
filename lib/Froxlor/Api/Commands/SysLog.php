@@ -74,7 +74,7 @@ class SysLog extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			$result[] = $row;
 		}
 		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] list log-entries");
-		return $this->response(200, "successfull", array(
+		return $this->response(200, "successful", array(
 			'count' => count($result),
 			'list' => $result
 		));
@@ -129,7 +129,7 @@ class SysLog extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 
 		$result = Database::pexecute_first($result_stmt, $params, true, true);
 		if ($result) {
-			return $this->response(200, "successfull", $result['num_logs']);
+			return $this->response(200, "successful", $result['num_logs']);
 		}
 	}
 
@@ -204,7 +204,7 @@ class SysLog extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			$params['trunc'] = $truncatedate;
 			Database::pexecute($result_stmt, $params, true, true);
 			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_WARNING, "[API] truncated the froxlor syslog");
-			return $this->response(200, "successfull", true);
+			return $this->response(200, "successful", true);
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
 	}

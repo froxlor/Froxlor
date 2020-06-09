@@ -81,7 +81,7 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 			$result = $this->apiCall('Certificates.get', array(
 				'id' => $domain['id']
 			));
-			return $this->response(200, "successfull", $result);
+			return $this->response(200, "successful", $result);
 		}
 		throw new \Exception("Domain '" . $domain['domain'] . "' already has a certificate. Did you mean to call update?", 406);
 	}
@@ -122,7 +122,7 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 		if (! $result) {
 			throw new \Exception("Domain '" . $domain['domain'] . "' does not have a certificate.", 412);
 		}
-		return $this->response(200, "successfull", $result);
+		return $this->response(200, "successful", $result);
 	}
 
 	/**
@@ -168,7 +168,7 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 		$result = $this->apiCall('Certificates.get', array(
 			'id' => $domain['id']
 		));
-		return $this->response(200, "successfull", $result);
+		return $this->response(200, "successful", $result);
 	}
 
 	/**
@@ -222,7 +222,7 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 			}
 			$result[] = $cert;
 		}
-		return $this->response(200, "successfull", array(
+		return $this->response(200, "successful", array(
 			'count' => count($result),
 			'list' => $result
 		));
@@ -258,7 +258,7 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 		$certs_stmt = Database::prepare($certs_stmt_query);
 		$result = Database::pexecute_first($certs_stmt, $qry_params, true, true);
 		if ($result) {
-			return $this->response(200, "successfull", $result['num_certs']);
+			return $this->response(200, "successful", $result['num_certs']);
 		}
 	}
 
@@ -326,7 +326,7 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 				\Froxlor\System\Cronjob::inserttask('12', $chk['domain']);
 			}
 			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] removed ssl-certificate for '" . $chk['domain'] . "'");
-			return $this->response(200, "successfull", $result);
+			return $this->response(200, "successful", $result);
 		}
 		throw new \Exception("Unable to determine SSL certificate. Maybe no access?", 406);
 	}

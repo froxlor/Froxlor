@@ -35,7 +35,7 @@ return array(
 					'settinggroup' => 'system',
 					'varname' => 'ssl_protocols',
 					'type' => 'option',
-					'default' => 'TLSv1,TLSv1.2',
+					'default' => 'TLSv1.2',
 					'option_mode' => 'multiple',
 					'option_options' => array(
 						'TLSv1' => 'TLSv1',

@@ -55,7 +55,6 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 			Database::pexecute($result_stmt, $result_data);
 
 			while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
-
 				if (isset($row['traffic']) && $row['traffic'] > 0 && $row['traffic_used'] != null && (($row['traffic_used'] * 100) / $row['traffic']) >= (int) Settings::Get('system.report_trafficmax')) {
 					$rep_userinfo = array(
 						'name' => $row['name'],
@@ -93,9 +92,11 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 					}
 
 					// include english language file (fallback)
-					include_once \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/lng/english.lng.php');
+					include \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/lng/english.lng.php');
 					// include admin/customer language file
-					include_once \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/' . $langfile);
+					if ($lngfile != 'lng/english.lng.php') {
+						include \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/' . $langfile);
+					}
 
 					// Get mail templates from database; the ones from 'admin' are fetched for fallback
 					$result2_stmt = Database::prepare("
@@ -146,6 +147,8 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 					Database::pexecute($upd_stmt, array(
 						'customerid' => $row['customerid']
 					));
+
+					unset($lng);
 				}
 			}
 
@@ -195,9 +198,11 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 					}
 
 					// include english language file (fallback)
-					include_once \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/lng/english.lng.php');
+					include \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/lng/english.lng.php');
 					// include admin/customer language file
-					include_once \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/' . $langfile);
+					if ($lngfile != 'lng/english.lng.php') {
+						include \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/' . $langfile);
+					}
 
 					// Get mail templates from database; the ones from 'admin' are fetched for fallback
 					$result2_stmt = Database::prepare("
@@ -326,6 +331,8 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 					}
 
 					$mail->ClearAddresses();
+
+					unset($lng);
 				}
 			}
 		} // trafficmax > 0
@@ -398,10 +405,10 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 					}
 
 					// include english language file (fallback)
-					include_once \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/lng/english.lng.php');
+					include \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/lng/english.lng.php');
 					// include admin/customer language file
 					if ($lngfile != 'lng/english.lng.php') {
-						include_once \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/' . $langfile);
+						include \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/' . $langfile);
 					}
 
 					// Get mail templates from database; the ones from 'admin' are fetched for fallback
@@ -453,6 +460,8 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 					Database::pexecute($upd_stmt, array(
 						'customerid' => $row['customerid']
 					));
+
+					unset($lng);
 				}
 			}
 
@@ -493,9 +502,11 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 					}
 
 					// include english language file (fallback)
-					include_once \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/lng/english.lng.php');
+					include \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/lng/english.lng.php');
 					// include admin/customer language file
-					include_once \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/' . $langfile);
+					if ($lngfile != 'lng/english.lng.php') {
+						include \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/' . $langfile);
+					}
 
 					// Get mail templates from database; the ones from 'admin' are fetched for fallback
 					$result2_stmt = Database::prepare("
@@ -546,6 +557,8 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 					Database::pexecute($upd_stmt, array(
 						'adminid' => $row['adminid']
 					));
+
+					unset($lng);
 				}
 			}
 		} // webmax > 0

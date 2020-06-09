@@ -159,6 +159,7 @@ class FroxlorInstall
 		$this->_guessServerName();
 		$this->_guessServerIP();
 		$this->_guessWebserver();
+		$this->_guessDistribution();
 
 		$this->_getPostField('mysql_host', '127.0.0.1');
 		$this->_getPostField('mysql_database', 'froxlor');
@@ -504,6 +505,17 @@ class FroxlorInstall
 			$this->_updateSetting($upd_stmt, 'error', 'system', 'errorlog_level');
 		}
 
+		$distros = glob(\Froxlor\FileDir::makeCorrectDir(\Froxlor\Froxlor::getInstallDir() . '/lib/configfiles/') . '*.xml');
+		foreach ($distros as $_distribution) {
+			if($this->_data['distribution'] == str_replace(".xml", "", strtolower(basename($_distribution)))) {
+				$dist = new \Froxlor\Config\ConfigParser($_distribution);
+				$defaults = $dist->getDefaults();
+				foreach ($defaults->property as $property) {
+					$this->_updateSetting($upd_stmt, $property->value, $property->settinggroup, $property->varname);
+				}
+			}
+		}
+
 		$this->_updateSetting($upd_stmt, $this->_data['activate_newsfeed'], 'admin', 'show_news_feed');
 		$this->_updateSetting($upd_stmt, dirname(dirname(dirname(__FILE__))), 'system', 'letsencryptchallengepath');
 
@@ -840,6 +852,32 @@ class FroxlorInstall
 		 */
 		$section = $this->_lng['install']['serversettings'];
 		eval("\$formdata .= \"" . $this->_getTemplate("datasection") . "\";");
+		// distribution
+		if (! empty($_POST['installstep']) && $this->_data['distribution'] == '') {
+			$diststyle = 'color:red;';
+		} else {
+			$diststyle = '';
+		}
+
+		// show list of available distro's
+		$distros = glob(\Froxlor\FileDir::makeCorrectDir(\Froxlor\Froxlor::getInstallDir() . '/lib/configfiles/') . '*.xml');
+		foreach ($distros as $_distribution) {
+			$dist = new \Froxlor\Config\ConfigParser($_distribution);
+			$dist_display = $dist->distributionName." ".$dist->distributionCodename." (" . $dist->distributionVersion . ")";
+			$distributions_select_data[$dist_display] .= str_replace(".xml", "", strtolower(basename($_distribution)));
+		}
+
+		// sort by distribution name
+		ksort($distributions_select_data);
+
+		foreach ($distributions_select_data as $dist_display => $dist_index) {
+			// create select-box-option
+			$distributions_select .= \Froxlor\UI\HTML::makeoption($dist_display, $dist_index, $this->_data['distribution']);
+			//$this->_data['distribution']
+		}
+
+		$formdata .= $this->_getSectionItemSelectbox('distribution', $distributions_select, $diststyle);
+
 		// servername
 		if (! empty($_POST['installstep']) && $this->_data['servername'] == '') {
 			$style = 'color:red;';
@@ -861,12 +899,12 @@ class FroxlorInstall
 			$websrvstyle = '';
 		}
 		// apache
-		$formdata .= $this->_getSectionItemCheckbox('apache2', ($this->_data['webserver'] == 'apache2'), $websrvstyle);
-		$formdata .= $this->_getSectionItemCheckbox('apache24', ($this->_data['webserver'] == 'apache24'), $websrvstyle);
+		$formdata .= $this->_getSectionItemCheckbox('webserver', 'apache2', ($this->_data['webserver'] == 'apache2'), $websrvstyle);
+		$formdata .= $this->_getSectionItemCheckbox('webserver', 'apache24', ($this->_data['webserver'] == 'apache24'), $websrvstyle);
 		// lighttpd
-		$formdata .= $this->_getSectionItemCheckbox('lighttpd', ($this->_data['webserver'] == 'lighttpd'), $websrvstyle);
+		$formdata .= $this->_getSectionItemCheckbox('webserver', 'lighttpd', ($this->_data['webserver'] == 'lighttpd'), $websrvstyle);
 		// nginx
-		$formdata .= $this->_getSectionItemCheckbox('nginx', ($this->_data['webserver'] == 'nginx'), $websrvstyle);
+		$formdata .= $this->_getSectionItemCheckbox('webserver', 'nginx', ($this->_data['webserver'] == 'nginx'), $websrvstyle);
 		// webserver-user
 		if (! empty($_POST['installstep']) && $this->_data['httpuser'] == '') {
 			$style = 'color:red;';
@@ -918,7 +956,7 @@ class FroxlorInstall
 	}
 
 	/**
-	 * generate form radio field for webserver-selection
+	 * generate form radio field 
 	 *
 	 * @param string $fieldname
 	 * @param boolean $checked
@@ -926,14 +964,34 @@ class FroxlorInstall
 	 *
 	 * @return string
 	 */
-	private function _getSectionItemCheckbox($fieldname = null, $checked = false, $style = "")
+	private function _getSectionItemCheckbox($groupname = null, $fieldname = null, $checked = false, $style = "")
 	{
+		$groupname = $this->_lng['install'][$groupname];
 		$fieldlabel = $this->_lng['install'][$fieldname];
 		if ($checked) {
 			$checked = 'checked="checked"';
 		}
 		$sectionitem = "";
 		eval("\$sectionitem .= \"" . $this->_getTemplate("dataitemchk") . "\";");
+		return $sectionitem;
+	}
+
+	/**
+	 * generate form selectbox
+	 *
+	 * @param string $fieldname
+	 * @param boolean $options
+	 * @param string $style
+	 *
+	 * @return string
+	 */
+	private function _getSectionItemSelectbox($fieldname = null, $options = null, $style = "")
+	{
+		$groupname = $this->_lng['install'][$groupname];
+		$fieldlabel = $this->_lng['install'][$fieldname];
+
+		$sectionitem = "";
+		eval("\$sectionitem .= \"" . $this->_getTemplate("dataitemselect") . "\";");
 		return $sectionitem;
 	}
 
@@ -1269,6 +1327,39 @@ class FroxlorInstall
 			} else {
 				// we don't need to bail out, since unknown does not affect any critical installation routines
 				$this->_data['webserver'] = 'unknown';
+			}
+		}
+	}
+
+
+	/**
+	 * get/guess linux distribution
+	 */
+	private function _guessDistribution()
+	{
+		// post
+		if (! empty($_POST['distribution'])) {
+			$this->_data['distribution'] = $_POST['distribution'];
+		} else {
+			//set default os.
+			$os_dist = array('ID' => 'buster');
+			$os_version = array('0' => '10');
+
+			//read os-release
+			if(file_exists('/etc/os-release')) {
+				$os_dist = parse_ini_file('/etc/os-release', false);
+				if(is_array($os_dist) && array_key_exists('ID', $os_dist) && array_key_exists('VERSION_ID', $os_dist)) {
+					$os_version = explode('.',$os_dist['VERSION_ID'])[0];
+				}
+			}
+
+			$distros = glob(\Froxlor\FileDir::makeCorrectDir(\Froxlor\Froxlor::getInstallDir() . '/lib/configfiles/') . '*.xml');
+			foreach ($distros as $_distribution) {
+				$dist = new \Froxlor\Config\ConfigParser($_distribution);
+				$ver = explode('.', $dist->distributionVersion)[0];
+				if (strtolower($os_dist['ID']) == strtolower($dist->distributionName) && $os_version == $ver) {
+					$this->_data['distribution'] = str_replace(".xml", "", strtolower(basename($_distribution)));
+				}
 			}
 		}
 	}

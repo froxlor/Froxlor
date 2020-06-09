@@ -74,7 +74,7 @@ class Froxlor extends \Froxlor\Api\ApiCommand
 					// zum update schritt #1 -> download
 					if ($isnewerversion == 1) {
 						$text = 'There is a newer version available: "' . $_version . '" (Your current version is: ' . $this->version . ')';
-						return $this->response(200, "successfull", array(
+						return $this->response(200, "successful", array(
 							'isnewerversion' => $isnewerversion,
 							'version' => $_version,
 							'message' => $text,
@@ -83,7 +83,7 @@ class Froxlor extends \Froxlor\Api\ApiCommand
 						));
 					} elseif ($isnewerversion == 0) {
 						// all good
-						return $this->response(200, "successfull", array(
+						return $this->response(200, "successful", array(
 							'isnewerversion' => $isnewerversion,
 							'version' => $version_label,
 							'message' => "",
@@ -95,7 +95,7 @@ class Froxlor extends \Froxlor\Api\ApiCommand
 					}
 				}
 			}
-			return $this->response(300, "successfull", array(
+			return $this->response(300, "successful", array(
 				'isnewerversion' => 0,
 				'version' => $this->version . $this->branding,
 				'message' => 'Version-check not available due to missing php-curl extension',
@@ -129,7 +129,7 @@ class Froxlor extends \Froxlor\Api\ApiCommand
 				\Froxlor\System\Cronjob::inserttask('4');
 				// cron.d file
 				\Froxlor\System\Cronjob::inserttask('99');
-				return $this->response(200, "successfull", true);
+				return $this->response(200, "successful", true);
 			} catch (\Exception $e) {
 				throw new \Exception($e->getMessage(), 406);
 			}
@@ -149,7 +149,7 @@ class Froxlor extends \Froxlor\Api\ApiCommand
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
 			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "User " . $this->getUserDetail('loginname') . " exported settings");
 			$json_export = \Froxlor\SImExporter::export();
-			return $this->response(200, "successfull", $json_export);
+			return $this->response(200, "successful", $json_export);
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
 	}
@@ -175,7 +175,7 @@ class Froxlor extends \Froxlor\Api\ApiCommand
 					'value' => $row['value']
 				);
 			}
-			return $this->response(200, "successfull", array(
+			return $this->response(200, "successful", array(
 				'count' => count($result),
 				'list' => $result
 			));
@@ -197,7 +197,7 @@ class Froxlor extends \Froxlor\Api\ApiCommand
 	{
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
 			$setting = $this->getParam('key');
-			return $this->response(200, "successfull", Settings::Get($setting));
+			return $this->response(200, "successful", Settings::Get($setting));
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
 	}
@@ -227,7 +227,7 @@ class Froxlor extends \Froxlor\Api\ApiCommand
 				throw new \Exception("Setting '" . $setting . "' could not be found");
 			}
 			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_WARNING, "[API] Changing setting '" . $setting . "' from '" . $oldvalue . "' to '" . $value . "'");
-			return $this->response(200, "successfull", Settings::Set($setting, $value, true));
+			return $this->response(200, "successful", Settings::Set($setting, $value, true));
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
 	}
@@ -240,7 +240,7 @@ class Froxlor extends \Froxlor\Api\ApiCommand
 	 */
 	public function generatePassword()
 	{
-		return $this->response(200, "successfull", \Froxlor\System\Crypt::generatePassword());
+		return $this->response(200, "successful", \Froxlor\System\Crypt::generatePassword());
 	}
 
 	/**
@@ -256,7 +256,7 @@ class Froxlor extends \Froxlor\Api\ApiCommand
 			$integrity = new \Froxlor\Database\IntegrityCheck();
 			$result = $integrity->checkAll();
 			if ($result) {
-				return $this->response(200, "successfull", "OK");
+				return $this->response(200, "successful", "OK");
 			}
 			throw new \Exception("Some checks failed.", 406);
 		}
@@ -333,7 +333,7 @@ class Froxlor extends \Froxlor\Api\ApiCommand
 		}
 
 		// return the list
-		return $this->response(200, "successfull", $functions);
+		return $this->response(200, "successful", $functions);
 	}
 
 	/**

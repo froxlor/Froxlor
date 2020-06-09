@@ -655,7 +655,7 @@ opcache.interned_strings_buffer'),
 	('system', 'leaccount', ''),
 	('system', 'nssextrausers', '0'),
 	('system', 'le_domain_dnscheck', '1'),
-	('system', 'ssl_protocols', 'TLSv1,TLSv1.2'),
+	('system', 'ssl_protocols', 'TLSv1.2'),
 	('system', 'tlsv13_cipher_list', ''),
 	('system', 'honorcipherorder', '0'),
 	('system', 'sessiontickets', '1'),
@@ -704,8 +704,8 @@ opcache.interned_strings_buffer'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'is_configured', '0'),
-	('panel', 'version', '0.10.16'),
-	('panel', 'db_version', '202004140');
+	('panel', 'version', '0.10.17'),
+	('panel', 'db_version', '202005150');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
@@ -997,7 +997,8 @@ CREATE TABLE IF NOT EXISTS `domain_ssl_settings` (
   `ssl_csr_file` mediumtext,
   `ssl_fullchain_file` mediumtext,
   `expirationdate` datetime DEFAULT NULL,
-  PRIMARY KEY  (`id`)
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY (`domainid`)
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 

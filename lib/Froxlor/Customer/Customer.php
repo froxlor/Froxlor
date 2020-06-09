@@ -30,7 +30,7 @@ class Customer
 	 *        	
 	 * @return string customers loginname
 	 */
-	public function getLoginNameByUid($uid = null)
+	public static function getLoginNameByUid($uid = null)
 	{
 		$result_stmt = Database::prepare("
 			SELECT `loginname` FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `guid` = :guid

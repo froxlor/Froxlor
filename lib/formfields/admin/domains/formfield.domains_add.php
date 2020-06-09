@@ -265,7 +265,6 @@ return array(
 						'desc' => $lng['serversettings']['ssl']['ssl_protocols']['description'],
 						'type' => 'checkbox',
 						'value' => array(
-							'TLSv1',
 							'TLSv1.2'
 						),
 						'values' => array(

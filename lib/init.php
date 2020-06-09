@@ -20,6 +20,17 @@
 // define default theme for configurehint, etc.
 $_deftheme = 'Sparkle';
 
+// validate correct php version
+if (version_compare("7.0.0", PHP_VERSION, ">=")) {
+	// get hint-template
+	$vendor_hint = file_get_contents(dirname(__DIR__) . '/templates/' . $_deftheme . '/misc/phprequirementfailed.tpl');
+	// replace values
+	$vendor_hint = str_replace("<FROXLOR_PHPMIN>", "7.0.0", $vendor_hint);
+	$vendor_hint = str_replace("<CURRENT_VERSION>", PHP_VERSION, $vendor_hint);
+	$vendor_hint = str_replace("<CURRENT_YEAR>", date('Y', time()), $vendor_hint);
+	die($vendor_hint);
+}
+
 if (! file_exists(dirname(__DIR__) . '/vendor/autoload.php')) {
 	// get hint-template
 	$vendor_hint = file_get_contents(dirname(__DIR__) . '/templates/' . $_deftheme . '/misc/vendormissinghint.tpl');

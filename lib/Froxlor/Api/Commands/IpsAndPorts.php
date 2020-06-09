@@ -56,7 +56,7 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 				$result[] = $row;
 			}
-			return $this->response(200, "successfull", array(
+			return $this->response(200, "successful", array(
 				'count' => count($result),
 				'list' => $result
 			));
@@ -82,7 +82,7 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 				SELECT COUNT(*) as num_ips FROM `" . TABLE_PANEL_IPSANDPORTS . "` " . $ip_where);
 			$result = Database::pexecute_first($result_stmt, null, true, true);
 			if ($result) {
-				return $this->response(200, "successfull", $result['num_ips']);
+				return $this->response(200, "successful", $result['num_ips']);
 			}
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
@@ -116,7 +116,7 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			), true, true);
 			if ($result) {
 				$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] get ip " . $result['ip'] . " " . $result['port']);
-				return $this->response(200, "successfull", $result);
+				return $this->response(200, "successful", $result);
 			}
 			throw new \Exception("IP/port with id #" . $id . " could not be found", 404);
 		}
@@ -307,7 +307,7 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			$result = $this->apiCall('IpsAndPorts.get', array(
 				'id' => $ins_data['id']
 			));
-			return $this->response(200, "successfull", $result);
+			return $this->response(200, "successful", $result);
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
 	}
@@ -514,7 +514,7 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 				$result = $this->apiCall('IpsAndPorts.get', array(
 					'id' => $result['id']
 				));
-				return $this->response(200, "successfull", $result);
+				return $this->response(200, "successful", $result);
 			}
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
@@ -583,7 +583,7 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 						\Froxlor\System\Cronjob::inserttask('4');
 
 						$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_WARNING, "[API] deleted IP/port '" . $result['ip'] . ":" . $result['port'] . "'");
-						return $this->response(200, "successfull", $result);
+						return $this->response(200, "successful", $result);
 					} else {
 						\Froxlor\UI\Response::standard_error('cantdeletesystemip', '', true);
 					}

@@ -53,6 +53,7 @@ $lng['install']['admin_user'] = 'Nom d\'utilisateur administrateur';
 $lng['install']['admin_pass1'] = 'Mot de passe administrateur';
 $lng['install']['admin_pass2'] = 'Mot de passe administrateur (confirmez)';
 $lng['install']['serversettings'] = 'Réglages serveur';
+$lng['install']['distribution'] = 'Distribution';
 $lng['install']['servername'] = 'Nom du serveur (FQDN, pas d\'adresse IP)';
 $lng['install']['serverip'] = 'Adresse IP du serveur';
 $lng['install']['webserver'] = 'Serveur Web';

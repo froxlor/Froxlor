@@ -102,7 +102,7 @@ class EmailForwarders extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 			$result = $this->apiCall('Emails.get', array(
 				'emailaddr' => $result['email_full']
 			));
-			return $this->response(200, "successfull", $result);
+			return $this->response(200, "successful", $result);
 		}
 		throw new \Exception("No more resources available", 406);
 	}
@@ -168,7 +168,7 @@ class EmailForwarders extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 			];
 		}
 
-		return $this->response(200, "successfull", [
+		return $this->response(200, "successful", [
 			'count' => count($destination),
 			'list' => $destination
 		]);
@@ -210,7 +210,7 @@ class EmailForwarders extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 
 		$result['destination'] = explode(' ', $result['destination']);
 
-		return $this->response(200, "successfull", count($result['destination']));
+		return $this->response(200, "successful", count($result['destination']));
 	}
 
 	/**
@@ -280,7 +280,7 @@ class EmailForwarders extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 			$result = $this->apiCall('Emails.get', array(
 				'emailaddr' => $result['email_full']
 			));
-			return $this->response(200, "successfull", $result);
+			return $this->response(200, "successful", $result);
 		}
 		throw new \Exception("Unknown forwarder id", 404);
 	}
