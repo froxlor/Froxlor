@@ -52,10 +52,7 @@ install:
   - mysql -h 127.0.0.1 --protocol=TCP -u root -pfr0xl0r.TravisCI froxlor010 < install/froxlor.sql
 
 script:
-  - ant phpunit
-
-after_success:
-  - bash <(curl -s https://codecov.io/bash) -f "build/logs/clover.xml"
+  - ant phpunit-no-coverage
 
 notifications:
   irc: "chat.freenode.net#froxlor"
