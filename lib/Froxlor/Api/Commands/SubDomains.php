@@ -572,7 +572,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		if ($result['parentdomainid'] != '0' && ($result['subcanemaildomain'] == '1' || $result['subcanemaildomain'] == '2') && $isemaildomain != $result['isemaildomain']) {
 			$isemaildomain = intval($isemaildomain);
 		} elseif ($result['parentdomainid'] != '0') {
-			$isemaildomain = $result['subcanemaildomain'] == '3' ? 1 : 0;
+//			$isemaildomain = $result['subcanemaildomain'] == '3' ? 1 : 0; DF8OE
 		}
 
 		// check changes of openbasedir-path variable
