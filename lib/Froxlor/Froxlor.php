@@ -17,7 +17,7 @@ final class Froxlor
 
 	/**
 	 * return path to where froxlor is installed, e.g.
-	 * /var/www/froxlor
+	 * /var/www/froxlor/
 	 *
 	 * @return string
 	 */

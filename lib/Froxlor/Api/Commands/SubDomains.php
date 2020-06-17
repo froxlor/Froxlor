@@ -683,6 +683,8 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				Database::pexecute($del_stmt, array(
 					'id' => $id
 				), true, true);
+				// remove domain from acme.sh / lets encrypt if used
+				\Froxlor\System\Cronjob::inserttask('12', $result['domain']);
 			}
 
 			\Froxlor\System\Cronjob::inserttask('1');
