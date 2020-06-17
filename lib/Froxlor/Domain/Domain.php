@@ -332,10 +332,6 @@ class Domain
 		$acmesh = \Froxlor\Cron\Http\LetsEncrypt\AcmeSh::getAcmeSh();
 		if (file_exists($acmesh)) {
 			$certificate_folder = \Froxlor\Cron\Http\LetsEncrypt\AcmeSh::getWorkingDirFromEnv($domainname);
-			if (\Froxlor\Settings::Get('system.leecc') > 0) {
-				$certificate_folder .= "_ecc";
-			}
-			$certificate_folder = \Froxlor\FileDir::makeCorrectDir($certificate_folder);
 			if (file_exists($certificate_folder)) {
 				$params = " --remove -d " . $domainname;
 				if (\Froxlor\Settings::Get('system.leecc') > 0) {
