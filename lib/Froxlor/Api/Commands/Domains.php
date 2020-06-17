@@ -1766,7 +1766,10 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 
 			$idna_convert = new \Froxlor\Idna\IdnaWrapper();
 			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_WARNING, "[API] updated domain '" . $idna_convert->decode($result['domain']) . "'");
-			return $this->response(200, "successful", $update_data);
+			$result = $this->apiCall('Domains.get', array(
+				'domainname' => $result['domain']
+			));
+			return $this->response(200, "successful", $result);
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
 	}

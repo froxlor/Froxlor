@@ -155,6 +155,7 @@ class DomainsTest extends TestCase
 		$json_result = Domains::getLocal($reseller_userdata, $data)->update();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEmpty($result['ssl_protocols']);
+		$this->assertEquals('test2.local', $result['domain']);
 	}
 
 	public function testAdminDomainsAddSysHostname()
@@ -206,6 +207,7 @@ class DomainsTest extends TestCase
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(1, $result['email_only']);
 		$this->assertFalse(in_array('TLSv1.3', explode(",", $result['ssl_protocols'])));
+		$this->assertEquals('test.local', $result['domain']);
 	}
 
 	/**
