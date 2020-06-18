@@ -875,7 +875,9 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	 *        	optional, the domain-id
 	 * @param string $domainname
 	 *        	optional, the domainname
-	 *        	
+	 * @param int $customerid
+	 *        	required when called as admin, not needed when called as customer
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array
