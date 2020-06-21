@@ -44,8 +44,6 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 	 */
 	private static $upddom_stmt = null;
 
-	private static $do_update = true;
-
 	public static $no_inserttask = false;
 
 	/**
@@ -76,6 +74,8 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 		if (! self::checkInstall()) {
 			return - 1;
 		}
+
+		self::checkUpgrade();
 
 		// flag for re-generation of vhost files
 		$changedetected = 0;
@@ -291,12 +291,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 	{
 		if (! empty($domains)) {
 
-			if (self::$do_update) {
-				self::checkUpgrade();
-				self::$do_update = false;
-			}
-
-			$acmesh_cmd = self::$acmesh . " --auto-upgrade 0 --server " . self::$apiserver . " --issue -d " . implode(" -d ", $domains);
+			$acmesh_cmd = self::$acmesh . " --server " . self::$apiserver . " --issue -d " . implode(" -d ", $domains);
 			// challenge path
 			$acmesh_cmd .= " -w " . Settings::Get('system.letsencryptchallengepath');
 			if (Settings::Get('system.leecc') > 0) {
@@ -598,7 +593,7 @@ EOC;
 	 */
 	private static function checkUpgrade()
 	{
-		$acmesh_result = \Froxlor\FileDir::safe_exec(self::$acmesh . " --upgrade");
+		$acmesh_result = \Froxlor\FileDir::safe_exec(self::$acmesh . " --upgrade --auto-upgrade 0");
 		// check for activated cron
 		$acmesh_result2 = \Froxlor\FileDir::safe_exec(self::$acmesh . " --install-cronjob");
 		FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, "Checking for LetsEncrypt client upgrades before renewing certificates:\n" . implode("\n", $acmesh_result) . "\n" . implode("\n", $acmesh_result2));
