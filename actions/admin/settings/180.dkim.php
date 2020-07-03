@@ -30,6 +30,20 @@ return array(
 					'save_method' => 'storeSettingFieldInsertBindTask',
 					'overview_option' => true
 				),
+				'dkim_service_type' => array(
+					'label' => $lng['dkim']['dkim_service_type']['title'],
+
+					'settinggroup' => 'dkim',
+					'varname' => 'dkim_service_type',
+					'type' => 'option',
+					'default' => 'dkim-filter',
+					'option_mode' => 'one',
+					'option_options' => array(
+						'dkim-filter' => 'dkim-filter',
+						'opendkim' => 'opendkim'
+					),
+					'save_method' => 'storeSettingFieldInsertBindTask'
+				),
 				'dkim_prefix' => array(
 					'label' => $lng['dkim']['dkim_prefix'],
 					'settinggroup' => 'dkim',
@@ -55,6 +69,15 @@ return array(
 					'type' => 'string',
 					'string_regexp' => '/^[a-z0-9\._]+$/i',
 					'default' => 'dkim-keys.conf',
+					'save_method' => 'storeSettingField'
+				),
+				'dkim_dkimsigns' => array(
+					'label' => $lng['dkim']['dkim_dkimsigns'],
+					'settinggroup' => 'dkim',
+					'varname' => 'dkim_dkimsigns',
+					'type' => 'string',
+					'string_regexp' => '/^[a-z0-9\._]+$/i',
+					'default' => 'SignTable',
 					'save_method' => 'storeSettingField'
 				),
 				'dkim_algorithm' => array(
