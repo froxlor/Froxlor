@@ -16,7 +16,7 @@ use Froxlor\Settings;
  * @author Froxlor team <team@froxlor.org> (2016-)
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package Cron
- *         
+ *
  */
 
 /**
@@ -207,12 +207,12 @@ abstract class DnsBase
 					$privkey_filename = \Froxlor\FileDir::makeCorrectFile(Settings::Get('dkim.dkim_prefix') . '/dkim-' . $domain['dkim_id']);
 					\Froxlor\FileDir::safe_exec('openssl genrsa -out ' . escapeshellarg($privkey_filename) . ' ' . Settings::Get('dkim.dkim_keylength'));
 					$domain['dkim_privkey'] = file_get_contents($privkey_filename);
-					\Froxlor\FileDir::safe_exec("chmod 0640 " . escapeshellarg($privkey_filename));
+					\Froxlor\FileDir::safe_exec("chmod 0644 " . escapeshellarg($privkey_filename));
 					$pubkey_filename = \Froxlor\FileDir::makeCorrectFile(Settings::Get('dkim.dkim_prefix') . '/dkim-' . $domain['dkim_id'] . '.public');
 					\Froxlor\FileDir::safe_exec('openssl rsa -in ' . escapeshellarg($privkey_filename) . ' -pubout -outform pem -out ' . escapeshellarg($pubkey_filename));
 					$domain['dkim_pubkey'] = file_get_contents($pubkey_filename);
-					\Froxlor\FileDir::safe_exec("chmod 0664 " . escapeshellarg($pubkey_filename));
-					$upd_stmt = Database::prepare("
+					\Froxlor\FileDir::safe_exec("chmod 0644 " . escapeshellarg($pubkey_filename));
+					$upd_stmt = Database::prepare(" 
 						UPDATE `" . TABLE_PANEL_DOMAINS . "` SET
 						`dkim_id` = :dkimid,
 						`dkim_privkey` = :privkey,
@@ -232,7 +232,7 @@ abstract class DnsBase
 					$privkey_file_handler = fopen($privkey_filename, "w");
 					fwrite($privkey_file_handler, $domain['dkim_privkey']);
 					fclose($privkey_file_handler);
-					\Froxlor\FileDir::safe_exec("chmod 0640 " . escapeshellarg($privkey_filename));
+					\Froxlor\FileDir::safe_exec("chmod 0644 " . escapeshellarg($privkey_filename));
 				}
 
 				if (! file_exists($pubkey_filename) && $domain['dkim_pubkey'] != '') {
@@ -246,8 +246,8 @@ abstract class DnsBase
 
                 if (Settings::Get('dkim.dkim_service_type') == 'opendkim') {
                     $dkimdomains .= $domain['domain'] . "\n";
-                    $dkimsigns .= "*@" . $domain['domain'] . " " . 'dkim-' . $domain['dkim_id'] . "_domainkey." .$domain['domain'] . "\n";
-                    $dkimkeys .= 'dkim-' . $domain['dkim_id'] . "_domainkey." .$domain['domain'] . " " . $domain['domain']  .":". $privkey_filename       ."\n";
+                    $dkimsigns .= "*@" . $domain['domain'] . " " . 'dkim-' . $domain['dkim_id'] . "._domainkey." .$domain['domain'] . "\n";
+                    $dkimkeys .= 'dkim-' . $domain['dkim_id'] . "._domainkey." .$domain['domain'] . " " . $domain['domain']  . ':dkim-' . $domain['dkim_id'] . ":". $privkey_filename       ."\n";
                 } else  {// Code for dkim-filter
                     $dkimdomains .= $domain['domain'] . "\n";
                     $dkimkeys .= "*@" . $domain['domain'] . ":" . $domain['domain'] . ":" . $privkey_filename . "\n";

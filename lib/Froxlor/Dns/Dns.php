@@ -144,7 +144,7 @@ class Dns
 			}
 			if (Settings::Get('dkim.use_dkim') == '1') {
 				// check for DKIM content later
-				self::addRequiredEntry('dkim_' . $domain['dkim_id'] . '._domainkey', 'TXT', $required_entries);
+				self::addRequiredEntry('dkim-' . $domain['dkim_id'] . '._domainkey', 'TXT', $required_entries);
 			}
 		}
 
@@ -283,7 +283,7 @@ class Dns
 							if ($record == '@SPF@') {
 								$txt_content = Settings::Get('spf.spf_entry');
 								$zonerecords[] = new DnsEntry('@', 'TXT', self::encloseTXTContent($txt_content));
-							} elseif ($record == 'dkim_' . $domain['dkim_id'] . '._domainkey' && ! empty($dkim_entries)) {
+							} elseif ($record == 'dkim-' . $domain['dkim_id'] . '._domainkey' && ! empty($dkim_entries)) {
 								// check for multiline entry
 								$multiline = false;
 								if (substr($dkim_entries[0], 0, 1) == '(') {
