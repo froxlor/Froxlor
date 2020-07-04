@@ -142,7 +142,7 @@ user = <SQL_UNPRIVILEGED_USER>
 password = <SQL_UNPRIVILEGED_PASSWORD>
 dbname = <SQL_DB>
 hosts = <SQL_HOST>
-query = SELECT destination FROM mail_virtual AS v, panel_customers AS c WHERE c.customerid = v.customerid AND c.deactivated = 0 AND v.email = '%s' AND trim(v.destination) <> '' 
+query = SELECT destination FROM mail_virtual AS v, panel_customers AS c WHERE c.customerid = v.customerid AND c.deactivated = 0 AND v.email = '%s' AND trim(v.destination) <> ''
 ]]>
 							</content>
 						</file>
@@ -254,9 +254,9 @@ smtpd_recipient_restrictions = permit_mynetworks,
 	reject_non_fqdn_recipient
 smtpd_sender_restrictions = permit_mynetworks,
 	reject_sender_login_mismatch,
-	permit_sasl_authenticated, 
-	reject_unknown_helo_hostname, 
-	reject_unknown_recipient_domain, 
+	permit_sasl_authenticated,
+	reject_unknown_helo_hostname,
+	reject_unknown_recipient_domain,
 	reject_unknown_sender_domain
 smtpd_client_restrictions = permit_mynetworks,
 	permit_sasl_authenticated,
@@ -264,7 +264,7 @@ smtpd_client_restrictions = permit_mynetworks,
 
 # Postfix 2.10 requires this option. Postfix < 2.10 ignores this.
 # The option is intentionally left empty.
-smtpd_relay_restrictions = 
+smtpd_relay_restrictions =
 
 # Maximum size of Message in bytes (50MB)
 message_size_limit = 52428800
@@ -354,7 +354,7 @@ protocols = imap pop3 sieve <SSLPROTOCOLS>
 #protocols = imap pop3 lmtp
 #protocols = imap pop3 lmtp sieve
 
-# A comma separated list of IPs or hosts where to listen in for connections. 
+# A comma separated list of IPs or hosts where to listen in for connections.
 # "*" listens in all IPv4 interfaces, "::" listens in all IPv6 interfaces.
 # If you want to specify non-default ports or anything more complex,
 # edit conf.d/master.conf.
@@ -373,7 +373,7 @@ login_greeting = Dovecot ready.
 #login_trusted_networks =
 
 # Sepace separated list of login access check sockets (e.g. tcpwrap)
-#login_access_sockets = 
+#login_access_sockets =
 
 # Show more verbose process titles (in ps). Currently shows user name and
 # IP address. Useful for seeing who are actually using the IMAP processes
@@ -454,7 +454,7 @@ disable_plaintext_auth = no
 
 # Default realm/domain to use if none was specified. This is used for both
 # SASL realms and appending @domain to username in plaintext logins.
-#auth_default_realm = 
+#auth_default_realm =
 
 # List of allowed characters in username. If the user-given username contains
 # a character not listed in here, the login automatically fails. This is just
@@ -497,7 +497,7 @@ auth_username_chars = abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
 # Kerberos keytab to use for the GSSAPI mechanism. Will use the system
 # default (usually /etc/krb5.keytab) if not specified. You may need to change
 # the auth service to run as root to be able to read this file.
-#auth_krb5_keytab = 
+#auth_krb5_keytab =
 
 # Do NTLM and GSS-SPNEGO authentication using Samba's winbind daemon and
 # ntlm_auth helper. <doc/wiki/Authentication/Mechanisms/Winbind.txt>
@@ -512,9 +512,9 @@ auth_username_chars = abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012345
 # Require a valid SSL client certificate or the authentication fails.
 #auth_ssl_require_client_cert = no
 
-# Take the username from client's SSL certificate, using 
+# Take the username from client's SSL certificate, using
 # X509_NAME_get_text_by_NID() which returns the subject's DN's
-# CommonName. 
+# CommonName.
 #auth_ssl_username_from_cert = no
 
 # Space separated list of wanted authentication mechanisms:
@@ -565,9 +565,9 @@ auth_mechanisms = plain
 log_path = syslog
 
 # Log file to use for informational messages. Defaults to log_path.
-#info_log_path = 
+#info_log_path =
 # Log file to use for debug messages. Defaults to info_log_path.
-#debug_log_path = 
+#debug_log_path =
 
 # Syslog facility to use if you're logging to syslog. Usually if you don't
 # want to use "mail", you'll use local0..local7. Also other standard
@@ -627,7 +627,7 @@ plugin {
 # Login log format. %s contains login_log_format_elements string, %$ contains
 # the data we want to log.
 #login_log_format = %$: %s
- 
+
 # Log prefix for mail processes. See doc/wiki/Variables.txt for list of
 # possible variables you can use.
 #mail_log_prefix = "%s(%u): "
@@ -695,11 +695,11 @@ namespace inbox {
   # Hierarchy separator to use. You should use the same separator for all
   # namespaces or some clients get confused. '/' is usually a good one.
   # The default however depends on the underlying mail storage format.
-  #separator = 
+  #separator =
 
   # Prefix required to access this namespace. This needs to be different for
   # all namespaces. For example "Public/".
-  #prefix = 
+  #prefix =
 
   # Physical location of the mailbox. This is in same format as
   # mail_location, which is also the default for it.
@@ -835,7 +835,7 @@ last_valid_gid = 12
 # WARNING: Never add directories here which local users can modify, that
 # may lead to root exploit. Usually this should be done only if you don't
 # allow shell access for users. <doc/wiki/Chrooting.txt>
-#valid_chroot_dirs = 
+#valid_chroot_dirs =
 
 # Default chroot directory for mail processes. This can be overridden for
 # specific users in user database by giving /./ in user's home directory
@@ -843,7 +843,7 @@ last_valid_gid = 12
 # need to do chrooting, Dovecot doesn't allow users to access files outside
 # their mail directory anyway. If your home directories are prefixed with
 # the chroot directory, append "/." to mail_chroot. <doc/wiki/Chrooting.txt>
-#mail_chroot = 
+#mail_chroot =
 
 # UNIX socket path to master authentication server to find users.
 # This is used by imap (for shared users) and lda.
@@ -854,7 +854,7 @@ last_valid_gid = 12
 
 # Space separated list of plugins to load for all services. Plugins specific to
 # IMAP, LDA, etc. are added to this list in their own .conf files.
-#mail_plugins = 
+#mail_plugins =
 
 ##
 ## Mailbox handling optimizations
@@ -951,7 +951,7 @@ mbox_write_locks = fcntl
 # fallbacks to re-reading the whole mbox file whenever something in mbox isn't
 # how it's expected to be. The only real downside to this setting is that if
 # some other MUA changes message flags, Dovecot doesn't notice it immediately.
-# Note that a full sync is done with SELECT, EXAMINE, EXPUNGE and CHECK 
+# Note that a full sync is done with SELECT, EXAMINE, EXPUNGE and CHECK
 # commands.
 #mbox_dirty_syncs = yes
 
@@ -1078,7 +1078,7 @@ service lmtp {
   #inet_listener lmtp {
     # Avoid making LMTP visible for the entire internet
     #address =
-    #port = 
+    #port =
   #}
 }
 
@@ -1112,8 +1112,8 @@ service auth {
   # permissions (e.g. 0777 allows everyone full permissions).
   unix_listener auth-userdb {
     #mode = 0666
-    #user = 
-    #group = 
+    #user =
+    #group =
   }
 
   # Postfix smtp-auth
@@ -1137,8 +1137,8 @@ service dict {
   # For example: mode=0660, group=vmail and global mail_access_groups=vmail
   unix_listener dict {
     #mode = 0600
-    #user = 
-    #group = 
+    #user =
+    #group =
   }
 }
 ]]>
@@ -1172,7 +1172,7 @@ ssl = no
 # PEM encoded trusted certificate authority. Set this only if you intend to use
 # ssl_verify_client_cert=yes. The file should contain the CA certificate(s)
 # followed by the matching CRL(s). (e.g. ssl_ca = </etc/pki/dovecot/certs/ca.pem)
-#ssl_ca = 
+#ssl_ca =
 
 # Require that CRL check succeeds for client certificates.
 #ssl_require_crl = yes
@@ -1223,7 +1223,7 @@ postmaster_address = postmaster@<SERVERNAME>
 
 # Hostname to use in various parts of sent mails (e.g. in Message-Id) and
 # in LMTP replies. Default is the system's real hostname@domain.
-#hostname = 
+#hostname =
 
 # If user is over quota, return with temporary failure instead of
 # bouncing the mail.
@@ -1247,7 +1247,7 @@ postmaster_address = postmaster@<SERVERNAME>
 #recipient_delimiter = +
 
 # Header where the original recipient address (SMTP's RCPT TO: address) is taken
-# from if not available elsewhere. With dovecot-lda -a parameter overrides this. 
+# from if not available elsewhere. With dovecot-lda -a parameter overrides this.
 # A commonly used header for this is X-Original-To.
 #lda_original_recipient_header =
 
@@ -1340,7 +1340,7 @@ imap_logout_format = in=%i out=%o
 
 # Override the IMAP CAPABILITY response. If the value begins with '+',
 # add the given capabilities on top of the defaults (e.g. +XFOO XBAR).
-#imap_capability = 
+#imap_capability =
 
 # How long to wait between "OK Still here" notifications when client is
 # IDLEing.
@@ -1349,7 +1349,7 @@ imap_logout_format = in=%i out=%o
 # ID field names and values to send to clients. Using * as the value makes
 # Dovecot use the default value. The following fields have default values
 # currently: name, version, os, os-version, support-url, support-email.
-#imap_id_send = 
+#imap_id_send =
 
 # ID fields sent by client to log. * means everything.
 #imap_id_log =
@@ -1372,14 +1372,14 @@ imap_logout_format = in=%i out=%o
 #     greyed out, instead of only later giving "not selectable" popup error.
 #
 # The list is space-separated.
-#imap_client_workarounds = 
+#imap_client_workarounds =
 
 # Host allowed in URLAUTH URLs sent by client. "*" allows all.
 #imap_urlauth_host =
 
 protocol imap {
   # Space separated list of plugins to load (default is global mail_plugins).
-  mail_plugins = $mail_plugins quota imap_quota 
+  mail_plugins = $mail_plugins quota imap_quota
 
   # Maximum number of IMAP connections allowed for a user from each IP address.
   # NOTE: The username is compared case-sensitively.
@@ -1586,7 +1586,7 @@ pop3_logout_format = in=%i out=%o top=%t/%p, retr=%r/%b, del=%d/%m, size=%s
 #     Outlook Express and Netscape Mail breaks if end of headers-line is
 #     missing. This option simply sends it if it's missing.
 # The list is space-separated.
-#pop3_client_workarounds = 
+#pop3_client_workarounds =
 
 protocol pop3 {
   # Space separated list of plugins to load (default is global mail_plugins).
@@ -1772,7 +1772,7 @@ driver = mysql
 #     option_file         - Read options from the given file instead of
 #                           the default my.cnf location
 #     option_group        - Read options from the given group (default: client)
-# 
+#
 #   You can connect to UNIX sockets by using host: host=/var/run/mysql.sock
 #   Note that currently you can't use spaces in parameters.
 #
@@ -1811,7 +1811,7 @@ default_pass_scheme = CRYPT
 #   %u = entire user@domain
 #   %n = user part of user@domain
 #   %d = domain part of user@domain
-# 
+#
 # Note that these can be used only as input to SQL query. If the query outputs
 # any of these substitutions, they're not touched. Otherwise it would be
 # difficult to have eg. usernames containing '%' characters.
@@ -2084,7 +2084,7 @@ LoadModule mod_ctrls_admin.c
 #   LoadModule mod_ratio.c
 #
 # Rewrite FTP commands sent by clients on-the-fly,
-# using regular expression matching and substitution 
+# using regular expression matching and substitution
 # (http://www.proftpd.org/docs/contrib/mod_rewrite.html)
 #   LoadModule mod_rewrite.c
 #
@@ -2260,7 +2260,7 @@ ControlsLog			/var/log/proftpd/controls.log
     ##DefaultChdir		/pub
 
     ## We want 'welcome.msg' displayed at login, '.message' displayed in
-    ## each newly chdired directory and tell users to read README* files. 
+    ## each newly chdired directory and tell users to read README* files.
     #DisplayLogin		/welcome.msg
     #DisplayChdir		.message
     #DisplayReadme		README*
@@ -2421,7 +2421,7 @@ password	<SQL_UNPRIVILEGED_PASSWORD>
 					</file>
 					<file name="/etc/nsswitch.conf" backup="true">
 						<content><![CDATA[
-# Make sure that `passwd`, `group` and `shadow` have mysql in their lines 
+# Make sure that `passwd`, `group` and `shadow` have mysql in their lines
 # You should place mysql at the end, so that it is queried after the other mechanisams
 #
 passwd:         files sss mysql
@@ -2477,6 +2477,36 @@ aliases:	files nisplus
 ]]>
 						</content>
 					</file>
+				</daemon>
+				<!-- OpenDKIM -->
+				<daemon name="opendkim" title="OpenDKIM">
+					<install><![CDATA[dnf install opendkim]]></install>
+					<file name="/etc/opendkim.conf" chown="root:root"
+						  chmod="0644">
+						<content><![CDATA[
+#
+# Froxlor opendkim snipet
+#
+Mode                    sv
+Syslog                  yes
+SyslogSuccess           yes
+Canonicalization        relaxed/simple
+Domain                  refile:{{settings.dkim.dkim_prefix}}{{settings.dkim.dkim_domains}}
+KeyTable                refile:{{settings.dkim.dkim_prefix}}{{settings.dkim.dkim_dkimkeys}}
+SigningTable            refile:{{settings.dkim.dkim_prefix}}{{settings.dkim.dkim_dkimsigns}}
+RequireSafeKeys         no
+Selector                default
+Socket                  inet:8891@localhost
+PidFile /var/run/opendkim/opendkim.pid
+UserID opendkim
+]]>
+						</content>
+					</file>
+					<command><![CDATA[echo "milter_default_action = accept" >> /etc/named.conf]]></command>
+					<command><![CDATA[echo "milter_protocol = 6" >> /etc/named.conf]]></command>
+					<command><![CDATA[echo "smtpd_milters = inet:127.0.0.1:8891" >> /etc/named.conf]]></command>
+					<command><![CDATA[echo "non_smtpd_milters = $smtpd_milters" >> /etc/named.conf]]></command>
+					<command><![CDATA[systemctl enable --now opendkim.service]]></command>
 				</daemon>
 			</service>
 		</services>
