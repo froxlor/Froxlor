@@ -59,8 +59,11 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 			// Let's Encrypt cronjob is combined with regeneration of webserver configuration files.
 			// For debugging purposes you can use the --debug switch and the --force switch to run the cron manually.
 			// check whether we MIGHT need to run although there is no task to regenerate config-files
-			$needRenew = self::issueDomains();
-			if ($needRenew || self::issueFroxlorVhost()) {
+			$issue_froxlor = self::issueFroxlorVhost();
+			$issue_domains = self::issueDomains();
+			$renew_froxlor = self::renewFroxlorVhost();
+			$renew_domains = self::renewDomains();
+			if ($issue_froxlor || $issue_domains || $renew_froxlor || $renew_domains) {
 				// insert task to generate certificates and vhost-configs
 				\Froxlor\System\Cronjob::inserttask(1);
 			}
