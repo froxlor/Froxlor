@@ -7,7 +7,7 @@ final class Froxlor
 {
 
 	// Main version variable
-	const VERSION = '0.10.18';
+	const VERSION = '0.10.19';
 
 	// Database version (YYYYMMDDC where C is a daily counter)
 	const DBVERSION = '202005150';
@@ -17,7 +17,7 @@ final class Froxlor
 
 	/**
 	 * return path to where froxlor is installed, e.g.
-	 * /var/www/froxlor
+	 * /var/www/froxlor/
 	 *
 	 * @return string
 	 */

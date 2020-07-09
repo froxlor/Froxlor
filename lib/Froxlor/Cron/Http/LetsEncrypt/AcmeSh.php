@@ -44,8 +44,6 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 	 */
 	private static $upddom_stmt = null;
 
-	private static $do_update = true;
-
 	public static $no_inserttask = false;
 
 	/**
@@ -61,8 +59,11 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 			// Let's Encrypt cronjob is combined with regeneration of webserver configuration files.
 			// For debugging purposes you can use the --debug switch and the --force switch to run the cron manually.
 			// check whether we MIGHT need to run although there is no task to regenerate config-files
-			$needRenew = self::issueDomains();
-			if ($needRenew || self::issueFroxlorVhost()) {
+			$issue_froxlor = self::issueFroxlorVhost();
+			$issue_domains = self::issueDomains();
+			$renew_froxlor = self::renewFroxlorVhost();
+			$renew_domains = self::renewDomains();
+			if ($issue_froxlor || $issue_domains || $renew_froxlor || $renew_domains) {
 				// insert task to generate certificates and vhost-configs
 				\Froxlor\System\Cronjob::inserttask(1);
 			}
@@ -76,6 +77,8 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 		if (! self::checkInstall()) {
 			return - 1;
 		}
+
+		self::checkUpgrade();
 
 		// flag for re-generation of vhost files
 		$changedetected = 0;
@@ -291,12 +294,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 	{
 		if (! empty($domains)) {
 
-			if (self::$do_update) {
-				self::checkUpgrade();
-				self::$do_update = false;
-			}
-
-			$acmesh_cmd = self::$acmesh . " --auto-upgrade 0 --server " . self::$apiserver . " --issue -d " . implode(" -d ", $domains);
+			$acmesh_cmd = self::$acmesh . " --server " . self::$apiserver . " --issue -d " . implode(" -d ", $domains);
 			// challenge path
 			$acmesh_cmd .= " -w " . Settings::Get('system.letsencryptchallengepath');
 			if (Settings::Get('system.leecc') > 0) {
@@ -496,7 +494,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 
 		if (is_dir($certificate_folder) && file_exists($ssl_file) && is_readable($ssl_file)) {
 			$cert_data = openssl_x509_parse(file_get_contents($ssl_file));
-			if (strtotime($cert_data['validTo_time_t']) > strtotime($cert_date)) {
+			if ($cert_data['validTo_time_t'] > strtotime($cert_date)) {
 				return true;
 			}
 		}
@@ -598,7 +596,7 @@ EOC;
 	 */
 	private static function checkUpgrade()
 	{
-		$acmesh_result = \Froxlor\FileDir::safe_exec(self::$acmesh . " --upgrade");
+		$acmesh_result = \Froxlor\FileDir::safe_exec(self::$acmesh . " --upgrade --auto-upgrade 0");
 		// check for activated cron
 		$acmesh_result2 = \Froxlor\FileDir::safe_exec(self::$acmesh . " --install-cronjob");
 		FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, "Checking for LetsEncrypt client upgrades before renewing certificates:\n" . implode("\n", $acmesh_result) . "\n" . implode("\n", $acmesh_result2));

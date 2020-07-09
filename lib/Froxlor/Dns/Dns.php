@@ -168,6 +168,13 @@ class Dns
 				// use the first NS entry as primary ns
 				$primary_ns = $entry['content'];
 			}
+			// check for CNAME on @, www- or wildcard-Alias and remove A/AAAA record accordingly
+			foreach (['@', 'www', '*'] as $crceord) {
+				if ($entry['type'] == 'CNAME' && $entry['record'] == '@' && (array_key_exists(md5($crceord), $required_entries['A']) || array_key_exists(md5($crceord), $required_entries['AAAA']))) {
+					unset($required_entries['A'][md5($crceord)]);
+					unset($required_entries['AAAA'][md5($crceord)]);
+				}
+			}
 			$zonerecords[] = new DnsEntry($entry['record'], $entry['type'], $entry['content'], $entry['prio'], $entry['ttl']);
 		}
 
