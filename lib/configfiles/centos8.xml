@@ -2502,10 +2502,10 @@ UserID opendkim
 ]]>
 						</content>
 					</file>
-					<command><![CDATA[echo "milter_default_action = accept" >> /etc/named.conf]]></command>
-					<command><![CDATA[echo "milter_protocol = 6" >> /etc/named.conf]]></command>
-					<command><![CDATA[echo "smtpd_milters = inet:127.0.0.1:8891" >> /etc/named.conf]]></command>
-					<command><![CDATA[echo "non_smtpd_milters = $smtpd_milters" >> /etc/named.conf]]></command>
+					<command><![CDATA[echo "milter_default_action = accept" >> /etc/postfix/main.cf]]></command>
+					<command><![CDATA[echo "milter_protocol = 6" >> /etc/postfix/main.cf]]></command>
+					<command><![CDATA[echo "smtpd_milters = inet:127.0.0.1:8891" >> /etc/postfix/main.cf]]></command>
+					<command><![CDATA[echo "non_smtpd_milters = $smtpd_milters" >> /etc/postfix/main.cf]]></command>
 					<command><![CDATA[systemctl enable --now opendkim.service]]></command>
 				</daemon>
 			</service>
