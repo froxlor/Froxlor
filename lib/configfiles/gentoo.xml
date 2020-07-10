@@ -1474,7 +1474,7 @@ user = <SQL_UNPRIVILEGED_USER>
 password = <SQL_UNPRIVILEGED_PASSWORD>
 dbname = <SQL_DB>
 hosts = <SQL_HOST>
-query = SELECT destination FROM mail_virtual AS v, panel_customers AS c WHERE c.customerid = v.customerid AND c.deactivated = 0 AND v.email = '%s' AND trim(v.destination) <> '' 
+query = SELECT destination FROM mail_virtual AS v, panel_customers AS c WHERE c.customerid = v.customerid AND c.deactivated = 0 AND v.email = '%s' AND trim(v.destination) <> ''
 ]]>
 							</content>
 						</file>
@@ -3823,7 +3823,7 @@ aliases:     files
 							<content><![CDATA[# remove "-D PHP5" from /etc/conf.d/apache2]]></content>
 						</command>
 					</commands>
-					<!-- instead of just restarting apache, we let the cronjob do all the 
+					<!-- instead of just restarting apache, we let the cronjob do all the
 						dirty work -->
 					<command><![CDATA[php {{const.install_dir}}scripts/froxlor_master_cronjob.php --force]]></command>
 				</daemon>
@@ -3862,9 +3862,39 @@ aliases:     files
 						</visibility>
 						<command><![CDATA[# remove "-D PHP5" from /etc/conf.d/apache2]]></command>
 					</commands>
-					<!-- instead of just restarting apache, we let the cronjob do all the 
+					<!-- instead of just restarting apache, we let the cronjob do all the
 						dirty work -->
 					<command><![CDATA[php {{const.install_dir}}scripts/froxlor_master_cronjob.php --force]]></command>
+				</daemon>
+				<!-- OpenDKIM -->
+				<daemon name="opendkim" title="OpenDKIM">
+					<install><![CDATA[emerge opendkim]]></install>
+					<file name="/etc/opendkim/opendkim.conf" chown="root:root"
+						  chmod="0644">
+						<content><![CDATA[
+#
+# Froxlor opendkim snipet
+#
+Mode                    sv
+Syslog                  yes
+SyslogSuccess           yes
+Canonicalization        relaxed/simple
+Domain                  refile:{{settings.dkim.dkim_prefix}}{{settings.dkim.dkim_domains}}
+KeyTable                refile:{{settings.dkim.dkim_prefix}}{{settings.dkim.dkim_dkimkeys}}
+SigningTable            refile:{{settings.dkim.dkim_prefix}}{{settings.dkim.dkim_dkimsigns}}
+RequireSafeKeys         no
+Selector                default
+Socket                  inet:8891@localhost
+UserID opendkim
+]]>
+						</content>
+					</file>
+					<command><![CDATA[echo "milter_default_action = accept" >> /etc/postfix/main.cf]]></command>
+					<command><![CDATA[echo "milter_protocol = 6" >> /etc/postfix/main.cf]]></command>
+					<command><![CDATA[echo "smtpd_milters = inet:127.0.0.1:8891" >> /etc/postfix/main.cf]]></command>
+					<command><![CDATA[echo "non_smtpd_milters = $smtpd_milters" >> /etc/postfix/main.cf]]></command>
+					<command><![CDATA[rc-update add opendkim default]]></command>
+					<command><![CDATA[/etc/init.d/opendkim start]]></command>
 				</daemon>
 			</service>
 		</services>
