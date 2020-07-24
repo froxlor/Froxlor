@@ -705,7 +705,7 @@ opcache.interned_strings_buffer'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'is_configured', '0'),
 	('panel', 'version', '0.10.19'),
-	('panel', 'db_version', '202005150');
+	('panel', 'db_version', '202007240');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
