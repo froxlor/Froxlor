@@ -649,3 +649,20 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.18')) {
 	showUpdateStep("Updating from 0.10.18 to 0.10.19", false);
 	\Froxlor\Froxlor::updateToVersion('0.10.19');
 }
+
+if (\Froxlor\Froxlor::isDatabaseVersion('202005150')) {
+	showUpdateStep("Add new performance indexes", true);
+	
+	Database::query("ALTER TABLE panel_customers ADD INDEX guid (guid);");
+	Database::query("ALTER TABLE panel_tasks ADD INDEX type (type);");
+	Database::query("ALTER TABLE mail_users ADD INDEX username (username);");
+	Database::query("ALTER TABLE mail_users ADD INDEX imap (imap);");
+	Database::query("ALTER TABLE mail_users ADD INDEX pop3 (pop3);");
+	Database::query("ALTER TABLE ftp_groups ADD INDEX gid (gid);");
+	Database::query("ALTER TABLE ftp_groups ADD INDEX members (members);");
+
+	
+	lastStepStatus(0);
+	\Froxlor\Froxlor::updateToDbVersion('202007240');
+}
+
