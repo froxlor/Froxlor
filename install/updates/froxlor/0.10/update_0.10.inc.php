@@ -651,7 +651,7 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.18')) {
 }
 
 if (\Froxlor\Froxlor::isDatabaseVersion('202005150')) {
-	showUpdateStep("Add new performerce indexes", false);
+	showUpdateStep("Add new performance indexes", true);
 	
 	Database::query("ALTER TABLE panel_customers ADD INDEX guid (guid);");
 	Database::query("ALTER TABLE panel_tasks ADD INDEX type (type);");
