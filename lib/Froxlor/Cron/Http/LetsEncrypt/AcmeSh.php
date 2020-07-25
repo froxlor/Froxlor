@@ -443,6 +443,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 						return true;
 					}
 				}
+				return false;
 			}
 			return $renew_certs;
 		}
