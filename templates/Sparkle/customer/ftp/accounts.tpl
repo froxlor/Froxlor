@@ -3,7 +3,7 @@
 		<header>
 			<h2>
 				<img src="templates/{$theme}/assets/img/icons/group_edit_big.png" alt="" />&nbsp;
-				{$lng['menue']['ftp']['accounts']}&nbsp;({$ftps_count})
+				{$lng['menue']['ftp']['accounts']}&nbsp;({$result['count']} / {$ftps_count})
 			</h2>
 		</header>
 
