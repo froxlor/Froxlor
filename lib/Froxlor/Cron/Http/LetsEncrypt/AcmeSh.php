@@ -63,7 +63,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 			$issue_domains = self::issueDomains();
 			$renew_froxlor = self::renewFroxlorVhost();
 			$renew_domains = self::renewDomains(true);
-			if ($issue_froxlor || $issue_domains || $renew_froxlor || $renew_domains) {
+			if ($issue_froxlor || !empty($issue_domains) || !empty($renew_froxlor) || $renew_domains) {
 				// insert task to generate certificates and vhost-configs
 				\Froxlor\System\Cronjob::inserttask(1);
 			}
@@ -399,8 +399,8 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 			");
 			$froxlor_ssl = Database::pexecute_first($froxlor_ssl_settings_stmt);
 			// also check for possible existing certificate
-			if ($froxlor_ssl || (! $froxlor_ssl && ! self::checkFsFilesAreNewer(Settings::Get('system.hostname'), date('Y-m-d H:i:s', 0)))) {
-				return ($froxlor_ssl ? $froxlor_ssl : true);
+			if ($froxlor_ssl && self::checkFsFilesAreNewer(Settings::Get('system.hostname'), $froxlor_ssl['expirationdate'])) {
+				return $froxlor_ssl;
 			}
 		}
 		return false;
