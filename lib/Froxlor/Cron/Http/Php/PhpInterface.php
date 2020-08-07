@@ -108,6 +108,11 @@ class PhpInterface
 				$this->_php_configs_cache[$php_config_id]['fpm_settings'] = Database::pexecute_first($stmt, array(
 					'id' => $this->_php_configs_cache[$php_config_id]['fpmsettingid']
 				));
+				// override fpm daemon settings if set in php-config
+				if ($this->_php_configs_cache[$php_config_id]['override_fpmconfig'] == 1) {
+					$this->_php_configs_cache[$php_config_id]['fpm_settings']['limit_extensions'] = $this->_php_configs_cache[$php_config_id]['limit_extensions'];
+					$this->_php_configs_cache[$php_config_id]['fpm_settings']['idle_timeout'] = $this->_php_configs_cache[$php_config_id]['idle_timeout'];
+				}
 			}
 		}
 
