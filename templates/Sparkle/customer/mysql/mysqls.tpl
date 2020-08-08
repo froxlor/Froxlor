@@ -3,7 +3,7 @@
 		<header>
 			<h2>
 				<img src="templates/{$theme}/assets/img/icons/mysql_big.png" alt="" />&nbsp;
-				{$lng['menue']['mysql']['databases']}&nbsp;({$mysqls_count})
+				{$lng['menue']['mysql']['databases']}&nbsp;({$result['count']} / {$mysqls_count})
 			</h2>
 		</header>
 

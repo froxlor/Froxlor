@@ -3,7 +3,7 @@
 		<header>
 			<h2>
 				<img src="templates/{$theme}/assets/img/icons/domains_big.png" alt="" />&nbsp;
-				{$lng['domains']['domainsettings']}&nbsp;({$domains_count})
+				{$lng['domains']['domainsettings']}&nbsp;({$result['count']} / {$domains_count})
 			</h2>
 		</header>
 

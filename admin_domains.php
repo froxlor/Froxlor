@@ -80,7 +80,7 @@ if ($page == 'domains' || $page == 'overview') {
 			$count++;
 		}
 
-		$domainscount = $paging->getEntries();
+		$domainscount = $result['count'] . " / " . $paging->getEntries();
 
 		// Display the list
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate("domains/domains") . "\";");

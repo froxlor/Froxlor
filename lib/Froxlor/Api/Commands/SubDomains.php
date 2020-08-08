@@ -36,7 +36,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	 * @param string $url
 	 *        	optional, overwrites path value with an URL to generate a redirect, alternatively use the path parameter also for URLs
 	 * @param int $openbasedir_path
-	 *        	optional, either 0 for customers-homedir or 1 for domains-docroot
+	 *        	optional, either 0 for domains-docroot or 1 for customers-homedir
 	 * @param int $phpsettingid
 	 *        	optional, php-settings-id, if empty the $domain value is used
 	 * @param int $redirectcode
@@ -452,7 +452,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	 * @param bool $isemaildomain
 	 *        	optional
 	 * @param int $openbasedir_path
-	 *        	optional, either 0 for customers-homedir or 1 for domains-docroot
+	 *        	optional, either 0 for domains-docroot or 1 for customers-homedir
 	 * @param int $phpsettingid
 	 *        	optional, php-settings-id, if empty the $domain value is used
 	 * @param int $redirectcode

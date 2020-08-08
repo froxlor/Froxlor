@@ -85,10 +85,12 @@ if ($page == 'overview') {
 			$mbdata_stmt = Database::prepare("SELECT SUM(data_length + index_length) as MB FROM information_schema.TABLES
 					WHERE table_schema = :table_schema
 					GROUP BY table_schema");
-			Database::pexecute($mbdata_stmt, array(
+			$mbdata = Database::pexecute_first($mbdata_stmt, array(
 				"table_schema" => $row['databasename']
 			));
-			$mbdata = $mbdata_stmt->fetch(PDO::FETCH_ASSOC);
+			if (!$mbdata) {
+				$mbdata = array('MB' => 0);
+			}
 			$row['size'] = \Froxlor\PhpHelper::sizeReadable($mbdata['MB'], 'GiB', 'bi', '%01.' . (int) Settings::Get('panel.decimal_places') . 'f %s');
 			eval("\$mysqls.=\"" . \Froxlor\UI\Template::getTemplate('mysql/mysqls_database') . "\";");
 			$count ++;
