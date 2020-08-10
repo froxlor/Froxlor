@@ -59,8 +59,11 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 			// Let's Encrypt cronjob is combined with regeneration of webserver configuration files.
 			// For debugging purposes you can use the --debug switch and the --force switch to run the cron manually.
 			// check whether we MIGHT need to run although there is no task to regenerate config-files
-			$needRenew = self::issueDomains();
-			if ($needRenew || self::issueFroxlorVhost()) {
+			$issue_froxlor = self::issueFroxlorVhost();
+			$issue_domains = self::issueDomains();
+			$renew_froxlor = self::renewFroxlorVhost();
+			$renew_domains = self::renewDomains(true);
+			if ($issue_froxlor || !empty($issue_domains) || !empty($renew_froxlor) || $renew_domains) {
 				// insert task to generate certificates and vhost-configs
 				\Froxlor\System\Cronjob::inserttask(1);
 			}
@@ -396,8 +399,8 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 			");
 			$froxlor_ssl = Database::pexecute_first($froxlor_ssl_settings_stmt);
 			// also check for possible existing certificate
-			if ($froxlor_ssl || (! $froxlor_ssl && ! self::checkFsFilesAreNewer(Settings::Get('system.hostname'), date('Y-m-d H:i:s', 0)))) {
-				return ($froxlor_ssl ? $froxlor_ssl : true);
+			if ($froxlor_ssl && self::checkFsFilesAreNewer(Settings::Get('system.hostname'), $froxlor_ssl['expirationdate'])) {
+				return $froxlor_ssl;
 			}
 		}
 		return false;
@@ -406,7 +409,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 	/**
 	 * get a list of domains that have a lets encrypt certificate (possible renew)
 	 */
-	private static function renewDomains()
+	private static function renewDomains($check = false)
 	{
 		$certificates_stmt = Database::query("
 			SELECT
@@ -434,6 +437,14 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 		");
 		$renew_certs = $certificates_stmt->fetchAll(\PDO::FETCH_ASSOC);
 		if ($renew_certs) {
+			if ($check) {
+				foreach ($renew_certs as $cert) {
+					if (self::checkFsFilesAreNewer($cert['domain'], $cert['expirationdate'])) {
+						return true;
+					}
+				}
+				return false;
+			}
 			return $renew_certs;
 		}
 		return array();

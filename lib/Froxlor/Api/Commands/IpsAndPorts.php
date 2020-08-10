@@ -51,7 +51,7 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			$query_fields = array();
 			$result_stmt = Database::prepare("
 				SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` " . $ip_where . $this->getSearchWhere($query_fields, $append_where) . $this->getOrderBy() . $this->getLimit());
-			Database::pexecute($result_stmt, null, true, true);
+			Database::pexecute($result_stmt, $query_fields, true, true);
 			$result = array();
 			while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 				$result[] = $row;

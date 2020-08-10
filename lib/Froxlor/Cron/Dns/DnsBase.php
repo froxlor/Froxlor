@@ -197,8 +197,8 @@ abstract class DnsBase
 
 			while ($domain = $result_domains_stmt->fetch(\PDO::FETCH_ASSOC)) {
 
-				$privkey_filename = \Froxlor\FileDir::makeCorrectFile(Settings::Get('dkim.dkim_prefix') . '/dkim-' . $domain['dkim_id']);
-				$pubkey_filename = \Froxlor\FileDir::makeCorrectFile(Settings::Get('dkim.dkim_prefix') . '/dkim-' . $domain['dkim_id'] . '.public');
+				$privkey_filename = \Froxlor\FileDir::makeCorrectFile(Settings::Get('dkim.dkim_prefix') . '/dkim' . $domain['dkim_id']);
+				$pubkey_filename = \Froxlor\FileDir::makeCorrectFile(Settings::Get('dkim.dkim_prefix') . '/dkim' . $domain['dkim_id'] . '.public');
 
 				if ($domain['dkim_privkey'] == '' || $domain['dkim_pubkey'] == '') {
 					$max_dkim_id_stmt = Database::query("SELECT MAX(`dkim_id`) as `max_dkim_id` FROM `" . TABLE_PANEL_DOMAINS . "`");
