@@ -3,7 +3,7 @@
 		<header>
 			<h2>
 				<img src="templates/{$theme}/assets/img/icons/emails_big.png" alt="" />&nbsp;
-				{$lng['menue']['email']['emails']}&nbsp;({$emailscount})
+				{$lng['menue']['email']['emails']}&nbsp;({$result['count']} / {$emailscount})
 			</h2>
 		</header>
 

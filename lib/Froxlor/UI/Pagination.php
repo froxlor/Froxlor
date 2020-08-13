@@ -164,6 +164,9 @@ class Pagination
 		// if a search is performed, the result-entries-count is irrelevant
 		// we do not want pagination
 		$this->is_search = true;
+		// unset any limit as we do not have pagination when showing search-results
+		unset($this->data['sql_limit']);
+		unset($this->data['sql_offset']);
 		return $this;
 	}
 
