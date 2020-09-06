@@ -155,7 +155,7 @@ class Nginx extends HttpConfigBase
 				// we know whether it's an ssl vhost or not
 				$ssl_vhost = false;
 				if ($row_ipsandports['ssl'] == '1') {
-					if ($row_ipsandports['ssl_cert_file'] == '') {
+					if ($row_ipsandports['ssl_cert_file'] == '' || ! file_exists($row_ipsandports['ssl_cert_file'])) {
 						$row_ipsandports['ssl_cert_file'] = Settings::Get('system.ssl_cert_file');
 						if (! file_exists($row_ipsandports['ssl_cert_file'])) {
 							// explicitly disable ssl for this vhost
@@ -659,7 +659,7 @@ class Nginx extends HttpConfigBase
 	{
 		$sslsettings = '';
 
-		if ($domain_or_ip['ssl_cert_file'] == '') {
+		if ($domain_or_ip['ssl_cert_file'] == '' || ! file_exists($domain_or_ip['ssl_cert_file'])) {
 			$domain_or_ip['ssl_cert_file'] = Settings::Get('system.ssl_cert_file');
 			if (! file_exists($domain_or_ip['ssl_cert_file'])) {
 				// explicitly disable ssl for this vhost
