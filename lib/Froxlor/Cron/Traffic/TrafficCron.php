@@ -570,29 +570,6 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 			}
 
 			if (isset($admin_diskspace[$row['adminid']])) {
-
-				$ins_data = array(
-					'adminid' => $row['adminid'],
-					'year' => date('Y', time()),
-					'month' => date('m', time()),
-					'day' => date('d', time()),
-					'stamp' => time(),
-					'webspace' => $admin_diskspace[$row['adminid']]['webspace'],
-					'mail' => $admin_diskspace[$row['adminid']]['mail'],
-					'mysql' => $admin_diskspace[$row['adminid']]['mysql']
-				);
-				$ins_stmt = Database::prepare("
-					INSERT INTO `" . TABLE_PANEL_DISKSPACE_ADMINS . "` SET
-					`adminid` = :adminid,
-					`year` = :year,
-					`month` = :month,
-					`day` = :day,
-					`stamp` = :stamp,
-					`webspace` = :webspace,
-					`mail` = :mail,
-					`mysql` = :mysql
-				");
-
 				$upd_data = array(
 					'diskspace' => $admin_diskspace[$row['adminid']]['all'],
 					'adminid' => $row['adminid']

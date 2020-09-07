@@ -705,7 +705,7 @@ opcache.interned_strings_buffer'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'is_configured', '0'),
 	('panel', 'version', '0.10.20'),
-	('panel', 'db_version', '202007240');
+	('panel', 'db_version', '202009070');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
@@ -782,23 +782,6 @@ CREATE TABLE `panel_diskspace` (
   `mysql` bigint(30) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `customerid` (`customerid`)
-) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
-
-
-
-DROP TABLE IF EXISTS `panel_diskspace_admins`;
-CREATE TABLE `panel_diskspace_admins` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `adminid` int(11) unsigned NOT NULL default '0',
-  `year` int(4) unsigned zerofill NOT NULL default '0000',
-  `month` int(2) unsigned zerofill NOT NULL default '00',
-  `day` int(2) unsigned zerofill NOT NULL default '00',
-  `stamp` int(11) unsigned NOT NULL default '0',
-  `webspace` bigint(30) unsigned NOT NULL default '0',
-  `mail` bigint(30) unsigned NOT NULL default '0',
-  `mysql` bigint(30) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`id`),
-  KEY `adminid` (`adminid`)
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 

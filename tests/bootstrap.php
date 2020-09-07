@@ -63,7 +63,6 @@ Database::query("TRUNCATE TABLE `" . TABLE_FTP_QUOTATALLIES . "`;");
 Database::query("TRUNCATE TABLE `" . TABLE_MAIL_VIRTUAL . "`;");
 Database::query("TRUNCATE TABLE `" . TABLE_MAIL_USERS . "`;");
 Database::query("TRUNCATE TABLE `" . TABLE_PANEL_DISKSPACE . "`;");
-Database::query("TRUNCATE TABLE `" . TABLE_PANEL_DISKSPACE_ADMINS . "`;");
 Database::query("TRUNCATE TABLE `" . TABLE_PANEL_TRAFFIC . "`;");
 Database::query("TRUNCATE TABLE `" . TABLE_PANEL_TRAFFIC_ADMINS . "`;");
 Database::query("TRUNCATE TABLE `" . TABLE_PANEL_TASKS . "`;");

@@ -668,3 +668,12 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.19')) {
 	showUpdateStep("Updating from 0.10.19 to 0.10.20", false);
 	\Froxlor\Froxlor::updateToVersion('0.10.20');
 }
+
+if (\Froxlor\Froxlor::isDatabaseVersion('202007240')) {
+
+	showUpdateStep("Removing old unused table", true);
+	Database::query("DROP TABLE IF EXISTS `panel_diskspace_admins`;");
+	lastStepStatus(0);
+
+	\Froxlor\Froxlor::updateToDbVersion('202009070');
+}
