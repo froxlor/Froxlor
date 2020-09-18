@@ -413,7 +413,8 @@ class Apache extends HttpConfigBase
 						$this->virtualhosts_data[$vhosts_filename] .= $this->processSpecialConfigTemplate($row_ipsandports['ssl_specialsettings'], $domain, $row_ipsandports['ip'], $row_ipsandports['port'], $row_ipsandports['ssl'] == '1') . "\n";
 					}
 
-					if ($row_ipsandports['ssl_cert_file'] == '' || ! file_exists($row_ipsandports['ssl_cert_file'])) {
+					// check for required fallback
+					if (($row_ipsandports['ssl_cert_file'] == '' || ! file_exists($row_ipsandports['ssl_cert_file'])) && (Settings::Get('system.le_froxlor_enabled') == '0' || $this->froxlorVhostHasLetsEncryptCert() == false)) {
 						$row_ipsandports['ssl_cert_file'] = Settings::Get('system.ssl_cert_file');
 						if (! file_exists($row_ipsandports['ssl_cert_file'])) {
 							// explicitly disable ssl for this vhost
