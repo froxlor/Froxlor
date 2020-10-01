@@ -155,7 +155,8 @@ class Nginx extends HttpConfigBase
 				// we know whether it's an ssl vhost or not
 				$ssl_vhost = false;
 				if ($row_ipsandports['ssl'] == '1') {
-					if ($row_ipsandports['ssl_cert_file'] == '' || ! file_exists($row_ipsandports['ssl_cert_file'])) {
+					// check for required fallback
+					if (($row_ipsandports['ssl_cert_file'] == '' || ! file_exists($row_ipsandports['ssl_cert_file'])) && (Settings::Get('system.le_froxlor_enabled') == '0' || $this->froxlorVhostHasLetsEncryptCert() == false)) {
 						$row_ipsandports['ssl_cert_file'] = Settings::Get('system.ssl_cert_file');
 						if (! file_exists($row_ipsandports['ssl_cert_file'])) {
 							// explicitly disable ssl for this vhost

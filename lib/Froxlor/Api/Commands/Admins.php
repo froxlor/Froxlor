@@ -730,14 +730,6 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 				'adminid' => $id
 			), true, true);
 
-			// delete the diskspace usage
-			$del_stmt = Database::prepare("
-				DELETE FROM `" . TABLE_PANEL_DISKSPACE_ADMINS . "` WHERE `adminid` = :adminid
-			");
-			Database::pexecute($del_stmt, array(
-				'adminid' => $id
-			), true, true);
-
 			// set admin-id of the old admin's customer to current admins
 			$upd_stmt = Database::prepare("
 				UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET

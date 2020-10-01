@@ -19,8 +19,8 @@ $(document).ready(function() {
 		} else {
 			ticks.push([i, $(row).children().first().html()]);
 		}
-		ftp.push([i, parseFloat(ftpd / 1024)]);
-		http.push([i, parseFloat(httpd / 1024)]);
+		ftp.push([i, parseFloat(ftpd)]);
+		http.push([i, parseFloat(httpd)]);
 		mail.push([i, parseFloat(maild)]);
 		i++;
 	});
@@ -107,24 +107,16 @@ $(document).ready(function() {
 		"font-size": "11px"
 	}).appendTo("body");
 
-	$("#ftpchart, #httpchart").bind("plothover", function(event, pos, item) {
+	$("#ftpchart, #httpchart, #mailchart").bind("plothover", function(event, pos, item) {
 		if (item) {
-			var y = item.datapoint[1].toFixed(2);
+			var y = item.datapoint[1];
+			var unit = 'MiB';
+			if (y > 1024) {
+				y /= 1024;
+				unit = 'GiB';
+			}
 
-			$("#tooltip").html(item.series.label + ": " + y + " GiB").css({
-				top: item.pageY + 5,
-				left: item.pageX - $("#tooltip").width() / 2
-			}).fadeIn(200);
-		} else {
-			$("#tooltip").hide();
-		}
-	});
-
-	$("#mailchart").bind("plothover", function(event, pos, item) {
-		if (item) {
-			var y = item.datapoint[1].toFixed(2);
-
-			$("#tooltip").html(item.series.label + ": " + y + " MiB").css({
+			$("#tooltip").html(item.series.label + ": " + y.toFixed(2) + " " + unit).css({
 				top: item.pageY + 5,
 				left: item.pageX - $("#tooltip").width() / 2
 			}).fadeIn(200);

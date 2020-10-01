@@ -86,21 +86,17 @@ if (! is_null($month) && ! is_null($year)) {
 
 		if (extension_loaded('bcmath')) {
 			$traf['ftptext'] = bcdiv($row['ftp_up'], 1024, Settings::Get('panel.decimal_places')) . " MiB up/ " . bcdiv($row['ftp_down'], 1024, Settings::Get('panel.decimal_places')) . " MiB down (FTP)";
-			$traf['httptext'] = bcdiv($http, 1024, Settings::Get('panel.decimal_places')) . " MiB (HTTP)";
-			$traf['mailtext'] = bcdiv($mail, 1024, Settings::Get('panel.decimal_places')) . " MiB (Mail)";
 			$traf['ftp'] = bcdiv($ftp, 1024, Settings::Get('panel.decimal_places'));
-			$traf['http'] = bcdiv($http, 1024, Settings::Get('panel.decimal_places'));
-			$traf['mail'] = bcdiv($mail, 1024, Settings::Get('panel.decimal_places'));
-			$traf['byte'] = bcdiv($traf['byte'], 1024, Settings::Get('panel.decimal_places'));
 		} else {
 			$traf['ftptext'] = round($row['ftp_up'] / 1024, Settings::Get('panel.decimal_places')) . " MiB up/ " . round($row['ftp_down'] / 1024, Settings::Get('panel.decimal_places')) . " MiB down (FTP)";
-			$traf['httptext'] = round($http / 1024, Settings::Get('panel.decimal_places')) . " MiB (HTTP)";
-			$traf['mailtext'] = round($mail / 1024, Settings::Get('panel.decimal_places')) . " MiB (Mail)";
-			$traf['http'] = round($http, Settings::Get('panel.decimal_places'));
-			$traf['ftp'] = round($ftp, Settings::Get('panel.decimal_places'));
-			$traf['mail'] = round($mail, Settings::Get('panel.decimal_places'));
-			$traf['byte'] = round($traf['byte'] / 1024, Settings::Get('panel.decimal_places'));
+			$traf['ftp'] = round($ftp / 1024, Settings::Get('panel.decimal_places'));
 		}
+
+		getReadableTraffic($traf,'httptext', $http, 1024, "MiB (HTTP)");
+		getReadableTraffic($traf,'http', $http, 1024);
+		getReadableTraffic($traf,'mailtext', $mail, 1024, "MiB (Mail)");
+		getReadableTraffic($traf,'mail', $mail, 1024);
+		getReadableTraffic($traf,'byte', $traf['byte'], (1024 * 1024));
 
 		eval("\$traffic.=\"" . \Froxlor\UI\Template::getTemplate('traffic/traffic_month') . "\";");
 		$show = $lng['traffic']['months'][intval($row['month'])] . ' ' . $row['year'];
@@ -142,21 +138,17 @@ if (! is_null($month) && ! is_null($year)) {
 
 		if (extension_loaded('bcmath')) {
 			$traf['ftptext'] = bcdiv($ftp_up, 1024, Settings::Get('panel.decimal_places')) . " MiB up/ " . bcdiv($ftp_down, 1024, Settings::Get('panel.decimal_places')) . " MiB down (FTP)";
-			$traf['httptext'] = bcdiv($http, 1024, Settings::Get('panel.decimal_places')) . " MiB (HTTP)";
-			$traf['mailtext'] = bcdiv($mail, 1024, Settings::Get('panel.decimal_places')) . " MiB (Mail)";
 			$traf['ftp'] = bcdiv(($ftp_up + $ftp_down), 1024, Settings::Get('panel.decimal_places'));
-			$traf['http'] = bcdiv($http, 1024, Settings::Get('panel.decimal_places'));
-			$traf['mail'] = bcdiv($mail, 1024, Settings::Get('panel.decimal_places'));
-			$traf['byte'] = bcdiv($traf['byte'], 1024 * 1024, Settings::Get('panel.decimal_places'));
 		} else {
 			$traf['ftptext'] = round($ftp_up / 1024, Settings::Get('panel.decimal_places')) . " MiB up/ " . round($ftp_down / 1024, Settings::Get('panel.decimal_places')) . " MiB down (FTP)";
-			$traf['httptext'] = round($http / 1024, Settings::Get('panel.decimal_places')) . " MiB (HTTP)";
-			$traf['mailtext'] = round($mail / 1024, Settings::Get('panel.decimal_places')) . " MiB (Mail)";
 			$traf['ftp'] = round(($ftp_up + $ftp_down) / 1024, Settings::Get('panel.decimal_places'));
-			$traf['http'] = round($http / 1024, Settings::Get('panel.decimal_places'));
-			$traf['mail'] = round($mail / 1024, Settings::Get('panel.decimal_places'));
-			$traf['byte'] = round($traf['byte'] / (1024 * 1024), Settings::Get('panel.decimal_places'));
 		}
+
+		getReadableTraffic($traf,'httptext', $http, 1024, "MiB (HTTP)");
+		getReadableTraffic($traf,'http', $http, 1024);
+		getReadableTraffic($traf,'mailtext', $mail, 1024, "MiB (Mail)");
+		getReadableTraffic($traf,'mail', $mail, 1024);
+		getReadableTraffic($traf,'byte', $traf['byte'], (1024 * 1024));
 
 		eval("\$traffic.=\"" . \Froxlor\UI\Template::getTemplate('traffic/traffic_traffic') . "\";");
 	}
@@ -166,4 +158,13 @@ if (! is_null($month) && ! is_null($year)) {
 	$traffic_complete['mail'] = \Froxlor\PhpHelper::sizeReadable($traffic_complete['mail'] * 1024, 'GiB', 'bi', '%01.' . (int) Settings::Get('panel.decimal_places') . 'f %s');
 
 	eval("echo \"" . \Froxlor\UI\Template::getTemplate('traffic/traffic') . "\";");
+}
+
+function getReadableTraffic(&$traf, $index, $value, $divisor, $desc = "")
+{
+	if (extension_loaded('bcmath')) {
+		$traf[$index] = bcdiv($value, $divisor,Settings::Get('panel.decimal_places')).(!empty($desc) ? " ".$desc : "");
+	} else {
+		$traf[$index] = round($value / $divisor, Settings::Get('panel.decimal_places')).(!empty($desc) ? " ".$desc : "");
+	}
 }
