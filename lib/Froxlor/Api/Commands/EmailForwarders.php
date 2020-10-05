@@ -30,9 +30,9 @@ class EmailForwarders extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 	 * @param string $emailaddr
 	 *        	optional, the email-address to add the forwarder for
 	 * @param int $customerid
-	 *        	optional, admin-only, the customer-id
+	 *        	optional, required when called as admin (if $loginname is not specified)
 	 * @param string $loginname
-	 *        	optional, admin-only, the loginname
+	 *        	optional, required when called as admin (if $customerid is not specified)
 	 * @param string $destination
 	 *        	email-address to add as forwarder
 	 *        	
@@ -221,9 +221,9 @@ class EmailForwarders extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 	 * @param string $emailaddr
 	 *        	optional, the email-address to delete the forwarder from
 	 * @param int $customerid
-	 *        	optional, admin-only, the customer-id
+	 *        	optional, required when called as admin (if $loginname is not specified)
 	 * @param string $loginname
-	 *        	optional, admin-only, the loginname
+	 *        	optional, required when called as admin (if $customerid is not specified)
 	 * @param int $forwarderid
 	 *        	id of the forwarder to delete
 	 *        	

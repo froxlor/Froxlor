@@ -56,7 +56,9 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	 * @param bool $hsts_preload
 	 *        	optional whether or not to preload HSTS header value, default 0
 	 * @param int $customerid
-	 *        	required when called as admin, not needed when called as customer
+	 *        	optional, required when called as admin (if $loginname is not specified)
+	 * @param string $loginname
+	 *        	optional, required when called as admin (if $customerid is not specified)
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
@@ -470,7 +472,9 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	 * @param bool $hsts_preload
 	 *        	optional whether or not to preload HSTS header value
 	 * @param int $customerid
-	 *        	required when called as admin, not needed when called as customer
+	 *        	optional, required when called as admin (if $loginname is not specified)
+	 * @param string $loginname
+	 *        	optional, required when called as admin (if $customerid is not specified)
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
@@ -876,7 +880,9 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	 * @param string $domainname
 	 *        	optional, the domainname
 	 * @param int $customerid
-	 *        	required when called as admin, not needed when called as customer
+	 *        	optional, required when called as admin (if $loginname is not specified)
+	 * @param string $loginname
+	 *        	optional, required when called as admin (if $customerid is not specified)
 	 *
 	 * @access admin, customer
 	 * @throws \Exception

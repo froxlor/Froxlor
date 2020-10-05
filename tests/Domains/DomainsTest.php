@@ -282,7 +282,7 @@ class DomainsTest extends TestCase
 			'customerid' => $customer_userdata['customerid'] + 1
 		];
 		Settings::Set('panel.allow_domain_change_customer', 1);
-		$this->expectExceptionMessage("The customer you have chosen doesn't exist.");
+		$this->expectExceptionMessage("Customer with id #2 could not be found");
 		Domains::getLocal($admin_userdata, $data)->update();
 	}
 
