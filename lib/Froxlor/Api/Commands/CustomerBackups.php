@@ -52,7 +52,9 @@ class CustomerBackups extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 	 * @param bool $backup_web
 	 *        	optional whether to backup web-data, default is 0 (false)
 	 * @param int $customerid
-	 *        	required when called as admin, not needed when called as customer
+	 *        	optional, required when called as admin (if $loginname is not specified)
+	 * @param string $loginname
+	 *        	optional, required when called as admin (if $customerid is not specified)
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception

@@ -199,6 +199,9 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	 * @param string $domain
 	 *        	domain-name
 	 * @param int $customerid
+	 *        	optional, required when called as admin (if $loginname is not specified)
+	 * @param string $loginname
+	 *        	optional, required when called as admin (if $customerid is not specified)
 	 * @param int $adminid
 	 *        	optional, default is the calling admin's ID
 	 * @param array $ipandport
@@ -297,7 +300,6 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 
 				// parameters
 				$p_domain = $this->getParam('domain');
-				$customerid = intval($this->getParam('customerid'));
 
 				// optional parameters
 				$p_ipandports = $this->getParam('ipandport', true, explode(',', Settings::Get('system.defaultip')));
@@ -378,9 +380,8 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 					), '', true);
 				}
 
-				$customer = $this->apiCall('Customers.get', array(
-					'id' => $customerid
-				));
+				$customer = $this->getCustomerData();
+				$customerid = $customer['customerid'];
 
 				if ($this->getUserDetail('customers_see_all') == '1' && $adminid != $this->getUserDetail('adminid')) {
 					$admin_stmt = Database::prepare("
@@ -846,7 +847,9 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	 * @param string $domainname
 	 *        	optional, the domainname
 	 * @param int $customerid
-	 *        	optional customer-id
+	 *        	required (if $loginname is not specified)
+	 * @param string $loginname
+	 *        	required (if $customerid is not specified)
 	 * @param int $adminid
 	 *        	optional, default is the calling admin's ID
 	 * @param array $ipandport
@@ -954,8 +957,17 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 
 			// optional parameters
 			$p_ipandports = $this->getParam('ipandport', true, array());
-			$customerid = intval($this->getParam('customerid', true, $result['customerid']));
 			$adminid = intval($this->getParam('adminid', true, $result['adminid']));
+
+			if ($this->getParam('customerid', true, 0) == 0 && $this->getParam('loginname', true, '') == '') {
+				$customerid = $result['customerid'];
+				$customer = $this->apiCall('Customers.get', array(
+					'id' => $customerid
+				));
+			} else {
+				$customer = $this->getCustomerData();
+				$customerid = $customer['customerid'];
+			}
 
 			$subcanemaildomain = $this->getParam('subcanemaildomain', true, $result['subcanemaildomain']);
 			$isemaildomain = $this->getBoolParam('isemaildomain', true, $result['isemaildomain']);
@@ -1090,13 +1102,6 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				if (empty($customer) || $customer['customerid'] != $customerid) {
 					\Froxlor\UI\Response::standard_error('customerdoesntexist', '', true);
 				}
-			} else {
-				$customerid = $result['customerid'];
-
-				// get customer
-				$customer = $this->apiCall('Customers.get', array(
-					'id' => $customerid
-				));
 			}
 
 			// handle change of admin (move domain from admin to admin)

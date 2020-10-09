@@ -40,7 +40,9 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 	 * @param string $ftp_domain
 	 *        	optional if customer.ftpatdomain is allowed, specify a domain (customer must be owner)
 	 * @param int $customerid
-	 *        	required when called as admin, not needed when called as customer
+	 *        	optional, required when called as admin (if $loginname is not specified)
+	 * @param string $loginname
+	 *        	optional, required when called as admin (if $customerid is not specified)
 	 * @param array $additional_members
 	 *        	optional whether to add additional usernames to the group
 	 * @param bool $is_defaultuser
@@ -351,7 +353,9 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 	 * @param string $shell
 	 *        	optional, default /bin/false (not changeable when deactivated)
 	 * @param int $customerid
-	 *        	required when called as admin, not needed when called as customer
+	 *        	optional, required when called as admin (if $loginname is not specified)
+	 * @param string $loginname
+	 *        	optional, required when called as admin (if $customerid is not specified)
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception

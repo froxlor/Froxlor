@@ -30,9 +30,9 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 	 * @param string $emailaddr
 	 *        	optional email-address to add the account for
 	 * @param int $customerid
-	 *        	optional, admin-only, the customer-id
+	 *        	optional, required when called as admin (if $loginname is not specified)
 	 * @param string $loginname
-	 *        	optional, admin-only, the loginname
+	 *        	optional, required when called as admin (if $customerid is not specified)
 	 * @param string $email_password
 	 *        	password for the account
 	 * @param string $alternative_email
@@ -295,9 +295,9 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 	 * @param string $emailaddr
 	 *        	optional, the email-address to update
 	 * @param int $customerid
-	 *        	optional, admin-only, the customer-id
+	 *        	optional, required when called as admin (if $loginname is not specified)
 	 * @param string $loginname
-	 *        	optional, admin-only, the loginname
+	 *        	optional, required when called as admin (if $customerid is not specified)
 	 * @param int $email_quota
 	 *        	optional, update quota
 	 * @param string $email_password
@@ -418,9 +418,9 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 	 * @param string $emailaddr
 	 *        	optional, the email-address to delete the account for
 	 * @param int $customerid
-	 *        	optional, admin-only, the customer-id
+	 *        	optional, required when called as admin (if $loginname is not specified)
 	 * @param string $loginname
-	 *        	optional, admin-only, the loginname
+	 *        	optional, required when called as admin (if $customerid is not specified)
 	 * @param bool $delete_userfiles
 	 *        	optional, default false
 	 *        	
