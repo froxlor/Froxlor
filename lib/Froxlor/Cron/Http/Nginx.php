@@ -902,7 +902,6 @@ class Nginx extends HttpConfigBase
 			FROM `" . TABLE_PANEL_HTPASSWDS . "` AS a
 			JOIN `" . TABLE_PANEL_DOMAINS . "` AS b USING (`customerid`)
 			WHERE b.customerid = :customerid AND b.domain = :domain
-			AND path LIKE CONCAT(b.documentroot, '%')
 		");
 		Database::pexecute($result_stmt, array(
 			'customerid' => $domain['customerid'],
@@ -1042,10 +1041,10 @@ class Nginx extends HttpConfigBase
 
 		if (Settings::Get('system.awstats_enabled') == '1') {
 			// awstats
-			$stats_text .= "\t" . 'location /awstats {' . "\n";
+			$stats_text .= "\t" . 'location ^~ /awstats {' . "\n";
 		} else {
 			// webalizer
-			$stats_text .= "\t" . 'location /webalizer {' . "\n";
+			$stats_text .= "\t" . 'location ^~ /webalizer {' . "\n";
 		}
 
 		$stats_text .= "\t\t" . 'alias ' . $alias_dir . ';' . "\n";
