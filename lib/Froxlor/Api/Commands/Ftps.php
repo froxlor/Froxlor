@@ -182,6 +182,17 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 					), true, true);
 				}
 
+				// create quotatallies entry if it not exists, refs #885
+				if ($result_stmt->rowCount() == 0) {
+					$stmt = Database::prepare("INSERT INTO `" . TABLE_FTP_QUOTATALLIES . "`
+						(`name`, `quota_type`, `bytes_in_used`, `bytes_out_used`, `bytes_xfer_used`, `files_in_used`, `files_out_used`, `files_xfer_used`)
+						VALUES (:name, 'user', '0', '0', '0', '0', '0', '0')
+					");
+					Database::pexecute($stmt, array(
+						"name" => $username
+					), true, true);
+				}
+
 				$group_upd_stmt = Database::prepare("
 					UPDATE `" . TABLE_FTP_GROUPS . "`
 					SET `members` = CONCAT_WS(',',`members`, :username)
@@ -345,7 +356,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 	 * @param string $username
 	 *        	optional, the username
 	 * @param string $ftp_password
-	 *        	password for the created database and database-user
+	 *        	optional, update password if specified
 	 * @param string $path
 	 *        	destination path relative to the customers-homedir
 	 * @param string $ftp_description
