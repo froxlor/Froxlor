@@ -198,16 +198,39 @@ class DomainsTest extends TestCase
 	public function testAdminDomainsUpdate()
 	{
 		global $admin_userdata;
+		// get customer
+		$json_result = Customers::getLocal($admin_userdata, array(
+			'loginname' => 'test1'
+		))->get();
+		$customer_userdata = json_decode($json_result, true)['data'];
 		$data = [
 			'domainname' => 'test.local',
 			'email_only' => 1,
-			'override_tls' => 0
+			'override_tls' => 0,
+			'documentroot' => 'web'
 		];
 		$json_result = Domains::getLocal($admin_userdata, $data)->update();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(1, $result['email_only']);
 		$this->assertFalse(in_array('TLSv1.3', explode(",", $result['ssl_protocols'])));
 		$this->assertEquals('test.local', $result['domain']);
+		$this->assertEquals($customer_userdata['documentroot'] . 'web/', $result['documentroot']);
+	}
+
+	/**
+	 *
+	 * @depends testAdminDomainsAdd
+	 */
+	public function testAdminDomainsUpdateAbsolutePath()
+	{
+		global $admin_userdata;
+		$data = [
+			'domainname' => 'test.local',
+			'documentroot' => '/web'
+		];
+		$json_result = Domains::getLocal($admin_userdata, $data)->update();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals('/web/', $result['documentroot']);
 	}
 
 	/**

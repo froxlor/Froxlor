@@ -1329,7 +1329,12 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 			}
 
 			if (! preg_match('/^https?\:\/\//', $documentroot)) {
-				$documentroot = \Froxlor\FileDir::makeCorrectDir($documentroot);
+				if ($documentroot != $result['documentroot']) {
+					if (substr($documentroot, 0, 1) != "/") {
+						$documentroot = $customer['documentroot'] . '/' . $documentroot;
+					}
+					$documentroot = \Froxlor\FileDir::makeCorrectDir($documentroot);
+				}
 			}
 
 			if ($email_only == '1') {
