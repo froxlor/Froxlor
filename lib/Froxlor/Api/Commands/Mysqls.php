@@ -307,7 +307,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 
 		// paramters
 		$password = $this->getParam('mysql_password', true, '');
-		$databasedescription = $this->getParam('description', true, '');
+		$databasedescription = $this->getParam('description', true, $result['description']);
 
 		// validation
 		$password = \Froxlor\Validate\Validate::validate($password, 'password', '', '', array(), true);
