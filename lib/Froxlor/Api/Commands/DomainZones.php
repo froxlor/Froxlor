@@ -170,6 +170,10 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 						break;
 					}
 				}
+				// check www-alias setting
+				if ($result['wwwserveralias'] == '1' && $result['iswildcarddomain'] == '0' && $record == 'www') {
+					$errors[] = $this->lng['error']['no_wwwcnamae_ifwwwalias'];
+				}
 			}
 			// append trailing dot (again)
 			$content .= '.';
