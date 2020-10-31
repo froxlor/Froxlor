@@ -713,6 +713,10 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			if ($id == $this->getUserDetail('adminid')) {
 				\Froxlor\UI\Response::standard_error('youcantdeleteyourself', '', true);
 			}
+			// can't delete the first superadmin
+			if ($id == 1) {
+				\Froxlor\UI\Response::standard_error('cannotdeletesuperadmin', '', true);
+			}
 
 			// delete admin
 			$del_stmt = Database::prepare("
