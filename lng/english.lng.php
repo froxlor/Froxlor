@@ -2098,3 +2098,4 @@ $lng['serversettings']['phpfpm_settings']['custom_config']['description'] = 'Add
 
 $lng['serversettings']['awstats']['logformat']['title'] = 'LogFormat setting';
 $lng['serversettings']['awstats']['logformat']['description'] = 'If you use customized logformat for your webserver, you need change the awstats LogFormat too.<br/>Default is 1. For more information check documentation <a target="_blank" href="https://awstats.sourceforge.io/docs/awstats_config.html#LogFormat">here</a>.';
+$lng['error']['cannotdeletesuperadmin'] = 'The first admin cannot be deleted.';
