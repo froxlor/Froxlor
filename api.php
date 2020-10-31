@@ -1,4 +1,6 @@
 <?php
+use voku\helper\AntiXSS;
+
 require __DIR__ . '/vendor/autoload.php';
 
 require \Froxlor\Froxlor::getInstallDir() . '/lib/tables.inc.php';
@@ -29,6 +31,12 @@ $decoded_request = json_decode($request, true);
 if (is_null($decoded_request)) {
 	json_response(400, "Invalid JSON");
 }
+
+/**
+ * check for xss attempts and clean request
+ */
+$antiXss = new AntiXSS();
+$request = $antiXss->xss_clean($request);
 
 // validate content
 try {
