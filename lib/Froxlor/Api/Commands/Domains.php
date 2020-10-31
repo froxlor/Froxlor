@@ -429,8 +429,8 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 						$zonefile = '';
 					}
 
-					$specialsettings = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $specialsettings), 'specialsettings', '/^[^\0]*$/', '', array(), true);
-					\Froxlor\Validate\Validate::validate($documentroot, 'documentroot', '', '', array(), true);
+					$specialsettings = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $specialsettings), 'specialsettings', \Froxlor\Validate\Validate::REGEX_CONF_TEXT, '', array(), true);
+					\Froxlor\Validate\Validate::validate($documentroot, 'documentroot', \Froxlor\Validate\Validate::REGEX_DIR, '', array(), true);
 
 					// If path is empty and 'Use domain name as default value for DocumentRoot path' is enabled in settings,
 					// set default path to subdomain or domain name
@@ -1162,8 +1162,8 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 					$dkim = $result['dkim'];
 				}
 
-				$specialsettings = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $specialsettings), 'specialsettings', '/^[^\0]*$/', '', array(), true);
-				$documentroot = \Froxlor\Validate\Validate::validate($documentroot, 'documentroot', '', '', array(), true);
+				$specialsettings = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $specialsettings), 'specialsettings', \Froxlor\Validate\Validate::REGEX_CONF_TEXT, '', array(), true);
+				$documentroot = \Froxlor\Validate\Validate::validate($documentroot, 'documentroot', \Froxlor\Validate\Validate::REGEX_DIR, '', array(), true);
 
 				// when moving customer and no path is specified, update would normally reuse the current document-root
 				// which would point to the wrong customer, therefore we will re-create that directory

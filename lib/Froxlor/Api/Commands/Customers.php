@@ -336,7 +336,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				$email = $idna_convert->encode(\Froxlor\Validate\Validate::validate($email, 'email', '', '', array(), true));
 				$customernumber = \Froxlor\Validate\Validate::validate($customernumber, 'customer number', '/^[A-Za-z0-9 \-]*$/Di', '', array(), true);
 				$def_language = \Froxlor\Validate\Validate::validate($def_language, 'default language', '', '', array(), true);
-				$custom_notes = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $custom_notes), 'custom_notes', '/^[^\0]*$/', '', array(), true);
+				$custom_notes = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $custom_notes), 'custom_notes', \Froxlor\Validate\Validate::REGEX_CONF_TEXT, '', array(), true);
 
 				if (Settings::Get('system.mail_quota_enabled') != '1') {
 					$email_quota = - 1;
@@ -928,7 +928,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 			$fax = \Froxlor\Validate\Validate::validate($fax, 'fax', '/^[0-9\- \+\(\)\/]*$/', '', array(), true);
 			$email = $idna_convert->encode(\Froxlor\Validate\Validate::validate($email, 'email', '', '', array(), true));
 			$customernumber = \Froxlor\Validate\Validate::validate($customernumber, 'customer number', '/^[A-Za-z0-9 \-]*$/Di', '', array(), true);
-			$custom_notes = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $custom_notes), 'custom_notes', '/^[^\0]*$/', '', array(), true);
+			$custom_notes = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $custom_notes), 'custom_notes', \Froxlor\Validate\Validate::REGEX_CONF_TEXT, '', array(), true);
 			if (! empty($allowed_phpconfigs)) {
 				$allowed_phpconfigs = array_map('intval', $allowed_phpconfigs);
 			}

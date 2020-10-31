@@ -405,10 +405,6 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		Customers::decreaseUsage($customer['customerid'], 'email_forwarders_used', '', $number_forwarders);
 		Admins::decreaseUsage($customer['customerid'], 'email_forwarders_used', '', $number_forwarders);
 
-		if ($delete_userfiles) {
-			\Froxlor\System\Cronjob::inserttask('7', $customer['loginname'], $result['email_full']);
-		}
-
 		// delete address
 		$stmt = Database::prepare("DELETE FROM `" . TABLE_MAIL_VIRTUAL . "` WHERE `customerid`= :customerid AND `id`= :id");
 		Database::pexecute($stmt, array(

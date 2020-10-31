@@ -111,6 +111,19 @@ class TrafficTest extends TestCase
 		$this->assertEquals(3, $result['list'][1]['customerid']);
 	}
 
+	public function testAdminTrafficListCustomersFilterCustomer()
+	{
+		global $admin_userdata;
+
+		$json_result = Traffic::getLocal($admin_userdata, array(
+			'customer_traffic' => 1,
+			'loginname' => 'test1'
+		))->listing();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(1, $result['count']);
+		$this->assertEquals(1, $result['list'][0]['customerid']);
+	}
+
 	public function testCustomerTrafficList()
 	{
 		global $admin_userdata;

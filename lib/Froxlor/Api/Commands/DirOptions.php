@@ -69,7 +69,7 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		$error500path = $this->getParam('error500path', true, '');
 
 		// validation
-		$path = \Froxlor\FileDir::makeCorrectDir(\Froxlor\Validate\Validate::validate($path, 'path', '', '', array(), true));
+		$path = \Froxlor\FileDir::makeCorrectDir(\Froxlor\Validate\Validate::validate($path, 'path', \Froxlor\Validate\Validate::REGEX_DIR, '', array(), true));
 		$userpath = $path;
 		$path = \Froxlor\FileDir::makeCorrectDir($customer['documentroot'] . '/' . $path);
 
