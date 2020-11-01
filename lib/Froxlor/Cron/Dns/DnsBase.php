@@ -41,6 +41,7 @@ abstract class DnsBase
 	{
 		$this->logger = $logger;
 
+		$known_ns_ips = [];
 		if (Settings::Get('system.nameservers') != '') {
 			$nameservers = explode(',', Settings::Get('system.nameservers'));
 			foreach ($nameservers as $nameserver) {
@@ -58,6 +59,8 @@ abstract class DnsBase
 					$nameserver_ips = array(
 						$nameserver
 					);
+				} else {
+					$known_ns_ips = array_merge($known_ns_ips, $nameserver_ips);
 				}
 				$this->ns[] = array(
 					'hostname' => $nameserver,
@@ -80,7 +83,9 @@ abstract class DnsBase
 		if (Settings::Get('system.axfrservers') != '') {
 			$axfrservers = explode(',', Settings::Get('system.axfrservers'));
 			foreach ($axfrservers as $axfrserver) {
-				$this->axfr[] = trim($axfrserver);
+				if (!in_array(trim($axfrserver), $known_ns_ips)) {
+					$this->axfr[] = trim($axfrserver);
+				}
 			}
 		}
 	}
