@@ -554,6 +554,7 @@ opcache.interned_strings_buffer'),
 	('system', 'ssl_cert_file', '/etc/apache2/apache2.pem'),
 	('system', 'use_ssl', '0'),
 	('system', 'default_vhostconf', ''),
+	('system', 'default_sslvhostconf', ''),
 	('system', 'mail_quota_enabled', '0'),
 	('system', 'mail_quota', '100'),
 	('system', 'webalizer_enabled', '1'),
@@ -704,7 +705,7 @@ opcache.interned_strings_buffer'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'is_configured', '0'),
-	('panel', 'version', '0.10.21'),
+	('panel', 'version', '0.10.22'),
 	('panel', 'db_version', '202009070');
 
 
