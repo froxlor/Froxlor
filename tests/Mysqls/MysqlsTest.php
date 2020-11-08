@@ -136,6 +136,26 @@ class MysqlsTest extends TestCase
 		}
 	}
 
+	
+	/**
+	 *
+	 * @depends testCustomerMysqlsAdd
+	 */
+	public function testAdminMysqlsUpdatePwdOnly()
+	{
+		global $admin_userdata;
+		
+		$newPwd = \Froxlor\System\Crypt::generatePassword();
+		$data = [
+			'dbname' => 'test1sql1',
+			'mysql_password' => $newPwd,
+			'loginname' => 'test1'
+		];
+		$json_result = Mysqls::getLocal($admin_userdata, $data)->update();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals('testdb-upd', $result['description']);
+	}
+
 	/**
 	 *
 	 * @depends testCustomerMysqlsAdd

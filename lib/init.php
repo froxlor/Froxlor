@@ -44,6 +44,8 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 
 use Froxlor\Database\Database;
 use Froxlor\Settings;
+use voku\helper\AntiXSS;
+use Froxlor\PhpHelper;
 
 header("Content-Type: text/html; charset=UTF-8");
 
@@ -85,6 +87,17 @@ foreach ($_REQUEST as $key => $value) {
 		unset($$key);
 	}
 }
+
+/**
+ * check for xss attempts and clean important globals
+ */
+$antiXss = new AntiXSS();
+// check $_GET
+PhpHelper::cleanGlobal($_GET, $antiXss);
+// check $_POST
+PhpHelper::cleanGlobal($_POST, $antiXss);
+// check $_COOKIE
+PhpHelper::cleanGlobal($_COOKIE, $antiXss);
 
 unset($_);
 unset($value);
@@ -475,9 +488,9 @@ unset($js);
 unset($css);
 
 if (isset($_POST['action'])) {
-	$action = $_POST['action'];
+	$action = trim(strip_tags($_POST['action']));
 } elseif (isset($_GET['action'])) {
-	$action = $_GET['action'];
+	$action = trim(strip_tags($_GET['action']));
 } else {
 	$action = '';
 	// clear request data
@@ -487,9 +500,9 @@ if (isset($_POST['action'])) {
 }
 
 if (isset($_POST['page'])) {
-	$page = $_POST['page'];
+	$page = trim(strip_tags($_POST['page']));
 } elseif (isset($_GET['page'])) {
-	$page = $_GET['page'];
+	$page = trim(strip_tags($_GET['page']));
 } else {
 	$page = '';
 }

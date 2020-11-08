@@ -231,7 +231,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			$idna_convert = new \Froxlor\Idna\IdnaWrapper();
 			$email = $idna_convert->encode(\Froxlor\Validate\Validate::validate($email, 'email', '', '', array(), true));
 			$def_language = \Froxlor\Validate\Validate::validate($def_language, 'default language', '', '', array(), true);
-			$custom_notes = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $custom_notes), 'custom_notes', '/^[^\0]*$/', '', array(), true);
+			$custom_notes = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $custom_notes), 'custom_notes', \Froxlor\Validate\Validate::REGEX_CONF_TEXT, '', array(), true);
 
 			if (Settings::Get('system.mail_quota_enabled') != '1') {
 				$email_quota = - 1;
@@ -531,7 +531,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 				$idna_convert = new \Froxlor\Idna\IdnaWrapper();
 				$email = $idna_convert->encode(\Froxlor\Validate\Validate::validate($email, 'email', '', '', array(), true));
 				$def_language = \Froxlor\Validate\Validate::validate($def_language, 'default language', '', '', array(), true);
-				$custom_notes = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $custom_notes), 'custom_notes', '/^[^\0]*$/', '', array(), true);
+				$custom_notes = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $custom_notes), 'custom_notes', \Froxlor\Validate\Validate::REGEX_CONF_TEXT, '', array(), true);
 				$theme = \Froxlor\Validate\Validate::validate($theme, 'theme', '', '', array(), true);
 				$password = \Froxlor\Validate\Validate::validate($password, 'password', '', '', array(), true);
 
@@ -712,6 +712,10 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			// don't be stupid
 			if ($id == $this->getUserDetail('adminid')) {
 				\Froxlor\UI\Response::standard_error('youcantdeleteyourself', '', true);
+			}
+			// can't delete the first superadmin
+			if ($id == 1) {
+				\Froxlor\UI\Response::standard_error('cannotdeletesuperadmin', '', true);
 			}
 
 			// delete admin

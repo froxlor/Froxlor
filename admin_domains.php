@@ -664,7 +664,6 @@ if ($page == 'domains' || $page == 'overview') {
 
 		if (isset($_POST['send']) && $_POST['send'] == 'send') {
 
-			$customerid = intval($_POST['customerid']);
 			$separator = \Froxlor\Validate\Validate::validate($_POST['separator'], 'separator');
 			$offset = (int) \Froxlor\Validate\Validate::validate($_POST['offset'], 'offset', "/[0-9]/i");
 
@@ -673,7 +672,7 @@ if ($page == 'domains' || $page == 'overview') {
 			$result = array();
 
 			try {
-				$bulk = new \Froxlor\Bulk\DomainBulkAction($file_name, $customerid);
+				$bulk = new \Froxlor\Bulk\DomainBulkAction($file_name, $userinfo);
 				$result = $bulk->doImport($separator, $offset);
 			} catch (Exception $e) {
 				\Froxlor\UI\Response::standard_error('domain_import_error', $e->getMessage());
@@ -695,19 +694,6 @@ if ($page == 'domains' || $page == 'overview') {
 				'page' => 'domains'
 			));
 		} else {
-			$customers = \Froxlor\UI\HTML::makeoption($lng['panel']['please_choose'], 0, 0, true);
-			$result_customers_stmt = Database::prepare("
-				SELECT `customerid`, `loginname`, `name`, `firstname`, `company`
-				FROM `" . TABLE_PANEL_CUSTOMERS . "` " . ($userinfo['customers_see_all'] ? '' : " WHERE `adminid` = '" . (int) $userinfo['adminid'] . "' ") . " ORDER BY `name` ASC");
-			$params = array();
-			if ($userinfo['customers_see_all'] == '0') {
-				$params['adminid'] = $userinfo['adminid'];
-			}
-			Database::pexecute($result_customers_stmt, $params);
-
-			while ($row_customer = $result_customers_stmt->fetch(PDO::FETCH_ASSOC)) {
-				$customers .= \Froxlor\UI\HTML::makeoption(\Froxlor\User::getCorrectFullUserDetails($row_customer) . ' (' . $row_customer['loginname'] . ')', $row_customer['customerid']);
-			}
 
 			$domain_import_data = include_once dirname(__FILE__) . '/lib/formfields/admin/domains/formfield.domains_import.php';
 			$domain_import_form = \Froxlor\UI\HtmlForm::genHTMLForm($domain_import_data);

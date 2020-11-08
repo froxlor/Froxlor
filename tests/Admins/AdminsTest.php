@@ -355,4 +355,16 @@ class AdminsTest extends TestCase
 			'loginname' => 'admin'
 		))->update();
 	}
+
+	public function testAdminsAdminsCannotDeleteFirstAdmin()
+	{
+		global $admin_userdata;
+		$testadmin_userdata = $admin_userdata;
+		$testadmin_userdata['adminid'] = 10;
+
+		$this->expectExceptionMessage("The first admin cannot be deleted.");
+		Admins::getLocal($testadmin_userdata, array(
+			'loginname' => 'admin'
+		))->delete();
+	}
 }

@@ -23,12 +23,6 @@ return array(
 				'title' => $lng['domains']['domain_import'],
 				'image' => 'icons/domain_add.png',
 				'fields' => array(
-					'customerid' => array(
-						'label' => $lng['admin']['customer'],
-						'type' => 'select',
-						'select_var' => $customers,
-						'mandatory' => true
-					),
 					'separator' => array(
 						'label' => $lng['domains']['import_separator'],
 						'type' => 'text',

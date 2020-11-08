@@ -41,6 +41,7 @@ abstract class DnsBase
 	{
 		$this->logger = $logger;
 
+		$known_ns_ips = [];
 		if (Settings::Get('system.nameservers') != '') {
 			$nameservers = explode(',', Settings::Get('system.nameservers'));
 			foreach ($nameservers as $nameserver) {
@@ -58,6 +59,8 @@ abstract class DnsBase
 					$nameserver_ips = array(
 						$nameserver
 					);
+				} else {
+					$known_ns_ips = array_merge($known_ns_ips, $nameserver_ips);
 				}
 				$this->ns[] = array(
 					'hostname' => $nameserver,
@@ -80,7 +83,9 @@ abstract class DnsBase
 		if (Settings::Get('system.axfrservers') != '') {
 			$axfrservers = explode(',', Settings::Get('system.axfrservers'));
 			foreach ($axfrservers as $axfrserver) {
-				$this->axfr[] = trim($axfrserver);
+				if (!in_array(trim($axfrserver), $known_ns_ips)) {
+					$this->axfr[] = trim($axfrserver);
+				}
 			}
 		}
 	}
@@ -210,14 +215,14 @@ abstract class DnsBase
 
 			while ($domain = $result_domains_stmt->fetch(\PDO::FETCH_ASSOC)) {
 
-				$privkey_filename = \Froxlor\FileDir::makeCorrectFile(Settings::Get('dkim.dkim_prefix') . '/dkim' . $domain['dkim_id']);
+				$privkey_filename = \Froxlor\FileDir::makeCorrectFile(Settings::Get('dkim.dkim_prefix') . '/dkim' . $domain['dkim_id'] . '.priv');
 				$pubkey_filename = \Froxlor\FileDir::makeCorrectFile(Settings::Get('dkim.dkim_prefix') . '/dkim' . $domain['dkim_id'] . '.public');
 
 				if ($domain['dkim_privkey'] == '' || (strlen($domain['dkim_pubkey']) > 0 && strlen($domain['dkim_pubkey']) < 20)) {
 					$max_dkim_id_stmt = Database::query("SELECT MAX(`dkim_id`) as `max_dkim_id` FROM `" . TABLE_PANEL_DOMAINS . "`");
 					$max_dkim_id = $max_dkim_id_stmt->fetch(\PDO::FETCH_ASSOC);
 					$domain['dkim_id'] = (int) $max_dkim_id['max_dkim_id'] + 1;
-					$privkey_filename = \Froxlor\FileDir::makeCorrectFile(Settings::Get('dkim.dkim_prefix') . '/dkim' . $domain['dkim_id']);
+					$privkey_filename = \Froxlor\FileDir::makeCorrectFile(Settings::Get('dkim.dkim_prefix') . '/dkim' . $domain['dkim_id'] . '.priv');
 					\Froxlor\FileDir::safe_exec('openssl genrsa -out ' . escapeshellarg($privkey_filename) . ' ' . Settings::Get('dkim.dkim_keylength'));
 					$domain['dkim_privkey'] = file_get_contents($privkey_filename);
 					\Froxlor\FileDir::safe_exec("chmod 0640 " . escapeshellarg($privkey_filename));

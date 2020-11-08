@@ -32,9 +32,9 @@ class DomainBulkAction extends BulkAction
 	 *
 	 * @return object DomainBulkAction instance
 	 */
-	public function __construct($import_file = null, $customer_id = 0)
+	public function __construct($import_file = null, $userinfo)
 	{
-		parent::__construct($import_file, $customer_id);
+		parent::__construct($import_file, $userinfo);
 		$this->setApiCall('Domains.add');
 	}
 
@@ -49,23 +49,14 @@ class DomainBulkAction extends BulkAction
 	 */
 	public function doImport($separator = ";", $offset = 0)
 	{
-		$this->preImport();
-
-		// get the admins userinfo to check for domains_used, etc.
-		global $userinfo;
-
-		if ($userinfo['domains'] == "-1") {
+		if ($this->userinfo['domains'] == "-1") {
 			$dom_unlimited = true;
 		} else {
 			$dom_unlimited = false;
 		}
 
-		$domains_used = (int) $userinfo['domains_used'];
-		$domains_avail = (int) $userinfo['domains'];
-
-		if (empty($separator) || strlen($separator) != 1) {
-			throw new \Exception("Invalid separator specified: '" . $separator . "'");
-		}
+		$domains_used = (int) $this->userinfo['domains_used'];
+		$domains_avail = (int) $this->userinfo['domains'];
 
 		if (! is_int($offset) || $offset < 0) {
 			throw new \Exception("Invalid offset specified");

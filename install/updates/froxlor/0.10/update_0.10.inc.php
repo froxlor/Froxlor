@@ -682,3 +682,13 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.20')) {
 	showUpdateStep("Updating from 0.10.20 to 0.10.21", false);
 	\Froxlor\Froxlor::updateToVersion('0.10.21');
 }
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.21')) {
+
+	showUpdateStep("Adding settings for ssl-vhost default content if not updated from db-version 201910110", true);
+	Settings::AddNew("system.default_sslvhostconf", '');
+	lastStepStatus(0);
+
+	showUpdateStep("Updating from 0.10.21 to 0.10.22", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.22');
+}
