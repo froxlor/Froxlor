@@ -153,7 +153,8 @@ if ($page == 'overview') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
 					Emails::getLocal($userinfo, array(
-						'id' => $id
+						'id' => $id,
+						'delete_userfiles' => ($_POST['delete_userfiles'] ?? 0)
 					))->delete();
 				} catch (Exception $e) {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
