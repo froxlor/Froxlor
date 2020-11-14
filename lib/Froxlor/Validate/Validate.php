@@ -217,9 +217,9 @@ class Validate
 	public static function validateDomain($domainname, $allow_underscore = false)
 	{
 		if (is_string($domainname)) {
-			$char_validation = '([a-z\d](-*[a-z\d])*)(\.?([a-z\d](-*[a-z\d])*))*\.([a-z\d])+';
+			$char_validation = '([a-z\d](-*[a-z\d])*)(\.?([a-z\d](-*[a-z\d])*))*\.(xn\-\-)?([a-z\d])+';
 			if ($allow_underscore) {
-				$char_validation = '([a-z\d\_](-*[a-z\d\_])*)(\.([a-z\d\_](-*[a-z\d])*))*(\.?([a-z\d](-*[a-z\d])*))+\.([a-z\d])+';
+				$char_validation = '([a-z\d\_](-*[a-z\d\_])*)(\.([a-z\d\_](-*[a-z\d])*))*(\.?([a-z\d](-*[a-z\d])*))+\.(xn\-\-)?([a-z\d])+';
 			}
 
 			// valid chars check && overall length check && length of each label

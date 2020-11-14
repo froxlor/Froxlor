@@ -395,4 +395,30 @@ class DomainsTest extends TestCase
 			'domainname' => 'täst.local'
 		])->delete();
 	}
+
+	/**
+	 * @refs https://github.com/Froxlor/Froxlor/issues/899
+	 */
+	public function testAdminIdn2DomainsAdd()
+	{
+		global $admin_userdata;
+		// get customer
+		$json_result = Customers::getLocal($admin_userdata, array(
+			'loginname' => 'test1'
+		))->get();
+		$customer_userdata = json_decode($json_result, true)['data'];
+		$data = [
+			'domain' => 'उदाहरण.भारत',
+			'customerid' => $customer_userdata['customerid']
+		];
+		$json_result = Domains::getLocal($admin_userdata, $data)->add();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals($customer_userdata['documentroot'] . 'xn--p1b6ci4b4b3a.xn--h2brj9c/', $result['documentroot']);
+		$this->assertEquals('xn--p1b6ci4b4b3a.xn--h2brj9c', $result['domain']);
+		$this->assertEquals('उदाहरण.भारत', $result['domain_ace']);
+
+		Domains::getLocal($admin_userdata, [
+			'domainname' => 'उदाहरण.भारत'
+		])->delete();
+	}
 }
