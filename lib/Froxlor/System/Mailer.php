@@ -32,6 +32,14 @@ class Mailer extends \PHPMailer\PHPMailer\PHPMailer
 			$this->Port = Settings::Get('system.mail_smtp_port');
 		}
 
+		/**
+		 * use froxlor's email-validation
+		 */
+		self::$validator = [
+			'\Froxlor\\Validate\\Validate',
+			'validateEmail'
+		];
+
 		if (self::ValidateAddress(Settings::Get('panel.adminmail')) !== false) {
 			// set return-to address and custom sender-name, see #76
 			$this->SetFrom(Settings::Get('panel.adminmail'), Settings::Get('panel.adminmail_defname'));
