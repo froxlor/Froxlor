@@ -256,6 +256,10 @@ class Validate
 	public static function validateEmail($email)
 	{
 		$email = strtolower($email);
+		// as of php-7.1
+		if (defined('FILTER_FLAG_EMAIL_UNICODE')) {
+			return filter_var($email, FILTER_VALIDATE_EMAIL, FILTER_FLAG_EMAIL_UNICODE);
+		}
 		return filter_var($email, FILTER_VALIDATE_EMAIL);
 	}
 
