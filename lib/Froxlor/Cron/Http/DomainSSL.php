@@ -107,6 +107,8 @@ class DomainSSL
 					fclose($_fh);
 					if ($type == 'ssl_key_file') {
 						chmod($filename, 0600);
+					} else {
+						chmod($filename, 0644);
 					}
 				}
 			}
