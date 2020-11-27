@@ -112,7 +112,7 @@ class PhpHelper
 	 *
 	 * @return void|boolean
 	 */
-	public static function phpErrHandler($errno, $errstr, $errfile, $errline, $errcontext)
+	public static function phpErrHandler($errno, $errstr, $errfile, $errline, $errcontext = array())
 	{
 		if (! (error_reporting() & $errno)) {
 			// This error code is not included in error_reporting
@@ -398,7 +398,7 @@ class PhpHelper
 	 * @param array $global
 	 * @param \voku\helper\AntiXSS $antiXss
 	 */
-	public static function cleanGlobal(&$global = [], &$antiXss)
+	public static function cleanGlobal(&$global, &$antiXss)
 	{
 		if (isset($global) && ! empty($global)) {
 			$tmp = $global;
