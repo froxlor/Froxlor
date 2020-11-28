@@ -184,16 +184,16 @@ $lng['error']['error'] = 'Chyba';
 $lng['error']['directorymustexist'] = 'Adresář %s musí existovat. Vytvoř jej prosím v FTP klientovi.';
 $lng['error']['filemustexist'] = 'Soubor %s musí existovat.';
 $lng['error']['allresourcesused'] = 'You have already used all of your resources.';
-$lng['error']['domains_cantdeletemaindomain'] = 'You cannot delete a domain which is used as an email-domain.';
-$lng['error']['domains_canteditdomain'] = 'You cannot edit this domain. It has been disabled by the admin.';
-$lng['error']['domains_cantdeletedomainwithemail'] = 'You cannot delete a domain which is used as an email-domain. Delete all email addresses first.';
+$lng['error']['domains_cantdeletemaindomain'] = 'Nemůžeš smazat doménu, která je využívána pro emailovou doménu.';
+$lng['error']['domains_canteditdomain'] = 'Tuto doménu nemůžeš měnit. Administrátor tuto možnost vypnul.';
+$lng['error']['domains_cantdeletedomainwithemail'] = 'Nemůžeš smazat doménu, která je využívána pro emailovou doménu. Nejříve smaž všechny emailové adresy.';
 $lng['error']['firstdeleteallsubdomains'] = 'You have to delete all subdomains first before you can create a wildcard domain.';
 $lng['error']['youhavealreadyacatchallforthisdomain'] = 'You have already defined a catchall for this domain.';
-$lng['error']['ftp_cantdeletemainaccount'] = 'You cannot delete your main FTP account';
-$lng['error']['login'] = 'The username or password you typed in is wrong. Please try it again!';
-$lng['error']['login_blocked'] = 'This account has been suspended because of too many login errors. <br />Please try again in %s seconds.';
+$lng['error']['ftp_cantdeletemainaccount'] = 'Nemůžeš smazat svůj hlavní FTP účet';
+$lng['error']['login'] = 'Zadané uživatelské jméno nebo heslo je špatné. Zkus to prosím za chvíli!';
+$lng['error']['login_blocked'] = 'Tento účet byl zablokován po příliš mnoho selhaných pokusech o přihlášení. <br />Zkus to znovu za %s sekund.';
 $lng['error']['notallreqfieldsorerrors'] = 'You have not filled in all or filled in some fields incorrectly.';
-$lng['error']['oldpasswordnotcorrect'] = 'The old password is not correct.';
+$lng['error']['oldpasswordnotcorrect'] = 'Staré heslo není správné.';
 $lng['error']['youcantallocatemorethanyouhave'] = 'You cannot allocate more resources than you own for yourself.';
 $lng['error']['mustbeurl'] = 'You have not typed a valid or complete url (e.g. http://somedomain.com/error404.htm)';
 $lng['error']['invalidpath'] = 'You have not chosen a valid URL (maybe problems with the dirlisting?)';
@@ -247,9 +247,9 @@ $lng['question']['email_reallydelete_forwarder'] = 'Do you really want to delete
 $lng['question']['extras_reallydelete'] = 'Do you really want to delete the directory protection for %s?';
 $lng['question']['extras_reallydelete_pathoptions'] = 'Do you really want to delete the path options for %s?';
 $lng['question']['ftp_reallydelete'] = 'Do you really want to delete the FTP-account %s?';
-$lng['question']['mysql_reallydelete'] = 'Do you really want to delete the database %s? This cannot be undone!';
+$lng['question']['mysql_reallydelete'] = 'Opravdu chceš smazat databázi %s? Tento krok je nevratný!';
 $lng['question']['admin_configs_reallyrebuild'] = 'Do you really want to rebuild all config files?';
-$lng['question']['admin_customer_alsoremovefiles'] = 'Remove user files too?';
+$lng['question']['admin_customer_alsoremovefiles'] = 'Smazat i soubory uživatelů?';
 $lng['question']['admin_customer_alsoremovemail'] = 'Completely remove email data from filesystem?';
 $lng['question']['admin_customer_alsoremoveftphomedir'] = 'Also remove FTP-user homedir?';
 
@@ -313,7 +313,7 @@ $lng['admin']['templates']['pop_success'] = 'Uvítací email pro nově založene
 $lng['admin']['templates']['template_replace_vars'] = 'Variables to be replaced in the template:';
 $lng['admin']['templates']['SALUTATION'] = 'Replaced with a correct salutation (name or company)';
 $lng['admin']['templates']['FIRSTNAME'] = 'Replaced with the customer\'s first name.';
-$lng['admin']['templates']['NAME'] = 'Replaced with the customers name.';
+$lng['admin']['templates']['NAME'] = 'Nahrazeno jménem zákazníka.';
 $lng['admin']['templates']['COMPANY'] = 'Replaces with the customer\'s company name';
 $lng['admin']['templates']['USERNAME'] = 'Replaced with the customer\'s account username.';
 $lng['admin']['templates']['PASSWORD'] = 'Replaced with the customer\'s account password.';
@@ -475,7 +475,7 @@ $lng['serversettings']['phpappendopenbasedir']['description'] = 'These paths (se
 // CHANGED IN 1.2.15-rc1
 
 $lng['error']['loginnameissystemaccount'] = 'You cannot create accounts which are similar to system accounts (as for example begin with "%s"). Please enter another account name.';
-$lng['error']['youcantdeleteyourself'] = 'You cannot delete yourself for security reasons.';
+$lng['error']['youcantdeleteyourself'] = 'Z bezpečnostních důvodů nemůžeš smazat sám sebe.';
 $lng['error']['youcanteditallfieldsofyourself'] = 'POZNÁMKA: Nemůžeš upravit všechna pole tvého vlastního účtu kvůli bezpečnosti.';
 
 // ADDED IN 1.2.16-svn1
@@ -788,7 +788,7 @@ $lng['domains']['topleveldomain'] = 'Top-Level-Domain';
 // ADDED IN 1.2.19-svn22
 
 $lng['serversettings']['allow_password_reset']['description'] = 'Customers can reset their password and an activation link will be sent to their e-mail address';
-$lng['serversettings']['allow_password_reset_admin']['title'] = 'Allow password reset by admins';
+$lng['serversettings']['allow_password_reset_admin']['title'] = 'Povolit reset hesla pro adminy';
 $lng['serversettings']['allow_password_reset_admin']['description'] = 'Admins/reseller can reset their password and an activation link will be sent to their e-mail address';
 
 // ADDED IN 1.2.19-svn25
@@ -834,18 +834,18 @@ $lng['admin']['phpsettings']['actions'] = 'Akce';
 $lng['admin']['phpsettings']['activedomains'] = 'In use for domain(s)';
 $lng['admin']['phpsettings']['notused'] = 'Configuration not in use';
 $lng['admin']['misc'] = 'Miscellaneous';
-$lng['admin']['phpsettings']['editsettings'] = 'Change PHP settings';
-$lng['admin']['phpsettings']['addsettings'] = 'Create new PHP settings';
-$lng['admin']['phpsettings']['viewsettings'] = 'View PHP settings';
-$lng['admin']['phpsettings']['phpinisettings'] = 'php.ini settings';
+$lng['admin']['phpsettings']['editsettings'] = 'Změnit PHP nastavení';
+$lng['admin']['phpsettings']['addsettings'] = 'Vytvořit nové PHP nastavení';
+$lng['admin']['phpsettings']['viewsettings'] = 'Zobrazit PHP nastavení';
+$lng['admin']['phpsettings']['phpinisettings'] = 'php.ini nastavení';
 $lng['error']['nopermissionsorinvalidid'] = 'You don\'t have enough permissions to change these settings or an invalid id was given.';
 $lng['panel']['view'] = 'view';
 $lng['question']['phpsetting_reallydelete'] = 'Do you really want to delete these settings? All domains which use these settings currently will be changed to the default config.';
 $lng['question']['fpmsetting_reallydelete'] = 'Do you really want to delete these php-fpm settings? All php configurations which use these settings currently will be changed to the default config.';
-$lng['admin']['phpsettings']['addnew'] = 'Create new PHP configuration';
+$lng['admin']['phpsettings']['addnew'] = 'Vytvořit novou PHP konfiguraci';
 $lng['admin']['fpmsettings']['addnew'] = 'Create new PHP version';
-$lng['error']['phpsettingidwrong'] = 'A PHP Configuration with this id doesn\'t exist';
-$lng['error']['descriptioninvalid'] = 'The description is too short, too long or contains illegal characters.';
+$lng['error']['phpsettingidwrong'] = 'Konfigurace s tímto ID neexistuje';
+$lng['error']['descriptioninvalid'] = 'Popis je moc krátký, dlouhý nebo obsahuje nepovolené znaky.';
 $lng['error']['info'] = 'Info';
 $lng['admin']['phpconfig']['template_replace_vars'] = 'Variables that will be replaced in the configs';
 $lng['admin']['phpconfig']['pear_dir'] = 'Will be replaced with the global setting for the pear directory.';
@@ -879,7 +879,7 @@ $lng['admin']['templates']['CUSTOMER_EMAIL'] = 'Replaced with the e-mail address
 $lng['admin']['templates']['ADMIN_EMAIL'] = 'Replaced with the e-mail address of the admin.';
 $lng['admin']['templates']['filetemplates'] = 'File templates';
 $lng['admin']['templates']['filecontent'] = 'File content';
-$lng['error']['filecontentnotset'] = 'The file cannot be empty!';
+$lng['error']['filecontentnotset'] = 'Soubor nemůže být prázdný!';
 $lng['serversettings']['index_file_extension']['description'] = 'Which file extension should be used for the index file in newly created customer directories? This file extension will be used, if you or one of your admins has created its own index file template.';
 $lng['serversettings']['index_file_extension']['title'] = 'File extension for index file in newly created customer directories';
 $lng['error']['index_file_extension'] = 'The file extension for the index file must be between 1 and 6 characters long. The extension can only contain characters like a-z, A-Z and 0-9';
@@ -903,14 +903,14 @@ $lng['error']['ipportdoesntexist'] = 'The ip/port combination you have chosen do
 
 // ADDED IN 1.2.19-svn38
 
-$lng['admin']['phpserversettings'] = 'PHP Settings';
+$lng['admin']['phpserversettings'] = 'PHP nastavení';
 $lng['admin']['phpsettings']['binary'] = 'PHP Binary';
-$lng['admin']['phpsettings']['fpmdesc'] = 'PHP-FPM config';
+$lng['admin']['phpsettings']['fpmdesc'] = 'PHP-FPM konfigurace';
 $lng['admin']['phpsettings']['file_extensions'] = 'File extensions';
 $lng['admin']['phpsettings']['file_extensions_note'] = '(without dot, separated by spaces)';
 $lng['admin']['mod_fcgid_maxrequests']['title'] = 'Maximum php requests for this domain (empty for default value)';
-$lng['serversettings']['mod_fcgid']['maxrequests']['title'] = 'Maximum Requests per domain';
-$lng['serversettings']['mod_fcgid']['maxrequests']['description'] = 'How many requests should be allowed per domain?';
+$lng['serversettings']['mod_fcgid']['maxrequests']['title'] = 'Maximum požadavků na doménu';
+$lng['serversettings']['mod_fcgid']['maxrequests']['description'] = 'Kolik požadavků na doménu by mělo být povoleno?';
 
 // ADDED IN 1.4.2.1-1
 
@@ -934,9 +934,9 @@ $lng['error']['usernamealreadyexists'] = 'The username %s already exists.';
 $lng['error']['plausibilitychecknotunderstood'] = 'Answer of plausibility check not understood.';
 $lng['error']['errorwhensaving'] = 'An error occurred when saving the field %s';
 
-$lng['success']['success'] = 'Information';
-$lng['success']['clickheretocontinue'] = 'Click here to continue';
-$lng['success']['settingssaved'] = 'The settings have been successfully saved.';
+$lng['success']['success'] = 'Informace';
+$lng['success']['clickheretocontinue'] = 'Klikni zde pro pokračování';
+$lng['success']['settingssaved'] = 'Nastavení bylo úspěšně uloženo.';
 
 // ADDED IN FROXLOR 0.9
 
@@ -973,7 +973,7 @@ $lng['admin']['servicedata'] = 'Service Data';
 
 // ADDED IN FROXLOR 0.9.2
 
-$lng['admin']['newerversionavailable'] = 'There is a newer version of Froxlor available';
+$lng['admin']['newerversionavailable'] = 'Nová verze Froxloru je dostupná';
 
 // ADDED IN FROXLOR 0.9.3
 
@@ -982,7 +982,7 @@ $lng['error']['hiddenfieldvaluechanged'] = 'The value for the hidden field "%s" 
 
 // ADDED IN FROXLOR 0.9.3-svn1
 
-$lng['serversettings']['panel_password_min_length']['title'] = 'Minimum password length';
+$lng['serversettings']['panel_password_min_length']['title'] = 'Minimální délka hesla';
 $lng['serversettings']['panel_password_min_length']['description'] = 'Here you can set a minimum length for passwords. \'0\' means: no minimum length required.';
 $lng['error']['notrequiredpasswordlength'] = 'The given password is too short. Please enter at least %s characters.';
 $lng['serversettings']['system_store_index_file_subs']['title'] = 'Store default index file also to new subfolders';
@@ -1061,7 +1061,7 @@ $lng['serversettings']['mod_fcgid']['defaultini'] = 'Default PHP configuration f
 
 // ADDED IN FROXLOR 0.9.6-svn6
 $lng['admin']['ftpserver'] = 'FTP Server';
-$lng['admin']['ftpserversettings'] = 'FTP Server settings';
+$lng['admin']['ftpserversettings'] = 'Nastavení FTP serveru';
 $lng['serversettings']['ftpserver']['desc'] = 'If pureftpd is selected the .ftpquota files for user quotas are created and updated daily';
 
 // ADDED IN FROXLOR 0.9.7-svn1
@@ -1143,11 +1143,11 @@ $lng['admin']['templates']['CUST_NAME'] = 'Customer name';
 $lng['admin']['templates']['DB_NAME'] = 'Database name';
 $lng['admin']['templates']['DB_PASS'] = 'Database password';
 $lng['admin']['templates']['DB_DESC'] = 'Database description';
-$lng['admin']['templates']['DB_SRV'] = 'Database server';
+$lng['admin']['templates']['DB_SRV'] = 'Databázový server';
 $lng['admin']['templates']['PMA_URI'] = 'URL to phpMyAdmin (if given)';
 $lng['admin']['notgiven'] = '[not given]';
-$lng['admin']['templates']['USR_NAME'] = 'FTP username';
-$lng['admin']['templates']['USR_PASS'] = 'FTP password';
+$lng['admin']['templates']['USR_NAME'] = 'FTP uživatelské jméno';
+$lng['admin']['templates']['USR_PASS'] = 'FTP heslo';
 $lng['admin']['templates']['USR_PATH'] = 'FTP homedir (relative to customer-docroot)';
 
 // ADDED IN FROXLOR 0.9.12-svn4
@@ -1889,7 +1889,7 @@ $lng['success']['backupscheduled'] = 'Your backup job has been scheduled. Please
 $lng['success']['backupaborted'] = 'Your scheduled backup has been cancelled';
 $lng['crondesc']['cron_backup'] = 'Process backup jobs';
 $lng['error']['backupfunctionnotenabled'] = 'The backup function is not enabled';
-$lng['serversettings']['backupenabled']['title'] = "Enable backup for customers";
+$lng['serversettings']['backupenabled']['title'] = "Povolit zálohy pro zákazníky";
 $lng['serversettings']['backupenabled']['description'] = "If activated, the customer will be able to schedule backup jobs (cron-backup) which generates an archive within his docroot (subdirectory chosable by customer)";
 $lng['extras']['path_protection_label'] = '<strong class="red">Important</strong>';
 $lng['extras']['path_protection_info'] = '<strong class="red">We strongly recommend protecting the given path, see "Extras" -> "Directory protection"</strong>';
@@ -2045,7 +2045,7 @@ $lng['login']['2fa'] = 'Two-factor authentication (2FA)';
 $lng['login']['2facode'] = 'Please enter 2FA code';
 $lng['2fa']['2fa_removed'] = '2FA removed successfully';
 $lng['2fa']['2fa_added'] = '2FA activated successfully<br><a href="%s?s=%s&page=2fa">View 2FA details</a>';
-$lng['2fa']['2fa_add'] = 'Activate 2FA';
+$lng['2fa']['2fa_add'] = 'Aktivovat 2FA';
 $lng['2fa']['2fa_delete'] = 'Deactivate 2FA';
 $lng['2fa']['2fa_verify'] = 'Verify code';
 $lng['mails']['2fa']['mailbody'] = 'Hello,\n\nyour 2FA login-code is: {CODE}.\n\nThis is an automatically created\ne-mail, please do not answer!\n\nYours sincerely, your administrator';
