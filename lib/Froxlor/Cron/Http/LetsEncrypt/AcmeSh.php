@@ -271,7 +271,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 	 * @param int $domain_id
 	 * @param FroxlorLogger $cronlog
 	 */
-	private static function validateDns(&$domains = array(), $domain_id, &$cronlog)
+	private static function validateDns(array &$domains, $domain_id, &$cronlog)
 	{
 		if (Settings::Get('system.le_domain_dnscheck') == '1' && ! empty($domains)) {
 			$loop_domains = $domains;
@@ -290,7 +290,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 		}
 	}
 
-	private static function runAcmeSh($certrow = array(), $domains = array(), &$cronlog = null, $force = false)
+	private static function runAcmeSh(array $certrow, array $domains, &$cronlog = null, $force = false)
 	{
 		if (! empty($domains)) {
 
