@@ -507,7 +507,7 @@ class FroxlorInstall
 
 		$distros = glob(\Froxlor\FileDir::makeCorrectDir(\Froxlor\Froxlor::getInstallDir() . '/lib/configfiles/') . '*.xml');
 		foreach ($distros as $_distribution) {
-			if($this->_data['distribution'] == str_replace(".xml", "", strtolower(basename($_distribution)))) {
+			if ($this->_data['distribution'] == str_replace(".xml", "", strtolower(basename($_distribution)))) {
 				$dist = new \Froxlor\Config\ConfigParser($_distribution);
 				$defaults = $dist->getDefaults();
 				foreach ($defaults->property as $property) {
@@ -521,6 +521,13 @@ class FroxlorInstall
 
 		// insert the lastcronrun to be the installation date
 		$this->_updateSetting($upd_stmt, time(), 'system', 'lastcronrun');
+
+		// check currently used php version and set values of fpm/fcgid accordingly
+		if (defined('PHP_MAJOR_VERSION') && defined('PHP_MINOR_VERSION')) {
+			$reload = "service php" . PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION . "-fpm restart";
+			$config_dir = "/etc/php/" . PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION . "/fpm/pool.d/";
+			$db->query("UPDATE `" . TABLE_PANEL_FPMDAEMONS . "` SET `reload_cmd` = '" . $reload . "', `config_dir` = '" . $config_dir . "' WHERE `id` ='1';");
+		}
 
 		// set specific times for some crons (traffic only at night, etc.)
 		$ts = mktime(0, 0, 0, date('m', time()), date('d', time()), date('Y', time()));
@@ -863,7 +870,7 @@ class FroxlorInstall
 		$distros = glob(\Froxlor\FileDir::makeCorrectDir(\Froxlor\Froxlor::getInstallDir() . '/lib/configfiles/') . '*.xml');
 		foreach ($distros as $_distribution) {
 			$dist = new \Froxlor\Config\ConfigParser($_distribution);
-			$dist_display = $dist->distributionName." ".$dist->distributionCodename." (" . $dist->distributionVersion . ")";
+			$dist_display = $dist->distributionName . " " . $dist->distributionCodename . " (" . $dist->distributionVersion . ")";
 			$distributions_select_data[$dist_display] .= str_replace(".xml", "", strtolower(basename($_distribution)));
 		}
 
@@ -873,7 +880,7 @@ class FroxlorInstall
 		foreach ($distributions_select_data as $dist_display => $dist_index) {
 			// create select-box-option
 			$distributions_select .= \Froxlor\UI\HTML::makeoption($dist_display, $dist_index, $this->_data['distribution']);
-			//$this->_data['distribution']
+			// $this->_data['distribution']
 		}
 
 		$formdata .= $this->_getSectionItemSelectbox('distribution', $distributions_select, $diststyle);
@@ -956,7 +963,7 @@ class FroxlorInstall
 	}
 
 	/**
-	 * generate form radio field 
+	 * generate form radio field
 	 *
 	 * @param string $fieldname
 	 * @param boolean $checked
@@ -1331,7 +1338,6 @@ class FroxlorInstall
 		}
 	}
 
-
 	/**
 	 * get/guess linux distribution
 	 */
@@ -1341,15 +1347,19 @@ class FroxlorInstall
 		if (! empty($_POST['distribution'])) {
 			$this->_data['distribution'] = $_POST['distribution'];
 		} else {
-			//set default os.
-			$os_dist = array('ID' => 'buster');
-			$os_version = array('0' => '10');
+			// set default os.
+			$os_dist = array(
+				'ID' => 'buster'
+			);
+			$os_version = array(
+				'0' => '10'
+			);
 
-			//read os-release
-			if(file_exists('/etc/os-release')) {
+			// read os-release
+			if (file_exists('/etc/os-release')) {
 				$os_dist = parse_ini_file('/etc/os-release', false);
-				if(is_array($os_dist) && array_key_exists('ID', $os_dist) && array_key_exists('VERSION_ID', $os_dist)) {
-					$os_version = explode('.',$os_dist['VERSION_ID'])[0];
+				if (is_array($os_dist) && array_key_exists('ID', $os_dist) && array_key_exists('VERSION_ID', $os_dist)) {
+					$os_version = explode('.', $os_dist['VERSION_ID'])[0];
 				}
 			}
 
