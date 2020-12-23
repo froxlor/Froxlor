@@ -316,7 +316,7 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			return $this->response(200, "successful", $result);
 		}
 		// return $errors
-		throw new \Exception(implode("\n", $errors));
+		throw new \Exception(implode("\n", $errors), 406);
 	}
 
 	/**
