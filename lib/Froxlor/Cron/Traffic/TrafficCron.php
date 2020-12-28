@@ -215,7 +215,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 				// will iterate through all customer-domains and the awstats-configs
 				// know the logfile-name, #246
 				if (Settings::Get('system.awstats_enabled') == '1') {
-					$httptraffic += floatval(self::callAwstatsGetTraffic($row['customerid'], $row['documentroot'] . '/awstats/', $domainlist[$row['customerid']]), $current_stamp);
+					$httptraffic += floatval(self::callAwstatsGetTraffic($row['customerid'], $row['documentroot'] . '/awstats/', $domainlist[$row['customerid']], $current_stamp));
 				} else {
 					$httptraffic += floatval(self::callWebalizerGetTraffic($row['loginname'], $row['documentroot'] . '/webalizer/', $caption, $domainlist[$row['customerid']]));
 				}
