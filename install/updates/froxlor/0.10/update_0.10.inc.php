@@ -705,7 +705,7 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.23')) {
 
 if (\Froxlor\Froxlor::isDatabaseVersion('202009070')) {
 
-	showUpdateStep("Adding setting to hide imcompatible settings", true);
+	showUpdateStep("Adding setting to hide incompatible settings", true);
 	Settings::AddNew("system.hide_incompatible_settings", '0');
 	lastStepStatus(0);
 
