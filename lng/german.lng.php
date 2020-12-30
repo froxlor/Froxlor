@@ -1150,8 +1150,8 @@ $lng['panel']['unlock'] = 'entsperren';
 $lng['question']['customer_reallyunlock'] = 'Wollen Sie den Kunden "%s" wirklich entsperren?';
 
 // ADDED IN FROXLOR 0.9.15
-$lng['serversettings']['perl_server']['title'] = 'Perl-Server-Ort';
-$lng['serversettings']['perl_server']['description'] = 'Der Standardwert ist diesem Guide entnommen: <a target="blank" href="http://wiki.nginx.org/SimpleCGI">http://wiki.nginx.org/SimpleCGI</a>';
+$lng['serversettings']['perl_server']['title'] = 'Perl Server-Socket';
+$lng['serversettings']['perl_server']['description'] = 'Eine einfache Anleitung hier zu findet man unter <a target="blank" href="http://wiki.nginx.org/SimpleCGIhttps://www.nginx.com/resources/wiki/start/topics/examples/fcgiwrap/">nginx.com</a>';
 $lng['serversettings']['nginx_php_backend']['title'] = 'Nginx-PHP-Backend';
 $lng['serversettings']['nginx_php_backend']['description'] = 'Dies ist das Backend, auf dem PHP auf Anfragen von Nginx hört. Kann ein UNIX Socket oder eine IP:Port Kombination sein<br />*NICHT relevant bei php-fpm';
 $lng['serversettings']['phpreload_command']['title'] = 'PHP-Reload-Befehl';
@@ -1747,3 +1747,4 @@ $lng['serversettings']['awstats']['logformat']['title'] = 'LogFormat Einstellung
 $lng['serversettings']['awstats']['logformat']['description'] = 'Wenn ein benutzerdefiniertes LogFormat beim Webserver verwendet wird, muss LogFormat von awstats ebenso angepasst werden.<br/>Standard ist 1. Für weitere Informationen siehe Dokumentation unter <a target="_blank" href="https://awstats.sourceforge.io/docs/awstats_config.html#LogFormat">hier</a>.';
 $lng['error']['cannotdeletesuperadmin'] = 'Der erste Administrator kann nicht gelöscht werden.';
 $lng['error']['no_wwwcnamae_ifwwwalias'] = 'Es kann kein CNAME Eintrag für "www" angelegt werden, da die Domain einen www-Alias aktiviert hat. Ändere diese Einstellung auf "Kein Alias" oder "Wildcard Alias"';
+$lng['serversettings']['hide_incompatible_settings'] = 'Inkompatible Einstellungen ausblenden';

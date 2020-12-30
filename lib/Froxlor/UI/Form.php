@@ -428,7 +428,7 @@ class Form
 			if (isset($fielddata['websrv_avail']) && is_array($fielddata['websrv_avail'])) {
 				$websrv = Settings::Get('system.webserver');
 				if (! in_array($websrv, $fielddata['websrv_avail'])) {
-					$do_show = false;
+					$do_show = Settings::Get('system.hide_incompatible_settings') == '1' ? false : true;
 					$fielddata['label'] .= sprintf($lng['serversettings']['option_unavailable_websrv'], implode(", ", $fielddata['websrv_avail']));
 				}
 			}
@@ -439,16 +439,17 @@ class Form
 			if (isset($fielddata['visible']) && $do_show) {
 				$do_show = $fielddata['visible'];
 				if (! $do_show) {
+					$do_show = Settings::Get('system.hide_incompatible_settings') == '1' ? false : true;
 					$fielddata['label'] .= $lng['serversettings']['option_unavailable'];
 				}
 			}
 
-			// if ($do_show) {
-			$returnvalue = call_user_func(array(
-				'\\Froxlor\\UI\\Fields',
-				'getFormFieldOutput' . ucfirst($fielddata['type'])
-			), $fieldname, $fielddata, $do_show);
-			// }
+			if ($do_show) {
+				$returnvalue = call_user_func(array(
+					'\\Froxlor\\UI\\Fields',
+					'getFormFieldOutput' . ucfirst($fielddata['type'])
+				), $fieldname, $fielddata, $do_show);
+			}
 		}
 		return $returnvalue;
 	}

@@ -30,7 +30,7 @@
 		"docs": "https://github.com/Froxlor/Froxlor/wiki"
 	},
 	"require": {
-		"php": ">=7.0",
+		"php": ">=7.1",
 		"ext-session": "*",
 		"ext-ctype": "*",
 		"ext-pdo": "*",

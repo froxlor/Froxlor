@@ -270,6 +270,14 @@ return array(
 					'default' => true,
 					'save_method' => 'storeSettingField'
 				),
+				'hide_incompatible_settings' => array(
+					'label' => $lng['serversettings']['hide_incompatible_settings'],
+					'settinggroup' => 'system',
+					'varname' => 'hide_incompatible_settings',
+					'type' => 'bool',
+					'default' => false,
+					'save_method' => 'storeSettingField'
+				),
 			)
 		)
 	)

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3a662afec2507126181e0f3bbf37dd6a",
+    "content-hash": "6b4d603703c6ace66f732d1abff8e2f3",
     "packages": [
         {
             "name": "froxlor/idna-convert-legacy",
@@ -4218,7 +4218,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.0",
+        "php": ">=7.1",
         "ext-session": "*",
         "ext-ctype": "*",
         "ext-pdo": "*",
