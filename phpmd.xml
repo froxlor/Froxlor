@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<ruleset name="froxlor ruleset"
+	xmlns="http://pmd.sf.net/ruleset/1.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://pmd.sf.net/ruleset/1.0.0 http://pmd.sf.net/ruleset_xml_schema.xsd"
+	xsi:noNamespaceSchemaLocation="http://pmd.sf.net/ruleset_xml_schema.xsd">
+	<description>
+		froxlor ruleset.
+	</description>
+
+	<rule ref="rulesets/design.xml">
+		<exclude name="NumberOfChildren" />
+	</rule>
+	<rule ref="rulesets/unusedcode.xml" />
+
+	<rule ref="rulesets/codesize.xml">
+		<exclude name="CyclomaticComplexity" />
+		<exclude name="ExcessiveClassComplexity" />
+		<exclude name="ExcessiveClassLength" />
+		<exclude name="ExcessiveMethodLength" />
+		<exclude name="NPathComplexity" />
+	</rule>
+
+	<rule ref="rulesets/naming.xml">
+		<exclude name="ShortVariable" />
+		<exclude name="LongVariable" />
+	</rule>
+
+	<rule ref="rulesets/naming.xml/ShortVariable">
+		<properties>
+			<property name="exceptions" value="id,ip" />
+		</properties>
+	</rule>
+
+	<rule ref="rulesets/codesize.xml/CyclomaticComplexity">
+		<priority>1</priority>
+		<properties>
+			<property name="reportLevel" value="150" />
+		</properties>
+	</rule>
+
+	<rule ref="rulesets/codesize.xml/ExcessiveClassComplexity">
+		<properties>
+			<property name="maximum" value="300" />
+		</properties>
+	</rule>
+
+</ruleset>

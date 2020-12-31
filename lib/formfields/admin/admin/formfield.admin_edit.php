@@ -14,7 +14,6 @@
  * @package    Formfields
  *
  */
-
 return array(
 	'admin_edit' => array(
 		'title' => $lng['admin']['admin_edit'],
@@ -32,14 +31,19 @@ return array(
 					'deactivated' => array(
 						'label' => $lng['admin']['deactivated_user'],
 						'type' => 'checkbox',
-                        'values' => array(
-                                        array ('label' => $lng['panel']['yes'], 'value' => '1')
-                                    ),
-                        'value' => array($result['deactivated']),
+						'values' => array(
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array(
+							$result['deactivated']
+						),
 						'visible' => ($result['adminid'] == $userinfo['userid'] ? false : true)
 					),
 					'admin_password' => array(
-						'label' => $lng['login']['password'].'&nbsp;('.$lng['panel']['emptyfornochanges'].')',
+						'label' => $lng['login']['password'] . '&nbsp;(' . $lng['panel']['emptyfornochanges'] . ')',
 						'type' => 'password',
 						'autocomplete' => 'off',
 						'visible' => ($result['adminid'] == $userinfo['userid'] ? false : true)
@@ -47,15 +51,29 @@ return array(
 					'admin_password_suggestion' => array(
 						'label' => $lng['customer']['generated_pwd'],
 						'type' => 'text',
-						'visible' => (Settings::Get('panel.password_regex') == ''),
-						'value' => generatePassword(),
-						'visible' => ($result['adminid'] == $userinfo['userid'] ? false : true)
+						'value' => \Froxlor\System\Crypt::generatePassword(),
+						'visible' => (\Froxlor\Settings::Get('panel.password_regex') == '' && ($result['adminid'] == $userinfo['userid'] ? false : true))
 					),
 					'def_language' => array(
 						'label' => $lng['login']['language'],
 						'type' => 'select',
 						'select_var' => $language_options,
 						'visible' => ($result['adminid'] == $userinfo['userid'] ? false : true)
+					),
+					'api_allowed' => array(
+						'label' => $lng['usersettings']['api_allowed']['title'],
+						'desc' => $lng['usersettings']['api_allowed']['description'],
+						'type' => 'checkbox',
+						'values' => array(
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array(
+							$result['api_allowed']
+						),
+						'visible' => (\Froxlor\Settings::Get('api.enabled') == '1' ? true : false)
 					)
 				)
 			),
@@ -88,9 +106,14 @@ return array(
 						'label' => $lng['usersettings']['custom_notes']['show'],
 						'type' => 'checkbox',
 						'values' => array(
-							array ('label' => $lng['panel']['yes'], 'value' => '1')
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
 						),
-						'value' => array($result['custom_notes_show'])
+						'value' => array(
+							$result['custom_notes_show']
+						)
 					)
 				)
 			),
@@ -107,10 +130,15 @@ return array(
 					'change_serversettings' => array(
 						'label' => $lng['admin']['change_serversettings'],
 						'type' => 'checkbox',
-                        'values' => array(
-                                        array ('label' => $lng['panel']['yes'], 'value' => '1')
-                                    ),
-                        'value' => array($result['change_serversettings'])
+						'values' => array(
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array(
+							$result['change_serversettings']
+						)
 					),
 					'customers' => array(
 						'label' => $lng['admin']['customers'],
@@ -123,10 +151,15 @@ return array(
 					'customers_see_all' => array(
 						'label' => $lng['admin']['customers_see_all'],
 						'type' => 'checkbox',
-                        'values' => array(
-                                        array ('label' => $lng['panel']['yes'], 'value' => '1')
-                                    ),
-                        'value' => array($result['customers_see_all'])
+						'values' => array(
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array(
+							$result['customers_see_all']
+						)
 					),
 					'domains' => array(
 						'label' => $lng['admin']['domains'],
@@ -139,18 +172,28 @@ return array(
 					'domains_see_all' => array(
 						'label' => $lng['admin']['domains_see_all'],
 						'type' => 'checkbox',
-                        'values' => array(
-                                        array ('label' => $lng['panel']['yes'], 'value' => '1')
-                                    ),
-                        'value' => array($result['domains_see_all'])
+						'values' => array(
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array(
+							$result['domains_see_all']
+						)
 					),
 					'caneditphpsettings' => array(
 						'label' => $lng['admin']['caneditphpsettings'],
 						'type' => 'checkbox',
-                        'values' => array(
-                                        array ('label' => $lng['panel']['yes'], 'value' => '1')
-                                    ),
-                        'value' => array($result['caneditphpsettings'])
+						'values' => array(
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array(
+							$result['caneditphpsettings']
+						)
 					),
 					'diskspace' => array(
 						'label' => $lng['customer']['diskspace'],
@@ -205,7 +248,7 @@ return array(
 						'type' => 'textul',
 						'value' => $result['email_quota'],
 						'maxlength' => 9,
-						'visible' => (Settings::Get('system.mail_quota_enabled') == '1' ? true : false),
+						'visible' => (\Froxlor\Settings::Get('system.mail_quota_enabled') == '1' ? true : false),
 						'mandatory' => true,
 						'ul_field' => $email_quota_ul
 					),
@@ -215,22 +258,6 @@ return array(
 						'value' => $result['ftps'],
 						'maxlength' => 9,
 						'ul_field' => $ftps_ul
-					),
-					'tickets' => array(
-						'label' => $lng['customer']['tickets'],
-						'type' => 'textul',
-						'value' => $result['tickets'],
-						'maxlength' => 9,
-						'visible' => (Settings::Get('ticket.enabled') == '1' ? true : false),
-						'ul_field' => $tickets_ul
-					),
-					'tickets_see_all' => array(
-							'label' => $lng['admin']['tickets_see_all'],
-							'type' => 'checkbox',
-							'values' => array(
-									array ('label' => $lng['panel']['yes'], 'value' => '1')
-							),
-							'value' => array($result['tickets_see_all'])
 					),
 					'mysqls' => array(
 						'label' => $lng['customer']['mysqls'],

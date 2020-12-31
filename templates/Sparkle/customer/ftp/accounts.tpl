@@ -3,7 +3,7 @@
 		<header>
 			<h2>
 				<img src="templates/{$theme}/assets/img/icons/group_edit_big.png" alt="" />&nbsp;
-				{$lng['menue']['ftp']['accounts']}&nbsp;({$ftps_count})
+				{$lng['menue']['ftp']['accounts']}&nbsp;({$result['count']} / {$ftps_count})
 			</h2>
 		</header>
 
@@ -30,6 +30,9 @@
 							<th>{$lng['login']['username']}&nbsp;{$arrowcode['username']}</th>
 							<th>{$lng['panel']['ftpdesc']}&nbsp;{$arrowcode['description']}</th>
 							<th>{$lng['panel']['path']}&nbsp;{$arrowcode['homedir']}</th>
+							<if \Froxlor\Settings::Get('system.allow_customer_shell') == '1' >
+							<th>{$lng['panel']['shell']}</th>
+							</if>
 							<th>{$lng['panel']['options']}</th>
 						</tr>
 					</thead>
@@ -58,4 +61,3 @@
 		</section>
 	</article>
 $footer
-

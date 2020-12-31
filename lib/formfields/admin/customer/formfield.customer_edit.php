@@ -14,7 +14,6 @@
  * @package    Formfields
  *
  */
-
 return array(
 	'customer_edit' => array(
 		'title' => $lng['admin']['customer_edit'],
@@ -35,36 +34,61 @@ return array(
 						'value' => $result['documentroot']
 					),
 					'createstdsubdomain' => array(
-						'label' => $lng['admin']['stdsubdomain_add'].'?',
+						'label' => $lng['admin']['stdsubdomain_add'] . '?',
 						'type' => 'checkbox',
 						'values' => array(
-							array ('label' => $lng['panel']['yes'], 'value' => '1')
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
 						),
-						'value' => array(($result['standardsubdomain'] != '0') ? '1' : '0')
+						'value' => array(
+							($result['standardsubdomain'] != '0') ? '1' : '0'
+						)
 					),
 					'deactivated' => array(
 						'label' => $lng['admin']['deactivated_user'],
 						'type' => 'checkbox',
 						'values' => array(
-							array ('label' => $lng['panel']['yes'], 'value' => '1')
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
 						),
-						'value' => array($result['deactivated'])
+						'value' => array(
+							$result['deactivated']
+						)
 					),
 					'new_customer_password' => array(
-						'label' => $lng['login']['password'].'&nbsp;('.$lng['panel']['emptyfornochanges'].')',
+						'label' => $lng['login']['password'] . '&nbsp;(' . $lng['panel']['emptyfornochanges'] . ')',
 						'type' => 'password',
 						'autocomplete' => 'off'
 					),
 					'new_customer_password_suggestion' => array(
 						'label' => $lng['customer']['generated_pwd'],
 						'type' => 'text',
-						'visible' => (Settings::Get('panel.password_regex') == ''),
-						'value' => generatePassword(),
+						'visible' => (\Froxlor\Settings::Get('panel.password_regex') == ''),
+						'value' => \Froxlor\System\Crypt::generatePassword()
 					),
 					'def_language' => array(
 						'label' => $lng['login']['language'],
 						'type' => 'select',
 						'select_var' => $language_options
+					),
+					'api_allowed' => array(
+						'label' => $lng['usersettings']['api_allowed']['title'],
+						'desc' => $lng['usersettings']['api_allowed']['description'],
+						'type' => 'checkbox',
+						'values' => array(
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array(
+							$result['api_allowed']
+						),
+						'visible' => (\Froxlor\Settings::Get('api.enabled') == '1' ? true : false)
 					)
 				)
 			),
@@ -144,9 +168,26 @@ return array(
 						'label' => $lng['usersettings']['custom_notes']['show'],
 						'type' => 'checkbox',
 						'values' => array(
-							array ('label' => $lng['panel']['yes'], 'value' => '1')
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
 						),
-						'value' => array($result['custom_notes_show'])
+						'value' => array(
+							$result['custom_notes_show']
+						)
+					)
+				)
+			),
+			'section_cpre' => array(
+				'visible' => ! empty($hosting_plans),
+				'title' => $lng['admin']['plans']['use_plan'],
+				'image' => 'icons/user_add.png',
+				'fields' => array(
+					'use_plan' => array(
+						'label' => $lng['admin']['plans']['use_plan'],
+						'type' => 'select',
+						'select_var' => $hosting_plans
 					)
 				)
 			),
@@ -158,7 +199,7 @@ return array(
 						'label' => $lng['customer']['diskspace'],
 						'type' => 'textul',
 						'value' => $result['diskspace'],
-						'maxlength' => 6,
+						'maxlength' => 16,
 						'mandatory' => true,
 						'ul_field' => $diskspace_ul
 					),
@@ -166,7 +207,7 @@ return array(
 						'label' => $lng['customer']['traffic'],
 						'type' => 'textul',
 						'value' => $result['traffic'],
-						'maxlength' => 4,
+						'maxlength' => 14,
 						'mandatory' => true,
 						'ul_field' => $traffic_ul
 					),
@@ -207,7 +248,7 @@ return array(
 						'type' => 'textul',
 						'value' => $result['email_quota'],
 						'maxlength' => 9,
-						'visible' => (Settings::Get('system.mail_quota_enabled') == '1' ? true : false),
+						'visible' => (\Froxlor\Settings::Get('system.mail_quota_enabled') == '1' ? true : false),
 						'mandatory' => true,
 						'ul_field' => $email_quota_ul
 					),
@@ -215,18 +256,28 @@ return array(
 						'label' => $lng['customer']['email_imap'],
 						'type' => 'checkbox',
 						'values' => array(
-							array ('label' => $lng['panel']['yes'], 'value' => '1')
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
 						),
-						'value' => array($result['imap']),
+						'value' => array(
+							$result['imap']
+						),
 						'mandatory' => true
 					),
 					'email_pop3' => array(
 						'label' => $lng['customer']['email_pop3'],
 						'type' => 'checkbox',
 						'values' => array(
-							array ('label' => $lng['panel']['yes'], 'value' => '1')
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
 						),
-						'value' => array($result['pop3']),
+						'value' => array(
+							$result['pop3']
+						),
 						'mandatory' => true
 					),
 					'ftps' => array(
@@ -235,14 +286,6 @@ return array(
 						'value' => $result['ftps'],
 						'maxlength' => 9,
 						'ul_field' => $ftps_ul
-					),
-					'tickets' => array(
-						'label' => $lng['customer']['tickets'],
-						'type' => 'textul',
-						'value' => $result['tickets'],
-						'maxlength' => 9,
-						'visible' => (Settings::Get('ticket.enabled') == '1' ? true : false),
-						'ul_field' => $tickets_ul
 					),
 					'mysqls' => array(
 						'label' => $lng['customer']['mysqls'],
@@ -253,20 +296,65 @@ return array(
 						'ul_field' => $mysqls_ul
 					),
 					'phpenabled' => array(
-						'label' => $lng['admin']['phpenabled'].'?',
+						'label' => $lng['admin']['phpenabled'] . '?',
 						'type' => 'checkbox',
 						'values' => array(
-							array ('label' => $lng['panel']['yes'], 'value' => '1')
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
 						),
-						'value' => array($result['phpenabled'])
+						'value' => array(
+							$result['phpenabled']
+						)
+					),
+					'allowed_phpconfigs' => array(
+						'visible' => (((int) \Froxlor\Settings::Get('system.mod_fcgid') == 1 || (int) \Froxlor\Settings::Get('phpfpm.enabled') == 1) ? true : false),
+						'label' => $lng['admin']['phpsettings']['title'],
+						'type' => 'checkbox',
+						'values' => $phpconfigs,
+						'value' => isset($result['allowed_phpconfigs']) && ! empty($result['allowed_phpconfigs']) ? json_decode($result['allowed_phpconfigs'], JSON_OBJECT_AS_ARRAY) : array(),
+						'is_array' => 1
 					),
 					'perlenabled' => array(
-						'label' => $lng['admin']['perlenabled'].'?',
+						'label' => $lng['admin']['perlenabled'] . '?',
 						'type' => 'checkbox',
 						'values' => array(
-							array ('label' => $lng['panel']['yes'], 'value' => '1')
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
 						),
-						'value' => array($result['perlenabled'])
+						'value' => array(
+							$result['perlenabled']
+						)
+					),
+					'dnsenabled' => array(
+						'label' => $lng['admin']['dnsenabled'] . '?',
+						'type' => 'checkbox',
+						'values' => array(
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array(
+							$result['dnsenabled']
+						),
+						'visible' => (\Froxlor\Settings::Get('system.dnsenabled') == '1' ? true : false)
+					),
+					'logviewenabled' => array(
+						'label' => $lng['admin']['logviewenabled'] . '?',
+						'type' => 'checkbox',
+						'values' => array(
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array(
+							$result['logviewenabled']
+						)
 					)
 				)
 			),

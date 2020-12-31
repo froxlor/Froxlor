@@ -5,6 +5,7 @@ function twoDigits(value) {
 	return value;
 }
 $(document).ready(function() {
+
 	// Scroll to top
 	$(window).scroll(function() {
 		if ($(this).scrollTop() > 100) {
@@ -70,7 +71,7 @@ $(document).ready(function() {
 	var snheight = $('#sidenavigation').height();
 	var mainheight = $('#maincontent').height();
 	if (snheight > mainheight && !$('#newsfeed').length) {
-		$('#maincontent').height(snheight);
+		$('#maincontent').css("min-height", snheight);
 	}
 	// this is necessary for the special setting feature (ref #1010)
 	$.getQueryVariable = function(key) {
@@ -205,12 +206,12 @@ $(document).ready(function() {
 
 	// Config files
 	var configfileTextareas = $("textarea.filecontent, textarea.shell");
-	var lastPw = "MYSQL_PASSWORD";
+	var lastPw = "FROXLOR_MYSQL_PASSWORD";
 	$("#configfiles_setmysqlpw").submit(function(event) {
 		event.preventDefault();
 		var inputVal = $("#configfiles_mysqlpw").val();
 		if (!inputVal.trim()) {
-			inputVal = "MYSQL_PASSWORD";
+			inputVal = "FROXLOR_MYSQL_PASSWORD";
 		}
 		configfileTextareas.each(function() {
 			this.value = this.value.replace(lastPw, inputVal);

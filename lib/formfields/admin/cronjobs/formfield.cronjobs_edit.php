@@ -14,7 +14,6 @@
  * @package    Formfields
  *
  */
-
 return array(
 	'cronjobs_edit' => array(
 		'title' => $lng['admin']['cronjob_edit'],
@@ -33,9 +32,14 @@ return array(
 						'label' => $lng['admin']['activated'],
 						'type' => 'checkbox',
 						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
-						'value' => array($result['isactive'])
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array(
+							$result['isactive']
+						)
 					),
 					'interval_value' => array(
 						'label' => $lng['cronjob']['cronjobintervalv'],

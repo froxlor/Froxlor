@@ -16,27 +16,32 @@
  * @package    Language
  *
  */
-
 $lng['requirements']['title'] = 'Checking system requirements...';
 $lng['requirements']['installed'] = 'installed';
 $lng['requirements']['not_true'] = 'no';
 $lng['requirements']['notfound'] = 'not found';
 $lng['requirements']['notinstalled'] = 'not installed';
 $lng['requirements']['activated'] = 'enabled';
-$lng['requirements']['phpversion'] = 'PHP version >= 5.3';
-$lng['requirements']['phpmagic_quotes_runtime'] = 'magic_quotes_runtime...';
-$lng['requirements']['phpmagic_quotes_runtime_description'] = 'PHP setting "magic_quotes_runtime" must be set to "Off". We have disabled it temporary for now please fix the coresponding php.ini.';
+$lng['requirements']['phpversion'] = 'PHP version >= 7.0';
+$lng['requirements']['newerphpprefered'] = 'Good, but php-7.1 is prefered.';
 $lng['requirements']['phppdo'] = 'PHP PDO extension and PDO-MySQL driver...';
+$lng['requirements']['phpsession'] = 'PHP session-extension...';
+$lng['requirements']['phpctype'] = 'PHP ctype-extension...';
+$lng['requirements']['phpsimplexml'] = 'PHP SimpleXML-extension...';
 $lng['requirements']['phpxml'] = 'PHP XML-extension...';
 $lng['requirements']['phpfilter'] = 'PHP filter-extension...';
 $lng['requirements']['phpposix'] = 'PHP posix-extension...';
 $lng['requirements']['phpbcmath'] = 'PHP bcmath-extension...';
 $lng['requirements']['phpcurl'] = 'PHP curl-extension...';
 $lng['requirements']['phpmbstring'] = 'PHP mbstring-extension...';
+$lng['requirements']['phpzip'] = 'PHP zip-extension...';
+$lng['requirements']['phpjson'] = 'PHP json-extension...';
 $lng['requirements']['bcmathdescription'] = 'Traffic-calculation related functions will not work correctly!';
-$lng['requirements']['curldescription'] = 'Version-check and news-feed may not work correctly!';
+$lng['requirements']['zipdescription'] = 'The auto-update feature requires the zip extension.';
 $lng['requirements']['openbasedir'] = 'open_basedir...';
 $lng['requirements']['openbasedirenabled'] = 'Froxlor will not work properly with open_basedir enabled. Please disable open_basedir for Froxlor in the coresponding php.ini';
+$lng['requirements']['mysqldump'] = 'MySQL dump tool';
+$lng['requirements']['mysqldumpmissing'] = 'Automatic backup of possible existing database is not possible. Please install mysql-client tools';
 $lng['requirements']['diedbecauseofrequirements'] = 'Cannot install Froxlor without these requirements! Try to fix them and retry.';
 $lng['requirements']['froxlor_succ_checks'] = 'All requirements are satisfied';
 
@@ -58,10 +63,11 @@ $lng['install']['admin_pass1'] = 'Administrator Password';
 $lng['install']['admin_pass2'] = 'Administrator-Password (confirm)';
 $lng['install']['activate_newsfeed'] = 'Enable the official newsfeed<br><small>(https://inside.froxlor.org/news/)</small>';
 $lng['install']['serversettings'] = 'Server settings';
+$lng['install']['distribution'] = 'Distribution';
 $lng['install']['servername'] = 'Server name (FQDN, no ip-address)';
 $lng['install']['serverip'] = 'Server IP';
 $lng['install']['webserver'] = 'Webserver';
-$lng['install']['apache2'] = 'Apache 2';
+$lng['install']['apache2'] = 'Apache 2.2';
 $lng['install']['apache24'] = 'Apache 2.4';
 $lng['install']['lighttpd'] = 'LigHTTPd';
 $lng['install']['nginx'] = 'NGINX';
@@ -81,8 +87,8 @@ $lng['install']['changing_data'] = 'Adjusting settings...';
 $lng['install']['creating_entries'] = 'Inserting new values...';
 $lng['install']['adding_admin_user'] = 'Creating admin-account...';
 $lng['install']['creating_configfile'] = 'Creating configfile...';
-$lng['install']['creating_configfile_temp'] = 'File was saved in /tmp/userdata.inc.php, please move to lib/.';
-$lng['install']['creating_configfile_failed'] = 'Could not create lib/userdata.inc.php, please create it manually with the following content:';
+$lng['install']['creating_configfile_temp'] = 'File was saved in %s, please move to ' . dirname(dirname(__DIR__)) . '/lib/userdata.inc.php';
+$lng['install']['creating_configfile_failed'] = 'Could not create ' . dirname(dirname(__DIR__)) . '/lib/userdata.inc.php, please create it manually with the following content:';
 $lng['install']['froxlor_succ_installed'] = 'Froxlor was installed successfully.';
 
 $lng['click_here_to_refresh'] = 'Click here to check again';

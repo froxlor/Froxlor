@@ -14,7 +14,6 @@
  * @package    Formfields
  *
  */
-
 return array(
 	'htpasswd_add' => array(
 		'title' => $lng['extras']['directoryprotection_add'],
@@ -26,7 +25,7 @@ return array(
 				'fields' => array(
 					'path' => array(
 						'label' => $lng['panel']['path'],
-						'desc' => (Settings::Get('panel.pathedit') != 'Dropdown' ? $lng['panel']['pathDescription'] : null).(isset($pathSelect['note']) ? '<br />'.$pathSelect['value'] : ''),
+						'desc' => (\Froxlor\Settings::Get('panel.pathedit') != 'Dropdown' ? $lng['panel']['pathDescription'] : null) . (isset($pathSelect['note']) ? '<br />' . $pathSelect['value'] : ''),
 						'type' => $pathSelect['type'],
 						'select_var' => $pathSelect['value'],
 						'value' => $pathSelect['value']
@@ -43,8 +42,8 @@ return array(
 					'directory_password_suggestion' => array(
 						'label' => $lng['customer']['generated_pwd'],
 						'type' => 'text',
-						'visible' => (Settings::Get('panel.password_regex') == ''),
-						'value' => generatePassword(),
+						'visible' => (\Froxlor\Settings::Get('panel.password_regex') == ''),
+						'value' => \Froxlor\System\Crypt::generatePassword()
 					),
 					'directory_authname' => array(
 						'label' => $lng['extras']['htpasswdauthname'],

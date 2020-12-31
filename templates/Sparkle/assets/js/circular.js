@@ -75,7 +75,7 @@ $(document).ready(function() {
 				circularCircle(canvas, 42, 0, 270, 4, usedColor);
 				circularCircle(canvas, 38, 0, 270, 4, assiColor);
 			}
-			circularText(canvas, 60, 42, 26, "∞")
+			circularText(canvas, 60, 42, 26, "∞");
 		} else if (!isNaN(assigned)) {
 			// Limited ressources but assigned
 			available = parseFloat(available);
@@ -90,7 +90,7 @@ $(document).ready(function() {
 			circularText(canvas, 60, 42, 22, usedP + "%");
 		} else if (available == "∞") {
 			circularCircle(canvas, 40, 0, 270, 8, unliColor);
-			circularText(canvas, 60, 42, 26, "∞")
+			circularText(canvas, 60, 42, 26, "∞");
 		} else {
 			// Limited ressources
 			available = parseFloat(available);
@@ -111,7 +111,7 @@ $(document).ready(function() {
 			if (usedP > 100) {
 				circularText(canvas, 60, 42, 22, usedP + "%", overColor);
 			} else {
-				circularText(canvas, 60, 42, 22, usedP + "%")
+				circularText(canvas, 60, 42, 22, usedP + "%");
 			}
 			
 			

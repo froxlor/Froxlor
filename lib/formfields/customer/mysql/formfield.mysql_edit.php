@@ -14,43 +14,43 @@
  * @package    Formfields
  */
 return array(
-    'mysql_edit' => array(
-        'title' => $lng['mysql']['database_edit'],
-        'image' => 'icons/mysql_edit.png',
-        'sections' => array(
-            'section_a' => array(
-                'title' => $lng['mysql']['database_edit'],
-                'image' => 'icons/mysql_edit.png',
-                'fields' => array(
-                    'databasename' => array(
-                        'label' => $lng['mysql']['databasename'],
-                        'type' => 'label',
-                        'value' => $result['databasename']
-                    ),
-                    'description' => array(
-                        'label' => $lng['mysql']['databasedescription'],
-                        'type' => 'text',
-                        'value' => $result['description']
-                    ),
-                    'mysql_server' => array(
-                        'visible' => (1 < $count_mysqlservers ? true : false),
-                        'label' => $lng['mysql']['mysql_server'],
-                        'type' => 'label',
-                        'value' => $sql_root['caption']
-                    ),
-                    'mysql_password' => array(
-                        'label' => $lng['changepassword']['new_password_ifnotempty'],
-                        'type' => 'password',
-                        'autocomplete' => 'off'
-                    ),
-                    'mysql_password_suggestion' => array(
-                        'label' => $lng['customer']['generated_pwd'],
-                        'type' => 'text',
-                        'visible' => (Settings::Get('panel.password_regex') == ''),
-                        'value' => generatePassword()
-                    )
-                )
-            )
-        )
-    )
+	'mysql_edit' => array(
+		'title' => $lng['mysql']['database_edit'],
+		'image' => 'icons/mysql_edit.png',
+		'sections' => array(
+			'section_a' => array(
+				'title' => $lng['mysql']['database_edit'],
+				'image' => 'icons/mysql_edit.png',
+				'fields' => array(
+					'databasename' => array(
+						'label' => $lng['mysql']['databasename'],
+						'type' => 'label',
+						'value' => $result['databasename']
+					),
+					'description' => array(
+						'label' => $lng['mysql']['databasedescription'],
+						'type' => 'text',
+						'value' => $result['description']
+					),
+					'mysql_server' => array(
+						'visible' => (1 < $count_mysqlservers ? true : false),
+						'label' => $lng['mysql']['mysql_server'],
+						'type' => 'label',
+						'value' => $sql_root['caption']
+					),
+					'mysql_password' => array(
+						'label' => $lng['changepassword']['new_password_ifnotempty'],
+						'type' => 'password',
+						'autocomplete' => 'off'
+					),
+					'mysql_password_suggestion' => array(
+						'label' => $lng['customer']['generated_pwd'],
+						'type' => 'text',
+						'visible' => (\Froxlor\Settings::Get('panel.password_regex') == ''),
+						'value' => \Froxlor\System\Crypt::generatePassword()
+					)
+				)
+			)
+		)
+	)
 );

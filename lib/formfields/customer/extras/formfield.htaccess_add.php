@@ -14,7 +14,6 @@
  * @package    Formfields
  *
  */
-
 return array(
 	'htaccess_add' => array(
 		'title' => $lng['extras']['pathoptions_add'],
@@ -26,7 +25,7 @@ return array(
 				'fields' => array(
 					'path' => array(
 						'label' => $lng['panel']['path'],
-						'desc' => (Settings::Get('panel.pathedit') != 'Dropdown' ? $lng['panel']['pathDescription'] : null).(isset($pathSelect['note']) ? '<br />'.$pathSelect['value'] : ''),
+						'desc' => (\Froxlor\Settings::Get('panel.pathedit') != 'Dropdown' ? $lng['panel']['pathDescription'] : null) . (isset($pathSelect['note']) ? '<br />' . $pathSelect['value'] : ''),
 						'type' => $pathSelect['type'],
 						'select_var' => $pathSelect['value'],
 						'value' => $pathSelect['value']
@@ -35,8 +34,11 @@ return array(
 						'label' => $lng['extras']['directory_browsing'],
 						'type' => 'checkbox',
 						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
 						'value' => array()
 					),
 					'error404path' => array(
@@ -45,13 +47,13 @@ return array(
 						'type' => 'text'
 					),
 					'error403path' => array(
-						'visible' => (Settings::Get('system.webserver') == 'apache2'),
+						'visible' => (\Froxlor\Settings::Get('system.webserver') == 'apache2'),
 						'label' => $lng['extras']['errordocument403path'],
 						'desc' => $lng['panel']['descriptionerrordocument'],
 						'type' => 'text'
 					),
 					'error500path' => array(
-						'visible' => (Settings::Get('system.webserver') == 'apache2'),
+						'visible' => (\Froxlor\Settings::Get('system.webserver') == 'apache2'),
 						'label' => $lng['extras']['errordocument500path'],
 						'desc' => $lng['panel']['descriptionerrordocument'],
 						'type' => 'text'
@@ -61,8 +63,11 @@ return array(
 						'label' => $lng['extras']['execute_perl'],
 						'type' => 'checkbox',
 						'values' => array(
-										array ('label' => $lng['panel']['yes'], 'value' => '1')
-									),
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
 						'value' => array()
 					)
 				)

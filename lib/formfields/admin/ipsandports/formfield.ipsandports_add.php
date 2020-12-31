@@ -14,7 +14,6 @@
  * @package    Formfields
  *
  */
-
 return array(
 	'ipsandports_add' => array(
 		'title' => $lng['admin']['ipsandports']['add'],
@@ -40,30 +39,45 @@ return array(
 				'image' => 'icons/ipsports_add.png',
 				'fields' => array(
 					'listen_statement' => array(
-						'visible' => !$is_nginx,
+						'visible' => ! $is_nginx,
 						'label' => $lng['admin']['ipsandports']['create_listen_statement'],
 						'type' => 'checkbox',
 						'values' => array(
-							array ('label' => $lng['panel']['yes'], 'value' => '1')
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
 						),
-						'value' => array('1')
+						'value' => array(
+							'1'
+						)
 					),
 					'namevirtualhost_statement' => array(
-						'visible' => $is_apache,
+						'visible' => $is_apache && ! $is_apache24,
 						'label' => $lng['admin']['ipsandports']['create_namevirtualhost_statement'],
 						'type' => 'checkbox',
 						'values' => array(
-							array ('label' => $lng['panel']['yes'], 'value' => '1')
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
 						),
-						'value' => array('1')
+						'value' => array(
+							'1'
+						)
 					),
 					'vhostcontainer' => array(
 						'label' => $lng['admin']['ipsandports']['create_vhostcontainer'],
 						'type' => 'checkbox',
 						'values' => array(
-							array ('label' => $lng['panel']['yes'], 'value' => '1')
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
 						),
-						'value' => array('1')
+						'value' => array(
+							'1'
+						)
 					),
 					'docroot' => array(
 						'label' => $lng['admin']['ipsandports']['docroot']['title'],
@@ -83,9 +97,14 @@ return array(
 						'label' => $lng['admin']['ipsandports']['create_vhostcontainer_servername_statement'],
 						'type' => 'checkbox',
 						'values' => array(
-							array ('label' => $lng['panel']['yes'], 'value' => '1')
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
 						),
-						'value' => array('1')
+						'value' => array(
+							'1'
+						)
 					)
 				)
 			),
@@ -100,19 +119,42 @@ return array(
 						'type' => 'textarea',
 						'cols' => 60,
 						'rows' => 12
+					),
+					'ssl_default_vhostconf_domain' => array(
+						'visible' => (\Froxlor\Settings::Get('system.use_ssl') == 1 ? true : false),
+						'style' => 'align-top',
+						'label' => $lng['admin']['ipsandports']['ssl_default_vhostconf_domain'],
+						'desc' => $lng['serversettings']['default_vhostconf_domain']['description'],
+						'type' => 'textarea',
+						'cols' => 60,
+						'rows' => 12
+					),
+					'include_default_vhostconf_domain' => array(
+						'label' => $lng['admin']['include_ownvhostsettings'],
+						'type' => 'checkbox',
+						'values' => array(
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array()
 					)
 				)
 			),
 			'section_d' => array(
 				'title' => $lng['admin']['ipsandports']['webserverssldomainconfig'],
 				'image' => 'icons/ipsports_add.png',
-				'visible' => (Settings::Get('system.use_ssl') == 1 ? true : false),
+				'visible' => (\Froxlor\Settings::Get('system.use_ssl') == 1 ? true : false),
 				'fields' => array(
 					'ssl' => array(
 						'label' => $lng['admin']['ipsandports']['enable_ssl'],
 						'type' => 'checkbox',
 						'values' => array(
-							array ('label' => $lng['panel']['yes'], 'value' => '1')
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
 						),
 						'value' => array()
 					),
@@ -132,6 +174,25 @@ return array(
 						'label' => $lng['admin']['ipsandports']['ssl_cert_chainfile']['title'],
 						'desc' => $lng['admin']['ipsandports']['ssl_cert_chainfile']['description'],
 						'type' => 'text'
+					),
+					'ssl_specialsettings' => array(
+						'style' => 'align-top',
+						'label' => $lng['admin']['ownsslvhostsettings'],
+						'desc' => $lng['serversettings']['default_vhostconf']['description'],
+						'type' => 'textarea',
+						'cols' => 60,
+						'rows' => 12
+					),
+					'include_specialsettings' => array(
+						'label' => $lng['admin']['include_ownvhostsettings'],
+						'type' => 'checkbox',
+						'values' => array(
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array()
 					)
 				)
 			)

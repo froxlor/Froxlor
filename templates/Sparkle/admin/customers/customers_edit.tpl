@@ -6,6 +6,7 @@ $header
 				{$title}
 			</h2>
 		</header>
+		<script type="text/javascript" src="templates/{$theme}/assets/js/customers.js"></script>
 
 		<section>
 

@@ -16,10 +16,9 @@
  * @package    Settings
  *
  */
-
 return array(
 	'groups' => array(
-	'ftpserver' => array(
+		'ftpserver' => array(
 			'title' => $lng['admin']['ftpserversettings'],
 			'fields' => array(
 				'ftpserver' => array(
@@ -29,11 +28,14 @@ return array(
 					'type' => 'option',
 					'default' => 'proftpd',
 					'option_mode' => 'one',
-					'option_options' => array('proftpd' => 'Proftpd', 'pureftpd' => 'Pureftpd'),
-					'save_method' => 'storeSettingField',
-				),
-			),
-		),
+					'option_options' => array(
+						'proftpd' => 'Proftpd',
+						'pureftpd' => 'Pureftpd'
+					),
+					'save_method' => 'storeSettingField'
+				)
+			)
+		)
 	)
 );
 
