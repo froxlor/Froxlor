@@ -1036,11 +1036,11 @@ class FroxlorInstall
 		// check for correct php version
 		$content .= $this->_status_message('begin', $this->_lng['requirements']['phpversion']);
 
-		if (version_compare("7.0.0", PHP_VERSION, ">=")) {
+		if (version_compare("7.1.0", PHP_VERSION, ">=")) {
 			$content .= $this->_status_message('red', $this->_lng['requirements']['notfound'] . ' (' . PHP_VERSION . ')');
 			$_die = true;
 		} else {
-			if (version_compare("7.1.0", PHP_VERSION, ">=")) {
+			if (version_compare("7.4.0", PHP_VERSION, ">=")) {
 				$content .= $this->_status_message('orange', $this->_lng['requirements']['newerphpprefered'] . ' (' . PHP_VERSION . ')');
 			} else {
 				$content .= $this->_status_message('green', PHP_VERSION);
