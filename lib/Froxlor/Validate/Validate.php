@@ -22,10 +22,10 @@ class Validate
 	 * @param
 	 *        	string language id for the error
 	 * @return string the clean string
-	 *        
+	 *
 	 *         If the default pattern is used and the string does not match, we try to replace the
 	 *         'bad' values and log the action.
-	 *        
+	 *
 	 */
 	public static function validate($str, $fieldname, $pattern = '', $lng = '', $emptydefault = array(), $throw_exception = false)
 	{
@@ -119,7 +119,7 @@ class Validate
 	 *        	whether to format CIDR nodation to netmask notation
 	 * @param bool $throw_exception
 	 *        	whether to throw an exception on failure
-	 *        	
+	 *
 	 * @return string|bool ip address on success, false on failure
 	 */
 	public static function validate_ip2($ip, $return_bool = false, $lng = 'invalidip', $allow_localhost = false, $allow_priv = false, $allow_cidr = false, $cidr_as_netmask = false, $throw_exception = false)
@@ -179,7 +179,7 @@ class Validate
 	 *
 	 * @param string $url
 	 *        	URL to be tested
-	 *        	
+	 *
 	 * @return bool
 	 */
 	public static function validateUrl($url)
@@ -211,7 +211,7 @@ class Validate
 	 *        	The domainname which should be checked.
 	 * @param bool $allow_underscore
 	 *        	optional if true, allowes the underscore character in a domain label (DKIM etc.)
-	 *        	
+	 *
 	 * @return string|boolean the domain-name if the domain is valid, false otherwise
 	 */
 	public static function validateDomain($domainname, $allow_underscore = false)
@@ -247,20 +247,20 @@ class Validate
 	}
 
 	/**
-	 * Returns if an emailaddress is in correct format or not
+	 * Returns if an email address is incorrect format or not
 	 *
-	 * @param string $email
-	 *        	The email address to check
+	 * @param string $email The email address to check
+     *
 	 * @return bool Correct or not
 	 */
 	public static function validateEmail($email)
 	{
 		$email = strtolower($email);
-		// as of php-7.1
+		// Since PHP 7.1
 		if (defined('FILTER_FLAG_EMAIL_UNICODE')) {
-			return filter_var($email, FILTER_VALIDATE_EMAIL, FILTER_FLAG_EMAIL_UNICODE);
+			return filter_var($email, FILTER_VALIDATE_EMAIL, FILTER_FLAG_EMAIL_UNICODE) !== false;
 		}
-		return filter_var($email, FILTER_VALIDATE_EMAIL);
+		return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
 	}
 
 	/**
@@ -272,7 +272,7 @@ class Validate
 	 *        	optional, default true, checks whether it must be UNIX compatible
 	 * @param int $mysql_max
 	 *        	optional, number of max mysql username characters, default empty
-	 *        	
+	 *
 	 * @return bool
 	 */
 	public static function validateUsername($username, $unix_names = 1, $mysql_max = '')
