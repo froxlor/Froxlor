@@ -1025,7 +1025,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				\Froxlor\System\Cronjob::inserttask('1');
 			}
 
-			if ($phpenabled != $result['phpenabled'] || $perlenabled != $result['perlenabled']) {
+			if ($phpenabled != $result['phpenabled'] || $perlenabled != $result['perlenabled'] || $email != $result['email']) {
 				\Froxlor\System\Cronjob::inserttask('1');
 			}
 

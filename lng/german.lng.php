@@ -1150,8 +1150,8 @@ $lng['panel']['unlock'] = 'entsperren';
 $lng['question']['customer_reallyunlock'] = 'Wollen Sie den Kunden "%s" wirklich entsperren?';
 
 // ADDED IN FROXLOR 0.9.15
-$lng['serversettings']['perl_server']['title'] = 'Perl-Server-Ort';
-$lng['serversettings']['perl_server']['description'] = 'Der Standardwert ist diesem Guide entnommen: <a target="blank" href="http://wiki.nginx.org/SimpleCGI">http://wiki.nginx.org/SimpleCGI</a>';
+$lng['serversettings']['perl_server']['title'] = 'Perl Server-Socket';
+$lng['serversettings']['perl_server']['description'] = 'Eine einfache Anleitung hier zu findet man unter <a target="blank" href="http://wiki.nginx.org/SimpleCGIhttps://www.nginx.com/resources/wiki/start/topics/examples/fcgiwrap/">nginx.com</a>';
 $lng['serversettings']['nginx_php_backend']['title'] = 'Nginx-PHP-Backend';
 $lng['serversettings']['nginx_php_backend']['description'] = 'Dies ist das Backend, auf dem PHP auf Anfragen von Nginx hört. Kann ein UNIX Socket oder eine IP:Port Kombination sein<br />*NICHT relevant bei php-fpm';
 $lng['serversettings']['phpreload_command']['title'] = 'PHP-Reload-Befehl';
@@ -1685,7 +1685,7 @@ $lng['apikeys']['valid_until_help'] = 'Datum Gültigkeitsende, Format JJJJ-MM-TT
 $lng['serversettings']['enable_api']['title'] = 'Aktiviere externe API Nutzung';
 $lng['serversettings']['enable_api']['description'] = 'Um die froxlor API nutzen zu können, muss diese Option aktiviert sein. Für detaillierte Informationen siehe <a href="https://api.froxlor.org/" target="_new">https://api.froxlor.org/</a>';
 $lng['serversettings']['dhparams_file']['title'] = 'DHParams Datei (Diffie–Hellman key exchange)';
-$lng['serversettings']['dhparams_file']['description'] = 'Wird eine dhparams.pem Datei hier angegeben, wir sie in die Webserver Konfiguration mit eingefügt.<br>Beispiel: /etc/apache2/ssl/dhparams.pem<br><br>Existiert die Datei nicht, wird sie wie folgt erstellt: <em>openssl dhparam -out /etc/apache2/ssl/dhparams.pem 4096<em>. Es wird empfohlen die Datei zu erstellen, bevor sie hier angegeben wird, da die Erstellung längere Zeit in Anspruch nimmt und den Cronjob blockiert.';
+$lng['serversettings']['dhparams_file']['description'] = 'Wird eine dhparams.pem Datei hier angegeben, wir sie in die Webserver Konfiguration mit eingefügt.<br>Beispiel: /etc/ssl/webserver/dhparams.pem<br><br>Existiert die Datei nicht, wird sie wie folgt erstellt: <em>openssl dhparam -out /etc/ssl/webserver/dhparams.pem 4096<em>. Es wird empfohlen die Datei zu erstellen, bevor sie hier angegeben wird, da die Erstellung längere Zeit in Anspruch nimmt und den Cronjob blockiert.';
 $lng['2fa']['2fa'] = '2FA Optionen';
 $lng['2fa']['2fa_enabled'] = 'Aktiviere Zwei-Faktor Authentifizierung (2FA)';
 $lng['login']['2fa'] = 'Zwei-Faktor Authentifizierung (2FA)';
@@ -1753,3 +1753,4 @@ $lng['serversettings']['awstats']['logformat']['title'] = 'LogFormat Einstellung
 $lng['serversettings']['awstats']['logformat']['description'] = 'Wenn ein benutzerdefiniertes LogFormat beim Webserver verwendet wird, muss LogFormat von awstats ebenso angepasst werden.<br/>Standard ist 1. Für weitere Informationen siehe Dokumentation unter <a target="_blank" href="https://awstats.sourceforge.io/docs/awstats_config.html#LogFormat">hier</a>.';
 $lng['error']['cannotdeletesuperadmin'] = 'Der erste Administrator kann nicht gelöscht werden.';
 $lng['error']['no_wwwcnamae_ifwwwalias'] = 'Es kann kein CNAME Eintrag für "www" angelegt werden, da die Domain einen www-Alias aktiviert hat. Ändere diese Einstellung auf "Kein Alias" oder "Wildcard Alias"';
+$lng['serversettings']['hide_incompatible_settings'] = 'Inkompatible Einstellungen ausblenden';

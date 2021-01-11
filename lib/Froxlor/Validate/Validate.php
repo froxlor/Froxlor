@@ -217,9 +217,9 @@ class Validate
 	public static function validateDomain($domainname, $allow_underscore = false)
 	{
 		if (is_string($domainname)) {
-			$char_validation = '([a-z\d](-*[a-z\d])*)(\.?([a-z\d](-*[a-z\d])*))*\.([a-z\d])+';
+			$char_validation = '([a-z\d](-*[a-z\d])*)(\.?([a-z\d](-*[a-z\d])*))*\.(xn\-\-)?([a-z\d])+';
 			if ($allow_underscore) {
-				$char_validation = '([a-z\d\_](-*[a-z\d\_])*)(\.([a-z\d\_](-*[a-z\d])*))*(\.?([a-z\d](-*[a-z\d])*))+\.([a-z\d])+';
+				$char_validation = '([a-z\d\_](-*[a-z\d\_])*)(\.([a-z\d\_](-*[a-z\d])*))*(\.?([a-z\d](-*[a-z\d])*))+\.(xn\-\-)?([a-z\d])+';
 			}
 
 			// valid chars check && overall length check && length of each label
@@ -256,6 +256,10 @@ class Validate
 	public static function validateEmail($email)
 	{
 		$email = strtolower($email);
+		// as of php-7.1
+		if (defined('FILTER_FLAG_EMAIL_UNICODE')) {
+			return filter_var($email, FILTER_VALIDATE_EMAIL, FILTER_FLAG_EMAIL_UNICODE);
+		}
 		return filter_var($email, FILTER_VALIDATE_EMAIL);
 	}
 

@@ -60,6 +60,10 @@ class Traffic extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	 *        	optional, default empty
 	 * @param int $day
 	 *        	optional, default empty
+	 * @param int $date_from
+	 *        	optional timestamp, default empty, if specified, $year, $month and $day will be ignored
+	 * @param int $date_until
+	 *        	optional timestamp, default empty, if specified, $year, $month and $day will be ignored
 	 * @param bool $customer_traffic
 	 *        	optional, admin-only, whether to output ones own traffic or all of ones customers, default is 0 (false)
 	 * @param int $customerid
@@ -76,10 +80,29 @@ class Traffic extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 		$year = $this->getParam('year', true, "");
 		$month = $this->getParam('month', true, "");
 		$day = $this->getParam('day', true, "");
+		$date_from = $this->getParam('date_from', true, - 1);
+		$date_until = $this->getParam('date_until', true, - 1);
 		$customer_traffic = $this->getBoolParam('customer_traffic', true, 0);
 		$customer_ids = $this->getAllowedCustomerIds();
 		$result = array();
 		$params = array();
+
+		// validate parameters
+		if ($date_from >= 0 || $date_until >= 0) {
+			$year = "";
+			$month = "";
+			$day = "";
+			if ($date_from == $date_until) {
+				$date_until = -1;
+			}
+			if ($date_from >= 0 && $date_until >= 0 && $date_until < $date_from) {
+				// switch
+				$temp_ts = $date_from;
+				$date_from = $date_until;
+				$date_until = $temp_ts;
+			}
+		}
+
 		// check for year/month/day
 		$where_str = "";
 		if (! empty($year) && is_numeric($year)) {
@@ -93,6 +116,17 @@ class Traffic extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 		if (! empty($day) && is_numeric($day)) {
 			$where_str .= " AND `day` = :day";
 			$params['day'] = $day;
+		}
+		if ($date_from >= 0 && $date_until >= 0) {
+			$where_str .= " AND `stamp` BETWEEN :df AND :du";
+			$params['df'] = $date_from;
+			$params['du'] = $date_until;
+		} elseif ($date_from >= 0 && $date_until < 0) {
+			$where_str .= " AND `stamp` > :df";
+			$params['df'] = $date_from;
+		} elseif ($date_from < 0 && $date_until >= 0) {
+			$where_str .= " AND `stamp` < :du";
+			$params['du'] = $date_until;
 		}
 
 		if (! $this->isAdmin() || ($this->isAdmin() && $customer_traffic)) {

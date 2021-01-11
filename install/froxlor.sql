@@ -15,10 +15,10 @@ CREATE TABLE `ftp_groups` (
 DROP TABLE IF EXISTS `ftp_users`;
 CREATE TABLE `ftp_users` (
   `id` int(20) NOT NULL auto_increment,
-  `username` varchar(255) NOT NULL default '',
+  `username` varchar(255) NOT NULL,
   `uid` int(5) NOT NULL default '0',
   `gid` int(5) NOT NULL default '0',
-  `password` varchar(128) NOT NULL default '',
+  `password` varchar(128) NOT NULL,
   `homedir` varchar(255) NOT NULL default '',
   `shell` varchar(255) NOT NULL default '/bin/false',
   `login_enabled` enum('N','Y') NOT NULL default 'N',
@@ -90,8 +90,8 @@ CREATE TABLE `panel_activation` (
 DROP TABLE IF EXISTS `panel_admins`;
 CREATE TABLE `panel_admins` (
   `adminid` int(11) unsigned NOT NULL auto_increment,
-  `loginname` varchar(50) NOT NULL default '',
-  `password` varchar(255) NOT NULL default '',
+  `loginname` varchar(50) NOT NULL,
+  `password` varchar(255) NOT NULL,
   `name` varchar(255) NOT NULL default '',
   `email` varchar(255) NOT NULL default '',
   `def_language` varchar(100) NOT NULL default '',
@@ -142,7 +142,7 @@ CREATE TABLE `panel_admins` (
 DROP TABLE IF EXISTS `panel_customers`;
 CREATE TABLE `panel_customers` (
   `customerid` int(11) unsigned NOT NULL auto_increment,
-  `loginname` varchar(50) NOT NULL default '',
+  `loginname` varchar(50) NOT NULL,
   `password` varchar(255) NOT NULL default '',
   `adminid` int(11) unsigned NOT NULL default '0',
   `name` varchar(255) NOT NULL default '',
@@ -223,7 +223,7 @@ CREATE TABLE `panel_databases` (
 DROP TABLE IF EXISTS `panel_domains`;
 CREATE TABLE `panel_domains` (
   `id` int(11) unsigned NOT NULL auto_increment,
-  `domain` varchar(255) NOT NULL default '',
+  `domain` varchar(255) NOT NULL,
   `domain_ace` varchar(255) NOT NULL default '',
   `adminid` int(11) unsigned NOT NULL default '0',
   `customerid` int(11) unsigned NOT NULL default '0',
@@ -286,7 +286,7 @@ CREATE TABLE `panel_domains` (
 DROP TABLE IF EXISTS `panel_ipsandports`;
 CREATE TABLE `panel_ipsandports` (
   `id` int(11) unsigned NOT NULL auto_increment,
-  `ip` varchar(39) NOT NULL default '',
+  `ip` varchar(39) NOT NULL,
   `port` int(5) NOT NULL default '80',
   `listen_statement` tinyint(1) NOT NULL default '0',
   `namevirtualhost_statement` tinyint(1) NOT NULL default '0',
@@ -671,6 +671,7 @@ opcache.interned_strings_buffer'),
 	('system', 'froxloraliases', ''),
 	('system', 'apply_specialsettings_default', '1'),
 	('system', 'apply_phpconfigs_default', '1'),
+	('system', 'hide_incompatible_settings', '0'),
 	('api', 'enabled', '0'),
 	('2fa', 'enabled', '1'),
 	('panel', 'decimal_places', '4'),
@@ -705,8 +706,8 @@ opcache.interned_strings_buffer'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'is_configured', '0'),
-	('panel', 'version', '0.10.22'),
-	('panel', 'db_version', '202009070');
+	('panel', 'version', '0.10.23.1'),
+	('panel', 'db_version', '202012300');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

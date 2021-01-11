@@ -443,12 +443,12 @@ class Form
 				}
 			}
 
-			// if ($do_show) {
-			$returnvalue = call_user_func(array(
-				'\\Froxlor\\UI\\Fields',
-				'getFormFieldOutput' . ucfirst($fielddata['type'])
-			), $fieldname, $fielddata, $do_show);
-			// }
+			if ($do_show || (!$do_show && Settings::Get('system.hide_incompatible_settings') == '0')) {
+				$returnvalue = call_user_func(array(
+					'\\Froxlor\\UI\\Fields',
+					'getFormFieldOutput' . ucfirst($fielddata['type'])
+				), $fieldname, $fielddata, $do_show);
+			}
 		}
 		return $returnvalue;
 	}
