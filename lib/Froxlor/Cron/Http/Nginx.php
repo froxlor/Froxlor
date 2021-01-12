@@ -1053,7 +1053,7 @@ class Nginx extends HttpConfigBase
 
 		if (Settings::Get('system.awstats_enabled') == '1') {
 			// awstats
-			$stats_text .= "\t" . 'location ^~ /awstats {' . "\n";
+			$stats_text .= "\t" . 'location ^~ /awstats/ {' . "\n";
 		} else {
 			// webalizer
 			$stats_text .= "\t" . 'location ^~ /webalizer {' . "\n";
