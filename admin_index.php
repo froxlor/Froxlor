@@ -57,6 +57,12 @@ if (isset($_POST['id'])) {
 if ($page == 'overview') {
 
 	$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_index");
+	$params = [];
+	if ($userinfo['customers_see_all'] == '0') {
+		$params = [
+			'adminid' => $userinfo['adminid']
+		];
+	}
 	$overview_stmt = Database::prepare("SELECT COUNT(*) AS `number_customers`,
 				SUM(`diskspace_used`) AS `diskspace_used`,
 				SUM(`mysqls_used`) AS `mysqls_used`,
@@ -68,9 +74,7 @@ if ($page == 'overview') {
 				SUM(`subdomains_used`) AS `subdomains_used`,
 				SUM(`traffic_used`) AS `traffic_used`
 				FROM `" . TABLE_PANEL_CUSTOMERS . "`" . ($userinfo['customers_see_all'] ? '' : " WHERE `adminid` = :adminid "));
-	$overview = Database::pexecute_first($overview_stmt, array(
-		'adminid' => $userinfo['adminid']
-	));
+	$overview = Database::pexecute_first($overview_stmt, $params);
 
 	$dec_places = Settings::Get('panel.decimal_places');
 	$overview['traffic_used'] = round($overview['traffic_used'] / (1024 * 1024), $dec_places);
@@ -79,9 +83,7 @@ if ($page == 'overview') {
 	$number_domains_stmt = Database::prepare("
 		SELECT COUNT(*) AS `number_domains` FROM `" . TABLE_PANEL_DOMAINS . "`
 		WHERE `parentdomainid`='0'" . ($userinfo['customers_see_all'] ? '' : " AND `adminid` = :adminid"));
-	$number_domains = Database::pexecute_first($number_domains_stmt, array(
-		'adminid' => $userinfo['adminid']
-	));
+	$number_domains = Database::pexecute_first($number_domains_stmt, $params);
 
 	$overview['number_domains'] = $number_domains['number_domains'];
 
