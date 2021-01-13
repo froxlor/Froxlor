@@ -400,10 +400,21 @@ class PhpHelper
 	 */
 	public static function cleanGlobal(&$global, &$antiXss)
 	{
+		$ignored_fields = [
+			'system_default_vhostconf',
+			'system_default_sslvhostconf',
+			'system_apache_globaldiropt',
+			'specialsettings',
+			'ssl_specialsettings',
+			'default_vhostconf_domain',
+			'ssl_default_vhostconf_domain'
+		];
 		if (isset($global) && ! empty($global)) {
 			$tmp = $global;
 			foreach ($tmp as $index => $value) {
-				$global[$index] = $antiXss->xss_clean($value);
+				if (!in_array($index, $ignored_fields)) {
+					$global[$index] = $antiXss->xss_clean($value);
+				}
 			}
 		}
 	}

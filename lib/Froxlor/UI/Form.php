@@ -217,7 +217,7 @@ class Form
 							if (! $only_enabledisable || ($only_enabledisable && isset($fielddetails['overview_option']))) {
 								$newfieldvalue = self::getFormFieldData($fieldname, $fielddetails, $input);
 								if ($newfieldvalue != $fielddetails['value']) {
-									if (($error = \Froxlor\Validate\Form::validateFormField($fieldname, $fielddetails, $newfieldvalue)) !== true) {
+									if (($error = \Froxlor\Validate\Form::validateFormField($fieldname, $fielddetails, $newfieldvalue)) != true) {
 										\Froxlor\UI\Response::standard_error($error, $fieldname);
 									} else {
 										$changed_fields[$fieldname] = $newfieldvalue;
