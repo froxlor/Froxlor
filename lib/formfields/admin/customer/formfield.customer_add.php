@@ -190,7 +190,7 @@ return array(
 				'image' => 'icons/user_add.png',
 				'fields' => array(
 					'diskspace' => array(
-						'label' => $lng['customer']['diskspace'],
+						'label' => $lng['customer']['diskspace'] . ' (' . $lng['customer']['mib'] . ')',
 						'type' => 'textul',
 						'value' => 0,
 						'maxlength' => 16,
@@ -198,7 +198,7 @@ return array(
 						'ul_field' => $diskspace_ul
 					),
 					'traffic' => array(
-						'label' => $lng['customer']['traffic'],
+						'label' => $lng['customer']['traffic'] . ' (' . $lng['customer']['gib'] . ')',
 						'type' => 'textul',
 						'value' => 0,
 						'maxlength' => 14,
@@ -238,7 +238,7 @@ return array(
 						'ul_field' => $email_forwarders_ul
 					),
 					'email_quota' => array(
-						'label' => $lng['customer']['email_quota'],
+						'label' => $lng['customer']['email_quota']. ' (' . $lng['customer']['mib'] . ')',
 						'type' => 'textul',
 						'value' => 0,
 						'maxlength' => 9,

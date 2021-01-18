@@ -77,8 +77,8 @@ if ($page == 'overview') {
 	$overview = Database::pexecute_first($overview_stmt, $params);
 
 	$dec_places = Settings::Get('panel.decimal_places');
-	$overview['traffic_used'] = round($overview['traffic_used'] / (1024 * 1024), $dec_places);
-	$overview['diskspace_used'] = round($overview['diskspace_used'] / 1024, $dec_places);
+	$overview['traffic_used'] = \Froxlor\PhpHelper::sizeReadable($overview['traffic_used'] * 1024, null, 'bi');
+	$overview['diskspace_used'] = \Froxlor\PhpHelper::sizeReadable($overview['diskspace_used'] * 1024, null, 'bi');
 
 	$number_domains_stmt = Database::prepare("
 		SELECT COUNT(*) AS `number_domains` FROM `" . TABLE_PANEL_DOMAINS . "`
@@ -113,10 +113,10 @@ if ($page == 'overview') {
 	}
 
 	$dec_places = Settings::Get('panel.decimal_places');
-	$userinfo['diskspace'] = round($userinfo['diskspace'] / 1024, $dec_places);
-	$userinfo['diskspace_used'] = round($userinfo['diskspace_used'] / 1024, $dec_places);
-	$userinfo['traffic'] = round($userinfo['traffic'] / (1024 * 1024), $dec_places);
-	$userinfo['traffic_used'] = round($userinfo['traffic_used'] / (1024 * 1024), $dec_places);
+	$userinfo['diskspace'] = ($userinfo['diskspace'] > -1) ? \Froxlor\PhpHelper::sizeReadable($userinfo['diskspace'] * 1024, null, 'bi') : - 1;
+	$userinfo['diskspace_used'] = \Froxlor\PhpHelper::sizeReadable($userinfo['diskspace_used'] * 1024, null, 'bi');
+	$userinfo['traffic'] = ($userinfo['traffic'] > -1) ? \Froxlor\PhpHelper::sizeReadable($userinfo['traffic'] * 1024, null, 'bi') : - 1;
+	$userinfo['traffic_used'] = \Froxlor\PhpHelper::sizeReadable($userinfo['traffic_used'] * 1024, null, 'bi');
 	$userinfo = \Froxlor\PhpHelper::strReplaceArray('-1', $lng['customer']['unlimited'], $userinfo, 'customers domains diskspace traffic mysqls emails email_accounts email_forwarders email_quota ftps subdomains');
 
 	$userinfo['custom_notes'] = ($userinfo['custom_notes'] != '') ? nl2br($userinfo['custom_notes']) : '';

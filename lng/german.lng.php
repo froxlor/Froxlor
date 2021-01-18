@@ -60,8 +60,8 @@ $lng['customer']['phone'] = 'Telefon';
 $lng['customer']['fax'] = 'Fax';
 $lng['customer']['email'] = 'E-Mail-Adresse';
 $lng['customer']['customernumber'] = 'Kundennummer';
-$lng['customer']['diskspace'] = 'Webspace (MiB)';
-$lng['customer']['traffic'] = 'Traffic (GiB)';
+$lng['customer']['diskspace'] = 'Webspace';
+$lng['customer']['traffic'] = 'Traffic';
 $lng['customer']['mysqls'] = 'MySQL-Datenbanken';
 $lng['customer']['emails'] = 'E-Mail-Adressen';
 $lng['customer']['accounts'] = 'E-Mail-Konten';
@@ -612,7 +612,7 @@ $lng['traffic']['months'][9] = "September";
 $lng['traffic']['months'][10] = "Oktober";
 $lng['traffic']['months'][11] = "November";
 $lng['traffic']['months'][12] = "Dezember";
-$lng['traffic']['mb'] = "Traffic (MiB)";
+$lng['traffic']['mb'] = "Traffic";
 $lng['traffic']['day'] = "Tag";
 $lng['traffic']['distribution'] = '<span color="#019522">FTP</span> | <span color="#0000FF">HTTP</span> | <span color="#800000">Mail</span>';
 $lng['traffic']['sumhttp'] = 'Gesamt HTTP-Traffic';
@@ -800,7 +800,7 @@ $lng['serversettings']['mail_quota_enabled']['enforcelink'] = 'Hier klicken, um 
 $lng['question']['admin_quotas_reallywipe'] = 'Sind Sie sicher, dass alle E-Mail-Kontingente aus der Tabelle mail_users entfernt werden sollen? Dieser Schritt kann nicht rückgängig gemacht werden!';
 $lng['question']['admin_quotas_reallyenforce'] = 'Sind Sie sicher, dass Sie allen Benutzern das Default-Quota zuweisen wollen? Dies kann nicht rückgängig gemacht werden!';
 $lng['error']['vmailquotawrong'] = 'Die Kontingent-Größe muss positiv sein.';
-$lng['customer']['email_quota'] = 'E-Mail-Kontingent (MiB)';
+$lng['customer']['email_quota'] = 'E-Mail-Kontingent';
 $lng['customer']['email_imap'] = 'IMAP';
 $lng['customer']['email_pop3'] = 'POP3';
 $lng['customer']['mail_quota'] = 'E-Mail-Kontingent';
@@ -1266,9 +1266,9 @@ $lng['mysql']['size'] = 'Datenbankgröße';
 
 $lng['error']['invalidhostname'] = 'Hostname muss eine gültige Domain sein. Er darf weder leer sein noch nur aus Leerzeichen bestehen';
 
-$lng['traffic']['http'] = 'HTTP (MiB)';
-$lng['traffic']['ftp'] = 'FTP (MiB)';
-$lng['traffic']['mail'] = 'Mail (MiB)';
+$lng['traffic']['http'] = 'HTTP';
+$lng['traffic']['ftp'] = 'FTP';
+$lng['traffic']['mail'] = 'Mail';
 
 // ADDED IN 0.9.27-svn1
 $lng['serversettings']['mod_fcgid']['idle_timeout']['title'] = 'Idle-Timeout';
@@ -1727,7 +1727,7 @@ $lng['serversettings']['default_sslvhostconf']['title'] = 'Standard SSL vHost-Ei
 $lng['serversettings']['includedefault_sslvhostconf'] = 'Nicht-SSL vHost-Einstellungen in SSL-vHost inkludieren';
 $lng['admin']['ownsslvhostsettings'] = 'Eigene SSL vHost-Einstellungen';
 $lng['admin']['ipsandports']['ssl_default_vhostconf_domain'] = 'Standard SSL vHost-Einstellungen für jeden Domain-Container';
-$lng['customer']['total_diskspace'] = 'Gesamtspeicherplatz (MiB)';
+$lng['customer']['total_diskspace'] = 'Gesamtspeicherplatz';
 $lng['admin']['domain_override_tls'] = 'Überschreibe System TLS Einstellungen';
 $lng['domains']['isaliasdomainof'] = 'Ist Aliasdomain für %s';
 $lng['serversettings']['apply_specialsettings_default']['title'] = 'Standardwert für "' . $lng['admin']['specialsettingsforsubdomains'] . "' Einstellung beim Bearbeiten einer Domain";

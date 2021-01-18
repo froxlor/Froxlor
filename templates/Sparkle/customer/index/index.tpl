@@ -87,7 +87,7 @@ $header
 						<if $userinfo['email_accounts'] != '∞'>
 						{$userinfo['email_accounts']} {$lng['panel']['available']}<br />
 						</if>
-						{$userinfo['mailspace_used']} {$lng['customer']['mib']}
+						{$userinfo['mailspace_used']}
 					</small>
 				</div>
 				</if>
@@ -130,7 +130,7 @@ $header
 						<if $userinfo['mysqls'] != '∞'>
 						{$userinfo['mysqls']} {$lng['panel']['available']}<br />
 						</if>
-						{$userinfo['dbspace_used']} {$lng['customer']['mib']}
+						{$userinfo['dbspace_used']}
 					</small>
 				</div>
 				</if>
