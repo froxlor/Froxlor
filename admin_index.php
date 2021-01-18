@@ -77,7 +77,9 @@ if ($page == 'overview') {
 	$overview = Database::pexecute_first($overview_stmt, $params);
 
 	$dec_places = Settings::Get('panel.decimal_places');
+	$overview['traffic_bytes_used'] = $overview['traffic_used'] * 1024;
 	$overview['traffic_used'] = \Froxlor\PhpHelper::sizeReadable($overview['traffic_used'] * 1024, null, 'bi');
+	$overview['diskspace_bytes_used'] = $overview['diskspace_used'] * 1024;
 	$overview['diskspace_used'] = \Froxlor\PhpHelper::sizeReadable($overview['diskspace_used'] * 1024, null, 'bi');
 
 	$number_domains_stmt = Database::prepare("
@@ -113,11 +115,17 @@ if ($page == 'overview') {
 	}
 
 	$dec_places = Settings::Get('panel.decimal_places');
+	// get everything in bytes for the percentage calculation on the dashboard
+	$userinfo['diskspace_bytes'] = ($userinfo['diskspace'] > -1) ? $userinfo['diskspace'] * 1024 : -1;
+	$userinfo['diskspace_bytes_used'] = $userinfo['diskspace_used'] * 1024;
+	$userinfo['traffic_bytes'] = ($userinfo['traffic'] > -1) ? $userinfo['traffic'] * 1024 : - 1;
+	$userinfo['traffic_bytes_used'] = $userinfo['traffic_used'] * 1024;
+
 	$userinfo['diskspace'] = ($userinfo['diskspace'] > -1) ? \Froxlor\PhpHelper::sizeReadable($userinfo['diskspace'] * 1024, null, 'bi') : - 1;
 	$userinfo['diskspace_used'] = \Froxlor\PhpHelper::sizeReadable($userinfo['diskspace_used'] * 1024, null, 'bi');
 	$userinfo['traffic'] = ($userinfo['traffic'] > -1) ? \Froxlor\PhpHelper::sizeReadable($userinfo['traffic'] * 1024, null, 'bi') : - 1;
 	$userinfo['traffic_used'] = \Froxlor\PhpHelper::sizeReadable($userinfo['traffic_used'] * 1024, null, 'bi');
-	$userinfo = \Froxlor\PhpHelper::strReplaceArray('-1', $lng['customer']['unlimited'], $userinfo, 'customers domains diskspace traffic mysqls emails email_accounts email_forwarders email_quota ftps subdomains');
+	$userinfo = \Froxlor\PhpHelper::strReplaceArray('-1', $lng['customer']['unlimited'], $userinfo, 'customers domains diskspace diskspace_bytes traffic traffic_bytes mysqls emails email_accounts email_forwarders email_quota ftps subdomains');
 
 	$userinfo['custom_notes'] = ($userinfo['custom_notes'] != '') ? nl2br($userinfo['custom_notes']) : '';
 

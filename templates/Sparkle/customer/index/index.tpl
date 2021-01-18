@@ -9,7 +9,7 @@ $header
 			<div class="grid-u-1-2" id="statsbox">
 				<if $userinfo['diskspace'] != '0'>
 				<div class="canvasbox">
-					<input type="hidden" id="totalspace" class="circular" data-used="{$userinfo['total_used']}" data-available="{$userinfo['diskspace']}">
+					<input type="hidden" id="totalspace" class="circular" data-used="{$userinfo['total_bytes_used']}" data-available="{$userinfo['diskspace_bytes']}">
 					<canvas id="totalspace-canvas" width="120" height="76"></canvas><br />
 					{$lng['customer']['total_diskspace']}<br />
 					<small>
@@ -37,7 +37,7 @@ $header
 
 				<if $userinfo['diskspace'] != '0'>
 				<div class="canvasbox">
-					<input type="hidden" id="diskspace" class="circular" data-used="{$userinfo['diskspace_used']}" data-available="{$userinfo['diskspace']}">
+					<input type="hidden" id="diskspace" class="circular" data-used="{$userinfo['diskspace_bytes_used']}" data-available="{$userinfo['diskspace_bytes']}">
 					<canvas id="diskspace-canvas" width="120" height="76"></canvas><br />
 					{$lng['customer']['diskspace']}<br />
 					<small>
@@ -51,7 +51,7 @@ $header
 
 				<if $userinfo['traffic'] != '0'>
 				<div class="canvasbox">
-					<input type="hidden" id="traffic" class="circular" data-used="{$userinfo['traffic_used']}" data-available="{$userinfo['traffic']}">
+					<input type="hidden" id="traffic" class="circular" data-used="{$userinfo['traffic_bytes_used']}" data-available="{$userinfo['traffic_bytes']}">
 					<canvas id="traffic-canvas" width="120" height="76"></canvas><br />
 					{$lng['customer']['traffic']}<br />
 					<small>
