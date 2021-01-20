@@ -702,6 +702,8 @@ $lng['dkim']['dkim_dkimkeys']['title'] = 'KeyList filename';
 $lng['dkim']['dkim_dkimkeys']['description'] = '<em>Filename</em> of the  DKIM KeyList parameter specified in the dkim-milter configuration';
 $lng['dkim']['dkimrestart_command']['title'] = 'Milter restart command';
 $lng['dkim']['dkimrestart_command']['description'] = 'Please specify the restart command for the DKIM milter service';
+$lng['dkim']['privkeysuffix']['title'] = 'Private keys suffix';
+$lng['dkim']['privkeysuffix']['description'] = 'You can specify an (optional) filename extension/suffix for the generate dkim private keys. Some services like dkim-filter requires this to be empty';
 
 // ADDED IN 1.2.19-svn9
 

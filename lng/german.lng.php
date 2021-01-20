@@ -695,6 +695,8 @@ $lng['dkim']['dkim_dkimkeys']['title'] = 'KeyList Dateiname';
 $lng['dkim']['dkim_dkimkeys']['description'] = 'Dateiname der DKIM-KeyList-Angabe aus der DKIM-Milter-Konfigurationsdatei.';
 $lng['dkim']['dkimrestart_command']['title'] = 'Milter-Restart-Kommando';
 $lng['dkim']['dkimrestart_command']['description'] = 'Wie lautet das Kommando zum Neustarten des DKIM-Milter-Dienstes?';
+$lng['dkim']['privkeysuffix']['title'] = 'Suffix für Private Keys';
+$lng['dkim']['privkeysuffix']['description'] = 'Hier kann eine (optionale) Dateiendung für die generierten Private Keys angegeben werden. Manche Dienste, wie dkim-filter, erwarten, dass die Schlüssel keine Dateiendung haben (leer).';
 
 // ADDED IN 1.2.19-svn9
 
