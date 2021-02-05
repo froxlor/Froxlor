@@ -407,7 +407,8 @@ class PhpHelper
 			'specialsettings',
 			'ssl_specialsettings',
 			'default_vhostconf_domain',
-			'ssl_default_vhostconf_domain'
+			'ssl_default_vhostconf_domain',
+			'filecontent'
 		];
 		if (isset($global) && ! empty($global)) {
 			$tmp = $global;
