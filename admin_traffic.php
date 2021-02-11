@@ -56,6 +56,26 @@ if ($page == 'overview' || $page == 'customers') {
 		$maxyears = date("Y") - $minyear['year'];
 	}
 
+	$params = [];
+	if ($userinfo['customers_see_all'] == '0') {
+		$params = [
+			'id' => $userinfo['adminid']
+		];
+	}
+	$customer_name_list_stmt = Database::prepare("
+		SELECT `customerid`,`company`,`name`,`firstname`
+		FROM `" . TABLE_PANEL_CUSTOMERS . "`
+		WHERE `deactivated`='0'" . ($userinfo['customers_see_all'] ? '' : " AND `adminid` = :id") . "
+		ORDER BY name"
+	);
+
+	$traffic_list_stmt = Database::prepare("
+		SELECT month, SUM(http+ftp_up+ftp_down+mail)*1024 AS traffic
+		FROM `" . TABLE_PANEL_TRAFFIC . "`
+		WHERE year = :year AND `customerid` = :id
+		GROUP BY month ORDER BY month"
+	);
+
 	for ($years = 0; $years <= $maxyears; $years ++) {
 
 		$overview['year'] = date("Y") - $years;
@@ -76,14 +96,7 @@ if ($page == 'overview' || $page == 'customers') {
 			'dec' => 0
 		);
 
-		$customer_name_list_stmt = Database::prepare("
-			SELECT `customerid`,`company`,`name`,`firstname`
-			FROM `" . TABLE_PANEL_CUSTOMERS . "`
-			WHERE `deactivated`='0'" . ($userinfo['customers_see_all'] ? '' : " AND `adminid` = :id") . "
-			ORDER BY name");
-		Database::pexecute($customer_name_list_stmt, array(
-			'id' => $userinfo['adminid']
-		));
+		Database::pexecute($customer_name_list_stmt, $params);
 
 		while ($customer_name = $customer_name_list_stmt->fetch(PDO::FETCH_ASSOC)) {
 
@@ -104,11 +117,6 @@ if ($page == 'overview' || $page == 'customers') {
 				'dec' => '-'
 			);
 
-			$traffic_list_stmt = Database::prepare("
-				SELECT month, SUM(http+ftp_up+ftp_down+mail)*1024 AS traffic
-				FROM `" . TABLE_PANEL_TRAFFIC . "`
-				WHERE year = :year AND `customerid` = :id
-				GROUP BY month ORDER BY month");
 			Database::pexecute($traffic_list_stmt, array(
 				'year' => (date("Y") - $years),
 				'id' => $customer_name['customerid']
