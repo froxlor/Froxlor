@@ -310,6 +310,13 @@ abstract class ApiCommand extends ApiParameter
 				} elseif (in_array($valoper['op'], $ops)) {
 					$condition .= $field . ' ' . $valoper['op'] . ':' . $cleanfield;
 					$query_fields[':' . $cleanfield] = $valoper['value'] ?? '';
+				} elseif (strtolower($valoper['op']) == 'in' && is_array($valoper['value']) && count($valoper['value']) > 0) {
+					$condition .= $field . ' ' . $valoper['op'] . ' (';
+					foreach ($valoper['value'] as $incnt => $invalue) {
+						$condition .= ":" . $cleanfield . $incnt . ", ";
+						$query_fields[':' . $cleanfield . $incnt] = $invalue ?? '';
+					}
+					$condition = substr($condition, 0, - 2) . ')';
 				} else {
 					continue;
 				}
@@ -518,7 +525,7 @@ abstract class ApiCommand extends ApiParameter
 				$customer_ids[] = $customer['customerid'];
 			}
 		} else {
-			if (!$this->isInternal() && ! empty($customer_hide_option) && \Froxlor\Settings::IsInList('panel.customer_hide_options', $customer_hide_option)) {
+			if (! $this->isInternal() && ! empty($customer_hide_option) && \Froxlor\Settings::IsInList('panel.customer_hide_options', $customer_hide_option)) {
 				throw new \Exception("You cannot access this resource", 405);
 			}
 			$customer_ids = array(
