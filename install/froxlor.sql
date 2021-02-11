@@ -387,6 +387,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('dkim', 'dkim_domains', 'domains'),
 	('dkim', 'dkim_dkimkeys', 'dkim-keys.conf'),
 	('dkim', 'dkimrestart_command', '/etc/init.d/dkim-filter restart'),
+	('dkim', 'privkeysuffix', '.priv'),
 	('admin', 'show_news_feed', '0'),
 	('admin', 'show_version_login', '0'),
 	('admin', 'show_version_footer', '0'),
@@ -672,6 +673,7 @@ opcache.interned_strings_buffer'),
 	('system', 'apply_specialsettings_default', '1'),
 	('system', 'apply_phpconfigs_default', '1'),
 	('system', 'hide_incompatible_settings', '0'),
+	('system', 'include_default_vhostconf', '0'),
 	('api', 'enabled', '0'),
 	('2fa', 'enabled', '1'),
 	('panel', 'decimal_places', '4'),
@@ -706,8 +708,8 @@ opcache.interned_strings_buffer'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'is_configured', '0'),
-	('panel', 'version', '0.10.23.1'),
-	('panel', 'db_version', '202012300');
+	('panel', 'version', '0.10.24'),
+	('panel', 'db_version', '202101200');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

@@ -36,7 +36,26 @@ return array(
 					'varname' => 'dkim_prefix',
 					'type' => 'string',
 					'string_type' => 'dir',
-					'default' => (\Froxlor\Settings:: Get('dkim.dkim_servicetype') == 0 ? 'etc/amavis/conf.d' : '/etc/opendkim'),
+					'default' => (\Froxlor\Settings:: Get('dkim.dkim_servicetype') == 0 ? 'etc/amavis/conf.d' : '/etc/opendkim'), # das hier ist meine Zeile
+#					'default' => '/etc/postfix/dkim/', # das hier ist von Froxlor
+#					'save_method' => 'storeSettingField'
+#				),
+#				'dkim_privkeysuffix' => array(
+#					'label' => $lng['dkim']['privkeysuffix'],
+#					'settinggroup' => 'dkim',
+#					'varname' => 'privkeysuffix',
+#					'type' => 'string',
+#					'string_regexp' => '/^[a-z0-9\._]+$/i',
+#					'default' => '.priv',
+#					'save_method' => 'storeSettingField'
+#				),
+#				'dkim_domains' => array(
+#					'label' => $lng['dkim']['dkim_domains'],
+#					'settinggroup' => 'dkim',
+#					'varname' => 'dkim_domains',
+#					'type' => 'string',
+#					'string_regexp' => '/^[a-z0-9\._]+$/i',
+#					'default' => 'domains',
 					'save_method' => 'storeSettingField'
 				),
 				'dkim_dkimkeys' => array(

@@ -196,7 +196,7 @@ return array(
 						)
 					),
 					'diskspace' => array(
-						'label' => $lng['customer']['diskspace'],
+						'label' => $lng['customer']['diskspace'] . ' (' . $lng['customer']['mib'] . ')',
 						'type' => 'textul',
 						'value' => $result['diskspace'],
 						'maxlength' => 6,
@@ -204,7 +204,7 @@ return array(
 						'ul_field' => $diskspace_ul
 					),
 					'traffic' => array(
-						'label' => $lng['customer']['traffic'],
+						'label' => $lng['customer']['traffic'] . ' (' . $lng['customer']['gib'] . ')',
 						'type' => 'textul',
 						'value' => $result['traffic'],
 						'maxlength' => 4,
@@ -244,7 +244,7 @@ return array(
 						'ul_field' => $email_forwarders_ul
 					),
 					'email_quota' => array(
-						'label' => $lng['customer']['email_quota'],
+						'label' => $lng['customer']['email_quota'] . ' (' . $lng['customer']['mib'] . ')',
 						'type' => 'textul',
 						'value' => $result['email_quota'],
 						'maxlength' => 9,
