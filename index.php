@@ -114,7 +114,7 @@ if ($action == '2fa_entercode') {
 		));
 		$row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-		if ($row['customer'] == $loginname) {
+		if ($row && $row['customer'] == $loginname) {
 			$table = "`" . TABLE_PANEL_CUSTOMERS . "`";
 			$uid = 'customerid';
 			$adminsession = '0';
@@ -142,7 +142,7 @@ if ($action == '2fa_entercode') {
 							"loginname" => $loginname
 						));
 						$row3 = $stmt->fetch(PDO::FETCH_ASSOC);
-						if ($row3['customer'] == $loginname) {
+						if ($row3 && $row3['customer'] == $loginname) {
 							$table = "`" . TABLE_PANEL_CUSTOMERS . "`";
 							$uid = 'customerid';
 							$adminsession = '0';
@@ -181,7 +181,7 @@ if ($action == '2fa_entercode') {
 				$row = $stmt->fetch(PDO::FETCH_ASSOC);
 			}
 
-			if ($row['admin'] == $loginname) {
+			if ($row && $row['admin'] == $loginname) {
 				$table = "`" . TABLE_PANEL_ADMINS . "`";
 				$uid = 'adminid';
 				$adminsession = '1';
