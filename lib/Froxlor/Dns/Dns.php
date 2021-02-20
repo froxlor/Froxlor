@@ -181,8 +181,8 @@ class Dns
 				// unset special spf required-entry
 				unset($required_entries[$entry['type']][md5("@SPF@")]);
 			}
-			if (empty($primary_ns) && $entry['type'] == 'NS') {
-				// use the first NS entry as primary ns
+			if (empty($primary_ns) && $entry['record'] == '@' && $entry['type'] == 'NS') {
+				// use the first NS entry pertaining to the current domain as primary ns
 				$primary_ns = $entry['content'];
 			}
 			// check for CNAME on @, www- or wildcard-Alias and remove A/AAAA record accordingly
