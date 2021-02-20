@@ -365,7 +365,11 @@ class Dns
 			}
 
 			// PowerDNS does not like multi-line-format
-			$soa_content = $primary_ns . " " . self::escapeSoaAdminMail(Settings::Get('panel.adminmail')) . " ";
+			$soa_email = Settings::Get('system.soaemail');
+			if ($soa_email == "") {
+				$soa_email = Settings::Get('panel.adminmail');
+			}
+			$soa_content = $primary_ns . " " . self::escapeSoaAdminMail($soa_email) . " ";
 			$soa_content .= $domain['bindserial'] . " ";
 			// TODO for now, dummy time-periods
 			$soa_content .= "3600 900 604800 " . (int) Settings::Get('system.defaultttl');

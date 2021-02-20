@@ -725,3 +725,12 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.23.1')) {
 	showUpdateStep("Updating from 0.10.23.1 to 0.10.24", false);
 	\Froxlor\Froxlor::updateToVersion('0.10.24');
 }
+
+if (\Froxlor\Froxlor::isDatabaseVersion('202101200')) {
+
+	showUpdateStep("Adding setting for mail address used in SOA records", true);
+	Settings::AddNew("system.soaemail", '');
+	lastStepStatus(0);
+
+	\Froxlor\Froxlor::updateToDbVersion('202102200');
+}

@@ -674,6 +674,7 @@ opcache.interned_strings_buffer'),
 	('system', 'apply_phpconfigs_default', '1'),
 	('system', 'hide_incompatible_settings', '0'),
 	('system', 'include_default_vhostconf', '0'),
+	('system', 'soaemail', ''),
 	('api', 'enabled', '0'),
 	('2fa', 'enabled', '1'),
 	('panel', 'decimal_places', '4'),
@@ -709,7 +710,7 @@ opcache.interned_strings_buffer'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'is_configured', '0'),
 	('panel', 'version', '0.10.24'),
-	('panel', 'db_version', '202101200');
+	('panel', 'db_version', '202102200');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
