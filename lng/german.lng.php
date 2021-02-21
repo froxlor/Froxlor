@@ -1750,3 +1750,5 @@ $lng['serversettings']['awstats']['logformat']['description'] = 'Wenn ein benutz
 $lng['error']['cannotdeletesuperadmin'] = 'Der erste Administrator kann nicht gelöscht werden.';
 $lng['error']['no_wwwcnamae_ifwwwalias'] = 'Es kann kein CNAME Eintrag für "www" angelegt werden, da die Domain einen www-Alias aktiviert hat. Ändere diese Einstellung auf "Kein Alias" oder "Wildcard Alias"';
 $lng['serversettings']['hide_incompatible_settings'] = 'Inkompatible Einstellungen ausblenden';
+
+$lng['serversettings']['soaemail'] = 'Mail-Adresse für SOA-Einträge (verwendet Panel-Absender-Name der Panel-Einstellungen falls leer)';
