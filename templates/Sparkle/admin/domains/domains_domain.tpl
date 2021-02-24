@@ -34,7 +34,7 @@
 		<if $row['letsencrypt'] == '1'>
 			&nbsp;<img src="templates/{$theme}/assets/img/icons/ssl_letsencrypt.png" alt="{$lng['panel']['letsencrypt']}" title="{$lng['panel']['letsencrypt']}" />
 		</if>
-		<if !(isset($row['domainaliasid']) && $row['domainaliasid'] != 0) && $row['id'] != \Froxlor\Settings::Get('system.hostname_id')>
+		<if !(isset($row['domainaliasid']) && !empty($row['domainaliasid'])) && $row['id'] != \Froxlor\Settings::Get('system.hostname_id')>
 			<if !(isset($row['standardsubdomain']) && $row['standardsubdomain'] == $row['id'])>
 				&nbsp;<a href="{$linker->getLink(array('section' => 'domains', 'page' => $page, 'action' => 'delete', 'id' => $row['id']))}">
 					<img src="templates/{$theme}/assets/img/icons/delete.png" alt="{$lng['panel']['delete']}" title="{$lng['panel']['delete']}" />
