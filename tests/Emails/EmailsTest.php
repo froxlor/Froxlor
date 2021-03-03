@@ -36,12 +36,14 @@ class MailsTest extends TestCase
 
 		$data = [
 			'email_part' => 'info',
-			'domain' => 'test2.local'
+			'domain' => 'test2.local',
+			'description' => 'awesome email'
 		];
 		$json_result = Emails::getLocal($customer_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals("info@test2.local", $result['email_full']);
 		$this->assertEquals(0, $result['iscatchall']);
+		$this->assertEquals('awesome email', $result['description']);
 
 		// reset setting
 		Settings::Set('panel.customer_hide_options', '', true);
@@ -87,11 +89,13 @@ class MailsTest extends TestCase
 
 		$data = [
 			'emailaddr' => 'catchall@test2.local',
-			'iscatchall' => 1
+			'iscatchall' => 1,
+			'description' => 'now with catchall'
 		];
 		$json_result = Emails::getLocal($customer_userdata, $data)->update();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(1, $result['iscatchall']);
+		$this->assertEquals('now with catchall', $result['description']);
 	}
 
 	public function testCustomerEmailForwardersAdd()

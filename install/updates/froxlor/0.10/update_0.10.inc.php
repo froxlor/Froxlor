@@ -734,3 +734,13 @@ if (\Froxlor\Froxlor::isDatabaseVersion('202101200')) {
 
 	\Froxlor\Froxlor::updateToDbVersion('202102200');
 }
+
+if (\Froxlor\Froxlor::isDatabaseVersion('202102200')) {
+
+	showUpdateStep("Add new description fields to mail and domain table", true);
+	Database::query("ALTER TABLE panel_domains ADD `description` varchar(255) NOT NULL DEFAULT '' AFTER `ssl_sessiontickets`;");
+	Database::query("ALTER TABLE mail_virtual ADD `description` varchar(255) NOT NULL DEFAULT '' AFTER `iscatchall`");
+	lastStepStatus(0);
+
+	\Froxlor\Froxlor::updateToDbVersion('202103030');
+}

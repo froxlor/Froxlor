@@ -71,6 +71,7 @@ CREATE TABLE `mail_virtual` (
   `customerid` int(11) NOT NULL default '0',
   `popaccountid` int(11) NOT NULL default '0',
   `iscatchall` tinyint(1) unsigned NOT NULL default '0',
+  `description` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY  (`id`),
   KEY `email` (`email`)
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
@@ -275,6 +276,7 @@ CREATE TABLE `panel_domains` (
   `ssl_enabled` tinyint(1) DEFAULT '1',
   `ssl_honorcipherorder` tinyint(1) DEFAULT '0',
   `ssl_sessiontickets` tinyint(1) DEFAULT '1',
+  `description` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY  (`id`),
   KEY `customerid` (`customerid`),
   KEY `parentdomain` (`parentdomainid`),
@@ -710,7 +712,7 @@ opcache.interned_strings_buffer'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'is_configured', '0'),
 	('panel', 'version', '0.10.24'),
-	('panel', 'db_version', '202102200');
+	('panel', 'db_version', '202103030');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
