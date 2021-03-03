@@ -172,7 +172,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		$customer_ids = $this->getAllowedCustomerIds('email');
 		$params['idea'] = ($id <= 0 ? $emailaddr : $id);
 
-		$result_stmt = Database::prepare("SELECT v.`id`, v.`email`, v.`email_full`, v.`iscatchall`, v.`destination`, v.`customerid`, v.`popaccountid`, v.`domainid`, v.`description`, u.`quota`
+		$result_stmt = Database::prepare("SELECT v.`id`, v.`email`, v.`email_full`, v.`iscatchall`, v.`destination`, v.`customerid`, v.`popaccountid`, v.`domainid`, v.`description`, u.`quota`, u.`imap`, u.`pop3`, u.`postfix`, u.`mboxsize`
 			FROM `" . TABLE_MAIL_VIRTUAL . "` v
 			LEFT JOIN `" . TABLE_MAIL_USERS . "` u ON v.`popaccountid` = u.`id`
 			WHERE v.`customerid` IN (" . implode(", ", $customer_ids) . ")
@@ -309,7 +309,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		$result = array();
 		$query_fields = array();
 		$result_stmt = Database::prepare("
-			SELECT m.`id`, m.`domainid`, m.`email`, m.`email_full`, m.`iscatchall`, u.`quota`, m.`destination`, m.`popaccountid`, d.`domain`, u.`mboxsize`
+			SELECT m.`id`, m.`domainid`, m.`email`, m.`email_full`, m.`iscatchall`, m.`destination`, m.`popaccountid`, d.`domain`, u.`quota`, u.`imap`, u.`pop3`, u.`postfix`, u.`mboxsize`
 			FROM `" . TABLE_MAIL_VIRTUAL . "` m
 			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` d ON (m.`domainid` = d.`id`)
 			LEFT JOIN `" . TABLE_MAIL_USERS . "` u ON (m.`popaccountid` = u.`id`)

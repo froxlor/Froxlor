@@ -448,6 +448,36 @@ class MailsTest extends TestCase
 		$this->assertEquals(0, $result['quota']);
 	}
 
+	public function testAdminEmailAccountsUpdateDeactivated()
+	{
+		global $admin_userdata;
+
+		// disable
+		$data = [
+			'emailaddr' => 'info@test2.local',
+			'loginname' => 'test1',
+			'deactivated' => 1
+		];
+		$json_result = EmailAccounts::getLocal($admin_userdata, $data)->update();
+		$result = json_decode($json_result, true)['data'];
+		// quota is disabled
+		$this->assertEquals(0, $result['imap']);
+		$this->assertEquals(0, $result['pop3']);
+		$this->assertEquals('N', $result['postfix']);
+		// re-enable
+		$data = [
+			'emailaddr' => 'info@test2.local',
+			'loginname' => 'test1',
+			'deactivated' => 0
+		];
+		$json_result = EmailAccounts::getLocal($admin_userdata, $data)->update();
+		$result = json_decode($json_result, true)['data'];
+		// quota is disabled
+		$this->assertEquals(1, $result['imap']);
+		$this->assertEquals(1, $result['pop3']);
+		$this->assertEquals('Y', $result['postfix']);
+	}
+
 	public function testAdminEmailAccountsUndefinedGet()
 	{
 		global $admin_userdata;

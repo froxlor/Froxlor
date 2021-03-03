@@ -100,7 +100,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 			// alternative email address to send info to
 			if (Settings::Get('panel.sendalternativemail') == 1) {
 				$alternative_email = $idna_convert->encode(\Froxlor\Validate\Validate::validate($alternative_email, 'alternative_email', '', '', array(), true));
-				if (!empty($alternative_email) && ! \Froxlor\Validate\Validate::validateEmail($alternative_email)) {
+				if (! empty($alternative_email) && ! \Froxlor\Validate\Validate::validateEmail($alternative_email)) {
 					\Froxlor\UI\Response::standard_error('alternativeemailiswrong', $alternative_email, true);
 				}
 			} else {
@@ -236,7 +236,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 				$this->mailer()->clearAddresses();
 
 				// customer wants to send the e-mail to an alternative email address too
-				if (Settings::Get('panel.sendalternativemail') == 1 && !empty($alternative_email)) {
+				if (Settings::Get('panel.sendalternativemail') == 1 && ! empty($alternative_email)) {
 					// get template for mail subject
 					$mail_subject = $this->getMailTemplate($customer, 'mails', 'pop_success_alternative_subject', $replace_arr, $this->lng['mails']['pop_success_alternative']['subject']);
 					// get template for mail body
@@ -302,6 +302,8 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 	 *        	optional, update quota
 	 * @param string $email_password
 	 *        	optional, update password
+	 * @param bool $deactivated
+	 *        	optional, admin-only
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
@@ -331,6 +333,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 
 		$password = $this->getParam('email_password', true, '');
 		$quota = $this->getParam('email_quota', true, $result['quota']);
+		$deactivated = $this->getBoolParam('deactivated', true, (strtolower($result['postfix']) == 'n' ? true : false));
 
 		// get needed customer info to reduce the email-account-counter by one
 		$customer = $this->getCustomerData();
@@ -370,6 +373,18 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 		} else {
 			// disable
 			$quota = 0;
+		}
+
+		if ($this->isAdmin()) {
+			if (($deactivated == true && strtolower($result['postfix']) == 'y') || ($deactivated == false && strtolower($result['postfix']) == 'n')) {
+				if (! empty($upd_query)) {
+					$upd_query .= ", ";
+				}
+				$upd_query .= "`postfix` = :postfix, `imap` = :imap, `pop3` = :pop3";
+				$upd_params['postfix'] = $deactivated ? 'N' : 'Y';
+				$upd_params['imap'] = $deactivated ? '0' : '1';
+				$upd_params['pop3'] = $deactivated ? '0' : '1';
+			}
 		}
 
 		// build update query
