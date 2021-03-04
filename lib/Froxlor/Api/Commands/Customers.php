@@ -1511,6 +1511,8 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				Database::pexecute($stmt, array(
 					'did' => $row['id']
 				), true, true);
+				// remove domains DNS from powerDNS if used, #581
+				\Froxlor\System\Cronjob::inserttask('11', $result['domain']);
 				// remove domain from acme.sh / lets encrypt if used
 				\Froxlor\System\Cronjob::inserttask('12', $row['domain']);
 			}
