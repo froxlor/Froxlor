@@ -1491,7 +1491,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 			), true, true);
 
 			// first gather all domain-id's to clean up panel_domaintoip, dns-entries and certificates accordingly
-			$did_stmt = Database::prepare("SELECT `id` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `customerid` = :id");
+			$did_stmt = Database::prepare("SELECT `id`, `domain` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `customerid` = :id");
 			Database::pexecute($did_stmt, array(
 				'id' => $id
 			), true, true);
@@ -1511,6 +1511,8 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				Database::pexecute($stmt, array(
 					'did' => $row['id']
 				), true, true);
+				// remove domain from acme.sh / lets encrypt if used
+				\Froxlor\System\Cronjob::inserttask('12', $row['domain']);
 			}
 			// remove customer domains
 			$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `customerid` = :id");
