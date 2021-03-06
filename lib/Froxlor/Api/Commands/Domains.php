@@ -288,6 +288,8 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	 *        	optional list of allowed/used ssl/tls ciphers, see system.ssl_cipher_list setting, only used/required if $override_tls is true, default empty or system.ssl_cipher_list setting if $override_tls is true
 	 * @param string $tlsv13_cipher_list
 	 *        	optional list of allowed/used tls-1.3 specific ciphers, see system.tlsv13_cipher_list setting, only used/required if $override_tls is true, default empty or system.tlsv13_cipher_list setting if $override_tls is true
+	 * @param string $description
+	 *        	optional custom description (currently not used/shown in the frontend), default empty
 	 *        	
 	 * @access admin
 	 * @throws \Exception
@@ -355,6 +357,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 						$tlsv13_cipher_list = $this->getParam('tlsv13_cipher_list', true, Settings::Get('system.tlsv13_cipher_list'));
 					}
 				}
+				$description = $this->getParam('description', true, '');
 
 				// validation
 				$p_domain = strtolower($p_domain);
@@ -730,7 +733,8 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 						'tlsv13_cipher_list' => $tlsv13_cipher_list,
 						'sslenabled' => $sslenabled,
 						'honorcipherorder' => $honorcipherorder,
-						'sessiontickets' => $sessiontickets
+						'sessiontickets' => $sessiontickets,
+						'description' => $description
 					);
 
 					$ins_stmt = Database::prepare("
@@ -782,7 +786,8 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 						`tlsv13_cipher_list` = :tlsv13_cipher_list,
 						`ssl_enabled` = :sslenabled,
 						`ssl_honorcipherorder` = :honorcipherorder,
-						`ssl_sessiontickets`= :sessiontickets
+						`ssl_sessiontickets` = :sessiontickets,
+						`description` = :description
 					");
 					Database::pexecute($ins_stmt, $ins_data, true, true);
 					$domainid = Database::lastInsertId();
@@ -934,6 +939,8 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	 *        	optional whether to honor the (server) cipher order for this domain. default 0 (false), requires SSL
 	 * @param bool $sessiontickets
 	 *        	optional whether to enable or disable TLS sessiontickets (RFC 5077) for this domain. default 1 (true), requires SSL
+	 * @param string $description
+	 *        	optional custom description (currently not used/shown in the frontend), default empty
 	 *        	
 	 * @access admin
 	 * @throws \Exception
@@ -1032,6 +1039,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				$ssl_cipher_list = $result['ssl_cipher_list'];
 				$tlsv13_cipher_list = $result['tlsv13_cipher_list'];
 			}
+			$description = $this->getParam('description', true, $result['description']);
 
 			// count subdomain usage of source-domain
 			$subdomains_stmt = Database::prepare("
@@ -1599,6 +1607,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 			$update_data['sslenabled'] = $sslenabled;
 			$update_data['honorcipherorder'] = $honorcipherorder;
 			$update_data['sessiontickets'] = $sessiontickets;
+			$update_data['description'] = $description;
 			$update_data['id'] = $id;
 
 			$update_stmt = Database::prepare("
@@ -1645,7 +1654,8 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				`tlsv13_cipher_list` = :tlsv13_cipher_list,
 				`ssl_enabled` = :sslenabled,
 				`ssl_honorcipherorder` = :honorcipherorder,
-				`ssl_sessiontickets` = :sessiontickets
+				`ssl_sessiontickets` = :sessiontickets,
+				`description` = :description
 				WHERE `id` = :id
 			");
 			Database::pexecute($update_stmt, $update_data, true, true);

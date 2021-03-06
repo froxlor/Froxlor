@@ -35,6 +35,8 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	optional, required when called as admin (if $loginname is not specified)
 	 * @param string $loginname
 	 *        	optional, required when called as admin (if $customerid is not specified)
+	 * @param string $description
+	 *        	optional custom description (currently not used/shown in the frontend), default empty
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
@@ -54,6 +56,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 
 			// parameters
 			$iscatchall = $this->getBoolParam('iscatchall', true, 0);
+			$description = $this->getParam('description', true, '');
 
 			// validation
 			if (substr($domain, 0, 4) != 'xn--') {
@@ -121,14 +124,16 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 				`email` = :email,
 				`email_full` = :email_full,
 				`iscatchall` = :iscatchall,
-				`domainid` = :domainid
+				`domainid` = :domainid,
+				`description` = :description
 			");
 			$params = array(
 				"cid" => $customer['customerid'],
 				"email" => $email,
 				"email_full" => $email_full,
 				"iscatchall" => $iscatchall,
-				"domainid" => $domain_check['id']
+				"domainid" => $domain_check['id'],
+				"description" => $description
 			);
 			Database::pexecute($stmt, $params, true, true);
 
@@ -167,7 +172,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		$customer_ids = $this->getAllowedCustomerIds('email');
 		$params['idea'] = ($id <= 0 ? $emailaddr : $id);
 
-		$result_stmt = Database::prepare("SELECT v.`id`, v.`email`, v.`email_full`, v.`iscatchall`, v.`destination`, v.`customerid`, v.`popaccountid`, v.`domainid`, u.`quota`
+		$result_stmt = Database::prepare("SELECT v.`id`, v.`email`, v.`email_full`, v.`iscatchall`, v.`destination`, v.`customerid`, v.`popaccountid`, v.`domainid`, v.`description`, u.`quota`, u.`imap`, u.`pop3`, u.`postfix`, u.`mboxsize`
 			FROM `" . TABLE_MAIL_VIRTUAL . "` v
 			LEFT JOIN `" . TABLE_MAIL_USERS . "` u ON v.`popaccountid` = u.`id`
 			WHERE v.`customerid` IN (" . implode(", ", $customer_ids) . ")
@@ -195,6 +200,8 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	optional, required when called as admin (if $customerid is not specified)
 	 * @param boolean $iscatchall
 	 *        	optional
+	 * @param string $description
+	 *        	optional custom description (currently not used/shown in the frontend), default empty
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
@@ -227,6 +234,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 
 		// parameters
 		$iscatchall = $this->getBoolParam('iscatchall', true, $result['iscatchall']);
+		$description = $this->getParam('description', true, $result['description']);
 
 		// get needed customer info to reduce the email-address-counter by one
 		$customer = $this->getCustomerData();
@@ -256,12 +264,13 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 
 		$stmt = Database::prepare("
 			UPDATE `" . TABLE_MAIL_VIRTUAL . "`
-			SET `email` = :email , `iscatchall` = :caflag
+			SET `email` = :email , `iscatchall` = :caflag, `description` = :description
 			WHERE `customerid`= :cid AND `id`= :id
 		");
 		$params = array(
 			"email" => $email,
 			"caflag" => $iscatchall,
+			"description" => $description,
 			"cid" => $customer['customerid'],
 			"id" => $id
 		);
@@ -300,7 +309,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		$result = array();
 		$query_fields = array();
 		$result_stmt = Database::prepare("
-			SELECT m.`id`, m.`domainid`, m.`email`, m.`email_full`, m.`iscatchall`, u.`quota`, m.`destination`, m.`popaccountid`, d.`domain`, u.`mboxsize`
+			SELECT m.`id`, m.`domainid`, m.`email`, m.`email_full`, m.`iscatchall`, m.`destination`, m.`popaccountid`, d.`domain`, u.`quota`, u.`imap`, u.`pop3`, u.`postfix`, u.`mboxsize`
 			FROM `" . TABLE_MAIL_VIRTUAL . "` m
 			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` d ON (m.`domainid` = d.`id`)
 			LEFT JOIN `" . TABLE_MAIL_USERS . "` u ON (m.`popaccountid` = u.`id`)

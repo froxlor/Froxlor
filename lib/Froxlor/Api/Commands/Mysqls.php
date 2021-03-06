@@ -88,13 +88,13 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 
 		// add database info to froxlor
 		$stmt = Database::prepare("
-				INSERT INTO `" . TABLE_PANEL_DATABASES . "`
-				SET
-				`customerid` = :customerid,
-				`databasename` = :databasename,
-				`description` = :description,
-				`dbserver` = :dbserver
-			");
+			INSERT INTO `" . TABLE_PANEL_DATABASES . "`
+			SET
+			`customerid` = :customerid,
+			`databasename` = :databasename,
+			`description` = :description,
+			`dbserver` = :dbserver
+		");
 		$params = array(
 			"customerid" => $customer['customerid'],
 			"databasename" => $username,
@@ -130,7 +130,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 				'COMPANY' => $userinfo['company'],
 				'CUSTOMER_NO' => $userinfo['customernumber'],
 				'DB_NAME' => $username,
-				'DB_PASS' => $password,
+				'DB_PASS' => htmlentities(htmlentities($password)),
 				'DB_DESC' => $databasedescription,
 				'DB_SRV' => $sql_root['host'],
 				'PMA_URI' => $pma

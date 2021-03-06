@@ -725,3 +725,27 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.23.1')) {
 	showUpdateStep("Updating from 0.10.23.1 to 0.10.24", false);
 	\Froxlor\Froxlor::updateToVersion('0.10.24');
 }
+
+if (\Froxlor\Froxlor::isDatabaseVersion('202101200')) {
+
+	showUpdateStep("Adding setting for mail address used in SOA records", true);
+	Settings::AddNew("system.soaemail", '');
+	lastStepStatus(0);
+
+	\Froxlor\Froxlor::updateToDbVersion('202102200');
+}
+
+if (\Froxlor\Froxlor::isDatabaseVersion('202102200')) {
+
+	showUpdateStep("Add new description fields to mail and domain table", true);
+	Database::query("ALTER TABLE panel_domains ADD `description` varchar(255) NOT NULL DEFAULT '' AFTER `ssl_sessiontickets`;");
+	Database::query("ALTER TABLE mail_virtual ADD `description` varchar(255) NOT NULL DEFAULT '' AFTER `iscatchall`");
+	lastStepStatus(0);
+
+	\Froxlor\Froxlor::updateToDbVersion('202103030');
+}
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.24')) {
+	showUpdateStep("Updating from 0.10.24 to 0.10.25", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.25');
+}

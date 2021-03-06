@@ -181,8 +181,8 @@ class Dns
 				// unset special spf required-entry
 				unset($required_entries[$entry['type']][md5("@SPF@")]);
 			}
-			if (empty($primary_ns) && $entry['type'] == 'NS') {
-				// use the first NS entry as primary ns
+			if (empty($primary_ns) && $entry['record'] == '@' && $entry['type'] == 'NS') {
+				// use the first NS entry pertaining to the current domain as primary ns
 				$primary_ns = $entry['content'];
 			}
 			// check for CNAME on @, www- or wildcard-Alias and remove A/AAAA record accordingly
@@ -365,7 +365,11 @@ class Dns
 			}
 
 			// PowerDNS does not like multi-line-format
-			$soa_content = $primary_ns . " " . self::escapeSoaAdminMail(Settings::Get('panel.adminmail')) . " ";
+			$soa_email = Settings::Get('system.soaemail');
+			if ($soa_email == "") {
+				$soa_email = Settings::Get('panel.adminmail');
+			}
+			$soa_content = $primary_ns . " " . self::escapeSoaAdminMail($soa_email) . " ";
 			$soa_content .= $domain['bindserial'] . " ";
 			// TODO for now, dummy time-periods
 			$soa_content .= "3600 900 604800 " . (int) Settings::Get('system.defaultttl');

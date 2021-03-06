@@ -115,6 +115,14 @@ class CustomersTest extends TestCase
 		$json_result = Customers::getLocal($admin_userdata)->listing();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(1, $result['count']);
+		$this->assertFalse(isset($result['list'][0]['webspace_used']));
+
+		$json_result = Customers::getLocal($admin_userdata, [
+			'show_usages' => true
+		])->listing();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(1, $result['count']);
+		$this->assertTrue(isset($result['list'][0]['webspace_used']));
 
 		$json_result = Customers::getLocal($admin_userdata)->listingCount();
 		$result = json_decode($json_result, true)['data'];

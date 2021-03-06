@@ -497,8 +497,8 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 
 	private static function checkFsFilesAreNewer($domain, $cert_date = 0)
 	{
-		$certificate_folder = self::getWorkingDirFromEnv($domain);
-		$ssl_file = \Froxlor\FileDir::makeCorrectFile($certificate_folder . '/' . $domain . '.cer');
+		$certificate_folder = self::getWorkingDirFromEnv(strtolower($domain));
+		$ssl_file = \Froxlor\FileDir::makeCorrectFile($certificate_folder . '/' . strtolower($domain) . '.cer');
 
 		if (is_dir($certificate_folder) && file_exists($ssl_file) && is_readable($ssl_file)) {
 			$cert_data = openssl_x509_parse(file_get_contents($ssl_file));

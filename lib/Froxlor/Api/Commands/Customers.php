@@ -33,7 +33,9 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 	 *        	optional specify offset for resultset
 	 * @param array $sql_orderby
 	 *        	optional array with index = fieldname and value = ASC|DESC to order the resultset by one or more fields
-	 *
+	 * @param bool $show_usages
+	 *        	optional, default false
+	 *        	
 	 * @access admin
 	 * @throws \Exception
 	 * @return string json-encoded array count|list
@@ -41,6 +43,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 	public function listing()
 	{
 		if ($this->isAdmin()) {
+			$show_usages = $this->getBoolParam('show_usages', true, false);
 			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] list customers");
 			$query_fields = array();
 			$result_stmt = Database::prepare("
@@ -57,7 +60,47 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 			$params = array_merge($params, $query_fields);
 			Database::pexecute($result_stmt, $params, true, true);
 			$result = array();
+
+			$domains_stmt = null;
+			$usages_stmt = null;
+			if ($show_usages) {
+				$domains_stmt = Database::prepare("
+					SELECT COUNT(`id`) AS `domains`
+					FROM `" . TABLE_PANEL_DOMAINS . "`
+					WHERE `customerid` = :cid
+					AND `parentdomainid` = '0'
+					AND `id`<> :stdd
+				");
+				$usages_stmt = Database::prepare("
+					SELECT * FROM `" . TABLE_PANEL_DISKSPACE . "`
+					WHERE `customerid` = :cid
+					ORDER BY `stamp` DESC LIMIT 1
+				");
+			}
+
 			while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
+				if ($show_usages) {
+					// get number of domains
+					Database::pexecute($domains_stmt, array(
+						'cid' => $row['customerid'],
+						'stdd' => $row['standardsubdomain']
+					));
+					$domains = $domains_stmt->fetch(\PDO::FETCH_ASSOC);
+					$row['domains'] = intval($domains['domains']);
+					// get disk-space usages for web, mysql and mail
+					$usages = Database::pexecute_first($usages_stmt, array(
+						'cid' => $row['customerid']
+					));
+					if ($usages) {
+						$row['webspace_used'] = $usages['webspace'];
+						$row['mailspace_used'] = $usages['mail'];
+						$row['dbspace_used'] = $usages['mysql'];
+					} else {
+						$row['webspace_used'] = 0;
+						$row['mailspace_used'] = 0;
+						$row['dbspace_used'] = 0;
+					}
+				}
 				$result[] = $row;
 			}
 			return $this->response(200, "successful", array(
@@ -103,6 +146,8 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 	 *        	optional, the customer-id
 	 * @param string $loginname
 	 *        	optional, the loginname
+	 * @param bool $show_usages
+	 *        	optional, default false
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
@@ -113,6 +158,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 		$id = $this->getParam('id', true, 0);
 		$ln_optional = ($id <= 0 ? false : true);
 		$loginname = $this->getParam('loginname', $ln_optional, '');
+		$show_usages = $this->getBoolParam('show_usages', true, false);
 
 		if ($this->isAdmin()) {
 			$result_stmt = Database::prepare("
@@ -141,6 +187,40 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 			// check whether the admin does not want the customer to see the notes
 			if (! $this->isAdmin() && $result['custom_notes_show'] != 1) {
 				$result['custom_notes'] = "";
+			}
+			if ($show_usages) {
+				// get number of domains
+				$domains_stmt = Database::prepare("
+					SELECT COUNT(`id`) AS `domains`
+					FROM `" . TABLE_PANEL_DOMAINS . "`
+					WHERE `customerid` = :cid
+					AND `parentdomainid` = '0'
+					AND `id`<> :stdd
+				");
+				Database::pexecute($domains_stmt, array(
+					'cid' => $result['customerid'],
+					'stdd' => $result['standardsubdomain']
+				));
+				$domains = $domains_stmt->fetch(\PDO::FETCH_ASSOC);
+				$result['domains'] = intval($domains['domains']);
+				// get disk-space usages for web, mysql and mail
+				$usages_stmt = Database::prepare("
+					SELECT * FROM `" . TABLE_PANEL_DISKSPACE . "`
+					WHERE `customerid` = :cid
+					ORDER BY `stamp` DESC LIMIT 1
+				");
+				$usages = Database::pexecute_first($usages_stmt, array(
+					'cid' => $result['customerid']
+				));
+				if ($usages) {
+					$result['webspace_used'] = $usages['webspace'];
+					$result['mailspace_used'] = $usages['mail'];
+					$result['dbspace_used'] = $usages['mysql'];
+				} else {
+					$result['webspace_used'] = 0;
+					$result['mailspace_used'] = 0;
+					$result['dbspace_used'] = 0;
+				}
 			}
 			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] get customer '" . $result['loginname'] . "'");
 			return $this->response(200, "successful", $result);
@@ -873,7 +953,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 			$email = $this->getParam('email', true, $idna_convert->decode($result['email']));
 			$name = $this->getParam('name', true, $result['name']);
 			$firstname = $this->getParam('firstname', true, $result['firstname']);
-			$company_required = (! empty($name) && empty($firstname)) || (empty($name) && ! empty($firstname)) || (empty($name) && empty($firstname));
+			$company_required = empty($result['company']) && ((! empty($name) && empty($firstname)) || (empty($name) && ! empty($firstname)) || (empty($name) && empty($firstname)));
 			$company = $this->getParam('company', ($company_required ? false : true), $result['company']);
 			$street = $this->getParam('street', true, $result['street']);
 			$zipcode = $this->getParam('zipcode', true, $result['zipcode']);
@@ -1411,7 +1491,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 			), true, true);
 
 			// first gather all domain-id's to clean up panel_domaintoip, dns-entries and certificates accordingly
-			$did_stmt = Database::prepare("SELECT `id` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `customerid` = :id");
+			$did_stmt = Database::prepare("SELECT `id`, `domain` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `customerid` = :id");
 			Database::pexecute($did_stmt, array(
 				'id' => $id
 			), true, true);
@@ -1431,6 +1511,10 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				Database::pexecute($stmt, array(
 					'did' => $row['id']
 				), true, true);
+				// remove domains DNS from powerDNS if used, #581
+				\Froxlor\System\Cronjob::inserttask('11', $result['domain']);
+				// remove domain from acme.sh / lets encrypt if used
+				\Froxlor\System\Cronjob::inserttask('12', $row['domain']);
 			}
 			// remove customer domains
 			$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `customerid` = :id");

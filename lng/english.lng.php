@@ -2109,3 +2109,5 @@ $lng['serversettings']['awstats']['logformat']['description'] = 'If you use cust
 $lng['error']['cannotdeletesuperadmin'] = 'The first admin cannot be deleted.';
 $lng['error']['no_wwwcnamae_ifwwwalias'] = 'Cannot set CNAME record for "www" as domain is set to generate a www-alias. Please change settings to either "No alias" or "Wildcard alias"';
 $lng['serversettings']['hide_incompatible_settings'] = 'Hide incompatible settings';
+
+$lng['serversettings']['soaemail'] = 'Mail address to use in SOA records (defaults to sender address from panel settings if empty)';

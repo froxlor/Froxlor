@@ -59,7 +59,7 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 				);
 
 				$query = "SELECT * FROM `" . TABLE_PANEL_DOMAINS . "`
-					WHERE `phpsettingid` = :id";
+					WHERE `phpsettingid` = :id AND `email_only` = '0' AND `phpenabled` = '1'";
 
 				if (! $with_subdomains) {
 					$query .= " AND `parentdomainid` = '0'";

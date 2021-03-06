@@ -245,7 +245,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 						'COMPANY' => $customer['company'],
 						'CUSTOMER_NO' => $customer['customernumber'],
 						'USR_NAME' => $username,
-						'USR_PASS' => $password,
+						'USR_PASS' => htmlentities(htmlentities($password)),
 						'USR_PATH' => \Froxlor\FileDir::makeCorrectDir(str_replace($customer['documentroot'], "/", $path))
 					);
 					// get template for mail subject
