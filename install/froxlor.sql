@@ -270,9 +270,9 @@ CREATE TABLE `panel_domains` (
   `writeaccesslog` tinyint(1) DEFAULT '1',
   `writeerrorlog` tinyint(1) DEFAULT '1',
   `override_tls` tinyint(1) DEFAULT '0',
-  `ssl_protocols` text,
-  `ssl_cipher_list` text,
-  `tlsv13_cipher_list` text,
+  `ssl_protocols` varchar(255) NOT NULL DEFAULT '',
+  `ssl_cipher_list` varchar(500) NOT NULL DEFAULT '',
+  `tlsv13_cipher_list` varchar(500) NOT NULL DEFAULT '',
   `ssl_enabled` tinyint(1) DEFAULT '1',
   `ssl_honorcipherorder` tinyint(1) DEFAULT '0',
   `ssl_sessiontickets` tinyint(1) DEFAULT '1',
@@ -712,7 +712,7 @@ opcache.interned_strings_buffer'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'is_configured', '0'),
 	('panel', 'version', '0.10.25'),
-	('panel', 'db_version', '202103030');
+	('panel', 'db_version', '202103110');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

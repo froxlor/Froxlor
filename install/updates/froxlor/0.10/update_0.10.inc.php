@@ -735,6 +735,9 @@ if (\Froxlor\Froxlor::isDatabaseVersion('202101200')) {
 	\Froxlor\Froxlor::updateToDbVersion('202102200');
 }
 
+/*
+ * skip due to potential "1118 Row size too large" error
+ *
 if (\Froxlor\Froxlor::isDatabaseVersion('202102200')) {
 
 	showUpdateStep("Add new description fields to mail and domain table", true);
@@ -744,8 +747,43 @@ if (\Froxlor\Froxlor::isDatabaseVersion('202102200')) {
 
 	\Froxlor\Froxlor::updateToDbVersion('202103030');
 }
+*/
 
 if (\Froxlor\Froxlor::isFroxlorVersion('0.10.24')) {
 	showUpdateStep("Updating from 0.10.24 to 0.10.25", false);
 	\Froxlor\Froxlor::updateToVersion('0.10.25');
+}
+
+if (\Froxlor\Froxlor::isDatabaseVersion('202102200') || \Froxlor\Froxlor::isDatabaseVersion('202103030')) {
+
+	showUpdateStep("Refactoring columns from large tables", true);
+	Database::query("ALTER TABLE panel_domains CHANGE `ssl_protocols` `ssl_protocols` varchar(255) NOT NULL DEFAULT '';");
+	Database::query("ALTER TABLE panel_domains CHANGE `ssl_cipher_list` `ssl_cipher_list` varchar(500) NOT NULL DEFAULT '';");
+	Database::query("ALTER TABLE panel_domains CHANGE `tlsv13_cipher_list` `tlsv13_cipher_list` varchar(500) NOT NULL DEFAULT '';");
+	lastStepStatus(0);
+
+	showUpdateStep("Add new description fields to mail and domain table", true);
+	$result = Database::query("DESCRIBE `panel_domains`");
+	$columnfound = 0;
+	while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+		if ($row['Field'] == 'description') {
+			$columnfound = 1;
+		}
+	}
+	if (! $columnfound) {
+		Database::query("ALTER TABLE panel_domains ADD `description` varchar(255) NOT NULL DEFAULT '' AFTER `ssl_sessiontickets`;");
+	}
+	$result = Database::query("DESCRIBE `mail_virtual`");
+	$columnfound = 0;
+	while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+		if ($row['Field'] == 'description') {
+			$columnfound = 1;
+		}
+	}
+	if (! $columnfound) {
+		Database::query("ALTER TABLE mail_virtual ADD `description` varchar(255) NOT NULL DEFAULT '' AFTER `iscatchall`");
+	}
+	lastStepStatus(0);
+
+	\Froxlor\Froxlor::updateToDbVersion('202103110');
 }
