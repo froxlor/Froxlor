@@ -136,8 +136,24 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 		// types
 		if ($type == 'A' && filter_var($content, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === false) {
 			$errors[] = $this->lng['error']['dns_arec_noipv4'];
+		} elseif ($type == 'A') {
+			// check whether there is a CNAME-record for the same resource
+			foreach ($dom_entries as $existing_entries) {
+				if ($existing_entries['type'] == 'CNAME' && $existing_entries['record'] == $record) {
+					$errors[] = $this->lng['error']['dns_other_nomorerr'];
+					break;
+				}
+			}
 		} elseif ($type == 'AAAA' && filter_var($content, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) === false) {
 			$errors[] = $this->lng['error']['dns_aaaarec_noipv6'];
+		} elseif ($type == 'AAAA') {
+			// check whether there is a CNAME-record for the same resource
+			foreach ($dom_entries as $existing_entries) {
+				if ($existing_entries['type'] == 'CNAME' && $existing_entries['record'] == $record) {
+					$errors[] = $this->lng['error']['dns_other_nomorerr'];
+					break;
+				}
+			}
 		} elseif ($type == 'CAA' && ! empty($content)) {
 			$re = '/(?\'critical\'\d)\h*(?\'type\'iodef|issue|issuewild)\h*(?\'value\'(?\'issuevalue\'"(?\'domain\'(?=.{3,128}$)(?>(?>[a-zA-Z0-9]+[a-zA-Z0-9-]*[a-zA-Z0-9]+|[a-zA-Z0-9]+)\.)*(?>[a-zA-Z]{2,}|[a-zA-Z0-9]{2,}\.[a-zA-Z]{2,}))[;\h]*(?\'parameters\'(?>[a-zA-Z0-9]{1,60}=[a-zA-Z0-9]{1,60}\h*)+)?")|(?\'iodefvalue\'"(?\'url\'(mailto:.*|http:\/\/.*|https:\/\/.*))"))/';
 			preg_match($re, $content, $matches);
@@ -198,6 +214,10 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 						$errors[] = $this->lng['error']['dns_mx_noalias'];
 						break;
 					}
+					elseif ($existing_entries['type'] == 'CNAME' && $existing_entries['record'] == $record) {
+						$errors[] = $this->lng['error']['dns_other_nomorerr'];
+						break;
+					}
 				}
 			}
 			// append trailing dot (again)
@@ -210,6 +230,14 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			}
 			if (! \Froxlor\Validate\Validate::validateDomain($content)) {
 				$errors[] = $this->lng['error']['dns_ns_invaliddom'];
+			} else {
+				// check whether there is a CNAME-record for the same resource
+				foreach ($dom_entries as $existing_entries) {
+					if ($existing_entries['type'] == 'CNAME' && $existing_entries['record'] == $record) {
+						$errors[] = $this->lng['error']['dns_other_nomorerr'];
+						break;
+					}
+				}
 			}
 			// append trailing dot (again)
 			$content .= '.';

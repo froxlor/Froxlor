@@ -1558,6 +1558,7 @@ $lng['error']['dns_mx_needdom'] = 'Der Wert des MX Eintrags muss ein gültiger D
 $lng['error']['dns_mx_noalias'] = 'Der MX Eintrag darf kein CNAME Eintrag sein.';
 $lng['error']['dns_cname_invaliddom'] = 'Ungültiger Domain-Name für CNAME Eintrag';
 $lng['error']['dns_cname_nomorerr'] = 'Es existiert bereits ein Eintrag mit dem gleichen Namen. Dieser Eintrag kann daher nicht für CNAME genutzt werden.';
+$lng['error']['dns_other_nomorerr'] = 'Es existiert bereits ein CNAME Eintrag mit dem gleichen Namen. Dieser Eintrag kann daher nicht für einen anderen genutzt werden.';
 $lng['error']['dns_ns_invaliddom'] = 'Ungültiger Domain-Name für NS Eintrag';
 $lng['error']['dns_srv_prioempty'] = 'Ungültige SRV Priorität angegeben';
 $lng['error']['dns_srv_invalidcontent'] = 'Ungültiger Wert des SRV Eintrags, dieser muss aus den Feldern weight, port und target, bestehen. Bsp.: 5 5060 sipserver.example.com.';

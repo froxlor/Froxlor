@@ -1908,6 +1908,7 @@ $lng['error']['dns_mx_needdom'] = 'The MX content value must be a valid domain-n
 $lng['error']['dns_mx_noalias'] = 'The MX-content value cannot be an CNAME entry.';
 $lng['error']['dns_cname_invaliddom'] = 'Invalid domain-name for CNAME record';
 $lng['error']['dns_cname_nomorerr'] = 'There already exists a resource-record with the same record-name. It can not be used as CNAME.';
+$lng['error']['dns_other_nomorerr'] = 'There already exists a CNAME record with the same record-name. It can not be used for another type.';
 $lng['error']['dns_ns_invaliddom'] = 'Invalid domain-name for NS record';
 $lng['error']['dns_srv_prioempty'] = 'Invalid SRV priority given';
 $lng['error']['dns_srv_invalidcontent'] = 'Invalid SRV content, must contain of fields weight, port and target, e.g.: 5 5060 sipserver.example.com.';
