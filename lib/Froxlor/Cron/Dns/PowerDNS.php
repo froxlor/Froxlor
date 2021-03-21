@@ -112,7 +112,7 @@ class PowerDNS extends DnsBase
 	private function insertZone($domainname, $serial = 0)
 	{
 		$ins_stmt = \Froxlor\Dns\PowerDNS::getDB()->prepare("
-			INSERT INTO domains set `name` = :domainname, `notified_serial` = :serial, `type` = 'NATIVE'
+			INSERT INTO domains set `name` = :domainname, `notified_serial` = :serial, `type` = 'MASTER'
 		");
 		$ins_stmt->execute(array(
 			'domainname' => $domainname,
