@@ -565,7 +565,7 @@ class Apache extends HttpConfigBase
 	 *
 	 * @return string
 	 */
-	protected function composePhpOptions($domain, $ssl_vhost = false)
+	protected function composePhpOptions(&$domain, $ssl_vhost = false)
 	{
 		$php_options_text = '';
 
