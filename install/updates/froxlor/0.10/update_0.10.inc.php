@@ -787,3 +787,14 @@ if (\Froxlor\Froxlor::isDatabaseVersion('202102200') || \Froxlor\Froxlor::isData
 
 	\Froxlor\Froxlor::updateToDbVersion('202103110');
 }
+
+if (\Froxlor\Froxlor::isDatabaseVersion('202103110')) {
+
+	showUpdateStep("Adding settings for imprint, terms of use and privacy policy URLs", true);
+	Settings::AddNew("panel.imprint_url", '');
+	Settings::AddNew("panel.terms_url", '');
+	Settings::AddNew("panel.privacy_url", '');
+	lastStepStatus(0);
+
+	\Froxlor\Froxlor::updateToDbVersion('202103240');
+}

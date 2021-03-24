@@ -2107,3 +2107,12 @@ $lng['error']['no_wwwcnamae_ifwwwalias'] = 'Cannot set CNAME record for "www" as
 $lng['serversettings']['hide_incompatible_settings'] = 'Hide incompatible settings';
 
 $lng['serversettings']['soaemail'] = 'Mail address to use in SOA records (defaults to sender address from panel settings if empty)';
+$lng['imprint'] = 'Legal notes';
+$lng['serversettings']['imprint_url']['title'] = 'URL to legal notes / imprint';
+$lng['serversettings']['imprint_url']['description'] = 'Specify an URL to your legal notes / imprint site. The link will be visible on the login screen and on the footer when logged in.';
+$lng['terms'] = 'Terms of use';
+$lng['serversettings']['terms_url']['title'] = 'URL to terms of use';
+$lng['serversettings']['terms_url']['description'] = 'Specify an URL to your terms of use site. The link will be visible on the login screen and on the footer when logged in.';
+$lng['privacy'] = 'Privacy policy';
+$lng['serversettings']['privacy_url']['title'] = 'URL to privacy policy';
+$lng['serversettings']['privacy_url']['description'] = 'Specify an URL to your privacy policy site / imprint site. The link will be visible on the login screen and on the footer when logged in.';

@@ -711,8 +711,11 @@ opcache.interned_strings_buffer'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'is_configured', '0'),
+	('panel', 'imprint_url', ''),
+	('panel', 'terms_url', ''),
+	('panel', 'privacy_url', ''),
 	('panel', 'version', '0.10.25'),
-	('panel', 'db_version', '202103110');
+	('panel', 'db_version', '202103240');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

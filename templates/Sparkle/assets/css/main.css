@@ -1738,3 +1738,10 @@ td.size-50 {
 	padding: 5px 10px;
 	color: #ffe !important;
 }
+
+.footer-link:after {
+        content: " |";
+}
+.footer-link:last-child:after {
+        content: "";
+}

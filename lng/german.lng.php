@@ -1753,3 +1753,12 @@ $lng['error']['no_wwwcnamae_ifwwwalias'] = 'Es kann kein CNAME Eintrag für "www
 $lng['serversettings']['hide_incompatible_settings'] = 'Inkompatible Einstellungen ausblenden';
 
 $lng['serversettings']['soaemail'] = 'Mail-Adresse für SOA-Einträge (verwendet Panel-Absender-Name der Panel-Einstellungen falls leer)';
+$lng['imprint'] = 'Impressum';
+$lng['serversettings']['imprint_url']['title'] = 'URL zum Impressum';
+$lng['serversettings']['imprint_url']['description'] = 'Die URL zur Impressums-Seite. Der Link ist auf der Login-Seite und wenn eingeloggt, in der Fußzeile sichtbar.';
+$lng['terms'] = 'AGB';
+$lng['serversettings']['terms_url']['title'] = 'URL zu den AGB';
+$lng['serversettings']['terms_url']['description'] = 'Die URL zur AGB-Seite. Der Link ist auf der Login-Seite und wenn eingeloggt, in der Fußzeile sichtbar.';
+$lng['privacy'] = 'Datenschutzerklärung';
+$lng['serversettings']['privacy_url']['title'] = 'URL zur Datenschutzerklärung';
+$lng['serversettings']['privacy_url']['description'] = 'Die URL zur Datenschutzerklärungs-Seite. Der Link ist auf der Login-Seite und wenn eingeloggt, in der Fußzeile sichtbar.';
