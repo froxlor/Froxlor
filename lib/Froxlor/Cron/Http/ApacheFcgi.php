@@ -24,7 +24,7 @@ use Froxlor\Cron\Http\Php\PhpInterface;
 class ApacheFcgi extends Apache
 {
 
-	protected function composePhpOptions($domain, $ssl_vhost = false)
+	protected function composePhpOptions(&$domain, $ssl_vhost = false)
 	{
 		$php_options_text = '';
 
@@ -43,6 +43,8 @@ class ApacheFcgi extends Apache
 					$php_options_text .= '  SuexecUserGroup "' . $domain['loginname'] . '" "' . $domain['loginname'] . '"' . "\n";
 				}
 
+				$domain['fpm_socket'] = $php->getInterface()->getSocketFile();
+
 				// mod_proxy stuff for apache-2.4
 				if (Settings::Get('system.apache24') == '1' && Settings::Get('phpfpm.use_mod_proxy') == '1') {
 					$filesmatch = $phpconfig['fpm_settings']['limit_extensions'];
@@ -54,7 +56,7 @@ class ApacheFcgi extends Apache
 					// start block, cut off last pipe and close block
 					$filesmatch = '(' . str_replace(".", "\.", substr($filesmatch, 0, - 1)) . ')';
 					$php_options_text .= '  <FilesMatch \.' . $filesmatch . '$>' . "\n";
-					$php_options_text .= '  SetHandler proxy:unix:' . $php->getInterface()->getSocketFile() . '|fcgi://localhost' . "\n";
+					$php_options_text .= '  SetHandler proxy:unix:' . $domain['fpm_socket'] . '|fcgi://localhost' . "\n";
 					$php_options_text .= '  </FilesMatch>' . "\n";
 
 					$mypath_dir = new \Froxlor\Http\Directory($domain['documentroot']);
@@ -80,7 +82,7 @@ class ApacheFcgi extends Apache
 					if ($phpconfig['pass_authorizationheader'] == '1') {
 						$addheader = " -pass-header Authorization";
 					}
-					$php_options_text .= '  FastCgiExternalServer ' . $php->getInterface()->getAliasConfigDir() . $srvName . ' -socket ' . $php->getInterface()->getSocketFile() . ' -idle-timeout ' . $phpconfig['fpm_settings']['idle_timeout'] . $addheader . "\n";
+					$php_options_text .= '  FastCgiExternalServer ' . $php->getInterface()->getAliasConfigDir() . $srvName . ' -socket ' . $domain['fpm_socket'] . ' -idle-timeout ' . $phpconfig['fpm_settings']['idle_timeout'] . $addheader . "\n";
 					$php_options_text .= '  <Directory "' . \Froxlor\FileDir::makeCorrectDir($domain['documentroot']) . '">' . "\n";
 					$filesmatch = $phpconfig['fpm_settings']['limit_extensions'];
 					$extensions = explode(" ", $filesmatch);

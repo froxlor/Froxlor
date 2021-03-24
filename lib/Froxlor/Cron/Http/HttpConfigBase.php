@@ -98,8 +98,12 @@ class HttpConfigBase
 			'IP' => $ip,
 			'PORT' => $port,
 			'SCHEME' => ($is_ssl_vhost) ? 'https' : 'http',
-			'DOCROOT' => $domain['documentroot']
+			'DOCROOT' => $domain['documentroot'],
+			'FPMSOCKET' => ''
 		);
+		if ((int) Settings::Get('phpfpm.enabled') == 1 && isset($domain['fpm_socket']) && !empty($domain['fpm_socket'])) {
+			$templateVars['FPMSOCKET'] = $domain['fpm_socket'];
+		}
 		return \Froxlor\PhpHelper::replaceVariables($template, $templateVars);
 	}
 
