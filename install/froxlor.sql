@@ -15,10 +15,10 @@ CREATE TABLE `ftp_groups` (
 DROP TABLE IF EXISTS `ftp_users`;
 CREATE TABLE `ftp_users` (
   `id` int(20) NOT NULL auto_increment,
-  `username` varchar(255) NOT NULL default '',
+  `username` varchar(255) NOT NULL,
   `uid` int(5) NOT NULL default '0',
   `gid` int(5) NOT NULL default '0',
-  `password` varchar(128) NOT NULL default '',
+  `password` varchar(128) NOT NULL,
   `homedir` varchar(255) NOT NULL default '',
   `shell` varchar(255) NOT NULL default '/bin/false',
   `login_enabled` enum('N','Y') NOT NULL default 'N',
@@ -71,6 +71,7 @@ CREATE TABLE `mail_virtual` (
   `customerid` int(11) NOT NULL default '0',
   `popaccountid` int(11) NOT NULL default '0',
   `iscatchall` tinyint(1) unsigned NOT NULL default '0',
+  `description` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY  (`id`),
   KEY `email` (`email`)
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
@@ -90,8 +91,8 @@ CREATE TABLE `panel_activation` (
 DROP TABLE IF EXISTS `panel_admins`;
 CREATE TABLE `panel_admins` (
   `adminid` int(11) unsigned NOT NULL auto_increment,
-  `loginname` varchar(50) NOT NULL default '',
-  `password` varchar(255) NOT NULL default '',
+  `loginname` varchar(50) NOT NULL,
+  `password` varchar(255) NOT NULL,
   `name` varchar(255) NOT NULL default '',
   `email` varchar(255) NOT NULL default '',
   `def_language` varchar(100) NOT NULL default '',
@@ -142,7 +143,7 @@ CREATE TABLE `panel_admins` (
 DROP TABLE IF EXISTS `panel_customers`;
 CREATE TABLE `panel_customers` (
   `customerid` int(11) unsigned NOT NULL auto_increment,
-  `loginname` varchar(50) NOT NULL default '',
+  `loginname` varchar(50) NOT NULL,
   `password` varchar(255) NOT NULL default '',
   `adminid` int(11) unsigned NOT NULL default '0',
   `name` varchar(255) NOT NULL default '',
@@ -223,7 +224,7 @@ CREATE TABLE `panel_databases` (
 DROP TABLE IF EXISTS `panel_domains`;
 CREATE TABLE `panel_domains` (
   `id` int(11) unsigned NOT NULL auto_increment,
-  `domain` varchar(255) NOT NULL default '',
+  `domain` varchar(255) NOT NULL,
   `domain_ace` varchar(255) NOT NULL default '',
   `adminid` int(11) unsigned NOT NULL default '0',
   `customerid` int(11) unsigned NOT NULL default '0',
@@ -269,12 +270,13 @@ CREATE TABLE `panel_domains` (
   `writeaccesslog` tinyint(1) DEFAULT '1',
   `writeerrorlog` tinyint(1) DEFAULT '1',
   `override_tls` tinyint(1) DEFAULT '0',
-  `ssl_protocols` text,
-  `ssl_cipher_list` text,
-  `tlsv13_cipher_list` text,
+  `ssl_protocols` varchar(255) NOT NULL DEFAULT '',
+  `ssl_cipher_list` varchar(500) NOT NULL DEFAULT '',
+  `tlsv13_cipher_list` varchar(500) NOT NULL DEFAULT '',
   `ssl_enabled` tinyint(1) DEFAULT '1',
   `ssl_honorcipherorder` tinyint(1) DEFAULT '0',
   `ssl_sessiontickets` tinyint(1) DEFAULT '1',
+  `description` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY  (`id`),
   KEY `customerid` (`customerid`),
   KEY `parentdomain` (`parentdomainid`),
@@ -286,7 +288,7 @@ CREATE TABLE `panel_domains` (
 DROP TABLE IF EXISTS `panel_ipsandports`;
 CREATE TABLE `panel_ipsandports` (
   `id` int(11) unsigned NOT NULL auto_increment,
-  `ip` varchar(39) NOT NULL default '',
+  `ip` varchar(39) NOT NULL,
   `port` int(5) NOT NULL default '80',
   `listen_statement` tinyint(1) NOT NULL default '0',
   `namevirtualhost_statement` tinyint(1) NOT NULL default '0',
@@ -387,6 +389,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('dkim', 'dkim_domains', 'domains'),
 	('dkim', 'dkim_dkimkeys', 'dkim-keys.conf'),
 	('dkim', 'dkimrestart_command', '/etc/init.d/dkim-filter restart'),
+	('dkim', 'privkeysuffix', '.priv'),
 	('admin', 'show_news_feed', '0'),
 	('admin', 'show_version_login', '0'),
 	('admin', 'show_version_footer', '0'),
@@ -554,6 +557,7 @@ opcache.interned_strings_buffer'),
 	('system', 'ssl_cert_file', '/etc/apache2/apache2.pem'),
 	('system', 'use_ssl', '0'),
 	('system', 'default_vhostconf', ''),
+	('system', 'default_sslvhostconf', ''),
 	('system', 'mail_quota_enabled', '0'),
 	('system', 'mail_quota', '100'),
 	('system', 'webalizer_enabled', '1'),
@@ -670,6 +674,9 @@ opcache.interned_strings_buffer'),
 	('system', 'froxloraliases', ''),
 	('system', 'apply_specialsettings_default', '1'),
 	('system', 'apply_phpconfigs_default', '1'),
+	('system', 'hide_incompatible_settings', '0'),
+	('system', 'include_default_vhostconf', '0'),
+	('system', 'soaemail', ''),
 	('api', 'enabled', '0'),
 	('2fa', 'enabled', '1'),
 	('panel', 'decimal_places', '4'),
@@ -704,8 +711,11 @@ opcache.interned_strings_buffer'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'is_configured', '0'),
-	('panel', 'version', '0.10.19'),
-	('panel', 'db_version', '202005150');
+	('panel', 'imprint_url', ''),
+	('panel', 'terms_url', ''),
+	('panel', 'privacy_url', ''),
+	('panel', 'version', '0.10.26'),
+	('panel', 'db_version', '202103240');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
@@ -782,23 +792,6 @@ CREATE TABLE `panel_diskspace` (
   `mysql` bigint(30) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `customerid` (`customerid`)
-) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
-
-
-
-DROP TABLE IF EXISTS `panel_diskspace_admins`;
-CREATE TABLE `panel_diskspace_admins` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `adminid` int(11) unsigned NOT NULL default '0',
-  `year` int(4) unsigned zerofill NOT NULL default '0000',
-  `month` int(2) unsigned zerofill NOT NULL default '00',
-  `day` int(2) unsigned zerofill NOT NULL default '00',
-  `stamp` int(11) unsigned NOT NULL default '0',
-  `webspace` bigint(30) unsigned NOT NULL default '0',
-  `mail` bigint(30) unsigned NOT NULL default '0',
-  `mysql` bigint(30) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`id`),
-  KEY `adminid` (`adminid`)
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 

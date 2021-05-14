@@ -34,9 +34,9 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 * @param bool $sendinfomail
 	 *        	optional, send created resource-information to customer, default: false
 	 * @param int $customerid
-	 *        	optional, admin-only, the customer-id
+	 *        	optional, required when called as admin (if $loginname is not specified)
 	 * @param string $loginname
-	 *        	optional, admin-only, the loginname
+	 *        	optional, required when called as admin (if $customerid is not specified)
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
@@ -88,13 +88,13 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 
 		// add database info to froxlor
 		$stmt = Database::prepare("
-				INSERT INTO `" . TABLE_PANEL_DATABASES . "`
-				SET
-				`customerid` = :customerid,
-				`databasename` = :databasename,
-				`description` = :description,
-				`dbserver` = :dbserver
-			");
+			INSERT INTO `" . TABLE_PANEL_DATABASES . "`
+			SET
+			`customerid` = :customerid,
+			`databasename` = :databasename,
+			`description` = :description,
+			`dbserver` = :dbserver
+		");
 		$params = array(
 			"customerid" => $customer['customerid'],
 			"databasename" => $username,
@@ -130,7 +130,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 				'COMPANY' => $userinfo['company'],
 				'CUSTOMER_NO' => $userinfo['customernumber'],
 				'DB_NAME' => $username,
-				'DB_PASS' => $password,
+				'DB_PASS' => htmlentities(htmlentities($password)),
 				'DB_DESC' => $databasedescription,
 				'DB_SRV' => $sql_root['host'],
 				'PMA_URI' => $pma
@@ -278,9 +278,9 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 * @param string $description
 	 *        	optional, description for database
 	 * @param int $customerid
-	 *        	optional, admin-only, the customer-id
+	 *        	optional, required when called as admin (if $loginname is not specified)
 	 * @param string $loginname
-	 *        	optional, admin-only, the loginname
+	 *        	optional, required when called as admin (if $customerid is not specified)
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
@@ -307,7 +307,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 
 		// paramters
 		$password = $this->getParam('mysql_password', true, '');
-		$databasedescription = $this->getParam('description', true, '');
+		$databasedescription = $this->getParam('description', true, $result['description']);
 
 		// validation
 		$password = \Froxlor\Validate\Validate::validate($password, 'password', '', '', array(), true);
@@ -462,9 +462,9 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 * @param int $mysql_server
 	 *        	optional, specify database-server, default is none
 	 * @param int $customerid
-	 *        	optional, admin-only, the customer-id
+	 *        	optional, required when called as admin (if $loginname is not specified)
 	 * @param string $loginname
-	 *        	optional, admin-only, the loginname
+	 *        	optional, required when called as admin (if $customerid is not specified)
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception

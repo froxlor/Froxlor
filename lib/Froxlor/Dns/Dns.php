@@ -131,9 +131,26 @@ class Dns
 		}
 
 		// additional required records for CAA if activated
-		if (Settings::Get('system.dns_createcaaentry') && Settings::Get('system.use_ssl') == "1" && !empty($domain['p_ssl_ipandports'])) {
-			// check for CAA content later
-			self::addRequiredEntry('@CAA@', 'CAA', $required_entries);
+		if (Settings::Get('system.dns_createcaaentry') && Settings::Get('system.use_ssl') == "1") {
+			$result_stmt = Database::prepare("
+				SELECT i.`ip`, i.`port`, i.`ssl`
+				FROM " . TABLE_PANEL_IPSANDPORTS . " i
+				LEFT JOIN " . TABLE_DOMAINTOIP . " dip ON dip.id_ipandports = i.id
+				WHERE i.ssl = 1 AND dip.id_domain = :domainid
+			");
+			Database::pexecute($result_stmt, array(
+				'domainid' => $domain['id']
+			));
+
+			$ssl_ipandports = array();
+			while ($ssl_ipandport = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
+				$ssl_ipandports[] = $ssl_ipandport;
+			}
+
+			if (! empty($ssl_ipandports)) {
+				// check for CAA content later
+				self::addRequiredEntry('@CAA@', 'CAA', $required_entries);
+			}
 		}
 
 		// additional required records for SPF and DKIM if activated
@@ -144,7 +161,7 @@ class Dns
 			}
 			if (Settings::Get('dkim.use_dkim') == '1') {
 				// check for DKIM content later
-				self::addRequiredEntry('dkim_' . $domain['dkim_id'] . '._domainkey', 'TXT', $required_entries);
+				self::addRequiredEntry('dkim' . $domain['dkim_id'] . '._domainkey', 'TXT', $required_entries);
 			}
 		}
 
@@ -160,16 +177,20 @@ class Dns
 				// unset special CAA required-entry
 				unset($required_entries[$entry['type']][md5("@CAA@")]);
 			}
-			if (Settings::Get('spf.use_spf') == '1' && $entry['type'] == 'TXT' && $entry['record'] == '@' && (strtolower(substr($entry['content'], 0, 7)) == '"v=spf1' || strtolower(substr($entry['content'], 0, 6)) == 'v=spf1') ) {
+			if (Settings::Get('spf.use_spf') == '1' && $entry['type'] == 'TXT' && $entry['record'] == '@' && (strtolower(substr($entry['content'], 0, 7)) == '"v=spf1' || strtolower(substr($entry['content'], 0, 6)) == 'v=spf1')) {
 				// unset special spf required-entry
 				unset($required_entries[$entry['type']][md5("@SPF@")]);
 			}
-			if (empty($primary_ns) && $entry['type'] == 'NS') {
-				// use the first NS entry as primary ns
+			if (empty($primary_ns) && $entry['record'] == '@' && $entry['type'] == 'NS') {
+				// use the first NS entry pertaining to the current domain as primary ns
 				$primary_ns = $entry['content'];
 			}
 			// check for CNAME on @, www- or wildcard-Alias and remove A/AAAA record accordingly
-			foreach (['@', 'www', '*'] as $crceord) {
+			foreach ([
+				'@',
+				'www',
+				'*'
+			] as $crceord) {
 				if ($entry['type'] == 'CNAME' && $entry['record'] == '@' && (array_key_exists(md5($crceord), $required_entries['A']) || array_key_exists(md5($crceord), $required_entries['AAAA']))) {
 					unset($required_entries['A'][md5($crceord)]);
 					unset($required_entries['AAAA'][md5($crceord)]);
@@ -186,16 +207,16 @@ class Dns
 				if ($froxlorhostname) {
 					// use all available IP's for the froxlor-hostname
 					$result_ip_stmt = Database::prepare("
-					SELECT `ip` FROM `" . TABLE_PANEL_IPSANDPORTS . "` GROUP BY `ip`
-				");
+						SELECT `ip` FROM `" . TABLE_PANEL_IPSANDPORTS . "` GROUP BY `ip`
+					");
 					Database::pexecute($result_ip_stmt);
 				} else {
 					$result_ip_stmt = Database::prepare("
-					SELECT `p`.`ip` AS `ip`
-					FROM `" . TABLE_PANEL_IPSANDPORTS . "` `p`, `" . TABLE_DOMAINTOIP . "` `di`
-					WHERE `di`.`id_domain` = :domainid AND `p`.`id` = `di`.`id_ipandports`
-					GROUP BY `p`.`ip`;
-				");
+						SELECT `p`.`ip` AS `ip`
+						FROM `" . TABLE_PANEL_IPSANDPORTS . "` `p`, `" . TABLE_DOMAINTOIP . "` `di`
+						WHERE `di`.`id_domain` = :domainid AND `p`.`id` = `di`.`id_ipandports`
+						GROUP BY `p`.`ip`;
+					");
 					Database::pexecute($result_ip_stmt, array(
 						'domainid' => $domain_id
 					));
@@ -283,7 +304,7 @@ class Dns
 							if ($record == '@SPF@') {
 								$txt_content = Settings::Get('spf.spf_entry');
 								$zonerecords[] = new DnsEntry('@', 'TXT', self::encloseTXTContent($txt_content));
-							} elseif ($record == 'dkim_' . $domain['dkim_id'] . '._domainkey' && ! empty($dkim_entries)) {
+							} elseif ($record == 'dkim' . $domain['dkim_id'] . '._domainkey' && ! empty($dkim_entries)) {
 								// check for multiline entry
 								$multiline = false;
 								if (substr($dkim_entries[0], 0, 1) == '(') {
@@ -309,6 +330,7 @@ class Dns
 								}
 
 								foreach ($caa_entries as $entry) {
+									if (empty($entry)) continue;
 									$zonerecords[] = new DnsEntry('@', 'CAA', $entry);
 									// additional required records by subdomain setting
 									if ($domain['wwwserveralias'] == '1') {
@@ -343,7 +365,11 @@ class Dns
 			}
 
 			// PowerDNS does not like multi-line-format
-			$soa_content = $primary_ns . " " . self::escapeSoaAdminMail(Settings::Get('panel.adminmail')) . " ";
+			$soa_email = Settings::Get('system.soaemail');
+			if ($soa_email == "") {
+				$soa_email = Settings::Get('panel.adminmail');
+			}
+			$soa_content = $primary_ns . " " . self::escapeSoaAdminMail($soa_email) . " ";
 			$soa_content .= $domain['bindserial'] . " ";
 			// TODO for now, dummy time-periods
 			$soa_content .= "3600 900 604800 " . (int) Settings::Get('system.defaultttl');

@@ -413,7 +413,8 @@ class Apache extends HttpConfigBase
 						$this->virtualhosts_data[$vhosts_filename] .= $this->processSpecialConfigTemplate($row_ipsandports['ssl_specialsettings'], $domain, $row_ipsandports['ip'], $row_ipsandports['port'], $row_ipsandports['ssl'] == '1') . "\n";
 					}
 
-					if ($row_ipsandports['ssl_cert_file'] == '') {
+					// check for required fallback
+					if (($row_ipsandports['ssl_cert_file'] == '' || ! file_exists($row_ipsandports['ssl_cert_file'])) && (Settings::Get('system.le_froxlor_enabled') == '0' || $this->froxlorVhostHasLetsEncryptCert() == false)) {
 						$row_ipsandports['ssl_cert_file'] = Settings::Get('system.ssl_cert_file');
 						if (! file_exists($row_ipsandports['ssl_cert_file'])) {
 							// explicitly disable ssl for this vhost
@@ -424,6 +425,11 @@ class Apache extends HttpConfigBase
 
 					if ($row_ipsandports['ssl_key_file'] == '') {
 						$row_ipsandports['ssl_key_file'] = Settings::Get('system.ssl_key_file');
+						if (! file_exists($row_ipsandports['ssl_key_file'])) {
+							// explicitly disable ssl for this vhost
+							$row_ipsandports['ssl_cert_file'] = "";
+							\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'System certificate key-file "' . Settings::Get('system.ssl_key_file') . '" does not seem to exist. Disabling SSL-vhost for "' . Settings::Get('system.hostname') . '"');
+						}
 					}
 
 					if ($row_ipsandports['ssl_ca_file'] == '') {
@@ -559,7 +565,7 @@ class Apache extends HttpConfigBase
 	 *
 	 * @return string
 	 */
-	protected function composePhpOptions($domain, $ssl_vhost = false)
+	protected function composePhpOptions(&$domain, $ssl_vhost = false)
 	{
 		$php_options_text = '';
 
@@ -782,14 +788,6 @@ class Apache extends HttpConfigBase
 			));
 			$logfiles_text .= '  CustomLog "|' . $command . '" ' . $logtype . "\n";
 		} else {
-			// Create the logfile if it does not exist (fixes #46)
-			touch($error_log);
-			chown($error_log, Settings::Get('system.httpuser'));
-			chgrp($error_log, Settings::Get('system.httpgroup'));
-			touch($access_log);
-			chown($access_log, Settings::Get('system.httpuser'));
-			chgrp($access_log, Settings::Get('system.httpgroup'));
-
 			$logfiles_text .= '  ErrorLog "' . $error_log . '"' . "\n";
 			$logfiles_text .= '  CustomLog "' . $access_log . '" ' . $logtype . "\n";
 		}
@@ -950,7 +948,7 @@ class Apache extends HttpConfigBase
 		}
 
 		if ($ssl_vhost === true && $domain['ssl'] == '1' && Settings::Get('system.use_ssl') == '1') {
-			if ($domain['ssl_cert_file'] == '') {
+			if ($domain['ssl_cert_file'] == '' || ! file_exists($domain['ssl_cert_file'])) {
 				$domain['ssl_cert_file'] = Settings::Get('system.ssl_cert_file');
 				if (! file_exists($domain['ssl_cert_file'])) {
 					// explicitly disable ssl for this vhost
@@ -959,8 +957,13 @@ class Apache extends HttpConfigBase
 				}
 			}
 
-			if ($domain['ssl_key_file'] == '') {
+			if ($domain['ssl_key_file'] == '' || ! file_exists($domain['ssl_key_file'])) {
 				$domain['ssl_key_file'] = Settings::Get('system.ssl_key_file');
+				if (! file_exists($domain['ssl_key_file'])) {
+					// explicitly disable ssl for this vhost
+					$domain['ssl_cert_file'] = "";
+					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'System certificate key-file "' . Settings::Get('system.ssl_key_file') . '" does not seem to exist. Disabling SSL-vhost for "' . $domain['domain'] . '"');
+				}
 			}
 
 			if ($domain['ssl_ca_file'] == '') {

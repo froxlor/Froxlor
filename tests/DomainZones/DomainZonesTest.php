@@ -4,6 +4,7 @@ use PHPUnit\Framework\TestCase;
 use Froxlor\Settings;
 use Froxlor\Api\Commands\Customers;
 use Froxlor\Api\Commands\DomainZones;
+use Froxlor\Api\Commands\Domains;
 
 /**
  *
@@ -100,6 +101,7 @@ class DomainZonesTest extends TestCase
 	}
 
 	/**
+	 *
 	 * @depends testCustomerDomainZonesAddA
 	 */
 	public function testAdminDomainZonesListing()
@@ -302,14 +304,14 @@ class DomainZonesTest extends TestCase
 			'domainname' => 'test2.local',
 			'record' => '@',
 			'type' => 'CAA',
-			'content' => $content,
+			'content' => $content
 		];
 		$json_result = DomainZones::getLocal($admin_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertTrue(count($result) > 1);
 		$found = false;
 		foreach ($result as $entry) {
-			if (substr($entry, -strlen($content)) == $content) {
+			if (substr($entry, - strlen($content)) == $content) {
 				$found = true;
 				break;
 			}
@@ -327,7 +329,7 @@ class DomainZonesTest extends TestCase
 			'domainname' => 'test2.local',
 			'record' => '@',
 			'type' => 'CAA',
-			'content' => $content,
+			'content' => $content
 		];
 		$json_result = DomainZones::getLocal($admin_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
@@ -340,7 +342,7 @@ class DomainZonesTest extends TestCase
 			}
 		}
 		$this->assertTrue($found);
-		$this->assertEquals('@	18000	IN	CAA	'.$content, $entry);
+		$this->assertEquals('@	18000	IN	CAA	' . $content, $entry);
 	}
 
 	public function testAdminDomainZonesAddCAAIssueWithTwoParameters()
@@ -352,7 +354,7 @@ class DomainZonesTest extends TestCase
 			'domainname' => 'test2.local',
 			'record' => '@',
 			'type' => 'CAA',
-			'content' => $content,
+			'content' => $content
 		];
 		$json_result = DomainZones::getLocal($admin_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
@@ -365,7 +367,7 @@ class DomainZonesTest extends TestCase
 			}
 		}
 		$this->assertTrue($found);
-		$this->assertEquals('@	18000	IN	CAA	'.$content, $entry);
+		$this->assertEquals('@	18000	IN	CAA	' . $content, $entry);
 	}
 
 	public function testAdminDomainZonesAddCAAInvalidIssueValue()
@@ -377,7 +379,7 @@ class DomainZonesTest extends TestCase
 			'domainname' => 'test2.local',
 			'record' => '@',
 			'type' => 'CAA',
-			'content' => $content,
+			'content' => $content
 		];
 		$this->expectExceptionMessage("DNS content invalid");
 		DomainZones::getLocal($admin_userdata, $data)->add();
@@ -392,7 +394,7 @@ class DomainZonesTest extends TestCase
 			'domainname' => 'test2.local',
 			'record' => '@',
 			'type' => 'CAA',
-			'content' => $content,
+			'content' => $content
 		];
 		$this->expectExceptionMessage("DNS content invalid");
 		DomainZones::getLocal($admin_userdata, $data)->add();
@@ -407,7 +409,7 @@ class DomainZonesTest extends TestCase
 			'domainname' => 'test2.local',
 			'record' => '@',
 			'type' => 'CAA',
-			'content' => $content,
+			'content' => $content
 		];
 		$this->expectExceptionMessage("DNS content invalid");
 		DomainZones::getLocal($admin_userdata, $data)->add();
@@ -422,7 +424,7 @@ class DomainZonesTest extends TestCase
 			'domainname' => 'test2.local',
 			'record' => '@',
 			'type' => 'CAA',
-			'content' => $content,
+			'content' => $content
 		];
 		$json_result = DomainZones::getLocal($admin_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
@@ -435,7 +437,7 @@ class DomainZonesTest extends TestCase
 			}
 		}
 		$this->assertTrue($found);
-		$this->assertEquals('@	18000	IN	CAA	'.$content, $entry);
+		$this->assertEquals('@	18000	IN	CAA	' . $content, $entry);
 	}
 
 	public function testAdminDomainZonesAddCAAIssueWildWithParameters()
@@ -447,7 +449,7 @@ class DomainZonesTest extends TestCase
 			'domainname' => 'test2.local',
 			'record' => '@',
 			'type' => 'CAA',
-			'content' => $content,
+			'content' => $content
 		];
 		$json_result = DomainZones::getLocal($admin_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
@@ -460,7 +462,7 @@ class DomainZonesTest extends TestCase
 			}
 		}
 		$this->assertTrue($found);
-		$this->assertEquals('@	18000	IN	CAA	'.$content, $entry);
+		$this->assertEquals('@	18000	IN	CAA	' . $content, $entry);
 	}
 
 	public function testAdminDomainZonesAddCAAIssueWildWithTwoParameters()
@@ -472,7 +474,7 @@ class DomainZonesTest extends TestCase
 			'domainname' => 'test2.local',
 			'record' => '@',
 			'type' => 'CAA',
-			'content' => $content,
+			'content' => $content
 		];
 		$json_result = DomainZones::getLocal($admin_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
@@ -485,7 +487,7 @@ class DomainZonesTest extends TestCase
 			}
 		}
 		$this->assertTrue($found);
-		$this->assertEquals('@	18000	IN	CAA	'.$content, $entry);
+		$this->assertEquals('@	18000	IN	CAA	' . $content, $entry);
 	}
 
 	public function testAdminDomainZonesAddCAAInvalidIssueWildValue()
@@ -497,7 +499,7 @@ class DomainZonesTest extends TestCase
 			'domainname' => 'test2.local',
 			'record' => '@',
 			'type' => 'CAA',
-			'content' => $content,
+			'content' => $content
 		];
 		$this->expectExceptionMessage("DNS content invalid");
 		DomainZones::getLocal($admin_userdata, $data)->add();
@@ -512,7 +514,7 @@ class DomainZonesTest extends TestCase
 			'domainname' => 'test2.local',
 			'record' => '@',
 			'type' => 'CAA',
-			'content' => $content,
+			'content' => $content
 		];
 		$this->expectExceptionMessage("DNS content invalid");
 		DomainZones::getLocal($admin_userdata, $data)->add();
@@ -527,7 +529,7 @@ class DomainZonesTest extends TestCase
 			'domainname' => 'test2.local',
 			'record' => '@',
 			'type' => 'CAA',
-			'content' => $content,
+			'content' => $content
 		];
 		$this->expectExceptionMessage("DNS content invalid");
 		DomainZones::getLocal($admin_userdata, $data)->add();
@@ -542,7 +544,7 @@ class DomainZonesTest extends TestCase
 			'domainname' => 'test2.local',
 			'record' => '@',
 			'type' => 'CAA',
-			'content' => $content,
+			'content' => $content
 		];
 		$json_result = DomainZones::getLocal($admin_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
@@ -555,7 +557,7 @@ class DomainZonesTest extends TestCase
 			}
 		}
 		$this->assertTrue($found);
-		$this->assertEquals('@	18000	IN	CAA	'.$content, $entry);
+		$this->assertEquals('@	18000	IN	CAA	' . $content, $entry);
 	}
 
 	public function testAdminDomainZonesAddCAAIodefMailInvalid()
@@ -567,7 +569,7 @@ class DomainZonesTest extends TestCase
 			'domainname' => 'test2.local',
 			'record' => '@',
 			'type' => 'CAA',
-			'content' => $content,
+			'content' => $content
 		];
 		$this->expectExceptionMessage("DNS content invalid");
 		DomainZones::getLocal($admin_userdata, $data)->add();
@@ -582,7 +584,7 @@ class DomainZonesTest extends TestCase
 			'domainname' => 'test2.local',
 			'record' => '@',
 			'type' => 'CAA',
-			'content' => $content,
+			'content' => $content
 		];
 		$json_result = DomainZones::getLocal($admin_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
@@ -595,7 +597,7 @@ class DomainZonesTest extends TestCase
 			}
 		}
 		$this->assertTrue($found);
-		$this->assertEquals('@	18000	IN	CAA	'.$content, $entry);
+		$this->assertEquals('@	18000	IN	CAA	' . $content, $entry);
 	}
 
 	public function testAdminDomainZonesAddCAAIodefHttpInvalid()
@@ -607,7 +609,7 @@ class DomainZonesTest extends TestCase
 			'domainname' => 'test2.local',
 			'record' => '@',
 			'type' => 'CAA',
-			'content' => $content,
+			'content' => $content
 		];
 		$this->expectExceptionMessage("DNS content invalid");
 		DomainZones::getLocal($admin_userdata, $data)->add();
@@ -622,7 +624,7 @@ class DomainZonesTest extends TestCase
 			'domainname' => 'test2.local',
 			'record' => '@',
 			'type' => 'CAA',
-			'content' => $content,
+			'content' => $content
 		];
 		$json_result = DomainZones::getLocal($admin_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
@@ -635,7 +637,7 @@ class DomainZonesTest extends TestCase
 			}
 		}
 		$this->assertTrue($found);
-		$this->assertEquals('@	18000	IN	CAA	'.$content, $entry);
+		$this->assertEquals('@	18000	IN	CAA	' . $content, $entry);
 	}
 
 	public function testAdminDomainZonesAddCAAIodefHttpsInvalid()
@@ -647,7 +649,7 @@ class DomainZonesTest extends TestCase
 			'domainname' => 'test2.local',
 			'record' => '@',
 			'type' => 'CAA',
-			'content' => $content,
+			'content' => $content
 		];
 		$this->expectExceptionMessage("DNS content invalid");
 		DomainZones::getLocal($admin_userdata, $data)->add();
@@ -717,6 +719,63 @@ class DomainZonesTest extends TestCase
 		];
 		$this->expectExceptionMessage("Invalid domain-name for CNAME record");
 		DomainZones::getLocal($admin_userdata, $data)->add();
+	}
+
+	/**
+	 *
+	 * @depends testAdminDomainZonesAddCname
+	 */
+	public function testAdminDomainZonesAddCnameInvalidWwwAlias()
+	{
+		global $admin_userdata;
+
+		// set domain to www-alias
+		$data = [
+			'domainname' => 'test2.local',
+			'selectserveralias' => '1'
+		];
+		Domains::getLocal($admin_userdata, $data)->update();
+
+		$data = [
+			'domainname' => 'test2.local',
+			'record' => 'www',
+			'type' => 'CNAME',
+			'content' => 'testing.local'
+		];
+		$this->expectExceptionMessage('Cannot set CNAME record for "www" as domain is set to generate a www-alias. Please change settings to either "No alias" or "Wildcard alias"');
+		DomainZones::getLocal($admin_userdata, $data)->add();
+	}
+
+	/**
+	 *
+	 * @depends testAdminDomainZonesAddCname
+	 */
+	public function testAdminDomainZonesAddForExistingCname()
+	{
+		global $admin_userdata;
+
+		// set domain to www-alias
+		$data = [
+			'domainname' => 'test2.local',
+			'selectserveralias' => '1'
+		];
+		Domains::getLocal($admin_userdata, $data)->update();
+
+		foreach ([
+			'A' => '127.0.0.1',
+			'AAAA' => '::1',
+			'MX' => 'mail.example.com.',
+			'NS' => 'ns.example.com.'
+		] as $type => $val) {
+			$data = [
+				'domainname' => 'test2.local',
+				'record' => 'db',
+				'type' => $type,
+				'content' => $val
+			];
+			$this->expectExceptionMessage('There already exists a CNAME record with the same record-name. It can not be used for another type.');
+			DomainZones::getLocal($admin_userdata, $data)->add();
+		}
 	}
 
 	/**

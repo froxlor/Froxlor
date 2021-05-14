@@ -133,10 +133,10 @@ if ($page == 'overview') {
 			FROM `" . TABLE_PANEL_DOMAINS . "`
 			WHERE `customerid`= :cid AND `isemaildomain` = '1'
 		");
-		$result = Database::pexecute_first($result_stmt, array(
+		$result2 = Database::pexecute_first($result_stmt, array(
 			"cid" => $userinfo['customerid']
 		));
-		$emaildomains_count = $result['emaildomains'];
+		$emaildomains_count = $result2['emaildomains'];
 
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate("email/emails") . "\";");
 	} elseif ($action == 'delete' && $id != 0) {
@@ -153,7 +153,8 @@ if ($page == 'overview') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
 					Emails::getLocal($userinfo, array(
-						'id' => $id
+						'id' => $id,
+						'delete_userfiles' => ($_POST['delete_userfiles'] ?? 0)
 					))->delete();
 				} catch (Exception $e) {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());

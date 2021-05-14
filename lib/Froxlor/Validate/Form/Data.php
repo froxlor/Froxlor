@@ -31,7 +31,7 @@ class Data
 			$newfieldvalue = str_replace("\t", " ", $newfieldvalue);
 
 			if (isset($fielddata['string_type']) && $fielddata['string_type'] == 'mail') {
-				$returnvalue = (filter_var($newfieldvalue, FILTER_VALIDATE_EMAIL) == $newfieldvalue);
+				$returnvalue = \Froxlor\Validate\Validate::validateEmail($newfieldvalue);
 			} elseif (isset($fielddata['string_type']) && $fielddata['string_type'] == 'url') {
 				$returnvalue = \Froxlor\Validate\Validate::validateUrl($newfieldvalue);
 			} elseif (isset($fielddata['string_type']) && $fielddata['string_type'] == 'dir') {
@@ -194,7 +194,7 @@ class Data
 			$newfieldvalue = str_replace("\t", " ", $newfieldvalue);
 
 			if (isset($fielddata['string_type']) && $fielddata['string_type'] == 'mail') {
-				$returnvalue = (filter_var($newfieldvalue, FILTER_VALIDATE_EMAIL) == $newfieldvalue);
+				$returnvalue = \Froxlor\Validate\Validate::validateEmail($newfieldvalue);
 			} elseif (isset($fielddata['string_type']) && $fielddata['string_type'] == 'url') {
 				$returnvalue = \Froxlor\Validate\Validate::validateUrl($newfieldvalue);
 			} elseif (isset($fielddata['string_type']) && $fielddata['string_type'] == 'dir') {

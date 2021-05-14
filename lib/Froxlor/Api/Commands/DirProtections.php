@@ -26,9 +26,9 @@ class DirProtections extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Res
 	 * add htaccess protection to a given directory
 	 *
 	 * @param int $customerid
-	 *        	optional, admin-only, the customer-id
+	 *        	optional, required when called as admin (if $loginname is not specified)
 	 * @param string $loginname
-	 *        	optional, admin-only, the loginname
+	 *        	optional, required when called as admin (if $customerid is not specified)
 	 * @param string $path
 	 * @param string $username
 	 * @param string $directory_password
@@ -60,7 +60,7 @@ class DirProtections extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Res
 		$authname = $this->getParam('directory_authname', true, '');
 
 		// validation
-		$path = \Froxlor\FileDir::makeCorrectDir(\Froxlor\Validate\Validate::validate($path, 'path', '', '', array(), true));
+		$path = \Froxlor\FileDir::makeCorrectDir(\Froxlor\Validate\Validate::validate($path, 'path', \Froxlor\Validate\Validate::REGEX_DIR, '', array(), true));
 		$path = \Froxlor\FileDir::makeCorrectDir($customer['documentroot'] . '/' . $path);
 		$username = \Froxlor\Validate\Validate::validate($username, 'username', '/^[a-zA-Z0-9][a-zA-Z0-9\-_]+\$?$/', '', array(), true);
 		$authname = \Froxlor\Validate\Validate::validate($authname, 'directory_authname', '/^[a-zA-Z0-9][a-zA-Z0-9\-_ ]+\$?$/', '', array(), true);
@@ -187,9 +187,9 @@ class DirProtections extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Res
 	 * @param string $username
 	 *        	optional, the username
 	 * @param int $customerid
-	 *        	optional, admin-only, the customer-id
+	 *        	optional, required when called as admin (if $loginname is not specified)
 	 * @param string $loginname
-	 *        	optional, admin-only, the loginname
+	 *        	optional, required when called as admin (if $customerid is not specified)
 	 * @param string $directory_password
 	 *        	optional, leave empty for no change
 	 * @param string $directory_authname

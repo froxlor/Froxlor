@@ -150,7 +150,7 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 			$count ++;
 		}
 
-		$customercount = $paging->getEntries();
+		$customercount = $result['count'] . " / " . $paging->getEntries();
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate("customers/customers") . "\";");
 	} elseif ($action == 'su' && $id != 0) {
 		try {

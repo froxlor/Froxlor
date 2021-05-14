@@ -1107,9 +1107,6 @@ $lng['panel']['unlock'] = 'unlock';
 $lng['question']['customer_reallyunlock'] = 'Sei sicuro di voler sbloccare il cliente %s?';
 
 // ADDED IN FROXLOR 0.9.15-svn1
-$lng['serversettings']['perl_server']['title'] = 'Localizzazione del server Perl';
-$lng['serversettings']['perl_server']['description'] = 'Di default è impostato per utilizzare la guida disponibile sul sito: <a target="blank" href="http://wiki.nginx.org/SimpleCGI">http://wiki.nginx.org/SimpleCGI</a>';
-
 $lng['serversettings']['nginx_php_backend']['title'] = 'Nginx PHP backend';
 $lng['serversettings']['nginx_php_backend']['description'] = 'questo è dove in ascolto il processo PHP per le richieste da nginx, può essere un socket unix combinazione IP:Porta';
 $lng['serversettings']['phpreload_command']['title'] = 'Comando riavvio PHP';

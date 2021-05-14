@@ -155,7 +155,8 @@ class Nginx extends HttpConfigBase
 				// we know whether it's an ssl vhost or not
 				$ssl_vhost = false;
 				if ($row_ipsandports['ssl'] == '1') {
-					if ($row_ipsandports['ssl_cert_file'] == '') {
+					// check for required fallback
+					if (($row_ipsandports['ssl_cert_file'] == '' || ! file_exists($row_ipsandports['ssl_cert_file'])) && (Settings::Get('system.le_froxlor_enabled') == '0' || $this->froxlorVhostHasLetsEncryptCert() == false)) {
 						$row_ipsandports['ssl_cert_file'] = Settings::Get('system.ssl_cert_file');
 						if (! file_exists($row_ipsandports['ssl_cert_file'])) {
 							// explicitly disable ssl for this vhost
@@ -165,6 +166,11 @@ class Nginx extends HttpConfigBase
 					}
 					if ($row_ipsandports['ssl_key_file'] == '') {
 						$row_ipsandports['ssl_key_file'] = Settings::Get('system.ssl_key_file');
+						if (! file_exists($row_ipsandports['ssl_key_file'])) {
+							// explicitly disable ssl for this vhost
+							$row_ipsandports['ssl_cert_file'] = "";
+							\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'System certificate key-file "' . Settings::Get('system.ssl_key_file') . '" does not seem to exist. Disabling SSL-vhost for "' . Settings::Get('system.hostname') . '"');
+						}
 					}
 					if ($row_ipsandports['ssl_ca_file'] == '') {
 						$row_ipsandports['ssl_ca_file'] = Settings::Get('system.ssl_ca_file');
@@ -659,7 +665,7 @@ class Nginx extends HttpConfigBase
 	{
 		$sslsettings = '';
 
-		if ($domain_or_ip['ssl_cert_file'] == '') {
+		if ($domain_or_ip['ssl_cert_file'] == '' || ! file_exists($domain_or_ip['ssl_cert_file'])) {
 			$domain_or_ip['ssl_cert_file'] = Settings::Get('system.ssl_cert_file');
 			if (! file_exists($domain_or_ip['ssl_cert_file'])) {
 				// explicitly disable ssl for this vhost
@@ -668,8 +674,15 @@ class Nginx extends HttpConfigBase
 			}
 		}
 
-		if ($domain_or_ip['ssl_key_file'] == '') {
+		if ($domain_or_ip['ssl_key_file'] == '' || ! file_exists($domain_or_ip['ssl_key_file'])) {
+			// use fallback
 			$domain_or_ip['ssl_key_file'] = Settings::Get('system.ssl_key_file');
+			// check whether it exists
+			if (! file_exists($domain_or_ip['ssl_key_file'])) {
+				// explicitly disable ssl for this vhost
+				$domain_or_ip['ssl_cert_file'] = "";
+				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'System certificate key-file "' . Settings::Get('system.ssl_key_file') . '" does not seem to exist. Disabling SSL-vhost for "' . $domain_or_ip['domain'] . '"');
+			}
 		}
 
 		if ($domain_or_ip['ssl_ca_file'] == '') {
@@ -901,7 +914,6 @@ class Nginx extends HttpConfigBase
 			FROM `" . TABLE_PANEL_HTPASSWDS . "` AS a
 			JOIN `" . TABLE_PANEL_DOMAINS . "` AS b USING (`customerid`)
 			WHERE b.customerid = :customerid AND b.domain = :domain
-			AND path LIKE CONCAT(b.documentroot, '%')
 		");
 		Database::pexecute($result_stmt, array(
 			'customerid' => $domain['customerid'],
@@ -958,7 +970,7 @@ class Nginx extends HttpConfigBase
 		return $returnval;
 	}
 
-	protected function composePhpOptions($domain, $ssl_vhost = false)
+	protected function composePhpOptions(&$domain, $ssl_vhost = false)
 	{
 		$phpopts = '';
 		if ($domain['phpenabled_customer'] == 1 && $domain['phpenabled_vhost'] == '1') {
@@ -1041,10 +1053,10 @@ class Nginx extends HttpConfigBase
 
 		if (Settings::Get('system.awstats_enabled') == '1') {
 			// awstats
-			$stats_text .= "\t" . 'location /awstats {' . "\n";
+			$stats_text .= "\t" . 'location ^~ /awstats/ {' . "\n";
 		} else {
 			// webalizer
-			$stats_text .= "\t" . 'location /webalizer {' . "\n";
+			$stats_text .= "\t" . 'location ^~ /webalizer {' . "\n";
 		}
 
 		$stats_text .= "\t\t" . 'alias ' . $alias_dir . ';' . "\n";

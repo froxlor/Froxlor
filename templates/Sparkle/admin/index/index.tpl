@@ -45,7 +45,7 @@ $header
 				</div>
 
 				<div class="canvasbox">
-					<input type="hidden" id="diskspace" class="circular" data-used="{$overview['diskspace_used']}" data-available="{$userinfo['diskspace']}" data-assigned="{$userinfo['diskspace_used']}">
+					<input type="hidden" id="diskspace" class="circular" data-used="{$overview['diskspace_bytes_used']}" data-available="{$userinfo['diskspace_bytes']}" data-assigned="{$userinfo['diskspace_bytes_used']}">
 					<canvas id="diskspace-canvas" width="120" height="76"></canvas><br/>
 					{$lng['customer']['diskspace']}<br />
 					<small>
@@ -58,7 +58,7 @@ $header
 				</div>
 
 				<div class="canvasbox">
-					<input type="hidden" id="traffic" class="circular" data-used="{$overview['traffic_used']}" data-available="{$userinfo['traffic']}" data-assigned="{$userinfo['traffic_used']}">
+					<input type="hidden" id="traffic" class="circular" data-used="{$overview['traffic_bytes_used']}" data-available="{$userinfo['traffic_bytes']}" data-assigned="{$userinfo['traffic_bytes_used']}">
 					<canvas id="traffic-canvas" width="120" height="76"></canvas><br/>
 					{$lng['customer']['traffic']}<br />
 					<small>

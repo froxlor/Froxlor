@@ -649,3 +649,157 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.18')) {
 	showUpdateStep("Updating from 0.10.18 to 0.10.19", false);
 	\Froxlor\Froxlor::updateToVersion('0.10.19');
 }
+
+if (\Froxlor\Froxlor::isDatabaseVersion('202005150')) {
+
+	showUpdateStep("Add new performance indexes", true);
+	Database::query("ALTER TABLE panel_customers ADD INDEX guid (guid);");
+	Database::query("ALTER TABLE panel_tasks ADD INDEX type (type);");
+	Database::query("ALTER TABLE mail_users ADD INDEX username (username);");
+	Database::query("ALTER TABLE mail_users ADD INDEX imap (imap);");
+	Database::query("ALTER TABLE mail_users ADD INDEX pop3 (pop3);");
+	Database::query("ALTER TABLE ftp_groups ADD INDEX gid (gid);");
+	lastStepStatus(0);
+
+	\Froxlor\Froxlor::updateToDbVersion('202007240');
+}
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.19')) {
+	showUpdateStep("Updating from 0.10.19 to 0.10.20", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.20');
+}
+
+if (\Froxlor\Froxlor::isDatabaseVersion('202007240')) {
+
+	showUpdateStep("Removing old unused table", true);
+	Database::query("DROP TABLE IF EXISTS `panel_diskspace_admins`;");
+	lastStepStatus(0);
+
+	\Froxlor\Froxlor::updateToDbVersion('202009070');
+}
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.20')) {
+	showUpdateStep("Updating from 0.10.20 to 0.10.21", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.21');
+}
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.21')) {
+
+	showUpdateStep("Adding settings for ssl-vhost default content if not updated from db-version 201910110", true);
+	Settings::AddNew("system.default_sslvhostconf", '');
+	lastStepStatus(0);
+
+	showUpdateStep("Updating from 0.10.21 to 0.10.22", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.22');
+}
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.22')) {
+	showUpdateStep("Updating from 0.10.22 to 0.10.23", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.23');
+}
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.23')) {
+	showUpdateStep("Updating from 0.10.23 to 0.10.23.1", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.23.1');
+}
+
+if (\Froxlor\Froxlor::isDatabaseVersion('202009070')) {
+
+	showUpdateStep("Adding setting to hide incompatible settings", true);
+	Settings::AddNew("system.hide_incompatible_settings", '0');
+	lastStepStatus(0);
+
+	\Froxlor\Froxlor::updateToDbVersion('202012300');
+}
+
+if (\Froxlor\Froxlor::isDatabaseVersion('202012300')) {
+
+	showUpdateStep("Adding setting for DKIM private key extension/suffix", true);
+	Settings::AddNew("dkim.privkeysuffix", '.priv');
+	lastStepStatus(0);
+
+	\Froxlor\Froxlor::updateToDbVersion('202101200');
+}
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.23.1')) {
+	showUpdateStep("Updating from 0.10.23.1 to 0.10.24", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.24');
+}
+
+if (\Froxlor\Froxlor::isDatabaseVersion('202101200')) {
+
+	showUpdateStep("Adding setting for mail address used in SOA records", true);
+	Settings::AddNew("system.soaemail", '');
+	lastStepStatus(0);
+
+	\Froxlor\Froxlor::updateToDbVersion('202102200');
+}
+
+/*
+ * skip due to potential "1118 Row size too large" error
+ *
+if (\Froxlor\Froxlor::isDatabaseVersion('202102200')) {
+
+	showUpdateStep("Add new description fields to mail and domain table", true);
+	Database::query("ALTER TABLE panel_domains ADD `description` varchar(255) NOT NULL DEFAULT '' AFTER `ssl_sessiontickets`;");
+	Database::query("ALTER TABLE mail_virtual ADD `description` varchar(255) NOT NULL DEFAULT '' AFTER `iscatchall`");
+	lastStepStatus(0);
+
+	\Froxlor\Froxlor::updateToDbVersion('202103030');
+}
+*/
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.24')) {
+	showUpdateStep("Updating from 0.10.24 to 0.10.25", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.25');
+}
+
+if (\Froxlor\Froxlor::isDatabaseVersion('202102200') || \Froxlor\Froxlor::isDatabaseVersion('202103030')) {
+
+	showUpdateStep("Refactoring columns from large tables", true);
+	Database::query("ALTER TABLE panel_domains CHANGE `ssl_protocols` `ssl_protocols` varchar(255) NOT NULL DEFAULT '';");
+	Database::query("ALTER TABLE panel_domains CHANGE `ssl_cipher_list` `ssl_cipher_list` varchar(500) NOT NULL DEFAULT '';");
+	Database::query("ALTER TABLE panel_domains CHANGE `tlsv13_cipher_list` `tlsv13_cipher_list` varchar(500) NOT NULL DEFAULT '';");
+	lastStepStatus(0);
+
+	showUpdateStep("Add new description fields to mail and domain table", true);
+	$result = Database::query("DESCRIBE `panel_domains`");
+	$columnfound = 0;
+	while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+		if ($row['Field'] == 'description') {
+			$columnfound = 1;
+		}
+	}
+	if (! $columnfound) {
+		Database::query("ALTER TABLE panel_domains ADD `description` varchar(255) NOT NULL DEFAULT '' AFTER `ssl_sessiontickets`;");
+	}
+	$result = Database::query("DESCRIBE `mail_virtual`");
+	$columnfound = 0;
+	while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+		if ($row['Field'] == 'description') {
+			$columnfound = 1;
+		}
+	}
+	if (! $columnfound) {
+		Database::query("ALTER TABLE mail_virtual ADD `description` varchar(255) NOT NULL DEFAULT '' AFTER `iscatchall`");
+	}
+	lastStepStatus(0);
+
+	\Froxlor\Froxlor::updateToDbVersion('202103110');
+}
+
+if (\Froxlor\Froxlor::isDatabaseVersion('202103110')) {
+
+	showUpdateStep("Adding settings for imprint, terms of use and privacy policy URLs", true);
+	Settings::AddNew("panel.imprint_url", '');
+	Settings::AddNew("panel.terms_url", '');
+	Settings::AddNew("panel.privacy_url", '');
+	lastStepStatus(0);
+
+	\Froxlor\Froxlor::updateToDbVersion('202103240');
+}
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.25')) {
+    showUpdateStep("Updating from 0.10.25 to 0.10.26", false);
+    \Froxlor\Froxlor::updateToVersion('0.10.26');
+}

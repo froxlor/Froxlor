@@ -48,7 +48,7 @@ strings in
 
 
 
-### New settings and database-layout changnes
+### New settings and database-layout changes
 If you add new settings or layout changes, please make sure you add these to
 
 * `install/froxlor.sql`

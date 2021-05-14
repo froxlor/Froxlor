@@ -62,8 +62,8 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 			$issue_froxlor = self::issueFroxlorVhost();
 			$issue_domains = self::issueDomains();
 			$renew_froxlor = self::renewFroxlorVhost();
-			$renew_domains = self::renewDomains();
-			if ($issue_froxlor || $issue_domains || $renew_froxlor || $renew_domains) {
+			$renew_domains = self::renewDomains(true);
+			if ($issue_froxlor || !empty($issue_domains) || !empty($renew_froxlor) || $renew_domains) {
 				// insert task to generate certificates and vhost-configs
 				\Froxlor\System\Cronjob::inserttask(1);
 			}
@@ -271,7 +271,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 	 * @param int $domain_id
 	 * @param FroxlorLogger $cronlog
 	 */
-	private static function validateDns(&$domains = array(), $domain_id, &$cronlog)
+	private static function validateDns(array &$domains, $domain_id, &$cronlog)
 	{
 		if (Settings::Get('system.le_domain_dnscheck') == '1' && ! empty($domains)) {
 			$loop_domains = $domains;
@@ -290,7 +290,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 		}
 	}
 
-	private static function runAcmeSh($certrow = array(), $domains = array(), &$cronlog = null, $force = false)
+	private static function runAcmeSh(array $certrow, array $domains, &$cronlog = null, $force = false)
 	{
 		if (! empty($domains)) {
 
@@ -399,8 +399,8 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 			");
 			$froxlor_ssl = Database::pexecute_first($froxlor_ssl_settings_stmt);
 			// also check for possible existing certificate
-			if ($froxlor_ssl || (! $froxlor_ssl && ! self::checkFsFilesAreNewer(Settings::Get('system.hostname'), date('Y-m-d H:i:s', 0)))) {
-				return ($froxlor_ssl ? $froxlor_ssl : true);
+			if ($froxlor_ssl && self::checkFsFilesAreNewer(Settings::Get('system.hostname'), $froxlor_ssl['expirationdate'])) {
+				return $froxlor_ssl;
 			}
 		}
 		return false;
@@ -409,7 +409,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 	/**
 	 * get a list of domains that have a lets encrypt certificate (possible renew)
 	 */
-	private static function renewDomains()
+	private static function renewDomains($check = false)
 	{
 		$certificates_stmt = Database::query("
 			SELECT
@@ -437,6 +437,14 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 		");
 		$renew_certs = $certificates_stmt->fetchAll(\PDO::FETCH_ASSOC);
 		if ($renew_certs) {
+			if ($check) {
+				foreach ($renew_certs as $cert) {
+					if (self::checkFsFilesAreNewer($cert['domain'], $cert['expirationdate'])) {
+						return true;
+					}
+				}
+				return false;
+			}
 			return $renew_certs;
 		}
 		return array();
@@ -489,12 +497,12 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 
 	private static function checkFsFilesAreNewer($domain, $cert_date = 0)
 	{
-		$certificate_folder = self::getWorkingDirFromEnv($domain);
-		$ssl_file = \Froxlor\FileDir::makeCorrectFile($certificate_folder . '/' . $domain . '.cer');
+		$certificate_folder = self::getWorkingDirFromEnv(strtolower($domain));
+		$ssl_file = \Froxlor\FileDir::makeCorrectFile($certificate_folder . '/' . strtolower($domain) . '.cer');
 
 		if (is_dir($certificate_folder) && file_exists($ssl_file) && is_readable($ssl_file)) {
 			$cert_data = openssl_x509_parse(file_get_contents($ssl_file));
-			if ($cert_data['validTo_time_t'] > strtotime($cert_date)) {
+			if ($cert_data && $cert_data['validTo_time_t'] > strtotime($cert_date)) {
 				return true;
 			}
 		}

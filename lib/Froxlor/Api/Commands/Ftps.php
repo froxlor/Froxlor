@@ -40,7 +40,9 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 	 * @param string $ftp_domain
 	 *        	optional if customer.ftpatdomain is allowed, specify a domain (customer must be owner)
 	 * @param int $customerid
-	 *        	required when called as admin, not needed when called as customer
+	 *        	optional, required when called as admin (if $loginname is not specified)
+	 * @param string $loginname
+	 *        	optional, required when called as admin (if $customerid is not specified)
 	 * @param array $additional_members
 	 *        	optional whether to add additional usernames to the group
 	 * @param bool $is_defaultuser
@@ -180,6 +182,17 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 					), true, true);
 				}
 
+				// create quotatallies entry if it not exists, refs #885
+				if ($result_stmt->rowCount() == 0) {
+					$stmt = Database::prepare("INSERT INTO `" . TABLE_FTP_QUOTATALLIES . "`
+						(`name`, `quota_type`, `bytes_in_used`, `bytes_out_used`, `bytes_xfer_used`, `files_in_used`, `files_out_used`, `files_xfer_used`)
+						VALUES (:name, 'user', '0', '0', '0', '0', '0', '0')
+					");
+					Database::pexecute($stmt, array(
+						"name" => $username
+					), true, true);
+				}
+
 				$group_upd_stmt = Database::prepare("
 					UPDATE `" . TABLE_FTP_GROUPS . "`
 					SET `members` = CONCAT_WS(',',`members`, :username)
@@ -232,7 +245,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 						'COMPANY' => $customer['company'],
 						'CUSTOMER_NO' => $customer['customernumber'],
 						'USR_NAME' => $username,
-						'USR_PASS' => $password,
+						'USR_PASS' => htmlentities(htmlentities($password)),
 						'USR_PATH' => \Froxlor\FileDir::makeCorrectDir(str_replace($customer['documentroot'], "/", $path))
 					);
 					// get template for mail subject
@@ -343,7 +356,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 	 * @param string $username
 	 *        	optional, the username
 	 * @param string $ftp_password
-	 *        	password for the created database and database-user
+	 *        	optional, update password if specified
 	 * @param string $path
 	 *        	destination path relative to the customers-homedir
 	 * @param string $ftp_description
@@ -351,7 +364,9 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 	 * @param string $shell
 	 *        	optional, default /bin/false (not changeable when deactivated)
 	 * @param int $customerid
-	 *        	required when called as admin, not needed when called as customer
+	 *        	optional, required when called as admin (if $loginname is not specified)
+	 * @param string $loginname
+	 *        	optional, required when called as admin (if $customerid is not specified)
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception

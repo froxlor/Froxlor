@@ -105,7 +105,11 @@ class DomainSSL
 					$_fh = fopen($filename, 'w');
 					fwrite($_fh, $dom_certs[$type]);
 					fclose($_fh);
-					chmod($filename, 0600);
+					if ($type == 'ssl_key_file') {
+						chmod($filename, 0600);
+					} else {
+						chmod($filename, 0644);
+					}
 				}
 			}
 			// override corresponding array values

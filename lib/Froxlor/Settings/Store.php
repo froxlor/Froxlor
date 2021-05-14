@@ -176,7 +176,7 @@ class Store
 		if ($returnvalue !== false) {
 			\Froxlor\System\Cronjob::inserttask('4');
 		}
-		return false;
+		return $returnvalue;
 	}
 
 	public static function storeSettingHostname($fieldname, $fielddata, $newfieldvalue)

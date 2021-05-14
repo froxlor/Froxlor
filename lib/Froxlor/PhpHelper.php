@@ -112,7 +112,7 @@ class PhpHelper
 	 *
 	 * @return void|boolean
 	 */
-	public static function phpErrHandler($errno, $errstr, $errfile, $errline, $errcontext)
+	public static function phpErrHandler($errno, $errstr, $errfile, $errline, $errcontext = array())
 	{
 		if (! (error_reporting() & $errno)) {
 			// This error code is not included in error_reporting
@@ -223,9 +223,17 @@ class PhpHelper
 	 */
 	public static function gethostbynamel6($host, $try_a = true)
 	{
-		$dns6 = dns_get_record($host, DNS_AAAA);
+		$dns6 = @dns_get_record($host, DNS_AAAA);
+		if (!is_array($dns6)) {
+			// no record or failed to check
+			$dns6 = [];
+		}
 		if ($try_a == true) {
-			$dns4 = dns_get_record($host, DNS_A);
+			$dns4 = @dns_get_record($host, DNS_A);
+			if (!is_array($dns4)) {
+				// no record or failed to check
+				$dns4 = [];
+			}
 			$dns = array_merge($dns4, $dns6);
 		} else {
 			$dns = $dns6;
@@ -381,5 +389,34 @@ class PhpHelper
 			$returnval = $source;
 		}
 		return $returnval;
+	}
+
+	/**
+	 * function to check a super-global passed by reference
+	 * so it gets automatically updated
+	 *
+	 * @param array $global
+	 * @param \voku\helper\AntiXSS $antiXss
+	 */
+	public static function cleanGlobal(&$global, &$antiXss)
+	{
+		$ignored_fields = [
+			'system_default_vhostconf',
+			'system_default_sslvhostconf',
+			'system_apache_globaldiropt',
+			'specialsettings',
+			'ssl_specialsettings',
+			'default_vhostconf_domain',
+			'ssl_default_vhostconf_domain',
+			'filecontent'
+		];
+		if (isset($global) && ! empty($global)) {
+			$tmp = $global;
+			foreach ($tmp as $index => $value) {
+				if (!in_array($index, $ignored_fields)) {
+					$global[$index] = $antiXss->xss_clean($value);
+				}
+			}
+		}
 	}
 }

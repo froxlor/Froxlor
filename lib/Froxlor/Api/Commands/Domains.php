@@ -199,6 +199,9 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	 * @param string $domain
 	 *        	domain-name
 	 * @param int $customerid
+	 *        	optional, required when called as admin (if $loginname is not specified)
+	 * @param string $loginname
+	 *        	optional, required when called as admin (if $customerid is not specified)
 	 * @param int $adminid
 	 *        	optional, default is the calling admin's ID
 	 * @param array $ipandport
@@ -285,6 +288,8 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	 *        	optional list of allowed/used ssl/tls ciphers, see system.ssl_cipher_list setting, only used/required if $override_tls is true, default empty or system.ssl_cipher_list setting if $override_tls is true
 	 * @param string $tlsv13_cipher_list
 	 *        	optional list of allowed/used tls-1.3 specific ciphers, see system.tlsv13_cipher_list setting, only used/required if $override_tls is true, default empty or system.tlsv13_cipher_list setting if $override_tls is true
+	 * @param string $description
+	 *        	optional custom description (currently not used/shown in the frontend), default empty
 	 *        	
 	 * @access admin
 	 * @throws \Exception
@@ -297,7 +302,6 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 
 				// parameters
 				$p_domain = $this->getParam('domain');
-				$customerid = intval($this->getParam('customerid'));
 
 				// optional parameters
 				$p_ipandports = $this->getParam('ipandport', true, explode(',', Settings::Get('system.defaultip')));
@@ -352,6 +356,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 						$tlsv13_cipher_list = $this->getParam('tlsv13_cipher_list', true, Settings::Get('system.tlsv13_cipher_list'));
 					}
 				}
+				$description = $this->getParam('description', true, '');
 
 				// validation
 				$p_domain = strtolower($p_domain);
@@ -377,9 +382,8 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 					), '', true);
 				}
 
-				$customer = $this->apiCall('Customers.get', array(
-					'id' => $customerid
-				));
+				$customer = $this->getCustomerData();
+				$customerid = $customer['customerid'];
 
 				if ($this->getUserDetail('customers_see_all') == '1' && $adminid != $this->getUserDetail('adminid')) {
 					$admin_stmt = Database::prepare("
@@ -428,8 +432,8 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 						$zonefile = '';
 					}
 
-					$specialsettings = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $specialsettings), 'specialsettings', '/^[^\0]*$/', '', array(), true);
-					\Froxlor\Validate\Validate::validate($documentroot, 'documentroot', '', '', array(), true);
+					$specialsettings = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $specialsettings), 'specialsettings', \Froxlor\Validate\Validate::REGEX_CONF_TEXT, '', array(), true);
+					\Froxlor\Validate\Validate::validate($documentroot, 'documentroot', \Froxlor\Validate\Validate::REGEX_DIR, '', array(), true);
 
 					// If path is empty and 'Use domain name as default value for DocumentRoot path' is enabled in settings,
 					// set default path to subdomain or domain name
@@ -727,7 +731,8 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 						'tlsv13_cipher_list' => $tlsv13_cipher_list,
 						'sslenabled' => $sslenabled,
 						'honorcipherorder' => $honorcipherorder,
-						'sessiontickets' => $sessiontickets
+						'sessiontickets' => $sessiontickets,
+						'description' => $description
 					);
 
 					$ins_stmt = Database::prepare("
@@ -779,7 +784,8 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 						`tlsv13_cipher_list` = :tlsv13_cipher_list,
 						`ssl_enabled` = :sslenabled,
 						`ssl_honorcipherorder` = :honorcipherorder,
-						`ssl_sessiontickets`= :sessiontickets
+						`ssl_sessiontickets` = :sessiontickets,
+						`description` = :description
 					");
 					Database::pexecute($ins_stmt, $ins_data, true, true);
 					$domainid = Database::lastInsertId();
@@ -844,7 +850,9 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	 * @param string $domainname
 	 *        	optional, the domainname
 	 * @param int $customerid
-	 *        	optional customer-id
+	 *        	required (if $loginname is not specified)
+	 * @param string $loginname
+	 *        	required (if $customerid is not specified)
 	 * @param int $adminid
 	 *        	optional, default is the calling admin's ID
 	 * @param array $ipandport
@@ -929,6 +937,8 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	 *        	optional whether to honor the (server) cipher order for this domain. default 0 (false), requires SSL
 	 * @param bool $sessiontickets
 	 *        	optional whether to enable or disable TLS sessiontickets (RFC 5077) for this domain. default 1 (true), requires SSL
+	 * @param string $description
+	 *        	optional custom description (currently not used/shown in the frontend), default empty
 	 *        	
 	 * @access admin
 	 * @throws \Exception
@@ -952,8 +962,17 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 
 			// optional parameters
 			$p_ipandports = $this->getParam('ipandport', true, array());
-			$customerid = intval($this->getParam('customerid', true, $result['customerid']));
 			$adminid = intval($this->getParam('adminid', true, $result['adminid']));
+
+			if ($this->getParam('customerid', true, 0) == 0 && $this->getParam('loginname', true, '') == '') {
+				$customerid = $result['customerid'];
+				$customer = $this->apiCall('Customers.get', array(
+					'id' => $customerid
+				));
+			} else {
+				$customer = $this->getCustomerData();
+				$customerid = $customer['customerid'];
+			}
 
 			$subcanemaildomain = $this->getParam('subcanemaildomain', true, $result['subcanemaildomain']);
 			$isemaildomain = $this->getBoolParam('isemaildomain', true, $result['isemaildomain']);
@@ -1015,6 +1034,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				$ssl_cipher_list = $result['ssl_cipher_list'];
 				$tlsv13_cipher_list = $result['tlsv13_cipher_list'];
 			}
+			$description = $this->getParam('description', true, $result['description']);
 
 			// count subdomain usage of source-domain
 			$subdomains_stmt = Database::prepare("
@@ -1085,13 +1105,6 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				if (empty($customer) || $customer['customerid'] != $customerid) {
 					\Froxlor\UI\Response::standard_error('customerdoesntexist', '', true);
 				}
-			} else {
-				$customerid = $result['customerid'];
-
-				// get customer
-				$customer = $this->apiCall('Customers.get', array(
-					'id' => $customerid
-				));
 			}
 
 			// handle change of admin (move domain from admin to admin)
@@ -1157,8 +1170,8 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 					$dkim = $result['dkim'];
 				}
 
-				$specialsettings = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $specialsettings), 'specialsettings', '/^[^\0]*$/', '', array(), true);
-				$documentroot = \Froxlor\Validate\Validate::validate($documentroot, 'documentroot', '', '', array(), true);
+				$specialsettings = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $specialsettings), 'specialsettings', \Froxlor\Validate\Validate::REGEX_CONF_TEXT, '', array(), true);
+				$documentroot = \Froxlor\Validate\Validate::validate($documentroot, 'documentroot', \Froxlor\Validate\Validate::REGEX_DIR, '', array(), true);
 
 				// when moving customer and no path is specified, update would normally reuse the current document-root
 				// which would point to the wrong customer, therefore we will re-create that directory
@@ -1324,7 +1337,12 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 			}
 
 			if (! preg_match('/^https?\:\/\//', $documentroot)) {
-				$documentroot = \Froxlor\FileDir::makeCorrectDir($documentroot);
+				if ($documentroot != $result['documentroot']) {
+					if (substr($documentroot, 0, 1) != "/") {
+						$documentroot = $customer['documentroot'] . '/' . $documentroot;
+					}
+					$documentroot = \Froxlor\FileDir::makeCorrectDir($documentroot);
+				}
 			}
 
 			if ($email_only == '1') {
@@ -1579,6 +1597,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 			$update_data['sslenabled'] = $sslenabled;
 			$update_data['honorcipherorder'] = $honorcipherorder;
 			$update_data['sessiontickets'] = $sessiontickets;
+			$update_data['description'] = $description;
 			$update_data['id'] = $id;
 
 			$update_stmt = Database::prepare("
@@ -1624,7 +1643,8 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				`tlsv13_cipher_list` = :tlsv13_cipher_list,
 				`ssl_enabled` = :sslenabled,
 				`ssl_honorcipherorder` = :honorcipherorder,
-				`ssl_sessiontickets` = :sessiontickets
+				`ssl_sessiontickets` = :sessiontickets,
+				`description` = :description
 				WHERE `id` = :id
 			");
 			Database::pexecute($update_stmt, $update_data, true, true);

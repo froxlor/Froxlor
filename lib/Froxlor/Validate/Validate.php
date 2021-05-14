@@ -4,6 +4,12 @@ namespace Froxlor\Validate;
 class Validate
 {
 
+	const REGEX_DIR = '/^|(\/[\w-]+)+$/';
+
+	const REGEX_PORT = '/^(([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9])|([1-5][0-9][0-9][0-9][0-9])|(6[0-4][0-9][0-9][0-9])|(65[0-4][0-9][0-9])|(655[0-2][0-9])|(6553[0-5]))$/Di';
+
+	const REGEX_CONF_TEXT = '/^[^\0]*$/';
+
 	/**
 	 * Validates the given string by matching against the pattern, prints an error on failure and exits
 	 *
@@ -211,9 +217,9 @@ class Validate
 	public static function validateDomain($domainname, $allow_underscore = false)
 	{
 		if (is_string($domainname)) {
-			$char_validation = '([a-z\d](-*[a-z\d])*)(\.?([a-z\d](-*[a-z\d])*))*\.([a-z\d])+';
+			$char_validation = '([a-z\d](-*[a-z\d])*)(\.?([a-z\d](-*[a-z\d])*))*\.(xn\-\-)?([a-z\d])+';
 			if ($allow_underscore) {
-				$char_validation = '([a-z\d\_](-*[a-z\d\_])*)(\.([a-z\d\_](-*[a-z\d])*))*(\.?([a-z\d](-*[a-z\d])*))+\.([a-z\d])+';
+				$char_validation = '([a-z\d\_](-*[a-z\d\_])*)(\.([a-z\d\_](-*[a-z\d])*))*(\.?([a-z\d](-*[a-z\d])*))+\.(xn\-\-)?([a-z\d])+';
 			}
 
 			// valid chars check && overall length check && length of each label
@@ -250,6 +256,10 @@ class Validate
 	public static function validateEmail($email)
 	{
 		$email = strtolower($email);
+		// as of php-7.1
+		if (defined('FILTER_FLAG_EMAIL_UNICODE')) {
+			return filter_var($email, FILTER_VALIDATE_EMAIL, FILTER_FLAG_EMAIL_UNICODE);
+		}
 		return filter_var($email, FILTER_VALIDATE_EMAIL);
 	}
 

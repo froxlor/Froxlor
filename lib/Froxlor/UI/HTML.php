@@ -299,7 +299,6 @@ class HTML
 			$checkbox = self::makecheckbox('delete_userfiles', $chk_text, '1', false, '0', true, true);
 		} else {
 			$checkbox = '<input type="hidden" name="delete_userfiles" value="0" />' . "\n";
-			;
 		}
 
 		$text = strtr($text, array(

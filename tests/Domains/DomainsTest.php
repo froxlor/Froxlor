@@ -32,13 +32,15 @@ class DomainsTest extends TestCase
 			'ssl_protocols' => array(
 				'TLSv1.2',
 				'TLSv1.3'
-			)
+			),
+			'description' => 'awesome domain'
 		];
 		$json_result = Domains::getLocal($admin_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals($customer_userdata['documentroot'] . 'test.local/', $result['documentroot']);
 		$this->assertTrue(in_array('TLSv1.3', explode(",", $result['ssl_protocols'])));
 		$this->assertEquals('0', $result['isemaildomain']);
+		$this->assertEquals('awesome domain', $result['description']);
 	}
 
 	/**
@@ -198,16 +200,41 @@ class DomainsTest extends TestCase
 	public function testAdminDomainsUpdate()
 	{
 		global $admin_userdata;
+		// get customer
+		$json_result = Customers::getLocal($admin_userdata, array(
+			'loginname' => 'test1'
+		))->get();
+		$customer_userdata = json_decode($json_result, true)['data'];
 		$data = [
 			'domainname' => 'test.local',
 			'email_only' => 1,
-			'override_tls' => 0
+			'override_tls' => 0,
+			'documentroot' => 'web',
+			'description' => 'changed desc'
 		];
 		$json_result = Domains::getLocal($admin_userdata, $data)->update();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(1, $result['email_only']);
 		$this->assertFalse(in_array('TLSv1.3', explode(",", $result['ssl_protocols'])));
 		$this->assertEquals('test.local', $result['domain']);
+		$this->assertEquals($customer_userdata['documentroot'] . 'web/', $result['documentroot']);
+		$this->assertEquals('changed desc', $result['description']);
+	}
+
+	/**
+	 *
+	 * @depends testAdminDomainsAdd
+	 */
+	public function testAdminDomainsUpdateAbsolutePath()
+	{
+		global $admin_userdata;
+		$data = [
+			'domainname' => 'test.local',
+			'documentroot' => '/web'
+		];
+		$json_result = Domains::getLocal($admin_userdata, $data)->update();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals('/web/', $result['documentroot']);
 	}
 
 	/**
@@ -282,7 +309,7 @@ class DomainsTest extends TestCase
 			'customerid' => $customer_userdata['customerid'] + 1
 		];
 		Settings::Set('panel.allow_domain_change_customer', 1);
-		$this->expectExceptionMessage("The customer you have chosen doesn't exist.");
+		$this->expectExceptionMessage("Customer with id #2 could not be found");
 		Domains::getLocal($admin_userdata, $data)->update();
 	}
 
@@ -370,6 +397,32 @@ class DomainsTest extends TestCase
 
 		Domains::getLocal($admin_userdata, [
 			'domainname' => 'täst.local'
+		])->delete();
+	}
+
+	/**
+	 * @refs https://github.com/Froxlor/Froxlor/issues/899
+	 */
+	public function testAdminIdn2DomainsAdd()
+	{
+		global $admin_userdata;
+		// get customer
+		$json_result = Customers::getLocal($admin_userdata, array(
+			'loginname' => 'test1'
+		))->get();
+		$customer_userdata = json_decode($json_result, true)['data'];
+		$data = [
+			'domain' => 'उदाहरण.भारत',
+			'customerid' => $customer_userdata['customerid']
+		];
+		$json_result = Domains::getLocal($admin_userdata, $data)->add();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals($customer_userdata['documentroot'] . 'xn--p1b6ci4b4b3a.xn--h2brj9c/', $result['documentroot']);
+		$this->assertEquals('xn--p1b6ci4b4b3a.xn--h2brj9c', $result['domain']);
+		$this->assertEquals('उदाहरण.भारत', $result['domain_ace']);
+
+		Domains::getLocal($admin_userdata, [
+			'domainname' => 'उदाहरण.भारत'
 		])->delete();
 	}
 }

@@ -107,7 +107,7 @@ if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
 			$count ++;
 		}
 
-		$admincount = $paging->getEntries();
+		$admincount = $result['count'] . " / " . $paging->getEntries();
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate("admins/admins") . "\";");
 	} elseif ($action == 'su') {
 
