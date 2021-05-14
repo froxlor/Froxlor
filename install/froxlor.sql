@@ -714,7 +714,7 @@ opcache.interned_strings_buffer'),
 	('panel', 'imprint_url', ''),
 	('panel', 'terms_url', ''),
 	('panel', 'privacy_url', ''),
-	('panel', 'version', '0.10.25'),
+	('panel', 'version', '0.10.26'),
 	('panel', 'db_version', '202103240');
 
 
