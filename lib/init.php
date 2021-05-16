@@ -482,6 +482,18 @@ if (array_key_exists('css', $_themeoptions['variants'][$themevariant]) && is_arr
 eval("\$header = \"" . \Froxlor\UI\Template::getTemplate('header', '1') . "\";");
 
 $current_year = date('Y', time());
+$panel_imprint_url = Settings::Get('panel.imprint_url');
+if (!empty($panel_imprint_url) && strtolower(substr($panel_imprint_url, 0, 4)) != 'http') {
+	$panel_imprint_url = 'https://'.$panel_imprint_url;
+}
+$panel_terms_url = Settings::Get('panel.terms_url');
+if (!empty($panel_terms_url) && strtolower(substr($panel_terms_url, 0, 4)) != 'http') {
+	$panel_terms_url = 'https://'.$panel_terms_url;
+}
+$panel_privacy_url = Settings::Get('panel.privacy_url');
+if (!empty($panel_privacy_url) && strtolower(substr($panel_privacy_url, 0, 4)) != 'http') {
+	$panel_privacy_url = 'https://'.$panel_privacy_url;
+}
 eval("\$footer = \"" . \Froxlor\UI\Template::getTemplate('footer', '1') . "\";");
 
 unset($js);

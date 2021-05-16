@@ -565,7 +565,7 @@ class Apache extends HttpConfigBase
 	 *
 	 * @return string
 	 */
-	protected function composePhpOptions($domain, $ssl_vhost = false)
+	protected function composePhpOptions(&$domain, $ssl_vhost = false)
 	{
 		$php_options_text = '';
 
@@ -788,14 +788,6 @@ class Apache extends HttpConfigBase
 			));
 			$logfiles_text .= '  CustomLog "|' . $command . '" ' . $logtype . "\n";
 		} else {
-			// Create the logfile if it does not exist (fixes #46)
-			touch($error_log);
-			chown($error_log, Settings::Get('system.httpuser'));
-			chgrp($error_log, Settings::Get('system.httpgroup'));
-			touch($access_log);
-			chown($access_log, Settings::Get('system.httpuser'));
-			chgrp($access_log, Settings::Get('system.httpgroup'));
-
 			$logfiles_text .= '  ErrorLog "' . $error_log . '"' . "\n";
 			$logfiles_text .= '  CustomLog "' . $access_log . '" ' . $logtype . "\n";
 		}

@@ -193,8 +193,12 @@ if ($page == 'overview') {
 			\Froxlor\UI\Response::standard_error('oldpasswordnotcorrect');
 		}
 
-		$new_password = \Froxlor\Validate\Validate::validate($_POST['new_password'], 'new password');
-		$new_password_confirm = \Froxlor\Validate\Validate::validate($_POST['new_password_confirm'], 'new password confirm');
+		try {
+			$new_password = \Froxlor\System\Crypt::validatePassword($_POST['new_password'], 'new password');
+			$new_password_confirm = \Froxlor\System\Crypt::validatePassword($_POST['new_password_confirm'], 'new password confirm');
+		} catch (Exception $e) {
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
+		}
 
 		if ($old_password == '') {
 			\Froxlor\UI\Response::standard_error(array(

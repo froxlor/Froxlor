@@ -970,7 +970,7 @@ class Nginx extends HttpConfigBase
 		return $returnval;
 	}
 
-	protected function composePhpOptions($domain, $ssl_vhost = false)
+	protected function composePhpOptions(&$domain, $ssl_vhost = false)
 	{
 		$phpopts = '';
 		if ($domain['phpenabled_customer'] == 1 && $domain['phpenabled_vhost'] == '1') {

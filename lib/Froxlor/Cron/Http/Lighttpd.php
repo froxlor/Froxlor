@@ -364,7 +364,7 @@ class Lighttpd extends HttpConfigBase
 		return;
 	}
 
-	protected function composePhpOptions($domain)
+	protected function composePhpOptions(&$domain)
 	{
 		return;
 	}

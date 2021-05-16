@@ -22,7 +22,7 @@ use Froxlor\Cron\Http\Php\PhpInterface;
 class NginxFcgi extends Nginx
 {
 
-	protected function composePhpOptions($domain, $ssl_vhost = false)
+	protected function composePhpOptions(&$domain, $ssl_vhost = false)
 	{
 		$php_options_text = '';
 
@@ -43,7 +43,8 @@ class NginxFcgi extends Nginx
 			if ($domain['ssl'] == '1' && $ssl_vhost) {
 				$php_options_text .= "\t\t" . 'fastcgi_param HTTPS on;' . "\n";
 			}
-			$php_options_text .= "\t\t" . 'fastcgi_pass unix:' . $php->getInterface()->getSocketFile() . ";\n";
+			$domain['fpm_socket'] = $php->getInterface()->getSocketFile();
+			$php_options_text .= "\t\t" . 'fastcgi_pass unix:' . $domain['fpm_socket'] . ";\n";
 			$php_options_text .= "\t\t" . 'fastcgi_index index.php;' . "\n";
 			$php_options_text .= "\t}\n\n";
 

@@ -24,7 +24,7 @@ class Extrausers
 	{
 		// passwd
 		$passwd = '/var/lib/extrausers/passwd';
-		$sql = "SELECT customerid,username,'x' as password,uid,gid,'Froxlor User' as comment,homedir,shell, login_enabled FROM ftp_users ORDER BY uid ASC";
+		$sql = "SELECT customerid,username,'x' as password,uid,gid,'Froxlor User' as comment,homedir,shell, login_enabled FROM ftp_users ORDER BY uid, LENGTH(username) ASC";
 		self::generateFile($passwd, $sql, $cronlog);
 
 		// group
