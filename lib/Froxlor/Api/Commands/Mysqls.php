@@ -83,7 +83,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		$dbm = new \Froxlor\Database\DbManager($this->logger());
 		
 		if(strtoupper(Settings::Get('customer.mysqlprefix')) == 'DBNAME' && !empty($databasename)) {
-			$username = $dbm->createDatabase($databasename, $password);
+			$username = $dbm->createDatabase($newdb_params['loginname'].'_'.$databasename, $password);
 		} else {
 			$username = $dbm->createDatabase($newdb_params['loginname'], $password, $newdb_params['mysql_lastaccountnumber']);
 		}
