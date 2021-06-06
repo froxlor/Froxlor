@@ -87,6 +87,8 @@ class DbManager
 			while (in_array($username, $allsqlusers)) {
 				$username = $loginname . '-' . substr(md5(uniqid(microtime(), 1)), 20, 3);
 			}
+		} elseif (strtoupper(Settings::Get('customer.mysqlprefix')) == 'DBNAME') {
+			$username = $loginname;
 		} else {
 			$username = $loginname . Settings::Get('customer.mysqlprefix') . (intval($last_accnumber) + 1);
 		}
