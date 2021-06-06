@@ -50,6 +50,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		// parameters
 		$dbserver = $this->getParam('mysql_server', true, 0);
 		$databasedescription = $this->getParam('description', true, '');
+		$databasename = $this->getParam('database_name', true, '');
 		$sendinfomail = $this->getBoolParam('sendinfomail', true, 0);
 		// get needed customer info to reduce the mysql-usage-counter by one
 		$customer = $this->getCustomerData('mysqls');
@@ -58,6 +59,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		$password = \Froxlor\Validate\Validate::validate($password, 'password', '', '', array(), true);
 		$password = \Froxlor\System\Crypt::validatePassword($password, true);
 		$databasedescription = \Froxlor\Validate\Validate::validate(trim($databasedescription), 'description', '', '', array(), true);
+		$databasename = \Froxlor\Validate\Validate::validate(trim($databasename), 'database_name', '', '', array(), true);
 
 		// validate whether the dbserver exists
 		$dbserver = \Froxlor\Validate\Validate::validate($dbserver, html_entity_decode($this->lng['mysql']['mysql_server']), '', '', 0, true);
@@ -79,7 +81,12 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		);
 		// create database, user, set permissions, etc.pp.
 		$dbm = new \Froxlor\Database\DbManager($this->logger());
-		$username = $dbm->createDatabase($newdb_params['loginname'], $password, $newdb_params['mysql_lastaccountnumber']);
+		
+		if(strtoupper(Settings::Get('customer.mysqlprefix')) == 'DBNAME' && !empty($databasename)) {
+			$username = $dbm->createDatabase($databasename, $password);
+		} else {
+			$username = $dbm->createDatabase($newdb_params['loginname'], $password, $newdb_params['mysql_lastaccountnumber']);
+		}
 
 		// we've checked against the password in dbm->createDatabase
 		if ($username == false) {
