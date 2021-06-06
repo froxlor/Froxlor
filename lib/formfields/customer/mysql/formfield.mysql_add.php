@@ -27,6 +27,7 @@ return array(
 						'type' => 'text'
 					),
 					'description' => array(
+						'visible' => (strtoupper(Settings::Get('customer.mysqlprefix')) == 'DBNAME') ? true : false,
 						'label' => $lng['mysql']['databasedescription'],
 						'type' => 'text'
 					),
