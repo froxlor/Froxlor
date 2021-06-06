@@ -23,6 +23,7 @@ return array(
 				'image' => 'icons/mysql_add.png',
 				'fields' => array(
 					'description' => array(
+						'visible' => (strtoupper(Settings::Get('customer.mysqlprefix')) == 'DBNAME') ? true : false,
 						'label' => $lng['mysql']['databasedescription'],
 						'type' => 'text'
 					),
