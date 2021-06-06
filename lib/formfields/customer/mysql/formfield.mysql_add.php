@@ -24,7 +24,7 @@ return array(
 				'fields' => array(
 					'database_name' => array(
 						'visible' => (strtoupper(Settings::Get('customer.mysqlprefix')) == 'DBNAME') ? true : false,
-						'label' => $lng['mysql']['database_name'],
+						'label' => $lng['mysql']['databasename'],
 						'type' => 'text'
 					),
 					'description' => array(
