@@ -23,11 +23,11 @@ return array(
 				'image' => 'icons/mysql_add.png',
 				'fields' => array(
 					'database_name' => array(
+						'visible' => (strtoupper(Settings::Get('customer.mysqlprefix')) == 'DBNAME') ? true : false,
 						'label' => $lng['mysql']['database_name'],
 						'type' => 'text'
 					),
 					'description' => array(
-						'visible' => (strtoupper(Settings::Get('customer.mysqlprefix')) == 'DBNAME') ? true : false,
 						'label' => $lng['mysql']['databasedescription'],
 						'type' => 'text'
 					),
