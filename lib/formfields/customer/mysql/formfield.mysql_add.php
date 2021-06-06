@@ -22,6 +22,10 @@ return array(
 				'title' => $lng['mysql']['database_create'],
 				'image' => 'icons/mysql_add.png',
 				'fields' => array(
+					'database_name' => array(
+						'label' => $lng['mysql']['database_name'],
+						'type' => 'text'
+					),
 					'description' => array(
 						'label' => $lng['mysql']['databasedescription'],
 						'type' => 'text'
