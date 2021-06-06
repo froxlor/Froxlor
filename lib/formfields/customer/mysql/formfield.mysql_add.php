@@ -1,5 +1,7 @@
 <?php
 
+use Froxlor\Settings;
+
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
