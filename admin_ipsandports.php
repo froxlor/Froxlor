@@ -19,9 +19,8 @@
 define('AREA', 'admin');
 require './lib/init.php';
 
-use Froxlor\Database\Database;
 use Froxlor\Settings;
-use Froxlor\Api\Commands\IpsAndPorts as IpsAndPorts;
+use Froxlor\Api\Commands\IpsAndPorts;
 
 if (isset($_POST['id'])) {
 	$id = intval($_POST['id']);
@@ -43,29 +42,33 @@ if ($page == 'ipsandports' || $page == 'overview') {
 			'ip' => $lng['admin']['ipsandports']['ip'],
 			'port' => $lng['admin']['ipsandports']['port']
 		);
-		$paging = new \Froxlor\UI\Paging($userinfo, TABLE_PANEL_IPSANDPORTS, $fields);
+		try {
+			// get total count
+			$json_result = IpsAndPorts::getLocal($userinfo)->listingCount();
+			$result = json_decode($json_result, true)['data'];
+			// initialize pagination and filtering
+			$paging = new \Froxlor\UI\Pagination($userinfo, $fields, $result);
+			// get list
+			$json_result = IpsAndPorts::getLocal($userinfo, $paging->getApiCommandParams())->listing();
+		} catch (Exception $e) {
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
+
 		$ipsandports = '';
-		$result_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` " . $paging->getSqlWhere(false) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
-		Database::pexecute($result_stmt);
-		$paging->setEntries(Database::num_rows());
 		$sortcode = $paging->getHtmlSortCode($lng);
 		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
 		$searchcode = $paging->getHtmlSearchCode($lng);
 		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
-		$i = 0;
 		$count = 0;
 
-		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-
-			if ($paging->checkDisplay($i)) {
-				$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
-				if (filter_var($row['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-					$row['ip'] = '[' . $row['ip'] . ']';
-				}
-				eval("\$ipsandports.=\"" . \Froxlor\UI\Template::getTemplate("ipsandports/ipsandports_ipandport") . "\";");
-				$count ++;
+		foreach ($result['list'] as $row) {
+			$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
+			if (filter_var($row['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+				$row['ip'] = '[' . $row['ip'] . ']';
 			}
-			$i ++;
+			eval("\$ipsandports.=\"" . \Froxlor\UI\Template::getTemplate("ipsandports/ipsandports_ipandport") . "\";");
+			$count ++;
 		}
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate("ipsandports/ipsandports") . "\";");
 	} elseif ($action == 'delete' && $id != 0) {
@@ -157,5 +160,14 @@ if ($page == 'ipsandports' || $page == 'overview') {
 				eval("echo \"" . \Froxlor\UI\Template::getTemplate("ipsandports/ipsandports_edit") . "\";");
 			}
 		}
+	} elseif ($action == 'jqCheckIP') {
+		$ip = $_POST['ip'] ?? "";
+		if ((filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) || filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) && filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_RES_RANGE | FILTER_FLAG_NO_PRIV_RANGE) == false) {
+			// returns notice if private network detected so we can display it
+			echo json_encode($lng['admin']['ipsandports']['ipnote']);
+		} else {
+			echo 0;
+		}
+		exit();
 	}
 }

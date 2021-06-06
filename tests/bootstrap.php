@@ -11,14 +11,19 @@ if (file_exists('/etc/froxlor-test.pwd') && file_exists('/etc/froxlor-test.rpwd'
 	define('TRAVIS_CI', 1);
 }
 
+if (@php_sapi_name() !== 'cli') {
+	// not to be called via browser
+	die;
+}
+
 $userdata_content = "<?php
 \$sql['user'] = 'froxlor010';
 \$sql['password'] = '$pwd';
-\$sql['host'] = 'localhost';
+\$sql['host'] = '127.0.0.1';
 \$sql['db'] = 'froxlor010';
 \$sql_root[0]['user'] = 'root';
 \$sql_root[0]['password'] = '$rpwd';
-\$sql_root[0]['host'] = 'localhost';
+\$sql_root[0]['host'] = '127.0.0.1';
 \$sql_root[0]['caption'] = 'Test default';
 \$sql['debug'] = true;" . PHP_EOL;
 
@@ -58,7 +63,6 @@ Database::query("TRUNCATE TABLE `" . TABLE_FTP_QUOTATALLIES . "`;");
 Database::query("TRUNCATE TABLE `" . TABLE_MAIL_VIRTUAL . "`;");
 Database::query("TRUNCATE TABLE `" . TABLE_MAIL_USERS . "`;");
 Database::query("TRUNCATE TABLE `" . TABLE_PANEL_DISKSPACE . "`;");
-Database::query("TRUNCATE TABLE `" . TABLE_PANEL_DISKSPACE_ADMINS . "`;");
 Database::query("TRUNCATE TABLE `" . TABLE_PANEL_TRAFFIC . "`;");
 Database::query("TRUNCATE TABLE `" . TABLE_PANEL_TRAFFIC_ADMINS . "`;");
 Database::query("TRUNCATE TABLE `" . TABLE_PANEL_TASKS . "`;");
@@ -143,6 +147,8 @@ $sel_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_ADMINS . "` WHERE 
 $admin_userdata = Database::pexecute_first($sel_stmt);
 $admin_userdata['adminsession'] = 1;
 
+$log = \Froxlor\FroxlorLogger::getInstanceOf($admin_userdata);
+
 Settings::Set('panel.standardlanguage', 'English', true);
 Settings::Set('panel.adminmail', 'admin@dev.froxlor.org', true);
 Settings::Set('panel.allow_domain_change_admin', '1', true);
@@ -152,7 +158,7 @@ Settings::Set('system.ipaddress', '82.149.225.46', true);
 Settings::Set('system.documentroot_use_default_value', '1', true);
 Settings::Set('system.hostname', 'dev.froxlor.org', true);
 Settings::Set('system.nameservers', 'dev.froxlor.org', true);
-Settings::Set('system.mysql_access_host', 'localhost,127.0.0.1,2a01:440:1:12:82:149:225:46,82.149.225.46', true);
+Settings::Set('system.mysql_access_host', 'localhost,127.0.0.1,172.17.0.1,2a01:440:1:12:82:149:225:46,82.149.225.46', true);
 Settings::Set('system.use_ssl', '1', true);
 Settings::Set('system.froxlordirectlyviahostname', '1', true);
 Settings::Set('system.dns_createhostnameentry', '1', true);

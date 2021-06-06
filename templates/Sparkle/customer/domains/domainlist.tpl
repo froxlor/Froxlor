@@ -3,7 +3,7 @@
 		<header>
 			<h2>
 				<img src="templates/{$theme}/assets/img/icons/domains_big.png" alt="" />&nbsp;
-				{$lng['domains']['domainsettings']}&nbsp;({$domains_count})
+				{$lng['domains']['domainsettings']}&nbsp;({$result['count']} / {$domains_count})
 			</h2>
 		</header>
 
@@ -27,7 +27,7 @@
 				<table class="full hl">
 					<thead>
 						<tr>
-							<th>{$lng['domains']['domainname']}&nbsp;{$arrowcode['d.domain']}</th>
+							<th>{$lng['domains']['domainname']}&nbsp;{$arrowcode['d.domain_ace']}</th>
 							<th>{$lng['panel']['path']}</th>
 							<th>{$lng['panel']['options']}</th>
 						</tr>

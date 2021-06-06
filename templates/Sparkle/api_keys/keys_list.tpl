@@ -16,6 +16,15 @@
 			</div>
 		</if>
 
+		<if (int)$userinfo['api_allowed'] != 1>
+		<div class="messagewrapperfull">
+			<div class="warningcontainer bradius">
+				<div class="warningtitle">{$lng['admin']['warning']}</div>
+				<div class="warning">{$lng['usersettings']['api_allowed']['notice']}</div>
+			</div>
+		</div>
+		</if>
+
 		<section>
 
 			<form action="{$linker->getLink(array('section' => 'index', 'page' => $page))}" method="post" enctype="application/x-www-form-urlencoded">
@@ -26,10 +35,12 @@
 					{$searchcode}
 				</div>
 
+				<if (int)$userinfo['api_allowed'] == 1>
 				<div class="overviewadd">
 					<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />
 					<a href="{$linker->getLink(array('section' => 'index', 'page' => $page, 'action' => 'add'))}">{$lng['apikeys']['key_add']}</a>
 				</div>
+				</if>
 
 				<table class="full hl">
 					<thead>
@@ -58,10 +69,12 @@
 			</form>
 
 			<if 15 < $count >
+			<if (int)$userinfo['api_allowed'] == 1>
 			<div class="overviewadd">
 				<img src="templates/{$theme}/assets/img/icons/add.png" alt="" />
 				<a href="{$linker->getLink(array('section' => 'index', 'page' => $page, 'action' => 'add'))}">{$lng['apikeys']['key_add']}</a>
 			</div>
+			</if>
 			</if>
 		</section>
 	</article>

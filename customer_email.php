@@ -43,27 +43,31 @@ if ($page == 'overview') {
 	if ($action == '') {
 		$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_email::emails");
 		$fields = array(
-			'd.domain' => $lng['domains']['domainname'],
+			'd.domain_ace' => $lng['domains']['domainname'],
 			'm.email_full' => $lng['emails']['emailaddress'],
 			'm.destination' => $lng['emails']['forwarders']
 		);
-		$paging = new \Froxlor\UI\Paging($userinfo, TABLE_MAIL_VIRTUAL, $fields);
-		$result_stmt = Database::prepare('SELECT `m`.`id`, `m`.`domainid`, `m`.`email`, `m`.`email_full`, `m`.`iscatchall`, `u`.`quota`, `m`.`destination`, `m`.`popaccountid`, `d`.`domain`, `u`.`mboxsize` FROM `' . TABLE_MAIL_VIRTUAL . '` `m`
-			LEFT JOIN `' . TABLE_PANEL_DOMAINS . '` `d` ON (`m`.`domainid` = `d`.`id`)
-			LEFT JOIN `' . TABLE_MAIL_USERS . '` `u` ON (`m`.`popaccountid` = `u`.`id`)
-			WHERE `m`.`customerid`= :customerid ' . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
-		Database::pexecute($result_stmt, array(
-			"customerid" => $userinfo['customerid']
-		));
-		$emailscount = Database::num_rows();
-		$paging->setEntries($emailscount);
+		try {
+			// get total count
+			$json_result = Emails::getLocal($userinfo)->listingCount();
+			$result = json_decode($json_result, true)['data'];
+			// initialize pagination and filtering
+			$paging = new \Froxlor\UI\Pagination($userinfo, $fields, $result);
+			// get list
+			$json_result = Emails::getLocal($userinfo, $paging->getApiCommandParams())->listing();
+		} catch (Exception $e) {
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
+
 		$sortcode = $paging->getHtmlSortCode($lng);
 		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
 		$searchcode = $paging->getHtmlSearchCode($lng);
 		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
 		$emails = array();
+		$emailscount = $paging->getEntries();
 
-		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+		foreach ($result['list'] as $row) {
 			if (! isset($emails[$row['domain']]) || ! is_array($emails[$row['domain']])) {
 				$emails[$row['domain']] = array();
 			}
@@ -71,13 +75,12 @@ if ($page == 'overview') {
 			$emails[$row['domain']][$row['email_full']] = $row;
 		}
 
-		if ($paging->sortfield == 'd.domain' && $paging->sortorder == 'desc') {
+		if ($paging->sortfield == 'd.domain_ace' && $paging->sortorder == 'desc') {
 			krsort($emails);
 		} else {
 			ksort($emails);
 		}
 
-		$i = 0;
 		$count = 0;
 		$accounts = '';
 		$emails_count = 0;
@@ -90,53 +93,50 @@ if ($page == 'overview') {
 			}
 
 			foreach ($emailaddresses as $row) {
-				if ($paging->checkDisplay($i)) {
-					if ($domainname != $idna_convert->decode($row['domain'])) {
-						$domainname = $idna_convert->decode($row['domain']);
-						eval("\$accounts.=\"" . \Froxlor\UI\Template::getTemplate("email/emails_domain") . "\";");
-					}
-
-					$emails_count ++;
-					$row['email'] = $idna_convert->decode($row['email']);
-					$row['email_full'] = $idna_convert->decode($row['email_full']);
-					$row['destination'] = explode(' ', $row['destination']);
-					uasort($row['destination'], 'strcasecmp');
-
-					$dest_list = $row['destination'];
-					foreach ($dest_list as $dest_id => $destination) {
-						$row['destination'][$dest_id] = $idna_convert->decode($row['destination'][$dest_id]);
-
-						if ($row['destination'][$dest_id] == $row['email_full']) {
-							unset($row['destination'][$dest_id]);
-						}
-					}
-
-					$destinations_count = count($row['destination']);
-					$row['destination'] = implode(', ', $row['destination']);
-
-					if (strlen($row['destination']) > 35) {
-						$row['destination'] = substr($row['destination'], 0, 32) . '... (' . $destinations_count . ')';
-					}
-
-					$row['mboxsize'] = \Froxlor\PhpHelper::sizeReadable($row['mboxsize'], 'GiB', 'bi', '%01.' . (int) Settings::Get('panel.decimal_places') . 'f %s');
-
-					$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
-					eval("\$accounts.=\"" . \Froxlor\UI\Template::getTemplate("email/emails_email") . "\";");
-					$count ++;
+				if ($domainname != $idna_convert->decode($row['domain'])) {
+					$domainname = $idna_convert->decode($row['domain']);
+					eval("\$accounts.=\"" . \Froxlor\UI\Template::getTemplate("email/emails_domain") . "\";");
 				}
 
-				$i ++;
+				$emails_count ++;
+				$row['email'] = $idna_convert->decode($row['email']);
+				$row['email_full'] = $idna_convert->decode($row['email_full']);
+				$row['destination'] = explode(' ', $row['destination']);
+				uasort($row['destination'], 'strcasecmp');
+
+				$dest_list = $row['destination'];
+				foreach ($dest_list as $dest_id => $destination) {
+					$row['destination'][$dest_id] = $idna_convert->decode($row['destination'][$dest_id]);
+
+					if ($row['destination'][$dest_id] == $row['email_full']) {
+						unset($row['destination'][$dest_id]);
+					}
+				}
+
+				$destinations_count = count($row['destination']);
+				$row['destination'] = implode(', ', $row['destination']);
+
+				if (strlen($row['destination']) > 35) {
+					$row['destination'] = substr($row['destination'], 0, 32) . '... (' . $destinations_count . ')';
+				}
+
+				$row['mboxsize'] = \Froxlor\PhpHelper::sizeReadable($row['mboxsize'], 'GiB', 'bi', '%01.' . (int) Settings::Get('panel.decimal_places') . 'f %s');
+
+				$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
+				eval("\$accounts.=\"" . \Froxlor\UI\Template::getTemplate("email/emails_email") . "\";");
+				$count ++;
 			}
 		}
 
-		$emaildomains_count_stmt = Database::prepare("SELECT COUNT(`id`) AS `count` FROM `" . TABLE_PANEL_DOMAINS . "`
-			WHERE `customerid`= :customerid
-			AND `isemaildomain`='1' ORDER BY `domain` ASC");
-		Database::pexecute($emaildomains_count_stmt, array(
-			"customerid" => $userinfo['customerid']
+		$result_stmt = Database::prepare("
+			SELECT COUNT(`id`) as emaildomains
+			FROM `" . TABLE_PANEL_DOMAINS . "`
+			WHERE `customerid`= :cid AND `isemaildomain` = '1'
+		");
+		$result2 = Database::pexecute_first($result_stmt, array(
+			"cid" => $userinfo['customerid']
 		));
-		$emaildomains_count = $emaildomains_count_stmt->fetch(PDO::FETCH_ASSOC);
-		$emaildomains_count = $emaildomains_count['count'];
+		$emaildomains_count = $result2['emaildomains'];
 
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate("email/emails") . "\";");
 	} elseif ($action == 'delete' && $id != 0) {
@@ -153,7 +153,8 @@ if ($page == 'overview') {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
 					Emails::getLocal($userinfo, array(
-						'id' => $id
+						'id' => $id,
+						'delete_userfiles' => ($_POST['delete_userfiles'] ?? 0)
 					))->delete();
 				} catch (Exception $e) {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
@@ -194,7 +195,7 @@ if ($page == 'overview') {
 				$result_stmt = Database::prepare("SELECT `id`, `domain`, `customerid` FROM `" . TABLE_PANEL_DOMAINS . "`
 					WHERE `customerid`= :cid
 					AND `isemaildomain`='1'
-					ORDER BY `domain` ASC");
+					ORDER BY `domain_ace` ASC");
 				Database::pexecute($result_stmt, array(
 					"cid" => $userinfo['customerid']
 				));

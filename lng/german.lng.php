@@ -60,8 +60,8 @@ $lng['customer']['phone'] = 'Telefon';
 $lng['customer']['fax'] = 'Fax';
 $lng['customer']['email'] = 'E-Mail-Adresse';
 $lng['customer']['customernumber'] = 'Kundennummer';
-$lng['customer']['diskspace'] = 'Webspace (MiB)';
-$lng['customer']['traffic'] = 'Traffic (GiB)';
+$lng['customer']['diskspace'] = 'Webspace';
+$lng['customer']['traffic'] = 'Traffic';
 $lng['customer']['mysqls'] = 'MySQL-Datenbanken';
 $lng['customer']['emails'] = 'E-Mail-Adressen';
 $lng['customer']['accounts'] = 'E-Mail-Konten';
@@ -202,6 +202,7 @@ $lng['error']['mydomain'] = '\'Domain\'';
 $lng['error']['mydocumentroot'] = '\'Documentroot\'';
 $lng['error']['loginnameexists'] = 'Der Login-Name "%s" existiert bereits.';
 $lng['error']['emailiswrong'] = 'Die E-Mail-Adresse "%s" enthält ungültige Zeichen oder ist nicht vollständig.';
+$lng['error']['alternativeemailiswrong'] = 'Die angegebene alternative E-Mail Adresse "%s", an welche die Zugangsdaten geschickt werden soll, scheint ungültig zu sein.';
 $lng['error']['loginnameiswrong'] = 'Der Login-Name "%s" enthält ungültige Zeichen.';
 $lng['error']['loginnameiswrong2'] = 'Der Login-Name enthält zu viele Zeichen, es sind maximal %s Zeichen erlaubt.';
 $lng['error']['userpathcombinationdupe'] = 'Die Kombination aus Benutzername und Pfad existiert bereits.';
@@ -314,6 +315,7 @@ $lng['admin']['templates']['COMPANY'] = 'Wird mit dem Firmennamen des Kunden ers
 $lng['admin']['templates']['USERNAME'] = 'Wird mit dem Benutzernamen des neuen Kundenkontos ersetzt.';
 $lng['admin']['templates']['PASSWORD'] = 'Wird mit dem Passwort des neuen Kundenkontos ersetzt.';
 $lng['admin']['templates']['EMAIL'] = 'Wird mit der Adresse des neuen E-Mail-Kontos ersetzt.';
+$lng['admin']['templates']['CUSTOMER_NO'] = 'Wir mit der Kunden-Nummer ersetzt';
 $lng['admin']['bindzonewarning'] = $lng['panel']['emptyfordefault'] . '<br /><strong class="red">WARNUNG:</strong> Bei der Verwendung einer Zonendatei müssen alle benötigten Records aller Subdomains ebenfalls manuell verwaltet werden.';
 
 /**
@@ -335,7 +337,7 @@ $lng['serversettings']['logfiles_directory']['description'] = 'Wo sollen die Log
 $lng['serversettings']['logfiles_script']['title'] = 'Eigenes Script zu dem Log-Files übergeben werden';
 $lng['serversettings']['logfiles_script']['description'] = 'Hier kann ein Script an das die Loginhalte übergeben werden hinterlegt und die Platzhalter <strong>{LOGFILE}, {DOMAIN} und {CUSTOMER}</strong> genutzt werden, sofern nötig. Falls ein Script angegeben wird, muss die Option <strong>Webserver Logdateien umleiten</strong> gesetzt werden';
 $lng['serversettings']['logfiles_format']['title'] = 'Access-Log Format';
-$lng['serversettings']['logfiles_format']['description'] = 'Hier kann ein angepasstes Log-format entsprechend der Webserver-Dokumentation angegeben werden, leer lassen für Standard';
+$lng['serversettings']['logfiles_format']['description'] = 'Hier kann ein angepasstes Log-format entsprechend der Webserver-Dokumentation angegeben werden, leer lassen für Standard. Abhängig vom LogFormat muss die Angabe unter Anführungszeichen stehen.<br/>Wenn verwendet mit nginx, so kann es wie folgt aussehen: <i>log_format frx_custom {EINGESTELLTES_FORMAT}</i>.<br/>Wenn verwendet mit Apache, so kann es wie folgt aussehen: <i>LogFormat {EINGESTELLTES_FORMAT} frx_custom</i>.<br /><strong>ACHTUNG:</strong> Der Code wird nicht auf Fehler geprüft. Etwaige Fehler werden auch übernommen und der Webserver könnte nicht mehr starten!';
 $lng['serversettings']['logfiles_type']['title'] = 'Access-Log Typ';
 $lng['serversettings']['logfiles_type']['description'] = 'Wähle zwischen <strong>combined</strong> oder <strong>vhost_combined</strong>.';
 $lng['serversettings']['logfiles_piped']['title'] = 'Webserver Logdateien zu eigenem Script umleiten (siehe oben)';
@@ -403,6 +405,7 @@ $lng['admin']['ipsandports']['add'] = 'IP-Adresse/Port hinzufügen';
 $lng['admin']['ipsandports']['edit'] = 'IP-Adresse/Port bearbeiten';
 $lng['admin']['ipsandports']['ipandport'] = 'IP-Adresse/Port';
 $lng['admin']['ipsandports']['ip'] = 'IP-Adresse';
+$lng['admin']['ipsandports']['ipnote'] = '<div id="ipnote" class="red">Hinweis: Obwohl private IP Adressen erlaubt sind, kann es bei manchen Features wie DNS zu ungewolltem Verhalten kommen.<br>Verwende private Adressen nur wenn du sicher bist.</div>';
 $lng['admin']['ipsandports']['port'] = 'Port';
 
 // ADDED IN 1.2.13-rc3
@@ -564,7 +567,7 @@ $lng['serversettings']['apacheconf_htpasswddir']['description'] = 'Wo sollen die
 
 $lng['error']['formtokencompromised'] = 'Das Formular scheint manipuliert worden zu sein. Aus Sicherheitsgründen wurden Sie ausgelogged.';
 $lng['serversettings']['mysql_access_host']['title'] = 'MySQL-Access-Hosts';
-$lng['serversettings']['mysql_access_host']['description'] = 'Eine durch Komma getrennte Liste mit den Hostnamen aller Hostnames/IP-Adressen, von denen sich die Benutzer einloggen dürfen.';
+$lng['serversettings']['mysql_access_host']['description'] = 'Eine durch Komma getrennte Liste mit den Hostnamen aller Hostnames/IP-Adressen, von denen sich die Benutzer einloggen dürfen. Um ein Subnetz zu erlauben ist die Netzmaske oder CIDR Syntax erlaubt.';
 
 // ADDED IN 1.2.18-svn1
 
@@ -609,7 +612,7 @@ $lng['traffic']['months'][9] = "September";
 $lng['traffic']['months'][10] = "Oktober";
 $lng['traffic']['months'][11] = "November";
 $lng['traffic']['months'][12] = "Dezember";
-$lng['traffic']['mb'] = "Traffic (MiB)";
+$lng['traffic']['mb'] = "Traffic";
 $lng['traffic']['day'] = "Tag";
 $lng['traffic']['distribution'] = '<span color="#019522">FTP</span> | <span color="#0000FF">HTTP</span> | <span color="#800000">Mail</span>';
 $lng['traffic']['sumhttp'] = 'Gesamt HTTP-Traffic';
@@ -673,7 +676,7 @@ $lng['message']['noreceipients'] = 'Es wurde keine E-Mail versendet, da sich kei
 $lng['admin']['sslsettings'] = 'SSL-Einstellungen';
 $lng['cronjobs']['notyetrun'] = 'Bisher nicht gestartet';
 $lng['serversettings']['default_vhostconf']['title'] = 'Standard vHost-Einstellungen';
-$lng['admin']['specialsettings_replacements'] = "Die folgenden Variablen können verwendet werden:<br/><code>{DOMAIN}</code>, <code>{DOCROOT}</code>, <code>{CUSTOMER}</code>, <code>{IP}</code>, <code>{PORT}</code>, <code>{SCHEME}</code><br/>";
+$lng['admin']['specialsettings_replacements'] = "Die folgenden Variablen können verwendet werden:<br/><code>{DOMAIN}</code>, <code>{DOCROOT}</code>, <code>{CUSTOMER}</code>, <code>{IP}</code>, <code>{PORT}</code>, <code>{SCHEME}</code>, <code>{FPMSOCKET}</code> (wenn zutreffend)<br/>";
 $lng['serversettings']['default_vhostconf']['description'] = 'Der Inhalt dieses Feldes wird direkt in den IP/Port-vHost-Container übernommen. ' . $lng['admin']['specialsettings_replacements'] . '<br /><strong>ACHTUNG:</strong> Der Code wird nicht auf Fehler geprüft. Etwaige Fehler werden also auch übernommen. Der Webserver könnte nicht mehr starten!';
 $lng['serversettings']['default_vhostconf_domain']['description'] = 'Der Inhalt dieses Feldes wird direkt in jeden Domain-vHost-Container übernommen. ' . $lng['admin']['specialsettings_replacements'] . '<strong>ACHTUNG:</strong> Der Code wird nicht auf Fehler geprüft. Etwaige Fehler werden also auch übernommen. Der Webserver könnte nicht mehr starten!';
 $lng['serversettings']['apache_globaldiropt']['title'] = 'Kunden-Prefix Ordner-Optionen';
@@ -692,6 +695,8 @@ $lng['dkim']['dkim_dkimkeys']['title'] = 'KeyList Dateiname';
 $lng['dkim']['dkim_dkimkeys']['description'] = 'Dateiname der DKIM-KeyList-Angabe aus der DKIM-Milter-Konfigurationsdatei.';
 $lng['dkim']['dkimrestart_command']['title'] = 'Milter-Restart-Kommando';
 $lng['dkim']['dkimrestart_command']['description'] = 'Wie lautet das Kommando zum Neustarten des DKIM-Milter-Dienstes?';
+$lng['dkim']['privkeysuffix']['title'] = 'Suffix für Private Keys';
+$lng['dkim']['privkeysuffix']['description'] = 'Hier kann eine (optionale) Dateiendung für die generierten Private Keys angegeben werden. Manche Dienste, wie dkim-filter, erwarten, dass die Schlüssel keine Dateiendung haben (leer).';
 
 // ADDED IN 1.2.19-svn9
 
@@ -797,7 +802,7 @@ $lng['serversettings']['mail_quota_enabled']['enforcelink'] = 'Hier klicken, um 
 $lng['question']['admin_quotas_reallywipe'] = 'Sind Sie sicher, dass alle E-Mail-Kontingente aus der Tabelle mail_users entfernt werden sollen? Dieser Schritt kann nicht rückgängig gemacht werden!';
 $lng['question']['admin_quotas_reallyenforce'] = 'Sind Sie sicher, dass Sie allen Benutzern das Default-Quota zuweisen wollen? Dies kann nicht rückgängig gemacht werden!';
 $lng['error']['vmailquotawrong'] = 'Die Kontingent-Größe muss positiv sein.';
-$lng['customer']['email_quota'] = 'E-Mail-Kontingent (MiB)';
+$lng['customer']['email_quota'] = 'E-Mail-Kontingent';
 $lng['customer']['email_imap'] = 'IMAP';
 $lng['customer']['email_pop3'] = 'POP3';
 $lng['customer']['mail_quota'] = 'E-Mail-Kontingent';
@@ -832,7 +837,8 @@ $lng['error']['nopermissionsorinvalidid'] = 'Entweder fehlen Ihnen die nötigen 
 $lng['panel']['view'] = 'ansehen';
 $lng['question']['phpsetting_reallydelete'] = 'Wollen Sie diese PHP-Einstellungen wirklich löschen? Alle Domains die diese Einstellungen bis jetzt verwendet haben, werden dann auf die Standardeinstellungen umgestellt.';
 $lng['question']['fpmsetting_reallydelete'] = 'Wollen Sie diese PHP-FPM Einstellungen wirklich löschen? Alle PHP Konfigurationen die diese Einstellungen bis jetzt verwendet haben, werden dann auf die Standardeinstellungen umgestellt.';
-$lng['admin']['phpsettings']['addnew'] = 'Neue Konfiguration erstellen';
+$lng['admin']['phpsettings']['addnew'] = 'Neue PHP Konfiguration erstellen';
+$lng['admin']['fpmsettings']['addnew'] = 'Neue PHP Version erstellen';
 $lng['error']['phpsettingidwrong'] = 'Eine PHP-Konfiguration mit dieser ID existiert nicht';
 $lng['error']['descriptioninvalid'] = 'Der Beschreibungstext ist zu kurz, zu lang oder enthält ungültige Zeichen';
 $lng['error']['info'] = 'Info';
@@ -1146,8 +1152,8 @@ $lng['panel']['unlock'] = 'entsperren';
 $lng['question']['customer_reallyunlock'] = 'Wollen Sie den Kunden "%s" wirklich entsperren?';
 
 // ADDED IN FROXLOR 0.9.15
-$lng['serversettings']['perl_server']['title'] = 'Perl-Server-Ort';
-$lng['serversettings']['perl_server']['description'] = 'Der Standardwert ist diesem Guide entnommen: <a target="blank" href="http://wiki.nginx.org/SimpleCGI">http://wiki.nginx.org/SimpleCGI</a>';
+$lng['serversettings']['perl_server']['title'] = 'Perl Server-Socket';
+$lng['serversettings']['perl_server']['description'] = 'Eine einfache Anleitung hier zu findet man unter <a target="blank" href="http://wiki.nginx.org/SimpleCGIhttps://www.nginx.com/resources/wiki/start/topics/examples/fcgiwrap/">nginx.com</a>';
 $lng['serversettings']['nginx_php_backend']['title'] = 'Nginx-PHP-Backend';
 $lng['serversettings']['nginx_php_backend']['description'] = 'Dies ist das Backend, auf dem PHP auf Anfragen von Nginx hört. Kann ein UNIX Socket oder eine IP:Port Kombination sein<br />*NICHT relevant bei php-fpm';
 $lng['serversettings']['phpreload_command']['title'] = 'PHP-Reload-Befehl';
@@ -1262,9 +1268,9 @@ $lng['mysql']['size'] = 'Datenbankgröße';
 
 $lng['error']['invalidhostname'] = 'Hostname muss eine gültige Domain sein. Er darf weder leer sein noch nur aus Leerzeichen bestehen';
 
-$lng['traffic']['http'] = 'HTTP (MiB)';
-$lng['traffic']['ftp'] = 'FTP (MiB)';
-$lng['traffic']['mail'] = 'Mail (MiB)';
+$lng['traffic']['http'] = 'HTTP';
+$lng['traffic']['ftp'] = 'FTP';
+$lng['traffic']['mail'] = 'Mail';
 
 // ADDED IN 0.9.27-svn1
 $lng['serversettings']['mod_fcgid']['idle_timeout']['title'] = 'Idle-Timeout';
@@ -1350,7 +1356,7 @@ $lng['domains']['serveraliasoption_www'] = 'www (www.domain.tld)';
 $lng['domains']['serveraliasoption_none'] = 'Kein Alias';
 $lng['error']['givendirnotallowed'] = 'Das angegebene Verzeichnis im Feld %s ist nicht erlaubt.';
 $lng['serversettings']['ssl']['ssl_cipher_list']['title'] = 'Erlaubte SSL Ciphers festlegen';
-$lng['serversettings']['ssl']['ssl_cipher_list']['description'] = 'Dies ist eine Liste von Ciphers, die genutzt werden sollen (oder auch nicht genutzt werden sollen), wenn eine SSL Verbindung besteht. Eine Liste aller Ciphers und wie diese hinzugefügt/ausgeschlossen werden ist in den Abschnitten "CIPHER LIST FORMAT" und "CIPHER STRINGS" in <a href="http://openssl.org/docs/apps/ciphers.html">der man-page für Ciphers</a> zu finden.<br /><br /><b>Standard-Wert ist:</b><pre>ECDH+AESGCM:ECDH+AES256:!aNULL:!MD5:!DSS:!DH:!AES128</pre>';
+$lng['serversettings']['ssl']['ssl_cipher_list']['description'] = 'Dies ist eine Liste von Ciphers, die genutzt werden sollen (oder auch nicht genutzt werden sollen), wenn eine SSL Verbindung besteht. Eine Liste aller Ciphers und wie diese hinzugefügt/ausgeschlossen werden ist in den Abschnitten "CIPHER LIST FORMAT" und "CIPHER STRINGS" in <a href="https://www.openssl.org/docs/manmaster/man1/openssl-ciphers.html">der man-page für Ciphers</a> zu finden.<br /><br /><b>Standard-Wert ist:</b><pre>ECDH+AESGCM:ECDH+AES256:!aNULL:!MD5:!DSS:!DH:!AES128</pre>';
 
 // Added in Froxlor 0.9.31
 $lng['panel']['dashboard'] = 'Dashboard';
@@ -1418,7 +1424,7 @@ $lng['admin']['integrityresult'] = 'Ergebnis';
 $lng['admin']['integrityfix'] = 'Probleme automatisch beheben';
 $lng['question']['admin_integritycheck_reallyfix'] = 'M&ouml;chten Sie wirklich versuchen s&auml;mtliche Datenbank-Integrit&auml;tsprobleme automatisch zu beheben?';
 $lng['serversettings']['system_croncmdline']['title'] = 'Cron Startbefehl (php Programm)';
-$lng['serversettings']['system_croncmdline']['description'] = 'Befehl zum Ausführen des Cronjobs. Ändern dieser Einstellung nur wenn nötig (Standard: "/usr/bin/nice -n 5 /usr/bin/php5 -q")!';
+$lng['serversettings']['system_croncmdline']['description'] = 'Befehl zum Ausführen des Cronjobs. Ändern dieser Einstellung nur wenn nötig (Standard: "/usr/bin/nice -n 5 /usr/bin/php -q")!';
 $lng['error']['cannotdeletehostnamephpconfig'] = 'Diese PHP-Konfiguration ist dem Froxlor-Vhost zugewiesen und kann daher nicht gelöscht werden.';
 $lng['error']['cannotdeletedefaultphpconfig'] = 'Diese PHP-Konfiguration ist als Standard hinterlegt und kann daher nicht gelöscht werden.';
 $lng['serversettings']['system_cron_allowautoupdate']['title'] = 'Erlaube automatische Datenbank-Aktualisierungen';
@@ -1467,12 +1473,12 @@ $lng['admin']['configfiles']['commands'] = '<span class="red">Kommandos:</span> 
 $lng['admin']['configfiles']['files'] = '<span class="red">Konfigurationsdateien:</span> Der Befehl direkt vor dem Textfeld sollte einen Editor mit der Zieldatei öffnen. Der Inhalt kann nun einfach kopiert und in den Editor eingefügt und die Datei gespeichert werden.<br><span class="red">Bitte beachten:</span> Das MySQL-Passwort wurde aus Sicherheitsgründen nicht ersetzt. Bitte ersetzen Sie "FROXLOR_MYSQL_PASSWORD" manuell oder nutzen Sie das folgende Formular, um es temporär auf dieser Seite zu setzen. Falls das Passwort vergessen wurde, findet es sich in der Datei "lib/userdata.inc.php".';
 $lng['serversettings']['apache_itksupport']['title'] = 'Anpassungen für Apache ITK-MPM verwenden';
 $lng['serversettings']['apache_itksupport']['description'] = '<div class="red">Achtung: Bitte nur verwenden, wenn wirklich Apache itk-mpm verwendet wird, ansonsten wird der Webserver nicht starten.</div>';
-$lng['integrity_check']['DatabaseCharset'] = 'Characterset der Datenbank (sollte UTF-8 sein)';
-$lng['integrity_check']['DomainIpTable'] = 'IP &lt;&dash;&gt; Domain Verkn&uuml;pfung';
-$lng['integrity_check']['SubdomainSslRedirect'] = 'Falsches SSL-redirect Flag bei nicht-SSL Domains';
-$lng['integrity_check']['FroxlorLocalGroupMemberForFcgidPhpFpm'] = 'froxlor-Benutzer in Kunden-Gruppen (f&uuml;r FCGID/php-fpm)';
-$lng['integrity_check']['WebserverGroupMemberForFcgidPhpFpm'] = 'Webserver-Benutzer in Kunden-Gruppen (f&uuml;r FCGID/php-fpm)';
-$lng['integrity_check']['SubdomainLetsencrypt'] = 'Hauptdomains ohne zugewiesenen SSL-Port haben keine Subdomain mit aktiviertem SSL-Redirect';
+$lng['integrity_check']['databaseCharset'] = 'Characterset der Datenbank (sollte UTF-8 sein)';
+$lng['integrity_check']['domainIpTable'] = 'IP &lt;&dash;&gt; Domain Verkn&uuml;pfung';
+$lng['integrity_check']['subdomainSslRedirect'] = 'Falsches SSL-redirect Flag bei nicht-SSL Domains';
+$lng['integrity_check']['froxlorLocalGroupMemberForFcgidPhpFpm'] = 'froxlor-Benutzer in Kunden-Gruppen (f&uuml;r FCGID/php-fpm)';
+$lng['integrity_check']['webserverGroupMemberForFcgidPhpFpm'] = 'Webserver-Benutzer in Kunden-Gruppen (f&uuml;r FCGID/php-fpm)';
+$lng['integrity_check']['subdomainLetsencrypt'] = 'Hauptdomains ohne zugewiesenen SSL-Port haben keine Subdomain mit aktiviertem SSL-Redirect';
 $lng['admin']['mod_fcgid_umask']['title'] = 'Umask (Standard: 022)';
 
 // Added for let's encrypt
@@ -1481,7 +1487,7 @@ $lng['admin']['letsencrypt']['description'] = 'Holt ein kostenloses Zertifikat v
 $lng['customer']['letsencrypt']['title'] = 'SSL Zertifikat erstellen (Let\'s Encrypt)';
 $lng['customer']['letsencrypt']['description'] = 'Holt ein kostenloses Zertifikat von <a href="https://letsencrypt.org">Let\'s Encrypt</a>. Das Zertifikat wird automatisch erstellt und verlängert.<br><strong class="red">ACHTUNG:</strong> Dieses Feature befindet sich noch im Test.';
 $lng['error']['sslredirectonlypossiblewithsslipport'] = 'Die Nutzung von Let\'s Encrypt ist nur möglich, wenn die Domain mindestens eine IP/Port - Kombination mit aktiviertem SSL zugewiesen hat.';
-$lng['error']['nowildcardwithletsencrypt'] = 'Let\'s Encrypt kann in ACME v1 nicht mit Wildcard-Domains umgehen. Bitte den ServerAlias auf WWW setzen oder deaktivieren';
+$lng['error']['nowildcardwithletsencrypt'] = 'Let\'s Encrypt kann mittels ACME Wildcard-Domains nur via DNS validieren, sorry. Bitte den ServerAlias auf WWW setzen oder deaktivieren';
 $lng['panel']['letsencrypt'] = 'Benutzt Let\'s encrypt';
 $lng['crondesc']['cron_letsencrypt'] = 'Aktualisierung der Let\'s Encrypt Zertifikate';
 $lng['serversettings']['letsencryptca']['title'] = "Let's Encrypt Umgebung";
@@ -1500,6 +1506,12 @@ $lng['serversettings']['leenabled']['title'] = "Let's Encrypt verwenden";
 $lng['serversettings']['leenabled']['description'] = "Wenn dies aktiviert ist, können Kunden durch Froxlor automatisch generierte und verlängerbare Let's Encrypt SSL-Zertifikate für Domains mit SSL IP/Port nutzen.<br /><br />Bitte die Webserver-Konfiguration beachten wenn aktiviert, da dieses Feature eine spezielle Konfiguration benötigt.";
 $lng['domains']['ssl_redirect_temporarilydisabled'] = "<br>Die SSL-Umleitung ist, während ein neues Let's Encrypt - Zertifikat erstellt wird, temporär deaktiviert. Die Umleitung wird nach der Zertifikatserstellung wieder aktiviert.";
 
+// Added for CAA record support
+$lng['serversettings']['caa_entry']['title'] = 'CAA DNS Einträge generieren';
+$lng['serversettings']['caa_entry']['description'] = 'Generiert CAA Einträge automatisch für alle Domains mit aktiviertem SSL und Let\'s Encrypt';
+$lng['serversettings']['caa_entry_custom']['title'] = 'Zusätzliche CAA DNS Einträge';
+$lng['serversettings']['caa_entry_custom']['description'] = 'DNS Certification Authority Authorization (CAA) verwendet das Domain Name System, um dem Besitzer einer Domain die Möglichkeit zu bieten, gewisse Zertifizierungsstellen (CAs) dazu zu berechtigen,<br>ein Zertifikat für die betroffene Domain auszustellen. CAA Records sollen verhindern, dass Zertifikate fälschlicherweise für eine Domain ausgestellt werden.<br><br>Der Inhalt dieses Feldes wird direkt in die DNS Zone übernommen (eine Zeile pro CAA Record). Wenn Let\'s Encrypt für eine Domain aktiviert wurde und die obige Option aktiviert wurde, wird immer automatisch dieser Eintrag angefügt und muss nicht selber angegeben werden:<br><code>0 issue "letsencrypt.org"</code> (Wenn wildcard aktiviert ist, wird statdessen issuewild benutzt).<br>Um Incident Reporting per Mail zu aktivieren, muss eine <code>iodef</code> Zeile angefügt werden. Ein Beispiel für einen Report an <code>me@example.com</code> wäre:<br><code>0 iodef "mailto:me@example.com"</code><br><br><strong>ACHTUNG:</strong> Der Code wird nicht auf Fehler geprüft. Etwaige Fehler werden also auch übernommen. Die CAA finalen Einträge könnten daher falsch sein!';
+
 // Autoupdate
 $lng['admin']['autoupdate'] = 'Auto-Update';
 $lng['error']['customized_version'] = 'Es scheint als wäre die Froxlor Installation angepasst worden. Kein Support, sorry.';
@@ -1512,6 +1524,7 @@ $lng['error']['autoupdate_6'] = 'Woops, keine (gültige) Version angegeben für 
 $lng['error']['autoupdate_7'] = 'Das heruntergeladene Archiv konnte nicht gefunden werden :(';
 $lng['error']['autoupdate_8'] = 'Das Archiv konnte nicht entpackt werden :(';
 $lng['error']['autoupdate_9'] = 'Die heruntergeladene Datei konnte nicht verifiziert werden. Bitte erneut versuchen zu aktualisieren.';
+$lng['error']['autoupdate_10'] = 'Minimum unterstützte Version von PHP ist 7.0';
 
 $lng['domains']['termination_date'] = 'Kündigungsdatum';
 $lng['domains']['termination_date_overview'] = 'gekündigt zum ';
@@ -1537,6 +1550,7 @@ $lng['tasks']['backup_customerfiles'] = 'Datensicherung für Kunde %loginname%';
 
 $lng['error']['dns_domain_nodns'] = 'DNS ist für diese Domain nicht aktiviert';
 $lng['error']['dns_content_empty'] = 'Keinen Inhalt angegeben';
+$lng['error']['dns_content_invalid'] = 'DNS Eintrag ungültig';
 $lng['error']['dns_arec_noipv4'] = 'Keine gültige IP-Adresse für A-Eintrag angegeben';
 $lng['error']['dns_aaaarec_noipv6'] = 'Keine gültige IP-Adresse für AAAA-Eintrag angegeben';
 $lng['error']['dns_mx_prioempty'] = 'Ungültige MX Priorität angegeben';
@@ -1544,6 +1558,7 @@ $lng['error']['dns_mx_needdom'] = 'Der Wert des MX Eintrags muss ein gültiger D
 $lng['error']['dns_mx_noalias'] = 'Der MX Eintrag darf kein CNAME Eintrag sein.';
 $lng['error']['dns_cname_invaliddom'] = 'Ungültiger Domain-Name für CNAME Eintrag';
 $lng['error']['dns_cname_nomorerr'] = 'Es existiert bereits ein Eintrag mit dem gleichen Namen. Dieser Eintrag kann daher nicht für CNAME genutzt werden.';
+$lng['error']['dns_other_nomorerr'] = 'Es existiert bereits ein CNAME Eintrag mit dem gleichen Namen. Dieser Eintrag kann daher nicht für einen anderen genutzt werden.';
 $lng['error']['dns_ns_invaliddom'] = 'Ungültiger Domain-Name für NS Eintrag';
 $lng['error']['dns_srv_prioempty'] = 'Ungültige SRV Priorität angegeben';
 $lng['error']['dns_srv_invalidcontent'] = 'Ungültiger Wert des SRV Eintrags, dieser muss aus den Feldern weight, port und target, bestehen. Bsp.: 5 5060 sipserver.example.com.';
@@ -1621,18 +1636,17 @@ $lng['admin']['domain_http2']['title'] = 'HTTP2 Unterstützung';
 $lng['admin']['domain_http2']['description'] = 'Siehe <a target="_blank" href="https://de.wikipedia.org/wiki/Hypertext_Transfer_Protocol#HTTP.2F2">Wikipedia</a> für eine ausführliche Beschreibung von HTTP2';
 $lng['admin']['testmail'] = 'SMTP Test';
 $lng['success']['testmailsent'] = 'Test E-Mail erfolgreich gesendet';
-$lng['serversettings']['disable_le_selfcheck']['title'] = "Deaktiviere Let's Encrypt lokale Selbstprüfung";
-$lng['serversettings']['disable_le_selfcheck']['description'] = "Wenn aktiviert wird Froxlor <strong>keine</strong> Erreichbarkeitsprüfung des Tokens vornehmen. Nötig bei ge-NAT-eten IP-Adressen oder Ähnlichem";
+$lng['serversettings']['le_domain_dnscheck']['title'] = "Validiere DNS der Domains wenn Let's Encrypt genutzt wird";
+$lng['serversettings']['le_domain_dnscheck']['description'] = "Wenn aktiviert wird froxlor überprüfen ob die DNS Einträge der Domains, welche ein Let's Encrypt Zertifikat beantragt, mindestens auf eine der System IP Adressen auflöst.";
 $lng['menue']['phpsettings']['fpmdaemons'] = 'PHP-FPM Versionen';
 $lng['admin']['phpsettings']['activephpconfigs'] = 'In Verwendung für PHP-Konfiguration(en)';
 $lng['admin']['phpsettingsforsubdomains'] = 'PHP-Config für alle Subdomains übernehmen:';
 $lng['serversettings']['phpsettingsforsubdomains']['description'] = 'Wenn ja, wird die gewählte PHP-Config für alle Subdomains übernommen';
 $lng['serversettings']['leapiversion']['title'] = "Wählen Sie die Let's Encrypt ACME Implementierung";
-$lng['serversettings']['leapiversion']['description'] = "Wählen Sie zwischen ACME v1 und ACME v2 Implementierung von Let's Encrypt.";
-$lng['error']['nowildcardwithletsencryptv2'] = 'Let\'s Encrypt kann in ACME v2 Wildcard-Domains nur via DNS validieren, sorry. Bitte den ServerAlias auf WWW setzen oder deaktivieren';
+$lng['serversettings']['leapiversion']['description'] = "Aktuell unterstützt froxlor lediglich die ACME v2 Implementierung von Let's Encrypt.";
 $lng['admin']['phpsettings']['pass_authorizationheader'] = 'Füge "-pass-header Authorization" / "CGIPassAuth On" in Vhosts ein';
 $lng['serversettings']['ssl']['ssl_protocols']['title'] = 'SSL Protokollversion festlegen';
-$lng['serversettings']['ssl']['ssl_protocols']['description'] = 'Dies ist eine Liste von SSL/TLS Protokollversionen die genutzt werden sollen (oder auch nicht genutzt werden sollen), wenn SSL verwendet wird. <b>Hinweis:</b> Ältere Browser sind möglicherweise nicht vollständig zum neusten Protokoll kompatibel.<br /><br /><b>Standard-Wert ist:</b><pre>TLSv1, TLSv1.2</pre>';
+$lng['serversettings']['ssl']['ssl_protocols']['description'] = 'Dies ist eine Liste von SSL/TLS Protokollversionen die genutzt werden sollen (oder auch nicht genutzt werden sollen), wenn SSL verwendet wird. <b>Hinweis:</b> Ältere Browser sind möglicherweise nicht vollständig zum neusten Protokoll kompatibel.<br /><br /><b>Standard-Wert ist:</b><pre>TLSv1.2</pre>';
 $lng['serversettings']['phpfpm_settings']['limit_extensions']['title'] = 'Erlaubte Dateiendungen';
 $lng['serversettings']['phpfpm_settings']['limit_extensions']['description'] = 'Beschränkt die Dateierweiterungen des Haupt-Skripts, das FPM zu parsen erlaubt. Dies kann Konfigurationsfehler auf der Webserverseite verhindern. Sie sollten FPM nur auf .php Erweiterungen beschränken, um zu verhindern, dass bösartige Nutzter andere Erweiterungen verwenden, um PHP Code auszuführen. Standardwert: .php';
 $lng['phpfpm']['ini_flags'] = 'Mögliche <strong>php_flag</strong>s für die php.ini. Pro Zeile eine Direktive';
@@ -1674,7 +1688,7 @@ $lng['apikeys']['valid_until_help'] = 'Datum Gültigkeitsende, Format JJJJ-MM-TT
 $lng['serversettings']['enable_api']['title'] = 'Aktiviere externe API Nutzung';
 $lng['serversettings']['enable_api']['description'] = 'Um die froxlor API nutzen zu können, muss diese Option aktiviert sein. Für detaillierte Informationen siehe <a href="https://api.froxlor.org/" target="_new">https://api.froxlor.org/</a>';
 $lng['serversettings']['dhparams_file']['title'] = 'DHParams Datei (Diffie–Hellman key exchange)';
-$lng['serversettings']['dhparams_file']['description'] = 'Wird eine dhparams.pem Datei hier angegeben, wir sie in die Webserver Konfiguration mit eingefügt.<br>Beispiel: /etc/apache2/ssl/dhparams.pem<br><br>Existiert die Datei nicht, wird sie wie folgt erstellt: <em>openssl dhparam -out /etc/apache2/ssl/dhparams.pem 4096<em>. Es wird empfohlen die Datei zu erstellen, bevor sie hier angegeben wird, da die Erstellung längere Zeit in Anspruch nimmt und den Cronjob blockiert.';
+$lng['serversettings']['dhparams_file']['description'] = 'Wird eine dhparams.pem Datei hier angegeben, wir sie in die Webserver Konfiguration mit eingefügt.<br>Beispiel: /etc/ssl/webserver/dhparams.pem<br><br>Existiert die Datei nicht, wird sie wie folgt erstellt: <em>openssl dhparam -out /etc/ssl/webserver/dhparams.pem 4096<em>. Es wird empfohlen die Datei zu erstellen, bevor sie hier angegeben wird, da die Erstellung längere Zeit in Anspruch nimmt und den Cronjob blockiert.';
 $lng['2fa']['2fa'] = '2FA Optionen';
 $lng['2fa']['2fa_enabled'] = 'Aktiviere Zwei-Faktor Authentifizierung (2FA)';
 $lng['login']['2fa'] = 'Zwei-Faktor Authentifizierung (2FA)';
@@ -1698,6 +1712,7 @@ $lng['panel']['system_is_configured'] = 'Das System ist bereits konfiguriert';
 $lng['panel']['settings_before_configuration'] = 'Stelle sicher, dass die Einstellungen angepasst wurden bevor die Dienste konfiguriert werden.';
 $lng['panel']['alternative_cmdline_config'] = 'Alternativ, führe den folgenden Befehl als root-Benutzer auf der Shell aus, um die Dienste automatisch zu konfigurieren.';
 $lng['tasks']['remove_pdns_domain'] = 'Lösche Domain %s von PowerDNS Datenbank';
+$lng['tasks']['remove_ssl_domain'] = 'Lösche SSL Dateien von Domain %s';
 $lng['admin']['novhostcontainer'] = '<br><br><small class="red">Keine der IPs und Ports hat die Option "' . $lng['admin']['ipsandports']['create_vhostcontainer'] . '" aktiviert, einige Einstellungen sind daher nicht verfügbar.</small>';
 $lng['serversettings']['errorlog_level']['title'] = 'Ausführlichkeit des Fehlerprotokolls';
 $lng['serversettings']['errorlog_level']['description'] = 'Steuert die Ausführlichkeit des Fehlerprotokolls. Voreinstellung ist "warn" bei Apache und "error" bei Nginx.';
@@ -1705,3 +1720,45 @@ $lng['serversettings']['letsencryptecc']['title'] = "ECC / ECDSA Zertifikate aus
 $lng['serversettings']['letsencryptecc']['description'] = "Wenn eine Schlüsselgröße ausgewählt wird, werden ECC / ECDSA Zertifikate erstellt";
 $lng['serversettings']['froxloraliases']['title'] = "Domain Aliase für Froxlor Vhost";
 $lng['serversettings']['froxloraliases']['description'] = "Komma getrennte Liste von Domains, welche als Server Alias zum Froxlor Vhost hinzugefügt werden";
+
+$lng['serversettings']['ssl']['tlsv13_cipher_list']['title'] = 'Explizite TLSv1.3 Ciphers, wenn genutzt';
+$lng['serversettings']['ssl']['tlsv13_cipher_list']['description'] = 'Dies ist eine Liste von Ciphers, die genutzt werden sollen (oder auch nicht genutzt werden sollen), wenn eine TLSv1.3 Verbindung hergestellt werden soll. Eine Liste aller Ciphers und wie diese hinzugefügt/ausgeschlossen werden ist <a href="https://wiki.openssl.org/index.php/TLS1.3">der Dokumentation für TLSv1.3</a> zu entnehmen.<br /><br /><b>Standard-Wert ist leer</b>';
+$lng['usersettings']['api_allowed']['title'] = 'Erlaube API Zugriff';
+$lng['usersettings']['api_allowed']['description'] = 'Wenn in den Einstellungen aktiviert, kann der Benutzer API Schlüssel erstellen und auf die froxlor API Zugreifen';
+$lng['usersettings']['api_allowed']['notice'] = 'API Zugriff ist für dieses Konto deaktiviert.';
+$lng['serversettings']['default_sslvhostconf']['title'] = 'Standard SSL vHost-Einstellungen';
+$lng['serversettings']['includedefault_sslvhostconf'] = 'Nicht-SSL vHost-Einstellungen in SSL-vHost inkludieren';
+$lng['admin']['ownsslvhostsettings'] = 'Eigene SSL vHost-Einstellungen';
+$lng['admin']['ipsandports']['ssl_default_vhostconf_domain'] = 'Standard SSL vHost-Einstellungen für jeden Domain-Container';
+$lng['customer']['total_diskspace'] = 'Gesamtspeicherplatz';
+$lng['admin']['domain_override_tls'] = 'Überschreibe System TLS Einstellungen';
+$lng['domains']['isaliasdomainof'] = 'Ist Aliasdomain für %s';
+$lng['serversettings']['apply_specialsettings_default']['title'] = 'Standardwert für "' . $lng['admin']['specialsettingsforsubdomains'] . "' Einstellung beim Bearbeiten einer Domain";
+$lng['serversettings']['apply_phpconfigs_default']['title'] = 'Standardwert für "' . $lng['admin']['phpsettingsforsubdomains'] . "' Einstellung beim Bearbeiten einer Domain";
+$lng['admin']['domain_sslenabled'] = 'Aktiviere Nutzung von SSL';
+$lng['admin']['domain_honorcipherorder'] = 'Bevorzuge die serverseitige Cipher Reihenfolge, Standardwert <strong>nein</strong>';
+$lng['admin']['domain_sessiontickets'] = 'Aktiviere TLS Sessiontickets (RFC 5077), Standardwert <strong>ja</strong>';
+
+$lng['admin']['domain_sessionticketsenabled']['title'] = 'Aktiviere Nutzung von TLS Sessiontickets systemweit';
+$lng['admin']['domain_sessionticketsenabled']['description'] = 'Standardwert <strong>yes</strong><br>Erfordert apache-2.4.11+ oder nginx-1.5.9+';
+
+$lng['serversettings']['phpfpm_settings']['restart_note'] = 'Achtung: Der Code wird nicht auf Fehler geprüft. Bei etwaigen Fehlern könnte der PHP-FPM-Prozess nicht mehr starten!';
+$lng['serversettings']['phpfpm_settings']['custom_config']['title'] = 'Benutzerdefinierte Konfiguration';
+$lng['serversettings']['phpfpm_settings']['custom_config']['description'] = 'Füge eine benutzerdefinierte Einstellungen zur PHP-FPM Instanz hinzu, beispielsweise <i>pm.status_path = /status</i> für Monitoring. Unten ersichtliche Variablen können verwendet werden.' . ' <strong>' . $lng['serversettings']['phpfpm_settings']['restart_note'] . '</strong>';
+
+$lng['serversettings']['awstats']['logformat']['title'] = 'LogFormat Einstellung';
+$lng['serversettings']['awstats']['logformat']['description'] = 'Wenn ein benutzerdefiniertes LogFormat beim Webserver verwendet wird, muss LogFormat von awstats ebenso angepasst werden.<br/>Standard ist 1. Für weitere Informationen siehe Dokumentation unter <a target="_blank" href="https://awstats.sourceforge.io/docs/awstats_config.html#LogFormat">hier</a>.';
+$lng['error']['cannotdeletesuperadmin'] = 'Der erste Administrator kann nicht gelöscht werden.';
+$lng['error']['no_wwwcnamae_ifwwwalias'] = 'Es kann kein CNAME Eintrag für "www" angelegt werden, da die Domain einen www-Alias aktiviert hat. Ändere diese Einstellung auf "Kein Alias" oder "Wildcard Alias"';
+$lng['serversettings']['hide_incompatible_settings'] = 'Inkompatible Einstellungen ausblenden';
+
+$lng['serversettings']['soaemail'] = 'Mail-Adresse für SOA-Einträge (verwendet Panel-Absender-Name der Panel-Einstellungen falls leer)';
+$lng['imprint'] = 'Impressum';
+$lng['serversettings']['imprint_url']['title'] = 'URL zum Impressum';
+$lng['serversettings']['imprint_url']['description'] = 'Die URL zur Impressums-Seite. Der Link ist auf der Login-Seite und wenn eingeloggt, in der Fußzeile sichtbar.';
+$lng['terms'] = 'AGB';
+$lng['serversettings']['terms_url']['title'] = 'URL zu den AGB';
+$lng['serversettings']['terms_url']['description'] = 'Die URL zur AGB-Seite. Der Link ist auf der Login-Seite und wenn eingeloggt, in der Fußzeile sichtbar.';
+$lng['privacy'] = 'Datenschutzerklärung';
+$lng['serversettings']['privacy_url']['title'] = 'URL zur Datenschutzerklärung';
+$lng['serversettings']['privacy_url']['description'] = 'Die URL zur Datenschutzerklärungs-Seite. Der Link ist auf der Login-Seite und wenn eingeloggt, in der Fußzeile sichtbar.';

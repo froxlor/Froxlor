@@ -406,11 +406,6 @@ allow-axfr-ips=127.0.0.0/8,::1,<NAMESERVERS_IP>
 # allow-dnsupdate-from=127.0.0.0/8,::1
 
 #################################
-# allow-recursion	List of subnets that are allowed to recurse
-#
-allow-recursion=127.0.0.1
-
-#################################
 # also-notify	When notifying a domain, also notify these nameservers
 #
 # also-notify=
@@ -751,16 +746,6 @@ module-dir=/usr/lib/powerdns/pdns/
 # receiver-threads=1
 
 #################################
-# recursive-cache-ttl	Seconds to store packets for recursive queries in the PacketCache
-#
-# recursive-cache-ttl=10
-
-#################################
-# recursor	If recursion is desired, IP address of a recursing nameserver
-#
-# recursor=no
-
-#################################
 # retrieval-threads	Number of AXFR-retrieval threads for slave operation
 #
 # retrieval-threads=2
@@ -948,11 +933,6 @@ allow-axfr-ips=127.0.0.0/8,::1,<NAMESERVERS_IP>
 # allow-dnsupdate-from	A global setting to allow DNS updates from these IP ranges.
 #
 # allow-dnsupdate-from=127.0.0.0/8,::1
-
-#################################
-# allow-recursion	List of subnets that are allowed to recurse
-#
-allow-recursion=127.0.0.1
 
 #################################
 # also-notify	When notifying a domain, also notify these nameservers
@@ -1295,16 +1275,6 @@ module-dir=/usr/lib/powerdns/pdns/
 # receiver-threads=1
 
 #################################
-# recursive-cache-ttl	Seconds to store packets for recursive queries in the PacketCache
-#
-# recursive-cache-ttl=10
-
-#################################
-# recursor	If recursion is desired, IP address of a recursing nameserver
-#
-# recursor=no
-
-#################################
 # retrieval-threads	Number of AXFR-retrieval threads for slave operation
 #
 # retrieval-threads=2
@@ -1504,7 +1474,7 @@ user = <SQL_UNPRIVILEGED_USER>
 password = <SQL_UNPRIVILEGED_PASSWORD>
 dbname = <SQL_DB>
 hosts = <SQL_HOST>
-query = SELECT destination FROM mail_virtual WHERE email = '%s' AND trim(destination) <> ''
+query = SELECT destination FROM mail_virtual AS v, panel_customers AS c WHERE c.customerid = v.customerid AND c.deactivated = 0 AND v.email = '%s' AND trim(v.destination) <> '' 
 ]]>
 							</content>
 						</file>
@@ -3687,21 +3657,7 @@ account     required    pam_mysql.so user=<SQL_UNPRIVILEGED_USER> passwd=<SQL_UN
 				<!-- Cronjob -->
 				<daemon name="cron" title="Cronjob for froxlor"
 					mandatory="true">
-					<file name="/etc/cron.d/froxlor" chown="root:0" chmod="0640">
-						<content><![CDATA[
-#
-# Set PATH, otherwise restart-scripts won't find start-stop-daemon
-#
-PATH=/sbin:/bin:/usr/sbin:/usr/bin
-#
-# Regular cron jobs for the froxlor package
-#
-# Please check that all following paths are correct
-#
-*/5 * * * *	root	/usr/bin/nice -n 5 /usr/bin/php -q <BASE_PATH>scripts/froxlor_master_cronjob.php
-]]>
-						</content>
-					</file>
+					<command><![CDATA[/usr/bin/php <BASE_PATH>scripts/froxlor_master_cronjob.php --run-task 99]]></command>
 					<command><![CDATA[{{settings.system.crondreload}}]]></command>
 				</daemon>
 				<!-- AWstats -->
@@ -3820,8 +3776,8 @@ aliases:     files
 #
 <CUSTOMER_LOGS>*.log {
   missingok
-  weekly
-  rotate 4
+  daily
+  rotate 7
   compress
   delaycompress
   notifempty
@@ -3869,7 +3825,7 @@ aliases:     files
 					</commands>
 					<!-- instead of just restarting apache, we let the cronjob do all the 
 						dirty work -->
-					<command><![CDATA[php {{const.\Froxlor\Froxlor::getInstallDir()}}/scripts/froxlor_master_cronjob.php --force]]></command>
+					<command><![CDATA[php {{const.install_dir}}scripts/froxlor_master_cronjob.php --force]]></command>
 				</daemon>
 				<!-- PHP-FPM -->
 				<daemon name="php-fpm"
@@ -3908,7 +3864,7 @@ aliases:     files
 					</commands>
 					<!-- instead of just restarting apache, we let the cronjob do all the 
 						dirty work -->
-					<command><![CDATA[php {{const.\Froxlor\Froxlor::getInstallDir()}}/scripts/froxlor_master_cronjob.php --force]]></command>
+					<command><![CDATA[php {{const.install_dir}}scripts/froxlor_master_cronjob.php --force]]></command>
 				</daemon>
 			</service>
 		</services>

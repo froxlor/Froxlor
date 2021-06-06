@@ -36,9 +36,7 @@ class WebserverBase
 				`d`.`phpsettingid`, `c`.`adminid`, `c`.`guid`, `c`.`email`,
 				`c`.`documentroot` AS `customerroot`, `c`.`deactivated`,
 				`c`.`phpenabled` AS `phpenabled_customer`,
-				`d`.`phpenabled` AS `phpenabled_vhost`,
-				`d`.`mod_fcgid_starter`,`d`.`mod_fcgid_maxrequests`,
-				`d`.`ocsp_stapling`
+				`d`.`phpenabled` AS `phpenabled_vhost`
 				FROM `" . TABLE_PANEL_DOMAINS . "` `d`
 
 				LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`)

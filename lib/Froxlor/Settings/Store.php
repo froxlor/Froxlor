@@ -27,29 +27,58 @@ class Store
 		$returnvalue = self::storeSettingField($fieldname, $fielddata, $newfieldvalue);
 
 		if ($returnvalue !== false && is_array($fielddata) && isset($fielddata['settinggroup']) && $fielddata['settinggroup'] == 'system' && isset($fielddata['varname']) && $fielddata['varname'] == 'defaultip') {
+			self::updateStdSubdomainDefaultIp($newfieldvalue, $defaultips_old);
+		}
 
-			$customerstddomains_result_stmt = Database::prepare("
-				SELECT `standardsubdomain` FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `standardsubdomain` <> '0'
-			");
-			Database::pexecute($customerstddomains_result_stmt);
+		return $returnvalue;
+	}
 
-			$ids = array();
+	public static function storeSettingDefaultSslIp($fieldname, $fielddata, $newfieldvalue)
+	{
+		$defaultips_old = Settings::Get('system.defaultsslip');
 
-			while ($customerstddomains_row = $customerstddomains_result_stmt->fetch(\PDO::FETCH_ASSOC)) {
-				$ids[] = (int) $customerstddomains_row['standardsubdomain'];
+		$returnvalue = self::storeSettingField($fieldname, $fielddata, $newfieldvalue);
+
+		if ($returnvalue !== false && is_array($fielddata) && isset($fielddata['settinggroup']) && $fielddata['settinggroup'] == 'system' && isset($fielddata['varname']) && $fielddata['varname'] == 'defaultsslip') {
+			self::updateStdSubdomainDefaultIp($newfieldvalue, $defaultips_old);
+		}
+
+		return $returnvalue;
+	}
+
+	private static function updateStdSubdomainDefaultIp($newfieldvalue, $defaultips_old)
+	{
+		// update standard-subdomain of customer if exists
+		$customerstddomains_result_stmt = Database::prepare("
+			SELECT `standardsubdomain` FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `standardsubdomain` <> '0'
+		");
+		Database::pexecute($customerstddomains_result_stmt);
+
+		$ids = array();
+		while ($customerstddomains_row = $customerstddomains_result_stmt->fetch(\PDO::FETCH_ASSOC)) {
+			$ids[] = (int) $customerstddomains_row['standardsubdomain'];
+		}
+
+		if (count($ids) > 0) {
+			$defaultips_new = explode(',', $newfieldvalue);
+
+			if (! empty($defaultips_old) && ! empty($newfieldvalue)) {
+				$in_value = $defaultips_old . ", " . $newfieldvalue;
+			} elseif (! empty($defaultips_old) && empty($newfieldvalue)) {
+				$in_value = $defaultips_old;
+			} else {
+				$in_value = $newfieldvalue;
 			}
 
-			if (count($ids) > 0) {
-				$defaultips_new = explode(',', $newfieldvalue);
+			// Delete the existing mappings linking to default IPs
+			$del_stmt = Database::prepare("
+				DELETE FROM `" . TABLE_DOMAINTOIP . "`
+				WHERE `id_domain` IN (" . implode(', ', $ids) . ")
+				AND `id_ipandports` IN (" . $in_value . ")
+			");
+			Database::pexecute($del_stmt);
 
-				// Delete the existing mappings linking to default IPs
-				$del_stmt = Database::prepare("
-					DELETE FROM `" . TABLE_DOMAINTOIP . "`
-					WHERE `id_domain` IN (" . implode(', ', $ids) . ")
-					AND `id_ipandports` IN (" . $defaultips_old . ", " . $newfieldvalue . ")
-				");
-				Database::pexecute($del_stmt);
-
+			if (count($defaultips_new) > 0) {
 				// Insert the new mappings
 				$ins_stmt = Database::prepare("
 					INSERT INTO `" . TABLE_DOMAINTOIP . "`
@@ -66,68 +95,6 @@ class Store
 				}
 			}
 		}
-
-		return $returnvalue;
-	}
-
-	public static function storeSettingDefaultSslIp($fieldname, $fielddata, $newfieldvalue)
-	{
-		$defaultips_old = Settings::Get('system.defaultsslip');
-
-		$returnvalue = self::storeSettingField($fieldname, $fielddata, $newfieldvalue);
-
-		if ($returnvalue !== false && is_array($fielddata) && isset($fielddata['settinggroup']) && $fielddata['settinggroup'] == 'system' && isset($fielddata['varname']) && $fielddata['varname'] == 'defaultsslip') {
-
-			$customerstddomains_result_stmt = Database::prepare("
-				SELECT `standardsubdomain` FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `standardsubdomain` <> '0'
-			");
-			Database::pexecute($customerstddomains_result_stmt);
-
-			$ids = array();
-
-			while ($customerstddomains_row = $customerstddomains_result_stmt->fetch(\PDO::FETCH_ASSOC)) {
-				$ids[] = (int) $customerstddomains_row['standardsubdomain'];
-			}
-
-			if (count($ids) > 0) {
-				$defaultips_new = explode(',', $newfieldvalue);
-
-				if (! empty($defaultips_old) && ! empty($newfieldvalue)) {
-					$in_value = $defaultips_old . ", " . $newfieldvalue;
-				} elseif (! empty($defaultips_old) && empty($newfieldvalue)) {
-					$in_value = $defaultips_old;
-				} else {
-					$in_value = $newfieldvalue;
-				}
-
-				// Delete the existing mappings linking to default IPs
-				$del_stmt = Database::prepare("
-					DELETE FROM `" . TABLE_DOMAINTOIP . "`
-					WHERE `id_domain` IN (" . implode(', ', $ids) . ")
-					AND `id_ipandports` IN (" . $in_value . ")
-				");
-				Database::pexecute($del_stmt);
-
-				if (count($defaultips_new) > 0) {
-					// Insert the new mappings
-					$ins_stmt = Database::prepare("
-					INSERT INTO `" . TABLE_DOMAINTOIP . "`
-					SET `id_domain` = :domainid, `id_ipandports` = :ipandportid
-				");
-
-					foreach ($ids as $id) {
-						foreach ($defaultips_new as $defaultip_new) {
-							Database::pexecute($ins_stmt, array(
-								'domainid' => $id,
-								'ipandportid' => $defaultip_new
-							));
-						}
-					}
-				}
-			}
-		}
-
-		return $returnvalue;
 	}
 
 	/**
@@ -143,25 +110,24 @@ class Store
 	 */
 	public static function storeSettingDefaultTheme($fieldname, $fielddata, $newfieldvalue)
 	{
-
 		// first save the setting itself
 		$returnvalue = self::storeSettingField($fieldname, $fielddata, $newfieldvalue);
 
 		if ($returnvalue !== false && is_array($fielddata) && isset($fielddata['settinggroup']) && $fielddata['settinggroup'] == 'panel' && isset($fielddata['varname']) && $fielddata['varname'] == 'default_theme') {
-			// now, if changing themes is disabled we recursivly set
+			// now, if changing themes is disabled we manually set
 			// the new theme (customers and admin, depending on settings)
 			if (Settings::Get('panel.allow_theme_change_customer') == '0') {
 				$upd_stmt = Database::prepare("
-				UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `theme` = :theme
-			");
+					UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `theme` = :theme
+				");
 				Database::pexecute($upd_stmt, array(
 					'theme' => $newfieldvalue
 				));
 			}
 			if (Settings::Get('panel.allow_theme_change_admin') == '0') {
 				$upd_stmt = Database::prepare("
-				UPDATE `" . TABLE_PANEL_ADMINS . "` SET `theme` = :theme
-			");
+					UPDATE `" . TABLE_PANEL_ADMINS . "` SET `theme` = :theme
+				");
 				Database::pexecute($upd_stmt, array(
 					'theme' => $newfieldvalue
 				));
@@ -204,17 +170,13 @@ class Store
 
 	public static function storeSettingFieldInsertBindTask($fieldname, $fielddata, $newfieldvalue)
 	{
-		if (is_array($fielddata) && isset($fielddata['settinggroup']) && $fielddata['settinggroup'] != '' && isset($fielddata['varname']) && $fielddata['varname'] != '') {
-			if (Settings::Set($fielddata['settinggroup'] . '.' . $fielddata['varname'], $newfieldvalue) !== false) {
-				return array(
-					$fielddata['settinggroup'] . '.' . $fielddata['varname'] => $newfieldvalue
-				);
-			} else {
-				return false;
-			}
-		} else {
-			return false;
+		// first save the setting itself
+		$returnvalue = self::storeSettingField($fieldname, $fielddata, $newfieldvalue);
+
+		if ($returnvalue !== false) {
+			\Froxlor\System\Cronjob::inserttask('4');
 		}
+		return $returnvalue;
 	}
 
 	public static function storeSettingHostname($fieldname, $fielddata, $newfieldvalue)
@@ -280,8 +242,8 @@ class Store
 			$mysql_access_host_array = array_map('trim', explode(',', Settings::Get('system.mysql_access_host')));
 			$mysql_access_host_array[] = $newfieldvalue;
 			$mysql_access_host_array = array_unique(\Froxlor\PhpHelper::arrayTrim($mysql_access_host_array));
-			$mysql_access_host = implode(',', $mysql_access_host_array);
 			\Froxlor\Database\DbManager::correctMysqlUsers($mysql_access_host_array);
+			$mysql_access_host = implode(',', $mysql_access_host_array);
 			Settings::Set('system.mysql_access_host', $mysql_access_host);
 		}
 
@@ -290,6 +252,28 @@ class Store
 
 	public static function storeSettingMysqlAccessHost($fieldname, $fielddata, $newfieldvalue)
 	{
+		$ips = $newfieldvalue;
+		// Convert cidr to netmask for mysql, if needed be
+		if (strpos($ips, ',') !== false) {
+			$ips = explode(',', $ips);
+		}
+		if (is_array($ips) && count($ips) > 0) {
+			$newfieldvalue = [];
+			foreach ($ips as $ip) {
+				$org_ip = $ip;
+				$ip_cidr = explode("/", $ip);
+				if (count($ip_cidr) === 2) {
+					$ip = $ip_cidr[0];
+					if (strlen($ip_cidr[1]) <= 2) {
+						$ip_cidr[1] = \Froxlor\Validate\Validate::cidr2NetmaskAddr($org_ip);
+					}
+					$newfieldvalue[] = $ip . '/' . $ip_cidr[1];
+				} else {
+					$newfieldvalue[] = $org_ip;
+				}
+			}
+			$newfieldvalue = implode(',', $newfieldvalue);
+		}
 		$returnvalue = self::storeSettingField($fieldname, $fielddata, $newfieldvalue);
 
 		if ($returnvalue !== false && is_array($fielddata) && isset($fielddata['settinggroup']) && $fielddata['settinggroup'] == 'system' && isset($fielddata['varname']) && $fielddata['varname'] == 'mysql_access_host') {
@@ -309,9 +293,11 @@ class Store
 				'cleanMySQLAccessHost'
 			), $mysql_access_host_array);
 
-			$mysql_access_host_array = array_unique($mysql_access_host_array);
+			$mysql_access_host_array = array_unique(\Froxlor\PhpHelper::arrayTrim($mysql_access_host_array));
 			$newfieldvalue = implode(',', $mysql_access_host_array);
 			\Froxlor\Database\DbManager::correctMysqlUsers($mysql_access_host_array);
+			$mysql_access_host = implode(',', $mysql_access_host_array);
+			Settings::Set('system.mysql_access_host', $mysql_access_host);
 		}
 
 		return $returnvalue;
@@ -330,25 +316,9 @@ class Store
 		$returnvalue = self::storeSettingField($fieldname, $fielddata, $newfieldvalue);
 
 		if ($returnvalue !== false && is_array($fielddata) && isset($fielddata['settinggroup']) && $fielddata['settinggroup'] == 'catchall' && isset($fielddata['varname']) && $fielddata['varname'] == 'catchall_enabled' && $newfieldvalue == '0') {
-
-			$result_stmt = Database::query("
-				SELECT `id`, `email`, `email_full`, `iscatchall`  FROM `" . TABLE_MAIL_VIRTUAL . "`
-				WHERE `iscatchall` = '1'
+			Database::query("
+				UPDATE `" . TABLE_MAIL_VIRTUAL . "` SET `iscatchall` = '0' WHERE `iscatchall` = '1'
 			");
-
-			if (Database::num_rows() > 0) {
-
-				$upd_stmt = Database::prepare("
-					UPDATE `" . TABLE_MAIL_VIRTUAL . "` SET `email` = :email, `iscatchall` = '0' WHERE `id` = :id
-				");
-
-				while ($result_row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
-					Database::pexecute($upd_stmt, array(
-						'email' => $result_row['email_full'],
-						'id' => $result_row['id']
-					));
-				}
-			}
 		}
 
 		return $returnvalue;

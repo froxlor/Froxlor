@@ -1,11 +1,9 @@
 language: php
-
+dist: bionic
+services:
+  - docker
 php:
-#  - "5.4"
-#  - "5.6"
-  - "7.0"
-#  - "7.1"
-#  - "7.2"
+  - 7.3
 
 branches:
   only:
@@ -14,47 +12,53 @@ branches:
 
 matrix:
   include:
- #   - php: 5.6
- #     env: deps=highest
- #   - php: 5.4
- #     env: deps=lowest
-    - php: 7.0
-      env: deps=highest
-
-mysql:
-  database: froxlor010
-  username: root
-  encoding: utf8
+    - php: 7.3
+      env: "DOCKER_MYSQL_TYPE=mysql DOCKER_MYSQL_VERSION=5.6"
+    - php: 7.3
+      env: "DOCKER_MYSQL_TYPE=mysql DOCKER_MYSQL_VERSION=5.7"
+    - php: 7.3
+      env: "DOCKER_MYSQL_TYPE=mysql DOCKER_MYSQL_VERSION=8.0 STARTCMD='mysqld --default-authentication-plugin=mysql_native_password'"
+    - php: 7.3
+      env: "DOCKER_MYSQL_TYPE=mariadb DOCKER_MYSQL_VERSION=10.3"
+    - php: 7.3
+      env: "DOCKER_MYSQL_TYPE=mariadb DOCKER_MYSQL_VERSION=10.4"
 
 addons:
   apt:
     update: true
 
-# build.xml includes that
-#install:
-#  - composer install
+before_install:
+  - export MYSQL_DATABASE=froxlor010
+  - docker run -d --name mysql -e MYSQL_ROOT_PASSWORD=fr0xl0r.TravisCI -e MYSQL_DATABASE=$MYSQL_DATABASE -p 3306:3306 $DOCKER_MYSQL_TYPE:$DOCKER_MYSQL_VERSION $STARTCMD
+  - sudo apt-get install -y ant
+  - >
+    export tries=0;
+    export max_tries=20;
+    while [[ true ]]; do
+      tries=$((tries + 1));
+      echo "waiting for database server to start up... [$tries]";
+      sleep 5;
+      # Now see that today's table is there, which would indicate that the cron job ran.
+      mysql -h 127.0.0.1 --protocol=TCP -u root -pfr0xl0r.TravisCI -s -e 'SHOW VARIABLES LIKE "%version%";'
+      look_exit=$?;
+      if [[ "$look_exit" = "0" ]]; then echo "Database server successfully started"; break; fi;
+      if [[ "$tries" -ge "$max_tries" ]]; then echo "Database server did not start in time"; exit 1; break; fi;
+    done;
 
-service:
-  - mysql
-
-before_script:
-  - mysql -e 'CREATE DATABASE IF NOT EXISTS froxlor010'
-  - echo "USE mysql;\nUPDATE user SET password=PASSWORD('fr0xl0r.TravisCI') WHERE user='root';\nFLUSH PRIVILEGES;\n" | mysql -u root
-  - mysql -u root -pfr0xl0r.TravisCI froxlor010 < install/froxlor.sql
-  - mysql -u root -pfr0xl0r.TravisCI -e "CREATE USER 'froxlor010'@'localhost' IDENTIFIED BY 'fr0xl0r.TravisCI';"
-  - mysql -u root -pfr0xl0r.TravisCI -e "GRANT ALL ON froxlor010.* TO 'froxlor010'@'localhost';"
+install:
+  - mysql -h 127.0.0.1 --protocol=TCP -u root -pfr0xl0r.TravisCI -e "CREATE DATABASE IF NOT EXISTS froxlor010;"
+  - mysql -h 127.0.0.1 --protocol=TCP -u root -pfr0xl0r.TravisCI -e "CREATE USER 'froxlor010'@'%' IDENTIFIED BY 'fr0xl0r.TravisCI';"
+  - mysql -h 127.0.0.1 --protocol=TCP -u root -pfr0xl0r.TravisCI -e "GRANT ALL ON froxlor010.* TO 'froxlor010'@'%';"
+  - mysql -h 127.0.0.1 --protocol=TCP -u root -pfr0xl0r.TravisCI froxlor010 < install/froxlor.sql
 
 script:
-# sufficient for travis
-   - ant phpunit-no-coverage
-#  - ant full-build-parallel
-#      -Dpdepend=$(pwd)/vendor/bin/pdepend
-#      -Dphpmd=$(pwd)/vendor/bin/phpmd
-#      -Dphpcpd=$(pwd)/vendor/bin/phpcpd
-#      -Dphpcs=$(pwd)/vendor/bin/phpcs
-#      -Dphploc=$(pwd)/vendor/bin/phploc
-#      -Dphpdox=$(pwd)/vendor/bin/phpdox
-#      -Dphpunit=$(pwd)/vendor/bin/phpunit
+  - ant phpunit-no-coverage
 
 notifications:
-  irc: "irc.freenode.org#froxlor"
+  irc: "chat.freenode.net#froxlor"
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/bdf91d1c3f745e51f796
+    on_success: always
+    on_failure: always
+    on_start: never

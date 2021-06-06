@@ -16,7 +16,7 @@ use Froxlor\Api\Commands\Traffic;
 class TrafficTest extends TestCase
 {
 
-	public static function setUpBeforeClass()
+	public static function setUpBeforeClass(): void
 	{
 		$ins_stmt = Database::prepare("
 			INSERT INTO `" . TABLE_PANEL_TRAFFIC . "` SET
@@ -79,6 +79,10 @@ class TrafficTest extends TestCase
 		$this->assertEquals(1, $result['count']);
 		$http = 2 * (5 * 1024 * 1024 * 1024); // 2x 5 GB
 		$this->assertEquals($http, $result['list'][0]['http']);
+
+		$this->expectExceptionCode(303);
+		$this->expectExceptionMessage("You cannot count the traffic data list");
+		Traffic::getLocal($admin_userdata)->listingCount();
 	}
 
 	public function testAdminTrafficListSpecificDate()
@@ -107,6 +111,19 @@ class TrafficTest extends TestCase
 		$this->assertEquals(3, $result['list'][1]['customerid']);
 	}
 
+	public function testAdminTrafficListCustomersFilterCustomer()
+	{
+		global $admin_userdata;
+
+		$json_result = Traffic::getLocal($admin_userdata, array(
+			'customer_traffic' => 1,
+			'loginname' => 'test1'
+		))->listing();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(1, $result['count']);
+		$this->assertEquals(1, $result['list'][0]['customerid']);
+	}
+
 	public function testCustomerTrafficList()
 	{
 		global $admin_userdata;
@@ -120,6 +137,10 @@ class TrafficTest extends TestCase
 		$this->assertEquals(1, $result['count']);
 		$mail = 250 * 1024 * 1024; // 250 MB
 		$this->assertEquals($mail, $result['list'][0]['mail']);
+
+		$this->expectExceptionCode(303);
+		$this->expectExceptionMessage("You cannot count the traffic data list");
+		Traffic::getLocal($admin_userdata)->listingCount();
 	}
 
 	public function testAdminTrafficAdd()

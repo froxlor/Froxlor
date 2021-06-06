@@ -45,7 +45,7 @@ return array(
 					'settinggroup' => 'panel',
 					'varname' => 'default_theme',
 					'type' => 'option',
-					'default' => 'Froxlor',
+					'default' => 'Sparkle',
 					'option_mode' => 'one',
 					'option_options_method' => array(
 						'\\Froxlor\\UI\\Template',
@@ -265,7 +265,37 @@ return array(
 						'traffic.mail' => $lng['menue']['traffic']['traffic'] . " / Mail"
 					),
 					'save_method' => 'storeSettingField'
-				)
+				),
+				'panel_imprint_url' => array(
+					'label' => $lng['serversettings']['imprint_url'],
+					'settinggroup' => 'panel',
+					'varname' => 'imprint_url',
+					'type' => 'string',
+					'string_type' => 'url',
+					'string_emptyallowed' => true,
+					'default' => '',
+					'save_method' => 'storeSettingField'
+				),
+				'panel_terms_url' => array(
+					'label' => $lng['serversettings']['terms_url'],
+					'settinggroup' => 'panel',
+					'varname' => 'terms_url',
+					'type' => 'string',
+					'string_type' => 'url',
+					'string_emptyallowed' => true,
+					'default' => '',
+					'save_method' => 'storeSettingField'
+				),
+				'panel_privacy_url' => array(
+					'label' => $lng['serversettings']['privacy_url'],
+					'settinggroup' => 'panel',
+					'varname' => 'privacy_url',
+					'type' => 'string',
+					'string_type' => 'url',
+					'string_emptyallowed' => true,
+					'default' => '',
+					'save_method' => 'storeSettingField'
+				),
 			)
 		)
 	)

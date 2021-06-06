@@ -42,7 +42,7 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function add()
 	{
@@ -136,8 +136,65 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 		// types
 		if ($type == 'A' && filter_var($content, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === false) {
 			$errors[] = $this->lng['error']['dns_arec_noipv4'];
+		} elseif ($type == 'A') {
+			// check whether there is a CNAME-record for the same resource
+			foreach ($dom_entries as $existing_entries) {
+				if ($existing_entries['type'] == 'CNAME' && $existing_entries['record'] == $record) {
+					$errors[] = $this->lng['error']['dns_other_nomorerr'];
+					break;
+				}
+			}
 		} elseif ($type == 'AAAA' && filter_var($content, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) === false) {
 			$errors[] = $this->lng['error']['dns_aaaarec_noipv6'];
+		} elseif ($type == 'AAAA') {
+			// check whether there is a CNAME-record for the same resource
+			foreach ($dom_entries as $existing_entries) {
+				if ($existing_entries['type'] == 'CNAME' && $existing_entries['record'] == $record) {
+					$errors[] = $this->lng['error']['dns_other_nomorerr'];
+					break;
+				}
+			}
+		} elseif ($type == 'CAA' && ! empty($content)) {
+			$re = '/(?\'critical\'\d)\h*(?\'type\'iodef|issue|issuewild)\h*(?\'value\'(?\'issuevalue\'"(?\'domain\'(?=.{3,128}$)(?>(?>[a-zA-Z0-9]+[a-zA-Z0-9-]*[a-zA-Z0-9]+|[a-zA-Z0-9]+)\.)*(?>[a-zA-Z]{2,}|[a-zA-Z0-9]{2,}\.[a-zA-Z]{2,}))[;\h]*(?\'parameters\'(?>[a-zA-Z0-9]{1,60}=[a-zA-Z0-9]{1,60}\h*)+)?")|(?\'iodefvalue\'"(?\'url\'(mailto:.*|http:\/\/.*|https:\/\/.*))"))/';
+			preg_match($re, $content, $matches);
+
+			if (empty($matches)) {
+				$errors[] = $this->lng['error']['dns_content_invalid'];
+			} elseif (($matches['type'] == 'issue' || $matches['type'] == 'issuewild') && ! \Froxlor\Validate\Validate::validateDomain($matches['domain'])) {
+				$errors[] = $this->lng['error']['dns_content_invalid'];
+			} elseif ($matches['type'] == 'iodef' && ! \Froxlor\Validate\Validate::validateUrl($matches['url'])) {
+				$errors[] = $this->lng['error']['dns_content_invalid'];
+			} else {
+				$content = $matches[0];
+			}
+		} elseif ($type == 'CNAME' || $type == 'DNAME') {
+			// check for trailing dot
+			if (substr($content, - 1) == '.') {
+				// remove it for checks
+				$content = substr($content, 0, - 1);
+			} else {
+				// add domain name
+				$content .= '.' . $domain;
+			}
+			if (! \Froxlor\Validate\Validate::validateDomain($content, true)) {
+				$errors[] = $this->lng['error']['dns_cname_invaliddom'];
+			} else {
+				// check whether there are RR-records for the same resource
+				foreach ($dom_entries as $existing_entries) {
+					if (($existing_entries['type'] == 'A' || $existing_entries['type'] == 'AAAA' || $existing_entries['type'] == 'MX' || $existing_entries['type'] == 'NS') && $existing_entries['record'] == $record) {
+						$errors[] = $this->lng['error']['dns_cname_nomorerr'];
+						break;
+					}
+				}
+				// check www-alias setting
+				if ($result['wwwserveralias'] == '1' && $result['iswildcarddomain'] == '0' && $record == 'www') {
+					$errors[] = $this->lng['error']['no_wwwcnamae_ifwwwalias'];
+				}
+			}
+			// append trailing dot (again)
+			$content .= '.';
+		} elseif ($type == 'LOC' && ! empty($content)) {
+			$content = $content;
 		} elseif ($type == 'MX') {
 			if ($prio === null || $prio < 0) {
 				$errors[] = $this->lng['error']['dns_mx_prioempty'];
@@ -157,26 +214,8 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 						$errors[] = $this->lng['error']['dns_mx_noalias'];
 						break;
 					}
-				}
-			}
-			// append trailing dot (again)
-			$content .= '.';
-		} elseif ($type == 'CNAME') {
-			// check for trailing dot
-			if (substr($content, - 1) == '.') {
-				// remove it for checks
-				$content = substr($content, 0, - 1);
-			} else {
-				// add domain name
-				$content .= '.' . $domain;
-			}
-			if (! \Froxlor\Validate\Validate::validateDomain($content, true)) {
-				$errors[] = $this->lng['error']['dns_cname_invaliddom'];
-			} else {
-				// check whether there are RR-records for the same resource
-				foreach ($dom_entries as $existing_entries) {
-					if (($existing_entries['type'] == 'A' || $existing_entries['type'] == 'AAAA' || $existing_entries['type'] == 'MX' || $existing_entries['type'] == 'NS') && $existing_entries['record'] == $record) {
-						$errors[] = $this->lng['error']['dns_cname_nomorerr'];
+					elseif ($existing_entries['type'] == 'CNAME' && $existing_entries['record'] == $record) {
+						$errors[] = $this->lng['error']['dns_other_nomorerr'];
 						break;
 					}
 				}
@@ -191,12 +230,19 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			}
 			if (! \Froxlor\Validate\Validate::validateDomain($content)) {
 				$errors[] = $this->lng['error']['dns_ns_invaliddom'];
+			} else {
+				// check whether there is a CNAME-record for the same resource
+				foreach ($dom_entries as $existing_entries) {
+					if ($existing_entries['type'] == 'CNAME' && $existing_entries['record'] == $record) {
+						$errors[] = $this->lng['error']['dns_other_nomorerr'];
+						break;
+					}
+				}
 			}
 			// append trailing dot (again)
 			$content .= '.';
-		} elseif ($type == 'TXT' && ! empty($content)) {
-			// check that TXT content is enclosed in " "
-			$content = \Froxlor\Dns\Dns::encloseTXTContent($content);
+		} elseif ($type == 'RP' && ! empty($content)) {
+			$content = $content;
 		} elseif ($type == 'SRV') {
 			if ($prio === null || $prio < 0) {
 				$errors[] = $this->lng['error']['dns_srv_prioempty'];
@@ -232,6 +278,11 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			if (substr($content, - 1) != '.') {
 				$content .= '.';
 			}
+		} elseif ($type == 'SSHFP' && ! empty($content)) {
+			$content = $content;
+		} elseif ($type == 'TXT' && ! empty($content)) {
+			// check that TXT content is enclosed in " "
+			$content = \Froxlor\Dns\Dns::encloseTXTContent($content);
 		}
 
 		$new_entry = array(
@@ -290,10 +341,10 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			$result = $this->apiCall('DomainZones.get', array(
 				'id' => $id
 			));
-			return $this->response(200, "successfull", $result);
+			return $this->response(200, "successful", $result);
 		}
 		// return $errors
-		throw new \Exception(implode("\n", $errors));
+		throw new \Exception(implode("\n", $errors), 406);
 	}
 
 	/**
@@ -306,7 +357,7 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function get()
 	{
@@ -341,7 +392,7 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 		$zonefile = (string) $zone;
 
 		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] get dns-zone for '" . $result['domain'] . "'");
-		return $this->response(200, "successfull", explode("\n", $zonefile));
+		return $this->response(200, "successful", explode("\n", $zonefile));
 	}
 
 	/**
@@ -354,12 +405,99 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 	}
 
 	/**
-	 * You cannot list dns zones.
-	 * To get all domains use Domains.listing() or SubDomains.listing()
+	 * List all entry records of a given domain by either id or domainname
+	 *
+	 * @param int $id
+	 *        	optional, the domain id
+	 * @param string $domainname
+	 *        	optional, the domain name
+	 * @param array $sql_search
+	 *        	optional array with index = fieldname, and value = array with 'op' => operator (one of <, > or =), LIKE is used if left empty and 'value' => searchvalue
+	 * @param int $sql_limit
+	 *        	optional specify number of results to be returned
+	 * @param int $sql_offset
+	 *        	optional specify offset for resultset
+	 * @param array $sql_orderby
+	 *        	optional array with index = fieldname and value = ASC|DESC to order the resultset by one or more fields
+	 *
+	 * @access admin, customer
+	 * @throws \Exception
+	 * @return bool
 	 */
 	public function listing()
 	{
-		throw new \Exception('You cannot list dns zones. To get all domains use Domains.listing() or SubDomains.listing()', 303);
+		if (Settings::Get('system.dnsenabled') != '1') {
+			throw new \Exception("DNS service not enabled on this system", 405);
+		}
+
+		if ($this->isAdmin() == false && $this->getUserDetail('dnsenabled') != '1') {
+			throw new \Exception("You cannot access this resource", 405);
+		}
+
+		$id = $this->getParam('id', true, 0);
+		$dn_optional = ($id <= 0 ? false : true);
+		$domainname = $this->getParam('domainname', $dn_optional, '');
+
+		// get requested domain
+		$result = $this->apiCall('SubDomains.get', array(
+			'id' => $id,
+			'domainname' => $domainname
+		));
+		$id = $result['id'];
+		$query_fields = array();
+		$sel_stmt = Database::prepare("SELECT * FROM `" . TABLE_DOMAIN_DNS . "` WHERE `domain_id` = :did" . $this->getSearchWhere($query_fields, true) . $this->getOrderBy() . $this->getLimit());
+		$query_fields['did'] = $id;
+		Database::pexecute($sel_stmt, $query_fields, true, true);
+		$result = [];
+		while ($row = $sel_stmt->fetch(\PDO::FETCH_ASSOC)) {
+			$result[] = $row;
+		}
+		return $this->response(200, "successful", array(
+			'count' => count($result),
+			'list' => $result
+		));
+	}
+
+	/**
+	 * returns the total number of domainzone-entries for given domain
+	 *
+	 * @param int $id
+	 *        	optional, the domain id
+	 * @param string $domainname
+	 *        	optional, the domain name
+	 *        	
+	 * @access admin, customer
+	 * @throws \Exception
+	 * @return bool
+	 */
+	public function listingCount()
+	{
+		if (Settings::Get('system.dnsenabled') != '1') {
+			throw new \Exception("DNS service not enabled on this system", 405);
+		}
+
+		if ($this->isAdmin() == false && $this->getUserDetail('dnsenabled') != '1') {
+			throw new \Exception("You cannot access this resource", 405);
+		}
+
+		$id = $this->getParam('id', true, 0);
+		$dn_optional = ($id <= 0 ? false : true);
+		$domainname = $this->getParam('domainname', $dn_optional, '');
+
+		// get requested domain
+		$result = $this->apiCall('SubDomains.get', array(
+			'id' => $id,
+			'domainname' => $domainname
+		));
+		$id = $result['id'];
+
+		$sel_stmt = Database::prepare("SELECT COUNT(*) as num_dns FROM `" . TABLE_DOMAIN_DNS . "` WHERE `domain_id` = :did");
+		$result = Database::pexecute_first($sel_stmt, array(
+			'did' => $id
+		), true, true);
+		if ($result) {
+			return $this->response(200, "successful", $result['num_dns']);
+		}
 	}
 
 	/**
@@ -405,8 +543,8 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 		if ($del_stmt->rowCount() > 0) {
 			// re-generate bind configs
 			\Froxlor\System\Cronjob::inserttask('4');
-			return $this->response(200, "successfull", true);
+			return $this->response(200, "successful", true);
 		}
-		return $this->response(304, "successfull", true);
+		return $this->response(304, "successful", true);
 	}
 }

@@ -178,6 +178,14 @@ class Cronjob
 				'type' => '11',
 				'data' => $data
 			));
+		} elseif ($type == '12' && $param1 != '') {
+			$data = array();
+			$data['domain'] = $param1;
+			$data = json_encode($data);
+			Database::pexecute($ins_stmt, array(
+				'type' => '12',
+				'data' => $data
+			));
 		} elseif ($type == '20' && is_array($param1)) {
 			$data = json_encode($param1);
 			Database::pexecute($ins_stmt, array(
@@ -277,6 +285,9 @@ class Cronjob
 			} elseif ($row['type'] == '11') {
 				// remove domain from pdns database if used
 				$task_desc = sprintf($lng['tasks']['remove_pdns_domain'], $row['data']['domain']);
+			} elseif ($row['type'] == '12') {
+				// remove domains ssl files
+				$task_desc = sprintf($lng['tasks']['remove_ssl_domain'], $row['data']['domain']);
 			} elseif ($row['type'] == '20') {
 				// deleting user-files
 				$loginname = '';
@@ -349,5 +360,15 @@ class Cronjob
 		}
 
 		die($message);
+	}
+
+	public static function updateLastRunOfCron($cronname)
+	{
+		$upd_stmt = Database::prepare("
+			UPDATE `" . TABLE_PANEL_CRONRUNS . "` SET `lastrun` = UNIX_TIMESTAMP() WHERE `cronfile` = :cron;
+		");
+		Database::pexecute($upd_stmt, array(
+			'cron' => $cronname
+		));
 	}
 }

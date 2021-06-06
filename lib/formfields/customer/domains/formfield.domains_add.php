@@ -83,6 +83,19 @@ return array(
 				'image' => 'icons/domain_add.png',
 				'visible' => \Froxlor\Settings::Get('system.use_ssl') == '1' ? ($ssl_ipsandports != '' ? true : false) : false,
 				'fields' => array(
+					'sslenabled' => array(
+						'label' => $lng['admin']['domain_sslenabled'],
+						'type' => 'checkbox',
+						'values' => array(
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array(
+							'1'
+						)
+					),
 					'ssl_redirect' => array(
 						'label' => $lng['domains']['ssl_redirect']['title'],
 						'desc' => $lng['domains']['ssl_redirect']['description'],
@@ -99,6 +112,19 @@ return array(
 						'visible' => (\Froxlor\Settings::Get('system.leenabled') == '1' ? true : false),
 						'label' => $lng['customer']['letsencrypt']['title'],
 						'desc' => $lng['customer']['letsencrypt']['description'],
+						'type' => 'checkbox',
+						'values' => array(
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array()
+					),
+					'http2' => array(
+						'visible' => ($ssl_ipsandports != '' ? true : false) && \Froxlor\Settings::Get('system.webserver') != 'lighttpd' && \Froxlor\Settings::Get('system.http2_support') == '1',
+						'label' => $lng['admin']['domain_http2']['title'],
+						'desc' => $lng['admin']['domain_http2']['description'],
 						'type' => 'checkbox',
 						'values' => array(
 							array(

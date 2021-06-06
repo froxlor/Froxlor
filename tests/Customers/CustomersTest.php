@@ -5,6 +5,8 @@ use Froxlor\Settings;
 use Froxlor\Database\Database;
 use Froxlor\Api\Commands\Admins;
 use Froxlor\Api\Commands\Customers;
+use Froxlor\Api\Commands\SubDomains;
+use Froxlor\Api\Commands\Ftps;
 
 /**
  *
@@ -58,6 +60,18 @@ class CustomersTest extends TestCase
 		$this->assertEquals(1337, $result['customernumber']);
 		$this->assertEquals(15, $result['subdomains']);
 		$this->assertEquals('secret', $result['custom_notes']);
+
+		$stdsubdomain = $result['standardsubdomain'] ?? false;
+		if (! $stdsubdomain) {
+			$this->fail('No standardsubdomain where there should be one');
+		} else {
+			// validate that the std-subdomain has been added
+			$json_result = SubDomains::getLocal($admin_userdata, array(
+				'id' => $result['standardsubdomain']
+			))->get();
+			$result = json_decode($json_result, true)['data'];
+			$this->assertEquals('test1.dev.froxlor.org', $result['domain']);
+		}
 	}
 
 	public function testAdminCustomersAddEmptyMail()
@@ -101,6 +115,18 @@ class CustomersTest extends TestCase
 		$json_result = Customers::getLocal($admin_userdata)->listing();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(1, $result['count']);
+		$this->assertFalse(isset($result['list'][0]['webspace_used']));
+
+		$json_result = Customers::getLocal($admin_userdata, [
+			'show_usages' => true
+		])->listing();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(1, $result['count']);
+		$this->assertTrue(isset($result['list'][0]['webspace_used']));
+
+		$json_result = Customers::getLocal($admin_userdata)->listingCount();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(1, $result);
 	}
 
 	/**
@@ -119,6 +145,10 @@ class CustomersTest extends TestCase
 		$json_result = Customers::getLocal($reseller_userdata)->listing();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(0, $result['count']);
+
+		$json_result = Customers::getLocal($reseller_userdata)->listingCount();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(0, $result);
 	}
 
 	/**
@@ -136,8 +166,11 @@ class CustomersTest extends TestCase
 
 		$this->expectExceptionCode(403);
 		$this->expectExceptionMessage("Not allowed to execute given command.");
-
 		$json_result = Customers::getLocal($customer_userdata)->listing();
+
+		$this->expectExceptionCode(403);
+		$this->expectExceptionMessage("Not allowed to execute given command.");
+		$json_result = Customers::getLocal($customer_userdata)->listingCount();
 	}
 
 	/**
@@ -224,7 +257,7 @@ class CustomersTest extends TestCase
 
 	/**
 	 *
-	 * @depends testAdminCustomersAdd
+	 * @depends testAdminCustomerUpdateDeactivate
 	 */
 	public function testCustomerCustomersGetWhenDeactivated()
 	{
@@ -246,7 +279,7 @@ class CustomersTest extends TestCase
 
 	/**
 	 *
-	 * @depends testAdminCustomersAdd
+	 * @depends testCustomerCustomersGetWhenDeactivated
 	 */
 	public function testCustomerCustomersUpdate()
 	{
@@ -447,7 +480,7 @@ class CustomersTest extends TestCase
 			'mysqls' => 15,
 			'createstdsubdomain' => 1,
 			'new_customer_password' => 'h0lYmo1y',
-			'sendpassword' => 1,
+			'sendpassword' => TRAVIS_CI == 1 ? 0 : 1,
 			'phpenabled' => 1,
 			'store_defaultindex' => 1,
 			'custom_notes' => 'secret',
@@ -537,15 +570,61 @@ class CustomersTest extends TestCase
 	{
 		global $admin_userdata;
 
+		$loginname = str_repeat("x", \Froxlor\Database\Database::getSqlUsernameLength() + 1);
 		$data = [
-			'new_loginname' => 'useruseruseruseruseruserX',
+			'new_loginname' => $loginname,
 			'email' => 'team@froxlor.org',
 			'firstname' => 'Test2',
 			'name' => 'Testman2',
 			'customernumber' => 1339
 		];
 
-		$this->expectExceptionMessage('Loginname contains too many characters. Only ' . (14 - strlen(Settings::Get('customer.mysqlprefix'))) . ' characters are allowed.');
+		$this->expectExceptionMessage('Loginname contains too many characters. Only ' . (\Froxlor\Database\Database::getSqlUsernameLength() - strlen(Settings::Get('customer.mysqlprefix'))) . ' characters are allowed.');
 		Customers::getLocal($admin_userdata, $data)->add();
+	}
+
+	/**
+	 *
+	 * @depends testAdminCustomersAddAutoLoginname
+	 */
+	public function testResellerCustomersAddNoFtpValidateDefaultUserExists()
+	{
+		global $admin_userdata;
+		// get reseller
+		$json_result = Admins::getLocal($admin_userdata, array(
+			'loginname' => 'reseller'
+		))->get();
+		$reseller_userdata = json_decode($json_result, true)['data'];
+		$reseller_userdata['adminsession'] = 1;
+
+		// set available ftp resources to 0 to validate that when the customer
+		// is added the default ftp user for the customer is created too regardless of
+		// available resource of the reseller/admin
+		$reseller_userdata['ftps'] = 0;
+
+		// add new customer
+		$data = [
+			'new_loginname' => 'testftpx',
+			'email' => 'testftp@froxlor.org',
+			'firstname' => 'Test',
+			'name' => 'Ftpman',
+			'customernumber' => 1339,
+			'new_customer_password' => 'h0lYmo1y'
+		];
+		Customers::getLocal($reseller_userdata, $data)->add();
+
+		// get FTP user
+		$json_result = Ftps::getLocal($reseller_userdata, [
+			'username' => 'testftpx'
+		])->get();
+		$ftp_data = json_decode($json_result, true)['data'];
+		$this->assertEquals("testftpx", $ftp_data['username']);
+
+		// now get rid of the customer again
+		$json_result = Customers::getLocal($reseller_userdata, array(
+			'loginname' => 'testftpx'
+		))->delete();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals('testftpx', $result['loginname']);
 	}
 }

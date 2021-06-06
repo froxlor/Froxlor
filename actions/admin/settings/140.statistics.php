@@ -33,7 +33,8 @@ return array(
 						1 => $lng['admin']['webalizer']['quiet'],
 						2 => $lng['admin']['webalizer']['veryquiet']
 					),
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'visible' => \Froxlor\Settings::Get('system.awstats_enabled') == 0
 				),
 				'system_awstats_enabled' => array(
 					'label' => $lng['serversettings']['awstats_enabled'],
@@ -50,7 +51,8 @@ return array(
 					'type' => 'string',
 					'string_type' => 'dir',
 					'default' => '/usr/bin/',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'visible' => \Froxlor\Settings::Get('system.awstats_enabled') == 1
 				),
 				'system_awstats_awstatspath' => array(
 					'label' => $lng['serversettings']['awstats_awstatspath'],
@@ -59,7 +61,8 @@ return array(
 					'type' => 'string',
 					'string_type' => 'dir',
 					'default' => '/usr/bin/',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'visible' => \Froxlor\Settings::Get('system.awstats_enabled') == 1
 				),
 				'system_awstats_conf' => array(
 					'label' => $lng['serversettings']['awstats_conf'],
@@ -68,7 +71,8 @@ return array(
 					'type' => 'string',
 					'string_type' => 'dir',
 					'default' => '/etc/awstats/',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'visible' => \Froxlor\Settings::Get('system.awstats_enabled') == 1
 				),
 				'system_awstats_icons' => array(
 					'label' => $lng['serversettings']['awstats_icons'],
@@ -77,7 +81,17 @@ return array(
 					'type' => 'string',
 					'string_type' => 'dir',
 					'default' => '/usr/share/awstats/icon/',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'visible' => \Froxlor\Settings::Get('system.awstats_enabled') == 1
+				),
+				'system_awstats_logformat' => array(
+					'label' => $lng['serversettings']['awstats']['logformat'],
+					'settinggroup' => 'system',
+					'varname' => 'awstats_logformat',
+					'type' => 'string',
+					'default' => '1',
+					'save_method' => 'storeSettingField',
+					'visible' => \Froxlor\Settings::Get('system.awstats_enabled') == 1
 				)
 			)
 		)

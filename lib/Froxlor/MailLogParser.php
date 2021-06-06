@@ -101,13 +101,13 @@ class MailLogParser
 
 			$timestamp = $this->getLogTimestamp($line);
 			if ($this->startTime < $timestamp) {
-				if (preg_match("/postfix\/qmgr.*(?::|\])\s([A-Z\d]+).*from=<?(?:.*\@([a-z\A-Z\d\.\-]+))?>?, size=(\d+),/", $line, $matches)) {
+				if (preg_match("/postfix\/qmgr.*(?::|\])\s([A-Z\d]+).*from=<?(?:.*\@([a-zA-Z\d\.\-]+))?>?, size=(\d+),/", $line, $matches)) {
 					// Postfix from
 					$this->mails[$matches[1]] = array(
 						"domainFrom" => strtolower($matches[2]),
 						"size" => $matches[3]
 					);
-				} elseif (preg_match("/postfix\/(?:pipe|smtp).*(?::|\])\s([A-Z\d]+).*to=<?(?:.*\@([a-z\A-Z\d\.\-]+))?>?,/", $line, $matches)) {
+				} elseif (preg_match("/postfix\/(?:pipe|smtp).*(?::|\])\s([A-Z\d]+).*to=<?(?:.*\@([a-zA-Z\d\.\-]+))?>?,/", $line, $matches)) {
 					// Postfix to
 					if (array_key_exists($matches[1], $this->mails)) {
 						$this->mails[$matches[1]]["domainTo"] = strtolower($matches[2]);
@@ -209,12 +209,12 @@ class MailLogParser
 
 			$timestamp = $this->getLogTimestamp($line);
 			if ($this->startTime < $timestamp) {
-				if (preg_match("/dovecot.*(?::|\]) imap\(.*@([a-z0-9\.\-]+)\):.*(?:in=(\d+) out=(\d+)|bytes=(\d+)\/(\d+))/i", $line, $matches)) {
+				if (preg_match("/dovecot.*(?::|\]) imap\(.*@([a-z0-9\.\-]+)\)(<\d+><[a-z0-9+\/=]+>)?:.*(?:in=(\d+) out=(\d+)|bytes=(\d+)\/(\d+))/i", $line, $matches)) {
 					// Dovecot IMAP
-					$this->addDomainTraffic($matches[1], (int) $matches[2] + (int) $matches[3], $timestamp);
-				} elseif (preg_match("/dovecot.*(?::|\]) pop3\(.*@([a-z0-9\.\-]+)\):.*in=(\d+).*out=(\d+)/i", $line, $matches)) {
+					$this->addDomainTraffic($matches[1], (int) $matches[3] + (int) $matches[4], $timestamp);
+				} elseif (preg_match("/dovecot.*(?::|\]) pop3\(.*@([a-z0-9\.\-]+)\)(<\d+><[a-z0-9+\/=]+>)?:.*in=(\d+).*out=(\d+)/i", $line, $matches)) {
 					// Dovecot POP3
-					$this->addDomainTraffic($matches[1], (int) $matches[2] + (int) $matches[3], $timestamp);
+					$this->addDomainTraffic($matches[1], (int) $matches[3] + (int) $matches[4], $timestamp);
 				}
 			}
 		}

@@ -72,16 +72,31 @@ class DbManagerMySQL
 	 * @param string $access_host
 	 * @param bool $p_encrypted
 	 *        	optional, whether the password is encrypted or not, default false
+	 * @param bool $update
+	 *        	optional, whether to update the password only (not create user)
 	 */
-	public function grantPrivilegesTo($username = null, $password = null, $access_host = null, $p_encrypted = false)
+	public function grantPrivilegesTo($username = null, $password = null, $access_host = null, $p_encrypted = false, $update = false)
 	{
-		// mysql8 compatibility
-		if (version_compare(Database::getAttribute(\PDO::ATTR_SERVER_VERSION), '8.0.11', '>=')) {
+		if (! $update) {
 			// create user
-			$stmt = Database::prepare("
-				CREATE USER '" . $username . "'@'" . $access_host . "' IDENTIFIED BY 'password'
-			");
-			Database::pexecute($stmt);
+			if ($p_encrypted) {
+				if (version_compare(Database::getAttribute(\PDO::ATTR_SERVER_VERSION), '5.7.0', '<')) {
+					$stmt = Database::prepare("
+						CREATE USER '" . $username . "'@'" . $access_host . "' IDENTIFIED BY PASSWORD :password
+					");
+				} else {
+					$stmt = Database::prepare("
+						CREATE USER '" . $username . "'@'" . $access_host . "' IDENTIFIED WITH mysql_native_password AS :password
+					");
+				}
+			} else {
+				$stmt = Database::prepare("
+					CREATE USER '" . $username . "'@'" . $access_host . "' IDENTIFIED BY :password
+				");
+			}
+			Database::pexecute($stmt, array(
+				"password" => $password
+			));
 			// grant privileges
 			$stmt = Database::prepare("
 				GRANT ALL ON `" . $username . "`.* TO :username@:host
@@ -91,30 +106,26 @@ class DbManagerMySQL
 				"host" => $access_host
 			));
 		} else {
-			// grant privileges
-			$stmt = Database::prepare("
-				GRANT ALL PRIVILEGES ON `" . $username . "`.* TO :username@:host IDENTIFIED BY 'password'
-			");
+			// set password
+			if (version_compare(Database::getAttribute(\PDO::ATTR_SERVER_VERSION), '5.7.6', '<')) {
+				if ($p_encrypted) {
+					$stmt = Database::prepare("SET PASSWORD FOR :username@:host = :password");
+				} else {
+					$stmt = Database::prepare("SET PASSWORD FOR :username@:host = PASSWORD(:password)");
+				}
+			} else {
+				if ($p_encrypted) {
+					$stmt = Database::prepare("ALTER USER :username@:host IDENTIFIED WITH mysql_native_password AS :password");
+				} else {
+					$stmt = Database::prepare("ALTER USER :username@:host IDENTIFIED BY :password");
+				}
+			}
 			Database::pexecute($stmt, array(
 				"username" => $username,
-				"host" => $access_host
+				"host" => $access_host,
+				"password" => $password
 			));
 		}
-		// set passoword
-		if (version_compare(Database::getAttribute(\PDO::ATTR_SERVER_VERSION), '5.7.6', '<')) {
-			if ($p_encrypted) {
-				$stmt = Database::prepare("SET PASSWORD FOR :username@:host = :password");
-			} else {
-				$stmt = Database::prepare("SET PASSWORD FOR :username@:host = PASSWORD(:password)");
-			}
-		} else {
-			$stmt = Database::prepare("ALTER USER :username@:host IDENTIFIED BY :password");
-		}
-		Database::pexecute($stmt, array(
-			"username" => $username,
-			"host" => $access_host,
-			"password" => $password
-		));
 	}
 
 	/**
@@ -138,7 +149,11 @@ class DbManagerMySQL
 		));
 
 		// as of MySQL 5.0.2 this also revokes privileges. (requires MySQL 4.1.2+)
-		$drop_stmt = Database::prepare("DROP USER IF EXISTS :dbname@:host");
+		if (version_compare(Database::getAttribute(\PDO::ATTR_SERVER_VERSION), '5.7.0', '<')) {
+			$drop_stmt = Database::prepare("DROP USER :dbname@:host");
+		} else {
+			$drop_stmt = Database::prepare("DROP USER IF EXISTS :dbname@:host");
+		}
 		while ($host = $host_res_stmt->fetch(\PDO::FETCH_ASSOC)) {
 			Database::pexecute($drop_stmt, array(
 				'dbname' => $dbname,
@@ -164,7 +179,11 @@ class DbManagerMySQL
 			Database::pexecute($stmt);
 		}
 		// as of MySQL 5.0.2 this also revokes privileges. (requires MySQL 4.1.2+)
-		$stmt = Database::prepare("DROP USER :username@:host");
+		if (version_compare(Database::getAttribute(\PDO::ATTR_SERVER_VERSION), '5.7.0', '<')) {
+			$stmt = Database::prepare("DROP USER :username@:host");
+		} else {
+			$stmt = Database::prepare("DROP USER IF EXISTS :username@:host");
+		}
 		Database::pexecute($stmt, array(
 			"username" => $username,
 			"host" => $host
@@ -230,7 +249,7 @@ class DbManagerMySQL
 			if ($user_only == false) {
 				if (! isset($allsqlusers[$row['User']]) || ! is_array($allsqlusers[$row['User']])) {
 					$allsqlusers[$row['User']] = array(
-						'password' => $row['Password'],
+						'password' => $row['Password'] ?? $row['authentication_string'],
 						'hosts' => array()
 					);
 				}

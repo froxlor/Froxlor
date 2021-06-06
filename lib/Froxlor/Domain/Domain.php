@@ -7,6 +7,41 @@ class Domain
 {
 
 	/**
+	 * return all ip addresses associated with given domain,
+	 * returns all ips if domain-id = 0 (froxlor.vhost)
+	 *
+	 * @param int $domain_id
+	 * @return array
+	 */
+	public static function getIpsOfDomain($domain_id)
+	{
+		if ($domain_id > 0) {
+			$sel_stmt = Database::prepare("
+				SELECT i.ip FROM `" . TABLE_PANEL_IPSANDPORTS . "` `i`
+				LEFT JOIN `" . TABLE_DOMAINTOIP . "` `dip` ON dip.id_ipandports = i.id
+				AND dip.id_domain = :domainid
+				GROUP BY i.ip
+			");
+			$sel_param = array(
+				'domainid' => $domain_id
+			);
+		} else {
+			// assuming froxlor.vhost (id = 0)
+			$sel_stmt = Database::prepare("
+				SELECT ip FROM `" . TABLE_PANEL_IPSANDPORTS . "`
+				GROUP BY ip
+			");
+			$sel_param = array();
+		}
+		Database::pexecute($sel_stmt, $sel_param);
+		$result = array();
+		while ($ip = $sel_stmt->fetch(\PDO::FETCH_ASSOC)) {
+			$result[] = $ip['ip'];
+		}
+		return $result;
+	}
+
+	/**
 	 * return an array of all enabled redirect-codes
 	 *
 	 * @return array array of enabled redirect-codes
@@ -289,6 +324,26 @@ class Domain
 				'domainid' => $aliasDestinationDomainID
 			));
 		}
+	}
+
+	public static function doLetsEncryptCleanUp($domainname = null)
+	{
+		// @ see \Froxlor\Cron\Http\LetsEncrypt\AcmeSh.php
+		$acmesh = \Froxlor\Cron\Http\LetsEncrypt\AcmeSh::getAcmeSh();
+		if (file_exists($acmesh)) {
+			$certificate_folder = \Froxlor\Cron\Http\LetsEncrypt\AcmeSh::getWorkingDirFromEnv($domainname);
+			if (file_exists($certificate_folder)) {
+				$params = " --remove -d " . $domainname;
+				if (\Froxlor\Settings::Get('system.leecc') > 0) {
+					$params .= " --ecc";
+				}
+				// run remove command
+				\Froxlor\FileDir::safe_exec($acmesh . $params);
+				// remove certificates directory
+				@unlink($certificate_folder);
+			}
+		}
+		return true;
 	}
 
 	/**

@@ -40,6 +40,13 @@ class ConfigParser
 	private $services = array();
 
 	/**
+	 * Holding the available defaults in the XML
+	 *
+	 * @var array
+	 */
+	private $defaults = array();
+
+	/**
 	 * Store the parsed SimpleXMLElement for usage
 	 *
 	 * @var \SimpleXMLElement
@@ -147,7 +154,7 @@ class ConfigParser
 	 *
 	 * @return bool
 	 */
-	private function parse()
+	private function parseServices()
 	{
 		// We only want to parse the stuff one time
 		if ($this->isparsed == true) {
@@ -175,6 +182,29 @@ class ConfigParser
 	}
 
 	/**
+	 * Parse the XML and populate $this->services
+	 *
+	 * @return bool
+	 */
+	private function parseDefaults()
+	{
+		// We only want to parse the stuff one time
+		if ($this->isparsed == true) {
+			return true;
+		}
+
+		// Get all defaults
+		$defaults = $this->xml->xpath('//defaults');
+		foreach ($defaults as $default) {
+			$this->defaults = $default;
+		}
+
+		// Switch flag to indicate we parsed our data
+		$this->isparsed = true;
+		return true;
+	}
+
+	/**
 	 * Return all services defined by the XML
 	 *
 	 * The array will hold ConfigService - Objects for further handling
@@ -184,9 +214,25 @@ class ConfigParser
 	public function getServices()
 	{
 		// Let's parse this shit(!)
-		$this->parse();
+		$this->parseServices();
 
 		// Return our carefully searched for services
 		return $this->services;
+	}
+
+	/**
+	 * Return all defaults defined by the XML
+	 *
+	 * The array will hold ConfigDefaults - Objects for further handling
+	 *
+	 * @return array
+	 */
+	public function getDefaults()
+	{
+		// Let's parse this shit(!)
+		$this->parseDefaults();
+
+		// Return our carefully searched for defaults
+		return $this->defaults;
 	}
 }

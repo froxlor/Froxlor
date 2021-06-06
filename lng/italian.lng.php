@@ -1107,9 +1107,6 @@ $lng['panel']['unlock'] = 'unlock';
 $lng['question']['customer_reallyunlock'] = 'Sei sicuro di voler sbloccare il cliente %s?';
 
 // ADDED IN FROXLOR 0.9.15-svn1
-$lng['serversettings']['perl_server']['title'] = 'Localizzazione del server Perl';
-$lng['serversettings']['perl_server']['description'] = 'Di default è impostato per utilizzare la guida disponibile sul sito: <a target="blank" href="http://wiki.nginx.org/SimpleCGI">http://wiki.nginx.org/SimpleCGI</a>';
-
 $lng['serversettings']['nginx_php_backend']['title'] = 'Nginx PHP backend';
 $lng['serversettings']['nginx_php_backend']['description'] = 'questo è dove in ascolto il processo PHP per le richieste da nginx, può essere un socket unix combinazione IP:Porta';
 $lng['serversettings']['phpreload_command']['title'] = 'Comando riavvio PHP';
@@ -1571,7 +1568,7 @@ $lng['domains']['serveraliasoption_www'] = 'WWW (www.dominio.tld)';
 $lng['domains']['serveraliasoption_none'] = 'Nessun alias';
 $lng['error']['givendirnotallowed'] = 'La cartella fornita nel campo %s non è permessa.';
 $lng['serversettings']['ssl']['ssl_cipher_list']['title'] = 'Configura le cifrature SSL permesse';
-$lng['serversettings']['ssl']['ssl_cipher_list']['description'] = 'Questa è una lista di cifrature che vuoi (o non vuoi) usare nelle communicazioni SSL. Per una lista delle cifrature e come includerle od escluderle, vedi le sezioni "CIPHER LIST FORMAT" e "CIPHER STRINGS" sulla <a href="http://openssl.org/docs/apps/ciphers.html">man-page per le cifrature</a>.<br /><br /><b>Il valore predefinito è:</b><pre>ECDHE-RSA-AES128-SHA256:AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH</pre>';
+$lng['serversettings']['ssl']['ssl_cipher_list']['description'] = 'Questa è una lista di cifrature che vuoi (o non vuoi) usare nelle communicazioni SSL. Per una lista delle cifrature e come includerle od escluderle, vedi le sezioni "CIPHER LIST FORMAT" e "CIPHER STRINGS" sulla <a href="https://www.openssl.org/docs/manmaster/man1/openssl-ciphers.html">man-page per le cifrature</a>.<br /><br /><b>Il valore predefinito è:</b><pre>ECDHE-RSA-AES128-SHA256:AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH</pre>';
 $lng['panel']['dashboard'] = 'Cruscotto';
 $lng['panel']['assigned'] = 'Assegnato';
 $lng['panel']['available'] = 'Disponibile';
@@ -1635,7 +1632,7 @@ $lng['admin']['integrityresult'] = 'Risultato';
 $lng['admin']['integrityfix'] = 'Risolvi problemi automaticamente';
 $lng['question']['admin_integritycheck_reallyfix'] = 'Vuoi veramente provare a risolvere i problemi di integrità del database automaticamente?';
 $lng['serversettings']['system_croncmdline']['title'] = 'Commando di esecuzione Cron (binario php)';
-$lng['serversettings']['system_croncmdline']['description'] = 'Commando per eseguire i nostri cronjob. Modificalo soltanto se sai cosa stai facendo (predefinito: "/usr/bin/nice -n 5 /usr/bin/php5 -q")!';
+$lng['serversettings']['system_croncmdline']['description'] = 'Commando per eseguire i nostri cronjob. Modificalo soltanto se sai cosa stai facendo (predefinito: "/usr/bin/nice -n 5 /usr/bin/php -q")!';
 $lng['error']['cannotdeletehostnamephpconfig'] = 'Questa configurazione PHP è utilizzata dal vhost Froxlor e non può essere eliminata.';
 $lng['error']['cannotdeletedefaultphpconfig'] = 'Questa configurazione PHP è impostata come predefinita e non può essere eliminata.';
 $lng['serversettings']['system_cron_allowautoupdate']['title'] = 'Permetti aggiornamenti automatici del database';

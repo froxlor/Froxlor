@@ -77,6 +77,7 @@ class BackupCron extends \Froxlor\Cron\FroxlorCron
 
 		$del_stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_TASKS . "` WHERE `id` = :id");
 
+		$cronlog = FroxlorLogger::getInstanceOf();
 		$all_jobs = $result_tasks_stmt->fetchAll();
 		foreach ($all_jobs as $row) {
 
@@ -96,7 +97,7 @@ class BackupCron extends \Froxlor\Cron\FroxlorCron
 						\Froxlor\FileDir::safe_exec('mkdir -p ' . escapeshellarg($row['data']['destdir']));
 					}
 
-					self::createCustomerBackup($row['data'], $customerdocroot, FroxlorLogger::getInstanceOf());
+					self::createCustomerBackup($row['data'], $customerdocroot, $cronlog);
 				}
 			}
 

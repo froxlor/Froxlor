@@ -25,36 +25,116 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 	/**
 	 * lists all customer entries
 	 *
+	 * @param array $sql_search
+	 *        	optional array with index = fieldname, and value = array with 'op' => operator (one of <, > or =), LIKE is used if left empty and 'value' => searchvalue
+	 * @param int $sql_limit
+	 *        	optional specify number of results to be returned
+	 * @param int $sql_offset
+	 *        	optional specify offset for resultset
+	 * @param array $sql_orderby
+	 *        	optional array with index = fieldname and value = ASC|DESC to order the resultset by one or more fields
+	 * @param bool $show_usages
+	 *        	optional, default false
+	 *        	
 	 * @access admin
 	 * @throws \Exception
-	 * @return array count|list
+	 * @return string json-encoded array count|list
 	 */
 	public function listing()
 	{
 		if ($this->isAdmin()) {
+			$show_usages = $this->getBoolParam('show_usages', true, false);
 			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] list customers");
+			$query_fields = array();
 			$result_stmt = Database::prepare("
 				SELECT `c`.*, `a`.`loginname` AS `adminname`
 				FROM `" . TABLE_PANEL_CUSTOMERS . "` `c`, `" . TABLE_PANEL_ADMINS . "` `a`
 				WHERE " . ($this->getUserDetail('customers_see_all') ? '' : " `c`.`adminid` = :adminid AND ") . "
-				`c`.`adminid` = `a`.`adminid`
-				ORDER BY `c`.`loginname` ASC
-			");
+				`c`.`adminid` = `a`.`adminid`" . $this->getSearchWhere($query_fields, true) . $this->getOrderBy() . $this->getLimit());
 			$params = array();
 			if ($this->getUserDetail('customers_see_all') == '0') {
 				$params = array(
 					'adminid' => $this->getUserDetail('adminid')
 				);
 			}
+			$params = array_merge($params, $query_fields);
 			Database::pexecute($result_stmt, $params, true, true);
 			$result = array();
+
+			$domains_stmt = null;
+			$usages_stmt = null;
+			if ($show_usages) {
+				$domains_stmt = Database::prepare("
+					SELECT COUNT(`id`) AS `domains`
+					FROM `" . TABLE_PANEL_DOMAINS . "`
+					WHERE `customerid` = :cid
+					AND `parentdomainid` = '0'
+					AND `id`<> :stdd
+				");
+				$usages_stmt = Database::prepare("
+					SELECT * FROM `" . TABLE_PANEL_DISKSPACE . "`
+					WHERE `customerid` = :cid
+					ORDER BY `stamp` DESC LIMIT 1
+				");
+			}
+
 			while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
+				if ($show_usages) {
+					// get number of domains
+					Database::pexecute($domains_stmt, array(
+						'cid' => $row['customerid'],
+						'stdd' => $row['standardsubdomain']
+					));
+					$domains = $domains_stmt->fetch(\PDO::FETCH_ASSOC);
+					$row['domains'] = intval($domains['domains']);
+					// get disk-space usages for web, mysql and mail
+					$usages = Database::pexecute_first($usages_stmt, array(
+						'cid' => $row['customerid']
+					));
+					if ($usages) {
+						$row['webspace_used'] = $usages['webspace'];
+						$row['mailspace_used'] = $usages['mail'];
+						$row['dbspace_used'] = $usages['mysql'];
+					} else {
+						$row['webspace_used'] = 0;
+						$row['mailspace_used'] = 0;
+						$row['dbspace_used'] = 0;
+					}
+				}
 				$result[] = $row;
 			}
-			return $this->response(200, "successfull", array(
+			return $this->response(200, "successful", array(
 				'count' => count($result),
 				'list' => $result
 			));
+		}
+		throw new \Exception("Not allowed to execute given command.", 403);
+	}
+
+	/**
+	 * returns the total number of customers for the given admin
+	 *
+	 * @access admin
+	 * @throws \Exception
+	 * @return string json-encoded array
+	 */
+	public function listingCount()
+	{
+		if ($this->isAdmin()) {
+			$result_stmt = Database::prepare("
+				SELECT COUNT(*) as num_customers
+				FROM `" . TABLE_PANEL_CUSTOMERS . "`
+				WHERE " . ($this->getUserDetail('customers_see_all') ? "1" : " `adminid` = :adminid "));
+			$params = array();
+			if ($this->getUserDetail('customers_see_all') == '0') {
+				$params = array(
+					'adminid' => $this->getUserDetail('adminid')
+				);
+			}
+			$result = Database::pexecute_first($result_stmt, $params, true, true);
+			if ($result) {
+				return $this->response(200, "successful", $result['num_customers']);
+			}
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
 	}
@@ -66,16 +146,19 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 	 *        	optional, the customer-id
 	 * @param string $loginname
 	 *        	optional, the loginname
+	 * @param bool $show_usages
+	 *        	optional, default false
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function get()
 	{
 		$id = $this->getParam('id', true, 0);
 		$ln_optional = ($id <= 0 ? false : true);
 		$loginname = $this->getParam('loginname', $ln_optional, '');
+		$show_usages = $this->getBoolParam('show_usages', true, false);
 
 		if ($this->isAdmin()) {
 			$result_stmt = Database::prepare("
@@ -105,8 +188,42 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 			if (! $this->isAdmin() && $result['custom_notes_show'] != 1) {
 				$result['custom_notes'] = "";
 			}
+			if ($show_usages) {
+				// get number of domains
+				$domains_stmt = Database::prepare("
+					SELECT COUNT(`id`) AS `domains`
+					FROM `" . TABLE_PANEL_DOMAINS . "`
+					WHERE `customerid` = :cid
+					AND `parentdomainid` = '0'
+					AND `id`<> :stdd
+				");
+				Database::pexecute($domains_stmt, array(
+					'cid' => $result['customerid'],
+					'stdd' => $result['standardsubdomain']
+				));
+				$domains = $domains_stmt->fetch(\PDO::FETCH_ASSOC);
+				$result['domains'] = intval($domains['domains']);
+				// get disk-space usages for web, mysql and mail
+				$usages_stmt = Database::prepare("
+					SELECT * FROM `" . TABLE_PANEL_DISKSPACE . "`
+					WHERE `customerid` = :cid
+					ORDER BY `stamp` DESC LIMIT 1
+				");
+				$usages = Database::pexecute_first($usages_stmt, array(
+					'cid' => $result['customerid']
+				));
+				if ($usages) {
+					$result['webspace_used'] = $usages['webspace'];
+					$result['mailspace_used'] = $usages['mail'];
+					$result['dbspace_used'] = $usages['mysql'];
+				} else {
+					$result['webspace_used'] = 0;
+					$result['mailspace_used'] = 0;
+					$result['dbspace_used'] = 0;
+				}
+			}
 			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] get customer '" . $result['loginname'] . "'");
-			return $this->response(200, "successfull", $result);
+			return $this->response(200, "successful", $result);
 		}
 		$key = ($id > 0 ? "id #" . $id : "loginname '" . $loginname . "'");
 		throw new \Exception("Customer with " . $key . " could not be found", 404);
@@ -136,6 +253,8 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 	 *        	optional
 	 * @param string $def_language,
 	 *        	optional, default is system-default language
+	 * @param bool $api_allowed
+	 *        	optional, default is true if system setting api.enabled is true, else false
 	 * @param int $gender
 	 *        	optional, 0 = no-gender, 1 = male, 2 = female
 	 * @param string $custom_notes
@@ -144,7 +263,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 	 *        	optional, whether to show the content of custom_notes to the customer, default 0 (false)
 	 * @param string $new_loginname
 	 *        	optional, if empty generated automatically using customer-prefix and increasing number
-	 * @param string $password
+	 * @param string $new_customer_password
 	 *        	optional, if empty generated automatically and send to the customer's email if $sendpassword is 1
 	 * @param bool $sendpassword
 	 *        	optional, whether to send the password to the customer after creation, default 0 (false)
@@ -197,15 +316,17 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 	 * @param bool $perlenabled
 	 *        	optional, whether to allow usage of Perl/CGI, default 0 (false)
 	 * @param bool $dnsenabled
-	 *        	optional, ether to allow usage of the DNS editor (requires activated nameserver in settings), default 0 (false)
+	 *        	optional, wether to allow usage of the DNS editor (requires activated nameserver in settings), default 0 (false)
 	 * @param bool $logviewenabled
-	 *        	optional, ether to allow acccess to webserver access/error-logs, default 0 (false)
+	 *        	optional, wether to allow acccess to webserver access/error-logs, default 0 (false)
 	 * @param bool $store_defaultindex
 	 *        	optional, whether to store the default index file to customers homedir
+	 * @param int $hosting_plan_id
+	 *        	optional, specify a hosting-plan to set certain resource-values from the plan instead of specifying them
 	 *        	
 	 * @access admin
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function add()
 	{
@@ -227,31 +348,60 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				$fax = $this->getParam('fax', true, '');
 				$customernumber = $this->getParam('customernumber', true, '');
 				$def_language = $this->getParam('def_language', true, Settings::Get('panel.standardlanguage'));
+				$api_allowed = $this->getBoolParam('api_allowed', true, Settings::Get('api.enabled'));
 				$gender = (int) $this->getParam('gender', true, 0);
 				$custom_notes = $this->getParam('custom_notes', true, '');
 				$custom_notes_show = $this->getBoolParam('custom_notes_show', true, 0);
-
-				$diskspace = $this->getUlParam('diskspace', 'diskspace_ul', true, 0);
-				$traffic = $this->getUlParam('traffic', 'traffic_ul', true, 0);
-				$subdomains = $this->getUlParam('subdomains', 'subdomains_ul', true, 0);
-				$emails = $this->getUlParam('emails', 'emails_ul', true, 0);
-				$email_accounts = $this->getUlParam('email_accounts', 'email_accounts_ul', true, 0);
-				$email_forwarders = $this->getUlParam('email_forwarders', 'email_forwarders_ul', true, 0);
-				$email_quota = $this->getUlParam('email_quota', 'email_quota_ul', true, Settings::Get('system.mail_quota'));
-				$email_imap = $this->getBoolParam('email_imap', true, 0);
-				$email_pop3 = $this->getBoolParam('email_pop3', true, 0);
-				$ftps = $this->getUlParam('ftps', 'ftps_ul', true, 0);
-				$mysqls = $this->getUlParam('mysqls', 'mysqls_ul', true, 0);
 				$createstdsubdomain = $this->getBoolParam('createstdsubdomain', true, 0);
 				$password = $this->getParam('new_customer_password', true, '');
 				$sendpassword = $this->getBoolParam('sendpassword', true, 0);
-				$phpenabled = $this->getBoolParam('phpenabled', true, 0);
-				$p_allowed_phpconfigs = $this->getParam('allowed_phpconfigs', true, array());
-				$perlenabled = $this->getBoolParam('perlenabled', true, 0);
-				$dnsenabled = $this->getBoolParam('dnsenabled', true, 0);
-				$logviewenabled = $this->getBoolParam('logviewenabled', true, 0);
 				$store_defaultindex = $this->getBoolParam('store_defaultindex', true, 0);
 				$loginname = $this->getParam('new_loginname', true, '');
+
+				// hosting-plan values
+				$hosting_plan_id = $this->getParam('hosting_plan_id', true, 0);
+				if ($hosting_plan_id > 0) {
+					$hp_result = $this->apiCall('HostingPlans.get', array(
+						'id' => $hosting_plan_id
+					));
+					$hp_result['value'] = json_decode($hp_result['value'], true);
+					foreach ($hp_result['value'] as $index => $value) {
+						$hp_result[$index] = $value;
+					}
+					$diskspace = $hp_result['diskspace'] ?? 0;
+					$traffic = $hp_result['traffic'] ?? 0;
+					$subdomains = $hp_result['subdomains'] ?? 0;
+					$emails = $hp_result['emails'] ?? 0;
+					$email_accounts = $hp_result['email_accounts'] ?? 0;
+					$email_forwarders = $hp_result['email_forwarders'] ?? 0;
+					$email_quota = $hp_result['email_quota'] ?? Settings::Get('system.mail_quota');
+					$email_imap = $hp_result['email_imap'] ?? 0;
+					$email_pop3 = $hp_result['email_pop3'] ?? 0;
+					$ftps = $hp_result['ftps'] ?? 0;
+					$mysqls = $hp_result['mysqls'] ?? 0;
+					$phpenabled = $hp_result['phpenabled'] ?? 0;
+					$p_allowed_phpconfigs = $hp_result['allowed_phpconfigs'] ?? 0;
+					$perlenabled = $hp_result['perlenabled'] ?? 0;
+					$dnsenabled = $hp_result['dnsenabled'] ?? 0;
+					$logviewenabled = $hp_result['logviewenabled'] ?? 0;
+				} else {
+					$diskspace = $this->getUlParam('diskspace', 'diskspace_ul', true, 0);
+					$traffic = $this->getUlParam('traffic', 'traffic_ul', true, 0);
+					$subdomains = $this->getUlParam('subdomains', 'subdomains_ul', true, 0);
+					$emails = $this->getUlParam('emails', 'emails_ul', true, 0);
+					$email_accounts = $this->getUlParam('email_accounts', 'email_accounts_ul', true, 0);
+					$email_forwarders = $this->getUlParam('email_forwarders', 'email_forwarders_ul', true, 0);
+					$email_quota = $this->getUlParam('email_quota', 'email_quota_ul', true, Settings::Get('system.mail_quota'));
+					$email_imap = $this->getBoolParam('email_imap', true, 0);
+					$email_pop3 = $this->getBoolParam('email_pop3', true, 0);
+					$ftps = $this->getUlParam('ftps', 'ftps_ul', true, 0);
+					$mysqls = $this->getUlParam('mysqls', 'mysqls_ul', true, 0);
+					$phpenabled = $this->getBoolParam('phpenabled', true, 0);
+					$p_allowed_phpconfigs = $this->getParam('allowed_phpconfigs', true, array());
+					$perlenabled = $this->getBoolParam('perlenabled', true, 0);
+					$dnsenabled = $this->getBoolParam('dnsenabled', true, 0);
+					$logviewenabled = $this->getBoolParam('logviewenabled', true, 0);
+				}
 
 				// validation
 				$name = \Froxlor\Validate\Validate::validate($name, 'name', '', '', array(), true);
@@ -266,7 +416,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				$email = $idna_convert->encode(\Froxlor\Validate\Validate::validate($email, 'email', '', '', array(), true));
 				$customernumber = \Froxlor\Validate\Validate::validate($customernumber, 'customer number', '/^[A-Za-z0-9 \-]*$/Di', '', array(), true);
 				$def_language = \Froxlor\Validate\Validate::validate($def_language, 'default language', '', '', array(), true);
-				$custom_notes = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $custom_notes), 'custom_notes', '/^[^\0]*$/', '', array(), true);
+				$custom_notes = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $custom_notes), 'custom_notes', \Froxlor\Validate\Validate::REGEX_CONF_TEXT, '', array(), true);
 
 				if (Settings::Get('system.mail_quota_enabled') != '1') {
 					$email_quota = - 1;
@@ -340,11 +490,12 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 						'login' => $loginname
 					), true, true);
 
-					if (strtolower($loginname_check['loginname']) == strtolower($loginname) || strtolower($loginname_check_admin['loginname']) == strtolower($loginname)) {
+					$mysql_maxlen = \Froxlor\Database\Database::getSqlUsernameLength() - strlen(Settings::Get('customer.mysqlprefix'));
+					if (($loginname_check && strtolower($loginname_check['loginname']) == strtolower($loginname)) || ($loginname_check_admin && strtolower($loginname_check_admin['loginname']) == strtolower($loginname))) {
 						\Froxlor\UI\Response::standard_error('loginnameexists', $loginname, true);
-					} elseif (! \Froxlor\Validate\Validate::validateUsername($loginname, Settings::Get('panel.unix_names'), 14 - strlen(Settings::Get('customer.mysqlprefix')))) {
-						if (strlen($loginname) > 14 - strlen(Settings::Get('customer.mysqlprefix'))) {
-							\Froxlor\UI\Response::standard_error('loginnameiswrong2', 14 - strlen(Settings::Get('customer.mysqlprefix')), true);
+					} elseif (! \Froxlor\Validate\Validate::validateUsername($loginname, Settings::Get('panel.unix_names'), $mysql_maxlen)) {
+						if (strlen($loginname) > $mysql_maxlen) {
+							\Froxlor\UI\Response::standard_error('loginnameiswrong2', $mysql_maxlen, true);
 						} else {
 							\Froxlor\UI\Response::standard_error('loginnameiswrong', $loginname, true);
 						}
@@ -355,26 +506,6 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 
 					if (file_exists($documentroot)) {
 						\Froxlor\UI\Response::standard_error('documentrootexists', $documentroot, true);
-					}
-
-					if ($createstdsubdomain != '1') {
-						$createstdsubdomain = '0';
-					}
-
-					if ($phpenabled != '0') {
-						$phpenabled = '1';
-					}
-
-					if ($perlenabled != '0') {
-						$perlenabled = '1';
-					}
-
-					if ($dnsenabled != '0') {
-						$dnsenabled = '1';
-					}
-
-					if ($logviewenabled != '0') {
-						$logviewenabled = '1';
 					}
 
 					if ($password == '') {
@@ -399,6 +530,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 						'email' => $email,
 						'customerno' => $customernumber,
 						'lang' => $def_language,
+						'api_allowed' => $api_allowed,
 						'docroot' => $documentroot,
 						'guid' => $guid,
 						'diskspace' => $diskspace,
@@ -439,6 +571,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 						`email` = :email,
 						`customernumber` = :customerno,
 						`def_language` = :lang,
+						`api_allowed` = :api_allowed,
 						`documentroot` = :docroot,
 						`guid` = :guid,
 						`diskspace` = :diskspace,
@@ -542,37 +675,14 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 					Database::pexecute($ins_stmt, $ins_data, true, true);
 
 					\Froxlor\System\Cronjob::inserttask('1');
-					$cryptPassword = \Froxlor\System\Crypt::makeCryptPassword($password);
-					// add FTP-User
-					// @fixme use Ftp-ApiCommand later
-					$ins_stmt = Database::prepare("
-						INSERT INTO `" . TABLE_FTP_USERS . "` SET `customerid` = :customerid, `username` = :username, `description` = :desc,
-						`password` = :passwd, `homedir` = :homedir, `login_enabled` = 'y', `uid` = :guid, `gid` = :guid
-					");
-					$ins_data = array(
-						'customerid' => $customerid,
-						'username' => $loginname,
-						'passwd' => $cryptPassword,
-						'homedir' => $documentroot,
-						'guid' => $guid,
-						'desc' => "Default"
-					);
-					Database::pexecute($ins_stmt, $ins_data, true, true);
-					// add FTP-Group
-					// @fixme use Ftp-ApiCommand later
-					$ins_stmt = Database::prepare("
-						INSERT INTO `" . TABLE_FTP_GROUPS . "` SET `customerid` = :customerid, `groupname` = :groupname, `gid` = :guid, `members` = :members
-					");
-					$ins_data = array(
-						'customerid' => $customerid,
-						'groupname' => $loginname,
-						'guid' => $guid,
-						'members' => $loginname . ',' . Settings::Get('system.httpuser')
-					);
 
+					// add default FTP-User
 					// also, add froxlor-local user to ftp-group (if exists!) to
 					// allow access to customer-directories from within the panel, which
 					// is necessary when pathedit = Dropdown
+					$local_users = array(
+						Settings::Get('system.httpuser')
+					);
 					if ((int) Settings::Get('system.mod_fcgid_ownvhost') == 1 || (int) Settings::Get('phpfpm.enabled_ownvhost') == 1) {
 						if ((int) Settings::Get('system.mod_fcgid') == 1) {
 							$local_user = Settings::Get('system.mod_fcgid_httpuser');
@@ -581,22 +691,20 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 						}
 						// check froxlor-local user membership in ftp-group
 						// without this check addition may duplicate user in list if httpuser == local_user
-						if (strpos($ins_data['members'], $local_user) == false) {
-							$ins_data['members'] .= ',' . $local_user;
+						if (in_array($local_user, $local_users) == false) {
+							$local_users[] = $local_user;
 						}
 					}
-					Database::pexecute($ins_stmt, $ins_data, true, true);
-
-					// FTP-Quotatallies
-					// @fixme use Ftp-ApiCommand later
-					$ins_stmt = Database::prepare("
-						INSERT INTO `" . TABLE_FTP_QUOTATALLIES . "` SET `name` = :name, `quota_type` = 'user', `bytes_in_used` = '0',
-						`bytes_out_used` = '0', `bytes_xfer_used` = '0', `files_in_used` = '0', `files_out_used` = '0', `files_xfer_used` = '0'
-					");
-					Database::pexecute($ins_stmt, array(
-						'name' => $loginname
-					), true, true);
-					$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] automatically added ftp-account for user '" . $loginname . "'");
+					$this->apiCall('Ftps.add', array(
+						'customerid' => $customerid,
+						'path' => '/',
+						'ftp_password' => $password,
+						'ftp_description' => "Default",
+						'sendinfomail' => 0,
+						'ftp_username' => $loginname,
+						'additional_members' => $local_users,
+						'is_defaultuser' => 1
+					));
 
 					$_stdsubdomain = '';
 					if ($createstdsubdomain == '1') {
@@ -661,6 +769,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 								'name' => $name,
 								'company' => $company
 							)),
+							'CUSTOMER_NO' => $customernumber,
 							'USERNAME' => $loginname,
 							'PASSWORD' => $password,
 							'SERVER_HOSTNAME' => $srv_hostname,
@@ -714,7 +823,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				$result = $this->apiCall('Customers.get', array(
 					'loginname' => $loginname
 				));
-				return $this->response(200, "successfull", $result);
+				return $this->response(200, "successful", $result);
 			}
 			throw new \Exception("No more resources available", 406);
 		}
@@ -749,6 +858,8 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 	 *        	optional
 	 * @param string $def_language,
 	 *        	optional, default is system-default language
+	 * @param bool $api_allowed
+	 *        	optional, default is true if system setting api.enabled is true, else false
 	 * @param int $gender
 	 *        	optional, 0 = no-gender, 1 = male, 2 = female
 	 * @param string $custom_notes
@@ -820,7 +931,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function update()
 	{
@@ -842,7 +953,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 			$email = $this->getParam('email', true, $idna_convert->decode($result['email']));
 			$name = $this->getParam('name', true, $result['name']);
 			$firstname = $this->getParam('firstname', true, $result['firstname']);
-			$company_required = (! empty($name) && empty($firstname)) || (empty($name) && ! empty($firstname)) || (empty($name) && empty($firstname));
+			$company_required = empty($result['company']) && ((! empty($name) && empty($firstname)) || (empty($name) && ! empty($firstname)) || (empty($name) && empty($firstname)));
 			$company = $this->getParam('company', ($company_required ? false : true), $result['company']);
 			$street = $this->getParam('street', true, $result['street']);
 			$zipcode = $this->getParam('zipcode', true, $result['zipcode']);
@@ -851,6 +962,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 			$fax = $this->getParam('fax', true, $result['fax']);
 			$customernumber = $this->getParam('customernumber', true, $result['customernumber']);
 			$def_language = $this->getParam('def_language', true, $result['def_language']);
+			$api_allowed = $this->getBoolParam('api_allowed', true, $result['api_allowed']);
 			$gender = (int) $this->getParam('gender', true, $result['gender']);
 			$custom_notes = $this->getParam('custom_notes', true, $result['custom_notes']);
 			$custom_notes_show = $this->getBoolParam('custom_notes_show', true, $result['custom_notes_show']);
@@ -896,8 +1008,8 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 			$fax = \Froxlor\Validate\Validate::validate($fax, 'fax', '/^[0-9\- \+\(\)\/]*$/', '', array(), true);
 			$email = $idna_convert->encode(\Froxlor\Validate\Validate::validate($email, 'email', '', '', array(), true));
 			$customernumber = \Froxlor\Validate\Validate::validate($customernumber, 'customer number', '/^[A-Za-z0-9 \-]*$/Di', '', array(), true);
-			$custom_notes = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $custom_notes), 'custom_notes', '/^[^\0]*$/', '', array(), true);
-			if (!empty($allowed_phpconfigs)) {
+			$custom_notes = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $custom_notes), 'custom_notes', \Froxlor\Validate\Validate::REGEX_CONF_TEXT, '', array(), true);
+			if (! empty($allowed_phpconfigs)) {
 				$allowed_phpconfigs = array_map('intval', $allowed_phpconfigs);
 			}
 		}
@@ -993,28 +1105,8 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				\Froxlor\System\Cronjob::inserttask('1');
 			}
 
-			if ($deactivated != '1') {
-				$deactivated = '0';
-			}
-
-			if ($phpenabled != '0') {
-				$phpenabled = '1';
-			}
-
-			if ($perlenabled != '0') {
-				$perlenabled = '1';
-			}
-
-			if ($dnsenabled != '0') {
-				$dnsenabled = '1';
-			}
-
-			if ($phpenabled != $result['phpenabled'] || $perlenabled != $result['perlenabled']) {
+			if ($phpenabled != $result['phpenabled'] || $perlenabled != $result['perlenabled'] || $email != $result['email']) {
 				\Froxlor\System\Cronjob::inserttask('1');
-			}
-
-			if ($logviewenabled != '0') {
-				$logviewenabled = '1';
 			}
 
 			// activate/deactivate customer services
@@ -1061,6 +1153,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				$dbm = new \Froxlor\Database\DbManager($this->logger());
 
 				// For each of them
+				$priv_changed = false;
 				while ($row_database = $databases_stmt->fetch(\PDO::FETCH_ASSOC)) {
 
 					if ($last_dbserver != $row_database['dbserver']) {
@@ -1081,10 +1174,13 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 							$dbm->getManager()->enableUser($row_database['databasename'], $mysql_access_host);
 						}
 					}
+					$priv_changed = true;
 				}
 
 				// At last flush the new privileges
-				$dbm->getManager()->flushPrivileges();
+				if ($priv_changed) {
+					$dbm->getManager()->flushPrivileges();
+				}
 				Database::needRoot(false);
 
 				// reactivate/deactivate api-keys
@@ -1156,7 +1252,8 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				'dnsenabled' => $dnsenabled,
 				'logviewenabled' => $logviewenabled,
 				'custom_notes' => $custom_notes,
-				'custom_notes_show' => $custom_notes_show
+				'custom_notes_show' => $custom_notes_show,
+				'api_allowed' => $api_allowed
 			);
 			$upd_data = $upd_data + $admin_upd_data;
 		}
@@ -1197,7 +1294,8 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				`dnsenabled` = :dnsenabled,
 				`logviewenabled` = :logviewenabled,
 				`custom_notes` = :custom_notes,
-				`custom_notes_show` = :custom_notes_show";
+				`custom_notes_show` = :custom_notes_show,
+				`api_allowed` = :api_allowed";
 			$upd_query .= $admin_upd_query;
 		}
 		$upd_query .= " WHERE `customerid` = :customerid";
@@ -1322,7 +1420,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 		$result = $this->apiCall('Customers.get', array(
 			'id' => $result['customerid']
 		));
-		return $this->response(200, "successfull", $result);
+		return $this->response(200, "successful", $result);
 	}
 
 	/**
@@ -1337,7 +1435,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 	 *        	
 	 * @access admin
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function delete()
 	{
@@ -1365,6 +1463,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 
 			$dbm = new \Froxlor\Database\DbManager($this->logger());
 
+			$priv_changed = false;
 			while ($row_database = $databases_stmt->fetch(\PDO::FETCH_ASSOC)) {
 				if ($last_dbserver != $row_database['dbserver']) {
 					Database::needRoot(true, $row_database['dbserver']);
@@ -1372,8 +1471,11 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 					$last_dbserver = $row_database['dbserver'];
 				}
 				$dbm->getManager()->deleteDatabase($row_database['databasename']);
+				$priv_changed = true;
 			}
-			$dbm->getManager()->flushPrivileges();
+			if ($priv_changed) {
+				$dbm->getManager()->flushPrivileges();
+			}
 			Database::needRoot(false);
 
 			// delete customer itself
@@ -1388,8 +1490,8 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				'id' => $id
 			), true, true);
 
-			// first gather all domain-id's to clean up panel_domaintoip and dns-entries accordingly
-			$did_stmt = Database::prepare("SELECT `id` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `customerid` = :id");
+			// first gather all domain-id's to clean up panel_domaintoip, dns-entries and certificates accordingly
+			$did_stmt = Database::prepare("SELECT `id`, `domain` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `customerid` = :id");
 			Database::pexecute($did_stmt, array(
 				'id' => $id
 			), true, true);
@@ -1404,6 +1506,15 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				Database::pexecute($stmt, array(
 					'did' => $row['id']
 				), true, true);
+				// remove domain->certificates entries
+				$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` WHERE `domainid` = :did");
+				Database::pexecute($stmt, array(
+					'did' => $row['id']
+				), true, true);
+				// remove domains DNS from powerDNS if used, #581
+				\Froxlor\System\Cronjob::inserttask('11', $result['domain']);
+				// remove domain from acme.sh / lets encrypt if used
+				\Froxlor\System\Cronjob::inserttask('12', $row['domain']);
 			}
 			// remove customer domains
 			$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `customerid` = :id");
@@ -1546,7 +1657,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 			\Froxlor\System\Cronjob::inserttask('10');
 
 			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_WARNING, "[API] deleted customer '" . $result['loginname'] . "'");
-			return $this->response(200, "successfull", $result);
+			return $this->response(200, "successful", $result);
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
 	}
@@ -1561,7 +1672,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 	 *        	
 	 * @access admin
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function unlock()
 	{
@@ -1588,7 +1699,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 			$result['loginfail_count'] = 0;
 
 			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_WARNING, "[API] unlocked customer '" . $result['loginname'] . "'");
-			return $this->response(200, "successfull", $result);
+			return $this->response(200, "successful", $result);
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
 	}
@@ -1606,7 +1717,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 	 *        	
 	 * @access admin
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function move()
 	{
@@ -1658,7 +1769,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 			$result = $this->apiCall('Customers.get', array(
 				'id' => $c_result['customerid']
 			));
-			return $this->response(200, "successfull", $result);
+			return $this->response(200, "successful", $result);
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
 	}

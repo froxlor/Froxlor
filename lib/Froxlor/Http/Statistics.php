@@ -37,20 +37,31 @@ class Statistics
 			\Froxlor\FileDir::safe_exec('mkdir -p ' . escapeshellarg(Settings::Get('system.awstats_conf')));
 		}
 
+		$logformat = Settings::Get('system.awstats_logformat');
+		if (! is_numeric($logformat)) {
+			// if LogFormat is NOT numeric (e.g. 1,2,3,4), we quote it.
+			// 1-4 are pre-defined formats by awstats which must not be quoted to work properly. So if
+			// it is not a integer, it is something customized and we simply quote it.
+			// Only escaping double-quote should be fine, as we only put the whole string under double-quote.
+			$logformat = '"' . str_replace('"', '\"', Settings::Get('system.awstats_logformat')) . '"';
+		}
+
 		// These are the variables we will replace
 		$regex = array(
 			'/\{LOG_FILE\}/',
 			'/\{SITE_DOMAIN\}/',
 			'/\{HOST_ALIASES\}/',
 			'/\{CUSTOMER_DOCROOT\}/',
-			'/\{AWSTATS_CONF\}/'
+			'/\{AWSTATS_CONF\}/',
+			'/\{AWSTATS_LOGFORMAT\}/'
 		);
 		$replace = array(
 			\Froxlor\FileDir::makeCorrectFile($logFile),
 			$siteDomain,
 			$hostAliases,
 			$awstats_dir,
-			\Froxlor\FileDir::makeCorrectDir(Settings::Get('system.awstats_conf'))
+			\Froxlor\FileDir::makeCorrectDir(Settings::Get('system.awstats_conf')),
+			$logformat
 		);
 
 		// File names

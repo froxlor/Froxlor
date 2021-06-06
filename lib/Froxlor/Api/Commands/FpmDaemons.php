@@ -24,29 +24,35 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	/**
 	 * lists all fpm-daemon entries
 	 *
+	 * @param array $sql_search
+	 *        	optional array with index = fieldname, and value = array with 'op' => operator (one of <, > or =), LIKE is used if left empty and 'value' => searchvalue
+	 * @param int $sql_limit
+	 *        	optional specify number of results to be returned
+	 * @param int $sql_offset
+	 *        	optional specify offset for resultset
+	 * @param array $sql_orderby
+	 *        	optional array with index = fieldname and value = ASC|DESC to order the resultset by one or more fields
+	 *        	
 	 * @access admin
 	 * @throws \Exception
-	 * @return array count|list
+	 * @return string json-encoded array count|list
 	 */
 	public function listing()
 	{
 		if ($this->isAdmin()) {
 			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] list fpm-daemons");
-
-			$result = Database::query("
-				SELECT * FROM `" . TABLE_PANEL_FPMDAEMONS . "` ORDER BY `description` ASC
-			");
-
+			$query_fields = array();
+			$result_stmt = Database::prepare("
+				SELECT * FROM `" . TABLE_PANEL_FPMDAEMONS . "`" . $this->getSearchWhere($query_fields) . $this->getOrderBy() . $this->getLimit());
+			Database::pexecute($result_stmt, $query_fields, true, true);
 			$fpmdaemons = array();
-			while ($row = $result->fetch(\PDO::FETCH_ASSOC)) {
+			while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 
 				$query_params = array(
 					'id' => $row['id']
 				);
 
-				$query = "SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "` WHERE `fpmsettingid` = :id";
-
-				$configresult_stmt = Database::prepare($query);
+				$configresult_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "` WHERE `fpmsettingid` = :id");
 				Database::pexecute($configresult_stmt, $query_params, true, true);
 
 				$configs = array();
@@ -64,10 +70,31 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				$fpmdaemons[] = $row;
 			}
 
-			return $this->response(200, "successfull", array(
+			return $this->response(200, "successful", array(
 				'count' => count($fpmdaemons),
 				'list' => $fpmdaemons
 			));
+		}
+		throw new \Exception("Not allowed to execute given command.", 403);
+	}
+
+	/**
+	 * returns the total number of accessable fpm daemons
+	 *
+	 * @access admin
+	 * @throws \Exception
+	 * @return string json-encoded array
+	 */
+	public function listingCount()
+	{
+		if ($this->isAdmin()) {
+			$result_stmt = Database::prepare("
+				SELECT COUNT(*) as num_fpms FROM `" . TABLE_PANEL_FPMDAEMONS . "`
+			");
+			$result = Database::pexecute_first($result_stmt, null, true, true);
+			if ($result) {
+				return $this->response(200, "successful", $result['num_fpms']);
+			}
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
 	}
@@ -80,7 +107,7 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	 *        	
 	 * @access admin
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function get()
 	{
@@ -94,7 +121,7 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				'id' => $id
 			), true, true);
 			if ($result) {
-				return $this->response(200, "successfull", $result);
+				return $this->response(200, "successful", $result);
 			}
 			throw new \Exception("fpm-daemon with id #" . $id . " could not be found", 404);
 		}
@@ -108,25 +135,27 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	 * @param string $reload_cmd
 	 * @param string $config_dir
 	 * @param string $pm
-	 *        	optional, process-manager, one of 'static', 'dynamic' or 'ondemand', default 'static'
+	 *        	optional, process-manager, one of 'static', 'dynamic' or 'ondemand', default 'dynamic'
 	 * @param int $max_children
-	 *        	optional, default 0
+	 *        	optional, default 5
 	 * @param int $start_servers
-	 *        	optional, default 0
+	 *        	optional, default 2
 	 * @param int $min_spare_servers
-	 *        	optional, default 0
+	 *        	optional, default 1
 	 * @param int $max_spare_servers
-	 *        	optional, default 0
+	 *        	optional, default 3
 	 * @param int $max_requests
 	 *        	optional, default 0
 	 * @param int $idle_timeout
-	 *        	optional, default 0
+	 *        	optional, default 10
 	 * @param string $limit_extensions
 	 *        	optional, limit execution to the following extensions, default '.php'
+	 * @param string $custom_config
+	 *        	optional, custom settings appended to phpfpm pool configuration
 	 *        	
 	 * @access admin
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function add()
 	{
@@ -138,14 +167,15 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			$config_dir = $this->getParam('config_dir');
 
 			// parameters
-			$pmanager = $this->getParam('pm', true, 'static');
-			$max_children = $this->getParam('max_children', true, 0);
-			$start_servers = $this->getParam('start_servers', true, 0);
-			$min_spare_servers = $this->getParam('min_spare_servers', true, 0);
-			$max_spare_servers = $this->getParam('max_spare_servers', true, 0);
+			$pmanager = $this->getParam('pm', true, 'dynamic');
+			$max_children = $this->getParam('max_children', true, 5);
+			$start_servers = $this->getParam('start_servers', true, 2);
+			$min_spare_servers = $this->getParam('min_spare_servers', true, 1);
+			$max_spare_servers = $this->getParam('max_spare_servers', true, 3);
 			$max_requests = $this->getParam('max_requests', true, 0);
-			$idle_timeout = $this->getParam('idle_timeout', true, 0);
+			$idle_timeout = $this->getParam('idle_timeout', true, 10);
 			$limit_extensions = $this->getParam('limit_extensions', true, '.php');
+			$custom_config = $this->getParam('custom_config', true, '');
 
 			// validation
 			$description = \Froxlor\Validate\Validate::validate($description, 'description', '', '', array(), true);
@@ -179,7 +209,8 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				`max_spare_servers` = :max_spare_servers,
 				`max_requests` = :max_requests,
 				`idle_timeout` = :idle_timeout,
-				`limit_extensions` = :limit_extensions
+				`limit_extensions` = :limit_extensions,
+				`custom_config` = :custom_config
 			");
 			$ins_data = array(
 				'desc' => $description,
@@ -192,7 +223,8 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				'max_spare_servers' => $max_spare_servers,
 				'max_requests' => $max_requests,
 				'idle_timeout' => $idle_timeout,
-				'limit_extensions' => $limit_extensions
+				'limit_extensions' => $limit_extensions,
+				'custom_config' => $custom_config
 			);
 			Database::pexecute($ins_stmt, $ins_data);
 			$id = Database::lastInsertId();
@@ -202,7 +234,7 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			$result = $this->apiCall('FpmDaemons.get', array(
 				'id' => $id
 			));
-			return $this->response(200, "successfull", $result);
+			return $this->response(200, "successful", $result);
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
 	}
@@ -219,25 +251,27 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	 * @param string $config_dir
 	 *        	optional
 	 * @param string $pm
-	 *        	optional, process-manager, one of 'static', 'dynamic' or 'ondemand', default 'static'
+	 *        	optional, process-manager, one of 'static', 'dynamic' or 'ondemand', default 'dynamic'
 	 * @param int $max_children
-	 *        	optional, default 0
+	 *        	optional, default 5
 	 * @param int $start_servers
-	 *        	optional, default 0
+	 *        	optional, default 2
 	 * @param int $min_spare_servers
-	 *        	optional, default 0
+	 *        	optional, default 1
 	 * @param int $max_spare_servers
-	 *        	optional, default 0
+	 *        	optional, default 3
 	 * @param int $max_requests
 	 *        	optional, default 0
 	 * @param int $idle_timeout
-	 *        	optional, default 0
+	 *        	optional, default 10
 	 * @param string $limit_extensions
 	 *        	optional, limit execution to the following extensions, default '.php'
+	 * @param string $custom_config
+	 *        	optional, custom settings appended to phpfpm pool configuration
 	 *        	
 	 * @access admin
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function update()
 	{
@@ -262,6 +296,7 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			$max_requests = $this->getParam('max_requests', true, $result['max_requests']);
 			$idle_timeout = $this->getParam('idle_timeout', true, $result['idle_timeout']);
 			$limit_extensions = $this->getParam('limit_extensions', true, $result['limit_extensions']);
+			$custom_config = $this->getParam('custom_config', true, $result['custom_config']);
 
 			// validation
 			$description = \Froxlor\Validate\Validate::validate($description, 'description', '', '', array(), true);
@@ -295,7 +330,8 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				`max_spare_servers` = :max_spare_servers,
 				`max_requests` = :max_requests,
 				`idle_timeout` = :idle_timeout,
-				`limit_extensions` = :limit_extensions
+				`limit_extensions` = :limit_extensions,
+				`custom_config` = :custom_config
 				WHERE `id` = :id
 			");
 			$upd_data = array(
@@ -310,6 +346,7 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				'max_requests' => $max_requests,
 				'idle_timeout' => $idle_timeout,
 				'limit_extensions' => $limit_extensions,
+				'custom_config' => $custom_config,
 				'id' => $id
 			);
 			Database::pexecute($upd_stmt, $upd_data, true, true);
@@ -319,7 +356,7 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			$result = $this->apiCall('FpmDaemons.get', array(
 				'id' => $id
 			));
-			return $this->response(200, "successfull", $result);
+			return $this->response(200, "successful", $result);
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
 	}
@@ -332,7 +369,7 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	 *        	
 	 * @access admin
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function delete()
 	{
@@ -365,7 +402,7 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 
 			\Froxlor\System\Cronjob::inserttask('1');
 			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] fpm-daemon setting '" . $result['description'] . "' has been deleted by '" . $this->getUserDetail('loginname') . "'");
-			return $this->response(200, "successfull", $result);
+			return $this->response(200, "successful", $result);
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
 	}

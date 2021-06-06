@@ -19,7 +19,7 @@
 define('AREA', 'admin');
 require './lib/init.php';
 
-use Froxlor\Database\Database;
+use Froxlor\Api\Commands\SysLog;
 
 if ($page == 'log' && $userinfo['change_serversettings'] == '1') {
 	if ($action == '') {
@@ -29,20 +29,25 @@ if ($page == 'log' && $userinfo['change_serversettings'] == '1') {
 			'user' => $lng['logger']['user'],
 			'text' => $lng['logger']['action']
 		);
-		$paging = new \Froxlor\UI\Paging($userinfo, TABLE_PANEL_LOG, $fields, null, null, 0, 'desc', 30);
-		$query = 'SELECT * FROM `' . TABLE_PANEL_LOG . '` ' . $paging->getSqlWhere(false) . ' ' . $paging->getSqlOrderBy();
-		$result_stmt = Database::query($query . ' ' . $paging->getSqlLimit());
-		$result_cnt_stmt = Database::query($query);
-		$logs_count = $result_cnt_stmt->rowCount();
-		$paging->setEntries($logs_count);
+		try {
+			// get total count
+			$json_result = SysLog::getLocal($userinfo)->listingCount();
+			$result = json_decode($json_result, true)['data'];
+			// initialize pagination and filtering
+			$paging = new \Froxlor\UI\Pagination($userinfo, $fields, $result);
+			// get list
+			$json_result = SysLog::getLocal($userinfo, $paging->getApiCommandParams())->listing();
+		} catch (Exception $e) {
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
 		$sortcode = $paging->getHtmlSortCode($lng);
 		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
 		$searchcode = $paging->getHtmlSearchCode($lng);
 		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
 		$clog = array();
 
-		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-
+		foreach ($result['list'] as $row) {
 			if (! isset($clog[$row['action']]) || ! is_array($clog[$row['action']])) {
 				$clog[$row['action']] = array();
 			}
@@ -55,7 +60,6 @@ if ($page == 'log' && $userinfo['change_serversettings'] == '1') {
 			ksort($clog);
 		}
 
-		$i = 0;
 		$count = 0;
 		$log_count = 0;
 		$log = '';
@@ -83,7 +87,7 @@ if ($page == 'log' && $userinfo['change_serversettings'] == '1') {
 						case \Froxlor\FroxlorLogger::LOGIN_ACTION:
 							$_action = $lng['logger']['login'];
 							break;
-						case LOG_ERROR:
+						case \Froxlor\FroxlorLogger::LOG_ERROR:
 							$_action = $lng['logger']['intern'];
 							break;
 						default:
@@ -100,23 +104,20 @@ if ($page == 'log' && $userinfo['change_serversettings'] == '1') {
 				eval("\$log.=\"" . \Froxlor\UI\Template::getTemplate('logger/logger_log') . "\";");
 				$count ++;
 				$_action = $action;
-				// }
-				$i ++;
 			}
-			$i ++;
 		}
 
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate('logger/logger') . "\";");
 	} elseif ($action == 'truncate') {
 
 		if (isset($_POST['send']) && $_POST['send'] == 'send') {
-			$truncatedate = time() - (60 * 10);
-			$trunc_stmt = Database::prepare("
-				DELETE FROM `" . TABLE_PANEL_LOG . "` WHERE `date` < :trunc");
-			Database::pexecute($trunc_stmt, array(
-				'trunc' => $truncatedate
-			));
-			$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_WARNING, 'truncated the system-log (mysql)');
+			try {
+				SysLog::getLocal($userinfo, array(
+					'min_to_keep' => 10
+				))->delete();
+			} catch (Exception $e) {
+				\Froxlor\UI\Response::dynamic_error($e->getMessage());
+			}
 			\Froxlor\UI\Response::redirectTo($filename, array(
 				'page' => $page,
 				's' => $s

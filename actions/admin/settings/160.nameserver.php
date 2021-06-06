@@ -107,6 +107,22 @@ return array(
 					'default' => false,
 					'save_method' => 'storeSettingField'
 				),
+				'system_dns_createcaaentry' => array(
+					'label' => $lng['serversettings']['caa_entry'],
+					'settinggroup' => 'system',
+					'varname' => 'dns_createcaaentry',
+					'type' => 'bool',
+					'default' => true,
+					'save_method' => 'storeSettingField'
+				),
+				'caa_caa_entry' => array(
+					'label' => $lng['serversettings']['caa_entry_custom'],
+					'settinggroup' => 'caa',
+					'varname' => 'caa_entry',
+					'type' => 'text',
+					'default' => '',
+					'save_method' => 'storeSettingField'
+				),
 				'system_defaultttl' => array(
 					'label' => $lng['serversettings']['defaultttl'],
 					'settinggroup' => 'system',
@@ -115,6 +131,16 @@ return array(
 					'default' => 604800, /* 1 week */
 					'int_min' => 3600, /* 1 hour */
 					'int_max' => 2147483647, /* integer max */
+					'save_method' => 'storeSettingField'
+				),
+				'system_soaemail' => array(
+					'label' => $lng['serversettings']['soaemail'],
+					'settinggroup' => 'system',
+					'varname' => 'soaemail',
+					'type' => 'string',
+					'string_type' => 'mail',
+					'string_emptyallowed' => true,
+					'default' => '',
 					'save_method' => 'storeSettingField'
 				)
 			)

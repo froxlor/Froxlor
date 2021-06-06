@@ -35,6 +35,7 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 		unset($_SESSION['requestData']);
 
 		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_customers");
+
 		$fields = array(
 			'c.loginname' => $lng['login']['username'],
 			'a.loginname' => $lng['admin']['admin'],
@@ -47,106 +48,109 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 			'c.traffic' => $lng['customer']['traffic'],
 			'c.traffic_used' => $lng['customer']['traffic'] . ' (' . $lng['panel']['used'] . ')'
 		);
+		try {
+			// get total count
+			$json_result = Customers::getLocal($userinfo)->listingCount();
+			$result = json_decode($json_result, true)['data'];
+			// initialize pagination and filtering
+			$paging = new \Froxlor\UI\Pagination($userinfo, $fields, $result);
+			// get list
+			$json_result = Customers::getLocal($userinfo, $paging->getApiCommandParams())->listing();
+		} catch (Exception $e) {
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
 
-		$paging = new \Froxlor\UI\Paging($userinfo, TABLE_PANEL_CUSTOMERS, $fields);
 		$customers = '';
-		$result_stmt = Database::prepare("
-			SELECT `c`.*, `a`.`loginname` AS `adminname`
-			FROM `" . TABLE_PANEL_CUSTOMERS . "` `c`, `" . TABLE_PANEL_ADMINS . "` `a`
-			WHERE " . ($userinfo['customers_see_all'] ? '' : " `c`.`adminid` = :adminid AND ") . "
-			`c`.`adminid` = `a`.`adminid` " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
-		Database::pexecute($result_stmt, array(
-			'adminid' => $userinfo['adminid']
-		));
-		$num_rows = Database::num_rows();
-		$paging->setEntries($num_rows);
 		$sortcode = $paging->getHtmlSortCode($lng, true);
 		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
 		$searchcode = $paging->getHtmlSearchCode($lng);
 		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
-		$i = 0;
 		$count = 0;
 
-		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+		foreach ($result['list'] as $row) {
 
-			if ($paging->checkDisplay($i)) {
+			$domains_stmt = Database::prepare("
+				SELECT COUNT(`id`) AS `domains`
+				FROM `" . TABLE_PANEL_DOMAINS . "`
+				WHERE `customerid` = :cid
+				AND `parentdomainid` = '0'
+				AND `id`<> :stdd
+			");
+			Database::pexecute($domains_stmt, array(
+				'cid' => $row['customerid'],
+				'stdd' => $row['standardsubdomain']
+			));
+			$domains = $domains_stmt->fetch(PDO::FETCH_ASSOC);
+			$row['domains'] = intval($domains['domains']);
+			$dec_places = Settings::Get('panel.decimal_places');
 
-				$domains_stmt = Database::prepare("
-					SELECT COUNT(`id`) AS `domains`
-					FROM `" . TABLE_PANEL_DOMAINS . "`
-					WHERE `customerid` = :cid
-					AND `parentdomainid` = '0'
-					AND `id`<> :stdd");
-				Database::pexecute($domains_stmt, array(
-					'cid' => $row['customerid'],
-					'stdd' => $row['standardsubdomain']
-				));
-				$domains = $domains_stmt->fetch(PDO::FETCH_ASSOC);
-				$row['domains'] = intval($domains['domains']);
-				$dec_places = Settings::Get('panel.decimal_places');
+			// get disk-space usages for web, mysql and mail
+			$usages_stmt = Database::prepare("
+				SELECT * FROM `" . TABLE_PANEL_DISKSPACE . "`
+				WHERE `customerid` = :cid
+				ORDER BY `stamp` DESC LIMIT 1
+			");
+			$usages = Database::pexecute_first($usages_stmt, array(
+				'cid' => $row['customerid']
+			));
 
-				// get disk-space usages for web, mysql and mail
-				$usages_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_DISKSPACE . "` WHERE `customerid` = :cid ORDER BY `stamp` DESC LIMIT 1");
-				$usages = Database::pexecute_first($usages_stmt, array(
-					'cid' => $row['customerid']
-				));
-
+			if ($usages) {
 				$row['webspace_used'] = round($usages['webspace'] / 1024, $dec_places);
 				$row['mailspace_used'] = round($usages['mail'] / 1024, $dec_places);
 				$row['dbspace_used'] = round($usages['mysql'] / 1024, $dec_places);
+			} else {
+				$row['webspace_used'] = 0;
+				$row['mailspace_used'] = 0;
+				$row['dbspace_used'] = 0;
+			}
+			$row['traffic_used'] = round($row['traffic_used'] / (1024 * 1024), $dec_places);
+			$row['traffic'] = round($row['traffic'] / (1024 * 1024), $dec_places);
+			$row['diskspace_used'] = round($row['diskspace_used'] / 1024, $dec_places);
+			$row['diskspace'] = round($row['diskspace'] / 1024, $dec_places);
+			$last_login = ((int) $row['lastlogin_succ'] == 0) ? $lng['panel']['neverloggedin'] : date('d.m.Y', $row['lastlogin_succ']);
 
-				$row['traffic_used'] = round($row['traffic_used'] / (1024 * 1024), $dec_places);
-				$row['traffic'] = round($row['traffic'] / (1024 * 1024), $dec_places);
-				$row['diskspace_used'] = round($row['diskspace_used'] / 1024, $dec_places);
-				$row['diskspace'] = round($row['diskspace'] / 1024, $dec_places);
-				$last_login = ((int) $row['lastlogin_succ'] == 0) ? $lng['panel']['neverloggedin'] : date('d.m.Y', $row['lastlogin_succ']);
-
-				/**
-				 * percent-values for progressbar
-				 */
-				// For Disk usage
-				if ($row['diskspace'] > 0) {
-					$disk_percent = round(($row['diskspace_used'] * 100) / $row['diskspace'], 0);
-					$disk_doublepercent = round($disk_percent * 2, 2);
-				} else {
-					$disk_percent = 0;
-					$disk_doublepercent = 0;
-				}
-
-				if ($row['traffic'] > 0) {
-					$traffic_percent = round(($row['traffic_used'] * 100) / $row['traffic'], 0);
-					$traffic_doublepercent = round($traffic_percent * 2, 2);
-				} else {
-					$traffic_percent = 0;
-					$traffic_doublepercent = 0;
-				}
-
-				$islocked = 0;
-				if ($row['loginfail_count'] >= Settings::Get('login.maxloginattempts') && $row['lastlogin_fail'] > (time() - Settings::Get('login.deactivatetime'))) {
-					$islocked = 1;
-				}
-
-				$row = \Froxlor\PhpHelper::strReplaceArray('-1', 'UL', $row, 'diskspace traffic mysqls emails email_accounts email_forwarders ftps subdomains');
-				$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
-
-				// fix progress-bars if value is >100%
-				if ($disk_percent > 100) {
-					$disk_percent = 100;
-				}
-				if ($traffic_percent > 100) {
-					$traffic_percent = 100;
-				}
-
-				$row['custom_notes'] = ($row['custom_notes'] != '') ? nl2br($row['custom_notes']) : '';
-
-				eval("\$customers.=\"" . \Froxlor\UI\Template::getTemplate("customers/customers_customer") . "\";");
-				$count ++;
+			/**
+			 * percent-values for progressbar
+			 */
+			if ($row['diskspace'] > 0) {
+				$disk_percent = round(($row['diskspace_used'] * 100) / $row['diskspace'], 0);
+				$disk_doublepercent = round($disk_percent * 2, 2);
+			} else {
+				$disk_percent = 0;
+				$disk_doublepercent = 0;
+			}
+			if ($row['traffic'] > 0) {
+				$traffic_percent = round(($row['traffic_used'] * 100) / $row['traffic'], 0);
+				$traffic_doublepercent = round($traffic_percent * 2, 2);
+			} else {
+				$traffic_percent = 0;
+				$traffic_doublepercent = 0;
 			}
 
-			$i ++;
+			$islocked = 0;
+			if ($row['loginfail_count'] >= Settings::Get('login.maxloginattempts') && $row['lastlogin_fail'] > (time() - Settings::Get('login.deactivatetime'))) {
+				$islocked = 1;
+			}
+
+			$row = \Froxlor\PhpHelper::strReplaceArray('-1', 'UL', $row, 'diskspace traffic mysqls emails email_accounts email_forwarders ftps subdomains');
+			$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
+
+			// fix progress-bars if value is >100%
+			if ($disk_percent > 100) {
+				$disk_percent = 100;
+			}
+			if ($traffic_percent > 100) {
+				$traffic_percent = 100;
+			}
+
+			$row['custom_notes'] = ($row['custom_notes'] != '') ? nl2br($row['custom_notes']) : '';
+
+			eval("\$customers.=\"" . \Froxlor\UI\Template::getTemplate("customers/customers_customer") . "\";");
+			$count ++;
 		}
 
-		$customercount = $num_rows;
+		$customercount = $result['count'] . " / " . $paging->getEntries();
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate("customers/customers") . "\";");
 	} elseif ($action == 'su' && $id != 0) {
 		try {

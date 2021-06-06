@@ -16,10 +16,36 @@
  * @package    System
  *
  */
+
+// define default theme for configurehint, etc.
+$_deftheme = 'Sparkle';
+
+// validate correct php version
+if (version_compare("7.1.0", PHP_VERSION, ">=")) {
+	// get hint-template
+	$vendor_hint = file_get_contents(dirname(__DIR__) . '/templates/' . $_deftheme . '/misc/phprequirementfailed.tpl');
+	// replace values
+	$vendor_hint = str_replace("<FROXLOR_PHPMIN>", "7.1.0", $vendor_hint);
+	$vendor_hint = str_replace("<CURRENT_VERSION>", PHP_VERSION, $vendor_hint);
+	$vendor_hint = str_replace("<CURRENT_YEAR>", date('Y', time()), $vendor_hint);
+	die($vendor_hint);
+}
+
+if (! file_exists(dirname(__DIR__) . '/vendor/autoload.php')) {
+	// get hint-template
+	$vendor_hint = file_get_contents(dirname(__DIR__) . '/templates/' . $_deftheme . '/misc/vendormissinghint.tpl');
+	// replace values
+	$vendor_hint = str_replace("<FROXLOR_INSTALL_DIR>", dirname(__DIR__), $vendor_hint);
+	$vendor_hint = str_replace("<CURRENT_YEAR>", date('Y', time()), $vendor_hint);
+	die($vendor_hint);
+}
+
 require dirname(__DIR__) . '/vendor/autoload.php';
 
 use Froxlor\Database\Database;
 use Froxlor\Settings;
+use voku\helper\AntiXSS;
+use Froxlor\PhpHelper;
 
 header("Content-Type: text/html; charset=UTF-8");
 
@@ -62,14 +88,22 @@ foreach ($_REQUEST as $key => $value) {
 	}
 }
 
+/**
+ * check for xss attempts and clean important globals
+ */
+$antiXss = new AntiXSS();
+// check $_GET
+PhpHelper::cleanGlobal($_GET, $antiXss);
+// check $_POST
+PhpHelper::cleanGlobal($_POST, $antiXss);
+// check $_COOKIE
+PhpHelper::cleanGlobal($_COOKIE, $antiXss);
+
 unset($_);
 unset($value);
 unset($key);
 
 $filename = htmlentities(basename($_SERVER['PHP_SELF']));
-
-// define default theme for configurehint, etc.
-$_deftheme = 'Sparkle';
 
 // check whether the userdata file exists
 if (! file_exists(\Froxlor\Froxlor::getInstallDir() . '/lib/userdata.inc.php')) {
@@ -88,7 +122,7 @@ if (! is_readable(\Froxlor\Froxlor::getInstallDir() . '/lib/userdata.inc.php')) 
 	// replace values
 	$owner_hint = str_replace("<USER>", $posixusername['name'], $owner_hint);
 	$owner_hint = str_replace("<GROUP>", $posixgroup['name'], $owner_hint);
-	$owner_hint = str_replace("<\Froxlor\Froxlor::getInstallDir()>", \Froxlor\Froxlor::getInstallDir(), $owner_hint);
+	$owner_hint = str_replace("<FROXLOR_INSTALL_DIR>", \Froxlor\Froxlor::getInstallDir(), $owner_hint);
 	$owner_hint = str_replace("<CURRENT_YEAR>", date('Y', time()), $owner_hint);
 	// show
 	die($owner_hint);
@@ -210,7 +244,7 @@ if (isset($s) && $s != "" && $nosession != 1) {
 	$userinfo_stmt = Database::prepare($query);
 	$userinfo = Database::pexecute_first($userinfo_stmt, $userinfo_data);
 
-	if ((($userinfo['adminsession'] == '1' && AREA == 'admin' && isset($userinfo['adminid'])) || ($userinfo['adminsession'] == '0' && (AREA == 'customer' || AREA == 'login') && isset($userinfo['customerid']))) && (! isset($userinfo['deactivated']) || $userinfo['deactivated'] != '1')) {
+	if ($userinfo && (($userinfo['adminsession'] == '1' && AREA == 'admin' && isset($userinfo['adminid'])) || ($userinfo['adminsession'] == '0' && (AREA == 'customer' || AREA == 'login') && isset($userinfo['customerid']))) && (! isset($userinfo['deactivated']) || $userinfo['deactivated'] != '1')) {
 		$upd_stmt = Database::prepare("
 			UPDATE `" . TABLE_PANEL_SESSIONS . "` SET
 			`lastactivity` = :lastactive
@@ -446,15 +480,27 @@ if (array_key_exists('css', $_themeoptions['variants'][$themevariant]) && is_arr
 eval("\$header = \"" . \Froxlor\UI\Template::getTemplate('header', '1') . "\";");
 
 $current_year = date('Y', time());
+$panel_imprint_url = Settings::Get('panel.imprint_url');
+if (!empty($panel_imprint_url) && strtolower(substr($panel_imprint_url, 0, 4)) != 'http') {
+	$panel_imprint_url = 'https://'.$panel_imprint_url;
+}
+$panel_terms_url = Settings::Get('panel.terms_url');
+if (!empty($panel_terms_url) && strtolower(substr($panel_terms_url, 0, 4)) != 'http') {
+	$panel_terms_url = 'https://'.$panel_terms_url;
+}
+$panel_privacy_url = Settings::Get('panel.privacy_url');
+if (!empty($panel_privacy_url) && strtolower(substr($panel_privacy_url, 0, 4)) != 'http') {
+	$panel_privacy_url = 'https://'.$panel_privacy_url;
+}
 eval("\$footer = \"" . \Froxlor\UI\Template::getTemplate('footer', '1') . "\";");
 
 unset($js);
 unset($css);
 
 if (isset($_POST['action'])) {
-	$action = $_POST['action'];
+	$action = trim(strip_tags($_POST['action']));
 } elseif (isset($_GET['action'])) {
-	$action = $_GET['action'];
+	$action = trim(strip_tags($_GET['action']));
 } else {
 	$action = '';
 	// clear request data
@@ -464,9 +510,9 @@ if (isset($_POST['action'])) {
 }
 
 if (isset($_POST['page'])) {
-	$page = $_POST['page'];
+	$page = trim(strip_tags($_POST['page']));
 } elseif (isset($_GET['page'])) {
-	$page = $_GET['page'];
+	$page = trim(strip_tags($_GET['page']));
 } else {
 	$page = '';
 }

@@ -21,6 +21,7 @@ require './lib/init.php';
 
 use Froxlor\Database\Database;
 use Froxlor\Settings;
+use Froxlor\Api\Commands\Customers as Customers;
 use Froxlor\Api\Commands\Domains as Domains;
 
 if (isset($_POST['id'])) {
@@ -31,91 +32,55 @@ if (isset($_POST['id'])) {
 
 if ($page == 'domains' || $page == 'overview') {
 	// Let's see how many customers we have
-	$stmt = Database::prepare("
-		SELECT COUNT(`customerid`) as `countcustomers` FROM `" . TABLE_PANEL_CUSTOMERS . "` " . ($userinfo['customers_see_all'] ? '' : " WHERE `adminid` = :adminid"));
-	$params = array();
-	if ($userinfo['customers_see_all'] == '0') {
-		$params['adminid'] = $userinfo['adminid'];
-	}
-	$countcustomers = Database::pexecute_first($stmt, $params);
-	$countcustomers = (int) $countcustomers['countcustomers'];
+	$json_result = Customers::getLocal($userinfo)->listingCount();
+	$countcustomers = json_decode($json_result, true)['data'];
 
 	if ($action == '') {
 
 		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_domains");
 		$fields = array(
-			'd.domain' => $lng['domains']['domainname'],
+			'd.domain_ace' => $lng['domains']['domainname'],
 			'c.name' => $lng['customer']['name'],
 			'c.firstname' => $lng['customer']['firstname'],
 			'c.company' => $lng['customer']['company'],
 			'c.loginname' => $lng['login']['username'],
 			'd.aliasdomain' => $lng['domains']['aliasdomain']
 		);
-		$paging = new \Froxlor\UI\Paging($userinfo, TABLE_PANEL_DOMAINS, $fields);
-		$domains = "";
-		$result_stmt = Database::prepare("
-			SELECT `d`.*, `c`.`loginname`, `c`.`deactivated`, `c`.`name`, `c`.`firstname`, `c`.`company`, `c`.`standardsubdomain`, `ad`.`id` AS `aliasdomainid`, `ad`.`domain` AS `aliasdomain`
-			FROM `" . TABLE_PANEL_DOMAINS . "` `d`
-			LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` `c` USING(`customerid`)
-			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` `ad` ON `d`.`aliasdomain`=`ad`.`id`
-			WHERE `d`.`parentdomainid`='0' " . ($userinfo['customers_see_all'] ? '' : " AND `d`.`adminid` = :adminid ") . " " . $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit());
-		$params = array();
-		if ($userinfo['customers_see_all'] == '0') {
-			$params['adminid'] = $userinfo['adminid'];
+		try {
+			// get total count
+			$json_result = Domains::getLocal($userinfo)->listingCount();
+			$result = json_decode($json_result, true)['data'];
+			// initialize pagination and filtering
+			$paging = new \Froxlor\UI\Pagination($userinfo, $fields, $result);
+			// get list
+			$json_result = Domains::getLocal($userinfo, $paging->getApiCommandParams())->listing();
+		} catch (Exception $e) {
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
-		Database::pexecute($result_stmt, $params);
-		$numrows_domains = Database::num_rows();
-		$paging->setEntries($numrows_domains);
+		$result = json_decode($json_result, true)['data'];
+
+		$domains = '';
 		$sortcode = $paging->getHtmlSortCode($lng);
 		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
 		$searchcode = $paging->getHtmlSearchCode($lng);
 		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
-		$domain_array = array();
 
-		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-
-			formatDomainEntry($row, $idna_convert);
-
-			if (! isset($domain_array[$row['domain']])) {
-				$domain_array[$row['domain']] = $row;
-			} else {
-				$domain_array[$row['domain']] = array_merge($row, $domain_array[$row['domain']]);
-			}
-
-			if (isset($row['aliasdomainid']) && $row['aliasdomainid'] != null && isset($row['aliasdomain']) && $row['aliasdomain'] != '') {
-				if (! isset($domain_array[$row['aliasdomain']])) {
-					$domain_array[$row['aliasdomain']] = array();
-				}
-				$domain_array[$row['aliasdomain']]['domainaliasid'] = $row['id'];
-				$domain_array[$row['aliasdomain']]['domainalias'] = $row['domain'];
-			}
-		}
-
-		/**
-		 * We need ksort/krsort here to make sure idna-domains are also sorted correctly
-		 */
-		if ($paging->sortfield == 'd.domain' && $paging->sortorder == 'asc') {
-			ksort($domain_array);
-		} elseif ($paging->sortfield == 'd.domain' && $paging->sortorder == 'desc') {
-			krsort($domain_array);
-		}
-
-		$i = 0;
 		$count = 0;
-		foreach ($domain_array as $row) {
-
-			if (isset($row['domain']) && $row['domain'] != '' && $paging->checkDisplay($i)) {
-				$row['customername'] = \Froxlor\User::getCorrectFullUserDetails($row);
-				$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
-				// display a nice list of IP's
+		foreach ($result['list'] as $row) {
+			formatDomainEntry($row, $idna_convert);
+			$row['customername'] = \Froxlor\User::getCorrectFullUserDetails($row);
+			$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
+			// display a nice list of IP's if it's not an alias for another domain
+			if (isset($row['aliasdomainid']) && $row['aliasdomainid'] != null && isset($row['aliasdomain']) && $row['aliasdomain'] != '') {
+				$row['ipandport'] = sprintf($lng['domains']['isaliasdomainof'], $row['aliasdomain']);
+			} else {
 				$row['ipandport'] = str_replace("\n", "<br />", $row['ipandport']);
-				eval("\$domains.=\"" . \Froxlor\UI\Template::getTemplate("domains/domains_domain") . "\";");
-				$count ++;
 			}
-			$i ++;
+			eval("\$domains.=\"" . \Froxlor\UI\Template::getTemplate("domains/domains_domain") . "\";");
+			$count++;
 		}
 
-		$domainscount = $numrows_domains;
+		$domainscount = $result['count'] . " / " . $paging->getEntries();
 
 		// Display the list
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate("domains/domains") . "\";");
@@ -416,6 +381,10 @@ if ($page == 'domains' || $page == 'overview') {
 
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
+					// remove ssl ip/ports if set is empty
+					if (!isset($_POST['ssl_ipandport']) || empty($_POST['ssl_ipandport'])) {
+						$_POST['remove_ssl_ipandport'] = true;
+					}
 					Domains::getLocal($userinfo, $_POST)->update();
 				} catch (Exception $e) {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
@@ -647,7 +616,6 @@ if ($page == 'domains' || $page == 'overview') {
 
 		if (isset($_POST['send']) && $_POST['send'] == 'send') {
 
-			$customerid = intval($_POST['customerid']);
 			$separator = \Froxlor\Validate\Validate::validate($_POST['separator'], 'separator');
 			$offset = (int) \Froxlor\Validate\Validate::validate($_POST['offset'], 'offset', "/[0-9]/i");
 
@@ -656,7 +624,7 @@ if ($page == 'domains' || $page == 'overview') {
 			$result = array();
 
 			try {
-				$bulk = new \Froxlor\Bulk\DomainBulkAction($file_name, $customerid);
+				$bulk = new \Froxlor\Bulk\DomainBulkAction($file_name, $userinfo);
 				$result = $bulk->doImport($separator, $offset);
 			} catch (Exception $e) {
 				\Froxlor\UI\Response::standard_error('domain_import_error', $e->getMessage());
@@ -678,19 +646,6 @@ if ($page == 'domains' || $page == 'overview') {
 				'page' => 'domains'
 			));
 		} else {
-			$customers = \Froxlor\UI\HTML::makeoption($lng['panel']['please_choose'], 0, 0, true);
-			$result_customers_stmt = Database::prepare("
-				SELECT `customerid`, `loginname`, `name`, `firstname`, `company`
-				FROM `" . TABLE_PANEL_CUSTOMERS . "` " . ($userinfo['customers_see_all'] ? '' : " WHERE `adminid` = '" . (int) $userinfo['adminid'] . "' ") . " ORDER BY `name` ASC");
-			$params = array();
-			if ($userinfo['customers_see_all'] == '0') {
-				$params['adminid'] = $userinfo['adminid'];
-			}
-			Database::pexecute($result_customers_stmt, $params);
-
-			while ($row_customer = $result_customers_stmt->fetch(PDO::FETCH_ASSOC)) {
-				$customers .= \Froxlor\UI\HTML::makeoption(\Froxlor\User::getCorrectFullUserDetails($row_customer) . ' (' . $row_customer['loginname'] . ')', $row_customer['customerid']);
-			}
 
 			$domain_import_data = include_once dirname(__FILE__) . '/lib/formfields/admin/domains/formfield.domains_import.php';
 			$domain_import_form = \Froxlor\UI\HtmlForm::genHTMLForm($domain_import_data);
@@ -717,18 +672,8 @@ function formatDomainEntry(&$row, &$idna_convert)
 	$row['domain'] = $idna_convert->decode($row['domain']);
 	$row['aliasdomain'] = $idna_convert->decode($row['aliasdomain']);
 
-	$resultips_stmt = Database::prepare("
-		SELECT `ips`.* FROM `" . TABLE_DOMAINTOIP . "` AS `dti`, `" . TABLE_PANEL_IPSANDPORTS . "` AS `ips`
-		WHERE `dti`.`id_ipandports` = `ips`.`id` AND `dti`.`id_domain` = :domainid
-	");
-
-	Database::pexecute($resultips_stmt, array(
-		'domainid' => $row['id']
-	));
-
 	$row['ipandport'] = '';
-	while ($rowip = $resultips_stmt->fetch(PDO::FETCH_ASSOC)) {
-
+	foreach ($row['ipsandports'] as $rowip) {
 		if (filter_var($rowip['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
 			$row['ipandport'] .= '[' . $rowip['ip'] . ']:' . $rowip['port'] . "\n";
 		} else {

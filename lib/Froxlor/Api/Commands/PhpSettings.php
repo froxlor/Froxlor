@@ -27,10 +27,18 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 	 *
 	 * @param bool $with_subdomains
 	 *        	optional, also include subdomains to the list domains that use the config, default 0 (false)
-	 *        	
+	 * @param array $sql_search
+	 *        	optional array with index = fieldname, and value = array with 'op' => operator (one of <, > or =), LIKE is used if left empty and 'value' => searchvalue
+	 * @param int $sql_limit
+	 *        	optional specify number of results to be returned
+	 * @param int $sql_offset
+	 *        	optional specify offset for resultset
+	 * @param array $sql_orderby
+	 *        	optional array with index = fieldname and value = ASC|DESC to order the resultset by one or more fields
+	 *
 	 * @access admin
 	 * @throws \Exception
-	 * @return array count|list
+	 * @return string json-encoded array count|list
 	 */
 	public function listing()
 	{
@@ -38,22 +46,20 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] list php-configs");
 
 			$with_subdomains = $this->getBoolParam('with_subdomains', true, false);
-
-			$result = Database::query("
+			$query_fields = array();
+			$result_stmt = Database::prepare("
 				SELECT c.*, fd.description as fpmdesc
 				FROM `" . TABLE_PANEL_PHPCONFIGS . "` c
-				LEFT JOIN `" . TABLE_PANEL_FPMDAEMONS . "` fd ON fd.id = c.fpmsettingid
-				ORDER BY c.description ASC
-			");
-
+				LEFT JOIN `" . TABLE_PANEL_FPMDAEMONS . "` fd ON fd.id = c.fpmsettingid" . $this->getSearchWhere($query_fields) . $this->getOrderBy() . $this->getLimit());
+			Database::pexecute($result_stmt, $query_fields, true, true);
 			$phpconfigs = array();
-			while ($row = $result->fetch(\PDO::FETCH_ASSOC)) {
+			while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 				$query_params = array(
 					'id' => $row['id']
 				);
 
 				$query = "SELECT * FROM `" . TABLE_PANEL_DOMAINS . "`
-					WHERE `phpsettingid` = :id";
+					WHERE `phpsettingid` = :id AND `email_only` = '0' AND `phpenabled` = '1'";
 
 				if (! $with_subdomains) {
 					$query .= " AND `parentdomainid` = '0'";
@@ -107,10 +113,32 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 				$phpconfigs[] = $row;
 			}
 
-			return $this->response(200, "successfull", array(
+			return $this->response(200, "successful", array(
 				'count' => count($phpconfigs),
 				'list' => $phpconfigs
 			));
+		}
+		throw new \Exception("Not allowed to execute given command.", 403);
+	}
+
+	/**
+	 * returns the total number of accessable php-setting entries
+	 *
+	 * @access admin
+	 * @throws \Exception
+	 * @return string json-encoded array
+	 */
+	public function listingCount()
+	{
+		if ($this->isAdmin()) {
+			$result_stmt = Database::prepare("
+				SELECT COUNT(*) as num_phps
+				FROM `" . TABLE_PANEL_PHPCONFIGS . "` c
+			");
+			$result = Database::pexecute_first($result_stmt, null, true, true);
+			if ($result) {
+				return $this->response(200, "successful", $result['num_phps']);
+			}
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
 	}
@@ -123,7 +151,7 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 	 *        	
 	 * @access admin
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function get()
 	{
@@ -137,7 +165,7 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 				'id' => $id
 			), true, true);
 			if ($result) {
-				return $this->response(200, "successfull", $result);
+				return $this->response(200, "successful", $result);
 			}
 			throw new \Exception("php-config with id #" . $id . " could not be found", 404);
 		}
@@ -192,7 +220,7 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 	 *        	
 	 * @access admin
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function add()
 	{
@@ -339,7 +367,7 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			$result = $this->apiCall('PhpSettings.get', array(
 				'id' => $ins_data['id']
 			));
-			return $this->response(200, "successfull", $result);
+			return $this->response(200, "successful", $result);
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
 	}
@@ -393,7 +421,7 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 	 *        	
 	 * @access admin
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function update()
 	{
@@ -535,7 +563,7 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			$result = $this->apiCall('PhpSettings.get', array(
 				'id' => $id
 			));
-			return $this->response(200, "successfull", $result);
+			return $this->response(200, "successful", $result);
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
 	}
@@ -548,7 +576,7 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 	 *        	
 	 * @access admin
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function delete()
 	{
@@ -586,7 +614,7 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 
 			\Froxlor\System\Cronjob::inserttask('1');
 			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] php setting '" . $result['description'] . "' has been deleted by '" . $this->getUserDetail('loginname') . "'");
-			return $this->response(200, "successfull", $result);
+			return $this->response(200, "successful", $result);
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
 	}

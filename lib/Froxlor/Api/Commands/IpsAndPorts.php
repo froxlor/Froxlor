@@ -25,30 +25,65 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 	/**
 	 * lists all ip/port entries
 	 *
+	 * @param array $sql_search
+	 *        	optional array with index = fieldname, and value = array with 'op' => operator (one of <, > or =), LIKE is used if left empty and 'value' => searchvalue
+	 * @param int $sql_limit
+	 *        	optional specify number of results to be returned
+	 * @param int $sql_offset
+	 *        	optional specify offset for resultset
+	 * @param array $sql_orderby
+	 *        	optional array with index = fieldname and value = ASC|DESC to order the resultset by one or more fields
+	 *
 	 * @access admin
 	 * @throws \Exception
-	 * @return array count|list
+	 * @return string json-encoded array count|list
 	 */
 	public function listing()
 	{
 		if ($this->isAdmin() && ($this->getUserDetail('change_serversettings') || ! empty($this->getUserDetail('ip')))) {
 			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] list ips and ports");
 			$ip_where = "";
+			$append_where = false;
 			if (! empty($this->getUserDetail('ip')) && $this->getUserDetail('ip') != - 1) {
 				$ip_where = "WHERE `id` IN (" . implode(", ", json_decode($this->getUserDetail('ip'), true)) . ")";
+				$append_where = true;
 			}
+			$query_fields = array();
 			$result_stmt = Database::prepare("
-				SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` " . $ip_where . " ORDER BY `ip` ASC, `port` ASC
-			");
-			Database::pexecute($result_stmt, null, true, true);
+				SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` " . $ip_where . $this->getSearchWhere($query_fields, $append_where) . $this->getOrderBy() . $this->getLimit());
+			Database::pexecute($result_stmt, $query_fields, true, true);
 			$result = array();
 			while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 				$result[] = $row;
 			}
-			return $this->response(200, "successfull", array(
+			return $this->response(200, "successful", array(
 				'count' => count($result),
 				'list' => $result
 			));
+		}
+		throw new \Exception("Not allowed to execute given command.", 403);
+	}
+
+	/**
+	 * returns the total number of accessable ip/port entries
+	 *
+	 * @access admin
+	 * @throws \Exception
+	 * @return string json-encoded array
+	 */
+	public function listingCount()
+	{
+		if ($this->isAdmin() && ($this->getUserDetail('change_serversettings') || ! empty($this->getUserDetail('ip')))) {
+			$ip_where = "";
+			if (! empty($this->getUserDetail('ip')) && $this->getUserDetail('ip') != - 1) {
+				$ip_where = "WHERE `id` IN (" . implode(", ", json_decode($this->getUserDetail('ip'), true)) . ")";
+			}
+			$result_stmt = Database::prepare("
+				SELECT COUNT(*) as num_ips FROM `" . TABLE_PANEL_IPSANDPORTS . "` " . $ip_where);
+			$result = Database::pexecute_first($result_stmt, null, true, true);
+			if ($result) {
+				return $this->response(200, "successful", $result['num_ips']);
+			}
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
 	}
@@ -61,7 +96,7 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 	 *        	
 	 * @access admin
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function get()
 	{
@@ -81,7 +116,7 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			), true, true);
 			if ($result) {
 				$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] get ip " . $result['ip'] . " " . $result['port']);
-				return $this->response(200, "successfull", $result);
+				return $this->response(200, "successful", $result);
 			}
 			throw new \Exception("IP/port with id #" . $id . " could not be found", 404);
 		}
@@ -118,27 +153,35 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 	 *        	optional, requires $ssl = 1, default empty
 	 * @param string $ssl_cert_chainfile
 	 *        	optional, requires $ssl = 1, default empty
+	 * @param string $ssl_specialsettings
+	 *        	optional, requires $ssl = 1, default empty
+	 * @param bool $include_specialsettings
+	 *        	optional, requires $ssl = 1, whether or not to include non-ssl specialsettings, default false
+	 * @param string $ssl_default_vhostconf_domain
+	 *        	optional, requires $ssl = 1, defatul empty
+	 * @param bool $include_default_vhostconf_domain
+	 *        	optional, requires $ssl = 1, whether or not to include non-ssl default_vhostconf_domain, default false
 	 *        	
 	 * @access admin
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function add()
 	{
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
 
-			$ip = \Froxlor\Validate\Validate::validate_ip2($this->getParam('ip'), false, 'invalidip', false, false, false, true);
-			$port = \Froxlor\Validate\Validate::validate($this->getParam('port', true, 80), 'port', '/^(([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9])|([1-5][0-9][0-9][0-9][0-9])|(6[0-4][0-9][0-9][0-9])|(65[0-4][0-9][0-9])|(655[0-2][0-9])|(6553[0-5]))$/Di', array(
+			$ip = \Froxlor\Validate\Validate::validate_ip2($this->getParam('ip'), false, 'invalidip', false, true, false, false, true);
+			$port = \Froxlor\Validate\Validate::validate($this->getParam('port', true, 80), 'port', \Froxlor\Validate\Validate::REGEX_PORT, array(
 				'stringisempty',
 				'myport'
 			), array(), true);
 			$listen_statement = ! empty($this->getBoolParam('listen_statement', true, 0)) ? 1 : 0;
 			$namevirtualhost_statement = ! empty($this->getBoolParam('namevirtualhost_statement', true, 0)) ? 1 : 0;
 			$vhostcontainer = ! empty($this->getBoolParam('vhostcontainer', true, 0)) ? 1 : 0;
-			$specialsettings = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $this->getParam('specialsettings', true, '')), 'specialsettings', '/^[^\0]*$/', '', array(), true);
+			$specialsettings = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $this->getParam('specialsettings', true, '')), 'specialsettings', \Froxlor\Validate\Validate::REGEX_CONF_TEXT, '', array(), true);
 			$vhostcontainer_servername_statement = ! empty($this->getBoolParam('vhostcontainer_servername_statement', true, 1)) ? 1 : 0;
-			$default_vhostconf_domain = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $this->getParam('default_vhostconf_domain', true, '')), 'default_vhostconf_domain', '/^[^\0]*$/', '', array(), true);
-			$docroot = \Froxlor\Validate\Validate::validate($this->getParam('docroot', true, ''), 'docroot', '', '', array(), true);
+			$default_vhostconf_domain = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $this->getParam('default_vhostconf_domain', true, '')), 'default_vhostconf_domain', \Froxlor\Validate\Validate::REGEX_CONF_TEXT, '', array(), true);
+			$docroot = \Froxlor\Validate\Validate::validate($this->getParam('docroot', true, ''), 'docroot', \Froxlor\Validate\Validate::REGEX_DIR, '', array(), true);
 
 			if ((int) Settings::Get('system.use_ssl') == 1) {
 				$ssl = ! empty($this->getBoolParam('ssl', true, 0)) ? intval($this->getBoolParam('ssl', true, 0)) : 0;
@@ -146,12 +189,20 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 				$ssl_key_file = \Froxlor\Validate\Validate::validate($this->getParam('ssl_key_file', $ssl, ''), 'ssl_key_file', '', '', array(), true);
 				$ssl_ca_file = \Froxlor\Validate\Validate::validate($this->getParam('ssl_ca_file', true, ''), 'ssl_ca_file', '', '', array(), true);
 				$ssl_cert_chainfile = \Froxlor\Validate\Validate::validate($this->getParam('ssl_cert_chainfile', true, ''), 'ssl_cert_chainfile', '', '', array(), true);
+				$ssl_specialsettings = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $this->getParam('ssl_specialsettings', true, '')), 'ssl_specialsettings', \Froxlor\Validate\Validate::REGEX_CONF_TEXT, '', array(), true);
+				$include_specialsettings = ! empty($this->getBoolParam('include_specialsettings', true, 0)) ? 1 : 0;
+				$ssl_default_vhostconf_domain = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $this->getParam('ssl_default_vhostconf_domain', true, '')), 'ssl_default_vhostconf_domain', \Froxlor\Validate\Validate::REGEX_CONF_TEXT, '', array(), true);
+				$include_default_vhostconf_domain = ! empty($this->getBoolParam('include_default_vhostconf_domain', true, 0)) ? 1 : 0;
 			} else {
 				$ssl = 0;
 				$ssl_cert_file = '';
 				$ssl_key_file = '';
 				$ssl_ca_file = '';
 				$ssl_cert_chainfile = '';
+				$ssl_specialsettings = '';
+				$include_specialsettings = 0;
+				$ssl_default_vhostconf_domain = '';
+				$include_default_vhostconf_domain = 0;
 			}
 
 			if ($listen_statement != '1') {
@@ -204,7 +255,7 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 				'port' => $port
 			));
 
-			if ($result_checkfordouble['id'] != '') {
+			if ($result_checkfordouble && $result_checkfordouble['id'] != '') {
 				\Froxlor\UI\Response::standard_error('myipnotdouble', '', true);
 			}
 
@@ -217,7 +268,9 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 				`specialsettings` = :ss, `ssl` = :ssl,
 				`ssl_cert_file` = :ssl_cert, `ssl_key_file` = :ssl_key,
 				`ssl_ca_file` = :ssl_ca, `ssl_cert_chainfile` = :ssl_chain,
-				`default_vhostconf_domain` = :dvhd, `docroot` = :docroot;
+				`default_vhostconf_domain` = :dvhd, `docroot` = :docroot,
+				`ssl_specialsettings` = :ssl_ss, `include_specialsettings` = :incss,
+				`ssl_default_vhostconf_domain` = :ssl_dvhd, `include_default_vhostconf_domain` = :incdvhd;
 			");
 			$ins_data = array(
 				'ip' => $ip,
@@ -233,7 +286,11 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 				'ssl_ca' => $ssl_ca_file,
 				'ssl_chain' => $ssl_cert_chainfile,
 				'dvhd' => $default_vhostconf_domain,
-				'docroot' => $docroot
+				'docroot' => $docroot,
+				'ssl_ss' => $ssl_specialsettings,
+				'incss' => $include_specialsettings,
+				'ssl_dvhd' => $ssl_default_vhostconf_domain,
+				'incdvhd' => $include_default_vhostconf_domain
 			);
 			Database::pexecute($ins_stmt, $ins_data);
 			$ins_data['id'] = Database::lastInsertId();
@@ -250,7 +307,7 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			$result = $this->apiCall('IpsAndPorts.get', array(
 				'id' => $ins_data['id']
 			));
-			return $this->response(200, "successfull", $result);
+			return $this->response(200, "successful", $result);
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
 	}
@@ -287,11 +344,19 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 	 *        	optional, requires $ssl = 1, default empty
 	 * @param string $ssl_cert_chainfile
 	 *        	optional, requires $ssl = 1, default empty
+	 * @param string $ssl_specialsettings
+	 *        	optional, requires $ssl = 1, default empty
+	 * @param bool $include_specialsettings
+	 *        	optional, requires $ssl = 1, whether or not to include non-ssl specialsettings, default false
+	 * @param string $ssl_default_vhostconf_domain
+	 *        	optional, requires $ssl = 1, defatul empty
+	 * @param bool $include_default_vhostconf_domain
+	 *        	optional, requires $ssl = 1, whether or not to include non-ssl default_vhostconf_domain, default false
 	 *        	
 	 *        	
 	 * @access admin
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function update()
 	{
@@ -302,18 +367,18 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 				'id' => $id
 			));
 
-			$ip = \Froxlor\Validate\Validate::validate_ip2($this->getParam('ip', true, $result['ip']), false, 'invalidip', false, false, false, true);
-			$port = \Froxlor\Validate\Validate::validate($this->getParam('port', true, $result['port']), 'port', '/^(([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9])|([1-5][0-9][0-9][0-9][0-9])|(6[0-4][0-9][0-9][0-9])|(65[0-4][0-9][0-9])|(655[0-2][0-9])|(6553[0-5]))$/Di', array(
+			$ip = \Froxlor\Validate\Validate::validate_ip2($this->getParam('ip', true, $result['ip']), false, 'invalidip', false, true, false, false, true);
+			$port = \Froxlor\Validate\Validate::validate($this->getParam('port', true, $result['port']), 'port', \Froxlor\Validate\Validate::REGEX_PORT, array(
 				'stringisempty',
 				'myport'
 			), array(), true);
 			$listen_statement = $this->getBoolParam('listen_statement', true, $result['listen_statement']);
 			$namevirtualhost_statement = $this->getBoolParam('namevirtualhost_statement', true, $result['namevirtualhost_statement']);
 			$vhostcontainer = $this->getBoolParam('vhostcontainer', true, $result['vhostcontainer']);
-			$specialsettings = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $this->getParam('specialsettings', true, $result['specialsettings'])), 'specialsettings', '/^[^\0]*$/', '', array(), true);
+			$specialsettings = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $this->getParam('specialsettings', true, $result['specialsettings'])), 'specialsettings', \Froxlor\Validate\Validate::REGEX_CONF_TEXT, '', array(), true);
 			$vhostcontainer_servername_statement = $this->getParam('vhostcontainer_servername_statement', true, $result['vhostcontainer_servername_statement']);
-			$default_vhostconf_domain = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $this->getParam('default_vhostconf_domain', true, $result['default_vhostconf_domain'])), 'default_vhostconf_domain', '/^[^\0]*$/', '', array(), true);
-			$docroot = \Froxlor\Validate\Validate::validate($this->getParam('docroot', true, $result['docroot']), 'docroot', '', '', array(), true);
+			$default_vhostconf_domain = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $this->getParam('default_vhostconf_domain', true, $result['default_vhostconf_domain'])), 'default_vhostconf_domain', \Froxlor\Validate\Validate::REGEX_CONF_TEXT, '', array(), true);
+			$docroot = \Froxlor\Validate\Validate::validate($this->getParam('docroot', true, $result['docroot']), 'docroot', \Froxlor\Validate\Validate::REGEX_DIR, '', array(), true);
 
 			if ((int) Settings::Get('system.use_ssl') == 1) {
 				$ssl = $this->getBoolParam('ssl', true, $result['ssl']);
@@ -321,12 +386,20 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 				$ssl_key_file = \Froxlor\Validate\Validate::validate($this->getParam('ssl_key_file', $ssl, $result['ssl_key_file']), 'ssl_key_file', '', '', array(), true);
 				$ssl_ca_file = \Froxlor\Validate\Validate::validate($this->getParam('ssl_ca_file', true, $result['ssl_ca_file']), 'ssl_ca_file', '', '', array(), true);
 				$ssl_cert_chainfile = \Froxlor\Validate\Validate::validate($this->getParam('ssl_cert_chainfile', true, $result['ssl_cert_chainfile']), 'ssl_cert_chainfile', '', '', array(), true);
+				$ssl_specialsettings = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $this->getParam('ssl_specialsettings', true, $result['ssl_specialsettings'])), 'ssl_specialsettings', \Froxlor\Validate\Validate::REGEX_CONF_TEXT, '', array(), true);
+				$include_specialsettings = $this->getBoolParam('include_specialsettings', true, $result['include_specialsettings']);
+				$ssl_default_vhostconf_domain = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $this->getParam('ssl_default_vhostconf_domain', true, $result['ssl_default_vhostconf_domain'])), 'ssl_default_vhostconf_domain', \Froxlor\Validate\Validate::REGEX_CONF_TEXT, '', array(), true);
+				$include_default_vhostconf_domain = $this->getBoolParam('include_default_vhostconf_domain', true, $result['include_default_vhostconf_domain']);
 			} else {
 				$ssl = 0;
 				$ssl_cert_file = '';
 				$ssl_key_file = '';
 				$ssl_ca_file = '';
 				$ssl_cert_chainfile = '';
+				$ssl_specialsettings = '';
+				$include_specialsettings = 0;
+				$ssl_default_vhostconf_domain = '';
+				$include_default_vhostconf_domain = 0;
 			}
 
 			$result_checkfordouble_stmt = Database::prepare("
@@ -389,9 +462,9 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 				$docroot = '';
 			}
 
-			if ($result['ip'] != $ip && $result['ip'] == Settings::Get('system.ipaddress') && $result_sameipotherport['id'] == '') {
+			if ($result['ip'] != $ip && $result['ip'] == Settings::Get('system.ipaddress') && $result_sameipotherport == false) {
 				\Froxlor\UI\Response::standard_error('cantchangesystemip', '', true);
-			} elseif ($result_checkfordouble['id'] != '' && $result_checkfordouble['id'] != $id) {
+			} elseif ($result_checkfordouble && $result_checkfordouble['id'] != '' && $result_checkfordouble['id'] != $id) {
 				\Froxlor\UI\Response::standard_error('myipnotdouble', '', true);
 			} else {
 
@@ -404,7 +477,9 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 					`specialsettings` = :ss, `ssl` = :ssl,
 					`ssl_cert_file` = :ssl_cert, `ssl_key_file` = :ssl_key,
 					`ssl_ca_file` = :ssl_ca, `ssl_cert_chainfile` = :ssl_chain,
-					`default_vhostconf_domain` = :dvhd, `docroot` = :docroot
+					`default_vhostconf_domain` = :dvhd, `docroot` = :docroot,
+					`ssl_specialsettings` = :ssl_ss, `include_specialsettings` = :incss,
+					`ssl_default_vhostconf_domain` = :ssl_dvhd, `include_default_vhostconf_domain` = :incdvhd
 					WHERE `id` = :id;
 				");
 				$upd_data = array(
@@ -422,6 +497,10 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 					'ssl_chain' => $ssl_cert_chainfile,
 					'dvhd' => $default_vhostconf_domain,
 					'docroot' => $docroot,
+					'ssl_ss' => $ssl_specialsettings,
+					'incss' => $include_specialsettings,
+					'ssl_dvhd' => $ssl_default_vhostconf_domain,
+					'incdvhd' => $include_default_vhostconf_domain,
 					'id' => $id
 				);
 				Database::pexecute($upd_stmt, $upd_data);
@@ -435,7 +514,7 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 				$result = $this->apiCall('IpsAndPorts.get', array(
 					'id' => $result['id']
 				));
-				return $this->response(200, "successfull", $result);
+				return $this->response(200, "successful", $result);
 			}
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
@@ -449,7 +528,7 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 	 *        	
 	 * @access admin
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function delete()
 	{
@@ -461,7 +540,7 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			));
 
 			$result_checkdomain_stmt = Database::prepare("
-				SELECT `id_domain` as `id` FROM `" . TABLE_DOMAINTOIP . "` WHERE `id_ipandports` = :id
+				SELECT `id_domain` FROM `" . TABLE_DOMAINTOIP . "` WHERE `id_ipandports` = :id
 			");
 			$result_checkdomain = Database::pexecute_first($result_checkdomain_stmt, array(
 				'id' => $id
@@ -481,7 +560,7 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 						'ip' => $result['ip']
 					));
 
-					if (($result['ip'] != Settings::Get('system.ipaddress')) || ($result['ip'] == Settings::Get('system.ipaddress') && $result_sameipotherport['id'] != '')) {
+					if (($result['ip'] != Settings::Get('system.ipaddress')) || ($result['ip'] == Settings::Get('system.ipaddress') && $result_sameipotherport != false)) {
 
 						$del_stmt = Database::prepare("
 							DELETE FROM `" . TABLE_PANEL_IPSANDPORTS . "`
@@ -504,7 +583,7 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 						\Froxlor\System\Cronjob::inserttask('4');
 
 						$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_WARNING, "[API] deleted IP/port '" . $result['ip'] . ":" . $result['port'] . "'");
-						return $this->response(200, "successfull", $result);
+						return $this->response(200, "successful", $result);
 					} else {
 						\Froxlor\UI\Response::standard_error('cantdeletesystemip', '', true);
 					}

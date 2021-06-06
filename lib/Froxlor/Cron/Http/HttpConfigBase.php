@@ -3,6 +3,7 @@ namespace Froxlor\Cron\Http;
 
 use Froxlor\Database\Database;
 use Froxlor\Settings;
+use Froxlor\Cron\Http\Php\Fpm;
 
 /**
  * This file is part of the Froxlor project.
@@ -26,6 +27,51 @@ use Froxlor\Settings;
  */
 class HttpConfigBase
 {
+
+	public function init()
+	{
+		// if Let's Encrypt is activated, run it before regeneration of webserver configfiles
+		if (Settings::Get('system.leenabled') == 1) {
+			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'Running Let\'s Encrypt cronjob prior to regenerating webserver config files');
+			\Froxlor\Cron\Http\LetsEncrypt\AcmeSh::$no_inserttask = true;
+			\Froxlor\Cron\Http\LetsEncrypt\AcmeSh::run(true);
+			// set last run timestamp of cronjob
+			\Froxlor\System\Cronjob::updateLastRunOfCron('letsencrypt');
+		}
+	}
+
+	public function reload()
+	{
+		$called_class = get_called_class();
+		if ((int) Settings::Get('phpfpm.enabled') == 1) {
+			// get all start/stop commands
+			$startstop_sel = Database::prepare("SELECT reload_cmd, config_dir FROM `" . TABLE_PANEL_FPMDAEMONS . "`");
+			Database::pexecute($startstop_sel);
+			$restart_cmds = $startstop_sel->fetchAll(\PDO::FETCH_ASSOC);
+			// restart all php-fpm instances
+			foreach ($restart_cmds as $restart_cmd) {
+				// check whether the config dir is empty (no domains uses this daemon)
+				// so we need to create a dummy
+				$_conffiles = glob(\Froxlor\FileDir::makeCorrectFile($restart_cmd['config_dir'] . "/*.conf"));
+				if ($_conffiles === false || empty($_conffiles)) {
+					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, $called_class . '::reload: fpm config directory "' . $restart_cmd['config_dir'] . '" is empty. Creating dummy.');
+					Fpm::createDummyPool($restart_cmd['config_dir']);
+				}
+				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, $called_class . '::reload: running ' . $restart_cmd['reload_cmd']);
+				\Froxlor\FileDir::safe_exec(escapeshellcmd($restart_cmd['reload_cmd']));
+			}
+		}
+		\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, $called_class . '::reload: reloading ' . $called_class);
+		\Froxlor\FileDir::safe_exec(escapeshellcmd(Settings::Get('system.apachereload_command')));
+
+		/**
+		 * nginx does not auto-spawn fcgi-processes
+		 */
+		if (Settings::Get('system.webserver') == "nginx" && Settings::Get('system.phpreload_command') != '' && (int) Settings::Get('phpfpm.enabled') == 0) {
+			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, $called_class . '::reload: restarting php processes');
+			\Froxlor\FileDir::safe_exec(Settings::Get('system.phpreload_command'));
+		}
+	}
 
 	/**
 	 * process special config as template, by substituting {VARIABLE} with the
@@ -52,8 +98,12 @@ class HttpConfigBase
 			'IP' => $ip,
 			'PORT' => $port,
 			'SCHEME' => ($is_ssl_vhost) ? 'https' : 'http',
-			'DOCROOT' => $domain['documentroot']
+			'DOCROOT' => $domain['documentroot'],
+			'FPMSOCKET' => ''
 		);
+		if ((int) Settings::Get('phpfpm.enabled') == 1 && isset($domain['fpm_socket']) && !empty($domain['fpm_socket'])) {
+			$templateVars['FPMSOCKET'] = $domain['fpm_socket'];
+		}
 		return \Froxlor\PhpHelper::replaceVariables($template, $templateVars);
 	}
 
@@ -87,7 +137,7 @@ class HttpConfigBase
 		");
 		$ssldestport = Database::pexecute_first($ssldestport_stmt);
 
-		if ($ssldestport['port'] != '') {
+		if ($ssldestport && $ssldestport['port'] != '') {
 			$_sslport = ":" . $ssldestport['port'];
 		}
 

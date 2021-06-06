@@ -263,6 +263,8 @@ class Settings
 		self::init();
 		// empty update array
 		self::$updatedata = array();
+		// re-read in all settings
+		return self::readSettings();
 	}
 
 	public static function loadSettingsInto(&$settings_data)

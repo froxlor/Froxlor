@@ -137,7 +137,11 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 					$mysqlusage_all[$row_database['customerid']] = 0;
 				}
 				// sum up result
-				$mysqlusage_all[$row_database['customerid']] += floatval($mysql_usage_row['customerusage']);
+				if ($mysql_usage_row) {
+					$mysqlusage_all[$row_database['customerid']] += floatval($mysql_usage_row['customerusage']);
+				} else {
+					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_WARNING, "Cannot get usage for database " . $row_database['databasename'] . ".");
+				}
 			} else {
 				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_WARNING, "Seems like the database " . $row_database['databasename'] . " had been removed manually.");
 			}
@@ -158,6 +162,13 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 		}
 
 		$result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_CUSTOMERS . "` ORDER BY `customerid` ASC");
+
+		$currentDate = date("Y-m-d");
+
+		$current_stamp = time();
+		$current_year = date('Y', $current_stamp);
+		$current_month = date('m', $current_stamp);
+		$current_day = date('d', $current_stamp);
 
 		while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 			/**
@@ -204,7 +215,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 				// will iterate through all customer-domains and the awstats-configs
 				// know the logfile-name, #246
 				if (Settings::Get('system.awstats_enabled') == '1') {
-					$httptraffic += floatval(self::callAwstatsGetTraffic($row['customerid'], $row['documentroot'] . '/awstats/', $domainlist[$row['customerid']]));
+					$httptraffic += floatval(self::callAwstatsGetTraffic($row['customerid'], $row['documentroot'] . '/awstats/', $domainlist[$row['customerid']], $current_stamp));
 				} else {
 					$httptraffic += floatval(self::callWebalizerGetTraffic($row['loginname'], $row['documentroot'] . '/webalizer/', $caption, $domainlist[$row['customerid']]));
 				}
@@ -245,8 +256,6 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 			$mailtraffic = 0;
 			if (Settings::Get("system.mailtraffic_enabled")) {
 				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'mail traffic usage for ' . $row['loginname'] . " started...");
-
-				$currentDate = date("Y-m-d");
 
 				$domains_stmt = Database::prepare("SELECT domain FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `customerid` = :cid");
 				Database::pexecute($domains_stmt, array(
@@ -308,10 +317,10 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 
 			$ins_data = array(
 				'customerid' => $row['customerid'],
-				'year' => date('Y', time()),
-				'month' => date('m', time()),
-				'day' => date('d', time()),
-				'stamp' => time(),
+				'year' => $current_year,
+				'month' => $current_month,
+				'day' => $current_day,
+				'stamp' => $current_stamp,
 				'http' => $current_traffic['http'],
 				'ftp_up' => $current_traffic['ftp_up'],
 				'ftp_down' => $current_traffic['ftp_down'],
@@ -336,8 +345,8 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 				FROM `" . TABLE_PANEL_TRAFFIC . "` WHERE `year` = :year AND `month` = :month AND `customerid` = :customerid
 			");
 			$sum_month_traffic = Database::pexecute_first($sum_month_traffic_stmt, array(
-				'year' => date('Y', time()),
-				'month' => date('m', time()),
+				'year' => $current_year,
+				'month' => $current_month,
 				'customerid' => $row['customerid']
 			));
 			$sum_month_traffic['all'] = $sum_month_traffic['http'] + $sum_month_traffic['ftp_up'] + $sum_month_traffic['ftp_down'] + $sum_month_traffic['mail'];
@@ -421,10 +430,10 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 
 			$ins_data = array(
 				'customerid' => $row['customerid'],
-				'year' => date('Y', time()),
-				'month' => date('m', time()),
-				'day' => date('d', time()),
-				'stamp' => time(),
+				'year' => $current_year,
+				'month' => $current_month,
+				'day' => $current_day,
+				'stamp' => $current_stamp,
 				'webspace' => $current_diskspace['webspace'],
 				'mail' => $current_diskspace['mail'],
 				'mysql' => $current_diskspace['mysql']
@@ -530,10 +539,10 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 
 				$ins_data = array(
 					'adminid' => $row['adminid'],
-					'year' => date('Y', time()),
-					'month' => date('m', time()),
-					'day' => date('d', time()),
-					'stamp' => time(),
+					'year' => $current_year,
+					'month' => $current_month,
+					'day' => $current_day,
+					'stamp' => $current_stamp,
 					'http' => $admin_traffic[$row['adminid']]['http'],
 					'ftp_up' => $admin_traffic[$row['adminid']]['ftp_up'],
 					'ftp_down' => $admin_traffic[$row['adminid']]['ftp_down'],
@@ -566,29 +575,6 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 			}
 
 			if (isset($admin_diskspace[$row['adminid']])) {
-
-				$ins_data = array(
-					'adminid' => $row['adminid'],
-					'year' => date('Y', time()),
-					'month' => date('m', time()),
-					'day' => date('d', time()),
-					'stamp' => time(),
-					'webspace' => $admin_diskspace[$row['adminid']]['webspace'],
-					'mail' => $admin_diskspace[$row['adminid']]['mail'],
-					'mysql' => $admin_diskspace[$row['adminid']]['mysql']
-				);
-				$ins_stmt = Database::prepare("
-					INSERT INTO `" . TABLE_PANEL_DISKSPACE_ADMINS . "` SET
-					`adminid` = :adminid,
-					`year` = :year,
-					`month` = :month,
-					`day` = :day,
-					`stamp` = :stamp,
-					`webspace` = :webspace,
-					`mail` = :mail,
-					`mysql` = :mysql
-				");
-
 				$upd_data = array(
 					'diskspace' => $admin_diskspace[$row['adminid']]['all'],
 					'adminid' => $row['adminid']
@@ -753,7 +739,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 		return;
 	}
 
-	private static function callAwstatsGetTraffic($customerid, $outputdir, $usersdomainlist)
+	private static function callAwstatsGetTraffic($customerid, $outputdir, $usersdomainlist, $current_stamp)
 	{
 		$returnval = 0;
 
@@ -785,8 +771,8 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 			");
 			$result_data = array(
 				'customerid' => $customerid,
-				'year' => date('Y', time()),
-				'month' => date('m', time())
+				'year' => date('Y', $current_stamp),
+				'month' => date('m', $current_stamp)
 			);
 			$result = Database::pexecute_first($result_stmt, $result_data);
 

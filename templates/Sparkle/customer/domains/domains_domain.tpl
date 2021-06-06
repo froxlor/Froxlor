@@ -15,7 +15,7 @@
 	</td>
 	<td>
 		<if $row['aliasdomain'] == ''>{$row['documentroot']}</if>
-		<if isset($row['aliasdomainid']) && $row['aliasdomainid'] != 0>{$lng['domains']['aliasdomain']} {$row['aliasdomain']}</if>
+		<if isset($row['aliasdomainid']) && !empty($row['aliasdomainid'])>{$lng['domains']['aliasdomain']} {$row['aliasdomain']}</if>
 	</td>
 	<td>
 		<if $row['caneditdomain'] == '1'>
@@ -28,7 +28,7 @@
 			<img src="templates/{$theme}/assets/img/icons/view.png" alt="{$lng['panel']['viewlogs']}" title="{$lng['panel']['viewlogs']}" />
 		</a>
 		</if>
-		<if $row['parentdomainid'] != '0' && !(isset($row['domainaliasid']) && $row['domainaliasid'] != 0)>
+		<if $row['parentdomainid'] != '0' && (!isset($row['domainaliasid']) || empty($row['domainaliasid']))>
 			<a href="{$linker->getLink(array('section' => 'domains', 'page' => 'domains', 'action' => 'delete', 'id' => $row['id']))}">
 				<img src="templates/{$theme}/assets/img/icons/delete.png" alt="{$lng['panel']['delete']}" title="{$lng['panel']['delete']}" />
 			</a>&nbsp;
@@ -46,10 +46,10 @@
 		<if $row['letsencrypt'] == '1'>
 			<img src="templates/{$theme}/assets/img/icons/ssl_letsencrypt.png" alt="{$lng['panel']['letsencrypt']}" title="{$lng['panel']['letsencrypt']}" />
 		</if>
-		<if $row['parentdomainid'] == '0' && !(isset($row['domainaliasid']) && $row['domainaliasid'] != 0)>
+		<if $row['parentdomainid'] == '0' && (!isset($row['domainaliasid']) || empty($row['domainaliasid']))>
 			({$lng['domains']['isassigneddomain']})&nbsp;
 		</if>
-		<if isset($row['domainaliasid']) && $row['domainaliasid'] != 0>
+		<if isset($row['domainaliasid']) && !empty($row['domainaliasid'])>
 			<a href="{$linker->getLink(array('section' => 'domains', 'page' => 'domains', 'searchfield' => 'd.aliasdomain', 'searchtext' => $row['id']))}">{$lng['domains']['hasaliasdomains']}</a>
 		</if>
 	</td>

@@ -8,17 +8,17 @@ CREATE TABLE `ftp_groups` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `groupname` (`groupname`),
   KEY `customerid` (`customerid`)
-) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
 DROP TABLE IF EXISTS `ftp_users`;
 CREATE TABLE `ftp_users` (
   `id` int(20) NOT NULL auto_increment,
-  `username` varchar(255) NOT NULL default '',
+  `username` varchar(255) NOT NULL,
   `uid` int(5) NOT NULL default '0',
   `gid` int(5) NOT NULL default '0',
-  `password` varchar(128) NOT NULL default '',
+  `password` varchar(128) NOT NULL,
   `homedir` varchar(255) NOT NULL default '',
   `shell` varchar(255) NOT NULL default '/bin/false',
   `login_enabled` enum('N','Y') NOT NULL default 'N',
@@ -33,7 +33,7 @@ CREATE TABLE `ftp_users` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `username` (`username`),
   KEY `customerid` (`customerid`)
-) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -57,7 +57,7 @@ CREATE TABLE `mail_users` (
   `mboxsize` bigint(30) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -71,9 +71,10 @@ CREATE TABLE `mail_virtual` (
   `customerid` int(11) NOT NULL default '0',
   `popaccountid` int(11) NOT NULL default '0',
   `iscatchall` tinyint(1) unsigned NOT NULL default '0',
+  `description` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY  (`id`),
   KEY `email` (`email`)
-) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 DROP TABLE IF EXISTS `panel_activation`;
@@ -84,17 +85,17 @@ CREATE TABLE `panel_activation` (
   `creation` int(11) unsigned NOT NULL default '0',
   `activationcode` varchar(50) default NULL,
   PRIMARY KEY (id)
-) ENGINE=MyISAM  CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 DROP TABLE IF EXISTS `panel_admins`;
 CREATE TABLE `panel_admins` (
   `adminid` int(11) unsigned NOT NULL auto_increment,
-  `loginname` varchar(50) NOT NULL default '',
-  `password` varchar(255) NOT NULL default '',
+  `loginname` varchar(50) NOT NULL,
+  `password` varchar(255) NOT NULL,
   `name` varchar(255) NOT NULL default '',
   `email` varchar(255) NOT NULL default '',
-  `def_language` varchar(255) NOT NULL default '',
+  `def_language` varchar(100) NOT NULL default '',
   `ip` varchar(500) NOT NULL default '-1',
   `customers` int(15) NOT NULL default '0',
   `customers_used` int(15) NOT NULL default '0',
@@ -127,21 +128,22 @@ CREATE TABLE `panel_admins` (
   `lastlogin_fail` int(11) unsigned NOT NULL default '0',
   `loginfail_count` int(11) unsigned NOT NULL default '0',
   `reportsent` tinyint(4) unsigned NOT NULL default '0',
-  `theme` varchar(255) NOT NULL default 'Sparkle',
+  `theme` varchar(50) NOT NULL default 'Sparkle',
   `custom_notes` text,
   `custom_notes_show` tinyint(1) NOT NULL default '0',
   `type_2fa` tinyint(1) NOT NULL default '0',
-  `data_2fa` varchar(500) NOT NULL default '',
+  `data_2fa` varchar(25) NOT NULL default '',
+  `api_allowed` tinyint(1) NOT NULL default '1',
    PRIMARY KEY  (`adminid`),
    UNIQUE KEY `loginname` (`loginname`)
-) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
 DROP TABLE IF EXISTS `panel_customers`;
 CREATE TABLE `panel_customers` (
   `customerid` int(11) unsigned NOT NULL auto_increment,
-  `loginname` varchar(50) NOT NULL default '',
+  `loginname` varchar(50) NOT NULL,
   `password` varchar(255) NOT NULL default '',
   `adminid` int(11) unsigned NOT NULL default '0',
   `name` varchar(255) NOT NULL default '',
@@ -149,13 +151,13 @@ CREATE TABLE `panel_customers` (
   `gender` int(1) NOT NULL DEFAULT '0',
   `company` varchar(255) NOT NULL default '',
   `street` varchar(255) NOT NULL default '',
-  `zipcode` varchar(255) NOT NULL default '',
+  `zipcode` varchar(25) NOT NULL default '',
   `city` varchar(255) NOT NULL default '',
-  `phone` varchar(255) NOT NULL default '',
-  `fax` varchar(255) NOT NULL default '',
+  `phone` varchar(50) NOT NULL default '',
+  `fax` varchar(50) NOT NULL default '',
   `email` varchar(255) NOT NULL default '',
   `customernumber` varchar(255) NOT NULL default '',
-  `def_language` varchar(255) NOT NULL default '',
+  `def_language` varchar(100) NOT NULL default '',
   `diskspace` bigint(30) NOT NULL default '0',
   `diskspace_used` bigint(30) NOT NULL default '0',
   `mysqls` int(15) NOT NULL default '0',
@@ -189,20 +191,20 @@ CREATE TABLE `panel_customers` (
   `imap` tinyint(1) NOT NULL default '1',
   `perlenabled` tinyint(1) NOT NULL default '0',
   `dnsenabled` tinyint(1) NOT NULL default '0',
-  `theme` varchar(255) NOT NULL default 'Sparkle',
+  `theme` varchar(50) NOT NULL default 'Sparkle',
   `custom_notes` text,
   `custom_notes_show` tinyint(1) NOT NULL default '0',
   `lepublickey` mediumtext default NULL,
   `leprivatekey` mediumtext default NULL,
   `leregistered` tinyint(1) NOT NULL default '0',
-  `leaccount` varchar(255) default '',
   `allowed_phpconfigs` varchar(500) NOT NULL default '',
   `type_2fa` tinyint(1) NOT NULL default '0',
-  `data_2fa` varchar(500) NOT NULL default '',
+  `data_2fa` varchar(25) NOT NULL default '',
+  `api_allowed` tinyint(1) NOT NULL default '1',
   `logviewenabled` tinyint(1) NOT NULL default '0',
    PRIMARY KEY  (`customerid`),
    UNIQUE KEY `loginname` (`loginname`)
-) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -215,14 +217,15 @@ CREATE TABLE `panel_databases` (
   `dbserver` int(11) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `customerid` (`customerid`)
-) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
 DROP TABLE IF EXISTS `panel_domains`;
 CREATE TABLE `panel_domains` (
   `id` int(11) unsigned NOT NULL auto_increment,
-  `domain` varchar(255) NOT NULL default '',
+  `domain` varchar(255) NOT NULL,
+  `domain_ace` varchar(255) NOT NULL default '',
   `adminid` int(11) unsigned NOT NULL default '0',
   `customerid` int(11) unsigned NOT NULL default '0',
   `aliasdomain` int(11) unsigned NULL,
@@ -246,6 +249,8 @@ CREATE TABLE `panel_domains` (
   `speciallogfile` tinyint(1) NOT NULL default '0',
   `ssl_redirect` tinyint(4) NOT NULL default '0',
   `specialsettings` text,
+  `ssl_specialsettings` text,
+  `include_specialsettings` tinyint(1) NOT NULL default '0',
   `deactivated` tinyint(1) NOT NULL default '0',
   `bindserial` varchar(10) NOT NULL default '2000010100',
   `add_date` int( 11 ) NOT NULL default '0',
@@ -264,18 +269,26 @@ CREATE TABLE `panel_domains` (
   `notryfiles` tinyint(1) DEFAULT '0',
   `writeaccesslog` tinyint(1) DEFAULT '1',
   `writeerrorlog` tinyint(1) DEFAULT '1',
+  `override_tls` tinyint(1) DEFAULT '0',
+  `ssl_protocols` varchar(255) NOT NULL DEFAULT '',
+  `ssl_cipher_list` varchar(500) NOT NULL DEFAULT '',
+  `tlsv13_cipher_list` varchar(500) NOT NULL DEFAULT '',
+  `ssl_enabled` tinyint(1) DEFAULT '1',
+  `ssl_honorcipherorder` tinyint(1) DEFAULT '0',
+  `ssl_sessiontickets` tinyint(1) DEFAULT '1',
+  `description` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY  (`id`),
   KEY `customerid` (`customerid`),
   KEY `parentdomain` (`parentdomainid`),
   KEY `domain` (`domain`)
-) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
 DROP TABLE IF EXISTS `panel_ipsandports`;
 CREATE TABLE `panel_ipsandports` (
   `id` int(11) unsigned NOT NULL auto_increment,
-  `ip` varchar(39) NOT NULL default '',
+  `ip` varchar(39) NOT NULL,
   `port` int(5) NOT NULL default '80',
   `listen_statement` tinyint(1) NOT NULL default '0',
   `namevirtualhost_statement` tinyint(1) NOT NULL default '0',
@@ -289,9 +302,13 @@ CREATE TABLE `panel_ipsandports` (
   `default_vhostconf_domain` text,
   `ssl_cert_chainfile` varchar(255) NOT NULL default '',
   `docroot` varchar(255) NOT NULL default '',
+  `ssl_specialsettings` text,
+  `include_specialsettings` tinyint(1) NOT NULL default '0',
+  `ssl_default_vhostconf_domain` text,
+  `include_default_vhostconf_domain` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `ip_port` (`ip`,`port`)
-) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -307,7 +324,7 @@ CREATE TABLE `panel_htaccess` (
   `error401path` varchar(255) NOT NULL default '',
   `options_cgi` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -321,7 +338,7 @@ CREATE TABLE `panel_htpasswds` (
   `authname` varchar(255) NOT NULL default 'Restricted Area',
   PRIMARY KEY  (`id`),
   KEY `customerid` (`customerid`)
-) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -350,7 +367,7 @@ CREATE TABLE `panel_settings` (
   `varname` varchar(255) NOT NULL default '',
   `value` text NOT NULL,
   PRIMARY KEY  (`settingid`)
-) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('catchall', 'catchall_enabled', '1'),
@@ -372,9 +389,11 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('dkim', 'dkim_domains', 'domains'),
 	('dkim', 'dkim_dkimkeys', 'dkim-keys.conf'),
 	('dkim', 'dkimrestart_command', '/etc/init.d/dkim-filter restart'),
+	('dkim', 'privkeysuffix', '.priv'),
 	('admin', 'show_news_feed', '0'),
 	('admin', 'show_version_login', '0'),
 	('admin', 'show_version_footer', '0'),
+	('caa', 'caa_entry', ''),
 	('spf', 'use_spf', '0'),
 	('spf', 'spf_entry', '"v=spf1 a mx -all"'),
 	('dkim', 'dkim_algorithm', 'all'),
@@ -404,7 +423,7 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('phpfpm', 'defaultini', '1'),
 	('phpfpm', 'vhost_defaultini', '2'),
 	('phpfpm', 'fastcgi_ipcdir', '/var/lib/apache2/fastcgi/'),
-	('phpfpm', 'use_mod_proxy', '0'),
+	('phpfpm', 'use_mod_proxy', '1'),
 	('phpfpm', 'ini_flags', 'asp_tags
 display_errors
 display_startup_errors
@@ -538,6 +557,7 @@ opcache.interned_strings_buffer'),
 	('system', 'ssl_cert_file', '/etc/apache2/apache2.pem'),
 	('system', 'use_ssl', '0'),
 	('system', 'default_vhostconf', ''),
+	('system', 'default_sslvhostconf', ''),
 	('system', 'mail_quota_enabled', '0'),
 	('system', 'mail_quota', '100'),
 	('system', 'webalizer_enabled', '1'),
@@ -557,10 +577,12 @@ opcache.interned_strings_buffer'),
 	('system', 'stdsubdomain', ''),
 	('system', 'awstats_path', '/usr/bin/'),
 	('system', 'awstats_conf', '/etc/awstats/'),
+	('system', 'awstats_logformat', '1'),
 	('system', 'defaultttl', '604800'),
 	('system', 'mod_fcgid_defaultini', '1'),
 	('system', 'ftpserver', 'proftpd'),
 	('system', 'dns_createmailentry', '0'),
+	('system', 'dns_createcaaentry', '1'),
 	('system', 'froxlordirectlyviahostname', '0'),
 	('system', 'report_enable', '1'),
 	('system', 'report_webmax', '90'),
@@ -613,7 +635,7 @@ opcache.interned_strings_buffer'),
 	('system', 'letsencryptkeysize', '4096'),
 	('system', 'letsencryptreuseold', 0),
 	('system', 'leenabled', '0'),
-	('system', 'leapiversion', '1'),
+	('system', 'leapiversion', '2'),
 	('system', 'backupenabled', '0'),
 	('system', 'dnsenabled', '0'),
 	('system', 'dns_server', 'Bind'),
@@ -636,8 +658,12 @@ opcache.interned_strings_buffer'),
 	('system', 'leregistered', '0'),
 	('system', 'leaccount', ''),
 	('system', 'nssextrausers', '0'),
-	('system', 'disable_le_selfcheck', '0'),
-	('system', 'ssl_protocols', 'TLSv1,TLSv1.2'),
+	('system', 'le_domain_dnscheck', '1'),
+	('system', 'ssl_protocols', 'TLSv1.2'),
+	('system', 'tlsv13_cipher_list', ''),
+	('system', 'honorcipherorder', '0'),
+	('system', 'sessiontickets', '1'),
+	('system', 'sessionticketsenabled', '1'),
 	('system', 'logfiles_format', ''),
 	('system', 'logfiles_type', '1'),
 	('system', 'logfiles_piped', '0'),
@@ -646,6 +672,11 @@ opcache.interned_strings_buffer'),
 	('system', 'errorlog_level', 'warn'),
 	('system', 'leecc', '0'),
 	('system', 'froxloraliases', ''),
+	('system', 'apply_specialsettings_default', '1'),
+	('system', 'apply_phpconfigs_default', '1'),
+	('system', 'hide_incompatible_settings', '0'),
+	('system', 'include_default_vhostconf', '0'),
+	('system', 'soaemail', ''),
 	('api', 'enabled', '0'),
 	('2fa', 'enabled', '1'),
 	('panel', 'decimal_places', '4'),
@@ -680,8 +711,11 @@ opcache.interned_strings_buffer'),
 	('panel', 'password_special_char', '!?<>§$%+#=@'),
 	('panel', 'customer_hide_options', ''),
 	('panel', 'is_configured', '0'),
-	('panel', 'version', '0.10.0'),
-	('panel', 'db_version', '201902210');
+	('panel', 'imprint_url', ''),
+	('panel', 'terms_url', ''),
+	('panel', 'privacy_url', ''),
+	('panel', 'version', '0.10.26'),
+	('panel', 'db_version', '202103240');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
@@ -690,7 +724,7 @@ CREATE TABLE `panel_tasks` (
   `type` int(11) NOT NULL default '0',
   `data` text,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 INSERT INTO `panel_tasks` (`type`) VALUES ('99');
 
@@ -705,7 +739,7 @@ CREATE TABLE `panel_templates` (
   `value` longtext NOT NULL,
   PRIMARY KEY  (id),
   KEY adminid (adminid)
-) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -723,7 +757,7 @@ CREATE TABLE `panel_traffic` (
   `mail` bigint(30) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `customerid` (`customerid`)
-) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -741,7 +775,7 @@ CREATE TABLE `panel_traffic_admins` (
   `mail` bigint(30) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `adminid` (`adminid`)
-) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -758,24 +792,7 @@ CREATE TABLE `panel_diskspace` (
   `mysql` bigint(30) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `customerid` (`customerid`)
-) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
-
-
-
-DROP TABLE IF EXISTS `panel_diskspace_admins`;
-CREATE TABLE `panel_diskspace_admins` (
-  `id` int(11) unsigned NOT NULL auto_increment,
-  `adminid` int(11) unsigned NOT NULL default '0',
-  `year` int(4) unsigned zerofill NOT NULL default '0000',
-  `month` int(2) unsigned zerofill NOT NULL default '00',
-  `day` int(2) unsigned zerofill NOT NULL default '00',
-  `stamp` int(11) unsigned NOT NULL default '0',
-  `webspace` bigint(30) unsigned NOT NULL default '0',
-  `mail` bigint(30) unsigned NOT NULL default '0',
-  `mysql` bigint(30) unsigned NOT NULL default '0',
-  PRIMARY KEY  (`id`),
-  KEY `adminid` (`adminid`)
-) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -786,7 +803,7 @@ CREATE TABLE `panel_languages` (
   `iso` char(3) NOT NULL DEFAULT 'foo',
   `file` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -809,7 +826,7 @@ CREATE TABLE IF NOT EXISTS `panel_syslog` (
   `user` varchar(50) NOT NULL,
   `text` text NOT NULL,
   PRIMARY KEY  (`logid`)
-) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -819,23 +836,24 @@ CREATE TABLE `panel_fpmdaemons` (
   `description` varchar(50) NOT NULL,
   `reload_cmd` varchar(255) NOT NULL,
   `config_dir` varchar(255) NOT NULL,
-  `pm` varchar(15) NOT NULL DEFAULT 'static',
-  `max_children` int(4) NOT NULL DEFAULT '1',
-  `start_servers` int(4) NOT NULL DEFAULT '20',
-  `min_spare_servers` int(4) NOT NULL DEFAULT '5',
-  `max_spare_servers` int(4) NOT NULL DEFAULT '35',
+  `pm` varchar(15) NOT NULL DEFAULT 'dynamic',
+  `max_children` int(4) NOT NULL DEFAULT '5',
+  `start_servers` int(4) NOT NULL DEFAULT '2',
+  `min_spare_servers` int(4) NOT NULL DEFAULT '1',
+  `max_spare_servers` int(4) NOT NULL DEFAULT '3',
   `max_requests` int(4) NOT NULL DEFAULT '0',
-  `idle_timeout` int(4) NOT NULL DEFAULT '30',
+  `idle_timeout` int(4) NOT NULL DEFAULT '10',
   `limit_extensions` varchar(255) NOT NULL default '.php',
+  `custom_config` text,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `reload` (`reload_cmd`),
   UNIQUE KEY `config` (`config_dir`)
-) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
 INSERT INTO `panel_fpmdaemons` (`id`, `description`, `reload_cmd`, `config_dir`) VALUES
-(1, 'System default', 'service php7.0-fpm restart', '/etc/php/7.0/fpm/pool.d/');
+(1, 'System default', 'service php7.3-fpm restart', '/etc/php/7.3/fpm/pool.d/');
 
 
 
@@ -855,23 +873,23 @@ CREATE TABLE `panel_phpconfigs` (
   `fpmsettingid` int(11) NOT NULL DEFAULT '1',
   `pass_authorizationheader` tinyint(1) NOT NULL default '0',
   `override_fpmconfig` tinyint(1) NOT NULL DEFAULT '0',
-  `pm` varchar(15) NOT NULL DEFAULT 'static',
-  `max_children` int(4) NOT NULL DEFAULT '1',
-  `start_servers` int(4) NOT NULL DEFAULT '20',
-  `min_spare_servers` int(4) NOT NULL DEFAULT '5',
-  `max_spare_servers` int(4) NOT NULL DEFAULT '35',
+  `pm` varchar(15) NOT NULL DEFAULT 'dynamic',
+  `max_children` int(4) NOT NULL DEFAULT '5',
+  `start_servers` int(4) NOT NULL DEFAULT '2',
+  `min_spare_servers` int(4) NOT NULL DEFAULT '1',
+  `max_spare_servers` int(4) NOT NULL DEFAULT '3',
   `max_requests` int(4) NOT NULL DEFAULT '0',
-  `idle_timeout` int(4) NOT NULL DEFAULT '30',
+  `idle_timeout` int(4) NOT NULL DEFAULT '10',
   `limit_extensions` varchar(255) NOT NULL default '.php',
   PRIMARY KEY  (`id`),
   KEY `fpmsettingid` (`fpmsettingid`)
-) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
 INSERT INTO `panel_phpconfigs` (`id`, `description`, `binary`, `file_extensions`, `mod_fcgid_starter`, `mod_fcgid_maxrequests`, `phpsettings`) VALUES
-(1, 'Default Config', '/usr/bin/php-cgi', 'php', '-1', '-1', 'allow_call_time_pass_reference = Off\r\nallow_url_fopen = Off\r\nasp_tags = Off\r\ndisable_classes =\r\ndisable_functions = curl_exec,curl_multi_exec,exec,parse_ini_file,passthru,popen,proc_close,proc_get_status,proc_nice,proc_open,proc_terminate,shell_exec,show_source,system\r\ndisplay_errors = Off\r\ndisplay_startup_errors = Off\r\nenable_dl = Off\r\nerror_reporting = E_ALL & ~E_NOTICE\r\nexpose_php = Off\r\nfile_uploads = On\r\ncgi.force_redirect = 1\r\ngpc_order = "GPC"\r\nhtml_errors = Off\r\nignore_repeated_errors = Off\r\nignore_repeated_source = Off\r\ninclude_path = ".:{PEAR_DIR}"\r\nlog_errors = On\r\nlog_errors_max_len = 1024\r\nmagic_quotes_gpc = Off\r\nmagic_quotes_runtime = Off\r\nmagic_quotes_sybase = Off\r\nmax_execution_time = 30\r\nmax_input_time = 60\r\nmemory_limit = 128M\r\n{OPEN_BASEDIR_C}open_basedir = "{OPEN_BASEDIR}"\r\noutput_buffering = 4096\r\npost_max_size = 16M\r\nprecision = 14\r\nregister_argc_argv = Off\r\nregister_globals = Off\r\nreport_memleaks = On\r\nsendmail_path = "/usr/sbin/sendmail -t -i -f {CUSTOMER_EMAIL}"\r\nsession.auto_start = 0\r\nsession.bug_compat_42 = 0\r\nsession.bug_compat_warn = 1\r\nsession.cache_expire = 180\r\nsession.cache_limiter = nocache\r\nsession.cookie_domain =\r\nsession.cookie_lifetime = 0\r\nsession.cookie_path = /\r\nsession.entropy_file = /dev/urandom\r\nsession.entropy_length = 16\r\nsession.gc_divisor = 1000\r\nsession.gc_maxlifetime = 1440\r\nsession.gc_probability = 1\r\nsession.name = PHPSESSID\r\nsession.referer_check =\r\nsession.save_handler = files\r\nsession.save_path = "{TMP_DIR}"\r\nsession.serialize_handler = php\r\nsession.use_cookies = 1\r\nsession.use_trans_sid = 0\r\nshort_open_tag = On\r\nsuhosin.mail.protect = 1\r\nsuhosin.simulation = Off\r\ntrack_errors = Off\r\nupload_max_filesize = 32M\r\nupload_tmp_dir = "{TMP_DIR}"\r\nvariables_order = "GPCS"\r\n;mail.add_x_header = On\r\n;mail.log = "/var/log/phpmail.log"\r\nopcache.restrict_api = "{DOCUMENT_ROOT}"\r\n'),
-(2, 'Froxlor Vhost Config', '/usr/bin/php-cgi', 'php', '-1', '-1', 'allow_call_time_pass_reference = Off\r\nallow_url_fopen = On\r\nasp_tags = Off\r\ndisable_classes =\r\ndisable_functions = curl_multi_exec,exec,parse_ini_file,passthru,popen,proc_close,proc_get_status,proc_nice,proc_open,proc_terminate,shell_exec,show_source,system\r\ndisplay_errors = Off\r\ndisplay_startup_errors = Off\r\nenable_dl = Off\r\nerror_reporting = E_ALL & ~E_NOTICE\r\nexpose_php = Off\r\nfile_uploads = On\r\ncgi.force_redirect = 1\r\ngpc_order = "GPC"\r\nhtml_errors = Off\r\nignore_repeated_errors = Off\r\nignore_repeated_source = Off\r\ninclude_path = ".:{PEAR_DIR}"\r\nlog_errors = On\r\nlog_errors_max_len = 1024\r\nmagic_quotes_gpc = Off\r\nmagic_quotes_runtime = Off\r\nmagic_quotes_sybase = Off\r\nmax_execution_time = 60\r\nmax_input_time = 60\r\nmemory_limit = 128M\r\noutput_buffering = 4096\r\npost_max_size = 16M\r\nprecision = 14\r\nregister_argc_argv = Off\r\nregister_globals = Off\r\nreport_memleaks = On\r\nsendmail_path = "/usr/sbin/sendmail -t -i -f {CUSTOMER_EMAIL}"\r\nsession.auto_start = 0\r\nsession.bug_compat_42 = 0\r\nsession.bug_compat_warn = 1\r\nsession.cache_expire = 180\r\nsession.cache_limiter = nocache\r\nsession.cookie_domain =\r\nsession.cookie_lifetime = 0\r\nsession.cookie_path = /\r\nsession.entropy_file = /dev/urandom\r\nsession.entropy_length = 16\r\nsession.gc_divisor = 1000\r\nsession.gc_maxlifetime = 1440\r\nsession.gc_probability = 1\r\nsession.name = PHPSESSID\r\nsession.referer_check =\r\nsession.save_handler = files\r\nsession.save_path = "{TMP_DIR}"\r\nsession.serialize_handler = php\r\nsession.use_cookies = 1\r\nsession.use_trans_sid = 0\r\nshort_open_tag = On\r\nsuhosin.mail.protect = 1\r\nsuhosin.simulation = Off\r\ntrack_errors = Off\r\nupload_max_filesize = 32M\r\nupload_tmp_dir = "{TMP_DIR}"\r\nvariables_order = "GPCS"\r\n;mail.add_x_header = On\r\n;mail.log = "/var/log/phpmail.log"\r\nopcache.restrict_api = ""\r\n');
+(1, 'Default Config', '/usr/bin/php-cgi', 'php', '-1', '-1', 'allow_url_fopen = Off\r\nallow_url_include = Off\r\nauto_append_file =\r\nauto_globals_jit = On\r\nauto_prepend_file =\r\nbcmath.scale = 0\r\ncli_server.color = On\r\ndefault_charset = "UTF-8"\r\ndefault_mimetype = "text/html"\r\ndefault_socket_timeout = 60\r\nasp_tags = Off\r\ndisable_functions = pcntl_alarm,pcntl_fork,pcntl_waitpid,pcntl_wait,pcntl_wifexited,pcntl_wifstopped,pcntl_wifsignaled,pcntl_wifcontinued,pcntl_wexitstatus,pcntl_wtermsig,pcntl_wstopsig,pcntl_signal,pcntl_signal_get_handler,pcntl_signal_dispatch,pcntl_get_last_error,pcntl_strerror,pcntl_sigprocmask,pcntl_sigwaitinfo,pcntl_sigtimedwait,pcntl_exec,pcntl_getpriority,pcntl_setpriority,pcntl_async_signals,curl_exec,curl_multi_exec,exec,parse_ini_file,passthru,popen,proc_close,proc_get_status,proc_nice,proc_open,proc_terminate,shell_exec,show_source,system\r\ndisplay_errors = Off\r\ndisplay_startup_errors = Off\r\ndoc_root =\r\nenable_dl = Off\r\nerror_reporting = E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_NOTICE\r\nexpose_php = Off\r\nfile_uploads = On\r\nhtml_errors = On\r\nignore_repeated_errors = Off\r\nignore_repeated_source = Off\r\ninclude_path = ".:{PEAR_DIR}"\r\nimplicit_flush = Off\r\nldap.max_links = -1\r\nlog_errors = On\r\nlog_errors_max_len = 1024\r\nmail.add_x_header = Off\r\nmax_execution_time = 30\r\nmax_file_uploads = 20\r\nmax_input_time = 60\r\nmemory_limit = 128M\r\n{OPEN_BASEDIR_C}open_basedir = "{OPEN_BASEDIR}"\r\noutput_buffering = 4096\r\npost_max_size = 16M\r\nprecision = 14\r\nregister_argc_argv = Off\r\nreport_memleaks = On\r\nrequest_order = "GP"\r\nsendmail_path = "/usr/sbin/sendmail -t -i -f {CUSTOMER_EMAIL}"\r\nserialize_precision = -1\r\nsession.auto_start = 0\r\nsession.cache_expire = 180\r\nsession.cache_limiter = nocache\r\nsession.cookie_domain =\r\nsession.cookie_httponly =\r\nsession.cookie_lifetime = 0\r\nsession.cookie_path = /\r\nsession.cookie_samesite =\r\nsession.gc_divisor = 1000\r\nsession.gc_maxlifetime = 1440\r\nsession.gc_probability = 0\r\nsession.name = PHPSESSID\r\nsession.referer_check =\r\nsession.save_handler = files\r\nsession.save_path = "{TMP_DIR}"\r\nsession.serialize_handler = php\r\nsession.sid_bits_per_character = 5\r\nsession.sid_length = 26\r\nsession.trans_sid_tags = "a=href,area=href,frame=src,form="\r\nsession.use_cookies = 1\r\nsession.use_only_cookies = 1\r\nsession.use_strict_mode = 0\r\nsession.use_trans_sid = 0\r\nshort_open_tag = On\r\nupload_max_filesize = 32M\r\nupload_tmp_dir = "{TMP_DIR}"\r\nvariables_order = "GPCS"\r\nopcache.restrict_api = "{DOCUMENT_ROOT}"\r\n'),
+(2, 'Froxlor Vhost Config', '/usr/bin/php-cgi', 'php', '-1', '-1', 'allow_url_fopen = On\r\nallow_url_include = Off\r\nauto_append_file =\r\nauto_globals_jit = On\r\nauto_prepend_file =\r\nbcmath.scale = 0\r\ncli_server.color = On\r\ndefault_charset = "UTF-8"\r\ndefault_mimetype = "text/html"\r\ndefault_socket_timeout = 60\r\nasp_tags = Off\r\ndisable_functions = pcntl_alarm,pcntl_fork,pcntl_waitpid,pcntl_wait,pcntl_wifexited,pcntl_wifstopped,pcntl_wifsignaled,pcntl_wifcontinued,pcntl_wexitstatus,pcntl_wtermsig,pcntl_wstopsig,pcntl_signal,pcntl_signal_get_handler,pcntl_signal_dispatch,pcntl_get_last_error,pcntl_strerror,pcntl_sigprocmask,pcntl_sigwaitinfo,pcntl_sigtimedwait,pcntl_exec,pcntl_getpriority,pcntl_setpriority,pcntl_async_signals,curl_multi_exec,parse_ini_file,passthru,popen,proc_close,proc_get_status,proc_nice,proc_open,proc_terminate,shell_exec,show_source,system\r\ndisplay_errors = Off\r\ndisplay_startup_errors = Off\r\ndoc_root =\r\nenable_dl = Off\r\nerror_reporting = E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_NOTICE\r\nexpose_php = Off\r\nfile_uploads = On\r\nhtml_errors = On\r\nignore_repeated_errors = Off\r\nignore_repeated_source = Off\r\ninclude_path = ".:{PEAR_DIR}"\r\nimplicit_flush = Off\r\nldap.max_links = -1\r\nlog_errors = On\r\nlog_errors_max_len = 1024\r\nmail.add_x_header = Off\r\nmax_execution_time = 60\r\nmax_file_uploads = 20\r\nmax_input_time = 60\r\nmemory_limit = 128M\r\noutput_buffering = 4096\r\npost_max_size = 16M\r\nprecision = 14\r\nregister_argc_argv = Off\r\nreport_memleaks = On\r\nrequest_order = "GP"\r\nsendmail_path = "/usr/sbin/sendmail -t -i -f {CUSTOMER_EMAIL}"\r\nserialize_precision = -1\r\nsession.auto_start = 0\r\nsession.cache_expire = 180\r\nsession.cache_limiter = nocache\r\nsession.cookie_domain =\r\nsession.cookie_httponly =\r\nsession.cookie_lifetime = 0\r\nsession.cookie_path = /\r\nsession.cookie_samesite =\r\nsession.gc_divisor = 1000\r\nsession.gc_maxlifetime = 1440\r\nsession.gc_probability = 0\r\nsession.name = PHPSESSID\r\nsession.referer_check =\r\nsession.save_handler = files\r\nsession.save_path = "{TMP_DIR}"\r\nsession.serialize_handler = php\r\nsession.sid_bits_per_character = 5\r\nsession.sid_length = 26\r\nsession.trans_sid_tags = "a=href,area=href,frame=src,form="\r\nsession.use_cookies = 1\r\nsession.use_only_cookies = 1\r\nsession.use_strict_mode = 0\r\nsession.use_trans_sid = 0\r\nshort_open_tag = On\r\nupload_max_filesize = 32M\r\nupload_tmp_dir = "{TMP_DIR}"\r\nvariables_order = "GPCS"\r\nopcache.restrict_api = ""\r\n');
 
 
 DROP TABLE IF EXISTS `cronjobs_run`;
@@ -885,7 +903,7 @@ CREATE TABLE IF NOT EXISTS `cronjobs_run` (
   `isactive` tinyint(1) DEFAULT '1',
   `desc_lng_key` varchar(100) NOT NULL DEFAULT 'cron_unknown_desc',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `cronclass`, `interval`, `isactive`, `desc_lng_key`) VALUES
@@ -910,7 +928,7 @@ CREATE TABLE IF NOT EXISTS `ftp_quotalimits` (
   `files_in_avail` int(10) unsigned NOT NULL,
   `files_out_avail` int(10) unsigned NOT NULL,
   `files_xfer_avail` int(10) unsigned NOT NULL
-) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -929,7 +947,7 @@ CREATE TABLE IF NOT EXISTS `ftp_quotatallies` (
   `files_in_used` int(10) unsigned NOT NULL,
   `files_out_used` int(10) unsigned NOT NULL,
   `files_xfer_used` int(10) unsigned NOT NULL
-) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -940,7 +958,7 @@ CREATE TABLE IF NOT EXISTS `redirect_codes` (
   `desc` varchar(200) NOT NULL,
   `enabled` tinyint(1) DEFAULT '1',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 
@@ -958,7 +976,7 @@ CREATE TABLE IF NOT EXISTS `domain_redirect_codes` (
   `rid` int(5) NOT NULL,
   `did` int(11) unsigned NOT NULL,
   UNIQUE KEY `rc` (`rid`, `did`)
-) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 DROP TABLE IF EXISTS `domain_ssl_settings`;
@@ -972,8 +990,9 @@ CREATE TABLE IF NOT EXISTS `domain_ssl_settings` (
   `ssl_csr_file` mediumtext,
   `ssl_fullchain_file` mediumtext,
   `expirationdate` datetime DEFAULT NULL,
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY (`domainid`)
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 DROP TABLE IF EXISTS `panel_domaintoip`;
@@ -981,7 +1000,7 @@ CREATE TABLE IF NOT EXISTS `panel_domaintoip` (
   `id_domain` int(11) unsigned NOT NULL,
   `id_ipandports` int(11) unsigned NOT NULL,
   PRIMARY KEY (`id_domain`,`id_ipandports`)
-) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 DROP TABLE IF EXISTS `domain_dns_entries`;
@@ -994,7 +1013,7 @@ CREATE TABLE `domain_dns_entries` (
   `ttl` int(11) NOT NULL DEFAULT '18000',
   `prio` int(11) DEFAULT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 DROP TABLE IF EXISTS `panel_plans`;
@@ -1007,7 +1026,7 @@ CREATE TABLE `panel_plans` (
   `ts` int(15) NOT NULL default '0',
   PRIMARY KEY  (id),
   KEY adminid (adminid)
-) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
 DROP TABLE IF EXISTS `api_keys`;
@@ -1022,5 +1041,5 @@ CREATE TABLE `api_keys` (
   PRIMARY KEY  (id),
   KEY adminid (adminid),
   KEY customerid (customerid)
-) ENGINE=MyISAM CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 

@@ -21,6 +21,8 @@ interface ResourceEntity
 
 	public function listing();
 
+	public function listingCount();
+
 	public function get();
 
 	public function add();

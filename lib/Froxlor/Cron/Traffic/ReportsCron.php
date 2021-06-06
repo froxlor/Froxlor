@@ -15,7 +15,7 @@ namespace Froxlor\Cron\Traffic;
  * @author Froxlor team <team@froxlor.org> (2010-)
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package Cron
- *         
+ *
  */
 use Froxlor\Database\Database;
 use Froxlor\Settings;
@@ -36,7 +36,7 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 		if ((int) Settings::Get('system.report_trafficmax') > 0) {
 			// Warn the customers at xx% traffic-usage
 			$result_stmt = Database::prepare("
-				SELECT `c`.`customerid`, `c`.`adminid`, `c`.`name`, `c`.`firstname`,
+				SELECT `c`.`customerid`, `c`.`customernumber`, `c`.`adminid`, `c`.`name`, `c`.`firstname`,
 				`c`.`company`, `c`.`traffic`, `c`.`email`, `c`.`def_language`,
 				`a`.`name` AS `adminname`, `a`.`email` AS `adminmail`,
 				(SELECT SUM(`t`.`http` + `t`.`ftp_up` + `t`.`ftp_down` + `t`.`mail`)
@@ -55,16 +55,19 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 			Database::pexecute($result_stmt, $result_data);
 
 			while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
-
 				if (isset($row['traffic']) && $row['traffic'] > 0 && $row['traffic_used'] != null && (($row['traffic_used'] * 100) / $row['traffic']) >= (int) Settings::Get('system.report_trafficmax')) {
 					$rep_userinfo = array(
 						'name' => $row['name'],
 						'firstname' => $row['firstname'],
-						'company' => $row['company']
+						'company' => $row['company'],
+						'customernumber' => $row['customernumber']
 					);
 					$replace_arr = array(
 						'SALUTATION' => \Froxlor\User::getCorrectUserSalutation($rep_userinfo),
-						'NAME' => $row['name'], // < keep this for compatibility
+						'NAME' => $rep_userinfo['name'],
+						'FIRSTNAME' => $rep_userinfo['firstname'],
+						'COMPANY' => $rep_userinfo['company'],
+						'CUSTOMER_NO' => $rep_userinfo['customernumber'],
 						'TRAFFIC' => round(($row['traffic'] / 1024), 2), /* traffic is stored in KB, template uses MB */
 						'TRAFFICUSED' => round(($row['traffic_used'] / 1024), 2), /* traffic is stored in KB, template uses MB */
 						'USAGE_PERCENT' => round(($row['traffic_used'] * 100) / $row['traffic'], 2),
@@ -89,9 +92,11 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 					}
 
 					// include english language file (fallback)
-					include_once \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/lng/english.lng.php');
+					include \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/lng/english.lng.php');
 					// include admin/customer language file
-					include_once \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/' . $langfile);
+					if ($lngfile != 'lng/english.lng.php') {
+						include \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/' . $langfile);
+					}
 
 					// Get mail templates from database; the ones from 'admin' are fetched for fallback
 					$result2_stmt = Database::prepare("
@@ -106,11 +111,11 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 						'varname' => 'trafficmaxpercent_subject'
 					);
 					$result2 = Database::pexecute_first($result2_stmt, $result2_data);
-					$mail_subject = html_entity_decode(\Froxlor\PhpHelper::replaceVariables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['trafficmaxpercent']['subject']), $replace_arr));
+					$mail_subject = html_entity_decode(\Froxlor\PhpHelper::replaceVariables((($result2 !== false && $result2['value'] != '') ? $result2['value'] : $lng['mails']['trafficmaxpercent']['subject']), $replace_arr));
 
 					$result2_data['varname'] = 'trafficmaxpercent_mailbody';
 					$result2 = Database::pexecute_first($result2_stmt, $result2_data);
-					$mail_body = html_entity_decode(\Froxlor\PhpHelper::replaceVariables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['trafficmaxpercent']['mailbody']), $replace_arr));
+					$mail_body = html_entity_decode(\Froxlor\PhpHelper::replaceVariables((($result2 !== false && $result2['value'] != '') ? $result2['value'] : $lng['mails']['trafficmaxpercent']['mailbody']), $replace_arr));
 
 					$_mailerror = false;
 					$mailerr_msg = "";
@@ -142,6 +147,8 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 					Database::pexecute($upd_stmt, array(
 						'customerid' => $row['customerid']
 					));
+
+					unset($lng);
 				}
 			}
 
@@ -168,8 +175,8 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 					$replace_arr = array(
 						'NAME' => $row['name'],
 						'TRAFFIC' => round(($row['traffic'] / 1024), 2), /* traffic is stored in KB, template uses MB */
-							'TRAFFICUSED' => round(($row['traffic_used_total'] / 1024), 2), /* traffic is stored in KB, template uses MB */
-							'USAGE_PERCENT' => round(($row['traffic_used_total'] * 100) / $row['traffic'], 2),
+						'TRAFFICUSED' => round(($row['traffic_used_total'] / 1024), 2), /* traffic is stored in KB, template uses MB */
+						'USAGE_PERCENT' => round(($row['traffic_used_total'] * 100) / $row['traffic'], 2),
 						'MAX_PERCENT' => Settings::Get('system.report_trafficmax')
 					);
 
@@ -191,9 +198,11 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 					}
 
 					// include english language file (fallback)
-					include_once \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/lng/english.lng.php');
+					include \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/lng/english.lng.php');
 					// include admin/customer language file
-					include_once \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/' . $langfile);
+					if ($lngfile != 'lng/english.lng.php') {
+						include \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/' . $langfile);
+					}
 
 					// Get mail templates from database; the ones from 'admin' are fetched for fallback
 					$result2_stmt = Database::prepare("
@@ -208,11 +217,11 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 						'varname' => 'trafficmaxpercent_subject'
 					);
 					$result2 = Database::pexecute_first($result2_stmt, $result2_data);
-					$mail_subject = html_entity_decode(\Froxlor\PhpHelper::replaceVariables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['trafficmaxpercent']['subject']), $replace_arr));
+					$mail_subject = html_entity_decode(\Froxlor\PhpHelper::replaceVariables((($result2 !== false && $result2['value'] != '') ? $result2['value'] : $lng['mails']['trafficmaxpercent']['subject']), $replace_arr));
 
 					$result2_data['varname'] = 'trafficmaxpercent_mailbody';
 					$result2 = Database::pexecute_first($result2_stmt, $result2_data);
-					$mail_body = html_entity_decode(\Froxlor\PhpHelper::replaceVariables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['trafficmaxpercent']['mailbody']), $replace_arr));
+					$mail_body = html_entity_decode(\Froxlor\PhpHelper::replaceVariables((($result2 !== false && $result2['value'] != '') ? $result2['value'] : $lng['mails']['trafficmaxpercent']['mailbody']), $replace_arr));
 
 					$_mailerror = false;
 					$mailerr_msg = "";
@@ -322,6 +331,8 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 					}
 
 					$mail->ClearAddresses();
+
+					unset($lng);
 				}
 			}
 		} // trafficmax > 0
@@ -343,7 +354,7 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 			 * report about diskusage for customers
 			 */
 			$result_stmt = Database::query("
-				SELECT `c`.`customerid`, `c`.`adminid`, `c`.`name`, `c`.`firstname`,
+				SELECT `c`.`customerid`, `c`.`customernumber`, `c`.`adminid`, `c`.`name`, `c`.`firstname`,
 				`c`.`company`, `c`.`diskspace`, `c`.`diskspace_used`, `c`.`email`, `c`.`def_language`,
 				`a`.`name` AS `adminname`, `a`.`email` AS `adminmail`
 				FROM `" . TABLE_PANEL_CUSTOMERS . "` AS `c`
@@ -361,11 +372,15 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 					$rep_userinfo = array(
 						'name' => $row['name'],
 						'firstname' => $row['firstname'],
-						'company' => $row['company']
+						'company' => $row['company'],
+						'customernumber' => $row['customernumber']
 					);
 					$replace_arr = array(
 						'SALUTATION' => \Froxlor\User::getCorrectUserSalutation($rep_userinfo),
-						'NAME' => $row['name'], // < keep this for compatibility
+						'NAME' => $rep_userinfo['name'],
+						'FIRSTNAME' => $rep_userinfo['firstname'],
+						'COMPANY' => $rep_userinfo['company'],
+						'CUSTOMER_NO' => $rep_userinfo['customernumber'],
 						'DISKAVAILABLE' => round(($row['diskspace'] / 1024), 2), /* traffic is stored in KB, template uses MB */
 						'DISKUSED' => round($row['diskspace_used'] / 1024, 2), /* traffic is stored in KB, template uses MB */
 						'USAGE_PERCENT' => round(($row['diskspace_used'] * 100) / $row['diskspace'], 2),
@@ -386,13 +401,15 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 						$lngfile = Database::pexecute_first($lngfile_stmt, array(
 							'deflang' => Settings::Get('panel.standardlanguage')
 						));
-						$langfile = $lngfile['file'];
+						$langfile = $lngfile['file'] ?? 'lng/english.lng.php';
 					}
 
 					// include english language file (fallback)
-					include_once \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/lng/english.lng.php');
+					include \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/lng/english.lng.php');
 					// include admin/customer language file
-					include_once \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/' . $langfile);
+					if ($lngfile != 'lng/english.lng.php') {
+						include \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/' . $langfile);
+					}
 
 					// Get mail templates from database; the ones from 'admin' are fetched for fallback
 					$result2_stmt = Database::prepare("
@@ -407,11 +424,11 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 						'varname' => 'diskmaxpercent_subject'
 					);
 					$result2 = Database::pexecute_first($result2_stmt, $result2_data);
-					$mail_subject = html_entity_decode(\Froxlor\PhpHelper::replaceVariables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['diskmaxpercent']['subject']), $replace_arr));
+					$mail_subject = html_entity_decode(\Froxlor\PhpHelper::replaceVariables((($result2 !== false && $result2['value'] != '') ? $result2['value'] : $lng['mails']['diskmaxpercent']['subject']), $replace_arr));
 
 					$result2_data['varname'] = 'diskmaxpercent_mailbody';
 					$result2 = Database::pexecute_first($result2_stmt, $result2_data);
-					$mail_body = html_entity_decode(\Froxlor\PhpHelper::replaceVariables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['diskmaxpercent']['mailbody']), $replace_arr));
+					$mail_body = html_entity_decode(\Froxlor\PhpHelper::replaceVariables((($result2 !== false && $result2['value'] != '') ? $result2['value'] : $lng['mails']['diskmaxpercent']['mailbody']), $replace_arr));
 
 					$_mailerror = false;
 					$mailerr_msg = "";
@@ -443,6 +460,8 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 					Database::pexecute($upd_stmt, array(
 						'customerid' => $row['customerid']
 					));
+
+					unset($lng);
 				}
 			}
 
@@ -483,9 +502,11 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 					}
 
 					// include english language file (fallback)
-					include_once \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/lng/english.lng.php');
+					include \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/lng/english.lng.php');
 					// include admin/customer language file
-					include_once \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/' . $langfile);
+					if ($lngfile != 'lng/english.lng.php') {
+						include \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . '/' . $langfile);
+					}
 
 					// Get mail templates from database; the ones from 'admin' are fetched for fallback
 					$result2_stmt = Database::prepare("
@@ -500,11 +521,11 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 						'varname' => 'diskmaxpercent_subject'
 					);
 					$result2 = Database::pexecute_first($result2_stmt, $result2_data);
-					$mail_subject = html_entity_decode(\Froxlor\PhpHelper::replaceVariables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['diskmaxpercent']['subject']), $replace_arr));
+					$mail_subject = html_entity_decode(\Froxlor\PhpHelper::replaceVariables((($result2 !== false && $result2['value'] != '') ? $result2['value'] : $lng['mails']['diskmaxpercent']['subject']), $replace_arr));
 
 					$result2_data['varname'] = 'diskmaxpercent_mailbody';
 					$result2 = Database::pexecute_first($result2_stmt, $result2_data);
-					$mail_body = html_entity_decode(\Froxlor\PhpHelper::replaceVariables((($result2['value'] != '') ? $result2['value'] : $lng['mails']['diskmaxpercent']['mailbody']), $replace_arr));
+					$mail_body = html_entity_decode(\Froxlor\PhpHelper::replaceVariables((($result2 !== false && $result2['value'] != '') ? $result2['value'] : $lng['mails']['diskmaxpercent']['mailbody']), $replace_arr));
 
 					$_mailerror = false;
 					$mailerr_msg = "";
@@ -536,6 +557,8 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 					Database::pexecute($upd_stmt, array(
 						'adminid' => $row['adminid']
 					));
+
+					unset($lng);
 				}
 			}
 		} // webmax > 0

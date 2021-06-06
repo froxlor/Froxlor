@@ -32,13 +32,15 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 * @param boolean $iscatchall
 	 *        	optional, make this address a catchall address, default: no
 	 * @param int $customerid
-	 *        	optional, admin-only, the customer-id
+	 *        	optional, required when called as admin (if $loginname is not specified)
 	 * @param string $loginname
-	 *        	optional, admin-only, the loginname
+	 *        	optional, required when called as admin (if $customerid is not specified)
+	 * @param string $description
+	 *        	optional custom description (currently not used/shown in the frontend), default empty
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function add()
 	{
@@ -54,6 +56,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 
 			// parameters
 			$iscatchall = $this->getBoolParam('iscatchall', true, 0);
+			$description = $this->getParam('description', true, '');
 
 			// validation
 			if (substr($domain, 0, 4) != 'xn--') {
@@ -62,9 +65,10 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			}
 
 			// check domain and whether it's an email-enabled domain
+			// use internal call because the customer might have 'domains' in customer_hide_options
 			$domain_check = $this->apiCall('SubDomains.get', array(
 				'domainname' => $domain
-			));
+			), true);
 			if ($domain_check['isemaildomain'] == 0) {
 				\Froxlor\UI\Response::standard_error('maindomainnonexist', $domain, true);
 			}
@@ -106,10 +110,12 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			);
 			$email_check = Database::pexecute_first($stmt, $params, true, true);
 
-			if (strtolower($email_check['email_full']) == strtolower($email_full)) {
-				\Froxlor\UI\Response::standard_error('emailexistalready', $email_full, true);
-			} elseif ($email_check['email'] == $email) {
-				\Froxlor\UI\Response::standard_error('youhavealreadyacatchallforthisdomain', '', true);
+			if ($email_check) {
+				if (strtolower($email_check['email_full']) == strtolower($email_full)) {
+					\Froxlor\UI\Response::standard_error('emailexistalready', $email_full, true);
+				} elseif ($email_check['email'] == $email) {
+					\Froxlor\UI\Response::standard_error('youhavealreadyacatchallforthisdomain', '', true);
+				}
 			}
 
 			$stmt = Database::prepare("
@@ -118,14 +124,16 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 				`email` = :email,
 				`email_full` = :email_full,
 				`iscatchall` = :iscatchall,
-				`domainid` = :domainid
+				`domainid` = :domainid,
+				`description` = :description
 			");
 			$params = array(
 				"cid" => $customer['customerid'],
 				"email" => $email,
 				"email_full" => $email_full,
 				"iscatchall" => $iscatchall,
-				"domainid" => $domain_check['id']
+				"domainid" => $domain_check['id'],
+				"description" => $description
 			);
 			Database::pexecute($stmt, $params, true, true);
 
@@ -137,7 +145,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			$result = $this->apiCall('Emails.get', array(
 				'emailaddr' => $email_full
 			));
-			return $this->response(200, "successfull", $result);
+			return $this->response(200, "successful", $result);
 		}
 		throw new \Exception("No more resources available", 406);
 	}
@@ -152,7 +160,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function get()
 	{
@@ -164,7 +172,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		$customer_ids = $this->getAllowedCustomerIds('email');
 		$params['idea'] = ($id <= 0 ? $emailaddr : $id);
 
-		$result_stmt = Database::prepare("SELECT v.`id`, v.`email`, v.`email_full`, v.`iscatchall`, v.`destination`, v.`customerid`, v.`popaccountid`, v.`domainid`, u.`quota`
+		$result_stmt = Database::prepare("SELECT v.`id`, v.`email`, v.`email_full`, v.`iscatchall`, v.`destination`, v.`customerid`, v.`popaccountid`, v.`domainid`, v.`description`, u.`quota`, u.`imap`, u.`pop3`, u.`postfix`, u.`mboxsize`
 			FROM `" . TABLE_MAIL_VIRTUAL . "` v
 			LEFT JOIN `" . TABLE_MAIL_USERS . "` u ON v.`popaccountid` = u.`id`
 			WHERE v.`customerid` IN (" . implode(", ", $customer_ids) . ")
@@ -173,7 +181,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		$result = Database::pexecute_first($result_stmt, $params, true, true);
 		if ($result) {
 			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] get email address '" . $result['email_full'] . "'");
-			return $this->response(200, "successfull", $result);
+			return $this->response(200, "successful", $result);
 		}
 		$key = ($id > 0 ? "id #" . $id : "emailaddr '" . $emailaddr . "'");
 		throw new \Exception("Email address with " . $key . " could not be found", 404);
@@ -187,15 +195,17 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 * @param string $emailaddr
 	 *        	optional, the email-address
 	 * @param int $customerid
-	 *        	optional, admin-only, the customer-id
+	 *        	optional, required when called as admin (if $loginname is not specified)
 	 * @param string $loginname
-	 *        	optional, admin-only, the loginname
+	 *        	optional, required when called as admin (if $customerid is not specified)
 	 * @param boolean $iscatchall
 	 *        	optional
+	 * @param string $description
+	 *        	optional custom description (currently not used/shown in the frontend), default empty
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function update()
 	{
@@ -224,6 +234,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 
 		// parameters
 		$iscatchall = $this->getBoolParam('iscatchall', true, $result['iscatchall']);
+		$description = $this->getParam('description', true, $result['description']);
 
 		// get needed customer info to reduce the email-address-counter by one
 		$customer = $this->getCustomerData();
@@ -233,6 +244,19 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			$iscatchall = '1';
 			$email_parts = explode('@', $result['email_full']);
 			$email = '@' . $email_parts[1];
+			// catchall check
+			$stmt = Database::prepare("
+				SELECT `email_full` FROM `" . TABLE_MAIL_VIRTUAL . "`
+				WHERE `email` = :email AND `customerid` = :cid AND `iscatchall` = '1'
+			");
+			$params = array(
+				"email" => $email,
+				"cid" => $customer['customerid']
+			);
+			$email_check = Database::pexecute_first($stmt, $params, true, true);
+			if ($email_check) {
+				\Froxlor\UI\Response::standard_error('youhavealreadyacatchallforthisdomain', '', true);
+			}
 		} else {
 			$iscatchall = '0';
 			$email = $result['email_full'];
@@ -240,12 +264,13 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 
 		$stmt = Database::prepare("
 			UPDATE `" . TABLE_MAIL_VIRTUAL . "`
-			SET `email` = :email , `iscatchall` = :caflag
+			SET `email` = :email , `iscatchall` = :caflag, `description` = :description
 			WHERE `customerid`= :cid AND `id`= :id
 		");
 		$params = array(
 			"email" => $email,
 			"caflag" => $iscatchall,
+			"description" => $description,
 			"cid" => $customer['customerid'],
 			"id" => $id
 		);
@@ -255,7 +280,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		$result = $this->apiCall('Emails.get', array(
 			'emailaddr' => $result['email_full']
 		));
-		return $this->response(200, "successfull", $result);
+		return $this->response(200, "successful", $result);
 	}
 
 	/**
@@ -265,31 +290,67 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	optional, admin-only, select email addresses of a specific customer by id
 	 * @param string $loginname
 	 *        	optional, admin-only, select email addresses of a specific customer by loginname
+	 * @param array $sql_search
+	 *        	optional array with index = fieldname, and value = array with 'op' => operator (one of <, > or =), LIKE is used if left empty and 'value' => searchvalue
+	 * @param int $sql_limit
+	 *        	optional specify number of results to be returned
+	 * @param int $sql_offset
+	 *        	optional specify offset for resultset
+	 * @param array $sql_orderby
+	 *        	optional array with index = fieldname and value = ASC|DESC to order the resultset by one or more fields
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
-	 * @return array count|list
+	 * @return string json-encoded array count|list
 	 */
 	public function listing()
 	{
 		$customer_ids = $this->getAllowedCustomerIds('email');
 		$result = array();
+		$query_fields = array();
 		$result_stmt = Database::prepare("
-			SELECT m.`id`, m.`domainid`, m.`email`, m.`email_full`, m.`iscatchall`, u.`quota`, m.`destination`, m.`popaccountid`, d.`domain`, u.`mboxsize`
+			SELECT m.`id`, m.`domainid`, m.`email`, m.`email_full`, m.`iscatchall`, m.`destination`, m.`popaccountid`, d.`domain`, u.`quota`, u.`imap`, u.`pop3`, u.`postfix`, u.`mboxsize`
+			FROM `" . TABLE_MAIL_VIRTUAL . "` m
+			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` d ON (m.`domainid` = d.`id`)
+			LEFT JOIN `" . TABLE_MAIL_USERS . "` u ON (m.`popaccountid` = u.`id`)
+			WHERE m.`customerid` IN (" . implode(", ", $customer_ids) . ")" . $this->getSearchWhere($query_fields, true) . $this->getOrderBy() . $this->getLimit());
+		Database::pexecute($result_stmt, $query_fields, true, true);
+		while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
+			$result[] = $row;
+		}
+		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] list email-addresses");
+		return $this->response(200, "successful", array(
+			'count' => count($result),
+			'list' => $result
+		));
+	}
+
+	/**
+	 * returns the total number of accessable email addresses
+	 *
+	 * @param int $customerid
+	 *        	optional, admin-only, select email addresses of a specific customer by id
+	 * @param string $loginname
+	 *        	optional, admin-only, select email addresses of a specific customer by loginname
+	 *        	
+	 * @access admin, customer
+	 * @throws \Exception
+	 * @return string json-encoded array
+	 */
+	public function listingCount()
+	{
+		$customer_ids = $this->getAllowedCustomerIds('email');
+		$result_stmt = Database::prepare("
+			SELECT COUNT(*) as num_emails
 			FROM `" . TABLE_MAIL_VIRTUAL . "` m
 			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` d ON (m.`domainid` = d.`id`)
 			LEFT JOIN `" . TABLE_MAIL_USERS . "` u ON (m.`popaccountid` = u.`id`)
 			WHERE m.`customerid` IN (" . implode(", ", $customer_ids) . ")
 		");
-		Database::pexecute($result_stmt, null, true, true);
-		while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
-			$result[] = $row;
+		$result = Database::pexecute_first($result_stmt, null, true, true);
+		if ($result) {
+			return $this->response(200, "successful", $result['num_emails']);
 		}
-		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] list email-addresses");
-		return $this->response(200, "successfull", array(
-			'count' => count($result),
-			'list' => $result
-		));
 	}
 
 	/**
@@ -300,15 +361,15 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 * @param string $emailaddr
 	 *        	optional, the email-address
 	 * @param int $customerid
-	 *        	optional, admin-only, the customer-id
+	 *        	optional, required when called as admin (if $loginname is not specified)
 	 * @param string $loginname
-	 *        	optional, admin-only, the loginname
+	 *        	optional, required when called as admin (if $customerid is not specified)
 	 * @param boolean $delete_userfiles
 	 *        	optional, delete email data from filesystem, default: 0 (false)
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function delete()
 	{
@@ -340,36 +401,18 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		}
 		// check whether this address is an account
 		if ($result['popaccountid'] != 0) {
-			// Free the Quota used by the email account
-			if (Settings::Get('system.mail_quota_enabled') == 1) {
-				$stmt = Database::prepare("SELECT `quota` FROM `" . TABLE_MAIL_USERS . "` WHERE `customerid`= :customerid AND `id`= :id");
-				$res_quota = Database::pexecute_first($stmt, array(
-					"customerid" => $customer['customerid'],
-					"id" => $result['popaccountid']
-				), true, true);
-				Customers::decreaseUsage($customer['customerid'], 'email_quota_used', '', $res_quota['quota']);
-				Admins::decreaseUsage($customer['customerid'], 'email_quota_used', '', $res_quota['quota']);
-				$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] deleted quota entries for email address '" . $result['email_full'] . "'");
-			}
-			// delete account
-			$stmt = Database::prepare("DELETE FROM `" . TABLE_MAIL_USERS . "` WHERE `customerid`= :customerid AND `id`= :id");
-			Database::pexecute($stmt, array(
-				"customerid" => $customer['customerid'],
-				"id" => $result['popaccountid']
-			), true, true);
-			Customers::decreaseUsage($customer['customerid'], 'email_accounts_used');
-			Admins::decreaseUsage($customer['customerid'], 'email_accounts_used');
-			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] deleted email account '" . $result['email_full'] . "'");
+			// use EmailAccounts.delete
+			$this->apiCall('EmailAccounts.delete', array(
+				'id' => $result['id'],
+				'customerid' => $customer['customerid'],
+				'delete_userfiles' => $delete_userfiles
+			));
 			$number_forwarders --;
 		}
 
 		// decrease forwarder counter
 		Customers::decreaseUsage($customer['customerid'], 'email_forwarders_used', '', $number_forwarders);
 		Admins::decreaseUsage($customer['customerid'], 'email_forwarders_used', '', $number_forwarders);
-
-		if ($delete_userfiles) {
-			\Froxlor\System\Cronjob::inserttask('7', $customer['loginname'], $result['email_full']);
-		}
 
 		// delete address
 		$stmt = Database::prepare("DELETE FROM `" . TABLE_MAIL_VIRTUAL . "` WHERE `customerid`= :customerid AND `id`= :id");
@@ -380,6 +423,6 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		Customers::decreaseUsage($customer['customerid'], 'emails_used');
 
 		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] deleted email address '" . $result['email_full'] . "'");
-		return $this->response(200, "successfull", $result);
+		return $this->response(200, "successful", $result);
 	}
 }

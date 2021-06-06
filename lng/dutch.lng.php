@@ -1080,8 +1080,6 @@ $lng['panel']['unlock'] = 'ontgrendelen';
 $lng['question']['customer_reallyunlock'] = 'Weet u zeker dat u klant %s? wilt ontgrendelen';
 
 // ADDED IN FROXLOR 0.9.15-svn1
-$lng['serversettings']['perl_server']['title'] = 'Server locatie Perl';
-$lng['serversettings']['perl_server']['description'] = 'Standaard is ingesteld op de gids: <a target="blank" href="http://wiki.nginx.org/SimpleCGI">http://wiki.nginx.org/SimpleCGI</a>';
 $lng['serversettings']['nginx_php_backend']['title'] = 'Nginx PHP backend';
 $lng['serversettings']['nginx_php_backend']['description'] = 'dit is waar het PHP-proces luistert naar verzoeken van nginx, kan een unix socket van ip:poort combinatie zijn';
 $lng['serversettings']['phpreload_command']['title'] = 'Commando voor het herladen van PHP';

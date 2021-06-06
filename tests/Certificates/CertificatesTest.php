@@ -64,7 +64,7 @@ class CertificatesTest extends TestCase
 			'ssl_key_file' => $certdata['key']
 		))->add();
 		$result = json_decode($json_result, true)['data'];
-		$this->assertEquals(5, $result['domainid']);
+		$this->assertEquals(7, $result['domainid']);
 	}
 
 	public function testAdminCertificatesList()
@@ -74,6 +74,10 @@ class CertificatesTest extends TestCase
 		$json_result = Certificates::getLocal($admin_userdata)->listing();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(2, $result['count']);
+
+		$json_result = Certificates::getLocal($admin_userdata)->listingCount();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(2, $result);
 	}
 
 	public function testResellerCertificatesList()
@@ -89,6 +93,10 @@ class CertificatesTest extends TestCase
 		$json_result = Certificates::getLocal($reseller_userdata)->listing();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(2, $result['count']);
+
+		$json_result = Certificates::getLocal($reseller_userdata)->listingCount();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(2, $result);
 	}
 
 	public function testCustomerCertificatesList()
@@ -103,6 +111,10 @@ class CertificatesTest extends TestCase
 		$json_result = Certificates::getLocal($customer_userdata)->listing();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(2, $result['count']);
+
+		$json_result = Certificates::getLocal($customer_userdata)->listingCount();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(2, $result);
 	}
 
 	public function testAdminCertificatesUpdate()
@@ -136,7 +148,7 @@ class CertificatesTest extends TestCase
 			'ssl_key_file' => $certdata['key']
 		))->update();
 		$result = json_decode($json_result, true)['data'];
-		$this->assertEquals(5, $result['domainid']);
+		$this->assertEquals(7, $result['domainid']);
 		$this->assertEquals(str_replace("\n", "", $certdata['cert']), str_replace("\n", "", $result['ssl_cert_file']));
 	}
 
@@ -189,7 +201,6 @@ class CertificatesTest extends TestCase
 		));
 
 		// export
-		openssl_csr_export($csr, $csrout);
 		openssl_x509_export($sscert, $certout);
 		openssl_pkey_export($privkey, $pkeyout, null);
 

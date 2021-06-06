@@ -44,6 +44,21 @@ return array(
 						'label' => $lng['login']['language'],
 						'type' => 'select',
 						'select_var' => $language_options
+					),
+					'api_allowed' => array(
+						'label' => $lng['usersettings']['api_allowed']['title'],
+						'desc' => $lng['usersettings']['api_allowed']['description'],
+						'type' => 'checkbox',
+						'values' => array(
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array(
+							'1'
+						),
+						'visible' => (\Froxlor\Settings::Get('api.enabled') == '1' ? true : false)
 					)
 				)
 			),
@@ -152,7 +167,7 @@ return array(
 						'value' => array()
 					),
 					'diskspace' => array(
-						'label' => $lng['customer']['diskspace'],
+						'label' => $lng['customer']['diskspace'] . ' (' . $lng['customer']['mib'] . ')',
 						'type' => 'textul',
 						'value' => 0,
 						'maxlength' => 6,
@@ -160,7 +175,7 @@ return array(
 						'ul_field' => $diskspace_ul
 					),
 					'traffic' => array(
-						'label' => $lng['customer']['traffic'],
+						'label' => $lng['customer']['traffic'] . ' (' . $lng['customer']['gib'] . ')',
 						'type' => 'textul',
 						'value' => 0,
 						'maxlength' => 4,
@@ -200,7 +215,7 @@ return array(
 						'ul_field' => $email_forwarders_ul
 					),
 					'email_quota' => array(
-						'label' => $lng['customer']['email_quota'],
+						'label' => $lng['customer']['email_quota'] . ' (' . $lng['customer']['mib'] . ')',
 						'type' => 'textul',
 						'value' => 0,
 						'maxlength' => 9,

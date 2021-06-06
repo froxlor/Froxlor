@@ -38,7 +38,7 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function add()
 	{
@@ -63,16 +63,25 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 		$ssl_cert_chainfile = $this->getParam('ssl_cert_chainfile', true, '');
 
 		// validate whether the domain does not already have an entry
-		$result = $this->apiCall('Certificates.get', array(
-			'id' => $domainid
-		));
-		if (empty($result)) {
+		$has_cert = true;
+		try {
+			$this->apiCall('Certificates.get', array(
+				'id' => $domainid
+			));
+		} catch (\Exception $e) {
+			if ($e->getCode() == 412) {
+				$has_cert = false;
+			} else {
+				throw $e;
+			}
+		}
+		if (! $has_cert) {
 			$this->addOrUpdateCertificate($domain['id'], $ssl_cert_file, $ssl_key_file, $ssl_ca_file, $ssl_cert_chainfile, true);
 			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] added ssl-certificate for '" . $domain['domain'] . "'");
 			$result = $this->apiCall('Certificates.get', array(
 				'id' => $domain['id']
 			));
-			return $this->response(200, "successfull", $result);
+			return $this->response(200, "successful", $result);
 		}
 		throw new \Exception("Domain '" . $domain['domain'] . "' already has a certificate. Did you mean to call update?", 406);
 	}
@@ -87,7 +96,7 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function get()
 	{
@@ -110,7 +119,10 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 		$result = Database::pexecute_first($stmt, array(
 			"domainid" => $domainid
 		));
-		return $this->response(200, "successfull", $result);
+		if (! $result) {
+			throw new \Exception("Domain '" . $domain['domain'] . "' does not have a certificate.", 412);
+		}
+		return $this->response(200, "successful", $result);
 	}
 
 	/**
@@ -129,7 +141,7 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function update()
 	{
@@ -156,15 +168,24 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 		$result = $this->apiCall('Certificates.get', array(
 			'id' => $domain['id']
 		));
-		return $this->response(200, "successfull", $result);
+		return $this->response(200, "successful", $result);
 	}
 
 	/**
 	 * lists all certificate entries
 	 *
+	 * @param array $sql_search
+	 *        	optional array with index = fieldname, and value = array with 'op' => operator (one of <, > or =), LIKE is used if left empty and 'value' => searchvalue
+	 * @param int $sql_limit
+	 *        	optional specify number of results to be returned
+	 * @param int $sql_offset
+	 *        	optional specify offset for resultset
+	 * @param array $sql_orderby
+	 *        	optional array with index = fieldname and value = ASC|DESC to order the resultset by one or more fields
+	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
-	 * @return array count|list
+	 * @return string json-encoded array count|list
 	 */
 	public function listing()
 	{
@@ -176,7 +197,53 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 			WHERE ";
 
 		$qry_params = array();
+		$query_fields = array();
+		if ($this->isAdmin() && $this->getUserDetail('customers_see_all') == '0') {
+			// admin with only customer-specific permissions
+			$certs_stmt_query .= "d.adminid = :adminid ";
+			$qry_params['adminid'] = $this->getUserDetail('adminid');
+		} elseif ($this->isAdmin() == false) {
+			// customer-area
+			$certs_stmt_query .= "d.customerid = :cid ";
+			$qry_params['cid'] = $this->getUserDetail('customerid');
+		} else {
+			$certs_stmt_query .= "1 ";
+		}
+		$certs_stmt = Database::prepare($certs_stmt_query . $this->getSearchWhere($query_fields, true) . $this->getOrderBy() . $this->getLimit());
+		$qry_params = array_merge($qry_params, $query_fields);
+		Database::pexecute($certs_stmt, $qry_params, true, true);
+		$result = array();
+		while ($cert = $certs_stmt->fetch(\PDO::FETCH_ASSOC)) {
+			// respect froxlor-hostname
+			if ($cert['domainid'] == 0) {
+				$cert['domain'] = Settings::Get('system.hostname');
+				$cert['letsencrypt'] = Settings::Get('system.le_froxlor_enabled');
+				$cert['loginname'] = 'froxlor.panel';
+			}
+			$result[] = $cert;
+		}
+		return $this->response(200, "successful", array(
+			'count' => count($result),
+			'list' => $result
+		));
+	}
 
+	/**
+	 * returns the total number of certificates for the given user
+	 *
+	 * @access admin, customer
+	 * @throws \Exception
+	 * @return string json-encoded array
+	 */
+	public function listingCount()
+	{
+		// select all my (accessable) certificates
+		$certs_stmt_query = "SELECT COUNT(*) as num_certs
+			FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` s
+			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` d ON `d`.`id` = `s`.`domainid`
+			LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` c ON `c`.`customerid` = `d`.`customerid`
+			WHERE ";
+		$qry_params = array();
 		if ($this->isAdmin() && $this->getUserDetail('customers_see_all') == '0') {
 			// admin with only customer-specific permissions
 			$certs_stmt_query .= "d.adminid = :adminid ";
@@ -189,21 +256,10 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 			$certs_stmt_query .= "1 ";
 		}
 		$certs_stmt = Database::prepare($certs_stmt_query);
-		Database::pexecute($certs_stmt, $qry_params, true, true);
-		$result = array();
-		while ($cert = $certs_stmt->fetch(\PDO::FETCH_ASSOC)) {
-			// respect froxlor-hostname
-			if ($cert['domainid'] == 0) {
-				$cert['domain'] = Settings::Get('system.hostname');
-				$cert['letsencrypt'] = Settings::Get('system.le_froxlor_enabled');
-				$cert['loginname'] = 'froxlor.panel';
-			}
-			$result[] = $cert;
+		$result = Database::pexecute_first($certs_stmt, $qry_params, true, true);
+		if ($result) {
+			return $this->response(200, "successful", $result['num_certs']);
 		}
-		return $this->response(200, "successfull", array(
-			'count' => count($result),
-			'list' => $result
-		));
 	}
 
 	/**
@@ -211,8 +267,8 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 	 *
 	 * @param int $id
 	 *
-	 * @return array
 	 * @throws \Exception
+	 * @return string json-encoded array
 	 */
 	public function delete()
 	{
@@ -220,7 +276,7 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 
 		if ($this->isAdmin() == false) {
 			$chk_stmt = Database::prepare("
-				SELECT d.domain FROM `" . TABLE_PANEL_DOMAINS . "` d
+				SELECT d.domain, d.letsencrypt FROM `" . TABLE_PANEL_DOMAINS . "` d
 				LEFT JOIN `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` s ON s.domainid = d.id
 				WHERE s.`id` = :id AND d.`customerid` = :cid
 			");
@@ -230,7 +286,7 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 			));
 		} elseif ($this->isAdmin()) {
 			$chk_stmt = Database::prepare("
-				SELECT d.domain FROM `" . TABLE_PANEL_DOMAINS . "` d
+				SELECT d.domain, d.letsencrypt FROM `" . TABLE_PANEL_DOMAINS . "` d
 				LEFT JOIN `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` s ON s.domainid = d.id
 				WHERE s.`id` = :id" . ($this->getUserDetail('customers_see_all') == '0' ? " AND d.`adminid` = :aid" : ""));
 			$params = array(
@@ -243,7 +299,7 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 			if ($chk == false && $this->getUserDetail('change_serversettings')) {
 				// check whether it might be the froxlor-vhost certificate
 				$chk_stmt = Database::prepare("
-				SELECT \"" . Settings::Get('system.hostname') . "\" as domain FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` 
+				SELECT \"" . Settings::Get('system.hostname') . "\" as domain, \"" . Settings::Get('system.le_froxlor_enabled') . "\" as letsencrypt FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "`
 				WHERE `id` = :id AND `domainid` = '0'");
 				$params = array(
 					'id' => $id
@@ -265,8 +321,12 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 			Database::pexecute($del_stmt, array(
 				'id' => $id
 			));
+			// trigger removing of certificate from acme.sh if let's encrypt
+			if ($chk['letsencrypt'] == '1') {
+				\Froxlor\System\Cronjob::inserttask('12', $chk['domain']);
+			}
 			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] removed ssl-certificate for '" . $chk['domain'] . "'");
-			return $this->response(200, "successfull", $result);
+			return $this->response(200, "successful", $result);
 		}
 		throw new \Exception("Unable to determine SSL certificate. Maybe no access?", 406);
 	}
@@ -292,6 +352,7 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 		}
 
 		$do_verify = true;
+		$expirationdate = null;
 		// no cert-file given -> forget everything
 		if ($ssl_cert_file == '') {
 			$ssl_key_file = '';
@@ -332,6 +393,7 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 			} else {
 				\Froxlor\UI\Response::standard_error('sslcertificateinvalidcert', '', true);
 			}
+			$expirationdate = empty($cert_content['validTo_time_t']) ? null : date("Y-m-d H:i:s", $cert_content['validTo_time_t']);
 		}
 
 		// Add/Update database entry
@@ -345,7 +407,8 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 			`ssl_cert_file` = :ssl_cert_file,
 			`ssl_key_file` = :ssl_key_file,
 			`ssl_ca_file` = :ssl_ca_file,
-			`ssl_cert_chainfile` = :ssl_cert_chainfile
+			`ssl_cert_chainfile` = :ssl_cert_chainfile,
+			`expirationdate` = :expirationdate
 			" . $qrywhere . " `domainid`= :domainid
 		");
 		$params = array(
@@ -353,6 +416,7 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 			"ssl_key_file" => $ssl_key_file,
 			"ssl_ca_file" => $ssl_ca_file,
 			"ssl_cert_chainfile" => $ssl_cert_chainfile,
+			"expirationdate" => $expirationdate,
 			"domainid" => $domainid
 		);
 		Database::pexecute($stmt, $params, true, true);

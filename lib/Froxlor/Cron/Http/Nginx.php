@@ -3,7 +3,6 @@ namespace Froxlor\Cron\Http;
 
 use Froxlor\Database\Database;
 use Froxlor\Settings;
-use Froxlor\Cron\Http\Php\Fpm;
 use Froxlor\Cron\Http\Php\PhpInterface;
 
 /**
@@ -55,36 +54,24 @@ class Nginx extends HttpConfigBase
 		$this->nginx_server = $nginx_server;
 	}
 
-	public function reload()
+	private function createLogformatEntry()
 	{
-		if ((int) Settings::Get('phpfpm.enabled') == 1) {
-			// get all start/stop commands
-			$startstop_sel = Database::prepare("SELECT reload_cmd, config_dir FROM `" . TABLE_PANEL_FPMDAEMONS . "`");
-			Database::pexecute($startstop_sel);
-			$restart_cmds = $startstop_sel->fetchAll(\PDO::FETCH_ASSOC);
-			// restart all php-fpm instances
-			foreach ($restart_cmds as $restart_cmd) {
-				// check whether the config dir is empty (no domains uses this daemon)
-				// so we need to create a dummy
-				$_conffiles = glob(\Froxlor\FileDir::makeCorrectFile($restart_cmd['config_dir'] . "/*.conf"));
-				if ($_conffiles === false || empty($_conffiles)) {
-					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'nginx::reload: fpm config directory "' . $restart_cmd['config_dir'] . '" is empty. Creating dummy.');
-					Fpm::createDummyPool($restart_cmd['config_dir']);
-				}
-				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'nginx::reload: running ' . $restart_cmd['reload_cmd']);
-				\Froxlor\FileDir::safe_exec(escapeshellcmd($restart_cmd['reload_cmd']));
+		if (Settings::Get('system.logfiles_format') != '') {
+			$vhosts_folder = '';
+			if (is_dir(Settings::Get('system.apacheconf_vhost'))) {
+				$vhosts_folder = \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.apacheconf_vhost'));
+			} else {
+				$vhosts_folder = \Froxlor\FileDir::makeCorrectDir(dirname(Settings::Get('system.apacheconf_vhost')));
 			}
-		}
 
-		\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'nginx::reload: reloading nginx');
-		\Froxlor\FileDir::safe_exec(Settings::Get('system.apachereload_command'));
+			$vhosts_filename = \Froxlor\FileDir::makeCorrectFile($vhosts_folder . '/02_froxlor_logfiles_format.conf');
 
-		/**
-		 * nginx does not auto-spawn fcgi-processes
-		 */
-		if (Settings::Get('system.phpreload_command') != '' && (int) Settings::Get('phpfpm.enabled') == 0) {
-			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'nginx::reload: restarting php processes');
-			\Froxlor\FileDir::safe_exec(Settings::Get('system.phpreload_command'));
+			if (! isset($this->nginx_data[$vhosts_filename])) {
+				$this->nginx_data[$vhosts_filename] = '';
+			}
+
+			$logtype = 'frx_custom';
+			$this->nginx_data[$vhosts_filename] = 'log_format ' . $logtype . ' ' . Settings::Get('system.logfiles_format') . ';' . "\n";
 		}
 	}
 
@@ -116,7 +103,7 @@ class Nginx extends HttpConfigBase
 			foreach ($statusCodes as $statusCode) {
 				if (Settings::Get('defaultwebsrverrhandler.err' . $statusCode) != '') {
 					$defhandler = Settings::Get('defaultwebsrverrhandler.err' . $statusCode);
-					if (! \Froxlor\Validate\Form\Data::validateUrl($defhandler)) {
+					if (! \Froxlor\Validate\Validate::validateUrl($defhandler)) {
 						$defhandler = \Froxlor\FileDir::makeCorrectFile($defhandler);
 					}
 					$this->nginx_data[$vhosts_filename] .= 'error_page ' . $statusCode . ' ' . $defhandler . ';' . "\n";
@@ -137,6 +124,8 @@ class Nginx extends HttpConfigBase
 
 	public function createIpPort()
 	{
+		$this->createLogformatEntry();
+
 		$result_ipsandports_stmt = Database::query("
 			SELECT * FROM `" . TABLE_PANEL_IPSANDPORTS . "` ORDER BY `ip` ASC, `port` ASC
 		");
@@ -166,7 +155,8 @@ class Nginx extends HttpConfigBase
 				// we know whether it's an ssl vhost or not
 				$ssl_vhost = false;
 				if ($row_ipsandports['ssl'] == '1') {
-					if ($row_ipsandports['ssl_cert_file'] == '') {
+					// check for required fallback
+					if (($row_ipsandports['ssl_cert_file'] == '' || ! file_exists($row_ipsandports['ssl_cert_file'])) && (Settings::Get('system.le_froxlor_enabled') == '0' || $this->froxlorVhostHasLetsEncryptCert() == false)) {
 						$row_ipsandports['ssl_cert_file'] = Settings::Get('system.ssl_cert_file');
 						if (! file_exists($row_ipsandports['ssl_cert_file'])) {
 							// explicitly disable ssl for this vhost
@@ -176,6 +166,11 @@ class Nginx extends HttpConfigBase
 					}
 					if ($row_ipsandports['ssl_key_file'] == '') {
 						$row_ipsandports['ssl_key_file'] = Settings::Get('system.ssl_key_file');
+						if (! file_exists($row_ipsandports['ssl_key_file'])) {
+							// explicitly disable ssl for this vhost
+							$row_ipsandports['ssl_cert_file'] = "";
+							\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'System certificate key-file "' . Settings::Get('system.ssl_key_file') . '" does not seem to exist. Disabling SSL-vhost for "' . Settings::Get('system.hostname') . '"');
+						}
 					}
 					if ($row_ipsandports['ssl_ca_file'] == '') {
 						$row_ipsandports['ssl_ca_file'] = Settings::Get('system.ssl_ca_file');
@@ -227,7 +222,7 @@ class Nginx extends HttpConfigBase
 
 				$aliases = "";
 				$froxlor_aliases = Settings::Get('system.froxloraliases');
-				if (!empty($froxlor_aliases)) {
+				if (! empty($froxlor_aliases)) {
 					$froxlor_aliases = explode(",", $froxlor_aliases);
 					foreach ($froxlor_aliases as $falias) {
 						if (\Froxlor\Validate\Validate::validateDomain(trim($falias))) {
@@ -237,7 +232,12 @@ class Nginx extends HttpConfigBase
 					$aliases = " " . trim($aliases);
 				}
 				$this->nginx_data[$vhost_filename] .= "\t" . 'server_name    ' . Settings::Get('system.hostname') . $aliases . ';' . "\n";
-				$this->nginx_data[$vhost_filename] .= "\t" . 'access_log      /var/log/nginx/access.log;' . "\n";
+
+				$logtype = 'combined';
+				if (Settings::Get('system.logfiles_format') != '') {
+					$logtype = 'frx_custom';
+				}
+				$this->nginx_data[$vhost_filename] .= "\t" . 'access_log     /var/log/nginx/access.log ' . $logtype . ';' . "\n";
 
 				if (Settings::Get('system.use_ssl') == '1' && Settings::Get('system.leenabled') == '1' && Settings::Get('system.le_froxlor_enabled') == '1') {
 					$acmeConfFilename = Settings::Get('system.letsencryptacmeconf');
@@ -255,7 +255,7 @@ class Nginx extends HttpConfigBase
 						$is_redirect = false;
 					} else {
 						$_sslport = $this->checkAlternativeSslPort();
-						$mypath = 'https://' . Settings::Get('system.hostname') . $_sslport . '/';
+						$mypath = 'https://' . Settings::Get('system.hostname') . $_sslport;
 						$this->nginx_data[$vhost_filename] .= "\t" . 'location / {' . "\n";
 						$this->nginx_data[$vhost_filename] .= "\t\t" . 'return 301 ' . $mypath . '$request_uri;' . "\n";
 						$this->nginx_data[$vhost_filename] .= "\t" . '}' . "\n";
@@ -269,7 +269,7 @@ class Nginx extends HttpConfigBase
 					$this->nginx_data[$vhost_filename] .= "\t" . '}' . "\n";
 				}
 
-				if ($row_ipsandports['specialsettings'] != '') {
+				if ($row_ipsandports['specialsettings'] != '' && ($row_ipsandports['ssl'] == '0' || ($row_ipsandports['ssl'] == '1' && Settings::Get('system.use_ssl') == '1' && $row_ipsandports['include_specialsettings'] == '1'))) {
 					$this->nginx_data[$vhost_filename] .= $this->processSpecialConfigTemplate($row_ipsandports['specialsettings'], array(
 						'domain' => Settings::Get('system.hostname'),
 						'loginname' => Settings::Get('phpfpm.vhost_httpuser'),
@@ -283,14 +283,24 @@ class Nginx extends HttpConfigBase
 				 */
 				if ($row_ipsandports['ssl'] == '1') {
 					$row_ipsandports['domain'] = Settings::Get('system.hostname');
+					$row_ipsandports['ssl_honorcipherorder'] = Settings::Get('system.honorcipherorder');
+					$row_ipsandports['ssl_sessiontickets'] = Settings::Get('system.sessiontickets');
 					$this->nginx_data[$vhost_filename] .= $this->composeSslSettings($row_ipsandports);
+					if ($row_ipsandports['ssl_specialsettings'] != '') {
+						$this->nginx_data[$vhost_filename] .= $this->processSpecialConfigTemplate($row_ipsandports['ssl_specialsettings'], array(
+							'domain' => Settings::Get('system.hostname'),
+							'loginname' => Settings::Get('phpfpm.vhost_httpuser'),
+							'documentroot' => $mypath,
+							'customerroot' => $mypath
+						), $row_ipsandports['ip'], $row_ipsandports['port'], $row_ipsandports['ssl'] == '1') . "\n";
+					}
 				}
 
 				if (! $is_redirect) {
 					$this->nginx_data[$vhost_filename] .= "\tlocation ~ \.php {\n";
-					$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_split_path_info ^(.+\.php)(/.+)\$;\n";
+					$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_split_path_info ^(.+?\.php)(/.*)$;\n";
 					$this->nginx_data[$vhost_filename] .= "\t\tinclude " . Settings::Get('nginx.fastcgiparams') . ";\n";
-					$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;\n";
+					$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_param SCRIPT_FILENAME \$request_filename;\n";
 					$this->nginx_data[$vhost_filename] .= "\t\tfastcgi_param PATH_INFO \$fastcgi_path_info;\n";
 					$this->nginx_data[$vhost_filename] .= "\t\ttry_files \$fastcgi_script_name =404;\n";
 
@@ -458,10 +468,12 @@ class Nginx extends HttpConfigBase
 				$ipport = $domain['ip'] . ':' . $domain['port'];
 			}
 
-			if ($ipandport['default_vhostconf_domain'] != '') {
+			if ($ipandport['default_vhostconf_domain'] != '' && ($ssl_vhost == false || ($ssl_vhost == true && $ipandport['include_default_vhostconf_domain'] == '1'))) {
 				$_vhost_content .= $this->processSpecialConfigTemplate($ipandport['default_vhostconf_domain'], $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
 			}
-
+			if ($ipandport['ssl_default_vhostconf_domain'] != '' && $ssl_vhost == true) {
+				$_vhost_content .= $this->processSpecialConfigTemplate($ipandport['ssl_default_vhostconf_domain'], $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n";
+			}
 			$http2 = $ssl_vhost == true && (isset($domain['http2']) && $domain['http2'] == '1' && Settings::Get('system.http2_support') == '1');
 
 			$vhost_content .= "\t" . 'listen ' . $ipport . ($ssl_vhost == true ? ' ssl' : '') . ($http2 == true ? ' http2' : '') . ';' . "\n";
@@ -487,7 +499,7 @@ class Nginx extends HttpConfigBase
 				'domainid' => $domain['id']
 			));
 
-			if ($ssldestport['port'] != '') {
+			if ($ssldestport && $ssldestport['port'] != '') {
 				$_sslport = ":" . $ssldestport['port'];
 			}
 
@@ -533,16 +545,24 @@ class Nginx extends HttpConfigBase
 
 				$vhost_content .= isset($this->needed_htpasswds[$domain['id']]) ? $this->needed_htpasswds[$domain['id']] . "\n" : '';
 
-				if ($domain['specialsettings'] != "") {
+				if ($domain['specialsettings'] != '' && ($ssl_vhost == false || ($ssl_vhost == true && $domain['include_specialsettings'] == 1))) {
 					$vhost_content = $this->mergeVhostCustom($vhost_content, $this->processSpecialConfigTemplate($domain['specialsettings'], $domain, $domain['ip'], $domain['port'], $ssl_vhost));
+				}
+
+				if ($domain['ssl_specialsettings'] != '' && $ssl_vhost == true) {
+					$vhost_content = $this->mergeVhostCustom($vhost_content, $this->processSpecialConfigTemplate($domain['ssl_specialsettings'], $domain, $domain['ip'], $domain['port'], $ssl_vhost));
 				}
 
 				if ($_vhost_content != '') {
 					$vhost_content = $this->mergeVhostCustom($vhost_content, $_vhost_content);
 				}
 
-				if (Settings::Get('system.default_vhostconf') != '') {
+				if (Settings::Get('system.default_vhostconf') != '' && ($ssl_vhost == false || ($ssl_vhost == true && Settings::Get('system.include_default_vhostconf') == 1))) {
 					$vhost_content = $this->mergeVhostCustom($vhost_content, $this->processSpecialConfigTemplate(Settings::Get('system.default_vhostconf'), $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n");
+				}
+
+				if (Settings::Get('system.default_sslvhostconf') != '' && $ssl_vhost == true) {
+					$vhost_content = $this->mergeVhostCustom($vhost_content, $this->processSpecialConfigTemplate(Settings::Get('system.default_sslvhostconf'), $domain, $domain['ip'], $domain['port'], $ssl_vhost) . "\n");
 				}
 			}
 		}
@@ -551,26 +571,40 @@ class Nginx extends HttpConfigBase
 		return $vhost_content;
 	}
 
+	private function cleanVhostStruct($vhost = null)
+	{
+		// Remove windows linebreaks
+		$vhost = str_replace("\r", "\n", $vhost);
+		// remove comments
+		$vhost = implode("\n", preg_replace('/^(\s+)?#(.*)$/', '', explode("\n", $vhost)));
+		// Break blocks into lines
+		$vhost = str_replace(array(
+			"{",
+			"}"
+		), array(
+			" {\n",
+			"\n}"
+		), $vhost);
+		// Break into array items
+		$vhost = explode("\n", preg_replace('/[ \t]+/', ' ', trim(preg_replace('/\t+/', '', $vhost))));
+		// Remove empty lines
+		$vhost = array_filter($vhost, function ($a) {
+			return preg_match("#\S#", $a);
+		});
+
+		// remove unnecessary whitespaces
+		$vhost = array_map("trim", $vhost);
+		// re-number array keys
+		$vhost = array_values($vhost);
+		return $vhost;
+	}
+
 	protected function mergeVhostCustom($vhost_frx, $vhost_usr)
 	{
 		// Clean froxlor defined settings
-		$vhost_frx = explode("\n", preg_replace('/[ \t]+/', ' ', trim(preg_replace('/\t+/', '', $vhost_frx)))); // Break into array items
-		$vhost_frx = array_map("trim", $vhost_frx); // remove unnecessary whitespaces
-
+		$vhost_frx = $this->cleanVhostStruct($vhost_frx);
 		// Clean user defined settings
-		$vhost_usr = str_replace("\r", "\n", $vhost_usr); // Remove windows linebreaks
-		$vhost_usr = str_replace(array(
-			"{ ",
-			" }"
-		), array(
-			"{\n",
-			"\n}"
-		), $vhost_usr); // Break blocks into lines
-		$vhost_usr = explode("\n", preg_replace('/[ \t]+/', ' ', trim(preg_replace('/\t+/', '', $vhost_usr)))); // Break into array items
-		// Remove empty lines
-		$vhost_usr = array_filter($vhost_usr, function ($a) {
-			return preg_match("#\S#", $a);
-		});
+		$vhost_usr = $this->cleanVhostStruct($vhost_usr);
 
 		// Cycle through the user defined settings
 		$currentBlock = array();
@@ -631,7 +665,7 @@ class Nginx extends HttpConfigBase
 	{
 		$sslsettings = '';
 
-		if ($domain_or_ip['ssl_cert_file'] == '') {
+		if ($domain_or_ip['ssl_cert_file'] == '' || ! file_exists($domain_or_ip['ssl_cert_file'])) {
 			$domain_or_ip['ssl_cert_file'] = Settings::Get('system.ssl_cert_file');
 			if (! file_exists($domain_or_ip['ssl_cert_file'])) {
 				// explicitly disable ssl for this vhost
@@ -640,8 +674,15 @@ class Nginx extends HttpConfigBase
 			}
 		}
 
-		if ($domain_or_ip['ssl_key_file'] == '') {
+		if ($domain_or_ip['ssl_key_file'] == '' || ! file_exists($domain_or_ip['ssl_key_file'])) {
+			// use fallback
 			$domain_or_ip['ssl_key_file'] = Settings::Get('system.ssl_key_file');
+			// check whether it exists
+			if (! file_exists($domain_or_ip['ssl_key_file'])) {
+				// explicitly disable ssl for this vhost
+				$domain_or_ip['ssl_cert_file'] = "";
+				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'System certificate key-file "' . Settings::Get('system.ssl_key_file') . '" does not seem to exist. Disabling SSL-vhost for "' . $domain_or_ip['domain'] . '"');
+			}
 		}
 
 		if ($domain_or_ip['ssl_ca_file'] == '') {
@@ -659,19 +700,31 @@ class Nginx extends HttpConfigBase
 			if (! file_exists($domain_or_ip['ssl_cert_file'])) {
 				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_ERR, $domain_or_ip['domain'] . ' :: certificate file "' . $domain_or_ip['ssl_cert_file'] . '" does not exist! Cannot create ssl-directives');
 			} else {
+
+				$ssl_protocols = (isset($domain_or_ip['override_tls']) && $domain_or_ip['override_tls'] == '1' && ! empty($domain_or_ip['ssl_protocols'])) ? $domain_or_ip['ssl_protocols'] : Settings::Get('system.ssl_protocols');
+				$ssl_cipher_list = (isset($domain_or_ip['override_tls']) && $domain_or_ip['override_tls'] == '1' && ! empty($domain_or_ip['ssl_cipher_list'])) ? $domain_or_ip['ssl_cipher_list'] : Settings::Get('system.ssl_cipher_list');
+
 				// obsolete: ssl on now belongs to the listen block as 'ssl' at the end
 				// $sslsettings .= "\t" . 'ssl on;' . "\n";
-				$sslsettings .= "\t" . 'ssl_protocols ' . str_replace(",", " ", Settings::Get('system.ssl_protocols')) . ';' . "\n";
-				$sslsettings .= "\t" . 'ssl_ciphers ' . Settings::Get('system.ssl_cipher_list') . ';' . "\n";
+				$sslsettings .= "\t" . 'ssl_protocols ' . str_replace(",", " ", $ssl_protocols) . ';' . "\n";
+				$sslsettings .= "\t" . 'ssl_ciphers ' . $ssl_cipher_list . ';' . "\n";
 				if (! empty(Settings::Get('system.dhparams_file'))) {
 					$dhparams = \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.dhparams_file'));
 					if (! file_exists($dhparams)) {
 						\Froxlor\FileDir::safe_exec('openssl dhparam -out ' . escapeshellarg($dhparams) . ' 4096');
 					}
-					$sslsettings .= 'ssl_dhparam ' . $dhparams . ';' . "\n";
+					$sslsettings .= "\t" . 'ssl_dhparam ' . $dhparams . ';' . "\n";
 				}
-				$sslsettings .= "\t" . 'ssl_ecdh_curve secp384r1;' . "\n";
-				$sslsettings .= "\t" . 'ssl_prefer_server_ciphers on;' . "\n";
+				// When <1.11.0: Defaults to prime256v1, similar to first curve recommendation by Mozilla.
+				// (When specifyng just one, there's no fallback when specific curve is not supported by client.)
+				// When >1.11.0: Defaults to auto, using recommended curves provided by OpenSSL.
+				// see https://github.com/Froxlor/Froxlor/issues/652
+				// $sslsettings .= "\t" . 'ssl_ecdh_curve secp384r1;' . "\n";
+				$sslsettings .= "\t" . 'ssl_prefer_server_ciphers ' .  (isset($domain_or_ip['ssl_honorcipherorder']) && $domain_or_ip['ssl_honorcipherorder'] == '1' ? 'on' : 'off') . ';' . "\n";
+				if (Settings::Get('system.sessionticketsenabled') == '1') {
+					$sslsettings .= "\t" . 'ssl_session_tickets ' .  (isset($domain_or_ip['ssl_sessiontickets']) && $domain_or_ip['ssl_sessiontickets'] == '1' ? 'on' : 'off') . ';' . "\n";
+				}
+				$sslsettings .= "\t" . 'ssl_session_cache shared:SSL:10m;' . "\n";
 				$sslsettings .= "\t" . 'ssl_certificate ' . \Froxlor\FileDir::makeCorrectFile($domain_or_ip['ssl_cert_file']) . ';' . "\n";
 
 				if ($domain_or_ip['ssl_key_file'] != '') {
@@ -722,7 +775,7 @@ class Nginx extends HttpConfigBase
 		while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 			if (! empty($row['error404path'])) {
 				$defhandler = $row['error404path'];
-				if (! \Froxlor\Validate\Form\Data::validateUrl($defhandler)) {
+				if (! \Froxlor\Validate\Validate::validateUrl($defhandler)) {
 					$defhandler = \Froxlor\FileDir::makeCorrectFile($defhandler);
 				}
 				$path_options .= "\t" . 'error_page   404    ' . $defhandler . ';' . "\n";
@@ -730,7 +783,7 @@ class Nginx extends HttpConfigBase
 
 			if (! empty($row['error403path'])) {
 				$defhandler = $row['error403path'];
-				if (! \Froxlor\Validate\Form\Data::validateUrl($defhandler)) {
+				if (! \Froxlor\Validate\Validate::validateUrl($defhandler)) {
 					$defhandler = \Froxlor\FileDir::makeCorrectFile($defhandler);
 				}
 				$path_options .= "\t" . 'error_page   403    ' . $defhandler . ';' . "\n";
@@ -738,7 +791,7 @@ class Nginx extends HttpConfigBase
 
 			if (! empty($row['error500path'])) {
 				$defhandler = $row['error500path'];
-				if (! \Froxlor\Validate\Form\Data::validateUrl($defhandler)) {
+				if (! \Froxlor\Validate\Validate::validateUrl($defhandler)) {
 					$defhandler = \Froxlor\FileDir::makeCorrectFile($defhandler);
 				}
 				$path_options .= "\t" . 'error_page   500 502 503 504    ' . $defhandler . ';' . "\n";
@@ -861,7 +914,6 @@ class Nginx extends HttpConfigBase
 			FROM `" . TABLE_PANEL_HTPASSWDS . "` AS a
 			JOIN `" . TABLE_PANEL_DOMAINS . "` AS b USING (`customerid`)
 			WHERE b.customerid = :customerid AND b.domain = :domain
-			AND path LIKE CONCAT(b.documentroot, '%')
 		");
 		Database::pexecute($result_stmt, array(
 			'customerid' => $domain['customerid'],
@@ -888,6 +940,7 @@ class Nginx extends HttpConfigBase
 					$path = \Froxlor\FileDir::makeCorrectDir(substr($row_htpasswds['path'], strlen($domain['documentroot']) - 1));
 				} else {
 					// if the website contents is located in a subdirectory of the user
+					$matches = array();
 					preg_match('/^([\/[:print:]]*\/)([[:print:]\/]+){1}$/i', $row_htpasswds['path'], $matches);
 					$path = \Froxlor\FileDir::makeCorrectDir(substr($row_htpasswds['path'], strlen($matches[1]) - 1));
 				}
@@ -917,7 +970,7 @@ class Nginx extends HttpConfigBase
 		return $returnval;
 	}
 
-	protected function composePhpOptions($domain, $ssl_vhost = false)
+	protected function composePhpOptions(&$domain, $ssl_vhost = false)
 	{
 		$phpopts = '';
 		if ($domain['phpenabled_customer'] == 1 && $domain['phpenabled_vhost'] == '1') {
@@ -926,9 +979,9 @@ class Nginx extends HttpConfigBase
 			$phpopts .= "\t" . '}' . "\n\n";
 
 			$phpopts .= "\tlocation @php {\n";
-			$phpopts .= "\t\tfastcgi_split_path_info ^(.+\.php)(/.+)\$;\n";
+			$phpopts .= "\t\tfastcgi_split_path_info ^(.+?\.php)(/.*)$;\n";
 			$phpopts .= "\t\tinclude " . Settings::Get('nginx.fastcgiparams') . ";\n";
-			$phpopts .= "\t\tfastcgi_param SCRIPT_FILENAME \$document_root\$fastcgi_script_name;\n";
+			$phpopts .= "\t\tfastcgi_param SCRIPT_FILENAME \$request_filename;\n";
 			$phpopts .= "\t\tfastcgi_param PATH_INFO \$fastcgi_path_info;\n";
 			$phpopts .= "\t\ttry_files \$fastcgi_script_name =404;\n";
 			$phpopts .= "\t\tfastcgi_pass " . Settings::Get('system.nginx_php_backend') . ";\n";
@@ -1000,10 +1053,10 @@ class Nginx extends HttpConfigBase
 
 		if (Settings::Get('system.awstats_enabled') == '1') {
 			// awstats
-			$stats_text .= "\t" . 'location /awstats {' . "\n";
+			$stats_text .= "\t" . 'location ^~ /awstats/ {' . "\n";
 		} else {
 			// webalizer
-			$stats_text .= "\t" . 'location /webalizer {' . "\n";
+			$stats_text .= "\t" . 'location ^~ /webalizer {' . "\n";
 		}
 
 		$stats_text .= "\t\t" . 'alias ' . $alias_dir . ';' . "\n";
@@ -1058,7 +1111,6 @@ class Nginx extends HttpConfigBase
 		$logtype = 'combined';
 		if (Settings::Get('system.logfiles_format') != '') {
 			$logtype = 'frx_custom';
-			$logfiles_text .= "\t" . 'log_format ' . $logtype . ' "' . Settings::Get('system.logfiles_format') . '";' . "\n";
 		}
 
 		$logfiles_text .= "\t" . 'access_log    ' . $access_log . ' ' . $logtype . ';' . "\n";

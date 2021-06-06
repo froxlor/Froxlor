@@ -36,20 +36,6 @@ abstract class BulkAction
 	private $impFile = null;
 
 	/**
-	 * customer id of the user the entity is being added to
-	 *
-	 * @var int
-	 */
-	private $custId = null;
-
-	/**
-	 * array of customer data read from the database
-	 *
-	 * @var array
-	 */
-	private $custData = null;
-
-	/**
 	 * api-function to call for addingg entity
 	 *
 	 * @var string
@@ -71,19 +57,26 @@ abstract class BulkAction
 	private $errors = array();
 
 	/**
+	 * logged in user
+	 *
+	 * @var array
+	 */
+	protected $userinfo = array();
+
+	/**
 	 * class constructor, optionally sets file and customer-id
 	 *
 	 * @param string $import_file
-	 * @param int $customer_id
+	 * @param array $userinfo
 	 *
 	 * @return object BulkAction instance
 	 */
-	protected function __construct($import_file = null, $customer_id = 0)
+	protected function __construct($import_file = null, $userinfo = array())
 	{
 		if (! empty($import_file)) {
 			$this->impFile = \Froxlor\FileDir::makeCorrectFile($import_file);
 		}
-		$this->custId = $customer_id;
+		$this->userinfo = $userinfo;
 	}
 
 	/**
@@ -110,18 +103,6 @@ abstract class BulkAction
 	}
 
 	/**
-	 * setter for customer-id
-	 *
-	 * @param int $customer_id
-	 *
-	 * @return void
-	 */
-	public function setCustomer($customer_id = 0)
-	{
-		$this->custId = $customer_id;
-	}
-
-	/**
 	 * return the list of errors
 	 *
 	 * @return array
@@ -145,7 +126,7 @@ abstract class BulkAction
 
 	protected function importEntity($data_array = null)
 	{
-		global $userinfo;
+		if (empty($data_array)) return null;
 
 		$module = '\\Froxlor\\Api\\Commands\\' . substr($this->api_call, 0, strpos($this->api_call, "."));
 		$function = substr($this->api_call, strpos($this->api_call, ".") + 1);
@@ -159,7 +140,7 @@ abstract class BulkAction
 
 		$result = null;
 		try {
-			$json_result = $module::getLocal($userinfo, $new_data)->$function();
+			$json_result = $module::getLocal($this->userinfo, $new_data)->$function();
 			$result = json_decode($json_result, true)['data'];
 		} catch (\Exception $e) {
 			$this->errors[] = $e->getMessage();
@@ -187,6 +168,10 @@ abstract class BulkAction
 
 		if (! is_readable($this->impFile)) {
 			throw new \Exception("Unable to read file '" . $this->impFile . "'");
+		}
+
+		if (empty($separator) || strlen($separator) != 1) {
+			throw new \Exception("Invalid separator specified: '" . $separator . "'");
 		}
 
 		$file_data = array();
@@ -218,37 +203,4 @@ abstract class BulkAction
 		return $file_data;
 	}
 
-	/**
-	 * to be called first in doImport() to read in customer and entity data
-	 */
-	protected function preImport()
-	{
-		$this->readCustomerData();
-
-		if ($this->custId <= 0) {
-			throw new \Exception("Invalid customer selected");
-		}
-
-		if (is_null($this->custData)) {
-			throw new \Exception("Failed to read customer data");
-		}
-	}
-
-	/**
-	 * reads customer data from panel_customer by $_custId
-	 *
-	 * @return bool
-	 */
-	protected function readCustomerData()
-	{
-		$cust_stmt = \Froxlor\Database\Database::prepare("SELECT * FROM `" . TABLE_PANEL_CUSTOMERS . "` WHERE `customerid` = :cid");
-		$this->custData = \Froxlor\Database\Database::pexecute_first($cust_stmt, array(
-			'cid' => $this->custId
-		));
-		if (is_array($this->custData) && isset($this->custData['customerid']) && $this->custData['customerid'] == $this->custId) {
-			return true;
-		}
-		$this->custData = null;
-		return false;
-	}
 }

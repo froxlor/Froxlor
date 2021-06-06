@@ -25,6 +25,9 @@ class MailsTest extends TestCase
 	{
 		global $admin_userdata;
 
+		// set domains as hidden to test whether the internal flag works
+		Settings::Set('panel.customer_hide_options', 'domains', true);
+
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
@@ -33,12 +36,17 @@ class MailsTest extends TestCase
 
 		$data = [
 			'email_part' => 'info',
-			'domain' => 'test2.local'
+			'domain' => 'test2.local',
+			'description' => 'awesome email'
 		];
 		$json_result = Emails::getLocal($customer_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals("info@test2.local", $result['email_full']);
 		$this->assertEquals(0, $result['iscatchall']);
+		$this->assertEquals('awesome email', $result['description']);
+
+		// reset setting
+		Settings::Set('panel.customer_hide_options', '', true);
 	}
 
 	public function testAdminEmailsAdd()
@@ -81,11 +89,13 @@ class MailsTest extends TestCase
 
 		$data = [
 			'emailaddr' => 'catchall@test2.local',
-			'iscatchall' => 1
+			'iscatchall' => 1,
+			'description' => 'now with catchall'
 		];
 		$json_result = Emails::getLocal($customer_userdata, $data)->update();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(1, $result['iscatchall']);
+		$this->assertEquals('now with catchall', $result['description']);
 	}
 
 	public function testCustomerEmailForwardersAdd()
@@ -193,6 +203,38 @@ class MailsTest extends TestCase
 
 	/**
 	 *
+	 * @depends testCustomerEmailForwardersAddAnother
+	 */
+	public function testCustomerEmailForwardersListing()
+	{
+		global $admin_userdata;
+
+		Settings::Set('panel.customer_hide_options', '', true);
+
+		// get customer
+		$json_result = Customers::getLocal($admin_userdata, array(
+			'loginname' => 'test1'
+		))->get();
+		$customer_userdata = json_decode($json_result, true)['data'];
+
+		$data = [
+			'emailaddr' => 'info@test2.local'
+		];
+		$json_result = EmailForwarders::getLocal($customer_userdata, $data)->listing();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(2, $result['count']);
+		$this->assertEquals(0, $result['list'][0]['id']);
+		$this->assertEquals('other@domain.tld', $result['list'][0]['address']);
+		$this->assertEquals(1, $result['list'][1]['id']);
+		$this->assertEquals('other2@domain.tld', $result['list'][1]['address']);
+
+		$json_result = EmailForwarders::getLocal($customer_userdata, $data)->listingCount();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(2, $result);
+	}
+
+	/**
+	 *
 	 * @depends testCustomerEmailForwardersDeleteEmailHidden
 	 */
 	public function testCustomerEmailForwardersAddWithSpaces()
@@ -292,13 +334,6 @@ class MailsTest extends TestCase
 		EmailForwarders::getLocal($admin_userdata)->update();
 	}
 
-	public function testAdminEmailForwadersUndefinedListing()
-	{
-		global $admin_userdata;
-		$this->expectExceptionCode(303);
-		EmailForwarders::getLocal($admin_userdata)->listing();
-	}
-
 	/**
 	 *
 	 * @depends testCustomerEmailForwardersAddAnother
@@ -362,6 +397,10 @@ class MailsTest extends TestCase
 		$this->assertEquals(2, $result['count']);
 		$this->assertEquals("info@test2.local", $result['list'][0]['email']);
 		$this->assertEquals("@test2.local", $result['list'][1]['email']);
+
+		$json_result = Emails::getLocal($customer_userdata)->listingCount();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(2, $result);
 	}
 
 	public function testCustomerEmailAccountsAdd()
@@ -407,6 +446,36 @@ class MailsTest extends TestCase
 		$result = json_decode($json_result, true)['data'];
 		// quota is disabled
 		$this->assertEquals(0, $result['quota']);
+	}
+
+	public function testAdminEmailAccountsUpdateDeactivated()
+	{
+		global $admin_userdata;
+
+		// disable
+		$data = [
+			'emailaddr' => 'info@test2.local',
+			'loginname' => 'test1',
+			'deactivated' => 1
+		];
+		$json_result = EmailAccounts::getLocal($admin_userdata, $data)->update();
+		$result = json_decode($json_result, true)['data'];
+		// quota is disabled
+		$this->assertEquals(0, $result['imap']);
+		$this->assertEquals(0, $result['pop3']);
+		$this->assertEquals('N', $result['postfix']);
+		// re-enable
+		$data = [
+			'emailaddr' => 'info@test2.local',
+			'loginname' => 'test1',
+			'deactivated' => 0
+		];
+		$json_result = EmailAccounts::getLocal($admin_userdata, $data)->update();
+		$result = json_decode($json_result, true)['data'];
+		// quota is disabled
+		$this->assertEquals(1, $result['imap']);
+		$this->assertEquals(1, $result['pop3']);
+		$this->assertEquals('Y', $result['postfix']);
 	}
 
 	public function testAdminEmailAccountsUndefinedGet()

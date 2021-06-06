@@ -168,7 +168,7 @@ class Crypt
 				$password = \Froxlor\Validate\Validate::validate($password, '/.*[0-9]+.*/', '/.*[0-9]+.*/', 'notrequiredpasswordcomplexity', array(), $json_response);
 			}
 			if (Settings::Get('panel.password_special_char_required')) {
-				$password = \Froxlor\Validate\Validate::validate($password, '/.*[' . preg_quote(Settings::Get('panel.password_special_char')) . ']+.*/', '/.*[' . preg_quote(Settings::Get('panel.password_special_char')) . ']+.*/', 'notrequiredpasswordcomplexity', array(), $json_response);
+				$password = \Froxlor\Validate\Validate::validate($password, '/.*[' . preg_quote(Settings::Get('panel.password_special_char'), '/') . ']+.*/', '/.*[' . preg_quote(Settings::Get('panel.password_special_char'), '/') . ']+.*/', 'notrequiredpasswordcomplexity', array(), $json_response);
 			}
 		}
 

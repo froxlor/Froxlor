@@ -99,7 +99,7 @@ return array(
 					'settinggroup' => 'phpfpm',
 					'varname' => 'use_mod_proxy',
 					'type' => 'bool',
-					'default' => false,
+					'default' => true,
 					'visible' => \Froxlor\Settings::Get('system.apache24'),
 					'save_method' => 'storeSettingField'
 				),

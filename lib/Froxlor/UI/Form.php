@@ -217,7 +217,7 @@ class Form
 							if (! $only_enabledisable || ($only_enabledisable && isset($fielddetails['overview_option']))) {
 								$newfieldvalue = self::getFormFieldData($fieldname, $fielddetails, $input);
 								if ($newfieldvalue != $fielddetails['value']) {
-									if (($error = \Froxlor\Validate\Form::validateFormField($fieldname, $fielddetails, $newfieldvalue)) !== true) {
+									if (($error = \Froxlor\Validate\Form::validateFormField($fieldname, $fielddetails, $newfieldvalue)) != true) {
 										\Froxlor\UI\Response::standard_error($error, $fieldname);
 									} else {
 										$changed_fields[$fieldname] = $newfieldvalue;
@@ -443,12 +443,12 @@ class Form
 				}
 			}
 
-			// if ($do_show) {
-			$returnvalue = call_user_func(array(
-				'\\Froxlor\\UI\\Fields',
-				'getFormFieldOutput' . ucfirst($fielddata['type'])
-			), $fieldname, $fielddata, $do_show);
-			// }
+			if ($do_show || (!$do_show && Settings::Get('system.hide_incompatible_settings') == '0')) {
+				$returnvalue = call_user_func(array(
+					'\\Froxlor\\UI\\Fields',
+					'getFormFieldOutput' . ucfirst($fielddata['type'])
+				), $fieldname, $fielddata, $do_show);
+			}
 		}
 		return $returnvalue;
 	}

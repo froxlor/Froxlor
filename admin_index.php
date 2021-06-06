@@ -57,6 +57,12 @@ if (isset($_POST['id'])) {
 if ($page == 'overview') {
 
 	$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_index");
+	$params = [];
+	if ($userinfo['customers_see_all'] == '0') {
+		$params = [
+			'adminid' => $userinfo['adminid']
+		];
+	}
 	$overview_stmt = Database::prepare("SELECT COUNT(*) AS `number_customers`,
 				SUM(`diskspace_used`) AS `diskspace_used`,
 				SUM(`mysqls_used`) AS `mysqls_used`,
@@ -68,20 +74,18 @@ if ($page == 'overview') {
 				SUM(`subdomains_used`) AS `subdomains_used`,
 				SUM(`traffic_used`) AS `traffic_used`
 				FROM `" . TABLE_PANEL_CUSTOMERS . "`" . ($userinfo['customers_see_all'] ? '' : " WHERE `adminid` = :adminid "));
-	$overview = Database::pexecute_first($overview_stmt, array(
-		'adminid' => $userinfo['adminid']
-	));
+	$overview = Database::pexecute_first($overview_stmt, $params);
 
 	$dec_places = Settings::Get('panel.decimal_places');
-	$overview['traffic_used'] = round($overview['traffic_used'] / (1024 * 1024), $dec_places);
-	$overview['diskspace_used'] = round($overview['diskspace_used'] / 1024, $dec_places);
+	$overview['traffic_bytes_used'] = $overview['traffic_used'] * 1024;
+	$overview['traffic_used'] = \Froxlor\PhpHelper::sizeReadable($overview['traffic_used'] * 1024, null, 'bi');
+	$overview['diskspace_bytes_used'] = $overview['diskspace_used'] * 1024;
+	$overview['diskspace_used'] = \Froxlor\PhpHelper::sizeReadable($overview['diskspace_used'] * 1024, null, 'bi');
 
 	$number_domains_stmt = Database::prepare("
 		SELECT COUNT(*) AS `number_domains` FROM `" . TABLE_PANEL_DOMAINS . "`
 		WHERE `parentdomainid`='0'" . ($userinfo['customers_see_all'] ? '' : " AND `adminid` = :adminid"));
-	$number_domains = Database::pexecute_first($number_domains_stmt, array(
-		'adminid' => $userinfo['adminid']
-	));
+	$number_domains = Database::pexecute_first($number_domains_stmt, $params);
 
 	$overview['number_domains'] = $number_domains['number_domains'];
 
@@ -111,11 +115,17 @@ if ($page == 'overview') {
 	}
 
 	$dec_places = Settings::Get('panel.decimal_places');
-	$userinfo['diskspace'] = round($userinfo['diskspace'] / 1024, $dec_places);
-	$userinfo['diskspace_used'] = round($userinfo['diskspace_used'] / 1024, $dec_places);
-	$userinfo['traffic'] = round($userinfo['traffic'] / (1024 * 1024), $dec_places);
-	$userinfo['traffic_used'] = round($userinfo['traffic_used'] / (1024 * 1024), $dec_places);
-	$userinfo = \Froxlor\PhpHelper::strReplaceArray('-1', $lng['customer']['unlimited'], $userinfo, 'customers domains diskspace traffic mysqls emails email_accounts email_forwarders email_quota ftps subdomains');
+	// get everything in bytes for the percentage calculation on the dashboard
+	$userinfo['diskspace_bytes'] = ($userinfo['diskspace'] > -1) ? $userinfo['diskspace'] * 1024 : -1;
+	$userinfo['diskspace_bytes_used'] = $userinfo['diskspace_used'] * 1024;
+	$userinfo['traffic_bytes'] = ($userinfo['traffic'] > -1) ? $userinfo['traffic'] * 1024 : - 1;
+	$userinfo['traffic_bytes_used'] = $userinfo['traffic_used'] * 1024;
+
+	$userinfo['diskspace'] = ($userinfo['diskspace'] > -1) ? \Froxlor\PhpHelper::sizeReadable($userinfo['diskspace'] * 1024, null, 'bi') : - 1;
+	$userinfo['diskspace_used'] = \Froxlor\PhpHelper::sizeReadable($userinfo['diskspace_used'] * 1024, null, 'bi');
+	$userinfo['traffic'] = ($userinfo['traffic'] > -1) ? \Froxlor\PhpHelper::sizeReadable($userinfo['traffic'] * 1024, null, 'bi') : - 1;
+	$userinfo['traffic_used'] = \Froxlor\PhpHelper::sizeReadable($userinfo['traffic_used'] * 1024, null, 'bi');
+	$userinfo = \Froxlor\PhpHelper::strReplaceArray('-1', $lng['customer']['unlimited'], $userinfo, 'customers domains diskspace diskspace_bytes traffic traffic_bytes mysqls emails email_accounts email_forwarders email_quota ftps subdomains');
 
 	$userinfo['custom_notes'] = ($userinfo['custom_notes'] != '') ? nl2br($userinfo['custom_notes']) : '';
 
@@ -183,8 +193,12 @@ if ($page == 'overview') {
 			\Froxlor\UI\Response::standard_error('oldpasswordnotcorrect');
 		}
 
-		$new_password = \Froxlor\Validate\Validate::validate($_POST['new_password'], 'new password');
-		$new_password_confirm = \Froxlor\Validate\Validate::validate($_POST['new_password_confirm'], 'new password confirm');
+		try {
+			$new_password = \Froxlor\System\Crypt::validatePassword($_POST['new_password'], 'new password');
+			$new_password_confirm = \Froxlor\System\Crypt::validatePassword($_POST['new_password_confirm'], 'new password confirm');
+		} catch (Exception $e) {
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
+		}
 
 		if ($old_password == '') {
 			\Froxlor\UI\Response::standard_error(array(
@@ -387,8 +401,6 @@ if ($page == 'overview') {
 	}
 } elseif ($page == 'apikeys' && Settings::Get('api.enabled') == 1) {
 	require_once __DIR__ . '/api_keys.php';
-} elseif ($page == 'apihelp' && Settings::Get('api.enabled') == 1) {
-	require_once __DIR__ . '/apihelp.php';
 } elseif ($page == '2fa' && Settings::Get('2fa.enabled') == 1) {
 	require_once __DIR__ . '/2fa.php';
 }

@@ -55,6 +55,13 @@ abstract class ApiCommand extends ApiParameter
 	private $mail = null;
 
 	/**
+	 * whether the call is an internal one or not
+	 *
+	 * @var boolean
+	 */
+	private $internal_call = false;
+
+	/**
 	 * language strings array
 	 *
 	 * @var array
@@ -90,10 +97,12 @@ abstract class ApiCommand extends ApiParameter
 	 *        	optional, array of parameters (var=>value) for the command
 	 * @param array $userinfo
 	 *        	optional, passed via WebInterface (instead of $header)
+	 * @param boolean $internal
+	 *        	optional whether called internally, default false
 	 *        	
 	 * @throws \Exception
 	 */
-	public function __construct($header = null, $params = null, $userinfo = null)
+	public function __construct($header = null, $params = null, $userinfo = null, $internal = false)
 	{
 		parent::__construct($params);
 
@@ -127,6 +136,9 @@ abstract class ApiCommand extends ApiParameter
 		if ($this->debug) {
 			$this->logger()->logAction(\Froxlor\FroxlorLogger::LOG_ERROR, LOG_DEBUG, "[API] " . get_called_class() . ": " . json_encode($params, JSON_UNESCAPED_SLASHES));
 		}
+
+		// set internal call flag
+		$this->internal_call = $internal;
 	}
 
 	/**
@@ -191,13 +203,15 @@ abstract class ApiCommand extends ApiParameter
 	 *        	array of user-data
 	 * @param array $params
 	 *        	array of parameters for the command
+	 * @param boolean $internal
+	 *        	optional whether called internally, default false
 	 *        	
 	 * @return ApiCommand
 	 * @throws \Exception
 	 */
-	public static function getLocal($userinfo = null, $params = null)
+	public static function getLocal($userinfo = null, $params = null, $internal = false)
 	{
-		return new static(null, $params, $userinfo);
+		return new static(null, $params, $userinfo, $internal);
 	}
 
 	/**
@@ -208,6 +222,16 @@ abstract class ApiCommand extends ApiParameter
 	protected function isAdmin()
 	{
 		return $this->is_admin;
+	}
+
+	/**
+	 * internal call flag
+	 *
+	 * @return boolean
+	 */
+	protected function isInternal()
+	{
+		return $this->internal_call;
 	}
 
 	/**
@@ -230,6 +254,173 @@ abstract class ApiCommand extends ApiParameter
 	protected function getUserData()
 	{
 		return $this->user_data;
+	}
+
+	/**
+	 * return SQL when parameter $sql_search is given via API
+	 *
+	 * @param array $sql_search
+	 *        	optional array with index = fieldname, and value = array with 'op' => operator (one of <, > or =), LIKE is used if left empty and 'value' => searchvalue
+	 * @param array $query_fields
+	 *        	optional array of placeholders mapped to the actual value which is used in the API commands when executing the statement [internal]
+	 * @param boolean $append
+	 *        	optional append to WHERE clause rather then create new one, default false [internal]
+	 *        	
+	 * @return string
+	 */
+	protected function getSearchWhere(&$query_fields = array(), $append = false)
+	{
+		$search = $this->getParam('sql_search', true, array());
+		$condition = '';
+		if (! empty($search)) {
+			if ($append == true) {
+				$condition = ' AND ';
+			} else {
+				$condition = ' WHERE ';
+			}
+			$ops = array(
+				'<',
+				'>',
+				'='
+			);
+			$first = true;
+			foreach ($search as $field => $valoper) {
+				$cleanfield = str_replace(".", "", $field);
+				$sortfield = explode('.', $field);
+				foreach ($sortfield as $id => $sfield) {
+					if (substr($sfield, - 1, 1) != '`') {
+						$sfield .= '`';
+					}
+					if ($sfield[0] != '`') {
+						$sfield = '`' . $sfield;
+					}
+					$sortfield[$id] = $sfield;
+				}
+				$field = implode('.', $sortfield);
+				if (! $first) {
+					$condition .= ' AND ';
+				}
+				if (! is_array($valoper) || ! isset($valoper['op']) || empty($valoper['op'])) {
+					$condition .= $field . ' LIKE :' . $cleanfield;
+					if (! is_array($valoper)) {
+						$query_fields[':' . $cleanfield] = '%' . $valoper . '%';
+					} else {
+						$query_fields[':' . $cleanfield] = '%' . $valoper['value'] . '%';
+					}
+				} elseif (in_array($valoper['op'], $ops)) {
+					$condition .= $field . ' ' . $valoper['op'] . ':' . $cleanfield;
+					$query_fields[':' . $cleanfield] = $valoper['value'] ?? '';
+				} elseif (strtolower($valoper['op']) == 'in' && is_array($valoper['value']) && count($valoper['value']) > 0) {
+					$condition .= $field . ' ' . $valoper['op'] . ' (';
+					foreach ($valoper['value'] as $incnt => $invalue) {
+						$condition .= ":" . $cleanfield . $incnt . ", ";
+						$query_fields[':' . $cleanfield . $incnt] = $invalue ?? '';
+					}
+					$condition = substr($condition, 0, - 2) . ')';
+				} else {
+					continue;
+				}
+				if ($first) {
+					$first = false;
+				}
+			}
+		}
+		return $condition;
+	}
+
+	/**
+	 * return LIMIT clause when at least $sql_limit parameter is given via API
+	 *
+	 * @param int $sql_limit
+	 *        	optional, limit resultset, default 0
+	 * @param int $sql_offset
+	 *        	optional, offset for limitation, default 0
+	 *        	
+	 * @return string
+	 */
+	protected function getLimit()
+	{
+		$limit = $this->getParam('sql_limit', true, 0);
+		$offset = $this->getParam('sql_offset', true, 0);
+
+		if (! is_numeric($limit)) {
+			$limit = 0;
+		}
+		if (! is_numeric($offset)) {
+			$offset = 0;
+		}
+
+		if ($limit > 0) {
+			return ' LIMIT ' . $offset . ',' . $limit;
+		}
+
+		return '';
+	}
+
+	/**
+	 * return ORDER BY clause if parameter $sql_orderby parameter is given via API
+	 *
+	 * @param array $sql_orderby
+	 *        	optional array with index = fieldname and value = ASC|DESC
+	 * @param boolean $append
+	 *        	optional append to ORDER BY clause rather then create new one, default false [internal]
+	 *        	
+	 * @return string
+	 */
+	protected function getOrderBy($append = false)
+	{
+		$orderby = $this->getParam('sql_orderby', true, array());
+		$order = "";
+		if (! empty($orderby)) {
+			if ($append) {
+				$order .= ", ";
+			} else {
+				$order .= " ORDER BY ";
+			}
+
+			$nat_fields = [
+				'`c`.`loginname`',
+				'`a`.`loginname`',
+				'`adminname`',
+				'`databasename`',
+				'`username`'
+			];
+
+			foreach ($orderby as $field => $by) {
+				$sortfield = explode('.', $field);
+				foreach ($sortfield as $id => $sfield) {
+					if (substr($sfield, - 1, 1) != '`') {
+						$sfield .= '`';
+					}
+					if ($sfield[0] != '`') {
+						$sfield = '`' . $sfield;
+					}
+					$sortfield[$id] = $sfield;
+				}
+				$field = implode('.', $sortfield);
+				$by = strtoupper($by);
+				if (! in_array($by, [
+					'ASC',
+					'DESC'
+				])) {
+					$by = 'ASC';
+				}
+				if (\Froxlor\Settings::Get('panel.natsorting') == 1 && in_array($field, $nat_fields)) {
+					// Acts similar to php's natsort(), found in one comment at http://my.opera.com/cpr/blog/show.dml/160556
+					$order .= "CONCAT( IF( ASCII( LEFT( " . $field . ", 5 ) ) > 57,
+					LEFT( " . $field . ", 1 ), 0 ),
+					IF( ASCII( RIGHT( " . $field . ", 1 ) ) > 57,
+						LPAD( " . $field . ", 255, '0' ),
+						LPAD( CONCAT( " . $field . ", '-' ), 255, '0' )
+					)) " . $by . ", ";
+				} else {
+					$order .= $field . " " . $by . ", ";
+				}
+			}
+			$order = substr($order, 0, - 2);
+		}
+
+		return $order;
 	}
 
 	/**
@@ -257,15 +448,18 @@ abstract class ApiCommand extends ApiParameter
 	 *
 	 * @param string $command
 	 * @param array|null $params
-	 *
+	 * @param boolean $internal
+	 *        	optional whether called internally, default false
+	 *        	
+	 *        	
 	 * @return array
 	 */
-	protected function apiCall($command = null, $params = null)
+	protected function apiCall($command = null, $params = null, $internal = false)
 	{
 		$_command = explode(".", $command);
 		$module = __NAMESPACE__ . "\Commands\\" . $_command[0];
 		$function = $_command[1];
-		$json_result = $module::getLocal($this->getUserData(), $params)->{$function}();
+		$json_result = $module::getLocal($this->getUserData(), $params, $internal)->{$function}();
 		return json_decode($json_result, true)['data'];
 	}
 
@@ -331,7 +525,7 @@ abstract class ApiCommand extends ApiParameter
 				$customer_ids[] = $customer['customerid'];
 			}
 		} else {
-			if (! empty($customer_hide_option) && \Froxlor\Settings::IsInList('panel.customer_hide_options', $customer_hide_option)) {
+			if (! $this->isInternal() && ! empty($customer_hide_option) && \Froxlor\Settings::IsInList('panel.customer_hide_options', $customer_hide_option)) {
 				throw new \Exception("You cannot access this resource", 405);
 			}
 			$customer_ids = array(
@@ -423,8 +617,12 @@ abstract class ApiCommand extends ApiParameter
 			"group" => $group,
 			"var" => $varname
 		), true, true);
+		$content = $default;
+		if ($result) {
+			$content = $result['value'] ?? $default;
+		}
 		// @fixme html_entity_decode
-		$content = html_entity_decode(\Froxlor\PhpHelper::replaceVariables((($result['value'] != '') ? $result['value'] : $default), $replace_arr));
+		$content = html_entity_decode(\Froxlor\PhpHelper::replaceVariables($content, $replace_arr));
 		return $content;
 	}
 

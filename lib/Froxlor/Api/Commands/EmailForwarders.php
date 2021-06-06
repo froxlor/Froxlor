@@ -30,15 +30,15 @@ class EmailForwarders extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 	 * @param string $emailaddr
 	 *        	optional, the email-address to add the forwarder for
 	 * @param int $customerid
-	 *        	optional, admin-only, the customer-id
+	 *        	optional, required when called as admin (if $loginname is not specified)
 	 * @param string $loginname
-	 *        	optional, admin-only, the loginname
+	 *        	optional, required when called as admin (if $customerid is not specified)
 	 * @param string $destination
 	 *        	email-address to add as forwarder
 	 *        	
 	 * @access admin,customer
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function add()
 	{
@@ -102,18 +102,18 @@ class EmailForwarders extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 			$result = $this->apiCall('Emails.get', array(
 				'emailaddr' => $result['email_full']
 			));
-			return $this->response(200, "successfull", $result);
+			return $this->response(200, "successful", $result);
 		}
 		throw new \Exception("No more resources available", 406);
 	}
 
 	/**
 	 * You cannot directly get an email forwarder.
-	 * You need to call Emails.get()
+	 * Try EmailForwarders.listing()
 	 */
 	public function get()
 	{
-		throw new \Exception('You cannot directly get an email forwarder. You need to call Emails.get()', 303);
+		throw new \Exception('You cannot directly get an email forwarder. Try EmailForwarders.listing()', 303);
 	}
 
 	/**
@@ -126,12 +126,91 @@ class EmailForwarders extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 	}
 
 	/**
-	 * You cannot directly list email forwarders.
-	 * You need to call Emails.listing()
+	 * List email forwarders for a given email address
+	 *
+	 * @param int $id
+	 *        	optional, the email-address-id
+	 * @param string $emailaddr
+	 *        	optional, the email-address to delete the forwarder from
+	 * @param int $customerid
+	 *        	optional, admin-only, the customer-id
+	 * @param string $loginname
+	 *        	optional, admin-only, the loginname
+	 *        	
+	 * @access admin,customer
+	 * @throws \Exception
+	 * @return string json-encoded array count|list
 	 */
 	public function listing()
 	{
-		throw new \Exception('You cannot directly list email forwarders. You need to call Emails.listing()', 303);
+		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'email')) {
+			throw new \Exception("You cannot access this resource", 405);
+		}
+
+		// parameter
+		$id = $this->getParam('id', true, 0);
+		$ea_optional = ($id <= 0 ? false : true);
+		$emailaddr = $this->getParam('emailaddr', $ea_optional, '');
+
+		// validation
+		$result = $this->apiCall('Emails.get', array(
+			'id' => $id,
+			'emailaddr' => $emailaddr
+		));
+		$id = $result['id'];
+
+		$result['destination'] = explode(' ', $result['destination']);
+		$destination = array();
+		foreach ($result['destination'] as $index => $address) {
+			$destination[] = [
+				'id' => $index,
+				'address' => $address
+			];
+		}
+
+		return $this->response(200, "successful", [
+			'count' => count($destination),
+			'list' => $destination
+		]);
+	}
+
+	/**
+	 * count email forwarders for a given email address
+	 *
+	 * @param int $id
+	 *        	optional, the email-address-id
+	 * @param string $emailaddr
+	 *        	optional, the email-address to delete the forwarder from
+	 * @param int $customerid
+	 *        	optional, admin-only, the customer-id
+	 * @param string $loginname
+	 *        	optional, admin-only, the loginname
+	 *        	
+	 * @access admin,customer
+	 * @throws \Exception
+	 * @return string json-encoded array
+	 */
+	public function listingCount()
+	{
+		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'email')) {
+			throw new \Exception("You cannot access this resource", 405);
+		}
+
+		// parameter
+		$id = $this->getParam('id', true, 0);
+		$ea_optional = ($id <= 0 ? false : true);
+		$emailaddr = $this->getParam('emailaddr', $ea_optional, '');
+
+		// validation
+		$result = $this->apiCall('Emails.get', array(
+			'id' => $id,
+			'emailaddr' => $emailaddr
+		));
+		$id = $result['id'];
+
+		$result['destination'] = explode(' ', $result['destination']);
+
+		return $this->response(200, "successful", count($result['destination']));
 	}
 
 	/**
@@ -142,15 +221,15 @@ class EmailForwarders extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 	 * @param string $emailaddr
 	 *        	optional, the email-address to delete the forwarder from
 	 * @param int $customerid
-	 *        	optional, admin-only, the customer-id
+	 *        	optional, required when called as admin (if $loginname is not specified)
 	 * @param string $loginname
-	 *        	optional, admin-only, the loginname
+	 *        	optional, required when called as admin (if $customerid is not specified)
 	 * @param int $forwarderid
 	 *        	id of the forwarder to delete
 	 *        	
 	 * @access admin,customer
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function delete()
 	{
@@ -201,7 +280,7 @@ class EmailForwarders extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 			$result = $this->apiCall('Emails.get', array(
 				'emailaddr' => $result['email_full']
 			));
-			return $this->response(200, "successfull", $result);
+			return $this->response(200, "successful", $result);
 		}
 		throw new \Exception("Unknown forwarder id", 404);
 	}

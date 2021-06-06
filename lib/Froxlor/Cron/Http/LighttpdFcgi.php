@@ -22,7 +22,7 @@ use Froxlor\Cron\Http\Php\PhpInterface;
 class LighttpdFcgi extends Lighttpd
 {
 
-	protected function composePhpOptions($domain)
+	protected function composePhpOptions(&$domain)
 	{
 		$php_options_text = '';
 
@@ -32,10 +32,11 @@ class LighttpdFcgi extends Lighttpd
 
 			// vhost data for php-fpm
 			if ((int) Settings::Get('phpfpm.enabled') == 1) {
+				$domain['fpm_socket'] = $php->getInterface()->getSocketFile();
 				$php_options_text = '  fastcgi.server = ( ' . "\n";
 				$php_options_text .= "\t" . '".php" => (' . "\n";
 				$php_options_text .= "\t\t" . '"localhost" => (' . "\n";
-				$php_options_text .= "\t\t" . '"socket" => "' . $php->getInterface()->getSocketFile() . '",' . "\n";
+				$php_options_text .= "\t\t" . '"socket" => "' . $domain['fpm_socket'] . '",' . "\n";
 				$php_options_text .= "\t\t" . '"check-local" => "enable",' . "\n";
 				$php_options_text .= "\t\t" . '"disable-time" => 1' . "\n";
 				$php_options_text .= "\t" . ')' . "\n";

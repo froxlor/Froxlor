@@ -53,7 +53,7 @@ return array(
 					'visible' => \Froxlor\Settings::Get('system.leenabled') && call_user_func(array(
 						'\Froxlor\Settings\FroxlorVhostSettings',
 						'hasVhostContainerEnabled'
-					))
+					), true)
 				),
 				'system_le_froxlor_redirect' => array(
 					'label' => $lng['serversettings']['le_froxlor_redirect'],
@@ -65,7 +65,7 @@ return array(
 					'visible' => \Froxlor\Settings::Get('system.use_ssl') && call_user_func(array(
 						'\Froxlor\Settings\FroxlorVhostSettings',
 						'hasVhostContainerEnabled'
-					))
+					), true)
 				),
 				'system_hsts_maxage' => array(
 					'label' => $lng['admin']['domain_hsts_maxage'],
@@ -79,7 +79,7 @@ return array(
 					'visible' => \Froxlor\Settings::Get('system.use_ssl') && call_user_func(array(
 						'\Froxlor\Settings\FroxlorVhostSettings',
 						'hasVhostContainerEnabled'
-					))
+					), true)
 				),
 				'system_hsts_incsub' => array(
 					'label' => $lng['admin']['domain_hsts_incsub'],
@@ -91,7 +91,7 @@ return array(
 					'visible' => \Froxlor\Settings::Get('system.use_ssl') && call_user_func(array(
 						'\Froxlor\Settings\FroxlorVhostSettings',
 						'hasVhostContainerEnabled'
-					))
+					), true)
 				),
 				'system_hsts_preload' => array(
 					'label' => $lng['admin']['domain_hsts_preload'],
@@ -103,7 +103,31 @@ return array(
 					'visible' => \Froxlor\Settings::Get('system.use_ssl') && call_user_func(array(
 						'\Froxlor\Settings\FroxlorVhostSettings',
 						'hasVhostContainerEnabled'
-					))
+					), true)
+				),
+				'system_honorcipherorder' => array(
+					'label' => $lng['admin']['domain_honorcipherorder'],
+					'settinggroup' => 'system',
+					'varname' => 'honorcipherorder',
+					'type' => 'bool',
+					'default' => false,
+					'save_method' => 'storeSettingField',
+					'visible' => \Froxlor\Settings::Get('system.use_ssl') && call_user_func(array(
+						'\Froxlor\Settings\FroxlorVhostSettings',
+						'hasVhostContainerEnabled'
+					), true)
+				),
+				'system_sessiontickets' => array(
+					'label' => $lng['admin']['domain_sessiontickets'],
+					'settinggroup' => 'system',
+					'varname' => 'sessiontickets',
+					'type' => 'bool',
+					'default' => true,
+					'save_method' => 'storeSettingField',
+					'visible' => \Froxlor\Settings::Get('system.use_ssl') && call_user_func(array(
+						'\Froxlor\Settings\FroxlorVhostSettings',
+						'hasVhostContainerEnabled'
+					), true)
 				),
 				/**
 				 * FCGID

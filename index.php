@@ -114,7 +114,7 @@ if ($action == '2fa_entercode') {
 		));
 		$row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-		if ($row['customer'] == $loginname) {
+		if ($row && $row['customer'] == $loginname) {
 			$table = "`" . TABLE_PANEL_CUSTOMERS . "`";
 			$uid = 'customerid';
 			$adminsession = '0';
@@ -142,7 +142,7 @@ if ($action == '2fa_entercode') {
 							"loginname" => $loginname
 						));
 						$row3 = $stmt->fetch(PDO::FETCH_ASSOC);
-						if ($row3['customer'] == $loginname) {
+						if ($row3 && $row3['customer'] == $loginname) {
 							$table = "`" . TABLE_PANEL_CUSTOMERS . "`";
 							$uid = 'customerid';
 							$adminsession = '0';
@@ -181,7 +181,7 @@ if ($action == '2fa_entercode') {
 				$row = $stmt->fetch(PDO::FETCH_ASSOC);
 			}
 
-			if ($row['admin'] == $loginname) {
+			if ($row && $row['admin'] == $loginname) {
 				$table = "`" . TABLE_PANEL_ADMINS . "`";
 				$uid = 'adminid';
 				$adminsession = '1';
@@ -393,7 +393,7 @@ if ($action == 'forgotpwd') {
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 		$loginname = \Froxlor\Validate\Validate::validate($_POST['loginname'], 'loginname');
 		$email = \Froxlor\Validate\Validate::validateEmail($_POST['loginemail'], 'email');
-		$result_stmt = Database::prepare("SELECT `adminid`, `customerid`, `firstname`, `name`, `company`, `email`, `loginname`, `def_language`, `deactivated` FROM `" . TABLE_PANEL_CUSTOMERS . "`
+		$result_stmt = Database::prepare("SELECT `adminid`, `customerid`, `customernumber`, `firstname`, `name`, `company`, `email`, `loginname`, `def_language`, `deactivated` FROM `" . TABLE_PANEL_CUSTOMERS . "`
 			WHERE `loginname`= :loginname
 			AND `email`= :email");
 		Database::pexecute($result_stmt, array(
@@ -481,6 +481,10 @@ if ($action == 'forgotpwd') {
 
 					$replace_arr = array(
 						'SALUTATION' => \Froxlor\User::getCorrectUserSalutation($user),
+						'NAME' => $user['name'],
+						'FIRSTNAME' => $user['firstname'] ?? "",
+						'COMPANY' => $user['company'] ?? "",
+						'CUSTOMER_NO' => $user['customernumber'] ?? 0,
 						'USERNAME' => $loginname,
 						'LINK' => $activationlink
 					);
@@ -598,21 +602,18 @@ if ($action == 'resetpwd') {
 				));
 
 				if ($result !== false) {
-					if ($result['admin'] == 1) {
-						$new_password = \Froxlor\Validate\Validate::validate($_POST['new_password'], 'new password');
-						$new_password_confirm = \Froxlor\Validate\Validate::validate($_POST['new_password_confirm'], 'new password confirm');
-					} else {
-						$new_password = \Froxlor\System\Crypt::validatePassword($_POST['new_password'], 'new password');
-						$new_password_confirm = \Froxlor\System\Crypt::validatePassword($_POST['new_password_confirm'], 'new password confirm');
+					try {
+						$new_password = \Froxlor\System\Crypt::validatePassword($_POST['new_password'], true);
+						$new_password_confirm = \Froxlor\System\Crypt::validatePassword($_POST['new_password_confirm'], true);
+					} catch (Exception $e) {
+						$message = $e->getMessage();
 					}
 
-					if ($new_password == '') {
-						$message = $new_password;
-					} elseif ($new_password_confirm == '') {
-						$message = $new_password_confirm;
-					} elseif ($new_password != $new_password_confirm) {
-						$message = $new_password . " != " . $new_password_confirm;
-					} else {
+					if (empty($message) && (empty($new_password) || $new_password != $new_password_confirm)) {
+						$message = $lng['error']['newpasswordconfirmerror'];
+					}
+
+					if (empty($message)) {
 						// Update user password
 						if ($result['admin'] == 1) {
 							$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_ADMINS . "`

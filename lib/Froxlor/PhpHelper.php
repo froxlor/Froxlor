@@ -4,6 +4,36 @@ namespace Froxlor;
 class PhpHelper
 {
 
+	private static $sort_key = 'id';
+
+	private static $sort_type = SORT_STRING;
+
+	/**
+	 * sort an array by either natural or string sort and a given index where the value for comparison is found
+	 *
+	 * @param array $list
+	 * @param string $key
+	 *
+	 * @return boolean
+	 */
+	public static function sortListBy(&$list, $key = 'id')
+	{
+		self::$sort_type = Settings::Get('panel.natsorting') == 1 ? SORT_NATURAL : SORT_STRING;
+		self::$sort_key = $key;
+		return usort($list, array(
+			'self',
+			'sortListByGivenKey'
+		));
+	}
+
+	private static function sortListByGivenKey($a, $b)
+	{
+		if (self::$sort_type == SORT_NATURAL) {
+			return strnatcasecmp($a[self::$sort_key], $b[self::$sort_key]);
+		}
+		return strcasecmp($a[self::$sort_key], $b[self::$sort_key]);
+	}
+
 	/**
 	 * Wrapper around htmlentities to handle arrays, with the advantage that you
 	 * can select which fields should be handled by htmlentities
@@ -82,7 +112,7 @@ class PhpHelper
 	 *
 	 * @return void|boolean
 	 */
-	public static function phpErrHandler($errno, $errstr, $errfile, $errline, $errcontext)
+	public static function phpErrHandler($errno, $errstr, $errfile, $errline, $errcontext = array())
 	{
 		if (! (error_reporting() & $errno)) {
 			// This error code is not included in error_reporting
@@ -193,9 +223,17 @@ class PhpHelper
 	 */
 	public static function gethostbynamel6($host, $try_a = true)
 	{
-		$dns6 = dns_get_record($host, DNS_AAAA);
+		$dns6 = @dns_get_record($host, DNS_AAAA);
+		if (!is_array($dns6)) {
+			// no record or failed to check
+			$dns6 = [];
+		}
 		if ($try_a == true) {
-			$dns4 = dns_get_record($host, DNS_A);
+			$dns4 = @dns_get_record($host, DNS_A);
+			if (!is_array($dns4)) {
+				// no record or failed to check
+				$dns4 = [];
+			}
 			$dns = array_merge($dns4, $dns6);
 		} else {
 			$dns = $dns6;
@@ -344,12 +382,41 @@ class PhpHelper
 		$returnval = array();
 		if (is_array($source)) {
 			$source = array_map('trim', $source);
-			$source = array_filter($source, function ($value) {
+			$returnval = array_filter($source, function ($value) {
 				return $value !== '';
 			});
 		} else {
 			$returnval = $source;
 		}
 		return $returnval;
+	}
+
+	/**
+	 * function to check a super-global passed by reference
+	 * so it gets automatically updated
+	 *
+	 * @param array $global
+	 * @param \voku\helper\AntiXSS $antiXss
+	 */
+	public static function cleanGlobal(&$global, &$antiXss)
+	{
+		$ignored_fields = [
+			'system_default_vhostconf',
+			'system_default_sslvhostconf',
+			'system_apache_globaldiropt',
+			'specialsettings',
+			'ssl_specialsettings',
+			'default_vhostconf_domain',
+			'ssl_default_vhostconf_domain',
+			'filecontent'
+		];
+		if (isset($global) && ! empty($global)) {
+			$tmp = $global;
+			foreach ($tmp as $index => $value) {
+				if (!in_array($index, $ignored_fields)) {
+					$global[$index] = $antiXss->xss_clean($value);
+				}
+			}
+		}
 	}
 }

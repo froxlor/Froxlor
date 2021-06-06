@@ -21,6 +21,10 @@ class IpsAndPortsTest extends TestCase
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(2, $result['count']);
 		$this->assertEquals('82.149.225.46', $result['list'][0]['ip']);
+
+		$json_result = IpsAndPorts::getLocal($admin_userdata)->listingCount();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(2, $result);
 	}
 
 	public function testResellerIpsAndPortsListHasNone()
@@ -107,6 +111,10 @@ class IpsAndPortsTest extends TestCase
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(1, $result['count']);
 		$this->assertEquals('82.149.225.47', $result['list'][0]['ip']);
+
+		$json_result = IpsAndPorts::getLocal($reseller_userdata)->listingCount();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals(1, $result);
 	}
 
 	/**
@@ -238,7 +246,7 @@ class IpsAndPortsTest extends TestCase
 			'ip' => '123.123.123.123'
 		];
 		$this->expectExceptionMessage("You cannot change the last system IP, either create another new IP/Port combination for the system IP or change the system IP.");
-		$json_result = IpsAndPorts::getLocal($admin_userdata, $data)->update();
+		IpsAndPorts::getLocal($admin_userdata, $data)->update();
 	}
 
 	public function testResellerIpsAndPortsEditNoDuplicate()

@@ -19,7 +19,6 @@ if (! defined('AREA')) {
  *         
  */
 
-use Froxlor\Database\Database;
 use Froxlor\Api\Commands\DomainZones as DomainZones;
 
 // This file is being included in admin_domains and customer_domains
@@ -36,13 +35,6 @@ $ttl = isset($_POST['record']['ttl']) ? (int) $_POST['record']['ttl'] : 18000;
 // get domain-name
 $domain = \Froxlor\Dns\Dns::getAllowedDomainEntry($domain_id, AREA, $userinfo);
 
-// select all entries
-$sel_stmt = Database::prepare("SELECT * FROM `" . TABLE_DOMAIN_DNS . "` WHERE domain_id = :did");
-Database::pexecute($sel_stmt, array(
-	'did' => $domain_id
-));
-$dom_entries = $sel_stmt->fetchAll(PDO::FETCH_ASSOC);
-
 $errors = "";
 $success_message = "";
 
@@ -58,8 +50,9 @@ if ($action == 'add_record' && ! empty($_POST)) {
 			'ttl' => $ttl
 		))->add();
 		$success_message = $lng['success']['dns_record_added'];
+		$record = $prio = $content = "";
 	} catch (Exception $e) {
-		\Froxlor\UI\Response::dynamic_error($e->getMessage());
+		$errors = str_replace("\n", "<br>", $e->getMessage());
 	}
 } elseif ($action == 'delete') {
 	// remove entry
@@ -70,25 +63,25 @@ if ($action == 'add_record' && ! empty($_POST)) {
 				'entry_id' => $entry_id,
 				'id' => $domain_id
 			))->delete();
+			// success message (inline)
+			$success_message = $lng['success']['dns_record_deleted'];
 		} catch (Exception $e) {
 			$errors = str_replace("\n", "<br>", $e->getMessage());
 		}
-
-		if (empty($errors)) {
-			// remove deleted entry from internal data array (no reread of DB necessary)
-			$_t = $dom_entries;
-			foreach ($_t as $idx => $entry) {
-				if ($entry['id'] == $entry_id) {
-					unset($dom_entries[$idx]);
-					break;
-				}
-			}
-			unset($_t);
-			// success message (inline)
-			$success_message = $lng['success']['dns_record_deleted'];
-		}
 	}
 }
+
+// select all entries
+try {
+	// get list
+	$json_result = DomainZones::getLocal($userinfo, [
+		'id' => $domain_id
+	])->listing();
+} catch (Exception $e) {
+	\Froxlor\UI\Response::dynamic_error($e->getMessage());
+}
+$result = json_decode($json_result, true)['data'];
+$dom_entries = $result['list'];
 
 // show editor
 $record_list = "";
@@ -108,11 +101,16 @@ if (! empty($dom_entries)) {
 $type_select_values = array(
 	'A',
 	'AAAA',
-	'NS',
+	'CAA',
+	'CNAME',
+	'DNAME',
+	'LOC',
 	'MX',
+	'NS',
+	'RP',
 	'SRV',
-	'TXT',
-	'CNAME'
+	'SSHFP',
+	'TXT'
 );
 asort($type_select_values);
 foreach ($type_select_values as $_type) {

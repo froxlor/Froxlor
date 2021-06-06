@@ -39,6 +39,15 @@ return array(
 					'default' => '/etc/postfix/dkim/',
 					'save_method' => 'storeSettingField'
 				),
+				'dkim_privkeysuffix' => array(
+					'label' => $lng['dkim']['privkeysuffix'],
+					'settinggroup' => 'dkim',
+					'varname' => 'privkeysuffix',
+					'type' => 'string',
+					'string_regexp' => '/^[a-z0-9\._]+$/i',
+					'default' => '.priv',
+					'save_method' => 'storeSettingField'
+				),
 				'dkim_domains' => array(
 					'label' => $lng['dkim']['dkim_domains'],
 					'settinggroup' => 'dkim',

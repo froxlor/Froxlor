@@ -25,28 +25,58 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	/**
 	 * lists all admin entries
 	 *
+	 * @param array $sql_search
+	 *        	optional array with index = fieldname, and value = array with 'op' => operator (one of <, > or =), LIKE is used if left empty and 'value' => searchvalue
+	 * @param int $sql_limit
+	 *        	optional specify number of results to be returned
+	 * @param int $sql_offset
+	 *        	optional specify offset for resultset
+	 * @param array $sql_orderby
+	 *        	optional array with index = fieldname and value = ASC|DESC to order the resultset by one or more fields
+	 *        	
 	 * @access admin
 	 * @throws \Exception
-	 * @return array count|list
+	 * @return string json-encoded array count|list
 	 */
 	public function listing()
 	{
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings') == 1) {
 			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] list admins");
+			$query_fields = array();
 			$result_stmt = Database::prepare("
 				SELECT *
-				FROM `" . TABLE_PANEL_ADMINS . "`
-				ORDER BY `loginname` ASC
-			");
-			Database::pexecute($result_stmt, null, true, true);
+				FROM `" . TABLE_PANEL_ADMINS . "`" . $this->getSearchWhere($query_fields) . $this->getOrderBy() . $this->getLimit());
+			Database::pexecute($result_stmt, $query_fields, true, true);
 			$result = array();
 			while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 				$result[] = $row;
 			}
-			return $this->response(200, "successfull", array(
+			return $this->response(200, "successful", array(
 				'count' => count($result),
 				'list' => $result
 			));
+		}
+		throw new \Exception("Not allowed to execute given command.", 403);
+	}
+
+	/**
+	 * returns the total number of admins for the given admin
+	 *
+	 * @access admin
+	 * @throws \Exception
+	 * @return string json-encoded array
+	 */
+	public function listingCount()
+	{
+		if ($this->isAdmin() && $this->getUserDetail('change_serversettings') == 1) {
+			$result_stmt = Database::prepare("
+				SELECT COUNT(*) as num_admins
+				FROM `" . TABLE_PANEL_ADMINS . "`
+			");
+			$result = Database::pexecute_first($result_stmt, null, true, true);
+			if ($result) {
+				return $this->response(200, "successful", $result['num_admins']);
+			}
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
 	}
@@ -61,7 +91,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	
 	 * @access admin
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function get()
 	{
@@ -79,7 +109,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			$result = Database::pexecute_first($result_stmt, $params, true, true);
 			if ($result) {
 				$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] get admin '" . $result['loginname'] . "'");
-				return $this->response(200, "successfull", $result);
+				return $this->response(200, "successful", $result);
 			}
 			$key = ($id > 0 ? "id #" . $id : "loginname '" . $loginname . "'");
 			throw new \Exception("Admin with " . $key . " could not be found", 404);
@@ -97,6 +127,8 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	optional, default auto-generated
 	 * @param string $def_language
 	 *        	optional, default is system-default language
+	 * @param bool $api_allowed
+	 *        	optional, default is true if system setting api.enabled is true, else false
 	 * @param string $custom_notes
 	 *        	optional, default empty
 	 * @param bool $custom_notes_show
@@ -158,7 +190,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	
 	 * @access admin
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function add()
 	{
@@ -171,6 +203,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 
 			// parameters
 			$def_language = $this->getParam('def_language', true, Settings::Get('panel.standardlanguage'));
+			$api_allowed = $this->getBoolParam('api_allowed', true, Settings::Get('api.enabled'));
 			$custom_notes = $this->getParam('custom_notes', true, '');
 			$custom_notes_show = $this->getBoolParam('custom_notes_show', true, 0);
 			$password = $this->getParam('admin_password', true, '');
@@ -198,7 +231,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			$idna_convert = new \Froxlor\Idna\IdnaWrapper();
 			$email = $idna_convert->encode(\Froxlor\Validate\Validate::validate($email, 'email', '', '', array(), true));
 			$def_language = \Froxlor\Validate\Validate::validate($def_language, 'default language', '', '', array(), true);
-			$custom_notes = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $custom_notes), 'custom_notes', '/^[^\0]*$/', '', array(), true);
+			$custom_notes = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $custom_notes), 'custom_notes', \Froxlor\Validate\Validate::REGEX_CONF_TEXT, '', array(), true);
 
 			if (Settings::Get('system.mail_quota_enabled') != '1') {
 				$email_quota = - 1;
@@ -232,7 +265,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 				'login' => $loginname
 			), true, true);
 
-			if (strtolower($loginname_check['loginname']) == strtolower($loginname) || strtolower($loginname_check_admin['loginname']) == strtolower($loginname)) {
+			if (($loginname_check && strtolower($loginname_check['loginname']) == strtolower($loginname)) || ($loginname_check_admin && strtolower($loginname_check_admin['loginname']) == strtolower($loginname))) {
 				\Froxlor\UI\Response::standard_error('loginnameexists', $loginname, true);
 			} elseif (preg_match('/^' . preg_quote(Settings::Get('customer.accountprefix'), '/') . '([0-9]+)/', $loginname)) {
 				// Accounts which match systemaccounts are not allowed, filtering them
@@ -271,6 +304,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 					'name' => $name,
 					'email' => $email,
 					'lang' => $def_language,
+					'api_allowed' => $api_allowed,
 					'change_serversettings' => $change_serversettings,
 					'customers' => $customers,
 					'customers_see_all' => $customers_see_all,
@@ -299,6 +333,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 					`name` = :name,
 					`email` = :email,
 					`def_language` = :lang,
+					`api_allowed` = :api_allowed,
 					`change_serversettings` = :change_serversettings,
 					`customers` = :customers,
 					`customers_see_all` = :customers_see_all,
@@ -329,7 +364,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 				$result = $this->apiCall('Admins.get', array(
 					'id' => $adminid
 				));
-				return $this->response(200, "successfull", $result);
+				return $this->response(200, "successful", $result);
 			}
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
@@ -350,6 +385,8 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	optional, default auto-generated
 	 * @param string $def_language
 	 *        	optional, default is system-default language
+	 * @param bool $api_allowed
+	 *        	optional, default is true if system setting api.enabled is true, else false
 	 * @param string $custom_notes
 	 *        	optional, default empty
 	 * @param string $theme
@@ -415,7 +452,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	
 	 * @access admin
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function update()
 	{
@@ -444,6 +481,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 
 				// you cannot edit some of the details of yourself
 				if ($result['adminid'] == $this->getUserDetail('adminid')) {
+					$api_allowed = $result['api_allowed'];
 					$deactivated = $result['deactivated'];
 					$customers = $result['customers'];
 					$domains = $result['domains'];
@@ -462,6 +500,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 					$traffic = $result['traffic'];
 					$ipaddress = ($result['ip'] != - 1 ? json_decode($result['ip'], true) : - 1);
 				} else {
+					$api_allowed = $this->getBoolParam('api_allowed', true, $result['api_allowed']);
 					$deactivated = $this->getBoolParam('deactivated', true, $result['deactivated']);
 
 					$dec_places = Settings::Get('panel.decimal_places');
@@ -492,7 +531,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 				$idna_convert = new \Froxlor\Idna\IdnaWrapper();
 				$email = $idna_convert->encode(\Froxlor\Validate\Validate::validate($email, 'email', '', '', array(), true));
 				$def_language = \Froxlor\Validate\Validate::validate($def_language, 'default language', '', '', array(), true);
-				$custom_notes = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $custom_notes), 'custom_notes', '/^[^\0]*$/', '', array(), true);
+				$custom_notes = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $custom_notes), 'custom_notes', \Froxlor\Validate\Validate::REGEX_CONF_TEXT, '', array(), true);
 				$theme = \Froxlor\Validate\Validate::validate($theme, 'theme', '', '', array(), true);
 				$password = \Froxlor\Validate\Validate::validate($password, 'password', '', '', array(), true);
 
@@ -578,6 +617,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 						'name' => $name,
 						'email' => $email,
 						'lang' => $def_language,
+						'api_allowed' => $api_allowed,
 						'change_serversettings' => $change_serversettings,
 						'customers' => $customers,
 						'customers_see_all' => $customers_see_all,
@@ -607,6 +647,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 						`name` = :name,
 						`email` = :email,
 						`def_language` = :lang,
+						`api_allowed` = :api_allowed,
 						`change_serversettings` = :change_serversettings,
 						`customers` = :customers,
 						`customers_see_all` = :customers_see_all,
@@ -636,7 +677,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 					$result = $this->apiCall('Admins.get', array(
 						'id' => $result['adminid']
 					));
-					return $this->response(200, "successfull", $result);
+					return $this->response(200, "successful", $result);
 				}
 			}
 		}
@@ -653,7 +694,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	
 	 * @access admin
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function delete()
 	{
@@ -672,6 +713,10 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			if ($id == $this->getUserDetail('adminid')) {
 				\Froxlor\UI\Response::standard_error('youcantdeleteyourself', '', true);
 			}
+			// can't delete the first superadmin
+			if ($id == 1) {
+				\Froxlor\UI\Response::standard_error('cannotdeletesuperadmin', '', true);
+			}
 
 			// delete admin
 			$del_stmt = Database::prepare("
@@ -684,14 +729,6 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			// delete the traffic-usage
 			$del_stmt = Database::prepare("
 				DELETE FROM `" . TABLE_PANEL_TRAFFIC_ADMINS . "` WHERE `adminid` = :adminid
-			");
-			Database::pexecute($del_stmt, array(
-				'adminid' => $id
-			), true, true);
-
-			// delete the diskspace usage
-			$del_stmt = Database::prepare("
-				DELETE FROM `" . TABLE_PANEL_DISKSPACE_ADMINS . "` WHERE `adminid` = :adminid
 			");
 			Database::pexecute($del_stmt, array(
 				'adminid' => $id
@@ -738,7 +775,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 
 			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_WARNING, "[API] deleted admin '" . $result['loginname'] . "'");
 			\Froxlor\User::updateCounters();
-			return $this->response(200, "successfull", $result);
+			return $this->response(200, "successful", $result);
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
 	}
@@ -753,7 +790,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	
 	 * @access admin
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function unlock()
 	{
@@ -780,7 +817,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			$result['loginfail_count'] = 0;
 
 			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_WARNING, "[API] unlocked admin '" . $result['loginname'] . "'");
-			return $this->response(200, "successfull", $result);
+			return $this->response(200, "successful", $result);
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
 	}
@@ -788,12 +825,12 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	/**
 	 * increase resource-usage
 	 *
-	 * @param int $customerid
+	 * @param int $adminid
 	 * @param string $resource
 	 * @param string $extra
 	 *        	optional, default empty
 	 * @param int $increase_by
-	 *              optional, default 1
+	 *        	optional, default 1
 	 */
 	public static function increaseUsage($adminid = 0, $resource = null, $extra = '', $increase_by = 1)
 	{
@@ -803,12 +840,12 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	/**
 	 * decrease resource-usage
 	 *
-	 * @param int $customerid
+	 * @param int $adminid
 	 * @param string $resource
 	 * @param string $extra
 	 *        	optional, default empty
 	 * @param int $decrease_by
-	 *              optional, default 1
+	 *        	optional, default 1
 	 */
 	public static function decreaseUsage($adminid = 0, $resource = null, $extra = '', $decrease_by = 1)
 	{

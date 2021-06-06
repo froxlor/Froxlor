@@ -35,7 +35,7 @@ return array(
 					'settinggroup' => 'system',
 					'varname' => 'ssl_protocols',
 					'type' => 'option',
-					'default' => 'TLSv1,TLSv1.2',
+					'default' => 'TLSv1.2',
 					'option_mode' => 'multiple',
 					'option_options' => array(
 						'TLSv1' => 'TLSv1',
@@ -52,6 +52,16 @@ return array(
 					'type' => 'string',
 					'string_emptyallowed' => false,
 					'default' => 'ECDH+AESGCM:ECDH+AES256:!aNULL:!MD5:!DSS:!DH:!AES128',
+					'save_method' => 'storeSettingField'
+				),
+				'system_tlsv13_cipher_list' => array(
+					'label' => $lng['serversettings']['ssl']['tlsv13_cipher_list'],
+					'settinggroup' => 'system',
+					'varname' => 'tlsv13_cipher_list',
+					'type' => 'string',
+					'string_emptyallowed' => true,
+					'default' => '',
+					'visible' => \Froxlor\Settings::Get('system.webserver') == "apache2" && \Froxlor\Settings::Get('system.apache24') == 1,
 					'save_method' => 'storeSettingField'
 				),
 				'system_ssl_cert_file' => array(
@@ -105,6 +115,15 @@ return array(
 					'visible' => \Froxlor\Settings::Get('system.webserver') == "apache2" && \Froxlor\Settings::Get('system.apache24') == 1,
 					'save_method' => 'storeSettingField'
 				),
+				'system_sessionticketsenabled' => array(
+					'label' => $lng['admin']['domain_sessionticketsenabled'],
+					'settinggroup' => 'system',
+					'varname' => 'sessionticketsenabled',
+					'type' => 'bool',
+					'default' => true,
+					'save_method' => 'storeSettingField',
+					'visible' => \Froxlor\Settings::Get('system.use_ssl') && (\Froxlor\Settings::Get('system.webserver') == "nginx" || (\Froxlor\Settings::Get('system.webserver') == "apache2" && \Froxlor\Settings::Get('system.apache24') == 1))
+				),
 				'system_leenabled' => array(
 					'label' => $lng['serversettings']['leenabled'],
 					'settinggroup' => 'system',
@@ -128,10 +147,9 @@ return array(
 					'settinggroup' => 'system',
 					'varname' => 'leapiversion',
 					'type' => 'option',
-					'default' => '1',
+					'default' => '2',
 					'option_mode' => 'one',
 					'option_options' => array(
-						'1' => 'ACME v1',
 						'2' => 'ACME v2'
 					),
 					'save_method' => 'storeSettingField'
@@ -141,10 +159,10 @@ return array(
 					'settinggroup' => 'system',
 					'varname' => 'letsencryptca',
 					'type' => 'option',
-					'default' => 'testing',
+					'default' => 'production',
 					'option_mode' => 'one',
 					'option_options' => array(
-						'testing' => 'https://acme-staging' . (\Froxlor\Settings::Get('system.leapiversion') == '2' ? '-v02' : '') . '.api.letsencrypt.org (Test)',
+						'testing' => 'https://acme-staging-v0' . \Froxlor\Settings::Get('system.leapiversion') . '.api.letsencrypt.org (Test)',
 						'production' => 'https://acme-v0' . \Froxlor\Settings::Get('system.leapiversion') . '.api.letsencrypt.org (Live)'
 					),
 					'save_method' => 'storeSettingField'
@@ -196,11 +214,11 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'system_disable_le_selfcheck' => array(
-					'label' => $lng['serversettings']['disable_le_selfcheck'],
+					'label' => $lng['serversettings']['le_domain_dnscheck'],
 					'settinggroup' => 'system',
-					'varname' => 'disable_le_selfcheck',
+					'varname' => 'le_domain_dnscheck',
 					'type' => 'bool',
-					'default' => false,
+					'default' => true,
 					'save_method' => 'storeSettingField'
 				)
 			)

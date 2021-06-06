@@ -1,4 +1,6 @@
 <?php
+use voku\helper\AntiXSS;
+
 require __DIR__ . '/vendor/autoload.php';
 
 require \Froxlor\Froxlor::getInstallDir() . '/lib/tables.inc.php';
@@ -23,15 +25,22 @@ if (empty($request)) {
 }
 
 // decode json request
-$decoded_request = json_decode(stripslashes($request), true);
+$decoded_request = json_decode($request, true);
 
 // is it valid?
 if (is_null($decoded_request)) {
 	json_response(400, "Invalid JSON");
 }
 
+/**
+ * check for xss attempts and clean request
+ */
+$antiXss = new AntiXSS();
+$request = $antiXss->xss_clean($request);
+
 // validate content
 try {
+	$decoded_request = stripcslashes_deep($decoded_request);
 	$request = \Froxlor\Api\FroxlorRPC::validateRequest($decoded_request);
 	// now actually do it
 	$cls = "\\Froxlor\\Api\\Commands\\" . $request['command']['class'];
@@ -71,4 +80,9 @@ function json_response($status, $status_message = '', $data = null)
 	$json_response = json_encode($response, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
 	echo $json_response;
 	exit();
+}
+
+function stripcslashes_deep($value)
+{
+	return is_array($value) ? array_map('stripcslashes_deep', $value) : stripcslashes($value);
 }

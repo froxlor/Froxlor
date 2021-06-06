@@ -30,9 +30,9 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 	 * @param string $emailaddr
 	 *        	optional email-address to add the account for
 	 * @param int $customerid
-	 *        	optional, admin-only, the customer-id
+	 *        	optional, required when called as admin (if $loginname is not specified)
 	 * @param string $loginname
-	 *        	optional, admin-only, the loginname
+	 *        	optional, required when called as admin (if $customerid is not specified)
 	 * @param string $email_password
 	 *        	password for the account
 	 * @param string $alternative_email
@@ -44,7 +44,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function add()
 	{
@@ -81,9 +81,9 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 			));
 			$id = $result['id'];
 
-			$email_full = $result['email_full'];
 			$idna_convert = new \Froxlor\Idna\IdnaWrapper();
-			$username = $idna_convert->decode($email_full);
+			$email_full = $result['email_full'];
+			$username = $email_full;
 			$password = \Froxlor\Validate\Validate::validate($email_password, 'password', '', '', array(), true);
 			$password = \Froxlor\System\Crypt::validatePassword($password, true);
 
@@ -100,8 +100,8 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 			// alternative email address to send info to
 			if (Settings::Get('panel.sendalternativemail') == 1) {
 				$alternative_email = $idna_convert->encode(\Froxlor\Validate\Validate::validate($alternative_email, 'alternative_email', '', '', array(), true));
-				if (! \Froxlor\Validate\Validate::validateEmail($alternative_email)) {
-					\Froxlor\UI\Response::standard_error('emailiswrong', $alternative_email, true);
+				if (! empty($alternative_email) && ! \Froxlor\Validate\Validate::validateEmail($alternative_email)) {
+					\Froxlor\UI\Response::standard_error('alternativeemailiswrong', $alternative_email, true);
 				}
 			} else {
 				$alternative_email = '';
@@ -192,7 +192,12 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 				$replace_arr = array(
 					'EMAIL' => $email_full,
 					'USERNAME' => $username,
-					'PASSWORD' => $password
+					'PASSWORD' => htmlentities(htmlentities($password)),
+					'SALUTATION' => \Froxlor\User::getCorrectUserSalutation($customer),
+					'NAME' => $customer['name'],
+					'FIRSTNAME' => $customer['firstname'],
+					'COMPANY' => $customer['company'],
+					'CUSTOMER_NO' => $customer['customernumber']
 				);
 
 				// get the customers admin
@@ -231,7 +236,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 				$this->mailer()->clearAddresses();
 
 				// customer wants to send the e-mail to an alternative email address too
-				if (Settings::Get('panel.sendalternativemail') == 1) {
+				if (Settings::Get('panel.sendalternativemail') == 1 && ! empty($alternative_email)) {
 					// get template for mail subject
 					$mail_subject = $this->getMailTemplate($customer, 'mails', 'pop_success_alternative_subject', $replace_arr, $this->lng['mails']['pop_success_alternative']['subject']);
 					// get template for mail body
@@ -268,7 +273,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 			$result = $this->apiCall('Emails.get', array(
 				'emailaddr' => $result['email_full']
 			));
-			return $this->response(200, "successfull", $result);
+			return $this->response(200, "successful", $result);
 		}
 		throw new \Exception("No more resources available", 406);
 	}
@@ -290,17 +295,19 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 	 * @param string $emailaddr
 	 *        	optional, the email-address to update
 	 * @param int $customerid
-	 *        	optional, admin-only, the customer-id
+	 *        	optional, required when called as admin (if $loginname is not specified)
 	 * @param string $loginname
-	 *        	optional, admin-only, the loginname
+	 *        	optional, required when called as admin (if $customerid is not specified)
 	 * @param int $email_quota
 	 *        	optional, update quota
 	 * @param string $email_password
 	 *        	optional, update password
+	 * @param bool $deactivated
+	 *        	optional, admin-only
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function update()
 	{
@@ -326,6 +333,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 
 		$password = $this->getParam('email_password', true, '');
 		$quota = $this->getParam('email_quota', true, $result['quota']);
+		$deactivated = $this->getBoolParam('deactivated', true, (strtolower($result['postfix']) == 'n' ? true : false));
 
 		// get needed customer info to reduce the email-account-counter by one
 		$customer = $this->getCustomerData();
@@ -367,6 +375,18 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 			$quota = 0;
 		}
 
+		if ($this->isAdmin()) {
+			if (($deactivated == true && strtolower($result['postfix']) == 'y') || ($deactivated == false && strtolower($result['postfix']) == 'n')) {
+				if (! empty($upd_query)) {
+					$upd_query .= ", ";
+				}
+				$upd_query .= "`postfix` = :postfix, `imap` = :imap, `pop3` = :pop3";
+				$upd_params['postfix'] = $deactivated ? 'N' : 'Y';
+				$upd_params['imap'] = $deactivated ? '0' : '1';
+				$upd_params['pop3'] = $deactivated ? '0' : '1';
+			}
+		}
+
 		// build update query
 		if (! empty($upd_query)) {
 			$upd_stmt = Database::prepare("
@@ -384,16 +404,25 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 		$result = $this->apiCall('Emails.get', array(
 			'emailaddr' => $result['email_full']
 		));
-		return $this->response(200, "successfull", $result);
+		return $this->response(200, "successful", $result);
 	}
 
 	/**
-	 * You cannot directly list email forwarders.
+	 * You cannot directly list email accounts.
 	 * You need to call Emails.listing()
 	 */
 	public function listing()
 	{
-		throw new \Exception('You cannot directly list email forwarders. You need to call Emails.listing()', 303);
+		throw new \Exception('You cannot directly list email accounts. You need to call Emails.listing()', 303);
+	}
+
+	/**
+	 * You cannot directly count email accounts.
+	 * You need to call Emails.listingCount()
+	 */
+	public function listingCount()
+	{
+		throw new \Exception('You cannot directly count email accounts. You need to call Emails.listingCount()', 303);
 	}
 
 	/**
@@ -404,15 +433,15 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 	 * @param string $emailaddr
 	 *        	optional, the email-address to delete the account for
 	 * @param int $customerid
-	 *        	optional, admin-only, the customer-id
+	 *        	optional, required when called as admin (if $loginname is not specified)
 	 * @param string $loginname
-	 *        	optional, admin-only, the loginname
+	 *        	optional, required when called as admin (if $customerid is not specified)
 	 * @param bool $delete_userfiles
 	 *        	optional, default false
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function delete()
 	{
@@ -478,6 +507,6 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 		Customers::decreaseUsage($customer['customerid'], 'email_quota_used', '', $quota);
 
 		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] deleted email account for '" . $result['email_full'] . "'");
-		return $this->response(200, "successfull", $result);
+		return $this->response(200, "successful", $result);
 	}
 }

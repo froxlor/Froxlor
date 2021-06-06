@@ -163,7 +163,7 @@ return array(
 						'label' => $lng['serversettings']['phpfpm_settings']['idle_timeout']['title'],
 						'desc' => $lng['serversettings']['phpfpm_settings']['idle_timeout']['description'] . $lng['serversettings']['phpfpm_settings']['override_fpmconfig_addinfo'],
 						'type' => 'int',
-						'value' => 30
+						'value' => 10
 					),
 					'limit_extensions' => array(
 						'visible' => (\Froxlor\Settings::Get('phpfpm.enabled') == 1 ? true : false),

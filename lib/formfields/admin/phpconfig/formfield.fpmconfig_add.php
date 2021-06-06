@@ -32,13 +32,13 @@ return array(
 						'label' => $lng['serversettings']['phpfpm_settings']['reload'],
 						'type' => 'text',
 						'maxlength' => 255,
-						'value' => 'service php7.0-fpm restart'
+						'value' => 'service php7.3-fpm restart'
 					),
 					'config_dir' => array(
 						'label' => $lng['serversettings']['phpfpm_settings']['configdir'],
 						'type' => 'text',
 						'maxlength' => 255,
-						'value' => '/etc/php/7.0/fpm/pool.d/'
+						'value' => '/etc/php/7.3/fpm/pool.d/'
 					),
 					'pm' => array(
 						'label' => $lng['serversettings']['phpfpm_settings']['pm'],
@@ -49,25 +49,25 @@ return array(
 						'label' => $lng['serversettings']['phpfpm_settings']['max_children']['title'],
 						'desc' => $lng['serversettings']['phpfpm_settings']['max_children']['description'],
 						'type' => 'int',
-						'value' => 1
+						'value' => 5
 					),
 					'start_servers' => array(
 						'label' => $lng['serversettings']['phpfpm_settings']['start_servers']['title'],
 						'desc' => $lng['serversettings']['phpfpm_settings']['start_servers']['description'],
 						'type' => 'int',
-						'value' => 20
+						'value' => 2
 					),
 					'min_spare_servers' => array(
 						'label' => $lng['serversettings']['phpfpm_settings']['min_spare_servers']['title'],
 						'desc' => $lng['serversettings']['phpfpm_settings']['min_spare_servers']['description'],
 						'type' => 'int',
-						'value' => 5
+						'value' => 1
 					),
 					'max_spare_servers' => array(
 						'label' => $lng['serversettings']['phpfpm_settings']['max_spare_servers']['title'],
 						'desc' => $lng['serversettings']['phpfpm_settings']['max_spare_servers']['description'],
 						'type' => 'int',
-						'value' => 35
+						'value' => 3
 					),
 					'max_requests' => array(
 						'label' => $lng['serversettings']['phpfpm_settings']['max_requests']['title'],
@@ -79,13 +79,20 @@ return array(
 						'label' => $lng['serversettings']['phpfpm_settings']['idle_timeout']['title'],
 						'desc' => $lng['serversettings']['phpfpm_settings']['idle_timeout']['description'],
 						'type' => 'int',
-						'value' => 30
+						'value' => 10
 					),
 					'limit_extensions' => array(
 						'label' => $lng['serversettings']['phpfpm_settings']['limit_extensions']['title'],
 						'desc' => $lng['serversettings']['phpfpm_settings']['limit_extensions']['description'],
 						'type' => 'text',
 						'value' => '.php'
+					),
+					'custom_config' => array(
+						'label' => $lng['serversettings']['phpfpm_settings']['custom_config']['title'],
+						'desc' => $lng['serversettings']['phpfpm_settings']['custom_config']['description'],
+						'type' => 'textarea',
+						'cols' => 50,
+						'rows' => 7
 					)
 				)
 			)

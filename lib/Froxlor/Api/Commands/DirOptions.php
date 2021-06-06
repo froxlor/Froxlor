@@ -26,9 +26,9 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	 * add options for a given directory
 	 *
 	 * @param int $customerid
-	 *        	optional, admin-only, the customer-id
+	 *        	optional, required when called as admin (if $loginname is not specified)
 	 * @param string $loginname
-	 *        	optional, admin-only, the loginname
+	 *        	optional, required when called as admin (if $customerid is not specified)
 	 * @param string $path
 	 *        	path relative to the customer's home-Directory
 	 * @param bool $options_indexes
@@ -44,7 +44,7 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function add()
 	{
@@ -69,7 +69,7 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		$error500path = $this->getParam('error500path', true, '');
 
 		// validation
-		$path = \Froxlor\FileDir::makeCorrectDir(\Froxlor\Validate\Validate::validate($path, 'path', '', '', array(), true));
+		$path = \Froxlor\FileDir::makeCorrectDir(\Froxlor\Validate\Validate::validate($path, 'path', \Froxlor\Validate\Validate::REGEX_DIR, '', array(), true));
 		$userpath = $path;
 		$path = \Froxlor\FileDir::makeCorrectDir($customer['documentroot'] . '/' . $path);
 
@@ -96,7 +96,7 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		), true, true);
 
 		// duplicate check
-		if ($path_dupe_check['path'] == $path) {
+		if ($path_dupe_check && $path_dupe_check['path'] == $path) {
 			\Froxlor\UI\Response::standard_error('errordocpathdupe', $userpath, true);
 		}
 
@@ -128,7 +128,7 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		$result = $this->apiCall('DirOptions.get', array(
 			'id' => $id
 		));
-		return $this->response(200, "successfull", $result);
+		return $this->response(200, "successful", $result);
 	}
 
 	/**
@@ -139,7 +139,7 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function get()
 	{
@@ -186,7 +186,7 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		$result = Database::pexecute_first($result_stmt, $params, true, true);
 		if ($result) {
 			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] get directory options for '" . $result['path'] . "'");
-			return $this->response(200, "successfull", $result);
+			return $this->response(200, "successful", $result);
 		}
 		$key = "id #" . $id;
 		throw new \Exception("Directory option with " . $key . " could not be found", 404);
@@ -198,9 +198,9 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	 * @param int $id
 	 *        	id of dir-protection entry
 	 * @param int $customerid
-	 *        	optional, admin-only, the customer-id
+	 *        	optional, required when called as admin (if $loginname is not specified)
 	 * @param string $loginname
-	 *        	optional, admin-only, the loginname
+	 *        	optional, required when called as admin (if $customerid is not specified)
 	 * @param bool $options_indexes
 	 *        	optional, activate directory-listing for this path, default 0 (false)
 	 * @param bool $options_cgi
@@ -214,7 +214,7 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function update()
 	{
@@ -275,7 +275,7 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		$result = $this->apiCall('DirOptions.get', array(
 			'id' => $id
 		));
-		return $this->response(200, "successfull", $result);
+		return $this->response(200, "successful", $result);
 	}
 
 	/**
@@ -285,10 +285,18 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	 *        	optional, admin-only, select directory-protections of a specific customer by id
 	 * @param string $loginname
 	 *        	optional, admin-only, select directory-protections of a specific customer by loginname
-	 *        	
+	 * @param array $sql_search
+	 *        	optional array with index = fieldname, and value = array with 'op' => operator (one of <, > or =), LIKE is used if left empty and 'value' => searchvalue
+	 * @param int $sql_limit
+	 *        	optional specify number of results to be returned
+	 * @param int $sql_offset
+	 *        	optional specify offset for resultset
+	 * @param array $sql_orderby
+	 *        	optional array with index = fieldname and value = ASC|DESC to order the resultset by one or more fields
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
-	 * @return array count|list
+	 * @return string json-encoded array count|list
 	 */
 	public function listing()
 	{
@@ -298,19 +306,49 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		$customer_ids = $this->getAllowedCustomerIds('extras.pathoptions');
 
 		$result = array();
+		$query_fields = array();
 		$result_stmt = Database::prepare("
 			SELECT * FROM `" . TABLE_PANEL_HTACCESS . "`
-			WHERE `customerid` IN (" . implode(', ', $customer_ids) . ")
-		");
-		Database::pexecute($result_stmt, null, true, true);
+			WHERE `customerid` IN (" . implode(', ', $customer_ids) . ")" . $this->getSearchWhere($query_fields, true) . $this->getOrderBy() . $this->getLimit());
+		Database::pexecute($result_stmt, $query_fields, true, true);
 		while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$result[] = $row;
 		}
 		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] list directory-options");
-		return $this->response(200, "successfull", array(
+		return $this->response(200, "successful", array(
 			'count' => count($result),
 			'list' => $result
 		));
+	}
+
+	/**
+	 * returns the total number of accessable directory options
+	 *
+	 * @param int $customerid
+	 *        	optional, admin-only, select directory-protections of a specific customer by id
+	 * @param string $loginname
+	 *        	optional, admin-only, select directory-protections of a specific customer by loginname
+	 *
+	 * @access admin, customer
+	 * @throws \Exception
+	 * @return string json-encoded array count|list
+	 */
+	public function listingCount()
+	{
+		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'extras')) {
+			throw new \Exception("You cannot access this resource", 405);
+		}
+		$customer_ids = $this->getAllowedCustomerIds('extras.pathoptions');
+		
+		$result = array();
+		$result_stmt = Database::prepare("
+			SELECT COUNT(*) as num_htaccess FROM `" . TABLE_PANEL_HTACCESS . "`
+			WHERE `customerid` IN (" . implode(', ', $customer_ids) . ")
+		");
+		$result = Database::pexecute_first($result_stmt, null, true, true);
+		if ($result) {
+			return $this->response(200, "successful", $result['num_htaccess']);
+		}
 	}
 
 	/**
@@ -321,7 +359,7 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	 *        	
 	 * @access admin, customer
 	 * @throws \Exception
-	 * @return array
+	 * @return string json-encoded array
 	 */
 	public function delete()
 	{
@@ -373,10 +411,10 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		Database::pexecute($stmt, array(
 			"customerid" => $customer_data['customerid'],
 			"id" => $id
-		));
+		), true, true);
 		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] deleted directory-option for '" . str_replace($customer_data['documentroot'], '/', $result['path']) . "'");
 		\Froxlor\System\Cronjob::inserttask('1');
-		return $this->response(200, "successfull", $result);
+		return $this->response(200, "successful", $result);
 	}
 
 	/**
@@ -394,7 +432,7 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	{
 		if ($errdoc !== null && $errdoc != '') {
 			// not a URL
-			if ((strtoupper(substr($errdoc, 0, 5)) != 'HTTP:' && strtoupper(substr($errdoc, 0, 6)) != 'HTTPS:') || ! \Froxlor\Validate\Form\Data::validateUrl($errdoc)) {
+			if ((strtoupper(substr($errdoc, 0, 5)) != 'HTTP:' && strtoupper(substr($errdoc, 0, 6)) != 'HTTPS:') || ! \Froxlor\Validate\Validate::validateUrl($errdoc)) {
 				// a file
 				if (substr($errdoc, 0, 1) != '"') {
 					$errdoc = \Froxlor\FileDir::makeCorrectFile($errdoc);
