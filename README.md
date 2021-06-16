@@ -28,8 +28,8 @@ You may find help in the following places:
 
 ### IRC
 
-froxlor may be found on freenode.net, channel #froxlor:
-irc://chat.freenode.net/froxlor
+froxlor may be found on libera.chat, channel #froxlor:
+irc://irc.libera.chat/froxlor
 
 ### Forum
 
