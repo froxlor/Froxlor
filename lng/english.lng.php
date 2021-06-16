@@ -2116,3 +2116,4 @@ $lng['serversettings']['terms_url']['description'] = 'Specify an URL to your ter
 $lng['privacy'] = 'Privacy policy';
 $lng['serversettings']['privacy_url']['title'] = 'URL to privacy policy';
 $lng['serversettings']['privacy_url']['description'] = 'Specify an URL to your privacy policy site / imprint site. The link will be visible on the login screen and on the footer when logged in.';
+$lng['admin']['domaindefaultalias'] = 'Default ServerAlias value for new domains';

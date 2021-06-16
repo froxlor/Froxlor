@@ -803,3 +803,12 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.25')) {
     showUpdateStep("Updating from 0.10.25 to 0.10.26", false);
     \Froxlor\Froxlor::updateToVersion('0.10.26');
 }
+
+if (\Froxlor\Froxlor::isDatabaseVersion('202103240')) {
+
+    showUpdateStep("Adding setting for default serveralias value for new domains", true);
+    Settings::AddNew("system.domaindefaultalias", '0');
+    lastStepStatus(0);
+
+    \Froxlor\Froxlor::updateToDbVersion('202106160');
+}

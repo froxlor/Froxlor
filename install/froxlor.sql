@@ -677,6 +677,7 @@ opcache.interned_strings_buffer'),
 	('system', 'hide_incompatible_settings', '0'),
 	('system', 'include_default_vhostconf', '0'),
 	('system', 'soaemail', ''),
+	('system', 'domaindefaultalias', '0'),
 	('api', 'enabled', '0'),
 	('2fa', 'enabled', '1'),
 	('panel', 'decimal_places', '4'),
@@ -715,7 +716,7 @@ opcache.interned_strings_buffer'),
 	('panel', 'terms_url', ''),
 	('panel', 'privacy_url', ''),
 	('panel', 'version', '0.10.26'),
-	('panel', 'db_version', '202103240');
+	('panel', 'db_version', '202106160');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

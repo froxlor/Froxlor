@@ -1762,3 +1762,4 @@ $lng['serversettings']['terms_url']['description'] = 'Die URL zur AGB-Seite. Der
 $lng['privacy'] = 'Datenschutzerklärung';
 $lng['serversettings']['privacy_url']['title'] = 'URL zur Datenschutzerklärung';
 $lng['serversettings']['privacy_url']['description'] = 'Die URL zur Datenschutzerklärungs-Seite. Der Link ist auf der Login-Seite und wenn eingeloggt, in der Fußzeile sichtbar.';
+$lng['admin']['domaindefaultalias'] = 'Standard ServerAlias-Angabe für neue Domains';
