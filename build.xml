@@ -6,17 +6,16 @@
 	<property name="pdepend" value="${basedir}/vendor/bin/pdepend" />
 	<property name="phpcpd" value="${basedir}/vendor/bin/phpcpd" />
 	<property name="phpcs" value="${basedir}/vendor/bin/phpcs" />
-	<property name="phpdox" value="${basedir}/vendor/bin/phpdox" />
 	<property name="phploc" value="${basedir}/vendor/bin/phploc" />
 	<property name="phpmd" value="${basedir}/vendor/bin/phpmd" />
 	<property name="phpunit" value="${basedir}/vendor/bin/phpunit" />
 
 	<target name="full-build"
-		depends="prepare,composer,static-analysis,phpunit,phpdox,-check-failure"
+		depends="prepare,composer,static-analysis,phpunit,-check-failure"
 		description="Performs static analysis, runs the tests, and generates project documentation" />
 
 	<target name="full-build-parallel"
-		depends="prepare,composer,static-analysis-parallel,phpunit,phpdox,-check-failure"
+		depends="prepare,composer,static-analysis-parallel,phpunit,-check-failure"
 		description="Performs static analysis (executing the tools in parallel), runs the tests, and generates project documentation" />
 
 	<target name="quick-build"
@@ -49,7 +48,6 @@
 		<delete dir="${basedir}/build/coverage" />
 		<delete dir="${basedir}/build/logs" />
 		<delete dir="${basedir}/build/pdepend" />
-		<delete dir="${basedir}/build/phpdox" />
 		<property name="clean.done" value="true" />
 	</target>
 
@@ -59,7 +57,6 @@
 		<mkdir dir="${basedir}/build/coverage" />
 		<mkdir dir="${basedir}/build/logs" />
 		<mkdir dir="${basedir}/build/pdepend" />
-		<mkdir dir="${basedir}/build/phpdox" />
 
 		<property name="prepare.done" value="true" />
 	</target>
@@ -267,18 +264,6 @@
 		</exec>
 
 		<property name="phpunit.done" value="true" />
-	</target>
-
-	<target name="phpdox" unless="phpdox.done"
-		depends="phploc-ci,phpcs-ci,phpcompat-ci,phpmd-ci"
-		description="Generate project documentation using phpDox">
-		<exec executable="${phpdox}" dir="${basedir}/build"
-			taskname="phpdox">
-			<arg value="--file" />
-			<arg path="${basedir}/phpdox.xml" />
-		</exec>
-
-		<property name="phpdox.done" value="true" />
 	</target>
 
 	<target name="-check-failure">
