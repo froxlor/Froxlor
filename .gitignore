@@ -16,6 +16,6 @@ logs/*
 !templates/Froxlor/
 !templates/Sparkle/
 !templates/misc/
-templates/Froxlor/assets/img/logo_custom.png
-templates/Froxlor/assets/img/logo_custom_login.png
+templates/Sparkle/assets/img/logo_custom.png
+templates/Sparkle/assets/img/logo_custom_login.png
 vendor/
