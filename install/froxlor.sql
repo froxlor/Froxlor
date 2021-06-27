@@ -628,7 +628,7 @@ opcache.interned_strings_buffer'),
 	('system', 'apacheitksupport', '0'),
 	('system', 'leprivatekey', 'unset'),
 	('system', 'lepublickey', 'unset'),
-	('system', 'letsencryptca', 'production'),
+	('system', 'letsencryptca', 'letsencrypt'),
 	('system', 'letsencryptcountrycode', 'DE'),
 	('system', 'letsencryptstate', 'Hessen'),
 	('system', 'letsencryptchallengepath', '/var/www/froxlor'),
@@ -716,7 +716,7 @@ opcache.interned_strings_buffer'),
 	('panel', 'terms_url', ''),
 	('panel', 'privacy_url', ''),
 	('panel', 'version', '0.10.26'),
-	('panel', 'db_version', '202106160');
+	('panel', 'db_version', '202106270');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
