@@ -53,7 +53,7 @@ class Dns
 			$domain = $domain_id;
 		}
 
-		if ($domain['isbinddomain'] != '1') {
+		if (!isset($domain['isbinddomain']) || $domain['isbinddomain'] != '1') {
 			return;
 		}
 
@@ -190,11 +190,25 @@ class Dns
 				'@',
 				'www',
 				'*'
-			] as $crceord) {
-				if ($entry['type'] == 'CNAME' && $entry['record'] == '@' && (array_key_exists(md5($crceord), $required_entries['A']) || array_key_exists(md5($crceord), $required_entries['AAAA']))) {
-					unset($required_entries['A'][md5($crceord)]);
-					unset($required_entries['AAAA'][md5($crceord)]);
+			] as $crecord) {
+				if ($entry['type'] == 'CNAME' && $entry['record'] == '@' && (array_key_exists(md5($crecord), $required_entries['A']) || array_key_exists(md5($crecord), $required_entries['AAAA']))) {
+					unset($required_entries['A'][md5($crecord)]);
+					unset($required_entries['AAAA'][md5($crecord)]);
 				}
+			}
+			// also allow overriding of auto-generated values (imap,pop3,mail,smtp) if enabled in the settings
+			if (Settings::Get('system.dns_createmailentry')) {
+			    foreach (array(
+			        'imap',
+			        'pop3',
+			        'mail',
+			        'smtp'
+			    ) as $crecord) {
+			        if ($entry['type'] == 'CNAME' && $entry['record'] == $crecord && (array_key_exists(md5($crecord), $required_entries['A']) || array_key_exists(md5($crecord), $required_entries['AAAA']))) {
+			            unset($required_entries['A'][md5($crecord)]);
+			            unset($required_entries['AAAA'][md5($crecord)]);
+			        }
+			    }
 			}
 			$zonerecords[] = new DnsEntry($entry['record'], $entry['type'], $entry['content'], $entry['prio'], $entry['ttl']);
 		}

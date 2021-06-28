@@ -812,3 +812,16 @@ if (\Froxlor\Froxlor::isDatabaseVersion('202103240')) {
 
     \Froxlor\Froxlor::updateToDbVersion('202106160');
 }
+
+if (\Froxlor\Froxlor::isDatabaseVersion('202106160')) {
+
+    showUpdateStep("Adjusting Let's Encrypt endpoint configuration to support ZeroSSL", true);
+    if (Settings::Get('system.letsencryptca') == 'testing') {
+        Settings::Set("system.letsencryptca", 'letsencrypt_test');
+    } else {
+        Settings::Set("system.letsencryptca", 'letsencrypt');
+    }
+    lastStepStatus(0);
+
+    \Froxlor\Froxlor::updateToDbVersion('202106270');
+}
