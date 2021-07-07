@@ -403,7 +403,7 @@ class Store
 
             // Delete file?
             if ($fielddata['value'] !== "" && array_key_exists($fieldname.'_delete', $_POST) && $_POST[$fieldname.'_delete']) {
-                @unlink($path . explode('?', $fielddata['value'], 2)[0]);
+                @unlink(\Froxlor\Froxlor::getInstallDir() . '/' . explode('?', $fielddata['value'], 2)[0]);
                 $save_to = '';
             }
 

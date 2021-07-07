@@ -60,6 +60,13 @@ class SImExporter
 
 	public static function export()
 	{
+	    $settings_definitions = [];
+	    foreach (\Froxlor\PhpHelper::loadConfigArrayDir('./actions/admin/settings/')['groups'] AS $group) {
+            foreach ($group['fields'] AS $field) {
+                $settings_definitions[$field['settinggroup']][$field['varname']] = $field;
+            }
+        }
+
 		$result_stmt = Database::query("
 			SELECT * FROM `" . TABLE_PANEL_SETTINGS . "` ORDER BY `settingid` ASC
 		");
@@ -69,6 +76,17 @@ class SImExporter
 			if (! in_array($index, self::$no_export)) {
 				$_data[$index] = $row['value'];
 			}
+
+			if (array_key_exists($row['settinggroup'], $settings_definitions) && array_key_exists($row['varname'], $settings_definitions[$row['settinggroup']])) {
+			    // Export image file
+			    if ($settings_definitions[$row['settinggroup']][$row['varname']]['type'] === "image") {
+			        if ($row['value'] === "") {
+			            continue;
+                    }
+
+			        $_data[$index.'.image_data'] = base64_encode(file_get_contents(explode('?', $row['value'], 2)[0]));
+                }
+            }
 		}
 
 		// add checksum for validation
@@ -122,6 +140,26 @@ class SImExporter
 			}
 			// store new data
 			foreach ($_data as $index => $value) {
+                $index_split = explode('.', $index, 3);
+
+			    // Catch image_data and save it
+                if (isset($index_split[2]) && $index_split[2] === 'image_data' && !empty($_data[$index_split[0].'.'.$index_split[1]])) {
+                    $path = \Froxlor\Froxlor::getInstallDir().'/img/';
+                    if (!is_dir($path) && !mkdir($path, '0775')) {
+                        throw new \Exception("img directory does not exist and cannot be created");
+                    }
+
+                    // Make sure we can write to the upload directory
+                    if (!is_writable($path)) {
+                        if (!chmod($path, '0775')) {
+                            throw new \Exception("Cannot write to img directory");
+                        }
+                    }
+
+                    file_put_contents(\Froxlor\Froxlor::getInstallDir() . '/' . explode('?', $_data[$index_split[0].'.'.$index_split[1]], 2)[0], base64_decode($value));
+                    continue;
+                }
+
 				Settings::Set($index, $value);
 			}
 			// save to DB
