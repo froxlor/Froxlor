@@ -77,7 +77,11 @@ strong {
 }
 
 header img {
-	padding: 10px 0 10px 10px;
+	padding: 10px;
+}
+.login header img {
+	margin: 0 auto;
+	display: block;
 }
 
 img.small {
