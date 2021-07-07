@@ -14,7 +14,7 @@ use Froxlor\Settings;
  * @author Froxlor team <team@froxlor.org> (2010-)
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package Install
- *         
+ *
  */
 if (! defined('_CRON_UPDATE')) {
 	if (! defined('AREA') || (defined('AREA') && AREA != 'admin') || ! isset($userinfo['loginname']) || (isset($userinfo['loginname']) && $userinfo['loginname'] == '')) {
@@ -824,4 +824,14 @@ if (\Froxlor\Froxlor::isDatabaseVersion('202106160')) {
     lastStepStatus(0);
 
     \Froxlor\Froxlor::updateToDbVersion('202106270');
+}
+
+if (\Froxlor\Froxlor::isDatabaseVersion('202107070')) {
+
+    showUpdateStep("Adding custom logo image settings", true);
+    Settings::AddNew("panel.logo_image_header", '');
+    Settings::AddNew("panel.logo_image_login", '');
+    lastStepStatus(0);
+
+    \Froxlor\Froxlor::updateToDbVersion('202107070');
 }

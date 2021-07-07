@@ -296,6 +296,24 @@ return array(
 					'default' => '',
 					'save_method' => 'storeSettingField'
 				),
+				'panel_logo_image_header' => array(
+					'label' => $lng['serversettings']['logo_image_header'],
+					'settinggroup' => 'panel',
+					'varname' => 'logo_image_header',
+					'type' => 'image',
+					'image_name' => 'logo_header',
+					'default' => '',
+					'save_method' => 'storeSettingImage'
+				),
+				'panel_logo_image_login' => array(
+					'label' => $lng['serversettings']['logo_image_login'],
+					'settinggroup' => 'panel',
+					'varname' => 'logo_image_login',
+					'type' => 'image',
+					'image_name' => 'logo_login',
+					'default' => '',
+					'save_method' => 'storeSettingImage'
+				),
 			)
 		)
 	)

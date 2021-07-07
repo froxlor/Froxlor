@@ -1745,3 +1745,9 @@ td.size-50 {
 .footer-link:last-child:after {
         content: "";
 }
+
+.field-image-preview {
+	max-width: 300px;
+	max-height: 500px;
+	margin-bottom: 10px;
+}

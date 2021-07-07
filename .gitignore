@@ -12,10 +12,9 @@ logs/*
 .well-known
 .idea
 *.iml
+img/
 
 !templates/Froxlor/
 !templates/Sparkle/
 !templates/misc/
-templates/Sparkle/assets/img/logo_custom.png
-templates/Sparkle/assets/img/logo_custom_login.png
 vendor/

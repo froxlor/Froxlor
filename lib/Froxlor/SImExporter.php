@@ -16,9 +16,9 @@ use Froxlor\Database\Database;
  * @author Froxlor team <team@froxlor.org> (2018-)
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package Classes
- *         
+ *
  * @since 0.9.39
- *       
+ *
  */
 
 /**
@@ -70,12 +70,14 @@ class SImExporter
 				$_data[$index] = $row['value'];
 			}
 		}
+
 		// add checksum for validation
 		$_data['_sha'] = sha1(var_export($_data, true));
 		$_export = json_encode($_data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
 		if (! $_export) {
 			throw new \Exception("Error exporting settings: " . json_last_error_msg());
 		}
+
 		return $_export;
 	}
 

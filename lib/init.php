@@ -380,14 +380,8 @@ if (! array_key_exists('variants', $_themeoptions) || ! array_key_exists($themev
 
 // check for custom header-graphic
 $hl_path = 'templates/' . $theme . '/assets/img';
-$header_logo = $header_logo_login = $hl_path . '/logo.png';
-
-if (file_exists($hl_path . '/logo_custom.png')) {
-	$header_logo = $hl_path . '/logo_custom.png';
-}
-if (file_exists($hl_path . '/logo_custom_login.png')) {
-	$header_logo_login = $hl_path . '/logo_custom_login.png';
-}
+$header_logo = Settings::Get('panel.logo_image_header') ?: $hl_path . '/logo.png';
+$header_logo_login = Settings::Get('panel.logo_image_login') ?: $hl_path . '/logo.png';
 
 /**
  * Redirects to index.php (login page) if no session exists

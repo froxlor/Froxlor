@@ -367,4 +367,62 @@ class Store
 
 		return $returnvalue;
 	}
+
+	public static function storeSettingImage($fieldname, $fielddata)
+    {
+        if (isset($fielddata['settinggroup'], $fielddata['varname']) && is_array($fielddata) && $fielddata['settinggroup'] !== '' && $fielddata['varname'] !== '') {
+            $save_to = null;
+            $path = \Froxlor\Froxlor::getInstallDir().'/img/';
+
+            // New file?
+            if ($_FILES[$fieldname]['tmp_name']) {
+                // Make sure upload directory exists
+                if (!is_dir($path) && !mkdir($path, '0775')) {
+                    throw new \Exception("img directory does not exist and cannot be created");
+                }
+
+                // Make sure we can write to the upload directory
+                if (!is_writable($path)) {
+                    if (!chmod($path, '0775')) {
+                        throw new \Exception("Cannot write to img directory");
+                    }
+                }
+
+                // Determine file extension
+                $spl = explode('.', $_FILES[$fieldname]['name']);
+                $file_extension = strtolower(array_pop($spl));
+                unset($spl);
+
+                // Move file
+                if (!move_uploaded_file($_FILES[$fieldname]['tmp_name'], $path.$fielddata['image_name'].'.'.$file_extension)) {
+                    throw new \Exception("Unable to save image to img folder");
+                }
+
+                $save_to = 'img/'.$fielddata['image_name'].'.'.$file_extension.'?v='.time();
+            }
+
+            // Delete file?
+            if ($fielddata['value'] !== "" && array_key_exists($fieldname.'_delete', $_POST) && $_POST[$fieldname.'_delete']) {
+                @unlink($path . explode('?', $fielddata['value'], 2)[0]);
+                $save_to = '';
+            }
+
+            // Nothing changed
+            if ($save_to === null) {
+                return array(
+                    $fielddata['settinggroup'] . '.' . $fielddata['varname'] => $fielddata['value']
+                );
+            }
+
+            if (Settings::Set($fielddata['settinggroup'] . '.' . $fielddata['varname'], $save_to) === false) {
+                return false;
+            }
+
+            return array(
+                $fielddata['settinggroup'] . '.' . $fielddata['varname'] => $save_to
+            );
+        }
+
+        return false;
+    }
 }
