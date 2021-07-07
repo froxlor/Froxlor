@@ -1765,7 +1765,7 @@ $lng['serversettings']['privacy_url']['description'] = 'Die URL zur Datenschutze
 $lng['admin']['domaindefaultalias'] = 'Standard ServerAlias-Angabe für neue Domains';
 
 $lng['serversettings']['logo_image_header']['title'] = 'Logo Bild (Header)';
-$lng['serversettings']['logo_image_header']['description'] = 'Das hochgeladene Bild wird als Logo oben links nach dem Login angezeigt (empfohlene Höhe sind 50px)';
+$lng['serversettings']['logo_image_header']['description'] = 'Das hochgeladene Bild wird als Logo oben links nach dem Login angezeigt (empfohlene Höhe sind 30px)';
 $lng['serversettings']['logo_image_login']['title'] = 'Logo Bild (Login)';
 $lng['serversettings']['logo_image_login']['description'] = 'Das hochgeladene Bild wird als Logo während des Logins angezeigt';
 $lng['panel']['image_field_delete'] = 'Das momentan vorhandene Bild löschen';

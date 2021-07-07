@@ -2119,7 +2119,7 @@ $lng['serversettings']['privacy_url']['description'] = 'Specify an URL to your p
 $lng['admin']['domaindefaultalias'] = 'Default ServerAlias value for new domains';
 
 $lng['serversettings']['logo_image_header']['title'] = 'Logo Image (Header)';
-$lng['serversettings']['logo_image_header']['description'] = 'Upload your own logo image to be shown in the header after login (recommended height 50px)';
+$lng['serversettings']['logo_image_header']['description'] = 'Upload your own logo image to be shown in the header after login (recommended height 30px)';
 $lng['serversettings']['logo_image_login']['title'] = 'Logo Image (Login)';
 $lng['serversettings']['logo_image_login']['description'] = 'Upload your own logo image to be shown during login';
 $lng['panel']['image_field_delete'] = 'Delete the existing current image';
