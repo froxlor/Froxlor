@@ -28,7 +28,7 @@
  * @author Froxlor team <team@froxlor.org> (2010-)
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package Install
- *         
+ *
  */
 class FroxlorInstall
 {
@@ -784,7 +784,7 @@ class FroxlorInstall
 		}
 		// language selection
 		$language_options = '';
-		foreach ($this->_languages as $language_name => $language_file) {
+		foreach ($this->_languages as $language_file => $language_name) {
 			$language_options .= \Froxlor\UI\HTML::makeoption($language_name, $language_file, $this->_activelng, true, true);
 		}
 		// get language-form-template
@@ -867,19 +867,24 @@ class FroxlorInstall
 		}
 
 		// show list of available distro's
+		$distributions_select_data = [];
 		$distros = glob(\Froxlor\FileDir::makeCorrectDir(\Froxlor\Froxlor::getInstallDir() . '/lib/configfiles/') . '*.xml');
 		foreach ($distros as $_distribution) {
 			$dist = new \Froxlor\Config\ConfigParser($_distribution);
 			$dist_display = $dist->distributionName . " " . $dist->distributionCodename . " (" . $dist->distributionVersion . ")";
+			if (!array_key_exists($dist_display, $distributions_select_data)) {
+				$distributions_select_data[$dist_display] = '';
+			}
 			$distributions_select_data[$dist_display] .= str_replace(".xml", "", strtolower(basename($_distribution)));
 		}
 
 		// sort by distribution name
 		ksort($distributions_select_data);
 
+		$distributions_select = '';
 		foreach ($distributions_select_data as $dist_display => $dist_index) {
 			// create select-box-option
-			$distributions_select .= \Froxlor\UI\HTML::makeoption($dist_display, $dist_index, $this->_data['distribution']);
+			$distributions_select .= \Froxlor\UI\HTML::makeoption($dist_display, $dist_index, $this->_data['distribution'] ?? '');
 			// $this->_data['distribution']
 		}
 
@@ -947,7 +952,7 @@ class FroxlorInstall
 	 *        	optional css
 	 * @param string $type
 	 *        	optional type of input-box (default: text)
-	 *        	
+	 *
 	 * @return string
 	 */
 	private function _getSectionItemString($fieldname = null, $required = false, $style = "", $type = 'text')
@@ -994,7 +999,6 @@ class FroxlorInstall
 	 */
 	private function _getSectionItemSelectbox($fieldname = null, $options = null, $style = "")
 	{
-		$groupname = $this->_lng['install'][$groupname];
 		$fieldlabel = $this->_lng['install'][$fieldname];
 
 		$sectionitem = "";
@@ -1239,7 +1243,7 @@ class FroxlorInstall
 	 *
 	 * @param string $template
 	 *        	name of the template including subdirectory
-	 *        	
+	 *
 	 * @return string
 	 */
 	private function _getTemplate($template = null)
