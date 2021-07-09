@@ -6,6 +6,6 @@
 			<input type="checkbox" value="1" name="{$fieldname}_delete" /> {$lng['panel']['image_field_delete']}
 			<br><br>
 		</if>
-		<input <if $do_show == 0>disabled="disabled"</if> type="file" class="file" name="{$fieldname}" accept=".jpg, .jpeg, .png" />
+		<input <if $do_show == 0>disabled="disabled"</if> type="file" class="file" name="{$fieldname}" accept="image/jpeg, image/jpg, image/png, image/gif" />
 	</td>
 </tr>

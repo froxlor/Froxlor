@@ -388,6 +388,11 @@ class Store
                     }
                 }
 
+                // Make sure mime-type matches an image
+                if (!in_array(mime_content_type($_FILES[$fieldname]['tmp_name']), ['image/jpeg','image/jpg','image/png','image/gif'])) {
+                    throw new \Exception("Uploaded file not a valid image");
+                }
+
                 // Determine file extension
                 $spl = explode('.', $_FILES[$fieldname]['name']);
                 $file_extension = strtolower(array_pop($spl));
