@@ -218,7 +218,7 @@ class Fpm
 					$openbasedir .= $_phpappendopenbasedir;
 				}
 			}
-			$fpm_config .= 'php_admin_value[session.save_path] = ' . \Froxlor\FileDir::makeCorrectDir(Settings::Get('phpfpm.tmpdir') . '/' . $this->domain['loginname'] . '/') . "\n";
+
 			$fpm_config .= 'php_admin_value[upload_tmp_dir] = ' . \Froxlor\FileDir::makeCorrectDir(Settings::Get('phpfpm.tmpdir') . '/' . $this->domain['loginname'] . '/') . "\n";
 
 			$admin = $this->getAdminData($this->domain['adminid']);
@@ -259,6 +259,11 @@ class Fpm
 			// if not we use our fallback-default as usual
 			if (strpos($fpm_config, 'php_admin_value[sendmail_path]') === false) {
 				$fpm_config .= 'php_admin_value[sendmail_path] = /usr/sbin/sendmail -t -i -f ' . $this->domain['email'] . "\n";
+			}
+
+			// check for session.save_path, whether it has been specified by the user, if not, set a default
+			if (strpos($fpm_config, 'php_value[session.save_path]') === false && strpos($fpm_config, 'php_admin_value[session.save_path]') === false) {
+				$fpm_config .= 'php_admin_value[session.save_path] = ' . $this->getTempDir() . "\n";
 			}
 
 			// append custom phpfpm configuration
