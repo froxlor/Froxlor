@@ -2117,3 +2117,9 @@ $lng['privacy'] = 'Privacy policy';
 $lng['serversettings']['privacy_url']['title'] = 'URL to privacy policy';
 $lng['serversettings']['privacy_url']['description'] = 'Specify an URL to your privacy policy site / imprint site. The link will be visible on the login screen and on the footer when logged in.';
 $lng['admin']['domaindefaultalias'] = 'Default ServerAlias value for new domains';
+
+$lng['serversettings']['logo_image_header']['title'] = 'Logo Image (Header)';
+$lng['serversettings']['logo_image_header']['description'] = 'Upload your own logo image to be shown in the header after login (recommended height 30px)';
+$lng['serversettings']['logo_image_login']['title'] = 'Logo Image (Login)';
+$lng['serversettings']['logo_image_login']['description'] = 'Upload your own logo image to be shown during login';
+$lng['panel']['image_field_delete'] = 'Delete the existing current image';

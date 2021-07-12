@@ -77,7 +77,11 @@ strong {
 }
 
 header img {
-	padding: 10px 0 10px 10px;
+	padding: 10px;
+}
+.login header img {
+	margin: 0 auto;
+	display: block;
 }
 
 img.small {
@@ -1744,4 +1748,10 @@ td.size-50 {
 }
 .footer-link:last-child:after {
         content: "";
+}
+
+.field-image-preview {
+	max-width: 300px;
+	max-height: 500px;
+	margin-bottom: 10px;
 }
