@@ -2,7 +2,8 @@
 	"variants": {
 		"default": {
 			"css": [
-				"main.css"
+				"main.css",
+				"custom.css"
 			],
 			"js": [
 				"main.js",
