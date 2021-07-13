@@ -17,4 +17,5 @@ img/
 !templates/Froxlor/
 !templates/Sparkle/
 !templates/misc/
+templates/Sparkle/assets/css/custom.css
 vendor/
