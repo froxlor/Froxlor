@@ -375,7 +375,7 @@ class Store
             $path = \Froxlor\Froxlor::getInstallDir().'/img/';
 
             // New file?
-            if ($_FILES[$fieldname]['tmp_name']) {
+            if (isset($_FILES[$fieldname]) && $_FILES[$fieldname]['tmp_name']) {
                 // Make sure upload directory exists
                 if (!is_dir($path) && !mkdir($path, '0775')) {
                     throw new \Exception("img directory does not exist and cannot be created");
