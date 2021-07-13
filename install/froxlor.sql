@@ -628,7 +628,7 @@ opcache.interned_strings_buffer'),
 	('system', 'apacheitksupport', '0'),
 	('system', 'leprivatekey', 'unset'),
 	('system', 'lepublickey', 'unset'),
-	('system', 'letsencryptca', 'production'),
+	('system', 'letsencryptca', 'letsencrypt'),
 	('system', 'letsencryptcountrycode', 'DE'),
 	('system', 'letsencryptstate', 'Hessen'),
 	('system', 'letsencryptchallengepath', '/var/www/froxlor'),
@@ -715,8 +715,10 @@ opcache.interned_strings_buffer'),
 	('panel', 'imprint_url', ''),
 	('panel', 'terms_url', ''),
 	('panel', 'privacy_url', ''),
+	('panel', 'logo_image_header', ''),
+	('panel', 'logo_image_login', ''),
 	('panel', 'version', '0.10.26'),
-	('panel', 'db_version', '202106160');
+	('panel', 'db_version', '202107070');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
@@ -933,7 +935,7 @@ CREATE TABLE IF NOT EXISTS `ftp_quotalimits` (
 
 
 
-INSERT INTO `ftp_quotalimits` (`name`, `quota_type`, `per_session`, `limit_type`, `bytes_in_avail`, `bytes_out_avail`, `bytes_xfer_avail`, `files_in_avail`, `files_out_avail`, `files_xfer_avail`) VALUES 
+INSERT INTO `ftp_quotalimits` (`name`, `quota_type`, `per_session`, `limit_type`, `bytes_in_avail`, `bytes_out_avail`, `bytes_xfer_avail`, `files_in_avail`, `files_out_avail`, `files_xfer_avail`) VALUES
 	('froxlor', 'user', 'false', 'hard', 0, 0, 0, 0, 0, 0);
 
 

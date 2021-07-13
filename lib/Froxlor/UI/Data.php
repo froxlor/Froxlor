@@ -52,6 +52,12 @@ class Data
 		return $newfieldvalue;
 	}
 
+	public static function getFormFieldDataImage($fieldname, $fielddata, $input)
+    {
+        // We always make the system think we have new data to trigger the save function where we actually check everything
+        return time();
+    }
+
 	public static function manipulateFormFieldDataDate($fieldname, $fielddata, $newfieldvalue)
 	{
 		if (isset($fielddata['date_timestamp']) && $fielddata['date_timestamp'] === true) {
