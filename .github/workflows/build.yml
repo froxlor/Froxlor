@@ -27,6 +27,11 @@ jobs:
       - name: Install tools
         run: sudo apt-get install -y ant
 
+      - name: Adjust firewall
+        run: |
+          sudo ufw allow out 3306/tcp
+          sudo ufw allow in 3306/tcp
+
       - name: Setup MariaDB
         uses: getong/mariadb-action@v1.1
         with:
