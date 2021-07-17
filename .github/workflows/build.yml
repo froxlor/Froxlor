@@ -37,7 +37,7 @@ jobs:
           mysql password: 'fr0xl0r.TravisCI'
 
       - name: Setup databases
-        run: mysql -u root -pfr0xl0r.TravisCI froxlor010 < install/froxlor.sql
+        run: mysql -h 127.0.0.1 --protocol=TCP -u root -pfr0xl0r.TravisCI froxlor010 < install/froxlor.sql
 
       - name: Run testing
         run: ant phpunit-no-coverage
