@@ -38,14 +38,15 @@ jobs:
           mariadb version: ${{ matrix.mariadb-version }}
           mysql database: 'froxlor010'
           mysql root password: 'fr0xl0r.TravisCI'
-          mysql user: 'froxlor010'
-          mysql password: 'fr0xl0r.TravisCI'
 
       - name: Wait for database
         run: sleep 15
 
       - name: Setup databases
-        run: mysql -h 127.0.0.1 --protocol=TCP -u root -pfr0xl0r.TravisCI froxlor010 < install/froxlor.sql
+        run: |
+          mysql -h 127.0.0.1 --protocol=TCP -u root -pfr0xl0r.TravisCI -e "CREATE USER 'froxlor010'@'%' IDENTIFIED BY 'fr0xl0r.TravisCI';"
+          mysql -h 127.0.0.1 --protocol=TCP -u root -pfr0xl0r.TravisCI -e "GRANT ALL ON froxlor010.* TO 'froxlor010'@'%';"
+          mysql -h 127.0.0.1 --protocol=TCP -u root -pfr0xl0r.TravisCI froxlor010 < install/froxlor.sql
 
       - name: Run testing
         run: ant quick-build
