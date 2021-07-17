@@ -19,11 +19,11 @@ if (@php_sapi_name() !== 'cli') {
 $userdata_content = "<?php
 \$sql['user'] = 'froxlor010';
 \$sql['password'] = '$pwd';
-\$sql['host'] = '127.0.0.1';
+\$sql['host'] = 'localhost';
 \$sql['db'] = 'froxlor010';
 \$sql_root[0]['user'] = 'root';
 \$sql_root[0]['password'] = '$rpwd';
-\$sql_root[0]['host'] = '127.0.0.1';
+\$sql_root[0]['host'] = 'localhost';
 \$sql_root[0]['caption'] = 'Test default';
 \$sql['debug'] = true;" . PHP_EOL;
 
