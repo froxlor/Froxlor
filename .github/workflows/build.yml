@@ -41,6 +41,9 @@ jobs:
           mysql user: 'froxlor010'
           mysql password: 'fr0xl0r.TravisCI'
 
+      - name: Wait for database
+        run: sleep 15
+
       - name: Setup databases
         run: mysql -h 127.0.0.1 --protocol=TCP -u root -pfr0xl0r.TravisCI froxlor010 < install/froxlor.sql
 
