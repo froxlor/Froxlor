@@ -61,6 +61,9 @@ class MysqlsTest extends TestCase
 		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
 
+		// Set customer.mysqlprefix to DBNAME
+		Settings::Set('customer.mysqlprefix', 'DBNAME');
+
 		$newPwd = \Froxlor\System\Crypt::generatePassword();
 		$data = [
 			'mysql_password' => $newPwd,
