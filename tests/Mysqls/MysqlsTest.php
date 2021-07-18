@@ -52,6 +52,40 @@ class MysqlsTest extends TestCase
 		}
 	}
 
+	public function testCustomerMysqlsDBNameAdd() {
+		global $admin_userdata;
+
+		// get customer
+		$json_result = Customers::getLocal($admin_userdata, array(
+			'loginname' => 'test1'
+		))->get();
+		// get customer
+		$json_result = Customers::getLocal($admin_userdata, array(
+			'loginname' => 'test1'
+		))->get();
+		$customer_userdata = json_decode($json_result, true)['data'];
+
+		$newPwd = \Froxlor\System\Crypt::generatePassword();
+		$data = [
+			'mysql_password' => $newPwd,
+			'database_name' => 'abc123',
+			'description' => 'testdb',
+			'sendinfomail' => TRAVIS_CI == 1 ? 0 : 1
+		];
+		$json_result = Mysqls::getLocal($customer_userdata, $data)->add();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals('abc123', $result['database_name']);
+		$this->assertEquals(0, $result['dbserver']);
+
+		// test connection
+		try {
+			$test_conn = new \PDO("mysql:host=127.0.0.1", 'test1_abc123', $newPwd);
+			unset($test_conn);
+		} catch (PDOException $e) {
+			$this->fail($e->getMessage());
+		}
+	}
+
 	/**
 	 *
 	 * @depends testCustomerMysqlsAdd
@@ -136,7 +170,7 @@ class MysqlsTest extends TestCase
 		}
 	}
 
-	
+
 	/**
 	 *
 	 * @depends testCustomerMysqlsAdd
@@ -144,7 +178,7 @@ class MysqlsTest extends TestCase
 	public function testAdminMysqlsUpdatePwdOnly()
 	{
 		global $admin_userdata;
-		
+
 		$newPwd = \Froxlor\System\Crypt::generatePassword();
 		$data = [
 			'dbname' => 'test1sql1',
