@@ -24,7 +24,7 @@ return array(
 				'title' => $lng['mysql']['database_create'],
 				'image' => 'icons/mysql_add.png',
 				'fields' => array(
-					'database_name' => array(
+					'custom_suffix' => array(
 						'visible' => (strtoupper(Settings::Get('customer.mysqlprefix')) == 'DBNAME') ? true : false,
 						'label' => $lng['mysql']['databasename'],
 						'type' => 'text'

@@ -67,7 +67,7 @@ class MysqlsTest extends TestCase
 		$newPwd = \Froxlor\System\Crypt::generatePassword();
 		$data = [
 			'mysql_password' => $newPwd,
-			'database_name' => 'abc123',
+			'custom_suffix' => 'abc123',
 			'description' => 'testdb',
 			'sendinfomail' => TRAVIS_CI == 1 ? 0 : 1
 		];

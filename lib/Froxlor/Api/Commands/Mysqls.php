@@ -31,7 +31,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	optional, default is 0
 	 * @param string $description
 	 *        	optional, description for database
-	 * @param string $name
+	 * @param string $custom_suffix
 	 *			optional, name for database
 	 * @param bool $sendinfomail
 	 *        	optional, send created resource-information to customer, default: false
@@ -52,7 +52,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		// parameters
 		$dbserver = $this->getParam('mysql_server', true, 0);
 		$databasedescription = $this->getParam('description', true, '');
-		$databasename = $this->getParam('database_name', true, '');
+		$databasename = $this->getParam('custom_suffix', true, '');
 		$sendinfomail = $this->getBoolParam('sendinfomail', true, 0);
 		// get needed customer info to reduce the mysql-usage-counter by one
 		$customer = $this->getCustomerData('mysqls');
