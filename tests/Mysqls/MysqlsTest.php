@@ -74,7 +74,7 @@ class MysqlsTest extends TestCase
 		];
 		$json_result = Mysqls::getLocal($customer_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
-		$this->assertEquals('abc123', $result['database_name']);
+		$this->assertEquals('abc123', $result['databasename']);
 		$this->assertEquals(0, $result['dbserver']);
 
 		// test connection
