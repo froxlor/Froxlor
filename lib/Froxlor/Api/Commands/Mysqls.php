@@ -17,7 +17,7 @@ use Froxlor\Settings;
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package API
  * @since 0.10.0
- *       
+ *
  */
 class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntity
 {
@@ -37,7 +37,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	optional, required when called as admin (if $loginname is not specified)
 	 * @param string $loginname
 	 *        	optional, required when called as admin (if $customerid is not specified)
-	 *        	
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -81,7 +81,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		);
 		// create database, user, set permissions, etc.pp.
 		$dbm = new \Froxlor\Database\DbManager($this->logger());
-		
+
 		if(strtoupper(Settings::Get('customer.mysqlprefix')) == 'DBNAME' && !empty($databasename)) {
 			$username = $dbm->createDatabase($newdb_params['loginname'].'_'.$databasename, $password);
 		} else {
@@ -188,7 +188,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	optional, the databasename
 	 * @param int $mysql_server
 	 *        	optional, specify database-server, default is none
-	 *        	
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -288,7 +288,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	optional, required when called as admin (if $loginname is not specified)
 	 * @param string $loginname
 	 *        	optional, required when called as admin (if $customerid is not specified)
-	 *        	
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -377,7 +377,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	optional specify offset for resultset
 	 * @param array $sql_orderby
 	 *        	optional array with index = fieldname and value = ASC|DESC to order the resultset by one or more fields
-	 *        	
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array count|list
@@ -441,7 +441,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	optional, admin-only, select dbs of a specific customer by id
 	 * @param string $loginname
 	 *        	optional, admin-only, select dbs of a specific customer by loginname
-	 *        	
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -472,7 +472,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	optional, required when called as admin (if $loginname is not specified)
 	 * @param string $loginname
 	 *        	optional, required when called as admin (if $customerid is not specified)
-	 *        	
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array
