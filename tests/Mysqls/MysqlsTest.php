@@ -59,10 +59,6 @@ class MysqlsTest extends TestCase
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
 		))->get();
-		// get customer
-		$json_result = Customers::getLocal($admin_userdata, array(
-			'loginname' => 'test1'
-		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
 
 		$newPwd = \Froxlor\System\Crypt::generatePassword();
