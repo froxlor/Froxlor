@@ -1832,15 +1832,15 @@ $lng['opcacheinfo']['false'] = '<i>false</i>';
 
 // Added for let's encrypt
 $lng['admin']['letsencrypt']['title'] = 'Use Let\'s Encrypt';
-$lng['admin']['letsencrypt']['description'] = 'Get a free certificate from <a href="https://letsencrypt.org">Let\'s Encrypt</a>. The certificate will be created and renewed automatically.<br><strong class="red">ATTENTION:</strong> If wildcards are enabled, this option will automatically be disabled. This feature is still in beta.';
+$lng['admin']['letsencrypt']['description'] = 'Get a free certificate from <a href="https://letsencrypt.org">Let\'s Encrypt</a>. The certificate will be created and renewed automatically.<br><strong class="red">ATTENTION:</strong> If wildcards are enabled, this option will automatically be disabled.';
 $lng['customer']['letsencrypt']['title'] = 'Use Let\'s Encrypt';
-$lng['customer']['letsencrypt']['description'] = 'Get a free certificate from <a href="https://letsencrypt.org">Let\'s Encrypt</a>. The certificate will be created and renewed automatically.<br><strong class="red">ATTENTION:</strong> This feature is still in beta.';
+$lng['customer']['letsencrypt']['description'] = 'Get a free certificate from <a href="https://letsencrypt.org">Let\'s Encrypt</a>. The certificate will be created and renewed automatically.';
 $lng['error']['sslredirectonlypossiblewithsslipport'] = 'Using Let\'s Encrypt is only possible when the domain has at least one ssl-enabled IP/port combination assigned.';
 $lng['error']['nowildcardwithletsencrypt'] = 'Let\'s Encrypt cannot handle wildcard-domains using ACME in froxlor (requires dns-challenge), sorry. Please set the ServerAlias to WWW or disable it completely';
 $lng['panel']['letsencrypt'] = 'Using Let\'s encrypt';
 $lng['crondesc']['cron_letsencrypt'] = 'updating Let\'s Encrypt certificates';
-$lng['serversettings']['letsencryptca']['title'] = "Let's Encrypt environment";
-$lng['serversettings']['letsencryptca']['description'] = "Environment to be used for Let's Encrypt certificates.";
+$lng['serversettings']['letsencryptca']['title'] = "ACME environment";
+$lng['serversettings']['letsencryptca']['description'] = "Environment to be used for Let's Encrypt / ZeroSSL certificates.";
 $lng['serversettings']['letsencryptcountrycode']['title'] = "Let's Encrypt country code";
 $lng['serversettings']['letsencryptcountrycode']['description'] = "2 letter country code used to generate Let's Encrypt certificates.";
 $lng['serversettings']['letsencryptstate']['title'] = "Let's Encrypt state";
@@ -2116,3 +2116,10 @@ $lng['serversettings']['terms_url']['description'] = 'Specify an URL to your ter
 $lng['privacy'] = 'Privacy policy';
 $lng['serversettings']['privacy_url']['title'] = 'URL to privacy policy';
 $lng['serversettings']['privacy_url']['description'] = 'Specify an URL to your privacy policy site / imprint site. The link will be visible on the login screen and on the footer when logged in.';
+$lng['admin']['domaindefaultalias'] = 'Default ServerAlias value for new domains';
+
+$lng['serversettings']['logo_image_header']['title'] = 'Logo Image (Header)';
+$lng['serversettings']['logo_image_header']['description'] = 'Upload your own logo image to be shown in the header after login (recommended height 30px)';
+$lng['serversettings']['logo_image_login']['title'] = 'Logo Image (Login)';
+$lng['serversettings']['logo_image_login']['description'] = 'Upload your own logo image to be shown during login';
+$lng['panel']['image_field_delete'] = 'Delete the existing current image';

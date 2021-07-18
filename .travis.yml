@@ -55,7 +55,7 @@ script:
   - ant phpunit-no-coverage
 
 notifications:
-  irc: "chat.freenode.net#froxlor"
+  irc: "irc.libera.chat#froxlor"
   webhooks:
     urls:
       - https://webhooks.gitter.im/e/bdf91d1c3f745e51f796

@@ -290,9 +290,9 @@ if ($page == 'domains' || $page == 'overview') {
 
 			// create serveralias options
 			$serveraliasoptions = "";
-			$serveraliasoptions .= \Froxlor\UI\HTML::makeoption($lng['domains']['serveraliasoption_wildcard'], '0', '0', true, true);
-			$serveraliasoptions .= \Froxlor\UI\HTML::makeoption($lng['domains']['serveraliasoption_www'], '1', '0', true, true);
-			$serveraliasoptions .= \Froxlor\UI\HTML::makeoption($lng['domains']['serveraliasoption_none'], '2', '0', true, true);
+			$serveraliasoptions .= \Froxlor\UI\HTML::makeoption($lng['domains']['serveraliasoption_wildcard'], '0', Settings::Get('system.domaindefaultalias'), true, true);
+			$serveraliasoptions .= \Froxlor\UI\HTML::makeoption($lng['domains']['serveraliasoption_www'], '1', Settings::Get('system.domaindefaultalias'), true, true);
+			$serveraliasoptions .= \Froxlor\UI\HTML::makeoption($lng['domains']['serveraliasoption_none'], '2', Settings::Get('system.domaindefaultalias'), true, true);
 
 			$subcanemaildomain = \Froxlor\UI\HTML::makeoption($lng['admin']['subcanemaildomain']['never'], '0', '0', true, true);
 			$subcanemaildomain .= \Froxlor\UI\HTML::makeoption($lng['admin']['subcanemaildomain']['choosableno'], '1', '0', true, true);

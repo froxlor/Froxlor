@@ -142,6 +142,9 @@ return array(
 					'default' => '/etc/apache2/conf-enabled/acme.conf',
 					'save_method' => 'storeSettingField'
 				),
+			    /**
+			     * currently the only option anyway
+			     *
 				'system_leapiversion' => array(
 					'label' => $lng['serversettings']['leapiversion'],
 					'settinggroup' => 'system',
@@ -154,16 +157,18 @@ return array(
 					),
 					'save_method' => 'storeSettingField'
 				),
+				*/
 				'system_letsencryptca' => array(
 					'label' => $lng['serversettings']['letsencryptca'],
 					'settinggroup' => 'system',
 					'varname' => 'letsencryptca',
 					'type' => 'option',
-					'default' => 'production',
+					'default' => 'letsencrypt',
 					'option_mode' => 'one',
 					'option_options' => array(
-						'testing' => 'https://acme-staging-v0' . \Froxlor\Settings::Get('system.leapiversion') . '.api.letsencrypt.org (Test)',
-						'production' => 'https://acme-v0' . \Froxlor\Settings::Get('system.leapiversion') . '.api.letsencrypt.org (Live)'
+						'letsencrypt_test' => 'Let\'s Encrypt (Test / Staging)',
+						'letsencrypt' => 'Let\'s Encrypt (Live)',
+					    'zerossl' => 'ZeroSSL (Live)'
 					),
 					'save_method' => 'storeSettingField'
 				),

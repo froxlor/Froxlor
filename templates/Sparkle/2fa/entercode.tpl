@@ -1,7 +1,7 @@
 $header
 	<article class="login bradius">
 		<header class="dark">
-			<img src="{$header_logo}" alt="Froxlor Server Management Panel" />
+			<img src="{$header_logo_login}" alt="Froxlor Server Management Panel" />
 		</header>
 			<section class="loginsec">
 				<form method="post" action="{$filename}" enctype="application/x-www-form-urlencoded">

@@ -7,10 +7,10 @@ final class Froxlor
 {
 
 	// Main version variable
-	const VERSION = '0.10.26';
+	const VERSION = '0.10.27';
 
 	// Database version (YYYYMMDDC where C is a daily counter)
-	const DBVERSION = '202103240';
+	const DBVERSION = '202107070';
 
 	// Distribution branding-tag (used for Debian etc.)
 	const BRANDING = '';
@@ -63,7 +63,7 @@ final class Froxlor
 	 *
 	 * @param string $to_check
 	 *        	version to check, if empty current version is used
-	 *        	
+	 *
 	 * @return bool true if version to check does not match, else false
 	 */
 	public static function hasUpdates($to_check = null)
@@ -84,7 +84,7 @@ final class Froxlor
 	 *
 	 * @param int $to_check
 	 *        	version to check, if empty current dbversion is used
-	 *        	
+	 *
 	 * @return bool true if version to check does not match, else false
 	 */
 	public static function hasDbUpdates($to_check = null)
@@ -105,7 +105,7 @@ final class Froxlor
 	 *
 	 * @param int $to_check
 	 *        	version to check
-	 *        	
+	 *
 	 * @return bool true if version to check matches, else false
 	 */
 	public static function isDatabaseVersion($to_check = null)
@@ -124,7 +124,7 @@ final class Froxlor
 	 *
 	 * @param string $new_version
 	 *        	new-version
-	 *        	
+	 *
 	 * @return bool true on success, else false
 	 */
 	public static function updateToDbVersion($new_version = null)
@@ -150,7 +150,7 @@ final class Froxlor
 	 *
 	 * @param string $new_version
 	 *        	new-version
-	 *        	
+	 *
 	 * @return bool true on success, else false
 	 */
 	public static function updateToVersion($new_version = null)
@@ -191,7 +191,7 @@ final class Froxlor
 	 *
 	 * @param string $to_check
 	 *        	version to check
-	 *        	
+	 *
 	 * @return bool true if version to check matches, else false
 	 */
 	public static function isFroxlorVersion($to_check = null)

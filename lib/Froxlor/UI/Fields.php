@@ -89,6 +89,15 @@ class Fields
 		return $returnvalue;
 	}
 
+    public static function getFormFieldOutputImage($fieldname, $fielddata, $do_show = true)
+    {
+        global $lng;
+        $label = $fielddata['label'];
+        $value = htmlentities($fielddata['value']);
+        eval("\$returnvalue = \"" . \Froxlor\UI\Template::getTemplate("formfields/image", true) . "\";");
+        return $returnvalue;
+    }
+
 	public static function getFormFieldOutputDate($fieldname, $fielddata, $do_show = true)
 	{
 		if (isset($fielddata['date_timestamp']) && $fielddata['date_timestamp'] === true) {
