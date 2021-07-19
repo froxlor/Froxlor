@@ -52,6 +52,39 @@ class MysqlsTest extends TestCase
 		}
 	}
 
+	public function testCustomerMysqlsDBNameAdd() {
+		global $admin_userdata;
+
+		// get customer
+		$json_result = Customers::getLocal($admin_userdata, array(
+			'loginname' => 'test1'
+		))->get();
+		$customer_userdata = json_decode($json_result, true)['data'];
+
+		// Set customer.mysqlprefix to DBNAME
+		Settings::Set('customer.mysqlprefix', 'DBNAME');
+
+		$newPwd = \Froxlor\System\Crypt::generatePassword();
+		$data = [
+			'mysql_password' => $newPwd,
+			'custom_suffix' => 'abc123',
+			'description' => 'testdb',
+			'sendinfomail' => TRAVIS_CI == 1 ? 0 : 1
+		];
+		$json_result = Mysqls::getLocal($customer_userdata, $data)->add();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals('test1_abc123', $result['databasename']);
+		$this->assertEquals(0, $result['dbserver']);
+
+		// test connection
+		try {
+			$test_conn = new \PDO("mysql:host=127.0.0.1", 'test1_abc123', $newPwd);
+			unset($test_conn);
+		} catch (PDOException $e) {
+			$this->fail($e->getMessage());
+		}
+	}
+
 	/**
 	 *
 	 * @depends testCustomerMysqlsAdd
@@ -136,7 +169,7 @@ class MysqlsTest extends TestCase
 		}
 	}
 
-	
+
 	/**
 	 *
 	 * @depends testCustomerMysqlsAdd
@@ -144,7 +177,7 @@ class MysqlsTest extends TestCase
 	public function testAdminMysqlsUpdatePwdOnly()
 	{
 		global $admin_userdata;
-		
+
 		$newPwd = \Froxlor\System\Crypt::generatePassword();
 		$data = [
 			'dbname' => 'test1sql1',
@@ -172,12 +205,13 @@ class MysqlsTest extends TestCase
 
 		$json_result = Mysqls::getLocal($customer_userdata)->listing();
 		$result = json_decode($json_result, true)['data'];
-		$this->assertEquals(1, $result['count']);
+		$this->assertEquals(2, $result['count']);
 		$this->assertEquals('test1sql1', $result['list'][0]['databasename']);
+		$this->assertEquals('test1_abc123', $result['list'][1]['databasename']);
 
 		$json_result = Mysqls::getLocal($customer_userdata)->listingCount();
 		$result = json_decode($json_result, true)['data'];
-		$this->assertEquals(1, $result);
+		$this->assertEquals(2, $result);
 	}
 
 	/**
@@ -200,6 +234,28 @@ class MysqlsTest extends TestCase
 		$json_result = Mysqls::getLocal($customer_userdata, $data)->delete();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals('test1sql1', $result['databasename']);
+	}
+
+	/**
+	 *
+	 * @depends testCustomerMysqlsList
+	 */
+	public function testCustomerMysqlsDBNameDelete()
+	{
+		global $admin_userdata;
+
+		// get customer
+		$json_result = Customers::getLocal($admin_userdata, array(
+			'loginname' => 'test1'
+		))->get();
+		$customer_userdata = json_decode($json_result, true)['data'];
+
+		$data = [
+			'dbname' => 'test1_abc123'
+		];
+		$json_result = Mysqls::getLocal($customer_userdata, $data)->delete();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals('test1_abc123', $result['databasename']);
 	}
 
 	/**
