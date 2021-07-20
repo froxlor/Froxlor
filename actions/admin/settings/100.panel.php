@@ -297,7 +297,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'panel_logo_overridetheme' => array(
-					'label' => $lng['panel']['logo_overridetheme'],
+					'label' => $lng['serversettings']['logo_overridetheme'],
 					'settinggroup' => 'panel',
 					'varname' => 'logo_overridetheme',
 					'type' => 'bool',
@@ -305,7 +305,7 @@ return array(
 					'save_method' => 'storeSettingField'
 				),
 				'panel_logo_overridecustom' => array(
-					'label' => $lng['panel']['logo_overridecustom'],
+					'label' => $lng['serversettings']['logo_overridecustom'],
 					'settinggroup' => 'panel',
 					'varname' => 'logo_overridecustom',
 					'type' => 'bool',
