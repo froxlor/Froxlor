@@ -386,7 +386,7 @@ class Dns
 			$soa_content = $primary_ns . " " . self::escapeSoaAdminMail($soa_email) . " ";
 			$soa_content .= $domain['bindserial'] . " ";
 			// TODO for now, dummy time-periods
-			$soa_content .= "3600 900 604800 " . (int) Settings::Get('system.defaultttl');
+			$soa_content .= "3600 900 1209600 1200";
 
 			$soa_record = new DnsEntry('@', 'SOA', $soa_content);
 			array_unshift($zonerecords, $soa_record);
