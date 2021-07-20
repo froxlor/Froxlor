@@ -867,3 +867,11 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.26')) {
 	showUpdateStep("Updating from 0.10.26 to 0.10.27", false);
 	\Froxlor\Froxlor::updateToVersion('0.10.27');
 }
+
+if (\Froxlor\Froxlor::isDatabaseVersion('202107070')) {
+	showUpdateStep("Adding settings to overwrite theme- or custom theme-logo with the new logo settings", true);
+	Settings::AddNew("panel.logo_overridetheme", '0');
+	Settings::AddNew("panel.logo_overridecustom", '0');
+	lastStepStatus(0);
+	\Froxlor\Froxlor::updateToDbVersion('202107200');
+}

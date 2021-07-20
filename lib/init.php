@@ -380,8 +380,24 @@ if (! array_key_exists('variants', $_themeoptions) || ! array_key_exists($themev
 
 // check for custom header-graphic
 $hl_path = 'templates/' . $theme . '/assets/img';
-$header_logo = Settings::Get('panel.logo_image_header') ?: $hl_path . '/logo.png';
-$header_logo_login = Settings::Get('panel.logo_image_login') ?: $hl_path . '/logo.png';
+
+// default is theme-image
+$header_logo = $hl_path . '/logo.png';
+$header_logo_login = $hl_path . '/logo.png';
+
+if (Settings::Get('panel.logo_overridetheme') == 1 || Settings::Get('panel.logo_overridecustom') == 1) {
+	// logo settings shall overwrite theme logo and possible custom logo
+	$header_logo = Settings::Get('panel.logo_image_header') ?: $header_logo;
+	$header_logo_login = Settings::Get('panel.logo_image_login') ?: $header_logo_login;
+}
+if (Settings::Get('panel.logo_overridecustom') == 0 && file_exists($hl_path . '/logo_custom.png')) {
+	// custom theme image (logo_custom.png) is not being overwritten by logo_image_* setting
+	$header_logo = $hl_path . '/logo_custom.png';
+	$header_logo_login = $hl_path . '/logo_custom.png';
+	if (file_exists($hl_path . '/logo_custom_login.png')) {
+		$header_logo_login = $hl_path . '/logo_custom_login.png';
+	}
+}
 
 /**
  * Redirects to index.php (login page) if no session exists

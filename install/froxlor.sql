@@ -717,8 +717,10 @@ opcache.interned_strings_buffer'),
 	('panel', 'privacy_url', ''),
 	('panel', 'logo_image_header', ''),
 	('panel', 'logo_image_login', ''),
+	('panel', 'logo_overridetheme', '0'),
+	('panel', 'logo_overridecustom', '0'),
 	('panel', 'version', '0.10.27'),
-	('panel', 'db_version', '202107070');
+	('panel', 'db_version', '202107200');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

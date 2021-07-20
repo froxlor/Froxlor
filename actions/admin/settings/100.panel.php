@@ -296,6 +296,22 @@ return array(
 					'default' => '',
 					'save_method' => 'storeSettingField'
 				),
+				'panel_logo_overridetheme' => array(
+					'label' => $lng['panel']['logo_overridetheme'],
+					'settinggroup' => 'panel',
+					'varname' => 'logo_overridetheme',
+					'type' => 'bool',
+					'default' => false,
+					'save_method' => 'storeSettingField'
+				),
+				'panel_logo_overridecustom' => array(
+					'label' => $lng['panel']['logo_overridecustom'],
+					'settinggroup' => 'panel',
+					'varname' => 'logo_overridecustom',
+					'type' => 'bool',
+					'default' => false,
+					'save_method' => 'storeSettingField'
+				),
 				'panel_logo_image_header' => array(
 					'label' => $lng['serversettings']['logo_image_header'],
 					'settinggroup' => 'panel',
