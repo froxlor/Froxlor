@@ -218,12 +218,12 @@ $lng['error']['nomailbodycreate'] = 'Musíš definovat text emailu pro tuto emai
 $lng['error']['templatenotfound'] = 'Šablona nebyla nalezena.';
 $lng['error']['alltemplatesdefined'] = 'Nemůžeš nadefinovat více šablon, všechny jazyky jsou již podporovány.';
 $lng['error']['wwwnotallowed'] = 'www není povolena pro subdomény.';
-$lng['error']['subdomainiswrong'] = 'The subdomain %s contains invalid characters.';
-$lng['error']['domaincantbeempty'] = 'The domain-name can not be empty.';
-$lng['error']['domainexistalready'] = 'The domain %s already exists.';
+$lng['error']['subdomainiswrong'] = 'Subdoména %s nemůže obsahovat neplatné znaky.';
+$lng['error']['domaincantbeempty'] = 'Název domény nemůže být prázdná.';
+$lng['error']['domainexistalready'] = 'Doména %s již existuje.';
 $lng['error']['domainisaliasorothercustomer'] = 'The selected alias domain is either itself an alias domain, has a different ip/port combination or belongs to another customer.';
-$lng['error']['emailexistalready'] = 'The email-address %s already exists.';
-$lng['error']['maindomainnonexist'] = 'The main-domain %s does not exist.';
+$lng['error']['emailexistalready'] = 'Emailová adresa %s již existuje.';
+$lng['error']['maindomainnonexist'] = 'Hlavní doména %s neexistuje.';
 $lng['error']['destinationnonexist'] = 'Please create your forwarder in the field \'Destination\'.';
 $lng['error']['destinationalreadyexistasmail'] = 'The forwarder to %s already exists as active email-address.';
 $lng['error']['destinationalreadyexist'] = 'You have already defined a forwarder to "%s"';
@@ -583,7 +583,7 @@ $lng['admin']['ipsandports']['create_vhostcontainer_servername_statement'] = 'Cr
 
 // ADDED IN 1.2.18-svn2
 
-$lng['admin']['webalizersettings'] = 'Webalizer settings';
+$lng['admin']['webalizersettings'] = 'Webalizer nastavení';
 $lng['admin']['webalizer']['normal'] = 'Normální';
 $lng['admin']['webalizer']['quiet'] = 'Tiché';
 $lng['admin']['webalizer']['veryquiet'] = 'Bez výstupu';
@@ -657,8 +657,8 @@ $lng['logger']['truncate'] = 'Prázdný log';
 $lng['serversettings']['ssl']['use_ssl']['title'] = 'Povolit SSL využití';
 $lng['serversettings']['ssl']['use_ssl']['description'] = 'Tohle zaškrtni, pokud chceš používat SSL pro tvůj webový server';
 $lng['serversettings']['ssl']['ssl_cert_file']['title'] = 'Cesta k SSL certifikátu';
-$lng['serversettings']['ssl']['ssl_cert_file']['description'] = 'Specify the path including the filename of the .crt or .pem file (main certificate)';
-$lng['serversettings']['ssl']['openssl_cnf'] = 'Defaults for creating the Cert file';
+$lng['serversettings']['ssl']['ssl_cert_file']['description'] = 'Specifikujte cestu k souboru obsahující v názvu .crt nebo .pem koncovku (hlavní certifikát)';
+$lng['serversettings']['ssl']['openssl_cnf'] = 'Výchozí nastavení pro tvorbu Cert souboru';
 $lng['panel']['reseller'] = 'prodejce';
 $lng['panel']['admin'] = 'admin';
 $lng['panel']['customer'] = 'zákazník/ci';
@@ -675,10 +675,10 @@ $lng['admin']['receipient'] = 'Příjemce';
 $lng['admin']['message'] = 'Napsat zprávu';
 $lng['admin']['text'] = 'Zpráva';
 $lng['menu']['message'] = 'Zprávy';
-$lng['error']['errorsendingmail'] = 'The message to "%s" failed';
+$lng['error']['errorsendingmail'] = 'Zpráva uživateli "%s" selhala';
 $lng['error']['cannotreaddir'] = 'Nelze přečíst adresář "%s"';
 $lng['message']['success'] = 'Zpráva úspěšně odeslána %s příjemcům,';
-$lng['message']['noreceipients'] = 'No e-mail has been sent because there are no recipients in the database';
+$lng['message']['noreceipients'] = 'Email nebyl odeslán, protože databáze neobsahuje žádné příjemce';
 $lng['admin']['sslsettings'] = 'SSL nastavení';
 $lng['cronjobs']['notyetrun'] = 'Ještě nespuštěno';
 $lng['serversettings']['default_vhostconf']['title'] = 'Výchozí vHost-nastavení';
@@ -709,8 +709,8 @@ $lng['admin']['caneditphpsettings'] = 'Může změnit doménové nastavení spoj
 // ADDED IN 1.2.19-svn12
 
 $lng['admin']['allips'] = 'Všechny IP';
-$lng['panel']['nosslipsavailable'] = 'There are currently no ssl ip/port combinations for this server';
-$lng['dkim']['use_dkim']['title'] = 'Activate DKIM support?';
+$lng['panel']['nosslipsavailable'] = 'Momentálně zde nejsou žádné ssl ip/port kombinace pro tento server';
+$lng['dkim']['use_dkim']['title'] = 'Aktivovat DKIM podporu?';
 $lng['dkim']['use_dkim']['description'] = 'Would you like to use the Domain Keys (DKIM) system?<br/><em class="red">Note: DKIM is only supported using dkim-filter, not opendkim (yet)</em>';
 $lng['error']['invalidmysqlhost'] = 'Invalid MySQL host address: %s';
 $lng['error']['cannotuseawstatsandwebalizeratonetime'] = 'You cannot enable Webalizer and AWstats at the same time, please chose one of them';
@@ -740,9 +740,9 @@ $lng['admin']['or'] = 'or';
 
 // ADDED IN 1.2.19-svn17
 
-$lng['serversettings']['unix_names']['title'] = 'Use UNIX compatible usernames';
+$lng['serversettings']['unix_names']['title'] = 'Použít kompatibilní přezdívky s UNIX ';
 $lng['serversettings']['unix_names']['description'] = 'Allows you to use <strong>-</strong> and <strong>_</strong> in usernames if <strong>No</strong>';
-$lng['error']['cannotwritetologfile'] = 'Cannot open logfile %s for writing';
+$lng['error']['cannotwritetologfile'] = 'Nelze otevřít log soubor %s pro zápis';
 $lng['admin']['sysload'] = 'Systémové zatížení';
 $lng['admin']['noloadavailable'] = 'nedostupné';
 $lng['admin']['nouptimeavailable'] = 'nedostupné';
@@ -765,7 +765,7 @@ $lng['pwdreminder']['notallowed'] = 'Resetování hesla je vypnuto';
 
 // ADDED IN 1.2.19-svn21
 
-$lng['customer']['title'] = 'Title';
+$lng['customer']['title'] = 'Oslovení';
 $lng['customer']['country'] = 'Země';
 $lng['panel']['dateformat'] = 'RRRR-MM-DD';
 $lng['panel']['dateformat_function'] = 'R-m-d';
@@ -843,7 +843,7 @@ $lng['panel']['view'] = 'view';
 $lng['question']['phpsetting_reallydelete'] = 'Do you really want to delete these settings? All domains which use these settings currently will be changed to the default config.';
 $lng['question']['fpmsetting_reallydelete'] = 'Do you really want to delete these php-fpm settings? All php configurations which use these settings currently will be changed to the default config.';
 $lng['admin']['phpsettings']['addnew'] = 'Vytvořit novou PHP konfiguraci';
-$lng['admin']['fpmsettings']['addnew'] = 'Create new PHP version';
+$lng['admin']['fpmsettings']['addnew'] = 'Vytvořit novou PHP verzi';
 $lng['error']['phpsettingidwrong'] = 'Konfigurace s tímto ID neexistuje';
 $lng['error']['descriptioninvalid'] = 'Popis je moc krátký, dlouhý nebo obsahuje nepovolené znaky.';
 $lng['error']['info'] = 'Info';
@@ -878,16 +878,16 @@ $lng['admin']['templates']['ADMIN'] = 'Replaced with the loginname of the admin.
 $lng['admin']['templates']['CUSTOMER_EMAIL'] = 'Replaced with the e-mail address of the customer.';
 $lng['admin']['templates']['ADMIN_EMAIL'] = 'Replaced with the e-mail address of the admin.';
 $lng['admin']['templates']['filetemplates'] = 'File templates';
-$lng['admin']['templates']['filecontent'] = 'File content';
+$lng['admin']['templates']['filecontent'] = 'Öbsah souboru';
 $lng['error']['filecontentnotset'] = 'Soubor nemůže být prázdný!';
 $lng['serversettings']['index_file_extension']['description'] = 'Which file extension should be used for the index file in newly created customer directories? This file extension will be used, if you or one of your admins has created its own index file template.';
 $lng['serversettings']['index_file_extension']['title'] = 'File extension for index file in newly created customer directories';
 $lng['error']['index_file_extension'] = 'The file extension for the index file must be between 1 and 6 characters long. The extension can only contain characters like a-z, A-Z and 0-9';
-$lng['admin']['expert_settings'] = 'Expert settings!';
+$lng['admin']['expert_settings'] = 'Expertní nastavení!';
 $lng['admin']['mod_fcgid_starter']['title'] = 'PHP Processes for this domain (empty for default value)';
 
-$lng['error']['customerdoesntexist'] = 'The customer you have chosen doesn\'t exist.';
-$lng['error']['admindoesntexist'] = 'The admin you have chosen doesn\'t exist.';
+$lng['error']['customerdoesntexist'] = 'Zvolený zákazník neexistuje.';
+$lng['error']['admindoesntexist'] = 'Zvolený administrátor neexistuje.';
 
 // ADDED IN 1.2.19-svn37
 
@@ -898,7 +898,7 @@ $lng['serversettings']['panel_allow_domain_change_admin']['description'] = 'If a
 $lng['serversettings']['panel_allow_domain_change_customer']['title'] = 'Allow moving domains between customers';
 $lng['serversettings']['panel_allow_domain_change_customer']['description'] = 'If activated you can change the customer of a domain at domainsettings.<br /><b>Attention:</b> Froxlor won\'t change any paths. This could render a domain unusable!';
 $lng['domains']['associated_with_domain'] = 'Associated';
-$lng['domains']['aliasdomains'] = 'Alias domains';
+$lng['domains']['aliasdomains'] = 'Alias domén';
 $lng['error']['ipportdoesntexist'] = 'The ip/port combination you have chosen doesn\'t exist.';
 
 // ADDED IN 1.2.19-svn38
@@ -906,9 +906,9 @@ $lng['error']['ipportdoesntexist'] = 'The ip/port combination you have chosen do
 $lng['admin']['phpserversettings'] = 'PHP nastavení';
 $lng['admin']['phpsettings']['binary'] = 'PHP Binary';
 $lng['admin']['phpsettings']['fpmdesc'] = 'PHP-FPM konfigurace';
-$lng['admin']['phpsettings']['file_extensions'] = 'File extensions';
-$lng['admin']['phpsettings']['file_extensions_note'] = '(without dot, separated by spaces)';
-$lng['admin']['mod_fcgid_maxrequests']['title'] = 'Maximum php requests for this domain (empty for default value)';
+$lng['admin']['phpsettings']['file_extensions'] = 'Přípony souborů';
+$lng['admin']['phpsettings']['file_extensions_note'] = '(bez tečky, oddělené mezerou)';
+$lng['admin']['mod_fcgid_maxrequests']['title'] = 'Maximum php žádostí pro tuto doménu (ponechte prázdné pro výchozí hodnotu)';
 $lng['serversettings']['mod_fcgid']['maxrequests']['title'] = 'Maximum požadavků na doménu';
 $lng['serversettings']['mod_fcgid']['maxrequests']['description'] = 'Kolik požadavků na doménu by mělo být povoleno?';
 
@@ -918,7 +918,7 @@ $lng['mysql']['mysql_server'] = 'MySQL-Server';
 
 // ADDED IN 1.4.2.1-2
 
-$lng['admin']['ipsandports']['webserverdefaultconfig'] = 'Webserver default config';
+$lng['admin']['ipsandports']['webserverdefaultconfig'] = 'Výchozí konfigurace Webserveru';
 $lng['admin']['ipsandports']['webserverdomainconfig'] = 'Webserver domain config';
 $lng['admin']['ipsandports']['webserverssldomainconfig'] = 'Webserver SSL config';
 $lng['admin']['ipsandports']['ssl_key_file'] = 'Path to the SSL Keyfile';
@@ -968,7 +968,7 @@ $lng['tasks']['noneoutstanding'] = 'There are currently no outstanding tasks for
 // ADDED IN FROXLOR 0.9.1
 
 $lng['admin']['accountdata'] = 'Account Data';
-$lng['admin']['contactdata'] = 'Contact Data';
+$lng['admin']['contactdata'] = 'Kontaktní data';
 $lng['admin']['servicedata'] = 'Service Data';
 
 // ADDED IN FROXLOR 0.9.2
@@ -1005,10 +1005,10 @@ $lng['dkim']['dkim_notes']['description'] = 'Notes that might be of interest to 
 
 $lng['admin']['cron']['cronsettings'] = 'Cronjob settings';
 $lng['cron']['cronname'] = 'cronjob-name';
-$lng['cron']['lastrun'] = 'last run';
+$lng['cron']['lastrun'] = 'naposledy spušteno';
 $lng['cron']['interval'] = 'interval';
-$lng['cron']['isactive'] = 'enabled';
-$lng['cron']['description'] = 'description';
+$lng['cron']['isactive'] = 'povoleno';
+$lng['cron']['description'] = 'popis';
 $lng['crondesc']['cron_unknown_desc'] = 'no description given';
 $lng['admin']['cron']['add'] = 'Add cronjob';
 $lng['crondesc']['cron_tasks'] = 'generating of configfiles';
@@ -1134,17 +1134,17 @@ $lng['error']['urlerrordocumentnotvalidforlighty'] = 'An URL as ErrorDocument do
 $lng['question']['remove_subbutmain_domains'] = 'Also remove domains which are added as full domains but which are subdomains of this domain?';
 $lng['domains']['issubof'] = 'This domain is a subdomain of another domain';
 $lng['domains']['issubofinfo'] = 'You have to set this to the correct domain if you want to add a subdomain as full-domain (e.g. you want to add "www.domain.tld", you have to select "domain.tld" here)';
-$lng['domains']['nosubtomaindomain'] = 'No subdomain of a full domain';
+$lng['domains']['nosubtomaindomain'] = 'Žádná subdoména celé domény';
 $lng['admin']['templates']['new_database_by_customer'] = 'Customer-notification when a database has been created';
 $lng['admin']['templates']['new_ftpaccount_by_customer'] = 'Customer-notification when a ftp-user has been created';
-$lng['admin']['templates']['newdatabase'] = 'Notification-mails for new databases';
-$lng['admin']['templates']['newftpuser'] = 'Notification-mails for new ftp-user';
-$lng['admin']['templates']['CUST_NAME'] = 'Customer name';
-$lng['admin']['templates']['DB_NAME'] = 'Database name';
-$lng['admin']['templates']['DB_PASS'] = 'Database password';
-$lng['admin']['templates']['DB_DESC'] = 'Database description';
+$lng['admin']['templates']['newdatabase'] = 'Emailové notifikace o nových databázích';
+$lng['admin']['templates']['newftpuser'] = 'Emailové notifikace o nových ftp uživatelů';
+$lng['admin']['templates']['CUST_NAME'] = 'Jméno zákazníka';
+$lng['admin']['templates']['DB_NAME'] = 'Název databáze';
+$lng['admin']['templates']['DB_PASS'] = 'Heslo databáze';
+$lng['admin']['templates']['DB_DESC'] = 'Popis databáze';
 $lng['admin']['templates']['DB_SRV'] = 'Databázový server';
-$lng['admin']['templates']['PMA_URI'] = 'URL to phpMyAdmin (if given)';
+$lng['admin']['templates']['PMA_URI'] = 'Odkaz k phpMyAdmin (pokud je postytnut)';
 $lng['admin']['notgiven'] = '[not given]';
 $lng['admin']['templates']['USR_NAME'] = 'FTP uživatelské jméno';
 $lng['admin']['templates']['USR_PASS'] = 'FTP heslo';
@@ -1181,10 +1181,10 @@ $lng['serversettings']['phpreload_command']['title'] = 'PHP reload command';
 $lng['serversettings']['phpreload_command']['description'] = 'this is used to reload the PHP backend if any is used<br />Default: blank<br />*NOT used with php-fpm';
 
 // ADDED IN FROXLOR 0.9.16
-$lng['error']['intvaluetoolow'] = 'The given number is too low (field %s)';
-$lng['error']['intvaluetoohigh'] = 'The given number is too high (field %s)';
+$lng['error']['intvaluetoolow'] = 'Zadané číslo je přiliš malé (pole %s)';
+$lng['error']['intvaluetoohigh'] = 'Zadané číslo je příliš vysoké (pole %s)';
 $lng['admin']['phpfpm_settings'] = 'PHP-FPM';
-$lng['serversettings']['phpfpm']['title'] = 'Enable php-fpm';
+$lng['serversettings']['phpfpm']['title'] = 'Zapnout php-fpm';
 $lng['serversettings']['phpfpm']['description'] = '<b>This needs a special webserver configuration see FPM-handbook for <a target="blank" href="https://github.com/Froxlor/Froxlor/wiki/apache2-with-php-fpm">Apache2</a> or <a target="blank" href="https://github.com/Froxlor/Froxlor/wiki/nginx-with-php-fpm">nginx</a></b>';
 $lng['serversettings']['phpfpm_settings']['configdir'] = 'Configuration directory of php-fpm';
 $lng['serversettings']['phpfpm_settings']['aliasconfigdir'] = 'Configuration Alias-directory of php-fpm';
@@ -1581,7 +1581,7 @@ $lng['admin']['speciallogfile']['title'] = 'Oddělit log soubor';
 $lng['admin']['speciallogfile']['description'] = 'Enable this to get a separate access-log file for this domain';
 $lng['error']['setlessthanalreadyused'] = 'You cannot set less resources of \'%s\' than this user already used<br />';
 $lng['error']['stringmustntbeempty'] = 'The value for the field %s must not be empty';
-$lng['admin']['domain_editable']['title'] = 'Allow editing of domain';
+$lng['admin']['domain_editable']['title'] = 'Povolit upravování domény';
 $lng['admin']['domain_editable']['desc'] = 'If set to yes, the customer is allowed to change several domain-settings.<br />If set to no, nothing can be changed by the customer.';
 $lng['admin']['writeaccesslog']['title'] = 'Write an access log';
 $lng['admin']['writeaccesslog']['description'] = 'Enable this to get an access-log file for this domain';
@@ -1592,12 +1592,12 @@ $lng['admin']['writeerrorlog']['description'] = 'Enable this to get an error-log
 $lng['serversettings']['panel_phpconfigs_hidestdsubdomain']['title'] = 'Hide standard-subdomains in PHP-configuration overview';
 $lng['serversettings']['panel_phpconfigs_hidestdsubdomain']['description'] = 'If activated the standard-subdomains for customers will not be displayed in the php-configurations overview<br /><br />Note: This is only visible if you have enabled FCGID or PHP-FPM';
 $lng['serversettings']['passwordcryptfunc']['title'] = 'Choose which password-crypt method is to be used';
-$lng['serversettings']['systemdefault'] = 'System default';
-$lng['serversettings']['panel_allow_theme_change_admin'] = 'Allow admins to change the theme';
+$lng['serversettings']['systemdefault'] = 'Základní systém. nastavení';
+$lng['serversettings']['panel_allow_theme_change_admin'] = 'Povolit amdinům změnit téma';
 $lng['serversettings']['panel_allow_theme_change_customer'] = 'Allow customers to change the theme';
-$lng['serversettings']['axfrservers']['title'] = 'AXFR servers';
+$lng['serversettings']['axfrservers']['title'] = 'AXFR servery';
 $lng['serversettings']['axfrservers']['description'] = 'A comma separated list of IP addresses allowed to transfer (AXFR) dns zones.';
-$lng['panel']['ssleditor'] = 'SSL settings for this domain';
+$lng['panel']['ssleditor'] = 'SSL nastavené pro tuto doménu';
 $lng['admin']['ipsandports']['ssl_paste_description'] = 'Paste your complete certificate content in the textbox';
 $lng['admin']['ipsandports']['ssl_cert_file_content'] = 'Content of the ssl certificate';
 $lng['admin']['ipsandports']['ssl_key_file_content'] = 'Content of the ssl (private-) key file';
@@ -1834,13 +1834,13 @@ $lng['customer']['letsencrypt']['title'] = 'Use Let\'s Encrypt';
 $lng['customer']['letsencrypt']['description'] = 'Get a free certificate from <a href="https://letsencrypt.org">Let\'s Encrypt</a>. The certificate will be created and renewed automatically.<br><strong class="red">ATTENTION:</strong> This feature is still in beta.';
 $lng['error']['sslredirectonlypossiblewithsslipport'] = 'Using Let\'s Encrypt is only possible when the domain has at least one ssl-enabled IP/port combination assigned.';
 $lng['error']['nowildcardwithletsencrypt'] = 'Let\'s Encrypt cannot handle wildcard-domains using ACME in froxlor (requires dns-challenge), sorry. Please set the ServerAlias to WWW or disable it completely';
-$lng['panel']['letsencrypt'] = 'Using Let\'s encrypt';
-$lng['crondesc']['cron_letsencrypt'] = 'updating Let\'s Encrypt certificates';
+$lng['panel']['letsencrypt'] = 'Používá Let\'s encrypt';
+$lng['crondesc']['cron_letsencrypt'] = 'aktualizuji Let\'s Encrypt certifikáty';
 $lng['serversettings']['letsencryptca']['title'] = "Let's Encrypt environment";
 $lng['serversettings']['letsencryptca']['description'] = "Environment to be used for Let's Encrypt certificates.";
 $lng['serversettings']['letsencryptcountrycode']['title'] = "Let's Encrypt country code";
 $lng['serversettings']['letsencryptcountrycode']['description'] = "2 letter country code used to generate Let's Encrypt certificates.";
-$lng['serversettings']['letsencryptstate']['title'] = "Let's Encrypt state";
+$lng['serversettings']['letsencryptstate']['title'] = "Let's Encrypt status";
 $lng['serversettings']['letsencryptstate']['description'] = "State used to generate Let's Encrypt certificates.";
 $lng['serversettings']['letsencryptchallengepath']['title'] = "Path for Let's Encrypt challenges";
 $lng['serversettings']['letsencryptchallengepath']['description'] = "Directory where the Let's Encrypt challenges should be offered from via a global alias.";
@@ -1848,7 +1848,7 @@ $lng['serversettings']['letsencryptkeysize']['title'] = "Key size for new Let's 
 $lng['serversettings']['letsencryptkeysize']['description'] = "Size of the key in Bits for new Let's Encrypt certificates.";
 $lng['serversettings']['letsencryptreuseold']['title'] = "Re-use Let's Encrypt key";
 $lng['serversettings']['letsencryptreuseold']['description'] = "If activated, the same key will be used for every renew, otherwise a new key will be generated every time.";
-$lng['serversettings']['leenabled']['title'] = "Enable Let's Encrypt";
+$lng['serversettings']['leenabled']['title'] = "Zapnout Let's Encrypt";
 $lng['serversettings']['leenabled']['description'] = "If activated, customers are able to let froxlor automatically generate and renew Let's Encrypt ssl-certificates for domains with a ssl IP/port.<br /><br />Please remember that you need to go through the webserver-configuration when enabled because this feature needs a special configuration.";
 $lng['domains']['ssl_redirect_temporarilydisabled'] = "<br>The SSL redirect is temporarily deactivated while a new Let's Encrypt certificate is generated. It will be activated again after the certificate was generated.";
 
@@ -1895,7 +1895,7 @@ $lng['extras']['path_protection_label'] = '<strong class="red">Important</strong
 $lng['extras']['path_protection_info'] = '<strong class="red">We strongly recommend protecting the given path, see "Extras" -> "Directory protection"</strong>';
 $lng['tasks']['backup_customerfiles'] = 'Backup job for customer %loginname%';
 
-$lng['error']['dns_domain_nodns'] = 'DNS is not enabled for this domain';
+$lng['error']['dns_domain_nodns'] = 'DNS pro tuto doménu je vypnuto';
 $lng['error']['dns_content_empty'] = 'No content given';
 $lng['error']['dns_content_invalid'] = 'DNS content invalid';
 $lng['error']['dns_arec_noipv4'] = 'No valid IP address for A-record given';
@@ -1953,7 +1953,7 @@ $lng['serversettings']['mail_smtp_usetls'] = 'Enable TLS encryption';
 $lng['serversettings']['mail_smtp_auth'] = 'Enable SMTP authentication';
 $lng['serversettings']['mail_smtp_port'] = 'TCP port to connect to';
 $lng['serversettings']['mail_smtp_user'] = 'SMTP username';
-$lng['serversettings']['mail_smtp_passwd'] = 'SMTP password';
+$lng['serversettings']['mail_smtp_passwd'] = 'SMTP heslo';
 $lng['domains']['ssl_certificates'] = 'SSL certificates';
 $lng['domains']['ssl_certificate_removed'] = 'The certificate with the id #%s has been removed successfully';
 $lng['domains']['ssl_certificate_error'] = "Error reading certificate for domain: %s";
@@ -1982,7 +1982,7 @@ $lng['serversettings']['nssextrausers']['description'] = 'Do not read users from
 $lng['admin']['domain_http2']['title'] = 'HTTP2 support';
 $lng['admin']['domain_http2']['description'] = 'See <a target="_blank" href="https://en.wikipedia.org/wiki/HTTP/2">Wikipedia</a> for a detailed explanation of HTTP2';
 $lng['admin']['testmail'] = 'SMTP test';
-$lng['success']['testmailsent'] = 'Test mail sent successfully';
+$lng['success']['testmailsent'] = 'Testovací email byl odeslán úspěšně';
 $lng['serversettings']['le_domain_dnscheck']['title'] = "Validate DNS of domains when using Let's Encrypt";
 $lng['serversettings']['le_domain_dnscheck']['description'] = "If activated, froxlor will validate whether the domain which requests a Let's Encrypt certificate resolves to at least one of the system ip addresses.";
 $lng['menue']['phpsettings']['fpmdaemons'] = 'PHP-FPM versions';
@@ -2085,7 +2085,7 @@ $lng['admin']['domain_override_tls'] = 'Override system TLS settings';
 $lng['domains']['isaliasdomainof'] = 'Is aliasdomain for %s';
 $lng['serversettings']['apply_specialsettings_default']['title'] = 'Default value for "' . $lng['admin']['specialsettingsforsubdomains'] . "' setting when editing a domain";
 $lng['serversettings']['apply_phpconfigs_default']['title'] = 'Default value for "' . $lng['admin']['phpsettingsforsubdomains'] . "' setting when editing a domain";
-$lng['admin']['domain_sslenabled'] = 'Enable usage of SSL';
+$lng['admin']['domain_sslenabled'] = 'Povolit použití SSL';
 $lng['admin']['domain_honorcipherorder'] = 'Honor the (server) cipher order, default <strong>no</strong>';
 $lng['admin']['domain_sessiontickets'] = 'Enable TLS sessiontickets (RFC 5077), default <strong>yes</strong>';
 
