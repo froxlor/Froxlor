@@ -1,5 +1,7 @@
 <?php
 
+use Froxlor\Settings;
+
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -22,6 +24,11 @@ return array(
 				'title' => $lng['mysql']['database_create'],
 				'image' => 'icons/mysql_add.png',
 				'fields' => array(
+					'custom_suffix' => array(
+						'visible' => (strtoupper(Settings::Get('customer.mysqlprefix')) == 'DBNAME') ? true : false,
+						'label' => $lng['mysql']['databasename'],
+						'type' => 'text'
+					),
 					'description' => array(
 						'label' => $lng['mysql']['databasedescription'],
 						'type' => 'text'

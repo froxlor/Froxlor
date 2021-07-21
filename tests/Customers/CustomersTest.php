@@ -513,7 +513,8 @@ class CustomersTest extends TestCase
 			'customernumber' => 1338,
 			'sendpassword' => 0,
 			'perlenabled' => 2,
-			'dnsenabled' => 4
+			'dnsenabled' => 4,
+			'createstdsubdomain' => 0
 		];
 
 		$json_result = Customers::getLocal($admin_userdata, $data)->add();

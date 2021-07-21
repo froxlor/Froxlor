@@ -213,7 +213,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	 * @param bool $email_only
 	 *        	optional, restrict domain to email usage, default 0 (false)
 	 * @param int $selectserveralias
-	 *        	optional, 0 = wildcard, 1 = www-alias, 2 = none, default 0
+	 *        	optional, 0 = wildcard, 1 = www-alias, 2 = none, default [system.domaindefaultalias]
 	 * @param bool $speciallogfile
 	 *        	optional, whether to create an exclusive web-logfile for this domain, default 0 (false)
 	 * @param int $alias
@@ -309,7 +309,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				$subcanemaildomain = $this->getParam('subcanemaildomain', true, 0);
 				$isemaildomain = $this->getBoolParam('isemaildomain', true, 0);
 				$email_only = $this->getBoolParam('email_only', true, 0);
-				$serveraliasoption = $this->getParam('selectserveralias', true, 0);
+				$serveraliasoption = $this->getParam('selectserveralias', true, Settings::Get('system.domaindefaultalias'));
 				$speciallogfile = $this->getBoolParam('speciallogfile', true, 0);
 				$aliasdomain = intval($this->getParam('alias', true, 0));
 				$issubof = $this->getParam('issubof', true, 0);

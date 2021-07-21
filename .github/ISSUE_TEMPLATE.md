@@ -1,6 +1,6 @@
 # Bug report vs. support request
 If you're unsure of whether your problem is a bug or a configuration error
-* contact us via IRC in #froxlor on freenode
+* contact us via IRC in #froxlor on irc.libera.chat
 * or post a thread in our forum at https://forum.froxlor.org
 
 As a rule of thumb: before reporting an issue

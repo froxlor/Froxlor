@@ -270,6 +270,20 @@ return array(
 					'default' => true,
 					'save_method' => 'storeSettingField'
 				),
+                'system_domaindefaultalias' => array(
+                    'label' => $lng['admin']['domaindefaultalias'],
+                    'settinggroup' => 'system',
+                    'varname' => 'domaindefaultalias',
+                    'type' => 'option',
+                    'default' => '0',
+                    'option_mode' => 'one',
+                    'option_options' => array(
+                        '0' => $lng['domains']['serveraliasoption_wildcard'],
+                        '1' => $lng['domains']['serveraliasoption_www'],
+                        '2' => $lng['domains']['serveraliasoption_none']
+                    ),
+                    'save_method' => 'storeSettingField'
+                ),
 				'hide_incompatible_settings' => array(
 					'label' => $lng['serversettings']['hide_incompatible_settings'],
 					'settinggroup' => 'system',

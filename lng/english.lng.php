@@ -332,7 +332,7 @@ $lng['serversettings']['session_timeout']['description'] = 'How long does a user
 $lng['serversettings']['accountprefix']['title'] = 'Customer prefix';
 $lng['serversettings']['accountprefix']['description'] = 'Which prefix should customer accounts have?';
 $lng['serversettings']['mysqlprefix']['title'] = 'SQL Prefix';
-$lng['serversettings']['mysqlprefix']['description'] = 'Which prefix should MySQL accounts have?</br>Use "RANDOM" as value to get a 3-digit random prefix';
+$lng['serversettings']['mysqlprefix']['description'] = 'Which prefix should MySQL accounts have?</br>Use "RANDOM" as value to get a 3-digit random prefix</br>Use "DBNAME" as the value, a database name field is used together with the customer name as a prefix.';
 $lng['serversettings']['ftpprefix']['title'] = 'FTP Prefix';
 $lng['serversettings']['ftpprefix']['description'] = 'Which prefix should ftp accounts have?<br/><b>If you change this you also have to change the Quota SQL Query in your FTP Server config file in case you use it!</b> ';
 $lng['serversettings']['documentroot_prefix']['title'] = 'Home directory';
@@ -1832,15 +1832,15 @@ $lng['opcacheinfo']['false'] = '<i>false</i>';
 
 // Added for let's encrypt
 $lng['admin']['letsencrypt']['title'] = 'Use Let\'s Encrypt';
-$lng['admin']['letsencrypt']['description'] = 'Get a free certificate from <a href="https://letsencrypt.org">Let\'s Encrypt</a>. The certificate will be created and renewed automatically.<br><strong class="red">ATTENTION:</strong> If wildcards are enabled, this option will automatically be disabled. This feature is still in beta.';
+$lng['admin']['letsencrypt']['description'] = 'Get a free certificate from <a href="https://letsencrypt.org">Let\'s Encrypt</a>. The certificate will be created and renewed automatically.<br><strong class="red">ATTENTION:</strong> If wildcards are enabled, this option will automatically be disabled.';
 $lng['customer']['letsencrypt']['title'] = 'Use Let\'s Encrypt';
-$lng['customer']['letsencrypt']['description'] = 'Get a free certificate from <a href="https://letsencrypt.org">Let\'s Encrypt</a>. The certificate will be created and renewed automatically.<br><strong class="red">ATTENTION:</strong> This feature is still in beta.';
+$lng['customer']['letsencrypt']['description'] = 'Get a free certificate from <a href="https://letsencrypt.org">Let\'s Encrypt</a>. The certificate will be created and renewed automatically.';
 $lng['error']['sslredirectonlypossiblewithsslipport'] = 'Using Let\'s Encrypt is only possible when the domain has at least one ssl-enabled IP/port combination assigned.';
 $lng['error']['nowildcardwithletsencrypt'] = 'Let\'s Encrypt cannot handle wildcard-domains using ACME in froxlor (requires dns-challenge), sorry. Please set the ServerAlias to WWW or disable it completely';
 $lng['panel']['letsencrypt'] = 'Using Let\'s encrypt';
 $lng['crondesc']['cron_letsencrypt'] = 'updating Let\'s Encrypt certificates';
-$lng['serversettings']['letsencryptca']['title'] = "Let's Encrypt environment";
-$lng['serversettings']['letsencryptca']['description'] = "Environment to be used for Let's Encrypt certificates.";
+$lng['serversettings']['letsencryptca']['title'] = "ACME environment";
+$lng['serversettings']['letsencryptca']['description'] = "Environment to be used for Let's Encrypt / ZeroSSL certificates.";
 $lng['serversettings']['letsencryptcountrycode']['title'] = "Let's Encrypt country code";
 $lng['serversettings']['letsencryptcountrycode']['description'] = "2 letter country code used to generate Let's Encrypt certificates.";
 $lng['serversettings']['letsencryptstate']['title'] = "Let's Encrypt state";
@@ -2116,3 +2116,15 @@ $lng['serversettings']['terms_url']['description'] = 'Specify an URL to your ter
 $lng['privacy'] = 'Privacy policy';
 $lng['serversettings']['privacy_url']['title'] = 'URL to privacy policy';
 $lng['serversettings']['privacy_url']['description'] = 'Specify an URL to your privacy policy site / imprint site. The link will be visible on the login screen and on the footer when logged in.';
+$lng['admin']['domaindefaultalias'] = 'Default ServerAlias value for new domains';
+
+$lng['serversettings']['logo_image_header']['title'] = 'Logo Image (Header)';
+$lng['serversettings']['logo_image_header']['description'] = 'Upload your own logo image to be shown in the header after login (recommended height 30px)';
+$lng['serversettings']['logo_image_login']['title'] = 'Logo Image (Login)';
+$lng['serversettings']['logo_image_login']['description'] = 'Upload your own logo image to be shown during login';
+$lng['panel']['image_field_delete'] = 'Delete the existing current image';
+$lng['serversettings']['logo_overridetheme']['title'] = 'Overwrites logo defined in theme by "Logo Image" (Header and Login, see below)';
+$lng['serversettings']['logo_overridetheme']['description'] = 'This needs to be set to "true" if you intend to use your uploaded logo; alternatively you can still use the theme-based "logo_custom.png" and "logo_custom_login.png" possibility.';
+$lng['serversettings']['logo_overridecustom']['title'] = 'Overwrite custom logo (logo_custom.png and logo_custom_login.png) defined in theme by "Logo Image" (Header and Login, see below)';
+$lng['serversettings']['logo_overridecustom']['description'] = 'Set this to "true" if you want to ignore theme-specific custom logos for header and login and use "Logo Image"';
+$lng['serversettings']['createstdsubdom_default']['title'] = 'Preselected value for "'.$lng['admin']['stdsubdomain_add'].'" when creating a customer';

@@ -53,7 +53,7 @@ class Dns
 			$domain = $domain_id;
 		}
 
-		if ($domain['isbinddomain'] != '1') {
+		if (!isset($domain['isbinddomain']) || $domain['isbinddomain'] != '1') {
 			return;
 		}
 
@@ -190,11 +190,25 @@ class Dns
 				'@',
 				'www',
 				'*'
-			] as $crceord) {
-				if ($entry['type'] == 'CNAME' && $entry['record'] == '@' && (array_key_exists(md5($crceord), $required_entries['A']) || array_key_exists(md5($crceord), $required_entries['AAAA']))) {
-					unset($required_entries['A'][md5($crceord)]);
-					unset($required_entries['AAAA'][md5($crceord)]);
+			] as $crecord) {
+				if ($entry['type'] == 'CNAME' && $entry['record'] == '@' && (array_key_exists(md5($crecord), $required_entries['A']) || array_key_exists(md5($crecord), $required_entries['AAAA']))) {
+					unset($required_entries['A'][md5($crecord)]);
+					unset($required_entries['AAAA'][md5($crecord)]);
 				}
+			}
+			// also allow overriding of auto-generated values (imap,pop3,mail,smtp) if enabled in the settings
+			if (Settings::Get('system.dns_createmailentry')) {
+			    foreach (array(
+			        'imap',
+			        'pop3',
+			        'mail',
+			        'smtp'
+			    ) as $crecord) {
+			        if ($entry['type'] == 'CNAME' && $entry['record'] == $crecord && (array_key_exists(md5($crecord), $required_entries['A']) || array_key_exists(md5($crecord), $required_entries['AAAA']))) {
+			            unset($required_entries['A'][md5($crecord)]);
+			            unset($required_entries['AAAA'][md5($crecord)]);
+			        }
+			    }
 			}
 			$zonerecords[] = new DnsEntry($entry['record'], $entry['type'], $entry['content'], $entry['prio'], $entry['ttl']);
 		}
@@ -372,7 +386,7 @@ class Dns
 			$soa_content = $primary_ns . " " . self::escapeSoaAdminMail($soa_email) . " ";
 			$soa_content .= $domain['bindserial'] . " ";
 			// TODO for now, dummy time-periods
-			$soa_content .= "3600 900 604800 " . (int) Settings::Get('system.defaultttl');
+			$soa_content .= "3600 900 1209600 1200";
 
 			$soa_record = new DnsEntry('@', 'SOA', $soa_content);
 			array_unshift($zonerecords, $soa_record);

@@ -4,6 +4,7 @@ use PHPUnit\Framework\TestCase;
 use Froxlor\Api\Commands\Admins;
 use Froxlor\Api\Commands\Customers;
 use Froxlor\Api\Commands\Certificates;
+use Froxlor\Api\Commands\SubDomains;
 
 /**
  *
@@ -18,6 +19,12 @@ class CertificatesTest extends TestCase
 	{
 		global $admin_userdata;
 
+		$json_result = SubDomains::getLocal($admin_userdata, array(
+			'domainname' => 'test2.local'
+		))->get();
+		$domain = json_decode($json_result, true)['data'];
+		$domainid = $domain['id'];
+
 		$certdata = $this->generateKey();
 		$json_result = Certificates::getLocal($admin_userdata, array(
 			'domainname' => 'test2.local',
@@ -25,7 +32,7 @@ class CertificatesTest extends TestCase
 			'ssl_key_file' => $certdata['key']
 		))->add();
 		$result = json_decode($json_result, true)['data'];
-		$this->assertEquals(3, $result['domainid']);
+		$this->assertEquals($domainid, $result['domainid']);
 	}
 
 	public function testResellerCertificatesAddAgain()
@@ -57,6 +64,12 @@ class CertificatesTest extends TestCase
 		))->get();
 		$customer_userdata = json_decode($json_result, true)['data'];
 
+		$json_result = SubDomains::getLocal($admin_userdata, array(
+			'domainname' => 'mysub2.test2.local'
+		))->get();
+		$domain = json_decode($json_result, true)['data'];
+		$domainid = $domain['id'];
+
 		$certdata = $this->generateKey();
 		$json_result = Certificates::getLocal($customer_userdata, array(
 			'domainname' => 'mysub2.test2.local',
@@ -64,7 +77,7 @@ class CertificatesTest extends TestCase
 			'ssl_key_file' => $certdata['key']
 		))->add();
 		$result = json_decode($json_result, true)['data'];
-		$this->assertEquals(7, $result['domainid']);
+		$this->assertEquals($domainid, $result['domainid']);
 	}
 
 	public function testAdminCertificatesList()
@@ -128,7 +141,6 @@ class CertificatesTest extends TestCase
 			'ssl_key_file' => $certdata['key']
 		))->update();
 		$result = json_decode($json_result, true)['data'];
-		$this->assertEquals(3, $result['domainid']);
 		$this->assertEquals(str_replace("\n", "", $certdata['cert']), str_replace("\n", "", $result['ssl_cert_file']));
 	}
 
@@ -148,7 +160,6 @@ class CertificatesTest extends TestCase
 			'ssl_key_file' => $certdata['key']
 		))->update();
 		$result = json_decode($json_result, true)['data'];
-		$this->assertEquals(7, $result['domainid']);
 		$this->assertEquals(str_replace("\n", "", $certdata['cert']), str_replace("\n", "", $result['ssl_cert_file']));
 	}
 
@@ -169,7 +180,7 @@ class CertificatesTest extends TestCase
 			'id' => 1
 		))->delete();
 		$result = json_decode($json_result, true)['data'];
-		$this->assertEquals(3, $result['domainid']);
+		$this->assertTrue(isset($result['domainid']) && $result['domainid'] > 0);
 	}
 
 	private function generateKey()
