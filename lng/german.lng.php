@@ -1773,3 +1773,4 @@ $lng['serversettings']['logo_overridetheme']['title'] = 'Überschreibe Theme-Log
 $lng['serversettings']['logo_overridetheme']['description'] = 'Ist die Nutzung eines hochgeladenen Logos gewünscht, muss diese Einstellung auf "Ja" gesetzt werden. Alternativ kann weiterhin das Theme-basierte Überschreiben via "logo_custom.png" und "logo_custom_login.png" genutzt werden.';
 $lng['serversettings']['logo_overridecustom']['title'] = 'Überschreibe benutzerdefinierte Theme-Logos (logo_custom.png und logo_custom_login.png) mit "Logo Bold" (Header und Login, siehe unten)';
 $lng['serversettings']['logo_overridecustom']['description'] = 'Ist diese Einstellung aktiv, werden benutzerdefinierte Logos im Theme-Ordner mit dem "Logo Bild" ersetzt';
+$lng['serversettings']['createstdsubdom_default']['title'] = 'Standardwert für "'.$lng['admin']['stdsubdomain_add'].'" bei Erstellung eines Kunden';

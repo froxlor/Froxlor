@@ -875,3 +875,10 @@ if (\Froxlor\Froxlor::isDatabaseVersion('202107070')) {
 	lastStepStatus(0);
 	\Froxlor\Froxlor::updateToDbVersion('202107200');
 }
+
+if (\Froxlor\Froxlor::isDatabaseVersion('202107200')) {
+	showUpdateStep("Adding settings to define default value of 'create std-subdomain' when creating a customer", true);
+	Settings::AddNew("system.createstdsubdom_default", '1');
+	lastStepStatus(0);
+	\Froxlor\Froxlor::updateToDbVersion('202107210');
+}

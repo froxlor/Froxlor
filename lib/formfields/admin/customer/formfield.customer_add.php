@@ -37,7 +37,7 @@ return array(
 							)
 						),
 						'value' => array(
-							'1'
+							\Froxlor\Settings::Get('system.createstdsubdom_default')
 						)
 					),
 					'store_defaultindex' => array(

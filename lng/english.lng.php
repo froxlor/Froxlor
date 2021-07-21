@@ -2127,3 +2127,4 @@ $lng['serversettings']['logo_overridetheme']['title'] = 'Overwrites logo defined
 $lng['serversettings']['logo_overridetheme']['description'] = 'This needs to be set to "true" if you intend to use your uploaded logo; alternatively you can still use the theme-based "logo_custom.png" and "logo_custom_login.png" possibility.';
 $lng['serversettings']['logo_overridecustom']['title'] = 'Overwrite custom logo (logo_custom.png and logo_custom_login.png) defined in theme by "Logo Image" (Header and Login, see below)';
 $lng['serversettings']['logo_overridecustom']['description'] = 'Set this to "true" if you want to ignore theme-specific custom logos for header and login and use "Logo Image"';
+$lng['serversettings']['createstdsubdom_default']['title'] = 'Preselected value for "'.$lng['admin']['stdsubdomain_add'].'" when creating a customer';
