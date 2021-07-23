@@ -428,7 +428,7 @@ if ($page == 'domains' || $page == 'overview') {
 					$customer = Database::pexecute_first($customer_stmt, array(
 						'customerid' => $result['customerid']
 					));
-					$result['customername'] = \Froxlor\User::getCorrectFullUserDetails($customer) . ' (' . $customer['loginname'] . ')';
+					$result['customername'] = \Froxlor\User::getCorrectFullUserDetails($customer);
 				}
 
 				if ($userinfo['customers_see_all'] == '1') {
@@ -594,6 +594,8 @@ if ($page == 'domains' || $page == 'overview') {
 				}
 
 				$result = \Froxlor\PhpHelper::htmlentitiesArray($result);
+				$result['customername'] .= ' (<a href="' . $linker->getLink(array('section' => 'customers', 'page' => 'customers',
+					'action' => 'su', 'id' => $customer['customerid'])) . '" rel="external">' . $customer['loginname'] . '</a>)';
 
 				$domain_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/domains/formfield.domains_edit.php';
 				$domain_edit_form = \Froxlor\UI\HtmlForm::genHTMLForm($domain_edit_data);
