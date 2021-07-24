@@ -1,4 +1,4 @@
-name: Froxlor-CI
+name: Froxlor-CI-MariaDB
 on: ['push', 'pull_request', 'create']
 
 jobs:

@@ -1,4 +1,4 @@
-name: Froxlor-CI
+name: Froxlor-CI-MySQL
 on: ['push', 'pull_request', 'create']
 
 jobs:
@@ -40,6 +40,12 @@ jobs:
         run: sleep 15
 
       - name: Setup databases
+        if: matrix.mysql-version == '8.0'
+        run: |
+          mysql -h 127.0.0.1 --protocol=TCP -u root -pfr0xl0r.TravisCI -e "CREATE USER 'froxlor010'@'%' IDENTIFIED WITH mysql_native_password BY 'fr0xl0r.TravisCI';"
+          mysql -h 127.0.0.1 --protocol=TCP -u root -pfr0xl0r.TravisCI -e "GRANT ALL ON froxlor010.* TO 'froxlor010'@'%';"
+          mysql -h 127.0.0.1 --protocol=TCP -u root -pfr0xl0r.TravisCI froxlor010 < install/froxlor.sql
+        if: matrix.mysql-version == '5.7'
         run: |
           mysql -h 127.0.0.1 --protocol=TCP -u root -pfr0xl0r.TravisCI -e "CREATE USER 'froxlor010'@'%' IDENTIFIED BY 'fr0xl0r.TravisCI';"
           mysql -h 127.0.0.1 --protocol=TCP -u root -pfr0xl0r.TravisCI -e "GRANT ALL ON froxlor010.* TO 'froxlor010'@'%';"
@@ -47,34 +53,3 @@ jobs:
 
       - name: Run testing
         run: ant quick-build
-
-#      - name: irc push
-#        uses: rectalogic/notify-irc@v1
-#        if: github.event_name == 'push'
-#        with:
-#          channel: "#froxlor"
-#          server: "irc.libera.chat"
-#          nickname: froxlor-ci
-#          message: |
-#            ${{ github.actor }} pushed ${{ github.event.ref }} ${{ github.event.compare }}
-#            ${{ join(github.event.commits.*.message) }}
-
-#      - name: irc pull request
-#        uses: rectalogic/notify-irc@v1
-#        if: github.event_name == 'pull_request'
-#        with:
-#          channel: "#froxlor"
-#          server: "irc.libera.chat"
-#          nickname: froxlor-ci
-#          message: |
-#            ${{ github.actor }} opened PR ${{ github.event.pull_request.html_url }}
-
-#      - name: irc tag created
-#        uses: rectalogic/notify-irc@v1
-#        if: github.event_name == 'create' && github.event.ref_type == 'tag'
-#        with:
-#          channel: "#froxlor"
-#          server: "irc.libera.chat"
-#          nickname: froxlor-ci
-#          message: |
-#            ${{ github.actor }} tagged ${{ github.repository }} ${{ github.event.ref }}
