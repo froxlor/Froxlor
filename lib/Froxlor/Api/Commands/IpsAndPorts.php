@@ -247,6 +247,9 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 				$docroot = '';
 			}
 
+			// always use compressed ipv6 format
+			$ip = inet_ntop(inet_pton($ip));
+
 			$result_checkfordouble_stmt = Database::prepare("
 			SELECT `id` FROM `" . TABLE_PANEL_IPSANDPORTS . "`
 			WHERE `ip` = :ip AND `port` = :port");
@@ -461,6 +464,9 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			} else {
 				$docroot = '';
 			}
+
+			// always use compressed ipv6 format
+			$ip = inet_ntop(inet_pton($ip));
 
 			if ($result['ip'] != $ip && $result['ip'] == Settings::Get('system.ipaddress') && $result_sameipotherport == false) {
 				\Froxlor\UI\Response::standard_error('cantchangesystemip', '', true);

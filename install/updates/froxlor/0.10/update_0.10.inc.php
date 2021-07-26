@@ -1,6 +1,7 @@
 <?php
 use Froxlor\Database\Database;
 use Froxlor\Settings;
+use Froxlor\Validate\Validate;
 
 /**
  * This file is part of the Froxlor project.
@@ -881,4 +882,24 @@ if (\Froxlor\Froxlor::isDatabaseVersion('202107200')) {
 	Settings::AddNew("system.createstdsubdom_default", '1');
 	lastStepStatus(0);
 	\Froxlor\Froxlor::updateToDbVersion('202107210');
+}
+
+if (\Froxlor\Froxlor::isDatabaseVersion('202107210')) {
+	showUpdateStep("Normalizing ipv6 for correct comparison", true);
+	$result_stmt = Database::prepare("
+		SELECT `id`, `ip` FROM `" . TABLE_PANEL_IPSANDPORTS . "`"
+	);
+	Database::pexecute($result_stmt);
+	$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_IPSANDPORTS . "` SET `ip` = :ip WHERE `id` = :id");
+	while ($iprow = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
+		if (Validate::is_ipv6($iprow['ip'])) {
+			$ip = inet_ntop(inet_pton($iprow['ip']));
+			Database::pexecute($upd_stmt, [
+				'ip' => $ip,
+				'id' => $iprow['id']
+			]);
+		}
+	}
+	lastStepStatus(0);
+	\Froxlor\Froxlor::updateToDbVersion('202107260');
 }

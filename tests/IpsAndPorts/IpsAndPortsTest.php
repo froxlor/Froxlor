@@ -72,12 +72,12 @@ class IpsAndPortsTest extends TestCase
 	{
 		global $admin_userdata;
 		$data = [
-			'ip' => '2a01:440:1:12:82:149:225:46',
+			'ip' => '2a01:0440:0000:0012:0082:0149:0225:0046',
 			'docroot' => '/var/www/html'
 		];
 		$json_result = IpsAndPorts::getLocal($admin_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
-		$this->assertEquals(4, $result['id']);
+		$this->assertEquals('2a01:440:0:12:82:149:225:46', $result['ip']);
 		$this->assertEquals('/var/www/html/', $result['docroot']);
 	}
 

@@ -241,10 +241,14 @@ class PhpHelper
 		$ips = array();
 		foreach ($dns as $record) {
 			if ($record["type"] == "A") {
-				$ips[] = $record["ip"];
+				// always use compressed ipv6 format
+				$ip = inet_ntop(inet_pton($record["ip"]));
+				$ips[] = $ip;
 			}
 			if ($record["type"] == "AAAA") {
-				$ips[] = $record["ipv6"];
+				// always use compressed ipv6 format
+				$ip = inet_ntop(inet_pton($record["ipv6"]));
+				$ips[] = $ip;
 			}
 		}
 		if (count($ips) < 1) {

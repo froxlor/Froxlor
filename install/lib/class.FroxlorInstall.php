@@ -687,7 +687,7 @@ class FroxlorInstall
 		if (version_compare($db_root->getAttribute(\PDO::ATTR_SERVER_VERSION), '8.0.11', '>=')) {
 			// create user
 			$stmt = $db_root->prepare("
-				CREATE USER '" . $username . "'@'" . $access_host . "' IDENTIFIED BY :password
+				CREATE USER '" . $username . "'@'" . $access_host . "' IDENTIFIED WITH mysql_native_password BY :password
 			");
 			$stmt->execute(array(
 				"password" => $password
@@ -1310,10 +1310,12 @@ class FroxlorInstall
 		// from form
 		if (! empty($_POST['serverip'])) {
 			$this->_data['serverip'] = $_POST['serverip'];
+			$this->_data['serverip'] = inet_ntop(inet_pton($this->_data['serverip']));
 			return;
 			// from $_SERVER
 		} elseif (! empty($_SERVER['SERVER_ADDR'])) {
 			$this->_data['serverip'] = $_SERVER['SERVER_ADDR'];
+			$this->_data['serverip'] = inet_ntop(inet_pton($this->_data['serverip']));
 			return;
 		}
 		// empty
