@@ -168,6 +168,7 @@ return array(
 					'option_options' => array(
 						'letsencrypt_test' => 'Let\'s Encrypt (Test / Staging)',
 						'letsencrypt' => 'Let\'s Encrypt (Live)',
+						'buypass' => 'Buypass (Live)',
 					    'zerossl' => 'ZeroSSL (Live)'
 					),
 					'save_method' => 'storeSettingField'

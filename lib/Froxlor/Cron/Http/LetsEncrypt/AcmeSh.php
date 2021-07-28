@@ -31,6 +31,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 	const ACME_PROVIDER = [
 		'letsencrypt' => "https://acme-v02.api.letsencrypt.org/directory",
 		'letsencrypt_test' => "https://acme-staging-v02.api.letsencrypt.org/directory",
+		'buypass' => "https://api.buypass.com/acme/directory",
 		'zerossl' => "https://acme.zerossl.com/v2/DV90"
 	];
 
