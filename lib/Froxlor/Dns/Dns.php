@@ -338,11 +338,28 @@ class Dns
 						foreach ($records as $record) {
 							if ($record == '@CAA@') {
 								$caa_entries = explode(PHP_EOL, Settings::Get('caa.caa_entry'));
-								if ($domain['letsencrypt'] == 1) {
-									$le_entry = $domain['iswildcarddomain'] == '1' ? '0 issuewild "letsencrypt.org"' : '0 issue "letsencrypt.org"';
-									array_push($caa_entries, $le_entry);
+								$caa_domain = "letsencrypt.org";
+								if (Settings::Get('system.letsencryptca') == 'buypass' || Settings::Get('system.letsencryptca') == 'buypass_test') {
+									$caa_domain = "buypass.com";
 								}
-
+								if ($domain['letsencrypt'] == 1) {
+									if (Settings::Get('system.letsencryptca') == 'zerossl') {
+										$caa_domains = [
+											"sectigo.com",
+											"trust-provider.com",
+											"usertrust.com",
+											"comodoca.com",
+											"comodo.com"
+										];
+										foreach ($caa_domains as $caa_domain) {
+											$le_entry = $domain['iswildcarddomain'] == '1' ? '0 issuewild "' . $caa_domain . '"' : '0 issue "' . $caa_domain . '"';
+											array_push($caa_entries, $le_entry);
+										}
+									} else {
+										$le_entry = $domain['iswildcarddomain'] == '1' ? '0 issuewild "' . $caa_domain . '"' : '0 issue "' . $caa_domain . '"';
+										array_push($caa_entries, $le_entry);
+									}
+								}
 								foreach ($caa_entries as $entry) {
 									if (empty($entry)) continue;
 									$zonerecords[] = new DnsEntry('@', 'CAA', $entry);
