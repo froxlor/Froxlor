@@ -90,7 +90,7 @@ class IntegrityCheck
 			'dbname' => Database::getDbName()
 		));
 		$charset = isset($resp['default_character_set_name']) ? $resp['default_character_set_name'] : null;
-		if (! empty($charset) && strtolower($charset) != 'utf8') {
+		if (! empty($charset) && substr(strtolower($charset), 0, 4) != 'utf8') {
 			$this->log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "database charset seems to be different from UTF-8, integrity-check can fix that");
 			if ($fix) {
 				// fix database
