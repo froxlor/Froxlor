@@ -679,6 +679,8 @@ opcache.interned_strings_buffer'),
 	('system', 'soaemail', ''),
 	('system', 'domaindefaultalias', '0'),
 	('system', 'createstdsubdom_default', '1'),
+	('system', 'froxlorusergroup', ''),
+	('system', 'froxlorusergroup_gid', ''),
 	('api', 'enabled', '0'),
 	('2fa', 'enabled', '1'),
 	('panel', 'decimal_places', '4'),
@@ -691,7 +693,6 @@ opcache.interned_strings_buffer'),
 	('panel', 'paging', '20'),
 	('panel', 'natsorting', '1'),
 	('panel', 'sendalternativemail', '0'),
-	('panel', 'no_robots', '1'),
 	('panel', 'allow_domain_change_admin', '0'),
 	('panel', 'allow_domain_change_customer', '0'),
 	('panel', 'frontend', 'froxlor'),
@@ -721,7 +722,7 @@ opcache.interned_strings_buffer'),
 	('panel', 'logo_overridetheme', '0'),
 	('panel', 'logo_overridecustom', '0'),
 	('panel', 'version', '0.10.27'),
-	('panel', 'db_version', '202107260');
+	('panel', 'db_version', '202107300');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

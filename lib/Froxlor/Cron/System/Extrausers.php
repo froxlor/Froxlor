@@ -2,6 +2,7 @@
 namespace Froxlor\Cron\System;
 
 use Froxlor\Database\Database;
+use Froxlor\Settings;
 
 /**
  * This file is part of the Froxlor project.
@@ -25,12 +26,13 @@ class Extrausers
 		// passwd
 		$passwd = '/var/lib/extrausers/passwd';
 		$sql = "SELECT customerid,username,'x' as password,uid,gid,'Froxlor User' as comment,homedir,shell, login_enabled FROM ftp_users ORDER BY uid, LENGTH(username) ASC";
-		self::generateFile($passwd, $sql, $cronlog);
+		$users_list = [];
+		self::generateFile($passwd, $sql, $cronlog, $users_list);
 
 		// group
 		$group = '/var/lib/extrausers/group';
 		$sql = "SELECT groupname,'x' as password,gid,members FROM ftp_groups ORDER BY gid ASC";
-		self::generateFile($group, $sql, $cronlog);
+		self::generateFile($group, $sql, $cronlog, $users_list);
 
 		// shadow
 		$shadow = '/var/lib/extrausers/shadow';
@@ -44,7 +46,7 @@ class Extrausers
 		@chmod('/var/lib/extrausers/shadow', 0640);
 	}
 
-	private static function generateFile($file, $query, &$cronlog)
+	private static function generateFile($file, $query, &$cronlog, &$result_list = null)
 	{
 		$type = basename($file);
 		$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Creating ' . $type . ' file');
@@ -74,6 +76,9 @@ class Extrausers
 						$u['comment'] = 'Locked Froxlor User';
 					}
 					$line = $u['username'] . ':' . $u['password'] . ':' . $u['uid'] . ':' . $u['gid'] . ':' . $u['comment'] . ':' . $u['homedir'] . ':' . $u['shell'] . PHP_EOL;
+					if (is_array($result_list)) {
+						$result_list[] = $u['username'];
+					}
 					break;
 				case 'group':
 					$line = $u['groupname'] . ':' . $u['password'] . ':' . $u['gid'] . ':' . $u['members'] . PHP_EOL;
@@ -84,6 +89,19 @@ class Extrausers
 			}
 			$data_content .= $line;
 		}
+
+		// check for local group to generate
+		if ($type == 'group' && Settings::Get('system.froxlorusergroup') != '') {
+			$guid = intval(Settings::Get('system.froxlorusergroup_gid'));
+			if (empty($guid)) {
+				$guid = intval(Settings::Get('system.lastguid')) + 1;
+				Settings::Set('system.lastguid', $guid, true);
+				Settings::Set('system.froxlorusergroup_gid', $guid, true);
+			}
+			$line = Settings::Get('system.froxlorusergroup') . ':x:' . $guid . ':' . implode(',', $result_list) . PHP_EOL;
+			$data_content .= $line;
+		}
+
 		if (file_put_contents($file, $data_content) !== false) {
 			$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Succesfully wrote ' . $type . ' file');
 		} else {

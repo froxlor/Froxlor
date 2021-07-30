@@ -207,4 +207,30 @@ class Check
 		}
 		return $returnvalue;
 	}
+
+	public static function checkLocalGroup($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues)
+	{
+		if (empty($newfieldvalue) || $fielddata == $newfieldvalue) {
+			$returnvalue = [
+				self::FORMFIELDS_PLAUSIBILITY_CHECK_OK
+			];
+		} elseif (function_exists('posix_getgrnam') && posix_getgrnam($newfieldvalue) == false) {
+			if (Validate::validateUsername($newfieldvalue, Settings::Get('panel.unix_names'), 32)) {
+				$returnvalue = [
+					self::FORMFIELDS_PLAUSIBILITY_CHECK_OK
+				];
+			} else {
+				$returnvalue = [
+					self::FORMFIELDS_PLAUSIBILITY_CHECK_ERROR,
+					'local_group_invalid'
+				];
+			}
+		} else {
+			$returnvalue = [
+				self::FORMFIELDS_PLAUSIBILITY_CHECK_ERROR,
+				'local_group_exists'
+			];
+		}
+		return $returnvalue;
+	}
 }

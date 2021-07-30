@@ -82,7 +82,20 @@ return array(
 					'string_emptyallowed' => true,
 					'default' => '',
 					'save_method' => 'storeSettingField'
-				)
+				),
+				'system_froxlorusergroup' => array(
+					'label' => $lng['serversettings']['froxlorusergroup'],
+					'settinggroup' => 'system',
+					'varname' => 'froxlorusergroup',
+					'type' => 'string',
+					'default' => '',
+					'save_method' => 'storeSettingField',
+					'plausibility_check_method' => array(
+						'\\Froxlor\\Validate\\Check',
+						'checkLocalGroup'
+					),
+					'visible' => \Froxlor\Settings::Get('system.nssextrausers')
+				),
 			)
 		)
 	)

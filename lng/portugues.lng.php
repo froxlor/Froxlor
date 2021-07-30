@@ -529,7 +529,6 @@ $lng['traffic']['distribution'] = '<font color="#019522">FTP</font> | <font colo
 $lng['traffic']['sumhttp'] = 'Resumo Tráfego de HTTP em';
 $lng['traffic']['sumftp'] = 'Resumo Tráfego de FTP em';
 $lng['traffic']['summail'] = 'Resumo Tráfego de HTTP em';
-$lng['serversettings']['no_robots']['title'] = 'Aceitar robÃ´s de procura na index de seuFroxlor';
 $lng['admin']['loggersettings'] = 'Configurações de Logs';
 $lng['serversettings']['logger']['enable'] = 'Habilitar/Desabilitar Logs';
 $lng['serversettings']['logger']['severity'] = 'Nível de Logs';

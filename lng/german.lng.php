@@ -619,10 +619,6 @@ $lng['traffic']['sumhttp'] = 'Gesamt HTTP-Traffic';
 $lng['traffic']['sumftp'] = 'Gesamt FTP-Traffic';
 $lng['traffic']['summail'] = 'Gesamt Mail-Traffic';
 
-// ADDED IN 1.2.19-svn4.5
-
-$lng['serversettings']['no_robots']['title'] = 'Erlaube die Indizierung Ihrer Froxlor-Installation durch Suchmaschinen';
-
 // ADDED IN 1.2.19-svn6
 
 $lng['admin']['loggersettings'] = 'Log-Einstellungen';
@@ -1774,3 +1770,7 @@ $lng['serversettings']['logo_overridetheme']['description'] = 'Ist die Nutzung e
 $lng['serversettings']['logo_overridecustom']['title'] = 'Überschreibe benutzerdefinierte Theme-Logos (logo_custom.png und logo_custom_login.png) mit "Logo Bold" (Header und Login, siehe unten)';
 $lng['serversettings']['logo_overridecustom']['description'] = 'Ist diese Einstellung aktiv, werden benutzerdefinierte Logos im Theme-Ordner mit dem "Logo Bild" ersetzt';
 $lng['serversettings']['createstdsubdom_default']['title'] = 'Standardwert für "'.$lng['admin']['stdsubdomain_add'].'" bei Erstellung eines Kunden';
+$lng['serversettings']['froxlorusergroup']['title'] = 'Benutzerdefinierte Gruppe für alle Kunden-Benutzer';
+$lng['serversettings']['froxlorusergroup']['description'] = 'Voraussetzung hierfür ist die Nutzung von libnss-extrausers (System-Einstellungen). Ein leerer Wert bedeutet, es wird keine Gruppe erstellt, bzw. vorhandene Gruppe wird entfernt.';
+$lng['error']['local_group_exists'] = 'Die angegebene Gruppe existiert bereits auf dem System';
+$lng['error']['local_group_invalid'] = 'Der angegebene Gruppen-Name ist nicht gültig';

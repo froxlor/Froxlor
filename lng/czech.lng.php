@@ -625,10 +625,6 @@ $lng['traffic']['sumhttp'] = 'Celkový HTTP-Provoz';
 $lng['traffic']['sumftp'] = 'Celkový FTP-Provoz';
 $lng['traffic']['summail'] = 'Celkový Mail-Provoz';
 
-// ADDED IN 1.2.19-svn4.5
-
-$lng['serversettings']['no_robots']['title'] = 'Povolit vyhledávacím enginům idexovat tuto froxlor instalaci';
-
 // ADDED IN 1.2.19-svn6
 
 $lng['admin']['loggersettings'] = 'Log nastavení';

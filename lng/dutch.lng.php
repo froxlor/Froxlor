@@ -558,10 +558,6 @@ $lng['traffic']['sumhttp'] = 'Samenvatting HTTP-verkeer in';
 $lng['traffic']['sumftp'] = 'Samenvatting FTP-verkeer in';
 $lng['traffic']['summail'] = 'Samenvatting Mail-verkeer in';
 
-// ADDED IN 1.2.19-svn4.5
-
-$lng['serversettings']['no_robots']['title'] = 'Zoekmachines toestaan uw Froxlor-installatie te indexeren';
-
 // ADDED IN 1.2.19-svn6
 
 $lng['admin']['loggersettings'] = 'Instellingen voor logs';

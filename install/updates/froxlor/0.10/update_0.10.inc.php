@@ -903,3 +903,14 @@ if (\Froxlor\Froxlor::isDatabaseVersion('202107210')) {
 	lastStepStatus(0);
 	\Froxlor\Froxlor::updateToDbVersion('202107260');
 }
+
+if (\Froxlor\Froxlor::isDatabaseVersion('202107260')) {
+	showUpdateStep("Removing setting for search-engine allow yes/no", true);
+	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'panel' AND `varname` = 'no_robots'");
+	lastStepStatus(0);
+	showUpdateStep("Adding setting to have all froxlor customers in a local group", true);
+	Settings::AddNew("system.froxlorusergroup", '');
+	Settings::AddNew("system.froxlorusergroup_gid", '');
+	lastStepStatus(0);
+	\Froxlor\Froxlor::updateToDbVersion('202107300');
+}

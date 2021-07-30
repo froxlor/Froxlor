@@ -584,10 +584,6 @@ $lng['traffic']['sumhttp'] = 'Sommatoria Traffico in ingresso HTTP';
 $lng['traffic']['sumftp'] = 'Sommatoria Traffico in ingresso FTP';
 $lng['traffic']['summail'] = 'Sommatoria Traffico in ingresso Mail';
 
-// ADDED IN 1.2.19-svn4.5
-
-$lng['serversettings']['no_robots']['title'] = 'Permetti ai robot dei motori di ricerca di indicizzare l\'installazione di Froxlor';
-
 // ADDED IN 1.2.19-svn6
 
 $lng['admin']['loggersettings'] = 'Impostazioni Log';
