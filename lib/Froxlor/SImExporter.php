@@ -118,7 +118,7 @@ class SImExporter
 			if ($_sha != sha1(var_export($_data, true))) {
 				throw new \Exception("SHA check of import data failed. Unable to import.");
 			}
-			// do not import version info - but we need that to possibily update settings
+			// do not import version info - but we need that to possibly update settings
 			// when there were changes in the variable-name or similar
 			unset($_data['panel.version']);
 			unset($_data['panel.db_version']);

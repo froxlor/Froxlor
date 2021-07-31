@@ -62,7 +62,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 
 		if (($this->getUserDetail('ftps_used') < $this->getUserDetail('ftps') || $this->getUserDetail('ftps') == '-1') || $this->isAdmin() && $is_defaultuser == 1) {
 
-			// required paramters
+			// required parameters
 			$path = $this->getParam('path');
 			$password = $this->getParam('ftp_password');
 
@@ -512,7 +512,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 	}
 
 	/**
-	 * returns the total number of accessable ftp accounts
+	 * returns the total number of accessible ftp accounts
 	 *
 	 * @param int $customerid
 	 *        	optional, admin-only, select ftp-users of a specific customer by id

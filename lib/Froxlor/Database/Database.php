@@ -165,7 +165,7 @@ class Database
 	}
 
 	/**
-	 * returns the sql-access data as array using indeces
+	 * returns the sql-access data as array using indices
 	 * 'user', 'passwd' and 'host'.
 	 * Returns false if not enabled
 	 *

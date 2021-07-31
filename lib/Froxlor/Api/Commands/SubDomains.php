@@ -810,7 +810,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	}
 
 	/**
-	 * returns the total number of accessable subdomain entries
+	 * returns the total number of accessible subdomain entries
 	 *
 	 * @param int $customerid
 	 *        	optional, admin-only, select (sub)domains of a specific customer by id

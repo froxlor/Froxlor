@@ -123,7 +123,7 @@ class FroxlorInstall
 		if ((isset($_POST['installstep']) && $_POST['installstep'] == '1') || (isset($_GET['check']) && $_GET['check'] == '1')) {
 			$pagetitle = $this->_lng['install']['title'];
 			if ($this->_checkPostData()) {
-				// ceck data and create userdata etc.etc.etc.
+				// check data and create userdata etc.etc.etc.
 				$result = $this->_doInstall();
 			} elseif (isset($_GET['check']) && $_GET['check'] == '1') {
 				// gather data
@@ -739,7 +739,7 @@ class FroxlorInstall
 		}
 
 		if ($tables_exist) {
-			// tell whats going on
+			// tell what's going on
 			$content .= $this->_status_message('begin', $this->_lng['install']['backup_old_db']);
 
 			// create temporary backup-filename

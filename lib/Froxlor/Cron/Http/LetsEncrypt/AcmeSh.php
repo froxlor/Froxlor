@@ -287,7 +287,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 			$our_ips = Domain::getIpsOfDomain($domain_id);
 			foreach ($loop_domains as $idx => $domain) {
 				$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, "Validating DNS of " . $domain);
-				// ips accordint to NS
+				// ips according to NS
 				$domain_ips = PhpHelper::gethostbynamel6($domain);
 				if ($domain_ips == false || count(array_intersect($our_ips, $domain_ips)) <= 0) {
 					// no common ips...

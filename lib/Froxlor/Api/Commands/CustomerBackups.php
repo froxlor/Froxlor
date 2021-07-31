@@ -23,7 +23,7 @@ class CustomerBackups extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 {
 
 	/**
-	 * check whether backup is enabled systemwide and if accessable for customer (hide_options)
+	 * check whether backup is enabled systemwide and if accessible for customer (hide_options)
 	 *
 	 * @throws \Exception
 	 */

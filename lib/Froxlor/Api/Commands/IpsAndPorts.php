@@ -65,7 +65,7 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 	}
 
 	/**
-	 * returns the total number of accessable ip/port entries
+	 * returns the total number of accessible ip/port entries
 	 *
 	 * @access admin
 	 * @throws \Exception

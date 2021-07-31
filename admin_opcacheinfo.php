@@ -22,7 +22,7 @@ require './lib/init.php';
 
 if ($action == 'reset' && function_exists('opcache_reset') && $userinfo['change_serversettings'] == '1') {
 	opcache_reset();
-	$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "reseted OPcache");
+	$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "reset OPcache");
 	header('Location: ' . $linker->getLink(array(
 		'section' => 'opcacheinfo',
 		'page' => 'showinfo'

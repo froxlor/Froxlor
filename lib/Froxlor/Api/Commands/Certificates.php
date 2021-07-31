@@ -189,7 +189,7 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 	 */
 	public function listing()
 	{
-		// select all my (accessable) certificates
+		// select all my (accessible) certificates
 		$certs_stmt_query = "SELECT s.*, d.domain, d.letsencrypt, c.customerid, c.loginname
 			FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` s
 			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` d ON `d`.`id` = `s`.`domainid`
@@ -237,7 +237,7 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 	 */
 	public function listingCount()
 	{
-		// select all my (accessable) certificates
+		// select all my (accessible) certificates
 		$certs_stmt_query = "SELECT COUNT(*) as num_certs
 			FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` s
 			LEFT JOIN `" . TABLE_PANEL_DOMAINS . "` d ON `d`.`id` = `s`.`domainid`

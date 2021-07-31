@@ -77,7 +77,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	}
 
 	/**
-	 * returns the total number of accessable domains
+	 * returns the total number of accessible domains
 	 *
 	 * @access admin
 	 * @throws \Exception

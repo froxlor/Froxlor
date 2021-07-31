@@ -55,7 +55,7 @@ class ConfigDaemon
 	private $isparsed = false;
 
 	/**
-	 * Sub - area of the full - XML only holding the daemon - data we are interessted in
+	 * Sub - area of the full - XML only holding the daemon - data we are interested in
 	 *
 	 * @var \SimpleXMLElement
 	 */

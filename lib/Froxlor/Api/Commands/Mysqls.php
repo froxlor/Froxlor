@@ -46,7 +46,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 */
 	public function add()
 	{
-		// required paramters
+		// required parameters
 		$password = $this->getParam('mysql_password');
 
 		// parameters
@@ -314,7 +314,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		));
 		$id = $result['id'];
 
-		// paramters
+		// parameters
 		$password = $this->getParam('mysql_password', true, '');
 		$databasedescription = $this->getParam('description', true, $result['description']);
 
@@ -437,7 +437,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	}
 
 	/**
-	 * returns the total number of accessable databases
+	 * returns the total number of accessible databases
 	 *
 	 * @param int $customerid
 	 *        	optional, admin-only, select dbs of a specific customer by id

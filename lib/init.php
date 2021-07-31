@@ -265,7 +265,7 @@ if (isset($s) && $s != "" && $nosession != 1) {
 }
 
 /**
- * Language Managament
+ * Language Management
  */
 $langs = array();
 $languages = array();
@@ -279,7 +279,7 @@ while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 	$langs[$row['language']][] = $row;
 	// check for row[iso] cause older froxlor
 	// versions didn't have that and it will
-	// lead to a lot of undfined variables
+	// lead to a lot of undefined variables
 	// before the admin can even update
 	if (isset($row['iso'])) {
 		$iso[$row['iso']] = $row['language'];
