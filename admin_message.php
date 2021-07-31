@@ -32,10 +32,10 @@ if ($page == 'message') {
 		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, 'viewed panel_message');
 
 		if (isset($_POST['send']) && $_POST['send'] == 'send') {
-			if ($_POST['receipient'] == 0 && $userinfo['customers_see_all'] == '1') {
+			if ($_POST['recipient'] == 0 && $userinfo['customers_see_all'] == '1') {
 				$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, 'sending messages to admins');
 				$result = Database::query('SELECT `name`, `email`  FROM `' . TABLE_PANEL_ADMINS . "`");
-			} elseif ($_POST['receipient'] == 1) {
+			} elseif ($_POST['recipient'] == 1) {
 				if ($userinfo['customers_see_all'] == '1') {
 					$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, 'sending messages to ALL customers');
 					$result = Database::query('SELECT `firstname`, `name`, `company`, `email`  FROM `' . TABLE_PANEL_CUSTOMERS . "`");
@@ -49,7 +49,7 @@ if ($page == 'message') {
 					));
 				}
 			} else {
-				\Froxlor\UI\Response::standard_error('noreceipientsgiven');
+				\Froxlor\UI\Response::standard_error('norecipientsgiven');
 			}
 
 			$subject = $_POST['subject'];
@@ -105,7 +105,7 @@ if ($page == 'message') {
 		$sentitems = isset($_GET['sentitems']) ? (int) $_GET['sentitems'] : 0;
 
 		if ($sentitems == 0) {
-			$successmessage = $lng['message']['noreceipients'];
+			$successmessage = $lng['message']['norecipients'];
 		} else {
 			$successmessage = str_replace('%s', $sentitems, $lng['message']['success']);
 		}
@@ -116,12 +116,12 @@ if ($page == 'message') {
 	}
 
 	$action = '';
-	$receipients = '';
+	$recipients = '';
 
 	if ($userinfo['customers_see_all'] == '1') {
-		$receipients .= \Froxlor\UI\HTML::makeoption($lng['panel']['reseller'], 0);
+		$recipients .= \Froxlor\UI\HTML::makeoption($lng['panel']['reseller'], 0);
 	}
 
-	$receipients .= \Froxlor\UI\HTML::makeoption($lng['panel']['customer'], 1);
+	$recipients .= \Froxlor\UI\HTML::makeoption($lng['panel']['customer'], 1);
 	eval("echo \"" . \Froxlor\UI\Template::getTemplate('message/message') . "\";");
 }
