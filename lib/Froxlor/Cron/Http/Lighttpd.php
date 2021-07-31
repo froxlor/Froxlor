@@ -678,7 +678,7 @@ class Lighttpd extends HttpConfigBase
 				// After inserting the AWStats information,
 				// be sure to build the awstats conf file as well
 				// and chown it using $awstats_params, #258
-				// Bug 960 + Bug 970 : Use full $domain instead of custom $awstats_params as following classes depend on the informations
+				// Bug 960 + Bug 970 : Use full $domain instead of custom $awstats_params as following classes depend on the information
 				\Froxlor\Http\Statistics::createAWStatsConf(Settings::Get('system.logfiles_directory') . $domain['loginname'] . $speciallogfile . '-access.log', $domain['domain'], $alias . $server_alias, $domain['customerroot'], $domain);
 			}
 		}

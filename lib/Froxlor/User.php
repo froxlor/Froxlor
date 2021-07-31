@@ -77,7 +77,7 @@ class User
 	}
 
 	/**
-	 * Function which updates all counters of used ressources in panel_admins and panel_customers
+	 * Function which updates all counters of used resources in panel_admins and panel_customers
 	 *
 	 * @param bool $returndebuginfo
 	 *        	Set to true to get an array with debug information
@@ -237,7 +237,7 @@ class User
 			$admin_domains = Database::pexecute_first($admin_domains_stmt, array(
 				"aid" => $admin['adminid']
 			));
-			// substract the amount of domains that are std-subdomains later when we iterated through all customers and know for sure
+			// subtract the amount of domains that are std-subdomains later when we iterated through all customers and know for sure
 			$admin['domains_used_new'] = $admin_domains['number_domains'];
 			// set current admin
 			$cur_adm = $admin['adminid'];

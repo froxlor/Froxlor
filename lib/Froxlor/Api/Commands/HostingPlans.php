@@ -66,7 +66,7 @@ class HostingPlans extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 	}
 
 	/**
-	 * returns the total number of accessable hosting plans
+	 * returns the total number of accessible hosting plans
 	 *
 	 * @access admin
 	 * @throws \Exception
@@ -182,9 +182,9 @@ class HostingPlans extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 	 * @param bool $perlenabled
 	 *        	optional, whether to allow usage of Perl/CGI, default 0 (false)
 	 * @param bool $dnsenabled
-	 *        	optional, ether to allow usage of the DNS editor (requires activated nameserver in settings), default 0 (false)
+	 *        	optional, whether to allow usage of the DNS editor (requires activated nameserver in settings), default 0 (false)
 	 * @param bool $logviewenabled
-	 *        	optional, ether to allow acccess to webserver access/error-logs, default 0 (false)
+	 *        	optional, whether to allow access to webserver access/error-logs, default 0 (false)
 	 *        	
 	 * @access admin
 	 * @throws \Exception
@@ -309,9 +309,9 @@ class HostingPlans extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 	 * @param bool $perlenabled
 	 *        	optional, whether to allow usage of Perl/CGI, default 0 (false)
 	 * @param bool $dnsenabled
-	 *        	optional, ether to allow usage of the DNS editor (requires activated nameserver in settings), default 0 (false)
+	 *        	optional, either to allow usage of the DNS editor (requires activated nameserver in settings), default 0 (false)
 	 * @param bool $logviewenabled
-	 *        	optional, ether to allow acccess to webserver access/error-logs, default 0 (false)
+	 *        	optional, either to allow access to webserver access/error-logs, default 0 (false)
 	 *        	
 	 * @access admin
 	 * @throws \Exception

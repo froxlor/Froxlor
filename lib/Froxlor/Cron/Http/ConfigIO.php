@@ -287,7 +287,7 @@ class ConfigIO
 	}
 
 	/**
-	 * returns a file/direcotry from the settings and checks whether it exists
+	 * returns a file/directory from the settings and checks whether it exists
 	 *
 	 * @param string $group
 	 *        	settings-group

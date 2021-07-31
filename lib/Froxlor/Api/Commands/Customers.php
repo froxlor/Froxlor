@@ -316,9 +316,9 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 	 * @param bool $perlenabled
 	 *        	optional, whether to allow usage of Perl/CGI, default 0 (false)
 	 * @param bool $dnsenabled
-	 *        	optional, wether to allow usage of the DNS editor (requires activated nameserver in settings), default 0 (false)
+	 *        	optional, whether to allow usage of the DNS editor (requires activated nameserver in settings), default 0 (false)
 	 * @param bool $logviewenabled
-	 *        	optional, wether to allow acccess to webserver access/error-logs, default 0 (false)
+	 *        	optional, whether to allow access to webserver access/error-logs, default 0 (false)
 	 * @param bool $store_defaultindex
 	 *        	optional, whether to store the default index file to customers homedir
 	 * @param int $hosting_plan_id
@@ -923,9 +923,9 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 	 * @param bool $perlenabled
 	 *        	optional, whether to allow usage of Perl/CGI, default 0 (false)
 	 * @param bool $dnsenabled
-	 *        	optional, ether to allow usage of the DNS editor (requires activated nameserver in settings), default 0 (false)
+	 *        	optional, whether to allow usage of the DNS editor (requires activated nameserver in settings), default 0 (false)
 	 * @param bool $logviewenabled
-	 *        	optional, ether to allow acccess to webserver access/error-logs, default 0 (false)
+	 *        	optional, whether to allow access to webserver access/error-logs, default 0 (false)
 	 * @param string $theme
 	 *        	optional, change theme
 	 *        	

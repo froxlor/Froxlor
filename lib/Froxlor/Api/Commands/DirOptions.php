@@ -322,7 +322,7 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	}
 
 	/**
-	 * returns the total number of accessable directory options
+	 * returns the total number of accessible directory options
 	 *
 	 * @param int $customerid
 	 *        	optional, admin-only, select directory-protections of a specific customer by id

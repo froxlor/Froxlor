@@ -62,7 +62,7 @@ class SwitchServerIpAction extends \Froxlor\Cli\Action
 		$ip_list = $this->_args['switch'];
 
 		if (empty($ip_list) || is_bool($ip_list)) {
-			throw new \Exception("No paramters given for --switch action.");
+			throw new \Exception("No parameters given for --switch action.");
 		}
 
 		$ips_to_switch = array();
@@ -179,7 +179,7 @@ class SwitchServerIpAction extends \Froxlor\Cli\Action
 			} elseif (! file_exists($this->_args["froxlor-dir"])) {
 				throw new \Exception("Given froxlor directory cannot be found ('" . $this->_args["froxlor-dir"] . "')");
 			} elseif (! is_readable($this->_args["froxlor-dir"])) {
-				throw new \Exception("Given froxlor direcotry cannot be read ('" . $this->_args["froxlor-dir"] . "')");
+				throw new \Exception("Given froxlor directory cannot be read ('" . $this->_args["froxlor-dir"] . "')");
 			}
 		}
 	}

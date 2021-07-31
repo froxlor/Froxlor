@@ -377,7 +377,7 @@ exit "$RETVAL"
 # allow-axfr-ips	Allow zonetransfers only to these subnets
 #
 allow-axfr-ips=127.0.0.0/8,::1,<NAMESERVERS_IP>
-# add these entries to the list if any speficied: <AXFRSERVERS>
+# add these entries to the list if any specified: <AXFRSERVERS>
 
 #################################
 # allow-dnsupdate-from	A global setting to allow DNS updates from these IP ranges.
@@ -905,7 +905,7 @@ gmysql-password=
 # allow-axfr-ips	Allow zonetransfers only to these subnets
 #
 # allow-axfr-ips=127.0.0.0/8,::1,<NAMESERVERS_IP>
-# add these entries to the list if any speficied: <AXFRSERVERS>
+# add these entries to the list if any specified: <AXFRSERVERS>
 
 #################################
 # allow-dnsupdate-from	A global setting to allow DNS updates from these IP ranges.
@@ -2187,7 +2187,7 @@ debugger_command =
 #	>$config_directory/$process_name.$process_id.log & sleep 5
 #
 # Another possibility is to run gdb under a detached screen session.
-# To attach to the screen sesssion, su root and run "screen -r
+# To attach to the screen session, su root and run "screen -r
 # <id_string>" where <id_string> uniquely matches one of the detached
 # sessions (from "screen -list").
 #
@@ -4174,7 +4174,7 @@ Port				21
 # PassivePorts                  49152 65534
 
 # If your host was NATted, this option is useful in order to
-# allow passive tranfers to work. You have to use your public
+# allow passive transfers to work. You have to use your public
 # address and opening the passive ports used on your firewall as well.
 # MasqueradeAddress		1.2.3.4
 
@@ -4199,7 +4199,7 @@ Group				nogroup
 # Umask 022 is a good standard umask to prevent new files and dirs
 # (second parm) from being group and world writable.
 Umask				022  022
-# Normally, we want files to be overwriteable.
+# Normally, we want files to be overwritable.
 AllowOverwrite			on
 
 # Uncomment this if you are using NIS or LDAP via NSS to retrieve passwords:
@@ -4448,7 +4448,7 @@ SQLBackend	mysql
 SQLEngine on
 SQLAuthenticate on
 #
-# Use both a crypted or plaintext password
+# Use both an encrypted or plaintext password
 SQLAuthTypes Crypt
 
 SQLAuthenticate users* groups*
@@ -4506,7 +4506,7 @@ TLSVerifyClient                         off
 #TLSRequired                             on
 
 # Allow SSL/TLS renegotiations when the client requests them, but
-# do not force the renegotations.  Some clients do not support
+# do not force the renegotiations.  Some clients do not support
 # SSL/TLS renegotiations; when mod_tls forces a renegotiation, these
 # clients will close the data connection, or there will be a timeout
 # on an idle data connection.
@@ -4806,7 +4806,7 @@ aliases:     files
 						chmod="0644">
 						<content><![CDATA[
 #
-# Froxlor logrotate snipet
+# Froxlor logrotate snippet
 #
 <CUSTOMER_LOGS>*.log {
   missingok

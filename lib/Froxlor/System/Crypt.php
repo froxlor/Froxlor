@@ -59,20 +59,20 @@ class Crypt
 	}
 
 	/**
-	 * Make crypted password from clear text password
+	 * Make encrypted password from clear text password
 	 *
 	 * @author Michal Wojcik <m.wojcik@sonet3.pl>
 	 * @author Michael Kaufmann <mkaufmann@nutime.de>
 	 * @author Froxlor team <team@froxlor.org> (2010-)
 	 *        
-	 *         0 - default crypt (depenend on system configuration)
+	 *         0 - default crypt (depends on system configuration)
 	 *         1 - MD5 $1$
 	 *         2 - BLOWFISH $2y$07$
 	 *         3 - SHA-256 $5$ (default)
 	 *         4 - SHA-512 $6$
 	 *        
 	 * @param string $password
-	 *        	Password to be crypted
+	 *        	Password to be encrypted
 	 * @param bool $htpasswd
 	 *        	optional whether to generate a SHA1 password for directory protection
 	 *        	

@@ -305,7 +305,7 @@ class DirProtections extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Res
 	}
 
 	/**
-	 * returns the total number of accessable directory protections
+	 * returns the total number of accessible directory protections
 	 *
 	 * @param int $customerid
 	 *        	optional, admin-only, select directory-protections of a specific customer by id

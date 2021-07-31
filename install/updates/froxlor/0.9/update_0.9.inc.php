@@ -2505,7 +2505,7 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.9.30')) {
 	showUpdateStep("Updating from 0.9.30 to 0.9.31-dev1", true);
 	lastStepStatus(0);
 
-	showUpdateStep("Removing unsused tables");
+	showUpdateStep("Removing unused tables");
 	Database::query("DROP TABLE IF EXISTS `ipsandports_docrootsettings`;");
 	Database::query("DROP TABLE IF EXISTS `domain_docrootsettings`;");
 	lastStepStatus(0);
@@ -2856,7 +2856,7 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.9.32-rc1')) {
 	Settings::AddNew("system.croncmdline", $croncmdline);
 	// add task to generate cron.d-file
 	\Froxlor\System\Cronjob::inserttask('99');
-	// silenty add the auto-update setting - we do not want everybody to know and use this
+	// silently add the auto-update setting - we do not want everybody to know and use this
 	// as it is a very dangerous setting
 	Settings::AddNew("system.cron_allowautoupdate", 0);
 	lastStepStatus(0);
@@ -3872,7 +3872,7 @@ opcache.interned_strings_buffer');
 
 if (\Froxlor\Froxlor::isDatabaseVersion('201801110')) {
 
-	showUpdateStep("Adding php-fpm php PATH setting for envrironment");
+	showUpdateStep("Adding php-fpm php PATH setting for environment");
 	Settings::AddNew("phpfpm.envpath", '/usr/local/bin:/usr/bin:/bin');
 	lastStepStatus(0);
 

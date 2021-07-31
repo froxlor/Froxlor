@@ -326,7 +326,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	}
 
 	/**
-	 * returns the total number of accessable email addresses
+	 * returns the total number of accessible email addresses
 	 *
 	 * @param int $customerid
 	 *        	optional, admin-only, select email addresses of a specific customer by id

@@ -56,7 +56,7 @@ $(document).ready(function() {
 		
 		// Draw percentages
 		if (!isNaN(assigned) && available == "∞") {
-			// Unlimited ressource and assigned
+			// Unlimited resource and assigned
 			if (assigned > used) {
 				// Draw assigned as full circle
 				circularCircle(canvas, 38, 0, 270, 4, assiColor);
@@ -77,7 +77,7 @@ $(document).ready(function() {
 			}
 			circularText(canvas, 60, 42, 26, "∞");
 		} else if (!isNaN(assigned)) {
-			// Limited ressources but assigned
+			// Limited resources but assigned
 			available = parseFloat(available);
 			
 			assignedP = Math.round(100 / available * assigned);
@@ -92,7 +92,7 @@ $(document).ready(function() {
 			circularCircle(canvas, 40, 0, 270, 8, unliColor);
 			circularText(canvas, 60, 42, 26, "∞");
 		} else {
-			// Limited ressources
+			// Limited resources
 			available = parseFloat(available);
 			usedP = 100 / available * used;
 			if (usedP < 1 && usedP > 0) {

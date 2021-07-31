@@ -926,7 +926,7 @@ $lng['admin']['ipsandports']['default_vhostconf_domain'] = 'Default vHost-settin
 $lng['serversettings']['ssl']['ssl_key_file']['title'] = 'Path to the SSL Keyfile';
 $lng['serversettings']['ssl']['ssl_key_file']['description'] = 'Specify the path including the filename for the private-key file (.key mostly)';
 $lng['serversettings']['ssl']['ssl_ca_file']['title'] = 'Path to the SSL CA certificate (optional)';
-$lng['serversettings']['ssl']['ssl_ca_file']['description'] = 'Client authentification, set this only if you know what it is.';
+$lng['serversettings']['ssl']['ssl_ca_file']['description'] = 'Client authentication, set this only if you know what it is.';
 
 $lng['error']['usernamealreadyexists'] = 'The username %s already exists.';
 
@@ -1601,7 +1601,7 @@ $lng['admin']['ipsandports']['ssl_paste_description'] = 'Paste your complete cer
 $lng['admin']['ipsandports']['ssl_cert_file_content'] = 'Content of the ssl certificate';
 $lng['admin']['ipsandports']['ssl_key_file_content'] = 'Content of the ssl (private-) key file';
 $lng['admin']['ipsandports']['ssl_ca_file_content'] = 'Content of the ssl CA file (optional)';
-$lng['admin']['ipsandports']['ssl_ca_file_content_desc'] = '<br /><br />Client authentification, set this only if you know what it is.';
+$lng['admin']['ipsandports']['ssl_ca_file_content_desc'] = '<br /><br />Client authentication, set this only if you know what it is.';
 $lng['admin']['ipsandports']['ssl_cert_chainfile_content'] = 'Content of the certificate chain file (optional)';
 $lng['admin']['ipsandports']['ssl_cert_chainfile_content_desc'] = '<br /><br />Mostly CA_Bundle, or similar, you probably want to set this if you bought a SSL certificate.';
 $lng['error']['sslcertificateismissingprivatekey'] = 'You need to specify a private key for your certificate';
@@ -1611,7 +1611,7 @@ $lng['error']['sslcertificateinvalidcertkeypair'] = 'The given private-key does 
 $lng['error']['sslcertificateinvalidca'] = 'The given CA certificate data does not seem to be a valid certificate';
 $lng['error']['sslcertificateinvalidchain'] = 'The given certificate chain data does not seem to be a valid certificate';
 $lng['serversettings']['customerssl_directory']['title'] = 'Webserver customer-ssl certificates-directory';
-$lng['serversettings']['customerssl_directory']['description'] = 'Where should customer-specified ssl-certificates be created?<br /><br /><div class="red">NOTE: This folder\'s content gets deleted regulary so avoid storing data in there manually.</div>';
+$lng['serversettings']['customerssl_directory']['description'] = 'Where should customer-specified ssl-certificates be created?<br /><br /><div class="red">NOTE: This folder\'s content gets deleted regularly so avoid storing data in there manually.</div>';
 $lng['admin']['phpfpm.ininote'] = 'Not all values you may want to define can be used in the php-fpm pool configuration';
 
 // Added in Froxlor 0.9.30
@@ -1918,7 +1918,7 @@ $lng['dnseditor']['records'] = 'records';
 $lng['error']['dns_notfoundorallowed'] = 'Domain not found or no permission';
 $lng['serversettings']['dnseditorenable']['title'] = 'Enable DNS editor';
 $lng['serversettings']['dnseditorenable']['description'] = 'Allows admins and customer to manage domain dns entries';
-$lng['dns']['howitworks'] = 'Here you can manage DNS entries for your domain. Note that froxlor will automatically generate NS/MX/A/AAAA records for you. The custom entries are prefered, only missing entries will be automatically generated.';
+$lng['dns']['howitworks'] = 'Here you can manage DNS entries for your domain. Note that froxlor will automatically generate NS/MX/A/AAAA records for you. The custom entries are preferred, only missing entries will be automatically generated.';
 $lng['serversettings']['dns_server']['title'] = 'DNS server daemon';
 $lng['serversettings']['dns_server']['description'] = 'Remember that daemons have to be configured using froxlors configuration templates';
 
@@ -1993,7 +1993,7 @@ $lng['serversettings']['leapiversion']['title'] = "Choose Let's Encrypt ACME imp
 $lng['serversettings']['leapiversion']['description'] = "Currently only ACME v2 implementation for Let's Encrypt is supported.";
 $lng['admin']['phpsettings']['pass_authorizationheader'] = 'Add "-pass-header Authorization" / "CGIPassAuth On" to vhosts';
 $lng['serversettings']['ssl']['ssl_protocols']['title'] = 'Configure the TLS protocol version';
-$lng['serversettings']['ssl']['ssl_protocols']['description'] = 'This is a list of ssl protocols that you want (or don\'t want) to use when using SSL. <b>Notice:</b> Some older browsers may not support the newest protcol versions.<br /><br /><b>Default value is:</b><pre>TLSv1.2</pre>';
+$lng['serversettings']['ssl']['ssl_protocols']['description'] = 'This is a list of ssl protocols that you want (or don\'t want) to use when using SSL. <b>Notice:</b> Some older browsers may not support the newest protocol versions.<br /><br /><b>Default value is:</b><pre>TLSv1.2</pre>';
 $lng['serversettings']['phpfpm_settings']['limit_extensions']['title'] = 'Allowed extensions';
 $lng['serversettings']['phpfpm_settings']['limit_extensions']['description'] = 'Limits the extensions of the main script FPM will allow to parse. This can prevent configuration mistakes on the web server side. You should only limit FPM to .php extensions to prevent malicious users to use other extensions to execute php code. Default value: .php';
 $lng['phpfpm']['ini_flags'] = 'Enter possible <strong>php_flag</strong>s for php.ini. One entry per line';

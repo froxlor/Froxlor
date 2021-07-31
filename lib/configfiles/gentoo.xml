@@ -398,7 +398,7 @@ mail	IN		A	<SERVERIP>
 # allow-axfr-ips	Allow zonetransfers only to these subnets
 #
 allow-axfr-ips=127.0.0.0/8,::1,<NAMESERVERS_IP>
-# add these entries to the list if any speficied: <AXFRSERVERS>
+# add these entries to the list if any specified: <AXFRSERVERS>
 
 #################################
 # allow-dnsupdate-from	A global setting to allow DNS updates from these IP ranges.
@@ -927,7 +927,7 @@ gmysql-password=
 # allow-axfr-ips	Allow zonetransfers only to these subnets
 #
 allow-axfr-ips=127.0.0.0/8,::1,<NAMESERVERS_IP>
-# add these entries to the list if any speficied: <AXFRSERVERS>
+# add these entries to the list if any specified: <AXFRSERVERS>
 
 #################################
 # allow-dnsupdate-from	A global setting to allow DNS updates from these IP ranges.
@@ -1587,7 +1587,7 @@ sendmail_path = /usr/sbin/sendmail
 # FQDN from Froxlor
 mydomain = <SERVERNAME>
 
-# set myhostname to $mydomain because Froxlor alrady uses a FQDN
+# set myhostname to $mydomain because Froxlor already uses a FQDN
 myhostname = $mydomain
 
 mydestination = $myhostname,
@@ -3762,7 +3762,7 @@ aliases:     files
 					</file>
 					<command><![CDATA[rc-update add nscd default]]></command>
 					<command><![CDATA[/etc/init.d/nscd restart]]></command>
-					<!-- clear group chache -->
+					<!-- clear group cache -->
 					<command><![CDATA[nscd --invalidate=group]]></command>
 				</daemon>
 				<!-- Logrotate -->
@@ -3772,7 +3772,7 @@ aliases:     files
 						chmod="0644">
 						<content><![CDATA[
 #
-# Froxlor logrotate snipet
+# Froxlor logrotate snippet
 #
 <CUSTOMER_LOGS>*.log {
   missingok

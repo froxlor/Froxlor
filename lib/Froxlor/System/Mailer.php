@@ -7,7 +7,7 @@ class Mailer extends \PHPMailer\PHPMailer\PHPMailer
 {
 
 	/**
-	 * class construtor
+	 * class constructor
 	 *
 	 * @param string $exceptions
 	 *        	whether to throw exceptions or not

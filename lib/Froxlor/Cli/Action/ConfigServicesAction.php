@@ -402,7 +402,7 @@ class ConfigServicesAction extends \Froxlor\Cli\Action
 			} elseif (! file_exists($this->_args["froxlor-dir"])) {
 				throw new \Exception("Given froxlor directory cannot be found ('" . $this->_args["froxlor-dir"] . "')");
 			} elseif (! is_readable($this->_args["froxlor-dir"])) {
-				throw new \Exception("Given froxlor direcotry cannot be read ('" . $this->_args["froxlor-dir"] . "')");
+				throw new \Exception("Given froxlor directory cannot be read ('" . $this->_args["froxlor-dir"] . "')");
 			}
 		}
 	}

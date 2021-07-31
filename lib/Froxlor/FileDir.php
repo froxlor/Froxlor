@@ -370,7 +370,7 @@ class FileDir
 	 * @param
 	 *        	integer uid The uid which must match the found directories
 	 * @param
-	 *        	integer gid The gid which must match the found direcotries
+	 *        	integer gid The gid which must match the found directories
 	 * @param
 	 *        	string value the value for the input-field
 	 *        	
@@ -461,7 +461,7 @@ class FileDir
 	 * @param int $uid
 	 *        	the uid which must match the found directories
 	 * @param int $gid
-	 *        	the gid which must match the found direcotries
+	 *        	the gid which must match the found directories
 	 *        	
 	 * @return array Array of found valid paths
 	 */

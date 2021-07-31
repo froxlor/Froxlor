@@ -226,7 +226,7 @@ query = SELECT gid FROM mail_users WHERE email = '%s'
 # FQDN from Froxlor
 mydomain = <SERVERNAME>
 
-# set myhostname to $mydomain because Froxlor alrady uses a FQDN
+# set myhostname to $mydomain because Froxlor already uses a FQDN
 myhostname = $mydomain
 
 mydestination = $myhostname,
@@ -1536,7 +1536,7 @@ protocol sieve {
 #
 # If you want UIDL compatibility with other POP3 servers, use:
 #  UW's ipop3d         : %08Xv%08Xu
-#  Courier             : %f or %v-%u (both might be used simultaneosly)
+#  Courier             : %f or %v-%u (both might be used simultaneously)
 #  Cyrus (<= 2.1.3)    : %u
 #  Cyrus (>= 2.1.4)    : %v.%u
 #  Dovecot v0.99.x     : %v.%u
@@ -1754,7 +1754,7 @@ driver = mysql
 # settings, like: host=sql1.host.org host=sql2.host.org
 #
 # pgsql:
-#   For available options, see the PostgreSQL documention for the
+#   For available options, see the PostgreSQL documentation for the
 #   PQconnectdb function of libpq.
 #   Use maxconns=n (default 5) to change how many connections Dovecot can
 #   create to pgsql.
@@ -2237,7 +2237,7 @@ ControlsLog			/var/log/proftpd/controls.log
   DefaultRoot ~
 # Reject rootlogin (just for security)
   RootLogin off
-# Noo need to require valid shell, because user is virtual
+# No need to require valid shell, because user is virtual
   RequireValidShell off
 </Global>
 
@@ -2447,7 +2447,7 @@ aliases:	files nisplus
 						</content>
 					</file>
 					<command><![CDATA[systemctl reload-or-restart nscd.service]]></command>
-					<!-- clear group chache -->
+					<!-- clear group cache -->
 					<command><![CDATA[nscd --invalidate=group]]></command>
 				</daemon>
 				<!-- Logrotate -->
@@ -2457,7 +2457,7 @@ aliases:	files nisplus
 						chmod="0644">
 						<content><![CDATA[
 #
-# Froxlor logrotate snipet
+# Froxlor logrotate snippet
 #
 <CUSTOMER_LOGS>*.log {
   missingok

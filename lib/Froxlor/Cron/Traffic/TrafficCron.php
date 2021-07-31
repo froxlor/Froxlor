@@ -69,7 +69,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 		}
 
 		/**
-		 * TRAFFIC AND DISKUSAGE MESSURE
+		 * TRAFFIC AND DISKUSAGE MEASURE
 		 */
 		\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'Traffic run started...');
 		$admin_traffic = array();
