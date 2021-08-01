@@ -23,8 +23,8 @@ $header
 				
 				<table class="full">
 					<tr>
-						<td><b><label for="receipient">{$lng['admin']['receipient']}</label></b></td>
-						<td><select name="receipient" id="receipient">$receipients</select></td>
+						<td><b><label for="recipient">{$lng['admin']['recipient']}</label></b></td>
+						<td><select name="recipient" id="recipient">$recipients</select></td>
 					</tr>
 					<tr>
 						<td><b><label for="subject">{$lng['admin']['subject']}</label></b></td>
