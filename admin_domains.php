@@ -594,8 +594,10 @@ if ($page == 'domains' || $page == 'overview') {
 				}
 
 				$result = \Froxlor\PhpHelper::htmlentitiesArray($result);
-				$result['customername'] .= ' (<a href="' . $linker->getLink(array('section' => 'customers', 'page' => 'customers',
-					'action' => 'su', 'id' => $customer['customerid'])) . '" rel="external">' . $customer['loginname'] . '</a>)';
+				if (Settings::Get('panel.allow_domain_change_customer') != '1') {
+					$result['customername'] .= ' (<a href="' . $linker->getLink(array('section' => 'customers', 'page' => 'customers',
+						'action' => 'su', 'id' => $customer['customerid'])) . '" rel="external">' . $customer['loginname'] . '</a>)';
+				}
 
 				$domain_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/domains/formfield.domains_edit.php';
 				$domain_edit_form = \Froxlor\UI\HtmlForm::genHTMLForm($domain_edit_data);
