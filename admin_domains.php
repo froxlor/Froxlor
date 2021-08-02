@@ -608,8 +608,10 @@ if ($page == 'domains' || $page == 'overview') {
 				}
 
 				$result = \Froxlor\PhpHelper::htmlentitiesArray($result);
-				$result['customername'] .= ' (<a href="' . $linker->getLink(array('section' => 'customers', 'page' => 'customers',
-					'action' => 'su', 'id' => $customer['customerid'])) . '" rel="external">' . $customer['loginname'] . '</a>)';
+				if (Settings::Get('panel.allow_domain_change_customer') != '1') {
+					$result['customername'] .= ' (<a href="' . $linker->getLink(array('section' => 'customers', 'page' => 'customers',
+						'action' => 'su', 'id' => $customer['customerid'])) . '" rel="external">' . $customer['loginname'] . '</a>)';
+				}
 
 				$pubkey = $result['dkim_pubkey'];
 				if((strlen($pubkey) > 20 && strlen($pubkey) < 400) || (strlen($pubkey) < 20 && ((int)\Froxlor\Settings::Get('dkim.dkim_keylength') == 1024))){
