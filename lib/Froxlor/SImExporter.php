@@ -16,9 +16,9 @@ use Froxlor\Database\Database;
  * @author Froxlor team <team@froxlor.org> (2018-)
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package Classes
- *         
+ *
  * @since 0.9.39
- *       
+ *
  */
 
 /**
@@ -60,6 +60,13 @@ class SImExporter
 
 	public static function export()
 	{
+	    $settings_definitions = [];
+	    foreach (\Froxlor\PhpHelper::loadConfigArrayDir('./actions/admin/settings/')['groups'] AS $group) {
+            foreach ($group['fields'] AS $field) {
+                $settings_definitions[$field['settinggroup']][$field['varname']] = $field;
+            }
+        }
+
 		$result_stmt = Database::query("
 			SELECT * FROM `" . TABLE_PANEL_SETTINGS . "` ORDER BY `settingid` ASC
 		");
@@ -69,13 +76,26 @@ class SImExporter
 			if (! in_array($index, self::$no_export)) {
 				$_data[$index] = $row['value'];
 			}
+
+			if (array_key_exists($row['settinggroup'], $settings_definitions) && array_key_exists($row['varname'], $settings_definitions[$row['settinggroup']])) {
+			    // Export image file
+			    if ($settings_definitions[$row['settinggroup']][$row['varname']]['type'] === "image") {
+			        if ($row['value'] === "") {
+			            continue;
+                    }
+
+			        $_data[$index.'.image_data'] = base64_encode(file_get_contents(explode('?', $row['value'], 2)[0]));
+                }
+            }
 		}
+
 		// add checksum for validation
 		$_data['_sha'] = sha1(var_export($_data, true));
 		$_export = json_encode($_data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
 		if (! $_export) {
 			throw new \Exception("Error exporting settings: " . json_last_error_msg());
 		}
+
 		return $_export;
 	}
 
@@ -98,7 +118,7 @@ class SImExporter
 			if ($_sha != sha1(var_export($_data, true))) {
 				throw new \Exception("SHA check of import data failed. Unable to import.");
 			}
-			// do not import version info - but we need that to possibily update settings
+			// do not import version info - but we need that to possibly update settings
 			// when there were changes in the variable-name or similar
 			unset($_data['panel.version']);
 			unset($_data['panel.db_version']);
@@ -120,6 +140,26 @@ class SImExporter
 			}
 			// store new data
 			foreach ($_data as $index => $value) {
+                $index_split = explode('.', $index, 3);
+
+			    // Catch image_data and save it
+                if (isset($index_split[2]) && $index_split[2] === 'image_data' && !empty($_data[$index_split[0].'.'.$index_split[1]])) {
+                    $path = \Froxlor\Froxlor::getInstallDir().'/img/';
+                    if (!is_dir($path) && !mkdir($path, '0775')) {
+                        throw new \Exception("img directory does not exist and cannot be created");
+                    }
+
+                    // Make sure we can write to the upload directory
+                    if (!is_writable($path)) {
+                        if (!chmod($path, '0775')) {
+                            throw new \Exception("Cannot write to img directory");
+                        }
+                    }
+
+                    file_put_contents(\Froxlor\Froxlor::getInstallDir() . '/' . explode('?', $_data[$index_split[0].'.'.$index_split[1]], 2)[0], base64_decode($value));
+                    continue;
+                }
+
 				Settings::Set($index, $value);
 			}
 			// save to DB

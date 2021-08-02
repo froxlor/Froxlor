@@ -79,7 +79,7 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	}
 
 	/**
-	 * returns the total number of accessable fpm daemons
+	 * returns the total number of accessible fpm daemons
 	 *
 	 * @access admin
 	 * @throws \Exception

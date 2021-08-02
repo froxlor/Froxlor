@@ -1,6 +1,7 @@
 <?php
 use Froxlor\Database\Database;
 use Froxlor\Settings;
+use Froxlor\Validate\Validate;
 
 /**
  * This file is part of the Froxlor project.
@@ -14,7 +15,7 @@ use Froxlor\Settings;
  * @author Froxlor team <team@froxlor.org> (2010-)
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package Install
- *         
+ *
  */
 if (! defined('_CRON_UPDATE')) {
 	if (! defined('AREA') || (defined('AREA') && AREA != 'admin') || ! isset($userinfo['loginname']) || (isset($userinfo['loginname']) && $userinfo['loginname'] == '')) {
@@ -802,4 +803,114 @@ if (\Froxlor\Froxlor::isDatabaseVersion('202103110')) {
 if (\Froxlor\Froxlor::isFroxlorVersion('0.10.25')) {
     showUpdateStep("Updating from 0.10.25 to 0.10.26", false);
     \Froxlor\Froxlor::updateToVersion('0.10.26');
+}
+
+if (\Froxlor\Froxlor::isDatabaseVersion('202103240')) {
+
+    showUpdateStep("Adding setting for default serveralias value for new domains", true);
+    Settings::AddNew("system.domaindefaultalias", '0');
+    lastStepStatus(0);
+
+    \Froxlor\Froxlor::updateToDbVersion('202106160');
+}
+
+if (\Froxlor\Froxlor::isDatabaseVersion('202106160')) {
+
+    showUpdateStep("Adjusting Let's Encrypt endpoint configuration to support ZeroSSL", true);
+    if (Settings::Get('system.letsencryptca') == 'testing') {
+        Settings::Set("system.letsencryptca", 'letsencrypt_test');
+    } else {
+        Settings::Set("system.letsencryptca", 'letsencrypt');
+    }
+    lastStepStatus(0);
+
+    \Froxlor\Froxlor::updateToDbVersion('202106270');
+}
+
+if (\Froxlor\Froxlor::isDatabaseVersion('202106270')) {
+    showUpdateStep("Adding custom logo image settings", true);
+    Settings::AddNew("panel.logo_image_header", '');
+    Settings::AddNew("panel.logo_image_login", '');
+    lastStepStatus(0);
+
+    // Migrating old custom logo over, if exists
+    $custom_logo_file_old = \Froxlor\Froxlor::getInstallDir() . '/templates/Sparkle/assets/img/logo_custom.png';
+    if (file_exists($custom_logo_file_old)) {
+        showUpdateStep("Migrating existing custom logo to new settings", true);
+
+        $path = \Froxlor\Froxlor::getInstallDir().'/img/';
+        if (!is_dir($path) && !mkdir($path, 0775)) {
+            throw new \Exception("img directory does not exist and cannot be created");
+        }
+        if (!is_writable($path)) {
+            if (!chmod($path, '0775')) {
+                throw new \Exception("Cannot write to img directory");
+            }
+        }
+
+        // Save as new custom logo header
+        $save_to = 'logo_header.png';
+        copy($custom_logo_file_old, $path.$save_to);
+        Settings::Set("panel.logo_image_header", "img/{$save_to}?v=".time());
+
+        // Save as new custom logo login
+        $save_to = 'logo_login.png';
+        copy($custom_logo_file_old, $path.$save_to);
+        Settings::Set("panel.logo_image_login", "img/{$save_to}?v=".time());
+
+        lastStepStatus(0);
+    }
+
+    \Froxlor\Froxlor::updateToDbVersion('202107070');
+}
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.26')) {
+	showUpdateStep("Updating from 0.10.26 to 0.10.27", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.27');
+}
+
+if (\Froxlor\Froxlor::isDatabaseVersion('202107070')) {
+	showUpdateStep("Adding settings to overwrite theme- or custom theme-logo with the new logo settings", true);
+	Settings::AddNew("panel.logo_overridetheme", '0');
+	Settings::AddNew("panel.logo_overridecustom", '0');
+	lastStepStatus(0);
+	\Froxlor\Froxlor::updateToDbVersion('202107200');
+}
+
+if (\Froxlor\Froxlor::isDatabaseVersion('202107200')) {
+	showUpdateStep("Adding settings to define default value of 'create std-subdomain' when creating a customer", true);
+	Settings::AddNew("system.createstdsubdom_default", '1');
+	lastStepStatus(0);
+	\Froxlor\Froxlor::updateToDbVersion('202107210');
+}
+
+if (\Froxlor\Froxlor::isDatabaseVersion('202107210')) {
+	showUpdateStep("Normalizing ipv6 for correct comparison", true);
+	$result_stmt = Database::prepare("
+		SELECT `id`, `ip` FROM `" . TABLE_PANEL_IPSANDPORTS . "`"
+	);
+	Database::pexecute($result_stmt);
+	$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_IPSANDPORTS . "` SET `ip` = :ip WHERE `id` = :id");
+	while ($iprow = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
+		if (Validate::is_ipv6($iprow['ip'])) {
+			$ip = inet_ntop(inet_pton($iprow['ip']));
+			Database::pexecute($upd_stmt, [
+				'ip' => $ip,
+				'id' => $iprow['id']
+			]);
+		}
+	}
+	lastStepStatus(0);
+	\Froxlor\Froxlor::updateToDbVersion('202107260');
+}
+
+if (\Froxlor\Froxlor::isDatabaseVersion('202107260')) {
+	showUpdateStep("Removing setting for search-engine allow yes/no", true);
+	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'panel' AND `varname` = 'no_robots'");
+	lastStepStatus(0);
+	showUpdateStep("Adding setting to have all froxlor customers in a local group", true);
+	Settings::AddNew("system.froxlorusergroup", '');
+	Settings::AddNew("system.froxlorusergroup_gid", '');
+	lastStepStatus(0);
+	\Froxlor\Froxlor::updateToDbVersion('202107300');
 }

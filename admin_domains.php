@@ -290,9 +290,9 @@ if ($page == 'domains' || $page == 'overview') {
 
 			// create serveralias options
 			$serveraliasoptions = "";
-			$serveraliasoptions .= \Froxlor\UI\HTML::makeoption($lng['domains']['serveraliasoption_wildcard'], '0', '0', true, true);
-			$serveraliasoptions .= \Froxlor\UI\HTML::makeoption($lng['domains']['serveraliasoption_www'], '1', '0', true, true);
-			$serveraliasoptions .= \Froxlor\UI\HTML::makeoption($lng['domains']['serveraliasoption_none'], '2', '0', true, true);
+			$serveraliasoptions .= \Froxlor\UI\HTML::makeoption($lng['domains']['serveraliasoption_wildcard'], '0', Settings::Get('system.domaindefaultalias'), true, true);
+			$serveraliasoptions .= \Froxlor\UI\HTML::makeoption($lng['domains']['serveraliasoption_www'], '1', Settings::Get('system.domaindefaultalias'), true, true);
+			$serveraliasoptions .= \Froxlor\UI\HTML::makeoption($lng['domains']['serveraliasoption_none'], '2', Settings::Get('system.domaindefaultalias'), true, true);
 
 			$subcanemaildomain = \Froxlor\UI\HTML::makeoption($lng['admin']['subcanemaildomain']['never'], '0', '0', true, true);
 			$subcanemaildomain .= \Froxlor\UI\HTML::makeoption($lng['admin']['subcanemaildomain']['choosableno'], '1', '0', true, true);
@@ -442,7 +442,7 @@ if ($page == 'domains' || $page == 'overview') {
 					$customer = Database::pexecute_first($customer_stmt, array(
 						'customerid' => $result['customerid']
 					));
-					$result['customername'] = \Froxlor\User::getCorrectFullUserDetails($customer) . ' (' . $customer['loginname'] . ')';
+					$result['customername'] = \Froxlor\User::getCorrectFullUserDetails($customer);
 				}
 
 				if ($userinfo['customers_see_all'] == '1') {
@@ -608,6 +608,8 @@ if ($page == 'domains' || $page == 'overview') {
 				}
 
 				$result = \Froxlor\PhpHelper::htmlentitiesArray($result);
+				$result['customername'] .= ' (<a href="' . $linker->getLink(array('section' => 'customers', 'page' => 'customers',
+					'action' => 'su', 'id' => $customer['customerid'])) . '" rel="external">' . $customer['loginname'] . '</a>)';
 
 				$pubkey = $result['dkim_pubkey'];
 				if((strlen($pubkey) > 20 && strlen($pubkey) < 400) || (strlen($pubkey) < 20 && ((int)\Froxlor\Settings::Get('dkim.dkim_keylength') == 1024))){

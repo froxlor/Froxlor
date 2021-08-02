@@ -1,0 +1,80 @@
+name: Froxlor-CI-MariaDB
+on: ['push', 'pull_request', 'create']
+
+jobs:
+  froxlor:
+    name: Froxlor (PHP ${{ matrix.php-versions }}, MariaDB ${{ matrix.mariadb-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php-versions: ['7.4', '8.0']
+        mariadb-version: [10.5, 10.4]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup PHP, with composer and extensions
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          tools: composer:v2
+          extensions: mbstring, xml, ctype, pdo_mysql, mysql, curl, json, zip, session, filter, posix, openssl, fileinfo, bcmath
+
+      - name: Install tools
+        run: sudo apt-get install -y ant
+
+      - name: Adjust firewall
+        run: |
+          sudo ufw allow out 3306/tcp
+          sudo ufw allow in 3306/tcp
+
+      - name: Setup MariaDB
+        uses: getong/mariadb-action@v1.1
+        with:
+          mariadb version: ${{ matrix.mariadb-version }}
+          mysql database: 'froxlor010'
+          mysql root password: 'fr0xl0r.TravisCI'
+
+      - name: Wait for database
+        run: sleep 15
+
+      - name: Setup databases
+        run: |
+          mysql -h 127.0.0.1 --protocol=TCP -u root -pfr0xl0r.TravisCI -e "CREATE USER 'froxlor010'@'%' IDENTIFIED BY 'fr0xl0r.TravisCI';"
+          mysql -h 127.0.0.1 --protocol=TCP -u root -pfr0xl0r.TravisCI -e "GRANT ALL ON froxlor010.* TO 'froxlor010'@'%';"
+          mysql -h 127.0.0.1 --protocol=TCP -u root -pfr0xl0r.TravisCI froxlor010 < install/froxlor.sql
+
+      - name: Run testing
+        run: ant quick-build
+
+#      - name: irc push
+#        uses: rectalogic/notify-irc@v1
+#        if: github.event_name == 'push'
+#        with:
+#          channel: "#froxlor"
+#          server: "irc.libera.chat"
+#          nickname: froxlor-ci
+#          message: |
+#            ${{ github.actor }} pushed ${{ github.event.ref }} ${{ github.event.compare }}
+#            ${{ join(github.event.commits.*.message) }}
+
+#      - name: irc pull request
+#        uses: rectalogic/notify-irc@v1
+#        if: github.event_name == 'pull_request'
+#        with:
+#          channel: "#froxlor"
+#          server: "irc.libera.chat"
+#          nickname: froxlor-ci
+#          message: |
+#            ${{ github.actor }} opened PR ${{ github.event.pull_request.html_url }}
+
+#      - name: irc tag created
+#        uses: rectalogic/notify-irc@v1
+#        if: github.event_name == 'create' && github.event.ref_type == 'tag'
+#        with:
+#          channel: "#froxlor"
+#          server: "irc.libera.chat"
+#          nickname: froxlor-ci
+#          message: |
+#            ${{ github.actor }} tagged ${{ github.repository }} ${{ github.event.ref }}

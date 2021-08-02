@@ -150,7 +150,7 @@ abstract class BulkAction
 
 	/**
 	 * reads in the csv import file and returns an array with
-	 * all the entites to be imported
+	 * all the entities to be imported
 	 *
 	 * @param string $separator
 	 *

@@ -65,7 +65,7 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 	}
 
 	/**
-	 * returns the total number of accessable ip/port entries
+	 * returns the total number of accessible ip/port entries
 	 *
 	 * @access admin
 	 * @throws \Exception
@@ -246,6 +246,9 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			} else {
 				$docroot = '';
 			}
+
+			// always use compressed ipv6 format
+			$ip = inet_ntop(inet_pton($ip));
 
 			$result_checkfordouble_stmt = Database::prepare("
 			SELECT `id` FROM `" . TABLE_PANEL_IPSANDPORTS . "`
@@ -461,6 +464,9 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			} else {
 				$docroot = '';
 			}
+
+			// always use compressed ipv6 format
+			$ip = inet_ntop(inet_pton($ip));
 
 			if ($result['ip'] != $ip && $result['ip'] == Settings::Get('system.ipaddress') && $result_sameipotherport == false) {
 				\Froxlor\UI\Response::standard_error('cantchangesystemip', '', true);

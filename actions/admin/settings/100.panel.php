@@ -77,14 +77,6 @@ return array(
 					'default' => false,
 					'save_method' => 'storeSettingField'
 				),
-				'panel_no_robots' => array(
-					'label' => $lng['serversettings']['no_robots'],
-					'settinggroup' => 'panel',
-					'varname' => 'no_robots',
-					'type' => 'bool',
-					'default' => true,
-					'save_method' => 'storeSettingField'
-				),
 				'panel_paging' => array(
 					'label' => $lng['serversettings']['paging'],
 					'settinggroup' => 'panel',
@@ -295,6 +287,40 @@ return array(
 					'string_emptyallowed' => true,
 					'default' => '',
 					'save_method' => 'storeSettingField'
+				),
+				'panel_logo_overridetheme' => array(
+					'label' => $lng['serversettings']['logo_overridetheme'],
+					'settinggroup' => 'panel',
+					'varname' => 'logo_overridetheme',
+					'type' => 'bool',
+					'default' => false,
+					'save_method' => 'storeSettingField'
+				),
+				'panel_logo_overridecustom' => array(
+					'label' => $lng['serversettings']['logo_overridecustom'],
+					'settinggroup' => 'panel',
+					'varname' => 'logo_overridecustom',
+					'type' => 'bool',
+					'default' => false,
+					'save_method' => 'storeSettingField'
+				),
+				'panel_logo_image_header' => array(
+					'label' => $lng['serversettings']['logo_image_header'],
+					'settinggroup' => 'panel',
+					'varname' => 'logo_image_header',
+					'type' => 'image',
+					'image_name' => 'logo_header',
+					'default' => '',
+					'save_method' => 'storeSettingImage'
+				),
+				'panel_logo_image_login' => array(
+					'label' => $lng['serversettings']['logo_image_login'],
+					'settinggroup' => 'panel',
+					'varname' => 'logo_image_login',
+					'type' => 'image',
+					'image_name' => 'logo_login',
+					'default' => '',
+					'save_method' => 'storeSettingImage'
 				),
 			)
 		)

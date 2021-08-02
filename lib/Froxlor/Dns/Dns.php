@@ -53,7 +53,7 @@ class Dns
 			$domain = $domain_id;
 		}
 
-		if ($domain['isbinddomain'] != '1') {
+		if (!isset($domain['isbinddomain']) || $domain['isbinddomain'] != '1') {
 			return;
 		}
 
@@ -190,11 +190,25 @@ class Dns
 				'@',
 				'www',
 				'*'
-			] as $crceord) {
-				if ($entry['type'] == 'CNAME' && $entry['record'] == '@' && (array_key_exists(md5($crceord), $required_entries['A']) || array_key_exists(md5($crceord), $required_entries['AAAA']))) {
-					unset($required_entries['A'][md5($crceord)]);
-					unset($required_entries['AAAA'][md5($crceord)]);
+			] as $crecord) {
+				if ($entry['type'] == 'CNAME' && $entry['record'] == '@' && (array_key_exists(md5($crecord), $required_entries['A']) || array_key_exists(md5($crecord), $required_entries['AAAA']))) {
+					unset($required_entries['A'][md5($crecord)]);
+					unset($required_entries['AAAA'][md5($crecord)]);
 				}
+			}
+			// also allow overriding of auto-generated values (imap,pop3,mail,smtp) if enabled in the settings
+			if (Settings::Get('system.dns_createmailentry')) {
+			    foreach (array(
+			        'imap',
+			        'pop3',
+			        'mail',
+			        'smtp'
+			    ) as $crecord) {
+			        if ($entry['type'] == 'CNAME' && $entry['record'] == $crecord && (array_key_exists(md5($crecord), $required_entries['A']) || array_key_exists(md5($crecord), $required_entries['AAAA']))) {
+			            unset($required_entries['A'][md5($crecord)]);
+			            unset($required_entries['AAAA'][md5($crecord)]);
+			        }
+			    }
 			}
 			$zonerecords[] = new DnsEntry($entry['record'], $entry['type'], $entry['content'], $entry['prio'], $entry['ttl']);
 		}
@@ -324,11 +338,28 @@ class Dns
 						foreach ($records as $record) {
 							if ($record == '@CAA@') {
 								$caa_entries = explode(PHP_EOL, Settings::Get('caa.caa_entry'));
-								if ($domain['letsencrypt'] == 1) {
-									$le_entry = $domain['iswildcarddomain'] == '1' ? '0 issuewild "letsencrypt.org"' : '0 issue "letsencrypt.org"';
-									array_push($caa_entries, $le_entry);
+								$caa_domain = "letsencrypt.org";
+								if (Settings::Get('system.letsencryptca') == 'buypass' || Settings::Get('system.letsencryptca') == 'buypass_test') {
+									$caa_domain = "buypass.com";
 								}
-
+								if ($domain['letsencrypt'] == 1) {
+									if (Settings::Get('system.letsencryptca') == 'zerossl') {
+										$caa_domains = [
+											"sectigo.com",
+											"trust-provider.com",
+											"usertrust.com",
+											"comodoca.com",
+											"comodo.com"
+										];
+										foreach ($caa_domains as $caa_domain) {
+											$le_entry = $domain['iswildcarddomain'] == '1' ? '0 issuewild "' . $caa_domain . '"' : '0 issue "' . $caa_domain . '"';
+											array_push($caa_entries, $le_entry);
+										}
+									} else {
+										$le_entry = $domain['iswildcarddomain'] == '1' ? '0 issuewild "' . $caa_domain . '"' : '0 issue "' . $caa_domain . '"';
+										array_push($caa_entries, $le_entry);
+									}
+								}
 								foreach ($caa_entries as $entry) {
 									if (empty($entry)) continue;
 									$zonerecords[] = new DnsEntry('@', 'CAA', $entry);
@@ -372,7 +403,7 @@ class Dns
 			$soa_content = $primary_ns . " " . self::escapeSoaAdminMail($soa_email) . " ";
 			$soa_content .= $domain['bindserial'] . " ";
 			// TODO for now, dummy time-periods
-			$soa_content .= "3600 900 604800 " . (int) Settings::Get('system.defaultttl');
+			$soa_content .= "3600 900 1209600 1200";
 
 			$soa_record = new DnsEntry('@', 'SOA', $soa_content);
 			array_unshift($zonerecords, $soa_record);

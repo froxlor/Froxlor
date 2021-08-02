@@ -308,7 +308,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 	 * @param bool $mysqls_ul
 	 *        	optional, whether customer should have unlimited mysql-databases, default 0 (false)
 	 * @param bool $createstdsubdomain
-	 *        	optional, whether to create a standard-subdomain ([loginname].froxlor-hostname.tld), default 0 (false)
+	 *        	optional, whether to create a standard-subdomain ([loginname].froxlor-hostname.tld), default [system.createstdsubdom_default]
 	 * @param bool $phpenabled
 	 *        	optional, whether to allow usage of PHP, default 0 (false)
 	 * @param array $allowed_phpconfigs
@@ -316,9 +316,9 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 	 * @param bool $perlenabled
 	 *        	optional, whether to allow usage of Perl/CGI, default 0 (false)
 	 * @param bool $dnsenabled
-	 *        	optional, wether to allow usage of the DNS editor (requires activated nameserver in settings), default 0 (false)
+	 *        	optional, whether to allow usage of the DNS editor (requires activated nameserver in settings), default 0 (false)
 	 * @param bool $logviewenabled
-	 *        	optional, wether to allow acccess to webserver access/error-logs, default 0 (false)
+	 *        	optional, whether to allow access to webserver access/error-logs, default 0 (false)
 	 * @param bool $store_defaultindex
 	 *        	optional, whether to store the default index file to customers homedir
 	 * @param int $hosting_plan_id
@@ -352,7 +352,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				$gender = (int) $this->getParam('gender', true, 0);
 				$custom_notes = $this->getParam('custom_notes', true, '');
 				$custom_notes_show = $this->getBoolParam('custom_notes_show', true, 0);
-				$createstdsubdomain = $this->getBoolParam('createstdsubdomain', true, 0);
+				$createstdsubdomain = $this->getBoolParam('createstdsubdomain', true, Settings::Get('system.createstdsubdom_default'));
 				$password = $this->getParam('new_customer_password', true, '');
 				$sendpassword = $this->getBoolParam('sendpassword', true, 0);
 				$store_defaultindex = $this->getBoolParam('store_defaultindex', true, 0);
@@ -923,9 +923,9 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 	 * @param bool $perlenabled
 	 *        	optional, whether to allow usage of Perl/CGI, default 0 (false)
 	 * @param bool $dnsenabled
-	 *        	optional, ether to allow usage of the DNS editor (requires activated nameserver in settings), default 0 (false)
+	 *        	optional, whether to allow usage of the DNS editor (requires activated nameserver in settings), default 0 (false)
 	 * @param bool $logviewenabled
-	 *        	optional, ether to allow acccess to webserver access/error-logs, default 0 (false)
+	 *        	optional, whether to allow access to webserver access/error-logs, default 0 (false)
 	 * @param string $theme
 	 *        	optional, change theme
 	 *        	
@@ -1512,7 +1512,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 					'did' => $row['id']
 				), true, true);
 				// remove domains DNS from powerDNS if used, #581
-				\Froxlor\System\Cronjob::inserttask('11', $result['domain']);
+				\Froxlor\System\Cronjob::inserttask('11', $row['domain']);
 				// remove domain from acme.sh / lets encrypt if used
 				\Froxlor\System\Cronjob::inserttask('12', $row['domain']);
 			}

@@ -205,9 +205,21 @@ return array(
 					'default' => false,
 					'cronmodule' => 'froxlor/backup',
 					'save_method' => 'storeSettingField'
-				)
+				),
+				'system_createstdsubdom_default' => array(
+					'label' => $lng['serversettings']['createstdsubdom_default'],
+					'settinggroup' => 'system',
+					'varname' => 'createstdsubdom_default',
+					'type' => 'option',
+					'default' => '1',
+					'option_mode' => 'one',
+					'option_options' => array(
+						'0' => $lng['panel']['no'],
+						'1' => $lng['panel']['yes']
+					),
+					'save_method' => 'storeSettingField'
+				),
 			)
 		)
 	)
 );
-

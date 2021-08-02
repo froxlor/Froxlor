@@ -94,7 +94,7 @@ class Fcgid
 		// Set Binary
 		$starter_file .= "exec " . $phpconfig['binary'] . " -c " . escapeshellarg($this->getConfigDir()) . "\n";
 
-		// remove +i attibute, so starter can be overwritten
+		// remove +i attribute, so starter can be overwritten
 		if (file_exists($this->getStarterFile())) {
 			\Froxlor\FileDir::removeImmutable($this->getStarterFile());
 		}

@@ -598,10 +598,6 @@ $lng['traffic']['sumhttp'] = 'Trafic HTTP total entrant';
 $lng['traffic']['sumftp'] = 'Trafic FTP total entrant';
 $lng['traffic']['summail'] = 'Trafic E-mail total entrant';
 
-// ADDED IN 1.2.19-svn4.5
-
-$lng['serversettings']['no_robots']['title'] = 'Permettre aux robots des moteurs de recherche d\'indexer l\'installation de Froxlor';
-
 // ADDED IN 1.2.19-svn6
 
 $lng['admin']['loggersettings'] = 'Paramètres des logs';
@@ -631,7 +627,7 @@ $lng['panel']['reseller'] = 'revendeur';
 $lng['panel']['admin'] = 'administrateur';
 $lng['panel']['customer'] = 'client(s)';
 $lng['error']['nomessagetosend'] = 'Vous n\'avez pas entré de message.';
-$lng['error']['noreceipientsgiven'] = 'Vous n\'avez pas spécifier de destinataire';
+$lng['error']['norecipientsgiven'] = 'Vous n\'avez pas spécifier de destinataire';
 $lng['admin']['emaildomain'] = 'Domaine e-mail';
 $lng['admin']['email_only'] = 'Seulement des e-mails ?';
 $lng['admin']['wwwserveralias'] = 'Ajouter un "www." à l\'alias du serveur "ServerAlias"';
@@ -639,14 +635,14 @@ $lng['admin']['ipsandports']['enable_ssl'] = 'Est-ce un port SSL ?';
 $lng['admin']['ipsandports']['ssl_cert_file'] = 'Emplacement du certificat SSL';
 $lng['panel']['send'] = 'envoyé';
 $lng['admin']['subject'] = 'Sujet';
-$lng['admin']['receipient'] = 'Destinataire';
+$lng['admin']['recipient'] = 'Destinataire';
 $lng['admin']['message'] = 'Ecrire un message';
 $lng['admin']['text'] = 'Message';
 $lng['menu']['message'] = 'Messages';
 $lng['error']['errorsendingmail'] = 'Echec d\'envoi du message à "%s"';
 $lng['error']['cannotreaddir'] = 'Impossible de lire dossier "%s"';
 $lng['message']['success'] = 'Le message a été envoyé aux destinataires "%s"';
-$lng['message']['noreceipients'] = 'Aucun e-mail n\'a été envoyé car il n\'existe aucun destinataire dans la base de données';
+$lng['message']['norecipients'] = 'Aucun e-mail n\'a été envoyé car il n\'existe aucun destinataire dans la base de données';
 $lng['admin']['sslsettings'] = 'Paramètres SSL';
 $lng['cronjobs']['notyetrun'] = 'Pas encore lancé';
 $lng['serversettings']['default_vhostconf']['title'] = 'Paramètres par défaut pour les vHosts';

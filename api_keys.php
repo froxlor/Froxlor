@@ -127,7 +127,7 @@ if ($action == 'delete') {
 
 $log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed api::api_keys");
 
-// select all my (accessable) certificates
+// select all my (accessible) certificates
 $keys_stmt_query = "SELECT ak.*, c.loginname, a.loginname as adminname
 	FROM `" . TABLE_API_KEYS . "` ak
 	LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` c ON `c`.`customerid` = `ak`.`customerid`

@@ -74,7 +74,7 @@ Alias "/.well-known/acme-challenge" "{{settings.system.letsencryptchallengepath}
 ]]>
 						</content>
 					</file>
-					<command><![CDATA[/etc/init.d/apache2 restart]]></command>
+					<command><![CDATA[service apache2 restart]]></command>
 				</daemon>
 				<!-- HTTP Lighttpd -->
 				<daemon name="lighttpd" title="LigHTTPd">
@@ -138,7 +138,7 @@ include_shell "/usr/share/lighttpd/include-conf-enabled.pl"
 					</command>
 					<command><![CDATA[lighty-disable-mod cgi]]></command>
 					<command><![CDATA[lighty-disable-mod fastcgi]]></command>
-					<command><![CDATA[/etc/init.d/lighttpd restart]]></command>
+					<command><![CDATA[service lighttpd restart]]></command>
 				</daemon>
 				<!-- HTTP Nginx -->
 				<daemon name="nginx" title="nginx">
@@ -354,7 +354,6 @@ exit "$RETVAL"
 						</visibility>
 						<content><![CDATA[/etc/init.d/php-fcgi restart]]></content>
 					</command>
-					<command><![CDATA[/etc/init.d/nginx restart]]></command>
 				</daemon>
 			</service>
 			<!--DNS -->
@@ -366,7 +365,7 @@ exit "$RETVAL"
 					<command><![CDATA[touch {{settings.system.bindconf_directory}}froxlor_bind.conf]]></command>
 					<command><![CDATA[chown bind:0 {{settings.system.bindconf_directory}}froxlor_bind.conf]]></command>
 					<command><![CDATA[chmod 0644 {{settings.system.bindconf_directory}}froxlor_bind.conf]]></command>
-					<command><![CDATA[/etc/init.d/bind9 restart]]></command>
+					<command><![CDATA[service bind9 restart]]></command>
 				</daemon>
 				<daemon name="powerdns" title="PowerDNS (standalone)">
 					<install><![CDATA[apt-get install pdns-server pdns-backend-mysql]]></install>
@@ -376,7 +375,7 @@ exit "$RETVAL"
 # allow-axfr-ips	Allow zonetransfers only to these subnets
 #
 allow-axfr-ips=127.0.0.0/8,::1,<NAMESERVERS_IP>
-# add these entries to the list if any speficied: <AXFRSERVERS>
+# add these entries to the list if any specified: <AXFRSERVERS>
 
 #################################
 # allow-dnsupdate-from	A global setting to allow DNS updates from these IP ranges.
@@ -908,7 +907,7 @@ gmysql-password=
 ]]>
 						</content>
 					</file>
-					<command><![CDATA[/etc/init.d/pdns restart]]></command>
+					<command><![CDATA[service pdns restart]]></command>
 				</daemon>
 				<daemon name="powerdns_bind"
 					title="PowerDNS via bind-backend">
@@ -919,7 +918,7 @@ gmysql-password=
 # allow-axfr-ips	Allow zonetransfers only to these subnets
 #
 # allow-axfr-ips=127.0.0.0/8,::1,<NAMESERVERS_IP>
-# add these entries to the list if any speficied: <AXFRSERVERS>
+# add these entries to the list if any specified: <AXFRSERVERS>
 
 #################################
 # allow-dnsupdate-from	A global setting to allow DNS updates from these IP ranges.
@@ -1455,7 +1454,7 @@ bind-check-interval=180
 ]]>
 						</content>
 					</file>
-					<command><![CDATA[/etc/init.d/pdns restart]]></command>
+					<command><![CDATA[service pdns restart]]></command>
 				</daemon>
 			</service>
 			<!-- SMTP services -->
@@ -1578,7 +1577,7 @@ root:               root@<SERVERNAME>
 					</files>
 					<commands index="3">
 						<command><![CDATA[newaliases]]></command>
-						<command><![CDATA[/etc/init.d/postfix restart]]></command>
+						<command><![CDATA[service postfix restart]]></command>
 					</commands>
 				</general>
 				<!-- postfix with dovecot -->
@@ -2059,7 +2058,7 @@ driver = mysql
 # settings, like: host=sql1.host.org host=sql2.host.org
 #
 # pgsql:
-#   For available options, see the PostgreSQL documention for the
+#   For available options, see the PostgreSQL documentation for the
 #   PQconnectdb function of libpq.
 #   Use maxconns=n (default 5) to change how many connections Dovecot can
 #   create to pgsql.
@@ -3124,7 +3123,7 @@ protocol sieve {
 #
 # If you want UIDL compatibility with other POP3 servers, use:
 #  UW's ipop3d         : %08Xv%08Xu
-#  Courier             : %f or %v-%u (both might be used simultaneosly)
+#  Courier             : %f or %v-%u (both might be used simultaneously)
 #  Cyrus (<= 2.1.3)    : %u
 #  Cyrus (>= 2.1.4)    : %v.%u
 #  Dovecot v0.99.x     : %v.%u
@@ -3299,7 +3298,7 @@ plugin {
 						</file>
 					</files>
 					<commands index="1">
-						<command><![CDATA[/etc/init.d/dovecot restart]]></command>
+						<command><![CDATA[service dovecot restart]]></command>
 					</commands>
 				</general>
 				<!-- Dovecot with postfix -->
@@ -3382,7 +3381,7 @@ Port				21
 # PassivePorts                  49152 65534
 
 # If your host was NATted, this option is useful in order to
-# allow passive tranfers to work. You have to use your public
+# allow passive transfers to work. You have to use your public
 # address and opening the passive ports used on your firewall as well.
 # MasqueradeAddress		1.2.3.4
 
@@ -3407,7 +3406,7 @@ Group				nogroup
 # Umask 022 is a good standard umask to prevent new files and dirs
 # (second parm) from being group and world writable.
 Umask				022  022
-# Normally, we want files to be overwriteable.
+# Normally, we want files to be overwritable.
 AllowOverwrite			on
 
 # Uncomment this if you are using NIS or LDAP via NSS to retrieve passwords:
@@ -3654,7 +3653,7 @@ SQLBackend	mysql
 SQLEngine on
 SQLAuthenticate on
 #
-# Use both a crypted or plaintext password
+# Use both an encrypted or plaintext password
 SQLAuthTypes Crypt
 
 SQLAuthenticate users* groups*
@@ -3712,7 +3711,7 @@ TLSVerifyClient                         off
 #TLSRequired                             on
 
 # Allow SSL/TLS renegotiations when the client requests them, but
-# do not force the renegotations.  Some clients do not support
+# do not force the renegotiations.  Some clients do not support
 # SSL/TLS renegotiations; when mod_tls forces a renegotiation, these
 # clients will close the data connection, or there will be a timeout
 # on an idle data connection.
@@ -3722,7 +3721,7 @@ TLSVerifyClient                         off
 ]]>
 						</content>
 					</file>
-					<command><![CDATA[/etc/init.d/proftpd restart]]></command>
+					<command><![CDATA[service proftpd restart]]></command>
 				</daemon>
 				<!-- Pureftpd -->
 				<daemon name="pureftpd" title="PureFTPd">
@@ -3948,7 +3947,7 @@ UPLOADGID=
 ]]>
 						</content>
 					</file>
-					<command><![CDATA[/etc/init.d/pure-ftpd-mysql restart]]></command>
+					<command><![CDATA[service pure-ftpd-mysql restart]]></command>
 				</daemon>
 			</service>
 			<!-- System tools/services -->
@@ -4020,7 +4019,7 @@ aliases:     files
 						chmod="0644">
 						<content><![CDATA[
 #
-# Froxlor logrotate snipet
+# Froxlor logrotate snippet
 #
 <CUSTOMER_LOGS>*.log {
   missingok
@@ -4088,7 +4087,7 @@ aliases:     files
 					<commands index="5">
 						<visibility mode="equals" value="apache2">{{settings.system.webserver}}
 						</visibility>
-						<command><![CDATA[/etc/init.d/apache2 restart]]></command>
+						<command><![CDATA[service apache2 restart]]></command>
 					</commands>
 					<!-- instead of just restarting apache, we let the cronjob do all the 
 						dirty work -->

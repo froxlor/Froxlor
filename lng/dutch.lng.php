@@ -558,10 +558,6 @@ $lng['traffic']['sumhttp'] = 'Samenvatting HTTP-verkeer in';
 $lng['traffic']['sumftp'] = 'Samenvatting FTP-verkeer in';
 $lng['traffic']['summail'] = 'Samenvatting Mail-verkeer in';
 
-// ADDED IN 1.2.19-svn4.5
-
-$lng['serversettings']['no_robots']['title'] = 'Zoekmachines toestaan uw Froxlor-installatie te indexeren';
-
 // ADDED IN 1.2.19-svn6
 
 $lng['admin']['loggersettings'] = 'Instellingen voor logs';
@@ -591,7 +587,7 @@ $lng['panel']['reseller'] = 'wederverkoper';
 $lng['panel']['admin'] = 'beheerder';
 $lng['panel']['customer'] = 'klant(en)';
 $lng['error']['nomessagetosend'] = 'U hebt geen bericht opgegeven.';
-$lng['error']['noreceipientsgiven'] = 'U hebt geen ontvanger opgegeven';
+$lng['error']['norecipientsgiven'] = 'U hebt geen ontvanger opgegeven';
 $lng['admin']['emaildomain'] = 'Emaildomein';
 $lng['admin']['email_only'] = 'Alleen email?';
 $lng['admin']['wwwserveralias'] = 'Voeg een "www." ServerAlias toe';
@@ -599,14 +595,14 @@ $lng['admin']['ipsandports']['enable_ssl'] = 'Is dit een SSL-poort?';
 $lng['admin']['ipsandports']['ssl_cert_file'] = 'Pad naar SSL-certificaat';
 $lng['panel']['send'] = 'verzenden';
 $lng['admin']['subject'] = 'Onderwerp';
-$lng['admin']['receipient'] = 'Ontvanger';
+$lng['admin']['recipient'] = 'Ontvanger';
 $lng['admin']['message'] = 'Bericht schrijven';
 $lng['admin']['text'] = 'Bericht';
 $lng['menu']['message'] = 'Berichten';
 $lng['error']['errorsendingmail'] = 'Het versturen van het bericht naar "%s" is mislukt';
 $lng['error']['cannotreaddir'] = 'De map "%s" kan niet gelezen worden';
 $lng['message']['success'] = 'Bericht verzonden naar ontvangers %s';
-$lng['message']['noreceipients'] = 'Er is geen email verstuurd omdat er geen ontvangers in de database zijn';
+$lng['message']['norecipients'] = 'Er is geen email verstuurd omdat er geen ontvangers in de database zijn';
 $lng['admin']['sslsettings'] = 'Instellingen voor SSL';
 $lng['cronjobs']['notyetrun'] = 'Nog niet uitgevoerd';
 $lng['serversettings']['default_vhostconf']['title'] = 'Standaard vhost-instellingen';

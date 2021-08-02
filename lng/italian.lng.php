@@ -584,10 +584,6 @@ $lng['traffic']['sumhttp'] = 'Sommatoria Traffico in ingresso HTTP';
 $lng['traffic']['sumftp'] = 'Sommatoria Traffico in ingresso FTP';
 $lng['traffic']['summail'] = 'Sommatoria Traffico in ingresso Mail';
 
-// ADDED IN 1.2.19-svn4.5
-
-$lng['serversettings']['no_robots']['title'] = 'Permetti ai robot dei motori di ricerca di indicizzare l\'installazione di Froxlor';
-
 // ADDED IN 1.2.19-svn6
 
 $lng['admin']['loggersettings'] = 'Impostazioni Log';
@@ -614,7 +610,7 @@ $lng['panel']['reseller'] = 'rivenditore';
 $lng['panel']['admin'] = 'amministratore';
 $lng['panel']['customer'] = 'cliente/i';
 $lng['error']['nomessagetosend'] = 'Non hai inserito un messaggio.';
-$lng['error']['noreceipientsgiven'] = 'Non hai specificato alcun destinatario';
+$lng['error']['norecipientsgiven'] = 'Non hai specificato alcun destinatario';
 $lng['admin']['emaildomain'] = 'Email dominio';
 $lng['admin']['email_only'] = 'Solo email?';
 $lng['admin']['wwwserveralias'] = 'Aggiungi a "www." ServerAlias';
@@ -622,14 +618,14 @@ $lng['admin']['ipsandports']['enable_ssl'] = 'Questa è una porta SSL?';
 $lng['admin']['ipsandports']['ssl_cert_file'] = 'Percorso del certificato SSL (SSL certificate)';
 $lng['panel']['send'] = 'invia';
 $lng['admin']['subject'] = 'Oggetto';
-$lng['admin']['receipient'] = 'Destinatario';
+$lng['admin']['recipient'] = 'Destinatario';
 $lng['admin']['message'] = 'Scrivi un messaggio';
 $lng['admin']['text'] = 'Messaggio';
 $lng['menu']['message'] = 'Messaggi';
 $lng['error']['errorsendingmail'] = 'Il messaggio a "%s" fallito';
 $lng['error']['cannotreaddir'] = 'Impossibile leggere la cartella "%s"';
 $lng['message']['success'] = 'Inviato correttamente il messaggio a %s recipients';
-$lng['message']['noreceipients'] = 'Nessuna e-mail è stata inviata perch¸ non ci sono i destinatari nel database';
+$lng['message']['norecipients'] = 'Nessuna e-mail è stata inviata perch¸ non ci sono i destinatari nel database';
 $lng['admin']['sslsettings'] = 'Impostazioni SSL';
 $lng['cronjobs']['notyetrun'] = 'Non ancora avviato';
 $lng['serversettings']['default_vhostconf']['title'] = 'Impostazioni default vhost';

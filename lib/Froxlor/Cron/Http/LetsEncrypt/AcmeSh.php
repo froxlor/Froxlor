@@ -21,12 +21,20 @@ use Froxlor\FileDir;
  * @author Froxlor team <team@froxlor.org> (2016-)
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package Cron
- *
+ *         
  * @since 0.9.35
- *
+ *       
  */
 class AcmeSh extends \Froxlor\Cron\FroxlorCron
 {
+
+	const ACME_PROVIDER = [
+		'letsencrypt' => "https://acme-v02.api.letsencrypt.org/directory",
+		'letsencrypt_test' => "https://acme-staging-v02.api.letsencrypt.org/directory",
+		'buypass' => "https://api.buypass.com/acme/directory",
+		'buypass_test' => "https://api.test4.buypass.no/acme/directory",
+		'zerossl' => "https://acme.zerossl.com/v2/DV90"
+	];
 
 	private static $apiserver = "";
 
@@ -63,7 +71,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 			$issue_domains = self::issueDomains();
 			$renew_froxlor = self::renewFroxlorVhost();
 			$renew_domains = self::renewDomains(true);
-			if ($issue_froxlor || !empty($issue_domains) || !empty($renew_froxlor) || $renew_domains) {
+			if ($issue_froxlor || ! empty($issue_domains) || ! empty($renew_froxlor) || $renew_domains) {
 				// insert task to generate certificates and vhost-configs
 				\Froxlor\System\Cronjob::inserttask(1);
 			}
@@ -71,7 +79,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 		}
 
 		// set server according to settings
-		self::$apiserver = 'https://acme-' . (Settings::Get('system.letsencryptca') == 'testing' ? 'staging-' : '') . 'v0' . \Froxlor\Settings::Get('system.leapiversion') . '.api.letsencrypt.org/directory';
+		self::$apiserver = self::ACME_PROVIDER[Settings::Get('system.letsencryptca')];
 
 		// validate acme.sh installation
 		if (! self::checkInstall()) {
@@ -279,7 +287,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 			$our_ips = Domain::getIpsOfDomain($domain_id);
 			foreach ($loop_domains as $idx => $domain) {
 				$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, "Validating DNS of " . $domain);
-				// ips accordint to NS
+				// ips according to NS
 				$domain_ips = PhpHelper::gethostbynamel6($domain);
 				if ($domain_ips == false || count(array_intersect($our_ips, $domain_ips)) <= 0) {
 					// no common ips...
@@ -306,7 +314,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 			if (Settings::Get('system.letsencryptreuseold') != '1') {
 				$acmesh_cmd .= " --always-force-new-domain-key";
 			}
-			if (Settings::Get('system.letsencryptca') == 'testing') {
+			if (Settings::Get('system.letsencryptca') == 'letsencrypt_test') {
 				$acmesh_cmd .= " --staging";
 			}
 			if ($force) {
@@ -517,7 +525,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 		$env_file = FileDir::makeCorrectFile(dirname(self::$acmesh) . '/acme.sh.env');
 		if (file_exists($env_file)) {
 			$output = [];
-			$cut = <<<EOC
+$cut = <<<EOC
 cut -d'"' -f2
 EOC;
 			exec('grep "LE_WORKING_DIR" ' . escapeshellarg($env_file) . ' | ' . $cut, $output);

@@ -17,7 +17,7 @@ use Froxlor\Settings;
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package API
  * @since 0.10.0
- *       
+ *
  */
 class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntity
 {
@@ -31,25 +31,28 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	optional, default is 0
 	 * @param string $description
 	 *        	optional, description for database
+	 * @param string $custom_suffix
+	 *			optional, name for database
 	 * @param bool $sendinfomail
 	 *        	optional, send created resource-information to customer, default: false
 	 * @param int $customerid
 	 *        	optional, required when called as admin (if $loginname is not specified)
 	 * @param string $loginname
 	 *        	optional, required when called as admin (if $customerid is not specified)
-	 *        	
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array
 	 */
 	public function add()
 	{
-		// required paramters
+		// required parameters
 		$password = $this->getParam('mysql_password');
 
 		// parameters
 		$dbserver = $this->getParam('mysql_server', true, 0);
 		$databasedescription = $this->getParam('description', true, '');
+		$databasename = $this->getParam('custom_suffix', true, '');
 		$sendinfomail = $this->getBoolParam('sendinfomail', true, 0);
 		// get needed customer info to reduce the mysql-usage-counter by one
 		$customer = $this->getCustomerData('mysqls');
@@ -58,6 +61,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		$password = \Froxlor\Validate\Validate::validate($password, 'password', '', '', array(), true);
 		$password = \Froxlor\System\Crypt::validatePassword($password, true);
 		$databasedescription = \Froxlor\Validate\Validate::validate(trim($databasedescription), 'description', '', '', array(), true);
+		$databasename = \Froxlor\Validate\Validate::validate(trim($databasename), 'database_name', '', '', array(), true);
 
 		// validate whether the dbserver exists
 		$dbserver = \Froxlor\Validate\Validate::validate($dbserver, html_entity_decode($this->lng['mysql']['mysql_server']), '', '', 0, true);
@@ -79,7 +83,12 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		);
 		// create database, user, set permissions, etc.pp.
 		$dbm = new \Froxlor\Database\DbManager($this->logger());
-		$username = $dbm->createDatabase($newdb_params['loginname'], $password, $newdb_params['mysql_lastaccountnumber']);
+
+		if(strtoupper(Settings::Get('customer.mysqlprefix')) == 'DBNAME' && !empty($databasename)) {
+			$username = $dbm->createDatabase($newdb_params['loginname'].'_'.$databasename, $password);
+		} else {
+			$username = $dbm->createDatabase($newdb_params['loginname'], $password, $newdb_params['mysql_lastaccountnumber']);
+		}
 
 		// we've checked against the password in dbm->createDatabase
 		if ($username == false) {
@@ -181,7 +190,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	optional, the databasename
 	 * @param int $mysql_server
 	 *        	optional, specify database-server, default is none
-	 *        	
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -281,7 +290,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	optional, required when called as admin (if $loginname is not specified)
 	 * @param string $loginname
 	 *        	optional, required when called as admin (if $customerid is not specified)
-	 *        	
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -305,7 +314,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		));
 		$id = $result['id'];
 
-		// paramters
+		// parameters
 		$password = $this->getParam('mysql_password', true, '');
 		$databasedescription = $this->getParam('description', true, $result['description']);
 
@@ -370,7 +379,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	optional specify offset for resultset
 	 * @param array $sql_orderby
 	 *        	optional array with index = fieldname and value = ASC|DESC to order the resultset by one or more fields
-	 *        	
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array count|list
@@ -428,13 +437,13 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	}
 
 	/**
-	 * returns the total number of accessable databases
+	 * returns the total number of accessible databases
 	 *
 	 * @param int $customerid
 	 *        	optional, admin-only, select dbs of a specific customer by id
 	 * @param string $loginname
 	 *        	optional, admin-only, select dbs of a specific customer by loginname
-	 *        	
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -465,7 +474,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	optional, required when called as admin (if $loginname is not specified)
 	 * @param string $loginname
 	 *        	optional, required when called as admin (if $customerid is not specified)
-	 *        	
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array

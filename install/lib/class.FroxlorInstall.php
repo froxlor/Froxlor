@@ -28,7 +28,7 @@
  * @author Froxlor team <team@froxlor.org> (2010-)
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package Install
- *         
+ *
  */
 class FroxlorInstall
 {
@@ -123,7 +123,7 @@ class FroxlorInstall
 		if ((isset($_POST['installstep']) && $_POST['installstep'] == '1') || (isset($_GET['check']) && $_GET['check'] == '1')) {
 			$pagetitle = $this->_lng['install']['title'];
 			if ($this->_checkPostData()) {
-				// ceck data and create userdata etc.etc.etc.
+				// check data and create userdata etc.etc.etc.
 				$result = $this->_doInstall();
 			} elseif (isset($_GET['check']) && $_GET['check'] == '1') {
 				// gather data
@@ -687,7 +687,7 @@ class FroxlorInstall
 		if (version_compare($db_root->getAttribute(\PDO::ATTR_SERVER_VERSION), '8.0.11', '>=')) {
 			// create user
 			$stmt = $db_root->prepare("
-				CREATE USER '" . $username . "'@'" . $access_host . "' IDENTIFIED BY :password
+				CREATE USER '" . $username . "'@'" . $access_host . "' IDENTIFIED WITH mysql_native_password BY :password
 			");
 			$stmt->execute(array(
 				"password" => $password
@@ -739,7 +739,7 @@ class FroxlorInstall
 		}
 
 		if ($tables_exist) {
-			// tell whats going on
+			// tell what's going on
 			$content .= $this->_status_message('begin', $this->_lng['install']['backup_old_db']);
 
 			// create temporary backup-filename
@@ -784,7 +784,7 @@ class FroxlorInstall
 		}
 		// language selection
 		$language_options = '';
-		foreach ($this->_languages as $language_name => $language_file) {
+		foreach ($this->_languages as $language_file => $language_name) {
 			$language_options .= \Froxlor\UI\HTML::makeoption($language_name, $language_file, $this->_activelng, true, true);
 		}
 		// get language-form-template
@@ -867,19 +867,24 @@ class FroxlorInstall
 		}
 
 		// show list of available distro's
+		$distributions_select_data = [];
 		$distros = glob(\Froxlor\FileDir::makeCorrectDir(\Froxlor\Froxlor::getInstallDir() . '/lib/configfiles/') . '*.xml');
 		foreach ($distros as $_distribution) {
 			$dist = new \Froxlor\Config\ConfigParser($_distribution);
 			$dist_display = $dist->distributionName . " " . $dist->distributionCodename . " (" . $dist->distributionVersion . ")";
+			if (!array_key_exists($dist_display, $distributions_select_data)) {
+				$distributions_select_data[$dist_display] = '';
+			}
 			$distributions_select_data[$dist_display] .= str_replace(".xml", "", strtolower(basename($_distribution)));
 		}
 
 		// sort by distribution name
 		ksort($distributions_select_data);
 
+		$distributions_select = '';
 		foreach ($distributions_select_data as $dist_display => $dist_index) {
 			// create select-box-option
-			$distributions_select .= \Froxlor\UI\HTML::makeoption($dist_display, $dist_index, $this->_data['distribution']);
+			$distributions_select .= \Froxlor\UI\HTML::makeoption($dist_display, $dist_index, $this->_data['distribution'] ?? '');
 			// $this->_data['distribution']
 		}
 
@@ -947,7 +952,7 @@ class FroxlorInstall
 	 *        	optional css
 	 * @param string $type
 	 *        	optional type of input-box (default: text)
-	 *        	
+	 *
 	 * @return string
 	 */
 	private function _getSectionItemString($fieldname = null, $required = false, $style = "", $type = 'text')
@@ -994,7 +999,6 @@ class FroxlorInstall
 	 */
 	private function _getSectionItemSelectbox($fieldname = null, $options = null, $style = "")
 	{
-		$groupname = $this->_lng['install'][$groupname];
 		$fieldlabel = $this->_lng['install'][$fieldname];
 
 		$sectionitem = "";
@@ -1239,7 +1243,7 @@ class FroxlorInstall
 	 *
 	 * @param string $template
 	 *        	name of the template including subdirectory
-	 *        	
+	 *
 	 * @return string
 	 */
 	private function _getTemplate($template = null)
@@ -1306,10 +1310,12 @@ class FroxlorInstall
 		// from form
 		if (! empty($_POST['serverip'])) {
 			$this->_data['serverip'] = $_POST['serverip'];
+			$this->_data['serverip'] = inet_ntop(inet_pton($this->_data['serverip']));
 			return;
 			// from $_SERVER
 		} elseif (! empty($_SERVER['SERVER_ADDR'])) {
 			$this->_data['serverip'] = $_SERVER['SERVER_ADDR'];
+			$this->_data['serverip'] = inet_ntop(inet_pton($this->_data['serverip']));
 			return;
 		}
 		// empty

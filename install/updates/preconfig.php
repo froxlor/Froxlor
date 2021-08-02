@@ -19,7 +19,7 @@
  * Function getPreConfig
  *
  * outputs various content before the update process
- * can be continued (askes for agreement whatever is being asked)
+ * can be continued (asks for agreement whatever is being asked)
  *
  * @param string $current_version
  * @param int $current_db_version

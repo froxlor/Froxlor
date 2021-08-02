@@ -87,7 +87,7 @@ if ($page == 'showinfo') {
 	$hits = $cache['num_hits'] . @sprintf(" (%.1f%%)", $cache['num_hits'] * 100 / ($cache['num_hits'] + $cache['num_misses']));
 	$misses = $cache['num_misses'] . @sprintf(" (%.1f%%)", $cache['num_misses'] * 100 / ($cache['num_hits'] + $cache['num_misses']));
 
-	// Fragementation: (freeseg - 1) / total_seg
+	// Fragmentation: (freeseg - 1) / total_seg
 	$nseg = $freeseg = $fragsize = $freetotal = 0;
 	for ($i = 0; $i < $mem['num_seg']; $i ++) {
 		$ptr = 0;

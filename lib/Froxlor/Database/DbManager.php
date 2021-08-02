@@ -16,9 +16,9 @@ use Froxlor\Settings;
  * @author Froxlor team <team@froxlor.org> (2010-)
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package Classes
- *         
+ *
  * @since 0.9.31
- *       
+ *
  */
 
 /**
@@ -87,6 +87,8 @@ class DbManager
 			while (in_array($username, $allsqlusers)) {
 				$username = $loginname . '-' . substr(md5(uniqid(microtime(), 1)), 20, 3);
 			}
+		} elseif (strtoupper(Settings::Get('customer.mysqlprefix')) == 'DBNAME') {
+			$username = $loginname;
 		} else {
 			$username = $loginname . Settings::Get('customer.mysqlprefix') . (intval($last_accnumber) + 1);
 		}

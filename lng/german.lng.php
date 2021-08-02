@@ -327,7 +327,7 @@ $lng['serversettings']['session_timeout']['description'] = 'Wie lange muss ein B
 $lng['serversettings']['accountprefix']['title'] = 'Kundenpräfix';
 $lng['serversettings']['accountprefix']['description'] = 'Welchen Präfix sollen die Kundenaccounts haben?';
 $lng['serversettings']['mysqlprefix']['title'] = 'MySQL-Präfix';
-$lng['serversettings']['mysqlprefix']['description'] = 'Welchen Präfix sollen die MySQL-Benutzerkonten haben?</br>Mit "RANDOM" als Wert wird ein 3-stelliger Zufallswert als Präfix verwendet.';
+$lng['serversettings']['mysqlprefix']['description'] = 'Welchen Präfix sollen die MySQL-Benutzerkonten haben?</br>Mit "RANDOM" als Wert wird ein 3-stelliger Zufallswert als Präfix verwendet.</br>Mit "DBNAME" als Wert wird ein Feld Databankname zusammen mit dem Kundennamen als Präfix genutzt.';
 $lng['serversettings']['ftpprefix']['title'] = 'FTP-Präfix';
 $lng['serversettings']['ftpprefix']['description'] = 'Welchen Präfix sollen die FTP-Benutzerkonten haben?<br/><b>Falls FTP-Quoatas verwendet werden, ist es notwendig das Quota-SQL-Query in der FTP-Server-Config ebenfalls zu ändern!</b>';
 $lng['serversettings']['documentroot_prefix']['title'] = 'Heimatverzeichnis';
@@ -619,10 +619,6 @@ $lng['traffic']['sumhttp'] = 'Gesamt HTTP-Traffic';
 $lng['traffic']['sumftp'] = 'Gesamt FTP-Traffic';
 $lng['traffic']['summail'] = 'Gesamt Mail-Traffic';
 
-// ADDED IN 1.2.19-svn4.5
-
-$lng['serversettings']['no_robots']['title'] = 'Erlaube die Indizierung Ihrer Froxlor-Installation durch Suchmaschinen';
-
 // ADDED IN 1.2.19-svn6
 
 $lng['admin']['loggersettings'] = 'Log-Einstellungen';
@@ -657,7 +653,7 @@ $lng['panel']['reseller'] = 'Reseller';
 $lng['panel']['admin'] = 'Administrator';
 $lng['panel']['customer'] = 'Kunde/n';
 $lng['error']['nomessagetosend'] = 'Keine Nachricht angegeben';
-$lng['error']['noreceipientsgiven'] = 'Keine Empfänger angegeben';
+$lng['error']['norecipientsgiven'] = 'Keine Empfänger angegeben';
 $lng['admin']['emaildomain'] = 'E-Mail-Domain';
 $lng['admin']['email_only'] = 'Nur als E-Mail-Domain verwenden?';
 $lng['admin']['wwwserveralias'] = 'Einen "www." ServerAlias hinzufügen';
@@ -665,14 +661,14 @@ $lng['admin']['ipsandports']['enable_ssl'] = 'Ist dies ein SSL-Port?';
 $lng['admin']['ipsandports']['ssl_cert_file'] = 'Pfad zum Zertifikat';
 $lng['panel']['send'] = 'Versenden';
 $lng['admin']['subject'] = 'Betreff';
-$lng['admin']['receipient'] = 'Empfänger';
+$lng['admin']['recipient'] = 'Empfänger';
 $lng['admin']['message'] = 'Rundmail senden';
 $lng['admin']['text'] = 'Nachricht';
 $lng['menu']['message'] = 'Nachrichten';
 $lng['error']['errorsendingmail'] = 'Das Versenden der Nachricht an "%s" schlug fehl.';
 $lng['error']['cannotreaddir'] = 'Der Ordner "%s" kann nicht gelesen werden';
 $lng['message']['success'] = 'Nachricht erfolgreich an "%s" Empfänger gesendet';
-$lng['message']['noreceipients'] = 'Es wurde keine E-Mail versendet, da sich keine Empfänger in der Datenbank befinden';
+$lng['message']['norecipients'] = 'Es wurde keine E-Mail versendet, da sich keine Empfänger in der Datenbank befinden';
 $lng['admin']['sslsettings'] = 'SSL-Einstellungen';
 $lng['cronjobs']['notyetrun'] = 'Bisher nicht gestartet';
 $lng['serversettings']['default_vhostconf']['title'] = 'Standard vHost-Einstellungen';
@@ -1490,8 +1486,8 @@ $lng['error']['sslredirectonlypossiblewithsslipport'] = 'Die Nutzung von Let\'s 
 $lng['error']['nowildcardwithletsencrypt'] = 'Let\'s Encrypt kann mittels ACME Wildcard-Domains nur via DNS validieren, sorry. Bitte den ServerAlias auf WWW setzen oder deaktivieren';
 $lng['panel']['letsencrypt'] = 'Benutzt Let\'s encrypt';
 $lng['crondesc']['cron_letsencrypt'] = 'Aktualisierung der Let\'s Encrypt Zertifikate';
-$lng['serversettings']['letsencryptca']['title'] = "Let's Encrypt Umgebung";
-$lng['serversettings']['letsencryptca']['description'] = "Let's Encrypt - Umgebung, welche genutzt wird um Zertifikate zu bestellen.";
+$lng['serversettings']['letsencryptca']['title'] = "ACME Umgebung";
+$lng['serversettings']['letsencryptca']['description'] = "Umgebung, welche genutzt wird um Zertifikate zu bestellen.";
 $lng['serversettings']['letsencryptcountrycode']['title'] = "Let's Encrypt Ländercode";
 $lng['serversettings']['letsencryptcountrycode']['description'] = "2 - stelliger Ländercode, welcher benutzt wird um Let's Encrypt - Zertifikate zu bestellen.";
 $lng['serversettings']['letsencryptstate']['title'] = "Let's Encrypt Bundesland";
@@ -1768,3 +1764,19 @@ $lng['serversettings']['terms_url']['description'] = 'Die URL zur AGB-Seite. Der
 $lng['privacy'] = 'Datenschutzerklärung';
 $lng['serversettings']['privacy_url']['title'] = 'URL zur Datenschutzerklärung';
 $lng['serversettings']['privacy_url']['description'] = 'Die URL zur Datenschutzerklärungs-Seite. Der Link ist auf der Login-Seite und wenn eingeloggt, in der Fußzeile sichtbar.';
+$lng['admin']['domaindefaultalias'] = 'Standard ServerAlias-Angabe für neue Domains';
+
+$lng['serversettings']['logo_image_header']['title'] = 'Logo Bild (Header)';
+$lng['serversettings']['logo_image_header']['description'] = 'Das hochgeladene Bild wird als Logo oben links nach dem Login angezeigt (empfohlene Höhe sind 30px)';
+$lng['serversettings']['logo_image_login']['title'] = 'Logo Bild (Login)';
+$lng['serversettings']['logo_image_login']['description'] = 'Das hochgeladene Bild wird als Logo während des Logins angezeigt';
+$lng['panel']['image_field_delete'] = 'Das momentan vorhandene Bild löschen';
+$lng['serversettings']['logo_overridetheme']['title'] = 'Überschreibe Theme-Logo mit "Logo Bild" (Header und Login, siehe unten)';
+$lng['serversettings']['logo_overridetheme']['description'] = 'Ist die Nutzung eines hochgeladenen Logos gewünscht, muss diese Einstellung auf "Ja" gesetzt werden. Alternativ kann weiterhin das Theme-basierte Überschreiben via "logo_custom.png" und "logo_custom_login.png" genutzt werden.';
+$lng['serversettings']['logo_overridecustom']['title'] = 'Überschreibe benutzerdefinierte Theme-Logos (logo_custom.png und logo_custom_login.png) mit "Logo Bold" (Header und Login, siehe unten)';
+$lng['serversettings']['logo_overridecustom']['description'] = 'Ist diese Einstellung aktiv, werden benutzerdefinierte Logos im Theme-Ordner mit dem "Logo Bild" ersetzt';
+$lng['serversettings']['createstdsubdom_default']['title'] = 'Standardwert für "'.$lng['admin']['stdsubdomain_add'].'" bei Erstellung eines Kunden';
+$lng['serversettings']['froxlorusergroup']['title'] = 'Benutzerdefinierte Gruppe für alle Kunden-Benutzer';
+$lng['serversettings']['froxlorusergroup']['description'] = 'Voraussetzung hierfür ist die Nutzung von libnss-extrausers (System-Einstellungen). Ein leerer Wert bedeutet, es wird keine Gruppe erstellt, bzw. vorhandene Gruppe wird entfernt.';
+$lng['error']['local_group_exists'] = 'Die angegebene Gruppe existiert bereits auf dem System';
+$lng['error']['local_group_invalid'] = 'Der angegebene Gruppen-Name ist nicht gültig';

@@ -3,10 +3,8 @@
 <head>
 	<meta charset="utf-8" />
 	<meta http-equiv="Default-Style" content="text/css" />
-	<if \Froxlor\Settings::Get('panel.no_robots') == '0'>
 	<meta name="robots" content="noindex, nofollow, noarchive" />
 	<meta name="GOOGLEBOT" content="nosnippet" />
-	</if>
 	<script type="text/javascript" src="js/jquery.min.js"></script>
 	<script type="text/javascript" src="js/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="js/jquery.tablesorter.min.js"></script>

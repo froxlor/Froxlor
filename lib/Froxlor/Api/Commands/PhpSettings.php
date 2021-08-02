@@ -122,7 +122,7 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 	}
 
 	/**
-	 * returns the total number of accessable php-setting entries
+	 * returns the total number of accessible php-setting entries
 	 *
 	 * @access admin
 	 * @throws \Exception
