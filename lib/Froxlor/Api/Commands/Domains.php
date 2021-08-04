@@ -1718,9 +1718,6 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 			");
 			Database::pexecute($_update_stmt, $_update_data, true, true);
 
-			// insert a rebuild-task
-			\Froxlor\System\Cronjob::inserttask('1');
-
 			// Cleanup domain <-> ip mapping
 			$del_stmt = Database::prepare("
 				DELETE FROM `" . TABLE_DOMAINTOIP . "` WHERE `id_domain` = :id
