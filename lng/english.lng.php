@@ -2128,3 +2128,4 @@ $lng['serversettings']['froxlorusergroup']['title'] = 'Custom system group for a
 $lng['serversettings']['froxlorusergroup']['description'] = 'Usage of libnss-extrausers (system-settings) is required for this to take effect. An empty value skips creation or removes existing group.';
 $lng['error']['local_group_exists'] = 'The given group already exists on the system.';
 $lng['error']['local_group_invalid'] = 'The given group name is invalid';
+$lng['error']['invaliddnsforletsencrypt'] = 'The domains DNS does not include any of the chosen IP addresses. Let\'s Encrypt certificate generation not possible.';

@@ -2,6 +2,7 @@
 namespace Froxlor\Api\Commands;
 
 use Froxlor\Database\Database;
+use Froxlor\Domain\Domain;
 use Froxlor\Settings;
 
 /**
@@ -227,6 +228,15 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 					$letsencrypt = '1';
 				} else {
 					\Froxlor\UI\Response::standard_error('letsencryptonlypossiblewithsslipport', '', true);
+				}
+			}
+
+			// validate dns if lets encrypt is enabled to check whether we can use it at all
+			if ($letsencrypt == '1' && Settings::Get('system.le_domain_dnscheck') == '1') {
+				$our_ips = Domain::getIpsOfDomain($domain_check['id']);
+				$domain_ips = \Froxlor\PhpHelper::gethostbynamel6($completedomain);
+				if ($domain_ips == false || count(array_intersect($our_ips, $domain_ips)) <= 0) {
+					\Froxlor\UI\Response::standard_error('invaliddnsforletsencrypt', '', true);
 				}
 			}
 
@@ -592,6 +602,15 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				$letsencrypt = '1';
 			} else {
 				\Froxlor\UI\Response::standard_error('letsencryptonlypossiblewithsslipport', '', true);
+			}
+		}
+
+		// validate dns if lets encrypt is enabled to check whether we can use it at all
+		if ($result['letsencrypt'] != $letsencrypt && $letsencrypt == '1' && Settings::Get('system.le_domain_dnscheck') == '1') {
+			$our_ips = Domain::getIpsOfDomain($result['parentdomainid']);
+			$domain_ips = \Froxlor\PhpHelper::gethostbynamel6($result['domain']);
+			if ($domain_ips == false || count(array_intersect($our_ips, $domain_ips)) <= 0) {
+				\Froxlor\UI\Response::standard_error('invaliddnsforletsencrypt', '', true);
 			}
 		}
 

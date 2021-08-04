@@ -1774,3 +1774,4 @@ $lng['serversettings']['froxlorusergroup']['title'] = 'Benutzerdefinierte Gruppe
 $lng['serversettings']['froxlorusergroup']['description'] = 'Voraussetzung hierfür ist die Nutzung von libnss-extrausers (System-Einstellungen). Ein leerer Wert bedeutet, es wird keine Gruppe erstellt, bzw. vorhandene Gruppe wird entfernt.';
 $lng['error']['local_group_exists'] = 'Die angegebene Gruppe existiert bereits auf dem System';
 $lng['error']['local_group_invalid'] = 'Der angegebene Gruppen-Name ist nicht gültig';
+$lng['error']['invaliddnsforletsencrypt'] = 'Die DNS-Einträge der Domain enhalten keine der gewählten IP Adressen. Let\'s Encrypt Zertifikats-Erstellung ist nicht möglich.';

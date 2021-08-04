@@ -574,6 +574,14 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 					$include_specialsettings = 0;
 				}
 
+				// validate dns if lets encrypt is enabled to check whether we can use it at all
+				if ($letsencrypt == '1' && Settings::Get('system.le_domain_dnscheck') == '1') {
+					$domain_ips = \Froxlor\PhpHelper::gethostbynamel6($domain);
+					if ($domain_ips == false || count(array_intersect($ssl_ipandports, $domain_ips)) <= 0) {
+						\Froxlor\UI\Response::standard_error('invaliddnsforletsencrypt', '', true);
+					}
+				}
+
 				// We can't enable let's encrypt for wildcard-domains
 				if ($serveraliasoption == '0' && $letsencrypt == '1') {
 					\Froxlor\UI\Response::standard_error('nowildcardwithletsencrypt', '', true);
@@ -1324,6 +1332,14 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				// vhost container settings
 				$ssl_specialsettings = '';
 				$include_specialsettings = 0;
+			}
+
+			// validate dns if lets encrypt is enabled to check whether we can use it at all
+			if ($letsencrypt == '1' && Settings::Get('system.le_domain_dnscheck') == '1') {
+				$domain_ips = \Froxlor\PhpHelper::gethostbynamel6($result['domain']);
+				if ($domain_ips == false || count(array_intersect($ssl_ipandports, $domain_ips)) <= 0) {
+					\Froxlor\UI\Response::standard_error('invaliddnsforletsencrypt', '', true);
+				}
 			}
 
 			// We can't enable let's encrypt for wildcard-domains
