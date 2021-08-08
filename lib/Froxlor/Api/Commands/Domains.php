@@ -194,6 +194,27 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	}
 
 	/**
+	 * get ips from array of id's
+	 *
+	 * @param array $ips
+	 * @return array
+	 */
+	private function getIpsFromIdArray(array $ids)
+	{
+		$resultips_stmt = Database::prepare("
+			SELECT `ip` FROM `" . TABLE_PANEL_IPSANDPORTS . "` WHERE id = :id
+		");
+		$result = [];
+		foreach ($ids as $id) {
+			$entry = Database::pexecute_first($resultips_stmt, array(
+				'id' => $id
+			));
+			$result[] = $entry['ip'];
+		}
+		return $result;
+	}
+
+	/**
 	 * add new domain entry
 	 *
 	 * @param string $domain
@@ -577,7 +598,8 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				// validate dns if lets encrypt is enabled to check whether we can use it at all
 				if ($letsencrypt == '1' && Settings::Get('system.le_domain_dnscheck') == '1') {
 					$domain_ips = \Froxlor\PhpHelper::gethostbynamel6($domain);
-					if ($domain_ips == false || count(array_intersect($ssl_ipandports, $domain_ips)) <= 0) {
+					$selected_ips = $this->getIpsFromIdArray($ssl_ipandports);
+					if ($domain_ips == false || count(array_intersect($selected_ips, $domain_ips)) <= 0) {
 						\Froxlor\UI\Response::standard_error('invaliddnsforletsencrypt', '', true);
 					}
 				}
@@ -1337,7 +1359,8 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 			// validate dns if lets encrypt is enabled to check whether we can use it at all
 			if ($letsencrypt == '1' && Settings::Get('system.le_domain_dnscheck') == '1') {
 				$domain_ips = \Froxlor\PhpHelper::gethostbynamel6($result['domain']);
-				if ($domain_ips == false || count(array_intersect($ssl_ipandports, $domain_ips)) <= 0) {
+				$selected_ips = $this->getIpsFromIdArray($ssl_ipandports);
+				if ($domain_ips == false || count(array_intersect($selected_ips, $domain_ips)) <= 0) {
 					\Froxlor\UI\Response::standard_error('invaliddnsforletsencrypt', '', true);
 				}
 			}
