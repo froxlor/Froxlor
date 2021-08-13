@@ -1859,7 +1859,7 @@ user_query = SELECT CONCAT(homedir, maildir) AS home, CONCAT('maildir:', homedir
 
 # Query to get a list of all usernames.
 #iterate_query = SELECT username AS user FROM users
-iterate_query = SELECT username AS user FROM mail_users
+iterate_query = "SELECT username AS user FROM mail_users WHERE (imap = 1 OR pop3 = 1)"
 ]]>
 						</content>
 					</file>
