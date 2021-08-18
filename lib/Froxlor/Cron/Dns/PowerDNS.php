@@ -1,6 +1,8 @@
 <?php
 namespace Froxlor\Cron\Dns;
 
+use Froxlor\Settings;
+
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2016 the Froxlor Team (see authors).
@@ -111,9 +113,15 @@ class PowerDNS extends DnsBase
 
 	private function insertZone($domainname, $serial = 0)
 	{
-		$ins_stmt = \Froxlor\Dns\PowerDNS::getDB()->prepare("
+		if (Settings::Get('system.powerdns_mode') === 'Master') {
+			$ins_stmt = \Froxlor\Dns\PowerDNS::getDB()->prepare("
+			INSERT INTO domains set `name` = :domainname, `notified_serial` = :serial, `type` = 'MASTER'
+		");
+		} else {
+			$ins_stmt = \Froxlor\Dns\PowerDNS::getDB()->prepare("
 			INSERT INTO domains set `name` = :domainname, `notified_serial` = :serial, `type` = 'NATIVE'
 		");
+		}
 		$ins_stmt->execute(array(
 			'domainname' => $domainname,
 			'serial' => $serial
