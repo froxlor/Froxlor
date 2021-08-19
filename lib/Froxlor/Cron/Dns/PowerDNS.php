@@ -15,7 +15,7 @@ use Froxlor\Settings;
  * @author Froxlor team <team@froxlor.org> (2016-)
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package Cron
- *         
+ *
  */
 class PowerDNS extends DnsBase
 {
@@ -113,21 +113,16 @@ class PowerDNS extends DnsBase
 
 	private function insertZone($domainname, $serial = 0)
 	{
-		if (Settings::Get('system.powerdns_mode') === 'Master') {
-			$ins_stmt = \Froxlor\Dns\PowerDNS::getDB()->prepare("
-			INSERT INTO domains set `name` = :domainname, `notified_serial` = :serial, `type` = 'MASTER'
+        $ins_stmt = \Froxlor\Dns\PowerDNS::getDB()->prepare("
+			INSERT INTO domains set `name` = :domainname, `notified_serial` = :serial, `type` = :type
 		");
-		} else {
-			$ins_stmt = \Froxlor\Dns\PowerDNS::getDB()->prepare("
-			INSERT INTO domains set `name` = :domainname, `notified_serial` = :serial, `type` = 'NATIVE'
-		");
-		}
-		$ins_stmt->execute(array(
-			'domainname' => $domainname,
-			'serial' => $serial
-		));
-		$lastid = \Froxlor\Dns\PowerDNS::getDB()->lastInsertId();
-		return $lastid;
+        $ins_stmt->execute(array(
+            'domainname' => $domainname,
+            'serial' => $serial,
+            'type' => strtoupper(Settings::Get('system.powerdns_mode'))
+        ));
+        $lastid = \Froxlor\Dns\PowerDNS::getDB()->lastInsertId();
+        return $lastid;;
 	}
 
 	private function insertRecords($domainid = 0, $records = array(), $origin = "")
