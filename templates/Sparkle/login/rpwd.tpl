@@ -11,7 +11,7 @@ $header
 			</if>
 			<section class="loginsec">
 				<h3>{$lng['pwdreminder']['choosenew']}</h3>
-				<form method="post" action="{$filename}?action=resetpwd&resetcode={$activationcode}" enctype="application/x-www-form-urlencoded">
+				<form method="post" action="index.php?action=resetpwd&resetcode={$activationcode}" enctype="application/x-www-form-urlencoded">
 					<fieldset>
 					<legend>Froxlor&nbsp;-&nbsp;{$lng['login']['presend']}</legend>
 					<p>
