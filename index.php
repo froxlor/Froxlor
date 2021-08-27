@@ -33,7 +33,7 @@ if (session_status() == PHP_SESSION_NONE) {
 	ini_set("session.use_cookies", false);
 	ini_set("session.cookie_httponly", true);
 	ini_set("session.cookie_secure", $is_ssl);
-	session_id($s);
+	session_id('login');
 	session_start();
 }
 
