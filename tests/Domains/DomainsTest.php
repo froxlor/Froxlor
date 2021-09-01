@@ -24,6 +24,7 @@ class DomainsTest extends TestCase
 		$json_result = Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1'
 		))->get();
+
 		$customer_userdata = json_decode($json_result, true)['data'];
 		$data = [
 			'domain' => 'TEST.local',
@@ -424,5 +425,26 @@ class DomainsTest extends TestCase
 		Domains::getLocal($admin_userdata, [
 			'domainname' => 'उदाहरण.भारत'
 		])->delete();
+	}
+
+	public function testAdminDomainsAddDnsLetsEncryptFail()
+	{
+		global $admin_userdata;
+		// get customer
+		$json_result = Customers::getLocal($admin_userdata, array(
+			'loginname' => 'test1'
+		))->get();
+		Settings::Set('system.le_domain_dnscheck', 1);
+		$customer_userdata = json_decode($json_result, true)['data'];
+		$data = [
+			'domain' => 'no-dns.local',
+			'customerid' => $customer_userdata['customerid'],
+			'letsencrypt' => 1,
+			'description' => 'no dns domain'
+		];
+
+		$this->expectExceptionCode(400);
+		$this->expectExceptionMessage('The domains DNS does not include any of the chosen IP addresses. Let\'s Encrypt certificate generation not possible.');
+		Domains::getLocal($admin_userdata, $data)->add();
 	}
 }

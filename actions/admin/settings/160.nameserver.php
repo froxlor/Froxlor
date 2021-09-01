@@ -99,6 +99,19 @@ return array(
 					'default' => '',
 					'save_method' => 'storeSettingField'
 				),
+				'system_powerdns_mode' => array(
+					'label' => $lng['serversettings']['powerdns_mode'],
+					'settinggroup' => 'system',
+					'varname' => 'powerdns_mode',
+					'type' => 'option',
+					'default' => 'Native',
+					'option_mode' => 'one',
+					'option_options' => array(
+						'Native' => 'Native',
+						'Master' => 'Master'
+					),
+					'save_method' => 'storeSettingField'
+				),
 				'system_dns_createmailentry' => array(
 					'label' => $lng['serversettings']['mail_also_with_mxservers'],
 					'settinggroup' => 'system',

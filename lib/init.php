@@ -103,7 +103,7 @@ unset($_);
 unset($value);
 unset($key);
 
-$filename = htmlentities(basename($_SERVER['PHP_SELF']));
+$filename = htmlentities(basename($_SERVER['SCRIPT_NAME']));
 
 // check whether the userdata file exists
 if (! file_exists(\Froxlor\Froxlor::getInstallDir() . '/lib/userdata.inc.php')) {
@@ -161,7 +161,9 @@ $idna_convert = new \Froxlor\Idna\IdnaWrapper();
 /**
  * If Froxlor was called via HTTPS -> enforce it for the next time by settings HSTS header according to settings
  */
+$is_ssl = false;
 if (isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) != 'off')) {
+	$is_ssl = true;
 	$maxage = Settings::Get('system.hsts_maxage');
 	if (empty($maxage)) {
 		$maxage = 0;
@@ -219,6 +221,8 @@ if (isset($s) && $s != "" && $nosession != 1) {
 	ini_set("session.name", "s");
 	ini_set("url_rewriter.tags", "");
 	ini_set("session.use_cookies", false);
+	ini_set("session.cookie_httponly", true);
+	ini_set("session.cookie_secure", $is_ssl);
 	session_id($s);
 	session_start();
 	$query = "SELECT `s`.*, `u`.* FROM `" . TABLE_PANEL_SESSIONS . "` `s` LEFT JOIN `";

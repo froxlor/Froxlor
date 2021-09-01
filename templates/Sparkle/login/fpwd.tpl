@@ -10,7 +10,7 @@ $header
 				</div>
 			</if>
 			<section class="loginsec">
-				<form method="post" action="$filename" enctype="application/x-www-form-urlencoded">
+				<form method="post" action="index.php" enctype="application/x-www-form-urlencoded">
 					<fieldset>
 					<legend>Froxlor&nbsp;-&nbsp;{$lng['login']['presend']}</legend>
 					<p>

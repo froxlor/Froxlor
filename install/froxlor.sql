@@ -611,6 +611,7 @@ opcache.interned_strings_buffer'),
 	('system', 'documentroot_use_default_value', '0'),
 	('system', 'passwordcryptfunc', '3'),
 	('system', 'axfrservers', ''),
+	('system', 'powerdns_mode', 'Native'),
 	('system', 'customer_ssl_path', '/etc/ssl/froxlor-custom/'),
 	('system', 'allow_error_report_admin', '1'),
 	('system', 'allow_error_report_customer', '0'),
@@ -721,8 +722,8 @@ opcache.interned_strings_buffer'),
 	('panel', 'logo_image_login', ''),
 	('panel', 'logo_overridetheme', '0'),
 	('panel', 'logo_overridecustom', '0'),
-	('panel', 'version', '0.10.27'),
-	('panel', 'db_version', '202107300');
+	('panel', 'version', '0.10.28'),
+	('panel', 'db_version', '202108180');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

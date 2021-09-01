@@ -28,6 +28,12 @@ if ($action == '') {
 }
 
 if (session_status() == PHP_SESSION_NONE) {
+	ini_set("session.name", "s");
+	ini_set("url_rewriter.tags", "");
+	ini_set("session.use_cookies", false);
+	ini_set("session.cookie_httponly", true);
+	ini_set("session.cookie_secure", $is_ssl);
+	session_id('login');
 	session_start();
 }
 

@@ -914,3 +914,15 @@ if (\Froxlor\Froxlor::isDatabaseVersion('202107260')) {
 	lastStepStatus(0);
 	\Froxlor\Froxlor::updateToDbVersion('202107300');
 }
+
+if (\Froxlor\Froxlor::isDatabaseVersion('202107300')) {
+	showUpdateStep("Adds the possibility to select the PowerDNS Operation Mode", true);
+	Settings::AddNew("system.powerdns_mode", 'Native');
+	lastStepStatus(0);
+	\Froxlor\Froxlor::updateToDbVersion('202108180');
+}
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.27')) {
+	showUpdateStep("Updating from 0.10.27 to 0.10.28", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.28');
+}

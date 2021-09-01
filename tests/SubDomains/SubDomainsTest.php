@@ -260,4 +260,24 @@ class SubDomainsTest extends TestCase
 		$this->assertEquals('mysub.test2.local', $result['domain']);
 		$this->assertEquals($customer_userdata['customerid'], $result['customerid']);
 	}
+
+	public function testCustomerSubDomainsAddDnsLetsEncryptFail()
+	{
+		global $admin_userdata;
+		// get customer
+		$json_result = Customers::getLocal($admin_userdata, array(
+			'loginname' => 'test1'
+		))->get();
+		\Froxlor\Settings::Set('system.le_domain_dnscheck', 1);
+		$customer_userdata = json_decode($json_result, true)['data'];
+		$data = [
+			'subdomain' => 'nodns',
+			'domain' => 'test2.local',
+			'letsencrypt' => 1
+		];
+
+		$this->expectExceptionCode(400);
+		$this->expectExceptionMessage('The domains DNS does not include any of the chosen IP addresses. Let\'s Encrypt certificate generation not possible.');
+		SubDomains::getLocal($customer_userdata, $data)->add();
+	}
 }
