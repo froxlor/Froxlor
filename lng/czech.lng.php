@@ -71,6 +71,7 @@ $lng['customer']['subdomains'] = 'Subdomény';
 $lng['customer']['domains'] = 'Domény';
 $lng['customer']['unlimited'] = '∞';
 $lng['customer']['mib'] = 'MiB';
+$lng['customer']['gib'] = 'GiB';
 
 /**
  * Customermenue
@@ -388,7 +389,7 @@ $lng['serversettings']['mxservers']['description'] = 'Seznam oddělený čárkam
  * CHANGED BETWEEN 1.2.12 and 1.2.13
  */
 
-$lng['mysql']['description'] = 'Here you can create and change your MySQL-databases.<br />The changes are made instantly and the database can be used immediately.<br />At the menu on the left side you find the tool phpMyAdmin with which you can easily administer your database.<br /><br />To use your databases in your own php-scripts use the following settings: (The data in <i>italics</i> have to be changed into the equivalents you typed in!)<br />Hostname: <b><SQL_HOST></b><br />Username: <b><i>databasename</i></b><br />Password: <b><i>the password you\'ve chosen</i></b><br />Database: <b><i>databasename</i></b>';
+$lng['mysql']['description'] = 'Zde můžete vytvořit a upravovat své MySQL-databáze.<br />Změny jsou provedeny ihned, takže ji můžete hned využívat.<br />Na levé straně v menu můžete najít nástroj phpMyAdmin s kterým můžete spravovat své databáze jednodušeji.<br /><br />Pro použití svých databází ve vlastních php-skriptech použijte následující nastavení: (Data v <i>italském fontu</i> musí být změněny do ekvivalentů, které jste zadali!)<br />Název hostitele: <b><SQL_HOST></b><br />Přezdívka: <b><i>databasename</i></b><br />Heslo: <b><i>heslo, co jste vybral</i></b><br />Databáze: <b><i>databasename</i></b>';
 
 /**
  * ADDED BETWEEN 1.2.12 and 1.2.13
@@ -697,6 +698,8 @@ $lng['dkim']['dkim_dkimkeys']['title'] = 'KeyList filename';
 $lng['dkim']['dkim_dkimkeys']['description'] = '<em>Filename</em> of the  DKIM KeyList parameter specified in the dkim-milter configuration';
 $lng['dkim']['dkimrestart_command']['title'] = 'Milter restart command';
 $lng['dkim']['dkimrestart_command']['description'] = 'Please specify the restart command for the DKIM milter service';
+$lng['dkim']['privkeysuffix']['title'] = 'Private keys suffix';
+$lng['dkim']['privkeysuffix']['description'] = 'You can specify an (optional) filename extension/suffix for the generate dkim private keys. Some services like dkim-filter requires this to be empty';
 
 // ADDED IN 1.2.19-svn9
 
@@ -1536,9 +1539,9 @@ $lng['mysql']['size'] = 'Velikost';
 
 $lng['error']['invalidhostname'] = 'Hostname needs to be a valid domain. It can\'t be empty nor can it consist only of whitespaces';
 
-$lng['traffic']['http'] = 'HTTP (MiB)';
-$lng['traffic']['ftp'] = 'FTP (MiB)';
-$lng['traffic']['mail'] = 'Mail (MiB)';
+$lng['traffic']['http'] = 'HTTP';
+$lng['traffic']['ftp'] = 'FTP';
+$lng['traffic']['mail'] = 'Mail';
 
 // ADDED IN 0.9.27-svn1
 $lng['serversettings']['mod_fcgid']['idle_timeout']['title'] = 'Idle Timeout';
@@ -1593,6 +1596,8 @@ $lng['serversettings']['panel_allow_theme_change_admin'] = 'Povolit amdinům zm�
 $lng['serversettings']['panel_allow_theme_change_customer'] = 'Allow customers to change the theme';
 $lng['serversettings']['axfrservers']['title'] = 'AXFR servery';
 $lng['serversettings']['axfrservers']['description'] = 'A comma separated list of IP addresses allowed to transfer (AXFR) dns zones.';
+$lng['serversettings']['powerdns_mode']['title'] = 'PowerDNS Operation Mode';
+$lng['serversettings']['powerdns_mode']['description'] = 'Select the PoweDNS mode: Native for no replication (Default) / Master if DNS replication is needed.';
 $lng['panel']['ssleditor'] = 'SSL nastavené pro tuto doménu';
 $lng['admin']['ipsandports']['ssl_paste_description'] = 'Paste your complete certificate content in the textbox';
 $lng['admin']['ipsandports']['ssl_cert_file_content'] = 'Content of the ssl certificate';
@@ -1785,7 +1790,7 @@ $lng['apcuinfo']['fragment'] = 'Fragmentace';
 // Added for opcache info
 $lng['admin']['opcacheinfo'] = 'OPcache Info';
 $lng['error']['no_opcacheinfo'] = 'No cache info available. OPCache does not appear to be running.';
-$lng['opcacheinfo']['generaltitle'] = 'General Information';
+$lng['opcacheinfo']['generaltitle'] = 'Obecné informace';
 $lng['opcacheinfo']['resetcache'] = 'Resetovat OPcache';
 $lng['opcacheinfo']['version'] = 'OPCache verze';
 $lng['opcacheinfo']['phpversion'] = 'PHP verze';
@@ -1901,6 +1906,7 @@ $lng['error']['dns_mx_needdom'] = 'The MX content value must be a valid domain-n
 $lng['error']['dns_mx_noalias'] = 'The MX-content value cannot be an CNAME entry.';
 $lng['error']['dns_cname_invaliddom'] = 'Invalid domain-name for CNAME record';
 $lng['error']['dns_cname_nomorerr'] = 'There already exists a resource-record with the same record-name. It can not be used as CNAME.';
+$lng['error']['dns_other_nomorerr'] = 'Již existuje CNAME záznam se stejným názvem. Ten nemůže být použit pro jiný druh.';
 $lng['error']['dns_ns_invaliddom'] = 'Invalid domain-name for NS record';
 $lng['error']['dns_srv_prioempty'] = 'Invalid SRV priority given';
 $lng['error']['dns_srv_invalidcontent'] = 'Invalid SRV content, must contain of fields weight, port and target, e.g.: 5 5060 sipserver.example.com.';
@@ -1942,19 +1948,19 @@ $lng['serversettings']['option_unavailable'] = '<br><em class="red">Option not a
 $lng['serversettings']['letsencryptacmeconf']['title'] = "Path to the acme.conf snippet";
 $lng['serversettings']['letsencryptacmeconf']['description'] = "File name of the config snippet which allows the web server to serve the acme challenge.";
 $lng['admin']['hostname'] = 'Hostname';
-$lng['admin']['memory'] = 'Memory usage';
+$lng['admin']['memory'] = 'Využití paměti';
 $lng['serversettings']['mail_use_smtp'] = 'Set mailer to use SMTP';
 $lng['serversettings']['mail_smtp_host'] = 'Specify SMTP server';
-$lng['serversettings']['mail_smtp_usetls'] = 'Enable TLS encryption';
+$lng['serversettings']['mail_smtp_usetls'] = 'Povolit TLS šifrování';
 $lng['serversettings']['mail_smtp_auth'] = 'Enable SMTP authentication';
 $lng['serversettings']['mail_smtp_port'] = 'TCP port to connect to';
 $lng['serversettings']['mail_smtp_user'] = 'SMTP username';
 $lng['serversettings']['mail_smtp_passwd'] = 'SMTP heslo';
-$lng['domains']['ssl_certificates'] = 'SSL certificates';
+$lng['domains']['ssl_certificates'] = 'SSL certifikáty';
 $lng['domains']['ssl_certificate_removed'] = 'The certificate with the id #%s has been removed successfully';
 $lng['domains']['ssl_certificate_error'] = "Error reading certificate for domain: %s";
-$lng['domains']['no_ssl_certificates'] = "There are no domains with SSL certificate";
-$lng['admin']['webserversettings_ssl'] = 'Webserver SSL settings';
+$lng['domains']['no_ssl_certificates'] = "Nejsou zde žádné domény se SSL certifikátem";
+$lng['admin']['webserversettings_ssl'] = 'SSL nastavení webového serveru';
 $lng['admin']['domain_hsts_maxage']['title'] = 'HTTP Strict Transport Security (HSTS)';
 $lng['admin']['domain_hsts_maxage']['description'] = 'Specify the max-age value for the Strict-Transport-Security header<br>The value <i>0</i> will disable HSTS for the domain. Most user set a value of <i>31536000</i> (one year).';
 $lng['admin']['domain_hsts_incsub']['title'] = 'Include HSTS for any subdomain';
@@ -1962,10 +1968,10 @@ $lng['admin']['domain_hsts_incsub']['description'] = 'The optional "includeSubDo
 $lng['admin']['domain_hsts_preload']['title'] = 'Include domain in <a href="https://hstspreload.appspot.com/" target="_blank">HSTS preload list</a>';
 $lng['admin']['domain_hsts_preload']['description'] = 'If you would like this domain to be included in the HSTS preload list maintained by Chrome (and used by Firefox and Safari), then use activate this.<br>Sending the preload directive from your site can have PERMANENT CONSEQUENCES and prevent users from accessing your site and any of its subdomains.<br>Please read the details at <a href="https://hstspreload.appspot.com/#removal" target="_blank">hstspreload.appspot.com/#removal</a> before sending the header with "preload".';
 
-$lng['serversettings']['http2_support']['title'] = 'HTTP2 Support';
+$lng['serversettings']['http2_support']['title'] = 'HTTP2 podpora';
 $lng['serversettings']['http2_support']['description'] = 'enable HTTP2 support for ssl.<br><em class="red">ENABLE ONLY IF YOUR WEBSERVER SUPPORTS THIS FEATURE (nginx version 1.9.5+, apache2 version 2.4.17+)</em>';
 
-$lng['error']['noipportgiven'] = 'No IP/port given';
+$lng['error']['noipportgiven'] = 'IP/port nezadán';
 
 // Added in froxlor 0.9.38.8
 $lng['admin']['domain_ocsp_stapling']['title'] = 'OCSP stapling';
@@ -1975,22 +1981,22 @@ $lng['serversettings']['ssl']['apache24_ocsp_cache_path']['title'] = 'Apache 2.4
 $lng['serversettings']['ssl']['apache24_ocsp_cache_path']['description'] = 'Configures the cache used to store OCSP responses which get included in TLS handshakes.';
 $lng['serversettings']['nssextrausers']['title'] = 'Use libnss-extrausers instead of libnss-mysql';
 $lng['serversettings']['nssextrausers']['description'] = 'Do not read users from the database but from files. Please only activate if you have already gone through the required configuration steps (system -> libnss-extrausers).<br><strong class="red">For Debian/Ubuntu only (or if you have compiled libnss-extrausers yourself!)</strong>';
-$lng['admin']['domain_http2']['title'] = 'HTTP2 support';
+$lng['admin']['domain_http2']['title'] = 'HTTP2 podpora';
 $lng['admin']['domain_http2']['description'] = 'See <a target="_blank" href="https://en.wikipedia.org/wiki/HTTP/2">Wikipedia</a> for a detailed explanation of HTTP2';
 $lng['admin']['testmail'] = 'SMTP test';
 $lng['success']['testmailsent'] = 'Testovací email byl odeslán úspěšně';
 $lng['serversettings']['le_domain_dnscheck']['title'] = "Validate DNS of domains when using Let's Encrypt";
 $lng['serversettings']['le_domain_dnscheck']['description'] = "If activated, froxlor will validate whether the domain which requests a Let's Encrypt certificate resolves to at least one of the system ip addresses.";
-$lng['menue']['phpsettings']['fpmdaemons'] = 'PHP-FPM versions';
+$lng['menue']['phpsettings']['fpmdaemons'] = 'PHP-FPM verze';
 $lng['admin']['phpsettings']['activephpconfigs'] = 'In use for php-config(s)';
-$lng['admin']['phpsettingsforsubdomains'] = 'Apply php-config to all subdomains:';
+$lng['admin']['phpsettingsforsubdomains'] = 'Aplikovat php konfiguraci na všechny subdomény:';
 $lng['serversettings']['phpsettingsforsubdomains']['description'] = 'If yes the chosen php-config will be updated to all subdomains';
 $lng['serversettings']['leapiversion']['title'] = "Choose Let's Encrypt ACME implementation";
 $lng['serversettings']['leapiversion']['description'] = "Currently only ACME v2 implementation for Let's Encrypt is supported.";
 $lng['admin']['phpsettings']['pass_authorizationheader'] = 'Add "-pass-header Authorization" / "CGIPassAuth On" to vhosts';
 $lng['serversettings']['ssl']['ssl_protocols']['title'] = 'Configure the TLS protocol version';
 $lng['serversettings']['ssl']['ssl_protocols']['description'] = 'This is a list of ssl protocols that you want (or don\'t want) to use when using SSL. <b>Notice:</b> Some older browsers may not support the newest protocol versions.<br /><br /><b>Default value is:</b><pre>TLSv1.2</pre>';
-$lng['serversettings']['phpfpm_settings']['limit_extensions']['title'] = 'Allowed extensions';
+$lng['serversettings']['phpfpm_settings']['limit_extensions']['title'] = 'Povolená rozšíření';
 $lng['serversettings']['phpfpm_settings']['limit_extensions']['description'] = 'Limits the extensions of the main script FPM will allow to parse. This can prevent configuration mistakes on the web server side. You should only limit FPM to .php extensions to prevent malicious users to use other extensions to execute php code. Default value: .php';
 $lng['phpfpm']['ini_flags'] = 'Enter possible <strong>php_flag</strong>s for php.ini. One entry per line';
 $lng['phpfpm']['ini_values'] = 'Enter possible <strong>php_value</strong>s for php.ini. One entry per line';
@@ -1998,17 +2004,17 @@ $lng['phpfpm']['ini_admin_flags'] = 'Enter possible <strong>php_admin_flag</stro
 $lng['phpfpm']['ini_admin_values'] = 'Enter possible <strong>php_admin_value</strong>s for php.ini. One entry per line';
 $lng['serversettings']['phpfpm_settings']['envpath'] = 'Paths to add to the PATH environment. Leave empty for no PATH environment variable';
 $lng['admin']['configfiles']['importexport'] = 'Import/Export';
-$lng['success']['settingsimported'] = 'Settings imported successfully';
-$lng['error']['jsonextensionnotfound'] = 'This feature requires the php json-extension.';
+$lng['success']['settingsimported'] = 'Nastavení naimportováno úspěšně';
+$lng['error']['jsonextensionnotfound'] = 'Tato funkce vyžaduje php rozšíření json.';
 
 // added in froxlor 0.9.39
-$lng['admin']['plans']['name'] = 'Plan name';
+$lng['admin']['plans']['name'] = 'Název plánu';
 $lng['admin']['plans']['description'] = 'Popis';
 $lng['admin']['plans']['last_update'] = 'Naposledy aktualizováno';
-$lng['admin']['plans']['plans'] = 'Hosting plans';
-$lng['admin']['plans']['plan_details'] = 'Plan details';
-$lng['admin']['plans']['add'] = 'Add new plan';
-$lng['admin']['plans']['edit'] = 'Edit plan';
+$lng['admin']['plans']['plans'] = 'Hostingové plány';
+$lng['admin']['plans']['plan_details'] = 'Podrobnosti plánu';
+$lng['admin']['plans']['add'] = 'Přidat nový plán';
+$lng['admin']['plans']['edit'] = 'Upravit plán';
 $lng['admin']['plans']['use_plan'] = 'Apply plan';
 $lng['question']['plan_reallydelete'] = 'Do you really want to delete the hosting plan %s?';
 $lng['admin']['notryfiles']['title'] = 'No autogenerated try_files';
@@ -2034,31 +2040,31 @@ $lng['apikeys']['valid_until_help'] = 'Date until valid, format YYYY-MM-DD';
 $lng['serversettings']['enable_api']['title'] = 'Enable external API usage';
 $lng['serversettings']['enable_api']['description'] = 'In order to use the froxlor API you need to activate this option. For more detailed information see <a href="https://api.froxlor.org/" target="_new">https://api.froxlor.org/</a>';
 $lng['serversettings']['dhparams_file']['title'] = 'DHParams file (Diffie–Hellman key exchange)';
-$lng['serversettings']['dhparams_file']['description'] = 'If a dhparams.pem file is specified here it will be included in the webserver configuration. Leave empty to disable.<br>Example: /etc/apache2/ssl/dhparams.pem<br><br>If the file does not exist, it will be created automatically with the following command: <em>openssl dhparam -out /etc/apache2/ssl/dhparams.pem 4096<em>. It is recommended to create the file prior to specifying it here as the creation takes quite a while and blocks the cronjob.';
+$lng['serversettings']['dhparams_file']['description'] = 'If a dhparams.pem file is specified here it will be included in the webserver configuration. Leave empty to disable.<br>Example: /etc/ssl/webserver/dhparams.pem<br><br>If the file does not exist, it will be created automatically with the following command: <em>openssl dhparam -out /etc/ssl/webserver/dhparams.pem 4096<em>. It is recommended to create the file prior to specifying it here as the creation takes quite a while and blocks the cronjob.';
 $lng['2fa']['2fa'] = '2FA možnosti';
 $lng['2fa']['2fa_enabled'] = 'Aktivovat dvoufázové ověření (2FA)';
 $lng['login']['2fa'] = 'Dvoufázové ověření (2FA)';
 $lng['login']['2facode'] = 'Prosím zadej 2FA kód';
 $lng['2fa']['2fa_removed'] = '2FA úspěšně odstraněno';
-$lng['2fa']['2fa_added'] = '2FA activated successfully<br><a href="%s?s=%s&page=2fa">View 2FA details</a>';
+$lng['2fa']['2fa_added'] = '2FA úspešně aktivováno<br><a href="%s?s=%s&page=2fa">Zobrazit 2FA údaje</a>';
 $lng['2fa']['2fa_add'] = 'Aktivovat 2FA';
 $lng['2fa']['2fa_delete'] = 'Deaktivovat 2FA';
 $lng['2fa']['2fa_verify'] = 'Ověřit kód';
 $lng['mails']['2fa']['mailbody'] = 'Hello,\n\nyour 2FA login-code is: {CODE}.\n\nThis is an automatically created\ne-mail, please do not answer!\n\nYours sincerely, your administrator';
-$lng['mails']['2fa']['subject'] = 'Froxlor - 2FA Code';
+$lng['mails']['2fa']['subject'] = 'Froxlor - 2FA kód';
 $lng['2fa']['2fa_overview_desc'] = 'Here you can activate a two-factor authentication for your account.<br><br>You can either use an authenticator-app (time-based one-time password / TOTP) or let froxlor send you an email to your account-address after each successful login with a one-time password.';
 $lng['2fa']['2fa_email_desc'] = 'Your account is set up to use one-time passwords via e-mail. To deactivate, click on "' . $lng['2fa']['2fa_delete'] . '"';
 $lng['2fa']['2fa_ga_desc'] = 'Your account is set up to use time-based one-time passwords via authenticator-app. Please scan the QR code below with your desired authenticator app to generate the codes. To deactivate, click on "' . $lng['2fa']['2fa_delete'] . '"';
-$lng['admin']['logviewenabled'] = 'Enable access to access/error-logs';
-$lng['panel']['viewlogs'] = 'View logfiles';
-$lng['panel']['not_configured'] = 'System not configured yet. Click here to go to configurations.';
+$lng['admin']['logviewenabled'] = 'Povolit přístup do access/error-logs';
+$lng['panel']['viewlogs'] = 'Zobrazit log soubory';
+$lng['panel']['not_configured'] = 'Systém ještě není nakonfigurován. Klikněte zde pro nakonfigurování.';
 $lng['panel']['done_configuring'] = 'When you are done configuring all required / desired services,<br>click the link below';
 $lng['panel']['ihave_configured'] = 'I have configured the services';
 $lng['panel']['system_is_configured'] = 'System is already set as configured';
 $lng['panel']['settings_before_configuration'] = 'Please be sure you adjusted the settings prior to configuring the services here';
 $lng['panel']['alternative_cmdline_config'] = 'Alternatively, just run the following command as root-user in your shell to configure the services automatically';
 $lng['tasks']['remove_pdns_domain'] = 'Delete domain %s from PowerDNS database';
-$lng['tasks']['remove_ssl_domain'] = 'Delete ssl files of domain %s';
+$lng['tasks']['remove_ssl_domain'] = 'Smazat ssl soubory domény %s';
 $lng['admin']['novhostcontainer'] = '<br><br><small class="red">None of the IPs and ports has the "' . $lng['admin']['ipsandports']['create_vhostcontainer'] . '" option enabled, many settings here will not be available</small>';
 $lng['serversettings']['errorlog_level']['title'] = 'Error log-level';
 $lng['serversettings']['errorlog_level']['description'] = 'Specify the error log level. Default is "warn" for apache-users and "error" for nginx-users.';
@@ -2069,14 +2075,14 @@ $lng['serversettings']['froxloraliases']['description'] = "Comma separated list 
 
 $lng['serversettings']['ssl']['tlsv13_cipher_list']['title'] = 'Configure explicit TLSv1.3 ciphers if used';
 $lng['serversettings']['ssl']['tlsv13_cipher_list']['description'] = 'This is a list of ciphers that you want (or don\'t want) to use when talking TLSv1.3. For a list of ciphers and how to include/exclude them, see <a href="https://wiki.openssl.org/index.php/TLS1.3">the docs for TLSv1.3</a>.<br /><br /><b>Default value is empty</b>';
-$lng['usersettings']['api_allowed']['title'] = 'Allow API access';
+$lng['usersettings']['api_allowed']['title'] = 'Povolit API přístup';
 $lng['usersettings']['api_allowed']['description'] = 'When enabled in the settings, this user can create API keys and access the froxlor API';
 $lng['usersettings']['api_allowed']['notice'] = 'API access is not allowed for your account.';
 $lng['serversettings']['default_sslvhostconf']['title'] = 'Default SSL vHost-settings';
 $lng['serversettings']['includedefault_sslvhostconf'] = 'Include non-SSL vHost-settings in SSL-vHost';
 $lng['admin']['ownsslvhostsettings'] = 'Own SSL vHost-settings';
 $lng['admin']['ipsandports']['ssl_default_vhostconf_domain'] = 'Default SSL vHost-settings for every domain container';
-$lng['customer']['total_diskspace'] = 'Total diskspace (MiB)';
+$lng['customer']['total_diskspace'] = 'Celkové místo na disku';
 $lng['admin']['domain_override_tls'] = 'Override system TLS settings';
 $lng['domains']['isaliasdomainof'] = 'Is aliasdomain for %s';
 $lng['serversettings']['apply_specialsettings_default']['title'] = 'Default value for "' . $lng['admin']['specialsettingsforsubdomains'] . "' setting when editing a domain";
@@ -2089,8 +2095,39 @@ $lng['admin']['domain_sessionticketsenabled']['title'] = 'Enable usage of TLS se
 $lng['admin']['domain_sessionticketsenabled']['description'] = 'Default <strong>yes</strong><br>Requires apache-2.4.11+ or nginx-1.5.9+';
 
 $lng['serversettings']['phpfpm_settings']['restart_note'] = 'Attention: The config won\'t be checked for any errors. If it contains errors, PHP-FPM might not start again!';
-$lng['serversettings']['phpfpm_settings']['custom_config']['title'] = 'Custom configuration';
+$lng['serversettings']['phpfpm_settings']['custom_config']['title'] = 'Vlastní konfigurace';
 $lng['serversettings']['phpfpm_settings']['custom_config']['description'] = 'Add custom configuration to each PHP-FPM version instance, for example <i>pm.status_path = /status</i> for monitoring. Variables below can be used here. ' . ' <strong>' . $lng['serversettings']['phpfpm_settings']['restart_note'] . '</strong>';
 
 $lng['serversettings']['awstats']['logformat']['title'] = 'LogFormat setting';
 $lng['serversettings']['awstats']['logformat']['description'] = 'If you use customized logformat for your webserver, you need change the awstats LogFormat too.<br/>Default is 1. For more information check documentation <a target="_blank" href="https://awstats.sourceforge.io/docs/awstats_config.html#LogFormat">here</a>.';
+$lng['error']['cannotdeletesuperadmin'] = 'The first admin cannot be deleted.';
+$lng['error']['no_wwwcnamae_ifwwwalias'] = 'Cannot set CNAME record for "www" as domain is set to generate a www-alias. Please change settings to either "No alias" or "Wildcard alias"';
+$lng['serversettings']['hide_incompatible_settings'] = 'Schovat nekompatibilní nastavení';
+
+$lng['serversettings']['soaemail'] = 'Mail address to use in SOA records (defaults to sender address from panel settings if empty)';
+$lng['imprint'] = 'Legal notes';
+$lng['serversettings']['imprint_url']['title'] = 'URL to legal notes / imprint';
+$lng['serversettings']['imprint_url']['description'] = 'Specify an URL to your legal notes / imprint site. The link will be visible on the login screen and on the footer when logged in.';
+$lng['terms'] = 'Terms of use';
+$lng['serversettings']['terms_url']['title'] = 'URL to terms of use';
+$lng['serversettings']['terms_url']['description'] = 'Specify an URL to your terms of use site. The link will be visible on the login screen and on the footer when logged in.';
+$lng['privacy'] = 'Privacy policy';
+$lng['serversettings']['privacy_url']['title'] = 'URL to privacy policy';
+$lng['serversettings']['privacy_url']['description'] = 'Specify an URL to your privacy policy site / imprint site. The link will be visible on the login screen and on the footer when logged in.';
+$lng['admin']['domaindefaultalias'] = 'Default ServerAlias value for new domains';
+
+$lng['serversettings']['logo_image_header']['title'] = 'Logo obrázek (Hlavička)';
+$lng['serversettings']['logo_image_header']['description'] = 'Upload your own logo image to be shown in the header after login (recommended height 30px)';
+$lng['serversettings']['logo_image_login']['title'] = 'Logo Image (Login)';
+$lng['serversettings']['logo_image_login']['description'] = 'Upload your own logo image to be shown during login';
+$lng['panel']['image_field_delete'] = 'Odstranit stávající obrázek';
+$lng['serversettings']['logo_overridetheme']['title'] = 'Overwrites logo defined in theme by "Logo Image" (Header and Login, see below)';
+$lng['serversettings']['logo_overridetheme']['description'] = 'This needs to be set to "true" if you intend to use your uploaded logo; alternatively you can still use the theme-based "logo_custom.png" and "logo_custom_login.png" possibility.';
+$lng['serversettings']['logo_overridecustom']['title'] = 'Přepsat vlastní logo (logo_custom.png a logo_custom_login.png) definované v tématu podle "Logo obrázku" (Hlavička a Přihlášení, můžete vidět níže)';
+$lng['serversettings']['logo_overridecustom']['description'] = 'Set this to "true" if you want to ignore theme-specific custom logos for header and login and use "Logo Image"';
+$lng['serversettings']['createstdsubdom_default']['title'] = 'Preselected value for "'.$lng['admin']['stdsubdomain_add'].'" when creating a customer';
+$lng['serversettings']['froxlorusergroup']['title'] = 'Custom system group for all customer users';
+$lng['serversettings']['froxlorusergroup']['description'] = 'Usage of libnss-extrausers (system-settings) is required for this to take effect. An empty value skips creation or removes existing group.';
+$lng['error']['local_group_exists'] = 'Zadaná skupina již v systému existuje.';
+$lng['error']['local_group_invalid'] = 'Zadaný název skupiny je neplatný';
+$lng['error']['invaliddnsforletsencrypt'] = 'DNS domén neobsahuje žádnou z vybraných IP adres. Vygenerování Let\'s Encrypt certifikátů není možné.';
