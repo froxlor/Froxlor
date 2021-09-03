@@ -10,7 +10,7 @@
  * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
  *
  * @copyright  (c) the authors
- * @author     Florian Lippert <flo@syscp.org>
+ * @author     David Konvičný <podpora@p4g.cz>
  * @author     Froxlor Team <team@froxlor.org>
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Language
@@ -20,7 +20,7 @@
 /**
  * Global
  */
-$lng['translator'] = '';
+$lng['translator'] = 'David Konvičný';
 $lng['panel']['edit'] = 'Upravit';
 $lng['panel']['delete'] = 'Smazat';
 $lng['panel']['create'] = 'Vytvořit';
@@ -2109,7 +2109,7 @@ $lng['imprint'] = 'Legal notes';
 $lng['serversettings']['imprint_url']['title'] = 'URL to legal notes / imprint';
 $lng['serversettings']['imprint_url']['description'] = 'Specify an URL to your legal notes / imprint site. The link will be visible on the login screen and on the footer when logged in.';
 $lng['terms'] = 'Terms of use';
-$lng['serversettings']['terms_url']['title'] = 'URL to terms of use';
+$lng['serversettings']['terms_url']['title'] = 'Odkaz na podmínky použití';
 $lng['serversettings']['terms_url']['description'] = 'Specify an URL to your terms of use site. The link will be visible on the login screen and on the footer when logged in.';
 $lng['privacy'] = 'Privacy policy';
 $lng['serversettings']['privacy_url']['title'] = 'URL to privacy policy';
