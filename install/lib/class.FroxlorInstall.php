@@ -163,6 +163,7 @@ class FroxlorInstall
 
 		$this->_getPostField('mysql_host', '127.0.0.1');
 		$this->_getPostField('mysql_database', 'froxlor');
+		$this->_getPostField('mysql_forcecreate', '0');
 		$this->_getPostField('mysql_unpriv_user', 'froxlor');
 		$this->_getPostField('mysql_unpriv_pass');
 		$this->_getPostField('mysql_root_user', 'root');
@@ -246,10 +247,12 @@ class FroxlorInstall
 			$content .= $this->_status_message('green', "OK");
 			// check for existing db and create backup if so
 			$content .= $this->_backupExistingDatabase($db_root);
-			// create unprivileged user and the database itself
-			$content .= $this->_createDatabaseAndUser($db_root);
-			// importing data to new database
-			$content .= $this->_importDatabaseData();
+			if (!$this->_abort) {
+				// create unprivileged user and the database itself
+				$content .= $this->_createDatabaseAndUser($db_root);
+				// importing data to new database
+				$content .= $this->_importDatabaseData();
+			}
 			if (! $this->_abort) {
 				// create DB object for new database
 				$options = array(
@@ -733,12 +736,16 @@ class FroxlorInstall
 		));
 		$rows = $db_root->query("SELECT FOUND_ROWS()")->fetchColumn();
 
+		$content .= $this->_status_message('begin', $this->_lng['install']['check_db_exists']);
+
 		// check result
 		if ($result_stmt !== false && $rows > 0) {
 			$tables_exist = true;
 		}
 
-		if ($tables_exist) {
+		if ($tables_exist && (int)$this->_data['mysql_forcecreate'] > 0) {
+			// set status
+			$content .= $this->_status_message('orange', 'exists (' . $this->_data['mysql_database'] . ')');
 			// tell what's going on
 			$content .= $this->_status_message('begin', $this->_lng['install']['backup_old_db']);
 
@@ -755,17 +762,29 @@ class FroxlorInstall
 				$mysql_dump = '/usr/local/bin/mysqldump';
 			}
 
+			// create temporary .cnf file
+			$cnffilename = "/tmp/froxlor_dump.cnf";
+			$dumpcnf = "[mysqldump]".PHP_EOL."password=\"".$this->_data['mysql_root_pass']."\"".PHP_EOL;
+			file_put_contents($cnffilename, $dumpcnf);
+
 			if ($do_backup) {
-				$command = $mysql_dump . " " . escapeshellarg($this->_data['mysql_database']) . " -u " . escapeshellarg($this->_data['mysql_root_user']) . " --password='" . escapeshellarg($this->_data['mysql_root_pass']) . "' --result-file=" . $filename;
-				$output = exec($command);
-				if (stristr($output, "error")) {
+				$command = $mysql_dump . " --defaults-extra-file=" . $cnffilename . " " . escapeshellarg($this->_data['mysql_database']) . " -u " . escapeshellarg($this->_data['mysql_root_user']) . " --result-file=" . $filename;
+				$output = [];
+				exec($command, $output);
+				@unlink($cnffilename);
+				if (stristr(implode(" ", $output), "error") || !file_exists($filename)) {
 					$content .= $this->_status_message('red', $this->_lng['install']['backup_failed']);
+					$this->_abort = true;
 				} else {
 					$content .= $this->_status_message('green', 'OK (' . $filename . ')');
 				}
 			} else {
 				$content .= $this->_status_message('red', $this->_lng['install']['backup_binary_missing']);
+				$this->_abort = true;
 			}
+		} else {
+			$content .= $this->_status_message('red', $this->_lng['install']['db_exists']);
+			$this->_abort = true;
 		}
 
 		return $content;
@@ -801,6 +820,8 @@ class FroxlorInstall
 		$formdata .= $this->_getSectionItemString('mysql_host', true);
 		// database
 		$formdata .= $this->_getSectionItemString('mysql_database', true);
+		// database overwrite if exists?
+		$formdata .= $this->_getSectionItemYesNo('mysql_forcecreate', false);
 		// unpriv-user has to be different from root
 		if ($this->_data['mysql_unpriv_user'] == $this->_data['mysql_root_user']) {
 			$style = 'blue';
@@ -1363,7 +1384,14 @@ class FroxlorInstall
 
 			// read os-release
 			if (file_exists('/etc/os-release')) {
-				$os_dist = parse_ini_file('/etc/os-release', false);
+				$os_dist_content = file_get_contents('/etc/os-release');
+				$os_dist_arr = explode("\n", $os_dist_content);
+				$os_dist = [];
+				foreach ($os_dist_arr as $os_dist_line) {
+					if (empty(trim($os_dist_line))) continue;
+					$tmp = explode("=", $os_dist_line);
+					$os_dist[$tmp[0]] = str_replace('"', "", trim($tmp[1]));
+				}
 				if (is_array($os_dist) && array_key_exists('ID', $os_dist) && array_key_exists('VERSION_ID', $os_dist)) {
 					$os_version = explode('.', $os_dist['VERSION_ID'])[0];
 				}
