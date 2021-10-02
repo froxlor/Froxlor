@@ -340,7 +340,7 @@ class Domain
 				// run remove command
 				\Froxlor\FileDir::safe_exec($acmesh . $params);
 				// remove certificates directory
-				@unlink($certificate_folder);
+				\Froxlor\FileDir::safe_exec('rm -rf ' . $certificate_folder);
 			}
 		}
 		return true;

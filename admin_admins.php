@@ -129,7 +129,7 @@ if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
 				'userid' => $userinfo['userid']
 			));
 
-			$s = md5(uniqid(microtime(), 1));
+			$s = \Froxlor\Froxlor::genSessionId();
 			$ins_stmt = Database::prepare("
 				INSERT INTO `" . TABLE_PANEL_SESSIONS . "` SET
 				`hash` = :hash, `userid` = :userid, `ipaddress` = :ip,
