@@ -62,6 +62,11 @@ class PowerDNS
 		} else {
 			$dbconf["dsn"]['host'] = $mysql_data['gmysql-host'];
 			$dbconf["dsn"]['port'] = $mysql_data['gmysql-port'];
+
+			if (!empty($mysql_data['gmysql-ssl-ca-file'])) {
+				$options[\PDO::MYSQL_ATTR_SSL_CA] = $mysql_data['gmysql-ssl-ca-file'];
+				$options[\PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = (bool) $mysql_data['gmysql-ssl-verify-server-certificate'];
+			}
 		}
 
 		// add options to dsn-string

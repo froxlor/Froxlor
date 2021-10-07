@@ -279,6 +279,8 @@ class Database
 			$host = $sql_root[self::$dbserver]['host'];
 			$socket = isset($sql_root[self::$dbserver]['socket']) ? $sql_root[self::$dbserver]['socket'] : null;
 			$port = isset($sql_root[self::$dbserver]['port']) ? $sql_root[self::$dbserver]['port'] : '3306';
+			$sslCAFile = $sql_root[self::$dbserver]['ssl']['caFile'] ?? "";
+			$sslVerifyServerCertificate = $sql_root[self::$dbserver]['ssl']['verifyServerCertificate'] ?? false;
 		} else {
 			$caption = 'localhost';
 			$user = $sql["user"];
@@ -286,6 +288,8 @@ class Database
 			$host = $sql["host"];
 			$socket = isset($sql['socket']) ? $sql['socket'] : null;
 			$port = isset($sql['port']) ? $sql['port'] : '3306';
+			$sslCAFile = $sql['ssl']['caFile'] ?? "";
+			$sslVerifyServerCertificate = $sql['ssl']['verifyServerCertificate'] ?? false;
 		}
 
 		// save sql-access-data if needed
@@ -297,7 +301,9 @@ class Database
 				'port' => $port,
 				'socket' => $socket,
 				'db' => $sql["db"],
-				'caption' => $caption
+				'caption' => $caption,
+				'ssl_ca_file' => $sslCAFile,
+				'ssl_verify_server_certificate' => $sslVerifyServerCertificate
 			);
 		}
 
@@ -321,6 +327,11 @@ class Database
 		} else {
 			$dbconf["dsn"]['host'] = $host;
 			$dbconf["dsn"]['port'] = $port;
+
+			if (!empty(self::$sqldata['ssl_ca_file'])) {
+				$options[\PDO::MYSQL_ATTR_SSL_CA] = self::$sqldata['ssl_ca_file'];
+				$options[\PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = (bool) self::$sqldata['ssl_verify_server_certificate'];
+			}
 		}
 
 		self::$dbname = $sql["db"];
