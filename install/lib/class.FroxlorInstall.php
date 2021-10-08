@@ -168,6 +168,8 @@ class FroxlorInstall
 		$this->_getPostField('mysql_unpriv_pass');
 		$this->_getPostField('mysql_root_user', 'root');
 		$this->_getPostField('mysql_root_pass');
+		$this->_getPostField('mysql_ssl_ca_file');
+		$this->_getPostField('mysql_ssl_verify_server_certificate', 0);
 		$this->_getPostField('admin_user', 'admin');
 		$this->_getPostField('admin_pass1');
 		$this->_getPostField('admin_pass2');
@@ -213,6 +215,12 @@ class FroxlorInstall
 		$options = array(
 			'PDO::MYSQL_ATTR_INIT_COMMAND' => 'SET names utf8'
 		);
+
+		if (!empty($this->_data['mysql_ssl_ca_file'])) {
+			$options[\PDO::MYSQL_ATTR_SSL_CA] = $this->_data['mysql_ssl_ca_file'];
+			$options[\PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = (bool) $this->_data['mysql_ssl_verify_server_certificate'];
+		}
+
 		$dsn = "mysql:host=" . $this->_data['mysql_host'] . ";";
 		$fatal_fail = false;
 		try {
@@ -258,6 +266,12 @@ class FroxlorInstall
 				$options = array(
 					'PDO::MYSQL_ATTR_INIT_COMMAND' => 'SET names utf8'
 				);
+
+				if (!empty($this->_data['mysql_ssl_ca_file'])) {
+					$options[\PDO::MYSQL_ATTR_SSL_CA] = $this->_data['mysql_ssl_ca_file'];
+					$options[\PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = (bool) $this->_data['mysql_ssl_verify_server_certificate'];
+				}
+
 				$dsn = "mysql:host=" . $this->_data['mysql_host'] . ";dbname=" . $this->_data['mysql_database'] . ";";
 				$another_fail = false;
 				try {
@@ -327,10 +341,14 @@ class FroxlorInstall
 		$userdata .= "\$sql['user']='" . addcslashes($this->_data['mysql_unpriv_user'], "'\\") . "';\n";
 		$userdata .= "\$sql['password']='" . addcslashes($this->_data['mysql_unpriv_pass'], "'\\") . "';\n";
 		$userdata .= "\$sql['db']='" . addcslashes($this->_data['mysql_database'], "'\\") . "';\n";
+		$userdata .= "\$sql['ssl']['caFile']='" . addcslashes($this->_data['mysql_ssl_ca_file'], "'\\") . "';\n";
+		$userdata .= "\$sql['ssl']['verifyServerCertificate']='" . addcslashes($this->_data['mysql_ssl_verify_server_certificate'], "'\\") . "';\n";
 		$userdata .= "\$sql_root[0]['caption']='Default';\n";
 		$userdata .= "\$sql_root[0]['host']='" . addcslashes($this->_data['mysql_host'], "'\\") . "';\n";
 		$userdata .= "\$sql_root[0]['user']='" . addcslashes($this->_data['mysql_root_user'], "'\\") . "';\n";
 		$userdata .= "\$sql_root[0]['password']='" . addcslashes($this->_data['mysql_root_pass'], "'\\") . "';\n";
+		$userdata .= "\$sql_root[0]['ssl']['caFile']='" . addcslashes($this->_data['mysql_ssl_ca_file'], "'\\") . "';\n";
+		$userdata .= "\$sql_root[0]['ssl']['verifyServerCertificate']='" . addcslashes($this->_data['mysql_ssl_verify_server_certificate'], "'\\") . "';\n";
 		$userdata .= "// enable debugging to browser in case of SQL errors\n";
 		$userdata .= "\$sql['debug'] = false;\n";
 		$userdata .= "?>";
@@ -582,6 +600,12 @@ class FroxlorInstall
 		$options = array(
 			'PDO::MYSQL_ATTR_INIT_COMMAND' => 'SET names utf8'
 		);
+
+		if (!empty($this->_data['mysql_ssl_ca_file'])) {
+			$options[\PDO::MYSQL_ATTR_SSL_CA] = $this->_data['mysql_ssl_ca_file'];
+			$options[\PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = (bool) $this->_data['mysql_ssl_verify_server_certificate'];
+		}
+
 		$dsn = "mysql:host=" . $this->_data['mysql_host'] . ";dbname=" . $this->_data['mysql_database'] . ";";
 		$fatal_fail = false;
 		try {
@@ -874,6 +898,9 @@ class FroxlorInstall
 			$style = '';
 		}
 		$formdata .= $this->_getSectionItemString('mysql_root_pass', true, $style, 'password');
+
+		$formdata .= $this->_getSectionItemString('mysql_ssl_ca_file', false, $style);
+		$formdata .= $this->_getSectionItemYesNo('mysql_ssl_verify_server_certificate', false, $style);
 
 		/**
 		 * admin data
