@@ -917,6 +917,8 @@ gmysql-dbname=pdns
 gmysql-user=powerdns
 gmysql-group=client
 gmysql-password=
+#gmysql-ssl-ca-file=
+#gmysql-ssl-verify-server-certificate=0
 ]]>
 						</content>
 					</file>
