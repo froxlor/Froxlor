@@ -722,7 +722,7 @@ opcache.interned_strings_buffer'),
 	('panel', 'logo_image_login', ''),
 	('panel', 'logo_overridetheme', '0'),
 	('panel', 'logo_overridecustom', '0'),
-	('panel', 'version', '0.10.29'),
+	('panel', 'version', '0.10.29.1'),
 	('panel', 'db_version', '202109040');
 
 
