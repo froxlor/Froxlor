@@ -791,48 +791,50 @@ class FroxlorInstall
 			$tables_exist = true;
 		}
 
-		if ($tables_exist && (int)$this->_data['mysql_forcecreate'] > 0) {
-			// set status
-			$content .= $this->_status_message('orange', 'exists (' . $this->_data['mysql_database'] . ')');
-			// tell what's going on
-			$content .= $this->_status_message('begin', $this->_lng['install']['backup_old_db']);
+		if ($tables_exist) {
+			if ((int)$this->_data['mysql_forcecreate'] > 0) {
+				// set status
+				$content .= $this->_status_message('orange', 'exists (' . $this->_data['mysql_database'] . ')');
+				// tell what's going on
+				$content .= $this->_status_message('begin', $this->_lng['install']['backup_old_db']);
 
-			// create temporary backup-filename
-			$filename = "/tmp/froxlor_backup_" . date('YmdHi') . ".sql";
+				// create temporary backup-filename
+				$filename = "/tmp/froxlor_backup_" . date('YmdHi') . ".sql";
 
-			// look for mysqldump
-			$do_backup = false;
-			if (file_exists("/usr/bin/mysqldump")) {
-				$do_backup = true;
-				$mysql_dump = '/usr/bin/mysqldump';
-			} elseif (file_exists("/usr/local/bin/mysqldump")) {
-				$do_backup = true;
-				$mysql_dump = '/usr/local/bin/mysqldump';
-			}
+				// look for mysqldump
+				$do_backup = false;
+				if (file_exists("/usr/bin/mysqldump")) {
+					$do_backup = true;
+					$mysql_dump = '/usr/bin/mysqldump';
+				} elseif (file_exists("/usr/local/bin/mysqldump")) {
+					$do_backup = true;
+					$mysql_dump = '/usr/local/bin/mysqldump';
+				}
 
-			// create temporary .cnf file
-			$cnffilename = "/tmp/froxlor_dump.cnf";
-			$dumpcnf = "[mysqldump]".PHP_EOL."password=\"".$this->_data['mysql_root_pass']."\"".PHP_EOL;
-			file_put_contents($cnffilename, $dumpcnf);
+				// create temporary .cnf file
+				$cnffilename = "/tmp/froxlor_dump.cnf";
+				$dumpcnf = "[mysqldump]" . PHP_EOL . "password=\"" . $this->_data['mysql_root_pass'] . "\"" . PHP_EOL;
+				file_put_contents($cnffilename, $dumpcnf);
 
-			if ($do_backup) {
-				$command = $mysql_dump . " --defaults-extra-file=" . $cnffilename . " " . escapeshellarg($this->_data['mysql_database']) . " -u " . escapeshellarg($this->_data['mysql_root_user']) . " --result-file=" . $filename;
-				$output = [];
-				exec($command, $output);
-				@unlink($cnffilename);
-				if (stristr(implode(" ", $output), "error") || !file_exists($filename)) {
-					$content .= $this->_status_message('red', $this->_lng['install']['backup_failed']);
-					$this->_abort = true;
+				if ($do_backup) {
+					$command = $mysql_dump . " --defaults-extra-file=" . $cnffilename . " " . escapeshellarg($this->_data['mysql_database']) . " -u " . escapeshellarg($this->_data['mysql_root_user']) . " --result-file=" . $filename;
+					$output = [];
+					exec($command, $output);
+					@unlink($cnffilename);
+					if (stristr(implode(" ", $output), "error") || ! file_exists($filename)) {
+						$content .= $this->_status_message('red', $this->_lng['install']['backup_failed']);
+						$this->_abort = true;
+					} else {
+						$content .= $this->_status_message('green', 'OK (' . $filename . ')');
+					}
 				} else {
-					$content .= $this->_status_message('green', 'OK (' . $filename . ')');
+					$content .= $this->_status_message('red', $this->_lng['install']['backup_binary_missing']);
+					$this->_abort = true;
 				}
 			} else {
-				$content .= $this->_status_message('red', $this->_lng['install']['backup_binary_missing']);
+				$content .= $this->_status_message('red', $this->_lng['install']['db_exists']);
 				$this->_abort = true;
 			}
-		} else {
-			$content .= $this->_status_message('red', $this->_lng['install']['db_exists']);
-			$this->_abort = true;
 		}
 
 		return $content;
