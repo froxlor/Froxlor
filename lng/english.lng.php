@@ -2131,3 +2131,4 @@ $lng['serversettings']['froxlorusergroup']['description'] = 'Usage of libnss-ext
 $lng['error']['local_group_exists'] = 'The given group already exists on the system.';
 $lng['error']['local_group_invalid'] = 'The given group name is invalid';
 $lng['error']['invaliddnsforletsencrypt'] = 'The domains DNS does not include any of the chosen IP addresses. Let\'s Encrypt certificate generation not possible.';
+$lng['error']['notallowedphpconfigused'] = 'Trying to use php-config which is not assigned to customer';

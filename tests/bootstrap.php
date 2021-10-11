@@ -43,14 +43,25 @@ require dirname(__DIR__) . '/lib/tables.inc.php';
 use Froxlor\Database\Database;
 use Froxlor\Settings;
 
-Database::needRoot(true);
 if (TRAVIS_CI == 0) {
+	Database::needRoot(true);
 	Database::query("DROP DATABASE IF EXISTS `froxlor010`;");
 	Database::query("CREATE DATABASE `froxlor010`;");
 	exec("mysql -u root -p" . $rpwd . " froxlor010 < " . dirname(__DIR__) . "/install/froxlor.sql");
+	Database::query("DROP USER IF EXISTS 'test1sql1'@'localhost';");
+	Database::query("DROP USER IF EXISTS 'test1sql1'@'127.0.0.1';");
+	Database::query("DROP USER IF EXISTS 'test1sql1'@'172.17.0.1';");
+	Database::query("DROP USER IF EXISTS 'test1sql1'@'82.149.225.46';");
+	Database::query("DROP USER IF EXISTS 'test1sql1'@'2a01:440:1:12:82:149:225:46';");
+	Database::query("DROP USER IF EXISTS 'test1_abc123'@'localhost';");
+	Database::query("DROP USER IF EXISTS 'test1_abc123'@'127.0.0.1';");
+	Database::query("DROP USER IF EXISTS 'test1_abc123'@'172.17.0.1';");
+	Database::query("DROP USER IF EXISTS 'test1_abc123'@'82.149.225.46';");
+	Database::query("DROP USER IF EXISTS 'test1_abc123'@'2a01:440:1:12:82:149:225:46';");
+	Database::query("DROP DATABASE IF EXISTS `test1sql1`;");
+	Database::query("DROP DATABASE IF EXISTS `test1_abc123`;");
+	Database::needRoot(false);
 }
-Database::query("DROP DATABASE IF EXISTS `test1sql1`;");
-Database::needRoot(false);
 
 // clear all tables
 Database::query("TRUNCATE TABLE `" . TABLE_PANEL_CUSTOMERS . "`;");

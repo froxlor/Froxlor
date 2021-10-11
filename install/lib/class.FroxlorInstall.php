@@ -835,6 +835,8 @@ class FroxlorInstall
 				$content .= $this->_status_message('red', $this->_lng['install']['db_exists']);
 				$this->_abort = true;
 			}
+		} else {
+			$content .= $content .= $this->_status_message('green', 'OK');
 		}
 
 		return $content;

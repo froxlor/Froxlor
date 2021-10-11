@@ -60,7 +60,7 @@ class DbManagerMySQL
 	 */
 	public function createDatabase($dbname = null)
 	{
-		Database::query("CREATE DATABASE `" . Database::quote($dbname) . "`");
+		Database::query("CREATE DATABASE `" . $dbname . "`");
 	}
 
 	/**
