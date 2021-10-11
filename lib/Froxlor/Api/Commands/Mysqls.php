@@ -61,7 +61,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		$password = \Froxlor\Validate\Validate::validate($password, 'password', '', '', array(), true);
 		$password = \Froxlor\System\Crypt::validatePassword($password, true);
 		$databasedescription = \Froxlor\Validate\Validate::validate(trim($databasedescription), 'description', '', '', array(), true);
-		$databasename = \Froxlor\Validate\Validate::validate(trim($databasename), 'database_name', '', '', array(), true);
+		$databasename = \Froxlor\Validate\Validate::validate(trim($databasename), 'database_name', '/^[A-Za-z0-9][A-Za-z0-9\-_]+$/i', '', array(), true);
 
 		// validate whether the dbserver exists
 		$dbserver = \Froxlor\Validate\Validate::validate($dbserver, html_entity_decode($this->lng['mysql']['mysql_server']), '', '', 0, true);
