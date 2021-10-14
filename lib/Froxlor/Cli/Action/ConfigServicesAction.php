@@ -341,13 +341,43 @@ class ConfigServicesAction extends \Froxlor\Cli\Action
 
 		// try to convert namserver hosts to ip's
 		$ns_ips = "";
+		$known_ns_ips = [];
 		if (Settings::Get('system.nameservers') != '') {
 			$nameservers = explode(',', Settings::Get('system.nameservers'));
 			foreach ($nameservers as $nameserver) {
 				$nameserver = trim($nameserver);
+				// DNS servers might be multi homed; allow transfer from all ip
+				// addresses of the DNS server
 				$nameserver_ips = \Froxlor\PhpHelper::gethostbynamel6($nameserver);
-				if (is_array($nameserver_ips) && count($nameserver_ips) > 0) {
-					$ns_ips .= implode(",", $nameserver_ips);
+				// append dot to hostname
+				if (substr($nameserver, - 1, 1) != '.') {
+					$nameserver .= '.';
+				}
+				// ignore invalid responses
+				if (! is_array($nameserver_ips)) {
+					// act like \Froxlor\PhpHelper::gethostbynamel6() and return unmodified hostname on error
+					$nameserver_ips = array(
+						$nameserver
+					);
+				} else {
+					$known_ns_ips = array_merge($known_ns_ips, $nameserver_ips);
+				}
+				if (!empty($ns_ips)) {
+					$ns_ips .= ',';
+				}
+				$ns_ips .= implode(",", $nameserver_ips);
+			}
+		}
+
+		// AXFR server
+		if (Settings::Get('system.axfrservers') != '') {
+			$axfrservers = explode(',', Settings::Get('system.axfrservers'));
+			foreach ($axfrservers as $axfrserver) {
+				if (!in_array(trim($axfrserver), $known_ns_ips)) {
+					if (!empty($ns_ips)) {
+						$ns_ips .= ',';
+					}
+					$ns_ips .= trim($axfrserver);
 				}
 			}
 		}
@@ -365,7 +395,6 @@ class ConfigServicesAction extends \Froxlor\Cli\Action
 			'<SERVERIP>' => Settings::Get('system.ipaddress'),
 			'<NAMESERVERS>' => Settings::Get('system.nameservers'),
 			'<NAMESERVERS_IP>' => $ns_ips,
-			'<AXFRSERVERS>' => Settings::Get('system.axfrservers'),
 			'<VIRTUAL_MAILBOX_BASE>' => Settings::Get('system.vmail_homedir'),
 			'<VIRTUAL_UID_MAPS>' => Settings::Get('system.vmail_uid'),
 			'<VIRTUAL_GID_MAPS>' => Settings::Get('system.vmail_gid'),
