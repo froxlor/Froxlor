@@ -2132,3 +2132,6 @@ $lng['error']['local_group_exists'] = 'The given group already exists on the sys
 $lng['error']['local_group_invalid'] = 'The given group name is invalid';
 $lng['error']['invaliddnsforletsencrypt'] = 'The domains DNS does not include any of the chosen IP addresses. Let\'s Encrypt certificate generation not possible.';
 $lng['error']['notallowedphpconfigused'] = 'Trying to use php-config which is not assigned to customer';
+
+$lng['serversettings']['phpfpm_settings']['allow_all_customers']['title'] = 'Assign this configuration to all currently existing customers';
+$lng['serversettings']['phpfpm_settings']['allow_all_customers']['description'] = 'Set this to "true" if you want to assign this configuration to all currently existing customers so it can be used by them. This setting is not permanent but can be run multiple times.';
