@@ -181,7 +181,8 @@ return array(
 						'value' => $result['phpsettings']
 					),
 					'allow_all_customers' => array(
-						'label' => $lng['serversettings']['phpfpm_settings']['allow_all_customers'],
+						'label' => $lng['serversettings']['phpfpm_settings']['allow_all_customers']['title'],
+						'desc' => $lng['serversettings']['phpfpm_settings']['allow_all_customers']['description'],
 						'type' => 'checkbox',
 						'values' => array(
 							array(
