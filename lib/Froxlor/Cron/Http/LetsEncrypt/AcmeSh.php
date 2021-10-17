@@ -131,7 +131,8 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 				'ssl_key_file' => null,
 				'ssl_ca_file' => null,
 				'ssl_csr_file' => null,
-				'id' => null
+				'id' => null,
+				'wwwserveralias' => 0
 			);
 
 			// add to queue
@@ -165,7 +166,8 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 				'ssl_key_file' => is_array($renew_froxlor) ? $renew_froxlor['ssl_key_file'] : null,
 				'ssl_ca_file' => is_array($renew_froxlor) ? $renew_froxlor['ssl_ca_file'] : null,
 				'ssl_csr_file' => is_array($renew_froxlor) ? $renew_froxlor['ssl_csr_file'] : null,
-				'id' => is_array($renew_froxlor) ? $renew_froxlor['id'] : null
+				'id' => is_array($renew_froxlor) ? $renew_froxlor['id'] : null,
+				'wwwserveralias' => 0
 			);
 			$renew_domains[] = $certrow;
 		}
