@@ -163,10 +163,13 @@ class FroxlorInstall
 
 		$this->_getPostField('mysql_host', '127.0.0.1');
 		$this->_getPostField('mysql_database', 'froxlor');
+		$this->_getPostField('mysql_forcecreate', '0');
 		$this->_getPostField('mysql_unpriv_user', 'froxlor');
 		$this->_getPostField('mysql_unpriv_pass');
 		$this->_getPostField('mysql_root_user', 'root');
 		$this->_getPostField('mysql_root_pass');
+		$this->_getPostField('mysql_ssl_ca_file');
+		$this->_getPostField('mysql_ssl_verify_server_certificate', 0);
 		$this->_getPostField('admin_user', 'admin');
 		$this->_getPostField('admin_pass1');
 		$this->_getPostField('admin_pass2');
@@ -212,6 +215,12 @@ class FroxlorInstall
 		$options = array(
 			'PDO::MYSQL_ATTR_INIT_COMMAND' => 'SET names utf8'
 		);
+
+		if (!empty($this->_data['mysql_ssl_ca_file'])) {
+			$options[\PDO::MYSQL_ATTR_SSL_CA] = $this->_data['mysql_ssl_ca_file'];
+			$options[\PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = (bool) $this->_data['mysql_ssl_verify_server_certificate'];
+		}
+
 		$dsn = "mysql:host=" . $this->_data['mysql_host'] . ";";
 		$fatal_fail = false;
 		try {
@@ -246,15 +255,23 @@ class FroxlorInstall
 			$content .= $this->_status_message('green', "OK");
 			// check for existing db and create backup if so
 			$content .= $this->_backupExistingDatabase($db_root);
-			// create unprivileged user and the database itself
-			$content .= $this->_createDatabaseAndUser($db_root);
-			// importing data to new database
-			$content .= $this->_importDatabaseData();
+			if (!$this->_abort) {
+				// create unprivileged user and the database itself
+				$content .= $this->_createDatabaseAndUser($db_root);
+				// importing data to new database
+				$content .= $this->_importDatabaseData();
+			}
 			if (! $this->_abort) {
 				// create DB object for new database
 				$options = array(
 					'PDO::MYSQL_ATTR_INIT_COMMAND' => 'SET names utf8'
 				);
+
+				if (!empty($this->_data['mysql_ssl_ca_file'])) {
+					$options[\PDO::MYSQL_ATTR_SSL_CA] = $this->_data['mysql_ssl_ca_file'];
+					$options[\PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = (bool) $this->_data['mysql_ssl_verify_server_certificate'];
+				}
+
 				$dsn = "mysql:host=" . $this->_data['mysql_host'] . ";dbname=" . $this->_data['mysql_database'] . ";";
 				$another_fail = false;
 				try {
@@ -324,10 +341,14 @@ class FroxlorInstall
 		$userdata .= "\$sql['user']='" . addcslashes($this->_data['mysql_unpriv_user'], "'\\") . "';\n";
 		$userdata .= "\$sql['password']='" . addcslashes($this->_data['mysql_unpriv_pass'], "'\\") . "';\n";
 		$userdata .= "\$sql['db']='" . addcslashes($this->_data['mysql_database'], "'\\") . "';\n";
+		$userdata .= "\$sql['ssl']['caFile']='" . addcslashes($this->_data['mysql_ssl_ca_file'], "'\\") . "';\n";
+		$userdata .= "\$sql['ssl']['verifyServerCertificate']='" . addcslashes($this->_data['mysql_ssl_verify_server_certificate'], "'\\") . "';\n";
 		$userdata .= "\$sql_root[0]['caption']='Default';\n";
 		$userdata .= "\$sql_root[0]['host']='" . addcslashes($this->_data['mysql_host'], "'\\") . "';\n";
 		$userdata .= "\$sql_root[0]['user']='" . addcslashes($this->_data['mysql_root_user'], "'\\") . "';\n";
 		$userdata .= "\$sql_root[0]['password']='" . addcslashes($this->_data['mysql_root_pass'], "'\\") . "';\n";
+		$userdata .= "\$sql_root[0]['ssl']['caFile']='" . addcslashes($this->_data['mysql_ssl_ca_file'], "'\\") . "';\n";
+		$userdata .= "\$sql_root[0]['ssl']['verifyServerCertificate']='" . addcslashes($this->_data['mysql_ssl_verify_server_certificate'], "'\\") . "';\n";
 		$userdata .= "// enable debugging to browser in case of SQL errors\n";
 		$userdata .= "\$sql['debug'] = false;\n";
 		$userdata .= "?>";
@@ -358,6 +379,30 @@ class FroxlorInstall
 		@umask($umask);
 
 		return $content;
+	}
+
+	/**
+	 * generate safe unique token
+	 *
+	 * @param int $length
+	 * @return string
+	 */
+	private function genUniqueToken(int $length = 16)
+	{
+		if(!isset($length) || intval($length) <= 8 ){
+			$length = 16;
+		}
+		if (function_exists('random_bytes')) {
+			return bin2hex(random_bytes($length));
+		}
+		if (function_exists('mcrypt_create_iv')) {
+			return bin2hex(mcrypt_create_iv($length, MCRYPT_DEV_URANDOM));
+		}
+		if (function_exists('openssl_random_pseudo_bytes')) {
+			return bin2hex(openssl_random_pseudo_bytes($length));
+		}
+		// if everything else fails, use unsafe fallback
+		return md5(uniqid(microtime(), 1));
 	}
 
 	/**
@@ -403,8 +448,8 @@ class FroxlorInstall
 		$content .= $this->_status_message('begin', $this->_lng['install']['adding_admin_user']);
 		$ins_data = array(
 			'loginname' => $this->_data['admin_user'],
-				/* use SHA256 default crypt */
-				'password' => crypt($this->_data['admin_pass1'], '$5$' . md5(uniqid(microtime(), 1)) . md5(uniqid(microtime(), 1))),
+			/* use SHA256 default crypt */
+			'password' => crypt($this->_data['admin_pass1'], '$5$' . $this->genUniqueToken() . $this->genUniqueToken()),
 			'email' => 'admin@' . $this->_data['servername'],
 			'deflang' => $this->_languages[$this->_activelng]
 		);
@@ -555,6 +600,12 @@ class FroxlorInstall
 		$options = array(
 			'PDO::MYSQL_ATTR_INIT_COMMAND' => 'SET names utf8'
 		);
+
+		if (!empty($this->_data['mysql_ssl_ca_file'])) {
+			$options[\PDO::MYSQL_ATTR_SSL_CA] = $this->_data['mysql_ssl_ca_file'];
+			$options[\PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = (bool) $this->_data['mysql_ssl_verify_server_certificate'];
+		}
+
 		$dsn = "mysql:host=" . $this->_data['mysql_host'] . ";dbname=" . $this->_data['mysql_database'] . ";";
 		$fatal_fail = false;
 		try {
@@ -733,39 +784,59 @@ class FroxlorInstall
 		));
 		$rows = $db_root->query("SELECT FOUND_ROWS()")->fetchColumn();
 
+		$content .= $this->_status_message('begin', $this->_lng['install']['check_db_exists']);
+
 		// check result
 		if ($result_stmt !== false && $rows > 0) {
 			$tables_exist = true;
 		}
 
 		if ($tables_exist) {
-			// tell what's going on
-			$content .= $this->_status_message('begin', $this->_lng['install']['backup_old_db']);
+			if ((int)$this->_data['mysql_forcecreate'] > 0) {
+				// set status
+				$content .= $this->_status_message('orange', 'exists (' . $this->_data['mysql_database'] . ')');
+				// tell what's going on
+				$content .= $this->_status_message('begin', $this->_lng['install']['backup_old_db']);
 
-			// create temporary backup-filename
-			$filename = "/tmp/froxlor_backup_" . date('YmdHi') . ".sql";
+				// create temporary backup-filename
+				$filename = "/tmp/froxlor_backup_" . date('YmdHi') . ".sql";
 
-			// look for mysqldump
-			$do_backup = false;
-			if (file_exists("/usr/bin/mysqldump")) {
-				$do_backup = true;
-				$mysql_dump = '/usr/bin/mysqldump';
-			} elseif (file_exists("/usr/local/bin/mysqldump")) {
-				$do_backup = true;
-				$mysql_dump = '/usr/local/bin/mysqldump';
-			}
+				// look for mysqldump
+				$do_backup = false;
+				if (file_exists("/usr/bin/mysqldump")) {
+					$do_backup = true;
+					$mysql_dump = '/usr/bin/mysqldump';
+				} elseif (file_exists("/usr/local/bin/mysqldump")) {
+					$do_backup = true;
+					$mysql_dump = '/usr/local/bin/mysqldump';
+				}
 
-			if ($do_backup) {
-				$command = $mysql_dump . " " . escapeshellarg($this->_data['mysql_database']) . " -u " . escapeshellarg($this->_data['mysql_root_user']) . " --password='" . escapeshellarg($this->_data['mysql_root_pass']) . "' --result-file=" . $filename;
-				$output = exec($command);
-				if (stristr($output, "error")) {
-					$content .= $this->_status_message('red', $this->_lng['install']['backup_failed']);
+				// create temporary .cnf file
+				$cnffilename = "/tmp/froxlor_dump.cnf";
+				$dumpcnf = "[mysqldump]" . PHP_EOL . "password=\"" . $this->_data['mysql_root_pass'] . "\"" . PHP_EOL;
+				file_put_contents($cnffilename, $dumpcnf);
+
+				if ($do_backup) {
+					$command = $mysql_dump . " --defaults-extra-file=" . $cnffilename . " " . escapeshellarg($this->_data['mysql_database']) . " -u " . escapeshellarg($this->_data['mysql_root_user']) . " --result-file=" . $filename;
+					$output = [];
+					exec($command, $output);
+					@unlink($cnffilename);
+					if (stristr(implode(" ", $output), "error") || ! file_exists($filename)) {
+						$content .= $this->_status_message('red', $this->_lng['install']['backup_failed']);
+						$this->_abort = true;
+					} else {
+						$content .= $this->_status_message('green', 'OK (' . $filename . ')');
+					}
 				} else {
-					$content .= $this->_status_message('green', 'OK (' . $filename . ')');
+					$content .= $this->_status_message('red', $this->_lng['install']['backup_binary_missing']);
+					$this->_abort = true;
 				}
 			} else {
-				$content .= $this->_status_message('red', $this->_lng['install']['backup_binary_missing']);
+				$content .= $this->_status_message('red', $this->_lng['install']['db_exists']);
+				$this->_abort = true;
 			}
+		} else {
+			$content .= $content .= $this->_status_message('green', 'OK');
 		}
 
 		return $content;
@@ -801,6 +872,8 @@ class FroxlorInstall
 		$formdata .= $this->_getSectionItemString('mysql_host', true);
 		// database
 		$formdata .= $this->_getSectionItemString('mysql_database', true);
+		// database overwrite if exists?
+		$formdata .= $this->_getSectionItemYesNo('mysql_forcecreate', false);
 		// unpriv-user has to be different from root
 		if ($this->_data['mysql_unpriv_user'] == $this->_data['mysql_root_user']) {
 			$style = 'blue';
@@ -829,6 +902,9 @@ class FroxlorInstall
 			$style = '';
 		}
 		$formdata .= $this->_getSectionItemString('mysql_root_pass', true, $style, 'password');
+
+		$formdata .= $this->_getSectionItemString('mysql_ssl_ca_file', false, $style);
+		$formdata .= $this->_getSectionItemYesNo('mysql_ssl_verify_server_certificate', false, $style);
 
 		/**
 		 * admin data
@@ -1363,7 +1439,14 @@ class FroxlorInstall
 
 			// read os-release
 			if (file_exists('/etc/os-release')) {
-				$os_dist = parse_ini_file('/etc/os-release', false);
+				$os_dist_content = file_get_contents('/etc/os-release');
+				$os_dist_arr = explode("\n", $os_dist_content);
+				$os_dist = [];
+				foreach ($os_dist_arr as $os_dist_line) {
+					if (empty(trim($os_dist_line))) continue;
+					$tmp = explode("=", $os_dist_line);
+					$os_dist[$tmp[0]] = str_replace('"', "", trim($tmp[1]));
+				}
 				if (is_array($os_dist) && array_key_exists('ID', $os_dist) && array_key_exists('VERSION_ID', $os_dist)) {
 					$os_version = explode('.', $os_dist['VERSION_ID'])[0];
 				}

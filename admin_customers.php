@@ -178,7 +178,7 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 				'hash' => $s
 			));
 
-			$s = md5(uniqid(microtime(), 1));
+			$s = \Froxlor\Froxlor::genSessionId();
 			$insert = Database::prepare("
 				INSERT INTO `" . TABLE_PANEL_SESSIONS . "` SET
 					`hash` = :hash,

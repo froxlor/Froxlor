@@ -722,8 +722,8 @@ opcache.interned_strings_buffer'),
 	('panel', 'logo_image_login', ''),
 	('panel', 'logo_overridetheme', '0'),
 	('panel', 'logo_overridecustom', '0'),
-	('panel', 'version', '0.10.28'),
-	('panel', 'db_version', '202108180');
+	('panel', 'version', '0.10.29.1'),
+	('panel', 'db_version', '202109040');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
@@ -822,7 +822,8 @@ INSERT INTO `panel_languages` (`id`, `language`, `iso`, `file`) VALUES
     (4, 'Portugu&ecirc;s', 'pt', 'lng/portugues.lng.php'),
     (5, 'Italiano', 'it', 'lng/italian.lng.php'),
     (6, 'Nederlands', 'nl', 'lng/dutch.lng.php'),
-    (7, 'Svenska', 'sv', 'lng/swedish.lng.php');
+    (7, 'Svenska', 'sv', 'lng/swedish.lng.php'),
+    (8, '&#268;esk&aacute; republika', 'cs', 'lng/czech.lng.php');
 
 
 DROP TABLE IF EXISTS `panel_syslog`;

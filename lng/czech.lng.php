@@ -382,7 +382,7 @@ $lng['serversettings']['pathedit']['description'] = 'Měla by cesta být na výb
 $lng['serversettings']['nameservers']['title'] = 'Názvy serverů';
 $lng['serversettings']['nameservers']['description'] = 'Seznam oddělený čárkami obsahující názvy hostitelů všech jmenných serverů. První bude primární.';
 $lng['serversettings']['mxservers']['title'] = 'MX servery';
-$lng['serversettings']['mxservers']['description'] = 'Seznam oddělený čárkami obsahující dvojici čísla a jméno hostitele oddělené mezerou (např. \ '10 mx.example.com \ ') obsahující servery mx.';
+$lng['serversettings']['mxservers']['description'] = 'Seznam oddělený čárkami obsahující dvojici čísla a jméno hostitele oddělené mezerou (např. \'10 mx.example.com\') obsahující servery mx.';
 
 /**
  * CHANGED BETWEEN 1.2.12 and 1.2.13

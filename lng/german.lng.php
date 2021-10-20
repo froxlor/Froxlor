@@ -1783,3 +1783,7 @@ $lng['serversettings']['froxlorusergroup']['description'] = 'Voraussetzung hierf
 $lng['error']['local_group_exists'] = 'Die angegebene Gruppe existiert bereits auf dem System';
 $lng['error']['local_group_invalid'] = 'Der angegebene Gruppen-Name ist nicht gültig';
 $lng['error']['invaliddnsforletsencrypt'] = 'Die DNS-Einträge der Domain enhalten keine der gewählten IP Adressen. Let\'s Encrypt Zertifikats-Erstellung ist nicht möglich.';
+$lng['error']['notallowedphpconfigused'] = 'Nutzung einer PHP-Konfiguration welche nicht dem Kunden zugeordnet ist';
+
+$lng['serversettings']['phpfpm_settings']['allow_all_customers']['title'] = 'Für aktuelle Kunden automatisch hinzufügen';
+$lng['serversettings']['phpfpm_settings']['allow_all_customers']['description'] = 'Ist diese Einstellung aktiv, wird die Konfiguration automatisch allen aktuell existierenden Kunden-Accounts zugewiesen. Diese Einstellung ist nicht permanent, kann aber mehrfach / nach Bedarf ausgeführt werden.';

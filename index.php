@@ -675,7 +675,7 @@ function finishLogin($userinfo)
 	global $version, $dbversion, $remote_addr, $http_user_agent, $languages;
 
 	if (isset($userinfo['userid']) && $userinfo['userid'] != '') {
-		$s = md5(uniqid(microtime(), 1));
+		$s = \Froxlor\Froxlor::genSessionId();
 
 		if (isset($_POST['language'])) {
 			$language = \Froxlor\Validate\Validate::validate($_POST['language'], 'language');

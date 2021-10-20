@@ -97,4 +97,34 @@ class PhpSettingsText extends TestCase
 			'id' => 1
 		))->get();
 	}
+
+	/**
+	 * @depends testAdminPhpSettingsAdd
+	 */
+	public function testAdminPhpSettingsAddForAll()
+	{
+		global $admin_userdata;
+		$data = [
+			'description' => 'test php #2',
+			'phpsettings' => 'error_reporting=E_ALL',
+			'fpmconfig' => Settings::Get('phpfpm.defaultini'),
+			'allow_all_customers' => true
+		];
+		$json_result = PhpSettings::getLocal($admin_userdata, $data)->add();
+		$result = json_decode($json_result, true)['data'];
+		$required_id = $result['id'];
+
+		$json_result = Customers::getLocal($admin_userdata)->listing();
+		$result = json_decode($json_result, true)['data'];
+
+		$allowed_cnt = 0;
+		foreach ($result['list'] as $customer) {
+			$cust_phpconfigsallowed = json_decode($customer['allowed_phpconfigs'], true);
+			if (!in_array($required_id, $cust_phpconfigsallowed)) {
+				$this->fail("Customer does not have php-config assigned which was added for all customers");
+			}
+			$allowed_cnt++;
+		}
+		$this->assertTrue($allowed_cnt == $result['count']);
+	}
 }

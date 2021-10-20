@@ -926,3 +926,20 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.27')) {
 	showUpdateStep("Updating from 0.10.27 to 0.10.28", false);
 	\Froxlor\Froxlor::updateToVersion('0.10.28');
 }
+
+if (\Froxlor\Froxlor::isDatabaseVersion('202108180')) {
+	showUpdateStep("Adding czech language file", true);
+	Database::query("INSERT INTO `" . TABLE_PANEL_LANGUAGE . "` SET `language` = '&#268;esk&aacute; republika', `iso` = 'cs', `file` = 'lng/czech.lng.php'");
+	lastStepStatus(0);
+	\Froxlor\Froxlor::updateToDbVersion('202109040');
+}
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.28')) {
+	showUpdateStep("Updating from 0.10.28 to 0.10.29", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.29');
+}
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.29')) {
+	showUpdateStep("Updating from 0.10.29 to 0.10.29.1", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.29.1');
+}

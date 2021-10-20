@@ -7,10 +7,10 @@ final class Froxlor
 {
 
 	// Main version variable
-	const VERSION = '0.10.28';
+	const VERSION = '0.10.29.1';
 
 	// Database version (YYYYMMDDC where C is a daily counter)
-	const DBVERSION = '202108180';
+	const DBVERSION = '202109040';
 
 	// Distribution branding-tag (used for Debian etc.)
 	const BRANDING = '';
@@ -200,6 +200,30 @@ final class Froxlor
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * generate safe unique session id
+	 *
+	 * @param int $length
+	 * @return string
+	 */
+	public static function genSessionId(int $length = 16)
+	{
+		if(!isset($length) || intval($length) <= 8 ){
+			$length = 16;
+		}
+		if (function_exists('random_bytes')) {
+			return bin2hex(random_bytes($length));
+		}
+		if (function_exists('mcrypt_create_iv')) {
+			return bin2hex(mcrypt_create_iv($length, MCRYPT_DEV_URANDOM));
+		}
+		if (function_exists('openssl_random_pseudo_bytes')) {
+			return bin2hex(openssl_random_pseudo_bytes($length));
+		}
+		// if everything else fails, use unsafe fallback
+		return md5(uniqid(microtime(), 1));
 	}
 
 	/**

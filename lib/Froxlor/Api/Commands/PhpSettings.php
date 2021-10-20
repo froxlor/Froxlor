@@ -217,7 +217,9 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 	 *        	optional number of seconds for idle-timeout if FPM is used, default is fpm-daemon-value
 	 * @param string $limit_extensions
 	 *        	optional limitation of php-file-extensions if FPM is used, default is fpm-daemon-value
-	 *        	
+	 * @param bool $allow_all_customers
+	 *        	optional add this configuration to the list of every existing customer's allowed-fpm-config list, default is false (no)
+	 *
 	 * @access admin
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -261,6 +263,7 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			$max_requests = $this->getParam('max_requests', true, $def_fpmconfig['max_requests']);
 			$idle_timeout = $this->getParam('idle_timeout', true, $def_fpmconfig['idle_timeout']);
 			$limit_extensions = $this->getParam('limit_extensions', true, $def_fpmconfig['limit_extensions']);
+			$allow_all_customers = $this->getBoolParam('allow_all_customers', true, 0);
 
 			// validation
 			$description = \Froxlor\Validate\Validate::validate($description, 'description', '', '', array(), true);
@@ -367,6 +370,8 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			$result = $this->apiCall('PhpSettings.get', array(
 				'id' => $ins_data['id']
 			));
+
+			$this->addForAllCustomers($allow_all_customers, $ins_data['id']);
 			return $this->response(200, "successful", $result);
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
@@ -418,6 +423,8 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 	 *        	optional number of seconds for idle-timeout if FPM is used, default is fpm-daemon-value
 	 * @param string $limit_extensions
 	 *        	optional limitation of php-file-extensions if FPM is used, default is fpm-daemon-value
+	 * @param bool $allow_all_customers
+	 *        	optional add this configuration to the list of every existing customer's allowed-fpm-config list, default is false (no)
 	 *        	
 	 * @access admin
 	 * @throws \Exception
@@ -456,6 +463,7 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			$max_requests = $this->getParam('max_requests', true, $result['max_requests']);
 			$idle_timeout = $this->getParam('idle_timeout', true, $result['idle_timeout']);
 			$limit_extensions = $this->getParam('limit_extensions', true, $result['limit_extensions']);
+			$allow_all_customers = $this->getBoolParam('allow_all_customers', true, 0);
 
 			// validation
 			$description = \Froxlor\Validate\Validate::validate($description, 'description', '', '', array(), true);
@@ -563,6 +571,8 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			$result = $this->apiCall('PhpSettings.get', array(
 				'id' => $id
 			));
+
+			$this->addForAllCustomers($allow_all_customers, $id);
 			return $this->response(200, "successful", $result);
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
@@ -617,5 +627,39 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			return $this->response(200, "successful", $result);
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
+	}
+
+	/**
+	 * add given php-config id to the list of allowed php-config to all currently existing customers
+	 * if allow_all_customers parameter is true in PhpSettings::add() or PhpSettings::update()
+	 *
+	 * @param bool $allow_all_customers
+	 * @param int $config_id
+	 */
+	private function addForAllCustomers(bool $allow_all_customers, int $config_id)
+	{
+		// should this config be added to the allowed list of all existing customers?
+		if ($allow_all_customers) {
+			$sel_stmt = Database::prepare("SELECT customerid, allowed_phpconfigs FROM `" . TABLE_PANEL_CUSTOMERS . "`");
+			$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET allowed_phpconfigs = :ap WHERE customerid = :cid");
+			Database::pexecute($sel_stmt);
+			while ($cust = $sel_stmt->fetch(\PDO::FETCH_ASSOC)) {
+				// get existing entries of customer
+				$ap = json_decode($cust['allowed_phpconfigs'], true);
+				// initialize array if it's empty
+				if (empty($ap)) {
+					$ap = [];
+				}
+				// add this config
+				$ap[] = $config_id;
+				// check for duplicates and force value-type to be int
+				$ap = array_map('intval', array_unique($ap));
+				// update customer-entry
+				Database::pexecute($upd_stmt, [
+					'ap' => json_encode($ap),
+					'cid' => $cust['customerid']
+				]);
+			}
+		}
 	}
 }

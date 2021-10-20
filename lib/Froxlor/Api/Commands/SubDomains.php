@@ -264,6 +264,16 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				$phpsid_result['phpsettingid'] = intval($phpsettingid);
 			}
 
+			$allowed_phpconfigs = $customer['allowed_phpconfigs'];
+			if (! empty($allowed_phpconfigs)) {
+				$allowed_phpconfigs = json_decode($allowed_phpconfigs, true);
+			} else {
+				$allowed_phpconfigs = [];
+			}
+			if (! in_array($phpsid_result['phpsettingid'], $allowed_phpconfigs)) {
+				\Froxlor\UI\Response::standard_error('notallowedphpconfigused', '', true);
+			}
+
 			// actually insert domain
 			$stmt = Database::prepare("
 				INSERT INTO `" . TABLE_PANEL_DOMAINS . "` SET
@@ -626,7 +636,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 
 		// We can't enable let's encrypt for wildcard-domains
 		if ($iswildcarddomain == '1' && $letsencrypt == '1') {
-			\Froxlor\UI\Response::standard_error('nowildcardwithletsencrypt');
+			\Froxlor\UI\Response::standard_error('nowildcardwithletsencrypt', '', true);
 		}
 
 		// Temporarily deactivate ssl_redirect until Let's Encrypt certificate was generated
@@ -647,6 +657,16 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			$idna_convert = new \Froxlor\Idna\IdnaWrapper();
 			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] automatically deleted mail-table entries for '" . $idna_convert->decode($result['domain']) . "'");
 			$dkim = 0;	// disable DKIM if domain is no longer email domain
+		}
+
+		$allowed_phpconfigs = $customer['allowed_phpconfigs'];
+		if (! empty($allowed_phpconfigs)) {
+			$allowed_phpconfigs = json_decode($allowed_phpconfigs, true);
+		} else {
+			$allowed_phpconfigs = [];
+		}
+		if (! in_array($phpsettingid, $allowed_phpconfigs)) {
+			\Froxlor\UI\Response::standard_error('notallowedphpconfigused', '', true);
 		}
 
 		// handle redirect
