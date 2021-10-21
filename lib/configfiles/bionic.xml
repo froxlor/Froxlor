@@ -382,7 +382,7 @@ exit "$RETVAL"
 				</daemon>
 				<daemon name="powerdns" title="PowerDNS (standalone)">
 					<install><![CDATA[apt-get install pdns-server pdns-backend-mysql]]></install>
-					<file name="/etc/powerdns/pdns.conf" backup="true" chmod="600">
+					<file name="/etc/powerdns/pdns.conf" backup="true" chown="root:pdns" chmod="640">
 						<content><![CDATA[
 #################################
 # allow-axfr-ips	Allow zonetransfers only to these subnets
@@ -906,7 +906,7 @@ include-dir=/etc/powerdns/froxlor/
 					</file>
 					<command><![CDATA[mkdir -p /etc/powerdns/froxlor/]]></command>
 					<file name="/etc/powerdns/froxlor/pdns_froxlor.conf"
-						chown="root:root" chmod="600">
+						chown="root:pdns" chmod="640">
 						<content><![CDATA[
 # mysql-settings / you need to create the power-dns database for yourself!
 launch=gmysql
@@ -926,7 +926,7 @@ gmysql-password=
 				<daemon name="powerdns_bind"
 					title="PowerDNS via bind-backend">
 					<install><![CDATA[apt-get install pdns-server]]></install>
-					<file name="/etc/powerdns/pdns.conf" backup="true" chmod="600">
+					<file name="/etc/powerdns/pdns.conf" backup="true" chown="root:pdns" chmod="640">
 						<content><![CDATA[
 #################################
 # allow-axfr-ips	Allow zonetransfers only to these subnets
@@ -1451,7 +1451,7 @@ include-dir=/etc/powerdns/froxlor/
 					</file>
 					<command><![CDATA[mkdir -p /etc/powerdns/froxlor/]]></command>
 					<file name="/etc/powerdns/froxlor/pdns_froxlor.conf"
-						chown="root:root" chmod="600">
+						chown="root:pdns" chmod="640">
 						<content><![CDATA[
 # Bind backend configuration
 
