@@ -2,6 +2,7 @@
 namespace Froxlor\Dns;
 
 use Froxlor\Database\Database;
+use Froxlor\Dkim\DkimHelperBase;
 use Froxlor\Settings;
 
 class Dns
@@ -66,6 +67,11 @@ class Dns
 			));
 			$dom_entries = $sel_stmt->fetchAll(\PDO::FETCH_ASSOC);
 		}
+
+        $dkimHelper = null;
+        if (Settings::Get('dkim.use_dkim') == '1') {
+            $dkimHelper = \Froxlor\Dkim\DkimHelperBase::getInstanceOf(\Froxlor\FroxlorLogger::getInstanceOf());
+        }
 
 		// check for required records
 		$required_entries = array();
@@ -161,7 +167,7 @@ class Dns
 			}
 			if (Settings::Get('dkim.use_dkim') == '1') {
 				// check for DKIM content later
-				self::addRequiredEntry('dkim' . $domain['dkim_id'] . '._domainkey', 'TXT', $required_entries);
+				self::addRequiredEntry($dkimHelper->getRecordName($domain), 'TXT', $required_entries);
 			}
 		}
 
@@ -308,8 +314,10 @@ class Dns
 			// TXT (SPF and DKIM)
 			if (array_key_exists("TXT", $required_entries)) {
 
+                $dkimRecordName = "";
 				if (Settings::Get('dkim.use_dkim') == '1') {
-					$dkim_entries = self::generateDkimEntries($domain);
+                    $dkimRecordName = $dkimHelper->getRecordName($domain);
+					$dkim_entries = $dkimHelper::createRecord($domain);
 				}
 
 				foreach ($required_entries as $type => $records) {
@@ -318,7 +326,7 @@ class Dns
 							if ($record == '@SPF@') {
 								$txt_content = Settings::Get('spf.spf_entry');
 								$zonerecords[] = new DnsEntry('@', 'TXT', self::encloseTXTContent($txt_content));
-							} elseif ($record == 'dkim' . $domain['dkim_id'] . '._domainkey' && ! empty($dkim_entries)) {
+							} elseif ($record == $dkimRecordName && ! empty($dkim_entries)) {
 								// check for multiline entry
 								$multiline = false;
 								if (substr($dkim_entries[0], 0, 1) == '(') {
@@ -450,52 +458,5 @@ class Dns
 		$mail_parts = explode("@", $email);
 		$escpd_mail = str_replace(".", "\.", $mail_parts[0]) . "." . $mail_parts[1] . ".";
 		return $escpd_mail;
-	}
-
-	private static function generateDkimEntries($domain)
-	{
-		$zone_dkim = array();
-
-		if (Settings::Get('dkim.use_dkim') == '1' && $domain['dkim'] == '1' && $domain['dkim_pubkey'] != '') {
-			// start
-			$dkim_txt = 'v=DKIM1;';
-
-			// algorithm
-			$algorithm = explode(',', Settings::Get('dkim.dkim_algorithm'));
-			$alg = '';
-			foreach ($algorithm as $a) {
-				if ($a == 'all') {
-					break;
-				} else {
-					$alg .= $a . ':';
-				}
-			}
-
-			if ($alg != '') {
-				$alg = substr($alg, 0, - 1);
-				$dkim_txt .= 'h=' . $alg . ';';
-			}
-
-			// notes
-			if (trim(Settings::Get('dkim.dkim_notes') != '')) {
-				$dkim_txt .= 'n=' . trim(Settings::Get('dkim.dkim_notes')) . ';';
-			}
-
-			// key
-			$dkim_txt .= 'k=rsa;p=' . trim(preg_replace('/-----BEGIN PUBLIC KEY-----(.+)-----END PUBLIC KEY-----/s', '$1', str_replace("\n", '', $domain['dkim_pubkey']))) . ';';
-
-			// service-type
-			if (Settings::Get('dkim.dkim_servicetype') == '1') {
-				$dkim_txt .= 's=email;';
-			}
-
-			// end-part
-			$dkim_txt .= 't=s';
-
-			// dkim-entry
-			$zone_dkim[] = $dkim_txt;
-		}
-
-		return $zone_dkim;
 	}
 }

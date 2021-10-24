@@ -30,6 +30,19 @@ return array(
 					'save_method' => 'storeSettingFieldInsertBindTask',
 					'overview_option' => true
 				),
+				'dkim_service_implementation' => array(
+					'label' => $lng['dkim']['dkim_service_implementation'],
+					'settinggroup' => 'dkim',
+					'varname' => 'dkim_service_implementation',
+					'type' => 'option',
+					'default' => '0',
+					'option_mode' => 'one',
+					'option_options' => array(
+						'DkimFilter' => 'dkim-filter',
+						'Rspamd' => 'Rspamd'
+					),
+					'save_method' => 'storeSettingFieldInsertBindTask'
+				),
 				'dkim_prefix' => array(
 					'label' => $lng['dkim']['dkim_prefix'],
 					'settinggroup' => 'dkim',
@@ -101,7 +114,7 @@ return array(
 					'settinggroup' => 'dkim',
 					'varname' => 'dkim_keylength',
 					'type' => 'option',
-					'default' => '1024',
+					'default' => '2048',
 					'option_mode' => 'one',
 					'option_options' => array(
 						'1024' => '1024 Bit',

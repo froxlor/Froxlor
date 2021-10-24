@@ -260,7 +260,8 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 		$nameserver = new $dnssrv(\Froxlor\FroxlorLogger::getInstanceOf());
 
 		if (Settings::Get('dkim.use_dkim') == '1') {
-			$nameserver->writeDKIMconfigs();
+            $dkimconf = \Froxlor\Cron\Dkim\DkimBase::getInstanceOf(\Froxlor\FroxlorLogger::getInstanceOf());
+            $dkimconf->writeDKIMconfigs();
 		}
 
 		$nameserver->writeConfigs();

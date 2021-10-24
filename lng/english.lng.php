@@ -692,7 +692,7 @@ $lng['serversettings']['decimal_places'] = 'Number of decimal places in traffic/
 
 $lng['admin']['dkimsettings'] = 'DomainKey settings';
 $lng['dkim']['dkim_prefix']['title'] = 'Prefix';
-$lng['dkim']['dkim_prefix']['description'] = 'Please specify the path to the DKIM RSA-files as well as to the configuration files for the Milter-plugin';
+$lng['dkim']['dkim_prefix']['description'] = 'Please specify the path to the DKIM RSA-files as well as to the configuration files for the Milter-plugin<br>dkim-filter: <code>/etc/postfix/dkim/</code><br>rspamd: <code>/var/lib/rspamd/dkim/</code>';
 $lng['dkim']['dkim_domains']['title'] = 'Domains filename';
 $lng['dkim']['dkim_domains']['description'] = '<em>Filename</em> of the DKIM Domains parameter specified in the dkim-milter configuration';
 $lng['dkim']['dkim_dkimkeys']['title'] = 'KeyList filename';
@@ -711,7 +711,7 @@ $lng['admin']['caneditphpsettings'] = 'Can change php-related domain settings?';
 $lng['admin']['allips'] = 'All IP\'s';
 $lng['panel']['nosslipsavailable'] = 'There are currently no ssl ip/port combinations for this server';
 $lng['dkim']['use_dkim']['title'] = 'Activate DKIM support?';
-$lng['dkim']['use_dkim']['description'] = 'Would you like to use the Domain Keys (DKIM) system?<br/><em class="red">Note: DKIM is only supported using dkim-filter, not opendkim (yet)</em>';
+$lng['dkim']['use_dkim']['description'] = 'Would you like to use the Domain Keys (DKIM) system?<br/><em class="red">Note: DKIM is only supported using dkim-filter and rspamd, not opendkim (yet)</em>';
 $lng['error']['invalidmysqlhost'] = 'Invalid MySQL host address: %s';
 $lng['error']['cannotuseawstatsandwebalizeratonetime'] = 'You cannot enable Webalizer and AWstats at the same time, please chose one of them';
 $lng['serversettings']['webalizer_enabled'] = 'Enable webalizer statistics';
@@ -2136,3 +2136,6 @@ $lng['error']['notallowedphpconfigused'] = 'Trying to use php-config which is no
 
 $lng['serversettings']['phpfpm_settings']['allow_all_customers']['title'] = 'Assign this configuration to all currently existing customers';
 $lng['serversettings']['phpfpm_settings']['allow_all_customers']['description'] = 'Set this to "true" if you want to assign this configuration to all currently existing customers so it can be used by them. This setting is not permanent but can be run multiple times.';
+
+// added in geekincompany:froxlor/feature/rspamd
+$lng['dkim']['dkim_service_implementation']['title'] = "DKIM Service Implementation";

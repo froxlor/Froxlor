@@ -685,15 +685,15 @@ $lng['serversettings']['decimal_places'] = 'Nachkommastellen bei der Ausgabe von
 
 $lng['admin']['dkimsettings'] = 'DomainKey-Einstellungen';
 $lng['dkim']['dkim_prefix']['title'] = 'Prefix';
-$lng['dkim']['dkim_prefix']['description'] = 'Wie lautet der Pfad zu den DKIM-RSA-Dateien sowie den Einstellungsdateien des Milter-Plugins?';
+$lng['dkim']['dkim_prefix']['description'] = 'Wie lautet der Pfad zu den DKIM-RSA-Dateien sowie den Einstellungsdateien des Milter-Plugins?<br>dkim-filter: <code>/etc/postfix/dkim/</code><br>rspamd: <code>/var/lib/rspamd/dkim/</code>';
 $lng['dkim']['dkim_domains']['title'] = 'Domains-Dateiname';
-$lng['dkim']['dkim_domains']['description'] = 'Dateiname der DKIM-Domains-Angabe aus der DKIM-Milter-Konfigurationsdatei.';
+$lng['dkim']['dkim_domains']['description'] = 'Dateiname der DKIM-Domains-Angabe aus der DKIM-Milter-Konfigurationsdatei.<br><em class="red">Nur für dkim-filter</em>';
 $lng['dkim']['dkim_dkimkeys']['title'] = 'KeyList Dateiname';
-$lng['dkim']['dkim_dkimkeys']['description'] = 'Dateiname der DKIM-KeyList-Angabe aus der DKIM-Milter-Konfigurationsdatei.';
+$lng['dkim']['dkim_dkimkeys']['description'] = 'Dateiname der DKIM-KeyList-Angabe aus der DKIM-Milter-Konfigurationsdatei.<br><em class="red">Nur für dkim-filter</em>';
 $lng['dkim']['dkimrestart_command']['title'] = 'Milter-Restart-Kommando';
 $lng['dkim']['dkimrestart_command']['description'] = 'Wie lautet das Kommando zum Neustarten des DKIM-Milter-Dienstes?';
 $lng['dkim']['privkeysuffix']['title'] = 'Suffix für Private Keys';
-$lng['dkim']['privkeysuffix']['description'] = 'Hier kann eine (optionale) Dateiendung für die generierten Private Keys angegeben werden. Manche Dienste, wie dkim-filter, erwarten, dass die Schlüssel keine Dateiendung haben (leer).';
+$lng['dkim']['privkeysuffix']['description'] = 'Hier kann eine (optionale) Dateiendung für die generierten Private Keys angegeben werden. Manche Dienste, wie dkim-filter und rspamd, erwarten, dass die Schlüssel keine Dateiendung haben (leer).';
 
 // ADDED IN 1.2.19-svn9
 
@@ -704,7 +704,7 @@ $lng['admin']['caneditphpsettings'] = 'Kann PHP-bezogene Domaineinstellungen vor
 $lng['admin']['allips'] = 'Alle IP-Adressen';
 $lng['panel']['nosslipsavailable'] = 'Für diesen Server wurden noch keine SSL IP/Port Kombinationen eingetragen';
 $lng['dkim']['use_dkim']['title'] = 'DKIM-Support aktivieren?';
-$lng['dkim']['use_dkim']['description'] = 'Wollen Sie das Domain-Keys-System (DKIM) benutzen?<br/><em class="red">Hinweis: Derzeit wird DKIM nur via dkim-filter unterstützt, nicht opendkim.</em>';
+$lng['dkim']['use_dkim']['description'] = 'Wollen Sie das Domain-Keys-System (DKIM) benutzen?<br/><em class="red">Hinweis: Derzeit wird DKIM nur durch dkim-filter und rspamd unterstützt, nicht opendkim.</em>';
 $lng['error']['invalidmysqlhost'] = 'Ungültige MySQL-Host-Adresse: "%s"';
 $lng['error']['cannotuseawstatsandwebalizeratonetime'] = 'Webalizer und AWstats können nicht zur gleichen Zeit aktiviert werden, bitte wählen Sie eines aus.';
 $lng['serversettings']['webalizer_enabled'] = 'Nutze Webalizer-Statistiken';
@@ -1782,3 +1782,6 @@ $lng['error']['notallowedphpconfigused'] = 'Nutzung einer PHP-Konfiguration welc
 
 $lng['serversettings']['phpfpm_settings']['allow_all_customers']['title'] = 'Für aktuelle Kunden automatisch hinzufügen';
 $lng['serversettings']['phpfpm_settings']['allow_all_customers']['description'] = 'Ist diese Einstellung aktiv, wird die Konfiguration automatisch allen aktuell existierenden Kunden-Accounts zugewiesen. Diese Einstellung ist nicht permanent, kann aber mehrfach / nach Bedarf ausgeführt werden.';
+
+// added in geekincompany:froxlor/feature/rspamd
+$lng['dkim']['dkim_service_implementation']['title'] = "DKIM Dienst Implementierung";
