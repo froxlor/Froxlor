@@ -526,6 +526,7 @@ $lng['admin']['configfiles']['http'] = 'Webserver (HTTP)';
 $lng['admin']['configfiles']['dns'] = 'Nameserver (DNS)';
 $lng['admin']['configfiles']['mail'] = 'Mailserver (IMAP/POP3)';
 $lng['admin']['configfiles']['smtp'] = 'Mailserver (SMTP)';
+$lng['admin']['configfiles']['dkim'] = 'Mailserver (DKIM)';
 $lng['admin']['configfiles']['ftp'] = 'FTP-Server';
 $lng['admin']['configfiles']['etc'] = 'Sonstige (System)';
 $lng['admin']['configfiles']['choosedistribution'] = '-- Distribution wählen --';

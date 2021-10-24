@@ -1,0 +1,33 @@
+version: "3.1"
+services:
+  www:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "127.0.0.1:8080:80"
+    volumes:
+      - ./:/var/www/html/froxlor
+  db:
+    image: mysql:8.0
+    ports:
+      - "127.0.0.1:3306:3306"
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_DATABASE: froxlor
+      MYSQL_USER: froxlor
+      MYSQL_PASSWORD: froxlor
+      MYSQL_ROOT_PASSWORD: toor
+    volumes:
+      - .mysql/dump:/docker-entrypoint-initdb.d
+      - .mysql/conf:/etc/mysql/conf.d
+      - .mysql/persistent:/var/lib/mysql
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "127.0.0.1:8000:80"
+    environment:
+      PMA_HOST: db
+      MYSQL_USER: froxlor
+      MYSQL_PASSWORD: froxlor
+      MYSQL_ROOT_PASSWORD: toor
