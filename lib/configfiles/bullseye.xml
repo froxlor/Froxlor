@@ -4458,7 +4458,7 @@ sudo chown -R vmail: /var/mail/vmail/sieve/]]></command>
 						<command><![CDATA[
 sudo mkdir /var/lib/rspamd/dkim/]]></command>
 					</command>
-					<file>
+					<file name="/etc/rspamd/local.d/dkim_signing.conf">
 						<content><![CDATA[
 selector = "dkim";
 path = "/var/lib/rspamd/dkim/$domain.$selector.key";
