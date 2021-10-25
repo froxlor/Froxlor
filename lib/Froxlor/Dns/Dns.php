@@ -313,10 +313,9 @@ class Dns
 
 			// TXT (SPF and DKIM)
 			if (array_key_exists("TXT", $required_entries)) {
-
-                $dkimRecordName = "";
+				$dkimRecordName = "";
 				if (Settings::Get('dkim.use_dkim') == '1') {
-                    $dkimRecordName = $dkimHelper->getRecordName($domain);
+					$dkimRecordName = $dkimHelper->getRecordName($domain);
 					$dkim_entries = $dkimHelper::createRecord($domain);
 				}
 
