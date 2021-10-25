@@ -17,10 +17,14 @@ class Rspamd extends DkimBase
 			\Froxlor\FileDir::safe_exec('rspamadm dkim_keygen -b ' . Settings::Get('dkim.dkim_keylength') . ' -s dkim -d ' . $domain['domain'] . ' -k ' . escapeshellarg($privkey_filename));
 			$domain['dkim_privkey'] = file_get_contents($privkey_filename);
 			\Froxlor\FileDir::safe_exec("chmod 0640 " . escapeshellarg($privkey_filename));
+			//TODO Configure Permission user and Group
+			\Froxlor\FileDir::safe_exec("chown _rspamd:_rspamd ".escapeshellarg($privkey_filename));
 
 			\Froxlor\FileDir::safe_exec('openssl rsa -in ' . escapeshellarg($privkey_filename) . ' -pubout -outform pem -out ' . escapeshellarg($pubkey_filename));
 			$domain['dkim_pubkey'] = file_get_contents($pubkey_filename);
 			\Froxlor\FileDir::safe_exec("chmod 0664 " . escapeshellarg($pubkey_filename));
+			//TODO Configure Permission user and Group
+			\Froxlor\FileDir::safe_exec("chown _rspamd:_rspamd ".escapeshellarg($pubkey_filename));
 
 			$upd_stmt = Database::prepare("
 						UPDATE `" . TABLE_PANEL_DOMAINS . "` SET
