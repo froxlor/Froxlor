@@ -4175,7 +4175,7 @@ postconf -e "smtpd_milters = inet:127.0.0.1:11332"
 postconf -e "non_smtpd_milters = inet:127.0.0.1:11332"
 						]]></command>
 					</commands>
-					<command><![CDATA[sytemctl restart dovecot]]></command>
+					<command><![CDATA[systemctl restart dovecot]]></command>
 					<file name="/etc/dovecot/conf.d/20-managesieve.conf" mode="append">
 						<!--TODO Copy Whole Config to here-->
 						<content><![CDATA[
@@ -4452,7 +4452,7 @@ pipe :copy "rspamc" ["learn_ham"];
 sievec /var/mail/vmail/sieve/global/spam-global.sieve
 sievec /var/mail/vmail/sieve/global/report-spam.sieve
 sievec /var/mail/vmail/sieve/global/report-ham.sieve
-sudo chown -R vmail: /var/mail/vmail/sieve/]]></command>
+chown -R vmail: /var/mail/vmail/sieve/]]></command>
 					</commands>
 					<command>
 						<command><![CDATA[
