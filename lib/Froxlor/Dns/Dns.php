@@ -169,6 +169,9 @@ class Dns
 				// check for DKIM content later
 				self::addRequiredEntry($dkimHelper->getRecordName($domain), 'TXT', $required_entries);
 			}
+			if (Settings::Get('dmarc.use_dmarc') == '1') {
+				self::addRequiredEntry('_dmarc', 'TXT', $required_entries);
+			}
 		}
 
 		$primary_ns = null;
@@ -186,6 +189,10 @@ class Dns
 			if (Settings::Get('spf.use_spf') == '1' && $entry['type'] == 'TXT' && $entry['record'] == '@' && (strtolower(substr($entry['content'], 0, 7)) == '"v=spf1' || strtolower(substr($entry['content'], 0, 6)) == 'v=spf1')) {
 				// unset special spf required-entry
 				unset($required_entries[$entry['type']][md5("@SPF@")]);
+			}
+			if (Settings::Get('dmarc.use_dmarc') == '1' && $entry['type'] == 'TXT' && $entry['record'] == '_dmarc' && (strtolower(substr($entry['content'], 0, 9)) == '"v=DMARC1' || strtolower(substr($entry['content'], 0, 8)) == 'v=DMARC1')) {
+				// unset special dmarc required-entry
+				unset($required_entries[$entry['type']][md5("_dmarc")]);
 			}
 			if (empty($primary_ns) && $entry['record'] == '@' && $entry['type'] == 'NS') {
 				// use the first NS entry pertaining to the current domain as primary ns
@@ -325,6 +332,9 @@ class Dns
 							if ($record == '@SPF@') {
 								$txt_content = Settings::Get('spf.spf_entry');
 								$zonerecords[] = new DnsEntry('@', 'TXT', self::encloseTXTContent($txt_content));
+							} elseif ($record == '_dmarc') {
+								$txt_content = Settings::Get('dmarc.dmarc_entry');
+								$zonerecords[] = new DnsEntry($record, 'TXT', self::encloseTXTContent($txt_content));
 							} elseif ($record == $dkimRecordName && ! empty($dkim_entries)) {
 								// check for multiline entry
 								$multiline = false;

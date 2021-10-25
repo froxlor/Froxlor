@@ -2139,3 +2139,6 @@ $lng['serversettings']['phpfpm_settings']['allow_all_customers']['description'] 
 
 // added in geekincompany:froxlor/feature/rspamd
 $lng['dkim']['dkim_service_implementation']['title'] = "DKIM Service Implementation";
+$lng['admin']['dmarcsettings'] = "DMARC Settings";
+$lng['dmarc']['use_dmarc']['title'] = "Enable DMARC";
+$lng['dmarc']['dmarc_entry']['title'] = "DMARC Record";

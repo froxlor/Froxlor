@@ -401,6 +401,8 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('dkim', 'dkim_keylength', '2048'),
 	('dkim', 'dkim_servicetype', '0'),
 	('dkim', 'dkim_notes', ''),
+	('dmarc', 'use_dmarc','0'),
+	('dmarc', 'dmarc_entry','"v=DMARC1; p=none;"'),
 	('defaultwebsrverrhandler', 'enabled', '0'),
 	('defaultwebsrverrhandler', 'err401', ''),
 	('defaultwebsrverrhandler', 'err403', ''),
