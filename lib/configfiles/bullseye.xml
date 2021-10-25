@@ -4460,9 +4460,17 @@ sudo mkdir /var/lib/rspamd/dkim/]]></command>
 					</command>
 					<file name="/etc/rspamd/local.d/dkim_signing.conf">
 						<content><![CDATA[
+# Default selector to use
 selector = "dkim";
+
+# Default path to key, can include '$domain' and '$selector' variables
 path = "/var/lib/rspamd/dkim/$domain.$selector.key";
-allow_username_mismatch = true;]]></content>
+
+# If true, username does not need to contain matching domain
+allow_username_mismatch = true;
+
+# Wether to normalise domains to eSLD
+use_esld = true;]]></content>
 					</file>
 					<command><![CDATA[cp /etc/rspamd/local.d/dkim_signing.conf /etc/rspamd/local.d/arc.conf]]></command>
 					<command><![CDATA[systemctl restart rspamd]]></command>
