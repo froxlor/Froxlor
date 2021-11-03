@@ -1715,6 +1715,15 @@ plugin {
 ]]>
 						</content>
 					</file>
+					<file name="/etc/dovecot/conf.d/90-quota.conf" chown="root:0"
+						chmod="0644" backup="true">
+						<content><![CDATA[
+plugin {
+  quota = maildir:User quota
+}
+]]>
+						</content>
+					</file>
 					<file name="/etc/dovecot/dovecot-sql.conf.ext" chown="root:0"
 						chmod="0640">
 						<content><![CDATA[
