@@ -67,6 +67,9 @@ if ($page == 'showinfo') {
 	$uptime_duration = duration($cache['start_time']);
 	$size_vars = bsize($cache['mem_size']);
 
+	$num_hits_and_misses = $cache['num_hits'] + $cache['num_misses'];
+	$num_hits_and_misses = 0 >= $num_hits_and_misses ? 1 : $num_hits_and_misses;
+
 	// check for possible empty values that are used in the templates
 	if (! isset($cache['file_upload_progress'])) {
 		$cache['file_upload_progress'] = $lng['logger']['unknown'];
@@ -84,8 +87,8 @@ if ($page == 'showinfo') {
 
 	$freemem = bsize($mem_avail) . sprintf(" (%.1f%%)", $mem_avail * 100 / $mem_size);
 	$usedmem = bsize($mem_used) . sprintf(" (%.1f%%)", $mem_used * 100 / $mem_size);
-	$hits = $cache['num_hits'] . @sprintf(" (%.1f%%)", $cache['num_hits'] * 100 / ($cache['num_hits'] + $cache['num_misses']));
-	$misses = $cache['num_misses'] . @sprintf(" (%.1f%%)", $cache['num_misses'] * 100 / ($cache['num_hits'] + $cache['num_misses']));
+	$hits = $cache['num_hits'] . @sprintf(" (%.1f%%)", $cache['num_hits'] * 100 / $num_hits_and_misses);
+	$misses = $cache['num_misses'] . @sprintf(" (%.1f%%)", $cache['num_misses'] * 100 / $num_hits_and_misses);
 
 	// Fragmentation: (freeseg - 1) / total_seg
 	$nseg = $freeseg = $fragsize = $freetotal = 0;
