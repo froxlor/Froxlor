@@ -1051,7 +1051,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 		}
 
 		if ($this->isAdmin()) {
-			if ($createstdsubdomain != '1') {
+			if ($createstdsubdomain != '1' || $deactivated) {
 				$createstdsubdomain = '0';
 			}
 
