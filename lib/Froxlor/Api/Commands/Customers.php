@@ -915,7 +915,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 	 * @param bool $mysqls_ul
 	 *        	optional, whether customer should have unlimited mysql-databases, default 0 (false)
 	 * @param bool $createstdsubdomain
-	 *        	optional, whether to create a standard-subdomain ([loginname].froxlor-hostname.tld), default 0 (false)
+	 *        	optional, whether to create a standard-subdomain ([loginname].froxlor-hostname.tld), default 1 (if customer has std-subdomain) else 0 (false)
 	 * @param bool $phpenabled
 	 *        	optional, whether to allow usage of PHP, default 0 (false)
 	 * @param array $allowed_phpconfigs
@@ -979,7 +979,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 			$email_pop3 = $this->getParam('email_pop3', true, $result['pop3']);
 			$ftps = $this->getUlParam('ftps', 'ftps_ul', true, $result['ftps']);
 			$mysqls = $this->getUlParam('mysqls', 'mysqls_ul', true, $result['mysqls']);
-			$createstdsubdomain = $this->getBoolParam('createstdsubdomain', true, 0);
+			$createstdsubdomain = $this->getBoolParam('createstdsubdomain', true, ($result['standardsubdomain'] != 0 ? 1 : 0));
 			$password = $this->getParam('new_customer_password', true, '');
 			$phpenabled = $this->getBoolParam('phpenabled', true, $result['phpenabled']);
 			$allowed_phpconfigs = $this->getParam('allowed_phpconfigs', true, json_decode($result['allowed_phpconfigs'], true));
