@@ -15,7 +15,7 @@ use Froxlor\Settings;
  * @author Froxlor team <team@froxlor.org> (2016-)
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package Cron
- *
+ *         
  */
 class PowerDNS extends DnsBase
 {
@@ -99,30 +99,32 @@ class PowerDNS extends DnsBase
 			));
 			$pdns_domain = $pdns_domains_stmt->fetch(\PDO::FETCH_ASSOC);
 
-			$del_rec_stmt->execute(array(
-				'did' => $pdns_domain['id']
-			));
-			$del_meta_stmt->execute(array(
-				'did' => $pdns_domain['id']
-			));
-			$del_dom_stmt->execute(array(
-				'did' => $pdns_domain['id']
-			));
+			if ($pdns_domain && ! empty($pdns_domain['id'])) {
+				$del_rec_stmt->execute(array(
+					'did' => $pdns_domain['id']
+				));
+				$del_meta_stmt->execute(array(
+					'did' => $pdns_domain['id']
+				));
+				$del_dom_stmt->execute(array(
+					'did' => $pdns_domain['id']
+				));
+			}
 		}
 	}
 
 	private function insertZone($domainname, $serial = 0)
 	{
-        $ins_stmt = \Froxlor\Dns\PowerDNS::getDB()->prepare("
+		$ins_stmt = \Froxlor\Dns\PowerDNS::getDB()->prepare("
 			INSERT INTO domains set `name` = :domainname, `notified_serial` = :serial, `type` = :type
 		");
-        $ins_stmt->execute(array(
-            'domainname' => $domainname,
-            'serial' => $serial,
-            'type' => strtoupper(Settings::Get('system.powerdns_mode'))
-        ));
-        $lastid = \Froxlor\Dns\PowerDNS::getDB()->lastInsertId();
-        return $lastid;;
+		$ins_stmt->execute(array(
+			'domainname' => $domainname,
+			'serial' => $serial,
+			'type' => strtoupper(Settings::Get('system.powerdns_mode'))
+		));
+		$lastid = \Froxlor\Dns\PowerDNS::getDB()->lastInsertId();
+		return $lastid;
 	}
 
 	private function insertRecords($domainid = 0, $records = array(), $origin = "")

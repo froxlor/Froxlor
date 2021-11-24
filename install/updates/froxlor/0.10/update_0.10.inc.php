@@ -943,3 +943,8 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.29')) {
 	showUpdateStep("Updating from 0.10.29 to 0.10.29.1", false);
 	\Froxlor\Froxlor::updateToVersion('0.10.29.1');
 }
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.29.1')) {
+	showUpdateStep("Updating from 0.10.29.1 to 0.10.30", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.30');
+}

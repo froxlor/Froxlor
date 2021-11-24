@@ -239,7 +239,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	 *        	optional, whether to create an exclusive web-logfile for this domain, default 0 (false)
 	 * @param int $alias
 	 *        	optional, domain-id of a domain that the new domain should be an alias of, default 0 (none)
-	 * @param bool $issubof
+	 * @param int $issubof
 	 *        	optional, domain-id of a domain this domain is a subdomain of (required for webserver-cronjob to generate the correct order), default 0 (none)
 	 * @param string $registration_date
 	 *        	optional, date of domain registration in form of YYYY-MM-DD, default empty (none)
@@ -903,7 +903,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	 *        	optional, when setting $speciallogfile to false, this needs to be set to true to confirm the action, default 0 (false)
 	 * @param int $alias
 	 *        	optional, domain-id of a domain that the new domain should be an alias of, default 0 (none)
-	 * @param bool $issubof
+	 * @param int $issubof
 	 *        	optional, domain-id of a domain this domain is a subdomain of (required for webserver-cronjob to generate the correct order), default 0 (none)
 	 * @param string $registration_date
 	 *        	optional, date of domain registration in form of YYYY-MM-DD, default empty (none)

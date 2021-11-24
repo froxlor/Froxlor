@@ -173,6 +173,7 @@ Settings::Set('system.mysql_access_host', 'localhost,127.0.0.1,172.17.0.1,2a01:4
 Settings::Set('system.use_ssl', '1', true);
 Settings::Set('system.froxlordirectlyviahostname', '1', true);
 Settings::Set('system.dns_createhostnameentry', '1', true);
+Settings::Set('system.bind_enable', '1', true);
 Settings::Set('system.dnsenabled', '1', true);
 Settings::Set('system.dns_server', 'PowerDNS', true);
 Settings::Set('phpfpm.enabled', '1', true);

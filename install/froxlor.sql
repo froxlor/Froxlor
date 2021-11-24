@@ -532,7 +532,7 @@ opcache.interned_strings_buffer'),
 	('system', 'vmail_gid', '2000'),
 	('system', 'vmail_homedir', '/var/customers/mail/'),
 	('system', 'vmail_maildirname', 'Maildir'),
-	('system', 'bind_enable', '1'),
+	('system', 'bind_enable', '0'),
 	('system', 'bindconf_directory', '/etc/bind/'),
 	('system', 'bindreload_command', '/etc/init.d/bind9 reload'),
 	('system', 'hostname', 'SERVERNAME'),
@@ -722,7 +722,7 @@ opcache.interned_strings_buffer'),
 	('panel', 'logo_image_login', ''),
 	('panel', 'logo_overridetheme', '0'),
 	('panel', 'logo_overridecustom', '0'),
-	('panel', 'version', '0.10.29.1'),
+	('panel', 'version', '0.10.30'),
 	('panel', 'db_version', '202109040');
 
 
