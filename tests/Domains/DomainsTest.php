@@ -172,12 +172,14 @@ class DomainsTest extends TestCase
 		$reseller_userdata['adminsession'] = 1;
 		$data = [
 			'domainname' => 'test2.local',
-			'ssl_protocols' => 'TLSv1'
+			'ssl_protocols' => 'TLSv1',
+			'documentroot' => '/var/customers/webs/test1/sub/'
 		];
 		$json_result = Domains::getLocal($reseller_userdata, $data)->update();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEmpty($result['ssl_protocols']);
 		$this->assertEquals('test2.local', $result['domain']);
+		$this->assertEquals('/var/customers/webs/test1/sub/', $result['documentroot']);
 	}
 
 	/**
@@ -442,6 +444,7 @@ class DomainsTest extends TestCase
 	}
 
 	/**
+	 *
 	 * @refs https://github.com/Froxlor/Froxlor/issues/899
 	 */
 	public function testAdminIdn2DomainsAdd()
