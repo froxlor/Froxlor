@@ -1722,7 +1722,7 @@ $lng['serversettings']['panel_password_special_char_required']['description'] = 
 $lng['serversettings']['panel_password_special_char']['title'] = 'Special characters list';
 $lng['serversettings']['panel_password_special_char']['description'] = 'One of these characters is required if the above option is set.';
 $lng['phpfpm']['use_mod_proxy']['title'] = 'Use mod_proxy / mod_proxy_fcgi';
-$lng['phpfpm']['use_mod_proxy']['description'] = '<strong class="red">Must be enabled when using Debian 9.x (Stretch)</strong>. Activate to use php-fpm via mod_proxy_fcgi. Requires at least apache-2.4.9';
+$lng['phpfpm']['use_mod_proxy']['description'] = '<strong class="red">Must be enabled when using Debian 9.x (Stretch) or newer</strong>. Activate to use php-fpm via mod_proxy_fcgi. Requires at least apache-2.4.9';
 $lng['error']['no_phpinfo'] = 'Sorry, unable to read phpinfo()';
 
 $lng['admin']['movetoadmin'] = 'Move customer';
@@ -2135,3 +2135,4 @@ $lng['error']['notallowedphpconfigused'] = 'Trying to use php-config which is no
 
 $lng['serversettings']['phpfpm_settings']['allow_all_customers']['title'] = 'Assign this configuration to all currently existing customers';
 $lng['serversettings']['phpfpm_settings']['allow_all_customers']['description'] = 'Set this to "true" if you want to assign this configuration to all currently existing customers so it can be used by them. This setting is not permanent but can be run multiple times.';
+$lng['error']['pathmustberelative'] = 'The user does not have the permission to specify directories outside the customers home-directory. Please specify a relative path (no leading /).';

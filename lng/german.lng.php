@@ -1445,7 +1445,7 @@ $lng['serversettings']['panel_password_special_char_required']['description'] = 
 $lng['serversettings']['panel_password_special_char']['title'] = 'Sonderzeichen-Liste';
 $lng['serversettings']['panel_password_special_char']['description'] = 'Mindestens eines dieser Sonderzeichen muss in dem Passwort vorkommen, sofern die Sonderzeichen-Option aktiviert ist.';
 $lng['phpfpm']['use_mod_proxy']['title'] = 'Verwende mod_proxy / mod_proxy_fcgi';
-$lng['phpfpm']['use_mod_proxy']['description'] = '<strong class="red">Muss gesetzt sein bei Debian 9.x (Stretch)</strong>. Diese Option kann aktiviert werden, um php-fpm via mod_proxy_fcgi einzubinden. Dies setzt mindestens apache-2.4.9 voraus';
+$lng['phpfpm']['use_mod_proxy']['description'] = '<strong class="red">Muss gesetzt sein bei Debian 9.x (Stretch) oder neuer</strong>. Diese Option kann aktiviert werden, um php-fpm via mod_proxy_fcgi einzubinden. Dies setzt mindestens apache-2.4.9 voraus';
 $lng['error']['no_phpinfo'] = 'Entschuldigung, es ist nicht möglich die phpinfo() auszulesen.';
 
 $lng['admin']['movetoadmin'] = 'Kunde verschieben';
@@ -1781,3 +1781,4 @@ $lng['error']['notallowedphpconfigused'] = 'Nutzung einer PHP-Konfiguration welc
 
 $lng['serversettings']['phpfpm_settings']['allow_all_customers']['title'] = 'Für aktuelle Kunden automatisch hinzufügen';
 $lng['serversettings']['phpfpm_settings']['allow_all_customers']['description'] = 'Ist diese Einstellung aktiv, wird die Konfiguration automatisch allen aktuell existierenden Kunden-Accounts zugewiesen. Diese Einstellung ist nicht permanent, kann aber mehrfach / nach Bedarf ausgeführt werden.';
+$lng['error']['pathmustberelative'] = 'Der Benutzer hat nicht die benötigten Berechtigungen, um Pfade außerhalb des Kunden-Heimatverzeichnisses anzugeben. Bitte einen relativen Pfad angeben (kein führendes /).';

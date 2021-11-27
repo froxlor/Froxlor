@@ -427,6 +427,20 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				}
 				$_documentroot = \Froxlor\FileDir::makeCorrectDir($customer['documentroot'] . $path_suffix);
 
+				$documentroot = \Froxlor\Validate\Validate::validate($documentroot, 'documentroot', \Froxlor\Validate\Validate::REGEX_DIR, '', array(), true);
+
+				// If path is empty and 'Use domain name as default value for DocumentRoot path' is enabled in settings,
+				// set default path to subdomain or domain name
+				if (! empty($documentroot)) {
+					if (substr($documentroot, 0, 1) != '/' && ! preg_match('/^https?\:\/\//', $documentroot)) {
+						$documentroot = $_documentroot . '/' . $documentroot;
+					} elseif (substr($documentroot, 0, 1) == '/' && $this->getUserDetail('change_serversettings') != '1') {
+						\Froxlor\UI\Response::standard_error('pathmustberelative', '', true);
+					}
+				} else {
+					$documentroot = $_documentroot;
+				}
+
 				$registration_date = \Froxlor\Validate\Validate::validate($registration_date, 'registration_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', array(
 					'0000-00-00',
 					'0',
@@ -454,17 +468,6 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 					}
 
 					$specialsettings = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $specialsettings), 'specialsettings', \Froxlor\Validate\Validate::REGEX_CONF_TEXT, '', array(), true);
-					\Froxlor\Validate\Validate::validate($documentroot, 'documentroot', \Froxlor\Validate\Validate::REGEX_DIR, '', array(), true);
-
-					// If path is empty and 'Use domain name as default value for DocumentRoot path' is enabled in settings,
-					// set default path to subdomain or domain name
-					if (! empty($documentroot)) {
-						if (substr($documentroot, 0, 1) != '/' && ! preg_match('/^https?\:\/\//', $documentroot)) {
-							$documentroot = $_documentroot . '/' . $documentroot;
-						}
-					} else {
-						$documentroot = $_documentroot;
-					}
 
 					$ssl_protocols = array();
 					if (! empty($p_ssl_protocols) && is_numeric($p_ssl_protocols)) {
@@ -507,7 +510,6 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 					$notryfiles = '0';
 					$writeaccesslog = '1';
 					$writeerrorlog = '1';
-					$documentroot = $_documentroot;
 					$override_tls = '0';
 					$ssl_protocols = array();
 				}
@@ -1187,6 +1189,38 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				$serveraliasoption = $p_serveraliasoption;
 			}
 
+			$documentroot = \Froxlor\Validate\Validate::validate($documentroot, 'documentroot', \Froxlor\Validate\Validate::REGEX_DIR, '', array(), true);
+
+			if (! empty($documentroot) && $documentroot != $result['documentroot'] && substr($documentroot, 0, 1) == '/' && substr($documentroot, 0, strlen($customer['documentroot'])) != $customer['documentroot'] && $this->getUserDetail('change_serversettings') != '1') {
+				\Froxlor\UI\Response::standard_error('pathmustberelative', '', true);
+			}
+
+			// when moving customer and no path is specified, update would normally reuse the current document-root
+			// which would point to the wrong customer, therefore we will re-create that directory
+			if (! empty($documentroot) && $customerid > 0 && $customerid != $result['customerid'] && Settings::Get('panel.allow_domain_change_customer') == '1') {
+				if (Settings::Get('system.documentroot_use_default_value') == 1) {
+					$_documentroot = \Froxlor\FileDir::makeCorrectDir($customer['documentroot'] . '/' . $result['domain']);
+				} else {
+					$_documentroot = $customer['documentroot'];
+				}
+				// set the customers default docroot
+				$documentroot = $_documentroot;
+			}
+
+			if ($documentroot == '') {
+				// If path is empty and 'Use domain name as default value for DocumentRoot path' is enabled in settings,
+				// set default path to subdomain or domain name
+				if (Settings::Get('system.documentroot_use_default_value') == 1) {
+					$documentroot = \Froxlor\FileDir::makeCorrectDir($customer['documentroot'] . '/' . $result['domain']);
+				} else {
+					$documentroot = $customer['documentroot'];
+				}
+			}
+
+			if (! preg_match('/^https?\:\/\//', $documentroot) && strstr($documentroot, ":") !== false) {
+				\Froxlor\UI\Response::standard_error('pathmaynotcontaincolon', '', true);
+			}
+
 			if ($this->getUserDetail('change_serversettings') == '1') {
 
 				if (Settings::Get('system.bind_enable') == '1') {
@@ -1201,33 +1235,6 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				}
 
 				$specialsettings = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $specialsettings), 'specialsettings', \Froxlor\Validate\Validate::REGEX_CONF_TEXT, '', array(), true);
-				$documentroot = \Froxlor\Validate\Validate::validate($documentroot, 'documentroot', \Froxlor\Validate\Validate::REGEX_DIR, '', array(), true);
-
-				// when moving customer and no path is specified, update would normally reuse the current document-root
-				// which would point to the wrong customer, therefore we will re-create that directory
-				if (! empty($documentroot) && $customerid > 0 && $customerid != $result['customerid'] && Settings::Get('panel.allow_domain_change_customer') == '1') {
-					if (Settings::Get('system.documentroot_use_default_value') == 1) {
-						$_documentroot = \Froxlor\FileDir::makeCorrectDir($customer['documentroot'] . '/' . $result['domain']);
-					} else {
-						$_documentroot = $customer['documentroot'];
-					}
-					// set the customers default docroot
-					$documentroot = $_documentroot;
-				}
-
-				if ($documentroot == '') {
-					// If path is empty and 'Use domain name as default value for DocumentRoot path' is enabled in settings,
-					// set default path to subdomain or domain name
-					if (Settings::Get('system.documentroot_use_default_value') == 1) {
-						$documentroot = \Froxlor\FileDir::makeCorrectDir($customer['documentroot'] . '/' . $result['domain']);
-					} else {
-						$documentroot = $customer['documentroot'];
-					}
-				}
-
-				if (! preg_match('/^https?\:\/\//', $documentroot) && strstr($documentroot, ":") !== false) {
-					\Froxlor\UI\Response::standard_error('pathmaynotcontaincolon', '', true);
-				}
 
 				$ssl_protocols = array();
 				if (! empty($p_ssl_protocols) && is_numeric($p_ssl_protocols)) {
