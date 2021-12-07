@@ -249,7 +249,6 @@ if ($page == 'overview') {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 
-
 		$result = json_decode($json_result, true)['data'];
 
 		if (isset($result['customerid']) && $result['customerid'] == $userinfo['customerid']) {

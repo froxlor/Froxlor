@@ -655,7 +655,6 @@ if ($page == 'domains' || $page == 'overview') {
 				$speciallogwarning = sprintf($lng['admin']['speciallogwarning'], $lng['admin']['delete_statistics']);
 
 				eval("echo \"" . \Froxlor\UI\Template::getTemplate("domains/domains_edit") . "\";");
-
 			}
 		}
 	} elseif ($action == 'jqGetCustomerPHPConfigs') {
