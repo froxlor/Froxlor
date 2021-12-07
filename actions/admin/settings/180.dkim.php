@@ -36,7 +36,7 @@ return array(
 					'varname' => 'dkim_prefix',
 					'type' => 'string',
 					'string_type' => 'dir',
-					'default' => '/etc/postfix/dkim/', # das hier ist von Froxlor
+					'default' => '/etc/postfix/dkim/',
 					'save_method' => 'storeSettingField'
 				),
 				'dkim_privkeysuffix' => array(
