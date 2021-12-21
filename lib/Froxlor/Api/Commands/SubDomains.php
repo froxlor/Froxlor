@@ -270,8 +270,11 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			} else {
 				$allowed_phpconfigs = [];
 			}
-			if (! in_array($phpsid_result['phpsettingid'], $allowed_phpconfigs)) {
-				\Froxlor\UI\Response::standard_error('notallowedphpconfigused', '', true);
+			// only with fcgid/fpm enabled will it be possible to select a php-setting
+			if ((int) Settings::Get('system.mod_fcgid') == 1 || (int) Settings::Get('phpfpm.enabled') == 1) {
+				if (! in_array($phpsid_result['phpsettingid'], $allowed_phpconfigs)) {
+					\Froxlor\UI\Response::standard_error('notallowedphpconfigused', '', true);
+				}
 			}
 
 			// actually insert domain
@@ -665,8 +668,11 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		} else {
 			$allowed_phpconfigs = [];
 		}
-		if (! in_array($phpsettingid, $allowed_phpconfigs)) {
-			\Froxlor\UI\Response::standard_error('notallowedphpconfigused', '', true);
+		// only with fcgid/fpm enabled will it be possible to select a php-setting
+		if ((int) Settings::Get('system.mod_fcgid') == 1 || (int) Settings::Get('phpfpm.enabled') == 1) {
+			if (! in_array($phpsettingid, $allowed_phpconfigs)) {
+				\Froxlor\UI\Response::standard_error('notallowedphpconfigused', '', true);
+			}
 		}
 
 		// handle redirect
