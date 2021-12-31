@@ -1782,3 +1782,5 @@ $lng['error']['notallowedphpconfigused'] = 'Nutzung einer PHP-Konfiguration welc
 $lng['serversettings']['phpfpm_settings']['allow_all_customers']['title'] = 'Für aktuelle Kunden automatisch hinzufügen';
 $lng['serversettings']['phpfpm_settings']['allow_all_customers']['description'] = 'Ist diese Einstellung aktiv, wird die Konfiguration automatisch allen aktuell existierenden Kunden-Accounts zugewiesen. Diese Einstellung ist nicht permanent, kann aber mehrfach / nach Bedarf ausgeführt werden.';
 $lng['error']['pathmustberelative'] = 'Der Benutzer hat nicht die benötigten Berechtigungen, um Pfade außerhalb des Kunden-Heimatverzeichnisses anzugeben. Bitte einen relativen Pfad angeben (kein führendes /).';
+$lng['serversettings']['acmeshpath']['title'] = 'Pfad zu acme.sh';
+$lng['serversettings']['acmeshpath']['description'] = 'Installationspfad zu acme.sh, inklusive acme.sh Script<br>Standard ist <b>/root/.acme.sh/acme.sh</b>';

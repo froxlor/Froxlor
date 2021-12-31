@@ -16,7 +16,7 @@ class FileDir
 	 * @param array $allowedChars
 	 *        	optional array of allowed characters in path/command
 	 *        	
-	 * @return string result of exec()
+	 * @return array result of exec()
 	 */
 	public static function safe_exec($exec_string, &$return_value = false, $allowedChars = null)
 	{

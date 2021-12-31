@@ -953,3 +953,10 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.30')) {
 	showUpdateStep("Updating from 0.10.30 to 0.10.31", false);
 	\Froxlor\Froxlor::updateToVersion('0.10.31');
 }
+
+if (\Froxlor\Froxlor::isDatabaseVersion('202109040')) {
+	showUpdateStep("Add setting for acme.sh install location", true);
+	Settings::AddNew("system.acmeshpath", '/root/.acme.sh/acme.sh');
+	lastStepStatus(0);
+	\Froxlor\Froxlor::updateToDbVersion('202112310');
+}

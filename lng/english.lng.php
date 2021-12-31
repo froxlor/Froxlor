@@ -2136,3 +2136,5 @@ $lng['error']['notallowedphpconfigused'] = 'Trying to use php-config which is no
 $lng['serversettings']['phpfpm_settings']['allow_all_customers']['title'] = 'Assign this configuration to all currently existing customers';
 $lng['serversettings']['phpfpm_settings']['allow_all_customers']['description'] = 'Set this to "true" if you want to assign this configuration to all currently existing customers so it can be used by them. This setting is not permanent but can be run multiple times.';
 $lng['error']['pathmustberelative'] = 'The user does not have the permission to specify directories outside the customers home-directory. Please specify a relative path (no leading /).';
+$lng['serversettings']['acmeshpath']['title'] = 'Path to acme.sh';
+$lng['serversettings']['acmeshpath']['description'] = 'Set this to where acme.sh is installed to, including the acme.sh script<br>Default is <b>/root/.acme.sh/acme.sh</b>';

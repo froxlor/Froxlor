@@ -310,7 +310,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 	{
 		if (! empty($domains)) {
 
-			$acmesh_cmd = self::$acmesh . " --server " . self::$apiserver . " --issue -d " . implode(" -d ", $domains);
+			$acmesh_cmd = self::getAcmeSh() . " --server " . self::$apiserver . " --issue -d " . implode(" -d ", $domains);
 			// challenge path
 			$acmesh_cmd .= " -w " . Settings::Get('system.letsencryptchallengepath');
 			if (Settings::Get('system.leecc') > 0) {
@@ -530,7 +530,7 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 		if (Settings::Get('system.leecc') > 0 && ! $forced_noecc) {
 			$domain .= "_ecc";
 		}
-		$env_file = FileDir::makeCorrectFile(dirname(self::$acmesh) . '/acme.sh.env');
+		$env_file = FileDir::makeCorrectFile(dirname(self::getAcmeSh()) . '/acme.sh.env');
 		if (file_exists($env_file)) {
 			$output = [];
 $cut = <<<EOC
@@ -541,11 +541,15 @@ EOC;
 				return FileDir::makeCorrectDir($output[0] . "/" . $domain);
 			}
 		}
-		return FileDir::makeCorrectDir(dirname(self::$acmesh) . "/" . $domain);
+		return FileDir::makeCorrectDir(dirname(self::getAcmeSh()) . "/" . $domain);
 	}
 
 	public static function getAcmeSh()
 	{
+		$from_settings = Settings::Get('system.acmeshpath');
+		if (file_exists($from_settings)) {
+			return $from_settings;
+		}
 		return self::$acmesh;
 	}
 
@@ -599,16 +603,24 @@ EOC;
 	 */
 	private static function checkInstall($tries = 0)
 	{
-		if (! file_exists(self::$acmesh) && $tries > 0) {
-			FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_ERR, "Download/installation of acme.sh seems to have failed. Re-run cronjob to try again or install manually to '" . self::$acmesh . "'");
-			echo PHP_EOL . "Download/installation of acme.sh seems to have failed. Re-run cronjob to try again or install manually to '" . self::$acmesh . "'" . PHP_EOL;
+		if (! file_exists(self::getAcmeSh()) && $tries > 0) {
+			FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_ERR, "Download/installation of acme.sh seems to have failed. Re-run cronjob to try again or install manually to '" . self::getAcmeSh() . "'");
+			echo PHP_EOL . "Download/installation of acme.sh seems to have failed. Re-run cronjob to try again or install manually to '" . self::getAcmeSh() . "'" . PHP_EOL;
 			return false;
-		} else if (! file_exists(self::$acmesh)) {
+		} else if (! file_exists(self::getAcmeSh())) {
 			FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, "Could not find acme.sh - installing it to /root/.acme.sh/");
 			$return = false;
-			\Froxlor\FileDir::safe_exec("wget -O - https://get.acme.sh | sh", $return, array(
+			\Froxlor\FileDir::safe_exec("wget -O - https://get.acme.sh | sh -s email=" . Settings::Get('panel.adminmail'), $return, array(
 				'|'
 			));
+			$set_path = self::getAcmeSh();
+			// after this, regardless of what the user specified, the acme.sh installation will be in /root/.acme.sh
+			if ($set_path != '/root/.acme.sh/acme.sh') {
+				Settings::Set('system.acmeshpath', '/root/.acme.sh/acme.sh', true);
+				// let the user know
+				FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_WARNING, "Acme.sh could not be found in '" . $set_path . "' so froxlor installed it to the default location, which is '/root/.acme.sh/'");
+				echo PHP_EOL . "Acme.sh could not be found in '" . $set_path . "' so froxlor installed it to the default location, which is '/root/.acme.sh/'" . PHP_EOL;
+			}
 			// check whether the installation worked
 			return self::checkInstall(++ $tries);
 		}
@@ -620,9 +632,9 @@ EOC;
 	 */
 	private static function checkUpgrade()
 	{
-		$acmesh_result = \Froxlor\FileDir::safe_exec(self::$acmesh . " --upgrade --auto-upgrade 0");
+		$acmesh_result = \Froxlor\FileDir::safe_exec(self::getAcmeSh() . " --upgrade --auto-upgrade 0");
 		// check for activated cron
-		$acmesh_result2 = \Froxlor\FileDir::safe_exec(self::$acmesh . " --install-cronjob");
+		$acmesh_result2 = \Froxlor\FileDir::safe_exec(self::getAcmeSh() . " --install-cronjob");
 		FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, "Checking for LetsEncrypt client upgrades before renewing certificates:\n" . implode("\n", $acmesh_result) . "\n" . implode("\n", $acmesh_result2));
 	}
 }
