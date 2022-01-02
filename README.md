@@ -1,6 +1,6 @@
 [![Froxlor-CI](https://github.com/Froxlor/Froxlor/actions/workflows/build-mariadb.yml/badge.svg?branch=master)](https://github.com/Froxlor/Froxlor/actions/workflows/build-mariadb.yml)
 [![Froxlor-CI](https://github.com/Froxlor/Froxlor/actions/workflows/build-mysql.yml/badge.svg?branch=master)](https://github.com/Froxlor/Froxlor/actions/workflows/build-mysql.yml)
-[![Discord](https://badgen.net/badge/icon/discord?icon=discord&label)](https://discord.gg/7dqQQNbrNh)
+[![Discord](https://badgen.net/badge/icon/discord?icon=discord&label)](https://discord.froxlor.org)
 
 # Froxlor
 
@@ -29,7 +29,7 @@ You may find help in the following places:
 
 ### Discord
 
-The froxlor community discord server can be found here: https://discord.gg/7dqQQNbrNh
+The froxlor community discord server can be found here: https://discord.froxlor.org
 
 ### IRC
 
