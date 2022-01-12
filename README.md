@@ -1,6 +1,6 @@
 [![Froxlor-CI](https://github.com/Froxlor/Froxlor/actions/workflows/build-mariadb.yml/badge.svg?branch=master)](https://github.com/Froxlor/Froxlor/actions/workflows/build-mariadb.yml)
 [![Froxlor-CI](https://github.com/Froxlor/Froxlor/actions/workflows/build-mysql.yml/badge.svg?branch=master)](https://github.com/Froxlor/Froxlor/actions/workflows/build-mysql.yml)
-[![Gitter](https://badges.gitter.im/Froxlor/community.svg)](https://gitter.im/Froxlor/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+[![Discord](https://badgen.net/badge/icon/discord?icon=discord&label)](https://discord.froxlor.org)
 
 # Froxlor
 
@@ -26,6 +26,10 @@ https://github.com/Froxlor/Froxlor/wiki/Install-froxlor-from-tarball
 ## Help
 
 You may find help in the following places:
+
+### Discord
+
+The froxlor community discord server can be found here: https://discord.froxlor.org
 
 ### IRC
 

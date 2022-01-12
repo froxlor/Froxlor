@@ -133,6 +133,15 @@ return array(
 					'cronmodule' => 'froxlor/letsencrypt',
 					'save_method' => 'storeSettingField'
 				),
+				'system_acmeshpath' => array(
+					'label' => $lng['serversettings']['acmeshpath'],
+					'settinggroup' => 'system',
+					'varname' => 'acmeshpath',
+					'type' => 'string',
+					'string_type' => 'file',
+					'default' => '/root/.acme.sh/acme.sh',
+					'save_method' => 'storeSettingField'
+				),
 				'system_letsencryptacmeconf' => array(
 					'label' => $lng['serversettings']['letsencryptacmeconf'],
 					'settinggroup' => 'system',

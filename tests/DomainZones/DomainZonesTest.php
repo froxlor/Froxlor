@@ -21,6 +21,7 @@ class DomainZonesTest extends TestCase
 		global $admin_userdata;
 
 		Settings::Set('system.dnsenabled', 1, true);
+		Settings::Set('system.mxservers', 'mx.hostname.tld', true);
 
 		// get customer
 		$json_result = Customers::getLocal($admin_userdata, array(
@@ -35,6 +36,9 @@ class DomainZonesTest extends TestCase
 		$result = json_decode($json_result, true)['data'];
 		$this->assertTrue(count($result) > 1);
 		$this->assertEquals('$ORIGIN test2.local.', $result[1]);
+		$resstr = preg_replace('/\s+/', '', $result[count($result)-2]);
+		$against = preg_replace('/\s+/', '', '@ 604800  IN      MX      10      mx.hostname.tld.');
+		$this->assertEquals($against, $resstr);
 	}
 
 	/**

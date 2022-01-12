@@ -682,6 +682,7 @@ opcache.interned_strings_buffer'),
 	('system', 'createstdsubdom_default', '1'),
 	('system', 'froxlorusergroup', ''),
 	('system', 'froxlorusergroup_gid', ''),
+	('system', 'acmeshpath', '/root/.acme.sh/acme.sh'),
 	('api', 'enabled', '0'),
 	('2fa', 'enabled', '1'),
 	('panel', 'decimal_places', '4'),
@@ -722,8 +723,8 @@ opcache.interned_strings_buffer'),
 	('panel', 'logo_image_login', ''),
 	('panel', 'logo_overridetheme', '0'),
 	('panel', 'logo_overridecustom', '0'),
-	('panel', 'version', '0.10.31'),
-	('panel', 'db_version', '202109040');
+	('panel', 'version', '0.10.32'),
+	('panel', 'db_version', '202112310');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
