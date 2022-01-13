@@ -2341,12 +2341,6 @@ ControlsLog			/var/log/proftpd/controls.log
 			</service>
 			<!-- System tools/services -->
 			<service type="system" title="{{lng.admin.configfiles.etc}}">
-				<!-- Cronjob -->
-				<daemon name="cron" title="Cronjob for froxlor"
-					mandatory="true">
-					<command><![CDATA[/usr/bin/php <BASE_PATH>scripts/froxlor_master_cronjob.php --run-task 99]]></command>
-					<command><![CDATA[{{settings.system.crondreload}}]]></command>
-				</daemon>
 				<!-- AWstats -->
 				<daemon name="awstats"
 					title="Awstats (webalizer alternative)">
@@ -2483,6 +2477,12 @@ aliases:	files nisplus
 ]]>
 						</content>
 					</file>
+				</daemon>
+				<!-- Cronjob -->
+				<daemon name="cron" title="Cronjob for froxlor"
+					mandatory="true">
+					<command><![CDATA[/usr/bin/php <BASE_PATH>scripts/froxlor_master_cronjob.php --run-task 99]]></command>
+					<command><![CDATA[{{settings.system.crondreload}}]]></command>
 				</daemon>
 			</service>
 		</services>
