@@ -178,9 +178,9 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			$custom_config = $this->getParam('custom_config', true, '');
 
 			// validation
-			$description = \Froxlor\Validate\Validate::validate($description, 'description', '', '', array(), true);
+			$description = \Froxlor\Validate\Validate::validate($description, 'description', \Froxlor\Validate\Validate::REGEX_DESC_TEXT, '', array(), true);
 			$reload_cmd = \Froxlor\Validate\Validate::validate($reload_cmd, 'reload_cmd', '', '', array(), true);
-			$config_dir = \Froxlor\Validate\Validate::validate($config_dir, 'config_dir', '', '', array(), true);
+			$config_dir = \Froxlor\Validate\Validate::validate($config_dir, 'config_dir', \Froxlor\Validate\Validate::REGEX_DIR, '', array(), true);
 			if (! in_array($pmanager, array(
 				'static',
 				'dynamic',
@@ -299,9 +299,9 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			$custom_config = $this->getParam('custom_config', true, $result['custom_config']);
 
 			// validation
-			$description = \Froxlor\Validate\Validate::validate($description, 'description', '', '', array(), true);
+			$description = \Froxlor\Validate\Validate::validate($description, 'description', \Froxlor\Validate\Validate::REGEX_DESC_TEXT, '', array(), true);
 			$reload_cmd = \Froxlor\Validate\Validate::validate($reload_cmd, 'reload_cmd', '', '', array(), true);
-			$config_dir = \Froxlor\Validate\Validate::validate($config_dir, 'config_dir', '', '', array(), true);
+			$config_dir = \Froxlor\Validate\Validate::validate($config_dir, 'config_dir', \Froxlor\Validate\Validate::REGEX_DIR, '', array(), true);
 			if (! in_array($pmanager, array(
 				'static',
 				'dynamic',

@@ -21,7 +21,7 @@ Developed by experienced server administrators, this panel simplifies the effort
 9. Have fun!
 
 ### Detailed installation
-https://github.com/Froxlor/Froxlor/wiki/Install-froxlor-from-tarball
+https://docs.froxlor.org/general/installation/index.html
 
 ## Help
 
@@ -42,12 +42,12 @@ The community is located on https://forum.froxlor.org/
 
 ### Wiki
 
-More documentation may be found in the froxlor - wiki:
-https://github.com/Froxlor/Froxlor/wiki
+More documentation may be found in the froxlor - documentation:
+https://docs.froxlor.org/
 
 ## License
 
-May be found in COPYING
+May be found in [COPYING](COPYING)
 
 ## Downloads
 
@@ -56,7 +56,7 @@ https://files.froxlor.org/releases/froxlor-latest.tar.gz [MD5](https://files.fro
 
 ### Debian repository
 
-[HowTo](https://github.com/Froxlor/Froxlor/wiki/Install-froxlor-on-debian)
+[HowTo](https://docs.froxlor.org/general/installation/aptpackage.html)
 
 ```
 apt-get -y install apt-transport-https lsb-release ca-certificates
@@ -66,7 +66,7 @@ echo "deb https://deb.froxlor.org/debian $(lsb_release -sc) main" > /etc/apt/sou
 
 ### Ubuntu repository
 
-[HowTo](https://github.com/Froxlor/Froxlor/wiki/Install-froxlor-on-ubuntu)
+[HowTo](https://docs.froxlor.org/general/installation/aptpackage.html)
 
 ```
 apt-get -y install apt-transport-https lsb-release ca-certificates

@@ -79,7 +79,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 			// validation
 			$password = \Froxlor\Validate\Validate::validate($password, 'password', '', '', array(), true);
 			$password = \Froxlor\System\Crypt::validatePassword($password, true);
-			$description = \Froxlor\Validate\Validate::validate(trim($description), 'description', '', '', array(), true);
+			$description = \Froxlor\Validate\Validate::validate(trim($description), 'description', \Froxlor\Validate\Validate::REGEX_DESC_TEXT, '', array(), true);
 
 			if (Settings::Get('system.allow_customer_shell') == '1') {
 				$shell = \Froxlor\Validate\Validate::validate(trim($shell), 'shell', '', '', array(), true);
@@ -396,7 +396,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 
 		// validation
 		$password = \Froxlor\Validate\Validate::validate($password, 'password', '', '', array(), true);
-		$description = \Froxlor\Validate\Validate::validate(trim($description), 'description', '', '', array(), true);
+		$description = \Froxlor\Validate\Validate::validate(trim($description), 'description', \Froxlor\Validate\Validate::REGEX_DESC_TEXT, '', array(), true);
 
 		if (Settings::Get('system.allow_customer_shell') == '1') {
 			$shell = \Froxlor\Validate\Validate::validate(trim($shell), 'shell', '', '', array(), true);

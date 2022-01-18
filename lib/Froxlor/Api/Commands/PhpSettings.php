@@ -266,7 +266,7 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			$allow_all_customers = $this->getBoolParam('allow_all_customers', true, 0);
 
 			// validation
-			$description = \Froxlor\Validate\Validate::validate($description, 'description', '', '', array(), true);
+			$description = \Froxlor\Validate\Validate::validate($description, 'description', \Froxlor\Validate\Validate::REGEX_DESC_TEXT, '', array(), true);
 			$phpsettings = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $phpsettings), 'phpsettings', '/^[^\0]*$/', '', array(), true);
 			if (Settings::Get('system.mod_fcgid') == 1) {
 				$binary = \Froxlor\FileDir::makeCorrectFile(\Froxlor\Validate\Validate::validate($binary, 'binary', '', '', array(), true));
@@ -466,7 +466,7 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			$allow_all_customers = $this->getBoolParam('allow_all_customers', true, 0);
 
 			// validation
-			$description = \Froxlor\Validate\Validate::validate($description, 'description', '', '', array(), true);
+			$description = \Froxlor\Validate\Validate::validate($description, 'description', \Froxlor\Validate\Validate::REGEX_DESC_TEXT, '', array(), true);
 			$phpsettings = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $phpsettings), 'phpsettings', '/^[^\0]*$/', '', array(), true);
 			if (Settings::Get('system.mod_fcgid') == 1) {
 				$binary = \Froxlor\FileDir::makeCorrectFile(\Froxlor\Validate\Validate::validate($binary, 'binary', '', '', array(), true));

@@ -60,7 +60,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		// validation
 		$password = \Froxlor\Validate\Validate::validate($password, 'password', '', '', array(), true);
 		$password = \Froxlor\System\Crypt::validatePassword($password, true);
-		$databasedescription = \Froxlor\Validate\Validate::validate(trim($databasedescription), 'description', '', '', array(), true);
+		$databasedescription = \Froxlor\Validate\Validate::validate(trim($databasedescription), 'description', \Froxlor\Validate\Validate::REGEX_DESC_TEXT, '', array(), true);
 		if (!empty($databasename)) {
 			$databasename = \Froxlor\Validate\Validate::validate(trim($databasename), 'database_name', '/^[A-Za-z0-9][A-Za-z0-9\-_]+$/i', '', array(), true);
 		}
@@ -322,7 +322,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 
 		// validation
 		$password = \Froxlor\Validate\Validate::validate($password, 'password', '', '', array(), true);
-		$databasedescription = \Froxlor\Validate\Validate::validate(trim($databasedescription), 'description', '', '', array(), true);
+		$databasedescription = \Froxlor\Validate\Validate::validate(trim($databasedescription), 'description', \Froxlor\Validate\Validate::REGEX_DESC_TEXT, '', array(), true);
 
 		if ($password != '') {
 			// validate password
