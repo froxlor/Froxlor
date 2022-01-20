@@ -4,6 +4,8 @@ namespace Froxlor\System;
 use Froxlor\Settings;
 use Froxlor\Database\Database;
 
+use Froxlor\Cron\TaskId;
+
 class Cronjob
 {
 
@@ -109,13 +111,13 @@ class Cronjob
 			INSERT INTO `" . TABLE_PANEL_TASKS . "` SET `type` = :type, `data` = :data
 		");
 
-		if ($type == '1' || $type == '3' || $type == '4' || $type == '5' || $type == '10' || $type == '99') {
+		if ($type == TaskId::REBUILD_VHOST || $type == '3' || $type == TaskId::REBUILD_DNS || $type == TaskId::CREATE_FTP || $type == TaskId::CREATE_QUOTA || $type == TaskId::REBUILD_CRON) {
 			// 4 = bind -> if bind disabled -> no task
-			if ($type == '4' && Settings::Get('system.bind_enable') == '0') {
+			if ($type == TaskId::REBUILD_DNS && Settings::Get('system.bind_enable') == '0') {
 				return;
 			}
 			// 10 = quota -> if quota disabled -> no task
-			if ($type == '10' && Settings::Get('system.diskquota_enabled') == '0') {
+			if ($type == TaskId::CREATE_QUOTA && Settings::Get('system.diskquota_enabled') == '0') {
 				return;
 			}
 
@@ -132,7 +134,7 @@ class Cronjob
 				'type' => $type,
 				'data' => ''
 			));
-		} elseif ($type == '2' && $param1 != '' && $param2 != '' && $param3 != '' && ($param4 == 0 || $param4 == 1)) {
+		} elseif ($type == TaskId::CREATE_HOME && $param1 != '' && $param2 != '' && $param3 != '' && ($param4 == 0 || $param4 == 1)) {
 			$data = array();
 			$data['loginname'] = $param1;
 			$data['uid'] = $param2;
@@ -140,56 +142,56 @@ class Cronjob
 			$data['store_defaultindex'] = $param4;
 			$data = json_encode($data);
 			Database::pexecute($ins_stmt, array(
-				'type' => '2',
+				'type' => TaskId::CREATE_HOME,
 				'data' => $data
 			));
-		} elseif ($type == '6' && $param1 != '') {
+		} elseif ($type == TaskId::DELETE_CUSTOMER_FILES && $param1 != '') {
 			$data = array();
 			$data['loginname'] = $param1;
 			$data = json_encode($data);
 			Database::pexecute($ins_stmt, array(
-				'type' => '6',
+				'type' => TaskId::DELETE_CUSTOMER_FILES,
 				'data' => $data
 			));
-		} elseif ($type == '7' && $param1 != '' && $param2 != '') {
+		} elseif ($type == TaskId::DELETE_EMAIL_DATA && $param1 != '' && $param2 != '') {
 			$data = array();
 			$data['loginname'] = $param1;
 			$data['email'] = $param2;
 			$data = json_encode($data);
 			Database::pexecute($ins_stmt, array(
-				'type' => '7',
+				'type' => TaskId::DELETE_EMAIL_DATA,
 				'data' => $data
 			));
-		} elseif ($type == '8' && $param1 != '' && $param2 != '') {
+		} elseif ($type == TaskId::DELETE_FTP_DATA && $param1 != '' && $param2 != '') {
 			$data = array();
 			$data['loginname'] = $param1;
 			$data['homedir'] = $param2;
 			$data = json_encode($data);
 			Database::pexecute($ins_stmt, array(
-				'type' => '8',
+				'type' => TaskId::DELETE_FTP_DATA,
 				'data' => $data
 			));
-		} elseif ($type == '11' && $param1 != '' && Settings::Get('system.bind_enable') == '1' && Settings::Get('system.dns_server') == 'PowerDNS') {
+		} elseif ($type == TaskId::DELETE_DOMAIN_PDNS && $param1 != '' && Settings::Get('system.bind_enable') == '1' && Settings::Get('system.dns_server') == 'PowerDNS') {
 			// -> if bind disabled or dns-server not PowerDNS -> no task
 			$data = array();
 			$data['domain'] = $param1;
 			$data = json_encode($data);
 			Database::pexecute($ins_stmt, array(
-				'type' => '11',
+				'type' => TaskId::DELETE_DOMAIN_PDNS,
 				'data' => $data
 			));
-		} elseif ($type == '12' && $param1 != '') {
+		} elseif ($type == TaskId::DELETE_DOMAIN_SSL && $param1 != '') {
 			$data = array();
 			$data['domain'] = $param1;
 			$data = json_encode($data);
 			Database::pexecute($ins_stmt, array(
-				'type' => '12',
+				'type' => TaskId::DELETE_DOMAIN_SSL,
 				'data' => $data
 			));
-		} elseif ($type == '20' && is_array($param1)) {
+		} elseif ($type == TaskId::CREATE_CUSTOMER_BACKUP && is_array($param1)) {
 			$data = json_encode($param1);
 			Database::pexecute($ins_stmt, array(
-				'type' => '20',
+				'type' => TaskId::CREATE_CUSTOMER_BACKUP,
 				'data' => $data
 			));
 		}
@@ -248,57 +250,23 @@ class Cronjob
 				$row['data'] = json_decode($row['data'], true);
 			}
 
-			// rebuilding webserver-configuration
-			if ($row['type'] == '1') {
-				$task_desc = $lng['tasks']['rebuild_webserverconfig'];
-			} elseif ($row['type'] == '2') {
-				// adding new user/
-				$loginname = '';
+			$task_id = $row['type'];
+			if (\Froxlor\Cron\TaskId::isValid($task_id)) {
+				$task_constname = \Froxlor\Cron\TaskId::convertToConstant($task_id);
+				$task_desc = isset($lng['tasks'][$task_constname]) ? $lng['tasks'][$task_constname] : $task_constname;
+				
 				if (is_array($row['data'])) {
-					$loginname = $row['data']['loginname'];
+					// task includes loginname
+					if (isset($row['data']['loginname'])) {
+						$loginname = $row['data']['loginname'];
+						$task_desc = str_replace('%loginname%', $loginname, $task_desc);
+					}
+					// task includes domain data
+					if (isset($row['data']['domain'])) {
+						$domain = $row['data']['domain'];
+						$task_desc = str_replace('%domain%', $domain, $task_desc);
+					}
 				}
-				$task_desc = $lng['tasks']['adding_customer'];
-				$task_desc = str_replace('%loginname%', $loginname, $task_desc);
-			} elseif ($row['type'] == '4') {
-				// rebuilding bind-configuration
-				$task_desc = $lng['tasks']['rebuild_bindconfig'];
-			} elseif ($row['type'] == '5') {
-				// creating ftp-user directory
-				$task_desc = $lng['tasks']['creating_ftpdir'];
-			} elseif ($row['type'] == '6') {
-				// deleting user-files
-				$loginname = '';
-				if (is_array($row['data'])) {
-					$loginname = $row['data']['loginname'];
-				}
-				$task_desc = $lng['tasks']['deleting_customerfiles'];
-				$task_desc = str_replace('%loginname%', $loginname, $task_desc);
-			} elseif ($row['type'] == '7') {
-				// deleting email-account
-				$task_desc = $lng['tasks']['remove_emailacc_files'];
-			} elseif ($row['type'] == '8') {
-				// deleting ftp-account
-				$task_desc = $lng['tasks']['remove_ftpacc_files'];
-			} elseif ($row['type'] == '10') {
-				// Set FS - quota
-				$task_desc = $lng['tasks']['diskspace_set_quota'];
-			} elseif ($row['type'] == '11') {
-				// remove domain from pdns database if used
-				$task_desc = sprintf($lng['tasks']['remove_pdns_domain'], $row['data']['domain']);
-			} elseif ($row['type'] == '12') {
-				// remove domains ssl files
-				$task_desc = sprintf($lng['tasks']['remove_ssl_domain'], $row['data']['domain']);
-			} elseif ($row['type'] == '20') {
-				// deleting user-files
-				$loginname = '';
-				if (is_array($row['data'])) {
-					$loginname = $row['data']['loginname'];
-				}
-				$task_desc = $lng['tasks']['backup_customerfiles'];
-				$task_desc = str_replace('%loginname%', $loginname, $task_desc);
-			} elseif ($row['type'] == '99') {
-				// re-generating of cron.d-file
-				$task_desc = $lng['tasks']['regenerating_crond'];
 			} else {
 				// unknown
 				$task_desc = "ERROR: Unknown task type '" . $row['type'] . "'";
