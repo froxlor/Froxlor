@@ -30,6 +30,7 @@
       <directory>tests/PhpAndFpm</directory>
       <directory>tests/Traffic</directory>
       <directory>tests/Froxlor</directory>
+      <directory>tests/Cron</directory>
     </testsuite>
   </testsuites>
   <logging>
