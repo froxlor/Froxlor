@@ -359,9 +359,9 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				\Froxlor\Domain\Domain::addRedirectToDomain($subdomain_id, $redirectcode);
 			}
 
-			\Froxlor\System\Cronjob::inserttask('1');
+			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_VHOST);
 			// Using nameserver, insert a task which rebuilds the server config
-			\Froxlor\System\Cronjob::inserttask('4');
+			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_DNS);
 
 			Customers::increaseUsage($customer['customerid'], 'subdomains_used');
 
@@ -733,11 +733,11 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 					'id' => $id
 				), true, true);
 				// remove domain from acme.sh / lets encrypt if used
-				\Froxlor\System\Cronjob::inserttask('12', $result['domain']);
+				\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::DELETE_DOMAIN_SSL, $result['domain']);
 			}
 
-			\Froxlor\System\Cronjob::inserttask('1');
-			\Froxlor\System\Cronjob::inserttask('4');
+			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_VHOST);
+			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_DNS);
 			$idna_convert = new \Froxlor\Idna\IdnaWrapper();
 			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] edited domain '" . $idna_convert->decode($result['domain']) . "'");
 		}
@@ -1019,13 +1019,13 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			'domainid' => $id
 		), true, true);
 
-		\Froxlor\System\Cronjob::inserttask('1');
+		\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_VHOST);
 		// Using nameserver, insert a task which rebuilds the server config
-		\Froxlor\System\Cronjob::inserttask('4');
+		\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_DNS);
 		// remove domains DNS from powerDNS if used, #581
-		\Froxlor\System\Cronjob::inserttask('11', $result['domain']);
+		\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::DELETE_DOMAIN_PDNS, $result['domain']);
 		// remove domain from acme.sh / lets encrypt if used
-		\Froxlor\System\Cronjob::inserttask('12', $result['domain']);
+		\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::DELETE_DOMAIN_SSL, $result['domain']);
 
 		// reduce subdomain-usage-counter
 		Customers::decreaseUsage($customer['customerid'], 'subdomains_used');

@@ -229,7 +229,7 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			Database::pexecute($ins_stmt, $ins_data);
 			$id = Database::lastInsertId();
 
-			\Froxlor\System\Cronjob::inserttask('1');
+			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_VHOST);
 			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] fpm-daemon with description '" . $description . "' has been created by '" . $this->getUserDetail('loginname') . "'");
 			$result = $this->apiCall('FpmDaemons.get', array(
 				'id' => $id
@@ -351,7 +351,7 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			);
 			Database::pexecute($upd_stmt, $upd_data, true, true);
 
-			\Froxlor\System\Cronjob::inserttask('1');
+			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_VHOST);
 			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] fpm-daemon with description '" . $description . "' has been updated by '" . $this->getUserDetail('loginname') . "'");
 			$result = $this->apiCall('FpmDaemons.get', array(
 				'id' => $id
@@ -400,7 +400,7 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				'id' => $id
 			), true, true);
 
-			\Froxlor\System\Cronjob::inserttask('1');
+			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_VHOST);
 			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] fpm-daemon setting '" . $result['description'] . "' has been deleted by '" . $this->getUserDetail('loginname') . "'");
 			return $this->response(200, "successful", $result);
 		}

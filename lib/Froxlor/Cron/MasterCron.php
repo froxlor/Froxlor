@@ -63,13 +63,13 @@ class MasterCron extends \Froxlor\Cron\FroxlorCron
 				if (strtolower($argv[$x]) == '--force') {
 					// really force re-generating of config-files by
 					// inserting task 1
-					\Froxlor\System\Cronjob::inserttask('1');
+					\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_VHOST);
 					// bind (if enabled, \Froxlor\System\Cronjob::inserttask() checks this)
-					\Froxlor\System\Cronjob::inserttask('4');
+					\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_DNS);
 					// set quotas (if enabled)
-					\Froxlor\System\Cronjob::inserttask('10');
+					\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::CREATE_QUOTA);
 					// also regenerate cron.d-file
-					\Froxlor\System\Cronjob::inserttask('99');
+					\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_CRON);
 					array_push($jobs_to_run, 'tasks');
 					define('CRON_IS_FORCED', 1);
 				} elseif (strtolower($argv[$x]) == '--debug') {

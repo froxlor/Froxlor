@@ -499,7 +499,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 		}
 
 		if ($delete_userfiles) {
-			\Froxlor\System\Cronjob::inserttask('7', $customer['loginname'], $result['email_full']);
+			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::DELETE_EMAIL_DATA, $customer['loginname'], $result['email_full']);
 		}
 
 		// decrease usage for customer

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Froxlor\Cron;
 
@@ -64,7 +64,7 @@ class TaskId {
 	/**
 	* TYPE=99 REGENERATE CRON
 	 */
-	const REBUILD_CRON = 99;	
+	const REBUILD_CRON = 99;
 
 	/**
 	 * Return if a cron task id is valid

@@ -123,12 +123,12 @@ class Froxlor extends \Froxlor\Api\ApiCommand
 			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "User " . $this->getUserDetail('loginname') . " imported settings");
 			try {
 				\Froxlor\SImExporter::import($json_str);
-				\Froxlor\System\Cronjob::inserttask('1');
-				\Froxlor\System\Cronjob::inserttask('10');
+				\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_VHOST);
+				\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::CREATE_QUOTA);
 				// Using nameserver, insert a task which rebuilds the server config
-				\Froxlor\System\Cronjob::inserttask('4');
+				\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_DNS);
 				// cron.d file
-				\Froxlor\System\Cronjob::inserttask('99');
+				\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_CRON);
 				return $this->response(200, "successful", true);
 			} catch (\Exception $e) {
 				throw new \Exception($e->getMessage(), 406);

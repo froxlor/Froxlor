@@ -32,7 +32,7 @@ class TaskIDTest extends TestCase
 
 		'CREATE_CUSTOMER_BACKUP' => 20,
 
-		'REBUILD_CRON' => 99,	
+		'REBUILD_CRON' => 99,
 	);
 
 	public function testValidTaskId()
@@ -62,12 +62,10 @@ class TaskIDTest extends TestCase
 	}
 
 	public function testIdMappingCorrect() {
-
 		foreach($this->fixedids as $name => $expected) {
 			$result = constant("\Froxlor\Cron\TaskId::$name");
 			$this->assertEquals( $expected, $result, "Task $name has bad mapping");
 		}
-		
 	}
 
 	public function testConvertToConstant() {
@@ -75,6 +73,9 @@ class TaskIDTest extends TestCase
 			$result = TaskId::convertToConstant($taskid);
 			$this->assertEquals( $name, $result, "Task $name has bad mapping from id to name");
 		}
+
+		$unknownIDResult = TaskId::isValid(10101010);
+		$this->assertFalse($unknownIDResult);
 	}
 }
 
