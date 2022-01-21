@@ -66,11 +66,11 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 			'page' => $page
 		), $_part, $settings_all, $settings_part, $only_enabledisable)) {
 			$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "rebuild configfiles due to changed setting");
-			\Froxlor\System\Cronjob::inserttask('1');
+			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_VHOST);
 			// Using nameserver, insert a task which rebuilds the server config
-			\Froxlor\System\Cronjob::inserttask('4');
+			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_DNS);
 			// cron.d file
-			\Froxlor\System\Cronjob::inserttask('99');
+			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_CRON);
 
 			\Froxlor\UI\Response::standard_success('settingssaved', '', array(
 				'filename' => $filename,
@@ -146,12 +146,12 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 
 		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "rebuild configfiles");
-		\Froxlor\System\Cronjob::inserttask('1');
-		\Froxlor\System\Cronjob::inserttask('10');
+		\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_VHOST);
+		\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::CREATE_QUOTA);
 		// Using nameserver, insert a task which rebuilds the server config
-		\Froxlor\System\Cronjob::inserttask('4');
+		\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_DNS);
 		// cron.d file
-		\Froxlor\System\Cronjob::inserttask('99');
+		\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_CRON);
 
 		\Froxlor\UI\Response::standard_success('rebuildingconfigs', '', array(
 			'filename' => 'admin_index.php'

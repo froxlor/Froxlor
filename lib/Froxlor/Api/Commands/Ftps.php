@@ -234,7 +234,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 				}
 
 				$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] added ftp-account '" . $username . " (" . $path . ")'");
-				\Froxlor\System\Cronjob::inserttask(5);
+				\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::CREATE_FTP);
 
 				if ($sendinfomail == 1) {
 					$replace_arr = array(
@@ -450,7 +450,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 		}
 		// it's the task for "new ftp" but that will
 		// create all directories and correct their permissions
-		\Froxlor\System\Cronjob::inserttask(5);
+		\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::CREATE_FTP);
 
 		$stmt = Database::prepare("
 			UPDATE `" . TABLE_FTP_USERS . "`
@@ -628,11 +628,11 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 
 		// refs #293
 		if ($delete_userfiles == 1) {
-			\Froxlor\System\Cronjob::inserttask('8', $customer_data['loginname'], $result['homedir']);
+			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::DELETE_FTP_DATA, $customer_data['loginname'], $result['homedir']);
 		} else {
 			if (Settings::Get('system.nssextrausers') == 1) {
 				// this is used so that the libnss-extrausers cron is fired
-				\Froxlor\System\Cronjob::inserttask(5);
+				\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::CREATE_FTP);
 			}
 		}
 

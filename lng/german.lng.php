@@ -928,11 +928,11 @@ $lng['update']['noupdatesavail'] = '<strong>Ihre Froxlor-Version ist aktuell.</s
 $lng['admin']['specialsettingsforsubdomains'] = 'Übernehme Einstellungen für alle Subdomains (*.beispiel.de)';
 $lng['serversettings']['specialsettingsforsubdomains']['description'] = 'Wenn ja, werden die individuellen Einstellungen für alle Subdomains übernommen.<br />Wenn nein, werden Subdomain-Specialsettings entfernt.';
 $lng['tasks']['outstanding_tasks'] = 'Ausstehende Cron-Aufgaben';
-$lng['tasks']['rebuild_webserverconfig'] = 'Neuerstellung der Webserver-Konfiguration';
-$lng['tasks']['adding_customer'] = 'Erstelle neuen Kunden %loginname%';
-$lng['tasks']['rebuild_bindconfig'] = 'Neuerstellung der Bind-Konfiguration';
-$lng['tasks']['creating_ftpdir'] = 'Erstelle Verzeichnis für neuen FTP-Benutzer';
-$lng['tasks']['deleting_customerfiles'] = 'Löschen von Kunden-Dateien %loginname%';
+$lng['tasks']['REBUILD_VHOST'] = 'Neuerstellung der Webserver-Konfiguration';
+$lng['tasks']['CREATE_HOME'] = 'Erstelle neuen Kunden %loginname%';
+$lng['tasks']['REBUILD_DNS'] = 'Neuerstellung der Bind-Konfiguration';
+$lng['tasks']['CREATE_FTP'] = 'Erstelle Verzeichnis für neuen FTP-Benutzer';
+$lng['tasks']['DELETE_CUSTOMER_FILES'] = 'Löschen von Kunden-Dateien %loginname%';
 $lng['tasks']['noneoutstanding'] = 'Zur Zeit gibt es keine ausstehenden Aufgaben für Froxlor';
 
 // ADDED IN FROXLOR 0.9.1
@@ -1252,7 +1252,7 @@ $lng['serversettings']['diskquota_enabled'] = 'Quota aktiviert?';
 $lng['serversettings']['diskquota_repquota_path']['description'] = 'Pfad zu repquota';
 $lng['serversettings']['diskquota_quotatool_path']['description'] = 'Pfad zu quotatool';
 $lng['serversettings']['diskquota_customer_partition']['description'] = 'Partition, auf welcher die Kundendaten liegen';
-$lng['tasks']['diskspace_set_quota'] = 'Quota auf dem Dateisystem setzen';
+$lng['tasks']['CREATE_QUOTA'] = 'Quota auf dem Dateisystem setzen';
 $lng['error']['session_timeout'] = 'Wert zu niedrig';
 $lng['error']['session_timeout_desc'] = 'Der Wert der Session-Timeout sollte nicht unter einer Minute liegen.';
 
@@ -1281,7 +1281,7 @@ $lng['admin']['speciallogwarning'] = 'ACHTUNG: Durch diese Einstellungen werden 
 // ADDED IN 0.9.28-svn2
 $lng['serversettings']['vmail_maildirname']['title'] = 'Maildir-(Unter-)Ordner';
 $lng['serversettings']['vmail_maildirname']['description'] = 'Der Maildir-Ordner innerhalb des Kontos des Benutzers (normalerweise \'Maildir\', in manchen Fällen auch \'.maildir\'). Sollen die E-Mails direkt in das Verzeichnis, diese Option leer lassen.';
-$lng['tasks']['remove_emailacc_files'] = 'E-Mail-Dateien des Kunden löschen';
+$lng['tasks']['DELETE_EMAIL_DATA'] = 'E-Mail-Dateien des Kunden löschen';
 
 // ADDED IN 0.9.28-svn5
 $lng['error']['operationnotpermitted'] = 'Diese Aktion ist nicht erlaubt!';
@@ -1411,8 +1411,8 @@ $lng['panel']['ftpdesc'] = 'FTP-Beschreibung';
 $lng['admin']['cronsettings'] = 'Cronjob-Einstellungen';
 $lng['serversettings']['system_cronconfig']['title'] = 'Cron-Konfigurationsdatei';
 $lng['serversettings']['system_cronconfig']['description'] = 'Pfad zur Konfigurationsdatei des Cron-Dienstes. Diese Datei wird von Froxlor automatisch aktualisiert.<br />Hinweis: Bitte verwenden Sie <strong>exakt</strong> die gleiche Datei wie für den Froxlor-Haupt-Cronjob (Standard: /etc/cron.d/froxlor)!<br><br>Wird <b>FreeBSD</b> verwendet, sollte hier <i>/etc/crontab</i> angegeben werden!';
-$lng['tasks']['remove_ftpacc_files'] = 'Kunden FTP-Konto Dateien löschen';
-$lng['tasks']['regenerating_crond'] = 'Neuerstellung der cron.d-Datei';
+$lng['tasks']['DELETE_FTP_DATA'] = 'Kunden FTP-Konto Dateien löschen';
+$lng['tasks']['REBUILD_CRON'] = 'Neuerstellung der cron.d-Datei';
 $lng['serversettings']['system_crondreload']['title'] = 'Cron-Daemon reload Befehl';
 $lng['serversettings']['system_crondreload']['description'] = 'Geben Sie hier den Befehl zum Neuladen des Cron-Daemons an';
 $lng['admin']['integritycheck'] = 'Datenbankpr&uuml;fung';
@@ -1544,7 +1544,7 @@ $lng['serversettings']['backupenabled']['title'] = "Backup für Kunden aktiviere
 $lng['serversettings']['backupenabled']['description'] = "Wenn dies aktiviert ist, kann der Kunde Sicherungen planen (cron-backup) welche ein Archiv in sein Heimatverzeichnis ablegt (Unterordner vom Kunden wählbar)";
 $lng['extras']['path_protection_label'] = '<strong class="red">Wichtig</strong>';
 $lng['extras']['path_protection_info'] = '<strong class="red">Wir raten dringend dazu den angegebenen Pfad zu schützen, siehe "Extras" -> "Verzeichnisschutz"</strong>';
-$lng['tasks']['backup_customerfiles'] = 'Datensicherung für Kunde %loginname%';
+$lng['tasks']['CREATE_CUSTOMER_BACKUP'] = 'Datensicherung für Kunde %loginname%';
 
 $lng['error']['dns_domain_nodns'] = 'DNS ist für diese Domain nicht aktiviert';
 $lng['error']['dns_content_empty'] = 'Keinen Inhalt angegeben';
@@ -1709,8 +1709,8 @@ $lng['panel']['ihave_configured'] = 'Ich habe die Dienste konfiguriert';
 $lng['panel']['system_is_configured'] = 'Das System ist bereits konfiguriert';
 $lng['panel']['settings_before_configuration'] = 'Stelle sicher, dass die Einstellungen angepasst wurden bevor die Dienste konfiguriert werden.';
 $lng['panel']['alternative_cmdline_config'] = 'Alternativ, führe den folgenden Befehl als root-Benutzer auf der Shell aus, um die Dienste automatisch zu konfigurieren.';
-$lng['tasks']['remove_pdns_domain'] = 'Lösche Domain %s von PowerDNS Datenbank';
-$lng['tasks']['remove_ssl_domain'] = 'Lösche SSL Dateien von Domain %s';
+$lng['tasks']['DELETE_DOMAIN_PDNS'] = 'Lösche Domain %domain% von PowerDNS Datenbank';
+$lng['tasks']['DELETE_DOMAIN_SSL'] = 'Lösche SSL Dateien von Domain %domain%';
 $lng['admin']['novhostcontainer'] = '<br><br><small class="red">Keine der IPs und Ports hat die Option "' . $lng['admin']['ipsandports']['create_vhostcontainer'] . '" aktiviert, einige Einstellungen sind daher nicht verfügbar.</small>';
 $lng['serversettings']['errorlog_level']['title'] = 'Ausführlichkeit des Fehlerprotokolls';
 $lng['serversettings']['errorlog_level']['description'] = 'Steuert die Ausführlichkeit des Fehlerprotokolls. Voreinstellung ist "warn" bei Apache und "error" bei Nginx.';

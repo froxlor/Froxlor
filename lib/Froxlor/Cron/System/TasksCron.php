@@ -4,6 +4,8 @@ namespace Froxlor\Cron\System;
 use Froxlor\Database\Database;
 use Froxlor\Settings;
 
+use Froxlor\Cron\TaskId;
+
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2003-2009 the SysCP Team (see authors).
@@ -45,55 +47,55 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 				$row['data'] = json_decode($row['data'], true);
 			}
 
-			if ($row['type'] == '1') {
+			if ($row['type'] == TaskId::REBUILD_VHOST) {
 				/**
 				 * TYPE=1 MEANS TO REBUILD APACHE VHOSTS.CONF
 				 */
 				self::rebuildWebserverConfigs();
-			} elseif ($row['type'] == '2') {
+			} elseif ($row['type'] == TaskId::CREATE_HOME) {
 				/**
 				 * TYPE=2 MEANS TO CREATE A NEW HOME AND CHOWN
 				 */
 				self::createNewHome($row);
-			} elseif ($row['type'] == '4' && (int) Settings::Get('system.bind_enable') != 0) {
+			} elseif ($row['type'] == TaskId::REBUILD_DNS && (int) Settings::Get('system.bind_enable') != 0) {
 				/**
 				 * TYPE=4 MEANS THAT SOMETHING IN THE BIND CONFIG HAS CHANGED.
 				 * REBUILD froxlor_bind.conf IF BIND IS ENABLED
 				 */
 				self::rebuildDnsConfigs();
-			} elseif ($row['type'] == '5') {
+			} elseif ($row['type'] == TaskId::CREATE_FTP) {
 				/**
 				 * TYPE=5 MEANS THAT A NEW FTP-ACCOUNT HAS BEEN CREATED, CREATE THE DIRECTORY
 				 */
 				self::createNewFtpHome($row);
-			} elseif ($row['type'] == '6') {
+			} elseif ($row['type'] == TaskId::DELETE_CUSTOMER_FILES) {
 				/**
 				 * TYPE=6 MEANS THAT A CUSTOMER HAS BEEN DELETED AND THAT WE HAVE TO REMOVE ITS FILES
 				 */
 				self::deleteCustomerData($row);
-			} elseif ($row['type'] == '7') {
+			} elseif ($row['type'] == TaskId::DELETE_EMAIL_DATA) {
 				/**
 				 * TYPE=7 Customer deleted an email account and wants the data to be deleted on the filesystem
 				 */
 				self::deleteEmailData($row);
-			} elseif ($row['type'] == '8') {
+			} elseif ($row['type'] == TaskId::DELETE_FTP_DATA) {
 				/**
 				 * TYPE=8 Customer deleted a ftp account and wants the homedir to be deleted on the filesystem
 				 * refs #293
 				 */
 				self::deleteFtpData($row);
-			} elseif ($row['type'] == '10' && (int) Settings::Get('system.diskquota_enabled') != 0) {
+			} elseif ($row['type'] == TaskId::CREATE_QUOTA && (int) Settings::Get('system.diskquota_enabled') != 0) {
 				/**
 				 * TYPE=10 Set the filesystem - quota
 				 */
 				self::setFilesystemQuota();
-			} elseif ($row['type'] == '11' && Settings::Get('system.dns_server') == 'PowerDNS') {
+			} elseif ($row['type'] == TaskId::DELETE_DOMAIN_PDNS && Settings::Get('system.dns_server') == 'PowerDNS') {
 				/**
 				 * TYPE=11 domain has been deleted, remove from pdns database if used
 				 */
 				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, "Removing PowerDNS entries for domain " . $row['data']['domain']);
 				\Froxlor\Dns\PowerDNS::cleanDomainZone($row['data']['domain']);
-			} elseif ($row['type'] == '12') {
+			} elseif ($row['type'] == TaskId::DELETE_DOMAIN_SSL) {
 				/**
 				 * TYPE=12 domain has been deleted, remove from acme.sh/let's encrypt directory if used
 				 */

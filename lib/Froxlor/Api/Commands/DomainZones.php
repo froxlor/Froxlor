@@ -336,7 +336,7 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			$dom_entries[] = $new_entry;
 
 			// re-generate bind configs
-			\Froxlor\System\Cronjob::inserttask('4');
+			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_DNS);
 
 			$result = $this->apiCall('DomainZones.get', array(
 				'id' => $id
@@ -542,7 +542,7 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 		), true, true);
 		if ($del_stmt->rowCount() > 0) {
 			// re-generate bind configs
-			\Froxlor\System\Cronjob::inserttask('4');
+			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_DNS);
 			return $this->response(200, "successful", true);
 		}
 		return $this->response(304, "successful", true);
