@@ -95,17 +95,13 @@ class Cronjob
 	 * @param
 	 *        	int Type of task
 	 * @param
-	 *        	string Parameter 1
-	 * @param
-	 *        	string Parameter 2
-	 * @param
-	 *        	string Parameter 3
+	 *        	string Parameter (possible to pass multiple times)
+	 *
 	 * @author Florian Lippert <flo@syscp.org>
 	 * @author Froxlor team <team@froxlor.org>
 	 */
-	public static function inserttask($type, $param1 = '', $param2 = '', $param3 = '', $param4 = '')
+	public static function inserttask($type, ...$params)
 	{
-
 		// prepare the insert-statement
 		$ins_stmt = Database::prepare("
 			INSERT INTO `" . TABLE_PANEL_TASKS . "` SET `type` = :type, `data` = :data
@@ -134,62 +130,62 @@ class Cronjob
 				'type' => $type,
 				'data' => ''
 			));
-		} elseif ($type == TaskId::CREATE_HOME && $param1 != '' && $param2 != '' && $param3 != '' && ($param4 == 0 || $param4 == 1)) {
+		} elseif ($type == TaskId::CREATE_HOME && count($params) == 4 && $params[0] != '' && $params[1] != '' && $params[2] != '' && ($params[3] == 0 || $params[3] == 1)) {
 			$data = array();
-			$data['loginname'] = $param1;
-			$data['uid'] = $param2;
-			$data['gid'] = $param3;
-			$data['store_defaultindex'] = $param4;
+			$data['loginname'] = $params[0];
+			$data['uid'] = $params[1];
+			$data['gid'] = $params[2];
+			$data['store_defaultindex'] = $params[3];
 			$data = json_encode($data);
 			Database::pexecute($ins_stmt, array(
 				'type' => TaskId::CREATE_HOME,
 				'data' => $data
 			));
-		} elseif ($type == TaskId::DELETE_CUSTOMER_FILES && $param1 != '') {
+		} elseif ($type == TaskId::DELETE_CUSTOMER_FILES && isset($params[0]) && $params[0] != '') {
 			$data = array();
-			$data['loginname'] = $param1;
+			$data['loginname'] = $params[0];
 			$data = json_encode($data);
 			Database::pexecute($ins_stmt, array(
 				'type' => TaskId::DELETE_CUSTOMER_FILES,
 				'data' => $data
 			));
-		} elseif ($type == TaskId::DELETE_EMAIL_DATA && $param1 != '' && $param2 != '') {
+		} elseif ($type == TaskId::DELETE_EMAIL_DATA && count($params) == 2 && $params[0] != '' && $params[1] != '') {
 			$data = array();
-			$data['loginname'] = $param1;
-			$data['email'] = $param2;
+			$data['loginname'] = $params[0];
+			$data['email'] = $params[1];
 			$data = json_encode($data);
 			Database::pexecute($ins_stmt, array(
 				'type' => TaskId::DELETE_EMAIL_DATA,
 				'data' => $data
 			));
-		} elseif ($type == TaskId::DELETE_FTP_DATA && $param1 != '' && $param2 != '') {
+		} elseif ($type == TaskId::DELETE_FTP_DATA && count($params) == 2 && $params[0] != '' && $params[1] != '') {
 			$data = array();
-			$data['loginname'] = $param1;
-			$data['homedir'] = $param2;
+			$data['loginname'] = $params[0];
+			$data['homedir'] = $params[1];
 			$data = json_encode($data);
 			Database::pexecute($ins_stmt, array(
 				'type' => TaskId::DELETE_FTP_DATA,
 				'data' => $data
 			));
-		} elseif ($type == TaskId::DELETE_DOMAIN_PDNS && $param1 != '' && Settings::Get('system.bind_enable') == '1' && Settings::Get('system.dns_server') == 'PowerDNS') {
+		} elseif ($type == TaskId::DELETE_DOMAIN_PDNS && isset($params[0]) && $params[0] != '' && Settings::Get('system.bind_enable') == '1' && Settings::Get('system.dns_server') == 'PowerDNS') {
 			// -> if bind disabled or dns-server not PowerDNS -> no task
 			$data = array();
-			$data['domain'] = $param1;
+			$data['domain'] = $params[0];
 			$data = json_encode($data);
 			Database::pexecute($ins_stmt, array(
 				'type' => TaskId::DELETE_DOMAIN_PDNS,
 				'data' => $data
 			));
-		} elseif ($type == TaskId::DELETE_DOMAIN_SSL && $param1 != '') {
+		} elseif ($type == TaskId::DELETE_DOMAIN_SSL && isset($params[0]) && $params[0] != '') {
 			$data = array();
-			$data['domain'] = $param1;
+			$data['domain'] = $params[0];
 			$data = json_encode($data);
 			Database::pexecute($ins_stmt, array(
 				'type' => TaskId::DELETE_DOMAIN_SSL,
 				'data' => $data
 			));
-		} elseif ($type == TaskId::CREATE_CUSTOMER_BACKUP && is_array($param1)) {
-			$data = json_encode($param1);
+		} elseif ($type == TaskId::CREATE_CUSTOMER_BACKUP && isset($params[0]) && is_array($params[0])) {
+			$data = json_encode($params[0]);
 			Database::pexecute($ins_stmt, array(
 				'type' => TaskId::CREATE_CUSTOMER_BACKUP,
 				'data' => $data
