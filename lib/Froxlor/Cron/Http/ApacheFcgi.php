@@ -56,7 +56,9 @@ class ApacheFcgi extends Apache
 					// start block, cut off last pipe and close block
 					$filesmatch = '(' . str_replace(".", "\.", substr($filesmatch, 0, - 1)) . ')';
 					$php_options_text .= '  <FilesMatch \.' . $filesmatch . '$>' . "\n";
-					$php_options_text .= '  SetHandler proxy:unix:' . $domain['fpm_socket'] . '|fcgi://localhost' . "\n";
+					$php_options_text .= '    <If "-f %{SCRIPT_FILENAME}">' . "\n";
+					$php_options_text .= '      SetHandler proxy:unix:' . $domain['fpm_socket'] . '|fcgi://localhost' . "\n";
+					$php_options_text .= '    </If>' . "\n";
 					$php_options_text .= '  </FilesMatch>' . "\n";
 
 					$mypath_dir = new \Froxlor\Http\Directory($domain['documentroot']);
