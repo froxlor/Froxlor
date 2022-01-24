@@ -691,15 +691,16 @@ $lng['serversettings']['decimal_places'] = 'Number of decimal places in traffic/
 
 $lng['admin']['dkimsettings'] = 'DomainKey settings';
 $lng['dkim']['dkim_prefix']['title'] = 'Prefix';
-$lng['dkim']['dkim_prefix']['description'] = 'Please specify the path to the DKIM RSA-files as well as to the configuration files for the Milter-plugin';
+$lng['dkim']['dkim_prefix']['description'] = 'Please specify the path to the DKIM RSA-files as well as to the configuration files for the Milter-plugin'.
+'<br />dkim-filter: <code>/etc/postfix/dkim/</code><br>rspamd: <code>/var/lib/rspamd/dkim/</code>';
 $lng['dkim']['dkim_domains']['title'] = 'Domains filename';
-$lng['dkim']['dkim_domains']['description'] = '<em>Filename</em> of the DKIM Domains parameter specified in the dkim-milter configuration';
+$lng['dkim']['dkim_domains']['description'] = '<em>Filename</em> of the DKIM Domains parameter specified in the dkim-milter configuration <br /><em>(only dkim-filter)</em>';
 $lng['dkim']['dkim_dkimkeys']['title'] = 'KeyList filename';
-$lng['dkim']['dkim_dkimkeys']['description'] = '<em>Filename</em> of the  DKIM KeyList parameter specified in the dkim-milter configuration';
+$lng['dkim']['dkim_dkimkeys']['description'] = '<em>Filename</em> of the  DKIM KeyList parameter specified in the dkim-milter configuration <br /><em>(only dkim-filter)</em>';
 $lng['dkim']['dkimrestart_command']['title'] = 'Milter restart command';
 $lng['dkim']['dkimrestart_command']['description'] = 'Please specify the restart command for the DKIM milter service';
 $lng['dkim']['privkeysuffix']['title'] = 'Private keys suffix';
-$lng['dkim']['privkeysuffix']['description'] = 'You can specify an (optional) filename extension/suffix for the generate dkim private keys. Some services like dkim-filter requires this to be empty';
+$lng['dkim']['privkeysuffix']['description'] = 'You can specify an (optional) filename extension/suffix for the generate dkim private keys. Some services like dkim-filter requires this to be empty <br /><em>(only dkim-filter)</em>';
 
 // ADDED IN 1.2.19-svn9
 
@@ -710,7 +711,7 @@ $lng['admin']['caneditphpsettings'] = 'Can change php-related domain settings?';
 $lng['admin']['allips'] = 'All IP\'s';
 $lng['panel']['nosslipsavailable'] = 'There are currently no ssl ip/port combinations for this server';
 $lng['dkim']['use_dkim']['title'] = 'Activate DKIM support?';
-$lng['dkim']['use_dkim']['description'] = 'Would you like to use the Domain Keys (DKIM) system?<br/><em class="red">Note: DKIM is only supported using dkim-filter, not opendkim (yet)</em>';
+$lng['dkim']['use_dkim']['description'] = 'Would you like to use the Domain Keys (DKIM) system?<br/><em class="red">Note: DKIM is only supported using rspamd, dkim-filter, not opendkim (yet)</em>';
 $lng['error']['invalidmysqlhost'] = 'Invalid MySQL host address: %s';
 $lng['error']['cannotuseawstatsandwebalizeratonetime'] = 'You cannot enable Webalizer and AWstats at the same time, please chose one of them';
 $lng['serversettings']['webalizer_enabled'] = 'Enable webalizer statistics';
@@ -2138,3 +2139,25 @@ $lng['serversettings']['phpfpm_settings']['allow_all_customers']['description'] 
 $lng['error']['pathmustberelative'] = 'The user does not have the permission to specify directories outside the customers home-directory. Please specify a relative path (no leading /).';
 $lng['serversettings']['acmeshpath']['title'] = 'Path to acme.sh';
 $lng['serversettings']['acmeshpath']['description'] = 'Set this to where acme.sh is installed to, including the acme.sh script<br>Default is <b>/root/.acme.sh/acme.sh</b>';
+
+
+// Added in eis-os:feature/dkim-without-bind
+$lng['dkim']['dkim_service_implementation']['title'] = 'DKIM Service Implementation';
+$lng['dkim']['dkim_service_implementation']['description'] = 'Select between dkim-filter (not compatible with opendkim!) and rspamd support';
+
+$lng['dkim']['dkim_user']['title'] = 'User for dkim files';
+$lng['dkim']['dkim_user']['description'] = 'Filesystem owner of dkim keys.<br />A empty value skips chown, for rspamd this should be set to <em>_rspamd</em>';
+
+$lng['dkim']['dkim_group']['title'] = 'Group for dkim files';
+$lng['dkim']['dkim_group']['description'] = 'An empty value skips chown, for rspamd should be <em>_rspamd</em>';
+
+/*
+$lng['dkim']['rspamd_dkim_key_path']['title'] = 'Rspamd dkim key path';
+$lng['dkim']['rspamd_dkim_key_path']['description'] = 'Please specify the path to the rspamd DKIM keyfiles (only rspamd)';
+*/
+
+$lng['dkim']['rspamd_dkim_selector_map']['title'] = 'Rspamd dkim_selector.map';
+$lng['dkim']['rspamd_dkim_selector_map']['description'] = 'Filename to dkim_selector.map (only rspamd)';
+
+$lng['dkim']['rspamd_dkim_paths_map']['title'] = 'Rspamd dkim_paths_map';
+$lng['dkim']['rspamd_dkim_paths_map']['description'] = 'Filename to dkim_paths_map (only rspamd)';

@@ -27,8 +27,59 @@ return array(
 					'varname' => 'use_dkim',
 					'type' => 'bool',
 					'default' => false,
-					'save_method' => 'storeSettingFieldInsertBindTask',
+					'save_method' => 'storeSettingFieldInsertDKIMTask',
 					'overview_option' => true
+				),
+				'dkim_service_implementation' => array(
+					'label' => $lng['dkim']['dkim_service_implementation'],
+					'settinggroup' => 'dkim',
+					'varname' => 'dkim_service_implementation',
+					'type' => 'option',
+					'default' => '0',
+					'option_mode' => 'one',
+					'option_options' => array(
+						'DkimFilter' => 'dkim-filter',
+						'Rspamd' => 'Rspamd'
+					),
+					'save_method' => 'storeSettingFieldInsertDKIMTask'
+				),
+				'dkim_user' => array(
+					'label' => $lng['dkim']['dkim_user'],
+					'settinggroup' => 'dkim',
+					'varname' => 'dkim_user',
+					'type' => 'string',
+					'string_emptyallowed' => true,
+					'string_regexp' => '/^[a-z0-9\._]*$/i',
+					'default' => '',
+					'save_method' => 'storeSettingFieldInsertDKIMTask'
+				),
+				'dkim_group' => array(
+					'label' => $lng['dkim']['dkim_group'],
+					'settinggroup' => 'dkim',
+					'varname' => 'dkim_group',
+					'type' => 'string',
+					'string_emptyallowed' => true,
+					'string_regexp' => '/^[a-z0-9\._]*$/i',
+					'default' => '',
+					'save_method' => 'storeSettingFieldInsertDKIMTask'
+				),
+				'rspamd_dkim_selector_map' => array(
+					'label' => $lng['dkim']['rspamd_dkim_selector_map'],
+					'settinggroup' => 'dkim',
+					'varname' => 'rspamd_dkim_selector_map',
+					'type' => 'string',
+					'default' => '/etc/rspamd/dkim_selectors.map',
+					'save_method' => 'storeSettingFieldInsertDKIMTask',
+					'visible' => \Froxlor\Settings::Get('dkim.dkim_service_implementation') == 'Rspamd',
+				),
+				'rspamd_dkim_paths_map' => array(
+					'label' => $lng['dkim']['rspamd_dkim_paths_map'],
+					'settinggroup' => 'dkim',
+					'varname' => 'rspamd_dkim_paths_map',
+					'type' => 'string',
+					'default' => '/etc/rspamd/dkim_paths.map',
+					'save_method' => 'storeSettingFieldInsertDKIMTask',
+					'visible' => \Froxlor\Settings::Get('dkim.dkim_service_implementation') == 'Rspamd',
 				),
 				'dkim_prefix' => array(
 					'label' => $lng['dkim']['dkim_prefix'],
@@ -37,7 +88,7 @@ return array(
 					'type' => 'string',
 					'string_type' => 'dir',
 					'default' => '/etc/postfix/dkim/',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingFieldInsertDKIMTask'
 				),
 				'dkim_privkeysuffix' => array(
 					'label' => $lng['dkim']['privkeysuffix'],
@@ -46,7 +97,7 @@ return array(
 					'type' => 'string',
 					'string_regexp' => '/^[a-z0-9\._]+$/i',
 					'default' => '.priv',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingFieldInsertDKIMTask'
 				),
 				'dkim_domains' => array(
 					'label' => $lng['dkim']['dkim_domains'],
@@ -55,7 +106,7 @@ return array(
 					'type' => 'string',
 					'string_regexp' => '/^[a-z0-9\._]+$/i',
 					'default' => 'domains',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingFieldInsertDKIMTask'
 				),
 				'dkim_dkimkeys' => array(
 					'label' => $lng['dkim']['dkim_dkimkeys'],
@@ -64,7 +115,7 @@ return array(
 					'type' => 'string',
 					'string_regexp' => '/^[a-z0-9\._]+$/i',
 					'default' => 'dkim-keys.conf',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingFieldInsertDKIMTask'
 				),
 				'dkim_algorithm' => array(
 					'label' => $lng['dkim']['dkim_algorithm'],
@@ -78,7 +129,7 @@ return array(
 						'sha1' => 'SHA1',
 						'sha256' => 'SHA256'
 					),
-					'save_method' => 'storeSettingFieldInsertBindTask'
+					'save_method' => 'storeSettingFieldInsertDKIMTask'
 				),
 				'dkim_servicetype' => array(
 					'label' => $lng['dkim']['dkim_servicetype'],
@@ -91,7 +142,7 @@ return array(
 						'0' => 'All',
 						'1' => 'E-Mail'
 					),
-					'save_method' => 'storeSettingFieldInsertBindTask'
+					'save_method' => 'storeSettingFieldInsertDKIMTask'
 				),
 				'dkim_keylength' => array(
 					'label' => array(
@@ -107,7 +158,7 @@ return array(
 						'1024' => '1024 Bit',
 						'2048' => '2048 Bit'
 					),
-					'save_method' => 'storeSettingFieldInsertBindTask'
+					'save_method' => 'storeSettingFieldInsertDKIMTask'
 				),
 				'dkim_notes' => array(
 					'label' => $lng['dkim']['dkim_notes'],
@@ -116,7 +167,7 @@ return array(
 					'type' => 'string',
 					'string_regexp' => '/^[a-z0-9\._]+$/i',
 					'default' => '',
-					'save_method' => 'storeSettingFieldInsertBindTask'
+					'save_method' => 'storeSettingFieldInsertDKIMTask'
 				),
 				'dkimrestart_command' => array(
 					'label' => $lng['dkim']['dkimrestart_command'],

@@ -614,7 +614,8 @@ $lng['serversettings']['decimal_places'] = 'Aantal getallen achter de komma in u
 
 $lng['admin']['dkimsettings'] = 'Instellingen voor DomainKeys';
 $lng['dkim']['dkim_prefix']['title'] = 'Prefix';
-$lng['dkim']['dkim_prefix']['description'] = 'Geef het pad naar de DKIM RSA-files alsook naar de configuratie van de Milter-plugin';
+$lng['dkim']['dkim_prefix']['description'] = 'Geef het pad naar de DKIM RSA-files alsook naar de configuratie van de Milter-plugin'.
+'<br />dkim-filter: <code>/etc/postfix/dkim/</code><br>rspamd: <code>/var/lib/rspamd/dkim/</code>';
 $lng['dkim']['dkim_domains']['title'] = 'Bestandsnaam domeinen';
 $lng['dkim']['dkim_domains']['description'] = '<em>Bestandsnaam</em> van het DKIM Domains-parameter zoals aangegeven in de configuratie van dkim-milter';
 $lng['dkim']['dkim_dkimkeys']['title'] = 'KeyList filename';

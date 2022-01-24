@@ -64,6 +64,7 @@ class MasterCron extends \Froxlor\Cron\FroxlorCron
 					// really force re-generating of config-files by
 					// inserting task 1
 					\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_VHOST);
+					\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_DKIM);
 					// bind (if enabled, \Froxlor\System\Cronjob::inserttask() checks this)
 					\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_DNS);
 					// set quotas (if enabled)

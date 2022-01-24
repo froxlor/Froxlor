@@ -540,4 +540,41 @@ class Database
 
 		return $substitutions;
 	}
+
+	/**
+	 * Get table column information
+	 * 
+	 * Example:
+	 * array(
+	 *  'name' => 'columnname',
+	 *  'type' => 'varchar(123)',
+	 *  'default' => ''
+	 * )
+	 * @param string $table_name
+	 * @param string $colum_name (may not exist)
+	 * @return array|false
+	 */
+	public static function getColumnInfo($table_name, $colum_name) {
+		/** @var \PDO */
+		$instance = self::getDB();
+
+		$sql = 'SELECT `COLUMN_NAME`, `COLUMN_TYPE`, `COLUMN_DEFAULT` FROM INFORMATION_SCHEMA.COLUMNS WHERE `TABLE_SCHEMA` = :database AND `TABLE_NAME` = :tablename AND `COLUMN_NAME` = :columnname';
+		$stmt = $instance->prepare($sql);
+		$stmt->execute(array(
+			'database' => self::getDbName(),
+			'tablename' => $table_name,
+			'columnname' => $colum_name,
+		));
+		$row = $stmt->fetch(\PDO::FETCH_ASSOC);
+		if (!is_array($row)) {
+			return false;
+		}
+
+		$result = array(
+			'name' => $row['COLUMN_NAME'],
+			'type' => str_replace(' unsigned', $row['COLUMN_TYPE'], ''),
+			'default' => $row['COLUMN_DEFAULT']
+		);
+		return $result;
+	}
 }

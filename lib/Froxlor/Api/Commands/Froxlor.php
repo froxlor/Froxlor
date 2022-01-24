@@ -125,6 +125,8 @@ class Froxlor extends \Froxlor\Api\ApiCommand
 				\Froxlor\SImExporter::import($json_str);
 				\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_VHOST);
 				\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::CREATE_QUOTA);
+
+				\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_DKIM);
 				// Using nameserver, insert a task which rebuilds the server config
 				\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_DNS);
 				// cron.d file

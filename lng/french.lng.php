@@ -667,7 +667,8 @@ $lng['serversettings']['decimal_places'] = 'Nombre de décimales à afficher pou
 
 $lng['admin']['dkimsettings'] = 'Paramètres DKIM';
 $lng['dkim']['dkim_prefix']['title'] = 'Prefix DKIM';
-$lng['dkim']['dkim_prefix']['description'] = 'Veuillez entrer l\'emplacement des fichiers RSA pour DKIM ainsi que l\'emplacement du fichier de configuration pour le plugin Milter';
+$lng['dkim']['dkim_prefix']['description'] = 'Veuillez entrer l\'emplacement des fichiers RSA pour DKIM ainsi que l\'emplacement du fichier de configuration pour le plugin Milter'.
+'<br />dkim-filter: <code>/etc/postfix/dkim/</code><br>rspamd: <code>/var/lib/rspamd/dkim/</code>';
 $lng['dkim']['dkim_domains']['title'] = 'Nom du fichier DKIM';
 $lng['dkim']['dkim_domains']['description'] = '<strong>Nom du fichier</strong> des paramètres DKIM pour les domaines tel que entré dans la configuration de DKIM-milter';
 $lng['dkim']['dkim_dkimkeys']['title'] = 'Nom du fichier des clefs DKIM';

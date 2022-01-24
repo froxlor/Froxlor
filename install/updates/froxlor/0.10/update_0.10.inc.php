@@ -965,3 +965,23 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.31')) {
         showUpdateStep("Updating from 0.10.31 to 0.10.32", false);
         \Froxlor\Froxlor::updateToVersion('0.10.32');
 }
+
+
+if (true) { // replace with isFroxlorVersion on merge
+	//showUpdateStep("Add setting for switchable dkim implementation", true);
+	Settings::AddNew("dkim.dkim_service_implementation", 'DkimFilter');
+
+	Settings::AddNew('dkim.rspamd_dkim_selector_map', '/etc/rspamd/dkim_selectors.map');
+	Settings::AddNew('dkim.rspamd_dkim_paths_map', '/etc/rspamd/dkim_paths.map');
+
+	Settings::AddNew("dkim.dkim_user", '');
+	Settings::AddNew("dkim.dkim_group", '');
+	//lastStepStatus(0);
+
+	//showUpdateStep("Add column dkim_selector to panel_domains", true);
+	if (Database::getColumnInfo(TABLE_PANEL_DOMAINS, 'dkim_selector') == false) {	
+		Database::query("ALTER TABLE `" . TABLE_PANEL_DOMAINS . "` ADD `dkim_selector` varchar(128) AFTER `dkim_id`;");
+	}
+	//lastStepStatus(0);
+	// Don't forget on merge: \Froxlor\Froxlor::updateToDbVersion();
+}

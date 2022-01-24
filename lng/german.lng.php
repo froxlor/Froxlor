@@ -684,7 +684,8 @@ $lng['serversettings']['decimal_places'] = 'Nachkommastellen bei der Ausgabe von
 
 $lng['admin']['dkimsettings'] = 'DomainKey-Einstellungen';
 $lng['dkim']['dkim_prefix']['title'] = 'Prefix';
-$lng['dkim']['dkim_prefix']['description'] = 'Wie lautet der Pfad zu den DKIM-RSA-Dateien sowie den Einstellungsdateien des Milter-Plugins?';
+$lng['dkim']['dkim_prefix']['description'] = 'Wie lautet der Pfad zu den DKIM-RSA-Dateien sowie den Einstellungsdateien des Milter-Plugins?'.
+'<br />dkim-filter: <code>/etc/postfix/dkim/</code><br>rspamd: <code>/var/lib/rspamd/dkim/</code>';
 $lng['dkim']['dkim_domains']['title'] = 'Domains-Dateiname';
 $lng['dkim']['dkim_domains']['description'] = 'Dateiname der DKIM-Domains-Angabe aus der DKIM-Milter-Konfigurationsdatei.';
 $lng['dkim']['dkim_dkimkeys']['title'] = 'KeyList Dateiname';

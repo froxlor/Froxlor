@@ -179,6 +179,19 @@ class Store
 		return $returnvalue;
 	}
 
+
+	public static function storeSettingFieldInsertDKIMTask($fieldname, $fielddata, $newfieldvalue)
+	{
+		// first save the setting itself
+		$returnvalue = self::storeSettingField($fieldname, $fielddata, $newfieldvalue);
+
+		if ($returnvalue !== false) {
+			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_DKIM);
+			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_DNS);
+		}
+		return $returnvalue;
+	}
+
 	public static function storeSettingHostname($fieldname, $fielddata, $newfieldvalue)
 	{
 		$returnvalue = self::storeSettingField($fieldname, $fielddata, $newfieldvalue);

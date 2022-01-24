@@ -592,7 +592,8 @@ $lng['error']['invalidip'] = 'Endereço de IP Inválido: %s';
 $lng['serversettings']['decimal_places'] = 'Número de casas decimais no tráfego / espaço de paginas web';
 $lng['admin']['dkimsettings'] = 'Configurações de Chave de Domínios';
 $lng['dkim']['dkim_prefix']['title'] = 'Prefixo';
-$lng['dkim']['dkim_prefix']['description'] = 'Por favor, especifique o caminho para o os arquivos DKIM RSA, bem como para os arquivos de configuração para o plugin Milter';
+$lng['dkim']['dkim_prefix']['description'] = 'Por favor, especifique o caminho para o os arquivos DKIM RSA, bem como para os arquivos de configuração para o plugin Milter'.
+'<br />dkim-filter: <code>/etc/postfix/dkim/</code><br>rspamd: <code>/var/lib/rspamd/dkim/</code>';
 $lng['dkim']['dkim_domains']['title'] = 'Nome de arquivo de domínios';
 $lng['dkim']['dkim_domains']['description'] = '<em>Nome do Arquivo</em> dos Domínios do DKIM, parâmetro especificado na configuração do dkim-Milter';
 $lng['dkim']['dkim_dkimkeys']['title'] = 'Nome de arquivo de chaves';

@@ -4,6 +4,8 @@ namespace Froxlor\Dns;
 use Froxlor\Database\Database;
 use Froxlor\Settings;
 
+use Froxlor\Dkim\Dkim;
+
 class Dns
 {
 
@@ -65,6 +67,13 @@ class Dns
 				'did' => $domain_id
 			));
 			$dom_entries = $sel_stmt->fetchAll(\PDO::FETCH_ASSOC);
+		}
+
+		// create the dkim records early, so we know the selector._domainkey for $required_entries
+		$dkim_records = array();
+		if (Settings::Get('dkim.use_dkim') == '1') {
+			$dkimHelper = \Froxlor\Dkim\Dkim::getInstanceOf(\Froxlor\FroxlorLogger::getInstanceOf());
+			$dkim_records = $dkimHelper->createRecords($domain,'._domainkey');
 		}
 
 		// check for required records
@@ -160,8 +169,10 @@ class Dns
 				self::addRequiredEntry('@SPF@', 'TXT', $required_entries);
 			}
 			if (Settings::Get('dkim.use_dkim') == '1') {
-				// check for DKIM content later
-				self::addRequiredEntry('dkim' . $domain['dkim_id'] . '._domainkey', 'TXT', $required_entries);
+				// fill the dkim selector into required_entries, add content later
+				foreach ($dkim_records as $dkim_record_name => $dkim_record_data) {
+					self::addRequiredEntry($dkim_record_name, 'TXT', $required_entries);
+				}
 			}
 		}
 
@@ -308,23 +319,20 @@ class Dns
 			// TXT (SPF and DKIM)
 			if (array_key_exists("TXT", $required_entries)) {
 
-				if (Settings::Get('dkim.use_dkim') == '1') {
-					$dkim_entries = self::generateDkimEntries($domain);
-				}
-
 				foreach ($required_entries as $type => $records) {
 					if ($type == 'TXT') {
 						foreach ($records as $record) {
 							if ($record == '@SPF@') {
 								$txt_content = Settings::Get('spf.spf_entry');
 								$zonerecords[] = new DnsEntry('@', 'TXT', self::encloseTXTContent($txt_content));
-							} elseif ($record == 'dkim' . $domain['dkim_id'] . '._domainkey' && ! empty($dkim_entries)) {
+							} elseif (isset($dkim_records[$record]) && !empty($dkim_records[$record])) {
+								$dkimRecord = $dkim_records[$record];
 								// check for multiline entry
 								$multiline = false;
-								if (substr($dkim_entries[0], 0, 1) == '(') {
+								if (substr($dkimRecord, 0, 1) == '(') {
 									$multiline = true;
 								}
-								$zonerecords[] = new DnsEntry($record, 'TXT', self::encloseTXTContent($dkim_entries[0], $multiline));
+								$zonerecords[] = new DnsEntry($record, 'TXT', self::encloseTXTContent($dkimRecord, $multiline));
 							}
 						}
 					}
@@ -450,52 +458,5 @@ class Dns
 		$mail_parts = explode("@", $email);
 		$escpd_mail = str_replace(".", "\.", $mail_parts[0]) . "." . $mail_parts[1] . ".";
 		return $escpd_mail;
-	}
-
-	private static function generateDkimEntries($domain)
-	{
-		$zone_dkim = array();
-
-		if (Settings::Get('dkim.use_dkim') == '1' && $domain['dkim'] == '1' && $domain['dkim_pubkey'] != '') {
-			// start
-			$dkim_txt = 'v=DKIM1;';
-
-			// algorithm
-			$algorithm = explode(',', Settings::Get('dkim.dkim_algorithm'));
-			$alg = '';
-			foreach ($algorithm as $a) {
-				if ($a == 'all') {
-					break;
-				} else {
-					$alg .= $a . ':';
-				}
-			}
-
-			if ($alg != '') {
-				$alg = substr($alg, 0, - 1);
-				$dkim_txt .= 'h=' . $alg . ';';
-			}
-
-			// notes
-			if (trim(Settings::Get('dkim.dkim_notes') != '')) {
-				$dkim_txt .= 'n=' . trim(Settings::Get('dkim.dkim_notes')) . ';';
-			}
-
-			// key
-			$dkim_txt .= 'k=rsa;p=' . trim(preg_replace('/-----BEGIN PUBLIC KEY-----(.+)-----END PUBLIC KEY-----/s', '$1', str_replace("\n", '', $domain['dkim_pubkey']))) . ';';
-
-			// service-type
-			if (Settings::Get('dkim.dkim_servicetype') == '1') {
-				$dkim_txt .= 's=email;';
-			}
-
-			// end-part
-			$dkim_txt .= 't=s';
-
-			// dkim-entry
-			$zone_dkim[] = $dkim_txt;
-		}
-
-		return $zone_dkim;
 	}
 }

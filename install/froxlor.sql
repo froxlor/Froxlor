@@ -390,6 +390,11 @@ INSERT INTO `panel_settings` (`settinggroup`, `varname`, `value`) VALUES
 	('dkim', 'dkim_dkimkeys', 'dkim-keys.conf'),
 	('dkim', 'dkimrestart_command', '/etc/init.d/dkim-filter restart'),
 	('dkim', 'privkeysuffix', '.priv'),
+	('dkim', 'dkim_service_implementation', 'DkimFilter');
+	('dkim', 'dkim_user', ''),
+	('dkim', 'dkim_group', ''),
+	('dkim', 'rspamd_dkim_paths_map', '/etc/rspamd/dkim_paths.map'),
+	('dkim', 'rspamd_dkim_selector_map', '/etc/rspamd/dkim_selectors.map'),
 	('admin', 'show_news_feed', '0'),
 	('admin', 'show_version_login', '0'),
 	('admin', 'show_version_footer', '0'),

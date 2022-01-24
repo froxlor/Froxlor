@@ -690,7 +690,8 @@ $lng['serversettings']['decimal_places'] = 'Number of decimal places in traffic/
 
 $lng['admin']['dkimsettings'] = 'DomainKey nastavení';
 $lng['dkim']['dkim_prefix']['title'] = 'Prefix';
-$lng['dkim']['dkim_prefix']['description'] = 'Please specify the path to the DKIM RSA-files as well as to the configuration files for the Milter-plugin';
+$lng['dkim']['dkim_prefix']['description'] = 'Please specify the path to the DKIM RSA-files as well as to the configuration files for the Milter-plugin'.
+'<br />dkim-filter: <code>/etc/postfix/dkim/</code><br>rspamd: <code>/var/lib/rspamd/dkim/</code>';
 $lng['dkim']['dkim_domains']['title'] = 'Domains filename';
 $lng['dkim']['dkim_domains']['description'] = '<em>Filename</em> of the DKIM Domains parameter specified in the dkim-milter configuration';
 $lng['dkim']['dkim_dkimkeys']['title'] = 'KeyList filename';

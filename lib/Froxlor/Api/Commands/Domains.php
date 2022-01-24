@@ -858,6 +858,8 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 					\Froxlor\Domain\Domain::triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $this->logger());
 
 					\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_VHOST);
+
+					\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_DKIM);
 					// Using nameserver, insert a task which rebuilds the server config
 					\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_DNS);
 
@@ -1473,6 +1475,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 			}
 
 			if ($isbinddomain != $result['isbinddomain'] || $zonefile != $result['zonefile'] || $dkim != $result['dkim'] || $isemaildomain != $result['isemaildomain']) {
+				\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_DKIM);
 				\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_DNS);
 			}
 			// check whether nameserver has been disabled, #581
@@ -1992,6 +1995,9 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] deleted domain/subdomains (#" . $result['id'] . ")");
 			\Froxlor\User::updateCounters();
 			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_VHOST);
+
+			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_DKIM);
+
 			// Using nameserver, insert a task which rebuilds the server config
 			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_DNS);
 			return $this->response(200, "successful", $result);

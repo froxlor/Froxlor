@@ -107,7 +107,7 @@ class Cronjob
 			INSERT INTO `" . TABLE_PANEL_TASKS . "` SET `type` = :type, `data` = :data
 		");
 
-		if ($type == TaskId::REBUILD_VHOST || $type == TaskId::REBUILD_DNS || $type == TaskId::CREATE_FTP || $type == TaskId::CREATE_QUOTA || $type == TaskId::REBUILD_CRON) {
+		if ($type == TaskId::REBUILD_VHOST || $type == TaskId::REBUILD_DNS || $type == TaskId::REBUILD_DKIM || $type == TaskId::CREATE_FTP || $type == TaskId::CREATE_QUOTA || $type == TaskId::REBUILD_CRON) {
 			// 4 = bind -> if bind disabled -> no task
 			if ($type == TaskId::REBUILD_DNS && Settings::Get('system.bind_enable') == '0') {
 				return;
