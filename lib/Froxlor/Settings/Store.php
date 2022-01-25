@@ -2,6 +2,7 @@
 namespace Froxlor\Settings;
 
 use Froxlor\Database\Database;
+use Froxlor\FileDir;
 use Froxlor\Settings;
 
 class Store
@@ -373,20 +374,21 @@ class Store
         if (isset($fielddata['settinggroup'], $fielddata['varname']) && is_array($fielddata) && $fielddata['settinggroup'] !== '' && $fielddata['varname'] !== '') {
             $save_to = null;
             $path = \Froxlor\Froxlor::getInstallDir().'/img/';
+            $path = \Froxlor\FileDir::makeCorrectDir($path);
 
             // New file?
             if (isset($_FILES[$fieldname]) && $_FILES[$fieldname]['tmp_name']) {
                 // Make sure upload directory exists
-                if (!is_dir($path) && !mkdir($path, '0775')) {
+                if (!is_dir($path) && !mkdir($path, 0775)) {
                     throw new \Exception("img directory does not exist and cannot be created");
                 }
 
                 // Make sure we can write to the upload directory
                 if (!is_writable($path)) {
-                    if (!chmod($path, '0775')) {
+                    if (!chmod($path, 0775)) {
                         throw new \Exception("Cannot write to img directory");
                     }
-                }
+				}
 
                 // Make sure mime-type matches an image
                 if (!in_array(mime_content_type($_FILES[$fieldname]['tmp_name']), ['image/jpeg','image/jpg','image/png','image/gif'])) {
