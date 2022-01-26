@@ -29,14 +29,18 @@ class FroxlorTestCase extends TestCase {
 	
 	public static function setUpBeforeClass() : void
 	{
-		if(!empty(self::$testcase_outputdir)) {
-			FileDir::setFroxlorTestPathPrefix(self::$testcase_outputdir);
+		if (defined('FROXLORTEST_REDIRECTDIR')) {
+			if(!empty(self::$testcase_outputdir)) {
+				FileDir::setFroxlorTestPathPrefix(self::$testcase_outputdir);
+			}
 		}
 	}
 
 	public static function tearDownAfterClass() : void
 	{
-		FileDir::setFroxlorTestPathPrefix(null);
+		if (defined('FROXLORTEST_REDIRECTDIR')) {
+			FileDir::setFroxlorTestPathPrefix(null);
+		}
 	}
 
 	public function tearDown() : void
