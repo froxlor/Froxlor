@@ -11,6 +11,8 @@ if (file_exists('/etc/froxlor-test.pwd') && file_exists('/etc/froxlor-test.rpwd'
 	define('TRAVIS_CI', 1);
 }
 
+//define('FROXLORTEST_REDIRECTDIR', 1);
+
 if (@php_sapi_name() !== 'cli') {
 	// not to be called via browser
 	die;
@@ -42,6 +44,7 @@ require dirname(__DIR__) . '/lib/tables.inc.php';
 
 use Froxlor\Database\Database;
 use Froxlor\Settings;
+use Froxlor\UnitTest\FroxlorTestCase;
 
 if (TRAVIS_CI == 0) {
 	Database::needRoot(true);
@@ -157,6 +160,11 @@ Settings::Set('system.defaultsslip', $defaultip, true);
 $sel_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_ADMINS . "` WHERE `adminid` = '1'");
 $admin_userdata = Database::pexecute_first($sel_stmt);
 $admin_userdata['adminsession'] = 1;
+
+FroxlorTestCase::setFroxlorAdminUserdata($admin_userdata);
+if (defined('FROXLORTEST_REDIRECTDIR')) {
+	FroxlorTestCase::setFroxlorTestOutputDir(dirname(__DIR__).'/build/froxlortestfs/');
+}
 
 $log = \Froxlor\FroxlorLogger::getInstanceOf($admin_userdata);
 

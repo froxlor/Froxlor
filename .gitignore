@@ -19,3 +19,5 @@ img/
 !templates/misc/
 templates/Sparkle/assets/css/custom.css
 vendor/
+build/
+.phpunit.result.cache
