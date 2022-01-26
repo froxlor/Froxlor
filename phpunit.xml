@@ -31,6 +31,7 @@
       <directory>tests/Traffic</directory>
       <directory>tests/Froxlor</directory>
       <directory>tests/Cron</directory>
+      <directory>tests/Dkim</directory>
     </testsuite>
   </testsuites>
   <logging>
