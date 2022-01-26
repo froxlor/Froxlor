@@ -60,7 +60,7 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 
 			} elseif ($row['type'] == TaskId::REBUILD_DKIM) {
 				/**
-				 * TYPE=41 MEANS THAT SOMETHING IN THE DKIM CONFIG HAS CHANGED.
+				 * TYPE=14 MEANS THAT SOMETHING IN THE DKIM CONFIG HAS CHANGED.
 				 */
 				self::rebuildDkimConfigs();				
 			} elseif ($row['type'] == TaskId::REBUILD_DNS && (int) Settings::Get('system.bind_enable') != 0) {

@@ -16,7 +16,7 @@ class DkimFilter extends DkimCron
 		$this->dkimkeys = '';
 	}
 
-	protected function createCertificates(array $domain)
+	public function createCertificates(array $domain)
 	{
 		if ($domain['dkim_id'] == 0 || empty($domain['dkim_selector'])) {
 			// switched from other dkim system, dkim_id may be 0, create new unique dkim id;
@@ -36,17 +36,17 @@ class DkimFilter extends DkimCron
 				// don't use any old public key, if private key is missing!
 				$domain['dkim_pubkey'] = '';
 			}
-			\Froxlor\FileDir::safe_exec('openssl genrsa -out ' . escapeshellarg($privkey_filename) . ' ' . Settings::Get('dkim.dkim_keylength'));
-			\Froxlor\FileDir::safe_exec("chmod 0640 " . escapeshellarg($privkey_filename));
-			$this->updateFileOwner($privkey_filename);
 
-			$privkey = file_get_contents($privkey_filename);
-			if ($privkey == false) {
-				$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_ERR, "Can\'t create or read private dkim key for domain id: ".$domain['id']);
+			if (empty($domain['dkim_privkey'])) {
+				if (!$this->createPrivateKey($domain)) {
+					return;
+				}
+			}
+
+			if (!$this->createPublicKey($domain)) {
 				return;
 			}
-			$domain['dkim_privkey'] = $privkey;
-			$this->createPublicKeyByPrivateKey($domain, $privkey_filename, $pubkey_filename);
+
 			$this->updateDomainDkimRecord($domain);
 		}
 
@@ -66,7 +66,6 @@ class DkimFilter extends DkimCron
 
 		if (!empty(Settings::Get('dkim.dkim_dkimkeys'))) {
 			$dkimkeys_filename = \Froxlor\FileDir::makeCorrectFile(Settings::Get('dkim.dkim_prefix') . '/' . Settings::Get('dkim.dkim_dkimkeys'));
-
 			file_put_contents($dkimkeys_filename, $this->dkimkeys);
 		}
 	}
