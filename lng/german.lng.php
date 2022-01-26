@@ -1685,7 +1685,7 @@ $lng['apikeys']['allowed_from_help'] = 'Komma getrennte Liste von IPs. Standard 
 $lng['apikeys']['valid_until'] = 'Gültig bis';
 $lng['apikeys']['valid_until_help'] = 'Datum Gültigkeitsende, Format JJJJ-MM-TT';
 $lng['serversettings']['enable_api']['title'] = 'Aktiviere externe API Nutzung';
-$lng['serversettings']['enable_api']['description'] = 'Um die froxlor API nutzen zu können, muss diese Option aktiviert sein. Für detaillierte Informationen siehe <a href="https://api.froxlor.org/" target="_new">https://api.froxlor.org/</a>';
+$lng['serversettings']['enable_api']['description'] = 'Um die froxlor API nutzen zu können, muss diese Option aktiviert sein. Für detaillierte Informationen siehe <a href="https://docs.froxlor.org/apiguide/index.html" target="_new">https://docs.froxlor.org/</a>';
 $lng['serversettings']['dhparams_file']['title'] = 'DHParams Datei (Diffie–Hellman key exchange)';
 $lng['serversettings']['dhparams_file']['description'] = 'Wird eine dhparams.pem Datei hier angegeben, wir sie in die Webserver Konfiguration mit eingefügt.<br>Beispiel: /etc/ssl/webserver/dhparams.pem<br><br>Existiert die Datei nicht, wird sie wie folgt erstellt: <em>openssl dhparam -out /etc/ssl/webserver/dhparams.pem 4096<em>. Es wird empfohlen die Datei zu erstellen, bevor sie hier angegeben wird, da die Erstellung längere Zeit in Anspruch nimmt und den Cronjob blockiert.';
 $lng['2fa']['2fa'] = '2FA Optionen';
