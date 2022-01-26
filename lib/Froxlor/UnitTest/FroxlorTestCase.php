@@ -54,8 +54,7 @@ class FroxlorTestCase extends TestCase {
 	}
 
 	protected function getFroxlorValidNameByClass() {
-		array('\\', ':');
-		return str_replace('\'', '_', get_class($this));
+		return str_replace(array("\\", ':'), '', get_class($this));
 	}
 
 	/**
@@ -65,6 +64,7 @@ class FroxlorTestCase extends TestCase {
 	protected function getFroxlorTestCustomer() 
 	{
 		$loginname = $this->getFroxlorValidNameByClass();
+		$loginname = substr(str_replace('Test', '', $loginname), 0, 9);
 		if ($this->testcase_customer != null) {
 			$json_result = Customers::getLocal(self::$admin_userdata, array(
 				'loginname' => $loginname,
