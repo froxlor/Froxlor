@@ -86,8 +86,6 @@ class Rspamd extends DkimCron
 		if (!empty($rspamd_selector_map_setting)) {
 			
 			$rspamd_selector_map_filename = \Froxlor\FileDir::makeCorrectFile($rspamd_selector_map_setting);
-
-			fprintf(STDERR, "dkim.rspamd_dkim_selector_map filename: $rspamd_selector_map_setting = $rspamd_selector_map_filename\n");
 			if (!$this->writeFileIfChanged($rspamd_selector_map_filename, $this->rspamd_dkim_selectors_map, 0644)) {
 				throw new \Exception("Write to dkim.rspamd_dkim_selector_map failed. Filename: ". $this->rspamd_selector_map_filename);
 			}

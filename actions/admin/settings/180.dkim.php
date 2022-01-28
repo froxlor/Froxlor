@@ -154,11 +154,12 @@ return array(
 					'settinggroup' => 'dkim',
 					'varname' => 'dkim_keylength',
 					'type' => 'option',
-					'default' => '1024',
+					'default' => '2048',
 					'option_mode' => 'one',
 					'option_options' => array(
 						'1024' => '1024 Bit',
-						'2048' => '2048 Bit'
+						'2048' => '2048 Bit',
+						'4096' => '4096 Bit'
 					),
 					'save_method' => 'storeSettingFieldInsertDKIMTask'
 				),
