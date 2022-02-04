@@ -843,7 +843,7 @@ if (\Froxlor\Froxlor::isDatabaseVersion('202106270')) {
             throw new \Exception("img directory does not exist and cannot be created");
         }
         if (!is_writable($path)) {
-            if (!chmod($path, '0775')) {
+            if (!chmod($path, 0775)) {
                 throw new \Exception("Cannot write to img directory");
             }
         }

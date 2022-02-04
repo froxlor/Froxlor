@@ -145,13 +145,13 @@ class SImExporter
 			    // Catch image_data and save it
                 if (isset($index_split[2]) && $index_split[2] === 'image_data' && !empty($_data[$index_split[0].'.'.$index_split[1]])) {
                     $path = \Froxlor\Froxlor::getInstallDir().'/img/';
-                    if (!is_dir($path) && !mkdir($path, '0775')) {
+                    if (!is_dir($path) && !mkdir($path, 0775)) {
                         throw new \Exception("img directory does not exist and cannot be created");
                     }
 
                     // Make sure we can write to the upload directory
                     if (!is_writable($path)) {
-                        if (!chmod($path, '0775')) {
+                        if (!chmod($path, 0775)) {
                             throw new \Exception("Cannot write to img directory");
                         }
                     }
