@@ -1,17 +1,22 @@
 {% extends "Froxlor/base.html.twig" %}
 
 {% block body %}
-<div class="container my-auto">
-<div class="alert alert-primary fade show" role="alert">
-	<h4 class="alert-heading">
-		Welcome to froxlor
-	</h4>
-	<p>It seems that Froxlor has not been installed yet.</p>
-	<p>Click on the link below to start the installation.</p>
-	<hr>
-	<p class="mt-1 text-center">
-		<a href="./install/install.php" class="btn btn-primary" title="Click to start the install process">Start install</a>
-	</p>
-</div>
-</div>
+	<div class="container max-w-lg flex align-content-center mt-5">
+		<img src="templates/Sparkle/assets/img/logo.png" alt="Froxlor Server Management Panel" />
+
+		<div class="row gx-0 rounded shadow bg-primary text-white mt-5">
+			<div class="col p-5 rounded-start">
+				<h2 class="card-title">Welcome to Froxlor</h2>
+				<p class="lead mt-5">It seems that Froxlor has not been installed yet.</p>
+				<p class="lead">Click on the button below to start the installation.</p>
+			</div>
+
+			<div class="col text-white position-relative">
+				<img class="h-75 position-absolute bottom-0 end-0 rounded-corner-tl-bl" src="{{ basehref }}templates/Froxlor/assets/img/preview.png">
+			</div>
+		</div>
+		<div class="mt-5 text-end">
+			<a class="btn btn-lg btn-primary" href="./install/install.php" title="Click to start the install process">Start install</a>
+		</div>
+	</div>
 {% endblock %}

@@ -20,24 +20,33 @@
 // define default theme for configurehint, etc.
 $_deftheme = 'Froxlor';
 
-// validate correct php version
-if (version_compare("7.1.0", PHP_VERSION, ">=")) {
-	// get hint-template
-	$wrongphp_hint = file_get_contents(dirname(__DIR__) . '/templates/' . $_deftheme . '/misc/phprequirementfailed.html.twig');
-	// replace values
-	$wrongphp_hint = str_replace("<FROXLOR_PHPMIN>", "7.1.0", $wrongphp_hint);
-	$wrongphp_hint = str_replace("<CURRENT_VERSION>", PHP_VERSION, $wrongphp_hint);
-	$wrongphp_hint = str_replace("<CURRENT_YEAR>", date('Y', time()), $wrongphp_hint);
-	die($wrongphp_hint);
+function view($template, $attributes) {
+    $view = file_get_contents(dirname(__DIR__) . '/templates/' . $template);
+
+    return str_replace(array_keys($attributes), array_values($attributes), $view);
 }
 
+// validate correct php version
+if (version_compare("7.1.0", PHP_VERSION, ">=")) {
+    die(
+        view($_deftheme . '/misc/phprequirementfailed.html.twig', [
+            '{{ basehref }}' => '',
+            '{{ froxlor_min_version }}' => '7.1.0',
+            '{{ current_version }}' => PHP_VERSION,
+            '{{ current_year }}' => date('Y', time()),
+        ])
+    );
+}
+
+// validate vendor autoloader
 if (!file_exists(dirname(__DIR__) . '/vendor/autoload.php')) {
-	// get hint-template
-	$vendor_hint = file_get_contents(dirname(__DIR__) . '/templates/' . $_deftheme . '/misc/vendormissinghint.html.twig');
-	// replace values
-	$vendor_hint = str_replace("<FROXLOR_INSTALL_DIR>", dirname(__DIR__), $vendor_hint);
-	$vendor_hint = str_replace("<CURRENT_YEAR>", date('Y', time()), $vendor_hint);
-	die($vendor_hint);
+    die(
+        view($_deftheme . '/misc/vendormissinghint.html.twig', [
+            '{{ basehref }}' => '',
+            '{{ froxlor_install_dir }}' => dirname(__DIR__),
+            '{{ current_year }}' => date('Y', time()),
+        ])
+    );
 }
 
 require dirname(__DIR__) . '/vendor/autoload.php';
@@ -47,6 +56,9 @@ use Froxlor\Settings;
 use voku\helper\AntiXSS;
 use Froxlor\PhpHelper;
 use Froxlor\UI\Panel\UI;
+
+// include MySQL-tabledefinitions
+require \Froxlor\Froxlor::getInstallDir() . '/lib/tables.inc.php';
 
 UI::sendHeaders();
 UI::initTwig();
@@ -118,8 +130,8 @@ if (!isset($sql) || !is_array($sql)) {
 	'phpExceptionHandler'
 ]);
 
-// include MySQL-tabledefinitions
-require \Froxlor\Froxlor::getInstallDir() . '/lib/tables.inc.php';
+// send ssl-related headers (later than the others because we need a working database-connection and installation)
+UI::sendSslHeaders();
 
 // create a new idna converter
 $idna_convert = new \Froxlor\Idna\IdnaWrapper();

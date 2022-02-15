@@ -153,6 +153,7 @@ class FroxlorInstall
 		$this->_guessWebserver();
 		$this->_guessDistribution();
 
+		$this->_getPostField('use_ssl', 1);
 		$this->_getPostField('mysql_host', '127.0.0.1');
 		$this->_getPostField('mysql_database', 'froxlor');
 		$this->_getPostField('mysql_forcecreate', '0');
@@ -585,6 +586,9 @@ class FroxlorInstall
 
 		$this->_updateSetting($upd_stmt, 'admin@' . $this->_data['servername'], 'panel', 'adminmail');
 		$this->_updateSetting($upd_stmt, $this->_data['serverip'], 'system', 'ipaddress');
+		if ($this->_data['use_ssl']) {
+			$this->_updateSetting($upd_stmt, 1, 'system', 'use_ssl');
+		}
 		$this->_updateSetting($upd_stmt, $this->_data['servername'], 'system', 'hostname');
 		$this->_updateSetting($upd_stmt, $this->_languages[$this->_activelng], 'panel', 'standardlanguage');
 		$this->_updateSetting($upd_stmt, $this->_data['mysql_access_host'], 'system', 'mysql_access_host');
@@ -600,14 +604,14 @@ class FroxlorInstall
 			$this->_updateSetting($upd_stmt, '/etc/lighttpd/conf-enabled/', 'system', 'apacheconf_vhost');
 			$this->_updateSetting($upd_stmt, '/etc/lighttpd/froxlor-diroptions/', 'system', 'apacheconf_diroptions');
 			$this->_updateSetting($upd_stmt, '/etc/lighttpd/froxlor-htpasswd/', 'system', 'apacheconf_htpasswddir');
-			$this->_updateSetting($upd_stmt, '/etc/init.d/lighttpd reload', 'system', 'apachereload_command');
+			$this->_updateSetting($upd_stmt, 'service lighttpd reload', 'system', 'apachereload_command');
 			$this->_updateSetting($upd_stmt, '/etc/lighttpd/lighttpd.pem', 'system', 'ssl_cert_file');
 			$this->_updateSetting($upd_stmt, '/var/run/lighttpd/', 'phpfpm', 'fastcgi_ipcdir');
 		} elseif ($this->_data['webserver'] == "nginx") {
 			$this->_updateSetting($upd_stmt, '/etc/nginx/sites-enabled/', 'system', 'apacheconf_vhost');
 			$this->_updateSetting($upd_stmt, '/etc/nginx/sites-enabled/', 'system', 'apacheconf_diroptions');
 			$this->_updateSetting($upd_stmt, '/etc/nginx/froxlor-htpasswd/', 'system', 'apacheconf_htpasswddir');
-			$this->_updateSetting($upd_stmt, '/etc/init.d/nginx reload', 'system', 'apachereload_command');
+			$this->_updateSetting($upd_stmt, 'service nginx reload', 'system', 'apachereload_command');
 			$this->_updateSetting($upd_stmt, '/etc/nginx/nginx.pem', 'system', 'ssl_cert_file');
 			$this->_updateSetting($upd_stmt, '/var/run/', 'phpfpm', 'fastcgi_ipcdir');
 			$this->_updateSetting($upd_stmt, 'error', 'system', 'errorlog_level');
@@ -618,8 +622,10 @@ class FroxlorInstall
 			if ($this->_data['distribution'] == str_replace(".xml", "", strtolower(basename($_distribution)))) {
 				$dist = new \Froxlor\Config\ConfigParser($_distribution);
 				$defaults = $dist->getDefaults();
-				foreach ($defaults->property as $property) {
-					$this->_updateSetting($upd_stmt, $property->value, $property->settinggroup, $property->varname);
+				if (!empty($defaults)) {
+					foreach ($defaults as $property) {
+						$this->_updateSetting($upd_stmt, $property->attributes()->value, $property->attributes()->settinggroup, $property->attributes()->varname);
+					}
 				}
 			}
 		}

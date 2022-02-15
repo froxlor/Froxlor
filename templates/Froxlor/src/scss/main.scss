@@ -1,0 +1,68 @@
+@charset "UTF-8";
+
+@import "variables";
+@import "~bootstrap/scss/bootstrap";
+@import "~@fortawesome/fontawesome-free/css/all";
+
+.max-w-lg {
+  max-width: 992px;
+}
+
+.card {
+  border: none;
+  @apply shadow;
+}
+
+.rounded-corner-tl-bl {
+  border-radius: $border-radius 0 $border-radius 0;
+}
+
+footer {
+  color: #888;
+  font-size: 0.75rem !important;
+}
+
+footer a,
+footer a:active,
+footer a:visited {
+  color: #888;
+}
+
+.dark {
+  /* redefine theme colors for dark theme */
+  $primary: #999;
+  $secondary: #111111;
+  $success: #999;
+  $dark: #000;
+
+  $card-bg: #2a2a2a;
+
+  $theme-colors: (
+          "primary": $primary,
+          "secondary": $secondary,
+          "success": $success,
+          "danger": $danger,
+          "info": $indigo,
+          "dark": $dark,
+          "light": $light,
+  );
+
+  /* redefine theme color variables */
+  @each $color, $value in $theme-colors {
+    --#{$variable-prefix}#{$color}: #{$value};
+  }
+
+  /* redefine theme color rgb vars (used for bg- colors) */
+  $theme-colors-rgb: map-loop($theme-colors, to-rgb, "$value");
+  @each $color, $value in $theme-colors-rgb {
+    --#{$variable-prefix}#{$color}-rgb: #{$value};
+  }
+
+  $body-color: #999;
+  $body-bg: #222;
+
+  --#{$variable-prefix}body-color: #{$body-color};
+  --#{$variable-prefix}body-bg: #{$body-bg};
+
+  @import "bootstrap";
+}
