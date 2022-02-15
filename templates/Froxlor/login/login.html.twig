@@ -1,0 +1,47 @@
+{% extends "Froxlor/base.html.twig" %}
+
+{% block body %}
+	<div class="container p-3 bg-light border border-top-0">
+		<img src="{{ basehref|default('') }}templates/Froxlor/assets/img/logo.png" alt="Froxlor Server Management Panel"/>
+		<section class="mt-4">
+			<h3 class="text-center mb-3">{{ pagetitle }}</h3>
+			{% if upd_in_progress %}
+				<div class="alert alert-warning" role="alert">
+					{{ lng('update.updateinprogress_onlyadmincanlogin')|raw }}
+				</div>
+			{% elseif successmsg is not empty %}
+				<div class="alert alert-success" role="alert">
+					<h4 class="alert-heading">{{ lng('success.success') }}</h4>
+					<p>{{ successmsg|raw }}</p>
+				</div>
+			{% elseif message is not empty %}
+				<div class="alert alert-danger" role="alert">
+					<h4 class="alert-heading">{{ lng('error.error') }}</h4>
+					<p>{{ message|raw }}</p>
+				</div>
+			{% endif %}
+			<form action="index.php" method="post" enctype="application/x-www-form-urlencoded">
+				<div class="row mb-3">
+					<label for="loginname" class="col-sm-4 col-form-label">{{ lng('login.username') }}</label>
+					<div class="col-sm-8">
+						<input class="form-control" type="text" name="loginname" id="loginname" value="" required/>
+					</div>
+				</div>
+				<div class="row mb-3">
+					<label for="password" class="col-sm-4 col-form-label">{{ lng('login.password') }}</label>
+					<div class="col-sm-8">
+						<input class="form-control" type="password" name="password" id="password" value="" required/>
+					</div>
+				</div>
+				<strong>language stuff noch</strong>
+				<aside class="text-end">
+					<input type="hidden" name="script" value="{{ lastscript }}" />
+					<input type="hidden" name="qrystr" value="{{ lastqrystr }}" />
+					<input type="hidden" name="send" value="send" />
+					<button class="btn btn-sm btn-primary" type="submit" name="dologin">{{ lng('login.login') }}</button>
+				</aside>
+			</form>
+			<strong>passwort vergessen stuff noch</strong>
+		</section>
+	</div>
+{% endblock %}

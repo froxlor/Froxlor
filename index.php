@@ -22,6 +22,7 @@ require './lib/init.php';
 use Froxlor\Database\Database;
 use Froxlor\Settings;
 use Froxlor\FroxlorLogger;
+use Froxlor\UI\Panel\UI;
 
 if ($action == '') {
 	$action = 'login';
@@ -32,14 +33,14 @@ if (session_status() == PHP_SESSION_NONE) {
 	ini_set("url_rewriter.tags", "");
 	ini_set("session.use_cookies", false);
 	ini_set("session.cookie_httponly", true);
-	ini_set("session.cookie_secure", $is_ssl);
+	ini_set("session.cookie_secure", UI::$SSL_REQ);
 	session_id('login');
 	session_start();
 }
 
 if ($action == '2fa_entercode') {
 	// page for entering the 2FA code after successful login
-	if (! isset($_SESSION) || ! isset($_SESSION['secret_2fa'])) {
+	if (!isset($_SESSION) || !isset($_SESSION['secret_2fa'])) {
 		// no session - redirect to index
 		\Froxlor\UI\Response::redirectTo('index.php');
 		exit();
@@ -48,7 +49,7 @@ if ($action == '2fa_entercode') {
 	eval("echo \"" . \Froxlor\UI\Template::getTemplate('2fa/entercode', true) . "\";");
 } elseif ($action == '2fa_verify') {
 	// verify code from 2fa code-enter form
-	if (! isset($_SESSION) || ! isset($_SESSION['secret_2fa'])) {
+	if (!isset($_SESSION) || !isset($_SESSION['secret_2fa'])) {
 		// no session - redirect to index
 		\Froxlor\UI\Response::redirectTo('index.php');
 		exit();
@@ -89,7 +90,7 @@ if ($action == '2fa_entercode') {
 		$userinfo['userid'] = $uid;
 
 		// if not successful somehow - start again
-		if (! finishLogin($userinfo)) {
+		if (!finishLogin($userinfo)) {
 			\Froxlor\UI\Response::redirectTo('index.php', array(
 				'showmessage' => '2'
 			));
@@ -173,7 +174,7 @@ if ($action == '2fa_entercode') {
 					"loginname" => $loginname
 				));
 				$row = $stmt->fetch(PDO::FETCH_ASSOC);
-				if (! isset($row['admin'])) {
+				if (!isset($row['admin'])) {
 					// not an admin who can see updates
 					\Froxlor\UI\Response::redirectTo('index.php');
 					exit();
@@ -230,8 +231,8 @@ if ($action == '2fa_entercode') {
 				// login correct
 				// reset loginfail_counter, set lastlogin_succ
 				$stmt = Database::prepare("UPDATE $table
-		              SET `lastlogin_succ`= :lastlogin_succ, `loginfail_count`='0'
-		              WHERE `$uid`= :uid");
+					  SET `lastlogin_succ`= :lastlogin_succ, `loginfail_count`='0'
+					  WHERE `$uid`= :uid");
 				Database::pexecute($stmt, array(
 					"lastlogin_succ" => time(),
 					"uid" => $userinfo[$uid]
@@ -323,7 +324,7 @@ if ($action == '2fa_entercode') {
 			exit();
 		}
 
-		if (! finishLogin($userinfo)) {
+		if (!finishLogin($userinfo)) {
 			\Froxlor\UI\Response::redirectTo('index.php', array(
 				'showmessage' => '2'
 			));
@@ -369,9 +370,9 @@ if ($action == '2fa_entercode') {
 				break;
 		}
 
-		$update_in_progress = '';
+		$update_in_progress = false;
 		if (\Froxlor\Froxlor::hasUpdates() || \Froxlor\Froxlor::hasDbUpdates()) {
-			$update_in_progress = $lng['update']['updateinprogress_onlyadmincanlogin'];
+			$update_in_progress = true;
 		}
 
 		// Pass the last used page if needed
@@ -381,7 +382,7 @@ if ($action == '2fa_entercode') {
 			$lastscript = str_replace("..", "", $lastscript);
 			$lastscript = htmlspecialchars($lastscript, ENT_QUOTES);
 
-			if (! file_exists(__DIR__ . "/" . $lastscript)) {
+			if (!file_exists(__DIR__ . "/" . $lastscript)) {
 				$lastscript = "";
 			}
 		}
@@ -390,7 +391,15 @@ if ($action == '2fa_entercode') {
 			$lastqrystr = htmlspecialchars($_REQUEST['qrystr'], ENT_QUOTES);
 		}
 
-		eval("echo \"" . \Froxlor\UI\Template::getTemplate('login') . "\";");
+		UI::TwigBuffer('login/login.html.twig', [
+			'pagetitle' => 'Login',
+			'lastscript' => $lastscript,
+			'lastqrystr' => $lastqrystr,
+			'upd_in_progress' => $update_in_progress,
+			'message' => $message,
+			'successmsg' => $successmessage
+		]);
+		UI::TwigOutputBuffer();
 	}
 }
 
@@ -441,7 +450,7 @@ if ($action == 'forgotpwd') {
 					// build a activation code
 					$timestamp = time();
 					$first = substr(md5($user['loginname'] . $timestamp . \Froxlor\PhpHelper::randomStr(16)), 0, 15);
-					$third = substr(md5($user['email'] . $timestamp . \Froxlor\PhpHelper::randomStr(16)), - 15);
+					$third = substr(md5($user['email'] . $timestamp . \Froxlor\PhpHelper::randomStr(16)), -15);
 					$activationcode = $first . $timestamp . $third . substr(md5($third . $timestamp), 0, 10);
 
 					// Drop all existing activation codes for this user
@@ -683,7 +692,7 @@ function finishLogin($userinfo)
 			$language = \Froxlor\Validate\Validate::validate($_POST['language'], 'language');
 			if ($language == 'profile') {
 				$language = $userinfo['def_language'];
-			} elseif (! isset($languages[$language])) {
+			} elseif (!isset($languages[$language])) {
 				$language = Settings::Get('panel.standardlanguage');
 			}
 		} else {
