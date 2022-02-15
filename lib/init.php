@@ -18,22 +18,22 @@
  */
 
 // define default theme for configurehint, etc.
-$_deftheme = 'Sparkle';
+$_deftheme = 'Froxlor';
 
 // validate correct php version
 if (version_compare("7.1.0", PHP_VERSION, ">=")) {
 	// get hint-template
-	$vendor_hint = file_get_contents(dirname(__DIR__) . '/templates/' . $_deftheme . '/misc/phprequirementfailed.tpl');
+	$wrongphp_hint = file_get_contents(dirname(__DIR__) . '/templates/' . $_deftheme . '/misc/phprequirementfailed.html.twig');
 	// replace values
-	$vendor_hint = str_replace("<FROXLOR_PHPMIN>", "7.1.0", $vendor_hint);
-	$vendor_hint = str_replace("<CURRENT_VERSION>", PHP_VERSION, $vendor_hint);
-	$vendor_hint = str_replace("<CURRENT_YEAR>", date('Y', time()), $vendor_hint);
-	die($vendor_hint);
+	$wrongphp_hint = str_replace("<FROXLOR_PHPMIN>", "7.1.0", $wrongphp_hint);
+	$wrongphp_hint = str_replace("<CURRENT_VERSION>", PHP_VERSION, $wrongphp_hint);
+	$wrongphp_hint = str_replace("<CURRENT_YEAR>", date('Y', time()), $wrongphp_hint);
+	die($wrongphp_hint);
 }
 
-if (! file_exists(dirname(__DIR__) . '/vendor/autoload.php')) {
+if (!file_exists(dirname(__DIR__) . '/vendor/autoload.php')) {
 	// get hint-template
-	$vendor_hint = file_get_contents(dirname(__DIR__) . '/templates/' . $_deftheme . '/misc/vendormissinghint.tpl');
+	$vendor_hint = file_get_contents(dirname(__DIR__) . '/templates/' . $_deftheme . '/misc/vendormissinghint.html.twig');
 	// replace values
 	$vendor_hint = str_replace("<FROXLOR_INSTALL_DIR>", dirname(__DIR__), $vendor_hint);
 	$vendor_hint = str_replace("<CURRENT_YEAR>", date('Y', time()), $vendor_hint);
@@ -46,37 +46,11 @@ use Froxlor\Database\Database;
 use Froxlor\Settings;
 use voku\helper\AntiXSS;
 use Froxlor\PhpHelper;
+use Froxlor\UI\Panel\UI;
 
-header("Content-Type: text/html; charset=UTF-8");
+UI::sendHeaders();
+UI::initTwig();
 
-// prevent Froxlor pages from being cached
-header("Cache-Control: no-store, no-cache, must-revalidate");
-header("Pragma: no-cache");
-header('Last-Modified: ' . gmdate('D, d M Y H:i:s \G\M\T', time()));
-header('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', time()));
-
-// Prevent inline - JS to be executed (i.e. XSS) in browsers which support this,
-// Inline-JS is no longer allowed and used
-// See: http://people.mozilla.org/~bsterne/content-security-policy/index.html
-// New stuff see: https://www.owasp.org/index.php/List_of_useful_HTTP_headers and https://www.owasp.org/index.php/Content_Security_Policy
-$csp_content = "default-src 'self'; script-src 'self'; connect-src 'self'; img-src 'self' data:; style-src 'self';";
-header("Content-Security-Policy: " . $csp_content);
-header("X-Content-Security-Policy: " . $csp_content);
-header("X-WebKit-CSP: " . $csp_content);
-
-header("X-XSS-Protection: 1; mode=block");
-
-// Don't allow to load Froxlor in an iframe to prevent i.e. clickjacking
-header("X-Frame-Options: DENY");
-
-// Internet Explorer shall not guess the Content-Type, see:
-// http://blogs.msdn.com/ie/archive/2008/07/02/ie8-security-part-v-comprehensive-protection.aspx
-header("X-Content-Type-Options: nosniff");
-
-// ensure that default timezone is set
-if (function_exists("date_default_timezone_set") && function_exists("date_default_timezone_get")) {
-	@date_default_timezone_set(@date_default_timezone_get());
-}
 
 /**
  * Register Globals Security Fix
@@ -106,81 +80,51 @@ unset($key);
 $filename = htmlentities(basename($_SERVER['SCRIPT_NAME']));
 
 // check whether the userdata file exists
-if (! file_exists(\Froxlor\Froxlor::getInstallDir() . '/lib/userdata.inc.php')) {
-	$config_hint = file_get_contents(\Froxlor\Froxlor::getInstallDir() . '/templates/' . $_deftheme . '/misc/configurehint.tpl');
-	$config_hint = str_replace("<CURRENT_YEAR>", date('Y', time()), $config_hint);
-	die($config_hint);
+if (!file_exists(\Froxlor\Froxlor::getInstallDir() . '/lib/userdata.inc.php')) {
+	UI::Twig()->addGlobal('install_mode', '1');
+	echo UI::Twig()->render($_deftheme . '/misc/configurehint.html.twig');
+	die();
 }
 
 // check whether we can read the userdata file
-if (! is_readable(\Froxlor\Froxlor::getInstallDir() . '/lib/userdata.inc.php')) {
+if (!is_readable(\Froxlor\Froxlor::getInstallDir() . '/lib/userdata.inc.php')) {
 	// get possible owner
 	$posixusername = posix_getpwuid(posix_getuid());
 	$posixgroup = posix_getgrgid(posix_getgid());
-	// get hint-template
-	$owner_hint = file_get_contents(\Froxlor\Froxlor::getInstallDir() . '/templates/' . $_deftheme . '/misc/ownershiphint.tpl');
-	// replace values
-	$owner_hint = str_replace("<USER>", $posixusername['name'], $owner_hint);
-	$owner_hint = str_replace("<GROUP>", $posixgroup['name'], $owner_hint);
-	$owner_hint = str_replace("<FROXLOR_INSTALL_DIR>", \Froxlor\Froxlor::getInstallDir(), $owner_hint);
-	$owner_hint = str_replace("<CURRENT_YEAR>", date('Y', time()), $owner_hint);
-	// show
-	die($owner_hint);
+	UI::Twig()->addGlobal('install_mode', '1');
+	echo UI::Twig()->render($_deftheme . '/misc/ownershiphint.html.twig', [
+		'user' => $posixusername['name'],
+		'group' => $posixgroup['name'],
+		'installdir' => \Froxlor\Froxlor::getInstallDir()
+	]);
+	die();
 }
 
-/**
- * Includes the Usersettings eg.
- * MySQL-Username/Passwort etc.
- */
+// include MySQL-Username/Passwort etc.
 require \Froxlor\Froxlor::getInstallDir() . '/lib/userdata.inc.php';
-
-if (! isset($sql) || ! is_array($sql)) {
-	$config_hint = file_get_contents(\Froxlor\Froxlor::getInstallDir() . '/templates/' . $_deftheme . '/misc/configurehint.tpl');
-	$config_hint = str_replace("<CURRENT_YEAR>", date('Y', time()), $config_hint);
-	die($config_hint);
+if (!isset($sql) || !is_array($sql)) {
+	UI::Twig()->addGlobal('install_mode', '1');
+	echo UI::Twig()->render($_deftheme . '/misc/configurehint.html.twig');
+	die();
 }
 
-/**
- * Includes the Functions
- */
-@set_error_handler(array(
+// set error-handler
+@set_error_handler([
 	'\\Froxlor\\PhpHelper',
 	'phpErrHandler'
-));
+]);
+@set_exception_handler([
+	'\\Froxlor\\PhpHelper',
+	'phpExceptionHandler'
+]);
 
-/**
- * Includes the MySQL-Tabledefinitions etc.
- */
+// include MySQL-tabledefinitions
 require \Froxlor\Froxlor::getInstallDir() . '/lib/tables.inc.php';
 
-/**
- * Create a new idna converter
- */
+// create a new idna converter
 $idna_convert = new \Froxlor\Idna\IdnaWrapper();
 
-/**
- * If Froxlor was called via HTTPS -> enforce it for the next time by settings HSTS header according to settings
- */
-$is_ssl = false;
-if (isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) != 'off')) {
-	$is_ssl = true;
-	$maxage = Settings::Get('system.hsts_maxage');
-	if (empty($maxage)) {
-		$maxage = 0;
-	}
-	$hsts_header = "Strict-Transport-Security: max-age=" . $maxage;
-	if (Settings::Get('system.hsts_incsub') == '1') {
-		$hsts_header .= "; includeSubDomains";
-	}
-	if (Settings::Get('system.hsts_preload') == '1') {
-		$hsts_header .= "; preload";
-	}
-	header($hsts_header);
-}
-
-/**
- * SESSION MANAGEMENT
- */
+// SESSION MANAGEMENT
 $remote_addr = $_SERVER['REMOTE_ADDR'];
 
 if (empty($_SERVER['HTTP_USER_AGENT'])) {
@@ -248,7 +192,7 @@ if (isset($s) && $s != "" && $nosession != 1) {
 	$userinfo_stmt = Database::prepare($query);
 	$userinfo = Database::pexecute_first($userinfo_stmt, $userinfo_data);
 
-	if ($userinfo && (($userinfo['adminsession'] == '1' && AREA == 'admin' && isset($userinfo['adminid'])) || ($userinfo['adminsession'] == '0' && (AREA == 'customer' || AREA == 'login') && isset($userinfo['customerid']))) && (! isset($userinfo['deactivated']) || $userinfo['deactivated'] != '1')) {
+	if ($userinfo && (($userinfo['adminsession'] == '1' && AREA == 'admin' && isset($userinfo['adminid'])) || ($userinfo['adminsession'] == '0' && (AREA == 'customer' || AREA == 'login') && isset($userinfo['customerid']))) && (!isset($userinfo['deactivated']) || $userinfo['deactivated'] != '1')) {
 		$upd_stmt = Database::prepare("
 			UPDATE `" . TABLE_PANEL_SESSIONS . "` SET
 			`lastactivity` = :lastactive
@@ -303,14 +247,14 @@ if (isset($userinfo['language']) && isset($languages[$userinfo['language']])) {
 	// default: use language from session, #277
 	$language = $userinfo['language'];
 } else {
-	if (! isset($userinfo['def_language']) || ! isset($languages[$userinfo['def_language']])) // this will always evaluat true, since it is the above statement inverted. @todo remove
+	if (!isset($userinfo['def_language']) || !isset($languages[$userinfo['def_language']])) // this will always evaluat true, since it is the above statement inverted. @todo remove
 	{
 		if (isset($_GET['language']) && isset($languages[$_GET['language']])) {
 			$language = $_GET['language'];
 		} else {
 			if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
 				$accept_langs = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
-				for ($i = 0; $i < count($accept_langs); $i ++) {
+				for ($i = 0; $i < count($accept_langs); $i++) {
 					// this only works for most common languages. some (uncommon) languages have a 3 letter iso-code.
 					// to be able to use these also, we would have to depend on the intl extension for php (using Locale::lookup or similar)
 					// as long as froxlor does not support any of these languages, we can leave it like that.
@@ -322,7 +266,7 @@ if (isset($userinfo['language']) && isset($languages[$userinfo['language']])) {
 				unset($iso);
 
 				// if HTTP_ACCEPT_LANGUAGES has no valid langs, use default (very unlikely)
-				if (! strlen($language) > 0) {
+				if (!strlen($language) > 0) {
 					$language = Settings::Get('panel.standardlanguage');
 				}
 			}
@@ -370,7 +314,7 @@ if (preg_match("/([a-z0-9\.\-]+)_([a-z0-9\.\-]+)/i", $theme, $matches)) {
 }
 
 // check for existence of the theme
-if (! file_exists('templates/' . $theme . '/config.json')) {
+if (!file_exists('templates/' . $theme . '/config.json')) {
 	// Fallback
 	$theme = $_deftheme;
 }
@@ -378,7 +322,7 @@ if (! file_exists('templates/' . $theme . '/config.json')) {
 $_themeoptions = json_decode(file_get_contents('templates/' . $theme . '/config.json'), true);
 
 // check for existence of variant in theme
-if (! array_key_exists('variants', $_themeoptions) || ! array_key_exists($themevariant, $_themeoptions['variants'])) {
+if (!array_key_exists('variants', $_themeoptions) || !array_key_exists($themevariant, $_themeoptions['variants'])) {
 	$themevariant = "default";
 }
 
@@ -494,25 +438,28 @@ if (array_key_exists('css', $_themeoptions['variants'][$themevariant]) && is_arr
 		}
 	}
 }
-eval("\$header = \"" . \Froxlor\UI\Template::getTemplate('header', '1') . "\";");
 
-$current_year = date('Y', time());
+UI::Twig()->addGlobal('theme_js', $js);
+UI::Twig()->addGlobal('theme_css', $css);
+unset($js);
+unset($css);
+
+/**
+ * @TODO
+ *
 $panel_imprint_url = Settings::Get('panel.imprint_url');
 if (!empty($panel_imprint_url) && strtolower(substr($panel_imprint_url, 0, 4)) != 'http') {
-	$panel_imprint_url = 'https://'.$panel_imprint_url;
+	$panel_imprint_url = 'https://' . $panel_imprint_url;
 }
 $panel_terms_url = Settings::Get('panel.terms_url');
 if (!empty($panel_terms_url) && strtolower(substr($panel_terms_url, 0, 4)) != 'http') {
-	$panel_terms_url = 'https://'.$panel_terms_url;
+	$panel_terms_url = 'https://' . $panel_terms_url;
 }
 $panel_privacy_url = Settings::Get('panel.privacy_url');
 if (!empty($panel_privacy_url) && strtolower(substr($panel_privacy_url, 0, 4)) != 'http') {
-	$panel_privacy_url = 'https://'.$panel_privacy_url;
+	$panel_privacy_url = 'https://' . $panel_privacy_url;
 }
-eval("\$footer = \"" . \Froxlor\UI\Template::getTemplate('footer', '1') . "\";");
-
-unset($js);
-unset($css);
+*/
 
 if (isset($_POST['action'])) {
 	$action = trim(strip_tags($_POST['action']));

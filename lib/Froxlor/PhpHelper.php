@@ -47,7 +47,7 @@ class PhpHelper
 	 * @param string $charset
 	 *        	See php documentation about this
 	 *        	
-	 * @return array The array with htmlentitie'd strings
+	 * @return array|string The string or an array with htmlentities converted strings
 	 * @author Florian Lippert <flo@syscp.org>
 	 */
 	public static function htmlentitiesArray($subject, $fields = '', $quote_style = ENT_QUOTES, $charset = 'UTF-8')
@@ -64,7 +64,7 @@ class PhpHelper
 				}
 			}
 		} else {
-			$subject = htmlentities($subject, $quote_style, $charset);
+			$subject = empty($subject) ? "" : htmlentities($subject, $quote_style, $charset);
 		}
 
 		return $subject;
@@ -120,28 +120,58 @@ class PhpHelper
 		}
 
 		if (! isset($_SERVER['SHELL']) || (isset($_SERVER['SHELL']) && $_SERVER['SHELL'] == '')) {
-			global $theme;
-
-			// fallback
-			if (empty($theme)) {
-				$theme = "Sparkle";
-			}
 			// prevent possible file-path-disclosure
 			$errfile = str_replace(\Froxlor\Froxlor::getInstallDir(), "", $errfile);
-			// if we're not on the shell, output a nicer error-message
-			$err_hint = file_get_contents(\Froxlor\Froxlor::getInstallDir() . '/templates/' . $theme . '/misc/phperrornice.tpl');
-			// replace values
-			$err_hint = str_replace("<TEXT>", '#' . $errno . ' ' . $errstr, $err_hint);
-			$err_hint = str_replace("<DEBUG>", $errfile . ':' . $errline, $err_hint);
-
-			// show
-			echo $err_hint;
+			// build alert
+			$type = 'danger';
+			if ($errno == E_NOTICE || $errno == E_DEPRECATED || $errno == E_STRICT) {
+				$type = 'info';
+			} elseif ($errno = E_WARNING) {
+				$type = 'warning';
+			}
+			$err_display = '<div class="alert alert-'.$type.' my-1" role="alert">';
+			$err_display .= '<strong>#' . $errno . ' ' . $errstr . '</strong><br>';
+			$err_display .= $errfile . ':' . $errline;
+			// later depended on whether to show or now
+				$err_display .= '<br><p><pre>';
+				$debug = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+				foreach ($debug as $dline) {
+					$err_display .= $dline['function'] . '() called at [' . str_replace(\Froxlor\Froxlor::getInstallDir(), '', $dline['file']) . ':' . $dline['line'] . ']<br>';
+				}
+				$err_display .= '</pre></p>';
+			// end later
+			$err_display .= '</div>';
+			// check for more existing errors
+			$errors = isset(\Froxlor\UI\Panel\UI::Twig()->getGlobals()['global_errors']) ? \Froxlor\UI\Panel\UI::Twig()->getGlobals()['global_errors'] : "";
+			\Froxlor\UI\Panel\UI::Twig()->addGlobal('global_errors', $errors . $err_display);
 			// return true to ignore php standard error-handler
 			return true;
 		}
 
 		// of on shell, use the php standard error-handler
 		return false;
+	}
+
+	public static function phpExceptionHandler(\Exception $exception)
+	{
+		if (! isset($_SERVER['SHELL']) || (isset($_SERVER['SHELL']) && $_SERVER['SHELL'] == '')) {
+			$err_display = '<div class="alert alert-danger my-1" role="alert">';
+			$err_display .= '<strong>#' . $exception->getCode() . ' ' . $exception->getMessage() . '</strong><br>';
+			// later depended on whether to show or now
+				$err_display .= '<br><p><pre>';
+				$debug = $exception->getTrace();
+				foreach ($debug as $dline) {
+					$err_display .= $dline['function'] . '() called at [' . str_replace(\Froxlor\Froxlor::getInstallDir(), '', $dline['file']) . ':' . $dline['line'] . ']<br>';
+				}
+				$err_display .= '</pre></p>';
+			// end later
+			$err_display .= '</div>';
+			// check for more existing errors
+			$errors = isset(\Froxlor\UI\Panel\UI::Twig()->getGlobals()['global_errors']) ? \Froxlor\UI\Panel\UI::Twig()->getGlobals()['global_errors'] : "";
+			\Froxlor\UI\Panel\UI::Twig()->addGlobal('global_errors', $errors . $err_display);
+			// return true to ignore php standard error-handler
+			return true;
+		}
 	}
 
 	public static function loadConfigArrayDir()

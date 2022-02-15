@@ -48,7 +48,11 @@
 		"monolog/monolog": "^1.24",
 		"robthree/twofactorauth": "^1.6",
 		"froxlor/idna-convert-legacy": "^2.1",
-		"voku/anti-xss": "^4.1"
+		"voku/anti-xss": "^4.1",
+		"twig/twig": "^3.3",
+		"twbs/bootstrap": "^5.1",
+		"components/jquery": "^3.6",
+		"components/font-awesome": "^5.15"
     },
 	"require-dev": {
 		"phpunit/phpunit": "^9",

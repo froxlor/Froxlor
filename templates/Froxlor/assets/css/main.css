@@ -1,0 +1,12 @@
+@charset "UTF-8";
+
+footer {
+    color: #888;
+    font-size: 0.75rem !important;
+}
+
+footer a,
+footer a:active,
+footer a:visited {
+    color: #888;
+}

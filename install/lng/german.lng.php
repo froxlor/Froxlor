@@ -58,7 +58,7 @@ $lng['install']['mysql_unpriv_user'] = 'Benutzername für den unprivilegierten M
 $lng['install']['mysql_unpriv_pass'] = 'Passwort für den unprivilegierten MySQL-Account';
 $lng['install']['mysql_root_user'] = 'Benutzername für den MySQL-Root-Account';
 $lng['install']['mysql_root_pass'] = 'Passwort für den MySQL-Root-Account';
-$lng['install']['mysql_ssl_ca_file'] = 'MySQL-Server Zertifikatspfad';
+$lng['install']['mysql_ssl_ca_file'] = 'MySQL-Server Zertifikatspfad<br><small>(optional)</small>';
 $lng['install']['mysql_ssl_verify_server_certificate'] = 'Validieren des MySQL-Server Zertifikats';
 $lng['install']['admin_account'] = 'Admin-Zugang';
 $lng['install']['admin_user'] = 'Administrator-Benutzername';
@@ -76,6 +76,7 @@ $lng['install']['lighttpd'] = 'LigHTTPd';
 $lng['install']['nginx'] = 'NGINX';
 $lng['install']['httpuser'] = 'HTTP Username';
 $lng['install']['httpgroup'] = 'HTTP Gruppenname';
+$lng['install']['use_ssl'] = 'Aktiviere SSL via Port 443';
 
 $lng['install']['testing_mysql'] = 'Teste MySQL-Root Zugang...';
 $lng['install']['testing_mysql_fail'] = 'Bei der Verwendung der Datenbank gibt es scheinbar Probleme. Installation kann nicht fortgesetzt werden. Bitte Zugangsdaten prüfen und erneut versuchen.';
@@ -95,6 +96,7 @@ $lng['install']['creating_configfile'] = 'Erstelle Konfigurationsdatei...';
 $lng['install']['creating_configfile_temp'] = 'Datei wurde in %s gespeichert, bitte nach ' . dirname(dirname(__DIR__)) . '/lib/userdata.inc.php verschieben.';
 $lng['install']['creating_configfile_failed'] = 'Konnte ' . dirname(dirname(__DIR__)) . '/lib/userdata.inc.php nicht erstellen, bitte manuell mit folgendem Inhalt anlegen:';
 $lng['install']['froxlor_succ_installed'] = 'Froxlor wurde erfolgreich installiert.';
+$lng['install']['failed'] = 'fehlgeschlagen';
 
 $lng['click_here_to_refresh'] = 'Hier klicken, um erneut zu prüfen';
 $lng['click_here_to_goback'] = 'Einen Schritt zurück';

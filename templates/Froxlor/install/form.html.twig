@@ -1,0 +1,88 @@
+<!-- language select -->
+<form action="{{ pagecontent.form.formaction }}" method="get">
+	<div class="row mb-3">
+		<label for="language" class="col-sm-4 col-form-label">{{ lng('install.language') }}</label>
+		<div class="col-sm-8">
+			<select class="form-select" id="language" name="language">
+				{% for lngfile,lngname in pagecontent.form.languages %}
+					<option value="{{ lngfile }}" {% if lngfile == pagecontent.form.activelang %} selected="selected" {% endif %}>{{ lngname }}</option>
+				{% endfor %}
+			</select>
+		</div>
+	</div>
+	<aside class="text-end">
+		<input type="hidden" name="check" value="1"/>
+		<button class="btn btn-sm btn-primary" type="submit" name="chooselang">{{ lng('install.lngbtn_go') }}</button>
+	</aside>
+</form>
+<!-- main install form -->
+<div class="alert alert-primary mt-md-3" role="alert">{{ lng('install.welcometext')|raw }}</div>
+{% if pagecontent.form.result is not empty %}
+	<div class="alert alert-warning" role="alert">
+		{% for emsg in pagecontent.form.result %}
+			<p>{{ emsg }}</p>
+		{% endfor %}
+	</div>
+{% endif %}
+<form action="{{ pagecontent.form.formaction }}" method="post">
+	{% for fdata in pagecontent.form.data %}
+		<fieldset>
+			<legend>{{ fdata.title }}</legend>
+			{% for field in fdata.fields %}
+				{% if field is iterable %}
+					{% if field.type is defined %}
+						{% if field.type == 'text' or field.type == 'password' %}
+							<div class="row mb-3">
+								<label for="{{ field.id }}" class="col-sm-4 col-form-label">{{ field.label|raw }}</label>
+								<div class="col-sm-8">
+									<input type="{{ field.type }}" class="form-control {% if field.style == 'red' %}is-invalid{% endif %}" id="{{ field.id }}" name="{{ field.name }}" value="{{ field.value }}" {% if field.required %} required {% endif %}/>
+								</div>
+							</div>
+						{% elseif field.type == 'select' %}
+							<div class="row mb-3">
+								<label for="{{ field.id }}" class="col-sm-4 col-form-label">{{ field.label|raw }}</label>
+								<div class="col-sm-8">
+									<select class="form-select {% if field.style == 'red' %}is-invalid{% endif %}" id="{{ field.id }}" name="{{ field.name }}" {% if field.required %} required {% endif %}>
+										{% for opts in field.options %}
+											<option value="{{ opts.value }}" {% if opts.selected %} selected="selected" {% endif %}>{{ opts.label }}</option>
+										{% endfor %}
+									</select>
+								</div>
+							</div>
+						{% elseif field.type == 'checkbox' %}
+							<div class="row mb-3">
+								<label for="{{ field.id }}" class="col-sm-4 col-form-label">{{ field.label|raw }}</label>
+								<div class="col-sm-8">
+									<div class="form-check form-switch">
+										<input class="form-check-input {% if field.style == 'red' %}is-invalid{% endif %}" type="checkbox" value="{{ field.value }}" id="{{ field.id }}" name="{{ field.name }}" {% if field.checked %} checked="checked" {% endif %}>
+									</div>
+								</div>
+							</div>
+						{% endif %}
+					{% else %}
+						<div class="row mb-3">
+							<label class="col-sm-4 col-form-label">{{ field.label|raw }}</label>
+							<div class="col-sm-8">
+								{% for radios in field.fields %}
+									<div class="form-check">
+										<input class="form-check-input {% if field.style == 'red' %}is-invalid{% endif %}" type="radio" name="{{ radios.name }}" id="{{ radios.id }}" value="{{ radios.value }}" {% if radios.checked %}checked="checked"{% endif %}>
+										<label class="form-check-label" for="{{ radios.id }}">
+											{{ radios.label }}
+										</label>
+									</div>
+								{% endfor %}
+							</div>
+						</div>
+					{% endif %}
+				{% endif %}
+			{% endfor %}
+		</fieldset>
+	{% endfor %}
+	<aside class="text-end mt-3">
+		<input type="hidden" name="check" value="1"/>
+		<input type="hidden" name="language" value="{{ pagecontent.form.activelang }}"/>
+		<input type="hidden" name="installstep" value="1"/>
+		<button class="btn btn-lg btn-success" type="submit" name="submitbutton">{{ lng('click_here_to_continue') }}
+			&raquo;</button>
+	</aside>
+</form>

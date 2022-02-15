@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="robots" content="noindex, nofollow, noarchive"/>
+		<meta
+		name="GOOGLEBOT" content="nosnippet"/>
+
+		<!-- Bootstrap CSS -->
+		<link
+		rel="stylesheet" href="{{ basehref|default("") }}vendor/twbs/bootstrap/dist/css/bootstrap.min.css">
+
+		<!-- FontAwesome CSS -->
+		<link
+		rel="stylesheet" href="{{ basehref|default("") }}vendor/components/font-awesome/css/all.min.css">
+
+		<!-- our css -->
+		<link href="{{ basehref|default("") }}templates/Froxlor/assets/css/main.css" rel="stylesheet">
+		{{ theme_css|raw }}
+		{% block custom_css %}{% endblock %}
+
+		<!-- Bootstrap and necessary plugins -->
+		<script src="{{ basehref|default("") }}vendor/components/jquery/jquery.min.js"></script>
+		<script src="{{ basehref|default("") }}vendor/twbs/bootstrap/dist/js/bootstrap.min.js"></script>
+		{{ theme_js|raw }}
+		{% block custom_js %}{% endblock %}
+		<title>Froxlor
+			{% if page_title %}
+				|
+				{{ page_title }}
+			{% endif %}
+		</title>
+	</head>
+
+
+	<body>
+		<div class="container-fluid"> {% block navigation %}{% endblock %}
+
+			{{ global_errors|raw }}
+
+			{% block body %}{% endblock %}
+
+			<footer class="pt-5 pb-5 text-center">
+				<span><img src="{{ basehref|default("") }}templates/Froxlor/assets/img/logo_grey.png" alt="Froxlor"/>
+					{% if install_mode is not defined  %}
+						{% if (get_setting('admin.show_version_login') ==
+					'1' and module == 'Login') or (module != 'Login'
+					and get_setting('admin.show_version_footer') == '1') %}{% endif %}
+						{{ call_static('\\Froxlor\\Froxlor', 'getFullVersion') }}
+					{% endif %}
+					&copy; 2009-{{ "now"|date("Y") }}
+					by
+					<a href="http://www.froxlor.org/" rel="external">the Froxlor Team</a><br/>
+					{% if install_mode is not defined %}
+						{% if (get_setting('panel.imprint_url') != '') %}
+							<a href="{{ get_setting('panel.imprint_url') }}" target="_blank" class="footer-link">{{ lng('imprint') }}</a>
+						{% endif %}
+						{% if (get_setting('panel.terms_url') != '') %}
+							<a href="{{ get_setting('panel.terms_url') }}" target="_blank" class="footer-link">{{ lng('terms') }}</a>
+						{% endif %}
+						{% if (get_setting('panel.privacy_url') != '') %}
+							<a href="{{ get_setting('panel.privacy_url') }}" target="_blank" class="footer-link">{{ lng('privacy') }}</a>
+						{% endif %}
+					{% endif %}
+				</span>
+				{% if lng('translator') %}
+					<br/>
+					<span>{{ lng('panel.translator') }}:
+						{{ lng('translator') }}
+					{% endif %}
+				</footer>
+			</div>
+		</body>
+	</body>
+</html>

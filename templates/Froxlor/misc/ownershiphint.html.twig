@@ -1,0 +1,20 @@
+{% extends "Froxlor/base.html.twig" %}
+
+{% block body %}
+<div class="container my-auto">
+<div class="alert alert-warning fade show" role="alert">
+	<h4 class="alert-heading">
+		Whoops!
+	</h4>
+	<p>The configuration file <b>lib/userdata.inc.php</b> cannot be read from the webserver.</p>
+	<p>This mostly happens due to wrong ownership.<br />Try the following command to correct the ownership:</p>
+	<p class="mb-0">
+	<pre>chown -R {{ user }}:{{ group }} {{ installdir }}</pre>
+	</p>
+	<hr>
+	<p class="mt-1 text-center">
+		<a href="./install/install.php" class="btn btn-primary" title="Click to start the install process">Start install</a>
+	</p>
+</div>
+</div>
+{% endblock %}

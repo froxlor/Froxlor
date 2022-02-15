@@ -58,7 +58,7 @@ $lng['install']['mysql_unpriv_user'] = 'Username for the unprivileged MySQL-acco
 $lng['install']['mysql_unpriv_pass'] = 'Password for the unprivileged MySQL-account';
 $lng['install']['mysql_root_user'] = 'Username for the MySQL-root-account';
 $lng['install']['mysql_root_pass'] = 'Password for the MySQL-root-account';
-$lng['install']['mysql_ssl_ca_file'] = 'MySQL server certificate file path';
+$lng['install']['mysql_ssl_ca_file'] = 'MySQL server certificate file path<br><small>(optional)</small>';
 $lng['install']['mysql_ssl_verify_server_certificate'] = 'Verify MySQL TLS certificate';
 $lng['install']['admin_account'] = 'Administrator Account';
 $lng['install']['admin_user'] = 'Administrator Username';
@@ -76,6 +76,7 @@ $lng['install']['lighttpd'] = 'LigHTTPd';
 $lng['install']['nginx'] = 'NGINX';
 $lng['install']['httpuser'] = 'HTTP username';
 $lng['install']['httpgroup'] = 'HTTP groupname';
+$lng['install']['use_ssl'] = 'Enable SSL via port 443';
 
 $lng['install']['testing_mysql'] = 'Checking MySQL-root access...';
 $lng['install']['testing_mysql_fail'] = 'There seems to be a problem with the database-connection. Cannot continue. Please go back and check your credentials.';
@@ -95,6 +96,7 @@ $lng['install']['creating_configfile'] = 'Creating configfile...';
 $lng['install']['creating_configfile_temp'] = 'File was saved in %s, please move to ' . dirname(dirname(__DIR__)) . '/lib/userdata.inc.php';
 $lng['install']['creating_configfile_failed'] = 'Could not create ' . dirname(dirname(__DIR__)) . '/lib/userdata.inc.php, please create it manually with the following content:';
 $lng['install']['froxlor_succ_installed'] = 'Froxlor was installed successfully.';
+$lng['install']['failed'] = 'failed';
 
 $lng['click_here_to_refresh'] = 'Click here to check again';
 $lng['click_here_to_goback'] = 'Click here to go back';
