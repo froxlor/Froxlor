@@ -33,7 +33,7 @@ class UI
 	 *
 	 * @var string
 	 */
-	private static $default_theme = 'Sparkle2';
+	private static $default_theme = 'Froxlor';
 
 	private static $install_mode = false;
 
@@ -145,8 +145,8 @@ class UI
 		$theme = self::$default_theme;
 		if (!self::$install_mode) {
 			// system default
-			if (\Froxlor\Froxlor::DBVERSION <= 201909150) {
-				\Froxlor\Settings::Set('panel.default_theme', 'Sparkle2');
+			if (\Froxlor\Froxlor::DBVERSION <= 202299999) {
+				\Froxlor\Settings::Set('panel.default_theme', 'Froxlor');
 			}
 			$theme = (\Froxlor\Settings::Get('panel.default_theme') !== null) ? \Froxlor\Settings::Get('panel.default_theme') : $theme;
 			// customer theme
