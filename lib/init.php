@@ -294,6 +294,8 @@ if ($language != 'English') {
 // last but not least include language references file
 include_once \Froxlor\FileDir::makeSecurePath('lng/lng_references.php');
 
+UI::setLng($lng);
+
 // Initialize our new link - class
 $linker = new \Froxlor\UI\Linker('index.php', $s);
 
@@ -317,15 +319,14 @@ if (preg_match("/([a-z0-9\.\-]+)_([a-z0-9\.\-]+)/i", $theme, $matches)) {
 }
 
 // check for existence of the theme
-if (!file_exists('templates/' . $theme . '/config.json')) {
-	// Fallback
-	$theme = $_deftheme;
+if (@file_exists('templates/' . $theme . '/config.json')) {
+	$_themeoptions = json_decode(file_get_contents('templates/' . $theme . '/config.json'), true);
+} else {
+	$_themeoptions = null;
 }
 
-$_themeoptions = json_decode(file_get_contents('templates/' . $theme . '/config.json'), true);
-
 // check for existence of variant in theme
-if (!array_key_exists('variants', $_themeoptions) || !array_key_exists($themevariant, $_themeoptions['variants'])) {
+if (is_array($_themeoptions) && (!array_key_exists('variants', $_themeoptions) || !array_key_exists($themevariant, $_themeoptions['variants']))) {
 	$themevariant = "default";
 }
 
@@ -425,7 +426,7 @@ if (AREA == 'admin' || AREA == 'customer') {
 }
 
 $js = "";
-if (array_key_exists('js', $_themeoptions['variants'][$themevariant]) && is_array($_themeoptions['variants'][$themevariant]['js'])) {
+if (is_array($_themeoptions) && array_key_exists('js', $_themeoptions['variants'][$themevariant]) && is_array($_themeoptions['variants'][$themevariant]['js'])) {
 	foreach ($_themeoptions['variants'][$themevariant]['js'] as $jsfile) {
 		if (file_exists('templates/' . $theme . '/assets/js/' . $jsfile)) {
 			$js .= '<script type="text/javascript" src="templates/' . $theme . '/assets/js/' . $jsfile . '"></script>' . "\n";
@@ -434,7 +435,7 @@ if (array_key_exists('js', $_themeoptions['variants'][$themevariant]) && is_arra
 }
 
 $css = "";
-if (array_key_exists('css', $_themeoptions['variants'][$themevariant]) && is_array($_themeoptions['variants'][$themevariant]['css'])) {
+if (is_array($_themeoptions) && array_key_exists('css', $_themeoptions['variants'][$themevariant]) && is_array($_themeoptions['variants'][$themevariant]['css'])) {
 	foreach ($_themeoptions['variants'][$themevariant]['css'] as $cssfile) {
 		if (file_exists('templates/' . $theme . '/assets/css/' . $cssfile)) {
 			$css .= '<link href="templates/' . $theme . '/assets/css/' . $cssfile . '" rel="stylesheet" type="text/css" />' . "\n";

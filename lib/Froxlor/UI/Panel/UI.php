@@ -37,6 +37,8 @@ class UI
 
 	private static $install_mode = false;
 
+	public static $SSL_REQ = false;
+
 	/**
 	 * send various security related headers
 	 */
@@ -80,6 +82,7 @@ class UI
 		 * If Froxlor was called via HTTPS -> enforce it for the next time by settings HSTS header according to settings
 		 */
 		if (isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) != 'off')) {
+			self::$SSL_REQ = true;
 			$maxage = \Froxlor\Settings::Get('system.hsts_maxage');
 			if (empty($maxage)) {
 				$maxage = 0;
