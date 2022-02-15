@@ -2,6 +2,11 @@
 <froxlor>
 	<distribution name="Debian" codename="Bullseye"
 		version="11.x" defaulteditor="/bin/nano">
+		<!-- OS defaults to be loaded on installation -->
+		<defaults>
+			<default settinggroup="system" varname="nssextrausers" value="1"></default>
+			<default settinggroup="system" varname="use_mod_proxy" value="1"></default>
+		</defaults>
 		<services>
 			<!-- HTTP -->
 			<service type="http" title="{{lng.admin.configfiles.http}}">

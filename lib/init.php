@@ -48,6 +48,9 @@ use voku\helper\AntiXSS;
 use Froxlor\PhpHelper;
 use Froxlor\UI\Panel\UI;
 
+// include MySQL-tabledefinitions
+require \Froxlor\Froxlor::getInstallDir() . '/lib/tables.inc.php';
+
 UI::sendHeaders();
 UI::initTwig();
 
@@ -118,8 +121,8 @@ if (!isset($sql) || !is_array($sql)) {
 	'phpExceptionHandler'
 ]);
 
-// include MySQL-tabledefinitions
-require \Froxlor\Froxlor::getInstallDir() . '/lib/tables.inc.php';
+// send ssl-related headers (later than the others because we need a working database-connection and installation)
+UI::sendSslHeaders();
 
 // create a new idna converter
 $idna_convert = new \Froxlor\Idna\IdnaWrapper();

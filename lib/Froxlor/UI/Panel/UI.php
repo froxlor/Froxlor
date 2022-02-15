@@ -72,11 +72,9 @@ class UI
 		if (function_exists("date_default_timezone_set") && function_exists("date_default_timezone_get")) {
 			@date_default_timezone_set(@date_default_timezone_get());
 		}
-
-		self::sendSslHeaders();
 	}
 
-	private static function sendSslHeaders()
+	public static function sendSslHeaders()
 	{
 		/**
 		 * If Froxlor was called via HTTPS -> enforce it for the next time by settings HSTS header according to settings
