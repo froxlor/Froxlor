@@ -441,7 +441,7 @@ class FroxlorInstall
 			return bin2hex(openssl_random_pseudo_bytes($length));
 		}
 		// if everything else fails, use unsafe fallback
-		return md5(uniqid(microtime(), 1));
+		return substr(md5(uniqid(microtime(), 1)), 0, $length);
 	}
 
 	/**
@@ -479,7 +479,7 @@ class FroxlorInstall
 		$defaultsslip = false;
 		if ($this->_data['use_ssl']) {
 			$stmt->execute(array(
-                'nvh' => $nvh,
+				'nvh' => $this->_data['webserver'] == 'apache2' ? '1' : '0',
 				'serverip' => $this->_data['serverip'],
 				'serverport' => 443
 			));

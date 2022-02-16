@@ -1,4 +1,5 @@
 <?php
+
 namespace Froxlor\Database;
 
 /**
@@ -243,7 +244,7 @@ class Database
 	 */
 	private static function getDB()
 	{
-		if (! extension_loaded('pdo') || in_array("mysql", \PDO::getAvailableDrivers()) == false) {
+		if (!extension_loaded('pdo') || in_array("mysql", \PDO::getAvailableDrivers()) == false) {
 			self::showerror(new \Exception("The php PDO extension or PDO-MySQL driver is not available"));
 		}
 
@@ -257,7 +258,7 @@ class Database
 		require \Froxlor\Froxlor::getInstallDir() . "/lib/userdata.inc.php";
 
 		// le format
-		if (self::$needroot == true && isset($sql['root_user']) && isset($sql['root_password']) && (! isset($sql_root) || ! is_array($sql_root))) {
+		if (self::$needroot == true && isset($sql['root_user']) && isset($sql['root_password']) && (!isset($sql_root) || !is_array($sql_root))) {
 			$sql_root = array(
 				0 => array(
 					'caption' => 'Default',
@@ -382,7 +383,7 @@ class Database
 		require \Froxlor\Froxlor::getInstallDir() . "/lib/userdata.inc.php";
 
 		// le format
-		if (isset($sql['root_user']) && isset($sql['root_password']) && (! isset($sql_root) || ! is_array($sql_root))) {
+		if (isset($sql['root_user']) && isset($sql['root_password']) && (!isset($sql_root) || !is_array($sql_root))) {
 			$sql_root = array(
 				0 => array(
 					'caption' => 'Default',
@@ -417,7 +418,7 @@ class Database
 		 * (no one seems to find the stuff in the syslog)
 		 */
 		$sl_dir = \Froxlor\FileDir::makeCorrectDir(\Froxlor\Froxlor::getInstallDir() . "/logs/");
-		if (! file_exists($sl_dir)) {
+		if (!file_exists($sl_dir)) {
 			@mkdir($sl_dir, 0755);
 		}
 		openlog("froxlor", LOG_PID | LOG_PERROR, LOG_LOCAL0);
@@ -428,7 +429,7 @@ class Database
 		/**
 		 * log error for reporting
 		 */
-		$errid = substr(md5(microtime()), 5, 5);
+		$errid = self::genUniqueToken();
 		$err_file = \Froxlor\FileDir::makeCorrectFile($sl_dir . "/" . $errid . "_sql-error.log");
 		$errlog = @fopen($err_file, 'w');
 		@fwrite($errlog, "|CODE " . $error->getCode() . "\n");
@@ -440,7 +441,7 @@ class Database
 
 		if (empty($sql['debug'])) {
 			$error_trace = '';
-		} elseif (! is_null($stmt)) {
+		} elseif (!is_null($stmt)) {
 			$error_trace .= "<br><br>" . $stmt->queryString;
 		}
 
@@ -453,40 +454,58 @@ class Database
 		}
 
 		if ($showerror) {
-			// fallback
-			$theme = 'Sparkle';
-
 			// clean up sensitive data
 			unset($sql);
 			unset($sql_root);
 
-			if ((isset($theme) && $theme != '') && ! isset($_SERVER['SHELL']) || (isset($_SERVER['SHELL']) && $_SERVER['SHELL'] == '')) {
+			if ((isset($theme) && $theme != '') && !isset($_SERVER['SHELL']) || (isset($_SERVER['SHELL']) && $_SERVER['SHELL'] == '')) {
 				// if we're not on the shell, output a nice error
-				$_errtpl = dirname($sl_dir) . '/templates/' . $theme . '/misc/dberrornice.tpl';
-				if (file_exists($_errtpl)) {
-					$err_hint = file_get_contents($_errtpl);
-					// replace values
-					$err_hint = str_replace("<TEXT>", $error_message, $err_hint);
-					$err_hint = str_replace("<DEBUG>", $error_trace, $err_hint);
-					$err_hint = str_replace("<CURRENT_YEAR>", date('Y', time()), $err_hint);
-
-					$err_report_html = '';
-					if (is_array($userinfo) && (($userinfo['adminsession'] == '1' && \Froxlor\Settings::Get('system.allow_error_report_admin') == '1') || ($userinfo['adminsession'] == '0' && \Froxlor\Settings::Get('system.allow_error_report_customer') == '1'))) {
-						$err_report_html = '<a href="<LINK>" title="Click here to report error">Report error</a>';
-						$err_report_html = str_replace("<LINK>", $linker->getLink(array(
-							'section' => 'index',
-							'page' => 'send_error_report',
-							'errorid' => $errid
-						)), $err_report_html);
-					}
-					$err_hint = str_replace("<REPORT>", $err_report_html, $err_hint);
-
-					// show
-					die($err_hint);
+				$err_report_link = '';
+				if (is_array($userinfo) && (($userinfo['adminsession'] == '1' && \Froxlor\Settings::Get('system.allow_error_report_admin') == '1') || ($userinfo['adminsession'] == '0' && \Froxlor\Settings::Get('system.allow_error_report_customer') == '1'))) {
+					$err_report_link = $linker->getLink(array(
+						'section' => 'index',
+						'page' => 'send_error_report',
+						'errorid' => $errid
+					));
 				}
+				// show
+				\Froxlor\UI\Panel\UI::initTwig(true);
+				\Froxlor\UI\Panel\UI::Twig()->addGlobal('install_mode', '1');
+				\Froxlor\UI\Panel\UI::TwigBuffer('misc/dberrornice.html.twig', [
+					'page_title' => 'Database error',
+					'message' => $error_message,
+					'debug' => $error_trace,
+					'report' => $err_report_link
+				]);
+				echo \Froxlor\UI\Panel\UI::TwigOutputBuffer();
+				die();
 			}
 			die("We are sorry, but a MySQL - error occurred. The administrator may find more information in the syslog");
 		}
+	}
+
+	/**
+	 * generate safe unique token
+	 *
+	 * @param int $length
+	 * @return string
+	 */
+	private static function genUniqueToken(int $length = 16)
+	{
+		if (!isset($length) || intval($length) <= 8) {
+			$length = 16;
+		}
+		if (function_exists('random_bytes')) {
+			return bin2hex(random_bytes($length));
+		}
+		if (function_exists('mcrypt_create_iv')) {
+			return bin2hex(mcrypt_create_iv($length, MCRYPT_DEV_URANDOM));
+		}
+		if (function_exists('openssl_random_pseudo_bytes')) {
+			return bin2hex(openssl_random_pseudo_bytes($length));
+		}
+		// if everything else fails, use unsafe fallback
+		return substr(md5(uniqid(microtime(), 1)), 0, $length);
 	}
 
 	/**
@@ -533,7 +552,7 @@ class Database
 		$length = strlen($search);
 
 		if ($length > $minLength) {
-			for ($shiftedLength = $length; $shiftedLength >= $minLength; $shiftedLength --) {
+			for ($shiftedLength = $length; $shiftedLength >= $minLength; $shiftedLength--) {
 				$substitutions[substr($search, 0, $shiftedLength)] = $replace;
 			}
 		}
