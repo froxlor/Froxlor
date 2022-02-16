@@ -5,12 +5,16 @@
 @import "~@fortawesome/fontawesome-free/css/all";
 
 .max-w-lg {
-  max-width: 992px;
+  max-width: 992px !important;
 }
 
 .card {
   border: none;
   @apply shadow;
+
+  .card-body {
+    padding: 1.5rem;
+  }
 }
 
 .rounded-corner-tl-bl {
@@ -30,12 +34,12 @@ footer a:visited {
 
 .dark {
   /* redefine theme colors for dark theme */
-  $primary: #999;
+  $primary: #3a3a3a;
   $secondary: #111111;
-  $success: #999;
+  $success: #3a3a3a;
   $dark: #000;
 
-  $card-bg: #2a2a2a;
+  $card-bg: #3a3a3a;
 
   $theme-colors: (
           "primary": $primary,

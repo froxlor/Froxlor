@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" {% if darkmode is defined %}class="{{ darkmode }}"{% endif %}>
 <head>
 	<!-- Required meta tags -->
 	<meta charset="utf-8">
@@ -23,7 +23,7 @@
 		{% endif %}
 	</title>
 </head>
-<body {% if install_mode is defined %}class="min-vh-100 d-flex align-items-center"{% endif %}>
+<body {% if body_class is defined %}class="{{ body_class }}"{% endif %}>
 	<div class="container-fluid">
 		{% block navigation %}{% endblock %}
 
