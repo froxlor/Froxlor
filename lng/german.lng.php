@@ -44,6 +44,7 @@ $lng['login']['language'] = 'Sprache';
 $lng['login']['login'] = 'Anmelden';
 $lng['login']['logout'] = 'Abmelden';
 $lng['login']['profile_lng'] = 'Profilsprache';
+$lng['login']['welcomemsg'] = 'Bitte melden Sie sich an, um auf Ihr Konto zuzugreifen.';
 
 /**
  * Customer

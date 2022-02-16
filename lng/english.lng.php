@@ -44,6 +44,7 @@ $lng['login']['language'] = 'Language';
 $lng['login']['login'] = 'Login';
 $lng['login']['logout'] = 'Logout';
 $lng['login']['profile_lng'] = 'Profile language';
+$lng['login']['welcomemsg'] = 'Please log in to access your account.';
 
 /**
  * Customer

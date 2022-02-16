@@ -331,12 +331,6 @@ if ($action == '2fa_entercode') {
 		}
 		exit();
 	} else {
-		$language_options = '';
-		$language_options .= \Froxlor\UI\HTML::makeoption($lng['login']['profile_lng'], 'profile', 'profile', true, true);
-
-		foreach ($languages as $language_file => $language_name) {
-			$language_options .= \Froxlor\UI\HTML::makeoption($language_name, $language_file, 'profile', true);
-		}
 
 		$smessage = isset($_GET['showmessage']) ? (int) $_GET['showmessage'] : 0;
 		$message = '';
@@ -393,6 +387,7 @@ if ($action == '2fa_entercode') {
 
 		UI::TwigBuffer('login/login.html.twig', [
 			'pagetitle' => 'Login',
+			'languages' => $languages,
 			'lastscript' => $lastscript,
 			'lastqrystr' => $lastqrystr,
 			'upd_in_progress' => $update_in_progress,
@@ -590,7 +585,12 @@ if ($action == 'forgotpwd') {
 		}
 	}
 
-	eval("echo \"" . \Froxlor\UI\Template::getTemplate('fpwd') . "\";");
+	UI::TwigBuffer('login/fpwd.html.twig', [
+		'pagetitle' => $lng['login']['presend'],
+		'action' => $action,
+		'message' => $message,
+	]);
+	UI::TwigOutputBuffer();
 }
 
 if ($action == 'resetpwd') {
