@@ -1,72 +1,23 @@
 @charset "UTF-8";
 
+@import "~@fortawesome/fontawesome-free/css/all";
 @import "variables";
 @import "~bootstrap/scss/bootstrap";
-@import "~@fortawesome/fontawesome-free/css/all";
 
-.max-w-lg {
-  max-width: 992px !important;
+.navbar, .card {
+  @extend .shadow-sm;
 }
 
-.card {
-  border: none;
-  @apply shadow;
+.alert-icon {
+  padding: .5rem;
+  background: rgba(0, 0, 0, .15);
+  text-align: center;
+  border-radius: $border-radius;
+  margin-right: .75rem;
+}
 
-  .card-body {
-    padding: 2rem;
+.card .card-body {
+  p {
+    @extend .card-text;
   }
-}
-
-.rounded-corner-tl-bl {
-  border-radius: $border-radius 0 $border-radius 0;
-}
-
-footer {
-  color: #888;
-  font-size: 0.75rem !important;
-}
-
-footer a,
-footer a:active,
-footer a:visited {
-  color: #888;
-}
-
-.dark {
-  /* redefine theme colors for dark theme */
-  $primary: #3a3a3a;
-  $secondary: #111111;
-  $success: #3a3a3a;
-  $dark: #000;
-
-  $card-bg: #3a3a3a;
-
-  $theme-colors: (
-          "primary": $primary,
-          "secondary": $secondary,
-          "success": $success,
-          "danger": $danger,
-          "info": $indigo,
-          "dark": $dark,
-          "light": $light,
-  );
-
-  /* redefine theme color variables */
-  @each $color, $value in $theme-colors {
-    --#{$variable-prefix}#{$color}: #{$value};
-  }
-
-  /* redefine theme color rgb vars (used for bg- colors) */
-  $theme-colors-rgb: map-loop($theme-colors, to-rgb, "$value");
-  @each $color, $value in $theme-colors-rgb {
-    --#{$variable-prefix}#{$color}-rgb: #{$value};
-  }
-
-  $body-color: #999;
-  $body-bg: #222;
-
-  --#{$variable-prefix}body-color: #{$body-color};
-  --#{$variable-prefix}body-bg: #{$body-bg};
-
-  @import "bootstrap";
 }

@@ -1,0 +1,30 @@
+<footer class="py-5 text-center">
+	<span>
+		<img src="{{ basehref|default("") }}templates/Froxlor/assets/img/logo_grey.png" alt="Froxlor"/>
+		{% if install_mode is not defined  %}
+			{% if (get_setting('admin.show_version_login') == '1'
+				and module == 'Login') or (module != 'Login'
+				and get_setting('admin.show_version_footer') == '1') %}
+				{{ call_static('\\Froxlor\\Froxlor', 'getFullVersion') }}
+			{% endif %}
+		{% endif %}
+		&copy; 2009-{{ "now"|date("Y") }} by <a href="https://www.froxlor.org/" rel="external">the Froxlor Team</a>
+		{% if install_mode is not defined %}
+			{% if (get_setting('panel.imprint_url') != '') %}
+				<a href="{{ get_setting('panel.imprint_url') }}" target="_blank" class="footer-link">{{ lng('imprint') }}</a>
+			{% endif %}
+			{% if (get_setting('panel.terms_url') != '') %}
+				<a href="{{ get_setting('panel.terms_url') }}" target="_blank" class="footer-link">{{ lng('terms') }}</a>
+			{% endif %}
+			{% if (get_setting('panel.privacy_url') != '') %}
+				<a href="{{ get_setting('panel.privacy_url') }}" target="_blank" class="footer-link">{{ lng('privacy') }}</a>
+			{% endif %}
+		{% endif %}
+	</span>
+
+    {% if lng('translator') %}
+        <span class="mt-3">
+			{{ lng('panel.translator') }}: {{ lng('translator') }}
+		</span>
+    {% endif %}
+</footer>

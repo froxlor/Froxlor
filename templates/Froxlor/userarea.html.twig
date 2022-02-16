@@ -1,26 +1,37 @@
 {% extends "Froxlor/base.html.twig" %}
 
+{% set body_class = "min-vh-100 d-flex flex-column" %}
+
 {% block navigation %}
-	<nav class="navbar navbar-expand navbar-light bg-light shadow-sm">
-		<div class="container-fluid">
-			<a class="navbar-brand" href="{{ linker({'section': 'index'}) }}">
+	{% if get_setting('panel.is_configured') == 0 and userinfo.adminsession == 1 and userinfo.change_serversettings == 1 %}
+		<div class="alert alert-info rounded-0 mb-0 d-flex justify-content-between align-items-baseline" role="alert">
+			<span>
+				<i class="alert-icon fa fa-info-circle"></i> {{ lng('panel.not_configured') }}
+			</span>
+
+			<span>
+				<a href="{{ linker({'section': 'configfiles', 'page': 'configfiles'}) }}" class="btn btn-light btn-sm">
+					Setup starten
+				</a>
+			</span>
+		</div>
+	{% endif %}
+
+	<nav class="navbar navbar-expand navbar-light bg-light py-0">
+		<div class="container-fluid gx-0">
+			<a class="navbar-brand bg-dark p-3" style="width: 280px" href="{{ linker({'section': 'index'}) }}">
 				<img src="{{ header_logo }}" alt="" width="auto" height="24" class="d-inline-block align-text-top">
 			</a>
 			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTop" aria-controls="navbarTop" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
-			<div class="collapse navbar-collapse justify-content-end" id="navbarTop">
+			<div class="collapse navbar-collapse justify-content-end px-3" id="navbarTop">
 				<ul class="navbar-nav align-items-center">
-					{% if get_setting('panel.is_configured') == 0 and userinfo.adminsession == 1 and userinfo.change_serversettings == 1 %}
-						<div class="alert alert-warning py-0 mx-2 my-auto" role="alert">
-							<a href="{{ linker({'section': 'configfiles', 'page': 'configfiles'}) }}" class="alert-link">{{ lng('panel.not_configured') }}</a>
-						</div>
-					{% endif %}
 					<li class="nav-item text-nowrap d-block me-2">
-						<a class="btn btn-primary btn-sm d-block" href="{{ linker({'section': 'index'}) }}">{{ lng('panel.dashboard') }}</a>
+						<a class="btn btn-secondary btn-sm d-block" href="{{ linker({'section': 'index'}) }}">{{ lng('panel.dashboard') }}</a>
 					</li>
 					<li class="nav-item dropdown me-2">
-						<a class="btn btn-info btn-sm d-block dropdown-toggle" href="#" id="navbarOpts" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+						<a class="btn btn-secondary btn-sm d-block dropdown-toggle" href="#" id="navbarOpts" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 							{{ lng('panel.options') }}
 						</a>
 						<ul class="dropdown-menu" aria-labelledby="navbarOpts">
@@ -56,16 +67,16 @@
 						</ul>
 					</li>
 					<!-- if switched-user
-															<li class="nav-item text-nowrap d-block me-2">
-																<a class="btn btn-info btn-sm d-block" href="#view=suBack">
-																	<i class="fas fa-undo"></i>
-																	Switch back</a>
-															</li>
-															endif -->
+					<li class="nav-item text-nowrap d-block me-2">
+						<a class="btn btn-info btn-sm d-block" href="#view=suBack">
+							<i class="fas fa-undo"></i>
+							Switch back</a>
+					</li>
+					endif -->
 					<li class="nav-item text-nowrap d-block">
-						<a class="btn btn-danger btn-sm d-block" href="{{ linker({'section': 'index', 'action': 'logout'}) }}">
+						<a class="btn btn-link" title="{{ lng('login.logout') }}" href="{{ linker({'section': 'index', 'action': 'logout'}) }}">
 							<i class="fas fa-power-off"></i>
-							{{ lng('login.logout') }}</a>
+						</a>
 					</li>
 				</ul>
 			</div>
@@ -73,13 +84,14 @@
 	</nav>
 {% endblock %}
 
-{%  block body %}
-	<div class="row">
-		<div class="col-2 bg-secondary text-light">
-			{{ include('Froxlor/sidebarmenu.html.twig') }}
-		</div>
-		<main role="main" class="col-10 px-3 py-2">
+{% block body %}
+	<div class="d-flex flex-grow-1">
+		{{ include('Froxlor/sidebarmenu.html.twig') }}
+
+		<main role="main" class="flex-grow-1 p-5">
 			{% block content %}{% endblock %}
+
+			{{ include('Froxlor/footer.html.twig') }}
 		</main>
 	</div>
 {% endblock %}

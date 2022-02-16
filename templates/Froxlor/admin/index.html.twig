@@ -1,5 +1,20 @@
 {% extends "Froxlor/userarea.html.twig" %}
 
 {% block content %}
-test text
+    {% if get_setting('panel.is_configured') == 0 and userinfo.adminsession == 1 and userinfo.change_serversettings == 1 %}
+        <div class="alert alert-info position-relative p-5">
+            <h3>Willkommen bei Froxlor!</h3>
+            <p class="lead mb-5">Damit Froxlor mit dem Backend vernünftig kommunizieren kann, musst du dieses noch Konfigurieren.</p>
+            <a class="btn btn-lg btn-light text-info" href="{{ linker({'section': 'configfiles', 'page': 'configfiles'}) }}">Jetzt konfigurieren</a>
+            <aside class="position-absolute bottom-0 end-0 p-5">
+                <i class="fa fa-hat-wizard fa-5x"></i>
+            </aside>
+        </div>
+    {% endif %}
+
+    <div class="card">
+        <div class="card-body">
+            <p>Test</p>
+        </div>
+    </div>
 {% endblock %}

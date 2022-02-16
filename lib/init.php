@@ -344,7 +344,7 @@ if (is_array($_themeoptions) && (!array_key_exists('variants', $_themeoptions) |
 $hl_path = 'templates/' . $theme . '/assets/img';
 
 // default is theme-image
-$header_logo = $hl_path . '/logo.png';
+$header_logo = $hl_path . '/logo_white.png';
 $header_logo_login = $hl_path . '/logo.png';
 
 if (Settings::Get('panel.logo_overridetheme') == 1 || Settings::Get('panel.logo_overridecustom') == 1) {

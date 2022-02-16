@@ -1,9 +1,31 @@
 // Colors
-$primary: #2a2a2a;
+$light-bg: #e9ecef;
+$dark-bg: #2f2f2f;
+
+$light-font-color: #333333;
+$dark-font-color: #ffffff;
+
+$froxlor-blue-light: #62c8f4;
+$froxlor-blue-dark: #1871a2;
+
+$primary: $froxlor-blue-dark;
+$secondary: $dark-bg;
+$info: $froxlor-blue-dark;
+$warning: #FBBF24;
+$danger: #E11D48;
+
+$alert-bg-scale: 0;
+$alert-color-scale: 0;
+$alert-border-width: 0;
+
+$card-border-width: 0;
 
 // Body
-$body-bg: #f8f8f8;
-$body-color: $primary;
+$body-bg: $light-bg;
+$body-color: $light-font-color;
 
 // Borders
 $border-radius: 0.5rem;
+
+// Links
+$links: $froxlor-blue-dark;
