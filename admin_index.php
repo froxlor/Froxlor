@@ -23,6 +23,7 @@ use Froxlor\Database\Database;
 use Froxlor\Settings;
 use Froxlor\Api\Commands\Froxlor as Froxlor;
 use Froxlor\Api\Commands\Admins as Admins;
+use Froxlor\UI\Panel\UI;
 
 if ($action == 'logout') {
 
@@ -183,7 +184,9 @@ if ($page == 'overview') {
 		$uptime = '';
 	}
 
-	eval("echo \"" . \Froxlor\UI\Template::getTemplate("index/index") . "\";");
+	// @fixme add all the overview/dashboard data from above
+	UI::TwigBuffer('admin/index.html.twig');
+	UI::TwigOutputBuffer();
 } elseif ($page == 'change_password') {
 
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
