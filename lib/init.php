@@ -176,7 +176,7 @@ if (isset($s) && $s != "" && $nosession != 1) {
 	ini_set("url_rewriter.tags", "");
 	ini_set("session.use_cookies", false);
 	ini_set("session.cookie_httponly", true);
-	ini_set("session.cookie_secure", $is_ssl);
+	ini_set("session.cookie_secure", UI::$SSL_REQ);
 	session_id($s);
 	session_start();
 	$query = "SELECT `s`.*, `u`.* FROM `" . TABLE_PANEL_SESSIONS . "` `s` LEFT JOIN `";
@@ -305,8 +305,9 @@ include_once \Froxlor\FileDir::makeSecurePath('lng/lng_references.php');
 
 UI::setLng($lng);
 
-// Initialize our new link - class
+// Initialize our link - class
 $linker = new \Froxlor\UI\Linker('index.php', $s);
+UI::setLinker($linker);
 
 /**
  * global Theme-variable
@@ -360,6 +361,9 @@ if (Settings::Get('panel.logo_overridecustom') == 0 && file_exists($hl_path . '/
 	}
 }
 
+UI::Twig()->addGlobal('header_logo_login', $header_logo_login);
+UI::Twig()->addGlobal('header_logo', $header_logo);
+
 /**
  * Redirects to index.php (login page) if no session exists
  */
@@ -373,10 +377,7 @@ if ($nosession == 1 && AREA != 'login') {
 	exit();
 }
 
-/**
- * Initialize Template Engine
- */
-$templatecache = array();
+UI::Twig()->addGlobal('userinfo', ($userinfo ?? []));
 
 /**
  * Logic moved out of lng-file
@@ -390,7 +391,7 @@ if (isset($userinfo['loginname']) && $userinfo['loginname'] != '') {
 /**
  * Fills variables for navigation, header and footer
  */
-$navigation = "";
+$navigation = [];
 if (AREA == 'admin' || AREA == 'customer') {
 	if (\Froxlor\Froxlor::hasUpdates() || \Froxlor\Froxlor::hasDbUpdates()) {
 		/*
@@ -431,8 +432,8 @@ if (AREA == 'admin' || AREA == 'customer') {
 		$navigation_data = \Froxlor\PhpHelper::loadConfigArrayDir('lib/navigation/');
 		$navigation = \Froxlor\UI\HTML::buildNavigation($navigation_data[AREA], $userinfo);
 	}
-	unset($navigation_data);
 }
+UI::Twig()->addGlobal('nav_entries', $navigation);
 
 $js = "";
 if (is_array($_themeoptions) && array_key_exists('js', $_themeoptions['variants'][$themevariant]) && is_array($_themeoptions['variants'][$themevariant]['js'])) {

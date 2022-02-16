@@ -29,6 +29,11 @@ class UI
 	private static $lng = array();
 
 	/**
+	 * linker class object
+	 */
+	private static $linker = null;
+
+	/**
 	 * default fallback theme
 	 *
 	 * @var string
@@ -205,6 +210,16 @@ class UI
 		echo $output;
 		// empty buffer
 		self::$twigbuf = [];
+	}
+
+	public static function setLinker($linker = null)
+	{
+		self::$linker = $linker;
+	}
+
+	public static function getLinker()
+	{
+		return self::$linker;
 	}
 
 	public static function setLng($lng = array())

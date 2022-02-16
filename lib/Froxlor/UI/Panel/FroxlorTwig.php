@@ -44,6 +44,10 @@ class FroxlorTwig extends \Twig\Extension\AbstractExtension
 			new \Twig\TwigFunction('lng', [
 				$this,
 				'getLang'
+			]),
+			new \Twig\TwigFunction('linker', [
+				$this,
+				'getLink'
 			])
 		);
 	}
@@ -89,6 +93,11 @@ class FroxlorTwig extends \Twig\Extension\AbstractExtension
 	public function getLang($identifier = null)
 	{
 		return \Froxlor\UI\Panel\UI::getLng($identifier);
+	}
+
+	public function getLink($linkopts)
+	{
+		return \Froxlor\UI\Panel\UI::getLinker()->getLink($linkopts);
 	}
 
 	/**

@@ -442,7 +442,7 @@ class Database
 		if (empty($sql['debug'])) {
 			$error_trace = '';
 		} elseif (!is_null($stmt)) {
-			$error_trace .= "<br><br>" . $stmt->queryString;
+			$error_trace .= "\n\n" . $stmt->queryString;
 		}
 
 		if ($showerror && $json_response) {

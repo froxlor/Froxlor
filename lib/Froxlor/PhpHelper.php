@@ -152,7 +152,7 @@ class PhpHelper
 		return false;
 	}
 
-	public static function phpExceptionHandler(\Exception $exception)
+	public static function phpExceptionHandler(\Throwable $exception)
 	{
 		if (! isset($_SERVER['SHELL']) || (isset($_SERVER['SHELL']) && $_SERVER['SHELL'] == '')) {
 			$err_display = '<div class="alert alert-danger my-1" role="alert">';

@@ -1,0 +1,32 @@
+<nav id="sidebar">
+	<ul class="nav flex-column flex-nowrap overflow-hidden w-100">
+		{% for idx,mitems in nav_entries %}
+			{% if mitems.label|upper != 'OVERVIEW' %}
+				{% if mitems.items is not empty %}
+					<li class="nav-item">
+						<a class="nav-link text-light {% if mitems.active == 0 %}collapsed{% endif %}" href="#sub{{ idx }}" data-bs-toggle="collapse" data-bs-target="#sub{{ idx }}">
+							<span class="{{ mitems.icon }}"></span>
+							{{ mitems.label|upper }}</a>
+						<div class="collapse {% if mitems.active == 1 %}show{% endif %}" id="sub{{ idx }}" aria-expanded="{% if mitems.active == 1 %}true{% else %}false{% endif %}">
+							<ul class="flex-column ps-3 nav">
+								{% for item in mitems.items %}
+									<li class="nav-item">
+										<a class="nav-link text-light pb-0 {% if item.active == 1 %}font-weight-bold{% endif %}" href="{{ item.url }}">{{ item.label }}</a>
+									</li>
+								{% endfor %}
+							</ul>
+						</div>
+					</li>
+				{% else %}
+					<li class="nav-item">
+						<a class="nav-link text-light {% if mitems.active == 1 %}active{% endif %}" href="{% if mitems.url is not empty %}{{ mitems.url }}{% else %}#{% endif %}" {% if mitems.target is not empty %} target="{{ mitems.target }}" {% endif %}>
+							{% if mitems.icon is not empty %}
+								<span class="{{ mitems.icon }}"></span>
+							{% endif %}
+							{{ mitems.label|upper }}</a>
+					</li>
+				{% endif %}
+			{% endif %}
+		{% endfor %}
+	</ul>
+</nav>

@@ -1,4 +1,5 @@
 <?php
+
 namespace Froxlor\UI;
 
 class HTML
@@ -17,9 +18,7 @@ class HTML
 	 */
 	public static function buildNavigation($navigation, $userinfo)
 	{
-		global $theme;
-
-		$returnvalue = '';
+		$returnvalue = [];
 
 		// sanitize user-given input (url-manipulation)
 		if (isset($_GET['page']) && is_array($_GET['page'])) {
@@ -30,17 +29,17 @@ class HTML
 		}
 
 		foreach ($navigation as $box) {
-			if ((! isset($box['show_element']) || $box['show_element'] === true) && (! isset($box['required_resources']) || $box['required_resources'] == '' || (isset($userinfo[$box['required_resources']]) && ((int) $userinfo[$box['required_resources']] > 0 || $userinfo[$box['required_resources']] == '-1')))) {
-				$navigation_links = '';
+			if ((!isset($box['show_element']) || $box['show_element'] === true) && (!isset($box['required_resources']) || $box['required_resources'] == '' || (isset($userinfo[$box['required_resources']]) && ((int) $userinfo[$box['required_resources']] > 0 || $userinfo[$box['required_resources']] == '-1')))) {
+				$navigation_links = [];
 				foreach ($box['elements'] as $element_id => $element) {
-					if ((! isset($element['show_element']) || $element['show_element'] === true) && (! isset($element['required_resources']) || $element['required_resources'] == '' || (isset($userinfo[$element['required_resources']]) && ((int) $userinfo[$element['required_resources']] > 0 || $userinfo[$element['required_resources']] == '-1')))) {
+					if ((!isset($element['show_element']) || $element['show_element'] === true) && (!isset($element['required_resources']) || $element['required_resources'] == '' || (isset($userinfo[$element['required_resources']]) && ((int) $userinfo[$element['required_resources']] > 0 || $userinfo[$element['required_resources']] == '-1')))) {
 						$target = '';
-						$active = '';
+						$active = false;
 						$navurl = '#';
 						if (isset($element['url']) && trim($element['url']) != '') {
 							// append sid only to local
 
-							if (! preg_match('/^https?\:\/\//', $element['url']) && (isset($userinfo['hash']) && $userinfo['hash'] != '')) {
+							if (!preg_match('/^https?\:\/\//', $element['url']) && (isset($userinfo['hash']) && $userinfo['hash'] != '')) {
 								// generate sid with ? oder &
 
 								if (strpos($element['url'], '?') !== false) {
@@ -55,9 +54,9 @@ class HTML
 							}
 
 							if (isset($_GET['page']) && substr_count($element['url'], "page=" . $_GET['page']) > 0 && substr_count($element['url'], basename($_SERVER["SCRIPT_FILENAME"])) > 0 && isset($_GET['action']) && substr_count($element['url'], "action=" . $_GET['action']) > 0) {
-								$active = ' active';
-							} elseif (isset($_GET['page']) && substr_count($element['url'], "page=" . $_GET['page']) > 0 && substr_count($element['url'], basename($_SERVER["SCRIPT_FILENAME"])) > 0 && substr_count($element['url'], "action=") == 0 && ! isset($_GET['action'])) {
-								$active = ' active';
+								$active = true;
+							} elseif (isset($_GET['page']) && substr_count($element['url'], "page=" . $_GET['page']) > 0 && substr_count($element['url'], basename($_SERVER["SCRIPT_FILENAME"])) > 0 && substr_count($element['url'], "action=") == 0 && !isset($_GET['action'])) {
+								$active = true;
 							}
 
 							$navurl = htmlspecialchars($element['url']);
@@ -66,16 +65,21 @@ class HTML
 							$navlabel = $element['label'];
 						}
 
-						eval("\$navigation_links .= \"" . \Froxlor\UI\Template::getTemplate("navigation_link", 1) . "\";");
+						$navigation_links[] = [
+							'url' => $navurl,
+							'target' => $target,
+							'is_active' => $active,
+							'label' => $navlabel
+						];
 					}
 				}
 
-				if ($navigation_links != '') {
+				if (!empty($navigation_links)) {
 					$target = '';
 					if (isset($box['url']) && trim($box['url']) != '') {
 						// append sid only to local
 
-						if (! preg_match('/^https?\:\/\//', $box['url']) && (isset($userinfo['hash']) && $userinfo['hash'] != '')) {
+						if (!preg_match('/^https?\:\/\//', $box['url']) && (isset($userinfo['hash']) && $userinfo['hash'] != '')) {
 							// generate sid with ? oder &
 
 							if (strpos($box['url'], '?') !== false) {
@@ -96,7 +100,12 @@ class HTML
 						$navlabel = $box['label'];
 					}
 
-					eval("\$returnvalue .= \"" . \Froxlor\UI\Template::getTemplate("navigation_element", 1) . "\";");
+					$returnvalue[] = [
+						'url' => $navurl,
+						'target' => $target,
+						'label' => $navlabel,
+						'items' => $navigation_links
+					];
 				}
 			}
 		}
@@ -134,11 +143,11 @@ class HTML
 			$checked = '';
 		}
 
-		if (! $title_trusted) {
+		if (!$title_trusted) {
 			$title = htmlspecialchars($title);
 		}
 
-		if (! $value_trusted) {
+		if (!$value_trusted) {
 			$value = htmlspecialchars($value);
 		}
 
@@ -181,11 +190,11 @@ class HTML
 			$selected .= ' disabled="disabled"';
 		}
 
-		if (! $title_trusted) {
+		if (!$title_trusted) {
 			$title = htmlspecialchars($title);
 		}
 
-		if (! $value_trusted) {
+		if (!$value_trusted) {
 			$value = htmlspecialchars($value);
 		}
 
