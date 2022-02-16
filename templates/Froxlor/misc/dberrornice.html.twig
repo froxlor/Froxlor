@@ -1,0 +1,26 @@
+{% extends "Froxlor/base.html.twig" %}
+
+{% block body %}
+	<div class="container my-auto">
+		<div class="alert alert-danger fade show" role="alert">
+			<h4 class="alert-heading">
+				A database error occurred
+			</h4>
+			<p>
+				{{ message }}
+			</p>
+			{% if debug is not empty %}
+				<hr>
+				<p class="mb-0">
+					<pre>{{ debug }}</pre>
+				</p>
+			{% endif %}
+			<p class="mt-1 text-center">
+				<a href="#" class="btn btn-primary" title="Click here to go back" id="historyback">Go back</a>
+				{% if report is not empty %}
+					<a href="{{ report|raw }}" class="btn btn-warning" title="Click here to report error">Report error</a>
+				{% endif %}
+			</p>
+		</div>
+	</div>
+{% endblock %}
