@@ -1,53 +1,61 @@
 {% extends "Froxlor/base.html.twig" %}
 
+{% set body_class = "min-vh-100 d-flex align-items-center" %}
+
 {% block body %}
-	<div class="container p-3 bg-light border border-top-0">
-		<img src="{{ basehref|default('') }}templates/Froxlor/assets/img/logo.png" alt="Froxlor Server Management Panel"/>
-		<section class="mt-4">
-			<h3 class="text-center mb-3">{{ pagetitle }}</h3>
-			{% if pagecontent.checks is defined or pagecontent.installprocess is defined %}
-				<table class="table table-borderless table-sm">
-					{% if pagecontent.checks is defined %}
-					{% set checks = pagecontent.checks %}
-					{% else %}
-					{% set checks = pagecontent.installprocess %}
-					{% endif %}
-					{% for check in checks %}
-						<tr class="{% if check.result == 1 %}table-danger{% elseif check.result == 2 %}table-warning{% endif %}">
-							<td class="w-75" scope="row">{{ check.title }}</td>
-							<td class="col-auto text-end{% if check.result == 0 %} text-success{% endif %}">
-								<span class="d-none d-md-inline">{{ check.result_txt }}</span>
-								{% if check.result == 0 %}&nbsp;&check;{% elseif check.result == 2 %}<span class="d-md-none">&nbsp;???</span>{% elseif check.result == 1 %}<span class="d-md-none">&nbsp;!!!</span>
-								{% endif %}
-							</td>
-						</tr>
-						{% if check.result_desc is not empty %}
-							<tr>
-								<td colspan="2" class="text-end">
-									<small>{{ check.result_desc|raw }}</span>
+	<div class="container max-w-lg flex align-content-center mt-5">
+		<img src="{{ basehref|default('') }}templates/Froxlor/assets/img/logo.png" class="filter-me" alt="Froxlor Server Management Panel"/>
+
+		<section class="card shadow mt-5">
+			<div class="card-body">
+				<h3 class="card-title mb-3">{{ pagetitle }}</h3>
+				{% if pagecontent.checks is defined or pagecontent.installprocess is defined %}
+					<table class="table table-borderless table-sm">
+						{% if pagecontent.checks is defined %}
+							{% set checks = pagecontent.checks %}
+						{% else %}
+							{% set checks = pagecontent.installprocess %}
+						{% endif %}
+
+						{% for check in checks %}
+							<tr class="{% if check.result == 1 %}table-danger{% elseif check.result == 2 %}table-warning{% endif %}">
+								<td class="w-75" scope="row">{{ check.title }}</td>
+								<td class="col-auto text-end{% if check.result == 0 %} text-success{% endif %}">
+									<span class="d-none d-md-inline">{{ check.result_txt }}</span>
+									{% if check.result == 0 %}&nbsp;<i class="fa fa-check-circle" {% elseif check.result == 2 %}<span class="d-md-none">&nbsp;???</span>{% elseif check.result == 1 %}<span class="d-md-none">&nbsp;!!!</span>
+									{% endif %}
 								</td>
 							</tr>
-						</small>
-					</td>
-				</tr>
-			{% endif %}
-		{% endfor %}
-	</table>
-{% elseif pagecontent.form is defined %}
-	{% include "Froxlor/install/form.html.twig" %}
-{% else %}
-	<div class="alert alert-warning" role="alert">
-		{{ pagecontent }}
+							{% if check.result_desc is not empty %}
+								<tr>
+									<td colspan="2" class="text-end">
+										<span>{{ check.result_desc|raw }}</span>
+									</td>
+								</tr>
+							{% endif %}
+						{% endfor %}
+					</table>
+				{% elseif pagecontent.form is defined %}
+					{% include "Froxlor/install/form.html.twig" %}
+				{% else %}
+					<div class="alert alert-warning" role="alert">
+						{{ pagecontent }}
+					</div>
+				{% endif %}
+
+				{% if pagenavigation is not empty %}
+					<div class="row pt-md-3">
+						<div class="col-12 col-md-8 d-flex align-items-center">
+							<h4 class="p-0 m-0 text-{% if pagenavigation.bad %}danger{% else %}success{% endif %}">{{ pagenavigation.message }}</h4>
+						</div>
+						<div class="col-12 col-md-4 text-end mt-4 mt-md-0">
+							<a class="btn btn-lg btn-block btn-{% if pagenavigation.bad %}warning{% else %}success{% endif %}" href="{{ pagenavigation.link}}">
+								{{ pagenavigation.linktext }} &raquo;
+							</a>
+						</div>
+					</div>
+				{% endif %}
+			</div>
+		</section>
 	</div>
-{% endif %}
-{% if pagenavigation is not empty %}
-	<div class="row pt-md-3">
-		<div class="col-12 col-md-8 d-flex align-items-center">
-			<h4 class="p-0 m-0 text-{% if pagenavigation.bad %}danger{% else %}success{% endif %}">{{ pagenavigation.message }}</h4>
-		</div>
-		<div class="col-12 col-md-4 text-end mt-4 mt-md-0">
-			<a class="btn btn-lg btn-block btn-{% if pagenavigation.bad %}warning{% else %}success{% endif %}" href="{{ pagenavigation.link}}">{{ pagenavigation.linktext }}
-				&raquo;</a>
-		</div>
-	</div>
-{% endif %}</section></div>{% endblock %}
+{% endblock %}

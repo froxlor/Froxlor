@@ -19,3 +19,4 @@ img/
 !templates/misc/
 templates/Sparkle/assets/css/custom.css
 vendor/
+node_modules/

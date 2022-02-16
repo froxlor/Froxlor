@@ -1,47 +1,60 @@
 {% extends "Froxlor/base.html.twig" %}
 
+{% set body_class = "min-vh-100 d-flex align-items-center" %}
+
 {% block body %}
-	<div class="container p-3 bg-light border border-top-0">
-		<img src="{{ basehref|default('') }}templates/Froxlor/assets/img/logo.png" alt="Froxlor Server Management Panel"/>
-		<section class="mt-4">
-			<h3 class="text-center mb-3">{{ pagetitle }}</h3>
-			{% if upd_in_progress %}
-				<div class="alert alert-warning" role="alert">
-					{{ lng('update.updateinprogress_onlyadmincanlogin')|raw }}
-				</div>
-			{% elseif successmsg is not empty %}
-				<div class="alert alert-success" role="alert">
-					<h4 class="alert-heading">{{ lng('success.success') }}</h4>
-					<p>{{ successmsg|raw }}</p>
-				</div>
-			{% elseif message is not empty %}
-				<div class="alert alert-danger" role="alert">
-					<h4 class="alert-heading">{{ lng('error.error') }}</h4>
-					<p>{{ message|raw }}</p>
-				</div>
-			{% endif %}
-			<form action="index.php" method="post" enctype="application/x-www-form-urlencoded">
-				<div class="row mb-3">
-					<label for="loginname" class="col-sm-4 col-form-label">{{ lng('login.username') }}</label>
-					<div class="col-sm-8">
-						<input class="form-control" type="text" name="loginname" id="loginname" value="" required/>
+	<div class="container">
+		<div class="row justify-content-center">
+			<form class="col-4 d-flex flex-column" method="post" enctype="application/x-www-form-urlencoded">
+				<img class="align-self-center mb-5" src="{{ basehref }}templates/Froxlor/assets/img/logo.png" alt="Froxlor Server Management Panel"/>
+
+				<div class="card shadow">
+					<div class="card-body">
+						<h5 class="card-title">{{ pagetitle }}</h5>
+						<p>Please log in to access your Account.</p>
+
+						{% if upd_in_progress %}
+							<div class="alert alert-warning" role="alert">
+								{{ lng('update.updateinprogress_onlyadmincanlogin')|raw }}
+							</div>
+						{% elseif successmsg is not empty %}
+							<div class="alert alert-success" role="alert">
+								<h4 class="alert-heading">{{ lng('success.success') }}</h4>
+								<p>{{ successmsg|raw }}</p>
+							</div>
+						{% elseif message is not empty %}
+							<div class="alert alert-danger" role="alert">
+								<h4 class="alert-heading">{{ lng('error.error') }}</h4>
+								<p>{{ message|raw }}</p>
+							</div>
+						{% endif %}
+
+						<div class="mb-3">
+							<label for="loginname" class="col-form-label">{{ lng('login.username') }}</label>
+							<input class="form-control" type="text" name="loginname" id="loginname" value="" required/>
+						</div>
+
+						<div class="mb-3">
+							<label for="password" class="col-form-label">{{ lng('login.password') }}</label>
+							<input class="form-control" type="password" name="password" id="password" value="" required/>
+						</div>
+
+						<div>
+							<label for="language" class="col-form-label">{{ lng('login.language') }}</label>
+							<select class="form-control" name="language" id="language" required>
+								<option value="de">Deutsch</option>
+							</select>
+						</div>
+					</div>
+
+					<div class="card-body d-grid gap-2">
+						<input type="hidden" name="script" value="{{ lastscript }}" />
+						<input type="hidden" name="qrystr" value="{{ lastqrystr }}" />
+						<input type="hidden" name="send" value="send" />
+						<button class="btn btn-primary rounded-top-0" type="submit" name="dologin">{{ lng('login.login') }}</button>
 					</div>
 				</div>
-				<div class="row mb-3">
-					<label for="password" class="col-sm-4 col-form-label">{{ lng('login.password') }}</label>
-					<div class="col-sm-8">
-						<input class="form-control" type="password" name="password" id="password" value="" required/>
-					</div>
-				</div>
-				<strong>language stuff noch</strong>
-				<aside class="text-end">
-					<input type="hidden" name="script" value="{{ lastscript }}" />
-					<input type="hidden" name="qrystr" value="{{ lastqrystr }}" />
-					<input type="hidden" name="send" value="send" />
-					<button class="btn btn-sm btn-primary" type="submit" name="dologin">{{ lng('login.login') }}</button>
-				</aside>
 			</form>
-			<strong>passwort vergessen stuff noch</strong>
-		</section>
+		</div>
 	</div>
 {% endblock %}

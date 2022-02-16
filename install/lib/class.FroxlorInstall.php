@@ -468,8 +468,9 @@ class FroxlorInstall
 			`vhostcontainer` = '1',
 			`vhostcontainer_servername_statement` = '1'
 		");
+        $nvh = $this->_data['webserver'] == 'apache2' ? '1' : '0';
 		$stmt->execute(array(
-			'nvh' => $this->_data['webserver'] == 'apache2' ? '1' : '0',
+			'nvh' => $nvh,
 			'serverip' => $this->_data['serverip'],
 			'serverport' => 80
 		));
