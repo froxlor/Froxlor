@@ -478,6 +478,7 @@ class FroxlorInstall
 		$defaultsslip = false;
 		if ($this->_data['use_ssl']) {
 			$stmt->execute(array(
+				'nvh' => $this->_data['webserver'] == 'apache2' ? '1' : '0',
 				'serverip' => $this->_data['serverip'],
 				'serverport' => 443
 			));
