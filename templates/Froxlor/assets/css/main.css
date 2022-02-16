@@ -20503,7 +20503,7 @@ readers do not read off random characters that represent icons */
   @apply shadow;
 }
 .card .card-body {
-  padding: 1.5rem;
+  padding: 2rem;
 }
 
 .rounded-corner-tl-bl {

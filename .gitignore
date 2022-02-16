@@ -1,5 +1,4 @@
 install/update.log
-templates/*
 lib/userdata.inc.php
 lib/userdata.inc.php.bak
 logs/*
@@ -13,10 +12,11 @@ logs/*
 .idea
 *.iml
 img/
-
-!templates/Froxlor/
-!templates/Sparkle/
-!templates/misc/
-templates/Sparkle/assets/css/custom.css
 vendor/
 node_modules/
+
+templates/*
+!templates/Froxlor/
+!templates/Sparkle/
+templates/Sparkle/assets/css/custom.css
+!templates/misc/
