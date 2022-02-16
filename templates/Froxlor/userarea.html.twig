@@ -1,7 +1,7 @@
 {% extends "Froxlor/base.html.twig" %}
 
 {% block navigation %}
-	<nav class="navbar navbar-expand navbar-light bg-light shadow-sm">
+	<nav class="navbar navbar-expand-md navbar-light bg-light shadow-sm">
 		<div class="container-fluid">
 			<a class="navbar-brand" href="{{ linker({'section': 'index'}) }}">
 				<img src="{{ header_logo }}" alt="" width="auto" height="24" class="d-inline-block align-text-top">
@@ -16,56 +16,56 @@
 							<a href="{{ linker({'section': 'configfiles', 'page': 'configfiles'}) }}" class="alert-link">{{ lng('panel.not_configured') }}</a>
 						</div>
 					{% endif %}
-					<li class="nav-item text-nowrap d-block me-2">
-						<a class="btn btn-primary btn-sm d-block" href="{{ linker({'section': 'index'}) }}">{{ lng('panel.dashboard') }}</a>
+					<li class="nav-item me-md-2 mt-2 mt-md-0 w-100 w-md-auto">
+						<a class="btn btn-primary btn-sm d-block text-nowrap" href="{{ linker({'section': 'index'}) }}"><i class="fa-solid fa-gauge"></i> {{ lng('panel.dashboard') }}</a>
 					</li>
-					<li class="nav-item dropdown me-2">
-						<a class="btn btn-info btn-sm d-block dropdown-toggle" href="#" id="navbarOpts" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-							{{ lng('panel.options') }}
+					<li class="nav-item dropdown me-md-2 mt-2 mt-md-0 w-100 w-md-auto">
+						<a class="btn btn-info btn-sm d-block text-nowrap dropdown-toggle" href="#" id="navbarOpts" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							<i class="fa-solid fa-pencil"></i> {{ lng('panel.options') }}
 						</a>
 						<ul class="dropdown-menu" aria-labelledby="navbarOpts">
 							<li>
-								<a class="dropdown-item" href="{{ linker({'section': 'index', 'page': 'change_password'}) }}">{{ lng('login.password') }}</a>
+								<a class="dropdown-item" href="{{ linker({'section': 'index', 'page': 'change_password'}) }}"><i class="fa-solid fa-lock"></i> {{ lng('login.password') }}</a>
 							</li>
 							<li>
-								<a class="dropdown-item" href="{{ linker({'section': 'index', 'page': 'change_language'}) }}">{{ lng('login.language') }}</a>
+								<a class="dropdown-item" href="{{ linker({'section': 'index', 'page': 'change_language'}) }}"><i class="fa-solid fa-flag"></i> {{ lng('login.language') }}</a>
 							</li>
 							{% if get_setting('2fa.enabled') == 1 %}
 								<li>
-									<a class="dropdown-item" href="{{ linker({'section': 'index', 'page': '2fa'}) }}">{{ lng('2fa.2fa') }}</a>
+									<a class="dropdown-item" href="{{ linker({'section': 'index', 'page': '2fa'}) }}"><i class="fa-solid fa-shield"></i> {{ lng('2fa.2fa') }}</a>
 								</li>
 							{% endif %}
 							{% if get_setting('panel.allow_theme_change_admin') == '1' and userinfo.adminsession == 1 %}
 								<li>
-									<a class="dropdown-item" href="{{ linker({'section': 'index', 'page': 'change_theme'}) }}">{{ lng('panel.theme') }}</a>
+									<a class="dropdown-item" href="{{ linker({'section': 'index', 'page': 'change_theme'}) }}"><i class="fa-solid fa-image"></i> {{ lng('panel.theme') }}</a>
 								</li>
 							{% elseif get_setting('panel.allow_theme_change_customer') == '1' and userinfo.adminsession == 0 %}
 								<li>
-									<a class="dropdown-item" href="{{ linker({'section': 'index', 'page': 'change_theme'}) }}">{{ lng('panel.theme') }}</a>
+									<a class="dropdown-item" href="{{ linker({'section': 'index', 'page': 'change_theme'}) }}"><i class="fa-solid fa-image"></i> {{ lng('panel.theme') }}</a>
 								</li>
 							{% endif %}
 							{% if get_setting('api.enabled') == 1 %}
 								<li><hr class="dropdown-divider"></li>
 								<li>
-									<a class="dropdown-item" href="{{ linker({'section': 'index', 'page': 'apikeys'}) }}">{{ lng('menue.main.apikeys') }}</a>
+									<a class="dropdown-item" href="{{ linker({'section': 'index', 'page': 'apikeys'}) }}"><i class="fa-solid fa-key"></i> {{ lng('menue.main.apikeys') }}</a>
 								</li>
 								<li>
-									<a class="dropdown-item" href="https://docs.froxlor.org/apiguide/index.html" rel="external" target="_blank">{{ lng('menue.main.apihelp') }}</a>
+									<a class="dropdown-item" href="https://docs.froxlor.org/apiguide/index.html" rel="external" target="_blank"><i class="fa-solid fa-circle-info"></i> {{ lng('menue.main.apihelp') }}</a>
 								</li>
 							{% endif %}
 						</ul>
 					</li>
 					<!-- if switched-user
-															<li class="nav-item text-nowrap d-block me-2">
-																<a class="btn btn-info btn-sm d-block" href="#view=suBack">
-																	<i class="fas fa-undo"></i>
-																	Switch back</a>
-															</li>
-															endif -->
-					<li class="nav-item text-nowrap d-block">
-						<a class="btn btn-danger btn-sm d-block" href="{{ linker({'section': 'index', 'action': 'logout'}) }}">
-							<i class="fas fa-power-off"></i>
-							{{ lng('login.logout') }}</a>
+					<li class="nav-item me-md-2 mt-2 mt-md-0 w-100 w-md-auto">
+						<a class="btn btn-info btn-sm d-block text-nowrap" href="#view=suBack">
+							<i class="fa-solid fa-rotate-left"></i> Switch back
+						</a>
+					</li>
+					endif -->
+					<li class="nav-item me-md-2 mt-2 mt-md-0 w-100 w-md-auto">
+						<a class="btn btn-danger btn-sm d-block text-nowrap" href="{{ linker({'section': 'index', 'action': 'logout'}) }}">
+							<i class="fa-solid fa-power-off"></i> {{ lng('login.logout') }}
+						</a>
 					</li>
 				</ul>
 			</div>
