@@ -13,24 +13,25 @@
 			"name": "Michael Kaufmann",
 			"email": "team@froxlor.org",
 			"role": "Lead Developer"
-		},
-		{
-			"name": "Robert Förster",
-			"email": "team@froxlor.org",
-			"role": "Package Maintainer"
 		}
 	],
 	"support": {
 		"email": "team@froxlor.org",
 		"issues": "https://github.com/Froxlor/Froxlor/issues",
 		"forum": "https://forum.froxlor.org/",
-		"wiki": "https://github.com/Froxlor/Froxlor/wiki",
 		"irc": "irc://irc.libera.chat/froxlor",
 		"source": "https://github.com/Froxlor/Froxlor",
-		"docs": "https://github.com/Froxlor/Froxlor/wiki"
+		"docs": "https://docs.froxlor.org/",
+		"chat": "https://discord.froxlor.org/"
 	},
+	"funding": [
+		{
+			"type": "github",
+			"url": "https://github.com/sponsors/d00p"
+		}
+	],
 	"require": {
-		"php": "^7.1 || ^8.0",
+		"php": "^7.4 || ^8.0",
 		"ext-session": "*",
 		"ext-ctype": "*",
 		"ext-pdo": "*",
