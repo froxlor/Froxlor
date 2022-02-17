@@ -8,11 +8,19 @@
 	<meta name="googlebot" content="nosnippet"/>
 
 	<!-- CSS -->
-	{{ theme_css|raw }}
+	{% if theme_css is empty %}
+		<link href="templates/Froxlor/assets/css/main.css" rel="stylesheet" type="text/css" />
+	{% else %}
+		{{ theme_css|raw }}
+	{% endif %}
 	{% block custom_css %}{% endblock %}
 
 	<!-- Scripts -->
-	{{ theme_js|raw }}
+	{% if theme_js is empty %}
+		<script type="text/javascript" src="templates/Froxlor/assets/js/main.js"></script>
+	{% else %}
+		{{ theme_js|raw }}
+	{% endif %}
 	{% block custom_js %}{% endblock %}
 	<title>Froxlor
 		{% if page_title %}

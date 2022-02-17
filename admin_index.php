@@ -186,7 +186,9 @@ if ($page == 'overview') {
 	UI::Twig()->addGlobal('userinfo', $userinfo);
 	UI::TwigBuffer('user/index.html.twig', [
 		'sysinfo' => $sysinfo,
-		'overview' => $overview
+		'overview' => $overview,
+		'outstanding_tasks' => $outstanding_tasks,
+		'cron_last_runs' => $cron_last_runs
 	]);
 	UI::TwigOutputBuffer();
 } elseif ($page == 'change_password') {

@@ -110,6 +110,31 @@
 					</div>
 				</div>
 			</div>
+			{% if userinfo.adminsession == 1 %}
+				{# froxlor-details #}
+				<div class="card mb-3">
+					<div class="card-header">
+						<i class="fa-solid fa-wrench"></i>
+						{{ lng('admin.froxlordetails') }}
+					</div>
+					<ul class="list-group list-group-flush">
+						<li class="list-group-item d-flex justify-content-between align-items-start">
+							<div class="ms-2 me-auto">
+								<div class="fw-bold">{{ lng('tasks.outstanding_tasks') }}</div>
+								{% for task in outstanding_tasks %}
+									<i class="fa-regular fa-clock"></i> {{ task.desc }}<br>
+								{% endfor %}
+							</div>
+						</li>
+						{% for cronrun in cron_last_runs %}
+						<li class="list-group-item d-flex justify-content-between align-items-start">
+							<div class="ms-2 me-auto">{{ cronrun.title }}</div>
+							<span class="badge bg-primary">{% if cronrun.lastrun > 0 %}{{ cronrun.lastrun|date('d.m.Y H:i') }}{% else %}{{ lng('cronjobs.notyetrun') }}{% endif %}</span>
+						</li>
+						{% endfor %}
+					</ul>
+				</div>
+			{% endif %}
 		</div>
 		{% if userinfo.adminsession == 1 %}
 			<div

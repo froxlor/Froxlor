@@ -193,6 +193,11 @@ class Cronjob
 		}
 	}
 
+	/**
+	 * returns an array of all cronjobs and when they last were executed
+	 * 
+	 * @return array
+	 */
 	public static function getCronjobsLastRun()
 	{
 		global $lng;
@@ -200,20 +205,13 @@ class Cronjob
 		$query = "SELECT `lastrun`, `desc_lng_key` FROM `" . TABLE_PANEL_CRONRUNS . "` WHERE `isactive` = '1' ORDER BY `cronfile` ASC";
 		$result = Database::query($query);
 
-		$cronjobs_last_run = '';
+		$cronjobs_last_run = [];
 		while ($row = $result->fetch(\PDO::FETCH_ASSOC)) {
-
-			$lastrun = $lng['cronjobs']['notyetrun'];
-			if ($row['lastrun'] > 0) {
-				$lastrun = date('d.m.Y H:i:s', $row['lastrun']);
-			}
-
-			$text = $lng['crondesc'][$row['desc_lng_key']];
-			$value = $lastrun;
-
-			eval("\$cronjobs_last_run .= \"" . \Froxlor\UI\Template::getTemplate("index/overview_item") . "\";");
+			$cronjobs_last_run[] = [
+				'title' => $lng['crondesc'][$row['desc_lng_key']],
+				'lastrun' => $row['lastrun']
+			];
 		}
-
 		return $cronjobs_last_run;
 	}
 
@@ -231,6 +229,11 @@ class Cronjob
 		));
 	}
 
+	/**
+	 * returns an array of tasks that are queued to be run by the cronjob
+	 * 
+	 * @return array
+	 */
 	public static function getOutstandingTasks()
 	{
 		global $lng;
@@ -238,8 +241,7 @@ class Cronjob
 		$query = "SELECT * FROM `" . TABLE_PANEL_TASKS . "` ORDER BY `type` ASC";
 		$result = Database::query($query);
 
-		$value = '<ul class="cronjobtask">';
-		$tasks = '';
+		$tasks = [];
 		while ($row = $result->fetch(\PDO::FETCH_ASSOC)) {
 
 			if ($row['data'] != '') {
@@ -249,41 +251,35 @@ class Cronjob
 			$task_id = $row['type'];
 			if (\Froxlor\Cron\TaskId::isValid($task_id)) {
 				$task_constname = \Froxlor\Cron\TaskId::convertToConstant($task_id);
-				$task_desc = isset($lng['tasks'][$task_constname]) ? $lng['tasks'][$task_constname] : $task_constname;
-				
+				$task = [
+					'desc' => isset($lng['tasks'][$task_constname]) ? $lng['tasks'][$task_constname] : $task_constname
+				];
 				if (is_array($row['data'])) {
 					// task includes loginname
 					if (isset($row['data']['loginname'])) {
 						$loginname = $row['data']['loginname'];
-						$task_desc = str_replace('%loginname%', $loginname, $task_desc);
+						$task['desc'] = str_replace('%loginname%', $loginname, $task['desc']);
 					}
 					// task includes domain data
 					if (isset($row['data']['domain'])) {
 						$domain = $row['data']['domain'];
-						$task_desc = str_replace('%domain%', $domain, $task_desc);
+						$task['desc'] = str_replace('%domain%', $domain, $task['desc']);
 					}
 				}
 			} else {
 				// unknown
-				$task_desc = "ERROR: Unknown task type '" . $row['type'] . "'";
+				$task = ['desc' => "ERROR: Unknown task type '" . $row['type'] . "'"];
 			}
 
-			if ($task_desc != '') {
-				$tasks .= '<li>' . $task_desc . '</li>';
-			}
+			$tasks[] = $task;
 		}
 
-		if (trim($tasks) == '') {
-			$value .= '<li>' . $lng['tasks']['noneoutstanding'] . '</li>';
-		} else {
-			$value .= $tasks;
+		if (empty($tasks)) {
+			$tasks = [['desc' => $lng['tasks']['noneoutstanding']]];
 		}
 
-		$value .= '</ul>';
 		$text = $lng['tasks']['outstanding_tasks'];
-		eval("\$outstanding_tasks = \"" . \Froxlor\UI\Template::getTemplate("index/overview_item") . "\";");
-
-		return $outstanding_tasks;
+		return $tasks;
 	}
 
 	/**

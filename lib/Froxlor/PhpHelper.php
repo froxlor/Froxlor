@@ -1,4 +1,5 @@
 <?php
+
 namespace Froxlor;
 
 class PhpHelper
@@ -53,12 +54,12 @@ class PhpHelper
 	public static function htmlentitiesArray($subject, $fields = '', $quote_style = ENT_QUOTES, $charset = 'UTF-8')
 	{
 		if (is_array($subject)) {
-			if (! is_array($fields)) {
+			if (!is_array($fields)) {
 				$fields = self::arrayTrim(explode(' ', $fields));
 			}
 
 			foreach ($subject as $field => $value) {
-				if ((! is_array($fields) || empty($fields)) || (is_array($fields) && ! empty($fields) && in_array($field, $fields))) {
+				if ((!is_array($fields) || empty($fields)) || (is_array($fields) && !empty($fields) && in_array($field, $fields))) {
 					// Just call ourselve to manage multi-dimensional arrays
 					$subject[$field] = self::htmlentitiesArray($subject[$field], $fields, $quote_style, $charset);
 				}
@@ -90,7 +91,7 @@ class PhpHelper
 		if (is_array($subject)) {
 			$fields = self::arrayTrim(explode(' ', $fields));
 			foreach ($subject as $field => $value) {
-				if ((! is_array($fields) || empty($fields)) || (is_array($fields) && ! empty($fields) && in_array($field, $fields))) {
+				if ((!is_array($fields) || empty($fields)) || (is_array($fields) && !empty($fields) && in_array($field, $fields))) {
 					$subject[$field] = str_replace($search, $replace, $subject[$field]);
 				}
 			}
@@ -108,18 +109,17 @@ class PhpHelper
 	 * @param string $errstr
 	 * @param string $errfile
 	 * @param int $errline
-	 * @param array $errcontext
 	 *
 	 * @return void|boolean
 	 */
-	public static function phpErrHandler($errno, $errstr, $errfile, $errline, $errcontext = array())
+	public static function phpErrHandler($errno, $errstr, $errfile, $errline)
 	{
-		if (! (error_reporting() & $errno)) {
+		if (!(error_reporting() & $errno)) {
 			// This error code is not included in error_reporting
 			return;
 		}
 
-		if (! isset($_SERVER['SHELL']) || (isset($_SERVER['SHELL']) && $_SERVER['SHELL'] == '')) {
+		if (!isset($_SERVER['SHELL']) || (isset($_SERVER['SHELL']) && $_SERVER['SHELL'] == '')) {
 			// prevent possible file-path-disclosure
 			$errfile = str_replace(\Froxlor\Froxlor::getInstallDir(), "", $errfile);
 			// build alert
@@ -129,16 +129,16 @@ class PhpHelper
 			} elseif ($errno = E_WARNING) {
 				$type = 'warning';
 			}
-			$err_display = '<div class="alert alert-'.$type.' my-1" role="alert">';
+			$err_display = '<div class="alert alert-' . $type . ' my-1" role="alert">';
 			$err_display .= '<strong>#' . $errno . ' ' . $errstr . '</strong><br>';
 			$err_display .= $errfile . ':' . $errline;
 			// later depended on whether to show or now
-				$err_display .= '<br><p><pre>';
-				$debug = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
-				foreach ($debug as $dline) {
-					$err_display .= $dline['function'] . '() called at [' . str_replace(\Froxlor\Froxlor::getInstallDir(), '', $dline['file']) . ':' . $dline['line'] . ']<br>';
-				}
-				$err_display .= '</pre></p>';
+			$err_display .= '<br><p><pre>';
+			$debug = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+			foreach ($debug as $dline) {
+				$err_display .= $dline['function'] . '() called at [' . str_replace(\Froxlor\Froxlor::getInstallDir(), '', $dline['file']) . ':' . $dline['line'] . ']<br>';
+			}
+			$err_display .= '</pre></p>';
 			// end later
 			$err_display .= '</div>';
 			// check for more existing errors
@@ -154,23 +154,19 @@ class PhpHelper
 
 	public static function phpExceptionHandler(\Throwable $exception)
 	{
-		if (! isset($_SERVER['SHELL']) || (isset($_SERVER['SHELL']) && $_SERVER['SHELL'] == '')) {
-			$err_display = '<div class="alert alert-danger my-1" role="alert">';
-			$err_display .= '<strong>#' . $exception->getCode() . ' ' . $exception->getMessage() . '</strong><br>';
-			// later depended on whether to show or now
-				$err_display .= '<br><p><pre>';
-				$debug = $exception->getTrace();
-				foreach ($debug as $dline) {
-					$err_display .= $dline['function'] . '() called at [' . str_replace(\Froxlor\Froxlor::getInstallDir(), '', $dline['file']) . ':' . $dline['line'] . ']<br>';
-				}
-				$err_display .= '</pre></p>';
-			// end later
-			$err_display .= '</div>';
-			// check for more existing errors
-			$errors = isset(\Froxlor\UI\Panel\UI::Twig()->getGlobals()['global_errors']) ? \Froxlor\UI\Panel\UI::Twig()->getGlobals()['global_errors'] : "";
-			\Froxlor\UI\Panel\UI::Twig()->addGlobal('global_errors', $errors . $err_display);
-			// return true to ignore php standard error-handler
-			return true;
+		if (!isset($_SERVER['SHELL']) || (isset($_SERVER['SHELL']) && $_SERVER['SHELL'] == '')) {
+			// show
+			\Froxlor\UI\Panel\UI::initTwig(true);
+			\Froxlor\UI\Panel\UI::Twig()->addGlobal('install_mode', '1');
+			\Froxlor\UI\Panel\UI::TwigBuffer('misc/alert_nosession.html.twig', [
+				'page_title' => 'Uncaught exception',
+				'heading' => 'Uncaught exception',
+				'type' => 'danger',
+				'alert_msg' => $exception->getCode() . ' ' . $exception->getMessage(),
+				'alert_info' => $exception->getTraceAsString()
+			]);
+			echo \Froxlor\UI\Panel\UI::TwigOutputBuffer();
+			die();
 		}
 	}
 
@@ -194,7 +190,7 @@ class PhpHelper
 		// we assume that this is a list of
 		// setting-groups to be selected
 		$selection = null;
-		for ($x = 0; $x < $numargs; $x ++) {
+		for ($x = 0; $x < $numargs; $x++) {
 			$arg = func_get_arg($x);
 			if (is_array($arg) && isset($arg[0])) {
 				$selection = $arg;
@@ -211,7 +207,7 @@ class PhpHelper
 			if (is_dir($data_dirname)) {
 				$data_dirhandle = opendir($data_dirname);
 				while (false !== ($data_filename = readdir($data_dirhandle))) {
-					if ($data_filename != '.' && $data_filename != '..' && $data_filename != '' && substr($data_filename, - 4) == '.php') {
+					if ($data_filename != '.' && $data_filename != '..' && $data_filename != '' && substr($data_filename, -4) == '.php') {
 						$data_files[] = $data_dirname . $data_filename;
 					}
 				}
@@ -367,7 +363,7 @@ class PhpHelper
 		$i = 0;
 		while ($size >= $sys['size'] && $i < $depth) {
 			$size /= $sys['size'];
-			$i ++;
+			$i++;
 		}
 
 		return sprintf($retstring, $size, $sys['prefix'][$i]);
@@ -390,7 +386,7 @@ class PhpHelper
 		$matches = array();
 
 		if (count($vars) > 0 && preg_match_all($pattern, $text, $matches)) {
-			for ($i = 0; $i < count($matches[1]); $i ++) {
+			for ($i = 0; $i < count($matches[1]); $i++) {
 				$current = $matches[1][$i];
 
 				if (isset($vars[$current])) {
@@ -444,7 +440,7 @@ class PhpHelper
 			'ssl_default_vhostconf_domain',
 			'filecontent'
 		];
-		if (isset($global) && ! empty($global)) {
+		if (isset($global) && !empty($global)) {
 			$tmp = $global;
 			foreach ($tmp as $index => $value) {
 				if (!in_array($index, $ignored_fields)) {
