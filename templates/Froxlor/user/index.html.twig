@@ -13,23 +13,126 @@
 	{% endif %}
 
 	<div class="row">
-		<div class="col-12 col-xl-8 mb-3 mb-xl-0">
+		<div class="col-12 {% if userinfo.adminsession == 1 %}col-xl-4{% else %}col-xl-8{% endif %} mb-3 mb-xl-0">
 			<div class="card">
 				<div class="card-body">
 					<p>Test</p>
 				</div>
 			</div>
 		</div>
-		<div class="col-12 col-xl-4">
+		{% if userinfo.adminsession == 1 %}
+			<div class="col-12 col-xl-4 mb-3 mb-xl-0">
+				{# system infos #}
+					<div class="card mb-3"> <div class="card-header">
+						<i class="fa-solid fa-gears"></i>
+						{{ lng('admin.systemdetails') }}
+					</div>
+					<ul class="list-group list-group-flush">
+						<li class="list-group-item d-flex justify-content-between align-items-start">
+							<div class="ms-2 me-auto">
+								<div class="fw-bold">{{ lng('admin.hostname') }}</div>
+								{{ sysinfo.hostname }}
+							</div>
+						</li>
+						<li class="list-group-item d-flex justify-content-between align-items-start">
+							<div class="ms-2 me-auto">
+								<div class="fw-bold">{{ lng('admin.serversoftware') }}</div>
+								{{ sysinfo.webserver }}
+							</div>
+						</li>
+						<li class="list-group-item d-flex justify-content-between align-items-start">
+							<div class="ms-2 me-auto">
+								<div class="fw-bold">{{ lng('admin.phpversion') }}</div>
+								<a href="{{ linker({'section':'settings','page':'phpinfo'}) }}">{{ sysinfo.phpversion }}</a>
+							</div>
+						</li>
+						<li class="list-group-item d-flex justify-content-between align-items-start">
+							<div class="ms-2 me-auto">
+								<div class="fw-bold">{{ lng('admin.mysqlserverversion') }}</div>
+								{{ sysinfo.mysqlserverversion }}
+							</div>
+						</li>
+						<li class="list-group-item d-flex justify-content-between align-items-start">
+							<div class="ms-2 me-auto">
+								<div class="fw-bold">{{ lng('admin.webserverinterface') }}</div>
+								{{ sysinfo.phpsapi }}
+							</div>
+						</li>
+						{% if sysinfo.memory is not empty %}
+						<li class="list-group-item d-flex justify-content-between align-items-start">
+							<div class="ms-2 me-auto">
+								<div class="fw-bold">{{ lng('admin.memory') }}</div>
+								<pre>{{ sysinfo.memory }}</pre>
+							</div>
+						</li>
+						{% endif %}
+						<li class="list-group-item d-flex justify-content-between align-items-start">
+							<div class="ms-2 me-auto">
+								<div class="fw-bold">{{ lng('admin.sysload') }}</div>
+								{{ sysinfo.load }}
+							</div>
+						</li>
+						{% if sysinfo.kernel is not empty %}
+						<li class="list-group-item d-flex justify-content-between align-items-start">
+							<div class="ms-2 me-auto">
+								<div class="fw-bold">Kernel</div>
+								{{ sysinfo.kernel }}
+							</div>
+						</li>
+						{% endif %}
+						{% if sysinfo.uptime is not empty %}
+						<li class="list-group-item d-flex justify-content-between align-items-start">
+							<div class="ms-2 me-auto">
+								<div class="fw-bold">Uptime</div>
+								{{ sysinfo.uptime }}
+							</div>
+						</li>
+						{% endif %}
+					</ul>
+				</div>
+			</div>
+		{% endif %}
+		<div
+			class="col-12 col-xl-4">
 
+			{# newsfeed #}
 			{% if (userinfo.adminsession == 1 and get_setting('admin.show_news_feed') == 1) or (userinfo.adminsession == 0 and get_setting('customer.show_news_feed') == 1) %}
-				{# newsfeed #}
+				<div class="card mb-3" id="newsfeed" {% if userinfo.adminsession == 0 %} data-role="customer" {% endif %}>
+					<div class="card-header">
+						<i class="fa-solid fa-rss"></i>
+						News
+					</div>
+					<div class="list-group list-group-flush" id="newsfeeditems">
+						<div class="list-group-item d-flex justify-content-between align-items-start">
+							<div class="ms-2 me-auto">
+								Loading newsfeed...
+							</div>
+							<span>
+								<i class="fa-solid fa-spinner fa-spin"></i>
+							</span>
+						</div>
+					</div>
+				</div>
+			{% elseif userinfo.adminsession == 1 and get_setting('admin.show_news_feed') == 0 %}
+				<div class="card bg-warning text-dark mb-3">
+					<div class="card-header">
+						<i class="fa-solid fa-rss"></i>
+						News
+					</div>
+					<div class="card-body">
+						<i class="fa-solid fa-circle-exclamation"></i>
+						{{ lng('panel.newsfeed_disabled') }}&nbsp;
+						<a href="{{ linker({'section':'settings','part':'panel'}) }}" title="{{ lng('panel.edit') }}">
+							<i class="fa-solid fa-pen"></i>
+						</a>
+					</div>
+				</div>
 			{% endif %}
 
 			{% if userinfo.adminsession == 1 %}
 				{# custom notes #}
 				{% if userinfo.custom_notes is not empty and userinfo.custom_notes_show == 1 %}
-					<div class="card bg-info text-dark">
+					<div class="card bg-info text-dark mb-3">
 						<div class="card-body">
 							{{ userinfo.custom_notes }}
 						</div>
@@ -41,7 +144,7 @@
 			{% else %}
 
 				{# account info #}
-				<div class="card">
+				<div class="card mb-3">
 					<div class="card-header">
 						<i class="fa-solid fa-user"></i>
 						{{ lng('index.accountdetails') }}
@@ -101,7 +204,8 @@
 					</ul>
 				</div>
 
-				<div class="card mt-3">
+				{# customer details #}
+				<div class="card">
 					<div class="card-header">
 						<i class="fa-solid fa-id-card"></i>
 						{{ lng('index.customerdetails') }}

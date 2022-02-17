@@ -90,10 +90,6 @@ if ($page == 'overview') {
 
 	$overview['number_domains'] = $number_domains['number_domains'];
 
-	$phpversion = phpversion();
-	$mysqlserverversion = Database::getAttribute(PDO::ATTR_SERVER_VERSION);
-	$webserverinterface = strtoupper(@php_sapi_name());
-
 	if ((isset($_GET['lookfornewversion']) && $_GET['lookfornewversion'] == 'yes') || (isset($lookfornewversion) && $lookfornewversion == 'yes')) {
 		try {
 			$json_result = Froxlor::getLocal($userinfo)->checkUpdate();
@@ -133,10 +129,10 @@ if ($page == 'overview') {
 	$cron_last_runs = \Froxlor\System\Cronjob::getCronjobsLastRun();
 	$outstanding_tasks = \Froxlor\System\Cronjob::getOutstandingTasks();
 
-	$system_hostname = gethostname();
+	// additional sys-infos
 	$meminfo = explode("\n", @file_get_contents("/proc/meminfo"));
 	$memory = "";
-	for ($i = 0; $i < sizeof($meminfo); ++ $i) {
+	for ($i = 0; $i < count($meminfo); ++ $i) {
 		if (substr($meminfo[$i], 0, 3) === "Mem") {
 			$memory .= $meminfo[$i] . PHP_EOL;
 		}
@@ -147,25 +143,21 @@ if ($page == 'overview') {
 		$load = number_format($loadArray[0], 2, '.', '') . " / " . number_format($loadArray[1], 2, '.', '') . " / " . number_format($loadArray[2], 2, '.', '');
 	} else {
 		$load = @file_get_contents('/proc/loadavg');
-
 		if (! $load) {
 			$load = $lng['admin']['noloadavailable'];
 		}
 	}
 
+	$kernel = '';
 	if (function_exists('posix_uname')) {
-		$showkernel = 1;
 		$kernel_nfo = posix_uname();
 		$kernel = $kernel_nfo['release'] . ' (' . $kernel_nfo['machine'] . ')';
-	} else {
-		$showkernel = 0;
-		$kernel = '';
 	}
 
 	// Try to get the uptime
 	// First: With exec (let's hope it's enabled for the Froxlor - vHost)
 	$uptime_array = explode(" ", @file_get_contents("/proc/uptime"));
-
+	$uptime = '';
 	if (is_array($uptime_array) && isset($uptime_array[0]) && is_numeric($uptime_array[0])) {
 		// Some calculatioon to get a nicly formatted display
 		$seconds = round($uptime_array[0], 0);
@@ -176,17 +168,27 @@ if ($page == 'overview') {
 		$minutes = floor($minutes - ($days * 24 * 60) - ($hours * 60));
 		$seconds = floor($seconds - ($days * 24 * 60 * 60) - ($hours * 60 * 60) - ($minutes * 60));
 		$uptime = "{$days}d, {$hours}h, {$minutes}m, {$seconds}s";
-
 		// Just cleanup
 		unset($uptime_array, $seconds, $minutes, $hours, $days);
-	} else {
-		// Nothing of the above worked, show an error :/
-		$uptime = '';
 	}
+
+	$sysinfo = [
+		'webserver' => $_SERVER['SERVER_SOFTWARE'] ?? 'unknown',
+		'phpversion' => phpversion(),
+		'mysqlserverversion' => Database::getAttribute(PDO::ATTR_SERVER_VERSION),
+		'phpsapi' => strtoupper(@php_sapi_name()),
+		'hostname' => gethostname(),
+		'memory' => $memory,
+		'load' => $load,
+		'kernel' => $kernel,
+		'uptime' => $uptime
+	];
 
 	// @fixme add all the overview/dashboard data from above
 	UI::Twig()->addGlobal('userinfo', $userinfo);
-	UI::TwigBuffer('user/index.html.twig');
+	UI::TwigBuffer('user/index.html.twig', [
+		'sysinfo' => $sysinfo
+	]);
 	UI::TwigOutputBuffer();
 } elseif ($page == 'change_password') {
 
