@@ -185,7 +185,8 @@ if ($page == 'overview') {
 	}
 
 	// @fixme add all the overview/dashboard data from above
-	UI::TwigBuffer('admin/index.html.twig');
+	UI::Twig()->addGlobal('userinfo', $userinfo);
+	UI::TwigBuffer('user/index.html.twig');
 	UI::TwigOutputBuffer();
 } elseif ($page == 'change_password') {
 

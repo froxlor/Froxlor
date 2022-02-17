@@ -11,7 +11,7 @@
 							<ul class="flex-column ps-3 nav">
 								{% for item in mitems.items %}
 									<li class="nav-item">
-										<a class="nav-link text-light pb-0 {% if item.active == 1 %}font-weight-bold{% endif %}" href="{{ item.url }}">{{ item.label }}</a>
+										<a class="nav-link text-light pb-0 {% if item.active == 1 %}font-weight-bold{% endif %}" href="{{ item.url|raw }}">{{ item.label }}</a>
 									</li>
 								{% endfor %}
 							</ul>
@@ -19,7 +19,7 @@
 					</li>
 				{% else %}
 					<li class="nav-item">
-						<a class="nav-link text-light {% if mitems.active == 1 %}active{% endif %}" href="{% if mitems.url is not empty %}{{ mitems.url }}{% else %}#{% endif %}" {% if mitems.target is not empty %} target="{{ mitems.target }}" {% endif %}>
+						<a class="nav-link text-light {% if mitems.active == 1 %}active{% endif %}" href="{% if mitems.url is not empty %}{{ mitems.url|raw }}{% else %}#{% endif %}" {% if mitems.target is not empty %} target="{{ mitems.target }}" {% endif %}>
 							{% if mitems.icon is not empty %}
 								<span class="{{ mitems.icon }}"></span>
 							{% endif %}
@@ -32,15 +32,15 @@
 	<hr>
 	<div class="dropdown">
 		<a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-			<img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2">
-			<strong>d00p</strong>
+			<i class="fa-solid fa-user me-3"></i>
+			<strong>{{ userinfo.loginname }}</strong>
 		</a>
 		<ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
 			<li><a class="dropdown-item" href="#">New project...</a></li>
 			<li><a class="dropdown-item" href="#">Settings</a></li>
 			<li><a class="dropdown-item" href="#">Profile</a></li>
 			<li><hr class="dropdown-divider"></li>
-			<li><a class="dropdown-item" href="#">Sign out</a></li>
+			<li><a class="dropdown-item" href="{{ linker({'section': 'index', 'action': 'logout'}) }}">{{ lng('login.logout') }}</a></li>
 		</ul>
 	</div>
 </div>

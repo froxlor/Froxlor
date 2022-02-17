@@ -22,6 +22,7 @@ require './lib/init.php';
 use Froxlor\Database\Database;
 use Froxlor\Settings;
 use Froxlor\Api\Commands\Customers as Customers;
+use Froxlor\UI\Panel\UI;
 
 if ($action == 'logout') {
 	$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, 'logged out');
@@ -58,15 +59,11 @@ if ($page == 'overview') {
 		"standardsubdomain" => $userinfo['standardsubdomain']
 	));
 
-	$domains = '';
 	$domainArray = array();
-
 	while ($row = $domain_stmt->fetch(PDO::FETCH_ASSOC)) {
 		$domainArray[] = $idna_convert->decode($row['domain']);
 	}
-
 	natsort($domainArray);
-	$domains = implode(',<br />', $domainArray);
 
 	// standard-subdomain
 	$stdsubdomain = '';
@@ -120,21 +117,13 @@ if ($page == 'overview') {
 
 	$userinfo['custom_notes'] = ($userinfo['custom_notes'] != '') ? nl2br($userinfo['custom_notes']) : '';
 
-	$services_enabled = "";
-	$se = array();
-	if ($userinfo['imap'] == '1')
-		$se[] = "IMAP";
-	if ($userinfo['pop3'] == '1')
-		$se[] = "POP3";
-	if ($userinfo['phpenabled'] == '1')
-		$se[] = "PHP";
-	if ($userinfo['perlenabled'] == '1')
-		$se[] = "Perl/CGI";
-	if ($userinfo['api_allowed'] == '1')
-		$se[] = '<a href="customer_index.php?s=' . $s . '&page=apikeys">API</a>';
-	$services_enabled = implode(", ", $se);
+	UI::Twig()->addGlobal('userinfo', $userinfo);
+	UI::TwigBuffer('user/index.html.twig', [
+		'domains' => $domainArray,
+		'stdsubdomain' => $stdsubdomain
+	]);
+	UI::TwigOutputBuffer();
 
-	eval("echo \"" . \Froxlor\UI\Template::getTemplate('index/index') . "\";");
 } elseif ($page == 'change_password') {
 
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {

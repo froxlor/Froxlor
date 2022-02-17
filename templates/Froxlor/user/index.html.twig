@@ -1,0 +1,168 @@
+{% extends "Froxlor/userarea.html.twig" %}
+
+{% block content %}
+	{% if get_setting('panel.is_configured') == 0 and userinfo.adminsession == 1 and userinfo.change_serversettings == 1 %}
+		<div class="alert alert-info position-relative p-5">
+			<h3>Willkommen bei Froxlor!</h3>
+			<p class="lead mb-5">Damit Froxlor mit dem Backend vernünftig kommunizieren kann, musst du dieses noch Konfigurieren.</p>
+			<a class="btn btn-lg btn-light text-info" href="{{ linker({'section': 'configfiles', 'page': 'configfiles'}) }}">Jetzt konfigurieren</a>
+			<aside class="position-absolute bottom-0 end-0 p-5">
+				<i class="fa fa-hat-wizard fa-5x"></i>
+			</aside>
+		</div>
+	{% endif %}
+
+	<div class="row">
+		<div class="col-12 col-md-8">
+			<div class="card">
+				<div class="card-body">
+					<p>Test</p>
+				</div>
+			</div>
+		</div>
+		<div class="col-12 col-md-4">
+
+			{% if (userinfo.adminsession == 1 and get_setting('admin.show_news_feed') == 1) or (userinfo.adminsession == 0 and get_setting('customer.show_news_feed') == 1) %}
+				{# newsfeed #}
+			{% endif %}
+
+			{% if userinfo.adminsession == 1 %}
+				{# custom notes #}
+				{% if userinfo.custom_notes is not empty and userinfo.custom_notes_show == 1 %}
+					<div class="card bg-info text-dark">
+						<div class="card-body">
+							{{ userinfo.custom_notes }}
+						</div>
+					</div>
+				{% endif %}
+
+				{# systemdetails #}
+
+			{% else %}
+
+				{# account info #}
+				<div class="card">
+					<div class="card-header">
+						<i class="fa-solid fa-user"></i>
+						{{ lng('index.accountdetails') }}
+					</div>
+					<div class="card-body">
+						<ul class="list-group list-group-flush">
+							<li class="list-group-item d-flex justify-content-between align-items-start">
+								<div class="ms-2 me-auto">
+									<div class="fw-bold">{{ lng('login.username') }}</div>
+									{{ userinfo.loginname }}
+								</div>
+							</li>
+							<li class="list-group-item d-flex justify-content-between align-items-start">
+								<div class="ms-2 me-auto">
+									<div class="fw-bold">{{ lng('customer.email') }}</div>
+									{{ userinfo.email }}
+								</div>
+							</li>
+							<li class="list-group-item d-flex justify-content-between align-items-start">
+								<div class="ms-2 me-auto">
+									<div class="fw-bold">{{ lng('customer.services') }}</div>
+									{% if userinfo.imap == 1 %}
+										<span class="badge bg-success">IMAP</span>
+									{% endif %}
+									{% if userinfo.pop3 == 1 %}
+										<span class="badge bg-success">POP3</span>
+									{% endif %}
+									{% if userinfo.phpenabled == 1 %}
+										<span class="badge bg-success">PHP</span>
+									{% endif %}
+									{% if userinfo.perlenabled == 1 %}
+										<span class="badge bg-success">Perl/CGI</span>
+									{% endif %}
+									{% if userinfo.api_allowed == 1 %}
+										<a href="{{ linker({'section':'index','page':'apikeys'}) }}">
+											<span class="badge bg-success">API</span>
+										</a>
+									{% endif %}
+								</div>
+							</li>
+							{% if stdsubdomain is not empty %}
+								<li class="list-group-item d-flex justify-content-between align-items-start">
+									<div class="ms-2 me-auto">
+										<div class="fw-bold">{{ lng('admin.stdsubdomain') }}</div>
+										{{ stdsubdomain }}
+									</div>
+								</li>
+							{% endif %}
+							<li class="list-group-item d-flex justify-content-between align-items-start">
+								<div class="ms-2 me-auto">
+									<div class="fw-bold">{{ lng('customer.domains') }}</div>
+									{% for domain in domains %}
+										{{ domain }}<br>
+									{% endfor %}
+								</div>
+								<span class="badge bg-primary rounded-pill">{{ domains|length }}</span>
+							</li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="card mt-3">
+					<div class="card-header">
+						<i class="fa-solid fa-id-card"></i>
+						{{ lng('index.customerdetails') }}
+					</div>
+					<div class="card-body">
+						<ul class="list-group list-group-flush">
+							{% if userinfo.customernumber is not empty %}
+								<li class="list-group-item d-flex justify-content-between align-items-start">
+									<div class="ms-2 me-auto">
+										<div class="fw-bold">{{ lng('customer.customernumber') }}</div>
+										{{ userinfo.customernumber }}
+									</div>
+								</li>
+							{% endif %}
+							{% if userinfo.company is not empty %}
+								<li class="list-group-item d-flex justify-content-between align-items-start">
+									<div class="ms-2 me-auto">
+										<div class="fw-bold">{{ lng('customer.company') }}</div>
+										{{ userinfo.company }}
+									</div>
+								</li>
+							{% endif %}
+							{% if userinfo.name is not empty %}
+								<li class="list-group-item d-flex justify-content-between align-items-start">
+									<div class="ms-2 me-auto">
+										<div class="fw-bold">{{ lng('customer.name') }}</div>
+										{{ userinfo.firstname }}
+										{{ userinfo.name }}
+									</div>
+								</li>
+							{% endif %}
+							{% if userinfo.street is not empty %}
+								<li class="list-group-item d-flex justify-content-between align-items-start">
+									<div class="ms-2 me-auto">
+										<div class="fw-bold">{{ lng('customer.street') }}</div>
+										{{ userinfo.street }}
+									</div>
+								</li>
+							{% endif %}
+							{% if userinfo.city is not empty %}
+								<li class="list-group-item d-flex justify-content-between align-items-start">
+									<div class="ms-2 me-auto">
+										<div class="fw-bold">{{ lng('customer.zipcode') }}/{{ lng('customer.city') }}</div>
+										{{ userinfo.zipcode }}
+										{{ userinfo.city }}
+									</div>
+								</li>
+							{% endif %}
+							{% if userinfo.custom_notes is not empty and userinfo.custom_notes_show == 1 %}
+								<li class="list-group-item list-group-item-info d-flex justify-content-between align-items-start">
+									<div class="ms-2 me-auto">
+										{{ userinfo.custom_notes }}
+									</div>
+								</li>
+							{% endif %}
+						</ul>
+					</div>
+				</div>
+			{% endif %}
+		</div>
+	</div>
+{% endblock %}

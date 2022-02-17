@@ -15,7 +15,7 @@
 			"css": [
 				"main.css",
 				"dark.css",
-                "custom.css"
+				"custom.css"
 			],
 			"js": [
 				"main.js",
