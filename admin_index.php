@@ -124,8 +124,6 @@ if ($page == 'overview') {
 	$userinfo['traffic_used'] = \Froxlor\PhpHelper::sizeReadable($userinfo['traffic_used'] * 1024, null, 'bi');
 	$userinfo = \Froxlor\PhpHelper::strReplaceArray('-1', $lng['customer']['unlimited'], $userinfo, 'customers domains diskspace diskspace_bytes traffic traffic_bytes mysqls emails email_accounts email_forwarders email_quota ftps subdomains');
 
-	$userinfo['custom_notes'] = ($userinfo['custom_notes'] != '') ? nl2br($userinfo['custom_notes']) : '';
-
 	$cron_last_runs = \Froxlor\System\Cronjob::getCronjobsLastRun();
 	$outstanding_tasks = \Froxlor\System\Cronjob::getOutstandingTasks();
 
@@ -187,7 +185,8 @@ if ($page == 'overview') {
 	// @fixme add all the overview/dashboard data from above
 	UI::Twig()->addGlobal('userinfo', $userinfo);
 	UI::TwigBuffer('user/index.html.twig', [
-		'sysinfo' => $sysinfo
+		'sysinfo' => $sysinfo,
+		'overview' => $overview
 	]);
 	UI::TwigOutputBuffer();
 } elseif ($page == 'change_password') {

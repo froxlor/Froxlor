@@ -14,16 +14,109 @@
 
 	<div class="row">
 		<div class="col-12 {% if userinfo.adminsession == 1 %}col-xl-4{% else %}col-xl-8{% endif %} mb-3 mb-xl-0">
-			<div class="card">
+			<div class="card mb-3">
+				<div class="card-header">
+					<i class="fa-solid fa-chart-line"></i>
+					{{ lng('panel.usage_statistics') }}
+				</div>
 				<div class="card-body">
-					<p>Test</p>
+					<div
+						class="row row-cols-1 row-cols-md-2{% if userinfo.adminsession == 0 %} row-cols-lg-3 row-cols-xl-4{% endif %} g-4">
+						{# admin-resources #}
+						{% if userinfo.adminsession == 1 %}
+							<div class="col">
+								<div class="card bg-light h-100 p-2">
+									<h5>{{ lng('admin.customers') }} <small>{{ overview.number_customers }}/{{ userinfo.customers }}</small></h5>
+									<div class="progress" style="height: .25rem;">
+										<div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+								</div>
+							</div>
+							<div class="col">
+								<div class="card bg-light h-100 p-2">
+									<h5>{{ lng('admin.customers') }} <small>{{ overview.number_customers }}/{{ userinfo.customers }}</small></h5>
+									<div class="progress" style="height: .25rem;">
+										<div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+								</div>
+							</div>
+							<div class="col">
+								<div class="card bg-light h-100 p-2">
+									<h5>{{ lng('admin.customers') }} <small>{{ overview.number_customers }}/{{ userinfo.customers }}</small></h5>
+									<div class="progress" style="height: .25rem;">
+										<div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+								</div>
+							</div>
+							<div class="col">
+								<div class="card bg-light h-100 p-2">
+									<h5>{{ lng('admin.customers') }} <small>{{ overview.number_customers }}/{{ userinfo.customers }}</small></h5>
+									<div class="progress" style="height: .25rem;">
+										<div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+								</div>
+							</div>
+							<div class="col">
+								<div class="card bg-light h-100 p-2">
+									<h5>{{ lng('admin.customers') }} <small>{{ overview.number_customers }}/{{ userinfo.customers }}</small></h5>
+									<div class="progress" style="height: .25rem;">
+										<div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+								</div>
+							</div>
+							{% else %}
+							{# customer-resources #}
+							<div class="col">
+								<div class="card bg-light h-100 p-2">
+									<h5>{{ lng('admin.customers') }} <small>{{ overview.number_customers }}/{{ userinfo.customers }}</small></h5>
+									<div class="progress" style="height: .25rem;">
+										<div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+								</div>
+							</div>
+							<div class="col">
+								<div class="card bg-light h-100 p-2">
+									<h5>{{ lng('admin.customers') }} <small>{{ overview.number_customers }}/{{ userinfo.customers }}</small></h5>
+									<div class="progress" style="height: .25rem;">
+										<div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+								</div>
+							</div>
+							<div class="col">
+								<div class="card bg-light h-100 p-2">
+									<h5>{{ lng('admin.customers') }} <small>{{ overview.number_customers }}/{{ userinfo.customers }}</small></h5>
+									<div class="progress" style="height: .25rem;">
+										<div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+								</div>
+							</div>
+							<div class="col">
+								<div class="card bg-light h-100 p-2">
+									<h5>{{ lng('admin.customers') }} <small>{{ overview.number_customers }}/{{ userinfo.customers }}</small></h5>
+									<div class="progress" style="height: .25rem;">
+										<div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+								</div>
+							</div>
+							<div class="col">
+								<div class="card bg-light h-100 p-2">
+									<h5>{{ lng('admin.customers') }} <small>{{ overview.number_customers }}/{{ userinfo.customers }}</small></h5>
+									<div class="progress" style="height: .25rem;">
+										<div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+									</div>
+								</div>
+							</div>
+						{% endif %}
+					</div>
 				</div>
 			</div>
 		</div>
 		{% if userinfo.adminsession == 1 %}
-			<div class="col-12 col-xl-4 mb-3 mb-xl-0">
+			<div
+				class="col-12 col-xl-4 mb-3 mb-xl-0">
 				{# system infos #}
-					<div class="card mb-3"> <div class="card-header">
+				<div class="card mb-3">
+					<div class="card-header">
 						<i class="fa-solid fa-gears"></i>
 						{{ lng('admin.systemdetails') }}
 					</div>
@@ -59,12 +152,12 @@
 							</div>
 						</li>
 						{% if sysinfo.memory is not empty %}
-						<li class="list-group-item d-flex justify-content-between align-items-start">
-							<div class="ms-2 me-auto">
-								<div class="fw-bold">{{ lng('admin.memory') }}</div>
-								<pre>{{ sysinfo.memory }}</pre>
-							</div>
-						</li>
+							<li class="list-group-item d-flex justify-content-between align-items-start">
+								<div class="ms-2 me-auto">
+									<div class="fw-bold">{{ lng('admin.memory') }}</div>
+									<pre>{{ sysinfo.memory }}</pre>
+								</div>
+							</li>
 						{% endif %}
 						<li class="list-group-item d-flex justify-content-between align-items-start">
 							<div class="ms-2 me-auto">
@@ -73,20 +166,20 @@
 							</div>
 						</li>
 						{% if sysinfo.kernel is not empty %}
-						<li class="list-group-item d-flex justify-content-between align-items-start">
-							<div class="ms-2 me-auto">
-								<div class="fw-bold">Kernel</div>
-								{{ sysinfo.kernel }}
-							</div>
-						</li>
+							<li class="list-group-item d-flex justify-content-between align-items-start">
+								<div class="ms-2 me-auto">
+									<div class="fw-bold">Kernel</div>
+									{{ sysinfo.kernel }}
+								</div>
+							</li>
 						{% endif %}
 						{% if sysinfo.uptime is not empty %}
-						<li class="list-group-item d-flex justify-content-between align-items-start">
-							<div class="ms-2 me-auto">
-								<div class="fw-bold">Uptime</div>
-								{{ sysinfo.uptime }}
-							</div>
-						</li>
+							<li class="list-group-item d-flex justify-content-between align-items-start">
+								<div class="ms-2 me-auto">
+									<div class="fw-bold">Uptime</div>
+									{{ sysinfo.uptime }}
+								</div>
+							</li>
 						{% endif %}
 					</ul>
 				</div>
@@ -134,7 +227,7 @@
 				{% if userinfo.custom_notes is not empty and userinfo.custom_notes_show == 1 %}
 					<div class="card bg-info text-dark mb-3">
 						<div class="card-body">
-							{{ userinfo.custom_notes }}
+							{{ userinfo.custom_notes|nl2br|raw }}
 						</div>
 					</div>
 				{% endif %}
@@ -256,7 +349,7 @@
 						{% if userinfo.custom_notes is not empty and userinfo.custom_notes_show == 1 %}
 							<li class="list-group-item list-group-item-info d-flex justify-content-between align-items-start">
 								<div class="ms-2 me-auto">
-									{{ userinfo.custom_notes }}
+									{{ userinfo.custom_notes|nl2br|raw }}
 								</div>
 							</li>
 						{% endif %}

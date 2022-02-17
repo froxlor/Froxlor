@@ -115,8 +115,6 @@ if ($page == 'overview') {
 	$userinfo['traffic_used'] = \Froxlor\PhpHelper::sizeReadable($userinfo['traffic_used'] * 1024, null, 'bi');
 	$userinfo = \Froxlor\PhpHelper::strReplaceArray('-1', $lng['customer']['unlimited'], $userinfo, 'diskspace diskspace_bytes traffic traffic_bytes mysqls emails email_accounts email_forwarders email_quota ftps subdomains');
 
-	$userinfo['custom_notes'] = ($userinfo['custom_notes'] != '') ? nl2br($userinfo['custom_notes']) : '';
-
 	UI::Twig()->addGlobal('userinfo', $userinfo);
 	UI::TwigBuffer('user/index.html.twig', [
 		'domains' => $domainArray,
