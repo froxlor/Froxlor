@@ -1,0 +1,39 @@
+@import "~@fortawesome/fontawesome-free/css/all";
+
+.navbar {
+  background: darken($navbar-bg, 3);
+}
+
+.navbar, .card {
+  @extend .shadow-sm;
+}
+
+.alert-icon {
+  padding: .5rem;
+  background: rgba(0, 0, 0, .15);
+  text-align: center;
+  border-radius: $border-radius;
+  margin-right: .75rem;
+}
+
+.card .card-body {
+  p {
+    @extend .card-text;
+  }
+}
+
+.max-w-420 {
+  max-width: 420px;
+}
+
+.max-w-xs {
+  max-width: 575.98px;
+}
+
+.max-w-lg {
+  max-width: 991.98px;
+}
+
+footer {
+  @extend .text-muted;
+}

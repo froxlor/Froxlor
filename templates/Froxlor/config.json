@@ -13,7 +13,6 @@
 		},
 		"dark": {
 			"css": [
-				"main.css",
 				"dark.css",
 				"custom.css"
 			],

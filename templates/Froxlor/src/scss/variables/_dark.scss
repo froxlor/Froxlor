@@ -1,0 +1,16 @@
+@import "main";
+
+// Body
+$body-bg: $dark-bg;
+$body-color: $dark-font-color;
+
+// Card
+$card-bg: lighten($body-bg, 10);
+
+$navbar-bg: $dark-bg;
+
+$light: lighten($dark-bg, 15);
+$list-group-bg: lighten($dark-bg, 10);
+$list-group-color: $body-color;
+
+$nav-link-color: $body-color;
