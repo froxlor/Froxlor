@@ -81,7 +81,7 @@ class Response
 	 */
 	public static function standard_error($errors = '', $replacer = '', $throw_exception = false)
 	{
-		global $userinfo, $s, $header, $footer, $lng, $theme;
+		global $lng;
 
 		$_SESSION['requestData'] = $_POST;
 		$replacer = htmlentities($replacer);
@@ -92,9 +92,9 @@ class Response
 			);
 		}
 
-		$link = '';
+		$link_ref = '';
 		if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $_SERVER['HTTP_HOST']) !== false) {
-			$link = '<a href="' . htmlentities($_SERVER['HTTP_REFERER']) . '">' . $lng['panel']['back'] . '</a>';
+			$link_ref = htmlentities($_SERVER['HTTP_REFERER']);
 		}
 
 		$error = '';
@@ -119,8 +119,15 @@ class Response
 		if ($throw_exception) {
 			throw new \Exception(strip_tags($error), 400);
 		}
-		eval("echo \"" . Template::getTemplate('misc/error', '1') . "\";");
-		exit();
+		\Froxlor\UI\Panel\UI::TwigBuffer('misc/alert.html.twig', [
+			'type' => 'danger',
+			'btntype' => 'light',
+			'heading' => $lng['error']['error'],
+			'alert_msg' => $error,
+			'redirect_link' => $link_ref
+		]);
+		\Froxlor\UI\Panel\UI::TwigOutputBuffer();
+		exit;
 	}
 
 	public static function dynamic_error($message)

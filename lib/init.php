@@ -500,6 +500,10 @@ if ($page == '') {
 	$page = 'overview';
 }
 
+UI::Twig()->addGlobal('action', $action);
+UI::Twig()->addGlobal('page', $page);
+UI::Twig()->addGlobal('s', $s);
+
 /**
  * Initialize the mailingsystem
  */

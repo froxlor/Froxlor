@@ -182,7 +182,6 @@ if ($page == 'overview') {
 		'uptime' => $uptime
 	];
 
-	// @fixme add all the overview/dashboard data from above
 	UI::Twig()->addGlobal('userinfo', $userinfo);
 	UI::TwigBuffer('user/index.html.twig', [
 		'sysinfo' => $sysinfo,
@@ -239,7 +238,8 @@ if ($page == 'overview') {
 			));
 		}
 	} else {
-		eval("echo \"" . \Froxlor\UI\Template::getTemplate("index/change_password") . "\";");
+		UI::TwigBuffer('user/change_password.html.twig');
+		UI::TwigOutputBuffer();
 	}
 } elseif ($page == 'change_language') {
 
@@ -279,11 +279,11 @@ if ($page == 'overview') {
 			$default_lang = $userinfo['def_language'];
 		}
 
-		foreach ($languages as $language_file => $language_name) {
-			$language_options .= \Froxlor\UI\HTML::makeoption($language_name, $language_file, $default_lang, true);
-		}
-
-		eval("echo \"" . \Froxlor\UI\Template::getTemplate("index/change_language") . "\";");
+		UI::TwigBuffer('user/change_language.html.twig', [
+			'languages' => $languages,
+			'default_lang' => $default_lang
+		]);
+		UI::TwigOutputBuffer();
 	}
 } elseif ($page == 'change_theme') {
 
@@ -322,11 +322,12 @@ if ($page == 'overview') {
 		}
 
 		$themes_avail = \Froxlor\UI\Template::getThemes();
-		foreach ($themes_avail as $t => $d) {
-			$theme_options .= \Froxlor\UI\HTML::makeoption($d, $t, $default_theme, true);
-		}
 
-		eval("echo \"" . \Froxlor\UI\Template::getTemplate("index/change_theme") . "\";");
+		UI::TwigBuffer('user/change_theme.html.twig', [
+			'themes' => $themes_avail,
+			'default_theme' => $default_theme
+		]);
+		UI::TwigOutputBuffer();
 	}
 } elseif ($page == 'send_error_report' && Settings::Get('system.allow_error_report_admin') == '1') {
 

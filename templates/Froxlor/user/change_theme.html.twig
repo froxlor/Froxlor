@@ -1,0 +1,33 @@
+{% extends "Froxlor/userarea.html.twig" %}
+
+{% block content %}
+	<div class="container">
+		<div class="row justify-content-center">
+			<form action="{{ linker({'section':'index'}) }}" class="col-12 max-w-420 d-flex flex-column" method="post" enctype="application/x-www-form-urlencoded">
+				<div class="card shadow">
+					<div class="card-body">
+						<h5 class="card-title">{{ lng('menue.main.changetheme') }}</h5>
+
+						<div>
+							<label for="theme" class="col-form-label">{{ lng('panel.theme') }}</label>
+							<select class="form-select" name="theme" id="theme" required>
+								{% for val,t in themes %}
+									<option value="{{ val }}" {% if default_theme == val %} selected="selected" {% endif %}>{{ t|raw }}</option>
+								{% endfor %}
+							</select>
+						</div>
+					</div>
+
+					<div class="card-body d-grid gap-2">
+						<input type="hidden" name="s" value="{{ s }}"/>
+						<input type="hidden" name="page" value="{{ page }}"/>
+						<input type="hidden" name="send" value="send"/>
+						<button class="btn btn-primary rounded-top-0" type="submit" name="dosave">
+							<i class="fa-regular fa-floppy-disk"></i>
+							{{ lng('menue.main.changetheme') }}</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+{% endblock %}
