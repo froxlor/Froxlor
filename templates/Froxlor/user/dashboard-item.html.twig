@@ -1,0 +1,29 @@
+{% macro ditem(lngstr, available, used, assigned = null, formatbytes = false) %}
+	<div class="col">
+		<div class="card bg-light h-100 p-2">
+			<div class="row mb-1">
+				<div class="col">{{ lng(lngstr) }}</div>
+				<div class="col-auto">
+					<small>{% if formatbytes %}{{ used|formatBytes }}{% else %}{{ used }}{% endif %}/{% if available < 0 %}{{ lng('customer.unlimited') }}{% else %}{% if formatbytes %}{{ available|formatBytes }}{% else %}{{ available }}{% endif %}{% endif %}</small>
+				</div>
+			</div>
+			<div class="progress my-auto" style="height: .25rem;">
+				{% set usageperc = 1 %}
+				{% if available > 0 %}
+					{% set usageperc = (used  / available) * 100|round %}
+				{% endif %}
+				<div class="progress-bar{% if available < 0 %} bg-secondary{% elseif usageperc >= 75 and usageperc < 90 %} bg-warning{% elseif usageperc >= 90 %} bg-danger{% endif %}" 
+				role="progressbar" 
+				style="width: {% if available < 0 %}100{% else %}{{ usageperc }}{% endif %}%;" aria-valuenow="{% if available < 0 %}100{% else %}{{ used }}{% endif %}" aria-valuemin="0" aria-valuemax="{% if available < 0 %}100{% else %}{{ available }}{% endif %}"></div>
+			</div>
+			{% if assigned is not empty %}
+			<div class="progress my-auto" style="height: .25rem;">
+				<div class="progress-bar bg-info" role="progressbar" 
+				style="width:{% if available > 0 %}{{ (assigned / available) * 100|round }}{% else %}1{% endif %}%;" 
+				aria-valuenow="{{ assigned }}" aria-valuemin="0" 
+				aria-valuemax="{{ available }}"></div>
+			</div>
+			{% endif %}
+		</div>
+	</div>
+{% endmacro %}

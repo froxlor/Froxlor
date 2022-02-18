@@ -20,92 +20,33 @@
 					{{ lng('panel.usage_statistics') }}
 				</div>
 				<div class="card-body">
-					<div
-						class="row row-cols-1 row-cols-md-2{% if userinfo.adminsession == 0 %} row-cols-lg-3 row-cols-xl-4{% endif %} g-4">
-						{# admin-resources #}
+					<div class="row row-cols-1 row-cols-md-2{% if userinfo.adminsession == 0 %} row-cols-lg-3 row-cols-xl-4{% endif %} g-4">
+						{% import "Froxlor/user/dashboard-item.html.twig" as dashboard %}
 						{% if userinfo.adminsession == 1 %}
-							<div class="col">
-								<div class="card bg-light h-100 p-2">
-									<h5>{{ lng('admin.customers') }} <small>{{ overview.number_customers }}/{{ userinfo.customers }}</small></h5>
-									<div class="progress" style="height: .25rem;">
-										<div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-									</div>
-								</div>
-							</div>
-							<div class="col">
-								<div class="card bg-light h-100 p-2">
-									<h5>{{ lng('admin.customers') }} <small>{{ overview.number_customers }}/{{ userinfo.customers }}</small></h5>
-									<div class="progress" style="height: .25rem;">
-										<div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-									</div>
-								</div>
-							</div>
-							<div class="col">
-								<div class="card bg-light h-100 p-2">
-									<h5>{{ lng('admin.customers') }} <small>{{ overview.number_customers }}/{{ userinfo.customers }}</small></h5>
-									<div class="progress" style="height: .25rem;">
-										<div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-									</div>
-								</div>
-							</div>
-							<div class="col">
-								<div class="card bg-light h-100 p-2">
-									<h5>{{ lng('admin.customers') }} <small>{{ overview.number_customers }}/{{ userinfo.customers }}</small></h5>
-									<div class="progress" style="height: .25rem;">
-										<div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-									</div>
-								</div>
-							</div>
-							<div class="col">
-								<div class="card bg-light h-100 p-2">
-									<h5>{{ lng('admin.customers') }} <small>{{ overview.number_customers }}/{{ userinfo.customers }}</small></h5>
-									<div class="progress" style="height: .25rem;">
-										<div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-									</div>
-								</div>
-							</div>
-							{% else %}
+							{# admin-resources #}
+							{{ dashboard.ditem('admin.customers', userinfo.customers, overview.number_customers) }}
+							{{ dashboard.ditem('admin.domains', userinfo.domains, overview.number_domains) }}
+
+							{{ dashboard.ditem('customer.diskspace', userinfo.diskspace_bytes, overview.diskspace_bytes_used, overview.diskspace_bytes, true) }}
+							{{ dashboard.ditem('customer.traffic', userinfo.traffic_bytes, overview.traffic_bytes_used, overview.traffic_bytes, true) }}
+
+							{{ dashboard.ditem('customer.subdomains', userinfo.subdomains, overview.subdomains_used, overview.subdomains_assigned) }}
+							{{ dashboard.ditem('customer.mysqls', userinfo.mysqls, overview.mysqls_used, overview.mysqls_assigned) }}
+							{{ dashboard.ditem('customer.emails', userinfo.emails, overview.emails_used, overview.emails_assigned) }}
+							{{ dashboard.ditem('customer.accounts', userinfo.email_accounts, overview.email_accounts_used, overview.email_accounts_assigned) }}
+							{{ dashboard.ditem('customer.forwarders', userinfo.email_forwarders, overview.email_forwarders_used, overview.email_forwarders_assigned) }}
+							{{ dashboard.ditem('customer.ftps', userinfo.ftps, overview.ftps_used, overview.ftps_assigned) }}
+						{% else %}
 							{# customer-resources #}
-							<div class="col">
-								<div class="card bg-light h-100 p-2">
-									<h5>{{ lng('admin.customers') }} <small>{{ overview.number_customers }}/{{ userinfo.customers }}</small></h5>
-									<div class="progress" style="height: .25rem;">
-										<div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-									</div>
-								</div>
-							</div>
-							<div class="col">
-								<div class="card bg-light h-100 p-2">
-									<h5>{{ lng('admin.customers') }} <small>{{ overview.number_customers }}/{{ userinfo.customers }}</small></h5>
-									<div class="progress" style="height: .25rem;">
-										<div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-									</div>
-								</div>
-							</div>
-							<div class="col">
-								<div class="card bg-light h-100 p-2">
-									<h5>{{ lng('admin.customers') }} <small>{{ overview.number_customers }}/{{ userinfo.customers }}</small></h5>
-									<div class="progress" style="height: .25rem;">
-										<div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-									</div>
-								</div>
-							</div>
-							<div class="col">
-								<div class="card bg-light h-100 p-2">
-									<h5>{{ lng('admin.customers') }} <small>{{ overview.number_customers }}/{{ userinfo.customers }}</small></h5>
-									<div class="progress" style="height: .25rem;">
-										<div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-									</div>
-								</div>
-							</div>
-							<div class="col">
-								<div class="card bg-light h-100 p-2">
-									<h5>{{ lng('admin.customers') }} <small>{{ overview.number_customers }}/{{ userinfo.customers }}</small></h5>
-									<div class="progress" style="height: .25rem;">
-										<div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-									</div>
-								</div>
-							</div>
+							{{ dashboard.ditem('customer.diskspace', userinfo.diskspace_bytes, userinfo.diskspace_bytes_used, null, true) }}
+							{{ dashboard.ditem('customer.traffic', userinfo.traffic_bytes, userinfo.traffic_bytes_used, null, true) }}
+
+							{{ dashboard.ditem('customer.subdomains', userinfo.subdomains, userinfo.subdomains_used) }}
+							{{ dashboard.ditem('customer.mysqls', userinfo.mysqls, userinfo.mysqls_used) }}
+							{{ dashboard.ditem('customer.emails', userinfo.emails, userinfo.emails_used) }}
+							{{ dashboard.ditem('customer.accounts', userinfo.email_accounts, userinfo.email_accounts_used) }}
+							{{ dashboard.ditem('customer.forwarders', userinfo.email_forwarders, userinfo.email_forwarders_used) }}
+							{{ dashboard.ditem('customer.ftps', userinfo.ftps, userinfo.ftps_used) }}
 						{% endif %}
 					</div>
 				</div>
@@ -122,15 +63,22 @@
 							<div class="ms-2 me-auto">
 								<div class="fw-bold">{{ lng('tasks.outstanding_tasks') }}</div>
 								{% for task in outstanding_tasks %}
-									<i class="fa-regular fa-clock"></i> {{ task.desc }}<br>
+									<i class="fa-regular fa-clock"></i>
+									{{ task.desc }}<br>
 								{% endfor %}
 							</div>
 						</li>
 						{% for cronrun in cron_last_runs %}
-						<li class="list-group-item d-flex justify-content-between align-items-start">
-							<div class="ms-2 me-auto">{{ cronrun.title }}</div>
-							<span class="badge bg-primary">{% if cronrun.lastrun > 0 %}{{ cronrun.lastrun|date('d.m.Y H:i') }}{% else %}{{ lng('cronjobs.notyetrun') }}{% endif %}</span>
-						</li>
+							<li class="list-group-item d-flex justify-content-between align-items-start">
+								<div class="ms-2 me-auto">{{ cronrun.title }}</div>
+								<span class="badge bg-primary">
+									{% if cronrun.lastrun > 0 %}
+										{{ cronrun.lastrun|date('d.m.Y H:i') }}
+									{% else %}
+										{{ lng('cronjobs.notyetrun') }}
+									{% endif %}
+								</span>
+							</li>
 						{% endfor %}
 					</ul>
 				</div>

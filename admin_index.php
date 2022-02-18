@@ -65,23 +65,34 @@ if ($page == 'overview') {
 		];
 	}
 	$overview_stmt = Database::prepare("SELECT COUNT(*) AS `number_customers`,
+				SUM(case when `diskspace` > 0 then `diskspace` else 0 end) AS `diskspace_assigned`,
 				SUM(`diskspace_used`) AS `diskspace_used`,
+				SUM(case when `mysqls` > 0 then `mysqls` else 0 end) AS `mysqls_assigned`,
 				SUM(`mysqls_used`) AS `mysqls_used`,
+				SUM(case when `emails` > 0 then `emails` else 0 end) AS `emails_assigned`,
 				SUM(`emails_used`) AS `emails_used`,
+				SUM(case when `email_accounts` > 0 then `email_accounts` else 0 end) AS `email_accounts_assigned`,
 				SUM(`email_accounts_used`) AS `email_accounts_used`,
+				SUM(case when `email_forwarders` > 0 then `email_forwarders` else 0 end) AS `email_forwarders_assigned`,
 				SUM(`email_forwarders_used`) AS `email_forwarders_used`,
+				SUM(case when `email_quota` > 0 then `email_quota` else 0 end) AS `email_quota_assigned`,
 				SUM(`email_quota_used`) AS `email_quota_used`,
+				SUM(case when `ftps` > 0 then `ftps` else 0 end) AS `ftps_assigned`,
 				SUM(`ftps_used`) AS `ftps_used`,
+				SUM(case when `subdomains` > 0 then `subdomains` else 0 end) AS `subdomains_assigned`,
 				SUM(`subdomains_used`) AS `subdomains_used`,
+				SUM(case when `traffic` > 0 then `traffic` else 0 end) AS `traffic_assigned`,
 				SUM(`traffic_used`) AS `traffic_used`
 				FROM `" . TABLE_PANEL_CUSTOMERS . "`" . ($userinfo['customers_see_all'] ? '' : " WHERE `adminid` = :adminid "));
 	$overview = Database::pexecute_first($overview_stmt, $params);
 
-	$dec_places = Settings::Get('panel.decimal_places');
-	$overview['traffic_bytes_used'] = $overview['traffic_used'] * 1024;
-	$overview['traffic_used'] = \Froxlor\PhpHelper::sizeReadable($overview['traffic_used'] * 1024, null, 'bi');
+	$userinfo['diskspace_bytes'] = ($userinfo['diskspace'] > -1) ? $userinfo['diskspace'] * 1024 : -1;
+	$overview['diskspace_bytes'] = $overview['diskspace_assigned'] * 1024;
 	$overview['diskspace_bytes_used'] = $overview['diskspace_used'] * 1024;
-	$overview['diskspace_used'] = \Froxlor\PhpHelper::sizeReadable($overview['diskspace_used'] * 1024, null, 'bi');
+
+	$userinfo['traffic_bytes'] = ($userinfo['traffic'] > -1) ? $userinfo['traffic'] * 1024 : - 1;
+	$overview['traffic_bytes'] = $overview['traffic_assigned'] * 1024;
+	$overview['traffic_bytes_used'] = $overview['traffic_used'] * 1024;
 
 	$number_domains_stmt = Database::prepare("
 		SELECT COUNT(*) AS `number_domains` FROM `" . TABLE_PANEL_DOMAINS . "`
@@ -110,19 +121,6 @@ if ($page == 'overview') {
 		$lookfornewversion_addinfo = '';
 		$isnewerversion = 0;
 	}
-
-	$dec_places = Settings::Get('panel.decimal_places');
-	// get everything in bytes for the percentage calculation on the dashboard
-	$userinfo['diskspace_bytes'] = ($userinfo['diskspace'] > -1) ? $userinfo['diskspace'] * 1024 : -1;
-	$userinfo['diskspace_bytes_used'] = $userinfo['diskspace_used'] * 1024;
-	$userinfo['traffic_bytes'] = ($userinfo['traffic'] > -1) ? $userinfo['traffic'] * 1024 : - 1;
-	$userinfo['traffic_bytes_used'] = $userinfo['traffic_used'] * 1024;
-
-	$userinfo['diskspace'] = ($userinfo['diskspace'] > -1) ? \Froxlor\PhpHelper::sizeReadable($userinfo['diskspace'] * 1024, null, 'bi') : - 1;
-	$userinfo['diskspace_used'] = \Froxlor\PhpHelper::sizeReadable($userinfo['diskspace_used'] * 1024, null, 'bi');
-	$userinfo['traffic'] = ($userinfo['traffic'] > -1) ? \Froxlor\PhpHelper::sizeReadable($userinfo['traffic'] * 1024, null, 'bi') : - 1;
-	$userinfo['traffic_used'] = \Froxlor\PhpHelper::sizeReadable($userinfo['traffic_used'] * 1024, null, 'bi');
-	$userinfo = \Froxlor\PhpHelper::strReplaceArray('-1', $lng['customer']['unlimited'], $userinfo, 'customers domains diskspace diskspace_bytes traffic traffic_bytes mysqls emails email_accounts email_forwarders email_quota ftps subdomains');
 
 	$cron_last_runs = \Froxlor\System\Cronjob::getCronjobsLastRun();
 	$outstanding_tasks = \Froxlor\System\Cronjob::getOutstandingTasks();
