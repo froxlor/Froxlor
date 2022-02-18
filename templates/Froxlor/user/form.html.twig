@@ -1,0 +1,9 @@
+{% extends "Froxlor/userarea.html.twig" %}
+
+{% block content %}
+
+	{% import "Froxlor/form/form.html.twig" as form %}
+
+	{{ form.form(formdata, '#', formdata.title) }}
+
+{% endblock %}
