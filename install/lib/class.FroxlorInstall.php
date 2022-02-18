@@ -1143,7 +1143,7 @@ class FroxlorInstall
 			$check['result_txt'] = $this->_lng['requirements']['notfound'] . ' (' . PHP_VERSION . ')';
 			$_die = true;
 		} else {
-			if (version_compare("7.4.0", PHP_VERSION, ">=")) {
+			if (version_compare("8.0.0", PHP_VERSION, ">=")) {
 				$check['result'] = 2;
 				$check['result_txt'] = $this->_lng['requirements']['newerphpprefered'] . ' (' . PHP_VERSION . ')';
 			} else {
