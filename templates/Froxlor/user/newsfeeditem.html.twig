@@ -1,9 +1,9 @@
 <a href="{{ link|default('#')|raw }}" class="list-group-item list-group-item-action">
 	<div class="d-flex w-100 justify-content-between">
-		<h5 class="mb-1">{{ title }}</h5>
+		<b class="mb-1">{{ title }}</b>
 		{% if date is not empty %}
 			<small>{{ date }}</small>
 		{% endif %}
 	</div>
-	<p class="mb-1">{{ content|raw }}</p>
+	<p class="small mb-1">{{ content|raw }}</p>
 </a>

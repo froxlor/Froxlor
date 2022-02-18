@@ -18,47 +18,11 @@
  */
 return array(
 	'customer' => array(
-		'index' => array(
-			'url' => 'customer_index.php',
-			'label' => $lng['admin']['overview'],
-			'elements' => array(
-				array(
-					'label' => $lng['menue']['main']['username']
-				),
-				array(
-					'url' => 'customer_index.php?page=change_password',
-					'label' => $lng['menue']['main']['changepassword']
-				),
-				array(
-					'url' => 'customer_index.php?page=change_language',
-					'label' => $lng['menue']['main']['changelanguage']
-				),
-				array(
-					'url' => 'customer_index.php?page=change_theme',
-					'label' => $lng['menue']['main']['changetheme'],
-					'show_element' => (\Froxlor\Settings::Get('panel.allow_theme_change_customer') == true)
-				),
-				array(
-					'url' => 'customer_index.php?page=apikeys',
-					'label' => $lng['menue']['main']['apikeys'],
-					'show_element' => (\Froxlor\Settings::Get('api.enabled') == true)
-				),
-				array(
-					'url' => 'https://docs.froxlor.org/apiguide/index.html',
-					'new_window' => true,
-					'label' => $lng['menue']['main']['apihelp'],
-					'show_element' => (\Froxlor\Settings::Get('api.enabled') == true)
-				),
-				array(
-					'url' => 'customer_index.php?action=logout',
-					'label' => $lng['login']['logout']
-				)
-			)
-		),
 		'email' => array(
 			'url' => 'customer_email.php',
 			'label' => $lng['menue']['email']['email'],
 			'show_element' => (! \Froxlor\Settings::IsInList('panel.customer_hide_options', 'email')),
+            'icon' => 'fa fa-envelope',
 			'elements' => array(
 				array(
 					'url' => 'customer_email.php?page=emails',
@@ -83,6 +47,7 @@ return array(
 			'url' => 'customer_mysql.php',
 			'label' => $lng['menue']['mysql']['mysql'],
 			'show_element' => (! \Froxlor\Settings::IsInList('panel.customer_hide_options', 'mysql')),
+            'icon' => 'fa fa-database',
 			'elements' => array(
 				array(
 					'url' => 'customer_mysql.php?page=mysqls',
@@ -102,6 +67,7 @@ return array(
 			'url' => 'customer_domains.php',
 			'label' => $lng['menue']['domains']['domains'],
 			'show_element' => (! \Froxlor\Settings::IsInList('panel.customer_hide_options', 'domains')),
+            'icon' => 'fa fa-globe',
 			'elements' => array(
 				array(
 					'url' => 'customer_domains.php?page=domains',
@@ -117,6 +83,7 @@ return array(
 			'url' => 'customer_ftp.php',
 			'label' => $lng['menue']['ftp']['ftp'],
 			'show_element' => (! \Froxlor\Settings::IsInList('panel.customer_hide_options', 'ftp')),
+            'icon' => 'fa fa-transfer',
 			'elements' => array(
 				array(
 					'url' => 'customer_ftp.php?page=accounts',
@@ -134,6 +101,7 @@ return array(
 			'url' => 'customer_extras.php',
 			'label' => $lng['menue']['extras']['extras'],
 			'show_element' => (! \Froxlor\Settings::IsInList('panel.customer_hide_options', 'extras')),
+            'icon' => 'fa fa-wrench',
 			'elements' => array(
 				array(
 					'url' => 'customer_extras.php?page=htpasswds',
@@ -161,6 +129,7 @@ return array(
 			'url' => 'customer_traffic.php',
 			'label' => $lng['menue']['traffic']['traffic'],
 			'show_element' => (! \Froxlor\Settings::IsInList('panel.customer_hide_options', 'traffic')),
+            'icon' => 'fa fa-area-chart',
 			'elements' => array(
 				array(
 					'url' => 'customer_traffic.php?page=current',
@@ -170,46 +139,10 @@ return array(
 		)
 	),
 	'admin' => array(
-		'index' => array(
-			'url' => 'admin_index.php',
-			'label' => $lng['admin']['overview'],
-			'elements' => array(
-				array(
-					'label' => $lng['menue']['main']['username']
-				),
-				array(
-					'url' => 'admin_index.php?page=change_password',
-					'label' => $lng['menue']['main']['changepassword']
-				),
-				array(
-					'url' => 'admin_index.php?page=change_language',
-					'label' => $lng['menue']['main']['changelanguage']
-				),
-				array(
-					'url' => 'admin_index.php?page=change_theme',
-					'label' => $lng['menue']['main']['changetheme'],
-					'show_element' => (\Froxlor\Settings::Get('panel.allow_theme_change_admin') == true)
-				),
-				array(
-					'url' => 'admin_index.php?page=apikeys',
-					'label' => $lng['menue']['main']['apikeys'],
-					'show_element' => (\Froxlor\Settings::Get('api.enabled') == true)
-				),
-				array(
-					'url' => 'https://docs.froxlor.org/apiguide/index.html',
-					'new_window' => true,
-					'label' => $lng['menue']['main']['apihelp'],
-					'show_element' => (\Froxlor\Settings::Get('api.enabled') == true)
-				),
-				array(
-					'url' => 'admin_index.php?action=logout',
-					'label' => $lng['login']['logout']
-				)
-			)
-		),
 		'resources' => array(
 			'label' => $lng['admin']['resources'],
 			'required_resources' => 'customers',
+            'icon' => 'fa fa-box',
 			'elements' => array(
 				array(
 					'url' => 'admin_customers.php?page=customers',
@@ -251,6 +184,7 @@ return array(
 		'traffic' => array(
 			'label' => $lng['admin']['traffic'],
 			'required_resources' => 'customers',
+            'icon' => 'fa fa-area-chart',
 			'elements' => array(
 				array(
 					'url' => 'admin_traffic.php?page=customers',
@@ -262,6 +196,7 @@ return array(
 		'server' => array(
 			'label' => $lng['admin']['server'],
 			'required_resources' => 'change_serversettings',
+            'icon' => 'fa fa-server',
 			'elements' => array(
 				array(
 					'url' => 'admin_configfiles.php?page=configfiles',
@@ -306,6 +241,7 @@ return array(
 		'server_php' => array(
 			'label' => $lng['admin']['server_php'],
 			'required_resources' => 'change_serversettings',
+            'icon' => 'fab fa-php',
 			'elements' => array(
 				array(
 					'url' => 'admin_phpsettings.php?page=overview',
@@ -339,6 +275,7 @@ return array(
 		),
 		'misc' => array(
 			'label' => $lng['admin']['misc'],
+            'icon' => 'fa fa-wrench',
 			'elements' => array(
 				array(
 					'url' => 'admin_settings.php?page=integritycheck',

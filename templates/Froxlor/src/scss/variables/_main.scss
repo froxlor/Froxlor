@@ -21,7 +21,8 @@ $alert-border-width: 0;
 $list-group-item-color-scale: 0;
 $list-group-item-bg-scale: 0;
 
-$card-border-width: 0;
+// Space
+$spacer: 1.25rem;
 
 // Body
 $body-bg: $light-bg;
@@ -35,3 +36,11 @@ $links: $froxlor-blue-dark;
 
 // Navbar
 $navbar-bg: #ffffff;
+
+// Sidebar
+$sidebar-width: 280px;
+
+// Card
+$card-cap-bg: none;
+$card-cap-padding-y: $spacer;
+$card-border-width: 0;

@@ -1,0 +1,12 @@
+.card {
+  margin-bottom: $spacer * 1.5;
+
+  .card-header {
+    border-bottom: #e5e5e5 solid 1px;
+  }
+  .card-body {
+    p {
+      @extend .card-text;
+    }
+  }
+}

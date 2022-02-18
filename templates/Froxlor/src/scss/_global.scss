@@ -8,18 +8,30 @@
   @extend .shadow-sm;
 }
 
+.page-header {
+  margin-bottom: 2rem;
+
+  &:after {
+    margin-top: .5rem;
+    display: block;
+    height: 3px;
+    width: 100px;
+    background: $froxlor-blue-dark;
+    border-radius: 3px;
+    content: ' ';
+  }
+}
+
+.progress-thin {
+  height: 3px;
+}
+
 .alert-icon {
   padding: .5rem;
   background: rgba(0, 0, 0, .15);
   text-align: center;
   border-radius: $border-radius;
   margin-right: .75rem;
-}
-
-.card .card-body {
-  p {
-    @extend .card-text;
-  }
 }
 
 .max-w-420 {
@@ -32,6 +44,10 @@
 
 .max-w-lg {
   max-width: 991.98px;
+}
+
+.max-h-before-header {
+  max-height: calc(100vh - ($spacer * 3.5));
 }
 
 footer {

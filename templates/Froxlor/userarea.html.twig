@@ -17,15 +17,20 @@
 		</div>
 	{% endif %}
 
-	<nav class="navbar navbar-expand py-0">
+	<nav class="navbar navbar-expand-md navbar-light py-0">
 		<div class="container-fluid gx-0">
-			<a class="navbar-brand bg-dark p-3" style="width: 280px" href="{{ linker({'section': 'index'}) }}">
+			<a class="navbar-brand p-3" href="{{ linker({'section': 'index'}) }}">
 				<img src="{{ header_logo }}" alt="" width="auto" height="24" class="d-inline-block align-text-top">
 			</a>
-			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTop" aria-controls="navbarTop" aria-expanded="false" aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-			</button>
-			<div class="collapse navbar-collapse justify-content-end px-3" id="navbarTop">
+			<div class="me-3 me-sm-0">
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar" aria-controls="sidebar"  aria-expanded="false" aria-label="Toggle sidebar">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+			</div>
+			<div class="collapse navbar-collapse justify-content-end px-3" id="navbar">
 				<ul class="navbar-nav align-items-center">
 					<li class="nav-item text-nowrap d-block me-2">
 						<a class="btn btn-primary btn-sm d-block" href="{{ linker({'section': 'index'}) }}">
@@ -87,11 +92,13 @@
 {% endblock %}
 
 {% block body %}
-	<div class="d-flex flex-grow-1">
+	<div class="d-flex flex-grow-1 overflow-hidden">
 		{{ include('Froxlor/sidebarmenu.html.twig') }}
 
-		<main role="main" class="flex-grow-1 p-5">
-			{% block content %}{% endblock %}
+		<main role="main" class="d-flex flex-column flex-grow-1 p-5 pb-0 overflow-auto max-h-before-header">
+			<section class="flex-grow-1">
+				{% block content %}{% endblock %}
+			</section>
 
 			{{ include('Froxlor/footer.html.twig') }}
 		</main>

@@ -12,7 +12,7 @@ class HTML
 	 *        	array navigation data
 	 * @param
 	 *        	array userinfo the userinfo of the user
-	 * @return string the content of the navigation bar
+	 * @return array the content of the navigation bar
 	 *        
 	 * @author Florian Lippert <flo@syscp.org>
 	 */
@@ -61,15 +61,18 @@ class HTML
 
 							$navurl = htmlspecialchars($element['url']);
 							$navlabel = $element['label'];
+							$icon = $element['icon'] ?? null;
 						} else {
 							$navlabel = $element['label'];
+                            $icon = $element['icon'] ?? null;
 						}
 
 						$navigation_links[] = [
 							'url' => $navurl,
 							'target' => $target,
 							'is_active' => $active,
-							'label' => $navlabel
+							'label' => $navlabel,
+							'icon' => $icon
 						];
 					}
 				}
@@ -95,15 +98,18 @@ class HTML
 
 						$navurl = htmlspecialchars($box['url']);
 						$navlabel = $box['label'];
+						$icon = $box['icon'] ?? null;
 					} else {
 						$navurl = "#";
 						$navlabel = $box['label'];
+						$icon = $box['icon'] ?? null;
 					}
 
 					$returnvalue[] = [
 						'url' => $navurl,
 						'target' => $target,
 						'label' => $navlabel,
+						'icon' => $icon,
 						'items' => $navigation_links
 					];
 				}

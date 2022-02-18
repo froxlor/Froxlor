@@ -1,46 +1,50 @@
-<div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px;">
-	<ul class="nav nav-pills flex-column mb-auto">
+<nav id="sidebar" class="sidebar collapse d-md-flex flex-shrink-0 flex-column bg-dark overflow-auto max-h-before-header">
+	<ul class="nav d-flex flex-fill flex-column py-3">
 		{% for idx,mitems in nav_entries %}
-			{% if mitems.label|upper != 'OVERVIEW' %}
-				{% if mitems.items is not empty %}
-					<li class="nav-item">
-						<a class="nav-link text-light {% if mitems.active == 0 %}collapsed{% endif %}" href="#sub{{ idx }}" data-bs-toggle="collapse" data-bs-target="#sub{{ idx }}">
-							<span class="{{ mitems.icon }}"></span>
-							{{ mitems.label|upper }}</a>
-						<div class="collapse {% if mitems.active == 1 %}show{% endif %}" id="sub{{ idx }}" aria-expanded="{% if mitems.active == 1 %}true{% else %}false{% endif %}">
-							<ul class="flex-column ps-3 nav">
-								{% for item in mitems.items %}
-									<li class="nav-item">
-										<a class="nav-link text-light pb-0 {% if item.active == 1 %}font-weight-bold{% endif %}" href="{{ item.url|raw }}">{{ item.label }}</a>
-									</li>
-								{% endfor %}
-							</ul>
-						</div>
-					</li>
-				{% else %}
-					<li class="nav-item">
-						<a class="nav-link text-light {% if mitems.active == 1 %}active{% endif %}" href="{% if mitems.url is not empty %}{{ mitems.url|raw }}{% else %}#{% endif %}" {% if mitems.target is not empty %} target="{{ mitems.target }}" {% endif %}>
-							{% if mitems.icon is not empty %}
-								<span class="{{ mitems.icon }}"></span>
-							{% endif %}
-							{{ mitems.label|upper }}</a>
-					</li>
-				{% endif %}
+			{% if mitems.items is not empty %}
+				<li class="nav-item">
+					<a class="nav-link text-light {% if mitems.active == 0 %}collapsed{% endif %}" href="#sub{{ idx }}" data-bs-toggle="collapse" data-bs-target="#sub{{ idx }}">
+						{% if mitems.icon is not empty %}
+							<i class="{{ mitems.icon }}"></i>
+						{% endif %}
+						{{ mitems.label }}
+					</a>
+					<div class="collapse {% if mitems.active == 1 %}show{% endif %}" id="sub{{ idx }}" aria-expanded="{% if mitems.active == 1 %}true{% else %}false{% endif %}">
+						<ul class="flex-column ps-3 nav">
+							{% for item in mitems.items %}
+								<li class="nav-item">
+									<a class="nav-link text-light {% if item.active == 1 %}font-weight-bold{% endif %}" href="{{ item.url|raw }}">{{ item.label|raw }}</a>
+								</li>
+							{% endfor %}
+						</ul>
+					</div>
+				</li>
+			{% else %}
+				<li class="nav-item">
+					<a class="nav-link text-light {% if mitems.active == 1 %}active{% endif %}" href="{% if mitems.url is not empty %}{{ mitems.url|raw }}{% else %}#{% endif %}" {% if mitems.target is not empty %} target="{{ mitems.target }}" {% endif %}>
+						{% if mitems.icon is not empty %}
+							<i class="{{ mitems.icon }}"></i>
+						{% endif %}
+						{{ mitems.label|upper }}
+					</a>
+				</li>
 			{% endif %}
 		{% endfor %}
 	</ul>
-	<hr>
-	<div class="dropdown">
-		<a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-			<i class="fa-solid fa-user me-3"></i>
-			<strong>{{ userinfo.loginname }}</strong>
-		</a>
-		<ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-			<li><a class="dropdown-item" href="#">New project...</a></li>
-			<li><a class="dropdown-item" href="#">Settings</a></li>
-			<li><a class="dropdown-item" href="#">Profile</a></li>
-			<li><hr class="dropdown-divider"></li>
-			<li><a class="dropdown-item" href="{{ linker({'section': 'index', 'action': 'logout'}) }}">{{ lng('login.logout') }}</a></li>
-		</ul>
+
+	<div class="d-flex flex-shrink-0 p-3 user-info">
+		<div class="dropdown d-block flex-shrink-0">
+			<a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+				<i class="fa-solid fa-user me-3"></i>
+				<strong>{{ userinfo.loginname }}</strong>
+			</a>
+			<ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+				<li><a class="dropdown-item" href="#">New project...</a></li>
+				<li><a class="dropdown-item" href="#">Settings</a></li>
+				<li><a class="dropdown-item" href="#">Profile</a></li>
+				<li><hr class="dropdown-divider"></li>
+				<li><a class="dropdown-item" href="{{ linker({'section': 'index', 'action': 'logout'}) }}">{{ lng('login.logout') }}</a></li>
+			</ul>
+		</div>
 	</div>
-</div>
+</nav>
