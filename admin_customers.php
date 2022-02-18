@@ -22,6 +22,7 @@ require './lib/init.php';
 use Froxlor\Database\Database;
 use Froxlor\Settings;
 use Froxlor\Api\Commands\Customers as Customers;
+use Froxlor\UI\Panel\UI;
 
 if (isset($_POST['id'])) {
 	$id = intval($_POST['id']);
@@ -283,11 +284,6 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 				's' => $s
 			));
 		} else {
-			$language_options = '';
-
-			foreach ($languages as $language_file => $language_name) {
-				$language_options .= \Froxlor\UI\HTML::makeoption($language_name, $language_file, Settings::Get('panel.standardlanguage'), true);
-			}
 
 			$diskspace_ul = \Froxlor\UI\HTML::makecheckbox('diskspace_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 			$traffic_ul = \Froxlor\UI\HTML::makecheckbox('traffic_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
@@ -299,10 +295,6 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 			$ftps_ul = \Froxlor\UI\HTML::makecheckbox('ftps_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 			$mysqls_ul = \Froxlor\UI\HTML::makecheckbox('mysqls_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
 
-			$gender_options = \Froxlor\UI\HTML::makeoption($lng['gender']['undef'], 0, true, true, true);
-			$gender_options .= \Froxlor\UI\HTML::makeoption($lng['gender']['male'], 1, null, true, true);
-			$gender_options .= \Froxlor\UI\HTML::makeoption($lng['gender']['female'], 2, null, true, true);
-
 			$phpconfigs = array();
 			$configs = Database::query("
 				SELECT c.*, fc.description as interpreter
@@ -312,38 +304,37 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 			while ($row = $configs->fetch(PDO::FETCH_ASSOC)) {
 				if ((int) Settings::Get('phpfpm.enabled') == 1) {
 					$phpconfigs[] = array(
-						'label' => $row['description'] . " [" . $row['interpreter'] . "]<br />",
+						'label' => $row['description'] . " [" . $row['interpreter'] . "]",
 						'value' => $row['id']
 					);
 				} else {
 					$phpconfigs[] = array(
-						'label' => $row['description'] . "<br />",
+						'label' => $row['description'],
 						'value' => $row['id']
 					);
 				}
 			}
 
 			// hosting plans
-			$hosting_plans = "";
+			$hosting_plans = [];
 			$plans = Database::query("
 				SELECT *
 				FROM `" . TABLE_PANEL_PLANS . "`
 				ORDER BY name ASC
 			");
-			if (Database::num_rows() > 0) {
-				$hosting_plans .= \Froxlor\UI\HTML::makeoption("---", 0, 0, true, true);
-			}
+			$hosting_plans = [
+				0 => "---"
+			];
 			while ($row = $plans->fetch(PDO::FETCH_ASSOC)) {
-				$hosting_plans .= \Froxlor\UI\HTML::makeoption($row['name'], $row['id'], 0, true, true);
+				$hosting_plans[$row['id']] = $row['name'];
 			}
 
 			$customer_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/customer/formfield.customer_add.php';
-			$customer_add_form = \Froxlor\UI\HtmlForm::genHTMLForm($customer_add_data);
 
-			$title = $customer_add_data['customer_add']['title'];
-			$image = $customer_add_data['customer_add']['image'];
-
-			eval("echo \"" . \Froxlor\UI\Template::getTemplate("customers/customers_add") . "\";");
+			UI::TwigBuffer('user/form.html.twig', [
+				'formdata' => $customer_add_data['customer_add']
+			]);
+			UI::TwigOutputBuffer();
 		}
 	} elseif ($action == 'edit' && $id != 0) {
 
