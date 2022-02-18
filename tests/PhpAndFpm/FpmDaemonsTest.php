@@ -20,13 +20,13 @@ class FpmDaemonsTest extends TestCase
 		global $admin_userdata;
 		$data = [
 			'description' => 'test2 fpm',
-			'reload_cmd' => 'service php7.1-fpm reload',
-			'config_dir' => '/etc/php/7.1/fpm/pool.d',
+			'reload_cmd' => 'service php7.4-fpm reload',
+			'config_dir' => '/etc/php/7.4/fpm/pool.d',
 			'limit_extensions' => ''
 		];
 		$json_result = FpmDaemons::getLocal($admin_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
-		$this->assertEquals('/etc/php/7.1/fpm/pool.d/', $result['config_dir']);
+		$this->assertEquals('/etc/php/7.4/fpm/pool.d/', $result['config_dir']);
 		$this->assertEquals('dynamic', $result['pm']);
 		$this->assertEquals(5, $result['max_children']);
 		$this->assertEquals('.php', $result['limit_extensions']);
@@ -77,7 +77,7 @@ class FpmDaemonsTest extends TestCase
 		];
 		$json_result = FpmDaemons::getLocal($admin_userdata, $data)->update();
 		$result = json_decode($json_result, true)['data'];
-		$this->assertEquals('/etc/php/7.1/fpm/pool.d/', $result['config_dir']);
+		$this->assertEquals('/etc/php/7.4/fpm/pool.d/', $result['config_dir']);
 		$this->assertEquals(10, $result['max_children']);
 		$this->assertEquals('.php .php.xml', $result['limit_extensions']);
 	}
@@ -239,7 +239,7 @@ class FpmDaemonsTest extends TestCase
 		];
 		$json_result = FpmDaemons::getLocal($admin_userdata, $data)->delete();
 		$result = json_decode($json_result, true)['data'];
-		$this->assertEquals('/etc/php/7.1/fpm/pool.d/', $result['config_dir']);
+		$this->assertEquals('/etc/php/7.4/fpm/pool.d/', $result['config_dir']);
 		$this->assertEquals(10, $result['max_children']);
 		$this->assertEquals('.php', $result['limit_extensions']);
 	}

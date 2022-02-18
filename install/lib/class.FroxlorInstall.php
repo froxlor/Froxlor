@@ -1138,7 +1138,7 @@ class FroxlorInstall
 			'result' => 0
 		];
 
-		if (version_compare("7.1.0", PHP_VERSION, ">=")) {
+		if (version_compare("7.4.0", PHP_VERSION, ">=")) {
 			$check['result'] = 1;
 			$check['result_txt'] = $this->_lng['requirements']['notfound'] . ' (' . PHP_VERSION . ')';
 			$_die = true;

@@ -20528,6 +20528,10 @@ readers do not read off random characters that represent icons */
   max-height: calc(100vh - 4.375rem);
 }
 
+.rounded-tl-bl {
+  border-radius: 0.5rem 0 0.5rem 0;
+}
+
 .navbar {
   background: #f7f7f7;
 }
@@ -20580,4 +20584,5 @@ readers do not read off random characters that represent icons */
 }
 .card .card-header {
   border-bottom: #e5e5e5 solid 1px;
+  font-weight: bold;
 }

@@ -27,11 +27,11 @@ function view($template, $attributes) {
 }
 
 // validate correct php version
-if (version_compare("7.1.0", PHP_VERSION, ">=")) {
+if (version_compare("7.4.0", PHP_VERSION, ">=")) {
     die(
         view($_deftheme . '/misc/phprequirementfailed.html.twig', [
             '{{ basehref }}' => '',
-            '{{ froxlor_min_version }}' => '7.1.0',
+            '{{ froxlor_min_version }}' => '7.4.0',
             '{{ current_version }}' => PHP_VERSION,
             '{{ current_year }}' => date('Y', time()),
         ])

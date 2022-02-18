@@ -1866,7 +1866,7 @@ $lng['error']['autoupdate_6'] = 'Uf, nebyla nalezena (platná) verze ke stažen�
 $lng['error']['autoupdate_7'] = 'Stažený archiv nebyl nalezen :(';
 $lng['error']['autoupdate_8'] = 'Archiv nemohl být extrahován :(';
 $lng['error']['autoupdate_9'] = 'Stažený soubor neprošel testem integrity. Zkus aktualizaci znovu.';
-$lng['error']['autoupdate_10'] = 'Minimální podporovaná verze PHP je 7.0';
+$lng['error']['autoupdate_10'] = 'Minimální podporovaná verze PHP je 7.4.0';
 
 $lng['admin']['server_php'] = 'PHP';
 $lng['domains']['termination_date'] = 'Datum zrušení';

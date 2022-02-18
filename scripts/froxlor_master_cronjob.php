@@ -16,8 +16,8 @@
  */
 
 // validate correct php version
-if (version_compare("7.0.0", PHP_VERSION, ">=")) {
-	die('Froxlor requires at least php-7.0. Please validate that your php-cli version and the cron execution command are correct.');
+if (version_compare("7.4.0", PHP_VERSION, ">=")) {
+	die('Froxlor requires at least php-7.4. Please validate that your php-cli version and the cron execution command are correct.');
 }
 
 require dirname(__DIR__) . '/vendor/autoload.php';

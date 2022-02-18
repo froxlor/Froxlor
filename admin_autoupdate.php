@@ -36,8 +36,8 @@ if (! extension_loaded('zip')) {
 	));
 }
 
-// 0.10.x requires 7.0 at least
-if (version_compare("7.0.0", PHP_VERSION, ">=")) {
+// 0.11.x requires 7.4 at least
+if (version_compare("7.4.0", PHP_VERSION, ">=")) {
 	\Froxlor\UI\Response::redirectTo($filename, array(
 		's' => $s,
 		'page' => 'error',

@@ -22,7 +22,7 @@ $lng['requirements']['not_true'] = 'non';
 $lng['requirements']['notfound'] = 'introuvable';
 $lng['requirements']['notinstalled'] = 'non installé';
 $lng['requirements']['activated'] = 'activé';
-$lng['requirements']['phpversion'] = 'PHP version >= 7.1';
+$lng['requirements']['phpversion'] = 'PHP version >= 7.4 (8.x recommandé)';
 $lng['requirements']['phppdo'] = 'extension PHP PDO et pilote PDO-MySQL ...';
 $lng['requirements']['phpxml'] = 'extension PHP XML...';
 $lng['requirements']['phpfilter'] = 'extension PHP filter ...';

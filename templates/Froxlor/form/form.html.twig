@@ -3,48 +3,43 @@
 	{% import "Froxlor/form/formfields.html.twig" as formfields %}
 
 	<form action="{{ action|default("") }}" method="post" enctype="application/x-www-form-urlencoded" class="form">
-		<div class="card mb-2">
-			{% if title is not empty %}
-				<div class="card-header">
-					{% if form_data.image is not empty %}
-						<i class="{{ form_data.image }}"></i>
-					{% endif %}
-					{{ title }}
-				</div>
-			{% endif %}
-			<div class="card-body">
-				{% for section in form_data.sections %}
-					<div class="card mb-3">
-						{% if section.title is not empty %}
-							<div class="card-header">
-								{% if section.image is not empty %}
-									<i class="{{ section.image }}"></i>
-								{% endif %}
-								{{ section.title }}
-							</div>
+		{% if title is not empty %}
+			<h3 class="page-header">
+				{% if form_data.image is not empty %}
+					<i class="{{ form_data.image }}"></i>
+				{% endif %}
+				{{ title }}
+			</h3>
+		{% endif %}
+
+		{% for section in form_data.sections %}
+			<div class="card mb-3">
+				{% if section.title is not empty %}
+					<div class="card-header">
+						{% if section.image is not empty %}
+							<i class="{{ section.image }}"></i>
 						{% endif %}
-						<div class="card-body">
-							{% for id,field in section.fields %}
-								{% if field.type == 'text' or field.type == 'password' %}
-									{{ formfields.input(id, field) }}
-								{% elseif field.type == 'textul' %}
-									{{ formfields.input_ul(id, field) }}
-								{% elseif field.type == 'checkbox' %}
-									{{ formfields.bool(id, field) }}
-								{% elseif field.type == 'select' %}
-									{{ formfields.select(id, field) }}
-								{% elseif field.type == 'textarea' %}
-									{{ formfields.textarea(id, field) }}
-								{% elseif field.type == 'label' %}
-									{{ formfields.plain(id, field) }}
-								{% endif %}
-							{% endfor %}
-						</div>
+						{{ section.title }}
 					</div>
-				{% endfor %}
+				{% endif %}
+				<div class="card-body">
+					{% for id,field in section.fields %}
+						{% if field.type == 'text' or field.type == 'password' %}
+							{{ formfields.input(id, field) }}
+						{% elseif field.type == 'textul' %}
+							{{ formfields.input_ul(id, field) }}
+						{% elseif field.type == 'checkbox' %}
+							{{ formfields.bool(id, field) }}
+						{% elseif field.type == 'select' %}
+							{{ formfields.select(id, field) }}
+						{% elseif field.type == 'textarea' %}
+							{{ formfields.textarea(id, field) }}
+						{% elseif field.type == 'label' %}
+							{{ formfields.plain(id, field) }}
+						{% endif %}
+					{% endfor %}
+				</div>
 			</div>
-			<!-- /card-body -->
-		</div>
-		<!-- /card -->
+		{% endfor %}
 	</form>
 {% endmacro %}

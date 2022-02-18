@@ -22,7 +22,7 @@ $lng['requirements']['not_true'] = 'nein';
 $lng['requirements']['notfound'] = 'nicht gefunden';
 $lng['requirements']['notinstalled'] = 'nicht installiert';
 $lng['requirements']['activated'] = 'ist aktiviert.';
-$lng['requirements']['phpversion'] = 'PHP Version >= 7.1';
+$lng['requirements']['phpversion'] = 'PHP Version >= 7.4 (8.x empfohlen)';
 $lng['requirements']['newerphpprefered'] = 'Passt, aber php-7.4 wird bevorzugt.';
 $lng['requirements']['phppdo'] = 'PHP PDO Erweiterung und PDO-MySQL Treiber...';
 $lng['requirements']['phpsession'] = 'PHP session-Erweiterung...';

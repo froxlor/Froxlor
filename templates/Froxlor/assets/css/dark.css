@@ -20527,3 +20527,7 @@ readers do not read off random characters that represent icons */
 .max-h-before-header {
   max-height: calc(100vh - 4.375rem);
 }
+
+.rounded-tl-bl {
+  border-radius: 0.5rem 0 0.5rem 0;
+}

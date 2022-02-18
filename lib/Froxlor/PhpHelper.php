@@ -284,32 +284,21 @@ class PhpHelper
 		}
 	}
 
-	/**
-	 * Function randomStr
-	 *
-	 * generate a pseudo-random string of bytes
-	 *
-	 * @param int $length
-	 *
-	 * @return string
-	 */
+    /**
+     * Function randomStr
+     *
+     * generate a pseudo-random string of bytes
+     *
+     * @param int $length
+     * @return string
+     * @throws \Exception
+     */
 	public static function randomStr($length)
 	{
-		if (version_compare(PHP_VERSION, '7.0.0') >= 0) {
-			return random_bytes($length);
-		} elseif (function_exists('openssl_random_pseudo_bytes')) {
-			return openssl_random_pseudo_bytes($length);
-		} else {
-			$pr_bits = '';
-			$fp = @fopen('/dev/urandom', 'rb');
-			if ($fp !== false) {
-				$pr_bits .= @fread($fp, $length);
-				@fclose($fp);
-			} else {
-				$pr_bits = substr(rand(time(), getrandmax()) . rand(time(), getrandmax()), 0, $length);
-			}
-			return $pr_bits;
-		}
+        if (function_exists('openssl_random_pseudo_bytes')) {
+            return openssl_random_pseudo_bytes($length);
+        }
+        return random_bytes($length);
 	}
 
 	/**
@@ -322,7 +311,7 @@ class PhpHelper
 	 * @param string $system
 	 *        	'si' for SI, 'bi' for binary prefixes
 	 *        	
-	 * @param
+	 * @param string $retstring
 	 *        	string
 	 */
 	public static function sizeReadable($size, $max = null, $system = 'si', $retstring = '%01.2f %s')
