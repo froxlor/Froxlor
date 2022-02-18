@@ -18,7 +18,7 @@
 		{% import "Froxlor/user/dashboard-item.html.twig" as dashboard %}
 		{% if userinfo.adminsession == 1 %}
 			{# admin-resources #}
-			<div class="row row-cols-2 row-cols-xl-5 g-0">
+			<div class="row row-cols-1 row-cols-sm-2 row-cols-xl-5 g-0">
 				{{ dashboard.ditem('admin.customers', userinfo.customers, overview.number_customers) }}
 				{{ dashboard.ditem('admin.domains', userinfo.domains, overview.number_domains) }}
 				{{ dashboard.ditem('customer.diskspace', userinfo.diskspace_bytes, overview.diskspace_bytes_used, overview.diskspace_bytes, true) }}
@@ -32,7 +32,7 @@
 			</div>
 		{% else %}
 			{# customer-resources #}
-			<div class="row row-cols-2 row-cols-xl-4 g-0">
+			<div class="row row-cols-1 row-cols-sm-2 row-cols-xl-4 g-0">
 				{{ dashboard.ditem('customer.diskspace', userinfo.diskspace_bytes, userinfo.diskspace_bytes_used, null, true) }}
 				{{ dashboard.ditem('customer.traffic', userinfo.traffic_bytes, userinfo.traffic_bytes_used, null, true) }}
 				{{ dashboard.ditem('customer.subdomains', userinfo.subdomains, userinfo.subdomains_used) }}
@@ -47,54 +47,116 @@
 
 	<div class="row">
 		<div class="col-7">
-			<div class="card">
-				<div class="card-header">
-					<h5>Applicant Information</h5>
-					<span class="text-muted">Personal details and application.</span>
-				</div>
-				<div class="card-body">
-					dd
-				</div>
-			</div>
-
 			{% if userinfo.adminsession == 1 %}
-			{# froxlor-details #}
-			<div class="card mb-3">
-				<div class="card-header">
-					<i class="fa-solid fa-wrench"></i>
-					{{ lng('admin.froxlordetails') }}
-				</div>
-				<ul class="list-group list-group-flush">
-					<li class="list-group-item d-flex justify-content-between align-items-start">
-						<div class="ms-2 me-auto">
-							<div class="fw-bold">{{ lng('tasks.outstanding_tasks') }}</div>
-							{% for task in outstanding_tasks %}
-								<i class="fa-regular fa-clock"></i>
-								{{ task.desc }}<br>
-							{% endfor %}
-						</div>
-					</li>
-					{% for cronrun in cron_last_runs %}
+				{# system infos #}
+				<div class="card mb-3">
+					<div class="card-header">
+						<i class="fa-solid fa-gears"></i>
+						{{ lng('admin.systemdetails') }}
+					</div>
+					<ul class="list-group list-group-flush">
 						<li class="list-group-item d-flex justify-content-between align-items-start">
-							<div class="ms-2 me-auto">{{ cronrun.title }}</div>
-							<span class="badge bg-primary">
+							<div class="ms-2 me-auto">
+								<div class="fw-bold">{{ lng('admin.hostname') }}</div>
+								{{ sysinfo.hostname }}
+							</div>
+						</li>
+						<li class="list-group-item d-flex justify-content-between align-items-start">
+							<div class="ms-2 me-auto">
+								<div class="fw-bold">{{ lng('admin.serversoftware') }}</div>
+								{{ sysinfo.webserver }}
+							</div>
+						</li>
+						<li class="list-group-item d-flex justify-content-between align-items-start">
+							<div class="ms-2 me-auto">
+								<div class="fw-bold">{{ lng('admin.phpversion') }}</div>
+								<a href="{{ linker({'section':'settings','page':'phpinfo'}) }}">{{ sysinfo.phpversion }}</a>
+							</div>
+						</li>
+						<li class="list-group-item d-flex justify-content-between align-items-start">
+							<div class="ms-2 me-auto">
+								<div class="fw-bold">{{ lng('admin.mysqlserverversion') }}</div>
+								{{ sysinfo.mysqlserverversion }}
+							</div>
+						</li>
+						<li class="list-group-item d-flex justify-content-between align-items-start">
+							<div class="ms-2 me-auto">
+								<div class="fw-bold">{{ lng('admin.webserverinterface') }}</div>
+								{{ sysinfo.phpsapi }}
+							</div>
+						</li>
+						{% if sysinfo.memory is not empty %}
+							<li class="list-group-item d-flex justify-content-between align-items-start">
+								<div class="ms-2 me-auto">
+									<div class="fw-bold">{{ lng('admin.memory') }}</div>
+									<pre>{{ sysinfo.memory }}</pre>
+								</div>
+							</li>
+						{% endif %}
+						<li class="list-group-item d-flex justify-content-between align-items-start">
+							<div class="ms-2 me-auto">
+								<div class="fw-bold">{{ lng('admin.sysload') }}</div>
+								{{ sysinfo.load }}
+							</div>
+						</li>
+						{% if sysinfo.kernel is not empty %}
+							<li class="list-group-item d-flex justify-content-between align-items-start">
+								<div class="ms-2 me-auto">
+									<div class="fw-bold">Kernel</div>
+									{{ sysinfo.kernel }}
+								</div>
+							</li>
+						{% endif %}
+						{% if sysinfo.uptime is not empty %}
+							<li class="list-group-item d-flex justify-content-between align-items-start">
+								<div class="ms-2 me-auto">
+									<div class="fw-bold">Uptime</div>
+									{{ sysinfo.uptime }}
+								</div>
+							</li>
+						{% endif %}
+					</ul>
+				</div>
+			{% endif %}
+		</div>
+		<div class="col-5">
+			{% if userinfo.adminsession == 1 %}
+				{# froxlor-details #}
+				<div class="card mb-3">
+					<div class="card-header">
+						<i class="fa-solid fa-wrench"></i>
+						{{ lng('admin.froxlordetails') }}
+					</div>
+					<ul class="list-group list-group-flush">
+						<li class="list-group-item d-flex justify-content-between align-items-start">
+							<div class="ms-2 me-auto">
+								<div class="fw-bold">{{ lng('tasks.outstanding_tasks') }}</div>
+								{% for task in outstanding_tasks %}
+									<i class="fa-regular fa-clock"></i>
+									{{ task.desc }}<br>
+								{% endfor %}
+							</div>
+						</li>
+						{% for cronrun in cron_last_runs %}
+							<li class="list-group-item d-flex justify-content-between align-items-start">
+								<div class="ms-2 me-auto">{{ cronrun.title }}</div>
+								<span class="badge bg-primary">
 									{% if cronrun.lastrun > 0 %}
 										{{ cronrun.lastrun|date('d.m.Y H:i') }}
 									{% else %}
 										{{ lng('cronjobs.notyetrun') }}
 									{% endif %}
 								</span>
-						</li>
-					{% endfor %}
-				</ul>
-			</div>
+							</li>
+						{% endfor %}
+					</ul>
+				</div>
 			{% endif %}
-		</div>
-		<div class="col-5">
+
 			<div id="newsfeed" class="card">
 				<div class="card-header">
-					<h5>Froxlor Newsfeed</h5>
-					<span class="text-muted">Personal details and application.</span>
+					<i class="fa fa-info-circle"></i>
+					Froxlor Newsfeed
 				</div>
 				<div class="list-group list-group-flush" id="newsfeeditems">
 					<div class="list-group-item d-flex justify-content-between align-items-start">
