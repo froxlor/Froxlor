@@ -17,7 +17,7 @@
 return array(
 	'ipsandports_add' => array(
 		'title' => $lng['admin']['ipsandports']['add'],
-		'image' => 'icons/ipsports_add.png',
+		'image' => 'fa-solid fa-plus',
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['admin']['ipsandports']['ipandport'],
@@ -42,42 +42,21 @@ return array(
 						'visible' => ! $is_nginx,
 						'label' => $lng['admin']['ipsandports']['create_listen_statement'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							'1'
-						)
+						'value' => '1',
+						'checked' => true
 					),
 					'namevirtualhost_statement' => array(
 						'visible' => $is_apache && ! $is_apache24,
 						'label' => $lng['admin']['ipsandports']['create_namevirtualhost_statement'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							'1'
-						)
+						'value' => '1',
+						'checked' => true
 					),
 					'vhostcontainer' => array(
 						'label' => $lng['admin']['ipsandports']['create_vhostcontainer'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							'1'
-						)
+						'value' => '1',
+						'checked' => true
 					),
 					'docroot' => array(
 						'label' => $lng['admin']['ipsandports']['docroot']['title'],
@@ -85,7 +64,6 @@ return array(
 						'type' => 'text'
 					),
 					'specialsettings' => array(
-						'style' => 'align-top',
 						'label' => $lng['admin']['ownvhostsettings'],
 						'desc' => $lng['serversettings']['default_vhostconf']['description'],
 						'type' => 'textarea',
@@ -96,15 +74,8 @@ return array(
 						'visible' => $is_apache,
 						'label' => $lng['admin']['ipsandports']['create_vhostcontainer_servername_statement'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							'1'
-						)
+						'value' => '1',
+						'checked' => true
 					)
 				)
 			),
@@ -113,7 +84,6 @@ return array(
 				'image' => 'icons/ipsports_add.png',
 				'fields' => array(
 					'default_vhostconf_domain' => array(
-						'style' => 'align-top',
 						'label' => $lng['admin']['ipsandports']['default_vhostconf_domain'],
 						'desc' => $lng['serversettings']['default_vhostconf_domain']['description'],
 						'type' => 'textarea',
@@ -122,7 +92,6 @@ return array(
 					),
 					'ssl_default_vhostconf_domain' => array(
 						'visible' => (\Froxlor\Settings::Get('system.use_ssl') == 1 ? true : false),
-						'style' => 'align-top',
 						'label' => $lng['admin']['ipsandports']['ssl_default_vhostconf_domain'],
 						'desc' => $lng['serversettings']['default_vhostconf_domain']['description'],
 						'type' => 'textarea',
@@ -132,13 +101,8 @@ return array(
 					'include_default_vhostconf_domain' => array(
 						'label' => $lng['admin']['include_ownvhostsettings'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array()
+						'value' => '1',
+						'checked' => false
 					)
 				)
 			),
@@ -150,13 +114,8 @@ return array(
 					'ssl' => array(
 						'label' => $lng['admin']['ipsandports']['enable_ssl'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array()
+						'value' => '1',
+						'checked' => false
 					),
 					'ssl_cert_file' => array(
 						'label' => $lng['admin']['ipsandports']['ssl_cert_file'],
@@ -176,7 +135,6 @@ return array(
 						'type' => 'text'
 					),
 					'ssl_specialsettings' => array(
-						'style' => 'align-top',
 						'label' => $lng['admin']['ownsslvhostsettings'],
 						'desc' => $lng['serversettings']['default_vhostconf']['description'],
 						'type' => 'textarea',
@@ -186,13 +144,8 @@ return array(
 					'include_specialsettings' => array(
 						'label' => $lng['admin']['include_ownvhostsettings'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array()
+						'value' => '1',
+						'checked' => false
 					)
 				)
 			)

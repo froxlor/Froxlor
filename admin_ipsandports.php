@@ -21,6 +21,7 @@ require './lib/init.php';
 
 use Froxlor\Settings;
 use Froxlor\Api\Commands\IpsAndPorts;
+use Froxlor\UI\Panel\UI;
 
 if (isset($_POST['id'])) {
 	$id = intval($_POST['id']);
@@ -68,7 +69,7 @@ if ($page == 'ipsandports' || $page == 'overview') {
 				$row['ip'] = '[' . $row['ip'] . ']';
 			}
 			eval("\$ipsandports.=\"" . \Froxlor\UI\Template::getTemplate("ipsandports/ipsandports_ipandport") . "\";");
-			$count ++;
+			$count++;
 		}
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate("ipsandports/ipsandports") . "\";");
 	} elseif ($action == 'delete' && $id != 0) {
@@ -118,12 +119,11 @@ if ($page == 'ipsandports' || $page == 'overview') {
 		} else {
 
 			$ipsandports_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/ipsandports/formfield.ipsandports_add.php';
-			$ipsandports_add_form = \Froxlor\UI\HtmlForm::genHTMLForm($ipsandports_add_data);
 
-			$title = $ipsandports_add_data['ipsandports_add']['title'];
-			$image = $ipsandports_add_data['ipsandports_add']['image'];
-
-			eval("echo \"" . \Froxlor\UI\Template::getTemplate("ipsandports/ipsandports_add") . "\";");
+			UI::TwigBuffer('user/form.html.twig', [
+				'formdata' => $ipsandports_add_data['ipsandports_add']
+			]);
+			UI::TwigOutputBuffer();
 		}
 	} elseif ($action == 'edit' && $id != 0) {
 		try {
@@ -152,12 +152,11 @@ if ($page == 'ipsandports' || $page == 'overview') {
 				$result = \Froxlor\PhpHelper::htmlentitiesArray($result);
 
 				$ipsandports_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/ipsandports/formfield.ipsandports_edit.php';
-				$ipsandports_edit_form = \Froxlor\UI\HtmlForm::genHTMLForm($ipsandports_edit_data);
 
-				$title = $ipsandports_edit_data['ipsandports_edit']['title'];
-				$image = $ipsandports_edit_data['ipsandports_edit']['image'];
-
-				eval("echo \"" . \Froxlor\UI\Template::getTemplate("ipsandports/ipsandports_edit") . "\";");
+				UI::TwigBuffer('user/form.html.twig', [
+					'formdata' => $ipsandports_edit_data['ipsandports_edit']
+				]);
+				UI::TwigOutputBuffer();
 			}
 		}
 	} elseif ($action == 'jqCheckIP') {
