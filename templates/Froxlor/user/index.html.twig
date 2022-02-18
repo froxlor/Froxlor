@@ -18,14 +18,12 @@
 		{% import "Froxlor/user/dashboard-item.html.twig" as dashboard %}
 		{% if userinfo.adminsession == 1 %}
 			{# admin-resources #}
-			<div class="row g-0">
+			<div class="row row-cols-2 row-cols-xl-5 g-0">
 				{{ dashboard.ditem('admin.customers', userinfo.customers, overview.number_customers) }}
 				{{ dashboard.ditem('admin.domains', userinfo.domains, overview.number_domains) }}
 				{{ dashboard.ditem('customer.diskspace', userinfo.diskspace_bytes, overview.diskspace_bytes_used, overview.diskspace_bytes, true) }}
 				{{ dashboard.ditem('customer.traffic', userinfo.traffic_bytes, overview.traffic_bytes_used, overview.traffic_bytes, true) }}
 				{{ dashboard.ditem('customer.subdomains', userinfo.subdomains, overview.subdomains_used, overview.subdomains_assigned) }}
-			</div>
-			<div class="row g-0">
 				{{ dashboard.ditem('customer.mysqls', userinfo.mysqls, overview.mysqls_used, overview.mysqls_assigned) }}
 				{{ dashboard.ditem('customer.emails', userinfo.emails, overview.emails_used, overview.emails_assigned) }}
 				{{ dashboard.ditem('customer.accounts', userinfo.email_accounts, overview.email_accounts_used, overview.email_accounts_assigned) }}
@@ -34,13 +32,11 @@
 			</div>
 		{% else %}
 			{# customer-resources #}
-			<div class="row g-0">
+			<div class="row row-cols-2 row-cols-xl-4 g-0">
 				{{ dashboard.ditem('customer.diskspace', userinfo.diskspace_bytes, userinfo.diskspace_bytes_used, null, true) }}
 				{{ dashboard.ditem('customer.traffic', userinfo.traffic_bytes, userinfo.traffic_bytes_used, null, true) }}
 				{{ dashboard.ditem('customer.subdomains', userinfo.subdomains, userinfo.subdomains_used) }}
 				{{ dashboard.ditem('customer.mysqls', userinfo.mysqls, userinfo.mysqls_used) }}
-			</div>
-			<div class="row g-0">
 				{{ dashboard.ditem('customer.emails', userinfo.emails, userinfo.emails_used) }}
 				{{ dashboard.ditem('customer.accounts', userinfo.email_accounts, userinfo.email_accounts_used) }}
 				{{ dashboard.ditem('customer.forwarders', userinfo.email_forwarders, userinfo.email_forwarders_used) }}
