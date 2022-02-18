@@ -35,6 +35,8 @@
 									{{ formfields.select(id, field) }}
 								{% elseif field.type == 'textarea' %}
 									{{ formfields.textarea(id, field) }}
+								{% elseif field.type == 'label' %}
+									{{ formfields.plain(id, field) }}
 								{% endif %}
 							{% endfor %}
 						</div>

@@ -1,11 +1,14 @@
 {% macro bool(id, field) %}
 	<div class="row mb-3">
-		<label for="{{ id }}" class="col-sm-4 col-form-label">{{ field.label|raw }}</label>
+		<label for="{{ id }}" class="col-sm-4 col-form-label">{{ field.label|raw }}
+			{% if field.desc is defined and field.desc is not empty %}<br><small>{{ field.desc|raw }}</small>
+			{% endif %}
+		</label>
 		<div class="col-sm-8">
 			{% if field.is_array is defined and field.is_array == 1 and field.values is not empty %}
 				{% for subfield in field.values %}
 					<div class="form-check form-switch">
-						<input type="checkbox" value="{{ subfield.value }}" name="{{ id }}[]" class="form-check-input" {% if field.value is defined and field.value == subfield.value %} checked="checked" {% endif %} {% if field.visible is defined and field.visible == false %} disabled {% endif %}>
+						<input type="checkbox" value="{{ subfield.value }}" name="{{ id }}[]" class="form-check-input" {% if field.value is defined and subfield.value in field.value %} checked="checked" {% endif %} {% if field.visible is defined and field.visible == false %} disabled {% endif %}>
 						<label class="form-check-label">
 							{{ subfield.label|raw }}
 						</label>
@@ -20,9 +23,24 @@
 	</div>
 {% endmacro %}
 
+{% macro plain(id, field) %}
+	<div class="row mb-3">
+		<label for="{{ id }}" class="col-sm-4 col-form-label">{{ field.label|raw }}
+			{% if field.desc is defined and field.desc is not empty %}<br><small>{{ field.desc|raw }}</small>
+			{% endif %}
+		</label>
+		<div class="col-sm-8">
+			<input type="text" readonly class="form-control-plaintext" id="{{ id }}" value="{{ field.value }}">
+		</div>
+	</div>
+{% endmacro %}
+
 {% macro input(id, field) %}
 	<div class="row mb-3">
-		<label for="{{ id }}" class="col-sm-4 col-form-label">{{ field.label|raw }}</label>
+		<label for="{{ id }}" class="col-sm-4 col-form-label">{{ field.label|raw }}
+			{% if field.desc is defined and field.desc is not empty %}<br><small>{{ field.desc|raw }}</small>
+			{% endif %}
+		</label>
 		<div class="col-sm-8">
 			<input type="{{ field.type }}" id="{{ id }}" name="{{ id }}" value="{{ field.value }}" class="form-control {% if field.valid is defined and field.valid == false %}is-invalid{% endif %}" {% if field.mandatory is defined and field.mandatory %} required {% endif %} {% if field.visible is defined and field.visible == false %} disabled {% endif %} {% if field.readonly is defined and field.readonly %} readonly {% endif %} {% if field.autocomplete is defined %} autocomplete="{{ field.autocomplete }}" {% endif %} {% if field.placeholder is defined %} placeholder="{{ field.placeholder }}" {% endif %}/>
 		</div>
@@ -37,7 +55,10 @@
 		{% endfor %}
 	{% endif %}
 	<div class="row mb-3">
-		<label for="{{ id }}" class="col-sm-4 col-form-label">{{ field.label|raw }}</label>
+		<label for="{{ id }}" class="col-sm-4 col-form-label">{{ field.label|raw }}
+			{% if field.desc is defined and field.desc is not empty %}<br><small>{{ field.desc|raw }}</small>
+			{% endif %}
+		</label>
 		<div class="col-sm-8">
 			<div class="input-group">
 				<input type="number" min="0" {% if max is not empty %} max="{{ max }}" {% endif %} id="{{ id }}" name="{{ id }}" value="{% if field.value >= 0 %}{{ field.value }}{% endif %}" class="form-control {% if field.valid is defined and field.valid == false %}is-invalid{% endif %}" {% if field.mandatory is defined and field.mandatory %} required {% endif %} {% if field.visible is defined and field.visible == false %} disabled {% endif %} {% if field.readonly is defined and field.readonly %} readonly {% endif %} {% if field.autocomplete is defined %} autocomplete="{{ field.autocomplete }}" {% endif %} {% if field.placeholder is defined %} placeholder="{{ field.placeholder }}" {% endif %}/>
@@ -52,7 +73,10 @@
 
 {% macro select(id, field) %}
 	<div class="row mb-3">
-		<label for="{{ id }}" class="col-sm-4 col-form-label">{{ field.label|raw }}</label>
+		<label for="{{ id }}" class="col-sm-4 col-form-label">{{ field.label|raw }}
+			{% if field.desc is defined and field.desc is not empty %}<br><small>{{ field.desc|raw }}</small>
+			{% endif %}
+		</label>
 		<div class="col-sm-8">
 			<select class="form-select {% if field.valid is defined and field.valid == false %}is-invalid{% endif %}" name="{{ id }}" id="{{ id }}" {% if field.mandatory is defined and field.mandatory %} required {% endif %} {% if field.visible is defined and field.visible == false %} disabled {% endif %}>
 				{% for val,txt in field.select_var %}

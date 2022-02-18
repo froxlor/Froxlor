@@ -132,7 +132,6 @@ return array(
 						'type' => 'text'
 					),
 					'custom_notes' => array(
-						'style' => 'align-top',
 						'label' => $lng['usersettings']['custom_notes']['title'],
 						'desc' => $lng['usersettings']['custom_notes']['description'],
 						'type' => 'textarea',
@@ -168,48 +167,42 @@ return array(
 						'type' => 'textul',
 						'value' => 0,
 						'maxlength' => 16,
-						'mandatory' => true,
-						'ul_field' => $diskspace_ul
+						'mandatory' => true
 					),
 					'traffic' => array(
 						'label' => $lng['customer']['traffic'] . ' (' . $lng['customer']['gib'] . ')',
 						'type' => 'textul',
 						'value' => 0,
 						'maxlength' => 14,
-						'mandatory' => true,
-						'ul_field' => $traffic_ul
+						'mandatory' => true
 					),
 					'subdomains' => array(
 						'label' => $lng['customer']['subdomains'],
 						'type' => 'textul',
 						'value' => 0,
 						'maxlength' => 9,
-						'mandatory' => true,
-						'ul_field' => $subdomains_ul
+						'mandatory' => true
 					),
 					'emails' => array(
 						'label' => $lng['customer']['emails'],
 						'type' => 'textul',
 						'value' => 0,
 						'maxlength' => 9,
-						'mandatory' => true,
-						'ul_field' => $emails_ul
+						'mandatory' => true
 					),
 					'email_accounts' => array(
 						'label' => $lng['customer']['accounts'],
 						'type' => 'textul',
 						'value' => 0,
 						'maxlength' => 9,
-						'mandatory' => true,
-						'ul_field' => $email_accounts_ul
+						'mandatory' => true
 					),
 					'email_forwarders' => array(
 						'label' => $lng['customer']['forwarders'],
 						'type' => 'textul',
 						'value' => 0,
 						'maxlength' => 9,
-						'mandatory' => true,
-						'ul_field' => $email_forwarders_ul
+						'mandatory' => true
 					),
 					'email_quota' => array(
 						'label' => $lng['customer']['email_quota']. ' (' . $lng['customer']['mib'] . ')',
@@ -217,8 +210,7 @@ return array(
 						'value' => 0,
 						'maxlength' => 9,
 						'visible' => (\Froxlor\Settings::Get('system.mail_quota_enabled') == '1' ? true : false),
-						'mandatory' => true,
-						'ul_field' => $email_quota_ul
+						'mandatory' => true
 					),
 					'email_imap' => array(
 						'label' => $lng['customer']['email_imap'],
@@ -238,16 +230,14 @@ return array(
 						'label' => $lng['customer']['ftps'],
 						'type' => 'textul',
 						'value' => 0,
-						'maxlength' => 9,
-						'ul_field' => $ftps_ul
+						'maxlength' => 9
 					),
 					'mysqls' => array(
 						'label' => $lng['customer']['mysqls'],
 						'type' => 'textul',
 						'value' => 0,
 						'maxlength' => 9,
-						'mandatory' => true,
-						'ul_field' => $mysqls_ul
+						'mandatory' => true
 					),
 					'phpenabled' => array(
 						'label' => $lng['admin']['phpenabled'] . '?',
@@ -260,10 +250,10 @@ return array(
 						'label' => $lng['admin']['phpsettings']['title'],
 						'type' => 'checkbox',
 						'values' => $phpconfigs,
-						'value' => ((int) \Froxlor\Settings::Get('system.mod_fcgid') == 1 ? 
-							\Froxlor\Settings::Get('system.mod_fcgid_defaultini')
+						'value' => ((int) \Froxlor\Settings::Get('system.mod_fcgid') == 1 ?
+							[\Froxlor\Settings::Get('system.mod_fcgid_defaultini')]
 						 : ((int) \Froxlor\Settings::Get('phpfpm.enabled') == 1 ?
-							\Froxlor\Settings::Get('phpfpm.defaultini')
+							[\Froxlor\Settings::Get('phpfpm.defaultini')]
 						 : null)),
 						'is_array' => 1
 					),

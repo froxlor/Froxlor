@@ -17,7 +17,7 @@
 return array(
 	'customer_edit' => array(
 		'title' => $lng['admin']['customer_edit'],
-		'image' => 'icons/user_edit.png',
+		'image' => 'fa-solid fa-user-pen',
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['admin']['accountdata'],
@@ -36,28 +36,14 @@ return array(
 					'createstdsubdomain' => array(
 						'label' => $lng['admin']['stdsubdomain_add'] . '?',
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							($result['standardsubdomain'] != '0') ? '1' : '0'
-						)
+						'value' => '1',
+						'checked' => ($result['standardsubdomain'] != '0') ? '1' : '0'
 					),
 					'deactivated' => array(
 						'label' => $lng['admin']['deactivated_user'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['deactivated']
-						)
+						'value' => '1',
+						'checked' => $result['deactivated']
 					),
 					'new_customer_password' => array(
 						'label' => $lng['login']['password'] . '&nbsp;(' . $lng['panel']['emptyfornochanges'] . ')',
@@ -73,21 +59,15 @@ return array(
 					'def_language' => array(
 						'label' => $lng['login']['language'],
 						'type' => 'select',
-						'select_var' => $language_options
+						'select_var' => $languages,
+						'selected' => $result['def_language']
 					),
 					'api_allowed' => array(
 						'label' => $lng['usersettings']['api_allowed']['title'],
 						'desc' => $lng['usersettings']['api_allowed']['description'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['api_allowed']
-						),
+						'value' => '1',
+						'checked' => $result['api_allowed'],
 						'visible' => (\Froxlor\Settings::Get('api.enabled') == '1' ? true : false)
 					)
 				)
@@ -111,7 +91,12 @@ return array(
 					'gender' => array(
 						'label' => $lng['gender']['title'],
 						'type' => 'select',
-						'select_var' => $gender_options
+						'select_var' => [
+							0 => $lng['gender']['undef'],
+							1 => $lng['gender']['male'],
+							2 => $lng['gender']['female']
+						],
+						'selected' => $result['gender']
 					),
 					'company' => array(
 						'label' => $lng['customer']['company'],
@@ -167,15 +152,8 @@ return array(
 					'custom_notes_show' => array(
 						'label' => $lng['usersettings']['custom_notes']['show'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['custom_notes_show']
-						)
+						'value' => '1',
+						'checked' => $result['custom_notes_show']
 					)
 				)
 			),
@@ -200,48 +178,42 @@ return array(
 						'type' => 'textul',
 						'value' => $result['diskspace'],
 						'maxlength' => 16,
-						'mandatory' => true,
-						'ul_field' => $diskspace_ul
+						'mandatory' => true
 					),
 					'traffic' => array(
 						'label' => $lng['customer']['traffic'] . ' (' . $lng['customer']['gib'] . ')',
 						'type' => 'textul',
 						'value' => $result['traffic'],
 						'maxlength' => 14,
-						'mandatory' => true,
-						'ul_field' => $traffic_ul
+						'mandatory' => true
 					),
 					'subdomains' => array(
 						'label' => $lng['customer']['subdomains'],
 						'type' => 'textul',
 						'value' => $result['subdomains'],
 						'maxlength' => 9,
-						'mandatory' => true,
-						'ul_field' => $subdomains_ul
+						'mandatory' => true
 					),
 					'emails' => array(
 						'label' => $lng['customer']['emails'],
 						'type' => 'textul',
 						'value' => $result['emails'],
 						'maxlength' => 9,
-						'mandatory' => true,
-						'ul_field' => $emails_ul
+						'mandatory' => true
 					),
 					'email_accounts' => array(
 						'label' => $lng['customer']['accounts'],
 						'type' => 'textul',
 						'value' => $result['email_accounts'],
 						'maxlength' => 9,
-						'mandatory' => true,
-						'ul_field' => $email_accounts_ul
+						'mandatory' => true
 					),
 					'email_forwarders' => array(
 						'label' => $lng['customer']['forwarders'],
 						'type' => 'textul',
 						'value' => $result['email_forwarders'],
 						'maxlength' => 9,
-						'mandatory' => true,
-						'ul_field' => $email_forwarders_ul
+						'mandatory' => true
 					),
 					'email_quota' => array(
 						'label' => $lng['customer']['email_quota'] . ' (' . $lng['customer']['mib'] . ')',
@@ -249,64 +221,40 @@ return array(
 						'value' => $result['email_quota'],
 						'maxlength' => 9,
 						'visible' => (\Froxlor\Settings::Get('system.mail_quota_enabled') == '1' ? true : false),
-						'mandatory' => true,
-						'ul_field' => $email_quota_ul
+						'mandatory' => true
 					),
 					'email_imap' => array(
 						'label' => $lng['customer']['email_imap'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['imap']
-						),
+						'value' => '1',
+						'checked' => $result['imap'],
 						'mandatory' => true
 					),
 					'email_pop3' => array(
 						'label' => $lng['customer']['email_pop3'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['pop3']
-						),
+						'value' => '1',
+						'checked' => $result['pop3'],
 						'mandatory' => true
 					),
 					'ftps' => array(
 						'label' => $lng['customer']['ftps'],
 						'type' => 'textul',
 						'value' => $result['ftps'],
-						'maxlength' => 9,
-						'ul_field' => $ftps_ul
+						'maxlength' => 9
 					),
 					'mysqls' => array(
 						'label' => $lng['customer']['mysqls'],
 						'type' => 'textul',
 						'value' => $result['mysqls'],
 						'maxlength' => 9,
-						'mandatory' => true,
-						'ul_field' => $mysqls_ul
+						'mandatory' => true
 					),
 					'phpenabled' => array(
 						'label' => $lng['admin']['phpenabled'] . '?',
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['phpenabled']
-						)
+						'value' => '1',
+						'checked' => $result['phpenabled']
 					),
 					'allowed_phpconfigs' => array(
 						'visible' => (((int) \Froxlor\Settings::Get('system.mod_fcgid') == 1 || (int) \Froxlor\Settings::Get('phpfpm.enabled') == 1) ? true : false),
@@ -319,49 +267,28 @@ return array(
 					'perlenabled' => array(
 						'label' => $lng['admin']['perlenabled'] . '?',
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['perlenabled']
-						)
+						'value' => '1',
+						'checked' => $result['perlenabled']
 					),
 					'dnsenabled' => array(
 						'label' => $lng['admin']['dnsenabled'] . '?',
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['dnsenabled']
-						),
+						'value' => '1',
+						'checked' => $result['dnsenabled'],
 						'visible' => (\Froxlor\Settings::Get('system.dnsenabled') == '1' ? true : false)
 					),
 					'logviewenabled' => array(
 						'label' => $lng['admin']['logviewenabled'] . '?',
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['logviewenabled']
-						)
+						'value' => '1',
+						'checked' => $result['logviewenabled']
 					)
 				)
 			),
 			'section_d' => array(
 				'title' => $lng['admin']['movetoadmin'],
 				'image' => 'icons/user_edit.png',
-				'visible' => ($admin_select_cnt > 1),
+				'visible' => count($admin_select) > 0,
 				'fields' => array(
 					'move_to_admin' => array(
 						'label' => $lng['admin']['movecustomertoadmin'],
