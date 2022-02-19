@@ -26,6 +26,14 @@ require './tables.inc.php';
 
 use Froxlor\UI\Panel\UI;
 
+if (isset($_POST['s'])) {
+	$s = $_POST['s'];
+} elseif (isset($_GET['s'])) {
+	$s = $_GET['s'];
+} else {
+	$s = '';
+}
+
 if (isset($_POST['action'])) {
 	$action = $_POST['action'];
 } elseif (isset($_GET['action'])) {
@@ -36,9 +44,45 @@ if (isset($_POST['action'])) {
 
 $theme = $_GET['theme'] ?? 'Froxlor';
 
-if ($action == "newsfeed") {
+UI::sendHeaders();
+UI::initTwig();
+UI::sendSslHeaders();
 
-	UI::initTwig();
+ini_set("session.name", "s");
+ini_set("url_rewriter.tags", "");
+ini_set("session.use_cookies", false);
+ini_set("session.cookie_httponly", true);
+ini_set("session.cookie_secure", UI::$SSL_REQ);
+session_id($s);
+session_start();
+
+if (empty($s)) {
+	die();
+}
+
+$remote_addr = $_SERVER['REMOTE_ADDR'];
+if (empty($_SERVER['HTTP_USER_AGENT'])) {
+	$http_user_agent = 'unknown';
+} else {
+	$http_user_agent = $_SERVER['HTTP_USER_AGENT'];
+}
+$timediff = time() - \Froxlor\Settings::Get('session.sessiontimeout');
+$sel_stmt = \Froxlor\Database\Database::prepare("
+	SELECT * FROM `" . TABLE_PANEL_SESSIONS . "`
+	WHERE `hash` = :hash AND `ipaddress` = :ipaddr AND `useragent` = :ua AND `lastactivity` > :timediff
+");
+$sinfo = \Froxlor\Database\Database::pexecute_first($sel_stmt, [
+	'hash' => $s,
+	'ipaddr' => $remote_addr,
+	'ua' => $http_user_agent,
+	'timediff' => $timediff
+]);
+
+if ($sinfo == false) {
+	die();
+}
+
+if ($action == "newsfeed") {
 
 	if (isset($_GET['role']) && $_GET['role'] == "customer") {
 		$feed = \Froxlor\Settings::Get("customer.news_feed_url");
@@ -82,6 +126,18 @@ if ($action == "newsfeed") {
 	} else {
 		echo "";
 	}
+} elseif ($action == "updatecheck") {
+	try {
+		$json_result = \Froxlor\Api\Commands\Froxlor::getLocal([
+			'adminid' => 1,
+			'adminsession' => 1,
+			'change_serversettings' => 1,
+			'loginname' => 'updatecheck'
+		])->checkUpdate();
+	} catch (Exception $e) {
+		\Froxlor\UI\Response::dynamic_error($e->getMessage());
+	}
+	echo $result;
 } else {
 	echo "No action set.";
 }
