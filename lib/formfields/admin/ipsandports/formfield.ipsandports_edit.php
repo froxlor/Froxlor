@@ -30,9 +30,10 @@ return array(
 					),
 					'port' => array(
 						'label' => $lng['admin']['ipsandports']['port'],
-						'type' => 'text',
+						'type' => 'number',
 						'value' => $result['port'],
-						'size' => 5
+						'min' => 1,
+						'max' => 65535
 					)
 				)
 			),

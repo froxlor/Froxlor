@@ -29,8 +29,9 @@ return array(
 					),
 					'port' => array(
 						'label' => $lng['admin']['ipsandports']['port'],
-						'type' => 'text',
-						'size' => 5
+						'type' => 'number',
+						'min' => 1,
+						'max' => 65535
 					)
 				)
 			),

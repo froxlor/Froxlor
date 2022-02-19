@@ -42,7 +42,7 @@
 			{% endif %}
 		</label>
 		<div class="col-sm-8">
-			<input type="{{ field.type }}" id="{{ id }}" name="{{ id }}" value="{{ field.value }}" class="form-control {% if field.valid is defined and field.valid == false %}is-invalid{% endif %}" {% if field.mandatory is defined and field.mandatory %} required {% endif %} {% if field.visible is defined and field.visible == false %} disabled {% endif %} {% if field.readonly is defined and field.readonly %} readonly {% endif %} {% if field.autocomplete is defined %} autocomplete="{{ field.autocomplete }}" {% endif %} {% if field.placeholder is defined %} placeholder="{{ field.placeholder }}" {% endif %}/>
+			<input type="{{ field.type }}" {% if field.type == 'number' and field.min is defined %}min="{{ field.min }}"{% endif %} {% if field.type == 'number' and field.max is defined %}max="{{ field.max }}"{% endif %} id="{{ id }}" name="{{ id }}" value="{{ field.value }}" class="form-control {% if field.valid is defined and field.valid == false %}is-invalid{% endif %}" {% if field.mandatory is defined and field.mandatory %} required {% endif %} {% if field.visible is defined and field.visible == false %} disabled {% endif %} {% if field.readonly is defined and field.readonly %} readonly {% endif %} {% if field.autocomplete is defined %} autocomplete="{{ field.autocomplete }}" {% endif %} {% if field.placeholder is defined %} placeholder="{{ field.placeholder }}" {% endif %}/>
 		</div>
 	</div>
 {% endmacro %}

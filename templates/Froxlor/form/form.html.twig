@@ -24,7 +24,7 @@
 				{% endif %}
 				<div class="card-body">
 					{% for id,field in section.fields %}
-						{% if field.type == 'text' or field.type == 'password' %}
+						{% if field.type == 'text' or field.type == 'password' or field.type == 'number' %}
 							{{ formfields.input(id, field) }}
 						{% elseif field.type == 'textul' %}
 							{{ formfields.input_ul(id, field) }}
