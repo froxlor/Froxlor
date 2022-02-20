@@ -30,7 +30,7 @@ class Response
         return self::jsonResponse(['data' => $data], $response_code);
     }
 
-    public static function jsonErrorResponse($message = null, int $response_code = 200)
+    public static function jsonErrorResponse($message = null, int $response_code = 400)
     {
         return self::jsonResponse(['message' => $message], $response_code);
     }
