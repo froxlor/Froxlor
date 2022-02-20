@@ -14,18 +14,16 @@
  * @package    Panel
  *
  */
-define('AREA', 'admin');
-require './lib/init.php';
+
+const AREA = 'admin';
+require __DIR__ . '/lib/init.php';
 
 use Froxlor\Api\Commands\HostingPlans;
 use Froxlor\Database\Database;
 use Froxlor\Settings;
+use Froxlor\UI\Request;
 
-if (isset($_POST['id'])) {
-	$id = intval($_POST['id']);
-} elseif (isset($_GET['id'])) {
-	$id = intval($_GET['id']);
-}
+$id = (int) Request::get('id');
 
 if ($page == '' || $page == 'overview') {
 

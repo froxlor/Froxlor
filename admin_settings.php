@@ -20,8 +20,8 @@ use Froxlor\Database\Database;
 use Froxlor\Settings;
 use Froxlor\Api\Commands\Froxlor;
 
-define('AREA', 'admin');
-require './lib/init.php';
+const AREA = 'admin';
+require __DIR__ . '/lib/init.php';
 
 // get sql-root access data
 Database::needRoot(true);

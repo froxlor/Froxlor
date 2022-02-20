@@ -17,7 +17,7 @@
  *
  */
 define('AREA', 'login');
-require './lib/init.php';
+require __DIR__ . '/lib/init.php';
 
 use Froxlor\Database\Database;
 use Froxlor\Settings;

@@ -16,12 +16,13 @@
  * @package    Panel
  *
  */
-define('AREA', 'customer');
-require './lib/init.php';
+const AREA = 'customer';
+require __DIR__ . '/lib/init.php';
 
+use Froxlor\Api\Commands\Mysqls as Mysqls;
 use Froxlor\Database\Database;
 use Froxlor\Settings;
-use Froxlor\Api\Commands\Mysqls as Mysqls;
+use Froxlor\UI\Request;
 
 // redirect if this customer page is hidden via settings
 if (Settings::IsInList('panel.customer_hide_options', 'mysql')) {
@@ -34,11 +35,7 @@ Database::needSqlData();
 $sql_root = Database::getSqlData();
 Database::needRoot(false);
 
-if (isset($_POST['id'])) {
-	$id = intval($_POST['id']);
-} elseif (isset($_GET['id'])) {
-	$id = intval($_GET['id']);
-}
+$id = (int) Request::get('id');
 
 if ($page == 'overview') {
 	$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_mysql");

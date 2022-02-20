@@ -16,25 +16,17 @@
  * @package    Panel
  *
  */
-define('AREA', 'admin');
-require './lib/init.php';
+
+const AREA = 'admin';
+require __DIR__ . '/lib/init.php';
 
 use Froxlor\Database\Database;
 use Froxlor\Settings;
+use Froxlor\UI\Request;
 
-if (isset($_POST['subjectid'])) {
-	$subjectid = intval($_POST['subjectid']);
-	$mailbodyid = intval($_POST['mailbodyid']);
-} elseif (isset($_GET['subjectid'])) {
-	$subjectid = intval($_GET['subjectid']);
-	$mailbodyid = intval($_GET['mailbodyid']);
-}
-
-if (isset($_POST['id'])) {
-	$id = intval($_POST['id']);
-} elseif (isset($_GET['id'])) {
-	$id = intval($_GET['id']);
-}
+$id = (int) Request::get('id');
+$subjectid = intval(Request::get('subjectid'));
+$mailbodyid = intval(Request::get('mailbodyid'));
 
 $available_templates = array(
 	'createcustomer',

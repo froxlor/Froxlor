@@ -16,12 +16,13 @@
  * @package    Panel
  *
  */
-define('AREA', 'customer');
+const AREA = 'customer';
 $intrafficpage = 1;
-require './lib/init.php';
+require __DIR__ . '/lib/init.php';
 
 use Froxlor\Database\Database;
 use Froxlor\Settings;
+use Froxlor\UI\Request;
 
 // redirect if this customer page is hidden via settings
 if (Settings::IsInList('panel.customer_hide_options', 'traffic')) {
@@ -32,14 +33,10 @@ $traffic = '';
 $month = null;
 $year = null;
 
-if (isset($_POST['month']) && isset($_POST['year'])) {
-	$month = intval($_POST['month']);
-	$year = intval($_POST['year']);
-} elseif (isset($_GET['month']) && isset($_GET['year'])) {
-	$month = intval($_GET['month']);
-	$year = intval($_GET['year']);
-} // BAM! $_GET???
-elseif (isset($_GET['page']) && $_GET['page'] == 'current') {
+if (Request::exist('month') && Request::exist('year')) {
+	$month = (int) Request::get('month');
+	$year = (int) Request::get('year');
+} elseif (isset($_GET['page']) && $_GET['page'] == 'current') {
 	if (date('d') != '01') {
 		$month = date('m');
 		$year = date('Y');

@@ -16,18 +16,16 @@
  * @package    Panel
  *
  */
-define('AREA', 'admin');
-require './lib/init.php';
 
-use Froxlor\Settings;
+const AREA = 'admin';
+require __DIR__ . '/lib/init.php';
+
 use Froxlor\Api\Commands\IpsAndPorts;
+use Froxlor\Settings;
 use Froxlor\UI\Panel\UI;
+use Froxlor\UI\Request;
 
-if (isset($_POST['id'])) {
-	$id = intval($_POST['id']);
-} elseif (isset($_GET['id'])) {
-	$id = intval($_GET['id']);
-}
+$id = (int) Request::get('id');
 
 if ($page == 'ipsandports' || $page == 'overview') {
 	// Do not display attributes that are not used by the current webserver

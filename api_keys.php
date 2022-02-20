@@ -21,13 +21,14 @@ if (! defined('AREA')) {
  */
 
 use Froxlor\Database\Database;
+use Froxlor\UI\Request;
 
 // This file is being included in admin_index and customer_index
 // and therefore does not need to require lib/init.php
 
 $del_stmt = Database::prepare("DELETE FROM `" . TABLE_API_KEYS . "` WHERE id = :id");
 $success_message = "";
-$id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
+$id = (int) Request::get('id');
 $area = AREA;
 
 // do the delete and then just show a success-message and the apikeys list again

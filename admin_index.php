@@ -16,14 +16,18 @@
  * @package    Panel
  *
  */
-define('AREA', 'admin');
-require './lib/init.php';
 
+const AREA = 'admin';
+require __DIR__ . '/lib/init.php';
+
+use Froxlor\Api\Commands\Admins as Admins;
+use Froxlor\Api\Commands\Froxlor as Froxlor;
 use Froxlor\Database\Database;
 use Froxlor\Settings;
-use Froxlor\Api\Commands\Froxlor as Froxlor;
-use Froxlor\Api\Commands\Admins as Admins;
 use Froxlor\UI\Panel\UI;
+use Froxlor\UI\Request;
+
+$id = (int) Request::get('id');
 
 if ($action == 'logout') {
 
@@ -47,12 +51,6 @@ if ($action == 'logout') {
 	Database::pexecute($stmt, $params);
 
 	\Froxlor\UI\Response::redirectTo('index.php');
-}
-
-if (isset($_POST['id'])) {
-	$id = intval($_POST['id']);
-} elseif (isset($_GET['id'])) {
-	$id = intval($_GET['id']);
 }
 
 if ($page == 'overview') {

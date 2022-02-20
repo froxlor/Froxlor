@@ -14,8 +14,9 @@
  * @package    Panel
  *
  */
-define('AREA', 'admin');
-require './lib/init.php';
+
+const AREA = 'admin';
+require __DIR__ . '/lib/init.php';
 
 use Froxlor\Database\Database;
 use Froxlor\Settings;

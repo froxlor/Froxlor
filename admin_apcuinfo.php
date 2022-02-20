@@ -25,8 +25,9 @@
  * Implemented into Froxlor: Janos Muzsi <muzsij@hypernics.hu>
  *
  */
-define('AREA', 'admin');
-require './lib/init.php';
+
+const AREA = 'admin';
+require __DIR__ . '/lib/init.php';
 
 $horizontal_bar_size = 950; // 1280px window width
 

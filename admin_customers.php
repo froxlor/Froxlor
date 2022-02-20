@@ -16,25 +16,20 @@
  * @package    Panel
  *
  */
-define('AREA', 'admin');
-require './lib/init.php';
 
+const AREA = 'admin';
+require __DIR__ . '/lib/init.php';
+
+use Froxlor\Api\Commands\Customers as Customers;
 use Froxlor\Database\Database;
 use Froxlor\Settings;
-use Froxlor\Api\Commands\Customers as Customers;
 use Froxlor\UI\Panel\UI;
+use Froxlor\UI\Request;
 
-if (isset($_POST['id'])) {
-	$id = intval($_POST['id']);
-} elseif (isset($_GET['id'])) {
-	$id = intval($_GET['id']);
-}
+$id = (int) Request::get('id');
 
 if ($page == 'customers' && $userinfo['customers'] != '0') {
 	if ($action == '') {
-		// clear request data
-		unset($_SESSION['requestData']);
-
 		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_customers");
 
 		$fields = array(

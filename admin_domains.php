@@ -16,19 +16,17 @@
  * @package    Panel
  *
  */
-define('AREA', 'admin');
-require './lib/init.php';
 
-use Froxlor\Database\Database;
-use Froxlor\Settings;
+const AREA = 'admin';
+require __DIR__ . '/lib/init.php';
+
 use Froxlor\Api\Commands\Customers as Customers;
 use Froxlor\Api\Commands\Domains as Domains;
+use Froxlor\Database\Database;
+use Froxlor\Settings;
+use Froxlor\UI\Request;
 
-if (isset($_POST['id'])) {
-	$id = intval($_POST['id']);
-} elseif (isset($_GET['id'])) {
-	$id = intval($_GET['id']);
-}
+$id = (int) Request::get('id');
 
 if ($page == 'domains' || $page == 'overview') {
 	// Let's see how many customers we have

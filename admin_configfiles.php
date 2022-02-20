@@ -15,8 +15,9 @@
  *
  * @since 0.9.34
  */
-define('AREA', 'admin');
-require './lib/init.php';
+
+const AREA = 'admin';
+require __DIR__ . '/lib/init.php';
 
 use Froxlor\Settings;
 

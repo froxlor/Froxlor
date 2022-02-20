@@ -16,26 +16,23 @@
  * @package    Panel
  *
  */
-define('AREA', 'customer');
-require './lib/init.php';
+const AREA = 'customer';
+require __DIR__ . '/lib/init.php';
 
-use Froxlor\Database\Database;
-use Froxlor\Settings;
-use Froxlor\Api\Commands\Emails as Emails;
 use Froxlor\Api\Commands\EmailAccounts as EmailAccounts;
 use Froxlor\Api\Commands\EmailForwarders as EmailForwarders;
+use Froxlor\Api\Commands\Emails as Emails;
+use Froxlor\Database\Database;
+use Froxlor\Settings;
 use Froxlor\UI\Panel\UI;
+use Froxlor\UI\Request;
 
 // redirect if this customer page is hidden via settings
 if (Settings::IsInList('panel.customer_hide_options', 'email')) {
 	\Froxlor\UI\Response::redirectTo('customer_index.php');
 }
 
-if (isset($_POST['id'])) {
-	$id = intval($_POST['id']);
-} elseif (isset($_GET['id'])) {
-	$id = intval($_GET['id']);
-}
+$id = (int) Request::get('id');
 
 if ($page == 'overview') {
 	$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_email");
@@ -213,10 +210,10 @@ if ($page == 'overview') {
 				if (Settings::Get('catchall.catchall_enabled') != '1') {
 					unset($email_add_data['emails_add']['sections']['section_a']['fields']['iscatchall']);
 				}
-				UI::TwigBuffer('user/form.html.twig', [
+				UI::twigBuffer('user/form.html.twig', [
 					'formdata' => $email_add_data['emails_add']
 				]);
-				UI::TwigOutputBuffer();
+				UI::twigOutputBuffer();
 			}
 		} else {
 			\Froxlor\UI\Response::standard_error('allresourcesused');
@@ -262,10 +259,10 @@ if ($page == 'overview') {
 				unset($email_edit_data['emails_edit']['sections']['section_a']['fields']['mail_catchall']);
 			}
 
-			UI::TwigBuffer('user/form.html.twig', [
+			UI::twigBuffer('user/form.html.twig', [
 				'formdata' => $email_edit_data['emails_edit']
 			]);
-			UI::TwigOutputBuffer();
+			UI::twigOutputBuffer();
 		}
 	} elseif ($action == 'togglecatchall' && $id != 0) {
 		try {
@@ -330,10 +327,10 @@ if ($page == 'overview') {
 
 				$account_add_data = include_once dirname(__FILE__) . '/lib/formfields/customer/email/formfield.emails_addaccount.php';
 
-				UI::TwigBuffer('user/form.html.twig', [
+				UI::twigBuffer('user/form.html.twig', [
 					'formdata' => $account_add_data['emails_addaccount']
 				]);
-				UI::TwigOutputBuffer();
+				UI::twigOutputBuffer();
 			}
 		} else {
 			\Froxlor\UI\Response::standard_error(array(
@@ -476,10 +473,10 @@ if ($page == 'overview') {
 
 					$forwarder_add_data = include_once dirname(__FILE__) . '/lib/formfields/customer/email/formfield.emails_addforwarder.php';
 
-					UI::TwigBuffer('user/form.html.twig', [
+					UI::twigBuffer('user/form.html.twig', [
 						'formdata' => $forwarder_add_data['emails_addforwarder']
 					]);
-					UI::TwigOutputBuffer();
+					UI::twigOutputBuffer();
 				}
 			}
 		} else {

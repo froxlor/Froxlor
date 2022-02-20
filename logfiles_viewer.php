@@ -19,15 +19,17 @@ if (! defined('AREA')) {
  *         
  */
 
-use Froxlor\Settings;
 use Froxlor\Api\Commands\SubDomains as SubDomains;
+use Froxlor\Settings;
+use Froxlor\UI\Request;
 
 // This file is being included in admin_domains and customer_domains
 // and therefore does not need to require lib/init.php
 
 // TODO get domain related settings for logfile (speciallogfile)
-$domain_id = isset($_GET['domain_id']) ? (int) $_GET['domain_id'] : null;
-$last_n = isset($_GET['number_of_lines']) ? (int) $_GET['number_of_lines'] : 100;
+
+$domain_id = (int) Request::get('domain_id');
+$last_n = (int) Request::get('number_of_lines', 100);
 
 // user's with logviewenabled = false
 if (AREA != 'admin' && $userinfo['logviewenabled'] != '1') {

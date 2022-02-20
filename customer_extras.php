@@ -16,24 +16,21 @@
  * @package    Panel
  *
  */
-define('AREA', 'customer');
-require './lib/init.php';
+const AREA = 'customer';
+require __DIR__ . '/lib/init.php';
 
-use Froxlor\Settings;
+use Froxlor\Api\Commands\CustomerBackups as CustomerBackups;
 use Froxlor\Api\Commands\DirOptions as DirOptions;
 use Froxlor\Api\Commands\DirProtections as DirProtections;
-use Froxlor\Api\Commands\CustomerBackups as CustomerBackups;
+use Froxlor\Settings;
+use Froxlor\UI\Request;
 
 // redirect if this customer page is hidden via settings
 if (Settings::IsInList('panel.customer_hide_options', 'extras')) {
 	\Froxlor\UI\Response::redirectTo('customer_index.php');
 }
 
-if (isset($_POST['id'])) {
-	$id = intval($_POST['id']);
-} elseif (isset($_GET['id'])) {
-	$id = intval($_GET['id']);
-}
+$id = (int) Request::get('id');
 
 if ($page == 'overview') {
 	$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_extras");

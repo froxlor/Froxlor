@@ -17,8 +17,9 @@
  * Based on https://github.com/amnuts/opcache-gui
  *
  */
-define('AREA', 'admin');
-require './lib/init.php';
+
+const AREA = 'admin';
+require __DIR__ . '/lib/init.php';
 
 if ($action == 'reset' && function_exists('opcache_reset') && $userinfo['change_serversettings'] == '1') {
 	opcache_reset();

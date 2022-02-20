@@ -17,8 +17,9 @@
  * @since      0.9.35
  *
  */
-define('AREA', 'admin');
-require './lib/init.php';
+
+const AREA = 'admin';
+require __DIR__ . '/lib/init.php';
 
 use Froxlor\Http\HttpClient;
 

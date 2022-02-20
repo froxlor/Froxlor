@@ -52,10 +52,11 @@ if (!file_exists(dirname(__DIR__) . '/vendor/autoload.php')) {
 require dirname(__DIR__) . '/vendor/autoload.php';
 
 use Froxlor\Database\Database;
-use Froxlor\Settings;
-use voku\helper\AntiXSS;
 use Froxlor\PhpHelper;
+use Froxlor\Settings;
 use Froxlor\UI\Panel\UI;
+use Froxlor\UI\Request;
+use voku\helper\AntiXSS;
 
 // include MySQL-tabledefinitions
 require \Froxlor\Froxlor::getInstallDir() . '/lib/tables.inc.php';
@@ -476,28 +477,12 @@ if (!empty($panel_privacy_url) && strtolower(substr($panel_privacy_url, 0, 4)) !
 }
 */
 
-if (isset($_POST['action'])) {
-	$action = trim(strip_tags($_POST['action']));
-} elseif (isset($_GET['action'])) {
-	$action = trim(strip_tags($_GET['action']));
-} else {
-	$action = '';
-	// clear request data
-	if (isset($_SESSION)) {
-		unset($_SESSION['requestData']);
-	}
-}
+$action = Request::get('action');
+$page = Request::get('page', 'overview');
 
-if (isset($_POST['page'])) {
-	$page = trim(strip_tags($_POST['page']));
-} elseif (isset($_GET['page'])) {
-	$page = trim(strip_tags($_GET['page']));
-} else {
-	$page = '';
-}
-
-if ($page == '') {
-	$page = 'overview';
+// clear request data
+if (!$action && isset($_SESSION)) {
+    unset($_SESSION['requestData']);
 }
 
 UI::twig()->addGlobal('action', $action);

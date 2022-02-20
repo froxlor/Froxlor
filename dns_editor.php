@@ -20,11 +20,12 @@ if (! defined('AREA')) {
  */
 
 use Froxlor\Api\Commands\DomainZones as DomainZones;
+use Froxlor\UI\Request;
 
 // This file is being included in admin_domains and customer_domains
 // and therefore does not need to require lib/init.php
 
-$domain_id = isset($_GET['domain_id']) ? (int) $_GET['domain_id'] : null;
+$domain_id = (int) Request::get(['domain_id']);
 
 $record = isset($_POST['record']['record']) ? trim($_POST['record']['record']) : null;
 $type = isset($_POST['record']['type']) ? $_POST['record']['type'] : 'A';

@@ -1,0 +1,52 @@
+{% macro table(table_options, api_response, action, title = "") %}
+
+	<form action="{{ action|default("") }}" method="post" enctype="application/x-www-form-urlencoded" class="form">
+		{% if title is not empty %}
+			<h3 class="page-header">
+				{% if table_options.icon is not empty %}
+					<i class="{{ table_options.icon }}"></i>
+				{% endif %}
+				{{ title }}
+			</h3>
+		{% endif %}
+
+		<div class="card">
+			<table class="table table-borderless table-striped mb-0">
+				<thead>
+					<tr>
+						{% for column in table_options.visible_columns %}
+							<th class="p-3">{{ table_options.columns[column].title }}</th>
+						{% endfor %}
+						{% if table_options.actions %}
+							<th class="p-3 text-end">Actions</th>
+						{% endif %}
+					</tr>
+				</thead>
+				<tbody>
+					{% for item in api_response.list %}
+						<tr>
+							{% for column in table_options.visible_columns %}
+								<td class="p-3">{{ item[column] }}</td>
+							{% endfor %}
+							{% if table_options.actions %}
+								<th class="p-3 text-end">
+									{% for action in table_options.actions %}
+										{% if action.href is not empty %}
+											<a href="{{ action.href }}">{% if action.icon is not empty %}<i class="{{ action.icon }}"></i>{% endif %}{{ action.title }}</a>
+										{% else %}
+											{% if action.icon is not empty %}<i class="{{ action.icon }}"></i>{% endif %}{{ action.title }}
+										{% endif %}
+									{% endfor %}
+								</th>
+							{% endif %}
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			<div class="card-footer">
+				Pagination...
+			</div>
+		</div>
+	</form>
+
+{% endmacro %}

@@ -1,0 +1,9 @@
+{% extends "Froxlor/userarea.html.twig" %}
+
+{% block content %}
+
+	{% import "Froxlor/table/table.html.twig" as table %}
+
+	{{ table.table(table_options, api_response, '#', table_options.title) }}
+
+{% endblock %}
