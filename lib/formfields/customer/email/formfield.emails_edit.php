@@ -30,7 +30,7 @@ return array(
 						'value' => $result['email_full']
 					),
 					'account_yes' => array(
-						'visible' => ($result['popaccountid'] != 0 ? true : false),
+						'visible' => ((int) $result['popaccountid'] != 0 ? true : false),
 						'label' => $lng['emails']['account'],
 						'type' => 'label',
 						'value' => $lng['panel']['yes'],
@@ -44,7 +44,7 @@ return array(
 						]
 					),
 					'account_no' => array(
-						'visible' => ($result['popaccountid'] == 0 ? true : false),
+						'visible' => ((int) $result['popaccountid'] == 0 ? true : false),
 						'label' => $lng['emails']['account'],
 						'type' => 'label',
 						'value' => $lng['panel']['no'],
@@ -58,12 +58,13 @@ return array(
 						]
 					),
 					'mail_quota' => array(
-						'visible' => ($result['popaccountid'] != 0 && \Froxlor\Settings::Get('system.mail_quota_enabled')),
+						'visible' => ((int) $result['popaccountid'] != 0 && \Froxlor\Settings::Get('system.mail_quota_enabled')),
 						'label' => $lng['customer']['email_quota'],
 						'type' => 'label',
 						'value' => $result['quota'] . ' MiB',
 						'next_to' => [
 							'add_link' => [
+								'visible' => ((int)$result['popaccountid'] != 0 && \Froxlor\Settings::Get('system.mail_quota_enabled')),
 								'type' => 'link',
 								'href' => $filename . '?page=accounts&amp;action=changequota&amp;id=' . $result['id'] . '&amp;s=' . $s,
 								'label' => $lng['emails']['quota_edit'],
@@ -74,20 +75,20 @@ return array(
 					'mail_catchall' => array(
 						'label' => $lng['emails']['catchall'],
 						'type' => 'label',
-						'value' => ($result['iscatchall'] == 0 ? $lng['panel']['no'] : $lng['panel']['yes']),
+						'value' => ((int)$result['iscatchall'] == 0 ? $lng['panel']['no'] : $lng['panel']['yes']),
 						'next_to' => [
 							'add_link' => [
 								'type' => 'link',
 								'href' => $filename . '?page=' . $page . '&amp;action=togglecatchall&amp;id=' . $result['id'] . '&amp;s=' . $s,
-								'label' => $lng['panel']['toggle'],
+								'label' => '<i class="fa-solid fa-arrow-right-arrow-left"></i> ' . $lng['panel']['toggle'],
 								'classes' => 'btn btn-sm btn-secondary'
 							]
 						]
 					),
 					'mail_fwds' => array(
 						'label' => $lng['emails']['forwarders'] . ' (' . $forwarders_count . ')',
-						'type' => 'label',
-						'value' => $forwarders,
+						'type' => 'itemlist',
+						'values' => $forwarders,
 						'next_to' => [
 							'add_link' => [
 								'type' => 'link',

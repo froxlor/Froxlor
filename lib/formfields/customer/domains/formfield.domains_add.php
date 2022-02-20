@@ -28,7 +28,7 @@ return array(
 						'type' => 'text',
 						'next_to' => [
 							'domain' => [
-								'next_to_prefix' => '&nbsp;.&nbsp;',
+								'next_to_prefix' => '.',
 								'type' => 'select',
 								'select_var' => $domains
 							]

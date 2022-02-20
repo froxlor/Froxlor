@@ -17,7 +17,7 @@
 return array(
 	'emails_addaccount' => array(
 		'title' => $lng['emails']['account_add'],
-		'image' => 'icons/email_add.png',
+		'image' => 'fa-solid fa-plus',
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['emails']['account_add'],
@@ -31,19 +31,22 @@ return array(
 					'email_password' => array(
 						'label' => $lng['login']['password'],
 						'type' => 'password',
-						'autocomplete' => 'off'
-					),
-					'email_password_suggestion' => array(
-						'label' => $lng['customer']['generated_pwd'],
-						'type' => 'text',
-						'visible' => (\Froxlor\Settings::Get('panel.password_regex') == ''),
-						'value' => \Froxlor\System\Crypt::generatePassword()
+						'autocomplete' => 'off',
+						'next_to' => [
+							'admin_password_suggestion' => array(
+								'next_to_prefix' => $lng['customer']['generated_pwd'].':',
+								'type' => 'text',
+								'visible' => (\Froxlor\Settings::Get('panel.password_regex') == ''),
+								'value' => \Froxlor\System\Crypt::generatePassword(),
+								'readonly' => true
+							)
+						]
 					),
 					'email_quota' => array(
 						'visible' => (\Froxlor\Settings::Get('system.mail_quota_enabled') == '1' ? true : false),
 						'label' => $lng['emails']['quota'],
 						'desc' => "MiB",
-						'type' => 'text',
+						'type' => 'number',
 						'value' => $quota
 					),
 					'alternative_email' => array(

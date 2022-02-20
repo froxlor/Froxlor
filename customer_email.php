@@ -200,26 +200,23 @@ if ($page == 'overview') {
 				Database::pexecute($result_stmt, array(
 					"cid" => $userinfo['customerid']
 				));
-				$domains = '';
-
+				$domains = [];
 				while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-					$domains .= \Froxlor\UI\HTML::makeoption($idna_convert->decode($row['domain']), $row['domain']);
+					$domains[] = [
+						'label' => $idna_convert->decode($row['domain']),
+						'value' => $row['domain']
+					];
 				}
-
-				// $iscatchall = \Froxlor\UI\HTML::makeyesno('iscatchall', '1', '0', '0');
 
 				$email_add_data = include_once dirname(__FILE__) . '/lib/formfields/customer/email/formfield.emails_add.php';
 
 				if (Settings::Get('catchall.catchall_enabled') != '1') {
 					unset($email_add_data['emails_add']['sections']['section_a']['fields']['iscatchall']);
 				}
-
-				$email_add_form = \Froxlor\UI\HtmlForm::genHTMLForm($email_add_data);
-
-				$title = $email_add_data['emails_add']['title'];
-				$image = $email_add_data['emails_add']['image'];
-
-				eval("echo \"" . \Froxlor\UI\Template::getTemplate("email/emails_add") . "\";");
+				UI::TwigBuffer('user/form.html.twig', [
+					'formdata' => $email_add_data['emails_add']
+				]);
+				UI::TwigOutputBuffer();
 			}
 		} else {
 			\Froxlor\UI\Response::standard_error('allresourcesused');
@@ -239,17 +236,20 @@ if ($page == 'overview') {
 			$result['email_full'] = $idna_convert->decode($result['email_full']);
 			$result['destination'] = explode(' ', $result['destination']);
 			uasort($result['destination'], 'strcasecmp');
-			$forwarders = '';
+			$forwarders = [];
 			$forwarders_count = 0;
 
 			foreach ($result['destination'] as $dest_id => $destination) {
 				$destination = $idna_convert->decode($destination);
-
 				if ($destination != $result['email_full'] && $destination != '') {
-					eval("\$forwarders.=\"" . \Froxlor\UI\Template::getTemplate("email/emails_edit_forwarder") . "\";");
+					$forwarders[] = [
+						'item' => $destination,
+						'href' => $linker->getLink(array('section' => 'email', 'page' => 'forwarders', 'action' => 'delete', 'id' => $id, 'forwarderid' => $dest_id)),
+						'label' => $lng['panel']['delete'],
+						'classes' => 'btn btn-sm btn-danger'
+					];
 					$forwarders_count ++;
 				}
-
 				$result['destination'][$dest_id] = $destination;
 			}
 
@@ -329,12 +329,11 @@ if ($page == 'overview') {
 				$quota = Settings::Get('system.mail_quota');
 
 				$account_add_data = include_once dirname(__FILE__) . '/lib/formfields/customer/email/formfield.emails_addaccount.php';
-				$account_add_form = \Froxlor\UI\HtmlForm::genHTMLForm($account_add_data);
 
-				$title = $account_add_data['emails_addaccount']['title'];
-				$image = $account_add_data['emails_addaccount']['image'];
-
-				eval("echo \"" . \Froxlor\UI\Template::getTemplate("email/account_add") . "\";");
+				UI::TwigBuffer('user/form.html.twig', [
+					'formdata' => $account_add_data['emails_addaccount']
+				]);
+				UI::TwigOutputBuffer();
 			}
 		} else {
 			\Froxlor\UI\Response::standard_error(array(
@@ -476,12 +475,11 @@ if ($page == 'overview') {
 					$result = \Froxlor\PhpHelper::htmlentitiesArray($result);
 
 					$forwarder_add_data = include_once dirname(__FILE__) . '/lib/formfields/customer/email/formfield.emails_addforwarder.php';
-					$forwarder_add_form = \Froxlor\UI\HtmlForm::genHTMLForm($forwarder_add_data);
 
-					$title = $forwarder_add_data['emails_addforwarder']['title'];
-					$image = $forwarder_add_data['emails_addforwarder']['image'];
-
-					eval("echo \"" . \Froxlor\UI\Template::getTemplate("email/forwarder_add") . "\";");
+					UI::TwigBuffer('user/form.html.twig', [
+						'formdata' => $forwarder_add_data['emails_addforwarder']
+					]);
+					UI::TwigOutputBuffer();
 				}
 			}
 		} else {

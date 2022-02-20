@@ -17,7 +17,7 @@
 return array(
 	'emails_addforwarder' => array(
 		'title' => $lng['emails']['forwarder_add'],
-		'image' => 'icons/autoresponder_add.png',
+		'image' => 'fa-solid fa-plus',
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['emails']['forwarder_add'],
@@ -30,7 +30,7 @@ return array(
 					),
 					'destination' => array(
 						'label' => $lng['emails']['to'],
-						'type' => 'text'
+						'type' => 'email'
 					)
 				)
 			)
