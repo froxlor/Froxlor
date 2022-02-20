@@ -256,7 +256,7 @@ class Froxlor extends \Froxlor\Api\ApiCommand
 			$integrity = new \Froxlor\Database\IntegrityCheck();
 			$result = $integrity->checkAll();
 			if ($result) {
-				return $this->response("OK");
+				return $this->response(null, 204);
 			}
 			throw new \Exception("Some checks failed.", 406);
 		}
