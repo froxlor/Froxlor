@@ -67,27 +67,10 @@ UI::initTwig();
 
 /**
  * Register Globals Security Fix
- * - unsetting every variable registered in $_REQUEST and as variable itself
  */
-foreach ($_REQUEST as $key => $value) {
-	if (isset($$key)) {
-		unset($$key);
-	}
-}
-
-/**
- * check for xss attempts and clean important globals
- */
-$antiXss = new AntiXSS();
-// check $_GET
-PhpHelper::cleanGlobal($_GET, $antiXss);
-// check $_POST
-PhpHelper::cleanGlobal($_POST, $antiXss);
-// check $_COOKIE
-PhpHelper::cleanGlobal($_COOKIE, $antiXss);
+Request::cleanAll();
 
 unset($_);
-unset($value);
 unset($key);
 
 $filename = htmlentities(basename($_SERVER['SCRIPT_NAME']));
