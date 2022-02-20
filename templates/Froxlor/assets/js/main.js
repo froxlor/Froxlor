@@ -3198,10 +3198,76 @@ function withinMaxClamp(min, value, max) {
 
 /***/ }),
 
-/***/ "./templates/Froxlor/src/main.js":
-/*!***************************************!*\
-  !*** ./templates/Froxlor/src/main.js ***!
-  \***************************************/
+/***/ "./templates/Froxlor/src/js/components/newsfeed.js":
+/*!*********************************************************!*\
+  !*** ./templates/Froxlor/src/js/components/newsfeed.js ***!
+  \*********************************************************/
+/***/ (() => {
+
+$(document).ready(function () {
+  /*
+   * newsfeed
+   */
+  if (document.getElementById('newsfeed')) {
+    var role = "";
+
+    if (typeof $("#newsfeed").data("role") !== "undefined") {
+      role = "&role=" + $("#newsfeed").data("role");
+    }
+
+    $.ajax({
+      url: "lib/ajax.php?action=newsfeed" + role + "&theme=" + window.$theme + "&s=" + window.$session,
+      type: "GET",
+      success: function success(data) {
+        $("#newsfeeditems").html(data);
+      },
+      error: function error(request, status, _error) {
+        console.log(request, status, _error);
+        $("#newsfeeditems").html('<div class="alert alert-warning" role="alert">Error loading newsfeed</div>');
+      }
+    });
+  }
+});
+
+/***/ }),
+
+/***/ "./templates/Froxlor/src/js/components/updatecheck.js":
+/*!************************************************************!*\
+  !*** ./templates/Froxlor/src/js/components/updatecheck.js ***!
+  \************************************************************/
+/***/ (() => {
+
+$(document).ready(function () {
+  /*
+   * updatecheck
+   */
+  if (document.getElementById('updatecheck')) {
+    var role = "";
+
+    if (typeof $("#updatecheck").data("role") !== "undefined") {
+      role = "&role=" + $("#newsfeed").data("role");
+    }
+
+    $.ajax({
+      url: "lib/ajax.php?action=updatecheck" + role + "&theme=" + window.$theme + "&s=" + window.$session,
+      type: "GET",
+      success: function success(data) {
+        $("#newsfeeditems").html(data);
+      },
+      error: function error(request, status, _error) {
+        console.log(request, status, _error);
+        $("#newsfeeditems").html('<div class="alert alert-warning" role="alert">Error loading newsfeed</div>');
+      }
+    });
+  }
+});
+
+/***/ }),
+
+/***/ "./templates/Froxlor/src/js/main.js":
+/*!******************************************!*\
+  !*** ./templates/Froxlor/src/js/main.js ***!
+  \******************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -3212,30 +3278,13 @@ __webpack_require__.r(__webpack_exports__);
 
 window.$ = window.jQuery = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
 $(document).ready(function () {
-  var mytheme = 'Froxlor';
-  /*
-   * newsfeed
-   */
+  window.$theme = 'Froxlor';
+  window.$session = $('meta[name="froxlor-session"]').attr('content');
+}); // Load components
 
-  if (document.getElementById('newsfeed')) {
-    var role = "";
+__webpack_require__(/*! ./components/newsfeed */ "./templates/Froxlor/src/js/components/newsfeed.js");
 
-    if (typeof $("#newsfeed").data("role") !== "undefined") {
-      role = "&role=" + $("#newsfeed").data("role");
-    }
-
-    $.ajax({
-      url: "lib/ajax.php?action=newsfeed" + role + "&theme=" + mytheme,
-      type: "GET",
-      success: function success(data) {
-        $("#newsfeeditems").html(data);
-      },
-      error: function error(a, b) {
-        $("#newsfeeditems").html('<div class="alert alert-warning" role="alert">Error loading newsfeed</div>');
-      }
-    });
-  }
-});
+__webpack_require__(/*! ./components/updatecheck */ "./templates/Froxlor/src/js/components/updatecheck.js");
 
 /***/ }),
 
@@ -19334,7 +19383,7 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	__webpack_require__.O(undefined, ["templates/Froxlor/assets/css/dark","templates/Froxlor/assets/css/main"], () => (__webpack_require__("./templates/Froxlor/src/main.js")))
+/******/ 	__webpack_require__.O(undefined, ["templates/Froxlor/assets/css/dark","templates/Froxlor/assets/css/main"], () => (__webpack_require__("./templates/Froxlor/src/js/main.js")))
 /******/ 	__webpack_require__.O(undefined, ["templates/Froxlor/assets/css/dark","templates/Froxlor/assets/css/main"], () => (__webpack_require__("./templates/Froxlor/src/scss/main.scss")))
 /******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["templates/Froxlor/assets/css/dark","templates/Froxlor/assets/css/main"], () => (__webpack_require__("./templates/Froxlor/src/scss/dark.scss")))
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);

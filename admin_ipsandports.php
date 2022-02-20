@@ -120,10 +120,10 @@ if ($page == 'ipsandports' || $page == 'overview') {
 
 			$ipsandports_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/ipsandports/formfield.ipsandports_add.php';
 
-			UI::TwigBuffer('user/form.html.twig', [
+			UI::twigBuffer('user/form.html.twig', [
 				'formdata' => $ipsandports_add_data['ipsandports_add']
 			]);
-			UI::TwigOutputBuffer();
+			UI::twigOutputBuffer();
 		}
 	} elseif ($action == 'edit' && $id != 0) {
 		try {
@@ -153,10 +153,10 @@ if ($page == 'ipsandports' || $page == 'overview') {
 
 				$ipsandports_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/ipsandports/formfield.ipsandports_edit.php';
 
-				UI::TwigBuffer('user/form.html.twig', [
+				UI::twigBuffer('user/form.html.twig', [
 					'formdata' => $ipsandports_edit_data['ipsandports_edit']
 				]);
-				UI::TwigOutputBuffer();
+				UI::twigOutputBuffer();
 			}
 		}
 	} elseif ($action == 'jqCheckIP') {

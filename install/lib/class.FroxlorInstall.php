@@ -133,7 +133,7 @@ class FroxlorInstall
 		$pagecontent = $result['pagecontent'];
 		$pagenavigation = $result['pagenavigation'];
 
-		UI::TwigBuffer('/install/index.html.twig', [
+		UI::twigBuffer('/install/index.html.twig', [
 			'pagetitle' => $pagetitle,
 			'pagecontent' => $pagecontent,
 			'pagenavigation' => $pagenavigation

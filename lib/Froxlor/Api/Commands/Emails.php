@@ -145,7 +145,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			$result = $this->apiCall('Emails.get', array(
 				'emailaddr' => $email_full
 			));
-			return $this->response(200, "successful", $result);
+			return $this->response($result);
 		}
 		throw new \Exception("No more resources available", 406);
 	}
@@ -181,7 +181,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		$result = Database::pexecute_first($result_stmt, $params, true, true);
 		if ($result) {
 			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] get email address '" . $result['email_full'] . "'");
-			return $this->response(200, "successful", $result);
+			return $this->response($result);
 		}
 		$key = ($id > 0 ? "id #" . $id : "emailaddr '" . $emailaddr . "'");
 		throw new \Exception("Email address with " . $key . " could not be found", 404);
@@ -280,7 +280,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		$result = $this->apiCall('Emails.get', array(
 			'emailaddr' => $result['email_full']
 		));
-		return $this->response(200, "successful", $result);
+		return $this->response($result);
 	}
 
 	/**
@@ -319,7 +319,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			$result[] = $row;
 		}
 		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] list email-addresses");
-		return $this->response(200, "successful", array(
+		return $this->response(array(
 			'count' => count($result),
 			'list' => $result
 		));
@@ -349,7 +349,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		");
 		$result = Database::pexecute_first($result_stmt, null, true, true);
 		if ($result) {
-			return $this->response(200, "successful", $result['num_emails']);
+			return $this->response($result['num_emails']);
 		}
 	}
 
@@ -423,6 +423,6 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		Customers::decreaseUsage($customer['customerid'], 'emails_used');
 
 		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] deleted email address '" . $result['email_full'] . "'");
-		return $this->response(200, "successful", $result);
+		return $this->response($result);
 	}
 }

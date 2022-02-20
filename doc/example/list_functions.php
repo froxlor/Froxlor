@@ -4,19 +4,17 @@
 require __DIR__ . '/FroxlorAPI.php';
 
 // create object of FroxlorAPI with URL, apikey and apisecret
-$fapi = new FroxlorAPI('https://froxlor.your-host.tld/api.php', 'your-api-key', 'your-api-secret');
+$fapi = new FroxlorAPI('http://localhost/api.php', 'your-api-key', 'your-api-secret');
 
 // send request
-$fapi->request('Froxlor.listFunctions');
+$response = $fapi->request('Froxlor.listFunctions');
 
 // check for error
-if (! empty($fapi->getLastError())) {
-	echo "Error: " . $fapi->getLastError();
-	exit();
+if ($fapi->getLastStatusCode() != 200) {
+    echo "HTTP-STATUS: " . $fapi->getLastStatusCode() . PHP_EOL;
+    echo "Description: "  . $response['message'] . PHP_EOL;
+    exit();
 }
 
-// get response of request
-$request = $fapi->getLastResponse();
-
 // view response data
-var_dump($request);
+var_dump($response);

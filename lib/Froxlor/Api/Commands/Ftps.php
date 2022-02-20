@@ -281,7 +281,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 				$result = $this->apiCall('Ftps.get', array(
 					'username' => $username
 				));
-				return $this->response(200, "successful", $result);
+				return $this->response($result);
 			}
 		}
 		throw new \Exception("No more resources available", 406);
@@ -342,7 +342,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 		$result = Database::pexecute_first($result_stmt, $params, true, true);
 		if ($result) {
 			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] get ftp-user '" . $result['username'] . "'");
-			return $this->response(200, "successful", $result);
+			return $this->response($result);
 		}
 		$key = ($id > 0 ? "id #" . $id : "username '" . $username . "'");
 		throw new \Exception("FTP user with " . $key . " could not be found", 404);
@@ -469,7 +469,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 			'username' => $result['username']
 		));
 		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] updated ftp-user '" . $result['username'] . "'");
-		return $this->response(200, "successful", $result);
+		return $this->response($result);
 	}
 
 	/**
@@ -505,7 +505,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 			$result[] = $row;
 		}
 		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] list ftp-users");
-		return $this->response(200, "successful", array(
+		return $this->response(array(
 			'count' => count($result),
 			'list' => $result
 		));
@@ -533,7 +533,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 		");
 		$result = Database::pexecute_first($result_stmt, null, true, true);
 		if ($result) {
-			return $this->response(200, "successful", $result['num_ftps']);
+			return $this->response($result['num_ftps']);
 		}
 	}
 
@@ -641,6 +641,6 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 		Customers::decreaseUsage($customer_data['customerid'], 'ftps_used', $resetaccnumber);
 
 		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_WARNING, "[API] deleted ftp-user '" . $result['username'] . "'");
-		return $this->response(200, "successful", $result);
+		return $this->response($result);
 	}
 }

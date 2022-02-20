@@ -103,12 +103,12 @@ if ($page == 'overview') {
 		$userinfo['total_bytes_used'] = 0;
 	}
 
-	UI::Twig()->addGlobal('userinfo', $userinfo);
-	UI::TwigBuffer('user/index.html.twig', [
+	UI::twig()->addGlobal('userinfo', $userinfo);
+	UI::twigBuffer('user/index.html.twig', [
 		'domains' => $domainArray,
 		'stdsubdomain' => $stdsubdomain
 	]);
-	UI::TwigOutputBuffer();
+	UI::twigOutputBuffer();
 
 } elseif ($page == 'change_password') {
 

@@ -211,10 +211,10 @@ if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
 
 			$admin_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/admin/formfield.admin_add.php';
 
-			UI::TwigBuffer('user/form.html.twig', [
+			UI::twigBuffer('user/form.html.twig', [
 				'formdata' => $admin_add_data['admin_add']
 			]);
-			UI::TwigOutputBuffer();
+			UI::twigOutputBuffer();
 		}
 	} elseif ($action == 'edit' && $id != 0) {
 		try {
@@ -258,10 +258,10 @@ if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
 
 				$admin_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/admin/formfield.admin_edit.php';
 
-				UI::TwigBuffer('user/form.html.twig', [
+				UI::twigBuffer('user/form.html.twig', [
 					'formdata' => $admin_edit_data['admin_edit']
 				]);
-				UI::TwigOutputBuffer();
+				UI::twigOutputBuffer();
 			}
 		}
 	}

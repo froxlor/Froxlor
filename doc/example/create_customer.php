@@ -4,7 +4,7 @@
 require __DIR__ . '/FroxlorAPI.php';
 
 // create object of FroxlorAPI with URL, apikey and apisecret
-$fapi = new FroxlorAPI('https://froxlor.your-host.tld/api.php', 'your-api-key', 'your-api-secret');
+$fapi = new FroxlorAPI('http://127.0.0.1/api.php', 'your-api-key', 'your-api-secret');
 
 // customer data
 $data = [
@@ -16,19 +16,17 @@ $data = [
 	'new_customer_password' => 's0mEcRypt1cpassword' . uniqid()
 ];
 // send request
-$fapi->request('Customers.add', $data);
+$response = $fapi->request('Customers.add', $data);
 
 // check for error
-if (! empty($fapi->getLastError())) {
-	echo "Error: " . $fapi->getLastError();
-	exit();
+if ($fapi->getLastStatusCode() != 200) {
+	echo "HTTP-STATUS: " . $fapi->getLastStatusCode() . PHP_EOL;
+    echo "Description: "  . $response['message'] . PHP_EOL;
+    exit();
 }
 
-// get response of request
-$request = $fapi->getLastResponse();
-
 // view response data
-var_dump($request);
+var_dump($response);
 
 /*
 array(60) {

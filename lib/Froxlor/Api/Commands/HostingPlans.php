@@ -57,7 +57,7 @@ class HostingPlans extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 			while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 				$result[] = $row;
 			}
-			return $this->response(200, "successful", array(
+			return $this->response(array(
 				'count' => count($result),
 				'list' => $result
 			));
@@ -85,7 +85,7 @@ class HostingPlans extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 			}
 			$result = Database::pexecute_first($result_stmt, $params, true, true);
 			if ($result) {
-				return $this->response(200, "successful", $result['num_plans']);
+				return $this->response($result['num_plans']);
 			}
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
@@ -120,7 +120,7 @@ class HostingPlans extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 			$result = Database::pexecute_first($result_stmt, $params, true, true);
 			if ($result) {
 				$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] get hosting-plan '" . $result['name'] . "'");
-				return $this->response(200, "successful", $result);
+				return $this->response($result);
 			}
 			$key = ($id > 0 ? "id #" . $id : "planname '" . $planname . "'");
 			throw new \Exception("Hosting-plan with " . $key . " could not be found", 404);
@@ -246,7 +246,7 @@ class HostingPlans extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 			$result = $this->apiCall('HostingPlans.get', array(
 				'planname' => $name
 			));
-			return $this->response(200, "successful", $result);
+			return $this->response($result);
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
 	}
@@ -393,7 +393,7 @@ class HostingPlans extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 			);
 			Database::pexecute($upd_stmt, $update_data, true, true);
 			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_WARNING, "[API] updated hosting-plan '" . $result['name'] . "'");
-			return $this->response(200, "successful", $update_data);
+			return $this->response($update_data);
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
 	}
@@ -431,7 +431,7 @@ class HostingPlans extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 				'id' => $id
 			), true, true);
 			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_WARNING, "[API] deleted hosting-plan '" . $result['name'] . "'");
-			return $this->response(200, "successful", $result);
+			return $this->response($result);
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
 	}

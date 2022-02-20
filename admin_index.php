@@ -180,14 +180,14 @@ if ($page == 'overview') {
 		'uptime' => $uptime
 	];
 
-	UI::Twig()->addGlobal('userinfo', $userinfo);
-	UI::TwigBuffer('user/index.html.twig', [
+	UI::twig()->addGlobal('userinfo', $userinfo);
+	UI::twigBuffer('user/index.html.twig', [
 		'sysinfo' => $sysinfo,
 		'overview' => $overview,
 		'outstanding_tasks' => $outstanding_tasks,
 		'cron_last_runs' => $cron_last_runs
 	]);
-	UI::TwigOutputBuffer();
+	UI::twigOutputBuffer();
 } elseif ($page == 'change_password') {
 
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
@@ -236,8 +236,8 @@ if ($page == 'overview') {
 			));
 		}
 	} else {
-		UI::TwigBuffer('user/change_password.html.twig');
-		UI::TwigOutputBuffer();
+		UI::twigBuffer('user/change_password.html.twig');
+		UI::twigOutputBuffer();
 	}
 } elseif ($page == 'change_language') {
 
@@ -277,11 +277,11 @@ if ($page == 'overview') {
 			$default_lang = $userinfo['def_language'];
 		}
 
-		UI::TwigBuffer('user/change_language.html.twig', [
+		UI::twigBuffer('user/change_language.html.twig', [
 			'languages' => $languages,
 			'default_lang' => $default_lang
 		]);
-		UI::TwigOutputBuffer();
+		UI::twigOutputBuffer();
 	}
 } elseif ($page == 'change_theme') {
 
@@ -321,11 +321,11 @@ if ($page == 'overview') {
 
 		$themes_avail = \Froxlor\UI\Template::getThemes();
 
-		UI::TwigBuffer('user/change_theme.html.twig', [
+		UI::twigBuffer('user/change_theme.html.twig', [
 			'themes' => $themes_avail,
 			'default_theme' => $default_theme
 		]);
-		UI::TwigOutputBuffer();
+		UI::twigOutputBuffer();
 	}
 } elseif ($page == 'send_error_report' && Settings::Get('system.allow_error_report_admin') == '1') {
 

@@ -370,7 +370,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			$result = $this->apiCall('SubDomains.get', array(
 				'id' => $subdomain_id
 			));
-			return $this->response(200, "successful", $result);
+			return $this->response($result);
 		}
 		throw new \Exception("No more resources available", 406);
 	}
@@ -451,7 +451,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		$result = Database::pexecute_first($result_stmt, $params, true, true);
 		if ($result) {
 			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] get subdomain '" . $result['domain'] . "'");
-			return $this->response(200, "successful", $result);
+			return $this->response($result);
 		}
 		$key = ($id > 0 ? "id #" . $id : "domainname '" . $domainname . "'");
 		throw new \Exception("Subdomain with " . $key . " could not be found", 404);
@@ -744,7 +744,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		$result = $this->apiCall('SubDomains.get', array(
 			'id' => $id
 		));
-		return $this->response(200, "successful", $result);
+		return $this->response($result);
 	}
 
 	/**
@@ -848,7 +848,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		while ($row = $domains_stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$result[] = $row;
 		}
-		return $this->response(200, "successful", array(
+		return $this->response(array(
 			'count' => count($result),
 			'list' => $result
 		));
@@ -913,7 +913,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		");
 		$result = Database::pexecute_first($domains_stmt, null, true, true);
 		if ($result) {
-			return $this->response(200, "successful", $result['num_subdom']);
+			return $this->response($result['num_subdom']);
 		}
 	}
 
@@ -1031,7 +1031,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		Customers::decreaseUsage($customer['customerid'], 'subdomains_used');
 
 		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_WARNING, "[API] deleted subdomain '" . $result['domain'] . "'");
-		return $this->response(200, "successful", $result);
+		return $this->response($result);
 	}
 
 	/**

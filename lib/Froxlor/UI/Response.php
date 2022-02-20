@@ -119,14 +119,14 @@ class Response
 		if ($throw_exception) {
 			throw new \Exception(strip_tags($error), 400);
 		}
-		\Froxlor\UI\Panel\UI::TwigBuffer('misc/alert.html.twig', [
+		\Froxlor\UI\Panel\UI::twigBuffer('misc/alert.html.twig', [
 			'type' => 'danger',
 			'btntype' => 'light',
 			'heading' => $lng['error']['error'],
 			'alert_msg' => $error,
 			'redirect_link' => $link_ref
 		]);
-		\Froxlor\UI\Panel\UI::TwigOutputBuffer();
+		\Froxlor\UI\Panel\UI::twigOutputBuffer();
 		exit;
 	}
 

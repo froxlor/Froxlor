@@ -128,8 +128,8 @@ class UI
 	 *
 	 * @return \Twig\Environment
 	 */
-	public static function Twig()
-	{
+	public static function twig(): ?\Twig\Environment
+    {
 		return self::$twig;
 	}
 
@@ -138,7 +138,7 @@ class UI
 	 *
 	 * @see \Twig\Environment::render()
 	 */
-	public static function TwigBuffer($name, array $context = [])
+	public static function twigBuffer($name, array $context = [])
 	{
 		self::$twigbuf[] = [
 			self::getTheme() . '/' . $name => $context
@@ -172,7 +172,7 @@ class UI
 	/**
 	 * echo output buffer and empty buffer-content
 	 */
-	public static function TwigOutputBuffer()
+	public static function twigOutputBuffer()
 	{
 		$output = "";
 		foreach (self::$twigbuf as $buf) {
@@ -250,13 +250,14 @@ class UI
 		}
 	}
 
-	/**
-	 * returns an array of available themes
-	 *
-	 * @return array
-	 */
-	public static function getThemes()
-	{
+    /**
+     * returns an array of available themes
+     *
+     * @return array
+     * @throws \Exception
+     */
+	public static function getThemes(): array
+    {
 		$themespath = \Froxlor\FileDir::makeCorrectDir(\Froxlor\Froxlor::getInstallDir() . '/templates/');
 		$themes_available = array();
 

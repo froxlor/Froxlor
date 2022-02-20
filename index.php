@@ -385,7 +385,7 @@ if ($action == '2fa_entercode') {
 			$lastqrystr = htmlspecialchars($_REQUEST['qrystr'], ENT_QUOTES);
 		}
 
-		UI::TwigBuffer('login/login.html.twig', [
+		UI::twigBuffer('login/login.html.twig', [
 			'pagetitle' => 'Login',
 			'languages' => $languages,
 			'lastscript' => $lastscript,
@@ -394,7 +394,7 @@ if ($action == '2fa_entercode') {
 			'message' => $message,
 			'successmsg' => $successmessage
 		]);
-		UI::TwigOutputBuffer();
+		UI::twigOutputBuffer();
 	}
 }
 
@@ -585,12 +585,12 @@ if ($action == 'forgotpwd') {
 		}
 	}
 
-	UI::TwigBuffer('login/fpwd.html.twig', [
+	UI::twigBuffer('login/fpwd.html.twig', [
 		'pagetitle' => $lng['login']['presend'],
 		'action' => $action,
 		'message' => $message,
 	]);
-	UI::TwigOutputBuffer();
+	UI::twigOutputBuffer();
 }
 
 if ($action == 'resetpwd') {

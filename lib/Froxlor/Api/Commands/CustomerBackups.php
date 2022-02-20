@@ -111,7 +111,7 @@ class CustomerBackups extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 		\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::CREATE_CUSTOMER_BACKUP, $task_data);
 
 		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] added customer-backup job for '" . $customer['loginname'] . "'. Target directory: " . $userpath);
-		return $this->response(200, "successful", $task_data);
+		return $this->response($task_data);
 	}
 
 	/**
@@ -170,7 +170,7 @@ class CustomerBackups extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 			}
 		}
 		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] list customer-backups");
-		return $this->response(200, "successful", array(
+		return $this->response(array(
 			'count' => count($result),
 			'list' => $result
 		));
@@ -204,7 +204,7 @@ class CustomerBackups extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 				$result_count ++;
 			}
 		}
-		return $this->response(200, "successful", $result_count);
+		return $this->response($result_count);
 	}
 
 	/**
@@ -239,7 +239,7 @@ class CustomerBackups extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 						'tid' => $entry
 					), true, true);
 					$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] deleted planned customer-backup #" . $entry);
-					return $this->response(200, "successful", true);
+					return $this->response(true);
 				}
 			}
 		}

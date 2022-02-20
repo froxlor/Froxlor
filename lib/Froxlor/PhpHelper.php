@@ -142,8 +142,8 @@ class PhpHelper
 			// end later
 			$err_display .= '</div>';
 			// check for more existing errors
-			$errors = isset(\Froxlor\UI\Panel\UI::Twig()->getGlobals()['global_errors']) ? \Froxlor\UI\Panel\UI::Twig()->getGlobals()['global_errors'] : "";
-			\Froxlor\UI\Panel\UI::Twig()->addGlobal('global_errors', $errors . $err_display);
+			$errors = isset(\Froxlor\UI\Panel\UI::twig()->getGlobals()['global_errors']) ? \Froxlor\UI\Panel\UI::twig()->getGlobals()['global_errors'] : "";
+			\Froxlor\UI\Panel\UI::twig()->addGlobal('global_errors', $errors . $err_display);
 			// return true to ignore php standard error-handler
 			return true;
 		}
@@ -157,15 +157,15 @@ class PhpHelper
 		if (!isset($_SERVER['SHELL']) || (isset($_SERVER['SHELL']) && $_SERVER['SHELL'] == '')) {
 			// show
 			\Froxlor\UI\Panel\UI::initTwig(true);
-			\Froxlor\UI\Panel\UI::Twig()->addGlobal('install_mode', '1');
-			\Froxlor\UI\Panel\UI::TwigBuffer('misc/alert_nosession.html.twig', [
+			\Froxlor\UI\Panel\UI::twig()->addGlobal('install_mode', '1');
+			\Froxlor\UI\Panel\UI::twigBuffer('misc/alert_nosession.html.twig', [
 				'page_title' => 'Uncaught exception',
 				'heading' => 'Uncaught exception',
 				'type' => 'danger',
 				'alert_msg' => $exception->getCode() . ' ' . $exception->getMessage(),
 				'alert_info' => $exception->getTraceAsString()
 			]);
-			echo \Froxlor\UI\Panel\UI::TwigOutputBuffer();
+			echo \Froxlor\UI\Panel\UI::twigOutputBuffer();
 			die();
 		}
 	}

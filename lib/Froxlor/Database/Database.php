@@ -470,14 +470,14 @@ class Database
 				}
 				// show
 				\Froxlor\UI\Panel\UI::initTwig(true);
-				\Froxlor\UI\Panel\UI::Twig()->addGlobal('install_mode', '1');
-				\Froxlor\UI\Panel\UI::TwigBuffer('misc/dberrornice.html.twig', [
+				\Froxlor\UI\Panel\UI::twig()->addGlobal('install_mode', '1');
+				\Froxlor\UI\Panel\UI::twigBuffer('misc/dberrornice.html.twig', [
 					'page_title' => 'Database error',
 					'message' => $error_message,
 					'debug' => $error_trace,
 					'report' => $err_report_link
 				]);
-				echo \Froxlor\UI\Panel\UI::TwigOutputBuffer();
+				echo \Froxlor\UI\Panel\UI::twigOutputBuffer();
 				die();
 			}
 			die("We are sorry, but a MySQL - error occurred. The administrator may find more information in the syslog");

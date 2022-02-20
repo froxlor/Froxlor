@@ -113,7 +113,7 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 				$phpconfigs[] = $row;
 			}
 
-			return $this->response(200, "successful", array(
+			return $this->response(array(
 				'count' => count($phpconfigs),
 				'list' => $phpconfigs
 			));
@@ -137,7 +137,7 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			");
 			$result = Database::pexecute_first($result_stmt, null, true, true);
 			if ($result) {
-				return $this->response(200, "successful", $result['num_phps']);
+				return $this->response($result['num_phps']);
 			}
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
@@ -165,7 +165,7 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 				'id' => $id
 			), true, true);
 			if ($result) {
-				return $this->response(200, "successful", $result);
+				return $this->response($result);
 			}
 			throw new \Exception("php-config with id #" . $id . " could not be found", 404);
 		}
@@ -372,7 +372,7 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			));
 
 			$this->addForAllCustomers($allow_all_customers, $ins_data['id']);
-			return $this->response(200, "successful", $result);
+			return $this->response($result);
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
 	}
@@ -573,7 +573,7 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			));
 
 			$this->addForAllCustomers($allow_all_customers, $id);
-			return $this->response(200, "successful", $result);
+			return $this->response($result);
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
 	}
@@ -624,7 +624,7 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 
 			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_VHOST);
 			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] php setting '" . $result['description'] . "' has been deleted by '" . $this->getUserDetail('loginname') . "'");
-			return $this->response(200, "successful", $result);
+			return $this->response($result);
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
 	}

@@ -243,7 +243,7 @@ abstract class ApiCommand extends ApiParameter
 	 */
 	protected function getUserDetail($detail = null)
 	{
-		return (isset($this->user_data[$detail]) ? $this->user_data[$detail] : null);
+		return ($this->user_data[$detail] ?? null);
 	}
 
 	/**
@@ -463,32 +463,16 @@ abstract class ApiCommand extends ApiParameter
 		return json_decode($json_result, true)['data'];
 	}
 
-	/**
-	 * return api-compatible response in JSON format and send corresponding http-header
-	 *
-	 * @param int $status
-	 * @param string $status_message
-	 * @param mixed $data
-	 *
-	 * @return string json-encoded response message
-	 */
-	protected function response($status, $status_message, $data = null)
+    /**
+     * return api-compatible response in JSON format and send corresponding http-header
+     *
+     * @param mixed $data
+     * @param int $response_code
+     * @return string json-encoded response message
+     */
+	protected function response($data = null, int $response_code = 200)
 	{
-		if (isset($_SERVER["SERVER_PROTOCOL"]) && ! empty($_SERVER["SERVER_PROTOCOL"])) {
-			$resheader = $_SERVER["SERVER_PROTOCOL"] . " " . $status;
-			if (! empty($status_message)) {
-				$resheader .= ' ' . str_replace("\n", " ", $status_message);
-			}
-			header($resheader);
-		}
-
-		$response = array();
-		$response['status'] = $status;
-		$response['status_message'] = $status_message;
-		$response['data'] = $data;
-
-		$json_response = json_encode($response, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
-		return $json_response;
+        return \Froxlor\Api\Response::jsonDataResponse($data, $response_code);
 	}
 
 	/**

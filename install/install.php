@@ -53,10 +53,10 @@ require __DIR__ . '/lib/class.FroxlorInstall.php';
 use Froxlor\UI\Panel\UI;
 
 UI::initTwig(true);
-UI::Twig()->addGlobal('install_mode', '1');
-UI::Twig()->addGlobal('basehref', '../');
+UI::twig()->addGlobal('install_mode', '1');
+UI::twig()->addGlobal('basehref', '../');
 
 $frxinstall = new FroxlorInstall();
 $frxinstall->run();
 
-UI::TwigOutputBuffer();
+UI::twigOutputBuffer();

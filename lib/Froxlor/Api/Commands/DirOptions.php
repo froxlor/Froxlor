@@ -128,7 +128,7 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		$result = $this->apiCall('DirOptions.get', array(
 			'id' => $id
 		));
-		return $this->response(200, "successful", $result);
+		return $this->response($result);
 	}
 
 	/**
@@ -186,7 +186,7 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		$result = Database::pexecute_first($result_stmt, $params, true, true);
 		if ($result) {
 			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] get directory options for '" . $result['path'] . "'");
-			return $this->response(200, "successful", $result);
+			return $this->response($result);
 		}
 		$key = "id #" . $id;
 		throw new \Exception("Directory option with " . $key . " could not be found", 404);
@@ -275,7 +275,7 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		$result = $this->apiCall('DirOptions.get', array(
 			'id' => $id
 		));
-		return $this->response(200, "successful", $result);
+		return $this->response($result);
 	}
 
 	/**
@@ -315,7 +315,7 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			$result[] = $row;
 		}
 		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] list directory-options");
-		return $this->response(200, "successful", array(
+		return $this->response(array(
 			'count' => count($result),
 			'list' => $result
 		));
@@ -347,7 +347,7 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		");
 		$result = Database::pexecute_first($result_stmt, null, true, true);
 		if ($result) {
-			return $this->response(200, "successful", $result['num_htaccess']);
+			return $this->response($result['num_htaccess']);
 		}
 	}
 
@@ -414,7 +414,7 @@ class DirOptions extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		), true, true);
 		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] deleted directory-option for '" . str_replace($customer_data['documentroot'], '/', $result['path']) . "'");
 		\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_VHOST);
-		return $this->response(200, "successful", $result);
+		return $this->response($result);
 	}
 
 	/**

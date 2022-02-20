@@ -1,17 +1,17 @@
 <?php
 namespace Froxlor\Http;
 
+use Exception;
+
 class HttpClient
 {
-
-	/**
-	 * Executes simple GET request
-	 *
-	 * @param string $url
-	 *
-	 * @return array
-	 */
-	public static function urlGet($url, $follow_location = true, $timeout = 10)
+    /**
+     * Executes simple GET request
+     *
+     * @return bool|string
+     * @throws Exception
+     */
+	public static function urlGet(string $url, bool $follow_location = true, int $timeout = 10)
 	{
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $url);
@@ -25,22 +25,19 @@ class HttpClient
 		if ($output === false) {
 			$e = curl_error($ch);
 			curl_close($ch);
-			throw new \Exception("Curl error: " . $e);
+			throw new Exception("Curl error: " . $e);
 		}
 		curl_close($ch);
 		return $output;
 	}
 
-	/**
-	 * Downloads and stores a file from an url
-	 *
-	 * @param string $url
-	 * @param string $target
-	 *
-	 * @return array
-	 */
-	public static function fileGet($url, $target)
-	{
+    /**
+     * Downloads and stores a file from an url
+     *
+     * @throws Exception
+     */
+	public static function fileGet(string $url, string $target): array
+    {
 		$fh = fopen($target, 'w');
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $url);
@@ -54,7 +51,7 @@ class HttpClient
 		if ($output === false) {
 			$e = curl_error($ch);
 			curl_close($ch);
-			throw new \Exception("Curl error: " . $e);
+			throw new Exception("Curl error: " . $e);
 		}
 		curl_close($ch);
 		return $output;

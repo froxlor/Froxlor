@@ -23,8 +23,12 @@ class ApiKeys extends \Froxlor\Api\ApiCommand
 {
 
 	public function listing()
-	{}
+	{
+        //
+    }
 
 	public function listingCount()
-	{}
+	{
+        //
+    }
 }

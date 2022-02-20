@@ -341,7 +341,7 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			$result = $this->apiCall('DomainZones.get', array(
 				'id' => $id
 			));
-			return $this->response(200, "successful", $result);
+			return $this->response($result);
 		}
 		// return $errors
 		throw new \Exception(implode("\n", $errors), 406);
@@ -392,7 +392,7 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 		$zonefile = (string) $zone;
 
 		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] get dns-zone for '" . $result['domain'] . "'");
-		return $this->response(200, "successful", explode("\n", $zonefile));
+		return $this->response(explode("\n", $zonefile));
 	}
 
 	/**
@@ -452,7 +452,7 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 		while ($row = $sel_stmt->fetch(\PDO::FETCH_ASSOC)) {
 			$result[] = $row;
 		}
-		return $this->response(200, "successful", array(
+		return $this->response(array(
 			'count' => count($result),
 			'list' => $result
 		));
@@ -496,7 +496,7 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			'did' => $id
 		), true, true);
 		if ($result) {
-			return $this->response(200, "successful", $result['num_dns']);
+			return $this->response($result['num_dns']);
 		}
 	}
 
@@ -543,8 +543,8 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 		if ($del_stmt->rowCount() > 0) {
 			// re-generate bind configs
 			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_DNS);
-			return $this->response(200, "successful", true);
+			return $this->response(true);
 		}
-		return $this->response(304, "successful", true);
+		return $this->response(null, 204);
 	}
 }

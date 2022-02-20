@@ -68,7 +68,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				}
 				$result[] = $row;
 			}
-			return $this->response(200, "successful", array(
+			return $this->response(array(
 				'count' => count($result),
 				'list' => $result
 			));
@@ -100,7 +100,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 			}
 			$result = Database::pexecute_first($result_stmt, $params, true, true);
 			if ($result) {
-				return $this->response(200, "successful", $result['num_domains']);
+				return $this->response($result['num_domains']);
 			}
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
@@ -156,7 +156,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 					$result['ipsandports'] = $this->getIpsForDomain($result['id']);
 				}
 				$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] get domain '" . $result['domain'] . "'");
-				return $this->response(200, "successful", $result);
+				return $this->response($result);
 			}
 			$key = ($id > 0 ? "id #" . $id : "domainname '" . $domainname . "'");
 			throw new \Exception("Domain with " . $key . " could not be found", 404);
@@ -866,7 +866,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 					$result = $this->apiCall('Domains.get', array(
 						'domainname' => $domain
 					));
-					return $this->response(200, "successful", $result);
+					return $this->response($result);
 				}
 			}
 			throw new \Exception("No more resources available", 406);
@@ -1833,7 +1833,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 			$result = $this->apiCall('Domains.get', array(
 				'domainname' => $result['domain']
 			));
-			return $this->response(200, "successful", $result);
+			return $this->response($result);
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
 	}
@@ -1994,7 +1994,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_VHOST);
 			// Using nameserver, insert a task which rebuilds the server config
 			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_DNS);
-			return $this->response(200, "successful", $result);
+			return $this->response($result);
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);
 	}

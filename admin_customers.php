@@ -321,10 +321,10 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 
 			$customer_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/customer/formfield.customer_add.php';
 
-			UI::TwigBuffer('user/form.html.twig', [
+			UI::twigBuffer('user/form.html.twig', [
 				'formdata' => $customer_add_data['customer_add']
 			]);
-			UI::TwigOutputBuffer();
+			UI::twigOutputBuffer();
 		}
 	} elseif ($action == 'edit' && $id != 0) {
 
@@ -406,10 +406,10 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 
 				$customer_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/customer/formfield.customer_edit.php';
 
-				UI::TwigBuffer('user/form.html.twig', [
+				UI::twigBuffer('user/form.html.twig', [
 					'formdata' => $customer_edit_data['customer_edit']
 				]);
-				UI::TwigOutputBuffer();
+				UI::twigOutputBuffer();
 			}
 		}
 	}

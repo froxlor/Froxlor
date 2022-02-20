@@ -93,8 +93,8 @@ $filename = htmlentities(basename($_SERVER['SCRIPT_NAME']));
 
 // check whether the userdata file exists
 if (!file_exists(\Froxlor\Froxlor::getInstallDir() . '/lib/userdata.inc.php')) {
-	UI::Twig()->addGlobal('install_mode', '1');
-	echo UI::Twig()->render($_deftheme . '/misc/configurehint.html.twig');
+	UI::twig()->addGlobal('install_mode', '1');
+	echo UI::twig()->render($_deftheme . '/misc/configurehint.html.twig');
 	die();
 }
 
@@ -103,8 +103,8 @@ if (!is_readable(\Froxlor\Froxlor::getInstallDir() . '/lib/userdata.inc.php')) {
 	// get possible owner
 	$posixusername = posix_getpwuid(posix_getuid());
 	$posixgroup = posix_getgrgid(posix_getgid());
-	UI::Twig()->addGlobal('install_mode', '1');
-	echo UI::Twig()->render($_deftheme . '/misc/ownershiphint.html.twig', [
+	UI::twig()->addGlobal('install_mode', '1');
+	echo UI::twig()->render($_deftheme . '/misc/ownershiphint.html.twig', [
 		'user' => $posixusername['name'],
 		'group' => $posixgroup['name'],
 		'installdir' => \Froxlor\Froxlor::getInstallDir()
@@ -115,8 +115,8 @@ if (!is_readable(\Froxlor\Froxlor::getInstallDir() . '/lib/userdata.inc.php')) {
 // include MySQL-Username/Passwort etc.
 require \Froxlor\Froxlor::getInstallDir() . '/lib/userdata.inc.php';
 if (!isset($sql) || !is_array($sql)) {
-	UI::Twig()->addGlobal('install_mode', '1');
-	echo UI::Twig()->render($_deftheme . '/misc/configurehint.html.twig');
+	UI::twig()->addGlobal('install_mode', '1');
+	echo UI::twig()->render($_deftheme . '/misc/configurehint.html.twig');
 	die();
 }
 
@@ -361,8 +361,8 @@ if (Settings::Get('panel.logo_overridecustom') == 0 && file_exists($hl_path . '/
 	}
 }
 
-UI::Twig()->addGlobal('header_logo_login', $header_logo_login);
-UI::Twig()->addGlobal('header_logo', $header_logo);
+UI::twig()->addGlobal('header_logo_login', $header_logo_login);
+UI::twig()->addGlobal('header_logo', $header_logo);
 
 /**
  * Redirects to index.php (login page) if no session exists
@@ -377,7 +377,7 @@ if ($nosession == 1 && AREA != 'login') {
 	exit();
 }
 
-UI::Twig()->addGlobal('userinfo', ($userinfo ?? []));
+UI::twig()->addGlobal('userinfo', ($userinfo ?? []));
 
 /**
  * Logic moved out of lng-file
@@ -433,7 +433,7 @@ if (AREA == 'admin' || AREA == 'customer') {
 		$navigation = \Froxlor\UI\HTML::buildNavigation($navigation_data[AREA], $userinfo);
 	}
 }
-UI::Twig()->addGlobal('nav_entries', $navigation);
+UI::twig()->addGlobal('nav_entries', $navigation);
 
 $js = "";
 $css = "";
@@ -454,8 +454,8 @@ if (is_array($_themeoptions) && array_key_exists('js', $_themeoptions['variants'
 	}
 }
 
-UI::Twig()->addGlobal('theme_js', $js);
-UI::Twig()->addGlobal('theme_css', $css);
+UI::twig()->addGlobal('theme_js', $js);
+UI::twig()->addGlobal('theme_css', $css);
 unset($js);
 unset($css);
 
@@ -500,9 +500,9 @@ if ($page == '') {
 	$page = 'overview';
 }
 
-UI::Twig()->addGlobal('action', $action);
-UI::Twig()->addGlobal('page', $page);
-UI::Twig()->addGlobal('s', $s);
+UI::twig()->addGlobal('action', $action);
+UI::twig()->addGlobal('page', $page);
+UI::twig()->addGlobal('s', $s);
 
 /**
  * Initialize the mailingsystem
