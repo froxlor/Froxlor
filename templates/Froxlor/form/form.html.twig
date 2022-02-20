@@ -24,19 +24,7 @@
 				{% endif %}
 				<div class="card-body">
 					{% for id,field in section.fields %}
-						{% if field.type == 'text' or field.type == 'password' or field.type == 'number' %}
-							{{ formfields.input(id, field) }}
-						{% elseif field.type == 'textul' %}
-							{{ formfields.input_ul(id, field) }}
-						{% elseif field.type == 'checkbox' %}
-							{{ formfields.bool(id, field) }}
-						{% elseif field.type == 'select' %}
-							{{ formfields.select(id, field) }}
-						{% elseif field.type == 'textarea' %}
-							{{ formfields.textarea(id, field) }}
-						{% elseif field.type == 'label' %}
-							{{ formfields.plain(id, field) }}
-						{% endif %}
+						{{ formfields.fieldrow(id, field) }}
 					{% endfor %}
 				</div>
 			</div>

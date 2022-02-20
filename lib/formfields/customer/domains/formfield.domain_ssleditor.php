@@ -17,7 +17,7 @@
 return array(
 	'domain_ssleditor' => array(
 		'title' => $lng['panel']['ssleditor'],
-		'image' => 'icons/ssl.png',
+		'image' => 'fa-solid fa-lock',
 		'sections' => array(
 			'section_a' => array(
 				'title' => 'SSL certificates',
@@ -30,7 +30,6 @@ return array(
 						'display' => $result_domain['domain']
 					),
 					'ssl_cert_file' => array(
-						'style' => 'align-top',
 						'label' => $lng['admin']['ipsandports']['ssl_cert_file_content'],
 						'desc' => $lng['admin']['ipsandports']['ssl_paste_description'],
 						'type' => 'textarea',
@@ -39,7 +38,6 @@ return array(
 						'value' => $result['ssl_cert_file']
 					),
 					'ssl_key_file' => array(
-						'style' => 'align-top',
 						'label' => $lng['admin']['ipsandports']['ssl_key_file_content'],
 						'desc' => $lng['admin']['ipsandports']['ssl_paste_description'],
 						'type' => 'textarea',
@@ -48,7 +46,6 @@ return array(
 						'value' => $result['ssl_key_file']
 					),
 					'ssl_cert_chainfile' => array(
-						'style' => 'align-top',
 						'label' => $lng['admin']['ipsandports']['ssl_cert_chainfile_content'],
 						'desc' => $lng['admin']['ipsandports']['ssl_paste_description'] . $lng['admin']['ipsandports']['ssl_cert_chainfile_content_desc'],
 						'type' => 'textarea',
@@ -57,7 +54,6 @@ return array(
 						'value' => $result['ssl_cert_chainfile']
 					),
 					'ssl_ca_file' => array(
-						'style' => 'align-top',
 						'label' => $lng['admin']['ipsandports']['ssl_ca_file_content'],
 						'desc' => $lng['admin']['ipsandports']['ssl_paste_description'] . $lng['admin']['ipsandports']['ssl_ca_file_content_desc'],
 						'type' => 'textarea',

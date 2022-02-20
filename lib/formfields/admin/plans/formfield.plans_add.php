@@ -17,7 +17,7 @@
 return array(
 	'plans_add' => array(
 		'title' => $lng['admin']['plans']['add'],
-		'image' => 'icons/templates_add_big.png',
+		'image' => 'fa-solid fa-plus',
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['admin']['plans']['plan_details'],

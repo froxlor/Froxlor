@@ -17,7 +17,7 @@
 return array(
 	'domain_import' => array(
 		'title' => $lng['domains']['domain_import'],
-		'image' => 'icons/domain_add.png',
+		'image' => 'fa-solid fa-file-import',
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['domains']['domain_import'],

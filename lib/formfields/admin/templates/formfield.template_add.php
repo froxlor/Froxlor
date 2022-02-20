@@ -17,7 +17,7 @@
 return array(
 	'template_add' => array(
 		'title' => $lng['admin']['templates']['template_add'],
-		'image' => 'icons/templates_add.png',
+		'image' => 'fa-solid fa-plus',
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['admin']['templates']['template_add'],

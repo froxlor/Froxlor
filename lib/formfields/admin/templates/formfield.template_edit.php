@@ -17,7 +17,7 @@
 return array(
 	'template_edit' => array(
 		'title' => $lng['admin']['templates']['template_edit'],
-		'image' => 'icons/templates_edit.png',
+		'image' => 'fa-solid fa-pen',
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['admin']['templates']['template_edit'],

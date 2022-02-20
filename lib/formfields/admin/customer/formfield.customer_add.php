@@ -43,14 +43,16 @@ return array(
 					'new_customer_password' => array(
 						'label' => $lng['login']['password'],
 						'type' => 'password',
-						'autocomplete' => 'off'
-					),
-					'new_customer_password_suggestion' => array(
-						'label' => $lng['customer']['generated_pwd'],
-						'type' => 'text',
-						'visible' => (\Froxlor\Settings::Get('panel.password_regex') == ''),
-						'value' => \Froxlor\System\Crypt::generatePassword(),
-						'readonly' => true
+						'autocomplete' => 'off',
+						'next_to' => [
+							'new_customer_password_suggestion' => array(
+								'next_to_prefix' => $lng['customer']['generated_pwd'].':',
+								'type' => 'text',
+								'visible' => (\Froxlor\Settings::Get('panel.password_regex') == ''),
+								'value' => \Froxlor\System\Crypt::generatePassword(),
+								'readonly' => true
+							)
+						]
 					),
 					'sendpassword' => array(
 						'label' => $lng['admin']['sendpassword'],
@@ -107,12 +109,14 @@ return array(
 						'type' => 'text'
 					),
 					'zipcode' => array(
-						'label' => $lng['customer']['zipcode'],
-						'type' => 'text'
-					),
-					'city' => array(
-						'label' => $lng['customer']['city'],
-						'type' => 'text'
+						'label' => $lng['customer']['zipcode'] . ' / ' . $lng['customer']['city'],
+						'type' => 'text',
+						'next_to' => [
+							'city' => array(
+								'next_to_prefix' => ' / ',
+								'type' => 'text'
+							)
+						]
 					),
 					'phone' => array(
 						'label' => $lng['customer']['phone'],
@@ -147,7 +151,7 @@ return array(
 				)
 			),
 			'section_cpre' => array(
-				'visible' => ! empty($hosting_plans),
+				'visible' => !empty($hosting_plans),
 				'title' => $lng['admin']['plans']['use_plan'],
 				'image' => 'icons/user_add.png',
 				'fields' => array(
@@ -205,7 +209,7 @@ return array(
 						'mandatory' => true
 					),
 					'email_quota' => array(
-						'label' => $lng['customer']['email_quota']. ' (' . $lng['customer']['mib'] . ')',
+						'label' => $lng['customer']['email_quota'] . ' (' . $lng['customer']['mib'] . ')',
 						'type' => 'textul',
 						'value' => 0,
 						'maxlength' => 9,
@@ -252,9 +256,9 @@ return array(
 						'values' => $phpconfigs,
 						'value' => ((int) \Froxlor\Settings::Get('system.mod_fcgid') == 1 ?
 							[\Froxlor\Settings::Get('system.mod_fcgid_defaultini')]
-						 : ((int) \Froxlor\Settings::Get('phpfpm.enabled') == 1 ?
-							[\Froxlor\Settings::Get('phpfpm.defaultini')]
-						 : null)),
+							: ((int) \Froxlor\Settings::Get('phpfpm.enabled') == 1 ?
+								[\Froxlor\Settings::Get('phpfpm.defaultini')]
+								: null)),
 						'is_array' => 1
 					),
 					'perlenabled' => array(

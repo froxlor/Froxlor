@@ -32,13 +32,16 @@ return array(
 						'label' => $lng['login']['password'],
 						'type' => 'password',
 						'mandatory' => true,
-						'autocomplete' => 'off'
-					),
-					'admin_password_suggestion' => array(
-						'label' => $lng['customer']['generated_pwd'],
-						'type' => 'text',
-						'visible' => (\Froxlor\Settings::Get('panel.password_regex') == ''),
-						'value' => \Froxlor\System\Crypt::generatePassword()
+						'autocomplete' => 'off',
+						'next_to' => [
+							'admin_password_suggestion' => array(
+								'next_to_prefix' => $lng['customer']['generated_pwd'].':',
+								'type' => 'text',
+								'visible' => (\Froxlor\Settings::Get('panel.password_regex') == ''),
+								'value' => \Froxlor\System\Crypt::generatePassword(),
+								'readonly' => true
+							)
+						]
 					),
 					'def_language' => array(
 						'label' => $lng['login']['language'],

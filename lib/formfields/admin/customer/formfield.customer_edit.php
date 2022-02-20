@@ -48,13 +48,16 @@ return array(
 					'new_customer_password' => array(
 						'label' => $lng['login']['password'] . '&nbsp;(' . $lng['panel']['emptyfornochanges'] . ')',
 						'type' => 'password',
-						'autocomplete' => 'off'
-					),
-					'new_customer_password_suggestion' => array(
-						'label' => $lng['customer']['generated_pwd'],
-						'type' => 'text',
-						'visible' => (\Froxlor\Settings::Get('panel.password_regex') == ''),
-						'value' => \Froxlor\System\Crypt::generatePassword()
+						'autocomplete' => 'off',
+						'next_to' => [
+							'new_customer_password_suggestion' => array(
+								'next_to_prefix' => $lng['customer']['generated_pwd'] . ':',
+								'type' => 'text',
+								'visible' => (\Froxlor\Settings::Get('panel.password_regex') == ''),
+								'value' => \Froxlor\System\Crypt::generatePassword(),
+								'readonly' => true
+							)
+						]
 					),
 					'def_language' => array(
 						'label' => $lng['login']['language'],
@@ -110,14 +113,16 @@ return array(
 						'value' => $result['street']
 					),
 					'zipcode' => array(
-						'label' => $lng['customer']['zipcode'],
+						'label' => $lng['customer']['zipcode'] . ' / ' . $lng['customer']['city'],
 						'type' => 'text',
-						'value' => $result['zipcode']
-					),
-					'city' => array(
-						'label' => $lng['customer']['city'],
-						'type' => 'text',
-						'value' => $result['city']
+						'value' => $result['zipcode'],
+						'next_to' => [
+							'city' => array(
+								'next_to_prefix' => ' / ',
+								'type' => 'text',
+								'value' => $result['city']
+							)
+						]
 					),
 					'phone' => array(
 						'label' => $lng['customer']['phone'],
@@ -158,7 +163,7 @@ return array(
 				)
 			),
 			'section_cpre' => array(
-				'visible' => ! empty($hosting_plans),
+				'visible' => !empty($hosting_plans),
 				'title' => $lng['admin']['plans']['use_plan'],
 				'image' => 'icons/user_add.png',
 				'fields' => array(
@@ -261,7 +266,7 @@ return array(
 						'label' => $lng['admin']['phpsettings']['title'],
 						'type' => 'checkbox',
 						'values' => $phpconfigs,
-						'value' => isset($result['allowed_phpconfigs']) && ! empty($result['allowed_phpconfigs']) ? json_decode($result['allowed_phpconfigs'], JSON_OBJECT_AS_ARRAY) : array(),
+						'value' => isset($result['allowed_phpconfigs']) && !empty($result['allowed_phpconfigs']) ? json_decode($result['allowed_phpconfigs'], JSON_OBJECT_AS_ARRAY) : array(),
 						'is_array' => 1
 					),
 					'perlenabled' => array(

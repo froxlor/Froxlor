@@ -24,6 +24,7 @@ use Froxlor\Settings;
 use Froxlor\Api\Commands\Emails as Emails;
 use Froxlor\Api\Commands\EmailAccounts as EmailAccounts;
 use Froxlor\Api\Commands\EmailForwarders as EmailForwarders;
+use Froxlor\UI\Panel\UI;
 
 // redirect if this customer page is hidden via settings
 if (Settings::IsInList('panel.customer_hide_options', 'email')) {
@@ -261,12 +262,10 @@ if ($page == 'overview') {
 				unset($email_edit_data['emails_edit']['sections']['section_a']['fields']['mail_catchall']);
 			}
 
-			$email_edit_form = \Froxlor\UI\HtmlForm::genHTMLForm($email_edit_data);
-
-			$title = $email_edit_data['emails_edit']['title'];
-			$image = $email_edit_data['emails_edit']['image'];
-
-			eval("echo \"" . \Froxlor\UI\Template::getTemplate("email/emails_edit") . "\";");
+			UI::TwigBuffer('user/form.html.twig', [
+				'formdata' => $email_edit_data['emails_edit']
+			]);
+			UI::TwigOutputBuffer();
 		}
 	} elseif ($action == 'togglecatchall' && $id != 0) {
 		try {

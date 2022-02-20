@@ -17,7 +17,7 @@
 return array(
 	'domain_edit' => array(
 		'title' => $lng['admin']['domain_edit'],
-		'image' => 'icons/domain_edit.png',
+		'image' => 'fa-solid fa-globe',
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['domains']['domainsettings'],
@@ -33,7 +33,7 @@ return array(
 						'label' => $lng['admin']['customer'],
 						'type' => (\Froxlor\Settings::Get('panel.allow_domain_change_customer') == '1' ? 'select' : 'label'),
 						'select_var' => (isset($customers) ? $customers : null),
-						'value' => (isset($result['customername']) ? $result['customername'] : null),
+						'selected' => (isset($result['customername']) ? $result['customername'] : null),
 						'mandatory' => true
 					),
 					'adminid' => array(
@@ -41,20 +41,22 @@ return array(
 						'label' => $lng['admin']['admin'],
 						'type' => (\Froxlor\Settings::Get('panel.allow_domain_change_admin') == '1' ? 'select' : 'label'),
 						'select_var' => (isset($admins) ? $admins : null),
-						'value' => (isset($result['adminname']) ? $result['adminname'] : null),
+						'selected' => (isset($result['adminname']) ? $result['adminname'] : null),
 						'mandatory' => true
 					),
 					'alias' => array(
 						'visible' => ($alias_check == '0' ? true : false),
 						'label' => $lng['domains']['aliasdomain'],
 						'type' => 'select',
-						'select_var' => $domains
+						'select_var' => $domains,
+						'selected' => '@TODO'
 					),
 					'issubof' => array(
 						'label' => $lng['domains']['issubof'],
 						'desc' => $lng['domains']['issubofinfo'],
 						'type' => 'select',
-						'select_var' => $subtodomains
+						'select_var' => $subtodomains,
+						'selected' => '@TODO'
 					),
 					'associated_info' => array(
 						'label' => $lng['domains']['associated_with_domain'],
@@ -65,15 +67,8 @@ return array(
 						'label' => $lng['admin']['domain_editable']['title'],
 						'desc' => $lng['admin']['domain_editable']['desc'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['caneditdomain']
-						)
+						'value' => '1',
+						'checked' => $result['caneditdomain']
 					),
 					'add_date' => array(
 						'label' => $lng['domains']['add_date'],
@@ -121,25 +116,18 @@ return array(
 						'label' => $lng['admin']['selectserveralias'],
 						'desc' => $lng['admin']['selectserveralias_desc'],
 						'type' => 'select',
-						'select_var' => $serveraliasoptions
+						'select_var' => $serveraliasoptions,
+						'selected' => '@TODO'
 					),
 					'speciallogfile' => array(
 						'label' => $lng['admin']['speciallogfile']['title'],
 						'desc' => $lng['admin']['speciallogfile']['description'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['speciallogfile']
-						)
+						'value' => '1',
+						'checked' => $result['speciallogfile']
 					),
 					'specialsettings' => array(
 						'visible' => ($userinfo['change_serversettings'] == '1' ? true : false),
-						'style' => 'align-top',
 						'label' => $lng['admin']['ownvhostsettings'],
 						'desc' => $lng['serversettings']['default_vhostconf']['description'],
 						'type' => 'textarea',
@@ -152,58 +140,30 @@ return array(
 						'label' => $lng['admin']['specialsettingsforsubdomains'],
 						'desc' => $lng['serversettings']['specialsettingsforsubdomains']['description'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							\Froxlor\Settings::Get('system.apply_specialsettings_default') == 1 ? '1' : ''
-						)
+						'value' => '1',
+						'checked' => \Froxlor\Settings::Get('system.apply_specialsettings_default') == 1 ? '1' : '0'
 					),
 					'notryfiles' => array(
 						'visible' => (\Froxlor\Settings::Get('system.webserver') == 'nginx' && $userinfo['change_serversettings'] == '1'),
 						'label' => $lng['admin']['notryfiles']['title'],
 						'desc' => $lng['admin']['notryfiles']['description'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['notryfiles']
-						)
+						'value' => '1',
+						'checked' => $result['notryfiles']
 					),
 					'writeaccesslog' => array(
 						'label' => $lng['admin']['writeaccesslog']['title'],
 						'desc' => $lng['admin']['writeaccesslog']['description'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['writeaccesslog']
-						)
+						'value' => '1',
+						'checked' => $result['writeaccesslog']
 					),
 					'writeerrorlog' => array(
 						'label' => $lng['admin']['writeerrorlog']['title'],
 						'desc' => $lng['admin']['writeerrorlog']['description'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['writeerrorlog']
-						)
+						'value' => '1',
+						'checked' => $result['writeerrorlog']
 					)
 				)
 			),
@@ -216,15 +176,8 @@ return array(
 						'visible' => ($ssl_ipsandports != '' ? true : false),
 						'label' => $lng['admin']['domain_sslenabled'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['ssl_enabled']
-						)
+						'value' => '1',
+						'checked' => $result['ssl_enabled']
 					),
 					'no_ssl_available_info' => array(
 						'visible' => ($ssl_ipsandports == '' ? true : false),
@@ -245,59 +198,31 @@ return array(
 						'label' => $lng['domains']['ssl_redirect']['title'],
 						'desc' => $lng['domains']['ssl_redirect']['description'] . ($result['temporary_ssl_redirect'] > 1 ? $lng['domains']['ssl_redirect_temporarilydisabled'] : ''),
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['ssl_redirect']
-						)
+						'value' => '1',
+						'checked' => $result['ssl_redirect']
 					),
 					'letsencrypt' => array(
 						'visible' => (\Froxlor\Settings::Get('system.leenabled') == '1' ? ($ssl_ipsandports != '' ? true : false) : false),
 						'label' => $lng['admin']['letsencrypt']['title'],
 						'desc' => $lng['admin']['letsencrypt']['description'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['letsencrypt']
-						)
+						'value' => '1',
+						'checked' => $result['letsencrypt']
 					),
 					'http2' => array(
 						'visible' => ($ssl_ipsandports != '' ? true : false) && \Froxlor\Settings::Get('system.webserver') != 'lighttpd' && \Froxlor\Settings::Get('system.http2_support') == '1',
 						'label' => $lng['admin']['domain_http2']['title'],
 						'desc' => $lng['admin']['domain_http2']['description'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['http2']
-						)
+						'value' => '1',
+						'checked' => $result['http2']
 					),
 					'override_tls' => array(
 						'visible' => (($ssl_ipsandports != '' ? true : false) && $userinfo['change_serversettings'] == '1' ? true : false),
 						'label' => $lng['admin']['domain_override_tls'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['override_tls']
-						)
+						'value' => '1',
+						'checked' => $result['override_tls']
 					),
 					'ssl_protocols' => array(
 						'visible' => (($ssl_ipsandports != '' ? true : false) && $userinfo['change_serversettings'] == '1' && \Froxlor\Settings::Get('system.webserver') != 'lighttpd' ? true : false),
@@ -308,19 +233,19 @@ return array(
 						'values' => array(
 							array(
 								'value' => 'TLSv1',
-								'label' => 'TLSv1<br />'
+								'label' => 'TLSv1'
 							),
 							array(
 								'value' => 'TLSv1.1',
-								'label' => 'TLSv1.1<br />'
+								'label' => 'TLSv1.1'
 							),
 							array(
 								'value' => 'TLSv1.2',
-								'label' => 'TLSv1.2<br />'
+								'label' => 'TLSv1.2'
 							),
 							array(
 								'value' => 'TLSv1.3',
-								'label' => 'TLSv1.3<br />'
+								'label' => 'TLSv1.3'
 							)
 						),
 						'is_array' => 1
@@ -341,7 +266,6 @@ return array(
 					),
 					'ssl_specialsettings' => array(
 						'visible' => ($userinfo['change_serversettings'] == '1' ? true : false),
-						'style' => 'align-top',
 						'label' => $lng['admin']['ownsslvhostsettings'],
 						'desc' => $lng['serversettings']['default_vhostconf']['description'],
 						'type' => 'textarea',
@@ -352,23 +276,16 @@ return array(
 					'include_specialsettings' => array(
 						'label' => $lng['admin']['include_ownvhostsettings'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['include_specialsettings']
-						)
+						'value' => '1',
+						'checked' => $result['include_specialsettings']
 					),
 					'hsts_maxage' => array(
 						'visible' => ($ssl_ipsandports != '' ? true : false),
 						'label' => $lng['admin']['domain_hsts_maxage']['title'],
 						'desc' => $lng['admin']['domain_hsts_maxage']['description'],
-						'type' => 'int',
-						'int_min' => 0,
-						'int_max' => 94608000, // 3-years
+						'type' => 'number',
+						'min' => 0,
+						'max' => 94608000, // 3-years
 						'value' => $result['hsts']
 					),
 					'hsts_sub' => array(
@@ -376,73 +293,38 @@ return array(
 						'label' => $lng['admin']['domain_hsts_incsub']['title'],
 						'desc' => $lng['admin']['domain_hsts_incsub']['description'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['hsts_sub']
-						)
+						'value' => '1',
+						'checked' => $result['hsts_sub']
 					),
 					'hsts_preload' => array(
 						'visible' => ($ssl_ipsandports != '' ? true : false),
 						'label' => $lng['admin']['domain_hsts_preload']['title'],
 						'desc' => $lng['admin']['domain_hsts_preload']['description'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['hsts_preload']
-						)
+						'value' => '1',
+						'checked' => $result['hsts_preload']
 					),
 					'ocsp_stapling' => array(
 						'visible' => ($ssl_ipsandports != '' ? true : false) && \Froxlor\Settings::Get('system.webserver') != 'lighttpd',
 						'label' => $lng['admin']['domain_ocsp_stapling']['title'],
 						'desc' => $lng['admin']['domain_ocsp_stapling']['description'] . (\Froxlor\Settings::Get('system.webserver') == 'nginx' ? $lng['admin']['domain_ocsp_stapling']['nginx_version_warning'] : ""),
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['ocsp_stapling']
-						)
+						'value' => '1',
+						'checked' => $result['ocsp_stapling']
 					),
 					'honorcipherorder' => array(
 						'visible' => ($ssl_ipsandports != '' ? true : false),
 						'label' => $lng['admin']['domain_honorcipherorder'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['ssl_honorcipherorder']
-						)
+						'value' => '1',
+						'checked' => $result['ssl_honorcipherorder']
 					),
 					'sessiontickets' => array(
 						'visible' => ($ssl_ipsandports != '' ? true : false) && \Froxlor\Settings::Get('system.webserver') != 'lighttpd' && \Froxlor\Settings::Get('system.sessionticketsenabled' != '1'),
 						'label' => $lng['admin']['domain_sessiontickets'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['ssl_sessiontickets']
-						)
+						'value' => '1',
+						'checked' => $result['ssl_sessiontickets']
 					)
 				)
 			),
@@ -454,60 +336,40 @@ return array(
 					'openbasedir' => array(
 						'label' => 'OpenBasedir',
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['openbasedir']
-						)
+						'value' => '1',
+						'checked' => $result['openbasedir']
 					),
 					'phpenabled' => array(
 						'label' => $lng['admin']['phpenabled'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['phpenabled']
-						)
+						'value' => '1',
+						'checked' => $result['phpenabled']
 					),
 					'phpsettingid' => array(
 						'visible' => (((int) \Froxlor\Settings::Get('system.mod_fcgid') == 1 || (int) \Froxlor\Settings::Get('phpfpm.enabled') == 1) ? true : false),
 						'label' => $lng['admin']['phpsettings']['title'],
 						'type' => 'select',
-						'select_var' => $phpconfigs
+						'select_var' => $phpconfigs,
+						'selected' => '@TODO'
 					),
 					'phpsettingsforsubdomains' => array(
 						'visible' => ($userinfo['change_serversettings'] == '1' ? true : false),
 						'label' => $lng['admin']['phpsettingsforsubdomains'],
 						'desc' => $lng['serversettings']['phpsettingsforsubdomains']['description'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							\Froxlor\Settings::Get('system.apply_phpconfigs_default') == 1 ? '1' : ''
-						)
+						'value' => '1',
+						'checked' => \Froxlor\Settings::Get('system.apply_phpconfigs_default') == 1 ? '1' : '0'
 					),
 					'mod_fcgid_starter' => array(
 						'visible' => ((int) \Froxlor\Settings::Get('system.mod_fcgid') == 1 ? true : false),
 						'label' => $lng['admin']['mod_fcgid_starter']['title'],
-						'type' => 'text',
+						'type' => 'number',
 						'value' => ((int) $result['mod_fcgid_starter'] != - 1 ? $result['mod_fcgid_starter'] : '')
 					),
 					'mod_fcgid_maxrequests' => array(
 						'visible' => ((int) \Froxlor\Settings::Get('system.mod_fcgid') == 1 ? true : false),
 						'label' => $lng['admin']['mod_fcgid_maxrequests']['title'],
-						'type' => 'text',
+						'type' => 'number',
 						'value' => ((int) $result['mod_fcgid_maxrequests'] != - 1 ? $result['mod_fcgid_maxrequests'] : '')
 					)
 				)
@@ -520,15 +382,8 @@ return array(
 					'isbinddomain' => array(
 						'label' => 'Nameserver',
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['isbinddomain']
-						)
+						'value' => '1',
+						'checked' => $result['isbinddomain']
 					),
 					'zonefile' => array(
 						'label' => 'Zonefile',
@@ -545,47 +400,27 @@ return array(
 					'isemaildomain' => array(
 						'label' => $lng['admin']['emaildomain'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['isemaildomain']
-						)
+						'value' => '1',
+						'checked' => $result['isemaildomain']
 					),
 					'email_only' => array(
 						'label' => $lng['admin']['email_only'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['email_only']
-						)
+						'value' => '1',
+						'checked' => $result['email_only']
 					),
 					'subcanemaildomain' => array(
 						'label' => $lng['admin']['subdomainforemail'],
 						'type' => 'select',
-						'select_var' => $subcanemaildomain
+						'select_var' => $subcanemaildomain,
+						'selected' => '@TODO'
 					),
 					'dkim' => array(
 						'visible' => (\Froxlor\Settings::Get('dkim.use_dkim') == '1' ? true : false),
 						'label' => 'DomainKeys',
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['dkim']
-						)
+						'value' => '1',
+						'checked' => $result['dkim']
 					)
 				)
 			)

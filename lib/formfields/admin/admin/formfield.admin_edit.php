@@ -39,13 +39,16 @@ return array(
 						'label' => $lng['login']['password'] . '&nbsp;(' . $lng['panel']['emptyfornochanges'] . ')',
 						'type' => 'password',
 						'autocomplete' => 'off',
-						'visible' => ($result['adminid'] == $userinfo['userid'] ? false : true)
-					),
-					'admin_password_suggestion' => array(
-						'label' => $lng['customer']['generated_pwd'],
-						'type' => 'text',
-						'value' => \Froxlor\System\Crypt::generatePassword(),
-						'visible' => (\Froxlor\Settings::Get('panel.password_regex') == '' && ($result['adminid'] == $userinfo['userid'] ? false : true))
+						'visible' => ($result['adminid'] == $userinfo['userid'] ? false : true),
+						'next_to' => [
+							'admin_password_suggestion' => array(
+								'next_to_prefix' => $lng['customer']['generated_pwd'].':',
+								'type' => 'text',
+								'visible' => (\Froxlor\Settings::Get('panel.password_regex') == '' && ($result['adminid'] == $userinfo['userid'] ? false : true)),
+								'value' => \Froxlor\System\Crypt::generatePassword(),
+								'readonly' => true
+							)
+						]
 					),
 					'def_language' => array(
 						'label' => $lng['login']['language'],

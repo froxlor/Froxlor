@@ -17,7 +17,7 @@
 return array(
 	'domain_edit' => array(
 		'title' => $lng['domains']['subdomain_edit'],
-		'image' => 'icons/domain_edit.png',
+		'image' => 'fa-solid fa-pen',
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['domains']['subdomain_edit'],
@@ -44,7 +44,7 @@ return array(
 						'desc' => (\Froxlor\Settings::Get('panel.pathedit') != 'Dropdown' ? $lng['panel']['pathDescriptionSubdomain'] : null) . (isset($pathSelect['note']) ? '<br />' . $pathSelect['value'] : ''),
 						'type' => $pathSelect['type'],
 						'select_var' => $pathSelect['value'],
-						'value' => $pathSelect['value']
+						'selected' => $pathSelect['value']
 					),
 					'url' => array(
 						'visible' => (\Froxlor\Settings::Get('panel.pathedit') == 'Dropdown' ? true : false),
@@ -70,15 +70,8 @@ return array(
 						'visible' => ((($result['subcanemaildomain'] == '1' || $result['subcanemaildomain'] == '2') && $result['parentdomainid'] != '0') ? true : false),
 						'label' => 'Emaildomain',
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['isemaildomain']
-						)
+						'value' => '1',
+						'checked' => $result['isemaildomain']
 					),
 					'openbasedir_path' => array(
 						'visible' => ($result['openbasedir'] == '1') ? true : false,
@@ -102,95 +95,53 @@ return array(
 					'sslenabled' => array(
 						'label' => $lng['admin']['domain_sslenabled'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['ssl_enabled']
-						)
+						'value' => '1',
+						'checked' => $result['ssl_enabled']
 					),
 					'ssl_redirect' => array(
 						'label' => $lng['domains']['ssl_redirect']['title'],
 						'desc' => $lng['domains']['ssl_redirect']['description'] . ($result['temporary_ssl_redirect'] > 1 ? $lng['domains']['ssl_redirect_temporarilydisabled'] : ''),
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['ssl_redirect']
-						)
+						'value' => '1',
+						'checked' => $result['ssl_redirect']
 					),
 					'letsencrypt' => array(
 						'visible' => \Froxlor\Settings::Get('system.leenabled') == '1' ? true : false,
 						'label' => $lng['customer']['letsencrypt']['title'],
 						'desc' => $lng['customer']['letsencrypt']['description'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['letsencrypt']
-						)
+						'value' => '1',
+						'checked' => $result['letsencrypt']
 					),
 					'http2' => array(
 						'visible' => ($ssl_ipsandports != '' ? true : false) && \Froxlor\Settings::Get('system.webserver') != 'lighttpd' && \Froxlor\Settings::Get('system.http2_support') == '1',
 						'label' => $lng['admin']['domain_http2']['title'],
 						'desc' => $lng['admin']['domain_http2']['description'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['http2']
-						)
+						'value' => '1',
+						'checked' => $result['http2']
 					),
 					'hsts_maxage' => array(
 						'label' => $lng['admin']['domain_hsts_maxage']['title'],
 						'desc' => $lng['admin']['domain_hsts_maxage']['description'],
-						'type' => 'int',
-						'int_min' => 0,
-						'int_max' => 94608000, // 3-years
+						'type' => 'number',
+						'min' => 0,
+						'max' => 94608000, // 3-years
 						'value' => $result['hsts']
 					),
 					'hsts_sub' => array(
 						'label' => $lng['admin']['domain_hsts_incsub']['title'],
 						'desc' => $lng['admin']['domain_hsts_incsub']['description'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['hsts_sub']
-						)
+						'value' => '1',
+						'checked' => $result['hsts_sub']
 					),
 					'hsts_preload' => array(
 						'label' => $lng['admin']['domain_hsts_preload']['title'],
 						'desc' => $lng['admin']['domain_hsts_preload']['description'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['hsts_preload']
-						)
+						'value' => '1',
+						'checked' => $result['hsts_preload']
 					)
 				)
 			)

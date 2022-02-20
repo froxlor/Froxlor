@@ -17,7 +17,7 @@
 return array(
 	'plans_edit' => array(
 		'title' => $lng['admin']['plans']['edit'],
-		'image' => 'icons/templates_edit_big.png',
+		'image' => 'fa-solid fa-pen',
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['admin']['plans']['plan_details'],

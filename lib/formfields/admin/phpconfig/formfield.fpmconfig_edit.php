@@ -17,7 +17,7 @@
 return array(
 	'fpmconfig_edit' => array(
 		'title' => $lng['admin']['phpsettings']['editsettings'],
-		'image' => 'icons/phpsettings_edit.png',
+		'image' => 'fa-solid fa-pen',
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['admin']['phpsettings']['editsettings'],
@@ -44,42 +44,45 @@ return array(
 					'pm' => array(
 						'label' => $lng['serversettings']['phpfpm_settings']['pm'],
 						'type' => 'select',
-						'select_var' => $pm_select
+						'select_var' => $pm_select,
+						'selected' => '@TODO'
 					),
 					'max_children' => array(
 						'label' => $lng['serversettings']['phpfpm_settings']['max_children']['title'],
 						'desc' => $lng['serversettings']['phpfpm_settings']['max_children']['description'],
-						'type' => 'int',
-						'value' => $result['max_children']
+						'type' => 'number',
+						'value' => $result['max_children'],
+						'min' => 1
 					),
 					'start_servers' => array(
 						'label' => $lng['serversettings']['phpfpm_settings']['start_servers']['title'],
 						'desc' => $lng['serversettings']['phpfpm_settings']['start_servers']['description'],
-						'type' => 'int',
-						'value' => $result['start_servers']
+						'type' => 'number',
+						'value' => $result['start_servers'],
+						'min' => 1
 					),
 					'min_spare_servers' => array(
 						'label' => $lng['serversettings']['phpfpm_settings']['min_spare_servers']['title'],
 						'desc' => $lng['serversettings']['phpfpm_settings']['min_spare_servers']['description'],
-						'type' => 'int',
+						'type' => 'number',
 						'value' => $result['min_spare_servers']
 					),
 					'max_spare_servers' => array(
 						'label' => $lng['serversettings']['phpfpm_settings']['max_spare_servers']['title'],
 						'desc' => $lng['serversettings']['phpfpm_settings']['max_spare_servers']['description'],
-						'type' => 'int',
+						'type' => 'number',
 						'value' => $result['max_spare_servers']
 					),
 					'max_requests' => array(
 						'label' => $lng['serversettings']['phpfpm_settings']['max_requests']['title'],
 						'desc' => $lng['serversettings']['phpfpm_settings']['max_requests']['description'],
-						'type' => 'int',
+						'type' => 'number',
 						'value' => $result['max_requests']
 					),
 					'idle_timeout' => array(
 						'label' => $lng['serversettings']['phpfpm_settings']['idle_timeout']['title'],
 						'desc' => $lng['serversettings']['phpfpm_settings']['idle_timeout']['description'],
-						'type' => 'int',
+						'type' => 'number',
 						'value' => $result['idle_timeout']
 					),
 					'limit_extensions' => array(
