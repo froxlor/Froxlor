@@ -34,7 +34,7 @@ return array(
 						'type' => 'text'
 					),
 					'mysql_server' => array(
-						'visible' => (1 < $count_mysqlservers ? true : false),
+						'visible' => (count($mysql_servers) > 1 ? true : false),
 						'label' => $lng['mysql']['mysql_server'],
 						'type' => 'select',
 						'select_var' => $mysql_servers
@@ -53,13 +53,8 @@ return array(
 					'sendinfomail' => array(
 						'label' => $lng['customer']['sendinfomail'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array()
+						'value' => '1',
+						'checked' => false
 					)
 				)
 			)

@@ -153,6 +153,7 @@ if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
 			$admin_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/admin/formfield.admin_add.php';
 
 			UI::twigBuffer('user/form.html.twig', [
+				'formaction' => $linker->getLink(array('section' => 'admins')),
 				'formdata' => $admin_add_data['admin_add']
 			]);
 			UI::twigOutputBuffer();
@@ -200,6 +201,7 @@ if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
 				$admin_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/admin/formfield.admin_edit.php';
 
 				UI::twigBuffer('user/form.html.twig', [
+					'formaction' => $linker->getLink(array('section' => 'admins', 'id' => $id)),
 					'formdata' => $admin_edit_data['admin_edit']
 				]);
 				UI::twigOutputBuffer();

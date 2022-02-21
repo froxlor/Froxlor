@@ -1,8 +1,8 @@
-{% macro form(form_data, action, title = "") %}
+{% macro form(form_data, formaction, title = "") %}
 
 	{% import "Froxlor/form/formfields.html.twig" as formfields %}
 
-	<form action="{{ action|default("") }}" method="post" enctype="application/x-www-form-urlencoded" class="form">
+	<form action="{{ formaction|default("") }}" method="post" enctype="application/x-www-form-urlencoded" class="form">
 		{% if title is not empty %}
 			<h3 class="page-header">
 				{% if form_data.image is not empty %}
@@ -29,5 +29,20 @@
 				</div>
 			</div>
 		{% endfor %}
+
+		<!-- submit buttons -->
+		<div class="card mb-3">
+			<div class="card-body">
+				<input type="hidden" name="s" value="{{ s }}"/>
+				<input type="hidden" name="page" value="{{ page }}"/>
+				<input type="hidden" name="action" value="{{ action }}"/>
+				<input type="hidden" name="send" value="send"/>
+
+				<div class="col-12 text-center">
+					<button type="reset" class="btn btn-warning">{{ lng('panel.cancel') }}</button>
+					<button type="submit" class="btn btn-success">{{ lng('panel.save') }}</button>
+				</div>
+			</div>
+		</div>
 	</form>
 {% endmacro %}

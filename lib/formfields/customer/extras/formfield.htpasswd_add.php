@@ -25,10 +25,11 @@ return array(
 				'fields' => array(
 					'path' => array(
 						'label' => $lng['panel']['path'],
-						'desc' => (\Froxlor\Settings::Get('panel.pathedit') != 'Dropdown' ? $lng['panel']['pathDescription'] : null) . (isset($pathSelect['note']) ? '<br />' . $pathSelect['value'] : ''),
+						'desc' => (\Froxlor\Settings::Get('panel.pathedit') != 'Dropdown' ? $lng['panel']['pathDescription'] : null),
 						'type' => $pathSelect['type'],
-						'select_var' => $pathSelect['value'],
-						'value' => $pathSelect['value']
+						'select_var' => $pathSelect['select_var'] ?? '',
+						'value' => $pathSelect['value'],
+						'note' => $pathSelect['note'] ?? '',
 					),
 					'username' => array(
 						'label' => $lng['login']['username'],

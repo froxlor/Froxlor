@@ -31,15 +31,8 @@ return array(
 					'options_indexes' => array(
 						'label' => $lng['extras']['directory_browsing'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['options_indexes']
-						)
+						'value' => '1',
+						'checked' => $result['options_indexes']
 					),
 					'error404path' => array(
 						'label' => $lng['extras']['errordocument404path'],
@@ -65,15 +58,8 @@ return array(
 						'visible' => ($cperlenabled == 1),
 						'label' => $lng['extras']['execute_perl'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['options_cgi']
-						)
+						'value' => '1',
+						'checked' => $result['options_cgi']
 					)
 				)
 			)

@@ -2141,3 +2141,4 @@ $lng['serversettings']['acmeshpath']['title'] = 'Path to acme.sh';
 $lng['serversettings']['acmeshpath']['description'] = 'Set this to where acme.sh is installed to, including the acme.sh script<br>Default is <b>/root/.acme.sh/acme.sh</b>';
 
 $lng['panel']['usage_statistics'] = 'Resource usage';
+$lng['panel']['security_question'] = 'Security question';

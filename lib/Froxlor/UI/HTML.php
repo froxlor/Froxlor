@@ -2,6 +2,19 @@
 
 namespace Froxlor\UI;
 
+/**
+ * This file is part of the Froxlor project.
+ * Copyright (c) 2010 the Froxlor Team (see authors).
+ *
+ * For the full copyright and license information, please view the COPYING
+ * file that was distributed with this source code. You can also view the
+ * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  (c) the authors
+ * @author     Froxlor team <team@froxlor.org> (2010-)
+ * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package    UI
+ */
 class HTML
 {
 
@@ -12,11 +25,9 @@ class HTML
 	 *        	array navigation data
 	 * @param
 	 *        	array userinfo the userinfo of the user
-	 * @return array the content of the navigation bar
-	 *        
-	 * @author Florian Lippert <flo@syscp.org>
+	 * @return array the content of the navigation bar according to user-permissions
 	 */
-	public static function buildNavigation($navigation, $userinfo)
+	public static function buildNavigation(array $navigation, array $userinfo)
 	{
 		$returnvalue = [];
 
@@ -64,7 +75,7 @@ class HTML
 							$icon = $element['icon'] ?? null;
 						} else {
 							$navlabel = $element['label'];
-                            $icon = $element['icon'] ?? null;
+							$icon = $element['icon'] ?? null;
 						}
 
 						$navigation_links[] = [
@@ -138,6 +149,8 @@ class HTML
 	 *        	Whether the value may contain html or not
 	 *        	
 	 * @return string HTML Code
+	 * 
+	 * @deprecated
 	 */
 	public static function makecheckbox($name, $title, $value, $break = false, $selvalue = null, $title_trusted = false, $value_trusted = false)
 	{
@@ -183,6 +196,8 @@ class HTML
 	 * @param bool $disabled
 	 *
 	 * @return string HTML Code
+	 * 
+	 * @deprecated
 	 */
 	public static function makeoption($title, $value, $selvalue = null, $title_trusted = false, $value_trusted = false, $id = null, $disabled = false)
 	{
@@ -229,6 +244,8 @@ class HTML
 	 * @return string HTML Code
 	 * @author Florian Lippert <flo@syscp.org> (2003-2009)
 	 * @author Froxlor team <team@froxlor.org> (2010-)
+	 * 
+	 * @deprecated
 	 */
 	public static function makeyesno($name, $yesvalue, $novalue = '', $yesselected = '', $disabled = false)
 	{
@@ -249,7 +266,7 @@ class HTML
 	}
 
 	/**
-	 * Prints Question on screen
+	 * Output boolean confirm-dialog
 	 *
 	 * @param string $text
 	 *        	The question
@@ -257,69 +274,59 @@ class HTML
 	 *        	File which will be called with POST if user clicks yes
 	 * @param array $params
 	 *        	Values which will be given to $yesfile. Format: array(variable1=>value1, variable2=>value2, variable3=>value3)
-	 * @param string $targetname
-	 *        	Name of the target eg Domain or eMail address etc.
-	 * @param int $back_nr
-	 *        	Number of steps to go back when "No" is pressed
+	 * @param string $replacer
+	 *        	value of a possible existing string-replacer in the question
 	 *        	
-	 * @author Florian Lippert <flo@syscp.org>
 	 * @author Froxlor team <team@froxlor.org> (2010-)
 	 *        
-	 * @return string outputs parsed question_yesno template
+	 * @return string
 	 */
-	public static function askYesNo($text, $yesfile, $params = array(), $targetname = '', $back_nr = 1)
+	public static function askYesNo(string $text, string $yesfile, array $params = [], string $replacer = '')
 	{
-		global $userinfo, $s, $header, $footer, $lng, $theme;
-
-		$hiddenparams = '';
-
-		if (is_array($params)) {
-			foreach ($params as $field => $value) {
-				$hiddenparams .= '<input type="hidden" name="' . htmlspecialchars($field) . '" value="' . htmlspecialchars($value) . '" />' . "\n";
-			}
-		}
+		global $lng;
 
 		if (isset($lng['question'][$text])) {
 			$text = $lng['question'][$text];
 		}
 
 		$text = strtr($text, array(
-			'%s' => htmlspecialchars($targetname)
+			'%s' => htmlspecialchars($replacer)
 		));
-		eval("echo \"" . Template::getTemplate('misc/question_yesno', '1') . "\";");
+
+		Panel\UI::twigBuffer('form/yesnoquestion.html.twig', [
+			'action' => $yesfile,
+			'url_params' => $params,
+			'question' => $text
+		]);
+		Panel\UI::twigOutputBuffer();
 		exit();
 	}
 
-	public static function askYesNoWithCheckbox($text, $chk_text, $yesfile, $params = array(), $targetname = '', $show_checkbox = true)
+	public static function askYesNoWithCheckbox(string $text, string $chk_text, string $yesfile, array $params = [], string $replacer = '', bool $show_checkbox = true)
 	{
-		global $userinfo, $s, $header, $footer, $lng, $theme;
-
-		$hiddenparams = '';
-
-		if (is_array($params)) {
-			foreach ($params as $field => $value) {
-				$hiddenparams .= '<input type="hidden" name="' . htmlspecialchars($field) . '" value="' . htmlspecialchars($value) . '" />' . "\n";
-			}
-		}
+		global $lng;
 
 		if (isset($lng['question'][$text])) {
 			$text = $lng['question'][$text];
 		}
+		$text = strtr($text, array(
+			'%s' => htmlspecialchars($replacer)
+		));
 
 		if (isset($lng['question'][$chk_text])) {
 			$chk_text = $lng['question'][$chk_text];
 		}
 
-		if ($show_checkbox) {
-			$checkbox = self::makecheckbox('delete_userfiles', $chk_text, '1', false, '0', true, true);
-		} else {
-			$checkbox = '<input type="hidden" name="delete_userfiles" value="0" />' . "\n";
-		}
-
-		$text = strtr($text, array(
-			'%s' => htmlspecialchars($targetname)
-		));
-		eval("echo \"" . Template::getTemplate('misc/question_yesno_checkbox', '1') . "\";");
+		Panel\UI::twigBuffer('form/yesnoquestion.html.twig', [
+			'action' => $yesfile,
+			'url_params' => $params,
+			'question' => $text,
+			'with_checkbox' => [
+				'chk_text' => $chk_text,
+				'show' => $show_checkbox
+			]
+		]);
+		Panel\UI::twigOutputBuffer();
 		exit();
 	}
 }

@@ -25,21 +25,17 @@ return array(
 				'fields' => array(
 					'path' => array(
 						'label' => $lng['panel']['path'],
-						'desc' => (\Froxlor\Settings::Get('panel.pathedit') != 'Dropdown' ? $lng['panel']['pathDescription'] : null) . (isset($pathSelect['note']) ? '<br />' . $pathSelect['value'] : ''),
+						'desc' => (\Froxlor\Settings::Get('panel.pathedit') != 'Dropdown' ? $lng['panel']['pathDescription'] : null),
 						'type' => $pathSelect['type'],
-						'select_var' => $pathSelect['value'],
-						'value' => $pathSelect['value']
+						'select_var' => $pathSelect['select_var'] ?? '',
+						'value' => $pathSelect['value'],
+						'note' => $pathSelect['note'] ?? '',
 					),
 					'options_indexes' => array(
 						'label' => $lng['extras']['directory_browsing'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array()
+						'value' => '1',
+						'checked' => false
 					),
 					'error404path' => array(
 						'label' => $lng['extras']['errordocument404path'],
@@ -62,13 +58,8 @@ return array(
 						'visible' => ($cperlenabled == 1),
 						'label' => $lng['extras']['execute_perl'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array()
+						'value' => '1',
+						'checked' => false
 					)
 				)
 			)

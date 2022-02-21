@@ -25,10 +25,11 @@ return array(
 				'fields' => array(
 					'path' => array(
 						'label' => $lng['panel']['backuppath']['title'],
-						'desc' => $lng['panel']['backuppath']['description'] . '<br>' . (\Froxlor\Settings::Get('panel.pathedit') != 'Dropdown' ? $lng['panel']['pathDescription'] : null) . (isset($pathSelect['note']) ? '<br />' . $pathSelect['value'] : ''),
+						'desc' => $lng['panel']['backuppath']['description'] . '<br>' . (\Froxlor\Settings::Get('panel.pathedit') != 'Dropdown' ? $lng['panel']['pathDescription'] : null),
 						'type' => $pathSelect['type'],
-						'select_var' => $pathSelect['value'],
-						'value' => $pathSelect['value']
+						'select_var' => $pathSelect['select_var'] ?? '',
+						'value' => $pathSelect['value'],
+						'note' => $pathSelect['note'] ?? '',
 					),
 					'path_protection_info' => array(
 						'label' => $lng['extras']['path_protection_label'],
@@ -38,41 +39,20 @@ return array(
 					'backup_web' => array(
 						'label' => $lng['extras']['backup_web'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							'1'
-						)
+						'value' => '1',
+						'checked' => true
 					),
 					'backup_mail' => array(
 						'label' => $lng['extras']['backup_mail'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							'1'
-						)
+						'value' => '1',
+						'checked' => true
 					),
 					'backup_dbs' => array(
 						'label' => $lng['extras']['backup_dbs'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							'1'
-						)
+						'value' => '1',
+						'checked' => true
 					)
 				)
 			)
