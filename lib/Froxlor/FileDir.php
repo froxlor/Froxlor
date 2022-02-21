@@ -394,22 +394,23 @@ class FileDir
 			$value = '/' . $value;
 		}
 
-		$fieldType = \Froxlor\Settings::Get('panel.pathedit');
+		$fieldType = strtolower(\Froxlor\Settings::Get('panel.pathedit'));
 
-		if ($fieldType == 'Manual') {
+		if ($fieldType == 'manual') {
 
 			$field = array(
 				'type' => 'text',
 				'value' => htmlspecialchars($value)
 			);
-		} elseif ($fieldType == 'Dropdown') {
+		
+		} elseif ($fieldType == 'dropdown') {
 
 			$dirList = self::findDirs($path, $uid, $gid);
 			natcasesort($dirList);
 
 			if (sizeof($dirList) > 0) {
 				if (sizeof($dirList) <= 100) {
-					$_field = '';
+					$_field = [];
 					foreach ($dirList as $dir) {
 						if (strpos($dir, $path) === 0) {
 							$dir = substr($dir, strlen($path));
@@ -419,11 +420,12 @@ class FileDir
 							}
 							$dir = self::makeCorrectDir($dir);
 						}
-						$_field .= \Froxlor\UI\HTML::makeoption($dir, $dir, $value);
+						$_field[$dir] = $dir;
 					}
 					$field = array(
 						'type' => 'select',
-						'value' => $_field
+						'select_var' => $_field,
+						'selected' => $value
 					);
 				} else {
 					// remove starting slash we added

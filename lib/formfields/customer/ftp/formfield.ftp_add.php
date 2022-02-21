@@ -25,24 +25,28 @@ return array(
 					'ftp_username' => array(
 						'visible' => (\Froxlor\Settings::Get('customer.ftpatdomain') == '1' ? true : false),
 						'label' => $lng['login']['username'],
-						'type' => 'text'
-					),
-					'ftp_domain' => array(
-						'visible' => (\Froxlor\Settings::Get('customer.ftpatdomain') == '1' ? true : false),
-						'label' => $lng['domains']['domainname'],
-						'type' => 'select',
-						'select_var' => (isset($domains) ? $domains : "")
+						'type' => 'text',
+						'next_to' => (\Froxlor\Settings::Get('customer.ftpatdomain') == '1' && count($domainlist) > 0 ? [
+							'ftp_domain' => array(
+								'next_to_prefix' => '@',
+								'label' => $lng['domains']['domainname'],
+								'type' => 'select',
+								'select_var' => $domainlist
+							),
+						]
+						: [])
 					),
 					'ftp_description' => array(
-						'label' => $lng['panel']['ftpdesc'] = 'FTP description',
+						'label' => $lng['panel']['ftpdesc'],
 						'type' => 'text'
 					),
 					'path' => array(
 						'label' => $lng['panel']['path'],
-						'desc' => (\Froxlor\Settings::Get('panel.pathedit') != 'Dropdown' ? $lng['panel']['pathDescription'] : null) . (isset($pathSelect['note']) ? '<br />' . $pathSelect['value'] : ''),
+						'desc' => (\Froxlor\Settings::Get('panel.pathedit') != 'Dropdown' ? $lng['panel']['pathDescription'] : null),
 						'type' => $pathSelect['type'],
-						'select_var' => $pathSelect['value'],
-						'value' => $pathSelect['value']
+						'select_var' => $pathSelect['select_var'] ?? '',
+						'value' => $pathSelect['value'],
+						'note' => $pathSelect['note'] ?? '',
 					),
 					'ftp_password' => array(
 						'label' => $lng['login']['password'],
@@ -58,19 +62,15 @@ return array(
 					'sendinfomail' => array(
 						'label' => $lng['customer']['sendinfomail'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array()
+						'value' => '1',
+						'checked' => false
 					),
 					'shell' => array(
 						'visible' => (\Froxlor\Settings::Get('system.allow_customer_shell') == '1' ? true : false),
 						'label' => $lng['panel']['shell'],
 						'type' => 'select',
-						'select_var' => (isset($shells) ? $shells : "")
+						'select_var' => $shells_avail,
+						'selected' => '/bin/false'
 					)
 				)
 			)

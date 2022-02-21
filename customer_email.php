@@ -211,6 +211,7 @@ if ($page == 'overview') {
 					unset($email_add_data['emails_add']['sections']['section_a']['fields']['iscatchall']);
 				}
 				UI::twigBuffer('user/form.html.twig', [
+					'formaction' => $linker->getLink(array('section' => 'email')),
 					'formdata' => $email_add_data['emails_add']
 				]);
 				UI::twigOutputBuffer();
@@ -260,6 +261,7 @@ if ($page == 'overview') {
 			}
 
 			UI::twigBuffer('user/form.html.twig', [
+				'formaction' => $linker->getLink(array('section' => 'email')),
 				'formdata' => $email_edit_data['emails_edit']
 			]);
 			UI::twigOutputBuffer();
@@ -328,6 +330,7 @@ if ($page == 'overview') {
 				$account_add_data = include_once dirname(__FILE__) . '/lib/formfields/customer/email/formfield.emails_addaccount.php';
 
 				UI::twigBuffer('user/form.html.twig', [
+					'formaction' => $linker->getLink(array('section' => 'email', 'id' => $id)),
 					'formdata' => $account_add_data['emails_addaccount']
 				]);
 				UI::twigOutputBuffer();
@@ -366,12 +369,12 @@ if ($page == 'overview') {
 				$result = \Froxlor\PhpHelper::htmlentitiesArray($result);
 
 				$account_changepw_data = include_once dirname(__FILE__) . '/lib/formfields/customer/email/formfield.emails_accountchangepasswd.php';
-				$account_changepw_form = \Froxlor\UI\HtmlForm::genHTMLForm($account_changepw_data);
 
-				$title = $account_changepw_data['emails_accountchangepasswd']['title'];
-				$image = $account_changepw_data['emails_accountchangepasswd']['image'];
-
-				eval("echo \"" . \Froxlor\UI\Template::getTemplate("email/account_changepw") . "\";");
+				UI::twigBuffer('user/form.html.twig', [
+					'formaction' => $linker->getLink(array('section' => 'email', 'id' => $id)),
+					'formdata' => $account_changepw_data['emails_accountchangepasswd']
+				]);
+				UI::twigOutputBuffer();
 			}
 		}
 	} elseif ($action == 'changequota' && Settings::Get('system.mail_quota_enabled') == '1' && $id != 0) {
@@ -402,12 +405,12 @@ if ($page == 'overview') {
 				$result = \Froxlor\PhpHelper::htmlentitiesArray($result);
 
 				$quota_edit_data = include_once dirname(__FILE__) . '/lib/formfields/customer/email/formfield.emails_accountchangequota.php';
-				$quota_edit_form = \Froxlor\UI\HtmlForm::genHTMLForm($quota_edit_data);
 
-				$title = $quota_edit_data['emails_accountchangequota']['title'];
-				$image = $quota_edit_data['emails_accountchangequota']['image'];
-
-				eval("echo \"" . \Froxlor\UI\Template::getTemplate("email/account_changequota") . "\";");
+				UI::twigBuffer('user/form.html.twig', [
+					'formaction' => $linker->getLink(array('section' => 'email', 'id' => $id)),
+					'formdata' => $quota_edit_data['emails_accountchangequota']
+				]);
+				UI::twigOutputBuffer();
 			}
 		}
 	} elseif ($action == 'delete' && $id != 0) {
@@ -474,6 +477,7 @@ if ($page == 'overview') {
 					$forwarder_add_data = include_once dirname(__FILE__) . '/lib/formfields/customer/email/formfield.emails_addforwarder.php';
 
 					UI::twigBuffer('user/form.html.twig', [
+						'formaction' => $linker->getLink(array('section' => 'email', 'id' => $id)),
 						'formdata' => $forwarder_add_data['emails_addforwarder']
 					]);
 					UI::twigOutputBuffer();

@@ -28,16 +28,17 @@ return array(
 						'value' => $result['username']
 					),
 					'ftp_description' => array(
-						'label' => $lng['panel']['ftpdesc'] = 'FTP description',
+						'label' => $lng['panel']['ftpdesc'],
 						'type' => 'text',
 						'value' => $result['description']
 					),
 					'path' => array(
 						'label' => $lng['panel']['path'],
-						'desc' => (\Froxlor\Settings::Get('panel.pathedit') != 'Dropdown' ? $lng['panel']['pathDescription'] : null) . (isset($pathSelect['note']) ? '<br />' . $pathSelect['value'] : ''),
+						'desc' => (\Froxlor\Settings::Get('panel.pathedit') != 'Dropdown' ? $lng['panel']['pathDescription'] : null),
 						'type' => $pathSelect['type'],
-						'select_var' => $pathSelect['value'],
-						'value' => $pathSelect['value']
+						'select_var' => $pathSelect['select_var'] ?? '',
+						'value' => $pathSelect['value'],
+						'note' => $pathSelect['note'] ?? '',
 					),
 					'ftp_password' => array(
 						'label' => $lng['login']['password'],
@@ -55,7 +56,8 @@ return array(
 						'visible' => (\Froxlor\Settings::Get('system.allow_customer_shell') == '1' ? true : false),
 						'label' => $lng['panel']['shell'],
 						'type' => 'select',
-						'select_var' => (isset($shells) ? $shells : "")
+						'select_var' => $shells_avail,
+						'selected' => $result['shell'] ?? '/bin/false'
 					)
 				)
 			)

@@ -1787,3 +1787,4 @@ $lng['serversettings']['acmeshpath']['title'] = 'Pfad zu acme.sh';
 $lng['serversettings']['acmeshpath']['description'] = 'Installationspfad zu acme.sh, inklusive acme.sh Script<br>Standard ist <b>/root/.acme.sh/acme.sh</b>';
 
 $lng['panel']['usage_statistics'] = 'Resourcen-Verbrauch';
+$lng['panel']['security_question'] = 'Sicherheitsabfrage';

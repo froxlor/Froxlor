@@ -1,7 +1,6 @@
 <?php
 
 use Froxlor\Api\Api;
-use voku\helper\AntiXSS;
 
 require __DIR__ . '/vendor/autoload.php';
 require __DIR__ . '/lib/tables.inc.php';

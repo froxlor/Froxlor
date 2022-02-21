@@ -46,8 +46,9 @@
 	</div>
 
 	<div class="row">
-		<div class="col-7">
-			{% if userinfo.adminsession == 1 %}
+		{% if userinfo.adminsession == 1 %}
+			<div
+				class="col-7">
 				{# system infos #}
 				<div class="card mb-3">
 					<div class="card-header">
@@ -117,9 +118,134 @@
 						{% endif %}
 					</ul>
 				</div>
-			{% endif %}
-		</div>
-		<div class="col-5">
+			</div>
+		{% else %}
+			<div
+				class="col-4">
+				{# account info #}
+				<div class="card mb-3">
+					<div class="card-header">
+						<i class="fa-solid fa-user"></i>
+						{{ lng('index.accountdetails') }}
+					</div>
+					<ul class="list-group list-group-flush">
+						<li class="list-group-item d-flex justify-content-between align-items-start">
+							<div class="ms-2 me-auto">
+								<div class="fw-bold">{{ lng('login.username') }}</div>
+								{{ userinfo.loginname }}
+							</div>
+						</li>
+						<li class="list-group-item d-flex justify-content-between align-items-start">
+							<div class="ms-2 me-auto">
+								<div class="fw-bold">{{ lng('customer.email') }}</div>
+								{{ userinfo.email }}
+							</div>
+						</li>
+						<li class="list-group-item d-flex justify-content-between align-items-start">
+							<div class="ms-2 me-auto">
+								<div class="fw-bold">{{ lng('customer.services') }}</div>
+								{% if userinfo.imap == 1 %}
+									<span class="badge bg-success">IMAP</span>
+								{% endif %}
+								{% if userinfo.pop3 == 1 %}
+									<span class="badge bg-success">POP3</span>
+								{% endif %}
+								{% if userinfo.phpenabled == 1 %}
+									<span class="badge bg-success">PHP</span>
+								{% endif %}
+								{% if userinfo.perlenabled == 1 %}
+									<span class="badge bg-success">Perl/CGI</span>
+								{% endif %}
+								{% if userinfo.api_allowed == 1 %}
+									<a href="{{ linker({'section':'index','page':'apikeys'}) }}">
+										<span class="badge bg-success">API</span>
+									</a>
+								{% endif %}
+							</div>
+						</li>
+						{% if stdsubdomain is not empty %}
+							<li class="list-group-item d-flex justify-content-between align-items-start">
+								<div class="ms-2 me-auto">
+									<div class="fw-bold">{{ lng('admin.stdsubdomain') }}</div>
+									{{ stdsubdomain }}
+								</div>
+							</li>
+						{% endif %}
+						<li class="list-group-item d-flex justify-content-between align-items-start">
+							<div class="ms-2 me-auto">
+								<div class="fw-bold">{{ lng('customer.domains') }}</div>
+								{% for domain in domains %}
+									{{ domain }}<br>
+								{% endfor %}
+							</div>
+							<span class="badge bg-primary rounded-pill">{{ domains|length }}</span>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div
+				class="col-4">
+				{# customer details #}
+				<div class="card">
+					<div class="card-header">
+						<i class="fa-solid fa-id-card"></i>
+						{{ lng('index.customerdetails') }}
+					</div>
+					<ul class="list-group list-group-flush">
+						{% if userinfo.customernumber is not empty %}
+							<li class="list-group-item d-flex justify-content-between align-items-start">
+								<div class="ms-2 me-auto">
+									<div class="fw-bold">{{ lng('customer.customernumber') }}</div>
+									{{ userinfo.customernumber }}
+								</div>
+							</li>
+						{% endif %}
+						{% if userinfo.company is not empty %}
+							<li class="list-group-item d-flex justify-content-between align-items-start">
+								<div class="ms-2 me-auto">
+									<div class="fw-bold">{{ lng('customer.company') }}</div>
+									{{ userinfo.company }}
+								</div>
+							</li>
+						{% endif %}
+						{% if userinfo.name is not empty %}
+							<li class="list-group-item d-flex justify-content-between align-items-start">
+								<div class="ms-2 me-auto">
+									<div class="fw-bold">{{ lng('customer.name') }}</div>
+									{{ userinfo.firstname }}
+									{{ userinfo.name }}
+								</div>
+							</li>
+						{% endif %}
+						{% if userinfo.street is not empty %}
+							<li class="list-group-item d-flex justify-content-between align-items-start">
+								<div class="ms-2 me-auto">
+									<div class="fw-bold">{{ lng('customer.street') }}</div>
+									{{ userinfo.street }}
+								</div>
+							</li>
+						{% endif %}
+						{% if userinfo.city is not empty %}
+							<li class="list-group-item d-flex justify-content-between align-items-start">
+								<div class="ms-2 me-auto">
+									<div class="fw-bold">{{ lng('customer.zipcode') }}/{{ lng('customer.city') }}</div>
+									{{ userinfo.zipcode }}
+									{{ userinfo.city }}
+								</div>
+							</li>
+						{% endif %}
+						{% if userinfo.custom_notes is not empty and userinfo.custom_notes_show == 1 %}
+							<li class="list-group-item list-group-item-info d-flex justify-content-between align-items-start">
+								<div class="ms-2 me-auto">
+									{{ userinfo.custom_notes|nl2br|raw }}
+								</div>
+							</li>
+						{% endif %}
+					</ul>
+				</div>
+			</div>
+		{% endif %}
+		<div class="{% if userinfo.adminsession == 1 %}col-5{% else %}col-4{% endif %}">
 			{% if userinfo.adminsession == 1 %}
 				{# froxlor-details #}
 				<div class="card mb-3">

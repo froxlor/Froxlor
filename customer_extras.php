@@ -23,6 +23,7 @@ use Froxlor\Api\Commands\CustomerBackups as CustomerBackups;
 use Froxlor\Api\Commands\DirOptions as DirOptions;
 use Froxlor\Api\Commands\DirProtections as DirProtections;
 use Froxlor\Settings;
+use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
 
 // redirect if this customer page is hidden via settings
@@ -127,12 +128,12 @@ if ($page == 'overview') {
 			$pathSelect = \Froxlor\FileDir::makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
 
 			$htpasswd_add_data = include_once dirname(__FILE__) . '/lib/formfields/customer/extras/formfield.htpasswd_add.php';
-			$htpasswd_add_form = \Froxlor\UI\HtmlForm::genHTMLForm($htpasswd_add_data);
 
-			$title = $htpasswd_add_data['htpasswd_add']['title'];
-			$image = $htpasswd_add_data['htpasswd_add']['image'];
-
-			eval("echo \"" . \Froxlor\UI\Template::getTemplate("extras/htpasswds_add") . "\";");
+			UI::twigBuffer('user/form.html.twig', [
+				'formaction' => $linker->getLink(array('section' => 'extras')),
+				'formdata' => $htpasswd_add_data['htpasswd_add']
+			]);
+			UI::twigOutputBuffer();
 		}
 	} elseif ($action == 'edit' && $id != 0) {
 		try {
@@ -159,16 +160,15 @@ if ($page == 'overview') {
 				if (strpos($result['path'], $userinfo['documentroot']) === 0) {
 					$result['path'] = str_replace($userinfo['documentroot'], "/", $result['path']);
 				}
-
 				$result = \Froxlor\PhpHelper::htmlentitiesArray($result);
 
 				$htpasswd_edit_data = include_once dirname(__FILE__) . '/lib/formfields/customer/extras/formfield.htpasswd_edit.php';
-				$htpasswd_edit_form = \Froxlor\UI\HtmlForm::genHTMLForm($htpasswd_edit_data);
 
-				$title = $htpasswd_edit_data['htpasswd_edit']['title'];
-				$image = $htpasswd_edit_data['htpasswd_edit']['image'];
-
-				eval("echo \"" . \Froxlor\UI\Template::getTemplate("extras/htpasswds_edit") . "\";");
+				UI::twigBuffer('user/form.html.twig', [
+					'formaction' => $linker->getLink(array('section' => 'extras', 'id' => $id)),
+					'formdata' => $htpasswd_edit_data['htpasswd_edit']
+				]);
+				UI::twigOutputBuffer();
 			}
 		}
 	}
@@ -271,12 +271,12 @@ if ($page == 'overview') {
 			$cperlenabled = \Froxlor\Customer\Customer::customerHasPerlEnabled($userinfo['customerid']);
 
 			$htaccess_add_data = include_once dirname(__FILE__) . '/lib/formfields/customer/extras/formfield.htaccess_add.php';
-			$htaccess_add_form = \Froxlor\UI\HtmlForm::genHTMLForm($htaccess_add_data);
 
-			$title = $htaccess_add_data['htaccess_add']['title'];
-			$image = $htaccess_add_data['htaccess_add']['image'];
-
-			eval("echo \"" . \Froxlor\UI\Template::getTemplate("extras/htaccess_add") . "\";");
+			UI::twigBuffer('user/form.html.twig', [
+				'formaction' => $linker->getLink(array('section' => 'extras')),
+				'formdata' => $htaccess_add_data['htaccess_add']
+			]);
+			UI::twigOutputBuffer();
 		}
 	} elseif (($action == 'edit') && ($id != 0)) {
 		try {
@@ -303,24 +303,17 @@ if ($page == 'overview') {
 				if (strpos($result['path'], $userinfo['documentroot']) === 0) {
 					$result['path'] = str_replace($userinfo['documentroot'], "/", $result['path']);
 				}
-
-				$result['error404path'] = $result['error404path'];
-				$result['error403path'] = $result['error403path'];
-				$result['error500path'] = $result['error500path'];
 				$cperlenabled = \Froxlor\Customer\Customer::customerHasPerlEnabled($userinfo['customerid']);
-				/*
-				 * $options_indexes = \Froxlor\UI\HTML::makeyesno('options_indexes', '1', '0', $result['options_indexes']);
-				 * $options_cgi = \Froxlor\UI\HTML::makeyesno('options_cgi', '1', '0', $result['options_cgi']);
-				 */
+
 				$result = \Froxlor\PhpHelper::htmlentitiesArray($result);
 
 				$htaccess_edit_data = include_once dirname(__FILE__) . '/lib/formfields/customer/extras/formfield.htaccess_edit.php';
-				$htaccess_edit_form = \Froxlor\UI\HtmlForm::genHTMLForm($htaccess_edit_data);
 
-				$title = $htaccess_edit_data['htaccess_edit']['title'];
-				$image = $htaccess_edit_data['htaccess_edit']['image'];
-
-				eval("echo \"" . \Froxlor\UI\Template::getTemplate("extras/htaccess_edit") . "\";");
+				UI::twigBuffer('user/form.html.twig', [
+					'formaction' => $linker->getLink(array('section' => 'extras', 'id' => $id)),
+					'formdata' => $htaccess_edit_data['htaccess_edit']
+				]);
+				UI::twigOutputBuffer();
 			}
 		}
 	}

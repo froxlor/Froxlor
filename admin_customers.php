@@ -317,6 +317,7 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 			$customer_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/customer/formfield.customer_add.php';
 
 			UI::twigBuffer('user/form.html.twig', [
+				'formaction' => $linker->getLink(array('section' => 'customers')),
 				'formdata' => $customer_add_data['customer_add']
 			]);
 			UI::twigOutputBuffer();
@@ -402,6 +403,7 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 				$customer_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/customer/formfield.customer_edit.php';
 
 				UI::twigBuffer('user/form.html.twig', [
+					'formaction' => $linker->getLink(array('section' => 'customers', 'id' => $id)),
 					'formdata' => $customer_edit_data['customer_edit']
 				]);
 				UI::twigOutputBuffer();
