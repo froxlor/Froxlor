@@ -31,7 +31,9 @@ $id = (int) Request::get('id');
 if ($page == 'customers' && $userinfo['customers'] != '0') {
 	if ($action == '') {
 		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_customers");
+        $customer_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/admin/tablelisting.customer.php';
 
+		/*
 		$fields = array(
 			'c.loginname' => $lng['login']['username'],
 			'a.loginname' => $lng['admin']['admin'],
@@ -44,18 +46,23 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 			'c.traffic' => $lng['customer']['traffic'],
 			'c.traffic_used' => $lng['customer']['traffic'] . ' (' . $lng['panel']['used'] . ')'
 		);
+		*/
 		try {
 			// get total count
 			$json_result = Customers::getLocal($userinfo)->listingCount();
 			$result = json_decode($json_result, true)['data'];
 			// initialize pagination and filtering
-			$paging = new \Froxlor\UI\Pagination($userinfo, $fields, $result);
+			/*
+            $paging = new \Froxlor\UI\Pagination($userinfo, $fields, $result);
+			*/
+			$paging = new \Froxlor\UI\Pagination($userinfo, $customer_list_data['customer_list']['columns'], $result);
 			// get list
 			$json_result = Customers::getLocal($userinfo, $paging->getApiCommandParams())->listing();
 		} catch (Exception $e) {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
-		$result = json_decode($json_result, true)['data'];
+		/*
+        $result = json_decode($json_result, true)['data'];
 
 		$customers = '';
 		$sortcode = $paging->getHtmlSortCode($lng, true);
@@ -106,9 +113,7 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 			$row['diskspace'] = round($row['diskspace'] / 1024, $dec_places);
 			$last_login = ((int) $row['lastlogin_succ'] == 0) ? $lng['panel']['neverloggedin'] : date('d.m.Y', $row['lastlogin_succ']);
 
-			/**
-			 * percent-values for progressbar
-			 */
+			// percent-values for progressbar
 			if ($row['diskspace'] > 0) {
 				$disk_percent = round(($row['diskspace_used'] * 100) / $row['diskspace'], 0);
 				$disk_doublepercent = round($disk_percent * 2, 2);
@@ -148,6 +153,13 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 
 		$customercount = $result['count'] . " / " . $paging->getEntries();
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate("customers/customers") . "\";");
+		*/
+
+        UI::twigBuffer('user/table.html.twig', [
+            'api_response' => json_decode($json_result, true)['data'],
+            'table_options' => $customer_list_data['customer_list'],
+        ]);
+        UI::twigOutputBuffer();
 	} elseif ($action == 'su' && $id != 0) {
 		try {
 			$json_result = Customers::getLocal($userinfo, array(

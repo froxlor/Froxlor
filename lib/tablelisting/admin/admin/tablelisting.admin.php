@@ -19,7 +19,7 @@
 return [
     'admin_list' => [
         'title' => $lng['admin']['admin'],
-        'icon' => 'fa-solid fa-user-plus',
+        'icon' => 'fa-solid fa-user',
         'columns' => [
             'adminid' => [
                 'title' => '#',
