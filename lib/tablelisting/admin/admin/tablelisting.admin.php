@@ -34,24 +34,33 @@ return [
             ],
             'diskspace' => [
                 'title' => $lng['customer']['diskspace'],
+                'type' => 'usage',
             ],
             'diskspace_used' => [
                 'title' => $lng['customer']['diskspace'] . ' (' . $lng['panel']['used'] . ')',
+                'type' => 'usage',
             ],
             'traffic' => [
-                'title' => $lng['customer']['traffic']
+                'title' => $lng['customer']['traffic'],
+                'type' => 'usage',
             ],
             'traffic_used' => [
-                'title' => $lng['customer']['traffic'] . ' (' . $lng['panel']['used'] . ')'
+                'title' => $lng['customer']['traffic'] . ' (' . $lng['panel']['used'] . ')',
+                'type' => 'usage',
             ],
             'deactivated' => [
-                'title' => $lng['admin']['deactivated']
+                'title' => $lng['admin']['deactivated'],
+                'type' => 'boolean',
             ],
         ],
         'visible_columns' => getVisibleColumnsForListing('admin_list', [
             'loginname',
             'name',
             'diskspace',
+            'diskspace_used',
+            'traffic',
+            'traffic_used',
+            'deactivated',
         ]),
         'actions' => [
             'delete' => [
@@ -62,6 +71,22 @@ return [
                 'title' => 'Show',
                 'href' => '#',
             ]
+        ],
+        'contextual_class' => [
+            'deactivated' => [
+                'value' => true,
+                'return' => 'bg-secondary'
+            ],
+            'diskspace_used' => [
+                'column' => 'diskspace',
+                'operator' => '>=',
+                'return' => 'bg-danger'
+            ],
+            'traffic_used' => [
+                'column' => 'traffic',
+                'operator' => '>=',
+                'return' => 'bg-danger'
+            ],
         ]
     ]
 ];
