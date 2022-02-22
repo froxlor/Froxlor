@@ -34,25 +34,13 @@ if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
 		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_admins");
         $admin_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/admin/tablelisting.admin.php';
 
-        /*
-        $fields = array(
-			'loginname' => $lng['login']['username'],
-			'name' => $lng['customer']['name'],
-			'diskspace' => $lng['customer']['diskspace'],
-			'diskspace_used' => $lng['customer']['diskspace'] . ' (' . $lng['panel']['used'] . ')',
-			'traffic' => $lng['customer']['traffic'],
-			'traffic_used' => $lng['customer']['traffic'] . ' (' . $lng['panel']['used'] . ')',
-			'deactivated' => $lng['admin']['deactivated']
-		);
-        */
         try {
-			// get total count
-			$json_result = Admins::getLocal($userinfo)->listingCount();
-			$result = json_decode($json_result, true)['data'];
+			// get collection
+            $collection = new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Admins::class, $userinfo);
 			// initialize pagination and filtering
-			$paging = new \Froxlor\UI\Pagination($userinfo, $admin_list_data['admin_list']['columns'], $result);
-			// get list
-			$json_result = Admins::getLocal($userinfo, $paging->getApiCommandParams())->listing();
+			$paging = new \Froxlor\UI\Pagination($userinfo, $admin_list_data['admin_list']['columns'], $collection->count());
+            // get filtered collection
+            $collection = new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Admins::class, $userinfo, $paging->getApiCommandParams());
 		} catch (Exception $e) {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
@@ -115,7 +103,7 @@ if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
         */
 
         UI::twigBuffer('user/table.html.twig', [
-            'api_response' => json_decode($json_result, true)['data'],
+            'collection' => $collection->getData(),
             'table_options' => $admin_list_data['admin_list'],
         ]);
         UI::twigOutputBuffer();

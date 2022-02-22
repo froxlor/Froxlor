@@ -33,31 +33,14 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_customers");
         $customer_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/admin/tablelisting.customer.php';
 
-		/*
-		$fields = array(
-			'c.loginname' => $lng['login']['username'],
-			'a.loginname' => $lng['admin']['admin'],
-			'c.name' => $lng['customer']['name'],
-			'c.email' => $lng['customer']['email'],
-			'c.firstname' => $lng['customer']['firstname'],
-			'c.company' => $lng['customer']['company'],
-			'c.diskspace' => $lng['customer']['diskspace'],
-			'c.diskspace_used' => $lng['customer']['diskspace'] . ' (' . $lng['panel']['used'] . ')',
-			'c.traffic' => $lng['customer']['traffic'],
-			'c.traffic_used' => $lng['customer']['traffic'] . ' (' . $lng['panel']['used'] . ')'
-		);
-		*/
 		try {
-			// get total count
-			$json_result = Customers::getLocal($userinfo)->listingCount();
-			$result = json_decode($json_result, true)['data'];
-			// initialize pagination and filtering
-			/*
-            $paging = new \Froxlor\UI\Pagination($userinfo, $fields, $result);
-			*/
-			$paging = new \Froxlor\UI\Pagination($userinfo, $customer_list_data['customer_list']['columns'], $result);
-			// get list
-			$json_result = Customers::getLocal($userinfo, $paging->getApiCommandParams())->listing();
+            // get collection
+            $collection = new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Customers::class, $userinfo);
+            // initialize pagination and filtering
+            $paging = new \Froxlor\UI\Pagination($userinfo, $customer_list_data['customer_list']['columns'], $collection->count());
+            // get filtered collection
+            $collection = new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Customers::class, $userinfo, $paging->getApiCommandParams());
+            $collection->has('admin', \Froxlor\Api\Commands\Admins::class, 'adminid', 'adminid');
 		} catch (Exception $e) {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
@@ -156,7 +139,7 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 		*/
 
         UI::twigBuffer('user/table.html.twig', [
-            'api_response' => json_decode($json_result, true)['data'],
+            'collection' => $collection->getData(),
             'table_options' => $customer_list_data['customer_list'],
         ]);
         UI::twigOutputBuffer();

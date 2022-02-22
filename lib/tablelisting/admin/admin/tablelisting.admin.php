@@ -22,38 +22,46 @@ return [
         'icon' => 'fa-solid fa-user',
         'columns' => [
             'adminid' => [
-                'title' => '#',
+                'label' => '#',
+                'column' => 'adminid',
                 'sortable' => true,
             ],
             'loginname' => [
-                'title' => $lng['login']['username'],
+                'label' => $lng['login']['username'],
+                'column' => 'loginname',
                 'sortable' => true,
             ],
             'name' => [
-                'title' => $lng['customer']['name'],
+                'label' => $lng['customer']['name'],
+                'column' => 'name',
             ],
             'diskspace' => [
-                'title' => $lng['customer']['diskspace'],
+                'label' => $lng['customer']['diskspace'],
+                'column' => 'diskspace',
                 'type' => 'usage',
             ],
             'diskspace_used' => [
-                'title' => $lng['customer']['diskspace'] . ' (' . $lng['panel']['used'] . ')',
+                'label' => $lng['customer']['diskspace'] . ' (' . $lng['panel']['used'] . ')',
+                'column' => 'diskspace_used',
                 'type' => 'usage',
             ],
             'traffic' => [
-                'title' => $lng['customer']['traffic'],
+                'label' => $lng['customer']['traffic'],
+                'column' => 'traffic',
                 'type' => 'usage',
             ],
             'traffic_used' => [
-                'title' => $lng['customer']['traffic'] . ' (' . $lng['panel']['used'] . ')',
+                'label' => $lng['customer']['traffic'] . ' (' . $lng['panel']['used'] . ')',
+                'column' => 'traffic_used',
                 'type' => 'usage',
             ],
             'deactivated' => [
-                'title' => $lng['admin']['deactivated'],
+                'label' => $lng['admin']['deactivated'],
+                'column' => 'deactivated',
                 'type' => 'boolean',
             ],
         ],
-        'visible_columns' => getVisibleColumnsForListing('admin_list', [
+        'visible_columns' => \Froxlor\UI\Listing::getVisibleColumnsForListing('admin_list', [
             'loginname',
             'name',
             'diskspace',
@@ -68,7 +76,7 @@ return [
                 'href' => '#',
             ],
             'show' => [
-                'title' => 'Show',
+                'text' => 'Show',
                 'href' => '#',
             ]
         ],
@@ -90,13 +98,3 @@ return [
         ]
     ]
 ];
-
-// Das müsste dann irgendwie als Klasse ausgelagert werden
-function getVisibleColumnsForListing($listing, $default_columns)
-{
-    // Hier käme dann die Logik, die das aus der DB zieht ...
-    // alternativ nimmt er die $default_columns, wenn kein Eintrag
-    // in der DB definiert ist
-
-    return $default_columns;
-}

@@ -1,4 +1,5 @@
 {% macro contextual_class(contextual_class, columns) %}
+    {# this could be refactored as filter #}
     {% for i_key,i_column in columns %}
         {% for c_key, c_column in contextual_class %}
             {% if i_key == c_key %}
@@ -12,7 +13,6 @@
                         {{ c_column.return }}
                     {% endif %}
                 {% elseif c_column.column is not empty %}
-                    check for {{ columns[c_column.column] }}
                     {# check for column #}
                     {% if c_column.operator is empty and columns[c_column.column] == i_column %}
                         {{ c_column.return }}
@@ -37,4 +37,17 @@
 
 {% macro usage(value) %}
     {{ value }}
+{% endmacro %}
+
+{% macro column(arr, str) %}
+    {# this could be refactored as filter #}
+    {% set strarr = str|split('.') %}
+
+    {% if strarr|length == 1 %}
+        {{ arr[strarr[0]] }}
+    {% elseif strarr|length == 2 %}
+        {{ arr[strarr[0]][strarr[1]] }}
+    {% else %}
+        column depth not supported
+    {% endif %}
 {% endmacro %}

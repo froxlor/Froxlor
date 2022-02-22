@@ -1,4 +1,4 @@
-{% macro table(table_options, api_response, action, title = "") %}
+{% macro table(table_options, collection, action, title = "") %}
 
 	{% import "Froxlor/table/tablemacros.html.twig" as tablemacros %}
 
@@ -12,12 +12,12 @@
 			</h3>
 		{% endif %}
 
-		<div class="card">
+		<div class="card table-responsive">
 			<table class="table table-borderless table-striped mb-0">
 				<thead>
 					<tr>
 						{% for column in table_options.visible_columns %}
-							<th class="p-3">{{ table_options.columns[column].title }}</th>
+							<th class="p-3">{{ table_options.columns[column].label }}</th>
 						{% endfor %}
 						{% if table_options.actions %}
 							<th class="p-3 text-end">Actions</th>
@@ -25,16 +25,16 @@
 					</tr>
 				</thead>
 				<tbody>
-					{% for columns in api_response.list %}
+					{% for columns in collection.list %}
 						<tr class="{{ tablemacros.contextual_class(table_options.contextual_class, columns)|trim }}">
 							{% for column in table_options.visible_columns %}
 								<td class="p-3">
 									{% if table_options.columns[column].type is empty %}
-										{{ columns[column] }}
+										{{ tablemacros.column(columns, table_options.columns[column].column)|trim }}
 									{% elseif table_options.columns[column].type == 'boolean' %}
-										{{ tablemacros.boolean(columns[column]) }}
+										{{ tablemacros.boolean(tablemacros.column(columns, table_options.columns[column].column)|trim) }}
 									{% elseif table_options.columns[column].type == 'usage' %}
-										{{ tablemacros.usage(columns[column]) }}
+										{{ tablemacros.usage(tablemacros.column(columns, table_options.columns[column].column)|trim) }}
 									{% endif %}
 								</td>
 							{% endfor %}

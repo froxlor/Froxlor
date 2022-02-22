@@ -21,22 +21,61 @@ return [
         'title' => $lng['admin']['customers'],
         'icon' => 'fa-solid fa-user',
         'columns' => [
-            'loginname' => [
-                'title' => $lng['login']['username']
+            'c.loginname' => [
+                'label' => $lng['login']['username'],
+                'column' => 'loginname',
+            ],
+            'a.loginname' => [
+                'label' => $lng['admin']['admin'],
+                'column' => 'admin.loginname',
+            ],
+            'c.name' => [
+                'label' => $lng['customer']['name'],
+                'column' => 'name',
+            ],
+            'c.email' => [
+                'label' => $lng['customer']['email'],
+                'column' => 'email',
+            ],
+            'c.firstname' => [
+                'label' => $lng['customer']['firstname'],
+                'column' => 'firstname',
+            ],
+            'c.company' => [
+                'label' => $lng['customer']['company'],
+                'column' => 'company',
+            ],
+            'c.diskspace' => [
+                'label' => $lng['customer']['diskspace'],
+                'column' => 'diskspace',
+                'type' => 'usage'
+            ],
+            'c.diskspace_used' => [
+                'label' => $lng['customer']['diskspace'] . ' (' . $lng['panel']['used'] . ')',
+                'column' => 'diskspace_used',
+                'type' => 'usage'
+            ],
+            'c.traffic' => [
+                'label' => $lng['customer']['traffic'],
+                'column' => 'traffic',
+                'type' => 'usage'
+            ],
+            'c.traffic_used' => [
+                'label' => $lng['customer']['traffic'] . ' (' . $lng['panel']['used'] . ')',
+                'column' => 'traffic_used',
+                'type' => 'usage'
             ],
         ],
-        'visible_columns' => getVisibleColumnsForListing('admin_list', [
-            'loginname',
+        'visible_columns' => \Froxlor\UI\Listing::getVisibleColumnsForListing('customer_list', [
+            'c.loginname',
+            'a.loginname',
+            'c.email',
+            'c.firstname',
+            'c.company',
+            'c.diskspace',
+            'c.diskspace_used',
+            'c.traffic',
+            'c.traffic_used',
         ]),
     ]
 ];
-
-// Das müsste dann irgendwie als Klasse ausgelagert werden
-function getVisibleColumnsForListing($listing, $default_columns)
-{
-    // Hier käme dann die Logik, die das aus der DB zieht ...
-    // alternativ nimmt er die $default_columns, wenn kein Eintrag
-    // in der DB definiert ist
-
-    return $default_columns;
-}

@@ -24,6 +24,7 @@ use Froxlor\Api\Commands\Customers as Customers;
 use Froxlor\Api\Commands\Domains as Domains;
 use Froxlor\Database\Database;
 use Froxlor\Settings;
+use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
 
 $id = (int) Request::get('id');
@@ -34,54 +35,26 @@ if ($page == 'domains' || $page == 'overview') {
 	$countcustomers = json_decode($json_result, true)['data'];
 
 	if ($action == '') {
-
 		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_domains");
-		$fields = array(
-			'd.domain_ace' => $lng['domains']['domainname'],
-			'c.name' => $lng['customer']['name'],
-			'c.firstname' => $lng['customer']['firstname'],
-			'c.company' => $lng['customer']['company'],
-			'c.loginname' => $lng['login']['username'],
-			'd.aliasdomain' => $lng['domains']['aliasdomain']
-		);
-		try {
-			// get total count
-			$json_result = Domains::getLocal($userinfo)->listingCount();
-			$result = json_decode($json_result, true)['data'];
-			// initialize pagination and filtering
-			$paging = new \Froxlor\UI\Pagination($userinfo, $fields, $result);
-			// get list
-			$json_result = Domains::getLocal($userinfo, $paging->getApiCommandParams())->listing();
-		} catch (Exception $e) {
-			\Froxlor\UI\Response::dynamic_error($e->getMessage());
-		}
-		$result = json_decode($json_result, true)['data'];
+        $domain_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/admin/tablelisting.domain.php';
 
-		$domains = '';
-		$sortcode = $paging->getHtmlSortCode($lng);
-		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
-		$searchcode = $paging->getHtmlSearchCode($lng);
-		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
+        try {
+            // get collection
+            $collection = new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Domains::class, $userinfo);
+            // initialize pagination and filtering
+            $paging = new \Froxlor\UI\Pagination($userinfo, $domain_list_data['domain_list']['columns'], $collection->count());
+            // get filtered collection
+            $collection = new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Domains::class, $userinfo, $paging->getApiCommandParams());
+            $collection->has('customer', \Froxlor\Api\Commands\Customers::class, 'customerid', 'customerid');
+        } catch (Exception $e) {
+            \Froxlor\UI\Response::dynamic_error($e->getMessage());
+        }
 
-		$count = 0;
-		foreach ($result['list'] as $row) {
-			formatDomainEntry($row, $idna_convert);
-			$row['customername'] = \Froxlor\User::getCorrectFullUserDetails($row);
-			$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
-			// display a nice list of IP's if it's not an alias for another domain
-			if (isset($row['aliasdomainid']) && $row['aliasdomainid'] != null && isset($row['aliasdomain']) && $row['aliasdomain'] != '') {
-				$row['ipandport'] = sprintf($lng['domains']['isaliasdomainof'], $row['aliasdomain']);
-			} else {
-				$row['ipandport'] = str_replace("\n", "<br />", $row['ipandport']);
-			}
-			eval("\$domains.=\"" . \Froxlor\UI\Template::getTemplate("domains/domains_domain") . "\";");
-			$count++;
-		}
-
-		$domainscount = $result['count'] . " / " . $paging->getEntries();
-
-		// Display the list
-		eval("echo \"" . \Froxlor\UI\Template::getTemplate("domains/domains") . "\";");
+        UI::twigBuffer('user/table.html.twig', [
+            'collection' => $collection->getData(),
+            'table_options' => $domain_list_data['domain_list'],
+        ]);
+        UI::twigOutputBuffer();
 	} elseif ($action == 'delete' && $id != 0) {
 
 		try {
