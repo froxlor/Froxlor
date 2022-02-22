@@ -1,6 +1,8 @@
 <?php
 namespace Froxlor\UI\Callbacks;
 
+use Froxlor\Settings;
+
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -30,7 +32,7 @@ class Number
             return 'Unlimited';
         }
 
-        return round($data / 1024, 3) . ' MB';
+        return round($data / 1024, Settings::Get('panel.decimal_places')) . ' MB';
     }
 
     /**
@@ -45,6 +47,6 @@ class Number
             return 'Unlimited';
         }
 
-        return round($data / (1024 * 1024), 3) . ' MB';
+        return round($data / (1024 * 1024), Settings::Get('panel.decimal_places')) . ' MB';
     }
 }
