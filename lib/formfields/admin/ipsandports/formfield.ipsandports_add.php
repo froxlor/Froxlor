@@ -25,13 +25,16 @@ return array(
 				'fields' => array(
 					'ip' => array(
 						'label' => $lng['admin']['ipsandports']['ip'],
-						'type' => 'text'
+						'type' => 'text',
+						'mandatory' => true
 					),
 					'port' => array(
 						'label' => $lng['admin']['ipsandports']['port'],
 						'type' => 'number',
 						'min' => 1,
-						'max' => 65535
+						'max' => 65535,
+						'value' => 80,
+						'mandatory' => true
 					)
 				)
 			),

@@ -21,6 +21,7 @@ require __DIR__ . '/lib/init.php';
 use Froxlor\Api\Commands\HostingPlans;
 use Froxlor\Database\Database;
 use Froxlor\Settings;
+use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
 
 $id = (int) Request::get('id');
@@ -60,7 +61,7 @@ if ($page == '' || $page == 'overview') {
 			$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
 			$row['ts_format'] = date("d.m.Y H:i", $row['ts']);
 			eval("\$plans.=\"" . \Froxlor\UI\Template::getTemplate("plans/plans_plan") . "\";");
-			$count ++;
+			$count++;
 		}
 
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate("plans/plans") . "\";");
@@ -114,17 +115,7 @@ if ($page == '' || $page == 'overview') {
 			));
 		} else {
 
-			$diskspace_ul = \Froxlor\UI\HTML::makecheckbox('diskspace_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
-			$traffic_ul = \Froxlor\UI\HTML::makecheckbox('traffic_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
-			$subdomains_ul = \Froxlor\UI\HTML::makecheckbox('subdomains_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
-			$emails_ul = \Froxlor\UI\HTML::makecheckbox('emails_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
-			$email_accounts_ul = \Froxlor\UI\HTML::makecheckbox('email_accounts_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
-			$email_forwarders_ul = \Froxlor\UI\HTML::makecheckbox('email_forwarders_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
-			$email_quota_ul = \Froxlor\UI\HTML::makecheckbox('email_quota_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
-			$ftps_ul = \Froxlor\UI\HTML::makecheckbox('ftps_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
-			$mysqls_ul = \Froxlor\UI\HTML::makecheckbox('mysqls_ul', $lng['customer']['unlimited'], '-1', false, '0', true, true);
-
-			$phpconfigs = array();
+			$phpconfigs = [];
 			$configs = Database::query("
 					SELECT c.*, fc.description as interpreter
 					FROM `" . TABLE_PANEL_PHPCONFIGS . "` c
@@ -133,12 +124,12 @@ if ($page == '' || $page == 'overview') {
 			while ($row = $configs->fetch(PDO::FETCH_ASSOC)) {
 				if ((int) Settings::Get('phpfpm.enabled') == 1) {
 					$phpconfigs[] = array(
-						'label' => $row['description'] . " [" . $row['interpreter'] . "]<br />",
+						'label' => $row['description'] . " [" . $row['interpreter'] . "]",
 						'value' => $row['id']
 					);
 				} else {
 					$phpconfigs[] = array(
-						'label' => $row['description'] . "<br />",
+						'label' => $row['description'],
 						'value' => $row['id']
 					);
 				}
@@ -157,12 +148,12 @@ if ($page == '' || $page == 'overview') {
 			unset($cust_add_data['customer_add']['sections']['section_cpre']);
 			// merge
 			$plans_add_data['plans_add']['sections'] = array_merge($plans_add_data['plans_add']['sections'], $cust_add_data['customer_add']['sections']);
-			$plans_add_form = \Froxlor\UI\HtmlForm::genHTMLForm($plans_add_data);
 
-			$title = $plans_add_data['plans_add']['title'];
-			$image = $plans_add_data['plans_add']['image'];
-
-			eval("echo \"" . \Froxlor\UI\Template::getTemplate("plans/plans_add") . "\";");
+			UI::twigBuffer('user/form.html.twig', [
+				'formaction' => $linker->getLink(array('section' => 'plans')),
+				'formdata' => $plans_add_data['plans_add']
+			]);
+			UI::twigOutputBuffer();
 		}
 	} elseif ($action == 'edit' && $id != 0) {
 		try {
@@ -197,52 +188,7 @@ if ($page == '' || $page == 'overview') {
 				));
 			} else {
 
-				$diskspace_ul = \Froxlor\UI\HTML::makecheckbox('diskspace_ul', $lng['customer']['unlimited'], '-1', false, $result['diskspace'], true, true);
-				if ($result['diskspace'] == '-1') {
-					$result['diskspace'] = '';
-				}
-
-				$traffic_ul = \Froxlor\UI\HTML::makecheckbox('traffic_ul', $lng['customer']['unlimited'], '-1', false, $result['traffic'], true, true);
-				if ($result['traffic'] == '-1') {
-					$result['traffic'] = '';
-				}
-
-				$subdomains_ul = \Froxlor\UI\HTML::makecheckbox('subdomains_ul', $lng['customer']['unlimited'], '-1', false, $result['subdomains'], true, true);
-				if ($result['subdomains'] == '-1') {
-					$result['subdomains'] = '';
-				}
-
-				$emails_ul = \Froxlor\UI\HTML::makecheckbox('emails_ul', $lng['customer']['unlimited'], '-1', false, $result['emails'], true, true);
-				if ($result['emails'] == '-1') {
-					$result['emails'] = '';
-				}
-
-				$email_accounts_ul = \Froxlor\UI\HTML::makecheckbox('email_accounts_ul', $lng['customer']['unlimited'], '-1', false, $result['email_accounts'], true, true);
-				if ($result['email_accounts'] == '-1') {
-					$result['email_accounts'] = '';
-				}
-
-				$email_forwarders_ul = \Froxlor\UI\HTML::makecheckbox('email_forwarders_ul', $lng['customer']['unlimited'], '-1', false, $result['email_forwarders'], true, true);
-				if ($result['email_forwarders'] == '-1') {
-					$result['email_forwarders'] = '';
-				}
-
-				$email_quota_ul = \Froxlor\UI\HTML::makecheckbox('email_quota_ul', $lng['customer']['unlimited'], '-1', false, $result['email_quota'], true, true);
-				if ($result['email_quota'] == '-1') {
-					$result['email_quota'] = '';
-				}
-
-				$ftps_ul = \Froxlor\UI\HTML::makecheckbox('ftps_ul', $lng['customer']['unlimited'], '-1', false, $result['ftps'], true, true);
-				if ($result['ftps'] == '-1') {
-					$result['ftps'] = '';
-				}
-
-				$mysqls_ul = \Froxlor\UI\HTML::makecheckbox('mysqls_ul', $lng['customer']['unlimited'], '-1', false, $result['mysqls'], true, true);
-				if ($result['mysqls'] == '-1') {
-					$result['mysqls'] = '';
-				}
-
-				$phpconfigs = array();
+				$phpconfigs = [];
 				$configs = Database::query("
 					SELECT c.*, fc.description as interpreter
 					FROM `" . TABLE_PANEL_PHPCONFIGS . "` c
@@ -251,12 +197,12 @@ if ($page == '' || $page == 'overview') {
 				while ($row = $configs->fetch(PDO::FETCH_ASSOC)) {
 					if ((int) Settings::Get('phpfpm.enabled') == 1) {
 						$phpconfigs[] = array(
-							'label' => $row['description'] . " [" . $row['interpreter'] . "]<br />",
+							'label' => $row['description'] . " [" . $row['interpreter'] . "]",
 							'value' => $row['id']
 						);
 					} else {
 						$phpconfigs[] = array(
-							'label' => $row['description'] . "<br />",
+							'label' => $row['description'],
 							'value' => $row['id']
 						);
 					}
@@ -296,12 +242,12 @@ if ($page == '' || $page == 'overview') {
 				unset($cust_edit_data['customer_edit']['sections']['section_cpre']);
 				// merge
 				$plans_edit_data['plans_edit']['sections'] = array_merge($plans_edit_data['plans_edit']['sections'], $cust_edit_data['customer_edit']['sections']);
-				$plans_edit_form = \Froxlor\UI\HtmlForm::genHTMLForm($plans_edit_data);
 
-				$title = $plans_edit_data['plans_edit']['title'];
-				$image = $plans_edit_data['plans_edit']['image'];
-
-				eval("echo \"" . \Froxlor\UI\Template::getTemplate("plans/plans_edit") . "\";");
+				UI::twigBuffer('user/form.html.twig', [
+					'formaction' => $linker->getLink(array('section' => 'plans', 'id' => $id)),
+					'formdata' => $plans_add_data['plans_add']
+				]);
+				UI::twigOutputBuffer();
 			}
 		}
 	} elseif ($action == 'jqGetPlanValues') {

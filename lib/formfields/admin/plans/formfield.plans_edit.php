@@ -26,7 +26,8 @@ return array(
 					'name' => array(
 						'label' => $lng['admin']['plans']['name'],
 						'type' => 'text',
-						'value' => $result['name']
+						'value' => $result['name'],
+						'mandatory' => true
 					),
 					'description' => array(
 						'label' => $lng['admin']['plans']['description'],

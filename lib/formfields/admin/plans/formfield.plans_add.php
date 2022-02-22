@@ -25,7 +25,8 @@ return array(
 				'fields' => array(
 					'name' => array(
 						'label' => $lng['admin']['plans']['name'],
-						'type' => 'text'
+						'type' => 'text',
+						'mandatory' => true
 					),
 					'description' => array(
 						'label' => $lng['admin']['plans']['description'],

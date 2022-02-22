@@ -119,6 +119,7 @@ if ($page == 'ipsandports' || $page == 'overview') {
 			$ipsandports_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/ipsandports/formfield.ipsandports_add.php';
 
 			UI::twigBuffer('user/form.html.twig', [
+				'formaction' => $linker->getLink(array('section' => 'ipsandports')),
 				'formdata' => $ipsandports_add_data['ipsandports_add']
 			]);
 			UI::twigOutputBuffer();
@@ -152,6 +153,7 @@ if ($page == 'ipsandports' || $page == 'overview') {
 				$ipsandports_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/ipsandports/formfield.ipsandports_edit.php';
 
 				UI::twigBuffer('user/form.html.twig', [
+					'formaction' => $linker->getLink(array('section' => 'ipsandports', 'id' => $id)),
 					'formdata' => $ipsandports_edit_data['ipsandports_edit']
 				]);
 				UI::twigOutputBuffer();

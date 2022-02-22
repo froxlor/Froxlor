@@ -22,6 +22,7 @@ require __DIR__ . '/lib/init.php';
 
 use Froxlor\Database\Database;
 use Froxlor\Settings;
+use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
 
 $id = (int) Request::get('id');
@@ -218,12 +219,12 @@ if ($action == '') {
 		$lng = $lng_bak;
 
 		$template_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/templates/formfield.template_add.php';
-		$template_add_form = \Froxlor\UI\HtmlForm::genHTMLForm($template_add_data);
 
-		$title = $template_add_data['template_add']['title'];
-		$image = $template_add_data['template_add']['image'];
-
-		eval("echo \"" . \Froxlor\UI\Template::getTemplate("templates/templates_add_2") . "\";");
+		UI::twigBuffer('user/form.html.twig', [
+			'formaction' => $linker->getLink(array('section' => 'templates')),
+			'formdata' => $template_add_data['template_add']
+		]);
+		UI::twigOutputBuffer();
 	} elseif (isset($_POST['send']) && $_POST['send'] == 'send') {
 		// email templates
 		$language = htmlentities(\Froxlor\Validate\Validate::validate($_POST['language'], 'language', '/^[^\r\n\0"\']+$/', 'nolanguageselect'));
@@ -305,12 +306,12 @@ if ($action == '') {
 			'page' => $page,
 			's' => $s
 		));
-	} elseif (! isset($_GET['files'])) {
+	} elseif (!isset($_GET['files'])) {
 
 		// email templates
 		$add = false;
-		$language_options = '';
-		$template_options = '';
+		$language_options = [];
+		$template_options = [];
 
 		foreach ($languages as $language_file => $language_name) {
 			$templates = array();
@@ -329,18 +330,47 @@ if ($action == '') {
 
 			if (count(array_diff($available_templates, $templates)) > 0) {
 				$add = true;
-				$language_options .= \Froxlor\UI\HTML::makeoption($language_name, $language_file, $userinfo['language'], true, true);
+				$language_options[$language_file] = $language_name;
 
 				$templates = array_diff($available_templates, $templates);
 
 				foreach ($templates as $template) {
-					$template_options .= \Froxlor\UI\HTML::makeoption($lng['admin']['templates'][$template], $template, NULL, true, true, $language_file) . "\n";
+					$template_options[$template] = $lng['admin']['templates'][$template];
 				}
 			}
 		}
 
 		if ($add) {
-			eval("echo \"" . \Froxlor\UI\Template::getTemplate("templates/templates_add_1") . "\";");
+			UI::twigBuffer('user/form.html.twig', [
+				'formaction' => $linker->getLink(array('section' => 'templates')),
+				'formdata' => [
+					'title' => $lng['admin']['templates']['template_add'],
+					'image' => 'fa-solid fa-plus',
+					'sections' => [
+						'section_a' => [
+							'title' => $lng['admin']['templates']['template_add'],
+							'fields' => [
+								'language' => [
+									'label' => $lng['login']['language'],
+									'type' => 'select',
+									'select_var' => $language_options,
+									'selected' => $userinfo['language']
+								],
+								'template' => [
+									'label' => $lng['admin']['templates']['action'],
+									'type' => 'select',
+									'select_var' => $template_options
+								],
+								'prepare' => [
+									'type' => 'hidden',
+									'value' => 'prepare'
+								]
+							]
+						]
+					]
+				]
+			]);
+			UI::twigOutputBuffer();
 		} else {
 			\Froxlor\UI\Response::standard_error('alltemplatesdefined');
 		}

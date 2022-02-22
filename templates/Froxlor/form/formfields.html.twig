@@ -1,6 +1,6 @@
 {% macro fieldrow(id, field, norow = false) %}
 	{% if field.visible is not defined or (field.visible is defined and field.visible) %}
-		{% if norow == false %}
+		{% if norow == false and field.type != 'hidden' %}
 			<div class="row mb-3">
 				<label for="{{ id }}" class="col-sm-4 col-form-label">{{ field.label|raw }}
 					{% if field.desc is defined and field.desc is not empty %}<br><small>{{ field.desc|raw }}</small>
@@ -8,7 +8,7 @@
 				</label>
 				<div class="col-sm-8">
 				{% endif %}
-				{% if field.type == 'text' or field.type == 'password' or field.type == 'number' or field.type == 'file' or field.type == 'email' %}
+				{% if field.type == 'text' or field.type == 'password' or field.type == 'number' or field.type == 'file' or field.type == 'email' or field.type == 'hidden' %}
 					{{ _self.input(id, field) }}
 				{% elseif field.type == 'textul' %}
 					{{ _self.input_ul(id, field) }}
@@ -25,7 +25,7 @@
 				{% elseif field.type == 'itemlist' %}
 					{{ _self.itemlist(id, field) }}
 				{% endif %}
-				{% if norow == false %}
+				{% if norow == false and field.type != 'hidden' %}
 				</div>
 			</div>
 		{% endif %}
