@@ -3,21 +3,15 @@ $(document).ready(function () {
      * updatecheck
      */
     if (document.getElementById('updatecheck')) {
-        let role = "";
-
-        if (typeof $("#updatecheck").data("role") !== "undefined") {
-            role = "&role=" + $("#newsfeed").data("role");
-        }
-
         $.ajax({
-            url: "lib/ajax.php?action=updatecheck" + role + "&theme=" + window.$theme + "&s=" + window.$session,
+            url: "lib/ajax.php?action=updatecheck&theme=" + window.$theme + "&s=" + window.$session,
             type: "GET",
             success: function (data) {
-                $("#newsfeeditems").html(data);
+                $("#updatecheck").html(data);
             },
             error: function (request, status, error) {
                 console.log(request, status, error)
-                $("#newsfeeditems").html('<div class="alert alert-warning" role="alert">Error loading newsfeed</div>');
+                $("#updatecheck").html('<div class="alert alert-warning" role="alert">Error checking version</div>');
             }
         });
     }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Froxlor\Ajax;
 
 use Exception;
@@ -161,14 +162,20 @@ class Ajax
 
     private function getUpdateCheck(array $session)
     {
+        UI::initTwig();
+        UI::twig()->addGlobal('s', $this->session);
+
         // TODO: set variables from current session
         try {
-            return \Froxlor\Api\Commands\Froxlor::getLocal([
+            $json_result = \Froxlor\Api\Commands\Froxlor::getLocal([
                 'adminid' => 1,
                 'adminsession' => 1,
                 'change_serversettings' => 1,
                 'loginname' => 'updatecheck'
             ])->checkUpdate();
+            $result = json_decode($json_result, true)['data'];
+            echo UI::twig()->render($this->theme . '/misc/version_top.html.twig', $result);
+            exit;
         } catch (Exception $e) {
             \Froxlor\UI\Response::dynamic_error($e->getMessage());
         }

@@ -18,7 +18,7 @@
 	{% endif %}
 	{% if redirect_link %}
 	<p class="mt-1">
-		<a href="{{ redirect_link }}" class="btn btn-{{ btntype }}">{% if type == 'danger' %}{{ lng('panel.back') }}{% else %}{{ lng('success.clickheretocontinue') }}{% endif %}</a>
+		<a href="{{ redirect_link|raw }}" class="btn btn-{{ btntype }}">{% if type == 'danger' %}{{ lng('panel.back') }}{% else %}{{ lng('success.clickheretocontinue') }}{% endif %}</a>
 	</p>
 	{% endif %}
 </div>

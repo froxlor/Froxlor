@@ -32,11 +32,10 @@
 			</div>
 			<div class="collapse navbar-collapse justify-content-end px-3" id="navbar">
 				<ul class="navbar-nav align-items-center">
-					<li class="nav-item text-nowrap d-block">
-						<a class="btn btn-link" title="{{ lng('login.logout') }}" href="{{ linker({'section': 'index', 'action': 'logout'}) }}">
-							<i class="fas fa-power-off"></i>
-						</a>
+					{% if userinfo.adminsession == 1 %}
+					<li class="nav-item text-nowrap d-block" id="updatecheck">
 					</li>
+					{% endif %}
 					<li class="nav-item text-nowrap d-block me-2">
 						<a class="btn btn-primary btn-sm d-block" href="{{ linker({'section': 'index'}) }}">
 							<i class="fa fa-dashboard"></i> {{ lng('panel.dashboard') }}
