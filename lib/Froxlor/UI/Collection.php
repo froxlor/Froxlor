@@ -39,7 +39,7 @@ class Collection
 
     public function count()
     {
-        return $this->get()['data']['count'];
+        return json_decode($this->class::getLocal($this->userInfo, $this->params)->listingCount(), true);
     }
 
     public function get()

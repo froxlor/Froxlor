@@ -38,27 +38,27 @@ return [
             'diskspace' => [
                 'label' => $lng['customer']['diskspace'],
                 'column' => 'diskspace',
-                'type' => 'usage',
+                'format_callback' => [\Froxlor\UI\Callbacks\Number::class, 'diskspace'],
             ],
             'diskspace_used' => [
                 'label' => $lng['customer']['diskspace'] . ' (' . $lng['panel']['used'] . ')',
                 'column' => 'diskspace_used',
-                'type' => 'usage',
+                'format_callback' => [\Froxlor\UI\Callbacks\ProgressBar::class, 'diskspace'],
             ],
             'traffic' => [
                 'label' => $lng['customer']['traffic'],
                 'column' => 'traffic',
-                'type' => 'usage',
+                'format_callback' => [\Froxlor\UI\Callbacks\Number::class, 'traffic'],
             ],
             'traffic_used' => [
                 'label' => $lng['customer']['traffic'] . ' (' . $lng['panel']['used'] . ')',
                 'column' => 'traffic_used',
-                'type' => 'usage',
+                'format_callback' => [\Froxlor\UI\Callbacks\ProgressBar::class, 'traffic'],
             ],
             'deactivated' => [
                 'label' => $lng['admin']['deactivated'],
                 'column' => 'deactivated',
-                'type' => 'boolean',
+                'format_callback' => [\Froxlor\UI\Callbacks\Text::class, 'boolean'],
             ],
         ],
         'visible_columns' => \Froxlor\UI\Listing::getVisibleColumnsForListing('admin_list', [

@@ -103,8 +103,7 @@ if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
         */
 
         UI::twigBuffer('user/table.html.twig', [
-            'collection' => $collection->getData(),
-            'table_options' => $admin_list_data['admin_list'],
+            'listing' => \Froxlor\UI\Listing::format($collection, $admin_list_data['admin_list']),
         ]);
         UI::twigOutputBuffer();
     } elseif ($action == 'su') {

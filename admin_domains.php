@@ -51,8 +51,7 @@ if ($page == 'domains' || $page == 'overview') {
         }
 
         UI::twigBuffer('user/table.html.twig', [
-            'collection' => $collection->getData(),
-            'table_options' => $domain_list_data['domain_list'],
+            'listing' => \Froxlor\UI\Listing::format($collection, $domain_list_data['domain_list']),
         ]);
         UI::twigOutputBuffer();
 	} elseif ($action == 'delete' && $id != 0) {

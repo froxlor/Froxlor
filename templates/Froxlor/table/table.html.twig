@@ -1,6 +1,4 @@
-{% macro table(table_options, collection, action, title = "") %}
-
-	{% import "Froxlor/table/tablemacros.html.twig" as tablemacros %}
+{% macro table(listing, action, title = "") %}
 
 	<form action="{{ action|default("") }}" method="post" enctype="application/x-www-form-urlencoded" class="form">
 		{% if title is not empty %}
@@ -16,39 +14,19 @@
 			<table class="table table-borderless table-striped mb-0">
 				<thead>
 					<tr>
-						{% for column in table_options.visible_columns %}
-							<th class="p-3">{{ table_options.columns[column].label }}</th>
+						{% for column in listing.table.th %}
+							<th class="p-3">{{ column }}</th>
 						{% endfor %}
-						{% if table_options.actions %}
-							<th class="p-3 text-end">Actions</th>
-						{% endif %}
 					</tr>
 				</thead>
 				<tbody>
-					{% for columns in collection.list %}
-						<tr class="{{ tablemacros.contextual_class(table_options.contextual_class, columns)|trim }}">
-							{% for column in table_options.visible_columns %}
+					{% for td in listing.table.tr %}
+						<tr>
+							{% for value in td %}
 								<td class="p-3">
-									{% if table_options.columns[column].type is empty %}
-										{{ tablemacros.column(columns, table_options.columns[column].column)|trim }}
-									{% elseif table_options.columns[column].type == 'boolean' %}
-										{{ tablemacros.boolean(tablemacros.column(columns, table_options.columns[column].column)|trim) }}
-									{% elseif table_options.columns[column].type == 'usage' %}
-										{{ tablemacros.usage(tablemacros.column(columns, table_options.columns[column].column)|trim) }}
-									{% endif %}
+									{{ value|raw }}
 								</td>
 							{% endfor %}
-							{% if table_options.actions %}
-								<th class="p-3 text-end">
-									{% for action in table_options.actions %}
-										{% if action.href is not empty %}
-											<a href="{{ action.href }}">{% if action.icon is not empty %}<i class="{{ action.icon }}"></i>{% endif %}{{ action.title }}</a>
-										{% else %}
-											{% if action.icon is not empty %}<i class="{{ action.icon }}"></i>{% endif %}{{ action.title }}
-										{% endif %}
-									{% endfor %}
-								</th>
-							{% endif %}
 						</tr>
 					{% endfor %}
 				</tbody>
