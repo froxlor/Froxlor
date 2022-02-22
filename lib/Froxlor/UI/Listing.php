@@ -44,6 +44,8 @@ class Listing
         }
 
         return [
+            'title' => $tabellisting['title'],
+            'icon' => $tabellisting['icon'],
             'table' => $table,
             'pagination' => null, // TODO: write some logic
         ];

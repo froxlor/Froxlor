@@ -1,12 +1,12 @@
-{% macro table(listing, action, title = "") %}
+{% macro table(listing) %}
 
 	<form action="{{ action|default("") }}" method="post" enctype="application/x-www-form-urlencoded" class="form">
-		{% if title is not empty %}
+		{% if listing.title is not empty %}
 			<h3 class="page-header">
-				{% if table_options.icon is not empty %}
-					<i class="{{ table_options.icon }}"></i>
+				{% if listing.icon is not empty %}
+					<i class="{{ listing.icon }}"></i>
 				{% endif %}
-				{{ title }}
+				{{ listing.title }}
 			</h3>
 		{% endif %}
 
