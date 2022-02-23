@@ -70,7 +70,7 @@ $lng['customer']['forwarders'] = 'Email-forwarders';
 $lng['customer']['ftps'] = 'FTP-accounts';
 $lng['customer']['subdomains'] = 'Subdomains';
 $lng['customer']['domains'] = 'Domains';
-$lng['customer']['unlimited'] = '∞';
+$lng['panel']['unlimited'] = '∞';
 $lng['customer']['mib'] = 'MiB';
 $lng['customer']['gib'] = 'GiB';
 

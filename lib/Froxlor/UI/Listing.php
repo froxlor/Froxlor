@@ -23,12 +23,20 @@ class Listing
         $items = $collection->getData()['list'];
         $table = [];
 
-        foreach ($tabellisting['visible_columns'] as $visible_column) {
+        foreach ($tabellisting['visible_columns'] as $key => $visible_column) {
+            if (isset($tabellisting['columns'][$visible_column]['visible']) && !$tabellisting['columns'][$visible_column]['visible']) {
+                continue;
+            }
+
             $table['th'][] = $tabellisting['columns'][$visible_column]['label'];
         }
 
         foreach ($items as $key => $item) {
             foreach ($tabellisting['visible_columns'] as $visible_column) {
+                if (isset($tabellisting['columns'][$visible_column]['visible']) && !$tabellisting['columns'][$visible_column]['visible']) {
+                    continue;
+                }
+
                 $format_callback = $tabellisting['columns'][$visible_column]['format_callback'] ?? null;
                 $column = $tabellisting['columns'][$visible_column]['column'];
                 $data = self::getMultiArrayFromString($item, $column);

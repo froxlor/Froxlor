@@ -31,30 +31,12 @@ class ProgressBar
      */
 	public static function diskspace(string $data, array $attributes): array
 	{
-		$infotext = '';
-		if (isset($attributes['customerid'])) {
-			// get disk-space usages for web, mysql and mail
-			$usages_stmt = \Froxlor\Database\Database::prepare("
-				SELECT * FROM `" . TABLE_PANEL_DISKSPACE . "`
-				WHERE `customerid` = :cid
-				ORDER BY `stamp` DESC LIMIT 1
-			");
-			$usages = \Froxlor\Database\Database::pexecute_first($usages_stmt, array(
-				'cid' => $attributes['customerid']
-			));
-
-			if ($usages != true) {
-				$usages = [
-					'webspace' => 0,
-					'mailspace' => 0,
-					'dbspace' => 0
-				];
-			}
-
+        $infotext = null;
+		if (isset($attributes['webspace_used']) && isset($attributes['mailspace_used']) && isset($attributes['dbspace_used'])) {
 			$infotext = UI::getLng('panel.used') . ':<br>';
-			$infotext .= 'web: ' . PhpHelper::sizeReadable($usages['webspace'] * 1024, null, 'bi') . '<br>';
-			$infotext .= 'mail: ' . PhpHelper::sizeReadable($usages['mailspace'] * 1024, null, 'bi') . '<br>';
-			$infotext .= 'mysql: ' . PhpHelper::sizeReadable($usages['dbspace'] * 1024, null, 'bi');
+			$infotext .= 'web: ' . PhpHelper::sizeReadable($attributes['webspace_used'] * 1024, null, 'bi') . '<br>';
+			$infotext .= 'mail: ' . PhpHelper::sizeReadable($attributes['mailspace_used'] * 1024, null, 'bi') . '<br>';
+			$infotext .= 'mysql: ' . PhpHelper::sizeReadable($attributes['dbspace_used'] * 1024, null, 'bi');
 		}
 
 		return self::pbData('diskspace', $attributes, 1024, (int)\Froxlor\Settings::Get('system.report_webmax'), $infotext);
@@ -79,7 +61,7 @@ class ProgressBar
 	{
 		$percent = 0;
 		$style = 'bg-info';
-		$text = PhpHelper::sizeReadable($attributes[$field . '_used'] * $size_factor, null, 'bi') . ' / ' . UI::getLng('customer.unlimited');
+		$text = PhpHelper::sizeReadable($attributes[$field . '_used'] * $size_factor, null, 'bi') . ' / ' . UI::getLng('panel.unlimited');
 		if ((int) $attributes[$field] >= 0) {
 			if (($attributes[$field] / 100) * $report_max < $attributes[$field . '_used']) {
 				$style = 'bg-danger';

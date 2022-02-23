@@ -36,7 +36,7 @@ if ($page == 'domains' || $page == 'overview') {
 
 	if ($action == '') {
 		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_domains");
-        $domain_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/admin/tablelisting.domain.php';
+        $domain_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.domain.php';
 
         try {
             // get collection

@@ -69,8 +69,6 @@ $lng['customer']['forwarders'] = 'Email-forwarders';
 $lng['customer']['ftps'] = 'FTP-účty';
 $lng['customer']['subdomains'] = 'Subdomény';
 $lng['customer']['domains'] = 'Domény';
-$lng['customer']['unlimited'] = '∞';
-$lng['customer']['mib'] = 'MiB';
 
 /**
  * Customermenue

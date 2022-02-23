@@ -31,7 +31,7 @@ $id = (int) Request::get('id');
 if ($page == 'customers' && $userinfo['customers'] != '0') {
 	if ($action == '') {
 		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_customers");
-        $customer_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/admin/tablelisting.customer.php';
+        $customer_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.customer.php';
 
 		try {
             // get collection
@@ -39,7 +39,7 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
             // initialize pagination and filtering
             $paging = new \Froxlor\UI\Pagination($userinfo, $customer_list_data['customer_list']['columns'], $collection->count());
             // get filtered collection
-            $collection = new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Customers::class, $userinfo, $paging->getApiCommandParams());
+            $collection = new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Customers::class, $userinfo, array_merge($paging->getApiCommandParams(), ['show_usages' => true]));
             $collection->has('admin', \Froxlor\Api\Commands\Admins::class, 'adminid', 'adminid');
 		} catch (Exception $e) {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());

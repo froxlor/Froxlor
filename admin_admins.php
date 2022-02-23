@@ -32,7 +32,7 @@ if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
 
 	if ($action == '') {
 		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_admins");
-        $admin_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/admin/tablelisting.admin.php';
+        $admin_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.admin.php';
 
         try {
 			// get collection
