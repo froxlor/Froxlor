@@ -52,28 +52,12 @@ class ProgressBar
 			$infotext .= 'web: ' . \Froxlor\PhpHelper::sizeReadable($usages['webspace'] * 1024, null, 'bi') . '<br>';
 			$infotext .= 'mail: ' . \Froxlor\PhpHelper::sizeReadable($usages['mailspace'] * 1024, null, 'bi') . '<br>';
 			$infotext .= 'mysql: ' . \Froxlor\PhpHelper::sizeReadable($usages['dbspace'] * 1024, null, 'bi');
-		}
 
-		$disk_percent = 0;
-		$style = 'bg-info';
-		$text = \Froxlor\PhpHelper::sizeReadable($attributes['diskspace_used'] * 1024, null, 'bi') . ' / ' . \Froxlor\UI\Panel\UI::getLng('customer.unlimited');
-		if ((int) $attributes['diskspace'] >= 0) {
-			if (($attributes['diskspace'] / 100) * (int)\Froxlor\Settings::Get('system.report_webmax') < $attributes['diskspace_used']) {
-				$style = 'bg-danger';
-			} elseif (($attributes['diskspace'] / 100) * ((int)\Froxlor\Settings::Get('system.report_webmax') - 15) < $attributes['diskspace_used']) {
-				$style = 'bg-warning';
-			}
-			$disk_percent = round(($attributes['diskspace_used'] * 100) / ($attributes['diskspace'] == 0 ? 1 : $attributes['diskspace']), 0);
-			if ($disk_percent > 100) {
-				$disk_percent = 100;
-			}
-			$text = \Froxlor\PhpHelper::sizeReadable($attributes['diskspace_used'] * 1024, null, 'bi') . ' / ' . \Froxlor\PhpHelper::sizeReadable($attributes['diskspace'] * 1024, null, 'bi');
-		}
-
-		if (!empty($infotext)) {
 			$infotext = '<i class="fa-solid fa-circle-info" title="' . $infotext . '"></i>&nbsp;';
 		}
-		return '<div class="progress progress-thin"><div class="progress-bar bg-info" style="width: ' . $disk_percent . '%;"></div></div><div class="text-end">' . $infotext . $text . '</div>';
+
+		$pbdata = self::pbData('diskspace', $attributes, 1024, (int)\Froxlor\Settings::Get('system.report_webmax'));
+		return '<div class="progress progress-thin"><div class="progress-bar ' . $pbdata['style'] . '" style="width: ' . $pbdata['percent'] . '%;"></div></div><div class="text-end">' . $infotext . $pbdata['text'] . '</div>';
 	}
 
 	/**
@@ -85,9 +69,35 @@ class ProgressBar
 	 */
 	public static function traffic(string $data, array $attributes): string
 	{
-		$percentage = $attributes['traffic_used'] ? round(100 * $attributes['traffic_used'] / $attributes['traffic']) : 0;
-		$text = Number::traffic($attributes['traffic_used']) . ' / ' . Number::traffic($attributes['traffic']);
+		$pbdata = self::pbData('traffic', $attributes, 1024 * 1024, (int)\Froxlor\Settings::Get('system.report_trafficmax'));
+		return '<div class="progress progress-thin"><div class="progress-bar ' . $pbdata['style'] . '" style="width: ' . $pbdata['percent'] . '%;"></div></div><div class="text-end">' . $pbdata['text'] . '</div>';
+	}
 
-		return '<div class="progress progress-thin"><div class="progress-bar bg-info" style="width: ' . $percentage . '%;"></div></div><div class="text-end">' . $text . '</div>';
+	/**
+	 * do needed calculations
+	 */
+	private static function pbData(string $field, array $attributes, int $size_factor = 1024, int $report_max = 90): array
+	{
+		$percent = 0;
+		$style = 'bg-info';
+		$text = \Froxlor\PhpHelper::sizeReadable($attributes[$field . '_used'] * $size_factor, null, 'bi') . ' / ' . \Froxlor\UI\Panel\UI::getLng('customer.unlimited');
+		if ((int) $attributes[$field] >= 0) {
+			if (($attributes[$field] / 100) * $report_max < $attributes[$field . '_used']) {
+				$style = 'bg-danger';
+			} elseif (($attributes[$field] / 100) * ($report_max - 15) < $attributes[$field . '_used']) {
+				$style = 'bg-warning';
+			}
+			$percent = round(($attributes[$field . '_used'] * 100) / ($attributes[$field] == 0 ? 1 : $attributes[$field]), 0);
+			if ($percent > 100) {
+				$percent = 100;
+			}
+			$text = \Froxlor\PhpHelper::sizeReadable($attributes[$field . '_used'] * $size_factor, null, 'bi') . ' / ' . \Froxlor\PhpHelper::sizeReadable($attributes[$field] * $size_factor, null, 'bi');
+		}
+
+		return [
+			'percent' => $percent,
+			'style' => $style,
+			'text' => $text
+		];
 	}
 }

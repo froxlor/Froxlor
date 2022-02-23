@@ -48,21 +48,11 @@ return [
             'c.diskspace' => [
                 'label' => $lng['customer']['diskspace'],
                 'column' => 'diskspace',
-                'format_callback' => [\Froxlor\UI\Callbacks\Number::class, 'diskspace'],
-            ],
-            'c.diskspace_used' => [
-                'label' => $lng['customer']['diskspace'] . ' (' . $lng['panel']['used'] . ')',
-                'column' => 'diskspace_used',
                 'format_callback' => [\Froxlor\UI\Callbacks\ProgressBar::class, 'diskspace'],
             ],
             'c.traffic' => [
                 'label' => $lng['customer']['traffic'],
                 'column' => 'traffic',
-                'format_callback' => [\Froxlor\UI\Callbacks\Number::class, 'traffic'],
-            ],
-            'c.traffic_used' => [
-                'label' => $lng['customer']['traffic'] . ' (' . $lng['panel']['used'] . ')',
-                'column' => 'traffic_used',
                 'format_callback' => [\Froxlor\UI\Callbacks\ProgressBar::class, 'traffic'],
             ],
         ],
@@ -73,9 +63,7 @@ return [
             'c.firstname',
             'c.company',
             'c.diskspace',
-            'c.diskspace_used',
             'c.traffic',
-            'c.traffic_used',
         ]),
     ]
 ];
