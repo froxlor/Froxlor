@@ -49,7 +49,6 @@ if ($page == 'ipsandports' || $page == 'overview') {
 		} catch (Exception $e) {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
-		$result = json_decode($json_result, true)['data'];
 
 		UI::twigBuffer('user/table.html.twig', [
 			'listing' => \Froxlor\UI\Listing::format($collection, $ipsandports_list_data['ipsandports_list']),
