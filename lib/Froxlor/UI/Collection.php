@@ -1,4 +1,5 @@
 <?php
+
 namespace Froxlor\UI;
 
 /**
@@ -23,7 +24,7 @@ class Collection
     private array $params;
     private string $class;
 
-    public function __construct($class, $userInfo, $params = [])
+    public function __construct(string $class, array $userInfo, array $params = [])
     {
         $this->class = $class;
         $this->params = $params;
@@ -57,16 +58,20 @@ class Collection
         return json_encode($this->get());
     }
 
-    public function has($column, $class, $parentKey = 'id', $childKey = 'id', $params = [])
+    public function has($column, $class, $parentKey = 'id', $childKey = 'id', $params = []): Collection
     {
-        $attributes = $this->getListing($class, $params);
+        // check if the api result contains any items (not the overall listingCount as we might be in a search-resultset)
+        if (count($this->items) > 0) {
+            $attributes = $this->getListing($class, $params);
 
-        foreach ($this->items['data']['list'] as $key => $item) {
-            foreach ($attributes['data']['list'] as $list) {
-                if ($item[$parentKey] == $list[$childKey]) {
-                    $this->items['data']['list'][$key][$column] = $list;
+            foreach ($this->items['data']['list'] as $key => $item) {
+                foreach ($attributes['data']['list'] as $list) {
+                    if ($item[$parentKey] == $list[$childKey]) {
+                        $this->items['data']['list'][$key][$column] = $list;
+                    }
                 }
             }
         }
+        return $this;
     }
 }
