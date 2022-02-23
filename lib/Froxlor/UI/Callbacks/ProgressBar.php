@@ -2,6 +2,9 @@
 
 namespace Froxlor\UI\Callbacks;
 
+use Froxlor\PhpHelper;
+use Froxlor\UI\Panel\UI;
+
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -19,14 +22,14 @@ namespace Froxlor\UI\Callbacks;
  */
 class ProgressBar
 {
-	/**
-	 * TODO: use twig for html templates ...
-	 *
-	 * @param string $data
-	 * @param array $attributes
-	 * @return string
-	 */
-	public static function diskspace(string $data, array $attributes): string
+    /**
+     * get progressbar data for used diskspace
+     *
+     * @param string $data
+     * @param array $attributes
+     * @return array
+     */
+	public static function diskspace(string $data, array $attributes): array
 	{
 		$infotext = '';
 		if (isset($attributes['customerid'])) {
@@ -48,39 +51,35 @@ class ProgressBar
 				];
 			}
 
-			$infotext = \Froxlor\UI\Panel\UI::getLng('panel.used') . ':<br>';
-			$infotext .= 'web: ' . \Froxlor\PhpHelper::sizeReadable($usages['webspace'] * 1024, null, 'bi') . '<br>';
-			$infotext .= 'mail: ' . \Froxlor\PhpHelper::sizeReadable($usages['mailspace'] * 1024, null, 'bi') . '<br>';
-			$infotext .= 'mysql: ' . \Froxlor\PhpHelper::sizeReadable($usages['dbspace'] * 1024, null, 'bi');
-
-			$infotext = '<i class="fa-solid fa-circle-info" title="' . $infotext . '"></i>&nbsp;';
+			$infotext = UI::getLng('panel.used') . ':<br>';
+			$infotext .= 'web: ' . PhpHelper::sizeReadable($usages['webspace'] * 1024, null, 'bi') . '<br>';
+			$infotext .= 'mail: ' . PhpHelper::sizeReadable($usages['mailspace'] * 1024, null, 'bi') . '<br>';
+			$infotext .= 'mysql: ' . PhpHelper::sizeReadable($usages['dbspace'] * 1024, null, 'bi');
 		}
 
-		$pbdata = self::pbData('diskspace', $attributes, 1024, (int)\Froxlor\Settings::Get('system.report_webmax'));
-		return '<div class="progress progress-thin"><div class="progress-bar ' . $pbdata['style'] . '" style="width: ' . $pbdata['percent'] . '%;"></div></div><div class="text-end">' . $infotext . $pbdata['text'] . '</div>';
-	}
+		return self::pbData('diskspace', $attributes, 1024, (int)\Froxlor\Settings::Get('system.report_webmax'), $infotext);
+    }
 
-	/**
-	 * TODO: use twig for html templates ...
-	 *
-	 * @param string $data
-	 * @param array $attributes
-	 * @return string
-	 */
-	public static function traffic(string $data, array $attributes): string
+    /**
+     * get progressbar data for traffic
+     *
+     * @param string $data
+     * @param array $attributes
+     * @return array
+     */
+	public static function traffic(string $data, array $attributes): array
 	{
-		$pbdata = self::pbData('traffic', $attributes, 1024 * 1024, (int)\Froxlor\Settings::Get('system.report_trafficmax'));
-		return '<div class="progress progress-thin"><div class="progress-bar ' . $pbdata['style'] . '" style="width: ' . $pbdata['percent'] . '%;"></div></div><div class="text-end">' . $pbdata['text'] . '</div>';
-	}
+		return self::pbData('traffic', $attributes, 1024 * 1024, (int)\Froxlor\Settings::Get('system.report_trafficmax'));
+    }
 
 	/**
 	 * do needed calculations
 	 */
-	private static function pbData(string $field, array $attributes, int $size_factor = 1024, int $report_max = 90): array
+	private static function pbData(string $field, array $attributes, int $size_factor = 1024, int $report_max = 90, $infotext = null): array
 	{
 		$percent = 0;
 		$style = 'bg-info';
-		$text = \Froxlor\PhpHelper::sizeReadable($attributes[$field . '_used'] * $size_factor, null, 'bi') . ' / ' . \Froxlor\UI\Panel\UI::getLng('customer.unlimited');
+		$text = PhpHelper::sizeReadable($attributes[$field . '_used'] * $size_factor, null, 'bi') . ' / ' . UI::getLng('customer.unlimited');
 		if ((int) $attributes[$field] >= 0) {
 			if (($attributes[$field] / 100) * $report_max < $attributes[$field . '_used']) {
 				$style = 'bg-danger';
@@ -91,13 +90,17 @@ class ProgressBar
 			if ($percent > 100) {
 				$percent = 100;
 			}
-			$text = \Froxlor\PhpHelper::sizeReadable($attributes[$field . '_used'] * $size_factor, null, 'bi') . ' / ' . \Froxlor\PhpHelper::sizeReadable($attributes[$field] * $size_factor, null, 'bi');
+			$text = PhpHelper::sizeReadable($attributes[$field . '_used'] * $size_factor, null, 'bi') . ' / ' . PhpHelper::sizeReadable($attributes[$field] * $size_factor, null, 'bi');
 		}
 
 		return [
-			'percent' => $percent,
-			'style' => $style,
-			'text' => $text
-		];
+            'type' => 'progressbar',
+            'data' => [
+                'percent' => $percent,
+                'style' => $style,
+                'text' => $text,
+                'infotext' => $infotext
+            ]
+        ];
 	}
 }

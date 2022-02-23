@@ -1,0 +1,19 @@
+{% macro progressbar(data) %}
+    <div class="progress progress-thin">
+        <div class="progress-bar {{ data.style }}" style="width: {{ data.percent }}%;"></div>
+    </div>
+    <div class="text-end">
+        {% if data.infotext is not empty %}
+            <i class="fa-solid fa-circle-info" data-toggle="tooltip" data-placement="right" title="{{ data.infotext|raw }}"></i>
+        {% endif %}
+        {{ data.text }}
+    </div>
+{% endmacro %}
+
+{% macro boolean(data) %}
+    {% if (data) %}
+        <i class="fa fa-check-circle"></i>
+    {% else %}
+        <i class="fa fa-times-circle"></i>
+    {% endif %}
+{% endmacro %}

@@ -1,7 +1,8 @@
 <?php
 namespace Froxlor\UI\Callbacks;
 
-use Froxlor\Settings;
+use Froxlor\PhpHelper;
+use Froxlor\UI\Panel\UI;
 
 /**
  * This file is part of the Froxlor project.
@@ -28,11 +29,7 @@ class Number
      */
     public static function diskspace(string $data): string
     {
-        if ($data < 0) {
-            return 'Unlimited';
-        }
-
-        return round($data / 1024, Settings::Get('panel.decimal_places')) . ' MB';
+        return $data >= 0 ? PhpHelper::sizeReadable($data * 1024, null, 'bi') : UI::getLng('panel.unlimited');
     }
 
     /**
@@ -43,10 +40,6 @@ class Number
      */
     public static function traffic(string $data): string
     {
-        if ($data < 0) {
-            return 'Unlimited';
-        }
-
-        return round($data / (1024 * 1024), Settings::Get('panel.decimal_places')) . ' MB';
+        return $data >= 0 ? PhpHelper::sizeReadable($data * (1024 * 1024), null, 'bi') : UI::getLng('panel.unlimited');
     }
 }

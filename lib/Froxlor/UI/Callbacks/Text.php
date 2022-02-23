@@ -18,8 +18,11 @@ namespace Froxlor\UI\Callbacks;
  */
 class Text
 {
-    public static function boolean(string $data): string
+    public static function boolean(string $data): array
     {
-        return $data ? '<i class="fa fa-check-circle"></i>' : '<i class="fa fa-times-circle"></i>';
+        return [
+            'type' => 'boolean',
+            'data' => (bool) $data
+        ];
     }
 }
