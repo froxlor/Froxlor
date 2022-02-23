@@ -1,6 +1,8 @@
 <?php
 namespace Froxlor\UI;
 
+use Froxlor\UI\Panel\UI;
+
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -20,18 +22,46 @@ class Listing
 {
     public static function format(Collection $collection, array $tabellisting): array
     {
-        $items = $collection->getData()['list'];
-        $table = [];
+        return [
+            'title' => $tabellisting['title'],
+            'icon' => $tabellisting['icon'],
+            'table' => [
+                'th' => self::generateTableHeadings($tabellisting),
+                'tr' => self::generateTableRows($collection, $tabellisting),
+            ],
+            'pagination' => null, // TODO: write some logic
+        ];
+    }
 
-        foreach ($tabellisting['visible_columns'] as $key => $visible_column) {
+    private static function generateTableHeadings(array $tabellisting): array
+    {
+        $heading = [];
+
+        // Table headings for columns
+        foreach ($tabellisting['visible_columns'] as $visible_column) {
             if (isset($tabellisting['columns'][$visible_column]['visible']) && !$tabellisting['columns'][$visible_column]['visible']) {
                 continue;
             }
 
-            $table['th'][] = $tabellisting['columns'][$visible_column]['label'];
+            $heading[] = $tabellisting['columns'][$visible_column]['label'];
         }
 
+        // Table headings for actions
+        if (isset($tabellisting['actions'])) {
+            $heading[] = UI::getLng('panel.actions');
+        }
+
+        return $heading;
+    }
+
+    private static function generateTableRows(Collection $collection, array $tabellisting): array
+    {
+        $rows = [];
+        $items = $collection->getData()['list'];
+
+        // Create new row from item
         foreach ($items as $key => $item) {
+            // Generate columns from item
             foreach ($tabellisting['visible_columns'] as $visible_column) {
                 if (isset($tabellisting['columns'][$visible_column]['visible']) && !$tabellisting['columns'][$visible_column]['visible']) {
                     continue;
@@ -44,19 +74,22 @@ class Listing
                 // TODO: contextual_class ...
 
                 if ($format_callback) {
-                    $table['tr'][$key][] = call_user_func($format_callback, $data, $item);
+                    $rows[$key][] = call_user_func($format_callback, $data, $item);
                 } else {
-                    $table['tr'][$key][] = $data;
+                    $rows[$key][] = $data;
                 }
+            }
+
+            // Set all actions for row
+            if (isset($tabellisting['actions'])) {
+                $rows[$key]['action'] = [
+                    'type' => 'actions',
+                    'data' => $tabellisting['actions'],
+                ];
             }
         }
 
-        return [
-            'title' => $tabellisting['title'],
-            'icon' => $tabellisting['icon'],
-            'table' => $table,
-            'pagination' => null, // TODO: write some logic
-        ];
+        return $rows;
     }
 
     public static function getVisibleColumnsForListing($listing, $default_columns)

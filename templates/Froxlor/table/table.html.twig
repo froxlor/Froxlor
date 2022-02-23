@@ -31,6 +31,8 @@
 											{{ callbacks.progressbar(value.data) }}
 										{% elseif value.type == 'boolean' %}
 											{{ callbacks.boolean(value.data) }}
+										{% elseif value.type == 'actions' %}
+											{{ callbacks.actions(value.data) }}
 										{% else %}
 											Callback '{{ value|json_encode }}' is not implemented!
 										{% endif %}

@@ -69,7 +69,7 @@ return [
 				'href' => '#',
 			],
 			'edit' => [
-				'text' => 'fa fa-pen',
+				'text' => 'Edit',
 				'href' => '#',
 			]
 		],

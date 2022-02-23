@@ -54,5 +54,15 @@ return [
             'c.loginname',
             'd.aliasdomain',
         ]),
+        'actions' => [
+            'delete' => [
+                'icon' => 'fa fa-trash',
+                'href' => '#',
+            ],
+            'edit' => [
+                'icon' => 'fa fa-edit',
+                'href' => '#',
+            ]
+        ]
     ]
 ];
