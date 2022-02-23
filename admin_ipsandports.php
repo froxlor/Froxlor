@@ -37,39 +37,24 @@ if ($page == 'ipsandports' || $page == 'overview') {
 	if ($action == '') {
 
 		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_ipsandports");
-		$fields = array(
-			'ip' => $lng['admin']['ipsandports']['ip'],
-			'port' => $lng['admin']['ipsandports']['port']
-		);
+		$ipsandports_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.ipsandports.php';
+
 		try {
-			// get total count
-			$json_result = IpsAndPorts::getLocal($userinfo)->listingCount();
-			$result = json_decode($json_result, true)['data'];
+			// get collection
+			$collection = new \Froxlor\UI\Collection(\Froxlor\Api\Commands\IpsAndPorts::class, $userinfo);
 			// initialize pagination and filtering
-			$paging = new \Froxlor\UI\Pagination($userinfo, $fields, $result);
-			// get list
-			$json_result = IpsAndPorts::getLocal($userinfo, $paging->getApiCommandParams())->listing();
+			$paging = new \Froxlor\UI\Pagination($userinfo, $ipsandports_list_data['ipsandports_list']['columns'], $collection->count());
+			// get filtered collection
+			$collection = new \Froxlor\UI\Collection(\Froxlor\Api\Commands\IpsAndPorts::class, $userinfo, $paging->getApiCommandParams());
 		} catch (Exception $e) {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 		$result = json_decode($json_result, true)['data'];
 
-		$ipsandports = '';
-		$sortcode = $paging->getHtmlSortCode($lng);
-		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
-		$searchcode = $paging->getHtmlSearchCode($lng);
-		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
-		$count = 0;
-
-		foreach ($result['list'] as $row) {
-			$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
-			if (filter_var($row['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-				$row['ip'] = '[' . $row['ip'] . ']';
-			}
-			eval("\$ipsandports.=\"" . \Froxlor\UI\Template::getTemplate("ipsandports/ipsandports_ipandport") . "\";");
-			$count++;
-		}
-		eval("echo \"" . \Froxlor\UI\Template::getTemplate("ipsandports/ipsandports") . "\";");
+		UI::twigBuffer('user/table.html.twig', [
+			'listing' => \Froxlor\UI\Listing::format($collection, $ipsandports_list_data['ipsandports_list']),
+		]);
+		UI::twigOutputBuffer();
 	} elseif ($action == 'delete' && $id != 0) {
 		try {
 			$json_result = IpsAndPorts::getLocal($userinfo, array(
