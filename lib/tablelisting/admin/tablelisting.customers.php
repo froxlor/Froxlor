@@ -16,6 +16,10 @@
  *
  */
 
+use Froxlor\UI\Callbacks\Impersonate;
+use Froxlor\UI\Callbacks\ProgressBar;
+use Froxlor\UI\Listing;
+
 return [
     'customer_list' => [
         'title' => $lng['admin']['customers'],
@@ -24,10 +28,12 @@ return [
             'c.loginname' => [
                 'label' => $lng['login']['username'],
                 'column' => 'loginname',
+                'format_callback' => [Impersonate::class, 'customer'],
             ],
             'a.loginname' => [
                 'label' => $lng['admin']['admin'],
                 'column' => 'admin.loginname',
+                'format_callback' => [Impersonate::class, 'admin'],
             ],
             'c.name' => [
                 'label' => $lng['customer']['name'],
@@ -48,15 +54,15 @@ return [
             'c.diskspace' => [
                 'label' => $lng['customer']['diskspace'],
                 'column' => 'diskspace',
-                'format_callback' => [\Froxlor\UI\Callbacks\ProgressBar::class, 'diskspace'],
+                'format_callback' => [ProgressBar::class, 'diskspace'],
             ],
             'c.traffic' => [
                 'label' => $lng['customer']['traffic'],
                 'column' => 'traffic',
-                'format_callback' => [\Froxlor\UI\Callbacks\ProgressBar::class, 'traffic'],
+                'format_callback' => [ProgressBar::class, 'traffic'],
             ],
         ],
-        'visible_columns' => \Froxlor\UI\Listing::getVisibleColumnsForListing('customer_list', [
+        'visible_columns' => Listing::getVisibleColumnsForListing('customer_list', [
             'c.loginname',
             'a.loginname',
             'c.email',
@@ -66,8 +72,18 @@ return [
             'c.traffic',
         ]),
         'actions' => [
+            'edit' => [
+                'icon' => 'fa fa-edit',
+                'href' => [
+                    'section' => 'customers',
+                    'page' => 'customers',
+                    'action' => 'edit',
+                    'id' => ':customerid'
+                ],
+            ],
             'delete' => [
                 'icon' => 'fa fa-trash',
+                'class' => 'text-danger',
                 'href' => [
                     'section' => 'customers',
                     'page' => 'customers',
@@ -75,15 +91,6 @@ return [
                     'id' => ':customerid'
                 ],
             ],
-            'edit' => [
-                'text' => 'Edit',
-                'href' => [
-                    'section' => 'customers',
-                    'page' => 'customers',
-                    'action' => 'edit',
-                    'id' => ':customerid'
-                ],
-            ]
         ],
     ]
 ];

@@ -16,6 +16,10 @@
  *
  */
 
+use Froxlor\Settings;
+use Froxlor\UI\Callbacks\Text;
+use Froxlor\UI\Listing;
+
 return [
 	'ipsandports_list' => [
 		'title' => $lng['admin']['ipsandports']['ipsandports'],
@@ -28,42 +32,49 @@ return [
 			'port' => [
 				'label' => $lng['admin']['ipsandports']['port'],
 				'column' => 'port',
+                'class' => 'text-center',
 			],
 			'listen' => [
 				'label' => 'Listen',
 				'column' => 'listen_statement',
-				'format_callback' => [\Froxlor\UI\Callbacks\Text::class, 'boolean'],
-				'visible' => \Froxlor\Settings::Get('system.webserver') != 'nginx'
+                'class' => 'text-center',
+				'format_callback' => [Text::class, 'boolean'],
+				'visible' => Settings::Get('system.webserver') != 'nginx'
 			],
 			'namevirtualhost' => [
 				'label' => 'NameVirtualHost',
 				'column' => 'namevirtualhost_statement',
-				'format_callback' => [\Froxlor\UI\Callbacks\Text::class, 'boolean'],
-				'visible' => \Froxlor\Settings::Get('system.webserver') == 'apache2' && (int) \Froxlor\Settings::Get('system.apache24') == 0
+                'class' => 'text-center',
+				'format_callback' => [Text::class, 'boolean'],
+				'visible' => Settings::Get('system.webserver') == 'apache2' && (int) Settings::Get('system.apache24') == 0
 			],
 			'vhostcontainer' => [
 				'label' => 'vHost-Container',
 				'column' => 'vhostcontainer',
-				'format_callback' => [\Froxlor\UI\Callbacks\Text::class, 'boolean']
+                'class' => 'text-center',
+				'format_callback' => [Text::class, 'boolean']
 			],
 			'specialsettings' => [
 				'label' => 'Specialsettings',
 				'column' => 'specialsettings',
-				'format_callback' => [\Froxlor\UI\Callbacks\Text::class, 'boolean']
+                'class' => 'text-center',
+				'format_callback' => [Text::class, 'boolean']
 			],
 			'servername' => [
 				'label' => 'ServerName',
 				'column' => 'vhostcontainer_servername_statement',
-				'format_callback' => [\Froxlor\UI\Callbacks\Text::class, 'boolean'],
-				'visible' => \Froxlor\Settings::Get('system.webserver') == 'apache2'
+                'class' => 'text-center',
+				'format_callback' => [Text::class, 'boolean'],
+				'visible' => Settings::Get('system.webserver') == 'apache2'
 			],
 			'ssl' => [
 				'label' => 'SSL',
 				'column' => 'ssl',
-				'format_callback' => [\Froxlor\UI\Callbacks\Text::class, 'boolean']
+                'class' => 'text-center',
+				'format_callback' => [Text::class, 'boolean']
 			],
 		],
-		'visible_columns' => \Froxlor\UI\Listing::getVisibleColumnsForListing('ipsandports_list', [
+		'visible_columns' => Listing::getVisibleColumnsForListing('ipsandports_list', [
 			'ip',
 			'port',
 			'listen',
@@ -73,5 +84,26 @@ return [
 			'servername',
 			'ssl'
 		]),
+        'actions' => [
+            'edit' => [
+                'icon' => 'fa fa-edit',
+                'href' => [
+                    'section' => 'ipsandports',
+                    'page' => 'ipsandports',
+                    'action' => 'edit',
+                    'id' => ':id'
+                ],
+            ],
+            'delete' => [
+                'icon' => 'fa fa-trash',
+                'class' => 'text-danger',
+                'href' => [
+                    'section' => 'ipsandports',
+                    'page' => 'ipsandports',
+                    'action' => 'delete',
+                    'id' => ':id'
+                ],
+            ],
+        ]
 	]
 ];

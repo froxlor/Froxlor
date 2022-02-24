@@ -30,28 +30,21 @@ use Froxlor\UI\Request;
 $id = (int) Request::get('id');
 
 if ($page == 'domains' || $page == 'overview') {
-	// Let's see how many customers we have
-	$json_result = Customers::getLocal($userinfo)->listingCount();
-	$countcustomers = json_decode($json_result, true)['data'];
-
 	if ($action == '') {
 		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_domains");
-        $domain_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.domain.php';
 
         try {
-            // get collection
-            $collection = new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Domains::class, $userinfo);
-            // initialize pagination and filtering
-            $paging = new \Froxlor\UI\Pagination($userinfo, $domain_list_data['domain_list']['columns'], $collection->count());
-            // get filtered collection
-            $collection = new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Domains::class, $userinfo, $paging->getApiCommandParams());
-            $collection->has('customer', \Froxlor\Api\Commands\Customers::class, 'customerid', 'customerid');
+            $domain_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.domains.php';
+            $list = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Domains::class, $userinfo))
+                ->has('customer', \Froxlor\Api\Commands\Customers::class, 'customerid', 'customerid')
+                ->withPagination($domain_list_data['domain_list']['columns'])
+                ->getList();
         } catch (Exception $e) {
             \Froxlor\UI\Response::dynamic_error($e->getMessage());
         }
 
         UI::twigBuffer('user/table.html.twig', [
-            'listing' => \Froxlor\UI\Listing::format($collection, $domain_list_data['domain_list']),
+            'listing' => \Froxlor\UI\Listing::format($list, $domain_list_data['domain_list']),
         ]);
         UI::twigOutputBuffer();
 	} elseif ($action == 'delete' && $id != 0) {

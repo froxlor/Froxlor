@@ -18,19 +18,30 @@
     {% endif %}
 {% endmacro %}
 
+{% macro link(data) %}
+    {% apply spaceless %}
+        <a href="{{ data.href }}" {% if data.class is defined %}class="{{ data.class }}"{% endif %} {% if data.target is defined %}target="{{ data.target }}"{% endif %}>
+            {% if data.icon is defined %}
+                <i class="{{ data.icon }}"></i>
+            {% endif %}
+            {% if data.text is defined %}
+                {{ data.text }}
+            {% endif %}
+        </a>
+    {% endapply %}
+{% endmacro %}
+
+{% macro domainWithSan(data) %}
+    {{ data.domain }}
+    {% if data.san is not empty %}
+        <br /><span class="small">SAN: {{ data.san }}</span>
+    {% endif %}
+{% endmacro %}
+
 {% macro actions(data) %}
     {% for action in data %}
         {% if action.visible is not defined or action.visible is defined and action.visible %}
-            {% apply spaceless %}
-                <a href="{{ action.href }}" {% if action.target is defined %}target="{{ action.target }}"{% endif %}>
-                    {% if action.icon is defined %}
-                        <i class="{{ action.icon }}"></i>
-                    {% endif %}
-                    {% if action.text is defined %}
-                        {{ action.text }}
-                    {% endif %}
-                </a>
-            {% endapply %}
+            {{ _self.link(action) }}
         {% endif %}
     {% endfor %}
 {% endmacro %}

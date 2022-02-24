@@ -16,6 +16,9 @@
  *
  */
 
+use Froxlor\UI\Callbacks\Impersonate;
+use Froxlor\UI\Listing;
+
 return [
     'domain_list' => [
         'title' => $lng['admin']['domains'],
@@ -40,13 +43,14 @@ return [
             'c.loginname' => [
                 'label' => $lng['login']['username'],
                 'column' => 'customer.loginname',
+                'format_callback' => [Impersonate::class, 'customer'],
             ],
             'd.aliasdomain' => [
                 'label' => $lng['domains']['aliasdomain'],
                 'column' => 'aliasdomain',
             ],
         ],
-        'visible_columns' => \Froxlor\UI\Listing::getVisibleColumnsForListing('domain_list', [
+        'visible_columns' => Listing::getVisibleColumnsForListing('domain_list', [
             'd.domain_ace',
             'c.name',
             'c.firstname',
@@ -55,17 +59,8 @@ return [
             'd.aliasdomain',
         ]),
         'actions' => [
-            'delete' => [
-                'icon' => 'fa fa-trash',
-                'href' => [
-                    'section' => 'domains',
-                    'page' => 'domains',
-                    'action' => 'delete',
-                    'id' => ':id'
-                ],
-            ],
             'edit' => [
-                'text' => 'Edit',
+                'icon' => 'fa fa-edit',
                 'href' => [
                     'section' => 'domains',
                     'page' => 'domains',
@@ -88,7 +83,17 @@ return [
                     'page' => 'domaindnseditor',
                     'domain_id' => ':id'
                 ],
-            ]
+            ],
+            'delete' => [
+                'icon' => 'fa fa-trash',
+                'class' => 'text-danger',
+                'href' => [
+                    'section' => 'domains',
+                    'page' => 'domains',
+                    'action' => 'delete',
+                    'id' => ':id'
+                ],
+            ],
         ]
     ]
 ];

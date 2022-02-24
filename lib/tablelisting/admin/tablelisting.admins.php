@@ -16,6 +16,10 @@
  *
  */
 
+use Froxlor\UI\Callbacks\ProgressBar;
+use Froxlor\UI\Callbacks\Text;
+use Froxlor\UI\Listing;
+
 return [
 	'admin_list' => [
 		'title' => $lng['admin']['admin'],
@@ -37,25 +41,27 @@ return [
 			],
 			'customers_used' => [
 				'label' => $lng['admin']['customers'],
-				'column' => 'customers_used'
+				'column' => 'customers_used',
+				'class' => 'text-center',
 			],
 			'diskspace' => [
 				'label' => $lng['customer']['diskspace'],
 				'column' => 'diskspace',
-				'format_callback' => [\Froxlor\UI\Callbacks\ProgressBar::class, 'diskspace'],
+				'format_callback' => [ProgressBar::class, 'diskspace'],
 			],
 			'traffic' => [
 				'label' => $lng['customer']['traffic'],
 				'column' => 'traffic',
-				'format_callback' => [\Froxlor\UI\Callbacks\ProgressBar::class, 'traffic'],
+				'format_callback' => [ProgressBar::class, 'traffic'],
 			],
 			'deactivated' => [
 				'label' => $lng['admin']['deactivated'],
 				'column' => 'deactivated',
-				'format_callback' => [\Froxlor\UI\Callbacks\Text::class, 'boolean'],
+				'class' => 'text-center',
+				'format_callback' => [Text::class, 'boolean'],
 			],
 		],
-		'visible_columns' => \Froxlor\UI\Listing::getVisibleColumnsForListing('admin_list', [
+		'visible_columns' => Listing::getVisibleColumnsForListing('admin_list', [
 			'loginname',
 			'name',
 			'customers_used',
@@ -64,24 +70,25 @@ return [
 			'deactivated',
 		]),
 		'actions' => [
-			'delete' => [
-				'icon' => 'fa fa-trash',
-                'href' => [
-                    'section' => 'admins',
-                    'page' => 'admins',
-                    'action' => 'delete',
-                    'id' => ':adminid'
-                ],
-			],
 			'edit' => [
-				'text' => 'Edit',
+                'icon' => 'fa fa-edit',
 				'href' => [
                     'section' => 'admins',
                     'page' => 'admins',
                     'action' => 'edit',
                     'id' => ':adminid'
                 ],
-			]
+			],
+            'delete' => [
+                'icon' => 'fa fa-trash',
+                'class' => 'text-danger',
+                'href' => [
+                    'section' => 'admins',
+                    'page' => 'admins',
+                    'action' => 'delete',
+                    'id' => ':adminid'
+                ],
+            ],
 		],
 		'contextual_class' => [
 			'deactivated' => [

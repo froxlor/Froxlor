@@ -32,78 +32,19 @@ if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
 
 	if ($action == '') {
 		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_admins");
-        $admin_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.admin.php';
+        $admin_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.admins.php';
 
         try {
-			// get collection
-            $collection = new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Admins::class, $userinfo);
-			// initialize pagination and filtering
-			$paging = new \Froxlor\UI\Pagination($userinfo, $admin_list_data['admin_list']['columns'], $collection->count());
-            // get filtered collection
-            $collection = new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Admins::class, $userinfo, $paging->getApiCommandParams());
+			// get filtered collection
+            $list = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Admins::class, $userinfo))
+                ->withPagination($admin_list_data['admin_list']['columns'])
+                ->getList();
 		} catch (Exception $e) {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
-        /*
-        $result = json_decode($json_result, true)['data'];
-
-		$admins = '';
-		$sortcode = $paging->getHtmlSortCode($lng, true);
-		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
-		$searchcode = $paging->getHtmlSearchCode($lng);
-		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
-		$count = 0;
-
-		$dec_places = Settings::Get('panel.decimal_places');
-
-		foreach ($result['list'] as $row) {
-
-			$row['traffic_used'] = round($row['traffic_used'] / (1024 * 1024), $dec_places);
-			$row['traffic'] = round($row['traffic'] / (1024 * 1024), $dec_places);
-			$row['diskspace_used'] = round($row['diskspace_used'] / 1024, $dec_places);
-			$row['diskspace'] = round($row['diskspace'] / 1024, $dec_places);
-
-			// percent-values for progressbar
-			// For Disk usage
-			if ($row['diskspace'] > 0) {
-				$disk_percent = round(($row['diskspace_used'] * 100) / $row['diskspace'], 0);
-				$disk_doublepercent = round($disk_percent * 2, 2);
-			} else {
-				$disk_percent = 0;
-				$disk_doublepercent = 0;
-			}
-			// For Traffic usage
-			if ($row['traffic'] > 0) {
-				$traffic_percent = round(($row['traffic_used'] * 100) / $row['traffic'], 0);
-				$traffic_doublepercent = round($traffic_percent * 2, 2);
-			} else {
-				$traffic_percent = 0;
-				$traffic_doublepercent = 0;
-			}
-
-			// fix progress-bars if value is >100%
-			if ($disk_percent > 100) {
-				$disk_percent = 100;
-			}
-			if ($traffic_percent > 100) {
-				$traffic_percent = 100;
-			}
-
-			$row = \Froxlor\PhpHelper::strReplaceArray('-1', 'UL', $row, 'customers domains diskspace traffic mysqls emails email_accounts email_forwarders email_quota ftps subdomains');
-			$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
-
-			$row['custom_notes'] = ($row['custom_notes'] != '') ? nl2br($row['custom_notes']) : '';
-
-			eval("\$admins.=\"" . \Froxlor\UI\Template::getTemplate("admins/admins_admin") . "\";");
-			$count ++;
-		}
-
-		$admincount = $result['count'] . " / " . $paging->getEntries();
-		eval("echo \"" . \Froxlor\UI\Template::getTemplate("admins/admins") . "\";");
-        */
 
         UI::twigBuffer('user/table.html.twig', [
-            'listing' => \Froxlor\UI\Listing::format($collection, $admin_list_data['admin_list']),
+            'listing' => \Froxlor\UI\Listing::format($list, $admin_list_data['admin_list']),
         ]);
         UI::twigOutputBuffer();
     } elseif ($action == 'su') {

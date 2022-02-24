@@ -31,22 +31,19 @@ $id = (int) Request::get('id');
 if ($page == 'customers' && $userinfo['customers'] != '0') {
 	if ($action == '') {
 		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_customers");
-        $customer_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.customer.php';
 
 		try {
-            // get collection
-            $collection = new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Customers::class, $userinfo);
-            // initialize pagination and filtering
-            $paging = new \Froxlor\UI\Pagination($userinfo, $customer_list_data['customer_list']['columns'], $collection->count());
-            // get filtered collection
-            $collection = new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Customers::class, $userinfo, array_merge($paging->getApiCommandParams(), ['show_usages' => true]));
-            $collection->has('admin', \Froxlor\Api\Commands\Admins::class, 'adminid', 'adminid');
-		} catch (Exception $e) {
-			\Froxlor\UI\Response::dynamic_error($e->getMessage());
-		}
+            $customer_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.customers.php';
+            $list = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Customers::class, $userinfo))
+                ->has('admin', \Froxlor\Api\Commands\Admins::class, 'adminid', 'adminid')
+                ->withPagination($customer_list_data['customer_list']['columns'])
+                ->getList();
+        } catch (Exception $e) {
+            \Froxlor\UI\Response::dynamic_error($e->getMessage());
+        }
 
         UI::twigBuffer('user/table.html.twig', [
-            'listing' => \Froxlor\UI\Listing::format($collection, $customer_list_data['customer_list']),
+            'listing' => \Froxlor\UI\Listing::format($list, $customer_list_data['customer_list']),
         ]);
         UI::twigOutputBuffer();
 	} elseif ($action == 'su' && $id != 0) {

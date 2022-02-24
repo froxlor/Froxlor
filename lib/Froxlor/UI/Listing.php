@@ -20,14 +20,14 @@ use Froxlor\UI\Panel\UI;
  */
 class Listing
 {
-    public static function format(Collection $collection, array $tabellisting): array
+    public static function format(array $list, array $tabellisting): array
     {
         return [
             'title' => $tabellisting['title'],
             'icon' => $tabellisting['icon'],
             'table' => [
                 'th' => self::generateTableHeadings($tabellisting),
-                'tr' => self::generateTableRows($collection, $tabellisting),
+                'tr' => self::generateTableRows($list, $tabellisting),
             ],
             'pagination' => null, // TODO: write some logic
         ];
@@ -43,26 +43,31 @@ class Listing
                 continue;
             }
 
-            $heading[] = $tabellisting['columns'][$visible_column]['label'];
+            $heading[] = [
+                'text' => $tabellisting['columns'][$visible_column]['label'],
+                'class' => $tabellisting['columns'][$visible_column]['class'] ?? null,
+            ];
         }
 
         // Table headings for actions
         if (isset($tabellisting['actions'])) {
-            $heading[] = UI::getLng('panel.options');
+            $heading[] = [
+                'text' => UI::getLng('panel.options'),
+                'class' => 'text-end',
+            ];
         }
 
         return $heading;
     }
 
-    private static function generateTableRows(Collection $collection, array $tabellisting): array
+    private static function generateTableRows(array $list, array $tabellisting): array
     {
         $rows = [];
-        $items = $collection->getData()['list'];
 
         // Create new row from item
-        foreach ($items as $key => $item) {
+        foreach ($list as $row => $item) {
             // Generate columns from item
-            foreach ($tabellisting['visible_columns'] as $visible_column) {
+            foreach ($tabellisting['visible_columns'] as $col => $visible_column) {
                 if (isset($tabellisting['columns'][$visible_column]['visible']) && !$tabellisting['columns'][$visible_column]['visible']) {
                     continue;
                 }
@@ -71,22 +76,30 @@ class Listing
                 $column = $tabellisting['columns'][$visible_column]['column'];
                 $data = self::getMultiArrayFromString($item, $column);
 
-                // TODO: contextual_class ...
-
                 if ($format_callback) {
-                    $rows[$key][] = call_user_func($format_callback, $data, $item);
+                    $rows[$row]['td'][$col]['data'] = call_user_func($format_callback, $data, $item);
                 } else {
-                    $rows[$key][] = $data;
+                    $rows[$row]['td'][$col]['data'] = $data;
                 }
+
+                $rows[$row]['td'][$col]['class'] = $tabellisting['columns'][$visible_column]['class'] ?? null;
             }
+
+            // TODO: contextual_class ...
+            //if (...) {
+            //    $rows[$key]['class'] = '...';
+            //}
 
             // Set all actions for row
             if (isset($tabellisting['actions'])) {
                 $actions = self::setLinks($tabellisting['actions'], $item);
 
-                $rows[$key]['action'] = [
-                    'type' => 'actions',
-                    'data' => $actions
+                $rows[$row]['td'][] = [
+                    'class' => 'text-end',
+                    'data' => [
+                        'type' => 'actions',
+                        'data' => $actions
+                    ]
                 ];
             }
         }
@@ -94,7 +107,7 @@ class Listing
         return $rows;
     }
 
-    private static function setLinks($actions, array $item)
+    private static function setLinks(array $actions, array $item): array
     {
         $linker = UI::getLinker();
 
@@ -119,7 +132,7 @@ class Listing
         return $actions;
     }
 
-    public static function getVisibleColumnsForListing($listing, $default_columns)
+    public static function getVisibleColumnsForListing(string $listing, array $default_columns): array
     {
         // Hier käme dann die Logik, die das aus der DB zieht ...
         // alternativ nimmt er die $default_columns, wenn kein Eintrag
@@ -128,7 +141,7 @@ class Listing
         return $default_columns;
     }
 
-    public static function getMultiArrayFromString($arr, $str)
+    public static function getMultiArrayFromString(array $arr, string $str)
     {
         foreach (explode('.', $str) as $key) {
             if (!array_key_exists($key, $arr)) {

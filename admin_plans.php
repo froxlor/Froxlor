@@ -31,40 +31,20 @@ if ($page == '' || $page == 'overview') {
 	if ($action == '') {
 
 		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_plans");
-		$fields = array(
-			'p.name' => $lng['admin']['plans']['name'],
-			'p.description' => $lng['admin']['plans']['description'],
-			'adminname' => $lng['admin']['admin'],
-			'p.ts' => $lng['admin']['plans']['last_update']
-		);
+
 		try {
-			// get total count
-			$json_result = HostingPlans::getLocal($userinfo)->listingCount();
-			$result = json_decode($json_result, true)['data'];
-			// initialize pagination and filtering
-			$paging = new \Froxlor\UI\Pagination($userinfo, $fields, $result);
-			// get list
-			$json_result = HostingPlans::getLocal($userinfo, $paging->getApiCommandParams())->listing();
+            $plan_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.plans.php';
+            $list = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\HostingPlans::class, $userinfo))
+                ->withPagination($plan_list_data['plan_list']['columns'])
+                ->getList();
 		} catch (Exception $e) {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
-		$result = json_decode($json_result, true)['data'];
 
-		$plans = '';
-		$sortcode = $paging->getHtmlSortCode($lng);
-		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
-		$searchcode = $paging->getHtmlSearchCode($lng);
-		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
-		$count = 0;
-
-		foreach ($result['list'] as $row) {
-			$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
-			$row['ts_format'] = date("d.m.Y H:i", $row['ts']);
-			eval("\$plans.=\"" . \Froxlor\UI\Template::getTemplate("plans/plans_plan") . "\";");
-			$count++;
-		}
-
-		eval("echo \"" . \Froxlor\UI\Template::getTemplate("plans/plans") . "\";");
+        UI::twigBuffer('user/table.html.twig', [
+            'listing' => \Froxlor\UI\Listing::format($list, $plan_list_data['plan_list']),
+        ]);
+        UI::twigOutputBuffer();
 	} elseif ($action == 'delete' && $id != 0) {
 
 		try {

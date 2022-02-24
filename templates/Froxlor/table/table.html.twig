@@ -13,31 +13,35 @@
 		{% endif %}
 
 		<div class="card table-responsive">
-			<table class="table table-borderless table-striped mb-0">
+			<table class="table table-borderless table-striped table-sm mb-0 px-3">
 				<thead>
 					<tr>
-						{% for column in listing.table.th %}
-							<th class="p-3">{{ column }}</th>
+						{% for th in listing.table.th %}
+							<th class="p-3 {{ th.class }}">{{ th.text }}</th>
 						{% endfor %}
 					</tr>
 				</thead>
 				<tbody>
-					{% for td in listing.table.tr %}
-						<tr>
-							{% for value in td %}
-								<td class="p-3">
-									{% if value is iterable %}
-										{% if value.type == 'progressbar' %}
-											{{ callbacks.progressbar(value.data) }}
-										{% elseif value.type == 'boolean' %}
-											{{ callbacks.boolean(value.data) }}
-										{% elseif value.type == 'actions' %}
-											{{ callbacks.actions(value.data) }}
+					{% for tr in listing.table.tr %}
+						<tr {% if tr.class is defined %}class="{{ tr.class }}"{% endif %}>
+							{% for td in tr.td %}
+								<td class="px-3{% if td.class is defined %} {{ td.class }}{% endif %}">
+									{% if td.data is iterable %}
+										{% if td.data.type == 'progressbar' %}
+											{{ callbacks.progressbar(td.data.data) }}
+										{% elseif td.data.type == 'boolean' %}
+											{{ callbacks.boolean(td.data.data) }}
+										{% elseif td.data.type == 'link' %}
+											{{ callbacks.link(td.data.data) }}
+										{% elseif td.data.type == 'domainWithSan' %}
+											{{ callbacks.domainWithSan(td.data.data) }}
+										{% elseif td.data.type == 'actions' %}
+											{{ callbacks.actions(td.data.data) }}
 										{% else %}
-											Callback '{{ value|json_encode }}' is not implemented!
+											Callback '{{ td|json_encode }}' is not implemented!
 										{% endif %}
 									{% else %}
-										{{ value|raw }}
+										{{ td.data|raw }}
 									{% endif %}
 								</td>
 							{% endfor %}
@@ -45,9 +49,11 @@
 					{% endfor %}
 				</tbody>
 			</table>
-			<div class="card-footer">
-				Pagination...
-			</div>
+			{% if listing.pagination is not empty %}
+				<div class="card-footer">
+					Pagination...
+				</div>
+			{% endif %}
 		</div>
 	</form>
 

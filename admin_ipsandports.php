@@ -28,32 +28,22 @@ use Froxlor\UI\Request;
 $id = (int) Request::get('id');
 
 if ($page == 'ipsandports' || $page == 'overview') {
-	// Do not display attributes that are not used by the current webserver
-	$websrv = Settings::Get('system.webserver');
-	$is_nginx = ($websrv == 'nginx');
-	$is_apache = ($websrv == 'apache2');
-	$is_apache24 = $is_apache && (Settings::Get('system.apache24') === '1');
-
 	if ($action == '') {
-
 		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_ipsandports");
-		$ipsandports_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.ipsandports.php';
 
 		try {
-			// get collection
-			$collection = new \Froxlor\UI\Collection(\Froxlor\Api\Commands\IpsAndPorts::class, $userinfo);
-			// initialize pagination and filtering
-			$paging = new \Froxlor\UI\Pagination($userinfo, $ipsandports_list_data['ipsandports_list']['columns'], $collection->count());
-			// get filtered collection
-			$collection = new \Froxlor\UI\Collection(\Froxlor\Api\Commands\IpsAndPorts::class, $userinfo, $paging->getApiCommandParams());
-		} catch (Exception $e) {
+            $ipsandports_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.ipsandports.php';
+			$list = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\IpsAndPorts::class, $userinfo))
+                ->withPagination($ipsandports_list_data['ipsandports_list']['columns'])
+                ->getList();
+        } catch (Exception $e) {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 
-		UI::twigBuffer('user/table.html.twig', [
-			'listing' => \Froxlor\UI\Listing::format($collection, $ipsandports_list_data['ipsandports_list']),
-		]);
-		UI::twigOutputBuffer();
+        UI::twigBuffer('user/table.html.twig', [
+            'listing' => \Froxlor\UI\Listing::format($list, $ipsandports_list_data['ipsandports_list']),
+        ]);
+        UI::twigOutputBuffer();
 	} elseif ($action == 'delete' && $id != 0) {
 		try {
 			$json_result = IpsAndPorts::getLocal($userinfo, array(

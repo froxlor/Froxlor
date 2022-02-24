@@ -220,6 +220,29 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 				$cert['letsencrypt'] = Settings::Get('system.le_froxlor_enabled');
 				$cert['loginname'] = 'froxlor.panel';
 			}
+
+            // Set data from certificate
+            $cert_data = openssl_x509_parse($cert['ssl_cert_file']);
+            if ($cert_data) {
+                $cert['validfromdate'] = date('Y-m-d H:i:s', $cert_data['validFrom_time_t']);
+                $cert['validtodate'] = date('Y-m-d H:i:s', $cert_data['validTo_time_t']);
+                $cert['isvalid'] = (bool) $cert_data['validTo_time_t'] > time();
+                $cert['issuer'] = $cert_data['issuer']['O'] ?? null;
+            }
+
+            // Set subject alt names from certificate
+            $cert['san'] = null;
+            if (isset($cert_data['extensions']['subjectAltName']) && ! empty($cert_data['extensions']['subjectAltName'])) {
+                $SANs = explode(",", $cert_data['extensions']['subjectAltName']);
+                $SANs = array_map('trim', $SANs);
+                foreach ($SANs as $san) {
+                    $san = str_replace("DNS:", "", $san);
+                    if ($san != $cert_data['subject']['CN'] && strpos($san, "othername:") === false) {
+                        $cert['san'][] = $san;
+                    }
+                }
+            }
+
 			$result[] = $cert;
 		}
 		return $this->response(array(
