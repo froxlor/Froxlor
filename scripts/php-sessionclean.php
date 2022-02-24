@@ -21,7 +21,7 @@ if (@php_sapi_name() !== 'cli') {
 	die('This script will only work in the shell.');
 }
 
-require dirname(dirname(__DIR__)) . '/vendor/autoload.php';
+require dirname(__DIR__) . '/vendor/autoload.php';
 
 // give control to command line handler
 try {

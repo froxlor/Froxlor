@@ -106,6 +106,12 @@ class CronConfig
 				}
 			}
 
+			// php sessionclean if enabled
+			if ((int) Settings::Get('phpfpm.enabled') == 1) {
+				$cronfile .= "# Look for and purge old sessions every 30 minutes".PHP_EOL;
+				$cronfile .= "09,39 * * * * root " . \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . "/scripts/php-sessionclean.php") . " --froxlor-dir=" . escapeshellarg(\Froxlor\Froxlor::getInstallDir()) . " 1> /dev/null" . PHP_EOL;
+			}
+
 			if (\Froxlor\FileDir::isFreeBSD()) {
 				// FreeBSD handles the cron-stuff in another way. We need to directly
 				// write to the crontab file as there is not cron.d/froxlor file
