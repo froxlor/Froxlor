@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Froxlor\UI\Panel;
 
+use Froxlor\UI\Linker;
+
 class UI
 {
 
@@ -217,7 +219,7 @@ class UI
 		self::$linker = $linker;
 	}
 
-	public static function getLinker()
+	public static function getLinker(): Linker
 	{
 		return self::$linker;
 	}

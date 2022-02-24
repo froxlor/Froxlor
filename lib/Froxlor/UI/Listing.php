@@ -82,14 +82,41 @@ class Listing
 
             // Set all actions for row
             if (isset($tabellisting['actions'])) {
+                $actions = self::setLinks($tabellisting['actions'], $item);
+
                 $rows[$key]['action'] = [
                     'type' => 'actions',
-                    'data' => $tabellisting['actions'],
+                    'data' => $actions
                 ];
             }
         }
 
         return $rows;
+    }
+
+    private static function setLinks($actions, array $item)
+    {
+        $linker = UI::getLinker();
+
+        // Check each action for a href
+        foreach ($actions as $key => $action) {
+            // Set link if href is an array
+            if (isset($action['href']) && is_array($action['href'])) {
+                // Search for "columns" in our href array
+                foreach ($action['href'] as $href_key => $href_value) {
+                    $length = strlen(':');
+                    if (substr($href_value, 0, $length) === ':') {
+                        $column = ltrim($href_value, ':');
+                        $action['href'][$href_key] = $item[$column];
+                    }
+                }
+
+                // Set actual link from linker
+                $actions[$key]['href'] = $linker->getLink($action['href']);
+            }
+        }
+
+        return $actions;
     }
 
     public static function getVisibleColumnsForListing($listing, $default_columns)

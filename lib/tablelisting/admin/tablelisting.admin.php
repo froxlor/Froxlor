@@ -66,11 +66,21 @@ return [
 		'actions' => [
 			'delete' => [
 				'icon' => 'fa fa-trash',
-				'href' => '#',
+                'href' => [
+                    'section' => 'admins',
+                    'page' => 'admins',
+                    'action' => 'delete',
+                    'id' => ':adminid'
+                ],
 			],
 			'edit' => [
 				'text' => 'Edit',
-				'href' => '#',
+				'href' => [
+                    'section' => 'admins',
+                    'page' => 'admins',
+                    'action' => 'edit',
+                    'id' => ':adminid'
+                ],
 			]
 		],
 		'contextual_class' => [

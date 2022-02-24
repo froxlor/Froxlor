@@ -57,11 +57,37 @@ return [
         'actions' => [
             'delete' => [
                 'icon' => 'fa fa-trash',
-                'href' => '#',
+                'href' => [
+                    'section' => 'domains',
+                    'page' => 'domains',
+                    'action' => 'delete',
+                    'id' => ':id'
+                ],
             ],
             'edit' => [
-                'icon' => 'fa fa-edit',
-                'href' => '#',
+                'text' => 'Edit',
+                'href' => [
+                    'section' => 'domains',
+                    'page' => 'domains',
+                    'action' => 'edit',
+                    'id' => ':id'
+                ],
+            ],
+            'logfiles' => [
+                'icon' => 'fa fa-file',
+                'href' => [
+                    'section' => 'domains',
+                    'page' => 'logfiles',
+                    'domain_id' => ':id'
+                ],
+            ],
+            'domaindnseditor' => [
+                'icon' => 'fa fa-globe',
+                'href' => [
+                    'section' => 'domains',
+                    'page' => 'domaindnseditor',
+                    'domain_id' => ':id'
+                ],
             ]
         ]
     ]

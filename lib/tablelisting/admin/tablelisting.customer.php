@@ -65,5 +65,25 @@ return [
             'c.diskspace',
             'c.traffic',
         ]),
+        'actions' => [
+            'delete' => [
+                'icon' => 'fa fa-trash',
+                'href' => [
+                    'section' => 'customers',
+                    'page' => 'customers',
+                    'action' => 'delete',
+                    'id' => ':customerid'
+                ],
+            ],
+            'edit' => [
+                'text' => 'Edit',
+                'href' => [
+                    'section' => 'customers',
+                    'page' => 'customers',
+                    'action' => 'edit',
+                    'id' => ':customerid'
+                ],
+            ]
+        ],
     ]
 ];

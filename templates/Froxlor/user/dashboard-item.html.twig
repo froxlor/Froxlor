@@ -3,7 +3,7 @@
         <div class="row mb-1">
             <div class="col text-truncate">{{ lng(lngstr) }}</div>
             <div class="col-auto">
-                <small>{% if formatbytes %}{{ used|formatBytes }}{% else %}{{ used }}{% endif %}/{% if available < 0 %}{{ lng('customer.unlimited') }}{% else %}{% if formatbytes %}{{ available|formatBytes }}{% else %}{{ available }}{% endif %}{% endif %}</small>
+                <small>{% if formatbytes %}{{ used|formatBytes }}{% else %}{{ used }}{% endif %}/{% if available < 0 %}{{ lng('panel.unlimited') }}{% else %}{% if formatbytes %}{{ available|formatBytes }}{% else %}{{ available }}{% endif %}{% endif %}</small>
             </div>
         </div>
         <div class="progress progress-thin my-auto">
