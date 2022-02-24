@@ -2142,4 +2142,3 @@ $lng['serversettings']['acmeshpath']['description'] = 'Set this to where acme.sh
 
 $lng['panel']['usage_statistics'] = 'Resource usage';
 $lng['panel']['security_question'] = 'Security question';
-$lng['panel']['actions'] = 'Actions';
