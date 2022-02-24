@@ -4,7 +4,6 @@ namespace Froxlor\Cli\Action;
 
 use Froxlor\Database\Database;
 use Froxlor\Settings;
-use Froxlor\Cli\PhpSessioncleanCmd;
 
 class PhpSessioncleanAction extends \Froxlor\Cli\Action
 {
