@@ -83,7 +83,7 @@ return array(
 			'url' => 'customer_ftp.php',
 			'label' => $lng['menue']['ftp']['ftp'],
 			'show_element' => (! \Froxlor\Settings::IsInList('panel.customer_hide_options', 'ftp')),
-            'icon' => 'fa fa-transfer',
+			'icon' => 'fa fa-users',
 			'elements' => array(
 				array(
 					'url' => 'customer_ftp.php?page=accounts',
