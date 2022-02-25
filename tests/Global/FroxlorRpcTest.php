@@ -15,7 +15,7 @@ class FroxlorRpcTest extends TestCase
 	{
 		$this->expectExceptionCode(401);
 		$this->expectExceptionMessage("Unauthenticated. Please provide api user credentials.");
-		FroxlorRPC::validateRequest([]);
+		FroxlorRPC::validateRequest("");
 	}
 
 	public function testValidateAuthInvalid()
@@ -24,7 +24,7 @@ class FroxlorRpcTest extends TestCase
 		$this->expectExceptionMessage("Invalid authorization credentials");
 		$_SERVER['PHP_AUTH_USER'] = 'asd';
 		$_SERVER['PHP_AUTH_PW'] = 'asd';
-		FroxlorRPC::validateRequest([]);
+		FroxlorRPC::validateRequest("");
 	}
 
 	public function testValidateAuthAllowFromInvalid()
@@ -35,17 +35,26 @@ class FroxlorRpcTest extends TestCase
 		$this->expectExceptionMessage("Invalid authorization credentials");
 		$_SERVER['PHP_AUTH_USER'] = 'test';
 		$_SERVER['PHP_AUTH_PW'] = 'test';
-		FroxlorRPC::validateRequest([]);
+		FroxlorRPC::validateRequest("");
 	}
 
-	public function testInvalidRequestBody()
+	public function testEmptyRequestBody()
 	{
 		Database::query("UPDATE `api_keys` SET `allowed_from` = '';");
 		$this->expectExceptionCode(400);
-		$this->expectExceptionMessage("Invalid request body");
+		$this->expectExceptionMessage("Empty request body.");
 		$_SERVER['PHP_AUTH_USER'] = 'test';
 		$_SERVER['PHP_AUTH_PW'] = 'test';
-		FroxlorRPC::validateRequest([]);
+		FroxlorRPC::validateRequest("");
+	}
+
+	public function testInvalidJSON()
+	{
+		$this->expectExceptionCode(400);
+		$this->expectExceptionMessage("Invalid JSON Format.");
+		$_SERVER['PHP_AUTH_USER'] = 'test';
+		$_SERVER['PHP_AUTH_PW'] = 'test';
+		FroxlorRPC::validateRequest('asd');
 	}
 
 	public function testNoCommandGiven()
@@ -54,7 +63,7 @@ class FroxlorRpcTest extends TestCase
 		$this->expectExceptionMessage("No command given");
 		$_SERVER['PHP_AUTH_USER'] = 'test';
 		$_SERVER['PHP_AUTH_PW'] = 'test';
-		FroxlorRPC::validateRequest(['cmd' => 'test']);
+		FroxlorRPC::validateRequest(json_encode(['cmd' => 'test']));
 	}
 
 	public function testInvalidCommandGiven()
@@ -63,7 +72,7 @@ class FroxlorRpcTest extends TestCase
 		$this->expectExceptionMessage("Invalid command");
 		$_SERVER['PHP_AUTH_USER'] = 'test';
 		$_SERVER['PHP_AUTH_PW'] = 'test';
-		FroxlorRPC::validateRequest(['command' => 'Froxlor']);
+		FroxlorRPC::validateRequest(json_encode(['command' => 'Froxlor']));
 	}
 
 	public function testUnknownCommandGiven()
@@ -72,14 +81,14 @@ class FroxlorRpcTest extends TestCase
 		$this->expectExceptionMessage("Unknown command");
 		$_SERVER['PHP_AUTH_USER'] = 'test';
 		$_SERVER['PHP_AUTH_PW'] = 'test';
-		FroxlorRPC::validateRequest(['command' => 'SomeModule.cmd']);
+		FroxlorRPC::validateRequest(json_encode(['command' => 'SomeModule.cmd']));
 	}
 
 	public function testCommandOk()
 	{
 		$_SERVER['PHP_AUTH_USER'] = 'test';
 		$_SERVER['PHP_AUTH_PW'] = 'test';
-		$result = FroxlorRPC::validateRequest(['command' => 'Froxlor.listFunctions']);
+		$result = FroxlorRPC::validateRequest(json_encode(['command' => 'Froxlor.listFunctions']));
 		$this->assertEquals('Froxlor', $result['command']['class']);
 		$this->assertEquals('listFunctions', $result['command']['method']);
 		$this->assertNull($result['params']);
@@ -89,16 +98,14 @@ class FroxlorRpcTest extends TestCase
 	{
 		$key = $this->generateKey();
 		$request = array(
-			'body' => [
-				'command' => 'Froxlor.listFunctions',
-				'params' => $key
-			]
+			'command' => 'Froxlor.listFunctions',
+			'params' => $key
 		);
 		$json_request = json_encode($request);
 		$decoded_request = json_decode($json_request, true);
 		$decoded_request = $this->stripcslashes_deep($decoded_request);
-		$this->assertEquals($key['key'], $decoded_request['body']['params']['key']);
-		$this->assertEquals($key['cert'], $decoded_request['body']['params']['cert']);
+		$this->assertEquals($key['key'], $decoded_request['params']['key']);
+		$this->assertEquals($key['cert'], $decoded_request['params']['cert']);
 	}
 
 	private function stripcslashes_deep($value)
