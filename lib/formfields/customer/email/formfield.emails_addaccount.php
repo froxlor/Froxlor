@@ -23,7 +23,7 @@ return array(
 				'title' => $lng['emails']['account_add'],
 				'image' => 'icons/email_add.png',
 				'fields' => array(
-					'email_full' => array(
+					'emailaddr' => array(
 						'label' => $lng['emails']['emailaddress'],
 						'type' => 'label',
 						'value' => $result['email_full']

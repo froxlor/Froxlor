@@ -17,7 +17,7 @@
 return array(
 	'htaccess_add' => array(
 		'title' => $lng['extras']['pathoptions_add'],
-		'image' => 'icons/htpasswd_add.png',
+		'image' => 'fa-solid fa-folder',
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['extras']['pathoptions_add'],

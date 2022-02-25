@@ -17,7 +17,7 @@
 return array(
 	'backup' => array(
 		'title' => $lng['extras']['backup'],
-		'image' => 'icons/backup_big.png',
+		'image' => 'fa-solid fa-server',
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['extras']['backup'],
@@ -33,8 +33,9 @@ return array(
 					),
 					'path_protection_info' => array(
 						'label' => $lng['extras']['path_protection_label'],
-						'type' => 'label',
-						'value' => $lng['extras']['path_protection_info']
+						'type' => 'infotext',
+						'value' => $lng['extras']['path_protection_info'],
+						'classes' => 'fw-bold text-danger'
 					),
 					'backup_web' => array(
 						'label' => $lng['extras']['backup_web'],

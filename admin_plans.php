@@ -40,10 +40,14 @@ if ($page == '' || $page == 'overview') {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 
-        UI::twigBuffer('user/table.html.twig', [
-            'listing' => \Froxlor\UI\Listing::format($collection, $plan_list_data['plan_list']),
-        ]);
-        UI::twigOutputBuffer();
+		UI::twigBuffer('user/table.html.twig', [
+			'listing' => \Froxlor\UI\Listing::format($collection, $plan_list_data['plan_list']),
+			'actions_links' => [[
+				'href' => $linker->getLink(['section' => 'plans', 'page' => $page, 'action' => 'add']),
+				'label' => $lng['admin']['plans']['add']
+			]]
+		]);
+		UI::twigOutputBuffer();
 	} elseif ($action == 'delete' && $id != 0) {
 
 		try {

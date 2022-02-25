@@ -16,81 +16,74 @@
  *
  */
 
+use Froxlor\UI\Callbacks\Text;
 use Froxlor\UI\Callbacks\Impersonate;
 use Froxlor\UI\Callbacks\ProgressBar;
 use Froxlor\UI\Listing;
 
 return [
-    'customer_list' => [
-        'title' => $lng['admin']['customers'],
-        'icon' => 'fa-solid fa-user',
-        'columns' => [
-            'c.loginname' => [
-                'label' => $lng['login']['username'],
-                'column' => 'loginname',
-                'format_callback' => [Impersonate::class, 'customer'],
-            ],
-            'a.loginname' => [
-                'label' => $lng['admin']['admin'],
-                'column' => 'admin.loginname',
-                'format_callback' => [Impersonate::class, 'admin'],
-            ],
-            'c.name' => [
-                'label' => $lng['customer']['name'],
-                'column' => 'name',
-            ],
-            'c.email' => [
-                'label' => $lng['customer']['email'],
-                'column' => 'email',
-            ],
-            'c.firstname' => [
-                'label' => $lng['customer']['firstname'],
-                'column' => 'firstname',
-            ],
-            'c.company' => [
-                'label' => $lng['customer']['company'],
-                'column' => 'company',
-            ],
-            'c.diskspace' => [
-                'label' => $lng['customer']['diskspace'],
-                'column' => 'diskspace',
-                'format_callback' => [ProgressBar::class, 'diskspace'],
-            ],
-            'c.traffic' => [
-                'label' => $lng['customer']['traffic'],
-                'column' => 'traffic',
-                'format_callback' => [ProgressBar::class, 'traffic'],
-            ],
-        ],
-        'visible_columns' => Listing::getVisibleColumnsForListing('customer_list', [
-            'c.loginname',
-            'a.loginname',
-            'c.email',
-            'c.firstname',
-            'c.company',
-            'c.diskspace',
-            'c.traffic',
-        ]),
-        'actions' => [
-            'edit' => [
-                'icon' => 'fa fa-edit',
-                'href' => [
-                    'section' => 'customers',
-                    'page' => 'customers',
-                    'action' => 'edit',
-                    'id' => ':customerid'
-                ],
-            ],
-            'delete' => [
-                'icon' => 'fa fa-trash',
-                'class' => 'text-danger',
-                'href' => [
-                    'section' => 'customers',
-                    'page' => 'customers',
-                    'action' => 'delete',
-                    'id' => ':customerid'
-                ],
-            ],
-        ],
-    ]
+	'customer_list' => [
+		'title' => $lng['admin']['customers'],
+		'icon' => 'fa-solid fa-user',
+		'columns' => [
+			'c.name' => [
+				'label' => $lng['customer']['name'],
+				'column' => 'name',
+				'format_callback' => [Text::class, 'customerfullname'],
+			],
+			'c.loginname' => [
+				'label' => $lng['login']['username'],
+				'column' => 'loginname',
+				'format_callback' => [Impersonate::class, 'customer'],
+			],
+			'a.loginname' => [
+				'label' => $lng['admin']['admin'],
+				'column' => 'admin.loginname',
+				'format_callback' => [Impersonate::class, 'admin'],
+			],
+			'c.email' => [
+				'label' => $lng['customer']['email'],
+				'column' => 'email',
+			],
+			'c.diskspace' => [
+				'label' => $lng['customer']['diskspace'],
+				'column' => 'diskspace',
+				'format_callback' => [ProgressBar::class, 'diskspace'],
+			],
+			'c.traffic' => [
+				'label' => $lng['customer']['traffic'],
+				'column' => 'traffic',
+				'format_callback' => [ProgressBar::class, 'traffic'],
+			],
+		],
+		'visible_columns' => Listing::getVisibleColumnsForListing('customer_list', [
+			'c.name',
+			'c.loginname',
+			'a.loginname',
+			'c.email',
+			'c.diskspace',
+			'c.traffic',
+		]),
+		'actions' => [
+			'edit' => [
+				'icon' => 'fa fa-edit',
+				'href' => [
+					'section' => 'customers',
+					'page' => 'customers',
+					'action' => 'edit',
+					'id' => ':customerid'
+				],
+			],
+			'delete' => [
+				'icon' => 'fa fa-trash',
+				'class' => 'text-danger',
+				'href' => [
+					'section' => 'customers',
+					'page' => 'customers',
+					'action' => 'delete',
+					'id' => ':customerid'
+				],
+			],
+		],
+	]
 ];

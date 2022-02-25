@@ -36,6 +36,13 @@ class UI
 	private static $linker = null;
 
 	/**
+	 * current logged in user
+	 *
+	 * @var array
+	 */
+	private static $userinfo = [];
+
+	/**
 	 * default fallback theme
 	 *
 	 * @var string
@@ -222,6 +229,16 @@ class UI
 	public static function getLinker(): Linker
 	{
 		return self::$linker;
+	}
+
+	public static function setCurrentUser($userinfo = null)
+	{
+		self::$userinfo = $userinfo;
+	}
+
+	public static function getCurrentUser(): array
+	{
+		return self::$userinfo;
 	}
 
 	public static function setLng($lng = array())

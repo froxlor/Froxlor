@@ -23,7 +23,7 @@ return array(
 				'title' => $lng['emails']['forwarder_add'],
 				'image' => 'icons/autoresponder_add.png',
 				'fields' => array(
-					'email_full' => array(
+					'emailaddr' => array(
 						'label' => $lng['emails']['from'],
 						'type' => 'label',
 						'value' => $result['email_full']

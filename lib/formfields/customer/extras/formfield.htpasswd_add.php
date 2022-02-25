@@ -17,7 +17,7 @@
 return array(
 	'htpasswd_add' => array(
 		'title' => $lng['extras']['directoryprotection_add'],
-		'image' => 'icons/htpasswd_add.png',
+		'image' => 'fa-solid fa-lock',
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['extras']['directoryprotection_add'],

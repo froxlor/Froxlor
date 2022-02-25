@@ -32,6 +32,8 @@
 											{{ callbacks.progressbar(td.data.data) }}
 										{% elseif td.data.type == 'boolean' %}
 											{{ callbacks.boolean(td.data.data) }}
+										{% elseif td.data.type == 'booleanWithInfo' %}
+											{{ callbacks.booleanWithInfo(td.data.data) }}
 										{% elseif td.data.type == 'link' %}
 											{{ callbacks.link(td.data.data) }}
 										{% elseif td.data.type == 'domainWithSan' %}

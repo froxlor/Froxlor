@@ -34,96 +34,17 @@ if (Settings::IsInList('panel.customer_hide_options', 'email')) {
 
 $id = (int) Request::get('id');
 
-if ($page == 'overview') {
-	$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_email");
-	eval("echo \"" . \Froxlor\UI\Template::getTemplate("email/email") . "\";");
-} elseif ($page == 'emails') {
+if ($page == 'overview' || $page == 'emails') {
 	if ($action == '') {
 		$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_email::emails");
-		$fields = array(
-			'd.domain_ace' => $lng['domains']['domainname'],
-			'm.email_full' => $lng['emails']['emailaddress'],
-			'm.destination' => $lng['emails']['forwarders']
-		);
+
 		try {
-			// get total count
-			$json_result = Emails::getLocal($userinfo)->listingCount();
-			$result = json_decode($json_result, true)['data'];
-			// initialize pagination and filtering
-			$paging = new \Froxlor\UI\Pagination($userinfo, $fields, $result);
-			// get list
-			$json_result = Emails::getLocal($userinfo, $paging->getApiCommandParams())->listing();
+			$email_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/customer/tablelisting.emails.php';
+			$list = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Emails::class, $userinfo))
+				->withPagination($email_list_data['email_list']['columns'])
+				->getList();
 		} catch (Exception $e) {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
-		}
-		$result = json_decode($json_result, true)['data'];
-
-		$sortcode = $paging->getHtmlSortCode($lng);
-		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
-		$searchcode = $paging->getHtmlSearchCode($lng);
-		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
-		$emails = array();
-		$emailscount = $paging->getEntries();
-
-		foreach ($result['list'] as $row) {
-			if (! isset($emails[$row['domain']]) || ! is_array($emails[$row['domain']])) {
-				$emails[$row['domain']] = array();
-			}
-
-			$emails[$row['domain']][$row['email_full']] = $row;
-		}
-
-		if ($paging->sortfield == 'd.domain_ace' && $paging->sortorder == 'desc') {
-			krsort($emails);
-		} else {
-			ksort($emails);
-		}
-
-		$count = 0;
-		$accounts = '';
-		$emails_count = 0;
-		$domainname = '';
-		foreach ($emails as $domainid => $emailaddresses) {
-			if ($paging->sortfield == 'm.email_full' && $paging->sortorder == 'desc') {
-				krsort($emailaddresses);
-			} else {
-				ksort($emailaddresses);
-			}
-
-			foreach ($emailaddresses as $row) {
-				if ($domainname != $idna_convert->decode($row['domain'])) {
-					$domainname = $idna_convert->decode($row['domain']);
-					eval("\$accounts.=\"" . \Froxlor\UI\Template::getTemplate("email/emails_domain") . "\";");
-				}
-
-				$emails_count ++;
-				$row['email'] = $idna_convert->decode($row['email']);
-				$row['email_full'] = $idna_convert->decode($row['email_full']);
-				$row['destination'] = explode(' ', $row['destination']);
-				uasort($row['destination'], 'strcasecmp');
-
-				$dest_list = $row['destination'];
-				foreach ($dest_list as $dest_id => $destination) {
-					$row['destination'][$dest_id] = $idna_convert->decode($row['destination'][$dest_id]);
-
-					if ($row['destination'][$dest_id] == $row['email_full']) {
-						unset($row['destination'][$dest_id]);
-					}
-				}
-
-				$destinations_count = count($row['destination']);
-				$row['destination'] = implode(', ', $row['destination']);
-
-				if (strlen($row['destination']) > 35) {
-					$row['destination'] = substr($row['destination'], 0, 32) . '... (' . $destinations_count . ')';
-				}
-
-				$row['mboxsize'] = \Froxlor\PhpHelper::sizeReadable($row['mboxsize'], 'GiB', 'bi', '%01.' . (int) Settings::Get('panel.decimal_places') . 'f %s');
-
-				$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
-				eval("\$accounts.=\"" . \Froxlor\UI\Template::getTemplate("email/emails_email") . "\";");
-				$count ++;
-			}
 		}
 
 		$result_stmt = Database::prepare("
@@ -136,7 +57,20 @@ if ($page == 'overview') {
 		));
 		$emaildomains_count = $result2['emaildomains'];
 
-		eval("echo \"" . \Froxlor\UI\Template::getTemplate("email/emails") . "\";");
+		$actions_links = false;
+		if (($userinfo['emails_used'] < $userinfo['emails'] || $userinfo['emails'] == '-1') && $emaildomains_count !=0) {
+			$actions_links = [[
+				'href' => $linker->getLink(['section' => 'email', 'page' => $page, 'action' => 'add']),
+				'label' => $lng['emails']['emails_add']
+			]];
+		}
+
+		UI::twigBuffer('user/table.html.twig', [
+			'listing' => \Froxlor\UI\Listing::format($list, $email_list_data['email_list']),
+			'actions_links' => $actions_links,
+			'entity_info' => $lng['emails']['description']
+		]);
+		UI::twigOutputBuffer();
 	} elseif ($action == 'delete' && $id != 0) {
 		try {
 			$json_result = Emails::getLocal($userinfo, array(

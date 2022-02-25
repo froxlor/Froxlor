@@ -39,10 +39,14 @@ if ($page == 'ipsandports' || $page == 'overview') {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 
-        UI::twigBuffer('user/table.html.twig', [
-            'listing' => \Froxlor\UI\Listing::format($collection, $ipsandports_list_data['ipsandports_list']),
-        ]);
-        UI::twigOutputBuffer();
+		UI::twigBuffer('user/table.html.twig', [
+			'listing' => \Froxlor\UI\Listing::format($collection, $ipsandports_list_data['ipsandports_list']),
+			'actions_links' => [[
+				'href' => $linker->getLink(['section' => 'ipsandports', 'page' => $page, 'action' => 'add']),
+				'label' => $lng['admin']['ipsandports']['add']
+			]]
+		]);
+		UI::twigOutputBuffer();
 	} elseif ($action == 'delete' && $id != 0) {
 		try {
 			$json_result = IpsAndPorts::getLocal($userinfo, array(

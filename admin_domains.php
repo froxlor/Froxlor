@@ -38,14 +38,31 @@ if ($page == 'domains' || $page == 'overview') {
             $collection = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Domains::class, $userinfo))
                 ->has('customer', \Froxlor\Api\Commands\Customers::class, 'customerid', 'customerid')
                 ->withPagination($domain_list_data['domain_list']['columns']);
+            $customerCollection = (new \Froxlor\UI\Collection(Customers::class, $userinfo));
         } catch (Exception $e) {
             \Froxlor\UI\Response::dynamic_error($e->getMessage());
         }
 
-        UI::twigBuffer('user/table.html.twig', [
-            'listing' => \Froxlor\UI\Listing::format($collection, $domain_list_data['domain_list']),
-        ]);
-        UI::twigOutputBuffer();
+		$actions_links = false;
+		if (($userinfo['domains_used'] < $userinfo['domains'] || $userinfo['domains'] == '-1') && $customerCollection->count() != 0) {
+			$actions_links = [];
+			$actions_links[] = [
+				'href' => $linker->getLink(['section' => 'domains', 'page' => $page, 'action' => 'add']),
+				'label' => $lng['admin']['domain_add']
+			];
+			$actions_links[] = [
+				'href' => $linker->getLink(['section' => 'domains', 'page' => $page, 'action' => 'import']),
+				'label' => $lng['domains']['domain_import'],
+				'icon' => 'fa-solid fa-file-import',
+				'class' => 'btn-secondary'
+			];
+		}
+
+		UI::twigBuffer('user/table.html.twig', [
+			'listing' => \Froxlor\UI\Listing::format($collection, $domain_list_data['domain_list']),
+			'actions_links' => $actions_links
+		]);
+		UI::twigOutputBuffer();
 	} elseif ($action == 'delete' && $id != 0) {
 
 		try {
