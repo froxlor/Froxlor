@@ -24,7 +24,7 @@ class User
 				$returnval = $userinfo['name'] . ', ' . $userinfo['firstname'];
 			} else {
 				if ($userinfo['name'] != '' && $userinfo['firstname'] != '') {
-					$returnval = $userinfo['name'] . ', ' . $userinfo['firstname'] . ' | ' . $userinfo['company'];
+					$returnval = $userinfo['name'] . ', ' . $userinfo['firstname'] . '<br><small>' . $userinfo['company'] . '</small>';
 				} else {
 					$returnval = $userinfo['company'];
 				}

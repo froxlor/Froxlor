@@ -14,6 +14,9 @@
  * @package    Formfields
  *
  */
+
+use Froxlor\Settings;
+
 return array(
 	'domain_add' => array(
 		'title' => $lng['domains']['subdomain_add'],
@@ -41,19 +44,19 @@ return array(
 					),
 					'path' => array(
 						'label' => $lng['panel']['path'],
-						'desc' => (\Froxlor\Settings::Get('panel.pathedit') != 'Dropdown' ? $lng['panel']['pathDescriptionSubdomain'] : null),
+						'desc' => (Settings::Get('panel.pathedit') != 'Dropdown' ? $lng['panel']['pathDescriptionSubdomain'] : null),
 						'type' => $pathSelect['type'],
 						'select_var' => $pathSelect['select_var'] ?? '',
 						'value' => $pathSelect['value'],
 						'note' => $pathSelect['note'] ?? '',
 					),
 					'url' => array(
-						'visible' => (\Froxlor\Settings::Get('panel.pathedit') == 'Dropdown' ? true : false),
+						'visible' => (Settings::Get('panel.pathedit') == 'Dropdown' ? true : false),
 						'label' => $lng['panel']['urloverridespath'],
 						'type' => 'text'
 					),
 					'redirectcode' => array(
-						'visible' => (\Froxlor\Settings::Get('customredirect.enabled') == '1' ? true : false),
+						'visible' => (Settings::Get('customredirect.enabled') == '1' ? true : false),
 						'label' => $lng['domains']['redirectifpathisurl'],
 						'desc' => $lng['domains']['redirectifpathisurlinfo'],
 						'type' => 'select',
@@ -71,18 +74,18 @@ return array(
 						'select_var' => $openbasedir
 					),
 					'phpsettingid' => array(
-						'visible' => (((int) \Froxlor\Settings::Get('system.mod_fcgid') == 1 || (int) \Froxlor\Settings::Get('phpfpm.enabled') == 1) && count($phpconfigs) > 0 ? true : false),
+						'visible' => (((int) Settings::Get('system.mod_fcgid') == 1 || (int) Settings::Get('phpfpm.enabled') == 1) && count($phpconfigs) > 0 ? true : false),
 						'label' => $lng['admin']['phpsettings']['title'],
 						'type' => 'select',
 						'select_var' => $phpconfigs,
-						'selected' => (int) Settings::Get('phpfpm.enabled') == 1) ? Settings::Get('phpfpm.defaultini') : Settings::Get('system.mod_fcgid_defaultini')
+						'selected' => (int) Settings::Get('phpfpm.enabled') == 1 ? Settings::Get('phpfpm.defaultini') : Settings::Get('system.mod_fcgid_defaultini')
 					)
 				)
 			),
 			'section_bssl' => array(
 				'title' => $lng['admin']['webserversettings_ssl'],
 				'image' => 'icons/domain_add.png',
-				'visible' => \Froxlor\Settings::Get('system.use_ssl') == '1' ? ($ssl_ipsandports ? true : false) : false,
+				'visible' => Settings::Get('system.use_ssl') == '1' ? ($ssl_ipsandports ? true : false) : false,
 				'fields' => array(
 					'sslenabled' => array(
 						'label' => $lng['admin']['domain_sslenabled'],
@@ -98,7 +101,7 @@ return array(
 						'checked' => false
 					),
 					'letsencrypt' => array(
-						'visible' => (\Froxlor\Settings::Get('system.leenabled') == '1' ? true : false),
+						'visible' => (Settings::Get('system.leenabled') == '1' ? true : false),
 						'label' => $lng['customer']['letsencrypt']['title'],
 						'desc' => $lng['customer']['letsencrypt']['description'],
 						'type' => 'checkbox',
@@ -106,7 +109,7 @@ return array(
 						'checked' => false
 					),
 					'http2' => array(
-						'visible' => ($ssl_ipsandports ? true : false) && \Froxlor\Settings::Get('system.webserver') != 'lighttpd' && \Froxlor\Settings::Get('system.http2_support') == '1',
+						'visible' => ($ssl_ipsandports ? true : false) && Settings::Get('system.webserver') != 'lighttpd' && Settings::Get('system.http2_support') == '1',
 						'label' => $lng['admin']['domain_http2']['title'],
 						'desc' => $lng['admin']['domain_http2']['description'],
 						'type' => 'checkbox',

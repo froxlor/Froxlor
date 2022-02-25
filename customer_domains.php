@@ -39,69 +39,23 @@ if ($page == 'overview') {
 } elseif ($page == 'domains') {
 	if ($action == '') {
 		$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_domains::domains");
-		$fields = array(
-			'd.domain_ace' => $lng['domains']['domainname'],
-			'd.aliasdomain' => $lng['domains']['aliasdomain']
-		);
+
+		$parentdomain_id = (int) Request::get('pid', '0');
+
 		try {
-			// get total count
-			$json_result = SubDomains::getLocal($userinfo)->listingCount();
-			$result = json_decode($json_result, true)['data'];
-			// initialize pagination and filtering
-			$paging = new \Froxlor\UI\Pagination($userinfo, $fields, $result);
-			// get list
-			$json_result = SubDomains::getLocal($userinfo, $paging->getApiCommandParams())->listing();
+			$domain_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/customer/tablelisting.domains.php';
+			$list = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\SubDomains::class, $userinfo))
+//				->addParam(['sql_search' => ['d.parentdomainid' => $parentdomain_id]])
+				->withPagination($domain_list_data['domain_list']['columns'])
+				->getList();
 		} catch (Exception $e) {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
-		$result = json_decode($json_result, true)['data'];
 
-		$sortcode = $paging->getHtmlSortCode($lng);
-		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
-		$searchcode = $paging->getHtmlSearchCode($lng);
-		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
-		$domains = '';
-		$parentdomains_count = 0;
-		$domains_count = $paging->getEntries();
-		$domain_array = array();
-
-		foreach ($result['list'] as $row) {
-			formatDomainEntry($row, $idna_convert);
-			if ($row['parentdomainid'] == '0' && $row['caneditdomain'] == '1') {
-				$parentdomains_count++;
-			}
-			$domain_array[$row['parentdomainname']][] = $row;
-		}
-
-		foreach ($domain_array as $parentdomain => $sdomains) {
-			// PARENTDOMAIN
-			if (Settings::Get('system.awstats_enabled') == '1') {
-				$statsapp = 'awstats';
-			} else {
-				$statsapp = 'webalizer';
-			}
-			$row = [
-				'domain' => $idna_convert->decode($parentdomain)
-			];
-			eval("\$domains.=\"" . \Froxlor\UI\Template::getTemplate("domains/domains_delimiter") . "\";");
-
-			foreach ($sdomains as $domain) {
-				$row = \Froxlor\PhpHelper::htmlentitiesArray($domain);
-
-				// show docroot nicely
-				if (strpos($row['documentroot'], $userinfo['documentroot']) === 0) {
-					$row['documentroot'] = \Froxlor\FileDir::makeCorrectDir(str_replace($userinfo['documentroot'], "/", $row['documentroot']));
-				}
-				// get ssl-ips if activated
-				$show_ssledit = false;
-				if (Settings::Get('system.use_ssl') == '1' && \Froxlor\Domain\Domain::domainHasSslIpPort($row['id']) && $row['caneditdomain'] == '1' && $row['letsencrypt'] == 0) {
-					$show_ssledit = true;
-				}
-				eval("\$domains.=\"" . \Froxlor\UI\Template::getTemplate("domains/domains_domain") . "\";");
-			}
-		}
-
-		eval("echo \"" . \Froxlor\UI\Template::getTemplate("domains/domainlist") . "\";");
+		UI::twigBuffer('user/table.html.twig', [
+			'listing' => \Froxlor\UI\Listing::format($list, $domain_list_data['domain_list']),
+		]);
+		UI::twigOutputBuffer();
 	} elseif ($action == 'delete' && $id != 0) {
 		try {
 			$json_result = SubDomains::getLocal($userinfo, array(

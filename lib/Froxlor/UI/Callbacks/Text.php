@@ -1,4 +1,5 @@
 <?php
+
 namespace Froxlor\UI\Callbacks;
 
 /**
@@ -18,22 +19,27 @@ namespace Froxlor\UI\Callbacks;
  */
 class Text
 {
-    public static function boolean(?string $data): array
-    {
-        return [
-            'type' => 'boolean',
-            'data' => (bool) $data
-        ];
-    }
+	public static function boolean(?string $data): array
+	{
+		return [
+			'type' => 'boolean',
+			'data' => (bool) $data
+		];
+	}
 
-    public static function domainWithSan(string $data, array $attributes): array
-    {
-        return [
-            'type' => 'domainWithSan',
-            'data' => [
-                'domain' => $data,
-                'san' => implode(', ', $attributes['san'] ?? []),
-            ]
-        ];
-    }
+	public static function domainWithSan(string $data, array $attributes): array
+	{
+		return [
+			'type' => 'domainWithSan',
+			'data' => [
+				'domain' => $data,
+				'san' => implode(', ', $attributes['san'] ?? []),
+			]
+		];
+	}
+
+	public static function customerfullname(string $data, array $attributes): string
+	{
+		return \Froxlor\User::getCorrectFullUserDetails($attributes);
+	}
 }

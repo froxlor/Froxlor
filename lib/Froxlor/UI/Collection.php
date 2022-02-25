@@ -81,12 +81,19 @@ class Collection
     public function has(string $column, string $class, string $parentKey = 'id', string $childKey = 'id', array $params = []): Collection
     {
         $this->has[] = [
-           'column' => $column,
-           'class' => $class,
-           'parentKey' => $parentKey,
-           'childKey' => $childKey,
-           'params' => $params
+            'column' => $column,
+            'class' => $class,
+            'parentKey' => $parentKey,
+            'childKey' => $childKey,
+            'params' => $params
         ];
+
+        return $this;
+    }
+
+    public function addParam(array $keyval): Collection
+    {
+        $this->params = array_merge($this->params, $keyval);
 
         return $this;
     }

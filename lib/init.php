@@ -362,6 +362,7 @@ if ($nosession == 1 && AREA != 'login') {
 }
 
 UI::twig()->addGlobal('userinfo', ($userinfo ?? []));
+UI::setCurrentUser($userinfo);
 
 /**
  * Logic moved out of lng-file
