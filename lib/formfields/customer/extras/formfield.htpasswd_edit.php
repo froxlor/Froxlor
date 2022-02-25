@@ -17,7 +17,7 @@
 return array(
 	'htpasswd_edit' => array(
 		'title' => $lng['extras']['directoryprotection_edit'],
-		'image' => 'icons/htpasswd_edit.png',
+		'image' => 'fa-solid fa-lock',
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['extras']['directoryprotection_edit'],

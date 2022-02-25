@@ -50,36 +50,18 @@ if ($page == 'overview') {
 			'path' => $lng['panel']['path']
 		);
 		try {
-			// get total count
-			$json_result = DirProtections::getLocal($userinfo)->listingCount();
-			$result = json_decode($json_result, true)['data'];
-			// initialize pagination and filtering
-			$paging = new \Froxlor\UI\Pagination($userinfo, $fields, $result);
-			// get list
-			$json_result = DirProtections::getLocal($userinfo, $paging->getApiCommandParams())->listing();
+			$htpasswd_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/customer/tablelisting.htpasswd.php';
+			$list = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\DirProtections::class, $userinfo))
+				->withPagination($htpasswd_list_data['htpasswd_list']['columns'])
+				->getList();
 		} catch (Exception $e) {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
-		$result = json_decode($json_result, true)['data'];
 
-		$sortcode = $paging->getHtmlSortCode($lng);
-		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
-		$searchcode = $paging->getHtmlSearchCode($lng);
-		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
-		$count = 0;
-		$htpasswds = '';
-
-		foreach ($result['list'] as $row) {
-			if (strpos($row['path'], $userinfo['documentroot']) === 0) {
-				$row['path'] = str_replace($userinfo['documentroot'], "/", $row['path']);
-			}
-			$row['path'] = \Froxlor\FileDir::makeCorrectDir($row['path']);
-			$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
-			eval("\$htpasswds.=\"" . \Froxlor\UI\Template::getTemplate("extras/htpasswds_htpasswd") . "\";");
-			$count ++;
-		}
-
-		eval("echo \"" . \Froxlor\UI\Template::getTemplate("extras/htpasswds") . "\";");
+		UI::twigBuffer('user/table.html.twig', [
+			'listing' => \Froxlor\UI\Listing::format($list, $htpasswd_list_data['htpasswd_list']),
+		]);
+		UI::twigOutputBuffer();
 	} elseif ($action == 'delete' && $id != 0) {
 		try {
 			$json_result = DirProtections::getLocal($userinfo, array(
@@ -181,51 +163,22 @@ if ($page == 'overview') {
 
 	if ($action == '') {
 		$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_extras::htaccess");
-		$fields = array(
-			'path' => $lng['panel']['path'],
-			'options_indexes' => $lng['extras']['view_directory'],
-			'error404path' => $lng['extras']['error404path'],
-			'error403path' => $lng['extras']['error403path'],
-			'error500path' => $lng['extras']['error500path'],
-			'options_cgi' => $lng['extras']['execute_perl']
-		);
-		try {
-			// get total count
-			$json_result = DirOptions::getLocal($userinfo)->listingCount();
-			$result = json_decode($json_result, true)['data'];
-			// initialize pagination and filtering
-			$paging = new \Froxlor\UI\Pagination($userinfo, $fields, $result);
-			// get list
-			$json_result = DirOptions::getLocal($userinfo, $paging->getApiCommandParams())->listing();
-		} catch (Exception $e) {
-			\Froxlor\UI\Response::dynamic_error($e->getMessage());
-		}
-		$result = json_decode($json_result, true)['data'];
-
-		$sortcode = $paging->getHtmlSortCode($lng);
-		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
-		$searchcode = $paging->getHtmlSearchCode($lng);
-		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
-		$count = 0;
-		$htaccess = '';
 
 		$cperlenabled = \Froxlor\Customer\Customer::customerHasPerlEnabled($userinfo['customerid']);
 
-		foreach ($result['list'] as $row) {
-			if (strpos($row['path'], $userinfo['documentroot']) === 0) {
-				$row['path'] = str_replace($userinfo['documentroot'], "/", $row['path']);
-			}
-			$row['path'] = \Froxlor\FileDir::makeCorrectDir($row['path']);
-			$row['options_indexes'] = str_replace('1', $lng['panel']['yes'], $row['options_indexes']);
-			$row['options_indexes'] = str_replace('0', $lng['panel']['no'], $row['options_indexes']);
-			$row['options_cgi'] = str_replace('1', $lng['panel']['yes'], $row['options_cgi']);
-			$row['options_cgi'] = str_replace('0', $lng['panel']['no'], $row['options_cgi']);
-			$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
-			eval("\$htaccess.=\"" . \Froxlor\UI\Template::getTemplate("extras/htaccess_htaccess") . "\";");
-			$count ++;
+		try {
+			$htaccess_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/customer/tablelisting.htaccess.php';
+			$list = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\DirOptions::class, $userinfo))
+				->withPagination($htaccess_list_data['htaccess_list']['columns'])
+				->getList();
+		} catch (Exception $e) {
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 
-		eval("echo \"" . \Froxlor\UI\Template::getTemplate("extras/htaccess") . "\";");
+		UI::twigBuffer('user/table.html.twig', [
+			'listing' => \Froxlor\UI\Listing::format($list, $htaccess_list_data['htaccess_list']),
+		]);
+		UI::twigOutputBuffer();
 	} elseif ($action == 'delete' && $id != 0) {
 		try {
 			$json_result = DirOptions::getLocal($userinfo, array(
@@ -363,7 +316,7 @@ if ($page == 'overview') {
 				\Froxlor\UI\Response::standard_success('backupscheduled');
 			} else {
 
-				if (! empty($existing_backupJob)) {
+				if (!empty($existing_backupJob)) {
 					$action = "abort";
 					$row = $existing_backupJob['data'];
 
@@ -371,18 +324,19 @@ if ($page == 'overview') {
 					$row['backup_web'] = ($row['backup_web'] == '1') ? $lng['panel']['yes'] : $lng['panel']['no'];
 					$row['backup_mail'] = ($row['backup_mail'] == '1') ? $lng['panel']['yes'] : $lng['panel']['no'];
 					$row['backup_dbs'] = ($row['backup_dbs'] == '1') ? $lng['panel']['yes'] : $lng['panel']['no'];
-				}
-				$pathSelect = \Froxlor\FileDir::makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
-				$backup_data = include_once dirname(__FILE__) . '/lib/formfields/customer/extras/formfield.backup.php';
-				$backup_form = \Froxlor\UI\HtmlForm::genHTMLForm($backup_data);
-				$title = $backup_data['backup']['title'];
-				$image = $backup_data['backup']['image'];
 
-				if (! empty($existing_backupJob)) {
 					// overwrite backup_form after we took everything from it we needed
 					eval("\$backup_form = \"" . \Froxlor\UI\Template::getTemplate("extras/backup_listexisting") . "\";");
 				}
-				eval("echo \"" . \Froxlor\UI\Template::getTemplate("extras/backup") . "\";");
+
+				$pathSelect = \Froxlor\FileDir::makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
+				$backup_data = include_once dirname(__FILE__) . '/lib/formfields/customer/extras/formfield.backup.php';
+
+				UI::twigBuffer('user/form.html.twig', [
+					'formaction' => $linker->getLink(array('section' => 'extras')),
+					'formdata' => $backup_data['backup']
+				]);
+				UI::twigOutputBuffer();
 			}
 		}
 	} else {

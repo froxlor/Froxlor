@@ -6,7 +6,7 @@
 					{% if field.desc is defined and field.desc is not empty %}<br><small>{{ field.desc|raw }}</small>
 					{% endif %}
 				</label>
-				<div class="col-sm-8">
+				<div class="col-sm-8{% if field.type == 'infotext' %} d-flex align-items-center{% endif %}">
 				{% endif %}
 				{% if field.type == 'text' or field.type == 'password' or field.type == 'number' or field.type == 'file' or field.type == 'email' or field.type == 'hidden' %}
 					{{ _self.input(id, field) }}
@@ -24,6 +24,8 @@
 					{{ _self.link(id, field) }}
 				{% elseif field.type == 'itemlist' %}
 					{{ _self.itemlist(id, field) }}
+				{% elseif field.type == 'infotext' %}
+					{{ _self.infotext(id, field) }}
 				{% endif %}
 				{% if norow == false and field.type != 'hidden' %}
 				</div>
@@ -45,6 +47,22 @@
 	{% else %}
 		<div class="form-check form-switch">
 			<input type="checkbox" value="{{ field.value }}" id="{{ id }}" name="{{ id }}" class="form-check-input {% if field.valid is defined and field.valid == false %}is-invalid{% endif %}" {% if field.checked is defined and field.checked == 1 %} checked="checked" {% endif %}>
+		</div>
+	{% endif %}
+{% endmacro %}
+
+{% macro infotext(id, field) %}
+	{% if field.next_to is defined %}
+		<div class="input-group">
+		{% endif %}
+		<span {% if field.classes is defined %} class="{{ field.classes }}" {% endif %}>{{ field.value }}</span>
+		{% if field.next_to is defined %}
+			{% for nid, nfield in field.next_to %}
+				{% if nfield.next_to_prefix is defined %}
+					<span class="input-group-text">{{ nfield.next_to_prefix }}</span>
+				{% endif %}
+				{{ _self.fieldrow(nid, nfield, true) }}
+			{% endfor %}
 		</div>
 	{% endif %}
 {% endmacro %}
@@ -74,7 +92,7 @@
 			<input type="text" readonly class="form-control-plaintext" value="{{ field.display }}">
 		{% endif %}
 		{% if field.note is defined and field.note is not empty %}
-		<div class="invalid-feedback">{{ field.note|raw }}</div>
+			<div class="invalid-feedback">{{ field.note|raw }}</div>
 		{% endif %}
 		{% if field.next_to is defined %}
 			{% for nid, nfield in field.next_to %}

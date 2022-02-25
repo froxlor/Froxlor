@@ -1893,8 +1893,8 @@ $lng['crondesc']['cron_backup'] = 'Process backup jobs';
 $lng['error']['backupfunctionnotenabled'] = 'The backup function is not enabled';
 $lng['serversettings']['backupenabled']['title'] = "Enable backup for customers";
 $lng['serversettings']['backupenabled']['description'] = "If activated, the customer will be able to schedule backup jobs (cron-backup) which generates an archive within his docroot (subdirectory chosable by customer)";
-$lng['extras']['path_protection_label'] = '<strong class="red">Important</strong>';
-$lng['extras']['path_protection_info'] = '<strong class="red">We strongly recommend protecting the given path, see "Extras" -> "Directory protection"</strong>';
+$lng['extras']['path_protection_label'] = '<strong class="text-danger">Important</strong>';
+$lng['extras']['path_protection_info'] = 'We strongly recommend protecting the given path, see "Extras" -> "Directory protection"';
 $lng['tasks']['CREATE_CUSTOMER_BACKUP'] = 'Backup job for customer %loginname%';
 
 $lng['error']['dns_domain_nodns'] = 'DNS is not enabled for this domain';
