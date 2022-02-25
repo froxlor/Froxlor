@@ -38,44 +38,19 @@ if ($page == 'overview') {
 } elseif ($page == 'accounts') {
 	if ($action == '') {
 		$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_ftp::accounts");
-		$fields = array(
-			'username' => $lng['login']['username'],
-			'homedir' => $lng['panel']['path'],
-			'description' => $lng['panel']['ftpdesc']
-		);
 		try {
-			// get total count
-			$json_result = Ftps::getLocal($userinfo)->listingCount();
-			$result = json_decode($json_result, true)['data'];
-			// initialize pagination and filtering
-			$paging = new \Froxlor\UI\Pagination($userinfo, $fields, $result);
-			// get list
-			$json_result = Ftps::getLocal($userinfo, $paging->getApiCommandParams())->listing();
+			$ftp_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/customer/tablelisting.ftps.php';
+			$list = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Ftps::class, $userinfo))
+				->withPagination($ftp_list_data['ftp_list']['columns'])
+				->getList();
 		} catch (Exception $e) {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
-		$result = json_decode($json_result, true)['data'];
-		$ftps_count = $paging->getEntries();
-		$sortcode = $paging->getHtmlSortCode($lng);
-		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
-		$searchcode = $paging->getHtmlSearchCode($lng);
-		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
-		$count = 0;
-		$accounts = '';
 
-		foreach ($result['list'] as $row) {
-			if (strpos($row['homedir'], $userinfo['documentroot']) === 0) {
-				$row['documentroot'] = str_replace($userinfo['documentroot'], "/", $row['homedir']);
-			} else {
-				$row['documentroot'] = $row['homedir'];
-			}
-			$row['documentroot'] = \Froxlor\FileDir::makeCorrectDir($row['documentroot']);
-			$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
-			eval("\$accounts.=\"" . \Froxlor\UI\Template::getTemplate('ftp/accounts_account') . "\";");
-			$count++;
-		}
-
-		eval("echo \"" . \Froxlor\UI\Template::getTemplate('ftp/accounts') . "\";");
+		UI::twigBuffer('user/table.html.twig', [
+			'listing' => \Froxlor\UI\Listing::format($list, $ftp_list_data['ftp_list']),
+		]);
+		UI::twigOutputBuffer();
 	} elseif ($action == 'delete' && $id != 0) {
 		try {
 			$json_result = Ftps::getLocal($userinfo, array(

@@ -47,56 +47,24 @@ if ($page == 'overview') {
 } elseif ($page == 'mysqls') {
 	if ($action == '') {
 		$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_mysql::mysqls");
-		$fields = array(
-			'databasename' => $lng['mysql']['databasename'],
-			'description' => $lng['mysql']['databasedescription']
-		);
-		try {
-			// get total count
-			$json_result = Mysqls::getLocal($userinfo)->listingCount();
-			$result = json_decode($json_result, true)['data'];
-			// initialize pagination and filtering
-			$paging = new \Froxlor\UI\Pagination($userinfo, $fields, $result);
-			// get list
-			$json_result = Mysqls::getLocal($userinfo, $paging->getApiCommandParams())->listing();
-		} catch (Exception $e) {
-			\Froxlor\UI\Response::dynamic_error($e->getMessage());
-		}
-		$result = json_decode($json_result, true)['data'];
-
-		$mysqls_count = $paging->getEntries();
-		$sortcode = $paging->getHtmlSortCode($lng);
-		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
-		$searchcode = $paging->getHtmlSearchCode($lng);
-		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
-		$count = 0;
-		$mysqls = '';
 
 		$dbservers_stmt = Database::query("SELECT COUNT(DISTINCT `dbserver`) as numservers FROM `" . TABLE_PANEL_DATABASES . "`");
 		$dbserver = $dbservers_stmt->fetch(PDO::FETCH_ASSOC);
 		$count_mysqlservers = $dbserver['numservers'];
 
-		// Begin root-session
-		Database::needRoot(true);
-		foreach ($result['list'] as $row) {
-			$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
-			$mbdata_stmt = Database::prepare("SELECT SUM(data_length + index_length) as MB FROM information_schema.TABLES
-					WHERE table_schema = :table_schema
-					GROUP BY table_schema");
-			$mbdata = Database::pexecute_first($mbdata_stmt, array(
-				"table_schema" => $row['databasename']
-			));
-			if (!$mbdata) {
-				$mbdata = array('MB' => 0);
-			}
-			$row['size'] = \Froxlor\PhpHelper::sizeReadable($mbdata['MB'], 'GiB', 'bi', '%01.' . (int) Settings::Get('panel.decimal_places') . 'f %s');
-			eval("\$mysqls.=\"" . \Froxlor\UI\Template::getTemplate('mysql/mysqls_database') . "\";");
-			$count++;
+		try {
+			$mysql_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/customer/tablelisting.mysqls.php';
+			$list = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Mysqls::class, $userinfo))
+				->withPagination($mysql_list_data['mysql_list']['columns'])
+				->getList();
+		} catch (Exception $e) {
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
-		Database::needRoot(false);
-		// End root-session
 
-		eval("echo \"" . \Froxlor\UI\Template::getTemplate('mysql/mysqls') . "\";");
+		UI::twigBuffer('user/table.html.twig', [
+			'listing' => \Froxlor\UI\Listing::format($list, $mysql_list_data['mysql_list']),
+		]);
+		UI::twigOutputBuffer();
 	} elseif ($action == 'delete' && $id != 0) {
 
 		try {
