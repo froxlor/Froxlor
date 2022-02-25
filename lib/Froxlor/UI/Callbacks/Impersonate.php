@@ -1,4 +1,5 @@
 <?php
+
 namespace Froxlor\UI\Callbacks;
 
 use Froxlor\UI\Panel\UI;
@@ -21,38 +22,41 @@ use Froxlor\UI\Panel\UI;
 
 class Impersonate
 {
-    public static function admin(string $data, array $attributes): array
-    {
-        $linker = UI::getLinker();
-        return [
-            'type' => 'link',
-            'data' => [
-                'text' => $data,
-                'href' => $linker->getLink([
-                    'section' => 'admins',
-                    'page' => 'admins',
-                    'action' => 'su',
-                    'id' => $attributes['adminid'],
-                ]),
-            ]
-        ];
-    }
+	public static function admin(string $data, array $attributes): mixed
+	{
+		if (UI::getCurrentUser()['adminid'] != $attributes['adminid']) {
+			$linker = UI::getLinker();
+			return [
+				'type' => 'link',
+				'data' => [
+					'text' => $data,
+					'href' => $linker->getLink([
+						'section' => 'admins',
+						'page' => 'admins',
+						'action' => 'su',
+						'id' => $attributes['adminid'],
+					]),
+				]
+			];
+		}
+		return $data;
+	}
 
-    public static function customer(string $data, array $attributes): array
-    {
-        $linker = UI::getLinker();
-        return [
-            'type' => 'link',
-            'data' => [
-                'text' => $data,
-                'href' => $linker->getLink([
-                    'section' => 'customers',
-                    'page' => 'customers',
-                    'action' => 'su',
-                    'sort' => $attributes['loginname'],
-                    'id' => $attributes['customerid'],
-                ]),
-            ]
-        ];
-    }
+	public static function customer(string $data, array $attributes): array
+	{
+		$linker = UI::getLinker();
+		return [
+			'type' => 'link',
+			'data' => [
+				'text' => $data,
+				'href' => $linker->getLink([
+					'section' => 'customers',
+					'page' => 'customers',
+					'action' => 'su',
+					'sort' => $attributes['loginname'],
+					'id' => $attributes['customerid'],
+				]),
+			]
+		];
+	}
 }
