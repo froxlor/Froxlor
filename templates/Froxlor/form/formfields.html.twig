@@ -53,7 +53,7 @@
 	{% if field.next_to is defined %}
 		<div class="input-group">
 		{% endif %}
-		<input type="text" readonly class="form-control-plaintext" id="{{ id }}" value="{{ field.value }}">
+		<input type="text" readonly class="form-control-plaintext" id="{{ id }}" name="{{ id }}" value="{{ field.value }}">
 		{% if field.next_to is defined %}
 			{% for nid, nfield in field.next_to %}
 				{% if nfield.next_to_prefix is defined %}
