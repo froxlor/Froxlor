@@ -33,10 +33,7 @@ if (Settings::IsInList('panel.customer_hide_options', 'extras')) {
 
 $id = (int) Request::get('id');
 
-if ($page == 'overview') {
-	$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_extras");
-	eval("echo \"" . \Froxlor\UI\Template::getTemplate("extras/extras") . "\";");
-} elseif ($page == 'htpasswds') {
+if ($page == 'overview' || $page == 'htpasswds') {
 
 	// redirect if this customer sub-page is hidden via settings
 	if (Settings::IsInList('panel.customer_hide_options', 'extras.directoryprotection')) {
@@ -60,6 +57,11 @@ if ($page == 'overview') {
 
 		UI::twigBuffer('user/table.html.twig', [
 			'listing' => \Froxlor\UI\Listing::format($list, $htpasswd_list_data['htpasswd_list']),
+			'add_link' => [
+				'href' => $linker->getLink(['section' => 'extras', 'page' => 'htpasswds', 'action' => 'add']),
+				'label' => $lng['extras']['directoryprotection_add']
+			],
+			'entity_info' => $lng['extras']['description']
 		]);
 		UI::twigOutputBuffer();
 	} elseif ($action == 'delete' && $id != 0) {
@@ -177,6 +179,11 @@ if ($page == 'overview') {
 
 		UI::twigBuffer('user/table.html.twig', [
 			'listing' => \Froxlor\UI\Listing::format($list, $htaccess_list_data['htaccess_list']),
+			'add_link' => [
+				'href' => $linker->getLink(['section' => 'extras', 'page' => 'htaccess', 'action' => 'add']),
+				'label' => $lng['extras']['pathoptions_add']
+			],
+			'entity_info' => $lng['extras']['description']
 		]);
 		UI::twigOutputBuffer();
 	} elseif ($action == 'delete' && $id != 0) {

@@ -2,7 +2,7 @@
 
 {% block content %}
 	<div class="row">
-		<div class="col-12 col-md-10 order-2 order-md-1">
+		<div class="col-12 {% if add_link is iterable or (entity_info is defined and entity_info is not empty) %}col-md-10 order-2 order-md-1{% endif %}">
 			{% import "Froxlor/table/table.html.twig" as table %}
 			{{ table.table(listing) }}
 		</div>

@@ -33,10 +33,7 @@ if (Settings::IsInList('panel.customer_hide_options', 'domains')) {
 
 $id = (int) Request::get('id');
 
-if ($page == 'overview') {
-	$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_domains");
-	eval("echo \"" . \Froxlor\UI\Template::getTemplate("domains/domains") . "\";");
-} elseif ($page == 'domains') {
+if ($page == 'overview' || $page == 'domains') {
 	if ($action == '') {
 		$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_domains::domains");
 
@@ -52,11 +49,11 @@ if ($page == 'overview') {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 
-		$add_link = false;
 		$json_result = SubDomains::getLocal($userinfo, ['sql_search' => ['d.parentdomainid' => 0]])->listing();
 		$result = json_decode($json_result, true)['data'];
 		$parentdomains_count = $result['count'];
 
+		$add_link = false;
 		if (($userinfo['subdomains_used'] < $userinfo['subdomains'] || $userinfo['subdomains'] == '-1') && $parentdomains_count != 0) {
 			$add_link = [
 				'href' => $linker->getLink(['section' => 'domains', 'page' => 'domains', 'action' => 'add']),

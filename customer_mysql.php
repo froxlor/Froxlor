@@ -38,13 +38,7 @@ Database::needRoot(false);
 
 $id = (int) Request::get('id');
 
-if ($page == 'overview') {
-	$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_mysql");
-	Database::needSqlData();
-	$sql = Database::getSqlData();
-	$lng['mysql']['description'] = str_replace('<SQL_HOST>', $sql['host'], $lng['mysql']['description']);
-	eval("echo \"" . \Froxlor\UI\Template::getTemplate('mysql/mysql') . "\";");
-} elseif ($page == 'mysqls') {
+if ($page == 'overview' || $page == 'mysqls') {
 	if ($action == '') {
 		$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_mysql::mysqls");
 
@@ -61,8 +55,22 @@ if ($page == 'overview') {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 
+		Database::needSqlData();
+		$sql = Database::getSqlData();
+		$lng['mysql']['description'] = str_replace('<SQL_HOST>', $sql['host'], $lng['mysql']['description']);
+
+		$add_link = false;
+		if ($userinfo['mysqls_used'] < $userinfo['mysqls'] || $userinfo['mysqls'] == '-1') {
+			$add_link = [
+				'href' => $linker->getLink(['section' => 'mysql', 'page' => 'mysqls', 'action' => 'add']),
+				'label' => $lng['mysql']['database_create']
+			];
+		}
+
 		UI::twigBuffer('user/table.html.twig', [
 			'listing' => \Froxlor\UI\Listing::format($list, $mysql_list_data['mysql_list']),
+			'add_link' => $add_link,
+			'entity_info' => $lng['mysql']['description']
 		]);
 		UI::twigOutputBuffer();
 	} elseif ($action == 'delete' && $id != 0) {

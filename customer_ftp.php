@@ -32,10 +32,7 @@ if (Settings::IsInList('panel.customer_hide_options', 'ftp')) {
 
 $id = (int) Request::get('id', 0);
 
-if ($page == 'overview') {
-	$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_ftp");
-	eval("echo \"" . \Froxlor\UI\Template::getTemplate('ftp/ftp') . "\";");
-} elseif ($page == 'accounts') {
+if ($page == 'overview' || $page == 'accounts') {
 	if ($action == '') {
 		$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_ftp::accounts");
 		try {
@@ -47,8 +44,18 @@ if ($page == 'overview') {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 
+		$add_link = false;
+		if ($userinfo['ftps_used'] < $userinfo['ftps'] || $userinfo['ftps'] == '-1') {
+			$add_link = [
+				'href' => $linker->getLink(['section' => 'ftp', 'page' => 'accounts', 'action' => 'add']),
+				'label' => $lng['ftp']['account_add']
+			];
+		}
+
 		UI::twigBuffer('user/table.html.twig', [
 			'listing' => \Froxlor\UI\Listing::format($list, $ftp_list_data['ftp_list']),
+			'add_link' => $add_link,
+			'entity_info' => $lng['ftp']['description']
 		]);
 		UI::twigOutputBuffer();
 	} elseif ($action == 'delete' && $id != 0) {

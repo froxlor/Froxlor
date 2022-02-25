@@ -34,10 +34,7 @@ if (Settings::IsInList('panel.customer_hide_options', 'email')) {
 
 $id = (int) Request::get('id');
 
-if ($page == 'overview') {
-	$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_email");
-	eval("echo \"" . \Froxlor\UI\Template::getTemplate("email/email") . "\";");
-} elseif ($page == 'emails') {
+if ($page == 'overview' || $page == 'emails') {
 	if ($action == '') {
 		$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_email::emails");
 
@@ -60,8 +57,18 @@ if ($page == 'overview') {
 		));
 		$emaildomains_count = $result2['emaildomains'];
 
+		$add_link = false;
+		if (($userinfo['emails_used'] < $userinfo['emails'] || $userinfo['emails'] == '-1') && $emaildomains_count !=0) {
+			$add_link = [
+				'href' => $linker->getLink(['section' => 'email', 'page' => $page, 'action' => 'add']),
+				'label' => $lng['emails']['emails_add']
+			];
+		}
+
 		UI::twigBuffer('user/table.html.twig', [
 			'listing' => \Froxlor\UI\Listing::format($list, $email_list_data['email_list']),
+			'add_link' => $add_link,
+			'entity_info' => $lng['emails']['description']
 		]);
 		UI::twigOutputBuffer();
 	} elseif ($action == 'delete' && $id != 0) {

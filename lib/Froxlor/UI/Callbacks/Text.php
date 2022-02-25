@@ -2,6 +2,8 @@
 
 namespace Froxlor\UI\Callbacks;
 
+use Froxlor\PhpHelper;
+
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -41,5 +43,10 @@ class Text
 	public static function customerfullname(string $data, array $attributes): string
 	{
 		return \Froxlor\User::getCorrectFullUserDetails($attributes);
+	}
+
+	public static function size(string $data, array $attributes): string
+	{
+		return PhpHelper::sizeReadable($data, null, 'bi');
 	}
 }
