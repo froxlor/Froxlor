@@ -19,14 +19,12 @@ if (! defined('AREA')) {
  *         
  */
 
-use Froxlor\Api\Commands\SubDomains as SubDomains;
+use Froxlor\Api\Commands\SubDomains;
 use Froxlor\Settings;
 use Froxlor\UI\Request;
 
 // This file is being included in admin_domains and customer_domains
 // and therefore does not need to require lib/init.php
-
-// TODO get domain related settings for logfile (speciallogfile)
 
 $domain_id = (int) Request::get('domain_id');
 $last_n = (int) Request::get('number_of_lines', 100);
