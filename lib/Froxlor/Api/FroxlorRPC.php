@@ -92,7 +92,7 @@ class FroxlorRPC
 				}
 			}
 		}
-		return false;
+		throw new Exception('Invalid authorization credentials', 403);
 	}
 
 	/**
