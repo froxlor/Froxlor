@@ -60,7 +60,7 @@ class FroxlorRpcTest extends TestCase
 	public function testNoCommandGiven()
 	{
 		$this->expectExceptionCode(400);
-		$this->expectExceptionMessage("No command given");
+		$this->expectExceptionMessage("Please provide a command.");
 		$_SERVER['PHP_AUTH_USER'] = 'test';
 		$_SERVER['PHP_AUTH_PW'] = 'test';
 		FroxlorRPC::validateRequest(json_encode(['cmd' => 'test']));
@@ -69,7 +69,7 @@ class FroxlorRpcTest extends TestCase
 	public function testInvalidCommandGiven()
 	{
 		$this->expectExceptionCode(400);
-		$this->expectExceptionMessage("Invalid command");
+		$this->expectExceptionMessage("The given command is invalid.");
 		$_SERVER['PHP_AUTH_USER'] = 'test';
 		$_SERVER['PHP_AUTH_PW'] = 'test';
 		FroxlorRPC::validateRequest(json_encode(['command' => 'Froxlor']));

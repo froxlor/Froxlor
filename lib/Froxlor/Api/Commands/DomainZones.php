@@ -545,6 +545,6 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_DNS);
 			return $this->response(true);
 		}
-		return $this->response(null, 204);
+		return $this->response(true, 304);
 	}
 }

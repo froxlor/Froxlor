@@ -929,7 +929,7 @@ class DomainZonesTest extends TestCase
 		$json_result = DomainZones::getLocal($customer_userdata, $data)->delete();
 		$result = json_decode($json_result, true);
 		$this->assertTrue($result['data']);
-		$this->assertEquals(200, $result['status']);
+		$this->assertEquals(200, http_response_code());
 	}
 
 	public function testCustomerDomainZonesDeleteUnmodified()
@@ -949,6 +949,6 @@ class DomainZonesTest extends TestCase
 		$json_result = DomainZones::getLocal($customer_userdata, $data)->delete();
 		$result = json_decode($json_result, true);
 		$this->assertTrue($result['data']);
-		$this->assertEquals(304, $result['status']);
+		$this->assertEquals(304, http_response_code());
 	}
 }
