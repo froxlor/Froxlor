@@ -27,6 +27,7 @@ return [
             'd.domain_ace' => [
                 'label' => $lng['domains']['domainname'],
                 'column' => 'domain_ace',
+                'sortable' => true,
             ],
             'c.name' => [
                 'label' => $lng['customer']['name'],
@@ -44,6 +45,7 @@ return [
                 'label' => $lng['login']['username'],
                 'column' => 'customer.loginname',
                 'format_callback' => [Impersonate::class, 'customer'],
+                'sortable' => true,
             ],
             'd.aliasdomain' => [
                 'label' => $lng['domains']['aliasdomain'],

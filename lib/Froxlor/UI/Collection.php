@@ -23,6 +23,7 @@ class Collection
     private array $has = [];
     private array $params;
     private array $userinfo;
+    private ?Pagination $pagination;
 
     public function __construct(string $class, array $userInfo, array $params = [])
     {
@@ -60,6 +61,11 @@ class Collection
             }
         }
 
+        // attach pagination if available
+        if ($this->pagination) {
+            $result = array_merge($result, $this->pagination->getApiResponseParams());
+        }
+
         return $result;
     }
 
@@ -93,10 +99,17 @@ class Collection
 
     public function withPagination(array $columns): Collection
     {
-        // TODO: handle 'sortable' => true in $columns
+        // Get only searchable columns
+        $sortableColumns = [];
+        foreach ($columns as $key => $column) {
+            if (isset($column['sortable']) && $column['sortable']) {
+                $sortableColumns[$key] = $column;
+            }
+        }
 
-        $pagination = new Pagination($this->userinfo, $columns, $this->count());
-        $this->params = array_merge($this->params, $pagination->getApiCommandParams());
+        // Prepare pagination
+        $this->pagination = new Pagination($this->userinfo, $sortableColumns, $this->count());
+        $this->params = array_merge($this->params, $this->pagination->getApiCommandParams());
 
         return $this;
     }

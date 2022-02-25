@@ -22,6 +22,7 @@ namespace Froxlor\UI;
  * Class to manage paging system
  *
  * @package Functions
+ * @deprecated
  */
 class Paging
 {

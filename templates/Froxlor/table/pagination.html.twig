@@ -1,0 +1,28 @@
+{% macro paging(pagination) %}
+    <div class="card-footer border-top">
+        {% if pagination.current_page >= pagination.last_page %}
+            <a href="?s={{ s }}&page={{ page }}&action={{ action }}&pageno=1">&laquo;</a>
+        {% endif %}
+        {% if pagination.current_page >= pagination.last_page %}
+            <a href="?s={{ s }}&page={{ page }}&action={{ action }}&pageno={{ pagination.current_page - 1 }}">&lsaquo;</a>
+        {% endif %}
+        {% if pagination.current_page < pagination.last_page %}
+            <a href="?s={{ s }}&page={{ page }}&action={{ action }}&pageno={{ pagination.current_page + 1 }}">&rsaquo;</a>
+        {% endif %}
+        {% if pagination.current_page < pagination.last_page %}
+            <a href="?s={{ s }}&page={{ page }}&action={{ action }}&pageno={{ pagination.last_page }}">&raquo;</a>
+        {% endif %}
+    </div>
+{% endmacro %}
+
+{% macro titlesorting(pagination, key, th) %}
+    {% if pagination is defined and key in pagination.sortfields %}
+        <th class="p-3 {{ th.class }}">
+            {{ th.text }}
+            <a href="?s={{ s }}&page={{ page }}&action={{ action }}&pageno={{ pagination.current_page }}&sortfield={{ key }}&sortorder=desc">&darr;</a>
+            <a href="?s={{ s }}&page={{ page }}&action={{ action }}&pageno={{ pagination.current_page }}&sortfield={{ key }}&sortorder=asc">&uarr;</a>
+        </th>
+    {% else %}
+        <th class="p-3 {{ th.class }}">{{ th.text }}</th>
+    {% endif %}
+{% endmacro %}

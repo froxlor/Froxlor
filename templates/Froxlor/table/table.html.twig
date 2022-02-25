@@ -1,6 +1,7 @@
 {% macro table(listing) %}
 
 	{% import "Froxlor/table/callbacks.html.twig" as callbacks %}
+	{% import "Froxlor/table/pagination.html.twig" as pagination %}
 
 	<form action="{{ action|default("") }}" method="post" enctype="application/x-www-form-urlencoded" class="form">
 		{% if listing.title is not empty %}
@@ -16,8 +17,8 @@
 			<table class="table table-borderless table-striped table-sm mb-0 px-3">
 				<thead>
 					<tr>
-						{% for th in listing.table.th %}
-							<th class="p-3 {{ th.class }}">{{ th.text }}</th>
+						{% for key,th in listing.table.th %}
+							{{ pagination.titlesorting(listing.pagination, key, th) }}
 						{% endfor %}
 					</tr>
 				</thead>
@@ -50,9 +51,7 @@
 				</tbody>
 			</table>
 			{% if listing.pagination is not empty %}
-				<div class="card-footer">
-					Pagination...
-				</div>
+				{{ pagination.paging(listing.pagination) }}
 			{% endif %}
 		</div>
 	</form>

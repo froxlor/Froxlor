@@ -33,15 +33,14 @@ if ($page == 'ipsandports' || $page == 'overview') {
 
 		try {
             $ipsandports_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.ipsandports.php';
-			$list = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\IpsAndPorts::class, $userinfo))
-                ->withPagination($ipsandports_list_data['ipsandports_list']['columns'])
-                ->getList();
+			$collection = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\IpsAndPorts::class, $userinfo))
+                ->withPagination($ipsandports_list_data['ipsandports_list']['columns']);
         } catch (Exception $e) {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 
         UI::twigBuffer('user/table.html.twig', [
-            'listing' => \Froxlor\UI\Listing::format($list, $ipsandports_list_data['ipsandports_list']),
+            'listing' => \Froxlor\UI\Listing::format($collection, $ipsandports_list_data['ipsandports_list']),
         ]);
         UI::twigOutputBuffer();
 	} elseif ($action == 'delete' && $id != 0) {

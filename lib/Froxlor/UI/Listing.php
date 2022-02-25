@@ -20,16 +20,18 @@ use Froxlor\UI\Panel\UI;
  */
 class Listing
 {
-    public static function format(array $list, array $tabellisting): array
+    public static function format(Collection $collection, array $tabellisting): array
     {
+        $collection = $collection->get();
+
         return [
             'title' => $tabellisting['title'],
             'icon' => $tabellisting['icon'],
             'table' => [
                 'th' => self::generateTableHeadings($tabellisting),
-                'tr' => self::generateTableRows($list, $tabellisting),
+                'tr' => self::generateTableRows($collection['data']['list'], $tabellisting),
             ],
-            'pagination' => null, // TODO: write some logic
+            'pagination' => $collection['pagination'],
         ];
     }
 
@@ -43,7 +45,7 @@ class Listing
                 continue;
             }
 
-            $heading[] = [
+            $heading[$visible_column] = [
                 'text' => $tabellisting['columns'][$visible_column]['label'],
                 'class' => $tabellisting['columns'][$visible_column]['class'] ?? null,
             ];
@@ -51,7 +53,7 @@ class Listing
 
         // Table headings for actions
         if (isset($tabellisting['actions'])) {
-            $heading[] = [
+            $heading['actions'] = [
                 'text' => UI::getLng('panel.options'),
                 'class' => 'text-end',
             ];

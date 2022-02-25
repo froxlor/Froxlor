@@ -34,16 +34,15 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 
 		try {
             $customer_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.customers.php';
-            $list = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Customers::class, $userinfo))
+            $collection = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Customers::class, $userinfo))
                 ->has('admin', \Froxlor\Api\Commands\Admins::class, 'adminid', 'adminid')
-                ->withPagination($customer_list_data['customer_list']['columns'])
-                ->getList();
+                ->withPagination($customer_list_data['customer_list']['columns']);
         } catch (Exception $e) {
             \Froxlor\UI\Response::dynamic_error($e->getMessage());
         }
 
         UI::twigBuffer('user/table.html.twig', [
-            'listing' => \Froxlor\UI\Listing::format($list, $customer_list_data['customer_list']),
+            'listing' => \Froxlor\UI\Listing::format($collection, $customer_list_data['customer_list']),
         ]);
         UI::twigOutputBuffer();
 	} elseif ($action == 'su' && $id != 0) {

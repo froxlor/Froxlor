@@ -35,16 +35,15 @@ if ($page == 'domains' || $page == 'overview') {
 
         try {
             $domain_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.domains.php';
-            $list = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Domains::class, $userinfo))
+            $collection = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Domains::class, $userinfo))
                 ->has('customer', \Froxlor\Api\Commands\Customers::class, 'customerid', 'customerid')
-                ->withPagination($domain_list_data['domain_list']['columns'])
-                ->getList();
+                ->withPagination($domain_list_data['domain_list']['columns']);
         } catch (Exception $e) {
             \Froxlor\UI\Response::dynamic_error($e->getMessage());
         }
 
         UI::twigBuffer('user/table.html.twig', [
-            'listing' => \Froxlor\UI\Listing::format($list, $domain_list_data['domain_list']),
+            'listing' => \Froxlor\UI\Listing::format($collection, $domain_list_data['domain_list']),
         ]);
         UI::twigOutputBuffer();
 	} elseif ($action == 'delete' && $id != 0) {

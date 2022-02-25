@@ -32,19 +32,17 @@ if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
 
 	if ($action == '') {
 		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_admins");
-        $admin_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.admins.php';
 
         try {
-			// get filtered collection
-            $list = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Admins::class, $userinfo))
-                ->withPagination($admin_list_data['admin_list']['columns'])
-                ->getList();
+            $admin_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.admins.php';
+            $collection = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Admins::class, $userinfo))
+                ->withPagination($admin_list_data['admin_list']['columns']);
 		} catch (Exception $e) {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 
         UI::twigBuffer('user/table.html.twig', [
-            'listing' => \Froxlor\UI\Listing::format($list, $admin_list_data['admin_list']),
+            'listing' => \Froxlor\UI\Listing::format($collection, $admin_list_data['admin_list']),
         ]);
         UI::twigOutputBuffer();
     } elseif ($action == 'su') {

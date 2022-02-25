@@ -51,14 +51,13 @@ $log->logAction(FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed domains::ssl_cert
 
 try {
     $certificates_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.sslcertificates.php';
-    $list = (new Collection(Certificates::class, $userinfo))
-        ->withPagination($certificates_list_data['sslcertificates_list']['columns'])
-        ->getList();
+    $collection = (new Collection(Certificates::class, $userinfo))
+        ->withPagination($certificates_list_data['sslcertificates_list']['columns']);
 } catch (Exception $e) {
     Response::dynamic_error($e->getMessage());
 }
 
 UI::twigBuffer('user/table.html.twig', [
-    'listing' => Listing::format($list, $certificates_list_data['sslcertificates_list']),
+    'listing' => Listing::format($collection, $certificates_list_data['sslcertificates_list']),
 ]);
 UI::twigOutputBuffer();

@@ -1,6 +1,8 @@
 <?php
 namespace Froxlor\UI;
 
+use Froxlor\Settings;
+
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -22,39 +24,42 @@ namespace Froxlor\UI;
  */
 class Pagination
 {
+	private array $data = array();
 
-	private $data = array();
+    private ?array $fields = null;
 
-	private $fields = null;
+    public string $sortorder = 'ASC';
 
-	public $sortorder = 'ASC';
+    public $sortfield = null;
 
-	public $sortfield = null;
+    private ?string $searchtext = null;
 
-	private $searchtext = null;
+    private $searchfield = null;
 
-	private $searchfield = null;
+    private bool $is_search = false;
 
-	private $is_search = false;
+    private int $pageno = 0;
 
-	private $pageno = 0;
+    private int $entries = 0;
 
-	private $entries = 0;
+    private int $perPage;
 
-	/**
-	 * Create new pagination object to search/filter, limit and sort Api-listing() calls
-	 *
-	 * @param array $userinfo
-	 * @param array $fields
-	 * @param number $total_entries
-	 */
-	public function __construct($userinfo, $fields = array(), $total_entries = 0)
+    /**
+     * Create new pagination object to search/filter, limit and sort Api-listing() calls
+     *
+     * @param array $userinfo
+     * @param array $fields
+     * @param int $total_entries
+     * @param int $perPage
+     */
+	public function __construct(array $userinfo, array $fields = array(), int $total_entries = 0, int $perPage = 20)
 	{
 		$this->fields = $fields;
 		$this->entries = $total_entries;
+		$this->perPage = $perPage;
 		$this->pageno = 1;
 		// add default limitation by settings
-		$this->addLimit(\Froxlor\Settings::Get('panel.paging'));
+		$this->addLimit(Settings::Get('panel.paging'));
 		// check search request
 		$this->searchtext = '';
 		if (count($fields) > 0) {
@@ -91,23 +96,21 @@ class Pagination
 		if (isset($_REQUEST['pageno']) && intval($_REQUEST['pageno']) != 0) {
 			$this->pageno = intval($_REQUEST['pageno']);
 		}
-		if (($this->pageno - 1) * \Froxlor\Settings::Get('panel.paging') > $this->entries) {
+		if (($this->pageno - 1) * Settings::Get('panel.paging') > $this->entries) {
 			$this->pageno = 1;
 		}
-		$this->addOffset(($this->pageno - 1) * \Froxlor\Settings::Get('panel.paging'));
+		$this->addOffset(($this->pageno - 1) * Settings::Get('panel.paging'));
 	}
 
 	/**
 	 * add a field for ordering
 	 *
 	 * @param string $field
-	 * @param string $order
-	 *        	optional, default 'ASC'
-	 *        	
-	 * @return \Froxlor\UI\Pagination
+	 * @param string $order optional, default 'ASC'
+	 * @return Pagination
 	 */
-	public function addOrderBy($field = null, $order = 'ASC')
-	{
+	public function addOrderBy($field = null, $order = 'ASC'): Pagination
+    {
 		if (! isset($this->data['sql_orderby'])) {
 			$this->data['sql_orderby'] = array();
 		}
@@ -118,42 +121,40 @@ class Pagination
 	/**
 	 * add a limit
 	 *
-	 * @param number $limit
+	 * @param int $limit
 	 *        	optional, default 0
 	 *        	
-	 * @return \Froxlor\UI\Pagination
+	 * @return Pagination
 	 */
-	public function addLimit($limit = 0)
-	{
-		$this->data['sql_limit'] = (int) $limit;
+	public function addLimit(int $limit = 0): Pagination
+    {
+		$this->data['sql_limit'] = $limit;
 		return $this;
 	}
 
 	/**
 	 * add an offset
 	 *
-	 * @param number $offset
-	 *        	optional, default 0
-	 *        	
-	 * @return \Froxlor\UI\Pagination
+	 * @param int $offset optional, default 0
+	 * @return Pagination
 	 */
-	public function addOffset($offset = 0)
-	{
-		$this->data['sql_offset'] = (int) $offset;
+	public function addOffset(int $offset = 0): Pagination
+    {
+		$this->data['sql_offset'] = $offset;
 		return $this;
 	}
 
-	/**
-	 * add a search operation
-	 *
-	 * @param string $searchtext
-	 * @param string $field
-	 * @param string $operator
-	 *
-	 * @return \Froxlor\UI\Pagination
-	 */
-	public function addSearch($searchtext = null, $field = null, $operator = null)
-	{
+    /**
+     * add a search operation
+     *
+     * @param string|null $searchtext
+     * @param string|null $field
+     * @param string|null $operator
+     *
+     * @return Pagination
+     */
+	public function addSearch(string $searchtext = null, string $field = null, string $operator = null): Pagination
+    {
 		if (! isset($this->data['sql_search'])) {
 			$this->data['sql_search'] = array();
 		}
@@ -175,150 +176,28 @@ class Pagination
 	 *
 	 * @return number
 	 */
-	public function getEntries()
-	{
+	public function getEntries(): int
+    {
 		return $this->entries;
 	}
 
-	/**
-	 * Returns html code for sorting field
-	 *
-	 * @param array $lng
-	 *        	Language array
-	 * @return string the html sortcode
-	 */
-	public function getHtmlSortCode($lng, $break = false)
-	{
-		$sortcode = '';
-		$fieldoptions = '';
-		$orderoptions = '';
-
-		foreach ($this->fields as $fieldname => $fieldcaption) {
-			$fieldoptions .= HTML::makeoption($fieldcaption, $fieldname, $this->sortfield, true, true);
-		}
-
-		$breakorws = ($break ? '<br />' : '&nbsp;');
-		foreach (array(
-			'asc' => $lng['panel']['ascending'],
-			'desc' => $lng['panel']['descending']
-		) as $sortordertype => $sortorderdescription) {
-			$orderoptions .= HTML::makeoption($sortorderdescription, $sortordertype, $this->sortorder, true, true);
-		}
-
-		eval("\$sortcode =\"" . Template::getTemplate("misc/htmlsortcode", '1') . "\";");
-		return $sortcode;
-	}
-
-	/**
-	 * Returns html code for sorting arrows
-	 *
-	 * @param string $baseurl
-	 *        	URL to use as base for links
-	 * @param string $field
-	 *        	If set, only this field will be returned
-	 *        	
-	 * @return mixed An array or a string (if field is set) of html code of arrows
-	 */
-	public function getHtmlArrowCode($baseurl, $field = '')
-	{
-		global $theme;
-		if ($field != '' && isset($this->fields[$field])) {
-			$baseurl = htmlspecialchars($baseurl);
-			$fieldname = htmlspecialchars($field);
-			eval("\$arrowcode =\"" . Template::getTemplate("misc/htmlarrowcode", '1') . "\";");
-		} else {
-			$baseurl = htmlspecialchars($baseurl);
-			$arrowcode = array();
-			foreach ($this->fields as $fieldname => $fieldcaption) {
-				$fieldname = htmlspecialchars($fieldname);
-				eval("\$arrowcode[\$fieldname] =\"" . Template::getTemplate("misc/htmlarrowcode", '1') . "\";");
-			}
-		}
-		return $arrowcode;
-	}
-
-	/**
-	 * Returns html code for searching field
-	 *
-	 * @param array $lng
-	 *        	Language array
-	 *        	
-	 * @return string the html searchcode
-	 */
-	public function getHtmlSearchCode($lng)
-	{
-		$searchcode = '';
-		$fieldoptions = '';
-		$searchtext = htmlspecialchars($this->searchtext);
-		foreach ($this->fields as $fieldname => $fieldcaption) {
-			$fieldoptions .= HTML::makeoption($fieldcaption, $fieldname, $this->searchfield, true, true);
-		}
-		eval("\$searchcode =\"" . Template::getTemplate("misc/htmlsearchcode", '1') . "\";");
-		return $searchcode;
-	}
-
-	/**
-	 * Returns html code for paging
-	 *
-	 * @param string $baseurl
-	 *        	URL to use as base for links
-	 *        	
-	 * @return string the html pagingcode
-	 */
-	public function getHtmlPagingCode($baseurl)
-	{
-		if (\Froxlor\Settings::Get('panel.paging') == 0 || $this->is_search) {
-			return '';
-		} else {
-			$pages = intval($this->getEntries() / \Froxlor\Settings::Get('panel.paging'));
-		}
-
-		if ($this->getEntries() % \Froxlor\Settings::Get('panel.paging') != 0) {
-			$pages ++;
-		}
-
-		if ($pages > 1) {
-
-			$start = $this->pageno - 4;
-			if ($start < 1) {
-				$start = 1;
-			}
-
-			$stop = $this->pageno + 4;
-			if ($stop > $pages) {
-				$stop = $pages;
-			}
-
-			// check for possible sorting values and keep it
-			$orderstr = '';
-			if (!empty($this->sortfield)) {
-				$fieldname = htmlspecialchars($this->sortfield);
-				$orderstr .= '&amp;sortfield=' . $fieldname . '&amp;sortorder=' . $this->sortorder;
-			}
-
-			$pagingcode = '<a href="' . htmlspecialchars($baseurl) . '&amp;pageno=1' . $orderstr . '">&laquo;</a> <a href="' . htmlspecialchars($baseurl) . '&amp;pageno=' . ((intval($this->pageno) - 1) == 0 ? '1' : intval($this->pageno) - 1) . $orderstr . '">&lt;</a>&nbsp;';
-			for ($i = $start; $i <= $stop; $i ++) {
-				if ($i != $this->pageno) {
-					$pagingcode .= ' <a href="' . htmlspecialchars($baseurl) . '&amp;pageno=' . $i . $orderstr . '">' . $i . '</a>&nbsp;';
-				} else {
-					$pagingcode .= ' <strong>' . $i . '</strong>&nbsp;';
-				}
-			}
-			$pagingcode .= ' <a href="' . htmlspecialchars($baseurl) . '&amp;pageno=' . ((intval($this->pageno) + 1) > $pages ? $pages : intval($this->pageno) + 1) . $orderstr . '">&gt;</a> <a href="' . $baseurl . '&amp;pageno=' . $pages . $orderstr . '">&raquo;</a>';
-		} else {
-			$pagingcode = '';
-		}
-
-		return $pagingcode;
-	}
-
-	/**
-	 * return parameter array for API command parameters $sql_search, $sql_limit, $sql_offset and $sql_orderby
-	 *
-	 * @return array
-	 */
-	public function getApiCommandParams()
+	public function getApiCommandParams(): array
 	{
 		return $this->data;
 	}
+
+    public function getApiResponseParams(): array
+    {
+        return [
+            'pagination' => [
+                "total" => $this->entries,
+                "per_page" => $this->perPage,
+                "current_page" => $this->pageno,
+                "last_page" => ceil($this->entries / $this->perPage),
+                "from" => $this->data['sql_offset'] ?? null,
+                "to" => min($this->data['sql_offset'] + $this->perPage, $this->entries),
+                'sortfields' => array_keys($this->fields),
+            ]
+        ];
+    }
 }
