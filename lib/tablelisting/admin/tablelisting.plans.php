@@ -21,7 +21,7 @@ use Froxlor\UI\Listing;
 
 return [
 	'plan_list' => [
-		'title' => $lng['domains']['ssl_certificates'],
+		'title' => $lng['admin']['plans']['plans'],
 		'icon' => 'fa-solid fa-user',
 		'columns' => [
             'p.name' => [

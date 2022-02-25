@@ -57,17 +57,17 @@ if ($page == 'overview' || $page == 'emails') {
 		));
 		$emaildomains_count = $result2['emaildomains'];
 
-		$add_link = false;
+		$actions_links = false;
 		if (($userinfo['emails_used'] < $userinfo['emails'] || $userinfo['emails'] == '-1') && $emaildomains_count !=0) {
-			$add_link = [
+			$actions_links = [[
 				'href' => $linker->getLink(['section' => 'email', 'page' => $page, 'action' => 'add']),
 				'label' => $lng['emails']['emails_add']
-			];
+			]];
 		}
 
 		UI::twigBuffer('user/table.html.twig', [
 			'listing' => \Froxlor\UI\Listing::format($list, $email_list_data['email_list']),
-			'add_link' => $add_link,
+			'actions_links' => $actions_links,
 			'entity_info' => $lng['emails']['description']
 		]);
 		UI::twigOutputBuffer();

@@ -33,20 +33,39 @@ if ($page == 'domains' || $page == 'overview') {
 	if ($action == '') {
 		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_domains");
 
-        try {
-            $domain_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.domains.php';
-            $list = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Domains::class, $userinfo))
-                ->has('customer', \Froxlor\Api\Commands\Customers::class, 'customerid', 'customerid')
-                ->withPagination($domain_list_data['domain_list']['columns'])
-                ->getList();
-        } catch (Exception $e) {
-            \Froxlor\UI\Response::dynamic_error($e->getMessage());
-        }
+		try {
+			$domain_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.domains.php';
+			$list = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Domains::class, $userinfo))
+				->has('customer', \Froxlor\Api\Commands\Customers::class, 'customerid', 'customerid')
+				->withPagination($domain_list_data['domain_list']['columns'])
+				->getList();
+		} catch (Exception $e) {
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
+		}
 
-        UI::twigBuffer('user/table.html.twig', [
-            'listing' => \Froxlor\UI\Listing::format($list, $domain_list_data['domain_list']),
-        ]);
-        UI::twigOutputBuffer();
+		$json_result = Customers::getLocal($userinfo)->listingCount();
+		$countcustomers = json_decode($json_result, true)['data'];
+
+		$actions_links = false;
+		if (($userinfo['domains_used'] < $userinfo['domains'] || $userinfo['domains'] == '-1') && $countcustomers != 0) {
+			$actions_links = [];
+			$actions_links[] = [
+				'href' => $linker->getLink(['section' => 'domains', 'page' => $page, 'action' => 'add']),
+				'label' => $lng['admin']['domain_add']
+			];
+			$actions_links[] = [
+				'href' => $linker->getLink(['section' => 'domains', 'page' => $page, 'action' => 'import']),
+				'label' => $lng['domains']['domain_import'],
+				'icon' => 'fa-solid fa-file-import',
+				'class' => 'btn-secondary'
+			];
+		}
+
+		UI::twigBuffer('user/table.html.twig', [
+			'listing' => \Froxlor\UI\Listing::format($list, $domain_list_data['domain_list']),
+			'actions_links' => $actions_links
+		]);
+		UI::twigOutputBuffer();
 	} elseif ($action == 'delete' && $id != 0) {
 
 		try {
@@ -325,7 +344,7 @@ if ($page == 'domains' || $page == 'overview') {
 
 					if (in_array($domain_emails_row['email_full'], $domain_emails_row['destination'])) {
 						$email_forwarders -= 1;
-						$email_accounts ++;
+						$email_accounts++;
 					}
 				}
 			}
@@ -541,14 +560,14 @@ if ($page == 'domains' || $page == 'overview') {
 					LEFT JOIN `" . TABLE_PANEL_FPMDAEMONS . "` fc ON fc.id = c.fpmsettingid
 				");
 				$c_allowed_configs = \Froxlor\Customer\Customer::getCustomerDetail($result['customerid'], 'allowed_phpconfigs');
-				if (! empty($c_allowed_configs)) {
+				if (!empty($c_allowed_configs)) {
 					$c_allowed_configs = json_decode($c_allowed_configs, true);
 				} else {
 					$c_allowed_configs = array();
 				}
 
 				while ($phpconfigs_row = $phpconfigs_result_stmt->fetch(PDO::FETCH_ASSOC)) {
-					$disabled = ! empty($c_allowed_configs) && ! in_array($phpconfigs_row['id'], $c_allowed_configs);
+					$disabled = !empty($c_allowed_configs) && !in_array($phpconfigs_row['id'], $c_allowed_configs);
 					if ((int) Settings::Get('phpfpm.enabled') == 1) {
 						$phpconfigs .= \Froxlor\UI\HTML::makeoption($phpconfigs_row['description'] . " [" . $phpconfigs_row['interpreter'] . "]", $phpconfigs_row['id'], $result['phpsettingid'], true, true, null, $disabled);
 					} else {
@@ -558,8 +577,10 @@ if ($page == 'domains' || $page == 'overview') {
 
 				$result = \Froxlor\PhpHelper::htmlentitiesArray($result);
 				if (Settings::Get('panel.allow_domain_change_customer') != '1') {
-					$result['customername'] .= ' (<a href="' . $linker->getLink(array('section' => 'customers', 'page' => 'customers',
-						'action' => 'su', 'id' => $customer['customerid'])) . '" rel="external">' . $customer['loginname'] . '</a>)';
+					$result['customername'] .= ' (<a href="' . $linker->getLink(array(
+						'section' => 'customers', 'page' => 'customers',
+						'action' => 'su', 'id' => $customer['customerid']
+					)) . '" rel="external">' . $customer['loginname'] . '</a>)';
 				}
 
 				$domain_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/domains/formfield.domains_edit.php';
@@ -577,7 +598,7 @@ if ($page == 'domains' || $page == 'overview') {
 
 		$customerid = intval($_POST['customerid']);
 		$allowed_phpconfigs = \Froxlor\Customer\Customer::getCustomerDetail($customerid, 'allowed_phpconfigs');
-		echo ! empty($allowed_phpconfigs) ? $allowed_phpconfigs : json_encode(array());
+		echo !empty($allowed_phpconfigs) ? $allowed_phpconfigs : json_encode(array());
 		exit();
 	} elseif ($action == 'import') {
 
@@ -597,7 +618,7 @@ if ($page == 'domains' || $page == 'overview') {
 				\Froxlor\UI\Response::standard_error('domain_import_error', $e->getMessage());
 			}
 
-			if (! empty($bulk->getErrors())) {
+			if (!empty($bulk->getErrors())) {
 				\Froxlor\UI\Response::dynamic_error(implode("<br>", $bulk->getErrors()));
 			}
 
@@ -606,7 +627,7 @@ if ($page == 'domains' || $page == 'overview') {
 			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_VHOST);
 			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_DNS);
 
-			$result_str = $result['imported'] . ' / ' . $result['all'] . (! empty($result['note']) ? ' (' . $result['note'] . ')' : '');
+			$result_str = $result['imported'] . ' / ' . $result['all'] . (!empty($result['note']) ? ' (' . $result['note'] . ')' : '');
 			\Froxlor\UI\Response::standard_success('domain_import_successfully', $result_str, array(
 				'filename' => $filename,
 				'action' => '',
@@ -647,7 +668,7 @@ function formatDomainEntry(&$row, &$idna_convert)
 			$row['ipandport'] .= $rowip['ip'] . ':' . $rowip['port'] . "\n";
 		}
 	}
-	$row['ipandport'] = substr($row['ipandport'], 0, - 1);
+	$row['ipandport'] = substr($row['ipandport'], 0, -1);
 	$row['termination_date'] = str_replace("0000-00-00", "", $row['termination_date']);
 
 	$row['termination_css'] = "";

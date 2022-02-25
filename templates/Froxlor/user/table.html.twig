@@ -2,19 +2,21 @@
 
 {% block content %}
 	<div class="row">
-		<div class="col-12 {% if add_link is iterable or (entity_info is defined and entity_info is not empty) %}col-md-10 order-2 order-md-1{% endif %}">
+		<div class="col-12 {% if actions_links is iterable or (entity_info is defined and entity_info is not empty) %}col-md-10 order-2 order-md-1{% endif %}">
 			{% import "Froxlor/table/table.html.twig" as table %}
 			{{ table.table(listing) }}
 		</div>
-		{% if add_link is iterable or (entity_info is defined and entity_info is not empty) %}
+		{% if actions_links is iterable or (entity_info is defined and entity_info is not empty) %}
 			<div class="col-12 col-md-2 order-1 order-md-2">
-				{% if add_link is iterable %}
-					<a class="btn btn-success d-block" href="{{ add_link.href|raw }}">
-						<i class="fa-solid fa-plus-circle"></i>
-						{{ add_link.label }}</a>
+				{% if actions_links is iterable %}
+					{% for link in actions_links %}
+						<a class="btn {{ link.class|default('btn-success') }} d-block mb-2" href="{{ link.href|raw }}">
+							<i class="{{ link.icon|default('fa-solid fa-plus-circle') }} me-1"></i>
+							{{ link.label }}</a>
+					{% endfor %}
 				{% endif %}
 				{% if entity_info is defined and entity_info is not empty %}
-					<div class="alert alert-info mt-2" role="alert">
+					<div class="alert alert-info" role="alert">
 						{{ entity_info|raw }}
 					</div>
 				{% endif %}

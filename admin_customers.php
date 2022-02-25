@@ -33,19 +33,28 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_customers");
 
 		try {
-            $customer_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.customers.php';
-            $list = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Customers::class, $userinfo))
-                ->has('admin', \Froxlor\Api\Commands\Admins::class, 'adminid', 'adminid')
-                ->withPagination($customer_list_data['customer_list']['columns'])
-                ->getList();
-        } catch (Exception $e) {
-            \Froxlor\UI\Response::dynamic_error($e->getMessage());
-        }
+			$customer_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.customers.php';
+			$list = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Customers::class, $userinfo))
+				->has('admin', \Froxlor\Api\Commands\Admins::class, 'adminid', 'adminid')
+				->withPagination($customer_list_data['customer_list']['columns'])
+				->getList();
+		} catch (Exception $e) {
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
+		}
 
-        UI::twigBuffer('user/table.html.twig', [
-            'listing' => \Froxlor\UI\Listing::format($list, $customer_list_data['customer_list']),
-        ]);
-        UI::twigOutputBuffer();
+		$actions_links = false;
+		if ($userinfo['customers_used'] < $userinfo['customers'] || $userinfo['customers'] == '-1') {
+			$actions_links = [[
+				'href' => $linker->getLink(['section' => 'customers', 'page' => $page, 'action' => 'add']),
+				'label' => $lng['admin']['customer_add']
+			]];
+		}
+
+		UI::twigBuffer('user/table.html.twig', [
+			'listing' => \Froxlor\UI\Listing::format($list, $customer_list_data['customer_list']),
+			'actions_links' => $actions_links
+		]);
+		UI::twigOutputBuffer();
 	} elseif ($action == 'su' && $id != 0) {
 		try {
 			$json_result = Customers::getLocal($userinfo, array(

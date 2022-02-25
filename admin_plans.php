@@ -33,18 +33,22 @@ if ($page == '' || $page == 'overview') {
 		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_plans");
 
 		try {
-            $plan_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.plans.php';
-            $list = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\HostingPlans::class, $userinfo))
-                ->withPagination($plan_list_data['plan_list']['columns'])
-                ->getList();
+			$plan_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.plans.php';
+			$list = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\HostingPlans::class, $userinfo))
+				->withPagination($plan_list_data['plan_list']['columns'])
+				->getList();
 		} catch (Exception $e) {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 
-        UI::twigBuffer('user/table.html.twig', [
-            'listing' => \Froxlor\UI\Listing::format($list, $plan_list_data['plan_list']),
-        ]);
-        UI::twigOutputBuffer();
+		UI::twigBuffer('user/table.html.twig', [
+			'listing' => \Froxlor\UI\Listing::format($list, $plan_list_data['plan_list']),
+			'actions_links' => [[
+				'href' => $linker->getLink(['section' => 'plans', 'page' => $page, 'action' => 'add']),
+				'label' => $lng['admin']['plans']['add']
+			]]
+		]);
+		UI::twigOutputBuffer();
 	} elseif ($action == 'delete' && $id != 0) {
 
 		try {

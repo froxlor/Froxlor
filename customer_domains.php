@@ -53,17 +53,17 @@ if ($page == 'overview' || $page == 'domains') {
 		$result = json_decode($json_result, true)['data'];
 		$parentdomains_count = $result['count'];
 
-		$add_link = false;
+		$actions_links = false;
 		if (($userinfo['subdomains_used'] < $userinfo['subdomains'] || $userinfo['subdomains'] == '-1') && $parentdomains_count != 0) {
-			$add_link = [
+			$actions_links = [[
 				'href' => $linker->getLink(['section' => 'domains', 'page' => 'domains', 'action' => 'add']),
 				'label' => $lng['domains']['subdomain_add']
-			];
+			]];
 		}
 
 		UI::twigBuffer('user/table.html.twig', [
 			'listing' => \Froxlor\UI\Listing::format($list, $domain_list_data['domain_list']),
-			'add_link' => $add_link,
+			'actions_links' => $actions_links,
 			'entity_info' => $lng['domains']['description']
 		]);
 		UI::twigOutputBuffer();

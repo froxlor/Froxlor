@@ -59,17 +59,17 @@ if ($page == 'overview' || $page == 'mysqls') {
 		$sql = Database::getSqlData();
 		$lng['mysql']['description'] = str_replace('<SQL_HOST>', $sql['host'], $lng['mysql']['description']);
 
-		$add_link = false;
+		$actions_links = false;
 		if ($userinfo['mysqls_used'] < $userinfo['mysqls'] || $userinfo['mysqls'] == '-1') {
-			$add_link = [
+			$actions_links = [[
 				'href' => $linker->getLink(['section' => 'mysql', 'page' => 'mysqls', 'action' => 'add']),
 				'label' => $lng['mysql']['database_create']
-			];
+			]];
 		}
 
 		UI::twigBuffer('user/table.html.twig', [
 			'listing' => \Froxlor\UI\Listing::format($list, $mysql_list_data['mysql_list']),
-			'add_link' => $add_link,
+			'actions_links' => $actions_links,
 			'entity_info' => $lng['mysql']['description']
 		]);
 		UI::twigOutputBuffer();

@@ -57,10 +57,10 @@ if ($page == 'overview' || $page == 'htpasswds') {
 
 		UI::twigBuffer('user/table.html.twig', [
 			'listing' => \Froxlor\UI\Listing::format($list, $htpasswd_list_data['htpasswd_list']),
-			'add_link' => [
+			'actions_links' => [[
 				'href' => $linker->getLink(['section' => 'extras', 'page' => 'htpasswds', 'action' => 'add']),
 				'label' => $lng['extras']['directoryprotection_add']
-			],
+			]],
 			'entity_info' => $lng['extras']['description']
 		]);
 		UI::twigOutputBuffer();
