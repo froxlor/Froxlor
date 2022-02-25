@@ -40,9 +40,8 @@ if ($page == 'overview' || $page == 'emails') {
 
 		try {
 			$email_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/customer/tablelisting.emails.php';
-			$list = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Emails::class, $userinfo))
-				->withPagination($email_list_data['email_list']['columns'])
-				->getList();
+			$collection = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Emails::class, $userinfo))
+				->withPagination($email_list_data['email_list']['columns']);
 		} catch (Exception $e) {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
@@ -58,7 +57,7 @@ if ($page == 'overview' || $page == 'emails') {
 		$emaildomains_count = $result2['emaildomains'];
 
 		$actions_links = false;
-		if (($userinfo['emails_used'] < $userinfo['emails'] || $userinfo['emails'] == '-1') && $emaildomains_count !=0) {
+		if (($userinfo['emails_used'] < $userinfo['emails'] || $userinfo['emails'] == '-1') && $emaildomains_count != 0) {
 			$actions_links = [[
 				'href' => $linker->getLink(['section' => 'email', 'page' => $page, 'action' => 'add']),
 				'label' => $lng['emails']['emails_add']
@@ -66,7 +65,7 @@ if ($page == 'overview' || $page == 'emails') {
 		}
 
 		UI::twigBuffer('user/table.html.twig', [
-			'listing' => \Froxlor\UI\Listing::format($list, $email_list_data['email_list']),
+			'listing' => \Froxlor\UI\Listing::format($collection, $email_list_data['email_list']),
 			'actions_links' => $actions_links,
 			'entity_info' => $lng['emails']['description']
 		]);

@@ -48,9 +48,8 @@ if ($page == 'overview' || $page == 'mysqls') {
 
 		try {
 			$mysql_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/customer/tablelisting.mysqls.php';
-			$list = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Mysqls::class, $userinfo))
-				->withPagination($mysql_list_data['mysql_list']['columns'])
-				->getList();
+			$collection = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Mysqls::class, $userinfo))
+				->withPagination($mysql_list_data['mysql_list']['columns']);
 		} catch (Exception $e) {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
@@ -68,7 +67,7 @@ if ($page == 'overview' || $page == 'mysqls') {
 		}
 
 		UI::twigBuffer('user/table.html.twig', [
-			'listing' => \Froxlor\UI\Listing::format($list, $mysql_list_data['mysql_list']),
+			'listing' => \Froxlor\UI\Listing::format($collection, $mysql_list_data['mysql_list']),
 			'actions_links' => $actions_links,
 			'entity_info' => $lng['mysql']['description']
 		]);

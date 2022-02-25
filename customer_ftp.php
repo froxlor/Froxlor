@@ -37,9 +37,8 @@ if ($page == 'overview' || $page == 'accounts') {
 		$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_ftp::accounts");
 		try {
 			$ftp_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/customer/tablelisting.ftps.php';
-			$list = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Ftps::class, $userinfo))
-				->withPagination($ftp_list_data['ftp_list']['columns'])
-				->getList();
+			$collection = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Ftps::class, $userinfo))
+				->withPagination($ftp_list_data['ftp_list']['columns']);
 		} catch (Exception $e) {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
@@ -53,7 +52,7 @@ if ($page == 'overview' || $page == 'accounts') {
 		}
 
 		UI::twigBuffer('user/table.html.twig', [
-			'listing' => \Froxlor\UI\Listing::format($list, $ftp_list_data['ftp_list']),
+			'listing' => \Froxlor\UI\Listing::format($collection, $ftp_list_data['ftp_list']),
 			'actions_links' => $actions_links,
 			'entity_info' => $lng['ftp']['description']
 		]);

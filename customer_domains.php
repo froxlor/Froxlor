@@ -41,20 +41,16 @@ if ($page == 'overview' || $page == 'domains') {
 
 		try {
 			$domain_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/customer/tablelisting.domains.php';
-			$list = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\SubDomains::class, $userinfo))
+			$collection = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\SubDomains::class, $userinfo))
 				//->addParam(['sql_search' => ['d.parentdomainid' => $parentdomain_id]])
-				->withPagination($domain_list_data['domain_list']['columns'])
-				->getList();
+				->withPagination($domain_list_data['domain_list']['columns']);
+			$parentDomainCollection = (new \Froxlor\UI\Collection(SubDomains::class, $userinfo, ['sql_search' => ['d.parentdomainid' => 0]]));
 		} catch (Exception $e) {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 
-		$json_result = SubDomains::getLocal($userinfo, ['sql_search' => ['d.parentdomainid' => 0]])->listing();
-		$result = json_decode($json_result, true)['data'];
-		$parentdomains_count = $result['count'];
-
 		$actions_links = false;
-		if (($userinfo['subdomains_used'] < $userinfo['subdomains'] || $userinfo['subdomains'] == '-1') && $parentdomains_count != 0) {
+		if (($userinfo['subdomains_used'] < $userinfo['subdomains'] || $userinfo['subdomains'] == '-1') && $parentDomainCollection->count() != 0) {
 			$actions_links = [[
 				'href' => $linker->getLink(['section' => 'domains', 'page' => 'domains', 'action' => 'add']),
 				'label' => $lng['domains']['subdomain_add']
@@ -62,7 +58,7 @@ if ($page == 'overview' || $page == 'domains') {
 		}
 
 		UI::twigBuffer('user/table.html.twig', [
-			'listing' => \Froxlor\UI\Listing::format($list, $domain_list_data['domain_list']),
+			'listing' => \Froxlor\UI\Listing::format($collection, $domain_list_data['domain_list']),
 			'actions_links' => $actions_links,
 			'entity_info' => $lng['domains']['description']
 		]);

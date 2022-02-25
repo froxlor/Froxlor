@@ -48,15 +48,14 @@ if ($page == 'overview' || $page == 'htpasswds') {
 		);
 		try {
 			$htpasswd_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/customer/tablelisting.htpasswd.php';
-			$list = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\DirProtections::class, $userinfo))
-				->withPagination($htpasswd_list_data['htpasswd_list']['columns'])
-				->getList();
+			$collection = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\DirProtections::class, $userinfo))
+				->withPagination($htpasswd_list_data['htpasswd_list']['columns']);
 		} catch (Exception $e) {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 
 		UI::twigBuffer('user/table.html.twig', [
-			'listing' => \Froxlor\UI\Listing::format($list, $htpasswd_list_data['htpasswd_list']),
+			'listing' => \Froxlor\UI\Listing::format($collection, $htpasswd_list_data['htpasswd_list']),
 			'actions_links' => [[
 				'href' => $linker->getLink(['section' => 'extras', 'page' => 'htpasswds', 'action' => 'add']),
 				'label' => $lng['extras']['directoryprotection_add']
@@ -170,15 +169,14 @@ if ($page == 'overview' || $page == 'htpasswds') {
 
 		try {
 			$htaccess_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/customer/tablelisting.htaccess.php';
-			$list = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\DirOptions::class, $userinfo))
-				->withPagination($htaccess_list_data['htaccess_list']['columns'])
-				->getList();
+			$collection = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\DirOptions::class, $userinfo))
+				->withPagination($htaccess_list_data['htaccess_list']['columns']);
 		} catch (Exception $e) {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 
 		UI::twigBuffer('user/table.html.twig', [
-			'listing' => \Froxlor\UI\Listing::format($list, $htaccess_list_data['htaccess_list']),
+			'listing' => \Froxlor\UI\Listing::format($collection, $htaccess_list_data['htaccess_list']),
 			'add_link' => [
 				'href' => $linker->getLink(['section' => 'extras', 'page' => 'htaccess', 'action' => 'add']),
 				'label' => $lng['extras']['pathoptions_add']
