@@ -24,22 +24,22 @@ return [
 		'title' => $lng['admin']['plans']['plans'],
 		'icon' => 'fa-solid fa-user',
 		'columns' => [
-            'p.name' => [
-                'label' => $lng['admin']['plans']['name'],
-                'field' => 'name',
-            ],
-            'p.description' => [
-                'label' => $lng['admin']['plans']['description'],
-                'field' => 'description',
-            ],
-            'p.adminname' => [
-                'label' => $lng['admin']['admin'],
-                'field' => 'adminname',
-            ],
-            'p.ts' => [
-                'label' => $lng['admin']['plans']['last_update'],
-                'field' => 'ts',
-            ],
+			'p.name' => [
+				'label' => $lng['admin']['plans']['name'],
+				'field' => 'name',
+			],
+			'p.description' => [
+				'label' => $lng['admin']['plans']['description'],
+				'field' => 'description',
+			],
+			'p.adminname' => [
+				'label' => $lng['admin']['admin'],
+				'field' => 'adminname',
+			],
+			'p.ts' => [
+				'label' => $lng['admin']['plans']['last_update'],
+				'field' => 'ts',
+			],
 		],
 		'visible_columns' => Listing::getVisibleColumnsForListing('sslcertificates_list', [
 			'p.name',
@@ -47,26 +47,26 @@ return [
 			'p.adminname',
 			'p.ts',
 		]),
-        'actions' => [
-            'edit' => [
-                'icon' => 'fa fa-edit',
-                'href' => [
-                    'section' => 'plans',
-                    'page' => 'overview',
-                    'action' => 'edit',
-                    'id' => ':id'
-                ],
-            ],
-            'delete' => [
-                'icon' => 'fa fa-trash',
-                'class' => 'text-danger',
-                'href' => [
-                    'section' => 'plans',
-                    'page' => 'overview',
-                    'action' => 'delete',
-                    'id' => ':id'
-                ],
-            ],
-        ]
+		'actions' => [
+			'edit' => [
+				'icon' => 'fa fa-edit',
+				'href' => [
+					'section' => 'plans',
+					'page' => 'overview',
+					'action' => 'edit',
+					'id' => ':id'
+				],
+			],
+			'delete' => [
+				'icon' => 'fa fa-trash',
+				'class' => 'text-danger',
+				'href' => [
+					'section' => 'plans',
+					'page' => 'overview',
+					'action' => 'delete',
+					'id' => ':id'
+				],
+			],
+		]
 	]
 ];

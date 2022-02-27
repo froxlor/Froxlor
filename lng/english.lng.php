@@ -2146,3 +2146,4 @@ $lng['ssl_certificates']['certificate_for'] = 'Certificate for';
 $lng['ssl_certificates']['valid_from'] = 'Valid from';
 $lng['ssl_certificates']['valid_until'] = 'Valid until';
 $lng['ssl_certificates']['issuer'] = 'Issuer';
+$lng['panel']['listing_empty'] = 'No entries found';

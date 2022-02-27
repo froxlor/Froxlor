@@ -24,6 +24,7 @@ return [
 	'domain_list' => [
 		'title' => $lng['admin']['domains'],
 		'icon' => 'fa-solid fa-user',
+		'empty_msg' => $lng['admin']['domain_nocustomeraddingavailable'],
 		'columns' => [
 			'd.domain_ace' => [
 				'label' => $lng['domains']['domainname'],

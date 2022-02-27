@@ -1788,3 +1788,4 @@ $lng['serversettings']['acmeshpath']['description'] = 'Installationspfad zu acme
 
 $lng['panel']['usage_statistics'] = 'Resourcen-Verbrauch';
 $lng['panel']['security_question'] = 'Sicherheitsabfrage';
+$lng['panel']['listing_empty'] = 'Keine Einträge gefunden';

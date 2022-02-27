@@ -13,49 +13,56 @@
 			</h3>
 		{% endif %}
 
-		<div class="card table-responsive">
-			<table class="table table-borderless table-striped table-sm mb-0 px-3">
-				<thead>
-					<tr>
-						{% for key,th in listing.table.th %}
-							{{ pagination.titlesorting(listing.pagination, key, th) }}
-						{% endfor %}
-					</tr>
-				</thead>
-				<tbody>
-					{% for tr in listing.table.tr %}
-						<tr {% if tr.class is defined %}class="{{ tr.class }}"{% endif %}>
-							{% for td in tr.td %}
-								<td class="px-3{% if td.class is defined %} {{ td.class }}{% endif %}">
-									{% if td.data is iterable %}
-										{% if td.data.type == 'progressbar' %}
-											{{ callbacks.progressbar(td.data.data) }}
-										{% elseif td.data.type == 'boolean' %}
-											{{ callbacks.boolean(td.data.data) }}
-										{% elseif td.data.type == 'booleanWithInfo' %}
-											{{ callbacks.booleanWithInfo(td.data.data) }}
-										{% elseif td.data.type == 'link' %}
-											{{ callbacks.link(td.data.data) }}
-										{% elseif td.data.type == 'domainWithSan' %}
-											{{ callbacks.domainWithSan(td.data.data) }}
-										{% elseif td.data.type == 'actions' %}
-											{{ callbacks.actions(td.data.data) }}
-										{% else %}
-											Callback '{{ td|json_encode }}' is not implemented!
-										{% endif %}
-									{% else %}
-										{{ td.data|raw }}
-									{% endif %}
-								</td>
+		{% if listing.table.tr|length == 0 %}
+			<div class="alert alert-info" role="alert">
+				<h4 class="alert-heading">{{ lng('admin.note') }}</h4>
+				<p>{{ listing.empty_msg|default(lng('panel.listing_empty'))|raw }}</p>
+			</div>
+		{% else %}
+			<div class="card table-responsive">
+				<table class="table table-borderless table-striped table-sm mb-0 px-3">
+					<thead>
+						<tr>
+							{% for key,th in listing.table.th %}
+								{{ pagination.titlesorting(listing.pagination, key, th) }}
 							{% endfor %}
 						</tr>
-					{% endfor %}
-				</tbody>
-			</table>
-			{% if listing.pagination is not empty %}
-				{{ pagination.paging(listing.pagination) }}
-			{% endif %}
-		</div>
+					</thead>
+					<tbody>
+						{% for tr in listing.table.tr %}
+							<tr {% if tr.class is defined %} class="{{ tr.class }}" {% endif %}>
+								{% for td in tr.td %}
+									<td class="px-3{% if td.class is defined %} {{ td.class }}{% endif %}">
+										{% if td.data is iterable %}
+											{% if td.data.type == 'progressbar' %}
+												{{ callbacks.progressbar(td.data.data) }}
+											{% elseif td.data.type == 'boolean' %}
+												{{ callbacks.boolean(td.data.data) }}
+											{% elseif td.data.type == 'booleanWithInfo' %}
+												{{ callbacks.booleanWithInfo(td.data.data) }}
+											{% elseif td.data.type == 'link' %}
+												{{ callbacks.link(td.data.data) }}
+											{% elseif td.data.type == 'domainWithSan' %}
+												{{ callbacks.domainWithSan(td.data.data) }}
+											{% elseif td.data.type == 'actions' %}
+												{{ callbacks.actions(td.data.data) }}
+											{% else %}
+												Callback '{{ td|json_encode }}' is not implemented!
+											{% endif %}
+										{% else %}
+											{{ td.data|raw }}
+										{% endif %}
+									</td>
+								{% endfor %}
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+				{% if listing.pagination is not empty %}
+					{{ pagination.paging(listing.pagination) }}
+				{% endif %}
+			</div>
+		{% endif %}
 	</form>
 
 {% endmacro %}
