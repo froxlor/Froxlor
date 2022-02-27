@@ -1,7 +1,7 @@
 {% macro fieldrow(id, field, norow = false, nohide = false) %}
 	{% if field.visible is not defined or (field.visible is defined and field.visible) or nohide == true %}
 		{% if norow == false and field.type != 'hidden' %}
-			<div class="row mb-3 pb-1 border-bottom">
+			<div class="row mb-3 pb-3 border-bottom">
 				{% if field.label is iterable %}
 					<label for="{{ id }}" class="col-sm-4 col-form-label">{{ field.label.title|raw }}
 						{% if field.label.description is defined and field.label.description is not empty %}<br><small>{{ field.label.description|raw }}</small>

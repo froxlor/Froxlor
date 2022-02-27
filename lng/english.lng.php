@@ -548,7 +548,7 @@ $lng['panel']['back'] = 'Back';
 // ADDED IN 1.2.16-svn12
 
 $lng['serversettings']['mod_fcgid']['title'] = 'Enable FCGID';
-$lng['serversettings']['mod_fcgid']['description'] = 'Use this to run PHP with the corresponding user account.<br /><br /><b>This needs a special webserver configuration for Apache, see <a target="blank" href="https://github.com/Froxlor/Froxlor/wiki/apache2-with-fcgid">FCGID - handbook</a></b>';
+$lng['serversettings']['mod_fcgid']['description'] = 'Use this to run PHP with the corresponding user account.<br /><br /><b>This needs a special webserver configuration for Apache, see <a target="_blank" href="https://docs.froxlor.org/general/configuration/fcgid.html">FCGID - handbook</a></b>';
 $lng['serversettings']['sendalternativemail']['title'] = 'Use alternative email-address';
 $lng['serversettings']['sendalternativemail']['description'] = 'Send the password-email to a different address during email-account-creation';
 $lng['emails']['alternative_emailaddress'] = 'Alternative e-mail-address';
@@ -1737,7 +1737,7 @@ $lng['domains']['import_file'] = 'CSV-File';
 $lng['success']['domain_import_successfully'] = 'Successfully imported %s domains.';
 $lng['error']['domain_import_error'] = 'Following error occurred while importing domains: %s';
 $lng['admin']['note'] = 'Note';
-$lng['domains']['import_description'] = 'Detailed information about the structure of the import-file and how to import successfully, please visit <a href="https://github.com/Froxlor/Froxlor/wiki/Domain-import-documenation" target="_blank">https://github.com/Froxlor/Froxlor/wiki/Domain-import-documenation</a>';
+$lng['domains']['import_description'] = 'Detailed information about the structure of the import-file and how to import successfully, please visit <a href="https://docs.froxlor.org/adminguide/domainimport.html" target="_blank">https://docs.froxlor.org/adminguide/domainimport.html</a>';
 $lng['usersettings']['custom_notes']['title'] = 'Custom notes';
 $lng['usersettings']['custom_notes']['description'] = 'Feel free to put any notes you want/need in here. They will show up in the admin/customer overview for the corresponding user.';
 $lng['usersettings']['custom_notes']['show'] = 'Show your notes on the dashboard of the user';

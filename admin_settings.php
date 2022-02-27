@@ -61,7 +61,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 			\Froxlor\UI\Response::standard_error($lng['error']['session_timeout'], $lng['error']['session_timeout_desc']);
 		}
 
-		if (\Froxlor\UI\Form::processFormEx($settings_data, $_POST, array(
+		if (\Froxlor\UI\Form::processForm($settings_data, $_POST, array(
 			'filename' => $filename,
 			'action' => $action,
 			'page' => $page

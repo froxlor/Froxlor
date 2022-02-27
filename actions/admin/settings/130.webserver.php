@@ -37,8 +37,7 @@ return array(
 					'plausibility_check_method' => array(
 						'\\Froxlor\\Validate\\Check',
 						'checkPhpInterfaceSetting'
-					),
-					'overview_option' => true
+					)
 				),
 				'system_apache_24' => array(
 					'label' => $lng['serversettings']['apache_24'],

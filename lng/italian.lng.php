@@ -1041,7 +1041,7 @@ $lng['serversettings']['perl_path']['description'] = 'Rilevante solo se si utili
 // ADDED IN FROXLOR 0.9.12-svn1
 $lng['admin']['fcgid_settings'] = 'FCGID';
 $lng['serversettings']['mod_fcgid_ownvhost']['title'] = 'Abilita FCGID per i vhost Froxlor';
-$lng['serversettings']['mod_fcgid_ownvhost']['description'] = 'Se attivato, Froxlor verrà eseguito con un utente locale<br /><strong>ATTENZIONE:</strong>Questo richiede una configurazione manuale, vedi <a target="blank" href="https://github.com/Froxlor/Froxlor/wiki/apache2-with-fcgid">FCGID - handbook</a>';
+$lng['serversettings']['mod_fcgid_ownvhost']['description'] = 'Se attivato, Froxlor verrà eseguito con un utente locale<br /><strong>ATTENZIONE:</strong>Questo richiede una configurazione manuale, vedi <a target="_blank" href="https://docs.froxlor.org/general/configuration/fcgid.html">FCGID - handbook</a>';
 $lng['admin']['mod_fcgid_user'] = 'Utente locale per FCGID (Froxlor vhost)';
 $lng['admin']['mod_fcgid_group'] = 'Gruppo locale per FCGID (Froxlor vhost)';
 
@@ -1660,7 +1660,7 @@ $lng['domains']['import_file'] = 'File CSV';
 $lng['success']['domain_import_successfully'] = 'Importato %s dominii con successo.';
 $lng['error']['domain_import_error'] = 'Il seguente errore è occorsonell \'importazione di dominii: %s';
 $lng['admin']['note'] = 'Nota';
-$lng['domains']['import_description'] = 'Per ottenere informazioni dettagliate sulla struttura del file di importazione e  su come importare con successo, visita <a href="https://github.com/Froxlor/Froxlor/wiki/Domain-import-documenation" target="_blank">https://github.com/Froxlor/Froxlor/wiki/Domain-import-documenation</a>';
+$lng['domains']['import_description'] = 'Per ottenere informazioni dettagliate sulla struttura del file di importazione e  su come importare con successo, visita <a href="https://docs.froxlor.org/adminguide/domainimport.html" target="_blank">https://docs.froxlor.org/adminguide/domainimport.html</a>';
 $lng['usersettings']['custom_notes']['title'] = 'Note personali';
 $lng['usersettings']['custom_notes']['description'] = 'Sentiti libero di inserire qualsi nota vuoi o necessiti qui. Apparirano nel riepilogo dell\'amministratore/cliente perl \'utente corrispondente.';
 $lng['usersettings']['custom_notes']['show'] = 'Mostra le tue note nel cruscotto dell\'utente';

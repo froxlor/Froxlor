@@ -5,6 +5,16 @@ namespace Froxlor\UI;
 class Data
 {
 
+	public static function getFormFieldDataEmail($fieldname, $fielddata, $input)
+	{
+		return self::getFormFieldDataText($fieldname, $fielddata, $input);
+	}
+
+	public static function getFormFieldDataUrl($fieldname, $fielddata, $input)
+	{
+		return self::getFormFieldDataText($fieldname, $fielddata, $input);
+	}
+
 	public static function getFormFieldDataText($fieldname, $fielddata, $input)
 	{
 		if (isset($input[$fieldname])) {

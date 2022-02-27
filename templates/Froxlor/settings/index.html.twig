@@ -8,7 +8,9 @@
 			<form action="{{ action|default(filename) }}" method="post" enctype="application/x-www-form-urlencoded" class="form">
 				<h3 class="page-header">
 					<i class="fa-solid fa-gears"></i>
-					{{ lng('admin.serversettings') }}{% if fields._group is defined %}&nbsp;&raquo;&nbsp;{{ fields._group.title }}{% endif %}
+					{{ lng('admin.serversettings') }}
+					{% if fields._group is defined %}&nbsp;&raquo;&nbsp;{{ fields._group.title }}
+					{% endif %}
 				</h3>
 
 				{% block settings %}
@@ -17,14 +19,16 @@
 							<div class="col">
 								<div class="card h-100 border {% if field.activated %}border-primary{% else %}border-secondary bg-light{% endif %}">
 									<div class="card-body text-center">
-										{% if field.activated %}
-											<a href="{{ linker({'section':'settings','page':'overview','part':field.part}) }}" class="btn btn-link stretched-link">
-												<i class="{{ field.icon }} fa-4x"></i>
-											</a>
-										{% else %}
+										<a href="{{ linker({'section':'settings','page':'overview','part':field.part}) }}" class="btn btn-link stretched-link">
 											<i class="{{ field.icon }} fa-4x"></i>
+										</a>
+										<p class="card-text mt-2">{{ field.title }}
+											{% if field.info is defined and field.info is not empty %}<br><small>{{ field.info|raw }}</small>
+											{% endif %}
+										</p>
+										{% if field.activated == false %}
+											<small class="text-danger">{{ lng('panel.not_activated') }}</small>
 										{% endif %}
-										<p class="card-text mt-2">{{ field.title }}{% if field.info is defined and field.info is not empty %}<br><small>{{ field.info|raw }}</small>{% endif %}</p>
 									</div>
 								</div>
 							</div>

@@ -1013,7 +1013,7 @@ $lng['serversettings']['perl_path']['description'] = 'Alleen relevant voor light
 // ADDED IN FROXLOR 0.9.12-svn1
 $lng['admin']['fcgid_settings'] = 'FCGID';
 $lng['serversettings']['mod_fcgid_ownvhost']['title'] = 'FCGID inschakelen voor de VHost voor Froxlor';
-$lng['serversettings']['mod_fcgid_ownvhost']['description'] = 'Indien ingeschakeld wordt Froxlor ook uitgevoerd onder een lokale gebruiker<br /><strong>Let op:</strong>Dit vereist handmatige configuratie, zie <a target="blank" href="https://github.com/Froxlor/Froxlor/wiki/apache2-with-fcgid">FCGID - handbook</a>';
+$lng['serversettings']['mod_fcgid_ownvhost']['description'] = 'Indien ingeschakeld wordt Froxlor ook uitgevoerd onder een lokale gebruiker<br /><strong>Let op:</strong>Dit vereist handmatige configuratie, zie <a target="_blank" href="https://docs.froxlor.org/general/configuration/fcgid.html">FCGID - handbook</a>';
 $lng['admin']['mod_fcgid_user'] = 'Lokale gebruiker voor FCGID (Froxlor vhost)';
 $lng['admin']['mod_fcgid_group'] = 'Lokale groep voor FCGID (Froxlor vhost)';
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace Froxlor\UI;
 
 class Response
@@ -86,7 +87,7 @@ class Response
 		$_SESSION['requestData'] = $_POST;
 		$replacer = htmlentities($replacer);
 
-		if (! is_array($errors)) {
+		if (!is_array($errors)) {
 			$errors = array(
 				$errors
 			);
@@ -164,7 +165,7 @@ class Response
 	 */
 	public static function standard_success($success_message = '', $replacer = '', $params = array(), $throw_exception = false)
 	{
-		global $s, $header, $footer, $lng, $theme;
+		global $s, $lng;
 
 		if (isset($lng['success'][$success_message])) {
 			$success_message = strtr($lng['success'][$success_message], array(
@@ -189,7 +190,14 @@ class Response
 			$redirect_url = '';
 		}
 
-		eval("echo \"" . Template::getTemplate('misc/success', '1') . "\";");
-		exit();
+		\Froxlor\UI\Panel\UI::twigBuffer('misc/alert.html.twig', [
+			'type' => 'success',
+			'btntype' => 'light',
+			'heading' => $lng['success']['success'],
+			'alert_msg' => $success_message,
+			'redirect_link' => $redirect_url
+		]);
+		\Froxlor\UI\Panel\UI::twigOutputBuffer();
+		exit;
 	}
 }

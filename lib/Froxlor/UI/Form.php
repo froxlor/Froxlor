@@ -59,102 +59,7 @@ class Form
 		return $fields;
 	}
 
-	public static function processForm(&$form, &$input, $url_params = array())
-	{
-		if (\Froxlor\Validate\Form::validateFormDefinition($form)) {
-			$submitted_fields = array();
-			$changed_fields = array();
-			$saved_fields = array();
-
-			foreach ($form['groups'] as $groupname => $groupdetails) {
-				if (\Froxlor\Validate\Form::validateFieldDefinition($groupdetails)) {
-					// Prefetch form fields
-					foreach ($groupdetails['fields'] as $fieldname => $fielddetails) {
-						$groupdetails['fields'][$fieldname] = self::arrayMergePrefix($fielddetails, $fielddetails['type'], self::prefetchFormFieldData($fieldname, $fielddetails));
-						$form['groups'][$groupname]['fields'][$fieldname] = $groupdetails['fields'][$fieldname];
-					}
-				}
-			}
-
-			foreach ($form['groups'] as $groupname => $groupdetails) {
-				if (\Froxlor\Validate\Form::validateFieldDefinition($groupdetails)) {
-					// Validate fields
-					foreach ($groupdetails['fields'] as $fieldname => $fielddetails) {
-						$newfieldvalue = self::getFormFieldData($fieldname, $fielddetails, $input);
-
-						if ($newfieldvalue != $fielddetails['value']) {
-							if (($error = \Froxlor\Validate\Form::validateFormField($fieldname, $fielddetails, $newfieldvalue)) !== true) {
-								\Froxlor\UI\Response::standard_error($error, $fieldname);
-							} else {
-								$changed_fields[$fieldname] = $newfieldvalue;
-							}
-						}
-
-						$submitted_fields[$fieldname] = $newfieldvalue;
-					}
-				}
-			}
-
-			foreach ($form['groups'] as $groupname => $groupdetails) {
-				if (\Froxlor\Validate\Form::validateFieldDefinition($groupdetails)) {
-					// Check fields for plausibility
-					foreach ($groupdetails['fields'] as $fieldname => $fielddetails) {
-						if (($plausibility_check = self::checkPlausibilityFormField($fieldname, $fielddetails, $submitted_fields[$fieldname], $submitted_fields)) !== false) {
-							if (is_array($plausibility_check) && isset($plausibility_check[0])) {
-								if ($plausibility_check[0] == \Froxlor\Validate\Check::FORMFIELDS_PLAUSIBILITY_CHECK_OK) {
-									// Nothing to do here, everything's okay
-								} elseif ($plausibility_check[0] == \Froxlor\Validate\Check::FORMFIELDS_PLAUSIBILITY_CHECK_ERROR) {
-									unset($plausibility_check[0]);
-									$error = $plausibility_check[1];
-									unset($plausibility_check[1]);
-									$targetname = implode(' ', $plausibility_check);
-									\Froxlor\UI\Response::standard_error($error, $targetname);
-								} elseif ($plausibility_check[0] == \Froxlor\Validate\Check::FORMFIELDS_PLAUSIBILITY_CHECK_QUESTION) {
-									unset($plausibility_check[0]);
-									$question = $plausibility_check[1];
-									unset($plausibility_check[1]);
-									$targetname = implode(' ', $plausibility_check);
-									if (!isset($input[$question])) {
-										if (is_array($url_params) && isset($url_params['filename'])) {
-											$filename = $url_params['filename'];
-											unset($url_params['filename']);
-										} else {
-											$filename = '';
-										}
-										\Froxlor\UI\HTML::askYesNo($question, $filename, array_merge($url_params, $submitted_fields, array(
-											$question => $question
-										)), $targetname);
-									}
-								} else {
-									\Froxlor\UI\Response::standard_error('plausibilitychecknotunderstood');
-								}
-							}
-						}
-					}
-				}
-			}
-
-			foreach ($form['groups'] as $groupname => $groupdetails) {
-				if (\Froxlor\Validate\Form::validateFieldDefinition($groupdetails)) {
-					// Save fields
-					foreach ($groupdetails['fields'] as $fieldname => $fielddetails) {
-						if (isset($changed_fields[$fieldname])) {
-							if (($saved_field = self::saveFormField($fieldname, $fielddetails, self::manipulateFormFieldData($fieldname, $fielddetails, $changed_fields[$fieldname]))) !== false) {
-								$saved_fields = array_merge($saved_fields, $saved_field);
-							} else {
-								\Froxlor\UI\Response::standard_error('errorwhensaving', $fieldname);
-							}
-						}
-					}
-				}
-			}
-
-			// Save form
-			return self::saveForm($form, $saved_fields);
-		}
-	}
-
-	public static function processFormEx(&$form, &$input, $url_params = array(), $part = null, $settings_all = array(), $settings_part = null, $only_enabledisable = false)
+	public static function processForm(&$form, &$input, $url_params = array(), $part = null, $settings_all = array(), $settings_part = null, $only_enabledisable = false)
 	{
 		if (\Froxlor\Validate\Form::validateFormDefinition($form)) {
 			$submitted_fields = array();
@@ -301,38 +206,16 @@ class Form
 		global $lng;
 
 		$activated = true;
-		$option = [];
 		if (isset($groupdetails['fields'])) {
-			foreach ($groupdetails['fields'] as $fieldname => $fielddetails) {
+			foreach ($groupdetails['fields'] as $fielddetails) {
 				if (isset($fielddetails['overview_option']) && $fielddetails['overview_option'] == true) {
-					if ($fielddetails['type'] != 'select' && $fielddetails['type'] != 'checkbox' && $fielddetails['type'] != 'option' && $fielddetails['type'] != 'bool') {
+					if ($fielddetails['type'] != 'checkbox') {
 						// throw exception here as this is most likely an internal issue
 						// if we messed up the arrays
 						\Froxlor\UI\Response::standard_error('overviewsettingoptionisnotavalidfield', '', true);
 					}
-
-					if ($fielddetails['type'] == 'select') {
-						$options_array = $fielddetails['select_var'];
-						$options = [];
-						foreach ($options_array as $value => $vtitle) {
-							$options[] = [
-								'title' => $vtitle,
-								'value' => $value,
-								'default' => Settings::Get($fielddetails['settinggroup'] . '.' . $fielddetails['varname'])
-							];
-						}
-						$option['type'] = 'select';
-						$option['label'] = $fielddetails['label'];
-						$option['fieldname'] = $fieldname;
-						$option['options'] = $options;
-						$activated = true;
-					} else {
-						$option['type'] = 'bool';
-						$option['label'] = $lng['admin']['activated'];
-						$option['fieldname'] = $fieldname;
-						$option['value'] = Settings::Get($fielddetails['settinggroup'] . '.' . $fielddetails['varname']);
-						$activated = (int) Settings::Get($fielddetails['settinggroup'] . '.' . $fielddetails['varname']);
-					}
+					$activated = (int) Settings::Get($fielddetails['settinggroup'] . '.' . $fielddetails['varname']);
+					break;
 				}
 			}
 		}
@@ -341,8 +224,7 @@ class Form
 			'title' => $groupdetails['title'],
 			'icon' => $groupdetails['icon'] ?? 'fa-solid fa-circle-question',
 			'part' => $groupname,
-			'activated' => $activated,
-			'option' => $option
+			'activated' => $activated
 		];
 
 		/**
@@ -354,7 +236,7 @@ class Form
 			$websrv = Settings::Get('system.webserver');
 			if (!in_array($websrv, $groupdetails['websrv_avail'])) {
 				$item['info'] = sprintf($lng['serversettings']['option_unavailable_websrv'], implode(", ", $groupdetails['websrv_avail']));
-				$option['visible'] = false;
+				$item['visible'] = false;
 			}
 		}
 
@@ -366,7 +248,7 @@ class Form
 		global $lng;
 
 		$returnvalue = [];
-		if (is_array($fielddata) && isset($fielddata['type']) && $fielddata['type'] != '' /* && method_exists('\\Froxlor\\UI\\Fields', 'getFormFieldOutput' . ucfirst($fielddata['type'])) */) {
+		if (is_array($fielddata) && isset($fielddata['type']) && $fielddata['type'] != '') {
 
 			if (!isset($fielddata['value'])) {
 				if (isset($fielddata['default'])) {
@@ -417,14 +299,6 @@ class Form
 				$fielddata['visible'] = false;
 			}
 
-			/*
-			if ($do_show || (!$do_show && Settings::Get('system.hide_incompatible_settings') == '0')) {
-				$returnvalue = call_user_func(array(
-					'\\Froxlor\\UI\\Fields',
-					'getFormFieldOutput' . ucfirst($fielddata['type'])
-				), $fieldname, $fielddata, $do_show);
-			}
-			*/
 			$returnvalue = $fielddata;
 		}
 		return $returnvalue;
@@ -433,11 +307,11 @@ class Form
 	public static function prefetchFormFieldData($fieldname, $fielddata)
 	{
 		$returnvalue = array();
-		if (is_array($fielddata) && isset($fielddata['type']) && $fielddata['type'] != '' && method_exists('\\Froxlor\\UI\\Fields', 'prefetchFormFieldData' . ucfirst($fielddata['type']))) {
-			$returnvalue = call_user_func(array(
-				'\\Froxlor\\UI\\Fields',
-				'prefetchFormFieldData' . ucfirst($fielddata['type'])
-			), $fieldname, $fielddata);
+		if (is_array($fielddata) && isset($fielddata['type']) && $fielddata['type'] == 'select') {
+
+			if ((!isset($fielddata['select_var']) || !is_array($fielddata['select_var']) || empty($fielddata['select_var'])) && (isset($fielddata['option_options_method']))) {
+				$returnvalue['select_var'] = call_user_func($fielddata['option_options_method']);
+			}
 		}
 		return $returnvalue;
 	}
