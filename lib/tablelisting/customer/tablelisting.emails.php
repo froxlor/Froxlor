@@ -16,6 +16,7 @@
  *
  */
 
+use Froxlor\Settings;
 use Froxlor\UI\Callbacks\Email;
 use Froxlor\UI\Callbacks\Text;
 use Froxlor\UI\Listing;
@@ -43,12 +44,12 @@ return [
 				'label' => $lng['emails']['catchall'],
 				'field' => 'iscatchall',
 				'format_callback' => [Text::class, 'boolean'],
-				'visible' => \Froxlor\Settings::Get('catchall.catchall_enabled') == '1'
+				'visible' => Settings::Get('catchall.catchall_enabled') == '1'
 			],
 			'm.quota' => [
 				'label' => $lng['emails']['quota'],
 				'field' => 'quota',
-				'visible' => \Froxlor\Settings::Get('system.mail_quota_enabled') == '1'
+				'visible' => Settings::Get('system.mail_quota_enabled') == '1'
 			]
 		],
 		'visible_columns' => Listing::getVisibleColumnsForListing('email_list', [

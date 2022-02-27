@@ -121,6 +121,11 @@ class Listing
 
 		// Check each action for a href
 		foreach ($actions as $key => $action) {
+			// Call user function if visible is an array
+			if (isset($action['visible']) && is_array($action['visible'])) {
+				$actions[$key]['visible'] = call_user_func($action['visible'], ['fields' => $item]);
+			}
+
 			// Set link if href is an array
 			if (isset($action['href']) && is_array($action['href'])) {
 				// Search for "columns" in our href array

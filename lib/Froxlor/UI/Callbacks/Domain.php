@@ -3,6 +3,7 @@
 namespace Froxlor\UI\Callbacks;
 
 use Froxlor\FileDir;
+use Froxlor\Settings;
 use Froxlor\UI\Panel\UI;
 
 /**
@@ -43,5 +44,41 @@ class Domain
 			}
 		}
 		return UI::getLng('domains.aliasdomain') . ' ' . $attributes['fields']['aliasdomain'];
+	}
+
+	public static function canEditDomain(array $attributes): bool
+	{
+		return (bool)$attributes['fields']['caneditdomain'];
+	}
+
+	public static function canViewDomainLogs(array $attributes): bool
+	{
+		return (bool)UI::getCurrentUser()['logviewenabled'];
+	}
+
+	public static function canDeleteDomain(array $attributes): bool
+	{
+		return $attributes['fields']['parentdomainid'] != '0'
+			&& empty($attributes['fields']['domainaliasid']);
+	}
+
+	public static function canEditDomainDNS(array $attributes): bool
+	{
+		return $attributes['fields']['isbinddomain'] == '1'
+			&& UI::getCurrentUser()['dnsenabled'] == '1'
+			&& $attributes['fields']['caneditdomain'] == '1'
+			&& Settings::Get('system.bind_enable') == '1'
+			&& Settings::Get('system.dnsenabled') == '1';
+	}
+
+	public function canEditDomainSSL(array $attributes): bool
+	{
+		// FIXME: https://github.com/Froxlor/Froxlor/blob/master/templates/Sparkle/customer/domains/domains_domain.tpl#L41
+		return false;
+	}
+
+	public function canEditDomainAlias(array $attributes): bool
+	{
+		return !empty($attributes['fields']['domainaliasid']);
 	}
 }
