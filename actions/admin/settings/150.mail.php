@@ -20,32 +20,33 @@ return array(
 	'groups' => array(
 		'mail' => array(
 			'title' => $lng['admin']['mailserversettings'],
+			'icon' => 'fa-solid fa-envelope',
 			'fields' => array(
 				'system_vmail_uid' => array(
 					'label' => $lng['serversettings']['vmail_uid'],
 					'settinggroup' => 'system',
 					'varname' => 'vmail_uid',
-					'type' => 'int',
+					'type' => 'number',
 					'default' => 2000,
-					'int_min' => 1,
-					'int_max' => 65535,
+					'min' => 2,
+					'max' => 65535,
 					'save_method' => 'storeSettingField'
 				),
 				'system_vmail_gid' => array(
 					'label' => $lng['serversettings']['vmail_gid'],
 					'settinggroup' => 'system',
 					'varname' => 'vmail_gid',
-					'type' => 'int',
+					'type' => 'number',
 					'default' => 2000,
-					'int_min' => 1,
-					'int_max' => 65535,
+					'min' => 2,
+					'max' => 65535,
 					'save_method' => 'storeSettingField'
 				),
 				'system_vmail_homedir' => array(
 					'label' => $lng['serversettings']['vmail_homedir'],
 					'settinggroup' => 'system',
 					'varname' => 'vmail_homedir',
-					'type' => 'string',
+					'type' => 'text',
 					'string_type' => 'dir',
 					'default' => '/var/customers/mail/',
 					'save_method' => 'storeSettingField'
@@ -54,7 +55,7 @@ return array(
 					'label' => $lng['serversettings']['vmail_maildirname'],
 					'settinggroup' => 'system',
 					'varname' => 'vmail_maildirname',
-					'type' => 'string',
+					'type' => 'text',
 					'string_type' => 'dir',
 					'default' => 'Maildir',
 					'string_emptyallowed' => true,
@@ -64,7 +65,7 @@ return array(
 					'label' => $lng['serversettings']['sendalternativemail'],
 					'settinggroup' => 'panel',
 					'varname' => 'sendalternativemail',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField'
 				),
@@ -72,7 +73,7 @@ return array(
 					'label' => $lng['serversettings']['mail_quota_enabled'],
 					'settinggroup' => 'system',
 					'varname' => 'mail_quota_enabled',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField'
 				),
@@ -80,7 +81,7 @@ return array(
 					'label' => $lng['serversettings']['mail_quota'],
 					'settinggroup' => 'system',
 					'varname' => 'mail_quota',
-					'type' => 'int',
+					'type' => 'number',
 					'default' => 100,
 					'save_method' => 'storeSettingField'
 				),
@@ -88,7 +89,7 @@ return array(
 					'label' => $lng['serversettings']['catchall_enabled'],
 					'settinggroup' => 'catchall',
 					'varname' => 'catchall_enabled',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => true,
 					'save_method' => 'storeSettingResetCatchall'
 				),
@@ -96,7 +97,7 @@ return array(
 					'label' => $lng['serversettings']['mailtraffic_enabled'],
 					'settinggroup' => 'system',
 					'varname' => 'mailtraffic_enabled',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => true,
 					'save_method' => 'storeSettingField'
 				),
@@ -104,10 +105,9 @@ return array(
 					'label' => $lng['serversettings']['mdaserver'],
 					'settinggroup' => 'system',
 					'varname' => 'mdaserver',
-					'type' => 'option',
-					'option_mode' => 'one',
+					'type' => 'select',
 					'default' => 'dovecot',
-					'option_options' => array(
+					'select_var' => array(
 						'courier' => 'Courier',
 						'dovecot' => 'Dovecot'
 					),
@@ -117,7 +117,7 @@ return array(
 					'label' => $lng['serversettings']['mdalog'],
 					'settinggroup' => 'system',
 					'varname' => 'mdalog',
-					'type' => 'string',
+					'type' => 'text',
 					'string_type' => 'file',
 					'default' => '/var/log/mail.log',
 					'string_emptyallowed' => true,
@@ -127,10 +127,9 @@ return array(
 					'label' => $lng['serversettings']['mtaserver'],
 					'settinggroup' => 'system',
 					'varname' => 'mtaserver',
-					'type' => 'option',
-					'option_mode' => 'one',
+					'type' => 'select',
 					'default' => 'postfix',
-					'option_options' => array(
+					'select_var' => array(
 						'exim4' => 'Exim4',
 						'postfix' => 'Postfix'
 					),
@@ -140,7 +139,7 @@ return array(
 					'label' => $lng['serversettings']['mtalog'],
 					'settinggroup' => 'system',
 					'varname' => 'mtalog',
-					'type' => 'string',
+					'type' => 'text',
 					'string_type' => 'file',
 					'default' => '/var/log/mail.log',
 					'string_emptyallowed' => true,
@@ -150,5 +149,3 @@ return array(
 		)
 	)
 );
-
-?>

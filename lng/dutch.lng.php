@@ -953,12 +953,12 @@ $lng['serversettings']['defaultttl'] = 'Standaard TTL voor domeinen in seconden 
 // ADDED IN FROXLOR 0.9.6-svn3
 $lng['serversettings']['defaultwebsrverrhandler_enabled'] = 'Standaard foutdocumenten voor alle klanten activeren';
 $lng['serversettings']['defaultwebsrverrhandler_err401']['title'] = 'Bestand/URL voor foutcode 401';
-$lng['serversettings']['defaultwebsrverrhandler_err401']['description'] = '<div class="red">Wordt niet ondersteund in: lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err401']['description'] = '<div class="text-danger">Wordt niet ondersteund in: lighttpd</div>';
 $lng['serversettings']['defaultwebsrverrhandler_err403']['title'] = 'Bestand/URL voor foutcode 403';
-$lng['serversettings']['defaultwebsrverrhandler_err403']['description'] = '<div class="red">Wordt niet ondersteund in: lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err403']['description'] = '<div class="text-danger">Wordt niet ondersteund in: lighttpd</div>';
 $lng['serversettings']['defaultwebsrverrhandler_err404'] = 'Bestand/URL voor foutcode 404';
 $lng['serversettings']['defaultwebsrverrhandler_err500']['title'] = 'Bestand/URL voor foutcode 500';
-$lng['serversettings']['defaultwebsrverrhandler_err500']['description'] = '<div class="red">Wordt niet ondersteund in: lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err500']['description'] = '<div class="text-danger">Wordt niet ondersteund in: lighttpd</div>';
 
 // ADDED IN FROXLOR 0.9.6-svn5
 $lng['serversettings']['mod_fcgid']['defaultini'] = 'Standaard PHP-configuratie voor nieuwe domeinen';

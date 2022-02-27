@@ -20,12 +20,13 @@ return array(
 	'groups' => array(
 		'dkim' => array(
 			'title' => $lng['admin']['dkimsettings'],
+			'icon' => 'fa-solid fa-fingerprint',
 			'fields' => array(
 				'dkim_enabled' => array(
 					'label' => $lng['dkim']['use_dkim'],
 					'settinggroup' => 'dkim',
 					'varname' => 'use_dkim',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingFieldInsertBindTask',
 					'overview_option' => true
@@ -34,7 +35,7 @@ return array(
 					'label' => $lng['dkim']['dkim_prefix'],
 					'settinggroup' => 'dkim',
 					'varname' => 'dkim_prefix',
-					'type' => 'string',
+					'type' => 'text',
 					'string_type' => 'dir',
 					'default' => '/etc/postfix/dkim/',
 					'save_method' => 'storeSettingField'
@@ -43,7 +44,7 @@ return array(
 					'label' => $lng['dkim']['privkeysuffix'],
 					'settinggroup' => 'dkim',
 					'varname' => 'privkeysuffix',
-					'type' => 'string',
+					'type' => 'text',
 					'string_regexp' => '/^[a-z0-9\._]+$/i',
 					'default' => '.priv',
 					'save_method' => 'storeSettingField'
@@ -52,7 +53,7 @@ return array(
 					'label' => $lng['dkim']['dkim_domains'],
 					'settinggroup' => 'dkim',
 					'varname' => 'dkim_domains',
-					'type' => 'string',
+					'type' => 'text',
 					'string_regexp' => '/^[a-z0-9\._]+$/i',
 					'default' => 'domains',
 					'save_method' => 'storeSettingField'
@@ -61,7 +62,7 @@ return array(
 					'label' => $lng['dkim']['dkim_dkimkeys'],
 					'settinggroup' => 'dkim',
 					'varname' => 'dkim_dkimkeys',
-					'type' => 'string',
+					'type' => 'text',
 					'string_regexp' => '/^[a-z0-9\._]+$/i',
 					'default' => 'dkim-keys.conf',
 					'save_method' => 'storeSettingField'
@@ -70,10 +71,10 @@ return array(
 					'label' => $lng['dkim']['dkim_algorithm'],
 					'settinggroup' => 'dkim',
 					'varname' => 'dkim_algorithm',
-					'type' => 'option',
+					'type' => 'select',
 					'default' => 'all',
-					'option_mode' => 'multiple',
-					'option_options' => array(
+					'select_mode' => 'multiple',
+					'select_var' => array(
 						'all' => 'All',
 						'sha1' => 'SHA1',
 						'sha256' => 'SHA256'
@@ -84,10 +85,9 @@ return array(
 					'label' => $lng['dkim']['dkim_servicetype'],
 					'settinggroup' => 'dkim',
 					'varname' => 'dkim_servicetype',
-					'type' => 'option',
+					'type' => 'select',
 					'default' => '0',
-					'option_mode' => 'one',
-					'option_options' => array(
+					'select_var' => array(
 						'0' => 'All',
 						'1' => 'E-Mail'
 					),
@@ -100,10 +100,9 @@ return array(
 					),
 					'settinggroup' => 'dkim',
 					'varname' => 'dkim_keylength',
-					'type' => 'option',
+					'type' => 'select',
 					'default' => '1024',
-					'option_mode' => 'one',
-					'option_options' => array(
+					'select_var' => array(
 						'1024' => '1024 Bit',
 						'2048' => '2048 Bit'
 					),
@@ -113,7 +112,7 @@ return array(
 					'label' => $lng['dkim']['dkim_notes'],
 					'settinggroup' => 'dkim',
 					'varname' => 'dkim_notes',
-					'type' => 'string',
+					'type' => 'text',
 					'string_regexp' => '/^[a-z0-9\._]+$/i',
 					'default' => '',
 					'save_method' => 'storeSettingFieldInsertBindTask'
@@ -122,7 +121,7 @@ return array(
 					'label' => $lng['dkim']['dkimrestart_command'],
 					'settinggroup' => 'dkim',
 					'varname' => 'dkimrestart_command',
-					'type' => 'string',
+					'type' => 'text',
 					'default' => '/etc/init.d/dkim-filter restart',
 					'save_method' => 'storeSettingField'
 				)
@@ -130,5 +129,3 @@ return array(
 		)
 	)
 );
-
-?>

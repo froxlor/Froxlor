@@ -20,12 +20,13 @@ return array(
 	'groups' => array(
 		'nameserver' => array(
 			'title' => $lng['admin']['nameserversettings'],
+			'icon' => 'fa-solid fa-globe',
 			'fields' => array(
 				'nameserver_enable' => array(
 					'label' => $lng['serversettings']['bindenable'],
 					'settinggroup' => 'system',
 					'varname' => 'bind_enable',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => true,
 					'save_method' => 'storeSettingField',
 					'overview_option' => true
@@ -34,7 +35,7 @@ return array(
 					'label' => $lng['serversettings']['dnseditorenable'],
 					'settinggroup' => 'system',
 					'varname' => 'dnsenabled',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField'
 				),
@@ -42,10 +43,9 @@ return array(
 					'label' => $lng['serversettings']['dns_server'],
 					'settinggroup' => 'system',
 					'varname' => 'dns_server',
-					'type' => 'option',
+					'type' => 'select',
 					'default' => 'Bind',
-					'option_mode' => 'one',
-					'option_options' => array(
+					'select_var' => array(
 						'Bind' => 'Bind9',
 						'PowerDNS' => 'PowerDNS'
 					),
@@ -55,7 +55,7 @@ return array(
 					'label' => $lng['serversettings']['bindconf_directory'],
 					'settinggroup' => 'system',
 					'varname' => 'bindconf_directory',
-					'type' => 'string',
+					'type' => 'text',
 					'string_type' => 'dir',
 					'default' => '/etc/bind/',
 					'save_method' => 'storeSettingField'
@@ -64,7 +64,7 @@ return array(
 					'label' => $lng['serversettings']['bindreload_command'],
 					'settinggroup' => 'system',
 					'varname' => 'bindreload_command',
-					'type' => 'string',
+					'type' => 'text',
 					'default' => '/etc/init.d/bind9 reload',
 					'save_method' => 'storeSettingField'
 				),
@@ -72,7 +72,7 @@ return array(
 					'label' => $lng['serversettings']['nameservers'],
 					'settinggroup' => 'system',
 					'varname' => 'nameservers',
-					'type' => 'string',
+					'type' => 'text',
 					'string_regexp' => '/^(([a-z0-9\-\._]+, ?)*[a-z0-9\-\._]+)?$/i',
 					'string_emptyallowed' => true,
 					'default' => '',
@@ -82,7 +82,7 @@ return array(
 					'label' => $lng['serversettings']['mxservers'],
 					'settinggroup' => 'system',
 					'varname' => 'mxservers',
-					'type' => 'string',
+					'type' => 'text',
 					'string_regexp' => '/^(([0-9]+ [a-z0-9\-\._]+, ?)*[0-9]+ [a-z0-9\-\._]+)?$/i',
 					'string_emptyallowed' => true,
 					'default' => '',
@@ -92,7 +92,7 @@ return array(
 					'label' => $lng['serversettings']['axfrservers'],
 					'settinggroup' => 'system',
 					'varname' => 'axfrservers',
-					'type' => 'string',
+					'type' => 'text',
 					'string_type' => 'validate_ip_incl_private',
 					'string_delimiter' => ',',
 					'string_emptyallowed' => true,
@@ -103,10 +103,9 @@ return array(
 					'label' => $lng['serversettings']['powerdns_mode'],
 					'settinggroup' => 'system',
 					'varname' => 'powerdns_mode',
-					'type' => 'option',
+					'type' => 'select',
 					'default' => 'Native',
-					'option_mode' => 'one',
-					'option_options' => array(
+					'select_var' => array(
 						'Native' => 'Native',
 						'Master' => 'Master'
 					),
@@ -116,7 +115,7 @@ return array(
 					'label' => $lng['serversettings']['mail_also_with_mxservers'],
 					'settinggroup' => 'system',
 					'varname' => 'dns_createmailentry',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField'
 				),
@@ -124,7 +123,7 @@ return array(
 					'label' => $lng['serversettings']['caa_entry'],
 					'settinggroup' => 'system',
 					'varname' => 'dns_createcaaentry',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => true,
 					'save_method' => 'storeSettingField'
 				),
@@ -132,7 +131,7 @@ return array(
 					'label' => $lng['serversettings']['caa_entry_custom'],
 					'settinggroup' => 'caa',
 					'varname' => 'caa_entry',
-					'type' => 'text',
+					'type' => 'textarea',
 					'default' => '',
 					'save_method' => 'storeSettingField'
 				),
@@ -140,18 +139,17 @@ return array(
 					'label' => $lng['serversettings']['defaultttl'],
 					'settinggroup' => 'system',
 					'varname' => 'defaultttl',
-					'type' => 'int',
+					'type' => 'number',
 					'default' => 604800, /* 1 week */
-					'int_min' => 3600, /* 1 hour */
-					'int_max' => 2147483647, /* integer max */
+					'min' => 3600, /* 1 hour */
+					'max' => 2147483647, /* integer max */
 					'save_method' => 'storeSettingField'
 				),
 				'system_soaemail' => array(
 					'label' => $lng['serversettings']['soaemail'],
 					'settinggroup' => 'system',
 					'varname' => 'soaemail',
-					'type' => 'string',
-					'string_type' => 'mail',
+					'type' => 'email',
 					'string_emptyallowed' => true,
 					'default' => '',
 					'save_method' => 'storeSettingField'

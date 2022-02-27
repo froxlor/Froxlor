@@ -20,14 +20,14 @@ class Fields
 		return $returnvalue;
 	}
 
-	public static function getFormFieldOutputOption($fieldname, $fielddata, $do_show = true)
+	public static function getFormFieldOutputSelect($fieldname, $fielddata, $do_show = true)
 	{
 		$returnvalue = '';
 
-		if (isset($fielddata['option_options']) && is_array($fielddata['option_options']) && ! empty($fielddata['option_options'])) {
+		if (isset($fielddata['select_var']) && is_array($fielddata['select_var']) && ! empty($fielddata['select_var'])) {
 			if (isset($fielddata['option_mode']) && $fielddata['option_mode'] == 'multiple') {
 				$multiple = true;
-				$fielddata['value'] = explode(',', $fielddata['value']);
+				$fielddata['selected'] = explode(',', $fielddata['selected']);
 			} else {
 				$multiple = false;
 			}
@@ -44,12 +44,15 @@ class Fields
 		return $returnvalue;
 	}
 
-	public static function prefetchFormFieldDataOption($fieldname, $fielddata)
+	/**
+	 * fetch select-options via callback function
+	 */
+	public static function prefetchFormFieldDataSelect($fieldname, $fielddata)
 	{
 		$returnvalue = array();
 
-		if ((! isset($fielddata['option_options']) || ! is_array($fielddata['option_options']) || empty($fielddata['option_options'])) && (isset($fielddata['option_options_method']))) {
-			$returnvalue['options'] = call_user_func($fielddata['option_options_method']);
+		if ((! isset($fielddata['select_var']) || ! is_array($fielddata['select_var']) || empty($fielddata['select_var'])) && (isset($fielddata['option_options_method']))) {
+			$returnvalue['select_var'] = call_user_func($fielddata['option_options_method']);
 		}
 
 		return $returnvalue;

@@ -1,0 +1,48 @@
+{% extends "Froxlor/userarea.html.twig" %}
+
+{% block content %}
+
+	<div class="row">
+		<div class="col-12 col-md-10 order-2 order-md-1">
+
+			<form action="{{ action|default(filename) }}" method="post" enctype="application/x-www-form-urlencoded" class="form">
+				<h3 class="page-header">
+					<i class="fa-solid fa-gears"></i>
+					{{ lng('admin.serversettings') }}{% if fields._group is defined %}&nbsp;&raquo;&nbsp;{{ fields._group.title }}{% endif %}
+				</h3>
+
+				{% block settings %}
+					<div class="row row-cols-2 row-cols-md-4 row-cols-xl-6 g-3">
+						{% for field in fields %}
+							<div class="col">
+								<div class="card h-100 border {% if field.activated %}border-primary{% else %}border-secondary bg-light{% endif %}">
+									<div class="card-body text-center">
+										{% if field.activated %}
+											<a href="{{ linker({'section':'settings','page':'overview','part':field.part}) }}" class="btn btn-link stretched-link">
+												<i class="{{ field.icon }} fa-4x"></i>
+											</a>
+										{% else %}
+											<i class="{{ field.icon }} fa-4x"></i>
+										{% endif %}
+										<p class="card-text mt-2">{{ field.title }}{% if field.info is defined and field.info is not empty %}<br><small>{{ field.info|raw }}</small>{% endif %}</p>
+									</div>
+								</div>
+							</div>
+						{% endfor %}
+					</div>
+				{% endblock %}
+
+			</form>
+
+		</div>
+		<div class="col-12 col-md-2 order-1 order-md-2">
+
+			<a class="btn btn-primary d-block mb-2" href="{{ linker({'section':'settings','page':'overview','part':'all'}) }}">
+				<i class="fa-solid fa-grip me-1"></i>
+				{{ lng('admin.configfiles.overview') }}</a>
+			<a class="btn btn-secondary d-block mb-2" href="{{ linker({'section':'settings','page':'importexport'}) }}">
+				<i class="fa-solid fa-file-import me-1"></i>
+				{{ lng('admin.configfiles.importexport') }}</a>
+		</div>
+	</div>
+{% endblock %}

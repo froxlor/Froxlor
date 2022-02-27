@@ -20,6 +20,7 @@ return array(
 	'groups' => array(
 		'panel' => array(
 			'title' => $lng['admin']['panelsettings'],
+			'icon' => 'fa-solid fa-chalkboard-user',
 			'fields' => array(
 				'panel_standardlanguage' => array(
 					'label' => array(
@@ -28,9 +29,8 @@ return array(
 					),
 					'settinggroup' => 'panel',
 					'varname' => 'standardlanguage',
-					'type' => 'option',
+					'type' => 'select',
 					'default' => 'English',
-					'option_mode' => 'one',
 					'option_options_method' => array(
 						'\\Froxlor\\User',
 						'getLanguages'
@@ -44,9 +44,8 @@ return array(
 					),
 					'settinggroup' => 'panel',
 					'varname' => 'default_theme',
-					'type' => 'option',
-					'default' => 'Sparkle',
-					'option_mode' => 'one',
+					'type' => 'select',
+					'default' => 'Froxlor',
 					'option_options_method' => array(
 						'\\Froxlor\\UI\\Template',
 						'getThemes'
@@ -57,7 +56,7 @@ return array(
 					'label' => $lng['serversettings']['panel_allow_theme_change_customer'],
 					'settinggroup' => 'panel',
 					'varname' => 'allow_theme_change_customer',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => true,
 					'save_method' => 'storeSettingField'
 				),
@@ -65,7 +64,7 @@ return array(
 					'label' => $lng['serversettings']['panel_allow_theme_change_admin'],
 					'settinggroup' => 'panel',
 					'varname' => 'allow_theme_change_admin',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => true,
 					'save_method' => 'storeSettingField'
 				),
@@ -73,7 +72,7 @@ return array(
 					'label' => $lng['serversettings']['natsorting'],
 					'settinggroup' => 'panel',
 					'varname' => 'natsorting',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField'
 				),
@@ -81,8 +80,8 @@ return array(
 					'label' => $lng['serversettings']['paging'],
 					'settinggroup' => 'panel',
 					'varname' => 'paging',
-					'type' => 'int',
-					'int_min' => 0,
+					'type' => 'number',
+					'min' => 0,
 					'default' => 0,
 					'save_method' => 'storeSettingField'
 				),
@@ -90,22 +89,20 @@ return array(
 					'label' => $lng['serversettings']['pathedit'],
 					'settinggroup' => 'panel',
 					'varname' => 'pathedit',
-					'type' => 'option',
+					'type' => 'select',
 					'default' => 'Manual',
-					'option_mode' => 'one',
-					'option_options' => array(
+					'select_var' => [
 						'Manual' => $lng['serversettings']['manual'],
 						'Dropdown' => $lng['serversettings']['dropdown']
-					),
+					],
 					'save_method' => 'storeSettingField'
 				),
 				'panel_adminmail' => array(
 					'label' => $lng['serversettings']['adminmail'],
 					'settinggroup' => 'panel',
 					'varname' => 'adminmail',
-					'type' => 'string',
-					'string_type' => 'mail',
-					'string_emptyallowed' => false,
+					'type' => 'email',
+					'string_emptyallowed' => true,
 					'default' => '',
 					'save_method' => 'storeSettingField'
 				),
@@ -113,7 +110,7 @@ return array(
 					'label' => $lng['serversettings']['adminmail_defname'],
 					'settinggroup' => 'panel',
 					'varname' => 'adminmail_defname',
-					'type' => 'string',
+					'type' => 'text',
 					'default' => 'Froxlor Administrator',
 					'save_method' => 'storeSettingField'
 				),
@@ -121,8 +118,7 @@ return array(
 					'label' => $lng['serversettings']['adminmail_return'],
 					'settinggroup' => 'panel',
 					'varname' => 'adminmail_return',
-					'type' => 'string',
-					'string_type' => 'mail',
+					'type' => 'email',
 					'string_emptyallowed' => true,
 					'default' => '',
 					'save_method' => 'storeSettingField'
@@ -131,9 +127,9 @@ return array(
 					'label' => $lng['serversettings']['decimal_places'],
 					'settinggroup' => 'panel',
 					'varname' => 'decimal_places',
-					'type' => 'int',
-					'int_min' => 0,
-					'int_max' => 15,
+					'type' => 'number',
+					'min' => 0,
+					'max' => 15,
 					'default' => 4,
 					'save_method' => 'storeSettingField'
 				),
@@ -141,8 +137,7 @@ return array(
 					'label' => $lng['serversettings']['phpmyadmin_url'],
 					'settinggroup' => 'panel',
 					'varname' => 'phpmyadmin_url',
-					'type' => 'string',
-					'string_type' => 'url',
+					'type' => 'url',
 					'string_emptyallowed' => true,
 					'default' => '',
 					'save_method' => 'storeSettingField'
@@ -151,8 +146,7 @@ return array(
 					'label' => $lng['serversettings']['webmail_url'],
 					'settinggroup' => 'panel',
 					'varname' => 'webmail_url',
-					'type' => 'string',
-					'string_type' => 'url',
+					'type' => 'url',
 					'string_emptyallowed' => true,
 					'default' => '',
 					'save_method' => 'storeSettingField'
@@ -161,8 +155,7 @@ return array(
 					'label' => $lng['serversettings']['webftp_url'],
 					'settinggroup' => 'panel',
 					'varname' => 'webftp_url',
-					'type' => 'string',
-					'string_type' => 'url',
+					'type' => 'url',
 					'string_emptyallowed' => true,
 					'default' => '',
 					'save_method' => 'storeSettingField'
@@ -171,7 +164,7 @@ return array(
 					'label' => $lng['admin']['show_version_login'],
 					'settinggroup' => 'admin',
 					'varname' => 'show_version_login',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField'
 				),
@@ -179,7 +172,7 @@ return array(
 					'label' => $lng['admin']['show_version_footer'],
 					'settinggroup' => 'admin',
 					'varname' => 'show_version_footer',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField'
 				),
@@ -187,7 +180,7 @@ return array(
 					'label' => $lng['admin']['show_news_feed'],
 					'settinggroup' => 'admin',
 					'varname' => 'show_news_feed',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField'
 				),
@@ -195,7 +188,7 @@ return array(
 					'label' => $lng['admin']['customer_show_news_feed'],
 					'settinggroup' => 'customer',
 					'varname' => 'show_news_feed',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField'
 				),
@@ -203,8 +196,7 @@ return array(
 					'label' => $lng['admin']['customer_news_feed_url'],
 					'settinggroup' => 'customer',
 					'varname' => 'news_feed_url',
-					'type' => 'string',
-					'string_type' => 'url',
+					'type' => 'url',
 					'string_emptyallowed' => true,
 					'default' => '',
 					'save_method' => 'storeSettingField'
@@ -213,7 +205,7 @@ return array(
 					'label' => $lng['serversettings']['panel_allow_domain_change_admin'],
 					'settinggroup' => 'panel',
 					'varname' => 'allow_domain_change_admin',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField'
 				),
@@ -221,7 +213,7 @@ return array(
 					'label' => $lng['serversettings']['panel_allow_domain_change_customer'],
 					'settinggroup' => 'panel',
 					'varname' => 'allow_domain_change_customer',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField'
 				),
@@ -229,7 +221,7 @@ return array(
 					'label' => $lng['serversettings']['panel_phpconfigs_hidestdsubdomain'],
 					'settinggroup' => 'panel',
 					'varname' => 'phpconfigs_hidestdsubdomain',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField'
 				),
@@ -237,11 +229,11 @@ return array(
 					'label' => $lng['serversettings']['panel_customer_hide_options'],
 					'settinggroup' => 'panel',
 					'varname' => 'customer_hide_options',
-					'type' => 'option',
+					'type' => 'select',
 					'default' => '',
-					'option_mode' => 'multiple',
+					'select_mode' => 'multiple',
 					'option_emptyallowed' => true,
-					'option_options' => array(
+					'select_var' => [
 						'email' => $lng['menue']['email']['email'],
 						'mysql' => $lng['menue']['mysql']['mysql'],
 						'domains' => $lng['menue']['domains']['domains'],
@@ -255,15 +247,14 @@ return array(
 						'traffic.http' => $lng['menue']['traffic']['traffic'] . " / HTTP",
 						'traffic.ftp' => $lng['menue']['traffic']['traffic'] . " / FTP",
 						'traffic.mail' => $lng['menue']['traffic']['traffic'] . " / Mail"
-					),
+					],
 					'save_method' => 'storeSettingField'
 				),
 				'panel_imprint_url' => array(
 					'label' => $lng['serversettings']['imprint_url'],
 					'settinggroup' => 'panel',
 					'varname' => 'imprint_url',
-					'type' => 'string',
-					'string_type' => 'url',
+					'type' => 'url',
 					'string_emptyallowed' => true,
 					'default' => '',
 					'save_method' => 'storeSettingField'
@@ -272,8 +263,7 @@ return array(
 					'label' => $lng['serversettings']['terms_url'],
 					'settinggroup' => 'panel',
 					'varname' => 'terms_url',
-					'type' => 'string',
-					'string_type' => 'url',
+					'type' => 'url',
 					'string_emptyallowed' => true,
 					'default' => '',
 					'save_method' => 'storeSettingField'
@@ -282,8 +272,7 @@ return array(
 					'label' => $lng['serversettings']['privacy_url'],
 					'settinggroup' => 'panel',
 					'varname' => 'privacy_url',
-					'type' => 'string',
-					'string_type' => 'url',
+					'type' => 'url',
 					'string_emptyallowed' => true,
 					'default' => '',
 					'save_method' => 'storeSettingField'
@@ -292,7 +281,7 @@ return array(
 					'label' => $lng['serversettings']['logo_overridetheme'],
 					'settinggroup' => 'panel',
 					'varname' => 'logo_overridetheme',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField'
 				),
@@ -300,7 +289,7 @@ return array(
 					'label' => $lng['serversettings']['logo_overridecustom'],
 					'settinggroup' => 'panel',
 					'varname' => 'logo_overridecustom',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField'
 				),
@@ -321,10 +310,8 @@ return array(
 					'image_name' => 'logo_login',
 					'default' => '',
 					'save_method' => 'storeSettingImage'
-				),
+				)
 			)
 		)
 	)
 );
-
-?>

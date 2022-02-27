@@ -18,12 +18,13 @@ return array(
 	'groups' => array(
 		'perl' => array(
 			'title' => $lng['admin']['perl_settings'],
+			'icon' => 'fa-solid fa-code',
 			'fields' => array(
 				'perl_path' => array(
 					'label' => $lng['serversettings']['perl_path'],
 					'settinggroup' => 'system',
 					'varname' => 'perl_path',
-					'type' => 'string',
+					'type' => 'text',
 					'default' => '/usr/bin/perl',
 					'save_method' => 'storeSettingField',
 					'websrv_avail' => array(
@@ -34,7 +35,7 @@ return array(
 					'label' => $lng['serversettings']['perl']['suexecworkaround'],
 					'settinggroup' => 'perl',
 					'varname' => 'suexecworkaround',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField',
 					'websrv_avail' => array(
@@ -45,7 +46,7 @@ return array(
 					'label' => $lng['serversettings']['perl']['suexeccgipath'],
 					'settinggroup' => 'perl',
 					'varname' => 'suexecpath',
-					'type' => 'string',
+					'type' => 'text',
 					'string_type' => 'dir',
 					'default' => '/var/www/cgi-bin/',
 					'save_method' => 'storeSettingField',
@@ -57,7 +58,7 @@ return array(
 					'label' => $lng['serversettings']['perl_server'],
 					'settinggroup' => 'serversettings',
 					'varname' => 'perl_server',
-					'type' => 'string',
+					'type' => 'text',
 					'default' => 'unix:/var/run/nginx/cgiwrap-dispatch.sock',
 					'save_method' => 'storeSettingField',
 					'websrv_avail' => array(
@@ -68,5 +69,3 @@ return array(
 		)
 	)
 );
-
-?>

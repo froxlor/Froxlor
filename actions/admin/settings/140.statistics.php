@@ -20,15 +20,15 @@ return array(
 	'groups' => array(
 		'statistics' => array(
 			'title' => $lng['admin']['statisticsettings'],
+			'icon' => 'fa-solid fa-chart-area',
 			'fields' => array(
 				'system_webalizer_quiet' => array(
 					'label' => $lng['serversettings']['webalizer_quiet'],
 					'settinggroup' => 'system',
 					'varname' => 'webalizer_quiet',
-					'type' => 'option',
+					'type' => 'select',
 					'default' => 2,
-					'option_mode' => 'one',
-					'option_options' => array(
+					'select_var' => array(
 						0 => $lng['admin']['webalizer']['normal'],
 						1 => $lng['admin']['webalizer']['quiet'],
 						2 => $lng['admin']['webalizer']['veryquiet']
@@ -40,7 +40,7 @@ return array(
 					'label' => $lng['serversettings']['awstats_enabled'],
 					'settinggroup' => 'system',
 					'varname' => 'awstats_enabled',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField'
 				),
@@ -48,7 +48,7 @@ return array(
 					'label' => $lng['serversettings']['awstats_path'],
 					'settinggroup' => 'system',
 					'varname' => 'awstats_path',
-					'type' => 'string',
+					'type' => 'text',
 					'string_type' => 'dir',
 					'default' => '/usr/bin/',
 					'save_method' => 'storeSettingField',
@@ -58,7 +58,7 @@ return array(
 					'label' => $lng['serversettings']['awstats_awstatspath'],
 					'settinggroup' => 'system',
 					'varname' => 'awstats_awstatspath',
-					'type' => 'string',
+					'type' => 'text',
 					'string_type' => 'dir',
 					'default' => '/usr/bin/',
 					'save_method' => 'storeSettingField',
@@ -68,7 +68,7 @@ return array(
 					'label' => $lng['serversettings']['awstats_conf'],
 					'settinggroup' => 'system',
 					'varname' => 'awstats_conf',
-					'type' => 'string',
+					'type' => 'text',
 					'string_type' => 'dir',
 					'default' => '/etc/awstats/',
 					'save_method' => 'storeSettingField',
@@ -78,7 +78,7 @@ return array(
 					'label' => $lng['serversettings']['awstats_icons'],
 					'settinggroup' => 'system',
 					'varname' => 'awstats_icons',
-					'type' => 'string',
+					'type' => 'text',
 					'string_type' => 'dir',
 					'default' => '/usr/share/awstats/icon/',
 					'save_method' => 'storeSettingField',
@@ -88,7 +88,7 @@ return array(
 					'label' => $lng['serversettings']['awstats']['logformat'],
 					'settinggroup' => 'system',
 					'varname' => 'awstats_logformat',
-					'type' => 'string',
+					'type' => 'text',
 					'default' => '1',
 					'save_method' => 'storeSettingField',
 					'visible' => \Froxlor\Settings::Get('system.awstats_enabled') == 1
@@ -97,5 +97,3 @@ return array(
 		)
 	)
 );
-
-?>

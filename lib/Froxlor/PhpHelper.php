@@ -172,7 +172,6 @@ class PhpHelper
 
 	public static function loadConfigArrayDir()
 	{
-		// Workaround until we use gettext
 		global $lng, $theme;
 
 		// we now use dynamic function parameters

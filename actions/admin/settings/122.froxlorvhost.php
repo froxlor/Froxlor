@@ -18,6 +18,7 @@ return array(
 	'groups' => array(
 		'froxlorvhost' => array(
 			'title' => $lng['admin']['froxlorvhost'] . (call_user_func(array('\Froxlor\Settings\FroxlorVhostSettings', 'hasVhostContainerEnabled')) == false ? $lng['admin']['novhostcontainer'] : ''),
+			'icon' => 'fa-solid fa-wrench',
 			'fields' => array(
 				/**
 				 * Webserver-Vhost
@@ -26,7 +27,7 @@ return array(
 					'label' => $lng['serversettings']['froxlordirectlyviahostname'],
 					'settinggroup' => 'system',
 					'varname' => 'froxlordirectlyviahostname',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField'
 				),
@@ -34,7 +35,7 @@ return array(
 					'label' => $lng['serversettings']['froxloraliases'],
 					'settinggroup' => 'system',
 					'varname' => 'froxloraliases',
-					'type' => 'string',
+					'type' => 'text',
 					'string_regexp' => '/^(([a-z0-9\-\._]+, ?)*[a-z0-9\-\._]+)?$/i',
 					'string_emptyallowed' => true,
 					'default' => '',
@@ -47,7 +48,7 @@ return array(
 					'label' => $lng['serversettings']['le_froxlor_enabled'],
 					'settinggroup' => 'system',
 					'varname' => 'le_froxlor_enabled',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingClearCertificates',
 					'visible' => \Froxlor\Settings::Get('system.leenabled') && call_user_func(array(
@@ -59,7 +60,7 @@ return array(
 					'label' => $lng['serversettings']['le_froxlor_redirect'],
 					'settinggroup' => 'system',
 					'varname' => 'le_froxlor_redirect',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField',
 					'visible' => \Froxlor\Settings::Get('system.use_ssl') && call_user_func(array(
@@ -71,9 +72,9 @@ return array(
 					'label' => $lng['admin']['domain_hsts_maxage'],
 					'settinggroup' => 'system',
 					'varname' => 'hsts_maxage',
-					'type' => 'int',
-					'int_min' => 0,
-					'int_max' => 94608000, // 3-years
+					'type' => 'number',
+					'min' => 0,
+					'max' => 94608000, // 3-years
 					'default' => 0,
 					'save_method' => 'storeSettingField',
 					'visible' => \Froxlor\Settings::Get('system.use_ssl') && call_user_func(array(
@@ -85,7 +86,7 @@ return array(
 					'label' => $lng['admin']['domain_hsts_incsub'],
 					'settinggroup' => 'system',
 					'varname' => 'hsts_incsub',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField',
 					'visible' => \Froxlor\Settings::Get('system.use_ssl') && call_user_func(array(
@@ -97,7 +98,7 @@ return array(
 					'label' => $lng['admin']['domain_hsts_preload'],
 					'settinggroup' => 'system',
 					'varname' => 'hsts_preload',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField',
 					'visible' => \Froxlor\Settings::Get('system.use_ssl') && call_user_func(array(
@@ -109,7 +110,7 @@ return array(
 					'label' => $lng['admin']['domain_honorcipherorder'],
 					'settinggroup' => 'system',
 					'varname' => 'honorcipherorder',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField',
 					'visible' => \Froxlor\Settings::Get('system.use_ssl') && call_user_func(array(
@@ -121,7 +122,7 @@ return array(
 					'label' => $lng['admin']['domain_sessiontickets'],
 					'settinggroup' => 'system',
 					'varname' => 'sessiontickets',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => true,
 					'save_method' => 'storeSettingField',
 					'visible' => \Froxlor\Settings::Get('system.use_ssl') && call_user_func(array(
@@ -136,7 +137,7 @@ return array(
 					'label' => $lng['serversettings']['mod_fcgid_ownvhost'],
 					'settinggroup' => 'system',
 					'varname' => 'mod_fcgid_ownvhost',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => true,
 					'save_method' => 'storeSettingField',
 					'websrv_avail' => array(
@@ -151,7 +152,7 @@ return array(
 					'label' => $lng['admin']['mod_fcgid_user'],
 					'settinggroup' => 'system',
 					'varname' => 'mod_fcgid_httpuser',
-					'type' => 'string',
+					'type' => 'text',
 					'default' => 'froxlorlocal',
 					'save_method' => 'storeSettingWebserverFcgidFpmUser',
 					'websrv_avail' => array(
@@ -166,7 +167,7 @@ return array(
 					'label' => $lng['admin']['mod_fcgid_group'],
 					'settinggroup' => 'system',
 					'varname' => 'mod_fcgid_httpgroup',
-					'type' => 'string',
+					'type' => 'text',
 					'default' => 'froxlorlocal',
 					'save_method' => 'storeSettingField',
 					'websrv_avail' => array(
@@ -181,9 +182,8 @@ return array(
 					'label' => $lng['serversettings']['mod_fcgid']['defaultini_ownvhost'],
 					'settinggroup' => 'system',
 					'varname' => 'mod_fcgid_defaultini_ownvhost',
-					'type' => 'option',
+					'type' => 'select',
 					'default' => '2',
-					'option_mode' => 'one',
 					'option_options_method' => array(
 						'\\Froxlor\\Http\\PhpConfig',
 						'getPhpConfigs'
@@ -204,7 +204,7 @@ return array(
 					'label' => $lng['phpfpm']['ownvhost'],
 					'settinggroup' => 'phpfpm',
 					'varname' => 'enabled_ownvhost',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => true,
 					'save_method' => 'storeSettingField',
 					'visible' => \Froxlor\Settings::Get('phpfpm.enabled') && call_user_func(array(
@@ -216,7 +216,7 @@ return array(
 					'label' => $lng['phpfpm']['vhost_httpuser'],
 					'settinggroup' => 'phpfpm',
 					'varname' => 'vhost_httpuser',
-					'type' => 'string',
+					'type' => 'text',
 					'default' => 'froxlorlocal',
 					'save_method' => 'storeSettingWebserverFcgidFpmUser',
 					'visible' => \Froxlor\Settings::Get('phpfpm.enabled') && call_user_func(array(
@@ -228,7 +228,7 @@ return array(
 					'label' => $lng['phpfpm']['vhost_httpgroup'],
 					'settinggroup' => 'phpfpm',
 					'varname' => 'vhost_httpgroup',
-					'type' => 'string',
+					'type' => 'text',
 					'default' => 'froxlorlocal',
 					'save_method' => 'storeSettingField',
 					'visible' => \Froxlor\Settings::Get('phpfpm.enabled') && call_user_func(array(
@@ -240,9 +240,8 @@ return array(
 					'label' => $lng['serversettings']['mod_fcgid']['defaultini_ownvhost'],
 					'settinggroup' => 'phpfpm',
 					'varname' => 'vhost_defaultini',
-					'type' => 'option',
+					'type' => 'select',
 					'default' => '2',
-					'option_mode' => 'one',
 					'option_options_method' => array(
 						'\\Froxlor\\Http\\PhpConfig',
 						'getPhpConfigs'
@@ -260,7 +259,7 @@ return array(
 					'label' => $lng['serversettings']['dns_createhostnameentry'],
 					'settinggroup' => 'system',
 					'varname' => 'dns_createhostnameentry',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField',
 					'visible' => \Froxlor\Settings::Get('system.bind_enable')

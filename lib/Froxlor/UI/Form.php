@@ -1,51 +1,23 @@
 <?php
+
 namespace Froxlor\UI;
 
 use Froxlor\Settings;
 
 class Form
 {
-
-	public static function buildForm($form)
+	public static function buildForm(array $form, string $part = ''): array
 	{
-		$fields = '';
-
-		if (\Froxlor\Validate\Form::validateFormDefinition($form)) {
-			foreach ($form['groups'] as $groupname => $groupdetails) {
-				if (isset($groupdetails['title']) && $groupdetails['title'] != '') {
-					$fields .= self::getFormGroupOutput($groupname, $groupdetails);
-				}
-
-				if (\Froxlor\Validate\Form::validateFieldDefinition($groupdetails)) {
-					// Prefetch form fields
-					foreach ($groupdetails['fields'] as $fieldname => $fielddetails) {
-						$groupdetails['fields'][$fieldname] = self::arrayMergePrefix($fielddetails, $fielddetails['type'], self::prefetchFormFieldData($fieldname, $fielddetails));
-						$form['groups'][$groupname]['fields'][$fieldname] = $groupdetails['fields'][$fieldname];
-					}
-
-					// Collect form field output
-					foreach ($groupdetails['fields'] as $fieldname => $fielddetails) {
-						$fields .= self::getFormFieldOutput($fieldname, $fielddetails);
-					}
-				}
-			}
-		}
-
-		return $fields;
-	}
-
-	public static function buildFormEx($form, $part = '')
-	{
-		$fields = '';
+		$fields = [];
 
 		if (\Froxlor\Validate\Form::validateFormDefinition($form)) {
 			foreach ($form['groups'] as $groupname => $groupdetails) {
 				// show overview
-				if ($part == '') {
+				if ($part == '' || $part == 'all') {
 					if (isset($groupdetails['title']) && $groupdetails['title'] != '') {
-						$fields .= self::getFormOverviewGroupOutput($groupname, $groupdetails);
+						$fields[] = self::getFormOverviewGroupOutput($groupname, $groupdetails);
 					}
-				} elseif ($part != '' && ($groupname == $part || $part == 'all')) {
+				} elseif ($part != '' && $groupname == $part) {
 					// only show one section
 					/**
 					 * this part checks for the 'websrv_avail' entry in the settings-array
@@ -56,7 +28,7 @@ class Form
 					$do_show = true;
 					if (isset($groupdetails['websrv_avail']) && is_array($groupdetails['websrv_avail'])) {
 						$websrv = Settings::Get('system.webserver');
-						if (! in_array($websrv, $groupdetails['websrv_avail'])) {
+						if (!in_array($websrv, $groupdetails['websrv_avail'])) {
 							$do_show = false;
 						}
 					}
@@ -68,24 +40,18 @@ class Form
 						$do_show = $groupdetails['visible'];
 					}
 
-					// if ($do_show) {
-					if (isset($groupdetails['title']) && $groupdetails['title'] != '') {
-						$fields .= self::getFormGroupOutput($groupname, $groupdetails);
-					}
+					$fields['_group'] = [
+						'title' => $groupdetails['title'] ?? 'unknown group',
+						'do_show' => $do_show
+					];
 
 					if (\Froxlor\Validate\Form::validateFieldDefinition($groupdetails)) {
-						// Prefetch form fields
-						foreach ($groupdetails['fields'] as $fieldname => $fielddetails) {
-							$groupdetails['fields'][$fieldname] = self::arrayMergePrefix($fielddetails, $fielddetails['type'], self::prefetchFormFieldData($fieldname, $fielddetails));
-							$form['groups'][$groupname]['fields'][$fieldname] = $groupdetails['fields'][$fieldname];
-						}
-
 						// Collect form field output
 						foreach ($groupdetails['fields'] as $fieldname => $fielddetails) {
-							$fields .= self::getFormFieldOutput($fieldname, $fielddetails);
+							$fields[$fieldname] = self::getFormFieldOutput($fieldname, $fielddetails);
+							$fields[$fieldname] = array_merge($fields[$fieldname], self::prefetchFormFieldData($fieldname, $fielddetails));
 						}
 					}
-					// }
 				}
 			}
 		}
@@ -148,7 +114,7 @@ class Form
 									$question = $plausibility_check[1];
 									unset($plausibility_check[1]);
 									$targetname = implode(' ', $plausibility_check);
-									if (! isset($input[$question])) {
+									if (!isset($input[$question])) {
 										if (is_array($url_params) && isset($url_params['filename'])) {
 											$filename = $url_params['filename'];
 											unset($url_params['filename']);
@@ -200,7 +166,7 @@ class Form
 					if (\Froxlor\Validate\Form::validateFieldDefinition($groupdetails)) {
 						// Prefetch form fields
 						foreach ($groupdetails['fields'] as $fieldname => $fielddetails) {
-							if (! $only_enabledisable || ($only_enabledisable && isset($fielddetails['overview_option']))) {
+							if (!$only_enabledisable || ($only_enabledisable && isset($fielddetails['overview_option']))) {
 								$groupdetails['fields'][$fieldname] = self::arrayMergePrefix($fielddetails, $fielddetails['type'], self::prefetchFormFieldData($fieldname, $fielddetails));
 								$form['groups'][$groupname]['fields'][$fieldname] = $groupdetails['fields'][$fieldname];
 							}
@@ -214,7 +180,7 @@ class Form
 					if (\Froxlor\Validate\Form::validateFieldDefinition($groupdetails)) {
 						// Validate fields
 						foreach ($groupdetails['fields'] as $fieldname => $fielddetails) {
-							if (! $only_enabledisable || ($only_enabledisable && isset($fielddetails['overview_option']))) {
+							if (!$only_enabledisable || ($only_enabledisable && isset($fielddetails['overview_option']))) {
 								$newfieldvalue = self::getFormFieldData($fieldname, $fielddetails, $input);
 								if ($newfieldvalue != $fielddetails['value']) {
 									if (($error = \Froxlor\Validate\Form::validateFormField($fieldname, $fielddetails, $newfieldvalue)) != true) {
@@ -236,7 +202,7 @@ class Form
 					if (\Froxlor\Validate\Form::validateFieldDefinition($groupdetails)) {
 						// Check fields for plausibility
 						foreach ($groupdetails['fields'] as $fieldname => $fielddetails) {
-							if (! $only_enabledisable || ($only_enabledisable && isset($fielddetails['overview_option']))) {
+							if (!$only_enabledisable || ($only_enabledisable && isset($fielddetails['overview_option']))) {
 								if (($plausibility_check = self::checkPlausibilityFormField($fieldname, $fielddetails, $submitted_fields[$fieldname], $submitted_fields)) !== false) {
 									if (is_array($plausibility_check) && isset($plausibility_check[0])) {
 										if ($plausibility_check[0] == \Froxlor\Validate\Check::FORMFIELDS_PLAUSIBILITY_CHECK_OK) {
@@ -252,7 +218,7 @@ class Form
 											$question = $plausibility_check[1];
 											unset($plausibility_check[1]);
 											$targetname = implode(' ', $plausibility_check);
-											if (! isset($input[$question])) {
+											if (!isset($input[$question])) {
 												if (is_array($url_params) && isset($url_params['filename'])) {
 													$filename = $url_params['filename'];
 													unset($url_params['filename']);
@@ -279,7 +245,7 @@ class Form
 					if (\Froxlor\Validate\Form::validateFieldDefinition($groupdetails)) {
 						// Save fields
 						foreach ($groupdetails['fields'] as $fieldname => $fielddetails) {
-							if (! $only_enabledisable || ($only_enabledisable && isset($fielddetails['overview_option']))) {
+							if (!$only_enabledisable || ($only_enabledisable && isset($fielddetails['overview_option']))) {
 								if (isset($changed_fields[$fieldname])) {
 									if (($saved_field = self::saveFormField($fieldname, $fielddetails, self::manipulateFormFieldData($fieldname, $fielddetails, $changed_fields[$fieldname]))) !== false) {
 										$saved_fields = array_merge($saved_fields, $saved_field);
@@ -306,7 +272,7 @@ class Form
 				'\\Froxlor\\Settings\\Store',
 				$fielddata['save_method']
 			), $fielddata, $newfieldvalue);
-		} elseif (is_array($fielddata) && ! isset($fielddata['save_method'])) {
+		} elseif (is_array($fielddata) && !isset($fielddata['save_method'])) {
 			$returnvalue = true;
 		} else {
 			$returnvalue = false;
@@ -322,7 +288,7 @@ class Form
 				'\\Froxlor\\Settings\\Store',
 				$fielddata['save_method']
 			), $fieldname, $fielddata, $newfieldvalue);
-		} elseif (is_array($fielddata) && ! isset($fielddata['save_method'])) {
+		} elseif (is_array($fielddata) && !isset($fielddata['save_method'])) {
 			$returnvalue = array();
 		} else {
 			$returnvalue = false;
@@ -330,92 +296,96 @@ class Form
 		return $returnvalue;
 	}
 
-	public static function getFormGroupOutput($groupname, $groupdetails)
-	{
-		global $lng, $theme;
-		eval("\$group = \"" . \Froxlor\UI\Template::getTemplate("settings/settings_group") . "\";");
-		return $group;
-	}
-
 	public static function getFormOverviewGroupOutput($groupname, $groupdetails)
 	{
-		global $lng, $filename, $s, $theme;
-
-		$group = '';
-		$title = $groupdetails['title'];
-		$part = $groupname;
+		global $lng;
 
 		$activated = true;
-		$option = '';
+		$option = [];
 		if (isset($groupdetails['fields'])) {
 			foreach ($groupdetails['fields'] as $fieldname => $fielddetails) {
 				if (isset($fielddetails['overview_option']) && $fielddetails['overview_option'] == true) {
-					if ($fielddetails['type'] != 'option' && $fielddetails['type'] != 'bool') {
-						\Froxlor\UI\Response::standard_error('overviewsettingoptionisnotavalidfield');
+					if ($fielddetails['type'] != 'select' && $fielddetails['type'] != 'checkbox' && $fielddetails['type'] != 'option' && $fielddetails['type'] != 'bool') {
+						// throw exception here as this is most likely an internal issue
+						// if we messed up the arrays
+						\Froxlor\UI\Response::standard_error('overviewsettingoptionisnotavalidfield', '', true);
 					}
 
-					if ($fielddetails['type'] == 'option') {
-						$options_array = $fielddetails['option_options'];
-						$options = '';
+					if ($fielddetails['type'] == 'select') {
+						$options_array = $fielddetails['select_var'];
+						$options = [];
 						foreach ($options_array as $value => $vtitle) {
-							$options .= \Froxlor\UI\HTML::makeoption($vtitle, $value, Settings::Get($fielddetails['settinggroup'] . '.' . $fielddetails['varname']));
+							$options[] = [
+								'title' => $vtitle,
+								'value' => $value,
+								'default' => Settings::Get($fielddetails['settinggroup'] . '.' . $fielddetails['varname'])
+							];
 						}
-						$option .= $fielddetails['label'] . ':&nbsp;';
-						$option .= '<select class="dropdown_noborder" name="' . $fieldname . '">';
-						$option .= $options;
-						$option .= '</select>';
+						$option['type'] = 'select';
+						$option['label'] = $fielddetails['label'];
+						$option['fieldname'] = $fieldname;
+						$option['options'] = $options;
 						$activated = true;
 					} else {
-						$option .= $lng['admin']['activated'] . ':&nbsp;';
-						$option .= \Froxlor\UI\HTML::makeyesno($fieldname, '1', '0', Settings::Get($fielddetails['settinggroup'] . '.' . $fielddetails['varname']));
+						$option['type'] = 'bool';
+						$option['label'] = $lng['admin']['activated'];
+						$option['fieldname'] = $fieldname;
+						$option['value'] = Settings::Get($fielddetails['settinggroup'] . '.' . $fielddetails['varname']);
 						$activated = (int) Settings::Get($fielddetails['settinggroup'] . '.' . $fielddetails['varname']);
 					}
 				}
 			}
 		}
 
+		$item = [
+			'title' => $groupdetails['title'],
+			'icon' => $groupdetails['icon'] ?? 'fa-solid fa-circle-question',
+			'part' => $groupname,
+			'activated' => $activated,
+			'option' => $option
+		];
+
 		/**
 		 * this part checks for the 'websrv_avail' entry in the settings
 		 * if found, we check if the current webserver is in the array.
-		 * If this
-		 * is not the case, we change the setting type to "hidden", #502
+		 * If this is not the case, we change the setting type to "hidden", #502
 		 */
-		$do_show = true;
 		if (isset($groupdetails['websrv_avail']) && is_array($groupdetails['websrv_avail'])) {
 			$websrv = Settings::Get('system.webserver');
-			if (! in_array($websrv, $groupdetails['websrv_avail'])) {
-				$do_show = false;
-				$title .= sprintf($lng['serversettings']['option_unavailable_websrv'], implode(", ", $groupdetails['websrv_avail']));
-				// hack disabled flag into select-box
-				$option = str_replace('<select class', '<select disabled="disabled" class', $option);
+			if (!in_array($websrv, $groupdetails['websrv_avail'])) {
+				$item['info'] = sprintf($lng['serversettings']['option_unavailable_websrv'], implode(", ", $groupdetails['websrv_avail']));
+				$option['visible'] = false;
 			}
 		}
 
-		eval("\$group = \"" . \Froxlor\UI\Template::getTemplate("settings/settings_overviewgroup") . "\";");
-
-		return $group;
+		return $item;
 	}
 
-	public static function getFormFieldOutput($fieldname, $fielddata)
+	public static function getFormFieldOutput($fieldname, $fielddata): array
 	{
 		global $lng;
 
-		$returnvalue = '';
-		if (is_array($fielddata) && isset($fielddata['type']) && $fielddata['type'] != '' && method_exists('\\Froxlor\\UI\\Fields', 'getFormFieldOutput' . ucfirst($fielddata['type']))) {
-			if (isset($fielddata['label']) && is_array($fielddata['label'])) {
-				if (isset($fielddata['label']['title']) && isset($fielddata['label']['description'])) {
-					$fielddata['label'] = '<b>' . $fielddata['label']['title'] . '</b><br />' . $fielddata['label']['description'];
-				} else {
-					$fielddata['label'] = implode(' ', $fielddata['label']);
-				}
-			}
+		$returnvalue = [];
+		if (is_array($fielddata) && isset($fielddata['type']) && $fielddata['type'] != '' /* && method_exists('\\Froxlor\\UI\\Fields', 'getFormFieldOutput' . ucfirst($fielddata['type'])) */) {
 
-			if (! isset($fielddata['value'])) {
+			if (!isset($fielddata['value'])) {
 				if (isset($fielddata['default'])) {
 					$fielddata['value'] = $fielddata['default'];
 				} else {
 					$fielddata['value'] = null;
 				}
+			}
+
+			// set value according to type
+			switch ($fielddata['type']) {
+				case 'select':
+					$fielddata['selected'] = $fielddata['value'];
+					unset($fielddata['value']);
+					break;
+				case 'checkbox':
+					$fielddata['checked'] = (bool) $fielddata['value'];
+					$fielddata['value'] = 1;
+					break;
 			}
 
 			/**
@@ -427,9 +397,9 @@ class Form
 			$do_show = true;
 			if (isset($fielddata['websrv_avail']) && is_array($fielddata['websrv_avail'])) {
 				$websrv = Settings::Get('system.webserver');
-				if (! in_array($websrv, $fielddata['websrv_avail'])) {
+				if (!in_array($websrv, $fielddata['websrv_avail'])) {
 					$do_show = false;
-					$fielddata['label'] .= sprintf($lng['serversettings']['option_unavailable_websrv'], implode(", ", $fielddata['websrv_avail']));
+					$fielddata['note'] = sprintf($lng['serversettings']['option_unavailable_websrv'], implode(", ", $fielddata['websrv_avail']));
 				}
 			}
 
@@ -438,17 +408,24 @@ class Form
 			// be false due to websrv_avail
 			if (isset($fielddata['visible']) && $do_show) {
 				$do_show = $fielddata['visible'];
-				if (! $do_show) {
-					$fielddata['label'] .= $lng['serversettings']['option_unavailable'];
+				if (!$do_show) {
+					$fielddata['note'] = $lng['serversettings']['option_unavailable'];
 				}
 			}
 
+			if (!$do_show) {
+				$fielddata['visible'] = false;
+			}
+
+			/*
 			if ($do_show || (!$do_show && Settings::Get('system.hide_incompatible_settings') == '0')) {
 				$returnvalue = call_user_func(array(
 					'\\Froxlor\\UI\\Fields',
 					'getFormFieldOutput' . ucfirst($fielddata['type'])
 				), $fieldname, $fielddata, $do_show);
 			}
+			*/
+			$returnvalue = $fielddata;
 		}
 		return $returnvalue;
 	}

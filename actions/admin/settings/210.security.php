@@ -20,12 +20,13 @@ return array(
 	'groups' => array(
 		'security' => array(
 			'title' => $lng['admin']['security_settings'],
+			'icon' => 'fa-solid fa-user-lock',
 			'fields' => array(
 				'panel_unix_names' => array(
 					'label' => $lng['serversettings']['unix_names'],
 					'settinggroup' => 'panel',
 					'varname' => 'unix_names',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => true,
 					'save_method' => 'storeSettingField'
 				),
@@ -33,7 +34,7 @@ return array(
 					'label' => $lng['serversettings']['mailpwcleartext'],
 					'settinggroup' => 'system',
 					'varname' => 'mailpwcleartext',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField'
 				),
@@ -41,9 +42,8 @@ return array(
 					'label' => $lng['serversettings']['passwordcryptfunc'],
 					'settinggroup' => 'system',
 					'varname' => 'passwordcryptfunc',
-					'type' => 'option',
+					'type' => 'select',
 					'default' => 0,
-					'option_mode' => 'one',
 					'option_options_method' => array(
 						'\\Froxlor\\System\\Crypt',
 						'getAvailablePasswordHashes'
@@ -54,7 +54,7 @@ return array(
 					'label' => $lng['serversettings']['allow_error_report_admin'],
 					'settinggroup' => 'system',
 					'varname' => 'allow_error_report_admin',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField'
 				),
@@ -62,7 +62,7 @@ return array(
 					'label' => $lng['serversettings']['allow_error_report_customer'],
 					'settinggroup' => 'system',
 					'varname' => 'allow_error_report_customer',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField'
 				),
@@ -70,7 +70,7 @@ return array(
 					'label' => $lng['serversettings']['allow_allow_customer_shell'],
 					'settinggroup' => 'system',
 					'varname' => 'allow_customer_shell',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField'
 				),
@@ -78,7 +78,7 @@ return array(
 					'label' => $lng['serversettings']['available_shells'],
 					'settinggroup' => 'system',
 					'varname' => 'available_shells',
-					'type' => 'string',
+					'type' => 'text',
 					'string_emptyallowed' => true,
 					'default' => '',
 					'save_method' => 'storeSettingField'
@@ -87,7 +87,7 @@ return array(
 					'label' => $lng['serversettings']['froxlorusergroup'],
 					'settinggroup' => 'system',
 					'varname' => 'froxlorusergroup',
-					'type' => 'string',
+					'type' => 'text',
 					'default' => '',
 					'save_method' => 'storeSettingField',
 					'plausibility_check_method' => array(

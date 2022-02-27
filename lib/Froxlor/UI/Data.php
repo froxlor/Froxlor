@@ -1,4 +1,5 @@
 <?php
+
 namespace Froxlor\UI;
 
 class Data
@@ -15,7 +16,7 @@ class Data
 		return $newfieldvalue;
 	}
 
-	public static function getFormFieldDataOption($fieldname, $fielddata, $input)
+	public static function getFormFieldDataSelect($fieldname, $fielddata, $input)
 	{
 		if (isset($input[$fieldname])) {
 			$newfieldvalue = $input[$fieldname];
@@ -30,7 +31,7 @@ class Data
 		return $newfieldvalue;
 	}
 
-	public static function getFormFieldDataInt($fieldname, $fielddata, $input)
+	public static function getFormFieldDataNumber($fieldname, $fielddata, $input)
 	{
 		if (isset($input[$fieldname])) {
 			$newfieldvalue = (int) $input[$fieldname];
@@ -41,7 +42,7 @@ class Data
 		return $newfieldvalue;
 	}
 
-	public static function getFormFieldDataBool($fieldname, $fielddata, $input)
+	public static function getFormFieldDataCheckbox($fieldname, $fielddata, $input)
 	{
 		if (isset($input[$fieldname]) && ($input[$fieldname] === '1' || $input[$fieldname] === 1 || $input[$fieldname] === true || strtolower($input[$fieldname]) === 'yes' || strtolower($input[$fieldname]) === 'ja')) {
 			$newfieldvalue = '1';
@@ -53,10 +54,10 @@ class Data
 	}
 
 	public static function getFormFieldDataImage($fieldname, $fielddata, $input)
-    {
-        // We always make the system think we have new data to trigger the save function where we actually check everything
-        return time();
-    }
+	{
+		// We always make the system think we have new data to trigger the save function where we actually check everything
+		return time();
+	}
 
 	public static function manipulateFormFieldDataDate($fieldname, $fielddata, $newfieldvalue)
 	{

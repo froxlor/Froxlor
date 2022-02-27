@@ -18,6 +18,7 @@ return array(
 	'groups' => array(
 		'fcgid' => array(
 			'title' => $lng['admin']['fcgid_settings'],
+			'icon' => 'fa-brands fa-php',
 			'websrv_avail' => array(
 				'apache2',
 				'lighttpd'
@@ -27,7 +28,7 @@ return array(
 					'label' => $lng['serversettings']['mod_fcgid'],
 					'settinggroup' => 'system',
 					'varname' => 'mod_fcgid',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField',
 					'plausibility_check_method' => array(
@@ -40,7 +41,7 @@ return array(
 					'label' => $lng['serversettings']['mod_fcgid']['configdir'],
 					'settinggroup' => 'system',
 					'varname' => 'mod_fcgid_configdir',
-					'type' => 'string',
+					'type' => 'text',
 					'string_type' => 'confdir',
 					'default' => '/var/www/php-fcgi-scripts/',
 					'plausibility_check_method' => array(
@@ -53,7 +54,7 @@ return array(
 					'label' => $lng['serversettings']['mod_fcgid']['tmpdir'],
 					'settinggroup' => 'system',
 					'varname' => 'mod_fcgid_tmpdir',
-					'type' => 'string',
+					'type' => 'text',
 					'string_type' => 'dir',
 					'default' => '/var/customers/tmp/',
 					'save_method' => 'storeSettingField'
@@ -62,7 +63,7 @@ return array(
 					'label' => $lng['serversettings']['mod_fcgid']['peardir'],
 					'settinggroup' => 'system',
 					'varname' => 'mod_fcgid_peardir',
-					'type' => 'string',
+					'type' => 'text',
 					'string_type' => 'dir',
 					'string_delimiter' => ':',
 					'string_emptyallowed' => true,
@@ -73,8 +74,8 @@ return array(
 					'label' => $lng['serversettings']['mod_fcgid']['wrapper'],
 					'settinggroup' => 'system',
 					'varname' => 'mod_fcgid_wrapper',
-					'type' => 'option',
-					'option_options' => array(
+					'type' => 'select',
+					'select_var' => array(
 						0 => 'ScriptAlias',
 						1 => 'FcgidWrapper'
 					),
@@ -88,7 +89,8 @@ return array(
 					'label' => $lng['serversettings']['mod_fcgid']['starter'],
 					'settinggroup' => 'system',
 					'varname' => 'mod_fcgid_starter',
-					'type' => 'int',
+					'type' => 'number',
+					'min' => 0,
 					'default' => 0,
 					'save_method' => 'storeSettingField'
 				),
@@ -96,7 +98,7 @@ return array(
 					'label' => $lng['serversettings']['mod_fcgid']['maxrequests'],
 					'settinggroup' => 'system',
 					'varname' => 'mod_fcgid_maxrequests',
-					'type' => 'int',
+					'type' => 'number',
 					'default' => 250,
 					'save_method' => 'storeSettingField'
 				),
@@ -104,9 +106,8 @@ return array(
 					'label' => $lng['serversettings']['mod_fcgid']['defaultini'],
 					'settinggroup' => 'system',
 					'varname' => 'mod_fcgid_defaultini',
-					'type' => 'option',
+					'type' => 'select',
 					'default' => '1',
-					'option_mode' => 'one',
 					'option_options_method' => array(
 						'\\Froxlor\\Http\\PhpConfig',
 						'getPhpConfigs'),
@@ -116,7 +117,7 @@ return array(
 					'label' => $lng['serversettings']['mod_fcgid']['idle_timeout'],
 					'settinggroup' => 'system',
 					'varname' => 'mod_fcgid_idle_timeout',
-					'type' => 'int',
+					'type' => 'number',
 					'default' => 30,
 					'save_method' => 'storeSettingField'
 				)
@@ -124,5 +125,3 @@ return array(
 		)
 	)
 );
-
-?>

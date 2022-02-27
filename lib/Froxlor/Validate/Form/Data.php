@@ -1,8 +1,25 @@
 <?php
+
 namespace Froxlor\Validate\Form;
 
 class Data
 {
+	public static function validateFormFieldText($fieldname, $fielddata, $newfieldvalue)
+	{
+		return self::validateFormFieldString($fieldname, $fielddata, $newfieldvalue);
+	}
+
+	public static function validateFormFieldEmail($fieldname, $fielddata, $newfieldvalue)
+	{
+		$fielddata['string_type'] == 'mail';
+		return self::validateFormFieldString($fieldname, $fielddata, $newfieldvalue);
+	}
+
+	public static function validateFormFieldUrl($fieldname, $fielddata, $newfieldvalue)
+	{
+		$fielddata['string_type'] == 'url';
+		return self::validateFormFieldString($fieldname, $fielddata, $newfieldvalue);
+	}
 
 	public static function validateFormFieldString($fieldname, $fielddata, $newfieldvalue)
 	{
@@ -42,7 +59,7 @@ class Data
 				} else {
 					// add trailing slash to validate path if needed
 					// refs #331
-					if (substr($newfieldvalue, - 1) != '/') {
+					if (substr($newfieldvalue, -1) != '/') {
 						$newfieldvalue .= '/';
 					}
 					$returnvalue = ($newfieldvalue == \Froxlor\FileDir::makeCorrectDir($newfieldvalue));
@@ -55,7 +72,7 @@ class Data
 				} else {
 					// add trailing slash to validate path if needed
 					// refs #331
-					if (substr($newfieldvalue, - 1) != '/') {
+					if (substr($newfieldvalue, -1) != '/') {
 						$newfieldvalue .= '/';
 					}
 					// if this is a configuration directory, check for stupidity of admins :p
@@ -128,7 +145,7 @@ class Data
 		}
 	}
 
-	public static function validateFormFieldBool($fieldname, $fielddata, $newfieldvalue)
+	public static function validateFormFieldCheckbox($fieldname, $fielddata, $newfieldvalue)
 	{
 		if ($newfieldvalue === '1' || $newfieldvalue === 1 || $newfieldvalue === true || strtolower($newfieldvalue) === 'yes' || strtolower($newfieldvalue) === 'ja' || $newfieldvalue === '0' || $newfieldvalue === 0 || $newfieldvalue === false || strtolower($newfieldvalue) === 'no' || strtolower($newfieldvalue) === 'nein' || strtolower($newfieldvalue) === '') {
 			return true;
@@ -200,7 +217,7 @@ class Data
 			} elseif (isset($fielddata['string_type']) && $fielddata['string_type'] == 'dir') {
 				// add trailing slash to validate path if needed
 				// refs #331
-				if (substr($newfieldvalue, - 1) != '/') {
+				if (substr($newfieldvalue, -1) != '/') {
 					$newfieldvalue .= '/';
 				}
 				$returnvalue = ($newfieldvalue == \Froxlor\FileDir::makeCorrectDir($newfieldvalue));
@@ -236,30 +253,30 @@ class Data
 		}
 	}
 
-	public static function validateFormFieldInt($fieldname, $fielddata, $newfieldvalue)
+	public static function validateFormFieldNumber($fieldname, $fielddata, $newfieldvalue)
 	{
-		if (isset($fielddata['int_min']) && (int) $newfieldvalue < (int) $fielddata['int_min']) {
+		if (isset($fielddata['min']) && (int) $newfieldvalue < (int) $fielddata['min']) {
 			return ('intvaluetoolow');
 		}
 
-		if (isset($fielddata['int_max']) && (int) $newfieldvalue > (int) $fielddata['int_max']) {
+		if (isset($fielddata['max']) && (int) $newfieldvalue > (int) $fielddata['max']) {
 			return ('intvaluetoohigh');
 		}
 
 		return true;
 	}
 
-	public static function validateFormFieldOption($fieldname, $fielddata, $newfieldvalue)
+	public static function validateFormFieldSelect($fieldname, $fielddata, $newfieldvalue)
 	{
 		$returnvalue = true;
 
 		if (isset($fielddata['option_mode']) && $fielddata['option_mode'] == 'multiple') {
 			$options = explode(',', $newfieldvalue);
 			foreach ($options as $option) {
-				$returnvalue = ($returnvalue && isset($fielddata['option_options'][$option]));
+				$returnvalue = ($returnvalue && isset($fielddata['select_var'][$option]));
 			}
 		} else {
-			$returnvalue = isset($fielddata['option_options'][$newfieldvalue]);
+			$returnvalue = isset($fielddata['select_var'][$newfieldvalue]);
 		}
 
 		if ($returnvalue === true || $fielddata['visible'] == false) {
@@ -272,7 +289,7 @@ class Data
 		}
 	}
 
-	public static function validateFormFieldText($fieldname, $fielddata, $newfieldvalue)
+	public static function validateFormFieldTextarea($fieldname, $fielddata, $newfieldvalue)
 	{
 		$returnvalue = 'stringformaterror';
 

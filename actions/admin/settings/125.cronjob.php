@@ -18,12 +18,13 @@ return array(
 	'groups' => array(
 		'crond' => array(
 			'title' => $lng['admin']['cronsettings'],
+			'icon' => 'fa-solid fa-clock-rotate-left',
 			'fields' => array(
 				'system_cronconfig' => array(
 					'label' => $lng['serversettings']['system_cronconfig'],
 					'settinggroup' => 'system',
 					'varname' => 'cronconfig',
-					'type' => 'string',
+					'type' => 'text',
 					'string_type' => 'file',
 					'default' => '/etc/cron.d/froxlor',
 					'save_method' => 'storeSettingField'
@@ -32,7 +33,7 @@ return array(
 					'label' => $lng['serversettings']['system_croncmdline'],
 					'settinggroup' => 'system',
 					'varname' => 'croncmdline',
-					'type' => 'string',
+					'type' => 'text',
 					'default' => '/usr/bin/nice -n 5 /usr/bin/php -q',
 					'save_method' => 'storeSettingField'
 				),
@@ -40,7 +41,7 @@ return array(
 					'label' => $lng['serversettings']['system_crondreload'],
 					'settinggroup' => 'system',
 					'varname' => 'crondreload',
-					'type' => 'string',
+					'type' => 'text',
 					'default' => '/etc/init.d/cron reload',
 					'save_method' => 'storeSettingField'
 				),
@@ -48,7 +49,7 @@ return array(
 					'label' => $lng['serversettings']['system_cron_allowautoupdate'],
 					'settinggroup' => 'system',
 					'varname' => 'cron_allowautoupdate',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField'
 				),
@@ -56,7 +57,7 @@ return array(
 					'label' => $lng['serversettings']['cron']['debug'],
 					'settinggroup' => 'system',
 					'varname' => 'debug_cron',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField'
 				)

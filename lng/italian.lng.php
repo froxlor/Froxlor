@@ -974,12 +974,12 @@ $lng['serversettings']['defaultttl'] = 'Dominio TTL per impegnare in secondi (pr
 // ADDED IN FROXLOR 0.9.6-svn3
 $lng['serversettings']['defaultwebsrverrhandler_enabled'] = 'Abilita errordocuments in automatico per tutti i clienti';
 $lng['serversettings']['defaultwebsrverrhandler_err401']['title'] = 'File/URL per l\'errore 401';
-$lng['serversettings']['defaultwebsrverrhandler_err401']['description'] = '<div class="red">Non supportato in: lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err401']['description'] = '<div class="text-danger">Non supportato in: lighttpd</div>';
 $lng['serversettings']['defaultwebsrverrhandler_err403']['title'] = 'File/URL per l\'errore 403';
-$lng['serversettings']['defaultwebsrverrhandler_err403']['description'] = '<div class="red">Non supportato in: lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err403']['description'] = '<div class="text-danger">Non supportato in: lighttpd</div>';
 $lng['serversettings']['defaultwebsrverrhandler_err404'] = 'File/URL per l\'errore 404';
 $lng['serversettings']['defaultwebsrverrhandler_err500']['title'] = 'File/URL per l\'errore 500';
-$lng['serversettings']['defaultwebsrverrhandler_err500']['description'] = '<div class="red">Non supportato in: lighttpd</div>';
+$lng['serversettings']['defaultwebsrverrhandler_err500']['description'] = '<div class="text-danger">Non supportato in: lighttpd</div>';
 
 // ADDED IN FROXLOR 0.9.6-svn5
 $lng['serversettings']['mod_fcgid']['defaultini'] = 'Configurazione di default di PHP per i nuovi domini';
@@ -1227,7 +1227,7 @@ $lng['admin']['store_defaultindex'] = 'Archivio del file indice predefinito al p
 $lng['admin']['ipsandports']['ssl_cert_chainfile']['title'] = 'Percorso al file catena dei certificati SSL';
 $lng['admin']['ipsandports']['ssl_cert_chainfile']['description'] = 'Principalmente Bundle CA, o similare, presubilmente vuoi impostare questo se hai acquistato un certificato SSL.';
 $lng['serversettings']['phpfpm']['title'] = 'Abilita php-fpm';
-$lng['serversettings']['phpfpm']['description'] = '<b>Questa impostazione richiede una configurazione speciale del server web. Vedi il manuale FPM per <a target="blank" href="https://github.com/Froxlor/Froxlor/wiki/apache2-with-php-fpm">Apache2</a> o <a target="blank" href="https://github.com/Froxlor/Froxlor/wiki/nginx-with-php-fpm">nginx</a></b>';
+$lng['serversettings']['phpfpm']['description'] = '<b>Questa impostazione richiede una configurazione speciale del server web. Vedi il <a target="_blank" href="https://docs.froxlor.org/general/configuration/php-fpm.html">manuale PHP-FPM</a></b>';
 $lng['serversettings']['phpfpm_settings']['aliasconfigdir'] = 'Configurazione cartella Alias per php-fpm';
 $lng['gender']['title'] = 'Titolo';
 $lng['gender']['male'] = 'Sig.';
@@ -1512,7 +1512,7 @@ $lng['error']['featureisdisabled'] = 'Funzionalità %s è disabilitata. Perfavor
 $lng['serversettings']['catchall_enabled']['title'] = 'Usa Catchall';
 $lng['serversettings']['catchall_enabled']['description'] = 'Vuoi offrire ai tuoi clienti la funzionalità di catchall?';
 $lng['serversettings']['apache_24']['title'] = 'Usa impostazioni per Apache 2.4';
-$lng['serversettings']['apache_24']['description'] = '<strong class="red">ATTENZIONE:</strong> spunta soltanto se hai installato la versione 2.4 o superiore di Apache<br />altrimenti il tuo server Web non si avvierà';
+$lng['serversettings']['apache_24']['description'] = '<strong class="text-danger">ATTENZIONE:</strong> spunta soltanto se hai installato la versione 2.4 o superiore di Apache<br />altrimenti il tuo server Web non si avvierà';
 $lng['serversettings']['nginx_fastcgiparams']['title'] = 'Percorso al file fastcgi_params';
 $lng['serversettings']['nginx_fastcgiparams']['description'] = 'Specifica il percorso al file fastcgi_params di nginx includendo il nome del file';
 $lng['serversettings']['documentroot_use_default_value']['title'] = 'Usa il nome del dominio come valore predefinito per il percorso DocumentRoot (radice dei documenti)';
@@ -1547,11 +1547,11 @@ $lng['error']['sslcertificateinvalidcertkeypair'] = 'La chiave privata fornita n
 $lng['error']['sslcertificateinvalidca'] = 'Il certificato CA fornito non sembra essere un certificato valido';
 $lng['error']['sslcertificateinvalidchain'] = 'I dati della catena di certificato non sembrano essere un certificato valido';
 $lng['serversettings']['customerssl_directory']['title'] = 'Cartella dei certificati ssl clienti del Webserver';
-$lng['serversettings']['customerssl_directory']['description'] = 'Dove devono esssere creati i certificati ssl cliente?<br /><br /><div class="red">NOTA: Il contenuto di questa cartella viene cancellato regolarmente, onde evitare il salvataggio manuale di dati in essa.</div>';
+$lng['serversettings']['customerssl_directory']['description'] = 'Dove devono esssere creati i certificati ssl cliente?<br /><br /><div class="text-danger">NOTA: Il contenuto di questa cartella viene cancellato regolarmente, onde evitare il salvataggio manuale di dati in essa.</div>';
 $lng['admin']['phpfpm.ininote'] = 'Non tutti i valori che potresti volere settare possono essere usati nella configurazione del pool php-fpm.';
 $lng['crondesc']['cron_mailboxsize'] = 'Calcolo dimensioni caselle di posta';
 $lng['domains']['ipandport_multi']['title'] = 'Indirizzi IP';
-$lng['domains']['ipandport_multi']['description'] = 'Specifica uno o più indirizzi IP per il dominio.<br /><br /><div class="red">NOTA: L\'indirizzo IP non può essere modificato quando il dominio è configurato come <strong>alias-domain</strong> di un altro dominio.</div>';
+$lng['domains']['ipandport_multi']['description'] = 'Specifica uno o più indirizzi IP per il dominio.<br /><br /><div class="text-danger">NOTA: L\'indirizzo IP non può essere modificato quando il dominio è configurato come <strong>alias-domain</strong> di un altro dominio.</div>';
 $lng['domains']['ipandport_ssl_multi']['title'] = 'Indirizzi IP SSL';
 $lng['domains']['ssl_redirect']['title'] = 'Reindirizzamento SSL';
 $lng['domains']['ssl_redirect']['description'] = 'Questa opzione crea un reindirizzamento per vhosts non-sll in modo che tutte le richieste vengono reindirizzate ai SSL-vhost.<br /><br />praticamente una richiesta a <strong>http</strong>://dominio.tld/ ti reindirizzera a <strong>https</strong>://dominio.tld/';
@@ -1632,7 +1632,7 @@ $lng['serversettings']['system_croncmdline']['description'] = 'Commando per eseg
 $lng['error']['cannotdeletehostnamephpconfig'] = 'Questa configurazione PHP è utilizzata dal vhost Froxlor e non può essere eliminata.';
 $lng['error']['cannotdeletedefaultphpconfig'] = 'Questa configurazione PHP è impostata come predefinita e non può essere eliminata.';
 $lng['serversettings']['system_cron_allowautoupdate']['title'] = 'Permetti aggiornamenti automatici del database';
-$lng['serversettings']['system_cron_allowautoupdate']['description'] = '<div class="red"><b>ATTENZIONE:</b></div> Questa impostazione permette al cronjob di bypassare la verifica di versione dei file e database di froxlors ed esegue gli aggiornamenti di database in caso si verificasse un disallineamento di versione.<br><br><div class="red">l\'aggiornamento automatico imposterà sempre i valori predefiniti per nuove impostazioni o modifiche. Questo, non sempre potrebbe essere congruo ed adeguato per il vostro sistema. Pensaci due volte prima di attivare questa opzione</div>';
+$lng['serversettings']['system_cron_allowautoupdate']['description'] = '<div class="text-danger"><b>ATTENZIONE:</b></div> Questa impostazione permette al cronjob di bypassare la verifica di versione dei file e database di froxlors ed esegue gli aggiornamenti di database in caso si verificasse un disallineamento di versione.<br><br><div class="text-danger">l\'aggiornamento automatico imposterà sempre i valori predefiniti per nuove impostazioni o modifiche. Questo, non sempre potrebbe essere congruo ed adeguato per il vostro sistema. Pensaci due volte prima di attivare questa opzione</div>';
 $lng['error']['passwordshouldnotbeusername'] = 'La password deve essere diversa dal nome utente.';
 $lng['admin']['customer_show_news_feed'] = "Mostra feed di notizie personalizzati sul cruscotto dei clienti";
 $lng['admin']['customer_news_feed_url'] = "Feed RSS- per il feed di notizie personalizzato";

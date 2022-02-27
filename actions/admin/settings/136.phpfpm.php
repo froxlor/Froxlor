@@ -18,12 +18,13 @@ return array(
 	'groups' => array(
 		'phpfpm' => array(
 			'title' => $lng['admin']['phpfpm_settings'],
+			'icon' => 'fa-brands fa-php',
 			'fields' => array(
 				'system_phpfpm_enabled' => array(
 					'label' => $lng['serversettings']['phpfpm'],
 					'settinggroup' => 'phpfpm',
 					'varname' => 'enabled',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField',
 					'plausibility_check_method' => array(
@@ -36,9 +37,8 @@ return array(
 					'label' => $lng['serversettings']['mod_fcgid']['defaultini'],
 					'settinggroup' => 'phpfpm',
 					'varname' => 'defaultini',
-					'type' => 'option',
+					'type' => 'select',
 					'default' => '1',
-					'option_mode' => 'one',
 					'option_options_method' => array(
 						'\\Froxlor\\Http\\PhpConfig',
 						'getPhpConfigs'
@@ -49,7 +49,7 @@ return array(
 					'label' => $lng['serversettings']['phpfpm_settings']['aliasconfigdir'],
 					'settinggroup' => 'phpfpm',
 					'varname' => 'aliasconfigdir',
-					'type' => 'string',
+					'type' => 'text',
 					'string_type' => 'confdir',
 					'default' => '/var/www/php-fpm/',
 					'save_method' => 'storeSettingField'
@@ -58,7 +58,7 @@ return array(
 					'label' => $lng['serversettings']['mod_fcgid']['tmpdir'],
 					'settinggroup' => 'phpfpm',
 					'varname' => 'tmpdir',
-					'type' => 'string',
+					'type' => 'text',
 					'string_type' => 'dir',
 					'default' => '/var/customers/tmp/',
 					'save_method' => 'storeSettingField'
@@ -67,7 +67,7 @@ return array(
 					'label' => $lng['serversettings']['mod_fcgid']['peardir'],
 					'settinggroup' => 'phpfpm',
 					'varname' => 'peardir',
-					'type' => 'string',
+					'type' => 'text',
 					'string_type' => 'dir',
 					'string_delimiter' => ':',
 					'string_emptyallowed' => true,
@@ -78,7 +78,7 @@ return array(
 					'label' => $lng['serversettings']['phpfpm_settings']['envpath'],
 					'settinggroup' => 'phpfpm',
 					'varname' => 'envpath',
-					'type' => 'string',
+					'type' => 'text',
 					'string_type' => 'dir',
 					'string_delimiter' => ':',
 					'string_emptyallowed' => true,
@@ -89,7 +89,7 @@ return array(
 					'label' => $lng['serversettings']['phpfpm_settings']['ipcdir'],
 					'settinggroup' => 'phpfpm',
 					'varname' => 'fastcgi_ipcdir',
-					'type' => 'string',
+					'type' => 'text',
 					'string_type' => 'dir',
 					'default' => '/var/lib/apache2/fastcgi/',
 					'save_method' => 'storeSettingField'
@@ -98,7 +98,7 @@ return array(
 					'label' => $lng['phpfpm']['use_mod_proxy'],
 					'settinggroup' => 'phpfpm',
 					'varname' => 'use_mod_proxy',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => true,
 					'visible' => \Froxlor\Settings::Get('system.apache24'),
 					'save_method' => 'storeSettingField'
@@ -107,7 +107,7 @@ return array(
 					'label' => $lng['phpfpm']['ini_flags'],
 					'settinggroup' => 'phpfpm',
 					'varname' => 'ini_flags',
-					'type' => 'text',
+					'type' => 'textarea',
 					'default' => '',
 					'save_method' => 'storeSettingField'
 				),
@@ -115,7 +115,7 @@ return array(
 					'label' => $lng['phpfpm']['ini_values'],
 					'settinggroup' => 'phpfpm',
 					'varname' => 'ini_values',
-					'type' => 'text',
+					'type' => 'textarea',
 					'default' => '',
 					'save_method' => 'storeSettingField'
 				),
@@ -123,7 +123,7 @@ return array(
 					'label' => $lng['phpfpm']['ini_admin_flags'],
 					'settinggroup' => 'phpfpm',
 					'varname' => 'ini_admin_flags',
-					'type' => 'text',
+					'type' => 'textarea',
 					'default' => '',
 					'save_method' => 'storeSettingField'
 				),
@@ -131,7 +131,7 @@ return array(
 					'label' => $lng['phpfpm']['ini_admin_values'],
 					'settinggroup' => 'phpfpm',
 					'varname' => 'ini_admin_values',
-					'type' => 'text',
+					'type' => 'textarea',
 					'default' => '',
 					'save_method' => 'storeSettingField'
 				)

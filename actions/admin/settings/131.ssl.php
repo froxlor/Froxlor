@@ -20,12 +20,13 @@ return array(
 	'groups' => array(
 		'ssl' => array(
 			'title' => $lng['admin']['sslsettings'],
+			'icon' => 'fa-solid fa-shield',
 			'fields' => array(
 				'system_ssl_enabled' => array(
 					'label' => $lng['serversettings']['ssl']['use_ssl'],
 					'settinggroup' => 'system',
 					'varname' => 'use_ssl',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField',
 					'overview_option' => true
@@ -34,10 +35,10 @@ return array(
 					'label' => $lng['serversettings']['ssl']['ssl_protocols'],
 					'settinggroup' => 'system',
 					'varname' => 'ssl_protocols',
-					'type' => 'option',
+					'type' => 'select',
 					'default' => 'TLSv1.2',
-					'option_mode' => 'multiple',
-					'option_options' => array(
+					'select_mode' => 'multiple',
+					'select_var' => array(
 						'TLSv1' => 'TLSv1',
 						'TLSv1.1' => 'TLSv1.1',
 						'TLSv1.2' => 'TLSv1.2',
@@ -49,7 +50,7 @@ return array(
 					'label' => $lng['serversettings']['ssl']['ssl_cipher_list'],
 					'settinggroup' => 'system',
 					'varname' => 'ssl_cipher_list',
-					'type' => 'string',
+					'type' => 'text',
 					'string_emptyallowed' => false,
 					'default' => 'ECDH+AESGCM:ECDH+AES256:!aNULL:!MD5:!DSS:!DH:!AES128',
 					'save_method' => 'storeSettingField'
@@ -58,7 +59,7 @@ return array(
 					'label' => $lng['serversettings']['ssl']['tlsv13_cipher_list'],
 					'settinggroup' => 'system',
 					'varname' => 'tlsv13_cipher_list',
-					'type' => 'string',
+					'type' => 'text',
 					'string_emptyallowed' => true,
 					'default' => '',
 					'visible' => \Froxlor\Settings::Get('system.webserver') == "apache2" && \Froxlor\Settings::Get('system.apache24') == 1,
@@ -68,7 +69,7 @@ return array(
 					'label' => $lng['serversettings']['ssl']['ssl_cert_file'],
 					'settinggroup' => 'system',
 					'varname' => 'ssl_cert_file',
-					'type' => 'string',
+					'type' => 'text',
 					'string_type' => 'file',
 					'string_emptyallowed' => true,
 					'default' => '/etc/apache2/apache2.pem',
@@ -78,7 +79,7 @@ return array(
 					'label' => $lng['serversettings']['ssl']['ssl_key_file'],
 					'settinggroup' => 'system',
 					'varname' => 'ssl_key_file',
-					'type' => 'string',
+					'type' => 'text',
 					'string_type' => 'file',
 					'string_emptyallowed' => true,
 					'default' => '/etc/apache2/apache2.key',
@@ -88,7 +89,7 @@ return array(
 					'label' => $lng['admin']['ipsandports']['ssl_cert_chainfile'],
 					'settinggroup' => 'system',
 					'varname' => 'ssl_cert_chainfile',
-					'type' => 'string',
+					'type' => 'text',
 					'string_type' => 'file',
 					'string_emptyallowed' => true,
 					'default' => '',
@@ -98,7 +99,7 @@ return array(
 					'label' => $lng['serversettings']['ssl']['ssl_ca_file'],
 					'settinggroup' => 'system',
 					'varname' => 'ssl_ca_file',
-					'type' => 'string',
+					'type' => 'text',
 					'string_type' => 'file',
 					'string_emptyallowed' => true,
 					'default' => '',
@@ -108,8 +109,7 @@ return array(
 					'label' => $lng['serversettings']['ssl']['apache24_ocsp_cache_path'],
 					'settinggroup' => 'system',
 					'varname' => 'apache24_ocsp_cache_path',
-					'type' => 'string',
-					'string_type' => 'string',
+					'type' => 'text',
 					'string_emptyallowed' => false,
 					'default' => 'shmcb:/var/run/apache2/ocsp-stapling.cache(131072)',
 					'visible' => \Froxlor\Settings::Get('system.webserver') == "apache2" && \Froxlor\Settings::Get('system.apache24') == 1,
@@ -119,7 +119,7 @@ return array(
 					'label' => $lng['admin']['domain_sessionticketsenabled'],
 					'settinggroup' => 'system',
 					'varname' => 'sessionticketsenabled',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => true,
 					'save_method' => 'storeSettingField',
 					'visible' => \Froxlor\Settings::Get('system.use_ssl') && (\Froxlor\Settings::Get('system.webserver') == "nginx" || (\Froxlor\Settings::Get('system.webserver') == "apache2" && \Froxlor\Settings::Get('system.apache24') == 1))
@@ -128,7 +128,7 @@ return array(
 					'label' => $lng['serversettings']['leenabled'],
 					'settinggroup' => 'system',
 					'varname' => 'leenabled',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => false,
 					'cronmodule' => 'froxlor/letsencrypt',
 					'save_method' => 'storeSettingField'
@@ -137,7 +137,7 @@ return array(
 					'label' => $lng['serversettings']['acmeshpath'],
 					'settinggroup' => 'system',
 					'varname' => 'acmeshpath',
-					'type' => 'string',
+					'type' => 'text',
 					'string_type' => 'file',
 					'default' => '/root/.acme.sh/acme.sh',
 					'save_method' => 'storeSettingField'
@@ -146,40 +146,38 @@ return array(
 					'label' => $lng['serversettings']['letsencryptacmeconf'],
 					'settinggroup' => 'system',
 					'varname' => 'letsencryptacmeconf',
-					'type' => 'string',
+					'type' => 'text',
 					'string_type' => 'file',
 					'default' => '/etc/apache2/conf-enabled/acme.conf',
 					'save_method' => 'storeSettingField'
 				),
-			    /**
-			     * currently the only option anyway
-			     *
+				/**
+				 * currently the only option anyway
+				 *
 				'system_leapiversion' => array(
 					'label' => $lng['serversettings']['leapiversion'],
 					'settinggroup' => 'system',
 					'varname' => 'leapiversion',
-					'type' => 'option',
+					'type' => 'select',
 					'default' => '2',
-					'option_mode' => 'one',
-					'option_options' => array(
+					'select_var' => array(
 						'2' => 'ACME v2'
 					),
 					'save_method' => 'storeSettingField'
 				),
-				*/
+				 */
 				'system_letsencryptca' => array(
 					'label' => $lng['serversettings']['letsencryptca'],
 					'settinggroup' => 'system',
 					'varname' => 'letsencryptca',
-					'type' => 'option',
+					'type' => 'select',
 					'default' => 'letsencrypt',
-					'option_mode' => 'one',
-					'option_options' => array(
+					'select_var' => array(
 						'letsencrypt_test' => 'Let\'s Encrypt (Test / Staging)',
 						'letsencrypt' => 'Let\'s Encrypt (Live)',
 						'buypass_test' => 'Buypass (Test / Staging)',
 						'buypass' => 'Buypass (Live)',
-					    'zerossl' => 'ZeroSSL (Live)'
+						'zerossl' => 'ZeroSSL (Live)'
 					),
 					'save_method' => 'storeSettingField'
 				),
@@ -187,7 +185,7 @@ return array(
 					'label' => $lng['serversettings']['letsencryptchallengepath'],
 					'settinggroup' => 'system',
 					'varname' => 'letsencryptchallengepath',
-					'type' => 'string',
+					'type' => 'text',
 					'string_emptyallowed' => false,
 					'default' => \Froxlor\Froxlor::getInstallDir(),
 					'save_method' => 'storeSettingField'
@@ -196,10 +194,9 @@ return array(
 					'label' => $lng['serversettings']['letsencryptkeysize'],
 					'settinggroup' => 'system',
 					'varname' => 'letsencryptkeysize',
-					'type' => 'option',
+					'type' => 'select',
 					'default' => '2048',
-					'option_mode' => 'one',
-					'option_options' => array(
+					'select_var' => array(
 						'2048' => '2048',
 						'3072' => '3072',
 						'4096' => '4096',
@@ -211,10 +208,9 @@ return array(
 					'label' => $lng['serversettings']['letsencryptecc'],
 					'settinggroup' => 'system',
 					'varname' => 'leecc',
-					'type' => 'option',
+					'type' => 'select',
 					'default' => '0',
-					'option_mode' => 'one',
-					'option_options' => array(
+					'select_var' => array(
 						'0' => '-',
 						'256' => 'ec-256',
 						'384' => 'ec-384'
@@ -225,7 +221,7 @@ return array(
 					'label' => $lng['serversettings']['letsencryptreuseold'],
 					'settinggroup' => 'system',
 					'varname' => 'letsencryptreuseold',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => true,
 					'save_method' => 'storeSettingField'
 				),
@@ -233,7 +229,7 @@ return array(
 					'label' => $lng['serversettings']['le_domain_dnscheck'],
 					'settinggroup' => 'system',
 					'varname' => 'le_domain_dnscheck',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => true,
 					'save_method' => 'storeSettingField'
 				)

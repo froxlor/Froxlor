@@ -1,0 +1,16 @@
+{% extends "Froxlor/settings/index.html.twig" %}
+
+{% block settings %}
+
+	{% import "Froxlor/form/formfields.html.twig" as formfields %}
+
+	<div class="card mb-3">
+		<div class="card-body">
+			{% for id,setting in fields %}
+				{% if id != '_group' %}
+					{{ formfields.fieldrow(id, setting, false, true) }}
+				{% endif %}
+			{% endfor %}
+		</div>
+	</div>
+{% endblock %}

@@ -18,12 +18,13 @@ return array(
 	'groups' => array(
 		'spf' => array(
 			'title' => $lng['admin']['spfsettings'],
+			'icon' => 'fa-solid fa-clipboard-check',
 			'fields' => array(
 				'spf_enabled' => array(
 					'label' => $lng['spf']['use_spf'],
 					'settinggroup' => 'spf',
 					'varname' => 'use_spf',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField',
 					'overview_option' => true
@@ -32,7 +33,7 @@ return array(
 					'label' => $lng['spf']['spf_entry'],
 					'settinggroup' => 'spf',
 					'varname' => 'spf_entry',
-					'type' => 'string',
+					'type' => 'text',
 					'default' => '"v=spf1 a mx -all"',
 					'save_method' => 'storeSettingField'
 				)
@@ -40,5 +41,3 @@ return array(
 		)
 	)
 );
-
-?>

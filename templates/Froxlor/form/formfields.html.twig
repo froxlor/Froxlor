@@ -1,14 +1,21 @@
-{% macro fieldrow(id, field, norow = false) %}
-	{% if field.visible is not defined or (field.visible is defined and field.visible) %}
+{% macro fieldrow(id, field, norow = false, nohide = false) %}
+	{% if field.visible is not defined or (field.visible is defined and field.visible) or nohide == true %}
 		{% if norow == false and field.type != 'hidden' %}
-			<div class="row mb-3">
-				<label for="{{ id }}" class="col-sm-4 col-form-label">{{ field.label|raw }}
-					{% if field.desc is defined and field.desc is not empty %}<br><small>{{ field.desc|raw }}</small>
-					{% endif %}
-				</label>
+			<div class="row mb-3 pb-1 border-bottom">
+				{% if field.label is iterable %}
+					<label for="{{ id }}" class="col-sm-4 col-form-label">{{ field.label.title|raw }}
+						{% if field.label.description is defined and field.label.description is not empty %}<br><small>{{ field.label.description|raw }}</small>
+						{% endif %}
+					</label>
+				{% else %}
+					<label for="{{ id }}" class="col-sm-4 col-form-label">{{ field.label|raw }}
+						{% if field.desc is defined and field.desc is not empty %}<br><small>{{ field.desc|raw }}</small>
+						{% endif %}
+					</label>
+				{% endif %}
 				<div class="col-sm-8{% if field.type == 'infotext' %} d-flex align-items-center{% endif %}">
 				{% endif %}
-				{% if field.type == 'text' or field.type == 'password' or field.type == 'number' or field.type == 'file' or field.type == 'email' or field.type == 'hidden' %}
+				{% if field.type == 'text' or field.type == 'password' or field.type == 'number' or field.type == 'file' or field.type == 'email' or field.type == 'url' or field.type == 'hidden' %}
 					{{ _self.input(id, field) }}
 				{% elseif field.type == 'textul' %}
 					{{ _self.input_ul(id, field) }}
@@ -26,6 +33,12 @@
 					{{ _self.itemlist(id, field) }}
 				{% elseif field.type == 'infotext' %}
 					{{ _self.infotext(id, field) }}
+				{% else %}
+					<div class="alert alert-warning" role="alert">Unknown field-type
+						{{ field.type }}</div>
+				{% endif %}
+				{% if field.note is defined and field.note is not empty %}
+					<small class="text-info">{{ field.note|raw }}</small>
 				{% endif %}
 				{% if norow == false and field.type != 'hidden' %}
 				</div>
@@ -38,7 +51,7 @@
 	{% if field.is_array is defined and field.is_array == 1 and field.values is not empty %}
 		{% for subfield in field.values %}
 			<div class="form-check form-switch">
-				<input type="checkbox" value="{{ subfield.value }}" name="{{ id }}[]" class="form-check-input" {% if field.value is defined and subfield.value in field.value %} checked="checked" {% endif %}>
+				<input type="checkbox" {% if field.visible is defined and field.visible == false %} disabled {% endif %} value="{{ subfield.value }}" name="{{ id }}[]" class="form-check-input" {% if field.value is defined and subfield.value in field.value %} checked="checked" {% endif %}>
 				<label class="form-check-label">
 					{{ subfield.label|raw }}
 				</label>
@@ -46,7 +59,7 @@
 		{% endfor %}
 	{% else %}
 		<div class="form-check form-switch">
-			<input type="checkbox" value="{{ field.value }}" id="{{ id }}" name="{{ id }}" class="form-check-input {% if field.valid is defined and field.valid == false %}is-invalid{% endif %}" {% if field.checked is defined and field.checked == 1 %} checked="checked" {% endif %}>
+			<input type="checkbox" {% if field.visible is defined and field.visible == false %} disabled {% endif %} value="{{ field.value }}" id="{{ id }}" name="{{ id }}" class="form-check-input {% if field.valid is defined and field.valid == false %}is-invalid{% endif %}" {% if field.checked is defined and field.checked == 1 %} checked="checked" {% endif %}>
 		</div>
 	{% endif %}
 {% endmacro %}
@@ -87,7 +100,7 @@
 	{% if field.next_to is defined %}
 		<div class="input-group">
 		{% endif %}
-		<input type="{{ field.type }}" {% if field.type == 'number' and field.min is defined %} min="{{ field.min }}" {% endif %} {% if field.type == 'number' and field.max is defined %} max="{{ field.max }}" {% endif %} {% if field.type != 'number' and field.maxlength is defined %} maxlength="{{ field.maxlength }}" {% endif %} id="{{ id }}" name="{{ id }}" value="{{ field.value }}" class="form-control {% if field.valid is defined and field.valid == false %}is-invalid{% endif %}" {% if field.mandatory is defined and field.mandatory %} required {% endif %} {% if field.readonly is defined and field.readonly %} readonly {% endif %} {% if field.autocomplete is defined %} autocomplete="{{ field.autocomplete }}" {% endif %} {% if field.placeholder is defined %} placeholder="{{ field.placeholder }}" {% endif %}/>
+		<input type="{{ field.type }}" {% if field.visible is defined and field.visible == false %} disabled {% endif %} {% if field.type == 'number' and field.min is defined %} min="{{ field.min }}" {% endif %} {% if field.type == 'number' and field.max is defined %} max="{{ field.max }}" {% endif %} {% if field.type != 'number' and field.maxlength is defined %} maxlength="{{ field.maxlength }}" {% endif %} id="{{ id }}" name="{{ id }}" value="{{ field.value }}" class="form-control {% if field.valid is defined and field.valid == false %}is-invalid{% endif %}" {% if field.mandatory is defined and field.mandatory %} required {% endif %} {% if field.readonly is defined and field.readonly %} readonly {% endif %} {% if field.autocomplete is defined %} autocomplete="{{ field.autocomplete }}" {% endif %} {% if field.placeholder is defined %} placeholder="{{ field.placeholder }}" {% endif %}/>
 		{% if field.type == 'hidden' and field.display is defined %}
 			<input type="text" readonly class="form-control-plaintext" value="{{ field.display }}">
 		{% endif %}
@@ -125,9 +138,9 @@
 	{% if field.next_to is defined %}
 		<div class="input-group">
 		{% endif %}
-		<select class="form-select {% if field.valid is defined and field.valid == false %}is-invalid{% endif %}" name="{{ id }}" id="{{ id }}" {% if field.mandatory is defined and field.mandatory %} required {% endif %}>
+		<select {% if field.visible is defined and field.visible == false %} disabled {% endif %} class="form-select {% if field.valid is defined and field.valid == false %}is-invalid{% endif %}" name="{{ id }}{% if field.select_mode is defined and field.select_mode == 'multiple' %}[]{% endif %}" id="{{ id }}" {% if field.mandatory is defined and field.mandatory %} required {% endif %} {% if field.select_mode is defined and field.select_mode == 'multiple' %} multiple="multiple" {% endif %}>
 			{% for val,txt in field.select_var %}
-				<option value="{{ val }}" {% if field.selected is defined and field.selected == val %} selected="selected" {% endif %}>{{ txt|raw }}</option>
+				<option value="{{ val }}" {% if field.selected is defined and ((field.selected is not iterable and field.selected == val) or (field.selected is iterable and val in field.selected|keys)) %} selected="selected" {% endif %}>{{ txt|raw }}</option>
 			{% endfor %}
 		</select>
 		{% if field.next_to is defined %}
@@ -142,7 +155,7 @@
 {% endmacro %}
 
 {% macro textarea(id, field) %}
-	<textarea {% if field.rows is defined %} rows="{{ field.rows }}" {% endif %} {% if field.cols is defined %} cols="{{ field.cols }}" {% endif %} id="{{ id }}" name="{{ id }}" class="form-control {% if field.valid is defined and field.valid == false %}is-invalid{% endif %}" {% if field.mandatory is defined and field.mandatory %} required {% endif %} {% if field.readonly is defined and field.readonly %} readonly {% endif %} {% if field.placeholder is defined %} placeholder="{{ field.placeholder }}" {% endif %}>{{ field.value }}</textarea>
+	<textarea {% if field.visible is defined and field.visible == false %} disabled {% endif %} rows="{{ field.rows|default('12') }}" cols="{{ field.cols|default('60') }}" id="{{ id }}" name="{{ id }}" class="form-control {% if field.valid is defined and field.valid == false %}is-invalid{% endif %}" {% if field.mandatory is defined and field.mandatory %} required {% endif %} {% if field.readonly is defined and field.readonly %} readonly {% endif %} {% if field.placeholder is defined %} placeholder="{{ field.placeholder }}" {% endif %}>{{ field.value }}</textarea>
 {% endmacro %}
 
 {% macro link(id, field) %}

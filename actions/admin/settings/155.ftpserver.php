@@ -20,15 +20,15 @@ return array(
 	'groups' => array(
 		'ftpserver' => array(
 			'title' => $lng['admin']['ftpserversettings'],
+			'icon' => 'fa-solid fa-arrow-right-arrow-left',
 			'fields' => array(
 				'ftpserver' => array(
 					'label' => $lng['admin']['ftpserver'],
 					'settinggroup' => 'system',
 					'varname' => 'ftpserver',
-					'type' => 'option',
+					'type' => 'select',
 					'default' => 'proftpd',
-					'option_mode' => 'one',
-					'option_options' => array(
+					'select_var' => array(
 						'proftpd' => 'Proftpd',
 						'pureftpd' => 'Pureftpd'
 					),
@@ -38,5 +38,3 @@ return array(
 		)
 	)
 );
-
-?>

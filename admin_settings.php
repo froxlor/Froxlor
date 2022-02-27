@@ -19,6 +19,7 @@
 use Froxlor\Database\Database;
 use Froxlor\Settings;
 use Froxlor\Api\Commands\Froxlor;
+use Froxlor\UI\Panel\UI;
 
 const AREA = 'admin';
 require __DIR__ . '/lib/init.php';
@@ -85,18 +86,15 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 			$_part = isset($_POST['part']) ? $_POST['part'] : '';
 		}
 
-		$fields = \Froxlor\UI\Form::buildFormEx($settings_data, $_part);
+		$fields = \Froxlor\UI\Form::buildForm($settings_data, $_part);
 
-		$settings_page = '';
-		if ($_part == '') {
-			eval("\$settings_page .= \"" . \Froxlor\UI\Template::getTemplate("settings/settings_overview") . "\";");
+		if ($_part == '' || $_part = 'all') {
+			UI::twigBuffer('settings/index.html.twig', ['fields' => $fields]);
 		} else {
-			eval("\$settings_page .= \"" . \Froxlor\UI\Template::getTemplate("settings/settings") . "\";");
+			UI::twigBuffer('settings/detailpart.html.twig', ['fields' => $fields]);
 		}
 
-		eval("echo \"" . \Froxlor\UI\Template::getTemplate("settings/settings_form_begin") . "\";");
-		eval("echo \$settings_page;");
-		eval("echo \"" . \Froxlor\UI\Template::getTemplate("settings/settings_form_end") . "\";");
+		UI::twigOutputBuffer();
 	}
 } elseif ($page == 'phpinfo' && $userinfo['change_serversettings'] == '1') {
 	ob_start();

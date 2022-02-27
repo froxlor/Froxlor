@@ -20,15 +20,15 @@ return array(
 	'groups' => array(
 		'webserver' => array(
 			'title' => $lng['admin']['webserversettings'],
+			'icon' => 'fa-solid fa-server',
 			'fields' => array(
 				'system_webserver' => array(
 					'label' => $lng['admin']['webserver'],
 					'settinggroup' => 'system',
 					'varname' => 'webserver',
-					'type' => 'option',
+					'type' => 'select',
 					'default' => 'apache2',
-					'option_mode' => 'one',
-					'option_options' => array(
+					'select_var' => array(
 						'apache2' => 'Apache 2',
 						'lighttpd' => 'ligHTTPd',
 						'nginx' => 'Nginx'
@@ -44,7 +44,7 @@ return array(
 					'label' => $lng['serversettings']['apache_24'],
 					'settinggroup' => 'system',
 					'varname' => 'apache24',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField',
 					'websrv_avail' => array(
@@ -55,7 +55,7 @@ return array(
 					'label' => $lng['serversettings']['apache_itksupport'],
 					'settinggroup' => 'system',
 					'varname' => 'apacheitksupport',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField',
 					'visible' => (\Froxlor\Settings::Get('system.mod_fcgid') == 0 && \Froxlor\Settings::Get('phpfpm.enabled') == 0),
@@ -67,7 +67,7 @@ return array(
 					'label' => $lng['serversettings']['http2_support'],
 					'settinggroup' => 'system',
 					'varname' => 'http2_support',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField',
 					'websrv_avail' => array(
@@ -80,7 +80,7 @@ return array(
 					'label' => $lng['serversettings']['dhparams_file'],
 					'settinggroup' => 'system',
 					'varname' => 'dhparams_file',
-					'type' => 'string',
+					'type' => 'text',
 					'string_type' => 'file',
 					'string_emptyallowed' => true,
 					'default' => '',
@@ -91,7 +91,7 @@ return array(
 					'label' => $lng['admin']['webserver_user'],
 					'settinggroup' => 'system',
 					'varname' => 'httpuser',
-					'type' => 'string',
+					'type' => 'text',
 					'default' => 'www-data',
 					'save_method' => 'storeSettingWebserverFcgidFpmUser'
 				),
@@ -99,7 +99,7 @@ return array(
 					'label' => $lng['admin']['webserver_group'],
 					'settinggroup' => 'system',
 					'varname' => 'httpgroup',
-					'type' => 'string',
+					'type' => 'text',
 					'default' => 'www-data',
 					'save_method' => 'storeSettingField'
 				),
@@ -107,7 +107,7 @@ return array(
 					'label' => $lng['serversettings']['apacheconf_vhost'],
 					'settinggroup' => 'system',
 					'varname' => 'apacheconf_vhost',
-					'type' => 'string',
+					'type' => 'text',
 					'string_type' => 'filedir',
 					'default' => '/etc/apache2/sites-enabled/',
 					'save_method' => 'storeSettingField'
@@ -116,7 +116,7 @@ return array(
 					'label' => $lng['serversettings']['apacheconf_diroptions'],
 					'settinggroup' => 'system',
 					'varname' => 'apacheconf_diroptions',
-					'type' => 'string',
+					'type' => 'text',
 					'string_type' => 'filedir',
 					'default' => '/etc/apache2/sites-enabled/',
 					'save_method' => 'storeSettingField'
@@ -125,7 +125,7 @@ return array(
 					'label' => $lng['serversettings']['apacheconf_htpasswddir'],
 					'settinggroup' => 'system',
 					'varname' => 'apacheconf_htpasswddir',
-					'type' => 'string',
+					'type' => 'text',
 					'string_type' => 'confdir',
 					'default' => '/etc/apache2/htpasswd/',
 					'save_method' => 'storeSettingField'
@@ -134,7 +134,7 @@ return array(
 					'label' => $lng['serversettings']['logfiles_directory'],
 					'settinggroup' => 'system',
 					'varname' => 'logfiles_directory',
-					'type' => 'string',
+					'type' => 'text',
 					'string_type' => 'dir',
 					'default' => '/var/customers/logs/',
 					'save_method' => 'storeSettingField'
@@ -143,8 +143,7 @@ return array(
 					'label' => $lng['serversettings']['logfiles_script'],
 					'settinggroup' => 'system',
 					'varname' => 'logfiles_script',
-					'type' => 'string',
-					'string_type' => '',
+					'type' => 'text',
 					'default' => '',
 					'save_method' => 'storeSettingField',
 					'websrv_avail' => array(
@@ -155,7 +154,7 @@ return array(
 					'label' => $lng['serversettings']['logfiles_piped'],
 					'settinggroup' => 'system',
 					'varname' => 'logfiles_piped',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField',
 					'websrv_avail' => array(
@@ -166,7 +165,7 @@ return array(
 					'label' => $lng['serversettings']['logfiles_format'],
 					'settinggroup' => 'system',
 					'varname' => 'logfiles_format',
-					'type' => 'string',
+					'type' => 'text',
 					'default' => '',
 					'string_emptyallowed' => true,
 					'save_method' => 'storeSettingField',
@@ -180,10 +179,9 @@ return array(
 					'label' => $lng['serversettings']['logfiles_type'],
 					'settinggroup' => 'system',
 					'varname' => 'logfiles_type',
-					'type' => 'option',
+					'type' => 'select',
 					'default' => '1',
-					'option_mode' => 'one',
-					'option_options' => array(
+					'select_var' => array(
 						'1' => 'combined',
 						'2' => 'vhost_combined'
 					),
@@ -196,10 +194,9 @@ return array(
 					'label' => $lng['serversettings']['errorlog_level'],
 					'settinggroup' => 'system',
 					'varname' => 'errorlog_level',
-					'type' => 'option',
+					'type' => 'select',
 					'default' => (\Froxlor\Settings::Get('system.webserver') == 'nginx' ? 'error' : 'warn'),
-					'option_mode' => 'one',
-					'option_options' => array(
+					'select_var' => array(
 						'emerg' => 'emerg',
 						'alert' => 'alert',
 						'crit' => 'crit',
@@ -219,7 +216,7 @@ return array(
 					'label' => $lng['serversettings']['customerssl_directory'],
 					'settinggroup' => 'system',
 					'varname' => 'customer_ssl_path',
-					'type' => 'string',
+					'type' => 'text',
 					'string_type' => 'confdir',
 					'default' => '/etc/ssl/froxlor-custom/',
 					'save_method' => 'storeSettingField'
@@ -228,7 +225,7 @@ return array(
 					'label' => $lng['serversettings']['phpappendopenbasedir'],
 					'settinggroup' => 'system',
 					'varname' => 'phpappendopenbasedir',
-					'type' => 'string',
+					'type' => 'text',
 					'string_emptyallowed' => true,
 					'default' => '',
 					'save_method' => 'storeSettingField'
@@ -237,7 +234,7 @@ return array(
 					'label' => $lng['serversettings']['deactivateddocroot'],
 					'settinggroup' => 'system',
 					'varname' => 'deactivateddocroot',
-					'type' => 'string',
+					'type' => 'text',
 					'string_type' => 'dir',
 					'string_emptyallowed' => true,
 					'default' => '',
@@ -247,7 +244,7 @@ return array(
 					'label' => $lng['serversettings']['default_vhostconf'],
 					'settinggroup' => 'system',
 					'varname' => 'default_vhostconf',
-					'type' => 'text',
+					'type' => 'textarea',
 					'default' => '',
 					'save_method' => 'storeSettingField'
 				),
@@ -255,7 +252,7 @@ return array(
 					'label' => $lng['serversettings']['default_sslvhostconf'],
 					'settinggroup' => 'system',
 					'varname' => 'default_sslvhostconf',
-					'type' => 'text',
+					'type' => 'textarea',
 					'default' => '',
 					'save_method' => 'storeSettingField',
 					'visible' => \Froxlor\Settings::Get('system.use_ssl') == 1
@@ -264,7 +261,7 @@ return array(
 					'label' => $lng['serversettings']['includedefault_sslvhostconf'],
 					'settinggroup' => 'system',
 					'varname' => 'include_default_vhostconf',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField'
 				),
@@ -272,7 +269,7 @@ return array(
 					'label' => $lng['serversettings']['apache_globaldiropt'],
 					'settinggroup' => 'system',
 					'varname' => 'apacheglobaldiropt',
-					'type' => 'text',
+					'type' => 'textarea',
 					'default' => '',
 					'save_method' => 'storeSettingField',
 					'visible' => (\Froxlor\Settings::Get('system.mod_fcgid') == 0 && \Froxlor\Settings::Get('phpfpm.enabled') == 0),
@@ -284,7 +281,7 @@ return array(
 					'label' => $lng['serversettings']['apachereload_command'],
 					'settinggroup' => 'system',
 					'varname' => 'apachereload_command',
-					'type' => 'string',
+					'type' => 'text',
 					'default' => '/etc/init.d/apache2 reload',
 					'save_method' => 'storeSettingField'
 				),
@@ -292,7 +289,7 @@ return array(
 					'label' => $lng['serversettings']['phpreload_command'],
 					'settinggroup' => 'system',
 					'varname' => 'phpreload_command',
-					'type' => 'string',
+					'type' => 'text',
 					'default' => '',
 					'save_method' => 'storeSettingField',
 					'websrv_avail' => array(
@@ -303,7 +300,7 @@ return array(
 					'label' => $lng['serversettings']['nginx_php_backend'],
 					'settinggroup' => 'system',
 					'varname' => 'nginx_php_backend',
-					'type' => 'string',
+					'type' => 'text',
 					'default' => '127.0.0.1:8888',
 					'save_method' => 'storeSettingField',
 					'websrv_avail' => array(
@@ -314,7 +311,7 @@ return array(
 					'label' => $lng['serversettings']['nginx_fastcgiparams'],
 					'settinggroup' => 'nginx',
 					'varname' => 'fastcgiparams',
-					'type' => 'string',
+					'type' => 'text',
 					'string_type' => 'file',
 					'default' => '/etc/nginx/fastcgi_params',
 					'save_method' => 'storeSettingField',
@@ -326,7 +323,7 @@ return array(
 					'label' => $lng['serversettings']['defaultwebsrverrhandler_enabled'],
 					'settinggroup' => 'defaultwebsrverrhandler',
 					'varname' => 'enabled',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField'
 				),
@@ -334,7 +331,7 @@ return array(
 					'label' => $lng['serversettings']['defaultwebsrverrhandler_err401'],
 					'settinggroup' => 'defaultwebsrverrhandler',
 					'varname' => 'err401',
-					'type' => 'string',
+					'type' => 'text',
 					'default' => '',
 					'save_method' => 'storeSettingField',
 					'websrv_avail' => array(
@@ -346,7 +343,7 @@ return array(
 					'label' => $lng['serversettings']['defaultwebsrverrhandler_err403'],
 					'settinggroup' => 'defaultwebsrverrhandler',
 					'varname' => 'err403',
-					'type' => 'string',
+					'type' => 'text',
 					'default' => '',
 					'save_method' => 'storeSettingField',
 					'websrv_avail' => array(
@@ -358,7 +355,7 @@ return array(
 					'label' => $lng['serversettings']['defaultwebsrverrhandler_err404'],
 					'settinggroup' => 'defaultwebsrverrhandler',
 					'varname' => 'err404',
-					'type' => 'string',
+					'type' => 'text',
 					'default' => '',
 					'save_method' => 'storeSettingField'
 				),
@@ -366,7 +363,7 @@ return array(
 					'label' => $lng['serversettings']['defaultwebsrverrhandler_err500'],
 					'settinggroup' => 'defaultwebsrverrhandler',
 					'varname' => 'err500',
-					'type' => 'string',
+					'type' => 'text',
 					'default' => '',
 					'save_method' => 'storeSettingField',
 					'websrv_avail' => array(
@@ -378,7 +375,7 @@ return array(
 					'label' => $lng['serversettings']['customredirect_enabled'],
 					'settinggroup' => 'customredirect',
 					'varname' => 'enabled',
-					'type' => 'bool',
+					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField'
 				),
@@ -386,9 +383,8 @@ return array(
 					'label' => $lng['serversettings']['customredirect_default'],
 					'settinggroup' => 'customredirect',
 					'varname' => 'default',
-					'type' => 'option',
+					'type' => 'select',
 					'default' => '1',
-					'option_mode' => 'one',
 					'option_options_method' => array('\\Froxlor\\Domain\\Domain', 'getRedirectCodes'),
 					'save_method' => 'storeSettingField'
 				)
