@@ -75,11 +75,11 @@ class Listing
                 }
 
                 $format_callback = $tabellisting['columns'][$visible_column]['format_callback'] ?? null;
-                $column = $tabellisting['columns'][$visible_column]['column'];
+                $column = $tabellisting['columns'][$visible_column]['field'];
                 $data = self::getMultiArrayFromString($item, $column);
 
                 if ($format_callback) {
-                    $rows[$row]['td'][$col]['data'] = call_user_func($format_callback, $data, $item);
+                    $rows[$row]['td'][$col]['data'] = call_user_func($format_callback, ['data' => $data, 'fields' => $item]);
                 } else {
                     $rows[$row]['td'][$col]['data'] = $data;
                 }
@@ -87,10 +87,14 @@ class Listing
                 $rows[$row]['td'][$col]['class'] = $tabellisting['columns'][$visible_column]['class'] ?? null;
             }
 
-            // TODO: contextual_class ...
-            //if (...) {
-            //    $rows[$key]['class'] = '...';
-            //}
+            // Set row classes from format_callback
+            if (isset($tabellisting['format_callback'])) {
+				$class = [];
+				foreach ($tabellisting['format_callback'] as $format_callback) {
+					$class[] = call_user_func($format_callback, ['fields' => $item]);
+				}
+                $rows[$row]['class'] = implode(' ', $class);
+            }
 
             // Set all actions for row
             if (isset($tabellisting['actions'])) {

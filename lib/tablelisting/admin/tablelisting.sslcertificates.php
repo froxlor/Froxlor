@@ -17,6 +17,7 @@
  */
 
 use Froxlor\Settings;
+use Froxlor\UI\Callbacks\SSLCertificates;
 use Froxlor\UI\Callbacks\Text;
 use Froxlor\UI\Listing;
 
@@ -27,28 +28,28 @@ return [
 		'columns' => [
             'd.domain' => [
                 'label' => $lng['domains']['domainname'],
-                'column' => 'domain',
+                'field' => 'domain',
             ],
             'c.domain' => [
                 'label' => $lng['ssl_certificates']['certificate_for'],
-                'column' => 'domain',
-                'format_callback' => [Text::class, 'domainWithSan'],
+                'field' => 'domain',
+                'format_callback' => [SSLCertificates::class, 'domainWithSan'],
             ],
             'c.issuer' => [
                 'label' => $lng['ssl_certificates']['issuer'],
-                'column' => 'issuer',
+                'field' => 'issuer',
             ],
             'c.validfromdate' => [
                 'label' => $lng['ssl_certificates']['valid_from'],
-                'column' => 'validfromdate',
+                'field' => 'validfromdate',
             ],
             'c.validtodate' => [
                 'label' => $lng['ssl_certificates']['valid_until'],
-                'column' => 'validtodate',
+                'field' => 'validtodate',
             ],
             'c.letsencrypt' => [
                 'label' => $lng['panel']['letsencrypt'],
-                'column' => 'letsencrypt',
+                'field' => 'letsencrypt',
                 'class' => 'text-center',
                 'format_callback' => [Text::class, 'boolean'],
                 'visible' => Settings::Get('system.le_froxlor_enabled'),

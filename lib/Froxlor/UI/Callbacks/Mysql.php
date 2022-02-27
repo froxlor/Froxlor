@@ -15,16 +15,15 @@ use Froxlor\Database\Database;
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Listing
+ * @package    Froxlor\UI\Callbacks
  *
  */
-
 class Mysql
 {
-	public static function dbserver(string $data, array $attributes): string
+	public static function dbserver(array $attributes): string
 	{
 		// get sql-root access data
-		Database::needRoot(true, (int) $data);
+		Database::needRoot(true, (int)$attributes['data']);
 		Database::needSqlData();
 		$sql_root = Database::getSqlData();
 		Database::needRoot(false);

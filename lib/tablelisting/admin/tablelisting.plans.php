@@ -26,19 +26,19 @@ return [
 		'columns' => [
             'p.name' => [
                 'label' => $lng['admin']['plans']['name'],
-                'column' => 'name',
+                'field' => 'name',
             ],
             'p.description' => [
                 'label' => $lng['admin']['plans']['description'],
-                'column' => 'description',
+                'field' => 'description',
             ],
             'p.adminname' => [
                 'label' => $lng['admin']['admin'],
-                'column' => 'adminname',
+                'field' => 'adminname',
             ],
             'p.ts' => [
                 'label' => $lng['admin']['plans']['last_update'],
-                'column' => 'ts',
+                'field' => 'ts',
             ],
 		],
 		'visible_columns' => Listing::getVisibleColumnsForListing('sslcertificates_list', [

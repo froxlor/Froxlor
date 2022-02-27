@@ -2,8 +2,8 @@
 
 namespace Froxlor\UI\Callbacks;
 
-use Froxlor\Settings;
 use Froxlor\PhpHelper;
+use Froxlor\Settings;
 
 /**
  * This file is part of the Froxlor project.
@@ -16,19 +16,18 @@ use Froxlor\PhpHelper;
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Listing
+ * @package    Froxlor\UI\Callbacks
  *
  */
-
 class Email
 {
-	public static function account(string $data, array $attributes): mixed
+	public static function account(array $attributes)
 	{
 		return [
 			'type' => 'booleanWithInfo',
 			'data' => [
-				'checked' => $data != 0,
-				'info' => $data != 0 ? PhpHelper::sizeReadable($attributes['mboxsize'], 'GiB', 'bi', '%01.' . (int) Settings::Get('panel.decimal_places') . 'f %s') : ''
+				'checked' => $attributes['data'] != 0,
+				'info' => $attributes['data'] != 0 ? PhpHelper::sizeReadable($attributes['fields']['mboxsize'], 'GiB', 'bi', '%01.' . (int)Settings::Get('panel.decimal_places') . 'f %s') : ''
 			]
 		];
 	}

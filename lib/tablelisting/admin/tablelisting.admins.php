@@ -17,6 +17,7 @@
  */
 
 use Froxlor\UI\Callbacks\ProgressBar;
+use Froxlor\UI\Callbacks\Style;
 use Froxlor\UI\Callbacks\Text;
 use Froxlor\UI\Listing;
 
@@ -27,36 +28,36 @@ return [
 		'columns' => [
 			'adminid' => [
 				'label' => '#',
-				'column' => 'adminid',
+				'field' => 'adminid',
 				'sortable' => true,
 			],
 			'loginname' => [
 				'label' => $lng['login']['username'],
-				'column' => 'loginname',
+				'field' => 'loginname',
 				'sortable' => true,
 			],
 			'name' => [
 				'label' => $lng['customer']['name'],
-				'column' => 'name',
+				'field' => 'name',
 			],
 			'customers_used' => [
 				'label' => $lng['admin']['customers'],
-				'column' => 'customers_used',
+				'field' => 'customers_used',
 				'class' => 'text-center',
 			],
 			'diskspace' => [
 				'label' => $lng['customer']['diskspace'],
-				'column' => 'diskspace',
+				'field' => 'diskspace',
 				'format_callback' => [ProgressBar::class, 'diskspace'],
 			],
 			'traffic' => [
 				'label' => $lng['customer']['traffic'],
-				'column' => 'traffic',
+				'field' => 'traffic',
 				'format_callback' => [ProgressBar::class, 'traffic'],
 			],
 			'deactivated' => [
 				'label' => $lng['admin']['deactivated'],
-				'column' => 'deactivated',
+				'field' => 'deactivated',
 				'class' => 'text-center',
 				'format_callback' => [Text::class, 'boolean'],
 			],
@@ -90,11 +91,10 @@ return [
                 ],
             ],
 		],
-		'contextual_class' => [
-			'deactivated' => [
-				'value' => true,
-				'return' => 'bg-secondary'
-			]
+		'format_callback' => [
+			[Style::class, 'deactivated'],
+			[Style::class, 'diskspaceWarning'],
+			[Style::class, 'trafficWarning']
 		]
 	]
 ];

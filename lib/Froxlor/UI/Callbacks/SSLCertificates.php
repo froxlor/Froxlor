@@ -2,9 +2,6 @@
 
 namespace Froxlor\UI\Callbacks;
 
-use Froxlor\FileDir;
-use Froxlor\UI\Panel\UI;
-
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -15,19 +12,21 @@ use Froxlor\UI\Panel\UI;
  *
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
+ * @author     Maurice Preuß <hello@envoyr.com>
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package    Froxlor\UI\Callbacks
  *
  */
-class Ftp
+class SSLCertificates
 {
-	public static function pathRelative(array $attributes): string
+	public static function domainWithSan(array $attributes): array
 	{
-		if (strpos($attributes['data'], UI::getCurrentUser()['documentroot']) === 0) {
-			$attributes['data'] = str_replace(UI::getCurrentUser()['documentroot'], "/", $attributes['data']);
-		}
-		$attributes['data'] = FileDir::makeCorrectDir($attributes['data']);
-
-		return $attributes['data'];
+		return [
+			'type' => 'domainWithSan',
+			'data' => [
+				'domain' => $attributes['data'],
+				'san' => implode(', ', $attributes['fields']['san'] ?? []),
+			]
+		];
 	}
 }

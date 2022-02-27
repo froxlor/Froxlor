@@ -27,21 +27,21 @@ return [
 		'columns' => [
 			'd.domain_ace' => [
 				'label' => $lng['domains']['domainname'],
-				'column' => 'domain_ace',
+				'field' => 'domain_ace',
 			],
 			'c.name' => [
 				'label' => $lng['customer']['name'],
-				'column' => 'customer.name',
+				'field' => 'customer.name',
 				'format_callback' => [Text::class, 'customerfullname'],
 			],
 			'c.loginname' => [
 				'label' => $lng['login']['username'],
-				'column' => 'customer.loginname',
+				'field' => 'customer.loginname',
 				'format_callback' => [Impersonate::class, 'customer'],
 			],
 			'd.aliasdomain' => [
 				'label' => $lng['domains']['aliasdomain'],
-				'column' => 'aliasdomain',
+				'field' => 'aliasdomain',
 			],
 		],
 		'visible_columns' => Listing::getVisibleColumnsForListing('domain_list', [

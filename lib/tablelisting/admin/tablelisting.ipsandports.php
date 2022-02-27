@@ -27,49 +27,49 @@ return [
 		'columns' => [
 			'ip' => [
 				'label' => $lng['admin']['ipsandports']['ip'],
-				'column' => 'ip',
+				'field' => 'ip',
 			],
 			'port' => [
 				'label' => $lng['admin']['ipsandports']['port'],
-				'column' => 'port',
+				'field' => 'port',
                 'class' => 'text-center',
 			],
 			'listen' => [
 				'label' => 'Listen',
-				'column' => 'listen_statement',
+				'field' => 'listen_statement',
                 'class' => 'text-center',
 				'format_callback' => [Text::class, 'boolean'],
 				'visible' => Settings::Get('system.webserver') != 'nginx'
 			],
 			'namevirtualhost' => [
 				'label' => 'NameVirtualHost',
-				'column' => 'namevirtualhost_statement',
+				'field' => 'namevirtualhost_statement',
                 'class' => 'text-center',
 				'format_callback' => [Text::class, 'boolean'],
 				'visible' => Settings::Get('system.webserver') == 'apache2' && (int) Settings::Get('system.apache24') == 0
 			],
 			'vhostcontainer' => [
 				'label' => 'vHost-Container',
-				'column' => 'vhostcontainer',
+				'field' => 'vhostcontainer',
                 'class' => 'text-center',
 				'format_callback' => [Text::class, 'boolean']
 			],
 			'specialsettings' => [
 				'label' => 'Specialsettings',
-				'column' => 'specialsettings',
+				'field' => 'specialsettings',
                 'class' => 'text-center',
 				'format_callback' => [Text::class, 'boolean']
 			],
 			'servername' => [
 				'label' => 'ServerName',
-				'column' => 'vhostcontainer_servername_statement',
+				'field' => 'vhostcontainer_servername_statement',
                 'class' => 'text-center',
 				'format_callback' => [Text::class, 'boolean'],
 				'visible' => Settings::Get('system.webserver') == 'apache2'
 			],
 			'ssl' => [
 				'label' => 'SSL',
-				'column' => 'ssl',
+				'field' => 'ssl',
                 'class' => 'text-center',
 				'format_callback' => [Text::class, 'boolean']
 			],

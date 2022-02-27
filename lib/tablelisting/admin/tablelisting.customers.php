@@ -28,31 +28,31 @@ return [
 		'columns' => [
 			'c.name' => [
 				'label' => $lng['customer']['name'],
-				'column' => 'name',
+				'field' => 'name',
 				'format_callback' => [Text::class, 'customerfullname'],
 			],
 			'c.loginname' => [
 				'label' => $lng['login']['username'],
-				'column' => 'loginname',
+				'field' => 'loginname',
 				'format_callback' => [Impersonate::class, 'customer'],
 			],
 			'a.loginname' => [
 				'label' => $lng['admin']['admin'],
-				'column' => 'admin.loginname',
+				'field' => 'admin.loginname',
 				'format_callback' => [Impersonate::class, 'admin'],
 			],
 			'c.email' => [
 				'label' => $lng['customer']['email'],
-				'column' => 'email',
+				'field' => 'email',
 			],
 			'c.diskspace' => [
 				'label' => $lng['customer']['diskspace'],
-				'column' => 'diskspace',
+				'field' => 'diskspace',
 				'format_callback' => [ProgressBar::class, 'diskspace'],
 			],
 			'c.traffic' => [
 				'label' => $lng['customer']['traffic'],
-				'column' => 'traffic',
+				'field' => 'traffic',
 				'format_callback' => [ProgressBar::class, 'traffic'],
 			],
 		],

@@ -2,6 +2,7 @@
 
 namespace Froxlor\UI\Callbacks;
 
+use Froxlor\FileDir;
 use Froxlor\UI\Panel\UI;
 
 /**
@@ -15,33 +16,32 @@ use Froxlor\UI\Panel\UI;
  * @copyright  (c) the authors
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Listing
+ * @package    Froxlor\UI\Callbacks
  *
  */
-
 class Domain
 {
-	public static function domainTarget(string $data, array $attributes): mixed
+	public static function domainTarget(array $attributes)
 	{
-		if (empty($attributes['aliasdomain'])) {
+		if (empty($attributes['fields']['aliasdomain'])) {
 			// path or redirect
-			if (preg_match('/^https?\:\/\//', $attributes['documentroot'])) {
+			if (preg_match('/^https?\:\/\//', $attributes['fields']['documentroot'])) {
 				return [
 					'type' => 'link',
 					'data' => [
-						'text' => $attributes['documentroot'],
-						'href' => $attributes['documentroot'],
+						'text' => $attributes['fields']['documentroot'],
+						'href' => $attributes['fields']['documentroot'],
 						'target' => '_blank'
 					]
 				];
 			} else {
 				// show docroot nicely
-				if (strpos($attributes['documentroot'], UI::getCurrentUser()['documentroot']) === 0) {
-					$attributes['documentroot'] = \Froxlor\FileDir::makeCorrectDir(str_replace(UI::getCurrentUser()['documentroot'], "/", $attributes['documentroot']));
+				if (strpos($attributes['fields']['documentroot'], UI::getCurrentUser()['documentroot']) === 0) {
+					$attributes['fields']['documentroot'] = FileDir::makeCorrectDir(str_replace(UI::getCurrentUser()['documentroot'], "/", $attributes['fields']['documentroot']));
 				}
-				return $attributes['documentroot'];
+				return $attributes['fields']['documentroot'];
 			}
 		}
-		return UI::getLng('domains.aliasdomain') . ' ' . $attributes['aliasdomain'];
+		return UI::getLng('domains.aliasdomain') . ' ' . $attributes['fields']['aliasdomain'];
 	}
 }

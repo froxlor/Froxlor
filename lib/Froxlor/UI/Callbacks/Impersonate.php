@@ -16,45 +16,44 @@ use Froxlor\UI\Panel\UI;
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @author     Maurice Preuß <hello@envoyr.com>
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Listing
+ * @package    Froxlor\UI\Callbacks
  *
  */
-
 class Impersonate
 {
-	public static function admin(string $data, array $attributes): mixed
+	public static function admin(array $attributes)
 	{
-		if (UI::getCurrentUser()['adminid'] != $attributes['adminid']) {
+		if (UI::getCurrentUser()['adminid'] != $attributes['fields']['adminid']) {
 			$linker = UI::getLinker();
 			return [
 				'type' => 'link',
 				'data' => [
-					'text' => $data,
+					'text' => $attributes['data'],
 					'href' => $linker->getLink([
 						'section' => 'admins',
 						'page' => 'admins',
 						'action' => 'su',
-						'id' => $attributes['adminid'],
+						'id' => $attributes['fields']['adminid'],
 					]),
 				]
 			];
 		}
-		return $data;
+		return $attributes['data'];
 	}
 
-	public static function customer(string $data, array $attributes): array
+	public static function customer(array $attributes): array
 	{
 		$linker = UI::getLinker();
 		return [
 			'type' => 'link',
 			'data' => [
-				'text' => $data,
+				'text' => $attributes['data'],
 				'href' => $linker->getLink([
 					'section' => 'customers',
 					'page' => 'customers',
 					'action' => 'su',
-					'sort' => $attributes['loginname'],
-					'id' => $attributes['customerid'],
+					'sort' => $attributes['fields']['loginname'],
+					'id' => $attributes['fields']['customerid'],
 				]),
 			]
 		];

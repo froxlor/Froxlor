@@ -27,20 +27,20 @@ return [
 		'columns' => [
 			'databasename' => [
 				'label' => $lng['mysql']['databasename'],
-				'column' => 'databasename',
+				'field' => 'databasename',
 			],
 			'description' => [
 				'label' => $lng['mysql']['databasedescription'],
-				'column' => 'description'
+				'field' => 'description'
 			],
 			'size' => [
 				'label' => $lng['mysql']['size'],
-				'column' => 'size',
+				'field' => 'size',
 				'format_callback' => [Text::class, 'size']
 			],
 			'dbserver' => [
 				'label' => $lng['mysql']['mysql_server'],
-				'column' => 'dbserver',
+				'field' => 'dbserver',
 				'format_callback' => [Mysql::class, 'dbserver'],
 				'visible' => $count_mysqlservers > 1
 			]

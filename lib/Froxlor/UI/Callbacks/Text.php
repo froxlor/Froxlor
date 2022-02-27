@@ -3,6 +3,9 @@
 namespace Froxlor\UI\Callbacks;
 
 use Froxlor\PhpHelper;
+use Froxlor\Settings;
+use Froxlor\UI\Panel\UI;
+use Froxlor\User;
 
 /**
  * This file is part of the Froxlor project.
@@ -16,37 +19,26 @@ use Froxlor\PhpHelper;
  * @author     Froxlor team <team@froxlor.org> (2010-)
  * @author     Maurice Preuß <hello@envoyr.com>
  * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Listing
+ * @package    Froxlor\UI\Callbacks
  *
  */
 class Text
 {
-	public static function boolean(?string $data): array
+	public static function boolean(array $attributes): array
 	{
 		return [
 			'type' => 'boolean',
-			'data' => (bool) $data
+			'data' => (bool)$attributes['data']
 		];
 	}
 
-	public static function domainWithSan(string $data, array $attributes): array
+	public static function customerfullname(array $attributes): string
 	{
-		return [
-			'type' => 'domainWithSan',
-			'data' => [
-				'domain' => $data,
-				'san' => implode(', ', $attributes['san'] ?? []),
-			]
-		];
+		return User::getCorrectFullUserDetails($attributes['fields']);
 	}
 
-	public static function customerfullname(string $data, array $attributes): string
+	public static function size(array $attributes): string
 	{
-		return \Froxlor\User::getCorrectFullUserDetails($attributes);
-	}
-
-	public static function size(string $data, array $attributes): string
-	{
-		return PhpHelper::sizeReadable($data, null, 'bi');
+		return PhpHelper::sizeReadable($attributes['data'], null, 'bi');
 	}
 }
