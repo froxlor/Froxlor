@@ -88,7 +88,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 
 		$fields = \Froxlor\UI\Form::buildForm($settings_data, $_part);
 
-		if ($_part == '' || $_part = 'all') {
+		if ($_part == '' || $_part == 'all') {
 			UI::twigBuffer('settings/index.html.twig', ['fields' => $fields]);
 		} else {
 			UI::twigBuffer('settings/detailpart.html.twig', ['fields' => $fields]);
