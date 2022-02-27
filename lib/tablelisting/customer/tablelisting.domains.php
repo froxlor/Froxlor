@@ -47,7 +47,7 @@ return [
                     'action' => 'edit',
                     'id' => ':id'
                 ],
-				'visible' => [Domain::class, 'canEditDomain']
+				'visible' => [Domain::class, 'canEdit']
             ],
             'logfiles' => [
                 'icon' => 'fa fa-file',
@@ -56,7 +56,7 @@ return [
                     'page' => 'logfiles',
                     'domain_id' => ':id'
                 ],
-				'visible' => [Domain::class, 'canViewDomainLogs']
+				'visible' => [Domain::class, 'canViewLogs']
             ],
             'domaindnseditor' => [
                 'icon' => 'fa fa-globe',
@@ -65,7 +65,7 @@ return [
                     'page' => 'domaindnseditor',
                     'domain_id' => ':id'
                 ],
-				'visible' => [Domain::class, 'canEditDomainDNS']
+				'visible' => [Domain::class, 'canEditDNS']
             ],
             'delete' => [
                 'icon' => 'fa fa-trash',
@@ -76,7 +76,7 @@ return [
                     'action' => 'delete',
                     'id' => ':id'
                 ],
-				'visible' => [Domain::class, 'canDeleteDomain']
+				'visible' => [Domain::class, 'canDelete']
             ]
 		]
 	]

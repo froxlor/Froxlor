@@ -17,7 +17,7 @@ namespace Froxlor\UI\Callbacks;
  * @package    Froxlor\UI\Callbacks
  *
  */
-class SSLCertificates
+class SSLCertificate
 {
 	public static function domainWithSan(array $attributes): array
 	{
@@ -28,5 +28,10 @@ class SSLCertificates
 				'san' => implode(', ', $attributes['fields']['san'] ?? []),
 			]
 		];
+	}
+
+	public function canDelete(array $attributes): bool
+	{
+		return false;
 	}
 }
