@@ -26,11 +26,11 @@ return [
 		'columns' => [
 			'username' => [
 				'label' => $lng['login']['username'],
-				'column' => 'username'
+				'field' => 'username'
 			],
 			'path' => [
 				'label' => $lng['panel']['path'],
-				'column' => 'path',
+				'field' => 'path',
 				'format_callback' => [Ftp::class, 'pathRelative']
 			]
 		],

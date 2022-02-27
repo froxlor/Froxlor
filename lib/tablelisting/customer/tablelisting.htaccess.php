@@ -27,29 +27,29 @@ return [
 		'columns' => [
 			'path' => [
 				'label' => $lng['panel']['path'],
-				'column' => 'path',
+				'field' => 'path',
 				'format_callback' => [Ftp::class, 'pathRelative']
 			],
 			'option_indexes' => [
 				'label' => $lng['extras']['view_directory'],
-				'column' => 'option_indexes',
+				'field' => 'option_indexes',
 				'format_callback' => [Text::class, 'boolean']
 			],
 			'error404path' => [
 				'label' => $lng['extras']['error404path'],
-				'column' => 'error404path'
+				'field' => 'error404path'
 			],
 			'error403path' => [
 				'label' => $lng['extras']['error403path'],
-				'column' => 'error403path'
+				'field' => 'error403path'
 			],
 			'error500path' => [
 				'label' => $lng['extras']['error500path'],
-				'column' => 'error500path'
+				'field' => 'error500path'
 			],
 			'options_cgi' => [
 				'label' => $lng['extras']['execute_perl'],
-				'column' => 'options_cgi',
+				'field' => 'options_cgi',
 				'format_callback' => [Text::class, 'boolean'],
 				'visible' => $cperlenabled
 			]

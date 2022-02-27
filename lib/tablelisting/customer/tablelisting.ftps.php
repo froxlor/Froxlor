@@ -26,20 +26,20 @@ return [
 		'columns' => [
 			'username' => [
 				'label' => $lng['login']['username'],
-				'column' => 'username',
+				'field' => 'username',
 			],
 			'description' => [
 				'label' => $lng['panel']['ftpdesc'],
-				'column' => 'description'
+				'field' => 'description'
 			],
 			'homedir' => [
 				'label' => $lng['panel']['path'],
-				'column' => 'homedir',
+				'field' => 'homedir',
 				'format_callback' => [Ftp::class, 'pathRelative']
 			],
 			'shell' => [
 				'label' => $lng['panel']['shell'],
-				'column' => 'shell',
+				'field' => 'shell',
 				'visible' => \Froxlor\Settings::Get('system.allow_customer_shell') == '1'
 			]
 		],

@@ -27,27 +27,27 @@ return [
 		'columns' => [
 			'm.email_full' => [
 				'label' => $lng['emails']['emailaddress'],
-				'column' => 'email_full',
+				'field' => 'email_full',
 			],
 			'm.destination' => [
 				'label' => $lng['emails']['forwarders'],
-				'column' => 'destination',
+				'field' => 'destination',
 				// @todo formatting
 			],
 			'm.popaccountid' => [
 				'label' => $lng['emails']['account'],
-				'column' => 'popaccountid',
+				'field' => 'popaccountid',
 				'format_callback' => [Email::class, 'account'],
 			],
 			'm.iscatchall' => [
 				'label' => $lng['emails']['catchall'],
-				'column' => 'iscatchall',
+				'field' => 'iscatchall',
 				'format_callback' => [Text::class, 'boolean'],
 				'visible' => \Froxlor\Settings::Get('catchall.catchall_enabled') == '1'
 			],
 			'm.quota' => [
 				'label' => $lng['emails']['quota'],
-				'column' => 'quota',
+				'field' => 'quota',
 				'visible' => \Froxlor\Settings::Get('system.mail_quota_enabled') == '1'
 			]
 		],

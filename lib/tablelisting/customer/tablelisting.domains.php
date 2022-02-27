@@ -26,11 +26,11 @@ return [
 		'columns' => [
 			'd.domain_ace' => [
 				'label' => $lng['domains']['domainname'],
-				'column' => 'domain_ace',
+				'field' => 'domain_ace',
 			],
 			'd.documentroot' => [
 				'label' => $lng['panel']['path'],
-				'column' => 'documentroot',
+				'field' => 'documentroot',
 				'format_callback' => [Domain::class, 'domainTarget'],
 			]
 		],
