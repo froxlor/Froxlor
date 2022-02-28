@@ -83,7 +83,7 @@ class Listing
 
 				// Get data from filed if it is defined
 				$field = $tabellisting['columns'][$visible_column]['field'] ?? null;
-				$data = self::getMultiArrayFromString($fields, $field);
+				$data = $field ? self::getMultiArrayFromString($fields, $field) : null;
 
 				// Call user function for given column if defined or return data from field, otherwise throw exception
 				$callback = $tabellisting['columns'][$visible_column]['callback'] ?? null;
