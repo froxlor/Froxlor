@@ -131,7 +131,8 @@ if ($page == 'ipsandports' || $page == 'overview') {
 
 				UI::twigBuffer('user/form.html.twig', [
 					'formaction' => $linker->getLink(array('section' => 'ipsandports', 'id' => $id)),
-					'formdata' => $ipsandports_edit_data['ipsandports_edit']
+					'formdata' => $ipsandports_edit_data['ipsandports_edit'],
+					'editid' => $id
 				]);
 				UI::twigOutputBuffer();
 			}

@@ -349,7 +349,8 @@ if ($page == 'overview' || $page == 'domains') {
 
 				UI::twigBuffer('user/form.html.twig', [
 					'formaction' => $linker->getLink(array('section' => 'domains', 'id' => $id)),
-					'formdata' => $subdomain_edit_data['domain_edit']
+					'formdata' => $subdomain_edit_data['domain_edit'],
+					'editid' => $id
 				]);
 				UI::twigOutputBuffer();
 			}

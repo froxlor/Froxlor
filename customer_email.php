@@ -195,7 +195,8 @@ if ($page == 'overview' || $page == 'emails') {
 
 			UI::twigBuffer('user/form.html.twig', [
 				'formaction' => $linker->getLink(array('section' => 'email')),
-				'formdata' => $email_edit_data['emails_edit']
+				'formdata' => $email_edit_data['emails_edit'],
+				'editid' => $id
 			]);
 			UI::twigOutputBuffer();
 		}

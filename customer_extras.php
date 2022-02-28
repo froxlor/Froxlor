@@ -149,7 +149,8 @@ if ($page == 'overview' || $page == 'htpasswds') {
 
 				UI::twigBuffer('user/form.html.twig', [
 					'formaction' => $linker->getLink(array('section' => 'extras', 'id' => $id)),
-					'formdata' => $htpasswd_edit_data['htpasswd_edit']
+					'formdata' => $htpasswd_edit_data['htpasswd_edit'],
+					'editid' => $id
 				]);
 				UI::twigOutputBuffer();
 			}
@@ -269,7 +270,8 @@ if ($page == 'overview' || $page == 'htpasswds') {
 
 				UI::twigBuffer('user/form.html.twig', [
 					'formaction' => $linker->getLink(array('section' => 'extras', 'id' => $id)),
-					'formdata' => $htaccess_edit_data['htaccess_edit']
+					'formdata' => $htaccess_edit_data['htaccess_edit'],
+					'editid' => $id
 				]);
 				UI::twigOutputBuffer();
 			}

@@ -179,7 +179,8 @@ if ($page == 'overview' || $page == 'accounts') {
 
 				UI::twigBuffer('user/form.html.twig', [
 					'formaction' => $linker->getLink(array('section' => 'ftp', 'id' => $id)),
-					'formdata' => $ftp_edit_data['ftp_edit']
+					'formdata' => $ftp_edit_data['ftp_edit'],
+					'editid' => $id
 				]);
 				UI::twigOutputBuffer();
 			}

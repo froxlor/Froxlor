@@ -310,7 +310,8 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 
 				UI::twigBuffer('user/form.html.twig', [
 					'formaction' => $linker->getLink(array('section' => 'customers', 'id' => $id)),
-					'formdata' => $customer_edit_data['customer_edit']
+					'formdata' => $customer_edit_data['customer_edit'],
+					'editid' => $id
 				]);
 				UI::twigOutputBuffer();
 			}

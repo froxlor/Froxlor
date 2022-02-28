@@ -41,7 +41,7 @@ return array(
 						'label' => $lng['admin']['phpsettings']['fpmdesc'],
 						'type' => 'select',
 						'select_var' => $fpmconfigs,
-						'selected' => '@TODO'
+						'selected' => $result['fpmsettingid']
 					),
 					'file_extensions' => array(
 						'visible' => (\Froxlor\Settings::Get('system.mod_fcgid') == 1 ? true : false),
@@ -55,13 +55,13 @@ return array(
 						'visible' => (\Froxlor\Settings::Get('system.mod_fcgid') == 1 ? true : false),
 						'label' => $lng['admin']['mod_fcgid_starter']['title'],
 						'type' => 'number',
-						'value' => ((int) $result['mod_fcgid_starter'] != - 1 ? $result['mod_fcgid_starter'] : '')
+						'value' => ((int) $result['mod_fcgid_starter'] != -1 ? $result['mod_fcgid_starter'] : '')
 					),
 					'mod_fcgid_maxrequests' => array(
 						'visible' => (\Froxlor\Settings::Get('system.mod_fcgid') == 1 ? true : false),
 						'label' => $lng['admin']['mod_fcgid_maxrequests']['title'],
 						'type' => 'number',
-						'value' => ((int) $result['mod_fcgid_maxrequests'] != - 1 ? $result['mod_fcgid_maxrequests'] : '')
+						'value' => ((int) $result['mod_fcgid_maxrequests'] != -1 ? $result['mod_fcgid_maxrequests'] : '')
 					),
 					'mod_fcgid_umask' => array(
 						'visible' => (\Froxlor\Settings::Get('system.mod_fcgid') == 1 ? true : false),
@@ -109,8 +109,12 @@ return array(
 						'label' => $lng['serversettings']['phpfpm_settings']['pm'],
 						'desc' => $lng['serversettings']['phpfpm_settings']['override_fpmconfig_addinfo'],
 						'type' => 'select',
-						'select_var' => $pm_select,
-						'selected' => '@TODO'
+						'select_var' => [
+							'static' => 'static',
+							'dynamic' => 'dynamic',
+							'ondemand' => 'ondemand'
+						],
+						'selected' => $result['pm']
 					),
 					'max_children' => array(
 						'visible' => (\Froxlor\Settings::Get('phpfpm.enabled') == 1 ? true : false),

@@ -43,8 +43,11 @@ return array(
 					'pm' => array(
 						'label' => $lng['serversettings']['phpfpm_settings']['pm'],
 						'type' => 'select',
-						'select_var' => $pm_select,
-						'selected' => '@TODO'
+						'select_var' => [
+							'static' => 'static',
+							'dynamic' => 'dynamic',
+							'ondemand' => 'ondemand'
+						]
 					),
 					'max_children' => array(
 						'label' => $lng['serversettings']['phpfpm_settings']['max_children']['title'],

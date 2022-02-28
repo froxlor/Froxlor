@@ -228,7 +228,8 @@ if ($page == '' || $page == 'overview') {
 
 				UI::twigBuffer('user/form.html.twig', [
 					'formaction' => $linker->getLink(array('section' => 'plans', 'id' => $id)),
-					'formdata' => $plans_add_data['plans_add']
+					'formdata' => $plans_edit_data['plans_edit'],
+					'editid' => $id
 				]);
 				UI::twigOutputBuffer();
 			}

@@ -70,5 +70,3 @@ upload_tmp_dir = "{TMP_DIR}"
 variables_order = "GPCS"
 opcache.restrict_api = "{DOCUMENT_ROOT}"
 EOINI;
-
-define('DEFAULT_PHPINI', $phpini);

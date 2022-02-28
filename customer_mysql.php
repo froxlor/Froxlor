@@ -185,7 +185,8 @@ if ($page == 'overview' || $page == 'mysqls') {
 
 				UI::twigBuffer('user/form.html.twig', [
 					'formaction' => $linker->getLink(array('section' => 'mysql', 'id' => $id)),
-					'formdata' => $mysql_edit_data['mysql_edit']
+					'formdata' => $mysql_edit_data['mysql_edit'],
+					'editid' => $id
 				]);
 				UI::twigOutputBuffer();
 			}

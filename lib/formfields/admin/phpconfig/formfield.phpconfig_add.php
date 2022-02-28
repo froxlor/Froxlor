@@ -40,7 +40,7 @@ return array(
 						'label' => $lng['admin']['phpsettings']['fpmdesc'],
 						'type' => 'select',
 						'select_var' => $fpmconfigs,
-						'selected' => '@TODO'
+						'selected' => 1
 					),
 					'file_extensions' => array(
 						'visible' => (\Froxlor\Settings::Get('system.mod_fcgid') == 1 ? true : false),
@@ -107,8 +107,11 @@ return array(
 						'label' => $lng['serversettings']['phpfpm_settings']['pm'],
 						'desc' => $lng['serversettings']['phpfpm_settings']['override_fpmconfig_addinfo'],
 						'type' => 'select',
-						'select_var' => $pm_select,
-						'selected' => '@TODO'
+						'select_var' => [
+							'static' => 'static',
+							'dynamic' => 'dynamic',
+							'ondemand' => 'ondemand'
+						]
 					),
 					'max_children' => array(
 						'visible' => (\Froxlor\Settings::Get('phpfpm.enabled') == 1 ? true : false),

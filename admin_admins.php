@@ -200,7 +200,8 @@ if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
 
 				UI::twigBuffer('user/form.html.twig', [
 					'formaction' => $linker->getLink(array('section' => 'admins', 'id' => $id)),
-					'formdata' => $admin_edit_data['admin_edit']
+					'formdata' => $admin_edit_data['admin_edit'],
+					'editid' => $id
 				]);
 				UI::twigOutputBuffer();
 			}
