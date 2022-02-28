@@ -17,9 +17,9 @@
  */
 
 use Froxlor\UI\Callbacks\Customer;
-use Froxlor\UI\Callbacks\Text;
 use Froxlor\UI\Callbacks\Impersonate;
 use Froxlor\UI\Callbacks\ProgressBar;
+use Froxlor\UI\Callbacks\Text;
 use Froxlor\UI\Listing;
 
 return [

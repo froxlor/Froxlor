@@ -16,6 +16,7 @@
  *
  */
 
+use Froxlor\Settings;
 use Froxlor\UI\Callbacks\Ftp;
 use Froxlor\UI\Listing;
 
@@ -40,7 +41,7 @@ return [
 			'shell' => [
 				'label' => $lng['panel']['shell'],
 				'field' => 'shell',
-				'visible' => \Froxlor\Settings::Get('system.allow_customer_shell') == '1'
+				'visible' => Settings::Get('system.allow_customer_shell') == '1'
 			]
 		],
 		'visible_columns' => Listing::getVisibleColumnsForListing('ftp_list', [

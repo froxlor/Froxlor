@@ -32,45 +32,45 @@ return [
 			'port' => [
 				'label' => $lng['admin']['ipsandports']['port'],
 				'field' => 'port',
-                'class' => 'text-center',
+				'class' => 'text-center',
 			],
 			'listen' => [
 				'label' => 'Listen',
 				'field' => 'listen_statement',
-                'class' => 'text-center',
+				'class' => 'text-center',
 				'format_callback' => [Text::class, 'boolean'],
 				'visible' => Settings::Get('system.webserver') != 'nginx'
 			],
 			'namevirtualhost' => [
 				'label' => 'NameVirtualHost',
 				'field' => 'namevirtualhost_statement',
-                'class' => 'text-center',
+				'class' => 'text-center',
 				'format_callback' => [Text::class, 'boolean'],
-				'visible' => Settings::Get('system.webserver') == 'apache2' && (int) Settings::Get('system.apache24') == 0
+				'visible' => Settings::Get('system.webserver') == 'apache2' && (int)Settings::Get('system.apache24') == 0
 			],
 			'vhostcontainer' => [
 				'label' => 'vHost-Container',
 				'field' => 'vhostcontainer',
-                'class' => 'text-center',
+				'class' => 'text-center',
 				'format_callback' => [Text::class, 'boolean']
 			],
 			'specialsettings' => [
 				'label' => 'Specialsettings',
 				'field' => 'specialsettings',
-                'class' => 'text-center',
+				'class' => 'text-center',
 				'format_callback' => [Text::class, 'boolean']
 			],
 			'servername' => [
 				'label' => 'ServerName',
 				'field' => 'vhostcontainer_servername_statement',
-                'class' => 'text-center',
+				'class' => 'text-center',
 				'format_callback' => [Text::class, 'boolean'],
 				'visible' => Settings::Get('system.webserver') == 'apache2'
 			],
 			'ssl' => [
 				'label' => 'SSL',
 				'field' => 'ssl',
-                'class' => 'text-center',
+				'class' => 'text-center',
 				'format_callback' => [Text::class, 'boolean']
 			],
 		],
@@ -84,28 +84,28 @@ return [
 			'servername',
 			'ssl'
 		]),
-        'actions' => [
-            'edit' => [
-                'icon' => 'fa fa-edit',
+		'actions' => [
+			'edit' => [
+				'icon' => 'fa fa-edit',
 				'title' => $lng['panel']['edit'],
-                'href' => [
-                    'section' => 'ipsandports',
-                    'page' => 'ipsandports',
-                    'action' => 'edit',
-                    'id' => ':id'
-                ],
-            ],
-            'delete' => [
-                'icon' => 'fa fa-trash',
+				'href' => [
+					'section' => 'ipsandports',
+					'page' => 'ipsandports',
+					'action' => 'edit',
+					'id' => ':id'
+				],
+			],
+			'delete' => [
+				'icon' => 'fa fa-trash',
 				'title' => $lng['panel']['delete'],
-                'class' => 'text-danger',
-                'href' => [
-                    'section' => 'ipsandports',
-                    'page' => 'ipsandports',
-                    'action' => 'delete',
-                    'id' => ':id'
-                ],
-            ],
-        ]
+				'class' => 'text-danger',
+				'href' => [
+					'section' => 'ipsandports',
+					'page' => 'ipsandports',
+					'action' => 'delete',
+					'id' => ':id'
+				],
+			],
+		]
 	]
 ];

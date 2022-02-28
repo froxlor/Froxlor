@@ -17,8 +17,8 @@
  */
 
 use Froxlor\UI\Callbacks\Domain;
-use Froxlor\UI\Callbacks\Text;
 use Froxlor\UI\Callbacks\Impersonate;
+use Froxlor\UI\Callbacks\Text;
 use Froxlor\UI\Listing;
 
 return [
