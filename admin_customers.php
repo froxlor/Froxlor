@@ -34,7 +34,7 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 
 		try {
 			$customer_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.customers.php';
-            $collection = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Customers::class, $userinfo))
+            $collection = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Customers::class, $userinfo, ['show_usages' => true]))
 				->has('admin', \Froxlor\Api\Commands\Admins::class, 'adminid', 'adminid')
 				->withPagination($customer_list_data['customer_list']['columns']);
 		} catch (Exception $e) {

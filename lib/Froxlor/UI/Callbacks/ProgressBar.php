@@ -33,9 +33,9 @@ class ProgressBar
 	{
 		$infotext = null;
 		if (isset($attributes['fields']['webspace_used']) && isset($attributes['fields']['mailspace_used']) && isset($attributes['fields']['dbspace_used'])) {
-			$infotext = UI::getLng('panel.used') . ':<br>';
-			$infotext .= 'web: ' . PhpHelper::sizeReadable($attributes['fields']['webspace_used'] * 1024, null, 'bi') . '<br>';
-			$infotext .= 'mail: ' . PhpHelper::sizeReadable($attributes['fields']['mailspace_used'] * 1024, null, 'bi') . '<br>';
+			$infotext = UI::getLng('panel.used') . ':' . PHP_EOL;
+			$infotext .= 'web: ' . PhpHelper::sizeReadable($attributes['fields']['webspace_used'] * 1024, null, 'bi') . PHP_EOL;
+			$infotext .= 'mail: ' . PhpHelper::sizeReadable($attributes['fields']['mailspace_used'] * 1024, null, 'bi') . PHP_EOL;
 			$infotext .= 'mysql: ' . PhpHelper::sizeReadable($attributes['fields']['dbspace_used'] * 1024, null, 'bi');
 		}
 
@@ -50,7 +50,7 @@ class ProgressBar
 	 */
 	public static function traffic(array $attributes): array
 	{
-		return self::pbData('traffic', $attributes['fields'], 1024 * 1024, (int)Settings::Get('system.report_trafficmax'));
+		return self::pbData('traffic', $attributes['fields'], 1024, (int)Settings::Get('system.report_trafficmax'));
 	}
 
 	/**
