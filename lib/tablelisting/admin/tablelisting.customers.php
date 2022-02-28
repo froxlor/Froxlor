@@ -30,17 +30,17 @@ return [
 			'c.name' => [
 				'label' => $lng['customer']['name'],
 				'field' => 'name',
-				'format_callback' => [Text::class, 'customerfullname'],
+				'callback' => [Text::class, 'customerfullname'],
 			],
 			'c.loginname' => [
 				'label' => $lng['login']['username'],
 				'field' => 'loginname',
-				'format_callback' => [Impersonate::class, 'customer'],
+				'callback' => [Impersonate::class, 'customer'],
 			],
 			'a.loginname' => [
 				'label' => $lng['admin']['admin'],
 				'field' => 'admin.loginname',
-				'format_callback' => [Impersonate::class, 'admin'],
+				'callback' => [Impersonate::class, 'admin'],
 			],
 			'c.email' => [
 				'label' => $lng['customer']['email'],
@@ -49,12 +49,12 @@ return [
 			'c.diskspace' => [
 				'label' => $lng['customer']['diskspace'],
 				'field' => 'diskspace',
-				'format_callback' => [ProgressBar::class, 'diskspace'],
+				'callback' => [ProgressBar::class, 'diskspace'],
 			],
 			'c.traffic' => [
 				'label' => $lng['customer']['traffic'],
 				'field' => 'traffic',
-				'format_callback' => [ProgressBar::class, 'traffic'],
+				'callback' => [ProgressBar::class, 'traffic'],
 			],
 		],
 		'visible_columns' => Listing::getVisibleColumnsForListing('customer_list', [

@@ -32,13 +32,13 @@ return [
 			'domains' => [
 				'label' => $lng['admin']['phpsettings']['activedomains'],
 				'field' => 'domains',
-				'text' => [PHPConf::class, 'domainList']
+				'callback' => [PHPConf::class, 'domainList']
 			],
 			'fpmdesc' => [
 				'label' => $lng['admin']['phpsettings']['fpmdesc'],
 				'field' => 'fpmdesc',
 				'visible' => (bool) Settings::Get('phpfpm.enabled'),
-				'format_callback' => [PHPConf::class, 'fpmConfLink']
+				'callback' => [PHPConf::class, 'fpmConfLink']
 			],
 			'c.binary' => [
 				'label' => $lng['admin']['phpsettings']['binary'],

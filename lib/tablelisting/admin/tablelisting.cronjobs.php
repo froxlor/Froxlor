@@ -26,12 +26,12 @@ return [
 			'c.description' => [
 				'label' => $lng['cron']['description'],
 				'field' => 'desc_lng_key',
-				'format_callback' => [Text::class, 'crondesc']
+				'callback' => [Text::class, 'crondesc']
 			],
 			'c.lastrun' => [
 				'label' => $lng['cron']['lastrun'],
 				'field' => 'lastrun',
-				'format_callback' => [Text::class, 'timestamp']
+				'callback' => [Text::class, 'timestamp']
 			],
 			'c.interval' => [
 				'label' => $lng['cron']['interval'],
@@ -40,7 +40,7 @@ return [
 			'c.isactive' => [
 				'label' => $lng['cron']['isactive'],
 				'field' => 'isactive',
-				'format_callback' => [Text::class, 'boolean']
+				'callback' => [Text::class, 'boolean']
 			],
 		],
 		'visible_columns' => Listing::getVisibleColumnsForListing('cron_list', [

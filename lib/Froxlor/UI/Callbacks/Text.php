@@ -27,7 +27,7 @@ class Text
 	public static function boolean(array $attributes): array
 	{
 		return [
-			'type' => 'boolean',
+			'macro' => 'boolean',
 			'data' => (bool)$attributes['data']
 		];
 	}

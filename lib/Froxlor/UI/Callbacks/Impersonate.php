@@ -26,7 +26,7 @@ class Impersonate
 		if (UI::getCurrentUser()['adminid'] != $attributes['fields']['adminid']) {
 			$linker = UI::getLinker();
 			return [
-				'type' => 'link',
+				'macro' => 'link',
 				'data' => [
 					'text' => $attributes['data'],
 					'href' => $linker->getLink([
@@ -45,7 +45,7 @@ class Impersonate
 	{
 		$linker = UI::getLinker();
 		return [
-			'type' => 'link',
+			'macro' => 'link',
 			'data' => [
 				'text' => $attributes['data'],
 				'href' => $linker->getLink([

@@ -31,7 +31,7 @@ return [
 			'd.documentroot' => [
 				'label' => $lng['panel']['path'],
 				'field' => 'documentroot',
-				'format_callback' => [Domain::class, 'domainTarget'],
+				'callback' => [Domain::class, 'domainTarget'],
 			]
 		],
 		'visible_columns' => Listing::getVisibleColumnsForListing('domain_list', [

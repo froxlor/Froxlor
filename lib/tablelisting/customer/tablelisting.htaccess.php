@@ -28,12 +28,12 @@ return [
 			'path' => [
 				'label' => $lng['panel']['path'],
 				'field' => 'path',
-				'format_callback' => [Ftp::class, 'pathRelative']
+				'callback' => [Ftp::class, 'pathRelative']
 			],
 			'option_indexes' => [
 				'label' => $lng['extras']['view_directory'],
 				'field' => 'option_indexes',
-				'format_callback' => [Text::class, 'boolean']
+				'callback' => [Text::class, 'boolean']
 			],
 			'error404path' => [
 				'label' => $lng['extras']['error404path'],
@@ -50,7 +50,7 @@ return [
 			'options_cgi' => [
 				'label' => $lng['extras']['execute_perl'],
 				'field' => 'options_cgi',
-				'format_callback' => [Text::class, 'boolean'],
+				'callback' => [Text::class, 'boolean'],
 				'visible' => $cperlenabled
 			]
 		],

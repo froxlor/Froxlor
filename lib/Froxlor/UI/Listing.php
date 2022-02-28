@@ -65,31 +65,37 @@ class Listing
 		return $heading;
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	private static function generateTableRows(array $list, array $tabellisting): array
 	{
 		$rows = [];
 
 		// Create new row from item
-		foreach ($list as $row => $item) {
+		foreach ($list as $row => $fields) {
 			// Generate columns from item
 			foreach ($tabellisting['visible_columns'] as $col => $visible_column) {
+				// Continue if column is not visible
 				if (isset($tabellisting['columns'][$visible_column]['visible']) && !$tabellisting['columns'][$visible_column]['visible']) {
 					continue;
 				}
 
-				$format_callback = $tabellisting['columns'][$visible_column]['format_callback'] ?? null;
-				$column = $tabellisting['columns'][$visible_column]['field'] ?? null;
-				if (empty($column)) {
-					throw new Exception('Column in "visible columns" specified that is not defined in "fields"');
-				}
-				$data = self::getMultiArrayFromString($item, $column);
+				// Get data from filed if it is defined
+				$field = $tabellisting['columns'][$visible_column]['field'] ?? null;
+				$data = self::getMultiArrayFromString($fields, $field);
 
-				if ($format_callback) {
-					$rows[$row]['td'][$col]['data'] = call_user_func($format_callback, ['data' => $data, 'fields' => $item]);
-				} else {
+				// Call user function for given column if defined or return data from field, otherwise throw exception
+				$callback = $tabellisting['columns'][$visible_column]['callback'] ?? null;
+				if ($callback) {
+					$rows[$row]['td'][$col]['data'] = call_user_func($callback, ['data' => $data, 'fields' => $fields]);
+				} elseif ($field) {
 					$rows[$row]['td'][$col]['data'] = $data;
+				} else {
+					throw new Exception('The visible column "'. $visible_column .'" has neither a "callback" nor a "field" set.');
 				}
 
+				// Set class for table-row if defined
 				$rows[$row]['td'][$col]['class'] = $tabellisting['columns'][$visible_column]['class'] ?? null;
 			}
 
@@ -97,19 +103,19 @@ class Listing
 			if (isset($tabellisting['format_callback'])) {
 				$class = [];
 				foreach ($tabellisting['format_callback'] as $format_callback) {
-					$class[] = call_user_func($format_callback, ['fields' => $item]);
+					$class[] = call_user_func($format_callback, ['fields' => $fields]);
 				}
 				$rows[$row]['class'] = implode(' ', $class);
 			}
 
 			// Set all actions for row
 			if (isset($tabellisting['actions'])) {
-				$actions = self::setLinks($tabellisting['actions'], $item);
+				$actions = self::setLinks($tabellisting['actions'], $fields);
 
 				$rows[$row]['td'][] = [
 					'class' => 'text-end',
 					'data' => [
-						'type' => 'actions',
+						'macro' => 'actions',
 						'data' => $actions
 					]
 				];
@@ -151,14 +157,14 @@ class Listing
 
 	public static function getVisibleColumnsForListing(string $listing, array $default_columns): array
 	{
-		// Hier käme dann die Logik, die das aus der DB zieht ...
-		// alternativ nimmt er die $default_columns, wenn kein Eintrag
-		// in der DB definiert ist
+		// Here would come the logic that pulls this from the DB ...
+		// alternatively, it takes the $default_columns if no entry is
+		// defined in the DB
 
 		return $default_columns;
 	}
 
-	public static function getMultiArrayFromString(array $arr, string $str)
+	public static function getMultiArrayFromString(array $arr, ?string $str)
 	{
 		foreach (explode('.', $str) as $key) {
 			if (!array_key_exists($key, $arr)) {

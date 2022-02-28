@@ -75,7 +75,7 @@ class ProgressBar
 		}
 
 		return [
-			'type' => 'progressbar',
+			'macro' => 'progressbar',
 			'data' => [
 				'percent' => $percent,
 				'style' => $style,

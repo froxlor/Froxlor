@@ -45,8 +45,10 @@
 {% macro domainWithSan(data) %}
 	{{ data.domain }}
 	{% if data.san is not empty %}
-		<br/><span class="small">SAN:
-			{{ data.san }}</span>
+		<br/>
+		<span class="small">
+			SAN: {{ data.san }}
+		</span>
 	{% endif %}
 {% endmacro %}
 

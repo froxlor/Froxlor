@@ -31,7 +31,7 @@ return [
 			'path' => [
 				'label' => $lng['panel']['path'],
 				'field' => 'path',
-				'format_callback' => [Ftp::class, 'pathRelative']
+				'callback' => [Ftp::class, 'pathRelative']
 			]
 		],
 		'visible_columns' => Listing::getVisibleColumnsForListing('htpasswd_list', [

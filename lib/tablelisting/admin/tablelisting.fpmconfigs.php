@@ -30,8 +30,7 @@ return [
 			],
 			'configs' => [
 				'label' => $lng['admin']['phpsettings']['activephpconfigs'],
-				'field' => 'configs',
-				'text' => [PHPConf::class, 'configsList']
+				'callback' => [PHPConf::class, 'configsList']
 			],
 			'reload_cmd' => [
 				'label' => $lng['serversettings']['phpfpm_settings']['reload'],

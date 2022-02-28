@@ -38,40 +38,40 @@ return [
 				'label' => 'Listen',
 				'field' => 'listen_statement',
 				'class' => 'text-center',
-				'format_callback' => [Text::class, 'boolean'],
+				'callback' => [Text::class, 'boolean'],
 				'visible' => Settings::Get('system.webserver') != 'nginx'
 			],
 			'namevirtualhost' => [
 				'label' => 'NameVirtualHost',
 				'field' => 'namevirtualhost_statement',
 				'class' => 'text-center',
-				'format_callback' => [Text::class, 'boolean'],
+				'callback' => [Text::class, 'boolean'],
 				'visible' => Settings::Get('system.webserver') == 'apache2' && (int)Settings::Get('system.apache24') == 0
 			],
 			'vhostcontainer' => [
 				'label' => 'vHost-Container',
 				'field' => 'vhostcontainer',
 				'class' => 'text-center',
-				'format_callback' => [Text::class, 'boolean']
+				'callback' => [Text::class, 'boolean']
 			],
 			'specialsettings' => [
 				'label' => 'Specialsettings',
 				'field' => 'specialsettings',
 				'class' => 'text-center',
-				'format_callback' => [Text::class, 'boolean']
+				'callback' => [Text::class, 'boolean']
 			],
 			'servername' => [
 				'label' => 'ServerName',
 				'field' => 'vhostcontainer_servername_statement',
 				'class' => 'text-center',
-				'format_callback' => [Text::class, 'boolean'],
+				'callback' => [Text::class, 'boolean'],
 				'visible' => Settings::Get('system.webserver') == 'apache2'
 			],
 			'ssl' => [
 				'label' => 'SSL',
 				'field' => 'ssl',
 				'class' => 'text-center',
-				'format_callback' => [Text::class, 'boolean']
+				'callback' => [Text::class, 'boolean']
 			],
 		],
 		'visible_columns' => Listing::getVisibleColumnsForListing('ipsandports_list', [

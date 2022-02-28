@@ -28,7 +28,7 @@ class Domain
 			// path or redirect
 			if (preg_match('/^https?\:\/\//', $attributes['fields']['documentroot'])) {
 				return [
-					'type' => 'link',
+					'macro' => 'link',
 					'data' => [
 						'text' => $attributes['fields']['documentroot'],
 						'href' => $attributes['fields']['documentroot'],

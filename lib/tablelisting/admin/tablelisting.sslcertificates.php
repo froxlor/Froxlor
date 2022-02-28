@@ -33,7 +33,7 @@ return [
 			'c.domain' => [
 				'label' => $lng['ssl_certificates']['certificate_for'],
 				'field' => 'domain',
-				'format_callback' => [SSLCertificate::class, 'domainWithSan'],
+				'callback' => [SSLCertificate::class, 'domainWithSan'],
 			],
 			'c.issuer' => [
 				'label' => $lng['ssl_certificates']['issuer'],
@@ -51,7 +51,7 @@ return [
 				'label' => $lng['panel']['letsencrypt'],
 				'field' => 'letsencrypt',
 				'class' => 'text-center',
-				'format_callback' => [Text::class, 'boolean'],
+				'callback' => [Text::class, 'boolean'],
 				'visible' => Settings::Get('system.le_froxlor_enabled'),
 			],
 		],

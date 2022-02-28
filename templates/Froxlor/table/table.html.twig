@@ -1,6 +1,6 @@
 {% macro table(listing) %}
 
-	{% import "Froxlor/table/callbacks.html.twig" as callbacks %}
+	{% import "Froxlor/table/macros.html.twig" as macros %}
 	{% import "Froxlor/table/pagination.html.twig" as pagination %}
 
 	<form action="{{ action|default("") }}" method="post" enctype="application/x-www-form-urlencoded" class="form">
@@ -34,20 +34,21 @@
 								{% for td in tr.td %}
 									<td class="px-3{% if td.class is defined %} {{ td.class }}{% endif %}">
 										{% if td.data is iterable %}
-											{% if td.data.type == 'progressbar' %}
-												{{ callbacks.progressbar(td.data.data) }}
-											{% elseif td.data.type == 'boolean' %}
-												{{ callbacks.boolean(td.data.data) }}
-											{% elseif td.data.type == 'booleanWithInfo' %}
-												{{ callbacks.booleanWithInfo(td.data.data) }}
-											{% elseif td.data.type == 'link' %}
-												{{ callbacks.link(td.data.data) }}
-											{% elseif td.data.type == 'domainWithSan' %}
-												{{ callbacks.domainWithSan(td.data.data) }}
-											{% elseif td.data.type == 'actions' %}
-												{{ callbacks.actions(td.data.data) }}
+											{% if td.data.macro == 'progressbar' %}
+												{{ macros.progressbar(td.data.data) }}
+											{% elseif td.data.macro == 'boolean' %}
+												{{ macros.boolean(td.data.data) }}
+											{% elseif td.data.macro == 'booleanWithInfo' %}
+												{{ macros.booleanWithInfo(td.data.data) }}
+											{% elseif td.data.macro == 'link' %}
+												{{ macros.link(td.data.data) }}
+											{% elseif td.data.macro == 'domainWithSan' %}
+												{{ macros.domainWithSan(td.data.data) }}
+											{% elseif td.data.macro == 'actions' %}
+												{{ macros.actions(td.data.data) }}
 											{% else %}
-												Callback '{{ td|json_encode }}' is not implemented!
+												Table macro '{{ td.data.macro|json_encode }}' is not implemented!
+												Unable to handle this data: {{ td.data|json_encode }}
 											{% endif %}
 										{% else %}
 											{{ td.data|raw }}

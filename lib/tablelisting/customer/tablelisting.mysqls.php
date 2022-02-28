@@ -36,12 +36,12 @@ return [
 			'size' => [
 				'label' => $lng['mysql']['size'],
 				'field' => 'size',
-				'format_callback' => [Text::class, 'size']
+				'callback' => [Text::class, 'size']
 			],
 			'dbserver' => [
 				'label' => $lng['mysql']['mysql_server'],
 				'field' => 'dbserver',
-				'format_callback' => [Mysql::class, 'dbserver'],
+				'callback' => [Mysql::class, 'dbserver'],
 				'visible' => $count_mysqlservers > 1
 			]
 		],

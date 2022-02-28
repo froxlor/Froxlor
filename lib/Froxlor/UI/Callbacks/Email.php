@@ -24,7 +24,7 @@ class Email
 	public static function account(array $attributes)
 	{
 		return [
-			'type' => 'booleanWithInfo',
+			'macro' => 'booleanWithInfo',
 			'data' => [
 				'checked' => $attributes['data'] != 0,
 				'info' => $attributes['data'] != 0 ? PhpHelper::sizeReadable($attributes['fields']['mboxsize'], 'GiB', 'bi', '%01.' . (int)Settings::Get('panel.decimal_places') . 'f %s') : ''

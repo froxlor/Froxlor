@@ -36,7 +36,7 @@ return [
 			'homedir' => [
 				'label' => $lng['panel']['path'],
 				'field' => 'homedir',
-				'format_callback' => [Ftp::class, 'pathRelative']
+				'callback' => [Ftp::class, 'pathRelative']
 			],
 			'shell' => [
 				'label' => $lng['panel']['shell'],

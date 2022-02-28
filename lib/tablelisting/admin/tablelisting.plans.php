@@ -39,7 +39,7 @@ return [
 			'p.ts' => [
 				'label' => $lng['admin']['plans']['last_update'],
 				'field' => 'ts',
-				'format_callback' => [Text::class, 'timestamp'],
+				'callback' => [Text::class, 'timestamp'],
 			],
 		],
 		'visible_columns' => Listing::getVisibleColumnsForListing('plan_list', [

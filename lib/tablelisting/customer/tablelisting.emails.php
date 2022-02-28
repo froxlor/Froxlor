@@ -38,12 +38,12 @@ return [
 			'm.popaccountid' => [
 				'label' => $lng['emails']['account'],
 				'field' => 'popaccountid',
-				'format_callback' => [Email::class, 'account'],
+				'callback' => [Email::class, 'account'],
 			],
 			'm.iscatchall' => [
 				'label' => $lng['emails']['catchall'],
 				'field' => 'iscatchall',
-				'format_callback' => [Text::class, 'boolean'],
+				'callback' => [Text::class, 'boolean'],
 				'visible' => Settings::Get('catchall.catchall_enabled') == '1'
 			],
 			'm.quota' => [

@@ -21,7 +21,7 @@ use Froxlor\UI\Panel\UI;
  */
 class PHPConf
 {
-	public static function domainList(array $attributes)
+	public static function domainList(array $attributes): string
 	{
 		$idna = new IdnaWrapper;
 		$domains = "";
@@ -56,7 +56,7 @@ class PHPConf
 	{
 		$linker = UI::getLinker();
 		return [
-			'type' => 'link',
+			'macro' => 'link',
 			'data' => [
 				'text' => $attributes['data'],
 				'href' => $linker->getLink([

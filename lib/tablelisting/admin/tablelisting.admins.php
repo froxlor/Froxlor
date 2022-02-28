@@ -48,18 +48,18 @@ return [
 			'diskspace' => [
 				'label' => $lng['customer']['diskspace'],
 				'field' => 'diskspace',
-				'format_callback' => [ProgressBar::class, 'diskspace'],
+				'callback' => [ProgressBar::class, 'diskspace'],
 			],
 			'traffic' => [
 				'label' => $lng['customer']['traffic'],
 				'field' => 'traffic',
-				'format_callback' => [ProgressBar::class, 'traffic'],
+				'callback' => [ProgressBar::class, 'traffic'],
 			],
 			'deactivated' => [
 				'label' => $lng['admin']['deactivated'],
 				'field' => 'deactivated',
 				'class' => 'text-center',
-				'format_callback' => [Text::class, 'boolean'],
+				'callback' => [Text::class, 'boolean'],
 			],
 		],
 		'visible_columns' => Listing::getVisibleColumnsForListing('admin_list', [
@@ -93,7 +93,7 @@ return [
 				],
 			],
 		],
-		'format_callback' => [
+		'callback' => [
 			[Style::class, 'deactivated'],
 			[Style::class, 'diskspaceWarning'],
 			[Style::class, 'trafficWarning']

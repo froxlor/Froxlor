@@ -34,12 +34,12 @@ return [
 			'c.name' => [
 				'label' => $lng['customer']['name'],
 				'field' => 'customer.name',
-				'format_callback' => [Text::class, 'customerfullname'],
+				'callback' => [Text::class, 'customerfullname'],
 			],
 			'c.loginname' => [
 				'label' => $lng['login']['username'],
 				'field' => 'customer.loginname',
-				'format_callback' => [Impersonate::class, 'customer'],
+				'callback' => [Impersonate::class, 'customer'],
 			],
 			'd.aliasdomain' => [
 				'label' => $lng['domains']['aliasdomain'],

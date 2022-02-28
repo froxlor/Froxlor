@@ -22,7 +22,7 @@ class SSLCertificate
 	public static function domainWithSan(array $attributes): array
 	{
 		return [
-			'type' => 'domainWithSan',
+			'macro' => 'domainWithSan',
 			'data' => [
 				'domain' => $attributes['data'],
 				'san' => implode(', ', $attributes['fields']['san'] ?? []),
