@@ -30,9 +30,9 @@ return [
 				'field' => 'path',
 				'callback' => [Ftp::class, 'pathRelative']
 			],
-			'option_indexes' => [
+			'options_indexes' => [
 				'label' => $lng['extras']['view_directory'],
-				'field' => 'option_indexes',
+				'field' => 'options_indexes',
 				'callback' => [Text::class, 'boolean']
 			],
 			'error404path' => [
@@ -56,7 +56,7 @@ return [
 		],
 		'visible_columns' => Listing::getVisibleColumnsForListing('htaccess_list', [
 			'path',
-			'option_indexes',
+			'options_indexes',
 			'error404path',
 			'error403path',
 			'error500path',
