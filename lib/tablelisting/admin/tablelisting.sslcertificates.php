@@ -26,55 +26,55 @@ return [
 		'title' => $lng['domains']['ssl_certificates'],
 		'icon' => 'fa-solid fa-user',
 		'columns' => [
-            'd.domain' => [
-                'label' => $lng['domains']['domainname'],
-                'field' => 'domain',
-            ],
-            'c.domain' => [
-                'label' => $lng['ssl_certificates']['certificate_for'],
-                'field' => 'domain',
-                'format_callback' => [SSLCertificate::class, 'domainWithSan'],
-            ],
-            'c.issuer' => [
-                'label' => $lng['ssl_certificates']['issuer'],
-                'field' => 'issuer',
-            ],
-            'c.validfromdate' => [
-                'label' => $lng['ssl_certificates']['valid_from'],
-                'field' => 'validfromdate',
-            ],
-            'c.validtodate' => [
-                'label' => $lng['ssl_certificates']['valid_until'],
-                'field' => 'validtodate',
-            ],
-            'c.letsencrypt' => [
-                'label' => $lng['panel']['letsencrypt'],
-                'field' => 'letsencrypt',
-                'class' => 'text-center',
-                'format_callback' => [Text::class, 'boolean'],
-                'visible' => Settings::Get('system.le_froxlor_enabled'),
-            ],
+			'd.domain' => [
+				'label' => $lng['domains']['domainname'],
+				'field' => 'domain',
+			],
+			'c.domain' => [
+				'label' => $lng['ssl_certificates']['certificate_for'],
+				'field' => 'domain',
+				'format_callback' => [SSLCertificate::class, 'domainWithSan'],
+			],
+			'c.issuer' => [
+				'label' => $lng['ssl_certificates']['issuer'],
+				'field' => 'issuer',
+			],
+			'c.validfromdate' => [
+				'label' => $lng['ssl_certificates']['valid_from'],
+				'field' => 'validfromdate',
+			],
+			'c.validtodate' => [
+				'label' => $lng['ssl_certificates']['valid_until'],
+				'field' => 'validtodate',
+			],
+			'c.letsencrypt' => [
+				'label' => $lng['panel']['letsencrypt'],
+				'field' => 'letsencrypt',
+				'class' => 'text-center',
+				'format_callback' => [Text::class, 'boolean'],
+				'visible' => Settings::Get('system.le_froxlor_enabled'),
+			],
 		],
 		'visible_columns' => Listing::getVisibleColumnsForListing('sslcertificates_list', [
 			'd.domain',
 			'c.domain',
-            'c.issuer',
-            'c.validfromdate',
+			'c.issuer',
+			'c.validfromdate',
 			'c.validtodate',
 			'c.letsencrypt',
 		]),
-        'actions' => [
-            'delete' => [
-                'icon' => 'fa fa-trash',
+		'actions' => [
+			'delete' => [
+				'icon' => 'fa fa-trash',
 				'title' => $lng['panel']['delete'],
-                'class' => 'text-danger',
-                'href' => [
-                    'section' => 'domains',
-                    'page' => 'sslcertificates',
-                    'action' => 'delete',
-                    'id' => ':id'
-                ],
-            ],
-        ]
+				'class' => 'text-danger',
+				'href' => [
+					'section' => 'domains',
+					'page' => 'sslcertificates',
+					'action' => 'delete',
+					'id' => ':id'
+				],
+			],
+		]
 	]
 ];
