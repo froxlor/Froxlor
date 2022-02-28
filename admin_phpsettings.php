@@ -183,25 +183,21 @@ if ($page == 'overview') {
 	if ($action == '') {
 
 		try {
-			$json_result = FpmDaemons::getLocal($userinfo)->listing();
+			$fpmconf_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.fpmconfigs.php';
+			$collection = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\FpmDaemons::class, $userinfo))
+				->withPagination($fpmconf_list_data['fpmconf_list']['columns']);
 		} catch (Exception $e) {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
-		$result = json_decode($json_result, true)['data'];
 
-		$tablecontent = '';
-		$count = 0;
-		if (isset($result['count']) && $result['count'] > 0) {
-			foreach ($result['list'] as $row) {
-				$configs = "";
-				foreach ($row['configs'] as $configused) {
-					$configs .= $configused . "<br>";
-				}
-				$count++;
-				eval("\$tablecontent.=\"" . \Froxlor\UI\Template::getTemplate("phpconfig/fpmdaemons_overview") . "\";");
-			}
-		}
-		eval("echo \"" . \Froxlor\UI\Template::getTemplate("phpconfig/fpmdaemons") . "\";");
+		UI::twigBuffer('user/table.html.twig', [
+			'listing' => \Froxlor\UI\Listing::format($collection, $fpmconf_list_data['fpmconf_list']),
+			'actions_links' => [[
+				'href' => $linker->getLink(['section' => 'phpsettings', 'page' => $page, 'action' => 'add']),
+				'label' => $lng['admin']['fpmsettings']['addnew']
+			]]
+		]);
+		UI::twigOutputBuffer();
 	}
 
 	if ($action == 'add') {

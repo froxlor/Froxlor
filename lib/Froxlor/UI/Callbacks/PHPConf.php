@@ -38,6 +38,15 @@ class PHPConf
 		return $domains;
 	}
 
+	public static function configsList(array $attributes)
+	{
+		$configs = "";
+		foreach ($attributes['fields']['configs'] as $configused) {
+			$configs .= $configused . "<br>";
+		}
+		return $configs;
+	}
+
 	public static function isNotDefault(array $attributes)
 	{
 		return $attributes['fields']['id'] != 1;
