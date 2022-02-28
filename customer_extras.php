@@ -178,10 +178,10 @@ if ($page == 'overview' || $page == 'htpasswds') {
 
 		UI::twigBuffer('user/table.html.twig', [
 			'listing' => \Froxlor\UI\Listing::format($collection, $htaccess_list_data['htaccess_list']),
-			'add_link' => [
+			'actions_links' => [[
 				'href' => $linker->getLink(['section' => 'extras', 'page' => 'htaccess', 'action' => 'add']),
 				'label' => $lng['extras']['pathoptions_add']
-			],
+			]],
 			'entity_info' => $lng['extras']['description']
 		]);
 		UI::twigOutputBuffer();
