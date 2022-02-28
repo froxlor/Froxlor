@@ -3,6 +3,7 @@
 namespace Froxlor\UI;
 
 use Froxlor\UI\Panel\UI;
+use Exception;
 
 /**
  * This file is part of the Froxlor project.
@@ -77,7 +78,10 @@ class Listing
 				}
 
 				$format_callback = $tabellisting['columns'][$visible_column]['format_callback'] ?? null;
-				$column = $tabellisting['columns'][$visible_column]['field'];
+				$column = $tabellisting['columns'][$visible_column]['field'] ?? null;
+				if (empty($column)) {
+					throw new Exception('Column in "visible columns" specified that is not defined in "fields"');
+				}
 				$data = self::getMultiArrayFromString($item, $column);
 
 				if ($format_callback) {

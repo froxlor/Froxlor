@@ -65,6 +65,7 @@ return [
 		'actions' => [
 			'edit' => [
 				'icon' => 'fa fa-edit',
+				'title' => $lng['panel']['edit'],
 				'href' => [
 					'section' => 'extras',
 					'page' => 'htaccess',
@@ -74,6 +75,7 @@ return [
 			],
 			'delete' => [
 				'icon' => 'fa fa-trash',
+				'title' => $lng['panel']['delete'],
 				'class' => 'text-danger',
 				'href' => [
 					'section' => 'extras',

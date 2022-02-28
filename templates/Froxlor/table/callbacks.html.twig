@@ -1,58 +1,59 @@
 {% macro progressbar(data) %}
-    <div class="progress progress-thin">
-        <div class="progress-bar {{ data.style }}" style="width: {{ data.percent }}%;"></div>
-    </div>
-    <div class="text-end">
-        {% if data.infotext is not empty %}
-            <i class="fa-solid fa-circle-info" data-toggle="tooltip" data-placement="right" title="{{ data.infotext|raw }}"></i>
-        {% endif %}
-        {{ data.text }}
-    </div>
+	<div class="progress progress-thin">
+		<div class="progress-bar {{ data.style }}" style="width: {{ data.percent }}%;"></div>
+	</div>
+	<div class="text-end">
+		{% if data.infotext is not empty %}
+			<i class="fa-solid fa-circle-info" data-toggle="tooltip" data-placement="right" title="{{ data.infotext|raw }}"></i>
+		{% endif %}
+		{{ data.text }}
+	</div>
 {% endmacro %}
 
 {% macro boolean(data) %}
-    {% if (data) %}
-        <i class="fa fa-check-circle text-success"></i>
-    {% else %}
-        <i class="fa fa-times-circle text-danger"></i>
-    {% endif %}
+	{% if (data) %}
+		<i class="fa fa-check-circle text-success"></i>
+	{% else %}
+		<i class="fa fa-times-circle text-danger"></i>
+	{% endif %}
 {% endmacro %}
 
 {% macro booleanWithInfo(data) %}
-    {% if (data.checked) %}
-        <i class="fa fa-check-circle text-success"></i>
-    {% else %}
-        <i class="fa fa-times-circle text-danger"></i>
-    {% endif %}
+	{% if (data.checked) %}
+		<i class="fa fa-check-circle text-success"></i>
+	{% else %}
+		<i class="fa fa-times-circle text-danger"></i>
+	{% endif %}
 	{% if data.info is not empty %}
-	{{ data.info }}
+		{{ data.info }}
 	{% endif %}
 {% endmacro %}
 
 {% macro link(data) %}
-    {% apply spaceless %}
-        <a href="{{ data.href }}" {% if data.class is defined %}class="{{ data.class }}"{% endif %} {% if data.target is defined %}target="{{ data.target }}"{% endif %}>
-            {% if data.icon is defined %}
-                <i class="{{ data.icon }}"></i>
-            {% endif %}
-            {% if data.text is defined %}
-                {{ data.text }}
-            {% endif %}
-        </a>
-    {% endapply %}
+	{% apply spaceless %}
+	<a href="{{ data.href }}" {% if data.class is defined %} class="{{ data.class }}" {% endif %} {% if data.target is defined %} target="{{ data.target }}" {% endif %}{% if data.title is defined %} title="{{ data.title }}" {% endif %}>
+		{% if data.icon is defined %}
+			<i class="{{ data.icon }}"></i>
+		{% endif %}
+		{% if data.text is defined %}
+			{{ data.text }}
+		{% endif %}
+	</a>
+	{% endapply %}
 {% endmacro %}
 
 {% macro domainWithSan(data) %}
-    {{ data.domain }}
-    {% if data.san is not empty %}
-        <br /><span class="small">SAN: {{ data.san }}</span>
-    {% endif %}
+	{{ data.domain }}
+	{% if data.san is not empty %}
+		<br/><span class="small">SAN:
+			{{ data.san }}</span>
+	{% endif %}
 {% endmacro %}
 
 {% macro actions(data) %}
-    {% for action in data %}
-        {% if action.visible is not defined or action.visible is defined and action.visible %}
-            {{ _self.link(action) }}
-        {% endif %}
-    {% endfor %}
+	{% for action in data %}
+		{% if action.visible is not defined or action.visible is defined and action.visible %}
+			{{ _self.link(action) }}
+		{% endif %}
+	{% endfor %}
 {% endmacro %}

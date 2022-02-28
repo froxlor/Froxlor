@@ -16,6 +16,7 @@
  *
  */
 
+use Froxlor\UI\Callbacks\Customer;
 use Froxlor\UI\Callbacks\Text;
 use Froxlor\UI\Callbacks\Impersonate;
 use Froxlor\UI\Callbacks\ProgressBar;
@@ -65,8 +66,21 @@ return [
 			'c.traffic',
 		]),
 		'actions' => [
+			'unlock' => [
+				'icon' => 'fa fa-unlock',
+				'title' => $lng['panel']['unlock'],
+				'class' => 'text-warning',
+				'href' => [
+					'section' => 'customers',
+					'page' => 'customers',
+					'action' => 'unlock',
+					'id' => ':customerid'
+				],
+				'visible' => [Customer::class, 'isLocked']
+			],
 			'edit' => [
 				'icon' => 'fa fa-edit',
+				'title' => $lng['panel']['edit'],
 				'href' => [
 					'section' => 'customers',
 					'page' => 'customers',
@@ -76,6 +90,7 @@ return [
 			],
 			'delete' => [
 				'icon' => 'fa fa-trash',
+				'title' => $lng['panel']['delete'],
 				'class' => 'text-danger',
 				'href' => [
 					'section' => 'customers',

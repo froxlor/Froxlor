@@ -62,6 +62,7 @@ return [
 		'actions' => [
 			'edit' => [
 				'icon' => 'fa fa-edit',
+				'title' => $lng['panel']['edit'],
 				'href' => [
 					'section' => 'email',
 					'page' => 'emails',
@@ -71,6 +72,7 @@ return [
 			],
 			'delete' => [
 				'icon' => 'fa fa-trash',
+				'title' => $lng['panel']['delete'],
 				'class' => 'text-danger',
 				'href' => [
 					'section' => 'email',

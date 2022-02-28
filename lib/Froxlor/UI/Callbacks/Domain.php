@@ -62,11 +62,25 @@ class Domain
 			&& empty($attributes['fields']['domainaliasid']);
 	}
 
+	public static function adminCanDelete(array $attributes): bool
+	{
+		return $attributes['fields']['id'] != Settings::Get('system.hostname_id')
+			&& empty($attributes['fields']['domainaliasid'])
+			&& $attributes['fields']['standardsubdomain'] != $attributes['fields']['id'];
+	}
+
 	public static function canEditDNS(array $attributes): bool
 	{
 		return $attributes['fields']['isbinddomain'] == '1'
 			&& UI::getCurrentUser()['dnsenabled'] == '1'
 			&& $attributes['fields']['caneditdomain'] == '1'
+			&& Settings::Get('system.bind_enable') == '1'
+			&& Settings::Get('system.dnsenabled') == '1';
+	}
+
+	public static function adminCanEditDNS(array $attributes): bool
+	{
+		return $attributes['fields']['isbinddomain'] == '1'
 			&& Settings::Get('system.bind_enable') == '1'
 			&& Settings::Get('system.dnsenabled') == '1';
 	}

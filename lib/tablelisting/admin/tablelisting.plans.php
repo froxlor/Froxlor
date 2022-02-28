@@ -16,7 +16,7 @@
  *
  */
 
-use Froxlor\Settings;
+use Froxlor\UI\Callbacks\Text;
 use Froxlor\UI\Listing;
 
 return [
@@ -39,9 +39,10 @@ return [
 			'p.ts' => [
 				'label' => $lng['admin']['plans']['last_update'],
 				'field' => 'ts',
+				'format_callback' => [Text::class, 'timestamp'],
 			],
 		],
-		'visible_columns' => Listing::getVisibleColumnsForListing('sslcertificates_list', [
+		'visible_columns' => Listing::getVisibleColumnsForListing('plan_list', [
 			'p.name',
 			'p.description',
 			'p.adminname',
@@ -50,6 +51,7 @@ return [
 		'actions' => [
 			'edit' => [
 				'icon' => 'fa fa-edit',
+				'title' => $lng['panel']['edit'],
 				'href' => [
 					'section' => 'plans',
 					'page' => 'overview',
@@ -59,6 +61,7 @@ return [
 			],
 			'delete' => [
 				'icon' => 'fa fa-trash',
+				'title' => $lng['panel']['delete'],
 				'class' => 'text-danger',
 				'href' => [
 					'section' => 'plans',

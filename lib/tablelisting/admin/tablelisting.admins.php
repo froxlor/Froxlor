@@ -72,24 +72,26 @@ return [
 		]),
 		'actions' => [
 			'edit' => [
-                'icon' => 'fa fa-edit',
+				'icon' => 'fa fa-edit',
+				'title' => $lng['panel']['edit'],
 				'href' => [
-                    'section' => 'admins',
-                    'page' => 'admins',
-                    'action' => 'edit',
-                    'id' => ':adminid'
-                ],
+					'section' => 'admins',
+					'page' => 'admins',
+					'action' => 'edit',
+					'id' => ':adminid'
+				],
 			],
-            'delete' => [
-                'icon' => 'fa fa-trash',
-                'class' => 'text-danger',
-                'href' => [
-                    'section' => 'admins',
-                    'page' => 'admins',
-                    'action' => 'delete',
-                    'id' => ':adminid'
-                ],
-            ],
+			'delete' => [
+				'icon' => 'fa fa-trash',
+				'title' => $lng['panel']['delete'],
+				'class' => 'text-danger',
+				'href' => [
+					'section' => 'admins',
+					'page' => 'admins',
+					'action' => 'delete',
+					'id' => ':adminid'
+				],
+			],
 		],
 		'format_callback' => [
 			[Style::class, 'deactivated'],

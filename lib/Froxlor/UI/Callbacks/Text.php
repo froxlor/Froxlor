@@ -41,4 +41,14 @@ class Text
 	{
 		return PhpHelper::sizeReadable($attributes['data'], null, 'bi');
 	}
+
+	public static function timestamp(array $attributes): string
+	{
+		return (int)$attributes['data'] > 0 ? date('d.m.Y H:i', (int)$attributes['data']) : UI::getLng('panel.never');
+	}
+
+	public static function crondesc(array $attributes): string
+	{
+		return UI::getLng('crondesc.' . $attributes['data']);
+	}
 }

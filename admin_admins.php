@@ -20,7 +20,7 @@
 const AREA = 'admin';
 require __DIR__ .  '/lib/init.php';
 
-use Froxlor\Api\Commands\Admins as Admins;
+use Froxlor\Api\Commands\Admins;
 use Froxlor\Database\Database;
 use Froxlor\Settings;
 use Froxlor\UI\Panel\UI;

@@ -39,45 +39,54 @@ return [
 			'd.documentroot'
 		]),
 		'actions' => [
-            'edit' => [
-                'icon' => 'fa fa-edit',
-                'href' => [
-                    'section' => 'domains',
-                    'page' => 'domains',
-                    'action' => 'edit',
-                    'id' => ':id'
-                ],
+			'edit' => [
+				'icon' => 'fa fa-edit',
+				'title' => $lng['panel']['edit'],
+				'href' => [
+					'section' => 'domains',
+					'page' => 'domains',
+					'action' => 'edit',
+					'id' => ':id'
+				],
 				'visible' => [Domain::class, 'canEdit']
-            ],
-            'logfiles' => [
-                'icon' => 'fa fa-file',
-                'href' => [
-                    'section' => 'domains',
-                    'page' => 'logfiles',
-                    'domain_id' => ':id'
-                ],
+			],
+			'logfiles' => [
+				'icon' => 'fa fa-file',
+				'title' => $lng['panel']['viewlogs'],
+				'href' => [
+					'section' => 'domains',
+					'page' => 'logfiles',
+					'domain_id' => ':id'
+				],
 				'visible' => [Domain::class, 'canViewLogs']
-            ],
-            'domaindnseditor' => [
-                'icon' => 'fa fa-globe',
-                'href' => [
-                    'section' => 'domains',
-                    'page' => 'domaindnseditor',
-                    'domain_id' => ':id'
-                ],
+			],
+			'domaindnseditor' => [
+				'icon' => 'fa fa-globe',
+				'title' => $lng['dnseditor']['edit'],
+				'href' => [
+					'section' => 'domains',
+					'page' => 'domaindnseditor',
+					'domain_id' => ':id'
+				],
 				'visible' => [Domain::class, 'canEditDNS']
-            ],
-            'delete' => [
-                'icon' => 'fa fa-trash',
-                'class' => 'text-danger',
-                'href' => [
-                    'section' => 'domains',
-                    'page' => 'domains',
-                    'action' => 'delete',
-                    'id' => ':id'
-                ],
+			],
+			'letsencrypt' => [
+				'icon' => 'fa fa-shield',
+				'title' => $lng['panel']['letsencrypt'],
+				'visible' => ':letsencrypt' // @fixme
+			],
+			'delete' => [
+				'icon' => 'fa fa-trash',
+				'title' => $lng['panel']['delete'],
+				'class' => 'text-danger',
+				'href' => [
+					'section' => 'domains',
+					'page' => 'domains',
+					'action' => 'delete',
+					'id' => ':id'
+				],
 				'visible' => [Domain::class, 'canDelete']
-            ]
+			]
 		]
 	]
 ];

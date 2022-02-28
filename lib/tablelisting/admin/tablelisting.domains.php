@@ -16,6 +16,7 @@
  *
  */
 
+use Froxlor\UI\Callbacks\Domain;
 use Froxlor\UI\Callbacks\Text;
 use Froxlor\UI\Callbacks\Impersonate;
 use Froxlor\UI\Listing;
@@ -54,6 +55,7 @@ return [
 		'actions' => [
 			'edit' => [
 				'icon' => 'fa fa-edit',
+				'title' => $lng['panel']['edit'],
 				'href' => [
 					'section' => 'domains',
 					'page' => 'domains',
@@ -63,6 +65,7 @@ return [
 			],
 			'logfiles' => [
 				'icon' => 'fa fa-file',
+				'title' => $lng['panel']['viewlogs'],
 				'href' => [
 					'section' => 'domains',
 					'page' => 'logfiles',
@@ -71,14 +74,22 @@ return [
 			],
 			'domaindnseditor' => [
 				'icon' => 'fa fa-globe',
+				'title' => $lng['dnseditor']['edit'],
 				'href' => [
 					'section' => 'domains',
 					'page' => 'domaindnseditor',
 					'domain_id' => ':id'
 				],
+				'visible' => [Domain::class, 'adminCanEditDNS']
+			],
+			'letsencrypt' => [
+				'icon' => 'fa fa-shield',
+				'title' => $lng['panel']['letsencrypt'],
+				'visible' => ':letsencrypt' // @fixme
 			],
 			'delete' => [
 				'icon' => 'fa fa-trash',
+				'title' => $lng['panel']['delete'],
 				'class' => 'text-danger',
 				'href' => [
 					'section' => 'domains',
@@ -86,6 +97,7 @@ return [
 					'action' => 'delete',
 					'id' => ':id'
 				],
+				'visible' => [Domain::class, 'adminCanDelete']
 			]
 		]
 	]
