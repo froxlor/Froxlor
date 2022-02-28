@@ -23,7 +23,7 @@ use Froxlor\UI\Listing;
 return [
 	'ipsandports_list' => [
 		'title' => $lng['admin']['ipsandports']['ipsandports'],
-		'icon' => 'fa-solid fa-user',
+		'icon' => 'fa-solid fa-ethernet',
 		'columns' => [
 			'ip' => [
 				'label' => $lng['admin']['ipsandports']['ip'],

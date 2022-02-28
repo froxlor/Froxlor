@@ -22,7 +22,7 @@ use Froxlor\UI\Listing;
 return [
 	'domain_list' => [
 		'title' => $lng['admin']['domains'],
-		'icon' => 'fa-solid fa-user',
+		'icon' => 'fa-solid fa-globe',
 		'columns' => [
 			'd.domain_ace' => [
 				'label' => $lng['domains']['domainname'],

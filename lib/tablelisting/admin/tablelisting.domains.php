@@ -24,7 +24,7 @@ use Froxlor\UI\Listing;
 return [
 	'domain_list' => [
 		'title' => $lng['admin']['domains'],
-		'icon' => 'fa-solid fa-user',
+		'icon' => 'fa-solid fa-globe',
 		'empty_msg' => $lng['admin']['domain_nocustomeraddingavailable'],
 		'columns' => [
 			'd.domain_ace' => [

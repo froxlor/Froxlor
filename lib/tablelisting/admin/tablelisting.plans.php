@@ -22,7 +22,7 @@ use Froxlor\UI\Listing;
 return [
 	'plan_list' => [
 		'title' => $lng['admin']['plans']['plans'],
-		'icon' => 'fa-solid fa-user',
+		'icon' => 'fa-solid fa-clipboard-list',
 		'columns' => [
 			'p.name' => [
 				'label' => $lng['admin']['plans']['name'],

@@ -24,7 +24,7 @@ use Froxlor\UI\Listing;
 return [
 	'sslcertificates_list' => [
 		'title' => $lng['domains']['ssl_certificates'],
-		'icon' => 'fa-solid fa-user',
+		'icon' => 'fa-solid fa-shield',
 		'columns' => [
 			'd.domain' => [
 				'label' => $lng['domains']['domainname'],
