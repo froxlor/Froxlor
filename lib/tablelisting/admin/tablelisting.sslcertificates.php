@@ -17,7 +17,7 @@
  */
 
 use Froxlor\Settings;
-use Froxlor\UI\Callbacks\SSLCertificates;
+use Froxlor\UI\Callbacks\SSLCertificate;
 use Froxlor\UI\Callbacks\Text;
 use Froxlor\UI\Listing;
 
@@ -33,7 +33,7 @@ return [
             'c.domain' => [
                 'label' => $lng['ssl_certificates']['certificate_for'],
                 'field' => 'domain',
-                'format_callback' => [SSLCertificates::class, 'domainWithSan'],
+                'format_callback' => [SSLCertificate::class, 'domainWithSan'],
             ],
             'c.issuer' => [
                 'label' => $lng['ssl_certificates']['issuer'],
