@@ -24,6 +24,13 @@ class MasterCron extends \Froxlor\Cron\FroxlorCron
 
 	private static $debugHandler = null;
 
+	private static $noncron_params = [
+		'force',
+		'debug',
+		'no-fork',
+		'run-task'
+	];
+
 	public static function setArguments($argv = null)
 	{
 		self::$argv = $argv;
@@ -47,6 +54,7 @@ class MasterCron extends \Froxlor\Cron\FroxlorCron
 			echo "--run-task\t\trun a specific task [1 = re-generate configs, 4 = re-generate dns zones, 10 = re-set quotas, 99 = re-create cron.d-file]\n";
 			echo "--debug\t\t\toutput debug information about what is going on to STDOUT.\n";
 			echo "--no-fork\t\tdo not fork to backkground (traffic cron only).\n\n";
+			exit();
 		}
 
 		/**
@@ -162,7 +170,7 @@ class MasterCron extends \Froxlor\Cron\FroxlorCron
 		$crontype = "";
 		if (isset(self::$argv) && is_array(self::$argv) && count(self::$argv) > 1) {
 			for ($x = 1; $x < count(self::$argv); $x ++) {
-				if (substr(strtolower(self::$argv[$x]), 0, 2) == '--' && strlen(self::$argv[$x]) > 3) {
+				if (substr(self::$argv[$x], 0, 2) == '--' && strlen(self::$argv[$x]) > 3 && !in_array(substr(strtolower(self::$argv[$x]), 2),self::$noncron_params)) {
 					$crontype = substr(strtolower(self::$argv[$x]), 2);
 					$basename .= "-" . $crontype;
 					break;

@@ -401,7 +401,7 @@ class Store
                     if (!chmod($path, 0775)) {
                         throw new \Exception("Cannot write to img directory");
                     }
-				}
+                }
 
                 // Make sure mime-type matches an image
                 if (!in_array(mime_content_type($_FILES[$fieldname]['tmp_name']), ['image/jpeg','image/jpg','image/png','image/gif'])) {

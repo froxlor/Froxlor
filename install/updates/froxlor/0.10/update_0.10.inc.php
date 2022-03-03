@@ -843,7 +843,7 @@ if (\Froxlor\Froxlor::isDatabaseVersion('202106270')) {
             throw new \Exception("img directory does not exist and cannot be created");
         }
         if (!is_writable($path)) {
-            if (!chmod($path, '0775')) {
+            if (!chmod($path, 0775)) {
                 throw new \Exception("Cannot write to img directory");
             }
         }
@@ -966,6 +966,10 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.31')) {
         \Froxlor\Froxlor::updateToVersion('0.10.32');
 }
 
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.32')) {
+	showUpdateStep("Updating from 0.10.32 to 0.10.33", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.33');
+}
 
 if (true) { // replace with isFroxlorVersion on merge
 	//showUpdateStep("Add setting for switchable dkim implementation", true);
@@ -985,3 +989,4 @@ if (true) { // replace with isFroxlorVersion on merge
 	//lastStepStatus(0);
 	// Don't forget on merge: \Froxlor\Froxlor::updateToDbVersion();
 }
+
