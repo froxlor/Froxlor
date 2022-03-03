@@ -660,4 +660,57 @@ class FileDir
 		}
 		return false;
 	}
+
+	/**
+	 * 
+	 * Write a file to filesystem if necessary and change permission and ownership
+	 * If directory does not exists it will be created.
+	 * 
+	 * @param string $filename Full filename to file (processed already with makeCorrectFile)
+	 * @param string $newdata Data to write
+	 * @param int $permissions Permissions to set, use octal, 0640 as example
+	 * @param string|null $user optional user for file
+	 * @param string|null $group optional group for file
+	 * @param \Froxlor\FroxlorLogger|null $logger optional FroxlorLogger object
+	 * 
+	 * @return boolean success if file is same or has been written
+	 */
+	public static function writeFile(string $filename, string $newdata, int $permissions, string $user = null, string $group = null, $logger = null) {
+		if ($permissions > 0777) {
+			throw new \Exception("Error Processing permissions");
+		}
+
+		$olddata = false;
+		$dir = dirname($filename);
+		if (!is_dir($dir)) {
+			if ($logger !== null) {
+				$logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Creating directory for '.$filename);
+			}
+			\Froxlor\FileDir::safe_exec('mkdir -p ' . escapeshellarg($dir));
+		}
+
+		if (file_exists($filename)) {
+			$olddata = file_get_contents($filename);
+		}
+		
+		if ($olddata === $newdata) {
+			if ($logger !== null) {
+				$logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'Skipping writing '.$filename.', data is up to date');
+			}
+		} else {
+			if(file_put_contents($filename, $newdata) === false) {
+				return false;
+			}
+		}
+		
+		$permissions_str = '0'.decoct($permissions);
+		\Froxlor\FileDir::safe_exec('chmod '.$permissions_str .' '.escapeshellarg($filename));
+		
+		if (!empty($user) && !empty($group)) {
+			$escaped_usergroup = escapeshellarg($user.':'.$group);
+			\Froxlor\FileDir::safe_exec('chown '.$escaped_usergroup.' '.escapeshellarg($filename));
+		}
+
+		return true;
+	}
 }
