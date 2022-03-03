@@ -1,5 +1,5 @@
 <?php
-if (! defined('AREA')) {
+if (!defined('AREA')) {
 	header("Location: index.php");
 	exit();
 }
@@ -21,6 +21,7 @@ if (! defined('AREA')) {
  */
 
 use Froxlor\Database\Database;
+use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
 
 // This file is being included in admin_index and customer_index
@@ -86,10 +87,10 @@ if ($action == 'delete') {
 } elseif ($action == 'jqEditApiKey') {
 	$keyid = isset($_POST['id']) ? (int) $_POST['id'] : 0;
 	$allowed_from = isset($_POST['allowed_from']) ? $_POST['allowed_from'] : "";
-	$valid_until = isset($_POST['valid_until']) ? (int) $_POST['valid_until'] : - 1;
+	$valid_until = isset($_POST['valid_until']) ? (int) $_POST['valid_until'] : -1;
 
 	// validate allowed_from
-	if (! empty($allowed_from)) {
+	if (!empty($allowed_from)) {
 		$ip_list = array_map('trim', explode(",", $allowed_from));
 		$_check_list = $ip_list;
 		foreach ($_check_list as $idx => $ip) {
@@ -101,8 +102,8 @@ if ($action == 'delete') {
 		$allowed_from = implode(",", array_unique($ip_list));
 	}
 
-	if ($valid_until <= 0 || ! is_numeric($valid_until)) {
-		$valid_until = - 1;
+	if ($valid_until <= 0 || !is_numeric($valid_until)) {
+		$valid_until = -1;
 	}
 
 	$upd_stmt = Database::prepare("
@@ -128,7 +129,7 @@ if ($action == 'delete') {
 
 $log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed api::api_keys");
 
-// select all my (accessible) certificates
+// select all my (accessible) api-keys
 $keys_stmt_query = "SELECT ak.*, c.loginname, a.loginname as adminname
 	FROM `" . TABLE_API_KEYS . "` ak
 	LEFT JOIN `" . TABLE_PANEL_CUSTOMERS . "` c ON `c`.`customerid` = `ak`.`customerid`
@@ -158,13 +159,11 @@ if (AREA == 'admin' && $userinfo['customers_see_all'] == '0') {
 	);
 }
 
-$paging = new \Froxlor\UI\Paging($userinfo, TABLE_API_KEYS, $fields);
-$keys_stmt_query .= $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit();
+//$keys_stmt_query .= $paging->getSqlWhere(true) . " " . $paging->getSqlOrderBy() . " " . $paging->getSqlLimit();
 
 $keys_stmt = Database::prepare($keys_stmt_query);
 Database::pexecute($keys_stmt, $qry_params);
 $all_keys = $keys_stmt->fetchAll(PDO::FETCH_ASSOC);
-$apikeys = "";
 
 if (count($all_keys) == 0) {
 	$count = 0;
@@ -173,64 +172,19 @@ if (count($all_keys) == 0) {
 	$searchcode = "";
 	$pagingcode = "";
 	eval("\$apikeys.=\"" . \Froxlor\UI\Template::getTemplate("api_keys/keys_error", true) . "\";");
-} else {
-	$count = count($all_keys);
-	$paging->setEntries($count);
-	$sortcode = $paging->getHtmlSortCode($lng);
-	$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
-	$searchcode = $paging->getHtmlSearchCode($lng);
-	$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
-
-	foreach ($all_keys as $idx => $key) {
-		if ($paging->checkDisplay($idx)) {
-
-			// my own key
-			$isMyKey = false;
-			if ($key['adminid'] == $userinfo['adminid'] && ((AREA == 'admin' && $key['customerid'] == 0) || (AREA == 'customer' && $key['customerid'] == $userinfo['customerid']))) {
-				// this is mine
-				$isMyKey = true;
-			}
-
-			$adminCustomerLink = "";
-			if (AREA == 'admin') {
-				if ($isMyKey) {
-					$adminCustomerLink = $key['adminname'];
-				} else {
-					$adminCustomerLink = '<a href="' . $linker->getLink(array(
-						'section' => (empty($key['customerid']) ? 'admins' : 'customers'),
-						'page' => (empty($key['customerid']) ? 'admins' : 'customers'),
-						'action' => 'su',
-						'id' => (empty($key['customerid']) ? $key['adminid'] : $key['customerid'])
-					)) . '" rel="external">' . (empty($key['customerid']) ? $key['adminname'] : $key['loginname']) . '</a>';
-				}
-			} else {
-				// customer do not need links
-				$adminCustomerLink = $key['loginname'];
-			}
-
-			// escape stuff
-			$row = \Froxlor\PhpHelper::htmlentitiesArray($key);
-
-			// shorten keys
-			$row['_apikey'] = substr($row['apikey'], 0, 20) . '...';
-			$row['_secret'] = substr($row['secret'], 0, 20) . '...';
-
-			// check whether the api key is not valid anymore
-			$isValid = true;
-			if ($row['valid_until'] >= 0) {
-				if ($row['valid_until'] < time()) {
-					$isValid = false;
-				}
-				// format
-				$row['valid_until'] = date('Y-m-d', $row['valid_until']);
-			} else {
-				// infinity
-				$row['valid_until'] = "";
-			}
-			eval("\$apikeys.=\"" . \Froxlor\UI\Template::getTemplate("api_keys/keys_key", true) . "\";");
-		} else {
-			continue;
-		}
-	}
 }
-eval("echo \"" . \Froxlor\UI\Template::getTemplate("api_keys/keys_list", true) . "\";");
+
+$apikeys_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/tablelisting.apikeys.php';
+$collection = [
+	'data' => $all_keys,
+	'pagination' => []
+];
+
+UI::twigBuffer('user/table.html.twig', [
+	'listing' => \Froxlor\UI\Listing::formatFromArray($collection, $apikeys_list_data['apikeys_list']),
+	'actions_links' => (int)$userinfo['api_allowed'] == 1 ? [[
+		'href' => $linker->getLink(['section' => 'index', 'page' => $page, 'action' => 'add']),
+		'label' => $lng['apikeys']['key_add']
+	]] : null
+]);
+UI::twigOutputBuffer();

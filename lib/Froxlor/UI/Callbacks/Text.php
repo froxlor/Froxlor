@@ -47,8 +47,18 @@ class Text
 		return (int)$attributes['data'] > 0 ? date('d.m.Y H:i', (int)$attributes['data']) : UI::getLng('panel.never');
 	}
 
+	public static function timestampUntil(array $attributes): string
+	{
+		return (int)$attributes['data'] > 0 ? date('d.m.Y H:i', (int)$attributes['data']) : UI::getLng('panel.unlimited');
+	}
+
 	public static function crondesc(array $attributes): string
 	{
 		return UI::getLng('crondesc.' . $attributes['data']);
+	}
+
+	public static function shorten(array $attributes): string
+	{
+		return substr($attributes['data'], 0, 20) . '...';
 	}
 }

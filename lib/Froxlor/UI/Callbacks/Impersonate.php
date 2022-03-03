@@ -58,4 +58,38 @@ class Impersonate
 			]
 		];
 	}
+
+	public static function apiAdminCustomerLink(array $attributes)
+	{
+		// my own key
+		$isMyKey = false;
+		if (
+			$attributes['fields']['adminid'] == UI::getCurrentUser()['adminid']
+			&& ((AREA == 'admin' && $attributes['fields']['customerid'] == 0)
+				|| (AREA == 'customer' && $attributes['fields']['customerid'] == UI::getCurrentUser()['customerid'])
+			)
+		) {
+			// this is mine
+			$isMyKey = true;
+		}
+
+		$adminCustomerLink = "";
+		if (AREA == 'admin') {
+			if ($isMyKey) {
+				$adminCustomerLink = $attributes['fields']['adminname'];
+			} else {
+				if (empty($attributes['fields']['customerid'])) {
+					$adminCustomerLink = self::admin($attributes);
+				} else {
+					$attributes['data'] = $attributes['fields']['loginname'];
+					$adminCustomerLink = self::customer($attributes);
+				}
+			}
+		} else {
+			// customer do not need links
+			$adminCustomerLink = $attributes['fields']['loginname'];
+		}
+
+		return $adminCustomerLink;
+	}
 }

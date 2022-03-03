@@ -29,6 +29,18 @@ class Style
 		return $attributes['fields']['deactivated'] ? 'bg-danger' : '';
 	}
 
+	public static function invalidApiKey(array $attributes): string
+	{
+		// check whether the api key is not valid anymore
+		$isValid = true;
+		if ($attributes['fields']['valid_until'] >= 0) {
+			if ($attributes['fields']['valid_until'] < time()) {
+				$isValid = false;
+			}
+		}
+		return $isValid ? '' : 'bg-danger';
+	}
+
 	public static function diskspaceWarning(array $attributes): string
 	{
 		return self::getWarningStyle('diskspace', $attributes['fields'], (int)Settings::Get('system.report_webmax'));

@@ -38,6 +38,20 @@ class Listing
 		];
 	}
 
+	public static function formatFromArray(array $collection, array $tabellisting): array
+	{
+		return [
+			'title' => $tabellisting['title'],
+			'icon' => $tabellisting['icon'],
+			'table' => [
+				'th' => self::generateTableHeadings($tabellisting),
+				'tr' => self::generateTableRows($collection['data'], $tabellisting),
+			],
+			'pagination' => $collection['pagination'],
+			'empty_msg' => $tabellisting['empty_msg'] ?? null
+		];
+	}
+
 	private static function generateTableHeadings(array $tabellisting): array
 	{
 		$heading = [];
@@ -92,7 +106,7 @@ class Listing
 				} elseif ($field) {
 					$rows[$row]['td'][$col]['data'] = $data;
 				} else {
-					throw new Exception('The visible column "'. $visible_column .'" has neither a "callback" nor a "field" set.');
+					throw new Exception('The visible column "' . $visible_column . '" has neither a "callback" nor a "field" set.');
 				}
 
 				// Set class for table-row if defined
