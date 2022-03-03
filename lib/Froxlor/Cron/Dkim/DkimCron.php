@@ -152,36 +152,12 @@ abstract class DkimCron
 	 * @return boolean success if file is same or has been written
 	 */
 	public function writeFileIfChanged(string $filename, string $newdata, int $permissions, bool $updateowner = false) {
-		
-		if ($permissions > 0777) {
-			throw new \Exception("Error Processing permissions");
-		}
-
-		$olddata = false;
-		$dir = dirname($filename);
-		if (!is_dir($dir)) {
-			$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Creating directory for '.$filename);
-			\Froxlor\FileDir::safe_exec('mkdir -p ' . escapeshellarg($dir));
-		}
-
-		if (file_exists($filename)) {
-			$olddata = file_get_contents($filename);
-		}
-		
-		if ($olddata === $newdata) {
-			$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'Skipping writing '.$filename.', data is up to date');
-		} else {
-			if(file_put_contents($filename, $newdata) === false) {
-				return false;
-			}
-		}
-		
-		$permissions_str = '0'.decoct($permissions);
-		\Froxlor\FileDir::safe_exec('chmod '.$permissions_str .' '.escapeshellarg($filename));
 		if ($updateowner) {
-			$this->updateFileOwner($filename);
+			$user = Settings::Get('dkim.dkim_user');
+			$group = Settings::Get('dkim.dkim_group');
+			return \Froxlor\FileDir::writeFile($filename, $newdata, $permissions, $user, $group, $this->logger);
 		}
-		return true;
+		return \Froxlor\FileDir::writeFile($filename, $newdata, $permissions, null, null, $this->logger);
 	}
 
 	/**
