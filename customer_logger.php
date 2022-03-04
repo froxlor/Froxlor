@@ -19,8 +19,6 @@
 const AREA = 'customer';
 require __DIR__ . '/lib/init.php';
 
-use Froxlor\Api\Commands\SysLog;
-use Froxlor\Database\Database;
 use Froxlor\Settings;
 use Froxlor\UI\Panel\UI;
 
@@ -31,91 +29,17 @@ if (Settings::IsInList('panel.customer_hide_options', 'extras.logger')) {
 
 if ($page == 'log') {
 	if ($action == '') {
-		$fields = array(
-			'date' => $lng['logger']['date'],
-			'type' => $lng['logger']['type'],
-			'user' => $lng['logger']['user'],
-			'text' => $lng['logger']['action']
-		);
 		try {
-			// get total count
-			$json_result = SysLog::getLocal($userinfo)->listingCount();
-			$result = json_decode($json_result, true)['data'];
-			// initialize pagination and filtering
-			$paging = new \Froxlor\UI\Pagination($userinfo, $fields, $result);
-			// get list
-			$json_result = SysLog::getLocal($userinfo, $paging->getApiCommandParams())->listing();
+			$syslog_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/tablelisting.syslog.php';
+			$collection = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\SysLog::class, $userinfo))
+				->addParam(['sql_orderby' => ['date' => 'DESC']])
+				->withPagination($syslog_list_data['syslog_list']['columns']);
 		} catch (Exception $e) {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
-		$result = json_decode($json_result, true)['data'];
-		$sortcode = $paging->getHtmlSortCode($lng);
-		$arrowcode = $paging->getHtmlArrowCode($filename . '?page=' . $page . '&s=' . $s);
-		$searchcode = $paging->getHtmlSearchCode($lng);
-		$pagingcode = $paging->getHtmlPagingCode($filename . '?page=' . $page . '&s=' . $s);
-		$clog = array();
-
-		foreach ($result['list'] as $row) {
-
-			if (! isset($clog[$row['action']]) || ! is_array($clog[$row['action']])) {
-				$clog[$row['action']] = array();
-			}
-			$clog[$row['action']][$row['logid']] = $row;
-		}
-
-		if ($paging->sortfield == 'date' && $paging->sortorder == 'desc') {
-			krsort($clog);
-		} else {
-			ksort($clog);
-		}
-
-		$count = 0;
-		$log_count = 0;
-		$log = '';
-		foreach ($clog as $action => $logrows) {
-			$_action = 0;
-			foreach ($logrows as $row) {
-				// if ($paging->checkDisplay($i)) {
-				$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
-				$row['date'] = date("d.m.y H:i:s", $row['date']);
-
-				if ($_action != $action) {
-					switch ($action) {
-						case \Froxlor\FroxlorLogger::USR_ACTION:
-							$_action = $lng['admin']['customer'];
-							break;
-						case \Froxlor\FroxlorLogger::RES_ACTION:
-							$_action = $lng['logger']['reseller'];
-							break;
-						case \Froxlor\FroxlorLogger::ADM_ACTION:
-							$_action = $lng['logger']['admin'];
-							break;
-						case \Froxlor\FroxlorLogger::CRON_ACTION:
-							$_action = $lng['logger']['cron'];
-							break;
-						case \Froxlor\FroxlorLogger::LOGIN_ACTION:
-							$_action = $lng['logger']['login'];
-							break;
-						case \Froxlor\FroxlorLogger::LOG_ERROR:
-							$_action = $lng['logger']['intern'];
-							break;
-						default:
-							$_action = $lng['logger']['unknown'];
-							break;
-					}
-
-					$row['action'] = $_action;
-					eval("\$log.=\"" . \Froxlor\UI\Template::getTemplate('logger/logger_action') . "\";");
-				}
-
-				$log_count ++;
-				$row['type'] = \Froxlor\FroxlorLogger::getInstanceOf()->getLogLevelDesc($row['type']);
-				eval("\$log.=\"" . \Froxlor\UI\Template::getTemplate('logger/logger_log') . "\";");
-				$count ++;
-				$_action = $action;
-			}
-		}
-
-		eval("echo \"" . \Froxlor\UI\Template::getTemplate('logger/logger') . "\";");
+		UI::twigBuffer('user/table.html.twig', [
+			'listing' => \Froxlor\UI\Listing::format($collection, $syslog_list_data['syslog_list'])
+		]);
+		UI::twigOutputBuffer();
 	}
 }

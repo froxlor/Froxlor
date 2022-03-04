@@ -17,7 +17,7 @@
 return array(
 	'cronjobs_edit' => array(
 		'title' => $lng['admin']['cronjob_edit'],
-		'image' => 'icons/clock_edit.png',
+		'image' => 'fa-solid fa-clock-rotate-left',
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['cronjob']['cronjobsettings'],
@@ -25,31 +25,31 @@ return array(
 				'fields' => array(
 					'cronfile' => array(
 						'label' => 'Cronjob',
-						'type' => ($change_cronfile == 1 ? 'text' : 'label'),
+						'type' => (substr($result['module'], 0, strpos($result['module'], '/')) != 'froxlor' ? 'text' : 'label'),
 						'value' => $result['cronfile']
 					),
 					'isactive' => array(
 						'label' => $lng['admin']['activated'],
 						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['isactive']
-						)
+						'value' => '1',
+						'checked' => $result['isactive']
 					),
 					'interval_value' => array(
 						'label' => $lng['cronjob']['cronjobintervalv'],
 						'type' => 'text',
-						'value' => $interval_value
+						'value' => explode(' ', $result['interval'] ?? "5 MINUTE")[0] ?? ""
 					),
 					'interval_interval' => array(
 						'label' => $lng['cronjob']['cronjobinterval'],
 						'type' => 'select',
-						'select_var' => $interval_interval
+						'select_var' => [
+							'MINUTE' => $lng['cronmgmt']['minutes'],
+							'HOUR' => $lng['cronmgmt']['hours'],
+							'DAY' => $lng['cronmgmt']['days'],
+							'WEEK' => $lng['cronmgmt']['weeks'],
+							'MONTH' => $lng['cronmgmt']['months']
+						],
+						'selected' => explode(' ', $result['interval'] ?? "5 MINUTE")[1] ?? null
 					)
 				)
 			)

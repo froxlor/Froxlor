@@ -66,30 +66,14 @@ if ($page == 'cronjobs' || $page == 'overview') {
 				));
 			} else {
 
-				// interval
-				$interval_nfo = explode(' ', $result['interval']);
-				$interval_value = $interval_nfo[0];
-
-				$interval_interval = '';
-				$interval_interval .= \Froxlor\UI\HTML::makeoption($lng['cronmgmt']['minutes'], 'MINUTE', $interval_nfo[1]);
-				$interval_interval .= \Froxlor\UI\HTML::makeoption($lng['cronmgmt']['hours'], 'HOUR', $interval_nfo[1]);
-				$interval_interval .= \Froxlor\UI\HTML::makeoption($lng['cronmgmt']['days'], 'DAY', $interval_nfo[1]);
-				$interval_interval .= \Froxlor\UI\HTML::makeoption($lng['cronmgmt']['weeks'], 'WEEK', $interval_nfo[1]);
-				$interval_interval .= \Froxlor\UI\HTML::makeoption($lng['cronmgmt']['months'], 'MONTH', $interval_nfo[1]);
-				// end of interval
-
-				$change_cronfile = false;
-				if (substr($result['module'], 0, strpos($result['module'], '/')) != 'froxlor') {
-					$change_cronfile = true;
-				}
-
 				$cronjobs_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/cronjobs/formfield.cronjobs_edit.php';
-				$cronjobs_edit_form = \Froxlor\UI\HtmlForm::genHTMLForm($cronjobs_edit_data);
 
-				$title = $cronjobs_edit_data['cronjobs_edit']['title'];
-				$image = $cronjobs_edit_data['cronjobs_edit']['image'];
-
-				eval("echo \"" . \Froxlor\UI\Template::getTemplate('cronjobs/cronjob_edit') . "\";");
+				UI::twigBuffer('user/form.html.twig', [
+					'formaction' => $linker->getLink(array('section' => 'cronjobs', 'id' => $id)),
+					'formdata' => $cronjobs_edit_data['cronjobs_edit'],
+					'editid' => $id
+				]);
+				UI::twigOutputBuffer();
 			}
 		}
 	} elseif ($action == 'delete' && $id != 0) {
