@@ -36,8 +36,11 @@ if ($page == 'cronjobs' || $page == 'overview') {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 
-		UI::twigBuffer('user/table.html.twig', [
+		UI::twigBuffer('user/table-note.html.twig', [
 			'listing' => \Froxlor\UI\Listing::format($collection, $cron_list_data['cron_list']),
+			// alert-box
+			'type' => 'warning',
+			'alert_msg' => $lng['cron']['changewarning']
 		]);
 		UI::twigOutputBuffer();
 	} elseif ($action == 'new') {

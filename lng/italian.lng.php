@@ -950,7 +950,7 @@ $lng['cronjob']['cronjobsettings'] = 'impostazioni Cronjob';
 $lng['cronjob']['cronjobinterval'] = 'Durata intervallo';
 $lng['panel']['options'] = 'opzioni';
 $lng['admin']['warning'] = 'ATTENZIONE - Leggi attentamente!';
-$lng['cron']['changewarning'] = 'La modifica di questi valori può avere conseguenze negative nel comportamento di Froxlor e dei suoi processi automatizzati<br /><br />Per favore modifica questi valori solo se sei sicuro di quello che stai facendo!';
+$lng['cron']['changewarning'] = 'La modifica di questi valori può avere conseguenze negative nel comportamento di Froxlor e dei suoi processi automatizzati<br />Per favore modifica questi valori solo se sei sicuro di quello che stai facendo!';
 
 $lng['serversettings']['stdsubdomainhost']['title'] = 'Sottodominio standard cliente';
 $lng['serversettings']['stdsubdomainhost']['description'] = 'Quale hostname dovrebbe essere usato per creare sottodomini standard per i clienti. Se vuoto, viene utilizzato l\'hostname del sistema.';

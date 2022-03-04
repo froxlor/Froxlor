@@ -3,23 +3,5 @@
 {% set body_class = "min-vh-100 d-flex align-items-center" %}
 
 {% block content %}
-<div class="alert alert-{{ type }} fade show" role="alert">
-	<h4 class="alert-heading">
-		{{ heading }}
-	</h4>
-	<p>
-		{{ alert_msg|raw }}
-	</p>
-	{% if alert_info %}
-	<hr>
-	<p class="mb-0">
-	<pre>{{ alert_info|raw }}</pre>
-	</p>
-	{% endif %}
-	{% if redirect_link %}
-	<p class="mt-1">
-		<a href="{{ redirect_link|raw }}" class="btn btn-{{ btntype }}">{% if type == 'danger' %}{{ lng('panel.back') }}{% else %}{{ lng('success.clickheretocontinue') }}{% endif %}</a>
-	</p>
-	{% endif %}
-</div>
+	{% include 'Froxlor/misc/alertbox.html.twig' %}
 {% endblock %}

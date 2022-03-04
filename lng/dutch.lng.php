@@ -929,7 +929,7 @@ $lng['cronjob']['cronjobsettings'] = 'Instellingen cron-taak';
 $lng['cronjob']['cronjobinterval'] = 'Interval uitvoeren';
 $lng['panel']['options'] = 'opties';
 $lng['admin']['warning'] = 'WAARSCHUWING - Let op!';
-$lng['cron']['changewarning'] = 'Het aanpassen van de ze waarden kunnen van negatieve invloed zijn op het gedrag van Froxlor en haar geautomatiseerde taken.<br /><br />Pas deze waarden alleen aan wanneer u *zeer zeker* bent van wat u doet.';
+$lng['cron']['changewarning'] = 'Het aanpassen van de ze waarden kunnen van negatieve invloed zijn op het gedrag van Froxlor en haar geautomatiseerde taken.<br />Pas deze waarden alleen aan wanneer u *zeer zeker* bent van wat u doet.';
 
 $lng['serversettings']['stdsubdomainhost']['title'] = 'Standaarddomein voor klanten';
 $lng['serversettings']['stdsubdomainhost']['description'] = 'Welke hostnaam dient gebruikt te worden voor standaard subdomeinen voor klanten. Indien leeg zal de naam van het systeem gebruikt worden.';

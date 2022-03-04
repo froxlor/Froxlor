@@ -138,7 +138,7 @@ class UI
 	 * @return \Twig\Environment
 	 */
 	public static function twig(): ?\Twig\Environment
-    {
+	{
 		return self::$twig;
 	}
 
@@ -191,11 +191,9 @@ class UI
 				} catch (\Exception $e) {
 					// whoops, template error
 					$errtpl = 'alert_nosession.html.twig';
-					/*
-					if (\Froxlor\CurrentUser::hasSession()) {
+					if (self::activeUserSession()) {
 						$errtpl = 'alert.html.twig';
 					}
-					*/
 					$edata = array(
 						'type' => "danger",
 						'heading' => "Template error",
@@ -241,6 +239,11 @@ class UI
 		return self::$userinfo;
 	}
 
+	public static function activeUserSession(): bool
+	{
+		return !empty(self::$userinfo);
+	}
+
 	public static function setLng($lng = array())
 	{
 		self::$lng = $lng;
@@ -269,14 +272,14 @@ class UI
 		}
 	}
 
-    /**
-     * returns an array of available themes
-     *
-     * @return array
-     * @throws \Exception
-     */
+	/**
+	 * returns an array of available themes
+	 *
+	 * @return array
+	 * @throws \Exception
+	 */
 	public static function getThemes(): array
-    {
+	{
 		$themespath = \Froxlor\FileDir::makeCorrectDir(\Froxlor\Froxlor::getInstallDir() . '/templates/');
 		$themes_available = array();
 

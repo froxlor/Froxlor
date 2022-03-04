@@ -1,0 +1,27 @@
+<div class="alert alert-{{ type }} fade show pb-0" role="alert">
+	{% if heading is defined and heading is not empty %}
+		<h4 class="alert-heading">
+			{{ heading }}
+		</h4>
+	{% endif %}
+	<p>
+		{{ alert_msg|raw }}
+	</p>
+	{% if alert_info %}
+		<hr>
+		<p class="mb-0">
+			<pre>{{ alert_info|raw }}</pre>
+		</p>
+	{% endif %}
+	{% if redirect_link %}
+		<p class="mt-1">
+			<a href="{{ redirect_link|raw }}" class="btn btn-{{ btntype }}">
+				{% if type == 'danger' %}
+					{{ lng('panel.back') }}
+				{% else %}
+					{{ lng('success.clickheretocontinue') }}
+				{% endif %}
+			</a>
+		</p>
+	{% endif %}
+</div>

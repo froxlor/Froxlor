@@ -1,18 +1,57 @@
 {% macro paging(pagination) %}
 	{% if pagination.last_page > 1 %}
 		<div class="card-footer border-top">
-			{% if pagination.current_page > 2 %}
-				<a href="?s={{ s }}&page={{ page }}&action={{ action }}&pageno=1">&laquo;</a>
-			{% endif %}
-			{% if pagination.current_page > 1 %}
-				<a href="?s={{ s }}&page={{ page }}&action={{ action }}&pageno={{ pagination.current_page - 1 }}">&lsaquo;</a>
-			{% endif %}
-			{% if pagination.current_page < pagination.last_page %}
-				<a href="?s={{ s }}&page={{ page }}&action={{ action }}&pageno={{ pagination.current_page + 1 }}">&rsaquo;</a>
-			{% endif %}
-			{% if pagination.current_page < pagination.last_page %}
-				<a href="?s={{ s }}&page={{ page }}&action={{ action }}&pageno={{ pagination.last_page }}">&raquo;</a>
-			{% endif %}
+
+			<nav aria-label="Pagination">
+				<ul class="pagination justify-content-center">
+					{% if pagination.current_page == 1 %}
+						<li class="page-item disabled">
+							<a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+								<i class="fa-solid fa-backward-fast"></i>
+							</a>
+						</li>
+						<li class="page-item disabled">
+							<a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+								<i class="fa-solid fa-backward"></i>
+							</a>
+						</li>
+					{% elseif pagination.current_page > 1 %}
+						<li class="page-item">
+							<a class="page-link" href="?s={{ s }}&page={{ page }}&action={{ action }}&pageno=1" tabindex="-1">
+								<i class="fa-solid fa-backward-fast"></i>
+							</a>
+						</li>
+						<li class="page-item">
+							<a class="page-link" href="?s={{ s }}&page={{ page }}&action={{ action }}&pageno={{ pagination.current_page - 1 }}" tabindex="-1">
+								<i class="fa-solid fa-backward"></i>
+							</a>
+						</li>
+					{% endif %}
+					{% if pagination.current_page < pagination.last_page %}
+						<li class="page-item">
+							<a class="page-link" href="?s={{ s }}&page={{ page }}&action={{ action }}&pageno={{ pagination.current_page + 1 }}" tabindex="-1">
+								<i class="fa-solid fa-forward"></i>
+							</a>
+						</li>
+						<li class="page-item">
+							<a class="page-link" href="?s={{ s }}&page={{ page }}&action={{ action }}&pageno={{ pagination.last_page }}" tabindex="-1">
+								<i class="fa-solid fa-forward-fast"></i>
+							</a>
+						</li>
+					{% else %}
+						<li class="page-item disabled">
+							<a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+								<i class="fa-solid fa-forward"></i>
+							</a>
+						</li>
+						<li class="page-item disabled">
+							<a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+								<i class="fa-solid fa-forward-fast"></i>
+							</a>
+						</li>
+					{% endif %}
+				</ul>
+			</nav>
 		</div>
 	{% endif %}
 {% endmacro %}

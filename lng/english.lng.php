@@ -1025,7 +1025,7 @@ $lng['cronjob']['cronjobintervalv'] = 'Runtime interval value';
 $lng['cronjob']['cronjobinterval'] = 'Runtime interval';
 $lng['panel']['options'] = 'Options';
 $lng['admin']['warning'] = 'WARNING - Please note!';
-$lng['cron']['changewarning'] = 'Changing these values can have a negative cause to the behavior of Froxlor and its automated tasks.<br /><br />Please only change values here, if you are sure you know what you are doing.';
+$lng['cron']['changewarning'] = 'Changing these values can have a negative cause to the behavior of Froxlor and its automated tasks.<br />Please only change values here, if you are sure you know what you are doing.';
 
 $lng['serversettings']['stdsubdomainhost']['title'] = 'Customer standard subdomain';
 $lng['serversettings']['stdsubdomainhost']['description'] = 'What hostname should be used to create standard subdomains for customer. If empty, the system-hostname is used.';
