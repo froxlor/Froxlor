@@ -42,6 +42,7 @@ class HTML
 		foreach ($navigation as $box) {
 			if ((!isset($box['show_element']) || $box['show_element'] === true) && (!isset($box['required_resources']) || $box['required_resources'] == '' || (isset($userinfo[$box['required_resources']]) && ((int) $userinfo[$box['required_resources']] > 0 || $userinfo[$box['required_resources']] == '-1')))) {
 				$navigation_links = [];
+				$box_active = false;
 				foreach ($box['elements'] as $element_id => $element) {
 					if ((!isset($element['show_element']) || $element['show_element'] === true) && (!isset($element['required_resources']) || $element['required_resources'] == '' || (isset($userinfo[$element['required_resources']]) && ((int) $userinfo[$element['required_resources']] > 0 || $userinfo[$element['required_resources']] == '-1')))) {
 						$target = '';
@@ -66,8 +67,10 @@ class HTML
 
 							if (isset($_GET['page']) && substr_count($element['url'], "page=" . $_GET['page']) > 0 && substr_count($element['url'], basename($_SERVER["SCRIPT_FILENAME"])) > 0 && isset($_GET['action']) && substr_count($element['url'], "action=" . $_GET['action']) > 0) {
 								$active = true;
+								$box_active = true;
 							} elseif (isset($_GET['page']) && substr_count($element['url'], "page=" . $_GET['page']) > 0 && substr_count($element['url'], basename($_SERVER["SCRIPT_FILENAME"])) > 0 && substr_count($element['url'], "action=") == 0 && !isset($_GET['action'])) {
 								$active = true;
+								$box_active = true;
 							}
 
 							$navurl = htmlspecialchars($element['url']);
@@ -81,7 +84,7 @@ class HTML
 						$navigation_links[] = [
 							'url' => $navurl,
 							'target' => $target,
-							'is_active' => $active,
+							'active' => $active,
 							'label' => $navlabel,
 							'icon' => $icon
 						];
@@ -121,7 +124,8 @@ class HTML
 						'target' => $target,
 						'label' => $navlabel,
 						'icon' => $icon,
-						'items' => $navigation_links
+						'items' => $navigation_links,
+						'active' => $box_active
 					];
 				}
 			}

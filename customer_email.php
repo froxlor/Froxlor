@@ -138,16 +138,20 @@ if ($page == 'overview' || $page == 'emails') {
 					];
 				}
 
-				$email_add_data = include_once dirname(__FILE__) . '/lib/formfields/customer/email/formfield.emails_add.php';
+				if (count($domains) > 0) {
+					$email_add_data = include_once dirname(__FILE__) . '/lib/formfields/customer/email/formfield.emails_add.php';
 
-				if (Settings::Get('catchall.catchall_enabled') != '1') {
-					unset($email_add_data['emails_add']['sections']['section_a']['fields']['iscatchall']);
+					if (Settings::Get('catchall.catchall_enabled') != '1') {
+						unset($email_add_data['emails_add']['sections']['section_a']['fields']['iscatchall']);
+					}
+					UI::twigBuffer('user/form.html.twig', [
+						'formaction' => $linker->getLink(array('section' => 'email')),
+						'formdata' => $email_add_data['emails_add']
+					]);
+					UI::twigOutputBuffer();
+				} else {
+					\Froxlor\UI\Response::standard_error('noemaildomainaddedyet');
 				}
-				UI::twigBuffer('user/form.html.twig', [
-					'formaction' => $linker->getLink(array('section' => 'email')),
-					'formdata' => $email_add_data['emails_add']
-				]);
-				UI::twigOutputBuffer();
 			}
 		} else {
 			\Froxlor\UI\Response::standard_error('allresourcesused');
@@ -179,7 +183,7 @@ if ($page == 'overview' || $page == 'emails') {
 						'label' => $lng['panel']['delete'],
 						'classes' => 'btn btn-sm btn-danger'
 					];
-					$forwarders_count ++;
+					$forwarders_count++;
 				}
 				$result['destination'][$dest_id] = $destination;
 			}

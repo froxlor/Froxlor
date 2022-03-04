@@ -40,3 +40,4 @@ $lng['menue']['logger']['logger'] = $lng['admin']['loggersystem'];
 
 $lng['serversettings']['default_sslvhostconf']['description'] = $lng['serversettings']['default_vhostconf']['description'];
 $lng['admin']['include_ownvhostsettings'] = $lng['serversettings']['includedefault_sslvhostconf'];
+$lng['error']['noemaildomainaddedyet'] = $lng['emails']['noemaildomainaddedyet'];
