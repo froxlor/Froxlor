@@ -1,4 +1,5 @@
 <?php
+
 namespace Froxlor\UI;
 
 use Froxlor\Settings;
@@ -26,33 +27,32 @@ class Pagination
 {
 	private array $data = array();
 
-    private ?array $fields = null;
+	private ?array $fields = null;
 
-    public string $sortorder = 'ASC';
+	public string $sortorder = 'ASC';
 
-    public $sortfield = null;
+	public $sortfield = null;
 
-    private ?string $searchtext = null;
+	private ?string $searchtext = null;
 
-    private $searchfield = null;
+	private $searchfield = null;
 
-    private bool $is_search = false;
+	private bool $is_search = false;
 
-    private int $pageno = 0;
+	private int $pageno = 0;
 
-    private int $entries = 0;
+	private int $entries = 0;
 
-    private int $perPage;
+	private int $perPage;
 
-    /**
-     * Create new pagination object to search/filter, limit and sort Api-listing() calls
-     *
-     * @param array $userinfo
-     * @param array $fields
-     * @param int $total_entries
-     * @param int $perPage
-     */
-	public function __construct(array $userinfo, array $fields = array(), int $total_entries = 0, int $perPage = 20)
+	/**
+	 * Create new pagination object to search/filter, limit and sort Api-listing() calls
+	 *
+	 * @param array $fields
+	 * @param int $total_entries
+	 * @param int $perPage
+	 */
+	public function __construct(array $fields = array(), int $total_entries = 0, int $perPage = 20)
 	{
 		$this->fields = $fields;
 		$this->entries = $total_entries;
@@ -72,7 +72,7 @@ class Pagination
 		if (isset($_REQUEST['searchfield']) && isset($fields[$_REQUEST['searchfield']])) {
 			$this->searchfield = $_REQUEST['searchfield'];
 		}
-		if (! empty($this->searchtext) && ! empty($this->searchfield)) {
+		if (!empty($this->searchtext) && !empty($this->searchfield)) {
 			$this->addSearch($this->searchtext, $this->searchfield);
 		}
 
@@ -110,8 +110,8 @@ class Pagination
 	 * @return Pagination
 	 */
 	public function addOrderBy($field = null, $order = 'ASC'): Pagination
-    {
-		if (! isset($this->data['sql_orderby'])) {
+	{
+		if (!isset($this->data['sql_orderby'])) {
 			$this->data['sql_orderby'] = array();
 		}
 		$this->data['sql_orderby'][$field] = $order;
@@ -127,7 +127,7 @@ class Pagination
 	 * @return Pagination
 	 */
 	public function addLimit(int $limit = 0): Pagination
-    {
+	{
 		$this->data['sql_limit'] = $limit;
 		return $this;
 	}
@@ -139,23 +139,23 @@ class Pagination
 	 * @return Pagination
 	 */
 	public function addOffset(int $offset = 0): Pagination
-    {
+	{
 		$this->data['sql_offset'] = $offset;
 		return $this;
 	}
 
-    /**
-     * add a search operation
-     *
-     * @param string|null $searchtext
-     * @param string|null $field
-     * @param string|null $operator
-     *
-     * @return Pagination
-     */
+	/**
+	 * add a search operation
+	 *
+	 * @param string|null $searchtext
+	 * @param string|null $field
+	 * @param string|null $operator
+	 *
+	 * @return Pagination
+	 */
 	public function addSearch(string $searchtext = null, string $field = null, string $operator = null): Pagination
-    {
-		if (! isset($this->data['sql_search'])) {
+	{
+		if (!isset($this->data['sql_search'])) {
 			$this->data['sql_search'] = array();
 		}
 		$this->data['sql_search'][$field] = [
@@ -177,7 +177,7 @@ class Pagination
 	 * @return number
 	 */
 	public function getEntries(): int
-    {
+	{
 		return $this->entries;
 	}
 
@@ -186,18 +186,18 @@ class Pagination
 		return $this->data;
 	}
 
-    public function getApiResponseParams(): array
-    {
-        return [
-            'pagination' => [
-                "total" => $this->entries,
-                "per_page" => $this->perPage,
-                "current_page" => $this->pageno,
-                "last_page" => ceil($this->entries / $this->perPage),
-                "from" => $this->data['sql_offset'] ?? null,
-                "to" => min($this->data['sql_offset'] + $this->perPage, $this->entries),
-                'sortfields' => array_keys($this->fields),
-            ]
-        ];
-    }
+	public function getApiResponseParams(): array
+	{
+		return [
+			'pagination' => [
+				"total" => $this->entries,
+				"per_page" => $this->perPage,
+				"current_page" => $this->pageno,
+				"last_page" => ceil($this->entries / $this->perPage),
+				"from" => $this->data['sql_offset'] ?? null,
+				"to" => min($this->data['sql_offset'] + $this->perPage, $this->entries),
+				'sortfields' => array_keys($this->fields),
+			]
+		];
+	}
 }
