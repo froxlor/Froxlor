@@ -220,9 +220,10 @@ if ($action == '') {
 
 		$template_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/templates/formfield.template_add.php';
 
-		UI::twigBuffer('user/form.html.twig', [
+		UI::twigBuffer('user/form-replacers.html.twig', [
 			'formaction' => $linker->getLink(array('section' => 'templates')),
-			'formdata' => $template_add_data['template_add']
+			'formdata' => $template_add_data['template_add'],
+			'replacers' => $template_add_data['template_replacers']
 		]);
 		UI::twigOutputBuffer();
 	} elseif (isset($_POST['send']) && $_POST['send'] == 'send') {
@@ -388,23 +389,24 @@ if ($action == '') {
 		} else {
 
 			$templatesdefined = array();
-			$free_templates = '';
+			$free_templates = [];
 
 			while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 				$templatesdefined[] = $row['varname'];
 			}
 
 			foreach (array_diff($file_templates, $templatesdefined) as $template) {
-				$free_templates .= \Froxlor\UI\HTML::makeoption($lng['admin']['templates'][$template], $template, '', true);
+				$free_templates[$template] = $lng['admin']['templates'][$template];
 			}
 
 			$filetemplate_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/templates/formfield.filetemplate_add.php';
-			$filetemplate_add_form = \Froxlor\UI\HtmlForm::genHTMLForm($filetemplate_add_data);
 
-			$title = $filetemplate_add_data['filetemplate_add']['title'];
-			$image = $filetemplate_add_data['filetemplate_add']['image'];
-
-			eval("echo \"" . \Froxlor\UI\Template::getTemplate("templates/filetemplates_add") . "\";");
+			UI::twigBuffer('user/form-replacers.html.twig', [
+				'formaction' => $linker->getLink(array('section' => 'templates')),
+				'formdata' => $filetemplate_add_data['filetemplate_add'],
+				'replacers' => $filetemplate_add_data['filetemplate_replacers']
+			]);
+			UI::twigOutputBuffer();
 		}
 	}
 } elseif ($action == 'edit' && $subjectid != 0 && $mailbodyid != 0) {
@@ -449,7 +451,7 @@ if ($action == '') {
 		} else {
 
 			$result = \Froxlor\PhpHelper::htmlentitiesArray($result);
-			$template = $lng['admin']['templates'][str_replace('_subject', '', $result['varname'])];
+			$template_name = $lng['admin']['templates'][str_replace('_subject', '', $result['varname'])];
 			$subject = $result['value'];
 			$result_stmt = Database::prepare("
 				SELECT `language`, `varname`, `value`
@@ -460,7 +462,7 @@ if ($action == '') {
 			));
 			$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
 
-			$template_name = str_replace('_mailbody', '', $result['varname']);
+			$template = str_replace('_mailbody', '', $result['varname']);
 
 			// don't escape the already escaped language-string so save up before htmlentities()
 			$language = $result['language'];
@@ -468,12 +470,13 @@ if ($action == '') {
 			$mailbody = $result['value'];
 
 			$template_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/templates/formfield.template_edit.php';
-			$template_edit_form = \Froxlor\UI\HtmlForm::genHTMLForm($template_edit_data);
 
-			$title = $template_edit_data['template_edit']['title'];
-			$image = $template_edit_data['template_edit']['image'];
-
-			eval("echo \"" . \Froxlor\UI\Template::getTemplate("templates/templates_edit") . "\";");
+			UI::twigBuffer('user/form-replacers.html.twig', [
+				'formaction' => $linker->getLink(array('section' => 'templates')),
+				'formdata' => $template_edit_data['template_edit'],
+				'replacers' => $template_edit_data['template_replacers']
+			]);
+			UI::twigOutputBuffer();
 		}
 	}
 } elseif ($action == 'editf' && $id != 0) {

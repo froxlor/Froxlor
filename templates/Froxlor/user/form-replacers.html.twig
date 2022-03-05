@@ -1,0 +1,23 @@
+{% extends "Froxlor/user/form.html.twig" %}
+
+{% block content %}
+
+	{{ parent() }}
+
+	{% if replacers is not empty and replacers is iterable %}
+		<div class="card mb-3">
+			<div class="card-body">
+				<h5 class="card-title">{{ lng('admin.templates.template_replace_vars') }}</h5>
+				<dl class="row">
+					{% for replacer in replacers.replacers %}
+						{% if (replacer.visible is defined and replacer.visible) or replacer.visible is not defined %}
+							<dt class="col-sm-3">{{ '{' }}{{ replacer.var }}{{ '}' }}</dt>
+							<dd class="col-sm-9">{{ replacer.description }}</dd>
+						{% endif %}
+					{% endfor %}
+				</dl>
+			</div>
+		</div>
+	{% endif %}
+
+{% endblock %}

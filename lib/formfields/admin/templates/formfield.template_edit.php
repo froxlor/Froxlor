@@ -32,8 +32,8 @@ return array(
 					'template' => array(
 						'label' => $lng['admin']['templates']['action'],
 						'type' => 'hidden',
-						'value' => $template,
-						'display' => $template
+						'value' => $template_name,
+						'display' => $template_name
 					),
 					'subject' => array(
 						'label' => $lng['admin']['templates']['subject'],
@@ -46,9 +46,18 @@ return array(
 						'cols' => 60,
 						'rows' => 12,
 						'value' => $mailbody
+					),
+					'subjectid' => array(
+						'type' => 'hidden',
+						'value' => $subjectid
+					),
+					'mailbodyid' => array(
+						'type' => 'hidden',
+						'value' => $mailbodyid
 					)
 				)
 			)
 		)
-	)
+	),
+	'template_replacers' => include __DIR__ . '/template.replacers.php'
 );

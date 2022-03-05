@@ -50,5 +50,6 @@ return array(
 				)
 			)
 		)
-	)
+	),
+	'template_replacers' => include __DIR__ . '/template.replacers.php'
 );
