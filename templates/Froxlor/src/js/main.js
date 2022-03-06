@@ -1,8 +1,10 @@
 // load bootstrap
 import 'bootstrap';
+import 'jquery-typeahead/src/jquery.typeahead.css'
 
 // load jquery
-window.$ = window.jQuery = require('jquery');
+global.$ = require('jquery');
+require('jquery-typeahead');
 
 $(document).ready(function () {
 	window.$theme = 'Froxlor';
@@ -10,5 +12,6 @@ $(document).ready(function () {
 });
 
 // Load components
+require('./components/search')
 require('./components/newsfeed')
 require('./components/updatecheck')

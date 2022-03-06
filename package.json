@@ -10,6 +10,7 @@
     "production": "mix --production"
   },
   "devDependencies": {
+    "jquery-typeahead": "^2.11.1",
     "laravel-mix": "^6.0.42",
     "resolve-url-loader": "^5.0.0",
     "sass": "^1.49.7",

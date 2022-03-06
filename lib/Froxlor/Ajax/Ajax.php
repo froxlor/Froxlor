@@ -7,6 +7,7 @@ use Froxlor\Http\HttpClient;
 use Froxlor\PhpHelper;
 use Froxlor\Settings;
 use Froxlor\UI\Panel\UI;
+use Froxlor\UI\Request;
 
 /**
  * This file is part of the Froxlor project.
@@ -28,6 +29,7 @@ class Ajax
 	protected string $session;
 	protected string $action;
 	protected string $theme;
+	protected array $lng;
 
 	/**
 	 * @throws Exception
@@ -37,6 +39,57 @@ class Ajax
 		$this->session = $_GET['s'] ?? $_POST['s'] ?? null;
 		$this->action = $_GET['action'] ?? $_POST['action'] ?? null;
 		$this->theme = $_GET['theme'] ?? 'Froxlor';
+
+		$this->initLang();
+	}
+
+	/**
+	 * initialize global $lng variable to have
+	 * localized strings available for the ApiCommands
+	 */
+	private function initLang()
+	{
+		global $lng;
+
+		// query the whole table
+		$result_stmt = \Froxlor\Database\Database::query("SELECT * FROM `" . TABLE_PANEL_LANGUAGE . "`");
+
+		$langs = array();
+		// presort languages
+		while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
+			$langs[$row['language']][] = $row;
+		}
+
+		// set default language before anything else to
+		// ensure that we can display messages
+		$language = \Froxlor\Settings::Get('panel.standardlanguage');
+
+		if (isset($this->user_data['language']) && isset($langs[$this->user_data['language']])) {
+			// default: use language from session, #277
+			$language = $this->user_data['language'];
+		} elseif (isset($this->user_data['def_language'])) {
+			$language = $this->user_data['def_language'];
+		}
+
+		// include every english language file we can get
+		foreach ($langs['English'] as $value) {
+			include_once \Froxlor\FileDir::makeSecurePath(\Froxlor\Froxlor::getInstallDir() . '/' . $value['file']);
+		}
+
+		// now include the selected language if its not english
+		if ($language != 'English') {
+			if (isset($langs[$language])) {
+				foreach ($langs[$language] as $value) {
+					include_once \Froxlor\FileDir::makeSecurePath(\Froxlor\Froxlor::getInstallDir() . '/' . $value['file']);
+				}
+			}
+		}
+
+		// last but not least include language references file
+		include_once \Froxlor\FileDir::makeSecurePath(\Froxlor\Froxlor::getInstallDir() . '/lng/lng_references.php');
+
+		// set array
+		$this->lng = $lng;
 	}
 
 	/**
@@ -186,10 +239,10 @@ class Ajax
 
 	private function searchSetting()
 	{
-		$searchtext = isset($_POST['searchtext']) ? $_POST['searchtext'] : "";
+		$searchtext = Request::get('searchtext');
 
 		$result = [];
-		if (strlen($searchtext) > 2) {
+		if ($searchtext && strlen($searchtext) > 2) {
 			$settings_data = PhpHelper::loadConfigArrayDir(\Froxlor\Froxlor::getInstallDir() . '/actions/admin/settings/');
 			$results = array();
 			PhpHelper::recursive_array_search($searchtext, $settings_data, $results);
@@ -202,13 +255,14 @@ class Ajax
 						$processed_setting[$settingkey] = true;
 						$sresult = $settings_data[$pk[0]][$pk[1]][$pk[2]][$pk[3]];
 						$result[] = [
-							'href' => 'admin_settings.php?page=overview&part=' . $pk[1] . '&em=' . $pk[3],
-							'title' => (is_array($sresult['label']) ? $sresult['label']['title'] : $sresult['label'])
+							'title' => (is_array($sresult['label']) ? $sresult['label']['title'] : $sresult['label']),
+							'href' => 'admin_settings.php?page=overview&part=' . $pk[1] . '&em=' . $pk[3] . '&s=' . $this->session,
 						];
 					}
 				}
 			}
 		}
-		echo json_encode($result);
+		header("Content-type: application/json");
+		echo json_encode(['settings' => $result]);
 	}
 }
