@@ -409,6 +409,19 @@ class PhpHelper
 		return $returnval;
 	}
 
+	public static function recursive_array_search($needle, $haystack, &$keys = array(), $currentKey = '')
+	{
+		foreach ($haystack as $key => $value) {
+			$pathkey = empty($currentKey) ? $key : $currentKey . '.' . $key;
+			if (is_array($value)) {
+				self::recursive_array_search($needle, $value, $keys, $pathkey);
+			} else if (stripos($value, $needle) !== false) {
+				$keys[] = $pathkey;
+			}
+		}
+		return true;
+	}
+
 	/**
 	 * function to check a super-global passed by reference
 	 * so it gets automatically updated
