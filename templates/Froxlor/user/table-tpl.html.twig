@@ -1,0 +1,11 @@
+{% extends "Froxlor/user/table.html.twig" %}
+
+{% block content %}
+	{% set listing = maillisting %}
+	{% set actions_links = mail_actions_links %}
+	{{ parent() }}
+
+	{% set listing = filelisting %}
+	{% set actions_links = file_actions_links %}
+	{{ parent() }}
+{% endblock %}

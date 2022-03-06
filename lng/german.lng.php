@@ -301,6 +301,7 @@ $lng['admin']['ownvhostsettings'] = 'Eigene vHost-Einstellungen';
 $lng['admin']['configfiles']['serverconfiguration'] = 'Konfiguration';
 $lng['admin']['templates']['templates'] = 'E-Mail-Vorlagen';
 $lng['admin']['templates']['template_add'] = 'Vorlage hinzufügen';
+$lng['admin']['templates']['template_fileadd'] = 'Dateivorlage hinzufügen';
 $lng['admin']['templates']['template_edit'] = 'Vorlage bearbeiten';
 $lng['admin']['templates']['action'] = 'Aktion';
 $lng['admin']['templates']['email'] = 'E-Mail- & Dateivorlagen';
@@ -318,6 +319,7 @@ $lng['admin']['templates']['PASSWORD'] = 'Wird mit dem Passwort des neuen Kunden
 $lng['admin']['templates']['EMAIL'] = 'Wird mit der Adresse des neuen E-Mail-Kontos ersetzt.';
 $lng['admin']['templates']['CUSTOMER_NO'] = 'Wir mit der Kunden-Nummer ersetzt';
 $lng['admin']['bindzonewarning'] = $lng['panel']['emptyfordefault'] . '<br /><strong class="text-danger">WARNUNG:</strong> Bei der Verwendung einer Zonendatei müssen alle benötigten Records aller Subdomains ebenfalls manuell verwaltet werden.';
+$lng['error']['templatelanguagecombodefined'] = 'Die gewählte Kombination aus Sprache und Vorlage ist bereits definiert.';
 
 /**
  * Serversettings

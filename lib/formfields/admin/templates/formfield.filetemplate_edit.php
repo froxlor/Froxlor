@@ -35,9 +35,37 @@ return array(
 						'cols' => 60,
 						'rows' => 12,
 						'value' => $row['value']
+					),
+					'filesend' => array(
+						'type' => 'hidden',
+						'value' => 'filesend'
 					)
 				)
 			)
 		)
-	)
+	),
+	'filetemplate_replacers' => [
+		'replacers' => [
+			[
+				'var' => 'SERVERNAME',
+				'description' => $lng['admin']['templates']['SERVERNAME']
+			],
+			[
+				'var' => 'CUSTOMER',
+				'description' => $lng['admin']['templates']['CUSTOMER']
+			],
+			[
+				'var' => 'ADMIN',
+				'description' => $lng['admin']['templates']['ADMIN']
+			],
+			[
+				'var' => 'CUSTOMER_EMAIL',
+				'description' => $lng['admin']['templates']['CUSTOMER_EMAIL']
+			],
+			[
+				'var' => 'ADMIN_EMAIL',
+				'description' => $lng['admin']['templates']['ADMIN_EMAIL']
+			]
+		]
+	]
 );

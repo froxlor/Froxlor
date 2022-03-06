@@ -231,6 +231,7 @@ $lng['error']['destinationalreadyexistasmail'] = 'The forwarder to %s already ex
 $lng['error']['destinationalreadyexist'] = 'You have already defined a forwarder to "%s"';
 $lng['error']['destinationiswrong'] = 'The forwarder %s contains invalid character(s) or is incomplete.';
 $lng['error']['backupfoldercannotbedocroot'] = 'The folder for backups cannot be your homedir, please chose a folder within your homedir, e.g. /backups';
+$lng['error']['templatelanguagecombodefined'] = 'The selected language/template combination has already been defined.';
 
 /**
  * Questions
@@ -305,6 +306,7 @@ $lng['admin']['ownvhostsettings'] = 'Own vHost-settings';
 $lng['admin']['configfiles']['serverconfiguration'] = 'Configuration';
 $lng['admin']['templates']['templates'] = 'Email-templates';
 $lng['admin']['templates']['template_add'] = 'Add template';
+$lng['admin']['templates']['template_fileadd'] = 'Add file template';
 $lng['admin']['templates']['template_edit'] = 'Edit template';
 $lng['admin']['templates']['action'] = 'Action';
 $lng['admin']['templates']['email'] = 'Email & file templates';

@@ -41,6 +41,9 @@ $available_templates = array(
 if ((int) Settings::Get('system.report_enable') == 1) {
 	array_push($available_templates, 'trafficmaxpercent', 'diskmaxpercent');
 }
+if (Settings::Get('panel.sendalternativemail') == 1) {
+	array_push($available_templates, 'pop_success_alternative');
+}
 
 $file_templates = array(
 	'index_html'
@@ -50,15 +53,12 @@ if ($action == '') {
 	// email templates
 	$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_templates");
 
-	if (Settings::Get('panel.sendalternativemail') == 1) {
-		$available_templates[] = 'pop_success_alternative';
-	}
-
 	$templates_array = array();
 	$result_stmt = Database::prepare("
 		SELECT `id`, `language`, `varname` FROM `" . TABLE_PANEL_TEMPLATES . "`
 		WHERE `adminid` = :adminid AND `templategroup`='mails'
-		ORDER BY `language`, `varname`");
+		ORDER BY `language`, `varname`
+	");
 	Database::pexecute($result_stmt, array(
 		'adminid' => $userinfo['adminid']
 	));
@@ -69,24 +69,27 @@ if ($action == '') {
 		$templates_array[$row['language']][$parts[1]][$parts[3]] = $row['id'];
 	}
 
-	$templates = '';
+	$templates = [];
 	foreach ($templates_array as $language => $template_defs) {
 		foreach ($template_defs as $action => $email) {
-			$subjectid = $email['subject'];
-			$mailbodyid = $email['mailbody'];
-			$template = $lng['admin']['templates'][$action];
-			eval("\$templates.=\"" . \Froxlor\UI\Template::getTemplate("templates/templates_template") . "\";");
+			$templates[] = [
+				'subjectid' => $email['subject'],
+				'mailbodyid' => $email['mailbody'],
+				'template' => $lng['admin']['templates'][$action],
+				'language' => $language
+			];
 		}
 	}
 
-	$add = false;
+	$mail_actions_links = false;
 	foreach ($languages as $language_file => $language_name) {
 
 		$templates_done = array();
 		$result_stmt = Database::prepare("
 			SELECT `varname` FROM `" . TABLE_PANEL_TEMPLATES . "`
 			WHERE `adminid` = :adminid AND `language`= :lang
-			AND `templategroup` = 'mails' AND `varname` LIKE '%_subject'");
+			AND `templategroup` = 'mails' AND `varname` LIKE '%_subject'
+		");
 		Database::pexecute($result_stmt, array(
 			'adminid' => $userinfo['adminid'],
 			'lang' => $language_name
@@ -97,13 +100,20 @@ if ($action == '') {
 		}
 
 		if (count(array_diff($available_templates, $templates_done)) > 0) {
-			$add = true;
+			$mail_actions_links = [[
+				'href' => $linker->getLink(['section' => 'templates', 'page' => $page, 'action' => 'add']),
+				'label' => $lng['admin']['templates']['template_add']
+			]];
 		}
 	}
 
+	$mailtpl_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.mailtemplates.php';
+	$collection_mail = [
+		'data' => $templates,
+		'pagination' => []
+	];
+
 	// filetemplates
-	$filetemplates = '';
-	$filetemplateadd = false;
 	$result_stmt = Database::prepare("
 		SELECT `id`, `varname` FROM `" . TABLE_PANEL_TEMPLATES . "`
 		WHERE `adminid` = :adminid AND `templategroup`='files'");
@@ -111,14 +121,35 @@ if ($action == '') {
 		'adminid' => $userinfo['adminid']
 	));
 
-	if (Database::num_rows() != count($file_templates)) {
-		$filetemplateadd = true;
+	$filetemplates = [];
+	while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+		$filetemplates[] = [
+			'id' => $row['id'],
+			'template' => $lng['admin']['templates'][$row['varname']]
+		];
 	}
 
-	while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-		eval("\$filetemplates.=\"" . \Froxlor\UI\Template::getTemplate("templates/templates_filetemplate") . "\";");
+	$file_actions_links = false;
+	if (Database::num_rows() != count($file_templates)) {
+		$file_actions_links = [[
+			'href' => $linker->getLink(['section' => 'templates', 'page' => $page, 'action' => 'add', 'files' => 'files']),
+			'label' => $lng['admin']['templates']['template_fileadd']
+		]];
 	}
-	eval("echo \"" . \Froxlor\UI\Template::getTemplate("templates/templates") . "\";");
+
+	$filetpl_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.filetemplates.php';
+	$collection_file = [
+		'data' => $filetemplates,
+		'pagination' => []
+	];
+
+	UI::twigBuffer('user/table-tpl.html.twig', [
+		'maillisting' => \Froxlor\UI\Listing::formatFromArray($collection_mail, $mailtpl_list_data['mailtpl_list']),
+		'filelisting' => \Froxlor\UI\Listing::formatFromArray($collection_file, $filetpl_list_data['filetpl_list']),
+		'mail_actions_links' => $mail_actions_links,
+		'file_actions_links' => $file_actions_links
+	]);
+	UI::twigOutputBuffer();
 } elseif ($action == 'delete' && $subjectid != 0 && $mailbodyid != 0) {
 	// email templates
 	$result_stmt = Database::prepare("
@@ -194,14 +225,24 @@ if ($action == '') {
 	}
 } elseif ($action == 'add') {
 
-	if (Settings::Get('panel.sendalternativemail') == 1) {
-		$available_templates[] = 'pop_success_alternative';
-	}
-
 	if (isset($_POST['prepare']) && $_POST['prepare'] == 'prepare') {
 		// email templates
 		$language = htmlentities(\Froxlor\Validate\Validate::validate($_POST['language'], 'language', '/^[^\r\n\0"\']+$/', 'nolanguageselect'));
 		$template = \Froxlor\Validate\Validate::validate($_POST['template'], 'template');
+
+		$result_stmt = Database::prepare("
+			SELECT COUNT(*) as def FROM `" . TABLE_PANEL_TEMPLATES . "`
+			WHERE `adminid` = :adminid AND `language` = :lang
+			AND `templategroup` = 'mails' AND `varname` LIKE :template
+		");
+		$result = Database::pexecute_first($result_stmt, array(
+			'adminid' => $userinfo['adminid'],
+			'lang' => $language,
+			'template' => $template . '%'
+		));
+		if ($result && $result['def'] > 0) {
+			\Froxlor\UI\Response::standard_error('templatelanguagecombodefined');
+		}
 
 		$lng_bak = $lng;
 		foreach ($langs['English'] as $key => $value) {
@@ -226,7 +267,7 @@ if ($action == '') {
 			'replacers' => $template_add_data['template_replacers']
 		]);
 		UI::twigOutputBuffer();
-	} elseif (isset($_POST['send']) && $_POST['send'] == 'send') {
+	} elseif (isset($_POST['send']) && $_POST['send'] == 'send' && !isset($_POST['filesend'])) {
 		// email templates
 		$language = htmlentities(\Froxlor\Validate\Validate::validate($_POST['language'], 'language', '/^[^\r\n\0"\']+$/', 'nolanguageselect'));
 		$template = \Froxlor\Validate\Validate::validate($_POST['template'], 'template');
@@ -369,7 +410,8 @@ if ($action == '') {
 							]
 						]
 					]
-				]
+				],
+				'editid' => $id
 			]);
 			UI::twigOutputBuffer();
 		} else {
@@ -515,12 +557,14 @@ if ($action == '') {
 			$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
 
 			$filetemplate_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/templates/formfield.filetemplate_edit.php';
-			$filetemplate_edit_form = \Froxlor\UI\HtmlForm::genHTMLForm($filetemplate_edit_data);
 
-			$title = $filetemplate_edit_data['filetemplate_edit']['title'];
-			$image = $filetemplate_edit_data['filetemplate_edit']['image'];
-
-			eval("echo \"" . \Froxlor\UI\Template::getTemplate("templates/filetemplates_edit") . "\";");
+			UI::twigBuffer('user/form-replacers.html.twig', [
+				'formaction' => $linker->getLink(array('section' => 'templates')),
+				'formdata' => $filetemplate_edit_data['filetemplate_edit'],
+				'replacers' => $filetemplate_edit_data['filetemplate_replacers'],
+				'editid' => $id
+			]);
+			UI::twigOutputBuffer();
 		}
 	} else {
 		\Froxlor\UI\Response::standard_error('templatenotfound');
