@@ -8,7 +8,8 @@
 		<div class="card-body">
 			{% for id,setting in fields %}
 				{% if id != '_group' %}
-					{{ formfields.fieldrow(id, setting, false, (get_setting('system.hide_incompatible_settings') == '0')) }}
+					{% set isEm = em is defined and em == id %}
+					{{ formfields.fieldrow(id, setting, false, (get_setting('system.hide_incompatible_settings') == '0'), isEm) }}
 				{% endif %}
 			{% endfor %}
 		</div>

@@ -16,10 +16,12 @@
  * @package    Panel
  *
  */
+
 use Froxlor\Database\Database;
 use Froxlor\Settings;
 use Froxlor\Api\Commands\Froxlor;
 use Froxlor\UI\Panel\UI;
+use Froxlor\UI\Request;
 
 const AREA = 'admin';
 require __DIR__ . '/lib/init.php';
@@ -91,7 +93,8 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 		if ($_part == '' || $_part == 'all') {
 			UI::twigBuffer('settings/index.html.twig', ['fields' => $fields]);
 		} else {
-			UI::twigBuffer('settings/detailpart.html.twig', ['fields' => $fields]);
+			$em = Request::get('em', '');
+			UI::twigBuffer('settings/detailpart.html.twig', ['fields' => $fields, 'em' => $em]);
 		}
 
 		UI::twigOutputBuffer();
@@ -274,7 +277,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 	eval("echo \"" . \Froxlor\UI\Template::getTemplate("settings/integritycheck") . "\";");
 } elseif ($page == 'importexport' && $userinfo['change_serversettings'] == '1') {
 	// check for json-stuff
-	if (! extension_loaded('json')) {
+	if (!extension_loaded('json')) {
 		\Froxlor\UI\Response::standard_error('jsonextensionnotfound');
 	}
 
@@ -359,7 +362,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 				$_mailerror = true;
 			}
 
-			if (! $_mailerror) {
+			if (!$_mailerror) {
 				// success
 				$mail->ClearAddresses();
 				\Froxlor\UI\Response::standard_success('testmailsent', '', array(

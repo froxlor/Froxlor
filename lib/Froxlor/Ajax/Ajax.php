@@ -254,10 +254,12 @@ class Ajax
 					if (!array_key_exists($settingkey, $processed_setting)) {
 						$processed_setting[$settingkey] = true;
 						$sresult = $settings_data[$pk[0]][$pk[1]][$pk[2]][$pk[3]];
-						$result[] = [
-							'title' => (is_array($sresult['label']) ? $sresult['label']['title'] : $sresult['label']),
-							'href' => 'admin_settings.php?page=overview&part=' . $pk[1] . '&em=' . $pk[3] . '&s=' . $this->session,
-						];
+						if ($sresult['type'] != 'hidden') {
+							$result[] = [
+								'title' => (is_array($sresult['label']) ? $sresult['label']['title'] : $sresult['label']),
+								'href' => 'admin_settings.php?page=overview&part=' . $pk[1] . '&em=' . $pk[3] . '&s=' . $this->session,
+							];
+						}
 					}
 				}
 			}

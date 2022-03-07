@@ -5,8 +5,8 @@ $(document).ready(function () {
 		input: '.js-typeahead-search_v1',
 		order: "desc",
 		dynamic: true,
-		display: ['data.title'],
-		href: "{{url}}",
+		display: ['title'],
+		href: "{{href}}",
 		emptyTemplate: "No results for {{query}}",
 		debug: true,
 		source: {
@@ -14,7 +14,7 @@ $(document).ready(function () {
 				ajax: {
 					method: "post",
 					url: "lib/ajax.php?action=searchsetting&theme=" + window.$theme + "&s=" + window.$session,
-					path: "title",
+					path: "settings",
 					data: {
 						searchtext: '{{query}}'
 					},
