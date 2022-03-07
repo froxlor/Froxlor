@@ -251,7 +251,7 @@ class Lighttpd extends HttpConfigBase
 							// check for existence, #1485
 							if (! file_exists($domain['ssl_ca_file'])) {
 								$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_ERR, $ip . ':' . $port . ' :: certificate CA file "' . $domain['ssl_ca_file'] . '" does not exist! Cannot create ssl-directives');
-								echo $ip . ':' . port . ' :: certificate CA file "' . $domain['ssl_ca_file'] . '" does not exist! SSL-directives might not be working' . "\n";
+								echo $ip . ':' . $port . ' :: certificate CA file "' . $domain['ssl_ca_file'] . '" does not exist! SSL-directives might not be working' . "\n";
 							} else {
 								$this->lighttpd_data[$vhost_filename] .= 'ssl.ca-file = "' . \Froxlor\FileDir::makeCorrectFile($domain['ssl_ca_file']) . '"' . "\n";
 							}
