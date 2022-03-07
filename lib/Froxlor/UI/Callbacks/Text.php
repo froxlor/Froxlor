@@ -3,7 +3,6 @@
 namespace Froxlor\UI\Callbacks;
 
 use Froxlor\PhpHelper;
-use Froxlor\Settings;
 use Froxlor\UI\Panel\UI;
 use Froxlor\User;
 

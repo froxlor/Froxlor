@@ -25,7 +25,7 @@ class Collection
 	private array $has = [];
 	private array $params;
 	private array $userinfo;
-	private ?Pagination $pagination;
+	private ?Pagination $pagination = null;
 
 	public function __construct(string $class, array $userInfo, array $params = [])
 	{

@@ -812,8 +812,26 @@ class FroxlorInstall
 
 	private function _grantDbPrivilegesTo(&$db_root, $database, $username, $password, $access_host)
 	{
+		// mariadb
+		if (version_compare($db_root->getAttribute(\PDO::ATTR_SERVER_VERSION), '10.0.0', '>=')) {
+			// create user
+			$stmt = $db_root->prepare("
+				CREATE USER '" . $username . "'@'" . $access_host . "' IDENTIFIED BY :password
+			");
+			$stmt->execute(array(
+				"password" => $password
+			));
+			// grant privileges
+			$stmt = $db_root->prepare("
+				GRANT ALL ON `" . $database . "`.* TO :username@:host
+			");
+			$stmt->execute(array(
+				"username" => $username,
+				"host" => $access_host
+			));
+		}
 		// mysql8 compatibility
-		if (version_compare($db_root->getAttribute(\PDO::ATTR_SERVER_VERSION), '8.0.11', '>=')) {
+		elseif (version_compare($db_root->getAttribute(\PDO::ATTR_SERVER_VERSION), '8.0.11', '>=')) {
 			// create user
 			$stmt = $db_root->prepare("
 				CREATE USER '" . $username . "'@'" . $access_host . "' IDENTIFIED WITH mysql_native_password BY :password
