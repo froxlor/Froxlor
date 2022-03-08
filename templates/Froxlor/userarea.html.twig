@@ -30,19 +30,11 @@
 					<span class="navbar-toggler-icon"></span>
 				</button>
 			</div>
-			<form id="form-search_v1" name="form-search_v1">
-				<div class="typeahead__container">
-					<div class="typeahead__field">
-						<div class="typeahead__query">
-							<input class="js-typeahead-search_v1" name="search_v1[query]" placeholder="Search" autocomplete="off">
-						</div>
-						<div class="typeahead__button">
-							<button type="submit">
-								<i class="typeahead__search-icon"></i>
-							</button>
-						</div>
-					</div>
+			<form id="search" class="position-relative" method="post">
+				<div class="input-group">
+					<input title="search" type="search" class="form-control-plaintext" placeholder="Search for ..." style="outline: none">
 				</div>
+				<ul id="search-dropdown" class="bg-white border list-group list-group-flush position-absolute" style="display:none; z-index: 50; max-height: 300px; overflow-y: scroll"></ul>
 			</form>
 			<div class="collapse navbar-collapse justify-content-end px-3" id="navbar">
 				<ul class="navbar-nav align-items-center">

@@ -3238,32 +3238,54 @@ $(document).ready(function () {
 /***/ (() => {
 
 $(document).ready(function () {
-  console.log('included search');
-  $.typeahead({
-    input: '.js-typeahead-search_v1',
-    order: "desc",
-    dynamic: true,
-    display: ['data.title'],
-    href: "{{url}}",
-    emptyTemplate: "No results for {{query}}",
-    debug: true,
-    source: {
-      settings: {
-        ajax: {
-          method: "post",
-          url: "lib/ajax.php?action=searchsetting&theme=" + window.$theme + "&s=" + window.$session,
-          path: "title",
-          data: {
-            searchtext: '{{query}}'
-          }
-        }
+  var search = $('#search');
+  search.submit(function (e) {
+    e.preventDefault();
+  });
+  search.find('input').on('keyup', function () {
+    var query = $(this).val();
+    var dropdown = $('#search-dropdown'); // Hide search if query is empty
+
+    if (!query.length) {
+      dropdown.hide().html('');
+      return;
+    } // Show notification for short search query
+
+
+    if (query.length && query.length < 3) {
+      dropdown.show().html('<li class="list-group-item text-muted">Please enter more than 2 characters</li>');
+      return;
+    } // Search
+
+
+    $.ajax({
+      url: "lib/ajax.php?action=searchglobal&theme=" + window.$theme + "&s=" + window.$session,
+      type: "POST",
+      data: {
+        searchtext: query
+      },
+      dataType: "json",
+      success: function success(data) {
+        // Show notification if we got no results
+        if (Object.keys(data).length === 0) {
+          dropdown.show().html('<li class="list-group-item text-muted">Nothing found!</li>');
+          return;
+        } // Clear dropdown and show results
+
+
+        dropdown.show().html('');
+        Object.keys(data).forEach(function (key) {
+          dropdown.append('<li class="list-group-item text-muted text-capitalize">' + key + '</li>');
+          data[key].forEach(function (item) {
+            dropdown.append('<li class="list-group-item"><a href="' + item.href + '" class="text-decoration-none">' + item.title + '</a></li>');
+          });
+        });
+      },
+      error: function error(a, b) {
+        console.log(a, b);
+        dropdown.show().html('<li class="list-group-item text-muted">Whoops we got some errors!</li>');
       }
-    },
-    callback: {
-      onInit: function onInit(node) {
-        console.log('Typeahead Initiated');
-      }
-    }
+    });
   });
 });
 
