@@ -305,10 +305,12 @@ class Ajax
 									$processed['settings'][$settingkey] = true;
 									$sresult = $settings_data[$pk[0]][$pk[1]][$pk[2]][$pk[3]];
 									if ($sresult['type'] != 'hidden') {
-										$result[] = [
+										if (!isset($result['settings'])) {
+											$result['settings'] = [];
+										}
+										$result['settings'][] = [
 											'title' => (is_array($sresult['label']) ? $sresult['label']['title'] : $sresult['label']),
-											'href' => 'admin_settings.php?page=overview&part=' . $pk[1] . '&em=' . $pk[3] . '&s=' . $this->session,
-											'category' => 'settings'
+											'href' => 'admin_settings.php?page=overview&part=' . $pk[1] . '&em=' . $pk[3] . '&s=' . $this->session
 										];
 									}
 								}
@@ -339,15 +341,74 @@ class Ajax
 						foreach ($collection->getList() as $cresult) {
 							if (is_array($processed['customer']) && !array_key_exists($cresult['customerid'], $processed['customer'])) {
 								$processed['customer'][$cresult['customerid']] = true;
-								$result[] = [
+								if (!isset($result['customer'])) {
+									$result['customer'] = [];
+								}
+								$result['customer'][] = [
 									'title' => User::getCorrectFullUserDetails($cresult),
-									'href' => 'admin_customers.php?page=customers&action=edit&id=' . $cresult['customerid'] . '&s=' . $this->session,
-									'category' => 'customer'
+									'href' => 'admin_customers.php?page=customers&action=edit&id=' . $cresult['customerid'] . '&s=' . $this->session
+								];
+							}
+						}
+					}
+
+					// domains
+					$searchfields = [
+						'd.domain',
+						'd.domain_ace',
+						'd.documentroot'
+					];
+					$collection = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Domains::class, $this->userinfo))
+						->addParam(['sql_search' => [
+							'_plainsql' =>  $this->searchStringSql($searchfields, $searchtext)
+						]]);
+					if ($collection->count() > 0) {
+						if (!isset($processed['domains'])) {
+							$processed['domains'] = [];
+						}
+						foreach ($collection->getList() as $cresult) {
+							if (is_array($processed['domains']) && !array_key_exists($cresult['id'], $processed['domains'])) {
+								$processed['domains'][$cresult['id']] = true;
+								if (!isset($result['domains'])) {
+									$result['domains'] = [];
+								}
+								$result['domains'][] = [
+									'title' => $cresult['domain_ace'],
+									'href' => 'admin_domains.php?page=domains&action=edit&id=' . $cresult['id'] . '&s=' . $this->session
 								];
 							}
 						}
 					}
 				} // is-admin
+				else {
+					// subdomains
+					$searchfields = [
+						'd.domain',
+						'd.domain_ace',
+						'd.documentroot'
+					];
+					$collection = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Domains::class, $this->userinfo))
+						->addParam(['sql_search' => [
+							'_plainsql' =>  $this->searchStringSql($searchfields, $searchtext)
+						]]);
+					if ($collection->count() > 0) {
+						if (!isset($processed['domains'])) {
+							$processed['domains'] = [];
+						}
+						foreach ($collection->getList() as $cresult) {
+							if (is_array($processed['domains']) && !array_key_exists($cresult['domains'], $processed['domains'])) {
+								$processed['domains'][$cresult['id']] = true;
+								if (!isset($result['domains'])) {
+									$result['domains'] = [];
+								}
+								$result['domains'][] = [
+									'title' => $cresult['domain_ace'],
+									'href' => 'customer_domains.php?page=domains&action=edit&id=' . $cresult['id'] . '&s=' . $this->session
+								];
+							}
+						}
+					}
+				} // is-customer
 			} // foreach splitted search-term
 		}
 		header("Content-type: application/json");
