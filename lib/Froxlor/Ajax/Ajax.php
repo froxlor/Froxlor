@@ -6,6 +6,7 @@ use Exception;
 use Froxlor\Http\HttpClient;
 use Froxlor\PhpHelper;
 use Froxlor\Settings;
+use Froxlor\User;
 use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
 
@@ -29,6 +30,7 @@ class Ajax
 	protected string $session;
 	protected string $action;
 	protected string $theme;
+	protected array $userinfo;
 	protected array $lng;
 
 	/**
@@ -39,6 +41,17 @@ class Ajax
 		$this->session = $_GET['s'] ?? $_POST['s'] ?? null;
 		$this->action = $_GET['action'] ?? $_POST['action'] ?? null;
 		$this->theme = $_GET['theme'] ?? 'Froxlor';
+
+		UI::sendHeaders();
+		UI::sendSslHeaders();
+
+		ini_set("session.name", "s");
+		ini_set("url_rewriter.tags", "");
+		ini_set("session.use_cookies", false);
+		ini_set("session.cookie_httponly", true);
+		ini_set("session.cookie_secure", UI::$SSL_REQ);
+		session_id($this->session);
+		session_start();
 
 		$this->initLang();
 	}
@@ -97,15 +110,15 @@ class Ajax
 	 */
 	public function handle()
 	{
-		$session = $this->getValidatedSession();
+		$this->userinfo = $this->getValidatedSession();
 
 		switch ($this->action) {
 			case 'newsfeed':
 				return $this->getNewsfeed();
 			case 'updatecheck':
 				return $this->getUpdateCheck();
-			case 'searchsetting':
-				return $this->searchSetting();
+			case 'searchglobal':
+				return $this->searchGlobal();
 			default:
 				return $this->errorResponse('Action not found!');
 		}
@@ -135,9 +148,9 @@ class Ajax
 
 		$timediff = time() - \Froxlor\Settings::Get('session.sessiontimeout');
 		$sel_stmt = \Froxlor\Database\Database::prepare("
-            SELECT * FROM `" . TABLE_PANEL_SESSIONS . "`
-            WHERE `hash` = :hash AND `ipaddress` = :ipaddr AND `useragent` = :ua AND `lastactivity` > :timediff
-        ");
+			SELECT * FROM `" . TABLE_PANEL_SESSIONS . "`
+			WHERE `hash` = :hash AND `ipaddress` = :ipaddr AND `useragent` = :ua AND `lastactivity` > :timediff
+		");
 
 		$session = \Froxlor\Database\Database::pexecute_first($sel_stmt, [
 			'hash' => $this->session,
@@ -150,7 +163,27 @@ class Ajax
 			throw new Exception('Session is not defined!');
 		}
 
-		return $session;
+		if ($session['adminsession'] == 1) {
+			// test for admin
+			$sel_stmt = \Froxlor\Database\Database::prepare("
+				SELECT * FROM `" . TABLE_PANEL_ADMINS . "`
+				WHERE `adminid` = :userid
+			");
+		} else {
+			// test for customer
+			$sel_stmt = \Froxlor\Database\Database::prepare("
+				SELECT * FROM `" . TABLE_PANEL_CUSTOMERS . "`
+				WHERE `customerid` = :userid
+			");
+		}
+		$user = \Froxlor\Database\Database::pexecute_first($sel_stmt, [
+			'userid' => $session['userid']
+		]);
+		if (!$user) {
+			throw new Exception('Session is not defined!');
+		}
+		$user['adminsession'] = $session['adminsession'];
+		return $user;
 	}
 
 	/**
@@ -237,34 +270,96 @@ class Ajax
 		}
 	}
 
-	private function searchSetting()
+	/**
+	 * @todo $userinfo
+	 */
+	private function searchGlobal()
 	{
 		$searchtext = Request::get('searchtext');
 
 		$result = [];
-		if ($searchtext && strlen($searchtext) > 2) {
-			$settings_data = PhpHelper::loadConfigArrayDir(\Froxlor\Froxlor::getInstallDir() . '/actions/admin/settings/');
-			$results = array();
-			PhpHelper::recursive_array_search($searchtext, $settings_data, $results);
-			$processed_setting = array();
-			foreach ($results as $pathkey) {
-				$pk = explode(".", $pathkey);
-				if (count($pk) > 4) {
-					$settingkey = $pk[0] . '.' . $pk[1] . '.' . $pk[2] . '.' . $pk[3];
-					if (!array_key_exists($settingkey, $processed_setting)) {
-						$processed_setting[$settingkey] = true;
-						$sresult = $settings_data[$pk[0]][$pk[1]][$pk[2]][$pk[3]];
-						if ($sresult['type'] != 'hidden') {
-							$result[] = [
-								'title' => (is_array($sresult['label']) ? $sresult['label']['title'] : $sresult['label']),
-								'href' => 'admin_settings.php?page=overview&part=' . $pk[1] . '&em=' . $pk[3] . '&s=' . $this->session,
-							];
+		if ($searchtext && strlen(trim($searchtext)) > 2) {
+
+			$processed = [];
+
+			$stparts = explode(" ", $searchtext);
+
+			foreach ($stparts as $searchtext) {
+				$searchtext = trim($searchtext);
+
+				// settings (if allowed)
+				if (isset($this->userinfo['adminsession']) && $this->userinfo['adminsession'] == 1) {
+
+					if ($this->userinfo['change_serversettings'] == 1) {
+						$settings_data = PhpHelper::loadConfigArrayDir(\Froxlor\Froxlor::getInstallDir() . '/actions/admin/settings/');
+						$results = array();
+						if (!isset($processed['settings'])) {
+							$processed['settings'] = [];
+						}
+						PhpHelper::recursive_array_search($searchtext, $settings_data, $results);
+						foreach ($results as $pathkey) {
+							$pk = explode(".", $pathkey);
+							if (count($pk) > 4) {
+								$settingkey = $pk[0] . '.' . $pk[1] . '.' . $pk[2] . '.' . $pk[3];
+								if (is_array($processed['settings']) && !array_key_exists($settingkey, $processed['settings'])) {
+									$processed['settings'][$settingkey] = true;
+									$sresult = $settings_data[$pk[0]][$pk[1]][$pk[2]][$pk[3]];
+									if ($sresult['type'] != 'hidden') {
+										$result[] = [
+											'title' => (is_array($sresult['label']) ? $sresult['label']['title'] : $sresult['label']),
+											'href' => 'admin_settings.php?page=overview&part=' . $pk[1] . '&em=' . $pk[3] . '&s=' . $this->session,
+											'category' => 'settings'
+										];
+									}
+								}
+							}
 						}
 					}
-				}
-			}
+
+					// customers
+					$searchfields = [
+						'c.loginname',
+						'c.name',
+						'c.firstname',
+						'c.company',
+						'c.street',
+						'c.zipcode',
+						'c.city',
+						'c.email',
+						'c.customernumber'
+					];
+					$collection = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Customers::class, $this->userinfo))
+						->addParam(['sql_search' => [
+							'_plainsql' =>  $this->searchStringSql($searchfields, $searchtext)
+						]]);
+					if ($collection->count() > 0) {
+						if (!isset($processed['customer'])) {
+							$processed['customer'] = [];
+						}
+						foreach ($collection->getList() as $cresult) {
+							if (is_array($processed['customer']) && !array_key_exists($cresult['customerid'], $processed['customer'])) {
+								$processed['customer'][$cresult['customerid']] = true;
+								$result[] = [
+									'title' => User::getCorrectFullUserDetails($cresult),
+									'href' => 'admin_customers.php?page=customers&action=edit&id=' . $cresult['customerid'] . '&s=' . $this->session,
+									'category' => 'customer'
+								];
+							}
+						}
+					}
+				} // is-admin
+			} // foreach splitted search-term
 		}
 		header("Content-type: application/json");
-		echo json_encode(['settings' => $result]);
+		echo json_encode($result);
+	}
+
+	private function searchStringSql(array $searchfields, $searchtext)
+	{
+		$result = "(";
+		foreach ($searchfields as $sf) {
+			$result .= $sf . " LIKE " . \Froxlor\Database\Database::quote('%' . $searchtext . '%') . " OR ";
+		}
+		return substr($result, 0, -3) . ")";
 	}
 }

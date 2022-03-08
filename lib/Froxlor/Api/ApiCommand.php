@@ -1,4 +1,5 @@
 <?php
+
 namespace Froxlor\Api;
 
 /**
@@ -110,9 +111,9 @@ abstract class ApiCommand extends ApiParameter
 		$this->dbversion = \Froxlor\Froxlor::DBVERSION;
 		$this->branding = \Froxlor\Froxlor::BRANDING;
 
-		if (! empty($header)) {
+		if (!empty($header)) {
 			$this->readUserData($header);
-		} elseif (! empty($userinfo)) {
+		} elseif (!empty($userinfo)) {
 			$this->user_data = $userinfo;
 			$this->is_admin = (isset($userinfo['adminsession']) && $userinfo['adminsession'] == 1 && $userinfo['adminid'] > 0) ? true : false;
 		} else {
@@ -272,7 +273,7 @@ abstract class ApiCommand extends ApiParameter
 	{
 		$search = $this->getParam('sql_search', true, array());
 		$condition = '';
-		if (! empty($search)) {
+		if (!empty($search)) {
 			if ($append == true) {
 				$condition = ' AND ';
 			} else {
@@ -285,43 +286,47 @@ abstract class ApiCommand extends ApiParameter
 			);
 			$first = true;
 			foreach ($search as $field => $valoper) {
-				$cleanfield = str_replace(".", "", $field);
-				$sortfield = explode('.', $field);
-				foreach ($sortfield as $id => $sfield) {
-					if (substr($sfield, - 1, 1) != '`') {
-						$sfield .= '`';
-					}
-					if ($sfield[0] != '`') {
-						$sfield = '`' . $sfield;
-					}
-					$sortfield[$id] = $sfield;
-				}
-				$field = implode('.', $sortfield);
-				if (! $first) {
-					$condition .= ' AND ';
-				}
-				if (! is_array($valoper) || ! isset($valoper['op']) || empty($valoper['op'])) {
-					$condition .= $field . ' LIKE :' . $cleanfield;
-					if (! is_array($valoper)) {
-						$query_fields[':' . $cleanfield] = '%' . $valoper . '%';
-					} else {
-						$query_fields[':' . $cleanfield] = '%' . $valoper['value'] . '%';
-					}
-				} elseif (in_array($valoper['op'], $ops)) {
-					$condition .= $field . ' ' . $valoper['op'] . ':' . $cleanfield;
-					$query_fields[':' . $cleanfield] = $valoper['value'] ?? '';
-				} elseif (strtolower($valoper['op']) == 'in' && is_array($valoper['value']) && count($valoper['value']) > 0) {
-					$condition .= $field . ' ' . $valoper['op'] . ' (';
-					foreach ($valoper['value'] as $incnt => $invalue) {
-						$condition .= ":" . $cleanfield . $incnt . ", ";
-						$query_fields[':' . $cleanfield . $incnt] = $invalue ?? '';
-					}
-					$condition = substr($condition, 0, - 2) . ')';
+				if ($field == '_plainsql') {
+					$condition .= $valoper;
 				} else {
-					continue;
-				}
-				if ($first) {
-					$first = false;
+					$cleanfield = str_replace(".", "", $field);
+					$sortfield = explode('.', $field);
+					foreach ($sortfield as $id => $sfield) {
+						if (substr($sfield, -1, 1) != '`') {
+							$sfield .= '`';
+						}
+						if ($sfield[0] != '`') {
+							$sfield = '`' . $sfield;
+						}
+						$sortfield[$id] = $sfield;
+					}
+					$field = implode('.', $sortfield);
+					if (!$first) {
+						$condition .= ' AND ';
+					}
+					if (!is_array($valoper) || !isset($valoper['op']) || empty($valoper['op'])) {
+						$condition .= $field . ' LIKE :' . $cleanfield;
+						if (!is_array($valoper)) {
+							$query_fields[':' . $cleanfield] = '%' . $valoper . '%';
+						} else {
+							$query_fields[':' . $cleanfield] = '%' . $valoper['value'] . '%';
+						}
+					} elseif (in_array($valoper['op'], $ops)) {
+						$condition .= $field . ' ' . $valoper['op'] . ':' . $cleanfield;
+						$query_fields[':' . $cleanfield] = $valoper['value'] ?? '';
+					} elseif (strtolower($valoper['op']) == 'in' && is_array($valoper['value']) && count($valoper['value']) > 0) {
+						$condition .= $field . ' ' . $valoper['op'] . ' (';
+						foreach ($valoper['value'] as $incnt => $invalue) {
+							$condition .= ":" . $cleanfield . $incnt . ", ";
+							$query_fields[':' . $cleanfield . $incnt] = $invalue ?? '';
+						}
+						$condition = substr($condition, 0, -2) . ')';
+					} else {
+						continue;
+					}
+					if ($first) {
+						$first = false;
+					}
 				}
 			}
 		}
@@ -343,10 +348,10 @@ abstract class ApiCommand extends ApiParameter
 		$limit = $this->getParam('sql_limit', true, 0);
 		$offset = $this->getParam('sql_offset', true, 0);
 
-		if (! is_numeric($limit)) {
+		if (!is_numeric($limit)) {
 			$limit = 0;
 		}
-		if (! is_numeric($offset)) {
+		if (!is_numeric($offset)) {
 			$offset = 0;
 		}
 
@@ -371,7 +376,7 @@ abstract class ApiCommand extends ApiParameter
 	{
 		$orderby = $this->getParam('sql_orderby', true, array());
 		$order = "";
-		if (! empty($orderby)) {
+		if (!empty($orderby)) {
 			if ($append) {
 				$order .= ", ";
 			} else {
@@ -389,7 +394,7 @@ abstract class ApiCommand extends ApiParameter
 			foreach ($orderby as $field => $by) {
 				$sortfield = explode('.', $field);
 				foreach ($sortfield as $id => $sfield) {
-					if (substr($sfield, - 1, 1) != '`') {
+					if (substr($sfield, -1, 1) != '`') {
 						$sfield .= '`';
 					}
 					if ($sfield[0] != '`') {
@@ -399,7 +404,7 @@ abstract class ApiCommand extends ApiParameter
 				}
 				$field = implode('.', $sortfield);
 				$by = strtoupper($by);
-				if (! in_array($by, [
+				if (!in_array($by, [
 					'ASC',
 					'DESC'
 				])) {
@@ -417,7 +422,7 @@ abstract class ApiCommand extends ApiParameter
 					$order .= $field . " " . $by . ", ";
 				}
 			}
-			$order = substr($order, 0, - 2);
+			$order = substr($order, 0, -2);
 		}
 
 		return $order;
@@ -463,16 +468,16 @@ abstract class ApiCommand extends ApiParameter
 		return json_decode($json_result, true)['data'];
 	}
 
-    /**
-     * return api-compatible response in JSON format and send corresponding http-header
-     *
-     * @param mixed $data
-     * @param int $response_code
-     * @return string json-encoded response message
-     */
+	/**
+	 * return api-compatible response in JSON format and send corresponding http-header
+	 *
+	 * @param mixed $data
+	 * @param int $response_code
+	 * @return string json-encoded response message
+	 */
 	protected function response($data = null, int $response_code = 200)
 	{
-        return \Froxlor\Api\Response::jsonDataResponse($data, $response_code);
+		return \Froxlor\Api\Response::jsonDataResponse($data, $response_code);
 	}
 
 	/**
@@ -493,7 +498,7 @@ abstract class ApiCommand extends ApiParameter
 			$customerid = $this->getParam('customerid', true, 0);
 			$loginname = $this->getParam('loginname', true, '');
 
-			if (! empty($customerid) || ! empty($loginname)) {
+			if (!empty($customerid) || !empty($loginname)) {
 				$_result = $this->apiCall('Customers.get', array(
 					'id' => $customerid,
 					'loginname' => $loginname
@@ -509,7 +514,7 @@ abstract class ApiCommand extends ApiParameter
 				$customer_ids[] = $customer['customerid'];
 			}
 		} else {
-			if (! $this->isInternal() && ! empty($customer_hide_option) && \Froxlor\Settings::IsInList('panel.customer_hide_options', $customer_hide_option)) {
+			if (!$this->isInternal() && !empty($customer_hide_option) && \Froxlor\Settings::IsInList('panel.customer_hide_options', $customer_hide_option)) {
 				throw new \Exception("You cannot access this resource", 405);
 			}
 			$customer_ids = array(
@@ -545,7 +550,7 @@ abstract class ApiCommand extends ApiParameter
 				'loginname' => $loginname
 			));
 			// check whether the customer has enough resources
-			if (! empty($customer_resource_check) && $customer[$customer_resource_check . '_used'] >= $customer[$customer_resource_check] && $customer[$customer_resource_check] != '-1') {
+			if (!empty($customer_resource_check) && $customer[$customer_resource_check . '_used'] >= $customer[$customer_resource_check] && $customer[$customer_resource_check] != '-1') {
 				throw new \Exception("Customer has no more resources available", 406);
 			}
 		} else {

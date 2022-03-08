@@ -1,30 +1,20 @@
 $(document).ready(function () {
 	console.log('included search');
 
-	$.typeahead({
-		input: '.js-typeahead-search_v1',
-		order: "desc",
-		dynamic: true,
-		display: ['title'],
-		href: "{{href}}",
-		emptyTemplate: "No results for {{query}}",
-		debug: true,
-		source: {
-			settings: {
-				ajax: {
-					method: "post",
-					url: "lib/ajax.php?action=searchsetting&theme=" + window.$theme + "&s=" + window.$session,
-					path: "settings",
-					data: {
-						searchtext: '{{query}}'
-					},
-				}
+	$('input[class=js-typeahead-search_v1]').on('change keyup keydown', function () {
+		$.ajax({
+			url: "lib/ajax.php?action=searchglobal&theme=" + window.$theme + "&s=" + window.$session,
+			type: "POST",
+			data: {
+				searchtext: $(this).val()
 			},
-		},
-		callback: {
-			onInit: function (node) {
-				console.log('Typeahead Initiated');
+			dataType: "json",
+			success: function (data) {
+				console.log(data);
+			},
+			error: function (a, b) {
+				console.log(a, b);
 			}
-		}
+		});
 	});
 });

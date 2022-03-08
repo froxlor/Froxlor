@@ -1,11 +1,9 @@
 <?php
+
 namespace Froxlor;
 
 use Exception;
 use Froxlor\Ajax\Ajax;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
 
 /**
  * This file is part of the Froxlor project.
@@ -27,14 +25,14 @@ require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 // Load the user settings
 if (!file_exists('./userdata.inc.php')) {
-    die();
+	die();
 }
 require './userdata.inc.php';
 require './tables.inc.php';
 
 // Return response
 try {
-    echo (new Ajax)->handle();
+	echo (new Ajax)->handle();
 } catch (Exception $e) {
-    echo \Froxlor\Api\Response::jsonErrorResponse($e->getMessage(), 500);
+	echo \Froxlor\Api\Response::jsonErrorResponse($e->getMessage(), 500);
 }
