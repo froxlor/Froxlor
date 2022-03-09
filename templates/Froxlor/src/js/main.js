@@ -1,10 +1,8 @@
 // load bootstrap
 import 'bootstrap';
-import 'jquery-typeahead/src/jquery.typeahead.css'
 
 // load jquery
 global.$ = require('jquery');
-require('jquery-typeahead');
 
 $(document).ready(function () {
 	window.$theme = 'Froxlor';
