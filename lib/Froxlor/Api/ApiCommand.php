@@ -2,6 +2,8 @@
 
 namespace Froxlor\Api;
 
+use Exception;
+
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
@@ -287,7 +289,12 @@ abstract class ApiCommand extends ApiParameter
 			$first = true;
 			foreach ($search as $field => $valoper) {
 				if ($field == '_plainsql') {
-					$condition .= $valoper;
+					if (isset($valoper['sql']) && isset($valoper['values']) && is_array($valoper['values'])) {
+						$condition .= $valoper['sql'];
+						foreach ($valoper['values'] as $var => $value) {
+							$query_fields[':' . $var] = $value;
+						}
+					}
 				} else {
 					$cleanfield = str_replace(".", "", $field);
 					$sortfield = explode('.', $field);

@@ -417,10 +417,13 @@ class Ajax
 
 	private function searchStringSql(array $searchfields, $searchtext)
 	{
-		$result = "(";
+		$result = ['sql' => [], 'values' => []];
+		$result['sql'] = "(";
 		foreach ($searchfields as $sf) {
-			$result .= $sf . " LIKE " . \Froxlor\Database\Database::quote('%' . $searchtext . '%') . " OR ";
+			$result['sql'] .= $sf . " LIKE :searchtext OR ";
 		}
-		return substr($result, 0, -3) . ")";
+		$result['sql'] = substr($result['sql'], 0, -3) . ")";
+		$result['values'] = ['searchtext' => '%' . $searchtext . '%'];
+		return $result;
 	}
 }
