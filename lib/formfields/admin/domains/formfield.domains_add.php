@@ -39,6 +39,7 @@ return array(
 						'label' => $lng['admin']['admin'],
 						'type' => 'select',
 						'select_var' => $admins,
+						'selected' => $userinfo['adminid'],
 						'mandatory' => true
 					),
 					'alias' => array(
@@ -63,7 +64,7 @@ return array(
 						'label' => $lng['domains']['add_date'],
 						'desc' => $lng['panel']['dateformat'],
 						'type' => 'label',
-						'value' => $add_date
+						'value' => date('Y-m-d')
 					),
 					'registration_date' => array(
 						'label' => $lng['domains']['registration_date'],
@@ -102,7 +103,8 @@ return array(
 						'label' => $lng['admin']['selectserveralias'],
 						'desc' => $lng['admin']['selectserveralias_desc'],
 						'type' => 'select',
-						'select_var' => $serveraliasoptions
+						'select_var' => $serveraliasoptions,
+						'selected' => \Froxlor\Settings::Get('system.domaindefaultalias')
 					),
 					'speciallogfile' => array(
 						'label' => $lng['admin']['speciallogfile']['title'],
@@ -223,7 +225,7 @@ return array(
 							),
 							array(
 								'value' => 'TLSv1.3',
-								'label' => 'TLSv1.3<'
+								'label' => 'TLSv1.3'
 							)
 						),
 						'is_array' => 1
@@ -328,7 +330,7 @@ return array(
 						'label' => $lng['admin']['phpsettings']['title'],
 						'type' => 'select',
 						'select_var' => $phpconfigs,
-						'selected' => '@TODO'
+						'selected' => (int) \Froxlor\Settings::Get('phpfpm.enabled') == 1 ? \Froxlor\Settings::Get('phpfpm.defaultini') : \Froxlor\Settings::Get('system.mod_fcgid_defaultini')
 					),
 					'mod_fcgid_starter' => array(
 						'visible' => ((int) \Froxlor\Settings::Get('system.mod_fcgid') == 1 ? true : false),
@@ -380,7 +382,7 @@ return array(
 						'label' => $lng['admin']['subdomainforemail'],
 						'type' => 'select',
 						'select_var' => $subcanemaildomain,
-						'selected' => '@TODO'
+						'selected' => 0
 					),
 					'dkim' => array(
 						'visible' => (\Froxlor\Settings::Get('dkim.use_dkim') == '1' ? true : false),

@@ -21,7 +21,6 @@ const AREA = 'admin';
 require __DIR__ . '/lib/init.php';
 
 use Froxlor\Api\Commands\IpsAndPorts;
-use Froxlor\Settings;
 use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
 
@@ -32,10 +31,10 @@ if ($page == 'ipsandports' || $page == 'overview') {
 		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_ipsandports");
 
 		try {
-            $ipsandports_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.ipsandports.php';
+			$ipsandports_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.ipsandports.php';
 			$collection = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\IpsAndPorts::class, $userinfo))
-                ->withPagination($ipsandports_list_data['ipsandports_list']['columns']);
-        } catch (Exception $e) {
+				->withPagination($ipsandports_list_data['ipsandports_list']['columns']);
+		} catch (Exception $e) {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 

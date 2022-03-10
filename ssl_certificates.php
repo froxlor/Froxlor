@@ -1,5 +1,5 @@
 <?php
-if (! defined('AREA')) {
+if (!defined('AREA')) {
 	header("Location: index.php");
 	exit();
 }
@@ -39,7 +39,7 @@ if ($action == 'delete') {
 		try {
 			$json_result = Certificates::getLocal($userinfo, [
 				'id' => $id
-            ])->delete();
+			])->delete();
 			$success_message = sprintf($lng['domains']['ssl_certificate_removed'], $id);
 		} catch (Exception $e) {
 			Response::dynamic_error($e->getMessage());
@@ -50,14 +50,16 @@ if ($action == 'delete') {
 $log->logAction(FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed domains::ssl_certificates");
 
 try {
-    $certificates_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.sslcertificates.php';
-    $collection = (new Collection(Certificates::class, $userinfo))
-        ->withPagination($certificates_list_data['sslcertificates_list']['columns']);
+	$certificates_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.sslcertificates.php';
+	$collection = (new Collection(Certificates::class, $userinfo))
+		->has('domains', \Froxlor\Api\Commands\Domains::class, 'domainid', 'id')
+		->has('customer', \Froxlor\Api\Commands\Customers::class, 'customerid', 'customerid')
+		->withPagination($certificates_list_data['sslcertificates_list']['columns']);
 } catch (Exception $e) {
-    Response::dynamic_error($e->getMessage());
+	Response::dynamic_error($e->getMessage());
 }
 
 UI::twigBuffer('user/table.html.twig', [
-    'listing' => Listing::format($collection, $certificates_list_data['sslcertificates_list']),
+	'listing' => Listing::format($collection, $certificates_list_data['sslcertificates_list']),
 ]);
 UI::twigOutputBuffer();

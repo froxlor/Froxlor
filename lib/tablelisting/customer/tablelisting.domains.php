@@ -70,10 +70,37 @@ return [
 				],
 				'visible' => [Domain::class, 'canEditDNS']
 			],
+			'domainssleditor' => [
+				'icon' => 'fa fa-shield',
+				'title' => $lng['panel']['ssleditor'], // @todo different certificate types by $row['domain_hascert']
+				'href' => [
+					'section' => 'domains',
+					'page' => 'domainssleditor',
+					'action' => 'view',
+					'id' => ':id'
+				],
+				'visible' => [Domain::class, 'adminCanEditDNS']
+			],
 			'letsencrypt' => [
 				'icon' => 'fa fa-shield',
 				'title' => $lng['panel']['letsencrypt'],
-				'visible' => ':letsencrypt' // @fixme
+				'visible' => [Domain::class, 'hasLetsEncryptActivated']
+			],
+			'haslias' => [
+				'icon' => 'fa fa-arrow-up-right-from-square',
+				'title' => $lng['domains']['hasaliasdomains'],
+				'href' => [
+					'section' => 'domains',
+					'page' => 'domains',
+					'searchfield' => 'd.aliasdomain',
+					'searchtext' => ':id'
+				],
+				'visible' => [Domain::class, 'canEditAlias']
+			],
+			'isassigned' => [
+				'icon' => 'fa-check-to-slot',
+				'title' => $lng['domains']['isassigneddomain'],
+				'visible' => [Domain::class, 'isAssigned']
 			],
 			'delete' => [
 				'icon' => 'fa fa-trash',

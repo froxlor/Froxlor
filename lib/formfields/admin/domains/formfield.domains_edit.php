@@ -26,22 +26,23 @@ return array(
 					'domain' => array(
 						'label' => 'Domain',
 						'type' => 'label',
-						'value' => $result['domain'],
-						'mandatory' => true
+						'value' => $result['domain_ace']
 					),
 					'customerid' => array(
 						'label' => $lng['admin']['customer'],
-						'type' => (\Froxlor\Settings::Get('panel.allow_domain_change_customer') == '1' ? 'select' : 'label'),
+						'type' => (\Froxlor\Settings::Get('panel.allow_domain_change_customer') == '1' ? 'select' : 'infotext'),
 						'select_var' => (isset($customers) ? $customers : null),
-						'selected' => (isset($result['customername']) ? $result['customername'] : null),
+						'selected' => $result['customerid'],
+						'value' => (isset($result['customername']) ? $result['customername'] : null),
 						'mandatory' => true
 					),
 					'adminid' => array(
 						'visible' => ($userinfo['customers_see_all'] == '1' ? true : false),
 						'label' => $lng['admin']['admin'],
-						'type' => (\Froxlor\Settings::Get('panel.allow_domain_change_admin') == '1' ? 'select' : 'label'),
-						'select_var' => (isset($admins) ? $admins : null),
-						'selected' => (isset($result['adminname']) ? $result['adminname'] : null),
+						'type' => (\Froxlor\Settings::Get('panel.allow_domain_change_admin') == '1' ? 'select' : 'infotext'),
+						'select_var' => (!empty($admins) ? $admins : null),
+						'selected' => (isset($result['adminid']) ? $result['adminid'] : $userinfo['adminid']),
+						'value' => (isset($result['adminname']) ? $result['adminname'] : null),
 						'mandatory' => true
 					),
 					'alias' => array(
@@ -49,14 +50,14 @@ return array(
 						'label' => $lng['domains']['aliasdomain'],
 						'type' => 'select',
 						'select_var' => $domains,
-						'selected' => '@TODO'
+						'selected' => $result['aliasdomain']
 					),
 					'issubof' => array(
 						'label' => $lng['domains']['issubof'],
 						'desc' => $lng['domains']['issubofinfo'],
 						'type' => 'select',
 						'select_var' => $subtodomains,
-						'selected' => '@TODO'
+						'selected' => $result['ismainbutsubto']
 					),
 					'associated_info' => array(
 						'label' => $lng['domains']['associated_with_domain'],
@@ -74,7 +75,7 @@ return array(
 						'label' => $lng['domains']['add_date'],
 						'desc' => $lng['panel']['dateformat'],
 						'type' => 'label',
-						'value' => $result['add_date']
+						'value' => date('Y-m-d', (int) $result['add_date'])
 					),
 					'registration_date' => array(
 						'label' => $lng['domains']['registration_date'],
@@ -117,7 +118,7 @@ return array(
 						'desc' => $lng['admin']['selectserveralias_desc'],
 						'type' => 'select',
 						'select_var' => $serveraliasoptions,
-						'selected' => '@TODO'
+						'selected' => $result['iswildcarddomain'] == '1' ? 0 : ($result['wwwserveralias'] == '1' ? 1 : 2)
 					),
 					'speciallogfile' => array(
 						'label' => $lng['admin']['speciallogfile']['title'],
@@ -229,7 +230,7 @@ return array(
 						'label' => $lng['serversettings']['ssl']['ssl_protocols']['title'],
 						'desc' => $lng['serversettings']['ssl']['ssl_protocols']['description'],
 						'type' => 'checkbox',
-						'value' => ! empty($result['ssl_protocols']) ? explode(",", $result['ssl_protocols']) : explode(",", \Froxlor\Settings::Get('system.ssl_protocols')),
+						'value' => !empty($result['ssl_protocols']) ? explode(",", $result['ssl_protocols']) : explode(",", \Froxlor\Settings::Get('system.ssl_protocols')),
 						'values' => array(
 							array(
 								'value' => 'TLSv1',
@@ -255,14 +256,14 @@ return array(
 						'label' => $lng['serversettings']['ssl']['ssl_cipher_list']['title'],
 						'desc' => $lng['serversettings']['ssl']['ssl_cipher_list']['description'],
 						'type' => 'text',
-						'value' => ! empty($result['ssl_cipher_list']) ? $result['ssl_cipher_list'] : \Froxlor\Settings::Get('system.ssl_cipher_list')
+						'value' => !empty($result['ssl_cipher_list']) ? $result['ssl_cipher_list'] : \Froxlor\Settings::Get('system.ssl_cipher_list')
 					),
 					'tlsv13_cipher_list' => array(
 						'visible' => (($ssl_ipsandports != '' ? true : false) && $userinfo['change_serversettings'] == '1' && \Froxlor\Settings::Get('system.webserver') == "apache2" && \Froxlor\Settings::Get('system.apache24') == 1 ? true : false),
 						'label' => $lng['serversettings']['ssl']['tlsv13_cipher_list']['title'],
 						'desc' => $lng['serversettings']['ssl']['tlsv13_cipher_list']['description'],
 						'type' => 'text',
-						'value' => ! empty($result['tlsv13_cipher_list']) ? $result['tlsv13_cipher_list'] : \Froxlor\Settings::Get('system.tlsv13_cipher_list')
+						'value' => !empty($result['tlsv13_cipher_list']) ? $result['tlsv13_cipher_list'] : \Froxlor\Settings::Get('system.tlsv13_cipher_list')
 					),
 					'ssl_specialsettings' => array(
 						'visible' => ($userinfo['change_serversettings'] == '1' ? true : false),
@@ -350,7 +351,7 @@ return array(
 						'label' => $lng['admin']['phpsettings']['title'],
 						'type' => 'select',
 						'select_var' => $phpconfigs,
-						'selected' => '@TODO'
+						'selected' => $result['phpsettingid']
 					),
 					'phpsettingsforsubdomains' => array(
 						'visible' => ($userinfo['change_serversettings'] == '1' ? true : false),
@@ -364,13 +365,13 @@ return array(
 						'visible' => ((int) \Froxlor\Settings::Get('system.mod_fcgid') == 1 ? true : false),
 						'label' => $lng['admin']['mod_fcgid_starter']['title'],
 						'type' => 'number',
-						'value' => ((int) $result['mod_fcgid_starter'] != - 1 ? $result['mod_fcgid_starter'] : '')
+						'value' => ((int) $result['mod_fcgid_starter'] != -1 ? $result['mod_fcgid_starter'] : '')
 					),
 					'mod_fcgid_maxrequests' => array(
 						'visible' => ((int) \Froxlor\Settings::Get('system.mod_fcgid') == 1 ? true : false),
 						'label' => $lng['admin']['mod_fcgid_maxrequests']['title'],
 						'type' => 'number',
-						'value' => ((int) $result['mod_fcgid_maxrequests'] != - 1 ? $result['mod_fcgid_maxrequests'] : '')
+						'value' => ((int) $result['mod_fcgid_maxrequests'] != -1 ? $result['mod_fcgid_maxrequests'] : '')
 					)
 				)
 			),
@@ -413,7 +414,7 @@ return array(
 						'label' => $lng['admin']['subdomainforemail'],
 						'type' => 'select',
 						'select_var' => $subcanemaildomain,
-						'selected' => '@TODO'
+						'selected' => $result['subcanemaildomain']
 					),
 					'dkim' => array(
 						'visible' => (\Froxlor\Settings::Get('dkim.use_dkim') == '1' ? true : false),

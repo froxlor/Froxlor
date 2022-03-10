@@ -43,14 +43,14 @@ return array(
 				'image' => 'icons/ipsports_add.png',
 				'fields' => array(
 					'listen_statement' => array(
-						'visible' => ! $is_nginx,
+						'visible' => ! \Froxlor\Settings::Get('system.webserver') == 'nginx',
 						'label' => $lng['admin']['ipsandports']['create_listen_statement'],
 						'type' => 'checkbox',
 						'value' => '1',
 						'checked' => true
 					),
 					'namevirtualhost_statement' => array(
-						'visible' => $is_apache && ! $is_apache24,
+						'visible' => \Froxlor\Settings::Get('system.webserver') == 'apache2' && (int) \Froxlor\Settings::Get('system.apache24') == 0,
 						'label' => $lng['admin']['ipsandports']['create_namevirtualhost_statement'],
 						'type' => 'checkbox',
 						'value' => '1',
@@ -75,7 +75,7 @@ return array(
 						'rows' => 12
 					),
 					'vhostcontainer_servername_statement' => array(
-						'visible' => $is_apache,
+						'visible' => \Froxlor\Settings::Get('system.webserver') == 'apache2',
 						'label' => $lng['admin']['ipsandports']['create_vhostcontainer_servername_statement'],
 						'type' => 'checkbox',
 						'value' => '1',

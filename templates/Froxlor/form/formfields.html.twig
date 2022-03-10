@@ -82,7 +82,7 @@
 	{% if field.next_to is defined %}
 		<div class="input-group">
 		{% endif %}
-		<span {% if field.classes is defined %} class="{{ field.classes }}" {% endif %}>{{ field.value }}</span>
+		<span {% if field.classes is defined %} class="{{ field.classes }}" {% endif %}>{{ field.value|raw }}</span>
 		{% if field.next_to is defined %}
 			{% for nid, nfield in field.next_to %}
 				{% if nfield.next_to_prefix is defined %}

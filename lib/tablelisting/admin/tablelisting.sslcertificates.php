@@ -17,6 +17,7 @@
  */
 
 use Froxlor\Settings;
+use Froxlor\UI\Callbacks\Domain;
 use Froxlor\UI\Callbacks\SSLCertificate;
 use Froxlor\UI\Callbacks\Text;
 use Froxlor\UI\Listing;
@@ -28,7 +29,8 @@ return [
 		'columns' => [
 			'd.domain' => [
 				'label' => $lng['domains']['domainname'],
-				'field' => 'domain',
+				'field' => 'domains.domain_ace',
+				'callback' => [Domain::class, 'domainWithCustomerLink'],
 			],
 			'c.domain' => [
 				'label' => $lng['ssl_certificates']['certificate_for'],

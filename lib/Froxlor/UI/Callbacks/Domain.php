@@ -5,6 +5,7 @@ namespace Froxlor\UI\Callbacks;
 use Froxlor\FileDir;
 use Froxlor\Settings;
 use Froxlor\UI\Panel\UI;
+use Froxlor\Domain\Domain as DDomain;
 
 /**
  * This file is part of the Froxlor project.
@@ -22,6 +23,20 @@ use Froxlor\UI\Panel\UI;
  */
 class Domain
 {
+	public static function domainWithCustomerLink(array $attributes)
+	{
+		$linker = UI::getLinker();
+		$result = '<a href="https://' . $attributes['data'] . '" target="_blank">' . $attributes['data'] . '</a>';
+		$result .= ' (<a href="' . $linker->getLink([
+			'section' => 'customers',
+			'page' => 'customers',
+			'action' => 'su',
+			'sort' => $attributes['fields']['loginname'],
+			'id' => $attributes['fields']['customerid'],
+		]) . '">' . $attributes['fields']['loginname'] . '</a>)';
+		return $result;
+	}
+
 	public static function domainTarget(array $attributes)
 	{
 		if (empty($attributes['fields']['aliasdomain'])) {
@@ -85,14 +100,31 @@ class Domain
 			&& Settings::Get('system.dnsenabled') == '1';
 	}
 
-	public function canEditSSL(array $attributes): bool
+	public static function hasLetsEncryptActivated(array $attributes): bool
 	{
-		// FIXME: https://github.com/Froxlor/Froxlor/blob/master/templates/Sparkle/customer/domains/domains_domain.tpl#L41
+		return (bool) $attributes['fields']['letsencrypt'];
+	}
+
+	public static function canEditSSL(array $attributes): bool
+	{
+		if (
+			Settings::Get('system.use_ssl') == '1'
+			&& DDomain::domainHasSslIpPort($attributes['fields']['id'])
+			&& $attributes['fields']['caneditdomain'] == '1'
+			&& $attributes['fields']['letsencrypt'] == 0
+		) {
+			return true;
+		}
 		return false;
 	}
 
-	public function canEditAlias(array $attributes): bool
+	public static function canEditAlias(array $attributes): bool
 	{
 		return !empty($attributes['fields']['domainaliasid']);
+	}
+
+	public static function isAssigned(array $attributes): bool
+	{
+		return ($attributes['fields']['parentdomainid'] == 0 && empty($attributes['fields']['domainaliasid']));
 	}
 }
