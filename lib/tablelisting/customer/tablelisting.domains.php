@@ -93,7 +93,7 @@ return [
 					'section' => 'domains',
 					'page' => 'domains',
 					'searchfield' => 'd.aliasdomain',
-					'searchtext' => ':id'
+					'searchtext' => ':domainaliasid'
 				],
 				'visible' => [Domain::class, 'canEditAlias']
 			],
