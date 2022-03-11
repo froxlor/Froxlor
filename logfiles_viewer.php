@@ -1,5 +1,5 @@
 <?php
-if (! defined('AREA')) {
+if (!defined('AREA')) {
 	header("Location: index.php");
 	exit();
 }
@@ -22,6 +22,7 @@ if (! defined('AREA')) {
 use Froxlor\Api\Commands\SubDomains;
 use Froxlor\Settings;
 use Froxlor\UI\Request;
+use Froxlor\UI\Panel\UI;
 
 // This file is being included in admin_domains and customer_domains
 // and therefore does not need to require lib/init.php
@@ -65,7 +66,7 @@ if (function_exists('exec')) {
 	// error log
 	if (file_exists($error_log)) {
 		$result = \Froxlor\FileDir::safe_exec('tail -n ' . $last_n . ' ' . escapeshellarg($error_log));
-		$error_log_content = implode("\n", $result) . "</textarea>";
+		$error_log_content = implode("\n", $result);
 	} else {
 		$error_log_content = "Error-Log" . (AREA == 'admin' ? " '" . $error_log . "'" : "") . " does not seem to exist";
 	}
@@ -78,7 +79,22 @@ if (function_exists('exec')) {
 		$access_log_content = "Access-Log" . (AREA == 'admin' ? " '" . $access_log . "'" : "") . " does not seem to exist";
 	}
 
-	eval("echo \"" . \Froxlor\UI\Template::getTemplate("logfiles_viewer/index", true) . "\";");
+	UI::twigBuffer('user/logfiles.html.twig', [
+		'error_log_content' => $error_log_content,
+		'access_log_content' => $access_log_content,
+		'actions_links' => [[
+			'class' => 'btn-secondary',
+			'href' => $linker->getLink(['section' => 'domains', 'page' => 'domains', 'action' => 'edit', 'id' => $domain_id]),
+			'label' => $lng['panel']['edit'],
+			'icon' => 'fa fa-pen'
+		], [
+			'class' => 'btn-secondary',
+			'href' => $linker->getLink(['section' => 'domains', 'page' => 'domains']),
+			'label' => $lng['menue']['domains']['domains'],
+			'icon' => 'fa fa-globe'
+		]]
+	]);
+	UI::twigOutputBuffer();
 } else {
 	if (AREA == 'admin') {
 		\Froxlor\UI\Response::dynamic_error('You need to allow the exec() function in the froxlor-vhost php-config');
