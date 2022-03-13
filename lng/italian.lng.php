@@ -1502,8 +1502,7 @@ $lng['serversettings']['mod_fcgid']['idle_timeout']['description'] = 'Impostazio
 $lng['serversettings']['phpfpm_settings']['idle_timeout']['title'] = 'Timeout Inattività';
 $lng['serversettings']['phpfpm_settings']['idle_timeout']['description'] = 'Impostazione Timeout per PHP5 FPM FastCGI.';
 $lng['panel']['cancel'] = 'Annulla';
-$lng['admin']['delete_statistics'] = 'Elimina Statistiche';
-$lng['admin']['speciallogwarning'] = 'AVVISO: Cambiando questa impostazione perderai tutte le vecchie statistiche per questo dominio. Se sei sicuro che vuoi cambiare questo digita "%s" nel campo sottostante e clicca il bottone "elimina".<br /><br />';
+$lng['admin']['speciallogwarning'] = '<div id="speciallogfilenote" class="invalid-feedback">AVVISO: Cambiando questa impostazione perderai tutte le vecchie statistiche per questo dominio.</div>';
 $lng['serversettings']['vmail_maildirname']['title'] = 'nome Maildir';
 $lng['serversettings']['vmail_maildirname']['description'] = 'cartella Maildir nell account utente. Normalmente \'Maildir\', in alcune implementazioni \'.maildir\', e direttamente nella cartella utente se lasciato vuoto.';
 $lng['tasks']['DELETE_EMAIL_DATA'] = 'Elimina i dati di posta elettronica del cliente.';

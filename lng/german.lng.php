@@ -1278,8 +1278,7 @@ $lng['serversettings']['phpfpm_settings']['idle_timeout']['title'] = 'Idle-Timeo
 $lng['serversettings']['phpfpm_settings']['idle_timeout']['description'] = 'Timeout-Einstellung für PHP-FPM FastCGI.';
 
 // ADDED IN 0.9.27-svn2
-$lng['admin']['delete_statistics'] = 'Statistiken Löschen';
-$lng['admin']['speciallogwarning'] = 'ACHTUNG: Durch diese Einstellungen werden Sie alle bisherige Statistiken dieser Domain verlieren. Wenn Sie dabei wirklich sicher sind, geben Sie bitte folgenden Text in das nachfolgende Textfeld ein: "%s" und bestätigen Sie mit "Löschen".<br /><br />';
+$lng['admin']['speciallogwarning'] = '<div id="speciallogfilenote" class="invalid-feedback">ACHTUNG: Durch diese Einstellungen werden Sie alle bisherige Statistiken dieser Domain verlieren.</div>';
 
 // ADDED IN 0.9.28-svn2
 $lng['serversettings']['vmail_maildirname']['title'] = 'Maildir-(Unter-)Ordner';

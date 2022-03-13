@@ -29,4 +29,31 @@ $(document).ready(function () {
 		});
 	});
 
+	// show warning if speciallogfile option is toggled
+	if ($('input[name=speciallogverified]')) {
+		$('input[name=speciallogfile]').click(function () {
+			$('#speciallogfilenote').remove();
+			$('#speciallogfile').removeClass('is-invalid');
+			$('#speciallogverified').val(0);
+			$.ajax({
+				url: "admin_domains.php?s=" + window.$session + "&page=overview&action=jqSpeciallogfileNote",
+				type: "POST",
+				data: {
+					id: $('input[name=id]').val(), newval: +$('#speciallogfile').is(':checked')
+				},
+				dataType: "json",
+				success: function (json) {
+					if (json.changed) {
+						$('#speciallogfile').addClass('is-invalid');
+						$('#speciallogfile').parent().append(json.info);
+						$('#speciallogverified').val(1);
+					}
+				},
+				error: function (a, b) {
+					console.log(a, b);
+				}
+			});
+		});
+	}
+
 });

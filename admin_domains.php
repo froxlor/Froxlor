@@ -590,8 +590,6 @@ if ($page == 'domains' || $page == 'overview') {
 
 				$domain_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/domains/formfield.domains_edit.php';
 
-				$speciallogwarning = sprintf($lng['admin']['speciallogwarning'], $lng['admin']['delete_statistics']);
-
 				UI::twigBuffer('user/form.html.twig', [
 					'formaction' => $linker->getLink(array('section' => 'domains', 'id' => $id)),
 					'formdata' => $domain_edit_data['domain_edit'],
@@ -605,6 +603,23 @@ if ($page == 'domains' || $page == 'overview') {
 		$customerid = intval($_POST['customerid']);
 		$allowed_phpconfigs = \Froxlor\Customer\Customer::getCustomerDetail($customerid, 'allowed_phpconfigs');
 		echo !empty($allowed_phpconfigs) ? $allowed_phpconfigs : json_encode([]);
+		exit();
+	} elseif ($action == 'jqSpeciallogfileNote') {
+		$domainid = intval($_POST['id']);
+		$newval = intval($_POST['newval']);
+		try {
+			$json_result = Domains::getLocal($userinfo, array(
+				'id' => $domainid
+			))->get();
+		} catch (Exception $e) {
+			\Froxlor\UI\Response::dynamic_error($e->getMessage());
+		}
+		$result = json_decode($json_result, true)['data'];
+		if ($newval != $result['speciallogfile']) {
+			echo json_encode(['changed' => true, 'info' => $lng['admin']['speciallogwarning']]);
+			exit();
+		}
+		echo 0;
 		exit();
 	} elseif ($action == 'import') {
 
@@ -659,33 +674,4 @@ if ($page == 'domains' || $page == 'overview') {
 } elseif ($page == 'logfiles') {
 
 	require_once __DIR__ . '/logfiles_viewer.php';
-}
-
-function formatDomainEntry(&$row, &$idna_convert)
-{
-	$row['domain'] = $idna_convert->decode($row['domain']);
-	$row['aliasdomain'] = $idna_convert->decode($row['aliasdomain']);
-
-	$row['ipandport'] = '';
-	foreach ($row['ipsandports'] as $rowip) {
-		if (filter_var($rowip['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-			$row['ipandport'] .= '[' . $rowip['ip'] . ']:' . $rowip['port'] . "\n";
-		} else {
-			$row['ipandport'] .= $rowip['ip'] . ':' . $rowip['port'] . "\n";
-		}
-	}
-	$row['ipandport'] = substr($row['ipandport'], 0, -1);
-	$row['termination_date'] = str_replace("0000-00-00", "", $row['termination_date']);
-
-	$row['termination_css'] = "";
-	if ($row['termination_date'] != "") {
-		$cdate = strtotime($row['termination_date'] . " 23:59:59");
-		$today = time();
-
-		if ($cdate < $today) {
-			$row['termination_css'] = 'domain-expired';
-		} else {
-			$row['termination_css'] = 'domain-canceled';
-		}
-	}
 }

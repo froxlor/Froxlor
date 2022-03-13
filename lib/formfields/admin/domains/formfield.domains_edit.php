@@ -127,6 +127,10 @@ return array(
 						'value' => '1',
 						'checked' => $result['speciallogfile']
 					),
+					'speciallogverified' => array(
+						'type' => 'hidden',
+						'value' => '0'
+					),
 					'specialsettings' => array(
 						'visible' => ($userinfo['change_serversettings'] == '1' ? true : false),
 						'label' => $lng['admin']['ownvhostsettings'],
