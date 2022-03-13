@@ -119,8 +119,6 @@ if ($page == '' || $page == 'overview') {
 			}
 
 			// dummy to avoid unknown variables
-			$language_options = null;
-			$gender_options = null;
 			$hosting_plans = null;
 
 			$plans_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/plans/formfield.plans_add.php';
@@ -199,9 +197,9 @@ if ($page == '' || $page == 'overview') {
 				$result['documentroot'] = null;
 				$result['standardsubdomain'] = null;
 				$result['deactivated'] = null;
-				$language_options = null;
+				$result['def_language'] = null;
 				$result['firstname'] = null;
-				$gender_options = null;
+				$result['gender'] = null;
 				$result['company'] = null;
 				$result['street'] = null;
 				$result['zipcode'] = null;
@@ -214,8 +212,7 @@ if ($page == '' || $page == 'overview') {
 				$result['custom_notes_show'] = null;
 				$result['api_allowed'] = null;
 				$hosting_plans = null;
-				$admin_select_cnt = null;
-				$admin_select = null;
+				$admin_select = [];
 
 				$plans_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/plans/formfield.plans_edit.php';
 				$cust_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/customer/formfield.customer_edit.php';
@@ -223,6 +220,7 @@ if ($page == '' || $page == 'overview') {
 				unset($cust_edit_data['customer_edit']['sections']['section_a']);
 				unset($cust_edit_data['customer_edit']['sections']['section_b']);
 				unset($cust_edit_data['customer_edit']['sections']['section_cpre']);
+				unset($cust_edit_data['customer_edit']['sections']['section_d']);
 				// merge
 				$plans_edit_data['plans_edit']['sections'] = array_merge($plans_edit_data['plans_edit']['sections'], $cust_edit_data['customer_edit']['sections']);
 

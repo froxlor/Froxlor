@@ -13,3 +13,6 @@ $(document).ready(function () {
 require('./components/search')
 require('./components/newsfeed')
 require('./components/updatecheck')
+require('./components/customer')
+require('./components/ipsandports')
+require('./components/domains')
