@@ -21,7 +21,11 @@ class FroxlorTwig extends \Twig\Extension\AbstractExtension
 			new \Twig\TwigFilter('idnDecode', array(
 				$this,
 				'idnDecodeFilter'
-			))
+			)),
+			new \Twig\TwigFilter('parsedown', [
+				$this,
+				'callParsedown'
+			])
 		);
 	}
 
@@ -98,6 +102,12 @@ class FroxlorTwig extends \Twig\Extension\AbstractExtension
 	public function getLink($linkopts)
 	{
 		return \Froxlor\UI\Panel\UI::getLinker()->getLink($linkopts);
+	}
+
+	public function callParsedown($string)
+	{
+		$pd = new \Parsedown();
+		return $pd->line($string);
 	}
 
 	/**
