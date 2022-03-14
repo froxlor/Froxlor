@@ -5,7 +5,7 @@
 	{% import "Froxlor/form/formfields.html.twig" as formfields %}
 
 	<div class="card mb-3">
-		<div class="card-body">
+		<div class="formfields">
 			{% for id,setting in fields %}
 				{% if id != '_group' %}
 					{% set isEm = em is defined and em == id %}
@@ -15,17 +15,15 @@
 		</div>
 	</div>
 
-	<div class="card mb-3">
-		<div class="card-body">
-			<input type="hidden" name="s" value="{{ s }}"/>
-			<input type="hidden" name="page" value="{{ page }}"/>
-			<input type="hidden" name="action" value="{{ action }}"/>
-			<input type="hidden" name="send" value="send"/>
+	<div>
+		<input type="hidden" name="s" value="{{ s }}"/>
+		<input type="hidden" name="page" value="{{ page }}"/>
+		<input type="hidden" name="action" value="{{ action }}"/>
+		<input type="hidden" name="send" value="send"/>
 
-			<div class="col-12 text-center">
-				<button type="reset" class="btn btn-warning">{{ lng('panel.cancel') }}</button>
-				<button type="submit" class="btn btn-success">{{ lng('panel.save') }}</button>
-			</div>
+		<div class="col-12 text-end">
+			<button type="reset" class="btn btn-outline-secondary">{{ lng('panel.cancel') }}</button>
+			<button type="submit" class="btn btn-primary">{{ lng('panel.save') }}</button>
 		</div>
 	</div>
 {% endblock %}
