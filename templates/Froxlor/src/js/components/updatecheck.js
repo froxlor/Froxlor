@@ -11,7 +11,8 @@ $(document).ready(function () {
 			},
 			error: function (request, status, error) {
 				console.log(request, status, error)
-				$("#updatecheck").html('<div class="alert alert-warning" role="alert">Error checking version</div>');
+				let message = 'Can\'t check version';
+				$("#updatecheck").html('<a class="nav-link disabled text-warning" data-bs-toggle="tooltip" data-bs-placement="left" title="' + message + '"><i class="fa fa-exclamation-triangle"></i> <span class="d-md-none d-xl-inline">' + message + '</span></a>');
 			}
 		});
 	}

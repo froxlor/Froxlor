@@ -1,0 +1,8 @@
+footer {
+	@extend .small;
+
+	a {
+		@extend .text-muted;
+		@extend .text-decoration-none;
+	}
+}

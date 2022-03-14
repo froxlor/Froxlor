@@ -20,8 +20,8 @@
                 aria-valuemax="{% if available < 0 %}100{% else %}{{ available }}{% endif %}"></div>
         </div>
         {% if assigned is not empty %}
-            <div class="progress progress-thin my-auto">
-                <div class="progress-bar bg-info" role="progressbar"
+            <div class="progress progress-thin mt-2 my-auto">
+                <div class="progress-bar bg-primary" role="progressbar"
                     style="width:{% if available > 0 %}{{ (assigned / available) * 100|round }}{% else %}1{% endif %}%;"
                     aria-valuenow="{{ assigned }}" aria-valuemin="0"
                     aria-valuemax="{{ available }}"></div>

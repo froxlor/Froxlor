@@ -4,15 +4,6 @@
 	{% import "Froxlor/table/pagination.html.twig" as pagination %}
 
 	<form action="{{ action|default("") }}" method="post" enctype="application/x-www-form-urlencoded" class="form">
-		{% if listing.title is not empty %}
-			<h3 class="page-header">
-				{% if listing.icon is not empty %}
-					<i class="{{ listing.icon }} me-1"></i>
-				{% endif %}
-				{{ listing.title }}
-			</h3>
-		{% endif %}
-
 		{% if listing.table.tr|length == 0 %}
 			<div class="alert alert-info" role="alert">
 				<h4 class="alert-heading">{{ lng('admin.note') }}</h4>
@@ -20,7 +11,7 @@
 			</div>
 		{% else %}
 			<div class="card table-responsive">
-				<table class="table table-borderless table-striped table-sm mb-0 px-3">
+				<table class="table table-borderless table-striped align-middle mb-0 px-3">
 					<thead>
 						<tr>
 							{% for key,th in listing.table.th %}

@@ -25,16 +25,9 @@
 		{{ theme_js|raw }}
 	{% endif %}
 	{% block custom_js %}{% endblock %}
-	<title>Froxlor
-		{% if page_title %}
-			|
-			{{ page_title }}
-		{% endif %}
-	</title>
+	<title>Froxlor{% if page_title %} | {{ page_title }}{% endif %}</title>
 </head>
-<body {% if body_class is defined %}class="{{ body_class }}"{% endif %}>
-	{{ global_errors|raw }}
-
+<body class="min-vh-100 d-flex flex-column">
 	{% block navigation %}{% endblock %}
 
 	{% block body %}

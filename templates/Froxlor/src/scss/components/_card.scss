@@ -1,13 +1,24 @@
 .card {
-  margin-bottom: $spacer * 1.5;
+	@extend .shadow-sm;
+	margin-bottom: $spacer * 1.5;
 
-  .card-header {
-    border-bottom: #e5e5e5 solid 1px;
-    font-weight: bold;
-  }
-  .card-body {
-    p {
-      @extend .card-text;
-    }
-  }
+	.card-header {
+		border-bottom: #e5e5e5 solid 1px;
+		font-weight: bold;
+	}
+
+	.card-body {
+		p {
+			@extend .card-text;
+		}
+	}
+
+	&.deactivated {
+		@extend .text-muted;
+		background: lighten($light-bg, 3%);
+
+		i {
+			@extend .text-muted;
+		}
+	}
 }

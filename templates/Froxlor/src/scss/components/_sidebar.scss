@@ -1,38 +1,49 @@
+.sidebar, .sub-sidebar {
+	width: $sidebar-width;
+}
+
 .sidebar {
-  width: $sidebar-width;
-  @extend .shadow;
+	@extend .shadow;
+	width: $sidebar-width;
 
-  &.collapsing {
-    transition: none;
-  }
+	&.collapsing {
+		transition: none;
+	}
 
-  .user-info {
-    background: darken($dark, 2);
-  }
+	.user-info {
+		background: darken($dark, 2);
+	}
 
-  >.nav {
-    >.nav-item {
-      >.nav-link {
-        i {
-          margin-right: 1rem;
-          width: 1rem;
-          text-align: center;
-          opacity: .5;
-        }
-        &:not(.collapsed) {
-          background: darken($dark, 4);
-          border-left: $primary solid 3px;
-          padding-left: calc(1rem - 3px);
-        }
-      }
-      >.collapse, >.collapsing {
-        background: darken($dark, 2);
+	> .nav {
+		> .nav-item {
+			> .nav-link {
+				i {
+					margin-right: 1rem;
+					width: 1rem;
+					text-align: center;
+					opacity: .5;
+				}
 
-        a {
-          opacity: .78;
-          margin-left: 1.25rem;
-        }
-      }
-    }
-  }
+				&:not(.collapsed) {
+					background: darken($dark, 4);
+					border-left: $primary solid 3px;
+					padding-left: calc(1rem - 3px);
+				}
+			}
+
+			> .collapse, > .collapsing {
+				background: darken($dark, 2);
+
+				a {
+					opacity: .78;
+					margin-left: 1rem;
+				}
+			}
+		}
+	}
+}
+
+.sub-sidebar {
+	@extend .shadow-sm;
+	background: $white;
 }

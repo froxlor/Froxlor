@@ -1,5 +1,23 @@
 {% extends "Froxlor/userarea.html.twig" %}
 
+{% block heading %}
+
+	{% if formdata.title is not empty %}
+		<div>
+			<h5 class="mb-1">
+				{% if form_data.image is not empty %}
+					<i class="{{ form_data.image }} me-1"></i>
+				{% endif %}
+				{{ formdata.title }}
+			</h5>
+			{% if formdata.description is not empty %}
+				<span class="text-muted">{{ formdata.description }}</span>
+			{% endif %}
+		</div>
+	{% endif %}
+
+{% endblock %}
+
 {% block content %}
 
 	{% import "Froxlor/form/form.html.twig" as form %}

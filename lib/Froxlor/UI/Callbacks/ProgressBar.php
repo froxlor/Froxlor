@@ -59,7 +59,7 @@ class ProgressBar
 	private static function pbData(string $field, array $attributes, int $size_factor = 1024, int $report_max = 90, $infotext = null): array
 	{
 		$percent = 0;
-		$style = 'bg-info';
+		$style = 'bg-primary';
 		$text = PhpHelper::sizeReadable($attributes[$field . '_used'] * $size_factor, null, 'bi') . ' / ' . UI::getLng('panel.unlimited');
 		if ((int)$attributes[$field] >= 0) {
 			if (($attributes[$field] / 100) * $report_max < $attributes[$field . '_used']) {

@@ -65,7 +65,7 @@ return [
 			'delete' => [
 				'icon' => 'fa fa-trash',
 				'title' => $lng['panel']['delete'],
-				'class' => 'text-danger',
+				'class' => 'btn-danger',
 				'href' => [
 					'section' => 'mysql',
 					'page' => 'mysqls',

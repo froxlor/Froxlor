@@ -17,9 +17,9 @@
 		</div>
 	{% endif %}
 
-	<nav class="navbar navbar-expand-md navbar-light py-0">
+	<nav class="navbar navbar-expand-md navbar-light p-0 {% if not block('heading') %}shadow-sm{% endif %}">
 		<div class="container-fluid gx-0">
-			<a class="navbar-brand p-3" href="{{ linker({'section': 'index'}) }}">
+			<a class="navbar-brand" href="{{ linker({'section': 'index'}) }}">
 				<img src="{{ header_logo }}" alt="" width="auto" height="24" class="d-inline-block align-text-top">
 			</a>
 			<div class="me-3 me-sm-0">
@@ -30,28 +30,27 @@
 					<span class="navbar-toggler-icon"></span>
 				</button>
 			</div>
-			<form id="search" class="position-relative" method="post">
-				<div class="input-group">
-					<input title="search" type="search" class="form-control-plaintext" placeholder="Search for ..." style="outline: none">
-				</div>
-				<ul id="search-dropdown" class="bg-white border list-group list-group-flush position-absolute" style="display:none; z-index: 50; max-height: 300px; overflow-y: scroll"></ul>
-			</form>
-			<div class="collapse navbar-collapse justify-content-end px-3" id="navbar">
-				<ul class="navbar-nav align-items-center">
+			<div class="collapse navbar-collapse px-3 px-lg-5" id="navbar">
+				<form id="search" class="d-flex position-relative" method="post">
+					<div class="input-group">
+						<input title="search" type="search" class="form-control-plaintext" placeholder="Search for ..." style="outline: none">
+					</div>
+					<ul id="search-dropdown" class="bg-white border list-group list-group-flush position-absolute" style="top: 2.5rem; display:none; z-index: 50; max-height: 300px; overflow-y: scroll"></ul>
+				</form>
+				<ul class="navbar-nav ms-auto">
 					{% if userinfo.adminsession == 1 %}
-					<li class="nav-item text-nowrap d-block" id="updatecheck">
-					</li>
+						<li class="nav-item" id="updatecheck"></li>
 					{% endif %}
-					<li class="nav-item text-nowrap d-block me-2">
-						<a class="btn btn-primary btn-sm d-block" href="{{ linker({'section': 'index'}) }}">
-							<i class="fa fa-dashboard"></i> {{ lng('panel.dashboard') }}
+					<li class="nav-item">
+						<a class="nav-link" href="{{ linker({'section': 'index'}) }}">
+							{{ lng('panel.dashboard') }}
 						</a>
 					</li>
-					<li class="nav-item dropdown me-2">
-						<a class="btn btn-secondary btn-sm d-block dropdown-toggle" href="#" id="navbarOpts" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-							<i class="fa fa-gears"></i> {{ lng('panel.options') }}
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarOpts" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							{{ userinfo.loginname }}
 						</a>
-						<ul class="dropdown-menu" aria-labelledby="navbarOpts">
+						<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarOpts">
 							<li>
 								<a class="dropdown-item" href="{{ linker({'section': 'index', 'page': 'change_password'}) }}"><i class="fa-solid fa-lock"></i> {{ lng('login.password') }}</a>
 							</li>
@@ -90,8 +89,8 @@
 							Switch back</a>
 					</li>
 					endif -->
-					<li class="nav-item text-nowrap d-block">
-						<a class="btn btn-link" title="{{ lng('login.logout') }}" href="{{ linker({'section': 'index', 'action': 'logout'}) }}">
+					<li class="nav-item">
+						<a class="btn btn-link pe-0" title="{{ lng('login.logout') }}" href="{{ linker({'section': 'index', 'action': 'logout'}) }}">
 							<i class="fas fa-power-off"></i>
 						</a>
 					</li>
@@ -102,15 +101,38 @@
 {% endblock %}
 
 {% block body %}
-	<div class="d-flex flex-grow-1 overflow-hidden">
-		{{ include('Froxlor/sidebarmenu.html.twig') }}
+	<div class="d-flex flex-grow-1">
+		{{ include('Froxlor/sidebar.html.twig') }}
 
-		<main role="main" class="d-flex flex-column flex-grow-1 px-5 pt-4 pb-0 overflow-auto max-h-before-header">
-			<section class="flex-grow-1">
-				{% block content %}{% endblock %}
-			</section>
+		<div class="d-flex flex-grow-1 overflow-hidden">
+			{# TODO: eventually planned for settings page ...
+			<div class="sub-sidebar border-end border-top d-none d-sm-block flex-shrink-0 py-3">
+				<span class="px-3 text-muted">Settings</span>
+				<nav class="nav flex-column">
+					<a class="nav-link active" aria-current="page" href="#">Active</a>
+					<a class="nav-link" href="#">Link</a>
+					<a class="nav-link" href="#">Link</a>
+					<a class="nav-link disabled">Disabled</a>
+				</nav>
+			</div>
+			#}
 
-			{{ include('Froxlor/footer.html.twig') }}
-		</main>
+			<main class="d-flex flex-column flex-grow-1 overflow-auto">
+				{% if block('heading') %}
+					<section class="py-3 px-3 px-lg-5 bg-white shadow-sm border-top d-flex justify-content-between align-items-center">
+						<div>{% block heading %}{% endblock %}</div>
+						<div>{% block actions %}{% endblock %}</div>
+					</section>
+				{% endif %}
+
+				<section class="flex-grow-1 p-3 p-lg-5">
+					{% block content %}{% endblock %}
+				</section>
+
+				{{ include('Froxlor/footer.html.twig') }}
+			</main>
+
+			{% block subsidebar %}{% endblock %}
+		</div>
 	</div>
 {% endblock %}

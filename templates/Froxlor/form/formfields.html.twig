@@ -1,9 +1,9 @@
 {% macro fieldrow(id, field, norow = false, nohide = false, em = false) %}
 	{% if field.visible is not defined or (field.visible is defined and field.visible) or nohide == true %}
 		{% if norow == false and field.type != 'hidden' %}
-			<div class="row mb-3 pb-3 border-bottom">
+			<div class="row g-0 formfield d-flex align-items-center">
 				{% if field.label is iterable %}
-					<label for="{{ id }}" class="col-sm-4 col-form-label">
+					<label for="{{ id }}" class="col-sm-4 col-form-label pe-3">
 						{% if em %}
 							<mark>
 							{% endif %}
@@ -15,7 +15,7 @@
 						{% endif %}
 					</label>
 				{% else %}
-					<label for="{{ id }}" class="col-sm-4 col-form-label">
+					<label for="{{ id }}" class="col-sm-4 col-form-label pe-3">
 						{% if em %}
 							<mark>
 							{% endif %}
@@ -27,7 +27,7 @@
 						{% endif %}
 					</label>
 				{% endif %}
-				<div class="col-sm-8{% if field.type == 'infotext' %} d-flex align-items-center{% endif %}">
+				<div class="col-sm-8">
 				{% endif %}
 				{% if field.type == 'text' or field.type == 'password' or field.type == 'number' or field.type == 'file' or field.type == 'email' or field.type == 'url' or field.type == 'hidden' %}
 					{{ _self.input(id, field) }}

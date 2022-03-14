@@ -9,7 +9,6 @@ $froxlor-blue-light: #62c8f4;
 $froxlor-blue-dark: #1871a2;
 
 $primary: $froxlor-blue-dark;
-$secondary: $dark-bg;
 $info: $froxlor-blue-light;
 $warning: #FBBF24;
 $danger: #E11D48;
@@ -21,6 +20,10 @@ $alert-border-width: 0;
 $list-group-item-color-scale: 0;
 $list-group-item-bg-scale: 0;
 
+$input-bg: lighten($light-bg, 5%);
+
+$font-size-root: 16px;
+
 // Space
 $spacer: 1.25rem;
 
@@ -29,7 +32,7 @@ $body-bg: $light-bg;
 $body-color: $light-font-color;
 
 // Borders
-$border-radius: 0.5rem;
+// $border-radius: 0.5rem;
 
 // Links
 $links: $froxlor-blue-dark;
@@ -38,7 +41,7 @@ $links: $froxlor-blue-dark;
 $navbar-bg: #ffffff;
 
 // Sidebar
-$sidebar-width: 280px;
+$sidebar-width: 256px;
 
 // Card
 $card-cap-bg: none;

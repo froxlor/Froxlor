@@ -25,6 +25,7 @@ use Froxlor\UI\Listing;
 return [
 	'customer_list' => [
 		'title' => $lng['admin']['customers'],
+		'description' => 'Manage your customers',
 		'icon' => 'fa-solid fa-user',
 		'columns' => [
 			'c.name' => [
@@ -91,7 +92,7 @@ return [
 			'delete' => [
 				'icon' => 'fa fa-trash',
 				'title' => $lng['panel']['delete'],
-				'class' => 'text-danger',
+				'class' => 'btn-danger',
 				'href' => [
 					'section' => 'customers',
 					'page' => 'customers',

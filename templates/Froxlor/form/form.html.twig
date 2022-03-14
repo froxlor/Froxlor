@@ -3,15 +3,6 @@
 	{% import "Froxlor/form/formfields.html.twig" as formfields %}
 
 	<form action="{{ formaction|default("") }}" method="post" enctype="application/x-www-form-urlencoded" class="form">
-		{% if title is not empty %}
-			<h3 class="page-header">
-				{% if form_data.image is not empty %}
-					<i class="{{ form_data.image }}"></i>
-				{% endif %}
-				{{ title }}
-			</h3>
-		{% endif %}
-
 		{% for section in form_data.sections %}
 			<div class="card mb-3">
 				{% if section.title is not empty %}
@@ -22,7 +13,7 @@
 						{{ section.title }}
 					</div>
 				{% endif %}
-				<div class="card-body">
+				<div class="formfields">
 					{% for id,field in section.fields %}
 						{{ formfields.fieldrow(id, field) }}
 					{% endfor %}
@@ -31,20 +22,18 @@
 		{% endfor %}
 
 		<!-- submit buttons -->
-		<div class="card mb-3">
-			<div class="card-body">
-				{% if hiddenid is not empty %}
-					<input type="hidden" name="id" value="{{ hiddenid }}"/>
-				{% endif %}
-				<input type="hidden" name="s" value="{{ s }}"/>
-				<input type="hidden" name="page" value="{{ page }}"/>
-				<input type="hidden" name="action" value="{{ action }}"/>
-				<input type="hidden" name="send" value="send"/>
+		<div>
+			{% if hiddenid is not empty %}
+				<input type="hidden" name="id" value="{{ hiddenid }}"/>
+			{% endif %}
+			<input type="hidden" name="s" value="{{ s }}"/>
+			<input type="hidden" name="page" value="{{ page }}"/>
+			<input type="hidden" name="action" value="{{ action }}"/>
+			<input type="hidden" name="send" value="send"/>
 
-				<div class="col-12 text-center">
-					<button type="reset" class="btn btn-warning">{{ lng('panel.cancel') }}</button>
-					<button type="submit" class="btn btn-success">{{ lng('panel.save') }}</button>
-				</div>
+			<div class="col-12 text-end">
+				<button type="reset" class="btn btn-outline-secondary">{{ lng('panel.cancel') }}</button>
+				<button type="submit" class="btn btn-primary">{{ lng('panel.save') }}</button>
 			</div>
 		</div>
 	</form>

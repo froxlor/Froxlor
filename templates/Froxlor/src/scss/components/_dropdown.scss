@@ -1,0 +1,12 @@
+.dropdown {
+	.dropdown-menu {
+		.dropdown-item {
+			i {
+				width: 1rem;
+				margin-right: 1rem;
+				text-align: center;
+				color: $text-muted;
+			}
+		}
+	}
+}
