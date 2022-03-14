@@ -67,9 +67,13 @@ class UI
 				|| strcasecmp('https', $isHttps) == 0
 			);
 
-		ini_set("url_rewriter.tags", "");
-		ini_set("session.cookie_httponly", true);
-		ini_set("session.cookie_secure", $isHttps);
+		session_set_cookie_params([
+			'path' => '/',
+			'domain' => $_SERVER['HTTP_HOST'],
+			'secure' => $isHttps,
+			'httponly' => true,
+			'samesite' => 'Strict'
+		]);
 		session_start();
 
 		header("Content-Type: text/html; charset=UTF-8");
