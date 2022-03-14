@@ -87,7 +87,6 @@ if ($page == 'message') {
 
 				\Froxlor\UI\Response::redirectTo($filename, array(
 					'page' => $page,
-					's' => $s,
 					'action' => 'showsuccess',
 					'sentitems' => $mailcounter
 				));

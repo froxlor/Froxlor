@@ -91,8 +91,7 @@ if ($page == 'overview' || $page == 'emails') {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
 				\Froxlor\UI\Response::redirectTo($filename, array(
-					'page' => $page,
-					's' => $s
+					'page' => $page
 				));
 			} else {
 				if ($result['popaccountid'] != '0') {
@@ -119,8 +118,7 @@ if ($page == 'overview' || $page == 'emails') {
 				\Froxlor\UI\Response::redirectTo($filename, array(
 					'page' => $page,
 					'action' => 'edit',
-					'id' => $result['id'],
-					's' => $s
+					'id' => $result['id']
 				));
 			} else {
 				$result_stmt = Database::prepare("SELECT `id`, `domain`, `customerid` FROM `" . TABLE_PANEL_DOMAINS . "`
@@ -225,8 +223,7 @@ if ($page == 'overview' || $page == 'emails') {
 		\Froxlor\UI\Response::redirectTo($filename, array(
 			'page' => $page,
 			'action' => 'edit',
-			'id' => $id,
-			's' => $s
+			'id' => $id
 		));
 	}
 } elseif ($page == 'accounts') {
@@ -250,8 +247,7 @@ if ($page == 'overview' || $page == 'emails') {
 				\Froxlor\UI\Response::redirectTo($filename, array(
 					'page' => 'emails',
 					'action' => 'edit',
-					'id' => $id,
-					's' => $s
+					'id' => $id
 				));
 			} else {
 
@@ -299,8 +295,7 @@ if ($page == 'overview' || $page == 'emails') {
 				\Froxlor\UI\Response::redirectTo($filename, array(
 					'page' => 'emails',
 					'action' => 'edit',
-					'id' => $id,
-					's' => $s
+					'id' => $id
 				));
 			} else {
 				$result['email_full'] = $idna_convert->decode($result['email_full']);
@@ -335,8 +330,7 @@ if ($page == 'overview' || $page == 'emails') {
 				\Froxlor\UI\Response::redirectTo($filename, array(
 					'page' => 'emails',
 					'action' => 'edit',
-					'id' => $id,
-					's' => $s
+					'id' => $id
 				));
 			} else {
 				$result['email_full'] = $idna_convert->decode($result['email_full']);
@@ -371,8 +365,7 @@ if ($page == 'overview' || $page == 'emails') {
 				\Froxlor\UI\Response::redirectTo($filename, array(
 					'page' => 'emails',
 					'action' => 'edit',
-					'id' => $id,
-					's' => $s
+					'id' => $id
 				));
 			} else {
 				\Froxlor\UI\HTML::askYesNoWithCheckbox('email_reallydelete_account', 'admin_customer_alsoremovemail', $filename, array(
@@ -405,8 +398,7 @@ if ($page == 'overview' || $page == 'emails') {
 					\Froxlor\UI\Response::redirectTo($filename, array(
 						'page' => 'emails',
 						'action' => 'edit',
-						'id' => $id,
-						's' => $s
+						'id' => $id
 					));
 				} else {
 					$result['email_full'] = $idna_convert->decode($result['email_full']);
@@ -457,8 +449,7 @@ if ($page == 'overview' || $page == 'emails') {
 					\Froxlor\UI\Response::redirectTo($filename, array(
 						'page' => 'emails',
 						'action' => 'edit',
-						'id' => $id,
-						's' => $s
+						'id' => $id
 					));
 				} else {
 					\Froxlor\UI\HTML::askYesNo('email_reallydelete_forwarder', $filename, array(

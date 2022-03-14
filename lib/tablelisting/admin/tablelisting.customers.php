@@ -40,7 +40,7 @@ return [
 			],
 			'a.loginname' => [
 				'label' => $lng['admin']['admin'],
-				'field' => 'admin.loginname',
+				'field' => 'adminname',
 				'callback' => [Impersonate::class, 'admin'],
 			],
 			'c.email' => [

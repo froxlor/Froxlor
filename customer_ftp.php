@@ -75,8 +75,7 @@ if ($page == 'overview' || $page == 'accounts') {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
 				\Froxlor\UI\Response::redirectTo($filename, array(
-					'page' => $page,
-					's' => $s
+					'page' => $page
 				));
 			} else {
 				\Froxlor\UI\HTML::askYesNoWithCheckbox('ftp_reallydelete', 'admin_customer_alsoremoveftphomedir', $filename, array(
@@ -97,8 +96,7 @@ if ($page == 'overview' || $page == 'accounts') {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
 				\Froxlor\UI\Response::redirectTo($filename, array(
-					'page' => $page,
-					's' => $s
+					'page' => $page
 				));
 			} else {
 				$pathSelect = \Froxlor\FileDir::makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], '/');
@@ -153,8 +151,7 @@ if ($page == 'overview' || $page == 'accounts') {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
 				\Froxlor\UI\Response::redirectTo($filename, array(
-					'page' => $page,
-					's' => $s
+					'page' => $page
 				));
 			} else {
 				if (strpos($result['homedir'], $userinfo['documentroot']) === 0) {

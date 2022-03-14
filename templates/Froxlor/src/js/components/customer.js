@@ -25,7 +25,7 @@ $(document).ready(function () {
 		var pid = $(this).val();
 		if (pid > 0) {
 			$.ajax({
-				url: "admin_plans.php?s=" + window.$session + "&page=overview&action=jqGetPlanValues",
+				url: "admin_plans.php?page=overview&action=jqGetPlanValues",
 				type: "POST",
 				data: {
 					planid: pid

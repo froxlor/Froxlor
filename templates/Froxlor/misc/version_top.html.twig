@@ -1,4 +1,4 @@
-<a class="nav-link {% if isnewerversion == 0 %}text-success{% else %}text-warning{% endif %}" {% if isnewerversion == 0 %} href="#" {% else %} href="admin_autoupdate.php?page=overview&s={{ s }}" {% endif %} title="{% if isnewerversion == 0 %}{{ additional_info }}{% else %}{{ message }}{% endif %}">
+<a class="nav-link {% if isnewerversion == 0 %}text-success{% else %}text-warning{% endif %}" {% if isnewerversion == 0 %} href="#" {% else %} href="admin_autoupdate.php?page=overview" {% endif %} title="{% if isnewerversion == 0 %}{{ additional_info }}{% else %}{{ message }}{% endif %}">
 	{% if isnewerversion == 0 %}
 		<i class="fa-solid fa-circle-check me-1"></i>
 	{% else %}

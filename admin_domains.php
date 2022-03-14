@@ -92,8 +92,7 @@ if ($page == 'domains' || $page == 'overview') {
 				}
 
 				\Froxlor\UI\Response::redirectTo($filename, array(
-					'page' => $page,
-					's' => $s
+					'page' => $page
 				));
 			} elseif ($alias_check['count'] > 0) {
 				\Froxlor\UI\Response::standard_error('domains_cantdeletedomainwithaliases');
@@ -119,8 +118,7 @@ if ($page == 'domains' || $page == 'overview') {
 				\Froxlor\UI\Response::dynamic_error($e->getMessage());
 			}
 			\Froxlor\UI\Response::redirectTo($filename, array(
-				'page' => $page,
-				's' => $s
+				'page' => $page
 			));
 		} else {
 
@@ -376,8 +374,7 @@ if ($page == 'domains' || $page == 'overview') {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
 				\Froxlor\UI\Response::redirectTo($filename, array(
-					'page' => $page,
-					's' => $s
+					'page' => $page
 				));
 			} else {
 

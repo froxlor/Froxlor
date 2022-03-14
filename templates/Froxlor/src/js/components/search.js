@@ -20,7 +20,7 @@ $(document).ready(function () {
 		}
 		// Search
 		$.ajax({
-			url: "lib/ajax.php?action=searchglobal&theme=" + window.$theme + "&s=" + window.$session,
+			url: "lib/ajax.php?action=searchglobal&theme=" + window.$theme,
 			type: "POST",
 			data: {
 				searchtext: query

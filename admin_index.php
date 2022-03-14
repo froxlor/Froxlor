@@ -32,25 +32,25 @@ $id = (int) Request::get('id');
 if ($action == 'logout') {
 
 	$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "logged out");
-
-	$params = array(
-		'adminid' => (int) $userinfo['adminid']
-	);
-
-	if (Settings::Get('session.allow_multiple_login') == '1') {
-		$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_SESSIONS . "`
-			WHERE `userid` = :adminid
-			AND `adminsession` = '1'
-			AND `hash` = :hash");
-		$params['hash'] = $s;
-	} else {
-		$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_SESSIONS . "`
-			WHERE `userid` = :adminid
-			AND `adminsession` = '1'");
-	}
-	Database::pexecute($stmt, $params);
+	unset($_SESSION['userinfo']);
+	\Froxlor\CurrentUser::setData();
+	session_destroy();
 
 	\Froxlor\UI\Response::redirectTo('index.php');
+} elseif ($action == 'suback') {
+	if (is_array(\Froxlor\CurrentUser::getField('switched_user'))) {
+		$result = \Froxlor\CurrentUser::getData();
+		$result = $result['switched_user'];
+		\Froxlor\CurrentUser::setData($result);
+		$target = (isset($_GET['target']) ? $_GET['target'] : 'index');
+		$redirect = "admin_" . $target . ".php";
+		if (!file_exists(\Froxlor\Froxlor::getInstallDir() . "/" . $redirect)) {
+			$redirect = "admin_index.php";
+		}
+		\Froxlor\UI\Response::redirectTo($redirect, null, true);
+	} else {
+		\Froxlor\UI\Response::dynamic_error("Cannot change back - You've never switched to another user :-)");
+	}
 }
 
 if ($page == 'overview') {
@@ -88,7 +88,7 @@ if ($page == 'overview') {
 	$overview['diskspace_bytes'] = $overview['diskspace_assigned'] * 1024;
 	$overview['diskspace_bytes_used'] = $overview['diskspace_used'] * 1024;
 
-	$userinfo['traffic_bytes'] = ($userinfo['traffic'] > -1) ? $userinfo['traffic'] * 1024 : - 1;
+	$userinfo['traffic_bytes'] = ($userinfo['traffic'] > -1) ? $userinfo['traffic'] * 1024 : -1;
 	$overview['traffic_bytes'] = $overview['traffic_assigned'] * 1024;
 	$overview['traffic_bytes_used'] = $overview['traffic_used'] * 1024;
 
@@ -114,7 +114,7 @@ if ($page == 'overview') {
 		$isnewerversion = $result['isnewerversion'];
 	} else {
 		$lookfornewversion_lable = $lng['admin']['lookfornewversion']['clickhere'];
-		$lookfornewversion_link = htmlspecialchars($filename . '?s=' . urlencode($s) . '&page=' . urlencode($page) . '&lookfornewversion=yes');
+		$lookfornewversion_link = htmlspecialchars($filename . '?page=' . urlencode($page) . '&lookfornewversion=yes');
 		$lookfornewversion_message = '';
 		$lookfornewversion_addinfo = '';
 		$isnewerversion = 0;
@@ -126,7 +126,7 @@ if ($page == 'overview') {
 	// additional sys-infos
 	$meminfo = explode("\n", @file_get_contents("/proc/meminfo"));
 	$memory = "";
-	for ($i = 0; $i < count($meminfo); ++ $i) {
+	for ($i = 0; $i < count($meminfo); ++$i) {
 		if (substr($meminfo[$i], 0, 3) === "Mem") {
 			$memory .= $meminfo[$i] . PHP_EOL;
 		}
@@ -137,7 +137,7 @@ if ($page == 'overview') {
 		$load = number_format($loadArray[0], 2, '.', '') . " / " . number_format($loadArray[1], 2, '.', '') . " / " . number_format($loadArray[2], 2, '.', '');
 	} else {
 		$load = @file_get_contents('/proc/loadavg');
-		if (! $load) {
+		if (!$load) {
 			$load = $lng['admin']['noloadavailable'];
 		}
 	}
@@ -191,7 +191,7 @@ if ($page == 'overview') {
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 		$old_password = \Froxlor\Validate\Validate::validate($_POST['old_password'], 'old password');
 
-		if (! \Froxlor\System\Crypt::validatePasswordLogin($userinfo, $old_password, TABLE_PANEL_ADMINS, 'adminid')) {
+		if (!\Froxlor\System\Crypt::validatePasswordLogin($userinfo, $old_password, TABLE_PANEL_ADMINS, 'adminid')) {
 			\Froxlor\UI\Response::standard_error('oldpasswordnotcorrect');
 		}
 
@@ -229,9 +229,7 @@ if ($page == 'overview') {
 				\Froxlor\UI\Response::dynamic_error($e->getMessage());
 			}
 			$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, 'changed password');
-			\Froxlor\UI\Response::redirectTo($filename, Array(
-				's' => $s
-			));
+			\Froxlor\UI\Response::redirectTo($filename);
 		}
 	} else {
 		UI::twigBuffer('user/change_password.html.twig');
@@ -251,21 +249,9 @@ if ($page == 'overview') {
 			} catch (Exception $e) {
 				\Froxlor\UI\Response::dynamic_error($e->getMessage());
 			}
-
-			// also update current session
-			$lng_stmt = Database::prepare("
-				UPDATE `" . TABLE_PANEL_SESSIONS . "`
-				SET `language`= :lng
-				WHERE `hash`= :hash");
-			Database::pexecute($lng_stmt, array(
-				'lng' => $def_language,
-				'hash' => $s
-			));
 		}
 		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "changed his/her default language to '" . $def_language . "'");
-		\Froxlor\UI\Response::redirectTo($filename, array(
-			's' => $s
-		));
+		\Froxlor\UI\Response::redirectTo($filename);
 	} else {
 
 		$language_options = '';
@@ -294,20 +280,8 @@ if ($page == 'overview') {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 
-		// also update current session
-		$theme_stmt = Database::prepare("
-				UPDATE `" . TABLE_PANEL_SESSIONS . "`
-				SET `theme`= :theme
-				WHERE `hash`= :hash");
-		Database::pexecute($theme_stmt, array(
-			'theme' => $theme,
-			'hash' => $s
-		));
-
 		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "changed his/her theme to '" . $theme . "'");
-		\Froxlor\UI\Response::redirectTo($filename, array(
-			's' => $s
-		));
+		\Froxlor\UI\Response::redirectTo($filename);
 	} else {
 
 		$theme_options = '';
@@ -386,22 +360,16 @@ if ($page == 'overview') {
 
 				// finally remove error from fs
 				@unlink($err_file);
-				\Froxlor\UI\Response::redirectTo($filename, array(
-					's' => $s
-				));
+				\Froxlor\UI\Response::redirectTo($filename);
 			}
 			// show a nice summary of the error-report
 			// before actually sending anything
 			eval("echo \"" . \Froxlor\UI\Template::getTemplate("index/send_error_report") . "\";");
 		} else {
-			\Froxlor\UI\Response::redirectTo($filename, array(
-				's' => $s
-			));
+			\Froxlor\UI\Response::redirectTo($filename);
 		}
 	} else {
-		\Froxlor\UI\Response::redirectTo($filename, array(
-			's' => $s
-		));
+		\Froxlor\UI\Response::redirectTo($filename);
 	}
 } elseif ($page == 'apikeys' && Settings::Get('api.enabled') == 1) {
 	require_once __DIR__ . '/api_keys.php';

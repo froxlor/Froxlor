@@ -29,9 +29,8 @@ define('RELEASE_URI', "https://autoupdate.froxlor.org/froxlor-{version}.zip");
 define('CHECKSUM_URI', "https://autoupdate.froxlor.org/froxlor-{version}.zip.sha256");
 
 // check for archive-stuff
-if (! extension_loaded('zip')) {
+if (!extension_loaded('zip')) {
 	\Froxlor\UI\Response::redirectTo($filename, array(
-		's' => $s,
 		'page' => 'error',
 		'errno' => 2
 	));
@@ -40,7 +39,6 @@ if (! extension_loaded('zip')) {
 // 0.11.x requires 7.4 at least
 if (version_compare("7.4.0", PHP_VERSION, ">=")) {
 	\Froxlor\UI\Response::redirectTo($filename, array(
-		's' => $s,
 		'page' => 'error',
 		'errno' => 10
 	));
@@ -72,15 +70,14 @@ if ($page == 'overview') {
 		$message_addinfo = $_message;
 
 		// not numeric -> error-message
-		if (! preg_match('/^((\d+\\.)(\d+\\.)(\d+\\.)?(\d+)?(\-(svn|dev|rc)(\d+))?)$/', $_version)) {
+		if (!preg_match('/^((\d+\\.)(\d+\\.)(\d+\\.)?(\d+)?(\-(svn|dev|rc)(\d+))?)$/', $_version)) {
 			// check for customized version to not output
 			// "There is a newer version of froxlor" besides the error-message
 			\Froxlor\UI\Response::redirectTo($filename, array(
-				's' => $s,
 				'page' => 'error',
 				'errno' => 3
 			));
-		} elseif (\Froxlor\Froxlor::versionCompare2($version, $_version) == - 1) {
+		} elseif (\Froxlor\Froxlor::versionCompare2($version, $_version) == -1) {
 			// there is a newer version - yay
 			$isnewerversion = 1;
 		} else {
@@ -117,7 +114,7 @@ elseif ($page == 'getdownload') {
 		$toCheck = str_replace('{version}', $newversion, CHECKSUM_URI);
 
 		// check for local destination folder
-		if (! is_dir(\Froxlor\Froxlor::getInstallDir() . '/updates/')) {
+		if (!is_dir(\Froxlor\Froxlor::getInstallDir() . '/updates/')) {
 			mkdir(\Froxlor\Froxlor::getInstallDir() . '/updates/');
 		}
 
@@ -136,7 +133,6 @@ elseif ($page == 'getdownload') {
 			HttpClient::fileGet($toLoad, $localArchive);
 		} catch (Exception $e) {
 			\Froxlor\UI\Response::redirectTo($filename, array(
-				's' => $s,
 				'page' => 'error',
 				'errno' => 4
 			));
@@ -144,7 +140,7 @@ elseif ($page == 'getdownload') {
 
 		// validate the integrity of the downloaded file
 		$_shouldsum = HttpClient::urlGet($toCheck);
-		if (! empty($_shouldsum)) {
+		if (!empty($_shouldsum)) {
 			$_t = explode(" ", $_shouldsum);
 			$shouldsum = $_t[0];
 		} else {
@@ -154,7 +150,6 @@ elseif ($page == 'getdownload') {
 
 		if ($filesum != $shouldsum) {
 			\Froxlor\UI\Response::redirectTo($filename, array(
-				's' => $s,
 				'page' => 'error',
 				'errno' => 9
 			));
@@ -162,13 +157,11 @@ elseif ($page == 'getdownload') {
 
 		// to the next step
 		\Froxlor\UI\Response::redirectTo($filename, array(
-			's' => $s,
 			'page' => 'extract',
 			'archive' => basename($localArchive)
 		));
 	}
 	\Froxlor\UI\Response::redirectTo($filename, array(
-		's' => $s,
 		'page' => 'error',
 		'errno' => 6
 	));
@@ -193,21 +186,17 @@ elseif ($page == 'extract') {
 		} else {
 			// error
 			\Froxlor\UI\Response::redirectTo($filename, array(
-				's' => $s,
 				'page' => 'error',
 				'errno' => 8
 			));
 		}
 
 		// redirect to update-page?
-		\Froxlor\UI\Response::redirectTo('admin_updates.php', array(
-			's' => $s
-		));
+		\Froxlor\UI\Response::redirectTo('admin_updates.php');
 	}
 
-	if (! file_exists($localArchive)) {
+	if (!file_exists($localArchive)) {
 		\Froxlor\UI\Response::redirectTo($filename, array(
-			's' => $s,
 			'page' => 'error',
 			'errno' => 7
 		));
@@ -231,6 +220,6 @@ elseif ($page == 'error') {
 	// 7 = local archive does not exist
 	// 8 = could not extract archive
 	// 9 = checksum mismatch
-	// 10 = <php-7.0
+	// 10 = <php-7.4
 	\Froxlor\UI\Response::standard_error('autoupdate_' . $errno);
 }

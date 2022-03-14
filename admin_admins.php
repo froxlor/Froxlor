@@ -62,33 +62,14 @@ if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
 		$destination_admin = $result['loginname'];
 
 		if ($destination_admin != '' && $result['adminid'] != $userinfo['userid']) {
-			$result_stmt = Database::prepare("
-				SELECT * FROM `" . TABLE_PANEL_SESSIONS . "` WHERE `userid` = :userid
-			");
-			$result = Database::pexecute_first($result_stmt, array(
-				'userid' => $userinfo['userid']
-			));
 
-			$s = \Froxlor\Froxlor::genSessionId();
-			$ins_stmt = Database::prepare("
-				INSERT INTO `" . TABLE_PANEL_SESSIONS . "` SET
-				`hash` = :hash, `userid` = :userid, `ipaddress` = :ip,
-				`useragent` = :ua, `lastactivity` = :la,
-				`language` = :lang, `adminsession` = '1'
-			");
-			$ins_data = array(
-				'hash' => $s,
-				'userid' => $id,
-				'ip' => $result['ipaddress'],
-				'ua' => $result['useragent'],
-				'la' => time(),
-				'lang' => $result['language']
-			);
-			Database::pexecute($ins_stmt, $ins_data);
+			$result['switched_user'] = \Froxlor\CurrentUser::getData();
+			$result['adminsession'] = 1;
+			$result['userid'] = $result['adminid'];
+			\Froxlor\CurrentUser::setData($result);
+
 			$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "switched adminuser and is now '" . $destination_admin . "'");
-			\Froxlor\UI\Response::redirectTo('admin_index.php', array(
-				's' => $s
-			));
+			\Froxlor\UI\Response::redirectTo('admin_index.php');
 		} else {
 			\Froxlor\UI\Response::redirectTo('index.php', array(
 				'action' => 'login'
@@ -114,8 +95,7 @@ if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
 					'id' => $id
 				))->delete();
 				\Froxlor\UI\Response::redirectTo($filename, array(
-					'page' => $page,
-					's' => $s
+					'page' => $page
 				));
 			} else {
 				\Froxlor\UI\HTML::askYesNo('admin_admin_reallydelete', $filename, array(
@@ -134,8 +114,7 @@ if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
 				\Froxlor\UI\Response::dynamic_error($e->getMessage());
 			}
 			\Froxlor\UI\Response::redirectTo($filename, array(
-				'page' => $page,
-				's' => $s
+				'page' => $page
 			));
 		} else {
 
@@ -175,8 +154,7 @@ if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
 				\Froxlor\UI\Response::redirectTo($filename, array(
-					'page' => $page,
-					's' => $s
+					'page' => $page
 				));
 			} else {
 

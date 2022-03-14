@@ -25,9 +25,7 @@ if ($userinfo['change_serversettings'] == '1') {
 
 	if ($action == 'setconfigured') {
 		Settings::Set('panel.is_configured', '1', true);
-		\Froxlor\UI\Response::redirectTo('admin_configfiles.php', array(
-			's' => $s
-		));
+		\Froxlor\UI\Response::redirectTo('admin_configfiles.php');
 	}
 
 	$customer_tmpdir = '/tmp/';
@@ -260,9 +258,7 @@ if ($userinfo['change_serversettings'] == '1') {
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate("configfiles/wizard") . "\";");
 	}
 } else {
-	\Froxlor\UI\Response::redirectTo('admin_index.php', array(
-		's' => $s
-	));
+	\Froxlor\UI\Response::redirectTo('admin_index.php');
 }
 
 // helper functions

@@ -1535,12 +1535,6 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				'id' => $id
 			), true, true);
 
-			// delete potential existing sessions
-			$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_SESSIONS . "` WHERE `userid` = :id AND `adminsession` = '0'");
-			Database::pexecute($stmt, array(
-				'id' => $id
-			), true, true);
-
 			// delete traffic information
 			$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_TRAFFIC . "` WHERE `customerid` = :id");
 			Database::pexecute($stmt, array(

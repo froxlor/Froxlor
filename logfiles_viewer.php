@@ -34,8 +34,7 @@ $last_n = (int) Request::get('number_of_lines', 100);
 if (AREA != 'admin' && $userinfo['logviewenabled'] != '1') {
 	// back to domain overview
 	\Froxlor\UI\Response::redirectTo($filename, array(
-		'page' => 'domains',
-		's' => $s
+		'page' => 'domains'
 	));
 }
 

@@ -7,7 +7,7 @@ $(document).ready(function () {
 			$('#ipnote').remove();
 			$('#ip').removeClass('is-invalid');
 			$.ajax({
-				url: "admin_ipsandports.php?s=" + window.$session + "&page=overview&action=jqCheckIP",
+				url: "admin_ipsandports.php?page=overview&action=jqCheckIP",
 				type: "POST",
 				data: {
 					ip: ipval

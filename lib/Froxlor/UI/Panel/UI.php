@@ -51,13 +51,27 @@ class UI
 
 	private static $install_mode = false;
 
-	public static $SSL_REQ = false;
-
 	/**
 	 * send various security related headers
 	 */
 	public static function sendHeaders()
 	{
+		$isHttps =
+			$_SERVER['HTTPS']
+			?? $_SERVER['REQUEST_SCHEME']
+			?? $_SERVER['HTTP_X_FORWARDED_PROTO']
+			?? null;
+
+		$isHttps =
+			$isHttps && (strcasecmp('on', $isHttps) == 0
+				|| strcasecmp('https', $isHttps) == 0
+			);
+
+		ini_set("url_rewriter.tags", "");
+		ini_set("session.cookie_httponly", true);
+		ini_set("session.cookie_secure", $isHttps);
+		session_start();
+
 		header("Content-Type: text/html; charset=UTF-8");
 
 		// prevent Froxlor pages from being cached
@@ -96,7 +110,6 @@ class UI
 		 * If Froxlor was called via HTTPS -> enforce it for the next time by settings HSTS header according to settings
 		 */
 		if (isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) != 'off')) {
-			self::$SSL_REQ = true;
 			$maxage = \Froxlor\Settings::Get('system.hsts_maxage');
 			if (empty($maxage)) {
 				$maxage = 0;
@@ -161,15 +174,14 @@ class UI
 		if (!self::$install_mode) {
 			// system default
 			if (\Froxlor\Froxlor::DBVERSION <= 202299999) {
+				// @fixme set this to the last 0.10.x DBVERSION to fallback to the new theme
 				\Froxlor\Settings::Set('panel.default_theme', 'Froxlor');
 			}
 			$theme = (\Froxlor\Settings::Get('panel.default_theme') !== null) ? \Froxlor\Settings::Get('panel.default_theme') : $theme;
 			// customer theme
-			/*
 			if (\Froxlor\CurrentUser::hasSession() && \Froxlor\CurrentUser::getField('theme') != $theme) {
 				$theme = \Froxlor\CurrentUser::getField('theme');
 			}
-			*/
 		}
 		if (!file_exists(\Froxlor\Froxlor::getInstallDir() . '/templates/' . $theme)) {
 			\Froxlor\PhpHelper::phpErrHandler(E_USER_WARNING, "Theme '" . $theme . "' could not be found.", __FILE__, __LINE__, null);

@@ -28,16 +28,6 @@ if ($action == '') {
 	$action = 'login';
 }
 
-if (session_status() == PHP_SESSION_NONE) {
-	ini_set("session.name", "s");
-	ini_set("url_rewriter.tags", "");
-	ini_set("session.use_cookies", false);
-	ini_set("session.cookie_httponly", true);
-	ini_set("session.cookie_secure", UI::$SSL_REQ);
-	session_id('login');
-	session_start();
-}
-
 if ($action == '2fa_entercode') {
 	// page for entering the 2FA code after successful login
 	if (!isset($_SESSION) || !isset($_SESSION['secret_2fa'])) {
@@ -683,10 +673,11 @@ if ($action == 'resetpwd') {
 
 function finishLogin($userinfo)
 {
-	global $version, $dbversion, $remote_addr, $http_user_agent, $languages;
+	global $languages;
 
 	if (isset($userinfo['userid']) && $userinfo['userid'] != '') {
-		$s = \Froxlor\Froxlor::genSessionId();
+
+		\Froxlor\CurrentUser::setData($userinfo);
 
 		if (isset($_POST['language'])) {
 			$language = \Froxlor\Validate\Validate::validate($_POST['language'], 'language');
@@ -698,65 +689,23 @@ function finishLogin($userinfo)
 		} else {
 			$language = Settings::Get('panel.standardlanguage');
 		}
+		\Froxlor\CurrentUser::setField('language', $language);
 
 		if (isset($userinfo['theme']) && $userinfo['theme'] != '') {
 			$theme = $userinfo['theme'];
 		} else {
 			$theme = Settings::Get('panel.default_theme');
+			\Froxlor\CurrentUser::setField('theme', $theme);
 		}
-
-		if (Settings::Get('session.allow_multiple_login') != '1') {
-			$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_SESSIONS . "`
-					WHERE `userid` = :uid
-					AND `adminsession` = :adminsession");
-			Database::pexecute($stmt, array(
-				"uid" => $userinfo['userid'],
-				"adminsession" => $userinfo['adminsession']
-			));
-		}
-
-		// check for field 'theme' in session-table, refs #607
-		// Changed with #1287 to new method
-		$stmt = Database::query("SHOW COLUMNS FROM panel_sessions LIKE 'theme'");
-		while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-			if ($row['Field'] == "theme") {
-				$has_theme = true;
-			}
-		}
-
-		$params = array(
-			"hash" => $s,
-			"userid" => $userinfo['userid'],
-			"ipaddress" => $remote_addr,
-			"useragent" => $http_user_agent,
-			"lastactivity" => time(),
-			"language" => $language,
-			"adminsession" => $userinfo['adminsession']
-		);
-
-		if ($has_theme) {
-			$params["theme"] = $theme;
-			$stmt = Database::prepare("INSERT INTO `" . TABLE_PANEL_SESSIONS . "`
-					(`hash`, `userid`, `ipaddress`, `useragent`, `lastactivity`, `language`, `adminsession`, `theme`)
-					VALUES (:hash, :userid, :ipaddress, :useragent, :lastactivity, :language, :adminsession, :theme)");
-		} else {
-			$stmt = Database::prepare("INSERT INTO `" . TABLE_PANEL_SESSIONS . "`
-					(`hash`, `userid`, `ipaddress`, `useragent`, `lastactivity`, `language`, `adminsession`)
-					VALUES (:hash, :userid, :ipaddress, :useragent, :lastactivity, :language, :adminsession)");
-		}
-		Database::pexecute($stmt, $params);
 
 		$qryparams = array();
 		if (isset($_POST['qrystr']) && $_POST['qrystr'] != "") {
 			parse_str(urldecode($_POST['qrystr']), $qryparams);
 		}
-		$qryparams['s'] = $s;
 
 		if ($userinfo['adminsession'] == '1') {
 			if (\Froxlor\Froxlor::hasUpdates() || \Froxlor\Froxlor::hasDbUpdates()) {
-				\Froxlor\UI\Response::redirectTo('admin_updates.php', array(
-					's' => $s
-				));
+				\Froxlor\UI\Response::redirectTo('admin_updates.php');
 			} else {
 				if (isset($_POST['script']) && $_POST['script'] != "") {
 					if (preg_match("/customer\_/", $_POST['script']) === 1) {

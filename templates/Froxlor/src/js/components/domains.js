@@ -4,7 +4,7 @@ $(document).ready(function () {
 	$('#customerid').change(function () {
 		var cid = $(this).val();
 		$.ajax({
-			url: "admin_domains.php?s=" + window.$session + "&page=domains&action=jqGetCustomerPHPConfigs",
+			url: "admin_domains.php?page=domains&action=jqGetCustomerPHPConfigs",
 			type: "POST",
 			data: {
 				customerid: cid
@@ -36,7 +36,7 @@ $(document).ready(function () {
 			$('#speciallogfile').removeClass('is-invalid');
 			$('#speciallogverified').val(0);
 			$.ajax({
-				url: "admin_domains.php?s=" + window.$session + "&page=overview&action=jqSpeciallogfileNote",
+				url: "admin_domains.php?page=overview&action=jqSpeciallogfileNote",
 				type: "POST",
 				data: {
 					id: $('input[name=id]').val(), newval: +$('#speciallogfile').is(':checked')

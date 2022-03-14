@@ -210,23 +210,6 @@ class Paging
 		}
 
 		$this->userinfo['lastpaging']['pageno'] = $this->pageno;
-		$upd_stmt = \Froxlor\Database\Database::prepare("
-			UPDATE `" . TABLE_PANEL_SESSIONS . "` SET
-			`lastpaging` = :lastpaging
-			WHERE `hash` = :hash  AND `userid` = :userid
-			AND `ipaddress` = :ipaddr AND `useragent` = :ua
-			AND `adminsession` = :adminsession
-		");
-		$upd_data = array(
-			'lastpaging' => json_encode($this->userinfo['lastpaging']),
-			'hash' => $userinfo['hash'],
-			'userid' => $userinfo['userid'],
-			'ipaddr' => $userinfo['ipaddress'],
-			'ua' => $userinfo['useragent'],
-			'adminsession' => $userinfo['adminsession']
-		);
-		\Froxlor\Database\Database::pexecute($upd_stmt, $upd_data);
-
 		$this->limit = $limit;
 	}
 

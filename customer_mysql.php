@@ -101,8 +101,7 @@ if ($page == 'overview' || $page == 'mysqls') {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
 				\Froxlor\UI\Response::redirectTo($filename, array(
-					'page' => $page,
-					's' => $s
+					'page' => $page
 				));
 			} else {
 				$dbnamedesc = $result['databasename'];
@@ -125,8 +124,7 @@ if ($page == 'overview' || $page == 'mysqls') {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
 				\Froxlor\UI\Response::redirectTo($filename, array(
-					'page' => $page,
-					's' => $s
+					'page' => $page
 				));
 			} else {
 
@@ -167,8 +165,7 @@ if ($page == 'overview' || $page == 'mysqls') {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
 				\Froxlor\UI\Response::redirectTo($filename, array(
-					'page' => $page,
-					's' => $s
+					'page' => $page
 				));
 			} else {
 

@@ -10,7 +10,7 @@ $(document).ready(function () {
 		}
 
 		$.ajax({
-			url: "lib/ajax.php?action=newsfeed" + role + "&theme=" + window.$theme + "&s=" + window.$session,
+			url: "lib/ajax.php?action=newsfeed" + role + "&theme=" + window.$theme,
 			type: "GET",
 			success: function (data) {
 				$("#newsfeeditems").html(data);

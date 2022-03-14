@@ -1554,7 +1554,6 @@ $lng['serversettings']['phpfpm_settings']['idle_timeout']['description'] = 'Time
 
 // ADDED IN 0.9.27-svn2
 $lng['panel']['cancel'] = 'Cancel';
-$lng['admin']['delete_statistics'] = 'Delete Statistics';
 $lng['admin']['speciallogwarning'] = '<div id="speciallogfilenote" class="invalid-feedback">WARNING: By changing this setting you will lose all your old statistics for this domain.</div>';
 
 // ADDED IN 0.9.28-svn2

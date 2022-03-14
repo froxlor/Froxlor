@@ -71,8 +71,7 @@ if ($page == '' || $page == 'overview') {
 				}
 
 				\Froxlor\UI\Response::redirectTo($filename, array(
-					'page' => $page,
-					's' => $s
+					'page' => $page
 				));
 			} else {
 				\Froxlor\UI\HTML::askYesNo('plan_reallydelete', $filename, array(
@@ -93,8 +92,7 @@ if ($page == '' || $page == 'overview') {
 				\Froxlor\UI\Response::dynamic_error($e->getMessage());
 			}
 			\Froxlor\UI\Response::redirectTo($filename, array(
-				'page' => $page,
-				's' => $s
+				'page' => $page
 			));
 		} else {
 
@@ -164,8 +162,7 @@ if ($page == '' || $page == 'overview') {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
 				\Froxlor\UI\Response::redirectTo($filename, array(
-					'page' => $page,
-					's' => $s
+					'page' => $page
 				));
 			} else {
 

@@ -34,9 +34,11 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 
 		try {
 			$customer_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.customers.php';
-            $collection = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Customers::class, $userinfo, ['show_usages' => true]))
-				->has('admin', \Froxlor\Api\Commands\Admins::class, 'adminid', 'adminid')
+			$collection = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Customers::class, $userinfo, ['show_usages' => true]))
 				->withPagination($customer_list_data['customer_list']['columns']);
+			if ($userinfo['change_serversettings']) {
+				$collection->has('admin', \Froxlor\Api\Commands\Admins::class, 'adminid', 'adminid');
+			}
 		} catch (Exception $e) {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
@@ -71,33 +73,12 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 			if ($result['deactivated'] == '1') {
 				\Froxlor\UI\Response::standard_error("usercurrentlydeactivated", $destination_user);
 			}
-			$result_stmt = Database::prepare("
-				SELECT * FROM `" . TABLE_PANEL_SESSIONS . "`
-				WHERE `userid` = :id
-				AND `hash` = :hash");
-			$result = Database::pexecute_first($result_stmt, array(
-				'id' => $userinfo['userid'],
-				'hash' => $s
-			));
 
-			$s = \Froxlor\Froxlor::genSessionId();
-			$insert = Database::prepare("
-				INSERT INTO `" . TABLE_PANEL_SESSIONS . "` SET
-					`hash` = :hash,
-					`userid` = :id,
-					`ipaddress` = :ip,
-					`useragent` = :ua,
-					`lastactivity` = :lastact,
-					`language` = :lang,
-					`adminsession` = '0'");
-			Database::pexecute($insert, array(
-				'hash' => $s,
-				'id' => $id,
-				'ip' => $result['ipaddress'],
-				'ua' => $result['useragent'],
-				'lastact' => time(),
-				'lang' => $result['language']
-			));
+			$result['switched_user'] = \Froxlor\CurrentUser::getData();
+			$result['adminsession'] = 0;
+			$result['userid'] = $result['customerid'];
+			\Froxlor\CurrentUser::setData($result);
+
 			$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "switched user and is now '" . $destination_user . "'");
 
 			$target = (isset($_GET['target']) ? $_GET['target'] : 'index');
@@ -105,9 +86,7 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 			if (!file_exists(\Froxlor\Froxlor::getInstallDir() . "/" . $redirect)) {
 				$redirect = "customer_index.php";
 			}
-			\Froxlor\UI\Response::redirectTo($redirect, array(
-				's' => $s
-			), true);
+			\Froxlor\UI\Response::redirectTo($redirect, null, true);
 		} else {
 			\Froxlor\UI\Response::redirectTo('index.php', array(
 				'action' => 'login'
@@ -132,8 +111,7 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 				\Froxlor\UI\Response::dynamic_error($e->getMessage());
 			}
 			\Froxlor\UI\Response::redirectTo($filename, array(
-				'page' => $page,
-				's' => $s
+				'page' => $page
 			));
 		} else {
 			\Froxlor\UI\HTML::askYesNo('customer_reallyunlock', $filename, array(
@@ -162,8 +140,7 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 				\Froxlor\UI\Response::dynamic_error($e->getMessage());
 			}
 			\Froxlor\UI\Response::redirectTo($filename, array(
-				'page' => $page,
-				's' => $s
+				'page' => $page
 			));
 		} else {
 			\Froxlor\UI\HTML::askYesNoWithCheckbox('admin_customer_reallydelete', 'admin_customer_alsoremovefiles', $filename, array(
@@ -181,8 +158,7 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 				\Froxlor\UI\Response::dynamic_error($e->getMessage());
 			}
 			\Froxlor\UI\Response::redirectTo($filename, array(
-				'page' => $page,
-				's' => $s
+				'page' => $page
 			));
 		} else {
 
@@ -248,8 +224,7 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
 				\Froxlor\UI\Response::redirectTo($filename, array(
-					'page' => $page,
-					's' => $s
+					'page' => $page
 				));
 			} else {
 

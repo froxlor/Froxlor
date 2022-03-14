@@ -81,8 +81,7 @@ if ($page == 'overview' || $page == 'htpasswds') {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
 				\Froxlor\UI\Response::redirectTo($filename, array(
-					'page' => $page,
-					's' => $s
+					'page' => $page
 				));
 			} else {
 				if (strpos($result['path'], $userinfo['documentroot']) === 0) {
@@ -104,8 +103,7 @@ if ($page == 'overview' || $page == 'htpasswds') {
 				\Froxlor\UI\Response::dynamic_error($e->getMessage());
 			}
 			\Froxlor\UI\Response::redirectTo($filename, array(
-				'page' => $page,
-				's' => $s
+				'page' => $page
 			));
 		} else {
 			$pathSelect = \Froxlor\FileDir::makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
@@ -136,8 +134,7 @@ if ($page == 'overview' || $page == 'htpasswds') {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
 				\Froxlor\UI\Response::redirectTo($filename, array(
-					'page' => $page,
-					's' => $s
+					'page' => $page
 				));
 			} else {
 				if (strpos($result['path'], $userinfo['documentroot']) === 0) {
@@ -203,8 +200,7 @@ if ($page == 'overview' || $page == 'htpasswds') {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
 				\Froxlor\UI\Response::redirectTo($filename, array(
-					'page' => $page,
-					's' => $s
+					'page' => $page
 				));
 			} else {
 				\Froxlor\UI\HTML::askYesNo('extras_reallydelete_pathoptions', $filename, array(
@@ -222,8 +218,7 @@ if ($page == 'overview' || $page == 'htpasswds') {
 				\Froxlor\UI\Response::dynamic_error($e->getMessage());
 			}
 			\Froxlor\UI\Response::redirectTo($filename, array(
-				'page' => $page,
-				's' => $s
+				'page' => $page
 			));
 		} else {
 			$pathSelect = \Froxlor\FileDir::makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
@@ -255,8 +250,7 @@ if ($page == 'overview' || $page == 'htpasswds') {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
 				\Froxlor\UI\Response::redirectTo($filename, array(
-					'page' => $page,
-					's' => $s
+					'page' => $page
 				));
 			} else {
 				if (strpos($result['path'], $userinfo['documentroot']) === 0) {
@@ -295,8 +289,7 @@ if ($page == 'overview' || $page == 'htpasswds') {
 			\Froxlor\UI\Response::standard_success('backupaborted');
 			\Froxlor\UI\Response::redirectTo($filename, array(
 				'page' => $page,
-				'action' => '',
-				's' => $s
+				'action' => ''
 			));
 		}
 		if ($action == '') {

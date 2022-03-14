@@ -55,8 +55,7 @@ if ($page == 'log' && $userinfo['change_serversettings'] == '1') {
 				\Froxlor\UI\Response::dynamic_error($e->getMessage());
 			}
 			\Froxlor\UI\Response::redirectTo($filename, array(
-				'page' => $page,
-				's' => $s
+				'page' => $page
 			));
 		} else {
 			\Froxlor\UI\HTML::askYesNo('logger_reallytruncate', $filename, array(

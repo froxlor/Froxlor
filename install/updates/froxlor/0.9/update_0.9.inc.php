@@ -23,6 +23,7 @@ if (! defined('_CRON_UPDATE')) {
 	}
 }
 
+define('TABLE_PANEL_SESSIONS', 'panel_sessions');
 if (\Froxlor\Froxlor::isFroxlorVersion('0.9-r0')) {
 
 	showUpdateStep("Updating from 0.9-r0 to 0.9-r1", false);

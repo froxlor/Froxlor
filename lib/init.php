@@ -20,50 +20,45 @@
 // define default theme for configurehint, etc.
 $_deftheme = 'Froxlor';
 
-function view($template, $attributes) {
-    $view = file_get_contents(dirname(__DIR__) . '/templates/' . $template);
+function view($template, $attributes)
+{
+	$view = file_get_contents(dirname(__DIR__) . '/templates/' . $template);
 
-    return str_replace(array_keys($attributes), array_values($attributes), $view);
+	return str_replace(array_keys($attributes), array_values($attributes), $view);
 }
 
 // validate correct php version
 if (version_compare("7.4.0", PHP_VERSION, ">=")) {
-    die(
-        view($_deftheme . '/misc/phprequirementfailed.html.twig', [
-            '{{ basehref }}' => '',
-            '{{ froxlor_min_version }}' => '7.4.0',
-            '{{ current_version }}' => PHP_VERSION,
-            '{{ current_year }}' => date('Y', time()),
-        ])
-    );
+	die(view($_deftheme . '/misc/phprequirementfailed.html.twig', [
+		'{{ basehref }}' => '',
+		'{{ froxlor_min_version }}' => '7.4.0',
+		'{{ current_version }}' => PHP_VERSION,
+		'{{ current_year }}' => date('Y', time()),
+	]));
 }
 
 // validate vendor autoloader
 if (!file_exists(dirname(__DIR__) . '/vendor/autoload.php')) {
-    die(
-        view($_deftheme . '/misc/vendormissinghint.html.twig', [
-            '{{ basehref }}' => '',
-            '{{ froxlor_install_dir }}' => dirname(__DIR__),
-            '{{ current_year }}' => date('Y', time()),
-        ])
-    );
+	die(view($_deftheme . '/misc/vendormissinghint.html.twig', [
+		'{{ basehref }}' => '',
+		'{{ froxlor_install_dir }}' => dirname(__DIR__),
+		'{{ current_year }}' => date('Y', time()),
+	]));
 }
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
 use Froxlor\Database\Database;
-use Froxlor\PhpHelper;
 use Froxlor\Settings;
 use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
-use voku\helper\AntiXSS;
+use Froxlor\CurrentUser;
 
 // include MySQL-tabledefinitions
 require \Froxlor\Froxlor::getInstallDir() . '/lib/tables.inc.php';
 
 UI::sendHeaders();
 UI::initTwig();
-
 
 /**
  * Register Globals Security Fix
@@ -120,97 +115,12 @@ UI::sendSslHeaders();
 // create a new idna converter
 $idna_convert = new \Froxlor\Idna\IdnaWrapper();
 
-// SESSION MANAGEMENT
-$remote_addr = $_SERVER['REMOTE_ADDR'];
-
-if (empty($_SERVER['HTTP_USER_AGENT'])) {
-	$http_user_agent = 'unknown';
-} else {
-	$http_user_agent = $_SERVER['HTTP_USER_AGENT'];
-}
-unset($userinfo);
-unset($userid);
-unset($customerid);
-unset($adminid);
-unset($s);
-
-if (isset($_POST['s'])) {
-	$s = $_POST['s'];
-	$nosession = 0;
-} elseif (isset($_GET['s'])) {
-	$s = $_GET['s'];
-	$nosession = 0;
-} else {
-	$s = '';
-	$nosession = 1;
+// re-read user data if logged in
+if (CurrentUser::hasSession()) {
+	CurrentUser::reReadUserData();
 }
 
-$timediff = time() - Settings::Get('session.sessiontimeout');
-$del_stmt = Database::prepare("
-	DELETE FROM `" . TABLE_PANEL_SESSIONS . "` WHERE `lastactivity` < :timediff
-");
-Database::pexecute($del_stmt, array(
-	'timediff' => $timediff
-));
-
-$userinfo = array();
-
-if (isset($s) && $s != "" && $nosession != 1) {
-	ini_set("session.name", "s");
-	ini_set("url_rewriter.tags", "");
-	ini_set("session.use_cookies", false);
-	ini_set("session.cookie_httponly", true);
-	ini_set("session.cookie_secure", UI::$SSL_REQ);
-	session_id($s);
-	session_start();
-	$query = "SELECT `s`.*, `u`.* FROM `" . TABLE_PANEL_SESSIONS . "` `s` LEFT JOIN `";
-
-	if (AREA == 'admin') {
-		$query .= TABLE_PANEL_ADMINS . "` `u` ON (`s`.`userid` = `u`.`adminid`)";
-		$adminsession = '1';
-	} else {
-		$query .= TABLE_PANEL_CUSTOMERS . "` `u` ON (`s`.`userid` = `u`.`customerid`)";
-		$adminsession = '0';
-	}
-
-	$query .= " WHERE `s`.`hash` = :hash AND `s`.`ipaddress` = :ipaddr
-		AND `s`.`useragent` = :ua AND `s`.`lastactivity` > :timediff
-		AND `s`.`adminsession` = :adminsession
-	";
-
-	$userinfo_data = array(
-		'hash' => $s,
-		'ipaddr' => $remote_addr,
-		'ua' => $http_user_agent,
-		'timediff' => $timediff,
-		'adminsession' => $adminsession
-	);
-	$userinfo_stmt = Database::prepare($query);
-	$userinfo = Database::pexecute_first($userinfo_stmt, $userinfo_data);
-
-	if ($userinfo && (($userinfo['adminsession'] == '1' && AREA == 'admin' && isset($userinfo['adminid'])) || ($userinfo['adminsession'] == '0' && (AREA == 'customer' || AREA == 'login') && isset($userinfo['customerid']))) && (!isset($userinfo['deactivated']) || $userinfo['deactivated'] != '1')) {
-		$upd_stmt = Database::prepare("
-			UPDATE `" . TABLE_PANEL_SESSIONS . "` SET
-			`lastactivity` = :lastactive
-			WHERE `hash` = :hash AND `adminsession` = :adminsession
-		");
-		$upd_data = array(
-			'lastactive' => time(),
-			'hash' => $s,
-			'adminsession' => $adminsession
-		);
-		Database::pexecute($upd_stmt, $upd_data);
-		$nosession = 0;
-	} else {
-		$nosession = 1;
-	}
-} else {
-	$nosession = 1;
-}
-
-/**
- * Language Management
- */
+// Language Management
 $langs = array();
 $languages = array();
 $iso = array();
@@ -239,36 +149,31 @@ foreach ($langs as $key => $value) {
 // ensure that we can display messages
 $language = Settings::Get('panel.standardlanguage');
 
-if (isset($userinfo['language']) && isset($languages[$userinfo['language']])) {
+if (CurrentUser::hasSession() && !empty(CurrentUser::getField('language')) && isset($languages[CurrentUser::getField('language')])) {
 	// default: use language from session, #277
-	$language = $userinfo['language'];
+	$language = CurrentUser::getField('language');
 } else {
-	if (!isset($userinfo['def_language']) || !isset($languages[$userinfo['def_language']])) // this will always evaluat true, since it is the above statement inverted. @todo remove
-	{
-		if (isset($_GET['language']) && isset($languages[$_GET['language']])) {
-			$language = $_GET['language'];
-		} else {
-			if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-				$accept_langs = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
-				for ($i = 0; $i < count($accept_langs); $i++) {
-					// this only works for most common languages. some (uncommon) languages have a 3 letter iso-code.
-					// to be able to use these also, we would have to depend on the intl extension for php (using Locale::lookup or similar)
-					// as long as froxlor does not support any of these languages, we can leave it like that.
-					if (isset($iso[substr($accept_langs[$i], 0, 2)])) {
-						$language = $iso[substr($accept_langs[$i], 0, 2)];
-						break;
-					}
+	if (!CurrentUser::hasSession()) {
+		if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+			$accept_langs = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+			for ($i = 0; $i < count($accept_langs); $i++) {
+				// this only works for most common languages. some (uncommon) languages have a 3 letter iso-code.
+				// to be able to use these also, we would have to depend on the intl extension for php (using Locale::lookup or similar)
+				// as long as froxlor does not support any of these languages, we can leave it like that.
+				if (isset($iso[substr($accept_langs[$i], 0, 2)])) {
+					$language = $iso[substr($accept_langs[$i], 0, 2)];
+					break;
 				}
-				unset($iso);
+			}
+			unset($iso);
 
-				// if HTTP_ACCEPT_LANGUAGES has no valid langs, use default (very unlikely)
-				if (!strlen($language) > 0) {
-					$language = Settings::Get('panel.standardlanguage');
-				}
+			// if HTTP_ACCEPT_LANGUAGES has no valid langs, use default (very unlikely)
+			if (!strlen($language) > 0) {
+				$language = Settings::Get('panel.standardlanguage');
 			}
 		}
 	} else {
-		$language = $userinfo['def_language'];
+		$language = CurrentUser::getField('def_language');
 	}
 }
 
@@ -290,7 +195,7 @@ include_once \Froxlor\FileDir::makeSecurePath('lng/lng_references.php');
 UI::setLng($lng);
 
 // Initialize our link - class
-$linker = new \Froxlor\UI\Linker('index.php', $s);
+$linker = new \Froxlor\UI\Linker('index.php');
 UI::setLinker($linker);
 
 /**
@@ -301,8 +206,8 @@ $theme = (Settings::Get('panel.default_theme') !== null) ? Settings::Get('panel.
 /**
  * overwrite with customer/admin theme if defined
  */
-if (isset($userinfo['theme']) && $userinfo['theme'] != $theme) {
-	$theme = $userinfo['theme'];
+if (CurrentUser::hasSession() && CurrentUser::getField('theme') != $theme) {
+	$theme = CurrentUser::getField('theme');
 }
 
 // Check if a different variant of the theme is used
@@ -351,8 +256,10 @@ UI::twig()->addGlobal('header_logo', $header_logo);
 /**
  * Redirects to index.php (login page) if no session exists
  */
-if ($nosession == 1 && AREA != 'login') {
-	unset($userinfo);
+if (!CurrentUser::hasSession() && AREA != 'login') {
+	unset($_SESSION['userinfo']);
+	CurrentUser::setData();
+	session_destroy();
 	$params = array(
 		"script" => basename($_SERVER["SCRIPT_NAME"]),
 		"qrystr" => $_SERVER["QUERY_STRING"]
@@ -361,16 +268,18 @@ if ($nosession == 1 && AREA != 'login') {
 	exit();
 }
 
+$userinfo = CurrentUser::getData();
 UI::twig()->addGlobal('userinfo', ($userinfo ?? []));
 UI::setCurrentUser($userinfo);
-
-/**
- * Logic moved out of lng-file
- */
-if (isset($userinfo['loginname']) && $userinfo['loginname'] != '') {
-	$lng['menue']['main']['username'] .= $userinfo['loginname'];
+// Initialize logger
+if (CurrentUser::hasSession()) {
 	// Initialize logging
 	$log = \Froxlor\FroxlorLogger::getInstanceOf($userinfo);
+	if ((CurrentUser::isAdmin() && AREA != 'admin') || (!CurrentUser::isAdmin() && AREA != 'customer')) {
+		// user tries to access an area not meant for him -> redirect to corresponding index
+		\Froxlor\UI\Response::redirectTo((CurrentUser::isAdmin() ? 'admin' : 'customer') . '_index.php', $params);
+		exit();
+	}
 }
 
 /**
@@ -412,10 +321,10 @@ if (AREA == 'admin' || AREA == 'customer') {
 				)
 			)
 		);
-		$navigation = \Froxlor\UI\HTML::buildNavigation($navigation_data['admin'], $userinfo);
+		$navigation = \Froxlor\UI\HTML::buildNavigation($navigation_data['admin'], CurrentUser::getData());
 	} else {
 		$navigation_data = \Froxlor\PhpHelper::loadConfigArrayDir('lib/navigation/');
-		$navigation = \Froxlor\UI\HTML::buildNavigation($navigation_data[AREA], $userinfo);
+		$navigation = \Froxlor\UI\HTML::buildNavigation($navigation_data[AREA], CurrentUser::getData());
 	}
 }
 UI::twig()->addGlobal('nav_entries', $navigation);
@@ -444,34 +353,16 @@ UI::twig()->addGlobal('theme_css', $css);
 unset($js);
 unset($css);
 
-/**
- * @TODO
- *
-$panel_imprint_url = Settings::Get('panel.imprint_url');
-if (!empty($panel_imprint_url) && strtolower(substr($panel_imprint_url, 0, 4)) != 'http') {
-	$panel_imprint_url = 'https://' . $panel_imprint_url;
-}
-$panel_terms_url = Settings::Get('panel.terms_url');
-if (!empty($panel_terms_url) && strtolower(substr($panel_terms_url, 0, 4)) != 'http') {
-	$panel_terms_url = 'https://' . $panel_terms_url;
-}
-$panel_privacy_url = Settings::Get('panel.privacy_url');
-if (!empty($panel_privacy_url) && strtolower(substr($panel_privacy_url, 0, 4)) != 'http') {
-	$panel_privacy_url = 'https://' . $panel_privacy_url;
-}
-*/
-
 $action = Request::get('action');
 $page = Request::get('page', 'overview');
 
 // clear request data
 if (!$action && isset($_SESSION)) {
-    unset($_SESSION['requestData']);
+	unset($_SESSION['requestData']);
 }
 
 UI::twig()->addGlobal('action', $action);
 UI::twig()->addGlobal('page', $page);
-UI::twig()->addGlobal('s', $s);
 
 /**
  * Initialize the mailingsystem

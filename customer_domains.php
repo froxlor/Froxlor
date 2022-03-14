@@ -86,8 +86,7 @@ if ($page == 'overview' || $page == 'domains') {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
 				\Froxlor\UI\Response::redirectTo($filename, array(
-					'page' => $page,
-					's' => $s
+					'page' => $page
 				));
 			} else {
 				\Froxlor\UI\HTML::askYesNo('domains_reallydelete', $filename, array(
@@ -108,8 +107,7 @@ if ($page == 'overview' || $page == 'domains') {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
 				\Froxlor\UI\Response::redirectTo($filename, array(
-					'page' => $page,
-					's' => $s
+					'page' => $page
 				));
 			} else {
 				$stmt = Database::prepare("SELECT `id`, `domain`, `documentroot`, `ssl_redirect`,`isemaildomain`,`letsencrypt` FROM `" . TABLE_PANEL_DOMAINS . "`
@@ -217,8 +215,7 @@ if ($page == 'overview' || $page == 'domains') {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
 				\Froxlor\UI\Response::redirectTo($filename, array(
-					'page' => $page,
-					's' => $s
+					'page' => $page
 				));
 			} else {
 				$result['domain'] = $idna_convert->decode($result['domain']);
@@ -385,8 +382,7 @@ if ($page == 'overview' || $page == 'domains') {
 			}
 			// back to domain overview
 			\Froxlor\UI\Response::redirectTo($filename, array(
-				'page' => 'domains',
-				's' => $s
+				'page' => 'domains'
 			));
 		}
 

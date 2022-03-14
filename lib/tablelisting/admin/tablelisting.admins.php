@@ -19,6 +19,7 @@
 use Froxlor\UI\Callbacks\ProgressBar;
 use Froxlor\UI\Callbacks\Style;
 use Froxlor\UI\Callbacks\Text;
+use Froxlor\UI\Callbacks\Impersonate;
 use Froxlor\UI\Listing;
 
 return [
@@ -34,6 +35,7 @@ return [
 			'loginname' => [
 				'label' => $lng['login']['username'],
 				'field' => 'loginname',
+				'callback' => [Impersonate::class, 'admin'],
 				'sortable' => true,
 			],
 			'name' => [

@@ -62,7 +62,7 @@ if ($page == 'overview') {
 
 				include_once \Froxlor\Froxlor::getInstallDir() . 'install/updatesql.php';
 
-				$redirect_url = 'admin_index.php?s=' . $s;
+				$redirect_url = 'admin_index.php';
 				eval("echo \"" . \Froxlor\UI\Template::getTemplate('update/update_end') . "\";");
 
 				\Froxlor\User::updateCounters();
@@ -107,7 +107,7 @@ if ($page == 'overview') {
 		}
 	} else {
 		$success_message = $lng['update']['noupdatesavail'];
-		$redirect_url = 'admin_index.php?s=' . $s;
+		$redirect_url = 'admin_index.php';
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate('update/noupdatesavail') . "\";");
 	}
 }

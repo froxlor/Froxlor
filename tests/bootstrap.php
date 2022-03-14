@@ -77,7 +77,6 @@ Database::query("TRUNCATE TABLE `" . TABLE_PANEL_DISKSPACE . "`;");
 Database::query("TRUNCATE TABLE `" . TABLE_PANEL_TRAFFIC . "`;");
 Database::query("TRUNCATE TABLE `" . TABLE_PANEL_TRAFFIC_ADMINS . "`;");
 Database::query("TRUNCATE TABLE `" . TABLE_PANEL_TASKS . "`;");
-Database::query("TRUNCATE TABLE `" . TABLE_PANEL_SESSIONS . "`;");
 Database::query("TRUNCATE TABLE `" . TABLE_PANEL_LOG . "`;");
 Database::query("TRUNCATE TABLE `" . TABLE_PANEL_HTPASSWDS . "`;");
 Database::query("TRUNCATE TABLE `" . TABLE_PANEL_HTACCESS . "`;");

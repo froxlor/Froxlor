@@ -27,23 +27,25 @@ use Froxlor\UI\Panel\UI;
 if ($action == 'logout') {
 	$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, 'logged out');
 
-	$params = array(
-		"customerid" => $userinfo['customerid']
-	);
-	if (Settings::Get('session.allow_multiple_login') == '1') {
-		$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_SESSIONS . "`
-			WHERE `userid` = :customerid
-			AND `adminsession` = '0'
-			AND `hash` = :hash");
-		$params["hash"] = $s;
-	} else {
-		$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_SESSIONS . "`
-			WHERE `userid` = :customerid
-			AND `adminsession` = '0'");
-	}
-	Database::pexecute($stmt, $params);
+	unset($_SESSION['userinfo']);
+	\Froxlor\CurrentUser::setData();
+	session_destroy();
 
 	\Froxlor\UI\Response::redirectTo('index.php');
+} elseif ($action == 'suback') {
+	if (is_array(\Froxlor\CurrentUser::getField('switched_user'))) {
+		$result = \Froxlor\CurrentUser::getData();
+		$result = $result['switched_user'];
+		\Froxlor\CurrentUser::setData($result);
+		$target = (isset($_GET['target']) ? $_GET['target'] : 'index');
+		$redirect = "admin_" . $target . ".php";
+		if (!file_exists(\Froxlor\Froxlor::getInstallDir() . "/" . $redirect)) {
+			$redirect = "admin_index.php";
+		}
+		\Froxlor\UI\Response::redirectTo($redirect, null, true);
+	} else {
+		\Froxlor\UI\Response::dynamic_error("Cannot change back - You've never switched to another user :-)");
+	}
 }
 
 if ($page == 'overview') {
@@ -92,7 +94,7 @@ if ($page == 'overview') {
 
 	// get everything in bytes for the percentage calculation on the dashboard
 	$userinfo['diskspace_bytes'] = ($userinfo['diskspace'] > -1) ? $userinfo['diskspace'] * 1024 : -1;
-	$userinfo['traffic_bytes'] = ($userinfo['traffic'] > -1) ? $userinfo['traffic'] * 1024 : - 1;
+	$userinfo['traffic_bytes'] = ($userinfo['traffic'] > -1) ? $userinfo['traffic'] * 1024 : -1;
 	$userinfo['traffic_bytes_used'] = $userinfo['traffic_used'] * 1024;
 
 	if ($usages) {
@@ -109,13 +111,12 @@ if ($page == 'overview') {
 		'stdsubdomain' => $stdsubdomain
 	]);
 	UI::twigOutputBuffer();
-
 } elseif ($page == 'change_password') {
 
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 		$old_password = \Froxlor\Validate\Validate::validate($_POST['old_password'], 'old password');
 
-		if (! \Froxlor\System\Crypt::validatePasswordLogin($userinfo, $old_password, TABLE_PANEL_CUSTOMERS, 'customerid')) {
+		if (!\Froxlor\System\Crypt::validatePasswordLogin($userinfo, $old_password, TABLE_PANEL_CUSTOMERS, 'customerid')) {
 			\Froxlor\UI\Response::standard_error('oldpasswordnotcorrect');
 		}
 
@@ -187,9 +188,7 @@ if ($page == 'overview') {
 				Database::pexecute($stmt, $params);
 			}
 
-			\Froxlor\UI\Response::redirectTo($filename, array(
-				's' => $s
-			));
+			\Froxlor\UI\Response::redirectTo($filename);
 		}
 	} else {
 		eval("echo \"" . \Froxlor\UI\Template::getTemplate('index/change_password') . "\";");
@@ -207,19 +206,9 @@ if ($page == 'overview') {
 				\Froxlor\UI\Response::dynamic_error($e->getMessage());
 			}
 
-			// also update current session
-			$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_SESSIONS . "`
-				SET `language` = :lang
-				WHERE `hash` = :hash");
-			Database::pexecute($stmt, array(
-				"lang" => $def_language,
-				"hash" => $s
-			));
 		}
 		$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "changed default language to '" . $def_language . "'");
-		\Froxlor\UI\Response::redirectTo($filename, array(
-			's' => $s
-		));
+		\Froxlor\UI\Response::redirectTo($filename);
 	} else {
 		$default_lang = Settings::Get('panel.standardlanguage');
 		if ($userinfo['def_language'] != '') {
@@ -245,19 +234,8 @@ if ($page == 'overview') {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 
-		// also update current session
-		$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_SESSIONS . "`
-			SET `theme` = :theme
-			WHERE `hash` = :hash");
-		Database::pexecute($stmt, array(
-			"theme" => $theme,
-			"hash" => $s
-		));
-
 		$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "changed default theme to '" . $theme . "'");
-		\Froxlor\UI\Response::redirectTo($filename, array(
-			's' => $s
-		));
+		\Froxlor\UI\Response::redirectTo($filename);
 	} else {
 		$default_theme = Settings::Get('panel.default_theme');
 		if ($userinfo['theme'] != '') {
@@ -333,22 +311,16 @@ if ($page == 'overview') {
 
 				// finally remove error from fs
 				@unlink($err_file);
-				\Froxlor\UI\Response::redirectTo($filename, array(
-					's' => $s
-				));
+				\Froxlor\UI\Response::redirectTo($filename);
 			}
 			// show a nice summary of the error-report
 			// before actually sending anything
 			eval("echo \"" . \Froxlor\UI\Template::getTemplate("index/send_error_report") . "\";");
 		} else {
-			\Froxlor\UI\Response::redirectTo($filename, array(
-				's' => $s
-			));
+			\Froxlor\UI\Response::redirectTo($filename);
 		}
 	} else {
-		\Froxlor\UI\Response::redirectTo($filename, array(
-			's' => $s
-		));
+		\Froxlor\UI\Response::redirectTo($filename);
 	}
 } elseif ($page == 'apikeys' && Settings::Get('api.enabled') == 1) {
 	require_once __DIR__ . '/api_keys.php';

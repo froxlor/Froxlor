@@ -16,24 +16,24 @@
 						</li>
 					{% elseif pagination.current_page > 1 %}
 						<li class="page-item">
-							<a class="page-link" href="?s={{ s }}&page={{ page }}&action={{ action }}&pageno=1" tabindex="-1">
+							<a class="page-link" href="?page={{ page }}&action={{ action }}&pageno=1" tabindex="-1">
 								<i class="fa-solid fa-angles-left"></i>
 							</a>
 						</li>
 						<li class="page-item">
-							<a class="page-link" href="?s={{ s }}&page={{ page }}&action={{ action }}&pageno={{ pagination.current_page - 1 }}" tabindex="-1">
+							<a class="page-link" href="?page={{ page }}&action={{ action }}&pageno={{ pagination.current_page - 1 }}" tabindex="-1">
 								<i class="fa-solid fa-chevron-left"></i>
 							</a>
 						</li>
 					{% endif %}
 					{% if pagination.current_page < pagination.last_page %}
 						<li class="page-item">
-							<a class="page-link" href="?s={{ s }}&page={{ page }}&action={{ action }}&pageno={{ pagination.current_page + 1 }}" tabindex="-1">
+							<a class="page-link" href="?page={{ page }}&action={{ action }}&pageno={{ pagination.current_page + 1 }}" tabindex="-1">
 								<i class="fa-solid fa-chevron-right"></i>
 							</a>
 						</li>
 						<li class="page-item">
-							<a class="page-link" href="?s={{ s }}&page={{ page }}&action={{ action }}&pageno={{ pagination.last_page }}" tabindex="-1">
+							<a class="page-link" href="?page={{ page }}&action={{ action }}&pageno={{ pagination.last_page }}" tabindex="-1">
 								<i class="fa-solid fa-angles-right"></i>
 							</a>
 						</li>
@@ -59,8 +59,8 @@
 	{% if pagination is defined and key in pagination.sortfields %}
 		<th class="p-3 {{ th.class }}">
 			{{ th.text }}
-			<a href="?s={{ s }}&page={{ page }}&action={{ action }}&pageno={{ pagination.current_page }}&sortfield={{ key }}&sortorder=desc">&darr;</a>
-			<a href="?s={{ s }}&page={{ page }}&action={{ action }}&pageno={{ pagination.current_page }}&sortfield={{ key }}&sortorder=asc">&uarr;</a>
+			<a href="?page={{ page }}&action={{ action }}&pageno={{ pagination.current_page }}&sortfield={{ key }}&sortorder=desc">&darr;</a>
+			<a href="?page={{ page }}&action={{ action }}&pageno={{ pagination.current_page }}&sortfield={{ key }}&sortorder=asc">&uarr;</a>
 		</th>
 	{% else %}
 		<th class="p-3 {{ th.class }}">{{ th.text }}</th>

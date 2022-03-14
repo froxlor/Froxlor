@@ -68,8 +68,7 @@ if ($page == 'ipsandports' || $page == 'overview') {
 				}
 
 				\Froxlor\UI\Response::redirectTo($filename, array(
-					'page' => $page,
-					's' => $s
+					'page' => $page
 				));
 			} else {
 				\Froxlor\UI\HTML::askYesNo('admin_ip_reallydelete', $filename, array(
@@ -87,8 +86,7 @@ if ($page == 'ipsandports' || $page == 'overview') {
 				\Froxlor\UI\Response::dynamic_error($e->getMessage());
 			}
 			\Froxlor\UI\Response::redirectTo($filename, array(
-				'page' => $page,
-				's' => $s
+				'page' => $page
 			));
 		} else {
 
@@ -119,8 +117,7 @@ if ($page == 'ipsandports' || $page == 'overview') {
 					\Froxlor\UI\Response::dynamic_error($e->getMessage());
 				}
 				\Froxlor\UI\Response::redirectTo($filename, array(
-					'page' => $page,
-					's' => $s
+					'page' => $page
 				));
 			} else {
 

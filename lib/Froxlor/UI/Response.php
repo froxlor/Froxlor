@@ -20,14 +20,8 @@ class Response
 	 */
 	public static function redirectTo($destination, $get_variables = null, $isRelative = true)
 	{
-		global $s;
-
 		if (is_array($get_variables)) {
-			if (isset($get_variables['s'])) {
-				$linker = new Linker($destination, $get_variables['s']);
-			} else {
-				$linker = new Linker($destination, $s);
-			}
+			$linker = new Linker($destination);
 
 			foreach ($get_variables as $key => $value) {
 				$linker->add($key, $value);
@@ -165,7 +159,7 @@ class Response
 	 */
 	public static function standard_success($success_message = '', $replacer = '', $params = array(), $throw_exception = false)
 	{
-		global $s, $lng;
+		global $lng;
 
 		if (isset($lng['success'][$success_message])) {
 			$success_message = strtr($lng['success'][$success_message], array(
@@ -178,12 +172,14 @@ class Response
 		}
 
 		if (is_array($params) && isset($params['filename'])) {
-			$redirect_url = $params['filename'] . '?s=' . $s;
+			$redirect_url = $params['filename'];
 			unset($params['filename']);
 
+			$first = true;
 			foreach ($params as $varname => $value) {
 				if ($value != '') {
-					$redirect_url .= '&amp;' . $varname . '=' . $value;
+					$redirect_url .= ($first ? '?' : '&amp;') . $varname . '=' . $value;
+					if ($first) $first = false;
 				}
 			}
 		} else {

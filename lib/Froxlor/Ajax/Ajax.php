@@ -27,7 +27,6 @@ use Froxlor\UI\Request;
  */
 class Ajax
 {
-	protected string $session;
 	protected string $action;
 	protected string $theme;
 	protected array $userinfo;
@@ -38,22 +37,11 @@ class Ajax
 	 */
 	public function __construct()
 	{
-		$this->session = $_GET['s'] ?? $_POST['s'] ?? null;
 		$this->action = $_GET['action'] ?? $_POST['action'] ?? null;
 		$this->theme = $_GET['theme'] ?? 'Froxlor';
 
 		UI::sendHeaders();
 		UI::sendSslHeaders();
-
-		ini_set("session.name", "s");
-		ini_set("url_rewriter.tags", "");
-		ini_set("session.use_cookies", false);
-		ini_set("session.cookie_httponly", true);
-		ini_set("session.cookie_secure", UI::$SSL_REQ);
-		session_id($this->session);
-		session_start();
-
-		$this->initLang();
 	}
 
 	/**
@@ -77,11 +65,11 @@ class Ajax
 		// ensure that we can display messages
 		$language = \Froxlor\Settings::Get('panel.standardlanguage');
 
-		if (isset($this->user_data['language']) && isset($langs[$this->user_data['language']])) {
+		if (isset($this->userinfo['language']) && isset($langs[$this->userinfo['language']])) {
 			// default: use language from session, #277
-			$language = $this->user_data['language'];
-		} elseif (isset($this->user_data['def_language'])) {
-			$language = $this->user_data['def_language'];
+			$language = $this->userinfo['language'];
+		} elseif (isset($this->userinfo['def_language'])) {
+			$language = $this->userinfo['def_language'];
 		}
 
 		// include every english language file we can get
@@ -112,6 +100,8 @@ class Ajax
 	{
 		$this->userinfo = $this->getValidatedSession();
 
+		$this->initLang();
+
 		switch ($this->action) {
 			case 'newsfeed':
 				return $this->getNewsfeed();
@@ -139,51 +129,10 @@ class Ajax
 	 */
 	private function getValidatedSession(): array
 	{
-		$remote_addr = $_SERVER['REMOTE_ADDR'];
-		if (empty($_SERVER['HTTP_USER_AGENT'])) {
-			$http_user_agent = 'unknown';
-		} else {
-			$http_user_agent = $_SERVER['HTTP_USER_AGENT'];
+		if (\Froxlor\CurrentUser::hasSession() == false) {
+			throw new Exception("No valid session");
 		}
-
-		$timediff = time() - \Froxlor\Settings::Get('session.sessiontimeout');
-		$sel_stmt = \Froxlor\Database\Database::prepare("
-			SELECT * FROM `" . TABLE_PANEL_SESSIONS . "`
-			WHERE `hash` = :hash AND `ipaddress` = :ipaddr AND `useragent` = :ua AND `lastactivity` > :timediff
-		");
-
-		$session = \Froxlor\Database\Database::pexecute_first($sel_stmt, [
-			'hash' => $this->session,
-			'ipaddr' => $remote_addr,
-			'ua' => $http_user_agent,
-			'timediff' => $timediff
-		]);
-
-		if (!$session) {
-			throw new Exception('Session is not defined!');
-		}
-
-		if ($session['adminsession'] == 1) {
-			// test for admin
-			$sel_stmt = \Froxlor\Database\Database::prepare("
-				SELECT * FROM `" . TABLE_PANEL_ADMINS . "`
-				WHERE `adminid` = :userid
-			");
-		} else {
-			// test for customer
-			$sel_stmt = \Froxlor\Database\Database::prepare("
-				SELECT * FROM `" . TABLE_PANEL_CUSTOMERS . "`
-				WHERE `customerid` = :userid
-			");
-		}
-		$user = \Froxlor\Database\Database::pexecute_first($sel_stmt, [
-			'userid' => $session['userid']
-		]);
-		if (!$user) {
-			throw new Exception('Session is not defined!');
-		}
-		$user['adminsession'] = $session['adminsession'];
-		return $user;
+		return \Froxlor\CurrentUser::getData();
 	}
 
 	/**
@@ -252,21 +201,17 @@ class Ajax
 	private function getUpdateCheck()
 	{
 		UI::initTwig();
-		UI::twig()->addGlobal('s', $this->session);
 
-		// TODO: set variables from current session
 		try {
-			$json_result = \Froxlor\Api\Commands\Froxlor::getLocal([
-				'adminid' => 1,
-				'adminsession' => 1,
-				'change_serversettings' => 1,
-				'loginname' => 'updatecheck'
-			])->checkUpdate();
+			$json_result = \Froxlor\Api\Commands\Froxlor::getLocal($this->userinfo)->checkUpdate();
 			$result = json_decode($json_result, true)['data'];
 			echo UI::twig()->render($this->theme . '/misc/version_top.html.twig', $result);
 			exit;
 		} catch (Exception $e) {
-			\Froxlor\UI\Response::dynamic_error($e->getMessage());
+			// don't display anything if just not allowed due to permissions
+			if ($e->getCode() != 403) {
+				\Froxlor\UI\Response::dynamic_error($e->getMessage());
+			}
 		}
 	}
 
@@ -310,7 +255,7 @@ class Ajax
 										}
 										$result['settings'][] = [
 											'title' => (is_array($sresult['label']) ? $sresult['label']['title'] : $sresult['label']),
-											'href' => 'admin_settings.php?page=overview&part=' . $pk[1] . '&em=' . $pk[3] . '&s=' . $this->session
+											'href' => 'admin_settings.php?page=overview&part=' . $pk[1] . '&em=' . $pk[3]
 										];
 									}
 								}
@@ -346,7 +291,7 @@ class Ajax
 								}
 								$result['customer'][] = [
 									'title' => User::getCorrectFullUserDetails($cresult),
-									'href' => 'admin_customers.php?page=customers&action=edit&id=' . $cresult['customerid'] . '&s=' . $this->session
+									'href' => 'admin_customers.php?page=customers&action=edit&id=' . $cresult['customerid']
 								];
 							}
 						}
@@ -374,7 +319,7 @@ class Ajax
 								}
 								$result['domains'][] = [
 									'title' => $cresult['domain_ace'],
-									'href' => 'admin_domains.php?page=domains&action=edit&id=' . $cresult['id'] . '&s=' . $this->session
+									'href' => 'admin_domains.php?page=domains&action=edit&id=' . $cresult['id']
 								];
 							}
 						}
@@ -403,7 +348,7 @@ class Ajax
 								}
 								$result['domains'][] = [
 									'title' => $cresult['domain_ace'],
-									'href' => 'customer_domains.php?page=domains&action=edit&id=' . $cresult['id'] . '&s=' . $this->session
+									'href' => 'customer_domains.php?page=domains&action=edit&id=' . $cresult['id']
 								];
 							}
 						}

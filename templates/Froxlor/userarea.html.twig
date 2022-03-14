@@ -38,6 +38,11 @@
 					<ul id="search-dropdown" class="bg-white border list-group list-group-flush position-absolute" style="top: 2.5rem; display:none; z-index: 50; max-height: 300px; overflow-y: scroll"></ul>
 				</form>
 				<ul class="navbar-nav ms-auto">
+					{% if call_static('\\Froxlor\\CurrentUser', 'getField', ['switched_user']) is not empty and call_static('\\Froxlor\\CurrentUser', 'getField', ['switched_user']) is iterable %}
+						<a class="nav-link text-success" href="{{ linker({'section': 'index', 'action': 'suback'}) }}">
+							<i class="fa-solid fa-reply me-1"></i> {{ userinfo.switched_user.loginname }}
+						</a>
+					{% endif %}
 					{% if userinfo.adminsession == 1 %}
 						<li class="nav-item" id="updatecheck"></li>
 					{% endif %}
@@ -82,13 +87,6 @@
 							{% endif %}
 						</ul>
 					</li>
-					<!-- if switched-user
-					<li class="nav-item text-nowrap d-block me-2">
-						<a class="btn btn-info btn-sm d-block" href="#view=suBack">
-							<i class="fas fa-undo"></i>
-							Switch back</a>
-					</li>
-					endif -->
 					<li class="nav-item">
 						<a class="btn btn-link pe-0" title="{{ lng('login.logout') }}" href="{{ linker({'section': 'index', 'action': 'logout'}) }}">
 							<i class="fas fa-power-off"></i>

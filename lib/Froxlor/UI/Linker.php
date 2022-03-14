@@ -1,4 +1,5 @@
 <?php
+
 namespace Froxlor\UI;
 
 /**
@@ -33,7 +34,7 @@ class Linker
 
 	private $args = array();
 
-	public function __construct($file = 'index.php', $sessionid = '', $hostname = '', $protocol = '', $port = '', $username = '', $password = '')
+	public function __construct($file = 'index.php', $hostname = '', $protocol = '', $port = '', $username = '', $password = '')
 	{
 		// Set the basic parts of our URL
 		$this->protocol = $protocol;
@@ -42,8 +43,6 @@ class Linker
 		$this->hostname = $hostname;
 		$this->port = $port;
 		$this->filename = $file;
-		// @TODO: Remove this
-		$this->args['s'] = $sessionid;
 	}
 
 	public function __set($key, $value)
@@ -90,11 +89,7 @@ class Linker
 	public function delAll()
 	{
 		// Just resetting the array
-		// Until the sessionid can be removed: save it
-		// @TODO: Remove this
-		$this->args = array(
-			's' => $this->args['s']
-		);
+		$this->args = [];
 	}
 
 	public function getLink()
@@ -158,7 +153,7 @@ class Linker
 		// Loop through arguments and add them to the link
 		foreach ($this->args as $key => $value) {
 			// For all but the first argument, prepend "&amp;"
-			if (substr($link, - 1) != "?") {
+			if (substr($link, -1) != "?") {
 				$link .= "&";
 			}
 

@@ -4,7 +4,7 @@ $(document).ready(function () {
 	 */
 	if (document.getElementById('updatecheck')) {
 		$.ajax({
-			url: "lib/ajax.php?action=updatecheck&theme=" + window.$theme + "&s=" + window.$session,
+			url: "lib/ajax.php?action=updatecheck&theme=" + window.$theme,
 			type: "GET",
 			success: function (data) {
 				$("#updatecheck").html(data);

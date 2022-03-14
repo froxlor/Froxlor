@@ -174,8 +174,7 @@ if ($action == '') {
 			));
 			$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "deleted template '" . $result['language'] . ' - ' . $lng['admin']['templates'][str_replace('_subject', '', $result['varname'])] . "'");
 			\Froxlor\UI\Response::redirectTo($filename, array(
-				'page' => $page,
-				's' => $s
+				'page' => $page
 			));
 		} else {
 			\Froxlor\UI\HTML::askYesNo('admin_template_reallydelete', $filename, array(
@@ -210,8 +209,7 @@ if ($action == '') {
 			));
 			$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "deleted template '" . $lng['admin']['templates'][$row['varname']] . "'");
 			\Froxlor\UI\Response::redirectTo($filename, array(
-				'page' => $page,
-				's' => $s
+				'page' => $page
 			));
 		} else {
 			\Froxlor\UI\HTML::askYesNo('admin_template_reallydelete', $filename, array(
@@ -319,8 +317,7 @@ if ($action == '') {
 
 			$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "added template '" . $language . ' - ' . $template . "'");
 			\Froxlor\UI\Response::redirectTo($filename, array(
-				'page' => $page,
-				's' => $s
+				'page' => $page
 			));
 		}
 	} elseif (isset($_POST['filesend']) && $_POST['filesend'] == 'filesend') {
@@ -345,8 +342,7 @@ if ($action == '') {
 
 		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "added template '" . $template . "'");
 		\Froxlor\UI\Response::redirectTo($filename, array(
-			'page' => $page,
-			's' => $s
+			'page' => $page
 		));
 	} elseif (!isset($_GET['files'])) {
 
@@ -487,8 +483,7 @@ if ($action == '') {
 
 			$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "edited template '" . $result['varname'] . "'");
 			\Froxlor\UI\Response::redirectTo($filename, array(
-				'page' => $page,
-				's' => $s
+				'page' => $page
 			));
 		} else {
 
@@ -550,8 +545,7 @@ if ($action == '') {
 
 			$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "edited template '" . $row['varname'] . "'");
 			\Froxlor\UI\Response::redirectTo($filename, array(
-				'page' => $page,
-				's' => $s
+				'page' => $page
 			));
 		} else {
 			$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
