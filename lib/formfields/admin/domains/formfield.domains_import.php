@@ -32,9 +32,10 @@ return array(
 					),
 					'offset' => array(
 						'label' => $lng['domains']['import_offset'],
-						'type' => 'text',
+						'type' => 'number',
 						'mandatory' => true,
 						'size' => 10,
+						'min' => 0,
 						'value' => '0'
 					),
 					'file' => array(

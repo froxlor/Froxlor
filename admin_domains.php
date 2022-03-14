@@ -657,12 +657,15 @@ if ($page == 'domains' || $page == 'overview') {
 		} else {
 
 			$domain_import_data = include_once dirname(__FILE__) . '/lib/formfields/admin/domains/formfield.domains_import.php';
-			$domain_import_form = \Froxlor\UI\HtmlForm::genHTMLForm($domain_import_data);
 
-			$title = $domain_import_data['domain_import']['title'];
-			$image = $domain_import_data['domain_import']['image'];
-
-			eval("echo \"" . \Froxlor\UI\Template::getTemplate("domains/domains_import") . "\";");
+			UI::twigBuffer('user/form-note.html.twig', [
+				'formaction' => $linker->getLink(array('section' => 'domains', 'page' => $page)),
+				'formdata' => $domain_import_data['domain_import'],
+				// alert-box
+				'type' => 'info',
+				'alert_msg' => $lng['domains']['import_description']
+			]);
+			UI::twigOutputBuffer();
 		}
 	}
 } elseif ($page == 'domaindnseditor' && Settings::Get('system.dnsenabled') == '1') {
