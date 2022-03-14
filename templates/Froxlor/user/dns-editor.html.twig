@@ -1,0 +1,34 @@
+{% extends "Froxlor/user/table.html.twig" %}
+
+{% block content %}
+	<div class="row mb-2">
+		{% include 'Froxlor/misc/alertbox.html.twig' %}
+	</div>
+
+	<ul class="nav nav-tabs mb-3" id="ex1" role="tablist">
+		<li class="nav-item" role="presentation">
+			<a class="nav-link active" id="ex1-tab-1" data-bs-toggle="tab" href="#ex1-tabs-1" role="tab" aria-controls="ex1-tabs-1" aria-selected="true">DNS Editor</a>
+		</li>
+		<li class="nav-item" role="presentation">
+			<a class="nav-link" id="ex1-tab-2" data-bs-toggle="tab" href="#ex1-tabs-2" role="tab" aria-controls="ex1-tabs-2" aria-selected="false">DNS Zone</a>
+		</li>
+	</ul>
+
+	<div class="tab-content" id="ex1-content">
+		<div class="tab-pane fade show active" id="ex1-tabs-1" role="tabpanel" aria-labelledby="ex1-tab-1">
+			{{ parent() }}
+
+			{% import "Froxlor/form/form.html.twig" as form %}
+			{{ form.form(formdata, formaction|default('#'), formdata.title, editid|default('')) }}
+		</div>
+		<div class="tab-pane fade" id="ex1-tabs-2" role="tabpanel" aria-labelledby="ex1-tab-2">
+			{% if zonefile is not empty %}
+				<div class="row">
+					<div class="col-12">
+						<textarea class="logcontent" rows="25" cols="60" readonly>{{ zonefile }}</textarea>
+					</div>
+				</div>
+			{% endif %}
+		</div>
+	</div>
+{% endblock %}

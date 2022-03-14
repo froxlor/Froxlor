@@ -1,5 +1,5 @@
 <?php
-if (! defined('AREA')) {
+if (!defined('AREA')) {
 	header("Location: index.php");
 	exit();
 }
@@ -21,16 +21,17 @@ if (! defined('AREA')) {
 
 use Froxlor\Api\Commands\DomainZones;
 use Froxlor\UI\Request;
+use Froxlor\UI\Panel\UI;
 
 // This file is being included in admin_domains and customer_domains
 // and therefore does not need to require lib/init.php
 
 $domain_id = (int) Request::get('domain_id');
 
-$record = isset($_POST['record']['record']) ? trim($_POST['record']['record']) : null;
-$type = isset($_POST['record']['type']) ? $_POST['record']['type'] : 'A';
-$prio = isset($_POST['record']['prio']) ? (int) $_POST['record']['prio'] : null;
-$content = isset($_POST['record']['content']) ? trim($_POST['record']['content']) : null;
+$record = isset($_POST['dns_record']) ? trim($_POST['dns_record']) : null;
+$type = isset($_POST['dns_type']) ? $_POST['dns_type'] : 'A';
+$prio = isset($_POST['dns_mxp']) ? (int) $_POST['dns_mxp'] : null;
+$content = isset($_POST['dns_content']) ? trim($_POST['dns_content']) : null;
 $ttl = isset($_POST['record']['ttl']) ? (int) $_POST['record']['ttl'] : 18000;
 
 // get domain-name
@@ -40,7 +41,7 @@ $errors = "";
 $success_message = "";
 
 // action for adding a new entry
-if ($action == 'add_record' && ! empty($_POST)) {
+if ($action == 'add_record' && !empty($_POST)) {
 	try {
 		DomainZones::getLocal($userinfo, array(
 			'id' => $domain_id,
@@ -74,51 +75,12 @@ if ($action == 'add_record' && ! empty($_POST)) {
 
 // select all entries
 try {
-	// get list
-	$json_result = DomainZones::getLocal($userinfo, [
-		'id' => $domain_id
-	])->listing();
+	$dns_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/tablelisting.dns.php';
+	$collection = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\DomainZones::class, $userinfo, ['id' => $domain_id]))
+		->withPagination($dns_list_data['dns_list']['columns']);
 } catch (Exception $e) {
 	\Froxlor\UI\Response::dynamic_error($e->getMessage());
 }
-$result = json_decode($json_result, true)['data'];
-$dom_entries = $result['list'];
-
-// show editor
-$record_list = "";
-$existing_entries = "";
-$type_select = "";
-$entriescount = 0;
-
-if (! empty($dom_entries)) {
-	$entriescount = count($dom_entries);
-	foreach ($dom_entries as $entry) {
-		$entry['content'] = wordwrap($entry['content'], 100, '<br>', true);
-		eval("\$existing_entries.=\"" . \Froxlor\UI\Template::getTemplate("dns_editor/entry_bit", true) . "\";");
-	}
-}
-
-// available types
-$type_select_values = array(
-	'A',
-	'AAAA',
-	'CAA',
-	'CNAME',
-	'DNAME',
-	'LOC',
-	'MX',
-	'NS',
-	'RP',
-	'SRV',
-	'SSHFP',
-	'TXT'
-);
-asort($type_select_values);
-foreach ($type_select_values as $_type) {
-	$type_select .= \Froxlor\UI\HTML::makeoption($_type, $_type, $type);
-}
-
-eval("\$record_list=\"" . \Froxlor\UI\Template::getTemplate("dns_editor/list", true) . "\";");
 
 try {
 	$json_result = DomainZones::getLocal($userinfo, array(
@@ -130,4 +92,26 @@ try {
 $result = json_decode($json_result, true)['data'];
 $zonefile = implode("\n", $result);
 
-eval("echo \"" . \Froxlor\UI\Template::getTemplate("dns_editor/index", true) . "\";");
+$dns_add_data = include_once dirname(__FILE__) . '/lib/formfields/formfield.dns_add.php';
+
+UI::twigBuffer('user/dns-editor.html.twig', [
+	'listing' => \Froxlor\UI\Listing::format($collection, $dns_list_data['dns_list']),
+	'actions_links' => [[
+		'class' => 'btn-secondary',
+		'href' => $linker->getLink(['section' => 'domains', 'page' => 'domains', 'action' => 'edit', 'id' => $domain_id]),
+		'label' => $lng['panel']['edit'],
+		'icon' => 'fa fa-pen'
+	], [
+		'class' => 'btn-secondary',
+		'href' => $linker->getLink(['section' => 'domains', 'page' => 'domains']),
+		'label' => $lng['menue']['domains']['domains'],
+		'icon' => 'fa fa-globe'
+	]],
+	'formaction' => $linker->getLink(array('section' => 'domains', 'action' => 'add_record', 'domain_id' => $domain_id)),
+	'formdata' => $dns_add_data['dns_add'],
+	// alert-box
+	'type' => (!empty($errors) ? 'danger' : (!empty($success_message) ? 'success' : 'warning')),
+	'alert_msg' => (!empty($errors) ? $errors : (!empty($success_message) ? $success_message : $lng['dns']['howitworks'])),
+	'zonefile' => $zonefile
+]);
+UI::twigOutputBuffer();

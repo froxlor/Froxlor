@@ -60,4 +60,9 @@ class Text
 	{
 		return substr($attributes['data'], 0, 20) . '...';
 	}
+
+	public static function wordwrap(array $attributes): string
+	{
+		return wordwrap($attributes['data'], 100, '<br>', true);
+	}
 }
