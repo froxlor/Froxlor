@@ -62,6 +62,7 @@ return [
 				'icon' => 'fa fa-eye',
 				'title' => $lng['apikeys']['clicktoview'],
 				'href' => [
+					'section' => 'index',
 					'page' => 'apikeys',
 					'action' => '#',
 					'id' => ':id'
@@ -72,13 +73,14 @@ return [
 				'title' => $lng['panel']['delete'],
 				'class' => 'text-danger',
 				'href' => [
+					'section' => 'index',
 					'page' => 'apikeys',
 					'action' => 'delete',
 					'id' => ':id'
 				],
 			],
 		],
-		'callback' => [
+		'format_callback' => [
 			[Style::class, 'invalidApiKey']
 		]
 	]

@@ -165,26 +165,25 @@ $keys_stmt = Database::prepare($keys_stmt_query);
 Database::pexecute($keys_stmt, $qry_params);
 $all_keys = $keys_stmt->fetchAll(PDO::FETCH_ASSOC);
 
-if (count($all_keys) == 0) {
-	$count = 0;
-	$message = $lng['apikeys']['no_api_keys'];
-	$sortcode = "";
-	$searchcode = "";
-	$pagingcode = "";
-	eval("\$apikeys.=\"" . \Froxlor\UI\Template::getTemplate("api_keys/keys_error", true) . "\";");
-}
-
 $apikeys_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/tablelisting.apikeys.php';
 $collection = [
 	'data' => $all_keys,
 	'pagination' => []
 ];
 
-UI::twigBuffer('user/table.html.twig', [
+$tpl = 'user/table.html.twig';
+if (!empty($success_message)) {
+	$tpl = 'user/table-note.html.twig';
+}
+
+UI::twigBuffer($tpl, [
 	'listing' => \Froxlor\UI\Listing::formatFromArray($collection, $apikeys_list_data['apikeys_list']),
 	'actions_links' => (int)$userinfo['api_allowed'] == 1 ? [[
 		'href' => $linker->getLink(['section' => 'index', 'page' => $page, 'action' => 'add']),
 		'label' => $lng['apikeys']['key_add']
-	]] : null
+	]] : null,
+	// alert-box
+	'type' => 'success',
+	'alert_msg' => $success_message
 ]);
 UI::twigOutputBuffer();

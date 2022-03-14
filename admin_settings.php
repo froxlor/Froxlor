@@ -267,14 +267,31 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 		));
 	}
 
-	$integritycheck = '';
+	$integritycheck = [];
 	foreach ($integrity->available as $id => $check) {
-		$displayid = $id + 1;
-		$result = $integrity->$check();
-		$checkdesc = $lng['integrity_check'][$check];
-		eval("\$integritycheck.=\"" . \Froxlor\UI\Template::getTemplate("settings/integritycheck_row") . "\";");
+		$integritycheck[] = [
+			'displayid' => $id + 1,
+			'result' => $integrity->$check(),
+			'checkdesc' => $lng['integrity_check'][$check]
+		];
 	}
-	eval("echo \"" . \Froxlor\UI\Template::getTemplate("settings/integritycheck") . "\";");
+
+	$integrity_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.integrity.php';
+	$collection = [
+		'data' => $integritycheck,
+		'pagination' => []
+	];
+
+	UI::twigBuffer('user/table.html.twig', [
+		'listing' => \Froxlor\UI\Listing::formatFromArray($collection, $integrity_list_data['integrity_list']),
+		'actions_links' => [[
+			'href' => $linker->getLink(['section' => 'settings', 'page' => $page, 'action' => 'fix']),
+			'label' => $lng['admin']['integrityfix'],
+			'icon' => 'fa-solid fa-screwdriver-wrench',
+			'class' => 'btn-warning'
+		]]
+	]);
+	UI::twigOutputBuffer();
 } elseif ($page == 'importexport' && $userinfo['change_serversettings'] == '1') {
 	// check for json-stuff
 	if (!extension_loaded('json')) {

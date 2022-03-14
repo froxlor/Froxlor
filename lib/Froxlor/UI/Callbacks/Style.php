@@ -29,6 +29,11 @@ class Style
 		return $attributes['fields']['deactivated'] ? 'bg-danger' : '';
 	}
 
+	public static function resultIntegrityBad(array $attributes): string
+	{
+		return $attributes['fields']['result'] ? '' : 'bg-warning';
+	}
+
 	public static function invalidApiKey(array $attributes): string
 	{
 		// check whether the api key is not valid anymore

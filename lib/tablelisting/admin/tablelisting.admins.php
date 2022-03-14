@@ -93,7 +93,7 @@ return [
 				],
 			],
 		],
-		'callback' => [
+		'format_callback' => [
 			[Style::class, 'deactivated'],
 			[Style::class, 'diskspaceWarning'],
 			[Style::class, 'trafficWarning']
