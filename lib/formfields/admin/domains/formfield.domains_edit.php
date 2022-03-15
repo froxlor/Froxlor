@@ -93,6 +93,37 @@ return array(
 					)
 				)
 			),
+			'section_e' => array(
+				'title' => $lng['admin']['mailserversettings'],
+				'image' => 'icons/domain_edit.png',
+				'fields' => array(
+					'isemaildomain' => array(
+						'label' => $lng['admin']['emaildomain'],
+						'type' => 'checkbox',
+						'value' => '1',
+						'checked' => $result['isemaildomain']
+					),
+					'email_only' => array(
+						'label' => $lng['admin']['email_only'],
+						'type' => 'checkbox',
+						'value' => '1',
+						'checked' => $result['email_only']
+					),
+					'subcanemaildomain' => array(
+						'label' => $lng['admin']['subdomainforemail'],
+						'type' => 'select',
+						'select_var' => $subcanemaildomain,
+						'selected' => $result['subcanemaildomain']
+					),
+					'dkim' => array(
+						'visible' => (\Froxlor\Settings::Get('dkim.use_dkim') == '1' ? true : false),
+						'label' => 'DomainKeys',
+						'type' => 'checkbox',
+						'value' => '1',
+						'checked' => $result['dkim']
+					)
+				)
+			),
 			'section_b' => array(
 				'title' => $lng['admin']['webserversettings'],
 				'image' => 'icons/domain_edit.png',
@@ -395,37 +426,6 @@ return array(
 						'desc' => $lng['admin']['bindzonewarning'],
 						'type' => 'text',
 						'value' => $result['zonefile']
-					)
-				)
-			),
-			'section_e' => array(
-				'title' => $lng['admin']['mailserversettings'],
-				'image' => 'icons/domain_edit.png',
-				'fields' => array(
-					'isemaildomain' => array(
-						'label' => $lng['admin']['emaildomain'],
-						'type' => 'checkbox',
-						'value' => '1',
-						'checked' => $result['isemaildomain']
-					),
-					'email_only' => array(
-						'label' => $lng['admin']['email_only'],
-						'type' => 'checkbox',
-						'value' => '1',
-						'checked' => $result['email_only']
-					),
-					'subcanemaildomain' => array(
-						'label' => $lng['admin']['subdomainforemail'],
-						'type' => 'select',
-						'select_var' => $subcanemaildomain,
-						'selected' => $result['subcanemaildomain']
-					),
-					'dkim' => array(
-						'visible' => (\Froxlor\Settings::Get('dkim.use_dkim') == '1' ? true : false),
-						'label' => 'DomainKeys',
-						'type' => 'checkbox',
-						'value' => '1',
-						'checked' => $result['dkim']
 					)
 				)
 			)

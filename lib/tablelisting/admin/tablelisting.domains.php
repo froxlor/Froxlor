@@ -71,6 +71,7 @@ return [
 					'page' => 'logfiles',
 					'domain_id' => ':id'
 				],
+				'visible' => [Domain::class, 'canViewLogs']
 			],
 			'domaindnseditor' => [
 				'icon' => 'fa fa-globe',

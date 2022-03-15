@@ -68,7 +68,12 @@ class Domain
 
 	public static function canViewLogs(array $attributes): bool
 	{
-		return (bool)UI::getCurrentUser()['logviewenabled'];
+		if ((int) UI::getCurrentUser()['adminsession'] == 0 && (bool)UI::getCurrentUser()['logviewenabled']) {
+			return true;
+		} elseif ((int) UI::getCurrentUser()['adminsession'] == 1 && (int)$attributes['fields']['email_only'] == 0) {
+			return true;
+		}
+		return false;
 	}
 
 	public static function canDelete(array $attributes): bool
@@ -102,7 +107,7 @@ class Domain
 
 	public static function hasLetsEncryptActivated(array $attributes): bool
 	{
-		return (bool) $attributes['fields']['letsencrypt'];
+		return ((bool) $attributes['fields']['letsencrypt'] && (int)$attributes['fields']['email_only'] == 0);
 	}
 
 	public static function canEditSSL(array $attributes): bool
@@ -110,8 +115,9 @@ class Domain
 		if (
 			Settings::Get('system.use_ssl') == '1'
 			&& DDomain::domainHasSslIpPort($attributes['fields']['id'])
-			&& $attributes['fields']['caneditdomain'] == '1'
-			&& $attributes['fields']['letsencrypt'] == 0
+			&& (int)$attributes['fields']['caneditdomain'] == 1
+			&& (int)$attributes['fields']['letsencrypt'] == 0
+			&& (int)$attributes['fields']['email_only'] == 0
 		) {
 			return true;
 		}

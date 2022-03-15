@@ -3,8 +3,8 @@
 	{% import "Froxlor/form/formfields.html.twig" as formfields %}
 
 	<form action="{{ formaction|default("") }}" method="post" enctype="application/x-www-form-urlencoded" class="form">
-		{% for section in form_data.sections %}
-			<div class="card mb-3">
+		{% for sid,section in form_data.sections %}
+			<div class="card mb-3" id="{{ sid }}">
 				{% if section.title is not empty %}
 					<div class="card-header">
 						{% if section.image is not empty %}

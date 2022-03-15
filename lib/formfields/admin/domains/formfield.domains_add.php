@@ -80,6 +80,37 @@ return array(
 					)
 				)
 			),
+			'section_e' => array(
+				'title' => $lng['admin']['mailserversettings'],
+				'image' => 'icons/domain_add.png',
+				'fields' => array(
+					'isemaildomain' => array(
+						'label' => $lng['admin']['emaildomain'],
+						'type' => 'checkbox',
+						'value' => '1',
+						'checked' => true
+					),
+					'email_only' => array(
+						'label' => $lng['admin']['email_only'],
+						'type' => 'checkbox',
+						'value' => '1',
+						'checked' => false
+					),
+					'subcanemaildomain' => array(
+						'label' => $lng['admin']['subdomainforemail'],
+						'type' => 'select',
+						'select_var' => $subcanemaildomain,
+						'selected' => 0
+					),
+					'dkim' => array(
+						'visible' => (\Froxlor\Settings::Get('dkim.use_dkim') == '1' ? true : false),
+						'label' => 'DomainKeys',
+						'type' => 'checkbox',
+						'value' => '1',
+						'checked' => true
+					)
+				)
+			),
 			'section_b' => array(
 				'title' => $lng['admin']['webserversettings'],
 				'image' => 'icons/domain_add.png',
@@ -359,37 +390,6 @@ return array(
 						'label' => 'Zonefile',
 						'desc' => $lng['admin']['bindzonewarning'],
 						'type' => 'text'
-					)
-				)
-			),
-			'section_e' => array(
-				'title' => $lng['admin']['mailserversettings'],
-				'image' => 'icons/domain_add.png',
-				'fields' => array(
-					'isemaildomain' => array(
-						'label' => $lng['admin']['emaildomain'],
-						'type' => 'checkbox',
-						'value' => '1',
-						'checked' => true
-					),
-					'email_only' => array(
-						'label' => $lng['admin']['email_only'],
-						'type' => 'checkbox',
-						'value' => '1',
-						'checked' => false
-					),
-					'subcanemaildomain' => array(
-						'label' => $lng['admin']['subdomainforemail'],
-						'type' => 'select',
-						'select_var' => $subcanemaildomain,
-						'selected' => 0
-					),
-					'dkim' => array(
-						'visible' => (\Froxlor\Settings::Get('dkim.use_dkim') == '1' ? true : false),
-						'label' => 'DomainKeys',
-						'type' => 'checkbox',
-						'value' => '1',
-						'checked' => true
 					)
 				)
 			)
