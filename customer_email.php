@@ -130,10 +130,7 @@ if ($page == 'overview' || $page == 'emails') {
 				));
 				$domains = [];
 				while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-					$domains[] = [
-						'label' => $idna_convert->decode($row['domain']),
-						'value' => $row['domain']
-					];
+					$domains[$row['domain']] = $idna_convert->decode($row['domain']);
 				}
 
 				if (count($domains) > 0) {

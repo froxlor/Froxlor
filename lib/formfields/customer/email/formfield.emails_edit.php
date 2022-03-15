@@ -35,9 +35,15 @@ return array(
 						'type' => 'label',
 						'value' => $lng['panel']['yes'],
 						'next_to' => [
+							'edit_link' => [
+								'type' => 'link',
+								'href' => $filename . '?page=accounts&amp;action=changepw&amp;id=' . $result['id'],
+								'label' => $lng['menue']['main']['changepassword'],
+								'classes' => 'btn btn-sm btn-secondary'
+							],
 							'del_link' => [
 								'type' => 'link',
-								'href' => $filename . '?page=accounts&amp;action=changepw&amp;id=' . $result['id'] . '&amp;s=' . $s,
+								'href' => $filename . '?page=accounts&amp;action=delete&amp;id=' . $result['id'],
 								'label' => $lng['emails']['account_delete'],
 								'classes' => 'btn btn-sm btn-danger'
 							]
@@ -51,7 +57,7 @@ return array(
 						'next_to' => [
 							'add_link' => [
 								'type' => 'link',
-								'href' => $filename . '?page=accounts&amp;action=add&amp;id=' . $result['id'] . '&amp;s=' . $s,
+								'href' => $filename . '?page=accounts&amp;action=add&amp;id=' . $result['id'],
 								'label' => $lng['emails']['account_add'],
 								'classes' => 'btn btn-sm btn-primary'
 							]
@@ -66,7 +72,7 @@ return array(
 							'add_link' => [
 								'visible' => ((int)$result['popaccountid'] != 0 && \Froxlor\Settings::Get('system.mail_quota_enabled')),
 								'type' => 'link',
-								'href' => $filename . '?page=accounts&amp;action=changequota&amp;id=' . $result['id'] . '&amp;s=' . $s,
+								'href' => $filename . '?page=accounts&amp;action=changequota&amp;id=' . $result['id'],
 								'label' => $lng['emails']['quota_edit'],
 								'classes' => 'btn btn-sm btn-secondary'
 							]
@@ -79,7 +85,7 @@ return array(
 						'next_to' => [
 							'add_link' => [
 								'type' => 'link',
-								'href' => $filename . '?page=' . $page . '&amp;action=togglecatchall&amp;id=' . $result['id'] . '&amp;s=' . $s,
+								'href' => $filename . '?page=' . $page . '&amp;action=togglecatchall&amp;id=' . $result['id'],
 								'label' => '<i class="fa-solid fa-arrow-right-arrow-left"></i> ' . $lng['panel']['toggle'],
 								'classes' => 'btn btn-sm btn-secondary'
 							]
@@ -92,7 +98,7 @@ return array(
 						'next_to' => [
 							'add_link' => [
 								'type' => 'link',
-								'href' => $filename . '?page=forwarders&amp;action=add&amp;id=' . $result['id'] . '&amp;s=' . $s,
+								'href' => $filename . '?page=forwarders&amp;action=add&amp;id=' . $result['id'],
 								'label' => $lng['emails']['forwarder_add'],
 								'classes' => 'btn btn-sm btn-primary'
 							]
