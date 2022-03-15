@@ -323,7 +323,7 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 			));
 			// trigger removing of certificate from acme.sh if let's encrypt
 			if ($chk['letsencrypt'] == '1') {
-				\Froxlor\System\Cronjob::inserttask('12', $chk['domain']);
+				\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::DELETE_DOMAIN_SSL, $chk['domain']);
 			}
 			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] removed ssl-certificate for '" . $chk['domain'] . "'");
 			return $this->response(200, "successful", $result);
@@ -421,7 +421,7 @@ class Certificates extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 		);
 		Database::pexecute($stmt, $params, true, true);
 		// insert task to re-generate webserver-configs (#1260)
-		\Froxlor\System\Cronjob::inserttask('1');
+		\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_VHOST);
 		return true;
 	}
 }

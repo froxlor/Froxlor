@@ -216,7 +216,7 @@ class HostingPlans extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 
 			// validation
 			$name = \Froxlor\Validate\Validate::validate(trim($name), 'name', '', '', array(), true);
-			$description = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $description), 'description', '/^[^\0]*$/');
+			$description = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $description), 'description', \Froxlor\Validate\Validate::REGEX_DESC_TEXT);
 
 			if (Settings::Get('system.mail_quota_enabled') != '1') {
 				$value_arr['email_quota'] = - 1;
@@ -361,7 +361,7 @@ class HostingPlans extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 
 			// validation
 			$name = \Froxlor\Validate\Validate::validate(trim($name), 'name', '', '', array(), true);
-			$description = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $description), 'description', '/^[^\0]*$/');
+			$description = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $description), 'description', \Froxlor\Validate\Validate::REGEX_DESC_TEXT);
 
 			if (Settings::Get('system.mail_quota_enabled') != '1') {
 				$value_arr['email_quota'] = - 1;

@@ -862,11 +862,11 @@ $lng['update']['noupdatesavail'] = '<strong>U gebruikt reeds de meest recente ve
 $lng['admin']['specialsettingsforsubdomains'] = 'Speciale instellingen toepassen op alle subdomeinen (*.example.com)';
 $lng['serversettings']['specialsettingsforsubdomains']['description'] = 'Indien "Ja" zullen deze aangepaste VHost-instellingen worden toegepast op alle subdomeinen.';
 $lng['tasks']['outstanding_tasks'] = 'Uitstaande cron-taken';
-$lng['tasks']['rebuild_webserverconfig'] = 'Bezig met opnieuw opbouwen van de configuratie van de webserver';
-$lng['tasks']['adding_customer'] = 'Klant met naam %loginname% wordt toegevoegd';
-$lng['tasks']['rebuild_bindconfig'] = 'Opnieuw opbouwen bind-configuratie';
-$lng['tasks']['creating_ftpdir'] = 'Map aanmaken voor nieuwe FTP-gebruiker';
-$lng['tasks']['deleting_customerfiles'] = 'Verwijderen klantbestanden van %loginname%';
+$lng['tasks']['REBUILD_VHOST'] = 'Bezig met opnieuw opbouwen van de configuratie van de webserver';
+$lng['tasks']['CREATE_HOME'] = 'Klant met naam %loginname% wordt toegevoegd';
+$lng['tasks']['REBUILD_DNS'] = 'Opnieuw opbouwen bind-configuratie';
+$lng['tasks']['CREATE_FTP'] = 'Map aanmaken voor nieuwe FTP-gebruiker';
+$lng['tasks']['DELETE_CUSTOMER_FILES'] = 'Verwijderen klantbestanden van %loginname%';
 $lng['tasks']['noneoutstanding'] = 'Er zijn op dit moment geen uitstaande taken voor Froxlor';
 
 // ADDED IN FROXLOR 0.9.1

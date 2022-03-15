@@ -249,7 +249,7 @@ return array(
 						'extras' => $lng['menue']['extras']['extras'],
 						'extras.directoryprotection' => $lng['menue']['extras']['extras'] . " / " . $lng['menue']['extras']['directoryprotection'],
 						'extras.pathoptions' => $lng['menue']['extras']['extras'] . " / " . $lng['menue']['extras']['pathoptions'],
-						'extras.logger' => $lng['menue']['extras']['extras'] . " / " . $lng['menue']['logger']['logger'],
+						'extras.logger' => $lng['menue']['extras']['extras'] . " / " . $lng['admin']['loggersystem'],
 						'extras.backup' => $lng['menue']['extras']['extras'] . " / " . $lng['menue']['extras']['backup'],
 						'traffic' => $lng['menue']['traffic']['traffic'],
 						'traffic.http' => $lng['menue']['traffic']['traffic'] . " / HTTP",

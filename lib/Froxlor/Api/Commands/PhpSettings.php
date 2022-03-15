@@ -266,7 +266,7 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			$allow_all_customers = $this->getBoolParam('allow_all_customers', true, 0);
 
 			// validation
-			$description = \Froxlor\Validate\Validate::validate($description, 'description', '', '', array(), true);
+			$description = \Froxlor\Validate\Validate::validate($description, 'description', \Froxlor\Validate\Validate::REGEX_DESC_TEXT, '', array(), true);
 			$phpsettings = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $phpsettings), 'phpsettings', '/^[^\0]*$/', '', array(), true);
 			if (Settings::Get('system.mod_fcgid') == 1) {
 				$binary = \Froxlor\FileDir::makeCorrectFile(\Froxlor\Validate\Validate::validate($binary, 'binary', '', '', array(), true));
@@ -364,7 +364,7 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			Database::pexecute($ins_stmt, $ins_data, true, true);
 			$ins_data['id'] = Database::lastInsertId();
 
-			\Froxlor\System\Cronjob::inserttask('1');
+			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_VHOST);
 			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] php setting with description '" . $description . "' has been created by '" . $this->getUserDetail('loginname') . "'");
 
 			$result = $this->apiCall('PhpSettings.get', array(
@@ -466,7 +466,7 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			$allow_all_customers = $this->getBoolParam('allow_all_customers', true, 0);
 
 			// validation
-			$description = \Froxlor\Validate\Validate::validate($description, 'description', '', '', array(), true);
+			$description = \Froxlor\Validate\Validate::validate($description, 'description', \Froxlor\Validate\Validate::REGEX_DESC_TEXT, '', array(), true);
 			$phpsettings = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $phpsettings), 'phpsettings', '/^[^\0]*$/', '', array(), true);
 			if (Settings::Get('system.mod_fcgid') == 1) {
 				$binary = \Froxlor\FileDir::makeCorrectFile(\Froxlor\Validate\Validate::validate($binary, 'binary', '', '', array(), true));
@@ -565,7 +565,7 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			);
 			Database::pexecute($upd_stmt, $upd_data, true, true);
 
-			\Froxlor\System\Cronjob::inserttask('1');
+			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_VHOST);
 			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] php setting with description '" . $description . "' has been updated by '" . $this->getUserDetail('loginname') . "'");
 
 			$result = $this->apiCall('PhpSettings.get', array(
@@ -622,7 +622,7 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 				'id' => $id
 			), true, true);
 
-			\Froxlor\System\Cronjob::inserttask('1');
+			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_VHOST);
 			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] php setting '" . $result['description'] . "' has been deleted by '" . $this->getUserDetail('loginname') . "'");
 			return $this->response(200, "successful", $result);
 		}

@@ -10,6 +10,8 @@ class Validate
 
 	const REGEX_CONF_TEXT = '/^[^\0]*$/';
 
+	const REGEX_DESC_TEXT = '/^[^\0\r\n<>]*$/';
+
 	/**
 	 * Validates the given string by matching against the pattern, prints an error on failure and exits
 	 *

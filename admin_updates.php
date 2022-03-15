@@ -65,7 +65,7 @@ if ($page == 'overview') {
 				eval("echo \"" . \Froxlor\UI\Template::getTemplate('update/update_end') . "\";");
 
 				\Froxlor\User::updateCounters();
-				\Froxlor\System\Cronjob::inserttask('1');
+				\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_VHOST);
 				@chmod(\Froxlor\Froxlor::getInstallDir() . '/lib/userdata.inc.php', 0440);
 
 				$successful_update = true;

@@ -114,7 +114,7 @@ class Cronjobs extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceE
 			), true, true);
 
 			// insert task to re-generate the cron.d-file
-			\Froxlor\System\Cronjob::inserttask('99');
+			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_CRON);
 			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] cronjob with description '" . $result['module'] . '/' . $result['cronfile'] . "' has been updated by '" . $this->getUserDetail('loginname') . "'");
 			$result = $this->apiCall('Cronjobs.get', array(
 				'id' => $id

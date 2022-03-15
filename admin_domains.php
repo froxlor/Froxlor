@@ -687,8 +687,8 @@ if ($page == 'domains' || $page == 'overview') {
 
 			// update customer/admin counters
 			\Froxlor\User::updateCounters(false);
-			\Froxlor\System\Cronjob::inserttask('1');
-			\Froxlor\System\Cronjob::inserttask('4');
+			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_VHOST);
+			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_DNS);
 
 			$result_str = $result['imported'] . ' / ' . $result['all'] . (! empty($result['note']) ? ' (' . $result['note'] . ')' : '');
 			\Froxlor\UI\Response::standard_success('domain_import_successfully', $result_str, array(

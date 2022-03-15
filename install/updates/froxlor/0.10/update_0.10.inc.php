@@ -843,7 +843,7 @@ if (\Froxlor\Froxlor::isDatabaseVersion('202106270')) {
             throw new \Exception("img directory does not exist and cannot be created");
         }
         if (!is_writable($path)) {
-            if (!chmod($path, '0775')) {
+            if (!chmod($path, 0775)) {
                 throw new \Exception("Cannot write to img directory");
             }
         }
@@ -964,4 +964,9 @@ if (\Froxlor\Froxlor::isDatabaseVersion('202109040')) {
 if (\Froxlor\Froxlor::isFroxlorVersion('0.10.31')) {
         showUpdateStep("Updating from 0.10.31 to 0.10.32", false);
         \Froxlor\Froxlor::updateToVersion('0.10.32');
+}
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.32')) {
+	showUpdateStep("Updating from 0.10.32 to 0.10.33", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.33');
 }

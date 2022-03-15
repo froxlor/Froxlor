@@ -645,10 +645,10 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 					unset($ins_data);
 
 					// insert task to create homedir etc.
-					\Froxlor\System\Cronjob::inserttask('2', $loginname, $guid, $guid, $store_defaultindex);
+					\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::CREATE_HOME, $loginname, $guid, $guid, $store_defaultindex);
 
 					// Using filesystem - quota, insert a task which cleans the filesystem - quota
-					\Froxlor\System\Cronjob::inserttask('10');
+					\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::CREATE_QUOTA);
 
 					// Add htpasswd for the stats-pages
 					$htpasswdPassword = \Froxlor\System\Crypt::makeCryptPassword($password, true);
@@ -674,7 +674,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 					$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] automatically added " . $stats_folder . " htpasswd for user '" . $loginname . "'");
 					Database::pexecute($ins_stmt, $ins_data, true, true);
 
-					\Froxlor\System\Cronjob::inserttask('1');
+					\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_VHOST);
 
 					// add default FTP-User
 					// also, add froxlor-local user to ftp-group (if exists!) to
@@ -739,7 +739,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 								'customerid' => $customerid
 							), true, true);
 							$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] automatically added standardsubdomain for user '" . $loginname . "'");
-							\Froxlor\System\Cronjob::inserttask('1');
+							\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_VHOST);
 						}
 					}
 
@@ -1088,7 +1088,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 						'customerid' => $result['customerid']
 					), true, true);
 					$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] automatically added standardsubdomain for user '" . $result['loginname'] . "'");
-					\Froxlor\System\Cronjob::inserttask('1');
+					\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_VHOST);
 				}
 			}
 
@@ -1102,11 +1102,11 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 					$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_ERR, "[API] Unable to delete standard-subdomain: " . $e->getMessage());
 				}
 				$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] automatically deleted standardsubdomain for user '" . $result['loginname'] . "'");
-				\Froxlor\System\Cronjob::inserttask('1');
+				\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_VHOST);
 			}
 
 			if ($phpenabled != $result['phpenabled'] || $perlenabled != $result['perlenabled'] || $email != $result['email']) {
-				\Froxlor\System\Cronjob::inserttask('1');
+				\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_VHOST);
 			}
 
 			// activate/deactivate customer services
@@ -1192,7 +1192,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 				), true, true);
 
 				$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] " . ($deactivated ? 'deactivated' : 'reactivated') . " user '" . $result['loginname'] . "'");
-				\Froxlor\System\Cronjob::inserttask('1');
+				\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_VHOST);
 			}
 
 			// Disable or enable POP3 Login for customers Mail Accounts
@@ -1304,7 +1304,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 
 		if ($this->isAdmin()) {
 			// Using filesystem - quota, insert a task which cleans the filesystem - quota
-			\Froxlor\System\Cronjob::inserttask('10');
+			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::CREATE_QUOTA);
 
 			$admin_update_query = "UPDATE `" . TABLE_PANEL_ADMINS . "` SET `customers_used` = `customers_used` ";
 
@@ -1512,9 +1512,9 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 					'did' => $row['id']
 				), true, true);
 				// remove domains DNS from powerDNS if used, #581
-				\Froxlor\System\Cronjob::inserttask('11', $row['domain']);
+				\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::DELETE_DOMAIN_PDNS, $row['domain']);
 				// remove domain from acme.sh / lets encrypt if used
-				\Froxlor\System\Cronjob::inserttask('12', $row['domain']);
+				\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::DELETE_DOMAIN_SSL, $row['domain']);
 			}
 			// remove customer domains
 			$stmt = Database::prepare("DELETE FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `customerid` = :id");
@@ -1643,18 +1643,18 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 			}
 
 			// rebuild configs
-			\Froxlor\System\Cronjob::inserttask('1');
+			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_VHOST);
 
 			// Using nameserver, insert a task which rebuilds the server config
-			\Froxlor\System\Cronjob::inserttask('4');
+			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_DNS);
 
 			if ($delete_userfiles == 1) {
 				// insert task to remove the customers files from the filesystem
-				\Froxlor\System\Cronjob::inserttask('6', $result['loginname']);
+				\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::DELETE_CUSTOMER_FILES, $result['loginname']);
 			}
 
 			// Using filesystem - quota, insert a task which cleans the filesystem - quota
-			\Froxlor\System\Cronjob::inserttask('10');
+			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::CREATE_QUOTA);
 
 			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_WARNING, "[API] deleted customer '" . $result['loginname'] . "'");
 			return $this->response(200, "successful", $result);

@@ -85,8 +85,8 @@ class ConfigServicesAction extends \Froxlor\Cli\Action
 		$distributions_select_data = array();
 
 		//set default os.
-		$os_dist = array('ID' => 'buster');
-		$os_version = array('0' => '10');
+		$os_dist = array('ID' => 'bullseye');
+		$os_version = array('0' => '11');
 		$os_default = $os_dist['ID'];
 
 		//read os-release

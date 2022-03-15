@@ -4756,12 +4756,6 @@ UPLOADGID=
 			</service>
 			<!-- System tools/services -->
 			<service type="system" title="{{lng.admin.configfiles.etc}}">
-				<!-- Cronjob -->
-				<daemon name="cron" title="Cronjob for froxlor"
-					mandatory="true">
-					<command><![CDATA[/usr/bin/php <BASE_PATH>scripts/froxlor_master_cronjob.php --run-task 99]]></command>
-					<command><![CDATA[{{settings.system.crondreload}}]]></command>
-				</daemon>
 				<!-- AWstats -->
 				<daemon name="awstats"
 					title="Awstats (webalizer alternative)">
@@ -4888,6 +4882,12 @@ aliases:     files
 					<!-- instead of just restarting apache, we let the cronjob do all the 
 						dirty work -->
 					<command><![CDATA[php {{const.install_dir}}scripts/froxlor_master_cronjob.php --force]]></command>
+				</daemon>
+				<!-- Cronjob -->
+				<daemon name="cron" title="Cronjob for froxlor"
+					mandatory="true">
+					<command><![CDATA[/usr/bin/php <BASE_PATH>scripts/froxlor_master_cronjob.php --run-task 99]]></command>
+					<command><![CDATA[{{settings.system.crondreload}}]]></command>
 				</daemon>
 			</service>
 		</services>
