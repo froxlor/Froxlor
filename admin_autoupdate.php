@@ -22,6 +22,7 @@ const AREA = 'admin';
 require __DIR__ . '/lib/init.php';
 
 use Froxlor\Http\HttpClient;
+use Froxlor\UI\Panel\UI;
 
 // define update-uri
 define('UPDATE_URI', "https://version.froxlor.org/Froxlor/api/" . $version);
@@ -89,10 +90,39 @@ if ($page == 'overview') {
 		// zum update schritt #1 -> download
 		if ($isnewerversion == 1) {
 			$text = 'There is a newer version available. Update to version <b>' . $_version . '</b> now?<br/>(Your current version is: ' . $version . ')';
-			$hiddenparams = '<input type="hidden" name="newversion" value="' . $_version . '" />';
-			$yesfile = $filename . '?s=' . $s . '&amp;page=getdownload';
-			eval("echo \"" . \Froxlor\UI\Template::getTemplate("misc/question_yesno", true) . "\";");
-			exit();
+
+			$upd_formfield = [
+				'updates' => [
+					'title' => $lng['update']['update'],
+					'image' => 'fa-solid fa-download',
+					'sections' => [
+						'section_autoupd' => [
+							'fields' => [
+								'newversion' => ['type' => 'hidden', 'value' => $_version]
+							]
+						]
+					],
+					'buttons' => [
+						[
+							'class' => 'btn-outline-secondary',
+							'label' => $lng['panel']['cancel'],
+							'type' => 'reset'
+						],
+						[
+							'label' => $lng['update']['proceed']
+						]
+					]
+				]
+			];
+
+			UI::twigBuffer('user/form-note.html.twig', [
+				'formaction' => $linker->getLink(array('section' => 'autoupdate', 'page' => 'getdownload')),
+				'formdata' => $upd_formfield['updates'],
+				// alert
+				'type' => 'warning',
+				'alert_msg' => $text
+			]);
+			UI::twigOutputBuffer();
 		} elseif ($isnewerversion == 0) {
 			// all good
 			\Froxlor\UI\Response::standard_success('noupdatesavail');
@@ -168,10 +198,9 @@ elseif ($page == 'getdownload') {
 } // extract and install new version
 elseif ($page == 'extract') {
 
-	$toExtract = isset($_GET['archive']) ? $_GET['archive'] : null;
-	$localArchive = \Froxlor\Froxlor::getInstallDir() . '/updates/' . $toExtract;
-
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
+		$toExtract = isset($_POST['archive']) ? $_POST['archive'] : null;
+		$localArchive = \Froxlor\Froxlor::getInstallDir() . '/updates/' . $toExtract;
 		// decompress from zip
 		$zip = new ZipArchive();
 		$res = $zip->open($localArchive);
@@ -193,6 +222,9 @@ elseif ($page == 'extract') {
 
 		// redirect to update-page?
 		\Froxlor\UI\Response::redirectTo('admin_updates.php');
+	} else {
+		$toExtract = isset($_GET['archive']) ? $_GET['archive'] : null;
+		$localArchive = \Froxlor\Froxlor::getInstallDir() . '/updates/' . $toExtract;
 	}
 
 	if (!file_exists($localArchive)) {
@@ -203,9 +235,39 @@ elseif ($page == 'extract') {
 	}
 
 	$text = 'Extract downloaded archive "' . $toExtract . '"?';
-	$hiddenparams = '';
-	$yesfile = $filename . '?s=' . $s . '&amp;page=extract&amp;archive=' . $toExtract;
-	eval("echo \"" . \Froxlor\UI\Template::getTemplate("misc/question_yesno", true) . "\";");
+
+	$upd_formfield = [
+		'updates' => [
+			'title' => $lng['update']['update'],
+			'image' => 'fa-solid fa-download',
+			'sections' => [
+				'section_autoupd' => [
+					'fields' => [
+						'archive' => ['type' => 'hidden', 'value' => $toExtract]
+					]
+				]
+			],
+			'buttons' => [
+				[
+					'class' => 'btn-outline-secondary',
+					'label' => $lng['panel']['cancel'],
+					'type' => 'reset'
+				],
+				[
+					'label' => $lng['update']['proceed']
+				]
+			]
+		]
+	];
+
+	UI::twigBuffer('user/form-note.html.twig', [
+		'formaction' => $linker->getLink(array('section' => 'autoupdate', 'page' => 'extract')),
+		'formdata' => $upd_formfield['updates'],
+		// alert
+		'type' => 'warning',
+		'alert_msg' => $text
+	]);
+	UI::twigOutputBuffer();
 } // display error
 elseif ($page == 'error') {
 

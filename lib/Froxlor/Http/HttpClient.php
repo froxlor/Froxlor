@@ -36,7 +36,7 @@ class HttpClient
      *
      * @throws Exception
      */
-	public static function fileGet(string $url, string $target): array
+	public static function fileGet(string $url, string $target)
     {
 		$fh = fopen($target, 'w');
 		$ch = curl_init();
