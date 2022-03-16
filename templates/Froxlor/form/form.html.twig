@@ -31,8 +31,14 @@
 			<input type="hidden" name="send" value="send"/>
 
 			<div class="col-12 text-end">
-				<button type="reset" class="btn btn-outline-secondary">{{ lng('panel.cancel') }}</button>
-				<button type="submit" class="btn btn-primary">{{ lng('panel.save') }}</button>
+				{% if form_data.buttons is defined and form_data.buttons is iterable %}
+					{% for btn in form_data.buttons %}
+						<button type="{{ btn.type|default("submit") }}" class="btn {{ btn.class|default(" btn-primary") }}">{{ btn.label }}</button>
+					{% endfor %}
+				{% else %}
+					<button type="reset" class="btn btn-outline-secondary">{{ lng('panel.cancel') }}</button>
+					<button type="submit" class="btn btn-primary">{{ lng('panel.save') }}</button>
+				{% endif %}
 			</div>
 		</div>
 	</form>

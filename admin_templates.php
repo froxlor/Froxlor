@@ -146,8 +146,7 @@ if ($action == '') {
 	UI::twigBuffer('user/table-tpl.html.twig', [
 		'maillisting' => \Froxlor\UI\Listing::formatFromArray($collection_mail, $mailtpl_list_data['mailtpl_list']),
 		'filelisting' => \Froxlor\UI\Listing::formatFromArray($collection_file, $filetpl_list_data['filetpl_list']),
-		'mail_actions_links' => $mail_actions_links,
-		'file_actions_links' => $file_actions_links
+		'actions_links' => array_merge($mail_actions_links, $file_actions_links)
 	]);
 	UI::twigOutputBuffer();
 } elseif ($action == 'delete' && $subjectid != 0 && $mailbodyid != 0) {

@@ -14,6 +14,7 @@
  * @package    Language
  *
  */
+
 use Froxlor\Database\Database;
 use Froxlor\Settings;
 use PHPMailer\PHPMailer;
@@ -28,7 +29,7 @@ use PHPMailer\PHPMailer;
  * @param string $current_version
  *        	current froxlor version
  *        	
- * @return null
+ * @return void
  */
 function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $current_db_version)
 {
@@ -39,86 +40,90 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 		$description = 'Froxlor now enables the usage of a domain-wildcard entry and subdomains for this domain at the same time (subdomains are parsed before the main-domain vhost container).';
 		$description .= 'This makes it possible to catch all non-existing subdomains with the main vhost but also have the ability to use subdomains for that domain.<br />';
 		$description .= 'If you would like Froxlor to do so with your domains, the update script can set the correct values for existing domains for you. Note: future domains will have wildcard-entries enabled by default no matter how you decide here.';
-		$question = '<strong>Do you want to use wildcard-entries for existing domains?:</strong>&nbsp;';
-		$question .= \Froxlor\UI\HTML::makeyesno('update_domainwildcardentry', '1', '0', '1');
+		$question = '<strong>Do you want to use wildcard-entries for existing domains?:</strong>';
 
-		eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+		$return['update_domainwildcardentry_note'] = ['type' => 'infotext', 'value' => $description];
+		$return['update_domainwildcardentry'] = ['type' => 'checkbox', 'value' => 1, 'label' => $question];
 	}
 
 	if (versionInUpdate($current_version, '0.9.6-svn2')) {
-		if (! PHPMailer::ValidateAddress(Settings::Get('panel.adminmail'))) {
+		if (!PHPMailer::ValidateAddress(Settings::Get('panel.adminmail'))) {
 			$has_preconfig = true;
-			$description = 'Froxlor uses a newer version of the phpMailerClass and determined that your current admin-mail address is invalid.';
-			$question = '<strong>Please specify a new admin-email address:</strong>&nbsp;<input type="text" class="text" name="update_adminmail" value="' . Settings::Get('panel.adminmail') . '" />';
-			eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+			$description = 'Froxlor uses a newer version of the PHPMailer-Class and determined that your current admin-mail address is invalid.';
+			$question = '<strong>Please specify a new admin-email address:</strong>';
+
+			$return['update_adminmail_note'] = ['type' => 'infotext', 'value' => $description];
+			$return['update_adminmail'] = ['type' => 'text', 'value' => Settings::Get('panel.adminmail'), 'label' => $question];
 		}
 	}
 
 	if (versionInUpdate($current_version, '0.9.6-svn3')) {
 		$has_preconfig = true;
 		$description = 'You now have the possibility to define default error-documents for your webserver which replace the default webserver error-messages.';
-		$question = '<strong>Do you want to enable default error-documents?:</strong>&nbsp;';
-		$question .= \Froxlor\UI\HTML::makeyesno('update_deferr_enable', '1', '0', '0') . '<br /><br />';
+		$question = '<strong>Do you want to enable default error-documents?:</strong>';
+
+		$return['update_deferr_note'] = ['type' => 'infotext', 'value' => $description];
+		$return['update_deferr_enable'] = ['type' => 'checkbox', 'value' => 1, 'label' => $question];
 		if (Settings::Get('system.webserver') == 'apache2') {
-			$question .= 'Path/URL for error 500:&nbsp;<input type="text" class="text" name="update_deferr_500" /><br /><br />';
-			$question .= 'Path/URL for error 401:&nbsp;<input type="text" class="text" name="update_deferr_401" /><br /><br />';
-			$question .= 'Path/URL for error 403:&nbsp;<input type="text" class="text" name="update_deferr_403" /><br /><br />';
+			$return['update_deferr_500'] = ['type' => 'text', 'value' => "", 'label' => 'Path/URL for error 500:'];
+			$return['update_deferr_401'] = ['type' => 'text', 'value' => "", 'label' => 'Path/URL for error 401:'];
+			$return['update_deferr_403'] = ['type' => 'text', 'value' => "", 'label' => 'Path/URL for error 403:'];
 		}
-		$question .= 'Path/URL for error 404:&nbsp;<input type="text" class="text" name="update_deferr_404" />';
-		eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+		$return['update_deferr_404'] = ['type' => 'text', 'value' => "", 'label' => 'Path/URL for error 404:'];
 	}
 
 	if (versionInUpdate($current_version, '0.9.6-svn4')) {
 		$has_preconfig = true;
 		$description = 'You can define a default support-ticket priority level which is pre-selected for new support-tickets.';
-		$question = '<strong>Which should be the default ticket-priority?:</strong>&nbsp;';
-		$question .= '<select name="update_deftic_priority">';
-		$priorities = \Froxlor\UI\HTML::makeoption($lng['ticket']['high'], '1', '2');
-		$priorities .= \Froxlor\UI\HTML::makeoption($lng['ticket']['normal'], '2', '2');
-		$priorities .= \Froxlor\UI\HTML::makeoption($lng['ticket']['low'], '3', '2');
-		$question .= $priorities . '</select>';
-		eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+		$question = '<strong>Which should be the default ticket-priority?:</strong>';
+
+		$return['update_deftic_priority_note'] = ['type' => 'infotext', 'value' => $description];
+		$return['update_deftic_priority'] = ['type' => 'select', 'select_var' => [1 => $lng['ticket']['high'], 2 => $lng['ticket']['normal'], 3 => $lng['ticket']['low']], 'selected' => 2, 'label' => $question];
 	}
 
 	if (versionInUpdate($current_version, '0.9.6-svn5')) {
 		$has_preconfig = true;
 		$description = 'If you have more than one PHP configurations defined in Froxlor you can now set a default one which will be used for every domain.';
-		$question = '<strong>Select default PHP configuration:</strong>&nbsp;';
-		$question .= '<select name="update_defsys_phpconfig">';
+		$question = '<strong>Select default PHP configuration:</strong>';
+
+		$return['update_defsys_phpconfig_note'] = ['type' => 'infotext', 'value' => $description];
 		$configs_array = \Froxlor\Http\PhpConfig::getPhpConfigs();
 		$configs = '';
 		foreach ($configs_array as $idx => $desc) {
-			$configs .= \Froxlor\UI\HTML::makeoption($desc, $idx, '1');
+			$configs[$idx] = $desc;
 		}
-		$question .= $configs . '</select>';
-		eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+		$return['update_defsys_phpconfig'] = ['type' => 'select', 'select_var' => $configs, 'label' => $question];
 	}
 
 	if (versionInUpdate($current_version, '0.9.6-svn6')) {
 		$has_preconfig = true;
 		$description = 'For the new FTP-quota feature, you can now chose the currently used ftpd-software.';
-		$question = '<strong>Used FTPd-software:</strong>&nbsp;';
-		$question .= '<select name="update_defsys_ftpserver">';
-		$question .= \Froxlor\UI\HTML::makeoption('ProFTPd', 'proftpd', 'proftpd');
-		$question .= \Froxlor\UI\HTML::makeoption('PureFTPd', 'pureftpd', 'proftpd');
-		$question .= '</select>';
-		eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+		$question = '<strong>Used FTPd-software:</strong>';
+
+		$return['update_defsys_ftpserver_note'] = ['type' => 'infotext', 'value' => $description];
+		$return['update_defsys_ftpserver'] = ['type' => 'select', 'select_var' => ['proftpd' => 'ProFTPd', 'pureftpd' => 'PureFTPd'], 'selected' => 'proftpd', 'label' => $question];
 	}
 
 	if (versionInUpdate($current_version, '0.9.7-svn1')) {
 		$has_preconfig = true;
 		$description = 'You can now choose whether customers can select the http-redirect code and which of them acts as default.';
-		$question = '<strong>Allow customer chosen redirects?:</strong>&nbsp;';
-		$question .= \Froxlor\UI\HTML::makeyesno('update_customredirect_enable', '1', '0', '1') . '<br /><br />';
-		$question .= '<strong>Select default redirect code (default: empty):</strong>&nbsp;';
-		$question .= '<select name="update_customredirect_default">';
-		$redirects = \Froxlor\UI\HTML::makeoption('--- (' . $lng['redirect_desc']['rc_default'] . ')', 1, '1');
-		$redirects .= \Froxlor\UI\HTML::makeoption('301 (' . $lng['redirect_desc']['rc_movedperm'] . ')', 2, '1');
-		$redirects .= \Froxlor\UI\HTML::makeoption('302 (' . $lng['redirect_desc']['rc_found'] . ')', 3, '1');
-		$redirects .= \Froxlor\UI\HTML::makeoption('303 (' . $lng['redirect_desc']['rc_seeother'] . ')', 4, '1');
-		$redirects .= \Froxlor\UI\HTML::makeoption('307 (' . $lng['redirect_desc']['rc_tempred'] . ')', 5, '1');
-		$question .= $redirects . '</select>';
-		eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+		$question = '<strong>Allow customer chosen redirects?:</strong>';
+		$return['update_customredirect_enable_note'] = ['type' => 'infotext', 'value' => $description];
+		$return['update_customredirect_enable'] = ['type' => 'checkbox', 'value' => 1, 'checked' => 1, 'label' => $question];
+
+		$question = '<strong>Select default redirect code (default: empty):</strong>';
+		$return['update_customredirect_default'] = [
+			'type' => 'select',
+			'select_var' => [
+				1 => '--- (' . $lng['redirect_desc']['rc_default'] . ')',
+				2 => '301 (' . $lng['redirect_desc']['rc_movedperm'] . ')',
+				3 => '302 (' . $lng['redirect_desc']['rc_found'] . ')',
+				4 => '303 (' . $lng['redirect_desc']['rc_seeother'] . ')',
+				5 => '307 (' . $lng['redirect_desc']['rc_tempred'] . ')'
+			],
+			'selected' => 1,
+			'label' => $question
+		];
 	}
 
 	if (versionInUpdate($current_version, '0.9.7-svn2')) {
@@ -130,24 +135,24 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 
 		if (count($wrongOpenBasedirDomain) > 0) {
 			$has_preconfig = true;
-			$description = 'Resetting the open_basedir to customer - root';
-			$question = '<strong>Due to a security - issue regarding open_basedir, Froxlor will set the open_basedir for the following domains to the customers root instead of the chosen documentroot:</strong><br />&nbsp;';
-			$question .= '<ul>';
+			$description = '<strong>Due to a security - issue regarding open_basedir, Froxlor will set the open_basedir for the following domains to the customers root instead of the chosen documentroot:</strong><br />&nbsp;';
+			$description .= '<ul>';
 			$idna_convert = new \Froxlor\Idna\IdnaWrapper();
 			foreach ($wrongOpenBasedirDomain as $domain) {
-				$question .= '<li>' . $idna_convert->decode($domain) . '</li>';
+				$description .= '<li>' . $idna_convert->decode($domain) . '</li>';
 			}
-			$question .= '</ul>';
-			eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+			$description .= '</ul>';
+			$return['update_reset_openbasedirpath_note'] = ['type' => 'infotext', 'value' => $description];
 		}
 	}
 
 	if (versionInUpdate($current_version, '0.9.9-svn1')) {
 		$has_preconfig = true;
 		$description = 'When entering MX servers to Froxlor there was no mail-, imap-, pop3- and smtp-"A record" created. You can now chose whether this should be done or not.';
-		$question = '<strong>Do you want these A-records to be created even with MX servers given?:</strong>&nbsp;';
-		$question .= \Froxlor\UI\HTML::makeyesno('update_defdns_mailentry', '1', '0', '0');
-		eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+		$question = '<strong>Do you want these A-records to be created even with MX servers given?:</strong>';
+
+		$return['update_defdns_mailentry_note'] = ['type' => 'infotext', 'value' => $description];
+		$return['update_defdns_mailentry'] = ['type' => 'checkbox', 'value' => 1, 'label' => $question];
 	}
 
 	if (versionInUpdate($current_version, '0.9.10-svn1')) {
@@ -157,7 +162,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 		$result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'system' AND `varname` = 'httpuser'");
 		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
 
-		if (! isset($result) || ! isset($result['value'])) {
+		if (!isset($result) || !isset($result['value'])) {
 			$has_preconfig = true;
 			$has_nouser = true;
 			$guessed_user = 'www-data';
@@ -170,7 +175,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 		$result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'system' AND `varname` = 'httpgroup'");
 		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
 
-		if (! isset($result) || ! isset($result['value'])) {
+		if (!isset($result) || !isset($result['value'])) {
 			$has_preconfig = true;
 			$has_nogroup = true;
 			$guessed_group = 'www-data';
@@ -182,77 +187,79 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 
 		if ($has_nouser || $has_nogroup) {
 			$description = 'Please enter the correct username/groupname of the webserver on your system We\'re guessing the user but it might not be correct, so please check.';
+			$return['update_httpusergroup_note'] = ['type' => 'infotext', 'value' => $description];
 			if ($has_nouser) {
-				$question = '<strong>Please enter the webservers username:</strong>&nbsp;<input type="text" class="text" name="update_httpuser" value="' . $guessed_user . '" />';
-			} elseif ($has_nogroup) {
-				$question2 = '<strong>Please enter the webservers groupname:</strong>&nbsp;<input type="text" class="text" name="update_httpgroup" value="' . $guessed_group . '" />';
-				if ($has_nouser) {
-					$question .= '<br /><br />' . $question2;
-				} else {
-					$question = $question2;
-				}
+				$question = '<strong>Please enter the webservers username:</strong>';
+				$return['update_httpuser'] = ['type' => 'text', 'value' => $guessed_user, 'label' => $question];
 			}
-			eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+			if ($has_nogroup) {
+				$question = '<strong>Please enter the webservers groupname:</strong>';
+				$return['update_httpgroup'] = ['type' => 'text', 'value' => $guessed_group, 'label' => $question];
+			}
 		}
 	}
 
 	if (versionInUpdate($current_version, '0.9.10')) {
 		$has_preconfig = true;
 		$description = 'you can now decide whether Froxlor should be reached via hostname/froxlor or directly via the hostname.';
-		$question = '<strong>Do you want Froxlor to be reached directly via the hostname?:</strong>&nbsp;';
-		$question .= \Froxlor\UI\HTML::makeyesno('update_directlyviahostname', '1', '0', '0');
-		eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+		$question = '<strong>Do you want Froxlor to be reached directly via the hostname?:</strong>';
+		$return['update_directlyviahostname_note'] = ['type' => 'infotext', 'value' => $description];
+		$return['update_directlyviahostname'] = ['type' => 'checkbox', 'value' => 1, 'label' => $question];
 	}
 
 	if (versionInUpdate($current_version, '0.9.11-svn1')) {
 		$has_preconfig = true;
 		$description = 'It is possible to enhance security with setting a regular expression to force your customers to enter more complex passwords.';
-		$question = '<strong>Enter a regular expression to force a higher password complexity (leave empty for none):</strong>&nbsp;';
-		$question .= '<input type="text" class="text" name="update_pwdregex" value="" />';
-		eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+		$question = '<strong>Enter a regular expression to force a higher password complexity (leave empty for none):</strong>';
+		$return['update_pwdregex_note'] = ['type' => 'infotext', 'value' => $description];
+		$return['update_pwdregex'] = ['type' => 'text', 'value' => '', 'label' => $question];
 	}
 
 	if (versionInUpdate($current_version, '0.9.11-svn3')) {
-		$has_preconfig = true;
-		$description = 'As Froxlor can now handle perl, you have to specify where the perl executable is (only if you\'re running lighttpd, else just leave empty).';
-		$question = '<strong>Path to perl (default \'/usr/bin/perl\'):</strong>&nbsp;';
-		$question .= '<input type="text" class="text" name="update_perlpath" value="/usr/bin/perl" />';
-		eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+		if (Settings::Get('system.webserver') == 'lighttpd') {
+			$has_preconfig = true;
+			$description = 'As Froxlor can now handle perl, you have to specify where the perl executable is.';
+			$question = '<strong>Path to perl (default \'/usr/bin/perl\'):</strong>';
+			$return['update_perlpath_note'] = ['type' => 'infotext', 'value' => $description];
+			$return['update_perlpath'] = ['type' => 'text', 'value' => '/usr/bin/perl', 'label' => $question];
+		}
 	}
 
 	if (versionInUpdate($current_version, '0.9.12-svn1')) {
 		if (Settings::Get('system.mod_fcgid') == 1) {
 			$has_preconfig = true;
 			$description = 'You can chose whether you want Froxlor to use FCGID itself too now.';
-			$question = '<strong>Use FCGID for the Froxlor Panel?:</strong>&nbsp;';
-			$question .= \Froxlor\UI\HTML::makeyesno('update_fcgid_ownvhost', '1', '0', '0') . '<br /><br />';
-			$question .= '<strong>If \'yes\', please specify local user/group (have to exist, Froxlor does not add them automatically):</strong><br /><br />';
-			$question .= 'Local user:&nbsp;';
-			$question .= '<input type="text" class="text" name="update_fcgid_httpuser" value="froxlorlocal" /><br /><br />';
-			$question .= 'Local group:&nbsp;';
-			$question .= '<input type="text" class="text" name="update_fcgid_httpgroup" value="froxlorlocal" /><br />';
-			eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+			$question = '<strong>Use FCGID for the Froxlor Panel?:</strong>';
+			$return['update_fcgid_ownvhost_note'] = ['type' => 'infotext', 'value' => $description];
+			$return['update_fcgid_ownvhost'] = ['type' => 'checkbox', 'value' => 1, 'label' => $question];
+
+			$question = '<strong>If \'yes\', please specify local user (has to exist, Froxlor does not add it automatically):</strong>';
+			$return['update_fcgid_httpuser'] = ['type' => 'text', 'value' => 'froxlorlocal', 'label' => $question];
+			$question = '<strong>If \'yes\', please specify local group (has to exist, Froxlor does not add it automatically):</strong>';
+			$return['update_fcgid_httpgroup'] = ['type' => 'text', 'value' => 'froxlorlocal', 'label' => $question];
 		}
 	}
 
 	if (versionInUpdate($current_version, '0.9.12-svn2')) {
 		$has_preconfig = true;
 		$description = 'Many apache user will have problems using perl/CGI as the customer docroots are not within the suexec path. Froxlor provides a simple workaround for that.';
-		$question = '<strong>Enable Apache/SuExec/Perl workaround?:</strong>&nbsp;';
-		$question .= \Froxlor\UI\HTML::makeyesno('update_perl_suexecworkaround', '1', '0', '0') . '<br /><br />';
-		$question .= '<strong>If \'yes\', please specify a path within the suexec path where Froxlor will create symlinks to customer perl-enabled paths:</strong><br /><br />';
-		$question .= 'Path for symlinks (must be within suexec path):&nbsp;';
-		$question .= '<input type="text" class="text" name="update_perl_suexecpath" value="/var/www/cgi-bin/" /><br />';
-		eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+		$question = '<strong>Enable Apache/SuExec/Perl workaround?:</strong>';
+		$return['update_perl_suexecworkaround_note'] = ['type' => 'infotext', 'value' => $description];
+		$return['update_perl_suexecworkaround'] = ['type' => 'checkbox', 'value' => 1, 'label' => $question];
+
+		$description = '<strong>If \'yes\', please specify a path within the suexec path where Froxlor will create symlinks to customer perl-enabled paths:</strong>';
+		$question = 'Path for symlinks (must be within suexec path):';
+		$return['update_perl_suexecpath_note'] = ['type' => 'infotext', 'value' => $description];
+		$return['update_perl_suexecpath'] = ['type' => 'text', 'value' => '/var/www/cgi-bin/', 'label' => $question];
 	}
 
 	if (versionInUpdate($current_version, '0.9.12-svn4')) {
 		if ((int) Settings::Get('system.awstats_enabled') == 1) {
 			$has_preconfig = true;
 			$description = 'Due to different paths of awstats_buildstaticpages.pl and awstats.pl you can set a different path for awstats.pl now.';
-			$question = '<strong>Path to \'awstats.pl\'?:</strong>&nbsp;';
-			$question .= '<input type="text" class="text" name="update_awstats_awstatspath" value="' . Settings::Get('system.awstats_path') . '" /><br />';
-			eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+			$question = '<strong>Path to \'awstats.pl\'?:</strong>';
+			$return['update_awstats_awstatspath_note'] = ['type' => 'infotext', 'value' => $description];
+			$return['update_awstats_awstatspath'] = ['type' => 'text', 'value' => Settings::Get('system.awstats_path'), 'label' => $question];
 		}
 	}
 
@@ -260,9 +267,9 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 		if ((int) Settings::Get('autoresponder.autoresponder_active') == 1) {
 			$has_preconfig = true;
 			$description = 'Froxlor can now limit the number of autoresponder-entries for each user. Here you can set the value which will be available for each customer (Of course you can change the value for each customer separately after the update).';
-			$question = '<strong>How many autoresponders should your customers be able to add?:</strong>&nbsp;';
-			$question .= '<input type="text" class="text" name="update_autoresponder_default" value="0" />&nbsp;' . \Froxlor\UI\HTML::makecheckbox('update_autoresponder_default', $lng['panel']['unlimited'], '-1', false, 0, true, true) . '<br />';
-			eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+			$question = '<strong>How many autoresponders should your customers be able to add?:</strong><br><small>-1 equals no limit</small>';
+			$return['update_autoresponder_default_note'] = ['type' => 'infotext', 'value' => $description];
+			$return['update_autoresponder_default'] = ['type' => 'number', 'value' => -1, 'min' => -1, 'label' => $question];
 		}
 	}
 
@@ -270,15 +277,19 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 		if ((int) Settings::Get('system.mod_fcgid_ownvhost') == 1) {
 			$has_preconfig = true;
 			$description = 'You have FCGID for Froxlor itself activated. You can now specify a PHP-configuration for this.';
-			$question = '<strong>Select Froxlor-vhost PHP configuration:</strong>&nbsp;';
-			$question .= '<select name="update_defaultini_ownvhost">';
+			$question = '<strong>Select Froxlor-vhost PHP configuration:</strong>';
+			$return['update_defaultini_ownvhost_note'] = ['type' => 'infotext', 'value' => $description];
 			$configs_array = \Froxlor\Http\PhpConfig::getPhpConfigs();
 			$configs = '';
 			foreach ($configs_array as $idx => $desc) {
-				$configs .= \Froxlor\UI\HTML::makeoption($desc, $idx, '1');
+				$configs[$idx] = $desc;
 			}
-			$question .= $configs . '</select>';
-			eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+			$return['update_defaultini_ownvhost'] = [
+				'type' => 'select',
+				'select_var' => $configs,
+				'selected' => 1,
+				'label' => $question
+			];
 		}
 	}
 
@@ -286,9 +297,9 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 		if ((int) Settings::Get('system.awstats_enabled') == 1) {
 			$has_preconfig = true;
 			$description = 'To have icons in AWStats statistic-pages please enter the path to AWStats icons folder.';
-			$question = '<strong>Path to AWSTats icons folder:</strong>&nbsp;';
-			$question .= '<input type="text" class="text" name="update_awstats_icons" value="' . Settings::Get('system.awstats_icons') . '" />';
-			eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+			$question = '<strong>Path to AWSTats icons folder:</strong>';
+			$return['update_awstats_icons_note'] = ['type' => 'infotext', 'value' => $description];
+			$return['update_awstats_icons'] = ['type' => 'text', 'value' => Settings::Get('system.awstats_icons'), 'label' => $question];
 		}
 	}
 
@@ -296,99 +307,109 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 		if ((int) Settings::Get('system.use_ssl') == 1) {
 			$has_preconfig = true;
 			$description = 'Froxlor now has the possibility to set \'SSLCertificateChainFile\' for the apache webserver.';
-			$question = '<strong>Enter filename (leave empty for none):</strong>&nbsp;';
-			$question .= '<input type="text" class="text" name="update_ssl_cert_chainfile" value="' . Settings::Get('system.ssl_cert_chainfile') . '" />';
-			eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+			$question = '<strong>Enter filename (leave empty for none):</strong>';
+			$return['update_ssl_cert_chainfile_note'] = ['type' => 'infotext', 'value' => $description];
+			$return['update_ssl_cert_chainfile'] = ['type' => 'text', 'value' => Settings::Get('system.ssl_cert_chainfile'), 'label' => $question];
 		}
 	}
 
 	if (versionInUpdate($current_version, '0.9.14-svn6')) {
 		$has_preconfig = true;
 		$description = 'You can now allow customers to use any of their domains as username for the login.';
-		$question = '<strong>Do you want to enable domain-login for all customers?:</strong>&nbsp;';
-		$question .= \Froxlor\UI\HTML::makeyesno('update_allow_domain_login', '1', '0', '0');
-		eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+		$question = '<strong>Do you want to enable domain-login for all customers?:</strong>';
+		$return['update_allow_domain_login_note'] = ['type' => 'infotext', 'value' => $description];
+		$return['update_allow_domain_login'] = ['type' => 'checkbox', 'value' => 1, 'label' => $question];
 	}
 
 	if (versionInUpdate($current_version, '0.9.14-svn10')) {
 		$has_preconfig = true;
 		$description = '<strong>This update removes the unsupported real-time option. Additionally the deprecated tables for navigation and cronscripts are removed, any modules using these tables need to be updated to the new structure!</strong>';
-		$question = '';
-		eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+		$return['update_unsported_realtime_option_note'] = ['type' => 'infotext', 'value' => $description];
 	}
 
 	if (versionInUpdate($current_version, '0.9.16-svn1')) {
 		$has_preconfig = true;
 		$description = 'Froxlor now features support for php-fpm.';
-		$question = '<strong>Do you want to enable php-fpm?:</strong>&nbsp;';
-		$question .= \Froxlor\UI\HTML::makeyesno('update_phpfpm_enabled', '1', '0', '0') . '<br /><br />';
-		$question .= 'If \'yes\', please specify the configuration directory:&nbsp;';
-		$question .= '<input type="text" class="text" name="update_phpfpm_configdir" value="/etc/php-fpm.d/" /><br /><br />';
-		$question .= 'Please specify the temporary files directory:&nbsp;';
-		$question .= '<input type="text" class="text" name="update_phpfpm_tmpdir" value="/var/customers/tmp/" /><br /><br />';
-		$question .= 'Please specify the PEAR directory:&nbsp;';
-		$question .= '<input type="text" class="text" name="update_phpfpm_peardir" value="/usr/share/php/:/usr/share/php5/" /><br /><br />';
-		$question .= 'Please specify the php-fpm restart-command:&nbsp;';
-		$question .= '<input type="text" class="text" name="update_phpfpm_reload" value="/etc/init.d/php-fpm restart" /><br /><br />';
-		$question .= 'Please specify the php-fpm rocess manager control:&nbsp;';
-		$question .= '<select name="update_phpfpm_pm">';
-		$redirects = \Froxlor\UI\HTML::makeoption('static', 'static', 'static');
-		$redirects .= \Froxlor\UI\HTML::makeoption('dynamic', 'dynamic', 'static');
-		$question .= $redirects . '</select><br /><br />';
-		$question .= 'Please specify the number of child processes:&nbsp;';
-		$question .= '<input type="text" class="text" name="update_phpfpm_max_children" value="1" /><br /><br />';
-		$question .= 'Please specify the number of requests per child before respawning:&nbsp;';
-		$question .= '<input type="text" class="text" name="update_phpfpm_max_requests" value="0" /><br /><br />';
-		$question .= '<em>The following settings are only required if you chose process manager = dynamic</em><br /><br />';
-		$question .= 'Please specify the number of child processes created on startup:&nbsp;';
-		$question .= '<input type="text" class="text" name="update_phpfpm_start_servers" value="20" /><br /><br />';
-		$question .= 'Please specify the desired minimum number of idle server processes:&nbsp;';
-		$question .= '<input type="text" class="text" name="update_phpfpm_min_spare_servers" value="5" /><br /><br />';
-		$question .= 'Please specify the desired maximum number of idle server processes:&nbsp;';
-		$question .= '<input type="text" class="text" name="update_phpfpm_max_spare_servers" value="35" /><br />';
-		eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+		$question = '<strong>Do you want to enable php-fpm?:</strong>';
+		$return['update_phpfpm_enabled_note'] = ['type' => 'infotext', 'value' => $description];
+		$return['update_phpfpm_enabled'] = ['type' => 'checkbox', 'value' => 1, 'label' => $question];
+
+		$question = 'If \'yes\', please specify the configuration directory:';
+		$return['update_phpfpm_configdir'] = ['type' => 'text', 'value' => "/etc/php-fpm.d/", 'label' => $question];
+		$question = 'Please specify the temporary files directory:';
+		$return['update_phpfpm_tmpdir'] = ['type' => 'text', 'value' => "/var/customers/tmp/", 'label' => $question];
+		$question = 'Please specify the PEAR directory:';
+		$return['update_phpfpm_peardir'] = ['type' => 'text', 'value' => "/usr/share/php/:/usr/share/php5/", 'label' => $question];
+		$question = 'Please specify the php-fpm restart-command:';
+		$return['update_phpfpm_reload'] = ['type' => 'text', 'value' => "/etc/init.d/php-fpm restart", 'label' => $question];
+		$question = 'Please specify the php-fpm rocess manager control:';
+		$return['update_phpfpm_pm'] = [
+			'type' => 'select',
+			'select_var' => [
+				'static' => 'static',
+				'dynamic' => 'dynamic'
+			],
+			'selected' => 'dynamic',
+			'label' => $question
+		];
+		$question = 'Please specify the number of child processes:';
+		$return['update_phpfpm_max_children'] = ['type' => 'number', 'value' => "2", 'label' => $question];
+		$question = 'Please specify the number of requests per child before respawning:';
+		$return['update_phpfpm_max_requests'] = ['type' => 'number', 'value' => "0", 'label' => $question];
+		$description = '<em>The following settings are only required if you chose process manager = dynamic</em>';
+		$return['update_phpfpm_dynamic_pm_note'] = ['type' => 'infotext', 'value' => $description];
+		$question = 'Please specify the number of child processes created on startup:';
+		$return['update_phpfpm_start_servers'] = ['type' => 'number', 'value' => "20", 'label' => $question];
+		$question = 'Please specify the desired minimum number of idle server processes:';
+		$return['update_phpfpm_min_spare_servers'] = ['type' => 'number', 'value' => "5", 'label' => $question];
+		$question = 'Please specify the desired maximum number of idle server processes:';
+		$return['update_phpfpm_max_spare_servers'] = ['type' => 'number', 'value' => "35", 'label' => $question];
 	}
 
 	if (versionInUpdate($current_version, '0.9.16-svn2')) {
 		if ((int) Settings::Get('phpfpm.enabled') == 1) {
 			$has_preconfig = true;
 			$description = 'You can chose whether you want Froxlor to use PHP-FPM itself too now.';
-			$question = '<strong>Use PHP-FPM for the Froxlor Panel?:</strong>&nbsp;';
-			$question .= \Froxlor\UI\HTML::makeyesno('update_phpfpm_enabled_ownvhost', '1', '0', '0') . '<br /><br />';
-			$question .= '<strong>If \'yes\', please specify local user/group (have to exist, Froxlor does not add them automatically):</strong><br /><br />';
-			$question .= 'Local user:&nbsp;';
-			$question .= '<input type="text" class="text" name="update_phpfpm_httpuser" value="' . Settings::Get('system.mod_fcgid_httpuser') . '" /><br /><br />';
-			$question .= 'Local group:&nbsp;';
-			$question .= '<input type="text" class="text" name="update_phpfpm_httpgroup" value="' . Settings::Get('system.mod_fcgid_httpgroup') . '" /><br />';
-			eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+			$question = '<strong>Use PHP-FPM for the Froxlor Panel?:</strong>';
+			$return['update_phpfpm_enabled_ownvhost_note'] = ['type' => 'infotext', 'value' => $description];
+			$return['update_phpfpm_enabled_ownvhost'] = ['type' => 'checkbox', 'value' => 1, 'label' => $question];
+
+			$question = '<strong>If \'yes\', please specify local user (has to exist, Froxlor does not add it automatically):</strong>';
+			$return['update_phpfpm_httpuser'] = ['type' => 'text', 'value' => Settings::Get('system.mod_fcgid_httpuser'), 'label' => $question];
+			$question = '<strong>If \'yes\', please specify local group (has to exist, Froxlor does not add it automatically):</strong>';
+			$return['update_phpfpm_httpgroup'] = ['type' => 'text', 'value' => Settings::Get('system.mod_fcgid_httpgroup'), 'label' => $question];
 		}
 	}
 
 	if (versionInUpdate($current_version, '0.9.17-svn1')) {
 		$has_preconfig = true;
 		$description = 'Select if you want to enable the web- and traffic-reports';
-		$question = '<strong>Enable?:</strong>&nbsp;';
-		$question .= \Froxlor\UI\HTML::makeyesno('update_system_report_enable', '1', '0', '1') . '<br /><br />';
-		$question .= '<strong>If \'yes\', please specify a percentage value for web- and traffic when reports are to be sent:</strong><br /><br />';
-		$question .= 'Webusage warning level:&nbsp;';
-		$question .= '<input type="text" class="text" name="update_system_report_webmax" value="90" /><br /><br />';
-		$question .= 'Traffic warning level:&nbsp;';
-		$question .= '<input type="text" class="text" name="update_system_report_trafficmax" value="90" /><br />';
-		eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+		$question = '<strong>Enable?:</strong>';
+		$return['update_system_report_enable_note'] = ['type' => 'infotext', 'value' => $description];
+		$return['update_system_report_enable'] = ['type' => 'checkbox', 'value' => 1, 'label' => $question];
+
+		$question = '<strong>If \'yes\', please specify a percentage value for web-usage when reports are to be sent:</strong>';
+		$return['update_system_report_webmax'] = ['type' => 'number', 'value' => '90', 'label' => $question];
+		$question = '<strong>If \'yes\', please specify a percentage value for traffic-usage when reports are to be sent:</strong>';
+		$return['update_system_report_trafficmax'] = ['type' => 'number', 'value' => '90', 'label' => $question];
 	}
 
 	if (versionInUpdate($current_version, '0.9.18-svn2')) {
 		$has_preconfig = true;
 		$description = 'As you can (obviously) see, Froxlor now comes with a new theme. You also have the possibility to switch back to "Classic" if you want to.';
-		$question = '<strong>Select default panel theme:</strong>&nbsp;';
-		$question .= '<select name="update_default_theme">';
+		$return['update_default_theme_note'] = ['type' => 'infotext', 'value' => $description];
+		$question = '<strong>Select default panel theme:</strong>';
 		$themes = \Froxlor\UI\Template::getThemes();
-		foreach ($themes as $cur_theme) // $theme is already in use
-		{
-			$question .= \Froxlor\UI\HTML::makeoption($cur_theme, $cur_theme, 'Froxlor');
+		$sel_themes = [];
+		foreach ($themes as $cur_theme) {
+			$sel_themes[$cur_theme] = $cur_theme;
 		}
-		$question .= '</select>';
-		eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+		$return['update_default_theme'] = [
+			'type' => 'select',
+			'select_var' => $sel_themes,
+			'selected' => 'Froxlor',
+			'label' => $question
+		];
 	}
 
 	if (versionInUpdate($current_version, '0.9.28-svn4')) {
@@ -398,16 +419,19 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 		$description .= '<br /><br />Notice: This update will <strong>alter your Froxlor database to use UTF-8</strong> as default charset. ';
 		$description .= 'Even though this is already tested, we <span class="red">strongly recommend</span> to ';
 		$description .= 'test this update in a testing environment using your existing data.<br /><br />';
-
-		$question = '<strong>Select your preferred Classic Theme replacement:</strong>&nbsp;';
-		$question .= '<select name="classic_theme_replacement">';
+		$return['classic_theme_replacement_note'] = ['type' => 'infotext', 'value' => $description];
+		$question = '<strong>Select your preferred Classic Theme replacement:</strong>';
 		$themes = \Froxlor\UI\Template::getThemes();
+		$sel_themes = [];
 		foreach ($themes as $cur_theme) {
-			$question .= \Froxlor\UI\HTML::makeoption($cur_theme, $cur_theme, 'Froxlor');
+			$sel_themes[$cur_theme] = $cur_theme;
 		}
-		$question .= '</select>';
-
-		eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+		$return['classic_theme_replacement'] = [
+			'type' => 'select',
+			'select_var' => $sel_themes,
+			'selected' => 'Froxlor',
+			'label' => $question
+		];
 	}
 
 	if (versionInUpdate($current_version, '0.9.28-svn6')) {
@@ -416,16 +440,16 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 			$has_preconfig = true;
 			$description = 'Froxlor now supports the new Apache 2.4. Please be aware that you need to load additional apache-modules in order to use it.<br />';
 			$description .= '<pre>LoadModule authz_core_module modules/mod_authz_core.so
-					LoadModule authz_host_module modules/mod_authz_host.so</pre><br />';
-			$question = '<strong>Do you want to enable the Apache-2.4 modification?:</strong>&nbsp;';
-			$question .= \Froxlor\UI\HTML::makeyesno('update_system_apache24', '1', '0', '0');
-			eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+					LoadModule authz_host_module modules/mod_authz_host.so</pre>';
+			$question = '<strong>Do you want to enable the Apache-2.4 modification?:</strong>';
+			$return['update_system_apache24_note'] = ['type' => 'infotext', 'value' => $description];
+			$return['update_system_apache24'] = ['type' => 'checkbox', 'value' => 1, 'label' => $question];
 		} elseif (Settings::Get('system.webserver') == 'nginx') {
 			$has_preconfig = true;
-			$description = 'The path to nginx\'s fastcgi_params file is now customizable.<br /><br />';
-			$question = '<strong>Please enter full path to you nginx/fastcgi_params file (including filename):</strong>&nbsp;';
-			$question .= '<input type="text" class="text" name="nginx_fastcgi_params" value="/etc/nginx/fastcgi_params" />';
-			eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+			$description = 'The path to nginx\'s fastcgi_params file is now customizable.';
+			$question = '<strong>Please enter full path to you nginx/fastcgi_params file (including filename):</strong>';
+			$return['nginx_fastcgi_params_note'] = ['type' => 'infotext', 'value' => $description];
+			$return['nginx_fastcgi_params'] = ['type' => 'text', 'value' => "/etc/nginx/fastcgi_params", 'label' => $question];
 		}
 	}
 
@@ -434,12 +458,10 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 		$has_preconfig = true;
 
 		$description = 'This version adds an option to append the domain-name to the document-root for domains and subdomains.<br />';
-		$description .= 'You can enable or disable this feature anytime from settings -> system settings.<br />';
-
-		$question = '<strong>Do you want to automatically append the domain-name to the documentroot of newly created domains?:</strong>&nbsp;';
-		$question .= \Froxlor\UI\HTML::makeyesno('update_system_documentroot_use_default_value', '1', '0', '0');
-
-		eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+		$description .= 'You can enable or disable this feature anytime from settings -> system settings.';
+		$question = '<strong>Do you want to automatically append the domain-name to the documentroot of newly created domains?:</strong>';
+		$return['update_system_documentroot_use_default_value_note'] = ['type' => 'infotext', 'value' => $description];
+		$return['update_system_documentroot_use_default_value'] = ['type' => 'checkbox', 'value' => 1, 'label' => $question];
 	}
 
 	if (versionInUpdate($current_version, '0.9.28')) {
@@ -451,56 +473,53 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 		$description .= 'If you don\'t have any problems with sending mails, you don\'t need to change this';
 		if (Settings::Get('system.mod_fcgid') == '1' || Settings::Get('phpfpm.enabled') == '1') {
 			// information about removal of php's safe_mode
-			$description .= '<br /><br />The php safe_mode flag has been removed as current versions of PHP<br />';
-			$description .= 'do not support it anymore.<br /><br />';
+			$description .= '<br /><br />The php safe_mode flag has been removed as current versions of PHP do not support it anymore.<br /><br />';
 			$description .= 'Please check your php-configurations and remove safe_mode-directives to avoid php notices/warnings.';
 		}
-		$question = '';
-
-		eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+		$return['update_default_sendmail_params_note'] = ['type' => 'infotext', 'value' => $description];
 	}
 
 	if (versionInUpdate($current_version, '0.9.29-dev1')) {
 		// we only need to ask if fcgid|php-fpm is enabled
 		if (Settings::Get('system.mod_fcgid') == '1' || Settings::Get('phpfpm.enabled') == '1') {
 			$has_preconfig = true;
-			$description = 'Standard-subdomains can now be hidden from the php-configuration overview.<br />';
-			$question = '<strong>Do you want to hide the standard-subdomains (this can be changed in the settings any time)?:</strong>&nbsp;';
-			$question .= \Froxlor\UI\HTML::makeyesno('hide_stdsubdomains', '1', '0', '0');
-			eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+			$description = 'Standard-subdomains can now be hidden from the php-configuration overview.';
+			$question = '<strong>Do you want to hide the standard-subdomains (this can be changed in the settings any time)?:</strong>';
+			$return['hide_stdsubdomains_note'] = ['type' => 'infotext', 'value' => $description];
+			$return['hide_stdsubdomains'] = ['type' => 'checkbox', 'value' => 1, 'label' => $question];
 		}
 	}
 
 	if (versionInUpdate($current_version, '0.9.29-dev2')) {
 		$has_preconfig = true;
 		$description = 'You can now decide whether admins/customers are able to change the theme<br />';
-		$question = '<strong>If you want to disallow theme-changing, select "no" from the dropdowns:</strong>&nbsp;';
-		$question .= "Admins: " . \Froxlor\UI\HTML::makeyesno('allow_themechange_a', '1', '0', '1') . '&nbsp;&nbsp;';
-		$question .= "Customers: " . \Froxlor\UI\HTML::makeyesno('allow_themechange_c', '1', '0', '1');
-		eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+		$return['allow_themechange_ac_note'] = ['type' => 'infotext', 'value' => $description];
+		$question = '<strong>Allow theme-changing for admins:</strong>';
+		$return['allow_themechange_a'] = ['type' => 'checkbox', 'value' => 1, 'checked' => 1, 'label' => $question];
+		$question = '<strong>Allow theme-changing for customers:</strong>';
+		$return['allow_themechange_c'] = ['type' => 'checkbox', 'value' => 1, 'checked' => 1, 'label' => $question];
 	}
 
 	if (versionInUpdate($current_version, '0.9.29-dev3')) {
 		$has_preconfig = true;
-		$description = 'There is now a possibility to specify AXFR servers for your bind zone-configuration<br />';
-		$question = '<strong>Enter a comma-separated list of AXFR servers or leave empty (default):</strong>&nbsp;';
-		$question .= '<input type="text" class="text" name="system_afxrservers" value="" />';
-		eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+		$description = 'There is now a possibility to specify AXFR servers for your bind zone-configuration';
+		$question = '<strong>Enter a comma-separated list of AXFR servers or leave empty (default):</strong>';
+		$return['system_afxrservers_note'] = ['type' => 'infotext', 'value' => $description];
+		$return['system_afxrservers'] = ['type' => 'text', 'value' => '', 'label' => $question];
 	}
 
 	if (versionInUpdate($current_version, '0.9.29-dev4')) {
 		$has_preconfig = true;
-		$description = 'As customers can now specify ssl-certificate data for their domains, you need to specify where the generated files are stored<br />';
-		$question = '<strong>Specify the directory for customer ssl-certificates:</strong>&nbsp;';
-		$question .= '<input type="text" class="text" name="system_customersslpath" value="/etc/ssl/froxlor-custom/" />';
-		eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+		$description = 'As customers can now specify ssl-certificate data for their domains, you need to specify where the generated files are stored';
+		$question = '<strong>Specify the directory for customer ssl-certificates:</strong>';
+		$return['system_customersslpath_note'] = ['type' => 'infotext', 'value' => $description];
+		$return['system_customersslpath'] = ['type' => 'text', 'value' => '/etc/ssl/froxlor-custom/', 'label' => $question];
 	}
 
 	if (versionInUpdate($current_version, '0.9.29.1-dev3')) {
 		$has_preconfig = true;
 		$description = 'The build in logrotation-feature has been removed. Please follow the configuration-instructions for your system to enable logrotating again.';
-		$question = '';
-		eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+		$return['update_removed_builtin_logrotate_note'] = ['type' => 'infotext', 'value' => $description];
 	}
 
 	// let the apache+fpm users know that they MUST change their config
@@ -518,216 +537,232 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
         Allow from env=REDIRECT_STATUS
     &lt;/Location&gt;
 &lt;/IfModule&gt;</pre>';
-			$question = '';
-			eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+			$return['update_fpm_implementation_changed_note'] = ['type' => 'infotext', 'value' => $description];
 		}
 	}
 
 	if (versionInUpdate($current_version, '0.9.31-dev2')) {
 		if (Settings::Get('system.webserver') == 'apache2' && Settings::Get('phpfpm.enabled') == '1') {
 			$has_preconfig = true;
-			$description = 'The FPM socket directory is now a setting in froxlor. Its default is <b>/var/lib/apache2/fastcgi/</b>.<br/>If you are using <b>/var/run/apache2</b> in the "<b>fastcgi.conf</b>" (Debian/Ubuntu) or "<b>70_fastcgi.conf</b>" (Gentoo) please correct this path accordingly<br />';
-			$question = '';
-			eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+			$description = 'The FPM socket directory is now a setting in froxlor. Its default is <b>/var/lib/apache2/fastcgi/</b>.<br/>If you are using <b>/var/run/apache2</b> in the "<b>fastcgi.conf</b>" (Debian/Ubuntu) or "<b>70_fastcgi.conf</b>" (Gentoo) please correct this path accordingly';
+			$return['update_fpm_socket_directory_changed_note'] = ['type' => 'infotext', 'value' => $description];
 		}
 	}
 
 	if (versionInUpdate($current_version, '0.9.31-dev4')) {
 		$has_preconfig = true;
-		$description = 'The template-variable {PASSWORD} has been replaced with {LINK}. Please update your password reset templates!<br />';
-		$question = '';
+		$description = 'The template-variable {PASSWORD} has been replaced with {LINK}. Please update your password reset templates!';
+		$return['update_template_var_password_changed_note'] = ['type' => 'infotext', 'value' => $description];
 		eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
 	}
 
 	if (versionInUpdate($current_version, '0.9.31-dev5')) {
 		$has_preconfig = true;
-		$description = 'You can enable/disable error-reporting for admins and customers!<br /><br />';
-		$question = '<strong>Do you want to enable error-reporting for admins? (default: yes):</strong>&nbsp;';
-		$question .= \Froxlor\UI\HTML::makeyesno('update_error_report_admin', '1', '0', '1') . '<br />';
-		$question .= '<strong>Do you want to enable error-reporting for customers? (default: no):</strong>&nbsp;';
-		$question .= \Froxlor\UI\HTML::makeyesno('update_error_report_customer', '1', '0', '0');
-		eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+		$description = 'You can enable/disable error-reporting for admins and customers!';
+		$return['update_error_report_admin_customer_note'] = ['type' => 'infotext', 'value' => $description];
+
+		$question = '<strong>Do you want to enable error-reporting for admins? (default: yes):</strong>';
+		$return['update_error_report_admin'] = ['type' => 'checkbox', 'value' => 1, 'checked' => 1, 'label' => $question];
+		$question = '<strong>Do you want to enable error-reporting for customers? (default: no):</strong>';
+		$return['update_error_report_customer'] = ['type' => 'checkbox', 'value' => 1, 'label' => $question];
 	}
 
 	if (versionInUpdate($current_version, '0.9.31-rc2')) {
 		$has_preconfig = true;
-		$description = 'You can enable/disable the display/usage of the news-feed for admins<br /><br />';
-		$question = '<strong>Do you want to enable the news-feed for admins? (default: yes):</strong>&nbsp;';
-		$question .= \Froxlor\UI\HTML::makeyesno('update_admin_news_feed', '1', '0', '1') . '<br />';
-		eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+		$description = 'You can enable/disable the display/usage of the news-feed for admins';
+		$question = '<strong>Do you want to enable the news-feed for admins? (default: yes):</strong>';
+		$return['update_admin_news_feed_note'] = ['type' => 'infotext', 'value' => $description];
+		$return['update_admin_news_feed'] = ['type' => 'checkbox', 'value' => 1, 'checked' => 1, 'label' => $question];
 	}
 
 	if (versionInUpdate($current_version, '0.9.32-dev2')) {
 		$has_preconfig = true;
-		$description = 'To enable logging of the mail-traffic, you need to set the following settings accordingly<br /><br />';
-		$question = '<strong>Do you want to enable the traffic collection for mail? (default: yes):</strong>&nbsp;';
-		$question .= \Froxlor\UI\HTML::makeyesno('mailtraffic_enabled', '1', '0', '1') . '<br />';
-		$question .= '<strong>Mail Transfer Agent</strong><br />';
-		$question .= 'Type of your MTA:&nbsp;';
-		$question .= '<select name="mtaserver">';
-		$question .= \Froxlor\UI\HTML::makeoption('Postfix', 'postfix', 'postfix');
-		$question .= \Froxlor\UI\HTML::makeoption('Exim4', 'exim4', 'postfix');
-		$question .= '</select><br />';
-		$question .= 'Logfile for your MTA:&nbsp;';
-		$question .= '<input type="text" class="text" name="mtalog" value="/var/log/mail.log" /><br />';
-		$question .= '<strong>Mail Delivery Agent</strong><br />';
-		$question .= 'Type of your MDA:&nbsp;';
-		$question .= '<select name="mdaserver">';
-		$question .= \Froxlor\UI\HTML::makeoption('Dovecot', 'dovecot', 'dovecot');
-		$question .= \Froxlor\UI\HTML::makeoption('Courier', 'courier', 'dovecot');
-		$question .= '</select><br /><br />';
-		$question .= 'Logfile for your MDA:&nbsp;';
-		$question .= '<input type="text" class="text" name="mdalog" value="/var/log/mail.log" /><br />';
-		eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+		$description = 'To enable logging of the mail-traffic, you need to set the following settings accordingly';
+		$question = '<strong>Do you want to enable the traffic collection for mail? (default: yes):</strong>';
+		$return['mailtraffic_enabled_note'] = ['type' => 'infotext', 'value' => $description];
+		$return['mailtraffic_enabled'] = ['type' => 'checkbox', 'value' => 1, 'checked' => 1, 'label' => $question];
+
+		$question = '<strong>Mail Transfer Agent</strong>';
+		$return['mtaserver'] = [
+			'type' => 'select',
+			'select_var' => [
+				'postfix' => 'Postfix',
+				'exim4' => 'Exim4'
+			],
+			'selected' => 'postfix',
+			'label' => $question
+		];
+
+		$question = 'Logfile for your MTA:';
+		$return['mtalog'] = ['type' => 'text', 'value' => "/var/log/mail.log", 'label' => $question];
+
+		$question = '<strong>Mail Delivery Agent</strong>';
+		$return['mdaserver'] = [
+			'type' => 'select',
+			'select_var' => [
+				'dovecot' => 'Dovecot',
+				'courier' => 'Courier'
+			],
+			'selected' => 'dovecot',
+			'label' => $question
+		];
+
+		$question = 'Logfile for your MDA:';
+		$return['mdalog'] = ['type' => 'text', 'value' => "/var/log/mail.log", 'label' => $question];
 	}
 
 	if (versionInUpdate($current_version, '0.9.32-dev5')) {
 		$has_preconfig = true;
-		$description = 'Froxlor now generates a cron-configuration file for the cron-daemon. Please set a filename which will be included automatically by your crond (e.g. files in /etc/cron.d/)<br /><br />';
-		$question = '<strong>Path to the cron-service configuration-file.</strong> This file will be updated regularly and automatically by froxlor.<br />Note: please <b>be sure</b> to use the same filename as for the main froxlor cronjob (default: /etc/cron.d/froxlor)!<br />';
-		$question .= '<input type="text" class="text" name="crondfile" value="/etc/cron.d/froxlor" /><br />';
-		eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+		$description = 'Froxlor now generates a cron-configuration file for the cron-daemon. Please set a filename which will be included automatically by your crond (e.g. files in /etc/cron.d/)';
+		$question = '<strong>Path to the cron-service configuration-file.</strong> This file will be updated regularly and automatically by froxlor.<br />Note: please <b>be sure</b> to use the same filename as for the main froxlor cronjob (default: /etc/cron.d/froxlor)!';
+		$return['crondfile_note'] = ['type' => 'infotext', 'value' => $description];
+		$return['crondfile'] = ['type' => 'text', 'value' => "/etc/cron.d/froxlor", 'label' => $question];
 	}
 
 	if (versionInUpdate($current_version, '0.9.32-dev6')) {
 		$has_preconfig = true;
-		$description = 'In order for the new cron.d file to work properly, we need to know about the cron-service reload command.<br /><br />';
-		$question = '<strong>Please specify the reload-command of your cron-daemon</strong> (default: /etc/init.d/cron reload)<br />';
-		$question .= '<input type="text" class="text" name="crondreload" value="/etc/init.d/cron reload" /><br />';
-		eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+		$description = 'In order for the new cron.d file to work properly, we need to know about the cron-service reload command.';
+		$question = '<strong>Please specify the reload-command of your cron-daemon</strong> (default: /etc/init.d/cron reload)';
+		$return['crondreload_note'] = ['type' => 'infotext', 'value' => $description];
+		$return['crondreload'] = ['type' => 'text', 'value' => "/etc/init.d/cron reload", 'label' => $question];
 	}
 
 	if (versionInUpdate($current_version, '0.9.32-rc2')) {
 		$has_preconfig = true;
-		$description = 'To customize the command which executes the cronjob (php - basically) change the path below according to your system.<br /><br />';
-		$question = '<strong>Please specify the command to execute cronscripts</strong> (default: "/usr/bin/nice -n 5 /usr/bin/php -q")<br />';
-		$question .= '<input type="text" class="text" name="croncmdline" value="/usr/bin/nice -n 5 /usr/bin/php -q" /><br />';
-		eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+		$description = 'To customize the command which executes the cronjob (php - basically) change the path below according to your system.';
+		$question = '<strong>Please specify the command to execute cronscripts</strong> (default: "/usr/bin/nice -n 5 /usr/bin/php -q")';
+		$return['croncmdline_note'] = ['type' => 'infotext', 'value' => $description];
+		$return['croncmdline'] = ['type' => 'text', 'value' => "/usr/bin/nice -n 5 /usr/bin/php -q", 'label' => $question];
 	}
 
 	if (versionInUpdate($current_version, '0.9.33-dev1')) {
 		$has_preconfig = true;
-		$description = 'You can enable/disable the display/usage of the custom newsfeed for customers.<br /><br />';
-		$question = '<strong>Do you want to enable the custom newsfeed for customer? (default: no):</strong>&nbsp;';
-		$question .= \Froxlor\UI\HTML::makeyesno('customer_show_news_feed', '1', '0', '0') . '<br />';
-		$question .= '<strong>You have to set the URL for your RSS-feed here, if you have chosen to enable the custom newsfeed on the customer-dashboard:</strong>&nbsp;';
-		$question .= '<input type="text" class="text" name="customer_news_feed_url" value="" /><br />';
-		eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+		$description = 'You can enable/disable the display/usage of the custom newsfeed for customers.';
+		$question = '<strong>Do you want to enable the custom newsfeed for customer? (default: no):</strong>';
+		$return['customer_show_news_feed_note'] = ['type' => 'infotext', 'value' => $description];
+		$return['customer_show_news_feed'] = ['type' => 'checkbox', 'value' => 1, 'label' => $question];
+
+		$question = '<strong>You have to set the URL for your RSS-feed here, if you have chosen to enable the custom newsfeed on the customer-dashboard:</strong>';
+		$return['customer_news_feed_url'] = ['type' => 'text', 'value' => "", 'label' => $question];
 	}
 
 	if (versionInUpdate($current_version, '0.9.33-dev2')) {
 		// only if bind is used - if not the default will be set, which is '0' (off)
 		if (Settings::get('system.bind_enable') == 1) {
 			$has_preconfig = true;
-			$description = 'You can enable/disable the generation of the bind-zone / config for the system hostname.<br /><br />';
-			$question = '<strong>Do you want to generate a bind-zone for the system-hostname? (default: no):</strong>&nbsp;';
-			$question .= \Froxlor\UI\HTML::makeyesno('dns_createhostnameentry', '1', '0', '0') . '<br />';
-			eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+			$description = 'You can enable/disable the generation of the bind-zone / config for the system hostname.';
+			$question = '<strong>Do you want to generate a bind-zone for the system-hostname? (default: no):</strong>';
+			$return['dns_createhostnameentry_note'] = ['type' => 'infotext', 'value' => $description];
+			$return['dns_createhostnameentry'] = ['type' => 'checkbox', 'value' => 1, 'label' => $question];
 		}
 	}
 
 	if (versionInUpdate($current_version, '0.9.33-rc2')) {
 		$has_preconfig = true;
-		$description = 'You can chose whether you want to receive an e-mail on cronjob errors. Keep in mind that this can lead to an e-mail being sent every 5 minutes.<br /><br />';
-		$question = '<strong>Do you want to receive cron-errors via mail? (default: no):</strong>&nbsp;';
-		$question .= \Froxlor\UI\HTML::makeyesno('system_send_cron_errors', '1', '0', '0') . '<br />';
-		eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+		$description = 'You can chose whether you want to receive an e-mail on cronjob errors. Keep in mind that this can lead to an e-mail being sent every 5 minutes.';
+		$question = '<strong>Do you want to receive cron-errors via mail? (default: no):</strong>';
+		$return['system_send_cron_errors_note'] = ['type' => 'infotext', 'value' => $description];
+		$return['system_send_cron_errors'] = ['type' => 'checkbox', 'value' => 1, 'label' => $question];
 	}
 
 	if (versionInUpdate($current_version, '0.9.34-dev3')) {
 		$has_preconfig = true;
-		$description = 'Froxlor now requires the PHP mbstring-extension as we need to be multibyte-character safe in some cases';
-		$question = '<strong>PHP mbstring</strong> is currently: ';
-		if (! extension_loaded('mbstring')) {
-			$question .= '<span class="red">not installed/loaded</span>';
-			$question .= '<br>Please install the PHP mbstring extension in order to finish the update';
+		$description = 'Froxlor now requires the PHP mbstring-extension as we need to be multibyte-character safe in some cases<br><br>';
+		$description .= '<strong>PHP mbstring</strong> is currently: ';
+		if (!extension_loaded('mbstring')) {
+			$description .= '<span class="red">not installed/loaded</span>';
+			$description .= '<br>Please install the PHP mbstring extension in order to finish the update';
 		} else {
-			$question .= '<span class="green">installed/loaded</span>';
+			$description .= '<span class="green">installed/loaded</span>';
 		}
-		$question .= '<br>';
-		eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+		$return['update_php_mbstring_extension_installed_note'] = ['type' => 'infotext', 'value' => $description];
 	}
 
 	if (versionInUpdate($current_db_version, '201603070')) {
 		$has_preconfig = true;
-		$description = 'You can chose whether you want to enable or disable our Let\'s Encrypt implementation.<br />Please remember that you need to go through the webserver-configuration when enabled because this feature needs a special configuration.<br /><br />';
-		$question = '<strong>Do you want to enable Let\'s Encrypt? (default: yes):</strong>&nbsp;';
-		$question .= \Froxlor\UI\HTML::makeyesno('enable_letsencrypt', '1', '0', '1') . '<br />';
-		eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+		$description = 'You can chose whether you want to enable or disable our Let\'s Encrypt implementation.<br />Please remember that you need to go through the webserver-configuration when enabled because this feature needs a special configuration.';
+		$question = '<strong>Do you want to enable Let\'s Encrypt? (default: yes):</strong>';
+		$return['enable_letsencrypt_note'] = ['type' => 'infotext', 'value' => $description];
+		$return['enable_letsencrypt'] = ['type' => 'checkbox', 'value' => 1, 'checked' => 1, 'label' => $question];
 	}
 
 	if (versionInUpdate($current_db_version, '201604270')) {
 		$has_preconfig = true;
-		$description = 'You can chose whether you want to enable or disable our backup function.<br /><br />';
-		$question = '<strong>Do you want to enable Backup? (default: no):</strong>&nbsp;';
-		$question .= \Froxlor\UI\HTML::makeyesno('enable_backup', '1', '0', '0') . '<br />';
-		eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+		$description = 'You can chose whether you want to enable or disable our backup function.';
+		$question = '<strong>Do you want to enable Backup? (default: no):</strong>';
+		$return['enable_backup_note'] = ['type' => 'infotext', 'value' => $description];
+		$return['enable_backup'] = ['type' => 'checkbox', 'value' => 1, 'label' => $question];
 	}
 
 	if (versionInUpdate($current_db_version, '201605090')) {
 		$has_preconfig = true;
-		$description = 'You can chose whether you want to enable or disable our DNS editor<br /><br />';
-		$question = '<strong>Do you want to enable the DNS editor? (default: no):</strong>&nbsp;';
-		$question .= \Froxlor\UI\HTML::makeyesno('enable_dns', '1', '0', '0') . '<br />';
-		eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+		$description = 'You can chose whether you want to enable or disable our DNS editor';
+		$question = '<strong>Do you want to enable the DNS editor? (default: no):</strong>';
+		$return['enable_dns_note'] = ['type' => 'infotext', 'value' => $description];
+		$return['enable_dns'] = ['type' => 'checkbox', 'value' => 1, 'label' => $question];
 	}
 
 	if (versionInUpdate($current_db_version, '201605170')) {
 		$has_preconfig = true;
 		$description = 'Froxlor now supports the dns-daemon Power-DNS, you can chose between bind and powerdns now.';
-		$question = '<strong>Select dns-daemon you want to use:</strong>&nbsp;';
-		$question .= '<select name="new_dns_daemon">';
-		$dnsdaemons = \Froxlor\UI\HTML::makeoption('Bind9', 'bind', 'bind');
-		$dnsdaemons .= \Froxlor\UI\HTML::makeoption('PowerDNS', 'pdns', 'bind');
-		$question .= $dnsdaemons . '</select>';
-		eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+		$return['new_dns_daemon_note'] = ['type' => 'infotext', 'value' => $description];
+		$question = '<strong>Select dns-daemon you want to use:</strong>';
+		$return['new_dns_daemon'] = [
+			'type' => 'select',
+			'select_var' => [
+				'bind' => 'Bind9',
+				'pdns' => 'PowerDNS'
+			],
+			'selected' => 'bind',
+			'label' => $question
+		];
 	}
 
 	if (versionInUpdate($current_db_version, '201609120')) {
 		if (Settings::Get('system.leenabled') == 1) {
 			$has_preconfig = true;
-			$description = 'You can now customize the path to your acme.conf file (global alias for Let\'s Encrypt). If you already set up Let\'s Encrypt and the acme.conf file, please set this to the complete path to the file!<br /><br />';
-			$question = '<strong>Path to the acme.conf alias-file.</strong><br />';
-			$question .= '<input type="text" class="text" name="acmeconffile" value="/etc/apache2/conf-enabled/acme.conf" /><br />';
-			eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+			$description = 'You can now customize the path to your acme.conf file (global alias for Let\'s Encrypt). If you already set up Let\'s Encrypt and the acme.conf file, please set this to the complete path to the file!';
+			$question = '<strong>Path to the acme.conf alias-file.</strong>';
+			$return['acmeconffile_note'] = ['type' => 'infotext', 'value' => $description];
+			$return['acmeconffile'] = ['type' => 'text', 'value' => "/etc/apache2/conf-enabled/acme.conf", 'label' => $question];
 		}
 	}
 
 	if (versionInUpdate($current_db_version, '201609200')) {
 		$has_preconfig = true;
-		$description = 'Specify SMTP settings which froxlor should use to send mail (optional)<br /><br />';
-		$question = '<strong>Enable sending mails via SMTP?</strong><br />';
-		$question .= \Froxlor\UI\HTML::makeyesno('smtp_enable', '1', '0', '0') . '<br />';
-		$question .= '<strong>Enable sending mails via SMTP?</strong><br />';
-		$question .= '<input type="text" class="text" name="smtp_host" value="localhost" /><br />';
-		$question .= '<strong>TCP port to connect to?</strong><br />';
-		$question .= '<input type="text" class="text" name="smtp_port" value="25" /><br />';
-		$question .= '<strong>Enable TLS encryption?</strong><br />';
-		$question .= \Froxlor\UI\HTML::makeyesno('smtp_usetls', '1', '0', '1') . '<br />';
-		$question .= '<strong>Enable SMTP authentication?</strong><br />';
-		$question .= \Froxlor\UI\HTML::makeyesno('smtp_auth', '1', '0', '1') . '<br />';
-		$question .= '<strong>SMTP user?</strong><br />';
-		$question .= '<input type="text" class="text" name="smtp_user" value="" /><br />';
-		$question .= '<strong>SMTP password?</strong><br />';
-		$question .= '<input type="password" class="text" name="smtp_passwd" value="" /><br />';
-		eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+		$description = 'Specify SMTP settings which froxlor should use to send mail (optional)';
+		$return['update_mail_via_smtp_note'] = ['type' => 'infotext', 'value' => $description];
+		$question = '<strong>Enable sending mails via SMTP?</strong>';
+		$return['smtp_enable'] = ['type' => 'checkbox', 'value' => 1, 'label' => $question];
+		$question .= '<strong>Enable sending mails via SMTP?</strong>';
+		$return['smtp_host'] = ['type' => 'text', 'value' => 'localhost', 'label' => $question];
+		$question .= '<strong>TCP port to connect to?</strong>';
+		$return['smtp_port'] = ['type' => 'number', 'value' => '25', 'label' => $question];
+		$question .= '<strong>Enable TLS encryption?</strong>';
+		$return['smtp_usetls'] = ['type' => 'checkbox', 'value' => 1, 'checked' => 1, 'label' => $question];
+		$question .= '<strong>Enable SMTP authentication?</strong>';
+		$return['smtp_auth'] = ['type' => 'checkbox', 'value' => 1, 'checked' => 1, 'label' => $question];
+		$question .= '<strong>SMTP user?</strong>';
+		$return['smtp_user'] = ['type' => 'text', 'value' => '', 'label' => $question];
+		$question .= '<strong>SMTP password?</strong>';
+		$return['smtp_user'] = ['type' => 'password', 'value' => '', 'label' => $question];
 	}
 
 	if (versionInUpdate($current_db_version, '201705050')) {
 		$has_preconfig = true;
-		$description = 'DEBIAN/UBUNTU ONLY: Enable usage of libnss-extrausers as alternative to libnss-mysql (NOTE: if enabled, go through the configuration steps right after the update!!!)<br /><br />';
-		$question = '<strong>Enable usage of libnss-extrausers?</strong><br />';
-		$question .= \Froxlor\UI\HTML::makeyesno('system_nssextrausers', '1', '0', '0') . '<br />';
-		eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+		$description = 'DEBIAN/UBUNTU ONLY: Enable usage of libnss-extrausers as alternative to libnss-mysql (NOTE: if enabled, go through the configuration steps right after the update!!!)';
+		$question = '<strong>Enable usage of libnss-extrausers?</strong>';
+		$return['system_nssextrausers_note'] = ['type' => 'infotext', 'value' => $description];
+		$return['system_nssextrausers'] = ['type' => 'checkbox', 'value' => 1, 'label' => $question];
 	}
 
 	if (versionInUpdate($current_db_version, '201712310')) {
 		if (Settings::Get('system.leenabled') == 1) {
 			$has_preconfig = true;
-			$description = 'Chose whether you want to disable the Let\'s Encrypt selfcheck as it causes false positives for some configurations.<br /><br />';
-			$question = '<strong>Disable Let\'s Encrypt self-check?</strong><br />';
-			$question .= \Froxlor\UI\HTML::makeyesno('system_disable_le_selfcheck', '1', '0', '0') . '<br />';
-			eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+			$description = 'Chose whether you want to disable the Let\'s Encrypt selfcheck as it causes false positives for some configurations.';
+			$question = '<strong>Disable Let\'s Encrypt self-check?</strong>';
+			$return['system_disable_le_selfcheck_note'] = ['type' => 'infotext', 'value' => $description];
+			$return['system_disable_le_selfcheck'] = ['type' => 'checkbox', 'value' => 1, 'label' => $question];
 		}
 	}
 }

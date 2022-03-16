@@ -18,41 +18,62 @@
 /**
  * Function getPreConfig
  *
- * outputs various content before the update process
+ * outputs various form-field-arrays before the update process
  * can be continued (asks for agreement whatever is being asked)
  *
  * @param string $current_version
  * @param int $current_db_version
  *
- * @return string
+ * @return array
  */
-function getPreConfig($current_version, $current_db_version)
+function getPreConfig($current_version, $current_db_version): array
 {
 	$has_preconfig = false;
-	$return = '<div class="preconfig"><h3 class="red">PLEASE NOTE - Important update notifications</h3>';
 
 	include_once \Froxlor\FileDir::makeCorrectFile(dirname(__FILE__) . '/preconfig/0.9/preconfig_0.9.inc.php');
-	parseAndOutputPreconfig($has_preconfig, $return, $current_version, $current_db_version);
+	$return['section_09'] = [
+		'title' => '0.9.x updates',
+		'fields' => []
+	];
+	parseAndOutputPreconfig($has_preconfig, $return['section_09']['fields'], $current_version, $current_db_version);
 
 	include_once \Froxlor\FileDir::makeCorrectFile(dirname(__FILE__) . '/preconfig/0.10/preconfig_0.10.inc.php');
-	parseAndOutputPreconfig2($has_preconfig, $return, $current_version, $current_db_version);
+	$return['section_010'] = [
+		'title' => '0.10.x updates',
+		'fields' => []
+	];
+	parseAndOutputPreconfig2($has_preconfig, $return['section_010']['fields'], $current_version, $current_db_version);
 
-	$return .= '<br /><br />' . \Froxlor\UI\HTML::makecheckbox('update_changesagreed', '<strong>I have read the update notifications above and I am aware of the changes made to my system.</strong>', '1', true, '0', true);
-	$return .= '</div>';
-	$return .= '<input type="hidden" name="update_preconfig" value="1" />';
+	if (empty($return['section_09']['fields'])) {
+		unset($return['section_09']);
+	}
+	if (empty($return['section_010']['fields'])) {
+		unset($return['section_010']);
+	}
+
+	if (!empty($return)) {
+		$has_preconfig = true;
+		$return['section_agree'] = [
+			'title' => 'Check',
+			'fields' => [
+				'update_changesagreed' => ['type' => 'checkbox', 'value' => 1, 'label' => '<strong>I have read the update notifications above and I am aware of the changes made to my system.</strong>'],
+				'update_preconfig' => ['type' => 'hidden', 'value' => 1]
+			]
+		];
+	}
 
 	if ($has_preconfig) {
 		return $return;
 	} else {
-		return '';
+		return [];
 	}
 }
 
 function versionInUpdate($current_version, $version_to_check)
 {
-	if (! \Froxlor\Froxlor::isFroxlor()) {
+	if (!\Froxlor\Froxlor::isFroxlor()) {
 		return true;
 	}
 
-	return (\Froxlor\Froxlor::versionCompare2($current_version, $version_to_check) == - 1 ? true : false);
+	return (\Froxlor\Froxlor::versionCompare2($current_version, $version_to_check) == -1 ? true : false);
 }

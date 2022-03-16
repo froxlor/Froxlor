@@ -324,7 +324,24 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 			\Froxlor\UI\Response::dynamic_error("Upload failed");
 		}
 	} else {
-		eval("echo \"" . \Froxlor\UI\Template::getTemplate("settings/importexport/index") . "\";");
+		$settings_data = include_once dirname(__FILE__) . '/lib/formfields/admin/settings/formfield.settings_import.php';
+
+		UI::twigBuffer('user/form.html.twig', [
+			'formaction' => $linker->getLink(array('section' => 'settings', 'page' => $page, 'action' => 'import')),
+			'formdata' => $settings_data['settings_import'],
+			'actions_links' => [[
+				'class' => 'btn-outline-primary',
+				'href' => $linker->getLink(['section' => 'settings', 'page' => 'overview']),
+				'label' => $lng['admin']['configfiles']['overview'],
+				'icon' => 'fa fa-grip'
+			],[
+				'class' => 'btn-outline-secondary',
+				'href' => $linker->getLink(['section' => 'settings', 'page' => $page, 'action' => 'export']),
+				'label' => 'Download/export ' . $lng['admin']['serversettings'],
+				'icon' => 'fa fa-file-import'
+			]]
+		]);
+		UI::twigOutputBuffer();
 	}
 } elseif ($page == 'testmail') {
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {

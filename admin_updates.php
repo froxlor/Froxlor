@@ -20,6 +20,7 @@ require __DIR__ . '/lib/init.php';
 
 use Froxlor\Database\Database;
 use Froxlor\Settings;
+use Froxlor\UI\Panel\UI;
 
 if ($page == 'overview') {
 	$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_updates");
@@ -29,7 +30,7 @@ if ($page == 'overview') {
 	 * have any version/dbversion in the database (don't know why)
 	 * so we have to set them both to run a correct upgrade
 	 */
-	if (! \Froxlor\Froxlor::isFroxlor()) {
+	if (!\Froxlor\Froxlor::isFroxlor()) {
 		if (Settings::Get('panel.version') == null || Settings::Get('panel.version') == '') {
 			Settings::Set('panel.version', '1.4.2.1');
 		}
@@ -57,7 +58,7 @@ if ($page == 'overview') {
 		$message = '';
 
 		if (isset($_POST['send']) && $_POST['send'] == 'send') {
-			if ((isset($_POST['update_preconfig']) && isset($_POST['update_changesagreed']) && intval($_POST['update_changesagreed']) != 0) || ! isset($_POST['update_preconfig'])) {
+			if ((isset($_POST['update_preconfig']) && isset($_POST['update_changesagreed']) && intval($_POST['update_changesagreed']) != 0) || !isset($_POST['update_preconfig'])) {
 				eval("echo \"" . \Froxlor\UI\Template::getTemplate('update/update_start') . "\";");
 
 				include_once \Froxlor\Froxlor::getInstallDir() . 'install/updatesql.php';
@@ -67,15 +68,15 @@ if ($page == 'overview') {
 
 				\Froxlor\User::updateCounters();
 				\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_VHOST);
-				@chmod(\Froxlor\Froxlor::getInstallDir() . '/lib/userdata.inc.php', 0440);
+				@chmod(\Froxlor\Froxlor::getInstallDir() . '/lib/userdata.inc.php', 0400);
 
 				$successful_update = true;
 			} else {
-				$message = '<br /><strong class="red">You have to agree that you have read the update notifications.</strong>';
+				$message = '<br><br><strong>You have to agree that you have read the update notifications.</strong>';
 			}
 		}
 
-		if (! $successful_update) {
+		if (!$successful_update) {
 			$current_version = Settings::Get('panel.version');
 			$current_db_version = Settings::Get('panel.db_version');
 			if (empty($current_db_version)) {
@@ -93,21 +94,37 @@ if ($page == 'overview') {
 				$ui_text = str_replace('%curversion', $current_db_version, $ui_text);
 				$ui_text = str_replace('%newversion', $new_db_version, $ui_text);
 			}
-			$update_information = $ui_text;
+			$ui_text .= $lng['update']['update_information']['part_b'];
+
+			$upd_formfield = [
+				'updates' => [
+					'title' => $lng['update']['update'],
+					'image' => 'fa-solid fa-download',
+					'sections' => [],
+					'buttons' => [
+						[
+							'label' => $lng['update']['proceed']
+						]
+					]
+				]
+			];
 
 			include_once \Froxlor\Froxlor::getInstallDir() . '/install/updates/preconfig.php';
 			$preconfig = getPreConfig($current_version, $current_db_version);
-			if ($preconfig != '') {
-				$update_information .= '<br />' . $preconfig . $message;
+			if (!empty($preconfig)) {
+				$upd_formfield['updates']['sections'] = $preconfig;
 			}
 
-			$update_information .= $lng['update']['update_information']['part_b'];
-
-			eval("echo \"" . \Froxlor\UI\Template::getTemplate('update/index') . "\";");
+			UI::twigBuffer('user/form-note.html.twig', [
+				'formaction' => $linker->getLink(array('section' => 'updates')),
+				'formdata' => $upd_formfield['updates'],
+				// alert
+				'type' => !empty($message) ? 'danger' : 'info',
+				'alert_msg' => $ui_text . $message
+			]);
+			UI::twigOutputBuffer();
 		}
 	} else {
-		$success_message = $lng['update']['noupdatesavail'];
-		$redirect_url = 'admin_index.php';
-		eval("echo \"" . \Froxlor\UI\Template::getTemplate('update/noupdatesavail') . "\";");
+		\Froxlor\UI\Response::standard_success('noupdatesavail');
 	}
 }

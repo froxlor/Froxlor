@@ -48,7 +48,7 @@
 	<div class="row">
 		{% if userinfo.adminsession == 1 %}
 			<div
-				class="col-7">
+				class="col-12 col-lg-6">
 				{# system infos #}
 				<div class="card mb-3">
 					<div class="card-header">
@@ -121,7 +121,7 @@
 			</div>
 		{% else %}
 			<div
-				class="col-4">
+				class="col-12 col-md-6 col-lg-4">
 				{# account info #}
 				<div class="card mb-3">
 					<div class="card-header">
@@ -184,7 +184,7 @@
 				</div>
 			</div>
 			<div
-				class="col-4">
+				class="col-12 col-md-6 col-lg-4">
 				{# customer details #}
 				<div class="card">
 					<div class="card-header">
@@ -245,7 +245,7 @@
 				</div>
 			</div>
 		{% endif %}
-		<div class="{% if userinfo.adminsession == 1 %}col-5{% else %}col-4{% endif %}">
+		<div class="col-12 {% if userinfo.adminsession == 1 %}col-lg-6{% else %}col-lg-4{% endif %}">
 			{% if userinfo.adminsession == 1 %}
 				{# froxlor-details #}
 				<div class="card mb-3">

@@ -25,7 +25,7 @@
  * @param string $current_version
  *        	current froxlor version
  *        	
- * @return null
+ * @return void
  */
 function parseAndOutputPreconfig2(&$has_preconfig, &$return, $current_version, $current_db_version)
 {
@@ -33,10 +33,9 @@ function parseAndOutputPreconfig2(&$has_preconfig, &$return, $current_version, $
 
 	if (versionInUpdate($current_db_version, '202004140')) {
 		$has_preconfig = true;
-		$description = 'Froxlor can now optionally validate the dns entries of domains that request Lets Encrypt certificates to reduce dns-related problems (e.g. freshly registered domain or updated a-record).<br />';
-		$question = '<strong>Validate DNS of domains when using Lets Encrypt&nbsp;';
-		$question .= \Froxlor\UI\HTML::makeyesno('system_le_domain_dnscheck', '1', '0', '1');
-
-		eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
+		$description = 'Froxlor can now optionally validate the dns entries of domains that request Lets Encrypt certificates to reduce dns-related problems (e.g. freshly registered domain or updated a-record).';
+		$question = '<strong>Validate DNS of domains when using Lets Encrypt';
+		$return['system_le_domain_dnscheck_note'] = ['type' => 'infotext', 'value' => $description];
+		$return['system_le_domain_dnscheck'] = ['type' => 'checkbox', 'value' => 1, 'label' => $question];
 	}
 }
