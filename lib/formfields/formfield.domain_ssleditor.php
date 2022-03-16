@@ -25,9 +25,8 @@ return array(
 				'fields' => array(
 					'domainname' => array(
 						'label' => $lng['domains']['domainname'],
-						'type' => 'hidden',
-						'value' => $result_domain['domain'],
-						'display' => $result_domain['domain']
+						'type' => 'label',
+						'value' => $result_domain['domain']
 					),
 					'ssl_cert_file' => array(
 						'label' => $lng['admin']['ipsandports']['ssl_cert_file_content'],

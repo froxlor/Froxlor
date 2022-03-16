@@ -19,7 +19,6 @@
 const AREA = 'customer';
 require __DIR__ . '/lib/init.php';
 
-use Froxlor\Api\Commands\Certificates as Certificates;
 use Froxlor\Api\Commands\SubDomains as SubDomains;
 use Froxlor\Database\Database;
 use Froxlor\Settings;
@@ -357,63 +356,7 @@ if ($page == 'overview' || $page == 'domains') {
 	}
 } elseif ($page == 'domainssleditor') {
 
-	if ($action == '' || $action == 'view') {
-
-		// get domain
-		try {
-			$json_result = SubDomains::getLocal($userinfo, array(
-				'id' => $id
-			))->get();
-		} catch (Exception $e) {
-			\Froxlor\UI\Response::dynamic_error($e->getMessage());
-		}
-		$result_domain = json_decode($json_result, true)['data'];
-
-		if (isset($_POST['send']) && $_POST['send'] == 'send') {
-			$do_insert = isset($_POST['do_insert']) ? (($_POST['do_insert'] == 1) ? true : false) : false;
-			try {
-				if ($do_insert) {
-					Certificates::getLocal($userinfo, $_POST)->add();
-				} else {
-					Certificates::getLocal($userinfo, $_POST)->update();
-				}
-			} catch (Exception $e) {
-				\Froxlor\UI\Response::dynamic_error($e->getMessage());
-			}
-			// back to domain overview
-			\Froxlor\UI\Response::redirectTo($filename, array(
-				'page' => 'domains'
-			));
-		}
-
-		$stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "`
-			WHERE `domainid`= :domainid");
-		$result = Database::pexecute_first($stmt, array(
-			"domainid" => $id
-		));
-
-		$do_insert = false;
-		// if no entry can be found, behave like we have empty values
-		if (!is_array($result) || !isset($result['ssl_cert_file'])) {
-			$result = array(
-				'ssl_cert_file' => '',
-				'ssl_key_file' => '',
-				'ssl_ca_file' => '',
-				'ssl_cert_chainfile' => ''
-			);
-			$do_insert = true;
-		}
-
-		$result = \Froxlor\PhpHelper::htmlentitiesArray($result);
-
-		$ssleditor_data = include_once dirname(__FILE__) . '/lib/formfields/customer/domains/formfield.domain_ssleditor.php';
-		$ssleditor_form = \Froxlor\UI\HtmlForm::genHTMLForm($ssleditor_data);
-
-		$title = $ssleditor_data['domain_ssleditor']['title'];
-		$image = $ssleditor_data['domain_ssleditor']['image'];
-
-		eval("echo \"" . \Froxlor\UI\Template::getTemplate("domains/domain_ssleditor") . "\";");
-	}
+	require_once __DIR__ . '/ssl_editor.php';
 } elseif ($page == 'domaindnseditor' && $userinfo['dnsenabled'] == '1' && Settings::Get('system.dnsenabled') == '1') {
 
 	require_once __DIR__ . '/dns_editor.php';
@@ -423,53 +366,4 @@ if ($page == 'overview' || $page == 'domains') {
 } elseif ($page == 'logfiles') {
 
 	require_once __DIR__ . '/logfiles_viewer.php';
-}
-
-function formatDomainEntry(&$row, &$idna_convert)
-{
-	$row['domain'] = $idna_convert->decode($row['domain']);
-	$row['aliasdomain'] = $idna_convert->decode($row['aliasdomain']);
-	$row['domainalias'] = $idna_convert->decode($row['domainalias']);
-
-	/**
-	 * check for set ssl-certs to show different state-icons
-	 */
-	// nothing (ssl_global)
-	$row['domain_hascert'] = 0;
-	$ssl_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` WHERE `domainid` = :domainid");
-	Database::pexecute($ssl_stmt, array(
-		"domainid" => $row['id']
-	));
-	$ssl_result = $ssl_stmt->fetch(PDO::FETCH_ASSOC);
-	if (is_array($ssl_result) && isset($ssl_result['ssl_cert_file']) && $ssl_result['ssl_cert_file'] != '') {
-		// own certificate (ssl_customer_green)
-		$row['domain_hascert'] = 1;
-	} else {
-		// check if it's parent has one set (shared)
-		if ($row['parentdomainid'] != 0) {
-			$ssl_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` WHERE `domainid` = :domainid");
-			Database::pexecute($ssl_stmt, array(
-				"domainid" => $row['parentdomainid']
-			));
-			$ssl_result = $ssl_stmt->fetch(PDO::FETCH_ASSOC);
-			if (is_array($ssl_result) && isset($ssl_result['ssl_cert_file']) && $ssl_result['ssl_cert_file'] != '') {
-				// parent has a certificate (ssl_shared)
-				$row['domain_hascert'] = 2;
-			}
-		}
-	}
-
-	$row['termination_date'] = str_replace("0000-00-00", "", $row['termination_date']);
-
-	$row['termination_css'] = "";
-	if ($row['termination_date'] != "") {
-		$cdate = strtotime($row['termination_date'] . " 23:59:59");
-		$today = time();
-
-		if ($cdate < $today) {
-			$row['termination_css'] = 'domain-expired';
-		} else {
-			$row['termination_css'] = 'domain-canceled';
-		}
-	}
 }
