@@ -190,7 +190,7 @@ if ($page == 'overview') {
 			\Froxlor\UI\Response::redirectTo($filename);
 		}
 	} else {
-		eval("echo \"" . \Froxlor\UI\Template::getTemplate('index/change_password') . "\";");
+		UI::view('user/change_password.html.twig');
 	}
 } elseif ($page == 'change_language') {
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {

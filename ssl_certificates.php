@@ -50,11 +50,14 @@ if ($action == 'delete') {
 $log->logAction(FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed domains::ssl_certificates");
 
 try {
-	$certificates_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.sslcertificates.php';
+	$certificates_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/tablelisting.sslcertificates.php';
 	$collection = (new Collection(Certificates::class, $userinfo))
-		->has('domains', \Froxlor\Api\Commands\Domains::class, 'domainid', 'id')
-		->has('customer', \Froxlor\Api\Commands\Customers::class, 'customerid', 'customerid')
 		->withPagination($certificates_list_data['sslcertificates_list']['columns']);
+	if ($userinfo['adminisession'] == 1) {
+		$collection->has('domains', \Froxlor\Api\Commands\Domains::class, 'domainid', 'id');
+	} else {
+		$collection->has('domains', \Froxlor\Api\Commands\SubDomains::class, 'domainid', 'id');
+	}
 } catch (Exception $e) {
 	Response::dynamic_error($e->getMessage());
 }
