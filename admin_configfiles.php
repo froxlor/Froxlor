@@ -108,6 +108,7 @@ if ($userinfo['change_serversettings'] == '1') {
 				'config' => [
 					'title' => $lng['admin']['configfiles']['serverconfiguration'],
 					'image' => 'fa-solid fa-wrench',
+					'description' => 'Configure the system services',
 					'sections' => [
 						'section_config' => [
 							'fields' => [
@@ -131,6 +132,12 @@ if ($userinfo['change_serversettings'] == '1') {
 			UI::twigBuffer('user/form-note.html.twig', [
 				'formaction' => $linker->getLink(array('section' => 'configfiles')),
 				'formdata' => $cfg_formfield['config'],
+				'actions_links' => (int) Settings::Get('panel.is_configured') == 0 ? [[
+					'href' => $linker->getLink(['section' => 'configfiles', 'page' => 'overview', 'action' => 'setconfigured']),
+					'label' => $lng['panel']['ihave_configured'],
+					'class' => 'btn-outline-warning',
+					'icon' => 'fa fa-circle-check'
+				]] : [],
 				// alert
 				'type' => 'warning',
 				'alert_msg' => $lng['panel']['settings_before_configuration']
