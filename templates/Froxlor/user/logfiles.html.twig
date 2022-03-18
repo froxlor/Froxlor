@@ -1,10 +1,15 @@
 {% extends "Froxlor/userarea.html.twig" %}
 
+{% block heading %}
+	<div>
+		<h5 class="mb-1">
+			<i class="fa-solid fa-magnifying-glass me-1"></i>
+			{{ lng('panel.viewlogs') }}
+		</h5>
+	</div>
+{% endblock %}
+
 {% block content %}
-	<h3 class="page-header">
-		<i class="fa-solid fa-magnifying-glass me-1"></i>
-		{{ lng('panel.viewlogs') }}
-	</h3>
 	<div class="row">
 		<div class="col-12 col-md-10 order-2 order-md-1">
 			<h4>Error-Log</h4>

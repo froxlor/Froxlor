@@ -16,12 +16,13 @@
  * @package    Install
  *
  */
+
 use Froxlor\FroxlorLogger;
 
 require_once __DIR__ . '/lib/updateFunctions.php';
 
-if (! defined('_CRON_UPDATE')) {
-	if (! defined('AREA') || (defined('AREA') && AREA != 'admin') || ! isset($userinfo['loginname']) || (isset($userinfo['loginname']) && $userinfo['loginname'] == '')) {
+if (!defined('_CRON_UPDATE')) {
+	if (!defined('AREA') || (defined('AREA') && AREA != 'admin') || !isset($userinfo['loginname']) || (isset($userinfo['loginname']) && $userinfo['loginname'] == '')) {
 		header('Location: ../index.php');
 		exit();
 	}
@@ -40,18 +41,24 @@ try {
 }
 
 if (\Froxlor\Froxlor::isFroxlor()) {
-	include_once (\Froxlor\FileDir::makeCorrectFile(dirname(__FILE__) . '/updates/froxlor/0.9/update_0.9.inc.php'));
-	include_once (\Froxlor\FileDir::makeCorrectFile(dirname(__FILE__) . '/updates/froxlor/0.10/update_0.10.inc.php'));
+
+	// will be filled and increased by the update include-files below
+	$update_tasks = [];
+	$task_counter = 0;
+
+	include_once(\Froxlor\FileDir::makeCorrectFile(dirname(__FILE__) . '/updates/froxlor/0.9/update_0.9.inc.php'));
+	include_once(\Froxlor\FileDir::makeCorrectFile(dirname(__FILE__) . '/updates/froxlor/0.10/update_0.10.inc.php'));
+	include_once(\Froxlor\FileDir::makeCorrectFile(dirname(__FILE__) . '/updates/froxlor/0.11/update_0.11.inc.php'));
 
 	// Check Froxlor - database integrity (only happens after all updates are done, so we know the db-layout is okay)
 	showUpdateStep("Checking database integrity");
 
 	$integrity = new \Froxlor\Database\IntegrityCheck();
-	if (! $integrity->checkAll()) {
+	if (!$integrity->checkAll()) {
 		lastStepStatus(1, 'Monkeys ate the integrity');
 		showUpdateStep("Trying to remove monkeys, feeding bananas");
-		if (! $integrity->fixAll()) {
-			lastStepStatus(2, 'Some monkeys just would not move, you should contact team@froxlor.org');
+		if (!$integrity->fixAll()) {
+			lastStepStatus(2, 'failed', 'Some monkeys just would not move, you should contact team@froxlor.org');
 		} else {
 			lastStepStatus(0, 'Integrity restored');
 		}

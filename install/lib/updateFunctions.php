@@ -18,27 +18,24 @@
 /**
  * Function showUpdateStep
  *
- * outputs and logs the current
- * update progress
+ * stores and logs the current update progress
  *
- * @param
- *        	string task/status
- * @param
- *        	bool needs_status (if false, a linebreak will be added)
+ * @param string $task
+ * @param bool $needs_status (if false, a linebreak will be added)
  *        	
- * @return string formatted output and log-entry
+ * @return void
  */
 function showUpdateStep($task = null, $needs_status = true)
 {
+	global $update_tasks, $task_counter;
+
 	set_time_limit(30);
-	if (! $needs_status)
-		echo "<b>";
 
 	// output
-	echo $task;
+	$update_tasks[$task_counter] = ['title' => $task, 'result' => 0];
 
-	if (! $needs_status) {
-		echo "</b><br />";
+	if (!$needs_status) {
+		$task_counter++;
 	}
 
 	\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_WARNING, $task);
@@ -47,40 +44,39 @@ function showUpdateStep($task = null, $needs_status = true)
 /**
  * Function lastStepStatus
  *
- * outputs [OK] (success), [??] (warning) or [!!] (failure)
- * of the last update-step
+ * outputs status of the last update-step
  *
- * @param
- *        	int status (0 = success, 1 = warning, 2 = failure)
+ * @param int $status (0 = success, 1 = warning, 2 = failure)
+ * @param string $message
+ * @param string $additional_info
  *        	
  * @return string formatted output and log-entry
  */
-function lastStepStatus($status = -1, $message = '')
+function lastStepStatus(int $status = -1, string $message = '', string $additional_info = '')
 {
+	global $update_tasks, $task_counter;
+
+	$update_tasks[$task_counter]['result_txt'] = $message ?? 'OK';
+	$update_tasks[$task_counter]['result_desc'] = $additional_info ?? '';
+
 	switch ($status) {
 
 		case 0:
-			$status_sign = ($message != '') ? '[' . $message . ']' : '[OK]';
-			$status_color = 'ok';
 			break;
 		case 1:
-			$status_sign = ($message != '') ? '[' . $message . ']' : '[??]';
-			$status_color = 'warn';
+			$update_tasks[$task_counter]['result'] = 2;
 			break;
 		case 2:
-			$status_sign = ($message != '') ? '[' . $message . ']' : '[!!]';
-			$status_color = 'err';
+			$update_tasks[$task_counter]['result'] = 1;
 			break;
 		default:
-			$status_sign = '[unknown]';
-			$status_color = 'unknown';
+			$update_tasks[$task_counter]['result'] = -1;
 			break;
 	}
 
-	// output
-	echo "<span class=\"update-step update-step-" . $status_color . "\">" . $status_sign . "</span><br />";
+	$task_counter++;
 
-	if ($status == - 1 || $status == 2) {
+	if ($status == -1 || $status == 2) {
 		\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_WARNING, 'Attention - last update task failed!!!');
 	} elseif ($status == 0 || $status == 1) {
 		\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_WARNING, 'Success');

@@ -1793,3 +1793,4 @@ $lng['admin']['configfiles']['description'] = 'System-Dienste konfigurieren';
 $lng['admin']['configfiles']['skipconfig'] = 'Nicht (erneut) konfigurieren';
 $lng['admin']['configfiles']['recommendednote'] = 'Empfohlene/benötigte Dienste ahand der aktuellen Systemeinstellungen';
 $lng['admin']['configfiles']['selectrecommended'] = 'Empfohlene wählen';
+$lng['update']['description'] = 'Aktualisierung der froxlor Datenbank';

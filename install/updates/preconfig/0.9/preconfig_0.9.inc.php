@@ -553,7 +553,6 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 		$has_preconfig = true;
 		$description = 'The template-variable {PASSWORD} has been replaced with {LINK}. Please update your password reset templates!';
 		$return['update_template_var_password_changed_note'] = ['type' => 'infotext', 'value' => $description];
-		eval("\$return.=\"" . \Froxlor\UI\Template::getTemplate("update/preconfigitem") . "\";");
 	}
 
 	if (versionInUpdate($current_version, '0.9.31-dev5')) {

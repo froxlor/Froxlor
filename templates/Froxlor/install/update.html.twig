@@ -1,0 +1,48 @@
+{% extends "Froxlor/userarea.html.twig" %}
+
+{% block heading %}
+	<div>
+		<h5 class="mb-1">
+			<i class="fa-solid fa-download me-1"></i>
+			{{ lng('update.update') }}
+		</h5>
+		<span class="text-muted">{{ lng('update.description') }}</span>
+	</div>
+{% endblock %}
+
+{% block content %}
+	<div class="card table-responsive">
+		<div class="card-body">
+			<table class="table table-borderless align-middle mb-0 px-3">
+				<tbody>
+				{% for check in checks %}
+					<tr class="{% if check.result == 1 %}table-danger{% elseif check.result == 2 %}table-warning{% endif %}">
+						<td class="w-75" scope="row">{{ check.title }}</td>
+						<td class="col-auto text-end{% if check.result == 0 %} text-success{% endif %}">
+							<span class="d-none d-md-inline">{{ check.result_txt }}</span>
+							{% if check.result == 0 %}&nbsp;<i class="fa fa-check-circle" {% elseif check.result == 2 %}<span class="d-md-none">&nbsp;???</span>{% elseif check.result == 1 %}<span class="d-md-none">&nbsp;!!!</span>
+							{% endif %}
+						</td>
+					</tr>
+					{% if check.result_desc is not empty %}
+						<tr>
+							<td colspan="2">
+								<span>{{ check.result_desc|raw }}</span>
+							</td>
+						</tr>
+					{% endif %}
+				{% endfor %}
+				</tbody>
+			</table>
+
+			<div class="row pt-md-3">
+				<div class="col-12 text-end mt-4 mt-md-0">
+					<a class="btn btn-lg btn-block btn-primary" href="admin_index.php">
+						{{ lng('success.clickheretocontinue') }}
+						&raquo;
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

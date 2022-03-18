@@ -62,8 +62,7 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.99')) {
 			// none of the files existed
 			lastStepStatus(0);
 		} else {
-			lastStepStatus(1, 'manual commands needed');
-			echo '<span class="update-step update-step-err">Please run the following commands manually:</span><br><pre>' . $del_list . '</pre><br>';
+			lastStepStatus(1, 'manual commands needed', 'Please run the following commands manually:<br><pre>' . $del_list . '</pre>');
 		}
 	}
 }

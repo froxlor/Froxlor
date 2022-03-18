@@ -2151,3 +2151,4 @@ $lng['admin']['configfiles']['description'] = 'Configure the system services';
 $lng['admin']['configfiles']['skipconfig'] = 'Don\'t (re)configure';
 $lng['admin']['configfiles']['recommendednote'] = 'Recommended/required services based on current system settings';
 $lng['admin']['configfiles']['selectrecommended'] = 'Select recommended';
+$lng['update']['description'] = 'Running database updates for your froxlor installation';

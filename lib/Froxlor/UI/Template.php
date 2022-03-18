@@ -51,6 +51,8 @@ class Template
 	 *        	string noarea If area should be used to get template
 	 * @return string The Template
 	 * @author Florian Lippert <flo@syscp.org>
+	 *
+	 * @deprecated
 	 */
 	public static function getTemplate($template, $noarea = 0)
 	{
