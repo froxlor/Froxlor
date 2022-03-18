@@ -1,5 +1,6 @@
 // load bootstrap
 import 'bootstrap';
+import 'chart.js/dist/chart';
 
 // load jquery
 global.$ = require('jquery');

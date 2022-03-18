@@ -56,12 +56,11 @@ if ($page == 'overview' || $page == 'domains') {
 			]];
 		}
 
-		UI::twigBuffer('user/table.html.twig', [
+		UI::view('user/table.html.twig', [
 			'listing' => \Froxlor\UI\Listing::format($collection, $domain_list_data['domain_list']),
 			'actions_links' => $actions_links,
 			'entity_info' => $lng['domains']['description']
 		]);
-		UI::twigOutputBuffer();
 	} elseif ($action == 'delete' && $id != 0) {
 		try {
 			$json_result = SubDomains::getLocal($userinfo, array(
@@ -188,11 +187,10 @@ if ($page == 'overview' || $page == 'domains') {
 
 				$subdomain_add_data = include_once dirname(__FILE__) . '/lib/formfields/customer/domains/formfield.domains_add.php';
 
-				UI::twigBuffer('user/form.html.twig', [
+				UI::view('user/form.html.twig', [
 					'formaction' => $linker->getLink(array('section' => 'domains')),
 					'formdata' => $subdomain_add_data['domain_add']
 				]);
-				UI::twigOutputBuffer();
 			}
 		}
 	} elseif ($action == 'edit' && $id != 0) {
@@ -343,12 +341,11 @@ if ($page == 'overview' || $page == 'domains') {
 
 				$subdomain_edit_data = include_once dirname(__FILE__) . '/lib/formfields/customer/domains/formfield.domains_edit.php';
 
-				UI::twigBuffer('user/form.html.twig', [
+				UI::view('user/form.html.twig', [
 					'formaction' => $linker->getLink(array('section' => 'domains', 'id' => $id)),
 					'formdata' => $subdomain_edit_data['domain_edit'],
 					'editid' => $id
 				]);
-				UI::twigOutputBuffer();
 			}
 		} else {
 			\Froxlor\UI\Response::standard_error('domains_canteditdomain');

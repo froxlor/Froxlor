@@ -34,7 +34,7 @@ if ($page == 'log' && $userinfo['change_serversettings'] == '1') {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 
-		UI::twigBuffer('user/table.html.twig', [
+		UI::view('user/table.html.twig', [
 			'listing' => \Froxlor\UI\Listing::format($collection, $syslog_list_data['syslog_list']),
 			'actions_links' => [[
 				'href' => $linker->getLink(['section' => 'logger', 'page' => 'log', 'action' => 'truncate']),
@@ -43,7 +43,6 @@ if ($page == 'log' && $userinfo['change_serversettings'] == '1') {
 				'class' => 'btn-warning'
 			]]
 		]);
-		UI::twigOutputBuffer();
 	} elseif ($action == 'truncate') {
 
 		if (isset($_POST['send']) && $_POST['send'] == 'send') {

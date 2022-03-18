@@ -143,12 +143,11 @@ if ($action == '') {
 		'pagination' => []
 	];
 
-	UI::twigBuffer('user/table-tpl.html.twig', [
+	UI::view('user/table-tpl.html.twig', [
 		'maillisting' => \Froxlor\UI\Listing::formatFromArray($collection_mail, $mailtpl_list_data['mailtpl_list']),
 		'filelisting' => \Froxlor\UI\Listing::formatFromArray($collection_file, $filetpl_list_data['filetpl_list']),
 		'actions_links' => array_merge($mail_actions_links, $file_actions_links)
 	]);
-	UI::twigOutputBuffer();
 } elseif ($action == 'delete' && $subjectid != 0 && $mailbodyid != 0) {
 	// email templates
 	$result_stmt = Database::prepare("
@@ -258,12 +257,11 @@ if ($action == '') {
 
 		$template_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/templates/formfield.template_add.php';
 
-		UI::twigBuffer('user/form-replacers.html.twig', [
+		UI::view('user/form-replacers.html.twig', [
 			'formaction' => $linker->getLink(array('section' => 'templates')),
 			'formdata' => $template_add_data['template_add'],
 			'replacers' => $template_add_data['template_replacers']
 		]);
-		UI::twigOutputBuffer();
 	} elseif (isset($_POST['send']) && $_POST['send'] == 'send' && !isset($_POST['filesend'])) {
 		// email templates
 		$language = htmlentities(\Froxlor\Validate\Validate::validate($_POST['language'], 'language', '/^[^\r\n\0"\']+$/', 'nolanguageselect'));
@@ -378,7 +376,7 @@ if ($action == '') {
 		}
 
 		if ($add) {
-			UI::twigBuffer('user/form.html.twig', [
+			UI::view('user/form.html.twig', [
 				'formaction' => $linker->getLink(array('section' => 'templates')),
 				'formdata' => [
 					'title' => $lng['admin']['templates']['template_add'],
@@ -408,7 +406,6 @@ if ($action == '') {
 				],
 				'editid' => $id
 			]);
-			UI::twigOutputBuffer();
 		} else {
 			\Froxlor\UI\Response::standard_error('alltemplatesdefined');
 		}
@@ -438,12 +435,11 @@ if ($action == '') {
 
 			$filetemplate_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/templates/formfield.filetemplate_add.php';
 
-			UI::twigBuffer('user/form-replacers.html.twig', [
+			UI::view('user/form-replacers.html.twig', [
 				'formaction' => $linker->getLink(array('section' => 'templates')),
 				'formdata' => $filetemplate_add_data['filetemplate_add'],
 				'replacers' => $filetemplate_add_data['filetemplate_replacers']
 			]);
-			UI::twigOutputBuffer();
 		}
 	}
 } elseif ($action == 'edit' && $subjectid != 0 && $mailbodyid != 0) {
@@ -507,12 +503,11 @@ if ($action == '') {
 
 			$template_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/templates/formfield.template_edit.php';
 
-			UI::twigBuffer('user/form-replacers.html.twig', [
+			UI::view('user/form-replacers.html.twig', [
 				'formaction' => $linker->getLink(array('section' => 'templates')),
 				'formdata' => $template_edit_data['template_edit'],
 				'replacers' => $template_edit_data['template_replacers']
 			]);
-			UI::twigOutputBuffer();
 		}
 	}
 } elseif ($action == 'editf' && $id != 0) {
@@ -551,13 +546,12 @@ if ($action == '') {
 
 			$filetemplate_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/templates/formfield.filetemplate_edit.php';
 
-			UI::twigBuffer('user/form-replacers.html.twig', [
+			UI::view('user/form-replacers.html.twig', [
 				'formaction' => $linker->getLink(array('section' => 'templates')),
 				'formdata' => $filetemplate_edit_data['filetemplate_edit'],
 				'replacers' => $filetemplate_edit_data['filetemplate_replacers'],
 				'editid' => $id
 			]);
-			UI::twigOutputBuffer();
 		}
 	} else {
 		\Froxlor\UI\Response::standard_error('templatenotfound');

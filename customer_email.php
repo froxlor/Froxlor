@@ -64,12 +64,11 @@ if ($page == 'overview' || $page == 'emails') {
 			]];
 		}
 
-		UI::twigBuffer('user/table.html.twig', [
+		UI::view('user/table.html.twig', [
 			'listing' => \Froxlor\UI\Listing::format($collection, $email_list_data['email_list']),
 			'actions_links' => $actions_links,
 			'entity_info' => $lng['emails']['description']
 		]);
-		UI::twigOutputBuffer();
 	} elseif ($action == 'delete' && $id != 0) {
 		try {
 			$json_result = Emails::getLocal($userinfo, array(
@@ -139,11 +138,10 @@ if ($page == 'overview' || $page == 'emails') {
 					if (Settings::Get('catchall.catchall_enabled') != '1') {
 						unset($email_add_data['emails_add']['sections']['section_a']['fields']['iscatchall']);
 					}
-					UI::twigBuffer('user/form.html.twig', [
+					UI::view('user/form.html.twig', [
 						'formaction' => $linker->getLink(array('section' => 'email')),
 						'formdata' => $email_add_data['emails_add']
 					]);
-					UI::twigOutputBuffer();
 				} else {
 					\Froxlor\UI\Response::standard_error('noemaildomainaddedyet');
 				}
@@ -192,12 +190,11 @@ if ($page == 'overview' || $page == 'emails') {
 				unset($email_edit_data['emails_edit']['sections']['section_a']['fields']['mail_catchall']);
 			}
 
-			UI::twigBuffer('user/form.html.twig', [
+			UI::view('user/form.html.twig', [
 				'formaction' => $linker->getLink(array('section' => 'email')),
 				'formdata' => $email_edit_data['emails_edit'],
 				'editid' => $id
 			]);
-			UI::twigOutputBuffer();
 		}
 	} elseif ($action == 'togglecatchall' && $id != 0) {
 		try {
@@ -260,11 +257,10 @@ if ($page == 'overview' || $page == 'emails') {
 
 				$account_add_data = include_once dirname(__FILE__) . '/lib/formfields/customer/email/formfield.emails_addaccount.php';
 
-				UI::twigBuffer('user/form.html.twig', [
+				UI::view('user/form.html.twig', [
 					'formaction' => $linker->getLink(array('section' => 'email', 'id' => $id)),
 					'formdata' => $account_add_data['emails_addaccount']
 				]);
-				UI::twigOutputBuffer();
 			}
 		} else {
 			\Froxlor\UI\Response::standard_error(array(
@@ -300,11 +296,10 @@ if ($page == 'overview' || $page == 'emails') {
 
 				$account_changepw_data = include_once dirname(__FILE__) . '/lib/formfields/customer/email/formfield.emails_accountchangepasswd.php';
 
-				UI::twigBuffer('user/form.html.twig', [
+				UI::view('user/form.html.twig', [
 					'formaction' => $linker->getLink(array('section' => 'email', 'id' => $id)),
 					'formdata' => $account_changepw_data['emails_accountchangepasswd']
 				]);
-				UI::twigOutputBuffer();
 			}
 		}
 	} elseif ($action == 'changequota' && Settings::Get('system.mail_quota_enabled') == '1' && $id != 0) {
@@ -335,11 +330,10 @@ if ($page == 'overview' || $page == 'emails') {
 
 				$quota_edit_data = include_once dirname(__FILE__) . '/lib/formfields/customer/email/formfield.emails_accountchangequota.php';
 
-				UI::twigBuffer('user/form.html.twig', [
+				UI::view('user/form.html.twig', [
 					'formaction' => $linker->getLink(array('section' => 'email', 'id' => $id)),
 					'formdata' => $quota_edit_data['emails_accountchangequota']
 				]);
-				UI::twigOutputBuffer();
 			}
 		}
 	} elseif ($action == 'delete' && $id != 0) {
@@ -403,11 +397,10 @@ if ($page == 'overview' || $page == 'emails') {
 
 					$forwarder_add_data = include_once dirname(__FILE__) . '/lib/formfields/customer/email/formfield.emails_addforwarder.php';
 
-					UI::twigBuffer('user/form.html.twig', [
+					UI::view('user/form.html.twig', [
 						'formaction' => $linker->getLink(array('section' => 'email', 'id' => $id)),
 						'formdata' => $forwarder_add_data['emails_addforwarder']
 					]);
-					UI::twigOutputBuffer();
 				}
 			}
 		} else {

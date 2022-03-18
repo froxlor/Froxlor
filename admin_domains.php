@@ -58,11 +58,10 @@ if ($page == 'domains' || $page == 'overview') {
 			];
 		}
 
-		UI::twigBuffer('user/table.html.twig', [
+		UI::view('user/table.html.twig', [
 			'listing' => \Froxlor\UI\Listing::format($collection, $domain_list_data['domain_list']),
 			'actions_links' => $actions_links
 		]);
-		UI::twigOutputBuffer();
 	} elseif ($action == 'delete' && $id != 0) {
 
 		try {
@@ -287,11 +286,10 @@ if ($page == 'domains' || $page == 'overview') {
 
 			$domain_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/domains/formfield.domains_add.php';
 
-			UI::twigBuffer('user/form.html.twig', [
+			UI::view('user/form.html.twig', [
 				'formaction' => $linker->getLink(array('section' => 'domains')),
 				'formdata' => $domain_add_data['domain_add']
 			]);
-			UI::twigOutputBuffer();
 		}
 	} elseif ($action == 'edit' && $id != 0) {
 
@@ -587,12 +585,11 @@ if ($page == 'domains' || $page == 'overview') {
 
 				$domain_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/domains/formfield.domains_edit.php';
 
-				UI::twigBuffer('user/form.html.twig', [
+				UI::view('user/form.html.twig', [
 					'formaction' => $linker->getLink(array('section' => 'domains', 'id' => $id)),
 					'formdata' => $domain_edit_data['domain_edit'],
 					'editid' => $id
 				]);
-				UI::twigOutputBuffer();
 			}
 		}
 	} elseif ($action == 'jqGetCustomerPHPConfigs') {
@@ -655,14 +652,13 @@ if ($page == 'domains' || $page == 'overview') {
 
 			$domain_import_data = include_once dirname(__FILE__) . '/lib/formfields/admin/domains/formfield.domains_import.php';
 
-			UI::twigBuffer('user/form-note.html.twig', [
+			UI::view('user/form-note.html.twig', [
 				'formaction' => $linker->getLink(array('section' => 'domains', 'page' => $page)),
 				'formdata' => $domain_import_data['domain_import'],
 				// alert-box
 				'type' => 'info',
 				'alert_msg' => $lng['domains']['import_description']
 			]);
-			UI::twigOutputBuffer();
 		}
 	}
 } elseif ($page == 'domainssleditor') {

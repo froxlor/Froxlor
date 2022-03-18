@@ -40,14 +40,13 @@ if ($page == 'overview') {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 
-		UI::twigBuffer('user/table.html.twig', [
+		UI::view('user/table.html.twig', [
 			'listing' => \Froxlor\UI\Listing::format($collection, $phpconf_list_data['phpconf_list']),
 			'actions_links' => [[
 				'href' => $linker->getLink(['section' => 'phpsettings', 'page' => $page, 'action' => 'add']),
 				'label' => $lng['admin']['phpsettings']['addnew']
 			]]
 		]);
-		UI::twigOutputBuffer();
 	}
 
 	if ($action == 'add') {
@@ -84,11 +83,10 @@ if ($page == 'overview') {
 
 				$phpconfig_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/phpconfig/formfield.phpconfig_add.php';
 
-				UI::twigBuffer('user/form.html.twig', [
+				UI::view('user/form.html.twig', [
 					'formaction' => $linker->getLink(array('section' => 'phpsettings')),
 					'formdata' => $phpconfig_add_data['phpconfig_add']
 				]);
-				UI::twigOutputBuffer();
 			}
 		} else {
 			\Froxlor\UI\Response::standard_error('nopermissionsorinvalidid');
@@ -164,12 +162,11 @@ if ($page == 'overview') {
 
 				$phpconfig_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/phpconfig/formfield.phpconfig_edit.php';
 
-				UI::twigBuffer('user/form.html.twig', [
+				UI::view('user/form.html.twig', [
 					'formaction' => $linker->getLink(array('section' => 'phpsettings', 'id' => $id)),
 					'formdata' => $phpconfig_edit_data['phpconfig_edit'],
 					'editid' => $id
 				]);
-				UI::twigOutputBuffer();
 			}
 		} else {
 			\Froxlor\UI\Response::standard_error('nopermissionsorinvalidid');
@@ -187,14 +184,13 @@ if ($page == 'overview') {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 
-		UI::twigBuffer('user/table.html.twig', [
+		UI::view('user/table.html.twig', [
 			'listing' => \Froxlor\UI\Listing::format($collection, $fpmconf_list_data['fpmconf_list']),
 			'actions_links' => [[
 				'href' => $linker->getLink(['section' => 'phpsettings', 'page' => $page, 'action' => 'add']),
 				'label' => $lng['admin']['fpmsettings']['addnew']
 			]]
 		]);
-		UI::twigOutputBuffer();
 	}
 
 	if ($action == 'add') {
@@ -214,11 +210,10 @@ if ($page == 'overview') {
 
 				$fpmconfig_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/phpconfig/formfield.fpmconfig_add.php';
 
-				UI::twigBuffer('user/form.html.twig', [
+				UI::view('user/form.html.twig', [
 					'formaction' => $linker->getLink(array('section' => 'phpsettings', 'page' => 'fpmdaemons')),
 					'formdata' => $fpmconfig_add_data['fpmconfig_add']
 				]);
-				UI::twigOutputBuffer();
 			}
 		} else {
 			\Froxlor\UI\Response::standard_error('nopermissionsorinvalidid');
@@ -289,12 +284,11 @@ if ($page == 'overview') {
 
 				$fpmconfig_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/phpconfig/formfield.fpmconfig_edit.php';
 
-				UI::twigBuffer('user/form.html.twig', [
+				UI::view('user/form.html.twig', [
 					'formaction' => $linker->getLink(array('section' => 'phpsettings', 'page' => 'fpmdaemons', 'id' => $id)),
 					'formdata' => $fpmconfig_edit_data['fpmconfig_edit'],
 					'editid' => $id
 				]);
-				UI::twigOutputBuffer();
 			}
 		} else {
 			\Froxlor\UI\Response::standard_error('nopermissionsorinvalidid');

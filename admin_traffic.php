@@ -21,6 +21,7 @@ require __DIR__ . '/lib/init.php';
 
 use Froxlor\Database\Database;
 use Froxlor\Settings;
+use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
 
 $id = (int) Request::get('id');
@@ -42,9 +43,6 @@ $months = array(
 );
 
 if ($page == 'overview' || $page == 'customers') {
-
-	$customerview = 1;
-	$stats_tables = '';
 	$minyear_stmt = Database::query("SELECT `year` FROM `" . TABLE_PANEL_TRAFFIC . "` ORDER BY `year` ASC LIMIT 1");
 	$minyear = $minyear_stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -60,10 +58,11 @@ if ($page == 'overview' || $page == 'customers') {
 			'id' => $userinfo['adminid']
 		];
 	}
+
 	$customer_name_list_stmt = Database::prepare("
 		SELECT `customerid`,`company`,`name`,`firstname`
 		FROM `" . TABLE_PANEL_CUSTOMERS . "`
-		WHERE `deactivated`='0'" . ($userinfo['customers_see_all'] ? '' : " AND `adminid` = :id") . "
+		WHERE `deactivated`='0'" . ($userinfo['customers_see_all'] ? '' : ' AND `adminid` = :id') . "
 		ORDER BY name"
 	);
 
@@ -74,11 +73,9 @@ if ($page == 'overview' || $page == 'customers') {
 		GROUP BY month ORDER BY month"
 	);
 
-	for ($years = 0; $years <= $maxyears; $years ++) {
+	$stats = [];
 
-		$overview['year'] = date("Y") - $years;
-		$overview['type'] = $lng['traffic']['customer'];
-		$domain_list = '';
+	for ($years = 0; $years <= $maxyears; $years ++) {
 		$totals = array(
 			'jan' => 0,
 			'feb' => 0,
@@ -96,8 +93,8 @@ if ($page == 'overview' || $page == 'customers') {
 
 		Database::pexecute($customer_name_list_stmt, $params);
 
+		$data = [];
 		while ($customer_name = $customer_name_list_stmt->fetch(PDO::FETCH_ASSOC)) {
-
 			$virtual_host = array(
 				'name' => ($customer_name['company'] == '' ? $customer_name['name'] . ", " . $customer_name['firstname'] : $customer_name['company']),
 				'customerid' => $customer_name['customerid'],
@@ -124,18 +121,17 @@ if ($page == 'overview' || $page == 'customers') {
 				$virtual_host[$months[(int) $traffic_month['month']]] = \Froxlor\PhpHelper::sizeReadable($traffic_month['traffic'], 'GiB', 'bi', '%01.' . (int) Settings::Get('panel.decimal_places') . 'f %s');
 				$totals[$months[(int) $traffic_month['month']]] += $traffic_month['traffic'];
 			}
-			eval("\$domain_list .= sprintf(\"%s\", \"" . \Froxlor\UI\Template::getTemplate("traffic/index_table_row") . "\");");
+
+			$data = $virtual_host;
 		}
-		// sum up totals
-		$virtual_host = array(
-			'name' => $lng['traffic']['months']['total']
-		);
-		foreach ($totals as $month => $bytes) {
-			$virtual_host[$month] = ($bytes == 0 ? '-' : \Froxlor\PhpHelper::sizeReadable($bytes, 'GiB', 'bi', '%01.' . (int) Settings::Get('panel.decimal_places') . 'f %s'));
-		}
-		$customerview = 0;
-		eval("\$total_list = sprintf(\"%s\", \"" . \Froxlor\UI\Template::getTemplate("traffic/index_table_row") . "\");");
-		eval("\$stats_tables .= sprintf(\"%s\", \"" . \Froxlor\UI\Template::getTemplate("traffic/index_table") . "\");");
+		$stats[] = [
+			'year' => date("Y") - $years,
+			'type' => $lng['traffic']['customer'],
+			'data' => $data,
+		];
 	}
-	eval("echo \"" . \Froxlor\UI\Template::getTemplate("traffic/index") . "\";");
+
+	UI::view('user/traffic.html.twig', [
+		'stats' => $stats
+	]);
 }

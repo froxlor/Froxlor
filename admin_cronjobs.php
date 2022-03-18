@@ -36,13 +36,12 @@ if ($page == 'cronjobs' || $page == 'overview') {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 
-		UI::twigBuffer('user/table-note.html.twig', [
+		UI::view('user/table-note.html.twig', [
 			'listing' => \Froxlor\UI\Listing::format($collection, $cron_list_data['cron_list']),
 			// alert-box
 			'type' => 'warning',
 			'alert_msg' => $lng['cron']['changewarning']
 		]);
-		UI::twigOutputBuffer();
 	} elseif ($action == 'new') {
 		/*
 		 * @TODO later
@@ -70,12 +69,11 @@ if ($page == 'cronjobs' || $page == 'overview') {
 
 				$cronjobs_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/cronjobs/formfield.cronjobs_edit.php';
 
-				UI::twigBuffer('user/form.html.twig', [
+				UI::view('user/form.html.twig', [
 					'formaction' => $linker->getLink(array('section' => 'cronjobs', 'id' => $id)),
 					'formdata' => $cronjobs_edit_data['cronjobs_edit'],
 					'editid' => $id
 				]);
-				UI::twigOutputBuffer();
 			}
 		}
 	} elseif ($action == 'delete' && $id != 0) {

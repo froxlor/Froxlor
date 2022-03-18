@@ -59,7 +59,6 @@ try {
 	Response::dynamic_error($e->getMessage());
 }
 
-UI::twigBuffer('user/table.html.twig', [
+UI::view('user/table.html.twig', [
 	'listing' => Listing::format($collection, $certificates_list_data['sslcertificates_list']),
 ]);
-UI::twigOutputBuffer();

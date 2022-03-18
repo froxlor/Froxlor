@@ -40,14 +40,13 @@ if ($page == '' || $page == 'overview') {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 
-		UI::twigBuffer('user/table.html.twig', [
+		UI::view('user/table.html.twig', [
 			'listing' => \Froxlor\UI\Listing::format($collection, $plan_list_data['plan_list']),
 			'actions_links' => [[
 				'href' => $linker->getLink(['section' => 'plans', 'page' => $page, 'action' => 'add']),
 				'label' => $lng['admin']['plans']['add']
 			]]
 		]);
-		UI::twigOutputBuffer();
 	} elseif ($action == 'delete' && $id != 0) {
 
 		try {
@@ -128,11 +127,10 @@ if ($page == '' || $page == 'overview') {
 			// merge
 			$plans_add_data['plans_add']['sections'] = array_merge($plans_add_data['plans_add']['sections'], $cust_add_data['customer_add']['sections']);
 
-			UI::twigBuffer('user/form.html.twig', [
+			UI::view('user/form.html.twig', [
 				'formaction' => $linker->getLink(array('section' => 'plans')),
 				'formdata' => $plans_add_data['plans_add']
 			]);
-			UI::twigOutputBuffer();
 		}
 	} elseif ($action == 'edit' && $id != 0) {
 		try {
@@ -221,12 +219,11 @@ if ($page == '' || $page == 'overview') {
 				// merge
 				$plans_edit_data['plans_edit']['sections'] = array_merge($plans_edit_data['plans_edit']['sections'], $cust_edit_data['customer_edit']['sections']);
 
-				UI::twigBuffer('user/form.html.twig', [
+				UI::view('user/form.html.twig', [
 					'formaction' => $linker->getLink(array('section' => 'plans', 'id' => $id)),
 					'formdata' => $plans_edit_data['plans_edit'],
 					'editid' => $id
 				]);
-				UI::twigOutputBuffer();
 			}
 		}
 	} elseif ($action == 'jqGetPlanValues') {

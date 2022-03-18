@@ -16,7 +16,7 @@ if (!defined('AREA')) {
  * @author Froxlor team <team@froxlor.org> (2016-)
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package Panel
- *         
+ *
  */
 
 use Froxlor\Api\Commands\SubDomains;
@@ -78,7 +78,7 @@ if (function_exists('exec')) {
 		$access_log_content = "Access-Log" . (AREA == 'admin' ? " '" . $access_log . "'" : "") . " does not seem to exist";
 	}
 
-	UI::twigBuffer('user/logfiles.html.twig', [
+	UI::view('user/logfiles.html.twig', [
 		'error_log_content' => $error_log_content,
 		'access_log_content' => $access_log_content,
 		'actions_links' => [[
@@ -93,7 +93,6 @@ if (function_exists('exec')) {
 			'icon' => 'fa fa-globe'
 		]]
 	]);
-	UI::twigOutputBuffer();
 } else {
 	if (AREA == 'admin') {
 		\Froxlor\UI\Response::dynamic_error('You need to allow the exec() function in the froxlor-vhost php-config');

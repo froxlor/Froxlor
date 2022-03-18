@@ -16,7 +16,7 @@ if (!defined('AREA')) {
  * @author Froxlor team <team@froxlor.org> (2016-)
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package Panel
- *         
+ *
  */
 
 use Froxlor\Api\Commands\DomainZones;
@@ -94,7 +94,7 @@ $zonefile = implode("\n", $result);
 
 $dns_add_data = include_once dirname(__FILE__) . '/lib/formfields/formfield.dns_add.php';
 
-UI::twigBuffer('user/dns-editor.html.twig', [
+UI::view('user/dns-editor.html.twig', [
 	'listing' => \Froxlor\UI\Listing::format($collection, $dns_list_data['dns_list']),
 	'actions_links' => [[
 		'class' => 'btn-secondary',
@@ -114,4 +114,3 @@ UI::twigBuffer('user/dns-editor.html.twig', [
 	'alert_msg' => (!empty($errors) ? $errors : (!empty($success_message) ? $success_message : $lng['dns']['howitworks'])),
 	'zonefile' => $zonefile
 ]);
-UI::twigOutputBuffer();

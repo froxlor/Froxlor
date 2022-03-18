@@ -25,7 +25,7 @@ if (Settings::Get('2fa.enabled') != '1') {
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package Panel
  * @since 0.10.0
- *       
+ *
  */
 
 // This file is being included in admin_index and customer_index
@@ -87,9 +87,8 @@ if ($userinfo['type_2fa'] == '0') {
 	$ga_qrcode = $tfa->getQRCodeImageAsDataUri($userinfo['loginname'], $userinfo['data_2fa']);
 }
 
-UI::twigBuffer('user/2fa.html.twig', [
+UI::view('user/2fa.html.twig', [
 	'themes' => $themes_avail,
 	'type_select_values' => $type_select_values,
 	'ga_qrcode' => $ga_qrcode
 ]);
-UI::twigOutputBuffer();

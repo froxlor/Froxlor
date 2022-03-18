@@ -47,7 +47,7 @@ class PhpHelper
 	 *        	See php documentation about this
 	 * @param string $charset
 	 *        	See php documentation about this
-	 *        	
+	 *
 	 * @return array|string The string or an array with htmlentities converted strings
 	 * @author Florian Lippert <flo@syscp.org>
 	 */
@@ -158,14 +158,13 @@ class PhpHelper
 			// show
 			\Froxlor\UI\Panel\UI::initTwig(true);
 			\Froxlor\UI\Panel\UI::twig()->addGlobal('install_mode', '1');
-			\Froxlor\UI\Panel\UI::twigBuffer('misc/alert_nosession.html.twig', [
+			\Froxlor\UI\Panel\UI::view('misc/alert_nosession.html.twig', [
 				'page_title' => 'Uncaught exception',
 				'heading' => 'Uncaught exception',
 				'type' => 'danger',
 				'alert_msg' => $exception->getCode() . ' ' . $exception->getMessage(),
 				'alert_info' => $exception->getTraceAsString()
 			]);
-			echo \Froxlor\UI\Panel\UI::twigOutputBuffer();
 			die();
 		}
 	}
@@ -309,7 +308,7 @@ class PhpHelper
 	 *        	maximum unit
 	 * @param string $system
 	 *        	'si' for SI, 'bi' for binary prefixes
-	 *        	
+	 *
 	 * @param string $retstring
 	 *        	string
 	 */
@@ -365,7 +364,7 @@ class PhpHelper
 	 *        	The string that should be searched for variables
 	 * @param array $vars
 	 *        	The array containing the variables with their values
-	 *        	
+	 *
 	 * @return string The submitted string with the variables replaced.
 	 */
 	public static function replaceVariables($text, $vars)

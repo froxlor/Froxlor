@@ -326,4 +326,10 @@ class UI
 		}
 		return $themes_available;
 	}
+
+	public static function view($name, array $context = [])
+	{
+		self::twigBuffer($name, $context);
+		self::twigOutputBuffer();
+	}
 }

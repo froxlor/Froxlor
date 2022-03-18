@@ -91,13 +91,11 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 		$fields = \Froxlor\UI\Form::buildForm($settings_data, $_part);
 
 		if ($_part == '' || $_part == 'all') {
-			UI::twigBuffer('settings/index.html.twig', ['fields' => $fields]);
+			UI::view('settings/index.html.twig', ['fields' => $fields]);
 		} else {
 			$em = Request::get('em', '');
-			UI::twigBuffer('settings/detailpart.html.twig', ['fields' => $fields, 'em' => $em]);
+			UI::view('settings/detailpart.html.twig', ['fields' => $fields, 'em' => $em]);
 		}
-
-		UI::twigOutputBuffer();
 	}
 } elseif ($page == 'phpinfo' && $userinfo['change_serversettings'] == '1') {
 	ob_start();
@@ -276,7 +274,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 		'pagination' => []
 	];
 
-	UI::twigBuffer('user/table.html.twig', [
+	UI::view('user/table.html.twig', [
 		'listing' => \Froxlor\UI\Listing::formatFromArray($collection, $integrity_list_data['integrity_list']),
 		'actions_links' => [[
 			'href' => $linker->getLink(['section' => 'settings', 'page' => $page, 'action' => 'fix']),
@@ -285,7 +283,6 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 			'class' => 'btn-warning'
 		]]
 	]);
-	UI::twigOutputBuffer();
 } elseif ($page == 'importexport' && $userinfo['change_serversettings'] == '1') {
 	// check for json-stuff
 	if (!extension_loaded('json')) {
@@ -326,7 +323,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 	} else {
 		$settings_data = include_once dirname(__FILE__) . '/lib/formfields/admin/settings/formfield.settings_import.php';
 
-		UI::twigBuffer('user/form.html.twig', [
+		UI::view('user/form.html.twig', [
 			'formaction' => $linker->getLink(array('section' => 'settings', 'page' => $page, 'action' => 'import')),
 			'formdata' => $settings_data['settings_import'],
 			'actions_links' => [[
@@ -341,7 +338,6 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 				'icon' => 'fa fa-file-import'
 			]]
 		]);
-		UI::twigOutputBuffer();
 	}
 } elseif ($page == 'testmail') {
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {

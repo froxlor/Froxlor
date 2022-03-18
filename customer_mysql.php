@@ -66,12 +66,11 @@ if ($page == 'overview' || $page == 'mysqls') {
 			]];
 		}
 
-		UI::twigBuffer('user/table.html.twig', [
+		UI::view('user/table.html.twig', [
 			'listing' => \Froxlor\UI\Listing::format($collection, $mysql_list_data['mysql_list']),
 			'actions_links' => $actions_links,
 			'entity_info' => $lng['mysql']['description']
 		]);
-		UI::twigOutputBuffer();
 	} elseif ($action == 'delete' && $id != 0) {
 
 		try {
@@ -140,11 +139,10 @@ if ($page == 'overview' || $page == 'mysqls') {
 
 				$mysql_add_data = include_once dirname(__FILE__) . '/lib/formfields/customer/mysql/formfield.mysql_add.php';
 
-				UI::twigBuffer('user/form.html.twig', [
+				UI::view('user/form.html.twig', [
 					'formaction' => $linker->getLink(array('section' => 'mysql')),
 					'formdata' => $mysql_add_data['mysql_add']
 				]);
-				UI::twigOutputBuffer();
 			}
 		}
 	} elseif ($action == 'edit' && $id != 0) {
@@ -180,12 +178,11 @@ if ($page == 'overview' || $page == 'mysqls') {
 
 				$mysql_edit_data = include_once dirname(__FILE__) . '/lib/formfields/customer/mysql/formfield.mysql_edit.php';
 
-				UI::twigBuffer('user/form.html.twig', [
+				UI::view('user/form.html.twig', [
 					'formaction' => $linker->getLink(array('section' => 'mysql', 'id' => $id)),
 					'formdata' => $mysql_edit_data['mysql_edit'],
 					'editid' => $id
 				]);
-				UI::twigOutputBuffer();
 			}
 		}
 	}

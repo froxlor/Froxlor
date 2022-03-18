@@ -1,0 +1,96 @@
+{% extends "Froxlor/userarea.html.twig" %}
+
+{% block heading %}
+
+	<div>
+		<h5 class="mb-1">
+			<i class="fa fa-chart-area me-1"></i> Traffic
+		</h5>
+		<span class="text-muted">View your traffic</span>
+	</div>
+
+{% endblock %}
+
+{% block content %}
+
+	<div class="row row-cols-4 g-0 bg-white rounded shadow-sm mb-4">
+		<div class="col p-3 border-end">
+			<h3>{{ traffic_complete_http|formatBytes }}</h3>
+			<span>HTTP</span>
+		</div>
+		<div class="col p-3 border-end">
+			<h3>{{ traffic_complete_ftp|formatBytes }}</h3>
+			<span>FTP</span>
+		</div>
+		<div class="col p-3 border-end">
+			<h3>{{ traffic_complete_mail|formatBytes }}</h3>
+			<span>Mail</span>
+		</div>
+		<div class="col p-3 border-end">
+			<h3>{{ traffic_complete_total|formatBytes }}</h3>
+			<span>Total</span>
+		</div>
+	</div>
+
+	<div class="card">
+		<div class="card-header">
+			Traffic
+		</div>
+		<div class="card-body">
+			<canvas id="trafficChart" height="75"></canvas>
+		</div>
+	</div>
+
+	{% if stats is defined %}
+		{% for yearly_stats in stats %}
+		<div class="card">
+			<div class="card-header">
+				Traffic per {{ yearly_stats.type }} in {{ yearly_stats.year }}
+			</div>
+			<div class="table-responsive">
+				{{ yearly_stats.data|json_encode }}
+			</div>
+		</div>
+		{% endfor %}
+	{% endif %}
+
+	<script>
+		const data = {
+			labels: {{ labels|json_encode|raw }},
+			datasets: [{
+				label: 'Web',
+				backgroundColor: '#22D3EE',
+				borderColor: '#0891B2',
+				data: {{ http_data|json_encode|raw }},
+				fill: true
+			},{
+				label: 'FTP',
+				backgroundColor: '#34D399',
+				borderColor: '#059669',
+				data: {{ ftp_data|json_encode|raw }},
+				fill: true
+			},{
+				label: 'Mail',
+				backgroundColor: '#FDE047',
+				borderColor: '#CA8A04',
+				data: {{ mail_data|json_encode|raw }},
+				fill: true
+			}]
+		};
+
+		const ctx = document.getElementById('trafficChart');
+		const myChart = new Chart(ctx, {
+			type: 'line',
+			data: data,
+			options: {
+				scales: {
+					y: {
+						stacked: true,
+						beginAtZero: true
+					}
+				}
+			}
+		});
+	</script>
+
+{% endblock %}

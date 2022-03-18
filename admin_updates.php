@@ -115,14 +115,13 @@ if ($page == 'overview') {
 				$upd_formfield['updates']['sections'] = $preconfig;
 			}
 
-			UI::twigBuffer('user/form-note.html.twig', [
+			UI::view('user/form-note.html.twig', [
 				'formaction' => $linker->getLink(array('section' => 'updates')),
 				'formdata' => $upd_formfield['updates'],
 				// alert
 				'type' => !empty($message) ? 'danger' : 'info',
 				'alert_msg' => $ui_text . $message
 			]);
-			UI::twigOutputBuffer();
 		}
 	} else {
 		\Froxlor\UI\Response::standard_success('noupdatesavail');

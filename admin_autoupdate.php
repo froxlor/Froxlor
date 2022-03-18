@@ -115,14 +115,13 @@ if ($page == 'overview') {
 				]
 			];
 
-			UI::twigBuffer('user/form-note.html.twig', [
+			UI::view('user/form-note.html.twig', [
 				'formaction' => $linker->getLink(array('section' => 'autoupdate', 'page' => 'getdownload')),
 				'formdata' => $upd_formfield['updates'],
 				// alert
 				'type' => 'warning',
 				'alert_msg' => $text
 			]);
-			UI::twigOutputBuffer();
 		} elseif ($isnewerversion == 0) {
 			// all good
 			\Froxlor\UI\Response::standard_success('noupdatesavail');
@@ -260,14 +259,13 @@ elseif ($page == 'extract') {
 		]
 	];
 
-	UI::twigBuffer('user/form-note.html.twig', [
+	UI::view('user/form-note.html.twig', [
 		'formaction' => $linker->getLink(array('section' => 'autoupdate', 'page' => 'extract')),
 		'formdata' => $upd_formfield['updates'],
 		// alert
 		'type' => 'warning',
 		'alert_msg' => $text
 	]);
-	UI::twigOutputBuffer();
 } // display error
 elseif ($page == 'error') {
 

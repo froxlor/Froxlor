@@ -106,11 +106,10 @@ if ($page == 'overview') {
 	}
 
 	UI::twig()->addGlobal('userinfo', $userinfo);
-	UI::twigBuffer('user/index.html.twig', [
+	UI::view('user/index.html.twig', [
 		'domains' => $domainArray,
 		'stdsubdomain' => $stdsubdomain
 	]);
-	UI::twigOutputBuffer();
 } elseif ($page == 'change_password') {
 
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
@@ -215,11 +214,10 @@ if ($page == 'overview') {
 			$default_lang = $userinfo['def_language'];
 		}
 
-		UI::twigBuffer('user/change_language.html.twig', [
+		UI::view('user/change_language.html.twig', [
 			'languages' => $languages,
 			'default_lang' => $default_lang
 		]);
-		UI::twigOutputBuffer();
 	}
 } elseif ($page == 'change_theme') {
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
@@ -244,11 +242,10 @@ if ($page == 'overview') {
 
 		$themes_avail = \Froxlor\UI\Template::getThemes();
 
-		UI::twigBuffer('user/change_theme.html.twig', [
+		UI::view('user/change_theme.html.twig', [
 			'themes' => $themes_avail,
 			'default_theme' => $default_theme
 		]);
-		UI::twigOutputBuffer();
 	}
 } elseif ($page == 'send_error_report' && Settings::Get('system.allow_error_report_customer') == '1') {
 

@@ -54,7 +54,7 @@ if ($page == 'overview' || $page == 'htpasswds') {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 
-		UI::twigBuffer('user/table.html.twig', [
+		UI::view('user/table.html.twig', [
 			'listing' => \Froxlor\UI\Listing::format($collection, $htpasswd_list_data['htpasswd_list']),
 			'actions_links' => [[
 				'href' => $linker->getLink(['section' => 'extras', 'page' => 'htpasswds', 'action' => 'add']),
@@ -62,7 +62,6 @@ if ($page == 'overview' || $page == 'htpasswds') {
 			]],
 			'entity_info' => $lng['extras']['description']
 		]);
-		UI::twigOutputBuffer();
 	} elseif ($action == 'delete' && $id != 0) {
 		try {
 			$json_result = DirProtections::getLocal($userinfo, array(
@@ -110,11 +109,10 @@ if ($page == 'overview' || $page == 'htpasswds') {
 
 			$htpasswd_add_data = include_once dirname(__FILE__) . '/lib/formfields/customer/extras/formfield.htpasswd_add.php';
 
-			UI::twigBuffer('user/form.html.twig', [
+			UI::view('user/form.html.twig', [
 				'formaction' => $linker->getLink(array('section' => 'extras')),
 				'formdata' => $htpasswd_add_data['htpasswd_add']
 			]);
-			UI::twigOutputBuffer();
 		}
 	} elseif ($action == 'edit' && $id != 0) {
 		try {
@@ -144,12 +142,11 @@ if ($page == 'overview' || $page == 'htpasswds') {
 
 				$htpasswd_edit_data = include_once dirname(__FILE__) . '/lib/formfields/customer/extras/formfield.htpasswd_edit.php';
 
-				UI::twigBuffer('user/form.html.twig', [
+				UI::view('user/form.html.twig', [
 					'formaction' => $linker->getLink(array('section' => 'extras', 'id' => $id)),
 					'formdata' => $htpasswd_edit_data['htpasswd_edit'],
 					'editid' => $id
 				]);
-				UI::twigOutputBuffer();
 			}
 		}
 	}
@@ -173,7 +170,7 @@ if ($page == 'overview' || $page == 'htpasswds') {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 
-		UI::twigBuffer('user/table.html.twig', [
+		UI::view('user/table.html.twig', [
 			'listing' => \Froxlor\UI\Listing::format($collection, $htaccess_list_data['htaccess_list']),
 			'actions_links' => [[
 				'href' => $linker->getLink(['section' => 'extras', 'page' => 'htaccess', 'action' => 'add']),
@@ -181,7 +178,6 @@ if ($page == 'overview' || $page == 'htpasswds') {
 			]],
 			'entity_info' => $lng['extras']['description']
 		]);
-		UI::twigOutputBuffer();
 	} elseif ($action == 'delete' && $id != 0) {
 		try {
 			$json_result = DirOptions::getLocal($userinfo, array(
@@ -226,11 +222,10 @@ if ($page == 'overview' || $page == 'htpasswds') {
 
 			$htaccess_add_data = include_once dirname(__FILE__) . '/lib/formfields/customer/extras/formfield.htaccess_add.php';
 
-			UI::twigBuffer('user/form.html.twig', [
+			UI::view('user/form.html.twig', [
 				'formaction' => $linker->getLink(array('section' => 'extras')),
 				'formdata' => $htaccess_add_data['htaccess_add']
 			]);
-			UI::twigOutputBuffer();
 		}
 	} elseif (($action == 'edit') && ($id != 0)) {
 		try {
@@ -262,12 +257,11 @@ if ($page == 'overview' || $page == 'htpasswds') {
 
 				$htaccess_edit_data = include_once dirname(__FILE__) . '/lib/formfields/customer/extras/formfield.htaccess_edit.php';
 
-				UI::twigBuffer('user/form.html.twig', [
+				UI::view('user/form.html.twig', [
 					'formaction' => $linker->getLink(array('section' => 'extras', 'id' => $id)),
 					'formdata' => $htaccess_edit_data['htaccess_edit'],
 					'editid' => $id
 				]);
-				UI::twigOutputBuffer();
 			}
 		}
 	}
@@ -332,11 +326,10 @@ if ($page == 'overview' || $page == 'htpasswds') {
 				$pathSelect = \Froxlor\FileDir::makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
 				$backup_data = include_once dirname(__FILE__) . '/lib/formfields/customer/extras/formfield.backup.php';
 
-				UI::twigBuffer('user/form.html.twig', [
+				UI::view('user/form.html.twig', [
 					'formaction' => $linker->getLink(array('section' => 'extras')),
 					'formdata' => $backup_data['backup']
 				]);
-				UI::twigOutputBuffer();
 			}
 		}
 	} else {

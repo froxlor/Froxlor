@@ -16,7 +16,7 @@ if (!defined('AREA')) {
  * @author Froxlor team <team@froxlor.org> (2016-)
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package Panel
- *         
+ *
  */
 
 use Froxlor\Database\Database;
@@ -81,7 +81,7 @@ if ($action == '' || $action == 'view') {
 	$title = ['title'];
 	$image = $ssleditor_data['domain_ssleditor']['image'];
 
-	UI::twigBuffer('user/form.html.twig', [
+	UI::view('user/form.html.twig', [
 		'formaction' => $linker->getLink(array('section' => 'domains', 'page' => 'domainssleditor', 'id' => $id)),
 		'formdata' => $ssleditor_data['domain_ssleditor'],
 		'editid' => $id,
@@ -92,5 +92,4 @@ if ($action == '' || $action == 'view') {
 			'icon' => 'fa fa-globe'
 		]]
 	]);
-	UI::twigOutputBuffer();
 }

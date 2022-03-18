@@ -41,14 +41,13 @@ if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 
-		UI::twigBuffer('user/table.html.twig', [
+		UI::view('user/table.html.twig', [
 			'listing' => \Froxlor\UI\Listing::format($collection, $admin_list_data['admin_list']),
 			'actions_links' => [[
 				'href' => $linker->getLink(['section' => 'admins', 'page' => $page, 'action' => 'add']),
 				'label' => $lng['admin']['admin_add']
 			]]
 		]);
-		UI::twigOutputBuffer();
 	} elseif ($action == 'su') {
 
 		try {
@@ -129,11 +128,10 @@ if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
 
 			$admin_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/admin/formfield.admin_add.php';
 
-			UI::twigBuffer('user/form.html.twig', [
+			UI::view('user/form.html.twig', [
 				'formaction' => $linker->getLink(array('section' => 'admins')),
 				'formdata' => $admin_add_data['admin_add']
 			]);
-			UI::twigOutputBuffer();
 		}
 	} elseif ($action == 'edit' && $id != 0) {
 		try {
@@ -176,12 +174,11 @@ if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
 
 				$admin_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/admin/formfield.admin_edit.php';
 
-				UI::twigBuffer('user/form.html.twig', [
+				UI::view('user/form.html.twig', [
 					'formaction' => $linker->getLink(array('section' => 'admins', 'id' => $id)),
 					'formdata' => $admin_edit_data['admin_edit'],
 					'editid' => $id
 				]);
-				UI::twigOutputBuffer();
 			}
 		}
 	}

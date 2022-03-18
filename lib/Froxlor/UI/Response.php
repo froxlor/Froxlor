@@ -15,7 +15,7 @@ class Response
 	 * @param boolean $isRelative
 	 *        	if the target we are creating for a redirect
 	 *        	should be a relative or an absolute url
-	 *        	
+	 *
 	 * @return boolean false if params is not an array
 	 */
 	public static function redirectTo($destination, $get_variables = null, $isRelative = true)
@@ -114,14 +114,13 @@ class Response
 		if ($throw_exception) {
 			throw new \Exception(strip_tags($error), 400);
 		}
-		\Froxlor\UI\Panel\UI::twigBuffer('misc/alert.html.twig', [
+		\Froxlor\UI\Panel\UI::view('misc/alert.html.twig', [
 			'type' => 'danger',
 			'btntype' => 'light',
 			'heading' => $lng['error']['error'],
 			'alert_msg' => $error,
 			'redirect_link' => $link_ref
 		]);
-		\Froxlor\UI\Panel\UI::twigOutputBuffer();
 		exit;
 	}
 
@@ -134,14 +133,13 @@ class Response
 			$link_ref = htmlentities($_SERVER['HTTP_REFERER']);
 		}
 
-		\Froxlor\UI\Panel\UI::twigBuffer('misc/alert.html.twig', [
+		\Froxlor\UI\Panel\UI::view('misc/alert.html.twig', [
 			'type' => 'danger',
 			'btntype' => 'light',
 			'heading' => $lng['error']['error'],
 			'alert_msg' => $message,
 			'redirect_link' => $link_ref
 		]);
-		\Froxlor\UI\Panel\UI::twigOutputBuffer();
 		exit;
 	}
 
@@ -186,14 +184,13 @@ class Response
 			$redirect_url = '';
 		}
 
-		\Froxlor\UI\Panel\UI::twigBuffer('misc/alert.html.twig', [
+		\Froxlor\UI\Panel\UI::view('misc/alert.html.twig', [
 			'type' => 'success',
 			'btntype' => 'light',
 			'heading' => $lng['success']['success'],
 			'alert_msg' => $success_message,
 			'redirect_link' => $redirect_url
 		]);
-		\Froxlor\UI\Panel\UI::twigOutputBuffer();
 		exit;
 	}
 }

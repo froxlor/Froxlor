@@ -51,12 +51,11 @@ if ($page == 'overview' || $page == 'accounts') {
 			]];
 		}
 
-		UI::twigBuffer('user/table.html.twig', [
+		UI::view('user/table.html.twig', [
 			'listing' => \Froxlor\UI\Listing::format($collection, $ftp_list_data['ftp_list']),
 			'actions_links' => $actions_links,
 			'entity_info' => $lng['ftp']['description']
 		]);
-		UI::twigOutputBuffer();
 	} elseif ($action == 'delete' && $id != 0) {
 		try {
 			$json_result = Ftps::getLocal($userinfo, array(
@@ -126,11 +125,10 @@ if ($page == 'overview' || $page == 'accounts') {
 
 				$ftp_add_data = include_once dirname(__FILE__) . '/lib/formfields/customer/ftp/formfield.ftp_add.php';
 
-				UI::twigBuffer('user/form.html.twig', [
+				UI::view('user/form.html.twig', [
 					'formaction' => $linker->getLink(array('section' => 'ftp')),
 					'formdata' => $ftp_add_data['ftp_add']
 				]);
-				UI::twigOutputBuffer();
 			}
 		}
 	} elseif ($action == 'edit' && $id != 0) {
@@ -174,12 +172,11 @@ if ($page == 'overview' || $page == 'accounts') {
 
 				$ftp_edit_data = include_once dirname(__FILE__) . '/lib/formfields/customer/ftp/formfield.ftp_edit.php';
 
-				UI::twigBuffer('user/form.html.twig', [
+				UI::view('user/form.html.twig', [
 					'formaction' => $linker->getLink(array('section' => 'ftp', 'id' => $id)),
 					'formdata' => $ftp_edit_data['ftp_edit'],
 					'editid' => $id
 				]);
-				UI::twigOutputBuffer();
 			}
 		}
 	}

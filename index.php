@@ -36,10 +36,9 @@ if ($action == '2fa_entercode') {
 		exit();
 	}
 	// show template to enter code
-	UI::twigBuffer('login/enter2fa.html.twig', [
+	UI::view('login/enter2fa.html.twig', [
 		'pagetitle' => $lng['login']['2fa']
 	]);
-	UI::twigOutputBuffer();
 } elseif ($action == '2fa_verify') {
 	// verify code from 2fa code-enter form
 	if (!isset($_SESSION) || !isset($_SESSION['secret_2fa'])) {
@@ -378,7 +377,7 @@ if ($action == '2fa_entercode') {
 			$lastqrystr = htmlspecialchars($_REQUEST['qrystr'], ENT_QUOTES);
 		}
 
-		UI::twigBuffer('login/login.html.twig', [
+		UI::view('login/login.html.twig', [
 			'pagetitle' => 'Login',
 			'languages' => $languages,
 			'lastscript' => $lastscript,
@@ -387,7 +386,6 @@ if ($action == '2fa_entercode') {
 			'message' => $message,
 			'successmsg' => $successmessage
 		]);
-		UI::twigOutputBuffer();
 	}
 }
 
@@ -578,12 +576,11 @@ if ($action == 'forgotpwd') {
 		}
 	}
 
-	UI::twigBuffer('login/fpwd.html.twig', [
+	UI::view('login/fpwd.html.twig', [
 		'pagetitle' => $lng['login']['presend'],
 		'action' => $action,
 		'message' => $message,
 	]);
-	UI::twigOutputBuffer();
 }
 
 if ($action == 'resetpwd') {
@@ -663,12 +660,11 @@ if ($action == 'resetpwd') {
 				}
 			}
 
-			UI::twigBuffer('login/rpwd.html.twig', [
+			UI::view('login/rpwd.html.twig', [
 				'pagetitle' => $lng['pwdreminder']['choosenew'],
 				'formaction' => 'index.php?action=resetpwd&resetcode=' . $activationcode,
 				'message' => $message,
 			]);
-			UI::twigOutputBuffer();
 		} else {
 			\Froxlor\UI\Response::redirectTo('index.php', array(
 				"showmessage" => '7'

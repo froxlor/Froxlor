@@ -17,7 +17,7 @@ if (!defined('AREA')) {
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package Panel
  * @since 0.10.0
- *       
+ *
  */
 
 use Froxlor\Database\Database;
@@ -176,7 +176,7 @@ if (!empty($success_message)) {
 	$tpl = 'user/table-note.html.twig';
 }
 
-UI::twigBuffer($tpl, [
+UI::view($tpl, [
 	'listing' => \Froxlor\UI\Listing::formatFromArray($collection, $apikeys_list_data['apikeys_list']),
 	'actions_links' => (int)$userinfo['api_allowed'] == 1 ? [[
 		'href' => $linker->getLink(['section' => 'index', 'page' => $page, 'action' => 'add']),
@@ -186,4 +186,3 @@ UI::twigBuffer($tpl, [
 	'type' => 'success',
 	'alert_msg' => $success_message
 ]);
-UI::twigOutputBuffer();

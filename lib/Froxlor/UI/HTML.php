@@ -126,7 +126,7 @@ class HTML
 	 * @param bool $disabled
 	 *
 	 * @return string HTML Code
-	 * 
+	 *
 	 * @deprecated
 	 */
 	public static function makeoption($title, $value, $selvalue = null, $title_trusted = false, $value_trusted = false, $id = null, $disabled = false)
@@ -169,9 +169,9 @@ class HTML
 	 *        	Values which will be given to $yesfile. Format: array(variable1=>value1, variable2=>value2, variable3=>value3)
 	 * @param string $replacer
 	 *        	value of a possible existing string-replacer in the question
-	 *        	
+	 *
 	 * @author Froxlor team <team@froxlor.org> (2010-)
-	 *        
+	 *
 	 * @return string
 	 */
 	public static function askYesNo(string $text, string $yesfile, array $params = [], string $replacer = '')
@@ -186,12 +186,11 @@ class HTML
 			'%s' => htmlspecialchars($replacer)
 		));
 
-		Panel\UI::twigBuffer('form/yesnoquestion.html.twig', [
+		Panel\UI::view('form/yesnoquestion.html.twig', [
 			'action' => $yesfile,
 			'url_params' => $params,
 			'question' => $text
 		]);
-		Panel\UI::twigOutputBuffer();
 		exit();
 	}
 
@@ -210,7 +209,7 @@ class HTML
 			$chk_text = $lng['question'][$chk_text];
 		}
 
-		Panel\UI::twigBuffer('form/yesnoquestion.html.twig', [
+		Panel\UI::view('form/yesnoquestion.html.twig', [
 			'action' => $yesfile,
 			'url_params' => $params,
 			'question' => $text,
@@ -219,7 +218,6 @@ class HTML
 				'show' => $show_checkbox
 			]
 		]);
-		Panel\UI::twigOutputBuffer();
 		exit();
 	}
 }
