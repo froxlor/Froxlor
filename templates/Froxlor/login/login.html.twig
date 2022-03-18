@@ -49,16 +49,16 @@
 					</div>
 
 					<div class="card-body d-grid gap-2">
-						<input type="hidden" name="script" value="{{ lastscript }}" />
-						<input type="hidden" name="qrystr" value="{{ lastqrystr|raw }}" />
-						<input type="hidden" name="send" value="send" />
+						<input type="hidden" name="script" value="{{ lastscript }}"/>
+						<input type="hidden" name="qrystr" value="{{ lastqrystr|raw }}"/>
+						<input type="hidden" name="send" value="send"/>
 						<button class="btn btn-primary rounded-top-0" type="submit" name="dologin">{{ lng('login.login') }}</button>
 					</div>
 
 					{% if get_setting('panel.allow_preset') == '1' %}
-					<div class="card-footer">
-						<a class="card-link text-muted" href="index.php?action=forgotpwd">{{ lng('login.forgotpwd') }}</a>
-					</div>
+						<div class="card-footer">
+							<a class="card-link text-muted" href="index.php?action=forgotpwd">{{ lng('login.forgotpwd') }}</a>
+						</div>
 					{% endif %}
 				</div>
 			</form>

@@ -43,32 +43,18 @@ class HTML
 			if ((!isset($box['show_element']) || $box['show_element'] === true) && (!isset($box['required_resources']) || $box['required_resources'] == '' || (isset($userinfo[$box['required_resources']]) && ((int) $userinfo[$box['required_resources']] > 0 || $userinfo[$box['required_resources']] == '-1')))) {
 				$navigation_links = [];
 				$box_active = false;
-				foreach ($box['elements'] as $element_id => $element) {
+				foreach ($box['elements'] as $element) {
 					if ((!isset($element['show_element']) || $element['show_element'] === true) && (!isset($element['required_resources']) || $element['required_resources'] == '' || (isset($userinfo[$element['required_resources']]) && ((int) $userinfo[$element['required_resources']] > 0 || $userinfo[$element['required_resources']] == '-1')))) {
 						$target = '';
 						$active = false;
 						$navurl = '#';
 						if (isset($element['url']) && trim($element['url']) != '') {
-							// append sid only to local
-
-							if (!preg_match('/^https?\:\/\//', $element['url']) && (isset($userinfo['hash']) && $userinfo['hash'] != '')) {
-								// generate sid with ? oder &
-
-								if (strpos($element['url'], '?') !== false) {
-									$element['url'] .= '&s=' . $userinfo['hash'];
-								} else {
-									$element['url'] .= '?s=' . $userinfo['hash'];
-								}
-							}
 
 							if (isset($element['new_window']) && $element['new_window'] == true) {
 								$target = ' target="_blank"';
 							}
 
-							if (isset($_GET['page']) && substr_count($element['url'], "page=" . $_GET['page']) > 0 && substr_count($element['url'], basename($_SERVER["SCRIPT_FILENAME"])) > 0 && isset($_GET['action']) && substr_count($element['url'], "action=" . $_GET['action']) > 0) {
-								$active = true;
-								$box_active = true;
-							} elseif (isset($_GET['page']) && substr_count($element['url'], "page=" . $_GET['page']) > 0 && substr_count($element['url'], basename($_SERVER["SCRIPT_FILENAME"])) > 0 && substr_count($element['url'], "action=") == 0 && !isset($_GET['action'])) {
+							if (isset($_GET['page']) && substr_count($element['url'], "page=" . $_GET['page']) > 0 && substr_count($element['url'], basename($_SERVER["SCRIPT_FILENAME"])) > 0) {
 								$active = true;
 								$box_active = true;
 							}
@@ -94,17 +80,6 @@ class HTML
 				if (!empty($navigation_links)) {
 					$target = '';
 					if (isset($box['url']) && trim($box['url']) != '') {
-						// append sid only to local
-
-						if (!preg_match('/^https?\:\/\//', $box['url']) && (isset($userinfo['hash']) && $userinfo['hash'] != '')) {
-							// generate sid with ? oder &
-
-							if (strpos($box['url'], '?') !== false) {
-								$box['url'] .= '&s=' . $userinfo['hash'];
-							} else {
-								$box['url'] .= '?s=' . $userinfo['hash'];
-							}
-						}
 
 						if (isset($box['new_window']) && $box['new_window'] == true) {
 							$target = ' target="_blank"';
@@ -132,55 +107,6 @@ class HTML
 		}
 
 		return $returnvalue;
-	}
-
-	/**
-	 * Return HTML Code for a checkbox
-	 *
-	 * @param string $name
-	 *        	The fieldname
-	 * @param string $title
-	 *        	The captions
-	 * @param string $value
-	 *        	The Value which will be returned
-	 * @param bool $break
-	 *        	Add a <br /> at the end of the checkbox
-	 * @param string $selvalue
-	 *        	Values which will be selected by default
-	 * @param bool $title_trusted
-	 *        	Whether the title may contain html or not
-	 * @param bool $value_trusted
-	 *        	Whether the value may contain html or not
-	 *        	
-	 * @return string HTML Code
-	 * 
-	 * @deprecated
-	 */
-	public static function makecheckbox($name, $title, $value, $break = false, $selvalue = null, $title_trusted = false, $value_trusted = false)
-	{
-		if ($selvalue !== null && $value == $selvalue) {
-			$checked = 'checked="checked"';
-		} elseif (isset($_SESSION['requestData'][$name])) {
-			$checked = 'checked="checked"';
-		} else {
-			$checked = '';
-		}
-
-		if (!$title_trusted) {
-			$title = htmlspecialchars($title);
-		}
-
-		if (!$value_trusted) {
-			$value = htmlspecialchars($value);
-		}
-
-		$checkbox = '<label class="nobr"><input type="checkbox" name="' . $name . '" value="' . $value . '" ' . $checked . ' />&nbsp;' . $title . '</label>';
-
-		if ($break) {
-			$checkbox .= '<br />';
-		}
-
-		return $checkbox;
 	}
 
 	/**
@@ -230,43 +156,6 @@ class HTML
 
 		$option = '<option value="' . $value . '" ' . $id_str . $selected . ' >' . $title . '</option>';
 		return $option;
-	}
-
-	/**
-	 * Returns HTML Code for two radio buttons with two choices: yes and no
-	 *
-	 * @param
-	 *        	string Name of HTML-Variable
-	 * @param
-	 *        	string Value which will be returned if user chooses yes
-	 * @param
-	 *        	string Value which will be returned if user chooses no
-	 * @param
-	 *        	string Value which is chosen by default
-	 * @param
-	 *        	bool Whether this element is disabled or not (default: false)
-	 * @return string HTML Code
-	 * @author Florian Lippert <flo@syscp.org> (2003-2009)
-	 * @author Froxlor team <team@froxlor.org> (2010-)
-	 * 
-	 * @deprecated
-	 */
-	public static function makeyesno($name, $yesvalue, $novalue = '', $yesselected = '', $disabled = false)
-	{
-		global $lng, $theme;
-
-		if ($disabled) {
-			$d = ' disabled="disabled"';
-		} else {
-			$d = '';
-		}
-
-		if (isset($_SESSION['requestData'])) {
-			$yesselected = $yesselected & $_SESSION['requestData'][$name];
-		}
-
-		return '<select class="dropdown_noborder" id="' . $name . '" name="' . $name . '"' . $d . '>
-	<option value="' . $yesvalue . '"' . ($yesselected ? ' selected="selected"' : '') . '>' . $lng['panel']['yes'] . '</option><option value="' . $novalue . '"' . ($yesselected ? '' : ' selected="selected"') . '>' . $lng['panel']['no'] . '</option></select>';
 	}
 
 	/**

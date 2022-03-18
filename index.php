@@ -36,7 +36,10 @@ if ($action == '2fa_entercode') {
 		exit();
 	}
 	// show template to enter code
-	eval("echo \"" . \Froxlor\UI\Template::getTemplate('2fa/entercode', true) . "\";");
+	UI::twigBuffer('login/enter2fa.html.twig', [
+		'pagetitle' => $lng['login']['2fa']
+	]);
+	UI::twigOutputBuffer();
 } elseif ($action == '2fa_verify') {
 	// verify code from 2fa code-enter form
 	if (!isset($_SESSION) || !isset($_SESSION['secret_2fa'])) {
@@ -660,7 +663,12 @@ if ($action == 'resetpwd') {
 				}
 			}
 
-			eval("echo \"" . \Froxlor\UI\Template::getTemplate('rpwd') . "\";");
+			UI::twigBuffer('login/rpwd.html.twig', [
+				'pagetitle' => $lng['pwdreminder']['choosenew'],
+				'formaction' => 'index.php?action=resetpwd&resetcode=' . $activationcode,
+				'message' => $message,
+			]);
+			UI::twigOutputBuffer();
 		} else {
 			\Froxlor\UI\Response::redirectTo('index.php', array(
 				"showmessage" => '7'
@@ -705,7 +713,7 @@ function finishLogin($userinfo)
 
 		if ($userinfo['adminsession'] == '1') {
 			if (\Froxlor\Froxlor::hasUpdates() || \Froxlor\Froxlor::hasDbUpdates()) {
-				\Froxlor\UI\Response::redirectTo('admin_updates.php');
+				\Froxlor\UI\Response::redirectTo('admin_updates.php?page=overview');
 			} else {
 				if (isset($_POST['script']) && $_POST['script'] != "") {
 					if (preg_match("/customer\_/", $_POST['script']) === 1) {

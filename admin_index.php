@@ -254,8 +254,6 @@ if ($page == 'overview') {
 		\Froxlor\UI\Response::redirectTo($filename);
 	} else {
 
-		$language_options = '';
-
 		$default_lang = Settings::Get('panel.standardlanguage');
 		if ($userinfo['def_language'] != '') {
 			$default_lang = $userinfo['def_language'];
@@ -283,8 +281,6 @@ if ($page == 'overview') {
 		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "changed his/her theme to '" . $theme . "'");
 		\Froxlor\UI\Response::redirectTo($filename);
 	} else {
-
-		$theme_options = '';
 
 		$default_theme = Settings::Get('panel.default_theme');
 		if ($userinfo['theme'] != '') {

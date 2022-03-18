@@ -215,12 +215,11 @@ if ($page == 'overview') {
 			$default_lang = $userinfo['def_language'];
 		}
 
-		$language_options = '';
-		foreach ($languages as $language_file => $language_name) {
-			$language_options .= \Froxlor\UI\HTML::makeoption($language_name, $language_file, $default_lang, true);
-		}
-
-		eval("echo \"" . \Froxlor\UI\Template::getTemplate('index/change_language') . "\";");
+		UI::twigBuffer('user/change_language.html.twig', [
+			'languages' => $languages,
+			'default_lang' => $default_lang
+		]);
+		UI::twigOutputBuffer();
 	}
 } elseif ($page == 'change_theme') {
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
@@ -237,18 +236,19 @@ if ($page == 'overview') {
 		$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "changed default theme to '" . $theme . "'");
 		\Froxlor\UI\Response::redirectTo($filename);
 	} else {
+
 		$default_theme = Settings::Get('panel.default_theme');
 		if ($userinfo['theme'] != '') {
 			$default_theme = $userinfo['theme'];
 		}
 
-		$theme_options = '';
 		$themes_avail = \Froxlor\UI\Template::getThemes();
-		foreach ($themes_avail as $t => $d) {
-			$theme_options .= \Froxlor\UI\HTML::makeoption($d, $t, $default_theme, true);
-		}
 
-		eval("echo \"" . \Froxlor\UI\Template::getTemplate('index/change_theme') . "\";");
+		UI::twigBuffer('user/change_theme.html.twig', [
+			'themes' => $themes_avail,
+			'default_theme' => $default_theme
+		]);
+		UI::twigOutputBuffer();
 	}
 } elseif ($page == 'send_error_report' && Settings::Get('system.allow_error_report_customer') == '1') {
 

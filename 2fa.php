@@ -1,11 +1,12 @@
 <?php
-if (! defined('AREA')) {
+if (!defined('AREA')) {
 	header("Location: index.php");
 	exit();
 }
 
 use Froxlor\Database\Database;
 use Froxlor\Settings;
+use Froxlor\UI\Panel\UI;
 
 if (Settings::Get('2fa.enabled') != '1') {
 	\Froxlor\UI\Response::dynamic_error("2FA not activated");
@@ -63,11 +64,13 @@ if ($action == 'delete') {
 		'd2fa' => $data,
 		'id' => $uid
 	));
-	\Froxlor\UI\Response::standard_success(sprintf($lng['2fa']['2fa_added'], $filename, $s));
+	\Froxlor\UI\Response::standard_success(sprintf($lng['2fa']['2fa_added'], $filename));
 }
 
 $log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed 2fa::overview");
 
+$type_select_values = [];
+$ga_qrcode = '';
 if ($userinfo['type_2fa'] == '0') {
 
 	// available types
@@ -77,14 +80,16 @@ if ($userinfo['type_2fa'] == '0') {
 		2 => 'Authenticator'
 	);
 	asort($type_select_values);
-	$type_select = "";
-	foreach ($type_select_values as $_val => $_type) {
-		$type_select .= \Froxlor\UI\HTML::makeoption($_type, $_val);
-	}
 } elseif ($userinfo['type_2fa'] == '1') {
 	// email 2fa enabled
 } elseif ($userinfo['type_2fa'] == '2') {
 	// authenticator 2fa enabled
 	$ga_qrcode = $tfa->getQRCodeImageAsDataUri($userinfo['loginname'], $userinfo['data_2fa']);
 }
-eval("echo \"" . \Froxlor\UI\Template::getTemplate("2fa/overview", true) . "\";");
+
+UI::twigBuffer('user/2fa.html.twig', [
+	'themes' => $themes_avail,
+	'type_select_values' => $type_select_values,
+	'ga_qrcode' => $ga_qrcode
+]);
+UI::twigOutputBuffer();

@@ -295,19 +295,6 @@ if (AREA == 'admin' || AREA == 'customer') {
 		 */
 		$navigation_data = array(
 			'admin' => array(
-				'index' => array(
-					'url' => 'admin_index.php',
-					'label' => $lng['admin']['overview'],
-					'elements' => array(
-						array(
-							'label' => $lng['menue']['main']['username']
-						),
-						array(
-							'url' => 'admin_index.php?action=logout',
-							'label' => $lng['login']['logout']
-						)
-					)
-				),
 				'server' => array(
 					'label' => $lng['admin']['server'],
 					'required_resources' => 'change_serversettings',
