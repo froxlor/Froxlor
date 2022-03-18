@@ -86,7 +86,7 @@ if ($userinfo['change_serversettings'] == '1') {
 			'distribution' => $distribution,
 			// alert
 			'type' => 'info',
-			'alert_msg' => 'Parameter file generated successfully. Now run the following command as root:',
+			'alert_msg' => $lng['admin']['configfiles']['finishnote'],
 			'basedir' => \Froxlor\Froxlor::getInstallDir(),
 			'params_filename' => $params_filename
 		]);
@@ -108,7 +108,7 @@ if ($userinfo['change_serversettings'] == '1') {
 				'config' => [
 					'title' => $lng['admin']['configfiles']['serverconfiguration'],
 					'image' => 'fa-solid fa-wrench',
-					'description' => 'Configure the system services',
+					'description' => $lng['admin']['configfiles']['description'],
 					'sections' => [
 						'section_config' => [
 							'fields' => [
@@ -140,7 +140,7 @@ if ($userinfo['change_serversettings'] == '1') {
 				]] : [],
 				// alert
 				'type' => 'warning',
-				'alert_msg' => $lng['panel']['settings_before_configuration']
+				'alert_msg' => $lng['panel']['settings_before_configuration'] . ((int)Settings::Get('panel.is_configured') == 1 ? '<br><br>' . $lng['panel']['system_is_configured'] : '')
 			]);
 		}
 	}

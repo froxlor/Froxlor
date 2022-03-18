@@ -1706,11 +1706,9 @@ $lng['2fa']['2fa_ga_desc'] = 'Das Konto ist eingerichtet, um zeitbasierte Einmal
 $lng['admin']['logviewenabled'] = 'Zugriff auf access/error-Logdateien';
 $lng['panel']['viewlogs'] = 'Logdateien einsehen';
 $lng['panel']['not_configured'] = 'Das System wurde noch nicht konfiguriert. Klicke auf den Button um die Installation zu starten.';
-$lng['panel']['done_configuring'] = 'Nach Abschluss der Konfiguration der Dienste,<br>untenstehenden Link klicken';
 $lng['panel']['ihave_configured'] = 'Ich habe die Dienste konfiguriert';
-$lng['panel']['system_is_configured'] = 'Das System ist bereits konfiguriert';
+$lng['panel']['system_is_configured'] = '<i class="fa-solid fa-circle-exclamation me-1"></i>Das System ist bereits konfiguriert';
 $lng['panel']['settings_before_configuration'] = 'Stelle sicher, dass die Einstellungen angepasst wurden bevor die Dienste konfiguriert werden.';
-$lng['panel']['alternative_cmdline_config'] = 'Alternativ, führe den folgenden Befehl als root-Benutzer auf der Shell aus, um die Dienste automatisch zu konfigurieren.';
 $lng['tasks']['DELETE_DOMAIN_PDNS'] = 'Lösche Domain %domain% von PowerDNS Datenbank';
 $lng['tasks']['DELETE_DOMAIN_SSL'] = 'Lösche SSL Dateien von Domain %domain%';
 $lng['admin']['novhostcontainer'] = '<br><br><small class="text-danger">Keine der IPs und Ports hat die Option "' . $lng['admin']['ipsandports']['create_vhostcontainer'] . '" aktiviert, einige Einstellungen sind daher nicht verfügbar.</small>';
@@ -1790,3 +1788,8 @@ $lng['serversettings']['acmeshpath']['description'] = 'Installationspfad zu acme
 $lng['panel']['usage_statistics'] = 'Resourcen-Verbrauch';
 $lng['panel']['security_question'] = 'Sicherheitsabfrage';
 $lng['panel']['listing_empty'] = 'Keine Einträge gefunden';
+$lng['admin']['configfiles']['finishnote'] = 'Parameter Datei erfolgreich erstellt. Folgende Befehle müssen als root ausgeführt werden:';
+$lng['admin']['configfiles']['description'] = 'System-Dienste konfigurieren';
+$lng['admin']['configfiles']['skipconfig'] = 'Nicht (erneut) konfigurieren';
+$lng['admin']['configfiles']['recommendednote'] = 'Empfohlene/benötigte Dienste ahand der aktuellen Systemeinstellungen';
+$lng['admin']['configfiles']['selectrecommended'] = 'Empfohlene wählen';

@@ -5,7 +5,7 @@
 		<i class="fa-solid fa-wrench"></i>
 		{{ lng('admin.configfiles.serverconfiguration') }}
 	</h5>
-	<span class="text-muted">Configure the system services</span>
+	<span class="text-muted">{{ lng('admin.configfiles.description') }}</span>
 {% endblock %}
 
 {% block actions %}
@@ -29,7 +29,7 @@
 									<div class="form-check">
 										<input class="form-check-input" type="radio" name="{{ stype }}" id="{{ stype }}none" value="x" checked>
 										<label class="form-check-label" for="{{ stype }}none">
-											Nicht (erneut) konfigurieren
+											{{ lng('admin.configfiles.skipconfig') }}
 										</label>
 									</div>
 								{% endif %}
@@ -46,14 +46,15 @@
 												(dtype == 'php-fpm' and get_setting('phpfpm.enabled') == '1') or
 												(dtype == 'cron')
 											%}
-											{% set recommended = true %}
+												{% set recommended = true %}
 											{% endif %}
 											<input class="form-check-input" type="checkbox" name="system[{{ dtype }}]" id="{{ dtype }}" value="{{ dtype }}" data-recommended="{{ recommended }}">
 											<label class="form-check-label" for="{{ dtype }}">
 												{% if recommended %}
-												<strong>{{ daemon.title }}<span class="text-danger">*</span></strong>
+													<strong>{{ daemon.title }}<span class="text-danger">*</span>
+													</strong>
 												{% else %}
-												{{ daemon.title }}
+													{{ daemon.title }}
 												{% endif %}
 											</label>
 										</div>
@@ -70,14 +71,15 @@
 												(dtype == 'proftpd' and get_setting('system.ftpserver') == 'proftpd') or
 												(dtype == 'pureftpd' and get_setting('system.ftpserver') == 'pureftpd')
 											%}
-											{% set recommended = true %}
+												{% set recommended = true %}
 											{% endif %}
 											<input class="form-check-input" type="radio" name="{{ stype }}" id="{{ dtype }}" value="{{ dtype }}" data-recommended="{{ recommended }}">
 											<label class="form-check-label" for="{{ dtype }}">
 												{% if recommended %}
-												<strong>{{ daemon.title }}<span class="text-danger">*</span></strong>
+													<strong>{{ daemon.title }}<span class="text-danger">*</span>
+													</strong>
 												{% else %}
-												{{ daemon.title }}
+													{{ daemon.title }}
 												{% endif %}
 											</label>
 										</div>
@@ -92,10 +94,11 @@
 		<div class="row mt-3">
 			<input type="hidden" name="finish" value="1"/>
 			<div class="col-12 col-md-6">
-				<span class="text-danger">*</span> Empfohlene/benötigte Dienste ahand der aktuellen Systemeinstellungen
+				<span class="text-danger">*</span>
+				{{ lng('admin.configfiles.recommendednote') }}
 			</div>
 			<div class="col-12 col-md-6 text-end">
-				<button type="button" class="btn btn-outline-secondary" id="selectRecommendedConfig">Empfohlene auswählen</button>
+				<button type="button" class="btn btn-outline-secondary" id="selectRecommendedConfig">{{ lng('admin.configfiles.selectrecommended') }}</button>
 				<button type="submit" class="btn btn-primary">{{ lng('update.proceed') }}</button>
 			</div>
 		</div>
