@@ -136,7 +136,7 @@ class PhpHelper
 			$err_display .= '<br><p><pre>';
 			$debug = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 			foreach ($debug as $dline) {
-				$err_display .= $dline['function'] . '() called at [' . str_replace(\Froxlor\Froxlor::getInstallDir(), '', $dline['file']) . ':' . $dline['line'] . ']<br>';
+				$err_display .= $dline['function'] . '() called at [' . str_replace(\Froxlor\Froxlor::getInstallDir(), '', ($dline['file'] ?? 'unknown')) . ':' . ($dline['line'] ?? 0) . ']<br>';
 			}
 			$err_display .= '</pre></p>';
 			// end later

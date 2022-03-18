@@ -1,0 +1,12 @@
+{% extends "Froxlor/settings/configuration.html.twig" %}
+
+{% block content %}
+	<div class="row mb-2">
+		{% include 'Froxlor/misc/alertbox.html.twig' %}
+	</div>
+
+	<div class="row mb-2">
+		<textarea cols="12" rows="4" readonly class="form-control w-100">`which php` {{ basedir }}install/scripts/config-services.php --froxlor-dir={{ basedir }} --apply={{ params_filename }}
+rm {{ params_filename }}</textarea>
+	</div>
+{% endblock %}
