@@ -42,10 +42,10 @@ if ($page == 'overview') {
 
 		UI::view('user/table.html.twig', [
 			'listing' => \Froxlor\UI\Listing::format($collection, $phpconf_list_data['phpconf_list']),
-			'actions_links' => [[
+			'actions_links' => (bool)$userinfo['change_serversettings'] ? [[
 				'href' => $linker->getLink(['section' => 'phpsettings', 'page' => $page, 'action' => 'add']),
 				'label' => $lng['admin']['phpsettings']['addnew']
-			]]
+			]] : []
 		]);
 	}
 
@@ -186,10 +186,10 @@ if ($page == 'overview') {
 
 		UI::view('user/table.html.twig', [
 			'listing' => \Froxlor\UI\Listing::format($collection, $fpmconf_list_data['fpmconf_list']),
-			'actions_links' => [[
+			'actions_links' => (bool)$userinfo['change_serversettings'] ? [[
 				'href' => $linker->getLink(['section' => 'phpsettings', 'page' => $page, 'action' => 'add']),
 				'label' => $lng['admin']['fpmsettings']['addnew']
-			]]
+			]] : []
 		]);
 	}
 

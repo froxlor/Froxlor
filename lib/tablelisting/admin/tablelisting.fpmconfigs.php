@@ -16,6 +16,7 @@
  *
  */
 
+use Froxlor\UI\Callbacks\Admin;
 use Froxlor\UI\Callbacks\PHPConf;
 use Froxlor\UI\Listing;
 
@@ -62,6 +63,7 @@ return [
 					'action' => 'edit',
 					'id' => ':id'
 				],
+				'visible' => [Admin::class, 'canChangeServerSettings']
 			],
 			'delete' => [
 				'icon' => 'fa fa-trash',

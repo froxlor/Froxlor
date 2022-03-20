@@ -240,7 +240,6 @@ return array(
 		),
 		'server_php' => array(
 			'label' => $lng['admin']['server_php'],
-			'required_resources' => 'change_serversettings',
             'icon' => 'fab fa-php',
 			'elements' => array(
 				array(
@@ -251,7 +250,6 @@ return array(
 				array(
 					'url' => 'admin_phpsettings.php?page=fpmdaemons',
 					'label' => $lng['menue']['phpsettings']['fpmdaemons'],
-					'required_resources' => 'change_serversettings',
 					'show_element' => \Froxlor\Settings::Get('phpfpm.enabled') == true
 				),
 				array(

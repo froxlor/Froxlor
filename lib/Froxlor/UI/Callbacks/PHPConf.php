@@ -32,7 +32,7 @@ class PHPConf
 		if ($subdomains_count == 0 && empty($domains)) {
 			$domains = UI::getLng('admin.phpsettings.notused');
 		} else {
-			$domains .= (!empty($domains) ? '+ ' : '') . $subdomains_count . ' ' . UI::getLng(('customer.subdomains'));
+			$domains .= !empty($subdomains_count) ? ((!empty($domains) ? '+ ' : '') . $subdomains_count . ' ' . UI::getLng('customer.subdomains')) : '';
 		}
 
 		return $domains;
@@ -49,23 +49,29 @@ class PHPConf
 
 	public static function isNotDefault(array $attributes)
 	{
-		return $attributes['fields']['id'] != 1;
+		if (UI::getCurrentUser()['change_serversettings']) {
+			return $attributes['fields']['id'] != 1;
+		}
+		return false;
 	}
 
 	public static function fpmConfLink(array $attributes)
 	{
-		$linker = UI::getLinker();
-		return [
-			'macro' => 'link',
-			'data' => [
-				'text' => $attributes['data'],
-				'href' => $linker->getLink([
-					'section' => 'phpsettings',
-					'page' => 'fpmdaemons',
-					'action' => 'edit',
-					'id' => $attributes['fields']['fpmsettingid'],
-				]),
-			]
-		];
+		if (UI::getCurrentUser()['change_serversettings']) {
+			$linker = UI::getLinker();
+			return [
+				'macro' => 'link',
+				'data' => [
+					'text' => $attributes['data'],
+					'href' => $linker->getLink([
+						'section' => 'phpsettings',
+						'page' => 'fpmdaemons',
+						'action' => 'edit',
+						'id' => $attributes['fields']['fpmsettingid'],
+					]),
+				]
+			];
+		}
+		return $attributes['data'];
 	}
 }

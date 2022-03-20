@@ -23,7 +23,6 @@ use Froxlor\FroxlorLogger;
 use Froxlor\Api\Commands\Certificates;
 use Froxlor\UI\Collection;
 use Froxlor\UI\Listing;
-use Froxlor\UI\Pagination;
 use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Response;
 

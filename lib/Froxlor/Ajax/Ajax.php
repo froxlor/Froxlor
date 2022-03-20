@@ -4,9 +4,7 @@ namespace Froxlor\Ajax;
 
 use Exception;
 use Froxlor\Http\HttpClient;
-use Froxlor\PhpHelper;
 use Froxlor\Settings;
-use Froxlor\User;
 use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
 
@@ -223,152 +221,16 @@ class Ajax
 		$searchtext = Request::get('searchtext');
 
 		$result = [];
-		if ($searchtext && strlen(trim($searchtext)) > 2) {
 
-			$processed = [];
+		// settings
+		$result_settings = GlobalSearch::searchSettings($searchtext, $this->userinfo);
 
-			$stparts = explode(" ", $searchtext);
+		// all searchable entities
+		$result_entities = GlobalSearch::searchGlobal($searchtext, $this->userinfo);
 
-			foreach ($stparts as $searchtext) {
-				$searchtext = trim($searchtext);
+		$result = array_merge($result_settings, $result_entities);
 
-				// settings (if allowed)
-				if (isset($this->userinfo['adminsession']) && $this->userinfo['adminsession'] == 1) {
-
-					if ($this->userinfo['change_serversettings'] == 1) {
-						$settings_data = PhpHelper::loadConfigArrayDir(\Froxlor\Froxlor::getInstallDir() . '/actions/admin/settings/');
-						$results = array();
-						if (!isset($processed['settings'])) {
-							$processed['settings'] = [];
-						}
-						PhpHelper::recursive_array_search($searchtext, $settings_data, $results);
-						foreach ($results as $pathkey) {
-							$pk = explode(".", $pathkey);
-							if (count($pk) > 4) {
-								$settingkey = $pk[0] . '.' . $pk[1] . '.' . $pk[2] . '.' . $pk[3];
-								if (is_array($processed['settings']) && !array_key_exists($settingkey, $processed['settings'])) {
-									$processed['settings'][$settingkey] = true;
-									$sresult = $settings_data[$pk[0]][$pk[1]][$pk[2]][$pk[3]];
-									if ($sresult['type'] != 'hidden') {
-										if (!isset($result['settings'])) {
-											$result['settings'] = [];
-										}
-										$result['settings'][] = [
-											'title' => (is_array($sresult['label']) ? $sresult['label']['title'] : $sresult['label']),
-											'href' => 'admin_settings.php?page=overview&part=' . $pk[1] . '&em=' . $pk[3]
-										];
-									}
-								}
-							}
-						}
-					}
-
-					// customers
-					$searchfields = [
-						'c.loginname',
-						'c.name',
-						'c.firstname',
-						'c.company',
-						'c.street',
-						'c.zipcode',
-						'c.city',
-						'c.email',
-						'c.customernumber'
-					];
-					$collection = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Customers::class, $this->userinfo))
-						->addParam(['sql_search' => [
-							'_plainsql' =>  $this->searchStringSql($searchfields, $searchtext)
-						]]);
-					if ($collection->count() > 0) {
-						if (!isset($processed['customer'])) {
-							$processed['customer'] = [];
-						}
-						foreach ($collection->getList() as $cresult) {
-							if (is_array($processed['customer']) && !array_key_exists($cresult['customerid'], $processed['customer'])) {
-								$processed['customer'][$cresult['customerid']] = true;
-								if (!isset($result['customer'])) {
-									$result['customer'] = [];
-								}
-								$result['customer'][] = [
-									'title' => User::getCorrectFullUserDetails($cresult),
-									'href' => 'admin_customers.php?page=customers&action=edit&id=' . $cresult['customerid']
-								];
-							}
-						}
-					}
-
-					// domains
-					$searchfields = [
-						'd.domain',
-						'd.domain_ace',
-						'd.documentroot'
-					];
-					$collection = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Domains::class, $this->userinfo))
-						->addParam(['sql_search' => [
-							'_plainsql' =>  $this->searchStringSql($searchfields, $searchtext)
-						]]);
-					if ($collection->count() > 0) {
-						if (!isset($processed['domains'])) {
-							$processed['domains'] = [];
-						}
-						foreach ($collection->getList() as $cresult) {
-							if (is_array($processed['domains']) && !array_key_exists($cresult['id'], $processed['domains'])) {
-								$processed['domains'][$cresult['id']] = true;
-								if (!isset($result['domains'])) {
-									$result['domains'] = [];
-								}
-								$result['domains'][] = [
-									'title' => $cresult['domain_ace'],
-									'href' => 'admin_domains.php?page=domains&action=edit&id=' . $cresult['id']
-								];
-							}
-						}
-					}
-				} // is-admin
-				else {
-					// subdomains
-					$searchfields = [
-						'd.domain',
-						'd.domain_ace',
-						'd.documentroot'
-					];
-					$collection = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Domains::class, $this->userinfo))
-						->addParam(['sql_search' => [
-							'_plainsql' =>  $this->searchStringSql($searchfields, $searchtext)
-						]]);
-					if ($collection->count() > 0) {
-						if (!isset($processed['domains'])) {
-							$processed['domains'] = [];
-						}
-						foreach ($collection->getList() as $cresult) {
-							if (is_array($processed['domains']) && !array_key_exists($cresult['domains'], $processed['domains'])) {
-								$processed['domains'][$cresult['id']] = true;
-								if (!isset($result['domains'])) {
-									$result['domains'] = [];
-								}
-								$result['domains'][] = [
-									'title' => $cresult['domain_ace'],
-									'href' => 'customer_domains.php?page=domains&action=edit&id=' . $cresult['id']
-								];
-							}
-						}
-					}
-				} // is-customer
-			} // foreach splitted search-term
-		}
 		header("Content-type: application/json");
 		echo json_encode($result);
-	}
-
-	private function searchStringSql(array $searchfields, $searchtext)
-	{
-		$result = ['sql' => [], 'values' => []];
-		$result['sql'] = "(";
-		foreach ($searchfields as $sf) {
-			$result['sql'] .= $sf . " LIKE :searchtext OR ";
-		}
-		$result['sql'] = substr($result['sql'], 0, -3) . ")";
-		$result['values'] = ['searchtext' => '%' . $searchtext . '%'];
-		return $result;
 	}
 }
