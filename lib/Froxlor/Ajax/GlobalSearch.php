@@ -204,7 +204,7 @@ class GlobalSearch
 					$toSearch = [
 						// (sub)domains
 						'domains' => [
-							'class' => \Froxlor\Api\Commands\Domains::class,
+							'class' => \Froxlor\Api\Commands\SubDomains::class,
 							'searchfields' => [
 								'd.domain',
 								'd.domain_ace',
@@ -215,6 +215,48 @@ class GlobalSearch
 								'title' => ['self', 'getFieldFromResult'],
 								'title_args' => 'domain_ace',
 								'href' => 'customer_domains.php?page=domains&action=edit&id='
+							]
+						],
+						// email addresses
+						'emails' => [
+							'class' => \Froxlor\Api\Commands\Emails::class,
+							'searchfields' => [
+								'm.email',
+								'm.email_full'
+							],
+							'result_key' => 'id',
+							'result_format' => [
+								'title' => ['self', 'getFieldFromResult'],
+								'title_args' => 'email',
+								'href' => 'customer_email.php?page=emails&action=edit&id='
+							]
+						],
+						// databases
+						'databases' => [
+							'class' => \Froxlor\Api\Commands\Mysqls::class,
+							'searchfields' => [
+								'databasename',
+								'description'
+							],
+							'result_key' => 'id',
+							'result_format' => [
+								'title' => ['self', 'getFieldFromResult'],
+								'title_args' => 'databasename',
+								'href' => 'customer_mysql.php?page=mysqls&action=edit&id='
+							]
+						],
+						// ftp user
+						'ftpuser' => [
+							'class' => \Froxlor\Api\Commands\Ftps::class,
+							'searchfields' => [
+								'username',
+								'description'
+							],
+							'result_key' => 'id',
+							'result_format' => [
+								'title' => ['self', 'getFieldFromResult'],
+								'title_args' => 'username',
+								'href' => 'customer_ftp.php?page=ftps&action=edit&id='
 							]
 						]
 					];
