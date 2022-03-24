@@ -16,6 +16,7 @@
  *
  */
 
+use Froxlor\UI\Callbacks\Admin;
 use Froxlor\UI\Callbacks\ProgressBar;
 use Froxlor\UI\Callbacks\Style;
 use Froxlor\UI\Callbacks\Text;
@@ -93,6 +94,7 @@ return [
 					'action' => 'delete',
 					'id' => ':adminid'
 				],
+				'visible' => [Admin::class, 'isNotMe']
 			],
 		],
 		'format_callback' => [

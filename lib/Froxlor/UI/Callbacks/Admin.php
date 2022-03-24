@@ -24,4 +24,9 @@ class Admin
 	{
 		return (bool)UI::getCurrentUser()['change_serversettings'];
 	}
+
+	public static function isNotMe(array $attributes)
+	{
+		return (UI::getCurrentUser()['adminid'] != $attributes['fields']['adminid']);
+	}
 }

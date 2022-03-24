@@ -22,8 +22,12 @@ require __DIR__ . '/lib/init.php';
 
 use Froxlor\Database\Database;
 use Froxlor\UI\Request;
+use Froxlor\UI\Panel\UI;
 
 $id = (int) Request::get('id');
+
+$note_type = null;
+$note_msg = null;
 
 if ($page == 'message') {
 	if ($action == '') {
@@ -53,7 +57,7 @@ if ($page == 'message') {
 			$subject = $_POST['subject'];
 			$message = wordwrap($_POST['message'], 70);
 
-			if (! empty($message)) {
+			if (!empty($message)) {
 				$mailcounter = 0;
 				$mail->Body = $message;
 				$mail->Subject = $subject;
@@ -70,7 +74,7 @@ if ($page == 'message') {
 					$mail->From = $userinfo['email'];
 					$mail->FromName = (isset($userinfo['firstname']) ? $userinfo['firstname'] . ' ' : '') . $userinfo['name'];
 
-					if (! $mail->Send()) {
+					if (!$mail->Send()) {
 						if ($mail->ErrorInfo != '') {
 							$mailerr_msg = $mail->ErrorInfo;
 						} else {
@@ -81,7 +85,7 @@ if ($page == 'message') {
 						\Froxlor\UI\Response::standard_error('errorsendingmail', $row['email']);
 					}
 
-					$mailcounter ++;
+					$mailcounter++;
 					$mail->ClearAddresses();
 				}
 
@@ -94,31 +98,39 @@ if ($page == 'message') {
 				\Froxlor\UI\Response::standard_error('nomessagetosend');
 			}
 		}
-	}
+	} elseif ($action == 'showsuccess') {
 
-	if ($action == 'showsuccess') {
-
-		$success = 1;
 		$sentitems = isset($_GET['sentitems']) ? (int) $_GET['sentitems'] : 0;
 
 		if ($sentitems == 0) {
-			$successmessage = $lng['message']['norecipients'];
+			$note_type = 'info';
+			$note_msg = $lng['message']['norecipients'];
 		} else {
-			$successmessage = str_replace('%s', $sentitems, $lng['message']['success']);
+			$note_type = 'success';
+			$note_msg = str_replace('%s', $sentitems, $lng['message']['success']);
 		}
-	} else {
-		$success = 0;
-		$sentitems = 0;
-		$successmessage = '';
 	}
 
-	$action = '';
-	$recipients = '';
+	$recipients = [];
 
 	if ($userinfo['customers_see_all'] == '1') {
-		$recipients .= \Froxlor\UI\HTML::makeoption($lng['panel']['reseller'], 0);
+		$recipients[0] = $lng['panel']['reseller'];
 	}
+	$recipients[1] = $lng['panel']['customer'];
 
-	$recipients .= \Froxlor\UI\HTML::makeoption($lng['panel']['customer'], 1);
-	eval("echo \"" . \Froxlor\UI\Template::getTemplate('message/message') . "\";");
+	$messages_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/messages/formfield.messages_add.php';
+
+	UI::view('user/form-note.html.twig', [
+		'formaction' => $linker->getLink(array('section' => 'message')),
+		'formdata' => $messages_add_data['messages_add'],
+		'actions_links' => [[
+			'href' => $linker->getLink(['section' => 'settings', 'page' => 'overview', 'part' => 'system', 'em' => 'system_mail_use_smtp']),
+			'label' => $lng['admin']['smtpsettings'],
+			'icon' => 'fa-solid fa-wrench',
+			'class' => 'btn-outline-secondary'
+		]],
+		// alert-box
+		'type' => $note_type,
+		'alert_msg' => $note_msg
+	]);
 }
