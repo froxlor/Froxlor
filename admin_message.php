@@ -126,7 +126,7 @@ if ($page == 'message') {
 		'actions_links' => [[
 			'href' => $linker->getLink(['section' => 'settings', 'page' => 'overview', 'part' => 'system', 'em' => 'system_mail_use_smtp']),
 			'label' => $lng['admin']['smtpsettings'],
-			'icon' => 'fa-solid fa-wrench',
+			'icon' => 'fa-solid fa-gears',
 			'class' => 'btn-outline-secondary'
 		]],
 		// alert-box

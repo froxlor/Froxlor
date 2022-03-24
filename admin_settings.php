@@ -331,7 +331,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 				'href' => $linker->getLink(['section' => 'settings', 'page' => 'overview']),
 				'label' => $lng['admin']['configfiles']['overview'],
 				'icon' => 'fa fa-grip'
-			],[
+			], [
 				'class' => 'btn-outline-secondary',
 				'href' => $linker->getLink(['section' => 'settings', 'page' => $page, 'action' => 'export']),
 				'label' => 'Download/export ' . $lng['admin']['serversettings'],
@@ -340,12 +340,14 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 		]);
 	}
 } elseif ($page == 'testmail') {
+
+	$note_type = 'info';
+	$note_msg = $lng['admin']['smtptestnote'];
+
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 		$test_addr = isset($_POST['test_addr']) ? $_POST['test_addr'] : null;
 
-		/**
-		 * Initialize the mailingsystem
-		 */
+		// Initialize the mailingsystem
 		$testmail = new \PHPMailer\PHPMailer\PHPMailer(true);
 		$testmail->CharSet = "UTF-8";
 
@@ -379,10 +381,12 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 				$testmail->AddAddress($test_addr);
 				$testmail->Send();
 			} catch (\PHPMailer\PHPMailer\Exception $e) {
-				$mailerr_msg = $e->errorMessage();
+				$note_type = 'danger';
+				$note_msg = $e->getMessage();
 				$_mailerror = true;
 			} catch (Exception $e) {
-				$mailerr_msg = $e->getMessage();
+				$note_type = 'danger';
+				$note_msg = $e->getMessage();
 				$_mailerror = true;
 			}
 
@@ -396,14 +400,24 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 			}
 		} else {
 			// invalid sender e-mail
-			$mailerr_msg = "Invalid sender e-mail address: " . Settings::Get('panel.adminmail');
-			$_mailerror = true;
+			$note_type = 'warning';
+			$note_msg = "Invalid sender e-mail address: " . Settings::Get('panel.adminmail');
 		}
 	}
 
-	$mail_smtp_user = Settings::Get('system.mail_smtp_user');
-	$mail_smtp_host = Settings::Get('system.mail_smtp_host');
-	$mail_smtp_port = Settings::Get('system.mail_smtp_port');
+	$mailtest_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/settings/formfield.settings_mailtest.php';
 
-	eval("echo \"" . \Froxlor\UI\Template::getTemplate("settings/testmail") . "\";");
+	UI::view('user/form-note.html.twig', [
+		'formaction' => $linker->getLink(array('section' => 'settings')),
+		'formdata' => $mailtest_add_data['mailtest'],
+		'actions_links' => [[
+			'href' => $linker->getLink(['section' => 'settings', 'page' => 'overview', 'part' => 'system', 'em' => 'system_mail_use_smtp']),
+			'label' => $lng['admin']['smtpsettings'],
+			'icon' => 'fa-solid fa-gears',
+			'class' => 'btn-outline-secondary'
+		]],
+		// alert-box
+		'type' => $note_type,
+		'alert_msg' => $note_msg
+	]);
 }

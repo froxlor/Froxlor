@@ -1795,3 +1795,6 @@ $lng['admin']['configfiles']['recommendednote'] = 'Empfohlene/benötigte Dienste
 $lng['admin']['configfiles']['selectrecommended'] = 'Empfohlene wählen';
 $lng['update']['description'] = 'Aktualisierung der froxlor Datenbank';
 $lng['admin']['smtpsettings'] = 'SMTP Einstellungen';
+$lng['panel']['unspecified'] = 'keine Angabe';
+$lng['admin']['smtptestaddr'] = 'Test-Email senden an';
+$lng['admin']['smtptestnote'] = 'Bitte beachten: Die untenstehenden Werte reflektieren die aktuellen Einstellungen und können auch nur dort angepasst werden (siehe Link in der oberen rechten Ecke)';

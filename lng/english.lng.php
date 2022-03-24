@@ -2153,3 +2153,6 @@ $lng['admin']['configfiles']['recommendednote'] = 'Recommended/required services
 $lng['admin']['configfiles']['selectrecommended'] = 'Select recommended';
 $lng['update']['description'] = 'Running database updates for your froxlor installation';
 $lng['admin']['smtpsettings'] = 'SMTP settings';
+$lng['panel']['unspecified'] = 'unspecified';
+$lng['admin']['smtptestaddr'] = 'Send test-mail to';
+$lng['admin']['smtptestnote'] = 'Note that the values below reflect your current settings and can only be adjusted there (see link in top right corner)';
