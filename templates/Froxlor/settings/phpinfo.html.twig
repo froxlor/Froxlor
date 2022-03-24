@@ -1,0 +1,42 @@
+{% extends "Froxlor/userarea.html.twig" %}
+
+{% block heading %}
+	<h5>
+		<i class="fa-solid fa-gears"></i>
+		{{ lng('admin.phpinfo') }}
+	</h5>
+{% endblock %}
+
+{% block content %}
+	<div class="card table-responsive">
+		<table class="table table-borderless table-striped align-middle mb-0 px-3">
+			<tbody>
+				{% for name,section in phpinfo %}
+					{% if name|lower == 'phpinfo' %}
+						{% set name = 'PHP ' ~ phpversion %}
+					{% endif %}
+					<tr>
+						<th colspan="3">{{ name|raw }}</th>
+					</tr>
+					{% for key,val in section %}
+						{% if key != 'Directive' %}
+							<tr>
+								{% if val is iterable %}
+									<td width="180">{{ key|raw }}</td>
+									<td colspan="2">{{ val[0]|raw }}<br/><small>(Master:
+											{{ val[1]|raw }})</small>
+									</td>
+								{% elseif key matches '/^\\d+$/' %}
+									<td colspan="3" align="center">{{ val|raw }}</td>
+								{% else %}
+									<td width="180">{{ key|raw }}</td>
+									<td colspan="2">{{ val|raw }}</td>
+								{% endif %}
+							</tr>
+						{% endif %}
+					{% endfor %}
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+{% endblock %}

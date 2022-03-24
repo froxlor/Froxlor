@@ -118,29 +118,13 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 				$phpinfo[$end][] = $match[2];
 			}
 		}
-		$phpinfohtml = '';
-		foreach ($phpinfo as $name => $section) {
-			$phpinfoentries = "";
-			foreach ($section as $key => $val) {
-				if (is_array($val)) {
-					eval("\$phpinfoentries .= \"" . \Froxlor\UI\Template::getTemplate("settings/phpinfo/phpinfo_3") . "\";");
-				} elseif (is_string($key)) {
-					eval("\$phpinfoentries .= \"" . \Froxlor\UI\Template::getTemplate("settings/phpinfo/phpinfo_2") . "\";");
-				} else {
-					eval("\$phpinfoentries .= \"" . \Froxlor\UI\Template::getTemplate("settings/phpinfo/phpinfo_1") . "\";");
-				}
-			}
-			// first header -> show actual php version
-			if (strtolower($name) == "phpinfo") {
-				$name = "PHP " . PHP_VERSION;
-			}
-			eval("\$phpinfohtml .= \"" . \Froxlor\UI\Template::getTemplate("settings/phpinfo/phpinfo_table") . "\";");
-		}
-		$phpinfo = $phpinfohtml;
 	} else {
 		\Froxlor\UI\Response::standard_error($lng['error']['no_phpinfo']);
 	}
-	eval("echo \"" . \Froxlor\UI\Template::getTemplate("settings/phpinfo") . "\";");
+	UI::view('settings/phpinfo.html.twig', [
+		'phpversion' => PHP_VERSION,
+		'phpinfo' => $phpinfo
+	]);
 } elseif ($page == 'rebuildconfigs' && $userinfo['change_serversettings'] == '1') {
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 
