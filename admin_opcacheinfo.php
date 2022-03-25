@@ -21,6 +21,8 @@
 const AREA = 'admin';
 require __DIR__ . '/lib/init.php';
 
+use Froxlor\UI\Panel\UI;
+
 if ($action == 'reset' && function_exists('opcache_reset') && $userinfo['change_serversettings'] == '1') {
 	opcache_reset();
 	$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "reset OPcache");
@@ -31,127 +33,250 @@ if ($action == 'reset' && function_exists('opcache_reset') && $userinfo['change_
 	exit();
 }
 
-if (! function_exists('opcache_get_configuration')) {
+if (!function_exists('opcache_get_configuration')) {
 	\Froxlor\UI\Response::standard_error($lng['error']['no_opcacheinfo']);
 }
 
 if ($page == 'showinfo') {
 
-	$opcache_info = opcache_get_configuration();
-	$opcache_status = opcache_get_status(false);
 	$time = time();
 	$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed OPcache info");
 
-	$runtimelines = '';
-	if (isset($opcache_info['directives']) && is_array($opcache_info['directives'])) {
-		foreach ($opcache_info['directives'] as $name => $value) {
-			$linkname = str_replace('_', '-', $name);
-			if ($name == 'opcache.optimization_level' && is_integer($value)) {
-				$value = '0x' . dechex($value);
-			}
-			if ($name == 'opcache.memory_consumption' && is_integer($value) && $value % (1024 * 1024) == 0) {
-				$value = $value / (1024 * 1024);
-			}
-			if ($value === null || $value === '') {
-				$value = $lng['opcacheinfo']['novalue'];
-			}
-			if ($value === true) {
-				$value = $lng['opcacheinfo']['true'];
-			}
-			if ($value === false) {
-				$value = $lng['opcacheinfo']['false'];
-			}
-			if (is_integer($value)) {
-				$value = number_format($value, 0, '.', ' ');
-			}
-			$name = str_replace('_', ' ', $name);
-			eval("\$runtimelines.=\"" . \Froxlor\UI\Template::getTemplate("settings/opcacheinfo/runtime_line") . "\";");
+	$optimizationLevels = [
+		1 << 0 => 'CSE, STRING construction',
+		1 << 1 => 'Constant conversion and jumps',
+		1 << 2 => '++, +=, series of jumps',
+		1 << 3 => 'INIT_FCALL_BY_NAME -> DO_FCALL',
+		1 << 4 => 'CFG based optimization',
+		1 << 5 => 'DFA based optimization',
+		1 << 6 => 'CALL GRAPH optimization',
+		1 << 7 => 'SCCP (constant propagation)',
+		1 << 8 => 'TMP VAR usage',
+		1 << 9 => 'NOP removal',
+		1 << 10 => 'Merge equal constants',
+		1 << 11 => 'Adjust used stack',
+		1 << 12 => 'Remove unused variables',
+		1 << 13 => 'DCE (dead code elimination)',
+		1 << 14 => '(unsafe) Collect constants',
+		1 << 15 => 'Inline functions'
+	];
+
+	$jitModes = [
+		[
+			'flag' => 'CPU-specific optimization',
+			'value' => [
+				'Disable CPU-specific optimization',
+				'Enable use of AVX, if the CPU supports it'
+			]
+		],
+		[
+			'flag' => 'Register allocation',
+			'value' => [
+				'Do not perform register allocation',
+				'Perform block-local register allocation',
+				'Perform global register allocation'
+			]
+		],
+		[
+			'flag' => 'Trigger',
+			'value' => [
+				'Compile all functions on script load',
+				'Compile functions on first execution',
+				'Profile functions on first request and compile the hottest functions afterwards',
+				'Profile on the fly and compile hot functions',
+				'Currently unused',
+				'Use tracing JIT. Profile on the fly and compile traces for hot code segments'
+			]
+		],
+		[
+			'flag' => 'Optimization level',
+			'value' => [
+				'No JIT',
+				'Minimal JIT (call standard VM handlers)',
+				'Inline VM handlers',
+				'Use type inference',
+				'Use call graph',
+				'Optimize whole script'
+			]
+		]
+	];
+
+	$jitModeMapping = [
+		'tracing' => 1254,
+		'on' => 1254,
+		'function' => 1205
+	];
+
+	$status = opcache_get_status(false);
+	$config = opcache_get_configuration();
+	$missingConfig = array_diff_key(ini_get_all('zend opcache', false), $config['directives']);
+	if (!empty($missingConfig)) {
+		$config['directives'] = array_merge($config['directives'], $missingConfig);
+	}
+
+	$files = [];
+	if (!empty($status['scripts'])) {
+		uasort($status['scripts'], static function ($a, $b) {
+			return $a['hits'] <=> $b['hits'];
+		});
+		foreach ($status['scripts'] as &$file) {
+			$file['full_path'] = str_replace('\\', '/', $file['full_path']);
+			$file['readable'] = [
+				'hits' => number_format($file['hits']),
+				'memory_consumption' => bsize($file['memory_consumption'])
+			];
+		}
+		$files = array_values($status['scripts']);
+	}
+
+	if ($config['directives']['opcache.file_cache_only'] || !empty($status['file_cache_only'])) {
+		$overview = false;
+	} else {
+		$overview = array_merge(
+			$status['memory_usage'],
+			$status['opcache_statistics'],
+			[
+				'total_memory' => $config['directives']['opcache.memory_consumption'],
+				'used_memory_percentage' => round(100 * (
+					($status['memory_usage']['used_memory'] + $status['memory_usage']['wasted_memory'])
+					/ $config['directives']['opcache.memory_consumption']
+				)),
+				'hit_rate_percentage' => round($status['opcache_statistics']['opcache_hit_rate']),
+				'used_key_percentage' => round(100 * ($status['opcache_statistics']['num_cached_keys']
+					/ $status['opcache_statistics']['max_cached_keys']
+				)),
+				'wasted_percentage' => round($status['memory_usage']['current_wasted_percentage'], 2),
+				'readable' => [
+					'total_memory' => bsize($config['directives']['opcache.memory_consumption']),
+					'used_memory' => bsize($status['memory_usage']['used_memory']),
+					'free_memory' => bsize($status['memory_usage']['free_memory']),
+					'wasted_memory' => bsize($status['memory_usage']['wasted_memory']),
+					'num_cached_scripts' => number_format($status['opcache_statistics']['num_cached_scripts']),
+					'hits' => number_format($status['opcache_statistics']['hits']),
+					'misses' => number_format($status['opcache_statistics']['misses']),
+					'blacklist_miss' => number_format($status['opcache_statistics']['blacklist_misses']),
+					'num_cached_keys' => number_format($status['opcache_statistics']['num_cached_keys']),
+					'max_cached_keys' => number_format($status['opcache_statistics']['max_cached_keys']),
+					'interned' => null,
+					'start_time' => (new DateTimeImmutable("@{$status['opcache_statistics']['start_time']}"))
+						->setTimezone(new DateTimeZone(date_default_timezone_get()))
+						->format('Y-m-d H:i:s'),
+					'last_restart_time' => ($status['opcache_statistics']['last_restart_time'] == 0
+						? 'never'
+						: (new DateTimeImmutable("@{$status['opcache_statistics']['last_restart_time']}"))
+						->setTimezone(new DateTimeZone(date_default_timezone_get()))
+						->format('Y-m-d H:i:s')
+					)
+				]
+			]
+		);
+	}
+
+	$preload = [];
+	if (!empty($status['preload_statistics']['scripts'])) {
+		$preload = $status['preload_statistics']['scripts'];
+		sort($preload, SORT_STRING);
+		if ($overview) {
+			$overview['preload_memory'] = $status['preload_statistics']['memory_consumption'];
+			$overview['readable']['preload_memory'] = bsize($status['preload_statistics']['memory_consumption']);
 		}
 	}
 
-	$cachehits = @$opcache_status['opcache_statistics']['hits'] ?: 0;
-	$cachemiss = @$opcache_status['opcache_statistics']['misses'] ?: 0;
-	$blacklistmiss = @$opcache_status['opcache_statistics']['blacklist_misses'] ?: 0;
-	$cachetotal = $cachehits + $cachemiss + $blacklistmiss;
+	if (!empty($status['interned_strings_usage'])) {
+		$overview['readable']['interned'] = [
+			'buffer_size' => bsize($status['interned_strings_usage']['buffer_size']),
+			'strings_used_memory' => bsize($status['interned_strings_usage']['used_memory']),
+			'strings_free_memory' => bsize($status['interned_strings_usage']['free_memory']),
+			'number_of_strings' => number_format($status['interned_strings_usage']['number_of_strings'])
+		];
+	}
 
-	$general = array(
-		'version' => (isset($opcache_info['version']['opcache_product_name']) ? $opcache_info['version']['opcache_product_name'] . ' ' : '') . $opcache_info['version']['version'],
-		'phpversion' => phpversion(),
-		'start_time' => @$opcache_status['opcache_statistics']['start_time'] ? date('Y-m-d H:i:s', $opcache_status['opcache_statistics']['start_time']) : '',
-		'last_restart_time' => @$opcache_status['opcache_statistics']['last_restart_time'] ? date('Y-m-d H:i:s', $opcache_status['opcache_statistics']['last_restart_time']) : $lng['opcacheinfo']['never'],
-		'oom_restarts' => number_format(@$opcache_status['opcache_statistics']['oom_restarts'] ?: 0, 0, '.', ' '),
-		'hash_restarts' => number_format(@$opcache_status['opcache_statistics']['hash_restarts'] ?: 0, 0, '.', ' '),
-		'manual_restarts' => number_format(@$opcache_status['opcache_statistics']['manual_restarts'] ?: 0, 0, '.', ' '),
-		'status' => (@$opcache_status['restart_in_progress'] ? $lng['opcacheinfo']['restartinprogress'] : (@$opcache_status['restart_pending'] ? $lng['opcacheinfo']['restartpending'] : (@$opcache_status['cache_full'] ? $lng['opcacheinfo']['cachefull'] : (@$opcache_status['opcache_enabled'] ? $lng['opcacheinfo']['enabled'] : $lng['opcacheinfo']['novalue'])))),
-		'cachedscripts' => number_format(@$opcache_status['opcache_statistics']['num_cached_scripts'] ?: 0, 0, '.', ' '),
-		'cachehits' => number_format($cachehits, 0, '.', ' ') . ($cachetotal > 0 ? sprintf(" (%.1f %%)", $cachehits / ($cachetotal) * 100) : ''),
-		'cachemiss' => number_format($cachemiss, 0, '.', ' ') . ($cachetotal > 0 ? sprintf(" (%.1f %%)", $cachemiss / ($cachetotal) * 100) : ''),
-		'blacklistmiss' => number_format($blacklistmiss, 0, '.', ' ') . ($cachetotal > 0 ? sprintf(" (%.1f %%)", $blacklistmiss / ($cachetotal) * 100) : '')
+	if ($overview && !empty($status['jit'])) {
+		$overview['jit_buffer_used_percentage'] = ($status['jit']['buffer_size']
+			? round(100 * (($status['jit']['buffer_size'] - $status['jit']['buffer_free']) / $status['jit']['buffer_size']))
+			: 0
+		);
+		$overview['readable'] = array_merge($overview['readable'], [
+			'jit_buffer_size' => bsize($status['jit']['buffer_size']),
+			'jit_buffer_free' => bsize($status['jit']['buffer_free'])
+		]);
+	}
+
+	$directives = [];
+	ksort($config['directives']);
+	foreach ($config['directives'] as $k => $v) {
+		if (in_array($k, ['opcache.max_file_size', 'opcache.memory_consumption', 'opcache.jit_buffer_size']) && $v) {
+			$v = bsize($v) . " ({$v})";
+		} elseif ($k === 'opcache.optimization_level') {
+			$levels = [];
+			foreach ($optimizationLevels as $level => $info) {
+				if ($level & $v) {
+					$levels[] = "{$info} [{$level}]";
+				}
+			}
+			$v = $levels ?: 'none';
+		} elseif ($k === 'opcache.jit') {
+			if ($v === '1') {
+				$v = 'on';
+			}
+			if (isset($jitModeMapping[$v]) || is_numeric($v)) {
+				$levels = [];
+				foreach (str_split((string)($jitModeMapping[$v] ?? $v)) as $type => $level) {
+					$levels[] = "{$level}: {$jitModes[$type]['value'][$level]} ({$jitModes[$type]['flag']})";
+				}
+				$v = [$v, $levels];
+			} elseif (empty($v) || strtolower($v) === 'off') {
+				$v = 'Off';
+			}
+		}
+		$directives[] = [
+			'k' => $k,
+			'v' => $v
+		];
+	}
+
+	$version = array_merge(
+		$config['version'],
+		[
+			'php' => phpversion(),
+			'server' => $_SERVER['SERVER_SOFTWARE'] ?: '',
+			'host' => (function_exists('gethostname')
+				? gethostname()
+				: (php_uname('n')
+					?: (empty($_SERVER['SERVER_NAME'])
+						? $_SERVER['HOST_NAME']
+						: $_SERVER['SERVER_NAME']
+					)
+				)
+			)
+		]
 	);
 
-	$usedmem = @$opcache_status['memory_usage']['used_memory'] ?: 0;
-	$usedmemstr = bsize($usedmem);
-	$freemem = @$opcache_status['memory_usage']['free_memory'] ?: 0;
-	$freememstr = bsize($freemem);
-	$totalmem = $usedmem + $freemem;
-	$wastedmem = @$opcache_status['memory_usage']['wasted_memory'] ?: 0;
-	$wastedmemstr = bsize($wastedmem);
-	if ($totalmem) {
-		$memory = array(
-			'total' => bsize($totalmem),
-			'used' => $usedmemstr . ($totalmem > 0 ? sprintf(" (%.1f %%)", $usedmem / ($totalmem) * 100) : ''),
-			'free' => $freememstr . ($totalmem > 0 ? sprintf(" (%.1f %%)", $freemem / ($totalmem) * 100) : ''),
-			'wasted' => $wastedmemstr . ($totalmem > 0 ? sprintf(" (%.1f %%)", $wastedmem / ($totalmem) * 100) : '')
-		);
-	}
-
-	if (isset($opcache_status['interned_strings_usage'])) {
-		$usedstring = @$opcache_status['interned_strings_usage']['used_memory'] ?: 0;
-		$usedstringstr = bsize($usedstring);
-		$freestring = @$opcache_status['interned_strings_usage']['free_memory'] ?: 0;
-		$freestringstr = bsize($freestring);
-		$totalstring = $usedstring + $freestring;
-		$stringbuffer = array(
-			'total' => bsize($totalstring),
-			'used' => $usedstringstr . ($totalstring > 0 ? sprintf(" (%.1f %%)", $usedstring / $totalstring * 100) : ''),
-			'free' => $freestringstr . ($totalstring > 0 ? sprintf(" (%.1f %%)", $freestring / $totalstring * 100) : ''),
-			'strcount' => number_format(@$opcache_status['interned_strings_usage']['number_of_strings'] ?: 0, 0, '.', ' ')
-		);
-	}
-
-	$usedkey = @$opcache_status['opcache_statistics']['num_cached_keys'] ?: 0;
-	$usedkeystr = number_format($usedkey, 0, '.', ' ');
-	$totalkey = @$opcache_status['opcache_statistics']['max_cached_keys'] ?: 0;
-	$wastedkey = $usedkey - (@$opcache_status['opcache_statistics']['num_cached_scripts'] ?: 0);
-	if (isset($opcache_status['opcache_statistics'])) {
-		$keystat = array(
-			'total' => number_format($totalkey, 0, '.', ' '),
-			'used' => $usedkeystr . ($totalkey > 0 ? sprintf(" (%.1f %%)", $usedkey / ($totalkey) * 100) : ''),
-			'wasted' => number_format($wastedkey, 0, '.', ' ') . ($totalkey > 0 ? sprintf(" (%.1f %%)", $wastedkey / ($totalkey) * 100) : '')
-		);
-	}
-
-	$blacklistlines = '';
-	if (isset($opcache_info['blacklist']) && is_array($opcache_info['blacklist'])) {
-		foreach ($opcache_info['blacklist'] as $value) {
-			eval("\$blacklistlines.=\"" . \Froxlor\UI\Template::getTemplate("settings/opcacheinfo/blacklist_line") . "\";");
-		}
-	}
-
-	eval("echo \"" . \Froxlor\UI\Template::getTemplate("settings/opcacheinfo/showinfo") . "\";");
+	UI::view('settings/opcacheinfo.html.twig', [
+		'opcacheinfo' => [
+			'version' => $version,
+			'overview' => $overview,
+			'files' => $files,
+			'preload' => $preload,
+			'directives' => $directives,
+			'blacklist' => $config['blacklist'],
+			'functions' => get_extension_funcs('Zend OPcache')
+		]
+	]);
 }
 
-function bsize($s)
+function bsize($size)
 {
-	foreach (array(
-		'',
-		'K',
-		'M',
-		'G'
-	) as $i => $k) {
-		if ($s < 1024)
-			break;
-		$s /= 1024;
+	$i = 0;
+	$val = ['b', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+	while (($size / 1024) > 1) {
+		$size /= 1024;
+		++$i;
 	}
-	return sprintf("%5.1f %sBytes", $s, $k);
+	return sprintf(
+		'%.2f%s%s',
+		$size,
+		'',
+		$val[$i]
+	);
 }

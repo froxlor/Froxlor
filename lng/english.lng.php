@@ -1829,6 +1829,7 @@ $lng['opcacheinfo']['blacklist'] = 'Blacklist';
 $lng['opcacheinfo']['novalue'] = '<i>no value</i>';
 $lng['opcacheinfo']['true'] = '<i>true</i>';
 $lng['opcacheinfo']['false'] = '<i>false</i>';
+$lng['opcacheinfo']['funcsavail'] = 'Available functions';
 
 // Added for let's encrypt
 $lng['admin']['letsencrypt']['title'] = 'Use Let\'s Encrypt';

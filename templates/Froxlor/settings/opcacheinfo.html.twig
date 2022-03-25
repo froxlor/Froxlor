@@ -1,0 +1,207 @@
+{% extends "Froxlor/userarea.html.twig" %}
+
+{% block heading %}
+	<h5>
+		<i class="fa-solid fa-hard-drive me-1"></i>
+		{{ lng('admin.opcacheinfo') }}
+	</h5>
+{% endblock %}
+
+{% block content %}
+	<div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 mb-4">
+		<div class="col">
+			<div class="card h-100 mb-3">
+				<div class="card-body">
+					<h5 class="card-title">{{ lng('opcacheinfo.memusage') }}</h5>
+					<div class="progress position-relative">
+						<div class="progress-bar bg-success" role="progressbar" style="width: {{ opcacheinfo.overview.used_memory_percentage }}%" aria-valuenow="{{ opcacheinfo.overview.used_memory }}" aria-valuemin="0" aria-valuemax="{{ opcacheinfo.overview.total_memory }}"></div>
+						<small class="justify-content-center d-flex position-absolute w-100">{{ opcacheinfo.overview.used_memory_percentage }}%</small>
+					</div>
+				</div>
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item d-flex justify-content-between align-items-center">
+						{{ lng('opcacheinfo.totalmem') }}
+						<span class="badge bg-secondary">{{ opcacheinfo.overview.readable.total_memory }}</span>
+					</li>
+					<li class="list-group-item d-flex justify-content-between align-items-center">
+						{{ lng('opcacheinfo.used') }}
+						<span class="badge bg-secondary">{{ opcacheinfo.overview.readable.used_memory }}</span>
+					</li>
+					<li class="list-group-item d-flex justify-content-between align-items-center">
+						{{ lng('opcacheinfo.free') }}
+						<span class="badge bg-secondary">{{ opcacheinfo.overview.readable.free_memory }}</span>
+					</li>
+					<li class="list-group-item d-flex justify-content-between align-items-center">
+						{{ lng('opcacheinfo.wastedmem') }}
+						<span class="badge bg-secondary">{{ opcacheinfo.overview.readable.wasted_memory }}</span>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="col">
+			<div class="card h-100 mb-3">
+				<div class="card-body">
+					<h5 class="card-title">{{ lng('opcacheinfo.hitsc') }}</h5>
+					<div class="progress position-relative">
+						<div class="progress-bar bg-success" role="progressbar" style="width: {{ opcacheinfo.overview.hit_rate_percentage }}%" aria-valuenow="{{ opcacheinfo.overview.hits }}" aria-valuemin="0" aria-valuemax="{{ opcacheinfo.overview.hits + opcacheinfo.overview.misses }}"></div>
+						<div class="progress-bar bg-danger" role="progressbar" style="width: {{ 100 - opcacheinfo.overview.hit_rate_percentage }}%" aria-valuenow="{{ opcacheinfo.overview.misses }}" aria-valuemin="0" aria-valuemax="{{ opcacheinfo.overview.hits + opcacheinfo.overview.misses }}"></div>
+						<small class="justify-content-center d-flex position-absolute w-100">{{ opcacheinfo.overview.hit_rate_percentage }}%</small>
+					</div>
+				</div>
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item d-flex justify-content-between align-items-center">
+						{{ lng('opcacheinfo.cachedscripts') }}
+						<span class="badge bg-secondary">{{ opcacheinfo.overview.readable.num_cached_scripts }}</span>
+					</li>
+					<li class="list-group-item d-flex justify-content-between align-items-center">
+						{{ lng('opcacheinfo.hitsc') }}
+						<span class="badge bg-secondary">{{ opcacheinfo.overview.readable.hits }}</span>
+					</li>
+					<li class="list-group-item d-flex justify-content-between align-items-center">
+						{{ lng('opcacheinfo.missc') }}
+						<span class="badge bg-secondary">{{ opcacheinfo.overview.readable.misses }}</span>
+					</li>
+					<li class="list-group-item d-flex justify-content-between align-items-center">
+						{{ lng('opcacheinfo.blmissc') }}
+						<span class="badge bg-secondary">{{ opcacheinfo.overview.readable.blacklist_miss }}</span>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="col">
+			<div class="card h-100 mb-3">
+				<div class="card-body">
+					<h5 class="card-title">{{ lng('opcacheinfo.usedkey') }}</h5>
+					<div class="progress position-relative">
+						<div class="progress-bar bg-success" role="progressbar" style="width: {{ opcacheinfo.overview.used_key_percentage }}%" aria-valuenow="{{ opcacheinfo.overview.num_cached_keys }}" aria-valuemin="0" aria-valuemax="{{ opcacheinfo.overview.max_cached_keys }}"></div>
+						<small class="justify-content-center d-flex position-absolute w-100">{{ opcacheinfo.overview.used_key_percentage }}%</small>
+					</div>
+				</div>
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item d-flex justify-content-between align-items-center">
+						{{ lng('opcacheinfo.maxkey') }}
+						<span class="badge bg-secondary">{{ opcacheinfo.overview.readable.max_cached_keys }}</span>
+					</li>
+					<li class="list-group-item d-flex justify-content-between align-items-center">
+						{{ lng('opcacheinfo.usedkey') }}
+						<span class="badge bg-secondary">{{ opcacheinfo.overview.readable.num_cached_keys }}</span>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="col">
+			<div class="card h-100 mb-3">
+				<div class="card-body">
+					<h5 class="card-title">{{ lng('opcacheinfo.strinterning') }}</h5>
+				</div>
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item d-flex justify-content-between align-items-center">
+						{{ lng('opcacheinfo.totalmem') }}
+						<span class="badge bg-secondary">{{ opcacheinfo.overview.readable.interned.buffer_size }}</span>
+					</li>
+					<li class="list-group-item d-flex justify-content-between align-items-center">
+						{{ lng('opcacheinfo.used') }}
+						<span class="badge bg-secondary">{{ opcacheinfo.overview.readable.interned.strings_used_memory }}</span>
+					</li>
+					<li class="list-group-item d-flex justify-content-between align-items-center">
+						{{ lng('opcacheinfo.free') }}
+						<span class="badge bg-secondary">{{ opcacheinfo.overview.readable.interned.strings_free_memory }}</span>
+					</li>
+					<li class="list-group-item d-flex justify-content-between align-items-center">
+						{{ lng('opcacheinfo.strcount') }}
+						<span class="badge bg-secondary">{{ opcacheinfo.overview.readable.interned.number_of_strings }}</span>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div class="row row-cols-1 row-cols-md-2">
+		<div class="col">
+			<div class="card table-responsive mb-3">
+				<table class="table table-borderless table-striped align-middle mb-0 px-3">
+					<tbody>
+						<tr>
+							<th class="text-center" colspan="2" scope="row">{{ lng('opcacheinfo.generaltitle') }}</th>
+						</tr>
+						<tr>
+							<th class="fw-bold" scope="row">{{ lng('opcacheinfo.version') }}</th>
+							<td class="text-end">{{ opcacheinfo.version.version }}</td>
+						</tr>
+						<tr>
+							<th class="fw-bold" scope="row">{{ lng('opcacheinfo.phpversion') }}</th>
+							<td class="text-end">{{ opcacheinfo.version.php }}</td>
+						</tr>
+						<tr>
+							<th class="fw-bold" scope="row">{{ lng('admin.hostname') }}</th>
+							<td class="text-end">{{ opcacheinfo.version.host }}</td>
+						</tr>
+						<tr>
+							<th class="fw-bold" scope="row">{{ lng('admin.serversoftware') }}</th>
+							<td class="text-end">{{ opcacheinfo.version.server }}</td>
+						</tr>
+						<tr>
+							<th class="fw-bold" scope="row">{{ lng('opcacheinfo.start') }}</th>
+							<td class="text-end">{{ opcacheinfo.overview.start_time|date('d.m.Y H:i:s') }}</td>
+						</tr>
+						<tr>
+							<th class="fw-bold" scope="row">{{ lng('opcacheinfo.lastreset') }}</th>
+							<td class="text-end">
+								{% if opcacheinfo.overview.last_restart_time > 0 %}
+									{{ opcacheinfo.overview.last_restart_time|date('d.m.Y H:i:s') }}
+								{% else %}
+									{{ lng('panel.never') }}
+								{% endif %}
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="card table-responsive">
+				<table class="table table-borderless table-striped align-middle mb-0 px-3">
+					<tbody>
+						<tr>
+							<th class="text-center" scope="row">{{ lng('opcacheinfo.funcsavail') }}</th>
+						</tr>
+						{% for funcs in opcacheinfo.functions %}
+						<tr>
+							<td>{{ funcs }}</td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="col">
+			<div class="card table-responsive">
+				<table class="table table-borderless table-striped align-middle mb-0 px-3">
+					<tbody>
+						<tr>
+							<th class="text-center" colspan="2" scope="row">{{ lng('opcacheinfo.runtimeconf') }}</th>
+						</tr>
+						{% for directive in opcacheinfo.directives %}
+							<tr>
+								<th class="fw-bold" scope="row">{{ directive.k }}</th>
+								<td class="text-end">
+									{% if directive.v is iterable %}
+										{% for vval in directive.v %}
+											{% if vval is iterable %}
+												{% for val2 in vval %}
+													{{ val2|raw }}<br>
+												{% endfor %}
+											{% else %}
+												{{ vval|raw }}<br>
+											{% endif %}
+										{% endfor %}
+									{% else %}
+										{{ directive.v|raw }}
+									{% endif %}
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+{% endblock %}
