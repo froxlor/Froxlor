@@ -145,11 +145,11 @@ class Settings
 	public static function IsInList($setting = null, $entry = null)
 	{
 		self::init();
-		$s = self::Get($setting);
-		if ($s == null) {
+		$svalue = self::Get($setting);
+		if ($svalue == null) {
 			return false;
 		}
-		$slist = explode(",", $s);
+		$slist = explode(",", $svalue);
 		return in_array($entry, $slist);
 	}
 

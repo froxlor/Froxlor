@@ -50,11 +50,7 @@ class Response
 			header('Location: ' . $linker->getLink());
 			exit();
 		} elseif ($get_variables == null) {
-			if ($isRelative) {
-				$linker = new Linker($destination, $s);
-			} else {
-				$linker = new Linker($destination);
-			}
+			$linker = new Linker($destination);
 			header('Location: ' . $linker->getLink());
 			exit();
 		}

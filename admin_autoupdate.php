@@ -62,7 +62,7 @@ if ($page == 'overview') {
 	if (is_array($latestversion) && count($latestversion) >= 1) {
 		$_version = $latestversion[0];
 		$_message = isset($latestversion[1]) ? $latestversion[1] : '';
-		$_link = isset($latestversion[2]) ? $latestversion[2] : htmlspecialchars($filename . '?s=' . urlencode($s) . '&page=' . urlencode($page) . '&lookfornewversion=yes');
+		$_link = isset($latestversion[2]) ? $latestversion[2] : htmlspecialchars($filename . '?page=' . urlencode($page) . '&lookfornewversion=yes');
 
 		// add the branding so debian guys are not gettings confused
 		// about their version-number
