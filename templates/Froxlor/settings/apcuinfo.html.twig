@@ -1,0 +1,176 @@
+{% extends "Froxlor/userarea.html.twig" %}
+
+{% block heading %}
+	<h5>
+		<i class="fa-solid fa-hard-drive me-1"></i>
+		{{ lng('admin.apcuinfo') }}
+	</h5>
+{% endblock %}
+
+{% block actions %}
+	<a class="btn btn-warning" href="{{ linker({'section':'apcuinfo','page':'showinfo','action':'delete'}) }}">
+		<i class="fa-solid fa-trash-can me-1"></i>
+		{{ lng('apcuinfo.clearcache') }}
+	</a>
+{% endblock %}
+
+{% block content %}
+	<div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 mb-4">
+		<div class="col">
+			<div class="card h-100 mb-3">
+				<div class="card-body">
+					<h5 class="card-title">{{ lng('apcuinfo.memnote') }}</h5>
+					<div class="progress position-relative">
+						<div class="progress-bar bg-success" role="progressbar" style="width: {{ apcuinfo.mem_used_percentage }}%" aria-valuenow="{{ apcuinfo.mem_used }}" aria-valuemin="0" aria-valuemax="{{ apcuinfo.mem_avail }}"></div>
+						<small class="justify-content-center d-flex position-absolute w-100">{{ apcuinfo.mem_used_percentage }}%</small>
+					</div>
+				</div>
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item d-flex justify-content-between align-items-center">
+						{{ lng('apcuinfo.total') }}
+						<span class="badge bg-secondary">{{ apcuinfo.readable.mem_size }}</span>
+					</li>
+					<li class="list-group-item d-flex justify-content-between align-items-center">
+						{{ lng('apcuinfo.used') }}
+						<span class="badge bg-secondary">{{ apcuinfo.readable.mem_used }}</span>
+					</li>
+					<li class="list-group-item d-flex justify-content-between align-items-center">
+						{{ lng('apcuinfo.free') }}
+						<span class="badge bg-secondary">{{ apcuinfo.readable.mem_avail }}</span>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="col">
+			<div class="card h-100 mb-3">
+				<div class="card-body">
+					<h5 class="card-title">{{ lng('apcuinfo.hitmiss') }}</h5>
+					<div class="progress position-relative">
+						<div class="progress-bar bg-success" role="progressbar" style="width: {{ apcuinfo.num_hits_percentage }}%" aria-valuenow="{{ apcuinfo.num_hits }}" aria-valuemin="0" aria-valuemax="{{ apcuinfo.num_hits_and_misses }}"></div>
+						<div class="progress-bar bg-danger" role="progressbar" style="width: {{ 100 - apcuinfo.num_misses_percentage }}%" aria-valuenow="{{ apcuinfo.num_misses }}" aria-valuemin="0" aria-valuemax="{{ apcuinfo.num_hits_and_misses }}"></div>
+						<small class="justify-content-center d-flex position-absolute w-100">{{ apcuinfo.num_hits_percentage }}%</small>
+					</div>
+				</div>
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item d-flex justify-content-between align-items-center">
+						{{ lng('apcuinfo.hit') }}
+						<span class="badge bg-secondary">{{ apcuinfo.readable.num_hits }}</span>
+					</li>
+					<li class="list-group-item d-flex justify-content-between align-items-center">
+						{{ lng('apcuinfo.miss') }}
+						<span class="badge bg-secondary">{{ apcuinfo.readable.num_misses }}</span>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="col">
+			<div class="card h-100 mb-3">
+				<div class="card-body">
+					<h5 class="card-title">{{ lng('apcuinfo.cachetitle') }}</h5>
+				</div>
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item d-flex justify-content-between align-items-center">
+						{{ lng('apcuinfo.cvar') }}
+						<span class="badge bg-secondary">{{ apcuinfo.readable.number_vars }}
+							({{ apcuinfo.size_vars }})</span>
+					</li>
+					<li class="list-group-item d-flex justify-content-between align-items-center">
+						{{ lng('apcuinfo.reqrate') }}
+						<span class="badge bg-secondary">{{ apcuinfo.req_rate_user }}
+							{{ lng('apcuinfo.creqsec') }}</span>
+					</li>
+					<li class="list-group-item d-flex justify-content-between align-items-center">
+						{{ lng('apcuinfo.hitrate') }}
+						<span class="badge bg-secondary">{{ apcuinfo.hit_rate_user }}
+							{{ lng('apcuinfo.creqsec') }}</span>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="col">
+			<div class="card h-100 mb-3">
+				<div class="card-body">
+					<h5 class="card-title">{{ lng('apcuinfo.detailmem') }}</h5>
+					{% if apcuinfo.fragmentation is not iterable %}
+						{{ lng('apcuinfo.nofragment') }}
+					{% endif %}
+				</div>
+				{% if apcuinfo.fragmentation is iterable %}
+					<div class="progress position-relative">
+						<div class="progress-bar bg-success" role="progressbar" style="width: {{ apcuinfo.fragmentation.used_percentage }}%" aria-valuenow="{{ apcuinfo.fragmentation.used_bytes }}" aria-valuemin="0" aria-valuemax="{{ apcuinfo.fragmentation.total_bytes }}"></div>
+						<small class="justify-content-center d-flex position-absolute w-100">{{ apcuinfo.fragmentation.used_percentage }}%</small>
+					</div>
+					<ul class="list-group list-group-flush">
+						<li class="list-group-item d-flex justify-content-between align-items-center">
+							{{ lng('apcuinfo.total') }}
+							<span class="badge bg-secondary">{{ apcuinfo.fragmentation.readable.total_bytes }}</span>
+						</li>
+						<li class="list-group-item d-flex justify-content-between align-items-center">
+							{{ lng('apcuinfo.used') }}
+							<span class="badge bg-secondary">{{ apcuinfo.fragmentation.readable.used_bytes }}</span>
+						</li>
+						<li class="list-group-item d-flex justify-content-between align-items-center">
+							{{ lng('apcuinfo.fragments') }}
+							<span class="badge bg-secondary">{{ apcuinfo.fragmentation.readable.num_frags }}</span>
+						</li>
+					</ul>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+
+	<div class="row row-cols-1 row-cols-md-2">
+		<div class="col">
+			<div class="card table-responsive mb-3">
+				<table class="table table-borderless table-striped align-middle mb-0 px-3">
+					<tbody>
+						<tr>
+							<th class="text-center" colspan="2" scope="row">{{ lng('apcuinfo.generaltitle') }}</th>
+						</tr>
+						<tr>
+							<th class="fw-bold" scope="row">{{ lng('apcuinfo.version') }}</th>
+							<td class="text-end">{{ apcuinfo.apcversion }}</td>
+						</tr>
+						<tr>
+							<th class="fw-bold" scope="row">{{ lng('apcuinfo.phpversion') }}</th>
+							<td class="text-end">{{ apcuinfo.phpversion }}</td>
+						</tr>
+						<tr>
+							<th class="fw-bold" scope="row">{{ lng('admin.hostname') }}</th>
+							<td class="text-end">{{ apcuinfo.host }}</td>
+						</tr>
+						<tr>
+							<th class="fw-bold" scope="row">{{ lng('admin.serversoftware') }}</th>
+							<td class="text-end">{{ apcuinfo.server }}</td>
+						</tr>
+						<tr>
+							<th class="fw-bold" scope="row">{{ lng('apcuinfo.start') }}</th>
+							<td class="text-end">{{ apcuinfo.start_time|date('d.m.Y H:i:s') }}</td>
+						</tr>
+						<tr>
+							<th class="fw-bold" scope="row">{{ lng('apcuinfo.uptime') }}</th>
+							<td class="text-end">{{ apcuinfo.uptime }}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="col">
+			<div class="card table-responsive">
+				<table class="table table-borderless table-striped align-middle mb-0 px-3">
+					<tbody>
+						<tr>
+							<th class="text-center" colspan="2" scope="row">{{ lng('apcuinfo.runtime') }}</th>
+						</tr>
+						{% for k,v in apcuinfo.runtimelines %}
+							<tr>
+								<th class="fw-bold" scope="row">{{ k|raw }}</th>
+								<td class="text-end">{{ v|raw }}</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+{% endblock %}

@@ -1782,12 +1782,15 @@ $lng['apcuinfo']['missrate'] = 'Miss Rate';
 $lng['apcuinfo']['insrate'] = 'Insert Rate';
 $lng['apcuinfo']['cachefull'] = 'Cache full count';
 $lng['apcuinfo']['runtime'] = 'Runtime Settings';
-$lng['apcuinfo']['memnote'] = 'Memory Usage <font size=-2>(multiple slices indicate fragments)</font>';
+$lng['apcuinfo']['memnote'] = 'Memory Usage';
+$lng['apcuinfo']['total'] = 'Total';
 $lng['apcuinfo']['free'] = 'Free';
 $lng['apcuinfo']['used'] = 'Used';
 $lng['apcuinfo']['hitmiss'] = 'Hits & Misses';
 $lng['apcuinfo']['detailmem'] = 'Detailed Memory Usage and Fragmentation';
 $lng['apcuinfo']['fragment'] = 'Fragmentation';
+$lng['apcuinfo']['nofragment'] = 'No fragmentation';
+$lng['apcuinfo']['fragments'] = 'Fragments';
 
 // Added for opcache info
 $lng['admin']['opcacheinfo'] = 'OPcache Info';
