@@ -7,6 +7,13 @@
 	</h5>
 {% endblock %}
 
+{% block actions %}
+	<a class="btn btn-warning" href="{{ linker({'section':'opcacheinfo','page':'showinfo','action':'reset'}) }}">
+		<i class="fa-solid fa-trash-can me-1"></i>
+		{{ lng('opcacheinfo.resetcache') }}
+	</a>
+{% endblock %}
+
 {% block content %}
 	<div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 mb-4">
 		<div class="col">

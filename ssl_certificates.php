@@ -52,7 +52,7 @@ try {
 	$certificates_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/tablelisting.sslcertificates.php';
 	$collection = (new Collection(Certificates::class, $userinfo))
 		->withPagination($certificates_list_data['sslcertificates_list']['columns']);
-	if ($userinfo['adminisession'] == 1) {
+	if ($userinfo['adminsession'] == 1) {
 		$collection->has('domains', \Froxlor\Api\Commands\Domains::class, 'domainid', 'id');
 	} else {
 		$collection->has('domains', \Froxlor\Api\Commands\SubDomains::class, 'domainid', 'id');
