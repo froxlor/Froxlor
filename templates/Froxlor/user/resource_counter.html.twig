@@ -1,0 +1,163 @@
+{% extends "Froxlor/userarea.html.twig" %}
+
+{% block heading %}
+	<h5 class="mb-1">
+		<i class="fa fa-calculator me-1"></i>
+		{{ lng('admin.updatecounters') }}
+	</h5>
+{% endblock %}
+
+{% block content %}
+
+	{% for usersection,data in counters|reverse(true) %}
+		<div class="card table-responsive">
+			<table class="table table-borderless table-striped align-middle mb-0 px-3">
+				<thead>
+					<tr>
+						<th colspan="3">{{ lng('admin.' ~ usersection) }}</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for user in data %}
+						<tr>
+							{% if usersection == 'customers' %}
+								<th class="px-3 w-50" scope="row">
+									{{ call_static('\\Froxlor\\User', 'getCorrectUserSalutation', [user]) }}
+									(<a href="{{ linker({'section': 'customers', 'page':'customers','action': 'su','id':user.customerid}) }}">{{ user.loginname }}</a>)
+								</th>
+								<td class="px-3 w-25">
+									{{ lng('customer.subdomains') }}:
+									<span class="{% if user.subdomains_used == user.subdomains_used_new %}text-success{% else %}warning{% endif %}">
+										<b>{{ user.subdomains_used }}
+											-&gt;
+											{{ user.subdomains_used_new }}</b>
+									</span><br/>
+									{{ lng('customer.mysqls') }}:
+									<span class="{% if user.mysqls_used == user.mysqls_used_new %}text-success{% else %}warning{% endif %}">
+										<b>{{ user.mysqls_used }}
+											-&gt;
+											{{ user.mysqls_used_new }}</b>
+									</span><br/>
+									{{ lng('customer.ftps') }}:
+									<span class="{% if user.ftps_used == user.ftps_used_new %}text-success{% else %}warning{% endif %}">
+										<b>{{ user.ftps_used }}
+											-&gt;
+											{{ user.ftps_used_new }}</b>
+									</span>
+								</td>
+								<td class="px-3 w-25">
+									{{ lng('customer.emails') }}:
+									<span class="{% if user.emails_used == user.emails_used_new %}text-success{% else %}warning{% endif %}">
+										<b>{{ user.emails_used }}
+											-&gt;
+											{{ user.emails_used_new }}</b>
+									</span><br/>
+									{{ lng('customer.accounts') }}:
+									<span class="{% if user.email_accounts_used == user.email_accounts_used_new %}text-success{% else %}warning{% endif %}">
+										<b>{{ user.email_accounts_used }}
+											-&gt;
+											{{ user.email_accounts_used_new }}</b>
+									</span><br/>
+									{{ lng('customer.forwarders') }}:
+									<span class="{% if user.email_forwarders_used == user.email_forwarders_used_new %}text-success{% else %}warning{% endif %}">
+										<b>{{ user.email_forwarders_used }}
+											-&gt;
+											{{ user.email_forwarders_used_new }}</b>
+									</span>
+									{% if get_setting('system.mail_quota_enabled') == 1 %}
+										<br/>{{ lng('customer.email_quota') }}:
+										<span class="{% if user.email_quota_used == user.email_quota_used_new %}text-success{% else %}warning{% endif %}">
+											<b>{{ user.email_quota_used }}
+												-&gt;
+												{{ user.email_quota_used_new }}</b>
+										</span>
+									{% endif %}
+								</td>
+							{% else %}
+								<th class="px-3 w-50" scope="row">
+									{{ user.name }}
+									{% if user.adminid != call_static('\\Froxlor\\CurrentUser', 'getField', ['adminid']) %}
+										(<a href="{{ linker({'section': 'admins', 'page':'admins','action': 'su','id':user.adminid}) }}">{{ user.loginname }}</a>)
+									{% endif %}
+								</th>
+								<td class="px-3 w-25">
+									{{ lng('admin.customers') }}:
+									<span class="{% if user.customers_used == user.customers_used_new %}text-success{% else %}warning{% endif %}">
+										<b>{{ user.customers_used }}
+											-&gt;
+											{{ user.customers_used_new }}</b>
+									</span><br/>
+									{{ lng('customer.domains') }}:
+									<span class="{% if user.domains_used == user.domains_used_new %}text-success{% else %}warning{% endif %}">
+										<b>{{ user.domains_used }}
+											-&gt;
+											{{ user.domains_used_new }}</b>
+									</span><br/>
+									{{ lng('customer.subdomains') }}:
+									<span class="{% if user.subdomains_used == user.subdomains_used_new %}text-success{% else %}warning{% endif %}">
+										<b>{{ user.subdomains_used }}
+											-&gt;
+											{{ user.subdomains_used_new }}</b>
+									</span><br/>
+									{{ lng('customer.diskspace') }}:
+									<span class="{% if user.diskspace_used == user.diskspace_used_new %}text-success{% else %}warning{% endif %}">
+										<b>{{ user.diskspace_used|formatBytes }}
+											-&gt;
+											{{ user.diskspace_used_new|formatBytes }}</b>
+									</span><br/>
+									{{ lng('customer.traffic') }}:
+									<span class="{% if user.traffic_used == user.traffic_used_new %}text-success{% else %}warning{% endif %}">
+										<b>{{ user.traffic_used|formatBytes }}
+											-&gt;
+											{{ user.traffic_used_new|formatBytes }}</b>
+									</span>
+								</td>
+								<td class="px-3 w-25">
+									{{ lng('customer.mysqls') }}:
+									<span class="{% if user.mysqls_used == user.mysqls_used_new %}text-success{% else %}warning{% endif %}">
+										<b>{{ user.mysqls_used }}
+											-&gt;
+											{{ user.mysqls_used_new }}</b>
+									</span><br/>
+									{{ lng('customer.ftps') }}:
+									<span class="{% if user.ftps_used == user.ftps_used_new %}text-success{% else %}warning{% endif %}">
+										<b>{{ user.ftps_used }}
+											-&gt;
+											{{ user.ftps_used_new }}</b>
+									</span><br/>
+									{{ lng('customer.emails') }}:
+									<span class="{% if user.emails_used == user.emails_used_new %}text-success{% else %}warning{% endif %}">
+										<b>{{ user.emails_used }}
+											-&gt;
+											{{ user.emails_used_new }}</b>
+									</span><br/>
+									{{ lng('customer.accounts') }}:
+									<span class="{% if user.email_accounts_used == user.email_accounts_used_new %}text-success{% else %}warning{% endif %}">
+										<b>{{ user.email_accounts_used }}
+											-&gt;
+											{{ user.email_accounts_used_new }}</b>
+									</span><br/>
+									{{ lng('customer.forwarders') }}:
+									<span class="{% if user.email_forwarders_used == user.email_forwarders_used_new %}text-success{% else %}warning{% endif %}">
+										<b>{{ user.email_forwarders_used }}
+											-&gt;
+											{{ user.email_forwarders_used_new }}</b>
+									</span>
+									{% if get_setting('system.mail_quota_enabled') == 1 %}
+										<br/>{{ lng('customer.email_quota') }}:
+										<span class="{% if user.email_quota_used == user.email_quota_used_new %}text-success{% else %}warning{% endif %}">
+											<b>{{ user.email_quota_used }}
+												-&gt;
+												{{ user.email_quota_used_new }}</b>
+										</span>
+									{% endif %}
+								</td>
+							{% endif %}
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	{% endfor %}
+
+{% endblock %}

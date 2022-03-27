@@ -150,17 +150,9 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 
 		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "updated resource-counters");
 		$updatecounters = \Froxlor\User::updateCounters(true);
-		$customers = '';
-		foreach ($updatecounters['customers'] as $customerid => $customer) {
-			eval("\$customers.=\"" . \Froxlor\UI\Template::getTemplate("settings/updatecounters_row_customer") . "\";");
-		}
-
-		$admins = '';
-		foreach ($updatecounters['admins'] as $adminid => $admin) {
-			eval("\$admins.=\"" . \Froxlor\UI\Template::getTemplate("settings/updatecounters_row_admin") . "\";");
-		}
-
-		eval("echo \"" . \Froxlor\UI\Template::getTemplate("settings/updatecounters") . "\";");
+		UI::view('user/resource-counter.html.twig', [
+			'counters' => $updatecounters
+		]);
 	} else {
 		\Froxlor\UI\HTML::askYesNo('admin_counters_reallyupdate', $filename, array(
 			'page' => $page
