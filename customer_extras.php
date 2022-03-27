@@ -291,14 +291,11 @@ if ($page == 'overview' || $page == 'htpasswds') {
 
 			// check whether there is a backup-job for this customer
 			try {
-				$json_result = CustomerBackups::getLocal($userinfo)->listing();
+				$backup_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/customer/tablelisting.backups.php';
+				$collection = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\CustomerBackups::class, $userinfo))
+					->withPagination($backup_list_data['backup_list']['columns']);
 			} catch (Exception $e) {
 				\Froxlor\UI\Response::dynamic_error($e->getMessage());
-			}
-			$result = json_decode($json_result, true)['data'];
-			$existing_backupJob = null;
-			if ($result['count'] > 0) {
-				$existing_backupJob = array_shift($result['list']);
 			}
 
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
@@ -309,26 +306,13 @@ if ($page == 'overview' || $page == 'htpasswds') {
 				}
 				\Froxlor\UI\Response::standard_success('backupscheduled');
 			} else {
-
-				if (!empty($existing_backupJob)) {
-					$action = "abort";
-					$row = $existing_backupJob['data'];
-
-					$row['path'] = \Froxlor\FileDir::makeCorrectDir(str_replace($userinfo['documentroot'], "/", $row['destdir']));
-					$row['backup_web'] = ($row['backup_web'] == '1') ? $lng['panel']['yes'] : $lng['panel']['no'];
-					$row['backup_mail'] = ($row['backup_mail'] == '1') ? $lng['panel']['yes'] : $lng['panel']['no'];
-					$row['backup_dbs'] = ($row['backup_dbs'] == '1') ? $lng['panel']['yes'] : $lng['panel']['no'];
-
-					// overwrite backup_form after we took everything from it we needed
-					eval("\$backup_form = \"" . \Froxlor\UI\Template::getTemplate("extras/backup_listexisting") . "\";");
-				}
-
 				$pathSelect = \Froxlor\FileDir::makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
 				$backup_data = include_once dirname(__FILE__) . '/lib/formfields/customer/extras/formfield.backup.php';
 
-				UI::view('user/form.html.twig', [
+				UI::view('user/form-datatable.html.twig', [
 					'formaction' => $linker->getLink(array('section' => 'extras')),
-					'formdata' => $backup_data['backup']
+					'formdata' => $backup_data['backup'],
+					'tabledata' => \Froxlor\UI\Listing::format($collection, $backup_list_data['backup_list']),
 				]);
 			}
 		}

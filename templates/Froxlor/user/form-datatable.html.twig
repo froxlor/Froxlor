@@ -1,0 +1,16 @@
+{% extends "Froxlor/user/form.html.twig" %}
+
+{% block content %}
+	{% if tabledata is not empty and tabledata is iterable %}
+		<div class="row mb-2">
+			{% set type = 'warning' %}
+			{% set alert_msg = lng('error.customerhasongoingbackupjob') %}
+			{% include 'Froxlor/misc/alertbox.html.twig' %}
+		</div>
+		{% import "Froxlor/table/table.html.twig" as table %}
+		{{ table.table(tabledata) }}
+	{% endif %}
+
+	{{ parent() }}
+
+{% endblock %}
