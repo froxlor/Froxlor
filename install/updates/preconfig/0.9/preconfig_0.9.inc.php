@@ -18,6 +18,7 @@
 use Froxlor\Database\Database;
 use Froxlor\Settings;
 use PHPMailer\PHPMailer;
+use Froxlor\UI\Panel\UI;
 
 /**
  * checks if the new-version has some updating to do
@@ -399,7 +400,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 		$description = 'As you can (obviously) see, Froxlor now comes with a new theme. You also have the possibility to switch back to "Classic" if you want to.';
 		$return['update_default_theme_note'] = ['type' => 'infotext', 'value' => $description];
 		$question = '<strong>Select default panel theme:</strong>';
-		$themes = \Froxlor\UI\Template::getThemes();
+		$themes = UI::getThemes();
 		$sel_themes = [];
 		foreach ($themes as $cur_theme) {
 			$sel_themes[$cur_theme] = $cur_theme;
@@ -421,7 +422,7 @@ function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $c
 		$description .= 'test this update in a testing environment using your existing data.<br /><br />';
 		$return['classic_theme_replacement_note'] = ['type' => 'infotext', 'value' => $description];
 		$question = '<strong>Select your preferred Classic Theme replacement:</strong>';
-		$themes = \Froxlor\UI\Template::getThemes();
+		$themes = UI::getThemes();
 		$sel_themes = [];
 		foreach ($themes as $cur_theme) {
 			$sel_themes[$cur_theme] = $cur_theme;

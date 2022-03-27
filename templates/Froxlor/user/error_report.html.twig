@@ -1,0 +1,25 @@
+{% extends "Froxlor/userarea.html.twig" %}
+
+{% block heading %}
+	<div>
+		<h5 class="mb-1">
+			<i class="fa-solid fa-bug me-1"></i>
+			{{ lng('error.send_report_title') }}
+		</h5>
+	</div>
+{% endblock %}
+
+{% block content %}
+	<form action="{{ linker({'section':'index','page':'send_error_report','errorid':errorid}) }}" class="col-12 d-flex flex-column" method="post" enctype="application/x-www-form-urlencoded">
+		<div class="alert alert-primary" role="alert">{{ lng('error.send_report_desc')|raw }}</div>
+		<code class="border rounded bg-white p-2 mb-3">{{ mail_html|nl2br }}</code>
+
+		<div>
+			<input type="hidden" name="send" value="send"/>
+
+			<div class="col-12 text-end">
+				<button type="submit" class="btn btn-primary">{{ lng('error.send_report') }}</button>
+			</div>
+		</div>
+	</form>
+{% endblock %}
