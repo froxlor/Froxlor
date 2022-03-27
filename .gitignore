@@ -14,9 +14,9 @@ logs/*
 img/
 vendor/
 node_modules/
-
+fonts/
 templates/*
 !templates/Froxlor/
-!templates/Sparkle/
-templates/Sparkle/assets/css/custom.css
+templates/Froxlor/assets/css/
+templates/Froxlor/assets/js/
 !templates/misc/
