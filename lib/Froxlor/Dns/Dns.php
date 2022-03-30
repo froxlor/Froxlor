@@ -81,7 +81,7 @@ class Dns
 		if (! $isMainButSubTo) {
 			self::addRequiredEntry('@', 'NS', $required_entries);
 		}
-		if ($domain['isemaildomain'] === '1') {
+		if ($domain['isemaildomain'] === '1' or $domain['isemaildomain'] === 1) {
 			self::addRequiredEntry('@', 'MX', $required_entries);
 			if (Settings::Get('system.dns_createmailentry')) {
 				foreach (array(
