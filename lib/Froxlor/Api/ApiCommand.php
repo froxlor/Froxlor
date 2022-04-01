@@ -297,6 +297,10 @@ abstract class ApiCommand extends ApiParameter
 					$sortfield[$id] = $sfield;
 				}
 				$field = implode('.', $sortfield);
+				if (preg_match('/^([a-z0-9\-\._`]+)$/i', $field) == false) {
+					// skip
+					continue;
+				}
 				if (! $first) {
 					$condition .= ' AND ';
 				}
@@ -313,6 +317,14 @@ abstract class ApiCommand extends ApiParameter
 				} elseif (strtolower($valoper['op']) == 'in' && is_array($valoper['value']) && count($valoper['value']) > 0) {
 					$condition .= $field . ' ' . $valoper['op'] . ' (';
 					foreach ($valoper['value'] as $incnt => $invalue) {
+						if (!is_numeric($incnt)) {
+							// skip
+							continue;
+						}
+						if (!empty($invalue) && preg_match('/^([a-z0-9\-\._`]+)$/i', $invalue) == false) {
+							// skip
+							continue;
+						}
 						$condition .= ":" . $cleanfield . $incnt . ", ";
 						$query_fields[':' . $cleanfield . $incnt] = $invalue ?? '';
 					}
@@ -398,6 +410,10 @@ abstract class ApiCommand extends ApiParameter
 					$sortfield[$id] = $sfield;
 				}
 				$field = implode('.', $sortfield);
+				if (preg_match('/^([a-z0-9\-\._`]+)$/i', $field) == false) {
+					// skip
+					continue;
+				}
 				$by = strtoupper($by);
 				if (! in_array($by, [
 					'ASC',
@@ -422,6 +438,7 @@ abstract class ApiCommand extends ApiParameter
 
 		return $order;
 	}
+
 
 	/**
 	 * return logger instance
