@@ -1,4 +1,7 @@
 <?php
+
+define('DEV_FROXLOR', 1);
+
 if (file_exists('/etc/froxlor-test.pwd') && file_exists('/etc/froxlor-test.rpwd')) {
 	// froxlor jenkins test-system
 	$pwd = trim(file_get_contents('/etc/froxlor-test.pwd'));

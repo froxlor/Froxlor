@@ -1,4 +1,5 @@
 <?php
+
 use PHPUnit\Framework\TestCase;
 
 use Froxlor\Api\Commands\Froxlor;
@@ -19,6 +20,10 @@ class FroxlorTest extends TestCase
 		$json_result = Froxlor::getLocal($admin_userdata)->checkUpdate();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(0, $result['isnewerversion']);
-		$this->assertEquals("You already have the latest version of Froxlor installed.", $result['additional_info']);
+		if (defined('DEV_FROXLOR') && DEV_FROXLOR == 1) {
+			$this->assertEquals("You already have the latest testing version of Froxlor installed.", $result['additional_info']);
+		} else {
+			$this->assertEquals("You already have the latest version of Froxlor installed.", $result['additional_info']);
+		}
 	}
 }
