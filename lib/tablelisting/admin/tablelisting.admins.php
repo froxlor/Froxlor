@@ -27,6 +27,7 @@ return [
 	'admin_list' => [
 		'title' => $lng['admin']['admin'],
 		'icon' => 'fa-solid fa-user',
+		'self_overview' => ['section' => 'admins', 'page' => 'admins'],
 		'columns' => [
 			'adminid' => [
 				'label' => '#',

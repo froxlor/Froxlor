@@ -25,6 +25,7 @@ return [
 	'phpconf_list' => [
 		'title' => $lng['menue']['phpsettings']['maintitle'],
 		'icon' => 'fa-brands fa-php',
+		'self_overview' => ['section' => 'phpsettings', 'page' => 'overview'],
 		'columns' => [
 			'c.description' => [
 				'label' => $lng['admin']['phpsettings']['description'],

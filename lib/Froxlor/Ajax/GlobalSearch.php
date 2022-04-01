@@ -100,10 +100,10 @@ class GlobalSearch
 								'c.customernumber',
 								'c.custom_notes'
 							],
-							'result_key' => 'customerid',
+							'result_key' => 'loginname',
 							'result_format' => [
 								'title' => ['\\Froxlor\\User', 'getCorrectFullUserDetails'],
-								'href' => 'admin_customers.php?page=customers&action=edit&id='
+								'href' => 'admin_customers.php?page=customers&searchfield=c.loginname&searchtext='
 							]
 						],
 						// domains
@@ -114,11 +114,11 @@ class GlobalSearch
 								'd.domain_ace',
 								'd.documentroot'
 							],
-							'result_key' => 'id',
+							'result_key' => 'domain_ace',
 							'result_format' => [
 								'title' => ['self', 'getFieldFromResult'],
 								'title_args' => 'domain_ace',
-								'href' => 'admin_domains.php?page=domains&action=edit&id='
+								'href' => 'admin_domains.php?page=domains&searchfield=d.domain_ace&searchtext='
 							]
 						],
 						// ips and ports
@@ -129,12 +129,12 @@ class GlobalSearch
 								'vhostcontainer',
 								'specialsettings'
 							],
-							'result_key' => 'id',
+							'result_key' => 'ip',
 							'result_groupkey' => 'ip',
 							'result_format' => [
 								'title' => ['self', 'getFieldFromResult'],
 								'title_args' => 'ip',
-								'href' => 'admin_ipsandports.php?page=ipsandports&action=edit&id='
+								'href' => 'admin_ipsandports.php?page=ipsandports&searchfield=ip&searchtext='
 							]
 						],
 						// hosting-plans
@@ -163,7 +163,7 @@ class GlobalSearch
 							'result_format' => [
 								'title' => ['self', 'getFieldFromResult'],
 								'title_args' => 'description',
-								'href' => ((bool) $userinfo['change_serversettings'] ? 'admin_phpsettings.php?page=overview&action=edit&id=' : 'admin_phpsettings.php?page=overview&sid=')
+								'href' => 'admin_phpsettings.php?page=overview&searchfield=id&searchtext='
 							]
 						],
 						// FPM daemons
@@ -177,7 +177,7 @@ class GlobalSearch
 							'result_format' => [
 								'title' => ['self', 'getFieldFromResult'],
 								'title_args' => 'description',
-								'href' => ((bool) $userinfo['change_serversettings'] ? 'admin_phpsettings.php?page=fpmdaemons&action=edit&id=' : 'admin_phpsettings.php?page=fpmdaemons&sid=')
+								'href' => 'admin_phpsettings.php?page=fpmdaemons&searchfield=id&searchtext='
 							]
 						]
 					];
@@ -192,11 +192,11 @@ class GlobalSearch
 								'email',
 								'custom_notes'
 							],
-							'result_key' => 'adminid',
+							'result_key' => 'loginname',
 							'result_format' => [
 								'title' => ['self', 'getFieldFromResult'],
 								'title_args' => 'name',
-								'href' => 'admin_admins.php?page=admins&action=edit&id='
+								'href' => 'admin_admins.php?page=admins&searchfield=loginname&searchtext='
 							]
 						];
 					}
@@ -210,11 +210,11 @@ class GlobalSearch
 								'd.domain_ace',
 								'd.documentroot'
 							],
-							'result_key' => 'id',
+							'result_key' => 'domain_ace',
 							'result_format' => [
 								'title' => ['self', 'getFieldFromResult'],
 								'title_args' => 'domain_ace',
-								'href' => 'customer_domains.php?page=domains&action=edit&id='
+								'href' => 'customer_domains.php?page=domains&searchfield=d.domain_ace&searchtext='
 							]
 						],
 						// email addresses
@@ -224,11 +224,11 @@ class GlobalSearch
 								'm.email',
 								'm.email_full'
 							],
-							'result_key' => 'id',
+							'result_key' => 'email',
 							'result_format' => [
 								'title' => ['self', 'getFieldFromResult'],
 								'title_args' => 'email',
-								'href' => 'customer_email.php?page=emails&action=edit&id='
+								'href' => 'customer_email.php?page=emails&searchfield=m.email&searchtext='
 							]
 						],
 						// databases
@@ -238,11 +238,11 @@ class GlobalSearch
 								'databasename',
 								'description'
 							],
-							'result_key' => 'id',
+							'result_key' => 'databasename',
 							'result_format' => [
 								'title' => ['self', 'getFieldFromResult'],
 								'title_args' => 'databasename',
-								'href' => 'customer_mysql.php?page=mysqls&action=edit&id='
+								'href' => 'customer_mysql.php?page=mysqls&searchfield=databasename&searchtext='
 							]
 						],
 						// ftp user
@@ -252,11 +252,11 @@ class GlobalSearch
 								'username',
 								'description'
 							],
-							'result_key' => 'id',
+							'result_key' => 'username',
 							'result_format' => [
 								'title' => ['self', 'getFieldFromResult'],
 								'title_args' => 'username',
-								'href' => 'customer_ftp.php?page=ftps&action=edit&id='
+								'href' => 'customer_ftp.php?page=accounts&searchfield=username&searchtext='
 							]
 						]
 					];

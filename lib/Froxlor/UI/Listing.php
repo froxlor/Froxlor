@@ -24,7 +24,7 @@ class Listing
 {
 	public static function format(Collection $collection, array $tabellisting): array
 	{
-		$collection = $collection->get();
+		$collection_data = $collection->get();
 
 		return [
 			'title' => $tabellisting['title'],
@@ -32,10 +32,13 @@ class Listing
 			'icon' => $tabellisting['icon'] ?? null,
 			'table' => [
 				'th' => self::generateTableHeadings($tabellisting),
-				'tr' => self::generateTableRows($collection['data']['list'], $tabellisting),
+				'tr' => self::generateTableRows($collection_data['data']['list'], $tabellisting),
 			],
-			'pagination' => $collection['pagination'],
-			'empty_msg' => $tabellisting['empty_msg'] ?? null
+			'pagination' => $collection_data['pagination'],
+			'empty_msg' => $tabellisting['empty_msg'] ?? null,
+			'total_entries' => ($collection->getPagination() instanceof Pagination) ? $collection->getPagination()->getEntries() : 0,
+			'is_search' => ($collection->getPagination() instanceof Pagination) ? $collection->getPagination()->isSearchResult() : false,
+			'self_overview' => $tabellisting['self_overview'] ?? []
 		];
 	}
 

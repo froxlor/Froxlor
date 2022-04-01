@@ -27,6 +27,7 @@ return [
 		'title' => $lng['admin']['customers'],
 		'description' => 'Manage your customers',
 		'icon' => 'fa-solid fa-user',
+		'self_overview' => ['section' => 'customers', 'page' => 'customers'],
 		'columns' => [
 			'c.name' => [
 				'label' => $lng['customer']['name'],

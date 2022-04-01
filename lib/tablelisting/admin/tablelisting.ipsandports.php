@@ -24,6 +24,7 @@ return [
 	'ipsandports_list' => [
 		'title' => $lng['admin']['ipsandports']['ipsandports'],
 		'icon' => 'fa-solid fa-ethernet',
+		'self_overview' => ['section' => 'ipsandports', 'page' => 'ipsandports'],
 		'columns' => [
 			'ip' => [
 				'label' => $lng['admin']['ipsandports']['ip'],

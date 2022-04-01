@@ -24,6 +24,7 @@ return [
 	'mysql_list' => [
 		'title' => $lng['menue']['mysql']['databases'],
 		'icon' => 'fa-solid fa-database',
+		'self_overview' => ['section' => 'mysql', 'page' => 'mysqls'],
 		'columns' => [
 			'databasename' => [
 				'label' => $lng['mysql']['databasename'],

@@ -25,6 +25,7 @@ return [
 	'email_list' => [
 		'title' => $lng['menue']['email']['emails'],
 		'icon' => 'fa-solid fa-envelope',
+		'self_overview' => ['section' => 'email', 'page' => 'emails'],
 		'columns' => [
 			'm.email_full' => [
 				'label' => $lng['emails']['emailaddress'],

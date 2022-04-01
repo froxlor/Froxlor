@@ -109,17 +109,24 @@ class Collection
 	public function withPagination(array $columns): Collection
 	{
 		// Get only searchable columns
+		/*
 		$sortableColumns = [];
 		foreach ($columns as $key => $column) {
 			if (isset($column['sortable']) && $column['sortable']) {
 				$sortableColumns[$key] = $column;
 			}
 		}
+		*/
 
 		// Prepare pagination
-		$this->pagination = new Pagination($sortableColumns, $this->count(), (int) Settings::Get('panel.paging'));
+		$this->pagination = new Pagination($columns, $this->count(), (int) Settings::Get('panel.paging'));
 		$this->params = array_merge($this->params, $this->pagination->getApiCommandParams());
 
 		return $this;
+	}
+
+	public function getPagination(): ?Pagination
+	{
+		return $this->pagination;
 	}
 }

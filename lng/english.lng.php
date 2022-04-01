@@ -2160,3 +2160,4 @@ $lng['admin']['smtpsettings'] = 'SMTP settings';
 $lng['panel']['unspecified'] = 'unspecified';
 $lng['admin']['smtptestaddr'] = 'Send test-mail to';
 $lng['admin']['smtptestnote'] = 'Note that the values below reflect your current settings and can only be adjusted there (see link in top right corner)';
+$lng['panel']['backtooverview'] = 'Back to overview';

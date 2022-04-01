@@ -200,4 +200,9 @@ class Pagination
 			]
 		];
 	}
+
+	public function isSearchResult(): bool
+	{
+		return $this->is_search;
+	}
 }

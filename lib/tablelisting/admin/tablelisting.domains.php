@@ -26,6 +26,7 @@ return [
 		'title' => $lng['admin']['domains'],
 		'icon' => 'fa-solid fa-globe',
 		'empty_msg' => $lng['admin']['domain_nocustomeraddingavailable'],
+		'self_overview' => ['section' => 'domains', 'page' => 'domains'],
 		'columns' => [
 			'd.domain_ace' => [
 				'label' => $lng['domains']['domainname'],

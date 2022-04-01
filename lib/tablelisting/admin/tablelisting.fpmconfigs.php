@@ -24,7 +24,11 @@ return [
 	'fpmconf_list' => [
 		'title' => $lng['menue']['phpsettings']['fpmdaemons'],
 		'icon' => 'fa-brands fa-php',
+		'self_overview' => ['section' => 'phpsettings', 'page' => 'fpmdaemons'],
 		'columns' => [
+			'id' => [
+				'field' => 'id'
+			],
 			'description' => [
 				'label' => $lng['admin']['phpsettings']['description'],
 				'field' => 'description',

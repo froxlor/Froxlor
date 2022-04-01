@@ -23,7 +23,11 @@ return [
 	'domain_list' => [
 		'title' => $lng['admin']['domains'],
 		'icon' => 'fa-solid fa-globe',
+		'self_overview' => ['section' => 'domains', 'page' => 'domains'],
 		'columns' => [
+			'ad.id' => [
+				'field' => 'aliasdomainid'
+			],
 			'd.domain_ace' => [
 				'label' => $lng['domains']['domainname'],
 				'field' => 'domain_ace',
@@ -92,8 +96,8 @@ return [
 				'href' => [
 					'section' => 'domains',
 					'page' => 'domains',
-					'searchfield' => 'd.aliasdomain',
-					'searchtext' => ':domainaliasid'
+					'searchfield' => 'ad.id',
+					'searchtext' => ':id'
 				],
 				'visible' => [Domain::class, 'canEditAlias']
 			],

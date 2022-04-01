@@ -24,6 +24,7 @@ return [
 	'ftp_list' => [
 		'title' => $lng['menue']['ftp']['accounts'],
 		'icon' => 'fa-solid fa-users',
+		'self_overview' => ['section' => 'ftp', 'page' => 'accounts'],
 		'columns' => [
 			'username' => [
 				'label' => $lng['login']['username'],
