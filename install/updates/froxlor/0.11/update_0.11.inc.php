@@ -26,7 +26,7 @@ if (!defined('_CRON_UPDATE')) {
 
 // last 0.10.x release
 if (\Froxlor\Froxlor::isFroxlorVersion('0.10.99')) {
-	showUpdateStep("Updating from 0.10.99 to 0.11.0-rc1", false);
+	showUpdateStep("Updating from 0.10.99 to 0.11.0-dev", false);
 
 	showUpdateStep("Removing unused table");
 	Database::query("DROP TABLE IF EXISTS `panel_sessions`;");
@@ -64,5 +64,10 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.99')) {
 		} else {
 			lastStepStatus(1, 'manual commands needed', 'Please run the following commands manually:<br><pre>' . $del_list . '</pre>');
 		}
+	}
+
+	if (\Froxlor\Froxlor::isFroxlorVersion('0.10.99')) {
+		showUpdateStep("Updating from 0.10.99 to 0.11.0-dev", false);
+		\Froxlor\Froxlor::updateToVersion('0.11.0-dev');
 	}
 }
