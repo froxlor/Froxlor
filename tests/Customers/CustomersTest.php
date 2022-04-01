@@ -195,7 +195,7 @@ class CustomersTest extends TestCase
 		$this->assertEquals('team@froxlor.org', $result['email']);
 		$this->assertEquals(1337, $result['customernumber']);
 		$this->assertEquals(15, $result['subdomains']);
-		$this->assertEquals('Sparkle', $result['theme']);
+		$this->assertEquals('Froxlor', $result['theme']);
 		$this->assertEquals('', $result['custom_notes']);
 	}
 

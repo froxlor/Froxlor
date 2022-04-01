@@ -320,7 +320,7 @@ class AdminsTest extends TestCase
 			'def_language' => 'English'
 		))->update();
 		$result = json_decode($json_result, true)['data'];
-		$this->assertEquals('Sparkle', $result['theme']);
+		$this->assertEquals('Froxlor', $result['theme']);
 		$this->assertEquals('English', $result['def_language']);
 	}
 
