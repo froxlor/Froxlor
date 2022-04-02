@@ -28,5 +28,5 @@ try {
 	\Froxlor\Cli\SwitchServerIpCmd::processParameters($argc, $argv);
 } catch (Exception $e) {
 	\Froxlor\Cli\SwitchServerIpCmd::printerr($e->getMessage());
-	exit 1;
+	exit(1);
 }
