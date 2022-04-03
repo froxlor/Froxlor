@@ -88,7 +88,11 @@ class GlobalSearch
 
 				if (preg_match('/^([a-z]+):$/', $searchtext, $matches)) {
 					$module = $matches[1];
-					continue;
+					if ($matches[1] == 'settings') {
+						break;
+					} else {
+						continue;
+					}
 				}
 
 				// admin
