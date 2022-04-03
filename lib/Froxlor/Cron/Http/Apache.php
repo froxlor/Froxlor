@@ -772,21 +772,29 @@ class Apache extends HttpConfigBase
 			$logtype = 'vhost_combined';
 		}
 
-		if (Settings::Get('system.logfiles_piped') == '1' && Settings::Get('system.logfiles_script') != '') {
-			// replace for error_log
-			$command = \Froxlor\PhpHelper::replaceVariables(Settings::Get('system.logfiles_script'), array(
-				'LOGFILE' => $error_log,
-				'DOMAIN' => $domain['domain'],
-				'CUSTOMER' => $domain['loginname']
-			));
-			$logfiles_text .= '  ErrorLog "|' . $command . "\"\n";
-			// replace for access_log
-			$command = \Froxlor\PhpHelper::replaceVariables(Settings::Get('system.logfiles_script'), array(
-				'LOGFILE' => $access_log,
-				'DOMAIN' => $domain['domain'],
-				'CUSTOMER' => $domain['loginname']
-			));
-			$logfiles_text .= '  CustomLog "|' . $command . '" ' . $logtype . "\n";
+		if (Settings::Get('system.logfiles_piped') == '1' && Settings::Get('system.logfiles_script') != ''z) {
+			if ($domain['writeerrorlog']) {
+				// replace for error_log
+				$command = \Froxlor\PhpHelper::replaceVariables(Settings::Get('system.logfiles_script'), array(
+					'LOGFILE' => $error_log,
+					'DOMAIN' => $domain['domain'],
+					'CUSTOMER' => $domain['loginname']
+				));
+				$logfiles_text .= '  ErrorLog "|' . $command . "\"\n";
+			} else {
+				$logfiles_text .= '  ErrorLog "' . $error_log . '"' . "\n";
+			}
+			if ($domain['writeaccesslog']) {
+				// replace for access_log
+				$command = \Froxlor\PhpHelper::replaceVariables(Settings::Get('system.logfiles_script'), array(
+					'LOGFILE' => $access_log,
+					'DOMAIN' => $domain['domain'],
+					'CUSTOMER' => $domain['loginname']
+				));
+				$logfiles_text .= '  CustomLog "|' . $command . '" ' . $logtype . "\n";
+			} else {
+				$logfiles_text .= '  CustomLog "' . $access_log . '" ' . $logtype . "\n";
+			}
 		} else {
 			$logfiles_text .= '  ErrorLog "' . $error_log . '"' . "\n";
 			$logfiles_text .= '  CustomLog "' . $access_log . '" ' . $logtype . "\n";
