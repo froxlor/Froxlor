@@ -32,36 +32,39 @@ class GlobalSearch
 			$stparts = explode(" ", $searchtext);
 			foreach ($stparts as $searchtext) {
 				$searchtext = trim($searchtext);
-
-				// settings (if allowed)
-				if (isset($userinfo['adminsession']) && $userinfo['adminsession'] == 1 && $userinfo['change_serversettings'] == 1) {
-
-					$settings_data = PhpHelper::loadConfigArrayDir(Froxlor::getInstallDir() . '/actions/admin/settings/');
-					$results = array();
-					if (!isset($processed['settings'])) {
-						$processed['settings'] = [];
+				if (preg_match('/^([a-z]+):$/', $searchtext, $matches)) {
+					// only search settings if specific search is 'settings', else skip
+					if ($matches[1] == 'settings') {
+						continue;
+					} else {
+						break;
 					}
-					PhpHelper::recursive_array_search($searchtext, $settings_data, $results);
-					foreach ($results as $pathkey) {
-						$pk = explode(".", $pathkey);
-						if (count($pk) > 4) {
-							$settingkey = $pk[0] . '.' . $pk[1] . '.' . $pk[2] . '.' . $pk[3];
-							if (is_array($processed['settings']) && !array_key_exists($settingkey, $processed['settings'])) {
-								$processed['settings'][$settingkey] = true;
-								$sresult = $settings_data[$pk[0]][$pk[1]][$pk[2]][$pk[3]];
-								if ($sresult['type'] != 'hidden') {
-									if (!isset($result['settings'])) {
-										$result['settings'] = [];
-									}
-									$result['settings'][] = [
-										'title' => (is_array($sresult['label']) ? $sresult['label']['title'] : $sresult['label']),
-										'href' => 'admin_settings.php?page=overview&part=' . $pk[1] . '&em=' . $pk[3]
-									];
-								} // not hidden
-							} // if not processed
-						} // correct settingkey
-					} // foreach
-				} // admin + change_serversetting
+				}
+				$settings_data = PhpHelper::loadConfigArrayDir(Froxlor::getInstallDir() . '/actions/admin/settings/');
+				$results = array();
+				if (!isset($processed['settings'])) {
+					$processed['settings'] = [];
+				}
+				PhpHelper::recursive_array_search($searchtext, $settings_data, $results);
+				foreach ($results as $pathkey) {
+					$pk = explode(".", $pathkey);
+					if (count($pk) > 4) {
+						$settingkey = $pk[0] . '.' . $pk[1] . '.' . $pk[2] . '.' . $pk[3];
+						if (is_array($processed['settings']) && !array_key_exists($settingkey, $processed['settings'])) {
+							$processed['settings'][$settingkey] = true;
+							$sresult = $settings_data[$pk[0]][$pk[1]][$pk[2]][$pk[3]];
+							if ($sresult['type'] != 'hidden') {
+								if (!isset($result['settings'])) {
+									$result['settings'] = [];
+								}
+								$result['settings'][] = [
+									'title' => (is_array($sresult['label']) ? $sresult['label']['title'] : $sresult['label']),
+									'href' => 'admin_settings.php?page=overview&part=' . $pk[1] . '&em=' . $pk[3]
+								];
+							} // not hidden
+						} // if not processed
+					} // correct settingkey
+				} // foreach
 			} // foreach
 		} // searchtext min 3 chars
 		return $result;

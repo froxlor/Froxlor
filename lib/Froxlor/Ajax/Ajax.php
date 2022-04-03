@@ -223,7 +223,10 @@ class Ajax
 		$result = [];
 
 		// settings
-		$result_settings = GlobalSearch::searchSettings($searchtext, $this->userinfo);
+		$result_settings = [];
+		if (isset($this->userinfo['adminsession']) && $this->userinfo['adminsession'] == 1 && $this->userinfo['change_serversettings'] == 1) {
+			$result_settings = GlobalSearch::searchSettings($searchtext, $this->userinfo);
+		}
 
 		// all searchable entities
 		$result_entities = GlobalSearch::searchGlobal($searchtext, $this->userinfo);
