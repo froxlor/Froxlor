@@ -772,7 +772,7 @@ class Apache extends HttpConfigBase
 			$logtype = 'vhost_combined';
 		}
 
-		if (Settings::Get('system.logfiles_piped') == '1' && Settings::Get('system.logfiles_script') != ''z) {
+		if (Settings::Get('system.logfiles_piped') == '1' && Settings::Get('system.logfiles_script') != '') {
 			if ($domain['writeerrorlog']) {
 				// replace for error_log
 				$command = \Froxlor\PhpHelper::replaceVariables(Settings::Get('system.logfiles_script'), array(
