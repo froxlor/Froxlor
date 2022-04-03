@@ -50,5 +50,4 @@ const TABLE_DOMAIN_DNS = 'domain_dns_entries';
 const TABLE_PANEL_FPMDAEMONS = 'panel_fpmdaemons';
 const TABLE_PANEL_PLANS = 'panel_plans';
 const TABLE_API_KEYS = 'api_keys';
-
-require dirname(__FILE__) . '/version.inc.php';
+const TABLE_PANEL_USERCOLUMNS = 'panel_usercolumns';

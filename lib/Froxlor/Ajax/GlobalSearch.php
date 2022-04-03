@@ -77,9 +77,16 @@ class GlobalSearch
 			$processed = [];
 
 			$stparts = explode(" ", $searchtext);
+			$module = "";
 
 			foreach ($stparts as $searchtext) {
+
 				$searchtext = trim($searchtext);
+
+				if (preg_match('/^([a-z]+):$/', $searchtext, $matches)) {
+					$module = $matches[1];
+					continue;
+				}
 
 				// admin
 				if (isset($userinfo['adminsession']) && $userinfo['adminsession'] == 1) {
@@ -260,6 +267,12 @@ class GlobalSearch
 							]
 						]
 					];
+				}
+
+				// module specific search
+				if (!empty($module)) {
+					$modSearch = $toSearch[$module] ?? [];
+					$toSearch = [$module => $modSearch];
 				}
 
 				foreach ($toSearch as $entity => $edata) {

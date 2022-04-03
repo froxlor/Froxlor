@@ -25,7 +25,7 @@ use Froxlor\Http\HttpClient;
 use Froxlor\UI\Panel\UI;
 
 // define update-uri
-define('UPDATE_URI', "https://version.froxlor.org/Froxlor/api/" . $version);
+define('UPDATE_URI', "https://version.froxlor.org/Froxlor/api/" . \Froxlor\Froxlor::VERSION);
 define('RELEASE_URI', "https://autoupdate.froxlor.org/froxlor-{version}.zip");
 define('CHECKSUM_URI', "https://autoupdate.froxlor.org/froxlor-{version}.zip.sha256");
 
@@ -66,7 +66,7 @@ if ($page == 'overview') {
 
 		// add the branding so debian guys are not gettings confused
 		// about their version-number
-		$version_label = $_version . $branding;
+		$version_label = $_version . \Froxlor\Froxlor::BRANDING;
 		$version_link = $_link;
 		$message_addinfo = $_message;
 
@@ -78,7 +78,7 @@ if ($page == 'overview') {
 				'page' => 'error',
 				'errno' => 3
 			));
-		} elseif (\Froxlor\Froxlor::versionCompare2($version, $_version) == -1) {
+		} elseif (\Froxlor\Froxlor::versionCompare2(\Froxlor\Froxlor::VERSION, $_version) == -1) {
 			// there is a newer version - yay
 			$isnewerversion = 1;
 		} else {
@@ -89,7 +89,7 @@ if ($page == 'overview') {
 		// anzeige über version-status mit ggfls. formular
 		// zum update schritt #1 -> download
 		if ($isnewerversion == 1) {
-			$text = 'There is a newer version available. Update to version <b>' . $_version . '</b> now?<br/>(Your current version is: ' . $version . ')';
+			$text = 'There is a newer version available. Update to version <b>' . $_version . '</b> now?<br/>(Your current version is: ' . \Froxlor\Froxlor::VERSION . ')';
 
 			$upd_formfield = [
 				'updates' => [

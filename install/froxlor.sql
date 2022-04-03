@@ -1053,3 +1053,13 @@ CREATE TABLE `api_keys` (
   KEY customerid (customerid)
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
+DROP TABLE IF EXISTS `panel_usercolumns`;
+CREATE TABLE `panel_usercolumns` (
+  `adminid` int(11) NOT NULL default '0',
+  `customerid` int(11) NOT NULL default '0',
+  `section` varchar(500) NOT NULL default '',
+  `columns` text NOT NULL,
+  UNIQUE KEY `user_section` (`adminid`, `customerid`, `section`),
+  KEY adminid (adminid),
+  KEY customerid (customerid)
+) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;

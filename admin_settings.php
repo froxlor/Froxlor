@@ -273,7 +273,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 		} catch (Exception $e) {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
-		header('Content-disposition: attachment; filename=Froxlor_settings-' . $version . '-' . $dbversion . '_' . date('d.m.Y') . '.json');
+		header('Content-disposition: attachment; filename=Froxlor_settings-' . \Froxlor\Froxlor::VERSION . '-' . \Froxlor\Froxlor::DBVERSION . '_' . date('d.m.Y') . '.json');
 		header('Content-type: application/json');
 		echo $json_export;
 		exit();

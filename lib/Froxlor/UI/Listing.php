@@ -2,8 +2,10 @@
 
 namespace Froxlor\UI;
 
+use Froxlor\Database\Database;
 use Froxlor\UI\Panel\UI;
-use Exception;
+use InvalidArgumentException;
+use Froxlor\CurrentUser;
 
 /**
  * This file is part of the Froxlor project.
@@ -38,7 +40,8 @@ class Listing
 			'empty_msg' => $tabellisting['empty_msg'] ?? null,
 			'total_entries' => ($collection->getPagination() instanceof Pagination) ? $collection->getPagination()->getEntries() : 0,
 			'is_search' => ($collection->getPagination() instanceof Pagination) ? $collection->getPagination()->isSearchResult() : false,
-			'self_overview' => $tabellisting['self_overview'] ?? []
+			'self_overview' => $tabellisting['self_overview'] ?? [],
+			'available_columns' => self::getAvailableColumnsForListing($tabellisting)
 		];
 	}
 
@@ -110,7 +113,7 @@ class Listing
 				} elseif ($field) {
 					$rows[$row]['td'][$col]['data'] = $data;
 				} else {
-					throw new Exception('The visible column "' . $visible_column . '" has neither a "callback" nor a "field" set.');
+					throw new InvalidArgumentException('The visible column "' . $visible_column . '" has neither a "callback" nor a "field" set.');
 				}
 
 				// Set class for table-row if defined
@@ -173,12 +176,75 @@ class Listing
 		return $actions;
 	}
 
+	private static function getAvailableColumnsForListing(array $tabellisting): array
+	{
+		$result = [];
+		if (isset($tabellisting['columns'])) {
+			foreach ($tabellisting['columns'] as $column => $coldata) {
+				$result[$column] = $coldata['label'];
+			}
+		}
+		return $result;
+	}
+
+	/**
+	 * store column listing selection of user to database
+	 * the selection array should look like this:
+	 * [
+	 *     'section_name' => [
+	 *         'column_name',
+	 *         'column_name',
+	 *         'column_name'
+	 *     ]
+	 * ]
+	 *
+	 * @param array $tablelisting
+	 *
+	 * @return bool
+	 */
+	public static function storeColumnListingForUser(array $tabellisting): bool
+	{
+		$section = array_key_first($tabellisting);
+		if (empty($section) || !is_array($tabellisting[$section]) || empty($tabellisting[$section])) {
+			throw new InvalidArgumentException("Invalid selection array for " . __METHOD__);
+		}
+		$userid = 'customerid';
+		if (CurrentUser::isAdmin()) {
+			$userid = 'adminid';
+		}
+		// delete possible existing entry
+		$del_stmt = Database::prepare("
+			DELETE FROM `" . TABLE_PANEL_USERCOLUMNS . "` WHERE `" . $userid . "` = :uid AND `section` = :section
+		");
+		Database::pexecute($del_stmt, ['uid' => CurrentUser::getData($userid), 'section' => $section]);
+		// add new entry
+		$ins_stmt = Database::prepare("
+			INSERT INTO `" . TABLE_PANEL_USERCOLUMNS . "` SET
+			`" . $userid . "` = :uid,
+			`section` = :section,
+			`columns` = :cols
+		");
+		Database::pexecute($ins_stmt, [
+			'uid' => CurrentUser::getData($userid),
+			'section' => $section,
+			'cols' => json_encode($tabellisting[$section])
+		]);
+		return true;
+	}
+
 	public static function getVisibleColumnsForListing(string $listing, array $default_columns): array
 	{
-		// Here would come the logic that pulls this from the DB ...
-		// alternatively, it takes the $default_columns if no entry is
-		// defined in the DB
-
+		$userid = 'customerid';
+		if (CurrentUser::isAdmin()) {
+			$userid = 'adminid';
+		}
+		$sel_stmt = Database::prepare("
+			SELECT `columns` FROM `" . TABLE_PANEL_USERCOLUMNS . "` WHERE `" . $userid . "` = :uid AND `section` = :section
+		");
+		$columns_json = Database::pexecute_first($sel_stmt, ['uid' => CurrentUser::getData($userid), 'section' => $listing]);
+		if ($columns_json && isset($columns_json['columns'])) {
+			return json_decode($columns_json['columns'], true);
+		}
 		return $default_columns;
 	}
 

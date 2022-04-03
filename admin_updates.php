@@ -80,11 +80,11 @@ if ($page == 'overview') {
 		if (empty($current_db_version)) {
 			$current_db_version = "0";
 		}
-		$new_version = $version;
-		$new_db_version = $dbversion;
+		$new_version = \Froxlor\Froxlor::VERSION;
+		$new_db_version = \Froxlor\Froxlor::DBVERSION;
 
 		$ui_text = $lng['update']['update_information']['part_a'];
-		if ($version != $current_version) {
+		if (\Froxlor\Froxlor::VERSION != $current_version) {
 			$ui_text = str_replace('%curversion', $current_version, $ui_text);
 			$ui_text = str_replace('%newversion', $new_version, $ui_text);
 		} else {

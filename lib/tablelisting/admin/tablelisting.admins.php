@@ -30,7 +30,7 @@ return [
 		'self_overview' => ['section' => 'admins', 'page' => 'admins'],
 		'columns' => [
 			'adminid' => [
-				'label' => '#',
+				'label' => 'ID',
 				'field' => 'adminid',
 				'sortable' => true,
 			],
