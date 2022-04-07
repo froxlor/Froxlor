@@ -1600,7 +1600,7 @@ root:               root@<SERVERNAME>
 # is /etc/mailname.
 #myorigin = /etc/mailname
 
-smtpd_banner = $myhostname ESMTP $mail_name (@@DISTRO@@)
+smtpd_banner = $myhostname ESMTP $mail_name (Ubuntu)
 biff = no
 
 # appending .domain is the MUA's job.

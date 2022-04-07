@@ -28,4 +28,5 @@ try {
 	\Froxlor\Cli\PhpSessioncleanCmd::processParameters($argc, $argv);
 } catch (Exception $e) {
 	\Froxlor\Cli\PhpSessioncleanCmd::printerr($e->getMessage());
+	exit(1);
 }

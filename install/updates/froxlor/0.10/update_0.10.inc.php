@@ -971,6 +971,11 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.32')) {
 	\Froxlor\Froxlor::updateToVersion('0.10.33');
 }
 
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.33')) {
+	showUpdateStep("Updating from 0.10.33 to 0.10.34", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.34');
+}
+
 if (true) { // replace with isFroxlorVersion on merge
 	//showUpdateStep("Add setting for switchable dkim implementation", true);
 	Settings::AddNew("dkim.dkim_service_implementation", 'DkimFilter');
@@ -989,4 +994,3 @@ if (true) { // replace with isFroxlorVersion on merge
 	//lastStepStatus(0);
 	// Don't forget on merge: \Froxlor\Froxlor::updateToDbVersion();
 }
-

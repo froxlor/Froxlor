@@ -182,7 +182,7 @@ class ConfigParser
 	}
 
 	/**
-	 * Parse the XML and populate $this->services
+	 * Parse the XML and populate $this->defaults
 	 *
 	 * @return bool
 	 */
@@ -194,9 +194,9 @@ class ConfigParser
 		}
 
 		// Get all defaults
-		$defaults = $this->xml->xpath('//defaults');
+		$defaults = $this->xml->xpath('//defaults/default');
 		foreach ($defaults as $default) {
-			$this->defaults = $default;
+			$this->defaults[] = $default;
 		}
 
 		// Switch flag to indicate we parsed our data
