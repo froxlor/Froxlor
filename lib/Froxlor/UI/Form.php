@@ -12,6 +12,10 @@ class Form
 
 		if (\Froxlor\Validate\Form::validateFormDefinition($form)) {
 			foreach ($form['groups'] as $groupname => $groupdetails) {
+				// check for advanced mode sections
+				if (isset($groupdetails['advanced_mode']) && $groupdetails['advanced_mode'] && (int) Settings::Get('panel.settings_mode') == 0) {
+					continue;
+				}
 				// show overview
 				if ($part == '' || $part == 'all') {
 					if (isset($groupdetails['title']) && $groupdetails['title'] != '') {
@@ -48,6 +52,10 @@ class Form
 					if (\Froxlor\Validate\Form::validateFieldDefinition($groupdetails)) {
 						// Collect form field output
 						foreach ($groupdetails['fields'] as $fieldname => $fielddetails) {
+							// check for advanced mode sections
+							if (isset($fielddetails['advanced_mode']) && $fielddetails['advanced_mode'] && (int) Settings::Get('panel.settings_mode') == 0) {
+								continue;
+							}
 							$fields[$fieldname] = self::getFormFieldOutput($fieldname, $fielddetails);
 							$fields[$fieldname] = array_merge($fields[$fieldname], self::prefetchFormFieldData($fieldname, $fielddetails));
 						}

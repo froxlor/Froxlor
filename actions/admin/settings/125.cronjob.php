@@ -19,6 +19,7 @@ return array(
 		'crond' => array(
 			'title' => $lng['admin']['cronsettings'],
 			'icon' => 'fa-solid fa-clock-rotate-left',
+			'advanced_mode' => true,
 			'fields' => array(
 				'system_cronconfig' => array(
 					'label' => $lng['serversettings']['system_cronconfig'],

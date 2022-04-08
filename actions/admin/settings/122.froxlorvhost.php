@@ -39,7 +39,8 @@ return array(
 					'string_regexp' => '/^(([a-z0-9\-\._]+, ?)*[a-z0-9\-\._]+)?$/i',
 					'string_emptyallowed' => true,
 					'default' => '',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				/**
 				 * SSL / Let's Encrypt
@@ -75,12 +76,13 @@ return array(
 					'type' => 'number',
 					'min' => 0,
 					'max' => 94608000, // 3-years
-					'default' => 0,
+					'default' => 10368000,
 					'save_method' => 'storeSettingField',
 					'visible' => \Froxlor\Settings::Get('system.use_ssl') && call_user_func(array(
 						'\Froxlor\Settings\FroxlorVhostSettings',
 						'hasVhostContainerEnabled'
-					), true)
+					), true),
+					'advanced_mode' => true
 				),
 				'system_hsts_incsub' => array(
 					'label' => $lng['admin']['domain_hsts_incsub'],
@@ -92,7 +94,8 @@ return array(
 					'visible' => \Froxlor\Settings::Get('system.use_ssl') && call_user_func(array(
 						'\Froxlor\Settings\FroxlorVhostSettings',
 						'hasVhostContainerEnabled'
-					), true)
+					), true),
+					'advanced_mode' => true
 				),
 				'system_hsts_preload' => array(
 					'label' => $lng['admin']['domain_hsts_preload'],
@@ -104,7 +107,8 @@ return array(
 					'visible' => \Froxlor\Settings::Get('system.use_ssl') && call_user_func(array(
 						'\Froxlor\Settings\FroxlorVhostSettings',
 						'hasVhostContainerEnabled'
-					), true)
+					), true),
+					'advanced_mode' => true
 				),
 				'system_honorcipherorder' => array(
 					'label' => $lng['admin']['domain_honorcipherorder'],
@@ -116,7 +120,8 @@ return array(
 					'visible' => \Froxlor\Settings::Get('system.use_ssl') && call_user_func(array(
 						'\Froxlor\Settings\FroxlorVhostSettings',
 						'hasVhostContainerEnabled'
-					), true)
+					), true),
+					'advanced_mode' => true
 				),
 				'system_sessiontickets' => array(
 					'label' => $lng['admin']['domain_sessiontickets'],
@@ -128,7 +133,8 @@ return array(
 					'visible' => \Froxlor\Settings::Get('system.use_ssl') && call_user_func(array(
 						'\Froxlor\Settings\FroxlorVhostSettings',
 						'hasVhostContainerEnabled'
-					), true)
+					), true),
+					'advanced_mode' => true
 				),
 				/**
 				 * FCGID

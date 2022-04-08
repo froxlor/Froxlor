@@ -36,7 +36,8 @@ return array(
 					'varname' => 'mailpwcleartext',
 					'type' => 'checkbox',
 					'default' => false,
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'system_passwordcryptfunc' => array(
 					'label' => $lng['serversettings']['passwordcryptfunc'],
@@ -48,7 +49,8 @@ return array(
 						'\\Froxlor\\System\\Crypt',
 						'getAvailablePasswordHashes'
 					),
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'system_allow_error_report_admin' => array(
 					'label' => $lng['serversettings']['allow_error_report_admin'],
@@ -72,7 +74,8 @@ return array(
 					'varname' => 'allow_customer_shell',
 					'type' => 'checkbox',
 					'default' => false,
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'system_available_shells' => array(
 					'label' => $lng['serversettings']['available_shells'],
@@ -81,7 +84,8 @@ return array(
 					'type' => 'text',
 					'string_emptyallowed' => true,
 					'default' => '',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'system_froxlorusergroup' => array(
 					'label' => $lng['serversettings']['froxlorusergroup'],
@@ -94,7 +98,8 @@ return array(
 						'\\Froxlor\\Validate\\Check',
 						'checkLocalGroup'
 					),
-					'visible' => \Froxlor\Settings::Get('system.nssextrausers')
+					'visible' => \Froxlor\Settings::Get('system.nssextrausers'),
+					'advanced_mode' => true
 				),
 			)
 		)

@@ -68,7 +68,8 @@ return array(
 					'string_delimiter' => ':',
 					'string_emptyallowed' => true,
 					'default' => '/usr/share/php/:/usr/share/php5/',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'system_mod_fcgid_wrapper' => array(
 					'label' => $lng['serversettings']['mod_fcgid']['wrapper'],
@@ -83,7 +84,8 @@ return array(
 					'save_method' => 'storeSettingField',
 					'websrv_avail' => array(
 						'apache2'
-					)
+					),
+					'advanced_mode' => true
 				),
 				'system_mod_fcgid_starter' => array(
 					'label' => $lng['serversettings']['mod_fcgid']['starter'],
@@ -92,7 +94,8 @@ return array(
 					'type' => 'number',
 					'min' => 0,
 					'default' => 0,
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'system_mod_fcgid_maxrequests' => array(
 					'label' => $lng['serversettings']['mod_fcgid']['maxrequests'],
@@ -100,7 +103,8 @@ return array(
 					'varname' => 'mod_fcgid_maxrequests',
 					'type' => 'number',
 					'default' => 250,
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'system_mod_fcgid_defaultini' => array(
 					'label' => $lng['serversettings']['mod_fcgid']['defaultini'],
@@ -119,7 +123,8 @@ return array(
 					'varname' => 'mod_fcgid_idle_timeout',
 					'type' => 'number',
 					'default' => 30,
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				)
 			)
 		)

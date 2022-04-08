@@ -4,6 +4,7 @@ namespace Froxlor\Ajax;
 
 use Froxlor\Froxlor;
 use Froxlor\PhpHelper;
+use Froxlor\Settings;
 use Froxlor\UI\Collection;
 
 /**
@@ -50,9 +51,15 @@ class GlobalSearch
 					$pk = explode(".", $pathkey);
 					if (count($pk) > 4) {
 						$settingkey = $pk[0] . '.' . $pk[1] . '.' . $pk[2] . '.' . $pk[3];
+						if (isset($settings_data[$pk[0]][$pk[1]]['advanced_mode']) && $settings_data[$pk[0]][$pk[1]]['advanced_mode'] && (int) Settings::Get('panel.settings_mode') == 0) {
+							continue;
+						}
 						if (is_array($processed['settings']) && !array_key_exists($settingkey, $processed['settings'])) {
 							$processed['settings'][$settingkey] = true;
 							$sresult = $settings_data[$pk[0]][$pk[1]][$pk[2]][$pk[3]];
+							if (isset($sresult['advanced_mode']) && $sresult['advanced_mode'] && (int) Settings::Get('panel.settings_mode') == 0) {
+								continue;
+							}
 							if ($sresult['type'] != 'hidden') {
 								if (!isset($result['settings'])) {
 									$result['settings'] = [];
