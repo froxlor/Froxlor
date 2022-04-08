@@ -1,5 +1,16 @@
 {% extends "Froxlor/settings/index.html.twig" %}
 
+{% block actions %}
+	<a class="btn btn-outline-primary" href="{{ linker({'section':'settings','page':'overview','part':'all'}) }}">
+		<i class="fa-solid fa-grip me-1"></i>
+		{{ lng('admin.configfiles.overview') }}
+	</a>
+	<a class="btn btn-outline-secondary" href="{{ linker({'section':'settings','page':'importexport'}) }}">
+		<i class="fa-solid fa-file-import me-1"></i>
+		{{ lng('admin.configfiles.importexport') }}
+	</a>
+{% endblock %}
+
 {% block settings %}
 
 	{% import "Froxlor/form/formfields.html.twig" as formfields %}

@@ -396,4 +396,10 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 		'type' => $note_type,
 		'alert_msg' => $note_msg
 	]);
+} elseif ($page == 'toggleSettingsMode') {
+	if ($userinfo['change_serversettings'] == '1') {
+		$cmode = Settings::Get('panel.settings_mode');
+		Settings::Set('panel.settings_mode', (int)(!(bool)$cmode));
+	}
+	\Froxlor\UI\Response::redirectTo($filename);
 }

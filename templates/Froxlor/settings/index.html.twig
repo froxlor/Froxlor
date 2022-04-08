@@ -11,9 +11,14 @@
 {% endblock %}
 
 {% block actions %}
-	<a class="btn btn-outline-primary" href="{{ linker({'section':'settings','page':'overview','part':'all'}) }}">
-		<i class="fa-solid fa-grip me-1"></i>
-		{{ lng('admin.configfiles.overview') }}
+	<a class="btn btn-outline-secondary" href="{{ linker({'section':'settings','page':'toggleSettingsMode'}) }}" title="{{ lng('panel.settingsmodetoggle') }}">
+		{% if get_setting('panel.settings_mode') == 0 %}
+		<i class="fa-solid fa-maximize me-1"></i>
+		{{ lng('panel.settingsmode') }}: {{ lng('panel.settingsmodebasic') }}
+		{% else %}
+		<i class="fa-solid fa-minimize me-1"></i>
+		{{ lng('panel.settingsmode') }}: {{ lng('panel.settingsmodeadvanced') }}
+		{% endif %}
 	</a>
 	<a class="btn btn-outline-secondary" href="{{ linker({'section':'settings','page':'importexport'}) }}">
 		<i class="fa-solid fa-file-import me-1"></i>

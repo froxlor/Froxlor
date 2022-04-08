@@ -17,8 +17,8 @@
 
 use Froxlor\Database\Database;
 use Froxlor\Settings;
-use PHPMailer\PHPMailer;
 use Froxlor\UI\Panel\UI;
+use PHPMailer\PHPMailer\PHPMailer;
 
 /**
  * checks if the new-version has some updating to do
@@ -32,7 +32,7 @@ use Froxlor\UI\Panel\UI;
  *        	
  * @return void
  */
-function parseAndOutputPreconfig(&$has_preconfig, &$return, $current_version, $current_db_version)
+function parseAndOutputPreconfig09(&$has_preconfig, &$return, $current_version, $current_db_version)
 {
 	global $lng;
 

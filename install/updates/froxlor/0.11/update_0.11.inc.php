@@ -56,9 +56,10 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.99')) {
 	showUpdateStep("Cleaning up old files");
 	$to_clean = array(
 		"templates/Sparkle",
+		"lib/version.inc.php"
 	);
 	$disabled = explode(',', ini_get('disable_functions'));
-	$exec_allowed = ! in_array('exec', $disabled);
+	$exec_allowed = !in_array('exec', $disabled);
 	$del_list = "";
 	foreach ($to_clean as $filedir) {
 		$complete_filedir = \Froxlor\Froxlor::getInstallDir() . $filedir;
@@ -80,6 +81,11 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.99')) {
 			lastStepStatus(1, 'manual commands needed', 'Please run the following commands manually:<br><pre>' . $del_list . '</pre>');
 		}
 	}
+
+	showUpdateStep("Adding new settings");
+	$panel_settings_mode = isset($_POST['panel_settings_mode']) ? (int) $_POST['panel_settings_mode'] : 0;
+	Settings::AddNew("panel.settings_mode", $panel_settings_mode);
+	lastStepStatus(0);
 
 	if (\Froxlor\Froxlor::isFroxlorVersion('0.10.99')) {
 		showUpdateStep("Updating from 0.10.99 to 0.11.0-dev1", false);

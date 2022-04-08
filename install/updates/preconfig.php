@@ -35,20 +35,30 @@ function getPreConfig($current_version, $current_db_version): array
 		'title' => '0.9.x updates',
 		'fields' => []
 	];
-	parseAndOutputPreconfig($has_preconfig, $return['section_09']['fields'], $current_version, $current_db_version);
+	parseAndOutputPreconfig09($has_preconfig, $return['section_09']['fields'], $current_version, $current_db_version);
 
 	include_once \Froxlor\FileDir::makeCorrectFile(dirname(__FILE__) . '/preconfig/0.10/preconfig_0.10.inc.php');
 	$return['section_010'] = [
 		'title' => '0.10.x updates',
 		'fields' => []
 	];
-	parseAndOutputPreconfig2($has_preconfig, $return['section_010']['fields'], $current_version, $current_db_version);
+	parseAndOutputPreconfig010($has_preconfig, $return['section_010']['fields'], $current_version, $current_db_version);
+
+	include_once \Froxlor\FileDir::makeCorrectFile(dirname(__FILE__) . '/preconfig/0.11/preconfig_0.11.inc.php');
+	$return['section_011'] = [
+		'title' => '0.11.x updates',
+		'fields' => []
+	];
+	parseAndOutputPreconfig011($has_preconfig, $return['section_011']['fields'], $current_version, $current_db_version);
 
 	if (empty($return['section_09']['fields'])) {
 		unset($return['section_09']);
 	}
 	if (empty($return['section_010']['fields'])) {
 		unset($return['section_010']);
+	}
+	if (empty($return['section_011']['fields'])) {
+		unset($return['section_011']);
 	}
 
 	if (!empty($return)) {
