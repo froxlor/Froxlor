@@ -2085,4 +2085,33 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 		}
 		return $ipandports;
 	}
+
+	/**
+	 * return dkim selectors for domain entry by either id or domainname
+	 *
+	 * @param int $id
+	 *        	optional, the domain-id
+	 * @param string $domainname
+	 *        	optional, the domainname
+	 *
+	 * @access admin
+	 * @throws \Exception
+	 * @return string json-encoded array
+	 */
+	public function getDKIMSelectors()
+	{
+		$id = $this->getParam('id', true, 0);
+		$dn_optional = ($id <= 0 ? false : true);
+		$domainname = $this->getParam('domainname', $dn_optional, '');
+
+		$resultDomain = $this->apiCall('Domains.get', array(
+			'id' => $id,
+			'domainname' => $domainname,
+		));
+		$dkim = \Froxlor\Dkim\Dkim::getInstanceOf($this->logger());
+
+		$result = $dkim->getSelectorsForDomain($resultDomain, true);
+
+		return $this->response(200, "successful", $result);
+	}
 }

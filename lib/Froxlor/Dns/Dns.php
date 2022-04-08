@@ -73,7 +73,7 @@ class Dns
 		$dkim_records = array();
 		if (Settings::Get('dkim.use_dkim') == '1') {
 			$dkimHelper = \Froxlor\Dkim\Dkim::getInstanceOf(\Froxlor\FroxlorLogger::getInstanceOf());
-			$dkim_records = $dkimHelper->createRecords($domain,'._domainkey');
+			$dkim_records = $dkimHelper->createRecords($domain);
 		}
 
 		// check for required records
