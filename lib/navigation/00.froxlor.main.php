@@ -232,6 +232,12 @@ return array(
 					'required_resources' => 'domains'
 				),
 				array(
+					'url' => 'admin_domains.php?page=dkim',
+					'label' => $lng['dkim']['title'],
+					'required_resources' => 'domains',
+					'show_element' => (\Froxlor\Settings::Get('dkim.use_dkim') == true)
+				),
+				array(
 					'url' => 'admin_ipsandports.php?page=ipsandports',
 					'label' => $lng['admin']['ipsandports']['ipsandports'],
 					'required_resources' => 'change_serversettings'

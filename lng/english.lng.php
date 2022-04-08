@@ -2141,7 +2141,10 @@ $lng['serversettings']['acmeshpath']['title'] = 'Path to acme.sh';
 $lng['serversettings']['acmeshpath']['description'] = 'Set this to where acme.sh is installed to, including the acme.sh script<br>Default is <b>/root/.acme.sh/acme.sh</b>';
 
 
-// Added in eis-os:feature/dkim-without-bind
+// Added in eis-os:feature/dkim-switchable
+$lng['dkim']['title'] = 'DKIM';
+$lng['dkim']['description'] = 'DomainKeys Identified Mail (DKIM) for email authentication';
+
 $lng['dkim']['dkim_service_implementation']['title'] = 'DKIM Service Implementation';
 $lng['dkim']['dkim_service_implementation']['description'] = 'Select between dkim-filter (not compatible with opendkim!) and rspamd support';
 

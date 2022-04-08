@@ -663,6 +663,9 @@ if ($page == 'domains' || $page == 'overview') {
 } elseif ($page == 'domaindnseditor' && Settings::Get('system.dnsenabled') == '1') {
 
 	require_once __DIR__ . '/dns_editor.php';
+} elseif ($page == 'dkim') {
+	
+	require_once __DIR__ . '/dkim_view.php';	
 } elseif ($page == 'sslcertificates') {
 
 	require_once __DIR__ . '/ssl_certificates.php';
