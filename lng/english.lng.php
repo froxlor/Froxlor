@@ -2165,3 +2165,4 @@ $lng['panel']['settingsmode'] = 'Mode';
 $lng['panel']['settingsmodebasic'] = 'Basic';
 $lng['panel']['settingsmodeadvanced'] = 'Advanced';
 $lng['panel']['settingsmodetoggle'] = 'Click to toggle mode';
+$lng['panel']['modalclose'] = 'Close';

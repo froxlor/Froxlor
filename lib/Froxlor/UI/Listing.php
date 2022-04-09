@@ -171,6 +171,11 @@ class Listing
 				// Set actual link from linker
 				$actions[$key]['href'] = $linker->getLink($action['href']);
 			}
+
+			// modal trigger - always require a valid callback
+			if (isset($action['modal']) && !empty($action['modal'])) {
+				$actions[$key]['modal'] = call_user_func($action['modal'], ['fields' => $item]);
+			}
 		}
 
 		return $actions;

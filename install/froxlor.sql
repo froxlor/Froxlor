@@ -864,7 +864,7 @@ CREATE TABLE `panel_fpmdaemons` (
 
 
 INSERT INTO `panel_fpmdaemons` (`id`, `description`, `reload_cmd`, `config_dir`) VALUES
-(1, 'System default', 'service php7.3-fpm restart', '/etc/php/7.3/fpm/pool.d/');
+(1, 'System default', 'service php7.4-fpm restart', '/etc/php/7.4/fpm/pool.d/');
 
 
 

@@ -61,12 +61,7 @@ return [
 			'show' => [
 				'icon' => 'fa fa-eye',
 				'title' => $lng['apikeys']['clicktoview'],
-				'href' => [
-					'section' => 'index',
-					'page' => 'apikeys',
-					'action' => '#',
-					'id' => ':id'
-				],
+				'modal' => [Text::class, 'apikeyDetailModal'],
 			],
 			'delete' => [
 				'icon' => 'fa fa-trash',

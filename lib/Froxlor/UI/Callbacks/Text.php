@@ -4,6 +4,7 @@ namespace Froxlor\UI\Callbacks;
 
 use Froxlor\PhpHelper;
 use Froxlor\UI\Panel\UI;
+use Froxlor\Froxlor;
 use Froxlor\User;
 
 /**
@@ -64,5 +65,23 @@ class Text
 	public static function wordwrap(array $attributes): string
 	{
 		return wordwrap($attributes['data'], 100, '<br>', true);
+	}
+
+	public static function apikeyDetailModal(array $attributes): array
+	{
+		$linker = UI::getLinker();
+		$result = $attributes['fields'];
+		$apikey_data = include Froxlor::getInstallDir() . '/lib/formfields/formfield.api_key.php';
+
+		$body = UI::twig()->render(UI::getTheme().'/user/inline-form.html.twig', [
+			'formaction' => $linker->getLink(array('section' => 'index', 'page' => 'apikeys')),
+			'formdata' => $apikey_data['apikey'],
+			'editid' => $attributes['fields']['id']
+		]);
+		return [
+			'id' => 'akModal' . $attributes['fields']['id'],
+			'title' => 'API-key ' . ($attributes['fields']['loginname'] ?? $attributes['fields']['adminname']),
+			'body' => $body
+		];
 	}
 }
