@@ -1,4 +1,11 @@
+#!/usr/bin/php
 <?php
+// Check if we're in the CLI
+if (@php_sapi_name() !== 'cli') {
+	die('This script will only work in the shell.');
+}
+
+
 // Include autoloader and table constants
 require __DIR__.'/../../vendor/autoload.php';
 require \Froxlor\Froxlor::getInstallDir() . '/lib/tables.inc.php';
