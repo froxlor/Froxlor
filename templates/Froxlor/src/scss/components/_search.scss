@@ -1,0 +1,32 @@
+#search {
+	display: flex;
+	position: relative;
+
+	i {
+		margin-right: .5rem;
+	}
+
+	.search-input {
+		outline: none;
+		border: none;
+	}
+
+	.search-results-box {
+		position: absolute;
+		top: 2.75rem;
+		z-index: 50;
+		width: 70vh;
+		max-height: 50vh;
+
+		background: #fff;
+		border: $border-color solid 1px;
+		border-radius: 0 0 $border-radius $border-radius;
+
+		.search-results {
+			width: 70vh; /** same as .search-results-box **/
+			max-height: calc(50vh - 2px); /** same as .search-results-box - border (top/bottom) **/
+			overflow: auto;
+			border-radius: $border-radius;
+		}
+	}
+}
