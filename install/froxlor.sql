@@ -653,7 +653,7 @@ opcache.validate_timestamps'),
 	('system', 'mail_smtp_auth', '1'),
 	('system', 'mail_smtp_user', ''),
 	('system', 'mail_smtp_passwd', ''),
-	('system', 'hsts_maxage', '0'),
+	('system', 'hsts_maxage', '10368000'),
 	('system', 'hsts_incsub', '0'),
 	('system', 'hsts_preload', '0'),
 	('system', 'leregistered', '0'),
@@ -675,7 +675,7 @@ opcache.validate_timestamps'),
 	('system', 'froxloraliases', ''),
 	('system', 'apply_specialsettings_default', '1'),
 	('system', 'apply_phpconfigs_default', '1'),
-	('system', 'hide_incompatible_settings', '0'),
+	('system', 'hide_incompatible_settings', '1'),
 	('system', 'include_default_vhostconf', '0'),
 	('system', 'soaemail', ''),
 	('system', 'domaindefaultalias', '0'),
@@ -723,6 +723,7 @@ opcache.validate_timestamps'),
 	('panel', 'logo_image_login', ''),
 	('panel', 'logo_overridetheme', '0'),
 	('panel', 'logo_overridecustom', '0'),
+	('panel', 'settings_mode', '0'),
 	('panel', 'version', '0.11.0-dev1'),
 	('panel', 'db_version', '202112310');
 
@@ -863,7 +864,7 @@ CREATE TABLE `panel_fpmdaemons` (
 
 
 INSERT INTO `panel_fpmdaemons` (`id`, `description`, `reload_cmd`, `config_dir`) VALUES
-(1, 'System default', 'service php7.3-fpm restart', '/etc/php/7.3/fpm/pool.d/');
+(1, 'System default', 'service php7.4-fpm restart', '/etc/php/7.4/fpm/pool.d/');
 
 
 

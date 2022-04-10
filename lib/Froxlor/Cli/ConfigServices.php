@@ -1,0 +1,475 @@
+<?php
+
+namespace Froxlor\Cli;
+
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
+use Froxlor\FileDir;
+use Froxlor\Froxlor;
+use Froxlor\Settings;
+use Froxlor\SImExporter;
+use Froxlor\Database\Database;
+use Froxlor\Config\ConfigParser;
+
+/**
+ * This file is part of the Froxlor project.
+ * Copyright (c) 2022 the Froxlor Team (see authors).
+ *
+ * For the full copyright and license information, please view the COPYING
+ * file that was distributed with this source code. You can also view the
+ * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright (c) the authors
+ * @author Froxlor team <team@froxlor.org> (2018-)
+ * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @package Cron
+ *         
+ */
+final class ConfigServices extends Command
+{
+
+	protected function configure()
+	{
+		$this->setName('froxlor:config-services');
+		$this->setDescription('Configure system services');
+		$this->addOption('create', 'c', InputOption::VALUE_NONE, 'Create a services list configuration for the --apply option.')
+			->addOption('apply', 'a', InputOption::VALUE_REQUIRED, 'Configure your services by given configuration file. To create one run the command with the --create option.')
+			->addOption('list', 'l', InputOption::VALUE_NONE, 'Output the services that are going to be configured using a given config file (--apply option). No services will be configured.')
+			->addOption('daemon', 'd', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'When used with --apply you can specify one or multiple daemons. These will be the only services that get configured.')
+			->addOption('import-settings', 'i', InputOption::VALUE_REQUIRED, 'Import settings from another froxlor installation. This can be done standalone or in addition to --apply.');
+	}
+
+	protected function execute(InputInterface $input, OutputInterface $output)
+	{
+		global $lng;
+
+		if (!file_exists(Froxlor::getInstallDir() . '/lib/userdata.inc.php')) {
+			$output->writeln("<error>Could not find froxlor's userdata.inc.php file. You should use this script only with an installed froxlor system.</>");
+			return self::INVALID;
+		}
+
+		include_once Froxlor::getInstallDir() . 'lng/english.lng.php';
+		include_once Froxlor::getInstallDir() . 'lng/lng_references.php';
+
+		$result = self::SUCCESS;
+
+		// import settings if given
+		if ($input->getOption('import-settings')) {
+			$result = $this->importSettings($input, $output);
+		}
+
+		if ($result == self::SUCCESS) {
+			$io = new SymfonyStyle($input, $output);
+			if ($input->getOption('create')) {
+				$result = $this->createConfig($input, $output, $io);
+			} elseif ($input->getOption('apply')) {
+				$result = $this->applyConfig($input, $output, $io);
+			} elseif ($input->getOption('list') || $input->getOption('daemon')) {
+				$output->writeln('<error>Options --list and --daemon only work together with --apply.</>');
+				$result = self::INVALID;
+			}
+		}
+
+		return $result;
+	}
+
+	private function createConfig(InputInterface $input, OutputInterface $output, SymfonyStyle $io)
+	{
+		$_daemons_config = array(
+			'distro' => ""
+		);
+
+		$config_dir = Froxlor::getInstallDir() . '/lib/configfiles/';
+		// show list of available distro's
+		$distros = glob($config_dir . '*.xml');
+		// tmp array
+		$distributions_select_data = array();
+
+		//set default os.
+		$os_dist = array('ID' => 'bullseye');
+		$os_version = array('0' => '11');
+		$os_default = $os_dist['ID'];
+
+		//read os-release
+		if (file_exists('/etc/os-release')) {
+			$os_dist = parse_ini_file('/etc/os-release', false);
+			if (is_array($os_dist) && array_key_exists('ID', $os_dist) && array_key_exists('VERSION_ID', $os_dist)) {
+				$os_version = explode('.', $os_dist['VERSION_ID'])[0];
+			}
+		}
+
+		// read in all the distros
+		foreach ($distros as $_distribution) {
+			// get configparser object
+			$dist = new \Froxlor\Config\ConfigParser($_distribution);
+			// get distro-info
+			$dist_display = $this->getCompleteDistroName($dist);
+			// store in tmp array
+			$distributions_select_data[$dist_display] = str_replace(".xml", "", strtolower(basename($_distribution)));
+
+			//guess if this is the current distro.
+			$ver = explode('.', $dist->distributionVersion)[0];
+			if (strtolower($os_dist['ID']) == strtolower($dist->distributionName) && $os_version == $ver) {
+				$os_default = str_replace(".xml", "", strtolower(basename($_distribution)));
+			}
+		}
+
+		// sort by distribution name
+		ksort($distributions_select_data);
+
+		// list all distributions
+		$table_rows = [];
+		$valid_dists = [];
+		foreach ($distributions_select_data as $name => $filename) {
+			$table_rows[] = [$filename, $name];
+			$valid_dists[] = $filename;
+		}
+		$io->table(
+			['ID', 'Distribution'],
+			$table_rows
+		);
+
+		$_daemons_config['distro'] = $io->choice('Choose distribution', $valid_dists, $os_default);
+
+		// go through all services and let user check whether to include it or not
+		$configfiles = new ConfigParser($config_dir . '/' . $_daemons_config['distro'] . ".xml");
+		$services = $configfiles->getServices();
+
+		foreach ($services as $si => $service) {
+			$output->writeln("--- " . strtoupper($si) . " ---");
+			$_daemons_config[$si] = "";
+
+			$daemons = $service->getDaemons();
+			$default_daemon = "";
+			$table_rows = [];
+			$valid_options = [];
+			foreach ($daemons as $di => $dd) {
+				$title = $dd->title;
+				if ($dd->default) {
+					$default_daemon = $di;
+					$title = $title . " (default)";
+				}
+				$table_rows[] = [$di, $title];
+				$valid_options[] = $di;
+			}
+			if ($si != 'system') {
+				$table_rows[] = ['x', 'No'];
+				$valid_options[] = 'x';
+			}
+			$io->table(
+				['Value', 'Name'],
+				$table_rows
+			);
+
+			$daemons['x'] = 'x';
+			if ($si == 'system') {
+				$_daemons_config[$si] = array();
+				// for the system/other services we need a multiple choice possibility
+				$output->writeln("<comment>Select every service you need. Enter empty value when done</>");
+				$sysservice = "";
+				do {
+					$sysservice = $io->ask('Choose service');
+					if (!empty($sysservice)) {
+						$_daemons_config[$si][] = $sysservice;
+					}
+				} while (!empty($sysservice));
+				// add 'cron' as fixed part (doesn't hurt if it exists)
+				if (!in_array('cron', $_daemons_config[$si])) {
+					$_daemons_config[$si][] = 'cron';
+				}
+			} else {
+				// for all others -> only one value
+				$_daemons_config[$si] = $io->choice('Choose service', $valid_options, $default_daemon);
+			}
+		}
+
+		$daemons_config = json_encode($_daemons_config);
+		$output_file = $io->ask("Choose output-filename", "/tmp/froxlor-config-" . date('Ymd') . ".json");
+		file_put_contents($output_file, $daemons_config);
+		$output->writeln("<info>Successfully generated service-configfile '" . $output_file . "'</>");
+		$output->writeln([
+			"",
+			"<info>You can now apply this config running:</>",
+			"php " . Froxlor::getInstallDir() . "bin/froxlor-cli froxlor:config-services --apply=" . $output_file,
+			""
+		]);
+		$proceed = $io->confirm("Do you want to apply the config now?", false);
+		if ($proceed) {
+			passthru("php " . Froxlor::getInstallDir() . "bin/froxlor-cli froxlor:config-services --apply=" . $output_file);
+		}
+		return self::SUCCESS;
+	}
+
+	private function applyConfig(InputInterface $input, OutputInterface $output, SymfonyStyle $io)
+	{
+		$applyFile = $input->getOption('apply');
+
+		if (strtoupper(substr($applyFile, 0, 4)) == 'HTTP') {
+			$output->writeln("Config file seems to be an URL, trying to download");
+			$target = "/tmp/froxlor-config-" . time() . ".json";
+			if (@file_exists($target)) {
+				@unlink($target);
+			}
+			$this->downloadFile($applyFile, $target);
+			$applyFile = $target;
+		}
+		if (!is_file($applyFile)) {
+			$output->writeln('<error>Given config file is not a file</>');
+			return self::INVALID;
+		} elseif (!file_exists($applyFile)) {
+			$output->writeln('<error>Given config file cannot be found (' . $applyFile . ')</>');
+			return self::INVALID;
+		} elseif (!is_readable($applyFile)) {
+			$output->writeln('<error>Given config file cannot be read (' . $applyFile . ')</>');
+			return self::INVALID;
+		}
+
+		$config = file_get_contents($applyFile);
+		$decoded_config = json_decode($config, true);
+
+		if ($input->getOption('list') != false) {
+			$table_rows = [];
+			foreach ($decoded_config as $service => $daemon) {
+				if (is_array($daemon) && count($daemon) > 0) {
+					foreach ($daemon as $sysdaemon) {
+						$table_rows[] = [$service, $sysdaemon];
+					}
+				} else {
+					if ($daemon == 'x') {
+						$daemon = '--- skipped ---';
+					}
+					$table_rows[] = [$service, $daemon];
+				}
+			}
+
+			$io->table(
+				['Service', 'Selected daemon'],
+				$table_rows
+			);
+			return self::SUCCESS;
+		}
+
+		$only_daemon = [];
+		if ($input->getOption('daemon') != false) {
+			$only_daemon = $input->getOption('daemon');
+		}
+
+		if (!empty($decoded_config)) {
+			$config_dir = Froxlor::getInstallDir() . 'lib/configfiles/';
+			$configfiles = new ConfigParser($config_dir . '/' . $decoded_config['distro'] . ".xml");
+			$services = $configfiles->getServices();
+			$replace_arr = $this->getReplacerArray();
+
+			foreach ($services as $si => $service) {
+				$output->writeln("--- Configuring: " . strtoupper($si) . " ---");
+				if (!isset($decoded_config[$si]) || $decoded_config[$si] == 'x') {
+					$output->writeln('<comment>Skipping ' . strtoupper($si) . ' configuration as desired</>');
+					continue;
+				}
+				$daemons = $service->getDaemons();
+				foreach ($daemons as $di => $dd) {
+					// check for desired service
+					if (($si != 'system' && $decoded_config[$si] != $di) || (is_array($decoded_config[$si]) && !in_array($di, $decoded_config[$si]))) {
+						continue;
+					}
+					$output->writeln("Configuring '" . $di . "'");
+
+					if (!empty($only_daemon) && !in_array($di, $only_daemon)) {
+						$output->writeln('<comment>Skipping ' . $di . ' configuration as desired</>');
+						continue;
+					}
+					// run all cmds
+					$confarr = $dd->getConfig();
+					foreach ($confarr as $action) {
+						switch ($action['type']) {
+							case "install":
+								$output->writeln("Installing required packages");
+								$result = null;
+								passthru(strtr($action['content'], $replace_arr), $result);
+								if (strlen($result) > 1) {
+									echo $result;
+								}
+								break;
+							case "command":
+								exec(strtr($action['content'], $replace_arr));
+								break;
+							case "file":
+								if (array_key_exists('content', $action)) {
+									$output->writeln('<comment>Creating file "' . $action['name'] . '"</>');
+									file_put_contents($action['name'], trim(strtr($action['content'], $replace_arr)));
+								} elseif (array_key_exists('subcommands', $action)) {
+									foreach ($action['subcommands'] as $fileaction) {
+										if (array_key_exists('execute', $fileaction) && $fileaction['execute'] == "pre") {
+											exec(strtr($fileaction['content'], $replace_arr));
+										} elseif (array_key_exists('execute', $fileaction) && $fileaction['execute'] == "post") {
+											exec(strtr($fileaction['content'], $replace_arr));
+										} elseif ($fileaction['type'] == 'file') {
+											$output->writeln('<comment>Creating file "' . $fileaction['name'] . '"</>');
+											file_put_contents($fileaction['name'], trim(strtr($fileaction['content'], $replace_arr)));
+										}
+									}
+								}
+								break;
+						}
+					}
+				}
+			}
+			// set is_configured flag
+			Settings::Set('panel.is_configured', '1', true);
+			// run cronjob at the end to ensure configs are all up to date
+			exec('php ' . Froxlor::getInstallDir() . 'scripts/froxlor_master_cronjob.php --force');
+			// and done
+			$output->writeln('<info>All services have been configured</>');
+			return self::SUCCESS;
+		} else {
+			$output->writeln('<error>Unable to decode given JSON file</>');
+			return self::INVALID;
+		}
+	}
+
+	private function getReplacerArray()
+	{
+		$customer_tmpdir = '/tmp/';
+		if (Settings::Get('system.mod_fcgid') == '1' && Settings::Get('system.mod_fcgid_tmpdir') != '') {
+			$customer_tmpdir = Settings::Get('system.mod_fcgid_tmpdir');
+		} elseif (Settings::Get('phpfpm.enabled') == '1' && Settings::Get('phpfpm.tmpdir') != '') {
+			$customer_tmpdir = Settings::Get('phpfpm.tmpdir');
+		}
+
+		// try to convert namserver hosts to ip's
+		$ns_ips = "";
+		$known_ns_ips = [];
+		if (Settings::Get('system.nameservers') != '') {
+			$nameservers = explode(',', Settings::Get('system.nameservers'));
+			foreach ($nameservers as $nameserver) {
+				$nameserver = trim($nameserver);
+				// DNS servers might be multi homed; allow transfer from all ip
+				// addresses of the DNS server
+				$nameserver_ips = \Froxlor\PhpHelper::gethostbynamel6($nameserver);
+				// append dot to hostname
+				if (substr($nameserver, -1, 1) != '.') {
+					$nameserver .= '.';
+				}
+				// ignore invalid responses
+				if (!is_array($nameserver_ips)) {
+					// act like \Froxlor\PhpHelper::gethostbynamel6() and return unmodified hostname on error
+					$nameserver_ips = array(
+						$nameserver
+					);
+				} else {
+					$known_ns_ips = array_merge($known_ns_ips, $nameserver_ips);
+				}
+				if (!empty($ns_ips)) {
+					$ns_ips .= ',';
+				}
+				$ns_ips .= implode(",", $nameserver_ips);
+			}
+		}
+
+		// AXFR server
+		if (Settings::Get('system.axfrservers') != '') {
+			$axfrservers = explode(',', Settings::Get('system.axfrservers'));
+			foreach ($axfrservers as $axfrserver) {
+				if (!in_array(trim($axfrserver), $known_ns_ips)) {
+					if (!empty($ns_ips)) {
+						$ns_ips .= ',';
+					}
+					$ns_ips .= trim($axfrserver);
+				}
+			}
+		}
+
+		Database::needSqlData();
+		$sql = Database::getSqlData();
+
+		$replace_arr = array(
+			'<SQL_UNPRIVILEGED_USER>' => $sql['user'],
+			'<SQL_UNPRIVILEGED_PASSWORD>' => $sql['passwd'],
+			'<SQL_DB>' => $sql['db'],
+			'<SQL_HOST>' => $sql['host'],
+			'<SQL_SOCKET>' => isset($sql['socket']) ? $sql['socket'] : null,
+			'<SERVERNAME>' => Settings::Get('system.hostname'),
+			'<SERVERIP>' => Settings::Get('system.ipaddress'),
+			'<NAMESERVERS>' => Settings::Get('system.nameservers'),
+			'<NAMESERVERS_IP>' => $ns_ips,
+			'<VIRTUAL_MAILBOX_BASE>' => Settings::Get('system.vmail_homedir'),
+			'<VIRTUAL_UID_MAPS>' => Settings::Get('system.vmail_uid'),
+			'<VIRTUAL_GID_MAPS>' => Settings::Get('system.vmail_gid'),
+			'<SSLPROTOCOLS>' => (Settings::Get('system.use_ssl') == '1') ? 'imaps pop3s' : '',
+			'<CUSTOMER_TMP>' => FileDir::makeCorrectDir($customer_tmpdir),
+			'<BASE_PATH>' => Froxlor::getInstallDir(),
+			'<BIND_CONFIG_PATH>' => FileDir::makeCorrectDir(Settings::Get('system.bindconf_directory')),
+			'<WEBSERVER_RELOAD_CMD>' => Settings::Get('system.apachereload_command'),
+			'<CUSTOMER_LOGS>' => FileDir::makeCorrectDir(Settings::Get('system.logfiles_directory')),
+			'<FPM_IPCDIR>' => FileDir::makeCorrectDir(Settings::Get('phpfpm.fastcgi_ipcdir')),
+			'<WEBSERVER_GROUP>' => Settings::Get('system.httpgroup')
+		);
+		return $replace_arr;
+	}
+
+	private function getCompleteDistroName($cparser)
+	{
+		// get distro-info
+		$dist_display = $cparser->distributionName;
+		if ($cparser->distributionCodename != '') {
+			$dist_display .= " " . $cparser->distributionCodename;
+		}
+		if ($cparser->distributionVersion != '') {
+			$dist_display .= " (" . $cparser->distributionVersion . ")";
+		}
+		if ($cparser->deprecated) {
+			$dist_display .= " [deprecated]";
+		}
+		return $dist_display;
+	}
+
+	private function importSettings(InputInterface $input, OutputInterface $output)
+	{
+		$importFile = $input->getOption('import-settings');
+
+		if (strtoupper(substr($importFile, 0, 4)) == 'HTTP') {
+			$output->writeln("Settings file seems to be an URL, trying to download");
+			$target = "/tmp/froxlor-import-settings-" . time() . ".json";
+			if (@file_exists($target)) {
+				@unlink($target);
+			}
+			$this->downloadFile($importFile, $target);
+			$importFile = $target;
+		}
+		if (!is_file($importFile)) {
+			$output->writeln('<error>Given settings file is not a file</>');
+			return self::INVALID;
+		} elseif (!file_exists($importFile)) {
+			$output->writeln('<error>Given settings file cannot be found (' . $importFile . ')</>');
+			return self::INVALID;
+		} elseif (!is_readable($importFile)) {
+			$output->writeln('<error>Given settings file cannot be read (' . $importFile . ')</>');
+			return self::INVALID;
+		}
+		$imp_content = file_get_contents($importFile);
+		SImExporter::import($imp_content);
+		$output->writeln("<info>Successfully imported settings from '" . $input->getOption('import-settings') . "'</info>");
+		return self::SUCCESS;
+	}
+
+	private function downloadFile($src, $dest)
+	{
+		set_time_limit(0);
+		// This is the file where we save the information
+		$fp = fopen($dest, 'w+');
+		// Here is the file we are downloading, replace spaces with %20
+		$ch = curl_init(str_replace(" ", "%20", $src));
+		curl_setopt($ch, CURLOPT_TIMEOUT, 50);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		// write curl response to file
+		curl_setopt($ch, CURLOPT_FILE, $fp);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+		// get curl response
+		curl_exec($ch);
+		curl_close($ch);
+		fclose($fp);
+	}
+}

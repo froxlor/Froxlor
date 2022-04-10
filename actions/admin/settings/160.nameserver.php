@@ -109,7 +109,8 @@ return array(
 						'Native' => 'Native',
 						'Master' => 'Master'
 					),
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'system_dns_createmailentry' => array(
 					'label' => $lng['serversettings']['mail_also_with_mxservers'],
@@ -125,7 +126,8 @@ return array(
 					'varname' => 'dns_createcaaentry',
 					'type' => 'checkbox',
 					'default' => true,
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'caa_caa_entry' => array(
 					'label' => $lng['serversettings']['caa_entry_custom'],
@@ -133,7 +135,8 @@ return array(
 					'varname' => 'caa_entry',
 					'type' => 'textarea',
 					'default' => '',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'system_defaultttl' => array(
 					'label' => $lng['serversettings']['defaultttl'],

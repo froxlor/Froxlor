@@ -27,15 +27,23 @@
  *        	
  * @return void
  */
-function parseAndOutputPreconfig010(&$has_preconfig, &$return, $current_version, $current_db_version)
+function parseAndOutputPreconfig011(&$has_preconfig, &$return, $current_version, $current_db_version)
 {
 	global $lng;
 
-	if (versionInUpdate($current_db_version, '202004140')) {
+	if (versionInUpdate($current_version, '0.10.99')) {
 		$has_preconfig = true;
-		$description = 'Froxlor can now optionally validate the dns entries of domains that request Lets Encrypt certificates to reduce dns-related problems (e.g. freshly registered domain or updated a-record).';
-		$question = '<strong>Validate DNS of domains when using Lets Encrypt';
-		$return['system_le_domain_dnscheck_note'] = ['type' => 'infotext', 'value' => $description];
-		$return['system_le_domain_dnscheck'] = ['type' => 'checkbox', 'value' => 1, 'label' => $question];
+		$description = 'We have rearranged the settings and split them into basic and advanced categories. This makes it easier for users who do not need all the detailed or very specific settings and options and gives a better overview of the basic/mostly used settings.';
+		$return['panel_settings_mode_note'] = ['type' => 'infotext', 'value' => $description];
+		$question = '<strong>Chose settings mode (you can change that at any time)</strong>';
+		$return['panel_settings_mode'] = [
+			'type' => 'select',
+			'select_var' => [
+				0 => 'Basic',
+				1 => 'Advanced'
+			],
+			'selected' => 1,
+			'label' => $question
+		];
 	}
 }

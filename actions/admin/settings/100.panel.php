@@ -47,7 +47,7 @@ return array(
 					'type' => 'select',
 					'default' => 'Froxlor',
 					'option_options_method' => array(
-						'\\Froxlor\\UI\\Template',
+						'\\Froxlor\\UI\\Panel\\UI',
 						'getThemes'
 					),
 					'save_method' => 'storeSettingDefaultTheme'
@@ -74,7 +74,8 @@ return array(
 					'varname' => 'natsorting',
 					'type' => 'checkbox',
 					'default' => false,
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'panel_paging' => array(
 					'label' => $lng['serversettings']['paging'],
@@ -121,7 +122,8 @@ return array(
 					'type' => 'email',
 					'string_emptyallowed' => true,
 					'default' => '',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'panel_decimal_places' => array(
 					'label' => $lng['serversettings']['decimal_places'],
@@ -131,7 +133,8 @@ return array(
 					'min' => 0,
 					'max' => 15,
 					'default' => 4,
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'panel_phpmyadmin_url' => array(
 					'label' => $lng['serversettings']['phpmyadmin_url'],
@@ -166,7 +169,8 @@ return array(
 					'varname' => 'show_version_login',
 					'type' => 'checkbox',
 					'default' => false,
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'admin_show_version_footer' => array(
 					'label' => $lng['admin']['show_version_footer'],
@@ -207,7 +211,8 @@ return array(
 					'varname' => 'allow_domain_change_admin',
 					'type' => 'checkbox',
 					'default' => false,
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'panel_allow_domain_change_customer' => array(
 					'label' => $lng['serversettings']['panel_allow_domain_change_customer'],
@@ -215,7 +220,8 @@ return array(
 					'varname' => 'allow_domain_change_customer',
 					'type' => 'checkbox',
 					'default' => false,
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'panel_phpconfigs_hidestdsubdomain' => array(
 					'label' => $lng['serversettings']['panel_phpconfigs_hidestdsubdomain'],
@@ -223,7 +229,8 @@ return array(
 					'varname' => 'phpconfigs_hidestdsubdomain',
 					'type' => 'checkbox',
 					'default' => false,
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'panel_customer_hide_options' => array(
 					'label' => $lng['serversettings']['panel_customer_hide_options'],
@@ -248,7 +255,8 @@ return array(
 						'traffic.ftp' => $lng['menue']['traffic']['traffic'] . " / FTP",
 						'traffic.mail' => $lng['menue']['traffic']['traffic'] . " / Mail"
 					],
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'panel_imprint_url' => array(
 					'label' => $lng['serversettings']['imprint_url'],

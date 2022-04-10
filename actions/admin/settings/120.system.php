@@ -144,7 +144,8 @@ return array(
 					'type' => 'text',
 					'string_regexp' => '/^[a-zA-Z0-9]{1,6}$/',
 					'default' => 'html',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'system_store_index_file_subs' => array(
 					'label' => $lng['serversettings']['system_store_index_file_subs'],
@@ -195,7 +196,6 @@ return array(
 					'default' => 90,
 					'save_method' => 'storeSettingField'
 				),
-
 				'system_mail_use_smtp' => array(
 					'label' => $lng['serversettings']['mail_use_smtp'],
 					'settinggroup' => 'system',
@@ -260,7 +260,8 @@ return array(
 					'varname' => 'apply_specialsettings_default',
 					'type' => 'checkbox',
 					'default' => true,
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'system_apply_phpconfigs_default' => array(
 					'label' => $lng['serversettings']['apply_phpconfigs_default'],
@@ -268,7 +269,8 @@ return array(
 					'varname' => 'apply_phpconfigs_default',
 					'type' => 'checkbox',
 					'default' => true,
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'system_domaindefaultalias' => array(
 					'label' => $lng['admin']['domaindefaultalias'],
@@ -281,15 +283,17 @@ return array(
 						'1' => $lng['domains']['serveraliasoption_www'],
 						'2' => $lng['domains']['serveraliasoption_none']
 					),
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'hide_incompatible_settings' => array(
 					'label' => $lng['serversettings']['hide_incompatible_settings'],
 					'settinggroup' => 'system',
 					'varname' => 'hide_incompatible_settings',
 					'type' => 'checkbox',
-					'default' => false,
-					'save_method' => 'storeSettingField'
+					'default' => true,
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 			)
 		)

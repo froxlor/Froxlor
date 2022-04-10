@@ -30,7 +30,6 @@ use Froxlor\UI\Request;
 $del_stmt = Database::prepare("DELETE FROM `" . TABLE_API_KEYS . "` WHERE id = :id");
 $success_message = "";
 $id = (int) Request::get('id');
-$area = AREA;
 
 // do the delete and then just show a success-message and the apikeys list again
 if ($action == 'delete') {

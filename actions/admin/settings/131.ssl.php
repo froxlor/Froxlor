@@ -53,7 +53,8 @@ return array(
 					'type' => 'text',
 					'string_emptyallowed' => false,
 					'default' => 'ECDH+AESGCM:ECDH+AES256:!aNULL:!MD5:!DSS:!DH:!AES128',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'system_tlsv13_cipher_list' => array(
 					'label' => $lng['serversettings']['ssl']['tlsv13_cipher_list'],
@@ -63,7 +64,8 @@ return array(
 					'string_emptyallowed' => true,
 					'default' => '',
 					'visible' => \Froxlor\Settings::Get('system.webserver') == "apache2" && \Froxlor\Settings::Get('system.apache24') == 1,
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'system_ssl_cert_file' => array(
 					'label' => $lng['serversettings']['ssl']['ssl_cert_file'],
@@ -113,7 +115,8 @@ return array(
 					'string_emptyallowed' => false,
 					'default' => 'shmcb:/var/run/apache2/ocsp-stapling.cache(131072)',
 					'visible' => \Froxlor\Settings::Get('system.webserver') == "apache2" && \Froxlor\Settings::Get('system.apache24') == 1,
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'system_sessionticketsenabled' => array(
 					'label' => $lng['admin']['domain_sessionticketsenabled'],
@@ -122,7 +125,8 @@ return array(
 					'type' => 'checkbox',
 					'default' => true,
 					'save_method' => 'storeSettingField',
-					'visible' => \Froxlor\Settings::Get('system.use_ssl') && (\Froxlor\Settings::Get('system.webserver') == "nginx" || (\Froxlor\Settings::Get('system.webserver') == "apache2" && \Froxlor\Settings::Get('system.apache24') == 1))
+					'visible' => \Froxlor\Settings::Get('system.use_ssl') && (\Froxlor\Settings::Get('system.webserver') == "nginx" || (\Froxlor\Settings::Get('system.webserver') == "apache2" && \Froxlor\Settings::Get('system.apache24') == 1)),
+					'advanced_mode' => true
 				),
 				'system_leenabled' => array(
 					'label' => $lng['serversettings']['leenabled'],
@@ -140,7 +144,8 @@ return array(
 					'type' => 'text',
 					'string_type' => 'file',
 					'default' => '/root/.acme.sh/acme.sh',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'system_letsencryptacmeconf' => array(
 					'label' => $lng['serversettings']['letsencryptacmeconf'],
@@ -188,7 +193,8 @@ return array(
 					'type' => 'text',
 					'string_emptyallowed' => false,
 					'default' => \Froxlor\Froxlor::getInstallDir(),
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'system_letsencryptkeysize' => array(
 					'label' => $lng['serversettings']['letsencryptkeysize'],
@@ -215,7 +221,8 @@ return array(
 						'256' => 'ec-256',
 						'384' => 'ec-384'
 					),
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'system_letsencryptreuseold' => array(
 					'label' => $lng['serversettings']['letsencryptreuseold'],
@@ -223,7 +230,8 @@ return array(
 					'varname' => 'letsencryptreuseold',
 					'type' => 'checkbox',
 					'default' => true,
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'system_disable_le_selfcheck' => array(
 					'label' => $lng['serversettings']['le_domain_dnscheck'],

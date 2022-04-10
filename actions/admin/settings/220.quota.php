@@ -18,6 +18,7 @@ return array(
 		'diskquota' => array(
 			'title' => $lng['diskquota'],
 			'icon' => 'fa-solid fa-sliders',
+			'advanced_mode' => true,
 			'fields' => array(
 				'diskquota_enabled' => array(
 					'label' => $lng['serversettings']['diskquota_enabled'],

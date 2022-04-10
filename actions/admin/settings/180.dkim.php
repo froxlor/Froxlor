@@ -47,7 +47,8 @@ return array(
 					'type' => 'text',
 					'string_regexp' => '/^[a-z0-9\._]+$/i',
 					'default' => '.priv',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'dkim_domains' => array(
 					'label' => $lng['dkim']['dkim_domains'],
@@ -79,7 +80,8 @@ return array(
 						'sha1' => 'SHA1',
 						'sha256' => 'SHA256'
 					),
-					'save_method' => 'storeSettingFieldInsertBindTask'
+					'save_method' => 'storeSettingFieldInsertBindTask',
+					'advanced_mode' => true
 				),
 				'dkim_servicetype' => array(
 					'label' => $lng['dkim']['dkim_servicetype'],
@@ -91,7 +93,8 @@ return array(
 						'0' => 'All',
 						'1' => 'E-Mail'
 					),
-					'save_method' => 'storeSettingFieldInsertBindTask'
+					'save_method' => 'storeSettingFieldInsertBindTask',
+					'advanced_mode' => true
 				),
 				'dkim_keylength' => array(
 					'label' => array(
@@ -115,7 +118,8 @@ return array(
 					'type' => 'text',
 					'string_regexp' => '/^[a-z0-9\._]+$/i',
 					'default' => '',
-					'save_method' => 'storeSettingFieldInsertBindTask'
+					'save_method' => 'storeSettingFieldInsertBindTask',
+					'advanced_mode' => true
 				),
 				'dkimrestart_command' => array(
 					'label' => $lng['dkim']['dkimrestart_command'],

@@ -128,7 +128,8 @@ return array(
 					'varname' => 'password_regex',
 					'type' => 'text',
 					'default' => '',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'customer_accountprefix' => array(
 					'label' => $lng['serversettings']['accountprefix'],

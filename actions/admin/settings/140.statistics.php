@@ -91,7 +91,8 @@ return array(
 					'type' => 'text',
 					'default' => '1',
 					'save_method' => 'storeSettingField',
-					'visible' => \Froxlor\Settings::Get('system.awstats_enabled') == 1
+					'visible' => \Froxlor\Settings::Get('system.awstats_enabled') == 1,
+					'advanced_mode' => true
 				)
 			)
 		)

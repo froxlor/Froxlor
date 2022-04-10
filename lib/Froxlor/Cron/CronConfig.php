@@ -111,7 +111,7 @@ class CronConfig
 			// php sessionclean if enabled
 			if ((int) Settings::Get('phpfpm.enabled') == 1) {
 				$cronfile .= "# Look for and purge old sessions every 30 minutes" . PHP_EOL;
-				$cronfile .= "09,39 * * * * root " . $binpath . " " . \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . "/scripts/php-sessionclean.php") . " --froxlor-dir=" . escapeshellarg(\Froxlor\Froxlor::getInstallDir()) . " 1> /dev/null" . PHP_EOL;
+				$cronfile .= "09,39 * * * * root " . $binpath . " " . \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . "/bin/froxlor-cli") . " froxlor:php-sessionclean 1> /dev/null" . PHP_EOL;
 			}
 
 			if (\Froxlor\FileDir::isFreeBSD()) {

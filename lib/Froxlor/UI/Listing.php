@@ -171,6 +171,11 @@ class Listing
 				// Set actual link from linker
 				$actions[$key]['href'] = $linker->getLink($action['href']);
 			}
+
+			// modal trigger - always require a valid callback
+			if (isset($action['modal']) && !empty($action['modal'])) {
+				$actions[$key]['modal'] = call_user_func($action['modal'], ['fields' => $item]);
+			}
 		}
 
 		return $actions;
@@ -216,7 +221,7 @@ class Listing
 		$del_stmt = Database::prepare("
 			DELETE FROM `" . TABLE_PANEL_USERCOLUMNS . "` WHERE `" . $userid . "` = :uid AND `section` = :section
 		");
-		Database::pexecute($del_stmt, ['uid' => CurrentUser::getData($userid), 'section' => $section]);
+		Database::pexecute($del_stmt, ['uid' => CurrentUser::getField($userid), 'section' => $section]);
 		// add new entry
 		$ins_stmt = Database::prepare("
 			INSERT INTO `" . TABLE_PANEL_USERCOLUMNS . "` SET
@@ -225,7 +230,7 @@ class Listing
 			`columns` = :cols
 		");
 		Database::pexecute($ins_stmt, [
-			'uid' => CurrentUser::getData($userid),
+			'uid' => CurrentUser::getField($userid),
 			'section' => $section,
 			'cols' => json_encode($tabellisting[$section])
 		]);
@@ -241,7 +246,7 @@ class Listing
 		$sel_stmt = Database::prepare("
 			SELECT `columns` FROM `" . TABLE_PANEL_USERCOLUMNS . "` WHERE `" . $userid . "` = :uid AND `section` = :section
 		");
-		$columns_json = Database::pexecute_first($sel_stmt, ['uid' => CurrentUser::getData($userid), 'section' => $listing]);
+		$columns_json = Database::pexecute_first($sel_stmt, ['uid' => CurrentUser::getField($userid), 'section' => $listing]);
 		if ($columns_json && isset($columns_json['columns'])) {
 			return json_decode($columns_json['columns'], true);
 		}

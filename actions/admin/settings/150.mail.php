@@ -30,7 +30,8 @@ return array(
 					'default' => 2000,
 					'min' => 2,
 					'max' => 65535,
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'system_vmail_gid' => array(
 					'label' => $lng['serversettings']['vmail_gid'],
@@ -40,7 +41,8 @@ return array(
 					'default' => 2000,
 					'min' => 2,
 					'max' => 65535,
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'system_vmail_homedir' => array(
 					'label' => $lng['serversettings']['vmail_homedir'],
@@ -59,7 +61,8 @@ return array(
 					'string_type' => 'dir',
 					'default' => 'Maildir',
 					'string_emptyallowed' => true,
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'panel_sendalternativemail' => array(
 					'label' => $lng['serversettings']['sendalternativemail'],
@@ -99,7 +102,8 @@ return array(
 					'varname' => 'mailtraffic_enabled',
 					'type' => 'checkbox',
 					'default' => true,
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'system_mdaserver' => array(
 					'label' => $lng['serversettings']['mdaserver'],
@@ -111,7 +115,8 @@ return array(
 						'courier' => 'Courier',
 						'dovecot' => 'Dovecot'
 					),
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'system_mdalog' => array(
 					'label' => $lng['serversettings']['mdalog'],
@@ -121,7 +126,8 @@ return array(
 					'string_type' => 'file',
 					'default' => '/var/log/mail.log',
 					'string_emptyallowed' => true,
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'system_mtaserver' => array(
 					'label' => $lng['serversettings']['mtaserver'],
@@ -133,7 +139,8 @@ return array(
 						'exim4' => 'Exim4',
 						'postfix' => 'Postfix'
 					),
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'system_mtalog' => array(
 					'label' => $lng['serversettings']['mtalog'],
@@ -143,7 +150,8 @@ return array(
 					'string_type' => 'file',
 					'default' => '/var/log/mail.log',
 					'string_emptyallowed' => true,
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				)
 			)
 		)

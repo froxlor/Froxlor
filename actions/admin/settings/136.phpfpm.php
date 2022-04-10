@@ -52,7 +52,8 @@ return array(
 					'type' => 'text',
 					'string_type' => 'confdir',
 					'default' => '/var/www/php-fpm/',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'system_phpfpm_tmpdir' => array(
 					'label' => $lng['serversettings']['mod_fcgid']['tmpdir'],
@@ -72,7 +73,8 @@ return array(
 					'string_delimiter' => ':',
 					'string_emptyallowed' => true,
 					'default' => '/usr/share/php/:/usr/share/php5/',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'system_phpfpm_envpath' => array(
 					'label' => $lng['serversettings']['phpfpm_settings']['envpath'],
@@ -83,7 +85,8 @@ return array(
 					'string_delimiter' => ':',
 					'string_emptyallowed' => true,
 					'default' => '/usr/local/bin:/usr/bin:/bin',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'system_phpfpm_fastcgi_ipcdir' => array(
 					'label' => $lng['serversettings']['phpfpm_settings']['ipcdir'],
@@ -92,7 +95,8 @@ return array(
 					'type' => 'text',
 					'string_type' => 'dir',
 					'default' => '/var/lib/apache2/fastcgi/',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'system_phpfpm_use_mod_proxy' => array(
 					'label' => $lng['phpfpm']['use_mod_proxy'],
@@ -109,7 +113,8 @@ return array(
 					'varname' => 'ini_flags',
 					'type' => 'textarea',
 					'default' => '',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'system_phpfpm_ini_values' => array(
 					'label' => $lng['phpfpm']['ini_values'],
@@ -117,7 +122,8 @@ return array(
 					'varname' => 'ini_values',
 					'type' => 'textarea',
 					'default' => '',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'system_phpfpm_ini_admin_flags' => array(
 					'label' => $lng['phpfpm']['ini_admin_flags'],
@@ -125,7 +131,8 @@ return array(
 					'varname' => 'ini_admin_flags',
 					'type' => 'textarea',
 					'default' => '',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				),
 				'system_phpfpm_ini_admin_values' => array(
 					'label' => $lng['phpfpm']['ini_admin_values'],
@@ -133,7 +140,8 @@ return array(
 					'varname' => 'ini_admin_values',
 					'type' => 'textarea',
 					'default' => '',
-					'save_method' => 'storeSettingField'
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
 				)
 			)
 		)
