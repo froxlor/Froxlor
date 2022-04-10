@@ -9,6 +9,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Froxlor\FileDir;
 use Froxlor\Froxlor;
+use Froxlor\PhpHelper;
 use Froxlor\Settings;
 use Froxlor\SImExporter;
 use Froxlor\Database\Database;
@@ -48,6 +49,11 @@ final class ConfigServices extends Command
 
 		if (!file_exists(Froxlor::getInstallDir() . '/lib/userdata.inc.php')) {
 			$output->writeln("<error>Could not find froxlor's userdata.inc.php file. You should use this script only with an installed froxlor system.</>");
+			return self::INVALID;
+		}
+
+		if ($input->getOption('import-settings') == false && $input->getOption('create') == false && $input->getOption('apply') == false) {
+			$output->writeln('<error>No option given to do something, exiting.</>');
 			return self::INVALID;
 		}
 
@@ -104,7 +110,7 @@ final class ConfigServices extends Command
 		// read in all the distros
 		foreach ($distros as $_distribution) {
 			// get configparser object
-			$dist = new \Froxlor\Config\ConfigParser($_distribution);
+			$dist = new ConfigParser($_distribution);
 			// get distro-info
 			$dist_display = $this->getCompleteDistroName($dist);
 			// store in tmp array
@@ -348,14 +354,14 @@ final class ConfigServices extends Command
 				$nameserver = trim($nameserver);
 				// DNS servers might be multi homed; allow transfer from all ip
 				// addresses of the DNS server
-				$nameserver_ips = \Froxlor\PhpHelper::gethostbynamel6($nameserver);
+				$nameserver_ips = PhpHelper::gethostbynamel6($nameserver);
 				// append dot to hostname
 				if (substr($nameserver, -1, 1) != '.') {
 					$nameserver .= '.';
 				}
 				// ignore invalid responses
 				if (!is_array($nameserver_ips)) {
-					// act like \Froxlor\PhpHelper::gethostbynamel6() and return unmodified hostname on error
+					// act like PhpHelper::gethostbynamel6() and return unmodified hostname on error
 					$nameserver_ips = array(
 						$nameserver
 					);
