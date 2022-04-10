@@ -52,7 +52,7 @@
 		"voku/anti-xss": "^4.1",
 		"twig/twig": "^3.3",
 		"erusev/parsedown": "^1.7",
-		"symfony/console": "^6.0"
+		"symfony/console": "^5.4"
     },
 	"require-dev": {
 		"phpunit/phpunit": "^9",

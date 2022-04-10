@@ -7,11 +7,12 @@ use Symfony\Component\Console\Application;
 use Froxlor\Cli\ConfigServices;
 use Froxlor\Cli\PhpSessionclean;
 use Froxlor\Cli\SwitchServerIp;
+use Froxlor\Froxlor;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 require dirname(__DIR__) . '/lib/tables.inc.php';
 
-$application = new Application;
+$application = new Application('froxlor-cli', Froxlor::getFullVersion());
 $application->add(new ConfigServices());
 $application->add(new PhpSessionclean());
 $application->add(new SwitchServerIp());
