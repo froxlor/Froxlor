@@ -28,7 +28,7 @@ use Froxlor\UI\Panel\UI;
  * @author Froxlor team <team@froxlor.org> (2010-)
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package Install
- *         
+ *
  */
 class FroxlorInstall
 {
@@ -83,7 +83,7 @@ class FroxlorInstall
 	 */
 	public function __construct()
 	{
-		$this->_basepath = dirname(dirname(dirname(__FILE__)));
+		$this->_basepath = dirname(__FILE__, 3);
 		$this->_data = array();
 	}
 
@@ -362,9 +362,9 @@ class FroxlorInstall
 
 	/**
 	 * Create userdata.inc.php file
-	 * 
+	 *
 	 * @param array $content
-	 * 
+	 *
 	 * @return void
 	 */
 	private function _createUserdataConf(&$content)
@@ -394,7 +394,7 @@ class FroxlorInstall
 
 		// test if we can store the userdata.inc.php in ../lib
 		$umask = @umask(077);
-		$userdata_file = dirname(dirname(dirname(__FILE__))) . '/lib/userdata.inc.php';
+		$userdata_file = dirname(__FILE__, 3) . '/lib/userdata.inc.php';
 		if (@touch($userdata_file) && @is_writable($userdata_file)) {
 			$fp = @fopen($userdata_file, 'w');
 			@fputs($fp, $userdata, strlen($userdata));
@@ -609,7 +609,7 @@ class FroxlorInstall
 		}
 
 		$this->_updateSetting($upd_stmt, $this->_data['activate_newsfeed'], 'admin', 'show_news_feed');
-		$this->_updateSetting($upd_stmt, dirname(dirname(dirname(__FILE__))), 'system', 'letsencryptchallengepath');
+		$this->_updateSetting($upd_stmt, dirname(__FILE__, 3), 'system', 'letsencryptchallengepath');
 
 		// insert the lastcronrun to be the installation date
 		$this->_updateSetting($upd_stmt, time(), 'system', 'lastcronrun');
@@ -687,7 +687,7 @@ class FroxlorInstall
 				'title' => $this->_lng['install']['importing_data'],
 				'result' => 0
 			];
-			$db_schema = dirname(dirname(__FILE__)) . '/froxlor.sql';
+			$db_schema = dirname(__FILE__, 2) . '/froxlor.sql';
 			$sql_query = @file_get_contents($db_schema);
 			$sql_query = $this->_remove_remarks($sql_query);
 			$sql_query = $this->_split_sql_file($sql_query, ';');
@@ -1034,7 +1034,7 @@ class FroxlorInstall
 	 *        	optional css
 	 * @param string $type
 	 *        	optional type of input-box (default: text)
-	 *        	
+	 *
 	 * @return array
 	 */
 	private function _getSectionItemString($fieldname = null, $required = false, $style = "", $type = 'text')
