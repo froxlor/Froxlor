@@ -15,7 +15,7 @@ namespace Froxlor\Cron\Traffic;
  * @author Froxlor team <team@froxlor.org> (2010-)
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package Cron
- *         
+ *
  */
 use Froxlor\Database\Database;
 use Froxlor\Settings;
@@ -898,8 +898,8 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 				foreach ($months as $month => $traffic) {
 					if (! isset($httptrafficlast[$year][$month])) {
 						$returnval += $traffic;
-					} elseif ($httptrafficlast[$year][$month] < $httptraffic[$year][$month]) {
-						$returnval += ($httptraffic[$year][$month] - $httptrafficlast[$year][$month]);
+					} elseif ($httptrafficlast[$year][$month] < $traffic) {
+						$returnval += ($traffic - $httptrafficlast[$year][$month]);
 					}
 				}
 			}

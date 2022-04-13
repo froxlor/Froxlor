@@ -39,7 +39,7 @@ class PhpHelper
 	 * Wrapper around htmlentities to handle arrays, with the advantage that you
 	 * can select which fields should be handled by htmlentities
 	 *
-	 * @param array $subject
+	 * @param array|string $subject
 	 *        	The subject array
 	 * @param string $fields
 	 *        	The fields which should be checked for, separated by spaces
@@ -61,7 +61,7 @@ class PhpHelper
 			foreach ($subject as $field => $value) {
 				if ((!is_array($fields) || empty($fields)) || (is_array($fields) && !empty($fields) && in_array($field, $fields))) {
 					// Just call ourselve to manage multi-dimensional arrays
-					$subject[$field] = self::htmlentitiesArray($subject[$field], $fields, $quote_style, $charset);
+					$subject[$field] = self::htmlentitiesArray($value, $fields, $quote_style, $charset);
 				}
 			}
 		} else {
@@ -75,15 +75,15 @@ class PhpHelper
 	 * Replaces Strings in an array, with the advantage that you
 	 * can select which fields should be str_replace'd
 	 *
-	 * @param
-	 *        	mixed String or array of strings to search for
-	 * @param
-	 *        	mixed String or array to replace with
-	 * @param
-	 *        	array The subject array
-	 * @param
+	 * @param 	string|array $search
+	 * 				String or array of strings to search for
+	 * @param string|array $reaplce
+	 *        	 String or array to replace with
+	 * @param string|array $subject
+	 *        	String or array The subject array
+	 * @param string $fields
 	 *        	string The fields which should be checked for, separated by spaces
-	 * @return array The str_replace'd array
+	 * @return string|array The str_replace'd array
 	 * @author Florian Lippert <flo@syscp.org>
 	 */
 	public static function strReplaceArray($search, $replace, $subject, $fields = '')
@@ -92,7 +92,7 @@ class PhpHelper
 			$fields = self::arrayTrim(explode(' ', $fields));
 			foreach ($subject as $field => $value) {
 				if ((!is_array($fields) || empty($fields)) || (is_array($fields) && !empty($fields) && in_array($field, $fields))) {
-					$subject[$field] = str_replace($search, $replace, $subject[$field]);
+					$subject[$field] = str_replace($search, $replace, $value);
 				}
 			}
 		} else {
