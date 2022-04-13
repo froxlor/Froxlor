@@ -93,8 +93,8 @@ $lng['install']['changing_data'] = 'Adjusting settings...';
 $lng['install']['creating_entries'] = 'Inserting new values...';
 $lng['install']['adding_admin_user'] = 'Creating admin-account...';
 $lng['install']['creating_configfile'] = 'Creating configfile...';
-$lng['install']['creating_configfile_temp'] = 'File was saved in %s, please move to ' . dirname(dirname(__DIR__)) . '/lib/userdata.inc.php';
-$lng['install']['creating_configfile_failed'] = 'Could not create ' . dirname(dirname(__DIR__)) . '/lib/userdata.inc.php, please create it manually with the following content:';
+$lng['install']['creating_configfile_temp'] = 'File was saved in %s, please move to ' . dirname(__DIR__, 2) . '/lib/userdata.inc.php';
+$lng['install']['creating_configfile_failed'] = 'Could not create ' . dirname(__DIR__, 2) . '/lib/userdata.inc.php, please create it manually with the following content:';
 $lng['install']['froxlor_succ_installed'] = 'Froxlor was installed successfully.';
 $lng['install']['failed'] = 'failed';
 

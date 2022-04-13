@@ -17,7 +17,7 @@ use Froxlor\Cron\Http\Php\PhpInterface;
  * @author Froxlor team <team@froxlor.org> (2010-)
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package Cron
- *         
+ *
  */
 class NginxFcgi extends Nginx
 {
@@ -64,7 +64,7 @@ class NginxFcgi extends Nginx
 	public function createOwnVhostStarter()
 	{
 		if (Settings::Get('phpfpm.enabled') == '1' && Settings::Get('phpfpm.enabled_ownvhost') == '1') {
-			$mypath = \Froxlor\FileDir::makeCorrectDir(dirname(dirname(dirname(__FILE__)))); // /var/www/froxlor, needed for chown
+			$mypath = \Froxlor\FileDir::makeCorrectDir(dirname(__FILE__, 3)); // /var/www/froxlor, needed for chown
 
 			$user = Settings::Get('phpfpm.vhost_httpuser');
 			$group = Settings::Get('phpfpm.vhost_httpgroup');
