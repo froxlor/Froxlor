@@ -1,4 +1,5 @@
 <?php
+
 namespace Froxlor\System;
 
 use Froxlor\Settings;
@@ -8,11 +9,8 @@ class Crypt
 
 	/**
 	 * Generates a random password
-	 *
-	 * @param boolean $isSalt
-	 *        	optional, create a hash for a salt used in \Froxlor\System\Crypt::makeCryptPassword because crypt() does not like some special characters in its salts, default is false
 	 */
-	public static function generatePassword($isSalt = false)
+	public static function generatePassword()
 	{
 		$alpha_lower = 'abcdefghijklmnopqrstuvwxyz';
 		$alpha_upper = strtoupper($alpha_lower);
@@ -31,11 +29,11 @@ class Crypt
 			$pw .= mb_substr(self::specialShuffle($numeric), 0, $n);
 		}
 
-		if (Settings::Get('panel.password_special_char_required') && ! $isSalt) {
+		if (Settings::Get('panel.password_special_char_required')) {
 			$pw .= mb_substr(self::specialShuffle($special), 0, $n);
 		}
 
-		$pw = mb_substr($pw, - $length);
+		$pw = mb_substr($pw, -$length);
 
 		return self::specialShuffle($pw);
 	}
@@ -51,7 +49,7 @@ class Crypt
 	{
 		$len = mb_strlen($str);
 		$sploded = array();
-		while ($len -- > 0) {
+		while ($len-- > 0) {
 			$sploded[] = mb_substr($str, $len, 1);
 		}
 		shuffle($sploded);
@@ -83,33 +81,12 @@ class Crypt
 		if ($htpasswd) {
 			return '{SHA}' . base64_encode(sha1($password, true));
 		}
-
-		$type = Settings::Get('system.passwordcryptfunc') !== null ? (int) Settings::Get('system.passwordcryptfunc') : 3;
-
-		switch ($type) {
-			case 1:
-				$cryptPassword = crypt($password, '$1$' . self::generatePassword(true) . self::generatePassword(true));
-				break;
-			case 2:
-				// Blowfish hashing with a salt as follows: "$2a$", "$2x$" or "$2y$",
-				// a two digit cost parameter, "$", and 22 characters from the alphabet "./0-9A-Za-z"
-				$cryptPassword = crypt($password, '$2y$07$' . substr(self::generatePassword(true) . self::generatePassword(true) . self::generatePassword(true), 0, 22));
-				break;
-			case 3:
-				$cryptPassword = crypt($password, '$5$' . self::generatePassword(true) . self::generatePassword(true));
-				break;
-			case 4:
-				$cryptPassword = crypt($password, '$6$' . self::generatePassword(true) . self::generatePassword(true));
-				break;
-			default:
-				$cryptPassword = crypt($password, self::generatePassword(true) . self::generatePassword(true));
-				break;
-		}
-		return $cryptPassword;
+		$algo = Settings::Get('system.passwordcryptfunc') !== null ? Settings::Get('system.passwordcryptfunc') : PASSWORD_DEFAULT;
+		return password_hash($password, $algo);
 	}
 
 	/**
-	 * return an array of available hashes for the crypt() function
+	 * return an array of available hashes
 	 *
 	 * @return array
 	 */
@@ -119,19 +96,16 @@ class Crypt
 
 		// get available pwd-hases
 		$available_pwdhashes = array(
-			0 => $lng['serversettings']['systemdefault']
+			PASSWORD_DEFAULT => $lng['serversettings']['systemdefault']
 		);
-		if (defined('CRYPT_MD5') && CRYPT_MD5 == 1) {
-			$available_pwdhashes[1] = 'MD5';
+		if (defined('PASSWORD_BCRYPT')) {
+			$available_pwdhashes[PASSWORD_BCRYPT] = 'Bcrypt/Blowfish';
 		}
-		if (defined('CRYPT_BLOWFISH') && CRYPT_BLOWFISH == 1) {
-			$available_pwdhashes[2] = 'BLOWFISH';
+		if (defined('PASSWORD_ARGON2I')) {
+			$available_pwdhashes[PASSWORD_ARGON2I] = 'Argon2i';
 		}
-		if (defined('CRYPT_SHA256') && CRYPT_SHA256 == 1) {
-			$available_pwdhashes[3] = 'SHA-256';
-		}
-		if (defined('CRYPT_SHA512') && CRYPT_SHA512 == 1) {
-			$available_pwdhashes[4] = 'SHA-512';
+		if (defined('PASSWORD_ARGON2ID')) {
+			$available_pwdhashes[PASSWORD_ARGON2ID] = 'Argon2id';
 		}
 
 		return $available_pwdhashes;
@@ -196,36 +170,27 @@ class Crypt
 	 */
 	public static function validatePasswordLogin($userinfo = null, $password = null, $table = 'panel_customers', $uid = 'customerid')
 	{
-		$systype = 3; // SHA256
-		if (Settings::Get('system.passwordcryptfunc') !== null) {
-			$systype = (int) Settings::Get('system.passwordcryptfunc');
+		$algo = Settings::Get('system.passwordcryptfunc') !== null ? Settings::Get('system.passwordcryptfunc') : PASSWORD_DEFAULT;
+		if (is_numeric($algo)) {
+			// old setting format
+			$algo = PASSWORD_DEFAULT;
+			Settings::Set('system.passwordcryptfunc', $algo);
 		}
-
 		$pwd_hash = $userinfo['password'];
 
 		$update_hash = false;
+		$pwd_check = "";
 		// check for good'ole md5
 		if (strlen($pwd_hash) == 32 && ctype_xdigit($pwd_hash)) {
 			$pwd_check = md5($password);
 			$update_hash = true;
-		} else {
-			// cut out the salt from the hash
-			$pwd_salt = str_replace(substr(strrchr($pwd_hash, "$"), 1), "", $pwd_hash);
-			// create same hash to compare
-			$pwd_check = crypt($password, $pwd_salt);
-			// check whether the hash needs to be updated
-			$hash_type_chk = substr($pwd_hash, 0, 3);
-			// MD5 || BLOWFISH || SHA256 || SHA512
-			if (($systype == 1 && $hash_type_chk != '$1$') || ($systype == 2 && $hash_type_chk != '$2$') || ($systype == 3 && $hash_type_chk != '$5$') || ($systype == 4 && $hash_type_chk != '$6$')) {
-				$update_hash = true;
-			}
 		}
 
-		if ($pwd_hash == $pwd_check) {
+		if ($pwd_hash == $pwd_check || password_verify($password, $pwd_hash)) {
 
 			// check for update of hash (only if our database is ready to handle the bigger string)
 			$is_ready = (\Froxlor\Froxlor::versionCompare2("0.9.33", \Froxlor\Froxlor::getVersion()) <= 0 ? true : false);
-			if ($update_hash && $is_ready) {
+			if ((password_needs_rehash($pwd_hash, $algo) || $update_hash) && $is_ready) {
 				$upd_stmt = \Froxlor\Database\Database::prepare("
 					UPDATE " . $table . " SET `password` = :newpasswd WHERE `" . $uid . "` = :uid
 				");
@@ -235,7 +200,6 @@ class Crypt
 				);
 				\Froxlor\Database\Database::pexecute($upd_stmt, $params);
 			}
-
 			return true;
 		}
 		return false;

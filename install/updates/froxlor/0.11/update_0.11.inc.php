@@ -87,6 +87,11 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.99')) {
 	Settings::AddNew("panel.settings_mode", $panel_settings_mode);
 	lastStepStatus(0);
 
+	showUpdateStep("Adjusting existing settings");
+	Settings::Set('system.passwordcryptfunc', PASSWORD_DEFAULT);
+	lastStepStatus(0);
+
+
 	if (\Froxlor\Froxlor::isFroxlorVersion('0.10.99')) {
 		showUpdateStep("Updating from 0.10.99 to 0.11.0-dev1", false);
 		\Froxlor\Froxlor::updateToVersion('0.11.0-dev1');
