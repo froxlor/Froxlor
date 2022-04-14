@@ -381,7 +381,7 @@ return array(
 			'section_d' => array(
 				'title' => $lng['admin']['nameserversettings'],
 				'image' => 'icons/domain_add.png',
-				'visible' => (Settings::Get('system.bind_enable') == '1' && $userinfo['change_serversettings'] == '1' ? true : false),
+				'visible' => Settings::Get('system.bind_enable') == '1' && $userinfo['change_serversettings'] == '1',
 				'fields' => array(
 					'isbinddomain' => array(
 						'label' => 'Nameserver',
