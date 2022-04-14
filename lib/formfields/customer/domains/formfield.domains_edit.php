@@ -34,7 +34,7 @@ return array(
 						'values' => $domainips
 					),
 					'alias' => array(
-						'visible' => ($alias_check == '0' ? true : false),
+						'visible' => $alias_check == '0',
 						'label' => $lng['domains']['aliasdomain'],
 						'type' => 'select',
 						'select_var' => $domains,
@@ -48,13 +48,13 @@ return array(
 						'selected' => $pathSelect['value']
 					),
 					'url' => array(
-						'visible' => (\Froxlor\Settings::Get('panel.pathedit') == 'Dropdown' ? true : false),
+						'visible' => \Froxlor\Settings::Get('panel.pathedit') == 'Dropdown',
 						'label' => $lng['panel']['urloverridespath'],
 						'type' => 'text',
 						'value' => $urlvalue
 					),
 					'redirectcode' => array(
-						'visible' => (\Froxlor\Settings::Get('customredirect.enabled') == '1' ? true : false),
+						'visible' => \Froxlor\Settings::Get('customredirect.enabled') == '1',
 						'label' => $lng['domains']['redirectifpathisurl'],
 						'desc' => $lng['domains']['redirectifpathisurlinfo'],
 						'type' => 'select',
@@ -62,7 +62,7 @@ return array(
 						'selected' => $def_code
 					),
 					'selectserveralias' => array(
-						'visible' => ((($result['parentdomainid'] == '0' && $userinfo['subdomains'] != '0') || $result['parentdomainid'] != '0') ? true : false),
+						'visible' => ($result['parentdomainid'] == '0' && $userinfo['subdomains'] != '0') || $result['parentdomainid'] != '0',
 						'label' => $lng['admin']['selectserveralias'],
 						'desc' => $lng['admin']['selectserveralias_desc'],
 						'type' => 'select',
@@ -70,21 +70,21 @@ return array(
 						'selected' => $serveraliasoptions_selected
 					),
 					'isemaildomain' => array(
-						'visible' => ((($result['subcanemaildomain'] == '1' || $result['subcanemaildomain'] == '2') && $result['parentdomainid'] != '0') ? true : false),
+						'visible' => ($result['subcanemaildomain'] == '1' || $result['subcanemaildomain'] == '2') && $result['parentdomainid'] != '0',
 						'label' => 'Emaildomain',
 						'type' => 'checkbox',
 						'value' => '1',
 						'checked' => $result['isemaildomain']
 					),
 					'openbasedir_path' => array(
-						'visible' => ($result['openbasedir'] == '1') ? true : false,
+						'visible' => $result['openbasedir'] == '1',
 						'label' => $lng['domain']['openbasedirpath'],
 						'type' => 'select',
 						'select_var' => $openbasedir,
 						'selected' => $result['openbasedir_path']
 					),
 					'phpsettingid' => array(
-						'visible' => (((int) \Froxlor\Settings::Get('system.mod_fcgid') == 1 || (int) \Froxlor\Settings::Get('phpfpm.enabled') == 1) && count($phpconfigs) > 0 ? true : false),
+						'visible' => ((int) \Froxlor\Settings::Get('system.mod_fcgid') == 1 || (int) \Froxlor\Settings::Get('phpfpm.enabled') == 1) && count($phpconfigs) > 0,
 						'label' => $lng['admin']['phpsettings']['title'],
 						'type' => 'select',
 						'select_var' => $phpconfigs,
@@ -95,7 +95,7 @@ return array(
 			'section_bssl' => array(
 				'title' => $lng['admin']['webserversettings_ssl'],
 				'image' => 'icons/domain_edit.png',
-				'visible' => \Froxlor\Settings::Get('system.use_ssl') == '1' ? ($ssl_ipsandports ? (\Froxlor\Domain\Domain::domainHasSslIpPort($result['id']) ? true : false) : false) : false,
+				'visible' => \Froxlor\Settings::Get('system.use_ssl') == '1' && $ssl_ipsandports && \Froxlor\Domain\Domain::domainHasSslIpPort($result['id']),
 				'fields' => array(
 					'sslenabled' => array(
 						'label' => $lng['admin']['domain_sslenabled'],
@@ -111,7 +111,7 @@ return array(
 						'checked' => $result['ssl_redirect']
 					),
 					'letsencrypt' => array(
-						'visible' => \Froxlor\Settings::Get('system.leenabled') == '1' ? true : false,
+						'visible' => \Froxlor\Settings::Get('system.leenabled') == '1',
 						'label' => $lng['customer']['letsencrypt']['title'],
 						'desc' => $lng['customer']['letsencrypt']['description'],
 						'type' => 'checkbox',
@@ -119,7 +119,7 @@ return array(
 						'checked' => $result['letsencrypt']
 					),
 					'http2' => array(
-						'visible' => ($ssl_ipsandports ? true : false) && \Froxlor\Settings::Get('system.webserver') != 'lighttpd' && \Froxlor\Settings::Get('system.http2_support') == '1',
+						'visible' => $ssl_ipsandports && \Froxlor\Settings::Get('system.webserver') != 'lighttpd' && \Froxlor\Settings::Get('system.http2_support') == '1',
 						'label' => $lng['admin']['domain_http2']['title'],
 						'desc' => $lng['admin']['domain_http2']['description'],
 						'type' => 'checkbox',

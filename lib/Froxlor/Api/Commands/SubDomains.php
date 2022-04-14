@@ -18,7 +18,7 @@ use Froxlor\Settings;
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package API
  * @since 0.10.0
- *       
+ *
  */
 class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntity
 {
@@ -60,7 +60,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	 *        	optional, required when called as admin (if $loginname is not specified)
 	 * @param string $loginname
 	 *        	optional, required when called as admin (if $customerid is not specified)
-	 *        	
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -382,7 +382,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	 *        	optional, the domain-id
 	 * @param string $domainname
 	 *        	optional, the domainname
-	 *        	
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -390,7 +390,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	public function get()
 	{
 		$id = $this->getParam('id', true, 0);
-		$dn_optional = ($id <= 0 ? false : true);
+		$dn_optional = $id > 0;
 		$domainname = $this->getParam('domainname', $dn_optional, '');
 
 		// convert possible idn domain to punycode
@@ -498,7 +498,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	 *        	optional, required when called as admin (if $loginname is not specified)
 	 * @param string $loginname
 	 *        	optional, required when called as admin (if $customerid is not specified)
-	 *        	
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -506,7 +506,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	public function update()
 	{
 		$id = $this->getParam('id', true, 0);
-		$dn_optional = ($id <= 0 ? false : true);
+		$dn_optional = $id > 0;
 		$domainname = $this->getParam('domainname', $dn_optional, '');
 
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'domains')) {
@@ -762,7 +762,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	 *        	optional specify offset for resultset
 	 * @param array $sql_orderby
 	 *        	optional array with index = fieldname and value = ASC|DESC to order the resultset by one or more fields
-	 *        	
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array count|list
@@ -861,7 +861,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	 *        	optional, admin-only, select (sub)domains of a specific customer by id
 	 * @param string $loginname
 	 *        	optional, admin-only, select (sub)domains of a specific customer by loginname
-	 *        	
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -936,7 +936,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	public function delete()
 	{
 		$id = $this->getParam('id', true, 0);
-		$dn_optional = ($id <= 0 ? false : true);
+		$dn_optional = $id > 0;
 		$domainname = $this->getParam('domainname', $dn_optional, '');
 
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'domains')) {

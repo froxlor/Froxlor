@@ -14,6 +14,9 @@
  * @package    Formfields
  *
  */
+
+use Froxlor\Settings;
+
 return array(
 	'admin_add' => array(
 		'title' => $lng['admin']['admin_add'],
@@ -37,7 +40,7 @@ return array(
 							'admin_password_suggestion' => array(
 								'next_to_prefix' => $lng['customer']['generated_pwd'].':',
 								'type' => 'text',
-								'visible' => (\Froxlor\Settings::Get('panel.password_regex') == ''),
+								'visible' => (Settings::Get('panel.password_regex') == ''),
 								'value' => \Froxlor\System\Crypt::generatePassword(),
 								'readonly' => true
 							)
@@ -55,8 +58,8 @@ return array(
 						'desc' => $lng['usersettings']['api_allowed']['description'],
 						'type' => 'checkbox',
 						'value' => '1',
-						'checked' => (\Froxlor\Settings::Get('api.enabled') == '1' ? true : false),
-						'visible' => (\Froxlor\Settings::Get('api.enabled') == '1' ? true : false)
+						'checked' => Settings::Get('api.enabled') == '1',
+						'visible' => Settings::Get('api.enabled') == '1'
 					)
 				)
 			),
@@ -183,7 +186,7 @@ return array(
 						'type' => 'textul',
 						'value' => 0,
 						'maxlength' => 9,
-						'visible' => (\Froxlor\Settings::Get('system.mail_quota_enabled') == '1' ? true : false),
+						'visible' => Settings::Get('system.mail_quota_enabled') == '1',
 						'mandatory' => true
 					),
 					'ftps' => array(

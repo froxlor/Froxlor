@@ -71,7 +71,7 @@ return array(
 						'type' => 'checkbox',
 						'value' => '1',
 						'checked' => $result['api_allowed'],
-						'visible' => (\Froxlor\Settings::Get('api.enabled') == '1' ? true : false)
+						'visible' => \Froxlor\Settings::Get('api.enabled') == '1'
 					)
 				)
 			),
@@ -225,7 +225,7 @@ return array(
 						'type' => 'textul',
 						'value' => $result['email_quota'],
 						'maxlength' => 9,
-						'visible' => (\Froxlor\Settings::Get('system.mail_quota_enabled') == '1' ? true : false),
+						'visible' => \Froxlor\Settings::Get('system.mail_quota_enabled') == '1',
 						'mandatory' => true
 					),
 					'email_imap' => array(
@@ -262,7 +262,7 @@ return array(
 						'checked' => $result['phpenabled']
 					),
 					'allowed_phpconfigs' => array(
-						'visible' => (((int) \Froxlor\Settings::Get('system.mod_fcgid') == 1 || (int) \Froxlor\Settings::Get('phpfpm.enabled') == 1) ? true : false),
+						'visible' => (((int) \Froxlor\Settings::Get('system.mod_fcgid') == 1 || (int) \Froxlor\Settings::Get('phpfpm.enabled') == 1)),
 						'label' => $lng['admin']['phpsettings']['title'],
 						'type' => 'checkbox',
 						'values' => $phpconfigs,
@@ -280,7 +280,7 @@ return array(
 						'type' => 'checkbox',
 						'value' => '1',
 						'checked' => $result['dnsenabled'],
-						'visible' => (\Froxlor\Settings::Get('system.dnsenabled') == '1' ? true : false)
+						'visible' => \Froxlor\Settings::Get('system.dnsenabled') == '1'
 					),
 					'logviewenabled' => array(
 						'label' => $lng['admin']['logviewenabled'] . '?',

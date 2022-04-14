@@ -30,7 +30,7 @@ return array(
 						'value' => $result['email_full']
 					),
 					'account_yes' => array(
-						'visible' => ((int) $result['popaccountid'] != 0 ? true : false),
+						'visible' => (int) $result['popaccountid'] != 0,
 						'label' => $lng['emails']['account'],
 						'type' => 'label',
 						'value' => $lng['panel']['yes'],
@@ -50,7 +50,7 @@ return array(
 						]
 					),
 					'account_no' => array(
-						'visible' => ((int) $result['popaccountid'] == 0 ? true : false),
+						'visible' => (int) $result['popaccountid'] == 0,
 						'label' => $lng['emails']['account'],
 						'type' => 'label',
 						'value' => $lng['panel']['no'],

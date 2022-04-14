@@ -17,7 +17,7 @@ use Froxlor\Database\Database;
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package API
  * @since 0.10.0
- *       
+ *
  */
 class HostingPlans extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntity
 {
@@ -33,7 +33,7 @@ class HostingPlans extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 	 *        	optional specify offset for resultset
 	 * @param array $sql_orderby
 	 *        	optional array with index = fieldname and value = ASC|DESC to order the resultset by one or more fields
-	 *        	
+	 *
 	 * @access admin
 	 * @throws \Exception
 	 * @return string json-encoded array count|list
@@ -98,7 +98,7 @@ class HostingPlans extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 	 *        	optional, the hosting-plan-id
 	 * @param string $planname
 	 *        	optional, the hosting-plan-name
-	 *        	
+	 *
 	 * @access admin
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -107,7 +107,7 @@ class HostingPlans extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 	{
 		if ($this->isAdmin()) {
 			$id = $this->getParam('id', true, 0);
-			$dn_optional = ($id <= 0 ? false : true);
+			$dn_optional = $id > 0;
 			$planname = $this->getParam('planname', $dn_optional, '');
 			$result_stmt = Database::prepare("
 				SELECT * FROM `" . TABLE_PANEL_PLANS . "` WHERE " . ($id > 0 ? "`id` = :iddn" : "`name` = :iddn") . ($this->getUserDetail('customers_see_all') ? '' : " AND `adminid` = :adminid"));
@@ -185,7 +185,7 @@ class HostingPlans extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 	 *        	optional, whether to allow usage of the DNS editor (requires activated nameserver in settings), default 0 (false)
 	 * @param bool $logviewenabled
 	 *        	optional, whether to allow access to webserver access/error-logs, default 0 (false)
-	 *        	
+	 *
 	 * @access admin
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -312,7 +312,7 @@ class HostingPlans extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 	 *        	optional, either to allow usage of the DNS editor (requires activated nameserver in settings), default 0 (false)
 	 * @param bool $logviewenabled
 	 *        	optional, either to allow access to webserver access/error-logs, default 0 (false)
-	 *        	
+	 *
 	 * @access admin
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -323,7 +323,7 @@ class HostingPlans extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 
 			// parameters
 			$id = $this->getParam('id', true, 0);
-			$dn_optional = ($id <= 0 ? false : true);
+			$dn_optional = $id > 0;
 			$planname = $this->getParam('planname', $dn_optional, '');
 
 			// get requested hosting-plan
@@ -405,7 +405,7 @@ class HostingPlans extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 	 *        	optional the hosting-plan-id
 	 * @param string $planname
 	 *        	optional the hosting-plan-name
-	 *        	
+	 *
 	 * @access admin
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -414,7 +414,7 @@ class HostingPlans extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 	{
 		if ($this->isAdmin()) {
 			$id = $this->getParam('id', true, 0);
-			$dn_optional = ($id <= 0 ? false : true);
+			$dn_optional = $id > 0;
 			$planname = $this->getParam('planname', $dn_optional, '');
 
 			// get requested hosting-plan

@@ -17,7 +17,7 @@ use Froxlor\Settings;
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package API
  * @since 0.10.0
- *       
+ *
  */
 class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntity
 {
@@ -41,7 +41,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 	 *        	optional quota if enabled in MB, default 0
 	 * @param bool $sendinfomail
 	 *        	optional, sends the welcome message to the new account (needed for creation, without the user won't be able to login before any mail is received), default 1 (true)
-	 *        	
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -56,7 +56,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 
 			// parameter
 			$id = $this->getParam('id', true, 0);
-			$ea_optional = ($id <= 0 ? false : true);
+			$ea_optional = $id > 0;
 			$emailaddr = $this->getParam('emailaddr', $ea_optional, '');
 			$email_password = $this->getParam('email_password');
 			$alternative_email = $this->getParam('alternative_email', true, '');
@@ -137,7 +137,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 			$stmt = Database::prepare("INSERT INTO `" . TABLE_MAIL_USERS . "` SET
 				`customerid` = :cid,
 				`email` = :email,
-				`username` = :username," . (Settings::Get('system.mailpwcleartext') == '1' ? '`password` = :password, ' : '') . " 
+				`username` = :username," . (Settings::Get('system.mailpwcleartext') == '1' ? '`password` = :password, ' : '') . "
 				`password_enc` = :password_enc,
 				`homedir` = :homedir,
 				`maildir` = :maildir,
@@ -304,7 +304,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 	 *        	optional, update password
 	 * @param bool $deactivated
 	 *        	optional, admin-only
-	 *        	
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -317,7 +317,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 
 		// parameter
 		$id = $this->getParam('id', true, 0);
-		$ea_optional = ($id <= 0 ? false : true);
+		$ea_optional = $id > 0;
 		$emailaddr = $this->getParam('emailaddr', $ea_optional, '');
 
 		// validation
@@ -333,7 +333,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 
 		$password = $this->getParam('email_password', true, '');
 		$quota = $this->getParam('email_quota', true, $result['quota']);
-		$deactivated = $this->getBoolParam('deactivated', true, (strtolower($result['postfix']) == 'n' ? true : false));
+		$deactivated = $this->getBoolParam('deactivated', true, strtolower($result['postfix']) == 'n');
 
 		// get needed customer info to reduce the email-account-counter by one
 		$customer = $this->getCustomerData();
@@ -438,7 +438,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 	 *        	optional, required when called as admin (if $customerid is not specified)
 	 * @param bool $delete_userfiles
 	 *        	optional, default false
-	 *        	
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -451,7 +451,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 
 		// parameter
 		$id = $this->getParam('id', true, 0);
-		$ea_optional = ($id <= 0 ? false : true);
+		$ea_optional = $id > 0;
 		$emailaddr = $this->getParam('emailaddr', $ea_optional, '');
 		$delete_userfiles = $this->getBoolParam('delete_userfiles', true, 0);
 

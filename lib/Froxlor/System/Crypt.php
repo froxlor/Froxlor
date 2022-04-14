@@ -62,18 +62,18 @@ class Crypt
 	 * @author Michal Wojcik <m.wojcik@sonet3.pl>
 	 * @author Michael Kaufmann <mkaufmann@nutime.de>
 	 * @author Froxlor team <team@froxlor.org> (2010-)
-	 *        
+	 *
 	 *         0 - default crypt (depends on system configuration)
 	 *         1 - MD5 $1$
 	 *         2 - BLOWFISH $2y$07$
 	 *         3 - SHA-256 $5$ (default)
 	 *         4 - SHA-512 $6$
-	 *        
+	 *
 	 * @param string $password
 	 *        	Password to be encrypted
 	 * @param bool $htpasswd
 	 *        	optional whether to generate a SHA1 password for directory protection
-	 *        	
+	 *
 	 * @return string encrypted password
 	 */
 	public static function makeCryptPassword($password, $htpasswd = false)
@@ -120,7 +120,7 @@ class Crypt
 	 *
 	 * @param string $password
 	 *        	the password to validate
-	 *        	
+	 *
 	 * @return string either the password or an errormessage+exit
 	 */
 	public static function validatePassword($password = null, $json_response = false)
@@ -165,7 +165,7 @@ class Crypt
 	 *        	either panel_customers or panel_admins
 	 * @param string $uid
 	 *        	user-id-field in $table
-	 *        	
+	 *
 	 * @return boolean
 	 */
 	public static function validatePasswordLogin($userinfo = null, $password = null, $table = 'panel_customers', $uid = 'customerid')
@@ -189,7 +189,7 @@ class Crypt
 		if ($pwd_hash == $pwd_check || password_verify($password, $pwd_hash)) {
 
 			// check for update of hash (only if our database is ready to handle the bigger string)
-			$is_ready = (\Froxlor\Froxlor::versionCompare2("0.9.33", \Froxlor\Froxlor::getVersion()) <= 0 ? true : false);
+			$is_ready = \Froxlor\Froxlor::versionCompare2("0.9.33", \Froxlor\Froxlor::getVersion()) <= 0 ;
 			if ((password_needs_rehash($pwd_hash, $algo) || $update_hash) && $is_ready) {
 				$upd_stmt = \Froxlor\Database\Database::prepare("
 					UPDATE " . $table . " SET `password` = :newpasswd WHERE `" . $uid . "` = :uid

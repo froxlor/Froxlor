@@ -18,9 +18,9 @@ use Froxlor\FroxlorLogger;
  * @author Froxlor team <team@froxlor.org> (2010-)
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package Cron
- *         
+ *
  * @since 0.9.35.1
- *       
+ *
  */
 class BackupCron extends \Froxlor\Cron\FroxlorCron
 {
@@ -35,7 +35,7 @@ class BackupCron extends \Froxlor\Cron\FroxlorCron
 					$BackupPidStatus = @posix_kill($BackupPid, 0);
 				} else {
 					system("kill -CHLD " . $BackupPid . " 1> /dev/null 2> /dev/null", $BackupPidStatus);
-					$BackupPidStatus = $BackupPidStatus ? false : true;
+					$BackupPidStatus = !$BackupPidStatus;
 				}
 				if ($BackupPidStatus) {
 					FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'Backup run already in progress');

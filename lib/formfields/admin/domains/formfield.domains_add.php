@@ -14,6 +14,9 @@
  * @package    Formfields
  *
  */
+
+use Froxlor\Settings;
+
 return array(
 	'domain_add' => array(
 		'title' => $lng['admin']['domain_add'],
@@ -35,7 +38,7 @@ return array(
 						'mandatory' => true
 					),
 					'adminid' => array(
-						'visible' => ($userinfo['customers_see_all'] == '1' ? true : false),
+						'visible' => $userinfo['customers_see_all'] == '1',
 						'label' => $lng['admin']['admin'],
 						'type' => 'select',
 						'select_var' => $admins,
@@ -103,7 +106,7 @@ return array(
 						'selected' => 0
 					),
 					'dkim' => array(
-						'visible' => (\Froxlor\Settings::Get('dkim.use_dkim') == '1' ? true : false),
+						'visible' => Settings::Get('dkim.use_dkim') == '1',
 						'label' => 'DomainKeys',
 						'type' => 'checkbox',
 						'value' => '1',
@@ -116,7 +119,7 @@ return array(
 				'image' => 'icons/domain_add.png',
 				'fields' => array(
 					'documentroot' => array(
-						'visible' => ($userinfo['change_serversettings'] == '1' ? true : false),
+						'visible' => $userinfo['change_serversettings'] == '1',
 						'label' => 'DocumentRoot',
 						'desc' => $lng['panel']['emptyfordefault'],
 						'type' => 'text'
@@ -126,7 +129,7 @@ return array(
 						'desc' => $lng['domains']['ipandport_multi']['description'],
 						'type' => 'checkbox',
 						'values' => $ipsandports,
-						'value' => explode(',', \Froxlor\Settings::Get('system.defaultip')),
+						'value' => explode(',', Settings::Get('system.defaultip')),
 						'is_array' => 1,
 						'mandatory' => true
 					),
@@ -135,7 +138,7 @@ return array(
 						'desc' => $lng['admin']['selectserveralias_desc'],
 						'type' => 'select',
 						'select_var' => $serveraliasoptions,
-						'selected' => \Froxlor\Settings::Get('system.domaindefaultalias')
+						'selected' => Settings::Get('system.domaindefaultalias')
 					),
 					'speciallogfile' => array(
 						'label' => $lng['admin']['speciallogfile']['title'],
@@ -145,7 +148,7 @@ return array(
 						'checked' => false
 					),
 					'specialsettings' => array(
-						'visible' => ($userinfo['change_serversettings'] == '1' ? true : false),
+						'visible' => $userinfo['change_serversettings'] == '1',
 						'label' => $lng['admin']['ownvhostsettings'],
 						'desc' => $lng['serversettings']['default_vhostconf']['description'],
 						'type' => 'textarea',
@@ -153,7 +156,7 @@ return array(
 						'rows' => 12
 					),
 					'notryfiles' => array(
-						'visible' => (\Froxlor\Settings::Get('system.webserver') == 'nginx' && $userinfo['change_serversettings'] == '1'),
+						'visible' => (Settings::Get('system.webserver') == 'nginx' && $userinfo['change_serversettings'] == '1'),
 						'label' => $lng['admin']['notryfiles']['title'],
 						'desc' => $lng['admin']['notryfiles']['description'],
 						'type' => 'checkbox',
@@ -179,17 +182,17 @@ return array(
 			'section_bssl' => array(
 				'title' => $lng['admin']['webserversettings_ssl'],
 				'image' => 'icons/domain_add.png',
-				'visible' => \Froxlor\Settings::Get('system.use_ssl') == '1' ? true : false,
+				'visible' => Settings::Get('system.use_ssl') == '1',
 				'fields' => array(
 					'sslenabled' => array(
-						'visible' => (!empty($ssl_ipsandports) ? true : false),
+						'visible' => !empty($ssl_ipsandports),
 						'label' => $lng['admin']['domain_sslenabled'],
 						'type' => 'checkbox',
 						'value' => '1',
 						'checked' => true
 					),
 					'no_ssl_available_info' => array(
-						'visible' => (!empty($ssl_ipsandports) ? true : false),
+						'visible' => !empty($ssl_ipsandports),
 						'label' => 'SSL',
 						'type' => 'label',
 						'value' => $lng['panel']['nosslipsavailable']
@@ -199,11 +202,11 @@ return array(
 						'desc' => $lng['domains']['ipandport_ssl_multi']['description'],
 						'type' => 'checkbox',
 						'values' => $ssl_ipsandports,
-						'value' => explode(',', \Froxlor\Settings::Get('system.defaultsslip')),
+						'value' => explode(',', Settings::Get('system.defaultsslip')),
 						'is_array' => 1
 					),
 					'ssl_redirect' => array(
-						'visible' => (!empty($ssl_ipsandports) ? true : false),
+						'visible' => !empty($ssl_ipsandports),
 						'label' => $lng['domains']['ssl_redirect']['title'],
 						'desc' => $lng['domains']['ssl_redirect']['description'],
 						'type' => 'checkbox',
@@ -211,7 +214,7 @@ return array(
 						'checked' => false
 					),
 					'letsencrypt' => array(
-						'visible' => (\Froxlor\Settings::Get('system.leenabled') == '1' ? (!empty($ssl_ipsandports) ? true : false) : false),
+						'visible' => (Settings::Get('system.leenabled') == '1' && !empty($ssl_ipsandports)),
 						'label' => $lng['admin']['letsencrypt']['title'],
 						'desc' => $lng['admin']['letsencrypt']['description'],
 						'type' => 'checkbox',
@@ -219,7 +222,7 @@ return array(
 						'checked' => false
 					),
 					'http2' => array(
-						'visible' => (!empty($ssl_ipsandports) ? true : false) && \Froxlor\Settings::Get('system.webserver') != 'lighttpd' && \Froxlor\Settings::Get('system.http2_support') == '1',
+						'visible' => !empty($ssl_ipsandports) && Settings::Get('system.webserver') != 'lighttpd' && Settings::Get('system.http2_support') == '1',
 						'label' => $lng['admin']['domain_http2']['title'],
 						'desc' => $lng['admin']['domain_http2']['description'],
 						'type' => 'checkbox',
@@ -227,14 +230,14 @@ return array(
 						'checked' => false
 					),
 					'override_tls' => array(
-						'visible' => ((!empty($ssl_ipsandports) ? true : false) && $userinfo['change_serversettings'] == '1' ? true : false),
+						'visible' => !empty($ssl_ipsandports) && $userinfo['change_serversettings'] == '1',
 						'label' => $lng['admin']['domain_override_tls'],
 						'type' => 'checkbox',
 						'value' => '1',
 						'checked' => false
 					),
 					'ssl_protocols' => array(
-						'visible' => ((!empty($ssl_ipsandports) ? true : false) && $userinfo['change_serversettings'] == '1' && \Froxlor\Settings::Get('system.webserver') != 'lighttpd' ? true : false),
+						'visible' => !empty($ssl_ipsandports) && $userinfo['change_serversettings'] == '1' && Settings::Get('system.webserver') != 'lighttpd',
 						'label' => $lng['serversettings']['ssl']['ssl_protocols']['title'],
 						'desc' => $lng['serversettings']['ssl']['ssl_protocols']['description'],
 						'type' => 'checkbox',
@@ -262,21 +265,21 @@ return array(
 						'is_array' => 1
 					),
 					'ssl_cipher_list' => array(
-						'visible' => ((!empty($ssl_ipsandports) ? true : false) && $userinfo['change_serversettings'] == '1' ? true : false),
+						'visible' => !empty($ssl_ipsandports) && $userinfo['change_serversettings'] == '1',
 						'label' => $lng['serversettings']['ssl']['ssl_cipher_list']['title'],
 						'desc' => $lng['serversettings']['ssl']['ssl_cipher_list']['description'],
 						'type' => 'text',
-						'value' => \Froxlor\Settings::Get('system.ssl_cipher_list')
+						'value' => Settings::Get('system.ssl_cipher_list')
 					),
 					'tlsv13_cipher_list' => array(
-						'visible' => ((!empty($ssl_ipsandports) ? true : false) && $userinfo['change_serversettings'] == '1' && \Froxlor\Settings::Get('system.webserver') == "apache2" && \Froxlor\Settings::Get('system.apache24') == 1 ? true : false),
+						'visible' => !empty($ssl_ipsandports) && $userinfo['change_serversettings'] == '1' && Settings::Get('system.webserver') == "apache2" && Settings::Get('system.apache24') == 1,
 						'label' => $lng['serversettings']['ssl']['tlsv13_cipher_list']['title'],
 						'desc' => $lng['serversettings']['ssl']['tlsv13_cipher_list']['description'],
 						'type' => 'text',
-						'value' => \Froxlor\Settings::Get('system.tlsv13_cipher_list')
+						'value' => Settings::Get('system.tlsv13_cipher_list')
 					),
 					'ssl_specialsettings' => array(
-						'visible' => ((!empty($ssl_ipsandports) ? true : false) && $userinfo['change_serversettings'] == '1' ? true : false),
+						'visible' => !empty($ssl_ipsandports) && $userinfo['change_serversettings'] == '1',
 						'label' => $lng['admin']['ownsslvhostsettings'],
 						'desc' => $lng['serversettings']['default_vhostconf']['description'],
 						'type' => 'textarea',
@@ -284,14 +287,14 @@ return array(
 						'rows' => 12
 					),
 					'include_specialsettings' => array(
-						'visible' => ((!empty($ssl_ipsandports) ? true : false) && $userinfo['change_serversettings'] == '1' ? true : false),
+						'visible' => !empty($ssl_ipsandports) && $userinfo['change_serversettings'] == '1',
 						'label' => $lng['admin']['include_ownvhostsettings'],
 						'type' => 'checkbox',
 						'value' => '1',
 						'checked' => false
 					),
 					'hsts_maxage' => array(
-						'visible' => ($ssl_ipsandports != '' ? true : false),
+						'visible' => $ssl_ipsandports != '',
 						'label' => $lng['admin']['domain_hsts_maxage']['title'],
 						'desc' => $lng['admin']['domain_hsts_maxage']['description'],
 						'type' => 'number',
@@ -300,7 +303,7 @@ return array(
 						'value' => 0
 					),
 					'hsts_sub' => array(
-						'visible' => (!empty($ssl_ipsandports) ? true : false),
+						'visible' => !empty($ssl_ipsandports),
 						'label' => $lng['admin']['domain_hsts_incsub']['title'],
 						'desc' => $lng['admin']['domain_hsts_incsub']['description'],
 						'type' => 'checkbox',
@@ -308,7 +311,7 @@ return array(
 						'checked' => false
 					),
 					'hsts_preload' => array(
-						'visible' => (!empty($ssl_ipsandports) ? true : false),
+						'visible' => !empty($ssl_ipsandports),
 						'label' => $lng['admin']['domain_hsts_preload']['title'],
 						'desc' => $lng['admin']['domain_hsts_preload']['description'],
 						'type' => 'checkbox',
@@ -316,22 +319,22 @@ return array(
 						'checked' => false
 					),
 					'ocsp_stapling' => array(
-						'visible' => (!empty($ssl_ipsandports) ? true : false) && \Froxlor\Settings::Get('system.webserver') != 'lighttpd',
+						'visible' => !empty($ssl_ipsandports) && Settings::Get('system.webserver') != 'lighttpd',
 						'label' => $lng['admin']['domain_ocsp_stapling']['title'],
-						'desc' => $lng['admin']['domain_ocsp_stapling']['description'] . (\Froxlor\Settings::Get('system.webserver') == 'nginx' ? $lng['admin']['domain_ocsp_stapling']['nginx_version_warning'] : ""),
+						'desc' => $lng['admin']['domain_ocsp_stapling']['description'] . (Settings::Get('system.webserver') == 'nginx' ? $lng['admin']['domain_ocsp_stapling']['nginx_version_warning'] : ""),
 						'type' => 'checkbox',
 						'value' => '1',
 						'checked' => false
 					),
 					'honorcipherorder' => array(
-						'visible' => (!empty($ssl_ipsandports) ? true : false),
+						'visible' => !empty($ssl_ipsandports),
 						'label' => $lng['admin']['domain_honorcipherorder'],
 						'type' => 'checkbox',
 						'value' => '1',
 						'checked' => false
 					),
 					'sessiontickets' => array(
-						'visible' => (!empty($ssl_ipsandports) ? true : false) && \Froxlor\Settings::Get('system.webserver') != 'lighttpd' && \Froxlor\Settings::Get('system.sessionticketsenabled' != '1'),
+						'visible' => !empty($ssl_ipsandports) && Settings::Get('system.webserver') != 'lighttpd' && Settings::Get('system.sessionticketsenabled' != '1'),
 						'label' => $lng['admin']['domain_sessiontickets'],
 						'type' => 'checkbox',
 						'value' => '1',
@@ -342,7 +345,7 @@ return array(
 			'section_c' => array(
 				'title' => $lng['admin']['phpserversettings'],
 				'image' => 'icons/domain_add.png',
-				'visible' => (($userinfo['change_serversettings'] == '1' || $userinfo['caneditphpsettings'] == '1') ? true : false),
+				'visible' => $userinfo['change_serversettings'] == '1' || $userinfo['caneditphpsettings'] == '1',
 				'fields' => array(
 					'openbasedir' => array(
 						'label' => 'OpenBasedir',
@@ -357,19 +360,19 @@ return array(
 						'checked' => true
 					),
 					'phpsettingid' => array(
-						'visible' => (((int) \Froxlor\Settings::Get('system.mod_fcgid') == 1 || (int) \Froxlor\Settings::Get('phpfpm.enabled') == 1) ? true : false),
+						'visible' => (int) Settings::Get('system.mod_fcgid') == 1 || (int) Settings::Get('phpfpm.enabled') == 1,
 						'label' => $lng['admin']['phpsettings']['title'],
 						'type' => 'select',
 						'select_var' => $phpconfigs,
-						'selected' => (int) \Froxlor\Settings::Get('phpfpm.enabled') == 1 ? \Froxlor\Settings::Get('phpfpm.defaultini') : \Froxlor\Settings::Get('system.mod_fcgid_defaultini')
+						'selected' => (int) Settings::Get('phpfpm.enabled') == 1 ? Settings::Get('phpfpm.defaultini') : Settings::Get('system.mod_fcgid_defaultini')
 					),
 					'mod_fcgid_starter' => array(
-						'visible' => ((int) \Froxlor\Settings::Get('system.mod_fcgid') == 1 ? true : false),
+						'visible' => (int) Settings::Get('system.mod_fcgid') == 1,
 						'label' => $lng['admin']['mod_fcgid_starter']['title'],
 						'type' => 'number'
 					),
 					'mod_fcgid_maxrequests' => array(
-						'visible' => ((int) \Froxlor\Settings::Get('system.mod_fcgid') == 1 ? true : false),
+						'visible' => (int) Settings::Get('system.mod_fcgid') == 1,
 						'label' => $lng['admin']['mod_fcgid_maxrequests']['title'],
 						'type' => 'number'
 					)
@@ -378,7 +381,7 @@ return array(
 			'section_d' => array(
 				'title' => $lng['admin']['nameserversettings'],
 				'image' => 'icons/domain_add.png',
-				'visible' => (\Froxlor\Settings::Get('system.bind_enable') == '1' && $userinfo['change_serversettings'] == '1' ? true : false),
+				'visible' => Settings::Get('system.bind_enable') == '1' && $userinfo['change_serversettings'] == '1',
 				'fields' => array(
 					'isbinddomain' => array(
 						'label' => 'Nameserver',

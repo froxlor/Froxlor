@@ -23,7 +23,7 @@ return array(
 				'image' => 'icons/user_add.png',
 				'fields' => array(
 					'ftp_username' => array(
-						'visible' => (\Froxlor\Settings::Get('customer.ftpatdomain') == '1' ? true : false),
+						'visible' => \Froxlor\Settings::Get('customer.ftpatdomain') == '1',
 						'label' => $lng['login']['username'],
 						'type' => 'text',
 						'next_to' => (\Froxlor\Settings::Get('customer.ftpatdomain') == '1' && count($domainlist) > 0 ? [
@@ -66,7 +66,7 @@ return array(
 						'checked' => false
 					),
 					'shell' => array(
-						'visible' => (\Froxlor\Settings::Get('system.allow_customer_shell') == '1' ? true : false),
+						'visible' => \Froxlor\Settings::Get('system.allow_customer_shell') == '1',
 						'label' => $lng['panel']['shell'],
 						'type' => 'select',
 						'select_var' => $shells_avail,

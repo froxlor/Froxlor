@@ -33,18 +33,18 @@ return array(
 						'type' => 'checkbox',
 						'value' => '1',
 						'checked' => $result['deactivated'],
-						'visible' => ($result['adminid'] == $userinfo['userid'] ? false : true)
+						'visible' => $result['adminid'] != $userinfo['userid']
 					),
 					'admin_password' => array(
 						'label' => $lng['login']['password'] . '&nbsp;(' . $lng['panel']['emptyfornochanges'] . ')',
 						'type' => 'password',
 						'autocomplete' => 'off',
-						'visible' => ($result['adminid'] == $userinfo['userid'] ? false : true),
+						'visible' => $result['adminid'] != $userinfo['userid'],
 						'next_to' => [
 							'admin_password_suggestion' => array(
 								'next_to_prefix' => $lng['customer']['generated_pwd'].':',
 								'type' => 'text',
-								'visible' => (\Froxlor\Settings::Get('panel.password_regex') == '' && ($result['adminid'] == $userinfo['userid'] ? false : true)),
+								'visible' => (\Froxlor\Settings::Get('panel.password_regex') == '' && !($result['adminid'] == $userinfo['userid'])),
 								'value' => \Froxlor\System\Crypt::generatePassword(),
 								'readonly' => true
 							)
@@ -55,7 +55,7 @@ return array(
 						'type' => 'select',
 						'select_var' => $languages,
 						'selected' => $result['def_language'],
-						'visible' => ($result['adminid'] == $userinfo['userid'] ? false : true)
+						'visible' => $result['adminid'] != $userinfo['userid']
 					),
 					'api_allowed' => array(
 						'label' => $lng['usersettings']['api_allowed']['title'],
@@ -63,7 +63,7 @@ return array(
 						'type' => 'checkbox',
 						'value' => '1',
 						'checked' => $result['api_allowed'],
-						'visible' => (\Froxlor\Settings::Get('api.enabled') == '1' ? true : false)
+						'visible' => \Froxlor\Settings::Get('api.enabled') == '1'
 					)
 				)
 			),
@@ -102,7 +102,7 @@ return array(
 			'section_c' => array(
 				'title' => $lng['admin']['servicedata'],
 				'image' => 'icons/user_add.png',
-				'visible' => ($result['adminid'] != $userinfo['userid'] ? true : false),
+				'visible' => $result['adminid'] != $userinfo['userid'],
 				'fields' => array(
 					'ipaddress' => array(
 						'label' => $lng['serversettings']['ipaddress']['title'],
@@ -195,7 +195,7 @@ return array(
 						'type' => 'textul',
 						'value' => $result['email_quota'],
 						'maxlength' => 9,
-						'visible' => (\Froxlor\Settings::Get('system.mail_quota_enabled') == '1' ? true : false),
+						'visible' => \Froxlor\Settings::Get('system.mail_quota_enabled') == '1',
 						'mandatory' => true
 					),
 					'ftps' => array(

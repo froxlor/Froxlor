@@ -17,7 +17,7 @@ use Froxlor\Settings;
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package API
  * @since 0.10.0
- *       
+ *
  */
 class DirProtections extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntity
 {
@@ -34,7 +34,7 @@ class DirProtections extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Res
 	 * @param string $directory_password
 	 * @param string $directory_authname
 	 *        	optional name/description for the protection
-	 *        	
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -121,7 +121,7 @@ class DirProtections extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Res
 	 *        	optional, the directory-protection-id
 	 * @param string $username
 	 *        	optional, the username
-	 *        	
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -133,7 +133,7 @@ class DirProtections extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Res
 		}
 
 		$id = $this->getParam('id', true, 0);
-		$un_optional = ($id <= 0 ? false : true);
+		$un_optional = $id > 0;
 		$username = $this->getParam('username', $un_optional, '');
 
 		$params = array();
@@ -194,7 +194,7 @@ class DirProtections extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Res
 	 *        	optional, leave empty for no change
 	 * @param string $directory_authname
 	 *        	optional name/description for the protection
-	 *        	
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -202,7 +202,7 @@ class DirProtections extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Res
 	public function update()
 	{
 		$id = $this->getParam('id', true, 0);
-		$un_optional = ($id <= 0 ? false : true);
+		$un_optional = $id > 0;
 		$username = $this->getParam('username', $un_optional, '');
 
 		// validation
@@ -311,7 +311,7 @@ class DirProtections extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Res
 	 *        	optional, admin-only, select directory-protections of a specific customer by id
 	 * @param string $loginname
 	 *        	optional, admin-only, select directory-protections of a specific customer by loginname
-	 *        	
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array count|list
@@ -341,7 +341,7 @@ class DirProtections extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Res
 	 *        	optional, the directory-protection-id
 	 * @param string $username
 	 *        	optional, the username
-	 *        	
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -353,7 +353,7 @@ class DirProtections extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Res
 		}
 
 		$id = $this->getParam('id', true, 0);
-		$un_optional = ($id <= 0 ? false : true);
+		$un_optional = $id > 0;
 		$username = $this->getParam('username', $un_optional, '');
 
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'extras.directoryprotection')) {

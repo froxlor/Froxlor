@@ -17,7 +17,7 @@ use Froxlor\Settings;
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package API
  * @since 0.10.0
- *       
+ *
  */
 class EmailForwarders extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntity
 {
@@ -35,7 +35,7 @@ class EmailForwarders extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 	 *        	optional, required when called as admin (if $customerid is not specified)
 	 * @param string $destination
 	 *        	email-address to add as forwarder
-	 *        	
+	 *
 	 * @access admin,customer
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -50,7 +50,7 @@ class EmailForwarders extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 
 			// parameter
 			$id = $this->getParam('id', true, 0);
-			$ea_optional = ($id <= 0 ? false : true);
+			$ea_optional = $id > 0;
 			$emailaddr = $this->getParam('emailaddr', $ea_optional, '');
 			$destination = $this->getParam('destination');
 
@@ -136,7 +136,7 @@ class EmailForwarders extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 	 *        	optional, admin-only, the customer-id
 	 * @param string $loginname
 	 *        	optional, admin-only, the loginname
-	 *        	
+	 *
 	 * @access admin,customer
 	 * @throws \Exception
 	 * @return string json-encoded array count|list
@@ -149,7 +149,7 @@ class EmailForwarders extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 
 		// parameter
 		$id = $this->getParam('id', true, 0);
-		$ea_optional = ($id <= 0 ? false : true);
+		$ea_optional = $id > 0;
 		$emailaddr = $this->getParam('emailaddr', $ea_optional, '');
 
 		// validation
@@ -185,7 +185,7 @@ class EmailForwarders extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 	 *        	optional, admin-only, the customer-id
 	 * @param string $loginname
 	 *        	optional, admin-only, the loginname
-	 *        	
+	 *
 	 * @access admin,customer
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -198,7 +198,7 @@ class EmailForwarders extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 
 		// parameter
 		$id = $this->getParam('id', true, 0);
-		$ea_optional = ($id <= 0 ? false : true);
+		$ea_optional = $id > 0;
 		$emailaddr = $this->getParam('emailaddr', $ea_optional, '');
 
 		// validation
@@ -226,7 +226,7 @@ class EmailForwarders extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 	 *        	optional, required when called as admin (if $customerid is not specified)
 	 * @param int $forwarderid
 	 *        	id of the forwarder to delete
-	 *        	
+	 *
 	 * @access admin,customer
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -239,7 +239,7 @@ class EmailForwarders extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 
 		// parameter
 		$id = $this->getParam('id', true, 0);
-		$ea_optional = ($id <= 0 ? false : true);
+		$ea_optional = $id > 0;
 		$emailaddr = $this->getParam('emailaddr', $ea_optional, '');
 		$forwarderid = $this->getParam('forwarderid');
 

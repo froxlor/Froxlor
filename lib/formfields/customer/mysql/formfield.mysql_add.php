@@ -25,7 +25,7 @@ return array(
 				'image' => 'icons/mysql_add.png',
 				'fields' => array(
 					'custom_suffix' => array(
-						'visible' => (strtoupper(Settings::Get('customer.mysqlprefix')) == 'DBNAME') ? true : false,
+						'visible' => strtoupper(Settings::Get('customer.mysqlprefix')) == 'DBNAME',
 						'label' => $lng['mysql']['databasename'],
 						'type' => 'text'
 					),
@@ -34,7 +34,7 @@ return array(
 						'type' => 'text'
 					),
 					'mysql_server' => array(
-						'visible' => (count($mysql_servers) > 1 ? true : false),
+						'visible' => count($mysql_servers) > 1,
 						'label' => $lng['mysql']['mysql_server'],
 						'type' => 'select',
 						'select_var' => $mysql_servers
