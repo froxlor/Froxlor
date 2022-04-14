@@ -34,7 +34,7 @@ class TrafficCron extends \Froxlor\Cron\FroxlorCron
 					$TrafficPidStatus = @posix_kill($TrafficPid, 0);
 				} else {
 					system("kill -CHLD " . $TrafficPid . " 1> /dev/null 2> /dev/null", $TrafficPidStatus);
-					$TrafficPidStatus = $TrafficPidStatus ? false : true;
+					$TrafficPidStatus = !$TrafficPidStatus;
 				}
 				if ($TrafficPidStatus) {
 					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'Traffic Run already in progress');

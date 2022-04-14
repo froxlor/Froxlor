@@ -14,9 +14,9 @@ namespace Froxlor\Http;
  * @author Froxlor team <team@froxlor.org> (2010-)
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package Cron
- *         
+ *
  * @since 0.9.33
- *       
+ *
  */
 use Froxlor\Database\Database;
 use Froxlor\FileDir;
@@ -26,7 +26,7 @@ use Froxlor\FileDir;
  * about a given directory in connections with its usage in froxlor
  *
  * @author Michael Kaufmann (d00p) <d00p@froxlor.org>
- *        
+ *
  */
 class Directory
 {
@@ -60,7 +60,7 @@ class Directory
 			'dir' => FileDir::makeCorrectDir($this->dir)
 		));
 		if ($uo_res != false && isset($uo_res['usropts'])) {
-			return ($uo_res['usropts'] > 0 ? true : false);
+			return $uo_res['usropts'] > 0;
 		}
 		return false;
 	}
@@ -77,7 +77,7 @@ class Directory
 			'dir' => FileDir::makeCorrectDir($this->dir)
 		));
 		if ($up_res != false && isset($up_res['usrprot'])) {
-			return ($up_res['usrprot'] > 0 ? true : false);
+			return $up_res['usrprot'] > 0;
 		}
 		return false;
 	}
@@ -88,7 +88,7 @@ class Directory
 	 *
 	 * @param bool $ifexists
 	 *        	also check whether file/dir exists
-	 *        	
+	 *
 	 * @return bool true if usable as dir, false otherwise
 	 */
 	public function isConfigDir($ifexists = false)

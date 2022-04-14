@@ -11,7 +11,7 @@ class Mailer extends \PHPMailer\PHPMailer\PHPMailer
 	 *
 	 * @param string $exceptions
 	 *        	whether to throw exceptions or not
-	 *        	
+	 *
 	 */
 	public function __construct($exceptions = false)
 	{
@@ -21,7 +21,7 @@ class Mailer extends \PHPMailer\PHPMailer\PHPMailer
 		if (Settings::Get('system.mail_use_smtp')) {
 			$this->isSMTP();
 			$this->Host = Settings::Get('system.mail_smtp_host');
-			$this->SMTPAuth = Settings::Get('system.mail_smtp_auth') == '1' ? true : false;
+			$this->SMTPAuth = Settings::Get('system.mail_smtp_auth') == '1';
 			$this->Username = Settings::Get('system.mail_smtp_user');
 			$this->Password = Settings::Get('system.mail_smtp_passwd');
 			if (Settings::Get('system.mail_smtp_usetls')) {

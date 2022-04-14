@@ -330,7 +330,7 @@ if ($page == 'overview' && $userinfo['change_serversettings'] == '1') {
 		if (Settings::Get('system.mail_use_smtp')) {
 			$testmail->isSMTP();
 			$testmail->Host = Settings::Get('system.mail_smtp_host');
-			$testmail->SMTPAuth = Settings::Get('system.mail_smtp_auth') == '1' ? true : false;
+			$testmail->SMTPAuth = Settings::Get('system.mail_smtp_auth') == '1';
 			$testmail->Username = Settings::Get('system.mail_smtp_user');
 			$testmail->Password = Settings::Get('system.mail_smtp_passwd');
 			if (Settings::Get('system.mail_smtp_usetls')) {

@@ -27,7 +27,7 @@ class Customer
 	 *
 	 * @param int $uid
 	 *        	uid of customer
-	 *        	
+	 *
 	 * @return string customers loginname
 	 */
 	public static function getLoginNameByUid($uid = null)
@@ -53,7 +53,7 @@ class Customer
 	 *
 	 * @param
 	 *        	int customer-id
-	 *        	
+	 *
 	 * @return boolean
 	 */
 	public static function customerHasPerlEnabled($cid = 0)
@@ -67,7 +67,7 @@ class Customer
 			$result = $result_stmt->fetch(\PDO::FETCH_ASSOC);
 
 			if (is_array($result) && isset($result['perlenabled'])) {
-				return ($result['perlenabled'] == '1') ? true : false;
+				return $result['perlenabled'] == '1';
 			}
 		}
 		return false;

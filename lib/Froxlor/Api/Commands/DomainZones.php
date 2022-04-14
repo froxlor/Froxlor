@@ -17,7 +17,7 @@ use Froxlor\Settings;
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package API
  * @since 0.10.0
- *       
+ *
  */
 class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntity
 {
@@ -39,7 +39,7 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 	 *        	optional, default empty
 	 * @param int $ttl
 	 *        	optional, default 18000
-	 *        	
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -55,7 +55,7 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 		}
 
 		$id = $this->getParam('id', true, 0);
-		$dn_optional = ($id <= 0 ? false : true);
+		$dn_optional = $id > 0;
 		$domainname = $this->getParam('domainname', $dn_optional, '');
 
 		// get requested domain
@@ -354,7 +354,7 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 	 *        	optional, the domain id
 	 * @param string $domainname
 	 *        	optional, the domain name
-	 *        	
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -370,7 +370,7 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 		}
 
 		$id = $this->getParam('id', true, 0);
-		$dn_optional = ($id <= 0 ? false : true);
+		$dn_optional = $id > 0;
 		$domainname = $this->getParam('domainname', $dn_optional, '');
 
 		// get requested domain
@@ -435,7 +435,7 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 		}
 
 		$id = $this->getParam('id', true, 0);
-		$dn_optional = ($id <= 0 ? false : true);
+		$dn_optional = $id > 0;
 		$domainname = $this->getParam('domainname', $dn_optional, '');
 
 		// get requested domain
@@ -465,7 +465,7 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 	 *        	optional, the domain id
 	 * @param string $domainname
 	 *        	optional, the domain name
-	 *        	
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return bool
@@ -481,7 +481,7 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 		}
 
 		$id = $this->getParam('id', true, 0);
-		$dn_optional = ($id <= 0 ? false : true);
+		$dn_optional = $id > 0;
 		$domainname = $this->getParam('domainname', $dn_optional, '');
 
 		// get requested domain
@@ -508,7 +508,7 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 	 *        	optional, the domain id
 	 * @param string $domainname
 	 *        	optional, the domain name
-	 *        	
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return bool
@@ -525,7 +525,7 @@ class DomainZones extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 
 		$entry_id = $this->getParam('entry_id');
 		$id = $this->getParam('id', true, 0);
-		$dn_optional = ($id <= 0 ? false : true);
+		$dn_optional = $id > 0;
 		$domainname = $this->getParam('domainname', $dn_optional, '');
 
 		// get requested domain

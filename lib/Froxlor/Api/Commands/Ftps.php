@@ -17,7 +17,7 @@ use Froxlor\Settings;
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package API
  * @since 0.10.0
- *       
+ *
  */
 class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntity
 {
@@ -47,7 +47,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 	 *        	optional whether to add additional usernames to the group
 	 * @param bool $is_defaultuser
 	 *        	optional whether this is the standard default ftp user which is being added so no usage is decreased
-	 *        	
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -294,7 +294,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 	 *        	optional, the customer-id
 	 * @param string $username
 	 *        	optional, the username
-	 *        	
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -302,7 +302,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 	public function get()
 	{
 		$id = $this->getParam('id', true, 0);
-		$un_optional = ($id <= 0 ? false : true);
+		$un_optional = !($id <= 0);
 		$username = $this->getParam('username', $un_optional, '');
 
 		$params = array();
@@ -367,7 +367,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 	 *        	optional, required when called as admin (if $loginname is not specified)
 	 * @param string $loginname
 	 *        	optional, required when called as admin (if $customerid is not specified)
-	 *        	
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -379,7 +379,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 		}
 
 		$id = $this->getParam('id', true, 0);
-		$un_optional = ($id <= 0 ? false : true);
+		$un_optional = !($id <= 0);
 		$username = $this->getParam('username', $un_optional, '');
 
 		$result = $this->apiCall('Ftps.get', array(
@@ -518,7 +518,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 	 *        	optional, admin-only, select ftp-users of a specific customer by id
 	 * @param string $loginname
 	 *        	optional, admin-only, select ftp-users of a specific customer by loginname
-	 *        	
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -546,7 +546,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 	 *        	optional, the username
 	 * @param bool $delete_userfiles
 	 *        	optional, default false
-	 *        	
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -554,7 +554,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 	public function delete()
 	{
 		$id = $this->getParam('id', true, 0);
-		$un_optional = ($id <= 0 ? false : true);
+		$un_optional = !($id <= 0);
 		$username = $this->getParam('username', $un_optional, '');
 		$delete_userfiles = $this->getBoolParam('delete_userfiles', true, 0);
 

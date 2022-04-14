@@ -39,7 +39,7 @@ class Listing
 			'pagination' => $collection_data['pagination'],
 			'empty_msg' => $tabellisting['empty_msg'] ?? null,
 			'total_entries' => ($collection->getPagination() instanceof Pagination) ? $collection->getPagination()->getEntries() : 0,
-			'is_search' => ($collection->getPagination() instanceof Pagination) ? $collection->getPagination()->isSearchResult() : false,
+			'is_search' => $collection->getPagination() instanceof Pagination && $collection->getPagination()->isSearchResult(),
 			'self_overview' => $tabellisting['self_overview'] ?? [],
 			'available_columns' => self::getAvailableColumnsForListing($tabellisting)
 		];

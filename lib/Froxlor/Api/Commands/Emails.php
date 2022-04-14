@@ -17,7 +17,7 @@ use Froxlor\Settings;
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package API
  * @since 0.10.0
- *       
+ *
  */
 class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntity
 {
@@ -37,7 +37,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	optional, required when called as admin (if $customerid is not specified)
 	 * @param string $description
 	 *        	optional custom description (currently not used/shown in the frontend), default empty
-	 *        	
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -157,7 +157,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	optional, the email-address-id
 	 * @param string $emailaddr
 	 *        	optional, the email-address
-	 *        	
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -165,7 +165,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	public function get()
 	{
 		$id = $this->getParam('id', true, 0);
-		$ea_optional = ($id <= 0 ? false : true);
+		$ea_optional = $id > 0;
 		$emailaddr = $this->getParam('emailaddr', $ea_optional, '');
 
 		$params = array();
@@ -202,7 +202,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	optional
 	 * @param string $description
 	 *        	optional custom description (currently not used/shown in the frontend), default empty
-	 *        	
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -223,7 +223,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		}
 
 		$id = $this->getParam('id', true, 0);
-		$ea_optional = ($id <= 0 ? false : true);
+		$ea_optional = $id > 0;
 		$emailaddr = $this->getParam('emailaddr', $ea_optional, '');
 
 		$result = $this->apiCall('Emails.get', array(
@@ -298,7 +298,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	optional specify offset for resultset
 	 * @param array $sql_orderby
 	 *        	optional array with index = fieldname and value = ASC|DESC to order the resultset by one or more fields
-	 *        	
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array count|list
@@ -332,7 +332,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	optional, admin-only, select email addresses of a specific customer by id
 	 * @param string $loginname
 	 *        	optional, admin-only, select email addresses of a specific customer by loginname
-	 *        	
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -366,7 +366,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	optional, required when called as admin (if $customerid is not specified)
 	 * @param boolean $delete_userfiles
 	 *        	optional, delete email data from filesystem, default: 0 (false)
-	 *        	
+	 *
 	 * @access admin, customer
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -378,7 +378,7 @@ class Emails extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		}
 
 		$id = $this->getParam('id', true, 0);
-		$ea_optional = ($id <= 0 ? false : true);
+		$ea_optional = $id > 0;
 		$emailaddr = $this->getParam('emailaddr', $ea_optional, '');
 
 		$result = $this->apiCall('Emails.get', array(

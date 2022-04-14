@@ -17,7 +17,7 @@ use Froxlor\Settings;
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package API
  * @since 0.10.0
- *       
+ *
  */
 class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntity
 {
@@ -35,7 +35,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	 *        	optional specify offset for resultset
 	 * @param array $sql_orderby
 	 *        	optional array with index = fieldname and value = ASC|DESC to order the resultset by one or more fields
-	 *        	
+	 *
 	 * @access admin
 	 * @throws \Exception
 	 * @return string json-encoded array count|list
@@ -117,7 +117,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	 *        	optional, default true
 	 * @param bool $no_std_subdomain
 	 *        	optional, default false
-	 *        	
+	 *
 	 * @access admin
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -126,7 +126,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	{
 		if ($this->isAdmin()) {
 			$id = $this->getParam('id', true, 0);
-			$dn_optional = ($id <= 0 ? false : true);
+			$dn_optional = $id > 0;
 			$domainname = $this->getParam('domainname', $dn_optional, '');
 			$with_ips = $this->getParam('with_ips', true, true);
 			$no_std_subdomain = $this->getParam('no_std_subdomain', true, false);
@@ -311,7 +311,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	 *        	optional list of allowed/used tls-1.3 specific ciphers, see system.tlsv13_cipher_list setting, only used/required if $override_tls is true, default empty or system.tlsv13_cipher_list setting if $override_tls is true
 	 * @param string $description
 	 *        	optional custom description (currently not used/shown in the frontend), default empty
-	 *        	
+	 *
 	 * @access admin
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -971,7 +971,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	 *        	optional whether to enable or disable TLS sessiontickets (RFC 5077) for this domain. default 1 (true), requires SSL
 	 * @param string $description
 	 *        	optional custom description (currently not used/shown in the frontend), default empty
-	 *        	
+	 *
 	 * @access admin
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -982,7 +982,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 
 			// parameters
 			$id = $this->getParam('id', true, 0);
-			$dn_optional = ($id <= 0 ? false : true);
+			$dn_optional = $id > 0;
 			$domainname = $this->getParam('domainname', $dn_optional, '');
 
 			// get requested domain
@@ -1849,7 +1849,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	 *        	optional, remove also domains that are subdomains of this domain but added as main domains; default false
 	 * @param bool $is_stdsubdomain
 	 *        	optional, default false, specify whether it's a std-subdomain you are deleting as it does not count as subdomain-resource
-	 *        	
+	 *
 	 * @access admin
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -1858,7 +1858,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	{
 		if ($this->isAdmin()) {
 			$id = $this->getParam('id', true, 0);
-			$dn_optional = ($id <= 0 ? false : true);
+			$dn_optional = $id > 0;
 			$domainname = $this->getParam('domainname', $dn_optional, '');
 			$is_stdsubdomain = $this->getParam('is_stdsubdomain', true, 0);
 			$remove_subbutmain_domains = $this->getParam('delete_mainsubdomains', true, 0);
@@ -2007,7 +2007,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	 *        	default false
 	 * @param int $edit_id
 	 *        	default 0
-	 *        	
+	 *
 	 * @throws \Exception
 	 * @return array
 	 */

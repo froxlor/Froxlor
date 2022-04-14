@@ -43,14 +43,14 @@ return array(
 						]
 					),
 					'email_quota' => array(
-						'visible' => (\Froxlor\Settings::Get('system.mail_quota_enabled') == '1' ? true : false),
+						'visible' => \Froxlor\Settings::Get('system.mail_quota_enabled') == '1',
 						'label' => $lng['emails']['quota'],
 						'desc' => "MiB",
 						'type' => 'number',
 						'value' => $quota
 					),
 					'alternative_email' => array(
-						'visible' => (\Froxlor\Settings::Get('panel.sendalternativemail') == '1' ? true : false),
+						'visible' => \Froxlor\Settings::Get('panel.sendalternativemail') == '1',
 						'label' => $lng['emails']['alternative_emailaddress'],
 						'type' => 'text'
 					)

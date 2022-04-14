@@ -17,7 +17,7 @@ use Froxlor\Settings;
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package API
  * @since 0.10.0
- *       
+ *
  */
 class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntity
 {
@@ -33,7 +33,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	optional specify offset for resultset
 	 * @param array $sql_orderby
 	 *        	optional array with index = fieldname and value = ASC|DESC to order the resultset by one or more fields
-	 *        	
+	 *
 	 * @access admin
 	 * @throws \Exception
 	 * @return string json-encoded array count|list
@@ -88,7 +88,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	optional, the admin-id
 	 * @param string $loginname
 	 *        	optional, the loginname
-	 *        	
+	 *
 	 * @access admin
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -96,7 +96,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	public function get()
 	{
 		$id = $this->getParam('id', true, 0);
-		$ln_optional = ($id <= 0 ? false : true);
+		$ln_optional = $id > 0;
 		$loginname = $this->getParam('loginname', $ln_optional, '');
 
 		if ($this->isAdmin() && ($this->getUserDetail('change_serversettings') == 1 || ($this->getUserDetail('adminid') == $id || $this->getUserDetail('loginname') == $loginname))) {
@@ -187,7 +187,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	optional, default false
 	 * @param array $ipaddress
 	 *        	optional, list of ip-address id's; default -1 (all IP's)
-	 *        	
+	 *
 	 * @access admin
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -449,7 +449,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	optional, default false
 	 * @param array $ipaddress
 	 *        	optional, list of ip-address id's; default -1 (all IP's)
-	 *        	
+	 *
 	 * @access admin
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -459,7 +459,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 		if ($this->isAdmin()) {
 
 			$id = $this->getParam('id', true, 0);
-			$ln_optional = ($id <= 0 ? false : true);
+			$ln_optional = $id > 0;
 			$loginname = $this->getParam('loginname', $ln_optional, '');
 
 			$result = $this->apiCall('Admins.get', array(
@@ -691,7 +691,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	optional, the admin-id
 	 * @param string $loginname
 	 *        	optional, the loginname
-	 *        	
+	 *
 	 * @access admin
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -700,7 +700,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	{
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings') == 1) {
 			$id = $this->getParam('id', true, 0);
-			$ln_optional = ($id <= 0 ? false : true);
+			$ln_optional = $id > 0;
 			$loginname = $this->getParam('loginname', $ln_optional, '');
 
 			$result = $this->apiCall('Admins.get', array(
@@ -787,7 +787,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	 *        	optional, the admin-id
 	 * @param string $loginname
 	 *        	optional, the loginname
-	 *        	
+	 *
 	 * @access admin
 	 * @throws \Exception
 	 * @return string json-encoded array
@@ -796,7 +796,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	{
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings') == 1) {
 			$id = $this->getParam('id', true, 0);
-			$ln_optional = ($id <= 0 ? false : true);
+			$ln_optional = $id > 0;
 			$loginname = $this->getParam('loginname', $ln_optional, '');
 
 			$result = $this->apiCall('Admins.get', array(

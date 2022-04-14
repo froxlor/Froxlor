@@ -53,7 +53,7 @@ return array(
 						'value' => \Froxlor\System\Crypt::generatePassword()
 					),
 					'shell' => array(
-						'visible' => (\Froxlor\Settings::Get('system.allow_customer_shell') == '1' ? true : false),
+						'visible' => \Froxlor\Settings::Get('system.allow_customer_shell') == '1',
 						'label' => $lng['panel']['shell'],
 						'type' => 'select',
 						'select_var' => $shells_avail,

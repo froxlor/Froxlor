@@ -283,7 +283,7 @@ if ($action == '') {
 		}
 
 		$templates = array_diff($available_templates, $templates);
-		if (array_search($template, $templates) === false) {
+		if (!in_array($template, $templates)) {
 			\Froxlor\UI\Response::standard_error('templatenotfound');
 		} else {
 			$ins_stmt = Database::prepare("

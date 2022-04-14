@@ -40,7 +40,7 @@ if ($action == '' || $action == 'view') {
 	$result_domain = json_decode($json_result, true)['data'];
 
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
-		$do_insert = isset($_POST['do_insert']) ? (($_POST['do_insert'] == 1) ? true : false) : false;
+		$do_insert = isset($_POST['do_insert']) && ((($_POST['do_insert'] == 1) ? true : false));
 		try {
 			if ($do_insert) {
 				Certificates::getLocal($userinfo, $_POST)->add();

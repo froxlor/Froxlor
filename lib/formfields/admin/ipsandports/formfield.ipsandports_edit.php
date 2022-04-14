@@ -99,7 +99,7 @@ return array(
 						'value' => $result['default_vhostconf_domain']
 					),
 					'ssl_default_vhostconf_domain' => array(
-						'visible' => (\Froxlor\Settings::Get('system.use_ssl') == 1 ? true : false),
+						'visible' => \Froxlor\Settings::Get('system.use_ssl') == 1,
 						'label' => $lng['admin']['ipsandports']['ssl_default_vhostconf_domain'],
 						'desc' => $lng['serversettings']['default_vhostconf_domain']['description'],
 						'type' => 'textarea',
@@ -118,7 +118,7 @@ return array(
 			'section_d' => array(
 				'title' => $lng['admin']['ipsandports']['webserverssldomainconfig'],
 				'image' => 'icons/ipsports_edit.png',
-				'visible' => (\Froxlor\Settings::Get('system.use_ssl') == 1 ? true : false),
+				'visible' => \Froxlor\Settings::Get('system.use_ssl') == 1,
 				'fields' => array(
 					'ssl' => array(
 						'label' => $lng['admin']['ipsandports']['enable_ssl'],

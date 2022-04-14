@@ -33,7 +33,7 @@ return array(
 						'value' => $result['description']
 					),
 					'mysql_server' => array(
-						'visible' => ($count_mysql_servers > 1 ? true : false),
+						'visible' => $count_mysql_servers > 1,
 						'label' => $lng['mysql']['mysql_server'],
 						'type' => 'label',
 						'value' => $sql_root['caption']

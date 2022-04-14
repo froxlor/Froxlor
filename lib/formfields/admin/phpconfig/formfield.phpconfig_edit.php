@@ -30,21 +30,21 @@ return array(
 						'value' => $result['description']
 					),
 					'binary' => array(
-						'visible' => (\Froxlor\Settings::Get('system.mod_fcgid') == 1 ? true : false),
+						'visible' => \Froxlor\Settings::Get('system.mod_fcgid') == 1,
 						'label' => $lng['admin']['phpsettings']['binary'],
 						'type' => 'text',
 						'maxlength' => 255,
 						'value' => $result['binary']
 					),
 					'fpmconfig' => array(
-						'visible' => (\Froxlor\Settings::Get('phpfpm.enabled') == 1 ? true : false),
+						'visible' => \Froxlor\Settings::Get('phpfpm.enabled') == 1,
 						'label' => $lng['admin']['phpsettings']['fpmdesc'],
 						'type' => 'select',
 						'select_var' => $fpmconfigs,
 						'selected' => $result['fpmsettingid']
 					),
 					'file_extensions' => array(
-						'visible' => (\Froxlor\Settings::Get('system.mod_fcgid') == 1 ? true : false),
+						'visible' => \Froxlor\Settings::Get('system.mod_fcgid') == 1,
 						'label' => $lng['admin']['phpsettings']['file_extensions'],
 						'desc' => $lng['admin']['phpsettings']['file_extensions_note'],
 						'type' => 'text',
@@ -52,47 +52,47 @@ return array(
 						'value' => $result['file_extensions']
 					),
 					'mod_fcgid_starter' => array(
-						'visible' => (\Froxlor\Settings::Get('system.mod_fcgid') == 1 ? true : false),
+						'visible' => \Froxlor\Settings::Get('system.mod_fcgid') == 1,
 						'label' => $lng['admin']['mod_fcgid_starter']['title'],
 						'type' => 'number',
 						'value' => ((int) $result['mod_fcgid_starter'] != -1 ? $result['mod_fcgid_starter'] : '')
 					),
 					'mod_fcgid_maxrequests' => array(
-						'visible' => (\Froxlor\Settings::Get('system.mod_fcgid') == 1 ? true : false),
+						'visible' => \Froxlor\Settings::Get('system.mod_fcgid') == 1,
 						'label' => $lng['admin']['mod_fcgid_maxrequests']['title'],
 						'type' => 'number',
 						'value' => ((int) $result['mod_fcgid_maxrequests'] != -1 ? $result['mod_fcgid_maxrequests'] : '')
 					),
 					'mod_fcgid_umask' => array(
-						'visible' => (\Froxlor\Settings::Get('system.mod_fcgid') == 1 ? true : false),
+						'visible' => \Froxlor\Settings::Get('system.mod_fcgid') == 1,
 						'label' => $lng['admin']['mod_fcgid_umask']['title'],
 						'type' => 'text',
 						'maxlength' => 3,
 						'value' => $result['mod_fcgid_umask']
 					),
 					'phpfpm_enable_slowlog' => array(
-						'visible' => (\Froxlor\Settings::Get('phpfpm.enabled') == 1 ? true : false),
+						'visible' => \Froxlor\Settings::Get('phpfpm.enabled') == 1,
 						'label' => $lng['admin']['phpsettings']['enable_slowlog'],
 						'type' => 'checkbox',
 						'value' => '1',
 						'checked' => $result['fpm_slowlog']
 					),
 					'phpfpm_reqtermtimeout' => array(
-						'visible' => (\Froxlor\Settings::Get('phpfpm.enabled') == 1 ? true : false),
+						'visible' => \Froxlor\Settings::Get('phpfpm.enabled') == 1,
 						'label' => $lng['admin']['phpsettings']['request_terminate_timeout'],
 						'type' => 'text',
 						'maxlength' => 10,
 						'value' => $result['fpm_reqterm']
 					),
 					'phpfpm_reqslowtimeout' => array(
-						'visible' => (\Froxlor\Settings::Get('phpfpm.enabled') == 1 ? true : false),
+						'visible' => \Froxlor\Settings::Get('phpfpm.enabled') == 1,
 						'label' => $lng['admin']['phpsettings']['request_slowlog_timeout'],
 						'type' => 'text',
 						'maxlength' => 10,
 						'value' => $result['fpm_reqslow']
 					),
 					'phpfpm_pass_authorizationheader' => array(
-						'visible' => (\Froxlor\Settings::Get('phpfpm.enabled') == 1 ? true : false),
+						'visible' => \Froxlor\Settings::Get('phpfpm.enabled') == 1,
 						'label' => $lng['admin']['phpsettings']['pass_authorizationheader'],
 						'type' => 'checkbox',
 						'value' => '1',
@@ -105,7 +105,7 @@ return array(
 						'checked' => $result['override_fpmconfig']
 					),
 					'pm' => array(
-						'visible' => (\Froxlor\Settings::Get('phpfpm.enabled') == 1 ? true : false),
+						'visible' => \Froxlor\Settings::Get('phpfpm.enabled') == 1,
 						'label' => $lng['serversettings']['phpfpm_settings']['pm'],
 						'desc' => $lng['serversettings']['phpfpm_settings']['override_fpmconfig_addinfo'],
 						'type' => 'select',
@@ -117,49 +117,49 @@ return array(
 						'selected' => $result['pm']
 					),
 					'max_children' => array(
-						'visible' => (\Froxlor\Settings::Get('phpfpm.enabled') == 1 ? true : false),
+						'visible' => \Froxlor\Settings::Get('phpfpm.enabled') == 1,
 						'label' => $lng['serversettings']['phpfpm_settings']['max_children']['title'],
 						'desc' => $lng['serversettings']['phpfpm_settings']['max_children']['description'] . $lng['serversettings']['phpfpm_settings']['override_fpmconfig_addinfo'],
 						'type' => 'number',
 						'value' => $result['max_children']
 					),
 					'start_servers' => array(
-						'visible' => (\Froxlor\Settings::Get('phpfpm.enabled') == 1 ? true : false),
+						'visible' => \Froxlor\Settings::Get('phpfpm.enabled') == 1,
 						'label' => $lng['serversettings']['phpfpm_settings']['start_servers']['title'],
 						'desc' => $lng['serversettings']['phpfpm_settings']['start_servers']['description'] . $lng['serversettings']['phpfpm_settings']['override_fpmconfig_addinfo'],
 						'type' => 'number',
 						'value' => $result['start_servers']
 					),
 					'min_spare_servers' => array(
-						'visible' => (\Froxlor\Settings::Get('phpfpm.enabled') == 1 ? true : false),
+						'visible' => \Froxlor\Settings::Get('phpfpm.enabled') == 1,
 						'label' => $lng['serversettings']['phpfpm_settings']['min_spare_servers']['title'],
 						'desc' => $lng['serversettings']['phpfpm_settings']['min_spare_servers']['description'] . $lng['serversettings']['phpfpm_settings']['override_fpmconfig_addinfo'],
 						'type' => 'number',
 						'value' => $result['min_spare_servers']
 					),
 					'max_spare_servers' => array(
-						'visible' => (\Froxlor\Settings::Get('phpfpm.enabled') == 1 ? true : false),
+						'visible' => \Froxlor\Settings::Get('phpfpm.enabled') == 1,
 						'label' => $lng['serversettings']['phpfpm_settings']['max_spare_servers']['title'],
 						'desc' => $lng['serversettings']['phpfpm_settings']['max_spare_servers']['description'] . $lng['serversettings']['phpfpm_settings']['override_fpmconfig_addinfo'],
 						'type' => 'number',
 						'value' => $result['max_spare_servers']
 					),
 					'max_requests' => array(
-						'visible' => (\Froxlor\Settings::Get('phpfpm.enabled') == 1 ? true : false),
+						'visible' => \Froxlor\Settings::Get('phpfpm.enabled') == 1,
 						'label' => $lng['serversettings']['phpfpm_settings']['max_requests']['title'],
 						'desc' => $lng['serversettings']['phpfpm_settings']['max_requests']['description'] . $lng['serversettings']['phpfpm_settings']['override_fpmconfig_addinfo'],
 						'type' => 'number',
 						'value' => $result['max_requests']
 					),
 					'idle_timeout' => array(
-						'visible' => (\Froxlor\Settings::Get('phpfpm.enabled') == 1 ? true : false),
+						'visible' => \Froxlor\Settings::Get('phpfpm.enabled') == 1,
 						'label' => $lng['serversettings']['phpfpm_settings']['idle_timeout']['title'],
 						'desc' => $lng['serversettings']['phpfpm_settings']['idle_timeout']['description'] . $lng['serversettings']['phpfpm_settings']['override_fpmconfig_addinfo'],
 						'type' => 'number',
 						'value' => $result['idle_timeout']
 					),
 					'limit_extensions' => array(
-						'visible' => (\Froxlor\Settings::Get('phpfpm.enabled') == 1 ? true : false),
+						'visible' => \Froxlor\Settings::Get('phpfpm.enabled') == 1,
 						'label' => $lng['serversettings']['phpfpm_settings']['limit_extensions']['title'],
 						'desc' => $lng['serversettings']['phpfpm_settings']['limit_extensions']['description'] . $lng['serversettings']['phpfpm_settings']['override_fpmconfig_addinfo'],
 						'type' => 'text',

@@ -14,7 +14,7 @@ use Froxlor\Settings;
  * @author Froxlor team <team@froxlor.org> (2010-)
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package Install
- *         
+ *
  */
 if (! defined('_CRON_UPDATE')) {
 	if (! defined('AREA') || (defined('AREA') && AREA != 'admin') || ! isset($userinfo['loginname']) || (isset($userinfo['loginname']) && $userinfo['loginname'] == '')) {
@@ -506,7 +506,7 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.9.6-svn2')) {
 
 	showUpdateStep("Updating from 0.9.6-svn2 to 0.9.6-svn3", false);
 
-	$update_deferr_enable = isset($_POST['update_deferr_enable']) ? true : false;
+	$update_deferr_enable = isset($_POST['update_deferr_enable']);
 
 	$err500 = false;
 	$err401 = false;
