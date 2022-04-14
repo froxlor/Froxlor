@@ -204,7 +204,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	public function get()
 	{
 		$id = $this->getParam('id', true, 0);
-		$dn_optional = !($id <= 0);
+		$dn_optional = $id > 0;
 		$dbname = $this->getParam('dbname', $dn_optional, '');
 		$dbserver = $this->getParam('mysql_server', true, -1);
 
@@ -304,7 +304,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	public function update()
 	{
 		$id = $this->getParam('id', true, 0);
-		$dn_optional = !($id <= 0);
+		$dn_optional = $id > 0;
 		$dbname = $this->getParam('dbname', $dn_optional, '');
 		$dbserver = $this->getParam('mysql_server', true, -1);
 		$customer = $this->getCustomerData();
@@ -488,7 +488,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 	public function delete()
 	{
 		$id = $this->getParam('id', true, 0);
-		$dn_optional = !($id <= 0);
+		$dn_optional = $id > 0;
 		$dbname = $this->getParam('dbname', $dn_optional, '');
 		$dbserver = $this->getParam('mysql_server', true, -1);
 		$customer = $this->getCustomerData();

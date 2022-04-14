@@ -302,7 +302,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 	public function get()
 	{
 		$id = $this->getParam('id', true, 0);
-		$un_optional = !($id <= 0);
+		$un_optional = $id > 0;
 		$username = $this->getParam('username', $un_optional, '');
 
 		$params = array();
@@ -379,7 +379,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 		}
 
 		$id = $this->getParam('id', true, 0);
-		$un_optional = !($id <= 0);
+		$un_optional = $id > 0;
 		$username = $this->getParam('username', $un_optional, '');
 
 		$result = $this->apiCall('Ftps.get', array(
@@ -554,7 +554,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 	public function delete()
 	{
 		$id = $this->getParam('id', true, 0);
-		$un_optional = !($id <= 0);
+		$un_optional = $id > 0;
 		$username = $this->getParam('username', $un_optional, '');
 		$delete_userfiles = $this->getBoolParam('delete_userfiles', true, 0);
 

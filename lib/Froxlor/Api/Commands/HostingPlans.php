@@ -107,7 +107,7 @@ class HostingPlans extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 	{
 		if ($this->isAdmin()) {
 			$id = $this->getParam('id', true, 0);
-			$dn_optional = !($id <= 0);
+			$dn_optional = $id > 0;
 			$planname = $this->getParam('planname', $dn_optional, '');
 			$result_stmt = Database::prepare("
 				SELECT * FROM `" . TABLE_PANEL_PLANS . "` WHERE " . ($id > 0 ? "`id` = :iddn" : "`name` = :iddn") . ($this->getUserDetail('customers_see_all') ? '' : " AND `adminid` = :adminid"));
@@ -323,7 +323,7 @@ class HostingPlans extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 
 			// parameters
 			$id = $this->getParam('id', true, 0);
-			$dn_optional = !($id <= 0);
+			$dn_optional = $id > 0;
 			$planname = $this->getParam('planname', $dn_optional, '');
 
 			// get requested hosting-plan
@@ -414,7 +414,7 @@ class HostingPlans extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resou
 	{
 		if ($this->isAdmin()) {
 			$id = $this->getParam('id', true, 0);
-			$dn_optional = !($id <= 0);
+			$dn_optional = $id > 0;
 			$planname = $this->getParam('planname', $dn_optional, '');
 
 			// get requested hosting-plan

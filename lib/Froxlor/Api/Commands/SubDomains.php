@@ -390,7 +390,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	public function get()
 	{
 		$id = $this->getParam('id', true, 0);
-		$dn_optional = !($id <= 0);
+		$dn_optional = $id > 0;
 		$domainname = $this->getParam('domainname', $dn_optional, '');
 
 		// convert possible idn domain to punycode
@@ -506,7 +506,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	public function update()
 	{
 		$id = $this->getParam('id', true, 0);
-		$dn_optional = !($id <= 0);
+		$dn_optional = $id > 0;
 		$domainname = $this->getParam('domainname', $dn_optional, '');
 
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'domains')) {
@@ -936,7 +936,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	public function delete()
 	{
 		$id = $this->getParam('id', true, 0);
-		$dn_optional = !($id <= 0);
+		$dn_optional = $id > 0;
 		$domainname = $this->getParam('domainname', $dn_optional, '');
 
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'domains')) {
