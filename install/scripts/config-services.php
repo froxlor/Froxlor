@@ -28,4 +28,5 @@ try {
 	\Froxlor\Cli\ConfigServicesCmd::processParameters($argc, $argv);
 } catch (Exception $e) {
 	\Froxlor\Cli\ConfigServicesCmd::printerr($e->getMessage());
+	exit(1);
 }

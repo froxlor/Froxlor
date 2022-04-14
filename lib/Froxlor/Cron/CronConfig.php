@@ -1,4 +1,5 @@
 <?php
+
 namespace Froxlor\Cron;
 
 /**
@@ -18,6 +19,7 @@ namespace Froxlor\Cron;
  * @since 0.10.0
  *
  */
+
 use Froxlor\Database\Database;
 use Froxlor\Settings;
 
@@ -55,6 +57,12 @@ class CronConfig
 			$result_stmt = Database::query("
 				SELECT * FROM `" . TABLE_PANEL_CRONRUNS . "` WHERE `isactive` = '1'
 			");
+
+			$binpath = Settings::Get("system.croncmdline");
+			// fallback as it is important
+			if ($binpath === null) {
+				$binpath = "/usr/bin/nice -n 5 /usr/bin/php -q";
+			}
 
 			$hour_delay = 0;
 			$day_delay = 5;
@@ -96,20 +104,14 @@ class CronConfig
 					}
 
 					// create entry-line
-					$binpath = Settings::Get("system.croncmdline");
-					// fallback as it is important
-					if ($binpath === null) {
-						$binpath = "/usr/bin/nice -n 5 /usr/bin/php -q";
-					}
-
 					$cronfile .= "root " . $binpath . " " . \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . "/scripts/froxlor_master_cronjob.php") . " --" . $row_cronentry['cronfile'] . " 1> /dev/null\n";
 				}
 			}
 
 			// php sessionclean if enabled
 			if ((int) Settings::Get('phpfpm.enabled') == 1) {
-				$cronfile .= "# Look for and purge old sessions every 30 minutes".PHP_EOL;
-				$cronfile .= "09,39 * * * * root " . \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . "/scripts/php-sessionclean.php") . " --froxlor-dir=" . escapeshellarg(\Froxlor\Froxlor::getInstallDir()) . " 1> /dev/null" . PHP_EOL;
+				$cronfile .= "# Look for and purge old sessions every 30 minutes" . PHP_EOL;
+				$cronfile .= "09,39 * * * * root " . $binpath . " " . \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . "/scripts/php-sessionclean.php") . " --froxlor-dir=" . escapeshellarg(\Froxlor\Froxlor::getInstallDir()) . " 1> /dev/null" . PHP_EOL;
 			}
 
 			if (\Froxlor\FileDir::isFreeBSD()) {
@@ -127,7 +129,7 @@ class CronConfig
 				$newcrontab = "";
 				foreach ($crontablines as $ctl) {
 					$ctl = trim($ctl);
-					if (! empty($ctl) && ! preg_match("/(.*)froxlor_master_cronjob\.php(.*)/", $ctl)) {
+					if (!empty($ctl) && !preg_match("/(.*)froxlor_master_cronjob\.php(.*)/", $ctl)) {
 						$newcrontab .= $ctl . "\n";
 					}
 				}
