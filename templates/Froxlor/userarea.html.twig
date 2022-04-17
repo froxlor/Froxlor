@@ -31,11 +31,14 @@
 				</button>
 			</div>
 			<div class="collapse navbar-collapse px-3 px-lg-5" id="navbar">
-				<form id="search" class="d-flex position-relative" method="post">
-					<div class="input-group">
-						<input title="search" type="search" class="form-control-plaintext" placeholder="Search for ..." style="outline: none">
+				<form id="search" method="post">
+					<div class="d-flex align-items-center">
+						<i class="fa fa-search text-muted"></i>
+						<input title="search" type="search" class="search-input" placeholder="Search for ...">
 					</div>
-					<ul id="search-dropdown" class="bg-white border list-group list-group-flush position-absolute" style="top: 2.5rem; display:none; z-index: 50; max-height: 300px; overflow-y: scroll"></ul>
+					<div class="search-results-box">
+						<div class="search-results list-group-flush" style="display: none"></div>
+					</div>
 				</form>
 				<ul class="navbar-nav ms-auto">
 					{% if call_static('\\Froxlor\\CurrentUser', 'getField', ['switched_user']) is not empty and call_static('\\Froxlor\\CurrentUser', 'getField', ['switched_user']) is iterable %}

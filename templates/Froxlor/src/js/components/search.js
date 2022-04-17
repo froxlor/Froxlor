@@ -7,7 +7,7 @@ $(document).ready(function () {
 
 	search.find('input').on('keyup', function () {
 		let query = $(this).val();
-		let dropdown = $('#search-dropdown');
+		let dropdown = $('#search .search-results');
 		// Hide search if query is empty
 		if (!query.length) {
 			dropdown.hide().html('');
