@@ -9,6 +9,16 @@ use Froxlor\Cli\PhpSessionclean;
 use Froxlor\Cli\SwitchServerIp;
 use Froxlor\Froxlor;
 
+// validate correct php version
+if (version_compare("7.4.0", PHP_VERSION, ">=")) {
+	die('Froxlor requires at least php-7.4. Please validate that your php-cli version is suitable.');
+}
+
+// ensure that default timezone is set
+if (function_exists("date_default_timezone_set") && function_exists("date_default_timezone_get")) {
+	@date_default_timezone_set(@date_default_timezone_get());
+}
+
 require dirname(__DIR__) . '/vendor/autoload.php';
 require dirname(__DIR__) . '/lib/tables.inc.php';
 
