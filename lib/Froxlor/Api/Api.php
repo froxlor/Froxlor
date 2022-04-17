@@ -1,4 +1,5 @@
 <?php
+
 namespace Froxlor\Api;
 
 use Exception;
@@ -21,55 +22,77 @@ use voku\helper\AntiXSS;
  */
 class Api
 {
-    protected array $headers;
+	protected array $headers;
 
-    /**
-     * Api constructor.
-     *
-     * @throws Exception
-     */
-    public function __construct()
-    {
-        $this->headers = getallheaders();
+	protected $request = null;
 
-        // set header for the response
-        header("Accept: application/json");
-        header("Content-Type: application/json");
+	/**
+	 * Api constructor.
+	 *
+	 * @throws Exception
+	 */
+	public function __construct()
+	{
+		$this->headers = getallheaders();
 
-        // check whether API interface is enabled after all
-        if (\Froxlor\Settings::Get('api.enabled') != 1) {
-            throw new Exception('API is not enabled. Please contact the administrator if you think this is wrong.', 400);
-        }
-    }
+		// set header for the response
+		header("Accept: application/json");
+		header("Content-Type: application/json");
 
-    /**
-     * Handle incoming api request to our backend.
-     *
-     * @param mixed $request
-     * @throws Exception
-     */
-    public function handle($request)
-    {
-        // validate content
-        $request = \Froxlor\Api\FroxlorRPC::validateRequest($request);
-        $request = (new AntiXSS())->xss_clean(
-            $this->stripcslashesDeep($request)
-        );
+		// check whether API interface is enabled after all
+		if (\Froxlor\Settings::Get('api.enabled') != 1) {
+			throw new Exception('API is not enabled. Please contact the administrator if you think this is wrong.', 400);
+		}
+	}
 
-        // now actually do it
-        $cls = "\\Froxlor\\Api\\Commands\\" . $request['command']['class'];
-        $method = $request['command']['method'];
-        $apiObj = new $cls([
-            'apikey' => $_SERVER['PHP_AUTH_USER'],
-            'secret' => $_SERVER['PHP_AUTH_PW']
-        ], $request['params']);
+	/**
+	 * @param mixed $request
+	 * 
+	 * @return Api
+	 */
+	public function formatMiddleware($request): Api
+	{
+		// check auf RESTful api call
+		$this->request = $request;
 
-        // call the method with the params if any
-        return $apiObj->$method();
-    }
+		$uri = parse_url($_SERVER["REQUEST_URI"], PHP_URL_QUERY);
+		// map /module/command to internal request array if match
+		if (!empty($uri) && preg_match("/^\/([a-z]+)\/([a-z]+)\/?/", $uri, $matches)) {
+			$request = [];
+			$request['command'] = ucfirst($matches[1]) . '.' . $matches[2];
+			$request['params'] = !empty($this->request) ? json_decode($this->request, true) : null;
+			$this->request = json_encode($request);
+		}
+		return $this;
+	}
+	/**
+	 * Handle incoming api request to our backend.
+	 *
+	 * @throws Exception
+	 */
+	public function handle()
+	{
+		$request = $this->request;
+		// validate content
+		$request = \Froxlor\Api\FroxlorRPC::validateRequest($request);
+		$request = (new AntiXSS())->xss_clean(
+			$this->stripcslashesDeep($request)
+		);
 
-    private function stripcslashesDeep($value)
-    {
-        return is_array($value) ? array_map([$this, 'stripcslashesDeep'], $value) : stripcslashes($value);
-    }
+		// now actually do it
+		$cls = "\\Froxlor\\Api\\Commands\\" . $request['command']['class'];
+		$method = $request['command']['method'];
+		$apiObj = new $cls([
+			'apikey' => $_SERVER['PHP_AUTH_USER'],
+			'secret' => $_SERVER['PHP_AUTH_PW']
+		], $request['params']);
+
+		// call the method with the params if any
+		return $apiObj->$method();
+	}
+
+	private function stripcslashesDeep($value)
+	{
+		return is_array($value) ? array_map([$this, 'stripcslashesDeep'], $value) : stripcslashes($value);
+	}
 }
