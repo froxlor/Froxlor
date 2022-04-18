@@ -10,8 +10,9 @@ namespace Froxlor\System;
 class IgnorantRecursiveDirectoryIterator extends \RecursiveDirectoryIterator
 {
 
-	public function getChildren()
-	{
+	#[\ReturnTypeWillChange]
+    public function getChildren()
+    {
 		try {
 			return new IgnorantRecursiveDirectoryIterator($this->getPathname());
 		} catch (\UnexpectedValueException $e) {

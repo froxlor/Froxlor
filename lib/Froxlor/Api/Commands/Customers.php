@@ -950,7 +950,7 @@ class Customers extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resource
 			$move_to_admin = (int) ($this->getParam('move_to_admin', true, 0));
 
 			$idna_convert = new \Froxlor\Idna\IdnaWrapper();
-			$email = $this->getParam('email', true, $idna_convert->decode($result['email']));
+			$email = $this->getParam('email', true, $idna_convert->decode($result['email'] ?? ''));
 			$name = $this->getParam('name', true, $result['name']);
 			$firstname = $this->getParam('firstname', true, $result['firstname']);
 			$company_required = empty($result['company']) && ((! empty($name) && empty($firstname)) || (empty($name) && ! empty($firstname)) || (empty($name) && empty($firstname)));
