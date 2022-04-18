@@ -331,6 +331,10 @@ class AcmeSh extends \Froxlor\Cron\FroxlorCron
 			if (defined('CRON_DEBUG_FLAG')) {
 				$acmesh_cmd .= " --debug";
 			}
+            $acmeReloadCmd = Settings::Get('system.acmereloadcmd');
+            if (!empty($acmeReloadCmd)) {
+                $acmesh_cmd .= " --reloadcmd \"$acmeReloadCmd\"";
+            }
 
 			$acme_result = \Froxlor\FileDir::safe_exec($acmesh_cmd);
 			// debug output of acme.sh run

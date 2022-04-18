@@ -142,6 +142,14 @@ return array(
 					'default' => '/root/.acme.sh/acme.sh',
 					'save_method' => 'storeSettingField'
 				),
+				'system_acmereloadcmd' => array(
+					'label' => $lng['serversettings']['acmereloadcmd'],
+					'settinggroup' => 'system',
+					'varname' => 'acmereloadcmd',
+					'type' => 'string',
+					'default' => '',
+					'save_method' => 'storeSettingField'
+				),
 				'system_letsencryptacmeconf' => array(
 					'label' => $lng['serversettings']['letsencryptacmeconf'],
 					'settinggroup' => 'system',

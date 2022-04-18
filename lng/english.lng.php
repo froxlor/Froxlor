@@ -2138,3 +2138,5 @@ $lng['serversettings']['phpfpm_settings']['allow_all_customers']['description'] 
 $lng['error']['pathmustberelative'] = 'The user does not have the permission to specify directories outside the customers home-directory. Please specify a relative path (no leading /).';
 $lng['serversettings']['acmeshpath']['title'] = 'Path to acme.sh';
 $lng['serversettings']['acmeshpath']['description'] = 'Set this to where acme.sh is installed to, including the acme.sh script<br>Default is <b>/root/.acme.sh/acme.sh</b>';
+$lng['serversettings']['acmereloadcmd']['title'] = 'ACME reload command';
+$lng['serversettings']['acmereloadcmd']['description'] = 'The reload command is passed to acme.sh --reloadcmd and called for each received certificate. Example: <i>systemctl reload dovecot.service postfix.service</i>';

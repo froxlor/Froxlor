@@ -683,6 +683,7 @@ opcache.validate_timestamps'),
 	('system', 'froxlorusergroup', ''),
 	('system', 'froxlorusergroup_gid', ''),
 	('system', 'acmeshpath', '/root/.acme.sh/acme.sh'),
+	('system', 'acmereloadcmd', ''),
 	('api', 'enabled', '0'),
 	('2fa', 'enabled', '1'),
 	('panel', 'decimal_places', '4'),
@@ -724,7 +725,7 @@ opcache.validate_timestamps'),
 	('panel', 'logo_overridetheme', '0'),
 	('panel', 'logo_overridecustom', '0'),
 	('panel', 'version', '0.10.34.1'),
-	('panel', 'db_version', '202112310');
+	('panel', 'db_version', '202204180');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
