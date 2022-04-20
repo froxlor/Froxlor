@@ -324,8 +324,8 @@ class TasksCron extends \Froxlor\Cron\FroxlorCron
 
 				if (file_exists($logsdir) && $logsdir != '/' && $logsdir != \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.logfiles_directory')) && substr($logsdir, 0, strlen(Settings::Get('system.logfiles_directory'))) == Settings::Get('system.logfiles_directory')) {
 					// build up wildcard for webX-{access,error}.log{*}
-					$logfiles .= '-*';
-					\Froxlor\FileDir::safe_exec('rm -f ' . escapeshellarg($logfiles));
+					$logsdir .= '-*';
+					\Froxlor\FileDir::safe_exec('rm -f ' . escapeshellarg($logsdir));
 				}
 			}
 		}

@@ -496,7 +496,7 @@ class FileDir
 			};
 
 			// create RecursiveIteratorIterator
-			$its = new \RecursiveIteratorIterator(new \RecursiveCallbackFilterIterator(new System\IgnorantRecursiveDirectoryIterator($path, \RecursiveDirectoryIterator::SKIP_DOTS), $filter));
+			$its = new \RecursiveIteratorIterator(new \RecursiveCallbackFilterIterator(new \RecursiveDirectoryIterator($path, \RecursiveDirectoryIterator::SKIP_DOTS), $filter));
 			// we can limit the recursion-depth, but will it be helpful or
 			// will people start asking "why do I only see 2 subdirectories, i want to use /a/b/c"
 			// let's keep this in mind and see whether it will be useful
