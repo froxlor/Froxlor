@@ -18,6 +18,7 @@ return array(
 	'phpconfig_edit' => array(
 		'title' => $lng['admin']['phpsettings']['editsettings'],
 		'image' => 'fa-solid fa-pen',
+		'self_overview' => ['section' => 'phpsettings', 'page' => 'overview'],
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['admin']['phpsettings']['editsettings'],

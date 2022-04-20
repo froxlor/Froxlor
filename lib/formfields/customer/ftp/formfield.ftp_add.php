@@ -17,6 +17,7 @@ return array(
 	'ftp_add' => array(
 		'title' => $lng['ftp']['account_add'],
 		'image' => 'icons/user_add.png',
+		'self_overview' => ['section' => 'ftp', 'page' => 'accounts'],
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['ftp']['account_add'],

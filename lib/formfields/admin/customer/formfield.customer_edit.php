@@ -18,6 +18,7 @@ return array(
 	'customer_edit' => array(
 		'title' => $lng['admin']['customer_edit'],
 		'image' => 'fa-solid fa-user-pen',
+		'self_overview' => ['section' => 'customers', 'page' => 'customers'],
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['admin']['accountdata'],

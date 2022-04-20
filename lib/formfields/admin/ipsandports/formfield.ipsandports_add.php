@@ -18,6 +18,7 @@ return array(
 	'ipsandports_add' => array(
 		'title' => $lng['admin']['ipsandports']['add'],
 		'image' => 'fa-solid fa-plus',
+		'self_overview' => ['section' => 'ipsandports', 'page' => 'ipsandports'],
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['admin']['ipsandports']['ipandport'],

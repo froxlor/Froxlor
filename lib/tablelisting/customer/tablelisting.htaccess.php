@@ -24,6 +24,7 @@ return [
 	'htaccess_list' => [
 		'title' => $lng['menue']['extras']['pathoptions'],
 		'icon' => 'fa-solid fa-folder',
+		'self_overview' => ['section' => 'extras', 'page' => 'htaccess'],
 		'columns' => [
 			'path' => [
 				'label' => $lng['panel']['path'],

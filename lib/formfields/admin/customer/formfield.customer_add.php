@@ -18,6 +18,7 @@ return array(
 	'customer_add' => array(
 		'title' => $lng['admin']['customer_add'],
 		'image' => 'fa-solid fa-user-plus',
+		'self_overview' => ['section' => 'customers', 'page' => 'customers'],
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['admin']['accountdata'],

@@ -18,6 +18,7 @@ return array(
 	'fpmconfig_add' => array(
 		'title' => $lng['admin']['phpsettings']['addsettings'],
 		'image' => 'fa-solid fa-plus',
+		'self_overview' => ['section' => 'phpsettings', 'page' => 'fpmdaemons'],
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['admin']['phpsettings']['addsettings'],

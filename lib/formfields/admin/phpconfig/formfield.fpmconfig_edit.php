@@ -18,6 +18,7 @@ return array(
 	'fpmconfig_edit' => array(
 		'title' => $lng['admin']['phpsettings']['editsettings'],
 		'image' => 'fa-solid fa-pen',
+		'self_overview' => ['section' => 'phpsettings', 'page' => 'fpmdaemons'],
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['admin']['phpsettings']['editsettings'],

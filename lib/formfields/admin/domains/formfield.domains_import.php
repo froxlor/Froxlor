@@ -18,6 +18,7 @@ return array(
 	'domain_import' => array(
 		'title' => $lng['domains']['domain_import'],
 		'image' => 'fa-solid fa-file-import',
+		'self_overview' => ['section' => 'domains', 'page' => 'domains'],
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['domains']['domain_import'],
