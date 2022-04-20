@@ -1878,6 +1878,7 @@ $lng['error']['autoupdate_7'] = 'The downloaded archive could not be found :(';
 $lng['error']['autoupdate_8'] = 'The archive could not be extracted :(';
 $lng['error']['autoupdate_9'] = 'The downloaded file did not pass the integrity check. Please try to update again.';
 $lng['error']['autoupdate_10'] = 'Minimum supported version of PHP is 7.4.0';
+$lng['error']['autoupdate_11'] = 'Webupdate is disabled';
 
 $lng['admin']['server_php'] = 'PHP';
 $lng['domains']['termination_date'] = 'Date of termination';

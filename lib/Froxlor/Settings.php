@@ -1,4 +1,5 @@
 <?php
+
 namespace Froxlor;
 
 use Froxlor\Database\Database;
@@ -44,6 +45,13 @@ class Settings
 	private static $data = null;
 
 	/**
+	 * local config overrides
+	 *
+	 * @var array
+	 */
+	private static $conf = null;
+
+	/**
 	 * changed and unsaved settings data
 	 *
 	 * @var array
@@ -65,6 +73,7 @@ class Settings
 	{
 		if (empty(self::$data)) {
 			self::readSettings();
+			self::readConfig();
 			self::$updatedata = array();
 
 			// prepare statement
@@ -88,6 +97,24 @@ class Settings
 		self::$data = array();
 		while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 			self::$data[$row['settinggroup']][$row['varname']] = $row['value'];
+		}
+		return true;
+	}
+
+	/**
+	 * Read in all config overrides from
+	 * config/config.inc.php
+	 */
+	private static function readConfig()
+	{
+		// set defaults
+		self::$conf = [
+			'enable_webupdate' => false
+		];
+
+		$configfile = Froxlor::getInstallDir() . '/lib/config.inc.php';
+		if (@file_exists($configfile) && is_readable($configfile)) {
+			self::$conf = include $configfile;
 		}
 		return true;
 	}
@@ -122,7 +149,7 @@ class Settings
 		self::init();
 		$sstr = explode(".", $setting);
 		// no separator - do'h
-		if (! isset($sstr[1])) {
+		if (!isset($sstr[1])) {
 			return null;
 		}
 		$result = null;
@@ -170,7 +197,7 @@ class Settings
 		if (self::Get($setting) !== null) {
 			// set new value in array
 			$sstr = explode(".", $setting);
-			if (! isset($sstr[1])) {
+			if (!isset($sstr[1])) {
 				return false;
 			}
 			self::$data[$sstr[0]][$sstr[1]] = $value;
@@ -179,12 +206,12 @@ class Settings
 				self::storeSetting($sstr[0], $sstr[1], $value);
 			} else {
 				// set temporary data for usage
-				if (! isset(self::$data[$sstr[0]]) || ! is_array(self::$data[$sstr[0]])) {
+				if (!isset(self::$data[$sstr[0]]) || !is_array(self::$data[$sstr[0]])) {
 					self::$data[$sstr[0]] = array();
 				}
 				self::$data[$sstr[0]][$sstr[1]] = $value;
 				// set update-data when invoking Flush()
-				if (! isset(self::$updatedata[$sstr[0]]) || ! is_array(self::$updatedata[$sstr[0]])) {
+				if (!isset(self::$updatedata[$sstr[0]]) || !is_array(self::$updatedata[$sstr[0]])) {
 					self::$updatedata[$sstr[0]] = array();
 				}
 				self::$updatedata[$sstr[0]][$sstr[1]] = $value;
@@ -210,7 +237,7 @@ class Settings
 		if (self::Get($setting) === null) {
 			// validate parameter
 			$sstr = explode(".", $setting);
-			if (! isset($sstr[1])) {
+			if (!isset($sstr[1])) {
 				return false;
 			}
 			// prepare statement
@@ -291,7 +318,7 @@ class Settings
 								'varname' => $field_details['varname']
 							));
 
-							if (! empty($row)) {
+							if (!empty($row)) {
 								$varvalue = $row['value'];
 							} else {
 								$varvalue = $field_details['default'];
@@ -305,5 +332,20 @@ class Settings
 				}
 			}
 		}
+	}
+
+	/**
+	 * get value from config by identifier
+	 */
+	public static function Config(string $config)
+	{
+		self::init();
+		$sstr = explode(".", $config);
+		$result = self::$conf;
+		foreach ($sstr as $key) {
+			$result = $result[$key] ?? null;
+			if (empty($result)) break;
+		}
+		return $result;
 	}
 }

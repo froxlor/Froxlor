@@ -1525,6 +1525,7 @@ $lng['error']['autoupdate_7'] = 'Das heruntergeladene Archiv konnte nicht gefund
 $lng['error']['autoupdate_8'] = 'Das Archiv konnte nicht entpackt werden :(';
 $lng['error']['autoupdate_9'] = 'Die heruntergeladene Datei konnte nicht verifiziert werden. Bitte erneut versuchen zu aktualisieren.';
 $lng['error']['autoupdate_10'] = 'Minimum unterstützte Version von PHP ist 7.4.0';
+$lng['error']['autoupdate_11'] = 'Webupdate ist deaktiviert';
 
 $lng['domains']['termination_date'] = 'Kündigungsdatum';
 $lng['domains']['termination_date_overview'] = 'gekündigt zum ';

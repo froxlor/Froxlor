@@ -45,6 +45,14 @@ if (version_compare("7.4.0", PHP_VERSION, ">=")) {
 	));
 }
 
+// check for webupdate to be enabled
+if (\Froxlor\Settings::Config('enable_webupdate') != true) {
+        \Froxlor\UI\Response::redirectTo($filename, array(
+                'page' => 'error',
+                'errno' => 11
+        ));
+}
+
 // display initial version check
 if ($page == 'overview') {
 
@@ -281,5 +289,6 @@ elseif ($page == 'error') {
 	// 8 = could not extract archive
 	// 9 = checksum mismatch
 	// 10 = <php-7.4
+	// 11 = enable_webupdate = false
 	\Froxlor\UI\Response::standard_error('autoupdate_' . $errno);
 }
