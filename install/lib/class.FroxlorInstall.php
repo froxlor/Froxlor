@@ -333,7 +333,7 @@ class FroxlorInstall
 		}
 
 		// check if we have unrecoverable errors
-		if ($fatal_fail || $another_fail || $this->_abort) {
+		if ($fatal_fail || isset($another_fail) && $another_fail || $this->_abort) {
 			// D'oh
 			$_die = true;
 			$message = $this->_lng['install']['testing_mysql_fail'];
@@ -775,7 +775,10 @@ class FroxlorInstall
 			$mysql_access_host_array[] = '127.0.0.1';
 		}
 
-		$mysql_access_host_array[] = $this->_data['serverip'];
+		if (!in_array($this->_data['serverip'], $mysql_access_host_array)) {
+			$mysql_access_host_array[] = $this->_data['serverip'];
+		}
+
 		foreach ($mysql_access_host_array as $mysql_access_host) {
 			$frox_db = str_replace('`', '', $this->_data['mysql_database']);
 			$this->_grantDbPrivilegesTo($db_root, $frox_db, $this->_data['mysql_unpriv_user'], $this->_data['mysql_unpriv_pass'], $mysql_access_host);
