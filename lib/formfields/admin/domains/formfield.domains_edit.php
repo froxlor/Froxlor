@@ -129,7 +129,6 @@ return array(
 				'image' => 'icons/domain_edit.png',
 				'fields' => array(
 					'documentroot' => array(
-						'visible' => $userinfo['change_serversettings'] == '1',
 						'label' => 'DocumentRoot',
 						'desc' => $lng['panel']['emptyfordefault'],
 						'type' => 'text',
