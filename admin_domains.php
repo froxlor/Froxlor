@@ -674,7 +674,7 @@ if ($page == 'domains' || $page == 'overview') {
 function formatDomainEntry(&$row, &$idna_convert)
 {
 	$row['domain'] = $idna_convert->decode($row['domain']);
-	$row['aliasdomain'] = $idna_convert->decode($row['aliasdomain']);
+	$row['aliasdomain'] = $idna_convert->decode($row['aliasdomain'] ?? '');
 
 	$row['ipandport'] = '';
 	foreach ($row['ipsandports'] as $rowip) {
@@ -685,7 +685,7 @@ function formatDomainEntry(&$row, &$idna_convert)
 		}
 	}
 	$row['ipandport'] = substr($row['ipandport'], 0, - 1);
-	$row['termination_date'] = str_replace("0000-00-00", "", $row['termination_date']);
+	$row['termination_date'] = str_replace("0000-00-00", "", $row['termination_date'] ?? '');
 
 	$row['termination_css'] = "";
 	if ($row['termination_date'] != "") {
