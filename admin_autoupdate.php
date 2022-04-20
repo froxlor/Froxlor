@@ -29,20 +29,30 @@ define('UPDATE_URI', "https://version.froxlor.org/Froxlor/api/" . \Froxlor\Froxl
 define('RELEASE_URI', "https://autoupdate.froxlor.org/froxlor-{version}.zip");
 define('CHECKSUM_URI', "https://autoupdate.froxlor.org/froxlor-{version}.zip.sha256");
 
-// check for archive-stuff
-if (!extension_loaded('zip')) {
-	\Froxlor\UI\Response::redirectTo($filename, array(
-		'page' => 'error',
-		'errno' => 2
-	));
-}
+if ($page != 'error') {
+	// check for archive-stuff
+	if (!extension_loaded('zip')) {
+		\Froxlor\UI\Response::redirectTo($filename, array(
+			'page' => 'error',
+			'errno' => 2
+		));
+	}
 
-// 0.11.x requires 7.4 at least
-if (version_compare("7.4.0", PHP_VERSION, ">=")) {
-	\Froxlor\UI\Response::redirectTo($filename, array(
-		'page' => 'error',
-		'errno' => 10
-	));
+	// 0.11.x requires 7.4 at least
+	if (version_compare("7.4.0", PHP_VERSION, ">=")) {
+		\Froxlor\UI\Response::redirectTo($filename, array(
+			'page' => 'error',
+			'errno' => 10
+		));
+	}
+
+	// check for webupdate to be enabled
+	if (\Froxlor\Settings::Config('enable_webupdate') != true) {
+		\Froxlor\UI\Response::redirectTo($filename, array(
+			'page' => 'error',
+			'errno' => 11
+		));
+	}
 }
 
 // display initial version check
@@ -281,5 +291,6 @@ elseif ($page == 'error') {
 	// 8 = could not extract archive
 	// 9 = checksum mismatch
 	// 10 = <php-7.4
+	// 11 = enable_webupdate = false
 	\Froxlor\UI\Response::standard_error('autoupdate_' . $errno);
 }

@@ -892,7 +892,7 @@ $lng['serversettings']['session_allow_multiple_login']['description'] = 'Wenn di
 $lng['serversettings']['panel_allow_domain_change_admin']['title'] = 'Erlaube Verschieben von Domains unter Admins';
 $lng['serversettings']['panel_allow_domain_change_admin']['description'] = 'Wenn diese Option aktiviert ist, kann unter Domaineinstellungen die Domain einem anderen Admin zugewiesen werden.<br /><b>Achtung:</b> Wenn der Kunde einer Domain nicht dem gleichen Admin zugeordnet ist wie die Domain selbst, kann dieser Admin alle anderen Domains des Kunden sehen!';
 $lng['serversettings']['panel_allow_domain_change_customer']['title'] = 'Erlaube Verschieben von Domains unter Kunden';
-$lng['serversettings']['panel_allow_domain_change_customer']['description'] = 'Wenn diese Option aktiviert ist, kann unter Domaineinstellungen die Domain einem anderen Kunden zugewiesen werden.<br /><b>Achtung:</b> Es werden keine Pfade bei dieser Aktion angepasst. Das kann dazu führen, dass die Domain nach dem Verschieben nicht mehr richtig funktioniert!';
+$lng['serversettings']['panel_allow_domain_change_customer']['description'] = 'Wenn diese Option aktiviert ist, kann unter Domaineinstellungen die Domain einem anderen Kunden zugewiesen werden.<br /><b>Achtung:</b> Der Dokumenten-Pfad der Domain wird auf den Heimatpfad (+ Domain-Ordner, sofern aktiviert) des neuen Kunden gesetzt.';
 $lng['domains']['associated_with_domain'] = 'Verbunden mit';
 $lng['domains']['aliasdomains'] = 'Aliasdomains';
 $lng['error']['ipportdoesntexist'] = 'Die gewählte IP/Port-Kombination existiert nicht.';
@@ -1525,6 +1525,7 @@ $lng['error']['autoupdate_7'] = 'Das heruntergeladene Archiv konnte nicht gefund
 $lng['error']['autoupdate_8'] = 'Das Archiv konnte nicht entpackt werden :(';
 $lng['error']['autoupdate_9'] = 'Die heruntergeladene Datei konnte nicht verifiziert werden. Bitte erneut versuchen zu aktualisieren.';
 $lng['error']['autoupdate_10'] = 'Minimum unterstützte Version von PHP ist 7.4.0';
+$lng['error']['autoupdate_11'] = 'Webupdate ist deaktiviert';
 
 $lng['domains']['termination_date'] = 'Kündigungsdatum';
 $lng['domains']['termination_date_overview'] = 'gekündigt zum ';

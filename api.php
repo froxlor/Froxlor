@@ -23,7 +23,7 @@ require __DIR__ . '/lib/tables.inc.php';
 
 // Return response
 try {
-    echo (new Api)->handle(@file_get_contents('php://input'));
+    echo (new Api)->formatMiddleware(@file_get_contents('php://input'))->handle();
 } catch (Exception $e) {
     echo \Froxlor\Api\Response::jsonErrorResponse($e->getMessage(), $e->getCode());
 }

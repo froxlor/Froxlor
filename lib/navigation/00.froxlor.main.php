@@ -228,7 +228,7 @@ return array(
 					'url' => 'admin_autoupdate.php?page=overview',
 					'label' => $lng['admin']['autoupdate'],
 					'required_resources' => 'change_serversettings',
-					'show_element' => extension_loaded('zip')
+					'show_element' => extension_loaded('zip') && \Froxlor\Settings::Config('enable_webupdate')
 				),
 				array(
 					'url' => 'admin_settings.php?page=wipecleartextmailpws',

@@ -760,6 +760,7 @@ class Lighttpd extends HttpConfigBase
 			'customerid' => $domain['customerid']
 		));
 
+		$diroption_text = '';
 		while ($row_htpasswds = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 			if ($this->auth_backend_loaded[$domain['ipandport']] != 'yes' && $this->auth_backend_loaded[$domain['ssl_ipandport']] != 'yes') {
 				$filename = $domain['customerid'] . '.htpasswd';
@@ -836,6 +837,7 @@ class Lighttpd extends HttpConfigBase
 			}
 		}
 
+		$servernames_text = '';
 		for ($i = 0; $i < sizeof($server_string); $i ++) {
 			$data = $server_string[$i];
 
