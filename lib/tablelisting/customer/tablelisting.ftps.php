@@ -57,7 +57,7 @@ return [
 				'title' => $lng['panel']['edit'],
 				'href' => [
 					'section' => 'ftp',
-					'page' => 'ftps',
+					'page' => 'accounts',
 					'action' => 'edit',
 					'id' => ':id'
 				],
@@ -68,7 +68,7 @@ return [
 				'class' => 'btn-danger',
 				'href' => [
 					'section' => 'ftp',
-					'page' => 'ftps',
+					'page' => 'accounts',
 					'action' => 'delete',
 					'id' => ':id'
 				],
