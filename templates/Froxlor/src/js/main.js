@@ -1,5 +1,6 @@
 // load bootstrap
 import 'bootstrap';
+import '@fortawesome/fontawesome-free';
 import 'chart.js/dist/chart';
 
 // load jquery

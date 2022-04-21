@@ -3,12 +3,11 @@
 let mix = require('laravel-mix');
 
 mix
-	.setPublicPath('')
+	.setPublicPath('templates/Froxlor/assets')
 	.options({
-		fileLoaderDirs:  {
-			fonts: 'templates/Froxlor/assets/fonts'
-		}
+		processCssUrls: false
 	})
-	.js('templates/Froxlor/src/js/main.js', 'templates/Froxlor/assets/js')
-	.sass('templates/Froxlor/src/scss/main.scss', 'templates/Froxlor/assets/css')
-	.sass('templates/Froxlor/src/scss/dark.scss', 'templates/Froxlor/assets/css');
+	.copyDirectory('node_modules/@fortawesome/fontawesome-free/webfonts', 'templates/Froxlor/assets/webfonts')
+	.js('templates/Froxlor/src/js/main.js', 'js')
+	.sass('templates/Froxlor/src/scss/main.scss', 'css')
+	.sass('templates/Froxlor/src/scss/dark.scss', 'css');

@@ -17,10 +17,10 @@ use Froxlor\Settings;
  * @author Froxlor team <team@froxlor.org> (2010-)
  * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
  * @package Cron
- *         
+ *
  * @link http://www.nutime.de/
  * @since 0.9.16
- *       
+ *
  */
 class Fpm
 {
@@ -244,13 +244,16 @@ class Fpm
 			$fpm_config .= "\n\n";
 			foreach ($phpini_array as $inisection) {
 				$is = explode("=", $inisection);
+				if (count($is) !== 2 || empty($is[0])) {
+					continue;
+				}
 				foreach ($this->ini as $sec => $possibles) {
 					if (in_array(trim($is[0]), $possibles)) {
 						// check explicitly for open_basedir
 						if (trim($is[0]) == 'open_basedir' && $openbasedir == '') {
 							continue;
 						}
-						$fpm_config .= $sec . '[' . trim($is[0]) . '] = ' . trim($is[1]) . "\n";
+						$fpm_config .= $sec . '[' . trim($is[0]) . '] = ' . trim($is[1] ?? '') . "\n";
 					}
 				}
 			}
@@ -293,7 +296,7 @@ class Fpm
 	 *
 	 * @param boolean $createifnotexists
 	 *        	create the directory if it does not exist
-	 *        	
+	 *
 	 * @return string the full path to the file
 	 */
 	public function getConfigFile($createifnotexists = true)
@@ -313,7 +316,7 @@ class Fpm
 	 *
 	 * @param boolean $createifnotexists
 	 *        	create the directory if it does not exist
-	 *        	
+	 *
 	 * @return string the full path to the socket
 	 */
 	public function getSocketFile($createifnotexists = true)
@@ -335,7 +338,7 @@ class Fpm
 	 *
 	 * @param boolean $createifnotexists
 	 *        	create the directory if it does not exist
-	 *        	
+	 *
 	 * @return string the directory
 	 */
 	public function getTempDir($createifnotexists = true)
@@ -356,7 +359,7 @@ class Fpm
 	 *
 	 * @param boolean $createifnotexists
 	 *        	create the directory if it does not exist
-	 *        	
+	 *
 	 * @return string the directory
 	 */
 	public function getAliasConfigDir($createifnotexists = true)
@@ -402,7 +405,7 @@ pm.max_children = 1
 	 *
 	 * @param int $adminid
 	 *        	id of the admin-user
-	 *        	
+	 *
 	 * @return array
 	 */
 	private function getAdminData($adminid)

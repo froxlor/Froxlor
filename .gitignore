@@ -19,4 +19,5 @@ templates/*
 !templates/Froxlor/
 templates/Froxlor/assets/css/
 templates/Froxlor/assets/js/
+templates/Froxlor/assets/webfonts/
 !templates/misc/
