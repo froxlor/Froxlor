@@ -1,4 +1,4 @@
-<div class="alert alert-{{ type|default("info") }} fade show pb-1" role="alert">
+<div class="alert alert-{{ type|default("info") }} fade show" role="alert">
 	{% if heading is defined and heading is not empty %}
 		<h4 class="alert-heading">
 			{{ heading }}
@@ -14,7 +14,7 @@
 		</p>
 	{% endif %}
 	{% if redirect_link %}
-		<p class="mt-1 pb-3">
+		<p>
 			<a href="{{ redirect_link|raw }}" class="btn btn-{{ btntype }}">
 				{% if type == 'danger' %}
 					{{ lng('panel.back') }}

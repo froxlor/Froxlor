@@ -17,8 +17,7 @@
 					<input type="hidden" name="delete_userfiles" value="0"/>
 				{% endif %}
 			{% endif %}
-			<hr>
-			<p class="mb-0">
+			<p>
 				<input type="hidden" name="send" value="send"/>
 				{% for id,field in url_params %}
 					<input type="hidden" name="{{ id }}" value="{{ field }}"/>
