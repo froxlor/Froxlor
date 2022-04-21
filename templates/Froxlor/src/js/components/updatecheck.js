@@ -12,7 +12,7 @@ $(document).ready(function () {
 			error: function (request, status, error) {
 				console.log(request, status, error)
 				let message = 'Can\'t check version';
-				$("#updatecheck").html('<a class="nav-link disabled text-warning" data-bs-toggle="tooltip" data-bs-placement="left" title="' + message + '"><i class="fa fa-exclamation-triangle"></i> <span class="d-md-none d-xl-inline">' + message + '</span></a>');
+				$("#updatecheck").html('<span class="text-decoration-none badge bg-warning mt-2 me-2" data-bs-toggle="tooltip" data-bs-placement="left" title="' + message + '"><i class="fa fa-exclamation-triangle"></i> <span class="d-md-none d-xl-inline">' + message + '</span></span>');
 			}
 		});
 	}

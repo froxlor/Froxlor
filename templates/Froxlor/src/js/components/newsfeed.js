@@ -17,7 +17,7 @@ $(document).ready(function () {
 			},
 			error: function (request, status, error) {
 				console.log(request, status, error)
-				$("#newsfeeditems").html('<div class="alert alert-warning" role="alert">Error loading newsfeed</div>');
+				$("#newsfeeditems").html('<div class="list-group-item text-center"><span class="badge bg-warning" role="alert">Error loading newsfeed</span></div>');
 			}
 		});
 	}
