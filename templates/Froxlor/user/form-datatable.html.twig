@@ -1,7 +1,7 @@
 {% extends "Froxlor/user/form.html.twig" %}
 
 {% block content %}
-	{% if tabledata is not empty and tabledata is iterable %}
+	{% if tabledata.table.tr is not empty and tabledata.table.tr is iterable %}
 		<div class="row mb-2">
 			{% set type = 'warning' %}
 			{% set alert_msg = lng('error.customerhasongoingbackupjob') %}

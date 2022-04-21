@@ -18,6 +18,7 @@ return array(
 	'admin_edit' => array(
 		'title' => $lng['admin']['admin_edit'],
 		'image' => 'fa-solid fa-user-pen',
+		'self_overview' => ['section' => 'admins', 'page' => 'admins'],
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['admin']['accountdata'],

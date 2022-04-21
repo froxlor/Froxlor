@@ -21,6 +21,7 @@ return array(
 	'admin_add' => array(
 		'title' => $lng['admin']['admin_add'],
 		'image' => 'fa-solid fa-user-plus',
+		'self_overview' => ['section' => 'admins', 'page' => 'admins'],
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['admin']['accountdata'],

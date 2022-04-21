@@ -19,6 +19,7 @@ return array(
 	'mysql_add' => array(
 		'title' => $lng['mysql']['database_create'],
 		'image' => 'icons/mysql_add.png',
+		'self_overview' => ['section' => 'mysql', 'page' => 'mysqls'],
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['mysql']['database_create'],

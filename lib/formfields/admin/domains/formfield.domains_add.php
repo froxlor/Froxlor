@@ -21,6 +21,7 @@ return array(
 	'domain_add' => array(
 		'title' => $lng['admin']['domain_add'],
 		'image' => 'fa-solid fa-globe',
+		'self_overview' => ['section' => 'domains', 'page' => 'domains'],
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['domains']['domainsettings'],

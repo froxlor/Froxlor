@@ -292,8 +292,7 @@ if ($page == 'overview' || $page == 'htpasswds') {
 			// check whether there is a backup-job for this customer
 			try {
 				$backup_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/customer/tablelisting.backups.php';
-				$collection = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\CustomerBackups::class, $userinfo))
-					->withPagination($backup_list_data['backup_list']['columns']);
+				$collection = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\CustomerBackups::class, $userinfo));
 			} catch (Exception $e) {
 				\Froxlor\UI\Response::dynamic_error($e->getMessage());
 			}

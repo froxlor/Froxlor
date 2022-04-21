@@ -23,6 +23,7 @@ return [
 	'htpasswd_list' => [
 		'title' => $lng['menue']['extras']['directoryprotection'],
 		'icon' => 'fa-solid fa-lock',
+		'self_overview' => ['section' => 'extras', 'page' => 'htpasswds'],
 		'columns' => [
 			'username' => [
 				'label' => $lng['login']['username'],

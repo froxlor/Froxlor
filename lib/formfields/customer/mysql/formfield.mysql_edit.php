@@ -17,6 +17,7 @@ return array(
 	'mysql_edit' => array(
 		'title' => $lng['mysql']['database_edit'],
 		'image' => 'icons/mysql_edit.png',
+		'self_overview' => ['section' => 'mysql', 'page' => 'mysqls'],
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['mysql']['database_edit'],

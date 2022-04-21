@@ -18,6 +18,7 @@ return array(
 	'ipsandports_edit' => array(
 		'title' => $lng['admin']['ipsandports']['edit'],
 		'image' => 'fa-solid fa-pen',
+		'self_overview' => ['section' => 'ipsandports', 'page' => 'ipsandports'],
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['admin']['ipsandports']['ipandport'],

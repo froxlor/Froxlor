@@ -18,6 +18,7 @@ return array(
 	'domain_edit' => array(
 		'title' => $lng['domains']['subdomain_edit'],
 		'image' => 'fa-solid fa-pen',
+		'self_overview' => ['section' => 'domains', 'page' => 'domains'],
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['domains']['subdomain_edit'],

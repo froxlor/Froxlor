@@ -17,6 +17,7 @@ return array(
 	'ftp_edit' => array(
 		'title' => $lng['ftp']['account_edit'],
 		'image' => 'icons/user_edit.png',
+		'self_overview' => ['section' => 'ftp', 'page' => 'accounts'],
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['ftp']['account_edit'],

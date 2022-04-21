@@ -18,6 +18,7 @@ return array(
 	'htaccess_add' => array(
 		'title' => $lng['extras']['pathoptions_add'],
 		'image' => 'fa-solid fa-folder',
+		'self_overview' => ['section' => 'extras', 'page' => 'htaccess'],
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['extras']['pathoptions_add'],

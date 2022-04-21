@@ -18,6 +18,7 @@ return array(
 	'emails_edit' => array(
 		'title' => $lng['emails']['emails_edit'],
 		'image' => 'fa-solid fa-pen',
+		'self_overview' => ['section' => 'email', 'page' => 'emails'],
 		'sections' => array(
 			'section_a' => array(
 				'title' => $lng['emails']['emails_edit'],
