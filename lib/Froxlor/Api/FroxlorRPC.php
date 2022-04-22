@@ -3,6 +3,8 @@
 namespace Froxlor\Api;
 
 use Exception;
+use Froxlor\Database\Database;
+use Froxlor\System\IPTools;
 
 /**
  * This file is part of the Froxlor project.
@@ -60,11 +62,12 @@ class FroxlorRPC
 	 *
 	 * @param string $key
 	 * @param string $secret
-	 * @return boolean
+	 *
+	 * @return bool
 	 */
 	private static function validateAuth(string $key, string $secret): bool
 	{
-		$sel_stmt = \Froxlor\Database\Database::prepare(
+		$sel_stmt = Database::prepare(
 			"
 			SELECT ak.*, a.api_allowed as admin_api_allowed, c.api_allowed as cust_api_allowed, c.deactivated
 			FROM `api_keys` ak
@@ -73,7 +76,7 @@ class FroxlorRPC
 			WHERE `apikey` = :ak AND `secret` = :as
 		"
 		);
-		$result = \Froxlor\Database\Database::pexecute_first($sel_stmt, array(
+		$result = Database::pexecute_first($sel_stmt, array(
 			'ak' => $key,
 			'as' => $secret
 		), true, true);
@@ -83,8 +86,7 @@ class FroxlorRPC
 				if (!empty($result['allowed_from'])) {
 					// @todo allow specification and validating of whole subnets later
 					$ip_list = explode(",", $result['allowed_from']);
-					$access_ip = inet_ntop(inet_pton($_SERVER['REMOTE_ADDR']));
-					if (in_array($access_ip, $ip_list)) {
+					if (self::validateAllowedFrom($ip_list, $_SERVER['REMOTE_ADDR'])) {
 						return true;
 					}
 				} else {
@@ -93,6 +95,32 @@ class FroxlorRPC
 			}
 		}
 		throw new Exception('Invalid authorization credentials', 403);
+	}
+
+	/**
+	 * validate if given remote_addr is within the list of allowed ip/ip-ranges
+	 *
+	 * @param array $allowed_from
+	 * @param string $remote_addr
+	 *
+	 * @return bool
+	 */
+	private static function validateAllowedFrom(array $allowed_from, string $remote_addr): bool
+	{
+		// shorten IP for comparison
+		$remote_addr = inet_ntop(inet_pton($remote_addr));
+		// check for diret matches
+		if (in_array($remote_addr, $allowed_from)) {
+			return true;
+		}
+		// check for possible cidr ranges
+		foreach ($allowed_from as $ip) {
+			$ip_cidr = explode("/", $ip);
+			if (count($ip_cidr) == 2 && IPTools::ip_in_range($ip_cidr, $remote_addr)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**

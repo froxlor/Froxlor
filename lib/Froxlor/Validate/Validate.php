@@ -1,5 +1,8 @@
 <?php
+
 namespace Froxlor\Validate;
+
+use Froxlor\System\IPTools;
 
 class Validate
 {
@@ -31,7 +34,7 @@ class Validate
 	 */
 	public static function validate($str, $fieldname, $pattern = '', $lng = '', $emptydefault = array(), $throw_exception = false)
 	{
-		if (! is_array($emptydefault)) {
+		if (!is_array($emptydefault)) {
 			$emptydefault_array = array(
 				$emptydefault
 			);
@@ -41,7 +44,7 @@ class Validate
 		}
 
 		// Check if the $str is one of the values which represent the default for an 'empty' value
-		if (is_array($emptydefault) && ! empty($emptydefault) && in_array($str, $emptydefault)) {
+		if (is_array($emptydefault) && !empty($emptydefault) && in_array($str, $emptydefault)) {
 			return $str;
 		}
 
@@ -49,7 +52,7 @@ class Validate
 
 			$pattern = '/^[^\r\n\t\f\0]*$/D';
 
-			if (! preg_match($pattern, $str)) {
+			if (!preg_match($pattern, $str)) {
 				// Allows letters a-z, digits, space (\\040), hyphen (\\-), underscore (\\_) and backslash (\\\\),
 				// everything else is removed from the string.
 				$allowed = "/[^a-z0-9\\040\\.\\-\\_\\\\]/i";
@@ -68,38 +71,6 @@ class Validate
 		}
 
 		\Froxlor\UI\Response::standard_error($lng, $fieldname, $throw_exception);
-	}
-
-	/**
-	 * Converts CIDR to a netmask address
-	 *
-	 * @thx to https://stackoverflow.com/a/5711080/3020926
-	 * @param string $cidr
-	 *
-	 * @return string
-	 */
-	public static function cidr2NetmaskAddr($cidr)
-	{
-		$ta = substr($cidr, strpos($cidr, '/') + 1) * 1;
-		$netmask = str_split(str_pad(str_pad('', $ta, '1'), 32, '0'), 8);
-
-		foreach ($netmask as &$element) {
-			$element = bindec($element);
-		}
-
-		return implode('.', $netmask);
-	}
-
-	/**
-	 * Checks if an $address (IP) is IPv6
-	 *
-	 * @param string $address
-	 *
-	 * @return string|bool ip address on success, false on failure
-	 */
-	public static function is_ipv6($address)
-	{
-		return filter_var($address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
 	}
 
 	/**
@@ -131,10 +102,14 @@ class Validate
 			$org_ip = $ip;
 			$ip_cidr = explode("/", $ip);
 			if (count($ip_cidr) === 2) {
-				if (strlen($ip_cidr[1]) <= 2 && in_array((int) $ip_cidr[1], array_values(range(1, 32)), true) === false) {
+				$cidr_range_max = 32;
+				if (IPTools::is_ipv6($ip_cidr[0])) {
+					$cidr_range_max = 128;
+				}
+				if (strlen($ip_cidr[1]) <= 3 && in_array((int) $ip_cidr[1], array_values(range(1, $cidr_range_max)), true) === false) {
 					\Froxlor\UI\Response::standard_error($lng, $ip, $throw_exception);
 				}
-				if ($cidr_as_netmask && self::is_ipv6($ip_cidr[0])) {
+				if ($cidr_as_netmask && IPTools::is_ipv6($ip_cidr[0])) {
 					// MySQL does not handle CIDR of IPv6 addresses, return error
 					if ($return_bool) {
 						return false;
@@ -143,8 +118,8 @@ class Validate
 					}
 				}
 				$ip = $ip_cidr[0];
-				if ($cidr_as_netmask && strlen($ip_cidr[1]) <= 2) {
-					$ip_cidr[1] = self::cidr2NetmaskAddr($org_ip);
+				if ($cidr_as_netmask && strlen($ip_cidr[1]) <= 3) {
+					$ip_cidr[1] = IPTools::cidr2NetmaskAddr($org_ip);
 				}
 				$cidr = "/" . $ip_cidr[1];
 			} else {
@@ -279,10 +254,10 @@ class Validate
 	 */
 	public static function validateUsername($username, $unix_names = 1, $mysql_max = '')
 	{
-		if (empty($mysql_max) || ! is_numeric($mysql_max) || $mysql_max <= 0) {
+		if (empty($mysql_max) || !is_numeric($mysql_max) || $mysql_max <= 0) {
 			$mysql_max = \Froxlor\Database\Database::getSqlUsernameLength() - 1;
 		} else {
-			$mysql_max --;
+			$mysql_max--;
 		}
 		if ($unix_names == 0) {
 			if (strpos($username, '--') === false) {
@@ -302,7 +277,7 @@ class Validate
 	 */
 	public static function validateSqlInterval($interval = null)
 	{
-		if (! empty($interval) && strstr($interval, ' ') !== false) {
+		if (!empty($interval) && strstr($interval, ' ') !== false) {
 			/*
 			 * [0] = ([0-9]+)
 			 * [1] = valid SQL-Interval expression

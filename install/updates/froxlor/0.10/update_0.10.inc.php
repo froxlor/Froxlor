@@ -1,7 +1,7 @@
 <?php
 use Froxlor\Database\Database;
 use Froxlor\Settings;
-use Froxlor\Validate\Validate;
+use Froxlor\System\IPTools;
 
 /**
  * This file is part of the Froxlor project.
@@ -892,7 +892,7 @@ if (\Froxlor\Froxlor::isDatabaseVersion('202107210')) {
 	Database::pexecute($result_stmt);
 	$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_IPSANDPORTS . "` SET `ip` = :ip WHERE `id` = :id");
 	while ($iprow = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
-		if (Validate::is_ipv6($iprow['ip'])) {
+		if (IPTools::is_ipv6($iprow['ip'])) {
 			$ip = inet_ntop(inet_pton($iprow['ip']));
 			Database::pexecute($upd_stmt, [
 				'ip' => $ip,

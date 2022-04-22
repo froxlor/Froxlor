@@ -779,6 +779,8 @@ class FroxlorInstall
 			$mysql_access_host_array[] = $this->_data['serverip'];
 		}
 
+		$mysql_access_host_array = array_unique($mysql_access_host_array);
+
 		foreach ($mysql_access_host_array as $mysql_access_host) {
 			$frox_db = str_replace('`', '', $this->_data['mysql_database']);
 			$this->_grantDbPrivilegesTo($db_root, $frox_db, $this->_data['mysql_unpriv_user'], $this->_data['mysql_unpriv_pass'], $mysql_access_host);
