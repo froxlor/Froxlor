@@ -16,6 +16,7 @@
  *
  */
 
+use Froxlor\UI\Callbacks\Style;
 use Froxlor\UI\Callbacks\Domain;
 use Froxlor\UI\Callbacks\Impersonate;
 use Froxlor\UI\Callbacks\Text;
@@ -117,6 +118,9 @@ return [
 				],
 				'visible' => [Domain::class, 'adminCanDelete']
 			]
+		],
+		'format_callback' => [
+			[Style::class, 'resultDomainTerminatedOrDeactivated']
 		]
 	]
 ];

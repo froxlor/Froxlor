@@ -16,6 +16,8 @@
  *
  */
 
+
+use Froxlor\UI\Callbacks\Style;
 use Froxlor\UI\Callbacks\Domain;
 use Froxlor\UI\Listing;
 
@@ -119,6 +121,9 @@ return [
 				],
 				'visible' => [Domain::class, 'canDelete']
 			]
+		],
+		'format_callback' => [
+			[Style::class, 'resultDomainTerminatedOrDeactivated']
 		]
 	]
 ];
