@@ -3,7 +3,9 @@
 namespace Froxlor\Ajax;
 
 use Exception;
+use Froxlor\Database\Database;
 use Froxlor\Http\HttpClient;
+use Froxlor\Validate\Validate;
 use Froxlor\Settings;
 use Froxlor\UI\Listing;
 use Froxlor\UI\Panel\UI;
@@ -52,7 +54,7 @@ class Ajax
 		global $lng;
 
 		// query the whole table
-		$result_stmt = \Froxlor\Database\Database::query("SELECT * FROM `" . TABLE_PANEL_LANGUAGE . "`");
+		$result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_LANGUAGE . "`");
 
 		$langs = array();
 		// presort languages
@@ -110,6 +112,8 @@ class Ajax
 				return $this->searchGlobal();
 			case 'tablelisting':
 				return $this->updateTablelisting();
+			case 'editapikey':
+				return $this->editApiKey();
 			default:
 				return $this->errorResponse('Action not found!');
 		}
@@ -236,8 +240,7 @@ class Ajax
 
 		$result = array_merge($result_settings, $result_entities);
 
-		header("Content-type: application/json");
-		echo json_encode($result);
+		return $this->jsonResponse($result);
 	}
 
 	private function updateTablelisting()
@@ -249,6 +252,61 @@ class Ajax
 
 		Listing::storeColumnListingForUser([Request::get('listing') => $columns]);
 
-		return json_encode($columns);
+		return $this->jsonResponse($columns);
+	}
+
+	private function editApiKey()
+	{
+		$keyid = isset($_POST['id']) ? (int) $_POST['id'] : 0;
+		$allowed_from = isset($_POST['allowed_from']) ? $_POST['allowed_from'] : "";
+		$valid_until = isset($_POST['valid_until']) ? (int) $_POST['valid_until'] : -1;
+
+		// validate allowed_from
+		if (!empty($allowed_from)) {
+			$ip_list = array_map('trim', explode(",", $allowed_from));
+			$_check_list = $ip_list;
+			foreach ($_check_list as $idx => $ip) {
+				if (Validate::validate_ip2($ip, true, 'invalidip', true, true, true) == false) {
+					unset($ip_list[$idx]);
+					continue;
+				}
+				// check for cidr
+				if (strpos($ip, '/') !== false) {
+					$ipparts = explode("/", $ip);
+					// shorten IP
+					$ip = inet_ntop(inet_pton($ipparts[0]));
+					// re-add cidr
+					$ip .= '/' . $ipparts[1];
+				} else {
+					// shorten IP
+					$ip = inet_ntop(inet_pton($ip));
+				}
+				$ip_list[$idx] = $ip;
+			}
+			$allowed_from = implode(",", array_unique($ip_list));
+		}
+
+		if ($valid_until <= 0 || !is_numeric($valid_until)) {
+			$valid_until = -1;
+		}
+
+		$upd_stmt = Database::prepare("
+			UPDATE `" . TABLE_API_KEYS . "` SET
+			`valid_until` = :vu, `allowed_from` = :af
+			WHERE `id` = :keyid AND `adminid` = :aid AND `customerid` = :cid
+		");
+		if ((int) $this->userinfo['adminsession'] == 1) {
+			$cid = 0;
+		} else {
+			$cid = $this->userinfo['customerid'];
+		}
+		Database::pexecute($upd_stmt, array(
+			'keyid' => $keyid,
+			'af' => $allowed_from,
+			'vu' => $valid_until,
+			'aid' => $this->userinfo['adminid'],
+			'cid' => $cid
+		));
+		return $this->jsonResponse(['allowed_from' => $allowed_from, 'valid_until' => $valid_until]);
 	}
 }

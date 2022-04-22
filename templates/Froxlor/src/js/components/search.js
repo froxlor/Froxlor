@@ -1,7 +1,7 @@
-$(document).ready(function () {
+$(function() {
 	let search = $('#search')
 
-	search.submit(function (e) {
+	search.on('submit', function (e) {
 		e.preventDefault();
 	});
 

@@ -36,6 +36,7 @@ $lng['requirements']['phpcurl'] = 'PHP curl-Erweiterung...';
 $lng['requirements']['phpmbstring'] = 'PHP mbstring-Erweiterung...';
 $lng['requirements']['phpzip'] = 'PHP zip-Erweiterung...';
 $lng['requirements']['phpjson'] = 'PHP json-Erweiterung...';
+$lng['requirements']['phpgmp'] = 'PHP gmp-Erweiterung...';
 $lng['requirements']['bcmathdescription'] = 'Traffic-Berechnungs bezogene Funktionen stehen nicht vollständig zur Verfügung!';
 $lng['requirements']['zipdescription'] = 'Die Auto-Update Funktion benötigt die zip Erweiterung.';
 $lng['requirements']['openbasedir'] = 'open_basedir genutzt wird...';

@@ -444,7 +444,7 @@ class FroxlorInstall
 			`vhostcontainer` = '1',
 			`vhostcontainer_servername_statement` = '1'
 		");
-        $nvh = $this->_data['webserver'] == 'apache2' ? '1' : '0';
+		$nvh = $this->_data['webserver'] == 'apache2' ? '1' : '0';
 		$stmt->execute(array(
 			'nvh' => $nvh,
 			'serverip' => $this->_data['serverip'],
@@ -1192,6 +1192,9 @@ class FroxlorInstall
 
 		// check for json extension
 		$this->_requirementCheckFor($content, $_die, 'json', false, 'phpjson');
+
+		// check for gmp extension
+		$this->_requirementCheckFor($content, $_die, 'gmp', false, 'phpgmp');
 
 		// check for bcmath extension
 		$this->_requirementCheckFor($content, $_die, 'bcmath', true, 'phpbcmath', 'bcmathdescription');

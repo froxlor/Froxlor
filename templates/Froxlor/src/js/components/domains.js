@@ -1,7 +1,7 @@
-$(document).ready(function () {
+$(function() {
 
 	// disable unusable php-configuration by customer settings
-	$('#customerid').change(function () {
+	$('#customerid').on('change', function () {
 		var cid = $(this).val();
 		$.ajax({
 			url: "admin_domains.php?page=domains&action=jqGetCustomerPHPConfigs",
@@ -31,7 +31,7 @@ $(document).ready(function () {
 
 	// show warning if speciallogfile option is toggled
 	if ($('input[name=speciallogverified]')) {
-		$('input[name=speciallogfile]').click(function () {
+		$('input[name=speciallogfile]').on('click', function () {
 			$('#speciallogfilenote').remove();
 			$('#speciallogfile').removeClass('is-invalid');
 			$('#speciallogverified').val(0);
@@ -64,7 +64,7 @@ $(document).ready(function () {
 		$('#section_d').hide();
 	}
 
-	$('#email_only').click(function () {
+	$('#email_only').on('click', function () {
 		if ($(this).is(':checked')) {
 			// hide unnecessary sections
 			$('#section_b').hide();

@@ -6,7 +6,7 @@ import 'chart.js/dist/chart';
 // load jquery
 global.$ = require('jquery');
 
-$(document).ready(function () {
+$(function() {
 	window.$theme = 'Froxlor';
 });
 
@@ -19,3 +19,4 @@ require('./components/tablecolumns')
 require('./components/ipsandports')
 require('./components/domains')
 require('./components/configfiles')
+require('./components/apikeys')
