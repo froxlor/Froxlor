@@ -5,6 +5,7 @@ namespace Froxlor\Ajax;
 use Exception;
 use Froxlor\Http\HttpClient;
 use Froxlor\Settings;
+use Froxlor\UI\Listing;
 use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
 
@@ -107,6 +108,8 @@ class Ajax
 				return $this->getUpdateCheck();
 			case 'searchglobal':
 				return $this->searchGlobal();
+			case 'tablelisting':
+				return $this->updateTablelisting();
 			default:
 				return $this->errorResponse('Action not found!');
 		}
@@ -235,5 +238,17 @@ class Ajax
 
 		header("Content-type: application/json");
 		echo json_encode($result);
+	}
+
+	private function updateTablelisting()
+	{
+		$columns = [];
+		foreach (Request::get('columns') as $requestedColumn => $value) {
+			$columns[] = $requestedColumn;
+		}
+
+		Listing::storeColumnListingForUser([Request::get('listing') => $columns]);
+
+		return json_encode($columns);
 	}
 }

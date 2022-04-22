@@ -57,7 +57,7 @@ if ($page == 'overview' || $page == 'domains') {
 		}
 
 		UI::view('user/table.html.twig', [
-			'listing' => \Froxlor\UI\Listing::format($collection, $domain_list_data['domain_list']),
+			'listing' => \Froxlor\UI\Listing::format($collection, $domain_list_data, 'domain_list') ,
 			'actions_links' => $actions_links,
 			'entity_info' => $lng['domains']['description']
 		]);

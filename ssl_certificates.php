@@ -62,5 +62,5 @@ try {
 }
 
 UI::view('user/table.html.twig', [
-	'listing' => Listing::format($collection, $certificates_list_data['sslcertificates_list']),
+	'listing' => Listing::format($collection, $certificates_list_data, 'sslcertificates_list') ,
 ]);

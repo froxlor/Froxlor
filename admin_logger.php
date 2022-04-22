@@ -35,7 +35,7 @@ if ($page == 'log' && $userinfo['change_serversettings'] == '1') {
 		}
 
 		UI::view('user/table.html.twig', [
-			'listing' => \Froxlor\UI\Listing::format($collection, $syslog_list_data['syslog_list']),
+			'listing' => \Froxlor\UI\Listing::format($collection, $syslog_list_data, 'syslog_list') ,
 			'actions_links' => [[
 				'href' => $linker->getLink(['section' => 'logger', 'page' => 'log', 'action' => 'truncate']),
 				'label' => $lng['logger']['truncate'],

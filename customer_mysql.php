@@ -67,7 +67,7 @@ if ($page == 'overview' || $page == 'mysqls') {
 		}
 
 		UI::view('user/table.html.twig', [
-			'listing' => \Froxlor\UI\Listing::format($collection, $mysql_list_data['mysql_list']),
+			'listing' => \Froxlor\UI\Listing::format($collection, $mysql_list_data, 'mysql_list') ,
 			'actions_links' => $actions_links,
 			'entity_info' => $lng['mysql']['description']
 		]);

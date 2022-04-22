@@ -24,8 +24,9 @@ $input-bg: lighten($light-bg, 5%);
 
 $font-size-root: 16px;
 
-// Space
+// Spacing
 $spacer: 1.25rem;
+$enable-negative-margins: true;
 
 // Body
 $body-bg: $light-bg;

@@ -10,6 +10,11 @@
 				<p>{{ listing.empty_msg|default(lng('panel.listing_empty'))|raw }}</p>
 			</div>
 		{% else %}
+			<div class="d-flex flex-column align-items-end mt-n2">
+				<div class="rounded-top bg-white small py-1 px-2 me-3 opacity-75" data-bs-toggle="modal" data-bs-target="#manageColumnsModal">
+					<i class="fa fa-cog"></i>
+				</div>
+			</div>
 			<div class="card table-responsive">
 				<table class="table table-borderless table-striped align-middle mb-0 px-3">
 					<thead>
@@ -57,4 +62,30 @@
 		{% endif %}
 	</form>
 
+	<!-- Modal -->
+	<div class="modal fade" id="manageColumnsModal" tabindex="-1" aria-labelledby="manageColumnsModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<form method="POST" class="modal-content" data-listing="{{ listing.id }}">
+				<div class="modal-header">
+					<h5 class="modal-title" id="manageColumnsModalLabel">{{ lng('panel.managetablecolumnsmodal.title') }}</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<p>{{ lng('panel.managetablecolumnsmodal.description') }}</p>
+					{% for key, column in listing.available_columns %}
+						<div class="form-check">
+							<input class="form-check-input" type="checkbox" value="" id="checkColumn{{ key }}" name="columns[{{ key }}]" {{ column.checked ? 'checked' : '' }}>
+							<label class="form-check-label" for="checkColumn{{ key }}">
+								{{ column.label }}
+							</label>
+						</div>
+					{% endfor %}
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ lng('panel.modalclose') }}</button>
+					<button type="submit" class="btn btn-primary">{{ lng('panel.save') }}</button>
+				</div>
+			</form>
+		</div>
+	</div>
 {% endmacro %}

@@ -55,7 +55,7 @@ if ($page == 'overview' || $page == 'htpasswds') {
 		}
 
 		UI::view('user/table.html.twig', [
-			'listing' => \Froxlor\UI\Listing::format($collection, $htpasswd_list_data['htpasswd_list']),
+			'listing' => \Froxlor\UI\Listing::format($collection, $htpasswd_list_data, 'htpasswd_list') ,
 			'actions_links' => [[
 				'href' => $linker->getLink(['section' => 'extras', 'page' => 'htpasswds', 'action' => 'add']),
 				'label' => $lng['extras']['directoryprotection_add']
@@ -171,7 +171,7 @@ if ($page == 'overview' || $page == 'htpasswds') {
 		}
 
 		UI::view('user/table.html.twig', [
-			'listing' => \Froxlor\UI\Listing::format($collection, $htaccess_list_data['htaccess_list']),
+			'listing' => \Froxlor\UI\Listing::format($collection, $htaccess_list_data, 'htaccess_list'),
 			'actions_links' => [[
 				'href' => $linker->getLink(['section' => 'extras', 'page' => 'htaccess', 'action' => 'add']),
 				'label' => $lng['extras']['pathoptions_add']
@@ -311,7 +311,7 @@ if ($page == 'overview' || $page == 'htpasswds') {
 				UI::view('user/form-datatable.html.twig', [
 					'formaction' => $linker->getLink(array('section' => 'extras')),
 					'formdata' => $backup_data['backup'],
-					'tabledata' => \Froxlor\UI\Listing::format($collection, $backup_list_data['backup_list']),
+					'tabledata' => \Froxlor\UI\Listing::format($collection, $backup_list_data, 'backup_list') ,
 				]);
 			}
 		}

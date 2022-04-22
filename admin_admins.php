@@ -42,7 +42,7 @@ if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
 		}
 
 		UI::view('user/table.html.twig', [
-			'listing' => \Froxlor\UI\Listing::format($collection, $admin_list_data['admin_list']),
+			'listing' => \Froxlor\UI\Listing::format($collection, $admin_list_data, 'admin_list') ,
 			'actions_links' => [[
 				'href' => $linker->getLink(['section' => 'admins', 'page' => $page, 'action' => 'add']),
 				'label' => $lng['admin']['admin_add']

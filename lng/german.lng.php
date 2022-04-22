@@ -1805,3 +1805,5 @@ $lng['panel']['settingsmodebasic'] = 'Einfach';
 $lng['panel']['settingsmodeadvanced'] = 'Erweitert';
 $lng['panel']['settingsmodetoggle'] = 'Modus umschalten';
 $lng['panel']['modalclose'] = 'Schließen';
+$lng['panel']['managetablecolumnsmodal']['title'] = 'Tabellenspalten verwalten';
+$lng['panel']['managetablecolumnsmodal']['description'] = 'Hier kannst du die Tabellenspalten für dich selbst individualisieren.';

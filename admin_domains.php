@@ -59,7 +59,7 @@ if ($page == 'domains' || $page == 'overview') {
 		}
 
 		UI::view('user/table.html.twig', [
-			'listing' => \Froxlor\UI\Listing::format($collection, $domain_list_data['domain_list']),
+			'listing' => \Froxlor\UI\Listing::format($collection, $domain_list_data, 'domain_list') ,
 			'actions_links' => $actions_links
 		]);
 	} elseif ($action == 'delete' && $id != 0) {

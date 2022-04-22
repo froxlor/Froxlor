@@ -52,7 +52,7 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 		}
 
 		UI::view('user/table.html.twig', [
-			'listing' => \Froxlor\UI\Listing::format($collection, $customer_list_data['customer_list']),
+			'listing' => \Froxlor\UI\Listing::format($collection, $customer_list_data, 'customer_list') ,
 			'actions_links' => $actions_links
 		]);
 	} elseif ($action == 'su' && $id != 0) {

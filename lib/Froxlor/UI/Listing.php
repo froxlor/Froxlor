@@ -24,11 +24,13 @@ use Froxlor\CurrentUser;
  */
 class Listing
 {
-	public static function format(Collection $collection, array $tabellisting): array
+	public static function format(Collection $collection, array $tabellisting, string $id): array
 	{
+		$tabellisting = $tabellisting[$id];
 		$collection_data = $collection->get();
 
 		return [
+			'id' => $id,
 			'title' => $tabellisting['title'],
 			'description' => $tabellisting['description'] ?? null,
 			'icon' => $tabellisting['icon'] ?? null,
@@ -186,7 +188,10 @@ class Listing
 		$result = [];
 		if (isset($tabellisting['columns'])) {
 			foreach ($tabellisting['columns'] as $column => $coldata) {
-				$result[$column] = $coldata['label'];
+				$result[$column] = [
+					'label' => $coldata['label'],
+					'checked' => in_array($column, $tabellisting['visible_columns']),
+				];
 			}
 		}
 		return $result;

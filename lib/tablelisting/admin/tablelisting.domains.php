@@ -28,6 +28,11 @@ return [
 		'empty_msg' => $lng['admin']['domain_nocustomeraddingavailable'],
 		'self_overview' => ['section' => 'domains', 'page' => 'domains'],
 		'columns' => [
+			'd.id' => [
+				'label' => 'ID',
+				'field' => 'id',
+				'sortable' => true,
+			],
 			'd.domain_ace' => [
 				'label' => $lng['domains']['domainname'],
 				'field' => 'domain_ace',

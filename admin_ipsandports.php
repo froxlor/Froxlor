@@ -39,7 +39,7 @@ if ($page == 'ipsandports' || $page == 'overview') {
 		}
 
 		UI::view('user/table.html.twig', [
-			'listing' => \Froxlor\UI\Listing::format($collection, $ipsandports_list_data['ipsandports_list']),
+			'listing' => \Froxlor\UI\Listing::format($collection, $ipsandports_list_data, 'ipsandports_list') ,
 			'actions_links' => [[
 				'href' => $linker->getLink(['section' => 'ipsandports', 'page' => $page, 'action' => 'add']),
 				'label' => $lng['admin']['ipsandports']['add']

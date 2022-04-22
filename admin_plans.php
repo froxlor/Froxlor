@@ -41,7 +41,7 @@ if ($page == '' || $page == 'overview') {
 		}
 
 		UI::view('user/table.html.twig', [
-			'listing' => \Froxlor\UI\Listing::format($collection, $plan_list_data['plan_list']),
+			'listing' => \Froxlor\UI\Listing::format($collection, $plan_list_data, 'plan_list') ,
 			'actions_links' => [[
 				'href' => $linker->getLink(['section' => 'plans', 'page' => $page, 'action' => 'add']),
 				'label' => $lng['admin']['plans']['add']

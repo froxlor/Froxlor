@@ -95,7 +95,7 @@ $zonefile = implode("\n", $result);
 $dns_add_data = include_once dirname(__FILE__) . '/lib/formfields/formfield.dns_add.php';
 
 UI::view('user/dns-editor.html.twig', [
-	'listing' => \Froxlor\UI\Listing::format($collection, $dns_list_data['dns_list']),
+	'listing' => \Froxlor\UI\Listing::format($collection, $dns_list_data, 'dns_list') ,
 	'actions_links' => [[
 		'class' => 'btn-secondary',
 		'href' => $linker->getLink(['section' => 'domains', 'page' => 'domains', 'action' => 'edit', 'id' => $domain_id]),

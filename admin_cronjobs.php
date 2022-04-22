@@ -37,7 +37,7 @@ if ($page == 'cronjobs' || $page == 'overview') {
 		}
 
 		UI::view('user/table-note.html.twig', [
-			'listing' => \Froxlor\UI\Listing::format($collection, $cron_list_data['cron_list']),
+			'listing' => \Froxlor\UI\Listing::format($collection, $cron_list_data, 'cron_list') ,
 			// alert-box
 			'type' => 'warning',
 			'alert_msg' => $lng['cron']['changewarning']

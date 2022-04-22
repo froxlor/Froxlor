@@ -29,6 +29,11 @@ return [
 		'icon' => 'fa-solid fa-user',
 		'self_overview' => ['section' => 'customers', 'page' => 'customers'],
 		'columns' => [
+			'c.customerid' => [
+				'label' => 'ID',
+				'field' => 'customerid',
+				'sortable' => true,
+			],
 			'c.name' => [
 				'label' => $lng['customer']['name'],
 				'field' => 'name',

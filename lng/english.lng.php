@@ -2167,3 +2167,5 @@ $lng['panel']['settingsmodebasic'] = 'Basic';
 $lng['panel']['settingsmodeadvanced'] = 'Advanced';
 $lng['panel']['settingsmodetoggle'] = 'Click to toggle mode';
 $lng['panel']['modalclose'] = 'Close';
+$lng['panel']['managetablecolumnsmodal']['title'] = 'Manage Table columns';
+$lng['panel']['managetablecolumnsmodal']['description'] = 'Here you can individualise the table columns for yourself.';

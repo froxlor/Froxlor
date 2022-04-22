@@ -52,7 +52,7 @@ if ($page == 'overview' || $page == 'accounts') {
 		}
 
 		UI::view('user/table.html.twig', [
-			'listing' => \Froxlor\UI\Listing::format($collection, $ftp_list_data['ftp_list']),
+			'listing' => \Froxlor\UI\Listing::format($collection, $ftp_list_data, 'ftp_list') ,
 			'actions_links' => $actions_links,
 			'entity_info' => $lng['ftp']['description']
 		]);

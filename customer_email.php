@@ -65,7 +65,7 @@ if ($page == 'overview' || $page == 'emails') {
 		}
 
 		UI::view('user/table.html.twig', [
-			'listing' => \Froxlor\UI\Listing::format($collection, $email_list_data['email_list']),
+			'listing' => \Froxlor\UI\Listing::format($collection, $email_list_data, 'email_list') ,
 			'actions_links' => $actions_links,
 			'entity_info' => $lng['emails']['description']
 		]);

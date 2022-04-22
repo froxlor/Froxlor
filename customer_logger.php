@@ -38,7 +38,7 @@ if ($page == 'log') {
 			\Froxlor\UI\Response::dynamic_error($e->getMessage());
 		}
 		UI::view('user/table.html.twig', [
-			'listing' => \Froxlor\UI\Listing::format($collection, $syslog_list_data['syslog_list'])
+			'listing' => \Froxlor\UI\Listing::format($collection, $syslog_list_data, 'syslog_list')
 		]);
 	}
 }
