@@ -63,7 +63,16 @@ class Domain
 
 	public static function domainExternalLink(array $attributes)
 	{
-		return '<a href="http://' . $attributes['data'] . '" target="_blank">' . $attributes['data'] . '</a>';
+		$result = '<a href="http://' . $attributes['data'] . '" target="_blank">' . $attributes['data'] . '</a>';
+		// check for statistics if parentdomainid==0 to show stats-link for customers
+		if ((int) UI::getCurrentUser()['adminsession'] == 0 && $attributes['fields']['parentdomainid'] == 0) {
+			$statsapp = 'webalizer';
+			if (Settings::Get('system.awstats_enabled') == '1') {
+				$statsapp = 'awstats';
+			}
+			$result .= ' <a href="http://' . $attributes['data'] . '/' . $statsapp . '" rel="external" title="' . UI::getLng('domains.statstics') . '"><i class="fa-solid fa-chart-line text-secondary"></i></a>';
+		}
+		return $result;
 	}
 
 	public static function canEdit(array $attributes): bool

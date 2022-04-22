@@ -121,11 +121,13 @@ class Ajax
 
 	public function errorResponse($message, int $response_code = 500)
 	{
+		header("Content-Type: application/json");
 		return \Froxlor\Api\Response::jsonErrorResponse($message, $response_code);
 	}
 
 	public function jsonResponse($value, int $response_code = 200)
 	{
+		header("Content-Type: application/json");
 		return \Froxlor\Api\Response::jsonResponse($value, $response_code);
 	}
 
@@ -197,7 +199,7 @@ class Ajax
 				]);
 			}
 
-			return $items;
+			return $this->jsonResponse($items);
 		} else {
 			return $this->errorResponse('No Newsfeeds available at the moment.');
 		}
@@ -210,8 +212,8 @@ class Ajax
 		try {
 			$json_result = \Froxlor\Api\Commands\Froxlor::getLocal($this->userinfo)->checkUpdate();
 			$result = json_decode($json_result, true)['data'];
-			echo UI::twig()->render($this->theme . '/misc/version_top.html.twig', $result);
-			exit;
+			$result = UI::twig()->render($this->theme . '/misc/version_top.html.twig', $result);
+			return $this->jsonResponse($result);
 		} catch (Exception $e) {
 			// don't display anything if just not allowed due to permissions
 			if ($e->getCode() != 403) {
