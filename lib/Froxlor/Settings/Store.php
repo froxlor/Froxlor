@@ -266,7 +266,7 @@ class Store
 				if (count($ip_cidr) === 2) {
 					$ip = $ip_cidr[0];
 					if (strlen($ip_cidr[1]) <= 2) {
-						$ip_cidr[1] = \Froxlor\Validate\Validate::cidr2NetmaskAddr($org_ip);
+						$ip_cidr[1] = \Froxlor\System\IPTools::cidr2NetmaskAddr($org_ip);
 					}
 					$newfieldvalue[] = $ip . '/' . $ip_cidr[1];
 				} else {

@@ -31,6 +31,7 @@ return [
 			'd.domain_ace' => [
 				'label' => $lng['domains']['domainname'],
 				'field' => 'domain_ace',
+				'callback' => [Domain::class, 'domainExternalLink'],
 			],
 			'd.documentroot' => [
 				'label' => $lng['panel']['path'],

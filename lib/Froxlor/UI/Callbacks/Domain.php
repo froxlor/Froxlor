@@ -61,6 +61,11 @@ class Domain
 		return UI::getLng('domains.aliasdomain') . ' ' . $attributes['fields']['aliasdomain'];
 	}
 
+	public static function domainExternalLink(array $attributes)
+	{
+		return '<a href="http://' . $attributes['data'] . '" target="_blank">' . $attributes['data'] . '</a>';
+	}
+
 	public static function canEdit(array $attributes): bool
 	{
 		return (bool)$attributes['fields']['caneditdomain'];
