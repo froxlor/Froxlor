@@ -2,6 +2,10 @@
 <froxlor>
 	<distribution name="Gentoo" version="2.2"
 		defaulteditor="/usr/bin/nano">
+		<!-- OS defaults to be loaded on installation -->
+		<defaults>
+			<default settinggroup="system" varname="nssextrausers" value="0"></default>
+		</defaults>
 		<services>
 			<!-- HTTP -->
 			<service type="http" title="{{lng.admin.configfiles.http}}">
@@ -3673,7 +3677,7 @@ account     required    pam_mysql.so user=<SQL_UNPRIVILEGED_USER> passwd=<SQL_UN
 				</daemon>
 				<!-- libnss-mysql -->
 				<daemon name="libnss"
-					title="libnss-mysql (required for FCGID/php-fpm/mpm-itk)">
+					title="libnss-mysql">
 					<install><![CDATA[emerge sys-auth/libnss-mysql]]></install>
 					<file name="/etc/libnss-mysql.cfg" chown="root:root"
 						chmod="0600" backup="true">
@@ -3795,7 +3799,7 @@ aliases:     files
 					</file>
 				</daemon>
 				<!-- FCGID -->
-				<daemon name="fcgid" title="FCGID (alternative to mod_php)">
+				<daemon name="fcgid" title="FCGID">
 					<command><![CDATA[echo "dev-lang/php cgi" >> /etc/portage/package.use]]></command>
 					<install><![CDATA[emerge dev-lang/php sys-auth/libnss-mysql]]></install>
 					<commands index="1">
@@ -3832,7 +3836,7 @@ aliases:     files
 				</daemon>
 				<!-- PHP-FPM -->
 				<daemon name="php-fpm"
-					title="PHP-FPM (alternative to mod_php)">
+					title="PHP-FPM">
 					<command><![CDATA[echo "dev-lang/php fpm" >> /etc/portage/package.use]]></command>
 					<install><![CDATA[emerge dev-lang/php sys-auth/libnss-mysql]]></install>
 					<commands index="1">

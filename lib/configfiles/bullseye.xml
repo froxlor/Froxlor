@@ -2,11 +2,6 @@
 <froxlor>
 	<distribution name="Debian" codename="Bullseye"
 		version="11.x" defaulteditor="/bin/nano">
-		<!-- OS defaults to be loaded on installation -->
-		<defaults>
-			<default settinggroup="system" varname="nssextrausers" value="1"></default>
-			<default settinggroup="system" varname="use_mod_proxy" value="1"></default>
-		</defaults>
 		<services>
 			<!-- HTTP -->
 			<service type="http" title="{{lng.admin.configfiles.http}}">
@@ -4773,7 +4768,7 @@ UPLOADGID=
 				</daemon>
 				<!-- libnss-extrausers -->
 				<daemon name="libnssextrausers"
-					title="libnss-extrausers (required for FCGID/php-fpm/mpm-itk)">
+					title="libnss-extrausers">
 					<install><![CDATA[apt-get install libnss-extrausers]]></install>
 					<commands index="1">
 						<command><![CDATA[mkdir -p /var/lib/extrausers]]></command>
@@ -4834,7 +4829,7 @@ aliases:     files
 					</file>
 				</daemon>
 				<!-- FCGID -->
-				<daemon name="fcgid" title="FCGID (alternative to mod_php)">
+				<daemon name="fcgid" title="FCGID">
 					<install><![CDATA[apt-get install apache2-suexec-pristine libapache2-mod-fcgid php-cgi]]></install>
 					<command><![CDATA[a2enmod suexec fcgid]]></command>
 					<commands index="1">
@@ -4852,7 +4847,7 @@ aliases:     files
 				</daemon>
 				<!-- PHP-FPM -->
 				<daemon name="php-fpm"
-					title="PHP-FPM (alternative to mod_php)">
+					title="PHP-FPM">
 					<install>
 						<visibility mode="equals" value="apache2">{{settings.system.webserver}}
 						</visibility>

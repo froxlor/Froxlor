@@ -116,6 +116,8 @@ class Ajax
 				return $this->resetTablelisting();
 			case 'editapikey':
 				return $this->editApiKey();
+			case 'getConfigDetails':
+				return $this->getConfigDetails();
 			default:
 				return $this->errorResponse('Action not found!');
 		}
@@ -316,5 +318,16 @@ class Ajax
 			'cid' => $cid
 		));
 		return $this->jsonResponse(['allowed_from' => $allowed_from, 'valid_until' => $valid_until]);
+	}
+
+	private function getConfigDetails()
+	{
+		$distro = isset($_POST['distro,']) ? $_POST['distro,'] : "";
+		$section = isset($_POST['section']) ? $_POST['section'] : "";
+		$daemon = isset($_POST['daemon']) ? $_POST['daemon'] : "";
+
+		// @todo
+
+		return $this->jsonResponse(['title' => 'TODO', 'content' => '<div class="alert alert-warning" role="alert">TODO</div>']);
 	}
 }

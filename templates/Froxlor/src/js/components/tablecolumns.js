@@ -1,16 +1,16 @@
-$(document).ready(function () {
+$(function () {
 	/*
 	 * table columns - manage columns modal
 	 */
 	let form = $('#manageColumnsModal form');
 
-	form.submit(function (event) {
+	form.on('submit', function (event) {
 		$.ajax({
 			url: 'lib/ajax.php?action=updatetablelisting&listing=' + form.data('listing') + '&theme=' + window.$theme,
-			type : 'POST',
-			dataType : 'json',
-			data : form.serialize(),
-			success : function () {
+			type: 'POST',
+			dataType: 'json',
+			data: form.serialize(),
+			success: function () {
 				window.location.href = '';
 			},
 			error: function (request) {
@@ -20,13 +20,13 @@ $(document).ready(function () {
 		event.preventDefault();
 	});
 
-	$('#manageColumnsModal form #reset').click(function () {
+	$('#manageColumnsModal form #reset').on('click', function () {
 		$.ajax({
 			url: 'lib/ajax.php?action=resettablelisting&listing=' + form.data('listing') + '&theme=' + window.$theme,
-			type : 'POST',
-			dataType : 'json',
-			data : {},
-			success : function () {
+			type: 'POST',
+			dataType: 'json',
+			data: {},
+			success: function () {
 				window.location.href = '';
 			},
 			error: function (request) {

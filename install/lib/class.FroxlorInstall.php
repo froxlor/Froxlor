@@ -984,6 +984,9 @@ class FroxlorInstall
 		foreach ($distros as $_distribution) {
 			$dist = new \Froxlor\Config\ConfigParser($_distribution);
 			$dist_display = $dist->distributionName . " " . $dist->distributionCodename . " (" . $dist->distributionVersion . ")";
+			if ($dist->deprecated) {
+				$dist_display .= " [deprecated]";
+			}
 			$distributions_select_data[] = [
 				'label' => $dist_display,
 				'value' => str_replace(".xml", "", strtolower(basename($_distribution))),
