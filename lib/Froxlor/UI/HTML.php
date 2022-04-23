@@ -169,12 +169,13 @@ class HTML
 	 *        	Values which will be given to $yesfile. Format: array(variable1=>value1, variable2=>value2, variable3=>value3)
 	 * @param string $replacer
 	 *        	value of a possible existing string-replacer in the question
+	 * @param array $back_link
 	 *
 	 * @author Froxlor team <team@froxlor.org> (2010-)
 	 *
 	 * @return string
 	 */
-	public static function askYesNo(string $text, string $yesfile, array $params = [], string $replacer = '')
+	public static function askYesNo(string $text, string $yesfile, array $params = [], string $replacer = '', array $back_link = [])
 	{
 		global $lng;
 
@@ -189,7 +190,8 @@ class HTML
 		Panel\UI::view('form/yesnoquestion.html.twig', [
 			'action' => $yesfile,
 			'url_params' => $params,
-			'question' => $text
+			'question' => $text,
+			'back_link' => $back_link
 		]);
 		exit();
 	}

@@ -32,36 +32,43 @@ $success_message = "";
 $id = (int) Request::get('id');
 
 // do the delete and then just show a success-message and the apikeys list again
-if ($action == 'delete') {
-	if ($id > 0) {
-		$chk = (AREA == 'admin' && $userinfo['customers_see_all'] == '1') ? true : false;
-		if (AREA == 'customer') {
-			$chk_stmt = Database::prepare("
+if ($action == 'delete' && $id > 0) {
+	\Froxlor\UI\HTML::askYesNo('apikey_reallydelete', $filename, array(
+		'id' => $id,
+		'page' => $page,
+		'action' => 'deletesure'
+	), '', [
+		'section' => 'index',
+		'page' => $page
+	]);
+} elseif ($action == 'deletesure' && $id > 0) {
+	$chk = (AREA == 'admin' && $userinfo['customers_see_all'] == '1') ? true : false;
+	if (AREA == 'customer') {
+		$chk_stmt = Database::prepare("
 				SELECT c.customerid FROM `" . TABLE_PANEL_CUSTOMERS . "` c
 				LEFT JOIN `" . TABLE_API_KEYS . "` ak ON ak.customerid = c.customerid
 				WHERE ak.`id` = :id AND c.`customerid` = :cid
 			");
-			$chk = Database::pexecute_first($chk_stmt, array(
-				'id' => $id,
-				'cid' => $userinfo['customerid']
-			));
-		} elseif (AREA == 'admin' && $userinfo['customers_see_all'] == '0') {
-			$chk_stmt = Database::prepare("
+		$chk = Database::pexecute_first($chk_stmt, array(
+			'id' => $id,
+			'cid' => $userinfo['customerid']
+		));
+	} elseif (AREA == 'admin' && $userinfo['customers_see_all'] == '0') {
+		$chk_stmt = Database::prepare("
 				SELECT a.adminid FROM `" . TABLE_PANEL_ADMINS . "` a
 				LEFT JOIN `" . TABLE_API_KEYS . "` ak ON ak.adminid = a.adminid
 				WHERE ak.`id` = :id AND a.`adminid` = :aid
 			");
-			$chk = Database::pexecute_first($chk_stmt, array(
-				'id' => $id,
-				'aid' => $userinfo['adminid']
-			));
-		}
-		if ($chk !== false) {
-			Database::pexecute($del_stmt, array(
-				'id' => $id
-			));
-			$success_message = sprintf($lng['apikeys']['apikey_removed'], $id);
-		}
+		$chk = Database::pexecute_first($chk_stmt, array(
+			'id' => $id,
+			'aid' => $userinfo['adminid']
+		));
+	}
+	if ($chk !== false) {
+		Database::pexecute($del_stmt, array(
+			'id' => $id
+		));
+		$success_message = sprintf($lng['apikeys']['apikey_removed'], $id);
 	}
 } elseif ($action == 'add') {
 	$ins_stmt = Database::prepare("

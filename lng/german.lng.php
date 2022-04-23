@@ -1807,3 +1807,4 @@ $lng['panel']['settingsmodetoggle'] = 'Modus umschalten';
 $lng['panel']['modalclose'] = 'Schließen';
 $lng['panel']['managetablecolumnsmodal']['title'] = 'Tabellenspalten verwalten';
 $lng['panel']['managetablecolumnsmodal']['description'] = 'Hier können die angezeigten Tabellenspalten angepasst werden';
+$lng['question']['plan_reallydelete'] = 'Wollen Sie den Api-Key wirklich löschen?';

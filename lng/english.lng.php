@@ -2169,3 +2169,4 @@ $lng['panel']['settingsmodetoggle'] = 'Click to toggle mode';
 $lng['panel']['modalclose'] = 'Close';
 $lng['panel']['managetablecolumnsmodal']['title'] = 'Manage table columns';
 $lng['panel']['managetablecolumnsmodal']['description'] = 'Here you can customize the visible columns';
+$lng['question']['apikey_reallydelete'] = 'Do you really want to delete this api-key?';
