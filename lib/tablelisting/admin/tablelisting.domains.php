@@ -52,6 +52,80 @@ return [
 				'label' => $lng['domains']['aliasdomain'],
 				'field' => 'aliasdomain',
 			],
+			'd.documentroot' => [
+				'label' => $lng['domains']['documentroot'],
+				'field' => 'documentroot',
+			],
+			'd.isbinddomain' => [
+				'label' => $lng['domains']['isbinddomain'],
+				'field' => 'isbinddomain',
+				'callback' => [Text::class, 'boolean'],
+			],
+			'd.isemaildomain' => [
+				'label' => $lng['domains']['isemaildomain'],
+				'field' => 'isemaildomain',
+				'callback' => [Text::class, 'boolean'],
+			],
+			'd.email_only' => [
+				'label' => $lng['domains']['email_only'],
+				'field' => 'email_only',
+				'callback' => [Text::class, 'boolean'],
+			],
+			'd.iswildcarddomain' => [
+				'label' => $lng['domains']['iswildcarddomain'],
+				'field' => 'iswildcarddomain',
+				'callback' => [Text::class, 'boolean'],
+			],
+			'd.subcanemaildomain' => [
+				'label' => $lng['domains']['subcanemaildomain'],
+				'field' => 'subcanemaildomain',
+				'callback' => [Text::class, 'boolean'],
+			],
+			'd.caneditdomain' => [
+				'label' => $lng['domains']['caneditdomain'],
+				'field' => 'caneditdomain',
+				'callback' => [Text::class, 'boolean'],
+			],
+			'd.dkim' => [
+				'label' => $lng['domains']['dkim'],
+				'field' => 'dkim',
+				'callback' => [Text::class, 'boolean'],
+			],
+			'd.phpenabled' => [
+				'label' => $lng['admin']['phpenabled'],
+				'field' => 'phpenabled',
+				'callback' => [Text::class, 'boolean'],
+			],
+			'd.openbasedir' => [
+				'label' => $lng['domains']['openbasedir'],
+				'field' => 'openbasedir',
+				'callback' => [Text::class, 'boolean'],
+			],
+			'd.speciallogfile' => [
+				'label' => $lng['domains']['speciallogfile'],
+				'field' => 'speciallogfile',
+				'callback' => [Text::class, 'boolean'],
+			],
+			'd.hsts' => [
+				'label' => $lng['domains']['hsts'],
+				'field' => 'hsts',
+				'callback' => [Text::class, 'boolean'],
+			],
+			'd.http2' => [
+				'label' => $lng['domains']['http2'],
+				'field' => 'http2',
+				'callback' => [Text::class, 'boolean'],
+			],
+			'd.letsencrypt' => [
+				'label' => $lng['domains']['letsencrypt'],
+				'field' => 'letsencrypt',
+				'callback' => [Text::class, 'boolean'],
+			],
+			'd.deactivated' => [
+				'label' => $lng['domains']['deactivated'],
+				'field' => 'deactivated',
+				'callback' => [Text::class, 'boolean'],
+			],
 		],
 		'visible_columns' => Listing::getVisibleColumnsForListing('domain_list', [
 			'd.domain_ace',

@@ -7,7 +7,7 @@ import 'chart.js/dist/chart';
 global.$ = require('jquery');
 global.bootstrap = require('bootstrap');
 
-$(function() {
+$(function () {
 	window.$theme = 'Froxlor';
 });
 

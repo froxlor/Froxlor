@@ -110,8 +110,10 @@ class Ajax
 				return $this->getUpdateCheck();
 			case 'searchglobal':
 				return $this->searchGlobal();
-			case 'tablelisting':
+			case 'updatetablelisting':
 				return $this->updateTablelisting();
+			case 'resettablelisting':
+				return $this->resetTablelisting();
 			case 'editapikey':
 				return $this->editApiKey();
 			default:
@@ -248,13 +250,17 @@ class Ajax
 	private function updateTablelisting()
 	{
 		$columns = [];
-		foreach (Request::get('columns') as $requestedColumn => $value) {
-			$columns[] = $requestedColumn;
+		foreach (Request::get('columns') as $value) {
+			$columns[] = $value;
 		}
-
 		Listing::storeColumnListingForUser([Request::get('listing') => $columns]);
-
 		return $this->jsonResponse($columns);
+	}
+
+	private function resetTablelisting()
+	{
+		Listing::deleteColumnListingForUser([Request::get('listing') => []]);
+		return $this->jsonResponse([]);
 	}
 
 	private function editApiKey()

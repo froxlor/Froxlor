@@ -198,6 +198,29 @@ class Listing
 	}
 
 	/**
+	 * delete column listing selection of user from database
+	 *
+	 * @param array $tabellisting
+	 * @return bool
+	 */
+	public static function deleteColumnListingForUser(array $tabellisting): bool
+	{
+		$section = array_key_first($tabellisting);
+		if (empty($section)) {
+			throw new InvalidArgumentException("Invalid selection array for " . __METHOD__);
+		}
+		$userid = 'customerid';
+		if (CurrentUser::isAdmin()) {
+			$userid = 'adminid';
+		}
+		$del_stmt = Database::prepare("
+			DELETE FROM `" . TABLE_PANEL_USERCOLUMNS . "` WHERE `" . $userid . "` = :uid AND `section` = :section
+		");
+		Database::pexecute($del_stmt, ['uid' => CurrentUser::getField($userid), 'section' => $section]);
+		return true;
+	}
+
+	/**
 	 * store column listing selection of user to database
 	 * the selection array should look like this:
 	 * [
@@ -208,8 +231,7 @@ class Listing
 	 *     ]
 	 * ]
 	 *
-	 * @param array $tablelisting
-	 *
+	 * @param array $tabellisting
 	 * @return bool
 	 */
 	public static function storeColumnListingForUser(array $tabellisting): bool
@@ -223,10 +245,7 @@ class Listing
 			$userid = 'adminid';
 		}
 		// delete possible existing entry
-		$del_stmt = Database::prepare("
-			DELETE FROM `" . TABLE_PANEL_USERCOLUMNS . "` WHERE `" . $userid . "` = :uid AND `section` = :section
-		");
-		Database::pexecute($del_stmt, ['uid' => CurrentUser::getField($userid), 'section' => $section]);
+		self::deleteColumnListingForUser($tabellisting);
 		// add new entry
 		$ins_stmt = Database::prepare("
 			INSERT INTO `" . TABLE_PANEL_USERCOLUMNS . "` SET
