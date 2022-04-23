@@ -1,7 +1,7 @@
-$(document).ready(function () {
+$(function() {
 
 	// check for internal ip and output a notice if private-range ip is given
-	$('#ip').change(function () {
+	$('#ip').on('change', function () {
 		var ipval = $(this).val();
 		if (ipval.length > 0) {
 			$('#ipnote').remove();

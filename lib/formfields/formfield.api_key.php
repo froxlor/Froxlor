@@ -40,15 +40,15 @@ return [
 						'value' => $result['secret']
 					],
 					'allowed_from' => [
-						'label' => UI::getLng('apikeys.allowed_from'),
+						'label' => ['title' => UI::getLng('apikeys.allowed_from'), 'description' => UI::getLng('apikeys.allowed_from_help')],
 						'type' => 'text',
 						'value' => $result['allowed_from'],
 					],
 					'valid_until' => [
-						'label' => UI::getLng('apikeys.valid_until'),
+						'label' => ['title' => UI::getLng('apikeys.valid_until'), 'description' => UI::getLng('apikeys.valid_until_help')],
+						/** @TODO datetime-picker */
 						'type' => 'text',
-						'value' => $result['valid_until'],
-						'format_callback' => [Text::class, 'timestampUntil'],
+						'value' => $result['valid_until'] < 0 ? "" : $result['valid_until']
 					]
 				]
 			]

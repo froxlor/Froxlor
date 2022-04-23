@@ -16,6 +16,8 @@
  *
  */
 
+
+use Froxlor\UI\Callbacks\Style;
 use Froxlor\UI\Callbacks\Domain;
 use Froxlor\UI\Listing;
 
@@ -31,7 +33,7 @@ return [
 			'd.domain_ace' => [
 				'label' => $lng['domains']['domainname'],
 				'field' => 'domain_ace',
-				'callback' => [Domain::class, 'domainExternalLink'],
+				'callback' => [Domain::class, 'domainExternalLinkInfo'],
 			],
 			'd.documentroot' => [
 				'label' => $lng['panel']['path'],
@@ -119,6 +121,9 @@ return [
 				],
 				'visible' => [Domain::class, 'canDelete']
 			]
+		],
+		'format_callback' => [
+			[Style::class, 'resultDomainTerminatedOrDeactivated']
 		]
 	]
 ];

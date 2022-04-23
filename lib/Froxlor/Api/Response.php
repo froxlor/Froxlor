@@ -1,4 +1,5 @@
 <?php
+
 namespace Froxlor\Api;
 
 /**
@@ -18,20 +19,20 @@ namespace Froxlor\Api;
  */
 class Response
 {
-    public static function jsonResponse($data = null, int $response_code = 200)
-    {
-        http_response_code($response_code);
+	public static function jsonResponse($data = null, int $response_code = 200)
+	{
+		http_response_code($response_code);
 
-        return json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
-    }
+		return json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+	}
 
-    public static function jsonDataResponse($data = null, int $response_code = 200)
-    {
-        return self::jsonResponse(['data' => $data], $response_code);
-    }
+	public static function jsonDataResponse($data = null, int $response_code = 200)
+	{
+		return self::jsonResponse(['data' => $data], $response_code);
+	}
 
-    public static function jsonErrorResponse($message = null, int $response_code = 400)
-    {
-        return self::jsonResponse(['message' => $message], $response_code);
-    }
+	public static function jsonErrorResponse($message = null, int $response_code = 400)
+	{
+		return self::jsonResponse(['message' => $message], $response_code);
+	}
 }

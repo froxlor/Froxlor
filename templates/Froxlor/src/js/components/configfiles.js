@@ -1,8 +1,8 @@
-$(document).ready(function () {
+$(function() {
 	/*
 	 * config files - select all recommended
 	 */
-	$('#selectRecommendedConfig').click(function () {
+	$('#selectRecommendedConfig').on('click', function () {
 		$('input[data-recommended]').each(function () {
 			if ($(this).data('recommended') == 1) {
 				$(this).prop('checked', true);

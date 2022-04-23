@@ -46,6 +46,21 @@ class Style
 		return $isValid ? '' : 'bg-danger';
 	}
 
+	public static function resultDomainTerminatedOrDeactivated(array $attributes): string
+	{
+		$termination_date = str_replace("0000-00-00", "", $attributes['fields']['termination_date'] ?? '');
+		$termination_css = '';
+		if (!empty($termination_date)) {
+			$cdate = strtotime($termination_date . " 23:59:59");
+			$today = time();
+			$termination_css = 'bg-warning';
+			if ($cdate < $today) {
+				$termination_css = 'bg-danger';
+			}
+		}
+		return $attributes['fields']['deactivated'] ? 'bg-info' : $termination_css;
+	}
+
 	public static function diskspaceWarning(array $attributes): string
 	{
 		return self::getWarningStyle('diskspace', $attributes['fields'], (int)Settings::Get('system.report_webmax'));

@@ -79,6 +79,7 @@ class Text
 			'editid' => $attributes['fields']['id']
 		]);
 		return [
+			'entry' => $attributes['fields']['id'],
 			'id' => 'akModal' . $attributes['fields']['id'],
 			'title' => 'API-key ' . ($attributes['fields']['loginname'] ?? $attributes['fields']['adminname']),
 			'body' => $body

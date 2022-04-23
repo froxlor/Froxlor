@@ -1,4 +1,4 @@
-$(document).ready(function () {
+$(function() {
 
 	// Make inputs with enabled unlimited checked disabled
 	$("input[name$='_ul']").each(function () {
@@ -9,7 +9,7 @@ $(document).ready(function () {
 		});
 	});
 	// change state when unlimited checkboxes are clicked
-	$("input[name$='_ul']").change(function () {
+	$("input[name$='_ul']").on('change', function () {
 		var fieldname = $(this).attr("name").substring(0, $(this).attr("name").length - 3);
 		$("input[name='" + fieldname + "']").prop({
 			readonly: $(this).is(":checked"),
@@ -21,7 +21,7 @@ $(document).ready(function () {
 	});
 
 	// set values from hosting plan when adding/editing a customer according to the plan's values
-	$('#use_plan').change(function () {
+	$('#use_plan').on('change', function () {
 		var pid = $(this).val();
 		if (pid > 0) {
 			$.ajax({
