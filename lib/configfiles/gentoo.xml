@@ -82,7 +82,7 @@ Alias "/.well-known/acme-challenge" "{{settings.system.letsencryptchallengepath}
 						</content>
 					</file>
 					<command><![CDATA[rc-update add apache2 default]]></command>
-					<command><![CDATA[/etc/init.d/apache2 restart]]></command>
+					<command><![CDATA[{{settings.system.apachereload_command}}]]></command>
 				</daemon>
 				<daemon name="apache" version="2.4" title="Apache 2.4">
 					<include>//service[@type='http']/general/commands</include>
@@ -113,7 +113,7 @@ Alias "/.well-known/acme-challenge" "{{settings.system.letsencryptchallengepath}
 						</content>
 					</file>
 					<command><![CDATA[rc-update add apache2 default]]></command>
-					<command><![CDATA[/etc/init.d/apache2 restart]]></command>
+					<command><![CDATA[{{settings.system.apachereload_command}}]]></command>
 				</daemon>
 				<!-- HTTP Lighttpd -->
 				<daemon name="lighttpd" title="LigHTTPd">
@@ -205,7 +205,7 @@ alias.url           += ("/.well-known/acme-challenge/" => "{{settings.system.let
 						<content><![CDATA[echo -e '\\ninclude "{{settings.system.apacheconf_diroptions}}"' >> /etc/lighttpd/lighttpd.conf]]></content>
 					</command>
 					<command><![CDATA[rc-update add lighttpd default]]></command>
-					<command><![CDATA[/etc/init.d/lighttpd restart]]></command>
+					<command><![CDATA[{{settings.system.apachereload_command}}]]></command>
 				</daemon>
 				<!-- HTTP Nginx -->
 				<daemon name="nginx" title="nginx">
@@ -352,7 +352,7 @@ exit "$RETVAL"
 						<content><![CDATA[/etc/init.d/php-fcgi restart]]></content>
 					</command>
 					<command><![CDATA[rc-update add nginx default]]></command>
-					<command><![CDATA[/etc/init.d/nginx restart]]></command>
+					<command><![CDATA[{{settings.system.apachereload_command}}]]></command>
 				</daemon>
 			</service>
 			<!--DNS -->

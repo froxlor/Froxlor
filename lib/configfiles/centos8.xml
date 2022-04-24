@@ -69,7 +69,7 @@ Alias "/.well-known/acme-challenge" "{{settings.system.letsencryptchallengepath}
 ]]>
 						</content>
 					</file>
-					<command><![CDATA[systemctl reload-or-restart httpd.service]]></command>
+					<command><![CDATA[{{settings.system.apachereload_command}}]]></command>
 				</daemon>
 			</service>
 			<!--DNS -->

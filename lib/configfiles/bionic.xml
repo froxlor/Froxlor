@@ -86,7 +86,7 @@ Alias "/.well-known/acme-challenge" "{{settings.system.letsencryptchallengepath}
 ]]>
 						</content>
 					</file>
-					<command><![CDATA[/etc/init.d/apache2 restart]]></command>
+					<command><![CDATA[{{settings.system.apachereload_command}}]]></command>
 				</daemon>
 				<!-- HTTP Lighttpd -->
 				<daemon name="lighttpd" title="LigHTTPd">
@@ -150,7 +150,7 @@ include_shell "/usr/share/lighttpd/include-conf-enabled.pl"
 					</command>
 					<command><![CDATA[lighty-disable-mod cgi]]></command>
 					<command><![CDATA[lighty-disable-mod fastcgi]]></command>
-					<command><![CDATA[/etc/init.d/lighttpd restart]]></command>
+					<command><![CDATA[{{settings.system.apachereload_command}}]]></command>
 				</daemon>
 				<!-- HTTP Nginx -->
 				<daemon name="nginx" title="nginx">
@@ -366,7 +366,7 @@ exit "$RETVAL"
 						</visibility>
 						<content><![CDATA[/etc/init.d/php-fcgi restart]]></content>
 					</command>
-					<command><![CDATA[/etc/init.d/nginx restart]]></command>
+					<command><![CDATA[{{settings.system.apachereload_command}}]]></command>
 				</daemon>
 			</service>
 			<!--DNS -->
@@ -4661,12 +4661,7 @@ aliases:     files
 						</visibility>
 						<visibility mode="true">{{settings.phpfpm.enabled_ownvhost}}
 						</visibility>
-						<command><![CDATA[a2dismod php7.0]]></command>
-					</commands>
-					<commands index="5">
-						<visibility mode="equals" value="apache2">{{settings.system.webserver}}
-						</visibility>
-						<command><![CDATA[/etc/init.d/apache2 restart]]></command>
+						<command><![CDATA[a2dismod php7.2]]></command>
 					</commands>
 					<!-- instead of just restarting apache, we let the cronjob do all the 
 						dirty work -->
