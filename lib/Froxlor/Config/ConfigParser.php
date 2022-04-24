@@ -1,4 +1,5 @@
 <?php
+
 namespace Froxlor\Config;
 
 /**
@@ -106,7 +107,7 @@ class ConfigParser
 	 */
 	public function __construct($filename)
 	{
-		if (! is_readable($filename)) {
+		if (!is_readable($filename)) {
 			throw new \Exception('File not readable');
 		}
 
@@ -123,7 +124,7 @@ class ConfigParser
 		$distribution = $this->xml->xpath('//distribution');
 
 		// No distribution found - can't use this file
-		if (! is_array($distribution)) {
+		if (!is_array($distribution)) {
 			throw new \Exception('Invalid XML, no distribution found');
 		}
 
@@ -234,5 +235,26 @@ class ConfigParser
 
 		// Return our carefully searched for defaults
 		return $this->defaults;
+	}
+
+	/**
+	 * return complete distribution string "Name [codename] [ (version)] [deprecated]
+	 *
+	 * @return string
+	 */
+	public function getCompleteDistroName(): string
+	{
+		// get distro-info
+		$dist_display = $this->distributionName;
+		if ($this->distributionCodename != '') {
+			$dist_display .= " " . $this->distributionCodename;
+		}
+		if ($this->distributionVersion != '') {
+			$dist_display .= " (" . $this->distributionVersion . ")";
+		}
+		if ($this->deprecated) {
+			$dist_display .= " [deprecated]";
+		}
+		return $dist_display;
 	}
 }

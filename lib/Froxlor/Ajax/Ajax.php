@@ -3,6 +3,8 @@
 namespace Froxlor\Ajax;
 
 use Exception;
+use Froxlor\Froxlor;
+use Froxlor\FileDir;
 use Froxlor\Database\Database;
 use Froxlor\Http\HttpClient;
 use Froxlor\Validate\Validate;
@@ -10,6 +12,8 @@ use Froxlor\Settings;
 use Froxlor\UI\Listing;
 use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
+use Froxlor\Config\ConfigParser;
+use Froxlor\Config\ConfigDisplay;
 
 /**
  * This file is part of the Froxlor project.
@@ -320,14 +324,46 @@ class Ajax
 		return $this->jsonResponse(['allowed_from' => $allowed_from, 'valid_until' => $valid_until]);
 	}
 
+	/**
+	 * return parsed commands/files of configuration templates
+	 */
 	private function getConfigDetails()
 	{
-		$distro = isset($_POST['distro,']) ? $_POST['distro,'] : "";
-		$section = isset($_POST['section']) ? $_POST['section'] : "";
-		$daemon = isset($_POST['daemon']) ? $_POST['daemon'] : "";
+		if (isset($this->userinfo['adminsession']) && $this->userinfo['adminsession'] == 1 && $this->userinfo['change_serversettings'] == 1) {
+			$distribution = isset($_POST['distro']) ? $_POST['distro'] : "";
+			$section = isset($_POST['section']) ? $_POST['section'] : "";
+			$daemon = isset($_POST['daemon']) ? $_POST['daemon'] : "";
 
-		// @todo
+			// validate distribution config-xml exists
+			$config_dir = FileDir::makeCorrectDir(Froxlor::getInstallDir() . '/lib/configfiles/');
+			if (!file_exists($config_dir . "/" . $distribution . ".xml")) {
+				return $this->errorResponse("Unknown distribution. The configuration could not be found.");
+			}
+			// read in all configurations
+			$configfiles = new ConfigParser($config_dir . "/" . $distribution . ".xml");
+			// get the services
+			$services = $configfiles->getServices();
+			// validate selected service exists for this distribution
+			if (!isset($services[$section])) {
+				return $this->errorResponse("Unknown category for selected distribution");
+			}
+			// get the daemons
+			$daemons = $services[$section]->getDaemons();
+			// validate selected daemon exists for this section
+			if (!isset($daemons[$daemon])) {
+				return $this->errorResponse("Unknown service for selected category");
+			}
+			// finally the config-steps
+			$confarr = $daemons[$daemon]->getConfig();
+			// get parsed content
+			UI::initTwig();
+			$content = ConfigDisplay::fromConfigArr($confarr, $configfiles->distributionEditor, $this->theme);
 
-		return $this->jsonResponse(['title' => 'TODO', 'content' => '<div class="alert alert-warning" role="alert">TODO</div>']);
+			return $this->jsonResponse([
+				'title' => $configfiles->getCompleteDistroName() . '&nbsp;&raquo;&nbsp' . $services[$section]->title . '&nbsp;&raquo;&nbsp' . $daemons[$daemon]->title,
+				'content' => $content
+			]);
+		}
+		return $this->errorResponse('Not allowed', 403);
 	}
 }

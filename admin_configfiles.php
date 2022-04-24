@@ -47,7 +47,7 @@ if ($userinfo['change_serversettings'] == '1') {
 		$configfiles = new \Froxlor\Config\ConfigParser($config_dir . '/' . $distribution . ".xml");
 
 		// get distro-info
-		$dist_display = getCompleteDistroName($configfiles);
+		$dist_display = $configfiles->getCompleteDistroName();
 
 		// get all the services from the distro
 		$services = $configfiles->getServices();
@@ -59,10 +59,8 @@ if ($userinfo['change_serversettings'] == '1') {
 		foreach ($distros as $_distribution) {
 			// get configparser object
 			$dist = new \Froxlor\Config\ConfigParser($_distribution);
-			// get distro-info
-			$dist_display = getCompleteDistroName($dist);
 			// store in tmp array
-			$distributions_select[str_replace(".xml", "", strtolower(basename($_distribution)))] = $dist_display;
+			$distributions_select[str_replace(".xml", "", strtolower(basename($_distribution)))] = $dist->getCompleteDistroName();
 		}
 
 		// sort by distribution name
@@ -148,20 +146,4 @@ if ($userinfo['change_serversettings'] == '1') {
 	UI::twigOutputBuffer();
 } else {
 	\Froxlor\UI\Response::redirectTo('admin_index.php');
-}
-
-function getCompleteDistroName($cparser)
-{
-	// get distro-info
-	$dist_display = $cparser->distributionName;
-	if ($cparser->distributionCodename != '') {
-		$dist_display .= " " . $cparser->distributionCodename;
-	}
-	if ($cparser->distributionVersion != '') {
-		$dist_display .= " (" . $cparser->distributionVersion . ")";
-	}
-	if ($cparser->deprecated) {
-		$dist_display .= " [deprecated]";
-	}
-	return $dist_display;
 }

@@ -1,0 +1,2 @@
+<textarea class="form-control bg-secondary text-light" rows="1" readonly>{{ distro_editor }} {{ realname }}</textarea>
+<textarea class="form-control" rows="{% if numbrows <= 20 %}{{ numbrows }}{% else %}21{% endif %}" readonly>{{ file_content|raw }}</textarea>
