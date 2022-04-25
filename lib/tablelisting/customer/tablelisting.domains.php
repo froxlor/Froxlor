@@ -86,7 +86,7 @@ return [
 					'action' => 'view',
 					'id' => ':id'
 				],
-				'visible' => [Domain::class, 'adminCanEditDNS']
+				'visible' => [Domain::class, 'canEditSSL']
 			],
 			'letsencrypt' => [
 				'icon' => 'fa fa-shield',
