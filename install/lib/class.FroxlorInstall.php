@@ -17,6 +17,9 @@
  *
  */
 
+use Froxlor\Froxlor;
+use Froxlor\FileDir;
+use Froxlor\Config\ConfigParser;
 use Froxlor\UI\Panel\UI;
 
 /**
@@ -595,10 +598,10 @@ class FroxlorInstall
 			$this->_updateSetting($upd_stmt, 'error', 'system', 'errorlog_level');
 		}
 
-		$distros = glob(\Froxlor\FileDir::makeCorrectDir(\Froxlor\Froxlor::getInstallDir() . '/lib/configfiles/') . '*.xml');
+		$distros = glob(FileDir::makeCorrectDir(Froxlor::getInstallDir() . '/lib/configfiles/') . '*.xml');
 		foreach ($distros as $_distribution) {
 			if ($this->_data['distribution'] == str_replace(".xml", "", strtolower(basename($_distribution)))) {
-				$dist = new \Froxlor\Config\ConfigParser($_distribution);
+				$dist = new ConfigParser($_distribution);
 				$defaults = $dist->getDefaults();
 				if (!empty($defaults)) {
 					foreach ($defaults as $property) {

@@ -88,10 +88,12 @@ class Domain
 
 	public static function canViewLogs(array $attributes): bool
 	{
-		if ((int) UI::getCurrentUser()['adminsession'] == 0 && (bool)UI::getCurrentUser()['logviewenabled']) {
-			return true;
-		} elseif ((int) UI::getCurrentUser()['adminsession'] == 1 && (int)$attributes['fields']['email_only'] == 0) {
-			return true;
+		if ((int)$attributes['fields']['email_only'] == 0) {
+			if ((int) UI::getCurrentUser()['adminsession'] == 0 && (bool)UI::getCurrentUser()['logviewenabled']) {
+				return true;
+			} elseif ((int) UI::getCurrentUser()['adminsession'] == 1) {
+				return true;
+			}
 		}
 		return false;
 	}

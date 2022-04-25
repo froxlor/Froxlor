@@ -59,6 +59,11 @@ return array(
 						'cols' => 100,
 						'rows' => 15,
 						'value' => $result['ssl_ca_file']
+					),
+					'do_insert' => array(
+						'type' => 'hidden',
+						'value' => '1',
+						'visible' => empty($result['ssl_cert_file'])
 					)
 				)
 			)
