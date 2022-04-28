@@ -1,30 +1,37 @@
 <?php
 
+/**
+ * This file is part of the Froxlor project.
+ * Copyright (c) 2010 the Froxlor Team (see authors).
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * http://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    http://files.froxlor.org/misc/COPYING.txt GPLv2
+ */
+
 namespace Froxlor\Cli;
 
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Froxlor\Froxlor;
 use Froxlor\Database\Database;
 
-/**
- * This file is part of the Froxlor project.
- * Copyright (c) 2022 the Froxlor Team (see authors).
- *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
- *
- * @copyright (c) the authors
- * @author Froxlor team <team@froxlor.org> (2018-)
- * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package Cron
- *         
- */
-final class SwitchServerIp extends Command
+final class SwitchServerIp extends CliCommand
 {
 
 	protected function configure()
@@ -37,21 +44,18 @@ final class SwitchServerIp extends Command
 
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
-		if (!file_exists(Froxlor::getInstallDir() . '/lib/userdata.inc.php')) {
-			$output->writeln("<error>Could not find froxlor's userdata.inc.php file. You should use this script only with an installed froxlor system.</>");
-			return self::INVALID;
-		}
+		$result = self::SUCCESS;
 
-		if ($input->getOption('list') == false && $input->getOption('switch') == false) {
+		$result = $this->validateRequirements($input, $output);
+
+		if ($result == self::SUCCESS && $input->getOption('list') == false && $input->getOption('switch') == false) {
 			$output->writeln('<error>Either --list or --switch option must be provided. Nothing to do, exiting.</>');
-			return self::INVALID;
+			$result = self::INVALID;
 		}
 
 		$io = new SymfonyStyle($input, $output);
 
-		$result = self::SUCCESS;
-
-		if ($input->getOption('list')) {
+		if ($result == self::SUCCESS && $input->getOption('list')) {
 
 			$sel_stmt = Database::prepare("SELECT * FROM panel_ipsandports ORDER BY ip ASC, port ASC");
 			Database::pexecute($sel_stmt);
@@ -67,7 +71,7 @@ final class SwitchServerIp extends Command
 			);
 		}
 
-		if ($input->getOption('switch')) {
+		if ($result == self::SUCCESS && $input->getOption('switch')) {
 			$result = $this->switchIPs($input, $output);
 		}
 

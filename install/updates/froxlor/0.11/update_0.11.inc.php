@@ -1,22 +1,31 @@
 <?php
 
-use Froxlor\Database\Database;
-use Froxlor\Settings;
-
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright (c) the authors
- * @author Froxlor team <team@froxlor.org> (2010-)
- * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package Install
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * http://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    http://files.froxlor.org/misc/COPYING.txt GPLv2
  */
+
+use Froxlor\Database\Database;
+use Froxlor\Settings;
+
 if (!defined('_CRON_UPDATE')) {
 	if (!defined('AREA') || (defined('AREA') && AREA != 'admin') || !isset($userinfo['loginname']) || (isset($userinfo['loginname']) && $userinfo['loginname'] == '')) {
 		header('Location: ../../../../index.php');
@@ -30,6 +39,7 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.99')) {
 
 	showUpdateStep("Removing unused table");
 	Database::query("DROP TABLE IF EXISTS `panel_sessions`;");
+	Database::query("DROP TABLE IF EXISTS `panel_languages`;");
 	lastStepStatus(0);
 
 	showUpdateStep("Updating froxlor - theme");
@@ -38,7 +48,7 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.99')) {
 	Settings::Set('panel.default_theme', 'Froxlor');
 	lastStepStatus(0);
 
-	showUpdateStep("Creating new tables");
+	showUpdateStep("Creating new tables and fields");
 	Database::query("DROP TABLE IF EXISTS `panel_usercolumns`;");
 	$sql = "CREATE TABLE `panel_usercolumns` (
 	`adminid` int(11) NOT NULL default '0',
@@ -55,8 +65,19 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.99')) {
 
 	showUpdateStep("Cleaning up old files");
 	$to_clean = array(
+		"install/lib",
+		"install/lng",
 		"templates/Sparkle",
-		"lib/version.inc.php"
+		"lib/version.inc.php",
+		"lng/czech.lng.php",
+		"lng/dutch.lng.php",
+		"lng/english.lng.php",
+		"lng/french.lng.php",
+		"lng/german.lng.php",
+		"lng/italian.lng.php",
+		"lng/lng_references.php",
+		"lng/portugues.lng.php",
+		"lng/swedish.lng.php",
 	);
 	$disabled = explode(',', ini_get('disable_functions'));
 	$exec_allowed = !in_array('exec', $disabled);
@@ -89,6 +110,18 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.99')) {
 
 	showUpdateStep("Adjusting existing settings");
 	Settings::Set('system.passwordcryptfunc', PASSWORD_DEFAULT);
+	// remap default-language
+	$lang_map = [
+		'Deutsch' => 'de',
+		'English' => 'en',
+		'Fran&ccedil;ais' => 'fr',
+		'Portugu&ecirc;s' => 'pt',
+		'Italiano' => 'it',
+		'Nederlands' => 'nl',
+		'Svenska' => 'sv',
+		'&#268;esk&aacute; republika' => 'cs'
+	];
+	Settings::Set('panel.standardlanguage', $lang_map[Settings::Get('panel_standardlanguage')] ?? 'en');
 	lastStepStatus(0);
 
 

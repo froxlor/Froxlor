@@ -1,8 +1,30 @@
 <?php
 
+/**
+ * This file is part of the Froxlor project.
+ * Copyright (c) 2010 the Froxlor Team (see authors).
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * http://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    http://files.froxlor.org/misc/COPYING.txt GPLv2
+ */
+
 namespace Froxlor\Cli;
 
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -15,21 +37,7 @@ use Froxlor\SImExporter;
 use Froxlor\Database\Database;
 use Froxlor\Config\ConfigParser;
 
-/**
- * This file is part of the Froxlor project.
- * Copyright (c) 2022 the Froxlor Team (see authors).
- *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
- *
- * @copyright (c) the authors
- * @author Froxlor team <team@froxlor.org> (2018-)
- * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package Cron
- *         
- */
-final class ConfigServices extends Command
+final class ConfigServices extends CliCommand
 {
 
 	protected function configure()
@@ -37,33 +45,37 @@ final class ConfigServices extends Command
 		$this->setName('froxlor:config-services');
 		$this->setDescription('Configure system services');
 		$this->addOption('create', 'c', InputOption::VALUE_NONE, 'Create a services list configuration for the --apply option.')
-			->addOption('apply', 'a', InputOption::VALUE_REQUIRED, 'Configure your services by given configuration file. To create one run the command with the --create option.')
+			->addOption('apply', 'a', InputOption::VALUE_REQUIRED, 'Configure your services by given configuration file/string. To create one run the command with the --create option.')
 			->addOption('list', 'l', InputOption::VALUE_NONE, 'Output the services that are going to be configured using a given config file (--apply option). No services will be configured.')
 			->addOption('daemon', 'd', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'When used with --apply you can specify one or multiple daemons. These will be the only services that get configured.')
-			->addOption('import-settings', 'i', InputOption::VALUE_REQUIRED, 'Import settings from another froxlor installation. This can be done standalone or in addition to --apply.');
+			->addOption('import-settings', 'i', InputOption::VALUE_REQUIRED, 'Import settings from another froxlor installation. This can be done standalone or in addition to --apply.')
+			->addOption('yes-to-all', 'A', InputOption::VALUE_NONE, 'Install packages without asking questions');
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
 		global $lng;
 
-		if (!file_exists(Froxlor::getInstallDir() . '/lib/userdata.inc.php')) {
-			$output->writeln("<error>Could not find froxlor's userdata.inc.php file. You should use this script only with an installed froxlor system.</>");
+		$result = self::SUCCESS;
+
+		$result = $this->validateRequirements($input, $output);
+
+		if ($result == self::SUCCESS && $input->getOption('import-settings') == false && $input->getOption('create') == false && $input->getOption('apply') == false) {
+			$output->writeln('<error>No option given to do something, exiting.</>');
 			return self::INVALID;
 		}
 
-		if ($input->getOption('import-settings') == false && $input->getOption('create') == false && $input->getOption('apply') == false) {
-			$output->writeln('<error>No option given to do something, exiting.</>');
-			return self::INVALID;
+		if ($result == self::SUCCESS && $input->getOption('yes-to-all')) {
+			putenv("DEBIAN_FRONTEND=noninteractive");
+			exec("echo 'APT::Get::Assume-Yes \"true\";' > /tmp/_tmp_apt.conf");
+			putenv("APT_CONFIG=/tmp/_tmp_apt.conf");
 		}
 
 		include_once Froxlor::getInstallDir() . 'lng/english.lng.php';
 		include_once Froxlor::getInstallDir() . 'lng/lng_references.php';
 
-		$result = self::SUCCESS;
-
 		// import settings if given
-		if ($input->getOption('import-settings')) {
+		if ($result == self::SUCCESS && $input->getOption('import-settings')) {
 			$result = $this->importSettings($input, $output);
 		}
 
@@ -77,6 +89,12 @@ final class ConfigServices extends Command
 				$output->writeln('<error>Options --list and --daemon only work together with --apply.</>');
 				$result = self::INVALID;
 			}
+		}
+
+		if ($input->getOption('yes-to-all')) {
+			putenv("DEBIAN_FRONTEND");
+			unlink("/tmp/_tmp_apt.conf");
+			putenv("APT_CONFIG");
 		}
 
 		return $result;
@@ -112,7 +130,7 @@ final class ConfigServices extends Command
 			// get configparser object
 			$dist = new ConfigParser($_distribution);
 			// get distro-info
-			$dist_display = $this->getCompleteDistroName($dist);
+			$dist_display = $dist->getCompleteDistroName();
 			// store in tmp array
 			$distributions_select_data[$dist_display] = str_replace(".xml", "", strtolower(basename($_distribution)));
 
@@ -152,6 +170,10 @@ final class ConfigServices extends Command
 			$default_daemon = "";
 			$table_rows = [];
 			$valid_options = [];
+			if ($si != 'system') {
+				$table_rows[] = ['x', 'No'];
+				$valid_options[] = 'x';
+			}
 			foreach ($daemons as $di => $dd) {
 				$title = $dd->title;
 				if ($dd->default) {
@@ -160,10 +182,6 @@ final class ConfigServices extends Command
 				}
 				$table_rows[] = [$di, $title];
 				$valid_options[] = $di;
-			}
-			if ($si != 'system') {
-				$table_rows[] = ['x', 'No'];
-				$valid_options[] = 'x';
 			}
 			$io->table(
 				['Value', 'Name'],
@@ -213,28 +231,37 @@ final class ConfigServices extends Command
 	{
 		$applyFile = $input->getOption('apply');
 
-		if (strtoupper(substr($applyFile, 0, 4)) == 'HTTP') {
-			$output->writeln("Config file seems to be an URL, trying to download");
-			$target = "/tmp/froxlor-config-" . time() . ".json";
-			if (@file_exists($target)) {
-				@unlink($target);
-			}
-			$this->downloadFile($applyFile, $target);
-			$applyFile = $target;
-		}
-		if (!is_file($applyFile)) {
-			$output->writeln('<error>Given config file is not a file</>');
-			return self::INVALID;
-		} elseif (!file_exists($applyFile)) {
-			$output->writeln('<error>Given config file cannot be found (' . $applyFile . ')</>');
-			return self::INVALID;
-		} elseif (!is_readable($applyFile)) {
-			$output->writeln('<error>Given config file cannot be read (' . $applyFile . ')</>');
-			return self::INVALID;
+		// check if plain JSON
+		$decoded_config = json_decode($applyFile);
+		$skipFileCheck = false;
+		if (json_last_error() == JSON_ERROR_NONE) {
+			$skipFileCheck = true;
 		}
 
-		$config = file_get_contents($applyFile);
-		$decoded_config = json_decode($config, true);
+		if (!$skipFileCheck) {
+			if (strtoupper(substr($applyFile, 0, 4)) == 'HTTP') {
+				$output->writeln("Config file seems to be an URL, trying to download");
+				$target = "/tmp/froxlor-config-" . time() . ".json";
+				if (@file_exists($target)) {
+					@unlink($target);
+				}
+				$this->downloadFile($applyFile, $target);
+				$applyFile = $target;
+			}
+			if (!is_file($applyFile)) {
+				$output->writeln('<error>Given config file is not a file</>');
+				return self::INVALID;
+			} elseif (!file_exists($applyFile)) {
+				$output->writeln('<error>Given config file cannot be found (' . $applyFile . ')</>');
+				return self::INVALID;
+			} elseif (!is_readable($applyFile)) {
+				$output->writeln('<error>Given config file cannot be read (' . $applyFile . ')</>');
+				return self::INVALID;
+			}
+
+			$config = file_get_contents($applyFile);
+			$decoded_config = json_decode($config, true);
+		}
 
 		if ($input->getOption('list') != false) {
 			$table_rows = [];
@@ -414,22 +441,6 @@ final class ConfigServices extends Command
 			'<WEBSERVER_GROUP>' => Settings::Get('system.httpgroup')
 		);
 		return $replace_arr;
-	}
-
-	private function getCompleteDistroName($cparser)
-	{
-		// get distro-info
-		$dist_display = $cparser->distributionName;
-		if ($cparser->distributionCodename != '') {
-			$dist_display .= " " . $cparser->distributionCodename;
-		}
-		if ($cparser->distributionVersion != '') {
-			$dist_display .= " (" . $cparser->distributionVersion . ")";
-		}
-		if ($cparser->deprecated) {
-			$dist_display .= " [deprecated]";
-		}
-		return $dist_display;
 	}
 
 	private function importSettings(InputInterface $input, OutputInterface $output)
