@@ -68,7 +68,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 			}
 
 			// validate whether the dbserver exists
-			$dbserver = \Froxlor\Validate\Validate::validate($dbserver, html_entity_decode($this->lng['mysql']['mysql_server']), '', '', 0, true);
+			$dbserver = \Froxlor\Validate\Validate::validate($dbserver, html_entity_decode(lng('mysql.mysql_server')), '', '', 0, true);
 			Database::needRoot(true, $dbserver);
 			Database::needSqlData();
 			$sql_root = Database::getSqlData();
@@ -124,7 +124,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 
 			// send info-mail?
 			if ($sendinfomail == 1) {
-				$pma = $this->lng['admin']['notgiven'];
+				$pma = lng('admin.notgiven');
 				if (Settings::Get('panel.phpmyadmin_url') != '') {
 					$pma = Settings::Get('panel.phpmyadmin_url');
 				}
@@ -150,9 +150,9 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 				);
 
 				// get template for mail subject
-				$mail_subject = $this->getMailTemplate($userinfo, 'mails', 'new_database_by_customer_subject', $replace_arr, $this->lng['mails']['new_database_by_customer']['subject']);
+				$mail_subject = $this->getMailTemplate($userinfo, 'mails', 'new_database_by_customer_subject', $replace_arr, lng('mails.new_database_by_customer.subject'));
 				// get template for mail body
-				$mail_body = $this->getMailTemplate($userinfo, 'mails', 'new_database_by_customer_mailbody', $replace_arr, $this->lng['mails']['new_database_by_customer']['mailbody']);
+				$mail_body = $this->getMailTemplate($userinfo, 'mails', 'new_database_by_customer_mailbody', $replace_arr, lng('mails.new_database_by_customer.mailbody'));
 
 				$_mailerror = false;
 				$mailerr_msg = "";

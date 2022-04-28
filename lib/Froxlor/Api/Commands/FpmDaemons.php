@@ -63,7 +63,7 @@ class FpmDaemons extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				}
 
 				if (empty($configs)) {
-					$configs[] = $this->lng['admin']['phpsettings']['notused'];
+					$configs[] = lng('admin.phpsettings.notused');
 				}
 
 				$row['configs'] = $configs;

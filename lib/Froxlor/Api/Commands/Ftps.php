@@ -249,9 +249,9 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 						'USR_PATH' => \Froxlor\FileDir::makeCorrectDir(str_replace($customer['documentroot'], "/", $path))
 					);
 					// get template for mail subject
-					$mail_subject = $this->getMailTemplate($customer, 'mails', 'new_ftpaccount_by_customer_subject', $replace_arr, $this->lng['mails']['new_ftpaccount_by_customer']['subject']);
+					$mail_subject = $this->getMailTemplate($customer, 'mails', 'new_ftpaccount_by_customer_subject', $replace_arr, lng('mails.new_ftpaccount_by_customer.subject'));
 					// get template for mail body
-					$mail_body = $this->getMailTemplate($customer, 'mails', 'new_ftpaccount_by_customer_mailbody', $replace_arr, $this->lng['mails']['new_ftpaccount_by_customer']['mailbody']);
+					$mail_body = $this->getMailTemplate($customer, 'mails', 'new_ftpaccount_by_customer_mailbody', $replace_arr, lng('mails.new_ftpaccount_by_customer.mailbody'));
 
 					$_mailerror = false;
 					$mailerr_msg = "";

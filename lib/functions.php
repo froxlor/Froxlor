@@ -23,6 +23,8 @@
  * @license    http://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
+use Froxlor\Language;
+
 function view($template, $attributes)
 {
 	$view = file_get_contents(dirname(__DIR__) . '/templates/' . $template);
@@ -32,5 +34,5 @@ function view($template, $attributes)
 
 function lng(string $identifier, array $arguments = [])
 {
-	return \Froxlor\Language::getTranslation($identifier, $arguments);
+	return Language::getTranslation($identifier, $arguments);
 }

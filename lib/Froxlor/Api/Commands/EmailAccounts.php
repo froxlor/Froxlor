@@ -207,9 +207,9 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 				));
 
 				// get template for mail subject
-				$mail_subject = $this->getMailTemplate($customer, 'mails', 'pop_success_subject', $replace_arr, $this->lng['mails']['pop_success']['subject']);
+				$mail_subject = $this->getMailTemplate($customer, 'mails', 'pop_success_subject', $replace_arr, lng('mails.pop_success.subject'));
 				// get template for mail body
-				$mail_body = $this->getMailTemplate($customer, 'mails', 'pop_success_mailbody', $replace_arr, $this->lng['mails']['pop_success']['mailbody']);
+				$mail_body = $this->getMailTemplate($customer, 'mails', 'pop_success_mailbody', $replace_arr, lng('mails.pop_success.mailbody'));
 
 				$_mailerror = false;
 				$mailerr_msg = "";
@@ -238,9 +238,9 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 				// customer wants to send the e-mail to an alternative email address too
 				if (Settings::Get('panel.sendalternativemail') == 1 && ! empty($alternative_email)) {
 					// get template for mail subject
-					$mail_subject = $this->getMailTemplate($customer, 'mails', 'pop_success_alternative_subject', $replace_arr, $this->lng['mails']['pop_success_alternative']['subject']);
+					$mail_subject = $this->getMailTemplate($customer, 'mails', 'pop_success_alternative_subject', $replace_arr, lng('mails.pop_success_alternative.subject'));
 					// get template for mail body
-					$mail_body = $this->getMailTemplate($customer, 'mails', 'pop_success_alternative_mailbody', $replace_arr, $this->lng['mails']['pop_success_alternative']['mailbody']);
+					$mail_body = $this->getMailTemplate($customer, 'mails', 'pop_success_alternative_mailbody', $replace_arr, lng('mails.pop_success_alternative.mailbody'));
 
 					$_mailerror = false;
 					try {
