@@ -1,65 +1,42 @@
 <?php
-namespace Froxlor\Config;
 
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright (c) the authors
- * @author Florian Aders <eleras@froxlor.org>
- * @author Froxlor team <team@froxlor.org> (2010-)
- * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package Classes
- *         
- * @since 0.9.34
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
+
+namespace Froxlor\Config;
+
+use Exception;
+use Froxlor\Settings;
+use SimpleXMLElement;
 
 /**
  * Class ConfigService
  *
  * Parses a distributions XML - file and gives access to the services within
  * Not to be used directly
- *
- * @copyright (c) the authors
- * @author Florian Aders <eleras@froxlor.org>
- * @author Froxlor team <team@froxlor.org> (2010-)
- * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package Classes
  */
 class ConfigService
 {
-
-	/**
-	 * Holding the available daemons in this service
-	 *
-	 * @var array
-	 */
-	private $daemons = array();
-
-	/**
-	 * Store the parsed SimpleXMLElement for usage
-	 *
-	 * @var \SimpleXMLElement
-	 */
-	private $fullxml;
-
-	/**
-	 * Memorize if we already parsed the XML
-	 *
-	 * @var bool
-	 */
-	private $isparsed = false;
-
-	/**
-	 * xpath leading to this service in the full XML
-	 *
-	 * @var string
-	 */
-	private $xpath;
 
 	/**
 	 * Human - readable title of this service
@@ -67,6 +44,30 @@ class ConfigService
 	 * @var string
 	 */
 	public $title;
+	/**
+	 * Holding the available daemons in this service
+	 *
+	 * @var array
+	 */
+	private $daemons = [];
+	/**
+	 * Store the parsed SimpleXMLElement for usage
+	 *
+	 * @var SimpleXMLElement
+	 */
+	private $fullxml;
+	/**
+	 * Memorize if we already parsed the XML
+	 *
+	 * @var bool
+	 */
+	private $isparsed = false;
+	/**
+	 * xpath leading to this service in the full XML
+	 *
+	 * @var string
+	 */
+	private $xpath;
 
 	public function __construct($xml, $xpath)
 	{
@@ -75,8 +76,41 @@ class ConfigService
 		$service = $this->fullxml->xpath($this->xpath);
 		$attributes = $service[0]->attributes();
 		if ($attributes['title'] != '') {
-			$this->title = $this->parseContent((string) $attributes['title']);
+			$this->title = $this->parseContent((string)$attributes['title']);
 		}
+	}
+
+	/**
+	 * Replace placeholders with content
+	 *
+	 * @param string $content
+	 * @return string $content w/o placeholder
+	 */
+	private function parseContent($content)
+	{
+		$content = preg_replace_callback('/\{\{(.*)\}\}/Ui', function ($matches) {
+			$match = null;
+			if (preg_match('/^settings\.(.*)$/', $matches[1], $match)) {
+				return Settings::Get($match[1]);
+			} elseif (preg_match('/^lng\.(.*)(?:\.(.*)(?:\.(.*)))$/U', $matches[1], $match)) {
+				global $lng;
+				if (isset($match[1]) && $match[1] != '' && isset($match[2]) && $match[2] != '' && isset($match[3]) && $match[3] != '') {
+					return $lng[$match[1]][$match[2]][$match[3]];
+				} elseif (isset($match[1]) && $match[1] != '' && isset($match[2]) && $match[2] != '') {
+					return $lng[$match[1]][$match[2]];
+				} elseif (isset($match[1]) && $match[1] != '') {
+					return $lng[$match[1]];
+				}
+				return '';
+			}
+		}, $content);
+		return $content;
+	}
+
+	public function getDaemons()
+	{
+		$this->parse();
+		return $this->daemons;
 	}
 
 	/**
@@ -101,10 +135,10 @@ class ConfigService
 			$versiontag = '';
 			foreach ($daemon->attributes() as $key => $value) {
 				if ($key == 'name' && $name == '') {
-					$name = (string) $value;
+					$name = (string)$value;
 					$nametag = "[@name='" . $value . "']";
 				} elseif ($key == 'name' && $name != '') {
-					$name = (string) $value . '_' . $name;
+					$name = (string)$value . '_' . $name;
 					$nametag = "[@name='" . $value . "']";
 				} elseif ($key == 'version' && $name == '') {
 					$name = str_replace('.', '', $value);
@@ -115,7 +149,7 @@ class ConfigService
 				}
 			}
 			if ($name == '') {
-				throw new \Exception('No name attribute for daemon');
+				throw new Exception('No name attribute for daemon');
 			}
 			$this->daemons[$name] = new ConfigDaemon($this->fullxml, $this->xpath . "/daemon" . $nametag . $versiontag);
 		}
@@ -123,38 +157,5 @@ class ConfigService
 		// Switch flag to indicate we parsed our data
 		$this->isparsed = true;
 		return true;
-	}
-
-	/**
-	 * Replace placeholders with content
-	 *
-	 * @param string $content
-	 * @return string $content w/o placeholder
-	 */
-	private function parseContent($content)
-	{
-		$content = preg_replace_callback('/\{\{(.*)\}\}/Ui', function ($matches) {
-			$match = null;
-			if (preg_match('/^settings\.(.*)$/', $matches[1], $match)) {
-				return \Froxlor\Settings::Get($match[1]);
-			} elseif (preg_match('/^lng\.(.*)(?:\.(.*)(?:\.(.*)))$/U', $matches[1], $match)) {
-				global $lng;
-				if (isset($match[1]) && $match[1] != '' && isset($match[2]) && $match[2] != '' && isset($match[3]) && $match[3] != '') {
-					return $lng[$match[1]][$match[2]][$match[3]];
-				} elseif (isset($match[1]) && $match[1] != '' && isset($match[2]) && $match[2] != '') {
-					return $lng[$match[1]][$match[2]];
-				} elseif (isset($match[1]) && $match[1] != '') {
-					return $lng[$match[1]];
-				}
-				return '';
-			}
-		}, $content);
-		return $content;
-	}
-
-	public function getDaemons()
-	{
-		$this->parse();
-		return $this->daemons;
 	}
 }

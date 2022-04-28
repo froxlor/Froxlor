@@ -6,59 +6,68 @@ use Froxlor\Settings;
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Formfields
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
-return array(
-	'mailtest' => array(
-		'title' => $lng['admin']['testmail'],
+
+return [
+	'mailtest' => [
+		'title' => lng('admin.testmail'),
 		'image' => 'fa-solid fa-paper-plane',
-		'sections' => array(
-			'section_a' => array(
-				'fields' => array(
-					'smtp_user' => array(
-						'label' => $lng['serversettings']['mail_smtp_user'],
+		'sections' => [
+			'section_a' => [
+				'fields' => [
+					'smtp_user' => [
+						'label' => lng('serversettings.mail_smtp_user'),
 						'type' => 'label',
-						'value' => (empty(Settings::Get('system.mail_smtp_user')) ? $lng['panel']['unspecified'] : Settings::Get('system.mail_smtp_user'))
-					),
-					'smtp_host' => array(
-						'label' => $lng['serversettings']['mail_smtp_host'],
+						'value' => (empty(Settings::Get('system.mail_smtp_user')) ? lng('panel.unspecified') : Settings::Get('system.mail_smtp_user'))
+					],
+					'smtp_host' => [
+						'label' => lng('serversettings.mail_smtp_host'),
 						'type' => 'label',
-						'value' => (empty(Settings::Get('system.mail_smtp_host')) ? $lng['panel']['unspecified'] : Settings::Get('system.mail_smtp_host'))
-					),
-					'smtp_port' => array(
-						'label' => $lng['serversettings']['mail_smtp_port'],
+						'value' => (empty(Settings::Get('system.mail_smtp_host')) ? lng('panel.unspecified') : Settings::Get('system.mail_smtp_host'))
+					],
+					'smtp_port' => [
+						'label' => lng('serversettings.mail_smtp_port'),
 						'type' => 'label',
-						'value' => (empty(Settings::Get('system.mail_smtp_port')) ? $lng['panel']['unspecified'] : Settings::Get('system.mail_smtp_port'))
-					),
-					'smtp_auth' => array(
-						'label' => $lng['serversettings']['mail_smtp_auth'],
+						'value' => (empty(Settings::Get('system.mail_smtp_port')) ? lng('panel.unspecified') : Settings::Get('system.mail_smtp_port'))
+					],
+					'smtp_auth' => [
+						'label' => lng('serversettings.mail_smtp_auth'),
 						'type' => 'checkbox',
 						'value' => 1,
-						'checked' => (bool) Settings::Get('system.mail_use_smtp'),
+						'checked' => (bool)Settings::Get('system.mail_use_smtp'),
 						'disabled' => true
-					),
-					'smtp_tls' => array(
-						'label' => $lng['serversettings']['mail_smtp_usetls'],
+					],
+					'smtp_tls' => [
+						'label' => lng('serversettings.mail_smtp_usetls'),
 						'type' => 'checkbox',
 						'value' => 1,
-						'checked' => (bool) Settings::Get('system.mail_smtp_usetls'),
+						'checked' => (bool)Settings::Get('system.mail_smtp_usetls'),
 						'disabled' => true
-					),
-					'test_addr' => array(
-						'label' => $lng['admin']['smtptestaddr'],
+					],
+					'test_addr' => [
+						'label' => lng('admin.smtptestaddr'),
 						'type' => 'email',
 						'mandatory' => true
-					)
-				)
-			)
-		)
-	)
-);
+					]
+				]
+			]
+		]
+	]
+];

@@ -1,25 +1,32 @@
 <?php
 
-namespace Froxlor;
-
-use Exception;
-use Froxlor\Ajax\Ajax;
-
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @author     Maurice Preuß <hello@envoyr.com>
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    AJAX
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
+
+namespace Froxlor;
+
+use Exception;
+use Froxlor\Ajax\Ajax;
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
@@ -27,8 +34,8 @@ require_once dirname(__DIR__) . '/vendor/autoload.php';
 if (!file_exists('./userdata.inc.php')) {
 	die();
 }
-require './userdata.inc.php';
-require './tables.inc.php';
+require_once dirname(__DIR__) . '/lib/userdata.inc.php';
+require_once dirname(__DIR__) . '/lib/tables.inc.php';
 
 // Return response
 try {

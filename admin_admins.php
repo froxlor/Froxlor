@@ -2,123 +2,137 @@
 
 /**
  * This file is part of the Froxlor project.
- * Copyright (c) 2003-2009 the SysCP Team (see authors).
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright  (c) the authors
- * @author     Florian Lippert <flo@syscp.org> (2003-2009)
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Panel
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
 const AREA = 'admin';
-require __DIR__ .  '/lib/init.php';
+require __DIR__ . '/lib/init.php';
 
 use Froxlor\Api\Commands\Admins;
+use Froxlor\CurrentUser;
 use Froxlor\Database\Database;
+use Froxlor\FroxlorLogger;
+use Froxlor\PhpHelper;
 use Froxlor\Settings;
+use Froxlor\UI\Collection;
+use Froxlor\UI\HTML;
+use Froxlor\UI\Listing;
 use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
+use Froxlor\UI\Response;
 
-$id = (int) Request::get('id');
+$id = (int)Request::get('id');
 
 if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
-
 	if ($action == '') {
-		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_admins");
+		$log->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_admins");
 
-        try {
-            $admin_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.admins.php';
-            $collection = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Admins::class, $userinfo))
-                ->withPagination($admin_list_data['admin_list']['columns']);
+		try {
+			$admin_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.admins.php';
+			$collection = (new Collection(Admins::class, $userinfo))
+				->withPagination($admin_list_data['admin_list']['columns']);
 		} catch (Exception $e) {
-			\Froxlor\UI\Response::dynamic_error($e->getMessage());
+			Response::dynamicError($e->getMessage());
 		}
 
 		UI::view('user/table.html.twig', [
-			'listing' => \Froxlor\UI\Listing::format($collection, $admin_list_data, 'admin_list') ,
-			'actions_links' => [[
-				'href' => $linker->getLink(['section' => 'admins', 'page' => $page, 'action' => 'add']),
-				'label' => $lng['admin']['admin_add']
-			]]
+			'listing' => Listing::format($collection, $admin_list_data, 'admin_list'),
+			'actions_links' => [
+				[
+					'href' => $linker->getLink(['section' => 'admins', 'page' => $page, 'action' => 'add']),
+					'label' => lng('admin.admin_add')
+				]
+			]
 		]);
 	} elseif ($action == 'su') {
-
 		try {
-			$json_result = Admins::getLocal($userinfo, array(
+			$json_result = Admins::getLocal($userinfo, [
 				'id' => $id
-			))->get();
+			])->get();
 		} catch (Exception $e) {
-			\Froxlor\UI\Response::dynamic_error($e->getMessage());
+			Response::dynamicError($e->getMessage());
 		}
 		$result = json_decode($json_result, true)['data'];
 		$destination_admin = $result['loginname'];
 
 		if ($destination_admin != '' && $result['adminid'] != $userinfo['userid']) {
-
-			$result['switched_user'] = \Froxlor\CurrentUser::getData();
+			$result['switched_user'] = CurrentUser::getData();
 			$result['adminsession'] = 1;
 			$result['userid'] = $result['adminid'];
-			\Froxlor\CurrentUser::setData($result);
+			CurrentUser::setData($result);
 
-			$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "switched adminuser and is now '" . $destination_admin . "'");
-			\Froxlor\UI\Response::redirectTo('admin_index.php');
+			$log->logAction(
+                FroxlorLogger::ADM_ACTION,
+                LOG_INFO,
+                "switched adminuser and is now '" . $destination_admin . "'"
+            );
+			Response::redirectTo('admin_index.php');
 		} else {
-			\Froxlor\UI\Response::redirectTo('index.php', array(
+			Response::redirectTo('index.php', [
 				'action' => 'login'
-			));
+			]);
 		}
 	} elseif ($action == 'delete' && $id != 0) {
 		try {
-			$json_result = Admins::getLocal($userinfo, array(
+			$json_result = Admins::getLocal($userinfo, [
 				'id' => $id
-			))->get();
+			])->get();
 		} catch (Exception $e) {
-			\Froxlor\UI\Response::dynamic_error($e->getMessage());
+			Response::dynamicError($e->getMessage());
 		}
 		$result = json_decode($json_result, true)['data'];
 
 		if ($result['loginname'] != '') {
 			if ($result['adminid'] == $userinfo['userid']) {
-				\Froxlor\UI\Response::standard_error('youcantdeleteyourself');
+				Response::standardError('youcantdeleteyourself');
 			}
 
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
-				Admins::getLocal($userinfo, array(
+				Admins::getLocal($userinfo, [
 					'id' => $id
-				))->delete();
-				\Froxlor\UI\Response::redirectTo($filename, array(
+				])->delete();
+				Response::redirectTo($filename, [
 					'page' => $page
-				));
+				]);
 			} else {
-				\Froxlor\UI\HTML::askYesNo('admin_admin_reallydelete', $filename, array(
+				HTML::askYesNo('admin_admin_reallydelete', $filename, [
 					'id' => $id,
 					'page' => $page,
 					'action' => $action
-				), $result['loginname']);
+				], $result['loginname']);
 			}
 		}
 	} elseif ($action == 'add') {
-
 		if (isset($_POST['send']) && $_POST['send'] == 'send') {
 			try {
 				Admins::getLocal($userinfo, $_POST)->add();
 			} catch (Exception $e) {
-				\Froxlor\UI\Response::dynamic_error($e->getMessage());
+				Response::dynamicError($e->getMessage());
 			}
-			\Froxlor\UI\Response::redirectTo($filename, array(
+			Response::redirectTo($filename, [
 				'page' => $page
-			));
+			]);
 		} else {
-
 			$ipaddress = [];
-			$ipaddress[-1] = $lng['admin']['allips'];
+			$ipaddress[-1] = lng('admin.allips');
 			$ipsandports_stmt = Database::query("
 				SELECT `id`, `ip` FROM `" . TABLE_PANEL_IPSANDPORTS . "` GROUP BY `ip` ORDER BY `ip` ASC
 			");
@@ -129,40 +143,38 @@ if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
 			$admin_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/admin/formfield.admin_add.php';
 
 			UI::view('user/form.html.twig', [
-				'formaction' => $linker->getLink(array('section' => 'admins')),
+				'formaction' => $linker->getLink(['section' => 'admins']),
 				'formdata' => $admin_add_data['admin_add']
 			]);
 		}
 	} elseif ($action == 'edit' && $id != 0) {
 		try {
-			$json_result = Admins::getLocal($userinfo, array(
+			$json_result = Admins::getLocal($userinfo, [
 				'id' => $id
-			))->get();
+			])->get();
 		} catch (Exception $e) {
-			\Froxlor\UI\Response::dynamic_error($e->getMessage());
+			Response::dynamicError($e->getMessage());
 		}
 		$result = json_decode($json_result, true)['data'];
 
 		if ($result['loginname'] != '') {
-
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
 					Admins::getLocal($userinfo, $_POST)->update();
 				} catch (Exception $e) {
-					\Froxlor\UI\Response::dynamic_error($e->getMessage());
+					Response::dynamicError($e->getMessage());
 				}
-				\Froxlor\UI\Response::redirectTo($filename, array(
+				Response::redirectTo($filename, [
 					'page' => $page
-				));
+				]);
 			} else {
-
 				$dec_places = Settings::Get('panel.decimal_places');
 				$result['traffic'] = round($result['traffic'] / (1024 * 1024), $dec_places);
 				$result['diskspace'] = round($result['diskspace'] / 1024, $dec_places);
 				$result['email'] = $idna_convert->decode($result['email']);
 
 				$ipaddress = [];
-				$ipaddress[-1] = $lng['admin']['allips'];
+				$ipaddress[-1] = lng('admin.allips');
 				$ipsandports_stmt = Database::query("
 					SELECT `id`, `ip` FROM `" . TABLE_PANEL_IPSANDPORTS . "` GROUP BY `ip` ORDER BY `ip` ASC
 				");
@@ -170,12 +182,12 @@ if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
 					$ipaddress[$row['id']] = $row['ip'];
 				}
 
-				$result = \Froxlor\PhpHelper::htmlentitiesArray($result);
+				$result = PhpHelper::htmlentitiesArray($result);
 
 				$admin_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/admin/formfield.admin_edit.php';
 
 				UI::view('user/form.html.twig', [
-					'formaction' => $linker->getLink(array('section' => 'admins', 'id' => $id)),
+					'formaction' => $linker->getLink(['section' => 'admins', 'id' => $id]),
 					'formdata' => $admin_edit_data['admin_edit'],
 					'editid' => $id
 				]);

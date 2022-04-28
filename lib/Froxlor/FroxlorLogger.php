@@ -1,10 +1,34 @@
 <?php
+
+/**
+ * This file is part of the Froxlor project.
+ * Copyright (c) 2010 the Froxlor Team (see authors).
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
+ */
+
 namespace Froxlor;
 
-use Monolog\Logger;
+use Froxlor\System\MysqlHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogHandler;
-use Froxlor\System\MysqlHandler;
+use Monolog\Logger;
 
 /**
  * Class FroxlorLogger
@@ -12,34 +36,36 @@ use Froxlor\System\MysqlHandler;
 class FroxlorLogger
 {
 
+	const USR_ACTION = '10';
+	const RES_ACTION = '20';
+	const ADM_ACTION = '30';
+	const CRON_ACTION = '40';
+	const LOGIN_ACTION = '50';
+	const LOG_ERROR = '99';
 	/**
 	 * current \Monolog\Logger object
 	 *
-	 * @var \Monolog\Logger
+	 * @var Logger
 	 */
 	private static $ml = null;
-
 	/**
 	 * LogTypes Array
 	 *
 	 * @var array
 	 */
 	private static $logtypes = null;
-
 	/**
 	 * whether to output log-messages to STDOUT (cron)
 	 *
 	 * @var bool
 	 */
 	private static $crondebug_flag = false;
-
 	/**
 	 * user info of logged in user
 	 *
 	 * @var array
 	 */
-	private static $userinfo = array();
-
+	private static $userinfo = [];
 	/**
 	 * whether the logger object has already been initialized
 	 *
@@ -47,26 +73,14 @@ class FroxlorLogger
 	 */
 	private static $is_initialized = false;
 
-	const USR_ACTION = '10';
-
-	const RES_ACTION = '20';
-
-	const ADM_ACTION = '30';
-
-	const CRON_ACTION = '40';
-
-	const LOGIN_ACTION = '50';
-
-	const LOG_ERROR = '99';
-
 	/**
 	 * Class constructor.
 	 */
-	protected function __construct($userinfo = array())
+	protected function __construct($userinfo = [])
 	{
 		$this->initMonolog();
 		self::$userinfo = $userinfo;
-		self::$logtypes = array();
+		self::$logtypes = [];
 
 		if ((Settings::Get('logger.logtypes') == null || Settings::Get('logger.logtypes') == '') && (Settings::Get('logger.enabled') !== null && Settings::Get('logger.enabled'))) {
 			self::$logtypes[0] = 'syslog';
@@ -81,7 +95,6 @@ class FroxlorLogger
 
 		if (self::$is_initialized == false) {
 			foreach (self::$logtypes as $logger) {
-
 				switch ($logger) {
 					case 'syslog':
 						self::$ml->pushHandler(new SyslogHandler('froxlor', LOG_USER, Logger::DEBUG));
@@ -90,7 +103,7 @@ class FroxlorLogger
 						$logger_logfile = Settings::Get('logger.logfile');
 						// is_writable needs an existing file to check if it's actually writable
 						@touch($logger_logfile);
-						if (empty($logger_logfile) || ! is_writable($logger_logfile)) {
+						if (empty($logger_logfile) || !is_writable($logger_logfile)) {
 							Settings::Set('logger.logfile', '/tmp/froxlor.log');
 						}
 						self::$ml->pushHandler(new StreamHandler($logger_logfile, Logger::DEBUG));
@@ -105,26 +118,9 @@ class FroxlorLogger
 	}
 
 	/**
-	 * return FroxlorLogger instance
-	 *
-	 * @param array $userinfo
-	 *
-	 * @return FroxlorLogger
-	 */
-	public static function getInstanceOf($userinfo = array())
-	{
-		if (empty($userinfo)) {
-			$userinfo = array(
-				'loginname' => 'system'
-			);
-		}
-		return new FroxlorLogger($userinfo);
-	}
-
-	/**
 	 * initiate monolog object
 	 *
-	 * @return \Monolog\Logger
+	 * @return Logger
 	 */
 	private function initMonolog()
 	{
@@ -136,16 +132,33 @@ class FroxlorLogger
 	}
 
 	/**
+	 * return FroxlorLogger instance
+	 *
+	 * @param array $userinfo
+	 *
+	 * @return FroxlorLogger
+	 */
+	public static function getInstanceOf($userinfo = [])
+	{
+		if (empty($userinfo)) {
+			$userinfo = [
+				'loginname' => 'system'
+			];
+		}
+		return new FroxlorLogger($userinfo);
+	}
+
+	/**
 	 * logs a given text to all enabled logger-facilities
 	 *
 	 * @param int $action
 	 * @param int $type
 	 * @param string $text
 	 */
-	public function logAction($action = \Froxlor\FroxlorLogger::USR_ACTION, $type = LOG_NOTICE, $text = null)
+	public function logAction($action = FroxlorLogger::USR_ACTION, $type = LOG_NOTICE, $text = null)
 	{
 		// not logging normal stuff if not set to "paranoid" logging
-		if (! self::$crondebug_flag && Settings::Get('logger.severity') == '1' && $type > LOG_NOTICE) {
+		if (!self::$crondebug_flag && Settings::Get('logger.severity') == '1' && $type > LOG_NOTICE) {
 			return;
 		}
 
@@ -153,20 +166,20 @@ class FroxlorLogger
 			$this->initMonolog();
 		}
 
-		if (self::$crondebug_flag || ($action == \Froxlor\FroxlorLogger::CRON_ACTION && $type <= LOG_WARNING)) {
+		if (self::$crondebug_flag || ($action == FroxlorLogger::CRON_ACTION && $type <= LOG_WARNING)) {
 			echo "[" . $this->getLogLevelDesc($type) . "] " . $text . PHP_EOL;
 		}
 
 		// warnings, errors and critical messages WILL be logged
-		if (Settings::Get('logger.log_cron') == '0' && $action == \Froxlor\FroxlorLogger::CRON_ACTION && $type > LOG_WARNING) {
+		if (Settings::Get('logger.log_cron') == '0' && $action == FroxlorLogger::CRON_ACTION && $type > LOG_WARNING) {
 			return;
 		}
 
-		$logExtra = array(
+		$logExtra = [
 			'source' => $this->getActionTypeDesc($action),
 			'action' => $action,
 			'user' => self::$userinfo['loginname']
-		);
+		];
 
 		switch ($type) {
 			case LOG_DEBUG:
@@ -187,36 +200,6 @@ class FroxlorLogger
 			default:
 				self::$ml->addDebug($text, $logExtra);
 		}
-	}
-
-	/**
-	 * Set whether to log cron-runs
-	 *
-	 * @param bool $_cronlog
-	 *
-	 * @return boolean
-	 */
-	public function setCronLog($_cronlog = 0)
-	{
-		$_cronlog = (int) $_cronlog;
-
-		if ($_cronlog < 0 || $_cronlog > 2) {
-			$_cronlog = 0;
-		}
-		Settings::Set('logger.log_cron', $_cronlog);
-		return $_cronlog;
-	}
-
-	/**
-	 * setter for crondebug-flag
-	 *
-	 * @param bool $_flag
-	 *
-	 * @return void
-	 */
-	public function setCronDebugFlag($_flag = false)
-	{
-		self::$crondebug_flag = (bool) $_flag;
 	}
 
 	public function getLogLevelDesc($type)
@@ -250,19 +233,19 @@ class FroxlorLogger
 	private function getActionTypeDesc($action)
 	{
 		switch ($action) {
-			case \Froxlor\FroxlorLogger::USR_ACTION:
+			case FroxlorLogger::USR_ACTION:
 				$_action = 'user';
 				break;
-			case \Froxlor\FroxlorLogger::ADM_ACTION:
+			case FroxlorLogger::ADM_ACTION:
 				$_action = 'admin';
 				break;
-			case \Froxlor\FroxlorLogger::RES_ACTION:
+			case FroxlorLogger::RES_ACTION:
 				$_action = 'reseller';
 				break;
-			case \Froxlor\FroxlorLogger::CRON_ACTION:
+			case FroxlorLogger::CRON_ACTION:
 				$_action = 'cron';
 				break;
-			case \Froxlor\FroxlorLogger::LOGIN_ACTION:
+			case FroxlorLogger::LOGIN_ACTION:
 				$_action = 'login';
 				break;
 			default:
@@ -270,5 +253,35 @@ class FroxlorLogger
 				break;
 		}
 		return $_action;
+	}
+
+	/**
+	 * Set whether to log cron-runs
+	 *
+	 * @param bool $_cronlog
+	 *
+	 * @return boolean
+	 */
+	public function setCronLog($_cronlog = 0)
+	{
+		$_cronlog = (int)$_cronlog;
+
+		if ($_cronlog < 0 || $_cronlog > 2) {
+			$_cronlog = 0;
+		}
+		Settings::Set('logger.log_cron', $_cronlog);
+		return $_cronlog;
+	}
+
+	/**
+	 * setter for crondebug-flag
+	 *
+	 * @param bool $_flag
+	 *
+	 * @return void
+	 */
+	public function setCronDebugFlag($_flag = false)
+	{
+		self::$crondebug_flag = (bool)$_flag;
 	}
 }

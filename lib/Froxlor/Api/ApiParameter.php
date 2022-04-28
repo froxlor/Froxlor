@@ -11,16 +11,16 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, you can also view it online at
- * http://files.froxlor.org/misc/COPYING.txt
+ * https://files.froxlor.org/misc/COPYING.txt
  *
  * @copyright  the authors
  * @author     Froxlor team <team@froxlor.org>
- * @license    http://files.froxlor.org/misc/COPYING.txt GPLv2
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
 namespace Froxlor\Api;
@@ -40,16 +40,59 @@ abstract class ApiParameter
 	/**
 	 *
 	 * @param array $params
-	 *        	optional, array of parameters (var=>value) for the command
-	 *        	
-	 * @throws \Exception
+	 *            optional, array of parameters (var=>value) for the command
+	 *
+	 * @throws Exception
 	 */
 	public function __construct($params = null)
 	{
-		if (! is_null($params)) {
+		if (!is_null($params)) {
 			$params = $this->trimArray($params);
 		}
 		$this->cmd_params = $params;
+	}
+
+	/**
+	 * run 'trim' function on an array recursively
+	 *
+	 * @param array $input
+	 *
+	 * @return array
+	 */
+	private function trimArray($input)
+	{
+		if (!is_array($input)) {
+			return trim($input);
+		}
+		return array_map([
+			$this,
+			'trimArray'
+		], $input);
+	}
+
+	/**
+	 * get specific parameter which also has and unlimited-field
+	 *
+	 * @param string $param
+	 *            parameter to get out of the request-parameter list
+	 * @param string $ul_field
+	 *            parameter to get out of the request-parameter list
+	 * @param bool $optional
+	 *            default: false
+	 * @param mixed $default
+	 *            value which is returned if optional=true and param is not set
+	 *
+	 * @return mixed
+	 * @throws Exception
+	 */
+	protected function getUlParam($param = null, $ul_field = null, $optional = false, $default = 0)
+	{
+		$param_value = (int)$this->getParam($param, $optional, $default);
+		$ul_field_value = $this->getBoolParam($ul_field, true, 0);
+		if ($ul_field_value != '0') {
+			$param_value = -1;
+		}
+		return $param_value;
 	}
 
 	/**
@@ -58,19 +101,19 @@ abstract class ApiParameter
 	 * Maybe more in the future
 	 *
 	 * @param string $param
-	 *        	parameter to get out of the request-parameter list
+	 *            parameter to get out of the request-parameter list
 	 * @param bool $optional
-	 *        	default: false
+	 *            default: false
 	 * @param mixed $default
-	 *        	value which is returned if optional=true and param is not set
-	 *        	
-	 * @throws \Exception
+	 *            value which is returned if optional=true and param is not set
+	 *
 	 * @return mixed
+	 * @throws Exception
 	 */
 	protected function getParam($param = null, $optional = false, $default = '')
 	{
 		// does it exist?
-		if (! isset($this->cmd_params[$param])) {
+		if (!isset($this->cmd_params[$param])) {
 			if ($optional === false) {
 				// get module + function for better error-messages
 				$inmod = $this->getModFunctionString();
@@ -92,72 +135,12 @@ abstract class ApiParameter
 	}
 
 	/**
-	 * getParam wrapper for boolean parameter
-	 *
-	 * @param string $param
-	 *        	parameter to get out of the request-parameter list
-	 * @param bool $optional
-	 *        	default: false
-	 * @param mixed $default
-	 *        	value which is returned if optional=true and param is not set
-	 *        	
-	 * @return string
-	 */
-	protected function getBoolParam($param = null, $optional = false, $default = false)
-	{
-		$_default = '0';
-		if ($default) {
-			$_default = '1';
-		}
-		$param_value = $this->getParam($param, $optional, $_default);
-		if ($param_value && intval($param_value) != 0) {
-			return '1';
-		}
-		return '0';
-	}
-
-	/**
-	 * get specific parameter which also has and unlimited-field
-	 *
-	 * @param string $param
-	 *        	parameter to get out of the request-parameter list
-	 * @param string $ul_field
-	 *        	parameter to get out of the request-parameter list
-	 * @param bool $optional
-	 *        	default: false
-	 * @param mixed $default
-	 *        	value which is returned if optional=true and param is not set
-	 *        	
-	 * @return mixed
-	 * @throws \Exception
-	 */
-	protected function getUlParam($param = null, $ul_field = null, $optional = false, $default = 0)
-	{
-		$param_value = (int) $this->getParam($param, $optional, $default);
-		$ul_field_value = $this->getBoolParam($ul_field, true, 0);
-		if ($ul_field_value != '0') {
-			$param_value = - 1;
-		}
-		return $param_value;
-	}
-
-	/**
-	 * return list of all parameters
-	 *
-	 * @return array
-	 */
-	protected function getParamList()
-	{
-		return $this->cmd_params;
-	}
-
-	/**
 	 * returns "module::function()" for better error-messages (missing parameter etc.)
 	 * makes debugging a whole lot more comfortable
 	 *
 	 * @param int $level
-	 *        	depth of backtrace, default 2
-	 *        	
+	 *            depth of backtrace, default 2
+	 *
 	 * @param int $max_level
 	 * @param array|null $trace
 	 *
@@ -177,26 +160,43 @@ abstract class ApiParameter
 		// is it the one we are looking for?
 		if ($class != $_class && $level <= $max_level) {
 			// check one level deeper
-			return $this->getModFunctionString(++ $level, $max_level, $trace);
+			return $this->getModFunctionString(++$level, $max_level, $trace);
 		}
 		return str_replace("Froxlor\\Api\\Commands\\", "", $class) . ':' . $func;
 	}
 
 	/**
-	 * run 'trim' function on an array recursively
+	 * getParam wrapper for boolean parameter
 	 *
-	 * @param array $input
+	 * @param string $param
+	 *            parameter to get out of the request-parameter list
+	 * @param bool $optional
+	 *            default: false
+	 * @param mixed $default
+	 *            value which is returned if optional=true and param is not set
+	 *
+	 * @return string
+	 */
+	protected function getBoolParam($param = null, $optional = false, $default = false)
+	{
+		$_default = '0';
+		if ($default) {
+			$_default = '1';
+		}
+		$param_value = $this->getParam($param, $optional, $_default);
+		if ($param_value && intval($param_value) != 0) {
+			return '1';
+		}
+		return '0';
+	}
+
+	/**
+	 * return list of all parameters
 	 *
 	 * @return array
 	 */
-	private function trimArray($input)
+	protected function getParamList()
 	{
-		if (! is_array($input)) {
-			return trim($input);
-		}
-		return array_map(array(
-			$this,
-			'trimArray'
-		), $input);
+		return $this->cmd_params;
 	}
 }

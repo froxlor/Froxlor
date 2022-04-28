@@ -1,32 +1,43 @@
 <?php
+
+/**
+ * This file is part of the Froxlor project.
+ * Copyright (c) 2010 the Froxlor Team (see authors).
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
+ */
+
 if (!defined('AREA')) {
 	header("Location: index.php");
 	exit();
 }
 
 use Froxlor\Database\Database;
+use Froxlor\FroxlorLogger;
+use Froxlor\FroxlorTwoFactorAuth;
 use Froxlor\Settings;
 use Froxlor\UI\Panel\UI;
+use Froxlor\UI\Response;
 
 if (Settings::Get('2fa.enabled') != '1') {
-	\Froxlor\UI\Response::dynamic_error("2FA not activated");
+	Response::dynamicError('2fa.2fa_not_activated');
 }
-
-/**
- * This file is part of the Froxlor project.
- * Copyright (c) 2018 the Froxlor Team (see authors).
- *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
- *
- * @copyright (c) the authors
- * @author Froxlor team <team@froxlor.org> (2018-)
- * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package Panel
- * @since 0.10.0
- *
- */
 
 // This file is being included in admin_index and customer_index
 // and therefore does not need to require lib/init.php
@@ -39,16 +50,16 @@ if (AREA == 'admin') {
 }
 $success_message = "";
 
-$tfa = new \Froxlor\FroxlorTwoFactorAuth('Froxlor ' . Settings::Get('system.hostname'));
+$tfa = new FroxlorTwoFactorAuth('Froxlor ' . Settings::Get('system.hostname'));
 
 // do the delete and then just show a success-message
 if ($action == 'delete') {
-	Database::pexecute($upd_stmt, array(
+	Database::pexecute($upd_stmt, [
 		't2fa' => 0,
 		'd2fa' => "",
 		'id' => $uid
-	));
-	\Froxlor\UI\Response::standard_success($lng['2fa']['2fa_removed']);
+	]);
+	Response::standardSuccess('2fa.2fa_removed');
 } elseif ($action == 'add') {
 	$type = isset($_POST['type_2fa']) ? $_POST['type_2fa'] : '0';
 
@@ -59,26 +70,25 @@ if ($action == 'delete') {
 		// generate secret for TOTP
 		$data = $tfa->createSecret();
 	}
-	Database::pexecute($upd_stmt, array(
+	Database::pexecute($upd_stmt, [
 		't2fa' => $type,
 		'd2fa' => $data,
 		'id' => $uid
-	));
-	\Froxlor\UI\Response::standard_success(sprintf($lng['2fa']['2fa_added'], $filename));
+	]);
+	Response::standardSuccess('2fa.2fa_added', [$filename]);
 }
 
-$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed 2fa::overview");
+$log->logAction(FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed 2fa::overview");
 
 $type_select_values = [];
 $ga_qrcode = '';
 if ($userinfo['type_2fa'] == '0') {
-
 	// available types
-	$type_select_values = array(
+	$type_select_values = [
 		0 => '-',
 		1 => 'E-Mail',
 		2 => 'Authenticator'
-	);
+	];
 	asort($type_select_values);
 } elseif ($userinfo['type_2fa'] == '1') {
 	// email 2fa enabled

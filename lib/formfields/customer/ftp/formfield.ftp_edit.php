@@ -6,62 +6,66 @@
  *
  * For the full copyright and license information, please view the COPYING
  * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * COPYING file online at https://files.froxlor.org/misc/COPYING.txt
  *
  * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Formfields
+ * @author         Froxlor team <team@froxlor.org> (2010-)
+ * @license        GPLv2 https://files.froxlor.org/misc/COPYING.txt
+ * @package        Formfields
  */
-return array(
-	'ftp_edit' => array(
-		'title' => $lng['ftp']['account_edit'],
+
+use Froxlor\Settings;
+use Froxlor\System\Crypt;
+
+return [
+	'ftp_edit' => [
+		'title' => lng('ftp.account_edit'),
 		'image' => 'icons/user_edit.png',
 		'self_overview' => ['section' => 'ftp', 'page' => 'accounts'],
-		'sections' => array(
-			'section_a' => array(
-				'title' => $lng['ftp']['account_edit'],
+		'sections' => [
+			'section_a' => [
+				'title' => lng('ftp.account_edit'),
 				'image' => 'icons/user_edit.png',
-				'fields' => array(
-					'username' => array(
-						'label' => $lng['login']['username'],
+				'fields' => [
+					'username' => [
+						'label' => lng('login.username'),
 						'type' => 'label',
 						'value' => $result['username']
-					),
-					'ftp_description' => array(
-						'label' => $lng['panel']['ftpdesc'],
+					],
+					'ftp_description' => [
+						'label' => lng('panel.ftpdesc'),
 						'type' => 'text',
 						'value' => $result['description']
-					),
-					'path' => array(
-						'label' => $lng['panel']['path'],
-						'desc' => (\Froxlor\Settings::Get('panel.pathedit') != 'Dropdown' ? $lng['panel']['pathDescription'] : null),
+					],
+					'path' => [
+						'label' => lng('panel.path'),
+						'desc' => (Settings::Get('panel.pathedit') != 'Dropdown' ? lng('panel.pathDescription') : null),
 						'type' => $pathSelect['type'],
 						'select_var' => $pathSelect['select_var'] ?? '',
 						'value' => $pathSelect['value'],
 						'note' => $pathSelect['note'] ?? '',
-					),
-					'ftp_password' => array(
-						'label' => $lng['login']['password'],
-						'desc' => $lng['ftp']['editpassdescription'],
+					],
+					'ftp_password' => [
+						'label' => lng('login.password'),
+						'desc' => lng('ftp.editpassdescription'),
 						'type' => 'password',
 						'autocomplete' => 'off'
-					),
-					'ftp_password_suggestion' => array(
-						'label' => $lng['customer']['generated_pwd'],
+					],
+					'ftp_password_suggestion' => [
+						'label' => lng('customer.generated_pwd'),
 						'type' => 'text',
-						'visible' => (\Froxlor\Settings::Get('panel.password_regex') == ''),
-						'value' => \Froxlor\System\Crypt::generatePassword()
-					),
-					'shell' => array(
-						'visible' => \Froxlor\Settings::Get('system.allow_customer_shell') == '1',
-						'label' => $lng['panel']['shell'],
+						'visible' => (Settings::Get('panel.password_regex') == ''),
+						'value' => Crypt::generatePassword()
+					],
+					'shell' => [
+						'visible' => Settings::Get('system.allow_customer_shell') == '1',
+						'label' => lng('panel.shell'),
 						'type' => 'select',
 						'select_var' => $shells_avail,
 						'selected' => $result['shell'] ?? '/bin/false'
-					)
-				)
-			)
-		)
-	)
-);
+					]
+				]
+			]
+		]
+	]
+];

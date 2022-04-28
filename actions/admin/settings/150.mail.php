@@ -2,28 +2,35 @@
 
 /**
  * This file is part of the Froxlor project.
- * Copyright (c) 2003-2009 the SysCP Team (see authors).
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright  (c) the authors
- * @author     Florian Lippert <flo@syscp.org> (2003-2009)
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Settings
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
-return array(
-	'groups' => array(
-		'mail' => array(
-			'title' => $lng['admin']['mailserversettings'],
+
+return [
+	'groups' => [
+		'mail' => [
+			'title' => lng('admin.mailserversettings'),
 			'icon' => 'fa-solid fa-envelope',
-			'fields' => array(
-				'system_vmail_uid' => array(
-					'label' => $lng['serversettings']['vmail_uid'],
+			'fields' => [
+				'system_vmail_uid' => [
+					'label' => lng('serversettings.vmail_uid'),
 					'settinggroup' => 'system',
 					'varname' => 'vmail_uid',
 					'type' => 'number',
@@ -32,9 +39,9 @@ return array(
 					'max' => 65535,
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
-				),
-				'system_vmail_gid' => array(
-					'label' => $lng['serversettings']['vmail_gid'],
+				],
+				'system_vmail_gid' => [
+					'label' => lng('serversettings.vmail_gid'),
 					'settinggroup' => 'system',
 					'varname' => 'vmail_gid',
 					'type' => 'number',
@@ -43,18 +50,18 @@ return array(
 					'max' => 65535,
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
-				),
-				'system_vmail_homedir' => array(
-					'label' => $lng['serversettings']['vmail_homedir'],
+				],
+				'system_vmail_homedir' => [
+					'label' => lng('serversettings.vmail_homedir'),
 					'settinggroup' => 'system',
 					'varname' => 'vmail_homedir',
 					'type' => 'text',
 					'string_type' => 'dir',
 					'default' => '/var/customers/mail/',
 					'save_method' => 'storeSettingField'
-				),
-				'system_vmail_maildirname' => array(
-					'label' => $lng['serversettings']['vmail_maildirname'],
+				],
+				'system_vmail_maildirname' => [
+					'label' => lng('serversettings.vmail_maildirname'),
 					'settinggroup' => 'system',
 					'varname' => 'vmail_maildirname',
 					'type' => 'text',
@@ -63,63 +70,63 @@ return array(
 					'string_emptyallowed' => true,
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
-				),
-				'panel_sendalternativemail' => array(
-					'label' => $lng['serversettings']['sendalternativemail'],
+				],
+				'panel_sendalternativemail' => [
+					'label' => lng('serversettings.sendalternativemail'),
 					'settinggroup' => 'panel',
 					'varname' => 'sendalternativemail',
 					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField'
-				),
-				'system_mail_quota_enabled' => array(
-					'label' => $lng['serversettings']['mail_quota_enabled'],
+				],
+				'system_mail_quota_enabled' => [
+					'label' => lng('serversettings.mail_quota_enabled'),
 					'settinggroup' => 'system',
 					'varname' => 'mail_quota_enabled',
 					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField'
-				),
-				'system_mail_quota' => array(
-					'label' => $lng['serversettings']['mail_quota'],
+				],
+				'system_mail_quota' => [
+					'label' => lng('serversettings.mail_quota'),
 					'settinggroup' => 'system',
 					'varname' => 'mail_quota',
 					'type' => 'number',
 					'default' => 100,
 					'save_method' => 'storeSettingField'
-				),
-				'system_catchall_enabled' => array(
-					'label' => $lng['serversettings']['catchall_enabled'],
+				],
+				'system_catchall_enabled' => [
+					'label' => lng('serversettings.catchall_enabled'),
 					'settinggroup' => 'catchall',
 					'varname' => 'catchall_enabled',
 					'type' => 'checkbox',
 					'default' => true,
 					'save_method' => 'storeSettingResetCatchall'
-				),
-				'system_mailtraffic_enabled' => array(
-					'label' => $lng['serversettings']['mailtraffic_enabled'],
+				],
+				'system_mailtraffic_enabled' => [
+					'label' => lng('serversettings.mailtraffic_enabled'),
 					'settinggroup' => 'system',
 					'varname' => 'mailtraffic_enabled',
 					'type' => 'checkbox',
 					'default' => true,
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
-				),
-				'system_mdaserver' => array(
-					'label' => $lng['serversettings']['mdaserver'],
+				],
+				'system_mdaserver' => [
+					'label' => lng('serversettings.mdaserver'),
 					'settinggroup' => 'system',
 					'varname' => 'mdaserver',
 					'type' => 'select',
 					'default' => 'dovecot',
-					'select_var' => array(
+					'select_var' => [
 						'courier' => 'Courier',
 						'dovecot' => 'Dovecot'
-					),
+					],
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
-				),
-				'system_mdalog' => array(
-					'label' => $lng['serversettings']['mdalog'],
+				],
+				'system_mdalog' => [
+					'label' => lng('serversettings.mdalog'),
 					'settinggroup' => 'system',
 					'varname' => 'mdalog',
 					'type' => 'text',
@@ -128,22 +135,22 @@ return array(
 					'string_emptyallowed' => true,
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
-				),
-				'system_mtaserver' => array(
-					'label' => $lng['serversettings']['mtaserver'],
+				],
+				'system_mtaserver' => [
+					'label' => lng('serversettings.mtaserver'),
 					'settinggroup' => 'system',
 					'varname' => 'mtaserver',
 					'type' => 'select',
 					'default' => 'postfix',
-					'select_var' => array(
+					'select_var' => [
 						'exim4' => 'Exim4',
 						'postfix' => 'Postfix'
-					),
+					],
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
-				),
-				'system_mtalog' => array(
-					'label' => $lng['serversettings']['mtalog'],
+				],
+				'system_mtalog' => [
+					'label' => lng('serversettings.mtalog'),
 					'settinggroup' => 'system',
 					'varname' => 'mtalog',
 					'type' => 'text',
@@ -152,8 +159,8 @@ return array(
 					'string_emptyallowed' => true,
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
-				)
-			)
-		)
-	)
-);
+				]
+			]
+		]
+	]
+];

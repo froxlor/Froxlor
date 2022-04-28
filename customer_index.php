@@ -2,66 +2,79 @@
 
 /**
  * This file is part of the Froxlor project.
- * Copyright (c) 2003-2009 the SysCP Team (see authors).
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright  (c) the authors
- * @author     Florian Lippert <flo@syscp.org> (2003-2009)
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Panel
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
+
 const AREA = 'customer';
 require __DIR__ . '/lib/init.php';
 
-use Froxlor\Database\Database;
-use Froxlor\Settings;
 use Froxlor\Api\Commands\Customers as Customers;
+use Froxlor\CurrentUser;
+use Froxlor\Database\Database;
+use Froxlor\Froxlor;
+use Froxlor\FroxlorLogger;
+use Froxlor\Settings;
+use Froxlor\System\Crypt;
 use Froxlor\UI\Panel\UI;
+use Froxlor\UI\Response;
+use Froxlor\Validate\Validate;
 
 if ($action == 'logout') {
-	$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, 'logged out');
+	$log->logAction(FroxlorLogger::USR_ACTION, LOG_NOTICE, 'logged out');
 
 	unset($_SESSION['userinfo']);
-	\Froxlor\CurrentUser::setData();
+	CurrentUser::setData();
 	session_destroy();
 
-	\Froxlor\UI\Response::redirectTo('index.php');
+	Response::redirectTo('index.php');
 } elseif ($action == 'suback') {
-	if (is_array(\Froxlor\CurrentUser::getField('switched_user'))) {
-		$result = \Froxlor\CurrentUser::getData();
+	if (is_array(CurrentUser::getField('switched_user'))) {
+		$result = CurrentUser::getData();
 		$result = $result['switched_user'];
-		\Froxlor\CurrentUser::setData($result);
+		CurrentUser::setData($result);
 		$target = (isset($_GET['target']) ? $_GET['target'] : 'index');
 		$redirect = "admin_" . $target . ".php";
-		if (!file_exists(\Froxlor\Froxlor::getInstallDir() . "/" . $redirect)) {
+		if (!file_exists(Froxlor::getInstallDir() . "/" . $redirect)) {
 			$redirect = "admin_index.php";
 		}
-		\Froxlor\UI\Response::redirectTo($redirect, null, true);
+		Response::redirectTo($redirect, null, true);
 	} else {
-		\Froxlor\UI\Response::dynamic_error("Cannot change back - You've never switched to another user :-)");
+		Response::dynamicError("Cannot change back - You've never switched to another user :-)");
 	}
 }
 
 if ($page == 'overview') {
-	$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_index");
+	$log->logAction(FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_index");
 
 	$domain_stmt = Database::prepare("SELECT `domain` FROM `" . TABLE_PANEL_DOMAINS . "`
 		WHERE `customerid` = :customerid
 		AND `parentdomainid` = '0'
 		AND `id` <> :standardsubdomain
 	");
-	Database::pexecute($domain_stmt, array(
+	Database::pexecute($domain_stmt, [
 		"customerid" => $userinfo['customerid'],
 		"standardsubdomain" => $userinfo['standardsubdomain']
-	));
+	]);
 
-	$domainArray = array();
+	$domainArray = [];
 	while ($row = $domain_stmt->fetch(PDO::FETCH_ASSOC)) {
 		$domainArray[] = $idna_convert->decode($row['domain']);
 	}
@@ -75,10 +88,10 @@ if ($page == 'overview') {
 			WHERE `customerid` = :customerid
 			AND `id` = :standardsubdomain
 		");
-		$std_domain = Database::pexecute_first($std_domain_stmt, array(
+		$std_domain = Database::pexecute_first($std_domain_stmt, [
 			"customerid" => $userinfo['customerid'],
 			"standardsubdomain" => $userinfo['standardsubdomain']
-		));
+		]);
 		$stdsubdomain = $std_domain['domain'];
 	}
 
@@ -88,9 +101,9 @@ if ($page == 'overview') {
 
 	// get disk-space usages for web, mysql and mail
 	$usages_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_DISKSPACE . "` WHERE `customerid` = :cid ORDER BY `stamp` DESC LIMIT 1");
-	$usages = Database::pexecute_first($usages_stmt, array(
+	$usages = Database::pexecute_first($usages_stmt, [
 		'cid' => $userinfo['customerid']
-	));
+	]);
 
 	// get everything in bytes for the percentage calculation on the dashboard
 	$userinfo['diskspace_bytes'] = ($userinfo['diskspace'] > -1) ? $userinfo['diskspace'] * 1024 : -1;
@@ -111,102 +124,101 @@ if ($page == 'overview') {
 		'stdsubdomain' => $stdsubdomain
 	]);
 } elseif ($page == 'change_password') {
-
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
-		$old_password = \Froxlor\Validate\Validate::validate($_POST['old_password'], 'old password');
+		$old_password = Validate::validate($_POST['old_password'], 'old password');
 
-		if (!\Froxlor\System\Crypt::validatePasswordLogin($userinfo, $old_password, TABLE_PANEL_CUSTOMERS, 'customerid')) {
-			\Froxlor\UI\Response::standard_error('oldpasswordnotcorrect');
+		if (!Crypt::validatePasswordLogin($userinfo, $old_password, TABLE_PANEL_CUSTOMERS, 'customerid')) {
+			Response::standardError('oldpasswordnotcorrect');
 		}
 
 		try {
-			$new_password = \Froxlor\System\Crypt::validatePassword($_POST['new_password'], 'new password');
-			$new_password_confirm = \Froxlor\System\Crypt::validatePassword($_POST['new_password_confirm'], 'new password confirm');
+			$new_password = Crypt::validatePassword($_POST['new_password'], 'new password');
+			$new_password_confirm = Crypt::validatePassword($_POST['new_password_confirm'], 'new password confirm');
 		} catch (Exception $e) {
-			\Froxlor\UI\Response::dynamic_error($e->getMessage());
+			Response::dynamicError($e->getMessage());
 		}
 
 		if ($old_password == '') {
-			\Froxlor\UI\Response::standard_error(array(
+			Response::standardError([
 				'stringisempty',
 				'oldpassword'
-			));
+			]);
 		} elseif ($new_password == '') {
-			\Froxlor\UI\Response::standard_error(array(
+			Response::standardError([
 				'stringisempty',
 				'newpassword'
-			));
+			]);
 		} elseif ($new_password_confirm == '') {
-			\Froxlor\UI\Response::standard_error(array(
+			Response::standardError([
 				'stringisempty',
 				'newpasswordconfirm'
-			));
+			]);
 		} elseif ($new_password != $new_password_confirm) {
-			\Froxlor\UI\Response::standard_error('newpasswordconfirmerror');
+			Response::standardError('newpasswordconfirmerror');
 		} else {
 			// Update user password
 			try {
-				Customers::getLocal($userinfo, array(
+				Customers::getLocal($userinfo, [
 					'id' => $userinfo['customerid'],
 					'new_customer_password' => $new_password
-				))->update();
+				])->update();
 			} catch (Exception $e) {
-				\Froxlor\UI\Response::dynamic_error($e->getMessage());
+				Response::dynamicError($e->getMessage());
 			}
-			$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, 'changed password');
+			$log->logAction(FroxlorLogger::USR_ACTION, LOG_NOTICE, 'changed password');
 
 			// Update ftp password
 			if (isset($_POST['change_main_ftp']) && $_POST['change_main_ftp'] == 'true') {
-				$cryptPassword = \Froxlor\System\Crypt::makeCryptPassword($new_password);
+				$cryptPassword = Crypt::makeCryptPassword($new_password);
 				$stmt = Database::prepare("UPDATE `" . TABLE_FTP_USERS . "`
 					SET `password` = :password
 					WHERE `customerid` = :customerid
 					AND `username` = :username");
-				$params = array(
+				$params = [
 					"password" => $cryptPassword,
 					"customerid" => $userinfo['customerid'],
 					"username" => $userinfo['loginname']
-				);
+				];
 				Database::pexecute($stmt, $params);
-				$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, 'changed main ftp password');
+				$log->logAction(FroxlorLogger::USR_ACTION, LOG_NOTICE, 'changed main ftp password');
 			}
 
 			// Update statistics password
 			if (isset($_POST['change_stats']) && $_POST['change_stats'] == 'true') {
-				$new_stats_password = \Froxlor\System\Crypt::makeCryptPassword($new_password, true);
+				$new_stats_password = Crypt::makeCryptPassword($new_password, true);
 
 				$stmt = Database::prepare("UPDATE `" . TABLE_PANEL_HTPASSWDS . "`
 					SET `password` = :password
 					WHERE `customerid` = :customerid
 					AND `username` = :username");
-				$params = array(
+				$params = [
 					"password" => $new_stats_password,
 					"customerid" => $userinfo['customerid'],
 					"username" => $userinfo['loginname']
-				);
+				];
 				Database::pexecute($stmt, $params);
 			}
 
-			\Froxlor\UI\Response::redirectTo($filename);
+			Response::redirectTo($filename);
 		}
 	} else {
 		UI::view('user/change_password.html.twig');
 	}
 } elseif ($page == 'change_language') {
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
-		$def_language = \Froxlor\Validate\Validate::validate($_POST['def_language'], 'default language');
+		$def_language = Validate::validate($_POST['def_language'], 'default language');
 		if (isset($languages[$def_language])) {
 			try {
-				Customers::getLocal($userinfo, array(
+				Customers::getLocal($userinfo, [
 					'id' => $userinfo['customerid'],
 					'def_language' => $def_language
-				))->update();
+				])->update();
 			} catch (Exception $e) {
-				\Froxlor\UI\Response::dynamic_error($e->getMessage());
+				Response::dynamicError($e->getMessage());
 			}
 		}
-		$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "changed default language to '" . $def_language . "'");
-		\Froxlor\UI\Response::redirectTo($filename);
+		$log->logAction(FroxlorLogger::USR_ACTION, LOG_NOTICE, "changed default language to '" . $def_language . "'");
+		Response::redirectTo($filename);
 	} else {
 		$default_lang = Settings::Get('panel.standardlanguage');
 		if ($userinfo['def_language'] != '') {
@@ -220,20 +232,19 @@ if ($page == 'overview') {
 	}
 } elseif ($page == 'change_theme') {
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
-		$theme = \Froxlor\Validate\Validate::validate($_POST['theme'], 'theme');
+		$theme = Validate::validate($_POST['theme'], 'theme');
 		try {
-			Customers::getLocal($userinfo, array(
+			Customers::getLocal($userinfo, [
 				'id' => $userinfo['customerid'],
 				'theme' => $theme
-			))->update();
+			])->update();
 		} catch (Exception $e) {
-			\Froxlor\UI\Response::dynamic_error($e->getMessage());
+			Response::dynamicError($e->getMessage());
 		}
 
-		$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "changed default theme to '" . $theme . "'");
-		\Froxlor\UI\Response::redirectTo($filename);
+		$log->logAction(FroxlorLogger::USR_ACTION, LOG_NOTICE, "changed default theme to '" . $theme . "'");
+		Response::redirectTo($filename);
 	} else {
-
 		$default_theme = Settings::Get('panel.default_theme');
 		if ($userinfo['theme'] != '') {
 			$default_theme = $userinfo['theme'];

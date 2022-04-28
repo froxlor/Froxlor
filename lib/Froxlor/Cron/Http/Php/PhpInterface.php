@@ -1,27 +1,33 @@
 <?php
-namespace Froxlor\Cron\Http\Php;
-
-use Froxlor\Database\Database;
-use Froxlor\Settings;
 
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright (c) the authors
- * @author Michael Kaufmann <mkaufmann@nutime.de>
- * @author Froxlor team <team@froxlor.org> (2010-)
- * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package Cron
- *         
- * @link http://www.nutime.de/
- * @since 0.9.16
- *       
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
+
+namespace Froxlor\Cron\Http\Php;
+
+use Froxlor\Database\Database;
+use Froxlor\Settings;
+
 class PhpInterface
 {
 
@@ -30,7 +36,7 @@ class PhpInterface
 	 *
 	 * @var array
 	 */
-	private $domain = array();
+	private $domain = [];
 
 	/**
 	 * Interface object
@@ -44,7 +50,7 @@ class PhpInterface
 	 *
 	 * @var array
 	 */
-	private $admin_cache = array();
+	private $admin_cache = [];
 
 	/**
 	 * main constructor
@@ -53,6 +59,21 @@ class PhpInterface
 	{
 		$this->domain = $domain;
 		$this->setInterface();
+	}
+
+	/**
+	 * set interface-object by type of
+	 * php-interface: fcgid or php-fpm
+	 * sets private $_interface variable
+	 */
+	private function setInterface()
+	{
+		// php-fpm
+		if ((int)Settings::Get('phpfpm.enabled') == 1) {
+			$this->interface = new Fpm($this->domain);
+		} elseif ((int)Settings::Get('system.mod_fcgid') == 1) {
+			$this->interface = new Fcgid($this->domain);
+		}
 	}
 
 	/**
@@ -65,26 +86,11 @@ class PhpInterface
 	}
 
 	/**
-	 * set interface-object by type of
-	 * php-interface: fcgid or php-fpm
-	 * sets private $_interface variable
-	 */
-	private function setInterface()
-	{
-		// php-fpm
-		if ((int) Settings::Get('phpfpm.enabled') == 1) {
-			$this->interface = new Fpm($this->domain);
-		} elseif ((int) Settings::Get('system.mod_fcgid') == 1) {
-			$this->interface = new Fcgid($this->domain);
-		}
-	}
-
-	/**
 	 * return the php-configuration from the database
 	 *
 	 * @param int $php_config_id
-	 *        	id of the php-configuration
-	 *        	
+	 *            id of the php-configuration
+	 *
 	 * @return array
 	 */
 	public function getPhpConfig($php_config_id)
@@ -96,18 +102,18 @@ class PhpInterface
 			$php_config_id = 1;
 		}
 
-		if (! isset($this->php_configs_cache[$php_config_id])) {
+		if (!isset($this->php_configs_cache[$php_config_id])) {
 			$stmt = Database::prepare("
 					SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "` WHERE `id` = :id");
-			$this->_php_configs_cache[$php_config_id] = Database::pexecute_first($stmt, array(
+			$this->_php_configs_cache[$php_config_id] = Database::pexecute_first($stmt, [
 				'id' => $php_config_id
-			));
-			if ((int) Settings::Get('phpfpm.enabled') == 1) {
+			]);
+			if ((int)Settings::Get('phpfpm.enabled') == 1) {
 				$stmt = Database::prepare("
 					SELECT * FROM `" . TABLE_PANEL_FPMDAEMONS . "` WHERE `id` = :id");
-				$this->_php_configs_cache[$php_config_id]['fpm_settings'] = Database::pexecute_first($stmt, array(
+				$this->_php_configs_cache[$php_config_id]['fpm_settings'] = Database::pexecute_first($stmt, [
 					'id' => $this->_php_configs_cache[$php_config_id]['fpmsettingid']
-				));
+				]);
 				// override fpm daemon settings if set in php-config
 				if ($this->_php_configs_cache[$php_config_id]['override_fpmconfig'] == 1) {
 					$this->_php_configs_cache[$php_config_id]['fpm_settings']['limit_extensions'] = $this->_php_configs_cache[$php_config_id]['limit_extensions'];

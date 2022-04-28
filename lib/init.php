@@ -11,16 +11,16 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, you can also view it online at
- * http://files.froxlor.org/misc/COPYING.txt
+ * https://files.froxlor.org/misc/COPYING.txt
  *
  * @copyright  the authors
  * @author     Froxlor team <team@froxlor.org>
- * @license    http://files.froxlor.org/misc/COPYING.txt GPLv2
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
 // define default theme for configurehint, etc.
@@ -48,15 +48,22 @@ if (!file_exists(dirname(__DIR__) . '/vendor/autoload.php')) {
 require dirname(__DIR__) . '/vendor/autoload.php';
 require dirname(__DIR__) . '/lib/functions.php';
 
-use Froxlor\Database\Database;
+use Froxlor\CurrentUser;
+use Froxlor\Froxlor;
+use Froxlor\FroxlorLogger;
+use Froxlor\Idna\IdnaWrapper;
 use Froxlor\Language;
+use Froxlor\PhpHelper;
 use Froxlor\Settings;
+use Froxlor\System\Mailer;
+use Froxlor\UI\HTML;
+use Froxlor\UI\Linker;
 use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
-use Froxlor\CurrentUser;
+use Froxlor\UI\Response;
 
 // include MySQL-tabledefinitions
-require \Froxlor\Froxlor::getInstallDir() . '/lib/tables.inc.php';
+require Froxlor::getInstallDir() . '/lib/tables.inc.php';
 
 UI::sendHeaders();
 UI::initTwig();
@@ -72,14 +79,14 @@ unset($key);
 $filename = htmlentities(basename($_SERVER['SCRIPT_NAME']));
 
 // check whether the userdata file exists
-if (!file_exists(\Froxlor\Froxlor::getInstallDir() . '/lib/userdata.inc.php')) {
+if (!file_exists(Froxlor::getInstallDir() . '/lib/userdata.inc.php')) {
 	UI::twig()->addGlobal('install_mode', '1');
 	echo UI::twig()->render($_deftheme . '/misc/configurehint.html.twig');
 	die();
 }
 
 // check whether we can read the userdata file
-if (!is_readable(\Froxlor\Froxlor::getInstallDir() . '/lib/userdata.inc.php')) {
+if (!is_readable(Froxlor::getInstallDir() . '/lib/userdata.inc.php')) {
 	// get possible owner
 	$posixusername = posix_getpwuid(posix_getuid());
 	$posixgroup = posix_getgrgid(posix_getgid());
@@ -87,13 +94,13 @@ if (!is_readable(\Froxlor\Froxlor::getInstallDir() . '/lib/userdata.inc.php')) {
 	echo UI::twig()->render($_deftheme . '/misc/ownershiphint.html.twig', [
 		'user' => $posixusername['name'],
 		'group' => $posixgroup['name'],
-		'installdir' => \Froxlor\Froxlor::getInstallDir()
+		'installdir' => Froxlor::getInstallDir()
 	]);
 	die();
 }
 
 // include MySQL-Username/Passwort etc.
-require \Froxlor\Froxlor::getInstallDir() . '/lib/userdata.inc.php';
+require Froxlor::getInstallDir() . '/lib/userdata.inc.php';
 if (!isset($sql) || !is_array($sql)) {
 	UI::twig()->addGlobal('install_mode', '1');
 	echo UI::twig()->render($_deftheme . '/misc/configurehint.html.twig');
@@ -114,7 +121,7 @@ if (!isset($sql) || !is_array($sql)) {
 UI::sendSslHeaders();
 
 // create a new idna converter
-$idna_convert = new \Froxlor\Idna\IdnaWrapper();
+$idna_convert = new IdnaWrapper();
 
 // re-read user data if logged in
 if (CurrentUser::hasSession()) {
@@ -139,7 +146,7 @@ if (CurrentUser::hasSession()) {
 }
 
 // Initialize our link - class
-$linker = new \Froxlor\UI\Linker('index.php');
+$linker = new Linker('index.php');
 UI::setLinker($linker);
 
 /**
@@ -204,11 +211,11 @@ if (!CurrentUser::hasSession() && AREA != 'login') {
 	unset($_SESSION['userinfo']);
 	CurrentUser::setData();
 	session_destroy();
-	$params = array(
+	$params = [
 		"script" => basename($_SERVER["SCRIPT_NAME"]),
 		"qrystr" => $_SERVER["QUERY_STRING"]
-	);
-	\Froxlor\UI\Response::redirectTo('index.php', $params);
+	];
+	Response::redirectTo('index.php', $params);
 	exit();
 }
 
@@ -218,10 +225,10 @@ UI::setCurrentUser($userinfo);
 // Initialize logger
 if (CurrentUser::hasSession()) {
 	// Initialize logging
-	$log = \Froxlor\FroxlorLogger::getInstanceOf($userinfo);
+	$log = FroxlorLogger::getInstanceOf($userinfo);
 	if ((CurrentUser::isAdmin() && AREA != 'admin') || (!CurrentUser::isAdmin() && AREA != 'customer')) {
 		// user tries to access an area not meant for him -> redirect to corresponding index
-		\Froxlor\UI\Response::redirectTo((CurrentUser::isAdmin() ? 'admin' : 'customer') . '_index.php', $params);
+		Response::redirectTo((CurrentUser::isAdmin() ? 'admin' : 'customer') . '_index.php', $params);
 		exit();
 	}
 }
@@ -231,31 +238,31 @@ if (CurrentUser::hasSession()) {
  */
 $navigation = [];
 if (AREA == 'admin' || AREA == 'customer') {
-	if (\Froxlor\Froxlor::hasUpdates() || \Froxlor\Froxlor::hasDbUpdates()) {
+	if (Froxlor::hasUpdates() || Froxlor::hasDbUpdates()) {
 		/*
 		 * if froxlor-files have been updated
 		 * but not yet configured by the admin
 		 * we only show logout and the update-page
 		 */
-		$navigation_data = array(
-			'admin' => array(
-				'server' => array(
+		$navigation_data = [
+			'admin' => [
+				'server' => [
 					'label' => $lng['admin']['server'],
 					'required_resources' => 'change_serversettings',
-					'elements' => array(
-						array(
+					'elements' => [
+						[
 							'url' => 'admin_updates.php?page=overview',
 							'label' => $lng['update']['update'],
 							'required_resources' => 'change_serversettings'
-						)
-					)
-				)
-			)
-		);
-		$navigation = \Froxlor\UI\HTML::buildNavigation($navigation_data['admin'], CurrentUser::getData());
+						]
+					]
+				]
+			]
+		];
+		$navigation = HTML::buildNavigation($navigation_data['admin'], CurrentUser::getData());
 	} else {
-		$navigation_data = \Froxlor\PhpHelper::loadConfigArrayDir('lib/navigation/');
-		$navigation = \Froxlor\UI\HTML::buildNavigation($navigation_data[AREA], CurrentUser::getData());
+		$navigation_data = PhpHelper::loadConfigArrayDir('lib/navigation/');
+		$navigation = HTML::buildNavigation($navigation_data[AREA], CurrentUser::getData());
 	}
 }
 UI::twig()->addGlobal('nav_entries', $navigation);
@@ -298,4 +305,4 @@ UI::twig()->addGlobal('page', $page);
 /**
  * Initialize the mailingsystem
  */
-$mail = new \Froxlor\System\Mailer(true);
+$mail = new Mailer(true);

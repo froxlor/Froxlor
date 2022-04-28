@@ -11,12 +11,12 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, you can also view it online at
- * http://files.froxlor.org/misc/COPYING.txt
+ * https://files.froxlor.org/misc/COPYING.txt
  *
  * @copyright  the authors
  * @author     Froxlor team <team@froxlor.org>
@@ -24,14 +24,16 @@
  * @author     Ralf Becker <beckerr@php.net>
  * @author     Rasmus Lerdorf <rasmus@php.net>
  * @author     Ilia Alshanetsky <ilia@prohost.org>
- * @license    http://files.froxlor.org/misc/COPYING.txt GPLv2
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  *
  * Based on https://github.com/krakjoe/apcu/blob/master/apc.php, which is
  * licensed under the PHP licence (version 3.01), which can be viewed
  * online at https://www.php.net/license/3_01.txt
  */
 
+use Froxlor\FroxlorLogger;
 use Froxlor\UI\Panel\UI;
+use Froxlor\UI\Response;
 
 const AREA = 'admin';
 require __DIR__ . '/lib/init.php';
@@ -40,31 +42,31 @@ $horizontal_bar_size = 950; // 1280px window width
 
 if ($action == 'delete' && function_exists('apcu_clear_cache') && $userinfo['change_serversettings'] == '1') {
 	apcu_clear_cache();
-	$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "cleared APCu cache");
-	header('Location: ' . $linker->getLink(array(
+	$log->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "cleared APCu cache");
+	header('Location: ' . $linker->getLink([
 			'section' => 'apcuinfo',
 			'page' => 'showinfo'
-		)));
+		]));
 	exit();
 }
 
 if (!function_exists('apcu_cache_info') || !function_exists('apcu_sma_info')) {
-	\Froxlor\UI\Response::standard_error($lng['error']['no_apcuinfo']);
+	Response::standardError(lng('error.no_apcuinfo'));
 }
 
 if ($page == 'showinfo') {
 	$cache = apcu_cache_info();
 	$mem = apcu_sma_info();
 	$time = time();
-	$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_apcuinfo");
+	$log->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_apcuinfo");
 
 	// check for possible empty values that are used in the templates
 	if (!isset($cache['file_upload_progress'])) {
-		$cache['file_upload_progress'] = $lng['logger']['unknown'];
+		$cache['file_upload_progress'] = lng('logger.unknown');
 	}
 
 	if (!isset($cache['num_expunges'])) {
-		$cache['num_expunges'] = $lng['logger']['unknown'];
+		$cache['num_expunges'] = lng('logger.unknown');
 	}
 
 	$overview = [

@@ -11,21 +11,22 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, you can also view it online at
- * http://files.froxlor.org/misc/COPYING.txt
+ * https://files.froxlor.org/misc/COPYING.txt
  *
  * @copyright  the authors
  * @author     Froxlor team <team@froxlor.org>
- * @license    http://files.froxlor.org/misc/COPYING.txt GPLv2
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
 namespace Froxlor\Install;
 
 use Froxlor\UI\Panel\UI;
+use Froxlor\UI\Request;
 
 class Install
 {
@@ -39,7 +40,7 @@ class Install
 
 	public function __construct()
 	{
-		$this->step = \Froxlor\UI\Request::get('step');
+		$this->step = Request::get('step');
 
 		$this->phpVersion = phpversion();
 		$this->loadedExtensions = get_loaded_extensions();
@@ -51,27 +52,19 @@ class Install
 	{
 		// check for required extensions
 		foreach ($this->requiredExtensions as $requiredExtension) {
-			if (in_array($requiredExtension, $this->loadedExtensions)) continue;
+			if (in_array($requiredExtension, $this->loadedExtensions)) {
+				continue;
+			}
 			$this->criticals['missing_extensions'][] = $requiredExtension;
 		}
 
 		// check for suggested extensions
 		foreach ($this->suggestedExtensions as $suggestedExtension) {
-			if (in_array($suggestedExtension, $this->loadedExtensions)) continue;
+			if (in_array($suggestedExtension, $this->loadedExtensions)) {
+				continue;
+			}
 			$this->suggestions['missing_extensions'][] = $suggestedExtension;
 		}
-	}
-
-	public function getPreflightText(): string
-	{
-		if (version_compare($this->requiredVersion, PHP_VERSION, "<")) {
-			$text = 'Your system is running with PHP ' . $this->phpVersion;
-		} else {
-			$text = 'Your system is running a lower version than PHP ' . $this->requiredVersion;
-			$this->criticals[] = 'Update your current PHP Version from ' . $this->phpVersion . ' to ' . $this->requiredVersion . ' or higher';
-		}
-
-		return $text;
 	}
 
 	public function handle()
@@ -105,5 +98,17 @@ class Install
 
 		// output view
 		UI::twigOutputBuffer();
+	}
+
+	public function getPreflightText(): string
+	{
+		if (version_compare($this->requiredVersion, PHP_VERSION, "<")) {
+			$text = 'Your system is running with PHP ' . $this->phpVersion;
+		} else {
+			$text = 'Your system is running a lower version than PHP ' . $this->requiredVersion;
+			$this->criticals[] = 'Update your current PHP Version from ' . $this->phpVersion . ' to ' . $this->requiredVersion . ' or higher';
+		}
+
+		return $text;
 	}
 }

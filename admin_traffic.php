@@ -2,31 +2,39 @@
 
 /**
  * This file is part of the Froxlor project.
- * Copyright (c) 2003-2009 the SysCP Team (see authors).
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright  (c) the authors
- * @author     Morton Jonuschat <m.jonuschat@chrome-it.de>
- * @license    GPLv2 http://files.syscp.org/misc/COPYING.txt
- * @package    Panel
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
 const AREA = 'admin';
 require __DIR__ . '/lib/init.php';
 
 use Froxlor\Database\Database;
+use Froxlor\PhpHelper;
 use Froxlor\Settings;
 use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
 
-$id = (int) Request::get('id');
+$id = (int)Request::get('id');
 
-$months = array(
+$months = [
 	'0' => 'empty',
 	'1' => 'jan',
 	'2' => 'feb',
@@ -40,13 +48,13 @@ $months = array(
 	'10' => 'oct',
 	'11' => 'nov',
 	'12' => 'dec'
-);
+];
 
 if ($page == 'overview' || $page == 'customers') {
 	$minyear_stmt = Database::query("SELECT `year` FROM `" . TABLE_PANEL_TRAFFIC . "` ORDER BY `year` ASC LIMIT 1");
 	$minyear = $minyear_stmt->fetch(PDO::FETCH_ASSOC);
 
-	if (! isset($minyear['year']) || $minyear['year'] == 0) {
+	if (!isset($minyear['year']) || $minyear['year'] == 0) {
 		$maxyears = 0;
 	} else {
 		$maxyears = date("Y") - $minyear['year'];
@@ -63,20 +71,18 @@ if ($page == 'overview' || $page == 'customers') {
 		SELECT `customerid`,`company`,`name`,`firstname`
 		FROM `" . TABLE_PANEL_CUSTOMERS . "`
 		WHERE `deactivated`='0'" . ($userinfo['customers_see_all'] ? '' : ' AND `adminid` = :id') . "
-		ORDER BY name"
-	);
+		ORDER BY name");
 
 	$traffic_list_stmt = Database::prepare("
 		SELECT month, SUM(http+ftp_up+ftp_down+mail)*1024 AS traffic
 		FROM `" . TABLE_PANEL_TRAFFIC . "`
 		WHERE year = :year AND `customerid` = :id
-		GROUP BY month ORDER BY month"
-	);
+		GROUP BY month ORDER BY month");
 
 	$stats = [];
 
-	for ($years = 0; $years <= $maxyears; $years ++) {
-		$totals = array(
+	for ($years = 0; $years <= $maxyears; $years++) {
+		$totals = [
 			'jan' => 0,
 			'feb' => 0,
 			'mar' => 0,
@@ -89,13 +95,13 @@ if ($page == 'overview' || $page == 'customers') {
 			'oct' => 0,
 			'nov' => 0,
 			'dec' => 0
-		);
+		];
 
 		Database::pexecute($customer_name_list_stmt, $params);
 
 		$data = [];
 		while ($customer_name = $customer_name_list_stmt->fetch(PDO::FETCH_ASSOC)) {
-			$virtual_host = array(
+			$virtual_host = [
 				'name' => ($customer_name['company'] == '' ? $customer_name['name'] . ", " . $customer_name['firstname'] : $customer_name['company']),
 				'customerid' => $customer_name['customerid'],
 				'jan' => '-',
@@ -110,23 +116,23 @@ if ($page == 'overview' || $page == 'customers') {
 				'oct' => '-',
 				'nov' => '-',
 				'dec' => '-'
-			);
+			];
 
-			Database::pexecute($traffic_list_stmt, array(
+			Database::pexecute($traffic_list_stmt, [
 				'year' => (date("Y") - $years),
 				'id' => $customer_name['customerid']
-			));
+			]);
 
 			while ($traffic_month = $traffic_list_stmt->fetch(PDO::FETCH_ASSOC)) {
-				$virtual_host[$months[(int) $traffic_month['month']]] = \Froxlor\PhpHelper::sizeReadable($traffic_month['traffic'], 'GiB', 'bi', '%01.' . (int) Settings::Get('panel.decimal_places') . 'f %s');
-				$totals[$months[(int) $traffic_month['month']]] += $traffic_month['traffic'];
+				$virtual_host[$months[(int)$traffic_month['month']]] = PhpHelper::sizeReadable($traffic_month['traffic'], 'GiB', 'bi', '%01.' . (int)Settings::Get('panel.decimal_places') . 'f %s');
+				$totals[$months[(int)$traffic_month['month']]] += $traffic_month['traffic'];
 			}
 
 			$data = $virtual_host;
 		}
 		$stats[] = [
 			'year' => date("Y") - $years,
-			'type' => $lng['traffic']['customer'],
+			'type' => lng('traffic.customer'),
 			'data' => $data,
 		];
 	}

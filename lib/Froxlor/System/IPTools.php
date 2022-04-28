@@ -1,5 +1,28 @@
 <?php
 
+/**
+ * This file is part of the Froxlor project.
+ * Copyright (c) 2010 the Froxlor Team (see authors).
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
+ */
+
 namespace Froxlor\System;
 
 class IPTools
@@ -26,22 +49,10 @@ class IPTools
 	}
 
 	/**
-	 * Checks if an $address (IP) is IPv6
-	 *
-	 * @param string $address
-	 *
-	 * @return string|bool ip address on success, false on failure
-	 */
-	public static function is_ipv6($address)
-	{
-		return filter_var($address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
-	}
-
-	/**
 	 * Checks whether the given $ip is in range of given ip/cidr range
 	 *
 	 * @param array $ip_cidr 0 => ip, 1 => netmask in decimal, e.g. [0 => '123.123.123.123', 1 => 24]
-	 * @param string $ip ip-address to check
+	 * @param string $ip     ip-address to check
 	 *
 	 * @return bool
 	 */
@@ -60,10 +71,22 @@ class IPTools
 	}
 
 	/**
+	 * Checks if an $address (IP) is IPv6
+	 *
+	 * @param string $address
+	 *
+	 * @return string|bool ip address on success, false on failure
+	 */
+	public static function is_ipv6($address)
+	{
+		return filter_var($address, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6);
+	}
+
+	/**
 	 * Checks whether the given ipv6 $ip is in range of given ip/cidr range
 	 *
 	 * @param array $ip_cidr 0 => ip, 1 => netmask in decimal, e.g. [0 => '123:123::1', 1 => 64]
-	 * @param string $ip ip-address to check
+	 * @param string $ip     ip-address to check
 	 *
 	 * @return bool
 	 */
@@ -87,12 +110,16 @@ class IPTools
 		$start_result = '';
 		for ($i = 0; $i < 8; $i++) {
 			$start_result .= substr($start, $i * 4, 4);
-			if ($i != 7) $start_result .= ':';
+			if ($i != 7) {
+				$start_result .= ':';
+			}
 		}
 		$end_result = '';
 		for ($i = 0; $i < 8; $i++) {
 			$end_result .= substr($end, $i * 4, 4);
-			if ($i != 7) $end_result .= ':';
+			if ($i != 7) {
+				$end_result .= ':';
+			}
 		}
 
 		$first = self::ip2long6($start_result);
@@ -103,19 +130,6 @@ class IPTools
 		return $in_range;
 	}
 
-	private static function ip2long6($ip)
-	{
-		$ip_n = inet_pton($ip);
-		$bits = 15; // 16 x 8 bit = 128bit
-		$ipv6long = '';
-		while ($bits >= 0) {
-			$bin = sprintf("%08b", (ord($ip_n[$bits])));
-			$ipv6long = $bin . $ipv6long;
-			$bits--;
-		}
-		return gmp_strval(gmp_init($ipv6long, 2), 10);
-	}
-
 	private static function inet6_expand(string $addr)
 	{
 		// Check if there are segments missing, insert if necessary
@@ -123,9 +137,10 @@ class IPTools
 			$part = explode('::', $addr);
 			$part[0] = explode(':', $part[0]);
 			$part[1] = explode(':', $part[1]);
-			$missing = array();
-			for ($i = 0; $i < (8 - (count($part[0]) + count($part[1]))); $i++)
+			$missing = [];
+			for ($i = 0; $i < (8 - (count($part[0]) + count($part[1]))); $i++) {
 				array_push($missing, '0000');
+			}
 			$missing = array_merge($part[0], $missing);
 			$part = array_merge($missing, $part[1]);
 		} else {
@@ -133,7 +148,9 @@ class IPTools
 		}
 		// Pad each segment until it has 4 digits
 		foreach ($part as &$p) {
-			while (strlen($p) < 4) $p = '0' . $p;
+			while (strlen($p) < 4) {
+				$p = '0' . $p;
+			}
 		}
 		unset($p);
 		// Join segments
@@ -150,16 +167,37 @@ class IPTools
 	{
 		/* Make sure the prefix is a number between 1 and 127 (inclusive) */
 		$prefix = intval($prefix);
-		if ($prefix < 0 || $prefix > 128) return false;
+		if ($prefix < 0 || $prefix > 128) {
+			return false;
+		}
 		$mask = '0b';
-		for ($i = 0; $i < $prefix; $i++) $mask .= '1';
-		for ($i = strlen($mask) - 2; $i < 128; $i++) $mask .= '0';
+		for ($i = 0; $i < $prefix; $i++) {
+			$mask .= '1';
+		}
+		for ($i = strlen($mask) - 2; $i < 128; $i++) {
+			$mask .= '0';
+		}
 		$mask = gmp_strval(gmp_init($mask), 16);
 		$result = '';
 		for ($i = 0; $i < 8; $i++) {
 			$result .= substr($mask, $i * 4, 4);
-			if ($i != 7) $result .= ':';
+			if ($i != 7) {
+				$result .= ':';
+			}
 		} // for
 		return inet_ntop(inet_pton($result));
+	}
+
+	private static function ip2long6($ip)
+	{
+		$ip_n = inet_pton($ip);
+		$bits = 15; // 16 x 8 bit = 128bit
+		$ipv6long = '';
+		while ($bits >= 0) {
+			$bin = sprintf("%08b", (ord($ip_n[$bits])));
+			$ipv6long = $bin . $ipv6long;
+			$bits--;
+		}
+		return gmp_strval(gmp_init($ipv6long, 2), 10);
 	}
 }

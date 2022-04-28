@@ -1,26 +1,35 @@
 <?php
-namespace Froxlor\Cron\Http;
-
-use Froxlor\Database\Database;
-use Froxlor\Settings;
 
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright (c) the authors
- * @author Michael Kaufmann <mkaufmann@nutime.de>
- * @author Froxlor team <team@froxlor.org> (2010-)
- * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package Cron
- *         
- * @since 0.9.31
- *       
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
+
+namespace Froxlor\Cron\Http;
+
+use Froxlor\Database\Database;
+use Froxlor\Domain\Domain;
+use Froxlor\Settings;
+use PDO;
+
 class WebserverBase
 {
 
@@ -64,9 +73,8 @@ class WebserverBase
 			WHERE p.id = :phpconfigid
 		");
 
-		$domains = array();
-		while ($domain = $result_domains_stmt->fetch(\PDO::FETCH_ASSOC)) {
-
+		$domains = [];
+		while ($domain = $result_domains_stmt->fetch(PDO::FETCH_ASSOC)) {
 			// set whole domain
 			$domains[$domain['domain']] = $domain;
 			// set empty-defaults for non-ssl
@@ -78,11 +86,10 @@ class WebserverBase
 
 			// now, if the domain has an ssl ip/port assigned, get
 			// the corresponding information from the db
-			if (\Froxlor\Domain\Domain::domainHasSslIpPort($domain['id'])) {
-
-				$ssl_ip = Database::pexecute_first($ip_stmt, array(
+			if (Domain::domainHasSslIpPort($domain['id'])) {
+				$ssl_ip = Database::pexecute_first($ip_stmt, [
 					'domainid' => $domain['id']
-				));
+				]);
 
 				// set ssl info for domain
 				$domains[$domain['domain']]['ssl'] = '1';
@@ -93,11 +100,10 @@ class WebserverBase
 			}
 
 			// read fpm-config-id if using fpm
-			if ((int) Settings::Get('phpfpm.enabled') == 1) {
-
-				$fpm_config = Database::pexecute_first($fpm_sel_stmt, array(
+			if ((int)Settings::Get('phpfpm.enabled') == 1) {
+				$fpm_config = Database::pexecute_first($fpm_sel_stmt, [
 					'phpconfigid' => $domain['phpsettingid']
-				));
+				]);
 				if ($fpm_config) {
 					$domains[$domain['domain']]['fpm_config_id'] = $fpm_config['id'];
 				} else {

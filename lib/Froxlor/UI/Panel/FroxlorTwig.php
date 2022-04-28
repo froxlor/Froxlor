@@ -1,65 +1,96 @@
 <?php
 
+/**
+ * This file is part of the Froxlor project.
+ * Copyright (c) 2010 the Froxlor Team (see authors).
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
+ */
+
 declare(strict_types=1);
 
 namespace Froxlor\UI\Panel;
 
-class FroxlorTwig extends \Twig\Extension\AbstractExtension
+use Froxlor\Idna\IdnaWrapper;
+use Froxlor\Settings;
+use Parsedown;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
+use Twig\TwigFunction;
+use Twig\TwigTest;
+
+class FroxlorTwig extends AbstractExtension
 {
 
 	public function getFilters()
 	{
-		return array(
-			new \Twig\TwigFilter('formatBytes', array(
+		return [
+			new TwigFilter('formatBytes', [
 				$this,
 				'formatBytesFilter'
-			)),
-			new \Twig\TwigFilter('formatIP', array(
+			]),
+			new TwigFilter('formatIP', [
 				$this,
 				'formatIPFilter'
-			)),
-			new \Twig\TwigFilter('idnDecode', array(
+			]),
+			new TwigFilter('idnDecode', [
 				$this,
 				'idnDecodeFilter'
-			)),
-			new \Twig\TwigFilter('parsedown', [
+			]),
+			new TwigFilter('parsedown', [
 				$this,
 				'callParsedown'
 			])
-		);
+		];
 	}
 
 	public function getTests()
 	{
-		return array(
-			new \Twig\TwigTest('numeric', function ($value) {
+		return [
+			new TwigTest('numeric', function ($value) {
 				return is_numeric($value);
 			})
-		);
+		];
 	}
 
 	public function getFunctions()
 	{
-		return array(
-			new \Twig\TwigFunction('get_setting', [
+		return [
+			new TwigFunction('get_setting', [
 				$this,
 				'getSetting'
 			]),
-			new \Twig\TwigFunction('lng', [
+			new TwigFunction('lng', [
 				$this,
 				'getLang'
 			]),
-			new \Twig\TwigFunction('linker', [
+			new TwigFunction('linker', [
 				$this,
 				'getLink'
 			])
-		);
+		];
 	}
 
 	public function formatBytesFilter($size, $suffix = "B", $factor = 1)
 	{
 		$size = $size * $factor;
-		$units = array(
+		$units = [
 			'',
 			'K',
 			'M',
@@ -69,7 +100,7 @@ class FroxlorTwig extends \Twig\Extension\AbstractExtension
 			'E',
 			'Z',
 			'Y'
-		);
+		];
 		$power = $size > 0 ? floor(log($size, 1024)) : 0;
 		if ($power < 0) {
 			$size = 0.00;
@@ -85,28 +116,28 @@ class FroxlorTwig extends \Twig\Extension\AbstractExtension
 
 	public function idnDecodeFilter($entity)
 	{
-		$idna_convert = new \Froxlor\Idna\IdnaWrapper();
+		$idna_convert = new IdnaWrapper();
 		return $idna_convert->decode($entity);
 	}
 
 	public function getSetting($setting = null)
 	{
-		return \Froxlor\Settings::Get($setting);
+		return Settings::Get($setting);
 	}
 
 	public function getLang($identifier = null)
 	{
-		return \Froxlor\UI\Panel\UI::getLng($identifier);
+		return UI::getLng($identifier);
 	}
 
 	public function getLink($linkopts)
 	{
-		return \Froxlor\UI\Panel\UI::getLinker()->getLink($linkopts);
+		return UI::getLinker()->getLink($linkopts);
 	}
 
 	public function callParsedown($string)
 	{
-		$pd = new \Parsedown();
+		$pd = new Parsedown();
 		return $pd->line($string);
 	}
 

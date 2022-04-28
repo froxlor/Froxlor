@@ -1,26 +1,46 @@
 <?php
 
+/**
+ * This file is part of the Froxlor project.
+ * Copyright (c) 2010 the Froxlor Team (see authors).
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
+ */
+
 namespace Froxlor\Ajax;
 
+use Froxlor\Api\Commands\Admins;
+use Froxlor\Api\Commands\Customers;
+use Froxlor\Api\Commands\Domains;
+use Froxlor\Api\Commands\Emails;
+use Froxlor\Api\Commands\FpmDaemons;
+use Froxlor\Api\Commands\Ftps;
+use Froxlor\Api\Commands\HostingPlans;
+use Froxlor\Api\Commands\IpsAndPorts;
+use Froxlor\Api\Commands\Mysqls;
+use Froxlor\Api\Commands\PhpSettings;
+use Froxlor\Api\Commands\SubDomains;
 use Froxlor\Froxlor;
 use Froxlor\PhpHelper;
 use Froxlor\Settings;
 use Froxlor\UI\Collection;
 
-/**
- * This file is part of the Froxlor project.
- * Copyright (c) 2010 the Froxlor Team (see authors).
- *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
- *
- * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    AJAX
- *
- */
 class GlobalSearch
 {
 	protected array $userinfo;
@@ -42,7 +62,7 @@ class GlobalSearch
 					}
 				}
 				$settings_data = PhpHelper::loadConfigArrayDir(Froxlor::getInstallDir() . '/actions/admin/settings/');
-				$results = array();
+				$results = [];
 				if (!isset($processed['settings'])) {
 					$processed['settings'] = [];
 				}
@@ -51,13 +71,13 @@ class GlobalSearch
 					$pk = explode(".", $pathkey);
 					if (count($pk) > 4) {
 						$settingkey = $pk[0] . '.' . $pk[1] . '.' . $pk[2] . '.' . $pk[3];
-						if (isset($settings_data[$pk[0]][$pk[1]]['advanced_mode']) && $settings_data[$pk[0]][$pk[1]]['advanced_mode'] && (int) Settings::Get('panel.settings_mode') == 0) {
+						if (isset($settings_data[$pk[0]][$pk[1]]['advanced_mode']) && $settings_data[$pk[0]][$pk[1]]['advanced_mode'] && (int)Settings::Get('panel.settings_mode') == 0) {
 							continue;
 						}
 						if (is_array($processed['settings']) && !array_key_exists($settingkey, $processed['settings'])) {
 							$processed['settings'][$settingkey] = true;
 							$sresult = $settings_data[$pk[0]][$pk[1]][$pk[2]][$pk[3]];
-							if (isset($sresult['advanced_mode']) && $sresult['advanced_mode'] && (int) Settings::Get('panel.settings_mode') == 0) {
+							if (isset($sresult['advanced_mode']) && $sresult['advanced_mode'] && (int)Settings::Get('panel.settings_mode') == 0) {
 								continue;
 							}
 							if ($sresult['type'] != 'hidden') {
@@ -78,7 +98,7 @@ class GlobalSearch
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public static function searchGlobal(string $searchtext, array $userinfo): array
 	{
@@ -90,7 +110,6 @@ class GlobalSearch
 			$module = "";
 
 			foreach ($stparts as $searchtext) {
-
 				$searchtext = trim($searchtext);
 
 				if (preg_match('/^([a-z]+):$/', $searchtext, $matches)) {
@@ -104,11 +123,10 @@ class GlobalSearch
 
 				// admin
 				if (isset($userinfo['adminsession']) && $userinfo['adminsession'] == 1) {
-
 					$toSearch = [
 						// customers
 						'customer' => [
-							'class' => \Froxlor\Api\Commands\Customers::class,
+							'class' => Customers::class,
 							'searchfields' => [
 								'c.loginname',
 								'c.name',
@@ -129,7 +147,7 @@ class GlobalSearch
 						],
 						// domains
 						'domains' => [
-							'class' => \Froxlor\Api\Commands\Domains::class,
+							'class' => Domains::class,
 							'searchfields' => [
 								'd.domain',
 								'd.domain_ace',
@@ -144,7 +162,7 @@ class GlobalSearch
 						],
 						// ips and ports
 						'ipsandports' => [
-							'class' => \Froxlor\Api\Commands\IpsAndPorts::class,
+							'class' => IpsAndPorts::class,
 							'searchfields' => [
 								'ip',
 								'vhostcontainer',
@@ -160,7 +178,7 @@ class GlobalSearch
 						],
 						// hosting-plans
 						'hostingplans' => [
-							'class' => \Froxlor\Api\Commands\HostingPlans::class,
+							'class' => HostingPlans::class,
 							'searchfields' => [
 								'p.name',
 								'p.description'
@@ -174,7 +192,7 @@ class GlobalSearch
 						],
 						// PHP configs
 						'phpconfigs' => [
-							'class' => \Froxlor\Api\Commands\PhpSettings::class,
+							'class' => PhpSettings::class,
 							'searchfields' => [
 								'c.description',
 								'fd.description',
@@ -189,7 +207,7 @@ class GlobalSearch
 						],
 						// FPM daemons
 						'fpmconfigs' => [
-							'class' => \Froxlor\Api\Commands\FpmDaemons::class,
+							'class' => FpmDaemons::class,
 							'searchfields' => [
 								'description',
 								'reload_cmd'
@@ -203,10 +221,10 @@ class GlobalSearch
 						]
 					];
 
-					if ((bool) $userinfo['change_serversettings']) {
+					if ((bool)$userinfo['change_serversettings']) {
 						// admins
 						$toSearch['admins'] = [
-							'class' => \Froxlor\Api\Commands\Admins::class,
+							'class' => Admins::class,
 							'searchfields' => [
 								'loginname',
 								'name',
@@ -225,7 +243,7 @@ class GlobalSearch
 					$toSearch = [
 						// (sub)domains
 						'domains' => [
-							'class' => \Froxlor\Api\Commands\SubDomains::class,
+							'class' => SubDomains::class,
 							'searchfields' => [
 								'd.domain',
 								'd.domain_ace',
@@ -240,7 +258,7 @@ class GlobalSearch
 						],
 						// email addresses
 						'emails' => [
-							'class' => \Froxlor\Api\Commands\Emails::class,
+							'class' => Emails::class,
 							'searchfields' => [
 								'm.email',
 								'm.email_full'
@@ -254,7 +272,7 @@ class GlobalSearch
 						],
 						// databases
 						'databases' => [
-							'class' => \Froxlor\Api\Commands\Mysqls::class,
+							'class' => Mysqls::class,
 							'searchfields' => [
 								'databasename',
 								'description'
@@ -268,7 +286,7 @@ class GlobalSearch
 						],
 						// ftp user
 						'ftpuser' => [
-							'class' => \Froxlor\Api\Commands\Ftps::class,
+							'class' => Ftps::class,
 							'searchfields' => [
 								'username',
 								'description'
@@ -290,11 +308,12 @@ class GlobalSearch
 				}
 
 				foreach ($toSearch as $entity => $edata) {
-
 					$collection = (new Collection($edata['class'], $userinfo))
-						->addParam(['sql_search' => [
-							'_plainsql' =>  self::searchStringSql($edata['searchfields'], $searchtext)
-						]]);
+						->addParam([
+							'sql_search' => [
+								'_plainsql' => self::searchStringSql($edata['searchfields'], $searchtext)
+							]
+						]);
 					if ($collection->count() > 0) {
 						if (!isset($processed[$entity])) {
 							$processed[$entity] = [];
@@ -320,7 +339,7 @@ class GlobalSearch
 		return $result;
 	}
 
-	private  static function searchStringSql(array $searchfields, $searchtext)
+	private static function searchStringSql(array $searchfields, $searchtext)
 	{
 		$result = ['sql' => [], 'values' => []];
 		$result['sql'] = "(";

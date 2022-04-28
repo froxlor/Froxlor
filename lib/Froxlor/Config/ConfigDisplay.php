@@ -1,28 +1,37 @@
 <?php
 
-namespace Froxlor\Config;
-
-use Froxlor\Froxlor;
-use Froxlor\Settings;
-use Froxlor\PhpHelper;
-use Froxlor\FileDir;
-use Froxlor\Database\Database;
-use Froxlor\UI\Panel\UI;
-
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Config
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
+
+namespace Froxlor\Config;
+
+use Froxlor\Database\Database;
+use Froxlor\FileDir;
+use Froxlor\Froxlor;
+use Froxlor\PhpHelper;
+use Froxlor\Settings;
+use Froxlor\UI\Panel\UI;
+
 class ConfigDisplay
 {
 	/**
@@ -74,9 +83,9 @@ class ConfigDisplay
 				// ignore invalid responses
 				if (!is_array($nameserver_ips)) {
 					// act like \Froxlor\PhpHelper::gethostbynamel6() and return unmodified hostname on error
-					$nameserver_ips = array(
+					$nameserver_ips = [
 						$nameserver
-					);
+					];
 				} else {
 					$known_ns_ips = array_merge($known_ns_ips, $nameserver_ips);
 				}
@@ -103,7 +112,7 @@ class ConfigDisplay
 		Database::needSqlData(true);
 		$sql = Database::getSqlData();
 
-		self::$replace_arr = array(
+		self::$replace_arr = [
 			'<SQL_UNPRIVILEGED_USER>' => $sql['user'],
 			'<SQL_UNPRIVILEGED_PASSWORD>' => 'FROXLOR_MYSQL_PASSWORD',
 			'<SQL_DB>' => $sql['db'],
@@ -124,7 +133,7 @@ class ConfigDisplay
 			'<CUSTOMER_LOGS>' => FileDir::makeCorrectDir(Settings::Get('system.logfiles_directory')),
 			'<FPM_IPCDIR>' => FileDir::makeCorrectDir(Settings::Get('phpfpm.fastcgi_ipcdir')),
 			'<WEBSERVER_GROUP>' => Settings::Get('system.httpgroup')
-		);
+		];
 
 		$commands_pre = "";
 		$commands_file = "";
@@ -139,7 +148,10 @@ class ConfigDisplay
 			if ($lasttype != '' && $lasttype != $_action['type']) {
 				$commands = trim($commands);
 				$numbrows = count(explode("\n", $commands));
-				$configpage .= UI::twig()->render(self::$theme . '/settings/conf/command.html.twig', ['commands' => $commands, 'numbrows' => $numbrows]);
+				$configpage .= UI::twig()->render(self::$theme . '/settings/conf/command.html.twig', [
+					'commands' => $commands,
+					'numbrows' => $numbrows
+				]);
 				$lasttype = '';
 				$commands = '';
 			}
@@ -170,12 +182,18 @@ class ConfigDisplay
 					$commands = trim($commands_pre);
 					if ($commands != "") {
 						$numbrows = count(explode("\n", $commands));
-						$commands_pre = UI::twig()->render(self::$theme . '/settings/conf/command.html.twig', ['commands' => $commands, 'numbrows' => $numbrows]);
+						$commands_pre = UI::twig()->render(self::$theme . '/settings/conf/command.html.twig', [
+							'commands' => $commands,
+							'numbrows' => $numbrows
+						]);
 					}
 					$commands = trim($commands_post);
 					if ($commands != "") {
 						$numbrows = count(explode("\n", $commands));
-						$commands_post = UI::twig()->render(self::$theme . '/settings/conf/command.html.twig', ['commands' => $commands, 'numbrows' => $numbrows]);
+						$commands_post = UI::twig()->render(self::$theme . '/settings/conf/command.html.twig', [
+							'commands' => $commands,
+							'numbrows' => $numbrows
+						]);
 					}
 					$configpage .= UI::twig()->render(self::$theme . '/settings/conf/fileblock.html.twig', [
 						'realname' => $realname,
@@ -192,7 +210,10 @@ class ConfigDisplay
 		$commands = trim($commands);
 		if ($commands != '') {
 			$numbrows = count(explode("\n", $commands));
-			$configpage .= UI::twig()->render(self::$theme . '/settings/conf/command.html.twig', ['commands' => $commands, 'numbrows' => $numbrows]);
+			$configpage .= UI::twig()->render(self::$theme . '/settings/conf/command.html.twig', [
+				'commands' => $commands,
+				'numbrows' => $numbrows
+			]);
 		}
 		return $configpage;
 	}

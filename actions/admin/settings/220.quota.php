@@ -1,59 +1,69 @@
 <?php
+
 /**
  * This file is part of the Froxlor project.
- * Copyright (c) 2011- the Froxlor Team (see authors).
+ * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2011-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Settings
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
-return array(
-	'groups' => array(
-		'diskquota' => array(
-			'title' => $lng['diskquota'],
+
+return [
+	'groups' => [
+		'diskquota' => [
+			'title' => lng('diskquota'),
 			'icon' => 'fa-solid fa-sliders',
 			'advanced_mode' => true,
-			'fields' => array(
-				'diskquota_enabled' => array(
-					'label' => $lng['serversettings']['diskquota_enabled'],
+			'fields' => [
+				'diskquota_enabled' => [
+					'label' => lng('serversettings.diskquota_enabled'),
 					'settinggroup' => 'system',
 					'varname' => 'diskquota_enabled',
 					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField',
 					'overview_option' => true
-				),
-				'diskquota_repquota_path' => array(
-					'label' => $lng['serversettings']['diskquota_repquota_path']['description'],
+				],
+				'diskquota_repquota_path' => [
+					'label' => lng('serversettings.diskquota_repquota_path.description'),
 					'settinggroup' => 'system',
 					'varname' => 'diskquota_repquota_path',
 					'type' => 'text',
 					'default' => '/usr/sbin/repquota',
 					'save_method' => 'storeSettingField'
-				),
-				'diskquota_quotatool_path' => array(
-					'label' => $lng['serversettings']['diskquota_quotatool_path']['description'],
+				],
+				'diskquota_quotatool_path' => [
+					'label' => lng('serversettings.diskquota_quotatool_path.description'),
 					'settinggroup' => 'system',
 					'varname' => 'diskquota_quotatool_path',
 					'type' => 'text',
 					'default' => '/usr/bin/quotatool',
 					'save_method' => 'storeSettingField'
-				),
-				'diskquota_customer_partition' => array(
-					'label' => $lng['serversettings']['diskquota_customer_partition']['description'],
+				],
+				'diskquota_customer_partition' => [
+					'label' => lng('serversettings.diskquota_customer_partition.description'),
 					'settinggroup' => 'system',
 					'varname' => 'diskquota_customer_partition',
 					'type' => 'text',
 					'default' => '/dev/root',
 					'save_method' => 'storeSettingField'
-				)
-			)
-		)
-	)
-);
+				]
+			]
+		]
+	]
+];

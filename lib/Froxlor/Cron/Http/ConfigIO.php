@@ -1,25 +1,38 @@
 <?php
-namespace Froxlor\Cron\Http;
-
-use Froxlor\Settings;
 
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright (c) the authors
- * @author Michael Kaufmann <mkaufmann@nutime.de>
- * @author Froxlor team <team@froxlor.org> (2010-)
- * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package Cron
- *         
- * @since 0.9.29
- *       
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
+
+namespace Froxlor\Cron\Http;
+
+use Froxlor\Database\Database;
+use Froxlor\FileDir;
+use Froxlor\Froxlor;
+use Froxlor\Settings;
+use PDO;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+
 class ConfigIO
 {
 
@@ -32,7 +45,6 @@ class ConfigIO
 	 */
 	public function cleanUp()
 	{
-
 		// old error logs
 		$this->cleanErrLogs();
 
@@ -57,107 +69,12 @@ class ConfigIO
 
 	private function cleanErrLogs()
 	{
-		$err_dir = \Froxlor\FileDir::makeCorrectDir(\Froxlor\Froxlor::getInstallDir() . "/logs/");
+		$err_dir = FileDir::makeCorrectDir(Froxlor::getInstallDir() . "/logs/");
 		if (@is_dir($err_dir)) {
 			// now get rid of old stuff
 			// (but append /*.log so we don't delete the directory)
 			$err_dir .= '/*.log';
-			\Froxlor\FileDir::safe_exec('rm -f ' . \Froxlor\FileDir::makeCorrectFile($err_dir));
-		}
-	}
-
-	/**
-	 * remove customer-specified auto-generated ssl-certificates
-	 * (they are being regenerated)
-	 *
-	 * @return null
-	 */
-	private function cleanCustomerSslCerts()
-	{
-
-		/*
-		 * only clean up if we're actually using SSL
-		 */
-		if (Settings::Get('system.use_ssl') == '1') {
-			// get correct directory
-			$configdir = $this->getFile('system', 'customer_ssl_path');
-			if ($configdir !== false) {
-
-				$configdir = \Froxlor\FileDir::makeCorrectDir($configdir);
-
-				if (@is_dir($configdir)) {
-					// now get rid of old stuff
-					// (but append /* so we don't delete the directory)
-					$configdir .= '/*';
-					\Froxlor\FileDir::safe_exec('rm -f ' . \Froxlor\FileDir::makeCorrectFile($configdir));
-				}
-			}
-		}
-	}
-
-	/**
-	 * remove webserver related configuration files before regeneration
-	 *
-	 * @return null
-	 */
-	private function cleanWebserverConfigs()
-	{
-
-		// get directories
-		$configdirs = array();
-		$dir = $this->getFile('system', 'apacheconf_vhost');
-		if ($dir !== false)
-			$configdirs[] = \Froxlor\FileDir::makeCorrectDir($dir);
-
-		$dir = $this->getFile('system', 'apacheconf_diroptions');
-		if ($dir !== false)
-			$configdirs[] = \Froxlor\FileDir::makeCorrectDir($dir);
-
-		// file pattern
-		$pattern = "/^([0-9]){2}_(froxlor|syscp)_(.+)\.conf$/";
-
-		// check ALL the folders
-		foreach ($configdirs as $config_dir) {
-
-			// check directory
-			if (@is_dir($config_dir)) {
-
-				// create directory iterator
-				$its = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($config_dir));
-
-				// iterate through all subdirs,
-				// look for vhost/diroption files
-				// and delete them
-				foreach ($its as $it) {
-					if ($it->isFile() && preg_match($pattern, $it->getFilename())) {
-						// remove file
-						\Froxlor\FileDir::safe_exec('rm -f ' . escapeshellarg(\Froxlor\FileDir::makeCorrectFile($its->getPathname())));
-					}
-				}
-			}
-		}
-	}
-
-	/**
-	 * remove htpasswd files before regeneration
-	 *
-	 * @return null
-	 */
-	private function cleanHtpasswdFiles()
-	{
-
-		// get correct directory
-		$configdir = $this->getFile('system', 'apacheconf_htpasswddir');
-
-		if ($configdir !== false) {
-			$configdir = \Froxlor\FileDir::makeCorrectDir($configdir);
-
-			if (@is_dir($configdir)) {
-				// now get rid of old stuff
-				// (but append /* so we don't delete the directory)
-				$configdir .= '/*';
-				\Froxlor\FileDir::safe_exec('rm -f ' . \Froxlor\FileDir::makeCorrectFile($configdir));
-			}
+			FileDir::safe_exec('rm -f ' . FileDir::makeCorrectFile($err_dir));
 		}
 	}
 
@@ -173,7 +90,7 @@ class ConfigIO
 		}
 
 		// dhr: cleanout froxlor-generated awstats configs prior to re-creation
-		$awstatsclean = array();
+		$awstatsclean = [];
 		$awstatsclean['header'] = "## GENERATED BY FROXLOR\n";
 		$awstatsclean['headerold'] = "## GENERATED BY SYSCP\n";
 		$awstatsclean['path'] = $this->getFile('system', 'awstats_conf');
@@ -187,7 +104,7 @@ class ConfigIO
 		if ($awstatsclean['path'] !== false && is_dir($awstatsclean['path'])) {
 			$awstatsclean['dir'] = dir($awstatsclean['path']);
 			while ($awstatsclean['entry'] = $awstatsclean['dir']->read()) {
-				$awstatsclean['fullentry'] = \Froxlor\FileDir::makeCorrectFile($awstatsclean['path'] . '/' . $awstatsclean['entry']);
+				$awstatsclean['fullentry'] = FileDir::makeCorrectFile($awstatsclean['path'] . '/' . $awstatsclean['entry']);
 				/**
 				 * don't do anything if the file does not exist
 				 */
@@ -197,7 +114,7 @@ class ConfigIO
 					fclose($awstatsclean['fh']);
 
 					if ($awstatsclean['headerRead'] == $awstatsclean['header'] || $awstatsclean['headerRead'] == $awstatsclean['headerold']) {
-						$awstats_conf_file = \Froxlor\FileDir::makeCorrectFile($awstatsclean['fullentry']);
+						$awstats_conf_file = FileDir::makeCorrectFile($awstatsclean['fullentry']);
 						@unlink($awstats_conf_file);
 					}
 				}
@@ -205,6 +122,30 @@ class ConfigIO
 		}
 		unset($awstatsclean);
 		// end dhr
+	}
+
+	/**
+	 * returns a file/directory from the settings and checks whether it exists
+	 *
+	 * @param string $group
+	 *            settings-group
+	 * @param string $varname
+	 *            var-name
+	 * @param boolean $check_exists
+	 *            check if the file exists
+	 *
+	 * @return string|boolean complete path including filename if any or false on error
+	 */
+	private function getFile($group, $varname, $check_exists = true)
+	{
+		// read from settings
+		$file = Settings::Get($group . '.' . $varname);
+
+		// check whether it exists
+		if ($check_exists && @file_exists($file) == false) {
+			return false;
+		}
+		return $file;
 	}
 
 	/**
@@ -221,12 +162,11 @@ class ConfigIO
 		// get correct directory
 		$configdir = $this->getFile('system', 'mod_fcgid_configdir');
 		if ($configdir !== false) {
-
-			$configdir = \Froxlor\FileDir::makeCorrectDir($configdir);
+			$configdir = FileDir::makeCorrectDir($configdir);
 
 			if (@is_dir($configdir)) {
 				// create directory iterator
-				$its = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($configdir));
+				$its = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($configdir));
 
 				// iterate through all subdirs,
 				// look for php-fcgi-starter files
@@ -235,14 +175,14 @@ class ConfigIO
 				foreach ($its as $it) {
 					if ($it->isFile() && $it->getFilename() == 'php-fcgi-starter') {
 						// set chattr -i
-						\Froxlor\FileDir::removeImmutable($its->getPathname());
+						FileDir::removeImmutable($its->getPathname());
 					}
 				}
 
 				// now get rid of old stuff
 				// (but append /* so we don't delete the directory)
 				$configdir .= '/*';
-				\Froxlor\FileDir::safe_exec('rm -rf ' . \Froxlor\FileDir::makeCorrectFile($configdir));
+				FileDir::safe_exec('rm -rf ' . FileDir::makeCorrectFile($configdir));
 			}
 		}
 	}
@@ -259,55 +199,121 @@ class ConfigIO
 		}
 
 		// get all fpm config paths
-		$fpmconf_sel = \Froxlor\Database\Database::prepare("SELECT config_dir FROM `" . TABLE_PANEL_FPMDAEMONS . "`");
-		\Froxlor\Database\Database::pexecute($fpmconf_sel);
-		$fpmconf_paths = $fpmconf_sel->fetchAll(\PDO::FETCH_ASSOC);
+		$fpmconf_sel = Database::prepare("SELECT config_dir FROM `" . TABLE_PANEL_FPMDAEMONS . "`");
+		Database::pexecute($fpmconf_sel);
+		$fpmconf_paths = $fpmconf_sel->fetchAll(PDO::FETCH_ASSOC);
 		// clean all php-fpm config-dirs
 		foreach ($fpmconf_paths as $configdir) {
-			$configdir = \Froxlor\FileDir::makeCorrectDir($configdir['config_dir']);
+			$configdir = FileDir::makeCorrectDir($configdir['config_dir']);
 			if (@is_dir($configdir)) {
 				// now get rid of old stuff
 				// (but append /*.conf so we don't delete the directory)
 				$configdir .= '/*.conf';
-				\Froxlor\FileDir::safe_exec('rm -f ' . \Froxlor\FileDir::makeCorrectFile($configdir));
+				FileDir::safe_exec('rm -f ' . FileDir::makeCorrectFile($configdir));
 			} else {
-				\Froxlor\FileDir::safe_exec('mkdir -p ' . $configdir);
+				FileDir::safe_exec('mkdir -p ' . $configdir);
 			}
 		}
 
 		// also remove aliasconfigdir #1273
 		$aliasconfigdir = $this->getFile('phpfpm', 'aliasconfigdir');
 		if ($aliasconfigdir !== false) {
-			$aliasconfigdir = \Froxlor\FileDir::makeCorrectDir($aliasconfigdir);
+			$aliasconfigdir = FileDir::makeCorrectDir($aliasconfigdir);
 			if (@is_dir($aliasconfigdir)) {
 				$aliasconfigdir .= '/*';
-				\Froxlor\FileDir::safe_exec('rm -rf ' . \Froxlor\FileDir::makeCorrectFile($aliasconfigdir));
+				FileDir::safe_exec('rm -rf ' . FileDir::makeCorrectFile($aliasconfigdir));
 			}
 		}
 	}
 
 	/**
-	 * returns a file/directory from the settings and checks whether it exists
+	 * remove webserver related configuration files before regeneration
 	 *
-	 * @param string $group
-	 *        	settings-group
-	 * @param string $varname
-	 *        	var-name
-	 * @param boolean $check_exists
-	 *        	check if the file exists
-	 *        	
-	 * @return string|boolean complete path including filename if any or false on error
+	 * @return null
 	 */
-	private function getFile($group, $varname, $check_exists = true)
+	private function cleanWebserverConfigs()
 	{
-
-		// read from settings
-		$file = Settings::Get($group . '.' . $varname);
-
-		// check whether it exists
-		if ($check_exists && @file_exists($file) == false) {
-			return false;
+		// get directories
+		$configdirs = [];
+		$dir = $this->getFile('system', 'apacheconf_vhost');
+		if ($dir !== false) {
+			$configdirs[] = FileDir::makeCorrectDir($dir);
 		}
-		return $file;
+
+		$dir = $this->getFile('system', 'apacheconf_diroptions');
+		if ($dir !== false) {
+			$configdirs[] = FileDir::makeCorrectDir($dir);
+		}
+
+		// file pattern
+		$pattern = "/^([0-9]){2}_(froxlor|syscp)_(.+)\.conf$/";
+
+		// check ALL the folders
+		foreach ($configdirs as $config_dir) {
+			// check directory
+			if (@is_dir($config_dir)) {
+				// create directory iterator
+				$its = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($config_dir));
+
+				// iterate through all subdirs,
+				// look for vhost/diroption files
+				// and delete them
+				foreach ($its as $it) {
+					if ($it->isFile() && preg_match($pattern, $it->getFilename())) {
+						// remove file
+						FileDir::safe_exec('rm -f ' . escapeshellarg(FileDir::makeCorrectFile($its->getPathname())));
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * remove htpasswd files before regeneration
+	 *
+	 * @return null
+	 */
+	private function cleanHtpasswdFiles()
+	{
+		// get correct directory
+		$configdir = $this->getFile('system', 'apacheconf_htpasswddir');
+
+		if ($configdir !== false) {
+			$configdir = FileDir::makeCorrectDir($configdir);
+
+			if (@is_dir($configdir)) {
+				// now get rid of old stuff
+				// (but append /* so we don't delete the directory)
+				$configdir .= '/*';
+				FileDir::safe_exec('rm -f ' . FileDir::makeCorrectFile($configdir));
+			}
+		}
+	}
+
+	/**
+	 * remove customer-specified auto-generated ssl-certificates
+	 * (they are being regenerated)
+	 *
+	 * @return null
+	 */
+	private function cleanCustomerSslCerts()
+	{
+		/*
+		 * only clean up if we're actually using SSL
+		 */
+		if (Settings::Get('system.use_ssl') == '1') {
+			// get correct directory
+			$configdir = $this->getFile('system', 'customer_ssl_path');
+			if ($configdir !== false) {
+				$configdir = FileDir::makeCorrectDir($configdir);
+
+				if (@is_dir($configdir)) {
+					// now get rid of old stuff
+					// (but append /* so we don't delete the directory)
+					$configdir .= '/*';
+					FileDir::safe_exec('rm -f ' . FileDir::makeCorrectFile($configdir));
+				}
+			}
+		}
 	}
 }

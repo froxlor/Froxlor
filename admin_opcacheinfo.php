@@ -11,18 +11,18 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, you can also view it online at
- * http://files.froxlor.org/misc/COPYING.txt
+ * https://files.froxlor.org/misc/COPYING.txt
  *
  * @copyright  the authors
  * @author     Froxlor team <team@froxlor.org>
  * @author     Janos Muzsi <muzsij@hypernics.hu>
  * @author     Andrew Collington <andy@amnuts.com>
- * @license    http://files.froxlor.org/misc/COPYING.txt GPLv2
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  *
  * Based on https://github.com/amnuts/opcache-gui, which is
  * licensed under the MIT licence, which can be viewed
@@ -32,26 +32,27 @@
 const AREA = 'admin';
 require __DIR__ . '/lib/init.php';
 
+use Froxlor\FroxlorLogger;
 use Froxlor\UI\Panel\UI;
+use Froxlor\UI\Response;
 
 if ($action == 'reset' && function_exists('opcache_reset') && $userinfo['change_serversettings'] == '1') {
 	opcache_reset();
-	$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "reset OPcache");
-	header('Location: ' . $linker->getLink(array(
-		'section' => 'opcacheinfo',
-		'page' => 'showinfo'
-	)));
+	$log->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "reset OPcache");
+	header('Location: ' . $linker->getLink([
+			'section' => 'opcacheinfo',
+			'page' => 'showinfo'
+		]));
 	exit();
 }
 
 if (!function_exists('opcache_get_configuration')) {
-	\Froxlor\UI\Response::standard_error($lng['error']['no_opcacheinfo']);
+	Response::standardError(lng('error.no_opcacheinfo'));
 }
 
 if ($page == 'showinfo') {
-
 	$time = time();
-	$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed OPcache info");
+	$log->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed OPcache info");
 
 	$optimizationLevels = [
 		1 << 0 => 'CSE, STRING construction',
@@ -149,13 +150,13 @@ if ($page == 'showinfo') {
 			[
 				'total_memory' => $config['directives']['opcache.memory_consumption'],
 				'used_memory_percentage' => round(100 * (
-					($status['memory_usage']['used_memory'] + $status['memory_usage']['wasted_memory'])
-					/ $config['directives']['opcache.memory_consumption']
-				)),
+						($status['memory_usage']['used_memory'] + $status['memory_usage']['wasted_memory'])
+						/ $config['directives']['opcache.memory_consumption']
+					)),
 				'hit_rate_percentage' => round($status['opcache_statistics']['opcache_hit_rate']),
 				'used_key_percentage' => round(100 * ($status['opcache_statistics']['num_cached_keys']
-					/ $status['opcache_statistics']['max_cached_keys']
-				)),
+						/ $status['opcache_statistics']['max_cached_keys']
+					)),
 				'wasted_percentage' => round($status['memory_usage']['current_wasted_percentage'], 2),
 				'readable' => [
 					'total_memory' => bsize($config['directives']['opcache.memory_consumption']),
@@ -175,8 +176,8 @@ if ($page == 'showinfo') {
 					'last_restart_time' => ($status['opcache_statistics']['last_restart_time'] == 0
 						? 'never'
 						: (new DateTimeImmutable("@{$status['opcache_statistics']['last_restart_time']}"))
-						->setTimezone(new DateTimeZone(date_default_timezone_get()))
-						->format('Y-m-d H:i:s')
+							->setTimezone(new DateTimeZone(date_default_timezone_get()))
+							->format('Y-m-d H:i:s')
 					)
 				]
 			]

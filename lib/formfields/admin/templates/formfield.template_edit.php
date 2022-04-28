@@ -4,60 +4,69 @@
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Formfields
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
-return array(
-	'template_edit' => array(
-		'title' => $lng['admin']['templates']['template_edit'],
+
+return [
+	'template_edit' => [
+		'title' => lng('admin.templates.template_edit'),
 		'image' => 'fa-solid fa-pen',
-		'sections' => array(
-			'section_a' => array(
-				'title' => $lng['admin']['templates']['template_edit'],
+		'sections' => [
+			'section_a' => [
+				'title' => lng('admin.templates.template_edit'),
 				'image' => 'icons/templates_edit.png',
-				'fields' => array(
-					'language' => array(
-						'label' => $lng['login']['language'],
+				'fields' => [
+					'language' => [
+						'label' => lng('login.language'),
 						'type' => 'hidden',
 						'value' => $language,
 						'display' => $language
-					),
-					'template' => array(
-						'label' => $lng['admin']['templates']['action'],
+					],
+					'template' => [
+						'label' => lng('admin.templates.action'),
 						'type' => 'hidden',
 						'value' => $template_name,
 						'display' => $template_name
-					),
-					'subject' => array(
-						'label' => $lng['admin']['templates']['subject'],
+					],
+					'subject' => [
+						'label' => lng('admin.templates.subject'),
 						'type' => 'text',
 						'value' => $subject
-					),
-					'mailbody' => array(
-						'label' => $lng['admin']['templates']['mailbody'],
+					],
+					'mailbody' => [
+						'label' => lng('admin.templates.mailbody'),
 						'type' => 'textarea',
 						'cols' => 60,
 						'rows' => 12,
 						'value' => $mailbody
-					),
-					'subjectid' => array(
+					],
+					'subjectid' => [
 						'type' => 'hidden',
 						'value' => $subjectid
-					),
-					'mailbodyid' => array(
+					],
+					'mailbodyid' => [
 						'type' => 'hidden',
 						'value' => $mailbodyid
-					)
-				)
-			)
-		)
-	),
+					]
+				]
+			]
+		]
+	],
 	'template_replacers' => include __DIR__ . '/template.replacers.php'
-);
+];

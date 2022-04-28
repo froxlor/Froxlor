@@ -2,70 +2,78 @@
 
 /**
  * This file is part of the Froxlor project.
- * Copyright (c) 2016 the Froxlor Team (see authors).
+ * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright  (c) the authors
- * @author     Michael Kaufmann <mkaufmann@nutime.de>
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Frontend
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- * @since      0.9.35
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
  *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
 const AREA = 'admin';
 require __DIR__ . '/lib/init.php';
 
+use Froxlor\Froxlor;
+use Froxlor\FroxlorLogger;
 use Froxlor\Http\HttpClient;
+use Froxlor\Settings;
 use Froxlor\UI\Panel\UI;
+use Froxlor\UI\Response;
 
 // define update-uri
-define('UPDATE_URI', "https://version.froxlor.org/Froxlor/api/" . \Froxlor\Froxlor::VERSION);
+define('UPDATE_URI', "https://version.froxlor.org/Froxlor/api/" . Froxlor::VERSION);
 define('RELEASE_URI', "https://autoupdate.froxlor.org/froxlor-{version}.zip");
 define('CHECKSUM_URI', "https://autoupdate.froxlor.org/froxlor-{version}.zip.sha256");
 
 if ($page != 'error') {
 	// check for archive-stuff
 	if (!extension_loaded('zip')) {
-		\Froxlor\UI\Response::redirectTo($filename, array(
+		Response::redirectTo($filename, [
 			'page' => 'error',
 			'errno' => 2
-		));
+		]);
 	}
 
 	// 0.11.x requires 7.4 at least
 	if (version_compare("7.4.0", PHP_VERSION, ">=")) {
-		\Froxlor\UI\Response::redirectTo($filename, array(
+		Response::redirectTo($filename, [
 			'page' => 'error',
 			'errno' => 10
-		));
+		]);
 	}
 
 	// check for webupdate to be enabled
-	if (\Froxlor\Settings::Config('enable_webupdate') != true) {
-		\Froxlor\UI\Response::redirectTo($filename, array(
+	if (Settings::Config('enable_webupdate') != true) {
+		Response::redirectTo($filename, [
 			'page' => 'error',
 			'errno' => 11
-		));
+		]);
 	}
 }
 
 // display initial version check
 if ($page == 'overview') {
-
 	// log our actions
-	$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "checking auto-update");
+	$log->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "checking auto-update");
 
 	// check for new version
 	try {
 		$latestversion = HttpClient::urlGet(UPDATE_URI, true, 3);
-	} catch (\Exception $e) {
-		\Froxlor\UI\Response::dynamic_error("Version-check currently unavailable, please try again later");
+	} catch (Exception $e) {
+		Response::dynamicError("Version-check currently unavailable, please try again later");
 	}
 	$latestversion = explode('|', $latestversion);
 
@@ -76,7 +84,7 @@ if ($page == 'overview') {
 
 		// add the branding so debian guys are not gettings confused
 		// about their version-number
-		$version_label = $_version . \Froxlor\Froxlor::BRANDING;
+		$version_label = $_version . Froxlor::BRANDING;
 		$version_link = $_link;
 		$message_addinfo = $_message;
 
@@ -84,11 +92,11 @@ if ($page == 'overview') {
 		if (!preg_match('/^((\d+\\.)(\d+\\.)(\d+\\.)?(\d+)?(\-(svn|dev|rc)(\d+))?)$/', $_version)) {
 			// check for customized version to not output
 			// "There is a newer version of froxlor" besides the error-message
-			\Froxlor\UI\Response::redirectTo($filename, array(
+			Response::redirectTo($filename, [
 				'page' => 'error',
 				'errno' => 3
-			));
-		} elseif (\Froxlor\Froxlor::versionCompare2(\Froxlor\Froxlor::VERSION, $_version) == -1) {
+			]);
+		} elseif (Froxlor::versionCompare2(Froxlor::VERSION, $_version) == -1) {
 			// there is a newer version - yay
 			$isnewerversion = 1;
 		} else {
@@ -99,11 +107,11 @@ if ($page == 'overview') {
 		// anzeige über version-status mit ggfls. formular
 		// zum update schritt #1 -> download
 		if ($isnewerversion == 1) {
-			$text = 'There is a newer version available. Update to version <b>' . $_version . '</b> now?<br/>(Your current version is: ' . \Froxlor\Froxlor::VERSION . ')';
+			$text = 'There is a newer version available. Update to version <b>' . $_version . '</b> now?<br/>(Your current version is: ' . Froxlor::VERSION . ')';
 
 			$upd_formfield = [
 				'updates' => [
-					'title' => $lng['update']['update'],
+					'title' => lng('update.update'),
 					'image' => 'fa-solid fa-download',
 					'sections' => [
 						'section_autoupd' => [
@@ -115,18 +123,18 @@ if ($page == 'overview') {
 					'buttons' => [
 						[
 							'class' => 'btn-outline-secondary',
-							'label' => $lng['panel']['cancel'],
+							'label' => lng('panel.cancel'),
 							'type' => 'reset'
 						],
 						[
-							'label' => $lng['update']['proceed']
+							'label' => lng('update.proceed')
 						]
 					]
 				]
 			];
 
 			UI::view('user/form-note.html.twig', [
-				'formaction' => $linker->getLink(array('section' => 'autoupdate', 'page' => 'getdownload')),
+				'formaction' => $linker->getLink(['section' => 'autoupdate', 'page' => 'getdownload']),
 				'formdata' => $upd_formfield['updates'],
 				// alert
 				'type' => 'warning',
@@ -134,33 +142,31 @@ if ($page == 'overview') {
 			]);
 		} elseif ($isnewerversion == 0) {
 			// all good
-			\Froxlor\UI\Response::standard_success('noupdatesavail');
+			Response::standardSuccess('noupdatesavail');
 		} else {
-			\Froxlor\UI\Response::standard_error('customized_version');
+			Response::standardError('customized_version');
 		}
 	}
 } // download the new archive
 elseif ($page == 'getdownload') {
-
 	// retrieve the new version from the form
 	$newversion = isset($_POST['newversion']) ? $_POST['newversion'] : null;
 
 	// valid?
 	if ($newversion !== null) {
-
 		// define files to get
 		$toLoad = str_replace('{version}', $newversion, RELEASE_URI);
 		$toCheck = str_replace('{version}', $newversion, CHECKSUM_URI);
 
 		// check for local destination folder
-		if (!is_dir(\Froxlor\Froxlor::getInstallDir() . '/updates/')) {
-			mkdir(\Froxlor\Froxlor::getInstallDir() . '/updates/');
+		if (!is_dir(Froxlor::getInstallDir() . '/updates/')) {
+			mkdir(Froxlor::getInstallDir() . '/updates/');
 		}
 
 		// name archive
-		$localArchive = \Froxlor\Froxlor::getInstallDir() . '/updates/' . basename($toLoad);
+		$localArchive = Froxlor::getInstallDir() . '/updates/' . basename($toLoad);
 
-		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "Downloading " . $toLoad . " to " . $localArchive);
+		$log->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "Downloading " . $toLoad . " to " . $localArchive);
 
 		// remove old archive
 		if (file_exists($localArchive)) {
@@ -171,10 +177,10 @@ elseif ($page == 'getdownload') {
 		try {
 			HttpClient::fileGet($toLoad, $localArchive);
 		} catch (Exception $e) {
-			\Froxlor\UI\Response::redirectTo($filename, array(
+			Response::redirectTo($filename, [
 				'page' => 'error',
 				'errno' => 4
-			));
+			]);
 		}
 
 		// validate the integrity of the downloaded file
@@ -188,34 +194,33 @@ elseif ($page == 'getdownload') {
 		$filesum = hash_file('sha256', $localArchive);
 
 		if ($filesum != $shouldsum) {
-			\Froxlor\UI\Response::redirectTo($filename, array(
+			Response::redirectTo($filename, [
 				'page' => 'error',
 				'errno' => 9
-			));
+			]);
 		}
 
 		// to the next step
-		\Froxlor\UI\Response::redirectTo($filename, array(
+		Response::redirectTo($filename, [
 			'page' => 'extract',
 			'archive' => basename($localArchive)
-		));
+		]);
 	}
-	\Froxlor\UI\Response::redirectTo($filename, array(
+	Response::redirectTo($filename, [
 		'page' => 'error',
 		'errno' => 6
-	));
+	]);
 } // extract and install new version
 elseif ($page == 'extract') {
-
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 		$toExtract = isset($_POST['archive']) ? $_POST['archive'] : null;
-		$localArchive = \Froxlor\Froxlor::getInstallDir() . '/updates/' . $toExtract;
+		$localArchive = Froxlor::getInstallDir() . '/updates/' . $toExtract;
 		// decompress from zip
 		$zip = new ZipArchive();
 		$res = $zip->open($localArchive);
 		if ($res === true) {
-			$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "Extracting " . $localArchive . " to " . \Froxlor\Froxlor::getInstallDir());
-			$zip->extractTo(\Froxlor\Froxlor::getInstallDir());
+			$log->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "Extracting " . $localArchive . " to " . Froxlor::getInstallDir());
+			$zip->extractTo(Froxlor::getInstallDir());
 			$zip->close();
 			// success - remove unused archive
 			@unlink($localArchive);
@@ -223,31 +228,31 @@ elseif ($page == 'extract') {
 			sleep(2);
 		} else {
 			// error
-			\Froxlor\UI\Response::redirectTo($filename, array(
+			Response::redirectTo($filename, [
 				'page' => 'error',
 				'errno' => 8
-			));
+			]);
 		}
 
 		// redirect to update-page?
-		\Froxlor\UI\Response::redirectTo('admin_updates.php');
+		Response::redirectTo('admin_updates.php');
 	} else {
 		$toExtract = isset($_GET['archive']) ? $_GET['archive'] : null;
-		$localArchive = \Froxlor\Froxlor::getInstallDir() . '/updates/' . $toExtract;
+		$localArchive = Froxlor::getInstallDir() . '/updates/' . $toExtract;
 	}
 
 	if (!file_exists($localArchive)) {
-		\Froxlor\UI\Response::redirectTo($filename, array(
+		Response::redirectTo($filename, [
 			'page' => 'error',
 			'errno' => 7
-		));
+		]);
 	}
 
 	$text = 'Extract downloaded archive "' . $toExtract . '"?';
 
 	$upd_formfield = [
 		'updates' => [
-			'title' => $lng['update']['update'],
+			'title' => lng('update.update'),
 			'image' => 'fa-solid fa-download',
 			'sections' => [
 				'section_autoupd' => [
@@ -259,18 +264,18 @@ elseif ($page == 'extract') {
 			'buttons' => [
 				[
 					'class' => 'btn-outline-secondary',
-					'label' => $lng['panel']['cancel'],
+					'label' => lng('panel.cancel'),
 					'type' => 'reset'
 				],
 				[
-					'label' => $lng['update']['proceed']
+					'label' => lng('update.proceed')
 				]
 			]
 		]
 	];
 
 	UI::view('user/form-note.html.twig', [
-		'formaction' => $linker->getLink(array('section' => 'autoupdate', 'page' => 'extract')),
+		'formaction' => $linker->getLink(['section' => 'autoupdate', 'page' => 'extract']),
 		'formdata' => $upd_formfield['updates'],
 		// alert
 		'type' => 'warning',
@@ -278,9 +283,8 @@ elseif ($page == 'extract') {
 	]);
 } // display error
 elseif ($page == 'error') {
-
 	// retrieve error-number via url-parameter
-	$errno = isset($_GET['errno']) ? (int) $_GET['errno'] : 0;
+	$errno = isset($_GET['errno']) ? (int)$_GET['errno'] : 0;
 
 	// 2 = no Zlib
 	// 3 = custom version detected
@@ -292,5 +296,5 @@ elseif ($page == 'error') {
 	// 9 = checksum mismatch
 	// 10 = <php-7.4
 	// 11 = enable_webupdate = false
-	\Froxlor\UI\Response::standard_error('autoupdate_' . $errno);
+	Response::standardError('autoupdate_' . $errno);
 }

@@ -11,16 +11,16 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, you can also view it online at
- * http://files.froxlor.org/misc/COPYING.txt
+ * https://files.froxlor.org/misc/COPYING.txt
  *
  * @copyright  the authors
  * @author     Froxlor team <team@froxlor.org>
- * @license    http://files.froxlor.org/misc/COPYING.txt GPLv2
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
 namespace Froxlor\Install;
@@ -37,7 +37,7 @@ class Update
 	 *
 	 * @param string $task
 	 * @param bool $needs_status (if false, a linebreak will be added)
-	 *        	
+	 *
 	 * @return void
 	 */
 	public static function showUpdateStep($task = null, $needs_status = true)
@@ -64,7 +64,7 @@ class Update
 	 * @param int $status (0 = success, 1 = warning, 2 = failure)
 	 * @param string $message
 	 * @param string $additional_info
-	 *        	
+	 *
 	 * @return string formatted output and log-entry
 	 */
 	public static function lastStepStatus(int $status = -1, string $message = '', string $additional_info = '')
@@ -75,7 +75,6 @@ class Update
 		$update_tasks[$task_counter]['result_desc'] = $additional_info ?? '';
 
 		switch ($status) {
-
 			case 0:
 				break;
 			case 1:

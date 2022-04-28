@@ -11,25 +11,26 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, you can also view it online at
- * http://files.froxlor.org/misc/COPYING.txt
+ * https://files.froxlor.org/misc/COPYING.txt
  *
  * @copyright  the authors
  * @author     Froxlor team <team@froxlor.org>
- * @license    http://files.froxlor.org/misc/COPYING.txt GPLv2
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
 namespace Froxlor\Cli;
 
-use Symfony\Component\Console\Input\InputOption;
+use Froxlor\Database\Database;
+use PDO;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Froxlor\Database\Database;
 
 final class SwitchServerIp extends CliCommand
 {
@@ -56,10 +57,9 @@ final class SwitchServerIp extends CliCommand
 		$io = new SymfonyStyle($input, $output);
 
 		if ($result == self::SUCCESS && $input->getOption('list')) {
-
 			$sel_stmt = Database::prepare("SELECT * FROM panel_ipsandports ORDER BY ip ASC, port ASC");
 			Database::pexecute($sel_stmt);
-			$ips = $sel_stmt->fetchAll(\PDO::FETCH_ASSOC);
+			$ips = $sel_stmt->fetchAll(PDO::FETCH_ASSOC);
 			$table_rows = [];
 			foreach ($ips as $ipdata) {
 				$table_rows[] = [$ipdata['id'], $ipdata['ip'], $ipdata['port']];
@@ -127,18 +127,18 @@ final class SwitchServerIp extends CliCommand
 			foreach ($ips_to_switch as $ip_pair) {
 				$output->writeln('Switching IP <comment>' . $ip_pair[0] . '</> to IP <comment>' . $ip_pair[1] . '</>');
 
-				$ip_check = Database::pexecute_first($check_stmt, array(
+				$ip_check = Database::pexecute_first($check_stmt, [
 					'newip' => $ip_pair[1]
-				));
+				]);
 				if ($ip_check) {
 					$output->writeln('<error>Note: ' . $ip_pair[0] . ' not updated to ' . $ip_pair[1] . ' - IP already exists in froxlor\'s database</>');
 					continue;
 				}
 
-				Database::pexecute($upd_stmt, array(
+				Database::pexecute($upd_stmt, [
 					'newip' => $ip_pair[1],
 					'oldip' => $ip_pair[0]
-				));
+				]);
 				$rows_updated = $upd_stmt->rowCount();
 
 				if ($rows_updated == 0) {
@@ -149,9 +149,9 @@ final class SwitchServerIp extends CliCommand
 				// check whether the system.ipaddress needs updating
 				if ($check_sysip['value'] == $ip_pair[0]) {
 					$upd2_stmt = Database::prepare("UPDATE `panel_settings` SET `value` = :newip WHERE `settinggroup` = 'system' and `varname` = 'ipaddress'");
-					Database::pexecute($upd2_stmt, array(
+					Database::pexecute($upd2_stmt, [
 						'newip' => $ip_pair[1]
-					));
+					]);
 					$output->writeln('<info>Updated system-ipaddress from <comment>' . $ip_pair[0] . '</comment> to <comment>' . $ip_pair[1] . '</comment></info>');
 				}
 
@@ -159,9 +159,9 @@ final class SwitchServerIp extends CliCommand
 				if (strstr($check_mysqlip['value'], $ip_pair[0]) !== false) {
 					$new_mysqlip = str_replace($ip_pair[0], $ip_pair[1], $check_mysqlip['value']);
 					$upd2_stmt = Database::prepare("UPDATE `panel_settings` SET `value` = :newmysql WHERE `settinggroup` = 'system' and `varname` = 'mysql_access_host'");
-					Database::pexecute($upd2_stmt, array(
+					Database::pexecute($upd2_stmt, [
 						'newmysql' => $new_mysqlip
-					));
+					]);
 					$output->writeln('<info>Updated mysql_access_host from <comment>' . $check_mysqlip['value'] . '</comment> to <comment>' . $new_mysqlip . '</comment></info>');
 				}
 
@@ -169,9 +169,9 @@ final class SwitchServerIp extends CliCommand
 				if (strstr($check_axfrip['value'], $ip_pair[0]) !== false) {
 					$new_axfrip = str_replace($ip_pair[0], $ip_pair[1], $check_axfrip['value']);
 					$upd2_stmt = Database::prepare("UPDATE `panel_settings` SET `value` = :newaxfr WHERE `settinggroup` = 'system' and `varname` = 'axfrservers'");
-					Database::pexecute($upd2_stmt, array(
+					Database::pexecute($upd2_stmt, [
 						'newaxfr' => $new_axfrip
-					));
+					]);
 					$output->writeln('<info>Updated axfr-servers from <comment>' . $check_axfrip['value'] . '</comment> to <comment>' . $new_axfrip . '</comment></info>');
 				}
 			}

@@ -1,35 +1,46 @@
 <?php
 
-namespace Froxlor\Ajax;
-
-use Exception;
-use Froxlor\Froxlor;
-use Froxlor\FileDir;
-use Froxlor\Database\Database;
-use Froxlor\Http\HttpClient;
-use Froxlor\Validate\Validate;
-use Froxlor\Settings;
-use Froxlor\UI\Listing;
-use Froxlor\UI\Panel\UI;
-use Froxlor\UI\Request;
-use Froxlor\Config\ConfigParser;
-use Froxlor\Config\ConfigDisplay;
-
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @author     Maurice Preuß <hello@envoyr.com>
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    AJAX
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
+
+namespace Froxlor\Ajax;
+
+use Exception;
+use Froxlor\Config\ConfigDisplay;
+use Froxlor\Config\ConfigParser;
+use Froxlor\CurrentUser;
+use Froxlor\Database\Database;
+use Froxlor\FileDir;
+use Froxlor\Froxlor;
+use Froxlor\Http\HttpClient;
+use Froxlor\Settings;
+use Froxlor\UI\Listing;
+use Froxlor\UI\Panel\UI;
+use Froxlor\UI\Request;
+use Froxlor\UI\Response;
+use Froxlor\Validate\Validate;
+use PDO;
+
 class Ajax
 {
 	protected string $action;
@@ -47,55 +58,6 @@ class Ajax
 
 		UI::sendHeaders();
 		UI::sendSslHeaders();
-	}
-
-	/**
-	 * initialize global $lng variable to have
-	 * localized strings available for the ApiCommands
-	 */
-	private function initLang()
-	{
-		global $lng;
-
-		// query the whole table
-		$result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_LANGUAGE . "`");
-
-		$langs = array();
-		// presort languages
-		while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
-			$langs[$row['language']][] = $row;
-		}
-
-		// set default language before anything else to
-		// ensure that we can display messages
-		$language = \Froxlor\Settings::Get('panel.standardlanguage');
-
-		if (isset($this->userinfo['language']) && isset($langs[$this->userinfo['language']])) {
-			// default: use language from session, #277
-			$language = $this->userinfo['language'];
-		} elseif (isset($this->userinfo['def_language'])) {
-			$language = $this->userinfo['def_language'];
-		}
-
-		// include every english language file we can get
-		foreach ($langs['English'] as $value) {
-			include_once \Froxlor\FileDir::makeSecurePath(\Froxlor\Froxlor::getInstallDir() . '/' . $value['file']);
-		}
-
-		// now include the selected language if its not english
-		if ($language != 'English') {
-			if (isset($langs[$language])) {
-				foreach ($langs[$language] as $value) {
-					include_once \Froxlor\FileDir::makeSecurePath(\Froxlor\Froxlor::getInstallDir() . '/' . $value['file']);
-				}
-			}
-		}
-
-		// last but not least include language references file
-		include_once \Froxlor\FileDir::makeSecurePath(\Froxlor\Froxlor::getInstallDir() . '/lng/lng_references.php');
-
-		// set array
-		$this->lng = $lng;
 	}
 
 	/**
@@ -127,27 +89,64 @@ class Ajax
 		}
 	}
 
-	public function errorResponse($message, int $response_code = 500)
-	{
-		header("Content-Type: application/json");
-		return \Froxlor\Api\Response::jsonErrorResponse($message, $response_code);
-	}
-
-	public function jsonResponse($value, int $response_code = 200)
-	{
-		header("Content-Type: application/json");
-		return \Froxlor\Api\Response::jsonResponse($value, $response_code);
-	}
-
 	/**
 	 * @throws Exception
 	 */
 	private function getValidatedSession(): array
 	{
-		if (\Froxlor\CurrentUser::hasSession() == false) {
+		if (CurrentUser::hasSession() == false) {
 			throw new Exception("No valid session");
 		}
-		return \Froxlor\CurrentUser::getData();
+		return CurrentUser::getData();
+	}
+
+	/**
+	 * initialize global $lng variable to have
+	 * localized strings available for the ApiCommands
+	 */
+	private function initLang()
+	{
+		global $lng;
+
+		// query the whole table
+		$result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_LANGUAGE . "`");
+
+		$langs = [];
+		// presort languages
+		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
+			$langs[$row['language']][] = $row;
+		}
+
+		// set default language before anything else to
+		// ensure that we can display messages
+		$language = Settings::Get('panel.standardlanguage');
+
+		if (isset($this->userinfo['language']) && isset($langs[$this->userinfo['language']])) {
+			// default: use language from session, #277
+			$language = $this->userinfo['language'];
+		} elseif (isset($this->userinfo['def_language'])) {
+			$language = $this->userinfo['def_language'];
+		}
+
+		// include every english language file we can get
+		foreach ($langs['English'] as $value) {
+			include_once FileDir::makeSecurePath(Froxlor::getInstallDir() . '/' . $value['file']);
+		}
+
+		// now include the selected language if its not english
+		if ($language != 'English') {
+			if (isset($langs[$language])) {
+				foreach ($langs[$language] as $value) {
+					include_once FileDir::makeSecurePath(Froxlor::getInstallDir() . '/' . $value['file']);
+				}
+			}
+		}
+
+		// last but not least include language references file
+		include_once FileDir::makeSecurePath(Froxlor::getInstallDir() . '/lng/lng_references.php');
+
+		// set array
+		$this->lng = $lng;
 	}
 
 	/**
@@ -213,6 +212,18 @@ class Ajax
 		}
 	}
 
+	public function errorResponse($message, int $response_code = 500)
+	{
+		header("Content-Type: application/json");
+		return \Froxlor\Api\Response::jsonErrorResponse($message, $response_code);
+	}
+
+	public function jsonResponse($value, int $response_code = 200)
+	{
+		header("Content-Type: application/json");
+		return \Froxlor\Api\Response::jsonResponse($value, $response_code);
+	}
+
 	private function getUpdateCheck()
 	{
 		UI::initTwig();
@@ -225,7 +236,7 @@ class Ajax
 		} catch (Exception $e) {
 			// don't display anything if just not allowed due to permissions
 			if ($e->getCode() != 403) {
-				\Froxlor\UI\Response::dynamic_error($e->getMessage());
+				Response::dynamicError($e->getMessage());
 			}
 		}
 	}
@@ -271,9 +282,9 @@ class Ajax
 
 	private function editApiKey()
 	{
-		$keyid = isset($_POST['id']) ? (int) $_POST['id'] : 0;
+		$keyid = isset($_POST['id']) ? (int)$_POST['id'] : 0;
 		$allowed_from = isset($_POST['allowed_from']) ? $_POST['allowed_from'] : "";
-		$valid_until = isset($_POST['valid_until']) ? (int) $_POST['valid_until'] : -1;
+		$valid_until = isset($_POST['valid_until']) ? (int)$_POST['valid_until'] : -1;
 
 		// validate allowed_from
 		if (!empty($allowed_from)) {
@@ -309,18 +320,18 @@ class Ajax
 			`valid_until` = :vu, `allowed_from` = :af
 			WHERE `id` = :keyid AND `adminid` = :aid AND `customerid` = :cid
 		");
-		if ((int) $this->userinfo['adminsession'] == 1) {
+		if ((int)$this->userinfo['adminsession'] == 1) {
 			$cid = 0;
 		} else {
 			$cid = $this->userinfo['customerid'];
 		}
-		Database::pexecute($upd_stmt, array(
+		Database::pexecute($upd_stmt, [
 			'keyid' => $keyid,
 			'af' => $allowed_from,
 			'vu' => $valid_until,
 			'aid' => $this->userinfo['adminid'],
 			'cid' => $cid
-		));
+		]);
 		return $this->jsonResponse(['allowed_from' => $allowed_from, 'valid_until' => $valid_until]);
 	}
 

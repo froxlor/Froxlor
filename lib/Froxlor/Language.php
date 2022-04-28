@@ -11,16 +11,16 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, you can also view it online at
- * http://files.froxlor.org/misc/COPYING.txt
+ * https://files.froxlor.org/misc/COPYING.txt
  *
  * @copyright  the authors
  * @author     Froxlor team <team@froxlor.org>
- * @license    http://files.froxlor.org/misc/COPYING.txt GPLv2
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
 namespace Froxlor;
@@ -33,6 +33,46 @@ class Language
 	protected static ?array $lng = null;
 	protected static string $defaultLanguage = 'en';
 	protected static ?string $requestedLanguage = null;
+
+	/**
+	 * @return array
+	 * @fixme iso seems to be not used in froxlor?
+	 */
+	public static function getLanguages(): array
+	{
+		$languages = [];
+		$directory = dirname(__DIR__, 2) . '/lng';
+
+		foreach (array_diff(scandir($directory), ['..', '.', 'index.html']) as $language) {
+			$iso = explode('.', $language)[0];
+			$languages[$iso] = self::getTranslation('languages.' . $iso);
+		}
+
+		return $languages;
+	}
+
+	public static function getTranslation(string $identifier, array $arguments = [])
+	{
+		// initialize
+		if (is_null(self::$lng)) {
+			// load fallback language
+			self::$lng = self::loadLanguage(self::$defaultLanguage);
+
+			// load user requested language
+			if (self::$requestedLanguage) {
+				self::$lng = array_merge(self::$lng, self::loadLanguage(self::$requestedLanguage));
+			}
+
+			// load fallback from browser if nothing requested
+			$iso = trim(substr(strtok(strtok($_SERVER['HTTP_ACCEPT_LANGUAGE'], ','), ';'), 0, 5));
+			if (!self::$requestedLanguage && strlen($iso) == 2 && $iso !== self::$defaultLanguage) {
+				self::$lng = array_merge(self::$lng, self::loadLanguage($iso));
+			}
+		}
+
+		// search by identifier
+		return vsprintf(self::$lng[$identifier] ?? $identifier, $arguments);
+	}
 
 	/**
 	 * @TODO: Possible iso: de, de-DE, de-AT (fallback to de)
@@ -63,46 +103,6 @@ class Language
 		}
 
 		return $result;
-	}
-
-	/**
-	 * @return array
-	 * @fixme iso seems to be not used in froxlor?
-	 */
-	public static function getLanguages(): array
-	{
-		$languages = [];
-		$directory = dirname(__DIR__, 2) . '/lng';
-
-		foreach (array_diff(scandir($directory), array('..', '.', 'index.html')) as $language) {
-			$iso = explode('.', $language)[0];
-			$languages[$iso] = self::getTranslation('languages.' . $iso);
-		}
-
-		return $languages;
-	}
-
-	public static function getTranslation(string $identifier, array $arguments = [])
-	{
-		// initialize
-		if (is_null(self::$lng)) {
-			// load fallback language
-			self::$lng = self::loadLanguage(self::$defaultLanguage);
-
-			// load user requested language
-			if (self::$requestedLanguage) {
-				self::$lng = array_merge(self::$lng, self::loadLanguage(self::$requestedLanguage));
-			}
-
-			// load fallback from browser if nothing requested
-			$iso = trim(substr(strtok(strtok($_SERVER['HTTP_ACCEPT_LANGUAGE'], ','), ';'), 0, 5));
-			if (!self::$requestedLanguage && strlen($iso) == 2 && $iso !== self::$defaultLanguage) {
-				self::$lng = array_merge(self::$lng, self::loadLanguage($iso));
-			}
-		}
-
-		// search by identifier
-		return vsprintf(self::$lng[$identifier] ?? $identifier, $arguments);
 	}
 
 	public static function setDefaultLanguage(string $string)

@@ -2,19 +2,25 @@
 
 /**
  * This file is part of the Froxlor project.
- * Copyright (c) 2003-2009 the SysCP Team (see authors).
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright  (c) the authors
- * @author     Florian Lippert <flo@syscp.org> (2003-2009)
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Panel
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
 const AREA = 'customer';
@@ -60,11 +66,11 @@ if (!is_null($month) && !is_null($year)) {
 		AND `year` = :year
 		GROUP BY `day`
 		ORDER BY `day` DESC");
-	$params = array(
+	$params = [
 		"customerid" => $userinfo['customerid'],
 		"month" => $month,
 		"year" => $year
-	);
+	];
 	Database::pexecute($result_stmt, $params);
 	$traf['byte'] = 0;
 	$traffic_complete['http'] = 0;
@@ -108,9 +114,9 @@ if (!is_null($month) && !is_null($year)) {
 		ORDER BY `year` DESC, `month` DESC
 		LIMIT 12
 	");
-	Database::pexecute($result_stmt, array(
+	Database::pexecute($result_stmt, [
 		"customerid" => $userinfo['customerid']
-	));
+	]);
 	$traffic_complete['http'] = 0;
 	$traffic_complete['ftp'] = 0;
 	$traffic_complete['mail'] = 0;
@@ -132,7 +138,7 @@ if (!is_null($month) && !is_null($year)) {
 		$traffic_complete['mail'] += $mail;
 		$traf['month'] = $row['month'];
 		$traf['year'] = $row['year'];
-		$traf['monthname'] = $lng['traffic']['months'][intval($row['month'])] . " " . $row['year'];
+		$traf['monthname'] = lng('traffic.months.' . intval($row['month'])) . " " . $row['year'];
 		$traf['byte'] = $http + $ftp_up + $ftp_down + $mail;
 		$traf['byte_total'] = $traf['byte_total'] + $http + $ftp_up + $ftp_down + $mail;
 		$traf['days'][] = $traf['monthname'];

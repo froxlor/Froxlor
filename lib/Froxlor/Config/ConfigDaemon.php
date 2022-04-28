@@ -1,77 +1,43 @@
 <?php
-namespace Froxlor\Config;
 
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright (c) the authors
- * @author Florian Aders <eleras@froxlor.org>
- * @author Froxlor team <team@froxlor.org> (2010-)
- * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package Classes
- *         
- * @since 0.9.34
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
+
+namespace Froxlor\Config;
+
+use Exception;
+use Froxlor\Froxlor;
+use Froxlor\Settings;
+use SimpleXMLElement;
 
 /**
  * Class ConfigDaemon
  *
  * Parses a distributions XML - file and gives access to the configuration
  * Not to be used directly
- *
- * @copyright (c) the authors
- * @author Florian Aders <eleras@froxlor.org>
- * @author Froxlor team <team@froxlor.org> (2010-)
- * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package Classes
  */
 class ConfigDaemon
 {
-
-	/**
-	 * Holding the commands for this daemon
-	 *
-	 * @var array
-	 */
-	private $orders = array();
-
-	/**
-	 * Store the parsed SimpleXMLElement for usage
-	 *
-	 * @var \SimpleXMLElement
-	 */
-	private $fullxml;
-
-	/**
-	 * Memorize if we already parsed the XML
-	 *
-	 * @var bool
-	 */
-	private $isparsed = false;
-
-	/**
-	 * Sub - area of the full - XML only holding the daemon - data we are interested in
-	 *
-	 * @var \SimpleXMLElement
-	 */
-	private $daemon;
-
-	/**
-	 * xpath leading to this daemon in the full XML
-	 *
-	 * @var string
-	 */
-	private $xpath;
-
-	/**
-	 * cache of sql-data if used
-	 */
-	private $sqldata_cache = null;
 
 	/**
 	 * Human - readable title of this service
@@ -79,13 +45,46 @@ class ConfigDaemon
 	 * @var string
 	 */
 	public $title;
-
 	/**
 	 * Whether this is the default daemon of the service-category
 	 *
 	 * @var boolean
 	 */
 	public $default;
+	/**
+	 * Holding the commands for this daemon
+	 *
+	 * @var array
+	 */
+	private $orders = [];
+	/**
+	 * Store the parsed SimpleXMLElement for usage
+	 *
+	 * @var SimpleXMLElement
+	 */
+	private $fullxml;
+	/**
+	 * Memorize if we already parsed the XML
+	 *
+	 * @var bool
+	 */
+	private $isparsed = false;
+	/**
+	 * Sub - area of the full - XML only holding the daemon - data we are interested in
+	 *
+	 * @var SimpleXMLElement
+	 */
+	private $daemon;
+	/**
+	 * xpath leading to this daemon in the full XML
+	 *
+	 * @var string
+	 */
+	private $xpath;
+	/**
+	 * cache of sql-data if used
+	 */
+	private $sqldata_cache = null;
 
 	public function __construct($xml, $xpath)
 	{
@@ -94,11 +93,74 @@ class ConfigDaemon
 		$this->daemon = $this->fullxml->xpath($this->xpath);
 		$attributes = $this->daemon[0]->attributes();
 		if ($attributes['title'] != '') {
-			$this->title = $this->parseContent((string) $attributes['title']);
+			$this->title = $this->parseContent((string)$attributes['title']);
 		}
 		if (isset($attributes['default'])) {
 			$this->default = ($attributes['default'] == true);
 		}
+	}
+
+	/**
+	 * Replace placeholders with content
+	 *
+	 * @param string $content
+	 * @return string $content w/o placeholder
+	 */
+	private function parseContent($content)
+	{
+		$content = preg_replace_callback('/\{\{(.*)\}\}/Ui', function ($matches) {
+			$match = null;
+			if (preg_match('/^settings\.(.*)$/', $matches[1], $match)) {
+				return Settings::Get($match[1]);
+			} elseif (preg_match('/^lng\.(.*)(?:\.(.*)(?:\.(.*)))$/U', $matches[1], $match)) {
+				global $lng;
+				if (isset($match[1]) && $match[1] != '' && isset($match[2]) && $match[2] != '' && isset($match[3]) && $match[3] != '') {
+					return $lng[$match[1]][$match[2]][$match[3]];
+				} elseif (isset($match[1]) && $match[1] != '' && isset($match[2]) && $match[2] != '') {
+					return $lng[$match[1]][$match[2]];
+				} elseif (isset($match[1]) && $match[1] != '') {
+					return $lng[$match[1]];
+				}
+				return '';
+			} elseif (preg_match('/^const\.(.*)$/', $matches[1], $match)) {
+				return $this->returnDynamic($match[1]);
+			} elseif (preg_match('/^sql\.(.*)$/', $matches[1], $match)) {
+				if (is_null($this->sqldata_cache)) {
+					// read in sql-data (if exists)
+					if (file_exists(Froxlor::getInstallDir() . "/lib/userdata.inc.php")) {
+						require Froxlor::getInstallDir() . "/lib/userdata.inc.php";
+						unset($sql_root);
+						$this->sqldata_cache = $sql;
+					}
+				}
+				return isset($this->sqldata_cache[$match[1]]) ? $this->sqldata_cache[$match[1]] : '';
+			}
+		}, $content);
+		return $content;
+	}
+
+	private function returnDynamic($key = null)
+	{
+		$dynamics = [
+			'install_dir' => Froxlor::getInstallDir()
+		];
+		return $dynamics[$key] ?? '';
+	}
+
+	/**
+	 * Get config for this daemon
+	 *
+	 * The returned array will be an array of array, each sub-array looking like this:
+	 * array('type' => 'install|file|command', 'content' => '<TEXT>')
+	 * If the type is "file", an additional "name" - element will be added to the array
+	 * To configure a daemon, the steps in the array must be followed in order
+	 *
+	 * @return array
+	 */
+	public function getConfig()
+	{
+		$this->parse();
+		return $this->orders;
 	}
 
 	/**
@@ -113,10 +175,10 @@ class ConfigDaemon
 			return true;
 		}
 
-		$preparsed = array();
+		$preparsed = [];
 		// First: let's push everything into an array and expand all includes
 		foreach ($this->daemon[0]->children() as $order) {
-			switch ((string) $order->getName()) {
+			switch ((string)$order->getName()) {
 				case "install":
 				case "file":
 				case "command":
@@ -125,10 +187,10 @@ class ConfigDaemon
 					break;
 				case "include":
 					// Includes, get the part we want via xpath
-					$includes = $this->fullxml->xpath((string) $order);
+					$includes = $this->fullxml->xpath((string)$order);
 					foreach ($includes[0] as $include) {
 						// The "include" is also a child, so just skip it, would make a mess later
-						if ((string) $include->getName() == 'include') {
+						if ((string)$include->getName() == 'include') {
 							continue;
 						}
 						$preparsed[] = $include;
@@ -141,7 +203,7 @@ class ConfigDaemon
 					// Hold the results
 					$visibility = 1;
 					foreach ($order->children() as $child) {
-						switch ((string) $child->getName()) {
+						switch ((string)$child->getName()) {
 							case "visibility":
 								$visibility += $this->checkVisibility($child);
 								break;
@@ -154,10 +216,10 @@ class ConfigDaemon
 								break;
 							case "include":
 								// Includes, get the part we want via xpath
-								$includes = $this->fullxml->xpath((string) $child);
+								$includes = $this->fullxml->xpath((string)$child);
 								foreach ($includes[0] as $include) {
 									// The "include" is also a child, so just skip it, would make a mess later
-									if ((string) $include->getName() == 'include') {
+									if ((string)$include->getName() == 'include') {
 										continue;
 									}
 									$preparsed[] = $include;
@@ -189,37 +251,108 @@ class ConfigDaemon
 	}
 
 	/**
-	 * Get config for this daemon
+	 * Check if visibility should be changed
 	 *
-	 * The returned array will be an array of array, each sub-array looking like this:
-	 * array('type' => 'install|file|command', 'content' => '<TEXT>')
-	 * If the type is "file", an additional "name" - element will be added to the array
-	 * To configure a daemon, the steps in the array must be followed in order
-	 *
-	 * @return array
+	 * @param SimpleXMLElement $order
+	 * @return int 0|-1
 	 */
-	public function getConfig()
+	private function checkVisibility($order)
 	{
-		$this->parse();
-		return $this->orders;
+		$attributes = [];
+		foreach ($order->attributes() as $key => $value) {
+			$attributes[(string)$key] = $this->parseContent(trim((string)$value));
+		}
+
+		$order = $this->parseContent(trim((string)$order));
+		if (!array_key_exists('mode', $attributes)) {
+			throw new Exception('"<visibility>' . $order . '</visibility>" is missing mode');
+		}
+
+		$return = 0;
+		switch ($attributes['mode']) {
+			case "isfile":
+				if (!is_file($order)) {
+					$return = -1;
+				}
+				break;
+			case "notisfile":
+				if (is_file($order)) {
+					$return = -1;
+				}
+				break;
+			case "isdir":
+				if (!is_dir($order)) {
+					$return = -1;
+				}
+				break;
+			case "notisdir":
+				if (is_dir($order)) {
+					$return = -1;
+				}
+				break;
+			case "false":
+				if ($order == true) {
+					$return = -1;
+				}
+				break;
+			case "true":
+				if ($order == false) {
+					$return = -1;
+				}
+				break;
+			case "notempty":
+				if ($order == "") {
+					$return = -1;
+				}
+				break;
+			case "userexists":
+				if (posix_getpwuid($order) === false) {
+					$return = -1;
+				}
+				break;
+			case "groupexists":
+				if (posix_getgrgid($order) === false) {
+					$return = -1;
+				}
+				break;
+			case "usernotexists":
+				if (is_array(posix_getpwuid($order))) {
+					$return = -1;
+				}
+				break;
+			case "groupnotexists":
+				if (is_array(posix_getgrgid($order))) {
+					$return = -1;
+				}
+				break;
+			case "usernamenotexists":
+				if (is_array(posix_getpwnam($order))) {
+					$return = -1;
+				}
+				break;
+			case "equals":
+				$return = (isset($attributes['value']) && $attributes['value'] == $order ? 0 : -1);
+				break;
+		}
+		return $return;
 	}
 
 	/**
 	 * Parse a single order and return it in a format for easier usage
 	 *
 	 * @param
-	 *        	SimpleXMLElement object holding a single order from the distribution - XML
+	 *            SimpleXMLElement object holding a single order from the distribution - XML
 	 * @return array|string
 	 */
 	private function parseOrder($order)
 	{
-		$attributes = array();
+		$attributes = [];
 		foreach ($order->attributes() as $key => $value) {
-			$attributes[(string) $key] = (string) $value;
+			$attributes[(string)$key] = (string)$value;
 		}
 
 		$parsedorder = '';
-		switch ((string) $order->getName()) {
+		switch ((string)$order->getName()) {
 			case "file":
 				$parsedorder = $this->parseFile($order, $attributes);
 				break;
@@ -230,99 +363,17 @@ class ConfigDaemon
 				$parsedorder = $this->parseInstall($order, $attributes);
 				break;
 			default:
-				throw new \Exception('Invalid order: ' . (string) $order->getName());
+				throw new Exception('Invalid order: ' . (string)$order->getName());
 		}
 
 		return $parsedorder;
 	}
 
 	/**
-	 * Parse a install - order and return it in a format for easier usage
-	 *
-	 * @param
-	 *        	SimpleXMLElement object holding a single install from the distribution - XML
-	 * @return array|string
-	 */
-	private function parseInstall($order, $attributes)
-	{
-		// No sub - elements, so the content can be returned directly
-		if ($order->count() == 0) {
-			return array(
-				'type' => 'install',
-				'content' => $this->parseContent(trim((string) $order))
-			);
-		}
-
-		// Hold the results
-		$visibility = 1;
-		$content = '';
-		foreach ($order->children() as $child) {
-			switch ((string) $child->getName()) {
-				case "visibility":
-					$visibility += $this->checkVisibility($child);
-					break;
-				case "content":
-					$content = trim((string) $child);
-					break;
-			}
-		}
-
-		if ($visibility > 0) {
-			return array(
-				'type' => 'install',
-				'content' => $this->parseContent($content)
-			);
-		} else {
-			return '';
-		}
-	}
-
-	/**
-	 * Parse a command - order and return it in a format for easier usage
-	 *
-	 * @param
-	 *        	SimpleXMLElement object holding a single command from the distribution - XML
-	 * @return array|string
-	 */
-	private function parseCommand($order, $attributes)
-	{
-		// No sub - elements, so the content can be returned directly
-		if ($order->count() == 0) {
-			return array(
-				'type' => 'command',
-				'content' => $this->parseContent(trim((string) $order))
-			);
-		}
-
-		// Hold the results
-		$visibility = 1;
-		$content = '';
-		foreach ($order->children() as $child) {
-			switch ((string) $child->getName()) {
-				case "visibility":
-					$visibility += $this->checkVisibility($child);
-					break;
-				case "content":
-					$content = trim((string) $child);
-					break;
-			}
-		}
-
-		if ($visibility > 0) {
-			return array(
-				'type' => 'command',
-				'content' => $this->parseContent($content)
-			);
-		} else {
-			return '';
-		}
-	}
-
-	/**
 	 * Parse a file - order and return it in a format for easier usage
 	 *
 	 * @param
-	 *        	SimpleXMLElement object holding a single file from the distribution - XML
+	 *            SimpleXMLElement object holding a single file from the distribution - XML
 	 * @return array|string
 	 */
 	private function parseFile($order, $attributes)
@@ -330,22 +381,22 @@ class ConfigDaemon
 		$visibility = 1;
 		// No sub - elements, so the content can be returned directly
 		if ($order->count() == 0) {
-			$content = (string) $order;
+			$content = (string)$order;
 		} else {
 			// Hold the results
 			foreach ($order->children() as $child) {
-				switch ((string) $child->getName()) {
+				switch ((string)$child->getName()) {
 					case "visibility":
 						$visibility += $this->checkVisibility($child);
 						break;
 					case "content":
-						$content = (string) $child;
+						$content = (string)$child;
 						break;
 				}
 			}
 		}
 
-		$return = array();
+		$return = [];
 		// Check if the original file should be backupped
 		// @TODO: Maybe have a backup - location somewhere central?
 		// @TODO: Use IO - class
@@ -355,54 +406,54 @@ class ConfigDaemon
 			} else {
 				$cmd = 'mv';
 			}
-			$return[] = array(
+			$return[] = [
 				'type' => 'command',
 				'content' => $cmd . ' "' . $this->parseContent($attributes['name']) . '" "' . $this->parseContent($attributes['name']) . '.frx.bak"',
 				'execute' => "pre"
-			);
+			];
 		}
 
 		// Now the content of the file can be written
 		if (isset($attributes['mode'])) {
-			$return[] = array(
+			$return[] = [
 				'type' => 'file',
 				'content' => $this->parseContent($content),
 				'name' => $this->parseContent($attributes['name']),
 				'mode' => $this->parseContent($attributes['mode'])
-			);
+			];
 		} else {
-			$return[] = array(
+			$return[] = [
 				'type' => 'file',
 				'content' => $this->parseContent($content),
 				'name' => $this->parseContent($attributes['name'])
-			);
+			];
 		}
 
 		// Let's check if the mode of the file should be changed
 		if (array_key_exists('chmod', $attributes)) {
-			$return[] = array(
+			$return[] = [
 				'type' => 'command',
 				'content' => 'chmod ' . $attributes['chmod'] . ' "' . $this->parseContent($attributes['name']) . '"',
 				'execute' => "post"
-			);
+			];
 		}
 
 		// Let's check if the owner of the file should be changed
 		if (array_key_exists('chown', $attributes)) {
-			$return[] = array(
+			$return[] = [
 				'type' => 'command',
 				'content' => 'chown ' . $attributes['chown'] . ' "' . $this->parseContent($attributes['name']) . '"',
 				'execute' => "post"
-			);
+			];
 		}
 
 		// If we have more than 1 element, we want to group this stuff for easier processing later
 		if (count($return) > 1) {
-			$return = array(
+			$return = [
 				'type' => 'file',
 				'subcommands' => $return,
 				'name' => $this->parseContent($attributes['name'])
-			);
+			];
 		}
 
 		if ($visibility > 0) {
@@ -413,148 +464,84 @@ class ConfigDaemon
 	}
 
 	/**
-	 * Replace placeholders with content
+	 * Parse a command - order and return it in a format for easier usage
 	 *
-	 * @param string $content
-	 * @return string $content w/o placeholder
+	 * @param
+	 *            SimpleXMLElement object holding a single command from the distribution - XML
+	 * @return array|string
 	 */
-	private function parseContent($content)
+	private function parseCommand($order, $attributes)
 	{
-		$content = preg_replace_callback('/\{\{(.*)\}\}/Ui', function ($matches) {
-			$match = null;
-			if (preg_match('/^settings\.(.*)$/', $matches[1], $match)) {
-				return \Froxlor\Settings::Get($match[1]);
-			} elseif (preg_match('/^lng\.(.*)(?:\.(.*)(?:\.(.*)))$/U', $matches[1], $match)) {
-				global $lng;
-				if (isset($match[1]) && $match[1] != '' && isset($match[2]) && $match[2] != '' && isset($match[3]) && $match[3] != '') {
-					return $lng[$match[1]][$match[2]][$match[3]];
-				} elseif (isset($match[1]) && $match[1] != '' && isset($match[2]) && $match[2] != '') {
-					return $lng[$match[1]][$match[2]];
-				} elseif (isset($match[1]) && $match[1] != '') {
-					return $lng[$match[1]];
-				}
-				return '';
-			} elseif (preg_match('/^const\.(.*)$/', $matches[1], $match)) {
-				return $this->returnDynamic($match[1]);
-			} elseif (preg_match('/^sql\.(.*)$/', $matches[1], $match)) {
-				if (is_null($this->sqldata_cache)) {
-					// read in sql-data (if exists)
-					if (file_exists(\Froxlor\Froxlor::getInstallDir() . "/lib/userdata.inc.php")) {
-						require \Froxlor\Froxlor::getInstallDir() . "/lib/userdata.inc.php";
-						unset($sql_root);
-						$this->sqldata_cache = $sql;
-					}
-				}
-				return isset($this->sqldata_cache[$match[1]]) ? $this->sqldata_cache[$match[1]] : '';
-			}
-		}, $content);
-		return $content;
-	}
+		// No sub - elements, so the content can be returned directly
+		if ($order->count() == 0) {
+			return [
+				'type' => 'command',
+				'content' => $this->parseContent(trim((string)$order))
+			];
+		}
 
-	private function returnDynamic($key = null)
-	{
-		$dynamics = [
-			'install_dir' => \Froxlor\Froxlor::getInstallDir()
-		];
-		return $dynamics[$key] ?? '';
+		// Hold the results
+		$visibility = 1;
+		$content = '';
+		foreach ($order->children() as $child) {
+			switch ((string)$child->getName()) {
+				case "visibility":
+					$visibility += $this->checkVisibility($child);
+					break;
+				case "content":
+					$content = trim((string)$child);
+					break;
+			}
+		}
+
+		if ($visibility > 0) {
+			return [
+				'type' => 'command',
+				'content' => $this->parseContent($content)
+			];
+		} else {
+			return '';
+		}
 	}
 
 	/**
-	 * Check if visibility should be changed
+	 * Parse a install - order and return it in a format for easier usage
 	 *
-	 * @param \SimpleXMLElement $order
-	 * @return int 0|-1
+	 * @param
+	 *            SimpleXMLElement object holding a single install from the distribution - XML
+	 * @return array|string
 	 */
-	private function checkVisibility($order)
+	private function parseInstall($order, $attributes)
 	{
-		$attributes = array();
-		foreach ($order->attributes() as $key => $value) {
-			$attributes[(string) $key] = $this->parseContent(trim((string) $value));
+		// No sub - elements, so the content can be returned directly
+		if ($order->count() == 0) {
+			return [
+				'type' => 'install',
+				'content' => $this->parseContent(trim((string)$order))
+			];
 		}
 
-		$order = $this->parseContent(trim((string) $order));
-		if (! array_key_exists('mode', $attributes)) {
-			throw new \Exception('"<visibility>' . $order . '</visibility>" is missing mode');
+		// Hold the results
+		$visibility = 1;
+		$content = '';
+		foreach ($order->children() as $child) {
+			switch ((string)$child->getName()) {
+				case "visibility":
+					$visibility += $this->checkVisibility($child);
+					break;
+				case "content":
+					$content = trim((string)$child);
+					break;
+			}
 		}
 
-		$return = 0;
-		switch ($attributes['mode']) {
-			case "isfile":
-				if (! is_file($order)) {
-					$return = - 1;
-				}
-				;
-				break;
-			case "notisfile":
-				if (is_file($order)) {
-					$return = - 1;
-				}
-				;
-				break;
-			case "isdir":
-				if (! is_dir($order)) {
-					$return = - 1;
-				}
-				;
-				break;
-			case "notisdir":
-				if (is_dir($order)) {
-					$return = - 1;
-				}
-				;
-				break;
-			case "false":
-				if ($order == true) {
-					$return = - 1;
-				}
-				;
-				break;
-			case "true":
-				if ($order == false) {
-					$return = - 1;
-				}
-				;
-				break;
-			case "notempty":
-				if ($order == "") {
-					$return = - 1;
-				}
-				;
-				break;
-			case "userexists":
-				if (posix_getpwuid($order) === false) {
-					$return = - 1;
-				}
-				;
-				break;
-			case "groupexists":
-				if (posix_getgrgid($order) === false) {
-					$return = - 1;
-				}
-				;
-				break;
-			case "usernotexists":
-				if (is_array(posix_getpwuid($order))) {
-					$return = - 1;
-				}
-				;
-				break;
-			case "groupnotexists":
-				if (is_array(posix_getgrgid($order))) {
-					$return = - 1;
-				}
-				;
-				break;
-			case "usernamenotexists":
-				if (is_array(posix_getpwnam($order))) {
-					$return = - 1;
-				}
-				;
-				break;
-			case "equals":
-				$return = (isset($attributes['value']) && $attributes['value'] == $order ? 0 : - 1);
-				break;
+		if ($visibility > 0) {
+			return [
+				'type' => 'install',
+				'content' => $this->parseContent($content)
+			];
+		} else {
+			return '';
 		}
-		return $return;
 	}
 }

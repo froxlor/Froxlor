@@ -4,49 +4,60 @@
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    \Froxlor\Settings
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
-return array(
-	'groups' => array(
-		'phpfpm' => array(
-			'title' => $lng['admin']['phpfpm_settings'],
+
+use Froxlor\Settings;
+
+return [
+	'groups' => [
+		'phpfpm' => [
+			'title' => lng('admin.phpfpm_settings'),
 			'icon' => 'fa-brands fa-php',
-			'fields' => array(
-				'system_phpfpm_enabled' => array(
-					'label' => $lng['serversettings']['phpfpm'],
+			'fields' => [
+				'system_phpfpm_enabled' => [
+					'label' => lng('serversettings.phpfpm'),
 					'settinggroup' => 'phpfpm',
 					'varname' => 'enabled',
 					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField',
-					'plausibility_check_method' => array(
+					'plausibility_check_method' => [
 						'\\Froxlor\\Validate\\Check',
 						'checkFcgidPhpFpm'
-					),
+					],
 					'overview_option' => true
-				),
-				'system_phpfpm_defaultini' => array(
-					'label' => $lng['serversettings']['mod_fcgid']['defaultini'],
+				],
+				'system_phpfpm_defaultini' => [
+					'label' => lng('serversettings.mod_fcgid.defaultini'),
 					'settinggroup' => 'phpfpm',
 					'varname' => 'defaultini',
 					'type' => 'select',
 					'default' => '1',
-					'option_options_method' => array(
+					'option_options_method' => [
 						'\\Froxlor\\Http\\PhpConfig',
 						'getPhpConfigs'
-					),
+					],
 					'save_method' => 'storeSettingField'
-				),
-				'system_phpfpm_aliasconfigdir' => array(
-					'label' => $lng['serversettings']['phpfpm_settings']['aliasconfigdir'],
+				],
+				'system_phpfpm_aliasconfigdir' => [
+					'label' => lng('serversettings.phpfpm_settings.aliasconfigdir'),
 					'settinggroup' => 'phpfpm',
 					'varname' => 'aliasconfigdir',
 					'type' => 'text',
@@ -54,18 +65,18 @@ return array(
 					'default' => '/var/www/php-fpm/',
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
-				),
-				'system_phpfpm_tmpdir' => array(
-					'label' => $lng['serversettings']['mod_fcgid']['tmpdir'],
+				],
+				'system_phpfpm_tmpdir' => [
+					'label' => lng('serversettings.mod_fcgid.tmpdir'),
 					'settinggroup' => 'phpfpm',
 					'varname' => 'tmpdir',
 					'type' => 'text',
 					'string_type' => 'dir',
 					'default' => '/var/customers/tmp/',
 					'save_method' => 'storeSettingField'
-				),
-				'system_phpfpm_peardir' => array(
-					'label' => $lng['serversettings']['mod_fcgid']['peardir'],
+				],
+				'system_phpfpm_peardir' => [
+					'label' => lng('serversettings.mod_fcgid.peardir'),
 					'settinggroup' => 'phpfpm',
 					'varname' => 'peardir',
 					'type' => 'text',
@@ -75,9 +86,9 @@ return array(
 					'default' => '/usr/share/php/:/usr/share/php5/',
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
-				),
-				'system_phpfpm_envpath' => array(
-					'label' => $lng['serversettings']['phpfpm_settings']['envpath'],
+				],
+				'system_phpfpm_envpath' => [
+					'label' => lng('serversettings.phpfpm_settings.envpath'),
 					'settinggroup' => 'phpfpm',
 					'varname' => 'envpath',
 					'type' => 'text',
@@ -87,9 +98,9 @@ return array(
 					'default' => '/usr/local/bin:/usr/bin:/bin',
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
-				),
-				'system_phpfpm_fastcgi_ipcdir' => array(
-					'label' => $lng['serversettings']['phpfpm_settings']['ipcdir'],
+				],
+				'system_phpfpm_fastcgi_ipcdir' => [
+					'label' => lng('serversettings.phpfpm_settings.ipcdir'),
 					'settinggroup' => 'phpfpm',
 					'varname' => 'fastcgi_ipcdir',
 					'type' => 'text',
@@ -97,53 +108,53 @@ return array(
 					'default' => '/var/lib/apache2/fastcgi/',
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
-				),
-				'system_phpfpm_use_mod_proxy' => array(
-					'label' => $lng['phpfpm']['use_mod_proxy'],
+				],
+				'system_phpfpm_use_mod_proxy' => [
+					'label' => lng('phpfpm.use_mod_proxy'),
 					'settinggroup' => 'phpfpm',
 					'varname' => 'use_mod_proxy',
 					'type' => 'checkbox',
 					'default' => true,
-					'visible' => \Froxlor\Settings::Get('system.apache24'),
+					'visible' => Settings::Get('system.apache24'),
 					'save_method' => 'storeSettingField'
-				),
-				'system_phpfpm_ini_flags' => array(
-					'label' => $lng['phpfpm']['ini_flags'],
+				],
+				'system_phpfpm_ini_flags' => [
+					'label' => lng('phpfpm.ini_flags'),
 					'settinggroup' => 'phpfpm',
 					'varname' => 'ini_flags',
 					'type' => 'textarea',
 					'default' => '',
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
-				),
-				'system_phpfpm_ini_values' => array(
-					'label' => $lng['phpfpm']['ini_values'],
+				],
+				'system_phpfpm_ini_values' => [
+					'label' => lng('phpfpm.ini_values'),
 					'settinggroup' => 'phpfpm',
 					'varname' => 'ini_values',
 					'type' => 'textarea',
 					'default' => '',
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
-				),
-				'system_phpfpm_ini_admin_flags' => array(
-					'label' => $lng['phpfpm']['ini_admin_flags'],
+				],
+				'system_phpfpm_ini_admin_flags' => [
+					'label' => lng('phpfpm.ini_admin_flags'),
 					'settinggroup' => 'phpfpm',
 					'varname' => 'ini_admin_flags',
 					'type' => 'textarea',
 					'default' => '',
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
-				),
-				'system_phpfpm_ini_admin_values' => array(
-					'label' => $lng['phpfpm']['ini_admin_values'],
+				],
+				'system_phpfpm_ini_admin_values' => [
+					'label' => lng('phpfpm.ini_admin_values'),
 					'settinggroup' => 'phpfpm',
 					'varname' => 'ini_admin_values',
 					'type' => 'textarea',
 					'default' => '',
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
-				)
-			)
-		)
-	)
-);
+				]
+			]
+		]
+	]
+];

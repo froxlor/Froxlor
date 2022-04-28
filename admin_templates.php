@@ -2,69 +2,82 @@
 
 /**
  * This file is part of the Froxlor project.
- * Copyright (c) 2003-2009 the SysCP Team (see authors).
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright  (c) the authors
- * @author     Florian Lippert <flo@syscp.org> (2003-2009)
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Panel
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
 const AREA = 'admin';
 require __DIR__ . '/lib/init.php';
 
 use Froxlor\Database\Database;
+use Froxlor\FileDir;
+use Froxlor\FroxlorLogger;
+use Froxlor\PhpHelper;
 use Froxlor\Settings;
+use Froxlor\UI\HTML;
+use Froxlor\UI\Listing;
 use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
+use Froxlor\UI\Response;
+use Froxlor\Validate\Validate;
 
-$id = (int) Request::get('id');
+$id = (int)Request::get('id');
 $subjectid = intval(Request::get('subjectid'));
 $mailbodyid = intval(Request::get('mailbodyid'));
 
-$available_templates = array(
+$available_templates = [
 	'createcustomer',
 	'pop_success',
 	'new_database_by_customer',
 	'new_ftpaccount_by_customer',
 	'password_reset'
-);
+];
 
 // only show templates of features that are enabled #1191
-if ((int) Settings::Get('system.report_enable') == 1) {
+if ((int)Settings::Get('system.report_enable') == 1) {
 	array_push($available_templates, 'trafficmaxpercent', 'diskmaxpercent');
 }
 if (Settings::Get('panel.sendalternativemail') == 1) {
 	array_push($available_templates, 'pop_success_alternative');
 }
 
-$file_templates = array(
+$file_templates = [
 	'index_html'
-);
+];
 
 if ($action == '') {
 	// email templates
-	$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_templates");
+	$log->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_templates");
 
-	$templates_array = array();
+	$templates_array = [];
 	$result_stmt = Database::prepare("
 		SELECT `id`, `language`, `varname` FROM `" . TABLE_PANEL_TEMPLATES . "`
 		WHERE `adminid` = :adminid AND `templategroup`='mails'
 		ORDER BY `language`, `varname`
 	");
-	Database::pexecute($result_stmt, array(
+	Database::pexecute($result_stmt, [
 		'adminid' => $userinfo['adminid']
-	));
+	]);
 
 	while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-		$parts = array();
+		$parts = [];
 		preg_match('/^([a-z]([a-z_]+[a-z])*)_(mailbody|subject)$/', $row['varname'], $parts);
 		$templates_array[$row['language']][$parts[1]][$parts[3]] = $row['id'];
 	}
@@ -75,7 +88,7 @@ if ($action == '') {
 			$templates[] = [
 				'subjectid' => $email['subject'],
 				'mailbodyid' => $email['mailbody'],
-				'template' => $lng['admin']['templates'][$action],
+				'template' => lng('admin.templates.' . $action),
 				'language' => $language
 			];
 		}
@@ -83,27 +96,28 @@ if ($action == '') {
 
 	$mail_actions_links = false;
 	foreach ($languages as $language_file => $language_name) {
-
-		$templates_done = array();
+		$templates_done = [];
 		$result_stmt = Database::prepare("
 			SELECT `varname` FROM `" . TABLE_PANEL_TEMPLATES . "`
 			WHERE `adminid` = :adminid AND `language`= :lang
 			AND `templategroup` = 'mails' AND `varname` LIKE '%_subject'
 		");
-		Database::pexecute($result_stmt, array(
+		Database::pexecute($result_stmt, [
 			'adminid' => $userinfo['adminid'],
 			'lang' => $language_name
-		));
+		]);
 
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$templates_done[] = str_replace('_subject', '', $row['varname']);
 		}
 
 		if (count(array_diff($available_templates, $templates_done)) > 0) {
-			$mail_actions_links = [[
-				'href' => $linker->getLink(['section' => 'templates', 'page' => $page, 'action' => 'add']),
-				'label' => $lng['admin']['templates']['template_add']
-			]];
+			$mail_actions_links = [
+				[
+					'href' => $linker->getLink(['section' => 'templates', 'page' => $page, 'action' => 'add']),
+					'label' => lng('admin.templates.template_add')
+				]
+			];
 		}
 	}
 
@@ -117,24 +131,31 @@ if ($action == '') {
 	$result_stmt = Database::prepare("
 		SELECT `id`, `varname` FROM `" . TABLE_PANEL_TEMPLATES . "`
 		WHERE `adminid` = :adminid AND `templategroup`='files'");
-	Database::pexecute($result_stmt, array(
+	Database::pexecute($result_stmt, [
 		'adminid' => $userinfo['adminid']
-	));
+	]);
 
 	$filetemplates = [];
 	while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 		$filetemplates[] = [
 			'id' => $row['id'],
-			'template' => $lng['admin']['templates'][$row['varname']]
+			'template' => lng('admin.templates.' . $row['varname'])
 		];
 	}
 
 	$file_actions_links = false;
 	if (Database::num_rows() != count($file_templates)) {
-		$file_actions_links = [[
-			'href' => $linker->getLink(['section' => 'templates', 'page' => $page, 'action' => 'add', 'files' => 'files']),
-			'label' => $lng['admin']['templates']['template_fileadd']
-		]];
+		$file_actions_links = [
+			[
+				'href' => $linker->getLink([
+					'section' => 'templates',
+					'page' => $page,
+					'action' => 'add',
+					'files' => 'files'
+				]),
+				'label' => lng('admin.templates.template_fileadd')
+			]
+		];
 	}
 
 	$filetpl_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.filetemplates.php';
@@ -144,8 +165,8 @@ if ($action == '') {
 	];
 
 	UI::view('user/table-tpl.html.twig', [
-		'maillisting' => \Froxlor\UI\Listing::formatFromArray($collection_mail, $mailtpl_list_data['mailtpl_list']),
-		'filelisting' => \Froxlor\UI\Listing::formatFromArray($collection_file, $filetpl_list_data['filetpl_list']),
+		'maillisting' => Listing::formatFromArray($collection_mail, $mailtpl_list_data['mailtpl_list']),
+		'filelisting' => Listing::formatFromArray($collection_file, $filetpl_list_data['filetpl_list']),
 		'actions_links' => array_merge($mail_actions_links, $file_actions_links)
 	]);
 } elseif ($action == 'delete' && $subjectid != 0 && $mailbodyid != 0) {
@@ -153,10 +174,10 @@ if ($action == '') {
 	$result_stmt = Database::prepare("
 		SELECT `language`, `varname` FROM `" . TABLE_PANEL_TEMPLATES . "`
 		WHERE `adminid` = :adminid AND `id` = :id");
-	Database::pexecute($result_stmt, array(
+	Database::pexecute($result_stmt, [
 		'adminid' => $userinfo['adminid'],
 		'id' => $subjectid
-	));
+	]);
 	$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
 
 	if ($result['varname'] != '') {
@@ -165,22 +186,22 @@ if ($action == '') {
 				DELETE FROM `" . TABLE_PANEL_TEMPLATES . "`
 				WHERE `adminid` = :adminid
 				AND (`id` = :ida OR `id` = :idb)");
-			Database::pexecute($del_stmt, array(
+			Database::pexecute($del_stmt, [
 				'adminid' => $userinfo['adminid'],
 				'ida' => $subjectid,
 				'idb' => $mailbodyid
-			));
-			$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "deleted template '" . $result['language'] . ' - ' . $lng['admin']['templates'][str_replace('_subject', '', $result['varname'])] . "'");
-			\Froxlor\UI\Response::redirectTo($filename, array(
+			]);
+			$log->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "deleted template '" . $result['language'] . ' - ' . lng('admin.templates.' . str_replace('_subject', '', $result['varname'])) . "'");
+			Response::redirectTo($filename, [
 				'page' => $page
-			));
+			]);
 		} else {
-			\Froxlor\UI\HTML::askYesNo('admin_template_reallydelete', $filename, array(
+			HTML::askYesNo('admin_template_reallydelete', $filename, [
 				'subjectid' => $subjectid,
 				'mailbodyid' => $mailbodyid,
 				'page' => $page,
 				'action' => $action
-			), $result['language'] . ' - ' . $lng['admin']['templates'][str_replace('_subject', '', $result['varname'])]);
+			], $result['language'] . ' - ' . lng('admin.templates.' . str_replace('_subject', '', $result['varname'])));
 		}
 	}
 } elseif ($action == 'deletef' && $id != 0) {
@@ -188,95 +209,93 @@ if ($action == '') {
 	$result_stmt = Database::prepare("
 		SELECT * FROM `" . TABLE_PANEL_TEMPLATES . "`
 		WHERE `adminid` = :adminid AND `id` = :id");
-	Database::pexecute($result_stmt, array(
+	Database::pexecute($result_stmt, [
 		'adminid' => $userinfo['adminid'],
 		'id' => $id
-	));
+	]);
 
 	if (Database::num_rows() > 0) {
-
 		$row = $result_stmt->fetch(PDO::FETCH_ASSOC);
 
 		if (isset($_POST['send']) && $_POST['send'] == 'send') {
 			$del_stmt = Database::prepare("
 				DELETE FROM `" . TABLE_PANEL_TEMPLATES . "`
 				WHERE `adminid` = :adminid AND `id` = :id");
-			Database::pexecute($del_stmt, array(
+			Database::pexecute($del_stmt, [
 				'adminid' => $userinfo['adminid'],
 				'id' => $id
-			));
-			$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "deleted template '" . $lng['admin']['templates'][$row['varname']] . "'");
-			\Froxlor\UI\Response::redirectTo($filename, array(
+			]);
+			$log->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "deleted template '" . lng('admin.templates.' . $row['varname']) . "'");
+			Response::redirectTo($filename, [
 				'page' => $page
-			));
+			]);
 		} else {
-			\Froxlor\UI\HTML::askYesNo('admin_template_reallydelete', $filename, array(
+			HTML::askYesNo('admin_template_reallydelete', $filename, [
 				'id' => $id,
 				'page' => $page,
 				'action' => $action
-			), $lng['admin']['templates'][$row['varname']]);
+			], lng('admin.templates.' . $row['varname']));
 		}
 	} else {
-		\Froxlor\UI\Response::standard_error('templatenotfound');
+		Response::standardError('templatenotfound');
 	}
 } elseif ($action == 'add') {
-
 	if (isset($_POST['prepare']) && $_POST['prepare'] == 'prepare') {
 		// email templates
-		$language = htmlentities(\Froxlor\Validate\Validate::validate($_POST['language'], 'language', '/^[^\r\n\0"\']+$/', 'nolanguageselect'));
-		$template = \Froxlor\Validate\Validate::validate($_POST['template'], 'template');
+		$language = htmlentities(Validate::validate($_POST['language'], 'language', '/^[^\r\n\0"\']+$/', 'nolanguageselect'));
+		$template = Validate::validate($_POST['template'], 'template');
 
 		$result_stmt = Database::prepare("
 			SELECT COUNT(*) as def FROM `" . TABLE_PANEL_TEMPLATES . "`
 			WHERE `adminid` = :adminid AND `language` = :lang
 			AND `templategroup` = 'mails' AND `varname` LIKE :template
 		");
-		$result = Database::pexecute_first($result_stmt, array(
+		$result = Database::pexecute_first($result_stmt, [
 			'adminid' => $userinfo['adminid'],
 			'lang' => $language,
 			'template' => $template . '%'
-		));
+		]);
 		if ($result && $result['def'] > 0) {
-			\Froxlor\UI\Response::standard_error('templatelanguagecombodefined');
+			Response::standardError('templatelanguagecombodefined');
 		}
 
 		$lng_bak = $lng;
 		foreach ($langs['English'] as $key => $value) {
-			include_once \Froxlor\FileDir::makeSecurePath($value['file']);
+			include_once FileDir::makeSecurePath($value['file']);
 		}
 		if ($language != 'English') {
 			foreach ($langs[$language] as $key => $value) {
-				include \Froxlor\FileDir::makeSecurePath($value['file']);
+				include FileDir::makeSecurePath($value['file']);
 			}
 		}
 
-		$subject = $lng['mails'][$template]['subject'];
-		$body = str_replace('\n', "\n", $lng['mails'][$template]['mailbody']);
+		$subject = lng('mails.' . $template . '.subject');
+		$body = str_replace('\n', "\n", lng('mails.' . $template . '.mailbody'));
 
 		$lng = $lng_bak;
 
 		$template_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/templates/formfield.template_add.php';
 
 		UI::view('user/form-replacers.html.twig', [
-			'formaction' => $linker->getLink(array('section' => 'templates')),
+			'formaction' => $linker->getLink(['section' => 'templates']),
 			'formdata' => $template_add_data['template_add'],
 			'replacers' => $template_add_data['template_replacers']
 		]);
 	} elseif (isset($_POST['send']) && $_POST['send'] == 'send' && !isset($_POST['filesend'])) {
 		// email templates
-		$language = htmlentities(\Froxlor\Validate\Validate::validate($_POST['language'], 'language', '/^[^\r\n\0"\']+$/', 'nolanguageselect'));
-		$template = \Froxlor\Validate\Validate::validate($_POST['template'], 'template');
-		$subject = \Froxlor\Validate\Validate::validate($_POST['subject'], 'subject', '/^[^\r\n\0]+$/', 'nosubjectcreate');
-		$mailbody = \Froxlor\Validate\Validate::validate($_POST['mailbody'], 'mailbody', '/^[^\0]+$/', 'nomailbodycreate');
-		$templates = array();
+		$language = htmlentities(Validate::validate($_POST['language'], 'language', '/^[^\r\n\0"\']+$/', 'nolanguageselect'));
+		$template = Validate::validate($_POST['template'], 'template');
+		$subject = Validate::validate($_POST['subject'], 'subject', '/^[^\r\n\0]+$/', 'nosubjectcreate');
+		$mailbody = Validate::validate($_POST['mailbody'], 'mailbody', '/^[^\0]+$/', 'nomailbodycreate');
+		$templates = [];
 		$result_stmt = Database::prepare("
 			SELECT `varname` FROM `" . TABLE_PANEL_TEMPLATES . "`
 			WHERE `adminid` = :adminid AND `language` = :lang
 			AND `templategroup` = 'mails' AND `varname` LIKE '%_subject'");
-		Database::pexecute($result_stmt, array(
+		Database::pexecute($result_stmt, [
 			'adminid' => $userinfo['adminid'],
 			'lang' => $language
-		));
+		]);
 
 		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$templates[] = str_replace('_subject', '', $row['varname']);
@@ -284,7 +303,7 @@ if ($action == '') {
 
 		$templates = array_diff($available_templates, $templates);
 		if (!in_array($template, $templates)) {
-			\Froxlor\UI\Response::standard_error('templatenotfound');
+			Response::standardError('templatenotfound');
 		} else {
 			$ins_stmt = Database::prepare("
 				INSERT INTO `" . TABLE_PANEL_TEMPLATES . "` SET
@@ -295,32 +314,32 @@ if ($action == '') {
 					`value` = :value");
 
 			// mail-subject
-			$ins_data = array(
+			$ins_data = [
 				'adminid' => $userinfo['adminid'],
 				'lang' => $language,
 				'var' => $template . '_subject',
 				'value' => $subject
-			);
+			];
 			Database::pexecute($ins_stmt, $ins_data);
 
 			// mail-body
-			$ins_data = array(
+			$ins_data = [
 				'adminid' => $userinfo['adminid'],
 				'lang' => $language,
 				'var' => $template . '_mailbody',
 				'value' => $mailbody
-			);
+			];
 			Database::pexecute($ins_stmt, $ins_data);
 
-			$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "added template '" . $language . ' - ' . $template . "'");
-			\Froxlor\UI\Response::redirectTo($filename, array(
+			$log->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "added template '" . $language . ' - ' . $template . "'");
+			Response::redirectTo($filename, [
 				'page' => $page
-			));
+			]);
 		}
 	} elseif (isset($_POST['filesend']) && $_POST['filesend'] == 'filesend') {
 		// file templates
-		$template = \Froxlor\Validate\Validate::validate($_POST['template'], 'template');
-		$filecontent = \Froxlor\Validate\Validate::validate($_POST['filecontent'], 'filecontent', '/^[^\0]+$/', 'filecontentnotset');
+		$template = Validate::validate($_POST['template'], 'template');
+		$filecontent = Validate::validate($_POST['filecontent'], 'filecontent', '/^[^\0]+$/', 'filecontentnotset');
 
 		$ins_stmt = Database::prepare("
 			INSERT INTO `" . TABLE_PANEL_TEMPLATES . "` SET
@@ -330,34 +349,33 @@ if ($action == '') {
 				`varname` = :var,
 				`value` = :value");
 
-		$ins_data = array(
+		$ins_data = [
 			'adminid' => $userinfo['adminid'],
 			'var' => $template,
 			'value' => $filecontent
-		);
+		];
 		Database::pexecute($ins_stmt, $ins_data);
 
-		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "added template '" . $template . "'");
-		\Froxlor\UI\Response::redirectTo($filename, array(
+		$log->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "added template '" . $template . "'");
+		Response::redirectTo($filename, [
 			'page' => $page
-		));
+		]);
 	} elseif (!isset($_GET['files'])) {
-
 		// email templates
 		$add = false;
 		$language_options = [];
 		$template_options = [];
 
 		foreach ($languages as $language_file => $language_name) {
-			$templates = array();
+			$templates = [];
 			$result_stmt = Database::prepare("
 				SELECT `varname` FROM `" . TABLE_PANEL_TEMPLATES . "`
 				WHERE `adminid` = :adminid AND `language` = :lang
 				AND `templategroup` = 'mails' AND `varname` LIKE '%_subject'");
-			Database::pexecute($result_stmt, array(
+			Database::pexecute($result_stmt, [
 				'adminid' => $userinfo['adminid'],
 				'lang' => $language_name
-			));
+			]);
 
 			while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 				$templates[] = str_replace('_subject', '', $row['varname']);
@@ -370,29 +388,29 @@ if ($action == '') {
 				$templates = array_diff($available_templates, $templates);
 
 				foreach ($templates as $template) {
-					$template_options[$template] = $lng['admin']['templates'][$template];
+					$template_options[$template] = lng('admin.templates.' . $template);
 				}
 			}
 		}
 
 		if ($add) {
 			UI::view('user/form.html.twig', [
-				'formaction' => $linker->getLink(array('section' => 'templates')),
+				'formaction' => $linker->getLink(['section' => 'templates']),
 				'formdata' => [
-					'title' => $lng['admin']['templates']['template_add'],
+					'title' => lng('admin.templates.template_add'),
 					'image' => 'fa-solid fa-plus',
 					'sections' => [
 						'section_a' => [
-							'title' => $lng['admin']['templates']['template_add'],
+							'title' => lng('admin.templates.template_add'),
 							'fields' => [
 								'language' => [
-									'label' => $lng['login']['language'],
+									'label' => lng('login.language'),
 									'type' => 'select',
 									'select_var' => $language_options,
 									'selected' => $userinfo['language']
 								],
 								'template' => [
-									'label' => $lng['admin']['templates']['action'],
+									'label' => lng('admin.templates.action'),
 									'type' => 'select',
 									'select_var' => $template_options
 								],
@@ -407,22 +425,21 @@ if ($action == '') {
 				'editid' => $id
 			]);
 		} else {
-			\Froxlor\UI\Response::standard_error('alltemplatesdefined');
+			Response::standardError('alltemplatesdefined');
 		}
 	} else {
 		// filetemplates
 		$result_stmt = Database::prepare("
 			SELECT `id`, `varname` FROM `" . TABLE_PANEL_TEMPLATES . "`
 			WHERE `adminid` = :adminid AND `templategroup`='files'");
-		Database::pexecute($result_stmt, array(
+		Database::pexecute($result_stmt, [
 			'adminid' => $userinfo['adminid']
-		));
+		]);
 
 		if (Database::num_rows() == count($file_templates)) {
-			\Froxlor\UI\Response::standard_error('alltemplatesdefined');
+			Response::standardError('alltemplatesdefined');
 		} else {
-
-			$templatesdefined = array();
+			$templatesdefined = [];
 			$free_templates = [];
 
 			while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -430,13 +447,13 @@ if ($action == '') {
 			}
 
 			foreach (array_diff($file_templates, $templatesdefined) as $template) {
-				$free_templates[$template] = $lng['admin']['templates'][$template];
+				$free_templates[$template] = lng('admin.templates.' . $template);
 			}
 
 			$filetemplate_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/templates/formfield.filetemplate_add.php';
 
 			UI::view('user/form-replacers.html.twig', [
-				'formaction' => $linker->getLink(array('section' => 'templates')),
+				'formaction' => $linker->getLink(['section' => 'templates']),
 				'formdata' => $filetemplate_add_data['filetemplate_add'],
 				'replacers' => $filetemplate_add_data['filetemplate_replacers']
 			]);
@@ -447,64 +464,62 @@ if ($action == '') {
 	$result_stmt = Database::prepare("
 		SELECT `language`, `varname`, `value` FROM `" . TABLE_PANEL_TEMPLATES . "`
 		WHERE `adminid` = :adminid AND `id` = :subjectid");
-	Database::pexecute($result_stmt, array(
+	Database::pexecute($result_stmt, [
 		'adminid' => $userinfo['adminid'],
 		'subjectid' => $subjectid
-	));
+	]);
 	$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
 
 	if ($result['varname'] != '') {
-
 		if (isset($_POST['send']) && $_POST['send'] == 'send') {
-			$subject = \Froxlor\Validate\Validate::validate($_POST['subject'], 'subject', '/^[^\r\n\0]+$/', 'nosubjectcreate');
-			$mailbody = \Froxlor\Validate\Validate::validate($_POST['mailbody'], 'mailbody', '/^[^\0]+$/', 'nomailbodycreate');
+			$subject = Validate::validate($_POST['subject'], 'subject', '/^[^\r\n\0]+$/', 'nosubjectcreate');
+			$mailbody = Validate::validate($_POST['mailbody'], 'mailbody', '/^[^\0]+$/', 'nomailbodycreate');
 
 			$upd_stmt = Database::prepare("
 				UPDATE `" . TABLE_PANEL_TEMPLATES . "` SET
 					`value` = :value
 				WHERE `adminid` = :adminid AND `id` = :id");
 			// subject
-			Database::pexecute($upd_stmt, array(
+			Database::pexecute($upd_stmt, [
 				'value' => $subject,
 				'adminid' => $userinfo['adminid'],
 				'id' => $subjectid
-			));
+			]);
 			// same query but mailbody
-			Database::pexecute($upd_stmt, array(
+			Database::pexecute($upd_stmt, [
 				'value' => $mailbody,
 				'adminid' => $userinfo['adminid'],
 				'id' => $mailbodyid
-			));
+			]);
 
-			$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "edited template '" . $result['varname'] . "'");
-			\Froxlor\UI\Response::redirectTo($filename, array(
+			$log->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "edited template '" . $result['varname'] . "'");
+			Response::redirectTo($filename, [
 				'page' => $page
-			));
+			]);
 		} else {
-
-			$result = \Froxlor\PhpHelper::htmlentitiesArray($result);
-			$template_name = $lng['admin']['templates'][str_replace('_subject', '', $result['varname'])];
+			$result = PhpHelper::htmlentitiesArray($result);
+			$template_name = lng('admin.templates.' . str_replace('_subject', '', $result['varname']));
 			$subject = $result['value'];
 			$result_stmt = Database::prepare("
 				SELECT `language`, `varname`, `value`
 				FROM `" . TABLE_PANEL_TEMPLATES . "`
 				WHERE `id` = :id");
-			Database::pexecute($result_stmt, array(
+			Database::pexecute($result_stmt, [
 				'id' => $mailbodyid
-			));
+			]);
 			$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
 
 			$template = str_replace('_mailbody', '', $result['varname']);
 
 			// don't escape the already escaped language-string so save up before htmlentities()
 			$language = $result['language'];
-			$result = \Froxlor\PhpHelper::htmlentitiesArray($result);
+			$result = PhpHelper::htmlentitiesArray($result);
 			$mailbody = $result['value'];
 
 			$template_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/templates/formfield.template_edit.php';
 
 			UI::view('user/form-replacers.html.twig', [
-				'formaction' => $linker->getLink(array('section' => 'templates')),
+				'formaction' => $linker->getLink(['section' => 'templates']),
 				'formdata' => $template_edit_data['template_edit'],
 				'replacers' => $template_edit_data['template_replacers']
 			]);
@@ -515,45 +530,44 @@ if ($action == '') {
 	$result_stmt = Database::prepare("
 		SELECT * FROM `" . TABLE_PANEL_TEMPLATES . "`
 		WHERE `adminid` = :adminid AND `id` = :id");
-	Database::pexecute($result_stmt, array(
+	Database::pexecute($result_stmt, [
 		'adminid' => $userinfo['adminid'],
 		'id' => $id
-	));
+	]);
 
 	if (Database::num_rows() > 0) {
-
 		$row = $result_stmt->fetch(PDO::FETCH_ASSOC);
 
 		// filetemplates
 		if (isset($_POST['filesend']) && $_POST['filesend'] == 'filesend') {
-			$filecontent = \Froxlor\Validate\Validate::validate($_POST['filecontent'], 'filecontent', '/^[^\0]+$/', 'filecontentnotset');
+			$filecontent = Validate::validate($_POST['filecontent'], 'filecontent', '/^[^\0]+$/', 'filecontentnotset');
 			$upd_stmt = Database::prepare("
 				UPDATE `" . TABLE_PANEL_TEMPLATES . "` SET
 					`value` = :value
 				WHERE `adminid` = :adminid AND `id` = :id");
-			Database::pexecute($upd_stmt, array(
+			Database::pexecute($upd_stmt, [
 				'value' => $filecontent,
 				'adminid' => $userinfo['adminid'],
 				'id' => $id
-			));
+			]);
 
-			$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "edited template '" . $row['varname'] . "'");
-			\Froxlor\UI\Response::redirectTo($filename, array(
+			$log->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "edited template '" . $row['varname'] . "'");
+			Response::redirectTo($filename, [
 				'page' => $page
-			));
+			]);
 		} else {
-			$row = \Froxlor\PhpHelper::htmlentitiesArray($row);
+			$row = PhpHelper::htmlentitiesArray($row);
 
 			$filetemplate_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/templates/formfield.filetemplate_edit.php';
 
 			UI::view('user/form-replacers.html.twig', [
-				'formaction' => $linker->getLink(array('section' => 'templates')),
+				'formaction' => $linker->getLink(['section' => 'templates']),
 				'formdata' => $filetemplate_edit_data['filetemplate_edit'],
 				'replacers' => $filetemplate_edit_data['filetemplate_replacers'],
 				'editid' => $id
 			]);
 		}
 	} else {
-		\Froxlor\UI\Response::standard_error('templatenotfound');
+		Response::standardError('templatenotfound');
 	}
 }

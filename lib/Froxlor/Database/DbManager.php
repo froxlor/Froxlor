@@ -1,37 +1,41 @@
 <?php
-namespace Froxlor\Database;
-
-use Froxlor\Settings;
 
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright (c) the authors
- * @author Michael Kaufmann <mkaufmann@nutime.de>
- * @author Froxlor team <team@froxlor.org> (2010-)
- * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package Classes
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- * @since 0.9.31
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
  *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
+
+namespace Froxlor\Database;
+
+use Froxlor\Database\Manager\DbManagerMySQL;
+use Froxlor\Froxlor;
+use Froxlor\FroxlorLogger;
+use Froxlor\Settings;
+use PDO;
 
 /**
  * Class DbManager
  *
  * Wrapper-class for database-management like creating
  * and removing databases, users and permissions
- *
- * @copyright (c) the authors
- * @author Michael Kaufmann <mkaufmann@nutime.de>
- * @author Froxlor team <team@froxlor.org> (2010-)
- * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package Classes
  */
 class DbManager
 {
@@ -53,12 +57,81 @@ class DbManager
 	/**
 	 * main constructor
 	 *
-	 * @param \Froxlor\FroxlorLogger $log
+	 * @param FroxlorLogger $log
 	 */
 	public function __construct($log = null)
 	{
 		$this->log = $log;
 		$this->setManager();
+	}
+
+	/**
+	 * set manager-object by type of
+	 * dbms: mysql only for now
+	 *
+	 * sets private $_manager variable
+	 */
+	private function setManager()
+	{
+		// TODO read different dbms from settings later
+		$this->manager = new DbManagerMySQL($this->log);
+	}
+
+	public static function correctMysqlUsers($mysql_access_host_array)
+	{
+		// get sql-root access data
+		Database::needRoot(true);
+		Database::needSqlData();
+		$sql_root = Database::getSqlData();
+		Database::needRoot(false);
+
+		$dbservers_stmt = Database::query("SELECT DISTINCT `dbserver` FROM `" . TABLE_PANEL_DATABASES . "`");
+		while ($dbserver = $dbservers_stmt->fetch(PDO::FETCH_ASSOC)) {
+			Database::needRoot(true, $dbserver['dbserver']);
+			Database::needSqlData();
+			$sql_root = Database::getSqlData();
+
+			$dbm = new DbManager(FroxlorLogger::getInstanceOf());
+			$users = $dbm->getManager()->getAllSqlUsers(false);
+
+			$databases = [
+				$sql_root['db']
+			];
+			$databases_result_stmt = Database::prepare("
+				SELECT * FROM `" . TABLE_PANEL_DATABASES . "`
+				WHERE `dbserver` = :mysqlserver
+			");
+			Database::pexecute($databases_result_stmt, [
+				'mysqlserver' => $dbserver['dbserver']
+			]);
+
+			while ($databases_row = $databases_result_stmt->fetch(PDO::FETCH_ASSOC)) {
+				$databases[] = $databases_row['databasename'];
+			}
+
+			foreach ($databases as $username) {
+				if (isset($users[$username]) && is_array($users[$username]) && isset($users[$username]['hosts']) && is_array($users[$username]['hosts'])) {
+					$password = $users[$username]['password'];
+
+					foreach ($mysql_access_host_array as $mysql_access_host) {
+						$mysql_access_host = trim($mysql_access_host);
+
+						if (!in_array($mysql_access_host, $users[$username]['hosts'])) {
+							$dbm->getManager()->grantPrivilegesTo($username, $password, $mysql_access_host, true);
+						}
+					}
+
+					foreach ($users[$username]['hosts'] as $mysql_access_host) {
+						if (!in_array($mysql_access_host, $mysql_access_host_array)) {
+							$dbm->getManager()->deleteUser($username, $mysql_access_host);
+						}
+					}
+				}
+			}
+
+			$dbm->getManager()->flushPrivileges();
+			Database::needRoot(false);
+		}
 	}
 
 	/**
@@ -82,10 +155,10 @@ class DbManager
 			// get all usernames from db-manager
 			$allsqlusers = $this->getManager()->getAllSqlUsers();
 			// generate random username
-			$username = $loginname . '-' . substr(\Froxlor\Froxlor::genSessionId(), 20, 3);
+			$username = $loginname . '-' . substr(Froxlor::genSessionId(), 20, 3);
 			// check whether it exists on the DBMS
 			while (in_array($username, $allsqlusers)) {
-				$username = $loginname . '-' . substr(\Froxlor\Froxlor::genSessionId(), 20, 3);
+				$username = $loginname . '-' . substr(Froxlor::genSessionId(), 20, 3);
 			}
 		} elseif (strtoupper(Settings::Get('customer.mysqlprefix')) == 'DBNAME') {
 			$username = $loginname;
@@ -100,12 +173,12 @@ class DbManager
 
 		// now create the database itself
 		$this->getManager()->createDatabase($username);
-		$this->log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "created database '" . $username . "'");
+		$this->log->logAction(FroxlorLogger::USR_ACTION, LOG_INFO, "created database '" . $username . "'");
 
 		// and give permission to the user on every access-host we have
 		foreach (array_map('trim', explode(',', Settings::Get('system.mysql_access_host'))) as $mysql_access_host) {
 			$this->getManager()->grantPrivilegesTo($username, $password, $mysql_access_host);
-			$this->log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "grant all privileges for '" . $username . "'@'" . $mysql_access_host . "'");
+			$this->log->logAction(FroxlorLogger::USR_ACTION, LOG_NOTICE, "grant all privileges for '" . $username . "'@'" . $mysql_access_host . "'");
 		}
 
 		$this->getManager()->flushPrivileges();
@@ -122,79 +195,5 @@ class DbManager
 	public function getManager()
 	{
 		return $this->manager;
-	}
-
-	/**
-	 * set manager-object by type of
-	 * dbms: mysql only for now
-	 *
-	 * sets private $_manager variable
-	 */
-	private function setManager()
-	{
-		// TODO read different dbms from settings later
-		$this->manager = new \Froxlor\Database\Manager\DbManagerMySQL($this->log);
-	}
-
-	public static function correctMysqlUsers($mysql_access_host_array)
-	{
-		// get sql-root access data
-		Database::needRoot(true);
-		Database::needSqlData();
-		$sql_root = Database::getSqlData();
-		Database::needRoot(false);
-
-		$dbservers_stmt = Database::query("SELECT DISTINCT `dbserver` FROM `" . TABLE_PANEL_DATABASES . "`");
-		while ($dbserver = $dbservers_stmt->fetch(\PDO::FETCH_ASSOC)) {
-
-			Database::needRoot(true, $dbserver['dbserver']);
-			Database::needSqlData();
-			$sql_root = Database::getSqlData();
-
-			$dbm = new DbManager(\Froxlor\FroxlorLogger::getInstanceOf());
-			$users = $dbm->getManager()->getAllSqlUsers(false);
-
-			$databases = array(
-				$sql_root['db']
-			);
-			$databases_result_stmt = Database::prepare("
-				SELECT * FROM `" . TABLE_PANEL_DATABASES . "`
-				WHERE `dbserver` = :mysqlserver
-			");
-			Database::pexecute($databases_result_stmt, array(
-				'mysqlserver' => $dbserver['dbserver']
-			));
-
-			while ($databases_row = $databases_result_stmt->fetch(\PDO::FETCH_ASSOC)) {
-				$databases[] = $databases_row['databasename'];
-			}
-
-			foreach ($databases as $username) {
-
-				if (isset($users[$username]) && is_array($users[$username]) && isset($users[$username]['hosts']) && is_array($users[$username]['hosts'])) {
-
-					$password = $users[$username]['password'];
-
-					foreach ($mysql_access_host_array as $mysql_access_host) {
-
-						$mysql_access_host = trim($mysql_access_host);
-
-						if (! in_array($mysql_access_host, $users[$username]['hosts'])) {
-							$dbm->getManager()->grantPrivilegesTo($username, $password, $mysql_access_host, true);
-						}
-					}
-
-					foreach ($users[$username]['hosts'] as $mysql_access_host) {
-
-						if (! in_array($mysql_access_host, $mysql_access_host_array)) {
-							$dbm->getManager()->deleteUser($username, $mysql_access_host);
-						}
-					}
-				}
-			}
-
-			$dbm->getManager()->flushPrivileges();
-			Database::needRoot(false);
-		}
 	}
 }

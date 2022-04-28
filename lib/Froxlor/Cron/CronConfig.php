@@ -1,27 +1,35 @@
 <?php
 
-namespace Froxlor\Cron;
-
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright (c) the authors
- * @author Michael Kaufmann <mkaufmann@nutime.de>
- * @author Froxlor team <team@froxlor.org> (2010-)
- * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package Cron
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- * @since 0.10.0
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
  *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
+namespace Froxlor\Cron;
+
 use Froxlor\Database\Database;
+use Froxlor\FileDir;
+use Froxlor\Froxlor;
 use Froxlor\Settings;
+use PDO;
 
 class CronConfig
 {
@@ -33,7 +41,6 @@ class CronConfig
 	 */
 	public static function checkCrondConfigurationFile()
 	{
-
 		// check for task
 		Database::query("
 			SELECT * FROM `" . TABLE_PANEL_TASKS . "` WHERE `type` = '99'
@@ -42,9 +49,8 @@ class CronConfig
 
 		// is there a task for re-generating the cron.d-file?
 		if ($num_results > 0) {
-
 			// get all crons and their intervals
-			if (\Froxlor\FileDir::isFreeBSD()) {
+			if (FileDir::isFreeBSD()) {
 				// FreeBSD does not need a header as we are writing directly to the crontab
 				$cronfile = "\n";
 			} else {
@@ -67,9 +73,9 @@ class CronConfig
 			$hour_delay = 0;
 			$day_delay = 5;
 			$month_delay = 7;
-			while ($row_cronentry = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
+			while ($row_cronentry = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 				// create cron.d-entry
-				$matches = array();
+				$matches = [];
 				if (preg_match("/(\d+) (MINUTE|HOUR|DAY|WEEK|MONTH)/", $row_cronentry['interval'], $matches)) {
 					if ($matches[1] == 1) {
 						$minvalue = "*";
@@ -104,17 +110,17 @@ class CronConfig
 					}
 
 					// create entry-line
-					$cronfile .= "root " . $binpath . " " . \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . "/scripts/froxlor_master_cronjob.php") . " --" . $row_cronentry['cronfile'] . " 1> /dev/null\n";
+					$cronfile .= "root " . $binpath . " " . FileDir::makeCorrectFile(Froxlor::getInstallDir() . "/scripts/froxlor_master_cronjob.php") . " --" . $row_cronentry['cronfile'] . " 1> /dev/null\n";
 				}
 			}
 
 			// php sessionclean if enabled
-			if ((int) Settings::Get('phpfpm.enabled') == 1) {
+			if ((int)Settings::Get('phpfpm.enabled') == 1) {
 				$cronfile .= "# Look for and purge old sessions every 30 minutes" . PHP_EOL;
-				$cronfile .= "09,39 * * * * root " . $binpath . " " . \Froxlor\FileDir::makeCorrectFile(\Froxlor\Froxlor::getInstallDir() . "/bin/froxlor-cli") . " froxlor:php-sessionclean 1> /dev/null" . PHP_EOL;
+				$cronfile .= "09,39 * * * * root " . $binpath . " " . FileDir::makeCorrectFile(Froxlor::getInstallDir() . "/bin/froxlor-cli") . " froxlor:php-sessionclean 1> /dev/null" . PHP_EOL;
 			}
 
-			if (\Froxlor\FileDir::isFreeBSD()) {
+			if (FileDir::isFreeBSD()) {
 				// FreeBSD handles the cron-stuff in another way. We need to directly
 				// write to the crontab file as there is not cron.d/froxlor file
 				// (settings for system.cronconfig should be set correctly of course)
@@ -153,7 +159,7 @@ class CronConfig
 			Database::query("DELETE FROM `" . TABLE_PANEL_TASKS . "` WHERE `type` = '99'");
 
 			// run reload command
-			\Froxlor\FileDir::safe_exec(escapeshellcmd(Settings::Get('system.crondreload')));
+			FileDir::safe_exec(escapeshellcmd(Settings::Get('system.crondreload')));
 		}
 		return true;
 	}

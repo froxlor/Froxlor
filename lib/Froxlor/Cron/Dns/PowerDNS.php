@@ -1,29 +1,43 @@
 <?php
-namespace Froxlor\Cron\Dns;
-
-use Froxlor\Settings;
 
 /**
  * This file is part of the Froxlor project.
- * Copyright (c) 2016 the Froxlor Team (see authors).
+ * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright (c) the authors
- * @author Froxlor team <team@froxlor.org> (2016-)
- * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package Cron
- *         
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
+
+namespace Froxlor\Cron\Dns;
+
+use Froxlor\Dns\Dns;
+use Froxlor\Dns\DnsZone;
+use Froxlor\FroxlorLogger;
+use Froxlor\Settings;
+use PDO;
+
 class PowerDNS extends DnsBase
 {
 
 	public function writeConfigs()
 	{
 		// tell the world what we are doing
-		$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'Task4 started - Refreshing DNS database');
+		$this->logger->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, 'Task4 started - Refreshing DNS database');
 
 		$domains = $this->getDomainList();
 
@@ -31,7 +45,7 @@ class PowerDNS extends DnsBase
 		$this->clearZoneTables($domains);
 
 		if (empty($domains)) {
-			$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'No domains found for nameserver-config, skipping...');
+			$this->logger->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, 'No domains found for nameserver-config, skipping...');
 			return;
 		}
 
@@ -43,15 +57,45 @@ class PowerDNS extends DnsBase
 			$this->walkDomainList($domain, $domains);
 		}
 
-		$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'PowerDNS database updated');
+		$this->logger->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, 'PowerDNS database updated');
 		$this->reloadDaemon();
-		$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'Task4 finished');
+		$this->logger->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, 'Task4 finished');
+	}
+
+	private function clearZoneTables($domains = null)
+	{
+		$this->logger->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, 'Cleaning dns zone entries from database');
+
+		$pdns_domains_stmt = \Froxlor\Dns\PowerDNS::getDB()->prepare("SELECT `id`, `name` FROM `domains` WHERE `name` = :domain");
+
+		$del_rec_stmt = \Froxlor\Dns\PowerDNS::getDB()->prepare("DELETE FROM `records` WHERE `domain_id` = :did");
+		$del_meta_stmt = \Froxlor\Dns\PowerDNS::getDB()->prepare("DELETE FROM `domainmetadata` WHERE `domain_id` = :did");
+		$del_dom_stmt = \Froxlor\Dns\PowerDNS::getDB()->prepare("DELETE FROM `domains` WHERE `id` = :did");
+
+		foreach ($domains as $domain) {
+			$pdns_domains_stmt->execute([
+				'domain' => $domain['domain']
+			]);
+			$pdns_domain = $pdns_domains_stmt->fetch(PDO::FETCH_ASSOC);
+
+			if ($pdns_domain && !empty($pdns_domain['id'])) {
+				$del_rec_stmt->execute([
+					'did' => $pdns_domain['id']
+				]);
+				$del_meta_stmt->execute([
+					'did' => $pdns_domain['id']
+				]);
+				$del_dom_stmt->execute([
+					'did' => $pdns_domain['id']
+				]);
+			}
+		}
 	}
 
 	private function walkDomainList($domain, $domains)
 	{
 		$zoneContent = '';
-		$subzones = array();
+		$subzones = [];
 
 		foreach ($domain['children'] as $child_domain_id) {
 			$subzones[] = $this->walkDomainList($domains[$child_domain_id], $domains);
@@ -65,7 +109,7 @@ class PowerDNS extends DnsBase
 			}
 
 			if ($domain['ismainbutsubto'] == 0) {
-				$zoneContent = \Froxlor\Dns\Dns::createDomainZone(($domain['id'] == 'none') ? $domain : $domain['id'], $isFroxlorHostname);
+				$zoneContent = Dns::createDomainZone(($domain['id'] == 'none') ? $domain : $domain['id'], $isFroxlorHostname);
 				if (count($subzones)) {
 					foreach ($subzones as $subzone) {
 						$zoneContent->records[] = $subzone;
@@ -74,42 +118,12 @@ class PowerDNS extends DnsBase
 				$pdnsDomId = $this->insertZone($zoneContent->origin, $zoneContent->serial);
 				$this->insertRecords($pdnsDomId, $zoneContent->records, $zoneContent->origin);
 				$this->insertAllowedTransfers($pdnsDomId);
-				$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'DB entries stored for zone `' . $domain['domain'] . '`');
+				$this->logger->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, 'DB entries stored for zone `' . $domain['domain'] . '`');
 			} else {
-				return \Froxlor\Dns\Dns::createDomainZone(($domain['id'] == 'none') ? $domain : $domain['id'], $isFroxlorHostname, true);
+				return Dns::createDomainZone(($domain['id'] == 'none') ? $domain : $domain['id'], $isFroxlorHostname, true);
 			}
 		} else {
-			$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_ERR, 'Custom zonefiles are NOT supported when PowerDNS is selected as DNS daemon (triggered by: ' . $domain['domain'] . ')');
-		}
-	}
-
-	private function clearZoneTables($domains = null)
-	{
-		$this->logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'Cleaning dns zone entries from database');
-
-		$pdns_domains_stmt = \Froxlor\Dns\PowerDNS::getDB()->prepare("SELECT `id`, `name` FROM `domains` WHERE `name` = :domain");
-
-		$del_rec_stmt = \Froxlor\Dns\PowerDNS::getDB()->prepare("DELETE FROM `records` WHERE `domain_id` = :did");
-		$del_meta_stmt = \Froxlor\Dns\PowerDNS::getDB()->prepare("DELETE FROM `domainmetadata` WHERE `domain_id` = :did");
-		$del_dom_stmt = \Froxlor\Dns\PowerDNS::getDB()->prepare("DELETE FROM `domains` WHERE `id` = :did");
-
-		foreach ($domains as $domain) {
-			$pdns_domains_stmt->execute(array(
-				'domain' => $domain['domain']
-			));
-			$pdns_domain = $pdns_domains_stmt->fetch(\PDO::FETCH_ASSOC);
-
-			if ($pdns_domain && ! empty($pdns_domain['id'])) {
-				$del_rec_stmt->execute(array(
-					'did' => $pdns_domain['id']
-				));
-				$del_meta_stmt->execute(array(
-					'did' => $pdns_domain['id']
-				));
-				$del_dom_stmt->execute(array(
-					'did' => $pdns_domain['id']
-				));
-			}
+			$this->logger->logAction(FroxlorLogger::CRON_ACTION, LOG_ERR, 'Custom zonefiles are NOT supported when PowerDNS is selected as DNS daemon (triggered by: ' . $domain['domain'] . ')');
 		}
 	}
 
@@ -118,16 +132,16 @@ class PowerDNS extends DnsBase
 		$ins_stmt = \Froxlor\Dns\PowerDNS::getDB()->prepare("
 			INSERT INTO domains set `name` = :domainname, `notified_serial` = :serial, `type` = :type
 		");
-		$ins_stmt->execute(array(
+		$ins_stmt->execute([
 			'domainname' => $domainname,
 			'serial' => $serial,
 			'type' => strtoupper(Settings::Get('system.powerdns_mode'))
-		));
+		]);
 		$lastid = \Froxlor\Dns\PowerDNS::getDB()->lastInsertId();
 		return $lastid;
 	}
 
-	private function insertRecords($domainid = 0, $records = array(), $origin = "")
+	private function insertRecords($domainid = 0, $records = [], $origin = "")
 	{
 		$ins_stmt = \Froxlor\Dns\PowerDNS::getDB()->prepare("
 			INSERT INTO records set
@@ -141,7 +155,7 @@ class PowerDNS extends DnsBase
 		");
 
 		foreach ($records as $record) {
-			if ($record instanceof \Froxlor\Dns\DnsZone) {
+			if ($record instanceof DnsZone) {
 				$this->insertRecords($domainid, $record->records, $record->origin);
 				continue;
 			}
@@ -152,14 +166,14 @@ class PowerDNS extends DnsBase
 				$_record = $record->record . "." . $origin;
 			}
 
-			$ins_data = array(
+			$ins_data = [
 				'did' => $domainid,
 				'rec' => $_record,
 				'type' => $record->type,
 				'content' => $record->content,
 				'ttl' => $record->ttl,
 				'prio' => $record->priority
-			);
+			];
 			$ins_stmt->execute($ins_data);
 		}
 	}
@@ -170,9 +184,9 @@ class PowerDNS extends DnsBase
 			INSERT INTO domainmetadata set `domain_id` = :did, `kind` = 'ALLOW-AXFR-FROM', `content` = :value
 		");
 
-		$ins_data = array(
+		$ins_data = [
 			'did' => $domainid
-		);
+		];
 
 		if (count($this->ns) > 0 || count($this->axfr) > 0) {
 			// put nameservers in allow-transfer

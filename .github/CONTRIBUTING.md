@@ -9,12 +9,10 @@ features or refactoring, especially not the kind which requires changes to a
 lot of files.
 Please focus on our API based version 0.10.x (current master).
 
-
-
-
 ## Checklist
 
 General rules for PRs are:
+
 * Please save us all some trouble and unnecessary round-trips by _testing_ your
 changes.
 
@@ -24,34 +22,24 @@ changes.
 	the next changes it back, a third one changes it again, only a little
 	differently...
 
-
 Thanks!
-
-
-
 
 ### Webserver changes
 If you make changes to the functionality of webserver configuration, please
 make sure your implementation covers all supported webservers.
-
-
-
 
 ### l10n
 
 If you add new language strings, please make sure you add the english fallback
 strings in
 
-* `lng/english.lng.php`
-* `install/lng/english.lng.php` (if applicable)
-
-
-
+* `lng/en.lng.php`
+* `install/lng/en.lng.php` (if applicable)
 
 ### New settings and database-layout changes
+
 If you add new settings or layout changes, please make sure you add these to
 
-* `install/froxlor.sql`
+* `install/froxlor.sql.php`
 * and handle the update (see `install/updates/froxlor/0.10/update_0.10.inc.php`)
 * if you have any question on how update-process works, please contact us
-

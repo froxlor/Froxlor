@@ -1,35 +1,39 @@
 <?php
+
+/**
+ * This file is part of the Froxlor project.
+ * Copyright (c) 2010 the Froxlor Team (see authors).
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
+ */
+
 namespace Froxlor\Dns;
 
 use Froxlor\Settings;
 
-/**
- * This file is part of the Froxlor project.
- * Copyright (c) 2016 the Froxlor Team (see authors).
- *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
- *
- * @copyright (c) the authors
- * @author Froxlor team <team@froxlor.org> (2016-)
- * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package Classes
- *         
- */
 class DnsEntry
 {
-
 	public $record;
-
 	public $ttl;
-
 	public $class = 'IN';
-
 	public $type;
-
 	public $priority;
-
 	public $content;
 
 	public function __construct($record = '', $type = 'A', $content = null, $prio = 0, $ttl = 0, $class = 'IN')
@@ -58,8 +62,8 @@ class DnsEntry
 			$_content = '("' . $_l . '"' . PHP_EOL;
 			$_l = array_pop($_contentlines);
 			// check for ending quote
-			if (substr($_l, - 1) == '"') {
-				$_l = substr($_l, 0, - 1);
+			if (substr($_l, -1) == '"') {
+				$_l = substr($_l, 0, -1);
 			}
 			foreach ($_contentlines as $_cl) {
 				// lines in between

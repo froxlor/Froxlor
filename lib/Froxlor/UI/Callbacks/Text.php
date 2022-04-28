@@ -1,27 +1,35 @@
 <?php
 
-namespace Froxlor\UI\Callbacks;
-
-use Froxlor\PhpHelper;
-use Froxlor\UI\Panel\UI;
-use Froxlor\Froxlor;
-use Froxlor\User;
-
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @author     Maurice Preuß <hello@envoyr.com>
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Froxlor\UI\Callbacks
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
+
+namespace Froxlor\UI\Callbacks;
+
+use Froxlor\Froxlor;
+use Froxlor\PhpHelper;
+use Froxlor\UI\Panel\UI;
+use Froxlor\User;
+
 class Text
 {
 	public static function boolean(array $attributes): array
@@ -73,8 +81,8 @@ class Text
 		$result = $attributes['fields'];
 		$apikey_data = include Froxlor::getInstallDir() . '/lib/formfields/formfield.api_key.php';
 
-		$body = UI::twig()->render(UI::getTheme().'/user/inline-form.html.twig', [
-			'formaction' => $linker->getLink(array('section' => 'index', 'page' => 'apikeys')),
+		$body = UI::twig()->render(UI::getTheme() . '/user/inline-form.html.twig', [
+			'formaction' => $linker->getLink(['section' => 'index', 'page' => 'apikeys']),
 			'formdata' => $apikey_data['apikey'],
 			'editid' => $attributes['fields']['id']
 		]);

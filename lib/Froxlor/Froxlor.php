@@ -1,4 +1,28 @@
 <?php
+
+/**
+ * This file is part of the Froxlor project.
+ * Copyright (c) 2010 the Froxlor Team (see authors).
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
+ */
+
 namespace Froxlor;
 
 use Froxlor\Database\Database;
@@ -37,16 +61,6 @@ final class Froxlor
 	}
 
 	/**
-	 * return version + branding
-	 *
-	 * @return string
-	 */
-	public static function getFullVersion()
-	{
-		return self::VERSION . self::BRANDING;
-	}
-
-	/**
 	 * return version + branding and database-version
 	 *
 	 * @return string
@@ -57,12 +71,22 @@ final class Froxlor
 	}
 
 	/**
+	 * return version + branding
+	 *
+	 * @return string
+	 */
+	public static function getFullVersion()
+	{
+		return self::VERSION . self::BRANDING;
+	}
+
+	/**
 	 * Function hasUpdates
 	 *
 	 * checks if a given version is not equal the current one
 	 *
 	 * @param string $to_check
-	 *        	version to check, if empty current version is used
+	 *            version to check, if empty current version is used
 	 *
 	 * @return bool true if version to check does not match, else false
 	 */
@@ -83,7 +107,7 @@ final class Froxlor
 	 * checks if a given database-version is not equal the current one
 	 *
 	 * @param int $to_check
-	 *        	version to check, if empty current dbversion is used
+	 *            version to check, if empty current dbversion is used
 	 *
 	 * @return bool true if version to check does not match, else false
 	 */
@@ -104,7 +128,7 @@ final class Froxlor
 	 * checks if a given database-version is the current one
 	 *
 	 * @param int $to_check
-	 *        	version to check
+	 *            version to check
 	 *
 	 * @return bool true if version to check matches, else false
 	 */
@@ -123,7 +147,7 @@ final class Froxlor
 	 * to the given value (no checks here!)
 	 *
 	 * @param string $new_version
-	 *        	new-version
+	 *            new-version
 	 *
 	 * @return bool true on success, else false
 	 */
@@ -133,9 +157,9 @@ final class Froxlor
 			$upd_stmt = Database::prepare("
 				UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = :newversion
 				WHERE `settinggroup` = 'panel' AND `varname` = 'db_version'");
-			Database::pexecute($upd_stmt, array(
+			Database::pexecute($upd_stmt, [
 				'newversion' => $new_version
-			));
+			]);
 			Settings::Set('panel.db_version', $new_version);
 			return true;
 		}
@@ -149,7 +173,7 @@ final class Froxlor
 	 * to the given value (no checks here!)
 	 *
 	 * @param string $new_version
-	 *        	new-version
+	 *            new-version
 	 *
 	 * @return bool true on success, else false
 	 */
@@ -159,9 +183,9 @@ final class Froxlor
 			$upd_stmt = Database::prepare("
 				UPDATE `" . TABLE_PANEL_SETTINGS . "` SET `value` = :newversion
 				WHERE `settinggroup` = 'panel' AND `varname` = 'version'");
-			Database::pexecute($upd_stmt, array(
+			Database::pexecute($upd_stmt, [
 				'newversion' => $new_version
-			));
+			]);
 			Settings::Set('panel.version', $new_version);
 			return true;
 		}
@@ -190,7 +214,7 @@ final class Froxlor
 	 * current one (and panel is froxlor)
 	 *
 	 * @param string $to_check
-	 *        	version to check
+	 *            version to check
 	 *
 	 * @return bool true if version to check matches, else false
 	 */
@@ -210,7 +234,7 @@ final class Froxlor
 	 */
 	public static function genSessionId(int $length = 16)
 	{
-		if(!isset($length) || intval($length) <= 8 ){
+		if (!isset($length) || intval($length) <= 8) {
 			$length = 16;
 		}
 		if (function_exists('random_bytes')) {
@@ -236,7 +260,6 @@ final class Froxlor
 	 */
 	public static function versionCompare2($a, $b)
 	{
-
 		// split version into pieces and remove trailing .0
 		$a = explode(".", $a);
 		$b = explode(".", $b);
@@ -259,7 +282,7 @@ final class Froxlor
 				if ($aVal > $b[$depth]) {
 					return 1; // A > B
 				} elseif ($aVal < $b[$depth]) {
-					return - 1; // B > A
+					return -1; // B > A
 				}
 				// an equal result is inconclusive at this point
 			} else {
@@ -269,7 +292,7 @@ final class Froxlor
 		}
 		// at this point, we know that to the depth that A and B extend to, they are equivalent.
 		// either the loop ended because A is shorter than B, or both are equal.
-		return (count($a) < count($b)) ? - 1 : 0;
+		return (count($a) < count($b)) ? -1 : 0;
 	}
 
 	private static function parseVersionArray(&$arr = null)
@@ -281,12 +304,12 @@ final class Froxlor
 			if (stripos($x[1], 'rc') !== false) {
 				$arr[] = '-1';
 				$arr[] = '2'; // rc > dev > svn
-				              // number of rc
+				// number of rc
 				$arr[] = substr($x[1], 2);
 			} elseif (stripos($x[1], 'dev') !== false) {
 				$arr[] = '-1';
 				$arr[] = '1'; // svn < dev < rc
-				              // number of dev
+				// number of dev
 				$arr[] = substr($x[1], 3);
 			} elseif (stripos($x[1], 'svn') !== false) {
 				// -svn version are deprecated

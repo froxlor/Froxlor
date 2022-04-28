@@ -2,165 +2,179 @@
 
 /**
  * This file is part of the Froxlor project.
- * Copyright (c) 2003-2009 the SysCP Team (see authors).
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright  (c) the authors
- * @author     Florian Lippert <flo@syscp.org> (2003-2009)
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Panel
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
 const AREA = 'admin';
 require __DIR__ . '/lib/init.php';
 
+use Froxlor\Api\Commands\Admins;
 use Froxlor\Api\Commands\Customers as Customers;
+use Froxlor\CurrentUser;
 use Froxlor\Database\Database;
+use Froxlor\Froxlor;
+use Froxlor\FroxlorLogger;
+use Froxlor\PhpHelper;
 use Froxlor\Settings;
+use Froxlor\UI\Collection;
+use Froxlor\UI\HTML;
+use Froxlor\UI\Listing;
 use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
+use Froxlor\UI\Response;
 
-$id = (int) Request::get('id');
+$id = (int)Request::get('id');
 
 if ($page == 'customers' && $userinfo['customers'] != '0') {
 	if ($action == '') {
-		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_customers");
+		$log->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_customers");
 
 		try {
 			$customer_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.customers.php';
-			$collection = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Customers::class, $userinfo, ['show_usages' => true]))
+			$collection = (new Collection(Customers::class, $userinfo, ['show_usages' => true]))
 				->withPagination($customer_list_data['customer_list']['columns']);
 			if ($userinfo['change_serversettings']) {
-				$collection->has('admin', \Froxlor\Api\Commands\Admins::class, 'adminid', 'adminid');
+				$collection->has('admin', Admins::class, 'adminid', 'adminid');
 			}
 		} catch (Exception $e) {
-			\Froxlor\UI\Response::dynamic_error($e->getMessage());
+			Response::dynamicError($e->getMessage());
 		}
 
 		$actions_links = false;
 		if ($userinfo['customers_used'] < $userinfo['customers'] || $userinfo['customers'] == '-1') {
-			$actions_links = [[
-				'href' => $linker->getLink(['section' => 'customers', 'page' => $page, 'action' => 'add']),
-				'label' => $lng['admin']['customer_add']
-			]];
+			$actions_links = [
+				[
+					'href' => $linker->getLink(['section' => 'customers', 'page' => $page, 'action' => 'add']),
+					'label' => lng('admin.customer_add')
+				]
+			];
 		}
 
 		UI::view('user/table.html.twig', [
-			'listing' => \Froxlor\UI\Listing::format($collection, $customer_list_data, 'customer_list') ,
+			'listing' => Listing::format($collection, $customer_list_data, 'customer_list'),
 			'actions_links' => $actions_links
 		]);
 	} elseif ($action == 'su' && $id != 0) {
 		try {
-			$json_result = Customers::getLocal($userinfo, array(
+			$json_result = Customers::getLocal($userinfo, [
 				'id' => $id
-			))->get();
+			])->get();
 		} catch (Exception $e) {
-			\Froxlor\UI\Response::dynamic_error($e->getMessage());
+			Response::dynamicError($e->getMessage());
 		}
 		$result = json_decode($json_result, true)['data'];
 
 		$destination_user = $result['loginname'];
 
 		if ($destination_user != '') {
-
 			if ($result['deactivated'] == '1') {
-				\Froxlor\UI\Response::standard_error("usercurrentlydeactivated", $destination_user);
+				Response::standardError("usercurrentlydeactivated", $destination_user);
 			}
 
-			$result['switched_user'] = \Froxlor\CurrentUser::getData();
+			$result['switched_user'] = CurrentUser::getData();
 			$result['adminsession'] = 0;
 			$result['userid'] = $result['customerid'];
-			\Froxlor\CurrentUser::setData($result);
+			CurrentUser::setData($result);
 
-			$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "switched user and is now '" . $destination_user . "'");
+			$log->logAction(FroxlorLogger::ADM_ACTION, LOG_INFO, "switched user and is now '" . $destination_user . "'");
 
 			$target = (isset($_GET['target']) ? $_GET['target'] : 'index');
 			$redirect = "customer_" . $target . ".php";
-			if (!file_exists(\Froxlor\Froxlor::getInstallDir() . "/" . $redirect)) {
+			if (!file_exists(Froxlor::getInstallDir() . "/" . $redirect)) {
 				$redirect = "customer_index.php";
 			}
-			\Froxlor\UI\Response::redirectTo($redirect, null, true);
+			Response::redirectTo($redirect, null, true);
 		} else {
-			\Froxlor\UI\Response::redirectTo('index.php', array(
+			Response::redirectTo('index.php', [
 				'action' => 'login'
-			));
+			]);
 		}
 	} elseif ($action == 'unlock' && $id != 0) {
 		try {
-			$json_result = Customers::getLocal($userinfo, array(
+			$json_result = Customers::getLocal($userinfo, [
 				'id' => $id
-			))->get();
+			])->get();
 		} catch (Exception $e) {
-			\Froxlor\UI\Response::dynamic_error($e->getMessage());
+			Response::dynamicError($e->getMessage());
 		}
 		$result = json_decode($json_result, true)['data'];
 
 		if (isset($_POST['send']) && $_POST['send'] == 'send') {
 			try {
-				$json_result = Customers::getLocal($userinfo, array(
+				$json_result = Customers::getLocal($userinfo, [
 					'id' => $id
-				))->unlock();
+				])->unlock();
 			} catch (Exception $e) {
-				\Froxlor\UI\Response::dynamic_error($e->getMessage());
+				Response::dynamicError($e->getMessage());
 			}
-			\Froxlor\UI\Response::redirectTo($filename, array(
+			Response::redirectTo($filename, [
 				'page' => $page
-			));
+			]);
 		} else {
-			\Froxlor\UI\HTML::askYesNo('customer_reallyunlock', $filename, array(
+			HTML::askYesNo('customer_reallyunlock', $filename, [
 				'id' => $id,
 				'page' => $page,
 				'action' => $action
-			), $result['loginname']);
+			], $result['loginname']);
 		}
 	} elseif ($action == 'delete' && $id != 0) {
 		try {
-			$json_result = Customers::getLocal($userinfo, array(
+			$json_result = Customers::getLocal($userinfo, [
 				'id' => $id
-			))->get();
+			])->get();
 		} catch (Exception $e) {
-			\Froxlor\UI\Response::dynamic_error($e->getMessage());
+			Response::dynamicError($e->getMessage());
 		}
 		$result = json_decode($json_result, true)['data'];
 
 		if (isset($_POST['send']) && $_POST['send'] == 'send') {
 			try {
-				$json_result = Customers::getLocal($userinfo, array(
+				$json_result = Customers::getLocal($userinfo, [
 					'id' => $id,
-					'delete_userfiles' => (isset($_POST['delete_userfiles']) ? (int) $_POST['delete_userfiles'] : 0)
-				))->delete();
+					'delete_userfiles' => (isset($_POST['delete_userfiles']) ? (int)$_POST['delete_userfiles'] : 0)
+				])->delete();
 			} catch (Exception $e) {
-				\Froxlor\UI\Response::dynamic_error($e->getMessage());
+				Response::dynamicError($e->getMessage());
 			}
-			\Froxlor\UI\Response::redirectTo($filename, array(
+			Response::redirectTo($filename, [
 				'page' => $page
-			));
+			]);
 		} else {
-			\Froxlor\UI\HTML::askYesNoWithCheckbox('admin_customer_reallydelete', 'admin_customer_alsoremovefiles', $filename, array(
+			HTML::askYesNoWithCheckbox('admin_customer_reallydelete', 'admin_customer_alsoremovefiles', $filename, [
 				'id' => $id,
 				'page' => $page,
 				'action' => $action
-			), $result['loginname']);
+			], $result['loginname']);
 		}
 	} elseif ($action == 'add') {
-
 		if (isset($_POST['send']) && $_POST['send'] == 'send') {
 			try {
 				Customers::getLocal($userinfo, $_POST)->add();
 			} catch (Exception $e) {
-				\Froxlor\UI\Response::dynamic_error($e->getMessage());
+				Response::dynamicError($e->getMessage());
 			}
-			\Froxlor\UI\Response::redirectTo($filename, array(
+			Response::redirectTo($filename, [
 				'page' => $page
-			));
+			]);
 		} else {
-
 			$phpconfigs = [];
 			$configs = Database::query("
 				SELECT c.*, fc.description as interpreter
@@ -168,16 +182,16 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 				LEFT JOIN `" . TABLE_PANEL_FPMDAEMONS . "` fc ON fc.id = c.fpmsettingid
 			");
 			while ($row = $configs->fetch(PDO::FETCH_ASSOC)) {
-				if ((int) Settings::Get('phpfpm.enabled') == 1) {
-					$phpconfigs[] = array(
+				if ((int)Settings::Get('phpfpm.enabled') == 1) {
+					$phpconfigs[] = [
 						'label' => $row['description'] . " [" . $row['interpreter'] . "]",
 						'value' => $row['id']
-					);
+					];
 				} else {
-					$phpconfigs[] = array(
+					$phpconfigs[] = [
 						'label' => $row['description'],
 						'value' => $row['id']
-					);
+					];
 				}
 			}
 
@@ -198,40 +212,37 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 			$customer_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/customer/formfield.customer_add.php';
 
 			UI::view('user/form.html.twig', [
-				'formaction' => $linker->getLink(array('section' => 'customers')),
+				'formaction' => $linker->getLink(['section' => 'customers']),
 				'formdata' => $customer_add_data['customer_add']
 			]);
 		}
 	} elseif ($action == 'edit' && $id != 0) {
-
 		try {
-			$json_result = Customers::getLocal($userinfo, array(
+			$json_result = Customers::getLocal($userinfo, [
 				'id' => $id
-			))->get();
+			])->get();
 		} catch (Exception $e) {
-			\Froxlor\UI\Response::dynamic_error($e->getMessage());
+			Response::dynamicError($e->getMessage());
 		}
 		$result = json_decode($json_result, true)['data'];
 
 		if ($result['loginname'] != '') {
-
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
 					Customers::getLocal($userinfo, $_POST)->update();
 				} catch (Exception $e) {
-					\Froxlor\UI\Response::dynamic_error($e->getMessage());
+					Response::dynamicError($e->getMessage());
 				}
-				\Froxlor\UI\Response::redirectTo($filename, array(
+				Response::redirectTo($filename, [
 					'page' => $page
-				));
+				]);
 			} else {
-
 				$dec_places = Settings::Get('panel.decimal_places');
 				$result['traffic'] = round($result['traffic'] / (1024 * 1024), $dec_places);
 				$result['diskspace'] = round($result['diskspace'] / 1024, $dec_places);
 				$result['email'] = $idna_convert->decode($result['email']);
 
-				$result = \Froxlor\PhpHelper::htmlentitiesArray($result);
+				$result = PhpHelper::htmlentitiesArray($result);
 
 				$phpconfigs = [];
 				$configs = Database::query("
@@ -240,16 +251,16 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 					LEFT JOIN `" . TABLE_PANEL_FPMDAEMONS . "` fc ON fc.id = c.fpmsettingid
 				");
 				while ($row = $configs->fetch(PDO::FETCH_ASSOC)) {
-					if ((int) Settings::Get('phpfpm.enabled') == 1) {
-						$phpconfigs[] = array(
+					if ((int)Settings::Get('phpfpm.enabled') == 1) {
+						$phpconfigs[] = [
 							'label' => $row['description'] . " [" . $row['interpreter'] . "]",
 							'value' => $row['id']
-						);
+						];
 					} else {
-						$phpconfigs[] = array(
+						$phpconfigs[] = [
 							'label' => $row['description'],
 							'value' => $row['id']
-						);
+						];
 					}
 				}
 
@@ -282,7 +293,7 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 				$customer_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/customer/formfield.customer_edit.php';
 
 				UI::view('user/form.html.twig', [
-					'formaction' => $linker->getLink(array('section' => 'customers', 'id' => $id)),
+					'formaction' => $linker->getLink(['section' => 'customers', 'id' => $id]),
 					'formdata' => $customer_edit_data['customer_edit'],
 					'editid' => $id
 				]);

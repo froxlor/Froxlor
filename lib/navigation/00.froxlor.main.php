@@ -2,297 +2,306 @@
 
 /**
  * This file is part of the Froxlor project.
- * Copyright (c) 2003-2009 the SysCP Team (see authors).
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright  (c) the authors
- * @author     Florian Lippert <flo@syscp.org> (2003-2009)
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Navigation
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
-return array(
-	'customer' => array(
-		'email' => array(
+
+use Froxlor\Settings;
+
+return [
+	'customer' => [
+		'email' => [
 			'url' => 'customer_email.php',
-			'label' => $lng['menue']['email']['email'],
-			'show_element' => (! \Froxlor\Settings::IsInList('panel.customer_hide_options', 'email')),
-            'icon' => 'fa fa-envelope',
-			'elements' => array(
-				array(
+			'label' => lng('menue.email.email'),
+			'show_element' => (!Settings::IsInList('panel.customer_hide_options', 'email')),
+			'icon' => 'fa fa-envelope',
+			'elements' => [
+				[
 					'url' => 'customer_email.php?page=emails',
-					'label' => $lng['menue']['email']['emails'],
+					'label' => lng('menue.email.emails'),
 					'required_resources' => 'emails'
-				),
-				array(
+				],
+				[
 					'url' => 'customer_email.php?page=emails&action=add',
-					'label' => $lng['emails']['emails_add'],
+					'label' => lng('emails.emails_add'),
 					'required_resources' => 'emails'
-				),
-				array(
-					'url' => \Froxlor\Settings::Get('panel.webmail_url'),
+				],
+				[
+					'url' => Settings::Get('panel.webmail_url'),
 					'new_window' => true,
-					'label' => $lng['menue']['email']['webmail'],
+					'label' => lng('menue.email.webmail'),
 					'required_resources' => 'emails_used',
-					'show_element' => (\Froxlor\Settings::Get('panel.webmail_url') != '')
-				)
-			)
-		),
-		'mysql' => array(
+					'show_element' => (Settings::Get('panel.webmail_url') != '')
+				]
+			]
+		],
+		'mysql' => [
 			'url' => 'customer_mysql.php',
-			'label' => $lng['menue']['mysql']['mysql'],
-			'show_element' => (! \Froxlor\Settings::IsInList('panel.customer_hide_options', 'mysql')),
-            'icon' => 'fa fa-database',
-			'elements' => array(
-				array(
+			'label' => lng('menue.mysql.mysql'),
+			'show_element' => (!Settings::IsInList('panel.customer_hide_options', 'mysql')),
+			'icon' => 'fa fa-database',
+			'elements' => [
+				[
 					'url' => 'customer_mysql.php?page=mysqls',
-					'label' => $lng['menue']['mysql']['databases'],
+					'label' => lng('menue.mysql.databases'),
 					'required_resources' => 'mysqls'
-				),
-				array(
-					'url' => \Froxlor\Settings::Get('panel.phpmyadmin_url'),
+				],
+				[
+					'url' => Settings::Get('panel.phpmyadmin_url'),
 					'new_window' => true,
-					'label' => $lng['menue']['mysql']['phpmyadmin'],
+					'label' => lng('menue.mysql.phpmyadmin'),
 					'required_resources' => 'mysqls_used',
-					'show_element' => (\Froxlor\Settings::Get('panel.phpmyadmin_url') != '')
-				)
-			)
-		),
-		'domains' => array(
+					'show_element' => (Settings::Get('panel.phpmyadmin_url') != '')
+				]
+			]
+		],
+		'domains' => [
 			'url' => 'customer_domains.php',
-			'label' => $lng['menue']['domains']['domains'],
-			'show_element' => (! \Froxlor\Settings::IsInList('panel.customer_hide_options', 'domains')),
-            'icon' => 'fa fa-globe',
-			'elements' => array(
-				array(
+			'label' => lng('menue.domains.domains'),
+			'show_element' => (!Settings::IsInList('panel.customer_hide_options', 'domains')),
+			'icon' => 'fa fa-globe',
+			'elements' => [
+				[
 					'url' => 'customer_domains.php?page=domains',
-					'label' => $lng['menue']['domains']['settings']
-				),
-				array(
+					'label' => lng('menue.domains.settings')
+				],
+				[
 					'url' => 'customer_domains.php?page=sslcertificates',
-					'label' => $lng['domains']['ssl_certificates']
-				)
-			)
-		),
-		'ftp' => array(
+					'label' => lng('domains.ssl_certificates')
+				]
+			]
+		],
+		'ftp' => [
 			'url' => 'customer_ftp.php',
-			'label' => $lng['menue']['ftp']['ftp'],
-			'show_element' => (! \Froxlor\Settings::IsInList('panel.customer_hide_options', 'ftp')),
+			'label' => lng('menue.ftp.ftp'),
+			'show_element' => (!Settings::IsInList('panel.customer_hide_options', 'ftp')),
 			'icon' => 'fa fa-users',
-			'elements' => array(
-				array(
+			'elements' => [
+				[
 					'url' => 'customer_ftp.php?page=accounts',
-					'label' => $lng['menue']['ftp']['accounts']
-				),
-				array(
-					'url' => \Froxlor\Settings::Get('panel.webftp_url'),
+					'label' => lng('menue.ftp.accounts')
+				],
+				[
+					'url' => Settings::Get('panel.webftp_url'),
 					'new_window' => true,
-					'label' => $lng['menue']['ftp']['webftp'],
-					'show_element' => (\Froxlor\Settings::Get('panel.webftp_url') != '')
-				)
-			)
-		),
-		'extras' => array(
+					'label' => lng('menue.ftp.webftp'),
+					'show_element' => (Settings::Get('panel.webftp_url') != '')
+				]
+			]
+		],
+		'extras' => [
 			'url' => 'customer_extras.php',
-			'label' => $lng['menue']['extras']['extras'],
-			'show_element' => (! \Froxlor\Settings::IsInList('panel.customer_hide_options', 'extras')),
-            'icon' => 'fa fa-wrench',
-			'elements' => array(
-				array(
+			'label' => lng('menue.extras.extras'),
+			'show_element' => (!Settings::IsInList('panel.customer_hide_options', 'extras')),
+			'icon' => 'fa fa-wrench',
+			'elements' => [
+				[
 					'url' => 'customer_extras.php?page=htpasswds',
-					'label' => $lng['menue']['extras']['directoryprotection'],
-					'show_element' => (! \Froxlor\Settings::IsInList('panel.customer_hide_options', 'extras.directoryprotection'))
-				),
-				array(
+					'label' => lng('menue.extras.directoryprotection'),
+					'show_element' => (!Settings::IsInList('panel.customer_hide_options', 'extras.directoryprotection'))
+				],
+				[
 					'url' => 'customer_extras.php?page=htaccess',
-					'label' => $lng['menue']['extras']['pathoptions'],
-					'show_element' => (! \Froxlor\Settings::IsInList('panel.customer_hide_options', 'extras.pathoptions'))
-				),
-				array(
+					'label' => lng('menue.extras.pathoptions'),
+					'show_element' => (!Settings::IsInList('panel.customer_hide_options', 'extras.pathoptions'))
+				],
+				[
 					'url' => 'customer_logger.php?page=log',
-					'label' => $lng['menue']['logger']['logger'],
-					'show_element' => (\Froxlor\Settings::Get('logger.enabled') == true) && (! \Froxlor\Settings::IsInList('panel.customer_hide_options', 'extras.logger'))
-				),
-				array(
+					'label' => lng('menue.logger.logger'),
+					'show_element' => (Settings::Get('logger.enabled') == true) && (!Settings::IsInList('panel.customer_hide_options', 'extras.logger'))
+				],
+				[
 					'url' => 'customer_extras.php?page=backup',
-					'label' => $lng['menue']['extras']['backup'],
-					'show_element' => (\Froxlor\Settings::Get('system.backupenabled') == true) && (! \Froxlor\Settings::IsInList('panel.customer_hide_options', 'extras.backup'))
-				)
-			)
-		),
-		'traffic' => array(
+					'label' => lng('menue.extras.backup'),
+					'show_element' => (Settings::Get('system.backupenabled') == true) && (!Settings::IsInList('panel.customer_hide_options', 'extras.backup'))
+				]
+			]
+		],
+		'traffic' => [
 			'url' => 'customer_traffic.php',
-			'label' => $lng['menue']['traffic']['traffic'],
-			'show_element' => (! \Froxlor\Settings::IsInList('panel.customer_hide_options', 'traffic')),
-            'icon' => 'fa fa-area-chart',
-			'elements' => array(
-				array(
+			'label' => lng('menue.traffic.traffic'),
+			'show_element' => (!Settings::IsInList('panel.customer_hide_options', 'traffic')),
+			'icon' => 'fa fa-area-chart',
+			'elements' => [
+				[
 					'url' => 'customer_traffic.php?page=current',
-					'label' => $lng['menue']['traffic']['current']
-				)
-			)
-		)
-	),
-	'admin' => array(
-		'resources' => array(
-			'label' => $lng['admin']['resources'],
+					'label' => lng('menue.traffic.current')
+				]
+			]
+		]
+	],
+	'admin' => [
+		'resources' => [
+			'label' => lng('admin.resources'),
 			'required_resources' => 'customers',
-            'icon' => 'fa fa-box',
-			'elements' => array(
-				array(
+			'icon' => 'fa fa-box',
+			'elements' => [
+				[
 					'url' => 'admin_customers.php?page=customers',
-					'label' => $lng['admin']['customers'],
+					'label' => lng('admin.customers'),
 					'required_resources' => 'customers'
-				),
-				array(
+				],
+				[
 					'url' => 'admin_admins.php?page=admins',
-					'label' => $lng['admin']['admins'],
+					'label' => lng('admin.admins'),
 					'required_resources' => 'change_serversettings'
-				),
-				array(
+				],
+				[
 					'url' => 'admin_domains.php?page=domains',
-					'label' => $lng['admin']['domains'],
+					'label' => lng('admin.domains'),
 					'required_resources' => 'domains'
-				),
-				array(
+				],
+				[
 					'url' => 'admin_domains.php?page=sslcertificates',
-					'label' => $lng['domains']['ssl_certificates'],
+					'label' => lng('domains.ssl_certificates'),
 					'required_resources' => 'domains'
-				),
-				array(
+				],
+				[
 					'url' => 'admin_ipsandports.php?page=ipsandports',
-					'label' => $lng['admin']['ipsandports']['ipsandports'],
+					'label' => lng('admin.ipsandports.ipsandports'),
 					'required_resources' => 'change_serversettings'
-				),
-				array(
+				],
+				[
 					'url' => 'admin_plans.php?page=overview',
-					'label' => $lng['admin']['plans']['plans'],
+					'label' => lng('admin.plans.plans'),
 					'required_resources' => 'customers'
-				),
-				array(
+				],
+				[
 					'url' => 'admin_settings.php?page=updatecounters',
-					'label' => $lng['admin']['updatecounters'],
+					'label' => lng('admin.updatecounters'),
 					'required_resources' => 'change_serversettings'
-				)
-			)
-		),
-		'traffic' => array(
-			'label' => $lng['admin']['traffic'],
+				]
+			]
+		],
+		'traffic' => [
+			'label' => lng('admin.traffic'),
 			'required_resources' => 'customers',
-            'icon' => 'fa fa-area-chart',
-			'elements' => array(
-				array(
+			'icon' => 'fa fa-area-chart',
+			'elements' => [
+				[
 					'url' => 'admin_traffic.php?page=customers',
-					'label' => $lng['admin']['customertraffic'],
+					'label' => lng('admin.customertraffic'),
 					'required_resources' => 'customers'
-				)
-			)
-		),
-		'server' => array(
-			'label' => $lng['admin']['server'],
+				]
+			]
+		],
+		'server' => [
+			'label' => lng('admin.server'),
 			'required_resources' => 'change_serversettings',
-            'icon' => 'fa fa-server',
-			'elements' => array(
-				array(
+			'icon' => 'fa fa-server',
+			'elements' => [
+				[
 					'url' => 'admin_configfiles.php?page=configfiles',
-					'label' => $lng['admin']['configfiles']['serverconfiguration'],
+					'label' => lng('admin.configfiles.serverconfiguration'),
 					'required_resources' => 'change_serversettings'
-				),
-				array(
+				],
+				[
 					'url' => 'admin_settings.php?page=overview',
-					'label' => $lng['admin']['serversettings'],
+					'label' => lng('admin.serversettings'),
 					'required_resources' => 'change_serversettings'
-				),
-				array(
+				],
+				[
 					'url' => 'admin_cronjobs.php?page=overview',
-					'label' => $lng['admin']['cron']['cronsettings'],
+					'label' => lng('admin.cron.cronsettings'),
 					'required_resources' => 'change_serversettings'
-				),
-				array(
+				],
+				[
 					'url' => 'admin_logger.php?page=log',
-					'label' => $lng['menue']['logger']['logger'],
+					'label' => lng('menue.logger.logger'),
 					'required_resources' => 'change_serversettings',
-					'show_element' => (\Froxlor\Settings::Get('logger.enabled') == true)
-				),
-				array(
+					'show_element' => (Settings::Get('logger.enabled') == true)
+				],
+				[
 					'url' => 'admin_settings.php?page=rebuildconfigs',
-					'label' => $lng['admin']['rebuildconf'],
+					'label' => lng('admin.rebuildconf'),
 					'required_resources' => 'change_serversettings'
-				),
-				array(
+				],
+				[
 					'url' => 'admin_autoupdate.php?page=overview',
-					'label' => $lng['admin']['autoupdate'],
+					'label' => lng('admin.autoupdate'),
 					'required_resources' => 'change_serversettings',
-					'show_element' => extension_loaded('zip') && \Froxlor\Settings::Config('enable_webupdate')
-				),
-				array(
+					'show_element' => extension_loaded('zip') && Settings::Config('enable_webupdate')
+				],
+				[
 					'url' => 'admin_settings.php?page=wipecleartextmailpws',
-					'label' => $lng['admin']['wipecleartextmailpwd'],
+					'label' => lng('admin.wipecleartextmailpwd'),
 					'required_resources' => 'change_serversettings',
-					'show_element' => (\Froxlor\Settings::Get('system.mailpwcleartext') == true)
-				)
-			)
-		),
-		'server_php' => array(
-			'label' => $lng['admin']['server_php'],
-            'icon' => 'fab fa-php',
-			'elements' => array(
-				array(
+					'show_element' => (Settings::Get('system.mailpwcleartext') == true)
+				]
+			]
+		],
+		'server_php' => [
+			'label' => lng('admin.server_php'),
+			'icon' => 'fab fa-php',
+			'elements' => [
+				[
 					'url' => 'admin_phpsettings.php?page=overview',
-					'label' => $lng['menue']['phpsettings']['maintitle'],
-					'show_element' => (\Froxlor\Settings::Get('system.mod_fcgid') == true || \Froxlor\Settings::Get('phpfpm.enabled') == true)
-				),
-				array(
+					'label' => lng('menue.phpsettings.maintitle'),
+					'show_element' => (Settings::Get('system.mod_fcgid') == true || Settings::Get('phpfpm.enabled') == true)
+				],
+				[
 					'url' => 'admin_phpsettings.php?page=fpmdaemons',
-					'label' => $lng['menue']['phpsettings']['fpmdaemons'],
-					'show_element' => \Froxlor\Settings::Get('phpfpm.enabled') == true
-				),
-				array(
+					'label' => lng('menue.phpsettings.fpmdaemons'),
+					'show_element' => Settings::Get('phpfpm.enabled') == true
+				],
+				[
 					'url' => 'admin_settings.php?page=phpinfo',
-					'label' => $lng['admin']['phpinfo'],
+					'label' => lng('admin.phpinfo'),
 					'required_resources' => 'change_serversettings'
-				),
-				array(
+				],
+				[
 					'url' => 'admin_apcuinfo.php?page=showinfo',
-					'label' => $lng['admin']['apcuinfo'],
+					'label' => lng('admin.apcuinfo'),
 					'required_resources' => 'change_serversettings',
 					'show_element' => (function_exists('apcu_cache_info') === true)
-				),
-				array(
+				],
+				[
 					'url' => 'admin_opcacheinfo.php?page=showinfo',
-					'label' => $lng['admin']['opcacheinfo'],
+					'label' => lng('admin.opcacheinfo'),
 					'required_resources' => 'change_serversettings',
 					'show_element' => (function_exists('opcache_get_configuration') === true)
-				)
-			)
-		),
-		'misc' => array(
-			'label' => $lng['admin']['misc'],
-            'icon' => 'fa fa-wrench',
-			'elements' => array(
-				array(
+				]
+			]
+		],
+		'misc' => [
+			'label' => lng('admin.misc'),
+			'icon' => 'fa fa-wrench',
+			'elements' => [
+				[
 					'url' => 'admin_settings.php?page=integritycheck',
-					'label' => $lng['admin']['integritycheck'],
+					'label' => lng('admin.integritycheck'),
 					'required_resources' => 'change_serversettings'
-				),
-				array(
+				],
+				[
 					'url' => 'admin_templates.php?page=email',
-					'label' => $lng['admin']['templates']['email']
-				),
-				array(
+					'label' => lng('admin.templates.email')
+				],
+				[
 					'url' => 'admin_message.php?page=message',
-					'label' => $lng['admin']['message']
-				),
-				array(
+					'label' => lng('admin.message')
+				],
+				[
 					'url' => 'admin_settings.php?page=testmail',
-					'label' => $lng['admin']['testmail']
-				)
-			)
-		)
-	)
-);
+					'label' => lng('admin.testmail')
+				]
+			]
+		]
+	]
+];

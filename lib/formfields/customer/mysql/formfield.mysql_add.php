@@ -1,6 +1,7 @@
 <?php
 
 use Froxlor\Settings;
+use Froxlor\System\Crypt;
 
 /**
  * This file is part of the Froxlor project.
@@ -8,57 +9,58 @@ use Froxlor\Settings;
  *
  * For the full copyright and license information, please view the COPYING
  * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * COPYING file online at https://files.froxlor.org/misc/COPYING.txt
  *
  * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Formfields
+ * @author         Froxlor team <team@froxlor.org> (2010-)
+ * @license        GPLv2 https://files.froxlor.org/misc/COPYING.txt
+ * @package        Formfields
  */
-return array(
-	'mysql_add' => array(
-		'title' => $lng['mysql']['database_create'],
+
+return [
+	'mysql_add' => [
+		'title' => lng('mysql.database_create'),
 		'image' => 'icons/mysql_add.png',
 		'self_overview' => ['section' => 'mysql', 'page' => 'mysqls'],
-		'sections' => array(
-			'section_a' => array(
-				'title' => $lng['mysql']['database_create'],
+		'sections' => [
+			'section_a' => [
+				'title' => lng('mysql.database_create'),
 				'image' => 'icons/mysql_add.png',
-				'fields' => array(
-					'custom_suffix' => array(
+				'fields' => [
+					'custom_suffix' => [
 						'visible' => strtoupper(Settings::Get('customer.mysqlprefix')) == 'DBNAME',
-						'label' => $lng['mysql']['databasename'],
+						'label' => lng('mysql.databasename'),
 						'type' => 'text'
-					),
-					'description' => array(
-						'label' => $lng['mysql']['databasedescription'],
+					],
+					'description' => [
+						'label' => lng('mysql.databasedescription'),
 						'type' => 'text'
-					),
-					'mysql_server' => array(
+					],
+					'mysql_server' => [
 						'visible' => count($mysql_servers) > 1,
-						'label' => $lng['mysql']['mysql_server'],
+						'label' => lng('mysql.mysql_server'),
 						'type' => 'select',
 						'select_var' => $mysql_servers
-					),
-					'mysql_password' => array(
-						'label' => $lng['login']['password'],
+					],
+					'mysql_password' => [
+						'label' => lng('login.password'),
 						'type' => 'password',
 						'autocomplete' => 'off'
-					),
-					'mysql_password_suggestion' => array(
-						'label' => $lng['customer']['generated_pwd'],
+					],
+					'mysql_password_suggestion' => [
+						'label' => lng('customer.generated_pwd'),
 						'type' => 'text',
-						'visible' => (\Froxlor\Settings::Get('panel.password_regex') == ''),
-						'value' => \Froxlor\System\Crypt::generatePassword()
-					),
-					'sendinfomail' => array(
-						'label' => $lng['customer']['sendinfomail'],
+						'visible' => (Settings::Get('panel.password_regex') == ''),
+						'value' => Crypt::generatePassword()
+					],
+					'sendinfomail' => [
+						'label' => lng('customer.sendinfomail'),
 						'type' => 'checkbox',
 						'value' => '1',
 						'checked' => false
-					)
-				)
-			)
-		)
-	)
-);
+					]
+				]
+			]
+		]
+	]
+];

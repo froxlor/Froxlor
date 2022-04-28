@@ -1,64 +1,68 @@
 <?php
-namespace Froxlor\Api\Commands;
-
-use Froxlor\Database\Database;
-use Froxlor\Settings;
 
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright (c) the authors
- * @author Froxlor team <team@froxlor.org> (2010-)
- * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package API
- * @since 0.10.0
- *       
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
-class CustomerBackups extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntity
-{
 
-	/**
-	 * check whether backup is enabled systemwide and if accessible for customer (hide_options)
-	 *
-	 * @throws \Exception
-	 */
-	private function validateAccess()
-	{
-		if (Settings::Get('system.backupenabled') != 1) {
-			throw new \Exception("You cannot access this resource", 405);
-		}
-		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'extras')) {
-			throw new \Exception("You cannot access this resource", 405);
-		}
-		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'extras.backup')) {
-			throw new \Exception("You cannot access this resource", 405);
-		}
-	}
+namespace Froxlor\Api\Commands;
+
+use Exception;
+use Froxlor\Api\ApiCommand;
+use Froxlor\Api\ResourceEntity;
+use Froxlor\Cron\TaskId;
+use Froxlor\Database\Database;
+use Froxlor\FileDir;
+use Froxlor\FroxlorLogger;
+use Froxlor\Settings;
+use Froxlor\System\Cronjob;
+use Froxlor\UI\Response;
+use Froxlor\Validate\Validate;
+use PDO;
+
+/**
+ * @since 0.10.0
+ */
+class CustomerBackups extends ApiCommand implements ResourceEntity
+{
 
 	/**
 	 * add a new customer backup job
 	 *
 	 * @param string $path
-	 *        	path to store the backup to
+	 *            path to store the backup to
 	 * @param bool $backup_dbs
-	 *        	optional whether to backup databases, default is 0 (false)
+	 *            optional whether to backup databases, default is 0 (false)
 	 * @param bool $backup_mail
-	 *        	optional whether to backup mail-data, default is 0 (false)
+	 *            optional whether to backup mail-data, default is 0 (false)
 	 * @param bool $backup_web
-	 *        	optional whether to backup web-data, default is 0 (false)
+	 *            optional whether to backup web-data, default is 0 (false)
 	 * @param int $customerid
-	 *        	optional, required when called as admin (if $loginname is not specified)
+	 *            optional, required when called as admin (if $loginname is not specified)
 	 * @param string $loginname
-	 *        	optional, required when called as admin (if $customerid is not specified)
-	 *        	
+	 *            optional, required when called as admin (if $customerid is not specified)
+	 *
 	 * @access admin, customer
-	 * @throws \Exception
 	 * @return string json-encoded array
+	 * @throws Exception
 	 */
 	public function add()
 	{
@@ -76,13 +80,13 @@ class CustomerBackups extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 		$customer = $this->getCustomerData();
 
 		// validation
-		$path = \Froxlor\FileDir::makeCorrectDir(\Froxlor\Validate\Validate::validate($path, 'path', '', '', array(), true));
+		$path = FileDir::makeCorrectDir(Validate::validate($path, 'path', '', '', [], true));
 		$userpath = $path;
-		$path = \Froxlor\FileDir::makeCorrectDir($customer['documentroot'] . '/' . $path);
+		$path = FileDir::makeCorrectDir($customer['documentroot'] . '/' . $path);
 
 		// path cannot be the customers docroot
-		if ($path == \Froxlor\FileDir::makeCorrectDir($customer['documentroot'])) {
-			\Froxlor\UI\Response::standard_error('backupfoldercannotbedocroot', '', true);
+		if ($path == FileDir::makeCorrectDir($customer['documentroot'])) {
+			Response::standardError('backupfoldercannotbedocroot', '', true);
 		}
 
 		if ($backup_dbs != '1') {
@@ -97,7 +101,7 @@ class CustomerBackups extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 			$backup_web = '0';
 		}
 
-		$task_data = array(
+		$task_data = [
 			'customerid' => $customer['customerid'],
 			'uid' => $customer['guid'],
 			'gid' => $customer['guid'],
@@ -106,12 +110,30 @@ class CustomerBackups extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 			'backup_dbs' => $backup_dbs,
 			'backup_mail' => $backup_mail,
 			'backup_web' => $backup_web
-		);
+		];
 		// schedule backup job
-		\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::CREATE_CUSTOMER_BACKUP, $task_data);
+		Cronjob::inserttask(TaskId::CREATE_CUSTOMER_BACKUP, $task_data);
 
-		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] added customer-backup job for '" . $customer['loginname'] . "'. Target directory: " . $userpath);
+		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] added customer-backup job for '" . $customer['loginname'] . "'. Target directory: " . $userpath);
 		return $this->response($task_data);
+	}
+
+	/**
+	 * check whether backup is enabled systemwide and if accessible for customer (hide_options)
+	 *
+	 * @throws Exception
+	 */
+	private function validateAccess()
+	{
+		if (Settings::Get('system.backupenabled') != 1) {
+			throw new Exception("You cannot access this resource", 405);
+		}
+		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'extras')) {
+			throw new Exception("You cannot access this resource", 405);
+		}
+		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'extras.backup')) {
+			throw new Exception("You cannot access this resource", 405);
+		}
 	}
 
 	/**
@@ -120,7 +142,7 @@ class CustomerBackups extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 	 */
 	public function get()
 	{
-		throw new \Exception('You cannot get a planned backup. Try CustomerBackups.listing()', 303);
+		throw new Exception('You cannot get a planned backup. Try CustomerBackups.listing()', 303);
 	}
 
 	/**
@@ -129,28 +151,31 @@ class CustomerBackups extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 	 */
 	public function update()
 	{
-		throw new \Exception('You cannot update a planned backup. You need to delete it and re-add it.', 303);
+		throw new Exception('You cannot update a planned backup. You need to delete it and re-add it.', 303);
 	}
 
 	/**
-	 * list all planned backup-jobs, if called from an admin, list all planned backup-jobs of all customers you are allowed to view, or specify id or loginname for one specific customer
+	 * list all planned backup-jobs, if called from an admin, list all planned backup-jobs of all customers you are
+	 * allowed to view, or specify id or loginname for one specific customer
 	 *
 	 * @param int $customerid
-	 *        	optional, admin-only, select backup-jobs of a specific customer by id
+	 *            optional, admin-only, select backup-jobs of a specific customer by id
 	 * @param string $loginname
-	 *        	optional, admin-only, select backup-jobs of a specific customer by loginname
+	 *            optional, admin-only, select backup-jobs of a specific customer by loginname
 	 * @param array $sql_search
-	 *        	optional array with index = fieldname, and value = array with 'op' => operator (one of <, > or =), LIKE is used if left empty and 'value' => searchvalue
+	 *            optional array with index = fieldname, and value = array with 'op' => operator (one of <, > or =),
+	 *            LIKE is used if left empty and 'value' => searchvalue
 	 * @param int $sql_limit
-	 *        	optional specify number of results to be returned
+	 *            optional specify number of results to be returned
 	 * @param int $sql_offset
-	 *        	optional specify offset for resultset
+	 *            optional specify offset for resultset
 	 * @param array $sql_orderby
-	 *        	optional array with index = fieldname and value = ASC|DESC to order the resultset by one or more fields
+	 *            optional array with index = fieldname and value = ASC|DESC to order the resultset by one or more
+	 *            fields
 	 *
 	 * @access admin, customer
-	 * @throws \Exception
 	 * @return string json-encoded array count|list
+	 * @throws Exception
 	 */
 	public function listing()
 	{
@@ -159,34 +184,34 @@ class CustomerBackups extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 		$customer_ids = $this->getAllowedCustomerIds('extras.backup');
 
 		// check whether there is a backup-job for this customer
-		$query_fields = array();
+		$query_fields = [];
 		$sel_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_TASKS . "` WHERE `type` = '20'" . $this->getSearchWhere($query_fields, true) . $this->getOrderBy() . $this->getLimit());
 		Database::pexecute($sel_stmt, $query_fields, true, true);
-		$result = array();
-		while ($entry = $sel_stmt->fetch(\PDO::FETCH_ASSOC)) {
+		$result = [];
+		while ($entry = $sel_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$entry['data'] = json_decode($entry['data'], true);
 			if (in_array($entry['data']['customerid'], $customer_ids)) {
 				$result[] = $entry;
 			}
 		}
-		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] list customer-backups");
-		return $this->response(array(
+		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] list customer-backups");
+		return $this->response([
 			'count' => count($result),
 			'list' => $result
-		));
+		]);
 	}
 
 	/**
 	 * returns the total number of planned backups
 	 *
 	 * @param int $customerid
-	 *        	optional, admin-only, select backup-jobs of a specific customer by id
+	 *            optional, admin-only, select backup-jobs of a specific customer by id
 	 * @param string $loginname
-	 *        	optional, admin-only, select backup-jobs of a specific customer by loginname
-	 *        	
+	 *            optional, admin-only, select backup-jobs of a specific customer by loginname
+	 *
 	 * @access admin, customer
-	 * @throws \Exception
 	 * @return string json-encoded array
+	 * @throws Exception
 	 */
 	public function listingCount()
 	{
@@ -198,10 +223,10 @@ class CustomerBackups extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 		$result_count = 0;
 		$sel_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_TASKS . "` WHERE `type` = '20'");
 		Database::pexecute($sel_stmt, null, true, true);
-		while ($entry = $sel_stmt->fetch(\PDO::FETCH_ASSOC)) {
+		while ($entry = $sel_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$entry['data'] = json_decode($entry['data'], true);
 			if (in_array($entry['data']['customerid'], $customer_ids)) {
-				$result_count ++;
+				$result_count++;
 			}
 		}
 		return $this->response($result_count);
@@ -211,15 +236,15 @@ class CustomerBackups extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 	 * delete a planned backup-jobs by id, if called from an admin you need to specify the customerid/loginname
 	 *
 	 * @param int $backup_job_entry
-	 *        	id of backup job
+	 *            id of backup job
 	 * @param int $customerid
-	 *        	optional, required when called as admin (if $loginname is not specified)
+	 *            optional, required when called as admin (if $loginname is not specified)
 	 * @param string $loginname
-	 *        	optional, required when called as admin (if $customerid is not specified)
-	 *        	
+	 *            optional, required when called as admin (if $customerid is not specified)
+	 *
 	 * @access admin, customer
-	 * @throws \Exception
 	 * @return bool
+	 * @throws Exception
 	 */
 	public function delete()
 	{
@@ -235,14 +260,14 @@ class CustomerBackups extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 			// check for the correct job
 			foreach ($result['list'] as $backupjob) {
 				if ($backupjob['id'] == $entry && in_array($backupjob['data']['customerid'], $customer_ids)) {
-					Database::pexecute($del_stmt, array(
+					Database::pexecute($del_stmt, [
 						'tid' => $entry
-					), true, true);
-					$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] deleted planned customer-backup #" . $entry);
+					], true, true);
+					$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] deleted planned customer-backup #" . $entry);
 					return $this->response(true);
 				}
 			}
 		}
-		throw new \Exception('Backup job with id #' . $entry . ' could not be found', 404);
+		throw new Exception('Backup job with id #' . $entry . ' could not be found', 404);
 	}
 }

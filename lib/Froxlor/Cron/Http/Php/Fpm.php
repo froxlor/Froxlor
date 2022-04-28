@@ -1,27 +1,36 @@
 <?php
-namespace Froxlor\Cron\Http\Php;
-
-use Froxlor\Database\Database;
-use Froxlor\Settings;
 
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright (c) the authors
- * @author Michael Kaufmann <mkaufmann@nutime.de>
- * @author Froxlor team <team@froxlor.org> (2010-)
- * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package Cron
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- * @link http://www.nutime.de/
- * @since 0.9.16
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
  *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
+
+namespace Froxlor\Cron\Http\Php;
+
+use Froxlor\Database\Database;
+use Froxlor\Domain\Domain;
+use Froxlor\FileDir;
+use Froxlor\PhpHelper;
+use Froxlor\Settings;
+
 class Fpm
 {
 
@@ -30,21 +39,21 @@ class Fpm
 	 *
 	 * @var array
 	 */
-	private $domain = array();
+	private $domain = [];
 
 	/**
 	 * fpm config
 	 *
 	 * @var array
 	 */
-	private $fpm_cfg = array();
+	private $fpm_cfg = [];
 
 	/**
 	 * Admin-Date cache array
 	 *
 	 * @var array
 	 */
-	private $admin_cache = array();
+	private $admin_cache = [];
 
 	/**
 	 * defines what can be used for pool-config from php.ini
@@ -52,14 +61,14 @@ class Fpm
 	 *
 	 * @var array
 	 */
-	private $ini = array();
+	private $ini = [];
 
 	/**
 	 * main constructor
 	 */
 	public function __construct($domain)
 	{
-		if (! isset($domain['fpm_config_id']) || empty($domain['fpm_config_id'])) {
+		if (!isset($domain['fpm_config_id']) || empty($domain['fpm_config_id'])) {
 			$domain['fpm_config_id'] = 1;
 		}
 		$this->domain = $domain;
@@ -67,22 +76,43 @@ class Fpm
 		$this->buildIniMapping();
 	}
 
+	private function readFpmConfig($fpm_config_id)
+	{
+		$stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_FPMDAEMONS . "` WHERE `id` = :id");
+		$this->fpm_cfg = Database::pexecute_first($stmt, [
+			'id' => $fpm_config_id
+		]);
+	}
+
 	private function buildIniMapping()
 	{
-		$this->ini = array(
+		$this->ini = [
 			'php_flag' => explode("\n", Settings::Get('phpfpm.ini_flags')),
 			'php_value' => explode("\n", Settings::Get('phpfpm.ini_values')),
 			'php_admin_flag' => explode("\n", Settings::Get('phpfpm.ini_admin_flags')),
 			'php_admin_value' => explode("\n", Settings::Get('phpfpm.ini_admin_values'))
-		);
+		];
 	}
 
-	private function readFpmConfig($fpm_config_id)
+	/**
+	 * create a dummy fpm pool config with minimal configuration
+	 * (this is used whenever a config directory is empty but needs at least one pool to startup/restart)
+	 *
+	 * @param string $configdir
+	 */
+	public static function createDummyPool($configdir)
 	{
-		$stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_FPMDAEMONS . "` WHERE `id` = :id");
-		$this->fpm_cfg = Database::pexecute_first($stmt, array(
-			'id' => $fpm_config_id
-		));
+		if (!is_dir($configdir)) {
+			FileDir::safe_exec('mkdir -p ' . escapeshellarg($configdir));
+		}
+		$config = FileDir::makeCorrectFile($configdir . '/dummy.conf');
+		$dummy = "[dummy]
+user = " . Settings::Get('system.httpuser') . "
+listen = /run/" . md5($configdir) . "-fpm.sock
+pm = static
+pm.max_children = 1
+";
+		file_put_contents($config, $dummy);
 	}
 
 	/**
@@ -95,7 +125,6 @@ class Fpm
 		$fh = @fopen($this->getConfigFile(), 'w');
 
 		if ($fh) {
-
 			if ($phpconfig['override_fpmconfig'] == 1) {
 				$this->fpm_cfg['pm'] = $phpconfig['pm'];
 				$this->fpm_cfg['max_children'] = $phpconfig['max_children'];
@@ -108,12 +137,12 @@ class Fpm
 			}
 
 			$fpm_pm = $this->fpm_cfg['pm'];
-			$fpm_children = (int) $this->fpm_cfg['max_children'];
-			$fpm_start_servers = (int) $this->fpm_cfg['start_servers'];
-			$fpm_min_spare_servers = (int) $this->fpm_cfg['min_spare_servers'];
-			$fpm_max_spare_servers = (int) $this->fpm_cfg['max_spare_servers'];
-			$fpm_requests = (int) $this->fpm_cfg['max_requests'];
-			$fpm_process_idle_timeout = (int) $this->fpm_cfg['idle_timeout'];
+			$fpm_children = (int)$this->fpm_cfg['max_children'];
+			$fpm_start_servers = (int)$this->fpm_cfg['start_servers'];
+			$fpm_min_spare_servers = (int)$this->fpm_cfg['min_spare_servers'];
+			$fpm_max_spare_servers = (int)$this->fpm_cfg['max_spare_servers'];
+			$fpm_requests = (int)$this->fpm_cfg['max_requests'];
+			$fpm_process_idle_timeout = (int)$this->fpm_cfg['idle_timeout'];
 			$fpm_limit_extensions = $this->fpm_cfg['limit_extensions'];
 			$fpm_custom_config = $this->fpm_cfg['custom_config'];
 
@@ -173,21 +202,21 @@ class Fpm
 			if ($phpconfig['fpm_slowlog'] == '1') {
 				$fpm_config .= 'request_terminate_timeout = ' . $phpconfig['fpm_reqterm'] . "\n";
 				$fpm_config .= 'request_slowlog_timeout = ' . $phpconfig['fpm_reqslow'] . "\n";
-				$slowlog = \Froxlor\FileDir::makeCorrectFile(Settings::Get('system.logfiles_directory') . '/' . $this->domain['loginname'] . '-php-slow.log');
+				$slowlog = FileDir::makeCorrectFile(Settings::Get('system.logfiles_directory') . '/' . $this->domain['loginname'] . '-php-slow.log');
 				$fpm_config .= 'slowlog = ' . $slowlog . "\n";
 				$fpm_config .= 'catch_workers_output = yes' . "\n";
 			}
 
-			$fpm_config .= ';chroot = ' . \Froxlor\FileDir::makeCorrectDir($this->domain['documentroot']) . "\n";
+			$fpm_config .= ';chroot = ' . FileDir::makeCorrectDir($this->domain['documentroot']) . "\n";
 			$fpm_config .= 'security.limit_extensions = ' . $fpm_limit_extensions . "\n";
 
-			$tmpdir = \Froxlor\FileDir::makeCorrectDir(Settings::Get('phpfpm.tmpdir') . '/' . $this->domain['loginname'] . '/');
-			if (! is_dir($tmpdir)) {
+			$tmpdir = FileDir::makeCorrectDir(Settings::Get('phpfpm.tmpdir') . '/' . $this->domain['loginname'] . '/');
+			if (!is_dir($tmpdir)) {
 				$this->getTempDir();
 			}
 
 			$env_path = Settings::Get('phpfpm.envpath');
-			if (! empty($env_path)) {
+			if (!empty($env_path)) {
 				$fpm_config .= 'env[PATH] = ' . $env_path . "\n";
 			}
 			$fpm_config .= 'env[TMP] = ' . $tmpdir . "\n";
@@ -200,29 +229,29 @@ class Fpm
 					$_phpappendopenbasedir = '';
 					$_custom_openbasedir = explode(':', Settings::Get('phpfpm.peardir'));
 					foreach ($_custom_openbasedir as $cobd) {
-						$_phpappendopenbasedir .= \Froxlor\Domain\Domain::appendOpenBasedirPath($cobd);
+						$_phpappendopenbasedir .= Domain::appendOpenBasedirPath($cobd);
 					}
 
 					$_custom_openbasedir = explode(':', Settings::Get('system.phpappendopenbasedir'));
 					foreach ($_custom_openbasedir as $cobd) {
-						$_phpappendopenbasedir .= \Froxlor\Domain\Domain::appendOpenBasedirPath($cobd);
+						$_phpappendopenbasedir .= Domain::appendOpenBasedirPath($cobd);
 					}
 
 					if ($this->domain['openbasedir_path'] == '0' && strstr($this->domain['documentroot'], ":") === false) {
-						$openbasedir = \Froxlor\Domain\Domain::appendOpenBasedirPath($this->domain['documentroot'], true);
+						$openbasedir = Domain::appendOpenBasedirPath($this->domain['documentroot'], true);
 					} else {
-						$openbasedir = \Froxlor\Domain\Domain::appendOpenBasedirPath($this->domain['customerroot'], true);
+						$openbasedir = Domain::appendOpenBasedirPath($this->domain['customerroot'], true);
 					}
 
-					$openbasedir .= \Froxlor\Domain\Domain::appendOpenBasedirPath($this->getTempDir());
+					$openbasedir .= Domain::appendOpenBasedirPath($this->getTempDir());
 					$openbasedir .= $_phpappendopenbasedir;
 				}
 			}
 
-			$fpm_config .= 'php_admin_value[upload_tmp_dir] = ' . \Froxlor\FileDir::makeCorrectDir(Settings::Get('phpfpm.tmpdir') . '/' . $this->domain['loginname'] . '/') . "\n";
+			$fpm_config .= 'php_admin_value[upload_tmp_dir] = ' . FileDir::makeCorrectDir(Settings::Get('phpfpm.tmpdir') . '/' . $this->domain['loginname'] . '/') . "\n";
 
 			$admin = $this->getAdminData($this->domain['adminid']);
-			$php_ini_variables = array(
+			$php_ini_variables = [
 				'SAFE_MODE' => 'Off', // keep this for compatibility, just in case
 				'PEAR_DIR' => Settings::Get('phpfpm.peardir'),
 				'TMP_DIR' => $this->getTempDir(),
@@ -234,11 +263,11 @@ class Fpm
 				'OPEN_BASEDIR' => $openbasedir,
 				'OPEN_BASEDIR_C' => '',
 				'OPEN_BASEDIR_GLOBAL' => Settings::Get('system.phpappendopenbasedir'),
-				'DOCUMENT_ROOT' => \Froxlor\FileDir::makeCorrectDir($this->domain['documentroot']),
-				'CUSTOMER_HOMEDIR' => \Froxlor\FileDir::makeCorrectDir($this->domain['customerroot'])
-			);
+				'DOCUMENT_ROOT' => FileDir::makeCorrectDir($this->domain['documentroot']),
+				'CUSTOMER_HOMEDIR' => FileDir::makeCorrectDir($this->domain['customerroot'])
+			];
 
-			$phpini = \Froxlor\PhpHelper::replaceVariables($phpconfig['phpsettings'], $php_ini_variables);
+			$phpini = PhpHelper::replaceVariables($phpconfig['phpsettings'], $php_ini_variables);
 			$phpini_array = explode("\n", $phpini);
 
 			$fpm_config .= "\n\n";
@@ -270,14 +299,99 @@ class Fpm
 			}
 
 			// append custom phpfpm configuration
-			if (! empty($fpm_custom_config)) {
+			if (!empty($fpm_custom_config)) {
 				$fpm_config .= "\n; Custom Configuration\n";
-				$fpm_config .= \Froxlor\PhpHelper::replaceVariables($fpm_custom_config, $php_ini_variables);
+				$fpm_config .= PhpHelper::replaceVariables($fpm_custom_config, $php_ini_variables);
 			}
 
 			fwrite($fh, $fpm_config, strlen($fpm_config));
 			fclose($fh);
 		}
+	}
+
+	/**
+	 * fpm-config file
+	 *
+	 * @param boolean $createifnotexists
+	 *            create the directory if it does not exist
+	 *
+	 * @return string the full path to the file
+	 */
+	public function getConfigFile($createifnotexists = true)
+	{
+		$configdir = $this->fpm_cfg['config_dir'];
+		$config = FileDir::makeCorrectFile($configdir . '/' . $this->domain['domain'] . '.conf');
+
+		if (!is_dir($configdir) && $createifnotexists) {
+			FileDir::safe_exec('mkdir -p ' . escapeshellarg($configdir));
+		}
+
+		return $config;
+	}
+
+	/**
+	 * return path of fpm-socket file
+	 *
+	 * @param boolean $createifnotexists
+	 *            create the directory if it does not exist
+	 *
+	 * @return string the full path to the socket
+	 */
+	public function getSocketFile($createifnotexists = true)
+	{
+		$socketdir = FileDir::makeCorrectDir(Settings::Get('phpfpm.fastcgi_ipcdir'));
+		// add fpm-config-id to filename so it's unique for the fpm-daemon and doesn't interfere with running configs when reuilding
+		$socket = strtolower(FileDir::makeCorrectFile($socketdir . '/' . $this->domain['fpm_config_id'] . '-' . $this->domain['loginname'] . '-' . $this->domain['domain'] . '-php-fpm.socket'));
+
+		if (!is_dir($socketdir) && $createifnotexists) {
+			FileDir::safe_exec('mkdir -p ' . escapeshellarg($socketdir));
+			FileDir::safe_exec('chown -R ' . Settings::Get('system.httpuser') . ':' . Settings::Get('system.httpgroup') . ' ' . escapeshellarg($socketdir));
+		}
+
+		return $socket;
+	}
+
+	/**
+	 * fpm-temp directory
+	 *
+	 * @param boolean $createifnotexists
+	 *            create the directory if it does not exist
+	 *
+	 * @return string the directory
+	 */
+	public function getTempDir($createifnotexists = true)
+	{
+		$tmpdir = FileDir::makeCorrectDir(Settings::Get('phpfpm.tmpdir') . '/' . $this->domain['loginname'] . '/');
+
+		if (!is_dir($tmpdir) && $createifnotexists) {
+			FileDir::safe_exec('mkdir -p ' . escapeshellarg($tmpdir));
+			FileDir::safe_exec('chown -R ' . $this->domain['guid'] . ':' . $this->domain['guid'] . ' ' . escapeshellarg($tmpdir));
+			FileDir::safe_exec('chmod 0750 ' . escapeshellarg($tmpdir));
+		}
+
+		return $tmpdir;
+	}
+
+	/**
+	 * return the admin-data of a specific admin
+	 *
+	 * @param int $adminid
+	 *            id of the admin-user
+	 *
+	 * @return array
+	 */
+	private function getAdminData($adminid)
+	{
+		$adminid = intval($adminid);
+
+		if (!isset($this->admin_cache[$adminid])) {
+			$stmt = Database::prepare("
+					SELECT `email`, `loginname` FROM `" . TABLE_PANEL_ADMINS . "` WHERE `adminid` = :id");
+			$this->admin_cache[$adminid] = Database::pexecute_first($stmt, [
+				'id' => $adminid
+			]);
+		}
+		return $this->admin_cache[$adminid];
 	}
 
 	/**
@@ -292,133 +406,26 @@ class Fpm
 	}
 
 	/**
-	 * fpm-config file
-	 *
-	 * @param boolean $createifnotexists
-	 *        	create the directory if it does not exist
-	 *
-	 * @return string the full path to the file
-	 */
-	public function getConfigFile($createifnotexists = true)
-	{
-		$configdir = $this->fpm_cfg['config_dir'];
-		$config = \Froxlor\FileDir::makeCorrectFile($configdir . '/' . $this->domain['domain'] . '.conf');
-
-		if (! is_dir($configdir) && $createifnotexists) {
-			\Froxlor\FileDir::safe_exec('mkdir -p ' . escapeshellarg($configdir));
-		}
-
-		return $config;
-	}
-
-	/**
-	 * return path of fpm-socket file
-	 *
-	 * @param boolean $createifnotexists
-	 *        	create the directory if it does not exist
-	 *
-	 * @return string the full path to the socket
-	 */
-	public function getSocketFile($createifnotexists = true)
-	{
-		$socketdir = \Froxlor\FileDir::makeCorrectDir(Settings::Get('phpfpm.fastcgi_ipcdir'));
-		// add fpm-config-id to filename so it's unique for the fpm-daemon and doesn't interfere with running configs when reuilding
-		$socket = strtolower(\Froxlor\FileDir::makeCorrectFile($socketdir . '/' . $this->domain['fpm_config_id'] . '-' . $this->domain['loginname'] . '-' . $this->domain['domain'] . '-php-fpm.socket'));
-
-		if (! is_dir($socketdir) && $createifnotexists) {
-			\Froxlor\FileDir::safe_exec('mkdir -p ' . escapeshellarg($socketdir));
-			\Froxlor\FileDir::safe_exec('chown -R ' . Settings::Get('system.httpuser') . ':' . Settings::Get('system.httpgroup') . ' ' . escapeshellarg($socketdir));
-		}
-
-		return $socket;
-	}
-
-	/**
-	 * fpm-temp directory
-	 *
-	 * @param boolean $createifnotexists
-	 *        	create the directory if it does not exist
-	 *
-	 * @return string the directory
-	 */
-	public function getTempDir($createifnotexists = true)
-	{
-		$tmpdir = \Froxlor\FileDir::makeCorrectDir(Settings::Get('phpfpm.tmpdir') . '/' . $this->domain['loginname'] . '/');
-
-		if (! is_dir($tmpdir) && $createifnotexists) {
-			\Froxlor\FileDir::safe_exec('mkdir -p ' . escapeshellarg($tmpdir));
-			\Froxlor\FileDir::safe_exec('chown -R ' . $this->domain['guid'] . ':' . $this->domain['guid'] . ' ' . escapeshellarg($tmpdir));
-			\Froxlor\FileDir::safe_exec('chmod 0750 ' . escapeshellarg($tmpdir));
-		}
-
-		return $tmpdir;
-	}
-
-	/**
 	 * fastcgi-fakedirectory directory
 	 *
 	 * @param boolean $createifnotexists
-	 *        	create the directory if it does not exist
+	 *            create the directory if it does not exist
 	 *
 	 * @return string the directory
 	 */
 	public function getAliasConfigDir($createifnotexists = true)
 	{
-
 		// ensure default...
 		if (Settings::Get('phpfpm.aliasconfigdir') == null) {
 			Settings::Set('phpfpm.aliasconfigdir', '/var/www/php-fpm');
 		}
 
-		$configdir = \Froxlor\FileDir::makeCorrectDir(Settings::Get('phpfpm.aliasconfigdir') . '/' . $this->domain['loginname'] . '/' . $this->domain['domain'] . '/');
-		if (! is_dir($configdir) && $createifnotexists) {
-			\Froxlor\FileDir::safe_exec('mkdir -p ' . escapeshellarg($configdir));
-			\Froxlor\FileDir::safe_exec('chown ' . $this->domain['guid'] . ':' . $this->domain['guid'] . ' ' . escapeshellarg($configdir));
+		$configdir = FileDir::makeCorrectDir(Settings::Get('phpfpm.aliasconfigdir') . '/' . $this->domain['loginname'] . '/' . $this->domain['domain'] . '/');
+		if (!is_dir($configdir) && $createifnotexists) {
+			FileDir::safe_exec('mkdir -p ' . escapeshellarg($configdir));
+			FileDir::safe_exec('chown ' . $this->domain['guid'] . ':' . $this->domain['guid'] . ' ' . escapeshellarg($configdir));
 		}
 
 		return $configdir;
-	}
-
-	/**
-	 * create a dummy fpm pool config with minimal configuration
-	 * (this is used whenever a config directory is empty but needs at least one pool to startup/restart)
-	 *
-	 * @param string $configdir
-	 */
-	public static function createDummyPool($configdir)
-	{
-		if (! is_dir($configdir)) {
-			\Froxlor\FileDir::safe_exec('mkdir -p ' . escapeshellarg($configdir));
-		}
-		$config = \Froxlor\FileDir::makeCorrectFile($configdir . '/dummy.conf');
-		$dummy = "[dummy]
-user = " . Settings::Get('system.httpuser') . "
-listen = /run/" . md5($configdir) . "-fpm.sock
-pm = static
-pm.max_children = 1
-";
-		file_put_contents($config, $dummy);
-	}
-
-	/**
-	 * return the admin-data of a specific admin
-	 *
-	 * @param int $adminid
-	 *        	id of the admin-user
-	 *
-	 * @return array
-	 */
-	private function getAdminData($adminid)
-	{
-		$adminid = intval($adminid);
-
-		if (! isset($this->admin_cache[$adminid])) {
-			$stmt = Database::prepare("
-					SELECT `email`, `loginname` FROM `" . TABLE_PANEL_ADMINS . "` WHERE `adminid` = :id");
-			$this->admin_cache[$adminid] = Database::pexecute_first($stmt, array(
-				'id' => $adminid
-			));
-		}
-		return $this->admin_cache[$adminid];
 	}
 }

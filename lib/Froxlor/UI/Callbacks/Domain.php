@@ -1,26 +1,35 @@
 <?php
 
-namespace Froxlor\UI\Callbacks;
-
-use Froxlor\FileDir;
-use Froxlor\Settings;
-use Froxlor\UI\Panel\UI;
-use Froxlor\Domain\Domain as DDomain;
-
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Froxlor\UI\Callbacks
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
+
+namespace Froxlor\UI\Callbacks;
+
+use Froxlor\Domain\Domain as DDomain;
+use Froxlor\FileDir;
+use Froxlor\Settings;
+use Froxlor\UI\Panel\UI;
+
 class Domain
 {
 	public static function domainWithCustomerLink(array $attributes)
@@ -28,12 +37,12 @@ class Domain
 		$linker = UI::getLinker();
 		$result = '<a href="https://' . $attributes['data'] . '" target="_blank">' . $attributes['data'] . '</a>';
 		$result .= ' (<a href="' . $linker->getLink([
-			'section' => 'customers',
-			'page' => 'customers',
-			'action' => 'su',
-			'sort' => $attributes['fields']['loginname'],
-			'id' => $attributes['fields']['customerid'],
-		]) . '">' . $attributes['fields']['loginname'] . '</a>)';
+				'section' => 'customers',
+				'page' => 'customers',
+				'action' => 'su',
+				'sort' => $attributes['fields']['loginname'],
+				'id' => $attributes['fields']['customerid'],
+			]) . '">' . $attributes['fields']['loginname'] . '</a>)';
 		return $result;
 	}
 
@@ -65,7 +74,7 @@ class Domain
 	{
 		$result = '<a href="http://' . $attributes['data'] . '" target="_blank">' . $attributes['data'] . '</a>';
 		// check for statistics if parentdomainid==0 to show stats-link for customers
-		if ((int) UI::getCurrentUser()['adminsession'] == 0 && $attributes['fields']['parentdomainid'] == 0) {
+		if ((int)UI::getCurrentUser()['adminsession'] == 0 && $attributes['fields']['parentdomainid'] == 0) {
 			$statsapp = 'webalizer';
 			if (Settings::Get('system.awstats_enabled') == '1') {
 				$statsapp = 'awstats';
@@ -89,9 +98,9 @@ class Domain
 	public static function canViewLogs(array $attributes): bool
 	{
 		if ((int)$attributes['fields']['email_only'] == 0) {
-			if ((int) UI::getCurrentUser()['adminsession'] == 0 && (bool)UI::getCurrentUser()['logviewenabled']) {
+			if ((int)UI::getCurrentUser()['adminsession'] == 0 && (bool)UI::getCurrentUser()['logviewenabled']) {
 				return true;
-			} elseif ((int) UI::getCurrentUser()['adminsession'] == 1) {
+			} elseif ((int)UI::getCurrentUser()['adminsession'] == 1) {
 				return true;
 			}
 		}
@@ -129,13 +138,12 @@ class Domain
 
 	public static function hasLetsEncryptActivated(array $attributes): bool
 	{
-		return ((bool) $attributes['fields']['letsencrypt'] && (int)$attributes['fields']['email_only'] == 0);
+		return ((bool)$attributes['fields']['letsencrypt'] && (int)$attributes['fields']['email_only'] == 0);
 	}
 
 	public static function canEditSSL(array $attributes): bool
 	{
-		if (
-			Settings::Get('system.use_ssl') == '1'
+		if (Settings::Get('system.use_ssl') == '1'
 			&& DDomain::domainHasSslIpPort($attributes['fields']['id'])
 			&& (int)$attributes['fields']['caneditdomain'] == 1
 			&& (int)$attributes['fields']['letsencrypt'] == 0

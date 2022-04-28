@@ -1,41 +1,51 @@
 <?php
-if (!defined('AREA')) {
-	header("Location: index.php");
-	exit();
-}
 
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright (c) the authors
- * @author Froxlor team <team@froxlor.org> (2016-)
- * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package Panel
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
-use Froxlor\Database\Database;
+if (!defined('AREA')) {
+	header("Location: index.php");
+	exit();
+}
+
 use Froxlor\Api\Commands\Certificates;
 use Froxlor\Api\Commands\SubDomains;
+use Froxlor\Database\Database;
+use Froxlor\PhpHelper;
 use Froxlor\UI\Panel\UI;
+use Froxlor\UI\Response;
 
 // This file is being included in admin_domains and customer_domains
 // and therefore does not need to require lib/init.php
 
 if ($action == '' || $action == 'view') {
-
 	// get domain
 	try {
-		$json_result = SubDomains::getLocal($userinfo, array(
+		$json_result = SubDomains::getLocal($userinfo, [
 			'id' => $id
-		))->get();
+		])->get();
 	} catch (Exception $e) {
-		\Froxlor\UI\Response::dynamic_error($e->getMessage());
+		Response::dynamicError($e->getMessage());
 	}
 	$result_domain = json_decode($json_result, true)['data'];
 
@@ -48,33 +58,33 @@ if ($action == '' || $action == 'view') {
 				Certificates::getLocal($userinfo, $_POST)->update();
 			}
 		} catch (Exception $e) {
-			\Froxlor\UI\Response::dynamic_error($e->getMessage());
+			Response::dynamicError($e->getMessage());
 		}
 		// back to domain overview
-		\Froxlor\UI\Response::redirectTo($filename, array(
+		Response::redirectTo($filename, [
 			'page' => 'domains'
-		));
+		]);
 	}
 
 	$stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "`
 		WHERE `domainid`= :domainid");
-	$result = Database::pexecute_first($stmt, array(
+	$result = Database::pexecute_first($stmt, [
 		"domainid" => $id
-	));
+	]);
 
 	$do_insert = false;
 	// if no entry can be found, behave like we have empty values
 	if (!is_array($result) || !isset($result['ssl_cert_file'])) {
-		$result = array(
+		$result = [
 			'ssl_cert_file' => '',
 			'ssl_key_file' => '',
 			'ssl_ca_file' => '',
 			'ssl_cert_chainfile' => ''
-		);
+		];
 		$do_insert = true;
 	}
 
-	$result = \Froxlor\PhpHelper::htmlentitiesArray($result);
+	$result = PhpHelper::htmlentitiesArray($result);
 
 	$ssleditor_data = include_once dirname(__FILE__) . '/lib/formfields/formfield.domain_ssleditor.php';
 
@@ -82,14 +92,16 @@ if ($action == '' || $action == 'view') {
 	$image = $ssleditor_data['domain_ssleditor']['image'];
 
 	UI::view('user/form.html.twig', [
-		'formaction' => $linker->getLink(array('section' => 'domains', 'page' => 'domainssleditor', 'id' => $id)),
+		'formaction' => $linker->getLink(['section' => 'domains', 'page' => 'domainssleditor', 'id' => $id]),
 		'formdata' => $ssleditor_data['domain_ssleditor'],
 		'editid' => $id,
-		'actions_links' => [[
-			'class' => 'btn-outline-primary',
-			'href' => $linker->getLink(['section' => 'domains', 'page' => 'overview']),
-			'label' => $lng['admin']['domains'],
-			'icon' => 'fa fa-globe'
-		]]
+		'actions_links' => [
+			[
+				'class' => 'btn-outline-primary',
+				'href' => $linker->getLink(['section' => 'domains', 'page' => 'overview']),
+				'label' => lng('admin.domains'),
+				'icon' => 'fa fa-globe'
+			]
+		]
 	]);
 }

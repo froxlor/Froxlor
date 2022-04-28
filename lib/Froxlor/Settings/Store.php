@@ -1,9 +1,42 @@
 <?php
+
+/**
+ * This file is part of the Froxlor project.
+ * Copyright (c) 2010 the Froxlor Team (see authors).
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
+ */
+
 namespace Froxlor\Settings;
 
+use Exception;
+use Froxlor\Cron\TaskId;
 use Froxlor\Database\Database;
+use Froxlor\Database\DbManager;
 use Froxlor\FileDir;
+use Froxlor\Froxlor;
+use Froxlor\Idna\IdnaWrapper;
+use Froxlor\PhpHelper;
 use Froxlor\Settings;
+use Froxlor\System\Cronjob;
+use Froxlor\System\IPTools;
+use PDO;
 
 class Store
 {
@@ -21,6 +54,37 @@ class Store
 		return $returnvalue;
 	}
 
+	public static function storeSettingField($fieldname, $fielddata, $newfieldvalue)
+	{
+		if (is_array($fielddata) && isset($fielddata['settinggroup']) && $fielddata['settinggroup'] != '' && isset($fielddata['varname']) && $fielddata['varname'] != '') {
+			if (Settings::Set($fielddata['settinggroup'] . '.' . $fielddata['varname'], $newfieldvalue) !== false) {
+				/*
+				 * when fielddata[cronmodule] is set, this means enable/disable a cronjob
+				 */
+				if (isset($fielddata['cronmodule']) && $fielddata['cronmodule'] != '') {
+					Cronjob::toggleCronStatus($fielddata['cronmodule'], $newfieldvalue);
+				}
+
+				/*
+				 * satisfy dependencies
+				 */
+				if (isset($fielddata['dependency']) && is_array($fielddata['dependency'])) {
+					if ((int)$fielddata['dependency']['onlyif'] == (int)$newfieldvalue) {
+						self::storeSettingField($fielddata['dependency']['fieldname'], $fielddata['dependency']['fielddata'], $newfieldvalue);
+					}
+				}
+
+				return [
+					$fielddata['settinggroup'] . '.' . $fielddata['varname'] => $newfieldvalue
+				];
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
+
 	public static function storeSettingDefaultIp($fieldname, $fielddata, $newfieldvalue)
 	{
 		$defaultips_old = Settings::Get('system.defaultip');
@@ -28,19 +92,6 @@ class Store
 		$returnvalue = self::storeSettingField($fieldname, $fielddata, $newfieldvalue);
 
 		if ($returnvalue !== false && is_array($fielddata) && isset($fielddata['settinggroup']) && $fielddata['settinggroup'] == 'system' && isset($fielddata['varname']) && $fielddata['varname'] == 'defaultip') {
-			self::updateStdSubdomainDefaultIp($newfieldvalue, $defaultips_old);
-		}
-
-		return $returnvalue;
-	}
-
-	public static function storeSettingDefaultSslIp($fieldname, $fielddata, $newfieldvalue)
-	{
-		$defaultips_old = Settings::Get('system.defaultsslip');
-
-		$returnvalue = self::storeSettingField($fieldname, $fielddata, $newfieldvalue);
-
-		if ($returnvalue !== false && is_array($fielddata) && isset($fielddata['settinggroup']) && $fielddata['settinggroup'] == 'system' && isset($fielddata['varname']) && $fielddata['varname'] == 'defaultsslip') {
 			self::updateStdSubdomainDefaultIp($newfieldvalue, $defaultips_old);
 		}
 
@@ -55,17 +106,17 @@ class Store
 		");
 		Database::pexecute($customerstddomains_result_stmt);
 
-		$ids = array();
-		while ($customerstddomains_row = $customerstddomains_result_stmt->fetch(\PDO::FETCH_ASSOC)) {
-			$ids[] = (int) $customerstddomains_row['standardsubdomain'];
+		$ids = [];
+		while ($customerstddomains_row = $customerstddomains_result_stmt->fetch(PDO::FETCH_ASSOC)) {
+			$ids[] = (int)$customerstddomains_row['standardsubdomain'];
 		}
 
 		if (count($ids) > 0) {
 			$defaultips_new = explode(',', $newfieldvalue);
 
-			if (! empty($defaultips_old) && ! empty($newfieldvalue)) {
+			if (!empty($defaultips_old) && !empty($newfieldvalue)) {
 				$in_value = $defaultips_old . ", " . $newfieldvalue;
-			} elseif (! empty($defaultips_old) && empty($newfieldvalue)) {
+			} elseif (!empty($defaultips_old) && empty($newfieldvalue)) {
 				$in_value = $defaultips_old;
 			} else {
 				$in_value = $newfieldvalue;
@@ -88,14 +139,27 @@ class Store
 
 				foreach ($ids as $id) {
 					foreach ($defaultips_new as $defaultip_new) {
-						Database::pexecute($ins_stmt, array(
+						Database::pexecute($ins_stmt, [
 							'domainid' => $id,
 							'ipandportid' => $defaultip_new
-						));
+						]);
 					}
 				}
 			}
 		}
+	}
+
+	public static function storeSettingDefaultSslIp($fieldname, $fielddata, $newfieldvalue)
+	{
+		$defaultips_old = Settings::Get('system.defaultsslip');
+
+		$returnvalue = self::storeSettingField($fieldname, $fielddata, $newfieldvalue);
+
+		if ($returnvalue !== false && is_array($fielddata) && isset($fielddata['settinggroup']) && $fielddata['settinggroup'] == 'system' && isset($fielddata['varname']) && $fielddata['varname'] == 'defaultsslip') {
+			self::updateStdSubdomainDefaultIp($newfieldvalue, $defaultips_old);
+		}
+
+		return $returnvalue;
 	}
 
 	/**
@@ -121,52 +185,21 @@ class Store
 				$upd_stmt = Database::prepare("
 					UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `theme` = :theme
 				");
-				Database::pexecute($upd_stmt, array(
+				Database::pexecute($upd_stmt, [
 					'theme' => $newfieldvalue
-				));
+				]);
 			}
 			if (Settings::Get('panel.allow_theme_change_admin') == '0') {
 				$upd_stmt = Database::prepare("
 					UPDATE `" . TABLE_PANEL_ADMINS . "` SET `theme` = :theme
 				");
-				Database::pexecute($upd_stmt, array(
+				Database::pexecute($upd_stmt, [
 					'theme' => $newfieldvalue
-				));
+				]);
 			}
 		}
 
 		return $returnvalue;
-	}
-
-	public static function storeSettingField($fieldname, $fielddata, $newfieldvalue)
-	{
-		if (is_array($fielddata) && isset($fielddata['settinggroup']) && $fielddata['settinggroup'] != '' && isset($fielddata['varname']) && $fielddata['varname'] != '') {
-			if (Settings::Set($fielddata['settinggroup'] . '.' . $fielddata['varname'], $newfieldvalue) !== false) {
-				/*
-				 * when fielddata[cronmodule] is set, this means enable/disable a cronjob
-				 */
-				if (isset($fielddata['cronmodule']) && $fielddata['cronmodule'] != '') {
-					\Froxlor\System\Cronjob::toggleCronStatus($fielddata['cronmodule'], $newfieldvalue);
-				}
-
-				/*
-				 * satisfy dependencies
-				 */
-				if (isset($fielddata['dependency']) && is_array($fielddata['dependency'])) {
-					if ((int) $fielddata['dependency']['onlyif'] == (int) $newfieldvalue) {
-						self::storeSettingField($fielddata['dependency']['fieldname'], $fielddata['dependency']['fielddata'], $newfieldvalue);
-					}
-				}
-
-				return array(
-					$fielddata['settinggroup'] . '.' . $fielddata['varname'] => $newfieldvalue
-				);
-			} else {
-				return false;
-			}
-		} else {
-			return false;
-		}
 	}
 
 	public static function storeSettingFieldInsertBindTask($fieldname, $fielddata, $newfieldvalue)
@@ -175,7 +208,7 @@ class Store
 		$returnvalue = self::storeSettingField($fieldname, $fielddata, $newfieldvalue);
 
 		if ($returnvalue !== false) {
-			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_DNS);
+			Cronjob::inserttask(TaskId::REBUILD_DNS);
 		}
 		return $returnvalue;
 	}
@@ -185,7 +218,7 @@ class Store
 		$returnvalue = self::storeSettingField($fieldname, $fielddata, $newfieldvalue);
 
 		if ($returnvalue !== false && is_array($fielddata) && isset($fielddata['settinggroup']) && $fielddata['settinggroup'] == 'system' && isset($fielddata['varname']) && ($fielddata['varname'] == 'hostname' || $fielddata['varname'] == 'stdsubdomain')) {
-			$idna_convert = new \Froxlor\Idna\IdnaWrapper();
+			$idna_convert = new IdnaWrapper();
 			$newfieldvalue = $idna_convert->encode($newfieldvalue);
 
 			if (($fielddata['varname'] == 'hostname' && Settings::Get('system.stdsubdomain') == '') || $fielddata['varname'] == 'stdsubdomain') {
@@ -212,10 +245,10 @@ class Store
 				");
 				Database::pexecute($customerstddomains_result_stmt);
 
-				$ids = array();
+				$ids = [];
 
-				while ($customerstddomains_row = $customerstddomains_result_stmt->fetch(\PDO::FETCH_ASSOC)) {
-					$ids[] = (int) $customerstddomains_row['standardsubdomain'];
+				while ($customerstddomains_row = $customerstddomains_result_stmt->fetch(PDO::FETCH_ASSOC)) {
+					$ids[] = (int)$customerstddomains_row['standardsubdomain'];
 				}
 
 				if (count($ids) > 0) {
@@ -224,10 +257,10 @@ class Store
 						`domain` = REPLACE(`domain`, :host, :newval)
 						WHERE `id` IN ('" . implode(', ', $ids) . "')
 					");
-					Database::pexecute($upd_stmt, array(
+					Database::pexecute($upd_stmt, [
 						'host' => $oldhost,
 						'newval' => $newhost
-					));
+					]);
 				}
 			}
 		}
@@ -242,8 +275,8 @@ class Store
 		if ($returnvalue !== false && is_array($fielddata) && isset($fielddata['settinggroup']) && $fielddata['settinggroup'] == 'system' && isset($fielddata['varname']) && $fielddata['varname'] == 'ipaddress') {
 			$mysql_access_host_array = array_map('trim', explode(',', Settings::Get('system.mysql_access_host')));
 			$mysql_access_host_array[] = $newfieldvalue;
-			$mysql_access_host_array = array_unique(\Froxlor\PhpHelper::arrayTrim($mysql_access_host_array));
-			\Froxlor\Database\DbManager::correctMysqlUsers($mysql_access_host_array);
+			$mysql_access_host_array = array_unique(PhpHelper::arrayTrim($mysql_access_host_array));
+			DbManager::correctMysqlUsers($mysql_access_host_array);
 			$mysql_access_host = implode(',', $mysql_access_host_array);
 			Settings::Set('system.mysql_access_host', $mysql_access_host);
 		}
@@ -266,7 +299,7 @@ class Store
 				if (count($ip_cidr) === 2) {
 					$ip = $ip_cidr[0];
 					if (strlen($ip_cidr[1]) <= 2) {
-						$ip_cidr[1] = \Froxlor\System\IPTools::cidr2NetmaskAddr($org_ip);
+						$ip_cidr[1] = IPTools::cidr2NetmaskAddr($org_ip);
 					}
 					$newfieldvalue[] = $ip . '/' . $ip_cidr[1];
 				} else {
@@ -280,36 +313,28 @@ class Store
 		if ($returnvalue !== false && is_array($fielddata) && isset($fielddata['settinggroup']) && $fielddata['settinggroup'] == 'system' && isset($fielddata['varname']) && $fielddata['varname'] == 'mysql_access_host') {
 			$mysql_access_host_array = array_map('trim', explode(',', $newfieldvalue));
 
-			if (in_array('127.0.0.1', $mysql_access_host_array) && ! in_array('localhost', $mysql_access_host_array)) {
+			if (in_array('127.0.0.1', $mysql_access_host_array) && !in_array('localhost', $mysql_access_host_array)) {
 				$mysql_access_host_array[] = 'localhost';
 			}
 
-			if (! in_array('127.0.0.1', $mysql_access_host_array) && in_array('localhost', $mysql_access_host_array)) {
+			if (!in_array('127.0.0.1', $mysql_access_host_array) && in_array('localhost', $mysql_access_host_array)) {
 				$mysql_access_host_array[] = '127.0.0.1';
 			}
 
 			// be aware that ipv6 addresses are enclosed in [ ] when passed here
-			$mysql_access_host_array = array_map(array(
+			$mysql_access_host_array = array_map([
 				'\\Froxlor\\Settings\\Store',
 				'cleanMySQLAccessHost'
-			), $mysql_access_host_array);
+			], $mysql_access_host_array);
 
-			$mysql_access_host_array = array_unique(\Froxlor\PhpHelper::arrayTrim($mysql_access_host_array));
+			$mysql_access_host_array = array_unique(PhpHelper::arrayTrim($mysql_access_host_array));
 			$newfieldvalue = implode(',', $mysql_access_host_array);
-			\Froxlor\Database\DbManager::correctMysqlUsers($mysql_access_host_array);
+			DbManager::correctMysqlUsers($mysql_access_host_array);
 			$mysql_access_host = implode(',', $mysql_access_host_array);
 			Settings::Set('system.mysql_access_host', $mysql_access_host);
 		}
 
 		return $returnvalue;
-	}
-
-	private static function cleanMySQLAccessHost($value)
-	{
-		if (substr($value, 0, 1) == '[' && substr($value, - 1) == ']') {
-			return substr($value, 1, - 1);
-		}
-		return $value;
 	}
 
 	public static function storeSettingResetCatchall($fieldname, $fielddata, $newfieldvalue)
@@ -332,7 +357,6 @@ class Store
 	public static function storeSettingWebserverFcgidFpmUser($fieldname, $fielddata, $newfieldvalue)
 	{
 		if (is_array($fielddata) && isset($fielddata['settinggroup']) && isset($fielddata['varname'])) {
-
 			$update_user = null;
 
 			// webserver
@@ -358,10 +382,10 @@ class Store
 				 */
 				if ($update_user != null && $newfieldvalue != $update_user) {
 					$upd_stmt = Database::prepare("UPDATE `" . TABLE_FTP_GROUPS . "` SET `members` = REPLACE(`members`, :olduser, :newuser)");
-					Database::pexecute($upd_stmt, array(
+					Database::pexecute($upd_stmt, [
 						'olduser' => $update_user,
 						'newuser' => $newfieldvalue
-					));
+					]);
 				}
 			}
 		}
@@ -370,66 +394,79 @@ class Store
 	}
 
 	public static function storeSettingImage($fieldname, $fielddata)
-    {
-        if (isset($fielddata['settinggroup'], $fielddata['varname']) && is_array($fielddata) && $fielddata['settinggroup'] !== '' && $fielddata['varname'] !== '') {
-            $save_to = null;
-            $path = \Froxlor\Froxlor::getInstallDir().'/img/';
-            $path = \Froxlor\FileDir::makeCorrectDir($path);
+	{
+		if (isset($fielddata['settinggroup'], $fielddata['varname']) && is_array($fielddata) && $fielddata['settinggroup'] !== '' && $fielddata['varname'] !== '') {
+			$save_to = null;
+			$path = Froxlor::getInstallDir() . '/img/';
+			$path = FileDir::makeCorrectDir($path);
 
-            // New file?
-            if (isset($_FILES[$fieldname]) && $_FILES[$fieldname]['tmp_name']) {
-                // Make sure upload directory exists
-                if (!is_dir($path) && !mkdir($path, 0775)) {
-                    throw new \Exception("img directory does not exist and cannot be created");
-                }
+			// New file?
+			if (isset($_FILES[$fieldname]) && $_FILES[$fieldname]['tmp_name']) {
+				// Make sure upload directory exists
+				if (!is_dir($path) && !mkdir($path, 0775)) {
+					throw new Exception("img directory does not exist and cannot be created");
+				}
 
-                // Make sure we can write to the upload directory
-                if (!is_writable($path)) {
-                    if (!chmod($path, 0775)) {
-                        throw new \Exception("Cannot write to img directory");
-                    }
-                }
+				// Make sure we can write to the upload directory
+				if (!is_writable($path)) {
+					if (!chmod($path, 0775)) {
+						throw new Exception("Cannot write to img directory");
+					}
+				}
 
-                // Make sure mime-type matches an image
-                if (!in_array(mime_content_type($_FILES[$fieldname]['tmp_name']), ['image/jpeg','image/jpg','image/png','image/gif'])) {
-                    throw new \Exception("Uploaded file not a valid image");
-                }
+				// Make sure mime-type matches an image
+				if (!in_array(mime_content_type($_FILES[$fieldname]['tmp_name']), [
+					'image/jpeg',
+					'image/jpg',
+					'image/png',
+					'image/gif'
+				])) {
+					throw new Exception("Uploaded file not a valid image");
+				}
 
-                // Determine file extension
-                $spl = explode('.', $_FILES[$fieldname]['name']);
-                $file_extension = strtolower(array_pop($spl));
-                unset($spl);
+				// Determine file extension
+				$spl = explode('.', $_FILES[$fieldname]['name']);
+				$file_extension = strtolower(array_pop($spl));
+				unset($spl);
 
-                // Move file
-                if (!move_uploaded_file($_FILES[$fieldname]['tmp_name'], $path.$fielddata['image_name'].'.'.$file_extension)) {
-                    throw new \Exception("Unable to save image to img folder");
-                }
+				// Move file
+				if (!move_uploaded_file($_FILES[$fieldname]['tmp_name'], $path . $fielddata['image_name'] . '.' . $file_extension)) {
+					throw new Exception("Unable to save image to img folder");
+				}
 
-                $save_to = 'img/'.$fielddata['image_name'].'.'.$file_extension.'?v='.time();
-            }
+				$save_to = 'img/' . $fielddata['image_name'] . '.' . $file_extension . '?v=' . time();
+			}
 
-            // Delete file?
-            if ($fielddata['value'] !== "" && array_key_exists($fieldname.'_delete', $_POST) && $_POST[$fieldname.'_delete']) {
-                @unlink(\Froxlor\Froxlor::getInstallDir() . '/' . explode('?', $fielddata['value'], 2)[0]);
-                $save_to = '';
-            }
+			// Delete file?
+			if ($fielddata['value'] !== "" && array_key_exists($fieldname . '_delete', $_POST) && $_POST[$fieldname . '_delete']) {
+				@unlink(Froxlor::getInstallDir() . '/' . explode('?', $fielddata['value'], 2)[0]);
+				$save_to = '';
+			}
 
-            // Nothing changed
-            if ($save_to === null) {
-                return array(
-                    $fielddata['settinggroup'] . '.' . $fielddata['varname'] => $fielddata['value']
-                );
-            }
+			// Nothing changed
+			if ($save_to === null) {
+				return [
+					$fielddata['settinggroup'] . '.' . $fielddata['varname'] => $fielddata['value']
+				];
+			}
 
-            if (Settings::Set($fielddata['settinggroup'] . '.' . $fielddata['varname'], $save_to) === false) {
-                return false;
-            }
+			if (Settings::Set($fielddata['settinggroup'] . '.' . $fielddata['varname'], $save_to) === false) {
+				return false;
+			}
 
-            return array(
-                $fielddata['settinggroup'] . '.' . $fielddata['varname'] => $save_to
-            );
-        }
+			return [
+				$fielddata['settinggroup'] . '.' . $fielddata['varname'] => $save_to
+			];
+		}
 
-        return false;
-    }
+		return false;
+	}
+
+	private static function cleanMySQLAccessHost($value)
+	{
+		if (substr($value, 0, 1) == '[' && substr($value, -1) == ']') {
+			return substr($value, 1, -1);
+		}
+		return $value;
+	}
 }

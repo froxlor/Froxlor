@@ -1,12 +1,38 @@
 <?php
 
+/**
+ * This file is part of the Froxlor project.
+ * Copyright (c) 2010 the Froxlor Team (see authors).
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
+ */
+
 namespace Froxlor;
+
+use Exception;
+use Froxlor\UI\Panel\UI;
+use Throwable;
+use voku\helper\AntiXSS;
 
 class PhpHelper
 {
-
 	private static $sort_key = 'id';
-
 	private static $sort_type = SORT_STRING;
 
 	/**
@@ -21,18 +47,10 @@ class PhpHelper
 	{
 		self::$sort_type = Settings::Get('panel.natsorting') == 1 ? SORT_NATURAL : SORT_STRING;
 		self::$sort_key = $key;
-		return usort($list, array(
+		return usort($list, [
 			'self',
 			'sortListByGivenKey'
-		));
-	}
-
-	private static function sortListByGivenKey($a, $b)
-	{
-		if (self::$sort_type == SORT_NATURAL) {
-			return strnatcasecmp($a[self::$sort_key], $b[self::$sort_key]);
-		}
-		return strcasecmp($a[self::$sort_key], $b[self::$sort_key]);
+		]);
 	}
 
 	/**
@@ -40,16 +58,16 @@ class PhpHelper
 	 * can select which fields should be handled by htmlentities
 	 *
 	 * @param array|string $subject
-	 *        	The subject array
+	 *            The subject array
 	 * @param string $fields
-	 *        	The fields which should be checked for, separated by spaces
+	 *            The fields which should be checked for, separated by spaces
 	 * @param int $quote_style
-	 *        	See php documentation about this
+	 *            See php documentation about this
 	 * @param string $charset
-	 *        	See php documentation about this
+	 *            See php documentation about this
 	 *
 	 * @return array|string The string or an array with htmlentities converted strings
-	 * @author Florian Lippert <flo@syscp.org>
+	 * @author Florian Lippert <flo@syscp.org> (2003-2009)
 	 */
 	public static function htmlentitiesArray($subject, $fields = '', $quote_style = ENT_QUOTES, $charset = 'UTF-8')
 	{
@@ -72,19 +90,40 @@ class PhpHelper
 	}
 
 	/**
+	 * Returns array with all empty-values removed
+	 *
+	 * @param array $source
+	 *            The array to trim
+	 * @return array The trim'med array
+	 */
+	public static function arrayTrim($source)
+	{
+		$returnval = [];
+		if (is_array($source)) {
+			$source = array_map('trim', $source);
+			$returnval = array_filter($source, function ($value) {
+				return $value !== '';
+			});
+		} else {
+			$returnval = $source;
+		}
+		return $returnval;
+	}
+
+	/**
 	 * Replaces Strings in an array, with the advantage that you
 	 * can select which fields should be str_replace'd
 	 *
-	 * @param 	string|array $search
-	 * 				String or array of strings to search for
+	 * @param string|array $search
+	 *                String or array of strings to search for
 	 * @param string|array $reaplce
-	 *        	 String or array to replace with
+	 *                String or array to replace with
 	 * @param string|array $subject
-	 *        	String or array The subject array
+	 *                String or array The subject array
 	 * @param string $fields
-	 *        	string The fields which should be checked for, separated by spaces
+	 *                string The fields which should be checked for, separated by spaces
 	 * @return string|array The str_replace'd array
-	 * @author Florian Lippert <flo@syscp.org>
+	 * @author Florian Lippert <flo@syscp.org> (2003-2009)
 	 */
 	public static function strReplaceArray($search, $replace, $subject, $fields = '')
 	{
@@ -121,7 +160,7 @@ class PhpHelper
 
 		if (!isset($_SERVER['SHELL']) || (isset($_SERVER['SHELL']) && $_SERVER['SHELL'] == '')) {
 			// prevent possible file-path-disclosure
-			$errfile = str_replace(\Froxlor\Froxlor::getInstallDir(), "", $errfile);
+			$errfile = str_replace(Froxlor::getInstallDir(), "", $errfile);
 			// build alert
 			$type = 'danger';
 			if ($errno == E_NOTICE || $errno == E_DEPRECATED || $errno == E_STRICT) {
@@ -136,14 +175,14 @@ class PhpHelper
 			$err_display .= '<br><p><pre>';
 			$debug = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 			foreach ($debug as $dline) {
-				$err_display .= $dline['function'] . '() called at [' . str_replace(\Froxlor\Froxlor::getInstallDir(), '', ($dline['file'] ?? 'unknown')) . ':' . ($dline['line'] ?? 0) . ']<br>';
+				$err_display .= $dline['function'] . '() called at [' . str_replace(Froxlor::getInstallDir(), '', ($dline['file'] ?? 'unknown')) . ':' . ($dline['line'] ?? 0) . ']<br>';
 			}
 			$err_display .= '</pre></p>';
 			// end later
 			$err_display .= '</div>';
 			// check for more existing errors
-			$errors = isset(\Froxlor\UI\Panel\UI::twig()->getGlobals()['global_errors']) ? \Froxlor\UI\Panel\UI::twig()->getGlobals()['global_errors'] : "";
-			\Froxlor\UI\Panel\UI::twig()->addGlobal('global_errors', $errors . $err_display);
+			$errors = isset(UI::twig()->getGlobals()['global_errors']) ? UI::twig()->getGlobals()['global_errors'] : "";
+			UI::twig()->addGlobal('global_errors', $errors . $err_display);
 			// return true to ignore php standard error-handler
 			return true;
 		}
@@ -152,13 +191,13 @@ class PhpHelper
 		return false;
 	}
 
-	public static function phpExceptionHandler(\Throwable $exception)
+	public static function phpExceptionHandler(Throwable $exception)
 	{
 		if (!isset($_SERVER['SHELL']) || (isset($_SERVER['SHELL']) && $_SERVER['SHELL'] == '')) {
 			// show
-			\Froxlor\UI\Panel\UI::initTwig(true);
-			\Froxlor\UI\Panel\UI::twig()->addGlobal('install_mode', '1');
-			\Froxlor\UI\Panel\UI::view('misc/alert_nosession.html.twig', [
+			UI::initTwig(true);
+			UI::twig()->addGlobal('install_mode', '1');
+			UI::view('misc/alert_nosession.html.twig', [
 				'page_title' => 'Uncaught exception',
 				'heading' => 'Uncaught exception',
 				'type' => 'danger',
@@ -183,7 +222,7 @@ class PhpHelper
 
 		// variable that holds all dirs that will
 		// be parsed for inclusion
-		$configdirs = array();
+		$configdirs = [];
 		// if one of the parameters is an array
 		// we assume that this is a list of
 		// setting-groups to be selected
@@ -197,8 +236,8 @@ class PhpHelper
 			}
 		}
 
-		$data = array();
-		$data_files = array();
+		$data = [];
+		$data_files = [];
 		$has_data = false;
 
 		foreach ($configdirs as $data_dirname) {
@@ -223,9 +262,9 @@ class PhpHelper
 		// if we have specific setting-groups
 		// to select, we'll handle this here
 		// (this is for multiserver-client settings)
-		$_data = array();
+		$_data = [];
 		if ($selection != null && is_array($selection) && isset($selection[0])) {
-			$_data['groups'] = array();
+			$_data['groups'] = [];
 			foreach ($data['groups'] as $group => $data) {
 				if (in_array($group, $selection)) {
 					$_data['groups'][$group] = $data;
@@ -242,7 +281,7 @@ class PhpHelper
 	 *
 	 * @param string $host
 	 * @param boolean $try_a
-	 *        	default true
+	 *            default true
 	 * @return boolean|array
 	 */
 	public static function gethostbynamel6($host, $try_a = true)
@@ -262,7 +301,7 @@ class PhpHelper
 		} else {
 			$dns = $dns6;
 		}
-		$ips = array();
+		$ips = [];
 		foreach ($dns as $record) {
 			if ($record["type"] == "A") {
 				// always use compressed ipv6 format
@@ -282,63 +321,63 @@ class PhpHelper
 		}
 	}
 
-    /**
-     * Function randomStr
-     *
-     * generate a pseudo-random string of bytes
-     *
-     * @param int $length
-     * @return string
-     * @throws \Exception
-     */
+	/**
+	 * Function randomStr
+	 *
+	 * generate a pseudo-random string of bytes
+	 *
+	 * @param int $length
+	 * @return string
+	 * @throws Exception
+	 */
 	public static function randomStr($length)
 	{
-        if (function_exists('openssl_random_pseudo_bytes')) {
-            return openssl_random_pseudo_bytes($length);
-        }
-        return random_bytes($length);
+		if (function_exists('openssl_random_pseudo_bytes')) {
+			return openssl_random_pseudo_bytes($length);
+		}
+		return random_bytes($length);
 	}
 
 	/**
 	 * Return human readable sizes
 	 *
 	 * @param int $size
-	 *        	size in bytes
+	 *            size in bytes
 	 * @param string $max
-	 *        	maximum unit
+	 *            maximum unit
 	 * @param string $system
-	 *        	'si' for SI, 'bi' for binary prefixes
+	 *            'si' for SI, 'bi' for binary prefixes
 	 *
 	 * @param string $retstring
-	 *        	string
+	 *            string
 	 */
 	public static function sizeReadable($size, $max = null, $system = 'si', $retstring = '%01.2f %s')
 	{
 		// Pick units
-		$systems = array(
-			'si' => array(
-				'prefix' => array(
+		$systems = [
+			'si' => [
+				'prefix' => [
 					'B',
 					'KB',
 					'MB',
 					'GB',
 					'TB',
 					'PB'
-				),
+				],
 				'size' => 1000
-			),
-			'bi' => array(
-				'prefix' => array(
+			],
+			'bi' => [
+				'prefix' => [
 					'B',
 					'KiB',
 					'MiB',
 					'GiB',
 					'TiB',
 					'PiB'
-				),
+				],
 				'size' => 1024
-			)
-		);
+			]
+		];
 		$sys = isset($systems[$system]) ? $systems[$system] : $systems['si'];
 
 		// Max unit to display
@@ -361,16 +400,16 @@ class PhpHelper
 	 * in the first argument with their values.
 	 *
 	 * @param string $text
-	 *        	The string that should be searched for variables
+	 *            The string that should be searched for variables
 	 * @param array $vars
-	 *        	The array containing the variables with their values
+	 *            The array containing the variables with their values
 	 *
 	 * @return string The submitted string with the variables replaced.
 	 */
 	public static function replaceVariables($text, $vars)
 	{
 		$pattern = "/\{([a-zA-Z0-9\-_]+)\}/";
-		$matches = array();
+		$matches = [];
 
 		if (count($vars) > 0 && preg_match_all($pattern, $text, $matches)) {
 			for ($i = 0; $i < count($matches[1]); $i++) {
@@ -387,35 +426,16 @@ class PhpHelper
 		return $text;
 	}
 
-	/**
-	 * Returns array with all empty-values removed
-	 *
-	 * @param array $source
-	 *        	The array to trim
-	 * @return array The trim'med array
-	 */
-	public static function arrayTrim($source)
-	{
-		$returnval = array();
-		if (is_array($source)) {
-			$source = array_map('trim', $source);
-			$returnval = array_filter($source, function ($value) {
-				return $value !== '';
-			});
-		} else {
-			$returnval = $source;
-		}
-		return $returnval;
-	}
-
-	public static function recursive_array_search($needle, $haystack, &$keys = array(), $currentKey = '')
+	public static function recursive_array_search($needle, $haystack, &$keys = [], $currentKey = '')
 	{
 		foreach ($haystack as $key => $value) {
 			$pathkey = empty($currentKey) ? $key : $currentKey . '.' . $key;
 			if (is_array($value)) {
 				self::recursive_array_search($needle, $value, $keys, $pathkey);
-			} else if (stripos($value, $needle) !== false) {
-				$keys[] = $pathkey;
+			} else {
+				if (stripos($value, $needle) !== false) {
+					$keys[] = $pathkey;
+				}
 			}
 		}
 		return true;
@@ -426,7 +446,7 @@ class PhpHelper
 	 * so it gets automatically updated
 	 *
 	 * @param array $global
-	 * @param \voku\helper\AntiXSS $antiXss
+	 * @param AntiXSS $antiXss
 	 */
 	public static function cleanGlobal(&$global, &$antiXss)
 	{
@@ -448,5 +468,13 @@ class PhpHelper
 				}
 			}
 		}
+	}
+
+	private static function sortListByGivenKey($a, $b)
+	{
+		if (self::$sort_type == SORT_NATURAL) {
+			return strnatcasecmp($a[self::$sort_key], $b[self::$sort_key]);
+		}
+		return strcasecmp($a[self::$sort_key], $b[self::$sort_key]);
 	}
 }

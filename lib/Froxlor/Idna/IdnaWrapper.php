@@ -1,27 +1,37 @@
 <?php
-namespace Froxlor\Idna;
 
 /**
  * This file is part of the Froxlor project.
- * Copyright (c) 2003-2009 the SysCP Team (see authors).
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright (c) the authors
- * @author Michael Duergner <michael@duergner.com> (2003-2009)
- * @author Froxlor team <team@froxlor.org> (2010-)
- * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package Classes
- *         
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
+
+namespace Froxlor\Idna;
+
+use Algo26\IdnaConvert\IdnaConvert;
+use InvalidArgumentException;
 
 /**
  * Class for wrapping a specific idna conversion class and offering a standard interface
  *
- * @package Functions
+ * @author     Michael Duergner <michael@duergner.com> (2003-2009)
  */
 class IdnaWrapper
 {
@@ -40,16 +50,16 @@ class IdnaWrapper
 	public function __construct()
 	{
 		// Instantiate it
-		$this->idna_converter = new \Algo26\IdnaConvert\IdnaConvert();
+		$this->idna_converter = new IdnaConvert();
 	}
 
 	/**
 	 * Encode a domain name, a email address or a list of one of both.
 	 *
 	 * @param
-	 *        	string May be either a single domain name, e single email address or a list of one
-	 *        	separated either by ',', ';' or ' '.
-	 *        	
+	 *            string May be either a single domain name, e single email address or a list of one
+	 *            separated either by ',', ';' or ' '.
+	 *
 	 * @return string Returns either a single domain name, a single email address or a list of one of
 	 *         both separated by the same string as the input.
 	 */
@@ -58,27 +68,12 @@ class IdnaWrapper
 		$to_encode = $this->isUtf8($to_encode) ? $to_encode : utf8_encode($to_encode);
 		try {
 			return $this->idna_converter->encode($to_encode);
-		} catch (\InvalidArgumentException $iae) {
+		} catch (InvalidArgumentException $iae) {
 			if ($iae->getCode() == 100) {
 				return $to_encode;
 			}
 			throw $iae;
 		}
-	}
-
-	/**
-	 * Decode a domain name, a email address or a list of one of both.
-	 *
-	 * @param
-	 *        	string May be either a single domain name, e single email address or a list of one
-	 *        	separated either by ',', ';' or ' '.
-	 *        	
-	 * @return string Returns either a single domain name, a single email address or a list of one of
-	 *         both separated by the same string as the input.
-	 */
-	public function decode($to_decode)
-	{
-		return $this->idna_converter->decode($to_decode);
 	}
 
 	/**
@@ -97,7 +92,7 @@ class IdnaWrapper
 			return false;
 		}
 		$strlen = strlen($string);
-		for ($i = 0; $i < $strlen; $i ++) {
+		for ($i = 0; $i < $strlen; $i++) {
 			$ord = ord($string[$i]);
 			if ($ord < 0x80) {
 				continue; // 0bbbbbbb
@@ -112,8 +107,8 @@ class IdnaWrapper
 				return false;
 			}
 			// $n Folgebytes? // 10bbbbbb
-			for ($c = 0; $c < $n; $c ++) {
-				if (++ $i === $strlen || (ord($string[$i]) & 0xC0) !== 0x80) {
+			for ($c = 0; $c < $n; $c++) {
+				if (++$i === $strlen || (ord($string[$i]) & 0xC0) !== 0x80) {
 					// ungültiges UTF-8-Zeichen
 					return false;
 				}
@@ -121,5 +116,20 @@ class IdnaWrapper
 		}
 		// kein ungültiges UTF-8-Zeichen gefunden
 		return true;
+	}
+
+	/**
+	 * Decode a domain name, a email address or a list of one of both.
+	 *
+	 * @param
+	 *            string May be either a single domain name, e single email address or a list of one
+	 *            separated either by ',', ';' or ' '.
+	 *
+	 * @return string Returns either a single domain name, a single email address or a list of one of
+	 *         both separated by the same string as the input.
+	 */
+	public function decode($to_decode)
+	{
+		return $this->idna_converter->decode($to_decode);
 	}
 }

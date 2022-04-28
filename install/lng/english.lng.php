@@ -7,12 +7,12 @@
  *
  * For the full copyright and license information, please view the COPYING
  * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * COPYING file online at https://files.froxlor.org/misc/COPYING.txt
  *
  * @copyright  (c) the authors
  * @author     Florian Lippert <flo@syscp.org> (2003-2009)
  * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
+ * @license    GPLv2 https://files.froxlor.org/misc/COPYING.txt
  * @package    Language
  *
  */

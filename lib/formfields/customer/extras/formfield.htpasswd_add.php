@@ -4,55 +4,67 @@
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Formfields
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
-return array(
-	'htpasswd_add' => array(
-		'title' => $lng['extras']['directoryprotection_add'],
+
+use Froxlor\Settings;
+use Froxlor\System\Crypt;
+
+return [
+	'htpasswd_add' => [
+		'title' => lng('extras.directoryprotection_add'),
 		'image' => 'fa-solid fa-lock',
 		'self_overview' => ['section' => 'extras', 'page' => 'htpasswds'],
-		'sections' => array(
-			'section_a' => array(
-				'title' => $lng['extras']['directoryprotection_add'],
+		'sections' => [
+			'section_a' => [
+				'title' => lng('extras.directoryprotection_add'),
 				'image' => 'icons/htpasswd_add.png',
-				'fields' => array(
-					'path' => array(
-						'label' => $lng['panel']['path'],
-						'desc' => (\Froxlor\Settings::Get('panel.pathedit') != 'Dropdown' ? $lng['panel']['pathDescription'] : null),
+				'fields' => [
+					'path' => [
+						'label' => lng('panel.path'),
+						'desc' => (Settings::Get('panel.pathedit') != 'Dropdown' ? lng('panel.pathDescription') : null),
 						'type' => $pathSelect['type'],
 						'select_var' => $pathSelect['select_var'] ?? '',
 						'value' => $pathSelect['value'],
 						'note' => $pathSelect['note'] ?? '',
-					),
-					'username' => array(
-						'label' => $lng['login']['username'],
+					],
+					'username' => [
+						'label' => lng('login.username'),
 						'type' => 'text'
-					),
-					'directory_password' => array(
-						'label' => $lng['login']['password'],
+					],
+					'directory_password' => [
+						'label' => lng('login.password'),
 						'type' => 'password',
 						'autocomplete' => 'off'
-					),
-					'directory_password_suggestion' => array(
-						'label' => $lng['customer']['generated_pwd'],
+					],
+					'directory_password_suggestion' => [
+						'label' => lng('customer.generated_pwd'),
 						'type' => 'text',
-						'visible' => (\Froxlor\Settings::Get('panel.password_regex') == ''),
-						'value' => \Froxlor\System\Crypt::generatePassword()
-					),
-					'directory_authname' => array(
-						'label' => $lng['extras']['htpasswdauthname'],
+						'visible' => (Settings::Get('panel.password_regex') == ''),
+						'value' => Crypt::generatePassword()
+					],
+					'directory_authname' => [
+						'label' => lng('extras.htpasswdauthname'),
 						'type' => 'text'
-					)
-				)
-			)
-		)
-	)
-);
+					]
+				]
+			]
+		]
+	]
+];

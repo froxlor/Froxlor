@@ -1,38 +1,41 @@
 <?php
 
-namespace Froxlor\UI;
-
-use Froxlor\Settings;
-
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    API
- * @since      0.10.0
- *       
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
+
+namespace Froxlor\UI;
+
+use Froxlor\Settings;
 
 /**
  * Class to manage pagination, limiting and ordering
  */
 class Pagination
 {
-	private array $data = array();
-
-	private ?array $fields = null;
-
 	public string $sortorder = 'ASC';
-
 	public $sortfield = null;
-
+	private array $data = [];
+	private ?array $fields = null;
 	private ?string $searchtext = null;
 
 	private $searchfield = null;
@@ -52,7 +55,7 @@ class Pagination
 	 * @param int $total_entries
 	 * @param int $perPage
 	 */
-	public function __construct(array $fields = array(), int $total_entries = 0, int $perPage = 20)
+	public function __construct(array $fields = [], int $total_entries = 0, int $perPage = 20)
 	{
 		$this->fields = $fields;
 		$this->entries = $total_entries;
@@ -103,44 +106,16 @@ class Pagination
 	}
 
 	/**
-	 * add a field for ordering
-	 *
-	 * @param string $field
-	 * @param string $order optional, default 'ASC'
-	 * @return Pagination
-	 */
-	public function addOrderBy($field = null, $order = 'ASC'): Pagination
-	{
-		if (!isset($this->data['sql_orderby'])) {
-			$this->data['sql_orderby'] = array();
-		}
-		$this->data['sql_orderby'][$field] = $order;
-		return $this;
-	}
-
-	/**
 	 * add a limit
 	 *
 	 * @param int $limit
-	 *        	optional, default 0
-	 *        	
+	 *            optional, default 0
+	 *
 	 * @return Pagination
 	 */
 	public function addLimit(int $limit = 0): Pagination
 	{
 		$this->data['sql_limit'] = $limit;
-		return $this;
-	}
-
-	/**
-	 * add an offset
-	 *
-	 * @param int $offset optional, default 0
-	 * @return Pagination
-	 */
-	public function addOffset(int $offset = 0): Pagination
-	{
-		$this->data['sql_offset'] = $offset;
 		return $this;
 	}
 
@@ -156,7 +131,7 @@ class Pagination
 	public function addSearch(string $searchtext = null, string $field = null, string $operator = null): Pagination
 	{
 		if (!isset($this->data['sql_search'])) {
-			$this->data['sql_search'] = array();
+			$this->data['sql_search'] = [];
 		}
 		$this->data['sql_search'][$field] = [
 			'value' => $searchtext,
@@ -168,6 +143,34 @@ class Pagination
 		// unset any limit as we do not have pagination when showing search-results
 		unset($this->data['sql_limit']);
 		unset($this->data['sql_offset']);
+		return $this;
+	}
+
+	/**
+	 * add a field for ordering
+	 *
+	 * @param string $field
+	 * @param string $order optional, default 'ASC'
+	 * @return Pagination
+	 */
+	public function addOrderBy($field = null, $order = 'ASC'): Pagination
+	{
+		if (!isset($this->data['sql_orderby'])) {
+			$this->data['sql_orderby'] = [];
+		}
+		$this->data['sql_orderby'][$field] = $order;
+		return $this;
+	}
+
+	/**
+	 * add an offset
+	 *
+	 * @param int $offset optional, default 0
+	 * @return Pagination
+	 */
+	public function addOffset(int $offset = 0): Pagination
+	{
+		$this->data['sql_offset'] = $offset;
 		return $this;
 	}
 

@@ -1,69 +1,97 @@
 <?php
-namespace Froxlor\Api\Commands;
-
-use Froxlor\Database\Database;
-use Froxlor\Domain\Domain;
-use Froxlor\Settings;
 
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright (c) the authors
- * @author Froxlor team <team@froxlor.org> (2010-)
- * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package API
- * @since 0.10.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
-class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntity
+
+namespace Froxlor\Api\Commands;
+
+use Exception;
+use Froxlor\Api\ApiCommand;
+use Froxlor\Api\ResourceEntity;
+use Froxlor\Cron\TaskId;
+use Froxlor\Database\Database;
+use Froxlor\Domain\Domain;
+use Froxlor\FileDir;
+use Froxlor\FroxlorLogger;
+use Froxlor\Idna\IdnaWrapper;
+use Froxlor\PhpHelper;
+use Froxlor\Settings;
+use Froxlor\System\Cronjob;
+use Froxlor\UI\Response;
+use Froxlor\Validate\Validate;
+use PDO;
+
+/**
+ * @since 0.10.0
+ */
+class SubDomains extends ApiCommand implements ResourceEntity
 {
 
 	/**
 	 * add a new subdomain
 	 *
 	 * @param string $subdomain
-	 *        	part before domain.tld to create as subdomain
+	 *            part before domain.tld to create as subdomain
 	 * @param string $domain
-	 *        	domainname of main-domain
+	 *            domainname of main-domain
 	 * @param int $alias
-	 *        	optional, domain-id of a domain that the new domain should be an alias of
+	 *            optional, domain-id of a domain that the new domain should be an alias of
 	 * @param string $path
-	 *        	optional, destination path relative to the customers-homedir, default is customers-homedir
+	 *            optional, destination path relative to the customers-homedir, default is customers-homedir
 	 * @param string $url
-	 *        	optional, overwrites path value with an URL to generate a redirect, alternatively use the path parameter also for URLs
+	 *            optional, overwrites path value with an URL to generate a redirect, alternatively use the path
+	 *            parameter also for URLs
 	 * @param int $openbasedir_path
-	 *        	optional, either 0 for domains-docroot or 1 for customers-homedir
+	 *            optional, either 0 for domains-docroot or 1 for customers-homedir
 	 * @param int $phpsettingid
-	 *        	optional, php-settings-id, if empty the $domain value is used
+	 *            optional, php-settings-id, if empty the $domain value is used
 	 * @param int $redirectcode
-	 *        	optional, redirect-code-id from TABLE_PANEL_REDIRECTCODES
+	 *            optional, redirect-code-id from TABLE_PANEL_REDIRECTCODES
 	 * @param bool $sslenabled
-	 *        	optional, whether or not SSL is enabled for this domain, regardless of the assigned ssl-ips, default 1 (true)
+	 *            optional, whether or not SSL is enabled for this domain, regardless of the assigned ssl-ips, default
+	 *            1 (true)
 	 * @param bool $ssl_redirect
-	 *        	optional, whether to generate a https-redirect or not, default false; requires SSL to be enabled
+	 *            optional, whether to generate a https-redirect or not, default false; requires SSL to be enabled
 	 * @param bool $letsencrypt
-	 *        	optional, whether to generate a Let's Encrypt certificate for this domain, default false; requires SSL to be enabled
+	 *            optional, whether to generate a Let's Encrypt certificate for this domain, default false; requires
+	 *            SSL to be enabled
 	 * @param bool $http2
-	 *        	optional, whether to enable http/2 for this subdomain (requires to be enabled in the settings), default 0 (false)
+	 *            optional, whether to enable http/2 for this subdomain (requires to be enabled in the settings),
+	 *            default 0 (false)
 	 * @param int $hsts_maxage
-	 *        	optional max-age value for HSTS header, default 0
+	 *            optional max-age value for HSTS header, default 0
 	 * @param bool $hsts_sub
-	 *        	optional whether or not to add subdomains to the HSTS header, default 0
+	 *            optional whether or not to add subdomains to the HSTS header, default 0
 	 * @param bool $hsts_preload
-	 *        	optional whether or not to preload HSTS header value, default 0
+	 *            optional whether or not to preload HSTS header value, default 0
 	 * @param int $customerid
-	 *        	optional, required when called as admin (if $loginname is not specified)
+	 *            optional, required when called as admin (if $loginname is not specified)
 	 * @param string $loginname
-	 *        	optional, required when called as admin (if $customerid is not specified)
+	 *            optional, required when called as admin (if $customerid is not specified)
 	 *
 	 * @access admin, customer
-	 * @throws \Exception
 	 * @return string json-encoded array
+	 * @throws Exception
 	 */
 	public function add()
 	{
@@ -104,26 +132,26 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			// validation
 			$subdomain = strtolower($subdomain);
 			if (substr($subdomain, 0, 4) == 'xn--') {
-				\Froxlor\UI\Response::standard_error('domain_nopunycode', '', true);
+				Response::standardError('domain_nopunycode', '', true);
 			}
 
-			$idna_convert = new \Froxlor\Idna\IdnaWrapper();
-			$subdomain = $idna_convert->encode(preg_replace(array(
+			$idna_convert = new IdnaWrapper();
+			$subdomain = $idna_convert->encode(preg_replace([
 				'/\:(\d)+$/',
 				'/^https?\:\/\//'
-			), '', \Froxlor\Validate\Validate::validate($subdomain, 'subdomain', '', 'subdomainiswrong', array(), true)));
+			], '', Validate::validate($subdomain, 'subdomain', '', 'subdomainiswrong', [], true)));
 
 			// merge the two parts together
 			$completedomain = $subdomain . '.' . $domain;
 
-			if (Settings::Get('system.validate_domain') && ! \Froxlor\Validate\Validate::validateDomain($completedomain)) {
-				\Froxlor\UI\Response::standard_error(array(
+			if (Settings::Get('system.validate_domain') && !Validate::validateDomain($completedomain)) {
+				Response::standardError([
 					'stringiswrong',
 					'mydomain'
-				), '', true);
+				], '', true);
 			}
 			if ($completedomain == strtolower(Settings::Get('system.hostname'))) {
-				\Froxlor\UI\Response::standard_error('admin_domain_emailsystemhostname', '', true);
+				Response::standardError('admin_domain_emailsystemhostname', '', true);
 			}
 
 			// check whether the domain already exists
@@ -134,14 +162,14 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				AND `email_only` = '0'
 				AND `caneditdomain` = '1'
 			");
-			$completedomain_check = Database::pexecute_first($completedomain_stmt, array(
+			$completedomain_check = Database::pexecute_first($completedomain_stmt, [
 				"domain" => $completedomain,
 				"customerid" => $customer['customerid']
-			), true, true);
+			], true, true);
 
 			if ($completedomain_check) {
 				// no exception so far - domain exists
-				\Froxlor\UI\Response::standard_error('domainexistalready', $completedomain, true);
+				Response::standardError('domainexistalready', $completedomain, true);
 			}
 
 			// alias domain checked?
@@ -160,14 +188,14 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 					GROUP BY `d`.`domain`
 					ORDER BY `d`.`domain` ASC
 				");
-				$aliasdomain_check = Database::pexecute_first($aliasdomain_stmt, array(
+				$aliasdomain_check = Database::pexecute_first($aliasdomain_stmt, [
 					"id" => $aliasdomain,
 					"customerid" => $customer['customerid']
-				), true, true);
+				], true, true);
 				if ($aliasdomain_check['id'] != $aliasdomain) {
-					\Froxlor\UI\Response::standard_error('domainisaliasorothercustomer', '', true);
+					Response::standardError('domainisaliasorothercustomer', '', true);
 				}
-				\Froxlor\Domain\Domain::triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $this->logger());
+				Domain::triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $this->logger());
 			}
 
 			// validate / correct path/url of domain
@@ -187,20 +215,20 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				AND `email_only` = '0'
 				AND `caneditdomain` = '1'
 			");
-			$domain_check = Database::pexecute_first($domain_stmt, array(
+			$domain_check = Database::pexecute_first($domain_stmt, [
 				"domain" => $domain,
 				"customerid" => $customer['customerid']
-			), true, true);
+			], true, true);
 
-			if (! $domain_check) {
+			if (!$domain_check) {
 				// the given main-domain
-				\Froxlor\UI\Response::standard_error('maindomainnonexist', $domain, true);
+				Response::standardError('maindomainnonexist', $domain, true);
 			} elseif ($subdomain == 'www' && $domain_check['wwwserveralias'] == '1') {
 				// you cannot add 'www' as subdomain when the maindomain generates a www-alias
-				\Froxlor\UI\Response::standard_error('wwwnotallowed', '', true);
+				Response::standardError('wwwnotallowed', '', true);
 			} elseif ($completedomain_check && strtolower($completedomain_check['domain']) == strtolower($completedomain)) {
 				// the domain does already exist as main-domain
-				\Froxlor\UI\Response::standard_error('domainexistalready', $completedomain, true);
+				Response::standardError('domainexistalready', $completedomain, true);
 			}
 
 			// if allowed, check for 'is email domain'-flag
@@ -213,30 +241,30 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			if ($ssl_redirect != 0) {
 				// a ssl-redirect only works if there actually is a
 				// ssl ip/port assigned to the domain
-				if (\Froxlor\Domain\Domain::domainHasSslIpPort($domain_check['id']) == true) {
+				if (Domain::domainHasSslIpPort($domain_check['id']) == true) {
 					$ssl_redirect = '1';
 					$_doredirect = true;
 				} else {
-					\Froxlor\UI\Response::standard_error('sslredirectonlypossiblewithsslipport', '', true);
+					Response::standardError('sslredirectonlypossiblewithsslipport', '', true);
 				}
 			}
 
 			if ($letsencrypt != 0) {
 				// let's encrypt only works if there actually is a
 				// ssl ip/port assigned to the domain
-				if (\Froxlor\Domain\Domain::domainHasSslIpPort($domain_check['id']) == true) {
+				if (Domain::domainHasSslIpPort($domain_check['id']) == true) {
 					$letsencrypt = '1';
 				} else {
-					\Froxlor\UI\Response::standard_error('letsencryptonlypossiblewithsslipport', '', true);
+					Response::standardError('letsencryptonlypossiblewithsslipport', '', true);
 				}
 			}
 
 			// validate dns if lets encrypt is enabled to check whether we can use it at all
 			if ($letsencrypt == '1' && Settings::Get('system.le_domain_dnscheck') == '1') {
 				$our_ips = Domain::getIpsOfDomain($domain_check['id']);
-				$domain_ips = \Froxlor\PhpHelper::gethostbynamel6($completedomain);
+				$domain_ips = PhpHelper::gethostbynamel6($completedomain);
 				if ($domain_ips == false || count(array_intersect($our_ips, $domain_ips)) <= 0) {
-					\Froxlor\UI\Response::standard_error('invaliddnsforletsencrypt', '', true);
+					Response::standardError('invaliddnsforletsencrypt', '', true);
 				}
 			}
 
@@ -249,11 +277,11 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			$phpsid_stmt = Database::prepare("
 				SELECT `phpsettingid` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `id` = :id
 			");
-			$phpsid_result = Database::pexecute_first($phpsid_stmt, array(
+			$phpsid_result = Database::pexecute_first($phpsid_stmt, [
 				"id" => $domain_check['id']
-			), true, true);
+			], true, true);
 
-			if (! isset($phpsid_result['phpsettingid']) || (int) $phpsid_result['phpsettingid'] <= 0) {
+			if (!isset($phpsid_result['phpsettingid']) || (int)$phpsid_result['phpsettingid'] <= 0) {
 				// assign default config
 				$phpsid_result['phpsettingid'] = 1;
 			}
@@ -263,15 +291,15 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			}
 
 			$allowed_phpconfigs = $customer['allowed_phpconfigs'];
-			if (! empty($allowed_phpconfigs)) {
+			if (!empty($allowed_phpconfigs)) {
 				$allowed_phpconfigs = json_decode($allowed_phpconfigs, true);
 			} else {
 				$allowed_phpconfigs = [];
 			}
 			// only with fcgid/fpm enabled will it be possible to select a php-setting
-			if ((int) Settings::Get('system.mod_fcgid') == 1 || (int) Settings::Get('phpfpm.enabled') == 1) {
-				if (! in_array($phpsid_result['phpsettingid'], $allowed_phpconfigs)) {
-					\Froxlor\UI\Response::standard_error('notallowedphpconfigused', '', true);
+			if ((int)Settings::Get('system.mod_fcgid') == 1 || (int)Settings::Get('phpfpm.enabled') == 1) {
+				if (!in_array($phpsid_result['phpsettingid'], $allowed_phpconfigs)) {
+					Response::standardError('notallowedphpconfigused', '', true);
 				}
 			}
 
@@ -309,7 +337,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				`tlsv13_cipher_list` = :tlsv13_cipher_list,
 				`ssl_enabled` = :sslenabled
 			");
-			$params = array(
+			$params = [
 				"customerid" => $customer['customerid'],
 				"adminid" => $customer['adminid'],
 				"domain" => $completedomain,
@@ -340,7 +368,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				"ssl_cipher_list" => $domain_check['ssl_cipher_list'],
 				"tlsv13_cipher_list" => $domain_check['tlsv13_cipher_list'],
 				"sslenabled" => $sslenabled
-			);
+			];
 			Database::pexecute($stmt, $params, true, true);
 			$subdomain_id = Database::lastInsertId();
 
@@ -351,41 +379,41 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				FROM `" . TABLE_DOMAINTOIP . "`
 				WHERE `id_domain` = :id_domain
 			");
-			Database::pexecute($stmt, array(
+			Database::pexecute($stmt, [
 				"id_domain" => $domain_check['id']
-			));
+			]);
 
 			if ($_doredirect) {
-				\Froxlor\Domain\Domain::addRedirectToDomain($subdomain_id, $redirectcode);
+				Domain::addRedirectToDomain($subdomain_id, $redirectcode);
 			}
 
-			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_VHOST);
+			Cronjob::inserttask(TaskId::REBUILD_VHOST);
 			// Using nameserver, insert a task which rebuilds the server config
-			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_DNS);
+			Cronjob::inserttask(TaskId::REBUILD_DNS);
 
 			Customers::increaseUsage($customer['customerid'], 'subdomains_used');
 
-			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] added subdomain '" . $completedomain . "'");
+			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] added subdomain '" . $completedomain . "'");
 
-			$result = $this->apiCall('SubDomains.get', array(
+			$result = $this->apiCall('SubDomains.get', [
 				'id' => $subdomain_id
-			));
+			]);
 			return $this->response($result);
 		}
-		throw new \Exception("No more resources available", 406);
+		throw new Exception("No more resources available", 406);
 	}
 
 	/**
 	 * return a subdomain entry by either id or domainname
 	 *
 	 * @param int $id
-	 *        	optional, the domain-id
+	 *            optional, the domain-id
 	 * @param string $domainname
-	 *        	optional, the domainname
+	 *            optional, the domainname
 	 *
 	 * @access admin, customer
-	 * @throws \Exception
 	 * @return string json-encoded array
+	 * @throws Exception
 	 */
 	public function get()
 	{
@@ -395,7 +423,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 
 		// convert possible idn domain to punycode
 		if (substr($domainname, 0, 4) != 'xn--') {
-			$idna_convert = new \Froxlor\Idna\IdnaWrapper();
+			$idna_convert = new IdnaWrapper();
 			$domainname = $idna_convert->encode($domainname);
 		}
 
@@ -405,7 +433,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				// whether the database belongs to one of his customers
 				$_custom_list_result = $this->apiCall('Customers.listing');
 				$custom_list_result = $_custom_list_result['list'];
-				$customer_ids = array();
+				$customer_ids = [];
 				foreach ($custom_list_result as $customer) {
 					$customer_ids[] = $customer['customerid'];
 				}
@@ -416,11 +444,11 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 						WHERE " . ($id > 0 ? "d.`id` = :iddn" : "d.`domain` = :iddn") . " AND d.`customerid` IN (" . implode(", ", $customer_ids) . ")
 						AND ((d.`parentdomainid`!='0' AND pd.`id` = d.`parentdomainid`) OR (d.`parentdomainid`='0' AND pd.`id` = d.`id`))
 					");
-					$params = array(
+					$params = [
 						'iddn' => ($id <= 0 ? $domainname : $id)
-					);
+					];
 				} else {
-					throw new \Exception("You do not have any customers yet", 406);
+					throw new Exception("You do not have any customers yet", 406);
 				}
 			} else {
 				$result_stmt = Database::prepare("
@@ -429,13 +457,13 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 					WHERE " . ($id > 0 ? "d.`id` = :iddn" : "d.`domain` = :iddn") . "
 					AND ((d.`parentdomainid`!='0' AND pd.`id` = d.`parentdomainid`) OR (d.`parentdomainid`='0' AND pd.`id` = d.`id`))
 				");
-				$params = array(
+				$params = [
 					'iddn' => ($id <= 0 ? $domainname : $id)
-				);
+				];
 			}
 		} else {
-			if (! $this->isInternal() && Settings::IsInList('panel.customer_hide_options', 'domains')) {
-				throw new \Exception("You cannot access this resource", 405);
+			if (!$this->isInternal() && Settings::IsInList('panel.customer_hide_options', 'domains')) {
+				throw new Exception("You cannot access this resource", 405);
 			}
 			$result_stmt = Database::prepare("
 				SELECT d.*, pd.`subcanemaildomain`, pd.`isbinddomain` as subisbinddomain
@@ -443,65 +471,111 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				WHERE d.`customerid`= :customerid AND " . ($id > 0 ? "d.`id` = :iddn" : "d.`domain` = :iddn") . "
 				AND ((d.`parentdomainid`!='0' AND pd.`id` = d.`parentdomainid`) OR (d.`parentdomainid`='0' AND pd.`id` = d.`id`))
 			");
-			$params = array(
+			$params = [
 				'customerid' => $this->getUserDetail('customerid'),
 				'iddn' => ($id <= 0 ? $domainname : $id)
-			);
+			];
 		}
 		$result = Database::pexecute_first($result_stmt, $params, true, true);
 		if ($result) {
-			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] get subdomain '" . $result['domain'] . "'");
+			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] get subdomain '" . $result['domain'] . "'");
 			return $this->response($result);
 		}
 		$key = ($id > 0 ? "id #" . $id : "domainname '" . $domainname . "'");
-		throw new \Exception("Subdomain with " . $key . " could not be found", 404);
+		throw new Exception("Subdomain with " . $key . " could not be found", 404);
+	}
+
+	/**
+	 * validate given path and replace with url if given and valid
+	 *
+	 * @param string $path
+	 * @param string $url
+	 * @param array $customer
+	 * @param string $completedomain
+	 * @param boolean $_doredirect
+	 *
+	 * @return string validated path
+	 * @throws Exception
+	 */
+	private function validateDomainDocumentRoot($path = null, $url = null, $customer = null, $completedomain = null, &$_doredirect = false)
+	{
+		// check whether an URL was specified
+		$_doredirect = false;
+		if (!empty($url) && Validate::validateUrl($url)) {
+			$path = $url;
+			$_doredirect = true;
+		} else {
+			$path = Validate::validate($path, 'path', '', '', [], true);
+		}
+
+		// check whether path is a real path
+		if (!preg_match('/^https?\:\/\//', $path) || !Validate::validateUrl($path)) {
+			if (strstr($path, ":") !== false) {
+				Response::standardError('pathmaynotcontaincolon', '', true);
+			}
+			// If path is empty or '/' and 'Use domain name as default value for DocumentRoot path' is enabled in settings,
+			// set default path to subdomain or domain name
+			if ((($path == '') || ($path == '/')) && Settings::Get('system.documentroot_use_default_value') == 1) {
+				$path = FileDir::makeCorrectDir($customer['documentroot'] . '/' . $completedomain);
+			} else {
+				$path = FileDir::makeCorrectDir($customer['documentroot'] . '/' . $path);
+			}
+		} else {
+			// no it's not, create a redirect
+			$_doredirect = true;
+		}
+		return $path;
 	}
 
 	/**
 	 * update subdomain entry by either id or domainname
 	 *
 	 * @param int $id
-	 *        	optional, the domain-id
+	 *            optional, the domain-id
 	 * @param string $domainname
-	 *        	optional, the domainname
+	 *            optional, the domainname
 	 * @param int $alias
-	 *        	optional, domain-id of a domain that the new domain should be an alias of
+	 *            optional, domain-id of a domain that the new domain should be an alias of
 	 * @param string $path
-	 *        	optional, destination path relative to the customers-homedir, default is customers-homedir
+	 *            optional, destination path relative to the customers-homedir, default is customers-homedir
 	 * @param string $url
-	 *        	optional, overwrites path value with an URL to generate a redirect, alternatively use the path parameter also for URLs
+	 *            optional, overwrites path value with an URL to generate a redirect, alternatively use the path
+	 *            parameter also for URLs
 	 * @param int $selectserveralias
-	 *        	optional, 0 = wildcard, 1 = www-alias, 2 = none
+	 *            optional, 0 = wildcard, 1 = www-alias, 2 = none
 	 * @param bool $isemaildomain
-	 *        	optional
+	 *            optional
 	 * @param int $openbasedir_path
-	 *        	optional, either 0 for domains-docroot or 1 for customers-homedir
+	 *            optional, either 0 for domains-docroot or 1 for customers-homedir
 	 * @param int $phpsettingid
-	 *        	optional, php-settings-id, if empty the $domain value is used
+	 *            optional, php-settings-id, if empty the $domain value is used
 	 * @param int $redirectcode
-	 *        	optional, redirect-code-id from TABLE_PANEL_REDIRECTCODES
+	 *            optional, redirect-code-id from TABLE_PANEL_REDIRECTCODES
 	 * @param bool $sslenabled
-	 *        	optional, whether or not SSL is enabled for this domain, regardless of the assigned ssl-ips, default 1 (true)
+	 *            optional, whether or not SSL is enabled for this domain, regardless of the assigned ssl-ips, default
+	 *            1 (true)
 	 * @param bool $ssl_redirect
-	 *        	optional, whether to generate a https-redirect or not, default false; requires SSL to be enabled
+	 *            optional, whether to generate a https-redirect or not, default false; requires SSL to be enabled
 	 * @param bool $letsencrypt
-	 *        	optional, whether to generate a Let's Encrypt certificate for this domain, default false; requires SSL to be enabled
+	 *            optional, whether to generate a Let's Encrypt certificate for this domain, default false; requires
+	 *            SSL to be enabled
 	 * @param bool $http2
-	 *        	optional, whether to enable http/2 for this domain (requires to be enabled in the settings), default 0 (false)
+	 *            optional, whether to enable http/2 for this domain (requires to be enabled in the settings), default
+	 *            0 (false)
 	 * @param int $hsts_maxage
-	 *        	optional max-age value for HSTS header
+	 *            optional max-age value for HSTS header
 	 * @param bool $hsts_sub
-	 *        	optional whether or not to add subdomains to the HSTS header
+	 *            optional whether or not to add subdomains to the HSTS header
 	 * @param bool $hsts_preload
-	 *        	optional whether or not to preload HSTS header value
+	 *            optional whether or not to preload HSTS header value
 	 * @param int $customerid
-	 *        	optional, required when called as admin (if $loginname is not specified)
+	 *            optional, required when called as admin (if $loginname is not specified)
 	 * @param string $loginname
-	 *        	optional, required when called as admin (if $customerid is not specified)
+	 *            optional, required when called as admin (if $customerid is not specified)
 	 *
 	 * @access admin, customer
-	 * @throws \Exception
 	 * @return string json-encoded array
+	 * @throws Exception
 	 */
 	public function update()
 	{
@@ -510,13 +584,13 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		$domainname = $this->getParam('domainname', $dn_optional, '');
 
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'domains')) {
-			throw new \Exception("You cannot access this resource", 405);
+			throw new Exception("You cannot access this resource", 405);
 		}
 
-		$result = $this->apiCall('SubDomains.get', array(
+		$result = $this->apiCall('SubDomains.get', [
 			'id' => $id,
 			'domainname' => $domainname
-		));
+		]);
 		$id = $result['id'];
 
 		// parameters
@@ -529,7 +603,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		$isemaildomain = $this->getBoolParam('isemaildomain', true, $result['isemaildomain']);
 		$openbasedir_path = $this->getParam('openbasedir_path', true, $result['openbasedir_path']);
 		$phpsettingid = $this->getParam('phpsettingid', true, $result['phpsettingid']);
-		$redirectcode = $this->getParam('redirectcode', true, \Froxlor\Domain\Domain::getDomainRedirectId($id));
+		$redirectcode = $this->getParam('redirectcode', true, Domain::getDomainRedirectId($id));
 		if (Settings::Get('system.use_ssl')) {
 			$sslenabled = $this->getBoolParam('sslenabled', true, $result['ssl_enabled']);
 			$ssl_redirect = $this->getBoolParam('ssl_redirect', true, $result['ssl_redirect']);
@@ -552,9 +626,9 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		$customer = $this->getCustomerData();
 
 		$alias_stmt = Database::prepare("SELECT COUNT(`id`) AS count FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `aliasdomain`= :aliasdomain");
-		$alias_check = Database::pexecute_first($alias_stmt, array(
+		$alias_check = Database::pexecute_first($alias_stmt, [
 			"aliasdomain" => $result['id']
-		));
+		]);
 		$alias_check = $alias_check['count'];
 
 		// alias domain checked?
@@ -567,14 +641,14 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				AND `c`.`customerid`= :customerid
 				AND `d`.`id`= :id
 			");
-			$aliasdomain_check = Database::pexecute_first($aliasdomain_stmt, array(
+			$aliasdomain_check = Database::pexecute_first($aliasdomain_stmt, [
 				"id" => $aliasdomain,
 				"customerid" => $customer['customerid']
-			), true, true);
+			], true, true);
 			if ($aliasdomain_check['id'] != $aliasdomain) {
-				\Froxlor\UI\Response::standard_error('domainisaliasorothercustomer', '', true);
+				Response::standardError('domainisaliasorothercustomer', '', true);
 			}
-			\Froxlor\Domain\Domain::triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $this->logger());
+			Domain::triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $this->logger());
 		}
 
 		// validate / correct path/url of domain
@@ -600,36 +674,36 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		if ($ssl_redirect != 0) {
 			// a ssl-redirect only works if there actually is a
 			// ssl ip/port assigned to the domain
-			if (\Froxlor\Domain\Domain::domainHasSslIpPort($result['id']) == true) {
+			if (Domain::domainHasSslIpPort($result['id']) == true) {
 				$ssl_redirect = '1';
 				$_doredirect = true;
 			} else {
-				\Froxlor\UI\Response::standard_error('sslredirectonlypossiblewithsslipport', '', true);
+				Response::standardError('sslredirectonlypossiblewithsslipport', '', true);
 			}
 		}
 
 		if ($letsencrypt != 0) {
 			// let's encrypt only works if there actually is a
 			// ssl ip/port assigned to the domain
-			if (\Froxlor\Domain\Domain::domainHasSslIpPort($result['id']) == true) {
+			if (Domain::domainHasSslIpPort($result['id']) == true) {
 				$letsencrypt = '1';
 			} else {
-				\Froxlor\UI\Response::standard_error('letsencryptonlypossiblewithsslipport', '', true);
+				Response::standardError('letsencryptonlypossiblewithsslipport', '', true);
 			}
 		}
 
 		// validate dns if lets encrypt is enabled to check whether we can use it at all
 		if ($result['letsencrypt'] != $letsencrypt && $letsencrypt == '1' && Settings::Get('system.le_domain_dnscheck') == '1') {
 			$our_ips = Domain::getIpsOfDomain($result['parentdomainid']);
-			$domain_ips = \Froxlor\PhpHelper::gethostbynamel6($result['domain']);
+			$domain_ips = PhpHelper::gethostbynamel6($result['domain']);
 			if ($domain_ips == false || count(array_intersect($our_ips, $domain_ips)) <= 0) {
-				\Froxlor\UI\Response::standard_error('invaliddnsforletsencrypt', '', true);
+				Response::standardError('invaliddnsforletsencrypt', '', true);
 			}
 		}
 
 		// We can't enable let's encrypt for wildcard-domains
 		if ($iswildcarddomain == '1' && $letsencrypt == '1') {
-			\Froxlor\UI\Response::standard_error('nowildcardwithletsencrypt', '', true);
+			Response::standardError('nowildcardwithletsencrypt', '', true);
 		}
 
 		// Temporarily deactivate ssl_redirect until Let's Encrypt certificate was generated
@@ -639,34 +713,34 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 
 		// is-email-domain flag changed - remove mail accounts and mail-addresses
 		if (($result['isemaildomain'] == '1') && $isemaildomain == '0') {
-			$params = array(
+			$params = [
 				"customerid" => $customer['customerid'],
 				"domainid" => $id
-			);
+			];
 			$stmt = Database::prepare("DELETE FROM `" . TABLE_MAIL_USERS . "` WHERE `customerid`= :customerid AND `domainid`= :domainid");
 			Database::pexecute($stmt, $params, true, true);
 			$stmt = Database::prepare("DELETE FROM `" . TABLE_MAIL_VIRTUAL . "` WHERE `customerid`= :customerid AND `domainid`= :domainid");
 			Database::pexecute($stmt, $params, true, true);
-			$idna_convert = new \Froxlor\Idna\IdnaWrapper();
-			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] automatically deleted mail-table entries for '" . $idna_convert->decode($result['domain']) . "'");
+			$idna_convert = new IdnaWrapper();
+			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] automatically deleted mail-table entries for '" . $idna_convert->decode($result['domain']) . "'");
 		}
 
 		$allowed_phpconfigs = $customer['allowed_phpconfigs'];
-		if (! empty($allowed_phpconfigs)) {
+		if (!empty($allowed_phpconfigs)) {
 			$allowed_phpconfigs = json_decode($allowed_phpconfigs, true);
 		} else {
 			$allowed_phpconfigs = [];
 		}
 		// only with fcgid/fpm enabled will it be possible to select a php-setting
-		if ((int) Settings::Get('system.mod_fcgid') == 1 || (int) Settings::Get('phpfpm.enabled') == 1) {
-			if (! in_array($phpsettingid, $allowed_phpconfigs)) {
-				\Froxlor\UI\Response::standard_error('notallowedphpconfigused', '', true);
+		if ((int)Settings::Get('system.mod_fcgid') == 1 || (int)Settings::Get('phpfpm.enabled') == 1) {
+			if (!in_array($phpsettingid, $allowed_phpconfigs)) {
+				Response::standardError('notallowedphpconfigused', '', true);
 			}
 		}
 
 		// handle redirect
 		if ($_doredirect) {
-			\Froxlor\Domain\Domain::updateRedirectOfDomain($id, $redirectcode);
+			Domain::updateRedirectOfDomain($id, $redirectcode);
 		}
 
 		if ($path != $result['documentroot'] || $isemaildomain != $result['isemaildomain'] || $wwwserveralias != $result['wwwserveralias'] || $iswildcarddomain != $result['iswildcarddomain'] || $aliasdomain != (int)$result['aliasdomain'] || $openbasedir_path != $result['openbasedir_path'] || $ssl_redirect != $result['ssl_redirect'] || $letsencrypt != $result['letsencrypt'] || $hsts_maxage != $result['hsts'] || $hsts_sub != $result['hsts_sub'] || $hsts_preload != $result['hsts_preload'] || $phpsettingid != $result['phpsettingid']) {
@@ -688,7 +762,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 					`phpsettingid` = :phpsettingid
 					WHERE `customerid`= :customerid AND `id`= :id
 				");
-			$params = array(
+			$params = [
 				"documentroot" => $path,
 				"isemaildomain" => $isemaildomain,
 				"wwwserveralias" => $wwwserveralias,
@@ -705,22 +779,22 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				"phpsettingid" => $phpsettingid,
 				"customerid" => $customer['customerid'],
 				"id" => $id
-			);
+			];
 			Database::pexecute($stmt, $params, true, true);
 
 			if ($result['aliasdomain'] != $aliasdomain && is_numeric($result['aliasdomain'])) {
 				// trigger when domain id for alias destination has changed: both for old and new destination
-				\Froxlor\Domain\Domain::triggerLetsEncryptCSRForAliasDestinationDomain($result['aliasdomain'], $this->logger());
-				\Froxlor\Domain\Domain::triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $this->logger());
+				Domain::triggerLetsEncryptCSRForAliasDestinationDomain($result['aliasdomain'], $this->logger());
+				Domain::triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $this->logger());
 			}
 			if ($result['wwwserveralias'] != $wwwserveralias || $result['letsencrypt'] != $letsencrypt) {
 				// or when wwwserveralias or letsencrypt was changed
-				\Froxlor\Domain\Domain::triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $this->logger());
-				if ((int) $aliasdomain === 0) {
+				Domain::triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $this->logger());
+				if ((int)$aliasdomain === 0) {
 					// in case the wwwserveralias is set on a main domain, $aliasdomain is 0
 					// --> the call just above to triggerLetsEncryptCSRForAliasDestinationDomain
 					// is a noop...let's repeat it with the domain id of the main domain
-					\Froxlor\Domain\Domain::triggerLetsEncryptCSRForAliasDestinationDomain($id, $this->logger());
+					Domain::triggerLetsEncryptCSRForAliasDestinationDomain($id, $this->logger());
 				}
 			}
 
@@ -729,21 +803,21 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				$del_stmt = Database::prepare("
 						DELETE FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` WHERE `domainid` = :id
 					");
-				Database::pexecute($del_stmt, array(
+				Database::pexecute($del_stmt, [
 					'id' => $id
-				), true, true);
+				], true, true);
 				// remove domain from acme.sh / lets encrypt if used
-				\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::DELETE_DOMAIN_SSL, $result['domain']);
+				Cronjob::inserttask(TaskId::DELETE_DOMAIN_SSL, $result['domain']);
 			}
 
-			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_VHOST);
-			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_DNS);
-			$idna_convert = new \Froxlor\Idna\IdnaWrapper();
-			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] edited domain '" . $idna_convert->decode($result['domain']) . "'");
+			Cronjob::inserttask(TaskId::REBUILD_VHOST);
+			Cronjob::inserttask(TaskId::REBUILD_DNS);
+			$idna_convert = new IdnaWrapper();
+			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_INFO, "[API] edited domain '" . $idna_convert->decode($result['domain']) . "'");
 		}
-		$result = $this->apiCall('SubDomains.get', array(
+		$result = $this->apiCall('SubDomains.get', [
 			'id' => $id
-		));
+		]);
 		return $this->response($result);
 	}
 
@@ -751,21 +825,23 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	 * lists all subdomain entries
 	 *
 	 * @param int $customerid
-	 *        	optional, admin-only, select (sub)domains of a specific customer by id
+	 *            optional, admin-only, select (sub)domains of a specific customer by id
 	 * @param string $loginname
-	 *        	optional, admin-only, select (sub)domains of a specific customer by loginname
+	 *            optional, admin-only, select (sub)domains of a specific customer by loginname
 	 * @param array $sql_search
-	 *        	optional array with index = fieldname, and value = array with 'op' => operator (one of <, > or =), LIKE is used if left empty and 'value' => searchvalue
+	 *            optional array with index = fieldname, and value = array with 'op' => operator (one of <, > or =),
+	 *            LIKE is used if left empty and 'value' => searchvalue
 	 * @param int $sql_limit
-	 *        	optional specify number of results to be returned
+	 *            optional specify number of results to be returned
 	 * @param int $sql_offset
-	 *        	optional specify offset for resultset
+	 *            optional specify offset for resultset
 	 * @param array $sql_orderby
-	 *        	optional array with index = fieldname and value = ASC|DESC to order the resultset by one or more fields
+	 *            optional array with index = fieldname and value = ASC|DESC to order the resultset by one or more
+	 *            fields
 	 *
 	 * @access admin, customer
-	 * @throws \Exception
 	 * @return string json-encoded array count|list
+	 * @throws Exception
 	 */
 	public function listing()
 	{
@@ -775,29 +851,29 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			$customerid = $this->getParam('customerid', true, 0);
 			$loginname = $this->getParam('loginname', true, '');
 
-			if (! empty($customerid) || ! empty($loginname)) {
-				$result = $this->apiCall('Customers.get', array(
+			if (!empty($customerid) || !empty($loginname)) {
+				$result = $this->apiCall('Customers.get', [
 					'id' => $customerid,
 					'loginname' => $loginname
-				));
-				$custom_list_result = array(
+				]);
+				$custom_list_result = [
 					$result
-				);
+				];
 			} else {
 				$_custom_list_result = $this->apiCall('Customers.listing');
 				$custom_list_result = $_custom_list_result['list'];
 			}
-			$customer_ids = array();
-			$customer_stdsubs = array();
+			$customer_ids = [];
+			$customer_stdsubs = [];
 			foreach ($custom_list_result as $customer) {
 				$customer_ids[] = $customer['customerid'];
 				$customer_stdsubs[$customer['customerid']] = $customer['standardsubdomain'];
 			}
 			if (empty($customer_ids)) {
-				throw new \Exception("Required resource unsatisfied.", 405);
+				throw new Exception("Required resource unsatisfied.", 405);
 			}
 			if (empty($customer_stdsubs)) {
-				throw new \Exception("Required resource unsatisfied.", 405);
+				throw new Exception("Required resource unsatisfied.", 405);
 			}
 
 			$select_fields = [
@@ -805,14 +881,14 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			];
 		} else {
 			if (Settings::IsInList('panel.customer_hide_options', 'domains')) {
-				throw new \Exception("You cannot access this resource", 405);
+				throw new Exception("You cannot access this resource", 405);
 			}
-			$customer_ids = array(
+			$customer_ids = [
 				$this->getUserDetail('customerid')
-			);
-			$customer_stdsubs = array(
+			];
+			$customer_stdsubs = [
 				$this->getUserDetail('customerid') => $this->getUserDetail('standardsubdomain')
-			);
+			];
 
 			$select_fields = [
 				'`d`.`id`',
@@ -830,7 +906,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				'`d`.`termination_date`'
 			];
 		}
-		$query_fields = array();
+		$query_fields = [];
 
 		// prepare select statement
 		$domains_stmt = Database::prepare("
@@ -843,28 +919,28 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			AND `d`.`email_only` = '0'
 			AND `d`.`id` NOT IN (" . implode(', ', $customer_stdsubs) . ")" . $this->getSearchWhere($query_fields, true) . " GROUP BY `d`.`id` ORDER BY `parentdomainname` " . $this->getOrderBy(true) . $this->getLimit());
 
-		$result = array();
+		$result = [];
 		Database::pexecute($domains_stmt, $query_fields, true, true);
-		while ($row = $domains_stmt->fetch(\PDO::FETCH_ASSOC)) {
+		while ($row = $domains_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$result[] = $row;
 		}
-		return $this->response(array(
+		return $this->response([
 			'count' => count($result),
 			'list' => $result
-		));
+		]);
 	}
 
 	/**
 	 * returns the total number of accessible subdomain entries
 	 *
 	 * @param int $customerid
-	 *        	optional, admin-only, select (sub)domains of a specific customer by id
+	 *            optional, admin-only, select (sub)domains of a specific customer by id
 	 * @param string $loginname
-	 *        	optional, admin-only, select (sub)domains of a specific customer by loginname
+	 *            optional, admin-only, select (sub)domains of a specific customer by loginname
 	 *
 	 * @access admin, customer
-	 * @throws \Exception
 	 * @return string json-encoded array
+	 * @throws Exception
 	 */
 	public function listingCount()
 	{
@@ -874,34 +950,34 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			$customerid = $this->getParam('customerid', true, 0);
 			$loginname = $this->getParam('loginname', true, '');
 
-			if (! empty($customerid) || ! empty($loginname)) {
-				$result = $this->apiCall('Customers.get', array(
+			if (!empty($customerid) || !empty($loginname)) {
+				$result = $this->apiCall('Customers.get', [
 					'id' => $customerid,
 					'loginname' => $loginname
-				));
-				$custom_list_result = array(
+				]);
+				$custom_list_result = [
 					$result
-				);
+				];
 			} else {
 				$_custom_list_result = $this->apiCall('Customers.listing');
 				$custom_list_result = $_custom_list_result['list'];
 			}
-			$customer_ids = array();
-			$customer_stdsubs = array();
+			$customer_ids = [];
+			$customer_stdsubs = [];
 			foreach ($custom_list_result as $customer) {
 				$customer_ids[] = $customer['customerid'];
 				$customer_stdsubs[$customer['customerid']] = $customer['standardsubdomain'];
 			}
 		} else {
 			if (Settings::IsInList('panel.customer_hide_options', 'domains')) {
-				throw new \Exception("You cannot access this resource", 405);
+				throw new Exception("You cannot access this resource", 405);
 			}
-			$customer_ids = array(
+			$customer_ids = [
 				$this->getUserDetail('customerid')
-			);
-			$customer_stdsubs = array(
+			];
+			$customer_stdsubs = [
 				$this->getUserDetail('customerid') => $this->getUserDetail('standardsubdomain')
-			);
+			];
 		}
 		// prepare select statement
 		$domains_stmt = Database::prepare("
@@ -921,17 +997,17 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 	 * delete a subdomain by either id or domainname
 	 *
 	 * @param int $id
-	 *        	optional, the domain-id
+	 *            optional, the domain-id
 	 * @param string $domainname
-	 *        	optional, the domainname
+	 *            optional, the domainname
 	 * @param int $customerid
-	 *        	optional, required when called as admin (if $loginname is not specified)
+	 *            optional, required when called as admin (if $loginname is not specified)
 	 * @param string $loginname
-	 *        	optional, required when called as admin (if $customerid is not specified)
+	 *            optional, required when called as admin (if $customerid is not specified)
 	 *
 	 * @access admin, customer
-	 * @throws \Exception
 	 * @return string json-encoded array
+	 * @throws Exception
 	 */
 	public function delete()
 	{
@@ -940,20 +1016,20 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 		$domainname = $this->getParam('domainname', $dn_optional, '');
 
 		if ($this->isAdmin() == false && Settings::IsInList('panel.customer_hide_options', 'domains')) {
-			throw new \Exception("You cannot access this resource", 405);
+			throw new Exception("You cannot access this resource", 405);
 		}
 
-		$result = $this->apiCall('SubDomains.get', array(
+		$result = $this->apiCall('SubDomains.get', [
 			'id' => $id,
 			'domainname' => $domainname
-		));
+		]);
 		$id = $result['id'];
 
 		// get needed customer info to reduce the subdomain-usage-counter by one
 		$customer = $this->getCustomerData();
 
-		if (! $this->isAdmin() && $result['caneditdomain'] == 0) {
-			throw new \Exception("You cannot edit this resource", 405);
+		if (!$this->isAdmin() && $result['caneditdomain'] == 0) {
+			throw new Exception("You cannot edit this resource", 405);
 		}
 
 		if ($result['isemaildomain'] == '1') {
@@ -962,117 +1038,75 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				SELECT COUNT(`id`) AS `count` FROM `" . TABLE_MAIL_VIRTUAL . "`
 				WHERE `customerid` = :customerid AND `domainid` = :domainid
 			");
-			$emails = Database::pexecute_first($emails_stmt, array(
+			$emails = Database::pexecute_first($emails_stmt, [
 				"customerid" => $customer['customerid'],
 				"domainid" => $id
-			), true, true);
+			], true, true);
 
 			if ($emails['count'] != '0') {
-				\Froxlor\UI\Response::standard_error('domains_cantdeletedomainwithemail', '', true);
+				Response::standardError('domains_cantdeletedomainwithemail', '', true);
 			}
 		}
 
-		\Froxlor\Domain\Domain::triggerLetsEncryptCSRForAliasDestinationDomain($result['aliasdomain'], $this->logger());
+		Domain::triggerLetsEncryptCSRForAliasDestinationDomain($result['aliasdomain'], $this->logger());
 
 		// delete domain from table
 		$stmt = Database::prepare("
 			DELETE FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `customerid` = :customerid AND `id` = :id
 		");
-		Database::pexecute($stmt, array(
+		Database::pexecute($stmt, [
 			"customerid" => $customer['customerid'],
 			"id" => $id
-		), true, true);
+		], true, true);
 
 		// remove connections to ips and domainredirects
 		$del_stmt = Database::prepare("
 			DELETE FROM `" . TABLE_DOMAINTOIP . "`
 			WHERE `id_domain` = :domainid
 		");
-		Database::pexecute($del_stmt, array(
+		Database::pexecute($del_stmt, [
 			'domainid' => $id
-		), true, true);
+		], true, true);
 
 		// remove redirect-codes
 		$del_stmt = Database::prepare("
 			DELETE FROM `" . TABLE_PANEL_DOMAINREDIRECTS . "`
 			WHERE `did` = :domainid
 		");
-		Database::pexecute($del_stmt, array(
+		Database::pexecute($del_stmt, [
 			'domainid' => $id
-		), true, true);
+		], true, true);
 
 		// remove certificate from domain_ssl_settings, fixes #1596
 		$del_stmt = Database::prepare("
 			DELETE FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "`
 			WHERE `domainid` = :domainid
 		");
-		Database::pexecute($del_stmt, array(
+		Database::pexecute($del_stmt, [
 			'domainid' => $id
-		), true, true);
+		], true, true);
 
 		// remove possible existing DNS entries
 		$del_stmt = Database::prepare("
 			DELETE FROM `" . TABLE_DOMAIN_DNS . "`
 			WHERE `domain_id` = :domainid
 		");
-		Database::pexecute($del_stmt, array(
+		Database::pexecute($del_stmt, [
 			'domainid' => $id
-		), true, true);
+		], true, true);
 
-		\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_VHOST);
+		Cronjob::inserttask(TaskId::REBUILD_VHOST);
 		// Using nameserver, insert a task which rebuilds the server config
-		\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_DNS);
+		Cronjob::inserttask(TaskId::REBUILD_DNS);
 		// remove domains DNS from powerDNS if used, #581
-		\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::DELETE_DOMAIN_PDNS, $result['domain']);
+		Cronjob::inserttask(TaskId::DELETE_DOMAIN_PDNS, $result['domain']);
 		// remove domain from acme.sh / lets encrypt if used
-		\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::DELETE_DOMAIN_SSL, $result['domain']);
+		Cronjob::inserttask(TaskId::DELETE_DOMAIN_SSL, $result['domain']);
 
 		// reduce subdomain-usage-counter
 		Customers::decreaseUsage($customer['customerid'], 'subdomains_used');
 
-		$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_WARNING, "[API] deleted subdomain '" . $result['domain'] . "'");
+		$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_WARNING, "[API] deleted subdomain '" . $result['domain'] . "'");
 		return $this->response($result);
-	}
-
-	/**
-	 * validate given path and replace with url if given and valid
-	 *
-	 * @param string $path
-	 * @param string $url
-	 * @param array $customer
-	 * @param string $completedomain
-	 * @param boolean $_doredirect
-	 *
-	 * @return string validated path
-	 * @throws \Exception
-	 */
-	private function validateDomainDocumentRoot($path = null, $url = null, $customer = null, $completedomain = null, &$_doredirect = false)
-	{
-		// check whether an URL was specified
-		$_doredirect = false;
-		if (! empty($url) && \Froxlor\Validate\Validate::validateUrl($url)) {
-			$path = $url;
-			$_doredirect = true;
-		} else {
-			$path = \Froxlor\Validate\Validate::validate($path, 'path', '', '', array(), true);
-		}
-
-		// check whether path is a real path
-		if (! preg_match('/^https?\:\/\//', $path) || ! \Froxlor\Validate\Validate::validateUrl($path)) {
-			if (strstr($path, ":") !== false) {
-				\Froxlor\UI\Response::standard_error('pathmaynotcontaincolon', '', true);
-			}
-			// If path is empty or '/' and 'Use domain name as default value for DocumentRoot path' is enabled in settings,
-			// set default path to subdomain or domain name
-			if ((($path == '') || ($path == '/')) && Settings::Get('system.documentroot_use_default_value') == 1) {
-				$path = \Froxlor\FileDir::makeCorrectDir($customer['documentroot'] . '/' . $completedomain);
-			} else {
-				$path = \Froxlor\FileDir::makeCorrectDir($customer['documentroot'] . '/' . $path);
-			}
-		} else {
-			// no it's not, create a redirect
-			$_doredirect = true;
-		}
-		return $path;
 	}
 }

@@ -2,121 +2,128 @@
 
 /**
  * This file is part of the Froxlor project.
- * Copyright (c) 2003-2009 the SysCP Team (see authors).
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright  (c) the authors
- * @author     Florian Lippert <flo@syscp.org> (2003-2009)
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Language
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
-return array(
-	'groups' => array(
-		'panel' => array(
-			'title' => $lng['admin']['panelsettings'],
+
+return [
+	'groups' => [
+		'panel' => [
+			'title' => lng('admin.panelsettings'),
 			'icon' => 'fa-solid fa-chalkboard-user',
-			'fields' => array(
-				'panel_standardlanguage' => array(
-					'label' => array(
-						'title' => $lng['login']['language'],
-						'description' => $lng['serversettings']['language']['description']
-					),
+			'fields' => [
+				'panel_standardlanguage' => [
+					'label' => [
+						'title' => lng('login.language'),
+						'description' => lng('serversettings.language.description')
+					],
 					'settinggroup' => 'panel',
 					'varname' => 'standardlanguage',
 					'type' => 'select',
 					'default' => 'English',
-					'option_options_method' => array(
+					'option_options_method' => [
 						'\\Froxlor\\User',
 						'getLanguages'
-					),
+					],
 					'save_method' => 'storeSettingField'
-				),
-				'panel_default_theme' => array(
-					'label' => array(
-						'title' => $lng['panel']['theme'],
-						'description' => $lng['serversettings']['default_theme']
-					),
+				],
+				'panel_default_theme' => [
+					'label' => [
+						'title' => lng('panel.theme'),
+						'description' => lng('serversettings.default_theme')
+					],
 					'settinggroup' => 'panel',
 					'varname' => 'default_theme',
 					'type' => 'select',
 					'default' => 'Froxlor',
-					'option_options_method' => array(
+					'option_options_method' => [
 						'\\Froxlor\\UI\\Panel\\UI',
 						'getThemes'
-					),
+					],
 					'save_method' => 'storeSettingDefaultTheme'
-				),
-				'panel_allow_theme_change_customer' => array(
-					'label' => $lng['serversettings']['panel_allow_theme_change_customer'],
+				],
+				'panel_allow_theme_change_customer' => [
+					'label' => lng('serversettings.panel_allow_theme_change_customer'),
 					'settinggroup' => 'panel',
 					'varname' => 'allow_theme_change_customer',
 					'type' => 'checkbox',
 					'default' => true,
 					'save_method' => 'storeSettingField'
-				),
-				'panel_allow_theme_change_admin' => array(
-					'label' => $lng['serversettings']['panel_allow_theme_change_admin'],
+				],
+				'panel_allow_theme_change_admin' => [
+					'label' => lng('serversettings.panel_allow_theme_change_admin'),
 					'settinggroup' => 'panel',
 					'varname' => 'allow_theme_change_admin',
 					'type' => 'checkbox',
 					'default' => true,
 					'save_method' => 'storeSettingField'
-				),
-				'panel_natsorting' => array(
-					'label' => $lng['serversettings']['natsorting'],
+				],
+				'panel_natsorting' => [
+					'label' => lng('serversettings.natsorting'),
 					'settinggroup' => 'panel',
 					'varname' => 'natsorting',
 					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
-				),
-				'panel_paging' => array(
-					'label' => $lng['serversettings']['paging'],
+				],
+				'panel_paging' => [
+					'label' => lng('serversettings.paging'),
 					'settinggroup' => 'panel',
 					'varname' => 'paging',
 					'type' => 'number',
 					'min' => 0,
 					'default' => 0,
 					'save_method' => 'storeSettingField'
-				),
-				'panel_pathedit' => array(
-					'label' => $lng['serversettings']['pathedit'],
+				],
+				'panel_pathedit' => [
+					'label' => lng('serversettings.pathedit'),
 					'settinggroup' => 'panel',
 					'varname' => 'pathedit',
 					'type' => 'select',
 					'default' => 'Manual',
 					'select_var' => [
-						'Manual' => $lng['serversettings']['manual'],
-						'Dropdown' => $lng['serversettings']['dropdown']
+						'Manual' => lng('serversettings.manual'),
+						'Dropdown' => lng('serversettings.dropdown')
 					],
 					'save_method' => 'storeSettingField'
-				),
-				'panel_adminmail' => array(
-					'label' => $lng['serversettings']['adminmail'],
+				],
+				'panel_adminmail' => [
+					'label' => lng('serversettings.adminmail'),
 					'settinggroup' => 'panel',
 					'varname' => 'adminmail',
 					'type' => 'email',
 					'string_emptyallowed' => true,
 					'default' => '',
 					'save_method' => 'storeSettingField'
-				),
-				'panel_adminmail_defname' => array(
-					'label' => $lng['serversettings']['adminmail_defname'],
+				],
+				'panel_adminmail_defname' => [
+					'label' => lng('serversettings.adminmail_defname'),
 					'settinggroup' => 'panel',
 					'varname' => 'adminmail_defname',
 					'type' => 'text',
 					'default' => 'Froxlor Administrator',
 					'save_method' => 'storeSettingField'
-				),
-				'panel_adminmail_return' => array(
-					'label' => $lng['serversettings']['adminmail_return'],
+				],
+				'panel_adminmail_return' => [
+					'label' => lng('serversettings.adminmail_return'),
 					'settinggroup' => 'panel',
 					'varname' => 'adminmail_return',
 					'type' => 'email',
@@ -124,9 +131,9 @@ return array(
 					'default' => '',
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
-				),
-				'panel_decimal_places' => array(
-					'label' => $lng['serversettings']['decimal_places'],
+				],
+				'panel_decimal_places' => [
+					'label' => lng('serversettings.decimal_places'),
 					'settinggroup' => 'panel',
 					'varname' => 'decimal_places',
 					'type' => 'number',
@@ -135,105 +142,105 @@ return array(
 					'default' => 4,
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
-				),
-				'panel_phpmyadmin_url' => array(
-					'label' => $lng['serversettings']['phpmyadmin_url'],
+				],
+				'panel_phpmyadmin_url' => [
+					'label' => lng('serversettings.phpmyadmin_url'),
 					'settinggroup' => 'panel',
 					'varname' => 'phpmyadmin_url',
 					'type' => 'url',
 					'string_emptyallowed' => true,
 					'default' => '',
 					'save_method' => 'storeSettingField'
-				),
-				'panel_webmail_url' => array(
-					'label' => $lng['serversettings']['webmail_url'],
+				],
+				'panel_webmail_url' => [
+					'label' => lng('serversettings.webmail_url'),
 					'settinggroup' => 'panel',
 					'varname' => 'webmail_url',
 					'type' => 'url',
 					'string_emptyallowed' => true,
 					'default' => '',
 					'save_method' => 'storeSettingField'
-				),
-				'panel_webftp_url' => array(
-					'label' => $lng['serversettings']['webftp_url'],
+				],
+				'panel_webftp_url' => [
+					'label' => lng('serversettings.webftp_url'),
 					'settinggroup' => 'panel',
 					'varname' => 'webftp_url',
 					'type' => 'url',
 					'string_emptyallowed' => true,
 					'default' => '',
 					'save_method' => 'storeSettingField'
-				),
-				'admin_show_version_login' => array(
-					'label' => $lng['admin']['show_version_login'],
+				],
+				'admin_show_version_login' => [
+					'label' => lng('admin.show_version_login'),
 					'settinggroup' => 'admin',
 					'varname' => 'show_version_login',
 					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
-				),
-				'admin_show_version_footer' => array(
-					'label' => $lng['admin']['show_version_footer'],
+				],
+				'admin_show_version_footer' => [
+					'label' => lng('admin.show_version_footer'),
 					'settinggroup' => 'admin',
 					'varname' => 'show_version_footer',
 					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField'
-				),
-				'admin_show_news_feed' => array(
-					'label' => $lng['admin']['show_news_feed'],
+				],
+				'admin_show_news_feed' => [
+					'label' => lng('admin.show_news_feed'),
 					'settinggroup' => 'admin',
 					'varname' => 'show_news_feed',
 					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField'
-				),
-				'customer_show_news_feed' => array(
-					'label' => $lng['admin']['customer_show_news_feed'],
+				],
+				'customer_show_news_feed' => [
+					'label' => lng('admin.customer_show_news_feed'),
 					'settinggroup' => 'customer',
 					'varname' => 'show_news_feed',
 					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField'
-				),
-				'customer_news_feed_url' => array(
-					'label' => $lng['admin']['customer_news_feed_url'],
+				],
+				'customer_news_feed_url' => [
+					'label' => lng('admin.customer_news_feed_url'),
 					'settinggroup' => 'customer',
 					'varname' => 'news_feed_url',
 					'type' => 'url',
 					'string_emptyallowed' => true,
 					'default' => '',
 					'save_method' => 'storeSettingField'
-				),
-				'panel_allow_domain_change_admin' => array(
-					'label' => $lng['serversettings']['panel_allow_domain_change_admin'],
+				],
+				'panel_allow_domain_change_admin' => [
+					'label' => lng('serversettings.panel_allow_domain_change_admin'),
 					'settinggroup' => 'panel',
 					'varname' => 'allow_domain_change_admin',
 					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
-				),
-				'panel_allow_domain_change_customer' => array(
-					'label' => $lng['serversettings']['panel_allow_domain_change_customer'],
+				],
+				'panel_allow_domain_change_customer' => [
+					'label' => lng('serversettings.panel_allow_domain_change_customer'),
 					'settinggroup' => 'panel',
 					'varname' => 'allow_domain_change_customer',
 					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
-				),
-				'panel_phpconfigs_hidestdsubdomain' => array(
-					'label' => $lng['serversettings']['panel_phpconfigs_hidestdsubdomain'],
+				],
+				'panel_phpconfigs_hidestdsubdomain' => [
+					'label' => lng('serversettings.panel_phpconfigs_hidestdsubdomain'),
 					'settinggroup' => 'panel',
 					'varname' => 'phpconfigs_hidestdsubdomain',
 					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
-				),
-				'panel_customer_hide_options' => array(
-					'label' => $lng['serversettings']['panel_customer_hide_options'],
+				],
+				'panel_customer_hide_options' => [
+					'label' => lng('serversettings.panel_customer_hide_options'),
 					'settinggroup' => 'panel',
 					'varname' => 'customer_hide_options',
 					'type' => 'select',
@@ -241,85 +248,85 @@ return array(
 					'select_mode' => 'multiple',
 					'option_emptyallowed' => true,
 					'select_var' => [
-						'email' => $lng['menue']['email']['email'],
-						'mysql' => $lng['menue']['mysql']['mysql'],
-						'domains' => $lng['menue']['domains']['domains'],
-						'ftp' => $lng['menue']['ftp']['ftp'],
-						'extras' => $lng['menue']['extras']['extras'],
-						'extras.directoryprotection' => $lng['menue']['extras']['extras'] . " / " . $lng['menue']['extras']['directoryprotection'],
-						'extras.pathoptions' => $lng['menue']['extras']['extras'] . " / " . $lng['menue']['extras']['pathoptions'],
-						'extras.logger' => $lng['menue']['extras']['extras'] . " / " . $lng['admin']['loggersystem'],
-						'extras.backup' => $lng['menue']['extras']['extras'] . " / " . $lng['menue']['extras']['backup'],
-						'traffic' => $lng['menue']['traffic']['traffic'],
-						'traffic.http' => $lng['menue']['traffic']['traffic'] . " / HTTP",
-						'traffic.ftp' => $lng['menue']['traffic']['traffic'] . " / FTP",
-						'traffic.mail' => $lng['menue']['traffic']['traffic'] . " / Mail"
+						'email' => lng('menue.email.email'),
+						'mysql' => lng('menue.mysql.mysql'),
+						'domains' => lng('menue.domains.domains'),
+						'ftp' => lng('menue.ftp.ftp'),
+						'extras' => lng('menue.extras.extras'),
+						'extras.directoryprotection' => lng('menue.extras.extras') . " / " . lng('menue.extras.directoryprotection'),
+						'extras.pathoptions' => lng('menue.extras.extras') . " / " . lng('menue.extras.pathoptions'),
+						'extras.logger' => lng('menue.extras.extras') . " / " . lng('admin.loggersystem'),
+						'extras.backup' => lng('menue.extras.extras') . " / " . lng('menue.extras.backup'),
+						'traffic' => lng('menue.traffic.traffic'),
+						'traffic.http' => lng('menue.traffic.traffic') . " / HTTP",
+						'traffic.ftp' => lng('menue.traffic.traffic') . " / FTP",
+						'traffic.mail' => lng('menue.traffic.traffic') . " / Mail"
 					],
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
-				),
-				'panel_imprint_url' => array(
-					'label' => $lng['serversettings']['imprint_url'],
+				],
+				'panel_imprint_url' => [
+					'label' => lng('serversettings.imprint_url'),
 					'settinggroup' => 'panel',
 					'varname' => 'imprint_url',
 					'type' => 'url',
 					'string_emptyallowed' => true,
 					'default' => '',
 					'save_method' => 'storeSettingField'
-				),
-				'panel_terms_url' => array(
-					'label' => $lng['serversettings']['terms_url'],
+				],
+				'panel_terms_url' => [
+					'label' => lng('serversettings.terms_url'),
 					'settinggroup' => 'panel',
 					'varname' => 'terms_url',
 					'type' => 'url',
 					'string_emptyallowed' => true,
 					'default' => '',
 					'save_method' => 'storeSettingField'
-				),
-				'panel_privacy_url' => array(
-					'label' => $lng['serversettings']['privacy_url'],
+				],
+				'panel_privacy_url' => [
+					'label' => lng('serversettings.privacy_url'),
 					'settinggroup' => 'panel',
 					'varname' => 'privacy_url',
 					'type' => 'url',
 					'string_emptyallowed' => true,
 					'default' => '',
 					'save_method' => 'storeSettingField'
-				),
-				'panel_logo_overridetheme' => array(
-					'label' => $lng['serversettings']['logo_overridetheme'],
+				],
+				'panel_logo_overridetheme' => [
+					'label' => lng('serversettings.logo_overridetheme'),
 					'settinggroup' => 'panel',
 					'varname' => 'logo_overridetheme',
 					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField'
-				),
-				'panel_logo_overridecustom' => array(
-					'label' => $lng['serversettings']['logo_overridecustom'],
+				],
+				'panel_logo_overridecustom' => [
+					'label' => lng('serversettings.logo_overridecustom'),
 					'settinggroup' => 'panel',
 					'varname' => 'logo_overridecustom',
 					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField'
-				),
-				'panel_logo_image_header' => array(
-					'label' => $lng['serversettings']['logo_image_header'],
+				],
+				'panel_logo_image_header' => [
+					'label' => lng('serversettings.logo_image_header'),
 					'settinggroup' => 'panel',
 					'varname' => 'logo_image_header',
 					'type' => 'image',
 					'image_name' => 'logo_header',
 					'default' => '',
 					'save_method' => 'storeSettingImage'
-				),
-				'panel_logo_image_login' => array(
-					'label' => $lng['serversettings']['logo_image_login'],
+				],
+				'panel_logo_image_login' => [
+					'label' => lng('serversettings.logo_image_login'),
 					'settinggroup' => 'panel',
 					'varname' => 'logo_image_login',
 					'type' => 'image',
 					'image_name' => 'logo_login',
 					'default' => '',
 					'save_method' => 'storeSettingImage'
-				)
-			)
-		)
-	)
-);
+				]
+			]
+		]
+	]
+];

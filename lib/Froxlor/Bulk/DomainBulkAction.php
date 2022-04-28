@@ -1,29 +1,34 @@
 <?php
-namespace Froxlor\Bulk;
 
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright (c) the authors
- * @author Michael Kaufmann <mkaufmann@nutime.de>
- * @author Froxlor team <team@froxlor.org> (2010-)
- * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package Cron
- *         
- * @since 0.9.33
- *       
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
+
+namespace Froxlor\Bulk;
+
+use Exception;
 
 /**
  * Class DomainBulkAction to mass-import domains for a given customer
- *
- * @author Michael Kaufmann (d00p) <d00p@froxlor.org>
- *        
  */
 class DomainBulkAction extends BulkAction
 {
@@ -55,21 +60,21 @@ class DomainBulkAction extends BulkAction
 			$dom_unlimited = false;
 		}
 
-		$domains_used = (int) $this->userinfo['domains_used'];
-		$domains_avail = (int) $this->userinfo['domains'];
+		$domains_used = (int)$this->userinfo['domains_used'];
+		$domains_avail = (int)$this->userinfo['domains'];
 
-		if (! is_int($offset) || $offset < 0) {
-			throw new \Exception("Invalid offset specified");
+		if (!is_int($offset) || $offset < 0) {
+			throw new Exception("Invalid offset specified");
 		}
 
 		try {
 			$domain_array = $this->parseImportFile($separator);
-		} catch (\Exception $e) {
+		} catch (Exception $e) {
 			throw $e;
 		}
 
 		if (count($domain_array) <= 0) {
-			throw new \Exception("No domains were read from the file.");
+			throw new Exception("No domains were read from the file.");
 		}
 
 		$global_counter = 0;
@@ -77,25 +82,24 @@ class DomainBulkAction extends BulkAction
 		$note = '';
 		foreach ($domain_array as $idx => $dom) {
 			if ($idx >= $offset) {
-				if ($dom_unlimited || (! $dom_unlimited && $domains_used < $domains_avail)) {
-
+				if ($dom_unlimited || (!$dom_unlimited && $domains_used < $domains_avail)) {
 					$result = $this->importEntity($dom);
 					if ($result) {
-						$import_counter ++;
-						$domains_used ++;
+						$import_counter++;
+						$domains_used++;
 					}
 				} else {
 					$note .= 'You have reached your maximum allocation of domains (' . $domains_avail . ').';
 					break;
 				}
 			}
-			$global_counter ++;
+			$global_counter++;
 		}
 
-		return array(
+		return [
 			'all' => $global_counter,
 			'imported' => $import_counter,
 			'notice' => $note
-		);
+		];
 	}
 }

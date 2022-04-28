@@ -1,27 +1,35 @@
 <?php
 
-namespace Froxlor\UI;
-
-use Froxlor\Database\Database;
-use Froxlor\UI\Panel\UI;
-use InvalidArgumentException;
-use Froxlor\CurrentUser;
-
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @author     Maurice Preuß <hello@envoyr.com>
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Listing
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
+
+namespace Froxlor\UI;
+
+use Froxlor\CurrentUser;
+use Froxlor\Database\Database;
+use Froxlor\UI\Panel\UI;
+use InvalidArgumentException;
+
 class Listing
 {
 	public static function format(Collection $collection, array $tabellisting, string $id): array
@@ -44,20 +52,6 @@ class Listing
 			'is_search' => $collection->getPagination() instanceof Pagination && $collection->getPagination()->isSearchResult(),
 			'self_overview' => $tabellisting['self_overview'] ?? [],
 			'available_columns' => self::getAvailableColumnsForListing($tabellisting)
-		];
-	}
-
-	public static function formatFromArray(array $collection, array $tabellisting): array
-	{
-		return [
-			'title' => $tabellisting['title'],
-			'icon' => $tabellisting['icon'],
-			'table' => [
-				'th' => self::generateTableHeadings($tabellisting),
-				'tr' => self::generateTableRows($collection['data'], $tabellisting),
-			],
-			'pagination' => $collection['pagination'],
-			'empty_msg' => $tabellisting['empty_msg'] ?? null
 		];
 	}
 
@@ -148,6 +142,18 @@ class Listing
 		return $rows;
 	}
 
+	public static function getMultiArrayFromString(array $arr, ?string $str)
+	{
+		foreach (explode('.', $str) as $key) {
+			if (!array_key_exists($key, $arr)) {
+				return null;
+			}
+			$arr = $arr[$key];
+		}
+
+		return $arr;
+	}
+
 	private static function setLinks(array $actions, array $item): array
 	{
 		$linker = UI::getLinker();
@@ -197,27 +203,18 @@ class Listing
 		return $result;
 	}
 
-	/**
-	 * delete column listing selection of user from database
-	 *
-	 * @param array $tabellisting
-	 * @return bool
-	 */
-	public static function deleteColumnListingForUser(array $tabellisting): bool
+	public static function formatFromArray(array $collection, array $tabellisting): array
 	{
-		$section = array_key_first($tabellisting);
-		if (empty($section)) {
-			throw new InvalidArgumentException("Invalid selection array for " . __METHOD__);
-		}
-		$userid = 'customerid';
-		if (CurrentUser::isAdmin()) {
-			$userid = 'adminid';
-		}
-		$del_stmt = Database::prepare("
-			DELETE FROM `" . TABLE_PANEL_USERCOLUMNS . "` WHERE `" . $userid . "` = :uid AND `section` = :section
-		");
-		Database::pexecute($del_stmt, ['uid' => CurrentUser::getField($userid), 'section' => $section]);
-		return true;
+		return [
+			'title' => $tabellisting['title'],
+			'icon' => $tabellisting['icon'],
+			'table' => [
+				'th' => self::generateTableHeadings($tabellisting),
+				'tr' => self::generateTableRows($collection['data'], $tabellisting),
+			],
+			'pagination' => $collection['pagination'],
+			'empty_msg' => $tabellisting['empty_msg'] ?? null
+		];
 	}
 
 	/**
@@ -261,6 +258,29 @@ class Listing
 		return true;
 	}
 
+	/**
+	 * delete column listing selection of user from database
+	 *
+	 * @param array $tabellisting
+	 * @return bool
+	 */
+	public static function deleteColumnListingForUser(array $tabellisting): bool
+	{
+		$section = array_key_first($tabellisting);
+		if (empty($section)) {
+			throw new InvalidArgumentException("Invalid selection array for " . __METHOD__);
+		}
+		$userid = 'customerid';
+		if (CurrentUser::isAdmin()) {
+			$userid = 'adminid';
+		}
+		$del_stmt = Database::prepare("
+			DELETE FROM `" . TABLE_PANEL_USERCOLUMNS . "` WHERE `" . $userid . "` = :uid AND `section` = :section
+		");
+		Database::pexecute($del_stmt, ['uid' => CurrentUser::getField($userid), 'section' => $section]);
+		return true;
+	}
+
 	public static function getVisibleColumnsForListing(string $listing, array $default_columns): array
 	{
 		$userid = 'customerid';
@@ -270,22 +290,13 @@ class Listing
 		$sel_stmt = Database::prepare("
 			SELECT `columns` FROM `" . TABLE_PANEL_USERCOLUMNS . "` WHERE `" . $userid . "` = :uid AND `section` = :section
 		");
-		$columns_json = Database::pexecute_first($sel_stmt, ['uid' => CurrentUser::getField($userid), 'section' => $listing]);
+		$columns_json = Database::pexecute_first($sel_stmt, [
+			'uid' => CurrentUser::getField($userid),
+			'section' => $listing
+		]);
 		if ($columns_json && isset($columns_json['columns'])) {
 			return json_decode($columns_json['columns'], true);
 		}
 		return $default_columns;
-	}
-
-	public static function getMultiArrayFromString(array $arr, ?string $str)
-	{
-		foreach (explode('.', $str) as $key) {
-			if (!array_key_exists($key, $arr)) {
-				return null;
-			}
-			$arr = $arr[$key];
-		}
-
-		return $arr;
 	}
 }

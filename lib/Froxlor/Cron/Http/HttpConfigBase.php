@@ -1,24 +1,40 @@
 <?php
-namespace Froxlor\Cron\Http;
-
-use Froxlor\Database\Database;
-use Froxlor\Settings;
-use Froxlor\Cron\Http\Php\Fpm;
 
 /**
  * This file is part of the Froxlor project.
- * Copyright (c) 2016 the Froxlor Team (see authors).
+ * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright (c) the authors
- * @author Froxlor team <team@froxlor.org> (2016-)
- * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package Cron
- *         
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
+
+namespace Froxlor\Cron\Http;
+
+use Froxlor\Cron\Http\LetsEncrypt\AcmeSh;
+use Froxlor\Cron\Http\Php\Fpm;
+use Froxlor\Database\Database;
+use Froxlor\FileDir;
+use Froxlor\Froxlor;
+use Froxlor\FroxlorLogger;
+use Froxlor\PhpHelper;
+use Froxlor\Settings;
+use Froxlor\System\Cronjob;
+use PDO;
 
 /**
  * Class HttpConfigBase
@@ -32,44 +48,44 @@ class HttpConfigBase
 	{
 		// if Let's Encrypt is activated, run it before regeneration of webserver configfiles
 		if (Settings::Get('system.leenabled') == 1) {
-			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, 'Running Let\'s Encrypt cronjob prior to regenerating webserver config files');
-			\Froxlor\Cron\Http\LetsEncrypt\AcmeSh::$no_inserttask = true;
-			\Froxlor\Cron\Http\LetsEncrypt\AcmeSh::run(true);
+			FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, 'Running Let\'s Encrypt cronjob prior to regenerating webserver config files');
+			AcmeSh::$no_inserttask = true;
+			AcmeSh::run(true);
 			// set last run timestamp of cronjob
-			\Froxlor\System\Cronjob::updateLastRunOfCron('letsencrypt');
+			Cronjob::updateLastRunOfCron('letsencrypt');
 		}
 	}
 
 	public function reload()
 	{
 		$called_class = get_called_class();
-		if ((int) Settings::Get('phpfpm.enabled') == 1) {
+		if ((int)Settings::Get('phpfpm.enabled') == 1) {
 			// get all start/stop commands
 			$startstop_sel = Database::prepare("SELECT reload_cmd, config_dir FROM `" . TABLE_PANEL_FPMDAEMONS . "`");
 			Database::pexecute($startstop_sel);
-			$restart_cmds = $startstop_sel->fetchAll(\PDO::FETCH_ASSOC);
+			$restart_cmds = $startstop_sel->fetchAll(PDO::FETCH_ASSOC);
 			// restart all php-fpm instances
 			foreach ($restart_cmds as $restart_cmd) {
 				// check whether the config dir is empty (no domains uses this daemon)
 				// so we need to create a dummy
-				$_conffiles = glob(\Froxlor\FileDir::makeCorrectFile($restart_cmd['config_dir'] . "/*.conf"));
+				$_conffiles = glob(FileDir::makeCorrectFile($restart_cmd['config_dir'] . "/*.conf"));
 				if ($_conffiles === false || empty($_conffiles)) {
-					\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, $called_class . '::reload: fpm config directory "' . $restart_cmd['config_dir'] . '" is empty. Creating dummy.');
+					FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, $called_class . '::reload: fpm config directory "' . $restart_cmd['config_dir'] . '" is empty. Creating dummy.');
 					Fpm::createDummyPool($restart_cmd['config_dir']);
 				}
-				\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, $called_class . '::reload: running ' . $restart_cmd['reload_cmd']);
-				\Froxlor\FileDir::safe_exec(escapeshellcmd($restart_cmd['reload_cmd']));
+				FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, $called_class . '::reload: running ' . $restart_cmd['reload_cmd']);
+				FileDir::safe_exec(escapeshellcmd($restart_cmd['reload_cmd']));
 			}
 		}
-		\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, $called_class . '::reload: reloading ' . $called_class);
-		\Froxlor\FileDir::safe_exec(escapeshellcmd(Settings::Get('system.apachereload_command')));
+		FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, $called_class . '::reload: reloading ' . $called_class);
+		FileDir::safe_exec(escapeshellcmd(Settings::Get('system.apachereload_command')));
 
 		/**
 		 * nginx does not auto-spawn fcgi-processes
 		 */
-		if (Settings::Get('system.webserver') == "nginx" && Settings::Get('system.phpreload_command') != '' && (int) Settings::Get('phpfpm.enabled') == 0) {
-			\Froxlor\FroxlorLogger::getInstanceOf()->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_INFO, $called_class . '::reload: restarting php processes');
-			\Froxlor\FileDir::safe_exec(Settings::Get('system.phpreload_command'));
+		if (Settings::Get('system.webserver') == "nginx" && Settings::Get('system.phpreload_command') != '' && (int)Settings::Get('phpfpm.enabled') == 0) {
+			FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, $called_class . '::reload: restarting php processes');
+			FileDir::safe_exec(Settings::Get('system.phpreload_command'));
 		}
 	}
 
@@ -87,12 +103,12 @@ class HttpConfigBase
 	 * {DOCROOT} - document root for this domain
 	 *
 	 * @param
-	 *        	$template
+	 *            $template
 	 * @return string
 	 */
 	protected function processSpecialConfigTemplate($template, $domain, $ip, $port, $is_ssl_vhost)
 	{
-		$templateVars = array(
+		$templateVars = [
 			'DOMAIN' => $domain['domain'],
 			'CUSTOMER' => $domain['loginname'],
 			'IP' => $ip,
@@ -100,24 +116,24 @@ class HttpConfigBase
 			'SCHEME' => ($is_ssl_vhost) ? 'https' : 'http',
 			'DOCROOT' => $domain['documentroot'],
 			'FPMSOCKET' => ''
-		);
-		if ((int) Settings::Get('phpfpm.enabled') == 1 && isset($domain['fpm_socket']) && !empty($domain['fpm_socket'])) {
+		];
+		if ((int)Settings::Get('phpfpm.enabled') == 1 && isset($domain['fpm_socket']) && !empty($domain['fpm_socket'])) {
 			$templateVars['FPMSOCKET'] = $domain['fpm_socket'];
 		}
-		return \Froxlor\PhpHelper::replaceVariables($template, $templateVars);
+		return PhpHelper::replaceVariables($template, $templateVars);
 	}
 
 	protected function getMyPath($ip_port = null)
 	{
-		if (! empty($ip_port) && $ip_port['docroot'] == '') {
+		if (!empty($ip_port) && $ip_port['docroot'] == '') {
 			if (Settings::Get('system.froxlordirectlyviahostname')) {
-				$mypath = \Froxlor\FileDir::makeCorrectDir(\Froxlor\Froxlor::getInstallDir());
+				$mypath = FileDir::makeCorrectDir(Froxlor::getInstallDir());
 			} else {
-				$mypath = \Froxlor\FileDir::makeCorrectDir(dirname(\Froxlor\Froxlor::getInstallDir()));
+				$mypath = FileDir::makeCorrectDir(dirname(Froxlor::getInstallDir()));
 			}
 		} else {
 			// user-defined docroot, #417
-			$mypath = \Froxlor\FileDir::makeCorrectDir($ip_port['docroot']);
+			$mypath = FileDir::makeCorrectDir($ip_port['docroot']);
 		}
 		return $mypath;
 	}
@@ -152,7 +168,7 @@ class HttpConfigBase
 			SELECT * FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` WHERE `domainid` = '0'
 		");
 		$froxlor_ssl = Database::pexecute_first($froxlor_ssl_settings_stmt);
-		if ($froxlor_ssl && ! empty($froxlor_ssl['ssl_cert_file'])) {
+		if ($froxlor_ssl && !empty($froxlor_ssl['ssl_cert_file'])) {
 			return true;
 		}
 		return false;
@@ -166,7 +182,7 @@ class HttpConfigBase
 			(`expirationdate` < DATE_ADD(NOW(), INTERVAL 30 DAY) OR `expirationdate` IS NULL)
 		");
 		$froxlor_ssl = Database::pexecute_first($froxlor_ssl_settings_stmt);
-		if ($froxlor_ssl && ! empty($froxlor_ssl['ssl_cert_file'])) {
+		if ($froxlor_ssl && !empty($froxlor_ssl['ssl_cert_file'])) {
 			return true;
 		}
 		return false;

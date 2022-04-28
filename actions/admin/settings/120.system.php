@@ -2,143 +2,150 @@
 
 /**
  * This file is part of the Froxlor project.
- * Copyright (c) 2003-2009 the SysCP Team (see authors).
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright  (c) the authors
- * @author     Florian Lippert <flo@syscp.org> (2003-2009)
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Settings
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
-return array(
-	'groups' => array(
-		'system' => array(
-			'title' => $lng['admin']['systemsettings'],
+
+return [
+	'groups' => [
+		'system' => [
+			'title' => lng('admin.systemsettings'),
 			'icon' => 'fa-solid fa-gears',
-			'fields' => array(
-				'system_documentroot_prefix' => array(
-					'label' => $lng['serversettings']['documentroot_prefix'],
+			'fields' => [
+				'system_documentroot_prefix' => [
+					'label' => lng('serversettings.documentroot_prefix'),
 					'settinggroup' => 'system',
 					'varname' => 'documentroot_prefix',
 					'type' => 'text',
 					'string_type' => 'dir',
 					'default' => '/var/customers/webs/',
 					'save_method' => 'storeSettingField',
-					'plausibility_check_method' => array(
+					'plausibility_check_method' => [
 						'\\Froxlor\\Validate\\Check',
 						'checkPathConflicts'
-					)
-				),
-				'system_documentroot_use_default_value' => array(
-					'label' => $lng['serversettings']['documentroot_use_default_value'],
+					]
+				],
+				'system_documentroot_use_default_value' => [
+					'label' => lng('serversettings.documentroot_use_default_value'),
 					'settinggroup' => 'system',
 					'varname' => 'documentroot_use_default_value',
 					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField'
-				),
-				'system_ipaddress' => array(
-					'label' => $lng['serversettings']['ipaddress'],
+				],
+				'system_ipaddress' => [
+					'label' => lng('serversettings.ipaddress'),
 					'settinggroup' => 'system',
 					'varname' => 'ipaddress',
 					'type' => 'select',
-					'option_options_method' => array(
+					'option_options_method' => [
 						'\\Froxlor\\Domain\\IpAddr',
 						'getIpAddresses'
-					),
+					],
 					'default' => '',
 					'save_method' => 'storeSettingIpAddress'
-				),
-				'system_defaultip' => array(
-					'label' => $lng['serversettings']['defaultip'],
+				],
+				'system_defaultip' => [
+					'label' => lng('serversettings.defaultip'),
 					'settinggroup' => 'system',
 					'varname' => 'defaultip',
 					'type' => 'select',
 					'select_mode' => 'multiple',
-					'option_options_method' => array(
+					'option_options_method' => [
 						'\\Froxlor\\Domain\\IpAddr',
 						'getIpPortCombinations'
-					),
+					],
 					'default' => '',
 					'save_method' => 'storeSettingDefaultIp'
-				),
-				'system_defaultsslip' => array(
-					'label' => $lng['serversettings']['defaultsslip'],
+				],
+				'system_defaultsslip' => [
+					'label' => lng('serversettings.defaultsslip'),
 					'settinggroup' => 'system',
 					'varname' => 'defaultsslip',
 					'type' => 'select',
 					'select_mode' => 'multiple',
-					'option_options_method' => array(
+					'option_options_method' => [
 						'\\Froxlor\\Domain\\IpAddr',
 						'getSslIpPortCombinations'
-					),
+					],
 					'default' => '',
 					'save_method' => 'storeSettingDefaultSslIp'
-				),
-				'system_hostname' => array(
-					'label' => $lng['serversettings']['hostname'],
+				],
+				'system_hostname' => [
+					'label' => lng('serversettings.hostname'),
 					'settinggroup' => 'system',
 					'varname' => 'hostname',
 					'type' => 'text',
 					'default' => '',
 					'save_method' => 'storeSettingHostname',
-					'plausibility_check_method' => array(
+					'plausibility_check_method' => [
 						'\\Froxlor\\Validate\\Check',
 						'checkHostname'
-					)
-				),
-				'api_enabled' => array(
-					'label' => $lng['serversettings']['enable_api'],
+					]
+				],
+				'api_enabled' => [
+					'label' => lng('serversettings.enable_api'),
 					'settinggroup' => 'api',
 					'varname' => 'enabled',
 					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField'
-				),
-				'system_validatedomain' => array(
-					'label' => $lng['serversettings']['validate_domain'],
+				],
+				'system_validatedomain' => [
+					'label' => lng('serversettings.validate_domain'),
 					'settinggroup' => 'system',
 					'varname' => 'validate_domain',
 					'type' => 'checkbox',
 					'default' => true,
 					'save_method' => 'storeSettingField'
-				),
-				'system_stdsubdomain' => array(
-					'label' => $lng['serversettings']['stdsubdomainhost'],
+				],
+				'system_stdsubdomain' => [
+					'label' => lng('serversettings.stdsubdomainhost'),
 					'settinggroup' => 'system',
 					'varname' => 'stdsubdomain',
 					'type' => 'text',
 					'default' => '',
 					'save_method' => 'storeSettingHostname'
-				),
-				'system_mysql_access_host' => array(
-					'label' => $lng['serversettings']['mysql_access_host'],
+				],
+				'system_mysql_access_host' => [
+					'label' => lng('serversettings.mysql_access_host'),
 					'settinggroup' => 'system',
 					'varname' => 'mysql_access_host',
 					'type' => 'text',
 					'default' => '127.0.0.1,localhost',
-					'plausibility_check_method' => array(
+					'plausibility_check_method' => [
 						'\\Froxlor\\Validate\\Check',
 						'checkMysqlAccessHost'
-					),
+					],
 					'save_method' => 'storeSettingMysqlAccessHost'
-				),
-				'system_nssextrausers' => array(
-					'label' => $lng['serversettings']['nssextrausers'],
+				],
+				'system_nssextrausers' => [
+					'label' => lng('serversettings.nssextrausers'),
 					'settinggroup' => 'system',
 					'varname' => 'nssextrausers',
 					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField'
-				),
-				'system_index_file_extension' => array(
-					'label' => $lng['serversettings']['index_file_extension'],
+				],
+				'system_index_file_extension' => [
+					'label' => lng('serversettings.index_file_extension'),
 					'settinggroup' => 'system',
 					'varname' => 'index_file_extension',
 					'type' => 'text',
@@ -146,38 +153,38 @@ return array(
 					'default' => 'html',
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
-				),
-				'system_store_index_file_subs' => array(
-					'label' => $lng['serversettings']['system_store_index_file_subs'],
+				],
+				'system_store_index_file_subs' => [
+					'label' => lng('serversettings.system_store_index_file_subs'),
 					'settinggroup' => 'system',
 					'varname' => 'store_index_file_subs',
 					'type' => 'checkbox',
 					'default' => true,
 					'save_method' => 'storeSettingField'
-				),
-				'system_httpuser' => array(
+				],
+				'system_httpuser' => [
 					'settinggroup' => 'system',
 					'varname' => 'httpuser',
 					'type' => 'hidden',
 					'default' => 'www-data'
-				),
-				'system_httpgroup' => array(
+				],
+				'system_httpgroup' => [
 					'settinggroup' => 'system',
 					'varname' => 'httpgroup',
 					'type' => 'hidden',
 					'default' => 'www-data'
-				),
-				'system_report_enable' => array(
-					'label' => $lng['serversettings']['report']['report'],
+				],
+				'system_report_enable' => [
+					'label' => lng('serversettings.report.report'),
 					'settinggroup' => 'system',
 					'varname' => 'report_enable',
 					'type' => 'checkbox',
 					'default' => true,
 					'cronmodule' => 'froxlor/reports',
 					'save_method' => 'storeSettingField'
-				),
-				'system_report_webmax' => array(
-					'label' => $lng['serversettings']['report']['webmax'],
+				],
+				'system_report_webmax' => [
+					'label' => lng('serversettings.report.webmax'),
 					'settinggroup' => 'system',
 					'varname' => 'report_webmax',
 					'type' => 'number',
@@ -185,9 +192,9 @@ return array(
 					'max' => 150,
 					'default' => 90,
 					'save_method' => 'storeSettingField'
-				),
-				'system_report_trafficmax' => array(
-					'label' => $lng['serversettings']['report']['trafficmax'],
+				],
+				'system_report_trafficmax' => [
+					'label' => lng('serversettings.report.trafficmax'),
 					'settinggroup' => 'system',
 					'varname' => 'report_trafficmax',
 					'type' => 'number',
@@ -195,25 +202,25 @@ return array(
 					'max' => 150,
 					'default' => 90,
 					'save_method' => 'storeSettingField'
-				),
-				'system_mail_use_smtp' => array(
-					'label' => $lng['serversettings']['mail_use_smtp'],
+				],
+				'system_mail_use_smtp' => [
+					'label' => lng('serversettings.mail_use_smtp'),
 					'settinggroup' => 'system',
 					'varname' => 'mail_use_smtp',
 					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField'
-				),
-				'system_mail_smtp_host' => array(
-					'label' => $lng['serversettings']['mail_smtp_host'],
+				],
+				'system_mail_smtp_host' => [
+					'label' => lng('serversettings.mail_smtp_host'),
 					'settinggroup' => 'system',
 					'varname' => 'mail_smtp_host',
 					'type' => 'text',
 					'default' => 'localhost',
 					'save_method' => 'storeSettingField'
-				),
-				'system_mail_smtp_port' => array(
-					'label' => $lng['serversettings']['mail_smtp_port'],
+				],
+				'system_mail_smtp_port' => [
+					'label' => lng('serversettings.mail_smtp_port'),
 					'settinggroup' => 'system',
 					'varname' => 'mail_smtp_port',
 					'type' => 'number',
@@ -221,81 +228,81 @@ return array(
 					'max' => 65535,
 					'default' => 25,
 					'save_method' => 'storeSettingField'
-				),
-				'system_mail_smtp_usetls' => array(
-					'label' => $lng['serversettings']['mail_smtp_usetls'],
+				],
+				'system_mail_smtp_usetls' => [
+					'label' => lng('serversettings.mail_smtp_usetls'),
 					'settinggroup' => 'system',
 					'varname' => 'mail_smtp_usetls',
 					'type' => 'checkbox',
 					'default' => true,
 					'save_method' => 'storeSettingField'
-				),
-				'system_mail_smtp_auth' => array(
-					'label' => $lng['serversettings']['mail_smtp_auth'],
+				],
+				'system_mail_smtp_auth' => [
+					'label' => lng('serversettings.mail_smtp_auth'),
 					'settinggroup' => 'system',
 					'varname' => 'mail_smtp_auth',
 					'type' => 'checkbox',
 					'default' => true,
 					'save_method' => 'storeSettingField'
-				),
-				'system_mail_smtp_user' => array(
-					'label' => $lng['serversettings']['mail_smtp_user'],
+				],
+				'system_mail_smtp_user' => [
+					'label' => lng('serversettings.mail_smtp_user'),
 					'settinggroup' => 'system',
 					'varname' => 'mail_smtp_user',
 					'type' => 'text',
 					'default' => '',
 					'save_method' => 'storeSettingField'
-				),
-				'system_mail_smtp_passwd' => array(
-					'label' => $lng['serversettings']['mail_smtp_passwd'],
+				],
+				'system_mail_smtp_passwd' => [
+					'label' => lng('serversettings.mail_smtp_passwd'),
 					'settinggroup' => 'system',
 					'varname' => 'mail_smtp_passwd',
 					'type' => 'password',
 					'default' => '',
 					'save_method' => 'storeSettingField'
-				),
-				'system_apply_specialsettings_default' => array(
-					'label' => $lng['serversettings']['apply_specialsettings_default'],
+				],
+				'system_apply_specialsettings_default' => [
+					'label' => lng('serversettings.apply_specialsettings_default'),
 					'settinggroup' => 'system',
 					'varname' => 'apply_specialsettings_default',
 					'type' => 'checkbox',
 					'default' => true,
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
-				),
-				'system_apply_phpconfigs_default' => array(
-					'label' => $lng['serversettings']['apply_phpconfigs_default'],
+				],
+				'system_apply_phpconfigs_default' => [
+					'label' => lng('serversettings.apply_phpconfigs_default'),
 					'settinggroup' => 'system',
 					'varname' => 'apply_phpconfigs_default',
 					'type' => 'checkbox',
 					'default' => true,
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
-				),
-				'system_domaindefaultalias' => array(
-					'label' => $lng['admin']['domaindefaultalias'],
+				],
+				'system_domaindefaultalias' => [
+					'label' => lng('admin.domaindefaultalias'),
 					'settinggroup' => 'system',
 					'varname' => 'domaindefaultalias',
 					'type' => 'select',
 					'default' => '0',
-					'select_var' => array(
-						'0' => $lng['domains']['serveraliasoption_wildcard'],
-						'1' => $lng['domains']['serveraliasoption_www'],
-						'2' => $lng['domains']['serveraliasoption_none']
-					),
+					'select_var' => [
+						'0' => lng('domains.serveraliasoption_wildcard'),
+						'1' => lng('domains.serveraliasoption_www'),
+						'2' => lng('domains.serveraliasoption_none')
+					],
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
-				),
-				'hide_incompatible_settings' => array(
-					'label' => $lng['serversettings']['hide_incompatible_settings'],
+				],
+				'hide_incompatible_settings' => [
+					'label' => lng('serversettings.hide_incompatible_settings'),
 					'settinggroup' => 'system',
 					'varname' => 'hide_incompatible_settings',
 					'type' => 'checkbox',
 					'default' => true,
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
-				),
-			)
-		)
-	)
-);
+				],
+			]
+		]
+	]
+];

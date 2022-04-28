@@ -4,216 +4,228 @@
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Formfields
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
-return array(
-	'admin_edit' => array(
-		'title' => $lng['admin']['admin_edit'],
+
+use Froxlor\Settings;
+use Froxlor\System\Crypt;
+
+return [
+	'admin_edit' => [
+		'title' => lng('admin.admin_edit'),
 		'image' => 'fa-solid fa-user-pen',
 		'self_overview' => ['section' => 'admins', 'page' => 'admins'],
-		'sections' => array(
-			'section_a' => array(
-				'title' => $lng['admin']['accountdata'],
+		'sections' => [
+			'section_a' => [
+				'title' => lng('admin.accountdata'),
 				'image' => 'icons/user_edit.png',
-				'fields' => array(
-					'loginname' => array(
-						'label' => $lng['login']['username'],
+				'fields' => [
+					'loginname' => [
+						'label' => lng('login.username'),
 						'type' => 'label',
 						'value' => $result['loginname']
-					),
-					'deactivated' => array(
-						'label' => $lng['admin']['deactivated_user'],
+					],
+					'deactivated' => [
+						'label' => lng('admin.deactivated_user'),
 						'type' => 'checkbox',
 						'value' => '1',
 						'checked' => $result['deactivated'],
 						'visible' => $result['adminid'] != $userinfo['userid']
-					),
-					'admin_password' => array(
-						'label' => $lng['login']['password'] . '&nbsp;(' . $lng['panel']['emptyfornochanges'] . ')',
+					],
+					'admin_password' => [
+						'label' => lng('login.password') . '&nbsp;(' . lng('panel.emptyfornochanges') . ')',
 						'type' => 'password',
 						'autocomplete' => 'off',
 						'visible' => $result['adminid'] != $userinfo['userid'],
 						'next_to' => [
-							'admin_password_suggestion' => array(
-								'next_to_prefix' => $lng['customer']['generated_pwd'].':',
+							'admin_password_suggestion' => [
+								'next_to_prefix' => lng('customer.generated_pwd') . ':',
 								'type' => 'text',
-								'visible' => (\Froxlor\Settings::Get('panel.password_regex') == '' && !($result['adminid'] == $userinfo['userid'])),
-								'value' => \Froxlor\System\Crypt::generatePassword(),
+								'visible' => (Settings::Get('panel.password_regex') == '' && !($result['adminid'] == $userinfo['userid'])),
+								'value' => Crypt::generatePassword(),
 								'readonly' => true
-							)
+							]
 						]
-					),
-					'def_language' => array(
-						'label' => $lng['login']['language'],
+					],
+					'def_language' => [
+						'label' => lng('login.language'),
 						'type' => 'select',
 						'select_var' => $languages,
 						'selected' => $result['def_language'],
 						'visible' => $result['adminid'] != $userinfo['userid']
-					),
-					'api_allowed' => array(
-						'label' => $lng['usersettings']['api_allowed']['title'],
-						'desc' => $lng['usersettings']['api_allowed']['description'],
+					],
+					'api_allowed' => [
+						'label' => lng('usersettings.api_allowed.title'),
+						'desc' => lng('usersettings.api_allowed.description'),
 						'type' => 'checkbox',
 						'value' => '1',
 						'checked' => $result['api_allowed'],
-						'visible' => \Froxlor\Settings::Get('api.enabled') == '1'
-					)
-				)
-			),
-			'section_b' => array(
-				'title' => $lng['admin']['contactdata'],
+						'visible' => Settings::Get('api.enabled') == '1'
+					]
+				]
+			],
+			'section_b' => [
+				'title' => lng('admin.contactdata'),
 				'image' => 'icons/user_edit.png',
-				'fields' => array(
-					'name' => array(
-						'label' => $lng['customer']['name'],
+				'fields' => [
+					'name' => [
+						'label' => lng('customer.name'),
 						'type' => 'text',
 						'mandatory' => true,
 						'value' => $result['name']
-					),
-					'email' => array(
-						'label' => $lng['customer']['email'],
+					],
+					'email' => [
+						'label' => lng('customer.email'),
 						'type' => 'text',
 						'mandatory' => true,
 						'value' => $result['email']
-					),
-					'custom_notes' => array(
-						'label' => $lng['usersettings']['custom_notes']['title'],
-						'desc' => $lng['usersettings']['custom_notes']['description'],
+					],
+					'custom_notes' => [
+						'label' => lng('usersettings.custom_notes.title'),
+						'desc' => lng('usersettings.custom_notes.description'),
 						'type' => 'textarea',
 						'cols' => 60,
 						'rows' => 12,
 						'value' => $result['custom_notes']
-					),
-					'custom_notes_show' => array(
-						'label' => $lng['usersettings']['custom_notes']['show'],
+					],
+					'custom_notes_show' => [
+						'label' => lng('usersettings.custom_notes.show'),
 						'type' => 'checkbox',
 						'value' => '1',
 						'checked' => $result['custom_notes_show']
-					)
-				)
-			),
-			'section_c' => array(
-				'title' => $lng['admin']['servicedata'],
+					]
+				]
+			],
+			'section_c' => [
+				'title' => lng('admin.servicedata'),
 				'image' => 'icons/user_add.png',
 				'visible' => $result['adminid'] != $userinfo['userid'],
-				'fields' => array(
-					'ipaddress' => array(
-						'label' => $lng['serversettings']['ipaddress']['title'],
+				'fields' => [
+					'ipaddress' => [
+						'label' => lng('serversettings.ipaddress.title'),
 						'type' => 'select',
 						'select_var' => $ipaddress,
 						'selected' => $result['ip']
-					),
-					'change_serversettings' => array(
-						'label' => $lng['admin']['change_serversettings'],
+					],
+					'change_serversettings' => [
+						'label' => lng('admin.change_serversettings'),
 						'type' => 'checkbox',
 						'value' => '1',
 						'checked' => $result['change_serversettings']
-					),
-					'customers' => array(
-						'label' => $lng['admin']['customers'],
+					],
+					'customers' => [
+						'label' => lng('admin.customers'),
 						'type' => 'textul',
 						'value' => $result['customers'],
 						'maxlength' => 9,
 						'mandatory' => true
-					),
-					'customers_see_all' => array(
-						'label' => $lng['admin']['customers_see_all'],
+					],
+					'customers_see_all' => [
+						'label' => lng('admin.customers_see_all'),
 						'type' => 'checkbox',
 						'value' => '1',
 						'checked' => $result['customers_see_all']
-					),
-					'domains' => array(
-						'label' => $lng['admin']['domains'],
+					],
+					'domains' => [
+						'label' => lng('admin.domains'),
 						'type' => 'textul',
 						'value' => $result['domains'],
 						'maxlength' => 9,
 						'mandatory' => true
-					),
-					'domains_see_all' => array(
-						'label' => $lng['admin']['domains_see_all'],
+					],
+					'domains_see_all' => [
+						'label' => lng('admin.domains_see_all'),
 						'type' => 'checkbox',
 						'value' => '1',
 						'checked' => $result['domains_see_all']
-					),
-					'caneditphpsettings' => array(
-						'label' => $lng['admin']['caneditphpsettings'],
+					],
+					'caneditphpsettings' => [
+						'label' => lng('admin.caneditphpsettings'),
 						'type' => 'checkbox',
 						'value' => '1',
 						'checked' => $result['caneditphpsettings']
-					),
-					'diskspace' => array(
-						'label' => $lng['customer']['diskspace'] . ' (' . $lng['customer']['mib'] . ')',
+					],
+					'diskspace' => [
+						'label' => lng('customer.diskspace') . ' (' . lng('customer.mib') . ')',
 						'type' => 'textul',
 						'value' => $result['diskspace'],
 						'maxlength' => 6,
 						'mandatory' => true
-					),
-					'traffic' => array(
-						'label' => $lng['customer']['traffic'] . ' (' . $lng['customer']['gib'] . ')',
+					],
+					'traffic' => [
+						'label' => lng('customer.traffic') . ' (' . lng('customer.gib') . ')',
 						'type' => 'textul',
 						'value' => $result['traffic'],
 						'maxlength' => 4,
 						'mandatory' => true
-					),
-					'subdomains' => array(
-						'label' => $lng['customer']['subdomains'],
+					],
+					'subdomains' => [
+						'label' => lng('customer.subdomains'),
 						'type' => 'textul',
 						'value' => $result['subdomains'],
 						'maxlength' => 9,
 						'mandatory' => true
-					),
-					'emails' => array(
-						'label' => $lng['customer']['emails'],
+					],
+					'emails' => [
+						'label' => lng('customer.emails'),
 						'type' => 'textul',
 						'value' => $result['emails'],
 						'maxlength' => 9,
 						'mandatory' => true
-					),
-					'email_accounts' => array(
-						'label' => $lng['customer']['accounts'],
+					],
+					'email_accounts' => [
+						'label' => lng('customer.accounts'),
 						'type' => 'textul',
 						'value' => $result['email_accounts'],
 						'maxlength' => 9,
 						'mandatory' => true
-					),
-					'email_forwarders' => array(
-						'label' => $lng['customer']['forwarders'],
+					],
+					'email_forwarders' => [
+						'label' => lng('customer.forwarders'),
 						'type' => 'textul',
 						'value' => $result['email_forwarders'],
 						'maxlength' => 9,
 						'mandatory' => true
-					),
-					'email_quota' => array(
-						'label' => $lng['customer']['email_quota'] . ' (' . $lng['customer']['mib'] . ')',
+					],
+					'email_quota' => [
+						'label' => lng('customer.email_quota') . ' (' . lng('customer.mib') . ')',
 						'type' => 'textul',
 						'value' => $result['email_quota'],
 						'maxlength' => 9,
-						'visible' => \Froxlor\Settings::Get('system.mail_quota_enabled') == '1',
+						'visible' => Settings::Get('system.mail_quota_enabled') == '1',
 						'mandatory' => true
-					),
-					'ftps' => array(
-						'label' => $lng['customer']['ftps'],
+					],
+					'ftps' => [
+						'label' => lng('customer.ftps'),
 						'type' => 'textul',
 						'value' => $result['ftps'],
 						'maxlength' => 9
-					),
-					'mysqls' => array(
-						'label' => $lng['customer']['mysqls'],
+					],
+					'mysqls' => [
+						'label' => lng('customer.mysqls'),
 						'type' => 'textul',
 						'value' => $result['mysqls'],
 						'maxlength' => 9,
 						'mandatory' => true
-					)
-				)
-			)
-		)
-	)
-);
+					]
+				]
+			]
+		]
+	]
+];

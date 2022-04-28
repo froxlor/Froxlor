@@ -1,26 +1,67 @@
 <?php
 
-namespace Froxlor\UI\Callbacks;
-
-use Froxlor\UI\Panel\UI;
-
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @author     Maurice Preuß <hello@envoyr.com>
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Froxlor\UI\Callbacks
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
+
+namespace Froxlor\UI\Callbacks;
+
+use Froxlor\UI\Panel\UI;
+
 class Impersonate
 {
+	public static function apiAdminCustomerLink(array $attributes)
+	{
+		// my own key
+		$isMyKey = false;
+		if ($attributes['fields']['adminid'] == UI::getCurrentUser()['adminid']
+			&& ((AREA == 'admin' && $attributes['fields']['customerid'] == 0)
+				|| (AREA == 'customer' && $attributes['fields']['customerid'] == UI::getCurrentUser()['customerid'])
+			)
+		) {
+			// this is mine
+			$isMyKey = true;
+		}
+
+		$adminCustomerLink = "";
+		if (AREA == 'admin') {
+			if ($isMyKey) {
+				$adminCustomerLink = $attributes['fields']['adminname'];
+			} else {
+				if (empty($attributes['fields']['customerid'])) {
+					$adminCustomerLink = self::admin($attributes);
+				} else {
+					$attributes['data'] = $attributes['fields']['loginname'];
+					$adminCustomerLink = self::customer($attributes);
+				}
+			}
+		} else {
+			// customer do not need links
+			$adminCustomerLink = $attributes['fields']['loginname'];
+		}
+
+		return $adminCustomerLink;
+	}
+
 	public static function admin(array $attributes)
 	{
 		if (UI::getCurrentUser()['adminid'] != $attributes['fields']['adminid']) {
@@ -57,39 +98,5 @@ class Impersonate
 				]),
 			]
 		];
-	}
-
-	public static function apiAdminCustomerLink(array $attributes)
-	{
-		// my own key
-		$isMyKey = false;
-		if (
-			$attributes['fields']['adminid'] == UI::getCurrentUser()['adminid']
-			&& ((AREA == 'admin' && $attributes['fields']['customerid'] == 0)
-				|| (AREA == 'customer' && $attributes['fields']['customerid'] == UI::getCurrentUser()['customerid'])
-			)
-		) {
-			// this is mine
-			$isMyKey = true;
-		}
-
-		$adminCustomerLink = "";
-		if (AREA == 'admin') {
-			if ($isMyKey) {
-				$adminCustomerLink = $attributes['fields']['adminname'];
-			} else {
-				if (empty($attributes['fields']['customerid'])) {
-					$adminCustomerLink = self::admin($attributes);
-				} else {
-					$attributes['data'] = $attributes['fields']['loginname'];
-					$adminCustomerLink = self::customer($attributes);
-				}
-			}
-		} else {
-			// customer do not need links
-			$adminCustomerLink = $attributes['fields']['loginname'];
-		}
-
-		return $adminCustomerLink;
 	}
 }

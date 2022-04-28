@@ -1,23 +1,37 @@
 <?php
-namespace Froxlor\Cron\System;
-
-use Froxlor\Database\Database;
-use Froxlor\Settings;
 
 /**
  * This file is part of the Froxlor project.
- * Copyright (c) 2017 the Froxlor Team (see authors).
+ * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright (c) the authors
- * @author Froxlor team <team@froxlor.org> (2017-)
- * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package Cron
- *         
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
+
+namespace Froxlor\Cron\System;
+
+use Froxlor\Customer\Customer;
+use Froxlor\Database\Database;
+use Froxlor\FroxlorLogger;
+use Froxlor\Settings;
+use Froxlor\User;
+use PDO;
+
 class Extrausers
 {
 
@@ -49,27 +63,27 @@ class Extrausers
 	private static function generateFile($file, $query, &$cronlog, &$result_list = null)
 	{
 		$type = basename($file);
-		$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Creating ' . $type . ' file');
+		$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Creating ' . $type . ' file');
 
-		if (! file_exists($file)) {
-			$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, $type . ' file does not yet exist');
+		if (!file_exists($file)) {
+			$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_NOTICE, $type . ' file does not yet exist');
 			@mkdir(dirname($file), 0750, true);
 			touch($file);
 		}
 
 		$data_sel_stmt = Database::query($query);
 		$data_content = "";
-		$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Writing ' . $data_sel_stmt->rowCount() . ' entries to ' . $type . ' file');
-		while ($u = $data_sel_stmt->fetch(\PDO::FETCH_ASSOC)) {
+		$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Writing ' . $data_sel_stmt->rowCount() . ' entries to ' . $type . ' file');
+		while ($u = $data_sel_stmt->fetch(PDO::FETCH_ASSOC)) {
 			switch ($type) {
 				case 'passwd':
 					// get user real name
-					$salutation_array = array(
-						'firstname' => \Froxlor\Customer\Customer::getCustomerDetail($u['customerid'], 'firstname'),
-						'name' => \Froxlor\Customer\Customer::getCustomerDetail($u['customerid'], 'name'),
-						'company' => \Froxlor\Customer\Customer::getCustomerDetail($u['customerid'], 'company')
-					);
-					$u['comment'] = self::cleanString(\Froxlor\User::getCorrectUserSalutation($salutation_array));
+					$salutation_array = [
+						'firstname' => Customer::getCustomerDetail($u['customerid'], 'firstname'),
+						'name' => Customer::getCustomerDetail($u['customerid'], 'name'),
+						'company' => Customer::getCustomerDetail($u['customerid'], 'company')
+					];
+					$u['comment'] = self::cleanString(User::getCorrectUserSalutation($salutation_array));
 					if ($u['login_enabled'] != 'Y') {
 						$u['password'] = '*';
 						$u['shell'] = '/bin/false';
@@ -103,9 +117,9 @@ class Extrausers
 		}
 
 		if (file_put_contents($file, $data_content) !== false) {
-			$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Succesfully wrote ' . $type . ' file');
+			$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Succesfully wrote ' . $type . ' file');
 		} else {
-			$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Error when writing ' . $type . ' file entries');
+			$cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Error when writing ' . $type . ' file entries');
 		}
 	}
 

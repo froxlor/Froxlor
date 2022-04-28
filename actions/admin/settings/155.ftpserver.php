@@ -2,39 +2,46 @@
 
 /**
  * This file is part of the Froxlor project.
- * Copyright (c) 2003-2009 the SysCP Team (see authors).
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright  (c) the authors
- * @author     Florian Lippert <flo@syscp.org> (2003-2009)
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Settings
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
-return array(
-	'groups' => array(
-		'ftpserver' => array(
-			'title' => $lng['admin']['ftpserversettings'],
+
+return [
+	'groups' => [
+		'ftpserver' => [
+			'title' => lng('admin.ftpserversettings'),
 			'icon' => 'fa-solid fa-arrow-right-arrow-left',
-			'fields' => array(
-				'ftpserver' => array(
-					'label' => $lng['admin']['ftpserver'],
+			'fields' => [
+				'ftpserver' => [
+					'label' => lng('admin.ftpserver'),
 					'settinggroup' => 'system',
 					'varname' => 'ftpserver',
 					'type' => 'select',
 					'default' => 'proftpd',
-					'select_var' => array(
+					'select_var' => [
 						'proftpd' => 'Proftpd',
 						'pureftpd' => 'Pureftpd'
-					),
+					],
 					'save_method' => 'storeSettingField'
-				)
-			)
-		)
-	)
-);
+				]
+			]
+		]
+	]
+];

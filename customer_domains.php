@@ -2,99 +2,117 @@
 
 /**
  * This file is part of the Froxlor project.
- * Copyright (c) 2003-2009 the SysCP Team (see authors).
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright  (c) the authors
- * @author     Florian Lippert <flo@syscp.org> (2003-2009)
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Panel
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
+
 const AREA = 'customer';
 require __DIR__ . '/lib/init.php';
 
 use Froxlor\Api\Commands\SubDomains as SubDomains;
 use Froxlor\Database\Database;
+use Froxlor\Domain\Domain;
+use Froxlor\FileDir;
+use Froxlor\FroxlorLogger;
+use Froxlor\PhpHelper;
 use Froxlor\Settings;
+use Froxlor\UI\Collection;
+use Froxlor\UI\HTML;
+use Froxlor\UI\Listing;
 use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
+use Froxlor\UI\Response;
+use Froxlor\Validate\Validate;
 
 // redirect if this customer page is hidden via settings
 if (Settings::IsInList('panel.customer_hide_options', 'domains')) {
-	\Froxlor\UI\Response::redirectTo('customer_index.php');
+	Response::redirectTo('customer_index.php');
 }
 
-$id = (int) Request::get('id');
+$id = (int)Request::get('id');
 
 if ($page == 'overview' || $page == 'domains') {
 	if ($action == '') {
-		$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_domains::domains");
+		$log->logAction(FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_domains::domains");
 
-		$parentdomain_id = (int) Request::get('pid', '0');
+		$parentdomain_id = (int)Request::get('pid', '0');
 
 		try {
 			$domain_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/customer/tablelisting.domains.php';
-			$collection = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\SubDomains::class, $userinfo))
+			$collection = (new Collection(SubDomains::class, $userinfo))
 				//->addParam(['sql_search' => ['d.parentdomainid' => $parentdomain_id]])
 				->withPagination($domain_list_data['domain_list']['columns']);
-			$parentDomainCollection = (new \Froxlor\UI\Collection(SubDomains::class, $userinfo, ['sql_search' => ['d.parentdomainid' => 0]]));
+			$parentDomainCollection = (new Collection(SubDomains::class, $userinfo, ['sql_search' => ['d.parentdomainid' => 0]]));
 		} catch (Exception $e) {
-			\Froxlor\UI\Response::dynamic_error($e->getMessage());
+			Response::dynamicError($e->getMessage());
 		}
 
 		$actions_links = false;
 		if (($userinfo['subdomains_used'] < $userinfo['subdomains'] || $userinfo['subdomains'] == '-1') && $parentDomainCollection->count() != 0) {
-			$actions_links = [[
-				'href' => $linker->getLink(['section' => 'domains', 'page' => 'domains', 'action' => 'add']),
-				'label' => $lng['domains']['subdomain_add']
-			]];
+			$actions_links = [
+				[
+					'href' => $linker->getLink(['section' => 'domains', 'page' => 'domains', 'action' => 'add']),
+					'label' => lng('domains.subdomain_add')
+				]
+			];
 		}
 
 		UI::view('user/table.html.twig', [
-			'listing' => \Froxlor\UI\Listing::format($collection, $domain_list_data, 'domain_list') ,
+			'listing' => Listing::format($collection, $domain_list_data, 'domain_list'),
 			'actions_links' => $actions_links,
-			'entity_info' => $lng['domains']['description']
+			'entity_info' => lng('domains.description')
 		]);
 	} elseif ($action == 'delete' && $id != 0) {
 		try {
-			$json_result = SubDomains::getLocal($userinfo, array(
+			$json_result = SubDomains::getLocal($userinfo, [
 				'id' => $id
-			))->get();
+			])->get();
 		} catch (Exception $e) {
-			\Froxlor\UI\Response::dynamic_error($e->getMessage());
+			Response::dynamicError($e->getMessage());
 		}
 		$result = json_decode($json_result, true)['data'];
 
 		$alias_stmt = Database::prepare("SELECT COUNT(`id`) AS `count` FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `aliasdomain` = :aliasdomain");
-		$alias_check = Database::pexecute_first($alias_stmt, array(
+		$alias_check = Database::pexecute_first($alias_stmt, [
 			"aliasdomain" => $id
-		));
+		]);
 
 		if (isset($result['parentdomainid']) && $result['parentdomainid'] != '0' && $alias_check['count'] == 0) {
 			if (isset($_POST['send']) && $_POST['send'] == 'send') {
 				try {
 					SubDomains::getLocal($userinfo, $_POST)->delete();
 				} catch (Exception $e) {
-					\Froxlor\UI\Response::dynamic_error($e->getMessage());
+					Response::dynamicError($e->getMessage());
 				}
-				\Froxlor\UI\Response::redirectTo($filename, array(
+				Response::redirectTo($filename, [
 					'page' => $page
-				));
+				]);
 			} else {
-				\Froxlor\UI\HTML::askYesNo('domains_reallydelete', $filename, array(
+				HTML::askYesNo('domains_reallydelete', $filename, [
 					'id' => $id,
 					'page' => $page,
 					'action' => $action
-				), $idna_convert->decode($result['domain']));
+				], $idna_convert->decode($result['domain']));
 			}
 		} else {
-			\Froxlor\UI\Response::standard_error('domains_cantdeletemaindomain');
+			Response::standardError('domains_cantdeletemaindomain');
 		}
 	} elseif ($action == 'add') {
 		if ($userinfo['subdomains_used'] < $userinfo['subdomains'] || $userinfo['subdomains'] == '-1') {
@@ -102,11 +120,11 @@ if ($page == 'overview' || $page == 'domains') {
 				try {
 					SubDomains::getLocal($userinfo, $_POST)->add();
 				} catch (Exception $e) {
-					\Froxlor\UI\Response::dynamic_error($e->getMessage());
+					Response::dynamicError($e->getMessage());
 				}
-				\Froxlor\UI\Response::redirectTo($filename, array(
+				Response::redirectTo($filename, [
 					'page' => $page
-				));
+				]);
 			} else {
 				$stmt = Database::prepare("SELECT `id`, `domain`, `documentroot`, `ssl_redirect`,`isemaildomain`,`letsencrypt` FROM `" . TABLE_PANEL_DOMAINS . "`
 					WHERE `customerid` = :customerid
@@ -114,15 +132,15 @@ if ($page == 'overview' || $page == 'domains') {
 					AND `email_only` = '0'
 					AND `caneditdomain` = '1'
 					ORDER BY `domain` ASC");
-				Database::pexecute($stmt, array(
+				Database::pexecute($stmt, [
 					"customerid" => $userinfo['customerid']
-				));
+				]);
 				$domains = [];
 				while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 					$domains[$row['domain']] = $idna_convert->decode($row['domain']);
 				}
 
-				$aliasdomains[0] = $lng['domains']['noaliasdomain'];
+				$aliasdomains[0] = lng('domains.noaliasdomain');
 				$domains_stmt = Database::prepare("SELECT `d`.`id`, `d`.`domain` FROM `" . TABLE_PANEL_DOMAINS . "` `d`, `" . TABLE_PANEL_CUSTOMERS . "` `c`
 					WHERE `d`.`aliasdomain` IS NULL
 					AND `d`.`id` <> `c`.`standardsubdomain`
@@ -131,9 +149,9 @@ if ($page == 'overview' || $page == 'domains') {
 					AND `d`.`email_only`='0'
 					AND `d`.`customerid`= :customerid
 					ORDER BY `d`.`domain` ASC");
-				Database::pexecute($domains_stmt, array(
+				Database::pexecute($domains_stmt, [
 					"customerid" => $userinfo['customerid']
-				));
+				]);
 
 				while ($row_domain = $domains_stmt->fetch(PDO::FETCH_ASSOC)) {
 					$aliasdomains[$row_domain['id']] = $idna_convert->decode($row_domain['domain']);
@@ -141,9 +159,9 @@ if ($page == 'overview' || $page == 'domains') {
 
 				$redirectcode = [];
 				if (Settings::Get('customredirect.enabled') == '1') {
-					$codes = \Froxlor\Domain\Domain::getRedirectCodesArray();
+					$codes = Domain::getRedirectCodesArray();
 					foreach ($codes as $rc) {
-						$redirectcode[$rc['id']] = $rc['code'] . ' (' . $lng['redirect_desc'][$rc['desc']] . ')';
+						$redirectcode[$rc['id']] = $rc['code'] . ' (' . lng('redirect_desc.' . $rc['desc']) . ')';
 					}
 				}
 
@@ -157,15 +175,15 @@ if ($page == 'overview' || $page == 'domains') {
 				");
 				Database::pexecute($ssl_ip_stmt);
 				$resultX = $ssl_ip_stmt->fetch(PDO::FETCH_ASSOC);
-				if (isset($resultX['countSSL']) && (int) $resultX['countSSL'] > 0) {
+				if (isset($resultX['countSSL']) && (int)$resultX['countSSL'] > 0) {
 					$ssl_ipsandports = true;
 				}
 
 				$openbasedir = [
-					0 => $lng['domain']['docroot'],
-					1 => $lng['domain']['homedir']
+					0 => lng('domain.docroot'),
+					1 => lng('domain.homedir')
 				];
-				$pathSelect = \Froxlor\FileDir::makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
+				$pathSelect = FileDir::makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
 
 				$phpconfigs = [];
 				if (isset($userinfo['allowed_phpconfigs']) && !empty($userinfo['allowed_phpconfigs'])) {
@@ -177,7 +195,7 @@ if ($page == 'overview' || $page == 'domains') {
 						WHERE c.id IN (" . implode(", ", $allowed_cfg) . ")
 					");
 					while ($phpconfigs_row = $phpconfigs_result_stmt->fetch(PDO::FETCH_ASSOC)) {
-						if ((int) Settings::Get('phpfpm.enabled') == 1) {
+						if ((int)Settings::Get('phpfpm.enabled') == 1) {
 							$phpconfigs[$phpconfigs_row['id']] = $phpconfigs_row['description'] . " [" . $phpconfigs_row['interpreter'] . "]";
 						} else {
 							$phpconfigs[$phpconfigs_row['id']] = $phpconfigs_row['description'];
@@ -188,19 +206,18 @@ if ($page == 'overview' || $page == 'domains') {
 				$subdomain_add_data = include_once dirname(__FILE__) . '/lib/formfields/customer/domains/formfield.domains_add.php';
 
 				UI::view('user/form.html.twig', [
-					'formaction' => $linker->getLink(array('section' => 'domains')),
+					'formaction' => $linker->getLink(['section' => 'domains']),
 					'formdata' => $subdomain_add_data['domain_add']
 				]);
 			}
 		}
 	} elseif ($action == 'edit' && $id != 0) {
-
 		try {
-			$json_result = SubDomains::getLocal($userinfo, array(
+			$json_result = SubDomains::getLocal($userinfo, [
 				'id' => $id
-			))->get();
+			])->get();
 		} catch (Exception $e) {
-			\Froxlor\UI\Response::dynamic_error($e->getMessage());
+			Response::dynamicError($e->getMessage());
 		}
 		$result = json_decode($json_result, true)['data'];
 
@@ -209,15 +226,15 @@ if ($page == 'overview' || $page == 'domains') {
 				try {
 					SubDomains::getLocal($userinfo, $_POST)->update();
 				} catch (Exception $e) {
-					\Froxlor\UI\Response::dynamic_error($e->getMessage());
+					Response::dynamicError($e->getMessage());
 				}
-				\Froxlor\UI\Response::redirectTo($filename, array(
+				Response::redirectTo($filename, [
 					'page' => $page
-				));
+				]);
 			} else {
 				$result['domain'] = $idna_convert->decode($result['domain']);
 
-				$domains[0] = $lng['domains']['noaliasdomain'];
+				$domains[0] = lng('domains.noaliasdomain');
 				// also check ip/port combination to be the same, #176
 				$domains_stmt = Database::prepare("SELECT `d`.`id`, `d`.`domain` FROM `" . TABLE_PANEL_DOMAINS . "` `d` , `" . TABLE_PANEL_CUSTOMERS . "` `c` , `" . TABLE_DOMAINTOIP . "` `dip`
 					WHERE `d`.`aliasdomain` IS NULL
@@ -232,34 +249,34 @@ if ($page == 'overview' || $page == 'domains') {
 						WHERE `id_domain` = :id)
 					GROUP BY `d`.`id`, `d`.`domain`
 					ORDER BY `d`.`domain` ASC");
-				Database::pexecute($domains_stmt, array(
+				Database::pexecute($domains_stmt, [
 					"id" => $result['id'],
 					"customerid" => $userinfo['customerid']
-				));
+				]);
 
 				while ($row_domain = $domains_stmt->fetch(PDO::FETCH_ASSOC)) {
 					$domains[$row_domain['id']] = $idna_convert->decode($row_domain['domain']);
 				}
 
-				if (preg_match('/^https?\:\/\//', $result['documentroot']) && \Froxlor\Validate\Validate::validateUrl($result['documentroot'])) {
+				if (preg_match('/^https?\:\/\//', $result['documentroot']) && Validate::validateUrl($result['documentroot'])) {
 					if (Settings::Get('panel.pathedit') == 'Dropdown') {
 						$urlvalue = $result['documentroot'];
-						$pathSelect = \Froxlor\FileDir::makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
+						$pathSelect = FileDir::makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid']);
 					} else {
 						$urlvalue = '';
-						$pathSelect = \Froxlor\FileDir::makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $result['documentroot'], true);
+						$pathSelect = FileDir::makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $result['documentroot'], true);
 					}
 				} else {
 					$urlvalue = '';
-					$pathSelect = \Froxlor\FileDir::makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $result['documentroot']);
+					$pathSelect = FileDir::makePathfield($userinfo['documentroot'], $userinfo['guid'], $userinfo['guid'], $result['documentroot']);
 				}
 
 				$redirectcode = [];
 				if (Settings::Get('customredirect.enabled') == '1') {
-					$def_code = \Froxlor\Domain\Domain::getDomainRedirectId($id);
-					$codes = \Froxlor\Domain\Domain::getRedirectCodesArray();
+					$def_code = Domain::getDomainRedirectId($id);
+					$codes = Domain::getRedirectCodesArray();
 					foreach ($codes as $rc) {
-						$redirectcode[$rc['id']] = $rc['code'] . ' (' . $lng['redirect_desc'][$rc['desc']] . ')';
+						$redirectcode[$rc['id']] = $rc['code'] . ' (' . lng('redirect_desc.' . $rc['desc']) . ')';
 					}
 				}
 
@@ -271,11 +288,11 @@ if ($page == 'overview' || $page == 'domains') {
 					LEFT JOIN `" . TABLE_DOMAINTOIP . "` dti ON dti.id_ipandports = pip.id
 					WHERE `dti`.`id_domain` = :id_domain AND pip.`ssl`='1'
 				");
-				Database::pexecute($ssl_ip_stmt, array(
+				Database::pexecute($ssl_ip_stmt, [
 					"id_domain" => $result['id']
-				));
+				]);
 				$resultX = $ssl_ip_stmt->fetch(PDO::FETCH_ASSOC);
-				if (isset($resultX['countSSL']) && (int) $resultX['countSSL'] > 0) {
+				if (isset($resultX['countSSL']) && (int)$resultX['countSSL'] > 0) {
 					$ssl_ipsandports = true;
 				}
 
@@ -284,8 +301,8 @@ if ($page == 'overview' || $page == 'domains') {
 				$result['ssl_redirect'] = ($result['ssl_redirect'] == 0 ? 0 : 1);
 
 				$openbasedir = [
-					0 => $lng['domain']['docroot'],
-					1 => $lng['domain']['homedir']
+					0 => lng('domain.docroot'),
+					1 => lng('domain.homedir')
 				];
 
 				// create serveralias options
@@ -296,18 +313,18 @@ if ($page == 'overview' || $page == 'domains') {
 				} elseif ($result['wwwserveralias'] == '1') {
 					$serveraliasoptions_selected = '1';
 				}
-				$serveraliasoptions[0] = $lng['domains']['serveraliasoption_wildcard'];
-				$serveraliasoptions[1] = $lng['domains']['serveraliasoption_www'];
-				$serveraliasoptions[2] = $lng['domains']['serveraliasoption_none'];
+				$serveraliasoptions[0] = lng('domains.serveraliasoption_wildcard');
+				$serveraliasoptions[1] = lng('domains.serveraliasoption_www');
+				$serveraliasoptions[2] = lng('domains.serveraliasoption_none');
 
 				$ips_stmt = Database::prepare("SELECT `p`.`ip` AS `ip` FROM `" . TABLE_PANEL_IPSANDPORTS . "` `p`
 					LEFT JOIN `" . TABLE_DOMAINTOIP . "` `dip`
 					ON ( `dip`.`id_ipandports` = `p`.`id` )
 					WHERE `dip`.`id_domain` = :id_domain
 					GROUP BY `p`.`ip`");
-				Database::pexecute($ips_stmt, array(
+				Database::pexecute($ips_stmt, [
 					"id_domain" => $result['id']
-				));
+				]);
 				$domainips = [];
 				while ($rowip = $ips_stmt->fetch(PDO::FETCH_ASSOC)) {
 					$domainips[] = ['item' => $rowip['ip']];
@@ -323,7 +340,7 @@ if ($page == 'overview' || $page == 'domains') {
 						WHERE c.id IN (" . implode(", ", $allowed_cfg) . ")
 					");
 					while ($phpconfigs_row = $phpconfigs_result_stmt->fetch(PDO::FETCH_ASSOC)) {
-						if ((int) Settings::Get('phpfpm.enabled') == 1) {
+						if ((int)Settings::Get('phpfpm.enabled') == 1) {
 							$phpconfigs[$phpconfigs_row['id']] = $phpconfigs_row['description'] . " [" . $phpconfigs_row['interpreter'] . "]";
 						} else {
 							$phpconfigs[$phpconfigs_row['id']] = $phpconfigs_row['description'];
@@ -332,35 +349,31 @@ if ($page == 'overview' || $page == 'domains') {
 				}
 
 				$alias_stmt = Database::prepare("SELECT COUNT(`id`) AS count FROM `" . TABLE_PANEL_DOMAINS . "` WHERE `aliasdomain`= :aliasdomain");
-				$alias_check = Database::pexecute_first($alias_stmt, array(
+				$alias_check = Database::pexecute_first($alias_stmt, [
 					"aliasdomain" => $result['id']
-				));
+				]);
 				$alias_check = $alias_check['count'];
 
-				$result = \Froxlor\PhpHelper::htmlentitiesArray($result);
+				$result = PhpHelper::htmlentitiesArray($result);
 
 				$subdomain_edit_data = include_once dirname(__FILE__) . '/lib/formfields/customer/domains/formfield.domains_edit.php';
 
 				UI::view('user/form.html.twig', [
-					'formaction' => $linker->getLink(array('section' => 'domains', 'id' => $id)),
+					'formaction' => $linker->getLink(['section' => 'domains', 'id' => $id]),
 					'formdata' => $subdomain_edit_data['domain_edit'],
 					'editid' => $id
 				]);
 			}
 		} else {
-			\Froxlor\UI\Response::standard_error('domains_canteditdomain');
+			Response::standardError('domains_canteditdomain');
 		}
 	}
 } elseif ($page == 'domainssleditor') {
-
 	require_once __DIR__ . '/ssl_editor.php';
 } elseif ($page == 'domaindnseditor' && $userinfo['dnsenabled'] == '1' && Settings::Get('system.dnsenabled') == '1') {
-
 	require_once __DIR__ . '/dns_editor.php';
 } elseif ($page == 'sslcertificates') {
-
 	require_once __DIR__ . '/ssl_certificates.php';
 } elseif ($page == 'logfiles') {
-
 	require_once __DIR__ . '/logfiles_viewer.php';
 }

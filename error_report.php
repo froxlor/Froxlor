@@ -1,26 +1,38 @@
 <?php
+
+/**
+ * This file is part of the Froxlor project.
+ * Copyright (c) 2010 the Froxlor Team (see authors).
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
+ */
+
 if (!defined('AREA')) {
 	header("Location: index.php");
 	exit();
 }
 
-/**
- * This file is part of the Froxlor project.
- * Copyright (c) 2022 the Froxlor Team (see authors).
- *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
- *
- * @copyright (c) the authors
- * @author Froxlor team <team@froxlor.org> (2016-)
- * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package Panel
- *
- */
-
-use Froxlor\UI\Request;
+use Froxlor\FileDir;
+use Froxlor\Froxlor;
 use Froxlor\UI\Panel\UI;
+use Froxlor\UI\Request;
+use Froxlor\UI\Response;
 
 // This file is being included in admin_domains and customer_domains
 // and therefore does not need to require lib/init.php
@@ -29,21 +41,20 @@ $errid = Request::get('errorid');
 
 if (!empty($errid)) {
 	// read error file
-	$err_dir = \Froxlor\FileDir::makeCorrectDir(\Froxlor\Froxlor::getInstallDir() . "/logs/");
-	$err_file = \Froxlor\FileDir::makeCorrectFile($err_dir . "/" . $errid . "_sql-error.log");
+	$err_dir = FileDir::makeCorrectDir(Froxlor::getInstallDir() . "/logs/");
+	$err_file = FileDir::makeCorrectFile($err_dir . "/" . $errid . "_sql-error.log");
 
 	if (file_exists($err_file)) {
-
 		$error_content = file_get_contents($err_file);
 		$error = explode("|", $error_content);
 
-		$_error = array(
+		$_error = [
 			'code' => str_replace("\n", "", substr($error[1], 5)),
 			'message' => str_replace("\n", "", substr($error[2], 4)),
-			'file' => str_replace("\n", "", substr($error[3], 5 + strlen(\Froxlor\Froxlor::getInstallDir()))),
+			'file' => str_replace("\n", "", substr($error[3], 5 + strlen(Froxlor::getInstallDir()))),
 			'line' => str_replace("\n", "", substr($error[4], 5)),
-			'trace' => str_replace(\Froxlor\Froxlor::getInstallDir(), "", substr($error[5], 6))
-		);
+			'trace' => str_replace(Froxlor::getInstallDir(), "", substr($error[5], 6))
+		];
 
 		// build mail-content
 		$mail_body = "Dear froxlor-team,\n\n";
@@ -54,8 +65,8 @@ if (!empty($errid)) {
 		$mail_body .= "Trace:\n" . trim($_error['trace']) . "\n\n";
 		$mail_body .= "-------------------------------------------------------------\n\n";
 		$mail_body .= "User-Area: " . AREA . "\n";
-		$mail_body .= "Froxlor-version: " . \Froxlor\Froxlor::VERSION . "\n";
-		$mail_body .= "DB-version: " . \Froxlor\Froxlor::DBVERSION . "\n\n";
+		$mail_body .= "Froxlor-version: " . Froxlor::VERSION . "\n";
+		$mail_body .= "DB-version: " . Froxlor::DBVERSION . "\n\n";
 		$mail_body .= "End of report";
 		$mail_html = nl2br($mail_body);
 
@@ -79,12 +90,12 @@ if (!empty($errid)) {
 
 			if ($_mailerror) {
 				// error when reporting an error...LOLFUQ
-				\Froxlor\UI\Response::standard_error('send_report_error', $mailerr_msg);
+				Response::standardError('send_report_error', $mailerr_msg);
 			}
 
 			// finally remove error from fs
 			@unlink($err_file);
-			\Froxlor\UI\Response::redirectTo($filename);
+			Response::redirectTo($filename);
 		}
 		// show a nice summary of the error-report
 		// before actually sending anything
@@ -92,8 +103,8 @@ if (!empty($errid)) {
 			'mail_html' => $mail_body
 		]);
 	} else {
-		\Froxlor\UI\Response::redirectTo($filename);
+		Response::redirectTo($filename);
 	}
 } else {
-	\Froxlor\UI\Response::redirectTo($filename);
+	Response::redirectTo($filename);
 }

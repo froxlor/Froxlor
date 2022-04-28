@@ -1,8 +1,36 @@
 <?php
 
+/**
+ * This file is part of the Froxlor project.
+ * Copyright (c) 2010 the Froxlor Team (see authors).
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
+ */
+
 namespace Froxlor\Validate;
 
+use Exception;
+use Froxlor\Database\Database;
+use Froxlor\FroxlorLogger;
+use Froxlor\Idna\IdnaWrapper;
 use Froxlor\System\IPTools;
+use Froxlor\UI\Response;
 
 class Validate
 {
@@ -19,25 +47,25 @@ class Validate
 	 * Validates the given string by matching against the pattern, prints an error on failure and exits
 	 *
 	 * @param string $str
-	 *        	the string to be tested (user input)
+	 *            the string to be tested (user input)
 	 * @param
-	 *        	string the $fieldname to be used in error messages
+	 *            string the $fieldname to be used in error messages
 	 * @param string $pattern
-	 *        	the regular expression to be used for testing
+	 *            the regular expression to be used for testing
 	 * @param
-	 *        	string language id for the error
+	 *            string language id for the error
 	 * @return string the clean string
-	 *        
+	 *
 	 *         If the default pattern is used and the string does not match, we try to replace the
 	 *         'bad' values and log the action.
-	 *        
+	 *
 	 */
-	public static function validate($str, $fieldname, $pattern = '', $lng = '', $emptydefault = array(), $throw_exception = false)
+	public static function validate($str, $fieldname, $pattern = '', $lng = '', $emptydefault = [], $throw_exception = false)
 	{
 		if (!is_array($emptydefault)) {
-			$emptydefault_array = array(
+			$emptydefault_array = [
 				$emptydefault
-			);
+			];
 			unset($emptydefault);
 			$emptydefault = $emptydefault_array;
 			unset($emptydefault_array);
@@ -49,7 +77,6 @@ class Validate
 		}
 
 		if ($pattern == '') {
-
 			$pattern = '/^[^\r\n\t\f\0]*$/D';
 
 			if (!preg_match($pattern, $str)) {
@@ -57,8 +84,8 @@ class Validate
 				// everything else is removed from the string.
 				$allowed = "/[^a-z0-9\\040\\.\\-\\_\\\\]/i";
 				$str = preg_replace($allowed, "", $str);
-				$log = \Froxlor\FroxlorLogger::getInstanceOf();
-				$log->logAction(\Froxlor\FroxlorLogger::USR_ACTION, LOG_WARNING, "cleaned bad formatted string (" . $str . ")");
+				$log = FroxlorLogger::getInstanceOf();
+				$log->logAction(FroxlorLogger::USR_ACTION, LOG_WARNING, "cleaned bad formatted string (" . $str . ")");
 			}
 		}
 
@@ -70,29 +97,29 @@ class Validate
 			$lng = 'stringformaterror';
 		}
 
-		\Froxlor\UI\Response::standard_error($lng, $fieldname, $throw_exception);
+		Response::standardError($lng, $fieldname, $throw_exception);
 	}
 
 	/**
 	 * Checks whether it is a valid ip
 	 *
 	 * @param string $ip
-	 *        	ip-address to check
+	 *            ip-address to check
 	 * @param bool $return_bool
-	 *        	whether to return bool or call \Froxlor\UI\Response::standard_error()
+	 *            whether to return bool or call \Froxlor\UI\Response::standard_error()
 	 * @param string $lng
-	 *        	index for error-message (if $return_bool is false)
+	 *            index for error-message (if $return_bool is false)
 	 * @param bool $allow_localhost
-	 *        	whether to allow 127.0.0.1
+	 *            whether to allow 127.0.0.1
 	 * @param bool $allow_priv
-	 *        	whether to allow private network addresses
+	 *            whether to allow private network addresses
 	 * @param bool $allow_cidr
-	 *        	whether to allow CIDR values e.g. 10.10.10.10/16
+	 *            whether to allow CIDR values e.g. 10.10.10.10/16
 	 * @param bool $cidr_as_netmask
-	 *        	whether to format CIDR nodation to netmask notation
+	 *            whether to format CIDR nodation to netmask notation
 	 * @param bool $throw_exception
-	 *        	whether to throw an exception on failure
-	 *        	
+	 *            whether to throw an exception on failure
+	 *
 	 * @return string|bool ip address on success, false on failure
 	 */
 	public static function validate_ip2($ip, $return_bool = false, $lng = 'invalidip', $allow_localhost = false, $allow_priv = false, $allow_cidr = false, $cidr_as_netmask = false, $throw_exception = false)
@@ -106,15 +133,15 @@ class Validate
 				if (IPTools::is_ipv6($ip_cidr[0])) {
 					$cidr_range_max = 128;
 				}
-				if (strlen($ip_cidr[1]) <= 3 && in_array((int) $ip_cidr[1], array_values(range(1, $cidr_range_max)), true) === false) {
-					\Froxlor\UI\Response::standard_error($lng, $ip, $throw_exception);
+				if (strlen($ip_cidr[1]) <= 3 && in_array((int)$ip_cidr[1], array_values(range(1, $cidr_range_max)), true) === false) {
+					Response::standardError($lng, $ip, $throw_exception);
 				}
 				if ($cidr_as_netmask && IPTools::is_ipv6($ip_cidr[0])) {
 					// MySQL does not handle CIDR of IPv6 addresses, return error
 					if ($return_bool) {
 						return false;
 					} else {
-						\Froxlor\UI\Response::standard_error($lng, $ip, $throw_exception);
+						Response::standardError($lng, $ip, $throw_exception);
 					}
 				}
 				$ip = $ip_cidr[0];
@@ -129,7 +156,7 @@ class Validate
 			if ($return_bool) {
 				return false;
 			} else {
-				\Froxlor\UI\Response::standard_error($lng, $ip, $throw_exception);
+				Response::standardError($lng, $ip, $throw_exception);
 			}
 		}
 
@@ -147,7 +174,7 @@ class Validate
 		if ($return_bool) {
 			return false;
 		} else {
-			\Froxlor\UI\Response::standard_error($lng, $ip, $throw_exception);
+			Response::standardError($lng, $ip, $throw_exception);
 		}
 	}
 
@@ -155,8 +182,8 @@ class Validate
 	 * Returns whether a URL is in a correct format or not
 	 *
 	 * @param string $url
-	 *        	URL to be tested
-	 *        	
+	 *            URL to be tested
+	 *
 	 * @return bool
 	 */
 	public static function validateUrl($url)
@@ -167,9 +194,9 @@ class Validate
 
 		// needs converting
 		try {
-			$idna_convert = new \Froxlor\Idna\IdnaWrapper();
+			$idna_convert = new IdnaWrapper();
 			$url = $idna_convert->encode($url);
-		} catch (\Exception $e) {
+		} catch (Exception $e) {
 			return false;
 		}
 
@@ -185,10 +212,10 @@ class Validate
 	 * Check if the submitted string is a valid domainname
 	 *
 	 * @param string $domainname
-	 *        	The domainname which should be checked.
+	 *            The domainname which should be checked.
 	 * @param bool $allow_underscore
-	 *        	optional if true, allowes the underscore character in a domain label (DKIM etc.)
-	 *        	
+	 *            optional if true, allowes the underscore character in a domain label (DKIM etc.)
+	 *
 	 * @return string|boolean the domain-name if the domain is valid, false otherwise
 	 */
 	public static function validateDomain($domainname, $allow_underscore = false)
@@ -227,7 +254,7 @@ class Validate
 	 * Returns if an emailaddress is in correct format or not
 	 *
 	 * @param string $email
-	 *        	The email address to check
+	 *            The email address to check
 	 * @return bool Correct or not
 	 */
 	public static function validateEmail($email)
@@ -244,18 +271,18 @@ class Validate
 	 * Returns if an username is in correct format or not.
 	 *
 	 * @param string $username
-	 *        	The username to check
+	 *            The username to check
 	 * @param bool $unix_names
-	 *        	optional, default true, checks whether it must be UNIX compatible
+	 *            optional, default true, checks whether it must be UNIX compatible
 	 * @param int $mysql_max
-	 *        	optional, number of max mysql username characters, default empty
-	 *        	
+	 *            optional, number of max mysql username characters, default empty
+	 *
 	 * @return bool
 	 */
 	public static function validateUsername($username, $unix_names = 1, $mysql_max = '')
 	{
 		if (empty($mysql_max) || !is_numeric($mysql_max) || $mysql_max <= 0) {
-			$mysql_max = \Froxlor\Database\Database::getSqlUsernameLength() - 1;
+			$mysql_max = Database::getSqlUsernameLength() - 1;
 		} else {
 			$mysql_max--;
 		}
@@ -282,7 +309,7 @@ class Validate
 			 * [0] = ([0-9]+)
 			 * [1] = valid SQL-Interval expression
 			 */
-			$valid_expr = array(
+			$valid_expr = [
 				'SECOND',
 				'MINUTE',
 				'HOUR',
@@ -290,7 +317,7 @@ class Validate
 				'WEEK',
 				'MONTH',
 				'YEAR'
-			);
+			];
 
 			$interval_parts = explode(' ', $interval);
 

@@ -4,43 +4,55 @@
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Panel
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
 const AREA = 'admin';
 require __DIR__ . '/lib/init.php';
 
 use Froxlor\Api\Commands\Cronjobs;
+use Froxlor\FroxlorLogger;
+use Froxlor\UI\Collection;
+use Froxlor\UI\Listing;
 use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
+use Froxlor\UI\Response;
 
-$id = (int) Request::get('id');
+$id = (int)Request::get('id');
 
 if ($page == 'cronjobs' || $page == 'overview') {
 	if ($action == '') {
-		$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_NOTICE, 'viewed admin_cronjobs');
+		$log->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, 'viewed admin_cronjobs');
 
 		try {
 			$cron_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.cronjobs.php';
-			$collection = (new \Froxlor\UI\Collection(\Froxlor\Api\Commands\Cronjobs::class, $userinfo))
+			$collection = (new Collection(Cronjobs::class, $userinfo))
 				->withPagination($cron_list_data['cron_list']['columns']);
 		} catch (Exception $e) {
-			\Froxlor\UI\Response::dynamic_error($e->getMessage());
+			Response::dynamicError($e->getMessage());
 		}
 
 		UI::view('user/table-note.html.twig', [
-			'listing' => \Froxlor\UI\Listing::format($collection, $cron_list_data, 'cron_list') ,
+			'listing' => Listing::format($collection, $cron_list_data, 'cron_list'),
 			// alert-box
 			'type' => 'warning',
-			'alert_msg' => $lng['cron']['changewarning']
+			'alert_msg' => lng('cron.changewarning')
 		]);
 	} elseif ($action == 'new') {
 		/*
@@ -48,11 +60,11 @@ if ($page == 'cronjobs' || $page == 'overview') {
 		 */
 	} elseif ($action == 'edit' && $id != 0) {
 		try {
-			$json_result = Cronjobs::getLocal($userinfo, array(
+			$json_result = Cronjobs::getLocal($userinfo, [
 				'id' => $id
-			))->get();
+			])->get();
 		} catch (Exception $e) {
-			\Froxlor\UI\Response::dynamic_error($e->getMessage());
+			Response::dynamicError($e->getMessage());
 		}
 		$result = json_decode($json_result, true)['data'];
 		if ($result['cronfile'] != '') {
@@ -60,17 +72,16 @@ if ($page == 'cronjobs' || $page == 'overview') {
 				try {
 					Cronjobs::getLocal($userinfo, $_POST)->update();
 				} catch (Exception $e) {
-					\Froxlor\UI\Response::dynamic_error($e->getMessage());
+					Response::dynamicError($e->getMessage());
 				}
-				\Froxlor\UI\Response::redirectTo($filename, array(
+				Response::redirectTo($filename, [
 					'page' => $page
-				));
+				]);
 			} else {
-
 				$cronjobs_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/cronjobs/formfield.cronjobs_edit.php';
 
 				UI::view('user/form.html.twig', [
-					'formaction' => $linker->getLink(array('section' => 'cronjobs', 'id' => $id)),
+					'formaction' => $linker->getLink(['section' => 'cronjobs', 'id' => $id]),
 					'formdata' => $cronjobs_edit_data['cronjobs_edit'],
 					'editid' => $id
 				]);

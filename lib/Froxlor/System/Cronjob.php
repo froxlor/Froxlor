@@ -1,10 +1,36 @@
 <?php
+
+/**
+ * This file is part of the Froxlor project.
+ * Copyright (c) 2010 the Froxlor Team (see authors).
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
+ */
+
 namespace Froxlor\System;
 
-use Froxlor\Settings;
-use Froxlor\Database\Database;
-
+use Exception;
 use Froxlor\Cron\TaskId;
+use Froxlor\Database\Database;
+use Froxlor\FroxlorLogger;
+use Froxlor\Settings;
+use PDO;
 
 class Cronjob
 {
@@ -20,15 +46,15 @@ class Cronjob
 	 */
 	public static function checkLastGuid()
 	{
-		$mylog = \Froxlor\FroxlorLogger::getInstanceOf();
+		$mylog = FroxlorLogger::getInstanceOf();
 
-		$group_lines = array();
-		$group_guids = array();
+		$group_lines = [];
+		$group_guids = [];
 		$update_to_guid = 0;
 
 		$froxlor_guid = 0;
 		$result_stmt = Database::query("SELECT MAX(`guid`) as `fguid` FROM `" . TABLE_PANEL_CUSTOMERS . "`");
-		$result = $result_stmt->fetch(\PDO::FETCH_ASSOC);
+		$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
 		$froxlor_guid = $result['fguid'];
 
 		// possibly no customers yet or f*cked up lastguid settings
@@ -41,7 +67,6 @@ class Cronjob
 		if (file_exists($g_file)) {
 			if (is_readable($g_file)) {
 				if (true == ($groups = file_get_contents($g_file))) {
-
 					$group_lines = explode("\n", $groups);
 
 					foreach ($group_lines as $group) {
@@ -57,7 +82,7 @@ class Cronjob
 							continue;
 						}
 
-						$guid = isset($group[2]) ? (int) $group[2] : 0;
+						$guid = isset($group[2]) ? (int)$group[2] : 0;
 
 						if ($guid > $update_to_guid) {
 							$update_to_guid = $guid;
@@ -70,22 +95,22 @@ class Cronjob
 					} elseif ($update_to_guid == $froxlor_guid) {
 						// if it's equal, that means we already have a collision
 						// to ensure it won't happen again, increase the guid by one
-						$update_to_guid = (int) $update_to_guid ++;
+						$update_to_guid = (int)$update_to_guid++;
 					}
 
 					// now check if it differs from our settings
 					if ($update_to_guid != Settings::Get('system.lastguid')) {
-						$mylog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Updating froxlor last guid to ' . $update_to_guid);
+						$mylog->logAction(FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Updating froxlor last guid to ' . $update_to_guid);
 						Settings::Set('system.lastguid', $update_to_guid);
 					}
 				} else {
-					$mylog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'File /etc/group not readable; cannot check for latest guid');
+					$mylog->logAction(FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'File /etc/group not readable; cannot check for latest guid');
 				}
 			} else {
-				$mylog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'File /etc/group not readable; cannot check for latest guid');
+				$mylog->logAction(FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'File /etc/group not readable; cannot check for latest guid');
 			}
 		} else {
-			$mylog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'File /etc/group does not exist; cannot check for latest guid');
+			$mylog->logAction(FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'File /etc/group does not exist; cannot check for latest guid');
 		}
 	}
 
@@ -93,12 +118,12 @@ class Cronjob
 	 * Inserts a task into the PANEL_TASKS-Table
 	 *
 	 * @param
-	 *        	int Type of task
+	 *            int Type of task
 	 * @param
-	 *        	string Parameter (possible to pass multiple times)
+	 *            string Parameter (possible to pass multiple times)
 	 *
-	 * @author Florian Lippert <flo@syscp.org>
-	 * @author Froxlor team <team@froxlor.org>
+	 * @author Florian Lippert <flo@syscp.org> (2003-2009)
+	 * @author Froxlor team <team@froxlor.org> (2010-)
 	 */
 	public static function inserttask($type, ...$params)
 	{
@@ -121,81 +146,81 @@ class Cronjob
 			$del_stmt = Database::prepare("
 				DELETE FROM `" . TABLE_PANEL_TASKS . "` WHERE `type` = :type
 			");
-			Database::pexecute($del_stmt, array(
+			Database::pexecute($del_stmt, [
 				'type' => $type
-			));
+			]);
 
 			// insert the new task
-			Database::pexecute($ins_stmt, array(
+			Database::pexecute($ins_stmt, [
 				'type' => $type,
 				'data' => ''
-			));
+			]);
 		} elseif ($type == TaskId::CREATE_HOME && count($params) == 4 && $params[0] != '' && $params[1] != '' && $params[2] != '' && ($params[3] == 0 || $params[3] == 1)) {
-			$data = array();
+			$data = [];
 			$data['loginname'] = $params[0];
 			$data['uid'] = $params[1];
 			$data['gid'] = $params[2];
 			$data['store_defaultindex'] = $params[3];
 			$data = json_encode($data);
-			Database::pexecute($ins_stmt, array(
+			Database::pexecute($ins_stmt, [
 				'type' => TaskId::CREATE_HOME,
 				'data' => $data
-			));
+			]);
 		} elseif ($type == TaskId::DELETE_CUSTOMER_FILES && isset($params[0]) && $params[0] != '') {
-			$data = array();
+			$data = [];
 			$data['loginname'] = $params[0];
 			$data = json_encode($data);
-			Database::pexecute($ins_stmt, array(
+			Database::pexecute($ins_stmt, [
 				'type' => TaskId::DELETE_CUSTOMER_FILES,
 				'data' => $data
-			));
+			]);
 		} elseif ($type == TaskId::DELETE_EMAIL_DATA && count($params) == 2 && $params[0] != '' && $params[1] != '') {
-			$data = array();
+			$data = [];
 			$data['loginname'] = $params[0];
 			$data['email'] = $params[1];
 			$data = json_encode($data);
-			Database::pexecute($ins_stmt, array(
+			Database::pexecute($ins_stmt, [
 				'type' => TaskId::DELETE_EMAIL_DATA,
 				'data' => $data
-			));
+			]);
 		} elseif ($type == TaskId::DELETE_FTP_DATA && count($params) == 2 && $params[0] != '' && $params[1] != '') {
-			$data = array();
+			$data = [];
 			$data['loginname'] = $params[0];
 			$data['homedir'] = $params[1];
 			$data = json_encode($data);
-			Database::pexecute($ins_stmt, array(
+			Database::pexecute($ins_stmt, [
 				'type' => TaskId::DELETE_FTP_DATA,
 				'data' => $data
-			));
+			]);
 		} elseif ($type == TaskId::DELETE_DOMAIN_PDNS && isset($params[0]) && $params[0] != '' && Settings::Get('system.bind_enable') == '1' && Settings::Get('system.dns_server') == 'PowerDNS') {
 			// -> if bind disabled or dns-server not PowerDNS -> no task
-			$data = array();
+			$data = [];
 			$data['domain'] = $params[0];
 			$data = json_encode($data);
-			Database::pexecute($ins_stmt, array(
+			Database::pexecute($ins_stmt, [
 				'type' => TaskId::DELETE_DOMAIN_PDNS,
 				'data' => $data
-			));
+			]);
 		} elseif ($type == TaskId::DELETE_DOMAIN_SSL && isset($params[0]) && $params[0] != '') {
-			$data = array();
+			$data = [];
 			$data['domain'] = $params[0];
 			$data = json_encode($data);
-			Database::pexecute($ins_stmt, array(
+			Database::pexecute($ins_stmt, [
 				'type' => TaskId::DELETE_DOMAIN_SSL,
 				'data' => $data
-			));
+			]);
 		} elseif ($type == TaskId::CREATE_CUSTOMER_BACKUP && isset($params[0]) && is_array($params[0])) {
 			$data = json_encode($params[0]);
-			Database::pexecute($ins_stmt, array(
+			Database::pexecute($ins_stmt, [
 				'type' => TaskId::CREATE_CUSTOMER_BACKUP,
 				'data' => $data
-			));
+			]);
 		}
 	}
 
 	/**
 	 * returns an array of all cronjobs and when they last were executed
-	 * 
+	 *
 	 * @return array
 	 */
 	public static function getCronjobsLastRun()
@@ -206,7 +231,7 @@ class Cronjob
 		$result = Database::query($query);
 
 		$cronjobs_last_run = [];
-		while ($row = $result->fetch(\PDO::FETCH_ASSOC)) {
+		while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
 			$cronjobs_last_run[] = [
 				'title' => $lng['crondesc'][$row['desc_lng_key']],
 				'lastrun' => $row['lastrun']
@@ -223,15 +248,15 @@ class Cronjob
 
 		$upd_stmt = Database::prepare("
 		UPDATE `" . TABLE_PANEL_CRONRUNS . "` SET `isactive` = :active WHERE `module` = :module");
-		Database::pexecute($upd_stmt, array(
+		Database::pexecute($upd_stmt, [
 			'active' => $isactive,
 			'module' => $module
-		));
+		]);
 	}
 
 	/**
 	 * returns an array of tasks that are queued to be run by the cronjob
-	 * 
+	 *
 	 * @return array
 	 */
 	public static function getOutstandingTasks()
@@ -242,15 +267,14 @@ class Cronjob
 		$result = Database::query($query);
 
 		$tasks = [];
-		while ($row = $result->fetch(\PDO::FETCH_ASSOC)) {
-
+		while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
 			if ($row['data'] != '') {
 				$row['data'] = json_decode($row['data'], true);
 			}
 
 			$task_id = $row['type'];
-			if (\Froxlor\Cron\TaskId::isValid($task_id)) {
-				$task_constname = \Froxlor\Cron\TaskId::convertToConstant($task_id);
+			if (TaskId::isValid($task_id)) {
+				$task_constname = TaskId::convertToConstant($task_id);
 				$task = [
 					'desc' => isset($lng['tasks'][$task_constname]) ? $lng['tasks'][$task_constname] : $task_constname
 				];
@@ -294,7 +318,6 @@ class Cronjob
 	public static function dieWithMail($message, $subject = "[froxlor] Cronjob error")
 	{
 		if (Settings::Get('system.send_cron_errors') == '1') {
-
 			$_mail = new Mailer(true);
 			$_mailerror = false;
 			$mailerr_msg = "";
@@ -307,7 +330,7 @@ class Cronjob
 			} catch (\PHPMailer\PHPMailer\Exception $e) {
 				$mailerr_msg = $e->errorMessage();
 				$_mailerror = true;
-			} catch (\Exception $e) {
+			} catch (Exception $e) {
 				$mailerr_msg = $e->getMessage();
 				$_mailerror = true;
 			}
@@ -327,8 +350,8 @@ class Cronjob
 		$upd_stmt = Database::prepare("
 			UPDATE `" . TABLE_PANEL_CRONRUNS . "` SET `lastrun` = UNIX_TIMESTAMP() WHERE `cronfile` = :cron;
 		");
-		Database::pexecute($upd_stmt, array(
+		Database::pexecute($upd_stmt, [
 			'cron' => $cronname
-		));
+		]);
 	}
 }

@@ -11,31 +11,31 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, you can also view it online at
- * http://files.froxlor.org/misc/COPYING.txt
+ * https://files.froxlor.org/misc/COPYING.txt
  *
  * @copyright  the authors
  * @author     Froxlor team <team@froxlor.org>
- * @license    http://files.froxlor.org/misc/COPYING.txt GPLv2
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
 namespace Froxlor\Cli;
 
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
+use Froxlor\Config\ConfigParser;
+use Froxlor\Database\Database;
 use Froxlor\FileDir;
 use Froxlor\Froxlor;
 use Froxlor\PhpHelper;
 use Froxlor\Settings;
 use Froxlor\SImExporter;
-use Froxlor\Database\Database;
-use Froxlor\Config\ConfigParser;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 final class ConfigServices extends CliCommand
 {
@@ -100,21 +100,68 @@ final class ConfigServices extends CliCommand
 		return $result;
 	}
 
+	private function importSettings(InputInterface $input, OutputInterface $output)
+	{
+		$importFile = $input->getOption('import-settings');
+
+		if (strtoupper(substr($importFile, 0, 4)) == 'HTTP') {
+			$output->writeln("Settings file seems to be an URL, trying to download");
+			$target = "/tmp/froxlor-import-settings-" . time() . ".json";
+			if (@file_exists($target)) {
+				@unlink($target);
+			}
+			$this->downloadFile($importFile, $target);
+			$importFile = $target;
+		}
+		if (!is_file($importFile)) {
+			$output->writeln('<error>Given settings file is not a file</>');
+			return self::INVALID;
+		} elseif (!file_exists($importFile)) {
+			$output->writeln('<error>Given settings file cannot be found (' . $importFile . ')</>');
+			return self::INVALID;
+		} elseif (!is_readable($importFile)) {
+			$output->writeln('<error>Given settings file cannot be read (' . $importFile . ')</>');
+			return self::INVALID;
+		}
+		$imp_content = file_get_contents($importFile);
+		SImExporter::import($imp_content);
+		$output->writeln("<info>Successfully imported settings from '" . $input->getOption('import-settings') . "'</info>");
+		return self::SUCCESS;
+	}
+
+	private function downloadFile($src, $dest)
+	{
+		set_time_limit(0);
+		// This is the file where we save the information
+		$fp = fopen($dest, 'w+');
+		// Here is the file we are downloading, replace spaces with %20
+		$ch = curl_init(str_replace(" ", "%20", $src));
+		curl_setopt($ch, CURLOPT_TIMEOUT, 50);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		// write curl response to file
+		curl_setopt($ch, CURLOPT_FILE, $fp);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+		// get curl response
+		curl_exec($ch);
+		curl_close($ch);
+		fclose($fp);
+	}
+
 	private function createConfig(InputInterface $input, OutputInterface $output, SymfonyStyle $io)
 	{
-		$_daemons_config = array(
+		$_daemons_config = [
 			'distro' => ""
-		);
+		];
 
 		$config_dir = Froxlor::getInstallDir() . '/lib/configfiles/';
 		// show list of available distro's
 		$distros = glob($config_dir . '*.xml');
 		// tmp array
-		$distributions_select_data = array();
+		$distributions_select_data = [];
 
 		//set default os.
-		$os_dist = array('ID' => 'bullseye');
-		$os_version = array('0' => '11');
+		$os_dist = ['ID' => 'bullseye'];
+		$os_version = ['0' => '11'];
 		$os_default = $os_dist['ID'];
 
 		//read os-release
@@ -190,7 +237,7 @@ final class ConfigServices extends CliCommand
 
 			$daemons['x'] = 'x';
 			if ($si == 'system') {
-				$_daemons_config[$si] = array();
+				$_daemons_config[$si] = [];
 				// for the system/other services we need a multiple choice possibility
 				$output->writeln("<comment>Select every service you need. Enter empty value when done</>");
 				$sysservice = "";
@@ -389,9 +436,9 @@ final class ConfigServices extends CliCommand
 				// ignore invalid responses
 				if (!is_array($nameserver_ips)) {
 					// act like PhpHelper::gethostbynamel6() and return unmodified hostname on error
-					$nameserver_ips = array(
+					$nameserver_ips = [
 						$nameserver
-					);
+					];
 				} else {
 					$known_ns_ips = array_merge($known_ns_ips, $nameserver_ips);
 				}
@@ -418,7 +465,7 @@ final class ConfigServices extends CliCommand
 		Database::needSqlData();
 		$sql = Database::getSqlData();
 
-		$replace_arr = array(
+		$replace_arr = [
 			'<SQL_UNPRIVILEGED_USER>' => $sql['user'],
 			'<SQL_UNPRIVILEGED_PASSWORD>' => $sql['passwd'],
 			'<SQL_DB>' => $sql['db'],
@@ -439,54 +486,7 @@ final class ConfigServices extends CliCommand
 			'<CUSTOMER_LOGS>' => FileDir::makeCorrectDir(Settings::Get('system.logfiles_directory')),
 			'<FPM_IPCDIR>' => FileDir::makeCorrectDir(Settings::Get('phpfpm.fastcgi_ipcdir')),
 			'<WEBSERVER_GROUP>' => Settings::Get('system.httpgroup')
-		);
+		];
 		return $replace_arr;
-	}
-
-	private function importSettings(InputInterface $input, OutputInterface $output)
-	{
-		$importFile = $input->getOption('import-settings');
-
-		if (strtoupper(substr($importFile, 0, 4)) == 'HTTP') {
-			$output->writeln("Settings file seems to be an URL, trying to download");
-			$target = "/tmp/froxlor-import-settings-" . time() . ".json";
-			if (@file_exists($target)) {
-				@unlink($target);
-			}
-			$this->downloadFile($importFile, $target);
-			$importFile = $target;
-		}
-		if (!is_file($importFile)) {
-			$output->writeln('<error>Given settings file is not a file</>');
-			return self::INVALID;
-		} elseif (!file_exists($importFile)) {
-			$output->writeln('<error>Given settings file cannot be found (' . $importFile . ')</>');
-			return self::INVALID;
-		} elseif (!is_readable($importFile)) {
-			$output->writeln('<error>Given settings file cannot be read (' . $importFile . ')</>');
-			return self::INVALID;
-		}
-		$imp_content = file_get_contents($importFile);
-		SImExporter::import($imp_content);
-		$output->writeln("<info>Successfully imported settings from '" . $input->getOption('import-settings') . "'</info>");
-		return self::SUCCESS;
-	}
-
-	private function downloadFile($src, $dest)
-	{
-		set_time_limit(0);
-		// This is the file where we save the information
-		$fp = fopen($dest, 'w+');
-		// Here is the file we are downloading, replace spaces with %20
-		$ch = curl_init(str_replace(" ", "%20", $src));
-		curl_setopt($ch, CURLOPT_TIMEOUT, 50);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-		// write curl response to file
-		curl_setopt($ch, CURLOPT_FILE, $fp);
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-		// get curl response
-		curl_exec($ch);
-		curl_close($ch);
-		fclose($fp);
 	}
 }

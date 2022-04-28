@@ -6,52 +6,56 @@
  *
  * For the full copyright and license information, please view the COPYING
  * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * COPYING file online at https://files.froxlor.org/misc/COPYING.txt
  *
  * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Formfields
+ * @author         Froxlor team <team@froxlor.org> (2010-)
+ * @license        GPLv2 https://files.froxlor.org/misc/COPYING.txt
+ * @package        Formfields
  */
-return array(
-	'mysql_edit' => array(
-		'title' => $lng['mysql']['database_edit'],
+
+use Froxlor\Settings;
+use Froxlor\System\Crypt;
+
+return [
+	'mysql_edit' => [
+		'title' => lng('mysql.database_edit'),
 		'image' => 'icons/mysql_edit.png',
 		'self_overview' => ['section' => 'mysql', 'page' => 'mysqls'],
-		'sections' => array(
-			'section_a' => array(
-				'title' => $lng['mysql']['database_edit'],
+		'sections' => [
+			'section_a' => [
+				'title' => lng('mysql.database_edit'),
 				'image' => 'icons/mysql_edit.png',
-				'fields' => array(
-					'databasename' => array(
-						'label' => $lng['mysql']['databasename'],
+				'fields' => [
+					'databasename' => [
+						'label' => lng('mysql.databasename'),
 						'type' => 'label',
 						'value' => $result['databasename']
-					),
-					'description' => array(
-						'label' => $lng['mysql']['databasedescription'],
+					],
+					'description' => [
+						'label' => lng('mysql.databasedescription'),
 						'type' => 'text',
 						'value' => $result['description']
-					),
-					'mysql_server' => array(
+					],
+					'mysql_server' => [
 						'visible' => $count_mysql_servers > 1,
-						'label' => $lng['mysql']['mysql_server'],
+						'label' => lng('mysql.mysql_server'),
 						'type' => 'label',
 						'value' => $sql_root['caption']
-					),
-					'mysql_password' => array(
-						'label' => $lng['changepassword']['new_password_ifnotempty'],
+					],
+					'mysql_password' => [
+						'label' => lng('changepassword.new_password_ifnotempty'),
 						'type' => 'password',
 						'autocomplete' => 'off'
-					),
-					'mysql_password_suggestion' => array(
-						'label' => $lng['customer']['generated_pwd'],
+					],
+					'mysql_password_suggestion' => [
+						'label' => lng('customer.generated_pwd'),
 						'type' => 'text',
-						'visible' => (\Froxlor\Settings::Get('panel.password_regex') == ''),
-						'value' => \Froxlor\System\Crypt::generatePassword()
-					)
-				)
-			)
-		)
-	)
-);
+						'visible' => (Settings::Get('panel.password_regex') == ''),
+						'value' => Crypt::generatePassword()
+					]
+				]
+			]
+		]
+	]
+];

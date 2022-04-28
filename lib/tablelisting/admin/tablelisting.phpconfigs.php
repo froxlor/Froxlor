@@ -11,22 +11,22 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, you can also view it online at
- * http://files.froxlor.org/misc/COPYING.txt
+ * https://files.froxlor.org/misc/COPYING.txt
  *
  * @copyright  the authors
  * @author     Froxlor team <team@froxlor.org>
- * @license    http://files.froxlor.org/misc/COPYING.txt GPLv2
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
+use Froxlor\Settings;
 use Froxlor\UI\Callbacks\Admin;
 use Froxlor\UI\Callbacks\PHPConf;
 use Froxlor\UI\Listing;
-use Froxlor\Settings;
 
 return [
 	'phpconf_list' => [
@@ -46,13 +46,13 @@ return [
 			'fpmdesc' => [
 				'label' => lng('admin.phpsettings.fpmdesc'),
 				'field' => 'fpmdesc',
-				'visible' => (bool) Settings::Get('phpfpm.enabled'),
+				'visible' => (bool)Settings::Get('phpfpm.enabled'),
 				'callback' => [PHPConf::class, 'fpmConfLink']
 			],
 			'c.binary' => [
 				'label' => lng('admin.phpsettings.binary'),
 				'field' => 'binary',
-				'visible' => !(bool) Settings::Get('phpfpm.enabled')
+				'visible' => !(bool)Settings::Get('phpfpm.enabled')
 			],
 			'c.file_extensions' => [
 				'label' => lng('admin.phpsettings.file_extensions'),

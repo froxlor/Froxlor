@@ -1,23 +1,37 @@
 <?php
 
+/**
+ * This file is part of the Froxlor project.
+ * Copyright (c) 2010 the Froxlor Team (see authors).
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
+ */
+
 namespace Froxlor\Validate\Form;
+
+use Froxlor\FileDir;
+use Froxlor\Validate\Validate;
 
 class Data
 {
 	public static function validateFormFieldText($fieldname, $fielddata, $newfieldvalue)
 	{
-		return self::validateFormFieldString($fieldname, $fielddata, $newfieldvalue);
-	}
-
-	public static function validateFormFieldEmail($fieldname, $fielddata, $newfieldvalue)
-	{
-		$fielddata['string_type'] == 'mail';
-		return self::validateFormFieldString($fieldname, $fielddata, $newfieldvalue);
-	}
-
-	public static function validateFormFieldUrl($fieldname, $fielddata, $newfieldvalue)
-	{
-		$fielddata['string_type'] == 'url';
 		return self::validateFormFieldString($fieldname, $fielddata, $newfieldvalue);
 	}
 
@@ -48,9 +62,9 @@ class Data
 			$newfieldvalue = str_replace("\t", " ", $newfieldvalue);
 
 			if (isset($fielddata['string_type']) && $fielddata['string_type'] == 'mail') {
-				$returnvalue = \Froxlor\Validate\Validate::validateEmail($newfieldvalue);
+				$returnvalue = Validate::validateEmail($newfieldvalue);
 			} elseif (isset($fielddata['string_type']) && $fielddata['string_type'] == 'url') {
-				$returnvalue = \Froxlor\Validate\Validate::validateUrl($newfieldvalue);
+				$returnvalue = Validate::validateUrl($newfieldvalue);
 			} elseif (isset($fielddata['string_type']) && $fielddata['string_type'] == 'dir') {
 				// check for empty value (it might be allowed)
 				if (trim($newfieldvalue) == '') {
@@ -62,7 +76,7 @@ class Data
 					if (substr($newfieldvalue, -1) != '/') {
 						$newfieldvalue .= '/';
 					}
-					$returnvalue = ($newfieldvalue == \Froxlor\FileDir::makeCorrectDir($newfieldvalue));
+					$returnvalue = ($newfieldvalue == FileDir::makeCorrectDir($newfieldvalue));
 				}
 			} elseif (isset($fielddata['string_type']) && $fielddata['string_type'] == 'confdir') {
 				// check for empty value (it might be allowed)
@@ -76,11 +90,11 @@ class Data
 						$newfieldvalue .= '/';
 					}
 					// if this is a configuration directory, check for stupidity of admins :p
-					if (\Froxlor\FileDir::checkDisallowedPaths($newfieldvalue) !== true) {
+					if (FileDir::checkDisallowedPaths($newfieldvalue) !== true) {
 						$newfieldvalue = '';
 						$returnvalue = 'givendirnotallowed';
 					} else {
-						$returnvalue = ($newfieldvalue == \Froxlor\FileDir::makeCorrectDir($newfieldvalue));
+						$returnvalue = ($newfieldvalue == FileDir::makeCorrectDir($newfieldvalue));
 					}
 				}
 			} elseif (isset($fielddata['string_type']) && $fielddata['string_type'] == 'file') {
@@ -89,7 +103,7 @@ class Data
 					$newfieldvalue = '';
 					$returnvalue = 'stringmustntbeempty';
 				} else {
-					$returnvalue = ($newfieldvalue == \Froxlor\FileDir::makeCorrectFile($newfieldvalue));
+					$returnvalue = ($newfieldvalue == FileDir::makeCorrectFile($newfieldvalue));
 				}
 			} elseif (isset($fielddata['string_type']) && $fielddata['string_type'] == 'filedir') {
 				// check for empty value (it might be allowed)
@@ -97,7 +111,7 @@ class Data
 					$newfieldvalue = '';
 					$returnvalue = 'stringmustntbeempty';
 				} else {
-					$returnvalue = (($newfieldvalue == \Froxlor\FileDir::makeCorrectDir($newfieldvalue)) || ($newfieldvalue == \Froxlor\FileDir::makeCorrectFile($newfieldvalue)));
+					$returnvalue = (($newfieldvalue == FileDir::makeCorrectDir($newfieldvalue)) || ($newfieldvalue == FileDir::makeCorrectFile($newfieldvalue)));
 				}
 			} elseif (isset($fielddata['string_type']) && $fielddata['string_type'] == 'validate_ip') {
 				// check for empty value (it might be allowed)
@@ -105,7 +119,7 @@ class Data
 					$newfieldvalue = '';
 					$returnvalue = 'stringmustntbeempty';
 				} else {
-					$newfieldvalue = \Froxlor\Validate\Validate::validate_ip2($newfieldvalue, true);
+					$newfieldvalue = Validate::validate_ip2($newfieldvalue, true);
 					$returnvalue = ($newfieldvalue !== false ? true : 'invalidip');
 				}
 			} elseif (isset($fielddata['string_type']) && $fielddata['string_type'] == 'validate_ip_incl_private') {
@@ -114,7 +128,7 @@ class Data
 					$newfieldvalue = '';
 					$returnvalue = 'stringmustntbeempty';
 				} else {
-					$newfieldvalue = \Froxlor\Validate\Validate::validate_ip2($newfieldvalue, true, 'invalidip', true, true, true);
+					$newfieldvalue = Validate::validate_ip2($newfieldvalue, true, 'invalidip', true, true, true);
 					$returnvalue = ($newfieldvalue !== false ? true : 'invalidip');
 				}
 			} elseif (preg_match('/^[^\r\n\t\f\0]*$/D', $newfieldvalue)) {
@@ -143,6 +157,18 @@ class Data
 		} else {
 			return $returnvalue;
 		}
+	}
+
+	public static function validateFormFieldEmail($fieldname, $fielddata, $newfieldvalue)
+	{
+		$fielddata['string_type'] == 'mail';
+		return self::validateFormFieldString($fieldname, $fielddata, $newfieldvalue);
+	}
+
+	public static function validateFormFieldUrl($fieldname, $fielddata, $newfieldvalue)
+	{
+		$fielddata['string_type'] == 'url';
+		return self::validateFormFieldString($fieldname, $fielddata, $newfieldvalue);
 	}
 
 	public static function validateFormFieldCheckbox($fieldname, $fielddata, $newfieldvalue)
@@ -196,7 +222,7 @@ class Data
 				 * don't use tabs in value-fields, #81
 				 */
 				$single_newfieldvalue = str_replace("\t", " ", $single_newfieldvalue);
-				$single_returnvalue = \Froxlor\Validate\Form\Data::validateFormFieldString($fieldname, $fielddata, $single_newfieldvalue);
+				$single_returnvalue = Data::validateFormFieldString($fieldname, $fielddata, $single_newfieldvalue);
 				if ($single_returnvalue !== true) {
 					$returnvalue = $single_returnvalue;
 					break;
@@ -211,20 +237,20 @@ class Data
 			$newfieldvalue = str_replace("\t", " ", $newfieldvalue);
 
 			if (isset($fielddata['string_type']) && $fielddata['string_type'] == 'mail') {
-				$returnvalue = \Froxlor\Validate\Validate::validateEmail($newfieldvalue);
+				$returnvalue = Validate::validateEmail($newfieldvalue);
 			} elseif (isset($fielddata['string_type']) && $fielddata['string_type'] == 'url') {
-				$returnvalue = \Froxlor\Validate\Validate::validateUrl($newfieldvalue);
+				$returnvalue = Validate::validateUrl($newfieldvalue);
 			} elseif (isset($fielddata['string_type']) && $fielddata['string_type'] == 'dir') {
 				// add trailing slash to validate path if needed
 				// refs #331
 				if (substr($newfieldvalue, -1) != '/') {
 					$newfieldvalue .= '/';
 				}
-				$returnvalue = ($newfieldvalue == \Froxlor\FileDir::makeCorrectDir($newfieldvalue));
+				$returnvalue = ($newfieldvalue == FileDir::makeCorrectDir($newfieldvalue));
 			} elseif (isset($fielddata['string_type']) && $fielddata['string_type'] == 'file') {
-				$returnvalue = ($newfieldvalue == \Froxlor\FileDir::makeCorrectFile($newfieldvalue));
+				$returnvalue = ($newfieldvalue == FileDir::makeCorrectFile($newfieldvalue));
 			} elseif (isset($fielddata['string_type']) && $fielddata['string_type'] == 'filedir') {
-				$returnvalue = (($newfieldvalue == \Froxlor\FileDir::makeCorrectDir($newfieldvalue)) || ($newfieldvalue == \Froxlor\FileDir::makeCorrectFile($newfieldvalue)));
+				$returnvalue = (($newfieldvalue == FileDir::makeCorrectDir($newfieldvalue)) || ($newfieldvalue == FileDir::makeCorrectFile($newfieldvalue)));
 			} elseif (preg_match('/^[^\r\n\t\f\0]*$/D', $newfieldvalue)) {
 				$returnvalue = true;
 			}
@@ -255,11 +281,11 @@ class Data
 
 	public static function validateFormFieldNumber($fieldname, $fielddata, $newfieldvalue)
 	{
-		if (isset($fielddata['min']) && (int) $newfieldvalue < (int) $fielddata['min']) {
+		if (isset($fielddata['min']) && (int)$newfieldvalue < (int)$fielddata['min']) {
 			return ('intvaluetoolow');
 		}
 
-		if (isset($fielddata['max']) && (int) $newfieldvalue > (int) $fielddata['max']) {
+		if (isset($fielddata['max']) && (int)$newfieldvalue > (int)$fielddata['max']) {
 			return ('intvaluetoohigh');
 		}
 

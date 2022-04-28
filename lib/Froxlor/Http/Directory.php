@@ -1,32 +1,36 @@
 <?php
-namespace Froxlor\Http;
 
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright (c) the authors
- * @author Michael Kaufmann <mkaufmann@nutime.de>
- * @author Froxlor team <team@froxlor.org> (2010-)
- * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package Cron
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- * @since 0.9.33
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
  *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
+
+namespace Froxlor\Http;
+
 use Froxlor\Database\Database;
 use Froxlor\FileDir;
 
 /**
  * Class frxDirectory handles directory actions and gives information
  * about a given directory in connections with its usage in froxlor
- *
- * @author Michael Kaufmann (d00p) <d00p@froxlor.org>
- *
  */
 class Directory
 {
@@ -56,9 +60,9 @@ class Directory
 		$uo_stmt = Database::prepare("
 			SELECT COUNT(`id`) as `usropts` FROM `" . TABLE_PANEL_HTACCESS . "` WHERE `path` = :dir
 		");
-		$uo_res = Database::pexecute_first($uo_stmt, array(
+		$uo_res = Database::pexecute_first($uo_stmt, [
 			'dir' => FileDir::makeCorrectDir($this->dir)
-		));
+		]);
 		if ($uo_res != false && isset($uo_res['usropts'])) {
 			return $uo_res['usropts'] > 0;
 		}
@@ -73,9 +77,9 @@ class Directory
 		$up_stmt = Database::prepare("
 			SELECT COUNT(`id`) as `usrprot` FROM `" . TABLE_PANEL_HTPASSWDS . "` WHERE `path` = :dir
 		");
-		$up_res = Database::pexecute_first($up_stmt, array(
+		$up_res = Database::pexecute_first($up_stmt, [
 			'dir' => FileDir::makeCorrectDir($this->dir)
-		));
+		]);
 		if ($up_res != false && isset($up_res['usrprot'])) {
 			return $up_res['usrprot'] > 0;
 		}
@@ -87,7 +91,7 @@ class Directory
 	 * or should rather be used as a single file
 	 *
 	 * @param bool $ifexists
-	 *        	also check whether file/dir exists
+	 *            also check whether file/dir exists
 	 *
 	 * @return bool true if usable as dir, false otherwise
 	 */
@@ -105,8 +109,8 @@ class Directory
 				$returnval = false;
 			}
 		} else {
-			if (! $ifexists) {
-				if (substr($this->dir, - 1) == '/') {
+			if (!$ifexists) {
+				if (substr($this->dir, -1) == '/') {
 					$returnval = true;
 				} else {
 					$returnval = false;

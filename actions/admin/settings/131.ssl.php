@@ -2,52 +2,62 @@
 
 /**
  * This file is part of the Froxlor project.
- * Copyright (c) 2003-2009 the SysCP Team (see authors).
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright  (c) the authors
- * @author     Florian Lippert <flo@syscp.org> (2003-2009)
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    \Froxlor\Settings
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
-return array(
-	'groups' => array(
-		'ssl' => array(
-			'title' => $lng['admin']['sslsettings'],
+
+use Froxlor\Froxlor;
+use Froxlor\Settings;
+
+return [
+	'groups' => [
+		'ssl' => [
+			'title' => lng('admin.sslsettings'),
 			'icon' => 'fa-solid fa-shield',
-			'fields' => array(
-				'system_ssl_enabled' => array(
-					'label' => $lng['serversettings']['ssl']['use_ssl'],
+			'fields' => [
+				'system_ssl_enabled' => [
+					'label' => lng('serversettings.ssl.use_ssl'),
 					'settinggroup' => 'system',
 					'varname' => 'use_ssl',
 					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField',
 					'overview_option' => true
-				),
-				'system_ssl_protocols' => array(
-					'label' => $lng['serversettings']['ssl']['ssl_protocols'],
+				],
+				'system_ssl_protocols' => [
+					'label' => lng('serversettings.ssl.ssl_protocols'),
 					'settinggroup' => 'system',
 					'varname' => 'ssl_protocols',
 					'type' => 'select',
 					'default' => 'TLSv1.2',
 					'select_mode' => 'multiple',
-					'select_var' => array(
+					'select_var' => [
 						'TLSv1' => 'TLSv1',
 						'TLSv1.1' => 'TLSv1.1',
 						'TLSv1.2' => 'TLSv1.2',
 						'TLSv1.3' => 'TLSv1.3'
-					),
+					],
 					'save_method' => 'storeSettingField'
-				),
-				'system_ssl_cipher_list' => array(
-					'label' => $lng['serversettings']['ssl']['ssl_cipher_list'],
+				],
+				'system_ssl_cipher_list' => [
+					'label' => lng('serversettings.ssl.ssl_cipher_list'),
 					'settinggroup' => 'system',
 					'varname' => 'ssl_cipher_list',
 					'type' => 'text',
@@ -55,20 +65,20 @@ return array(
 					'default' => 'ECDH+AESGCM:ECDH+AES256:!aNULL:!MD5:!DSS:!DH:!AES128',
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
-				),
-				'system_tlsv13_cipher_list' => array(
-					'label' => $lng['serversettings']['ssl']['tlsv13_cipher_list'],
+				],
+				'system_tlsv13_cipher_list' => [
+					'label' => lng('serversettings.ssl.tlsv13_cipher_list'),
 					'settinggroup' => 'system',
 					'varname' => 'tlsv13_cipher_list',
 					'type' => 'text',
 					'string_emptyallowed' => true,
 					'default' => '',
-					'visible' => \Froxlor\Settings::Get('system.webserver') == "apache2" && \Froxlor\Settings::Get('system.apache24') == 1,
+					'visible' => Settings::Get('system.webserver') == "apache2" && Settings::Get('system.apache24') == 1,
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
-				),
-				'system_ssl_cert_file' => array(
-					'label' => $lng['serversettings']['ssl']['ssl_cert_file'],
+				],
+				'system_ssl_cert_file' => [
+					'label' => lng('serversettings.ssl.ssl_cert_file'),
 					'settinggroup' => 'system',
 					'varname' => 'ssl_cert_file',
 					'type' => 'text',
@@ -76,9 +86,9 @@ return array(
 					'string_emptyallowed' => true,
 					'default' => '/etc/apache2/apache2.pem',
 					'save_method' => 'storeSettingField'
-				),
-				'system_ssl_key_file' => array(
-					'label' => $lng['serversettings']['ssl']['ssl_key_file'],
+				],
+				'system_ssl_key_file' => [
+					'label' => lng('serversettings.ssl.ssl_key_file'),
 					'settinggroup' => 'system',
 					'varname' => 'ssl_key_file',
 					'type' => 'text',
@@ -86,9 +96,9 @@ return array(
 					'string_emptyallowed' => true,
 					'default' => '/etc/apache2/apache2.key',
 					'save_method' => 'storeSettingField'
-				),
-				'system_ssl_cert_chainfile' => array(
-					'label' => $lng['admin']['ipsandports']['ssl_cert_chainfile'],
+				],
+				'system_ssl_cert_chainfile' => [
+					'label' => lng('admin.ipsandports.ssl_cert_chainfile'),
 					'settinggroup' => 'system',
 					'varname' => 'ssl_cert_chainfile',
 					'type' => 'text',
@@ -96,9 +106,9 @@ return array(
 					'string_emptyallowed' => true,
 					'default' => '',
 					'save_method' => 'storeSettingField'
-				),
-				'system_ssl_ca_file' => array(
-					'label' => $lng['serversettings']['ssl']['ssl_ca_file'],
+				],
+				'system_ssl_ca_file' => [
+					'label' => lng('serversettings.ssl.ssl_ca_file'),
 					'settinggroup' => 'system',
 					'varname' => 'ssl_ca_file',
 					'type' => 'text',
@@ -106,39 +116,39 @@ return array(
 					'string_emptyallowed' => true,
 					'default' => '',
 					'save_method' => 'storeSettingField'
-				),
-				'system_apache24_ocsp_cache_path' => array(
-					'label' => $lng['serversettings']['ssl']['apache24_ocsp_cache_path'],
+				],
+				'system_apache24_ocsp_cache_path' => [
+					'label' => lng('serversettings.ssl.apache24_ocsp_cache_path'),
 					'settinggroup' => 'system',
 					'varname' => 'apache24_ocsp_cache_path',
 					'type' => 'text',
 					'string_emptyallowed' => false,
 					'default' => 'shmcb:/var/run/apache2/ocsp-stapling.cache(131072)',
-					'visible' => \Froxlor\Settings::Get('system.webserver') == "apache2" && \Froxlor\Settings::Get('system.apache24') == 1,
+					'visible' => Settings::Get('system.webserver') == "apache2" && Settings::Get('system.apache24') == 1,
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
-				),
-				'system_sessionticketsenabled' => array(
-					'label' => $lng['admin']['domain_sessionticketsenabled'],
+				],
+				'system_sessionticketsenabled' => [
+					'label' => lng('admin.domain_sessionticketsenabled'),
 					'settinggroup' => 'system',
 					'varname' => 'sessionticketsenabled',
 					'type' => 'checkbox',
 					'default' => true,
 					'save_method' => 'storeSettingField',
-					'visible' => \Froxlor\Settings::Get('system.use_ssl') && (\Froxlor\Settings::Get('system.webserver') == "nginx" || (\Froxlor\Settings::Get('system.webserver') == "apache2" && \Froxlor\Settings::Get('system.apache24') == 1)),
+					'visible' => Settings::Get('system.use_ssl') && (Settings::Get('system.webserver') == "nginx" || (Settings::Get('system.webserver') == "apache2" && Settings::Get('system.apache24') == 1)),
 					'advanced_mode' => true
-				),
-				'system_leenabled' => array(
-					'label' => $lng['serversettings']['leenabled'],
+				],
+				'system_leenabled' => [
+					'label' => lng('serversettings.leenabled'),
 					'settinggroup' => 'system',
 					'varname' => 'leenabled',
 					'type' => 'checkbox',
 					'default' => false,
 					'cronmodule' => 'froxlor/letsencrypt',
 					'save_method' => 'storeSettingField'
-				),
-				'system_acmeshpath' => array(
-					'label' => $lng['serversettings']['acmeshpath'],
+				],
+				'system_acmeshpath' => [
+					'label' => lng('serversettings.acmeshpath'),
 					'settinggroup' => 'system',
 					'varname' => 'acmeshpath',
 					'type' => 'text',
@@ -146,102 +156,102 @@ return array(
 					'default' => '/root/.acme.sh/acme.sh',
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
-				),
-				'system_letsencryptacmeconf' => array(
-					'label' => $lng['serversettings']['letsencryptacmeconf'],
+				],
+				'system_letsencryptacmeconf' => [
+					'label' => lng('serversettings.letsencryptacmeconf'),
 					'settinggroup' => 'system',
 					'varname' => 'letsencryptacmeconf',
 					'type' => 'text',
 					'string_type' => 'file',
 					'default' => '/etc/apache2/conf-enabled/acme.conf',
 					'save_method' => 'storeSettingField'
-				),
+				],
 				/**
 				 * currently the only option anyway
 				 *
-				'system_leapiversion' => array(
-					'label' => $lng['serversettings']['leapiversion'],
-					'settinggroup' => 'system',
-					'varname' => 'leapiversion',
-					'type' => 'select',
-					'default' => '2',
-					'select_var' => array(
-						'2' => 'ACME v2'
-					),
-					'save_method' => 'storeSettingField'
-				),
+				 * 'system_leapiversion' => array(
+				 * 'label' => lng('serversettings.leapiversion'),
+				 * 'settinggroup' => 'system',
+				 * 'varname' => 'leapiversion',
+				 * 'type' => 'select',
+				 * 'default' => '2',
+				 * 'select_var' => array(
+				 * '2' => 'ACME v2'
+				 * ),
+				 * 'save_method' => 'storeSettingField'
+				 * ),
 				 */
-				'system_letsencryptca' => array(
-					'label' => $lng['serversettings']['letsencryptca'],
+				'system_letsencryptca' => [
+					'label' => lng('serversettings.letsencryptca'),
 					'settinggroup' => 'system',
 					'varname' => 'letsencryptca',
 					'type' => 'select',
 					'default' => 'letsencrypt',
-					'select_var' => array(
+					'select_var' => [
 						'letsencrypt_test' => 'Let\'s Encrypt (Test / Staging)',
 						'letsencrypt' => 'Let\'s Encrypt (Live)',
 						'buypass_test' => 'Buypass (Test / Staging)',
 						'buypass' => 'Buypass (Live)',
 						'zerossl' => 'ZeroSSL (Live)'
-					),
+					],
 					'save_method' => 'storeSettingField'
-				),
-				'system_letsencryptchallengepath' => array(
-					'label' => $lng['serversettings']['letsencryptchallengepath'],
+				],
+				'system_letsencryptchallengepath' => [
+					'label' => lng('serversettings.letsencryptchallengepath'),
 					'settinggroup' => 'system',
 					'varname' => 'letsencryptchallengepath',
 					'type' => 'text',
 					'string_emptyallowed' => false,
-					'default' => \Froxlor\Froxlor::getInstallDir(),
+					'default' => Froxlor::getInstallDir(),
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
-				),
-				'system_letsencryptkeysize' => array(
-					'label' => $lng['serversettings']['letsencryptkeysize'],
+				],
+				'system_letsencryptkeysize' => [
+					'label' => lng('serversettings.letsencryptkeysize'),
 					'settinggroup' => 'system',
 					'varname' => 'letsencryptkeysize',
 					'type' => 'select',
 					'default' => '2048',
-					'select_var' => array(
+					'select_var' => [
 						'2048' => '2048',
 						'3072' => '3072',
 						'4096' => '4096',
 						'8192' => '8192'
-					),
+					],
 					'save_method' => 'storeSettingField'
-				),
-				'system_leecc' => array(
-					'label' => $lng['serversettings']['letsencryptecc'],
+				],
+				'system_leecc' => [
+					'label' => lng('serversettings.letsencryptecc'),
 					'settinggroup' => 'system',
 					'varname' => 'leecc',
 					'type' => 'select',
 					'default' => '0',
-					'select_var' => array(
+					'select_var' => [
 						'0' => '-',
 						'256' => 'ec-256',
 						'384' => 'ec-384'
-					),
+					],
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
-				),
-				'system_letsencryptreuseold' => array(
-					'label' => $lng['serversettings']['letsencryptreuseold'],
+				],
+				'system_letsencryptreuseold' => [
+					'label' => lng('serversettings.letsencryptreuseold'),
 					'settinggroup' => 'system',
 					'varname' => 'letsencryptreuseold',
 					'type' => 'checkbox',
 					'default' => true,
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
-				),
-				'system_le_domain_dnscheck' => array(
-					'label' => $lng['serversettings']['le_domain_dnscheck'],
+				],
+				'system_le_domain_dnscheck' => [
+					'label' => lng('serversettings.le_domain_dnscheck'),
 					'settinggroup' => 'system',
 					'varname' => 'le_domain_dnscheck',
 					'type' => 'checkbox',
 					'default' => true,
 					'save_method' => 'storeSettingField'
-				)
-			)
-		)
-	)
-);
+				]
+			]
+		]
+	]
+];

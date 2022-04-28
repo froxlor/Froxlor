@@ -11,27 +11,27 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, you can also view it online at
- * http://files.froxlor.org/misc/COPYING.txt
+ * https://files.froxlor.org/misc/COPYING.txt
  *
  * @copyright  the authors
  * @author     Froxlor team <team@froxlor.org>
- * @license    http://files.froxlor.org/misc/COPYING.txt GPLv2
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
 namespace Froxlor\Cli;
 
+use Froxlor\Database\Database;
+use Froxlor\FileDir;
+use Froxlor\Settings;
+use PDO;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Froxlor\Froxlor;
-use Froxlor\FileDir;
-use Froxlor\Settings;
-use Froxlor\Database\Database;
 
 final class PhpSessionclean extends CliCommand
 {
@@ -48,8 +48,8 @@ final class PhpSessionclean extends CliCommand
 		$result = $this->validateRequirements($input, $output);
 
 		if ($result == self::SUCCESS) {
-			if ((int) Settings::Get('phpfpm.enabled') == 1) {
-				if ($input->hasArgument('max-lifetime') &&  is_numeric($input->getArgument('max-lifetime')) && $input->getArgument('max-lifetime') > 0) {
+			if ((int)Settings::Get('phpfpm.enabled') == 1) {
+				if ($input->hasArgument('max-lifetime') && is_numeric($input->getArgument('max-lifetime')) && $input->getArgument('max-lifetime') > 0) {
 					$this->cleanSessionfiles((int)$input->getArgument('max-lifetime'));
 				} else {
 					// use default max-lifetime value
@@ -72,7 +72,7 @@ final class PhpSessionclean extends CliCommand
 		// get all pool-config directories configured
 		$sel_stmt = Database::prepare("SELECT DISTINCT `config_dir` FROM `" . TABLE_PANEL_FPMDAEMONS . "`");
 		Database::pexecute($sel_stmt);
-		while ($fpmd = $sel_stmt->fetch(\PDO::FETCH_ASSOC)) {
+		while ($fpmd = $sel_stmt->fetch(PDO::FETCH_ASSOC)) {
 			$poolfiles = glob(FileDir::makeCorrectFile($fpmd['config_dir'] . '/*.conf'));
 			foreach ($poolfiles as $cf) {
 				$contents = file_get_contents($cf);

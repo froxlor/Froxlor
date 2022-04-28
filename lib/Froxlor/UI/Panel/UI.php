@@ -1,10 +1,43 @@
 <?php
 
+/**
+ * This file is part of the Froxlor project.
+ * Copyright (c) 2010 the Froxlor Team (see authors).
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
+ */
+
 declare(strict_types=1);
 
 namespace Froxlor\UI\Panel;
 
+use DirectoryIterator;
+use Exception;
+use Froxlor\CurrentUser;
+use Froxlor\FileDir;
+use Froxlor\Froxlor;
+use Froxlor\PhpHelper;
+use Froxlor\Settings;
 use Froxlor\UI\Linker;
+use Twig\Environment;
+use Twig\Extension\DebugExtension;
+use Twig\Loader\FilesystemLoader;
 
 class UI
 {
@@ -12,7 +45,7 @@ class UI
 	/**
 	 * twig object
 	 *
-	 * @var \Twig\Environment
+	 * @var Environment
 	 */
 	private static $twig = null;
 
@@ -21,14 +54,14 @@ class UI
 	 *
 	 * @var array
 	 */
-	private static $twigbuf = array();
+	private static $twigbuf = [];
 
 	/**
 	 * language strigs array
 	 *
 	 * @var array
 	 */
-	private static $lng = array();
+	private static $lng = [];
 
 	/**
 	 * linker class object
@@ -114,15 +147,15 @@ class UI
 		 * If Froxlor was called via HTTPS -> enforce it for the next time by settings HSTS header according to settings
 		 */
 		if (isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) != 'off')) {
-			$maxage = \Froxlor\Settings::Get('system.hsts_maxage');
+			$maxage = Settings::Get('system.hsts_maxage');
 			if (empty($maxage)) {
 				$maxage = 0;
 			}
 			$hsts_header = "Strict-Transport-Security: max-age=" . $maxage;
-			if (\Froxlor\Settings::Get('system.hsts_incsub') == '1') {
+			if (Settings::Get('system.hsts_incsub') == '1') {
 				$hsts_header .= "; includeSubDomains";
 			}
-			if (\Froxlor\Settings::Get('system.hsts_preload') == '1') {
+			if (Settings::Get('system.hsts_preload') == '1') {
 				$hsts_header .= "; preload";
 			}
 			header($hsts_header);
@@ -136,13 +169,13 @@ class UI
 	{
 		self::$install_mode = $install_mode;
 		// init twig template engine
-		$loader = new \Twig\Loader\FilesystemLoader(\Froxlor\Froxlor::getInstallDir() . '/templates/');
-		self::$twig = new \Twig\Environment($loader, array(
+		$loader = new FilesystemLoader(Froxlor::getInstallDir() . '/templates/');
+		self::$twig = new Environment($loader, [
 			'debug' => true,
-			'cache' => \Froxlor\Froxlor::getInstallDir() . '/cache',
+			'cache' => Froxlor::getInstallDir() . '/cache',
 			'auto_reload' => true
-		));
-		self::$twig->addExtension(new \Twig\Extension\DebugExtension());
+		]);
+		self::$twig->addExtension(new DebugExtension());
 		self::$twig->addExtension(new CustomReflection());
 		self::$twig->addExtension(new FroxlorTwig());
 		// empty buffer
@@ -152,97 +185,21 @@ class UI
 	/**
 	 * twig wrapper
 	 *
-	 * @return \Twig\Environment
+	 * @return Environment
 	 */
-	public static function twig(): ?\Twig\Environment
+	public static function twig(): ?Environment
 	{
 		return self::$twig;
-	}
-
-	/**
-	 * wrapper for twig's "render" function to buffer the output
-	 *
-	 * @see \Twig\Environment::render()
-	 */
-	public static function twigBuffer($name, array $context = [])
-	{
-		self::$twigbuf[] = [
-			self::getTheme() . '/' . $name => $context
-		];
-	}
-
-	public static function getTheme()
-	{
-		// fallback
-		$theme = self::$default_theme;
-		if (!self::$install_mode) {
-			// system default
-			if (\Froxlor\Froxlor::DBVERSION <= 202299999) {
-				// @fixme set this to the last 0.10.x DBVERSION to fallback to the new theme
-				\Froxlor\Settings::Set('panel.default_theme', 'Froxlor');
-			}
-			$theme = (\Froxlor\Settings::Get('panel.default_theme') !== null) ? \Froxlor\Settings::Get('panel.default_theme') : $theme;
-			// customer theme
-			if (\Froxlor\CurrentUser::hasSession() && \Froxlor\CurrentUser::getField('theme') != $theme) {
-				$theme = \Froxlor\CurrentUser::getField('theme');
-			}
-		}
-		if (!file_exists(\Froxlor\Froxlor::getInstallDir() . '/templates/' . $theme)) {
-			\Froxlor\PhpHelper::phpErrHandler(E_USER_WARNING, "Theme '" . $theme . "' could not be found.", __FILE__, __LINE__, null);
-			$theme = self::$default_theme;
-		}
-		return $theme;
-	}
-
-	/**
-	 * echo output buffer and empty buffer-content
-	 */
-	public static function twigOutputBuffer()
-	{
-		$output = "";
-		foreach (self::$twigbuf as $buf) {
-			foreach ($buf as $name => $context) {
-				try {
-					$output .= self::$twig->render($name, $context);
-				} catch (\Exception $e) {
-					// whoops, template error
-					$errtpl = 'alert_nosession.html.twig';
-					if (self::activeUserSession()) {
-						$errtpl = 'alert.html.twig';
-					}
-					$edata = array(
-						'type' => "danger",
-						'heading' => "Template error",
-						'alert_msg' => $e->getMessage(),
-						'alert_info' => $e->getTraceAsString()
-					);
-					try {
-						// try with user theme if set
-						$output .= self::$twig->render(self::getTheme() . '/misc/' . $errtpl, $edata);
-					} catch (\Exception $e) {
-						// try with default theme if different from user theme
-						if (self::getTheme() != self::$default_theme) {
-							$output .= self::$twig->render(self::$default_theme . '/misc/' . $errtpl, $edata);
-						} else {
-							throw $e;
-						}
-					}
-				}
-			}
-		}
-		echo $output;
-		// empty buffer
-		self::$twigbuf = [];
-	}
-
-	public static function setLinker($linker = null)
-	{
-		self::$linker = $linker;
 	}
 
 	public static function getLinker(): Linker
 	{
 		return self::$linker;
+	}
+
+	public static function setLinker($linker = null)
+	{
+		self::$linker = $linker;
 	}
 
 	public static function setCurrentUser($userinfo = null)
@@ -253,16 +210,6 @@ class UI
 	public static function getCurrentUser(): array
 	{
 		return self::$userinfo;
-	}
-
-	public static function activeUserSession(): bool
-	{
-		return !empty(self::$userinfo);
-	}
-
-	public static function setLng($lng = array())
-	{
-		self::$lng = $lng;
 	}
 
 	public static function getLng($identifier, $context = null)
@@ -288,19 +235,24 @@ class UI
 		}
 	}
 
+	public static function setLng($lng = [])
+	{
+		self::$lng = $lng;
+	}
+
 	/**
 	 * returns an array of available themes
 	 *
 	 * @return array
-	 * @throws \Exception
+	 * @throws Exception
 	 */
 	public static function getThemes(): array
 	{
-		$themespath = \Froxlor\FileDir::makeCorrectDir(\Froxlor\Froxlor::getInstallDir() . '/templates/');
-		$themes_available = array();
+		$themespath = FileDir::makeCorrectDir(Froxlor::getInstallDir() . '/templates/');
+		$themes_available = [];
 
 		if (is_dir($themespath)) {
-			$its = new \DirectoryIterator($themespath);
+			$its = new DirectoryIterator($themespath);
 
 			foreach ($its as $it) {
 				if ($it->isDir() && $it->getFilename() != '.' && $it->getFilename() != '..' && $it->getFilename() != 'misc') {
@@ -331,5 +283,86 @@ class UI
 	{
 		self::twigBuffer($name, $context);
 		self::twigOutputBuffer();
+	}
+
+	/**
+	 * wrapper for twig's "render" function to buffer the output
+	 *
+	 * @see \Twig\Environment::render()
+	 */
+	public static function twigBuffer($name, array $context = [])
+	{
+		self::$twigbuf[] = [
+			self::getTheme() . '/' . $name => $context
+		];
+	}
+
+	public static function getTheme()
+	{
+		// fallback
+		$theme = self::$default_theme;
+		if (!self::$install_mode) {
+			// system default
+			if (Froxlor::DBVERSION <= 202299999) {
+				// @fixme set this to the last 0.10.x DBVERSION to fallback to the new theme
+				Settings::Set('panel.default_theme', 'Froxlor');
+			}
+			$theme = (Settings::Get('panel.default_theme') !== null) ? Settings::Get('panel.default_theme') : $theme;
+			// customer theme
+			if (CurrentUser::hasSession() && CurrentUser::getField('theme') != $theme) {
+				$theme = CurrentUser::getField('theme');
+			}
+		}
+		if (!file_exists(Froxlor::getInstallDir() . '/templates/' . $theme)) {
+			PhpHelper::phpErrHandler(E_USER_WARNING, "Theme '" . $theme . "' could not be found.", __FILE__, __LINE__, null);
+			$theme = self::$default_theme;
+		}
+		return $theme;
+	}
+
+	/**
+	 * echo output buffer and empty buffer-content
+	 */
+	public static function twigOutputBuffer()
+	{
+		$output = "";
+		foreach (self::$twigbuf as $buf) {
+			foreach ($buf as $name => $context) {
+				try {
+					$output .= self::$twig->render($name, $context);
+				} catch (Exception $e) {
+					// whoops, template error
+					$errtpl = 'alert_nosession.html.twig';
+					if (self::activeUserSession()) {
+						$errtpl = 'alert.html.twig';
+					}
+					$edata = [
+						'type' => "danger",
+						'heading' => "Template error",
+						'alert_msg' => $e->getMessage(),
+						'alert_info' => $e->getTraceAsString()
+					];
+					try {
+						// try with user theme if set
+						$output .= self::$twig->render(self::getTheme() . '/misc/' . $errtpl, $edata);
+					} catch (Exception $e) {
+						// try with default theme if different from user theme
+						if (self::getTheme() != self::$default_theme) {
+							$output .= self::$twig->render(self::$default_theme . '/misc/' . $errtpl, $edata);
+						} else {
+							throw $e;
+						}
+					}
+				}
+			}
+		}
+		echo $output;
+		// empty buffer
+		self::$twigbuf = [];
+	}
+
+	public static function activeUserSession(): bool
+	{
+		return !empty(self::$userinfo);
 	}
 }

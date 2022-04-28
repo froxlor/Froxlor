@@ -1,42 +1,41 @@
 <?php
 
-namespace Froxlor;
-
-use Froxlor\Database\Database;
-
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright (c) the authors
- * @author Michael Kaufmann <mkaufmann@nutime.de>
- * @author Froxlor team <team@froxlor.org> (2010-)
- * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package Classes
- *         
- * @since 0.9.31
- *       
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
+
+namespace Froxlor;
+
+use Froxlor\Database\Database;
+use PDO;
+use PDOStatement;
 
 /**
  * Class Settings
  *
  * Interaction with settings from the db
- *
- * @copyright (c) the authors
- * @author Michael Kaufmann <mkaufmann@nutime.de>
- * @author Froxlor team <team@froxlor.org> (2010-)
- * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package Classes
- *         
  */
 class Settings
 {
-
 	/**
 	 * settings data
 	 *
@@ -62,9 +61,30 @@ class Settings
 	 * prepared statement for updating the
 	 * settings table
 	 *
-	 * @var \PDOStatement
+	 * @var PDOStatement
 	 */
 	private static $updstmt = null;
+
+	/**
+	 * tests if a setting-value that i s a comma separated list contains an entry
+	 *
+	 * @param string $setting
+	 *            a group and a varname separated by a dot (group.varname)
+	 * @param string $entry
+	 *            the entry that is expected to be in the list
+	 *
+	 * @return boolean true, if the list contains $entry
+	 */
+	public static function IsInList($setting = null, $entry = null)
+	{
+		self::init();
+		$svalue = self::Get($setting);
+		if ($svalue == null) {
+			return false;
+		}
+		$slist = explode(",", $svalue);
+		return in_array($entry, $slist);
+	}
 
 	/**
 	 * private constructor, reads in all settings
@@ -74,7 +94,7 @@ class Settings
 		if (empty(self::$data)) {
 			self::readSettings();
 			self::readConfig();
-			self::$updatedata = array();
+			self::$updatedata = [];
 
 			// prepare statement
 			self::$updstmt = Database::prepare("
@@ -94,8 +114,8 @@ class Settings
 			SELECT `settingid`, `settinggroup`, `varname`, `value`
 			FROM `" . TABLE_PANEL_SETTINGS . "`
 		");
-		self::$data = array();
-		while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
+		self::$data = [];
+		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
 			self::$data[$row['settinggroup']][$row['varname']] = $row['value'];
 		}
 		return true;
@@ -120,28 +140,11 @@ class Settings
 	}
 
 	/**
-	 * update a value in the database
-	 *
-	 * @param string $group
-	 * @param string $varname
-	 * @param string $value
-	 */
-	private static function storeSetting($group = null, $varname = null, $value = null)
-	{
-		$upd_data = array(
-			'group' => $group,
-			'varname' => $varname,
-			'value' => $value
-		);
-		Database::pexecute(self::$updstmt, $upd_data);
-	}
-
-	/**
 	 * return a setting-value by its group and varname
 	 *
 	 * @param string $setting
-	 *        	a group and a varname separated by a dot (group.varname)
-	 *        	
+	 *            a group and a varname separated by a dot (group.varname)
+	 *
 	 * @return mixed
 	 */
 	public static function Get($setting = null)
@@ -160,31 +163,10 @@ class Settings
 	}
 
 	/**
-	 * tests if a setting-value that i s a comma separated list contains an entry
-	 *
-	 * @param string $setting
-	 *        	a group and a varname separated by a dot (group.varname)
-	 * @param string $entry
-	 *        	the entry that is expected to be in the list
-	 *        	
-	 * @return boolean true, if the list contains $entry
-	 */
-	public static function IsInList($setting = null, $entry = null)
-	{
-		self::init();
-		$svalue = self::Get($setting);
-		if ($svalue == null) {
-			return false;
-		}
-		$slist = explode(",", $svalue);
-		return in_array($entry, $slist);
-	}
-
-	/**
 	 * update a setting / set a new value
 	 *
 	 * @param string $setting
-	 *        	a group and a varname separated by a dot (group.varname)
+	 *            a group and a varname separated by a dot (group.varname)
 	 * @param string $value
 	 * @param boolean $instant_save
 	 *
@@ -207,12 +189,12 @@ class Settings
 			} else {
 				// set temporary data for usage
 				if (!isset(self::$data[$sstr[0]]) || !is_array(self::$data[$sstr[0]])) {
-					self::$data[$sstr[0]] = array();
+					self::$data[$sstr[0]] = [];
 				}
 				self::$data[$sstr[0]][$sstr[1]] = $value;
 				// set update-data when invoking Flush()
 				if (!isset(self::$updatedata[$sstr[0]]) || !is_array(self::$updatedata[$sstr[0]])) {
-					self::$updatedata[$sstr[0]] = array();
+					self::$updatedata[$sstr[0]] = [];
 				}
 				self::$updatedata[$sstr[0]][$sstr[1]] = $value;
 			}
@@ -222,10 +204,27 @@ class Settings
 	}
 
 	/**
+	 * update a value in the database
+	 *
+	 * @param string $group
+	 * @param string $varname
+	 * @param string $value
+	 */
+	private static function storeSetting($group = null, $varname = null, $value = null)
+	{
+		$upd_data = [
+			'group' => $group,
+			'varname' => $varname,
+			'value' => $value
+		];
+		Database::pexecute(self::$updstmt, $upd_data);
+	}
+
+	/**
 	 * add a new setting to the database (mainly used in updater)
 	 *
 	 * @param string $setting
-	 *        	a group and a varname separated by a dot (group.varname)
+	 *            a group and a varname separated by a dot (group.varname)
 	 * @param string $value
 	 *
 	 * @return boolean
@@ -247,11 +246,11 @@ class Settings
 					`varname` = :varname,
 					`value` = :value
 					");
-			$ins_data = array(
+			$ins_data = [
 				'group' => $sstr[0],
 				'varname' => $sstr[1],
 				'value' => $value
-			);
+			];
 			Database::pexecute($ins_stmt, $ins_data);
 			// also set new value to internal array and make it available
 			self::$data[$sstr[0]][$sstr[1]] = $value;
@@ -275,7 +274,7 @@ class Settings
 				}
 			}
 			// now empty the array
-			self::$updatedata = array();
+			self::$updatedata = [];
 			// re-read in all settings
 			return self::readSettings();
 		}
@@ -289,7 +288,7 @@ class Settings
 	{
 		self::init();
 		// empty update array
-		self::$updatedata = array();
+		self::$updatedata = [];
 		// re-read in all settings
 		return self::readSettings();
 	}
@@ -297,7 +296,6 @@ class Settings
 	public static function loadSettingsInto(&$settings_data)
 	{
 		if (is_array($settings_data) && isset($settings_data['groups']) && is_array($settings_data['groups'])) {
-
 			// prepare for use in for-loop
 			$row_stmt = Database::prepare("
 				SELECT `settinggroup`, `varname`, `value`
@@ -306,17 +304,14 @@ class Settings
 			");
 
 			foreach ($settings_data['groups'] as $settings_part => $settings_part_details) {
-
 				if (is_array($settings_part_details) && isset($settings_part_details['fields']) && is_array($settings_part_details['fields'])) {
-
 					foreach ($settings_part_details['fields'] as $field_name => $field_details) {
-
 						if (isset($field_details['settinggroup']) && isset($field_details['varname']) && isset($field_details['default'])) {
 							// execute prepared statement
-							$row = Database::pexecute_first($row_stmt, array(
+							$row = Database::pexecute_first($row_stmt, [
 								'group' => $field_details['settinggroup'],
 								'varname' => $field_details['varname']
-							));
+							]);
 
 							if (!empty($row)) {
 								$varvalue = $row['value'];
@@ -344,7 +339,9 @@ class Settings
 		$result = self::$conf;
 		foreach ($sstr as $key) {
 			$result = $result[$key] ?? null;
-			if (empty($result)) break;
+			if (empty($result)) {
+				break;
+			}
 		}
 		return $result;
 	}

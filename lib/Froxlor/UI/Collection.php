@@ -1,24 +1,32 @@
 <?php
 
-namespace Froxlor\UI;
-
-use Froxlor\Settings;
-
 /**
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @author     Maurice Preuß <hello@envoyr.com>
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Collection
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
+
+namespace Froxlor\UI;
+
+use Froxlor\Settings;
+
 class Collection
 {
 	private string $class;
@@ -34,14 +42,14 @@ class Collection
 		$this->userinfo = $userInfo;
 	}
 
-	private function getListing($class, $params): array
+	public function getList(): array
 	{
-		return json_decode($class::getLocal($this->userinfo, $params)->listing(), true);
+		return $this->getData()['list'];
 	}
 
-	public function count(): int
+	public function getData(): array
 	{
-		return json_decode($this->class::getLocal($this->userinfo, $this->params)->listingCount(), true)['data'];
+		return $this->get()['data'];
 	}
 
 	public function get(): array
@@ -71,14 +79,9 @@ class Collection
 		return $result;
 	}
 
-	public function getData(): array
+	private function getListing($class, $params): array
 	{
-		return $this->get()['data'];
-	}
-
-	public function getList(): array
-	{
-		return $this->getData()['list'];
+		return json_decode($class::getLocal($this->userinfo, $params)->listing(), true);
 	}
 
 	public function getJson(): string
@@ -119,10 +122,15 @@ class Collection
 		*/
 
 		// Prepare pagination
-		$this->pagination = new Pagination($columns, $this->count(), (int) Settings::Get('panel.paging'));
+		$this->pagination = new Pagination($columns, $this->count(), (int)Settings::Get('panel.paging'));
 		$this->params = array_merge($this->params, $this->pagination->getApiCommandParams());
 
 		return $this;
+	}
+
+	public function count(): int
+	{
+		return json_decode($this->class::getLocal($this->userinfo, $this->params)->listingCount(), true)['data'];
 	}
 
 	public function getPagination(): ?Pagination

@@ -1,9 +1,34 @@
 <?php
 
+/**
+ * This file is part of the Froxlor project.
+ * Copyright (c) 2010 the Froxlor Team (see authors).
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
+ */
+
 namespace Froxlor\Cron;
 
+use ReflectionClass;
 
-class TaskId {
+class TaskId
+{
 	/**
 	 * TYPE=1 MEANS TO REBUILD APACHE VHOSTS.CONF
 	 */
@@ -52,33 +77,35 @@ class TaskId {
 	const DELETE_DOMAIN_PDNS = 11;
 
 	/**
-	* TYPE=12 domain has been deleted, remove from acme.sh/let's encrypt directory if used
+	 * TYPE=12 domain has been deleted, remove from acme.sh/let's encrypt directory if used
 	 */
 	const DELETE_DOMAIN_SSL = 12;
 
 	/**
-	* TYPE=20 COSTUMERBACKUP
+	 * TYPE=20 COSTUMERBACKUP
 	 */
 	const CREATE_CUSTOMER_BACKUP = 20;
 
 	/**
-	* TYPE=99 REGENERATE CRON
+	 * TYPE=99 REGENERATE CRON
 	 */
 	const REBUILD_CRON = 99;
 
 	/**
 	 * Return if a cron task id is valid
+	 *
 	 * @param int|string $id cron task id (legacy string support)
 	 * @return boolean
 	 */
-	public static function isValid($id) {
+	public static function isValid($id)
+	{
 		static $reflContants;
 		if (!is_numeric($id)) {
 			return false;
 		}
 		$numericid = (int)$id;
 		if (!is_array($reflContants)) {
-			$reflClass = new \ReflectionClass(get_called_class());
+			$reflClass = new ReflectionClass(get_called_class());
 			$reflContants = $reflClass->getConstants();
 		}
 		return in_array($numericid, $reflContants, true);
@@ -86,20 +113,21 @@ class TaskId {
 
 	/**
 	 * Get constant name by id
+	 *
 	 * @param int|string $id cron task id (legacy string support)
 	 * @return string|false constant name or false if not found
 	 */
-	public static function convertToConstant($id) {
+	public static function convertToConstant($id)
+	{
 		static $reflContants;
 		if (!is_numeric($id)) {
 			return false;
 		}
 		$numericid = (int)$id;
 		if (!is_array($reflContants)) {
-			$reflClass = new \ReflectionClass(get_called_class());
+			$reflClass = new ReflectionClass(get_called_class());
 			$reflContants = $reflClass->getConstants();
 		}
 		return array_search($numericid, $reflContants, true);
 	}
 }
-

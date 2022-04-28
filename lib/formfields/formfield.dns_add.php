@@ -4,30 +4,39 @@
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Formfields
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
-return array(
-	'dns_add' => array(
+
+return [
+	'dns_add' => [
 		'title' => 'DNS Editor',
 		'image' => 'fa-solid fa-globe',
-		'sections' => array(
-			'section_a' => array(
-				'fields' => array(
-					'dns_record' => array(
+		'sections' => [
+			'section_a' => [
+				'fields' => [
+					'dns_record' => [
 						'label' => 'Record',
 						'type' => 'text',
 						'value' => $record,
 						'mandatory' => true
-					),
-					'dns_type' => array(
+					],
+					'dns_type' => [
 						'label' => 'Type',
 						'type' => 'select',
 						'select_var' => [
@@ -45,25 +54,25 @@ return array(
 							'TXT' => 'TXT'
 						],
 						'selected' => $type
-					),
-					'dns_mxp' => array(
+					],
+					'dns_mxp' => [
 						'label' => 'Priority',
 						'type' => 'number',
 						'value' => $prio
-					),
-					'dns_content' => array(
+					],
+					'dns_content' => [
 						'label' => 'Content',
 						'type' => 'text',
 						'value' => $content
-					),
-					'dns_ttl' => array(
+					],
+					'dns_ttl' => [
 						'label' => 'TTL',
 						'type' => 'number',
 						'min' => 30,
 						'value' => $ttl
-					)
-				)
-			)
-		)
-	)
-);
+					]
+				]
+			]
+		]
+	]
+];

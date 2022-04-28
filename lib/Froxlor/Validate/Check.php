@@ -1,6 +1,32 @@
 <?php
+
+/**
+ * This file is part of the Froxlor project.
+ * Copyright (c) 2010 the Froxlor Team (see authors).
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
+ */
+
 namespace Froxlor\Validate;
 
+use Froxlor\Database\Database;
+use Froxlor\FileDir;
 use Froxlor\Settings;
 
 class Check
@@ -14,49 +40,49 @@ class Check
 
 	public static function checkFcgidPhpFpm($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues)
 	{
-		$returnvalue = array(
+		$returnvalue = [
 			self::FORMFIELDS_PLAUSIBILITY_CHECK_OK
-		);
+		];
 
-		$check_array = array(
-			'system_mod_fcgid_enabled' => array(
+		$check_array = [
+			'system_mod_fcgid_enabled' => [
 				'other_post_field' => 'system_phpfpm_enabled',
 				'other_enabled' => 'phpfpm.enabled',
 				'other_enabled_lng' => 'phpfpmstillenabled',
-				'deactivate' => array(
+				'deactivate' => [
 					'phpfpm.enabled_ownvhost' => 0
-				)
-			),
-			'system_phpfpm_enabled' => array(
+				]
+			],
+			'system_phpfpm_enabled' => [
 				'other_post_field' => 'system_mod_fcgid_enabled',
 				'other_enabled' => 'system.mod_fcgid',
 				'other_enabled_lng' => 'fcgidstillenabled',
-				'deactivate' => array(
+				'deactivate' => [
 					'system.mod_fcgid_ownvhost' => 0
-				)
-			)
-		);
+				]
+			]
+		];
 
 		// interface is to be enabled
-		if ((int) $newfieldvalue == 1) {
+		if ((int)$newfieldvalue == 1) {
 			// check for POST value of the other field == 1 (active)
-			if (isset($_POST[$check_array[$fieldname]['other_post_field']]) && (int) $_POST[$check_array[$fieldname]['other_post_field']] == 1) {
+			if (isset($_POST[$check_array[$fieldname]['other_post_field']]) && (int)$_POST[$check_array[$fieldname]['other_post_field']] == 1) {
 				// the other interface is activated already and STAYS activated
-				if ((int) Settings::Get($check_array[$fieldname]['other_enabled']) == 1) {
-					$returnvalue = array(
+				if ((int)Settings::Get($check_array[$fieldname]['other_enabled']) == 1) {
+					$returnvalue = [
 						self::FORMFIELDS_PLAUSIBILITY_CHECK_ERROR,
 						$check_array[$fieldname]['other_enabled_lng']
-					);
+					];
 				} else {
 					// fcgid is being validated before fpm -> "ask" fpm about its state
 					if ($fieldname == 'system_mod_fcgid_enabled') {
 						$returnvalue = self::checkFcgidPhpFpm('system_phpfpm_enabled', null, $check_array[$fieldname]['other_post_field'], null);
 					} else {
 						// not, bot are nogo
-						$returnvalue = $returnvalue = array(
+						$returnvalue = $returnvalue = [
 							self::FORMFIELDS_PLAUSIBILITY_CHECK_ERROR,
 							'fcgidandphpfpmnogoodtogether'
-						);
+						];
 					}
 				}
 			}
@@ -78,30 +104,30 @@ class Check
 
 		foreach ($mysql_access_host_array as $host_entry) {
 			if (Validate::validate_ip2($host_entry, true, 'invalidip', true, true, true, true, false) == false && Validate::validateDomain($host_entry) == false && Validate::validateLocalHostname($host_entry) == false && $host_entry != '%') {
-				return array(
+				return [
 					self::FORMFIELDS_PLAUSIBILITY_CHECK_ERROR,
 					'invalidmysqlhost',
 					$host_entry
-				);
+				];
 			}
 		}
 
-		return array(
+		return [
 			self::FORMFIELDS_PLAUSIBILITY_CHECK_OK
-		);
+		];
 	}
 
 	public static function checkHostname($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues)
 	{
 		if (0 == strlen(trim($newfieldvalue)) || Validate::validateDomain($newfieldvalue) === false) {
-			return array(
+			return [
 				self::FORMFIELDS_PLAUSIBILITY_CHECK_ERROR,
 				'invalidhostname'
-			);
+			];
 		} else {
-			return array(
+			return [
 				self::FORMFIELDS_PLAUSIBILITY_CHECK_OK
-			);
+			];
 		}
 	}
 
@@ -110,20 +136,20 @@ class Check
 	 * reference: #1519
 	 *
 	 * @return bool true if the domain is to be deleted, false otherwise
-	 *        
+	 *
 	 */
 	public static function checkMailAccDeletionState($email_addr = null)
 	{
 		// example data of task 7: a:2:{s:9:"loginname";s:4:"webX";s:5:"email";s:20:"deleteme@example.tld";}
 
 		// check for task
-		$result_tasks_stmt = \Froxlor\Database\Database::prepare("
+		$result_tasks_stmt = Database::prepare("
 			SELECT * FROM `" . TABLE_PANEL_TASKS . "` WHERE `type` = '7' AND `data` LIKE :emailaddr
 		");
-		\Froxlor\Database\Database::pexecute($result_tasks_stmt, array(
+		Database::pexecute($result_tasks_stmt, [
 			'emailaddr' => "%" . $email_addr . "%"
-		));
-		$num_results = \Froxlor\Database\Database::num_rows();
+		]);
+		$num_results = Database::num_rows();
 
 		// is there a task for deleting this email account?
 		if ($num_results > 0) {
@@ -134,32 +160,32 @@ class Check
 
 	public static function checkPathConflicts($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues)
 	{
-		if ((int) Settings::Get('system.mod_fcgid') == 1) {
+		if ((int)Settings::Get('system.mod_fcgid') == 1) {
 			// fcgid-configdir has changed -> check against customer-doc-prefix
 			if ($fieldname == "system_mod_fcgid_configdir") {
-				$newdir = \Froxlor\FileDir::makeCorrectDir($newfieldvalue);
-				$cdir = \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.documentroot_prefix'));
+				$newdir = FileDir::makeCorrectDir($newfieldvalue);
+				$cdir = FileDir::makeCorrectDir(Settings::Get('system.documentroot_prefix'));
 			} elseif ($fieldname == "system_documentroot_prefix") {
 				// customer-doc-prefix has changed -> check against fcgid-configdir
-				$newdir = \Froxlor\FileDir::makeCorrectDir($newfieldvalue);
-				$cdir = \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.mod_fcgid_configdir'));
+				$newdir = FileDir::makeCorrectDir($newfieldvalue);
+				$cdir = FileDir::makeCorrectDir(Settings::Get('system.mod_fcgid_configdir'));
 			}
 
 			// neither dir can be within the other nor can they be equal
 			if (substr($newdir, 0, strlen($cdir)) == $cdir || substr($cdir, 0, strlen($newdir)) == $newdir || $newdir == $cdir) {
-				$returnvalue = array(
+				$returnvalue = [
 					self::FORMFIELDS_PLAUSIBILITY_CHECK_ERROR,
 					'fcgidpathcannotbeincustomerdoc'
-				);
+				];
 			} else {
-				$returnvalue = array(
+				$returnvalue = [
 					self::FORMFIELDS_PLAUSIBILITY_CHECK_OK
-				);
+				];
 			}
 		} else {
-			$returnvalue = array(
+			$returnvalue = [
 				self::FORMFIELDS_PLAUSIBILITY_CHECK_OK
-			);
+			];
 		}
 
 		return $returnvalue;
@@ -167,17 +193,17 @@ class Check
 
 	public static function checkPhpInterfaceSetting($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues)
 	{
-		$returnvalue = array(
+		$returnvalue = [
 			self::FORMFIELDS_PLAUSIBILITY_CHECK_OK
-		);
+		];
 
-		if ((int) Settings::Get('system.mod_fcgid') == 1) {
+		if ((int)Settings::Get('system.mod_fcgid') == 1) {
 			// fcgid only works for apache and lighttpd
 			if (strtolower($newfieldvalue) != 'apache2' && strtolower($newfieldvalue) != 'lighttpd') {
-				$returnvalue = array(
+				$returnvalue = [
 					self::FORMFIELDS_PLAUSIBILITY_CHECK_ERROR,
 					'fcgidstillenableddeadlock'
-				);
+				];
 			}
 		}
 
@@ -186,24 +212,24 @@ class Check
 
 	public static function checkUsername($fieldname, $fielddata, $newfieldvalue, $allnewfieldvalues)
 	{
-		if (! isset($allnewfieldvalues['customer_mysqlprefix'])) {
+		if (!isset($allnewfieldvalues['customer_mysqlprefix'])) {
 			$allnewfieldvalues['customer_mysqlprefix'] = Settings::Get('customer.mysqlprefix');
 		}
 
-		$returnvalue = array();
-		if (Validate::validateUsername($newfieldvalue, Settings::Get('panel.unix_names'), \Froxlor\Database\Database::getSqlUsernameLength() - strlen($allnewfieldvalues['customer_mysqlprefix'])) === true) {
-			$returnvalue = array(
+		$returnvalue = [];
+		if (Validate::validateUsername($newfieldvalue, Settings::Get('panel.unix_names'), Database::getSqlUsernameLength() - strlen($allnewfieldvalues['customer_mysqlprefix'])) === true) {
+			$returnvalue = [
 				self::FORMFIELDS_PLAUSIBILITY_CHECK_OK
-			);
+			];
 		} else {
 			$errmsg = 'accountprefixiswrong';
 			if ($fieldname == 'customer_mysqlprefix') {
 				$errmsg = 'mysqlprefixiswrong';
 			}
-			$returnvalue = array(
+			$returnvalue = [
 				self::FORMFIELDS_PLAUSIBILITY_CHECK_ERROR,
 				$errmsg
-			);
+			];
 		}
 		return $returnvalue;
 	}

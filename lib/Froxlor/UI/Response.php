@@ -1,6 +1,32 @@
 <?php
 
+/**
+ * This file is part of the Froxlor project.
+ * Copyright (c) 2010 the Froxlor Team (see authors).
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * https://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
+ */
+
 namespace Froxlor\UI;
+
+use Exception;
+use Froxlor\UI\Panel\UI;
 
 class Response
 {
@@ -9,12 +35,12 @@ class Response
 	 * Sends an header ( 'Location ...' ) to the browser.
 	 *
 	 * @param string $destination
-	 *        	Destination
+	 *            Destination
 	 * @param array $get_variables
-	 *        	Get-Variables
+	 *            Get-Variables
 	 * @param boolean $isRelative
-	 *        	if the target we are creating for a redirect
-	 *        	should be a relative or an absolute url
+	 *            if the target we are creating for a redirect
+	 *            should be a relative or an absolute url
 	 *
 	 * @return boolean false if params is not an array
 	 */
@@ -62,15 +88,15 @@ class Response
 	 * Prints one ore more errormessages on screen
 	 *
 	 * @param array $errors
-	 *        	Errormessages
+	 *            Errormessages
 	 * @param string $replacer
-	 *        	A %s in the errormessage will be replaced by this string.
+	 *            A %s in the errormessage will be replaced by this string.
 	 * @param bool $throw_exception
 	 *
-	 * @author Florian Lippert <flo@syscp.org>
+	 * @author Florian Lippert <flo@syscp.org> (2003-2009)
 	 * @author Ron Brand <ron.brand@web.de>
 	 */
-	public static function standard_error($errors = '', $replacer = '', $throw_exception = false)
+	public static function standardError($errors = '', $replacer = '', $throw_exception = false)
 	{
 		global $lng;
 
@@ -78,9 +104,9 @@ class Response
 		$replacer = htmlentities($replacer);
 
 		if (!is_array($errors)) {
-			$errors = array(
+			$errors = [
 				$errors
-			);
+			];
 		}
 
 		$link_ref = '';
@@ -92,9 +118,9 @@ class Response
 		foreach ($errors as $single_error) {
 			if (isset($lng['error'][$single_error])) {
 				$single_error = $lng['error'][$single_error];
-				$single_error = strtr($single_error, array(
+				$single_error = strtr($single_error, [
 					'%s' => $replacer
-				));
+				]);
 			} else {
 				$error = 'Unknown Error (' . $single_error . '): ' . $replacer;
 				break;
@@ -108,9 +134,9 @@ class Response
 		}
 
 		if ($throw_exception) {
-			throw new \Exception(strip_tags($error), 400);
+			throw new Exception(strip_tags($error), 400);
 		}
-		\Froxlor\UI\Panel\UI::view('misc/alert.html.twig', [
+		UI::view('misc/alert.html.twig', [
 			'type' => 'danger',
 			'btntype' => 'light',
 			'heading' => $lng['error']['error'],
@@ -120,7 +146,7 @@ class Response
 		exit;
 	}
 
-	public static function dynamic_error($message)
+	public static function dynamicError($message)
 	{
 		global $lng;
 		$_SESSION['requestData'] = $_POST;
@@ -129,7 +155,7 @@ class Response
 			$link_ref = htmlentities($_SERVER['HTTP_REFERER']);
 		}
 
-		\Froxlor\UI\Panel\UI::view('misc/alert.html.twig', [
+		UI::view('misc/alert.html.twig', [
 			'type' => 'danger',
 			'btntype' => 'light',
 			'heading' => $lng['error']['error'],
@@ -143,26 +169,26 @@ class Response
 	 * Prints one ore more errormessages on screen
 	 *
 	 * @param array $success_message
-	 *        	Errormessages
+	 *            Errormessages
 	 * @param string $replacer
-	 *        	A %s in the errormessage will be replaced by this string.
+	 *            A %s in the errormessage will be replaced by this string.
 	 * @param array $params
 	 * @param bool $throw_exception
 	 *
-	 * @author Florian Lippert <flo@syscp.org>
+	 * @author Florian Lippert <flo@syscp.org> (2003-2009)
 	 */
-	public static function standard_success($success_message = '', $replacer = '', $params = array(), $throw_exception = false)
+	public static function standardSuccess($success_message = '', $replacer = '', $params = [], $throw_exception = false)
 	{
 		global $lng;
 
 		if (isset($lng['success'][$success_message])) {
-			$success_message = strtr($lng['success'][$success_message], array(
+			$success_message = strtr($lng['success'][$success_message], [
 				'%s' => htmlentities($replacer)
-			));
+			]);
 		}
 
 		if ($throw_exception) {
-			throw new \Exception(strip_tags($success_message), 200);
+			throw new Exception(strip_tags($success_message), 200);
 		}
 
 		if (is_array($params) && isset($params['filename'])) {
@@ -173,14 +199,16 @@ class Response
 			foreach ($params as $varname => $value) {
 				if ($value != '') {
 					$redirect_url .= ($first ? '?' : '&amp;') . $varname . '=' . $value;
-					if ($first) $first = false;
+					if ($first) {
+						$first = false;
+					}
 				}
 			}
 		} else {
 			$redirect_url = '';
 		}
 
-		\Froxlor\UI\Panel\UI::view('misc/alert.html.twig', [
+		UI::view('misc/alert.html.twig', [
 			'type' => 'success',
 			'btntype' => 'light',
 			'heading' => $lng['success']['success'],
