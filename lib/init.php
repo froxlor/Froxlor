@@ -26,13 +26,6 @@
 // define default theme for configurehint, etc.
 $_deftheme = 'Froxlor';
 
-function view($template, $attributes)
-{
-	$view = file_get_contents(dirname(__DIR__) . '/templates/' . $template);
-
-	return str_replace(array_keys($attributes), array_values($attributes), $view);
-}
-
 // validate correct php version
 if (version_compare("7.4.0", PHP_VERSION, ">=")) {
 	die(view($_deftheme . '/misc/phprequirementfailed.html.twig', [

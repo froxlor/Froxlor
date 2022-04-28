@@ -34,8 +34,8 @@ class Install
 	public string $requiredVersion = '7.4.0';
 	public array $requiredExtensions = ['libxml', 'zip'];
 	public array $suggestedExtensions = ['curl'];
-	public array $suggestions;
-	public array $criticals;
+	public array $suggestions = [];
+	public array $criticals = [];
 
 	public function __construct()
 	{
@@ -76,7 +76,7 @@ class Install
 
 	public function handle()
 	{
-		$formfield = require dirname(__DIR__) . '/lib/formfields/install/formfield.install.php';
+		$formfield = require dirname(__DIR__, 3) . '/lib/formfields/install/formfield.install.php';
 
 		// init twig
 		UI::initTwig(true);
