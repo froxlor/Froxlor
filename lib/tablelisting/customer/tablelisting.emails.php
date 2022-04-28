@@ -4,16 +4,23 @@
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @author     Maurice Preuß <hello@envoyr.com>
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Tabellisting
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * http://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    http://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
 use Froxlor\Settings;
@@ -23,32 +30,32 @@ use Froxlor\UI\Listing;
 
 return [
 	'email_list' => [
-		'title' => $lng['menue']['email']['emails'],
+		'title' => lng('menue.email.emails'),
 		'icon' => 'fa-solid fa-envelope',
 		'self_overview' => ['section' => 'email', 'page' => 'emails'],
 		'columns' => [
 			'm.email_full' => [
-				'label' => $lng['emails']['emailaddress'],
+				'label' => lng('emails.emailaddress'),
 				'field' => 'email_full',
 			],
 			'm.destination' => [
-				'label' => $lng['emails']['forwarders'],
+				'label' => lng('emails.forwarders'),
 				'field' => 'destination',
 				// @todo formatting
 			],
 			'm.popaccountid' => [
-				'label' => $lng['emails']['account'],
+				'label' => lng('emails.account'),
 				'field' => 'popaccountid',
 				'callback' => [Email::class, 'account'],
 			],
 			'm.iscatchall' => [
-				'label' => $lng['emails']['catchall'],
+				'label' => lng('emails.catchall'),
 				'field' => 'iscatchall',
 				'callback' => [Text::class, 'boolean'],
 				'visible' => Settings::Get('catchall.catchall_enabled') == '1'
 			],
 			'm.quota' => [
-				'label' => $lng['emails']['quota'],
+				'label' => lng('emails.quota'),
 				'field' => 'quota',
 				'visible' => Settings::Get('system.mail_quota_enabled') == '1'
 			]
@@ -63,7 +70,7 @@ return [
 		'actions' => [
 			'edit' => [
 				'icon' => 'fa fa-edit',
-				'title' => $lng['panel']['edit'],
+				'title' => lng('panel.edit'),
 				'href' => [
 					'section' => 'email',
 					'page' => 'emails',
@@ -73,7 +80,7 @@ return [
 			],
 			'delete' => [
 				'icon' => 'fa fa-trash',
-				'title' => $lng['panel']['delete'],
+				'title' => lng('panel.delete'),
 				'class' => 'btn-danger',
 				'href' => [
 					'section' => 'email',

@@ -4,16 +4,23 @@
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @author     Maurice Preuß <hello@envoyr.com>
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Tabellisting
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * http://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    http://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
 use Froxlor\Settings;
@@ -24,33 +31,33 @@ use Froxlor\UI\Listing;
 
 return [
 	'sslcertificates_list' => [
-		'title' => $lng['domains']['ssl_certificates'],
+		'title' => lng('domains.ssl_certificates'),
 		'icon' => 'fa-solid fa-shield',
 		'columns' => [
 			'd.domain' => [
-				'label' => $lng['domains']['domainname'],
+				'label' => lng('domains.domainname'),
 				'field' => 'domains.domain_ace',
 				'callback' => [Domain::class, 'domainWithCustomerLink'],
 			],
 			'c.domain' => [
-				'label' => $lng['ssl_certificates']['certificate_for'],
+				'label' => lng('ssl_certificates.certificate_for'),
 				'field' => 'domain',
 				'callback' => [SSLCertificate::class, 'domainWithSan'],
 			],
 			'c.issuer' => [
-				'label' => $lng['ssl_certificates']['issuer'],
+				'label' => lng('ssl_certificates.issuer'),
 				'field' => 'issuer',
 			],
 			'c.validfromdate' => [
-				'label' => $lng['ssl_certificates']['valid_from'],
+				'label' => lng('ssl_certificates.valid_from'),
 				'field' => 'validfromdate',
 			],
 			'c.validtodate' => [
-				'label' => $lng['ssl_certificates']['valid_until'],
+				'label' => lng('ssl_certificates.valid_until'),
 				'field' => 'validtodate',
 			],
 			'c.letsencrypt' => [
-				'label' => $lng['panel']['letsencrypt'],
+				'label' => lng('panel.letsencrypt'),
 				'field' => 'letsencrypt',
 				'class' => 'text-center',
 				'callback' => [Text::class, 'boolean'],
@@ -68,7 +75,7 @@ return [
 		'actions' => [
 			'delete' => [
 				'icon' => 'fa fa-trash',
-				'title' => $lng['panel']['delete'],
+				'title' => lng('panel.delete'),
 				'class' => 'btn-danger',
 				'href' => [
 					'section' => 'domains',

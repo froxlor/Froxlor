@@ -4,16 +4,23 @@
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @author     Maurice Preuß <hello@envoyr.com>
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Tabellisting
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * http://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    http://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
 use Froxlor\UI\Callbacks\Style;
@@ -24,9 +31,9 @@ use Froxlor\UI\Listing;
 
 return [
 	'domain_list' => [
-		'title' => $lng['admin']['domains'],
+		'title' => lng('admin.domains'),
 		'icon' => 'fa-solid fa-globe',
-		'empty_msg' => $lng['admin']['domain_nocustomeraddingavailable'],
+		'empty_msg' => lng('admin.domain_nocustomeraddingavailable'),
 		'self_overview' => ['section' => 'domains', 'page' => 'domains'],
 		'columns' => [
 			'd.id' => [
@@ -35,94 +42,94 @@ return [
 				'sortable' => true,
 			],
 			'd.domain_ace' => [
-				'label' => $lng['domains']['domainname'],
+				'label' => lng('domains.domainname'),
 				'field' => 'domain_ace',
 			],
 			'c.name' => [
-				'label' => $lng['customer']['name'],
+				'label' => lng('customer.name'),
 				'field' => 'customer.name',
 				'callback' => [Text::class, 'customerfullname'],
 			],
 			'c.loginname' => [
-				'label' => $lng['login']['username'],
+				'label' => lng('login.username'),
 				'field' => 'customer.loginname',
 				'callback' => [Impersonate::class, 'customer'],
 			],
 			'd.aliasdomain' => [
-				'label' => $lng['domains']['aliasdomain'],
+				'label' => lng('domains.aliasdomain'),
 				'field' => 'aliasdomain',
 			],
 			'd.documentroot' => [
-				'label' => $lng['domains']['documentroot'],
+				'label' => lng('domains.documentroot'),
 				'field' => 'documentroot',
 			],
 			'd.isbinddomain' => [
-				'label' => $lng['domains']['isbinddomain'],
+				'label' => lng('domains.isbinddomain'),
 				'field' => 'isbinddomain',
 				'callback' => [Text::class, 'boolean'],
 			],
 			'd.isemaildomain' => [
-				'label' => $lng['domains']['isemaildomain'],
+				'label' => lng('domains.isemaildomain'),
 				'field' => 'isemaildomain',
 				'callback' => [Text::class, 'boolean'],
 			],
 			'd.email_only' => [
-				'label' => $lng['domains']['email_only'],
+				'label' => lng('domains.email_only'),
 				'field' => 'email_only',
 				'callback' => [Text::class, 'boolean'],
 			],
 			'd.iswildcarddomain' => [
-				'label' => $lng['domains']['iswildcarddomain'],
+				'label' => lng('domains.iswildcarddomain'),
 				'field' => 'iswildcarddomain',
 				'callback' => [Text::class, 'boolean'],
 			],
 			'd.subcanemaildomain' => [
-				'label' => $lng['domains']['subcanemaildomain'],
+				'label' => lng('domains.subcanemaildomain'),
 				'field' => 'subcanemaildomain',
 				'callback' => [Text::class, 'boolean'],
 			],
 			'd.caneditdomain' => [
-				'label' => $lng['domains']['caneditdomain'],
+				'label' => lng('domains.caneditdomain'),
 				'field' => 'caneditdomain',
 				'callback' => [Text::class, 'boolean'],
 			],
 			'd.dkim' => [
-				'label' => $lng['domains']['dkim'],
+				'label' => lng('domains.dkim'),
 				'field' => 'dkim',
 				'callback' => [Text::class, 'boolean'],
 			],
 			'd.phpenabled' => [
-				'label' => $lng['admin']['phpenabled'],
+				'label' => lng('admin.phpenabled'),
 				'field' => 'phpenabled',
 				'callback' => [Text::class, 'boolean'],
 			],
 			'd.openbasedir' => [
-				'label' => $lng['domains']['openbasedir'],
+				'label' => lng('domains.openbasedir'),
 				'field' => 'openbasedir',
 				'callback' => [Text::class, 'boolean'],
 			],
 			'd.speciallogfile' => [
-				'label' => $lng['domains']['speciallogfile'],
+				'label' => lng('domains.speciallogfile'),
 				'field' => 'speciallogfile',
 				'callback' => [Text::class, 'boolean'],
 			],
 			'd.hsts' => [
-				'label' => $lng['domains']['hsts'],
+				'label' => lng('domains.hsts'),
 				'field' => 'hsts',
 				'callback' => [Text::class, 'boolean'],
 			],
 			'd.http2' => [
-				'label' => $lng['domains']['http2'],
+				'label' => lng('domains.http2'),
 				'field' => 'http2',
 				'callback' => [Text::class, 'boolean'],
 			],
 			'd.letsencrypt' => [
-				'label' => $lng['domains']['letsencrypt'],
+				'label' => lng('domains.letsencrypt'),
 				'field' => 'letsencrypt',
 				'callback' => [Text::class, 'boolean'],
 			],
 			'd.deactivated' => [
-				'label' => $lng['domains']['deactivated'],
+				'label' => lng('domains.deactivated'),
 				'field' => 'deactivated',
 				'callback' => [Text::class, 'boolean'],
 			],
@@ -136,7 +143,7 @@ return [
 		'actions' => [
 			'edit' => [
 				'icon' => 'fa fa-edit',
-				'title' => $lng['panel']['edit'],
+				'title' => lng('panel.edit'),
 				'href' => [
 					'section' => 'domains',
 					'page' => 'domains',
@@ -146,7 +153,7 @@ return [
 			],
 			'logfiles' => [
 				'icon' => 'fa fa-file',
-				'title' => $lng['panel']['viewlogs'],
+				'title' => lng('panel.viewlogs'),
 				'href' => [
 					'section' => 'domains',
 					'page' => 'logfiles',
@@ -156,7 +163,7 @@ return [
 			],
 			'domaindnseditor' => [
 				'icon' => 'fa fa-globe',
-				'title' => $lng['dnseditor']['edit'],
+				'title' => lng('dnseditor.edit'),
 				'href' => [
 					'section' => 'domains',
 					'page' => 'domaindnseditor',
@@ -166,7 +173,7 @@ return [
 			],
 			'domainssleditor' => [
 				'icon' => 'fa fa-shield',
-				'title' => $lng['panel']['ssleditor'], // @todo different certificate types by $row['domain_hascert']
+				'title' => lng('panel.ssleditor'), // @todo different certificate types by $row['domain_hascert']
 				'href' => [
 					'section' => 'domains',
 					'page' => 'domainssleditor',
@@ -177,12 +184,12 @@ return [
 			],
 			'letsencrypt' => [
 				'icon' => 'fa fa-shield',
-				'title' => $lng['panel']['letsencrypt'],
+				'title' => lng('panel.letsencrypt'),
 				'visible' => [Domain::class, 'hasLetsEncryptActivated']
 			],
 			'delete' => [
 				'icon' => 'fa fa-trash',
-				'title' => $lng['panel']['delete'],
+				'title' => lng('panel.delete'),
 				'class' => 'btn-danger',
 				'href' => [
 					'section' => 'domains',

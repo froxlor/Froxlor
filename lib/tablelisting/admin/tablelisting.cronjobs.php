@@ -4,15 +4,23 @@
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright  (c) the authors
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Tabellisting
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * http://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    http://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
 use Froxlor\UI\Callbacks\Text;
@@ -20,25 +28,25 @@ use Froxlor\UI\Listing;
 
 return [
 	'cron_list' => [
-		'title' => $lng['admin']['cron']['cronsettings'],
+		'title' => lng('admin.cron.cronsettings'),
 		'icon' => 'fa-solid fa-clock-rotate-left',
 		'columns' => [
 			'c.description' => [
-				'label' => $lng['cron']['description'],
+				'label' => lng('cron.description'),
 				'field' => 'desc_lng_key',
 				'callback' => [Text::class, 'crondesc']
 			],
 			'c.lastrun' => [
-				'label' => $lng['cron']['lastrun'],
+				'label' => lng('cron.lastrun'),
 				'field' => 'lastrun',
 				'callback' => [Text::class, 'timestamp']
 			],
 			'c.interval' => [
-				'label' => $lng['cron']['interval'],
+				'label' => lng('cron.interval'),
 				'field' => 'interval'
 			],
 			'c.isactive' => [
-				'label' => $lng['cron']['isactive'],
+				'label' => lng('cron.isactive'),
 				'field' => 'isactive',
 				'callback' => [Text::class, 'boolean']
 			],
@@ -52,7 +60,7 @@ return [
 		'actions' => [
 			'edit' => [
 				'icon' => 'fa fa-edit',
-				'title' => $lng['panel']['edit'],
+				'title' => lng('panel.edit'),
 				'href' => [
 					'section' => 'cronjobs',
 					'page' => 'overview',
