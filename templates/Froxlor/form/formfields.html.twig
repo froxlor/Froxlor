@@ -61,6 +61,13 @@
 	{% endif %}
 {% endmacro %}
 
+{% macro field(id, field, norow = true, nohide = false, em = false) %}
+	<div class="mb-3">
+		<label for="{{ id }}" class="form-label">{{ field.label }}</label>
+		{{ _self.fieldrow(id, field, norow, nohide, em) }}
+	</div>
+{% endmacro %}
+
 {% macro bool(id, field) %}
 	{% if field.is_array is defined and field.is_array == 1 and field.values is not empty %}
 		{% for subfield in field.values %}

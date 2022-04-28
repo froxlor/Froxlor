@@ -1,4 +1,5 @@
 <?php
+
 namespace Froxlor;
 
 use Froxlor\Database\Database;
@@ -10,12 +11,12 @@ class FileDir
 	 * Wrapper around the exec command.
 	 *
 	 * @param string $exec_string
-	 *        	command to be executed
+	 *            command to be executed
 	 * @param string $return_value
-	 *        	referenced variable where the output is stored
+	 *            referenced variable where the output is stored
 	 * @param array $allowedChars
-	 *        	optional array of allowed characters in path/command
-	 *        	
+	 *            optional array of allowed characters in path/command
+	 *
 	 * @return array result of exec()
 	 */
 	public static function safe_exec($exec_string, &$return_value = false, $allowedChars = null)
@@ -38,8 +39,9 @@ class FileDir
 		}
 
 		foreach ($disallowed as $dc) {
-			if ($acheck && in_array($dc, $allowedChars))
+			if ($acheck && in_array($dc, $allowedChars)) {
 				continue;
+			}
 			// check for bad signs in execute command
 			if (stristr($exec_string, $dc)) {
 				die("SECURITY CHECK FAILED!\nThe execute string '" . $exec_string . "' is a possible security risk!\nPlease check your whole server for security problems by hand!\n");
@@ -65,22 +67,28 @@ class FileDir
 	 * (Copied from cron_tasks.php:rev1189 as we'll need this more often in future)
 	 *
 	 * @param string $homeDir
-	 *        	The homedir of the user
+	 *            The homedir of the user
 	 * @param string $dirToCreate
-	 *        	The dir which should be created
+	 *            The dir which should be created
 	 * @param int $uid
-	 *        	The uid of the user
+	 *            The uid of the user
 	 * @param int $gid
-	 *        	The gid of the user
+	 *            The gid of the user
 	 * @param bool $placeindex
-	 *        	Place standard-index.html into the new folder
+	 *            Place standard-index.html into the new folder
 	 * @param bool $allow_notwithinhomedir
-	 *        	Allow creating a directory out of the customers docroot
-	 *        	
+	 *            Allow creating a directory out of the customers docroot
+	 *
 	 * @return bool true if everything went okay, false if something went wrong
 	 */
-	public static function mkDirWithCorrectOwnership($homeDir, $dirToCreate, $uid, $gid, $placeindex = false, $allow_notwithinhomedir = false)
-	{
+	public static function mkDirWithCorrectOwnership(
+		$homeDir,
+		$dirToCreate,
+		$uid,
+		$gid,
+		$placeindex = false,
+		$allow_notwithinhomedir = false
+	) {
 		if ($homeDir != '' && $dirToCreate != '') {
 			$homeDir = self::makeCorrectDir($homeDir);
 			$dirToCreate = self::makeCorrectDir($dirToCreate);
@@ -96,14 +104,14 @@ class FileDir
 			$subdir = self::makeCorrectDir($subdir);
 			$subdirs = array();
 
-			if ($within_homedir || ! $allow_notwithinhomedir) {
+			if ($within_homedir || !$allow_notwithinhomedir) {
 				$subdirlen = strlen($subdir);
 				$offset = 0;
 
 				while ($offset < $subdirlen) {
 					$offset = strpos($subdir, '/', $offset);
 					$subdirelem = substr($subdir, 0, $offset);
-					$offset ++;
+					$offset++;
 					array_push($subdirs, self::makeCorrectDir($homeDir . $subdirelem));
 				}
 			} else {
@@ -113,7 +121,7 @@ class FileDir
 			$subdirs = array_unique($subdirs);
 			sort($subdirs);
 			foreach ($subdirs as $sdir) {
-				if (! is_dir($sdir)) {
+				if (!is_dir($sdir)) {
 					$sdir = self::makeCorrectDir($sdir);
 					self::safe_exec('mkdir -p ' . escapeshellarg($sdir));
 					// place index
@@ -123,7 +131,7 @@ class FileDir
 							self::storeDefaultIndex($loginname, $sdir, null);
 						}
 					}
-					self::safe_exec('chown -R ' . (int) $uid . ':' . (int) $gid . ' ' . escapeshellarg($sdir));
+					self::safe_exec('chown -R ' . (int)$uid . ':' . (int)$gid . ' ' . escapeshellarg($sdir));
 				}
 			}
 			return true;
@@ -143,7 +151,6 @@ class FileDir
 	 */
 	public static function checkDisallowedPaths($path = null)
 	{
-
 		/*
 		 * disallow base-directories and /
 		 */
@@ -181,19 +188,19 @@ class FileDir
 	 * store the default index-file in a given destination folder
 	 *
 	 * @param string $loginname
-	 *        	customers loginname
+	 *            customers loginname
 	 * @param string $destination
-	 *        	path where to create the file
+	 *            path where to create the file
 	 * @param object $logger
-	 *        	FroxlorLogger object
+	 *            FroxlorLogger object
 	 * @param boolean $force
-	 *        	force creation whatever the settings say (needed for task #2, create new user)
-	 *        	
+	 *            force creation whatever the settings say (needed for task #2, create new user)
+	 *
 	 * @return null
 	 */
 	public static function storeDefaultIndex($loginname = null, $destination = null, $logger = null, $force = false)
 	{
-		if ($force || (int) Settings::Get('system.store_index_file_subs') == 1) {
+		if ($force || (int)Settings::Get('system.store_index_file_subs') == 1) {
 			$result_stmt = Database::prepare("
 			SELECT `t`.`value`, `c`.`email` AS `customer_email`, `a`.`email` AS `admin_email`, `c`.`loginname` AS `customer_login`, `a`.`loginname` AS `admin_login`
 			FROM `" . TABLE_PANEL_CUSTOMERS . "` AS `c` INNER JOIN `" . TABLE_PANEL_ADMINS . "` AS `a`
@@ -206,7 +213,6 @@ class FileDir
 			));
 
 			if (Database::num_rows() > 0) {
-
 				$template = $result_stmt->fetch(\PDO::FETCH_ASSOC);
 
 				$replace_arr = array(
@@ -224,12 +230,14 @@ class FileDir
 				fwrite($index_html_handler, $htmlcontent);
 				fclose($index_html_handler);
 				if ($logger !== null) {
-					$logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Creating \'index.' . Settings::Get('system.index_file_extension') . '\' for Customer \'' . $template['customer_login'] . '\' based on template in directory ' . escapeshellarg($indexhtmlpath));
+					$logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE,
+						'Creating \'index.' . Settings::Get('system.index_file_extension') . '\' for Customer \'' . $template['customer_login'] . '\' based on template in directory ' . escapeshellarg($indexhtmlpath));
 				}
 			} else {
 				$destination = self::makeCorrectDir($destination);
 				if ($logger !== null) {
-					$logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Running: cp -a ' . \Froxlor\Froxlor::getInstallDir() . '/templates/misc/standardcustomer/* ' . escapeshellarg($destination));
+					$logger->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_NOTICE,
+						'Running: cp -a ' . \Froxlor\Froxlor::getInstallDir() . '/templates/misc/standardcustomer/* ' . escapeshellarg($destination));
 				}
 				self::safe_exec('cp -a ' . \Froxlor\Froxlor::getInstallDir() . '/templates/misc/standardcustomer/* ' . escapeshellarg($destination));
 			}
@@ -241,13 +249,13 @@ class FileDir
 	 * Function which returns a correct filename, means to add a slash at the beginning if there wasn't one
 	 *
 	 * @param string $filename
-	 *        	the filename
-	 *        	
+	 *            the filename
+	 *
 	 * @return string the corrected filename
 	 */
 	public static function makeCorrectFile($filename)
 	{
-		if (! isset($filename) || trim($filename) == '') {
+		if (!isset($filename) || trim($filename) == '') {
 			$error = 'Given filename for function ' . __FUNCTION__ . ' is empty.' . "\n";
 			$error .= 'This is very dangerous and should not happen.' . "\n";
 			$error .= 'Please inform the Froxlor team about this issue so they can fix it.';
@@ -266,19 +274,20 @@ class FileDir
 	}
 
 	/**
-	 * Function which returns a correct dirname, means to add slashes at the beginning and at the end if there weren't some
+	 * Function which returns a correct dirname, means to add slashes at the beginning and at the end if there weren't
+	 * some
 	 *
 	 * @param string $path
-	 *        	the path to correct
-	 *        	
-	 * @throws \Exception
+	 *            the path to correct
+	 *
 	 * @return string the corrected path
+	 * @throws \Exception
 	 */
 	public static function makeCorrectDir($dir)
 	{
 		if (is_string($dir) && strlen($dir) > 0) {
 			$dir = trim($dir);
-			if (substr($dir, - 1, 1) != '/') {
+			if (substr($dir, -1, 1) != '/') {
 				$dir .= '/';
 			}
 			if (substr($dir, 0, 1) != '/') {
@@ -293,13 +302,12 @@ class FileDir
 	 * Function which returns a secure path, means to remove all multiple dots and slashes
 	 *
 	 * @param string $path
-	 *        	the path to secure
-	 *        	
+	 *            the path to secure
+	 *
 	 * @return string the corrected path
 	 */
 	public static function makeSecurePath($path)
 	{
-
 		// check for bad characters, some are allowed with escaping
 		// but we generally don't want them in our directory-names,
 		// thx to aaronmueller for this snipped
@@ -341,7 +349,7 @@ class FileDir
 	 * Function which returns a correct destination for Postfix Virtual Table
 	 *
 	 * @param
-	 *        	string The destinations
+	 *            string The destinations
 	 * @return string the corrected destinations
 	 * @author Florian Lippert <flo@syscp.org>
 	 */
@@ -355,7 +363,7 @@ class FileDir
 			$destination = substr($destination, 1);
 		}
 
-		if (substr($destination, - 1, 1) == ' ') {
+		if (substr($destination, -1, 1) == ' ') {
 			$destination = substr($destination, 0, strlen($destination) - 1);
 		}
 
@@ -366,16 +374,16 @@ class FileDir
 	 * Returns a valid html tag for the chosen $fieldType for paths
 	 *
 	 * @param
-	 *        	string path The path to start searching in
+	 *            string path The path to start searching in
 	 * @param
-	 *        	integer uid The uid which must match the found directories
+	 *            integer uid The uid which must match the found directories
 	 * @param
-	 *        	integer gid The gid which must match the found directories
+	 *            integer gid The gid which must match the found directories
 	 * @param
-	 *        	string value the value for the input-field
-	 *        	
+	 *            string value the value for the input-field
+	 *
 	 * @return string The html tag for the chosen $fieldType
-	 *        
+	 *
 	 * @author Martin Burchert <martin.burchert@syscp.de>
 	 * @author Manuel Bernhardt <manuel.bernhardt@syscp.de>
 	 */
@@ -390,21 +398,18 @@ class FileDir
 		// but dirList holds the paths with starting slash
 		// so we just add one here to get the correct
 		// default path selected, #225
-		if (substr($value, 0, 1) != '/' && ! $dom) {
+		if (substr($value, 0, 1) != '/' && !$dom) {
 			$value = '/' . $value;
 		}
 
 		$fieldType = strtolower(\Froxlor\Settings::Get('panel.pathedit'));
 
 		if ($fieldType == 'manual') {
-
 			$field = array(
 				'type' => 'text',
 				'value' => htmlspecialchars($value)
 			);
-		
 		} elseif ($fieldType == 'dropdown') {
-
 			$dirList = self::findDirs($path, $uid, $gid);
 			natcasesort($dirList);
 
@@ -459,12 +464,12 @@ class FileDir
 	 * the found directory is valid. It uses recursive-iterators to find subdirectories.
 	 *
 	 * @param string $path
-	 *        	the path to start searching in
+	 *            the path to start searching in
 	 * @param int $uid
-	 *        	the uid which must match the found directories
+	 *            the uid which must match the found directories
 	 * @param int $gid
-	 *        	the gid which must match the found directories
-	 *        	
+	 *            the gid which must match the found directories
+	 *
 	 * @return array Array of found valid paths
 	 */
 	private static function findDirs($path, $uid, $gid)
@@ -474,7 +479,6 @@ class FileDir
 
 		// valid directory?
 		if (is_dir($path)) {
-
 			// Will exclude everything under these directories
 			$exclude = array(
 				'awstats',
@@ -496,7 +500,8 @@ class FileDir
 			};
 
 			// create RecursiveIteratorIterator
-			$its = new \RecursiveIteratorIterator(new \RecursiveCallbackFilterIterator(new \RecursiveDirectoryIterator($path, \RecursiveDirectoryIterator::SKIP_DOTS), $filter));
+			$its = new \RecursiveIteratorIterator(new \RecursiveCallbackFilterIterator(new \RecursiveDirectoryIterator($path,
+				\RecursiveDirectoryIterator::SKIP_DOTS), $filter));
 			// we can limit the recursion-depth, but will it be helpful or
 			// will people start asking "why do I only see 2 subdirectories, i want to use /a/b/c"
 			// let's keep this in mind and see whether it will be useful
@@ -521,13 +526,13 @@ class FileDir
 	 * if exact = false [default])
 	 *
 	 * @param boolean $exact
-	 *        	whether to check explicitly for FreeBSD or *BSD
-	 *        	
+	 *            whether to check explicitly for FreeBSD or *BSD
+	 *
 	 * @return boolean
 	 */
 	public static function isFreeBSD($exact = false)
 	{
-		if (($exact && PHP_OS == 'FreeBSD') || (! $exact && stristr(PHP_OS, 'BSD'))) {
+		if (($exact && PHP_OS == 'FreeBSD') || (!$exact && stristr(PHP_OS, 'BSD'))) {
 			return true;
 		}
 		return false;
@@ -537,8 +542,8 @@ class FileDir
 	 * set the immutable flag for a file
 	 *
 	 * @param string $filename
-	 *        	the file to set the flag for
-	 *        	
+	 *            the file to set the flag for
+	 *
 	 * @return boolean
 	 */
 	public static function setImmutable($filename = null)
@@ -550,8 +555,8 @@ class FileDir
 	 * removes the immutable flag for a file
 	 *
 	 * @param string $filename
-	 *        	the file to set the flag for
-	 *        	
+	 *            the file to set the flag for
+	 *
 	 * @return boolean
 	 */
 	public static function removeImmutable($filename = null)
@@ -564,8 +569,8 @@ class FileDir
 	 * to use chattr (Linux) or chflags (FreeBSD)
 	 *
 	 * @param boolean $remove
-	 *        	whether to use +i|schg (false) or -i|noschg (true)
-	 *        	
+	 *            whether to use +i|schg (false) or -i|noschg (true)
+	 *
 	 * @return string functionname + parameter (not the file)
 	 */
 	private static function getImmutableFunction($remove = false)
@@ -581,10 +586,8 @@ class FileDir
 
 	public static function getFilesystemQuota()
 	{
-
 		// enabled at all?
 		if (Settings::Get('system.diskquota_enabled')) {
-
 			// set linux defaults
 			$repquota_params = "-np";
 			// $quota_line_regex = "/^#([0-9]+)\s*[+-]{2}\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)\s*(\d+)/i";
@@ -598,14 +601,14 @@ class FileDir
 
 			// Fetch all quota in the desired partition
 			$repquota = array();
-			exec(Settings::Get('system.diskquota_repquota_path') . " " . $repquota_params . " " . escapeshellarg(Settings::Get('system.diskquota_customer_partition')), $repquota);
+			exec(Settings::Get('system.diskquota_repquota_path') . " " . $repquota_params . " " . escapeshellarg(Settings::Get('system.diskquota_customer_partition')),
+				$repquota);
 
 			$usedquota = array();
 			foreach ($repquota as $tmpquota) {
 				$matches = null;
 				// Let's see if the line matches a quota - line
 				if (preg_match($quota_line_regex, $tmpquota, $matches)) {
-
 					// It matches - put it into an array with userid as key (for easy lookup later)
 					$usedquota[$matches[1]] = array(
 						'block' => array(

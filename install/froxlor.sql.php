@@ -1,3 +1,29 @@
+<?php
+
+/**
+ * This file is part of the Froxlor project.
+ * Copyright (c) 2010 the Froxlor Team (see authors).
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * http://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    http://files.froxlor.org/misc/COPYING.txt GPLv2
+ */
+
+return <<<FROXLORSQL
 DROP TABLE IF EXISTS `ftp_groups`;
 CREATE TABLE `ftp_groups` (
   `id` int(20) NOT NULL auto_increment,
@@ -9,8 +35,6 @@ CREATE TABLE `ftp_groups` (
   UNIQUE KEY `groupname` (`groupname`),
   KEY `customerid` (`customerid`)
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
-
-
 
 DROP TABLE IF EXISTS `ftp_users`;
 CREATE TABLE `ftp_users` (
@@ -58,7 +82,6 @@ CREATE TABLE `mail_users` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
-
 
 
 DROP TABLE IF EXISTS `mail_virtual`;
@@ -139,7 +162,6 @@ CREATE TABLE `panel_admins` (
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
-
 DROP TABLE IF EXISTS `panel_customers`;
 CREATE TABLE `panel_customers` (
   `customerid` int(11) unsigned NOT NULL auto_increment,
@@ -207,7 +229,6 @@ CREATE TABLE `panel_customers` (
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
-
 DROP TABLE IF EXISTS `panel_databases`;
 CREATE TABLE `panel_databases` (
   `id` int(11) unsigned NOT NULL auto_increment,
@@ -218,7 +239,6 @@ CREATE TABLE `panel_databases` (
   PRIMARY KEY  (`id`),
   KEY `customerid` (`customerid`)
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
-
 
 
 DROP TABLE IF EXISTS `panel_domains`;
@@ -284,7 +304,6 @@ CREATE TABLE `panel_domains` (
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
-
 DROP TABLE IF EXISTS `panel_ipsandports`;
 CREATE TABLE `panel_ipsandports` (
   `id` int(11) unsigned NOT NULL auto_increment,
@@ -311,7 +330,6 @@ CREATE TABLE `panel_ipsandports` (
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
-
 DROP TABLE IF EXISTS `panel_htaccess`;
 CREATE TABLE `panel_htaccess` (
   `id` int(11) unsigned NOT NULL auto_increment,
@@ -327,7 +345,6 @@ CREATE TABLE `panel_htaccess` (
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
-
 DROP TABLE IF EXISTS `panel_htpasswds`;
 CREATE TABLE `panel_htpasswds` (
   `id` int(11) unsigned NOT NULL auto_increment,
@@ -339,7 +356,6 @@ CREATE TABLE `panel_htpasswds` (
   PRIMARY KEY  (`id`),
   KEY `customerid` (`customerid`)
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
-
 
 
 DROP TABLE IF EXISTS `panel_sessions`;
@@ -357,7 +373,6 @@ CREATE TABLE `panel_sessions` (
   PRIMARY KEY  (`hash`),
   KEY `userid` (`userid`)
 ) ENGINE=HEAP;
-
 
 
 DROP TABLE IF EXISTS `panel_settings`;
@@ -690,7 +705,7 @@ opcache.validate_timestamps'),
 	('panel', 'phpmyadmin_url', ''),
 	('panel', 'webmail_url', ''),
 	('panel', 'webftp_url', ''),
-	('panel', 'standardlanguage', 'English'),
+	('panel', 'standardlanguage', 'en'),
 	('panel', 'pathedit', 'Manual'),
 	('panel', 'paging', '20'),
 	('panel', 'natsorting', '1'),
@@ -736,6 +751,7 @@ CREATE TABLE `panel_tasks` (
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
+
 INSERT INTO `panel_tasks` (`type`) VALUES ('99');
 
 
@@ -750,7 +766,6 @@ CREATE TABLE `panel_templates` (
   PRIMARY KEY  (id),
   KEY adminid (adminid)
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
-
 
 
 DROP TABLE IF EXISTS `panel_traffic`;
@@ -770,7 +785,6 @@ CREATE TABLE `panel_traffic` (
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
-
 DROP TABLE IF EXISTS `panel_traffic_admins`;
 CREATE TABLE `panel_traffic_admins` (
   `id` int(11) unsigned NOT NULL auto_increment,
@@ -786,7 +800,6 @@ CREATE TABLE `panel_traffic_admins` (
   PRIMARY KEY  (`id`),
   KEY `adminid` (`adminid`)
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
-
 
 
 DROP TABLE IF EXISTS `panel_diskspace`;
@@ -805,29 +818,6 @@ CREATE TABLE `panel_diskspace` (
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
-
-DROP TABLE IF EXISTS `panel_languages`;
-CREATE TABLE `panel_languages` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `language` varchar(30) NOT NULL DEFAULT '',
-  `iso` char(3) NOT NULL DEFAULT 'foo',
-  `file` varchar(255) NOT NULL DEFAULT '',
-  PRIMARY KEY  (`id`)
-) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
-
-
-
-INSERT INTO `panel_languages` (`id`, `language`, `iso`, `file`) VALUES
-    (1, 'Deutsch', 'de', 'lng/german.lng.php'),
-    (2, 'English', 'en', 'lng/english.lng.php'),
-    (3, 'Fran&ccedil;ais', 'fr', 'lng/french.lng.php'),
-    (4, 'Portugu&ecirc;s', 'pt', 'lng/portugues.lng.php'),
-    (5, 'Italiano', 'it', 'lng/italian.lng.php'),
-    (6, 'Nederlands', 'nl', 'lng/dutch.lng.php'),
-    (7, 'Svenska', 'sv', 'lng/swedish.lng.php'),
-    (8, '&#268;esk&aacute; republika', 'cs', 'lng/czech.lng.php');
-
-
 DROP TABLE IF EXISTS `panel_syslog`;
 CREATE TABLE IF NOT EXISTS `panel_syslog` (
   `logid` bigint(20) NOT NULL auto_increment,
@@ -838,7 +828,6 @@ CREATE TABLE IF NOT EXISTS `panel_syslog` (
   `text` text NOT NULL,
   PRIMARY KEY  (`logid`)
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
-
 
 
 DROP TABLE IF EXISTS `panel_fpmdaemons`;
@@ -862,10 +851,8 @@ CREATE TABLE `panel_fpmdaemons` (
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
-
 INSERT INTO `panel_fpmdaemons` (`id`, `description`, `reload_cmd`, `config_dir`) VALUES
 (1, 'System default', 'service php7.4-fpm restart', '/etc/php/7.4/fpm/pool.d/');
-
 
 
 DROP TABLE IF EXISTS `panel_phpconfigs`;
@@ -897,7 +884,6 @@ CREATE TABLE `panel_phpconfigs` (
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
-
 INSERT INTO `panel_phpconfigs` (`id`, `description`, `binary`, `file_extensions`, `mod_fcgid_starter`, `mod_fcgid_maxrequests`, `phpsettings`) VALUES
 (1, 'Default Config', '/usr/bin/php-cgi', 'php', '-1', '-1', 'allow_url_fopen = Off\r\nallow_url_include = Off\r\nauto_append_file =\r\nauto_globals_jit = On\r\nauto_prepend_file =\r\nbcmath.scale = 0\r\ncli_server.color = On\r\ndefault_charset = "UTF-8"\r\ndefault_mimetype = "text/html"\r\ndefault_socket_timeout = 60\r\nasp_tags = Off\r\ndisable_functions = pcntl_alarm,pcntl_fork,pcntl_waitpid,pcntl_wait,pcntl_wifexited,pcntl_wifstopped,pcntl_wifsignaled,pcntl_wifcontinued,pcntl_wexitstatus,pcntl_wtermsig,pcntl_wstopsig,pcntl_signal,pcntl_signal_get_handler,pcntl_signal_dispatch,pcntl_get_last_error,pcntl_strerror,pcntl_sigprocmask,pcntl_sigwaitinfo,pcntl_sigtimedwait,pcntl_exec,pcntl_getpriority,pcntl_setpriority,pcntl_async_signals,curl_exec,curl_multi_exec,exec,parse_ini_file,passthru,popen,proc_close,proc_get_status,proc_nice,proc_open,proc_terminate,shell_exec,show_source,system\r\ndisplay_errors = Off\r\ndisplay_startup_errors = Off\r\ndoc_root =\r\nenable_dl = Off\r\nerror_reporting = E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_NOTICE\r\nexpose_php = Off\r\nfile_uploads = On\r\nhtml_errors = On\r\nignore_repeated_errors = Off\r\nignore_repeated_source = Off\r\ninclude_path = ".:{PEAR_DIR}"\r\nimplicit_flush = Off\r\nldap.max_links = -1\r\nlog_errors = On\r\nlog_errors_max_len = 1024\r\nmail.add_x_header = Off\r\nmax_execution_time = 30\r\nmax_file_uploads = 20\r\nmax_input_time = 60\r\nmemory_limit = 128M\r\n{OPEN_BASEDIR_C}open_basedir = "{OPEN_BASEDIR}"\r\noutput_buffering = 4096\r\npost_max_size = 16M\r\nprecision = 14\r\nregister_argc_argv = Off\r\nreport_memleaks = On\r\nrequest_order = "GP"\r\nsendmail_path = "/usr/sbin/sendmail -t -i -f {CUSTOMER_EMAIL}"\r\nserialize_precision = -1\r\nsession.auto_start = 0\r\nsession.cache_expire = 180\r\nsession.cache_limiter = nocache\r\nsession.cookie_domain =\r\nsession.cookie_httponly =\r\nsession.cookie_lifetime = 0\r\nsession.cookie_path = /\r\nsession.cookie_samesite =\r\nsession.gc_divisor = 1000\r\nsession.gc_maxlifetime = 1440\r\nsession.gc_probability = 0\r\nsession.name = PHPSESSID\r\nsession.referer_check =\r\nsession.save_handler = files\r\nsession.save_path = "{TMP_DIR}"\r\nsession.serialize_handler = php\r\nsession.sid_bits_per_character = 5\r\nsession.sid_length = 26\r\nsession.trans_sid_tags = "a=href,area=href,frame=src,form="\r\nsession.use_cookies = 1\r\nsession.use_only_cookies = 1\r\nsession.use_strict_mode = 0\r\nsession.use_trans_sid = 0\r\nshort_open_tag = On\r\nupload_max_filesize = 32M\r\nupload_tmp_dir = "{TMP_DIR}"\r\nvariables_order = "GPCS"\r\nopcache.restrict_api = "{DOCUMENT_ROOT}"\r\n'),
 (2, 'Froxlor Vhost Config', '/usr/bin/php-cgi', 'php', '-1', '-1', 'allow_url_fopen = On\r\nallow_url_include = Off\r\nauto_append_file =\r\nauto_globals_jit = On\r\nauto_prepend_file =\r\nbcmath.scale = 0\r\ncli_server.color = On\r\ndefault_charset = "UTF-8"\r\ndefault_mimetype = "text/html"\r\ndefault_socket_timeout = 60\r\nasp_tags = Off\r\ndisable_functions = pcntl_alarm,pcntl_fork,pcntl_waitpid,pcntl_wait,pcntl_wifexited,pcntl_wifstopped,pcntl_wifsignaled,pcntl_wifcontinued,pcntl_wexitstatus,pcntl_wtermsig,pcntl_wstopsig,pcntl_signal,pcntl_signal_get_handler,pcntl_signal_dispatch,pcntl_get_last_error,pcntl_strerror,pcntl_sigprocmask,pcntl_sigwaitinfo,pcntl_sigtimedwait,pcntl_exec,pcntl_getpriority,pcntl_setpriority,pcntl_async_signals,curl_multi_exec,parse_ini_file,passthru,popen,proc_close,proc_get_status,proc_nice,proc_open,proc_terminate,shell_exec,show_source,system\r\ndisplay_errors = Off\r\ndisplay_startup_errors = Off\r\ndoc_root =\r\nenable_dl = Off\r\nerror_reporting = E_ALL & ~E_DEPRECATED & ~E_STRICT & ~E_NOTICE\r\nexpose_php = Off\r\nfile_uploads = On\r\nhtml_errors = On\r\nignore_repeated_errors = Off\r\nignore_repeated_source = Off\r\ninclude_path = ".:{PEAR_DIR}"\r\nimplicit_flush = Off\r\nldap.max_links = -1\r\nlog_errors = On\r\nlog_errors_max_len = 1024\r\nmail.add_x_header = Off\r\nmax_execution_time = 60\r\nmax_file_uploads = 20\r\nmax_input_time = 60\r\nmemory_limit = 128M\r\noutput_buffering = 4096\r\npost_max_size = 16M\r\nprecision = 14\r\nregister_argc_argv = Off\r\nreport_memleaks = On\r\nrequest_order = "GP"\r\nsendmail_path = "/usr/sbin/sendmail -t -i -f {CUSTOMER_EMAIL}"\r\nserialize_precision = -1\r\nsession.auto_start = 0\r\nsession.cache_expire = 180\r\nsession.cache_limiter = nocache\r\nsession.cookie_domain =\r\nsession.cookie_httponly =\r\nsession.cookie_lifetime = 0\r\nsession.cookie_path = /\r\nsession.cookie_samesite =\r\nsession.gc_divisor = 1000\r\nsession.gc_maxlifetime = 1440\r\nsession.gc_probability = 0\r\nsession.name = PHPSESSID\r\nsession.referer_check =\r\nsession.save_handler = files\r\nsession.save_path = "{TMP_DIR}"\r\nsession.serialize_handler = php\r\nsession.sid_bits_per_character = 5\r\nsession.sid_length = 26\r\nsession.trans_sid_tags = "a=href,area=href,frame=src,form="\r\nsession.use_cookies = 1\r\nsession.use_only_cookies = 1\r\nsession.use_strict_mode = 0\r\nsession.use_trans_sid = 0\r\nshort_open_tag = On\r\nupload_max_filesize = 32M\r\nupload_tmp_dir = "{TMP_DIR}"\r\nvariables_order = "GPCS"\r\nopcache.restrict_api = ""\r\n');
@@ -926,7 +912,6 @@ INSERT INTO `cronjobs_run` (`id`, `module`, `cronfile`, `cronclass`, `interval`,
 	(6, 'froxlor/backup', 'backup', '\\Froxlor\\Cron\\System\\BackupCron', '1 DAY', '0', 'cron_backup');
 
 
-
 DROP TABLE IF EXISTS `ftp_quotalimits`;
 CREATE TABLE IF NOT EXISTS `ftp_quotalimits` (
   `name` varchar(30) default NULL,
@@ -942,10 +927,8 @@ CREATE TABLE IF NOT EXISTS `ftp_quotalimits` (
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
-
 INSERT INTO `ftp_quotalimits` (`name`, `quota_type`, `per_session`, `limit_type`, `bytes_in_avail`, `bytes_out_avail`, `bytes_xfer_avail`, `files_in_avail`, `files_out_avail`, `files_xfer_avail`) VALUES
 	('froxlor', 'user', 'false', 'hard', 0, 0, 0, 0, 0, 0);
-
 
 
 DROP TABLE IF EXISTS `ftp_quotatallies`;
@@ -961,7 +944,6 @@ CREATE TABLE IF NOT EXISTS `ftp_quotatallies` (
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
-
 DROP TABLE IF EXISTS `redirect_codes`;
 CREATE TABLE IF NOT EXISTS `redirect_codes` (
   `id` int(5) NOT NULL auto_increment,
@@ -972,14 +954,12 @@ CREATE TABLE IF NOT EXISTS `redirect_codes` (
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
-
 INSERT INTO `redirect_codes` (`id`, `code`, `desc`, `enabled`) VALUES
 	(1, '---', 'rc_default', 1),
 	(2, '301', 'rc_movedperm', 1),
 	(3, '302', 'rc_found', 1),
 	(4, '303', 'rc_seeother', 1),
 	(5, '307', 'rc_tempred', 1);
-
 
 
 DROP TABLE IF EXISTS `domain_redirect_codes`;
@@ -1054,6 +1034,7 @@ CREATE TABLE `api_keys` (
   KEY customerid (customerid)
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
+
 DROP TABLE IF EXISTS `panel_usercolumns`;
 CREATE TABLE `panel_usercolumns` (
   `adminid` int(11) NOT NULL default '0',
@@ -1064,3 +1045,4 @@ CREATE TABLE `panel_usercolumns` (
   KEY adminid (adminid),
   KEY customerid (customerid)
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
+FROXLORSQL;

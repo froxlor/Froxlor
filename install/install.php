@@ -4,25 +4,29 @@
  * This file is part of the Froxlor project.
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright  (c) the authors
- * @author     Michael Kaufmann <mkaufmann@nutime.de>
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    Install
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * http://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    http://files.froxlor.org/misc/COPYING.txt GPLv2
  */
+
+use Froxlor\Install\Install;
+
 // define default theme for configurehint, etc.
 $_deftheme = 'Froxlor';
-
-function view($template, $attributes) {
-    $view = file_get_contents(dirname(__DIR__) . '/templates/' . $template);
-
-    return str_replace(array_keys($attributes), array_values($attributes), $view);
-}
 
 // validate correct php version
 if (version_compare("7.4.0", PHP_VERSION, ">=")) {
@@ -48,15 +52,8 @@ if (!file_exists(dirname(__DIR__) . '/vendor/autoload.php')) {
 }
 
 require dirname(__DIR__) . '/vendor/autoload.php';
-require __DIR__ . '/lib/class.FroxlorInstall.php';
+require dirname(__DIR__) . '/lib/functions.php';
+require dirname(__DIR__) . '/lib/tables.inc.php';
 
-use Froxlor\UI\Panel\UI;
-
-UI::initTwig(true);
-UI::twig()->addGlobal('install_mode', '1');
-UI::twig()->addGlobal('basehref', '../');
-
-$frxinstall = new FroxlorInstall();
-$frxinstall->run();
-
-UI::twigOutputBuffer();
+$installer = new Install();
+$installer->handle();

@@ -690,7 +690,7 @@ class FroxlorInstall
 				'title' => $this->_lng['install']['importing_data'],
 				'result' => 0
 			];
-			$db_schema = dirname(__FILE__, 2) . '/froxlor.sql';
+			$db_schema = dirname(__FILE__, 2) . '/froxlor.sql.php';
 			$sql_query = @file_get_contents($db_schema);
 			$sql_query = $this->_remove_remarks($sql_query);
 			$sql_query = $this->_split_sql_file($sql_query, ';');

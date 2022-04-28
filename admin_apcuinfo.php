@@ -1,32 +1,37 @@
 <?php
 
-use Froxlor\UI\Panel\UI;
-
-/*
- * +----------------------------------------------------------------------+
- * | APC |
- * +----------------------------------------------------------------------+
- * | Copyright (c) 2006-2011 The PHP Group |
- * +----------------------------------------------------------------------+
- * | This source file is subject to version 3.01 of the PHP license, |
- * | that is bundled with this package in the file LICENSE, and is |
- * | available through the world-wide-web at the following url: |
- * | http://www.php.net/license/3_01.txt |
- * | If you did not receive a copy of the PHP license and are unable to |
- * | obtain it through the world-wide-web, please send a note to |
- * | license@php.net so we can mail you a copy immediately. |
- * +----------------------------------------------------------------------+
- * | Authors: Ralf Becker <beckerr@php.net> |
- * | Rasmus Lerdorf <rasmus@php.net> |
- * | Ilia Alshanetsky <ilia@prohost.org> |
- * +----------------------------------------------------------------------+
+/**
+ * This file is part of the Froxlor project.
+ * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * All other licensing and usage conditions are those of the PHP Group.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * Based on https://github.com/krakjoe/apcu/blob/master/apc.php
- * Implemented into Froxlor: Janos Muzsi <muzsij@hypernics.hu>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * http://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @author     Janos Muzsi <muzsij@hypernics.hu>
+ * @author     Ralf Becker <beckerr@php.net>
+ * @author     Rasmus Lerdorf <rasmus@php.net>
+ * @author     Ilia Alshanetsky <ilia@prohost.org>
+ * @license    http://files.froxlor.org/misc/COPYING.txt GPLv2
+ *
+ * Based on https://github.com/krakjoe/apcu/blob/master/apc.php, which is
+ * licensed under the PHP licence (version 3.01), which can be viewed
+ * online at https://www.php.net/license/3_01.txt
  */
+
+use Froxlor\UI\Panel\UI;
 
 const AREA = 'admin';
 require __DIR__ . '/lib/init.php';
@@ -37,9 +42,9 @@ if ($action == 'delete' && function_exists('apcu_clear_cache') && $userinfo['cha
 	apcu_clear_cache();
 	$log->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "cleared APCu cache");
 	header('Location: ' . $linker->getLink(array(
-		'section' => 'apcuinfo',
-		'page' => 'showinfo'
-	)));
+			'section' => 'apcuinfo',
+			'page' => 'showinfo'
+		)));
 	exit();
 }
 
@@ -70,10 +75,14 @@ if ($page == 'showinfo') {
 		'num_hits' => $cache['num_hits'],
 		'num_misses' => $cache['num_misses'],
 		'num_inserts' => $cache['num_inserts'],
-		'req_rate_user' => sprintf("%.2f", $cache['num_hits'] ? (($cache['num_hits'] + $cache['num_misses']) / ($time - $cache['start_time'])) : 0),
-		'hit_rate_user' => sprintf("%.2f", $cache['num_hits'] ? (($cache['num_hits']) / ($time - $cache['start_time'])) : 0),
-		'miss_rate_user' => sprintf("%.2f", $cache['num_misses'] ? (($cache['num_misses']) / ($time - $cache['start_time'])) : 0),
-		'insert_rate_user' => sprintf("%.2f", $cache['num_inserts'] ? (($cache['num_inserts']) / ($time - $cache['start_time'])) : 0),
+		'req_rate_user' => sprintf("%.2f",
+			$cache['num_hits'] ? (($cache['num_hits'] + $cache['num_misses']) / ($time - $cache['start_time'])) : 0),
+		'hit_rate_user' => sprintf("%.2f",
+			$cache['num_hits'] ? (($cache['num_hits']) / ($time - $cache['start_time'])) : 0),
+		'miss_rate_user' => sprintf("%.2f",
+			$cache['num_misses'] ? (($cache['num_misses']) / ($time - $cache['start_time'])) : 0),
+		'insert_rate_user' => sprintf("%.2f",
+			$cache['num_inserts'] ? (($cache['num_inserts']) / ($time - $cache['start_time'])) : 0),
 		'apcversion' => phpversion('apcu'),
 		'phpversion' => phpversion(),
 		'number_vars' => $cache['num_entries'],
@@ -96,8 +105,10 @@ if ($page == 'showinfo') {
 	];
 
 	$overview['mem_used_percentage'] = number_format(($overview['mem_used'] / $overview['mem_avail']) * 100, 1);
-	$overview['num_hits_percentage'] = number_format(($overview['num_hits'] / $overview['num_hits_and_misses']) * 100, 1);
-	$overview['num_misses_percentage'] = number_format(($overview['num_misses'] / $overview['num_hits_and_misses']) * 100, 1);
+	$overview['num_hits_percentage'] = number_format(($overview['num_hits'] / $overview['num_hits_and_misses']) * 100,
+		1);
+	$overview['num_misses_percentage'] = number_format(($overview['num_misses'] / $overview['num_hits_and_misses']) * 100,
+		1);
 	$overview['readable'] = [
 		'mem_size' => bsize($overview['mem_size']),
 		'mem_avail' => bsize($overview['mem_avail']),
@@ -123,7 +134,9 @@ if ($page == 'showinfo') {
 			}
 			$ptr = $block['offset'] + $block['size'];
 			/* Only consider blocks <5M for the fragmentation % */
-			if ($block['size'] < (5 * 1024 * 1024)) $fragsize += $block['size'];
+			if ($block['size'] < (5 * 1024 * 1024)) {
+				$fragsize += $block['size'];
+			}
 			$freetotal += $block['size'];
 		}
 		$freeseg += count($mem['block_lists'][$i]);
@@ -175,15 +188,34 @@ function duration($ts)
 	$hours = (int)(($rem) / 3600) - $days * 24 - $weeks * 7 * 24;
 	$mins = (int)(($rem) / 60) - $hours * 60 - $days * 24 * 60 - $weeks * 7 * 24 * 60;
 	$str = '';
-	if ($years == 1) $str .= "$years year, ";
-	if ($years > 1) $str .= "$years years, ";
-	if ($weeks == 1) $str .= "$weeks week, ";
-	if ($weeks > 1) $str .= "$weeks weeks, ";
-	if ($days == 1) $str .= "$days day,";
-	if ($days > 1) $str .= "$days days,";
-	if ($hours == 1) $str .= " $hours hour and";
-	if ($hours > 1) $str .= " $hours hours and";
-	if ($mins == 1) $str .= " 1 minute";
-	else $str .= " $mins minutes";
+	if ($years == 1) {
+		$str .= "$years year, ";
+	}
+	if ($years > 1) {
+		$str .= "$years years, ";
+	}
+	if ($weeks == 1) {
+		$str .= "$weeks week, ";
+	}
+	if ($weeks > 1) {
+		$str .= "$weeks weeks, ";
+	}
+	if ($days == 1) {
+		$str .= "$days day,";
+	}
+	if ($days > 1) {
+		$str .= "$days days,";
+	}
+	if ($hours == 1) {
+		$str .= " $hours hour and";
+	}
+	if ($hours > 1) {
+		$str .= " $hours hours and";
+	}
+	if ($mins == 1) {
+		$str .= " 1 minute";
+	} else {
+		$str .= " $mins minutes";
+	}
 	return $str;
 }

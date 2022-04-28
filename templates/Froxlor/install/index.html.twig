@@ -2,58 +2,69 @@
 
 {% block content %}
 	<div class="container max-w-lg flex align-content-center mt-5">
-		<img src="{{ basehref|default('') }}templates/Froxlor/assets/img/logo.png" class="filter-me" alt="Froxlor Server Management Panel"/>
+		<img src="{{ basehref|default('') }}templates/Froxlor/assets/img/logo.png" class="mb-5" alt="Froxlor Server Management Panel"/>
 
-		<section class="card shadow mt-5">
-			<div class="card-body">
-				<h3 class="card-title mb-3">{{ pagetitle }}</h3>
-				{% if pagecontent.checks is defined or pagecontent.installprocess is defined %}
-					<table class="table table-borderless table-sm">
-						{% if pagecontent.checks is defined %}
-							{% set checks = pagecontent.checks %}
-						{% else %}
-							{% set checks = pagecontent.installprocess %}
+		<div class="row text-center gx-0">
+			<div class="col p-3{{ setup.step == 0 ? ' bg-white shadow rounded-top' : '' }}"><i class="far fa-circle{{ setup.step > 0 ? '-check' : '' }}"></i> Preflight</div>
+			<div class="col p-3{{ setup.step == 1 ? ' bg-white shadow rounded-top' : '' }}"><i class="far fa-circle{{ setup.step > 1 ? '-check' : '' }}"></i> Database</div>
+			<div class="col p-3{{ setup.step == 2 ? ' bg-white shadow rounded-top' : '' }}"><i class="far fa-circle{{ setup.step > 2 ? '-check' : '' }}"></i> Admin</div>
+			<div class="col p-3{{ setup.step == 3 ? ' bg-white shadow rounded-top' : '' }}"><i class="far fa-circle{{ setup.step > 3 ? '-check' : '' }}"></i> System</div>
+		</div>
+
+		<div class="card border-0 shadow">
+			<div class="card-body p-5">
+				<form method="post" action="?step={{ setup.step + 1 }}">
+					{% if setup.step > 0 %}
+						<h4 class="mb-3">{{ section.title }}</h4>
+						<p class="lead">{{ section.description }}</p>
+
+						{% import "Froxlor/form/formfields.html.twig" as formfields %}
+
+						{% for id, field in section.fields %}
+							{{ formfields.field(id, field) }}
+						{% endfor %}
+
+						<div class="d-flex justify-content-between mt-4">
+							<a href="?step={{ setup.step - 1 }}" class="btn btn-secondary">&laquo;</a>
+							<button class="btn btn-primary">Next</button>
+						</div>
+					{% else %}
+						<h4 class="mb-3">Welcome to froxlor</h4>
+						<p class="lead">We check the system for dependencies to ensure that all required php extensions and modules are enabled so that froxlor runs properly.</p>
+
+						<p class="lead {{ preflight.criticals ? 'text-danger' : preflight.suggestions ? 'text-warning' : 'text-success'}}">
+							<i class="{{ preflight.criticals ? 'fa fa-triangle-exclamation' : preflight.suggestions ? 'fa-circle-info' : 'far fa-circle-check' }}"></i>
+							{{ preflight.text }}
+						</p>
+
+						{% if preflight.criticals %}
+							<p class="text-muted">Critical Error</p>
+							<ul>
+								{% for critical in preflight.criticals %}
+									<li>{{ critical|json_encode }}</li>
+								{% endfor %}
+							</ul>
 						{% endif %}
 
-						{% for check in checks %}
-							<tr class="{% if check.result == 1 %}table-danger{% elseif check.result == 2 %}table-warning{% endif %}">
-								<td class="w-75" scope="row">{{ check.title }}</td>
-								<td class="col-auto text-end{% if check.result == 0 %} text-success{% endif %}">
-									<span class="d-none d-md-inline">{{ check.result_txt }}</span>
-									{% if check.result == 0 %}&nbsp;<i class="fa fa-check-circle" {% elseif check.result == 2 %}<span class="d-md-none">&nbsp;???</span>{% elseif check.result == 1 %}<span class="d-md-none">&nbsp;!!!</span>
-									{% endif %}
-								</td>
-							</tr>
-							{% if check.result_desc is not empty %}
-								<tr>
-									<td colspan="2" class="text-end">
-										<span>{{ check.result_desc|raw }}</span>
-									</td>
-								</tr>
-							{% endif %}
-						{% endfor %}
-					</table>
-				{% elseif pagecontent.form is defined %}
-					{% include "Froxlor/install/form.html.twig" %}
-				{% else %}
-					<div class="alert alert-warning" role="alert">
-						{{ pagecontent }}
-					</div>
-				{% endif %}
+						{% if preflight.suggestions %}
+							<p class="text-muted">Suggestions</p>
+							<ul>
+								{% for suggestion in preflight.suggestions %}
+									<li>{{ suggestion|json_encode }}</li>
+								{% endfor %}
+							</ul>
+						{% endif %}
 
-				{% if pagenavigation is not empty %}
-					<div class="row pt-md-3">
-						<div class="col-12 col-md-8 d-flex align-items-center">
-							<h4 class="p-0 m-0 text-{% if pagenavigation.bad %}danger{% else %}success{% endif %}">{{ pagenavigation.message }}</h4>
+						<div class="d-flex justify-content-end mt-4">
+							{% if preflight.criticals or preflight.suggestions %}
+								<a href="" class="btn btn-secondary"><i class="fa fa-arrow-rotate-left"></i> Check again</a>
+							{% else %}
+								<a href="?step=1" class="btn btn-primary">Start installation</a>
+							{% endif %}
 						</div>
-						<div class="col-12 col-md-4 text-end mt-4 mt-md-0">
-							<a class="btn btn-lg btn-block btn-{% if pagenavigation.bad %}warning{% else %}success{% endif %}" href="{{ pagenavigation.link}}">
-								{{ pagenavigation.linktext }} &raquo;
-							</a>
-						</div>
-					</div>
-				{% endif %}
+					{% endif %}
+				</form>
 			</div>
-		</section>
+		</div>
 	</div>
 {% endblock %}

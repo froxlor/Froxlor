@@ -2,19 +2,25 @@
 
 /**
  * This file is part of the Froxlor project.
- * Copyright (c) 2003-2009 the SysCP Team (see authors).
  * Copyright (c) 2010 the Froxlor Team (see authors).
  *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
  *
- * @copyright  (c) the authors
- * @author     Florian Lippert <flo@syscp.org> (2003-2009)
- * @author     Froxlor team <team@froxlor.org> (2010-)
- * @license    GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package    System
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * http://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    http://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
 // define default theme for configurehint, etc.
@@ -47,8 +53,10 @@ if (!file_exists(dirname(__DIR__) . '/vendor/autoload.php')) {
 }
 
 require dirname(__DIR__) . '/vendor/autoload.php';
+require dirname(__DIR__) . '/lib/functions.php';
 
 use Froxlor\Database\Database;
+use Froxlor\Language;
 use Froxlor\Settings;
 use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
@@ -120,91 +128,34 @@ if (CurrentUser::hasSession()) {
 	CurrentUser::reReadUserData();
 }
 
-// Language Management
-$langs = array();
-$languages = array();
-$iso = array();
-
-// query the whole table
-$result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_LANGUAGE . "`");
-
-// presort languages
-while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-	$langs[$row['language']][] = $row;
-	// check for row[iso] cause older froxlor
-	// versions didn't have that and it will
-	// lead to a lot of undefined variables
-	// before the admin can even update
-	if (isset($row['iso'])) {
-		$iso[$row['iso']] = $row['language'];
-	}
-}
-
-// buildup $languages for the login screen
-foreach ($langs as $key => $value) {
-	$languages[$key] = $key;
-}
+/**
+ * Language management
+ */
 
 // set default language before anything else to
 // ensure that we can display messages
-$language = Settings::Get('panel.standardlanguage');
+Language::setLanguage(Settings::Get('panel.standardlanguage'));
 
-if (CurrentUser::hasSession() && !empty(CurrentUser::getField('language')) && isset($languages[CurrentUser::getField('language')])) {
-	// default: use language from session, #277
-	$language = CurrentUser::getField('language');
-} else {
-	if (!CurrentUser::hasSession()) {
-		if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-			$accept_langs = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
-			for ($i = 0; $i < count($accept_langs); $i++) {
-				// this only works for most common languages. some (uncommon) languages have a 3 letter iso-code.
-				// to be able to use these also, we would have to depend on the intl extension for php (using Locale::lookup or similar)
-				// as long as froxlor does not support any of these languages, we can leave it like that.
-				if (isset($iso[substr($accept_langs[$i], 0, 2)])) {
-					$language = $iso[substr($accept_langs[$i], 0, 2)];
-					break;
-				}
-			}
-			unset($iso);
-
-			// if HTTP_ACCEPT_LANGUAGES has no valid langs, use default (very unlikely)
-			if (!strlen($language) > 0) {
-				$language = Settings::Get('panel.standardlanguage');
-			}
-		}
+// set language by given user
+if (CurrentUser::hasSession()) {
+	if (!empty(CurrentUser::getField('language')) && isset(Language::getLanguages()[CurrentUser::getField('language')])) {
+		Language::setLanguage(CurrentUser::getField('language'));
 	} else {
-		$language = CurrentUser::getField('def_language');
+		Language::setLanguage(CurrentUser::getField('def_language'));
 	}
 }
-
-// include every english language file we can get
-foreach ($langs['English'] as $key => $value) {
-	include_once \Froxlor\FileDir::makeSecurePath($value['file']);
-}
-
-// now include the selected language if its not english
-if ($language != 'English') {
-	foreach ($langs[$language] as $key => $value) {
-		include_once \Froxlor\FileDir::makeSecurePath($value['file']);
-	}
-}
-
-// last but not least include language references file
-include_once \Froxlor\FileDir::makeSecurePath('lng/lng_references.php');
-
-UI::setLng($lng);
 
 // Initialize our link - class
 $linker = new \Froxlor\UI\Linker('index.php');
 UI::setLinker($linker);
 
 /**
- * global Theme-variable
+ * Global Theme-variable
  */
 $theme = (Settings::Get('panel.default_theme') !== null) ? Settings::Get('panel.default_theme') : $_deftheme;
 
 /**
- * overwrite with customer/admin theme if defined
+ * Overwrite with customer/admin theme if defined
  */
 if (CurrentUser::hasSession() && CurrentUser::getField('theme') != $theme) {
 	$theme = CurrentUser::getField('theme');
