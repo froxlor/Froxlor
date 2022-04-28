@@ -23,9 +23,12 @@
  * @license    http://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
+use Froxlor\Froxlor;
+use Froxlor\Filedir;
 use Froxlor\FroxlorLogger;
-
-require_once __DIR__ . '/lib/updateFunctions.php';
+use Froxlor\UI\Response;
+use Froxlor\Database\IntegrityCheck;
+use Froxlor\Install\Update;
 
 if (!defined('_CRON_UPDATE')) {
 	if (!defined('AREA') || (defined('AREA') && AREA != 'admin') || !isset($userinfo['loginname']) || (isset($userinfo['loginname']) && $userinfo['loginname'] == '')) {
@@ -41,35 +44,35 @@ $filelog = FroxlorLogger::getInstanceOf(array(
 // if first writing does not work we'll stop, tell the user to fix it
 // and then let him try again.
 try {
-	$filelog->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_WARNING, '-------------- START LOG --------------');
+	$filelog->logAction(FroxlorLogger::ADM_ACTION, LOG_WARNING, '-------------- START LOG --------------');
 } catch (Exception $e) {
-	\Froxlor\UI\Response::standard_error('exception', $e->getMessage());
+	Response::standard_error('exception', $e->getMessage());
 }
 
-if (\Froxlor\Froxlor::isFroxlor()) {
+if (Froxlor::isFroxlor()) {
 
 	// will be filled and increased by the update include-files below
 	$update_tasks = [];
 	$task_counter = 0;
 
-	include_once(\Froxlor\FileDir::makeCorrectFile(dirname(__FILE__) . '/updates/froxlor/0.11/update_0.11.inc.php'));
+	include_once(FileDir::makeCorrectFile(dirname(__FILE__) . '/updates/froxlor/0.11/update_0.11.inc.php'));
 
 	// Check Froxlor - database integrity (only happens after all updates are done, so we know the db-layout is okay)
-	showUpdateStep("Checking database integrity");
+	Update::showUpdateStep("Checking database integrity");
 
-	$integrity = new \Froxlor\Database\IntegrityCheck();
+	$integrity = new IntegrityCheck();
 	if (!$integrity->checkAll()) {
-		lastStepStatus(1, 'Monkeys ate the integrity');
-		showUpdateStep("Trying to remove monkeys, feeding bananas");
+		Update::lastStepStatus(1, 'Monkeys ate the integrity');
+		Update::showUpdateStep("Trying to remove monkeys, feeding bananas");
 		if (!$integrity->fixAll()) {
-			lastStepStatus(2, 'failed', 'Some monkeys just would not move, you should contact team@froxlor.org');
+			Update::lastStepStatus(2, 'failed', 'Some monkeys just would not move, you should contact team@froxlor.org');
 		} else {
-			lastStepStatus(0, 'Integrity restored');
+			Update::lastStepStatus(0, 'Integrity restored');
 		}
 	} else {
-		lastStepStatus(0);
+		Update::lastStepStatus(0);
 	}
 
-	$filelog->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_WARNING, '--------------- END LOG ---------------');
+	$filelog->logAction(FroxlorLogger::ADM_ACTION, LOG_WARNING, '--------------- END LOG ---------------');
 	unset($filelog);
 }

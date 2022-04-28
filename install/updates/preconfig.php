@@ -23,6 +23,9 @@
  * @license    http://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
+use Froxlor\Froxlor;
+use Froxlor\FileDir;
+
 /**
  * Function getPreConfig
  *
@@ -38,7 +41,7 @@ function getPreConfig($current_version, $current_db_version): array
 {
 	$has_preconfig = false;
 
-	include_once \Froxlor\FileDir::makeCorrectFile(dirname(__FILE__) . '/preconfig/0.11/preconfig_0.11.inc.php');
+	include_once FileDir::makeCorrectFile(dirname(__FILE__) . '/preconfig/0.11/preconfig_0.11.inc.php');
 	$return['section_011'] = [
 		'title' => '0.11.x updates',
 		'fields' => []
@@ -69,9 +72,9 @@ function getPreConfig($current_version, $current_db_version): array
 
 function versionInUpdate($current_version, $version_to_check)
 {
-	if (!\Froxlor\Froxlor::isFroxlor()) {
+	if (!Froxlor::isFroxlor()) {
 		return true;
 	}
 
-	return \Froxlor\Froxlor::versionCompare2($current_version, $version_to_check) == -1;
+	return Froxlor::versionCompare2($current_version, $version_to_check) == -1;
 }

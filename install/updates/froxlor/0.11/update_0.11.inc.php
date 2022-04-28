@@ -23,8 +23,10 @@
  * @license    http://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
+use Froxlor\Froxlor;
 use Froxlor\Database\Database;
 use Froxlor\Settings;
+use Froxlor\Install\Update;
 
 if (!defined('_CRON_UPDATE')) {
 	if (!defined('AREA') || (defined('AREA') && AREA != 'admin') || !isset($userinfo['loginname']) || (isset($userinfo['loginname']) && $userinfo['loginname'] == '')) {
@@ -34,21 +36,21 @@ if (!defined('_CRON_UPDATE')) {
 }
 
 // last 0.10.x release
-if (\Froxlor\Froxlor::isFroxlorVersion('0.10.99')) {
-	showUpdateStep("Updating from 0.10.99 to 0.11.0-dev1", false);
+if (Froxlor::isFroxlorVersion('0.10.99')) {
+	Update::showUpdateStep("Updating from 0.10.99 to 0.11.0-dev1", false);
 
-	showUpdateStep("Removing unused table");
+	Update::showUpdateStep("Removing unused table");
 	Database::query("DROP TABLE IF EXISTS `panel_sessions`;");
 	Database::query("DROP TABLE IF EXISTS `panel_languages`;");
-	lastStepStatus(0);
+	Update::lastStepStatus(0);
 
-	showUpdateStep("Updating froxlor - theme");
+	Update::showUpdateStep("Updating froxlor - theme");
 	Database::query("UPDATE `" . TABLE_PANEL_ADMINS . "` SET `theme` = 'Froxlor' WHERE `theme` <> 'Froxlor';");
 	Database::query("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `theme` = 'Froxlor' WHERE `theme` <> 'Froxlor';");
 	Settings::Set('panel.default_theme', 'Froxlor');
-	lastStepStatus(0);
+	Update::lastStepStatus(0);
 
-	showUpdateStep("Creating new tables and fields");
+	Update::showUpdateStep("Creating new tables and fields");
 	Database::query("DROP TABLE IF EXISTS `panel_usercolumns`;");
 	$sql = "CREATE TABLE `panel_usercolumns` (
 	`adminid` int(11) NOT NULL default '0',
@@ -60,10 +62,10 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.99')) {
 	KEY customerid (customerid)
 	) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;";
 	Database::query($sql);
-	lastStepStatus(0);
+	Update::lastStepStatus(0);
 
 
-	showUpdateStep("Cleaning up old files");
+	Update::showUpdateStep("Cleaning up old files");
 	$to_clean = array(
 		"install/lib",
 		"install/lng",
@@ -93,22 +95,22 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.99')) {
 		}
 	}
 	if ($exec_allowed) {
-		lastStepStatus(0);
+		Update::lastStepStatus(0);
 	} else {
 		if (empty($del_list)) {
 			// none of the files existed
-			lastStepStatus(0);
+			Update::lastStepStatus(0);
 		} else {
-			lastStepStatus(1, 'manual commands needed', 'Please run the following commands manually:<br><pre>' . $del_list . '</pre>');
+			Update::lastStepStatus(1, 'manual commands needed', 'Please run the following commands manually:<br><pre>' . $del_list . '</pre>');
 		}
 	}
 
-	showUpdateStep("Adding new settings");
+	Update::showUpdateStep("Adding new settings");
 	$panel_settings_mode = isset($_POST['panel_settings_mode']) ? (int) $_POST['panel_settings_mode'] : 0;
 	Settings::AddNew("panel.settings_mode", $panel_settings_mode);
-	lastStepStatus(0);
+	Update::lastStepStatus(0);
 
-	showUpdateStep("Adjusting existing settings");
+	Update::showUpdateStep("Adjusting existing settings");
 	Settings::Set('system.passwordcryptfunc', PASSWORD_DEFAULT);
 	// remap default-language
 	$lang_map = [
@@ -122,11 +124,11 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.99')) {
 		'&#268;esk&aacute; republika' => 'cs'
 	];
 	Settings::Set('panel.standardlanguage', $lang_map[Settings::Get('panel_standardlanguage')] ?? 'en');
-	lastStepStatus(0);
+	Update::lastStepStatus(0);
 
 
-	if (\Froxlor\Froxlor::isFroxlorVersion('0.10.99')) {
-		showUpdateStep("Updating from 0.10.99 to 0.11.0-dev1", false);
-		\Froxlor\Froxlor::updateToVersion('0.11.0-dev1');
+	if (Froxlor::isFroxlorVersion('0.10.99')) {
+		Update::showUpdateStep("Updating from 0.10.99 to 0.11.0-dev1", false);
+		Froxlor::updateToVersion('0.11.0-dev1');
 	}
 }
