@@ -1,8 +1,30 @@
 <?php
 
+/**
+ * This file is part of the Froxlor project.
+ * Copyright (c) 2010 the Froxlor Team (see authors).
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, you can also view it online at
+ * http://files.froxlor.org/misc/COPYING.txt
+ *
+ * @copyright  the authors
+ * @author     Froxlor team <team@froxlor.org>
+ * @license    http://files.froxlor.org/misc/COPYING.txt GPLv2
+ */
+
 namespace Froxlor\Cli;
 
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -11,21 +33,7 @@ use Froxlor\FileDir;
 use Froxlor\Settings;
 use Froxlor\Database\Database;
 
-/**
- * This file is part of the Froxlor project.
- * Copyright (c) 2022 the Froxlor Team (see authors).
- *
- * For the full copyright and license information, please view the COPYING
- * file that was distributed with this source code. You can also view the
- * COPYING file online at http://files.froxlor.org/misc/COPYING.txt
- *
- * @copyright (c) the authors
- * @author Froxlor team <team@froxlor.org> (2018-)
- * @license GPLv2 http://files.froxlor.org/misc/COPYING.txt
- * @package Cron
- *         
- */
-final class PhpSessionclean extends Command
+final class PhpSessionclean extends CliCommand
 {
 
 	protected function configure()
@@ -37,23 +45,24 @@ final class PhpSessionclean extends Command
 
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
-		if (!file_exists(Froxlor::getInstallDir() . '/lib/userdata.inc.php')) {
-			$output->writeln("<error>Could not find froxlor's userdata.inc.php file. You should use this script only with an installed froxlor system.</>");
-			return self::INVALID;
-		}
+		$result = $this->validateRequirements($input, $output);
 
-		if ((int) Settings::Get('phpfpm.enabled') == 1) {
-			if ($input->hasArgument('max-lifetime') &&  is_numeric($input->getArgument('max-lifetime')) && $input->getArgument('max-lifetime') > 0) {
-				$this->cleanSessionfiles((int)$input->getArgument('max-lifetime'));
+		if ($result == self::SUCCESS) {
+			if ((int) Settings::Get('phpfpm.enabled') == 1) {
+				if ($input->hasArgument('max-lifetime') &&  is_numeric($input->getArgument('max-lifetime')) && $input->getArgument('max-lifetime') > 0) {
+					$this->cleanSessionfiles((int)$input->getArgument('max-lifetime'));
+				} else {
+					// use default max-lifetime value
+					$this->cleanSessionfiles();
+				}
+				$result = self::SUCCESS;
 			} else {
-				// use default max-lifetime value
-				$this->cleanSessionfiles();
+				// php-fpm not enabled
+				$output->writeln('<comment>PHP-FPM not enabled for this installation.</comment>');
+				$result = self::INVALID;
 			}
-			return self::SUCCESS;
 		}
-		// php-fpm not enabled
-		$output->writeln('<comment>PHP-FPM not enabled for this installation.</comment>');
-		return self::INVALID;
+		return $result;
 	}
 
 	private function cleanSessionfiles(int $maxlifetime = 1440)
