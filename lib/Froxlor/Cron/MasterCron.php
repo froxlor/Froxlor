@@ -209,6 +209,7 @@ class MasterCron extends FroxlorCron
 			unset($sql['root_password']);
 		}
 
+		require Froxlor::getInstallDir() . '/lib/functions.php';
 		// Includes the MySQL-Tabledefinitions etc.
 		require Froxlor::getInstallDir() . '/lib/tables.inc.php';
 		fwrite(self::$debugHandler, 'Table definitions included' . "\n");

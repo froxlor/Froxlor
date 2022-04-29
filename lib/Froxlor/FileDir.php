@@ -424,8 +424,6 @@ class FileDir
 	 */
 	public static function makePathfield($path, $uid, $gid, $value = '', $dom = false)
 	{
-		global $lng;
-
 		$value = str_replace($path, '', $value);
 		$field = [];
 
@@ -471,20 +469,17 @@ class FileDir
 					// remove starting slash we added
 					// for the Dropdown, #225
 					$value = substr($value, 1);
-					// $field = $lng['panel']['toomanydirs'];
 					$field = [
 						'type' => 'text',
 						'value' => htmlspecialchars($value),
-						'note' => $lng['panel']['toomanydirs']
+						'note' => lng('panel.toomanydirs')
 					];
 				}
 			} else {
-				// $field = $lng['panel']['dirsmissing'];
-				// $field = '<input type="hidden" name="path" value="/" />';
 				$field = [
 					'type' => 'hidden',
 					'value' => '/',
-					'note' => $lng['panel']['dirsmissing']
+					'note' => lng('panel.dirsmissing')
 				];
 			}
 		}

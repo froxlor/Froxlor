@@ -93,8 +93,6 @@ class Form
 
 	public static function getFormOverviewGroupOutput($groupname, $groupdetails)
 	{
-		global $lng;
-
 		$activated = true;
 		if (isset($groupdetails['fields'])) {
 			foreach ($groupdetails['fields'] as $fielddetails) {
@@ -125,7 +123,7 @@ class Form
 		if (isset($groupdetails['websrv_avail']) && is_array($groupdetails['websrv_avail'])) {
 			$websrv = Settings::Get('system.webserver');
 			if (!in_array($websrv, $groupdetails['websrv_avail'])) {
-				$item['info'] = sprintf($lng['serversettings']['option_unavailable_websrv'], implode(", ", $groupdetails['websrv_avail']));
+				$item['info'] = lng('serversettings.option_unavailable_websrv', [implode(", ", $groupdetails['websrv_avail'])]);
 				$item['visible'] = false;
 			}
 		}
@@ -135,8 +133,6 @@ class Form
 
 	public static function getFormFieldOutput($fieldname, $fielddata): array
 	{
-		global $lng;
-
 		$returnvalue = [];
 		if (is_array($fielddata) && isset($fielddata['type']) && $fielddata['type'] != '') {
 			if (!isset($fielddata['value'])) {
@@ -170,7 +166,7 @@ class Form
 				$websrv = Settings::Get('system.webserver');
 				if (!in_array($websrv, $fielddata['websrv_avail'])) {
 					$do_show = false;
-					$fielddata['note'] = sprintf($lng['serversettings']['option_unavailable_websrv'], implode(", ", $fielddata['websrv_avail']));
+					$fielddata['note'] = lng('serversettings.option_unavailable_websrv', [implode(", ", $fielddata['websrv_avail'])]);
 				}
 			}
 
@@ -180,7 +176,7 @@ class Form
 			if (isset($fielddata['visible']) && $do_show) {
 				$do_show = $fielddata['visible'];
 				if (!$do_show) {
-					$fielddata['note'] = $lng['serversettings']['option_unavailable'];
+					$fielddata['note'] = lng('serversettings.option_unavailable');
 				}
 			}
 

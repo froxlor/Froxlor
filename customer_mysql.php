@@ -67,11 +67,6 @@ if ($page == 'overview' || $page == 'mysqls') {
 			Response::dynamicError($e->getMessage());
 		}
 
-		Database::needSqlData();
-		$sql = Database::getSqlData();
-		// FIXME: setting translation on the fly is currently not supported; do we want this; alternatives
-		// $lng['mysql']['description'] = str_replace('<SQL_HOST>', $sql['host'], lng('mysql.description'));
-
 		$actions_links = false;
 		if ($userinfo['mysqls_used'] < $userinfo['mysqls'] || $userinfo['mysqls'] == '-1') {
 			$actions_links = [

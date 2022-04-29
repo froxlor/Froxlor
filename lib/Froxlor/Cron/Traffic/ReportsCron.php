@@ -40,6 +40,7 @@ use Froxlor\PhpHelper;
 use Froxlor\Settings;
 use Froxlor\System\Mailer;
 use Froxlor\User;
+use Froxlor\Language;
 use PDO;
 
 class ReportsCron extends FroxlorCron
@@ -98,29 +99,8 @@ class ReportsCron extends FroxlorCron
 						'MAX_PERCENT' => Settings::Get('system.report_trafficmax')
 					];
 
-					$lngfile_stmt = Database::prepare("
-						SELECT `file` FROM `" . TABLE_PANEL_LANGUAGE . "`
-						WHERE `language` = :deflang
-					");
-					$lngfile = Database::pexecute_first($lngfile_stmt, [
-						'deflang' => $row['def_language']
-					]);
-
-					if ($lngfile !== null) {
-						$langfile = $lngfile['file'];
-					} else {
-						$lngfile = Database::pexecute_first($lngfile_stmt, [
-							'deflang' => Settings::Get('panel.standardlanguage')
-						]);
-						$langfile = $lngfile['file'];
-					}
-
-					// include english language file (fallback)
-					include FileDir::makeCorrectFile(Froxlor::getInstallDir() . '/lng/english.lng.php');
-					// include admin/customer language file
-					if ($lngfile != 'lng/english.lng.php') {
-						include FileDir::makeCorrectFile(Froxlor::getInstallDir() . '/' . $langfile);
-					}
+					// set target user language
+					Language::setLanguage($row['def_language']);
 
 					// Get mail templates from database; the ones from 'admin' are fetched for fallback
 					$result2_stmt = Database::prepare("
@@ -135,11 +115,11 @@ class ReportsCron extends FroxlorCron
 						'varname' => 'trafficmaxpercent_subject'
 					];
 					$result2 = Database::pexecute_first($result2_stmt, $result2_data);
-					$mail_subject = html_entity_decode(PhpHelper::replaceVariables((($result2 !== false && $result2['value'] != '') ? $result2['value'] : $lng['mails']['trafficmaxpercent']['subject']), $replace_arr));
+					$mail_subject = html_entity_decode(PhpHelper::replaceVariables((($result2 !== false && $result2['value'] != '') ? $result2['value'] : lng('mails.trafficmaxpercent.subject')), $replace_arr));
 
 					$result2_data['varname'] = 'trafficmaxpercent_mailbody';
 					$result2 = Database::pexecute_first($result2_stmt, $result2_data);
-					$mail_body = html_entity_decode(PhpHelper::replaceVariables((($result2 !== false && $result2['value'] != '') ? $result2['value'] : $lng['mails']['trafficmaxpercent']['mailbody']), $replace_arr));
+					$mail_body = html_entity_decode(PhpHelper::replaceVariables((($result2 !== false && $result2['value'] != '') ? $result2['value'] : lng('mails.trafficmaxpercent.mailbody')), $replace_arr));
 
 					$_mailerror = false;
 					$mailerr_msg = "";
@@ -241,11 +221,11 @@ class ReportsCron extends FroxlorCron
 						'varname' => 'trafficmaxpercent_subject'
 					];
 					$result2 = Database::pexecute_first($result2_stmt, $result2_data);
-					$mail_subject = html_entity_decode(PhpHelper::replaceVariables((($result2 !== false && $result2['value'] != '') ? $result2['value'] : $lng['mails']['trafficmaxpercent']['subject']), $replace_arr));
+					$mail_subject = html_entity_decode(PhpHelper::replaceVariables((($result2 !== false && $result2['value'] != '') ? $result2['value'] : lng('mails.trafficmaxpercent.subject')), $replace_arr));
 
 					$result2_data['varname'] = 'trafficmaxpercent_mailbody';
 					$result2 = Database::pexecute_first($result2_stmt, $result2_data);
-					$mail_body = html_entity_decode(PhpHelper::replaceVariables((($result2 !== false && $result2['value'] != '') ? $result2['value'] : $lng['mails']['trafficmaxpercent']['mailbody']), $replace_arr));
+					$mail_body = html_entity_decode(PhpHelper::replaceVariables((($result2 !== false && $result2['value'] != '') ? $result2['value'] : lng('mails.trafficmaxpercent.mailbody')), $replace_arr));
 
 					$_mailerror = false;
 					$mailerr_msg = "";
@@ -447,11 +427,11 @@ class ReportsCron extends FroxlorCron
 						'varname' => 'diskmaxpercent_subject'
 					];
 					$result2 = Database::pexecute_first($result2_stmt, $result2_data);
-					$mail_subject = html_entity_decode(PhpHelper::replaceVariables((($result2 !== false && $result2['value'] != '') ? $result2['value'] : $lng['mails']['diskmaxpercent']['subject']), $replace_arr));
+					$mail_subject = html_entity_decode(PhpHelper::replaceVariables((($result2 !== false && $result2['value'] != '') ? $result2['value'] : lng('mails.diskmaxpercent.subject')), $replace_arr));
 
 					$result2_data['varname'] = 'diskmaxpercent_mailbody';
 					$result2 = Database::pexecute_first($result2_stmt, $result2_data);
-					$mail_body = html_entity_decode(PhpHelper::replaceVariables((($result2 !== false && $result2['value'] != '') ? $result2['value'] : $lng['mails']['diskmaxpercent']['mailbody']), $replace_arr));
+					$mail_body = html_entity_decode(PhpHelper::replaceVariables((($result2 !== false && $result2['value'] != '') ? $result2['value'] : lng('mails.diskmaxpercent.mailbody')), $replace_arr));
 
 					$_mailerror = false;
 					$mailerr_msg = "";
@@ -544,11 +524,11 @@ class ReportsCron extends FroxlorCron
 						'varname' => 'diskmaxpercent_subject'
 					];
 					$result2 = Database::pexecute_first($result2_stmt, $result2_data);
-					$mail_subject = html_entity_decode(PhpHelper::replaceVariables((($result2 !== false && $result2['value'] != '') ? $result2['value'] : $lng['mails']['diskmaxpercent']['subject']), $replace_arr));
+					$mail_subject = html_entity_decode(PhpHelper::replaceVariables((($result2 !== false && $result2['value'] != '') ? $result2['value'] : lng('mails.diskmaxpercent.subject')), $replace_arr));
 
 					$result2_data['varname'] = 'diskmaxpercent_mailbody';
 					$result2 = Database::pexecute_first($result2_stmt, $result2_data);
-					$mail_body = html_entity_decode(PhpHelper::replaceVariables((($result2 !== false && $result2['value'] != '') ? $result2['value'] : $lng['mails']['diskmaxpercent']['mailbody']), $replace_arr));
+					$mail_body = html_entity_decode(PhpHelper::replaceVariables((($result2 !== false && $result2['value'] != '') ? $result2['value'] : lng('mails.diskmaxpercent.mailbody')), $replace_arr));
 
 					$_mailerror = false;
 					$mailerr_msg = "";
@@ -580,8 +560,6 @@ class ReportsCron extends FroxlorCron
 					Database::pexecute($upd_stmt, [
 						'adminid' => $row['adminid']
 					]);
-
-					unset($lng);
 				}
 			}
 		} // webmax > 0

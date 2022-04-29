@@ -98,8 +98,6 @@ class Response
 	 */
 	public static function standardError($errors = '', $replacer = '', $throw_exception = false)
 	{
-		global $lng;
-
 		$_SESSION['requestData'] = $_POST;
 		$replacer = htmlentities($replacer);
 
@@ -116,7 +114,7 @@ class Response
 
 		$error = '';
 		foreach ($errors as $single_error) {
-			$single_error = lng('error.'.$single_error, [htmlentities($replacer)]);
+			$single_error = lng('error.' . $single_error, [htmlentities($replacer)]);
 			if (empty($error)) {
 				$error = $single_error;
 			} else {
@@ -130,7 +128,7 @@ class Response
 		UI::view('misc/alert.html.twig', [
 			'type' => 'danger',
 			'btntype' => 'light',
-			'heading' => $lng['error']['error'],
+			'heading' => lng('error.error'),
 			'alert_msg' => $error,
 			'redirect_link' => $link_ref
 		]);
@@ -139,7 +137,6 @@ class Response
 
 	public static function dynamicError($message)
 	{
-		global $lng;
 		$_SESSION['requestData'] = $_POST;
 		$link_ref = '';
 		if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], $_SERVER['HTTP_HOST']) !== false) {
@@ -149,7 +146,7 @@ class Response
 		UI::view('misc/alert.html.twig', [
 			'type' => 'danger',
 			'btntype' => 'light',
-			'heading' => $lng['error']['error'],
+			'heading' => lng('error.error'),
 			'alert_msg' => $message,
 			'redirect_link' => $link_ref
 		]);
@@ -170,9 +167,7 @@ class Response
 	 */
 	public static function standardSuccess($success_message = '', $replacer = '', $params = [], $throw_exception = false)
 	{
-		global $lng;
-
-		$success_message = lng('success.'.$success_message, [htmlentities($replacer)]);
+		$success_message = lng('success.' . $success_message, [htmlentities($replacer)]);
 
 		if ($throw_exception) {
 			throw new Exception(strip_tags($success_message), 200);
@@ -198,7 +193,7 @@ class Response
 		UI::view('misc/alert.html.twig', [
 			'type' => 'success',
 			'btntype' => 'light',
-			'heading' => $lng['success']['success'],
+			'heading' => lng('success.success'),
 			'alert_msg' => $success_message,
 			'redirect_link' => $redirect_url
 		]);

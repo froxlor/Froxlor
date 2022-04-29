@@ -247,12 +247,12 @@ if (AREA == 'admin' || AREA == 'customer') {
 		$navigation_data = [
 			'admin' => [
 				'server' => [
-					'label' => $lng['admin']['server'],
+					'label' => lng('admin.server'),
 					'required_resources' => 'change_serversettings',
 					'elements' => [
 						[
 							'url' => 'admin_updates.php?page=overview',
-							'label' => $lng['update']['update'],
+							'label' => lng('update.update'),
 							'required_resources' => 'change_serversettings'
 						]
 					]

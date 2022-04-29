@@ -53,9 +53,8 @@ class IpAddr
 
 	public static function getSslIpPortCombinations()
 	{
-		global $lng;
 		return [
-				'' => $lng['panel']['none_value']
+				'' => lng('panel.none_value')
 			] + self::getIpPortCombinations(true);
 	}
 

@@ -89,11 +89,9 @@ class Crypt
 	 */
 	public static function getAvailablePasswordHashes()
 	{
-		global $lng;
-
 		// get available pwd-hases
 		$available_pwdhashes = [
-			PASSWORD_DEFAULT => $lng['serversettings']['systemdefault']
+			PASSWORD_DEFAULT => lng('serversettings.systemdefault')
 		];
 		if (defined('PASSWORD_BCRYPT')) {
 			$available_pwdhashes[PASSWORD_BCRYPT] = 'Bcrypt/Blowfish';

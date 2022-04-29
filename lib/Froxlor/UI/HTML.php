@@ -186,15 +186,7 @@ class HTML
 	 */
 	public static function askYesNo(string $text, string $yesfile, array $params = [], string $replacer = '', array $back_link = [])
 	{
-		global $lng;
-
-		if (isset($lng['question'][$text])) {
-			$text = $lng['question'][$text];
-		}
-
-		$text = strtr($text, [
-			'%s' => htmlspecialchars($replacer)
-		]);
+		$text = lng('question.' . $text, [htmlspecialchars($replacer)]);
 
 		Panel\UI::view('form/yesnoquestion.html.twig', [
 			'action' => $yesfile,
@@ -207,18 +199,8 @@ class HTML
 
 	public static function askYesNoWithCheckbox(string $text, string $chk_text, string $yesfile, array $params = [], string $replacer = '', bool $show_checkbox = true)
 	{
-		global $lng;
-
-		if (isset($lng['question'][$text])) {
-			$text = $lng['question'][$text];
-		}
-		$text = strtr($text, [
-			'%s' => htmlspecialchars($replacer)
-		]);
-
-		if (isset($lng['question'][$chk_text])) {
-			$chk_text = $lng['question'][$chk_text];
-		}
+		$text = lng('question.' . $text, [htmlspecialchars($replacer)]);
+		$chk_text = lng('question.' . $chk_text);
 
 		Panel\UI::view('form/yesnoquestion.html.twig', [
 			'action' => $yesfile,
