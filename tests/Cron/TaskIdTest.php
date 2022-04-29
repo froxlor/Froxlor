@@ -46,9 +46,6 @@ class TaskIDTest extends TestCase
 
 		$isNegativeValid = TaskId::isValid(-1);
 		$this->assertFalse($isNegativeValid, "Negative task should be invalid");
-
-		$isTESTTASKValid = TaskIdExtended::isValid(10101010);
-		$this->assertTrue($isTESTTASKValid);
 	}
 
 	public function testIdMappingCorrect() {
@@ -67,8 +64,4 @@ class TaskIDTest extends TestCase
 		$unknownIDResult = TaskId::isValid(10101010);
 		$this->assertFalse($unknownIDResult);
 	}
-}
-
-class TaskIdExtended extends TaskId {
-	const TESTTASK = 10101010;
 }

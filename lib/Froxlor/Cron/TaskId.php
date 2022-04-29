@@ -27,7 +27,7 @@ namespace Froxlor\Cron;
 
 use ReflectionClass;
 
-class TaskId
+final class TaskId
 {
 	/**
 	 * TYPE=1 MEANS TO REBUILD APACHE VHOSTS.CONF
