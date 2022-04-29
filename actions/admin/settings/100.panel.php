@@ -37,9 +37,9 @@ return [
 					'settinggroup' => 'panel',
 					'varname' => 'standardlanguage',
 					'type' => 'select',
-					'default' => 'English',
+					'default' => 'en',
 					'option_options_method' => [
-						'\\Froxlor\\User',
+						'\\Froxlor\\Language',
 						'getLanguages'
 					],
 					'save_method' => 'storeSettingField'

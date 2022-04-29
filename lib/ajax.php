@@ -35,6 +35,7 @@ if (!file_exists('./userdata.inc.php')) {
 	die();
 }
 require_once dirname(__DIR__) . '/lib/userdata.inc.php';
+require_once dirname(__DIR__) . '/lib/functions.php';
 require_once dirname(__DIR__) . '/lib/tables.inc.php';
 
 // Return response

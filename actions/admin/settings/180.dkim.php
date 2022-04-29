@@ -108,7 +108,7 @@ return [
 				'dkim_keylength' => [
 					'label' => [
 						'title' => lng('dkim.dkim_keylength.title'),
-						'description' => sprintf(lng('dkim.dkim_keylength.description'), Settings::Get('dkim.dkim_prefix'))
+						'description' => lng('dkim.dkim_keylength.description', [Settings::Get('dkim.dkim_prefix')])
 					],
 					'settinggroup' => 'dkim',
 					'varname' => 'dkim_keylength',

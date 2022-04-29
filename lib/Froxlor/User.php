@@ -84,20 +84,6 @@ class User
 		return $returnval;
 	}
 
-	public static function getLanguages()
-	{
-		$result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_LANGUAGE . "` ");
-		$languages_array = [];
-
-		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-			if (!isset($languages_array[$row['language']]) && !in_array($row['language'], $languages_array)) {
-				$languages_array[$row['language']] = html_entity_decode($row['language']);
-			}
-		}
-
-		return $languages_array;
-	}
-
 	/**
 	 * Function which updates all counters of used resources in panel_admins and panel_customers
 	 *

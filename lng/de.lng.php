@@ -1011,9 +1011,6 @@ Vielen Dank, Ihr Administrator',
 			'subject' => 'Froxlor - 2FA Code',
 		],
 	],
-	'menu' => [
-		'message' => 'Nachrichten',
-	],
 	'menue' => [
 		'main' => [
 			'main' => 'Allgemein',

@@ -39,7 +39,6 @@ use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
 use Froxlor\UI\Response;
 use Froxlor\Validate\Validate;
-use PDO;
 
 class Ajax
 {

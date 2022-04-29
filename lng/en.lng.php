@@ -1308,9 +1308,6 @@ Yours sincerely, your administrator',
 			'subject' => 'Froxlor - 2FA Code',
 		],
 	],
-	'menu' => [
-		'message' => 'Messages',
-	],
 	'menue' => [
 		'main' => [
 			'main' => 'Main',

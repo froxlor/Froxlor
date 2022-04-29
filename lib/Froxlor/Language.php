@@ -70,6 +70,13 @@ class Language
 			}
 		}
 
+		// shortcut for identifier with => [title, description]
+		if (!isset(self::$lng[$identifier]) && isset(self::$lng[$identifier . '.title'])) {
+			return [
+				'title' => vsprintf(self::$lng[$identifier . '.title'] ?? $identifier, $arguments),
+				'description' => vsprintf(self::$lng[$identifier . '.description'] ?? $identifier, $arguments),
+			];
+		}
 		// search by identifier
 		return vsprintf(self::$lng[$identifier] ?? $identifier, $arguments);
 	}
