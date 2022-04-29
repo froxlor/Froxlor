@@ -29,6 +29,7 @@ require __DIR__ . '/lib/init.php';
 use Froxlor\Database\Database;
 use Froxlor\FileDir;
 use Froxlor\FroxlorLogger;
+use Froxlor\Language;
 use Froxlor\PhpHelper;
 use Froxlor\Settings;
 use Froxlor\UI\HTML;
@@ -259,20 +260,14 @@ if ($action == '') {
 			Response::standardError('templatelanguagecombodefined');
 		}
 
-		$lng_bak = $lng;
-		foreach ($langs['English'] as $key => $value) {
-			include_once FileDir::makeSecurePath($value['file']);
-		}
-		if ($language != 'English') {
-			foreach ($langs[$language] as $key => $value) {
-				include FileDir::makeSecurePath($value['file']);
-			}
-		}
+		// set target language
+		Language::setLanguage($language);
 
 		$subject = lng('mails.' . $template . '.subject');
 		$body = str_replace('\n', "\n", lng('mails.' . $template . '.mailbody'));
 
-		$lng = $lng_bak;
+		// re set language to user
+		Language::setLanguage(CurrentUser::getField('def_language'));
 
 		$template_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/templates/formfield.template_add.php';
 

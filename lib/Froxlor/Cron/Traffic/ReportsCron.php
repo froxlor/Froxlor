@@ -151,8 +151,6 @@ class ReportsCron extends FroxlorCron
 					Database::pexecute($upd_stmt, [
 						'customerid' => $row['customerid']
 					]);
-
-					unset($lng);
 				}
 			}
 
@@ -184,29 +182,8 @@ class ReportsCron extends FroxlorCron
 						'MAX_PERCENT' => Settings::Get('system.report_trafficmax')
 					];
 
-					$lngfile_stmt = Database::prepare("
-						SELECT `file` FROM `" . TABLE_PANEL_LANGUAGE . "`
-						WHERE `language` = :deflang
-					");
-					$lngfile = Database::pexecute_first($lngfile_stmt, [
-						'deflang' => $row['def_language']
-					]);
-
-					if ($lngfile !== null) {
-						$langfile = $lngfile['file'];
-					} else {
-						$lngfile = Database::pexecute_first($lngfile_stmt, [
-							'deflang' => Settings::Get('panel.standardlanguage')
-						]);
-						$langfile = $lngfile['file'];
-					}
-
-					// include english language file (fallback)
-					include FileDir::makeCorrectFile(Froxlor::getInstallDir() . '/lng/english.lng.php');
-					// include admin/customer language file
-					if ($lngfile != 'lng/english.lng.php') {
-						include FileDir::makeCorrectFile(Froxlor::getInstallDir() . '/' . $langfile);
-					}
+					// set target user language
+					Language::setLanguage($row['def_language']);
 
 					// Get mail templates from database; the ones from 'admin' are fetched for fallback
 					$result2_stmt = Database::prepare("
@@ -334,8 +311,6 @@ class ReportsCron extends FroxlorCron
 					}
 
 					$mail->ClearAddresses();
-
-					unset($lng);
 				}
 			}
 		} // trafficmax > 0
@@ -390,29 +365,8 @@ class ReportsCron extends FroxlorCron
 						'MAX_PERCENT' => Settings::Get('system.report_webmax')
 					];
 
-					$lngfile_stmt = Database::prepare("
-						SELECT `file` FROM `" . TABLE_PANEL_LANGUAGE . "`
-						WHERE `language` = :deflang
-					");
-					$lngfile = Database::pexecute_first($lngfile_stmt, [
-						'deflang' => $row['def_language']
-					]);
-
-					if ($lngfile !== null) {
-						$langfile = $lngfile['file'];
-					} else {
-						$lngfile = Database::pexecute_first($lngfile_stmt, [
-							'deflang' => Settings::Get('panel.standardlanguage')
-						]);
-						$langfile = $lngfile['file'] ?? 'lng/english.lng.php';
-					}
-
-					// include english language file (fallback)
-					include FileDir::makeCorrectFile(Froxlor::getInstallDir() . '/lng/english.lng.php');
-					// include admin/customer language file
-					if ($lngfile != 'lng/english.lng.php') {
-						include FileDir::makeCorrectFile(Froxlor::getInstallDir() . '/' . $langfile);
-					}
+					// set target user language
+					Language::setLanguage($row['def_language']);
 
 					// Get mail templates from database; the ones from 'admin' are fetched for fallback
 					$result2_stmt = Database::prepare("
@@ -463,8 +417,6 @@ class ReportsCron extends FroxlorCron
 					Database::pexecute($upd_stmt, [
 						'customerid' => $row['customerid']
 					]);
-
-					unset($lng);
 				}
 			}
 
@@ -487,29 +439,8 @@ class ReportsCron extends FroxlorCron
 						'MAX_PERCENT' => Settings::Get('system.report_webmax')
 					];
 
-					$lngfile_stmt = Database::prepare("
-						SELECT `file` FROM `" . TABLE_PANEL_LANGUAGE . "`
-						WHERE `language` = :deflang
-					");
-					$lngfile = Database::pexecute_first($lngfile_stmt, [
-						'deflang' => $row['def_language']
-					]);
-
-					if ($lngfile !== null) {
-						$langfile = $lngfile['file'];
-					} else {
-						$lngfile = Database::pexecute_first($lngfile_stmt, [
-							'deflang' => Settings::Get('panel.standardlanguage')
-						]);
-						$langfile = $lngfile['file'];
-					}
-
-					// include english language file (fallback)
-					include FileDir::makeCorrectFile(Froxlor::getInstallDir() . '/lng/english.lng.php');
-					// include admin/customer language file
-					if ($lngfile != 'lng/english.lng.php') {
-						include FileDir::makeCorrectFile(Froxlor::getInstallDir() . '/' . $langfile);
-					}
+					// set target user language
+					Language::setLanguage($row['def_language']);
 
 					// Get mail templates from database; the ones from 'admin' are fetched for fallback
 					$result2_stmt = Database::prepare("

@@ -54,8 +54,6 @@ final class ConfigServices extends CliCommand
 
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
-		global $lng;
-
 		$result = self::SUCCESS;
 
 		$result = $this->validateRequirements($input, $output);
