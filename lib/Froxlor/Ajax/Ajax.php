@@ -46,7 +46,6 @@ class Ajax
 	protected string $action;
 	protected string $theme;
 	protected array $userinfo;
-	protected array $lng;
 
 	/**
 	 * @throws Exception
@@ -66,8 +65,6 @@ class Ajax
 	public function handle()
 	{
 		$this->userinfo = $this->getValidatedSession();
-
-		$this->initLang();
 
 		switch ($this->action) {
 			case 'newsfeed':
@@ -98,55 +95,6 @@ class Ajax
 			throw new Exception("No valid session");
 		}
 		return CurrentUser::getData();
-	}
-
-	/**
-	 * initialize global $lng variable to have
-	 * localized strings available for the ApiCommands
-	 */
-	private function initLang()
-	{
-		global $lng;
-
-		// query the whole table
-		$result_stmt = Database::query("SELECT * FROM `" . TABLE_PANEL_LANGUAGE . "`");
-
-		$langs = [];
-		// presort languages
-		while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-			$langs[$row['language']][] = $row;
-		}
-
-		// set default language before anything else to
-		// ensure that we can display messages
-		$language = Settings::Get('panel.standardlanguage');
-
-		if (isset($this->userinfo['language']) && isset($langs[$this->userinfo['language']])) {
-			// default: use language from session, #277
-			$language = $this->userinfo['language'];
-		} elseif (isset($this->userinfo['def_language'])) {
-			$language = $this->userinfo['def_language'];
-		}
-
-		// include every english language file we can get
-		foreach ($langs['English'] as $value) {
-			include_once FileDir::makeSecurePath(Froxlor::getInstallDir() . '/' . $value['file']);
-		}
-
-		// now include the selected language if its not english
-		if ($language != 'English') {
-			if (isset($langs[$language])) {
-				foreach ($langs[$language] as $value) {
-					include_once FileDir::makeSecurePath(Froxlor::getInstallDir() . '/' . $value['file']);
-				}
-			}
-		}
-
-		// last but not least include language references file
-		include_once FileDir::makeSecurePath(Froxlor::getInstallDir() . '/lng/lng_references.php');
-
-		// set array
-		$this->lng = $lng;
 	}
 
 	/**

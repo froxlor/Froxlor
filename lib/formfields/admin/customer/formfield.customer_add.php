@@ -256,6 +256,14 @@ return [
 						'maxlength' => 9,
 						'mandatory' => true
 					],
+					'allowed_mysqlserver' => [
+						'visible' => count($mysql_servers) > 1,
+						'label' => lng('customer.mysqlserver'),
+						'type' => 'checkbox',
+						'values' => $mysql_servers,
+						'value' => [0],
+						'is_array' => 1
+					],
 					'phpenabled' => [
 						'label' => lng('admin.phpenabled') . '?',
 						'type' => 'checkbox',

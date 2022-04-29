@@ -57,13 +57,6 @@ class UI
 	private static $twigbuf = [];
 
 	/**
-	 * language strigs array
-	 *
-	 * @var array
-	 */
-	private static $lng = [];
-
-	/**
 	 * linker class object
 	 */
 	private static $linker = null;
@@ -210,34 +203,6 @@ class UI
 	public static function getCurrentUser(): array
 	{
 		return self::$userinfo;
-	}
-
-	public static function getLng($identifier, $context = null)
-	{
-		$id = explode(".", $identifier);
-		if (is_null($context)) {
-			$id_first = array_shift($id);
-			if (!isset(self::$lng[$id_first])) {
-				return null;
-			}
-			if (empty($id)) {
-				return self::$lng[$id_first];
-			} else {
-				return self::getLng(implode(".", $id), self::$lng[$id_first]);
-			}
-		} else {
-			$id_first = array_shift($id);
-			if (empty($id)) {
-				return isset($context[$id_first]) ? $context[$id_first] : null;
-			} else {
-				return self::getLng(implode(".", $id), $context[$id_first]);
-			}
-		}
-	}
-
-	public static function setLng($lng = [])
-	{
-		self::$lng = $lng;
 	}
 
 	/**

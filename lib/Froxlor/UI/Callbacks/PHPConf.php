@@ -39,9 +39,9 @@ class PHPConf
 			$domains .= $idna->decode($configdomain) . "<br>";
 		}
 		if ($subdomains_count == 0 && empty($domains)) {
-			$domains = UI::getLng('admin.phpsettings.notused');
+			$domains = lng('admin.phpsettings.notused');
 		} else {
-			$domains .= !empty($subdomains_count) ? ((!empty($domains) ? '+ ' : '') . $subdomains_count . ' ' . UI::getLng('customer.subdomains')) : '';
+			$domains .= !empty($subdomains_count) ? ((!empty($domains) ? '+ ' : '') . $subdomains_count . ' ' . lng('customer.subdomains')) : '';
 		}
 
 		return $domains;
@@ -75,8 +75,8 @@ class PHPConf
 					'href' => $linker->getLink([
 						'section' => 'phpsettings',
 						'page' => 'fpmdaemons',
-						'action' => 'edit',
-						'id' => $attributes['fields']['fpmsettingid'],
+						'searchfield' => 'id',
+						'searchtext' => $attributes['fields']['fpmsettingid'],
 					]),
 				]
 			];

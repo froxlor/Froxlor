@@ -27,7 +27,6 @@ namespace Froxlor\UI\Callbacks;
 
 use Froxlor\PhpHelper;
 use Froxlor\Settings;
-use Froxlor\UI\Panel\UI;
 
 class ProgressBar
 {
@@ -41,7 +40,7 @@ class ProgressBar
 	{
 		$infotext = null;
 		if (isset($attributes['fields']['webspace_used']) && isset($attributes['fields']['mailspace_used']) && isset($attributes['fields']['dbspace_used'])) {
-			$infotext = UI::getLng('panel.used') . ':' . PHP_EOL;
+			$infotext = lng('panel.used') . ':' . PHP_EOL;
 			$infotext .= 'web: ' . PhpHelper::sizeReadable($attributes['fields']['webspace_used'] * 1024, null, 'bi') . PHP_EOL;
 			$infotext .= 'mail: ' . PhpHelper::sizeReadable($attributes['fields']['mailspace_used'] * 1024, null, 'bi') . PHP_EOL;
 			$infotext .= 'mysql: ' . PhpHelper::sizeReadable($attributes['fields']['dbspace_used'] * 1024, null, 'bi');
@@ -57,7 +56,7 @@ class ProgressBar
 	{
 		$percent = 0;
 		$style = 'bg-primary';
-		$text = PhpHelper::sizeReadable($attributes[$field . '_used'] * $size_factor, null, 'bi') . ' / ' . UI::getLng('panel.unlimited');
+		$text = PhpHelper::sizeReadable($attributes[$field . '_used'] * $size_factor, null, 'bi') . ' / ' . lng('panel.unlimited');
 		if ((int)$attributes[$field] >= 0) {
 			if (($attributes[$field] / 100) * $report_max < $attributes[$field . '_used']) {
 				$style = 'bg-danger';

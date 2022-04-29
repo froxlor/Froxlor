@@ -27,7 +27,8 @@ const AREA = 'admin';
 require __DIR__ . '/lib/init.php';
 
 use Froxlor\Api\Commands\Admins;
-use Froxlor\Api\Commands\Customers as Customers;
+use Froxlor\Api\Commands\Customers;
+use Froxlor\Api\Commands\MysqlServer;
 use Froxlor\CurrentUser;
 use Froxlor\Database\Database;
 use Froxlor\Froxlor;
@@ -175,6 +176,20 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 				'page' => $page
 			]);
 		} else {
+			$mysql_servers = [];
+			try {
+				$result_json = MysqlServer::getLocal($userinfo)->listing();
+				$result_decoded = json_decode($result_json, true)['data']['list'];
+				foreach ($result_decoded as $dbserver => $dbdata) {
+					$mysql_servers[] = [
+						'label' => $dbdata['caption'],
+						'value' => $dbserver
+					];
+				}
+			} catch (Exception $e) {
+				/* just none */
+			}
+
 			$phpconfigs = [];
 			$configs = Database::query("
 				SELECT c.*, fc.description as interpreter
@@ -243,6 +258,20 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 				$result['email'] = $idna_convert->decode($result['email']);
 
 				$result = PhpHelper::htmlentitiesArray($result);
+
+				$mysql_servers = [];
+				try {
+					$result_json = MysqlServer::getLocal($userinfo)->listing();
+					$result_decoded = json_decode($result_json, true)['data']['list'];
+					foreach ($result_decoded as $dbserver => $dbdata) {
+						$mysql_servers[] = [
+							'label' => $dbdata['caption'],
+							'value' => $dbserver
+						];
+					}
+				} catch (Exception $e) {
+					/* just none */
+				}
 
 				$phpconfigs = [];
 				$configs = Database::query("

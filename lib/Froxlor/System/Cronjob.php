@@ -225,15 +225,13 @@ class Cronjob
 	 */
 	public static function getCronjobsLastRun()
 	{
-		global $lng;
-
 		$query = "SELECT `lastrun`, `desc_lng_key` FROM `" . TABLE_PANEL_CRONRUNS . "` WHERE `isactive` = '1' ORDER BY `cronfile` ASC";
 		$result = Database::query($query);
 
 		$cronjobs_last_run = [];
 		while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
 			$cronjobs_last_run[] = [
-				'title' => $lng['crondesc'][$row['desc_lng_key']],
+				'title' => lng('crondesc.' . $row['desc_lng_key']),
 				'lastrun' => $row['lastrun']
 			];
 		}
@@ -261,8 +259,6 @@ class Cronjob
 	 */
 	public static function getOutstandingTasks()
 	{
-		global $lng;
-
 		$query = "SELECT * FROM `" . TABLE_PANEL_TASKS . "` ORDER BY `type` ASC";
 		$result = Database::query($query);
 
@@ -275,21 +271,20 @@ class Cronjob
 			$task_id = $row['type'];
 			if (TaskId::isValid($task_id)) {
 				$task_constname = TaskId::convertToConstant($task_id);
-				$task = [
-					'desc' => isset($lng['tasks'][$task_constname]) ? $lng['tasks'][$task_constname] : $task_constname
-				];
+				$lngParams = [];
 				if (is_array($row['data'])) {
 					// task includes loginname
 					if (isset($row['data']['loginname'])) {
-						$loginname = $row['data']['loginname'];
-						$task['desc'] = str_replace('%loginname%', $loginname, $task['desc']);
+						$lngParams = [$row['data']['loginname']];
 					}
 					// task includes domain data
 					if (isset($row['data']['domain'])) {
-						$domain = $row['data']['domain'];
-						$task['desc'] = str_replace('%domain%', $domain, $task['desc']);
+						$lngParams = [$row['data']['domain']];
 					}
 				}
+				$task = [
+					'desc' => lng('tasks.' . $task_constname, $lngParams)
+				];
 			} else {
 				// unknown
 				$task = ['desc' => "ERROR: Unknown task type '" . $row['type'] . "'"];
@@ -299,10 +294,9 @@ class Cronjob
 		}
 
 		if (empty($tasks)) {
-			$tasks = [['desc' => $lng['tasks']['noneoutstanding']]];
+			$tasks = [['desc' => lng('tasks.noneoutstanding')]];
 		}
 
-		$text = $lng['tasks']['outstanding_tasks'];
 		return $tasks;
 	}
 

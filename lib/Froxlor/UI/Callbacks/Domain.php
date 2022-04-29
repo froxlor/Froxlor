@@ -67,7 +67,7 @@ class Domain
 				return $attributes['fields']['documentroot'];
 			}
 		}
-		return UI::getLng('domains.aliasdomain') . ' ' . $attributes['fields']['aliasdomain'];
+		return lng('domains.aliasdomain') . ' ' . $attributes['fields']['aliasdomain'];
 	}
 
 	public static function domainExternalLinkInfo(array $attributes)
@@ -79,13 +79,13 @@ class Domain
 			if (Settings::Get('system.awstats_enabled') == '1') {
 				$statsapp = 'awstats';
 			}
-			$result .= ' <a href="http://' . $attributes['data'] . '/' . $statsapp . '" rel="external" title="' . UI::getLng('domains.statstics') . '"><i class="fa-solid fa-chart-line text-secondary"></i></a>';
+			$result .= ' <a href="http://' . $attributes['data'] . '/' . $statsapp . '" rel="external" title="' . lng('domains.statstics') . '"><i class="fa-solid fa-chart-line text-secondary"></i></a>';
 		}
 		if ($attributes['fields']['registration_date'] != '') {
-			$result .= '<br><small>' . UI::getLng('domains.registration_date') . ': ' . $attributes['fields']['registration_date'] . '</small>';
+			$result .= '<br><small>' . lng('domains.registration_date') . ': ' . $attributes['fields']['registration_date'] . '</small>';
 		}
 		if ($attributes['fields']['termination_date'] != '') {
-			$result .= '<br><small>' . UI::getLng('domains.termination_date_overview') . ': ' . $attributes['fields']['termination_date'] . '</small>';
+			$result .= '<br><small>' . lng('domains.termination_date_overview') . ': ' . $attributes['fields']['termination_date'] . '</small>';
 		}
 		return $result;
 	}

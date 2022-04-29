@@ -1751,10 +1751,10 @@ Nota: Perfavore <b>sii sicuro</b> di usare lo stesso nome di file come per il cr
 	'tasks' => [
 		'outstanding_tasks' => 'Processi Cron in sospeso',
 		'REBUILD_VHOST' => 'Ricostruzione della configurazione del webserver',
-		'CREATE_HOME' => 'Aggiunto il nuovo cliente %loginname%',
+		'CREATE_HOME' => 'Aggiunto il nuovo cliente %s',
 		'REBUILD_DNS' => 'Ricostruzione della configurazione di bind',
 		'CREATE_FTP' => 'Creazione delle cartelle per i nuovi utenti ftp',
-		'DELETE_CUSTOMER_FILES' => 'Eliminazione dei file del cliente %loginname%',
+		'DELETE_CUSTOMER_FILES' => 'Eliminazione dei file del cliente %s',
 		'noneoutstanding' => 'Attualmente non ci sono processi in sospeso per Froxlor',
 		'CREATE_QUOTA' => 'Setta quota al filesystem',
 		'DELETE_EMAIL_DATA' => 'Elimina i dati di posta elettronica del cliente.',

@@ -125,9 +125,9 @@ class FroxlorTwig extends AbstractExtension
 		return Settings::Get($setting);
 	}
 
-	public function getLang($identifier = null)
+	public function getLang($identifier = null, array $arguments = [])
 	{
-		return UI::getLng($identifier);
+		return lng($identifier, $arguments);
 	}
 
 	public function getLink($linkopts)

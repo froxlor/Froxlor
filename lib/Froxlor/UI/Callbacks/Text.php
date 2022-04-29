@@ -52,17 +52,17 @@ class Text
 
 	public static function timestamp(array $attributes): string
 	{
-		return (int)$attributes['data'] > 0 ? date('d.m.Y H:i', (int)$attributes['data']) : UI::getLng('panel.never');
+		return (int)$attributes['data'] > 0 ? date('d.m.Y H:i', (int)$attributes['data']) : lng('panel.never');
 	}
 
 	public static function timestampUntil(array $attributes): string
 	{
-		return (int)$attributes['data'] > 0 ? date('d.m.Y H:i', (int)$attributes['data']) : UI::getLng('panel.unlimited');
+		return (int)$attributes['data'] > 0 ? date('d.m.Y H:i', (int)$attributes['data']) : lng('panel.unlimited');
 	}
 
 	public static function crondesc(array $attributes): string
 	{
-		return UI::getLng('crondesc.' . $attributes['data']);
+		return lng('crondesc.' . $attributes['data']);
 	}
 
 	public static function shorten(array $attributes): string

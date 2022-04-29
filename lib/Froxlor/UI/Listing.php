@@ -74,7 +74,7 @@ class Listing
 		// Table headings for actions
 		if (isset($tabellisting['actions'])) {
 			$heading['actions'] = [
-				'text' => UI::getLng('panel.options'),
+				'text' => lng('panel.options'),
 				'class' => 'text-end',
 			];
 		}

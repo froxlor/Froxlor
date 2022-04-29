@@ -1115,10 +1115,10 @@ Met vriendelijke groet, uw beheerder',
 	'tasks' => [
 		'outstanding_tasks' => 'Uitstaande cron-taken',
 		'REBUILD_VHOST' => 'Bezig met opnieuw opbouwen van de configuratie van de webserver',
-		'CREATE_HOME' => 'Klant met naam %loginname% wordt toegevoegd',
+		'CREATE_HOME' => 'Klant met naam %s wordt toegevoegd',
 		'REBUILD_DNS' => 'Opnieuw opbouwen bind-configuratie',
 		'CREATE_FTP' => 'Map aanmaken voor nieuwe FTP-gebruiker',
-		'DELETE_CUSTOMER_FILES' => 'Verwijderen klantbestanden van %loginname%',
+		'DELETE_CUSTOMER_FILES' => 'Verwijderen klantbestanden van %s',
 		'noneoutstanding' => 'Er zijn op dit moment geen uitstaande taken voor Froxlor',
 	],
 	'traffic' => [
