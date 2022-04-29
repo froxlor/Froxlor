@@ -31,6 +31,7 @@ use PDOException;
 use Froxlor\Froxlor;
 use Froxlor\Api\ApiCommand;
 use Froxlor\Api\ResourceEntity;
+use Froxlor\Database\Database;
 use Froxlor\Validate\Validate;
 
 class MysqlServer extends ApiCommand implements ResourceEntity
@@ -272,6 +273,31 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 	public function update()
 	{
 		throw new Exception('@TODO Later', 303);
+	}
+
+	/**
+	 * check whether a given customer / current user (as customer) has
+	 * databases on the given dbserver
+	 *
+	 * @param int mysql_server
+	 * @param int $customerid
+	 *            optional, admin-only, select ftp-users of a specific customer by id
+	 * @param string $loginname
+	 *            optional, admin-only, select ftp-users of a specific customer by loginname
+	 *
+	 * @access admin, customer
+	 * @return string json-encoded array count
+	 */
+	public function databasesOnServer()
+	{
+		$dbserver = $this->getParam('mysql_server');
+		$customer_ids = $this->getAllowedCustomerIds();
+
+		$result_stmt = Database::prepare("
+			SELECT COUNT(*) num_dbs FROM `" . TABLE_PANEL_DATABASES . "`
+			WHERE `customerid` IN (" . implode(", ", $customer_ids) . ") AND `dbserver` = :dbserver");
+		$result = Database::pexecute_first($result_stmt, ['dbserver' => $dbserver], true, true);
+		return $this->response(['count' => $result['num_dbs']]);
 	}
 
 	private function generateNewUserData(array $sql, array $sql_root)

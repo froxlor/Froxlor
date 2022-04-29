@@ -846,7 +846,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 	public function listing()
 	{
 		if ($this->isAdmin()) {
-			// if we're an admin, list all databases of all the admins customers
+			// if we're an admin, list all subdomains of all the admins customers
 			// or optionally for one specific customer identified by id or loginname
 			$customerid = $this->getParam('customerid', true, 0);
 			$loginname = $this->getParam('loginname', true, '');

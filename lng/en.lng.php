@@ -1171,6 +1171,7 @@ return [
 		'invaliddnsforletsencrypt' => 'The domains DNS does not include any of the chosen IP addresses. Let\'s Encrypt certificate generation not possible.',
 		'notallowedphpconfigused' => 'Trying to use php-config which is not assigned to customer',
 		'pathmustberelative' => 'The user does not have the permission to specify directories outside the customers home-directory. Please specify a relative path (no leading /).',
+		'mysqlserverstillhasdbs' => 'Cannot remove database server from customers allow-list as there are still databases on it.',
 	],
 	'extras' => [
 		'description' => 'Here you can add some extras, for example directory protection.<br />The system will need some time to apply the new settings after every change.',

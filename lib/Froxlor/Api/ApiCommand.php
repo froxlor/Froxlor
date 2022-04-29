@@ -479,7 +479,7 @@ abstract class ApiCommand extends ApiParameter
 	{
 		$customer_ids = [];
 		if ($this->isAdmin()) {
-			// if we're an admin, list all ftp-users of all the admins customers
+			// if we're an admin, list all of the admins customers
 			// or optionally for one specific customer identified by id or loginname
 			$customerid = $this->getParam('customerid', true, 0);
 			$loginname = $this->getParam('loginname', true, '');

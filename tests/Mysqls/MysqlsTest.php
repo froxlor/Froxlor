@@ -5,6 +5,7 @@ use Froxlor\Settings;
 use Froxlor\Api\Commands\Admins;
 use Froxlor\Api\Commands\Customers;
 use Froxlor\Api\Commands\Mysqls;
+use Froxlor\Api\Commands\MysqlServer;
 use Froxlor\Database\Database;
 use Froxlor\Settings\Store;
 
@@ -13,6 +14,7 @@ use Froxlor\Settings\Store;
  * @covers \Froxlor\Api\ApiCommand
  * @covers \Froxlor\Api\ApiParameter
  * @covers \Froxlor\Api\Commands\Mysqls
+ * @covers \Froxlor\Api\Commands\MysqlServer
  * @covers \Froxlor\Api\Commands\Customers
  * @covers \Froxlor\Api\Commands\Admins
  * @covers \Froxlor\Database\DbManager
@@ -212,6 +214,36 @@ class MysqlsTest extends TestCase
 		$json_result = Mysqls::getLocal($customer_userdata)->listingCount();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals(2, $result);
+
+		$data = [
+			'mysql_server' => '0'
+		];
+		$json_result = MysqlServer::getLocal($admin_userdata, $data)->databasesOnServer();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals('2', $result['count']);
+
+		$data = [
+			'mysql_server' => '1'
+		];
+		$json_result = MysqlServer::getLocal($admin_userdata, $data)->databasesOnServer();
+		$result = json_decode($json_result, true)['data'];
+		$this->assertEquals('0', $result['count']);
+	}
+
+	/**
+	 * @depends testCustomerMysqlsList
+	 */
+	public function testUpdateCustomerAllowedMysqlWithExistingDbs()
+	{
+		global $admin_userdata;
+
+		$this->expectExceptionMessage("Cannot remove database server from customers allow-list as there are still databases on it.");
+		// reactivate customer
+		// get customer
+		Customers::getLocal($admin_userdata, array(
+			'loginname' => 'test1',
+			'allowed_mysqls' => [1]
+		))->update();
 	}
 
 	/**
@@ -315,4 +347,5 @@ class MysqlsTest extends TestCase
 			$this->assertEquals($testdata['password'], $passwd);
 		}
 	}
+
 }

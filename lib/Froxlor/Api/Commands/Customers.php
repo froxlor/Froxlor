@@ -1117,7 +1117,21 @@ class Customers extends ApiCommand implements ResourceEntity
 			}
 
 			// validate allowed_mysqls whether the customer has databases on a removed, now disallowed db-server and abort if true
-			// @todo
+			$former_allowed_mysqlserver = json_decode($result['allowed_mysqlserver'], true);
+			if ($allowed_mysqlserver != $former_allowed_mysqlserver) {
+				$to_remove_mysqlserver = array_diff($former_allowed_mysqlserver, $allowed_mysqlserver);
+				if (count($to_remove_mysqlserver) > 0) {
+					foreach ($to_remove_mysqlserver as $mysqlserver_check) {
+						$result_ms = $this->apiCall('MysqlServer.databasesOnServer', [
+							'mysql_server' => $mysqlserver_check,
+							'customerid' => $id
+						]);
+						if ($result_ms['count'] > 0) {
+							Response::standardError('mysqlserverstillhasdbs', '', true);
+						}
+					}
+				}
+			}
 
 			if ($email == '') {
 				Response::standardError([

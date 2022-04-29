@@ -874,6 +874,7 @@ return [
 		'invaliddnsforletsencrypt' => 'Die DNS-Einträge der Domain enhalten keine der gewählten IP Adressen. Let\'s Encrypt Zertifikats-Erstellung ist nicht möglich.',
 		'notallowedphpconfigused' => 'Nutzung einer PHP-Konfiguration welche nicht dem Kunden zugeordnet ist',
 		'pathmustberelative' => 'Der Benutzer hat nicht die benötigten Berechtigungen, um Pfade außerhalb des Kunden-Heimatverzeichnisses anzugeben. Bitte einen relativen Pfad angeben (kein führendes /).',
+		'mysqlserverstillhasdbs' => 'Datenbank-Server kann für den Kunden nicht entfernt werden, da sich dort noch Datenbanken befinden.',
 	],
 	'extras' => [
 		'description' => 'Hier können Sie zusätzliche Extras einrichten, wie zum Beispiel einen Verzeichnisschutz.<br />Die Änderungen sind erst nach einer kurzen Zeit wirksam.',
