@@ -166,9 +166,11 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 			$listen_statement = !empty($this->getBoolParam('listen_statement', true, 0)) ? 1 : 0;
 			$namevirtualhost_statement = !empty($this->getBoolParam('namevirtualhost_statement', true, 0)) ? 1 : 0;
 			$vhostcontainer = !empty($this->getBoolParam('vhostcontainer', true, 0)) ? 1 : 0;
-			$specialsettings = Validate::validate(str_replace("\r\n", "\n", $this->getParam('specialsettings', true, '')), 'specialsettings', Validate::REGEX_CONF_TEXT, '', [], true);
+			$ss = $this->getParam('specialsettings', true, '');
+			$specialsettings = Validate::validate(str_replace("\r\n", "\n", $ss ?? ""), 'specialsettings', Validate::REGEX_CONF_TEXT, '', [], true);
 			$vhostcontainer_servername_statement = !empty($this->getBoolParam('vhostcontainer_servername_statement', true, 1)) ? 1 : 0;
-			$default_vhostconf_domain = Validate::validate(str_replace("\r\n", "\n", $this->getParam('default_vhostconf_domain', true, '')), 'default_vhostconf_domain', Validate::REGEX_CONF_TEXT, '', [], true);
+			$dvd = $this->getParam('default_vhostconf_domain', true, '');
+			$default_vhostconf_domain = Validate::validate(str_replace("\r\n", "\n", $dvd), 'default_vhostconf_domain', Validate::REGEX_CONF_TEXT, '', [], true);
 			$docroot = Validate::validate($this->getParam('docroot', true, ''), 'docroot', Validate::REGEX_DIR, '', [], true);
 
 			if ((int)Settings::Get('system.use_ssl') == 1) {
@@ -177,9 +179,11 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 				$ssl_key_file = Validate::validate($this->getParam('ssl_key_file', $ssl, ''), 'ssl_key_file', '', '', [], true);
 				$ssl_ca_file = Validate::validate($this->getParam('ssl_ca_file', true, ''), 'ssl_ca_file', '', '', [], true);
 				$ssl_cert_chainfile = Validate::validate($this->getParam('ssl_cert_chainfile', true, ''), 'ssl_cert_chainfile', '', '', [], true);
-				$ssl_specialsettings = Validate::validate(str_replace("\r\n", "\n", $this->getParam('ssl_specialsettings', true, '')), 'ssl_specialsettings', Validate::REGEX_CONF_TEXT, '', [], true);
+				$sslss = $this->getParam('ssl_specialsettings', true, '');
+				$ssl_specialsettings = Validate::validate(str_replace("\r\n", "\n", $sslss ?? ""), 'ssl_specialsettings', Validate::REGEX_CONF_TEXT, '', [], true);
 				$include_specialsettings = !empty($this->getBoolParam('include_specialsettings', true, 0)) ? 1 : 0;
-				$ssl_default_vhostconf_domain = Validate::validate(str_replace("\r\n", "\n", $this->getParam('ssl_default_vhostconf_domain', true, '')), 'ssl_default_vhostconf_domain', Validate::REGEX_CONF_TEXT, '', [], true);
+				$ssldvd = $this->getParam('ssl_default_vhostconf_domain', true, '');
+				$ssl_default_vhostconf_domain = Validate::validate(str_replace("\r\n", "\n", $ssldvd ?? ""), 'ssl_default_vhostconf_domain', Validate::REGEX_CONF_TEXT, '', [], true);
 				$include_default_vhostconf_domain = !empty($this->getBoolParam('include_default_vhostconf_domain', true, 0)) ? 1 : 0;
 			} else {
 				$ssl = 0;
@@ -401,9 +405,11 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 			$listen_statement = $this->getBoolParam('listen_statement', true, $result['listen_statement']);
 			$namevirtualhost_statement = $this->getBoolParam('namevirtualhost_statement', true, $result['namevirtualhost_statement']);
 			$vhostcontainer = $this->getBoolParam('vhostcontainer', true, $result['vhostcontainer']);
-			$specialsettings = Validate::validate(str_replace("\r\n", "\n", $this->getParam('specialsettings', true, $result['specialsettings'])), 'specialsettings', Validate::REGEX_CONF_TEXT, '', [], true);
+			$ss = $this->getParam('specialsettings', true, $result['specialsettings']);
+			$specialsettings = Validate::validate(str_replace("\r\n", "\n", $ss ?? ""), 'specialsettings', Validate::REGEX_CONF_TEXT, '', [], true);
 			$vhostcontainer_servername_statement = $this->getParam('vhostcontainer_servername_statement', true, $result['vhostcontainer_servername_statement']);
-			$default_vhostconf_domain = Validate::validate(str_replace("\r\n", "\n", $this->getParam('default_vhostconf_domain', true, $result['default_vhostconf_domain'])), 'default_vhostconf_domain', Validate::REGEX_CONF_TEXT, '', [], true);
+			$dvd = $this->getParam('default_vhostconf_domain', true, $result['default_vhostconf_domain']);
+			$default_vhostconf_domain = Validate::validate(str_replace("\r\n", "\n", $dvd ?? ""), 'default_vhostconf_domain', Validate::REGEX_CONF_TEXT, '', [], true);
 			$docroot = Validate::validate($this->getParam('docroot', true, $result['docroot']), 'docroot', Validate::REGEX_DIR, '', [], true);
 
 			if ((int)Settings::Get('system.use_ssl') == 1) {
@@ -412,9 +418,11 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 				$ssl_key_file = Validate::validate($this->getParam('ssl_key_file', $ssl, $result['ssl_key_file']), 'ssl_key_file', '', '', [], true);
 				$ssl_ca_file = Validate::validate($this->getParam('ssl_ca_file', true, $result['ssl_ca_file']), 'ssl_ca_file', '', '', [], true);
 				$ssl_cert_chainfile = Validate::validate($this->getParam('ssl_cert_chainfile', true, $result['ssl_cert_chainfile']), 'ssl_cert_chainfile', '', '', [], true);
-				$ssl_specialsettings = Validate::validate(str_replace("\r\n", "\n", $this->getParam('ssl_specialsettings', true, $result['ssl_specialsettings'])), 'ssl_specialsettings', Validate::REGEX_CONF_TEXT, '', [], true);
+				$sslss = $this->getParam('ssl_specialsettings', true, $result['ssl_specialsettings']);
+				$ssl_specialsettings = Validate::validate(str_replace("\r\n", "\n", $sslss ?? ""), 'ssl_specialsettings', Validate::REGEX_CONF_TEXT, '', [], true);
 				$include_specialsettings = $this->getBoolParam('include_specialsettings', true, $result['include_specialsettings']);
-				$ssl_default_vhostconf_domain = Validate::validate(str_replace("\r\n", "\n", $this->getParam('ssl_default_vhostconf_domain', true, $result['ssl_default_vhostconf_domain'])), 'ssl_default_vhostconf_domain', Validate::REGEX_CONF_TEXT, '', [], true);
+				$ssldvd = $this->getParam('ssl_default_vhostconf_domain', true, $result['ssl_default_vhostconf_domain']);
+				$ssl_default_vhostconf_domain = Validate::validate(str_replace("\r\n", "\n", $ssldvd ?? ""), 'ssl_default_vhostconf_domain', Validate::REGEX_CONF_TEXT, '', [], true);
 				$include_default_vhostconf_domain = $this->getBoolParam('include_default_vhostconf_domain', true, $result['include_default_vhostconf_domain']);
 			} else {
 				$ssl = 0;

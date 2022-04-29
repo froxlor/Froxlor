@@ -582,7 +582,7 @@ class Admins extends ApiCommand implements ResourceEntity
 				$idna_convert = new IdnaWrapper();
 				$email = $idna_convert->encode(Validate::validate($email, 'email', '', '', [], true));
 				$def_language = Validate::validate($def_language, 'default language', '', '', [], true);
-				$custom_notes = Validate::validate(str_replace("\r\n", "\n", $custom_notes), 'custom_notes', Validate::REGEX_CONF_TEXT, '', [], true);
+				$custom_notes = Validate::validate(str_replace("\r\n", "\n", $custom_notes ?? ""), 'custom_notes', Validate::REGEX_CONF_TEXT, '', [], true);
 				$theme = Validate::validate($theme, 'theme', '', '', [], true);
 				$password = Validate::validate($password, 'password', '', '', [], true);
 

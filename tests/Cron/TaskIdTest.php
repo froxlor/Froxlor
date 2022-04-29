@@ -46,17 +46,7 @@ class TaskIDTest extends TestCase
 
 		$isNegativeValid = TaskId::isValid(-1);
 		$this->assertFalse($isNegativeValid, "Negative task should be invalid");
-	}
 
-	public function testAcceptNewTaskId()
-	{
-		$isTESTTASKValid = TaskIdExtended::isValid(10101010);
-		$this->assertTrue($isTESTTASKValid);
-	}
-
-
-	public function testFixedTaskIdTable()
-	{
 		$isTESTTASKValid = TaskIdExtended::isValid(10101010);
 		$this->assertTrue($isTESTTASKValid);
 	}

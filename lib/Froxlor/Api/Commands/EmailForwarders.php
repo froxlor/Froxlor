@@ -84,7 +84,7 @@ class EmailForwarders extends ApiCommand implements ResourceEntity
 			$id = $result['id'];
 
 			// current destination array
-			$result['destination_array'] = explode(' ', $result['destination']);
+			$result['destination_array'] = explode(' ', ($result['destination'] ?? ""));
 
 			// prepare destination
 			$destination = trim($destination);
