@@ -242,7 +242,7 @@ class MysqlsTest extends TestCase
 		// get customer
 		Customers::getLocal($admin_userdata, array(
 			'loginname' => 'test1',
-			'allowed_mysqls' => [1]
+			'allowed_mysqlserver' => [1]
 		))->update();
 	}
 
