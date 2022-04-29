@@ -82,7 +82,7 @@ class DbManagerMySQL
 		if (!$update) {
 			// create user
 			if ($p_encrypted) {
-				if (version_compare(Database::getAttribute(PDO::ATTR_SERVER_VERSION), '5.7.0', '<')) {
+				if (version_compare(Database::getAttribute(\PDO::ATTR_SERVER_VERSION), '5.7.0', '<') || version_compare(Database::getAttribute(\PDO::ATTR_SERVER_VERSION), '10.0.0', '>=')) {
 					$stmt = Database::prepare("
 						CREATE USER '" . $username . "'@'" . $access_host . "' IDENTIFIED BY PASSWORD :password
 					");
@@ -109,7 +109,7 @@ class DbManagerMySQL
 			]);
 		} else {
 			// set password
-			if (version_compare(Database::getAttribute(PDO::ATTR_SERVER_VERSION), '5.7.6', '<')) {
+			if (version_compare(Database::getAttribute(\PDO::ATTR_SERVER_VERSION), '5.7.6', '<') || version_compare(Database::getAttribute(\PDO::ATTR_SERVER_VERSION), '10.0.0', '>=')) {
 				if ($p_encrypted) {
 					$stmt = Database::prepare("SET PASSWORD FOR :username@:host = :password");
 				} else {

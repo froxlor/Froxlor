@@ -32,16 +32,16 @@ return [
 						'type' => 'label',
 						'value' => $result['databasename']
 					],
+					'mysql_server' => [
+						'visible' => count($mysql_servers) > 1,
+						'label' => lng('mysql.mysql_server'),
+						'type' => 'label',
+						'value' => $mysql_servers[$result['dbserver']] ?? 'unknown db server'
+					],
 					'description' => [
 						'label' => lng('mysql.databasedescription'),
 						'type' => 'text',
 						'value' => $result['description']
-					],
-					'mysql_server' => [
-						'visible' => $count_mysql_servers > 1,
-						'label' => lng('mysql.mysql_server'),
-						'type' => 'label',
-						'value' => $sql_root['caption']
 					],
 					'mysql_password' => [
 						'label' => lng('changepassword.new_password_ifnotempty'),

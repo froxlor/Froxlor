@@ -116,16 +116,7 @@ class Response
 
 		$error = '';
 		foreach ($errors as $single_error) {
-			if (isset($lng['error'][$single_error])) {
-				$single_error = $lng['error'][$single_error];
-				$single_error = strtr($single_error, [
-					'%s' => $replacer
-				]);
-			} else {
-				$error = 'Unknown Error (' . $single_error . '): ' . $replacer;
-				break;
-			}
-
+			$single_error = lng('error.'.$single_error, [htmlentities($replacer)]);
 			if (empty($error)) {
 				$error = $single_error;
 			} else {
@@ -181,11 +172,7 @@ class Response
 	{
 		global $lng;
 
-		if (isset($lng['success'][$success_message])) {
-			$success_message = strtr($lng['success'][$success_message], [
-				'%s' => htmlentities($replacer)
-			]);
-		}
+		$success_message = lng('success.'.$success_message, [htmlentities($replacer)]);
 
 		if ($throw_exception) {
 			throw new Exception(strip_tags($success_message), 200);

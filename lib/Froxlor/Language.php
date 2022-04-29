@@ -64,7 +64,7 @@ class Language
 			}
 
 			// load fallback from browser if nothing requested
-			$iso = trim(substr(strtok(strtok($_SERVER['HTTP_ACCEPT_LANGUAGE'], ','), ';'), 0, 5));
+			$iso = trim(substr(strtok(strtok(($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? 'en'), ','), ';'), 0, 5));
 			if (!self::$requestedLanguage && strlen($iso) == 2 && $iso !== self::$defaultLanguage) {
 				self::$lng = array_merge(self::$lng, self::loadLanguage($iso));
 			}

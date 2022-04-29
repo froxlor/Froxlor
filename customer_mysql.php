@@ -26,7 +26,8 @@
 const AREA = 'customer';
 require __DIR__ . '/lib/init.php';
 
-use Froxlor\Api\Commands\Mysqls as Mysqls;
+use Froxlor\Api\Commands\Mysqls;
+use Froxlor\Api\Commands\MysqlServer;
 use Froxlor\Database\Database;
 use Froxlor\FroxlorLogger;
 use Froxlor\Settings;
@@ -139,15 +140,16 @@ if ($page == 'overview' || $page == 'mysqls') {
 					'page' => $page
 				]);
 			} else {
-				$dbservers_stmt = Database::query("SELECT DISTINCT `dbserver` FROM `" . TABLE_PANEL_DATABASES . "`");
 				$mysql_servers = [];
-				while ($dbserver = $dbservers_stmt->fetch(PDO::FETCH_ASSOC)) {
-					Database::needRoot(true, $dbserver['dbserver']);
-					Database::needSqlData();
-					$sql_root = Database::getSqlData();
-					$mysql_servers[$dbserver['dbserver']] = $sql_root['caption'];
+				try {
+					$result_json = MysqlServer::getLocal($userinfo)->listing();
+					$result_decoded = json_decode($result_json, true)['data']['list'];
+					foreach ($result_decoded as $dbserver => $dbdata) {
+						$mysql_servers[$dbserver] = $dbdata['caption'];
+					}
+				} catch (Exception $e) {
+					/* just none */
 				}
-				Database::needRoot(false);
 
 				$mysql_add_data = include_once dirname(__FILE__) . '/lib/formfields/customer/mysql/formfield.mysql_add.php';
 
@@ -178,14 +180,16 @@ if ($page == 'overview' || $page == 'mysqls') {
 					'page' => $page
 				]);
 			} else {
-				$dbservers_stmt = Database::query("SELECT COUNT(DISTINCT `dbserver`) as numservers FROM `" . TABLE_PANEL_DATABASES . "`");
-				$dbserver = $dbservers_stmt->fetch(PDO::FETCH_ASSOC);
-				$count_mysql_servers = $dbserver['numservers'];
-
-				Database::needRoot(true, $result['dbserver']);
-				Database::needSqlData();
-				$sql_root = Database::getSqlData();
-				Database::needRoot(false);
+				$mysql_servers = [];
+				try {
+					$result_json = MysqlServer::getLocal($userinfo)->listing();
+					$result_decoded = json_decode($result_json, true)['data']['list'];
+					foreach ($result_decoded as $dbserver => $dbdata) {
+						$mysql_servers[$dbserver] = $dbdata['caption'] . ' (' . $dbdata['host'] . (isset($dbdata['port']) && !empty($dbdata['port']) ? ':' . $dbdata['port'] : '').')';
+					}
+				} catch (Exception $e) {
+					/* just none */
+				}
 
 				$mysql_edit_data = include_once dirname(__FILE__) . '/lib/formfields/customer/mysql/formfield.mysql_edit.php';
 

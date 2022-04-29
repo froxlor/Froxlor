@@ -62,6 +62,24 @@ if (Froxlor::isFroxlorVersion('0.10.99')) {
 	KEY customerid (customerid)
 	) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;";
 	Database::query($sql);
+	// new customer allowed_mysqlserver field
+	Database::query("ALTER TABLE `" . TABLE_PANEL_CUSTOMERS . "` ADD `allowed_mysqlserver` varchar(500) NOT NULL default '[0]';");
+	Update::lastStepStatus(0);
+
+	Update::showUpdateStep("Checking for multiple mysql-servers to allow acccess to customers for existing databases");
+	$dbservers_stmt = Database::query("
+		SELECT `customerid`,
+		GROUP_CONCAT(DISTINCT `dbserver` SEPARATOR ',') as allowed_mysqlserver
+		FROM `" . TABLE_PANEL_DATABASES . "`
+		GROUP BY `customerid`;
+	");
+	$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `allowed_mysqlserver` = :allowed_mysqlserver WHERE `customerid` = :customerid");
+	while ($dbserver = $dbservers_stmt->fetch(PDO::FETCH_ASSOC)) {
+		if (isset($dbserver['allowed_mysqlserver']) && !empt($dbserver['allowed_mysqlserver'])) {
+			$allowed_mysqlserver = json_encode(explode(",", $dbserver['allowed_mysqlserver']));
+			Database::pexecute($upd_stmt, ['allowed_mysql_server' => $allowed_mysqlserver, 'customerid' => $dbserver['customerid']]);
+		}
+	}
 	Update::lastStepStatus(0);
 
 

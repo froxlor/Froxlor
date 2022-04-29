@@ -39,7 +39,8 @@ file_put_contents($userdata, $userdata_content);
 
 // include autoloader / api / etc
 require dirname(__DIR__) . '/vendor/autoload.php';
-
+// include functions
+require dirname(__DIR__) . '/lib/functions.php';
 // include table definitions
 require dirname(__DIR__) . '/lib/tables.inc.php';
 
@@ -50,7 +51,9 @@ if (TRAVIS_CI == 0) {
 	Database::needRoot(true);
 	Database::query("DROP DATABASE IF EXISTS `froxlor010`;");
 	Database::query("CREATE DATABASE `froxlor010`;");
-	exec("mysql -u root -p" . $rpwd . " froxlor010 < " . dirname(__DIR__) . "/install/froxlor.sql");
+	$sql = include(dirname(__DIR__) . "/install/froxlor.sql.php");
+	file_put_contents("/tmp/froxlor.sql", $sql);
+	exec("mysql -u root -p" . $rpwd . " froxlor010 < /tmp/froxlor.sql");
 	Database::query("DROP USER IF EXISTS 'test1sql1'@'localhost';");
 	Database::query("DROP USER IF EXISTS 'test1sql1'@'127.0.0.1';");
 	Database::query("DROP USER IF EXISTS 'test1sql1'@'172.17.0.1';");

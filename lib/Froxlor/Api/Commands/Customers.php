@@ -270,6 +270,9 @@ class Customers extends ApiCommand implements ResourceEntity
 	 * @param int $hosting_plan_id
 	 *                             optional, specify a hosting-plan to set certain resource-values from the plan
 	 *                             instead of specifying them
+	 * @param array $allowed_mysqlserver
+	 *        	                   optional, array of IDs of defined mysql-servers the customer is allowed to use,
+	 *                             default is to allow the default dbserver (id=0)
 	 *
 	 * @access admin
 	 * @return string json-encoded array
@@ -349,6 +352,13 @@ class Customers extends ApiCommand implements ResourceEntity
 					$logviewenabled = $this->getBoolParam('logviewenabled', true, 0);
 				}
 
+				if ($mysqls == -1 || $mysqls > 0) {
+					$p_allowed_mysqlserver = $this->getParam('allowed_mysqlserver', true, [0]);
+				} else {
+					// mysql not allowed, so no mysql available for customer
+					$p_allowed_mysqlserver = [];
+				}
+
 				// validation
 				$name = Validate::validate($name, 'name', '', '', [], true);
 				$firstname = Validate::validate($firstname, 'first name', '', '', [], true);
@@ -388,6 +398,15 @@ class Customers extends ApiCommand implements ResourceEntity
 					}
 				}
 				$allowed_phpconfigs = array_map('intval', $allowed_phpconfigs);
+
+				$allowed_mysqlserver = array();
+				if (! empty($p_allowed_mysqlserver) && is_array($p_allowed_mysqlserver)) {
+					foreach ($p_allowed_mysqlserver as $allowed_ms) {
+						$allowed_ms = intval($allowed_ms);
+						$allowed_mysqlserver[] = $allowed_ms;
+					}
+				}
+				$allowed_mysqlserver = array_map('intval', $allowed_mysqlserver);
 
 				$diskspace = $diskspace * 1024;
 				$traffic = $traffic * 1024 * 1024;
@@ -496,7 +515,8 @@ class Customers extends ApiCommand implements ResourceEntity
 						'logviewenabled' => $logviewenabled,
 						'theme' => $_theme,
 						'custom_notes' => $custom_notes,
-						'custom_notes_show' => $custom_notes_show
+						'custom_notes_show' => $custom_notes_show,
+						'allowed_mysqlserver' => empty($allowed_mysqlserver) ? "" : json_encode($allowed_mysqlserver)
 					];
 
 					$ins_stmt = Database::prepare("
@@ -538,7 +558,8 @@ class Customers extends ApiCommand implements ResourceEntity
 						`logviewenabled` = :logviewenabled,
 						`theme` = :theme,
 						`custom_notes` = :custom_notes,
-						`custom_notes_show` = :custom_notes_show
+						`custom_notes_show` = :custom_notes_show,
+						`allowed_mysqlserver`= :allowed_mysqlserver
 					");
 					Database::pexecute($ins_stmt, $ins_data, true, true);
 
@@ -717,8 +738,8 @@ class Customers extends ApiCommand implements ResourceEntity
 							'USERNAME' => $loginname,
 							'PASSWORD' => $password,
 							'SERVER_HOSTNAME' => $srv_hostname,
-							'SERVER_IP' => isset($srv_ip['ip']) ? $srv_ip['ip'] : '',
-							'SERVER_PORT' => isset($srv_ip['port']) ? $srv_ip['port'] : '',
+							'SERVER_IP' => $srv_ip['ip'] ?? '',
+							'SERVER_PORT' => $srv_ip['port'] ?? '',
 							'DOMAINNAME' => $_stdsubdomain
 						];
 
@@ -726,12 +747,12 @@ class Customers extends ApiCommand implements ResourceEntity
 						$mail_subject = $this->getMailTemplate([
 							'adminid' => $this->getUserDetail('adminid'),
 							'def_language' => $def_language
-						], 'mails', 'createcustomer_subject', $replace_arr, $this->lng['mails']['createcustomer']['subject']);
+						], 'mails', 'createcustomer_subject', $replace_arr, lng('mails.createcustomer.subject'));
 						// get template for mail body
 						$mail_body = $this->getMailTemplate([
 							'adminid' => $this->getUserDetail('adminid'),
 							'def_language' => $def_language
-						], 'mails', 'createcustomer_mailbody', $replace_arr, $this->lng['mails']['createcustomer']['mailbody']);
+						], 'mails', 'createcustomer_mailbody', $replace_arr, lng('mails.createcustomer.mailbody'));
 
 						$_mailerror = false;
 						$mailerr_msg = "";
@@ -984,6 +1005,9 @@ class Customers extends ApiCommand implements ResourceEntity
 	 *                             optional, whether to allow access to webserver access/error-logs, default 0 (false)
 	 * @param string $theme
 	 *                             optional, change theme
+	 * @param array $allowed_mysqlserver
+	 *        	                   optional, array of IDs of defined mysql-servers the customer is allowed to use,
+	 *                             default is to allow the default dbserver (id=0)
 	 *
 	 * @access admin, customer
 	 * @return string json-encoded array
@@ -1044,6 +1068,7 @@ class Customers extends ApiCommand implements ResourceEntity
 			$logviewenabled = $this->getBoolParam('logviewenabled', true, $result['logviewenabled']);
 			$deactivated = $this->getBoolParam('deactivated', true, $result['deactivated']);
 			$theme = $this->getParam('theme', true, $result['theme']);
+			$allowed_mysqlserver = $this->getParam('allowed_mysqlserver', true, json_decode($result['allowed_mysqlserver'], true));
 		} else {
 			// allowed parameters
 			$def_language = $this->getParam('def_language', true, $result['def_language']);
@@ -1068,6 +1093,9 @@ class Customers extends ApiCommand implements ResourceEntity
 			if (!empty($allowed_phpconfigs)) {
 				$allowed_phpconfigs = array_map('intval', $allowed_phpconfigs);
 			}
+			if (! empty($allowed_mysqlserver)) {
+				$allowed_mysqlserver = array_map('intval', $allowed_mysqlserver);
+			}
 		}
 		$def_language = Validate::validate($def_language, 'default language', '', '', [], true);
 		$theme = Validate::validate($theme, 'theme', '', '', [], true);
@@ -1087,6 +1115,9 @@ class Customers extends ApiCommand implements ResourceEntity
 			if (((($this->getUserDetail('diskspace_used') + $diskspace - $result['diskspace']) > $this->getUserDetail('diskspace')) && ($this->getUserDetail('diskspace') / 1024) != '-1') || ((($this->getUserDetail('mysqls_used') + $mysqls - $result['mysqls']) > $this->getUserDetail('mysqls')) && $this->getUserDetail('mysqls') != '-1') || ((($this->getUserDetail('emails_used') + $emails - $result['emails']) > $this->getUserDetail('emails')) && $this->getUserDetail('emails') != '-1') || ((($this->getUserDetail('email_accounts_used') + $email_accounts - $result['email_accounts']) > $this->getUserDetail('email_accounts')) && $this->getUserDetail('email_accounts') != '-1') || ((($this->getUserDetail('email_forwarders_used') + $email_forwarders - $result['email_forwarders']) > $this->getUserDetail('email_forwarders')) && $this->getUserDetail('email_forwarders') != '-1') || ((($this->getUserDetail('email_quota_used') + $email_quota - $result['email_quota']) > $this->getUserDetail('email_quota')) && $this->getUserDetail('email_quota') != '-1' && Settings::Get('system.mail_quota_enabled') == '1') || ((($this->getUserDetail('ftps_used') + $ftps - $result['ftps']) > $this->getUserDetail('ftps')) && $this->getUserDetail('ftps') != '-1') || ((($this->getUserDetail('subdomains_used') + $subdomains - $result['subdomains']) > $this->getUserDetail('subdomains')) && $this->getUserDetail('subdomains') != '-1') || (($diskspace / 1024) == '-1' && ($this->getUserDetail('diskspace') / 1024) != '-1') || ($mysqls == '-1' && $this->getUserDetail('mysqls') != '-1') || ($emails == '-1' && $this->getUserDetail('emails') != '-1') || ($email_accounts == '-1' && $this->getUserDetail('email_accounts') != '-1') || ($email_forwarders == '-1' && $this->getUserDetail('email_forwarders') != '-1') || ($email_quota == '-1' && $this->getUserDetail('email_quota') != '-1' && Settings::Get('system.mail_quota_enabled') == '1') || ($ftps == '-1' && $this->getUserDetail('ftps') != '-1') || ($subdomains == '-1' && $this->getUserDetail('subdomains') != '-1')) {
 				Response::standardError('youcantallocatemorethanyouhave', '', true);
 			}
+
+			// validate allowed_mysqls whether the customer has databases on a removed, now disallowed db-server and abort if true
+			// @todo
 
 			if ($email == '') {
 				Response::standardError([
@@ -1305,7 +1336,8 @@ class Customers extends ApiCommand implements ResourceEntity
 				'logviewenabled' => $logviewenabled,
 				'custom_notes' => $custom_notes,
 				'custom_notes_show' => $custom_notes_show,
-				'api_allowed' => $api_allowed
+				'api_allowed' => $api_allowed,
+				'allowed_mysqlserver' => empty($allowed_mysqlserver) ? "" : json_encode($allowed_mysqlserver)
 			];
 			$upd_data = $upd_data + $admin_upd_data;
 		}
@@ -1347,7 +1379,8 @@ class Customers extends ApiCommand implements ResourceEntity
 				`logviewenabled` = :logviewenabled,
 				`custom_notes` = :custom_notes,
 				`custom_notes_show` = :custom_notes_show,
-				`api_allowed` = :api_allowed";
+				`api_allowed` = :api_allowed,
+				`allowed_mysqlserver` = :allowed_mysqlserver";
 			$upd_query .= $admin_upd_query;
 		}
 		$upd_query .= " WHERE `customerid` = :customerid";
