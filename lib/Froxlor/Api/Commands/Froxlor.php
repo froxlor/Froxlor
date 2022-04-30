@@ -296,6 +296,8 @@ class Froxlor extends ApiCommand
 	 *
 	 * @param string $module
 	 *            optional, return list of functions for a specific module
+	 * @param string $function
+	 *            optional, return parameter information for a specific module and function
 	 *
 	 * @access admin, customer
 	 * @return string json-encoded array
@@ -304,6 +306,7 @@ class Froxlor extends ApiCommand
 	public function listFunctions()
 	{
 		$module = $this->getParam('module', true, '');
+		$function = $this->getParam('function', true, '');
 
 		$functions = [];
 		if ($module != null) {
@@ -313,11 +316,13 @@ class Froxlor extends ApiCommand
 			$reflection = new ReflectionClass(__NAMESPACE__ . '\\' . $module);
 			$_functions = $reflection->getMethods(ReflectionMethod::IS_PUBLIC);
 			foreach ($_functions as $func) {
-				if ($func->class == __NAMESPACE__ . '\\' . $module && $func->isPublic()) {
-					array_push($functions, array_merge([
-						'module' => $module,
-						'function' => $func->name
-					], $this->getParamListFromDoc($module, $func->name)));
+				if (empty($function) || ($function != null && $func->name == $function)) {
+					if ($func->class == __NAMESPACE__ . '\\' . $module && $func->isPublic()) {
+						array_push($functions, array_merge([
+							'module' => $module,
+							'function' => $func->name
+						], $this->getParamListFromDoc($module, $func->name)));
+					}
 				}
 			}
 		} else {

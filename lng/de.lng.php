@@ -108,6 +108,7 @@ return [
 			'skipconfig' => 'Nicht (erneut) konfigurieren',
 			'recommendednote' => 'Empfohlene/benötigte Dienste anhand der aktuellen Systemeinstellungen',
 			'selectrecommended' => 'Empfohlene wählen',
+			'downloadselected' => 'Auswahl exportieren',
 		],
 		'templates' => [
 			'templates' => 'E-Mail-Vorlagen',

@@ -29,7 +29,9 @@ use Exception;
 use PDO;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Froxlor\Database\Database;
 
 final class RunApiCommand extends CliCommand
@@ -42,6 +44,7 @@ final class RunApiCommand extends CliCommand
 		$this->addArgument('user', InputArgument::REQUIRED, 'Loginname of the user you want to run the command as')
 			->addArgument('api-command', InputArgument::REQUIRED, 'The command to execute in the form "Module.function"')
 			->addArgument('parameters', InputArgument::OPTIONAL, 'Paramaters to pass to the command as JSON array');
+		$this->addOption('show-params', 's', InputOption::VALUE_NONE, 'Show possible parameters for given api-command (given command will *not* be called)');
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output)
@@ -50,24 +53,52 @@ final class RunApiCommand extends CliCommand
 
 		$result = $this->validateRequirements($input, $output);
 
-		try {
-			$loginname = $input->getArgument('user');
-			$userinfo = $this->getUserByName($loginname);
-			$command = $input->getArgument('api-command');
-			$apicmd = $this->validateCommand($command);
-			$module = "\\Froxlor\\Api\\Commands\\" . $apicmd['class'];
-			$function = $apicmd['function'];
-			$params_json = $input->getArgument('parameters');
-			$params = json_decode($params_json ?? '', true);
-			$json_result = $module::getLocal($userinfo, $params)->{$function}();
-			$output->write($json_result);
-			$result = self::SUCCESS;
-		} catch (Exception $e) {
-			$output->writeln('<error>' . $e->getMessage() . '</>');
-			$result = self::FAILURE;
+		if ($result == self::SUCCESS) {
+			try {
+				$loginname = $input->getArgument('user');
+				$userinfo = $this->getUserByName($loginname);
+				$command = $input->getArgument('api-command');
+				$apicmd = $this->validateCommand($command);
+				$module = "\\Froxlor\\Api\\Commands\\" . $apicmd['class'];
+				$function = $apicmd['function'];
+				if ($input->getOption('show-params') !== false) {
+					$json_result = \Froxlor\Api\Commands\Froxlor::getLocal($userinfo, ['module' => $apicmd['class'], 'function' => $function])->listFunctions();
+					$io = new SymfonyStyle($input, $output);
+					$result = $this->outputParamsList($json_result, $io);
+				} else {
+					$params_json = $input->getArgument('parameters');
+					$params = json_decode($params_json ?? '', true);
+					$json_result = $module::getLocal($userinfo, $params)->{$function}();
+					$output->write($json_result);
+					$result = self::SUCCESS;
+				}
+			} catch (Exception $e) {
+				$output->writeln('<error>' . $e->getMessage() . '</>');
+				$result = self::FAILURE;
+			}
 		}
 
 		return $result;
+	}
+
+	private function outputParamsList(string $json, SymfonyStyle $io): int
+	{
+		$docs = json_decode($json, true);
+		$docs = array_shift($docs['data']);
+		if (!isset($docs['params'])) {
+			$io->warning(($docs['head'] ?? "unknown return"));
+			return self::INVALID;
+		}
+		if (empty($docs['params'])) {
+			$io->success("No parameters required");
+		} else {
+			$rows = [];
+			foreach ($docs['params'] as $param) {
+				$rows[] = [$param['type'], '<options=bold>'.$param['parameter'].'</>', $param['desc'] ?? ""];
+			}
+			$io->table(['Type', 'Name', 'Description'], $rows);
+		}
+		return self::SUCCESS;
 	}
 
 	private function validateCommand(string $command): array
