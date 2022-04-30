@@ -12,6 +12,18 @@ $(function () {
 		})
 	});
 
+	/*
+	 * export/download JSON file (e.g. for usage with config-services)
+	 */
+	$('#downloadSelectionAsJson').on('click', function () {
+		var formData = $(this).closest('form').serialize();
+		window.location = "lib/ajax.php?action=getConfigJsonExport&" + formData;
+	});
+
+	/*
+	 * open modal window to show selected config-commands/files
+	 * for selected daemon
+	 */
 	$('.show-config').on('click', function () {
 		var distro = $(this).data('dist');
 		var section = $(this).data('section');
