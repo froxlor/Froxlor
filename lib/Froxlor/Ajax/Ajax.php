@@ -80,6 +80,8 @@ class Ajax
 				return $this->editApiKey();
 			case 'getConfigDetails':
 				return $this->getConfigDetails();
+			case 'getConfigJsonExport':
+				return $this->getConfigJsonExport();
 			default:
 				return $this->errorResponse('Action not found!');
 		}
@@ -321,6 +323,21 @@ class Ajax
 				'title' => $configfiles->getCompleteDistroName() . '&nbsp;&raquo;&nbsp' . $services[$section]->title . '&nbsp;&raquo;&nbsp' . $daemons[$daemon]->title,
 				'content' => $content
 			]);
+		}
+		return $this->errorResponse('Not allowed', 403);
+	}
+
+	/**
+	 * download JSON export of config-selection
+	 */
+	private function getConfigJsonExport()
+	{
+		if (isset($this->userinfo['adminsession']) && $this->userinfo['adminsession'] == 1 && $this->userinfo['change_serversettings'] == 1) {
+			$params = $_GET;
+			unset($params['action']);
+			unset($params['finish']);
+			header('Content-disposition: attachment; filename=froxlor-config-' . time() . '.json');
+			return $this->jsonResponse($params);
 		}
 		return $this->errorResponse('Not allowed', 403);
 	}

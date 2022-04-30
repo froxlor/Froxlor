@@ -61,6 +61,12 @@ abstract class ApiParameter
 	 */
 	private function trimArray($input)
 	{
+		if ($input === '') {
+			return "";
+		}
+		if (is_numeric($input) || is_null($input)) {
+			return $input;
+		}
 		if (!is_array($input)) {
 			return trim($input);
 		}

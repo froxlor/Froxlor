@@ -1451,6 +1451,7 @@ class Domains extends ApiCommand implements ResourceEntity
 			$ipandports = $this->validateIpAddresses($p_ipandports, false, $result['id']);
 			// check ssl IP
 			if (empty($p_ssl_ipandports) || (!is_array($p_ssl_ipandports) && is_null($p_ssl_ipandports))) {
+				$p_ssl_ipandports = [];
 				foreach ($result['ipsandports'] as $ip) {
 					if ($ip['ssl'] == 1) {
 						$p_ssl_ipandports[] = $ip['id'];

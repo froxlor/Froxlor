@@ -48,19 +48,6 @@ class TaskIDTest extends TestCase
 		$this->assertFalse($isNegativeValid, "Negative task should be invalid");
 	}
 
-	public function testAcceptNewTaskId()
-	{
-		$isTESTTASKValid = TaskIdExtended::isValid(10101010);
-		$this->assertTrue($isTESTTASKValid);
-	}
-
-
-	public function testFixedTaskIdTable()
-	{
-		$isTESTTASKValid = TaskIdExtended::isValid(10101010);
-		$this->assertTrue($isTESTTASKValid);
-	}
-
 	public function testIdMappingCorrect() {
 		foreach($this->fixedids as $name => $expected) {
 			$result = constant("\Froxlor\Cron\TaskId::$name");
@@ -77,8 +64,4 @@ class TaskIDTest extends TestCase
 		$unknownIDResult = TaskId::isValid(10101010);
 		$this->assertFalse($unknownIDResult);
 	}
-}
-
-class TaskIdExtended extends TaskId {
-	const TESTTASK = 10101010;
 }

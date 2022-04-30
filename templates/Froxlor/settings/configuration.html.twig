@@ -104,7 +104,9 @@
 				{{ lng('admin.configfiles.recommendednote') }}
 			</div>
 			<div class="col-12 col-md-6 text-end">
+				<input type="hidden" name="dist" value="{{ distribution }}" />
 				<button type="button" class="btn btn-outline-secondary" id="selectRecommendedConfig">{{ lng('admin.configfiles.selectrecommended') }}</button>
+				<button type="button" class="btn btn-outline-secondary" id="downloadSelectionAsJson"><i class="fa-solid fa-download"></i> {{ lng('admin.configfiles.downloadselected') }}</button>
 				<button type="submit" class="btn btn-primary">{{ lng('update.proceed') }}</button>
 			</div>
 		</div>

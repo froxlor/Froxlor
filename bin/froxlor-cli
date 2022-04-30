@@ -27,6 +27,7 @@
 declare(strict_types=1);
 
 use Symfony\Component\Console\Application;
+use Froxlor\Cli\RunApiCommand;
 use Froxlor\Cli\ConfigServices;
 use Froxlor\Cli\PhpSessionclean;
 use Froxlor\Cli\SwitchServerIp;
@@ -46,6 +47,7 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 require dirname(__DIR__) . '/lib/tables.inc.php';
 
 $application = new Application('froxlor-cli', Froxlor::getFullVersion());
+$application->add(new RunApiCommand());
 $application->add(new ConfigServices());
 $application->add(new PhpSessionclean());
 $application->add(new SwitchServerIp());
