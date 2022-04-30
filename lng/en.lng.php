@@ -2447,4 +2447,10 @@ Yours sincerely, your administrator',
 			'notice' => 'API access is not allowed for your account.',
 		],
 	],
+	'install' => [
+		'dependency_check' => [
+			'title' => 'Welcome to froxlor',
+			'description' => 'We check the system for dependencies to ensure that all required php extensions and modules are enabled so that froxlor runs properly.',
+		],
+	],
 ];

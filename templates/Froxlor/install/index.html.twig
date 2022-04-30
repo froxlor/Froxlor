@@ -2,18 +2,38 @@
 
 {% block content %}
 	<div class="container max-w-lg flex align-content-center mt-5">
-		<img src="{{ basehref|default('') }}templates/Froxlor/assets/img/logo.png" class="mb-5" alt="Froxlor Server Management Panel"/>
+		<img src="{{ basehref|default('') }}templates/Froxlor/assets/img/logo.png" class="mb-5" alt="{{ lng('slogan') }}"/>
+
+		{% if error is not null %}
+			<div class="alert alert-danger mb-4">{{ error }}</div>
+		{% endif %}
 
 		<div class="row text-center gx-0">
-			<div class="col p-3{{ setup.step == 0 ? ' bg-white shadow rounded-top' : '' }}"><i class="far fa-circle{{ setup.step > 0 ? '-check' : '' }}"></i> Preflight</div>
-			<div class="col p-3{{ setup.step == 1 ? ' bg-white shadow rounded-top' : '' }}"><i class="far fa-circle{{ setup.step > 1 ? '-check' : '' }}"></i> Database</div>
-			<div class="col p-3{{ setup.step == 2 ? ' bg-white shadow rounded-top' : '' }}"><i class="far fa-circle{{ setup.step > 2 ? '-check' : '' }}"></i> Admin</div>
-			<div class="col p-3{{ setup.step == 3 ? ' bg-white shadow rounded-top' : '' }}"><i class="far fa-circle{{ setup.step > 3 ? '-check' : '' }}"></i> System</div>
+			<div class="col p-3{{ setup.step == 0 ? ' bg-white shadow rounded-top' : '' }}">
+				<i class="far fa-circle{{ setup.step > 0 ? '-check' : '' }}"></i>
+				{% if setup.step > 0 %}<a href="?step=0" class="text-decoration-none">{{ lng('preflight') }}</a>{% else %}{{ lng('preflight') }}{% endif %}
+			</div>
+			<div class="col p-3{{ setup.step == 1 ? ' bg-white shadow rounded-top' : '' }}">
+				<i class="far fa-circle{{ setup.step > 1 ? '-check' : '' }}"></i>
+				{% if setup.step > 1 %}<a href="?step=1" class="text-decoration-none">{{ lng('database') }}</a>{% else %}{{ lng('database') }}{% endif %}
+			</div>
+			<div class="col p-3{{ setup.step == 2 ? ' bg-white shadow rounded-top' : '' }}">
+				<i class="far fa-circle{{ setup.step > 2 ? '-check' : '' }}"></i>
+				{% if setup.step > 2 %}<a href="?step=2" class="text-decoration-none">{{ lng('admin') }}</a>{% else %}{{ lng('admin') }}{% endif %}
+			</div>
+			<div class="col p-3{{ setup.step == 3 ? ' bg-white shadow rounded-top' : '' }}">
+				<i class="far fa-circle{{ setup.step > 3 ? '-check' : '' }}"></i>
+				{% if setup.step > 3 %}<a href="?step=3" class="text-decoration-none">{{ lng('system') }}</a>{% else %}{{ lng('system') }}{% endif %}
+			</div>
+			<div class="col p-3{{ setup.step == 4 ? ' bg-white shadow rounded-top' : '' }}">
+				<i class="far fa-circle{{ setup.step > 4 ? '-check' : '' }}"></i>
+				{% if setup.step > 4 %}<a href="?step=4" class="text-decoration-none">{{ lng('install') }}</a>{% else %}{{ lng('install') }}{% endif %}
+			</div>
 		</div>
 
 		<div class="card border-0 shadow">
 			<div class="card-body p-5">
-				<form method="post" action="?step={{ setup.step + 1 }}">
+				<form method="post" action="?step={{ setup.step }}">
 					{% if setup.step > 0 %}
 						<h4 class="mb-3">{{ section.title }}</h4>
 						<p class="lead">{{ section.description }}</p>
@@ -25,12 +45,12 @@
 						{% endfor %}
 
 						<div class="d-flex justify-content-between mt-4">
-							<a href="?step={{ setup.step - 1 }}" class="btn btn-secondary">&laquo;</a>
-							<button class="btn btn-primary">Next</button>
+							<a href="?step={{ setup.step - 1 }}" class="btn btn-secondary">&laquo; {{ lng('back') }}</a>
+							<button type="submit" name="submit" class="btn btn-primary">{{ lng('next') }} &raquo;</button>
 						</div>
 					{% else %}
-						<h4 class="mb-3">Welcome to froxlor</h4>
-						<p class="lead">We check the system for dependencies to ensure that all required php extensions and modules are enabled so that froxlor runs properly.</p>
+						<h4 class="mb-3">{{ lng('install.dependency_check.title') }}</h4>
+						<p class="lead">{{ lng('install.dependency_check.description') }}</p>
 
 						<p class="lead {{ preflight.criticals ? 'text-danger' : preflight.suggestions ? 'text-warning' : 'text-success'}}">
 							<i class="{{ preflight.criticals ? 'fa fa-triangle-exclamation' : preflight.suggestions ? 'fa-circle-info' : 'far fa-circle-check' }}"></i>
@@ -38,7 +58,7 @@
 						</p>
 
 						{% if preflight.criticals %}
-							<p class="text-muted">Critical Error</p>
+							<p class="text-muted">{{ lng('critical_error') }}</p>
 							<ul>
 								{% for critical in preflight.criticals %}
 									<li>{{ critical|json_encode }}</li>
@@ -47,7 +67,7 @@
 						{% endif %}
 
 						{% if preflight.suggestions %}
-							<p class="text-muted">Suggestions</p>
+							<p class="text-muted">{{ lng('suggestions') }}</p>
 							<ul>
 								{% for suggestion in preflight.suggestions %}
 									<li>{{ suggestion|json_encode }}</li>
@@ -57,9 +77,9 @@
 
 						<div class="d-flex justify-content-end mt-4">
 							{% if preflight.criticals or preflight.suggestions %}
-								<a href="" class="btn btn-secondary"><i class="fa fa-arrow-rotate-left"></i> Check again</a>
+								<a href="" class="btn btn-secondary"><i class="fa fa-arrow-rotate-left"></i> {{ lng('check_again') }}</a>
 							{% else %}
-								<a href="?step=1" class="btn btn-primary">Start installation</a>
+								<a href="?step=1" class="btn btn-primary">{{ lng('start_installation') }}</a>
 							{% endif %}
 						</div>
 					{% endif %}

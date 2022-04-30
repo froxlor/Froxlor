@@ -30,153 +30,111 @@ return [
 		'self_overview' => ['section' => 'admins', 'page' => 'admins'],
 		'sections' => [
 			'step1' => [
-				'title' => lng('install.dabatase'),
+				'title' => lng('install.database.title'),
 				'fields' => [
 					'sql_hostname' => [
 						'label' => lng('sql_hostname'),
 						'type' => 'text',
 						'mandatory' => true,
-						'value' => 'localhost'
+						'value' => old('sql_hostname', 'localhost', 'installation')
 					],
 					'sql_root_username' => [
 						'label' => lng('sql_root_username'),
-						'type' => 'password',
+						'type' => 'text',
 						'mandatory' => true,
+						'value' => old('sql_root_username', 'froxroot', 'installation'),
 						'next_to' => [
 							'sql_root_password' => [
 								'label' => lng('sql_root_password'),
 								'type' => 'password',
-								'mandatory' => true
+								'mandatory' => true,
+								'value' => old('sql_root_password', null, 'installation'),
 							],
 						]
 					],
 					'sql_username' => [
 						'label' => lng('sql_username'),
-						'type' => 'password',
+						'type' => 'text',
 						'mandatory' => true,
+						'value' => old('sql_username', 'froxlor', 'installation'),
 						'next_to' => [
 							'sql_password' => [
 								'label' => lng('sql_password'),
 								'type' => 'password',
-								'mandatory' => true
+								'mandatory' => true,
+								'value' => old('sql_password', null, 'installation'),
 							],
 						]
+					],
+					'sql_database' => [
+						'label' => lng('sql_database'),
+						'type' => 'text',
+						'mandatory' => true,
+						'value' => old('sql_database', 'froxlor', 'installation'),
+					],
+					'sql_override_database' => [
+						'label' => lng('sql_override_database'),
+						'type' => 'checkbox',
+						'value' => '1',
+						'checked' => old('sql_override_database', '0', 'installation')
 					],
 				]
 			],
 			'step2' => [
-				'title' => lng('admin.contactdata'),
-				'image' => 'icons/user_add.png',
+				'title' => lng('install.admin.title'),
 				'fields' => [
 					'name' => [
 						'label' => lng('name'),
 						'type' => 'text',
-						'mandatory' => true
+						'mandatory' => true,
+						'value' => old('name', 'Administrator', 'installation'),
 					],
 					'username' => [
 						'label' => lng('username'),
 						'type' => 'text',
-						'mandatory' => true
+						'mandatory' => true,
+						'value' => old('username', 'admin', 'installation'),
 					],
 					'password' => [
 						'label' => lng('password'),
 						'type' => 'password',
-						'mandatory' => true
+						'mandatory' => true,
+						'value' => old('password', null, 'installation'),
 					],
 					'email' => [
 						'label' => lng('email'),
 						'type' => 'text',
-						'mandatory' => true
+						'mandatory' => true,
+						'value' => old('email', null, 'installation'),
 					],
 				]
 			],
 			'step3' => [
-				'title' => lng('admin.servicedata'),
-				'image' => 'icons/user_add.png',
+				'title' => lng('install.system.title'),
 				'fields' => [
-					'ipaddress' => [
-						'label' => lng('serversettings.ipaddress.title'),
-						'type' => 'select'
+					'system' => [
+						'label' => lng('install.system.system'),
+						'type' => 'select',
+						'select_var' => $this->supportedOS,
 					],
-					'change_serversettings' => [
-						'label' => lng('admin.change_serversettings'),
+					'test' => [
+						'label' => lng('install.system.test'),
 						'type' => 'checkbox',
 						'value' => '1',
 						'checked' => false
 					],
-					'customers' => [
-						'label' => lng('admin.customers'),
-						'type' => 'textul',
-						'value' => 0,
-						'maxlength' => 9,
-						'mandatory' => true
+				]
+			],
+			'step4' => [
+				'title' => lng('install.system.title'),
+				'fields' => [
+					'system' => [
+						'label' => lng('install.system.system'),
+						'type' => 'textarea',
+						'value' => '/var/www/html/froxlor/bin/froxlor-cli cron --force',
+						'readonly' => true,
+						'rows' => 1
 					],
-					'customers_see_all' => [
-						'label' => lng('admin.customers_see_all'),
-						'type' => 'checkbox',
-						'value' => '1',
-						'checked' => false
-					],
-					'domains' => [
-						'label' => lng('admin.domains'),
-						'type' => 'textul',
-						'value' => 0,
-						'maxlength' => 9,
-						'mandatory' => true
-					],
-					'domains_see_all' => [
-						'label' => lng('admin.domains_see_all'),
-						'type' => 'checkbox',
-						'value' => '1',
-						'checked' => false
-					],
-					'caneditphpsettings' => [
-						'label' => lng('admin.caneditphpsettings'),
-						'type' => 'checkbox',
-						'value' => '1',
-						'checked' => false
-					],
-					'subdomains' => [
-						'label' => lng('customer.subdomains'),
-						'type' => 'textul',
-						'value' => 0,
-						'maxlength' => 9,
-						'mandatory' => true
-					],
-					'emails' => [
-						'label' => lng('customer.emails'),
-						'type' => 'textul',
-						'value' => 0,
-						'maxlength' => 9,
-						'mandatory' => true
-					],
-					'email_accounts' => [
-						'label' => lng('customer.accounts'),
-						'type' => 'textul',
-						'value' => 0,
-						'maxlength' => 9,
-						'mandatory' => true
-					],
-					'email_forwarders' => [
-						'label' => lng('customer.forwarders'),
-						'type' => 'textul',
-						'value' => 0,
-						'maxlength' => 9,
-						'mandatory' => true
-					],
-					'ftps' => [
-						'label' => lng('customer.ftps'),
-						'type' => 'textul',
-						'value' => 0,
-						'maxlength' => 9
-					],
-					'mysqls' => [
-						'label' => lng('customer.mysqls'),
-						'type' => 'textul',
-						'value' => 0,
-						'maxlength' => 9,
-						'mandatory' => true
-					]
 				]
 			]
 		]

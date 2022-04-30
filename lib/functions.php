@@ -24,6 +24,7 @@
  */
 
 use Froxlor\Language;
+use Froxlor\UI\Request;
 
 function view($template, $attributes)
 {
@@ -35,4 +36,12 @@ function view($template, $attributes)
 function lng(string $identifier, array $arguments = [])
 {
 	return Language::getTranslation($identifier, $arguments);
+}
+
+function old(string $identifier, string $default = null, string $session = null)
+{
+	if ($session && isset($_SESSION[$session])) {
+		return $_SESSION[$session][$identifier] ?? $default;
+	}
+	return Request::get($identifier, $default);
 }
