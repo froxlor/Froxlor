@@ -94,7 +94,7 @@ final class RunApiCommand extends CliCommand
 		} else {
 			$rows = [];
 			foreach ($docs['params'] as $param) {
-				$rows[] = [$param['type'], '<options=bold>'.$param['parameter'].'</>', $param['desc'] ?? ""];
+				$rows[] = [$param['type'], '<options=bold>' . $param['parameter'] . '</>', $param['desc'] ?? ""];
 			}
 			$io->table(['Type', 'Name', 'Description'], $rows);
 		}

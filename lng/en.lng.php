@@ -1354,6 +1354,9 @@ Yours sincerely, your administrator',
 			'maintitle' => 'PHP Configurations',
 			'fpmdaemons' => 'PHP-FPM versions',
 		],
+		'logger' => [
+			'logger' => 'System log',
+		],
 	],
 	'message' => [
 		'norecipients' => 'No e-mail has been sent because there are no recipients in the database',
