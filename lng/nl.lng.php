@@ -1150,7 +1150,7 @@ Met vriendelijke groet, uw beheerder',
 		'update' => 'Froxlor Update',
 		'proceed' => 'Verdergaan',
 		'update_information' => [
-			'part_a' => 'De bestanden van Froxlor zijn bijgewerkt naar versie <strong>%newversion</strong>. De geinstalleerde versie is <strong>%curversion</strong>.',
+			'part_a' => 'De bestanden van Froxlor zijn bijgewerkt naar versie <strong>%s</strong>. De geinstalleerde versie is <strong>%s</strong>.',
 			'part_b' => '<br /><br />Klanten kunnen niet inloggen totdat de update voltooid is.<br /><strong>Verdergaan?</strong>',
 		],
 		'noupdatesavail' => '<strong>U gebruikt reeds de meest recente versie van Froxlor.</strong>',

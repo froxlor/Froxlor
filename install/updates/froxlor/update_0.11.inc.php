@@ -87,6 +87,11 @@ if (Froxlor::isFroxlorVersion('0.10.99')) {
 	$to_clean = array(
 		"install/lib",
 		"install/lng",
+		"install/updates/froxlor/0.9",
+		"install/updates/froxlor/0.10",
+		"install/updates/preconfig/0.9",
+		"install/updates/preconfig/0.10",
+		"install/updates/preconfig.php",
 		"templates/Sparkle",
 		"lib/version.inc.php",
 		"lng/czech.lng.php",

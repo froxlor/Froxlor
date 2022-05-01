@@ -25,6 +25,7 @@
 
 namespace Froxlor\Install;
 
+use Froxlor\Froxlor;
 use Froxlor\FroxlorLogger;
 
 class Update
@@ -95,5 +96,14 @@ class Update
 		} elseif ($status == 0 || $status == 1) {
 			FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::ADM_ACTION, LOG_WARNING, 'Success');
 		}
+	}
+
+	public static function versionInUpdate($current_version, $version_to_check)
+	{
+		if (!Froxlor::isFroxlor()) {
+			return true;
+		}
+
+		return Froxlor::versionCompare2($current_version, $version_to_check) == -1;
 	}
 }

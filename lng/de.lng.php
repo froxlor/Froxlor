@@ -2075,7 +2075,7 @@ Vielen Dank, Ihr Administrator',
 		'update' => 'Froxlor Aktualisierung',
 		'proceed' => 'Ausführen',
 		'update_information' => [
-			'part_a' => 'Die Froxlor-Dateien wurden aktualisiert. Neue Version ist <strong>%newversion</strong>. Die bisher installierte Version ist <strong>%curversion</strong>',
+			'part_a' => 'Die Froxlor-Dateien wurden aktualisiert. Neue Version ist <strong>%s</strong>. Die bisher installierte Version ist <strong>%s</strong>',
 			'part_b' => '<br /><br />Ein Kunden-Login ist vor Abschluss des Aktualisierungsvorganges nicht möglich.<br /><strong>Aktualisierung ausführen?</strong>',
 		],
 		'noupdatesavail' => '<strong>Ihre Froxlor-Version ist aktuell.</strong>',

@@ -24,7 +24,7 @@
  */
 
 use Froxlor\Froxlor;
-use Froxlor\Filedir;
+use Froxlor\FileDir;
 use Froxlor\FroxlorLogger;
 use Froxlor\UI\Response;
 use Froxlor\Database\IntegrityCheck;
@@ -55,7 +55,7 @@ if (Froxlor::isFroxlor()) {
 	$update_tasks = [];
 	$task_counter = 0;
 
-	include_once(FileDir::makeCorrectFile(dirname(__FILE__) . '/updates/froxlor/0.11/update_0.11.inc.php'));
+	include_once(FileDir::makeCorrectFile(dirname(__FILE__) . '/updates/froxlor/update_0.11.inc.php'));
 
 	// Check Froxlor - database integrity (only happens after all updates are done, so we know the db-layout is okay)
 	Update::showUpdateStep("Checking database integrity");
