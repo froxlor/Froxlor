@@ -30,6 +30,7 @@ use Froxlor\Cron\TaskId;
 use Froxlor\Database\Database;
 use Froxlor\Froxlor;
 use Froxlor\FroxlorLogger;
+use Froxlor\Install\Preconfig;
 use Froxlor\Settings;
 use Froxlor\System\Cronjob;
 use Froxlor\UI\Panel\UI;
@@ -96,15 +97,15 @@ if ($page == 'overview') {
 		$new_version = Froxlor::VERSION;
 		$new_db_version = Froxlor::DBVERSION;
 
-		$ui_text = lng('update.update_information.part_a');
 		if (Froxlor::VERSION != $current_version) {
-			$ui_text = str_replace('%curversion', $current_version, $ui_text);
-			$ui_text = str_replace('%newversion', $new_version, $ui_text);
+			$replacer_currentversion = $current_version;
+			$replacer_newversion = $new_version;
 		} else {
 			// show db version
-			$ui_text = str_replace('%curversion', $current_db_version, $ui_text);
-			$ui_text = str_replace('%newversion', $new_db_version, $ui_text);
+			$replacer_currentversion = $current_db_version;
+			$replacer_newversion = $new_db_version;
 		}
+		$ui_text = lng('update.update_information.part_a', [$replacer_newversion, $replacer_currentversion]);
 		$ui_text .= lng('update.update_information.part_b');
 
 		$upd_formfield = [
@@ -121,8 +122,7 @@ if ($page == 'overview') {
 			]
 		];
 
-		include_once Froxlor::getInstallDir() . '/install/updates/preconfig.php';
-		$preconfig = getPreConfig($current_version, $current_db_version);
+		$preconfig = Preconfig::getPreConfig();
 		if (!empty($preconfig)) {
 			$upd_formfield['updates']['sections'] = $preconfig;
 		}
@@ -135,6 +135,6 @@ if ($page == 'overview') {
 			'alert_msg' => $ui_text . $message
 		]);
 	} else {
-		Response::standardSuccess('noupdatesavail');
+		Response::standardSuccess('update.noupdatesavail');
 	}
 }

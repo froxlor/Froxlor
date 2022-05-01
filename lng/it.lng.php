@@ -1810,7 +1810,7 @@ Nota: Perfavore <b>sii sicuro</b> di usare lo stesso nome di file come per il cr
 		'update' => 'Aggiorna Froxlor',
 		'proceed' => 'Procedi',
 		'update_information' => [
-			'part_a' => 'I file di Froxlor sono stati aggiornati alla versione <strong>%newversion</strong>. La versione installata è <strong>%curversion</strong>.',
+			'part_a' => 'I file di Froxlor sono stati aggiornati alla versione <strong>%s</strong>. La versione installata è <strong>%s</strong>.',
 			'part_b' => '<br /><br />I clienti non potranno accedere fino a quando l\'aggiornamento non sarà completato.<br /><strong>Procedere?</strong>',
 		],
 		'noupdatesavail' => '<strong>È già presente l\'ultima versione di Froxlor.</strong>',

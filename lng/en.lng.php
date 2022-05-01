@@ -2433,7 +2433,7 @@ Yours sincerely, your administrator',
 		'update' => 'Froxlor update',
 		'proceed' => 'Proceed',
 		'update_information' => [
-			'part_a' => 'The Froxlor files have been updated to version <strong>%newversion</strong>. The installed version is <strong>%curversion</strong>.',
+			'part_a' => 'The Froxlor files have been updated to version <strong>%s</strong>. The installed version is <strong>%s</strong>.',
 			'part_b' => '<br /><br />Customers will not be able to log in until the update has been finished.<br /><strong>Proceed?</strong>',
 		],
 		'noupdatesavail' => '<strong>You already have the latest Froxlor version.</strong>',
