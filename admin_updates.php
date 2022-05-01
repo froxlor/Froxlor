@@ -135,6 +135,6 @@ if ($page == 'overview') {
 			'alert_msg' => $ui_text . $message
 		]);
 	} else {
-		Response::standardSuccess('noupdatesavail');
+		Response::standardSuccess('update.noupdatesavail');
 	}
 }

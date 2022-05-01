@@ -114,7 +114,10 @@ class Response
 
 		$error = '';
 		foreach ($errors as $single_error) {
-			$single_error = lng('error.' . $single_error, [htmlentities($replacer)]);
+			if (strpos($single_error, ".") === false) {
+				$single_error = 'error.'.$single_error;
+			}
+			$single_error = lng($single_error, [htmlentities($replacer)]);
 			if (empty($error)) {
 				$error = $single_error;
 			} else {
@@ -167,7 +170,10 @@ class Response
 	 */
 	public static function standardSuccess($success_message = '', $replacer = '', $params = [], $throw_exception = false)
 	{
-		$success_message = lng('success.' . $success_message, [htmlentities($replacer)]);
+		if (strpos($success_message, ".") === false) {
+			$success_message = 'success.'.$success_message;
+		}
+		$success_message = lng($success_message, [htmlentities($replacer)]);
 
 		if ($throw_exception) {
 			throw new Exception(strip_tags($success_message), 200);
