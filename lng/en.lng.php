@@ -110,6 +110,7 @@ return [
 			'skipconfig' => 'Don\'t (re)configure',
 			'recommendednote' => 'Recommended/required services based on current system settings',
 			'selectrecommended' => 'Select recommended',
+			'downloadselected' => 'Export selected',
 		],
 		'templates' => [
 			'templates' => 'Email-templates',
@@ -1352,6 +1353,9 @@ Yours sincerely, your administrator',
 		'phpsettings' => [
 			'maintitle' => 'PHP Configurations',
 			'fpmdaemons' => 'PHP-FPM versions',
+		],
+		'logger' => [
+			'logger' => 'System log',
 		],
 	],
 	'message' => [

@@ -15,6 +15,10 @@
  *
  */
 
+use Froxlor\Froxlor;
+use Froxlor\FileDir;
+use Froxlor\Config\ConfigParser;
+
 /**
  * checks if the new-version has some updating to do
  *
@@ -29,7 +33,6 @@
  */
 function parseAndOutputPreconfig011(&$has_preconfig, &$return, $current_version, $current_db_version)
 {
-	global $lng;
 
 	if (versionInUpdate($current_version, '0.10.99')) {
 		$has_preconfig = true;
@@ -43,6 +46,29 @@ function parseAndOutputPreconfig011(&$has_preconfig, &$return, $current_version,
 				1 => 'Advanced'
 			],
 			'selected' => 1,
+			'label' => $question
+		];
+
+		$description = 'The configuration page now can preselect a distribution, please select your current distribution';
+		$return['system_distribution_note'] = ['type' => 'infotext', 'value' => $description];
+		$question = '<strong>Select distribution</strong>';
+		$config_dir = FileDir::makeCorrectDir(Froxlor::getInstallDir() . '/lib/configfiles/');
+		// show list of available distro's
+		$distros = glob($config_dir . '*.xml');
+		$distributions_select[''] = '-';
+		// read in all the distros
+		foreach ($distros as $_distribution) {
+			// get configparser object
+			$dist = new ConfigParser($_distribution);
+			// store in tmp array
+			$distributions_select[str_replace(".xml", "", strtolower(basename($_distribution)))] = $dist->getCompleteDistroName();
+		}
+		// sort by distribution name
+		asort($distributions_select);
+		$return['system_distribution'] = [
+			'type' => 'select',
+			'select_var' => $distributions_select,
+			'selected' => '',
 			'label' => $question
 		];
 	}

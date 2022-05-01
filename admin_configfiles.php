@@ -43,6 +43,11 @@ if ($userinfo['change_serversettings'] == '1') {
 	// get distro from URL param
 	$distribution = Request::get('distribution');
 
+	// check for possible setting
+	if (empty($distribution)) {
+		$distribution = Settings::Get('system.distribution') ?? "";
+	}
+
 	$distributions_select = [];
 
 	$services = [];
@@ -51,6 +56,11 @@ if ($userinfo['change_serversettings'] == '1') {
 	if (!empty($distribution)) {
 		if (!file_exists($config_dir . '/' . $distribution . ".xml")) {
 			Response::dynamicError("Unknown distribution");
+		}
+
+		// update setting if different
+		if ($distribution != Settings::Get('system.distribution')) {
+			Settings::Set('system.distribution', $distribution);
 		}
 
 		// create configparser object
