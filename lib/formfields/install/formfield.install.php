@@ -32,93 +32,135 @@ return [
 			'step1' => [
 				'title' => lng('install.database.title'),
 				'fields' => [
-					'sql_hostname' => [
-						'label' => lng('sql_hostname'),
+					'mysql_host' => [
+						'label' => lng('mysql_host'),
 						'type' => 'text',
 						'mandatory' => true,
-						'value' => old('sql_hostname', 'localhost', 'installation')
+						'value' => old('mysql_host', 'localhost', 'installation')
 					],
-					'sql_root_username' => [
-						'label' => lng('sql_root_username'),
+					'mysql_root_user' => [
+						'label' => lng('mysql_root_user'),
 						'type' => 'text',
 						'mandatory' => true,
-						'value' => old('sql_root_username', 'froxroot', 'installation'),
+						'value' => old('mysql_root_user', 'froxroot', 'installation'),
 						'next_to' => [
-							'sql_root_password' => [
-								'label' => lng('sql_root_password'),
+							'mysql_root_pass' => [
+								'label' => lng('mysql_root_pass'),
 								'type' => 'password',
 								'mandatory' => true,
-								'value' => old('sql_root_password', null, 'installation'),
+								'value' => old('mysql_root_pass', null, 'installation'),
 							],
 						]
 					],
-					'sql_username' => [
-						'label' => lng('sql_username'),
+					'mysql_unprivileged_user' => [
+						'label' => lng('mysql_unprivileged_user'),
 						'type' => 'text',
 						'mandatory' => true,
-						'value' => old('sql_username', 'froxlor', 'installation'),
+						'value' => old('mysql_unprivileged_user', 'froxlor', 'installation'),
 						'next_to' => [
-							'sql_password' => [
-								'label' => lng('sql_password'),
+							'mysql_unprivileged_pass' => [
+								'label' => lng('mysql_unprivileged_pass'),
 								'type' => 'password',
 								'mandatory' => true,
-								'value' => old('sql_password', null, 'installation'),
+								'value' => old('mysql_unprivileged_pass', null, 'installation'),
 							],
 						]
 					],
-					'sql_database' => [
-						'label' => lng('sql_database'),
+					'mysql_database' => [
+						'label' => lng('mysql_database'),
 						'type' => 'text',
 						'mandatory' => true,
-						'value' => old('sql_database', 'froxlor', 'installation'),
+						'value' => old('mysql_database', 'froxlor', 'installation'),
 					],
-					'sql_override_database' => [
-						'label' => lng('sql_override_database'),
+					'mysql_force_create' => [
+						'label' => lng('mysql_force_create'),
 						'type' => 'checkbox',
 						'value' => '1',
-						'checked' => old('sql_override_database', '0', 'installation')
+						'checked' => old('mysql_force_create', '0', 'installation')
+					],
+					'mysql_access_host' => [
+						'label' => lng('mysql_access_host'),
+						'type' => 'text',
+						'mandatory' => true,
+						'value' => old('mysql_access_host', '127.0.0.1,localhost', 'installation'),
 					],
 				]
 			],
 			'step2' => [
 				'title' => lng('install.admin.title'),
 				'fields' => [
-					'name' => [
-						'label' => lng('name'),
+					'admin_name' => [
+						'label' => lng('admin_name'),
 						'type' => 'text',
 						'mandatory' => true,
-						'value' => old('name', 'Administrator', 'installation'),
+						'value' => old('admin_name', 'Administrator', 'installation'),
 					],
-					'username' => [
-						'label' => lng('username'),
+					'admin_user' => [
+						'label' => lng('admin_user'),
 						'type' => 'text',
 						'mandatory' => true,
-						'value' => old('username', 'admin', 'installation'),
+						'value' => old('admin_user', 'admin', 'installation'),
 					],
-					'password' => [
-						'label' => lng('password'),
+					'admin_pass' => [
+						'label' => lng('admin_pass'),
 						'type' => 'password',
 						'mandatory' => true,
-						'value' => old('password', null, 'installation'),
+						'value' => old('admin_pass', null, 'installation'),
 					],
-					'email' => [
-						'label' => lng('email'),
+					'admin_email' => [
+						'label' => lng('admin_email'),
 						'type' => 'text',
 						'mandatory' => true,
-						'value' => old('email', null, 'installation'),
+						'value' => old('admin_email', null, 'installation'),
 					],
 				]
 			],
 			'step3' => [
 				'title' => lng('install.system.title'),
 				'fields' => [
-					'system' => [
-						'label' => lng('install.system.system'),
+					'distribution' => [
+						'label' => lng('distribution'),
 						'type' => 'select',
 						'select_var' => $this->supportedOS,
 					],
-					'test' => [
-						'label' => lng('install.system.test'),
+					'serverip' => [
+						'label' => lng('serverip'),
+						'type' => 'text',
+						'mandatory' => true,
+						'value' => old('serverip', null, 'installation'),
+					],
+					'servername' => [
+						'label' => lng('servername'),
+						'type' => 'text',
+						'mandatory' => true,
+						'value' => old('servername', null, 'installation'),
+					],
+					'use_ssl' => [
+						'label' => lng('use_ssl'),
+						'type' => 'checkbox',
+						'value' => '1',
+						'checked' => old('use_ssl', '0', 'installation'),
+					],
+					'webserver' => [
+						'label' => lng('webserver'),
+						'type' => 'text',
+						'mandatory' => true,
+						'value' => old('webserver', 'apache24', 'installation'),
+					],
+					'httpuser' => [
+						'label' => lng('httpuser'),
+						'type' => 'text',
+						'mandatory' => true,
+						'value' => old('httpuser', 'www-data', 'installation'),
+					],
+					'httpgroup' => [
+						'label' => lng('httpgroup'),
+						'type' => 'text',
+						'mandatory' => true,
+						'value' => old('httpgroup', 'www-data', 'installation'),
+					],
+					'activate_newsfeed' => [
+						'label' => lng('activate_newsfeed'),
 						'type' => 'checkbox',
 						'value' => '1',
 						'checked' => false

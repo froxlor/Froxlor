@@ -60,7 +60,6 @@ CREATE TABLE `ftp_users` (
 ) ENGINE=InnoDB CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
-
 DROP TABLE IF EXISTS `mail_users`;
 CREATE TABLE `mail_users` (
   `id` int(11) NOT NULL auto_increment,

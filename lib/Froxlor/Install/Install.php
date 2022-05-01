@@ -26,6 +26,7 @@
 namespace Froxlor\Install;
 
 use Exception;
+use Froxlor\Install\Install\Core;
 use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
 
@@ -36,8 +37,8 @@ class Install
 	public $phpVersion;
 	public $formfield;
 	public string $requiredVersion = '7.4.0';
-	public array $requiredExtensions = ['libxml', 'zip'];
-	public array $suggestedExtensions = ['curl'];
+	public array $requiredExtensions = ['session', 'ctype', 'xml', 'filter', 'posix', 'mbstring', 'curl', 'gmp', 'json'];
+	public array $suggestedExtensions = ['bcmath', 'zip'];
 	public array $suggestions = [];
 	public array $criticals = [];
 	public array $loadedExtensions;
@@ -123,13 +124,19 @@ class Install
 			$_SESSION['installation'] = array_merge($_SESSION['installation'] ?? [], $validatedData);
 		}
 
-		// also handle completion of installation if it's the last step
+		// also handle completion of installation if it's the step before the last step
+		if ($this->currentStep == ($this->maxSteps -1)) {
+			$core = new \Froxlor\Install\Install\Core($_SESSION['installation']);
+			$core->doInstall();
+		}
+
+		// redirect user to home if the installation is done
 		if ($this->currentStep == $this->maxSteps) {
-			$this->startInstallation($validatedData);
 			header('Location: ../');
 			return;
 		}
 
+		// redirect to next step
 		header('Location: ?step=' . ($this->currentStep + 1));
 	}
 
@@ -208,16 +215,16 @@ class Install
 	 */
 	private function checkDatabase(array $validatedData): void
 	{
-		$dsn = sprintf('mysql:host=%s;charset=utf8mb4', $validatedData['sql_hostname']);
-		$pdo = new \PDO($dsn, $validatedData['sql_root_username'], $validatedData['sql_root_password']);
+		$dsn = sprintf('mysql:host=%s;charset=utf8', $validatedData['mysql_host']);
+		$pdo = new \PDO($dsn, $validatedData['mysql_root_user'], $validatedData['mysql_root_pass']);
 
 		// check if the database already exist
 		$stmt = $pdo->prepare('SHOW DATABASES LIKE ?');
 		$stmt->execute([
-			$validatedData['sql_database']
+			$validatedData['mysql_database']
 		]);
 		$hasDatabase = $stmt->fetch();
-		if ($hasDatabase && !$validatedData['sql_override_database']) {
+		if ($hasDatabase && !$validatedData['mysql_force_create']) {
 			throw new Exception('Database already exist, please set override option to rebuild!');
 		}
 
@@ -230,35 +237,25 @@ class Install
 			throw new Exception('Cant drop test db');
 		}
 
-		// FIXME: seems not to work
 		// check if the user already exist
-		$stmt = $pdo->prepare("SELECT `user` FROM `mysql.user` WHERE `user` = '?'");
-		if ($stmt->rowCount()) {
-			throw new Exception('Username already exist, please use another username!');
+		$stmt = $pdo->prepare("SELECT `User` FROM `mysql`.`user` WHERE `User` = ?");
+		$stmt->execute([$validatedData['mysql_unprivileged_user']]);
+		if ($stmt->rowCount() && !$validatedData['mysql_force_create']) {
+			throw new Exception('Username already exist, please use another username or delete it first!');
 		}
 
 		// check if we can create a new user
 		$testUser = uniqid('froxlor_tmp_');
 		$stmt = $pdo->prepare('CREATE USER ?@? IDENTIFIED BY ?');
-		if ($stmt->execute([$testUser, $validatedData['sql_hostname'], uniqid()]) === false) {
+		if ($stmt->execute([$testUser, $validatedData['mysql_host'], uniqid()]) === false) {
 			throw new Exception('cant create test user');
 		}
 		$stmt = $pdo->prepare('DROP USER ?@?');
-		if ($stmt->execute([$testUser, $validatedData['sql_hostname']]) === false) {
+		if ($stmt->execute([$testUser, $validatedData['mysql_host']]) === false) {
 			throw new Exception('cant create test user');
 		}
 		if ($pdo->prepare('FLUSH PRIVILEGES')->execute() === false) {
 			throw new Exception('Cant flush privileges');
 		}
-	}
-
-	/**
-	 * @param array $validatedData
-	 * @return void
-	 * @throws Exception
-	 */
-	private function startInstallation(array $validatedData): void
-	{
-		// TODO: do the installation (maybe in an own class?)
 	}
 }
