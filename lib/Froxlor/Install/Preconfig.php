@@ -61,7 +61,9 @@ class Preconfig
 	 */
 	public function addToPreConfig(array $array)
 	{
-		$this->preconfig_data = $this->preconfig_data + $array;
+		if (isset($array['title']) && isset($array['fields']) && count($array['fields']) > 0) {
+			$this->preconfig_data[] = $array;
+		}
 	}
 
 	/**
@@ -103,11 +105,8 @@ class Preconfig
 					'update_preconfig' => ['type' => 'hidden', 'value' => 1]
 				]
 			];
-			$result = [
-				$preconfig->getData(),
-				$agree
-			];
-			return $result;
+			$preconfig->addToPreConfig($agree);
+			return $preconfig->getData();
 		}
 		return [];
 	}

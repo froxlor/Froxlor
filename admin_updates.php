@@ -123,7 +123,6 @@ if ($page == 'overview') {
 		];
 
 		$preconfig = Preconfig::getPreConfig();
-
 		if (!empty($preconfig)) {
 			$upd_formfield['updates']['sections'] = $preconfig;
 		}
