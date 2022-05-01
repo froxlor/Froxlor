@@ -6,6 +6,7 @@ logs/*
 .buildpath
 .project
 .settings/
+.test/
 *.diff
 *~
 .well-known
