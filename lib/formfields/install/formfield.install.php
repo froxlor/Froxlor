@@ -121,6 +121,7 @@ return [
 					'distribution' => [
 						'label' => lng('distribution'),
 						'type' => 'select',
+						'mandatory' => true,
 						'select_var' => $this->supportedOS,
 					],
 					'serverip' => [
@@ -139,13 +140,19 @@ return [
 						'label' => lng('use_ssl'),
 						'type' => 'checkbox',
 						'value' => '1',
-						'checked' => old('use_ssl', '0', 'installation'),
+						'checked' => old('use_ssl', '1', 'installation'),
 					],
 					'webserver' => [
 						'label' => lng('webserver'),
 						'type' => 'text',
 						'mandatory' => true,
 						'value' => old('webserver', 'apache24', 'installation'),
+					],
+					'webserver_backend' => [
+						'label' => lng('webserver_backend'),
+						'type' => 'select',
+						'mandatory' => true,
+						'select_var' => $this->webserverBackend,
 					],
 					'httpuser' => [
 						'label' => lng('httpuser'),

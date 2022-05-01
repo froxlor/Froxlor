@@ -42,8 +42,14 @@ class Install
 	public array $suggestions = [];
 	public array $criticals = [];
 	public array $loadedExtensions;
+	// TODO: add more os
 	public array $supportedOS = [
 		'focal' => 'Ubuntu 20.04 LTS (Focal Fossa)'
+	];
+	public array $webserverBackend = [
+		'php-fpm' => 'PHP-FPM',
+		'fcgid' => 'FCGID',
+		'none' => 'None',
 	];
 
 	public function __construct()
@@ -126,7 +132,7 @@ class Install
 
 		// also handle completion of installation if it's the step before the last step
 		if ($this->currentStep == ($this->maxSteps -1)) {
-			$core = new \Froxlor\Install\Install\Core($_SESSION['installation']);
+			$core = new Core($_SESSION['installation']);
 			$core->doInstall();
 		}
 

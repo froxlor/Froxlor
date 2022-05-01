@@ -30,6 +30,7 @@ use Froxlor\Config\ConfigParser;
 use Froxlor\FileDir;
 use Froxlor\Froxlor;
 use Froxlor\PhpHelper;
+use Froxlor\System\Crypt;
 use PDO;
 use PDOException;
 use PDOStatement;
@@ -503,9 +504,8 @@ class Core
 		// last but not least create the main admin
 		$ins_data = [
 			'loginname' => $this->validatedData['admin_user'],
-			/* use system default crypt */
 			'password' => password_hash($this->validatedData['admin_pass'], PASSWORD_DEFAULT),
-			'email' => 'admin@' . $this->validatedData['servername'],
+			'email' => $this->validatedData['admin_email'],
 			'deflang' => 'en' // TODO: set lanuage
 		];
 		$ins_stmt = $db_user->prepare("
