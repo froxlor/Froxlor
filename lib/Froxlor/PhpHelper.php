@@ -210,8 +210,6 @@ class PhpHelper
 
 	public static function loadConfigArrayDir()
 	{
-		global $lng, $theme;
-
 		// we now use dynamic function parameters
 		// so we can read from more than one directory
 		// and still be valid for old calls

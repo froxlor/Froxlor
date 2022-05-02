@@ -1158,6 +1158,7 @@ Vielen Dank, Ihr Administrator',
 			'title' => 'Tabellenspalten verwalten',
 			'description' => 'Hier können die angezeigten Tabellenspalten angepasst werden',
 		],
+		'mandatoryfield' => 'Pflichtfeld',
 	],
 	'phpfpm' => [
 		'vhost_httpuser' => 'Lokaler Benutzer für PHP-FPM (Froxlor-Vhost)',

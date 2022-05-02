@@ -462,13 +462,15 @@ class Core
 			`port` = :serverport,
 			`namevirtualhost_statement` = :nvh,
 			`vhostcontainer` = '1',
-			`vhostcontainer_servername_statement` = '1'
+			`vhostcontainer_servername_statement` = '1',
+			`ssl` = :ssl
 		");
 		$nvh = $this->validatedData['webserver'] == 'apache2' ? '1' : '0';
 		$stmt->execute([
 			'nvh' => $nvh,
 			'serverip' => $this->validatedData['serverip'],
-			'serverport' => 80
+			'serverport' => 80,
+			'ssl' => 0
 		]);
 		$defaultip = $db_user->lastInsertId();
 
@@ -477,7 +479,8 @@ class Core
 			$stmt->execute([
 				'nvh' => $this->validatedData['webserver'] == 'apache2' ? '1' : '0',
 				'serverip' => $this->validatedData['serverip'],
-				'serverport' => 443
+				'serverport' => 443,
+				'ssl' => 1
 			]);
 			$defaultsslip = $db_user->lastInsertId();
 		}

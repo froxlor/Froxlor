@@ -7,7 +7,7 @@
 						{% if em %}
 							<mark>
 							{% endif %}
-							{{ field.label.title|raw }}
+							{{ field.label.title|raw }}{% if field.mandatory is defined and field.mandatory %}<span class="text-danger">*</span>{% endif %}
 							{% if em %}
 							</mark>
 						{% endif %}
@@ -19,7 +19,7 @@
 						{% if em %}
 							<mark>
 							{% endif %}
-							{{ field.label|raw }}
+							{{ field.label|raw }}{% if field.mandatory is defined and field.mandatory %}<span class="text-danger">*</span>{% endif %}
 							{% if em %}
 							</mark>
 						{% endif %}

@@ -29,6 +29,7 @@ use Exception;
 use PDO;
 use PDOException;
 use Froxlor\Froxlor;
+use Froxlor\PhpHelper;
 use Froxlor\Api\ApiCommand;
 use Froxlor\Api\ResourceEntity;
 use Froxlor\Database\Database;
@@ -171,13 +172,17 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 			throw new Exception('Cannot delete first/default mysql-server');
 		}
 
-		// @todo check whether the server is in use by any customer
-
 		// get all data from lib/userdata
 		require Froxlor::getInstallDir() . "/lib/userdata.inc.php";
 
 		if (!isset($sql_root[$dbserver])) {
 			throw new Exception('Mysql server not found', 404);
+		}
+
+		// check whether the server is in use by any customer
+		$result_ms = $this->databasesOnServer(true, $dbserver);
+		if ($result_ms > 0) {
+			Response::standardError('mysqlserverstillhasdbs', '', true);
 		}
 
 		unset($sql_root[$dbserver]);
@@ -288,51 +293,36 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 	 * @access admin, customer
 	 * @return string json-encoded array count
 	 */
-	public function databasesOnServer()
+	public function databasesOnServer(bool $internal_all = false, int $dbserver = 0)
 	{
-		$dbserver = $this->getParam('mysql_server');
-		$customer_ids = $this->getAllowedCustomerIds();
-
-		$result_stmt = Database::prepare("
-			SELECT COUNT(*) num_dbs FROM `" . TABLE_PANEL_DATABASES . "`
-			WHERE `customerid` IN (" . implode(", ", $customer_ids) . ") AND `dbserver` = :dbserver");
-		$result = Database::pexecute_first($result_stmt, ['dbserver' => $dbserver], true, true);
-		return $this->response(['count' => $result['num_dbs']]);
+		if ($internal_all) {
+			$result_stmt = Database::prepare("
+				SELECT COUNT(*) num_dbs FROM `" . TABLE_PANEL_DATABASES . "`
+				WHERE `dbserver` = :dbserver
+			");
+			$result = Database::pexecute_first($result_stmt, ['dbserver' => $dbserver], true, true);
+			return (int) $result['num_dbs'];
+		} else {
+			$dbserver = $this->getParam('mysql_server');
+			$customer_ids = $this->getAllowedCustomerIds();
+			$result_stmt = Database::prepare("
+				SELECT COUNT(*) num_dbs FROM `" . TABLE_PANEL_DATABASES . "`
+				WHERE `customerid` IN (" . implode(", ", $customer_ids) . ") AND `dbserver` = :dbserver
+			");
+			$result = Database::pexecute_first($result_stmt, ['dbserver' => $dbserver], true, true);
+			return $this->response(['count' => $result['num_dbs']]);
+		}
 	}
 
+	/**
+	 * write new userdata.inc.php file
+	 */
 	private function generateNewUserData(array $sql, array $sql_root)
 	{
-		$content = '<?php' . PHP_EOL;
-		$content .= '//automatically generated userdata.inc.php for Froxlor' . PHP_EOL;
-		$content .= '$sql[\'host\']=\'' . $sql['host'] . '\';' . PHP_EOL;
-		$content .= '$sql[\'user\']=\'' . $sql['user'] . '\';' . PHP_EOL;
-		$content .= '$sql[\'password\']=\'' . $sql['password'] . '\';' . PHP_EOL;
-		$content .= '$sql[\'db\']=\'' . $sql['db'] . '\';' . PHP_EOL;
-		foreach ($sql_root as $index => $sqlroot_data) {
-			$content .= '// database server #' . ($index + 1) . PHP_EOL;
-			foreach ($sqlroot_data as $field => $value) {
-				// ssl-fields
-				if (is_array($value)) {
-					foreach ($value as $vfield => $vvalue) {
-						if ($vfield == 'verifyServerCertificate') {
-							$content .= '$sql_root[' . (int)$index . '][\'' . $field . '\'][\'' . $vfield . '\'] = ' . ($vvalue ? 'true' : 'false') . ';' . PHP_EOL;
-						} else {
-							$content .= '$sql_root[' . (int)$index . '][\'' . $field . '\'][\'' . $vfield . '\'] = \'' . $vvalue . '\';' . PHP_EOL;
-						}
-					}
-				} else {
-					if ($field == 'password') {
-						$content .= '$sql_root[' . (int)$index . '][\'' . $field . '\'] = <<<EOP
-' . $value . '
-EOP;' . PHP_EOL;
-					} else {
-						$content .= '$sql_root[' . (int)$index . '][\'' . $field . '\'] = \'' . $value . '\';' . PHP_EOL;
-					}
-				}
-			}
-		}
-		$content .= '$sql[\'debug\']=' . ($sql['debug'] ? 'true' : 'false') . ';' . PHP_EOL;
-		$content .= '?>' . PHP_EOL;
+		$content = PhpHelper::parseArrayToPhpFile(
+			['sql' => $sql, 'sql_root' => $sql_root],
+			'automatically generated userdata.inc.php for froxlor'
+		);
 		file_put_contents(Froxlor::getInstallDir() . "/lib/userdata.inc.php", $content);
 	}
 }

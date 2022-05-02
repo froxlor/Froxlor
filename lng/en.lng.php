@@ -1498,6 +1498,7 @@ Yours sincerely, your administrator',
 			'title' => 'Manage table columns',
 			'description' => 'Here you can customize the visible columns',
 		],
+		'mandatoryfield' => 'Field is mandatory',
 	],
 	'phpfpm' => [
 		'vhost_httpuser' => 'Local user to use for PHP-FPM (Froxlor vHost)',

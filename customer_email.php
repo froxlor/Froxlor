@@ -159,7 +159,7 @@ if ($page == 'overview' || $page == 'emails') {
 						'formdata' => $email_add_data['emails_add']
 					]);
 				} else {
-					Response::standardError('noemaildomainaddedyet');
+					Response::standardError('emails.noemaildomainaddedyet');
 				}
 			}
 		} else {
