@@ -197,10 +197,10 @@ return [
 						'label' => lng('admin.domain_sslenabled'),
 						'type' => 'checkbox',
 						'value' => '1',
-						'checked' => true
+						'checked' => !empty($ssl_ipsandports)
 					],
 					'no_ssl_available_info' => [
-						'visible' => !empty($ssl_ipsandports),
+						'visible' => empty($ssl_ipsandports),
 						'label' => 'SSL',
 						'type' => 'label',
 						'value' => lng('panel.nosslipsavailable')

@@ -227,4 +227,37 @@ class Crypt
 		$algo = Settings::Get('system.passwordcryptfunc') !== null ? Settings::Get('system.passwordcryptfunc') : PASSWORD_DEFAULT;
 		return password_hash($password, $algo);
 	}
+
+	/**
+	 * creates a self-signed ECC-certificate for the froxlor-vhost
+	 * and sets the content to the corresponding files set in the
+	 * settings for ssl-certificate-file and ssl-certificate-key
+	 *
+	 * @return void
+	 */
+	public static function createSelfSignedCertificate()
+	{
+		// certificate info
+		$dn = [
+			"countryName" => "DE",
+			"stateOrProvinceName" => "Hessen",
+			"localityName" => "Frankfurt am Main",
+			"organizationName" => "froxlor",
+			"organizationalUnitName" => "froxlor Server Management Panel",
+			"commonName" => Settings::Get('system.hostname'),
+			"emailAddress" => Settings::Get('panel.adminmail')
+		];
+		// create private key
+		$privkey = openssl_pkey_new([
+			"private_key_type" => OPENSSL_KEYTYPE_EC,
+			"curve_name" => 'prime256v1',
+		]);
+		// create signing request
+		$csr = openssl_csr_new($dn, $privkey, array('digest_alg' => 'sha384'));
+		// sign csr
+		$x509 = openssl_csr_sign($csr, null, $privkey, 365, array('digest_alg' => 'sha384'));
+		// export to files
+		openssl_x509_export_to_file($x509, Settings::Get('system.ssl_cert_file'));
+		openssl_pkey_export_to_file($private_key, Settings::Get('system.ssl_key_file'));
+	}
 }
