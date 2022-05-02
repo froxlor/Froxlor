@@ -151,7 +151,6 @@ return [
 			'normal' => 'normální',
 			'paranoid' => 'paranoidní',
 		],
-		'loggersystem' => 'Systémový log',
 		'emaildomain' => 'Emailová doména',
 		'email_only' => 'Jen email?',
 		'wwwserveralias' => 'Přidat "www." ServerAlias',
@@ -560,6 +559,9 @@ return [
 		],
 		'phpsettings' => [
 			'maintitle' => 'PHP konfigurace',
+		],
+		'logger' => [
+			'logger' => 'Systémový log',
 		],
 	],
 	'message' => [

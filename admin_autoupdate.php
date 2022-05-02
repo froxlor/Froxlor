@@ -296,5 +296,9 @@ elseif ($page == 'error') {
 	// 9 = checksum mismatch
 	// 10 = <php-7.4
 	// 11 = enable_webupdate = false
-	Response::standardError('autoupdate_' . $errno);
+	$errmsg = 'autoupdate_' . $errno;
+	if ($errno == 3) {
+		$errmsg = 'customized_version';
+	}
+	Response::standardError($errmsg);
 }

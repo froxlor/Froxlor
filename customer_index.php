@@ -141,17 +141,17 @@ if ($page == 'overview') {
 		if ($old_password == '') {
 			Response::standardError([
 				'stringisempty',
-				'oldpassword'
+				'changepassword.old_password'
 			]);
 		} elseif ($new_password == '') {
 			Response::standardError([
 				'stringisempty',
-				'newpassword'
+				'changepassword.new_password'
 			]);
 		} elseif ($new_password_confirm == '') {
 			Response::standardError([
 				'stringisempty',
-				'newpasswordconfirm'
+				'changepassword.new_password_confirm'
 			]);
 		} elseif ($new_password != $new_password_confirm) {
 			Response::standardError('newpasswordconfirmerror');

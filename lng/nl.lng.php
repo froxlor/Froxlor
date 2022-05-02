@@ -172,7 +172,6 @@ return [
 			'normal' => 'normaal',
 			'paranoid' => 'paranoide',
 		],
-		'loggersystem' => 'Systeemlog',
 		'emaildomain' => 'Emaildomein',
 		'email_only' => 'Alleen email?',
 		'wwwserveralias' => 'Voeg een "www." ServerAlias toe',
@@ -652,6 +651,9 @@ Met vriendelijke groet, uw beheerder',
 		],
 		'phpsettings' => [
 			'maintitle' => 'PHP Configuratie\'s',
+		],
+		'logger' => [
+			'logger' => 'Systeemlog',
 		],
 	],
 	'message' => [

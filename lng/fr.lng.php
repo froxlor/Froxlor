@@ -148,7 +148,6 @@ return [
 			'normal' => 'normal',
 			'paranoid' => 'paranoÃ¯aque',
 		],
-		'loggersystem' => 'Log système',
 		'emaildomain' => 'Domaine e-mail',
 		'email_only' => 'Seulement des e-mails ?',
 		'wwwserveralias' => 'Ajouter un "www." à l\'alias du serveur "ServerAlias"',
@@ -461,6 +460,9 @@ return [
 		'traffic' => [
 			'traffic' => 'Trafic',
 			'current' => 'Mois actuel',
+		],
+		'logger' => [
+			'logger' => 'Log système',
 		],
 	],
 	'message' => [

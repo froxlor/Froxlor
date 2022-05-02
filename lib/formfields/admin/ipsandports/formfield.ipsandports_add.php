@@ -115,7 +115,7 @@ return [
 						'rows' => 12
 					],
 					'include_default_vhostconf_domain' => [
-						'label' => lng('admin.include_ownvhostsettings'),
+						'label' => lng('serversettings.includedefault_sslvhostconf'),
 						'type' => 'checkbox',
 						'value' => '1',
 						'checked' => false
@@ -158,7 +158,7 @@ return [
 						'rows' => 12
 					],
 					'include_specialsettings' => [
-						'label' => lng('admin.include_ownvhostsettings'),
+						'label' => lng('serversettings.includedefault_sslvhostconf'),
 						'type' => 'checkbox',
 						'value' => '1',
 						'checked' => false

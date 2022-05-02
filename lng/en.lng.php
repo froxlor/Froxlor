@@ -243,7 +243,6 @@ return [
 			'normal' => 'normal',
 			'paranoid' => 'paranoid',
 		],
-		'loggersystem' => 'System log',
 		'emaildomain' => 'Emaildomain',
 		'email_only' => 'Only email?',
 		'wwwserveralias' => 'Add a "www." ServerAlias',
@@ -2287,6 +2286,7 @@ Yours sincerely, your administrator',
 		],
 		'default_sslvhostconf' => [
 			'title' => 'Default SSL vHost-settings',
+			'description' => 'The content of this field will be included into this ip/port vHost container directly. You can use the following variables:<br/><code>{DOMAIN}</code>, <code>{DOCROOT}</code>, <code>{CUSTOMER}</code>, <code>{IP}</code>, <code>{PORT}</code>, <code>{SCHEME}</code>, <code>{FPMSOCKET}</code> (if applicable)<br/> Attention: The code won\'t be checked for any errors. If it contains errors, webserver might not start again!',
 		],
 		'includedefault_sslvhostconf' => 'Include non-SSL vHost-settings in SSL-vHost',
 		'apply_specialsettings_default' => [

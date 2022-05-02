@@ -160,7 +160,6 @@ return [
 			'normal' => 'normal',
 			'paranoid' => 'paranóico',
 		],
-		'loggersystem' => 'Sistema-Log',
 		'emaildomain' => 'Domínio de Email',
 		'email_only' => 'Somente Email?',
 		'wwwserveralias' => 'Adicionar um "www." ServerAlias',
@@ -549,6 +548,9 @@ return [
 		],
 		'phpsettings' => [
 			'maintitle' => 'Configurações do PHP',
+		],
+		'logger' > [
+			'logger' => 'Sistema-Log',
 		],
 	],
 	'message' => [

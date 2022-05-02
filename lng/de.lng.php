@@ -240,7 +240,6 @@ return [
 			'normal' => 'Normal',
 			'paranoid' => 'Paranoid',
 		],
-		'loggersystem' => 'System-Log',
 		'emaildomain' => 'E-Mail-Domain',
 		'email_only' => 'Nur als E-Mail-Domain verwenden?',
 		'wwwserveralias' => 'Einen "www." ServerAlias hinzufügen',
@@ -1056,6 +1055,9 @@ Vielen Dank, Ihr Administrator',
 		'phpsettings' => [
 			'maintitle' => 'PHP-Konfigurationen',
 			'fpmdaemons' => 'PHP-FPM Versionen',
+		],
+		'logger' => [
+			'logger' => 'System-Log',
 		],
 	],
 	'message' => [
@@ -1936,6 +1938,7 @@ Vielen Dank, Ihr Administrator',
 		],
 		'default_sslvhostconf' => [
 			'title' => 'Standard SSL vHost-Einstellungen',
+			'description' => 'Der Inhalt dieses Feldes wird direkt in den IP/Port-vHost-Container übernommen. Die folgenden Variablen können verwendet werden:<br/><code>{DOMAIN}</code>, <code>{DOCROOT}</code>, <code>{CUSTOMER}</code>, <code>{IP}</code>, <code>{PORT}</code>, <code>{SCHEME}</code>, <code>{FPMSOCKET}</code> (wenn zutreffend)<br/><br /><strong>ACHTUNG:</strong> Der Code wird nicht auf Fehler geprüft. Etwaige Fehler werden also auch übernommen. Der Webserver könnte nicht mehr starten!',
 		],
 		'includedefault_sslvhostconf' => 'Nicht-SSL vHost-Einstellungen in SSL-vHost inkludieren',
 		'apply_specialsettings_default' => [

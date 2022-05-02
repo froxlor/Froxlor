@@ -207,7 +207,6 @@ return [
 			'normal' => 'normale',
 			'paranoid' => 'paranoico',
 		],
-		'loggersystem' => 'Log di Sistema',
 		'emaildomain' => 'Email dominio',
 		'email_only' => 'Solo email?',
 		'wwwserveralias' => 'Aggiungi a "www." ServerAlias',
@@ -1076,6 +1075,9 @@ Cordiali Saluti, Team Froxlor',
 		],
 		'phpsettings' => [
 			'maintitle' => 'Configurazioni PHP',
+		],
+		'logger' => [
+			'logger' => 'Log di Sistema',
 		],
 	],
 	'message' => [

@@ -234,7 +234,7 @@ return [
 					],
 					'ssl_ipandport' => [
 						'label' => lng('domains.ipandport_ssl_multi.title'),
-						'desc' => lng('domains.ipandport_ssl_multi.description'),
+						'desc' => lng('domains.ipandport_multi.description'),
 						'type' => 'checkbox',
 						'values' => $ssl_ipsandports,
 						'value' => $usedips,
@@ -321,7 +321,7 @@ return [
 						'value' => $result['ssl_specialsettings']
 					],
 					'include_specialsettings' => [
-						'label' => lng('admin.include_ownvhostsettings'),
+						'label' => lng('serversettings.includedefault_sslvhostconf'),
 						'type' => 'checkbox',
 						'value' => '1',
 						'checked' => $result['include_specialsettings']

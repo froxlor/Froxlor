@@ -1136,7 +1136,7 @@ class Customers extends ApiCommand implements ResourceEntity
 			if ($email == '') {
 				Response::standardError([
 					'stringisempty',
-					'emailadd'
+					'customer.email'
 				], '', true);
 			} elseif (!Validate::validateEmail($email)) {
 				Response::standardError('emailiswrong', $email, true);

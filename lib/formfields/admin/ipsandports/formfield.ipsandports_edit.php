@@ -120,7 +120,7 @@ return [
 						'value' => $result['ssl_default_vhostconf_domain']
 					],
 					'include_default_vhostconf_domain' => [
-						'label' => lng('admin.include_ownvhostsettings'),
+						'label' => lng('serversettings.includedefault_sslvhostconf'),
 						'type' => 'checkbox',
 						'value' => '1',
 						'checked' => $result['include_default_vhostconf_domain']
@@ -168,7 +168,7 @@ return [
 						'value' => $result['ssl_specialsettings']
 					],
 					'include_specialsettings' => [
-						'label' => lng('admin.include_ownvhostsettings'),
+						'label' => lng('serversettings.includedefault_sslvhostconf'),
 						'type' => 'checkbox',
 						'value' => '1',
 						'checked' => $result['include_specialsettings']

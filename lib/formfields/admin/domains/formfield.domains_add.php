@@ -207,7 +207,7 @@ return [
 					],
 					'ssl_ipandport' => [
 						'label' => lng('domains.ipandport_ssl_multi.title'),
-						'desc' => lng('domains.ipandport_ssl_multi.description'),
+						'desc' => lng('domains.ipandport_multi.description'),
 						'type' => 'checkbox',
 						'values' => $ssl_ipsandports,
 						'value' => explode(',', Settings::Get('system.defaultsslip')),
@@ -296,7 +296,7 @@ return [
 					],
 					'include_specialsettings' => [
 						'visible' => !empty($ssl_ipsandports) && $userinfo['change_serversettings'] == '1',
-						'label' => lng('admin.include_ownvhostsettings'),
+						'label' => lng('serversettings.includedefault_sslvhostconf'),
 						'type' => 'checkbox',
 						'value' => '1',
 						'checked' => false
