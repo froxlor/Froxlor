@@ -63,7 +63,7 @@
 
 {% macro field(id, field, norow = true, nohide = false, em = false) %}
 	<div class="mb-3">
-		<label for="{{ id }}" class="form-label">{{ field.label }}</label>
+		<label for="{{ id }}" class="form-label">{{ field.label|raw }}</label>
 		{{ _self.fieldrow(id, field, norow, nohide, em) }}
 	</div>
 {% endmacro %}

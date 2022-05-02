@@ -35,6 +35,7 @@ use Froxlor\Http\Directory;
 use Froxlor\Http\Statistics;
 use Froxlor\Settings;
 use Froxlor\Validate\Validate;
+use Froxlor\System\Crypt;
 use PDO;
 
 /**
@@ -212,9 +213,16 @@ class Lighttpd extends HttpConfigBase
 				if (($row_ipsandports['ssl_cert_file'] == '' || !file_exists($row_ipsandports['ssl_cert_file'])) && (Settings::Get('system.le_froxlor_enabled') == '0' || $this->froxlorVhostHasLetsEncryptCert() == false)) {
 					$row_ipsandports['ssl_cert_file'] = Settings::Get('system.ssl_cert_file');
 					if (!file_exists($row_ipsandports['ssl_cert_file'])) {
+						$this->logger->logAction(FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'System certificate file "' . Settings::Get('system.ssl_cert_file') . '" does not seem to exist. Creating self-signed certificate...');
+						Crypt::createSelfSignedCertificate();
+					}
+				}
+				if ($row_ipsandports['ssl_key_file'] == '') {
+					$row_ipsandports['ssl_key_file'] = Settings::Get('system.ssl_key_file');
+					if (!file_exists($row_ipsandports['ssl_key_file'])) {
 						// explicitly disable ssl for this vhost
 						$row_ipsandports['ssl_cert_file'] = "";
-						$this->logger->logAction(FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'System certificate file "' . Settings::Get('system.ssl_cert_file') . '" does not seem to exist. Disabling SSL-vhost for "' . Settings::Get('system.hostname') . '"');
+						FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'System certificate key-file "' . Settings::Get('system.ssl_key_file') . '" does not seem to exist. Disabling SSL-vhost for "' . Settings::Get('system.hostname') . '"');
 					}
 				}
 

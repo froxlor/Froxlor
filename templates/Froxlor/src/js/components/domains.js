@@ -56,14 +56,19 @@ $(function() {
 		});
 	}
 
+	/**
+	 * email only domain - hide unnecessary/unused sections
+	 */
 	if ($('#id') && $('#email_only').is(':checked')) {
-		// hide unnecessary sections
 		$('#section_b').hide();
 		$('#section_bssl').hide();
 		$('#section_c').hide();
 		$('#section_d').hide();
 	}
 
+	/**
+	 * toggle show/hide of sections in case of email only flag
+	 */
 	$('#email_only').on('click', function () {
 		if ($(this).is(':checked')) {
 			// hide unnecessary sections

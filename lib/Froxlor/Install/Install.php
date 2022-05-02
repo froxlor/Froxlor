@@ -29,6 +29,7 @@ use Exception;
 use Froxlor\Install\Install\Core;
 use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
+use Froxlor\Config\ConfigParser;
 
 class Install
 {
@@ -42,18 +43,29 @@ class Install
 	public array $suggestions = [];
 	public array $criticals = [];
 	public array $loadedExtensions;
-	// TODO: add more os
-	public array $supportedOS = [
-		'focal' => 'Ubuntu 20.04 LTS (Focal Fossa)'
-	];
+	public array $supportedOS = [];
 	public array $webserverBackend = [
 		'php-fpm' => 'PHP-FPM',
 		'fcgid' => 'FCGID',
-		'none' => 'None',
+		'mod_php' => 'mod_php (not recommended)',
 	];
 
 	public function __construct()
 	{
+		// get all supported OS
+		// show list of available distro's
+		$distros = glob(dirname(__DIR__, 3) . '/lib/configfiles/*.xml');
+		$distributions_select[''] = '-';
+		// read in all the distros
+		foreach ($distros as $distribution) {
+			// get configparser object
+			$dist = new ConfigParser($distribution);
+			// store in tmp array
+			$this->supportedOS[str_replace(".xml", "", strtolower(basename($distribution)))] = $dist->getCompleteDistroName();
+		}
+		// sort by distribution name
+		asort($this->supportedOS);
+
 		// set formfield, so we can get the fields and steps etc.
 		$this->formfield = require dirname(__DIR__, 3) . '/lib/formfields/install/formfield.install.php';
 
@@ -131,7 +143,7 @@ class Install
 		}
 
 		// also handle completion of installation if it's the step before the last step
-		if ($this->currentStep == ($this->maxSteps -1)) {
+		if ($this->currentStep == ($this->maxSteps - 1)) {
 			$core = new Core($_SESSION['installation']);
 			$core->doInstall();
 		}
@@ -180,10 +192,10 @@ class Install
 	private function getInformationText(): string
 	{
 		if (version_compare($this->requiredVersion, PHP_VERSION, "<")) {
-			$text = 'Your system is running with PHP ' . $this->phpVersion;
+			$text = lng('install.phpinfosuccess', [$this->phpVersion]);
 		} else {
-			$text = 'Your system is running a lower version than PHP ' . $this->requiredVersion;
-			$this->criticals[] = 'Update your current PHP Version from ' . $this->phpVersion . ' to ' . $this->requiredVersion . ' or higher';
+			$text = lng('install.phpinfowarn', [$this->requiredVersion]);
+			$this->criticals[] = lng('install.phpinfoupdate', [$this->phpVersion, $this->requiredVersion]);
 		}
 		return $text;
 	}
