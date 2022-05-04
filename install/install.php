@@ -30,25 +30,27 @@ $_deftheme = 'Froxlor';
 
 // validate correct php version
 if (version_compare("7.4.0", PHP_VERSION, ">=")) {
-    die(
-        view($_deftheme . '/misc/phprequirementfailed.html.twig', [
-            '{{ basehref }}' => '../',
-            '{{ froxlor_min_version }}' => '7.4.0',
-            '{{ current_version }}' => PHP_VERSION,
-            '{{ current_year }}' => date('Y', time()),
-        ])
-    );
+	die(view($_deftheme . '/misc/phprequirementfailed.html.twig', [
+			'{{ basehref }}' => '../',
+			'{{ froxlor_min_version }}' => '7.4.0',
+			'{{ current_version }}' => PHP_VERSION,
+			'{{ current_year }}' => date('Y', time()),
+		]));
 }
 
 // validate vendor autoloader
 if (!file_exists(dirname(__DIR__) . '/vendor/autoload.php')) {
-    die(
-        view($_deftheme . '/misc/vendormissinghint.html.twig', [
-            '{{ basehref }}' => '../',
-            '{{ froxlor_install_dir }}' => dirname(__DIR__),
-            '{{ current_year }}' => date('Y', time()),
-        ])
-    );
+	die(view($_deftheme . '/misc/vendormissinghint.html.twig', [
+			'{{ basehref }}' => '../',
+			'{{ froxlor_install_dir }}' => dirname(__DIR__),
+			'{{ current_year }}' => date('Y', time()),
+		]));
+}
+
+// check installation status
+if (file_exists(dirname(__DIR__) . '/lib/userdata.inc.php')) {
+	http_response_code(404);
+	die();
 }
 
 require dirname(__DIR__) . '/vendor/autoload.php';

@@ -31,6 +31,7 @@ return [
 		'sections' => [
 			'step1' => [
 				'title' => lng('install.database.title'),
+				'description' => lng('install.database.description'),
 				'fields' => [
 					'mysql_host' => [
 						'label' => lng('mysql.mysql_server'),
@@ -82,6 +83,7 @@ return [
 			],
 			'step2' => [
 				'title' => lng('install.admin.title'),
+				'description' => lng('install.admin.description'),
 				'fields' => [
 					'admin_name' => [
 						'label' => lng('customer.name'),
@@ -101,6 +103,12 @@ return [
 						'mandatory' => true,
 						'value' => old('admin_pass', null, 'installation'),
 					],
+					'admin_pass_confirm' => [
+						'label' => lng('changepassword.new_password_confirm'),
+						'type' => 'password',
+						'mandatory' => true,
+						'value' => old('admin_pass_confirm', null, 'installation'),
+					],
 					'admin_email' => [
 						'label' => lng('customer.email'),
 						'type' => 'text',
@@ -111,6 +119,7 @@ return [
 			],
 			'step3' => [
 				'title' => lng('install.system.title'),
+				'description' => lng('install.system.description'),
 				'fields' => [
 					'distribution' => [
 						'label' => lng('admin.configfiles.distribution'),
@@ -170,7 +179,8 @@ return [
 				]
 			],
 			'step4' => [
-				'title' => lng('install.system.title'),
+				'title' => lng('install.install.title'),
+				'description' => lng('install.install.description'),
 				'fields' => [
 					'system' => [
 						'label' => lng('install.install.runcmd'),
