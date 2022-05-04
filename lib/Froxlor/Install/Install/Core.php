@@ -503,7 +503,6 @@ class Core
 			]);
 		}
 
-
 		// last but not least create the main admin
 		$ins_data = [
 			'loginname' => $this->validatedData['admin_user'],

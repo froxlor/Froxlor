@@ -61,11 +61,20 @@
 	{% endif %}
 {% endmacro %}
 
+{# installation specific format #}
 {% macro field(id, field, norow = true, nohide = false, em = false) %}
-	<div class="mb-3">
-		<label for="{{ id }}" class="form-label">{{ field.label|raw }}</label>
+	{% if field.type != 'checkbox' %}
+	<div class="form-floating mb-3">
 		{{ _self.fieldrow(id, field, norow, nohide, em) }}
+		<label for="{{ id }}" class="form-label">{{ field.label|raw }}</label>
 	</div>
+	{% else %}
+	<div class="form-check form-switch mb-3">
+		<input type="hidden" value="0" name="{{ id }}" />
+		<input type="checkbox" {% if (field.visible is defined and field.visible == false) or (field.disabled is defined and field.disabled == true) %} disabled {% endif %} value="{{ subfield.value }}" name="{{ id }}[]" class="form-check-input" {% if field.value is defined and subfield.value in field.value %} checked="checked" {% endif %}>
+		<label for="{{ id }}" class="form-check-label">{{ field.label|raw }}</label>
+	</div>
+	{% endif %}
 {% endmacro %}
 
 {% macro bool(id, field) %}

@@ -35,40 +35,56 @@ return [
 				'fields' => [
 					'mysql_host' => [
 						'label' => lng('mysql.mysql_server'),
+						'placeholder' => lng('mysql.mysql_server'),
 						'type' => 'text',
 						'mandatory' => true,
 						'value' => old('mysql_host', 'localhost', 'installation')
 					],
+					'mysql_ssl_ca_file' => [
+						'label' => lng('mysql.mysql_ssl_ca_file'),
+						'placeholder' => lng('mysql.mysql_ssl_ca_file'),
+						'type' => 'text',
+						'value' => old('mysql_ssl_ca_file', null, 'installation'),
+						'advanced' => true, // @todo
+					],
+					'mysql_ssl_verify_server_certificate' => [
+						'label' => lng('mysql.mysql_ssl_verify_server_certificate'),
+						'type' => 'checkbox',
+						'value' => '1',
+						'checked' => old('mysql_ssl_verify_server_certificate', '0', 'installation'),
+						'advanced' => true // @todo
+					],
 					'mysql_root_user' => [
 						'label' => lng('mysql.privileged_user'),
+						'placeholder' => lng('mysql.privileged_user'),
 						'type' => 'text',
 						'mandatory' => true,
 						'value' => old('mysql_root_user', 'froxroot', 'installation'),
-						'next_to' => [
-							'mysql_root_pass' => [
-								'label' => lng('login.password'),
-								'type' => 'password',
-								'mandatory' => true,
-								'value' => old('mysql_root_pass', null, 'installation'),
-							],
-						]
+					],
+					'mysql_root_pass' => [
+						'label' => lng('mysql.privileged_passwd'),
+						'placeholder' => lng('mysql.privileged_passwd'),
+						'type' => 'password',
+						'mandatory' => true,
+						'value' => old('mysql_root_pass', null, 'installation'),
 					],
 					'mysql_unprivileged_user' => [
 						'label' => lng('install.database.user'),
+						'placeholder' => lng('install.database.user'),
 						'type' => 'text',
 						'mandatory' => true,
 						'value' => old('mysql_unprivileged_user', 'froxlor', 'installation'),
-						'next_to' => [
-							'mysql_unprivileged_pass' => [
-								'label' => lng('login.password'),
-								'type' => 'password',
-								'mandatory' => true,
-								'value' => old('mysql_unprivileged_pass', null, 'installation'),
-							],
-						]
+					],
+					'mysql_unprivileged_pass' => [
+						'label' => lng('mysql.unprivileged_passwd'),
+						'placeholder' => lng('mysql.unprivileged_passwd'),
+						'type' => 'password',
+						'mandatory' => true,
+						'value' => old('mysql_unprivileged_pass', null, 'installation'),
 					],
 					'mysql_database' => [
 						'label' => lng('install.database.dbname'),
+						'placeholder' => lng('install.database.dbname'),
 						'type' => 'text',
 						'mandatory' => true,
 						'value' => old('mysql_database', 'froxlor', 'installation'),
@@ -87,30 +103,35 @@ return [
 				'fields' => [
 					'admin_name' => [
 						'label' => lng('customer.name'),
+						'placeholder' => lng('customer.name'),
 						'type' => 'text',
 						'mandatory' => true,
 						'value' => old('admin_name', 'Administrator', 'installation'),
 					],
 					'admin_user' => [
 						'label' => lng('login.username'),
+						'placeholder' => lng('login.username'),
 						'type' => 'text',
 						'mandatory' => true,
 						'value' => old('admin_user', 'admin', 'installation'),
 					],
 					'admin_pass' => [
 						'label' => lng('login.password'),
+						'placeholder' => lng('login.password'),
 						'type' => 'password',
 						'mandatory' => true,
 						'value' => old('admin_pass', null, 'installation'),
 					],
 					'admin_pass_confirm' => [
 						'label' => lng('changepassword.new_password_confirm'),
+						'placeholder' => lng('changepassword.new_password_confirm'),
 						'type' => 'password',
 						'mandatory' => true,
 						'value' => old('admin_pass_confirm', null, 'installation'),
 					],
 					'admin_email' => [
 						'label' => lng('customer.email'),
+						'placeholder' => lng('customer.email'),
 						'type' => 'text',
 						'mandatory' => true,
 						'value' => old('admin_email', null, 'installation'),
@@ -129,12 +150,14 @@ return [
 					],
 					'serverip' => [
 						'label' => lng('serversettings.ipaddress.title'),
+						'placeholder' => lng('serversettings.ipaddress.title'),
 						'type' => 'text',
 						'mandatory' => true,
 						'value' => old('serverip', null, 'installation'),
 					],
 					'servername' => [
 						'label' => lng('install.system.servername'),
+						'placeholder' => lng('install.system.servername'),
 						'type' => 'text',
 						'mandatory' => true,
 						'value' => old('servername', null, 'installation'),
@@ -160,12 +183,14 @@ return [
 					],
 					'httpuser' => [
 						'label' => lng('admin.webserver_user'),
+						'placeholder' => lng('admin.webserver_user'),
 						'type' => 'text',
 						'mandatory' => true,
 						'value' => old('httpuser', 'www-data', 'installation'),
 					],
 					'httpgroup' => [
 						'label' => lng('admin.webserver_group'),
+						'placeholder' => lng('admin.webserver_group'),
 						'type' => 'text',
 						'mandatory' => true,
 						'value' => old('httpgroup', 'www-data', 'installation'),
@@ -185,7 +210,7 @@ return [
 					'system' => [
 						'label' => lng('install.install.runcmd'),
 						'type' => 'textarea',
-						'value' => Froxlor::getInstallDir().'bin/froxlor-cli froxlor:config-services -a [JSON PARAMETER] --yes-to-all',
+						'value' => Froxlor::getInstallDir() . 'bin/froxlor-cli froxlor:config-services -a [JSON PARAMETER] --yes-to-all',
 						'readonly' => true,
 						'rows' => 1
 					],
