@@ -2498,5 +2498,17 @@ Yours sincerely, your administrator',
 			'description' => 'The command below will download, install and configure your system according to the data you have given in this installation process.',
 			'runcmd' => 'Run the following command as root-user in your shell on this server:',
 		],
+		'errors' => [
+			'databaseexists' => 'Database already exist, please set override option to rebuild!',
+			'unabletocreatedb' => 'Test database could not be created',
+			'unabletodropdb' => 'Test database could not be dropped',
+			'mysqlusernameexists' => 'The user specified for unprivileged user already exist. Please use another username or delete it first.',
+			'unabletocreateuser' => 'Test user could not be created',
+			'unabletodropuser' => 'Test user could not be dropped',
+			'unabletoflushprivs' => 'Given privileged user is unable to flush privileges',
+			'servernameneedstobevalid' => 'Given servername does not seem to be a FQDN or hostname',
+			'websrvuserdoesnotexist' => 'Given webserver-user does not seem to exist on the system',
+			'websrvgrpdoesnotexist' => 'Given webserver-group does not seem to exist on the system',
+		]
 	],
 ];

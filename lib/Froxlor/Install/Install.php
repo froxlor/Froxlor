@@ -30,6 +30,7 @@ use Froxlor\Install\Install\Core;
 use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
 use Froxlor\Config\ConfigParser;
+use Froxlor\Validate\Validate;
 
 class Install
 {
@@ -138,6 +139,14 @@ class Install
 			if ($this->currentStep == 1) {
 				$this->checkDatabase($validatedData);
 			}
+			// Check validity of admin user data
+			elseif ($this->currentStep == 2) {
+				$this->checkAdminUser($validatedData);
+			}
+			// Check validity of system data
+			elseif ($this->currentStep == 3) {
+				$this->checkSystem($validatedData);
+			}
 			// Store validated data for later use
 			$_SESSION['installation'] = array_merge($_SESSION['installation'] ?? [], $validatedData);
 		}
@@ -231,6 +240,51 @@ class Install
 	/**
 	 * @throws Exception
 	 */
+	private function checkSystem(array $validatedData): void
+	{
+		$serverip = $validatedData['serverip'] ?? '';
+		$servername = $validatedData['servername'] ?? '';
+		$httpuser = $validatedData['httpuser'] ?? 'www-data';
+		$httpgroup = $validatedData['httpgroup'] ?? 'www-data';
+
+		if (!Validate::validate_ip2($serverip, true, '', false, true)) {
+			throw new Exception(lng('error.invalidip', [$serverip]));
+		} elseif (!Validate::validateDomain($servername) && !Validate::validateLocalHostname($servername)) {
+			throw new Exception(lng('install.errors.servernameneedstobevalid'));
+		} elseif (posix_getpwnam($httpuser) === false) {
+			throw new Exception(lng('install.errors.websrvuserdoesnotexist'));
+		} elseif (posix_getgrnam($httpgroup) === false) {
+			throw new Exception(lng('install.errors.websrvgrpdoesnotexist'));
+		}
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	private function checkAdminUser(array $validatedData): void
+	{
+		$name = $validatedData['admin_name'] ?? 'Administrator';
+		$loginname = $validatedData['admin_user'] ?? '';
+		$email = $validatedData['admin_email'] ?? '';
+		$password = $validatedData['admin_pass'] ?? '';
+		$password_confirm = $validatedData['admin_pass_confirm'] ?? '';
+
+		if (!preg_match('/^[^\r\n\t\f\0]*$/D', $name)) {
+			throw new Exception(lng('error.stringformaterror', ['admin_name']));
+		} elseif (empty(trim($loginname)) || !preg_match('/^[a-z][a-z0-9]', $loginname)) {
+			throw new Exception(lng('error.loginnameiswrong', [$loginname]));
+		} elseif (empty(trim($email)) || !Validate::validateEmail($email)) {
+			throw new Exception(lng('error.emailiswrong', [$email]));
+		} elseif (empty($password) || $password != $password_confirm) {
+			throw new Exception(lng('error.newpasswordconfirmerror'));
+		} elseif (!empty($password) && $password == $loginname) {
+			throw new Exception(lng('error.passwordshouldnotbeusername'));
+		}
+	}
+
+	/**
+	 * @throws Exception
+	 */
 	private function checkDatabase(array $validatedData): void
 	{
 		$dsn = sprintf('mysql:host=%s;charset=utf8', $validatedData['mysql_host']);
@@ -243,37 +297,37 @@ class Install
 		]);
 		$hasDatabase = $stmt->fetch();
 		if ($hasDatabase && !$validatedData['mysql_force_create']) {
-			throw new Exception('Database already exist, please set override option to rebuild!');
+			throw new Exception(lng('install.errors.databaseexists'));
 		}
 
 		// check if we can create a new database
 		$testDatabase = uniqid('froxlor_tmp_');
 		if ($pdo->exec('CREATE DATABASE IF NOT EXISTS ' . $testDatabase . ';') === false) {
-			throw new Exception('cant create test db');
+			throw new Exception(lng('install.errors.unabletocreatedb'));
 		}
 		if ($pdo->exec('DROP DATABASE IF EXISTS ' . $testDatabase . ';') === false) {
-			throw new Exception('Cant drop test db');
+			throw new Exception(lng('install.errors.unabletodropdb'));
 		}
 
 		// check if the user already exist
 		$stmt = $pdo->prepare("SELECT `User` FROM `mysql`.`user` WHERE `User` = ?");
 		$stmt->execute([$validatedData['mysql_unprivileged_user']]);
 		if ($stmt->rowCount() && !$validatedData['mysql_force_create']) {
-			throw new Exception('Username already exist, please use another username or delete it first!');
+			throw new Exception(lng('install.errors.mysqlusernameexists'));
 		}
 
 		// check if we can create a new user
 		$testUser = uniqid('froxlor_tmp_');
 		$stmt = $pdo->prepare('CREATE USER ?@? IDENTIFIED BY ?');
 		if ($stmt->execute([$testUser, $validatedData['mysql_host'], uniqid()]) === false) {
-			throw new Exception('cant create test user');
+			throw new Exception(lng('install.errors.unabletocreateuser'));
 		}
 		$stmt = $pdo->prepare('DROP USER ?@?');
 		if ($stmt->execute([$testUser, $validatedData['mysql_host']]) === false) {
-			throw new Exception('cant create test user');
+			throw new Exception(lng('install.errors.unabletodropuser'));
 		}
 		if ($pdo->prepare('FLUSH PRIVILEGES')->execute() === false) {
-			throw new Exception('Cant flush privileges');
+			throw new Exception(lng('install.errors.unabletoflushprivs'));
 		}
 	}
 }

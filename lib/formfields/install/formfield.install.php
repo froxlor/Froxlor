@@ -180,26 +180,27 @@ return [
 						'type' => 'select',
 						'mandatory' => true,
 						'select_var' => $this->webserverBackend,
+						'selected' => old('webserver_backend', 'php-fpm', 'installation'),
 					],
 					'httpuser' => [
 						'label' => lng('admin.webserver_user'),
 						'placeholder' => lng('admin.webserver_user'),
 						'type' => 'text',
 						'mandatory' => true,
-						'value' => old('httpuser', 'www-data', 'installation'),
+						'value' => old('httpuser', posix_getpwuid(posix_getuid()), 'installation'),
 					],
 					'httpgroup' => [
 						'label' => lng('admin.webserver_group'),
 						'placeholder' => lng('admin.webserver_group'),
 						'type' => 'text',
 						'mandatory' => true,
-						'value' => old('httpgroup', 'www-data', 'installation'),
+						'value' => old('httpgroup', posix_getgrgid(posix_getgid()), 'installation'),
 					],
 					'activate_newsfeed' => [
 						'label' => lng('install.system.activate_newsfeed'),
 						'type' => 'checkbox',
 						'value' => '1',
-						'checked' => false
+						'checked' => old('activate_newsfeed', '0', 'installation'),
 					],
 				]
 			],
