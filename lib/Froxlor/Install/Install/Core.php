@@ -30,7 +30,6 @@ use Froxlor\Config\ConfigParser;
 use Froxlor\FileDir;
 use Froxlor\Froxlor;
 use Froxlor\PhpHelper;
-use Froxlor\System\Crypt;
 use PDO;
 use PDOException;
 use PDOStatement;
@@ -128,6 +127,8 @@ class Core
 		$this->doDataEntries($pdo);
 		// create config-file
 		$this->createUserdataConf();
+		// create JSON array for config-services
+		$this->createJsonArray();
 	}
 
 	/**
@@ -229,14 +230,13 @@ class Core
 
 		$mysql_access_host_array = array_map('trim', explode(',', $this->validatedData['mysql_access_host']));
 
+		// @todo localhost/127.0.0.1/serverip checks and addition is only required if mysql_access_host is not a separate machine
 		if (in_array('127.0.0.1', $mysql_access_host_array) && !in_array('localhost', $mysql_access_host_array)) {
 			$mysql_access_host_array[] = 'localhost';
 		}
-
 		if (!in_array('127.0.0.1', $mysql_access_host_array) && in_array('localhost', $mysql_access_host_array)) {
 			$mysql_access_host_array[] = '127.0.0.1';
 		}
-
 		if (!in_array($this->validatedData['serverip'], $mysql_access_host_array)) {
 			$mysql_access_host_array[] = $this->validatedData['serverip'];
 		}
@@ -367,6 +367,7 @@ class Core
 		$this->updateSetting($upd_stmt, $this->validatedData['serverip'], 'system', 'ipaddress');
 		if ($this->validatedData['use_ssl']) {
 			$this->updateSetting($upd_stmt, 1, 'system', 'use_ssl');
+			$this->updateSetting($upd_stmt, 1, 'system', 'leenabled');
 		}
 		$this->updateSetting($upd_stmt, $this->validatedData['servername'], 'system', 'hostname');
 		$this->updateSetting($upd_stmt, 'en', 'panel', 'standardlanguage'); // TODO: set language
@@ -374,6 +375,7 @@ class Core
 		$this->updateSetting($upd_stmt, $this->validatedData['webserver'], 'system', 'webserver');
 		$this->updateSetting($upd_stmt, $this->validatedData['httpuser'], 'system', 'httpuser');
 		$this->updateSetting($upd_stmt, $this->validatedData['httpgroup'], 'system', 'httpgroup');
+		$this->updateSetting($upd_stmt, $this->validatedData['distribution'], 'system', 'distribution');
 
 		// necessary changes for webservers != apache2
 		if ($this->validatedData['webserver'] == "apache24") {
@@ -386,6 +388,7 @@ class Core
 			$this->updateSetting($upd_stmt, 'service lighttpd reload', 'system', 'apachereload_command');
 			$this->updateSetting($upd_stmt, '/etc/lighttpd/lighttpd.pem', 'system', 'ssl_cert_file');
 			$this->updateSetting($upd_stmt, '/var/run/lighttpd/', 'phpfpm', 'fastcgi_ipcdir');
+			$this->updateSetting($upd_stmt, '/etc/lighttpd/acme.conf', 'system', 'letsencryptacmeconf');
 		} elseif ($this->validatedData['webserver'] == "nginx") {
 			$this->updateSetting($upd_stmt, '/etc/nginx/sites-enabled/', 'system', 'apacheconf_vhost');
 			$this->updateSetting($upd_stmt, '/etc/nginx/sites-enabled/', 'system', 'apacheconf_diroptions');
@@ -394,6 +397,7 @@ class Core
 			$this->updateSetting($upd_stmt, '/etc/nginx/nginx.pem', 'system', 'ssl_cert_file');
 			$this->updateSetting($upd_stmt, '/var/run/', 'phpfpm', 'fastcgi_ipcdir');
 			$this->updateSetting($upd_stmt, 'error', 'system', 'errorlog_level');
+			$this->updateSetting($upd_stmt, '/etc/nginx/acme.conf', 'system', 'letsencryptacmeconf');
 		}
 
 		$distros = glob(FileDir::makeCorrectDir(Froxlor::getInstallDir() . '/lib/configfiles/') . '*.xml');
@@ -415,11 +419,24 @@ class Core
 		// insert the lastcronrun to be the installation date
 		$this->updateSetting($upd_stmt, time(), 'system', 'lastcronrun');
 
+		// set settings according to selected php-backend
+		if ($this->validatedData['webserver_backend'] == 'php-fpm') {
+			$this->updateSetting($upd_stmt, '1', 'phpfpm', 'enabled');
+			$this->updateSetting($upd_stmt, '1', 'phpfpm', 'enabled_ownvhost');
+		} elseif ($this->validatedData['webserver_backend'] == 'fcgid') {
+			$this->updateSetting($upd_stmt, '1', 'system', 'mod_fcgid');
+			$this->updateSetting($upd_stmt, '1', 'phpfpm', 'mod_fcgid_ownvhost');
+		}
+
 		// check currently used php version and set values of fpm/fcgid accordingly
 		if (defined('PHP_MAJOR_VERSION') && defined('PHP_MINOR_VERSION')) {
+			// php-fpm
 			$reload = "service php" . PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION . "-fpm restart";
 			$config_dir = "/etc/php/" . PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION . "/fpm/pool.d/";
 			$db_user->query("UPDATE `" . TABLE_PANEL_FPMDAEMONS . "` SET `reload_cmd` = '" . $reload . "', `config_dir` = '" . $config_dir . "' WHERE `id` ='1';");
+			// fcgid
+			$binary = "/usr/bin/php" . PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION . "-cgi";
+			$db_user->query("UPDATE `" . TABLE_PANEL_PHPCONFIGS . "` SET `binary` = '" . $binary . "';");
 		}
 
 		// set specific times for some crons (traffic only at night, etc.)
@@ -507,6 +524,7 @@ class Core
 		$ins_data = [
 			'loginname' => $this->validatedData['admin_user'],
 			'password' => password_hash($this->validatedData['admin_pass'], PASSWORD_DEFAULT),
+			'adminname' => $this->validatedData['admin_name'],
 			'email' => $this->validatedData['admin_email'],
 			'deflang' => 'en' // TODO: set lanuage
 		];
@@ -514,7 +532,7 @@ class Core
 			INSERT INTO `" . TABLE_PANEL_ADMINS . "` SET
 			`loginname` = :loginname,
 			`password` = :password,
-			`name` = 'Froxlor-Administrator',
+			`name` = :adminname,
 			`email` = :email,
 			`def_language` = :deflang,
 			`api_allowed` = 1,
@@ -597,5 +615,23 @@ class Core
 			}
 		}
 		@umask($umask);
+	}
+
+	private function createJsonArray()
+	{
+		$system_params= ["cron","libnssextrausers","logrotate"];
+		if ($this->validatedData['webserver_backend'] == 'php-fpm') {
+			$system_params[] = 'php-fpm';
+		} elseif ($this->validatedData['webserver_backend'] == 'fcgid') {
+			$system_params[] = 'fcgid';
+		}
+		// @todo ftp,mail,smtp
+		$json_params = [
+			'distro' => $this->validatedData['distribution'],
+			'dns' => 'x',
+			'http' => $this->validatedData['webserver'],
+			'system' => $system_params
+		];
+		$_SESSION['installation']['json_params'] = json_encode($json_params);
 	}
 }

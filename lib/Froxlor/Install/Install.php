@@ -329,5 +329,7 @@ class Install
 		if ($pdo->prepare('FLUSH PRIVILEGES')->execute() === false) {
 			throw new Exception(lng('install.errors.unabletoflushprivs'));
 		}
+
+		// @todo build and set $validatedData['mysql_access_host']
 	}
 }
