@@ -132,7 +132,7 @@ return [
 					'admin_email' => [
 						'label' => lng('customer.email'),
 						'placeholder' => lng('customer.email'),
-						'type' => 'text',
+						'type' => 'email',
 						'mandatory' => true,
 						'value' => old('admin_email', null, 'installation'),
 					],
@@ -147,20 +147,21 @@ return [
 						'type' => 'select',
 						'mandatory' => true,
 						'select_var' => $this->supportedOS,
+						'selected' => $guessedDistribution
 					],
 					'serverip' => [
 						'label' => lng('serversettings.ipaddress.title'),
 						'placeholder' => lng('serversettings.ipaddress.title'),
 						'type' => 'text',
 						'mandatory' => true,
-						'value' => old('serverip', null, 'installation'),
+						'value' => old('serverip', $_SERVER['SERVER_ADDR'] ?? null, 'installation'),
 					],
 					'servername' => [
 						'label' => lng('install.system.servername'),
 						'placeholder' => lng('install.system.servername'),
 						'type' => 'text',
 						'mandatory' => true,
-						'value' => old('servername', null, 'installation'),
+						'value' => old('servername', filter_var($_SERVER['SERVER_NAME'] ?? "", FILTER_VALIDATE_IP) ? null : $_SERVER['SERVER_NAME'], 'installation'),
 					],
 					'use_ssl' => [
 						'label' => lng('serversettings.ssl.use_ssl.title'),
@@ -173,7 +174,7 @@ return [
 						'type' => 'select',
 						'mandatory' => true,
 						'select_var' => ['apache24' => 'Apache 2.4', 'nginx' => 'Nginx', 'lighttpd' => 'LigHTTPd'],
-						'value' => old('webserver', 'apache24', 'installation'),
+						'value' => old('webserver', $guessedWebserver, 'installation'),
 					],
 					'webserver_backend' => [
 						'label' => lng('install.system.phpbackend'),
@@ -187,14 +188,14 @@ return [
 						'placeholder' => lng('admin.webserver_user'),
 						'type' => 'text',
 						'mandatory' => true,
-						'value' => old('httpuser', posix_getpwuid(posix_getuid()), 'installation'),
+						'value' => old('httpuser', posix_getpwuid(posix_getuid())['name'] ?? '', 'installation'),
 					],
 					'httpgroup' => [
 						'label' => lng('admin.webserver_group'),
 						'placeholder' => lng('admin.webserver_group'),
 						'type' => 'text',
 						'mandatory' => true,
-						'value' => old('httpgroup', posix_getgrgid(posix_getgid()), 'installation'),
+						'value' => old('httpgroup', posix_getgrgid(posix_getgid())['name'] ?? '', 'installation'),
 					],
 					'activate_newsfeed' => [
 						'label' => lng('install.system.activate_newsfeed'),

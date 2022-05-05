@@ -67,6 +67,10 @@ class Install
 		// sort by distribution name
 		asort($this->supportedOS);
 
+		// guess distribution and webserver to preselect in formfield
+		$guessedDistribution = $this->guessDistribution();
+		$guessedWebserver = $this->guessWebserver();
+
 		// set formfield, so we can get the fields and steps etc.
 		$this->formfield = require dirname(__DIR__, 3) . '/lib/formfields/install/formfield.install.php';
 
@@ -77,10 +81,6 @@ class Install
 		// set actual php version and extensions
 		$this->phpVersion = phpversion();
 		$this->loadedExtensions = get_loaded_extensions();
-
-		// init twig
-		UI::initTwig(true);
-		UI::sendHeaders();
 
 		// set global variables
 		UI::twig()->addGlobal('install_mode', true);
@@ -155,6 +155,7 @@ class Install
 		if ($this->currentStep == ($this->maxSteps - 1)) {
 			$core = new Core($_SESSION['installation']);
 			$core->doInstall();
+			// @todo no going back after this point!
 		}
 
 		// redirect user to home if the installation is done
@@ -271,7 +272,7 @@ class Install
 
 		if (!preg_match('/^[^\r\n\t\f\0]*$/D', $name)) {
 			throw new Exception(lng('error.stringformaterror', ['admin_name']));
-		} elseif (empty(trim($loginname)) || !preg_match('/^[a-z][a-z0-9]', $loginname)) {
+		} elseif (empty(trim($loginname)) || !preg_match('/^[a-z][a-z0-9]+$/', $loginname)) {
 			throw new Exception(lng('error.loginnameiswrong', [$loginname]));
 		} elseif (empty(trim($email)) || !Validate::validateEmail($email)) {
 			throw new Exception(lng('error.emailiswrong', [$email]));
@@ -331,5 +332,38 @@ class Install
 		}
 
 		// @todo build and set $validatedData['mysql_access_host']
+	}
+
+	private function guessWebserver(): ?string
+	{
+		if (strtoupper(@php_sapi_name()) == "APACHE2HANDLER" || stristr($_SERVER['SERVER_SOFTWARE'], "apache/2")) {
+			return 'apache24';
+		} elseif (substr(strtoupper(@php_sapi_name()), 0, 8) == "LIGHTTPD" || stristr($_SERVER['SERVER_SOFTWARE'], "lighttpd")) {
+			return 'lighttpd';
+		} elseif (substr(strtoupper(@php_sapi_name()), 0, 8) == "NGINX" || stristr($_SERVER['SERVER_SOFTWARE'], "nginx")) {
+			return 'nginx';
+		}
+		return null;
+	}
+
+	private function guessDistribution(): ?string
+	{
+		// set default os.
+		$os_dist = array(
+			'VERSION_CODENAME' => 'bullseye'
+		);
+		// read os-release
+		if (@file_exists('/etc/os-release')) {
+			$os_dist_content = file_get_contents('/etc/os-release');
+			$os_dist_arr = explode("\n", $os_dist_content);
+			$os_dist = [];
+			foreach ($os_dist_arr as $os_dist_line) {
+				if (empty(trim($os_dist_line))) continue;
+				$tmp = explode("=", $os_dist_line);
+				$os_dist[$tmp[0]] = str_replace('"', "", trim($tmp[1]));
+			}
+			return strtolower($os_dist['VERSION_CODENAME']);
+		}
+		return null;
 	}
 }

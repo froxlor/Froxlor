@@ -71,7 +71,7 @@
 	{% else %}
 	<div class="form-check form-switch mb-3">
 		<input type="hidden" value="0" name="{{ id }}" />
-		<input type="checkbox" {% if (field.visible is defined and field.visible == false) or (field.disabled is defined and field.disabled == true) %} disabled {% endif %} value="{{ subfield.value }}" name="{{ id }}[]" class="form-check-input" {% if field.value is defined and subfield.value in field.value %} checked="checked" {% endif %}>
+		<input type="checkbox" {% if (field.visible is defined and field.visible == false) or (field.disabled is defined and field.disabled == true) %} disabled {% endif %} value="{{ subfield.value }}" name="{{ id }}[]" class="form-check-input" {% if field.checked is defined and field.checked == 1 %} checked="checked" {% endif %}>
 		<label for="{{ id }}" class="form-check-label">{{ field.label|raw }}</label>
 	</div>
 	{% endif %}
