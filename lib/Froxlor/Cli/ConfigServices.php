@@ -40,6 +40,15 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 final class ConfigServices extends CliCommand
 {
 
+	private $yes_to_all_supported = [
+		/* 'bookworm', */
+		'bionic',
+		'bullseye',
+		'buster',
+		'focal',
+		/* 'jammy', */
+	];
+
 	protected function configure()
 	{
 		$this->setName('froxlor:config-services');
@@ -49,7 +58,7 @@ final class ConfigServices extends CliCommand
 			->addOption('list', 'l', InputOption::VALUE_NONE, 'Output the services that are going to be configured using a given config file (--apply option). No services will be configured.')
 			->addOption('daemon', 'd', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'When used with --apply you can specify one or multiple daemons. These will be the only services that get configured.')
 			->addOption('import-settings', 'i', InputOption::VALUE_REQUIRED, 'Import settings from another froxlor installation. This can be done standalone or in addition to --apply.')
-			->addOption('yes-to-all', 'A', InputOption::VALUE_NONE, 'Install packages without asking questions');
+			->addOption('yes-to-all', 'A', InputOption::VALUE_NONE, 'Install packages without asking questions (Debian/Ubuntu only currently)');
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output)
@@ -58,23 +67,26 @@ final class ConfigServices extends CliCommand
 
 		$result = $this->validateRequirements($input, $output);
 
+		require Froxlor::getInstallDir() . '/lib/functions.php';
+
 		if ($result == self::SUCCESS && $input->getOption('import-settings') == false && $input->getOption('create') == false && $input->getOption('apply') == false) {
 			$output->writeln('<error>No option given to do something, exiting.</>');
 			return self::INVALID;
 		}
 
-		if ($result == self::SUCCESS && $input->getOption('yes-to-all')) {
-			putenv("DEBIAN_FRONTEND=noninteractive");
-			exec("echo 'APT::Get::Assume-Yes \"true\";' > /tmp/_tmp_apt.conf");
-			putenv("APT_CONFIG=/tmp/_tmp_apt.conf");
-		}
-
-		include_once Froxlor::getInstallDir() . 'lng/english.lng.php';
-		include_once Froxlor::getInstallDir() . 'lng/lng_references.php';
-
 		// import settings if given
 		if ($result == self::SUCCESS && $input->getOption('import-settings')) {
 			$result = $this->importSettings($input, $output);
+		}
+
+		if ($result == self::SUCCESS && $input->getOption('yes-to-all')) {
+			if (in_array(Settings::Get('system.distribution'), $this->yes_to_all_supported)) {
+				putenv("DEBIAN_FRONTEND=noninteractive");
+				exec("echo 'APT::Get::Assume-Yes \"true\";' > /tmp/_tmp_apt.conf");
+				putenv("APT_CONFIG=/tmp/_tmp_apt.conf");
+			} else {
+				$output->writeln('<comment>--yes-to-all ignored, not configured for supported distribution</>');
+			}
 		}
 
 		if ($result == self::SUCCESS) {
@@ -89,7 +101,7 @@ final class ConfigServices extends CliCommand
 			}
 		}
 
-		if ($input->getOption('yes-to-all')) {
+		if ($input->getOption('yes-to-all') && in_array(Settings::Get('system.distribution'), $this->yes_to_all_supported)) {
 			putenv("DEBIAN_FRONTEND");
 			unlink("/tmp/_tmp_apt.conf");
 			putenv("APT_CONFIG");
