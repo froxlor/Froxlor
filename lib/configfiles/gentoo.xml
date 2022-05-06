@@ -1590,7 +1590,7 @@ root:               root@<SERVERNAME>
 					title="Postfix 2 with dovecot">
 					<include>//service[@type='smtp']/general/commands[@index=1]
 					</include>
-					<command><![CDATA[echo "mail-mta/postfix dovecot-sasl -sasl" >> /etc/portage/package.use]]></command>
+					<command><![CDATA[echo "mail-mta/postfix dovecot-sasl -sasl" >> /etc/portage/package.use/froxlor]]></command>
 					<include>//service[@type='smtp']/general/installs[@index=1]
 					</include>
 					<include>//service[@type='smtp']/general/commands[@index=2]
@@ -1738,7 +1738,7 @@ dovecot	  unix	-	n	n	-	-	pipe
 					title="Postfix 3 with dovecot" default="true">
 					<include>//service[@type='smtp']/general/commands[@index=1]
 					</include>
-					<command><![CDATA[echo "mail-mta/postfix dovecot-sasl -sasl" >> /etc/portage/package.use]]></command>
+					<command><![CDATA[echo "mail-mta/postfix dovecot-sasl -sasl" >> /etc/portage/package.use/froxlor]]></command>
 					<include>//service[@type='smtp']/general/installs[@index=1]
 					</include>
 					<include>//service[@type='smtp']/general/commands[@index=2]
@@ -1891,7 +1891,7 @@ dovecot	  unix	-	n	n	-	-	pipe
 					title="Postfix 2 with courier">
 					<include>//service[@type='smtp']/general/commands[@index=1]
 					</include>
-					<command><![CDATA[echo "mail-mta/postfix -dovecot-sasl sasl" >> /etc/portage/package.use]]></command>
+					<command><![CDATA[echo "mail-mta/postfix -dovecot-sasl sasl" >> /etc/portage/package.use/froxlor]]></command>
 					<include>//service[@type='smtp']/general/installs[@index=1]
 					</include>
 					<include>//service[@type='smtp']/general/commands[@index=2]
@@ -2020,7 +2020,7 @@ sql_select: SELECT password_enc FROM mail_users WHERE username='%u@%r' OR email=
 				<!-- Dovecot -->
 				<daemon name="dovecot" version="2" title="Dovecot"
 					default="true">
-					<command><![CDATA[echo "net-mail/dovecot mysql managesieve sieve" >> /etc/portage/package.use]]></command>
+					<command><![CDATA[echo "net-mail/dovecot mysql managesieve sieve" >> /etc/portage/package.use/froxlor]]></command>
 					<install><![CDATA[emerge net-mail/dovecot]]></install>
 					<file name="/etc/dovecot/dovecot.conf" chown="root:root"
 						chmod="0640" backup="true">
@@ -3424,7 +3424,7 @@ MAILDIRPATH=.maildir
 			<service type="ftp" title="{{lng.admin.configfiles.ftp}}">
 				<!-- Proftpd -->
 				<daemon name="proftpd" title="ProFTPd" default="true">
-					<command><![CDATA[echo "net-ftp/proftpd mysql" >> /etc/portage/package.use]]></command>
+					<command><![CDATA[echo "net-ftp/proftpd mysql" >> /etc/portage/package.use/froxlor]]></command>
 					<install><![CDATA[emerge net-ftp/proftpd]]></install>
 					<file name="/etc/proftpd/create-cert.sh" chown="root:0"
 						chmod="0700">
@@ -3556,7 +3556,7 @@ UseReverseDNS off
 				</daemon>
 				<!-- Pureftpd -->
 				<daemon name="pureftpd" title="PureFTPd">
-					<command><![CDATA[echo "net-ftp/pure-ftpd mysql" >> /etc/portage/package.use]]></command>
+					<command><![CDATA[echo "net-ftp/pure-ftpd mysql" >> /etc/portage/package.use/froxlor]]></command>
 					<install><![CDATA[emerge net-ftp/pure-ftpd]]></install>
 					<file name="/etc/conf.d/pure-ftpd" chown="root:0" chmod="0644"
 						backup="true">
@@ -3610,7 +3610,7 @@ MySQLGetQTASZ   SELECT panel_customers.diskspace/1024 AS QuotaSize FROM panel_cu
 				</daemon>
 				<!-- Vsftpd -->
 				<daemon name="vsftpd" title="vsftpd">
-					<command><![CDATA[echo "net-ftp/vsftpd pam" >> /etc/portage/package.use]]></command>
+					<command><![CDATA[echo "net-ftp/vsftpd pam" >> /etc/portage/package.use/froxlor]]></command>
 					<install><![CDATA[emerge net-ftp/vsftpd sys-auth/pam_mysql]]></install>
 					<file name="/etc/vsftpd/vsftpd.conf" chown="root:root"
 						chmod="0644" backup="true">
@@ -3857,12 +3857,12 @@ aliases:     files
 				</daemon>
 				<!-- FCGID -->
 				<daemon name="fcgid" title="FCGID">
-					<command><![CDATA[echo "dev-lang/php cgi" >> /etc/portage/package.use]]></command>
-					<install><![CDATA[emerge dev-lang/php sys-auth/libnss-mysql]]></install>
+					<command><![CDATA[echo "dev-lang/php cgi" >> /etc/portage/package.use/froxlor]]></command>
+					<install><![CDATA[emerge dev-lang/php]]></install>
 					<commands index="1">
 						<visibility mode="equals" value="apache2">{{settings.system.webserver}}
 						</visibility>
-						<command><![CDATA[echo "www-servers/apache suexec" >> /etc/portage/package.use]]></command>
+						<command><![CDATA[echo "www-servers/apache suexec" >> /etc/portage/package.use/froxlor]]></command>
 					</commands>
 					<install>
 						<visibility mode="equals" value="apache2">{{settings.system.webserver}}
@@ -3894,12 +3894,12 @@ aliases:     files
 				<!-- PHP-FPM -->
 				<daemon name="php-fpm"
 					title="PHP-FPM">
-					<command><![CDATA[echo "dev-lang/php fpm" >> /etc/portage/package.use]]></command>
-					<install><![CDATA[emerge dev-lang/php sys-auth/libnss-mysql]]></install>
+					<command><![CDATA[echo "dev-lang/php fpm" >> /etc/portage/package.use/froxlor]]></command>
+					<install><![CDATA[emerge dev-lang/php]]></install>
 					<commands index="1">
 						<visibility mode="equals" value="apache2">{{settings.system.webserver}}
 						</visibility>
-						<command><![CDATA[echo "www-servers/apache suexec" >> /etc/portage/package.use]]></command>
+						<command><![CDATA[echo "www-servers/apache suexec" >> /etc/portage/package.use/froxlor]]></command>
 					</commands>
 					<install>
 						<visibility mode="equals" value="apache2">{{settings.system.webserver}}

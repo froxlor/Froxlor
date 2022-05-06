@@ -265,6 +265,13 @@ class Core
 	 */
 	private function grantDbPrivilegesTo(&$db_root, $database, $username, $password, $access_host)
 	{
+		if ($this->validatedData['mysql_force_create']) {
+			$drop_stmt = $db_root->prepare("DROP USER :username@:host");
+			$drop_stmt->execute([
+				"username" => $username,
+				"host" => $access_host
+			]);
+		}
 		if (version_compare($db_root->getAttribute(PDO::ATTR_SERVER_VERSION), '10.0.0', '>=')) {
 			// mariadb compatibility
 			// create user
@@ -417,17 +424,26 @@ class Core
 			$this->updateSetting($upd_stmt, '1', 'phpfpm', 'enabled_ownvhost');
 		} elseif ($this->validatedData['webserver_backend'] == 'fcgid') {
 			$this->updateSetting($upd_stmt, '1', 'system', 'mod_fcgid');
-			$this->updateSetting($upd_stmt, '1', 'phpfpm', 'mod_fcgid_ownvhost');
+			$this->updateSetting($upd_stmt, '1', 'system', 'mod_fcgid_ownvhost');
 		}
 
 		// check currently used php version and set values of fpm/fcgid accordingly
 		if (defined('PHP_MAJOR_VERSION') && defined('PHP_MINOR_VERSION')) {
-			// php-fpm
-			$reload = "service php" . PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION . "-fpm restart";
-			$config_dir = "/etc/php/" . PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION . "/fpm/pool.d/";
+			// @todo does not work for gentoo
+			if ($this->validatedData['distribution'] == 'gentoo') {
+				// php-fpm
+				$reload = "/etc/init.d/php-fpm restart";
+				$config_dir = "/etc/php/fpm-php" . PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION . "/fpm.d/";
+				// fcgid
+				$binary = "/usr/bin/php-cgi";
+			} else {
+				// php-fpm
+				$reload = "service php" . PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION . "-fpm restart";
+				$config_dir = "/etc/php/" . PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION . "/fpm/pool.d/";
+				// fcgid
+				$binary = "/usr/bin/php" . PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION . "-cgi";
+			}
 			$db_user->query("UPDATE `" . TABLE_PANEL_FPMDAEMONS . "` SET `reload_cmd` = '" . $reload . "', `config_dir` = '" . $config_dir . "' WHERE `id` ='1';");
-			// fcgid
-			$binary = "/usr/bin/php" . PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION . "-cgi";
 			$db_user->query("UPDATE `" . TABLE_PANEL_PHPCONFIGS . "` SET `binary` = '" . $binary . "';");
 		}
 
@@ -611,7 +627,7 @@ class Core
 
 	private function createJsonArray()
 	{
-		$system_params= ["cron","libnssextrausers","logrotate"];
+		$system_params = ["cron", "libnssextrausers", "logrotate"];
 		if ($this->validatedData['webserver_backend'] == 'php-fpm') {
 			$system_params[] = 'php-fpm';
 		} elseif ($this->validatedData['webserver_backend'] == 'fcgid') {

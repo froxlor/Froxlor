@@ -354,15 +354,8 @@ class Install
 		);
 		// read os-release
 		if (@file_exists('/etc/os-release')) {
-			$os_dist_content = file_get_contents('/etc/os-release');
-			$os_dist_arr = explode("\n", $os_dist_content);
-			$os_dist = [];
-			foreach ($os_dist_arr as $os_dist_line) {
-				if (empty(trim($os_dist_line))) continue;
-				$tmp = explode("=", $os_dist_line);
-				$os_dist[$tmp[0]] = str_replace('"', "", trim($tmp[1]));
-			}
-			return strtolower($os_dist['VERSION_CODENAME']);
+			$os_dist = parse_ini_file('/etc/os-release', false);
+			return strtolower($os_dist['VERSION_CODENAME'] ?? ($os_dist['ID'] ?? null));
 		}
 		return null;
 	}

@@ -289,7 +289,7 @@ final class ConfigServices extends CliCommand
 		$applyFile = $input->getOption('apply');
 
 		// check if plain JSON
-		$decoded_config = json_decode($applyFile);
+		$decoded_config = json_decode($applyFile, true);
 		$skipFileCheck = false;
 		if (json_last_error() == JSON_ERROR_NONE) {
 			$skipFileCheck = true;
