@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block actions %}
-	<a class="btn btn-outline-primary" href="{{ linker({'section':'configfiles'}) }}">
+	<a class="btn btn-outline-primary" href="{{ linker({'section':'configfiles','reselect':1}) }}">
 		<i class="fa-solid fa-grip me-1"></i>
 		{{ lng('admin.configfiles.distribution') }}:
 		{{ distribution }}

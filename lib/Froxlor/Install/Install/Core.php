@@ -382,22 +382,12 @@ class Core
 			$this->updateSetting($upd_stmt, 'apache2', 'system', 'webserver');
 			$this->updateSetting($upd_stmt, '1', 'system', 'apache24');
 		} elseif ($this->validatedData['webserver'] == "lighttpd") {
-			$this->updateSetting($upd_stmt, '/etc/lighttpd/conf-enabled/', 'system', 'apacheconf_vhost');
-			$this->updateSetting($upd_stmt, '/etc/lighttpd/froxlor-diroptions/', 'system', 'apacheconf_diroptions');
-			$this->updateSetting($upd_stmt, '/etc/lighttpd/froxlor-htpasswd/', 'system', 'apacheconf_htpasswddir');
-			$this->updateSetting($upd_stmt, 'service lighttpd reload', 'system', 'apachereload_command');
 			$this->updateSetting($upd_stmt, '/etc/lighttpd/lighttpd.pem', 'system', 'ssl_cert_file');
 			$this->updateSetting($upd_stmt, '/var/run/lighttpd/', 'phpfpm', 'fastcgi_ipcdir');
-			$this->updateSetting($upd_stmt, '/etc/lighttpd/acme.conf', 'system', 'letsencryptacmeconf');
 		} elseif ($this->validatedData['webserver'] == "nginx") {
-			$this->updateSetting($upd_stmt, '/etc/nginx/sites-enabled/', 'system', 'apacheconf_vhost');
-			$this->updateSetting($upd_stmt, '/etc/nginx/sites-enabled/', 'system', 'apacheconf_diroptions');
-			$this->updateSetting($upd_stmt, '/etc/nginx/froxlor-htpasswd/', 'system', 'apacheconf_htpasswddir');
-			$this->updateSetting($upd_stmt, 'service nginx reload', 'system', 'apachereload_command');
 			$this->updateSetting($upd_stmt, '/etc/nginx/nginx.pem', 'system', 'ssl_cert_file');
 			$this->updateSetting($upd_stmt, '/var/run/', 'phpfpm', 'fastcgi_ipcdir');
 			$this->updateSetting($upd_stmt, 'error', 'system', 'errorlog_level');
-			$this->updateSetting($upd_stmt, '/etc/nginx/acme.conf', 'system', 'letsencryptacmeconf');
 		}
 
 		$distros = glob(FileDir::makeCorrectDir(Froxlor::getInstallDir() . '/lib/configfiles/') . '*.xml');
@@ -407,7 +397,9 @@ class Core
 				$defaults = $dist->getDefaults();
 				if (!empty($defaults)) {
 					foreach ($defaults as $property) {
-						$this->updateSetting($upd_stmt, $property->attributes()->value, $property->attributes()->settinggroup, $property->attributes()->varname);
+						if (!isset($property->attributes()->for) || (isset($property->attributes()->for) && $property->attributes()->for == $this->validatedData['webserver'])) {
+							$this->updateSetting($upd_stmt, $property->attributes()->value, $property->attributes()->settinggroup, $property->attributes()->varname);
+						}
 					}
 				}
 			}

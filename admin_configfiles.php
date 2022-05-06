@@ -42,10 +42,14 @@ if ($userinfo['change_serversettings'] == '1') {
 
 	// get distro from URL param
 	$distribution = Request::get('distribution');
+	$reselect = Request::get('reselect', 0);
 
 	// check for possible setting
 	if (empty($distribution)) {
 		$distribution = Settings::Get('system.distribution') ?? "";
+	}
+	if ($reselect == 1) {
+		$distribution = '';
 	}
 
 	$distributions_select = [];
@@ -130,7 +134,8 @@ if ($userinfo['change_serversettings'] == '1') {
 								'distribution' => [
 									'type' => 'select',
 									'select_var' => $distributions_select,
-									'label' => lng('admin.configfiles.distribution')
+									'label' => lng('admin.configfiles.distribution'),
+									'selected' => Settings::Get('system.distribution') ?? ''
 								]
 							]
 						]

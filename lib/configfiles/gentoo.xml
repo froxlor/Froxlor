@@ -4,7 +4,24 @@
 		defaulteditor="/usr/bin/nano">
 		<!-- OS defaults to be loaded on installation -->
 		<defaults>
-			<default settinggroup="system" varname="nssextrausers" value="0"></default>
+			<default settinggroup="system" varname="nssextrausers" value="1"></default>
+			<default for="apache24" settinggroup="system" varname="apacheconf_vhost" value="/etc/apache2/vhosts.d/"></default>
+			<default for="apache24" settinggroup="system" varname="apacheconf_diroptions" value="/etc/apache2/vhosts.d/"></default>
+			<default for="apache24" settinggroup="system" varname="apacheconf_htpasswddir" value="/etc/apache2/froxlor-htpasswd/"></default>
+			<default for="apache24" settinggroup="system" varname="apachereload_command" value="/etc/init.d/apache2 reload"></default>
+			<!-- TODO how does this work on gentoo? -->
+			<default for="apache24" settinggroup="system" varname="letsencryptacmeconf" value="/etc/apache2/acme.conf"></default>
+			<default for="lighttpd" settinggroup="system" varname="apacheconf_vhost" value="/etc/lighttpd/vhosts.d/"></default>
+			<default for="lighttpd" settinggroup="system" varname="apacheconf_diroptions" value="/etc/lighttpd/diropts.d/"></default>
+			<default for="lighttpd" settinggroup="system" varname="apacheconf_htpasswddir" value="/etc/lighttpd/froxlor-htpasswd/"></default>
+			<default for="lighttpd" settinggroup="system" varname="apachereload_command" value="/etc/init.d/lighttpd reload"></default>
+			<default for="nginx" settinggroup="system" varname="apacheconf_vhost" value="/etc/nginx/sites-enabled/"></default>
+			<default for="nginx" settinggroup="system" varname="apacheconf_diroptions" value="/etc/nginx/sites-enabled/"></default>
+			<default for="nginx" settinggroup="system" varname="apacheconf_htpasswddir" value="/etc/nginx/froxlor-htpasswd/"></default>
+			<default for="nginx" settinggroup="system" varname="apachereload_command" value="/etc/init.d/nginx reload"></default>
+			<default for="nginx" settinggroup="system" varname="letsencryptacmeconf" value="/etc/nginx/acme.conf"></default>
+			<default settinggroup="system" varname="bindreload_command" value="/etc/init.d/named restart"></default>
+			<default settinggroup="system" varname="crondreload" value="/etc/init.d/cronie restart"></default>
 		</defaults>
 		<services>
 			<!-- HTTP -->
@@ -3794,6 +3811,46 @@ aliases:     files
   <WEBSERVER_RELOAD_CMD> > /dev/null 2>&1 || true
   endscript
 }
+]]>
+						</content>
+					</file>
+				</daemon>
+				<!-- libnss-extrausers -->
+				<daemon name="libnssextrausers"
+					title="libnss-extrausers">
+					<install><![CDATA[emerge app-eselect/eselect-repository]]></install>
+					<install><![CDATA[mkdir -p /etc/portage/repos.conf]]></install>
+					<install><![CDATA[eselect repository add froxlor git https://github.com/Froxlor/Gentoo-Ebuild.git]]></install>
+					<install><![CDATA[emaint sync -r froxlor]]></install>
+					<install><![CDATA[emerge sys-auth/libnss-extrausers]]></install>
+					<commands index="1">
+						<command><![CDATA[mkdir -p /var/lib/extrausers]]></command>
+						<command><![CDATA[touch /var/lib/extrausers/passwd]]></command>
+						<command><![CDATA[touch /var/lib/extrausers/group]]></command>
+						<command><![CDATA[touch /var/lib/extrausers/shadow]]></command>
+					</commands>
+					<file name="/etc/nsswitch.conf" backup="true">
+						<content><![CDATA[
+# Make sure that `passwd`, `group` and `shadow` have extrausers in their lines
+# You should place extrausers at the end, so that it is queried after the other mechanisams
+#
+passwd:         compat extrausers
+group:          compat extrausers
+shadow:         compat extrausers
+
+hosts:       files dns
+networks:    files dns
+
+services:    db files
+protocols:   db files
+rpc:         db files
+ethers:      db files
+netmasks:    files
+netgroup:    files
+bootparams:  files
+
+automount:   files
+aliases:     files
 ]]>
 						</content>
 					</file>

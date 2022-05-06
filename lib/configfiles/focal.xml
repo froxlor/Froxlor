@@ -2,6 +2,20 @@
 <froxlor>
 	<distribution name="Ubuntu" codename="Focal"
 		version="20.04" defaulteditor="/bin/nano">
+		<!-- OS defaults to be loaded on installation -->
+		<defaults>
+			<default settinggroup="system" varname="nssextrausers" value="1"></default>
+			<default for="lighttpd" settinggroup="system" varname="apacheconf_vhost" value="/etc/lighttpd/conf-enabled/"></default>
+			<default for="lighttpd" settinggroup="system" varname="apacheconf_diroptions" value="/etc/lighttpd/froxlor-diroptions/"></default>
+			<default for="lighttpd" settinggroup="system" varname="apacheconf_htpasswddir" value="/etc/lighttpd/froxlor-htpasswd/"></default>
+			<default for="lighttpd" settinggroup="system" varname="apachereload_command" value="service lighttpd reload"></default>
+			<default for="lighttpd" settinggroup="system" varname="letsencryptacmeconf" value="/etc/lighttpd/acme.conf"></default>
+			<default for="nginx" settinggroup="system" varname="apacheconf_vhost" value="/etc/nginx/sites-enabled/"></default>
+			<default for="nginx" settinggroup="system" varname="apacheconf_diroptions" value="/etc/nginx/sites-enabled/"></default>
+			<default for="nginx" settinggroup="system" varname="apacheconf_htpasswddir" value="/etc/nginx/froxlor-htpasswd/"></default>
+			<default for="nginx" settinggroup="system" varname="apachereload_command" value="service nginx reload"></default>
+			<default for="nginx" settinggroup="system" varname="letsencryptacmeconf" value="/etc/nginx/acme.conf"></default>
+		</defaults>
 		<services>
 			<!-- HTTP -->
 			<service type="http" title="{{lng.admin.configfiles.http}}">
