@@ -23,7 +23,7 @@
  * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
-return <<<FROXLORSQL
+return <<<'FROXLORSQL'
 DROP TABLE IF EXISTS `ftp_groups`;
 CREATE TABLE `ftp_groups` (
   `id` int(20) NOT NULL auto_increment,

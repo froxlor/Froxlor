@@ -65,43 +65,8 @@
 					</commands>
 				</general>
 				<!-- HTTP Apache -->
-				<daemon name="apache" version="2.2" title="Apache 2.2"
-					default="true">
-					<install><![CDATA[emerge www-servers/apache]]></install>
-					<include>//service[@type='http']/general/commands</include>
-					<file name="/etc/apache2/modules.d/70_fastcgi.conf">
-						<visibility mode="true">{{settings.phpfpm.enabled}}
-						</visibility>
-						<content><![CDATA[
-<IfModule mod_fastcgi.c>
-    FastCgiIpcDir <FPM_IPCDIR>
-
-    <Location "/fastcgiphp">
-        Order Deny,Allow
-        Deny from All
-        # Prevent accessing this path directly
-        Allow from env=REDIRECT_STATUS
-    </Location>
-</IfModule>
-]]>
-						</content>
-					</file>
-					<file name="{{settings.system.letsencryptacmeconf}}">
-						<visibility mode="true">{{settings.system.leenabled}}
-						</visibility>
-						<content><![CDATA[
-Alias "/.well-known/acme-challenge" "{{settings.system.letsencryptchallengepath}}/.well-known/acme-challenge"
-<Directory "{{settings.system.letsencryptchallengepath}}/.well-known/acme-challenge">
-	Order allow,deny
-	Allow from all
-</Directory>
-]]>
-						</content>
-					</file>
-					<command><![CDATA[rc-update add apache2 default]]></command>
-					<command><![CDATA[{{settings.system.apachereload_command}}]]></command>
-				</daemon>
 				<daemon name="apache" version="2.4" title="Apache 2.4">
+					<install><![CDATA[emerge www-servers/apache]]></install>
 					<include>//service[@type='http']/general/commands</include>
 					<file name="/etc/apache2/modules.d/70_fastcgi.conf">
 						<visibility mode="true">{{settings.phpfpm.enabled}}
@@ -3865,6 +3830,11 @@ aliases:     files
 						<command><![CDATA[echo "www-servers/apache suexec" >> /etc/portage/package.use/froxlor]]></command>
 					</commands>
 					<install>
+						<visibility mode="true">{{settings.system.mod_fcgid}}
+						</visibility>
+						<command><![CDATA[echo "www-servers/apache apache2_modules_proxy_fcgi" >> /etc/portage/package.use/froxlor]]></command>
+					</install>
+					<install>
 						<visibility mode="equals" value="apache2">{{settings.system.webserver}}
 						</visibility>
 						<content><![CDATA[emerge www-servers/apache]]></content>
@@ -3904,7 +3874,12 @@ aliases:     files
 					<install>
 						<visibility mode="equals" value="apache2">{{settings.system.webserver}}
 						</visibility>
-						<content><![CDATA[emerge www-servers/apache www-apache/mod_fastcgi]]></content>
+						<content><![CDATA[emerge www-servers/apache www-apache/mod_fastcgi_handler]]></content>
+					</install>
+					<install>
+						<visibility mode="true">{{settings.phpfpm.enabled}}
+						</visibility>
+						<command><![CDATA[echo "www-servers/apache apache2_modules_proxy_fcgi" >> /etc/portage/package.use/froxlor]]></command>
 					</install>
 					<commands index="2">
 						<visibility mode="equals" value="apache2">{{settings.system.webserver}}

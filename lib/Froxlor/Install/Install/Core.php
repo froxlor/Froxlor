@@ -429,7 +429,7 @@ class Core
 
 		// check currently used php version and set values of fpm/fcgid accordingly
 		if (defined('PHP_MAJOR_VERSION') && defined('PHP_MINOR_VERSION')) {
-			// @todo does not work for gentoo
+			// gentoo specific
 			if ($this->validatedData['distribution'] == 'gentoo') {
 				// php-fpm
 				$reload = "/etc/init.d/php-fpm restart";
@@ -445,6 +445,11 @@ class Core
 			}
 			$db_user->query("UPDATE `" . TABLE_PANEL_FPMDAEMONS . "` SET `reload_cmd` = '" . $reload . "', `config_dir` = '" . $config_dir . "' WHERE `id` ='1';");
 			$db_user->query("UPDATE `" . TABLE_PANEL_PHPCONFIGS . "` SET `binary` = '" . $binary . "';");
+		}
+
+		if ($this->validatedData['use_ssl']) {
+			// enable let's encrypt cron
+			$db_user->query("UPDATE `" . TABLE_PANEL_CRONRUNS . "` SET `isactive` = '1' WHERE `module` = 'froxlor/letsencrypt';");
 		}
 
 		// set specific times for some crons (traffic only at night, etc.)
