@@ -424,7 +424,7 @@ class Customers extends ApiCommand implements ResourceEntity
 
 						// Accounts which match systemaccounts are not allowed, filtering them
 						if (preg_match('/^' . preg_quote(Settings::Get('customer.accountprefix'), '/') . '([0-9]+)/', $loginname)) {
-							Response::standardError('loginnameissystemaccount', Settings::Get('customer.accountprefix'), true);
+							Response::standardError('loginnameisusingprefix', Settings::Get('customer.accountprefix'), true);
 						}
 
 						// Additional filtering for Bug #962
