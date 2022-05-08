@@ -286,7 +286,9 @@ class Admins extends ApiCommand implements ResourceEntity
 				Response::standardError('loginnameexists', $loginname, true);
 			} elseif (preg_match('/^' . preg_quote(Settings::Get('customer.accountprefix'), '/') . '([0-9]+)/', $loginname)) {
 				// Accounts which match systemaccounts are not allowed, filtering them
-				Response::standardError('loginnameissystemaccount', Settings::Get('customer.accountprefix'), true);
+				Response::standardError('loginnameisusingprefix', Settings::Get('customer.accountprefix'), true);
+			} elseif (function_exists('posix_getpwnam') && !in_array("posix_getpwnam", explode(",", ini_get('disable_functions'))) && posix_getpwnam($loginname)) {
+				Response::standardError('loginnameissystemaccount', $loginname, true);
 			} elseif (!Validate::validateUsername($loginname)) {
 				Response::standardError('loginnameiswrong', $loginname, true);
 			} elseif (!Validate::validateEmail($email)) {

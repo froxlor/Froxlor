@@ -491,7 +491,7 @@ class CustomersTest extends TestCase
 			)
 		];
 
-		$this->expectExceptionMessage('You cannot create accounts which are similar to system accounts (as for example begin with "web"). Please enter another account name.');
+		$this->expectExceptionMessage('You cannot create accounts that begin with "web", as this prefix is set to be used for the automatic account-naming. Please enter another account name.');
 		Customers::getLocal($admin_userdata, $data)->add();
 	}
 

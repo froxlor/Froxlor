@@ -429,7 +429,7 @@ class Customers extends ApiCommand implements ResourceEntity
 
 						// Additional filtering for Bug #962
 						if (function_exists('posix_getpwnam') && !in_array("posix_getpwnam", explode(",", ini_get('disable_functions'))) && posix_getpwnam($loginname)) {
-							Response::standardError('loginnameissystemaccount', Settings::Get('customer.accountprefix'), true);
+							Response::standardError('loginnameissystemaccount', $loginname, true);
 						}
 					} else {
 						$accountnumber = intval(Settings::Get('system.lastaccountnumber')) + 1;
