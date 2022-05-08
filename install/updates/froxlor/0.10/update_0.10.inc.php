@@ -995,18 +995,5 @@ if (\Froxlor\Froxlor::isDatabaseVersion('202112310')) {
 	}
 	lastStepStatus(0);
 
-	showUpdateStep("Add new nginx setting 'default location' to domain table", true);
-	$result = Database::query("DESCRIBE `panel_domains`");
-	$columnFound = 0;
-	while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-		if ($row['Field'] == 'nginx_location_default') {
-			$columnFound = 1;
-		}
-	}
-	if (! $columnFound) {
-		Database::query("ALTER TABLE panel_domains ADD `nginx_location_default` tinyint(1) NOT NULL DEFAULT '1' AFTER `nginx_root_default`;");
-	}
-	lastStepStatus(0);
-
 	\Froxlor\Froxlor::updateToDbVersion('2022050801');
 }

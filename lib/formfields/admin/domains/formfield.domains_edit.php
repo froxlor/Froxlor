@@ -177,6 +177,21 @@ return array(
 							$result['notryfiles']
 						)
 					),
+					'nginx_root_no_default' => array(
+						'visible' => (\Froxlor\Settings::Get('system.webserver') == 'nginx' && $userinfo['change_serversettings'] == '1'),
+						'label' => $lng['admin']['nginx_root_default']['title'],
+						'desc' => $lng['admin']['nginx_root_default']['description'],
+						'type' => 'checkbox',
+						'values' => array(
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array(
+							$result['nginx_root_default']
+						)
+					),
 					'writeaccesslog' => array(
 						'label' => $lng['admin']['writeaccesslog']['title'],
 						'desc' => $lng['admin']['writeaccesslog']['description'],
@@ -203,36 +218,6 @@ return array(
 						),
 						'value' => array(
 							$result['writeerrorlog']
-						)
-					),
-					'nginx_root_default' => array(
-						'visible' => (\Froxlor\Settings::Get('system.webserver') == 'nginx' && $userinfo['change_serversettings'] == '1'),
-						'label' => $lng['admin']['nginx_root_default']['title'],
-						'desc' => $lng['admin']['nginx_root_default']['description'],
-						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['nginx_root_default']
-						)
-					),
-					'nginx_location_default' => array(
-						'visible' => (\Froxlor\Settings::Get('system.webserver') == 'nginx' && $userinfo['change_serversettings'] == '1'),
-						'label' => $lng['admin']['nginx_location_default']['title'],
-						'desc' => $lng['admin']['nginx_location_default']['description'],
-						'type' => 'checkbox',
-						'values' => array(
-							array(
-								'label' => $lng['panel']['yes'],
-								'value' => '1'
-							)
-						),
-						'value' => array(
-							$result['nginx_location_default']
 						)
 					)
 				)

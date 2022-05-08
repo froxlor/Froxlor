@@ -1787,5 +1787,3 @@ $lng['serversettings']['acmeshpath']['description'] = 'Installationspfad zu acme
 
 $lng['admin']['nginx_root_default']['title'] = 'Die root-Einstellung standardmaessig hinzufuegen';
 $lng['admin']['nginx_root_default']['description'] = 'Standardmaessig aktiviert. Wenn deaktiviert, wird die "root"-Direktive nicht hinzugefügt. Das kann die Webseite disfunktional machen, daher ist eine manuelle Anpassung von <em>"'.$lng['admin']['ownvhostsettings'].'"</em> notwendig.';
-$lng['admin']['nginx_location_default']['title'] = 'Den "location / {}"-Block standardmaessig hinzufuegen';
-$lng['admin']['nginx_location_default']['description'] = 'Standardmaessig aktiviert. Wenn deaktiviert, wird der Standard-location-Block nicht hinzugefügt. Das kann die Webseite disfunktional machen, daher ist eine manuelle Anpassung von <em>"'.$lng['admin']['ownvhostsettings'].'"</em> notwendig.';

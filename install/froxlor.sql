@@ -268,7 +268,6 @@ CREATE TABLE `panel_domains` (
   `http2` tinyint(1) DEFAULT '0',
   `notryfiles` tinyint(1) DEFAULT '0',
   `nginx_root_default` tinyint(1) DEFAULT '1',
-  `nginx_location_default` tinyint(1) DEFAULT '1',
   `writeaccesslog` tinyint(1) DEFAULT '1',
   `writeerrorlog` tinyint(1) DEFAULT '1',
   `override_tls` tinyint(1) DEFAULT '0',
