@@ -998,32 +998,39 @@ class Nginx extends HttpConfigBase
 	{
 		$webroot_text = '';
 
-		if ($domain['deactivated'] == '1' && Settings::Get('system.deactivateddocroot') != '') {
-			$webroot_text .= "\t" . '# Using docroot for deactivated users...' . "\n";
-			$webroot_text .= "\t" . 'root     ' . \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.deactivateddocroot')) . ';' . "\n";
-			$this->deactivated = true;
-		} else {
-			$webroot_text .= "\t" . 'root     ' . \Froxlor\FileDir::makeCorrectDir($domain['documentroot']) . ';' . "\n";
-			$this->deactivated = false;
-		}
-
-		$webroot_text .= "\n\t" . 'location / {' . "\n";
-
-		if ($domain['phpenabled_customer'] == 1 && $domain['phpenabled_vhost'] == '1') {
-			$webroot_text .= "\t" . 'index    index.php index.html index.htm;' . "\n";
-			if ($domain['notryfiles'] != 1) {
-				$webroot_text .= "\t\t" . 'try_files $uri $uri/ @rewrites;' . "\n";
+		// Add the default root location block, if set
+		if ($domain['nginx_root_default'] == '1') {
+			if ($domain['deactivated'] == '1' && Settings::Get('system.deactivateddocroot') != '') {
+				$webroot_text .= "\t" . '# Using docroot for deactivated users...' . "\n";
+				$webroot_text .= "\t" . 'root     ' . \Froxlor\FileDir::makeCorrectDir(Settings::Get('system.deactivateddocroot')) . ';' . "\n";
+				$this->deactivated = true;
+			} else {
+				$webroot_text .= "\t" . 'root     ' . \Froxlor\FileDir::makeCorrectDir($domain['documentroot']) . ';' . "\n";
+				$this->deactivated = false;
 			}
-		} else {
-			$webroot_text .= "\t" . 'index    index.html index.htm;' . "\n";
 		}
 
-		if ($this->vhost_root_autoindex) {
-			$webroot_text .= "\t\t" . 'autoindex on;' . "\n";
-			$this->vhost_root_autoindex = false;
+		// Add the default location block, if set
+		if ($domain['nginx_location_default'] == '1') {
+			$webroot_text .= "\n\t" . 'location / {' . "\n";
+
+			if ($domain['phpenabled_customer'] == 1 && $domain['phpenabled_vhost'] == '1') {
+				$webroot_text .= "\t" . 'index    index.php index.html index.htm;' . "\n";
+				if ($domain['notryfiles'] != 1) {
+					$webroot_text .= "\t\t" . 'try_files $uri $uri/ @rewrites;' . "\n";
+				}
+			} else {
+				$webroot_text .= "\t" . 'index    index.html index.htm;' . "\n";
+			}
+
+			if ($this->vhost_root_autoindex) {
+				$webroot_text .= "\t\t" . 'autoindex on;' . "\n";
+				$this->vhost_root_autoindex = false;
+			}
+
+			$webroot_text .= "\t" . '}' . "\n\n";
 		}
 
-		$webroot_text .= "\t" . '}' . "\n\n";
 		if ($domain['phpenabled_customer'] == 1 && $domain['phpenabled_vhost'] == '1' && $domain['notryfiles'] != 1) {
 			$webroot_text .= "\tlocation @rewrites {\n";
 			$webroot_text .= "\t\trewrite ^ /index.php last;\n";

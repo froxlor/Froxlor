@@ -1784,3 +1784,8 @@ $lng['serversettings']['phpfpm_settings']['allow_all_customers']['description'] 
 $lng['error']['pathmustberelative'] = 'Der Benutzer hat nicht die benötigten Berechtigungen, um Pfade außerhalb des Kunden-Heimatverzeichnisses anzugeben. Bitte einen relativen Pfad angeben (kein führendes /).';
 $lng['serversettings']['acmeshpath']['title'] = 'Pfad zu acme.sh';
 $lng['serversettings']['acmeshpath']['description'] = 'Installationspfad zu acme.sh, inklusive acme.sh Script<br>Standard ist <b>/root/.acme.sh/acme.sh</b>';
+
+$lng['admin']['nginx_root_default']['title'] = 'Die root-Einstellung standardmaessig hinzufuegen';
+$lng['admin']['nginx_root_default']['description'] = 'Standardmaessig aktiviert. Wenn deaktiviert, wird die "root"-Direktive nicht hinzugefügt. Das kann die Webseite disfunktional machen, daher ist eine manuelle Anpassung von <em>"'.$lng['admin']['ownvhostsettings'].'"</em> notwendig.';
+$lng['admin']['nginx_location_default']['title'] = 'Den "location / {}"-Block standardmaessig hinzufuegen';
+$lng['admin']['nginx_location_default']['description'] = 'Standardmaessig aktiviert. Wenn deaktiviert, wird der Standard-location-Block nicht hinzugefügt. Das kann die Webseite disfunktional machen, daher ist eine manuelle Anpassung von <em>"'.$lng['admin']['ownvhostsettings'].'"</em> notwendig.';

@@ -267,6 +267,8 @@ CREATE TABLE `panel_domains` (
   `ocsp_stapling` tinyint(1) DEFAULT '0',
   `http2` tinyint(1) DEFAULT '0',
   `notryfiles` tinyint(1) DEFAULT '0',
+  `nginx_root_default` tinyint(1) DEFAULT '1',
+  `nginx_location_default` tinyint(1) DEFAULT '1',
   `writeaccesslog` tinyint(1) DEFAULT '1',
   `writeerrorlog` tinyint(1) DEFAULT '1',
   `override_tls` tinyint(1) DEFAULT '0',
@@ -724,7 +726,7 @@ opcache.validate_timestamps'),
 	('panel', 'logo_overridetheme', '0'),
 	('panel', 'logo_overridecustom', '0'),
 	('panel', 'version', '0.10.34.1'),
-	('panel', 'db_version', '202112310');
+	('panel', 'db_version', '2022050801');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;

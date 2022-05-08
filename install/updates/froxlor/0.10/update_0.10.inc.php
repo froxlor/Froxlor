@@ -962,8 +962,8 @@ if (\Froxlor\Froxlor::isDatabaseVersion('202109040')) {
 }
 
 if (\Froxlor\Froxlor::isFroxlorVersion('0.10.31')) {
-        showUpdateStep("Updating from 0.10.31 to 0.10.32", false);
-        \Froxlor\Froxlor::updateToVersion('0.10.32');
+	showUpdateStep("Updating from 0.10.31 to 0.10.32", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.32');
 }
 
 if (\Froxlor\Froxlor::isFroxlorVersion('0.10.32')) {
@@ -979,4 +979,34 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.33')) {
 if (\Froxlor\Froxlor::isFroxlorVersion('0.10.34')) {
 	showUpdateStep("Updating from 0.10.34 to 0.10.34.1", false);
 	\Froxlor\Froxlor::updateToVersion('0.10.34.1');
+}
+
+if (\Froxlor\Froxlor::isDatabaseVersion('202112310')) {
+	showUpdateStep("Add new nginx setting 'root' to domain table", true);
+	$result = Database::query("DESCRIBE `panel_domains`");
+	$columnFound = 0;
+	while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+		if ($row['Field'] == 'nginx_root_default') {
+			$columnFound = 1;
+		}
+	}
+	if (! $columnFound) {
+		Database::query("ALTER TABLE panel_domains ADD `nginx_root_default` tinyint(1) NOT NULL DEFAULT '1' AFTER `notryfiles`;");
+	}
+	lastStepStatus(0);
+
+	showUpdateStep("Add new nginx setting 'default location' to domain table", true);
+	$result = Database::query("DESCRIBE `panel_domains`");
+	$columnFound = 0;
+	while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+		if ($row['Field'] == 'nginx_location_default') {
+			$columnFound = 1;
+		}
+	}
+	if (! $columnFound) {
+		Database::query("ALTER TABLE panel_domains ADD `nginx_location_default` tinyint(1) NOT NULL DEFAULT '1' AFTER `nginx_root_default`;");
+	}
+	lastStepStatus(0);
+
+	\Froxlor\Froxlor::updateToDbVersion('2022050801');
 }

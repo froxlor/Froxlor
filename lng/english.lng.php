@@ -2138,3 +2138,8 @@ $lng['serversettings']['phpfpm_settings']['allow_all_customers']['description'] 
 $lng['error']['pathmustberelative'] = 'The user does not have the permission to specify directories outside the customers home-directory. Please specify a relative path (no leading /).';
 $lng['serversettings']['acmeshpath']['title'] = 'Path to acme.sh';
 $lng['serversettings']['acmeshpath']['description'] = 'Set this to where acme.sh is installed to, including the acme.sh script<br>Default is <b>/root/.acme.sh/acme.sh</b>';
+
+$lng['admin']['nginx_root_default']['title'] = 'Add the default root directive';
+$lng['admin']['nginx_root_default']['description'] = 'Enabled by default. If disabled, the "root" directive will not be added. This most likely causes the website malfunction if not set on your own settings at <em>"'.$lng['admin']['ownvhostsettings'].'"</em>.';
+$lng['admin']['nginx_location_default']['title'] = 'Add the default "location / {}" block';
+$lng['admin']['nginx_location_default']['description'] = 'Enabled by default. If disabled, the location block will not be added. This most likely causes the website malfunction if not set on your own. Useful if you want to use your own location block at <em>"'.$lng['admin']['ownvhostsettings'].'"</em>.';
