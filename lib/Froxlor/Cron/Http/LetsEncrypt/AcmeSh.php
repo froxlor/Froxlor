@@ -417,7 +417,10 @@ EOC;
 		$acmesh_result = FileDir::safe_exec(self::getAcmeSh() . " --upgrade --auto-upgrade 0");
 		// check for activated cron
 		$acmesh_result2 = FileDir::safe_exec(self::getAcmeSh() . " --install-cronjob");
-		FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, "Checking for LetsEncrypt client upgrades before renewing certificates:\n" . implode("\n", $acmesh_result) . "\n" . implode("\n", $acmesh_result2));
+		// set default CA
+		$acmesh_result3 = FileDir::safe_exec(self::getAcmeSh() . " --set-default-ca --server " . self::$apiserver);
+		// log messages
+		FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, "Checking for LetsEncrypt client upgrades before renewing certificates:\n" . implode("\n", $acmesh_result) . "\n" . implode("\n", $acmesh_result2) . "\n" . implode("\n", $acmesh_result3));
 	}
 
 	/**
