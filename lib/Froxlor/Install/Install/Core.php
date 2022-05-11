@@ -231,6 +231,7 @@ class Core
 		$mysql_access_host_array = array_map('trim', explode(',', $this->validatedData['mysql_access_host']));
 
 		// @todo localhost/127.0.0.1/serverip checks and addition is only required if mysql_access_host is not a separate machine
+		/*
 		if (in_array('127.0.0.1', $mysql_access_host_array) && !in_array('localhost', $mysql_access_host_array)) {
 			$mysql_access_host_array[] = 'localhost';
 		}
@@ -240,6 +241,7 @@ class Core
 		if (!in_array($this->validatedData['serverip'], $mysql_access_host_array)) {
 			$mysql_access_host_array[] = $this->validatedData['serverip'];
 		}
+		*/
 
 		$mysql_access_host_array = array_unique($mysql_access_host_array);
 
@@ -370,8 +372,10 @@ class Core
 			WHERE `settinggroup` = :group AND `varname` = :varname
 		");
 
+		$mainip = !empty($this->validatedData['serveripv6']) ? $this->validatedData['serveripv6'] : $this->validatedData['serveripv4'];
+
 		$this->updateSetting($upd_stmt, 'admin@' . $this->validatedData['servername'], 'panel', 'adminmail');
-		$this->updateSetting($upd_stmt, $this->validatedData['serverip'], 'system', 'ipaddress');
+		$this->updateSetting($upd_stmt, $mainip, 'system', 'ipaddress');
 		if ($this->validatedData['use_ssl']) {
 			$this->updateSetting($upd_stmt, 1, 'system', 'use_ssl');
 			$this->updateSetting($upd_stmt, 1, 'system', 'leenabled');
@@ -496,23 +500,47 @@ class Core
 			`ssl` = :ssl
 		");
 		$nvh = $this->validatedData['webserver'] == 'apache2' ? '1' : '0';
-		$stmt->execute([
-			'nvh' => $nvh,
-			'serverip' => $this->validatedData['serverip'],
-			'serverport' => 80,
-			'ssl' => 0
-		]);
-		$defaultip = $db_user->lastInsertId();
+		if (!empty($this->validatedData['serveripv6'])) {
+			$stmt->execute([
+				'nvh' => $nvh,
+				'serverip' => $this->validatedData['serveripv6'],
+				'serverport' => 80,
+				'ssl' => 0
+			]);
+			$defaultip = $db_user->lastInsertId();
+		}
+		if (!empty($this->validatedData['serveripv4'])) {
+			$stmt->execute([
+				'nvh' => $nvh,
+				'serverip' => $this->validatedData['serveripv4'],
+				'serverport' => 80,
+				'ssl' => 0
+			]);
+			$lastinsert = $db_user->lastInsertId();
+			$defaultip = $defaultip != false ? $defaultip . ',' . $lastinsert : $lastinsert;
+		}
 
 		$defaultsslip = false;
 		if ($this->validatedData['use_ssl']) {
-			$stmt->execute([
-				'nvh' => $this->validatedData['webserver'] == 'apache2' ? '1' : '0',
-				'serverip' => $this->validatedData['serverip'],
-				'serverport' => 443,
-				'ssl' => 1
-			]);
-			$defaultsslip = $db_user->lastInsertId();
+			if (!empty($this->validatedData['serveripv6'])) {
+				$stmt->execute([
+					'nvh' => $this->validatedData['webserver'] == 'apache2' ? '1' : '0',
+					'serverip' => $this->validatedData['serveripv6'],
+					'serverport' => 443,
+					'ssl' => 1
+				]);
+				$defaultsslip = $db_user->lastInsertId();
+			}
+			if (!empty($this->validatedData['serveripv4'])) {
+				$stmt->execute([
+					'nvh' => $this->validatedData['webserver'] == 'apache2' ? '1' : '0',
+					'serverip' => $this->validatedData['serveripv4'],
+					'serverport' => 443,
+					'ssl' => 1
+				]);
+				$lastinsert = $db_user->lastInsertId();
+				$defaultsslip = $defaultsslip != false ? $defaultsslip . ',' . $lastinsert : $lastinsert;
+			}
 		}
 
 		// insert the defaultip

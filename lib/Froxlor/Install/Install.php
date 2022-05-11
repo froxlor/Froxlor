@@ -31,6 +31,7 @@ use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
 use Froxlor\Config\ConfigParser;
 use Froxlor\Validate\Validate;
+use Froxlor\System\IPTools;
 
 class Install
 {
@@ -256,13 +257,18 @@ class Install
 	 */
 	private function checkSystem(array $validatedData): void
 	{
-		$serverip = $validatedData['serverip'] ?? '';
+		$serveripv4 = $validatedData['serveripv4'] ?? '';
+		$serveripv6 = $validatedData['serveripv6'] ?? '';
 		$servername = $validatedData['servername'] ?? '';
 		$httpuser = $validatedData['httpuser'] ?? 'www-data';
 		$httpgroup = $validatedData['httpgroup'] ?? 'www-data';
 
-		if (!Validate::validate_ip2($serverip, true, '', false, true)) {
-			throw new Exception(lng('error.invalidip', [$serverip]));
+		if (empty($serveripv4) && empty($serveripv6)) {
+			throw new Exception(lng('install.errors.nov4andnov6ip'));
+		} elseif (!Validate::validate_ip2($serveripv4, true, '', false, true) || IPTools::is_ipv6($serveripv4)) {
+			throw new Exception(lng('error.invalidip', [$serveripv4]));
+		} elseif (!Validate::validate_ip2($serveripv6, true, '', false, true) || IPTools::is_ipv6($serveripv6) == false) {
+			throw new Exception(lng('error.invalidip', [$serveripv6]));
 		} elseif (!Validate::validateDomain($servername) && !Validate::validateLocalHostname($servername)) {
 			throw new Exception(lng('install.errors.servernameneedstobevalid'));
 		} elseif (posix_getpwnam($httpuser) === false) {
