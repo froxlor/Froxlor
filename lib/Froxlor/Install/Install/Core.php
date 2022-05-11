@@ -352,7 +352,7 @@ class Core
 
 			$pdo->query($froxlorSQL);
 		} catch (PDOException $e) {
-			throw new Exception('failed to import data!', 0, $e);
+			throw new Exception('failed to import data!' . $e->getMessage(), 0, $e);
 		}
 	}
 
