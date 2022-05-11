@@ -149,12 +149,18 @@ return [
 						'select_var' => $this->supportedOS,
 						'selected' => $guessedDistribution
 					],
-					'serverip' => [
-						'label' => lng('serversettings.ipaddress.title'),
-						'placeholder' => lng('serversettings.ipaddress.title'),
+					'serveripv4' => [
+						'label' => lng('install.system.ipv4'),
+						'placeholder' => lng('install.system.ipv4'),
 						'type' => 'text',
-						'mandatory' => true,
-						'value' => old('serverip', $_SERVER['SERVER_ADDR'] ?? null, 'installation'),
+						'value' => old('serveripv4', filter_var($_SERVER['SERVER_ADDR'] ?? "", FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) ? ($_SERVER['SERVER_ADDR'] ?? "") : "", 'installation'),
+
+					],
+					'serveripv6' => [
+						'label' => lng('install.system.ipv6'),
+						'placeholder' => lng('install.system.ipv6'),
+						'type' => 'text',
+						'value' => old('serveripv6', filter_var($_SERVER['SERVER_ADDR'] ?? "", FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) ? ($_SERVER['SERVER_ADDR'] ?? "") : "", 'installation'),
 					],
 					'servername' => [
 						'label' => lng('install.system.servername'),
@@ -189,6 +195,7 @@ return [
 						'type' => 'text',
 						'mandatory' => true,
 						'value' => old('httpuser', posix_getpwuid(posix_getuid())['name'] ?? '', 'installation'),
+						'advanced' => true,
 					],
 					'httpgroup' => [
 						'label' => lng('admin.webserver_group'),
@@ -196,6 +203,7 @@ return [
 						'type' => 'text',
 						'mandatory' => true,
 						'value' => old('httpgroup', posix_getgrgid(posix_getgid())['name'] ?? '', 'installation'),
+						'advanced' => true,
 					],
 					'activate_newsfeed' => [
 						'label' => lng('install.system.activate_newsfeed'),

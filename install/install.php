@@ -26,6 +26,8 @@
 use Froxlor\UI\Panel\UI;
 use Froxlor\Install\Install;
 
+require dirname(__DIR__) . '/lib/functions.php';
+
 // define default theme for configurehint, etc.
 $_deftheme = 'Froxlor';
 
@@ -61,8 +63,6 @@ require dirname(__DIR__) . '/lib/tables.inc.php';
 // init twig
 UI::initTwig(true);
 UI::sendHeaders();
-
-require dirname(__DIR__) . '/lib/functions.php';
 
 $installer = new Install();
 $installer->handle();
