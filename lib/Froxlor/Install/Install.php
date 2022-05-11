@@ -35,6 +35,7 @@ use Froxlor\Validate\Validate;
 class Install
 {
 	public $currentStep;
+	public $extendedView;
 	public $maxSteps;
 	public $phpVersion;
 	public $formfield;
@@ -76,6 +77,7 @@ class Install
 
 		// set actual step
 		$this->currentStep = Request::get('step', 0);
+		$this->extendedView = Request::get('extended', 0);
 		$this->maxSteps = count($this->formfield['install']['sections']);
 
 		// set actual php version and extensions
@@ -112,13 +114,14 @@ class Install
 			'setup' => [
 				'step' => $this->currentStep,
 			],
-			'preflight' => $this->checkExtensions(),
+			'preflight' => $this->checkRequirements(),
 			'page' => [
 				'title' => 'Database',
 				'description' => 'Test',
 			],
 			'section' => $this->formfield['install']['sections']['step' . $this->currentStep] ?? [],
 			'error' => $error ?? null,
+			'extended' => $this->extendedView,
 		]);
 
 		// output view
@@ -171,8 +174,18 @@ class Install
 	/**
 	 * @return array
 	 */
-	private function checkExtensions(): array
+	private function checkRequirements(): array
 	{
+		// check whether we can read the userdata file
+		if (!@touch(dirname(__DIR__, 2).'/.~writecheck'	)) {
+			// get possible owner
+			$posixusername = posix_getpwuid(posix_getuid())['name'];
+			$posixgroup = posix_getgrgid(posix_getgid())['name'];
+			$this->criticals['wrong_ownership'] = ['user' => $posixusername, 'group' => $posixgroup];
+		} else {
+			@unlink(dirname(__DIR__, 2).'/.~writecheck');
+		}
+
 		// check for required extensions
 		foreach ($this->requiredExtensions as $requiredExtension) {
 			if (in_array($requiredExtension, $this->loadedExtensions)) {

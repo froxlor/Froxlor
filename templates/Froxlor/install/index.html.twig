@@ -42,6 +42,10 @@
 						{% import "Froxlor/form/formfields.html.twig" as formfields %}
 
 						{% for id, field in section.fields %}
+							{% if field.advanced is defined and field.advanced == true and extended == false %}
+								{# hide advanced fields #}
+								{% set field = field|merge({'type': 'hidden'})  %}
+							{% endif %}
 							{{ formfields.field(id, field) }}
 						{% endfor %}
 

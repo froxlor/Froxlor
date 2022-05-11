@@ -31,7 +31,7 @@ return [
 		'title' => lng('admin.cron.cronsettings'),
 		'icon' => 'fa-solid fa-clock-rotate-left',
 		'columns' => [
-			'c.description' => [
+			'c.desc_lng_key' => [
 				'label' => lng('cron.description'),
 				'field' => 'desc_lng_key',
 				'callback' => [Text::class, 'crondesc']
@@ -52,7 +52,7 @@ return [
 			],
 		],
 		'visible_columns' => Listing::getVisibleColumnsForListing('cron_list', [
-			'c.description',
+			'c.desc_lng_key',
 			'c.lastrun',
 			'c.interval',
 			'c.isactive',
