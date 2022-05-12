@@ -26,6 +26,7 @@
 namespace Froxlor\Install;
 
 use Exception;
+use PDO;
 use Froxlor\Install\Install\Core;
 use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
@@ -164,12 +165,35 @@ class Install
 
 		// redirect user to home if the installation is done
 		if ($this->currentStep == $this->maxSteps) {
-			header('Location: ../');
-			return;
+			// check setting for "panel.is_configured" whether user has
+			// run the config-services script (or checked the manual mode)
+			if ($this->checkInstallStateFinished()) {
+				header('Location: ../');
+				return;
+			}
+			throw new Exception(lng('install.errors.notyetconfigured'));
 		}
 
 		// redirect to next step
 		header('Location: ?step=' . ($this->currentStep + 1));
+	}
+
+	private function checkInstallStateFinished(): bool
+	{
+		$core = new Core($_SESSION['installation']);
+		if (isset($_SESSION['installation']['manual_config']) && (int) $_SESSION['installation']['manual_config'] == 1) {
+			$core->createUserdataConf();
+			return true;
+		}
+		$pdo = $core->getUnprivilegedPdo();
+		$stmt = $pdo->prepare("SELECT `value` FROM `panel_settings` WHERE `settinggroup` = 'panel' AND `varname` = 'is_configured'");
+		$stmt->execute();
+		$result = $stmt->fetch(PDO::FETCH_ASSOC);
+		if ($result && (int) $result['value'] == 1) {
+			$core->createUserdataConf();
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -349,8 +373,6 @@ class Install
 		if ($pdo->prepare('FLUSH PRIVILEGES')->execute() === false) {
 			throw new Exception(lng('install.errors.unabletoflushprivs'));
 		}
-
-		// @todo build and set $validatedData['mysql_access_host']
 	}
 
 	private function guessWebserver(): ?string

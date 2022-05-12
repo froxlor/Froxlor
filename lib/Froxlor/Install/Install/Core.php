@@ -108,6 +108,27 @@ class Core
 			$options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = (bool)$this->validatedData['mysql_ssl_verify_server_certificate'];
 		}
 
+		$pdo = $this->getUnprivilegedPdo();
+
+		// change settings accordingly
+		$this->doSettings($pdo);
+		// create entries
+		$this->doDataEntries($pdo);
+		// create JSON array for config-services
+		$this->createJsonArray();
+	}
+
+	public function getUnprivilegedPdo(): PDO
+	{
+		$options = [
+			'PDO::MYSQL_ATTR_INIT_COMMAND' => 'SET names utf8'
+		];
+
+		if (!empty($this->validatedData['mysql_ssl_ca_file'])) {
+			$options[PDO::MYSQL_ATTR_SSL_CA] = $this->validatedData['mysql_ssl_ca_file'];
+			$options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = (bool)$this->validatedData['mysql_ssl_verify_server_certificate'];
+		}
+
 		$dsn = "mysql:host=" . $this->validatedData['mysql_host'] . ";dbname=" . $this->validatedData['mysql_database'] . ";";
 		try {
 			$pdo = new PDO($dsn, $this->validatedData['mysql_unprivileged_user'], $this->validatedData['mysql_unprivileged_pass'], $options);
@@ -117,18 +138,10 @@ class Core
 				$sql_mode .= ',NO_AUTO_CREATE_USER';
 			}
 			$pdo->exec('SET sql_mode = "' . $sql_mode . '"');
+			return $pdo;
 		} catch (PDOException $e) {
 			throw new Exception('Unexpected exception occured', 0, $e);
 		}
-
-		// change settings accordingly
-		$this->doSettings($pdo);
-		// create entries
-		$this->doDataEntries($pdo);
-		// create config-file
-		$this->createUserdataConf();
-		// create JSON array for config-services
-		$this->createJsonArray();
 	}
 
 	/**
@@ -193,6 +206,8 @@ class Core
 	 */
 	private function createDatabaseAndUser(object &$db_root)
 	{
+		$this->validatedData['mysql_access_host'] = $this->validatedData['mysql_host'];
+
 		// so first we have to delete the database and
 		// the user given for the unpriv-user if they exit
 		$del_stmt = $db_root->prepare("DELETE FROM `mysql`.`user` WHERE `User` = :user AND `Host` = :accesshost");
@@ -228,21 +243,21 @@ class Core
 		$ins_stmt = $db_root->prepare("CREATE DATABASE `" . str_replace('`', '', $this->validatedData['mysql_database']) . "` CHARACTER SET=utf8 COLLATE=utf8_general_ci");
 		$ins_stmt->execute();
 
+
 		$mysql_access_host_array = array_map('trim', explode(',', $this->validatedData['mysql_access_host']));
 
-		// @todo localhost/127.0.0.1/serverip checks and addition is only required if mysql_access_host is not a separate machine
-		/*
 		if (in_array('127.0.0.1', $mysql_access_host_array) && !in_array('localhost', $mysql_access_host_array)) {
 			$mysql_access_host_array[] = 'localhost';
 		}
 		if (!in_array('127.0.0.1', $mysql_access_host_array) && in_array('localhost', $mysql_access_host_array)) {
 			$mysql_access_host_array[] = '127.0.0.1';
 		}
-		if (!in_array($this->validatedData['serverip'], $mysql_access_host_array)) {
-			$mysql_access_host_array[] = $this->validatedData['serverip'];
+		if (!empty($this->validatedData['serveripv4']) && !in_array($this->validatedData['serveripv4'], $mysql_access_host_array)) {
+			$mysql_access_host_array[] = $this->validatedData['serveripv4'];
 		}
-		*/
-
+		if (!empty($this->validatedData['serveripv6']) && !in_array($this->validatedData['serveripv6'], $mysql_access_host_array)) {
+			$mysql_access_host_array[] = $this->validatedData['serveripv6'];
+		}
 		$mysql_access_host_array = array_unique($mysql_access_host_array);
 
 		foreach ($mysql_access_host_array as $mysql_access_host) {
@@ -268,11 +283,17 @@ class Core
 	private function grantDbPrivilegesTo(&$db_root, $database, $username, $password, $access_host)
 	{
 		if ($this->validatedData['mysql_force_create']) {
-			$drop_stmt = $db_root->prepare("DROP USER :username@:host");
-			$drop_stmt->execute([
-				"username" => $username,
-				"host" => $access_host
-			]);
+			try {
+				// try to drop the user, but ignore exceptions as the mysql-access-hosts might
+				// have changed and we would try to drop a non-existing user
+				$drop_stmt = $db_root->prepare("DROP USER :username@:host");
+				$drop_stmt->execute([
+					"username" => $username,
+					"host" => $access_host
+				]);
+			} catch (PDOException $e) {
+				/* continue */
+			}
 		}
 		if (version_compare($db_root->getAttribute(PDO::ATTR_SERVER_VERSION), '10.0.0', '>=')) {
 			// mariadb compatibility
@@ -319,31 +340,8 @@ class Core
 	 */
 	private function importDatabaseData()
 	{
-		$options = [
-			'PDO::MYSQL_ATTR_INIT_COMMAND' => 'SET names utf8'
-		];
-
-		if (!empty($this->validatedData['mysql_ssl_ca_file'])) {
-			$options[PDO::MYSQL_ATTR_SSL_CA] = $this->validatedData['mysql_ssl_ca_file'];
-			$options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = (bool)$this->validatedData['mysql_ssl_verify_server_certificate'];
-		}
-
-		$dsn = "mysql:host=" . $this->validatedData['mysql_host'] . ";dbname=" . $this->validatedData['mysql_database'] . ";";
 		try {
-			$pdo = new PDO($dsn, $this->validatedData['mysql_unprivileged_user'], $this->validatedData['mysql_unprivileged_pass'], $options);
-			$attributes = [
-				'ATTR_ERRMODE' => 'ERRMODE_EXCEPTION'
-			];
-			// set attributes
-			foreach ($attributes as $k => $v) {
-				$pdo->setAttribute(constant("PDO::" . $k), constant("PDO::" . $v));
-			}
-			$version_server = $pdo->getAttribute(PDO::ATTR_SERVER_VERSION);
-			$sql_mode = 'NO_ENGINE_SUBSTITUTION';
-			if (version_compare($version_server, '8.0.11', '<')) {
-				$sql_mode .= ',NO_AUTO_CREATE_USER';
-			}
-			$pdo->exec('SET sql_mode = "' . $sql_mode . '"');
+			$pdo = $this->getUnprivilegedPdo();
 		} catch (PDOException $e) {
 			throw new Exception('failed to initialize froxlor user connection!');
 		}
@@ -603,7 +601,7 @@ class Core
 	 * @return void
 	 * @throws Exception
 	 */
-	private function createUserdataConf()
+	public function createUserdataConf()
 	{
 		$userdata = [
 			'sql' => [

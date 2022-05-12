@@ -222,8 +222,14 @@ return [
 						'type' => 'textarea',
 						'value' => !empty($_SESSION['installation']['json_params']) ? Froxlor::getInstallDir() . "bin/froxlor-cli froxlor:config-services -a '" . $_SESSION['installation']['json_params'] . "' --yes-to-all" : "something went wrong...",
 						'readonly' => true,
-						'rows' => 1
+						'rows' => 3
 					],
+					'manual_config' => [
+						'label' => lng('install.install.manual_config'),
+						'type' => 'checkbox',
+						'value' => '1',
+						'checked' => old('manual_config', '0', 'installation'),
+					]
 				]
 			]
 		]

@@ -2498,8 +2498,9 @@ Yours sincerely, your administrator',
 		'install' => [
 			'top' => 'Finish setup',
 			'title' => 'One last step...',
-			'description' => 'The command below will download, install and configure your system according to the data you have given in this installation process.',
+			'description' => 'The command below will download, install and configure required services on your system according to the data you have given in this installation process.',
 			'runcmd' => 'Run the following command as root-user in your shell on this server:',
+			'manual_config' => 'I will manually configure the services, just take me to the login',
 		],
 		'errors' => [
 			'databaseexists' => 'Database already exist, please set override option to rebuild!',
@@ -2513,6 +2514,7 @@ Yours sincerely, your administrator',
 			'servernameneedstobevalid' => 'Given servername does not seem to be a FQDN or hostname',
 			'websrvuserdoesnotexist' => 'Given webserver-user does not seem to exist on the system',
 			'websrvgrpdoesnotexist' => 'Given webserver-group does not seem to exist on the system',
+			'notyetconfigured' => 'It seems that the services were not yet configured (successfully). Please either run the command shown below or check the box to do it later.'
 		]
 	],
 ];
