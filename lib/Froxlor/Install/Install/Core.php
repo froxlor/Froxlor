@@ -377,6 +377,7 @@ class Core
 		if ($this->validatedData['use_ssl']) {
 			$this->updateSetting($upd_stmt, 1, 'system', 'use_ssl');
 			$this->updateSetting($upd_stmt, 1, 'system', 'leenabled');
+			$this->updateSetting($upd_stmt, 1, 'system', 'le_froxlor_enabled');
 		}
 		$this->updateSetting($upd_stmt, $this->validatedData['servername'], 'system', 'hostname');
 		$this->updateSetting($upd_stmt, 'en', 'panel', 'standardlanguage'); // TODO: set language

@@ -94,6 +94,13 @@ class Install
 		if (isset($_SESSION['installation']) && $this->currentStep == 0) {
 			unset($_SESSION['installation']);
 		}
+
+		// check for url manipulation or wrong step
+		if ((isset($_SESSION['installation']['stepCompleted']) && ($this->currentStep + 1) > ($_SESSION['installation']['stepCompleted'] ?? 0))
+			|| (!isset($_SESSION['installation']['stepCompleted']) && $this->currentStep > 0)
+		) {
+			$this->currentStep = isset($_SESSION['installation']['stepCompleted']) ? $_SESSION['installation']['stepCompleted'] + 1 : 1;
+		}
 	}
 
 	/**
@@ -115,6 +122,7 @@ class Install
 		UI::twigBuffer('/install/index.html.twig', [
 			'setup' => [
 				'step' => $this->currentStep,
+				'max_steps' => $this->maxSteps,
 			],
 			'preflight' => $this->checkRequirements(),
 			'page' => [
@@ -135,11 +143,10 @@ class Install
 	 */
 	private function handleFormData(array $formfield): void
 	{
-		// Validate user data
-		$validatedData = $this->validateRequest($formfield['sections']['step' . $this->currentStep]['fields']);
-
 		// handle current step
 		if ($this->currentStep <= $this->maxSteps) {
+			// Validate user data
+			$validatedData = $this->validateRequest($formfield['sections']['step' . $this->currentStep]['fields']);
 			// Check database connection (
 			if ($this->currentStep == 1) {
 				$this->checkDatabase($validatedData);
@@ -152,6 +159,7 @@ class Install
 			elseif ($this->currentStep == 3) {
 				$this->checkSystem($validatedData);
 			}
+			$validatedData['stepCompleted'] = ($this->currentStep < $this->maxSteps) ? $this->currentStep : ($this->maxSteps - 1);
 			// Store validated data for later use
 			$_SESSION['installation'] = array_merge($_SESSION['installation'] ?? [], $validatedData);
 		}
@@ -160,7 +168,6 @@ class Install
 		if ($this->currentStep == ($this->maxSteps - 1)) {
 			$core = new Core($_SESSION['installation']);
 			$core->doInstall();
-			// @todo no going back after this point!
 		}
 
 		// redirect user to home if the installation is done
@@ -202,13 +209,13 @@ class Install
 	private function checkRequirements(): array
 	{
 		// check whether we can read the userdata file
-		if (!@touch(dirname(__DIR__, 2).'/.~writecheck'	)) {
+		if (!@touch(dirname(__DIR__, 2) . '/.~writecheck')) {
 			// get possible owner
 			$posixusername = posix_getpwuid(posix_getuid())['name'];
 			$posixgroup = posix_getgrgid(posix_getgid())['name'];
 			$this->criticals['wrong_ownership'] = ['user' => $posixusername, 'group' => $posixgroup];
 		} else {
-			@unlink(dirname(__DIR__, 2).'/.~writecheck');
+			@unlink(dirname(__DIR__, 2) . '/.~writecheck');
 		}
 
 		// check for required extensions

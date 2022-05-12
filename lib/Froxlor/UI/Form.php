@@ -148,6 +148,9 @@ class Form
 				case 'select':
 					$fielddata['selected'] = $fielddata['value'];
 					unset($fielddata['value']);
+					if (isset($fielddata['select_mode']) && $fielddata['select_mode'] == 'multiple') {
+						$fielddata['selected'] = array_flip(explode(",", $fielddata['selected']));
+					}
 					break;
 				case 'checkbox':
 					$fielddata['checked'] = (bool)$fielddata['value'];

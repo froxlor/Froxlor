@@ -49,9 +49,13 @@
 							{{ formfields.field(id, field) }}
 						{% endfor %}
 
-						<div class="d-flex justify-content-between mt-4">
+						<div class="d-flex {% if setup.step < setup.max_steps %}justify-content-between{% else %}justify-content-end{% endif %} mt-4">
+							{% if setup.step < setup.max_steps %}
 							<a href="?step={{ setup.step - 1 }}" class="btn btn-secondary">&laquo; {{ lng('panel.back') }}</a>
 							<button type="submit" name="submit" class="btn btn-primary">{{ lng('panel.next') }} &raquo;</button>
+							{% else %}
+							<button type="submit" name="submit" class="btn btn-success">{{ lng('install.install.top') }} &raquo;</button>
+							{% endif %}
 						</div>
 					{% else %}
 						<h4 class="mb-3">{{ lng('install.dependency_check.title') }}</h4>

@@ -85,8 +85,6 @@ return [
 		'visible_columns' => Listing::getVisibleColumnsForListing('ipsandports_list', [
 			'ip',
 			'port',
-			'listen',
-			'namevirtualhost',
 			'vhostcontainer',
 			'specialsettings',
 			'servername',
