@@ -106,16 +106,18 @@ if (!is_null($month) && !is_null($year)) {
 		'mail_data' => $traf['mail_data'],
 	]);
 } else {
+	// default to the last 36 months
+	$from_date = (new DateTime)->modify("last day of last months")->setTime(23, 59, 59)->sub(new \DateInterval('P3Y'))->format('U');
 	$result_stmt = Database::prepare("
 		SELECT `month`, `year`, SUM(`http`) AS http, SUM(`ftp_up`) AS ftp_up, SUM(`ftp_down`) AS ftp_down, SUM(`mail`) AS mail
 		FROM `" . TABLE_PANEL_TRAFFIC . "`
-		WHERE `customerid` = :customerid
+		WHERE `customerid` = :customerid AND `stamp` = :fromdate
 		GROUP BY `year`, `month`
-		ORDER BY `year` DESC, `month` DESC
-		LIMIT 12
+		ORDER BY `year` ASC, `month` ASC
 	");
 	Database::pexecute($result_stmt, [
-		"customerid" => $userinfo['customerid']
+		"customerid" => $userinfo['customerid'],
+		"fromdate" => $from_date
 	]);
 	$traffic_complete['http'] = 0;
 	$traffic_complete['ftp'] = 0;

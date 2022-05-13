@@ -53,6 +53,9 @@ class HTML
 			if ((!isset($box['show_element']) || $box['show_element'] === true) && (!isset($box['required_resources']) || $box['required_resources'] == '' || (isset($userinfo[$box['required_resources']]) && ((int)$userinfo[$box['required_resources']] > 0 || $userinfo[$box['required_resources']] == '-1')))) {
 				$navigation_links = [];
 				$box_active = false;
+				if (isset($box['url']) && $box['url'] == basename($_SERVER["SCRIPT_FILENAME"])) {
+					$box_active = true;
+				}
 				foreach ($box['elements'] as $element) {
 					if ((!isset($element['show_element']) || $element['show_element'] === true) && (!isset($element['required_resources']) || $element['required_resources'] == '' || (isset($userinfo[$element['required_resources']]) && ((int)$userinfo[$element['required_resources']] > 0 || $userinfo[$element['required_resources']] == '-1')))) {
 						$target = '';
@@ -63,7 +66,10 @@ class HTML
 								$target = ' target="_blank"';
 							}
 
-							if (isset($_GET['page']) && substr_count($element['url'], "page=" . $_GET['page']) > 0 && substr_count($element['url'], basename($_SERVER["SCRIPT_FILENAME"])) > 0) {
+							if (
+								((empty($_GET['page']) && substr_count($element['url'], "page=") == 0) || (isset($_GET['page']) && substr_count($element['url'], "page=" . $_GET['page']) > 0))
+								&& substr_count($element['url'], basename($_SERVER["SCRIPT_FILENAME"])) > 0
+							) {
 								$active = true;
 								$box_active = true;
 							}

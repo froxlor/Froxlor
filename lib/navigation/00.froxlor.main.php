@@ -143,6 +143,10 @@ return [
 				[
 					'url' => 'customer_traffic.php?page=current',
 					'label' => lng('menue.traffic.current')
+				],
+				[
+					'url' => 'customer_traffic.php',
+					'label' => lng('menue.traffic.overview')
 				]
 			]
 		]

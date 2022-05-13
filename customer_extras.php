@@ -289,20 +289,27 @@ if ($page == 'overview' || $page == 'htpasswds') {
 	}
 
 	if (Settings::Get('system.backupenabled') == 1) {
-		if ($action == 'abort' && isset($_POST['send']) && $_POST['send'] == 'send') {
-			$log->logAction(FroxlorLogger::USR_ACTION, LOG_NOTICE, "customer_extras::backup - aborted scheduled backupjob");
-			try {
-				CustomerBackups::getLocal($userinfo, $_POST)->delete();
-			} catch (Exception $e) {
-				Response::dynamicError($e->getMessage());
+		if ($action == 'abort') {
+			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+				$log->logAction(FroxlorLogger::USR_ACTION, LOG_NOTICE, "customer_extras::backup - aborted scheduled backupjob");
+				try {
+					CustomerBackups::getLocal($userinfo, $_POST)->delete();
+				} catch (Exception $e) {
+					Response::dynamicError($e->getMessage());
+				}
+				Response::redirectTo($filename, [
+					'page' => $page,
+					'action' => ''
+				]);
+			} else {
+				HTML::askYesNo('extras_reallydelete_backup', $filename, [
+					'backup_job_entry' => $id,
+					'section' => 'extras',
+					'page' => $page,
+					'action' => $action
+				]);
 			}
-			Response::standardSuccess('backupaborted');
-			Response::redirectTo($filename, [
-				'page' => $page,
-				'action' => ''
-			]);
-		}
-		if ($action == '') {
+		} elseif ($action == '') {
 			$log->logAction(FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_extras::backup");
 
 			// check whether there is a backup-job for this customer

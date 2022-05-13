@@ -111,7 +111,7 @@ return [
 				'visible' => [Domain::class, 'canEditAlias']
 			],
 			'isassigned' => [
-				'icon' => 'fa-check-to-slot',
+				'icon' => 'fa fa-check-to-slot',
 				'title' => lng('domains.isassigneddomain'),
 				'visible' => [Domain::class, 'isAssigned']
 			],
