@@ -2469,6 +2469,8 @@ Yours sincerely, your administrator',
 		'phpinfoupdate' => 'Update your current PHP Version from %s to %s or higher',
 		'start_installation' => 'Start installation',
 		'check_again' => 'Reload to check again',
+		'switchmode_advanced' => 'Show advanced options',
+		'switchmode_basic' => 'Hide advanced options',
 		'dependency_check' => [
 			'title' => 'Welcome to froxlor',
 			'description' => 'We check the system for dependencies to ensure that all required php extensions and modules are enabled so that froxlor runs properly.',
