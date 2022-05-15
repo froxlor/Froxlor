@@ -83,6 +83,8 @@ class Ajax
 				return $this->getConfigDetails();
 			case 'getConfigJsonExport':
 				return $this->getConfigJsonExport();
+			case 'loadLanguageString':
+				return $this->loadLanguageString();
 			default:
 				return $this->errorResponse('Action not found!');
 		}
@@ -343,5 +345,17 @@ class Ajax
 			return $this->jsonResponse($params);
 		}
 		return $this->errorResponse('Not allowed', 403);
+	}
+
+	/**
+	 * loads a given language string by its identifier
+	 */
+	private function loadLanguageString()
+	{
+		$langid = isset($_POST['langid']) ? $_POST['langid'] : "";
+		if (preg_match('/^([a-zA-Z\.]+)$/', $langid)) {
+			return $this->jsonResponse(lng($langid));
+		}
+		return $this->errorResponse('Invalid identifier: ' . $langid, 406);
 	}
 }

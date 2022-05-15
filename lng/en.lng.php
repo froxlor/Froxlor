@@ -897,6 +897,25 @@ return [
 	'dnseditor' => [
 		'edit' => 'edit DNS',
 		'records' => 'records',
+		'notes' => [
+			'A' => '32-bit IPv4 address, used to map hostnames to an IP address of the host.',
+			'AAAA' => '128-bit IPv6 address, used to map hostnames to an IP address of the host.',
+			'CAA' => 'The CAA resource record allows a DNS domain name holder to specify one or more Certification Authorities (CAs) authorized to issue certificates for that domain.<br>Structure: <code>flag tag[issue|issuewild|iodef|contactmail|contactphone] value</code><br>Example: <code>0 issue "ca.example.net"<br>0 iodef "mailto:security@example.com"</code>',
+			'CNAME' => 'Alias of the domain name, the DNS lookup will continue by retrying the lookup with the new name. Only possible for subdomains!',
+			'DNAME' => 'Creates an alias for an entire subtree of the domain name tree',
+			'LOC' => 'Geographic location information for a domain name.<br>Structure: <code>( d1 [m1 [s1]] {"N"|"S"} d2 [m2 [s2]] {"E"|"W"} alt["m"] [siz["m"] [hp["m"] [vp["m"]]]] )</code><br>Description: <code>d1:     [0 .. 90]            (degrees latitude)
+			d2:     [0 .. 180]           (degrees longitude)
+			m1, m2: [0 .. 59]            (minutes latitude/longitude)
+			s1, s2: [0 .. 59.999]        (seconds latitude/longitude)
+			alt:    [-100000.00 .. 42849672.95] BY .01 (altitude in meters)
+			siz, hp, vp: [0 .. 90000000.00] (size/precision in meters)</code><br>Example: <code>52 22 23.000 N 4 53 32.000 E -2.00m 0.00m 10000m 10m</code>',
+			'MX' => 'Mail exchange record, maps a domain name to a mailserver for that domain.<br>Example: <code>10 mail.example.com</code><br>Note: For priority, use field above',
+			'NS' => 'Delegates a DNS zone to use the given authoritative name servers.',
+			'RP' => 'Responsible Person record<br>Structure: <code>mailbox[replace @ with a dot] txt-record-name</code><br>Example: <code>team.froxlor.org. froxlor.org.</code>',
+			'SRV' => 'Service location record, used for newer protocols instead of creating protocol-specific records such as MX.<br>Structure: <code>priority weight port target</code><br>Example: <code>0 5 5060 sipserver.example.com.</code><br>Note: For priority, use field above',
+			'SSHFP' => 'The SSHFP resource record is used to publish secure shell (SSH) key fingerprints in the DNS.<br>Structure: <code>algorithm type fingerprint</code><br>Algorithms: <code>0: reserved, 1: RSA, 2: DSA, 3: ECDSA, 4: Ed25519, 6: Ed448</code><br>Types: <code>0: reserved, 1: SHA-1, 2: SHA-256</code><br>Example: <code>2 1 123456789abcdef67890123456789abcdef67890</code>',
+			'TXT' => 'Free definable, descriptive text.'
+		]
 	],
 	'domain' => [
 		'openbasedirpath' => 'OpenBasedir-path',

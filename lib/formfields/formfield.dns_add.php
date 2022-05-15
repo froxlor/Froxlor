@@ -63,7 +63,8 @@ return [
 					'dns_content' => [
 						'label' => 'Content',
 						'type' => 'text',
-						'value' => $content
+						'value' => $content,
+						'note' => lng('dnseditor.notes.A')
 					],
 					'dns_ttl' => [
 						'label' => 'TTL',
