@@ -51,6 +51,14 @@ return [
 				'label' => lng('customer.name'),
 				'field' => 'name',
 			],
+			'email' => [
+				'label' => lng('login.email'),
+				'field' => 'email',
+			],
+			'def_language' => [
+				'label' => lng('login.profile_lng'),
+				'field' => 'def_language',
+			],
 			'customers_used' => [
 				'label' => lng('admin.customers'),
 				'field' => 'customers_used',
@@ -66,9 +74,31 @@ return [
 				'field' => 'traffic',
 				'callback' => [ProgressBar::class, 'traffic'],
 			],
+			'caneditphpsettings' => [
+				'label' => lng('admin.caneditphpsettings'),
+				'field' => 'caneditphpsettings',
+				'class' => 'text-center',
+				'callback' => [Text::class, 'boolean'],
+			],
+			'change_serversettings' => [
+				'label' => lng('admin.change_serversettings'),
+				'field' => 'change_serversettings',
+				'class' => 'text-center',
+				'callback' => [Text::class, 'boolean'],
+			],
 			'deactivated' => [
 				'label' => lng('admin.deactivated'),
 				'field' => 'deactivated',
+				'class' => 'text-center',
+				'callback' => [Text::class, 'boolean'],
+			],
+			'theme' => [
+				'label' => lng('panel.theme'),
+				'field' => 'theme',
+			],
+			'api_allowed' => [
+				'label' => lng('usersettings.api_allowed.title'),
+				'field' => 'api_allowed',
 				'class' => 'text-center',
 				'callback' => [Text::class, 'boolean'],
 			],

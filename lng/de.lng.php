@@ -659,6 +659,10 @@ return [
 		'ssl_certificate_error' => 'Fehler beim Lesen des Zertifikats für die Domain: %s',
 		'no_ssl_certificates' => 'Es wurden keine SSL-Zertifikate gefunden',
 		'isaliasdomainof' => 'Ist Aliasdomain für %s',
+		'isbinddomain' => 'Erstelle DNS-Zone',
+		'dkimenabled' => 'DKIM aktiviert',
+		'openbasedirenabled' => 'Openbasedir Einschränkung',
+		'hsts' => 'HSTS aktiviert',
 	],
 	'emails' => [
 		'description' => 'Hier können Sie Ihre E-Mail-Adressen einrichten.<br />Ein Konto ist wie Ihr Briefkasten vor der Haustür. Wenn jemand eine E-Mail an Sie schreibt, wird diese in dieses Konto gelegt.<br /><br />Die Zugangsdaten lauten wie folgt: (Die Angaben in <i>kursiver</i> Schrift sind durch die jeweiligen Einträge zu ersetzen)<br /><br />Hostname: <b><i>Domainname</i></b><br />Benutzername: <b><i>Kontoname / E-Mail-Adresse</i></b><br />Passwort: <b><i>das gewählte Passwort</i></b>',

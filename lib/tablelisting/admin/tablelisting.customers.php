@@ -60,6 +60,38 @@ return [
 				'label' => lng('customer.email'),
 				'field' => 'email',
 			],
+			'c.street' => [
+				'label' => lng('customer.street'),
+				'field' => 'street',
+			],
+			'c.zipcode' => [
+				'label' => lng('customer.zipcode'),
+				'field' => 'zipcode',
+			],
+			'c.city' => [
+				'label' => lng('customer.city'),
+				'field' => 'city',
+			],
+			'c.phone' => [
+				'label' => lng('customer.phone'),
+				'field' => 'phone',
+			],
+			'c.fax' => [
+				'label' => lng('customer.fax'),
+				'field' => 'fax',
+			],
+			'c.customernumber' => [
+				'label' => lng('customer.customernumber'),
+				'field' => 'customernumber',
+			],
+			'c.def_language' => [
+				'label' => lng('login.profile_lng'),
+				'field' => 'def_language',
+			],
+			'c.guid' => [
+				'label' => 'GUID',
+				'field' => 'guid',
+			],
 			'c.diskspace' => [
 				'label' => lng('customer.diskspace'),
 				'field' => 'diskspace',
@@ -69,6 +101,46 @@ return [
 				'label' => lng('customer.traffic'),
 				'field' => 'traffic',
 				'callback' => [ProgressBar::class, 'traffic'],
+			],
+			'c.deactivated' => [
+				'label' => lng('admin.deactivated'),
+				'field' => 'deactivated',
+				'class' => 'text-center',
+				'callback' => [Text::class, 'boolean'],
+			],
+			'c.phpenabled' => [
+				'label' => lng('admin.phpenabled'),
+				'field' => 'phpenabled',
+				'class' => 'text-center',
+				'callback' => [Text::class, 'boolean'],
+			],
+			'c.perlenabled' => [
+				'label' => lng('admin.perlenabled'),
+				'field' => 'perlenabled',
+				'class' => 'text-center',
+				'callback' => [Text::class, 'boolean'],
+			],
+			'c.dnsenabled' => [
+				'label' => lng('admin.dnsenabled'),
+				'field' => 'dnsenabled',
+				'class' => 'text-center',
+				'callback' => [Text::class, 'boolean'],
+			],
+			'c.theme' => [
+				'label' => lng('panel.theme'),
+				'field' => 'theme',
+			],
+			'c.logviewenabled' => [
+				'label' => lng('admin.logviewenabled'),
+				'field' => 'logviewenabled',
+				'class' => 'text-center',
+				'callback' => [Text::class, 'boolean'],
+			],
+			'api_allowed' => [
+				'label' => lng('usersettings.api_allowed.title'),
+				'field' => 'api_allowed',
+				'class' => 'text-center',
+				'callback' => [Text::class, 'boolean'],
 			],
 		],
 		'visible_columns' => Listing::getVisibleColumnsForListing('customer_list', [

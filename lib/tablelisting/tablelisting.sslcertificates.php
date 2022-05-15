@@ -56,13 +56,6 @@ return [
 				'label' => lng('ssl_certificates.valid_until'),
 				'field' => 'validtodate',
 			],
-			'c.letsencrypt' => [
-				'label' => lng('panel.letsencrypt'),
-				'field' => 'letsencrypt',
-				'class' => 'text-center',
-				'callback' => [Text::class, 'boolean'],
-				'visible' => Settings::Get('system.le_froxlor_enabled'),
-			],
 		],
 		'visible_columns' => Listing::getVisibleColumnsForListing('sslcertificates_list', [
 			'd.domain',
@@ -70,7 +63,6 @@ return [
 			'c.issuer',
 			'c.validfromdate',
 			'c.validtodate',
-			'c.letsencrypt',
 		]),
 		'actions' => [
 			'delete' => [

@@ -971,6 +971,10 @@ return [
 		'ssl_certificate_error' => 'Error reading certificate for domain: %s',
 		'no_ssl_certificates' => 'There are no domains with SSL certificate',
 		'isaliasdomainof' => 'Is aliasdomain for %s',
+		'isbinddomain' => 'Create DNS zone',
+		'dkimenabled' => 'DKIM enabled',
+		'openbasedirenabled' => 'Openbasedir restiction',
+		'hsts' => 'HSTS enabled',
 	],
 	'emails' => [
 		'description' => 'Here you can create and change your email addresses.<br />An account is like your letterbox in front of your house. If someone sends you an email, it will be dropped into the account.<br /><br />To download your emails use the following settings in your mailprogram: (The data in <i>italics</i> has to be changed to the equivalents you typed in!)<br />Hostname: <b><i>domainname</i></b><br />Username: <b><i>account name / e-mail address</i></b><br />password: <b><i>the password you\'ve chosen</i></b>',

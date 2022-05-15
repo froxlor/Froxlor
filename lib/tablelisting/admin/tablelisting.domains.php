@@ -60,7 +60,7 @@ return [
 				'field' => 'aliasdomain',
 			],
 			'd.documentroot' => [
-				'label' => lng('domains.documentroot'),
+				'label' => lng('customer.documentroot'),
 				'field' => 'documentroot',
 			],
 			'd.isbinddomain' => [
@@ -69,32 +69,32 @@ return [
 				'callback' => [Text::class, 'boolean'],
 			],
 			'd.isemaildomain' => [
-				'label' => lng('domains.isemaildomain'),
+				'label' => lng('admin.emaildomain'),
 				'field' => 'isemaildomain',
 				'callback' => [Text::class, 'boolean'],
 			],
 			'd.email_only' => [
-				'label' => lng('domains.email_only'),
+				'label' => lng('admin.email_only'),
 				'field' => 'email_only',
 				'callback' => [Text::class, 'boolean'],
 			],
 			'd.iswildcarddomain' => [
-				'label' => lng('domains.iswildcarddomain'),
+				'label' => lng('domains.serveraliasoption_wildcard'),
 				'field' => 'iswildcarddomain',
 				'callback' => [Text::class, 'boolean'],
 			],
 			'd.subcanemaildomain' => [
-				'label' => lng('domains.subcanemaildomain'),
+				'label' => lng('admin.subdomainforemail'),
 				'field' => 'subcanemaildomain',
 				'callback' => [Text::class, 'boolean'],
 			],
 			'd.caneditdomain' => [
-				'label' => lng('domains.caneditdomain'),
+				'label' => lng('admin.domain_editable.title'),
 				'field' => 'caneditdomain',
 				'callback' => [Text::class, 'boolean'],
 			],
 			'd.dkim' => [
-				'label' => lng('domains.dkim'),
+				'label' => lng('domains.dkimenabled'),
 				'field' => 'dkim',
 				'callback' => [Text::class, 'boolean'],
 			],
@@ -104,12 +104,12 @@ return [
 				'callback' => [Text::class, 'boolean'],
 			],
 			'd.openbasedir' => [
-				'label' => lng('domains.openbasedir'),
+				'label' => lng('domains.openbasedirenabled'),
 				'field' => 'openbasedir',
 				'callback' => [Text::class, 'boolean'],
 			],
 			'd.speciallogfile' => [
-				'label' => lng('domains.speciallogfile'),
+				'label' => lng('admin.speciallogfile.title'),
 				'field' => 'speciallogfile',
 				'callback' => [Text::class, 'boolean'],
 			],
@@ -119,17 +119,17 @@ return [
 				'callback' => [Text::class, 'boolean'],
 			],
 			'd.http2' => [
-				'label' => lng('domains.http2'),
+				'label' => lng('admin.domain_http2.title'),
 				'field' => 'http2',
 				'callback' => [Text::class, 'boolean'],
 			],
 			'd.letsencrypt' => [
-				'label' => lng('domains.letsencrypt'),
+				'label' => lng('panel.letsencrypt'),
 				'field' => 'letsencrypt',
 				'callback' => [Text::class, 'boolean'],
 			],
 			'd.deactivated' => [
-				'label' => lng('domains.deactivated'),
+				'label' => lng('admin.deactivated'),
 				'field' => 'deactivated',
 				'callback' => [Text::class, 'boolean'],
 			],

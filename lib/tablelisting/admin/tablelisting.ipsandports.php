@@ -62,22 +62,71 @@ return [
 				'class' => 'text-center',
 				'callback' => [Text::class, 'boolean']
 			],
+			'servername' => [
+				'label' => lng('admin.ipsandports.create_vhostcontainer_servername_statement'),
+				'field' => 'vhostcontainer_servername_statement',
+				'class' => 'text-center',
+				'callback' => [Text::class, 'boolean'],
+				'visible' => Settings::Get('system.webserver') == 'apache2'
+			],
 			'specialsettings' => [
 				'label' => 'Specialsettings',
 				'field' => 'specialsettings',
 				'class' => 'text-center',
 				'callback' => [Text::class, 'boolean']
 			],
-			'servername' => [
-				'label' => 'ServerName',
-				'field' => 'vhostcontainer_servername_statement',
-				'class' => 'text-center',
-				'callback' => [Text::class, 'boolean'],
-				'visible' => Settings::Get('system.webserver') == 'apache2'
-			],
 			'ssl' => [
 				'label' => 'SSL',
 				'field' => 'ssl',
+				'class' => 'text-center',
+				'callback' => [Text::class, 'boolean']
+			],
+			'ssl_cert_file' => [
+				'label' => lng('admin.ipsandports.ssl_cert_file'),
+				'field' => 'ssl_cert_file',
+				'class' => 'text-center',
+			],
+			'ssl_key_file' => [
+				'label' => lng('admin.ipsandports.ssl_key_file'),
+				'field' => 'ssl_key_file',
+				'class' => 'text-center',
+			],
+			'ssl_ca_file' => [
+				'label' => lng('admin.ipsandports.ssl_ca_file'),
+				'field' => 'ssl_ca_file',
+				'class' => 'text-center',
+			],
+			'ssl_cert_chainfile' => [
+				'label' => lng('admin.ipsandports.ssl_cert_chainfile.title'),
+				'field' => 'ssl_cert_chainfile',
+				'class' => 'text-center',
+			],
+			'docroot' => [
+				'label' => lng('admin.ipsandports.docroot.title'),
+				'field' => 'docroot',
+				'class' => 'text-center',
+			],
+			'ssl_specialsettings' => [
+				'label' => 'SSL Specialsettings',
+				'field' => 'ssl_specialsettings',
+				'class' => 'text-center',
+				'callback' => [Text::class, 'boolean']
+			],
+			'include_specialsettings' => [
+				'label' => lng('serversettings.includedefault_sslvhostconf'),
+				'field' => 'include_specialsettings',
+				'class' => 'text-center',
+				'callback' => [Text::class, 'boolean']
+			],
+			'ssl_default_vhostconf_domain' => [
+				'label' => lng('admin.ipsandports.ssl_default_vhostconf_domain'),
+				'field' => 'ssl_default_vhostconf_domain',
+				'class' => 'text-center',
+				'callback' => [Text::class, 'boolean']
+			],
+			'include_default_vhostconf_domain' => [
+				'label' => '[Domains] '. lng('serversettings.includedefault_sslvhostconf'),
+				'field' => 'include_default_vhostconf_domain',
 				'class' => 'text-center',
 				'callback' => [Text::class, 'boolean']
 			],
