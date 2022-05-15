@@ -79,8 +79,19 @@
 						{% if preflight.criticals %}
 							<p class="text-muted">{{ lng('install.critical_error') }}</p>
 							<ul>
-								{% for critical in preflight.criticals %}
-									<li>{{ critical|json_encode }}</li>
+								{% for ctype, critical in preflight.criticals %}
+									{% if ctype == 'wrong_ownership' %}
+									<li>{{ lng('install.errors.' ~ ctype, [critical.user, critical.group]) }}</li>
+									{% elseif ctype == 'missing_extensions' %}
+									<li>{{ lng('install.errors.' ~ ctype) }}<ul>
+										{% for missext in critical %}
+										<li>{{ missext }}</li>
+										{% endfor %}
+										</ul>
+									</li>
+									{% else %}
+									<li>{{ critical|raw }}</li>
+									{% endif %}
 								{% endfor %}
 							</ul>
 						{% endif %}
@@ -88,8 +99,17 @@
 						{% if preflight.suggestions %}
 							<p class="text-muted">{{ lng('install.suggestions') }}</p>
 							<ul>
-								{% for suggestion in preflight.suggestions %}
-									<li>{{ suggestion|json_encode }}</li>
+								{% for ctype, suggestion in preflight.suggestions %}
+									{% if ctype == 'missing_extensions' %}
+									<li>{{ lng('install.errors.suggestedextensions') }}<ul>
+										{% for missext in suggestion %}
+										<li>{{ missext }}</li>
+										{% endfor %}
+										</ul>
+									</li>
+									{% else %}
+									<li>{{ suggestion|raw }}</li>
+									{% endif %}
 								{% endfor %}
 							</ul>
 						{% endif %}
