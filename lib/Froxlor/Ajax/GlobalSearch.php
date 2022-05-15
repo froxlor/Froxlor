@@ -187,7 +187,7 @@ class GlobalSearch
 							'result_format' => [
 								'title' => ['self', 'getFieldFromResult'],
 								'title_args' => 'name',
-								'href' => 'admin_plans.php?page=overview&action=edit&id='
+								'href' => 'admin_plans.php?page=overview&searchfield=id&searchtext='
 							]
 						],
 						// PHP configs

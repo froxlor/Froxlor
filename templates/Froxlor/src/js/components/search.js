@@ -10,12 +10,14 @@ $(function() {
 		let dropdown = $('#search .search-results');
 		// Hide search if query is empty
 		if (!query.length) {
-			dropdown.hide().html('');
+			dropdown.html('');
+			dropdown.parent().hide();
 			return;
 		}
 		// Show notification for short search query
 		if (query.length && query.length < 3) {
-			dropdown.show().html('<li class="list-group-item text-muted">Please enter more than 2 characters</li>');
+			dropdown.html('<li class="list-group-item text-muted">Please enter more than 2 characters</li>');
+			dropdown.parent().show();
 			return;
 		}
 		// Search
@@ -29,12 +31,14 @@ $(function() {
 			success: data => {
 				// Show notification if we got no results
 				if (Object.keys(data).length === 0) {
-					dropdown.show().html('<li class="list-group-item text-muted">Nothing found!</li>');
+					dropdown.html('<li class="list-group-item text-muted">Nothing found!</li>');
+					dropdown.parent().show();
 					return;
 				}
 
 				// Clear dropdown and show results
-				dropdown.show().html('');
+				dropdown.html('');
+				dropdown.parent().show();
 				Object.keys(data).forEach(key => {
 					dropdown.append('<li class="list-group-item text-muted text-capitalize">' + key + '</li>');
 					data[key].forEach(item => {
@@ -44,7 +48,8 @@ $(function() {
 			},
 			error: function (a, b) {
 				console.log(a, b);
-				dropdown.show().html('<li class="list-group-item text-muted">Whoops we got some errors!</li>');
+				dropdown.html('<li class="list-group-item text-muted">Whoops we got some errors!</li>');
+				dropdown.parent().show();
 			}
 		});
 	});

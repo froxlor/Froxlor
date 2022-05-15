@@ -34,6 +34,10 @@ return [
 		'icon' => 'fa-brands fa-php',
 		'self_overview' => ['section' => 'phpsettings', 'page' => 'overview'],
 		'columns' => [
+			'c.id' => [
+				'label' => 'ID',
+				'field' => 'id',
+			],
 			'c.description' => [
 				'label' => lng('admin.phpsettings.description'),
 				'field' => 'description',

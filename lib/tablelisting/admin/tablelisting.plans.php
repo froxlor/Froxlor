@@ -31,6 +31,10 @@ return [
 		'title' => lng('admin.plans.plans'),
 		'icon' => 'fa-solid fa-clipboard-list',
 		'columns' => [
+			'p.id' => [
+				'label' => 'ID',
+				'field' => 'id',
+			],
 			'p.name' => [
 				'label' => lng('admin.plans.name'),
 				'field' => 'name',

@@ -23,7 +23,7 @@
 		border-radius: 0 0 $border-radius $border-radius;
 
 		.search-results {
-			width: 70vh; /** same as .search-results-box **/
+			width: 100%; /** same as .search-results-box **/
 			max-height: calc(50vh - 2px); /** same as .search-results-box - border (top/bottom) **/
 			overflow: auto;
 			border-radius: $border-radius;
