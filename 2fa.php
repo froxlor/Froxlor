@@ -34,6 +34,7 @@ use Froxlor\FroxlorTwoFactorAuth;
 use Froxlor\Settings;
 use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Response;
+use Froxlor\PhpHelper;
 
 if (Settings::Get('2fa.enabled') != '1') {
 	Response::dynamicError('2fa.2fa_not_activated');
@@ -60,22 +61,71 @@ if ($action == 'delete') {
 		'id' => $uid
 	]);
 	Response::standardSuccess('2fa.2fa_removed');
-} elseif ($action == 'add') {
+} elseif ($action == 'preadd') {
 	$type = isset($_POST['type_2fa']) ? $_POST['type_2fa'] : '0';
 
-	if ($type == 0 || $type == 1) {
-		$data = "";
-	}
-	if ($type == 2) {
+	$data = "";
+	if ($type > 0) {
 		// generate secret for TOTP
 		$data = $tfa->createSecret();
+
+		$userinfo['type_2fa'] = $type;
+		$userinfo['data_2fa'] = $data;
+		$userinfo['2fa_unsaved'] = true;
+
+		// if type = email, send a code there for confirmation
+		if ($type == 1) {
+			$code = $tfa->getCode($tfa->createSecret());
+			$_mailerror = false;
+			$mailerr_msg = "";
+			$replace_arr = [
+				'CODE' => $code
+			];
+			$mail_body = html_entity_decode(PhpHelper::replaceVariables(lng('mails.2fa.mailbody'), $replace_arr));
+
+			try {
+				$mail->Subject = lng('mails.2fa.subject');
+				$mail->AltBody = $mail_body;
+				$mail->MsgHTML(str_replace("\n", "<br />", $mail_body));
+				$mail->AddAddress($userinfo['email'], User::getCorrectUserSalutation($userinfo));
+				$mail->Send();
+			} catch (\PHPMailer\PHPMailer\Exception $e) {
+				$mailerr_msg = $e->errorMessage();
+				$_mailerror = true;
+			} catch (Exception $e) {
+				$mailerr_msg = $e->getMessage();
+				$_mailerror = true;
+			}
+
+			if ($_mailerror) {
+				Response::dynamicError($mailerr_msg);
+			}
+		}
+		UI::twig()->addGlobal('userinfo', $userinfo);
+	} else {
+		Response::dynamicError('Select one of the possible values for 2FA');
 	}
-	Database::pexecute($upd_stmt, [
-		't2fa' => $type,
-		'd2fa' => $data,
-		'id' => $uid
-	]);
-	Response::standardSuccess('2fa.2fa_added', [$filename]);
+} elseif ($action == 'add') {
+	$type = isset($_POST['type_2fa']) ? $_POST['type_2fa'] : '0';
+	$data = isset($_POST['data_2fa']) ? $_POST['data_2fa'] : '';
+	$code = isset($_POST['codevalidation']) ? $_POST['codevalidation'] : '';
+
+	// validate
+	$result = $tfa->verifyCode($data, $code, 3);
+
+	if ($result) {
+		if ($type == 0 || $type == 1) {
+			// no fixed secret for email validation, the validation code will be set on the fly
+			$data = "";
+		}
+		Database::pexecute($upd_stmt, [
+			't2fa' => $type,
+			'd2fa' => $data,
+			'id' => $uid
+		]);
+		Response::standardSuccess('2fa.2fa_added', $filename);
+	}
+	Response::dynamicError('Invalid/wrong code');
 }
 
 $log->logAction(FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed 2fa::overview");
@@ -98,7 +148,6 @@ if ($userinfo['type_2fa'] == '0') {
 }
 
 UI::view('user/2fa.html.twig', [
-	'themes' => $themes_avail,
 	'type_select_values' => $type_select_values,
 	'ga_qrcode' => $ga_qrcode
 ]);

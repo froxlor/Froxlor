@@ -4,6 +4,8 @@
 	<div class="container">
 		<div class="row justify-content-center">
 			{% if userinfo.type_2fa == 0 %}
+				{% set linkeraction = 'preadd' %}
+			{% elseif userinfo['2fa_unsaved'] is defined and userinfo['2fa_unsaved'] %}
 				{% set linkeraction = 'add' %}
 			{% else %}
 				{% set linkeraction = 'delete' %}
@@ -24,9 +26,17 @@
 
 							{% elseif userinfo.type_2fa == 2 %}
 								<label for="qrcode" class="col-form-label">{{ lng('2fa.2fa_ga_desc')|raw }}</label>
-								<img src="{{ ga_qrcode }}" class="img-fluid" alt="QRCode" id="qrcode"/>
+								<img src="{{ ga_qrcode }}" class="img-fluid" alt="QRCode" id="qrcode"/><br>
+								<span>Code: <code>{{ userinfo.data_2fa }}</code></span>
 							{% endif %}
 
+							{% if userinfo['2fa_unsaved'] is defined and userinfo['2fa_unsaved'] %}
+							<br>
+							<label for="codevalidation" class="col-form-label">{{ lng('login.2facode') }}</label>
+							<input type="text" name="codevalidation" id="codevalidation" class="form-control" required/>
+							<input type="hidden" name="type_2fa" id="type_2fa" value="{{ userinfo.type_2fa }}"/>
+							<input type="hidden" name="data_2fa" id="data_2fa" value="{{ userinfo.data_2fa }}"/>
+							{% endif %}
 						</div>
 					</div>
 
@@ -34,6 +44,9 @@
 						<input type="hidden" name="page" value="{{ page }}"/>
 						<input type="hidden" name="send" value="send"/>
 						{% if userinfo.type_2fa == 0 %}
+							<button class="btn btn-primary rounded-top-0" type="submit" name="preadd">
+								{{ lng('2fa.2fa_add') }}</button>
+						{% elseif userinfo['2fa_unsaved'] is defined and userinfo['2fa_unsaved'] %}
 							<button class="btn btn-primary rounded-top-0" type="submit" name="add">
 								{{ lng('2fa.2fa_add') }}</button>
 						{% else %}

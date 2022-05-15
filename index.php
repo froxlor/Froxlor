@@ -65,7 +65,7 @@ if ($action == '2fa_entercode') {
 	}
 	$code = isset($_POST['2fa_code']) ? $_POST['2fa_code'] : null;
 	// verify entered code
-	$tfa = new FroxlorTwoFactorAuth('Froxlor');
+	$tfa = new FroxlorTwoFactorAuth('Froxlor ' . Settings::Get('system.hostname'));
 	$result = ($_SESSION['secret_2fa'] == 'email' ? true : $tfa->verifyCode($_SESSION['secret_2fa'], $code, 3));
 	// either the code is valid when using authenticator-app, or we will select userdata by id and entered code
 	// which is temporarily stored for the customer when using email-2fa
@@ -283,7 +283,7 @@ if ($action == '2fa_entercode') {
 			// send mail if type_2fa = 1 (email)
 			if ($userinfo['type_2fa'] == 1) {
 				// generate code
-				$tfa = new FroxlorTwoFactorAuth('Froxlor');
+				$tfa = new FroxlorTwoFactorAuth('Froxlor ' . Settings::Get('system.hostname'));
 				$code = $tfa->getCode($tfa->createSecret());
 				// set code for user
 				$stmt = Database::prepare("UPDATE $table SET `data_2fa` = :d2fa WHERE `$uid` = :uid");
