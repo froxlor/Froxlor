@@ -194,6 +194,9 @@ class Listing
 		$result = [];
 		if (isset($tabellisting['columns'])) {
 			foreach ($tabellisting['columns'] as $column => $coldata) {
+				if (isset($coldata['visible']) && !$coldata['visible']) {
+					continue;
+				}
 				$result[$column] = [
 					'label' => $coldata['label'],
 					'checked' => in_array($column, $tabellisting['visible_columns']),
