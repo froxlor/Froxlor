@@ -40,4 +40,16 @@ class Email
 			]
 		];
 	}
+
+	public static function forwarderList(array $attributes)
+	{
+		$forwarders = explode(" ", $attributes['data']);
+		if (($key = array_search($attributes['fields']['email_full'], $forwarders)) !== false) {
+			unset($forwarders[$key]);
+		}
+		if (count($forwarders) > 0) {
+			return implode("<br>", $forwarders);
+		}
+		return "";
+	}
 }

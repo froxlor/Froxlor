@@ -41,7 +41,7 @@ return [
 			'm.destination' => [
 				'label' => lng('emails.forwarders'),
 				'field' => 'destination',
-				// @todo formatting
+				'callback' => [Email::class, 'forwarderList'],
 			],
 			'm.popaccountid' => [
 				'label' => lng('emails.account'),

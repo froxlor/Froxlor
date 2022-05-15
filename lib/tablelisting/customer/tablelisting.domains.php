@@ -25,6 +25,7 @@
 
 use Froxlor\UI\Callbacks\Domain;
 use Froxlor\UI\Callbacks\Style;
+use Froxlor\UI\Callbacks\Text;
 use Froxlor\UI\Listing;
 
 return [
@@ -33,9 +34,6 @@ return [
 		'icon' => 'fa-solid fa-globe',
 		'self_overview' => ['section' => 'domains', 'page' => 'domains'],
 		'columns' => [
-			'ad.id' => [
-				'field' => 'aliasdomainid'
-			],
 			'd.domain_ace' => [
 				'label' => lng('domains.domainname'),
 				'field' => 'domain_ace',
@@ -45,7 +43,36 @@ return [
 				'label' => lng('panel.path'),
 				'field' => 'documentroot',
 				'callback' => [Domain::class, 'domainTarget'],
-			]
+			],
+			'd.isbinddomain' => [
+				'label' => lng('domains.isbinddomain'),
+				'field' => 'isbinddomain',
+				'callback' => [Text::class, 'boolean'],
+			],
+			'd.isemaildomain' => [
+				'label' => lng('admin.emaildomain'),
+				'field' => 'isemaildomain',
+				'callback' => [Text::class, 'boolean'],
+			],
+			'd.email_only' => [
+				'label' => lng('admin.email_only'),
+				'field' => 'email_only',
+				'callback' => [Text::class, 'boolean'],
+			],
+			'd.iswildcarddomain' => [
+				'label' => lng('domains.serveraliasoption_wildcard'),
+				'field' => 'iswildcarddomain',
+				'callback' => [Text::class, 'boolean'],
+			],
+			'd.letsencrypt' => [
+				'label' => lng('panel.letsencrypt'),
+				'field' => 'letsencrypt',
+				'callback' => [Text::class, 'boolean'],
+			],
+			'ad.id' => [
+				'label' => lng('domains.aliasdomainid'),
+				'field' => 'aliasdomainid'
+			],
 		],
 		'visible_columns' => Listing::getVisibleColumnsForListing('domain_list', [
 			'd.domain_ace',
