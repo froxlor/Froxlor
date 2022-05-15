@@ -43,6 +43,8 @@ class Validate
 
 	const REGEX_DESC_TEXT = '/^[^\0\r\n<>]*$/';
 
+	const REGEX_YYYY_MM_DD = '/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/';
+
 	/**
 	 * Validates the given string by matching against the pattern, prints an error on failure and exits
 	 *

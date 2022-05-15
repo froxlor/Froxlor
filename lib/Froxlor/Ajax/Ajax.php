@@ -26,6 +26,7 @@
 namespace Froxlor\Ajax;
 
 use Exception;
+use DateTime;
 use Froxlor\Config\ConfigDisplay;
 use Froxlor\Config\ConfigParser;
 use Froxlor\CurrentUser;
@@ -233,7 +234,7 @@ class Ajax
 	{
 		$keyid = isset($_POST['id']) ? (int)$_POST['id'] : 0;
 		$allowed_from = isset($_POST['allowed_from']) ? $_POST['allowed_from'] : "";
-		$valid_until = isset($_POST['valid_until']) ? (int)$_POST['valid_until'] : -1;
+		$valid_until = isset($_POST['valid_until']) ? $_POST['valid_until'] : "";
 
 		// validate allowed_from
 		if (!empty($allowed_from)) {
@@ -260,8 +261,10 @@ class Ajax
 			$allowed_from = implode(",", array_unique($ip_list));
 		}
 
-		if ($valid_until <= 0 || !is_numeric($valid_until)) {
-			$valid_until = -1;
+		if (!empty($valid_until)) {
+			$valid_until_db = DateTime::createFromFormat('Y-m-d\TH:i', $valid_until)->format('U');
+		} else {
+			$valid_until_db = -1;
 		}
 
 		$upd_stmt = Database::prepare("
@@ -277,7 +280,7 @@ class Ajax
 		Database::pexecute($upd_stmt, [
 			'keyid' => $keyid,
 			'af' => $allowed_from,
-			'vu' => $valid_until,
+			'vu' => $valid_until_db,
 			'aid' => $this->userinfo['adminid'],
 			'cid' => $cid
 		]);

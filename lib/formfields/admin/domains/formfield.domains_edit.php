@@ -86,20 +86,21 @@ return [
 					'add_date' => [
 						'label' => lng('domains.add_date'),
 						'desc' => lng('panel.dateformat'),
-						'type' => 'label',
+						'type' => 'date',
+						'readonly' => true,
 						'value' => date('Y-m-d', (int)$result['add_date'])
 					],
 					'registration_date' => [
 						'label' => lng('domains.registration_date'),
 						'desc' => lng('panel.dateformat'),
-						'type' => 'text',
+						'type' => 'date',
 						'value' => $result['registration_date'],
 						'size' => 10
 					],
 					'termination_date' => [
 						'label' => lng('domains.termination_date'),
 						'desc' => lng('panel.dateformat'),
-						'type' => 'text',
+						'type' => 'date',
 						'value' => $result['termination_date'],
 						'size' => 10
 					]

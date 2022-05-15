@@ -506,7 +506,7 @@ return [
 		'allowed_from' => 'Allowed from',
 		'allowed_from_help' => 'Comma separated list of ip addresses / networks.<br>Default is empty (allow from all).',
 		'valid_until' => 'Valid until',
-		'valid_until_help' => 'Date until valid, format YYYY-MM-DD',
+		'valid_until_help' => 'Date until valid, format YYYY-MM-DDThh:mm',
 	],
 	'changepassword' => [
 		'old_password' => 'Old password',

@@ -403,7 +403,7 @@ class Domains extends ApiCommand implements ResourceEntity
 					$documentroot = $_documentroot;
 				}
 
-				$registration_date = Validate::validate($registration_date, 'registration_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', [
+				$registration_date = Validate::validate($registration_date, 'registration_date', Validate::REGEX_YYYY_MM_DD, '', [
 					'0000-00-00',
 					'0',
 					''
@@ -412,7 +412,7 @@ class Domains extends ApiCommand implements ResourceEntity
 					$registration_date = null;
 				}
 
-				$termination_date = Validate::validate($termination_date, 'termination_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', [
+				$termination_date = Validate::validate($termination_date, 'termination_date', Validate::REGEX_YYYY_MM_DD, '', [
 					'0000-00-00',
 					'0',
 					''
@@ -1291,7 +1291,7 @@ class Domains extends ApiCommand implements ResourceEntity
 				$adminid = $result['adminid'];
 			}
 
-			$registration_date = Validate::validate($registration_date, 'registration_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', [
+			$registration_date = Validate::validate($registration_date, 'registration_date', Validate::REGEX_YYYY_MM_DD, '', [
 				'0000-00-00',
 				'0',
 				''
@@ -1299,7 +1299,7 @@ class Domains extends ApiCommand implements ResourceEntity
 			if ($registration_date == '0000-00-00' || empty($registration_date)) {
 				$registration_date = null;
 			}
-			$termination_date = Validate::validate($termination_date, 'termination_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', [
+			$termination_date = Validate::validate($termination_date, 'termination_date', Validate::REGEX_YYYY_MM_DD, '', [
 				'0000-00-00',
 				'0',
 				''

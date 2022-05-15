@@ -58,9 +58,8 @@ return [
 							'title' => lng('apikeys.valid_until'),
 							'description' => lng('apikeys.valid_until_help')
 						],
-						/** @TODO datetime-picker */
-						'type' => 'text',
-						'value' => $result['valid_until'] < 0 ? "" : $result['valid_until']
+						'type' => 'datetime-local',
+						'value' => $result['valid_until'] < 0 ? "" : date('Y-m-d\TH:i', $result['valid_until'])
 					]
 				]
 			]

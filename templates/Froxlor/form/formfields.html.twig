@@ -29,7 +29,7 @@
 				{% endif %}
 				<div class="col-sm-8">
 				{% endif %}
-				{% if field.type == 'text' or field.type == 'password' or field.type == 'number' or field.type == 'file' or field.type == 'email' or field.type == 'url' or field.type == 'hidden' %}
+				{% if field.type == 'text' or field.type == 'password' or field.type == 'number' or field.type == 'file' or field.type == 'email' or field.type == 'url' or field.type == 'hidden' or field.type == 'date' or field.type == 'datetime-local' %}
 					{{ _self.input(id, field) }}
 				{% elseif field.type == 'textul' %}
 					{{ _self.input_ul(id, field) }}
