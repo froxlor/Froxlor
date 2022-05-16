@@ -34,4 +34,12 @@ $(function () {
 			}
 		});
 	});
+
+	$('#manageColumnsModal form #select-all').on('click', function () {
+		$('#manageColumnsModal form input:checkbox').prop('checked', true);
+	});
+
+	$('#manageColumnsModal form #unselect-all').on('click', function () {
+		$('#manageColumnsModal form input:checkbox').prop('checked', false);
+	});
 });

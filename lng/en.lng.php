@@ -1529,6 +1529,8 @@ Yours sincerely, your administrator',
 			'description' => 'Here you can customize the visible columns',
 		],
 		'mandatoryfield' => 'Field is mandatory',
+		'select_all' => 'Select all',
+		'unselect_all' => 'Unselect all',
 	],
 	'phpfpm' => [
 		'vhost_httpuser' => 'Local user to use for PHP-FPM (Froxlor vHost)',

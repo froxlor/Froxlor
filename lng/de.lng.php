@@ -1165,6 +1165,8 @@ Vielen Dank, Ihr Administrator',
 			'description' => 'Hier können die angezeigten Tabellenspalten angepasst werden',
 		],
 		'mandatoryfield' => 'Pflichtfeld',
+		'select_all' => 'Alle auswählen',
+		'unselect_all' => 'Alle abwählen',
 	],
 	'phpfpm' => [
 		'vhost_httpuser' => 'Lokaler Benutzer für PHP-FPM (Froxlor-Vhost)',
