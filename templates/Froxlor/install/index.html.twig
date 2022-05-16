@@ -35,15 +35,11 @@
 			<div class="card-body p-5">
 				<form method="post" action="?step={{ setup.step }}">
 					{% if setup.step > 0 %}
-						<div class="row">
-							<div class="col-12 col-md-7 order-2 order-md-1">
-								<h4 class="mb-3">{{ section.title }}</h4>
-							</div>
-							<div class="col-12 col-md-5 order-1 order-md-2">
-								<div class="form-check form-switch">
-									<input class="form-check-input" type="checkbox" id="switchInstallMode" {% if extended is defined and extended %}checked{% endif %}>
-									<label class="form-check-label" for="switchInstallMode">{% if extended is defined and extended %}{{ lng('install.switchmode_basic') }}{% else %}{{ lng('install.switchmode_advanced') }}{% endif %}</label>
-								</div>
+						<div class="d-block d-lg-flex justify-content-between align-items-center mb-3">
+							<h4 class="mb-3 mb-lg-0">{{ section.title }}</h4>
+							<div class="form-check form-switch">
+								<input class="form-check-input" type="checkbox" id="switchInstallMode" {% if extended is defined and extended %}checked{% endif %}>
+								<label class="form-check-label" for="switchInstallMode">{% if extended is defined and extended %}{{ lng('install.switchmode_basic') }}{% else %}{{ lng('install.switchmode_advanced') }}{% endif %}</label>
 							</div>
 						</div>
 						<p class="lead">{{ section.description }}</p>
