@@ -478,11 +478,41 @@ class SubDomains extends ApiCommand implements ResourceEntity
 		}
 		$result = Database::pexecute_first($result_stmt, $params, true, true);
 		if ($result) {
+			$result['domain_hascert'] = $this->getHasCertValueForDomain((int)$result['id'], (int)$result['parentdomainid']);
 			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] get subdomain '" . $result['domain'] . "'");
 			return $this->response($result);
 		}
 		$key = ($id > 0 ? "id #" . $id : "domainname '" . $domainname . "'");
 		throw new Exception("Subdomain with " . $key . " could not be found", 404);
+	}
+
+	private function getHasCertValueForDomain(int $domainid, int $parentdomainid): int
+	{
+		// nothing (ssl_global)
+		$domain_hascert = 0;
+		$ssl_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` WHERE `domainid` = :domainid");
+		Database::pexecute($ssl_stmt, array(
+			"domainid" => $domainid
+		));
+		$ssl_result = $ssl_stmt->fetch(PDO::FETCH_ASSOC);
+		if (is_array($ssl_result) && isset($ssl_result['ssl_cert_file']) && $ssl_result['ssl_cert_file'] != '') {
+			// own certificate (ssl_customer_green)
+			$domain_hascert = 1;
+		} else {
+			// check if it's parent has one set (shared)
+			if ($parentdomainid != 0) {
+				$ssl_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` WHERE `domainid` = :domainid");
+				Database::pexecute($ssl_stmt, array(
+					"domainid" => $parentdomainid
+				));
+				$ssl_result = $ssl_stmt->fetch(PDO::FETCH_ASSOC);
+				if (is_array($ssl_result) && isset($ssl_result['ssl_cert_file']) && $ssl_result['ssl_cert_file'] != '') {
+					// parent has a certificate (ssl_shared)
+					$domain_hascert = 2;
+				}
+			}
+		}
+		return $domain_hascert;
 	}
 
 	/**
@@ -922,6 +952,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 		$result = [];
 		Database::pexecute($domains_stmt, $query_fields, true, true);
 		while ($row = $domains_stmt->fetch(PDO::FETCH_ASSOC)) {
+			$row['domain_hascert'] = $this->getHasCertValueForDomain((int)$row['id'], (int)$row['parentdomainid']);
 			$result[] = $row;
 		}
 		return $this->response([

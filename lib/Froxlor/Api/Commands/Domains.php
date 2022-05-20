@@ -94,6 +94,7 @@ class Domains extends ApiCommand implements ResourceEntity
 				if ($with_ips) {
 					$row['ipsandports'] = $this->getIpsForDomain($row['id']);
 				}
+				$row['domain_hascert'] = $this->getHasCertValueForDomain((int)$row['id'], (int)$row['parentdomainid']);
 				$result[] = $row;
 			}
 			return $this->response([
@@ -882,6 +883,7 @@ class Domains extends ApiCommand implements ResourceEntity
 				if ($with_ips) {
 					$result['ipsandports'] = $this->getIpsForDomain($result['id']);
 				}
+				$result['domain_hascert'] = $this->getHasCertValueForDomain((int)$result['id'], (int)$result['parentdomainid']);
 				$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] get domain '" . $result['domain'] . "'");
 				return $this->response($result);
 			}
@@ -889,6 +891,35 @@ class Domains extends ApiCommand implements ResourceEntity
 			throw new Exception("Domain with " . $key . " could not be found", 404);
 		}
 		throw new Exception("Not allowed to execute given command.", 403);
+	}
+
+	private function getHasCertValueForDomain(int $domainid, int $parentdomainid): int
+	{
+		// nothing (ssl_global)
+		$domain_hascert = 0;
+		$ssl_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` WHERE `domainid` = :domainid");
+		Database::pexecute($ssl_stmt, array(
+			"domainid" => $domainid
+		));
+		$ssl_result = $ssl_stmt->fetch(PDO::FETCH_ASSOC);
+		if (is_array($ssl_result) && isset($ssl_result['ssl_cert_file']) && $ssl_result['ssl_cert_file'] != '') {
+			// own certificate (ssl_customer_green)
+			$domain_hascert = 1;
+		} else {
+			// check if it's parent has one set (shared)
+			if ($parentdomainid != 0) {
+				$ssl_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_DOMAIN_SSL_SETTINGS . "` WHERE `domainid` = :domainid");
+				Database::pexecute($ssl_stmt, array(
+					"domainid" => $parentdomainid
+				));
+				$ssl_result = $ssl_stmt->fetch(PDO::FETCH_ASSOC);
+				if (is_array($ssl_result) && isset($ssl_result['ssl_cert_file']) && $ssl_result['ssl_cert_file'] != '') {
+					// parent has a certificate (ssl_shared)
+					$domain_hascert = 2;
+				}
+			}
+		}
+		return $domain_hascert;
 	}
 
 	/**

@@ -37,12 +37,12 @@ class Domain
 		$linker = UI::getLinker();
 		$result = '<a href="https://' . $attributes['data'] . '" target="_blank">' . $attributes['data'] . '</a>';
 		$result .= ' (<a href="' . $linker->getLink([
-				'section' => 'customers',
-				'page' => 'customers',
-				'action' => 'su',
-				'sort' => $attributes['fields']['loginname'],
-				'id' => $attributes['fields']['customerid'],
-			]) . '">' . $attributes['fields']['loginname'] . '</a>)';
+			'section' => 'customers',
+			'page' => 'customers',
+			'action' => 'su',
+			'sort' => $attributes['fields']['loginname'],
+			'id' => $attributes['fields']['customerid'],
+		]) . '">' . $attributes['fields']['loginname'] . '</a>)';
 		return $result;
 	}
 
@@ -143,7 +143,8 @@ class Domain
 
 	public static function canEditSSL(array $attributes): bool
 	{
-		if (Settings::Get('system.use_ssl') == '1'
+		if (
+			Settings::Get('system.use_ssl') == '1'
 			&& DDomain::domainHasSslIpPort($attributes['fields']['id'])
 			&& (int)$attributes['fields']['caneditdomain'] == 1
 			&& (int)$attributes['fields']['letsencrypt'] == 0
@@ -162,5 +163,38 @@ class Domain
 	public static function isAssigned(array $attributes): bool
 	{
 		return ($attributes['fields']['parentdomainid'] == 0 && empty($attributes['fields']['domainaliasid']));
+	}
+
+	public static function editSSLButtons(array $attributes): array
+	{
+		$result = [
+			'icon' => 'fa fa-shield',
+			'title' => lng('panel.ssleditor'),
+			'href' => [
+				'section' => 'domains',
+				'page' => 'domainssleditor',
+				'action' => 'view',
+				'id' => ':id'
+			],
+		];
+
+		// specified certificate for domain
+		if ($attributes['fields']['domain_hascert'] == 1) {
+			$result['icon'] .= ' text-success';
+		}
+		// shared certificates (e.g. subdomain if domain where certificate is specified)
+		elseif ($attributes['fields']['domain_hascert'] == 2) {
+			$result['icon'] .= ' text-warning';
+			$result['title'] .= "\n".lng('panel.ssleditor_infoshared');
+		}
+		// no certificate specified, using global fallbacks (IPs and Ports or if empty SSL settings)
+		elseif ($attributes['fields']['domain_hascert'] == 0) {
+			$result['icon'] .= ' text-danger';
+			$result['title'] .= "\n".lng('panel.ssleditor_infoglobal');
+		}
+
+		$result['visible'] = [Domain::class, 'canEditSSL'];
+
+		return $result;
 	}
 }

@@ -111,15 +111,7 @@ return [
 				'visible' => [Domain::class, 'canEditDNS']
 			],
 			'domainssleditor' => [
-				'icon' => 'fa fa-shield',
-				'title' => lng('panel.ssleditor'), // @todo different certificate types by $row['domain_hascert']
-				'href' => [
-					'section' => 'domains',
-					'page' => 'domainssleditor',
-					'action' => 'view',
-					'id' => ':id'
-				],
-				'visible' => [Domain::class, 'canEditSSL']
+				'callback' => [Domain::class, 'editSSLButtons'],
 			],
 			'letsencrypt' => [
 				'icon' => 'fa fa-shield',

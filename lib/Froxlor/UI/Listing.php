@@ -160,6 +160,13 @@ class Listing
 
 		// Check each action for a href
 		foreach ($actions as $key => $action) {
+
+			// complete link built via callback
+			if (isset($action['callback']) && !empty($action['callback'])) {
+				$action = call_user_func($action['callback'], ['fields' => $item]);
+				$actions[$key] = $action;
+			}
+
 			// Call user function if visible is an array
 			if (isset($action['visible']) && is_array($action['visible'])) {
 				$actions[$key]['visible'] = call_user_func($action['visible'], ['fields' => $item]);
