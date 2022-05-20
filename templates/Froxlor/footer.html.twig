@@ -3,7 +3,7 @@
 		<img src="{{ basehref|default("") }}templates/Froxlor/assets/img/logo_grey.png" alt="Froxlor"/>
 		{% if install_mode is not defined  %}
 			{% if (get_setting('admin.show_version_login') == '1'
-				and module == 'Login') or (module != 'Login'
+				and area == 'login') or (area != 'login'
 				and get_setting('admin.show_version_footer') == '1') %}
 				{{ call_static('\\Froxlor\\Froxlor', 'getFullVersion') }}
 			{% endif %}

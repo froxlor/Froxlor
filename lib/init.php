@@ -301,6 +301,7 @@ if (!$action && isset($_SESSION)) {
 
 UI::twig()->addGlobal('action', $action);
 UI::twig()->addGlobal('page', $page);
+UI::twig()->addGlobal('area', AREA);
 
 /**
  * Initialize the mailingsystem
