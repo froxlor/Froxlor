@@ -199,7 +199,6 @@ class Core
 	/**
 	 * Create database and database-user
 	 *
-	 * @todo add exceptions?
 	 * @param object $db_root
 	 * @return void
 	 * @throws Exception
@@ -271,7 +270,6 @@ class Core
 	/**
 	 * Grant privileges to given user.
 	 *
-	 * @todo add exceptions?
 	 * @param $db_root
 	 * @param $database
 	 * @param $username
@@ -665,11 +663,13 @@ class Core
 		} elseif ($this->validatedData['webserver_backend'] == 'fcgid') {
 			$system_params[] = 'fcgid';
 		}
-		// @todo ftp,mail,smtp
 		$json_params = [
 			'distro' => $this->validatedData['distribution'],
 			'dns' => 'x',
 			'http' => $this->validatedData['webserver'],
+			'smtp' => 'postfix_dovecot',
+			'mail' => 'dovecot_postfix',
+			'ftp' => 'proftpd',
 			'system' => $system_params
 		];
 		$_SESSION['installation']['json_params'] = json_encode($json_params);

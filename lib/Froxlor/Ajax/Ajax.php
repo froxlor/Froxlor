@@ -194,7 +194,7 @@ class Ajax
 	}
 
 	/**
-	 * @todo $userinfo
+	 * search globally in various resources
 	 */
 	private function searchGlobal()
 	{

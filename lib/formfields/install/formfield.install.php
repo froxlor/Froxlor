@@ -45,14 +45,14 @@ return [
 						'placeholder' => lng('mysql.mysql_ssl_ca_file'),
 						'type' => 'text',
 						'value' => old('mysql_ssl_ca_file', null, 'installation'),
-						'advanced' => true, // @todo
+						'advanced' => true,
 					],
 					'mysql_ssl_verify_server_certificate' => [
 						'label' => lng('mysql.mysql_ssl_verify_server_certificate'),
 						'type' => 'checkbox',
 						'value' => '1',
 						'checked' => old('mysql_ssl_verify_server_certificate', '0', 'installation'),
-						'advanced' => true // @todo
+						'advanced' => true,
 					],
 					'mysql_root_user' => [
 						'label' => lng('mysql.privileged_user'),

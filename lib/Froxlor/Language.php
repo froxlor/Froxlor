@@ -36,7 +36,6 @@ class Language
 
 	/**
 	 * @return array
-	 * @fixme iso seems to be not used in froxlor?
 	 */
 	public static function getLanguages(): array
 	{

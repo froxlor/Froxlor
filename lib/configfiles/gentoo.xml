@@ -1983,7 +1983,7 @@ sql_select: SELECT password_enc FROM mail_users WHERE username='%u@%r' OR email=
 			<!-- IMAP/POP3 services -->
 			<service type="mail" title="{{lng.admin.configfiles.mail}}">
 				<!-- Dovecot -->
-				<daemon name="dovecot" version="2" title="Dovecot"
+				<daemon name="dovecot_postfix" version="2" title="Dovecot"
 					default="true">
 					<command><![CDATA[echo "net-mail/dovecot mysql managesieve sieve" >> /etc/portage/package.use/froxlor]]></command>
 					<install><![CDATA[emerge net-mail/dovecot]]></install>
