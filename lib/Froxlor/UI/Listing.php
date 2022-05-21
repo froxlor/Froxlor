@@ -55,6 +55,24 @@ class Listing
 		];
 	}
 
+	public static function formatFromArray(array $collection, array $tabellisting): array
+	{
+		return [
+			'title' => $tabellisting['title'],
+			'icon' => $tabellisting['icon'],
+			'description' => $tabellisting['description'] ?? null,
+			'icon' => $tabellisting['icon'] ?? null,
+			'table' => [
+				'th' => self::generateTableHeadings($tabellisting),
+				'tr' => self::generateTableRows($collection['data'], $tabellisting),
+			],
+			'pagination' => $collection['pagination'],
+			'empty_msg' => $tabellisting['empty_msg'] ?? null,
+			'self_overview' => $tabellisting['self_overview'] ?? [],
+			'available_columns' => self::getAvailableColumnsForListing($tabellisting)
+		];
+	}
+
 	private static function generateTableHeadings(array $tabellisting): array
 	{
 		$heading = [];
@@ -211,20 +229,6 @@ class Listing
 			}
 		}
 		return $result;
-	}
-
-	public static function formatFromArray(array $collection, array $tabellisting): array
-	{
-		return [
-			'title' => $tabellisting['title'],
-			'icon' => $tabellisting['icon'],
-			'table' => [
-				'th' => self::generateTableHeadings($tabellisting),
-				'tr' => self::generateTableRows($collection['data'], $tabellisting),
-			],
-			'pagination' => $collection['pagination'],
-			'empty_msg' => $tabellisting['empty_msg'] ?? null
-		];
 	}
 
 	/**

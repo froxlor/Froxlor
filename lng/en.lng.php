@@ -384,7 +384,6 @@ return [
 		],
 		'cronsettings' => 'Cronjob settings',
 		'integritycheck' => 'Database validation',
-		'integrityid' => '#',
 		'integrityname' => 'Name',
 		'integrityresult' => 'Result',
 		'integrityfix' => 'Fix problems automatically',

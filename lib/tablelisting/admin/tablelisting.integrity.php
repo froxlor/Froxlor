@@ -33,7 +33,7 @@ return [
 		'icon' => 'fa-solid fa-circle-check',
 		'columns' => [
 			'displayid' => [
-				'label' => lng('admin.integrityid'),
+				'label' => 'ID',
 				'field' => 'displayid'
 			],
 			'checkdesc' => [

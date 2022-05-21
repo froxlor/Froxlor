@@ -27,7 +27,6 @@ const AREA = 'admin';
 require __DIR__ . '/lib/init.php';
 
 use Froxlor\Database\Database;
-use Froxlor\FileDir;
 use Froxlor\FroxlorLogger;
 use Froxlor\Language;
 use Froxlor\PhpHelper;
@@ -62,6 +61,8 @@ if (Settings::Get('panel.sendalternativemail') == 1) {
 $file_templates = [
 	'index_html'
 ];
+
+$languages = Language::getLanguages();
 
 if ($action == '') {
 	// email templates
@@ -164,6 +165,13 @@ if ($action == '') {
 		'data' => $filetemplates,
 		'pagination' => []
 	];
+
+	if ($mail_actions_links === false) {
+		$mail_actions_links = [];
+	}
+	if ($file_actions_links === false) {
+		$file_actions_links = [];
+	}
 
 	UI::view('user/table-tpl.html.twig', [
 		'maillisting' => Listing::formatFromArray($collection_mail, $mailtpl_list_data['mailtpl_list']),

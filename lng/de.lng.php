@@ -380,7 +380,6 @@ return [
 		],
 		'cronsettings' => 'Cronjob-Einstellungen',
 		'integritycheck' => 'Datenbankpr&uuml;fung',
-		'integrityid' => '#',
 		'integrityname' => 'Name',
 		'integrityresult' => 'Ergebnis',
 		'integrityfix' => 'Probleme automatisch beheben',
