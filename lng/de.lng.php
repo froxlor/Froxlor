@@ -329,7 +329,9 @@ return [
 		'accountdata' => 'Benutzerdaten',
 		'contactdata' => 'Kontaktdaten',
 		'servicedata' => 'Dienstleistungsdaten',
-		'newerversionavailable' => 'Eine neuere Version von Froxlor wurde veröffentlicht',
+		'newerversionavailable' => 'Eine neuere Version von Froxlor wurde veröffentlicht.',
+		'newerversiondetails' => 'Jetzt auf Version <b>%s</b> aktualisieren?<br/>(Aktuelle Version ist: %s)',
+		'extractdownloadedzip' => 'Heruntergeladenes Archiv "%s" entpacken?',
 		'cron' => [
 			'cronsettings' => 'Cronjob-Einstellungen',
 			'add' => 'Cronjob hinzufügen',
@@ -2004,6 +2006,10 @@ Vielen Dank, Ihr Administrator',
 		'acmeshpath' => [
 			'title' => 'Pfad zu acme.sh',
 			'description' => 'Installationspfad zu acme.sh, inklusive acme.sh Script<br>Standard ist <b>/root/.acme.sh/acme.sh</b>',
+		],
+		'update_channel' => [
+			'title' => 'froxlor Update Kanal',
+			'description' => 'Wähle den bevorzugten Update Kanal. Standard ist "stable"',
 		],
 	],
 	'spf' => [

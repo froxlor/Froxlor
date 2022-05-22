@@ -133,6 +133,7 @@ if (Froxlor::isFroxlorVersion('0.10.99')) {
 	Settings::AddNew("panel.settings_mode", $panel_settings_mode);
 	$system_distribution = isset($_POST['system_distribution']) ? $_POST['system_distribution'] : '';
 	Settings::AddNew("system.distribution", $system_distribution);
+	Settings::AddNew("system.update_channel", 'stable');
 	Update::lastStepStatus(0);
 
 	Update::showUpdateStep("Adjusting existing settings");

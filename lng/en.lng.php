@@ -331,7 +331,9 @@ return [
 		'accountdata' => 'Account Data',
 		'contactdata' => 'Contact Data',
 		'servicedata' => 'Service Data',
-		'newerversionavailable' => 'There is a newer version of Froxlor available',
+		'newerversionavailable' => 'There is a newer version of Froxlor available.',
+		'newerversiondetails' => 'Update to version <b>%s</b> now?<br/>(Your current version is: %s)',
+		'extractdownloadedzip' => 'Extract downloaded archive "%s"?',
 		'cron' => [
 			'cronsettings' => 'Cronjob settings',
 			'add' => 'Add cronjob',
@@ -2377,6 +2379,12 @@ Yours sincerely, your administrator',
 			'title' => 'Path to acme.sh',
 			'description' => 'Set this to where acme.sh is installed to, including the acme.sh script<br>Default is <b>/root/.acme.sh/acme.sh</b>',
 		],
+		'update_channel' => [
+			'title' => 'froxlor update-channel',
+			'description' => 'Select the update channel of froxlor. Default is "stable"',
+		],
+		'uc_stable' => 'stable',
+		'uc_testing' => 'testing',
 	],
 	'spf' => [
 		'use_spf' => 'Activate SPF for domains?',

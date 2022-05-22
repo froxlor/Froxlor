@@ -108,6 +108,19 @@ return [
 					'default' => false,
 					'save_method' => 'storeSettingField'
 				],
+				'update_channel' => [
+					'label' => lng('serversettings.update_channel'),
+					'settinggroup' => 'system',
+					'varname' => 'update_channel',
+					'type' => 'select',
+					'default' => 'stable',
+					'select_var' => [
+						'stable' => lng('serversettings.uc_stable'),
+						'testing' => lng('serversettings.uc_testing')
+					],
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
+				],
 				'system_validatedomain' => [
 					'label' => lng('serversettings.validate_domain'),
 					'settinggroup' => 'system',
