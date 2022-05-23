@@ -25,17 +25,17 @@
 
 use Froxlor\Settings;
 
-return array(
-	'emails_edit' => array(
+return [
+	'emails_edit' => [
 		'title' => lng('emails.emails_edit'),
 		'image' => 'fa-solid fa-pen',
 		'self_overview' => ['section' => 'email', 'page' => 'emails'],
-		'sections' => array(
-			'section_a' => array(
+		'sections' => [
+			'section_a' => [
 				'title' => lng('emails.emails_edit'),
 				'image' => 'icons/email_edit.png',
 				'nobuttons' => true,
-				'fields' => array(
+				'fields' => [
 					'email_full' => [
 						'label' => lng('emails.emailaddress'),
 						'type' => 'label',
@@ -90,34 +90,34 @@ return array(
 							]
 						]
 					],
-					'mail_catchall' => array(
+					'mail_catchall' => [
 						'label' => lng('emails.catchall'),
 						'type' => 'label',
-						'value' => ((int)$result['iscatchall'] == 0 ? lng('panel.no'] : lng('panel')['yes')),
+						'value' => ((int)$result['iscatchall'] == 0 ? lng('panel.no') : lng('panel.yes')),
 						'next_to' => [
-	'add_link' => [
-		'type' => 'link',
-		'href' => $filename . '?page=' . $page . '&amp;action=togglecatchall&amp;id=' . $result['id'],
-		'label' => '<i class="fa-solid fa-arrow-right-arrow-left"></i> ' . lng('panel.toggle'),
-		'classes' => 'btn btn-sm btn-secondary'
-	]
-]
-					),
+							'add_link' => [
+								'type' => 'link',
+								'href' => $filename . '?page=' . $page . '&amp;action=togglecatchall&amp;id=' . $result['id'],
+								'label' => '<i class="fa-solid fa-arrow-right-arrow-left"></i> ' . lng('panel.toggle'),
+								'classes' => 'btn btn-sm btn-secondary'
+							]
+						]
+					],
 					'mail_fwds' => [
-	'label' => lng('emails.forwarders') . ' (' . $forwarders_count . ')',
-	'type' => 'itemlist',
-	'values' => $forwarders,
-	'next_to' => [
-		'add_link' => [
-			'type' => 'link',
-			'href' => $filename . '?page=forwarders&amp;action=add&amp;id=' . $result['id'],
-			'label' => lng('emails.forwarder_add'),
-			'classes' => 'btn btn-sm btn-primary'
+						'label' => lng('emails.forwarders') . ' (' . $forwarders_count . ')',
+						'type' => 'itemlist',
+						'values' => $forwarders,
+						'next_to' => [
+							'add_link' => [
+								'type' => 'link',
+								'href' => $filename . '?page=forwarders&amp;action=add&amp;id=' . $result['id'],
+								'label' => lng('emails.forwarder_add'),
+								'classes' => 'btn btn-sm btn-primary'
+							]
+						]
+					]
+				]
+			]
 		]
 	]
-]
-				)
-			)
-		)
-	)
-)
+];
