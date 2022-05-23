@@ -45,6 +45,12 @@ return [
 				'label' => lng('domains.domainname'),
 				'field' => 'domain_ace',
 			],
+			'ipsandports' => [
+				'label' => lng('admin.ipsandports.ipsandports'),
+				'field' => 'ipsandports',
+				'sortable' => false,
+				'callback' => [Domain::class, 'listIPs'],
+			],
 			'c.name' => [
 				'label' => lng('customer.name'),
 				'field' => 'customer.name',

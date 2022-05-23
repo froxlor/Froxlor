@@ -197,4 +197,16 @@ class Domain
 
 		return $result;
 	}
+
+	public static function listIPs(array $attributes): string
+	{
+		if (isset($attributes['fields']['ipsandports']) && !empty($attributes['fields']['ipsandports'])) {
+			$iplist = "";
+			foreach ($attributes['fields']['ipsandports'] as $ipport) {
+				$iplist .= $ipport['ip'].':'.$ipport['port'].'<br>';
+			}
+			return $iplist;
+		}
+		return lng('panel.empty');
+	}
 }

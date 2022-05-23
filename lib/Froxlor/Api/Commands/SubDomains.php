@@ -410,6 +410,8 @@ class SubDomains extends ApiCommand implements ResourceEntity
 	 *            optional, the domain-id
 	 * @param string $domainname
 	 *            optional, the domainname
+	 * @param bool $with_ips
+	 *            optional, default true
 	 *
 	 * @access admin, customer
 	 * @return string json-encoded array
@@ -420,6 +422,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 		$id = $this->getParam('id', true, 0);
 		$dn_optional = $id > 0;
 		$domainname = $this->getParam('domainname', $dn_optional, '');
+		$with_ips = $this->getParam('with_ips', true, true);
 
 		// convert possible idn domain to punycode
 		if (substr($domainname, 0, 4) != 'xn--') {
@@ -478,6 +481,10 @@ class SubDomains extends ApiCommand implements ResourceEntity
 		}
 		$result = Database::pexecute_first($result_stmt, $params, true, true);
 		if ($result) {
+			$result['ipsandports'] = [];
+			if ($with_ips) {
+				$result['ipsandports'] = $this->getIpsForDomain($result['id']);
+			}
 			$result['domain_hascert'] = $this->getHasCertValueForDomain((int)$result['id'], (int)$result['parentdomainid']);
 			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] get subdomain '" . $result['domain'] . "'");
 			return $this->response($result);
@@ -854,6 +861,8 @@ class SubDomains extends ApiCommand implements ResourceEntity
 	/**
 	 * lists all subdomain entries
 	 *
+	 * @param bool $with_ips
+	 *            optional, default true
 	 * @param int $customerid
 	 *            optional, admin-only, select (sub)domains of a specific customer by id
 	 * @param string $loginname
@@ -875,6 +884,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 	 */
 	public function listing()
 	{
+		$with_ips = $this->getParam('with_ips', true, true);
 		if ($this->isAdmin()) {
 			// if we're an admin, list all subdomains of all the admins customers
 			// or optionally for one specific customer identified by id or loginname
@@ -952,6 +962,10 @@ class SubDomains extends ApiCommand implements ResourceEntity
 		$result = [];
 		Database::pexecute($domains_stmt, $query_fields, true, true);
 		while ($row = $domains_stmt->fetch(PDO::FETCH_ASSOC)) {
+			$row['ipsandports'] = [];
+			if ($with_ips) {
+				$row['ipsandports'] = $this->getIpsForDomain($row['id']);
+			}
 			$row['domain_hascert'] = $this->getHasCertValueForDomain((int)$row['id'], (int)$row['parentdomainid']);
 			$result[] = $row;
 		}
@@ -959,6 +973,39 @@ class SubDomains extends ApiCommand implements ResourceEntity
 			'count' => count($result),
 			'list' => $result
 		]);
+	}
+
+	/**
+	 * get ips connected to given domain as array
+	 *
+	 * @param number $domain_id
+	 * @param bool $ssl_only
+	 *            optional, return only ssl enabled ip's, default false
+	 * @return array
+	 */
+	private function getIpsForDomain($domain_id = 0, $ssl_only = false)
+	{
+		$fields = '`ips`.ip, `ips`.port, `ips`.ssl';
+		if ($this->isAdmin()) {
+			$fields = '`ips`.*';
+		}
+		$resultips_stmt = Database::prepare("
+			SELECT " . $fields . " FROM `" . TABLE_DOMAINTOIP . "` AS `dti`, `" . TABLE_PANEL_IPSANDPORTS . "` AS `ips`
+			WHERE `dti`.`id_ipandports` = `ips`.`id` AND `dti`.`id_domain` = :domainid " . ($ssl_only ? " AND `ips`.`ssl` = '1'" : ""));
+
+		Database::pexecute($resultips_stmt, [
+			'domainid' => $domain_id
+		]);
+
+		$ipandports = [];
+		while ($rowip = $resultips_stmt->fetch(PDO::FETCH_ASSOC)) {
+			if (filter_var($rowip['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+				$rowip['is_ipv6'] = true;
+			}
+			$ipandports[] = $rowip;
+		}
+
+		return $ipandports;
 	}
 
 	/**

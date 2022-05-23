@@ -39,6 +39,12 @@ return [
 				'field' => 'domain_ace',
 				'callback' => [Domain::class, 'domainExternalLinkInfo'],
 			],
+			'ipsandports' => [
+				'label' => lng('admin.ipsandports.ipsandports'),
+				'field' => 'ipsandports',
+				'sortable' => false,
+				'callback' => [Domain::class, 'listIPs'],
+			],
 			'd.documentroot' => [
 				'label' => lng('panel.path'),
 				'field' => 'documentroot',
