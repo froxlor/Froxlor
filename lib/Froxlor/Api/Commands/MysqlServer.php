@@ -68,7 +68,9 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 	 * @param string $description
 	 *             optional, description for server
 	 * @param bool $allow_all_customers
-	 *             optional add this configuration to the list of every existing customer's allowed-fpm-config list, default is false (no)
+	 *             optional add this configuration to the list of every existing customer's allowed-mysqlserver-config list, default is false (no)
+	 * @param bool $test_connection
+	 *             optional, test connection with given credentials, default is true (yes)
 	 *
 	 * @access admin
 	 * @throws Exception
@@ -85,6 +87,8 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 		$privileged_user = $this->getParam('privileged_user');
 		$privileged_password = $this->getParam('privileged_password');
 		$description = $this->getParam('description', true, '');
+		$allow_all_customers = $this->getParam('allow_all_customers', true, 0);
+		$test_connection = $this->getParam('test_connection', true, 1);
 
 		// validation
 		$mysql_host = Validate::validate_ip2($mysql_host, true, 'invalidip', true, true, false);
@@ -102,20 +106,22 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 		$description = Validate::validate(trim($description), 'description', Validate::REGEX_DESC_TEXT, '', [], true);
 
 		// testing connection with given credentials
-		$options = array(
-			PDO::MYSQL_ATTR_INIT_COMMAND => 'SET names utf8'
-		);
-		if (!empty($mysql_ca)) {
-			$options[PDO::MYSQL_ATTR_SSL_CA] = $mysql_ca;
-			$options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = (bool) $mysql_verifycert;
-		}
+		if ($test_connection) {
+			$options = array(
+				PDO::MYSQL_ATTR_INIT_COMMAND => 'SET names utf8'
+			);
+			if (!empty($mysql_ca)) {
+				$options[PDO::MYSQL_ATTR_SSL_CA] = $mysql_ca;
+				$options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = (bool) $mysql_verifycert;
+			}
 
-		$dsn = "mysql:host=" . $mysql_host . ";port=" . $mysql_port . ";";
-		try {
-			$db_test = new \PDO($dsn, $privileged_user, $privileged_password, $options);
-			unset($db_test);
-		} catch (PDOException $e) {
-			throw new Exception("Connection to given mysql database could not be established. Error-message: " . $e->getMessage(), $e->getCode());
+			$dsn = "mysql:host=" . $mysql_host . ";port=" . $mysql_port . ";";
+			try {
+				$db_test = new \PDO($dsn, $privileged_user, $privileged_password, $options);
+				unset($db_test);
+			} catch (PDOException $e) {
+				throw new Exception("Connection to given mysql database could not be established. Error-message: " . $e->getMessage(), $e->getCode());
+			}
 		}
 
 		// get all data from lib/userdata
@@ -150,13 +156,22 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 		];
 
 		$this->generateNewUserData($sql, $sql_root);
-		return $this->response(['true']);
+
+		// last added to array
+		$newdbserver = array_key_last($sql_root);
+
+		if ($allow_all_customers) {
+			$this->addDatabaseFromCustomerAllowedList($newdbserver);
+		}
+
+		return $this->response(['dbserver' => $newdbserver]);
 	}
 
 	/**
 	 * remove a mysql-server
 	 *
-	 * @param int $dbserver number of the mysql server
+	 * @param int $dbserver
+	 * 		the number of the mysql-server
 	 *
 	 * @access admin
 	 * @throws Exception
@@ -169,7 +184,7 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 		$dbserver = (int) $this->getParam('dbserver');
 
 		if ($dbserver == 0) {
-			throw new Exception('Cannot delete first/default mysql-server');
+			throw new Exception('Cannot delete first/default mysql-server', 406);
 		}
 
 		// get all data from lib/userdata
@@ -184,6 +199,9 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 		if ($result_ms > 0) {
 			Response::standardError('mysqlserverstillhasdbs', '', true);
 		}
+
+		// when removing, remove from list of allowed_mysqlservers from any customers
+		$this->removeDatabaseFromCustomerAllowedList($dbserver);
 
 		unset($sql_root[$dbserver]);
 
@@ -216,6 +234,8 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 				} elseif (!in_array($index, $allowed_mysqls)) {
 					continue;
 				}
+				// no usernames required for non-admins
+				unset($sqlrootdata['user']);
 			}
 			// passwords will not be returned in any case for security reasons
 			unset($sqlrootdata['password']);
@@ -249,20 +269,28 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 	 * Return info about a specific mysql-server
 	 *
 	 * @param int $dbserver
-	 * 		index of the mysql-server
+	 * 		the number of the mysql-server
 	 *
-	 * @access admin
+	 * @access admin, customer
 	 * @throws Exception
 	 * @return string json-encoded array
 	 */
 	public function get()
 	{
-		$this->validateAccess();
-
 		$dbserver = (int) $this->getParam('dbserver');
 
 		// get all data from lib/userdata
 		require Froxlor::getInstallDir() . "/lib/userdata.inc.php";
+
+		// limit customer to its allowed servers
+		if ($this->isAdmin() == false) {
+			$allowed_mysqls = json_decode($this->getUserDetail('allowed_mysqlserver'), true);
+			if ($allowed_mysqls === false || empty($allowed_mysqls) || !in_array($dbserver, $allowed_mysqls)) {
+				throw new Exception("You cannot access this resource", 405);
+			}
+			// no usernames required for non-admins
+			unset($sqlrootdata['user']);
+		}
 
 		if (!isset($sql_root[$dbserver])) {
 			throw new Exception('Mysql server not found', 404);
@@ -273,11 +301,111 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 	}
 
 	/**
-	 * @TODO implement me
+	 * update given mysql-server
+	 *
+	 * @param int $dbserver
+	 *             the number of the mysql server
+	 * @param string $mysql_host
+	 *             ip/hostname of mysql-server
+	 * @param string $mysql_port
+	 *             optional, port to connect to
+	 * @param string $mysql_ca
+	 *             optional, path to certificate file
+	 * @param string $mysql_verifycert
+	 *             optional, verify server certificate
+	 * @param string $privileged_user
+	 *             privileged user on the mysql-server (must have GRANT privileges)
+	 * @param string $privileged_password
+	 *             password of privileged user
+	 * @param string $description
+	 *             optional, description for server
+	 * @param bool $allow_all_customers
+	 *             optional add this configuration to the list of every existing customer's allowed-mysqlserver-config list, default is false (no)
+	 * @param bool $test_connection
+	 *             optional, test connection with given credentials, default is true (yes)
+	 *
+	 * @access admin
+	 * @throws Exception
+	 * @return string json-encoded array
 	 */
 	public function update()
 	{
-		throw new Exception('@TODO Later', 303);
+		$this->validateAccess();
+
+		$dbserver = (int) $this->getParam('dbserver');
+
+		require Froxlor::getInstallDir() . "/lib/userdata.inc.php";
+
+		if (!isset($sql_root[$dbserver])) {
+			throw new Exception('Mysql server not found', 404);
+		}
+
+		$result = $sql_root[$dbserver];
+
+		$mysql_host = $this->getParam('mysql_host', true, $result['host']);
+		$mysql_port = $this->getParam('mysql_port', true, $result['port'] ?? 3306);
+		$mysql_ca = $this->getParam('mysql_ca', true, $result['ssl']['caFile'] ?? '');
+		$mysql_verifycert = $this->getBoolParam('mysql_verifycert', true, $result['ssl']['verifyServerCertificate'] ?? 0);
+		$privileged_user = $this->getParam('privileged_user', true, $result['user']);
+		$privileged_password = $this->getParam('privileged_password', true, $result['password']);
+		$description = $this->getParam('description', true, $result['caption']);
+		$allow_all_customers = $this->getParam('allow_all_customers', true, 0);
+		$test_connection = $this->getParam('test_connection', true, 1);
+
+		// validation
+		$mysql_host = Validate::validate_ip2($mysql_host, true, 'invalidip', true, true, false);
+		if ($mysql_host === false) {
+			$mysql_host = Validate::validateLocalHostname($mysql_host);
+			if ($mysql_host === false) {
+				$mysql_host = Validate::validateDomain($mysql_host);
+				if ($mysql_host === false) {
+					throw new Exception("Invalid mysql server ip/hostname", 406);
+				}
+			}
+		}
+		$mysql_port = Validate::validate($mysql_port, 'port', Validate::REGEX_PORT, '', [3306], true);
+		$privileged_password = Validate::validate($privileged_password, 'password', '', '', [], true);
+		$description = Validate::validate(trim($description), 'description', Validate::REGEX_DESC_TEXT, '', [], true);
+
+		// testing connection with given credentials
+		if ($test_connection) {
+			$options = array(
+				PDO::MYSQL_ATTR_INIT_COMMAND => 'SET names utf8'
+			);
+			if (!empty($mysql_ca)) {
+				$options[PDO::MYSQL_ATTR_SSL_CA] = $mysql_ca;
+				$options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = (bool) $mysql_verifycert;
+			}
+
+			$dsn = "mysql:host=" . $mysql_host . ";port=" . $mysql_port . ";";
+			try {
+				$db_test = new \PDO($dsn, $privileged_user, $privileged_password, $options);
+				unset($db_test);
+			} catch (PDOException $e) {
+				throw new Exception("Connection to given mysql database could not be established. Error-message: " . $e->getMessage(), $e->getCode());
+			}
+		}
+
+		// set new values to sql_root array
+		$sql_root[$dbserver] = [
+			'caption' => $description,
+			'host' => $mysql_host,
+			'port' => $mysql_port,
+			'user' => $privileged_user,
+			'password' => $privileged_password,
+			'ssl' => [
+				'caFile' => $mysql_ca ?? "",
+				'verifyServerCertificate' => $mysql_verifycert ?? false
+			]
+		];
+
+		$this->generateNewUserData($sql, $sql_root);
+
+		if ($allow_all_customers) {
+			$this->addDatabaseFromCustomerAllowedList($dbserver);
+		}
+
+		return $this->response(['true']);
 	}
 
 	/**
@@ -311,6 +439,46 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 			");
 			$result = Database::pexecute_first($result_stmt, ['dbserver' => $dbserver], true, true);
 			return $this->response(['count' => $result['num_dbs']]);
+		}
+	}
+
+	private function removeDatabaseFromCustomerAllowedList(int $dbserver)
+	{
+		$sel_stmt = Database::prepare("
+			SELECT customerid, allowed_mysqlserver FROM `" . TABLE_PANEL_CUSTOMERS . "`
+		");
+		Database::pexecute($sel_stmt);
+		$upd_stmt = Database::prepare("
+			UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET
+			`allowed_mysqlserver` = :am WHERE `customerid` = :cid
+		");
+		while ($customer = $sel_stmt->fetch(PDO::FETCH_ASSOC)) {
+			$allowed_mysqls = json_decode(($customer['allowed_mysqlserver'] ?? '[]'), true);
+			if (($key = array_search($dbserver, $allowed_mysqls)) !== false) {
+				unset($allowed_mysqls[$key]);
+				$allowed_mysqls = json_encode($allowed_mysqls);
+				Database::pexecute($upd_stmt, ['am' => $allowed_mysqls, 'cid' => $customer['customerid']]);
+			}
+		}
+	}
+
+	private function addDatabaseFromCustomerAllowedList(int $dbserver)
+	{
+		$sel_stmt = Database::prepare("
+			SELECT customerid, allowed_mysqlserver FROM `" . TABLE_PANEL_CUSTOMERS . "`
+		");
+		Database::pexecute($sel_stmt);
+		$upd_stmt = Database::prepare("
+			UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET
+			`allowed_mysqlserver` = :am WHERE `customerid` = :cid
+		");
+		while ($customer = $sel_stmt->fetch(PDO::FETCH_ASSOC)) {
+			$allowed_mysqls = json_decode(($customer['allowed_mysqlserver'] ?? '[]'), true);
+			if (!in_array($dbserver, $allowed_mysqls)) {
+				$allowed_mysqls[] = $dbserver;
+				$allowed_mysqls = json_encode($allowed_mysqls);
+				Database::pexecute($upd_stmt, ['am' => $allowed_mysqls, 'cid' => $customer['customerid']]);
+			}
 		}
 	}
 
