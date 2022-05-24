@@ -35,7 +35,7 @@ class MysqlServerTest extends TestCase
 		global $admin_userdata;
 
 		$data = [
-			'mysql_host' => '123456789',
+			'mysql_host' => 'abc123+',
 			'privileged_user' => 'someone',
 			'privileged_password' => 'something'
 		];
