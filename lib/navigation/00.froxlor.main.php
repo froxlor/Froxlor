@@ -183,6 +183,10 @@ return [
 					'required_resources' => 'change_serversettings'
 				],
 				[
+					'url' => 'admin_mysqlserver.php?page=mysqlserver',
+					'label' => lng('admin.mysqlserver.mysqlserver'),
+				],
+				[
 					'url' => 'admin_plans.php?page=overview',
 					'label' => lng('admin.plans.plans'),
 					'required_resources' => 'customers'

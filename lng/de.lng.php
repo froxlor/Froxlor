@@ -458,6 +458,22 @@ return [
 		'smtpsettings' => 'SMTP Einstellungen',
 		'smtptestaddr' => 'Test-Email senden an',
 		'smtptestnote' => 'Bitte beachten: Die untenstehenden Werte reflektieren die aktuellen Einstellungen und können auch nur dort angepasst werden (siehe Link in der oberen rechten Ecke)',
+		'mysqlserver' => [
+			'caption' => 'Beschreibung',
+			'user' => 'Privilegierter Benutzer',
+			'add' => 'MySQL Server hinzufügen',
+			'edit' => 'MySQL Server bearbeiten',
+			'password' => 'Passwort privilegierter Benutzer',
+			'password_emptynochange' => 'Neues Passwort, leer für keine Änderung',
+			'allowall' => [
+				'title' => 'Nutzung für aktuelle Kunden automatisch erlauben',
+				'description' => 'Ist diese Einstellung aktiv, wird die Verwendung dieses Datenbank-Servers automatisch allen aktuell existierenden Kunden-Accounts erlaubt. Diese Einstellung ist nicht permanent, kann aber mehrfach / nach Bedarf ausgeführt werden.',
+			],
+			'testconn' => 'Teste Verbindung beim Speichern',
+			'ssl' => 'Verwende SSL für die Verbindung zum Datenbank-Server',
+			'ssl_cert_file' => 'Dateipfad zur SSL certificate authority',
+			'verify_ca' => 'Aktiviere SSL Zertifikats-Verifikation',
+		],
 	],
 	'apikeys' => [
 		'no_api_keys' => 'Keine API Keys gefunden',

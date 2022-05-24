@@ -23,64 +23,67 @@
  * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
-use Froxlor\UI\Callbacks\Mysql;
-use Froxlor\UI\Callbacks\Text;
+use Froxlor\UI\Callbacks\Admin;
 use Froxlor\UI\Listing;
 
 return [
-	'mysql_list' => [
-		'title' => lng('menue.mysql.databases'),
-		'icon' => 'fa-solid fa-database',
-		'self_overview' => ['section' => 'mysql', 'page' => 'mysqls'],
+	'mysqlserver_list' => [
+		'title' => lng('admin.mysqlserver.mysqlserver'),
+		'icon' => 'fa-solid fa-server',
+		'self_overview' => ['section' => 'mysqlserver', 'page' => 'mysqlserver'],
 		'columns' => [
-			'databasename' => [
-				'label' => lng('mysql.databasename'),
-				'field' => 'databasename',
+			'id' => [
+				'label' => lng('admin.mysqlserver.dbserver'),
+				'field' => 'id',
 			],
-			'description' => [
-				'label' => lng('mysql.databasedescription'),
-				'field' => 'description'
+			'caption' => [
+				'label' => lng('admin.mysqlserver.caption'),
+				'field' => 'caption',
 			],
-			'size' => [
-				'label' => lng('mysql.size'),
-				'field' => 'size',
-				'callback' => [Text::class, 'size']
+			'host' => [
+				'label' => lng('admin.mysqlserver.host'),
+				'field' => 'host',
 			],
-			'dbserver' => [
-				'label' => lng('mysql.mysql_server'),
-				'field' => 'dbserver',
-				'callback' => [Mysql::class, 'dbserver'],
-				'visible' => $multiple_mysqlservers
-			]
+			'port' => [
+				'label' => lng('admin.mysqlserver.port'),
+				'field' => 'port',
+				'class' => 'text-center',
+			],
+			'user' => [
+				'label' => lng('admin.mysqlserver.user'),
+				'field' => 'user',
+				'visible' => [Admin::class, 'canChangeServerSettings']
+			],
 		],
-		'visible_columns' => Listing::getVisibleColumnsForListing('mysql_list', [
-			'databasename',
-			'description',
-			'size',
-			'dbserver'
+		'visible_columns' => Listing::getVisibleColumnsForListing('mysqlserver_list', [
+			'caption',
+			'host',
+			'port',
 		]),
 		'actions' => [
 			'edit' => [
 				'icon' => 'fa fa-edit',
 				'title' => lng('panel.edit'),
 				'href' => [
-					'section' => 'mysql',
-					'page' => 'mysqls',
+					'section' => 'mysqlserver',
+					'page' => 'mysqlserver',
 					'action' => 'edit',
 					'id' => ':id'
 				],
+				'visible' => [Admin::class, 'canChangeServerSettings']
 			],
 			'delete' => [
 				'icon' => 'fa fa-trash',
 				'title' => lng('panel.delete'),
 				'class' => 'btn-danger',
 				'href' => [
-					'section' => 'mysql',
-					'page' => 'mysqls',
+					'section' => 'mysqlserver',
+					'page' => 'mysqlserver',
 					'action' => 'delete',
 					'id' => ':id'
 				],
-			]
+				'visible' => [Admin::class, 'canChangeServerSettings']
+			],
 		]
 	]
 ];

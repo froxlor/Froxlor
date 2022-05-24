@@ -273,7 +273,7 @@ return [
 						'label' => lng('customer.mysqlserver'),
 						'type' => 'checkbox',
 						'values' => $mysql_servers,
-						'value' => isset($result['allowed_mysqlserver']) && !empty($result['allowed_mysqlserver']) ? json_decode($result['allowed_phpconfigs'], JSON_OBJECT_AS_ARRAY) : [],
+						'value' => isset($result['allowed_mysqlserver']) && !empty($result['allowed_mysqlserver']) ? json_decode($result['allowed_mysqlserver'], JSON_OBJECT_AS_ARRAY) : [],
 						'is_array' => 1
 					],
 					'phpenabled' => [

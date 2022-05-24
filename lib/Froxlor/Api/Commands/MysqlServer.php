@@ -91,12 +91,12 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 		$test_connection = $this->getParam('test_connection', true, 1);
 
 		// validation
-		$mysql_host = Validate::validate_ip2($mysql_host, true, 'invalidip', true, true, false);
-		if ($mysql_host === false) {
-			$mysql_host = Validate::validateLocalHostname($mysql_host);
-			if ($mysql_host === false) {
-				$mysql_host = Validate::validateDomain($mysql_host);
-				if ($mysql_host === false) {
+		$mysql_host_chk = Validate::validate_ip2($mysql_host, true, 'invalidip', true, true, false);
+		if ($mysql_host_chk === false) {
+			$mysql_host_chk = Validate::validateLocalHostname($mysql_host);
+			if ($mysql_host_chk === false) {
+				$mysql_host_chk = Validate::validateDomain($mysql_host);
+				if ($mysql_host_chk === false) {
 					throw new Exception("Invalid mysql server ip/hostname", 406);
 				}
 			}
@@ -170,8 +170,10 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 	/**
 	 * remove a mysql-server
 	 *
+	 * @param int $id
+	 *             optional the number of the mysql server (either id or dbserver must be set)
 	 * @param int $dbserver
-	 * 		the number of the mysql-server
+	 *             optional the number of the mysql server (either id or dbserver must be set)
 	 *
 	 * @access admin
 	 * @throws Exception
@@ -181,7 +183,10 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 	{
 		$this->validateAccess();
 
-		$dbserver = (int) $this->getParam('dbserver');
+		$id = (int) $this->getParam('id', true, -1);
+		$dn_optional = $id >= 0;
+		$dbserver = (int) $this->getParam('dbserver', $dn_optional, -1);
+		$dbserver = $id >= 0 ? $id : $dbserver;
 
 		if ($dbserver == 0) {
 			throw new Exception('Cannot delete first/default mysql-server', 406);
@@ -197,7 +202,7 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 		// check whether the server is in use by any customer
 		$result_ms = $this->databasesOnServer(true, $dbserver);
 		if ($result_ms > 0) {
-			Response::standardError('mysqlserverstillhasdbs', '', true);
+			throw new Exception(lng('error.mysqlserverstillhasdbs'), 406);
 		}
 
 		// when removing, remove from list of allowed_mysqlservers from any customers
@@ -239,6 +244,7 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 			}
 			// passwords will not be returned in any case for security reasons
 			unset($sqlrootdata['password']);
+			$sqlrootdata['id'] = $index;
 			$result[$index] = $sqlrootdata;
 		}
 
@@ -268,8 +274,10 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 	/**
 	 * Return info about a specific mysql-server
 	 *
+	 * @param int $id
+	 *             optional the number of the mysql server (either id or dbserver must be set)
 	 * @param int $dbserver
-	 * 		the number of the mysql-server
+	 *             optional the number of the mysql server (either id or dbserver must be set)
 	 *
 	 * @access admin, customer
 	 * @throws Exception
@@ -277,7 +285,10 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 	 */
 	public function get()
 	{
-		$dbserver = (int) $this->getParam('dbserver');
+		$id = (int) $this->getParam('id', true, -1);
+		$dn_optional = $id >= 0;
+		$dbserver = (int) $this->getParam('dbserver', $dn_optional, -1);
+		$dbserver = $id >= 0 ? $id : $dbserver;
 
 		// get all data from lib/userdata
 		require Froxlor::getInstallDir() . "/lib/userdata.inc.php";
@@ -297,14 +308,17 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 		}
 
 		unset($sql_root[$dbserver]['password']);
+		$sql_root[$dbserver]['id'] = $dbserver;
 		return $this->response($sql_root[$dbserver]);
 	}
 
 	/**
 	 * update given mysql-server
 	 *
+	 * @param int $id
+	 *             optional the number of the mysql server (either id or dbserver must be set)
 	 * @param int $dbserver
-	 *             the number of the mysql server
+	 *             optional the number of the mysql server (either id or dbserver must be set)
 	 * @param string $mysql_host
 	 *             ip/hostname of mysql-server
 	 * @param string $mysql_port
@@ -332,7 +346,10 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 	{
 		$this->validateAccess();
 
-		$dbserver = (int) $this->getParam('dbserver');
+		$id = (int) $this->getParam('id', true, -1);
+		$dn_optional = $id >= 0;
+		$dbserver = (int) $this->getParam('dbserver', $dn_optional, -1);
+		$dbserver = $id >= 0 ? $id : $dbserver;
 
 		require Froxlor::getInstallDir() . "/lib/userdata.inc.php";
 
@@ -342,7 +359,11 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 
 		$result = $sql_root[$dbserver];
 
-		$mysql_host = $this->getParam('mysql_host', true, $result['host']);
+		if ($dbserver == 0) {
+			$mysql_host = $result['host'];
+		} else {
+			$mysql_host = $this->getParam('mysql_host', true, $result['host']);
+		}
 		$mysql_port = $this->getParam('mysql_port', true, $result['port'] ?? 3306);
 		$mysql_ca = $this->getParam('mysql_ca', true, $result['ssl']['caFile'] ?? '');
 		$mysql_verifycert = $this->getBoolParam('mysql_verifycert', true, $result['ssl']['verifyServerCertificate'] ?? 0);
@@ -353,12 +374,12 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 		$test_connection = $this->getParam('test_connection', true, 1);
 
 		// validation
-		$mysql_host = Validate::validate_ip2($mysql_host, true, 'invalidip', true, true, false);
-		if ($mysql_host === false) {
-			$mysql_host = Validate::validateLocalHostname($mysql_host);
-			if ($mysql_host === false) {
-				$mysql_host = Validate::validateDomain($mysql_host);
-				if ($mysql_host === false) {
+		$mysql_host_chk = Validate::validate_ip2($mysql_host, true, 'invalidip', true, true, false);
+		if ($mysql_host_chk === false) {
+			$mysql_host_chk = Validate::validateLocalHostname($mysql_host);
+			if ($mysql_host_chk === false) {
+				$mysql_host_chk = Validate::validateDomain($mysql_host);
+				if ($mysql_host_chk === false) {
 					throw new Exception("Invalid mysql server ip/hostname", 406);
 				}
 			}
@@ -366,6 +387,14 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 		$mysql_port = Validate::validate($mysql_port, 'port', Validate::REGEX_PORT, '', [3306], true);
 		$privileged_password = Validate::validate($privileged_password, 'password', '', '', [], true);
 		$description = Validate::validate(trim($description), 'description', Validate::REGEX_DESC_TEXT, '', [], true);
+
+		if ($mysql_host != $result['host']) {
+			// check whether the server is in use by any customer
+			$result_ms = $this->databasesOnServer(true, $dbserver);
+			if ($result_ms > 0) {
+				throw new Exception("Unable to update mysql-host as there are still databases on it", 406);
+			}
+		}
 
 		// testing connection with given credentials
 		if ($test_connection) {
@@ -491,6 +520,12 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 			['sql' => $sql, 'sql_root' => $sql_root],
 			'automatically generated userdata.inc.php for froxlor'
 		);
+		chmod(Froxlor::getInstallDir() . "/lib/userdata.inc.php", 0700);
 		file_put_contents(Froxlor::getInstallDir() . "/lib/userdata.inc.php", $content);
+		chmod(Froxlor::getInstallDir() . "/lib/userdata.inc.php", 0400);
+		clearstatcache();
+		if (function_exists('opcache_invalidate')) {
+			@opcache_invalidate(Froxlor::getInstallDir() . "/lib/userdata.inc.php", true);
+		}
 	}
 }

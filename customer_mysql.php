@@ -55,9 +55,7 @@ if ($page == 'overview' || $page == 'mysqls') {
 	if ($action == '') {
 		$log->logAction(FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed customer_mysql::mysqls");
 
-		$dbservers_stmt = Database::query("SELECT COUNT(DISTINCT `dbserver`) as numservers FROM `" . TABLE_PANEL_DATABASES . "`");
-		$dbserver = $dbservers_stmt->fetch(PDO::FETCH_ASSOC);
-		$count_mysqlservers = $dbserver['numservers'];
+		$multiple_mysqlservers = count(json_decode($userinfo['allowed_mysqlserver'] ?? '[]', true)) > 1;
 
 		try {
 			$mysql_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/customer/tablelisting.mysqls.php';
