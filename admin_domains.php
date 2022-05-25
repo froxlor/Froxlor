@@ -148,7 +148,7 @@ if ($page == 'domains' || $page == 'overview') {
 			$customers = \Froxlor\UI\HTML::makeoption($lng['panel']['please_choose'], 0, 0, true);
 			$result_customers_stmt = Database::prepare("
 					SELECT `customerid`, `loginname`, `name`, `firstname`, `company`
-					FROM `" . TABLE_PANEL_CUSTOMERS . "` " . ($userinfo['customers_see_all'] ? '' : " WHERE `adminid` = '" . (int) $userinfo['adminid'] . "' ") . " ORDER BY COALESCE(NULLIF(`name`,''), `company`) ASC");
+					FROM `" . TABLE_PANEL_CUSTOMERS . "` " . ($userinfo['customers_see_all'] ? '' : " WHERE `adminid` = :adminid ") . " ORDER BY COALESCE(NULLIF(`name`,''), `company`) ASC");
 			$params = array();
 			if ($userinfo['customers_see_all'] == '0') {
 				$params['adminid'] = $userinfo['adminid'];
