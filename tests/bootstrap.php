@@ -183,3 +183,4 @@ Settings::Set('system.dnsenabled', '1', true);
 Settings::Set('system.dns_server', 'PowerDNS', true);
 Settings::Set('phpfpm.enabled', '1', true);
 Settings::Set('phpfpm.enabled_ownvhost', '1', true);
+Settings::Set('system.update_channel', 'testing', true);
