@@ -58,8 +58,6 @@ class Froxlor extends ApiCommand
 	 */
 	public function checkUpdate()
 	{
-		define('UPDATE_URI', "https://version.froxlor.org/Froxlor/api/" . $this->version);
-
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
 
 			// log our actions
@@ -71,10 +69,10 @@ class Froxlor extends ApiCommand
 			if ($aucheck == 1) {
 				// anzeige über version-status mit ggfls. formular
 				// zum update schritt #1 -> download
-				$text = 'There is a newer version available: "' . AutoUpdate::getFromResult('version') . '" (Your current version is: ' . $this->version . ')';
+				$text = 'There is a newer ' . (Settings::Get('system.update_channel') == 'testing' ? 'testing ' : '') . 'version available: "' . AutoUpdate::getFromResult('version') . '" (Your current version is: ' . $this->version . ')';
 				return $this->response([
 					'isnewerversion' => (int) !AutoUpdate::getFromResult('has_latest'),
-					'version' => AutoUpdate::getFromResult('version'),
+					'version' => $this->version,
 					'message' => $text,
 					'link' => AutoUpdate::getFromResult('url'),
 					'additional_info' => AutoUpdate::getFromResult('info')
@@ -103,7 +101,7 @@ class Froxlor extends ApiCommand
 					'version' => $this->version,
 					'message' => '',
 					'link' => '',
-					'additional_info' => lng('update.noupdatesavail')
+					'additional_info' => lng('update.noupdatesavail', [(Settings::Get('system.update_channel') == 'testing' ? lng('serversettings.uc_testing') : '')])
 				]);
 			}
 		}

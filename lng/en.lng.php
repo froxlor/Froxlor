@@ -2499,7 +2499,7 @@ Yours sincerely, your administrator',
 			'part_a' => 'The Froxlor files have been updated to version <strong>%s</strong>. The installed version is <strong>%s</strong>.',
 			'part_b' => '<br /><br />Customers will not be able to log in until the update has been finished.<br /><strong>Proceed?</strong>',
 		],
-		'noupdatesavail' => 'You already have the latest Froxlor version.',
+		'noupdatesavail' => 'You already have the latest %sversion of Froxlor installed.',
 		'description' => 'Running database updates for your froxlor installation',
 	],
 	'usersettings' => [

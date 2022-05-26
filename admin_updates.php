@@ -135,6 +135,6 @@ if ($page == 'overview') {
 			'alert_msg' => $ui_text . $message
 		]);
 	} else {
-		Response::standardSuccess('update.noupdatesavail');
+		Response::standardSuccess('update.noupdatesavail', [(Settings::Get('system.update_channel') == 'testing' ? lng('serversettings.uc_testing') : '')]);
 	}
 }
