@@ -23,6 +23,7 @@
  * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
+use Froxlor\Language;
 use Froxlor\Settings;
 use Froxlor\System\Crypt;
 
@@ -76,7 +77,7 @@ return [
 					'def_language' => [
 						'label' => lng('login.language'),
 						'type' => 'select',
-						'select_var' => $languages,
+						'select_var' => Language::getLanguages(),
 						'selected' => Settings::Get('panel.standardlanguage')
 					],
 					'api_allowed' => [
