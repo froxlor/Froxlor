@@ -1,4 +1,5 @@
 install/update.log
+install/*.json
 lib/userdata.inc.php
 lib/userdata.inc.php.bak
 logs/*
