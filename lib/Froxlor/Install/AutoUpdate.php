@@ -33,7 +33,7 @@ use Froxlor\Http\HttpClient;
 class AutoUpdate
 {
 	// define update-uri
-	const UPDATE_URI = "https://version.froxlor.org/froxlor/api2/";
+	const UPDATE_URI = "https://version.froxlor.org/froxlor/api/v2/";
 	const RELEASE_URI = "https://autoupdate.froxlor.org/froxlor-{version}.zip";
 	const CHECKSUM_URI = "https://autoupdate.froxlor.org/froxlor-{version}.zip.sha256";
 

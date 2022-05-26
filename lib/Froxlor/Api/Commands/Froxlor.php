@@ -31,12 +31,11 @@ use Froxlor\Cron\TaskId;
 use Froxlor\Database\Database;
 use Froxlor\Database\IntegrityCheck;
 use Froxlor\FroxlorLogger;
-use Froxlor\Http\HttpClient;
+use Froxlor\Install\AutoUpdate;
 use Froxlor\Settings;
 use Froxlor\SImExporter;
 use Froxlor\System\Cronjob;
 use Froxlor\System\Crypt;
-use Froxlor\UI\Response;
 use PDO;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -62,74 +61,51 @@ class Froxlor extends ApiCommand
 		define('UPDATE_URI', "https://version.froxlor.org/Froxlor/api/" . $this->version);
 
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
-			if (function_exists('curl_version')) {
-				// log our actions
-				$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] checking for updates");
 
-				// check for new version
-				try {
-					$latestversion = HttpClient::urlGet(UPDATE_URI, true, 3);
-				} catch (Exception $e) {
-					$latestversion = \Froxlor\Froxlor::getVersion() . "|Version-check currently unavailable, please try again later";
-				}
-				$latestversion = explode('|', $latestversion);
+			// log our actions
+			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] checking for updates");
 
-				if (is_array($latestversion) && count($latestversion) >= 1) {
-					$_version = $latestversion[0];
-					$_message = isset($latestversion[1]) ? $latestversion[1] : '';
-					$_link = isset($latestversion[2]) ? $latestversion[2] : '';
+			// check for new version
+			$aucheck = AutoUpdate::checkVersion();
 
-					// add the branding so debian guys are not gettings confused
-					// about their version-number
-					$version_label = $_version . $this->branding;
-					$version_link = $_link;
-					$message_addinfo = $_message;
-
-					// not numeric -> error-message
-					if (!preg_match('/^((\d+\\.)(\d+\\.)(\d+\\.)?(\d+)?(\-(svn|dev|rc)(\d+))?)$/', $_version)) {
-						// check for customized version to not output
-						// "There is a newer version of froxlor" besides the error-message
-						$isnewerversion = -1;
-					} elseif (\Froxlor\Froxlor::versionCompare2($this->version, $_version) == -1) {
-						// there is a newer version - yay
-						$isnewerversion = 1;
+			if ($aucheck == 1) {
+				// anzeige über version-status mit ggfls. formular
+				// zum update schritt #1 -> download
+				$text = 'There is a newer version available: "' . AutoUpdate::getFromResult('version') . '" (Your current version is: ' . $this->version . ')';
+				return $this->response([
+					'isnewerversion' => (int) !AutoUpdate::getFromResult('has_latest'),
+					'version' => AutoUpdate::getFromResult('version'),
+					'message' => $text,
+					'link' => AutoUpdate::getFromResult('url'),
+					'additional_info' => AutoUpdate::getFromResult('info')
+				]);
+			} else if ($aucheck < 0 || $aucheck > 1) {
+				// errors
+				if ($aucheck < 0) {
+					$errmsg = AutoUpdate::getLastError();
+				} else {
+					if ($aucheck == 3) {
+						$errmsg = lng('error.customized_version');
 					} else {
-						// nothing new
-						$isnewerversion = 0;
-					}
-
-					// anzeige über version-status mit ggfls. formular
-					// zum update schritt #1 -> download
-					if ($isnewerversion == 1) {
-						$text = 'There is a newer version available: "' . $_version . '" (Your current version is: ' . $this->version . ')';
-						return $this->response([
-							'isnewerversion' => $isnewerversion,
-							'version' => $_version,
-							'message' => $text,
-							'link' => $version_link,
-							'additional_info' => $message_addinfo
-						]);
-					} elseif ($isnewerversion == 0) {
-						// all good
-						return $this->response([
-							'isnewerversion' => $isnewerversion,
-							'version' => $version_label,
-							'message' => "",
-							'link' => $version_link,
-							'additional_info' => $message_addinfo
-						]);
-					} else {
-						Response::standardError('customized_version', '', true);
+						$errmsg = lng('error.autoupdate_' . $aucheck);
 					}
 				}
+				return $this->response([
+					'isnewerversion' => 0,
+					'version' => $this->version,
+					'message' => $errmsg,
+					'link' => '',
+					'additional_info' => ''
+				]);
+			} else {
+				return $this->response([
+					'isnewerversion' => 0,
+					'version' => $this->version,
+					'message' => lng('update.noupdatesavail'),
+					'link' => '',
+					'additional_info' => ''
+				]);
 			}
-			return $this->response([
-				'isnewerversion' => 0,
-				'version' => $this->version . $this->branding,
-				'message' => 'Version-check not available due to missing php-curl extension',
-				'link' => UPDATE_URI . '/pretty',
-				'additional_info' => ""
-			], 502);
 		}
 		throw new Exception("Not allowed to execute given command.", 403);
 	}
