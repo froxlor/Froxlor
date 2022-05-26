@@ -101,7 +101,7 @@ class Froxlor extends ApiCommand
 					'version' => $this->version,
 					'message' => '',
 					'link' => '',
-					'additional_info' => lng('update.noupdatesavail', [(Settings::Get('system.update_channel') == 'testing' ? lng('serversettings.uc_testing') : '')])
+					'additional_info' => lng('update.noupdatesavail', [(Settings::Get('system.update_channel') == 'testing' ? lng('serversettings.uc_testing') . ' ' : '')])
 				]);
 			}
 		}
