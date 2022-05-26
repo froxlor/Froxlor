@@ -93,17 +93,17 @@ class Froxlor extends ApiCommand
 				return $this->response([
 					'isnewerversion' => 0,
 					'version' => $this->version,
-					'message' => $errmsg,
+					'message' => '',
 					'link' => '',
-					'additional_info' => ''
+					'additional_info' => $errmsg
 				]);
 			} else {
 				return $this->response([
 					'isnewerversion' => 0,
 					'version' => $this->version,
-					'message' => lng('update.noupdatesavail'),
+					'message' => '',
 					'link' => '',
-					'additional_info' => ''
+					'additional_info' => lng('update.noupdatesavail')
 				]);
 			}
 		}

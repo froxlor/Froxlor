@@ -33,6 +33,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Froxlor\Database\Database;
+use Froxlor\Froxlor;
 
 final class RunApiCommand extends CliCommand
 {
@@ -52,6 +53,8 @@ final class RunApiCommand extends CliCommand
 		$result = self::SUCCESS;
 
 		$result = $this->validateRequirements($input, $output);
+
+		require Froxlor::getInstallDir() . '/lib/functions.php';
 
 		if ($result == self::SUCCESS) {
 			try {
