@@ -207,6 +207,7 @@ return [
 						'value' => lng('panel.nosslipsavailable')
 					],
 					'ssl_ipandport' => [
+						'visible' => !empty($ssl_ipsandports),
 						'label' => lng('domains.ipandport_ssl_multi.title'),
 						'desc' => lng('domains.ipandport_multi.description'),
 						'type' => 'checkbox',
@@ -303,7 +304,7 @@ return [
 						'checked' => false
 					],
 					'hsts_maxage' => [
-						'visible' => $ssl_ipsandports != '',
+						'visible' => !empty($ssl_ipsandports),
 						'label' => lng('admin.domain_hsts_maxage.title'),
 						'desc' => lng('admin.domain_hsts_maxage.description'),
 						'type' => 'number',

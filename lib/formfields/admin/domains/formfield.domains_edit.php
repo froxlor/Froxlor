@@ -234,6 +234,7 @@ return [
 						'value' => lng('panel.nosslipsavailable')
 					],
 					'ssl_ipandport' => [
+						'visible' => !empty($ssl_ipsandports),
 						'label' => lng('domains.ipandport_ssl_multi.title'),
 						'desc' => lng('domains.ipandport_multi.description'),
 						'type' => 'checkbox',
@@ -313,7 +314,7 @@ return [
 						'value' => !empty($result['tlsv13_cipher_list']) ? $result['tlsv13_cipher_list'] : Settings::Get('system.tlsv13_cipher_list')
 					],
 					'ssl_specialsettings' => [
-						'visible' => $userinfo['change_serversettings'] == '1',
+						'visible' => !empty($ssl_ipsandports) && $userinfo['change_serversettings'] == '1',
 						'label' => lng('admin.ownsslvhostsettings'),
 						'desc' => lng('serversettings.default_vhostconf.description'),
 						'type' => 'textarea',
@@ -322,6 +323,7 @@ return [
 						'value' => $result['ssl_specialsettings']
 					],
 					'include_specialsettings' => [
+						'visible' => !empty($ssl_ipsandports) && $userinfo['change_serversettings'] == '1',
 						'label' => lng('serversettings.includedefault_sslvhostconf'),
 						'type' => 'checkbox',
 						'value' => '1',
