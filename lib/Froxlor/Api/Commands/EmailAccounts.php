@@ -222,6 +222,7 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 					'NAME' => $customer['name'],
 					'FIRSTNAME' => $customer['firstname'],
 					'COMPANY' => $customer['company'],
+					'USERNAME' => $customer['loginname'],
 					'CUSTOMER_NO' => $customer['customernumber']
 				];
 

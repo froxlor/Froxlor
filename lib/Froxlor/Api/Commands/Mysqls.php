@@ -162,6 +162,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 					'NAME' => $userinfo['name'],
 					'FIRSTNAME' => $userinfo['firstname'],
 					'COMPANY' => $userinfo['company'],
+					'USERNAME' => $userinfo['loginname'],
 					'CUSTOMER_NO' => $userinfo['customernumber'],
 					'DB_NAME' => $username,
 					'DB_PASS' => htmlentities(htmlentities($password)),

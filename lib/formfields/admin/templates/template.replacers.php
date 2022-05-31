@@ -46,8 +46,7 @@ return [
 		],
 		[
 			'var' => 'USERNAME',
-			'description' => lng('admin.templates.USERNAME'),
-			'visible' => $template == 'createcustomer' || $template == 'password_reset'
+			'description' => lng('admin.templates.USERNAME')
 		],
 		[
 			'var' => 'PASSWORD',

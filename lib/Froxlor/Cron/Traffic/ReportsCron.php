@@ -59,7 +59,7 @@ class ReportsCron extends FroxlorCron
 		if ((int)Settings::Get('system.report_trafficmax') > 0) {
 			// Warn the customers at xx% traffic-usage
 			$result_stmt = Database::prepare("
-				SELECT `c`.`customerid`, `c`.`customernumber`, `c`.`adminid`, `c`.`name`, `c`.`firstname`,
+				SELECT `c`.`customerid`, `c`.`loginname`, `c`.`customernumber`, `c`.`adminid`, `c`.`name`, `c`.`firstname`,
 				`c`.`company`, `c`.`traffic`, `c`.`email`, `c`.`def_language`,
 				`a`.`name` AS `adminname`, `a`.`email` AS `adminmail`,
 				(SELECT SUM(`t`.`http` + `t`.`ftp_up` + `t`.`ftp_down` + `t`.`mail`)
@@ -90,6 +90,7 @@ class ReportsCron extends FroxlorCron
 						'NAME' => $rep_userinfo['name'],
 						'FIRSTNAME' => $rep_userinfo['firstname'],
 						'COMPANY' => $rep_userinfo['company'],
+						'USERNAME' => $rep_userinfo['loginname'],
 						'CUSTOMER_NO' => $rep_userinfo['customernumber'],
 						'TRAFFIC' => round(($row['traffic'] / 1024), 2),
 						/* traffic is stored in KB, template uses MB */
@@ -332,7 +333,7 @@ class ReportsCron extends FroxlorCron
 			 * report about diskusage for customers
 			 */
 			$result_stmt = Database::query("
-				SELECT `c`.`customerid`, `c`.`customernumber`, `c`.`adminid`, `c`.`name`, `c`.`firstname`,
+				SELECT `c`.`customerid`, `c`.`loginname`, `c`.`customernumber`, `c`.`adminid`, `c`.`name`, `c`.`firstname`,
 				`c`.`company`, `c`.`diskspace`, `c`.`diskspace_used`, `c`.`email`, `c`.`def_language`,
 				`a`.`name` AS `adminname`, `a`.`email` AS `adminmail`
 				FROM `" . TABLE_PANEL_CUSTOMERS . "` AS `c`
@@ -356,6 +357,7 @@ class ReportsCron extends FroxlorCron
 						'NAME' => $rep_userinfo['name'],
 						'FIRSTNAME' => $rep_userinfo['firstname'],
 						'COMPANY' => $rep_userinfo['company'],
+						'USERNAME' => $rep_userinfo['loginname'],
 						'CUSTOMER_NO' => $rep_userinfo['customernumber'],
 						'DISKAVAILABLE' => round(($row['diskspace'] / 1024), 2),
 						/* traffic is stored in KB, template uses MB */
