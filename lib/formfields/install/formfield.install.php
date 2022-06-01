@@ -180,7 +180,7 @@ return [
 						'type' => 'select',
 						'mandatory' => true,
 						'select_var' => ['apache24' => 'Apache 2.4', 'nginx' => 'Nginx', 'lighttpd' => 'LigHTTPd'],
-						'value' => old('webserver', $guessedWebserver, 'installation'),
+						'selected' => old('webserver', $guessedWebserver, 'installation'),
 					],
 					'webserver_backend' => [
 						'label' => lng('install.system.phpbackend'),

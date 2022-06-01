@@ -32,6 +32,7 @@ use Froxlor\Cli\ConfigServices;
 use Froxlor\Cli\PhpSessionclean;
 use Froxlor\Cli\SwitchServerIp;
 use Froxlor\Cli\UpdateCommand;
+use Froxlor\Cli\InstallCommand;
 use Froxlor\Froxlor;
 
 // validate correct php version
@@ -53,4 +54,5 @@ $application->add(new ConfigServices());
 $application->add(new PhpSessionclean());
 $application->add(new SwitchServerIp());
 $application->add(new UpdateCommand());
+$application->add(new InstallCommand());
 $application->run();

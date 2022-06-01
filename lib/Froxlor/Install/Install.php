@@ -54,7 +54,7 @@ class Install
 		'mod_php' => 'mod_php (not recommended)',
 	];
 
-	public function __construct()
+	public function __construct(array $cliData = [])
 	{
 		// get all supported OS
 		// show list of available distro's
@@ -78,28 +78,30 @@ class Install
 		$this->formfield = require dirname(__DIR__, 3) . '/lib/formfields/install/formfield.install.php';
 
 		// set actual step
-		$this->currentStep = Request::get('step', 0);
-		$this->extendedView = Request::get('extended', 0);
+		$this->currentStep = $cliData['step'] ?? Request::get('step', 0);
+		$this->extendedView = $cliData['extended'] ?? Request::get('extended', 0);
 		$this->maxSteps = count($this->formfield['install']['sections']);
 
 		// set actual php version and extensions
 		$this->phpVersion = phpversion();
 		$this->loadedExtensions = get_loaded_extensions();
 
-		// set global variables
-		UI::twig()->addGlobal('install_mode', true);
-		UI::twig()->addGlobal('basehref', '../');
+		if (empty($cliData)) {
+			// set global variables
+			UI::twig()->addGlobal('install_mode', true);
+			UI::twig()->addGlobal('basehref', '../');
 
-		// unset session if user goes back to step 0
-		if (isset($_SESSION['installation']) && $this->currentStep == 0) {
-			unset($_SESSION['installation']);
-		}
+			// unset session if user goes back to step 0
+			if (isset($_SESSION['installation']) && $this->currentStep == 0) {
+				unset($_SESSION['installation']);
+			}
 
-		// check for url manipulation or wrong step
-		if ((isset($_SESSION['installation']['stepCompleted']) && ($this->currentStep + 1) > ($_SESSION['installation']['stepCompleted'] ?? 0))
-			|| (!isset($_SESSION['installation']['stepCompleted']) && $this->currentStep > 0)
-		) {
-			$this->currentStep = isset($_SESSION['installation']['stepCompleted']) ? $_SESSION['installation']['stepCompleted'] + 1 : 1;
+			// check for url manipulation or wrong step
+			if ((isset($_SESSION['installation']['stepCompleted']) && ($this->currentStep + 1) > ($_SESSION['installation']['stepCompleted'] ?? 0))
+				|| (!isset($_SESSION['installation']['stepCompleted']) && $this->currentStep > 0)
+			) {
+				$this->currentStep = isset($_SESSION['installation']['stepCompleted']) ? $_SESSION['installation']['stepCompleted'] + 1 : 1;
+			}
 		}
 	}
 
@@ -206,7 +208,7 @@ class Install
 	/**
 	 * @return array
 	 */
-	private function checkRequirements(): array
+	public function checkRequirements(): array
 	{
 		// check whether we can read the userdata file
 		if (!@touch(dirname(__DIR__, 2) . '/.~writecheck')) {
@@ -286,7 +288,7 @@ class Install
 	/**
 	 * @throws Exception
 	 */
-	private function checkSystem(array $validatedData): void
+	public function checkSystem(array $validatedData): void
 	{
 		$serveripv4 = $validatedData['serveripv4'] ?? '';
 		$serveripv6 = $validatedData['serveripv6'] ?? '';
@@ -312,7 +314,7 @@ class Install
 	/**
 	 * @throws Exception
 	 */
-	private function checkAdminUser(array $validatedData): void
+	public function checkAdminUser(array $validatedData): void
 	{
 		$name = $validatedData['admin_name'] ?? 'Administrator';
 		$loginname = $validatedData['admin_user'] ?? '';
@@ -336,7 +338,7 @@ class Install
 	/**
 	 * @throws Exception
 	 */
-	private function checkDatabase(array $validatedData): void
+	public function checkDatabase(array $validatedData): void
 	{
 		$dsn = sprintf('mysql:host=%s;charset=utf8', $validatedData['mysql_host']);
 		$pdo = new \PDO($dsn, $validatedData['mysql_root_user'], $validatedData['mysql_root_pass']);
@@ -384,7 +386,7 @@ class Install
 
 	private function guessWebserver(): ?string
 	{
-		if (strtoupper(@php_sapi_name()) == "APACHE2HANDLER" || stristr($_SERVER['SERVER_SOFTWARE'], "apache/2")) {
+		if (strtoupper(@php_sapi_name()) == "APACHE2HANDLER" || stristr($_SERVER['SERVER_SOFTWARE'], "apache")) {
 			return 'apache24';
 		} elseif (substr(strtoupper(@php_sapi_name()), 0, 8) == "LIGHTTPD" || stristr($_SERVER['SERVER_SOFTWARE'], "lighttpd")) {
 			return 'lighttpd';
@@ -397,14 +399,13 @@ class Install
 	private function guessDistribution(): ?string
 	{
 		// set default os.
-		$os_dist = array(
-			'VERSION_CODENAME' => 'bullseye'
-		);
+		$default = 'bullseye';
+
 		// read os-release
 		if (@file_exists('/etc/os-release')) {
 			$os_dist = parse_ini_file('/etc/os-release', false);
-			return strtolower($os_dist['VERSION_CODENAME'] ?? ($os_dist['ID'] ?? null));
+			return strtolower($os_dist['VERSION_CODENAME'] ?? ($os_dist['ID'] ?? $default));
 		}
-		return null;
+		return $default;
 	}
 }
