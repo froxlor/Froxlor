@@ -298,9 +298,9 @@ class Install
 
 		if (empty($serveripv4) && empty($serveripv6)) {
 			throw new Exception(lng('install.errors.nov4andnov6ip'));
-		} elseif (!Validate::validate_ip2($serveripv4, true, '', false, true) || IPTools::is_ipv6($serveripv4)) {
+		} elseif (!empty($serveripv4) && (!Validate::validate_ip2($serveripv4, true, '', false, true) || IPTools::is_ipv6($serveripv4))) {
 			throw new Exception(lng('error.invalidip', [$serveripv4]));
-		} elseif (!Validate::validate_ip2($serveripv6, true, '', false, true) || IPTools::is_ipv6($serveripv6) == false) {
+		} elseif (!empty($serveripv6) && (!Validate::validate_ip2($serveripv6, true, '', false, true) || IPTools::is_ipv6($serveripv6) == false)) {
 			throw new Exception(lng('error.invalidip', [$serveripv6]));
 		} elseif (!Validate::validateDomain($servername) && !Validate::validateLocalHostname($servername)) {
 			throw new Exception(lng('install.errors.servernameneedstobevalid'));

@@ -57,6 +57,8 @@ final class InstallCommand extends Command
 			return self::INVALID;
 		}
 
+		session_start();
+
 		require __DIR__ . '/install.functions.php';
 
 		$this->io = new SymfonyStyle($input, $output);
@@ -133,6 +135,12 @@ final class InstallCommand extends Command
 				$this->io->note($section['description']);
 				foreach ($section['fields'] as $fieldname => $fielddata) {
 					if ($extended == false && isset($fielddata['advanced']) && $fielddata['advanced'] == true) {
+						if ($fieldname == 'httpuser' || $fieldname == 'httpgroup') {
+							// overwrite posix_getgrgid(posix_getgid())['name'] as it would result in 'root'
+							$this->formfielddata[$fieldname] = 'www-data';
+						} else {
+							$this->formfielddata[$fieldname] = $fielddata['value'];
+						}
 						continue;
 					}
 					$fielddata['value'] = $this->formfielddata[$fieldname] ?? ($fielddata['value'] ?? null);
@@ -160,23 +168,24 @@ final class InstallCommand extends Command
 
 				try {
 					if ($step == 1) {
-//						$inst->checkDatabase($this->formfielddata);
+						$inst->checkDatabase($this->formfielddata);
 					} elseif ($step == 2) {
-//						$inst->checkAdminUser($this->formfielddata);
+						$inst->checkAdminUser($this->formfielddata);
 					} elseif ($step == 3) {
-//						$inst->checkSystem($this->formfielddata);
+						$inst->checkSystem($this->formfielddata);
 					}
-				}
-				catch (Exception $e) {
+				} catch (Exception $e) {
 					$this->io->error($e->getMessage());
 					return $this->showStep($step, $extended);
+				}
+				if ($step == 3) {
+					// do actual install with data from $this->formfielddata
+					$core = new Core($this->formfielddata);
+					$core->doInstall();
 				}
 				return $this->showStep(++$step, $extended);
 				break;
 			case 4:
-				// do actual install with data from $this->formfielddata
-//				$core = new Core($this->formfielddata);
-//				$core->doInstall();
 				$section = $inst->formfield['install']['sections']['step' . $step] ?? [];
 				$this->io->section($section['title']);
 				$this->io->note($section['description']);

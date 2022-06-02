@@ -497,6 +497,7 @@ class Core
 			`ssl` = :ssl
 		");
 		$nvh = $this->validatedData['webserver'] == 'apache2' ? '1' : '0';
+		$defaultip = false;
 		if (!empty($this->validatedData['serveripv6'])) {
 			$stmt->execute([
 				'nvh' => $nvh,
