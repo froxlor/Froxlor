@@ -197,6 +197,7 @@ class EmailAccounts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Reso
 					'NAME' => $customer['name'],
 					'FIRSTNAME' => $customer['firstname'],
 					'COMPANY' => $customer['company'],
+					'USERNAME' => $customer['loginname'],
 					'CUSTOMER_NO' => $customer['customernumber']
 				);
 

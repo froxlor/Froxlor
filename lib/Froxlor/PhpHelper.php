@@ -63,7 +63,7 @@ class PhpHelper
 					$subject[$field] = self::htmlentitiesArray($subject[$field], $fields, $quote_style, $charset);
 				}
 			}
-		} else {
+		} elseif (!empty($subject)) {
 			$subject = htmlentities($subject, $quote_style, $charset);
 		}
 

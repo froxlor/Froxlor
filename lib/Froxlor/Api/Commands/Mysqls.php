@@ -141,6 +141,7 @@ class Mysqls extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 					'NAME' => $userinfo['name'],
 					'FIRSTNAME' => $userinfo['firstname'],
 					'COMPANY' => $userinfo['company'],
+					'USERNAME' => $userinfo['loginname'],
 					'CUSTOMER_NO' => $userinfo['customernumber'],
 					'DB_NAME' => $username,
 					'DB_PASS' => htmlentities(htmlentities($password)),

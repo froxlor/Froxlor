@@ -229,7 +229,7 @@ return array(
 					'default' => true,
 					'save_method' => 'storeSettingField'
 				),
-				'system_disable_le_selfcheck' => array(
+				'system_le_domain_dnscheck' => array(
 					'label' => $lng['serversettings']['le_domain_dnscheck'],
 					'settinggroup' => 'system',
 					'varname' => 'le_domain_dnscheck',

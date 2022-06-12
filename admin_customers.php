@@ -395,7 +395,7 @@ if ($page == 'customers' && $userinfo['customers'] != '0') {
 				$dec_places = Settings::Get('panel.decimal_places');
 				$result['traffic'] = round($result['traffic'] / (1024 * 1024), $dec_places);
 				$result['diskspace'] = round($result['diskspace'] / 1024, $dec_places);
-				$result['email'] = $idna_convert->decode($result['email']);
+				$result['email'] = $idna_convert->decode($result['email'] ?? '');
 
 				$diskspace_ul = \Froxlor\UI\HTML::makecheckbox('diskspace_ul', $lng['customer']['unlimited'], '-1', false, $result['diskspace'], true, true);
 				if ($result['diskspace'] == '-1') {

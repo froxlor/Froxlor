@@ -83,7 +83,7 @@ if ($page == 'overview') {
 				$statsapp = 'webalizer';
 			}
 			$row = [
-				'domain' => $idna_convert->decode($parentdomain)
+				'domain' => $idna_convert->decode($parentdomain ?? '')
 			];
 			eval("\$domains.=\"" . \Froxlor\UI\Template::getTemplate("domains/domains_delimiter") . "\";");
 
@@ -506,8 +506,8 @@ if ($page == 'overview') {
 function formatDomainEntry(&$row, &$idna_convert)
 {
 	$row['domain'] = $idna_convert->decode($row['domain']);
-	$row['aliasdomain'] = $idna_convert->decode($row['aliasdomain']);
-	$row['domainalias'] = $idna_convert->decode($row['domainalias']);
+	$row['aliasdomain'] = $idna_convert->decode($row['aliasdomain'] ?? '');
+	$row['domainalias'] = $idna_convert->decode($row['domainalias'] ?? '');
 
 	/**
 	 * check for set ssl-certs to show different state-icons
@@ -537,7 +537,7 @@ function formatDomainEntry(&$row, &$idna_convert)
 		}
 	}
 
-	$row['termination_date'] = str_replace("0000-00-00", "", $row['termination_date']);
+	$row['termination_date'] = str_replace("0000-00-00", "", $row['termination_date'] ?? '');
 
 	$row['termination_css'] = "";
 	if ($row['termination_date'] != "") {

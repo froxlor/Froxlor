@@ -62,11 +62,11 @@ $header
 					<td><em>{CUSTOMER_NO}</em></td>
 					<td>{$lng['admin']['templates']['CUSTOMER_NO']}</td>
 				</tr>
+				<tr>
+					<td><em>{USERNAME}</em></td>
+					<td>{$lng['admin']['templates']['USERNAME']}</td>
+				</tr>
 				<if ($template_name == 'createcustomer')>
-					<tr>
-						<td><em>{USERNAME}</em></td>
-						<td>{$lng['admin']['templates']['USERNAME']}</td>
-					</tr>
 					<tr>
 						<td><em>{PASSWORD}</em></td>
 						<td>{$lng['admin']['templates']['PASSWORD']}</td>
@@ -94,10 +94,6 @@ $header
 					</if>
 				</if>
 				<if ($template_name == 'password_reset')>
-					<tr>
-						<td><em>{USERNAME}</em></td>
-						<td>{$lng['admin']['templates']['USERNAME']}</td>
-					</tr>
 					<tr>
 						<td><em>{LINK}</em></td>
 						<td>{$lng['admin']['templates']['LINK']}</td>
