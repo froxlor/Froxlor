@@ -472,7 +472,7 @@ class Admins extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEnt
 				// parameters
 				$name = $this->getParam('name', true, $result['name']);
 				$idna_convert = new \Froxlor\Idna\IdnaWrapper();
-				$email = $this->getParam('email', true, $idna_convert->decode($result['email']));
+				$email = $this->getParam('email', true, $idna_convert->decode($result['email'] ?? ''));
 				$password = $this->getParam('admin_password', true, '');
 				$def_language = $this->getParam('def_language', true, $result['def_language']);
 				$custom_notes = $this->getParam('custom_notes', true, $result['custom_notes']);

@@ -243,6 +243,7 @@ class Ftps extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEntit
 						'NAME' => $customer['name'],
 						'FIRSTNAME' => $customer['firstname'],
 						'COMPANY' => $customer['company'],
+						'USERNAME' => $customer['loginname'],
 						'CUSTOMER_NO' => $customer['customernumber'],
 						'USR_NAME' => $username,
 						'USR_PASS' => htmlentities(htmlentities($password)),
