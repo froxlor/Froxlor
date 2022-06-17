@@ -239,6 +239,7 @@ CREATE TABLE `panel_domains` (
   `zonefile` varchar(255) NOT NULL default '',
   `dkim` tinyint(1) NOT NULL default '0',
   `dkim_id` int(11) unsigned NOT NULL default '0',
+  `dkim_selector` varchar(128) NOT NULL default '',
   `dkim_privkey` text,
   `dkim_pubkey` text,
   `wwwserveralias` tinyint(1) NOT NULL default '1',
