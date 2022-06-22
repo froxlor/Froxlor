@@ -182,6 +182,7 @@ final class InstallCommand extends Command
 					// do actual install with data from $this->formfielddata
 					$core = new Core($this->formfielddata);
 					$core->doInstall();
+					$core->createUserdataConf();
 				}
 				return $this->showStep(++$step, $extended);
 				break;
@@ -195,7 +196,7 @@ final class InstallCommand extends Command
 					$cmdfield['value']
 				]);
 				if ($this->io->confirm('Execute command now?', false)) {
-					exec($cmdfield['value']);
+					passthru($cmdfield['value']);
 				}
 				break;
 		}
