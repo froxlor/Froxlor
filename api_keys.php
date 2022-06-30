@@ -34,6 +34,16 @@ use Froxlor\UI\HTML;
 use Froxlor\UI\Listing;
 use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
+use Froxlor\UI\Response;
+
+// redirect if this customer has no permission for API usage
+if ($userinfo['adminsession'] == 0 && $userinfo['api_allowed'] == 0) {
+	Response::redirectTo('customer_index.php');
+}
+// redirect if this admin has no permission for API usage
+if ($userinfo['adminsession'] == 1 && $userinfo['api_allowed'] == 0) {
+	Response::redirectTo('admin_index.php');
+}
 
 // This file is being included in admin_index and customer_index
 // and therefore does not need to require lib/init.php

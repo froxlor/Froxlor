@@ -79,7 +79,7 @@
 									<a class="dropdown-item" href="{{ linker({'section': 'index', 'page': 'change_theme'}) }}"><i class="fa-solid fa-image"></i> {{ lng('panel.theme') }}</a>
 								</li>
 							{% endif %}
-							{% if get_setting('api.enabled') == 1 %}
+							{% if get_setting('api.enabled') == 1 and userinfo.api_allowed == 1 %}
 								<li><hr class="dropdown-divider"></li>
 								<li>
 									<a class="dropdown-item" href="{{ linker({'section': 'index', 'page': 'apikeys'}) }}"><i class="fa-solid fa-key"></i> {{ lng('menue.main.apikeys') }}</a>
