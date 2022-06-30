@@ -94,21 +94,19 @@ if (function_exists('exec')) {
 		'access_log_content' => $access_log_content,
 		'actions_links' => [
 			[
-				'class' => 'btn-secondary',
 				'href' => $linker->getLink([
 					'section' => 'domains',
 					'page' => 'domains',
 					'action' => 'edit',
 					'id' => $domain_id
 				]),
-				'label' => lng('panel.edit'),
+				'label' => lng('admin.domain_edit'),
 				'icon' => 'fa fa-pen'
 			],
 			[
-				'class' => 'btn-secondary',
 				'href' => $linker->getLink(['section' => 'domains', 'page' => 'domains']),
-				'label' => lng('menue.domains.domains'),
-				'icon' => 'fa fa-globe'
+				'label' => lng('panel.backtooverview'),
+				'icon' => 'fa fa-reply'
 			]
 		]
 	]);
