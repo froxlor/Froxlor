@@ -150,19 +150,25 @@ class BackupCron extends \Froxlor\Cron\FroxlorCron
 			$sql_root = Database::getSqlData();
 			Database::needRoot(false);
 
+			$mysqlcnf_file = tempnam("/tmp", "frx");
+			$mysqlcnf = "[mysqldump]\npassword=".$sql_root['passwd']."\n";
+			file_put_contents($mysqlcnf_file, $mysqlcnf);
+
 			$has_dbs = false;
 			while ($row = $sel_stmt->fetch()) {
 				$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'shell> mysqldump -u ' . escapeshellarg($sql_root['user']) . ' -pXXXXX ' . $row['databasename'] . ' > ' . \Froxlor\FileDir::makeCorrectFile($tmpdir . '/mysql/' . $row['databasename'] . '_' . date('YmdHi', time()) . '.sql'));
 				$bool_false = false;
-				\Froxlor\FileDir::safe_exec('mysqldump -u ' . escapeshellarg($sql_root['user']) . ' -p' . $sql_root['passwd'] . ' ' . $row['databasename'] . ' > ' . \Froxlor\FileDir::makeCorrectFile($tmpdir . '/mysql/' . $row['databasename'] . '_' . date('YmdHi', time()) . '.sql'), $bool_false, array(
+				FileDir::safe_exec('mysqldump --defaults-file=' . escapeshellarg($mysqlcnf_file) .' -u ' . escapeshellarg($sql_root['user']) . ' ' . $row['databasename'] . ' > ' . FileDir::makeCorrectFile($tmpdir . '/mysql/' . $row['databasename'] . '_' . date('YmdHi', time()) . '.sql'), $bool_false, [
 					'>'
-				));
+				]);
 				$has_dbs = true;
 			}
 
 			if ($has_dbs) {
 				$create_backup_tar_data .= './mysql ';
 			}
+
+			unlink($mysqlcnf_file);
 
 			unset($sql_root);
 		}

@@ -60,6 +60,7 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 						'name' => $row['name'],
 						'firstname' => $row['firstname'],
 						'company' => $row['company'],
+						'loginname' => $row['loginname'],
 						'customernumber' => $row['customernumber']
 					);
 					$replace_arr = array(
@@ -374,6 +375,7 @@ class ReportsCron extends \Froxlor\Cron\FroxlorCron
 						'name' => $row['name'],
 						'firstname' => $row['firstname'],
 						'company' => $row['company'],
+						'loginname' => $row['loginname'],
 						'customernumber' => $row['customernumber']
 					);
 					$replace_arr = array(
