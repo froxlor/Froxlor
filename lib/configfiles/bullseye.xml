@@ -3561,7 +3561,7 @@ postmaster_address = postmaster@<SERVERNAME>
 
 protocol lda {
   # Space separated list of plugins to load (default is global mail_plugins).
-  #mail_plugins = $mail_plugins
+  mail_plugins = $mail_plugins quota sieve
 }
 ]]>
 							</content>
