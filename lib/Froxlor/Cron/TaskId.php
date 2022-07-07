@@ -72,16 +72,8 @@ class TaskId {
 	 * @return boolean
 	 */
 	public static function isValid($id) {
-		static $reflContants;
-		if (!is_numeric($id)) {
-			return false;
-		}
-		$numericid = (int)$id;
-		if (!is_array($reflContants)) {
-			$reflClass = new \ReflectionClass(get_called_class());
-			$reflContants = $reflClass->getConstants();
-		}
-		return in_array($numericid, $reflContants, true);
+		$valid = (static::convertToConstant($id) !== false);
+		return $valid;
 	}
 
 	/**
@@ -90,16 +82,16 @@ class TaskId {
 	 * @return string|false constant name or false if not found
 	 */
 	public static function convertToConstant($id) {
-		static $reflContants;
+		static $reflContants = array();
 		if (!is_numeric($id)) {
 			return false;
 		}
 		$numericid = (int)$id;
-		if (!is_array($reflContants)) {
-			$reflClass = new \ReflectionClass(get_called_class());
-			$reflContants = $reflClass->getConstants();
+		if (!isset($reflContants[static::class])) {
+			$reflClass = new \ReflectionClass(static::class);
+			$reflContants[static::class] = $reflClass->getConstants();
 		}
-		return array_search($numericid, $reflContants, true);
+		return array_search($numericid, $reflContants[static::class], true);
 	}
 }
 
