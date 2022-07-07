@@ -287,19 +287,19 @@ class FileDir
 				fclose($index_html_handler);
 				if ($logger !== null) {
 					$logger->logAction(
-                        FroxlorLogger::CRON_ACTION,
-                        LOG_NOTICE,
-                        'Creating \'index.' . Settings::Get('system.index_file_extension') . '\' for Customer \'' . $template['customer_login'] . '\' based on template in directory ' . escapeshellarg($indexhtmlpath)
-                    );
+						FroxlorLogger::CRON_ACTION,
+						LOG_NOTICE,
+						'Creating \'index.' . Settings::Get('system.index_file_extension') . '\' for Customer \'' . $template['customer_login'] . '\' based on template in directory ' . escapeshellarg($indexhtmlpath)
+					);
 				}
 			} else {
 				$destination = self::makeCorrectDir($destination);
 				if ($logger !== null) {
 					$logger->logAction(
-                        FroxlorLogger::CRON_ACTION,
-                        LOG_NOTICE,
-                        'Running: cp -a ' . Froxlor::getInstallDir() . '/templates/misc/standardcustomer/* ' . escapeshellarg($destination)
-                    );
+						FroxlorLogger::CRON_ACTION,
+						LOG_NOTICE,
+						'Running: cp -a ' . Froxlor::getInstallDir() . '/templates/misc/standardcustomer/* ' . escapeshellarg($destination)
+					);
 				}
 				self::safe_exec('cp -a ' . Froxlor::getInstallDir() . '/templates/misc/standardcustomer/* ' . escapeshellarg($destination));
 			}
@@ -447,34 +447,23 @@ class FileDir
 			natcasesort($dirList);
 
 			if (sizeof($dirList) > 0) {
-				if (sizeof($dirList) <= 100) {
-					$_field = [];
-					foreach ($dirList as $dir) {
-						if (strpos($dir, $path) === 0) {
-							$dir = substr($dir, strlen($path));
-							// docroot cut off of current directory == empty -> directory is the docroot
-							if (empty($dir)) {
-								$dir = '/';
-							}
-							$dir = self::makeCorrectDir($dir);
+				$_field = [];
+				foreach ($dirList as $dir) {
+					if (strpos($dir, $path) === 0) {
+						$dir = substr($dir, strlen($path));
+						// docroot cut off of current directory == empty -> directory is the docroot
+						if (empty($dir)) {
+							$dir = '/';
 						}
-						$_field[$dir] = $dir;
+						$dir = self::makeCorrectDir($dir);
 					}
-					$field = [
-						'type' => 'select',
-						'select_var' => $_field,
-						'selected' => $value
-					];
-				} else {
-					// remove starting slash we added
-					// for the Dropdown, #225
-					$value = substr($value, 1);
-					$field = [
-						'type' => 'text',
-						'value' => htmlspecialchars($value),
-						'note' => lng('panel.toomanydirs')
-					];
+					$_field[$dir] = $dir;
 				}
+				$field = [
+					'type' => 'select',
+					'select_var' => $_field,
+					'selected' => $value
+				];
 			} else {
 				$field = [
 					'type' => 'hidden',
@@ -525,25 +514,31 @@ class FileDir
 			$filter = function ($file, $key, $iterator) use ($exclude) {
 				if (in_array($file->getFilename(), $exclude)) {
 					return false;
+				} elseif (substr($file->getFilename(), 0, 1) == '.') {
+					// also hide hidden folders
+					return false;
 				}
 				return true;
 			};
 
 			// create RecursiveIteratorIterator
-			$its = new RecursiveIteratorIterator(new RecursiveCallbackFilterIterator(new RecursiveDirectoryIterator(
-                $path,
-                RecursiveDirectoryIterator::SKIP_DOTS
-            ), $filter));
+			$its = new \RecursiveIteratorIterator(
+				new \RecursiveCallbackFilterIterator(
+					new \RecursiveDirectoryIterator($path, \RecursiveDirectoryIterator::SKIP_DOTS),
+					$filter
+				),
+				\RecursiveIteratorIterator::LEAVES_ONLY,
+				\RecursiveIteratorIterator::CATCH_GET_CHILD
+			);
 			// we can limit the recursion-depth, but will it be helpful or
 			// will people start asking "why do I only see 2 subdirectories, i want to use /a/b/c"
 			// let's keep this in mind and see whether it will be useful
-			// @TODO
-			// $its->setMaxDepth(2);
+			$its->setMaxDepth(2);
 
 			// check every file
 			foreach ($its as $fullFileName => $it) {
 				if ($it->isDir() && (fileowner($fullFileName) == $uid || filegroup($fullFileName) == $gid)) {
-					$_fileList[] = self::makeCorrectDir(dirname($fullFileName));
+					$_fileList[] = self::makeCorrectDir($fullFileName);
 				}
 			}
 			$_fileList[] = $path;
@@ -634,9 +629,9 @@ class FileDir
 			// Fetch all quota in the desired partition
 			$repquota = [];
 			exec(
-                Settings::Get('system.diskquota_repquota_path') . " " . $repquota_params . " " . escapeshellarg(Settings::Get('system.diskquota_customer_partition')),
-                $repquota
-            );
+				Settings::Get('system.diskquota_repquota_path') . " " . $repquota_params . " " . escapeshellarg(Settings::Get('system.diskquota_customer_partition')),
+				$repquota
+			);
 
 			$usedquota = [];
 			foreach ($repquota as $tmpquota) {
