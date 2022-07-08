@@ -87,6 +87,7 @@ Database::query("TRUNCATE TABLE `" . TABLE_PANEL_ADMINS . "`;");
 Database::query("TRUNCATE TABLE `" . TABLE_PANEL_IPSANDPORTS . "`;");
 Database::query("TRUNCATE TABLE `" . TABLE_API_KEYS . "`;");
 Database::query("TRUNCATE TABLE `" . TABLE_PANEL_DATABASES . "`;");
+Database::query("TRUNCATE TABLE `" . TABLE_PANEL_PLANS . "`;");
 Database::query("ALTER TABLE `" . TABLE_PANEL_FPMDAEMONS . "` AUTO_INCREMENT=2;");
 
 // add superadmin
