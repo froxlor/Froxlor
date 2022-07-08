@@ -27,10 +27,12 @@ namespace Froxlor\Cli;
 
 use Exception;
 use Froxlor\Froxlor;
+use Froxlor\Config\ConfigParser;
 use Froxlor\Install\Install;
 use Froxlor\Install\Install\Core;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -46,26 +48,17 @@ final class InstallCommand extends Command
 	{
 		$this->setName('froxlor:install');
 		$this->setDescription('Installation process to use instead of web-ui');
+		$this->addArgument('input-file', InputArgument::OPTIONAL, 'Optional JSON array file to use for unattended installations');
+		$this->addOption('print-example-file', 'p', InputOption::VALUE_NONE, 'Outputs an example JSON content to be used with the input file parameter');
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
 		$result = self::SUCCESS;
 
-		if (file_exists(Froxlor::getInstallDir() . '/lib/userdata.inc.php')) {
-			$output->writeln("<error>froxlor seems to be installed already.</>");
-			return self::INVALID;
-		}
-
 		session_start();
 
 		require __DIR__ . '/install.functions.php';
-
-		$this->io = new SymfonyStyle($input, $output);
-
-		$this->io->title('Froxlor installation');
-
-		$extended = $this->io->confirm('Use advanced installation mode?', false);
 
 		// set a few defaults CLI cannot know
 		$_SERVER['SERVER_SOFTWARE'] = 'apache';
@@ -82,12 +75,59 @@ final class InstallCommand extends Command
 			$_SERVER['SERVER_ADDR'] = filter_var($ips[0] ?? "", FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) ? ($ips[0] ?? '') : '';
 		}
 
-		$result = $this->showStep(0, $extended);
+		if ($input->getOption('print-example-file') !== false) {
+			$this->printExampleFile($output);
+			return self::SUCCESS;
+		}
 
+		if (file_exists(Froxlor::getInstallDir() . '/lib/userdata.inc.php')) {
+			$output->writeln("<error>froxlor seems to be installed already.</>");
+			return self::INVALID;
+		}
+
+		$this->io = new SymfonyStyle($input, $output);
+		$this->io->title('Froxlor installation');
+
+		if ($input->getArgument('input-file')) {
+			$inputFile = $input->getArgument('input-file');
+			if (strtoupper(substr($inputFile, 0, 4)) == 'HTTP') {
+				$output->writeln("Input file seems to be an URL, trying to download");
+				$target = "/tmp/froxlor-install-" . time() . ".json";
+				if (@file_exists($target)) {
+					@unlink($target);
+				}
+				$this->downloadFile($inputFile, $target);
+				$inputFile = $target;
+			}
+			if (!is_file($inputFile)) {
+				$output->writeln('<error>Given input file is not a file</>');
+				return self::INVALID;
+			} elseif (!file_exists($inputFile)) {
+				$output->writeln('<error>Given input file cannot be found (' . $inputFile . ')</>');
+				return self::INVALID;
+			} elseif (!is_readable($inputFile)) {
+				$output->writeln('<error>Given input file cannot be read (' . $inputFile . ')</>');
+				return self::INVALID;
+			}
+
+			$inputcontent = file_get_contents($inputFile);
+			$decoded_input = json_decode($inputcontent, true) ?? [];
+			$extended = true;
+
+			if (empty($decoded_input)) {
+				$output->writeln('<error>Given input file seems to be invalid JSON</>');
+				return self::INVALID;
+			}
+			$this->io->info('Running unattended installation');
+		} else {
+			$extended = $this->io->confirm('Use advanced installation mode?', false);
+		}
+
+		$result = $this->showStep(0, $extended, $decoded_input);
 		return $result;
 	}
 
-	private function showStep(int $step = 0, bool $extended = false): int
+	private function showStep(int $step = 0, bool $extended = false, array $decoded_input = []): int
 	{
 		$result = self::SUCCESS;
 		$inst = new Install(['step' => $step, 'extended' => $extended]);
@@ -123,8 +163,8 @@ final class InstallCommand extends Command
 						}
 					}
 				}
-				if ($result == self::SUCCESS && $this->io->confirm('Continue?', true)) {
-					return $this->showStep(++$step, $extended);
+				if ($result == self::SUCCESS) {
+					return $this->showStep(++$step, $extended, $decoded_input);
 				}
 				break;
 			case 1:
@@ -132,7 +172,9 @@ final class InstallCommand extends Command
 			case 3:
 				$section = $inst->formfield['install']['sections']['step' . $step] ?? [];
 				$this->io->section($section['title']);
-				$this->io->note($section['description']);
+				if (empty($decoded_input)) {
+					$this->io->note($section['description']);
+				}
 				foreach ($section['fields'] as $fieldname => $fielddata) {
 					if ($extended == false && isset($fielddata['advanced']) && $fielddata['advanced'] == true) {
 						if ($fieldname == 'httpuser' || $fieldname == 'httpgroup') {
@@ -143,26 +185,40 @@ final class InstallCommand extends Command
 						}
 						continue;
 					}
+					$ask_field = true;
+					// preset from input-file
+					if (!empty($decoded_input) && isset($decoded_input[$fieldname])) {
+						$this->formfielddata[$fieldname] = $decoded_input[$fieldname];
+						$ask_field = false;
+					}
 					$fielddata['value'] = $this->formfielddata[$fieldname] ?? ($fielddata['value'] ?? null);
 					$fielddata['label'] = strip_tags(str_replace("<br>", " ", $fielddata['label']));
-					if ($fielddata['type'] == 'password') {
-						$this->formfielddata[$fieldname] = $this->io->askHidden($fielddata['label'], function ($value) use ($fielddata) {
-							if (isset($fielddata['mandatory']) && $fielddata['mandatory'] && empty($value)) {
-								throw new \RuntimeException('You must enter a value.');
-							}
-							return $value;
-						});
-					} elseif ($fielddata['type'] == 'checkbox') {
-						$this->formfielddata[$fieldname] = $this->io->confirm($fielddata['label'], $fielddata['value'] ?? false);
-					} elseif ($fielddata['type'] == 'select') {
-						$this->formfielddata[$fieldname] = $this->io->choice($fielddata['label'], $fielddata['select_var'], $fielddata['selected'] ?? '');
+					if ($ask_field) {
+						if ($fielddata['type'] == 'password') {
+							$this->formfielddata[$fieldname] = $this->io->askHidden($fielddata['label'], function ($value) use ($fielddata) {
+								if (isset($fielddata['mandatory']) && $fielddata['mandatory'] && empty($value)) {
+									throw new \RuntimeException('You must enter a value.');
+								}
+								return $value;
+							});
+						} elseif ($fielddata['type'] == 'checkbox') {
+							$this->formfielddata[$fieldname] = $this->io->confirm($fielddata['label'], $fielddata['value'] ?? false);
+						} elseif ($fielddata['type'] == 'select') {
+							$this->formfielddata[$fieldname] = $this->io->choice($fielddata['label'], $fielddata['select_var'], $fielddata['selected'] ?? '');
+						} else {
+							$this->formfielddata[$fieldname] = $this->io->ask($fielddata['label'], $fielddata['value'] ?? '', function ($value) use ($fielddata) {
+								if (isset($fielddata['mandatory']) && $fielddata['mandatory'] && empty($value)) {
+									throw new \RuntimeException('You must enter a value.');
+								}
+								return $value;
+							});
+						}
 					} else {
-						$this->formfielddata[$fieldname] = $this->io->ask($fielddata['label'], $fielddata['value'] ?? '', function ($value) use ($fielddata) {
-							if (isset($fielddata['mandatory']) && $fielddata['mandatory'] && empty($value)) {
-								throw new \RuntimeException('You must enter a value.');
-							}
-							return $value;
-						});
+						$this->io->text("Setting field '" . $fieldname . "' to value '" . ($fielddata['type'] == 'password' ? '*hidden*' : $fielddata['value']) . "'");
+						if (isset($fielddata['mandatory']) && $fielddata['mandatory'] && empty($fielddata['value'])) {
+							$this->io->error("Mandatory field '" . $fieldname . "' not specified/empty value in input file");
+							return self::FAILURE;
+						}
 					}
 				}
 
@@ -176,7 +232,7 @@ final class InstallCommand extends Command
 					}
 				} catch (Exception $e) {
 					$this->io->error($e->getMessage());
-					return $this->showStep($step, $extended);
+					return $this->showStep($step, $extended, $decoded_input);
 				}
 				if ($step == 3) {
 					// do actual install with data from $this->formfielddata
@@ -184,7 +240,7 @@ final class InstallCommand extends Command
 					$core->doInstall();
 					$core->createUserdataConf();
 				}
-				return $this->showStep(++$step, $extended);
+				return $this->showStep(++$step, $extended, $decoded_input);
 				break;
 			case 4:
 				$section = $inst->formfield['install']['sections']['step' . $step] ?? [];
@@ -195,11 +251,77 @@ final class InstallCommand extends Command
 					$cmdfield['label'],
 					$cmdfield['value']
 				]);
-				if ($this->io->confirm('Execute command now?', false)) {
+				if (!empty($decoded_input) || $this->io->confirm('Execute command now?', false)) {
 					passthru($cmdfield['value']);
 				}
 				break;
 		}
 		return $result;
+	}
+
+	private function printExampleFile(OutputInterface $output)
+	{
+		// show list of available distro's
+		$distros = glob(dirname(__DIR__, 3) . '/lib/configfiles/*.xml');
+		// read in all the distros
+		foreach ($distros as $distribution) {
+			// get configparser object
+			$dist = new ConfigParser($distribution);
+			// store in tmp array
+			$supportedOS[str_replace(".xml", "", strtolower(basename($distribution)))] = $dist->getCompleteDistroName();
+		}
+		// sort by distribution name
+		asort($supportedOS);
+		$webserverBackend = [
+			'php-fpm' => 'PHP-FPM',
+			'fcgid' => 'FCGID',
+			'mod_php' => 'mod_php (not recommended)',
+		];
+		$guessedDistribution = "";
+		$guessedWebserver = "";
+		$fields = include dirname(dirname(__DIR__)) . '/formfields/install/formfield.install.php';
+		$json_output = [];
+		foreach ($fields['install']['sections'] as $section => $section_fields) {
+			foreach ($section_fields['fields'] as $name => $field) {
+				if ($name == 'system' || $name == 'manual_config') {
+					continue;
+				}
+				if ($field['type'] == 'text' || $field['type'] == 'email') {
+					if ($name == 'httpuser' || $name == 'httpgroup') {
+						$fieldval = 'www-data';
+					} else {
+						$fieldval = $field['value'] ?? "";
+					}
+				} elseif ($field['type'] == 'password') {
+					$fieldval = '******';
+				} elseif ($field['type'] == 'select') {
+					$fieldval = implode("|", array_keys($field['select_var']));
+				} else if ($field['type'] == 'checkbox') {
+					$fieldval = "1|0";
+				} else {
+					$fieldval = "?";
+				}
+				$json_output[$name] = $fieldval;
+			}
+		}
+		$output->writeln(json_encode($json_output, JSON_PRETTY_PRINT));
+	}
+
+	private function downloadFile($src, $dest)
+	{
+		set_time_limit(0);
+		// This is the file where we save the information
+		$fp = fopen($dest, 'w+');
+		// Here is the file we are downloading, replace spaces with %20
+		$ch = curl_init(str_replace(" ", "%20", $src));
+		curl_setopt($ch, CURLOPT_TIMEOUT, 50);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		// write curl response to file
+		curl_setopt($ch, CURLOPT_FILE, $fp);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+		// get curl response
+		curl_exec($ch);
+		curl_close($ch);
+		fclose($fp);
 	}
 }

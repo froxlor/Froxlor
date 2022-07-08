@@ -71,6 +71,8 @@ class Install
 		asort($this->supportedOS);
 
 		// guess distribution and webserver to preselect in formfield
+		$webserverBackend = $this->webserverBackend;
+		$supportedOS = $this->supportedOS;
 		$guessedDistribution = $this->guessDistribution();
 		$guessedWebserver = $this->guessWebserver();
 

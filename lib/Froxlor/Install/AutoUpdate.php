@@ -70,7 +70,8 @@ class AutoUpdate
 				}
 				$latestversion = HttpClient::urlGet(self::UPDATE_URI . Froxlor::VERSION . $channel, true, 3);
 			} catch (Exception $e) {
-				throw new Exception("Version-check currently unavailable, please try again later", 504);
+				self::$lasterror = "Version-check currently unavailable, please try again later";
+				return -1;
 			}
 
 			self::$latestversion = json_decode($latestversion, true);

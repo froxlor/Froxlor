@@ -146,7 +146,7 @@ return [
 						'label' => lng('admin.configfiles.distribution'),
 						'type' => 'select',
 						'mandatory' => true,
-						'select_var' => $this->supportedOS,
+						'select_var' => $supportedOS,
 						'selected' => $guessedDistribution
 					],
 					'serveripv4' => [
@@ -186,7 +186,7 @@ return [
 						'label' => lng('install.system.phpbackend'),
 						'type' => 'select',
 						'mandatory' => true,
-						'select_var' => $this->webserverBackend,
+						'select_var' => $webserverBackend,
 						'selected' => old('webserver_backend', 'php-fpm', 'installation'),
 					],
 					'httpuser' => [
