@@ -36,7 +36,7 @@ class MysqlsTest extends TestCase
 		$data = [
 			'mysql_password' => $newPwd,
 			'description' => 'testdb',
-			'sendinfomail' => TRAVIS_CI == 1 ? 0 : 1
+			'sendinfomail' => FROXLORTEST_SENDMAIL ? 1 : 0
 		];
 		$json_result = Mysqls::getLocal($customer_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
@@ -69,7 +69,7 @@ class MysqlsTest extends TestCase
 			'mysql_password' => $newPwd,
 			'custom_suffix' => 'abc123',
 			'description' => 'testdb',
-			'sendinfomail' => TRAVIS_CI == 1 ? 0 : 1
+			'sendinfomail' => FROXLORTEST_SENDMAIL ? 1 : 0
 		];
 		$json_result = Mysqls::getLocal($customer_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
@@ -294,25 +294,25 @@ class MysqlsTest extends TestCase
 			$this->assertNotEmpty($data['password'], 'No password for user "' . $user . '"');
 		}
 
-		if (TRAVIS_CI == 0) {
-			// just to be sure, not required for travis as the vm is fresh every time
-			Database::needRoot(true);
-			Database::query("DROP USER IF EXISTS froxlor010@10.0.0.10;");
-		}
+		// just to be sure, not required for travis as the vm is fresh every time
+		Database::query("DROP USER IF EXISTS ".FROXLORTEST_DBUSER."@10.0.0.10;");
 
 		// grant privileges to another host
-		$testdata = $users['froxlor010'];
-		$dbm->getManager()->grantPrivilegesTo('froxlor010', $testdata['password'], '10.0.0.10', true);
+		$testdata = $users[FROXLORTEST_DBUSER];
+		$dbm->getManager()->grantPrivilegesTo(FROXLORTEST_DBUSER, $testdata['password'], '10.0.0.10', true);
 
 		// select all entries from mysql.user for froxlor010 to compare password-hashes
 		$sel_stmt = Database::prepare("SELECT * FROM mysql.user WHERE `User` = :usr");
 		Database::pexecute($sel_stmt, [
-			'usr' => 'froxlor010'
+			'usr' => FROXLORTEST_DBUSER
 		]);
 		$results = $sel_stmt->fetchAll(\PDO::FETCH_ASSOC);
 		foreach ($results as $user) {
 			$passwd = $user['Password'] ?? $user['authentication_string'];
 			$this->assertEquals($testdata['password'], $passwd);
 		}
+
+		// don't leak root access to other tests
+		Database::needRoot(false);
 	}
 }

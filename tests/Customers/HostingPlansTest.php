@@ -289,7 +289,7 @@ class HostingPlansTest extends TestCase
 			'customernumber' => 1337,
 			'createstdsubdomain' => 0,
 			'new_customer_password' => 'h0lYmo1y',
-			'sendpassword' => TRAVIS_CI == 1 ? 0 : 1,
+			'sendpassword' => FROXLORTEST_SENDMAIL ? 1 : 0,
 			'store_defaultindex' => 1,
 			'custom_notes' => 'secret',
 			'custom_notes_show' => 0,

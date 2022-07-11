@@ -1,38 +1,123 @@
 <?php
-if (file_exists('/etc/froxlor-test.pwd') && file_exists('/etc/froxlor-test.rpwd')) {
-	// froxlor jenkins test-system
-	$pwd = trim(file_get_contents('/etc/froxlor-test.pwd'));
-	$rpwd = trim(file_get_contents('/etc/froxlor-test.rpwd'));
-	define('TRAVIS_CI', 0);
-} else {
-	// travis-ci.org
-	$pwd = 'fr0xl0r.TravisCI';
-	$rpwd = 'fr0xl0r.TravisCI';
-	define('TRAVIS_CI', 1);
-}
+
+use Froxlor\Database\Database;
+use Froxlor\Settings;
+use Froxlor\UnitTest\FroxlorTestCase;
 
 if (@php_sapi_name() !== 'cli') {
 	// not to be called via browser
 	die;
 }
 
-$userdata_content = "<?php
-\$sql['user'] = 'froxlor010';
-\$sql['password'] = '$pwd';
-\$sql['host'] = '127.0.0.1';
-\$sql['db'] = 'froxlor010';
-\$sql_root[0]['user'] = 'root';
-\$sql_root[0]['password'] = '$rpwd';
-\$sql_root[0]['host'] = '127.0.0.1';
-\$sql_root[0]['caption'] = 'Test default';
-\$sql['debug'] = true;" . PHP_EOL;
+define('FROXLORTEST', 1);
 
 $userdata = dirname(__DIR__) . '/lib/userdata.inc.php';
 
-if (file_exists($userdata)) {
-	rename($userdata, $userdata . ".bak");
+// default test configuration
+// for custom test config, copy data to userdata.inc.php and set keepconfig true
+$sql['user'] = 'froxlor010';
+$sql['password'] = 'fr0xl0r.TravisCI';
+$sql['host'] = '127.0.0.1';
+$sql['db'] = 'froxlor010';
+$sql_root[0]['user'] = 'root';
+$sql_root[0]['password'] = 'fr0xl0r.TravisCI';
+$sql_root[0]['host'] = '127.0.0.1';
+$sql_root[0]['caption'] = 'Test default';
+$sql['debug'] = true;
+
+// Is this TRAVIS_CI, ignore empty mariadb.sys password
+$testconfig['TRAVIS_CI'] = 0;
+
+// drop DB and import froxlor.sql
+$testconfig['dropdb'] = false;
+
+// should tests try to send emails
+$testconfig['sendeemail'] = false;
+
+// redirect file output to ./build/
+$testconfig['redirectdir'] = false;
+
+// don't remove FroxlorTestCase customer after test run
+$testconfig['keepdata'] = false;
+
+// bootstrap should not overwrite userdata.inc.php with defaults
+$testconfig['keepconfig'] = false;
+
+// end of configuration
+
+
+// Create default test scenarios
+if (file_exists('/etc/froxlor-test.pwd') && file_exists('/etc/froxlor-test.rpwd')) {
+	// froxlor jenkins test-system
+	$pwd = trim(file_get_contents('/etc/froxlor-test.pwd'));
+	$rpwd = trim(file_get_contents('/etc/froxlor-test.rpwd'));
+
+	$sql['user'] = 'froxlor010';
+	$sql['password'] = $pwd;
+	$sql_root[0]['user'] = 'root';
+	$sql_root[0]['password'] = $rpwd;
+
+	$testconfig['TRAVIS_CI'] = 0;
+	$testconfig['sendeemail'] = true;
+	$testconfig['dropdb'] = true;
+} else {
+	// travis-ci.org
+	$testconfig['TRAVIS_CI'] = 1;
+	$testconfig['sendeemail'] = false;
+	$testconfig['dropdb'] = false;
 }
-file_put_contents($userdata, $userdata_content);
+
+/**
+ * Loads file userdata.inc.php without changing globals
+ * @param string $userdata filename
+ * @return boolean 
+ */
+function froxlortest_getKeepConfig($userdata) {
+	if (file_exists($userdata)) {
+		require $userdata;
+		if (isset($testconfig) && is_array($testconfig)) {
+			return ($testconfig['keepconfig'] ?? false) == true;
+		}
+	}
+	return false;
+}
+
+$testconfig['keepconfig'] = froxlortest_getKeepConfig($userdata);
+
+// overwrite the userdata.inc.php unless keepconfig
+if ($testconfig['keepconfig'] != true) {
+	if (file_exists($userdata)) {
+		rename($userdata, $userdata . ".bak");
+	}
+	$userdata_content = "<?php\n";
+	$userdata_content .= "\$sql = " . var_export($sql, true).";\n";
+	$userdata_content .= "\$sql_root = ". var_export($sql_root, true).";\n";
+	$userdata_content .= "\$testconfig = ". var_export($testconfig, true).";\n";;
+
+	file_put_contents($userdata, $userdata_content);
+}
+
+$sql = array();
+$sql_root = array();
+$testconfig = array();
+
+// load userdata.inc.php including test config
+require dirname(__DIR__) . '/lib/userdata.inc.php';
+
+// apply testconfig
+
+define('FROXLORTEST_DB', $sql['db'] ?? 'froxlor010' );
+define('FROXLORTEST_DBUSER', $sql['user'] ?? 'froxlor010' );
+
+define('TRAVIS_CI', $testconfig['TRAVIS_CI'] ?? 0);
+define('FROXLORTEST_SENDMAIL', $testconfig['sendeemail'] ?? 0);
+define('FROXLORTEST_DROPDB', $testconfig['dropdb'] ?? 0);
+
+define('FROXLORTEST_KEEPTESTCASEDATA', $testconfig['keeptestdata'] ?? 0);
+
+if ($testconfig['redirectdir'] ?? 0) {
+	define('FROXLORTEST_REDIRECTDIR', 1);
+}
 
 // include autoloader / api / etc
 require dirname(__DIR__) . '/vendor/autoload.php';
@@ -40,14 +125,13 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 // include table definitions
 require dirname(__DIR__) . '/lib/tables.inc.php';
 
-use Froxlor\Database\Database;
-use Froxlor\Settings;
-
-if (TRAVIS_CI == 0) {
+if (FROXLORTEST_DROPDB) {
+	$dbroot_user = $sql_root[0]['user'];
+	$dbroot_password = $sql_root[0]['password'];
 	Database::needRoot(true);
-	Database::query("DROP DATABASE IF EXISTS `froxlor010`;");
-	Database::query("CREATE DATABASE `froxlor010`;");
-	exec("mysql -u root -p" . $rpwd . " froxlor010 < " . dirname(__DIR__) . "/install/froxlor.sql");
+	Database::query("DROP DATABASE IF EXISTS `".FROXLORTEST_DB."`;");
+	Database::query("CREATE DATABASE `".FROXLORTEST_DB."`;");
+	exec("mysql -u ".escapeshellarg($dbroot_user)." -p" . escapeshellarg($dbroot_password) . " ".escapeshellarg(FROXLORTEST_DB)." < " . dirname(__DIR__) . "/install/froxlor.sql");
 	Database::query("DROP USER IF EXISTS 'test1sql1'@'localhost';");
 	Database::query("DROP USER IF EXISTS 'test1sql1'@'127.0.0.1';");
 	Database::query("DROP USER IF EXISTS 'test1sql1'@'172.17.0.1';");
@@ -60,6 +144,7 @@ if (TRAVIS_CI == 0) {
 	Database::query("DROP USER IF EXISTS 'test1_abc123'@'2a01:440:1:12:82:149:225:46';");
 	Database::query("DROP DATABASE IF EXISTS `test1sql1`;");
 	Database::query("DROP DATABASE IF EXISTS `test1_abc123`;");
+	Database::query('FLUSH PRIVILEGES;');
 	Database::needRoot(false);
 }
 

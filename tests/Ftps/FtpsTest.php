@@ -157,7 +157,7 @@ class FtpsTest extends TestCase
 			'ftp_password' => 'h4xXx0r',
 			'path' => '/',
 			'ftp_description' => 'testing',
-			'sendinfomail' => TRAVIS_CI == 1 ? 0 : 1
+			'sendinfomail' => FROXLORTEST_SENDMAIL ? 1 : 0
 		];
 		$json_result = Ftps::getLocal($customer_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
@@ -255,7 +255,7 @@ class FtpsTest extends TestCase
 			'ftp_password' => 'h4xXx0r',
 			'path' => '/',
 			'ftp_description' => 'testing',
-			'sendinfomail' => TRAVIS_CI == 1 ? 0 : 1
+			'sendinfomail' => FROXLORTEST_SENDMAIL ? 1 : 0
 		];
 		$json_result = Ftps::getLocal($admin_userdata, $data)->add();
 		$result = json_decode($json_result, true)['data'];
