@@ -6,6 +6,37 @@ use Froxlor\Database\Database;
 
 class FileDir
 {
+	/**
+	 * If FROXLORTEST_REDIRECTDIR is defined, add this prefix to path
+	 */
+	private static $path_prefix = '';
+
+	/**
+	 * For UnitTest change makeCorrectFile & makeCorrectDir to point to a different fs tree 
+	 * This changes the internal behavior of makeSecurePath, so it adds a prefix under test
+	 * @param string|null $path_prefix Redirect paths
+	 */
+	public static function setFroxlorTestPathPrefix($path_prefix) {
+		if (defined('FROXLORTEST_REDIRECTDIR')) {
+			if (empty($path_prefix)) {
+				self::$path_prefix = '';
+			}
+			self::$path_prefix = $path_prefix;
+		} else {
+			throw new \Exception('Cannot use '.__METHOD__.' outside tests!');
+		}
+	}
+
+	public static function redirectFroxlorTestPath($path) {
+		if (empty(self::$path_prefix)) {
+			return $path;
+		}
+		$installdir = Froxlor::getInstallDir();
+		if (strncmp($path, $installdir, strlen($installdir)) === 0) {
+			return $path;
+		}
+		return self::$path_prefix.$path;
+	}
 
 	/**
 	 * Wrapper around the exec command.
@@ -335,6 +366,9 @@ class FileDir
 		$path = str_replace("\ ", " ", $path);
 		$path = str_replace(" ", "\ ", $path);
 
+		if (defined('FROXLORTEST_REDIRECTDIR')) {
+			$path = self::redirectFroxlorTestPath($path);
+		}
 		return $path;
 	}
 

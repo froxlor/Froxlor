@@ -244,6 +244,11 @@ $sel_stmt = Database::prepare("SELECT * FROM `" . TABLE_PANEL_ADMINS . "` WHERE 
 $admin_userdata = Database::pexecute_first($sel_stmt);
 $admin_userdata['adminsession'] = 1;
 
+FroxlorTestCase::setFroxlorAdminUserdata($admin_userdata);
+if (defined('FROXLORTEST_REDIRECTDIR')) {
+	FroxlorTestCase::setFroxlorTestOutputDir(dirname(__DIR__).'/build/froxlortestfs/');
+}
+
 $log = \Froxlor\FroxlorLogger::getInstanceOf($admin_userdata);
 
 Settings::Set('panel.standardlanguage', 'English', true);
