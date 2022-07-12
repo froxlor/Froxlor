@@ -136,7 +136,7 @@ class DbManagerMySQL
 	 */
 	public function deleteDatabase($dbname = null)
 	{
-		if (Database::getAttribute(\PDO::ATTR_SERVER_VERSION) < '5.0.2') {
+		if (version_compare(Database::getAttribute(\PDO::ATTR_SERVER_VERSION), '5.0.2', '<')) {
 			// failsafe if user has been deleted manually (requires MySQL 4.1.2+)
 			$stmt = Database::prepare("REVOKE ALL PRIVILEGES, GRANT OPTION FROM `" . $dbname . "`");
 			Database::pexecute($stmt, array(), false);
