@@ -267,7 +267,7 @@ class MysqlsTest extends FroxlorTestCase
 		$dbm = new \Froxlor\Database\DbManager(\Froxlor\FroxlorLogger::getInstanceOf());
 		$users = $dbm->getManager()->getAllSqlUsers(false);
 
-		$error = $this->hasSQLPasswordTableErrors('FROXLORTEST_DBUSER');
+		$error = $this->hasSQLPasswordTableErrors(FROXLORTEST_DBUSER);
 		$this->assertFalse($error);
 		Database::needRoot(true);
 
