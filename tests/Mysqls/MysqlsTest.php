@@ -7,6 +7,7 @@ use Froxlor\Api\Commands\Customers;
 use Froxlor\Api\Commands\Mysqls;
 use Froxlor\Database\Database;
 use Froxlor\Settings\Store;
+use Froxlor\UnitTest\FroxlorTestCase;
 
 /**
  *
@@ -19,18 +20,13 @@ use Froxlor\Settings\Store;
  * @covers \Froxlor\Database\Manager\DbManagerMySQL
  * @covers \Froxlor\Settings\Store
  */
-class MysqlsTest extends TestCase
+class MysqlsTest extends FroxlorTestCase
 {
 
 	public function testCustomerMysqlsAdd()
 	{
-		global $admin_userdata;
-
 		// get customer
-		$json_result = Customers::getLocal($admin_userdata, array(
-			'loginname' => 'test1'
-		))->get();
-		$customer_userdata = json_decode($json_result, true)['data'];
+		$customer_userdata = $this->getFroxlorTestCustomerTest1();
 
 		$newPwd = \Froxlor\System\Crypt::generatePassword();
 		$data = [
@@ -53,13 +49,8 @@ class MysqlsTest extends TestCase
 	}
 
 	public function testCustomerMysqlsDBNameAdd() {
-		global $admin_userdata;
-
 		// get customer
-		$json_result = Customers::getLocal($admin_userdata, array(
-			'loginname' => 'test1'
-		))->get();
-		$customer_userdata = json_decode($json_result, true)['data'];
+		$customer_userdata = $this->getFroxlorTestCustomerTest1();
 
 		// Set customer.mysqlprefix to DBNAME
 		Settings::Set('customer.mysqlprefix', 'DBNAME');
@@ -108,12 +99,7 @@ class MysqlsTest extends TestCase
 	 */
 	public function testResellerMysqlsGet()
 	{
-		global $admin_userdata;
-		// get reseller
-		$json_result = Admins::getLocal($admin_userdata, array(
-			'loginname' => 'reseller'
-		))->get();
-		$reseller_userdata = json_decode($json_result, true)['data'];
+		$reseller_userdata = $this->getFroxlorTestReseller();
 		$reseller_userdata['adminsession'] = 1;
 		$json_result = Mysqls::getLocal($reseller_userdata, array(
 			'dbname' => 'test1sql1'
@@ -125,13 +111,8 @@ class MysqlsTest extends TestCase
 
 	public function testCustomerMysqlsGetUnknown()
 	{
-		global $admin_userdata;
-
 		// get customer
-		$json_result = Customers::getLocal($admin_userdata, array(
-			'loginname' => 'test1'
-		))->get();
-		$customer_userdata = json_decode($json_result, true)['data'];
+		$customer_userdata = $this->getFroxlorTestCustomerTest1();
 
 		$data = [
 			'dbname' => 'test1sql5'
@@ -172,7 +153,7 @@ class MysqlsTest extends TestCase
 
 	/**
 	 *
-	 * @depends testCustomerMysqlsAdd
+	 * @depends testAdminMysqlsUpdate
 	 */
 	public function testAdminMysqlsUpdatePwdOnly()
 	{
@@ -190,18 +171,16 @@ class MysqlsTest extends TestCase
 	}
 
 	/**
-	 *
+	 * Checks listing databases by customer
+	 * (req db: test1sql1, test1_abc123)
+	 * 
 	 * @depends testCustomerMysqlsAdd
+	 * @depends testCustomerMysqlsDBNameAdd
 	 */
 	public function testCustomerMysqlsList()
 	{
-		global $admin_userdata;
-
 		// get customer
-		$json_result = Customers::getLocal($admin_userdata, array(
-			'loginname' => 'test1'
-		))->get();
-		$customer_userdata = json_decode($json_result, true)['data'];
+		$customer_userdata = $this->getFroxlorTestCustomerTest1();
 
 		$json_result = Mysqls::getLocal($customer_userdata)->listing();
 		$result = json_decode($json_result, true)['data'];
@@ -216,17 +195,12 @@ class MysqlsTest extends TestCase
 
 	/**
 	 *
-	 * @depends testCustomerMysqlsList
+	 * @depends testCustomerMysqlsAdd
 	 */
 	public function testCustomerMysqlsDelete()
 	{
-		global $admin_userdata;
-
 		// get customer
-		$json_result = Customers::getLocal($admin_userdata, array(
-			'loginname' => 'test1'
-		))->get();
-		$customer_userdata = json_decode($json_result, true)['data'];
+		$customer_userdata = $this->getFroxlorTestCustomerTest1();
 
 		$data = [
 			'dbname' => 'test1sql1'
@@ -238,17 +212,12 @@ class MysqlsTest extends TestCase
 
 	/**
 	 *
-	 * @depends testCustomerMysqlsList
+	 * @depends testCustomerMysqlsDBNameAdd
 	 */
 	public function testCustomerMysqlsDBNameDelete()
 	{
-		global $admin_userdata;
-
 		// get customer
-		$json_result = Customers::getLocal($admin_userdata, array(
-			'loginname' => 'test1'
-		))->get();
-		$customer_userdata = json_decode($json_result, true)['data'];
+		$customer_userdata = $this->getFroxlorTestCustomerTest1();
 
 		$data = [
 			'dbname' => 'test1_abc123'
