@@ -46,6 +46,9 @@ class MysqlsTest extends FroxlorTestCase
 		} catch (PDOException $e) {
 			$this->fail($e->getMessage());
 		}
+
+		$error = $this->hasSQLPasswordTableErrors('test1sql1');
+		$this->assertFalse($error);
 	}
 
 	public function testCustomerMysqlsDBNameAdd() {
@@ -148,6 +151,9 @@ class MysqlsTest extends FroxlorTestCase
 		} catch (PDOException $e) {
 			$this->fail($e->getMessage());
 		}
+
+		$error = $this->hasSQLPasswordTableErrors('test1sql1');
+		$this->assertFalse($error);
 	}
 
 
@@ -168,6 +174,9 @@ class MysqlsTest extends FroxlorTestCase
 		$json_result = Mysqls::getLocal($admin_userdata, $data)->update();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEquals('testdb-upd', $result['description']);
+
+		$error = $this->hasSQLPasswordTableErrors('test1sql1');
+		$this->assertFalse($error);
 	}
 
 	/**
@@ -243,6 +252,9 @@ class MysqlsTest extends FroxlorTestCase
 
 		$mysql_access_hosts = Settings::Get('system.mysql_access_host');
 		$this->assertTrue(strpos($mysql_access_hosts, '82.149.225.47') !== false);
+
+		$error = $this->hasSQLPasswordTableErrors(FROXLORTEST_DBUSER);
+		$this->assertFalse($error);
 	}
 
 	/**
@@ -254,14 +266,10 @@ class MysqlsTest extends FroxlorTestCase
 		\Froxlor\Database\Database::needRoot(true);
 		$dbm = new \Froxlor\Database\DbManager(\Froxlor\FroxlorLogger::getInstanceOf());
 		$users = $dbm->getManager()->getAllSqlUsers(false);
-		foreach ($users as $user => $data) {
-			if (TRAVIS_CI == 1 && strtolower($user) == 'mariadb.sys') {
-				// travis seems to have a user for mariadb on version 10.4
-				// we do not want to test that one
-				continue;
-			}
-			$this->assertNotEmpty($data['password'], 'No password for user "' . $user . '"');
-		}
+
+		$error = $this->hasSQLPasswordTableErrors('FROXLORTEST_DBUSER');
+		$this->assertFalse($error);
+		Database::needRoot(true);
 
 		// just to be sure, not required for travis as the vm is fresh every time
 		Database::query("DROP USER IF EXISTS ".FROXLORTEST_DBUSER."@10.0.0.10;");
@@ -278,10 +286,40 @@ class MysqlsTest extends FroxlorTestCase
 		$results = $sel_stmt->fetchAll(\PDO::FETCH_ASSOC);
 		foreach ($results as $user) {
 			$passwd = $user['Password'] ?? $user['authentication_string'];
+			$this->assertNotEmpty($passwd, 'No password for '.FROXLORTEST_DBUSER.' @ '.$user['Host']);
 			$this->assertEquals($testdata['password'], $passwd);
 		}
 
 		// don't leak root access to other tests
 		Database::needRoot(false);
+	}
+
+	/**
+	 * Check for inconsistent mysql.user entries for db username
+	 * - empty passwords
+	 * 
+	 * Note: resets root access
+	 * @param string $username 
+	 * @return false|string 
+	 */
+	protected function hasSQLPasswordTableErrors($username)
+	{
+		Database::needRoot(true);
+		$sel_stmt = Database::prepare("SELECT * FROM mysql.user WHERE `User` = :usr");
+		Database::pexecute($sel_stmt, [
+			'usr' => $username
+		]);
+
+		$results = $sel_stmt->fetchAll(\PDO::FETCH_ASSOC);
+		foreach ($results as $user) {
+			$passwd = $user['Password'] ?? $user['authentication_string'];
+			if (empty($passwd)) {
+				$result = 'Empty password for '.$username.' @ '.$user['Host'];
+				return $result;
+			} 
+		}
+
+		Database::needRoot(false);
+		return false;
 	}
 }

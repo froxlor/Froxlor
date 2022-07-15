@@ -25,7 +25,7 @@ $sql_root[0]['host'] = '127.0.0.1';
 $sql_root[0]['caption'] = 'Test default';
 $sql['debug'] = true;
 
-// Is this TRAVIS_CI, ignore empty mariadb.sys password
+// Will set TRAVIS_CI constant
 $testconfig['TRAVIS_CI'] = 0;
 
 // drop DB and import froxlor.sql
