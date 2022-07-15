@@ -8,7 +8,9 @@ use Froxlor\Api\Commands\Admins;
 use Froxlor\Api\Commands\Customers;
 use Froxlor\Api\Commands\Domains;
 
-
+/**
+ * Test case with additonal helpers for getting and creating customers, reseller and admin
+ */
 class FroxlorTestCase extends TestCase {
 	protected static $admin_userdata;
 	protected static $testcase_outputdir;
@@ -58,7 +60,88 @@ class FroxlorTestCase extends TestCase {
 	}
 
 	/**
+	 * Get the admin user
+	 * @return array 
+	 */
+	protected function getFroxlorTestAdmin() {
+		return self::$admin_userdata;
+	}
+
+	/**
+	 * Get or create default reseller
+	 * @return mixed 
+	 * @throws Exception 
+	 */
+	protected function getFroxlorTestReseller() 
+	{
+		try {
+			$json_result = Admins::getLocal(self::$admin_userdata, array(
+				'loginname' => 'reseller'
+			))->get();
+			$reseller_userdata = json_decode($json_result, true)['data'];
+		} catch(\Exception $e) {
+			// Can't get data, create new reseller
+			$data = [
+				'new_loginname' => 'reseller',
+				'email' => 'testreseller@froxlor.org',
+				'name' => 'Testreseller',
+				'admin_password' => 'h0lYmo1y',
+				'diskspace' => - 1,
+				'traffic' => - 1,
+				'customers' => 15,
+				'domains' => 15,
+				'subdomains' => 15,
+				'emails' => - 1,
+				'email_accounts' => 15,
+				'email_forwarders' => 15,
+				'email_imap' => 1,
+				'email_pop3' => 0,
+				'ftps' => 15,
+				'mysqls' => 15,
+				'sendpassword' => 0,
+				'phpenabled' => 1,
+				'ip' => array()
+			];		
+			$json_result = Admins::getLocal(self::$admin_userdata, $data)->add();
+			$reseller_userdata = json_decode($json_result, true)['data'];
+		}
+		
+		return $reseller_userdata; 
+	}	
+
+	/**
+	 * Get test1 customer without removing from Datebase, 
+	 * if necessary creates the customer at reseller account
+	 * @return array
+	 */
+	protected function getFroxlorTestCustomerTest1() 
+	{
+		$loginname = 'test1';
+		try {
+			$json_result = Customers::getLocal(self::$admin_userdata, array(
+				'loginname' => $loginname,
+			))->get();
+			$customer_userdata = json_decode($json_result, true)['data'];
+		} catch(\Exception $e) {
+			// Can't get data, create new customer
+			$customer_userdata = $this->createFroxlorTestCustomer($loginname);
+			$reseller_userdata = $this->getFroxlorTestReseller();
+
+			global $admin_userdata;
+			$json_result = Customers::getLocal($admin_userdata, array(
+				'loginname' => $loginname,
+				'adminid' => $reseller_userdata['adminid'],
+			))->move();
+
+			$result = json_decode($json_result, true)['data'];
+		}
+		
+		return $customer_userdata; 
+	}	
+
+	/**
 	 * Creates a test customer for this test, or returns the same customer via api
+	 * will be removed on test end
 	 * @return array
 	 */
 	protected function getFroxlorTestCustomer() 
@@ -88,7 +171,18 @@ class FroxlorTestCase extends TestCase {
 		} catch(\Exception $e) {
 
 		}
-		
+
+		$this->testcase_customer = $this->createFroxlorTestCustomer($loginname);
+		return $this->testcase_customer;
+	}
+
+	/**
+	 * Creates a customer via api
+	 * @param string $loginname 
+	 * @return array 
+	 * @throws Exception 
+	 */
+	protected function createFroxlorTestCustomer($loginname) {
 		$data = [
 			'new_loginname' => $loginname,
 			'email' => 'team@froxlor.org',
@@ -122,8 +216,8 @@ class FroxlorTestCase extends TestCase {
 
 		
 		$json_result = Customers::getLocal(self::$admin_userdata, $data)->add();
-		$this->testcase_customer = json_decode($json_result, true)['data'];
-		return $this->testcase_customer;		
+		$customer_userdata = json_decode($json_result, true)['data'];
+		return $customer_userdata;
 	}
 	
 	/**
