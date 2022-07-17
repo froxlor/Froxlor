@@ -378,9 +378,9 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 			$listen_statement = $this->getBoolParam('listen_statement', true, $result['listen_statement']);
 			$namevirtualhost_statement = $this->getBoolParam('namevirtualhost_statement', true, $result['namevirtualhost_statement']);
 			$vhostcontainer = $this->getBoolParam('vhostcontainer', true, $result['vhostcontainer']);
-			$specialsettings = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $this->getParam('specialsettings', true, $result['specialsettings'])), 'specialsettings', \Froxlor\Validate\Validate::REGEX_CONF_TEXT, '', array(), true);
+			$specialsettings = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $this->getParam('specialsettings', true, ($result['specialsettings'] ?? ""))), 'specialsettings', \Froxlor\Validate\Validate::REGEX_CONF_TEXT, '', array(), true);
 			$vhostcontainer_servername_statement = $this->getParam('vhostcontainer_servername_statement', true, $result['vhostcontainer_servername_statement']);
-			$default_vhostconf_domain = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $this->getParam('default_vhostconf_domain', true, $result['default_vhostconf_domain'])), 'default_vhostconf_domain', \Froxlor\Validate\Validate::REGEX_CONF_TEXT, '', array(), true);
+			$default_vhostconf_domain = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $this->getParam('default_vhostconf_domain', true, ($result['default_vhostconf_domain'] ?? ""))), 'default_vhostconf_domain', \Froxlor\Validate\Validate::REGEX_CONF_TEXT, '', array(), true);
 			$docroot = \Froxlor\Validate\Validate::validate($this->getParam('docroot', true, $result['docroot']), 'docroot', \Froxlor\Validate\Validate::REGEX_DIR, '', array(), true);
 
 			if ((int) Settings::Get('system.use_ssl') == 1) {
@@ -389,9 +389,9 @@ class IpsAndPorts extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 				$ssl_key_file = \Froxlor\Validate\Validate::validate($this->getParam('ssl_key_file', $ssl, $result['ssl_key_file']), 'ssl_key_file', '', '', array(), true);
 				$ssl_ca_file = \Froxlor\Validate\Validate::validate($this->getParam('ssl_ca_file', true, $result['ssl_ca_file']), 'ssl_ca_file', '', '', array(), true);
 				$ssl_cert_chainfile = \Froxlor\Validate\Validate::validate($this->getParam('ssl_cert_chainfile', true, $result['ssl_cert_chainfile']), 'ssl_cert_chainfile', '', '', array(), true);
-				$ssl_specialsettings = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $this->getParam('ssl_specialsettings', true, $result['ssl_specialsettings'])), 'ssl_specialsettings', \Froxlor\Validate\Validate::REGEX_CONF_TEXT, '', array(), true);
+				$ssl_specialsettings = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $this->getParam('ssl_specialsettings', true, ($result['ssl_specialsettings'] ?? ""))), 'ssl_specialsettings', \Froxlor\Validate\Validate::REGEX_CONF_TEXT, '', array(), true);
 				$include_specialsettings = $this->getBoolParam('include_specialsettings', true, $result['include_specialsettings']);
-				$ssl_default_vhostconf_domain = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $this->getParam('ssl_default_vhostconf_domain', true, $result['ssl_default_vhostconf_domain'])), 'ssl_default_vhostconf_domain', \Froxlor\Validate\Validate::REGEX_CONF_TEXT, '', array(), true);
+				$ssl_default_vhostconf_domain = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $this->getParam('ssl_default_vhostconf_domain', true, ($result['ssl_default_vhostconf_domain'] ?? ""))), 'ssl_default_vhostconf_domain', \Froxlor\Validate\Validate::REGEX_CONF_TEXT, '', array(), true);
 				$include_default_vhostconf_domain = $this->getBoolParam('include_default_vhostconf_domain', true, $result['include_default_vhostconf_domain']);
 			} else {
 				$ssl = 0;

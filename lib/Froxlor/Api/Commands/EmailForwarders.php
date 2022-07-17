@@ -65,7 +65,7 @@ class EmailForwarders extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Re
 			$id = $result['id'];
 
 			// current destination array
-			$result['destination_array'] = explode(' ', $result['destination']);
+			$result['destination_array'] = explode(' ', ($result['destination'] ?? ''));
 
 			// prepare destination
 			$destination = trim($destination);

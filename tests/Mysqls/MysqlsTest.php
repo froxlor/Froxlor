@@ -276,7 +276,11 @@ class MysqlsTest extends FroxlorTestCase
 
 		// grant privileges to another host
 		$testdata = $users[FROXLORTEST_DBUSER];
-		$dbm->getManager()->grantPrivilegesTo(FROXLORTEST_DBUSER, $testdata['password'], '10.0.0.10', true);
+		$password = [
+			'password' => $testdata['password'],
+			'plugin' => $testdata['plugin']
+		];
+		$dbm->getManager()->grantPrivilegesTo(FROXLORTEST_DBUSER, $password, '10.0.0.10', true);
 
 		// select all entries from mysql.user for froxlor010 to compare password-hashes
 		$sel_stmt = Database::prepare("SELECT * FROM mysql.user WHERE `User` = :usr");
