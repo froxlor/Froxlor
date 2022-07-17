@@ -528,7 +528,7 @@ class Admins extends ApiCommand implements ResourceEntity
 				$email = $this->getParam('email', true, $idna_convert->decode($result['email']));
 				$password = $this->getParam('admin_password', true, '');
 				$def_language = $this->getParam('def_language', true, $result['def_language']);
-				$custom_notes = $this->getParam('custom_notes', true, $result['custom_notes']);
+				$custom_notes = $this->getParam('custom_notes', true, ($result['custom_notes'] ?? ""));
 				$custom_notes_show = $this->getBoolParam('custom_notes_show', true, $result['custom_notes_show']);
 				$theme = $this->getParam('theme', true, $result['theme']);
 

@@ -319,7 +319,7 @@ class MysqlsTest extends TestCase
 		$users = $dbm->getManager()->getAllSqlUsers(false);
 		foreach ($users as $user => $data) {
 			if (strtolower($user) == 'mariadb.sys') {
-				// travis seems to have a user for mariadb on version 10.4
+				// some systems seem to have a user for mariadb on version 10.4
 				// we do not want to test that one
 				continue;
 			}
@@ -334,7 +334,11 @@ class MysqlsTest extends TestCase
 
 		// grant privileges to another host
 		$testdata = $users['froxlor010'];
-		$dbm->getManager()->grantPrivilegesTo('froxlor010', $testdata['password'], '10.0.0.10', true);
+		$password = [
+			'password' => $testdata['password'],
+			'plugin' => $testdata['plugin']
+		];
+		$dbm->getManager()->grantPrivilegesTo('froxlor010', $password, '10.0.0.10', true);
 
 		// select all entries from mysql.user for froxlor010 to compare password-hashes
 		$sel_stmt = Database::prepare("SELECT * FROM mysql.user WHERE `User` = :usr");
