@@ -38,6 +38,7 @@ use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
 use Froxlor\UI\Response;
 use Froxlor\Validate\Validate;
+use Froxlor\Language;
 
 $id = (int)Request::get('id');
 
@@ -243,6 +244,7 @@ if ($page == 'overview') {
 		UI::view('user/change_password.html.twig');
 	}
 } elseif ($page == 'change_language') {
+	$languages = Language::getLanguages();
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 		$def_language = Validate::validate($_POST['def_language'], 'default language');
 
