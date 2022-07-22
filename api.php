@@ -30,6 +30,12 @@ require __DIR__ . '/vendor/autoload.php';
 require __DIR__ . '/lib/functions.php';
 require __DIR__ . '/lib/tables.inc.php';
 
+// set error-handler
+@set_error_handler([
+	'\\Froxlor\\Api\\Api',
+	'phpErrHandler'
+]);
+
 // Return response
 try {
 	echo (new Api)->formatMiddleware(@file_get_contents('php://input'))->handle();

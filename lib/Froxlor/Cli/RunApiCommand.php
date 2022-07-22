@@ -56,6 +56,12 @@ final class RunApiCommand extends CliCommand
 
 		require Froxlor::getInstallDir() . '/lib/functions.php';
 
+		// set error-handler
+		@set_error_handler([
+			'\\Froxlor\\Api\\Api',
+			'phpErrHandler'
+		]);
+
 		if ($result == self::SUCCESS) {
 			try {
 				$loginname = $input->getArgument('user');

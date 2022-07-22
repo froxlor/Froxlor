@@ -101,6 +101,20 @@ class Api
 		return $apiObj->$method();
 	}
 
+	/**
+	 * API PHP error handler to always return a valid JSON response
+	 *
+	 * @param mixed $errno
+	 * @param mixed $errstr
+	 * @param mixed $errfile
+	 * @param mixed $errline
+	 * @return never
+	 */
+	public static function phpErrHandler($errno, $errstr, $errfile, $errline)
+	{
+		throw new Exception('Internal PHP error: #' . $errno . ' ' . $errstr /* . ' in ' . $errfile . ':' . $errline */, 500);
+	}
+
 	private function stripcslashesDeep($value)
 	{
 		return is_array($value) ? array_map([$this, 'stripcslashesDeep'], $value) : stripcslashes($value);
