@@ -313,6 +313,7 @@ return [
 					'settinggroup' => 'panel',
 					'varname' => 'logo_image_header',
 					'type' => 'image',
+					'accept' => 'image/jpeg, image/jpg, image/png, image/gif',
 					'image_name' => 'logo_header',
 					'default' => '',
 					'save_method' => 'storeSettingImage'
@@ -322,6 +323,7 @@ return [
 					'settinggroup' => 'panel',
 					'varname' => 'logo_image_login',
 					'type' => 'image',
+					'accept' => 'image/jpeg, image/jpg, image/png, image/gif',
 					'image_name' => 'logo_login',
 					'default' => '',
 					'save_method' => 'storeSettingImage'

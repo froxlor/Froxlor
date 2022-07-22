@@ -27,7 +27,7 @@
 {% endblock %}
 
 {% block content %}
-	<form action="{{ action|default(filename) }}" method="post" enctype="application/x-www-form-urlencoded" class="form">
+	<form action="{{ action|default(filename) }}" method="post" enctype="multipart/form-data" class="form">
 		{% block settings %}
 			<div class="row row-cols-2 row-cols-md-2 row-cols-xl-4 g-3">
 				{% for field in fields %}

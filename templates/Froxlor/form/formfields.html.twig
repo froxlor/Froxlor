@@ -47,6 +47,8 @@
 					{{ _self.itemlist(id, field) }}
 				{% elseif field.type == 'infotext' %}
 					{{ _self.infotext(id, field) }}
+				{% elseif field.type == 'image' %}
+					{{ _self.image(id, field) }}
 				{% else %}
 					<div class="alert alert-warning" role="alert">Unknown field-type
 						{{ field.type }}</div>
@@ -133,7 +135,7 @@
 	{% if field.next_to is defined %}
 		<div class="input-group">
 		{% endif %}
-		<input type="{{ field.type }}" {% if field.visible is defined and field.visible == false %} disabled {% endif %} {% if field.type == 'number' and field.min is defined %} min="{{ field.min }}" {% endif %} {% if field.type == 'number' and field.max is defined %} max="{{ field.max }}" {% endif %} {% if field.type != 'number' and field.maxlength is defined %} maxlength="{{ field.maxlength }}" {% endif %} id="{{ id }}" name="{{ id }}" value="{{ field.value }}" class="form-control {% if field.valid is defined and field.valid == false %}is-invalid{% endif %}" {% if field.mandatory is defined and field.mandatory %} required {% endif %} {% if field.readonly is defined and field.readonly %} readonly {% endif %} {% if field.autocomplete is defined %} autocomplete="{{ field.autocomplete }}" {% endif %} {% if field.placeholder is defined %} placeholder="{{ field.placeholder }}" {% endif %}/>
+		<input type="{{ field.type }}" {% if field.visible is defined and field.visible == false %} disabled {% endif %} {% if field.type == 'number' and field.min is defined %} min="{{ field.min }}" {% endif %} {% if field.type == 'number' and field.max is defined %} max="{{ field.max }}" {% endif %} {% if field.type != 'number' and field.maxlength is defined %} maxlength="{{ field.maxlength }}" {% endif %} id="{{ id }}" name="{{ id }}" value="{{ field.value }}" class="form-control {% if field.valid is defined and field.valid == false %}is-invalid{% endif %}" {% if field.mandatory is defined and field.mandatory %} required {% endif %} {% if field.readonly is defined and field.readonly %} readonly {% endif %} {% if field.autocomplete is defined %} autocomplete="{{ field.autocomplete }}" {% endif %} {% if field.placeholder is defined %} placeholder="{{ field.placeholder }}" {% endif %} {% if field.type == 'file' and field.accept is defined %} accept="{{ field.accept }}" {% endif %}/>
 		{% if field.type == 'hidden' and field.display is defined %}
 			<input type="text" readonly class="form-control-plaintext" value="{{ field.display }}">
 		{% endif %}
@@ -146,6 +148,20 @@
 			{% endfor %}
 		</div>
 	{% endif %}
+{% endmacro %}
+
+{% macro image(id, field) %}
+	{% if field.value is not empty %}
+		<img src="/{{ field.value }}" alt="Current Image" class="field-image-preview"><br>
+		<div class="form-check form-switch mb-2">
+			<input type="checkbox" value="1" name="{{ id }}_delete" class="form-check-input">
+			<label class="form-check-label">
+				{{ lng('panel.image_field_delete') }}
+			</label>
+		</div>
+	{% endif %}
+	{% set field = field|merge({'type':'file'}) %}
+	{{ _self.input(id, field) }}
 {% endmacro %}
 
 {% macro input_ul(id, field) %}
