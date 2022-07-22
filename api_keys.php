@@ -49,7 +49,6 @@ if ($userinfo['adminsession'] == 1 && $userinfo['api_allowed'] == 0) {
 // and therefore does not need to require lib/init.php
 
 $del_stmt = Database::prepare("DELETE FROM `" . TABLE_API_KEYS . "` WHERE id = :id");
-$success_message = "";
 $id = (int)Request::get('id');
 
 // do the delete and then just show a success-message and the apikeys list again
@@ -89,7 +88,10 @@ if ($action == 'delete' && $id > 0) {
 		Database::pexecute($del_stmt, [
 			'id' => $id
 		]);
-		$success_message = lng('apikeys.apikey_removed', [$id]);
+		Response::standardSuccess('apikeys.apikey_removed', $id, [
+			'filename' => $filename,
+			'page' => $page
+		]);
 	}
 } elseif ($action == 'add') {
 	$ins_stmt = Database::prepare("
@@ -110,7 +112,10 @@ if ($action == 'delete' && $id > 0) {
 		'aid' => $userinfo['adminid'],
 		'cid' => $cid
 	]);
-	$success_message = lng('apikeys.apikey_added');
+	Response::standardSuccess('apikeys.apikey_added', '', [
+		'filename' => $filename,
+		'page' => $page
+	]);
 }
 
 $log->logAction(FroxlorLogger::USR_ACTION, LOG_NOTICE, "viewed api::api_keys");
@@ -158,9 +163,6 @@ $collection = [
 ];
 
 $tpl = 'user/table.html.twig';
-if (!empty($success_message)) {
-	$tpl = 'user/table-note.html.twig';
-}
 
 UI::view($tpl, [
 	'listing' => Listing::formatFromArray($collection, $apikeys_list_data['apikeys_list']),
@@ -170,7 +172,4 @@ UI::view($tpl, [
 			'label' => lng('apikeys.key_add')
 		]
 	] : null,
-	// alert-box
-	'type' => 'success',
-	'alert_msg' => $success_message
 ]);
