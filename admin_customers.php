@@ -44,7 +44,7 @@ use Froxlor\UI\Response;
 
 $id = (int)Request::get('id');
 
-if ($page == 'customers' && $userinfo['customers'] != '0') {
+if (($page == 'customers' || $page == 'overview') && $userinfo['customers'] != '0') {
 	if ($action == '') {
 		$log->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_customers");
 

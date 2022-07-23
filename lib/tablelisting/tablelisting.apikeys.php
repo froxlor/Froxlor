@@ -32,6 +32,7 @@ return [
 	'apikeys_list' => [
 		'title' => lng('menue.main.apikeys'),
 		'icon' => 'fa-solid fa-key',
+		'self_overview' => ['section' => 'index', 'page' => 'apikeys'],
 		'columns' => [
 			'a.loginname' => [
 				'label' => lng('login.username'),

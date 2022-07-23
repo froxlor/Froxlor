@@ -31,6 +31,7 @@ return [
 	'backup_list' => [
 		'title' => lng('error.customerhasongoingbackupjob'),
 		'icon' => 'fa-solid fa-server',
+		'self_overview' => ['section' => 'extras', 'page' => 'backup'],
 		'columns' => [
 			'destdir' => [
 				'label' => lng('panel.path'),

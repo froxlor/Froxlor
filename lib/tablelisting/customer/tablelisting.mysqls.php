@@ -44,7 +44,8 @@ return [
 			'size' => [
 				'label' => lng('mysql.size'),
 				'field' => 'size',
-				'callback' => [Text::class, 'size']
+				'callback' => [Text::class, 'size'],
+				'searchable' => false
 			],
 			'dbserver' => [
 				'label' => lng('mysql.mysql_server'),

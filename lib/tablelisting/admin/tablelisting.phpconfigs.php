@@ -45,7 +45,8 @@ return [
 			'domains' => [
 				'label' => lng('admin.phpsettings.activedomains'),
 				'field' => 'domains',
-				'callback' => [PHPConf::class, 'domainList']
+				'callback' => [PHPConf::class, 'domainList'],
+				'searchable' => false,
 			],
 			'fpmdesc' => [
 				'label' => lng('admin.phpsettings.fpmdesc'),

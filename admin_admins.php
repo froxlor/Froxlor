@@ -41,7 +41,7 @@ use Froxlor\UI\Response;
 
 $id = (int)Request::get('id');
 
-if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
+if (($page == 'admins' || $page == 'overview') && $userinfo['change_serversettings'] == '1') {
 	if ($action == '') {
 		$log->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_admins");
 

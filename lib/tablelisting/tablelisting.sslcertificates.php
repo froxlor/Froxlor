@@ -23,16 +23,15 @@
  * @license    https://files.froxlor.org/misc/COPYING.txt GPLv2
  */
 
-use Froxlor\Settings;
 use Froxlor\UI\Callbacks\Domain;
 use Froxlor\UI\Callbacks\SSLCertificate;
-use Froxlor\UI\Callbacks\Text;
 use Froxlor\UI\Listing;
 
 return [
 	'sslcertificates_list' => [
 		'title' => lng('domains.ssl_certificates'),
 		'icon' => 'fa-solid fa-shield',
+		'self_overview' => ['section' => 'domains', 'page' => 'sslcertificates'],
 		'columns' => [
 			'd.domain' => [
 				'label' => lng('domains.domainname'),

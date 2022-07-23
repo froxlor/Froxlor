@@ -31,6 +31,7 @@ return [
 	'dns_list' => [
 		'title' => 'DNS Entries',
 		'icon' => 'fa-solid fa-globe',
+		'self_overview' => ['section' => 'domains', 'page' => 'domaindnseditor'],
 		'columns' => [
 			'record' => [
 				'label' => 'Record',

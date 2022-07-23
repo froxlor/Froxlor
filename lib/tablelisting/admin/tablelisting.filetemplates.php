@@ -29,6 +29,7 @@ return [
 	'filetpl_list' => [
 		'title' => lng('admin.templates.filetemplates'),
 		'icon' => 'fa-solid fa-file-lines',
+		'self_overview' => ['section' => 'templates', 'page' => 'email'],
 		'columns' => [
 			'template' => [
 				'label' => lng('admin.templates.action'),

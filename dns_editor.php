@@ -108,7 +108,7 @@ $zonefile = implode("\n", $result);
 $dns_add_data = include_once dirname(__FILE__) . '/lib/formfields/formfield.dns_add.php';
 
 UI::view('user/dns-editor.html.twig', [
-	'listing' => Listing::format($collection, $dns_list_data, 'dns_list'),
+	'listing' => Listing::format($collection, $dns_list_data, 'dns_list', ['domain_id' => $domain_id]),
 	'actions_links' => [
 		[
 			'class' => 'btn-secondary',
@@ -133,5 +133,5 @@ UI::view('user/dns-editor.html.twig', [
 	// alert-box
 	'type' => (!empty($errors) ? 'danger' : (!empty($success_message) ? 'success' : 'warning')),
 	'alert_msg' => (!empty($errors) ? $errors : (!empty($success_message) ? $success_message : lng('dns.howitworks'))),
-	'zonefile' => $zonefile
+	'zonefile' => $zonefile,
 ]);

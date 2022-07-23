@@ -29,6 +29,7 @@ return [
 	'mailtpl_list' => [
 		'title' => lng('admin.templates.templates'),
 		'icon' => 'fa-solid fa-envelope',
+		'self_overview' => ['section' => 'templates', 'page' => 'email'],
 		'columns' => [
 			'language' => [
 				'label' => lng('login.language'),

@@ -44,6 +44,7 @@ return [
 				'field' => 'ipsandports',
 				'sortable' => false,
 				'callback' => [Domain::class, 'listIPs'],
+				'searchable' => false,
 			],
 			'd.documentroot' => [
 				'label' => lng('panel.path'),

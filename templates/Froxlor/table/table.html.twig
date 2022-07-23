@@ -12,6 +12,7 @@
 		{% else %}
 			<div class="d-flex flex-column align-items-end mt-n2">
 				<div class="rounded-top bg-white small py-1 px-2 me-3 opacity-75">
+					<span type="button" data-bs-toggle="modal" data-bs-target="#searchColumnsModal" class="me-2"><i class="fa fa-search"></i></span>
 					<span type="button" data-bs-toggle="modal" data-bs-target="#manageColumnsModal"><i class="fa fa-cog"></i></span>
 				</div>
 			</div>
@@ -87,6 +88,43 @@
 					<button type="button" class="btn btn-secondary" id="reset">{{ lng('panel.default') }}</button>
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ lng('panel.modalclose') }}</button>
 					<button type="submit" class="btn btn-primary">{{ lng('panel.save') }}</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<!-- Modal -->
+	<div class="modal fade" id="searchColumnsModal" tabindex="-1" aria-labelledby="searchColumnsModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<form method="GET" class="modal-content" action="{{ linker(listing.self_overview) }}">
+				<div class="modal-header">
+					<h5 class="modal-title" id="searchColumnsModalLabel">{{ lng('panel.searchtablecolumnsmodal.title') }}</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<p>{{ lng('panel.searchtablecolumnsmodal.description') }}</p>
+					<div class="mb-3">
+						<select class="form-select" name="searchfield" id="searchfield">
+						{% for key, column in listing.available_columns %}
+							{% if column.searchable is not defined or (column.searchable is defined and column.searchable == true) %}
+							<option value="{{ key }}">{{ column.label }}</option>
+							{% endif %}
+						{% endfor %}
+						</select>
+					</div>
+					<div class="mb-3">
+						<input class="form-control" type="text" name="searchtext" id="searchtext" placeholder="{{ lng('panel.search') }}..." value="" />
+					</div>
+					<input type="hidden" name="page" value="{{ page }}" />
+					{% if listing.listing_search_additional_param is defined and listing.listing_search_additional_param|length > 0 %}
+						{% for fldname,fldval in listing.listing_search_additional_param %}
+							<input type="hidden" name="{{ fldname }}" value="{{ fldval }}" />
+						{% endfor %}
+					{% endif %}
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ lng('panel.modalclose') }}</button>
+					<button type="submit" class="btn btn-primary">{{ lng('panel.search') }}</button>
 				</div>
 			</form>
 		</div>

@@ -30,6 +30,7 @@ return [
 	'plan_list' => [
 		'title' => lng('admin.plans.plans'),
 		'icon' => 'fa-solid fa-clipboard-list',
+		'self_overview' => ['section' => 'plans', 'page' => 'overview'],
 		'columns' => [
 			'p.id' => [
 				'label' => 'ID',

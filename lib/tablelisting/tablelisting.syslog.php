@@ -31,6 +31,7 @@ return [
 	'syslog_list' => [
 		'title' => lng('menue.logger.logger'),
 		'icon' => 'fa-solid fa-file-lines',
+		'self_overview' => ['section' => 'logger', 'page' => 'log'],
 		'columns' => [
 			'date' => [
 				'label' => lng('logger.date'),

@@ -34,6 +34,7 @@ return [
 		'self_overview' => ['section' => 'phpsettings', 'page' => 'fpmdaemons'],
 		'columns' => [
 			'id' => [
+				'label' => 'ID',
 				'field' => 'id'
 			],
 			'description' => [
@@ -42,7 +43,8 @@ return [
 			],
 			'configs' => [
 				'label' => lng('admin.phpsettings.activephpconfigs'),
-				'callback' => [PHPConf::class, 'configsList']
+				'callback' => [PHPConf::class, 'configsList'],
+				'searchable' => false,
 			],
 			'reload_cmd' => [
 				'label' => lng('serversettings.phpfpm_settings.reload'),

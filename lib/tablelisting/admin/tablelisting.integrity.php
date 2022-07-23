@@ -31,6 +31,7 @@ return [
 	'integrity_list' => [
 		'title' => lng('admin.integritycheck'),
 		'icon' => 'fa-solid fa-circle-check',
+		'self_overview' => ['section' => 'settings', 'page' => 'integritycheck'],
 		'columns' => [
 			'displayid' => [
 				'label' => 'ID',
@@ -43,7 +44,8 @@ return [
 			'result' => [
 				'label' => lng('admin.integrityresult'),
 				'field' => 'result',
-				'callback' => [Text::class, 'boolean']
+				'callback' => [Text::class, 'boolean'],
+				'searchable' => false,
 			]
 		],
 		'visible_columns' => Listing::getVisibleColumnsForListing('integrity_list', [

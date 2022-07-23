@@ -32,7 +32,7 @@ use InvalidArgumentException;
 
 class Listing
 {
-	public static function format(Collection $collection, array $tabellisting, string $id): array
+	public static function format(Collection $collection, array $tabellisting, string $id, array $listing_search_additional_param = []): array
 	{
 		$tabellisting = $tabellisting[$id];
 		$collection_data = $collection->get();
@@ -51,7 +51,8 @@ class Listing
 			'total_entries' => ($collection->getPagination() instanceof Pagination) ? $collection->getPagination()->getEntries() : 0,
 			'is_search' => $collection->getPagination() instanceof Pagination && $collection->getPagination()->isSearchResult(),
 			'self_overview' => $tabellisting['self_overview'] ?? [],
-			'available_columns' => self::getAvailableColumnsForListing($tabellisting)
+			'available_columns' => self::getAvailableColumnsForListing($tabellisting),
+			'listing_search_additional_param' => $listing_search_additional_param ?? [],
 		];
 	}
 
@@ -225,6 +226,7 @@ class Listing
 				$result[$column] = [
 					'label' => $coldata['label'],
 					'checked' => in_array($column, $tabellisting['visible_columns']),
+					'searchable' => $coldata['searchable'] ?? true,
 				];
 			}
 		}
