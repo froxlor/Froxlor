@@ -68,9 +68,9 @@ class Froxlor extends ApiCommand
 			$uc_data = Update::getUpdateCheckData();
 
 			$force_ucheck = $this->getBoolParam('force', true, 0);
-			$response = $uc_data['data'];
+			$response = $uc_data['data'] ?? [];
 
-			if (empty($uc_data) || $uc_data['ts'] + self::UPDATE_CHECK_INTERVAL < time() || $uc_data['channel'] != Settings::Get('system.update_channel') || $force_ucheck) {
+			if (empty($uc_data) || empty($response) || $uc_data['ts'] + self::UPDATE_CHECK_INTERVAL < time() || $uc_data['channel'] != Settings::Get('system.update_channel') || $force_ucheck) {
 				// log our actions
 				$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] checking for updates");
 
