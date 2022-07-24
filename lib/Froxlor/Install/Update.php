@@ -27,6 +27,7 @@ namespace Froxlor\Install;
 
 use Froxlor\Froxlor;
 use Froxlor\FroxlorLogger;
+use Froxlor\Settings;
 
 class Update
 {
@@ -105,5 +106,25 @@ class Update
 		}
 
 		return Froxlor::versionCompare2($current_version, $version_to_check) == -1;
+	}
+
+	public static function storeUpdateCheckData(array $response)
+	{
+		$data = [
+			'ts' => time(),
+			'channel' => Settings::Get('system.update_channel'),
+			'data' => $response
+		];
+		Settings::Set('system.updatecheck_data', json_encode($data));
+	}
+
+	public static function getUpdateCheckData()
+	{
+		$uc_data = Settings::Get('system.updatecheck_data');
+		if (!empty($uc_data)) {
+			$data = json_decode($uc_data, true);
+			return $data;
+		}
+		return null;
 	}
 }

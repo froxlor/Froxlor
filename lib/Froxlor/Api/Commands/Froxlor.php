@@ -32,6 +32,7 @@ use Froxlor\Database\Database;
 use Froxlor\Database\IntegrityCheck;
 use Froxlor\FroxlorLogger;
 use Froxlor\Install\AutoUpdate;
+use Froxlor\Install\Update;
 use Froxlor\Settings;
 use Froxlor\SImExporter;
 use Froxlor\System\Cronjob;
@@ -49,8 +50,12 @@ use ReflectionMethod;
 class Froxlor extends ApiCommand
 {
 
+	const UPDATE_CHECK_INTERVAL = 21600; // 6 hrs
+
 	/**
 	 * checks whether there is a newer version of froxlor available
+	 *
+	 * @param bool $force optional, force live update-check
 	 *
 	 * @access admin
 	 * @return string json-encoded array
@@ -60,50 +65,62 @@ class Froxlor extends ApiCommand
 	{
 		if ($this->isAdmin() && $this->getUserDetail('change_serversettings')) {
 
-			// log our actions
-			$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] checking for updates");
+			$uc_data = Update::getUpdateCheckData();
 
-			// check for new version
-			$aucheck = AutoUpdate::checkVersion();
+			$force_ucheck = $this->getBoolParam('force', true, 0);
+			$response = $uc_data['data'];
 
-			if ($aucheck == 1) {
-				// anzeige über version-status mit ggfls. formular
-				// zum update schritt #1 -> download
-				$text = 'There is a newer ' . (Settings::Get('system.update_channel') == 'testing' ? 'testing ' : '') . 'version available: "' . AutoUpdate::getFromResult('version') . '" (Your current version is: ' . $this->version . ')';
-				return $this->response([
-					'isnewerversion' => (int) !AutoUpdate::getFromResult('has_latest'),
-					'version' => $this->version,
-					'message' => $text,
-					'link' => AutoUpdate::getFromResult('url'),
-					'additional_info' => AutoUpdate::getFromResult('info')
-				]);
-			} else if ($aucheck < 0 || $aucheck > 1) {
-				// errors
-				if ($aucheck < 0) {
-					$errmsg = AutoUpdate::getLastError();
-				} else {
-					if ($aucheck == 3) {
-						$errmsg = lng('error.customized_version');
+			if (empty($uc_data) || $uc_data['ts'] + self::UPDATE_CHECK_INTERVAL < time() || $uc_data['channel'] != Settings::Get('system.update_channel') || $force_ucheck) {
+				// log our actions
+				$this->logger()->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "[API] checking for updates");
+
+				// check for new version
+				$aucheck = AutoUpdate::checkVersion();
+
+				$response = [];
+				if ($aucheck == 1) {
+					// anzeige über version-status mit ggfls. formular
+					// zum update schritt #1 -> download
+					$text = lng('update.uc_newinfo', [(Settings::Get('system.update_channel') == 'testing' ? 'testing ' : ''), AutoUpdate::getFromResult('version'), $this->version]);
+					$response = [
+						'isnewerversion' => (int) !AutoUpdate::getFromResult('has_latest'),
+						'version' => $this->version,
+						'message' => $text,
+						'link' => AutoUpdate::getFromResult('url'),
+						'additional_info' => AutoUpdate::getFromResult('info')
+					];
+				} else if ($aucheck < 0 || $aucheck > 1) {
+					// errors
+					if ($aucheck < 0) {
+						$errmsg = AutoUpdate::getLastError();
 					} else {
-						$errmsg = lng('error.autoupdate_' . $aucheck);
+						if ($aucheck == 3) {
+							$errmsg = lng('error.customized_version');
+						} else {
+							$errmsg = lng('error.autoupdate_' . $aucheck);
+						}
 					}
+					$response = [
+						'isnewerversion' => 0,
+						'version' => $this->version,
+						'message' => '',
+						'link' => '',
+						'additional_info' => $errmsg
+					];
+				} else {
+					$response = [
+						'isnewerversion' => 0,
+						'version' => $this->version,
+						'message' => '',
+						'link' => '',
+						'additional_info' => lng('update.noupdatesavail', [(Settings::Get('system.update_channel') == 'testing' ? lng('serversettings.uc_testing') . ' ' : '')])
+					];
 				}
-				return $this->response([
-					'isnewerversion' => 0,
-					'version' => $this->version,
-					'message' => '',
-					'link' => '',
-					'additional_info' => $errmsg
-				]);
-			} else {
-				return $this->response([
-					'isnewerversion' => 0,
-					'version' => $this->version,
-					'message' => '',
-					'link' => '',
-					'additional_info' => lng('update.noupdatesavail', [(Settings::Get('system.update_channel') == 'testing' ? lng('serversettings.uc_testing') . ' ' : '')])
-				]);
+
+				Update::storeUpdateCheckData($response);
 			}
+
+			return $this->response($response);
 		}
 		throw new Exception("Not allowed to execute given command.", 403);
 	}

@@ -82,7 +82,6 @@ if (Froxlor::isFroxlorVersion('0.10.99')) {
 	}
 	Update::lastStepStatus(0);
 
-
 	Update::showUpdateStep("Cleaning up old files");
 	$to_clean = array(
 		"install/lib",
@@ -134,6 +133,7 @@ if (Froxlor::isFroxlorVersion('0.10.99')) {
 	$system_distribution = isset($_POST['system_distribution']) ? $_POST['system_distribution'] : '';
 	Settings::AddNew("system.distribution", $system_distribution);
 	Settings::AddNew("system.update_channel", 'stable');
+	Settings::AddNew("system.updatecheck_data", '');
 	Update::lastStepStatus(0);
 
 	Update::showUpdateStep("Adjusting existing settings");
@@ -152,9 +152,5 @@ if (Froxlor::isFroxlorVersion('0.10.99')) {
 	Settings::Set('panel.standardlanguage', $lang_map[Settings::Get('panel_standardlanguage')] ?? 'en');
 	Update::lastStepStatus(0);
 
-
-	if (Froxlor::isFroxlorVersion('0.10.99')) {
-		Update::showUpdateStep("Updating from 0.10.99 to 0.11.0-dev1", false);
-		Froxlor::updateToVersion('0.11.0-dev1');
-	}
+	Froxlor::updateToVersion('0.11.0-dev1');
 }

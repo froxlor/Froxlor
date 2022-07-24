@@ -254,6 +254,7 @@ if ($page == 'overview') {
 					'id' => $userinfo['adminid'],
 					'def_language' => $def_language
 				])->update();
+				CurrentUser::setField('language', $def_language);
 			} catch (Exception $e) {
 				Response::dynamicError($e->getMessage());
 			}

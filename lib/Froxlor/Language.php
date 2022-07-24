@@ -119,5 +119,6 @@ class Language
 	public static function setLanguage(string $string)
 	{
 		self::$requestedLanguage = $string;
+		self::$lng = null;
 	}
 }

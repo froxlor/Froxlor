@@ -2501,6 +2501,7 @@ Yours sincerely, your administrator',
 		],
 		'noupdatesavail' => 'You already have the latest %sversion of Froxlor installed.',
 		'description' => 'Running database updates for your froxlor installation',
+		'uc_newinfo' => 'There is a newer %sversion available: "%s" (Your current version is: %s)',
 	],
 	'usersettings' => [
 		'custom_notes' => [
