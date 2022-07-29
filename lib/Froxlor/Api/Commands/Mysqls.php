@@ -89,7 +89,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 			}
 
 			// validate whether the dbserver exists
-			$dbserver = Validate::validate($dbserver, html_entity_decode(lng('mysql.mysql_server')), '', '', 0, true);
+			$dbserver = Validate::validate($dbserver, html_entity_decode(lng('mysql.mysql_server')), '/^[0-9]+$/', '', 0, true);
 			Database::needRoot(true, $dbserver);
 			Database::needSqlData();
 			$sql_root = Database::getSqlData();
@@ -110,9 +110,9 @@ class Mysqls extends ApiCommand implements ResourceEntity
 			$dbm = new DbManager($this->logger());
 
 			if (strtoupper(Settings::Get('customer.mysqlprefix')) == 'DBNAME' && !empty($databasename)) {
-				$username = $dbm->createDatabase($newdb_params['loginname'] . '_' . $databasename, $password);
+				$username = $dbm->createDatabase($newdb_params['loginname'] . '_' . $databasename, $password, $dbserver);
 			} else {
-				$username = $dbm->createDatabase($newdb_params['loginname'], $password, $newdb_params['mysql_lastaccountnumber']);
+				$username = $dbm->createDatabase($newdb_params['loginname'], $password, $dbserver, $newdb_params['mysql_lastaccountnumber']);
 			}
 
 			// we've checked against the password in dbm->createDatabase
@@ -229,6 +229,8 @@ class Mysqls extends ApiCommand implements ResourceEntity
 		$dn_optional = $id > 0;
 		$dbname = $this->getParam('dbname', $dn_optional, '');
 		$dbserver = $this->getParam('mysql_server', true, -1);
+
+		$dbserver = Validate::validate($dbserver, html_entity_decode(lng('mysql.mysql_server')), '/^[0-9]+$/', '', 0, true);
 
 		if ($this->isAdmin()) {
 			if ($this->getUserDetail('customers_see_all') != 1) {

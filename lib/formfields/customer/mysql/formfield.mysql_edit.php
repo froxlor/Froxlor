@@ -52,7 +52,8 @@ return [
 						'label' => lng('customer.generated_pwd'),
 						'type' => 'text',
 						'visible' => (Settings::Get('panel.password_regex') == ''),
-						'value' => Crypt::generatePassword()
+						'value' => Crypt::generatePassword(),
+						'readonly' => true
 					]
 				]
 			]

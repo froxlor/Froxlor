@@ -79,37 +79,29 @@ class DbManager
 
 	public static function correctMysqlUsers($mysql_access_host_array)
 	{
-		// get sql-root access data
-		Database::needRoot(true);
-		Database::needSqlData();
-		$sql_root = Database::getSqlData();
-		Database::needRoot(false);
+		// get all databases for all dbservers
+		$databases = [];
+		$databases_result_stmt = Database::prepare("
+			SELECT * FROM `" . TABLE_PANEL_DATABASES . "`
+			ORDER BY `dbserver` ASC
+		");
+		Database::pexecute($databases_result_stmt);
+		while ($databases_row = $databases_result_stmt->fetch(PDO::FETCH_ASSOC)) {
+			if (!isset($databases[$databases_row['dbserver']])) {
+				$databases[$databases_row['dbserver']] = [];
+			}
+			$databases[$databases_row['dbserver']][] = $databases_row['databasename'];
+		}
 
 		$dbservers_stmt = Database::query("SELECT DISTINCT `dbserver` FROM `" . TABLE_PANEL_DATABASES . "`");
 		while ($dbserver = $dbservers_stmt->fetch(PDO::FETCH_ASSOC)) {
+			// require privileged access for target db-server
 			Database::needRoot(true, $dbserver['dbserver']);
-			Database::needSqlData();
-			$sql_root = Database::getSqlData();
 
 			$dbm = new DbManager(FroxlorLogger::getInstanceOf());
 			$users = $dbm->getManager()->getAllSqlUsers(false);
 
-			$databases = [
-				$sql_root['db']
-			];
-			$databases_result_stmt = Database::prepare("
-				SELECT * FROM `" . TABLE_PANEL_DATABASES . "`
-				WHERE `dbserver` = :mysqlserver
-			");
-			Database::pexecute($databases_result_stmt, [
-				'mysqlserver' => $dbserver['dbserver']
-			]);
-
-			while ($databases_row = $databases_result_stmt->fetch(PDO::FETCH_ASSOC)) {
-				$databases[] = $databases_row['databasename'];
-			}
-
-			foreach ($databases as $username) {
+			foreach ($databases[$dbserver] as $username) {
 				if (isset($users[$username]) && is_array($users[$username]) && isset($users[$username]['hosts']) && is_array($users[$username]['hosts'])) {
 
 					$password = [
@@ -150,9 +142,9 @@ class DbManager
 	 *
 	 * @return string|bool $username if successful or false of username is equal to the password
 	 */
-	public function createDatabase($loginname = null, $password = null, $last_accnumber = 0)
+	public function createDatabase($loginname = null, $password = null, int $dbserver = 0, $last_accnumber = 0)
 	{
-		Database::needRoot(true);
+		Database::needRoot(true, $dbserver);
 
 		// check whether we shall create a random username
 		if (strtoupper(Settings::Get('customer.mysqlprefix')) == 'RANDOM') {
