@@ -202,7 +202,8 @@ class Mysqls extends ApiCommand implements ResourceEntity
 			$this->logger()->logAction($this->isAdmin() ? FroxlorLogger::ADM_ACTION : FroxlorLogger::USR_ACTION, LOG_WARNING, "[API] added mysql-database '" . $username . "'");
 
 			$result = $this->apiCall('Mysqls.get', [
-				'dbname' => $username
+				'dbname' => $username,
+				'mysql_server' => $dbserver
 			]);
 			return $this->response($result);
 		}
@@ -230,7 +231,9 @@ class Mysqls extends ApiCommand implements ResourceEntity
 		$dbname = $this->getParam('dbname', $dn_optional, '');
 		$dbserver = $this->getParam('mysql_server', true, -1);
 
-		$dbserver = Validate::validate($dbserver, html_entity_decode(lng('mysql.mysql_server')), '/^[0-9]+$/', '', 0, true);
+		if ($dbserver != -1) {
+			$dbserver = Validate::validate($dbserver, html_entity_decode(lng('mysql.mysql_server')), '/^[0-9]+$/', '', 0, true);
+		}
 
 		if ($this->isAdmin()) {
 			if ($this->getUserDetail('customers_see_all') != 1) {
