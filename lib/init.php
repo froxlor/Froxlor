@@ -26,6 +26,8 @@
 // define default theme for configurehint, etc.
 $_deftheme = 'Froxlor';
 
+require dirname(__DIR__) . '/lib/functions.php';
+
 // validate correct php version
 if (version_compare("7.4.0", PHP_VERSION, ">=")) {
 	die(view($_deftheme . '/misc/phprequirementfailed.html.twig', [
@@ -46,7 +48,6 @@ if (!file_exists(dirname(__DIR__) . '/vendor/autoload.php')) {
 }
 
 require dirname(__DIR__) . '/vendor/autoload.php';
-require dirname(__DIR__) . '/lib/functions.php';
 
 use Froxlor\CurrentUser;
 use Froxlor\Froxlor;
