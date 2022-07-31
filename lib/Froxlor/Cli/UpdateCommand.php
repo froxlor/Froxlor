@@ -27,7 +27,10 @@ namespace Froxlor\Cli;
 
 use Exception;
 use Froxlor\Froxlor;
+use Froxlor\Settings;
+use Froxlor\Install\Update;
 use Froxlor\Install\AutoUpdate;
+use Froxlor\System\Mailer;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -41,6 +44,7 @@ final class UpdateCommand extends CliCommand
 		$this->setName('froxlor:update');
 		$this->setDescription('Check for newer version and update froxlor');
 		$this->addOption('check-only', 'c', InputOption::VALUE_NONE, 'Only check for newer version and exit')
+			->addOption('mail-notify', 'm', InputOption::VALUE_NONE, 'Additionally inform administrator via email if a newer version was found')
 			->addOption('yes-to-all', 'A', InputOption::VALUE_NONE, 'Do not ask for download, extract and database-update, just do it (if not --check-only is set)')
 			->addOption('integer-return', 'i', InputOption::VALUE_NONE, 'Return integer whether a new version is available or not (implies --check-only). Useful for programmatic use.');
 	}
@@ -60,12 +64,17 @@ final class UpdateCommand extends CliCommand
 				$aucheck = AutoUpdate::checkVersion();
 
 				if ($aucheck == 1) {
+					$this->mailNotify($input, $output);
 					if ($input->getOption('integer-return')) {
 						$output->write(1);
 						return self::SUCCESS;
 					}
 					// there is a new version
-					$text = lng('admin.newerversionavailable') . ' ' . lng('admin.newerversiondetails', [AutoUpdate::getFromResult('version'), Froxlor::VERSION]);
+					if ($input->getOption('check-only')) {
+						$text = lng('update.uc_newinfo', [(Settings::Get('system.update_channel') == 'testing' ? 'testing ' : ''), AutoUpdate::getFromResult('version'), Froxlor::VERSION]);
+					} else {
+						$text = lng('admin.newerversionavailable') . ' ' . lng('admin.newerversiondetails', [AutoUpdate::getFromResult('version'), Froxlor::VERSION]);
+					}
 					$text = str_replace("<br/>", " ", $text);
 					$text = str_replace("<b>", "<info>", $text);
 					$text = str_replace("</b>", "</info>", $text);
@@ -154,6 +163,24 @@ final class UpdateCommand extends CliCommand
 			}
 		}
 		return $result;
+	}
+
+	private function mailNotify(InputInterface $input, OutputInterface $output)
+	{
+		if ($input->getOption('mail-notify')) {
+			$last_check_version = Settings::Get('system.update_notify_last');
+			if (Update::versionInUpdate($last_check_version, AutoUpdate::getFromResult('version'))) {
+				$text = lng('update.uc_newinfo', [(Settings::Get('system.update_channel') == 'testing' ? 'testing ' : ''), AutoUpdate::getFromResult('version'), Froxlor::VERSION]);
+				$mail = new Mailer(true);
+				$mail->Body = $text;
+				$mail->Subject = "[froxlor] " . lng('update.notify_subject');
+				$mail->AddAddress(Settings::Get('panel.adminmail'), Settings::Get('panel.adminmail_defname'));
+				if (!$mail->Send() && $input->getOption('integer-return') == null) {
+					$output->writeln('<error>' . $mail->ErrorInfo . '</>');
+				}
+				Settings::Set('system.update_notify_last', AutoUpdate::getFromResult('version'));
+			}
+		}
 	}
 
 	private function updateDatabase()

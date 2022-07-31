@@ -37,7 +37,10 @@ if (!defined('_CRON_UPDATE')) {
 
 // last 0.10.x release
 if (Froxlor::isFroxlorVersion('0.10.99')) {
-	Update::showUpdateStep("Updating from 0.10.99 to 0.11.0-dev1", false);
+
+	$update_to = '0.11.0-dev1';
+
+	Update::showUpdateStep("Updating from 0.10.99 to ".$update_to, false);
 
 	Update::showUpdateStep("Removing unused table");
 	Database::query("DROP TABLE IF EXISTS `panel_sessions`;");
@@ -134,6 +137,7 @@ if (Froxlor::isFroxlorVersion('0.10.99')) {
 	Settings::AddNew("system.distribution", $system_distribution);
 	Settings::AddNew("system.update_channel", 'stable');
 	Settings::AddNew("system.updatecheck_data", '');
+	Settings::AddNew("system.update_notify_last", $update_to);
 	Update::lastStepStatus(0);
 
 	Update::showUpdateStep("Adjusting existing settings");
@@ -152,5 +156,5 @@ if (Froxlor::isFroxlorVersion('0.10.99')) {
 	Settings::Set('panel.standardlanguage', $lang_map[Settings::Get('panel_standardlanguage')] ?? 'en');
 	Update::lastStepStatus(0);
 
-	Froxlor::updateToVersion('0.11.0-dev1');
+	Froxlor::updateToVersion($update_to);
 }

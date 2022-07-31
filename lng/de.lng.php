@@ -2117,6 +2117,7 @@ Vielen Dank, Ihr Administrator',
 		'noupdatesavail' => 'Die genutzte %sVersion von Froxlor ist aktuell.',
 		'description' => 'Aktualisierung der froxlor Datenbank',
 		'uc_newinfo' => 'Eine neuere %sVersion ist verfügbar: "%s" (Aktuell installierte Version: %s)',
+		'notify_subject' => 'Neues Update verfügbar',
 	],
 	'usersettings' => [
 		'custom_notes' => [
