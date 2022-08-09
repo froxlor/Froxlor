@@ -1935,12 +1935,6 @@ Yours sincerely, your administrator',
 			'title' => 'Allow moving domains between customers',
 			'description' => 'If activated you can change the customer of a domain at domainsettings.<br /><b>Attention:</b> Froxlor changes the documentroot to the new customer\'s default homedir (+ domain-folder if activated)',
 		],
-		'cron' => [
-			'debug' => [
-				'title' => 'Cronscript debugging',
-				'description' => 'Activate to keep the lockfile after a cron-run for debugging.<br /><b>Attention:</b>Keeping the lockfile can cause the next scheduled cron not to run properly.',
-			],
-		],
 		'specialsettingsforsubdomains' => [
 			'description' => 'If yes these custom vHost-settings will be added to all subdomains; if no subdomain-specialsettings are being removed.',
 		],

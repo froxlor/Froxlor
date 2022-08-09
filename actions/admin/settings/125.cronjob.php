@@ -62,14 +62,6 @@ return [
 					'type' => 'checkbox',
 					'default' => false,
 					'save_method' => 'storeSettingField'
-				],
-				'system_debug_cron' => [
-					'label' => lng('serversettings.cron.debug'),
-					'settinggroup' => 'system',
-					'varname' => 'debug_cron',
-					'type' => 'checkbox',
-					'default' => false,
-					'save_method' => 'storeSettingField'
 				]
 			]
 		]

@@ -42,4 +42,9 @@ abstract class FroxlorCron
 	{
 		static::$lockfile = $lockfile;
 	}
+
+	public static function setCronlog($cronlog = null)
+	{
+		static::$cronlog = $cronlog;
+	}
 }

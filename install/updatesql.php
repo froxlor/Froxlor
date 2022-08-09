@@ -64,10 +64,10 @@ if (Froxlor::isFroxlor()) {
 
 	$integrity = new IntegrityCheck();
 	if (!$integrity->checkAll()) {
-		Update::lastStepStatus(1, 'Monkeys ate the integrity');
-		Update::showUpdateStep("Trying to remove monkeys, feeding bananas");
+		Update::lastStepStatus(1, 'Integrity could not be validated');
+		Update::showUpdateStep("Trying to automatically restore integrity");
 		if (!$integrity->fixAll()) {
-			Update::lastStepStatus(2, 'failed', 'Some monkeys just would not move, you should contact team@froxlor.org');
+			Update::lastStepStatus(2, 'failed', 'Check "database validation" as admin on the left-side menu to see where the problem is');
 		} else {
 			Update::lastStepStatus(0, 'Integrity restored');
 		}

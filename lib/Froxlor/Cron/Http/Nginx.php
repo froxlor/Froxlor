@@ -218,15 +218,25 @@ class Nginx extends HttpConfigBase
 					$this->nginx_data[$vhost_filename] .= "\t" . 'index    index.php index.html index.htm;' . "\n\n";
 					$this->nginx_data[$vhost_filename] .= "\t" . 'location / {' . "\n";
 					$this->nginx_data[$vhost_filename] .= "\t" . '}' . "\n";
+
+					// protect lib/userdata.inc.php
+					$this->nginx_data[$vhosts_filename] .= "\t" . 'location = ' . rtrim(Froxlor::getInstallDir(), "/") . '/lib/userdata.inc.php {' . "\n";
+					$this->nginx_data[$vhosts_filename] .= "\t" . '    deny all;' . "\n";
+					$this->nginx_data[$vhosts_filename] .= "\t" . '}' . "\n";
+
+					// protect bin/
+					$this->nginx_data[$vhosts_filename] .= "\t" . 'location = ' . rtrim(Froxlor::getInstallDir(), "/") . '/bin {' . "\n";
+					$this->nginx_data[$vhosts_filename] .= "\t" . '    deny all;' . "\n";
+					$this->nginx_data[$vhosts_filename] .= "\t" . '}' . "\n";
 				}
 
 				if ($row_ipsandports['specialsettings'] != '' && ($row_ipsandports['ssl'] == '0' || ($row_ipsandports['ssl'] == '1' && Settings::Get('system.use_ssl') == '1' && $row_ipsandports['include_specialsettings'] == '1'))) {
 					$this->nginx_data[$vhost_filename] .= $this->processSpecialConfigTemplate($row_ipsandports['specialsettings'], [
-							'domain' => Settings::Get('system.hostname'),
-							'loginname' => Settings::Get('phpfpm.vhost_httpuser'),
-							'documentroot' => $mypath,
-							'customerroot' => $mypath
-						], $row_ipsandports['ip'], $row_ipsandports['port'], $row_ipsandports['ssl'] == '1') . "\n";
+						'domain' => Settings::Get('system.hostname'),
+						'loginname' => Settings::Get('phpfpm.vhost_httpuser'),
+						'documentroot' => $mypath,
+						'customerroot' => $mypath
+					], $row_ipsandports['ip'], $row_ipsandports['port'], $row_ipsandports['ssl'] == '1') . "\n";
 				}
 
 				/**
@@ -239,11 +249,11 @@ class Nginx extends HttpConfigBase
 					$this->nginx_data[$vhost_filename] .= $this->composeSslSettings($row_ipsandports);
 					if ($row_ipsandports['ssl_specialsettings'] != '') {
 						$this->nginx_data[$vhost_filename] .= $this->processSpecialConfigTemplate($row_ipsandports['ssl_specialsettings'], [
-								'domain' => Settings::Get('system.hostname'),
-								'loginname' => Settings::Get('phpfpm.vhost_httpuser'),
-								'documentroot' => $mypath,
-								'customerroot' => $mypath
-							], $row_ipsandports['ip'], $row_ipsandports['port'], $row_ipsandports['ssl'] == '1') . "\n";
+							'domain' => Settings::Get('system.hostname'),
+							'loginname' => Settings::Get('phpfpm.vhost_httpuser'),
+							'documentroot' => $mypath,
+							'customerroot' => $mypath
+						], $row_ipsandports['ip'], $row_ipsandports['port'], $row_ipsandports['ssl'] == '1') . "\n";
 					}
 				}
 

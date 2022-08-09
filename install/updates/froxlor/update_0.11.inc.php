@@ -24,6 +24,7 @@
  */
 
 use Froxlor\Froxlor;
+use Froxlor\FileDir;
 use Froxlor\Database\Database;
 use Froxlor\Settings;
 use Froxlor\Install\Update;
@@ -105,15 +106,16 @@ if (Froxlor::isFroxlorVersion('0.10.99')) {
 		"lng/lng_references.php",
 		"lng/portugues.lng.php",
 		"lng/swedish.lng.php",
+		"scripts",
 	);
 	$disabled = explode(',', ini_get('disable_functions'));
 	$exec_allowed = !in_array('exec', $disabled);
 	$del_list = "";
 	foreach ($to_clean as $filedir) {
-		$complete_filedir = \Froxlor\Froxlor::getInstallDir() . $filedir;
+		$complete_filedir = Froxlor::getInstallDir() . $filedir;
 		if (file_exists($complete_filedir)) {
 			if ($exec_allowed) {
-				Froxlor\FileDir::safe_exec("rm -rf " . escapeshellarg($complete_filedir));
+				FileDir::safe_exec("rm -rf " . escapeshellarg($complete_filedir));
 			} else {
 				$del_list .= "rm -rf " . escapeshellarg($complete_filedir) . PHP_EOL;
 			}
@@ -154,6 +156,7 @@ if (Froxlor::isFroxlorVersion('0.10.99')) {
 		'&#268;esk&aacute; republika' => 'cs'
 	];
 	Settings::Set('panel.standardlanguage', $lang_map[Settings::Get('panel_standardlanguage')] ?? 'en');
+	Database::query("DELETE FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `settinggroup` = 'system' AND `varname` = 'debug_cron'");
 	Update::lastStepStatus(0);
 
 	Froxlor::updateToVersion($update_to);

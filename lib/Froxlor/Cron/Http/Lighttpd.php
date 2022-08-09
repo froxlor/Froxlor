@@ -125,6 +125,15 @@ class Lighttpd extends HttpConfigBase
 				}
 
 				if (!$is_redirect) {
+					// protect lib/userdata.inc.php
+					$this->lighttpd_data[$vhosts_filename] .= '  $HTTP["host"] =~ "' . rtrim(Froxlor::getInstallDir(), "/") . '/lib" {' . "\n";
+					$this->lighttpd_data[$vhosts_filename] .= '    url.access-deny = ("userdata.inc.php")' . "\n";
+					$this->lighttpd_data[$vhosts_filename] .= '  }' . "\n";
+					// protect bin/
+					$this->lighttpd_data[$vhosts_filename] .= '  $HTTP["host"] =~ "' . rtrim(Froxlor::getInstallDir(), "/") . '/bin" {' . "\n";
+					$this->lighttpd_data[$vhosts_filename] .= '    url.access-deny = ("")' . "\n";
+					$this->lighttpd_data[$vhosts_filename] .= '  }' . "\n";
+
 					/**
 					 * dirprotection, see #72
 					 *

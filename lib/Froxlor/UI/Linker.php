@@ -153,7 +153,7 @@ class Linker
 			}
 
 			// Encode parameters and add them to the link
-			$link .= urlencode($key) . (!empty($value) ? '=' . urlencode($value) : '');
+			$link .= urlencode($key) . ($value !== "" ? '=' . urlencode($value) : '');
 		}
 
 		// Reset our class for further use

@@ -25,6 +25,7 @@
 
 namespace Froxlor\Cron\Http;
 
+use Froxlor\Froxlor;
 use Froxlor\Cron\Http\Php\PhpInterface;
 use Froxlor\Customer\Customer;
 use Froxlor\Database\Database;
@@ -161,6 +162,27 @@ class Apache extends HttpConfigBase
 				}
 
 				if (!$is_redirect) {
+					// protect lib/userdata.inc.php
+					$this->virtualhosts_data[$vhosts_filename] .= '  <Directory "' . rtrim(Froxlor::getInstallDir(), "/") . '/lib/">' . "\n";
+					$this->virtualhosts_data[$vhosts_filename] .= '    <Files "userdata.inc.php">' . "\n";
+					if (Settings::Get('system.apache24') == '1') {
+						$this->virtualhosts_data[$vhosts_filename] .= '    Require all denied' . "\n";
+					} else {
+						$this->virtualhosts_data[$vhosts_filename] .= '    Order deny,allow' . "\n";
+						$this->virtualhosts_data[$vhosts_filename] .= '    deny from all' . "\n";
+					}
+					$this->virtualhosts_data[$vhosts_filename] .= '    </Files>' . "\n";
+					$this->virtualhosts_data[$vhosts_filename] .= '  </Directory>' . "\n";
+					// protect bin/
+					$this->virtualhosts_data[$vhosts_filename] .= '  <Directory "' . rtrim(Froxlor::getInstallDir(), "/") . '/bin/">' . "\n";
+					if (Settings::Get('system.apache24') == '1') {
+						$this->virtualhosts_data[$vhosts_filename] .= '    Require all denied' . "\n";
+					} else {
+						$this->virtualhosts_data[$vhosts_filename] .= '    Order deny,allow' . "\n";
+						$this->virtualhosts_data[$vhosts_filename] .= '    deny from all' . "\n";
+					}
+					$this->virtualhosts_data[$vhosts_filename] .= '  </Directory>' . "\n";
+
 					// create fcgid <Directory>-Part (starter is created in apache_fcgid)
 					if (Settings::Get('system.mod_fcgid_ownvhost') == '1' && Settings::Get('system.mod_fcgid') == '1') {
 						$configdir = FileDir::makeCorrectDir(Settings::Get('system.mod_fcgid_configdir') . '/froxlor.panel/' . Settings::Get('system.hostname'));
