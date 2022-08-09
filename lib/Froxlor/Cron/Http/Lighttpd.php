@@ -29,6 +29,7 @@ use Froxlor\Cron\Http\Php\PhpInterface;
 use Froxlor\Customer\Customer;
 use Froxlor\Database\Database;
 use Froxlor\Domain\Domain;
+use Froxlor\Froxlor;
 use Froxlor\FileDir;
 use Froxlor\FroxlorLogger;
 use Froxlor\Http\Directory;
@@ -36,14 +37,9 @@ use Froxlor\Http\Statistics;
 use Froxlor\Settings;
 use Froxlor\Validate\Validate;
 use Froxlor\System\Crypt;
+use Froxlor\Idna\IdnaWrapper;
 use PDO;
 
-/**
- * @author        Florian Lippert <flo@syscp.org> (2003-2009)
- * @author        Froxlor team <team@froxlor.org> (2010-)
- *
- * @todo          ssl-redirect to non-standard port
- */
 class Lighttpd extends HttpConfigBase
 {
 
@@ -81,7 +77,7 @@ class Lighttpd extends HttpConfigBase
 				$ipv6 = '';
 			}
 
-			$this->logger->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, 'lighttpd::createIpPort: creating ip/port settings for  ' . $ip . ":" . $port);
+			FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, 'lighttpd::createIpPort: creating ip/port settings for  ' . $ip . ":" . $port);
 			$vhost_filename = FileDir::makeCorrectFile(Settings::Get('system.apacheconf_vhost') . '/10_froxlor_ipandport_' . trim(str_replace(':', '.', $row_ipsandports['ip']), '.') . '.' . $row_ipsandports['port'] . '.conf');
 
 			if (!isset($this->lighttpd_data[$vhost_filename])) {
@@ -126,13 +122,13 @@ class Lighttpd extends HttpConfigBase
 
 				if (!$is_redirect) {
 					// protect lib/userdata.inc.php
-					$this->lighttpd_data[$vhosts_filename] .= '  $HTTP["host"] =~ "' . rtrim(Froxlor::getInstallDir(), "/") . '/lib" {' . "\n";
-					$this->lighttpd_data[$vhosts_filename] .= '    url.access-deny = ("userdata.inc.php")' . "\n";
-					$this->lighttpd_data[$vhosts_filename] .= '  }' . "\n";
+					$this->lighttpd_data[$vhost_filename] .= '  $HTTP["host"] =~ "' . rtrim(Froxlor::getInstallDir(), "/") . '/lib" {' . "\n";
+					$this->lighttpd_data[$vhost_filename] .= '    url.access-deny = ("userdata.inc.php")' . "\n";
+					$this->lighttpd_data[$vhost_filename] .= '  }' . "\n";
 					// protect bin/
-					$this->lighttpd_data[$vhosts_filename] .= '  $HTTP["host"] =~ "' . rtrim(Froxlor::getInstallDir(), "/") . '/bin" {' . "\n";
-					$this->lighttpd_data[$vhosts_filename] .= '    url.access-deny = ("")' . "\n";
-					$this->lighttpd_data[$vhosts_filename] .= '  }' . "\n";
+					$this->lighttpd_data[$vhost_filename] .= '  $HTTP["host"] =~ "' . rtrim(Froxlor::getInstallDir(), "/") . '/bin" {' . "\n";
+					$this->lighttpd_data[$vhost_filename] .= '    url.access-deny = ("")' . "\n";
+					$this->lighttpd_data[$vhost_filename] .= '  }' . "\n";
 
 					/**
 					 * dirprotection, see #72
@@ -222,7 +218,7 @@ class Lighttpd extends HttpConfigBase
 				if (($row_ipsandports['ssl_cert_file'] == '' || !file_exists($row_ipsandports['ssl_cert_file'])) && (Settings::Get('system.le_froxlor_enabled') == '0' || $this->froxlorVhostHasLetsEncryptCert() == false)) {
 					$row_ipsandports['ssl_cert_file'] = Settings::Get('system.ssl_cert_file');
 					if (!file_exists($row_ipsandports['ssl_cert_file'])) {
-						$this->logger->logAction(FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'System certificate file "' . Settings::Get('system.ssl_cert_file') . '" does not seem to exist. Creating self-signed certificate...');
+						FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'System certificate file "' . Settings::Get('system.ssl_cert_file') . '" does not seem to exist. Creating self-signed certificate...');
 						Crypt::createSelfSignedCertificate();
 					}
 				}
@@ -264,7 +260,7 @@ class Lighttpd extends HttpConfigBase
 				if ($domain['ssl_cert_file'] != '') {
 					// check for existence, #1485
 					if (!file_exists($domain['ssl_cert_file'])) {
-						$this->logger->logAction(FroxlorLogger::CRON_ACTION, LOG_ERR, $ip . ':' . $port . ' :: certificate file "' . $domain['ssl_cert_file'] . '" does not exist! Cannot create ssl-directives');
+						FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_ERR, $ip . ':' . $port . ' :: certificate file "' . $domain['ssl_cert_file'] . '" does not exist! Cannot create ssl-directives');
 						echo $ip . ':' . $port . ' :: certificate file "' . $domain['ssl_cert_file'] . '" does not exist! Cannot create SSL-directives' . "\n";
 					} else {
 						$this->lighttpd_data[$vhost_filename] .= 'ssl.engine = "enable"' . "\n";
@@ -286,7 +282,7 @@ class Lighttpd extends HttpConfigBase
 						if ($domain['ssl_ca_file'] != '') {
 							// check for existence, #1485
 							if (!file_exists($domain['ssl_ca_file'])) {
-								$this->logger->logAction(FroxlorLogger::CRON_ACTION, LOG_ERR, $ip . ':' . $port . ' :: certificate CA file "' . $domain['ssl_ca_file'] . '" does not exist! Cannot create ssl-directives');
+								FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_ERR, $ip . ':' . $port . ' :: certificate CA file "' . $domain['ssl_ca_file'] . '" does not exist! Cannot create ssl-directives');
 								echo $ip . ':' . $port . ' :: certificate CA file "' . $domain['ssl_ca_file'] . '" does not exist! SSL-directives might not be working' . "\n";
 							} else {
 								$this->lighttpd_data[$vhost_filename] .= 'ssl.ca-file = "' . FileDir::makeCorrectFile($domain['ssl_ca_file']) . '"' . "\n";
@@ -571,21 +567,19 @@ class Lighttpd extends HttpConfigBase
 			$this->deactivated = true;
 		} else {
 			if ($ssl === false && $domain['ssl_redirect'] == '1') {
-				$redirect_domain = $this->idnaConvert->encode('https://' . $domain['domain']);
-				$webroot_text .= '  url.redirect = (' . "\n";
-				$webroot_text .= "\t" . '"^/(.*)" => "' . $redirect_domain . '/$1",' . "\n";
-				$webroot_text .= "\t" . '"" => "' . $redirect_domain . '",' . "\n";
-				$webroot_text .= "\t" . '"/" => "' . $redirect_domain . '"' . "\n";
-				$webroot_text .= '  )' . "\n";
+				$redirect_domain = (new IdnaWrapper)->encode('https://' . $domain['domain']);
 			} elseif (preg_match("#^https?://#i", $domain['documentroot'])) {
-				$redirect_domain = $this->idnaConvert->encode($domain['documentroot']);
-				$webroot_text .= '  url.redirect = (' . "\n";
-				$webroot_text .= "\t" . '"^/(.*)" => "' . $redirect_domain . '/$1",' . "\n";
-				$webroot_text .= "\t" . '"" => "' . $redirect_domain . '",' . "\n";
-				$webroot_text .= "\t" . '"/" => "' . $redirect_domain . '"' . "\n";
-				$webroot_text .= '  )' . "\n";
+				$redirect_domain = (new IdnaWrapper)->encode($domain['documentroot']);
 			} else {
 				$webroot_text .= '  server.document-root = "' . FileDir::makeCorrectDir($domain['documentroot']) . "\"\n";
+				$redirect_domain = '';
+			}
+			if (!empty($redirect_domain)) {
+				$webroot_text .= '  url.redirect = (' . "\n";
+				$webroot_text .= "\t" . '"^/(.*)" => "' . $redirect_domain . '/$1",' . "\n";
+				$webroot_text .= "\t" . '"" => "' . $redirect_domain . '",' . "\n";
+				$webroot_text .= "\t" . '"/" => "' . $redirect_domain . '"' . "\n";
+				$webroot_text .= '  )' . "\n";
 			}
 			$this->deactivated = false;
 		}
@@ -765,7 +759,7 @@ class Lighttpd extends HttpConfigBase
 				if (!file_exists($domain['ssl_cert_file'])) {
 					// explicitly disable ssl for this vhost
 					$domain['ssl_cert_file'] = "";
-					$this->logger->logAction(FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'System certificate file "' . Settings::Get('system.ssl_cert_file') . '" does not seem to exist. Disabling SSL-vhost for "' . $domain['domain'] . '"');
+					FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'System certificate file "' . Settings::Get('system.ssl_cert_file') . '" does not seem to exist. Disabling SSL-vhost for "' . $domain['domain'] . '"');
 				}
 			}
 
@@ -923,7 +917,7 @@ class Lighttpd extends HttpConfigBase
 
 	public function writeConfigs()
 	{
-		$this->logger->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, "lighttpd::writeConfigs: rebuilding " . Settings::Get('system.apacheconf_vhost'));
+		FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, "lighttpd::writeConfigs: rebuilding " . Settings::Get('system.apacheconf_vhost'));
 
 		$vhostDir = new Directory(Settings::Get('system.apacheconf_vhost'));
 		if (!$vhostDir->isConfigDir()) {
@@ -950,14 +944,12 @@ class Lighttpd extends HttpConfigBase
 			fclose($vhosts_file_handler);
 		} else {
 			if (!file_exists(Settings::Get('system.apacheconf_vhost'))) {
-				$this->logger->logAction(FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'lighttpd::writeConfigs: mkdir ' . escapeshellarg(FileDir::makeCorrectDir(Settings::Get('system.apacheconf_vhost'))));
+				FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'lighttpd::writeConfigs: mkdir ' . escapeshellarg(FileDir::makeCorrectDir(Settings::Get('system.apacheconf_vhost'))));
 				FileDir::safe_exec('mkdir ' . escapeshellarg(FileDir::makeCorrectDir(Settings::Get('system.apacheconf_vhost'))));
 			}
 
 			// Write a single file for every vhost
 			foreach ($this->lighttpd_data as $vhosts_filename => $vhosts_file) {
-				$this->known_filenames[] = basename($vhosts_filename);
-
 				// Apply header
 				$vhosts_file = '# ' . basename($vhosts_filename) . "\n" . '# Created ' . date('d.m.Y H:i') . "\n" . '# Do NOT manually edit this file, all changes will be deleted after the next domain change at the panel.' . "\n" . "\n" . $vhosts_file;
 

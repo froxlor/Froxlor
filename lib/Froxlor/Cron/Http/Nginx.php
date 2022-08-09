@@ -29,6 +29,7 @@ use Froxlor\Cron\Http\Php\PhpInterface;
 use Froxlor\Customer\Customer;
 use Froxlor\Database\Database;
 use Froxlor\Domain\Domain;
+use Froxlor\Froxlor;
 use Froxlor\FileDir;
 use Froxlor\FroxlorLogger;
 use Froxlor\Http\Directory;
@@ -50,8 +51,7 @@ class Nginx extends HttpConfigBase
 	protected $known_htpasswdsfilenames = [];
 	protected $mod_accesslog_loaded = '0';
 	protected $vhost_root_autoindex = false;
-	protected $known_vhostfilenames = [];
-	private $nginx_server = [];
+
 	/**
 	 * indicator whether a customer is deactivated or not
 	 * if yes, only the webroot will be generated
@@ -59,11 +59,6 @@ class Nginx extends HttpConfigBase
 	 * @var bool
 	 */
 	private $deactivated = false;
-
-	public function __construct($nginx_server = [])
-	{
-		$this->nginx_server = $nginx_server;
-	}
 
 	public function createVirtualHosts()
 	{
@@ -220,14 +215,14 @@ class Nginx extends HttpConfigBase
 					$this->nginx_data[$vhost_filename] .= "\t" . '}' . "\n";
 
 					// protect lib/userdata.inc.php
-					$this->nginx_data[$vhosts_filename] .= "\t" . 'location = ' . rtrim(Froxlor::getInstallDir(), "/") . '/lib/userdata.inc.php {' . "\n";
-					$this->nginx_data[$vhosts_filename] .= "\t" . '    deny all;' . "\n";
-					$this->nginx_data[$vhosts_filename] .= "\t" . '}' . "\n";
+					$this->nginx_data[$vhost_filename] .= "\t" . 'location = ' . rtrim(Froxlor::getInstallDir(), "/") . '/lib/userdata.inc.php {' . "\n";
+					$this->nginx_data[$vhost_filename] .= "\t" . '    deny all;' . "\n";
+					$this->nginx_data[$vhost_filename] .= "\t" . '}' . "\n";
 
 					// protect bin/
-					$this->nginx_data[$vhosts_filename] .= "\t" . 'location = ' . rtrim(Froxlor::getInstallDir(), "/") . '/bin {' . "\n";
-					$this->nginx_data[$vhosts_filename] .= "\t" . '    deny all;' . "\n";
-					$this->nginx_data[$vhosts_filename] .= "\t" . '}' . "\n";
+					$this->nginx_data[$vhost_filename] .= "\t" . 'location = ' . rtrim(Froxlor::getInstallDir(), "/") . '/bin {' . "\n";
+					$this->nginx_data[$vhost_filename] .= "\t" . '    deny all;' . "\n";
+					$this->nginx_data[$vhost_filename] .= "\t" . '}' . "\n";
 				}
 
 				if ($row_ipsandports['specialsettings'] != '' && ($row_ipsandports['ssl'] == '0' || ($row_ipsandports['ssl'] == '1' && Settings::Get('system.use_ssl') == '1' && $row_ipsandports['include_specialsettings'] == '1'))) {
@@ -1252,8 +1247,6 @@ class Nginx extends HttpConfigBase
 
 			// Write a single file for every vhost
 			foreach ($this->nginx_data as $vhosts_filename => $vhosts_file) {
-				$this->known_filenames[] = basename($vhosts_filename);
-
 				// Apply header
 				$vhosts_file = '# ' . basename($vhosts_filename) . "\n" . '# Created ' . date('d.m.Y H:i') . "\n" . '# Do NOT manually edit this file, all changes will be deleted after the next domain change at the panel.' . "\n" . "\n" . $vhosts_file;
 

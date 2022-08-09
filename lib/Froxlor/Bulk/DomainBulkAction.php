@@ -34,10 +34,12 @@ class DomainBulkAction extends BulkAction
 {
 
 	/**
+	 * @param string $import_file
+	 * @param array $userinfo
 	 *
-	 * @return object DomainBulkAction instance
+	 * @return DomainBulkAction
 	 */
-	public function __construct($import_file = null, $userinfo)
+	public function __construct(string $import_file = null, array $userinfo = [])
 	{
 		parent::__construct($import_file, $userinfo);
 		$this->setApiCall('Domains.add');
@@ -52,7 +54,7 @@ class DomainBulkAction extends BulkAction
 	 *
 	 * @return array 'all' => amount of records processed, 'imported' => number of imported records
 	 */
-	public function doImport($separator = ";", $offset = 0)
+	public function doImport(string $separator = ";", int $offset = 0)
 	{
 		if ($this->userinfo['domains'] == "-1") {
 			$dom_unlimited = true;

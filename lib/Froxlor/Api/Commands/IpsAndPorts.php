@@ -92,7 +92,7 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 	 * returns the total number of accessible ip/port entries
 	 *
 	 * @access admin
-	 * @return string json-encoded array
+	 * @return string json-encoded response message
 	 * @throws Exception
 	 */
 	public function listingCount()
@@ -108,6 +108,7 @@ class IpsAndPorts extends ApiCommand implements ResourceEntity
 			if ($result) {
 				return $this->response($result['num_ips']);
 			}
+			return $this->response(0);
 		}
 		throw new Exception("Not allowed to execute given command.", 403);
 	}

@@ -65,10 +65,10 @@ class AcmeSh extends FroxlorCron
 	/**
 	 * run the task
 	 *
-	 * @param boolean $internal
+	 * @param bool $internal
 	 * @return number
 	 */
-	public static function run($internal = false)
+	public static function run(bool $internal = false)
 	{
 		// usually, this is action is called from within the tasks-jobs
 		if (!defined('CRON_IS_FORCED') && !defined('CRON_DEBUG_FLAG') && $internal == false) {
@@ -201,6 +201,7 @@ class AcmeSh extends FroxlorCron
 		} else {
 			FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::CRON_ACTION, LOG_INFO, "No new certificates or certificate updates found");
 		}
+		return 0;
 	}
 
 	/**

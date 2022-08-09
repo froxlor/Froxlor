@@ -216,7 +216,6 @@ class EmailAccounts extends ApiCommand implements ResourceEntity
 				// replacer array for mail to create account on server
 				$replace_arr = [
 					'EMAIL' => $email_full,
-					'USERNAME' => $username,
 					'PASSWORD' => htmlentities(htmlentities($password)),
 					'SALUTATION' => User::getCorrectUserSalutation($customer),
 					'NAME' => $customer['name'],

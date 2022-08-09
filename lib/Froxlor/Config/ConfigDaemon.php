@@ -127,6 +127,8 @@ class ConfigDaemon
 				if (is_null($this->sqldata_cache)) {
 					// read in sql-data (if exists)
 					if (file_exists(Froxlor::getInstallDir() . "/lib/userdata.inc.php")) {
+						$sql = [];
+						$sql_root = [];
 						require Froxlor::getInstallDir() . "/lib/userdata.inc.php";
 						unset($sql_root);
 						$this->sqldata_cache = $sql;

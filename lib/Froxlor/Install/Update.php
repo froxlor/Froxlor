@@ -31,6 +31,9 @@ use Froxlor\Settings;
 
 class Update
 {
+	private static $update_tasks = [];
+
+	private static $task_counter = 0;
 
 	/**
 	 * Function showUpdateStep
@@ -42,20 +45,18 @@ class Update
 	 *
 	 * @return void
 	 */
-	public static function showUpdateStep($task = null, $needs_status = true)
+	public static function showUpdateStep(string $task, bool $needs_status = true)
 	{
-		global $update_tasks, $task_counter;
-
 		set_time_limit(30);
 
 		// output
-		$update_tasks[$task_counter] = ['title' => $task, 'result' => 0];
+		self::$update_tasks[self::$task_counter] = ['title' => $task, 'result' => 0];
 
 		if (!$needs_status) {
-			$task_counter++;
+			self::$task_counter++;
 		}
 
-		FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::ADM_ACTION, LOG_WARNING, $task);
+		FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::ADM_ACTION, \LOG_WARNING, $task);
 	}
 
 	/**
@@ -67,35 +68,33 @@ class Update
 	 * @param string $message
 	 * @param string $additional_info
 	 *
-	 * @return string formatted output and log-entry
+	 * @return void
 	 */
 	public static function lastStepStatus(int $status = -1, string $message = '', string $additional_info = '')
 	{
-		global $update_tasks, $task_counter;
-
-		$update_tasks[$task_counter]['result_txt'] = $message ?? 'OK';
-		$update_tasks[$task_counter]['result_desc'] = $additional_info ?? '';
+		self::$update_tasks[self::$task_counter]['result_txt'] = $message ?? 'OK';
+		self::$update_tasks[self::$task_counter]['result_desc'] = $additional_info ?? '';
 
 		switch ($status) {
 			case 0:
 				break;
 			case 1:
-				$update_tasks[$task_counter]['result'] = 2;
+				self::$update_tasks[self::$task_counter]['result'] = 2;
 				break;
 			case 2:
-				$update_tasks[$task_counter]['result'] = 1;
+				self::$update_tasks[self::$task_counter]['result'] = 1;
 				break;
 			default:
-				$update_tasks[$task_counter]['result'] = -1;
+			self::$update_tasks[self::$task_counter]['result'] = -1;
 				break;
 		}
 
-		$task_counter++;
+		self::$task_counter++;
 
 		if ($status == -1 || $status == 2) {
-			FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::ADM_ACTION, LOG_WARNING, 'Attention - last update task failed!!!');
+			FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::ADM_ACTION, \LOG_WARNING, 'Attention - last update task failed!!!');
 		} elseif ($status == 0 || $status == 1) {
-			FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::ADM_ACTION, LOG_WARNING, 'Success');
+			FroxlorLogger::getInstanceOf()->logAction(FroxlorLogger::ADM_ACTION, \LOG_WARNING, 'Success');
 		}
 	}
 
@@ -126,5 +125,15 @@ class Update
 			return $data;
 		}
 		return null;
+	}
+
+	public static function getUpdateTasks(): array
+	{
+		return self::$update_tasks;
+	}
+
+	public static function getTaskCounter(): int
+	{
+		return self::$task_counter;
 	}
 }

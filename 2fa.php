@@ -35,6 +35,7 @@ use Froxlor\Settings;
 use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Response;
 use Froxlor\PhpHelper;
+use Froxlor\User;
 
 if (Settings::Get('2fa.enabled') != '1') {
 	Response::dynamicError('2fa.2fa_not_activated');

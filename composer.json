@@ -19,7 +19,6 @@
 		"email": "team@froxlor.org",
 		"issues": "https://github.com/Froxlor/Froxlor/issues",
 		"forum": "https://forum.froxlor.org/",
-		"irc": "irc://irc.libera.chat/froxlor",
 		"source": "https://github.com/Froxlor/Froxlor",
 		"docs": "https://docs.froxlor.org/",
 		"chat": "https://discord.froxlor.org/"
@@ -64,7 +63,8 @@
 		"sebastian/phpcpd": "^6.0",
 		"phploc/phploc": "^7.0",
 		"phpmd/phpmd": "^2.10",
-		"phpunit/php-timer" : "^5"
+		"phpunit/php-timer" : "^5",
+		"phpstan/phpstan": "^1.8"
 	},
 	"suggest": {
 		"ext-bcmath": "*",

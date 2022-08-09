@@ -549,7 +549,7 @@ class Ftps extends ApiCommand implements ResourceEntity
 	 *            optional, admin-only, select ftp-users of a specific customer by loginname
 	 *
 	 * @access admin, customer
-	 * @return string json-encoded array
+	 * @return string json-encoded response message
 	 * @throws Exception
 	 */
 	public function listingCount()
@@ -564,6 +564,7 @@ class Ftps extends ApiCommand implements ResourceEntity
 		if ($result) {
 			return $this->response($result['num_ftps']);
 		}
+		return $this->response(0);
 	}
 
 	/**

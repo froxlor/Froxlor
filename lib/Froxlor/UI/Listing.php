@@ -60,7 +60,6 @@ class Listing
 	{
 		return [
 			'title' => $tabellisting['title'],
-			'icon' => $tabellisting['icon'],
 			'description' => $tabellisting['description'] ?? null,
 			'icon' => $tabellisting['icon'] ?? null,
 			'table' => [

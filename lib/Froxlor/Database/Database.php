@@ -127,6 +127,9 @@ class Database
 	{
 		global $userinfo, $theme, $linker;
 
+		$sql = [];
+		$sql_root = [];
+
 		// include userdata.inc.php
 		require Froxlor::getInstallDir() . "/lib/userdata.inc.php";
 

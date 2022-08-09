@@ -25,6 +25,7 @@
 
 namespace Froxlor\Cli;
 
+use PDO;
 use Froxlor\Froxlor;
 use Froxlor\FileDir;
 use Froxlor\Settings;
@@ -32,6 +33,7 @@ use Froxlor\FroxlorLogger;
 use Froxlor\Database\Database;
 use Froxlor\System\Cronjob;
 use Froxlor\Cron\TaskId;
+use Froxlor\Cron\CronConfig;
 use Froxlor\Cron\System\Extrausers;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -142,7 +144,7 @@ final class MasterCron extends CliCommand
 		// we have to check the system's last guid with every cron run
 		// in case the admin installed new software which added a new user
 		//so users in the database don't conflict with system users
-		$this->cronlog->logAction(FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Checking system\'s last guid');
+		$this->cronLog->logAction(FroxlorLogger::CRON_ACTION, LOG_NOTICE, 'Checking system\'s last guid');
 		Cronjob::checkLastGuid();
 
 		// check for cron.d-generation task and create it if necessary
@@ -160,7 +162,7 @@ final class MasterCron extends CliCommand
 	{
 		if ($jobcount > 0) {
 			if (Settings::Get('system.nssextrausers') == 1) {
-				Extrausers::generateFiles(self::$cronlog);
+				Extrausers::generateFiles($this->cronLog);
 				return;
 			}
 

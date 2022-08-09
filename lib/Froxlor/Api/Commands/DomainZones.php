@@ -491,7 +491,7 @@ class DomainZones extends ApiCommand implements ResourceEntity
 	 *            optional, the domain name
 	 *
 	 * @access admin, customer
-	 * @return bool
+	 * @return string json-encoded response message
 	 * @throws Exception
 	 */
 	public function listingCount()
@@ -522,6 +522,7 @@ class DomainZones extends ApiCommand implements ResourceEntity
 		if ($result) {
 			return $this->response($result['num_dns']);
 		}
+		return $this->response(0);
 	}
 
 	/**

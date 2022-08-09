@@ -46,11 +46,11 @@ class PhpInterface
 	private $interface = null;
 
 	/**
-	 * Admin-User data array
+	 * PHP-Config data array
 	 *
 	 * @var array
 	 */
-	private $admin_cache = [];
+	private $php_configs_cache = [];
 
 	/**
 	 * main constructor
@@ -93,10 +93,8 @@ class PhpInterface
 	 *
 	 * @return array
 	 */
-	public function getPhpConfig($php_config_id)
+	public function getPhpConfig(int $php_config_id)
 	{
-		$php_config_id = intval($php_config_id);
-
 		// If domain has no config, we will use the default one.
 		if ($php_config_id == 0) {
 			$php_config_id = 1;
@@ -104,24 +102,26 @@ class PhpInterface
 
 		if (!isset($this->php_configs_cache[$php_config_id])) {
 			$stmt = Database::prepare("
-					SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "` WHERE `id` = :id");
-			$this->_php_configs_cache[$php_config_id] = Database::pexecute_first($stmt, [
+				SELECT * FROM `" . TABLE_PANEL_PHPCONFIGS . "` WHERE `id` = :id
+			");
+			$this->php_configs_cache[$php_config_id] = Database::pexecute_first($stmt, [
 				'id' => $php_config_id
 			]);
 			if ((int)Settings::Get('phpfpm.enabled') == 1) {
 				$stmt = Database::prepare("
-					SELECT * FROM `" . TABLE_PANEL_FPMDAEMONS . "` WHERE `id` = :id");
-				$this->_php_configs_cache[$php_config_id]['fpm_settings'] = Database::pexecute_first($stmt, [
-					'id' => $this->_php_configs_cache[$php_config_id]['fpmsettingid']
+					SELECT * FROM `" . TABLE_PANEL_FPMDAEMONS . "` WHERE `id` = :id
+				");
+				$this->php_configs_cache[$php_config_id]['fpm_settings'] = Database::pexecute_first($stmt, [
+					'id' => $this->php_configs_cache[$php_config_id]['fpmsettingid']
 				]);
 				// override fpm daemon settings if set in php-config
-				if ($this->_php_configs_cache[$php_config_id]['override_fpmconfig'] == 1) {
-					$this->_php_configs_cache[$php_config_id]['fpm_settings']['limit_extensions'] = $this->_php_configs_cache[$php_config_id]['limit_extensions'];
-					$this->_php_configs_cache[$php_config_id]['fpm_settings']['idle_timeout'] = $this->_php_configs_cache[$php_config_id]['idle_timeout'];
+				if ($this->php_configs_cache[$php_config_id]['override_fpmconfig'] == 1) {
+					$this->php_configs_cache[$php_config_id]['fpm_settings']['limit_extensions'] = $this->php_configs_cache[$php_config_id]['limit_extensions'];
+					$this->php_configs_cache[$php_config_id]['fpm_settings']['idle_timeout'] = $this->php_configs_cache[$php_config_id]['idle_timeout'];
 				}
 			}
 		}
 
-		return $this->_php_configs_cache[$php_config_id];
+		return $this->php_configs_cache[$php_config_id];
 	}
 }

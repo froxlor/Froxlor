@@ -40,16 +40,10 @@ use Froxlor\Validate\Validate;
 use Froxlor\System\Crypt;
 use PDO;
 
-/**
- * @author        Florian Lippert <flo@syscp.org> (2003-2009)
- * @author        Froxlor team <team@froxlor.org> (2010-)
- */
 class Apache extends HttpConfigBase
 {
 
 	// protected
-	protected $known_vhostfilenames = [];
-
 	protected $known_diroptionsfilenames = [];
 
 	protected $known_htpasswdsfilenames = [];
@@ -1460,8 +1454,6 @@ class Apache extends HttpConfigBase
 
 				// Write a single file for every vhost
 				foreach ($this->virtualhosts_data as $vhosts_filename => $vhosts_file) {
-					$this->known_vhostfilenames[] = basename($vhosts_filename);
-
 					// Apply header
 					$vhosts_file = '# ' . basename($vhosts_filename) . "\n" . '# Created ' . date('d.m.Y H:i') . "\n" . '# Do NOT manually edit this file, all changes will be deleted after the next domain change at the panel.' . "\n" . "\n" . $vhosts_file;
 					$vhosts_file_handler = fopen($vhosts_filename, 'w');

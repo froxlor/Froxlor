@@ -51,12 +51,7 @@ try {
 
 if (Froxlor::isFroxlor()) {
 
-	// will be filled and increased by the update include-files below
-	$update_tasks = [];
-	$task_counter = 0;
-
 	include_once(FileDir::makeCorrectFile(dirname(__FILE__) . '/updates/froxlor/update_0.10.inc.php'));
-
 	include_once(FileDir::makeCorrectFile(dirname(__FILE__) . '/updates/froxlor/update_0.11.inc.php'));
 
 	// Check Froxlor - database integrity (only happens after all updates are done, so we know the db-layout is okay)

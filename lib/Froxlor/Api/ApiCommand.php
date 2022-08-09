@@ -105,7 +105,7 @@ abstract class ApiCommand extends ApiParameter
 	 *
 	 * @throws Exception
 	 */
-	public function __construct($header = null, $params = null, $userinfo = null, $internal = false)
+	final public function __construct($header = null, $params = null, $userinfo = null, $internal = false)
 	{
 		parent::__construct($params);
 

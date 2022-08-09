@@ -28,6 +28,7 @@ namespace Froxlor\Cli;
 use Exception;
 use Froxlor\Froxlor;
 use Froxlor\Settings;
+use Froxlor\Database\Database;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -72,7 +73,7 @@ class CliCommand extends Command
 		include_once Froxlor::getInstallDir() . '/install/updatesql.php';
 		ob_end_flush();
 		$output->writeln('<info>Automatic update done - you should check your settings to be sure everything is fine</>');
-		return self::SUCCCESS;
+		return self::SUCCESS;
 	}
 
 	private function cleanUpdateOutput($buffer)
