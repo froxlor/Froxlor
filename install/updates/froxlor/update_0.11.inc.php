@@ -79,7 +79,7 @@ if (Froxlor::isFroxlorVersion('0.10.99')) {
 	");
 	$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_CUSTOMERS . "` SET `allowed_mysqlserver` = :allowed_mysqlserver WHERE `customerid` = :customerid");
 	while ($dbserver = $dbservers_stmt->fetch(PDO::FETCH_ASSOC)) {
-		if (isset($dbserver['allowed_mysqlserver']) && !empt($dbserver['allowed_mysqlserver'])) {
+		if (isset($dbserver['allowed_mysqlserver']) && !empty($dbserver['allowed_mysqlserver'])) {
 			$allowed_mysqlserver = json_encode(explode(",", $dbserver['allowed_mysqlserver']));
 			Database::pexecute($upd_stmt, ['allowed_mysql_server' => $allowed_mysqlserver, 'customerid' => $dbserver['customerid']]);
 		}

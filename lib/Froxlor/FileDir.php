@@ -554,7 +554,7 @@ class FileDir
 	 */
 	public static function setImmutable(string $filename)
 	{
-		FileDir::safe_exec(self::getImmutableFunction(false) . escapeshellarg($filename));
+		self::safe_exec(self::getImmutableFunction(false) . escapeshellarg($filename));
 	}
 
 	/**

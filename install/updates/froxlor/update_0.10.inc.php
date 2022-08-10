@@ -24,10 +24,12 @@
  */
 
 use Froxlor\Froxlor;
+use Froxlor\FileDir;
 use Froxlor\Database\Database;
 use Froxlor\Settings;
 use Froxlor\Install\Update;
 use Froxlor\System\Cronjob;
+use Froxlor\System\IPTools;
 
 if (!defined('_CRON_UPDATE')) {
 	if (!defined('AREA') || (defined('AREA') && AREA != 'admin') || !isset($userinfo['loginname']) || (isset($userinfo['loginname']) && $userinfo['loginname'] == '')) {
@@ -323,7 +325,7 @@ if (Froxlor::isDatabaseVersion('201907270')) {
 		$complete_filedir = Froxlor::getInstallDir() . $filedir;
 		if (file_exists($complete_filedir)) {
 			if ($exec_allowed) {
-				Froxlor\FileDir::safe_exec("rm -rf " . escapeshellarg($complete_filedir));
+				FileDir::safe_exec("rm -rf " . escapeshellarg($complete_filedir));
 			} else {
 				$del_list .= "rm -rf " . escapeshellarg($complete_filedir) . PHP_EOL;
 			}
@@ -889,7 +891,7 @@ if (Froxlor::isDatabaseVersion('202107210')) {
 	Database::pexecute($result_stmt);
 	$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_IPSANDPORTS . "` SET `ip` = :ip WHERE `id` = :id");
 	while ($iprow = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
-		if (Validate::is_ipv6($iprow['ip'])) {
+		if (IPTools::is_ipv6($iprow['ip'])) {
 			$ip = inet_ntop(inet_pton($iprow['ip']));
 			Database::pexecute($upd_stmt, [
 				'ip' => $ip,
