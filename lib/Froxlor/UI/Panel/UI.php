@@ -279,7 +279,7 @@ class UI
 			}
 		}
 		if (!file_exists(Froxlor::getInstallDir() . '/templates/' . $theme)) {
-			PhpHelper::phpErrHandler(E_USER_WARNING, "Theme '" . $theme . "' could not be found.", __FILE__, __LINE__, null);
+			PhpHelper::phpErrHandler(E_USER_WARNING, "Theme '" . $theme . "' could not be found.", __FILE__, __LINE__);
 			$theme = self::$default_theme;
 		}
 		return $theme;

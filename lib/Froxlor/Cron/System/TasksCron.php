@@ -27,6 +27,7 @@ namespace Froxlor\Cron\System;
 
 use Froxlor\Cron\FroxlorCron;
 use Froxlor\Cron\Http\ConfigIO;
+use Froxlor\Cron\Http\HttpConfigBase;
 use Froxlor\Cron\TaskId;
 use Froxlor\Database\Database;
 use Froxlor\Dns\PowerDNS;
@@ -158,7 +159,7 @@ class TasksCron extends FroxlorCron
 		// get webserver object
 		$webserver = new $websrv();
 
-		if (isset($webserver)) {
+		if ($webserver instanceof HttpConfigBase) {
 			$webserver->init();
 			// clean up old configs
 			$configio->cleanUp();

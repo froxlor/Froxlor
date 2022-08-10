@@ -70,10 +70,10 @@ class Update
 	 *
 	 * @return void
 	 */
-	public static function lastStepStatus(int $status = -1, string $message = '', string $additional_info = '')
+	public static function lastStepStatus(int $status = -1, string $message = 'OK', string $additional_info = '')
 	{
-		self::$update_tasks[self::$task_counter]['result_txt'] = $message ?? 'OK';
-		self::$update_tasks[self::$task_counter]['result_desc'] = $additional_info ?? '';
+		self::$update_tasks[self::$task_counter]['result_txt'] = $message;
+		self::$update_tasks[self::$task_counter]['result_desc'] = $additional_info;
 
 		switch ($status) {
 			case 0:

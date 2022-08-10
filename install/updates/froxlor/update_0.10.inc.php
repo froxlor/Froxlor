@@ -98,7 +98,7 @@ if (Froxlor::isDatabaseVersion('201809280')) {
 if (Froxlor::isDatabaseVersion('201811180')) {
 
 	Update::showUpdateStep("Adding new settings for 2FA");
-	Settings::AddNew('2fa.enabled', '1', true);
+	Settings::AddNew('2fa.enabled', '1');
 	Update::lastStepStatus(0);
 
 	Update::showUpdateStep("Adding new fields to admin-table for 2FA");
@@ -127,7 +127,7 @@ if (Froxlor::isDatabaseVersion('201812010')) {
 
 	Update::showUpdateStep("Adding new is_configured-flag");
 	// updated systems are already configured (most likely :P)
-	Settings::AddNew('panel.is_configured', '1', true);
+	Settings::AddNew('panel.is_configured', '1');
 	Update::lastStepStatus(0);
 
 	Froxlor::updateToDbVersion('201812100');
@@ -287,8 +287,8 @@ if (Froxlor::isFroxlorVersion('0.10.0-rc1')) {
 if (Froxlor::isDatabaseVersion('201904250')) {
 
 	Update::showUpdateStep("Adding new settings for CAA");
-	Settings::AddNew('caa.caa_entry', '', true);
-	Settings::AddNew('system.dns_createcaaentry', 1, true);
+	Settings::AddNew('caa.caa_entry', '');
+	Settings::AddNew('system.dns_createcaaentry', 1);
 	Update::lastStepStatus(0);
 
 	Froxlor::updateToDbVersion('201907270');
@@ -928,7 +928,7 @@ if (Froxlor::isFroxlorVersion('0.10.27')) {
 
 if (Froxlor::isDatabaseVersion('202108180')) {
 	Update::showUpdateStep("Adding czech language file", true);
-	Database::query("INSERT INTO `" . TABLE_PANEL_LANGUAGE . "` SET `language` = '&#268;esk&aacute; republika', `iso` = 'cs', `file` = 'lng/czech.lng.php'");
+	Database::query("INSERT INTO `panel_languages` SET `language` = '&#268;esk&aacute; republika', `iso` = 'cs', `file` = 'lng/czech.lng.php'");
 	Update::lastStepStatus(0);
 	Froxlor::updateToDbVersion('202109040');
 }

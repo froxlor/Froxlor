@@ -332,7 +332,7 @@ class Install
 			throw new Exception(lng('error.emailiswrong', [$email]));
 		} elseif (empty($password) || $password != $password_confirm) {
 			throw new Exception(lng('error.newpasswordconfirmerror'));
-		} elseif (!empty($password) && $password == $loginname) {
+		} elseif ($password == $loginname) {
 			throw new Exception(lng('error.passwordshouldnotbeusername'));
 		}
 	}

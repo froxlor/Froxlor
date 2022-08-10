@@ -94,7 +94,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 			Database::needSqlData();
 			$sql_root = Database::getSqlData();
 			Database::needRoot(false);
-			if (!isset($sql_root) || !is_array($sql_root)) {
+			if (!is_array($sql_root)) {
 				throw new Exception("Database server with index #" . $dbserver . " is unknown", 404);
 			}
 

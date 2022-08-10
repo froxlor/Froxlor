@@ -458,7 +458,7 @@ class PhpHelper
 			'ssl_default_vhostconf_domain',
 			'filecontent'
 		];
-		if (isset($global) && !empty($global)) {
+		if (!empty($global)) {
 			$tmp = $global;
 			foreach ($tmp as $index => $value) {
 				if (!in_array($index, $ignored_fields)) {
@@ -516,7 +516,7 @@ class PhpHelper
 				$str .= self::tabPrefix(($depth-1), "[\n");
 			}
 			foreach ($array as $key => $value) {
-				if (isset($key) && !is_array($value)) {
+				if (!is_array($value)) {
 					if (is_bool($value)) {
 						$str .= self::tabPrefix($depth, sprintf("'%s' => %s,\n", $key, $value ? 'true' : 'false'));
 					} elseif (is_int($value)) {

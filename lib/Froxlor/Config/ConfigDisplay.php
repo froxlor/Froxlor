@@ -109,7 +109,7 @@ class ConfigDisplay
 			}
 		}
 
-		Database::needSqlData(true);
+		Database::needSqlData();
 		$sql = Database::getSqlData();
 
 		self::$replace_arr = [

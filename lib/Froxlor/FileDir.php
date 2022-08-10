@@ -313,9 +313,9 @@ class FileDir
 	 *
 	 * @return string the corrected filename
 	 */
-	public static function makeCorrectFile($filename)
+	public static function makeCorrectFile(string $filename)
 	{
-		if (!isset($filename) || trim($filename) == '') {
+		if (trim($filename) == '') {
 			$error = 'Given filename for function ' . __FUNCTION__ . ' is empty.' . "\n";
 			$error .= 'This is very dangerous and should not happen.' . "\n";
 			$error .= 'Please inform the Froxlor team about this issue so they can fix it.';

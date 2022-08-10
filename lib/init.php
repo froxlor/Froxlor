@@ -223,7 +223,7 @@ if (!CurrentUser::hasSession() && AREA != 'login') {
 }
 
 $userinfo = CurrentUser::getData();
-UI::twig()->addGlobal('userinfo', ($userinfo ?? []));
+UI::twig()->addGlobal('userinfo', $userinfo);
 UI::setCurrentUser($userinfo);
 // Initialize logger
 if (CurrentUser::hasSession()) {

@@ -34,11 +34,11 @@ class Mailer extends PHPMailer
 	/**
 	 * class constructor
 	 *
-	 * @param string $exceptions
+	 * @param bool $exceptions
 	 *            whether to throw exceptions or not
 	 *
 	 */
-	public function __construct($exceptions = false)
+	public function __construct(bool $exceptions = false)
 	{
 		parent::__construct($exceptions);
 		$this->CharSet = "UTF-8";

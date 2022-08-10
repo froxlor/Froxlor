@@ -411,7 +411,7 @@ if ($action == 'forgotpwd') {
 
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 		$loginname = Validate::validate($_POST['loginname'], 'loginname');
-		$email = Validate::validateEmail($_POST['loginemail'], 'email');
+		$email = Validate::validateEmail($_POST['loginemail']);
 		$result_stmt = Database::prepare("SELECT `adminid`, `customerid`, `customernumber`, `firstname`, `name`, `company`, `email`, `loginname`, `def_language`, `deactivated` FROM `" . TABLE_PANEL_CUSTOMERS . "`
 			WHERE `loginname`= :loginname
 			AND `email`= :email");

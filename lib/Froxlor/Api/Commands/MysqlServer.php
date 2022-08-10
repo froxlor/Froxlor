@@ -131,7 +131,7 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 		require Froxlor::getInstallDir() . "/lib/userdata.inc.php";
 
 		// le format
-		if (isset($sql['root_user']) && isset($sql['root_password']) && (!isset($sql_root) || !is_array($sql_root))) {
+		if (isset($sql['root_user']) && isset($sql['root_password']) &&!is_array($sql_root)) {
 			$sql_root = array(
 				0 => array(
 					'caption' => 'Default',
@@ -154,7 +154,7 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 			'password' => $privileged_password,
 			'ssl' => [
 				'caFile' => $mysql_ca ?? "",
-				'verifyServerCertificate' => $mysql_verifycert ?? false
+				'verifyServerCertificate' => $mysql_verifycert
 			]
 		];
 
@@ -195,6 +195,7 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 			throw new Exception('Cannot delete first/default mysql-server', 406);
 		}
 
+		$sql_root = [];
 		// get all data from lib/userdata
 		require Froxlor::getInstallDir() . "/lib/userdata.inc.php";
 
@@ -358,6 +359,7 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 		$dbserver = (int) $this->getParam('dbserver', $dn_optional, -1);
 		$dbserver = $id >= 0 ? $id : $dbserver;
 
+		$sql_root = [];
 		require Froxlor::getInstallDir() . "/lib/userdata.inc.php";
 
 		if (!isset($sql_root[$dbserver])) {
