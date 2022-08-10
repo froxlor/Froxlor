@@ -52,13 +52,13 @@ class Validate
 	 * @param string $str the string to be tested (user input)
 	 * @param string $fieldname to be used in error messages
 	 * @param string $pattern the regular expression to be used for testing
-	 * @param string $language id for the error
+	 * @param string|array $lng id for the error
 	 * @param string|array $emptydefault fallback value
 	 * @param bool $throw_exception whether to display error or throw an exception, default false
 	 *
 	 * @return string|void the clean string or error
 	 */
-	public static function validate($str, string $fieldname, string $pattern = '', string $lng = '', $emptydefault = [], bool $throw_exception = false)
+	public static function validate($str, string $fieldname, string $pattern = '', $lng = '', $emptydefault = [], bool $throw_exception = false)
 	{
 		if (!is_array($emptydefault)) {
 			$emptydefault_array = [
