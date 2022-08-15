@@ -180,12 +180,18 @@ abstract class ApiParameter
 	 */
 	private function trimArray($input)
 	{
-		if (! is_array($input)) {
+		if ($input === '') {
+			return "";
+		}
+		if (is_numeric($input) || is_null($input)) {
+			return $input;
+		}
+		if (!is_array($input)) {
 			return trim($input);
 		}
-		return array_map(array(
+		return array_map([
 			$this,
 			'trimArray'
-		), $input);
+		], $input);
 	}
 }

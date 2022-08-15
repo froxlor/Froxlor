@@ -1,4 +1,5 @@
 <?php
+
 namespace Froxlor;
 
 use Froxlor\Database\Database;
@@ -96,14 +97,14 @@ class FileDir
 			$subdir = self::makeCorrectDir($subdir);
 			$subdirs = array();
 
-			if ($within_homedir || ! $allow_notwithinhomedir) {
+			if ($within_homedir || !$allow_notwithinhomedir) {
 				$subdirlen = strlen($subdir);
 				$offset = 0;
 
 				while ($offset < $subdirlen) {
 					$offset = strpos($subdir, '/', $offset);
 					$subdirelem = substr($subdir, 0, $offset);
-					$offset ++;
+					$offset++;
 					array_push($subdirs, self::makeCorrectDir($homeDir . $subdirelem));
 				}
 			} else {
@@ -113,7 +114,7 @@ class FileDir
 			$subdirs = array_unique($subdirs);
 			sort($subdirs);
 			foreach ($subdirs as $sdir) {
-				if (! is_dir($sdir)) {
+				if (!is_dir($sdir)) {
 					$sdir = self::makeCorrectDir($sdir);
 					self::safe_exec('mkdir -p ' . escapeshellarg($sdir));
 					// place index
@@ -247,7 +248,7 @@ class FileDir
 	 */
 	public static function makeCorrectFile($filename)
 	{
-		if (! isset($filename) || trim($filename) == '') {
+		if (!isset($filename) || trim($filename) == '') {
 			$error = 'Given filename for function ' . __FUNCTION__ . ' is empty.' . "\n";
 			$error .= 'This is very dangerous and should not happen.' . "\n";
 			$error .= 'Please inform the Froxlor team about this issue so they can fix it.';
@@ -278,7 +279,7 @@ class FileDir
 	{
 		if (is_string($dir) && strlen($dir) > 0) {
 			$dir = trim($dir);
-			if (substr($dir, - 1, 1) != '/') {
+			if (substr($dir, -1, 1) != '/') {
 				$dir .= '/';
 			}
 			if (substr($dir, 0, 1) != '/') {
@@ -355,7 +356,7 @@ class FileDir
 			$destination = substr($destination, 1);
 		}
 
-		if (substr($destination, - 1, 1) == ' ') {
+		if (substr($destination, -1, 1) == ' ') {
 			$destination = substr($destination, 0, strlen($destination) - 1);
 		}
 
@@ -390,7 +391,7 @@ class FileDir
 		// but dirList holds the paths with starting slash
 		// so we just add one here to get the correct
 		// default path selected, #225
-		if (substr($value, 0, 1) != '/' && ! $dom) {
+		if (substr($value, 0, 1) != '/' && !$dom) {
 			$value = '/' . $value;
 		}
 
@@ -408,34 +409,22 @@ class FileDir
 			natcasesort($dirList);
 
 			if (sizeof($dirList) > 0) {
-				if (sizeof($dirList) <= 100) {
-					$_field = '';
-					foreach ($dirList as $dir) {
-						if (strpos($dir, $path) === 0) {
-							$dir = substr($dir, strlen($path));
-							// docroot cut off of current directory == empty -> directory is the docroot
-							if (empty($dir)) {
-								$dir = '/';
-							}
-							$dir = self::makeCorrectDir($dir);
+				$_field = '';
+				foreach ($dirList as $dir) {
+					if (strpos($dir, $path) === 0) {
+						$dir = substr($dir, strlen($path));
+						// docroot cut off of current directory == empty -> directory is the docroot
+						if (empty($dir)) {
+							$dir = '/';
 						}
-						$_field .= \Froxlor\UI\HTML::makeoption($dir, $dir, $value);
+						$dir = self::makeCorrectDir($dir);
 					}
-					$field = array(
-						'type' => 'select',
-						'value' => $_field
-					);
-				} else {
-					// remove starting slash we added
-					// for the Dropdown, #225
-					$value = substr($value, 1);
-					// $field = $lng['panel']['toomanydirs'];
-					$field = array(
-						'type' => 'text',
-						'value' => htmlspecialchars($value),
-						'note' => $lng['panel']['toomanydirs']
-					);
+					$_field .= \Froxlor\UI\HTML::makeoption($dir, $dir, $value);
 				}
+				$field = array(
+					'type' => 'select',
+					'value' => $_field
+				);
 			} else {
 				// $field = $lng['panel']['dirsmissing'];
 				// $field = '<input type="hidden" name="path" value="/" />';
@@ -489,22 +478,31 @@ class FileDir
 			$filter = function ($file, $key, $iterator) use ($exclude) {
 				if (in_array($file->getFilename(), $exclude)) {
 					return false;
+				} elseif (substr($file->getFilename(), 0, 1) == '.') {
+					// also hide hidden folders
+					return false;
 				}
 				return true;
 			};
 
 			// create RecursiveIteratorIterator
-			$its = new \RecursiveIteratorIterator(new \RecursiveCallbackFilterIterator(new \RecursiveDirectoryIterator($path, \RecursiveDirectoryIterator::SKIP_DOTS), $filter));
+			$its = new \RecursiveIteratorIterator(
+				new \RecursiveCallbackFilterIterator(
+					new \RecursiveDirectoryIterator($path, \RecursiveDirectoryIterator::SKIP_DOTS),
+					$filter
+				),
+				\RecursiveIteratorIterator::LEAVES_ONLY,
+				\RecursiveIteratorIterator::CATCH_GET_CHILD
+			);
 			// we can limit the recursion-depth, but will it be helpful or
 			// will people start asking "why do I only see 2 subdirectories, i want to use /a/b/c"
 			// let's keep this in mind and see whether it will be useful
-			// @TODO
-			// $its->setMaxDepth(2);
+			$its->setMaxDepth(2);
 
 			// check every file
 			foreach ($its as $fullFileName => $it) {
 				if ($it->isDir() && (fileowner($fullFileName) == $uid || filegroup($fullFileName) == $gid)) {
-					$_fileList[] = self::makeCorrectDir(dirname($fullFileName));
+					$_fileList[] = self::makeCorrectDir($fullFileName);
 				}
 			}
 			$_fileList[] = $path;
@@ -525,7 +523,7 @@ class FileDir
 	 */
 	public static function isFreeBSD($exact = false)
 	{
-		if (($exact && PHP_OS == 'FreeBSD') || (! $exact && stristr(PHP_OS, 'BSD'))) {
+		if (($exact && PHP_OS == 'FreeBSD') || (!$exact && stristr(PHP_OS, 'BSD'))) {
 			return true;
 		}
 		return false;

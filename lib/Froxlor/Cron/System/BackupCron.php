@@ -4,6 +4,7 @@ namespace Froxlor\Cron\System;
 use Froxlor\Database\Database;
 use Froxlor\Settings;
 use Froxlor\FroxlorLogger;
+use Froxlor\FileDir;
 
 /**
  * This file is part of the Froxlor project.
@@ -158,7 +159,7 @@ class BackupCron extends \Froxlor\Cron\FroxlorCron
 			while ($row = $sel_stmt->fetch()) {
 				$cronlog->logAction(\Froxlor\FroxlorLogger::CRON_ACTION, LOG_DEBUG, 'shell> mysqldump -u ' . escapeshellarg($sql_root['user']) . ' -pXXXXX ' . $row['databasename'] . ' > ' . \Froxlor\FileDir::makeCorrectFile($tmpdir . '/mysql/' . $row['databasename'] . '_' . date('YmdHi', time()) . '.sql'));
 				$bool_false = false;
-				FileDir::safe_exec('mysqldump --defaults-file=' . escapeshellarg($mysqlcnf_file) .' -u ' . escapeshellarg($sql_root['user']) . ' ' . $row['databasename'] . ' > ' . FileDir::makeCorrectFile($tmpdir . '/mysql/' . $row['databasename'] . '_' . date('YmdHi', time()) . '.sql'), $bool_false, [
+				\Froxlor\FileDir::safe_exec('mysqldump --defaults-file=' . escapeshellarg($mysqlcnf_file) .' -u ' . escapeshellarg($sql_root['user']) . ' ' . $row['databasename'] . ' > ' . FileDir::makeCorrectFile($tmpdir . '/mysql/' . $row['databasename'] . '_' . date('YmdHi', time()) . '.sql'), $bool_false, [
 					'>'
 				]);
 				$has_dbs = true;
