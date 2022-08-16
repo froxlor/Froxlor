@@ -491,7 +491,7 @@ class FileDir
 					new \RecursiveDirectoryIterator($path, \RecursiveDirectoryIterator::SKIP_DOTS),
 					$filter
 				),
-				\RecursiveIteratorIterator::LEAVES_ONLY,
+				\RecursiveIteratorIterator::SELF_FIRST,
 				\RecursiveIteratorIterator::CATCH_GET_CHILD
 			);
 			// we can limit the recursion-depth, but will it be helpful or
