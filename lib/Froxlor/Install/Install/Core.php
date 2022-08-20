@@ -52,7 +52,7 @@ class Core
 	 * @return void
 	 * @throws Exception
 	 */
-	public function doInstall()
+	public function doInstall(bool $create_ud_str = true)
 	{
 		$options = [
 			'PDO::MYSQL_ATTR_INIT_COMMAND' => 'SET names utf8'
@@ -116,7 +116,9 @@ class Core
 		$this->doDataEntries($pdo);
 		// create JSON array for config-services
 		$this->createJsonArray();
-		$this->createUserdataParamStr();
+		if ($create_ud_str) {
+			$this->createUserdataParamStr();
+		}
 	}
 
 	public function getUnprivilegedPdo(): PDO
