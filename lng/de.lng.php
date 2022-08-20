@@ -2169,6 +2169,7 @@ Vielen Dank, Ihr Administrator',
 			'description' => 'Der untenstehende Befehl lädt, installiert und konfiguriert die benötigten Dienste auf dem System aufgrund der Angaben die während des Installationsprozessen gesammelt wurden.',
 			'runcmd' => 'Folgenden Befehl als root-Benutzer in der Shell auf dem Server ausführen:',
 			'manual_config' => 'Ich werden die Dienste manuell konfigurieren, direkt zum Login umleiten',
+			'waitforconfig' => 'Warte auf Abschluss der Dienstkonfiguration...',
 		],
 		'errors' => [
 			'wrong_ownership' => 'Die froxlor Dateien gehören nicht vollständig dem Benutzer %s:%s',

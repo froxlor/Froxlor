@@ -231,7 +231,11 @@ return [
 						'type' => 'checkbox',
 						'value' => '1',
 						'checked' => old('manual_config', '0', 'installation'),
-					]
+					],
+					'target_servername' => [
+						'type' => 'hidden',
+						'value' => $_SESSION['installation']['servername'] ?? "",
+					],
 				]
 			]
 		]

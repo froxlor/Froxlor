@@ -60,7 +60,8 @@
 							<a href="?step={{ setup.step - 1 }}" class="btn btn-secondary">&laquo; {{ lng('panel.back') }}</a>
 							<button type="submit" name="submit" class="btn btn-primary">{{ lng('panel.next') }} &raquo;</button>
 							{% else %}
-							<button type="submit" name="submit" class="btn btn-success">{{ lng('install.install.top') }} &raquo;</button>
+							<span id="submitAuto"><i class="fas fa-spinner fa-pulse"></i> {{ lng('install.install.waitforconfig') }}</span>
+							<button id="submitManual" type="submit" name="submit" class="btn btn-success d-none">{{ lng('install.install.top') }} &raquo;</button>
 							{% endif %}
 						</div>
 					{% else %}

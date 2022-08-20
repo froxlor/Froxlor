@@ -2555,6 +2555,7 @@ Yours sincerely, your administrator',
 			'description' => 'The command below will download, install and configure required services on your system according to the data you have given in this installation process.',
 			'runcmd' => 'Run the following command as root-user in your shell on this server:',
 			'manual_config' => 'I will manually configure the services, just take me to the login',
+			'waitforconfig' => 'Waiting for services to be configured...',
 		],
 		'errors' => [
 			'wrong_ownership' => 'Make sure the froxlor files are owned by %s:%s',
