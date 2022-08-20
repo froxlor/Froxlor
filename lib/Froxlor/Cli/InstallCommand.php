@@ -49,12 +49,21 @@ final class InstallCommand extends Command
 		$this->setName('froxlor:install');
 		$this->setDescription('Installation process to use instead of web-ui');
 		$this->addArgument('input-file', InputArgument::OPTIONAL, 'Optional JSON array file to use for unattended installations');
-		$this->addOption('print-example-file', 'p', InputOption::VALUE_NONE, 'Outputs an example JSON content to be used with the input file parameter');
+		$this->addOption('print-example-file', 'p', InputOption::VALUE_NONE, 'Outputs an example JSON content to be used with the input file parameter')
+			->addOption('create-userdata-from-str', 'c', InputOption::VALUE_REQUIRED, 'Creates lib/userdata.inc.php file from string created by web-install process');
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
 		$result = self::SUCCESS;
+
+		if ($input->getOption('create-userdata-from-str') !== false) {
+			$ud_str = $input->getOption('create-userdata-from-str');
+			$ud_dec = json_decode(base64_decode($ud_str), true);
+			$core = new Core($ud_dec);
+			$core->createUserdataConf();
+			return $result;
+		}
 
 		session_start();
 

@@ -201,7 +201,7 @@
 {% endmacro %}
 
 {% macro textarea(id, field) %}
-	<textarea {% if field.visible is defined and field.visible == false %} disabled {% endif %} rows="{{ field.rows|default('12') }}" cols="{{ field.cols|default('60') }}" id="{{ id }}" name="{{ id }}" class="form-control {% if field.valid is defined and field.valid == false %}is-invalid{% endif %}" {% if field.mandatory is defined and field.mandatory %} required {% endif %} {% if field.readonly is defined and field.readonly %} readonly {% endif %} {% if field.placeholder is defined %} placeholder="{{ field.placeholder }}" {% endif %}>{{ field.value }}</textarea>
+	<textarea {% if field.visible is defined and field.visible == false %} disabled {% endif %} rows="{{ field.rows|default('12') }}" cols="{{ field.cols|default('60') }}" id="{{ id }}" name="{{ id }}" class="form-control {% if field.valid is defined and field.valid == false %}is-invalid{% endif %}" {% if field.mandatory is defined and field.mandatory %} required {% endif %} {% if field.readonly is defined and field.readonly %} readonly {% endif %} {% if field.placeholder is defined %} placeholder="{{ field.placeholder }}" {% endif %} {% if field.style is defined %} style="{{ field.style }}" {% endif %}>{{ field.value }}</textarea>
 {% endmacro %}
 
 {% macro link(id, field) %}

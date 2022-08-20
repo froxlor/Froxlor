@@ -404,8 +404,20 @@ class Install
 		$default = 'bullseye';
 
 		// read os-release
-		if (@file_exists('/etc/os-release')) {
-			$os_dist = parse_ini_file('/etc/os-release', false);
+		if (@file_exists('/etc/os-release') && is_readable('/etc/os-release')) {
+			if (function_exists('parse_ini_file')) {
+				$os_dist = parse_ini_file('/etc/os-release', false);
+			} else {
+				$osrf = explode("\n", file_get_contents('/etc/os-release'));
+				foreach ($osrf as $line) {
+					$osrfline = explode("\n", $line);
+					if ($osrfline[0] == 'VERSION_CODENAME') {
+						$os_dist['VERSION_CODENAME'] = $osrfline[1];
+					} else if ($osrfline[0] == 'ID') {
+						$os_dist['ID'] = $osrfline[1];
+					}
+				}
+			}
 			return strtolower($os_dist['VERSION_CODENAME'] ?? ($os_dist['ID'] ?? $default));
 		}
 		return $default;

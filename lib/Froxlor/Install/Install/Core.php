@@ -116,6 +116,7 @@ class Core
 		$this->doDataEntries($pdo);
 		// create JSON array for config-services
 		$this->createJsonArray();
+		$this->createUserdataParamStr();
 	}
 
 	public function getUnprivilegedPdo(): PDO
@@ -674,5 +675,24 @@ class Core
 			'system' => $system_params
 		];
 		$_SESSION['installation']['json_params'] = json_encode($json_params);
+	}
+
+	private function createUserdataParamStr()
+	{
+		$req_fields = [
+			'mysql_host',
+			'mysql_unprivileged_user',
+			'mysql_unprivileged_pass',
+			'mysql_database',
+			'mysql_root_user',
+			'mysql_root_pass',
+			'mysql_ssl_ca_file',
+			'mysql_ssl_verify_server_certificate'
+		];
+		$json_params = [];
+		foreach ($req_fields as $field) {
+			$json_params[$field] = $this->validatedData[$field] ?? "";
+		}
+		$_SESSION['installation']['ud_str'] = base64_encode(json_encode($json_params));
 	}
 }
