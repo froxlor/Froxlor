@@ -26,6 +26,7 @@
 namespace Froxlor\Install;
 
 use Exception;
+use ZipArchive;
 use Froxlor\Froxlor;
 use Froxlor\Settings;
 use Froxlor\Http\HttpClient;

@@ -46,23 +46,19 @@ class Validate
 	const REGEX_YYYY_MM_DD = '/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/';
 
 	/**
-	 * Validates the given string by matching against the pattern, prints an error on failure and exits
+	 * Validates the given string by matching against the pattern, prints an error on failure and exits.
+	 * If the default pattern is used and the string does not match, we try to replace the 'bad' values and log the action.
 	 *
-	 * @param string $str
-	 *            the string to be tested (user input)
-	 * @param
-	 *            string the $fieldname to be used in error messages
-	 * @param string $pattern
-	 *            the regular expression to be used for testing
-	 * @param
-	 *            string language id for the error
-	 * @return string the clean string
+	 * @param string $str the string to be tested (user input)
+	 * @param string $fieldname to be used in error messages
+	 * @param string $pattern the regular expression to be used for testing
+	 * @param string|array $lng id for the error
+	 * @param string|array $emptydefault fallback value
+	 * @param bool $throw_exception whether to display error or throw an exception, default false
 	 *
-	 *         If the default pattern is used and the string does not match, we try to replace the
-	 *         'bad' values and log the action.
-	 *
+	 * @return string|void the clean string or error
 	 */
-	public static function validate($str, $fieldname, $pattern = '', $lng = '', $emptydefault = [], $throw_exception = false)
+	public static function validate($str, string $fieldname, string $pattern = '', $lng = '', $emptydefault = [], bool $throw_exception = false)
 	{
 		if (!is_array($emptydefault)) {
 			$emptydefault_array = [
@@ -122,9 +118,9 @@ class Validate
 	 * @param bool $throw_exception
 	 *            whether to throw an exception on failure
 	 *
-	 * @return string|bool ip address on success, false on failure
+	 * @return string|bool|void ip address on success, false on failure (or nothing if error is displayed)
 	 */
-	public static function validate_ip2($ip, $return_bool = false, $lng = 'invalidip', $allow_localhost = false, $allow_priv = false, $allow_cidr = false, $cidr_as_netmask = false, $throw_exception = false)
+	public static function validate_ip2($ip, bool $return_bool = false, string $lng = 'invalidip', bool $allow_localhost = false, bool $allow_priv = false, bool $allow_cidr = false, bool $cidr_as_netmask = false, bool $throw_exception = false)
 	{
 		$cidr = "";
 		if ($allow_cidr) {
@@ -136,15 +132,17 @@ class Validate
 					$cidr_range_max = 128;
 				}
 				if (strlen($ip_cidr[1]) <= 3 && in_array((int)$ip_cidr[1], array_values(range(1, $cidr_range_max)), true) === false) {
+					if ($return_bool) {
+						return false;
+					}
 					Response::standardError($lng, $ip, $throw_exception);
 				}
 				if ($cidr_as_netmask && IPTools::is_ipv6($ip_cidr[0])) {
 					// MySQL does not handle CIDR of IPv6 addresses, return error
 					if ($return_bool) {
 						return false;
-					} else {
-						Response::standardError($lng, $ip, $throw_exception);
 					}
+					Response::standardError($lng, $ip, $throw_exception);
 				}
 				$ip = $ip_cidr[0];
 				if ($cidr_as_netmask && strlen($ip_cidr[1]) <= 3) {
@@ -157,9 +155,8 @@ class Validate
 		} elseif (strpos($ip, "/") !== false) {
 			if ($return_bool) {
 				return false;
-			} else {
-				Response::standardError($lng, $ip, $throw_exception);
 			}
+			Response::standardError($lng, $ip, $throw_exception);
 		}
 
 		$filter_lan = $allow_priv ? FILTER_FLAG_NO_RES_RANGE : (FILTER_FLAG_NO_RES_RANGE | FILTER_FLAG_NO_PRIV_RANGE);
@@ -175,9 +172,8 @@ class Validate
 
 		if ($return_bool) {
 			return false;
-		} else {
-			Response::standardError($lng, $ip, $throw_exception);
 		}
+		Response::standardError($lng, $ip, $throw_exception);
 	}
 
 	/**

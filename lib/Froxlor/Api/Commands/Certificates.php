@@ -371,7 +371,7 @@ class Certificates extends ApiCommand implements ResourceEntity
 	 * returns the total number of certificates for the given user
 	 *
 	 * @access admin, customer
-	 * @return string json-encoded array
+	 * @return string json-encoded response message
 	 * @throws Exception
 	 */
 	public function listingCount()
@@ -399,6 +399,7 @@ class Certificates extends ApiCommand implements ResourceEntity
 		if ($result) {
 			return $this->response($result['num_certs']);
 		}
+		return $this->response(0);
 	}
 
 	/**

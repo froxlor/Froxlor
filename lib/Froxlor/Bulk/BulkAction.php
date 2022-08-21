@@ -76,7 +76,7 @@ abstract class BulkAction
 	 *
 	 * @return object BulkAction instance
 	 */
-	protected function __construct($import_file = null, $userinfo = [])
+	protected function __construct(string $import_file = null, array $userinfo = [])
 	{
 		if (!empty($import_file)) {
 			$this->impFile = FileDir::makeCorrectFile($import_file);
@@ -93,7 +93,7 @@ abstract class BulkAction
 	 *
 	 * @return array 'all' => amount of records processed, 'imported' => number of imported records
 	 */
-	abstract public function doImport($separator = ";", $offset = 0);
+	abstract public function doImport(string $separator = ";", int $offset = 0);
 
 	/**
 	 * setter for import-file

@@ -123,7 +123,7 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 				}
 
 				// check whether we use that config as froxor-vhost config
-				if (Settings::Get('system.mod_fcgid_defaultini_ownvhost') == $row['id'] || Settings::Get('phpfpm.vhost_defaultini') == $row['id']) {
+				if ((Settings::Get('system.mod_fcgid') == '1' && Settings::Get('system.mod_fcgid_defaultini_ownvhost') == $row['id']) || (Settings::Get('phpfpm.enabled') == '1' && Settings::Get('phpfpm.vhost_defaultini') == $row['id'])) {
 					$domains[] = Settings::Get('system.hostname');
 				}
 
@@ -178,7 +178,7 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 	 * returns the total number of accessible php-setting entries
 	 *
 	 * @access admin
-	 * @return string json-encoded array
+	 * @return string json-encoded response message
 	 * @throws Exception
 	 */
 	public function listingCount()
@@ -192,6 +192,7 @@ class PhpSettings extends ApiCommand implements ResourceEntity
 			if ($result) {
 				return $this->response($result['num_phps']);
 			}
+			return $this->response(0);
 		}
 		throw new Exception("Not allowed to execute given command.", 403);
 	}

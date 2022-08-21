@@ -163,11 +163,14 @@ class UI
 		self::$install_mode = $install_mode;
 		// init twig template engine
 		$loader = new FilesystemLoader(Froxlor::getInstallDir() . '/templates/');
-		self::$twig = new Environment($loader, [
-			'debug' => true,
-			'cache' => Froxlor::getInstallDir() . '/cache',
-			'auto_reload' => true
-		]);
+		$twig_params = [
+			'auto_reload' => true,
+			'debug' => false,
+		];
+		if (is_writable(Froxlor::getInstallDir() . '/cache')) {
+			$twig_params['cache'] = Froxlor::getInstallDir() . '/cache';
+		}
+		self::$twig = new Environment($loader, $twig_params);
 		self::$twig->addExtension(new DebugExtension());
 		self::$twig->addExtension(new CustomReflection());
 		self::$twig->addExtension(new FroxlorTwig());
@@ -279,7 +282,7 @@ class UI
 			}
 		}
 		if (!file_exists(Froxlor::getInstallDir() . '/templates/' . $theme)) {
-			PhpHelper::phpErrHandler(E_USER_WARNING, "Theme '" . $theme . "' could not be found.", __FILE__, __LINE__, null);
+			PhpHelper::phpErrHandler(E_USER_WARNING, "Theme '" . $theme . "' could not be found.", __FILE__, __LINE__);
 			$theme = self::$default_theme;
 		}
 		return $theme;

@@ -124,11 +124,14 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 			}
 		}
 
+		$sql = [];
+		$sql_root = [];
+
 		// get all data from lib/userdata
 		require Froxlor::getInstallDir() . "/lib/userdata.inc.php";
 
 		// le format
-		if (isset($sql['root_user']) && isset($sql['root_password']) && (!isset($sql_root) || !is_array($sql_root))) {
+		if (isset($sql['root_user']) && isset($sql['root_password']) &&!is_array($sql_root)) {
 			$sql_root = array(
 				0 => array(
 					'caption' => 'Default',
@@ -151,7 +154,7 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 			'password' => $privileged_password,
 			'ssl' => [
 				'caFile' => $mysql_ca ?? "",
-				'verifyServerCertificate' => $mysql_verifycert ?? false
+				'verifyServerCertificate' => $mysql_verifycert
 			]
 		];
 
@@ -192,6 +195,7 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 			throw new Exception('Cannot delete first/default mysql-server', 406);
 		}
 
+		$sql_root = [];
 		// get all data from lib/userdata
 		require Froxlor::getInstallDir() . "/lib/userdata.inc.php";
 
@@ -222,6 +226,8 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 	 */
 	public function listing()
 	{
+		$sql = [];
+		$sql_root = [];
 		// get all data from lib/userdata
 		require Froxlor::getInstallDir() . "/lib/userdata.inc.php";
 
@@ -255,7 +261,7 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 	 * returns the total number of mysql servers
 	 *
 	 * @access admin, customer
-	 * @return string json-encoded array
+	 * @return string json-encoded response message
 	 */
 	public function listingCount()
 	{
@@ -266,6 +272,7 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 			}
 			return $this->response(0);
 		}
+		$sql_root = [];
 		// get all data from lib/userdata
 		require Froxlor::getInstallDir() . "/lib/userdata.inc.php";
 		return $this->response(count($sql_root));
@@ -290,8 +297,13 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 		$dbserver = (int) $this->getParam('dbserver', $dn_optional, -1);
 		$dbserver = $id >= 0 ? $id : $dbserver;
 
+		$sql_root = [];
 		// get all data from lib/userdata
 		require Froxlor::getInstallDir() . "/lib/userdata.inc.php";
+
+		if (!isset($sql_root[$dbserver])) {
+			throw new Exception('Mysql server not found', 404);
+		}
 
 		// limit customer to its allowed servers
 		if ($this->isAdmin() == false) {
@@ -300,11 +312,7 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 				throw new Exception("You cannot access this resource", 405);
 			}
 			// no usernames required for non-admins
-			unset($sqlrootdata['user']);
-		}
-
-		if (!isset($sql_root[$dbserver])) {
-			throw new Exception('Mysql server not found', 404);
+			unset($sql_root[$dbserver]['user']);
 		}
 
 		unset($sql_root[$dbserver]['password']);
@@ -351,6 +359,7 @@ class MysqlServer extends ApiCommand implements ResourceEntity
 		$dbserver = (int) $this->getParam('dbserver', $dn_optional, -1);
 		$dbserver = $id >= 0 ? $id : $dbserver;
 
+		$sql_root = [];
 		require Froxlor::getInstallDir() . "/lib/userdata.inc.php";
 
 		if (!isset($sql_root[$dbserver])) {

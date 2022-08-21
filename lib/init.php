@@ -62,6 +62,7 @@ use Froxlor\UI\Linker;
 use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
 use Froxlor\UI\Response;
+use Froxlor\Install\Update;
 
 // include MySQL-tabledefinitions
 require Froxlor::getInstallDir() . '/lib/tables.inc.php';
@@ -153,13 +154,14 @@ UI::setLinker($linker);
 /**
  * Global Theme-variable
  */
-$theme = (Settings::Get('panel.default_theme') !== null) ? Settings::Get('panel.default_theme') : $_deftheme;
-
-/**
- * Overwrite with customer/admin theme if defined
- */
-if (CurrentUser::hasSession() && CurrentUser::getField('theme') != $theme) {
-	$theme = CurrentUser::getField('theme');
+if (Update::versionInUpdate(Settings::Get('panel.version'), '0.11.0-dev1')) {
+	$theme = $_deftheme;
+} else {
+	$theme = (Settings::Get('panel.default_theme') !== null) ? Settings::Get('panel.default_theme') : $_deftheme;
+	// Overwrite with customer/admin theme if defined
+	if (CurrentUser::hasSession() && CurrentUser::getField('theme') != $theme) {
+		$theme = CurrentUser::getField('theme');
+	}
 }
 
 // Check if a different variant of the theme is used
@@ -221,7 +223,7 @@ if (!CurrentUser::hasSession() && AREA != 'login') {
 }
 
 $userinfo = CurrentUser::getData();
-UI::twig()->addGlobal('userinfo', ($userinfo ?? []));
+UI::twig()->addGlobal('userinfo', $userinfo);
 UI::setCurrentUser($userinfo);
 // Initialize logger
 if (CurrentUser::hasSession()) {

@@ -143,7 +143,7 @@ final class UpdateCommand extends CliCommand
 							$auex = AutoUpdate::extractZip($audl);
 							if ($auex == 0) {
 								$output->writeln("<info>Froxlor files updated successfully.</>");
-								$result = self::SUCCCESS;
+								$result = self::SUCCESS;
 								$question = new ConfirmationQuestion('Update database? [no] ', false, '/^(y|j)/i');
 								if ($yestoall || $helper->ask($input, $output, $question)) {
 									$result = $this->updateDatabase();
@@ -193,7 +193,7 @@ final class UpdateCommand extends CliCommand
 		]);
 		include_once Froxlor::getInstallDir() . '/install/updatesql.php';
 		ob_end_flush();
-		return self::SUCCCESS;
+		return self::SUCCESS;
 	}
 
 	private function cleanUpdateOutput($buffer)

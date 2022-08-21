@@ -1017,7 +1017,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 	 *            optional, admin-only, select (sub)domains of a specific customer by loginname
 	 *
 	 * @access admin, customer
-	 * @return string json-encoded array
+	 * @return string json-encoded response message
 	 * @throws Exception
 	 */
 	public function listingCount()
@@ -1069,6 +1069,7 @@ class SubDomains extends ApiCommand implements ResourceEntity
 		if ($result) {
 			return $this->response($result['num_subdom']);
 		}
+		return $this->response(0);
 	}
 
 	/**

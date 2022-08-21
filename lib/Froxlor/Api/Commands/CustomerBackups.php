@@ -210,7 +210,7 @@ class CustomerBackups extends ApiCommand implements ResourceEntity
 	 *            optional, admin-only, select backup-jobs of a specific customer by loginname
 	 *
 	 * @access admin, customer
-	 * @return string json-encoded array
+	 * @return string json-encoded response message
 	 * @throws Exception
 	 */
 	public function listingCount()

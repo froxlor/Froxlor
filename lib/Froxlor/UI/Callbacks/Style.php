@@ -66,6 +66,21 @@ class Style
 		return $attributes['fields']['deactivated'] ? 'bg-info' : $termination_css;
 	}
 
+	public static function resultCustomerLockedOrDeactivated(array $attributes): string
+	{
+		$row_css = '';
+		if ((int)$attributes['fields']['deactivated'] == 1) {
+			$row_css = 'bg-info';
+		} elseif (
+			$attributes['fields']['loginfail_count'] >= Settings::Get('login.maxloginattempts')
+			&& $attributes['fields']['lastlogin_fail'] > (time() - Settings::Get('login.deactivatetime'))
+		) {
+			$row_css = 'bg-warning';
+		}
+
+		return $row_css;
+	}
+
 	public static function diskspaceWarning(array $attributes): string
 	{
 		return self::getWarningStyle('diskspace', $attributes['fields'], (int)Settings::Get('system.report_webmax'));

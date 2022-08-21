@@ -51,12 +51,7 @@ try {
 
 if (Froxlor::isFroxlor()) {
 
-	// will be filled and increased by the update include-files below
-	$update_tasks = [];
-	$task_counter = 0;
-
 	include_once(FileDir::makeCorrectFile(dirname(__FILE__) . '/updates/froxlor/update_0.10.inc.php'));
-
 	include_once(FileDir::makeCorrectFile(dirname(__FILE__) . '/updates/froxlor/update_0.11.inc.php'));
 
 	// Check Froxlor - database integrity (only happens after all updates are done, so we know the db-layout is okay)
@@ -64,10 +59,10 @@ if (Froxlor::isFroxlor()) {
 
 	$integrity = new IntegrityCheck();
 	if (!$integrity->checkAll()) {
-		Update::lastStepStatus(1, 'Monkeys ate the integrity');
-		Update::showUpdateStep("Trying to remove monkeys, feeding bananas");
+		Update::lastStepStatus(1, 'Integrity could not be validated');
+		Update::showUpdateStep("Trying to automatically restore integrity");
 		if (!$integrity->fixAll()) {
-			Update::lastStepStatus(2, 'failed', 'Some monkeys just would not move, you should contact team@froxlor.org');
+			Update::lastStepStatus(2, 'failed', 'Check "database validation" as admin on the left-side menu to see where the problem is');
 		} else {
 			Update::lastStepStatus(0, 'Integrity restored');
 		}

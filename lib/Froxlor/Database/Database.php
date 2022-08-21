@@ -45,6 +45,7 @@ use PDOStatement;
  *         object
  * @method static string lastInsertId ($name = null) Returns the ID of the last inserted row or sequence value
  * @method static string quote ($string, $parameter_type = null) Quotes a string for use in a query.
+ * @method static mixed getAttribute(int $attribute) Retrieve a database connection attribute
  */
 class Database
 {
@@ -127,11 +128,14 @@ class Database
 	{
 		global $userinfo, $theme, $linker;
 
+		$sql = [];
+		$sql_root = [];
+
 		// include userdata.inc.php
 		require Froxlor::getInstallDir() . "/lib/userdata.inc.php";
 
 		// le format
-		if (isset($sql['root_user']) && isset($sql['root_password']) && (!isset($sql_root) || !is_array($sql_root))) {
+		if (isset($sql['root_user']) && isset($sql['root_password']) && !is_array($sql_root)) {
 			$sql_root = [
 				0 => [
 					'caption' => 'Default',
@@ -291,13 +295,13 @@ class Database
 	 */
 	private static function genUniqueToken(int $length = 16)
 	{
-		if (!isset($length) || intval($length) <= 8) {
+		if (intval($length) <= 8) {
 			$length = 16;
 		}
 		if (function_exists('random_bytes')) {
 			return bin2hex(random_bytes($length));
 		}
-		if (function_exists('mcrypt_create_iv')) {
+		if (function_exists('mcrypt_create_iv') && defined('MCRYPT_DEV_URANDOM')) {
 			return bin2hex(mcrypt_create_iv($length, MCRYPT_DEV_URANDOM));
 		}
 		if (function_exists('openssl_random_pseudo_bytes')) {

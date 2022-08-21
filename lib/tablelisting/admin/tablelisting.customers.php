@@ -27,6 +27,7 @@ use Froxlor\UI\Callbacks\Customer;
 use Froxlor\UI\Callbacks\Impersonate;
 use Froxlor\UI\Callbacks\ProgressBar;
 use Froxlor\UI\Callbacks\Text;
+use Froxlor\UI\Callbacks\Style;
 use Froxlor\UI\Listing;
 
 return [
@@ -155,7 +156,7 @@ return [
 			'unlock' => [
 				'icon' => 'fa fa-unlock',
 				'title' => lng('panel.unlock'),
-				'class' => 'text-warning',
+				'class' => 'btn-outline-secondary',
 				'href' => [
 					'section' => 'customers',
 					'page' => 'customers',
@@ -186,5 +187,8 @@ return [
 				],
 			],
 		],
+		'format_callback' => [
+			[Style::class, 'resultCustomerLockedOrDeactivated']
+		]
 	]
 ];

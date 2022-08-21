@@ -42,7 +42,7 @@ return [
 					'settinggroup' => 'system',
 					'varname' => 'froxlordirectlyviahostname',
 					'type' => 'checkbox',
-					'default' => false,
+					'default' => true,
 					'save_method' => 'storeSettingField'
 				],
 				'system_froxloraliases' => [

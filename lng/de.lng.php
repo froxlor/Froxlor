@@ -1559,12 +1559,6 @@ Vielen Dank, Ihr Administrator',
 			'title' => 'Erlaube Verschieben von Domains unter Kunden',
 			'description' => 'Wenn diese Option aktiviert ist, kann unter Domaineinstellungen die Domain einem anderen Kunden zugewiesen werden.<br /><b>Achtung:</b> Der Dokumenten-Pfad der Domain wird auf den Heimatpfad (+ Domain-Ordner, sofern aktiviert) des neuen Kunden gesetzt.',
 		],
-		'cron' => [
-			'debug' => [
-				'title' => 'Debuggen des Cronscripts',
-				'description' => 'Wenn aktiviert, wird die Lockdatei nach dem Cronlauf zum Debuggen nicht gelöscht<br /><b>Achtung:</b> Eine alte Lockdatei kann weitere Cronjobs behindern und dafür sorgen, dass diese nicht vollständig ausgeführt werden.',
-			],
-		],
 		'specialsettingsforsubdomains' => [
 			'description' => 'Wenn ja, werden die individuellen Einstellungen für alle Subdomains übernommen.<br />Wenn nein, werden Subdomain-Specialsettings entfernt.',
 		],
@@ -2175,6 +2169,7 @@ Vielen Dank, Ihr Administrator',
 			'description' => 'Der untenstehende Befehl lädt, installiert und konfiguriert die benötigten Dienste auf dem System aufgrund der Angaben die während des Installationsprozessen gesammelt wurden.',
 			'runcmd' => 'Folgenden Befehl als root-Benutzer in der Shell auf dem Server ausführen:',
 			'manual_config' => 'Ich werden die Dienste manuell konfigurieren, direkt zum Login umleiten',
+			'waitforconfig' => 'Warte auf Abschluss der Dienstkonfiguration...',
 		],
 		'errors' => [
 			'wrong_ownership' => 'Die froxlor Dateien gehören nicht vollständig dem Benutzer %s:%s',

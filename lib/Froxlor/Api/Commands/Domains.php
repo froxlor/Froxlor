@@ -1743,9 +1743,6 @@ class Domains extends ApiCommand implements ResourceEntity
 				$upd_specialsettings = ", `specialsettings` = :specialsettings, `ssl_specialsettings` = :ssl_specialsettings, `include_specialsettings` = :include_specialsettings ";
 			} else {
 				$upd_specialsettings = '';
-				unset($_update_data['specialsettings']);
-				unset($_update_data['ssl_specialsettings']);
-				unset($_update_data['include_specialsettings']);
 				$upd_stmt = Database::prepare("
 					UPDATE `" . TABLE_PANEL_DOMAINS . "` SET `specialsettings`='', `ssl_specialsettings`='', `include_specialsettings`='0' WHERE `parentdomainid` = :id
 				");

@@ -1935,12 +1935,6 @@ Yours sincerely, your administrator',
 			'title' => 'Allow moving domains between customers',
 			'description' => 'If activated you can change the customer of a domain at domainsettings.<br /><b>Attention:</b> Froxlor changes the documentroot to the new customer\'s default homedir (+ domain-folder if activated)',
 		],
-		'cron' => [
-			'debug' => [
-				'title' => 'Cronscript debugging',
-				'description' => 'Activate to keep the lockfile after a cron-run for debugging.<br /><b>Attention:</b>Keeping the lockfile can cause the next scheduled cron not to run properly.',
-			],
-		],
 		'specialsettingsforsubdomains' => [
 			'description' => 'If yes these custom vHost-settings will be added to all subdomains; if no subdomain-specialsettings are being removed.',
 		],
@@ -2561,6 +2555,7 @@ Yours sincerely, your administrator',
 			'description' => 'The command below will download, install and configure required services on your system according to the data you have given in this installation process.',
 			'runcmd' => 'Run the following command as root-user in your shell on this server:',
 			'manual_config' => 'I will manually configure the services, just take me to the login',
+			'waitforconfig' => 'Waiting for services to be configured...',
 		],
 		'errors' => [
 			'wrong_ownership' => 'Make sure the froxlor files are owned by %s:%s',

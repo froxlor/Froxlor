@@ -26,12 +26,10 @@
 namespace Froxlor;
 
 use Exception;
-use Froxlor\Customer\Customer;
-use Froxlor\Database\Database;
 use PDO;
 use RecursiveCallbackFilterIterator;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
+use Froxlor\Customer\Customer;
+use Froxlor\Database\Database;
 
 class FileDir
 {
@@ -315,9 +313,9 @@ class FileDir
 	 *
 	 * @return string the corrected filename
 	 */
-	public static function makeCorrectFile($filename)
+	public static function makeCorrectFile(string $filename)
 	{
-		if (!isset($filename) || trim($filename) == '') {
+		if (trim($filename) == '') {
 			$error = 'Given filename for function ' . __FUNCTION__ . ' is empty.' . "\n";
 			$error .= 'This is very dangerous and should not happen.' . "\n";
 			$error .= 'Please inform the Froxlor team about this issue so they can fix it.';
@@ -527,7 +525,7 @@ class FileDir
 					new \RecursiveDirectoryIterator($path, \RecursiveDirectoryIterator::SKIP_DOTS),
 					$filter
 				),
-				\RecursiveIteratorIterator::LEAVES_ONLY,
+				\RecursiveIteratorIterator::SELF_FIRST,
 				\RecursiveIteratorIterator::CATCH_GET_CHILD
 			);
 			// we can limit the recursion-depth, but will it be helpful or
@@ -550,26 +548,24 @@ class FileDir
 	/**
 	 * set the immutable flag for a file
 	 *
-	 * @param string $filename
-	 *            the file to set the flag for
+	 * @param string $filename the file to set the flag for
 	 *
-	 * @return boolean
+	 * @return void
 	 */
-	public static function setImmutable($filename = null)
+	public static function setImmutable(string $filename)
 	{
-		FileDir::safe_exec(self::getImmutableFunction(false) . escapeshellarg($filename));
+		self::safe_exec(self::getImmutableFunction(false) . escapeshellarg($filename));
 	}
 
 	/**
 	 * internal function to check whether
 	 * to use chattr (Linux) or chflags (FreeBSD)
 	 *
-	 * @param boolean $remove
-	 *            whether to use +i|schg (false) or -i|noschg (true)
+	 * @param bool $remove whether to use +i|schg (false) or -i|noschg (true)
 	 *
 	 * @return string functionname + parameter (not the file)
 	 */
-	private static function getImmutableFunction($remove = false)
+	private static function getImmutableFunction(bool $remove = false)
 	{
 		if (self::isFreeBSD()) {
 			// FreeBSD style
@@ -585,12 +581,11 @@ class FileDir
 	 * or BSD-based (NetBSD, OpenBSD, etc.
 	 * if exact = false [default])
 	 *
-	 * @param boolean $exact
-	 *            whether to check explicitly for FreeBSD or *BSD
+	 * @param bool $exact whether to check explicitly for FreeBSD or *BSD
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
-	public static function isFreeBSD($exact = false)
+	public static function isFreeBSD(bool $exact = false)
 	{
 		if (($exact && PHP_OS == 'FreeBSD') || (!$exact && stristr(PHP_OS, 'BSD'))) {
 			return true;
@@ -601,16 +596,19 @@ class FileDir
 	/**
 	 * removes the immutable flag for a file
 	 *
-	 * @param string $filename
-	 *            the file to set the flag for
+	 * @param string $filename the file to set the flag for
 	 *
-	 * @return boolean
+	 * @return void
 	 */
-	public static function removeImmutable($filename = null)
+	public static function removeImmutable(string $filename)
 	{
 		FileDir::safe_exec(self::getImmutableFunction(true) . escapeshellarg($filename));
 	}
 
+	/**
+	 * 
+	 * @return array|false
+	 */
 	public static function getFilesystemQuota()
 	{
 		// enabled at all?

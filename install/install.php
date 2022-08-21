@@ -51,10 +51,9 @@ if (!file_exists(dirname(__DIR__) . '/vendor/autoload.php')) {
 }
 
 // check installation status
-// @fixme userdata.inc.php is created iun step3 so step4 is never shown
 if (file_exists(dirname(__DIR__) . '/lib/userdata.inc.php')) {
-	http_response_code(404);
-	die();
+	header("Location: ../");
+	exit;
 }
 
 require dirname(__DIR__) . '/vendor/autoload.php';

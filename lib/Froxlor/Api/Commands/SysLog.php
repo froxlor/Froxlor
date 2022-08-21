@@ -103,7 +103,7 @@ class SysLog extends ApiCommand implements ResourceEntity
 	 * returns the total number of log-entries
 	 *
 	 * @access admin
-	 * @return string json-encoded array
+	 * @return string json-encoded response message
 	 * @throws Exception
 	 */
 	public function listingCount()
@@ -150,6 +150,7 @@ class SysLog extends ApiCommand implements ResourceEntity
 		if ($result) {
 			return $this->response($result['num_logs']);
 		}
+		return $this->response(0);
 	}
 
 	/**

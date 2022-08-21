@@ -258,30 +258,28 @@ class FroxlorLogger
 	/**
 	 * Set whether to log cron-runs
 	 *
-	 * @param bool $_cronlog
+	 * @param int $cronlog
 	 *
-	 * @return boolean
+	 * @return int
 	 */
-	public function setCronLog($_cronlog = 0)
+	public function setCronLog(int $cronlog = 0)
 	{
-		$_cronlog = (int)$_cronlog;
-
-		if ($_cronlog < 0 || $_cronlog > 2) {
-			$_cronlog = 0;
+		if ($cronlog < 0 || $cronlog > 2) {
+			$cronlog = 0;
 		}
-		Settings::Set('logger.log_cron', $_cronlog);
-		return $_cronlog;
+		Settings::Set('logger.log_cron', $cronlog);
+		return $cronlog;
 	}
 
 	/**
 	 * setter for crondebug-flag
 	 *
-	 * @param bool $_flag
+	 * @param bool $flag
 	 *
 	 * @return void
 	 */
-	public function setCronDebugFlag($_flag = false)
+	public function setCronDebugFlag(bool $flag = false)
 	{
-		self::$crondebug_flag = (bool)$_flag;
+		self::$crondebug_flag = $flag;
 	}
 }

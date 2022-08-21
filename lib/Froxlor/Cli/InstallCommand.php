@@ -49,12 +49,25 @@ final class InstallCommand extends Command
 		$this->setName('froxlor:install');
 		$this->setDescription('Installation process to use instead of web-ui');
 		$this->addArgument('input-file', InputArgument::OPTIONAL, 'Optional JSON array file to use for unattended installations');
-		$this->addOption('print-example-file', 'p', InputOption::VALUE_NONE, 'Outputs an example JSON content to be used with the input file parameter');
+		$this->addOption('print-example-file', 'p', InputOption::VALUE_NONE, 'Outputs an example JSON content to be used with the input file parameter')
+			->addOption('create-userdata-from-str', 'c', InputOption::VALUE_REQUIRED, 'Creates lib/userdata.inc.php file from string created by web-install process');
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
 		$result = self::SUCCESS;
+
+		if ($input->getOption('create-userdata-from-str') !== null) {
+			$ud_str = $input->getOption('create-userdata-from-str');
+			$ud_dec = @json_decode(@base64_decode($ud_str), true);
+			if (is_array($ud_dec) && !empty($ud_dec) && count($ud_dec) == 8) {
+				$core = new Core($ud_dec);
+				$core->createUserdataConf();
+				return $result;
+			}
+			$output->writeln("<error>Invalid parameter value.</>");
+			return self::INVALID;
+		}
 
 		session_start();
 
@@ -121,6 +134,7 @@ final class InstallCommand extends Command
 			$this->io->info('Running unattended installation');
 		} else {
 			$extended = $this->io->confirm('Use advanced installation mode?', false);
+			$decoded_input = [];
 		}
 
 		$result = $this->showStep(0, $extended, $decoded_input);
@@ -237,7 +251,7 @@ final class InstallCommand extends Command
 				if ($step == 3) {
 					// do actual install with data from $this->formfielddata
 					$core = new Core($this->formfielddata);
-					$core->doInstall();
+					$core->doInstall(false);
 					$core->createUserdataConf();
 				}
 				return $this->showStep(++$step, $extended, $decoded_input);

@@ -396,7 +396,7 @@ class DirOptions extends ApiCommand implements ResourceEntity
 	 *            optional, admin-only, select directory-protections of a specific customer by loginname
 	 *
 	 * @access admin, customer
-	 * @return string json-encoded array count|list
+	 * @return string json-encoded response message
 	 * @throws Exception
 	 */
 	public function listingCount()
@@ -415,6 +415,7 @@ class DirOptions extends ApiCommand implements ResourceEntity
 		if ($result) {
 			return $this->response($result['num_htaccess']);
 		}
+		return $this->response(0);
 	}
 
 	/**

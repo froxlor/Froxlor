@@ -26,11 +26,12 @@
 const AREA = 'admin';
 require __DIR__ . '/lib/init.php';
 
+use Exception;
 use Froxlor\Cron\TaskId;
-use Froxlor\Database\Database;
 use Froxlor\Froxlor;
 use Froxlor\FroxlorLogger;
 use Froxlor\Install\Preconfig;
+use Froxlor\Install\Update;
 use Froxlor\Settings;
 use Froxlor\System\Cronjob;
 use Froxlor\UI\Panel\UI;
@@ -40,32 +41,8 @@ use Froxlor\User;
 if ($page == 'overview') {
 	$log->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_updates");
 
-	/**
-	 * this is a dirty hack but syscp 1.4.2.1 does not
-	 * have any version/dbversion in the database (don't know why)
-	 * so we have to set them both to run a correct upgrade
-	 */
 	if (!Froxlor::isFroxlor()) {
-		if (Settings::Get('panel.version') == null || Settings::Get('panel.version') == '') {
-			Settings::Set('panel.version', '1.4.2.1');
-		}
-		if (Settings::Get('system.dbversion') == null || Settings::Get('system.dbversion') == '') {
-			/**
-			 * for syscp-stable (1.4.2.1) this value has to be 0
-			 * so the required table-fields are added correctly
-			 * and the svn-version has its value in the database
-			 * -> bug #54
-			 */
-			$result_stmt = Database::query("
-				SELECT `value` FROM `" . TABLE_PANEL_SETTINGS . "` WHERE `varname` = 'dbversion'");
-			$result = $result_stmt->fetch(PDO::FETCH_ASSOC);
-
-			if (isset($result['value'])) {
-				Settings::Set('system.dbversion', (int)$result['value'], false);
-			} else {
-				Settings::Set('system.dbversion', 0, false);
-			}
-		}
+		throw new Exception('SysCP/customized upgrades are not supported');
 	}
 
 	if (Froxlor::hasDbUpdates() || Froxlor::hasUpdates()) {
@@ -81,7 +58,7 @@ if ($page == 'overview') {
 				@chmod(Froxlor::getInstallDir() . '/lib/userdata.inc.php', 0400);
 
 				UI::view('install/update.html.twig', [
-					'checks' => $update_tasks
+					'checks' => Update::getUpdateTasks()
 				]);
 				exit;
 			} else {

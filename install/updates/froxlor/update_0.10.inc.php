@@ -24,10 +24,12 @@
  */
 
 use Froxlor\Froxlor;
+use Froxlor\FileDir;
 use Froxlor\Database\Database;
 use Froxlor\Settings;
 use Froxlor\Install\Update;
 use Froxlor\System\Cronjob;
+use Froxlor\System\IPTools;
 
 if (!defined('_CRON_UPDATE')) {
 	if (!defined('AREA') || (defined('AREA') && AREA != 'admin') || !isset($userinfo['loginname']) || (isset($userinfo['loginname']) && $userinfo['loginname'] == '')) {
@@ -96,7 +98,7 @@ if (Froxlor::isDatabaseVersion('201809280')) {
 if (Froxlor::isDatabaseVersion('201811180')) {
 
 	Update::showUpdateStep("Adding new settings for 2FA");
-	Settings::AddNew('2fa.enabled', '1', true);
+	Settings::AddNew('2fa.enabled', '1');
 	Update::lastStepStatus(0);
 
 	Update::showUpdateStep("Adding new fields to admin-table for 2FA");
@@ -125,7 +127,7 @@ if (Froxlor::isDatabaseVersion('201812010')) {
 
 	Update::showUpdateStep("Adding new is_configured-flag");
 	// updated systems are already configured (most likely :P)
-	Settings::AddNew('panel.is_configured', '1', true);
+	Settings::AddNew('panel.is_configured', '1');
 	Update::lastStepStatus(0);
 
 	Froxlor::updateToDbVersion('201812100');
@@ -285,8 +287,8 @@ if (Froxlor::isFroxlorVersion('0.10.0-rc1')) {
 if (Froxlor::isDatabaseVersion('201904250')) {
 
 	Update::showUpdateStep("Adding new settings for CAA");
-	Settings::AddNew('caa.caa_entry', '', true);
-	Settings::AddNew('system.dns_createcaaentry', 1, true);
+	Settings::AddNew('caa.caa_entry', '');
+	Settings::AddNew('system.dns_createcaaentry', 1);
 	Update::lastStepStatus(0);
 
 	Froxlor::updateToDbVersion('201907270');
@@ -323,7 +325,7 @@ if (Froxlor::isDatabaseVersion('201907270')) {
 		$complete_filedir = Froxlor::getInstallDir() . $filedir;
 		if (file_exists($complete_filedir)) {
 			if ($exec_allowed) {
-				Froxlor\FileDir::safe_exec("rm -rf " . escapeshellarg($complete_filedir));
+				FileDir::safe_exec("rm -rf " . escapeshellarg($complete_filedir));
 			} else {
 				$del_list .= "rm -rf " . escapeshellarg($complete_filedir) . PHP_EOL;
 			}
@@ -889,7 +891,7 @@ if (Froxlor::isDatabaseVersion('202107210')) {
 	Database::pexecute($result_stmt);
 	$upd_stmt = Database::prepare("UPDATE `" . TABLE_PANEL_IPSANDPORTS . "` SET `ip` = :ip WHERE `id` = :id");
 	while ($iprow = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
-		if (Validate::is_ipv6($iprow['ip'])) {
+		if (IPTools::is_ipv6($iprow['ip'])) {
 			$ip = inet_ntop(inet_pton($iprow['ip']));
 			Database::pexecute($upd_stmt, [
 				'ip' => $ip,
@@ -926,7 +928,7 @@ if (Froxlor::isFroxlorVersion('0.10.27')) {
 
 if (Froxlor::isDatabaseVersion('202108180')) {
 	Update::showUpdateStep("Adding czech language file", true);
-	Database::query("INSERT INTO `" . TABLE_PANEL_LANGUAGE . "` SET `language` = '&#268;esk&aacute; republika', `iso` = 'cs', `file` = 'lng/czech.lng.php'");
+	Database::query("INSERT INTO `panel_languages` SET `language` = '&#268;esk&aacute; republika', `iso` = 'cs', `file` = 'lng/czech.lng.php'");
 	Update::lastStepStatus(0);
 	Froxlor::updateToDbVersion('202109040');
 }

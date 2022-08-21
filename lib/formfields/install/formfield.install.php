@@ -220,16 +220,22 @@ return [
 					'system' => [
 						'label' => lng('install.install.runcmd'),
 						'type' => 'textarea',
-						'value' => !empty($_SESSION['installation']['json_params']) ? Froxlor::getInstallDir() . "bin/froxlor-cli froxlor:config-services -a '" . $_SESSION['installation']['json_params'] . "' --yes-to-all" : "something went wrong...",
+						'value' => (!empty($_SESSION['installation']['ud_str']) ? Froxlor::getInstallDir() . "bin/froxlor-cli froxlor:install -c '" . $_SESSION['installation']['ud_str'] . "'\n" : "") .
+							(!empty($_SESSION['installation']['json_params']) ? Froxlor::getInstallDir() . "bin/froxlor-cli froxlor:config-services -a '" . $_SESSION['installation']['json_params'] . "' --yes-to-all" : "something went wrong..."),
 						'readonly' => true,
-						'rows' => 3
+						'rows' => 10,
+						'style' => 'min-height:16rem;'
 					],
 					'manual_config' => [
 						'label' => lng('install.install.manual_config'),
 						'type' => 'checkbox',
 						'value' => '1',
 						'checked' => old('manual_config', '0', 'installation'),
-					]
+					],
+					'target_servername' => [
+						'type' => 'hidden',
+						'value' => $_SESSION['installation']['servername'] ?? "",
+					],
 				]
 			]
 		]

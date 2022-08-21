@@ -143,7 +143,7 @@ class Customers extends ApiCommand implements ResourceEntity
 	 * returns the total number of customers for the given admin
 	 *
 	 * @access admin
-	 * @return string json-encoded array
+	 * @return string json-encoded response message
 	 * @throws Exception
 	 */
 	public function listingCount()
@@ -163,6 +163,7 @@ class Customers extends ApiCommand implements ResourceEntity
 			if ($result) {
 				return $this->response($result['num_customers']);
 			}
+			return $this->response(0);
 		}
 		throw new Exception("Not allowed to execute given command.", 403);
 	}

@@ -110,7 +110,7 @@ class CronConfig
 					}
 
 					// create entry-line
-					$cronfile .= "root " . $binpath . " " . FileDir::makeCorrectFile(Froxlor::getInstallDir() . "/scripts/froxlor_master_cronjob.php") . " --" . $row_cronentry['cronfile'] . " 1> /dev/null\n";
+					$cronfile .= "root " . $binpath . " " . FileDir::makeCorrectFile(Froxlor::getInstallDir() . "/bin/froxlor-cli") . " froxlor:cron " . escapeshellarg($row_cronentry['cronfile']) . " -q 1> /dev/null\n";
 				}
 			}
 
@@ -135,7 +135,7 @@ class CronConfig
 				$newcrontab = "";
 				foreach ($crontablines as $ctl) {
 					$ctl = trim($ctl);
-					if (!empty($ctl) && !preg_match("/(.*)froxlor_master_cronjob\.php(.*)/", $ctl)) {
+					if (!empty($ctl) && !preg_match("/(.*)froxlor\:cron(.*)/", $ctl)) {
 						$newcrontab .= $ctl . "\n";
 					}
 				}

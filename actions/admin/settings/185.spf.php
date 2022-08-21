@@ -29,7 +29,7 @@ return [
 			'title' => lng('admin.spfsettings'),
 			'icon' => 'fa-solid fa-clipboard-check',
 			'fields' => [
-				'spf_enabled' => [
+				'use_spf' => [
 					'label' => lng('spf.use_spf'),
 					'settinggroup' => 'spf',
 					'varname' => 'use_spf',

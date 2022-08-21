@@ -37,6 +37,7 @@ use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
 use Froxlor\UI\Response;
 use Froxlor\Validate\Validate;
+use Froxlor\CurrentUser;
 
 $id = (int)Request::get('id');
 $subjectid = intval(Request::get('subjectid'));

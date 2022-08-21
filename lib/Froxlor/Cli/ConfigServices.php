@@ -410,7 +410,7 @@ final class ConfigServices extends CliCommand
 			// set is_configured flag
 			Settings::Set('panel.is_configured', '1', true);
 			// run cronjob at the end to ensure configs are all up to date
-			exec('php ' . Froxlor::getInstallDir() . 'scripts/froxlor_master_cronjob.php --force');
+			exec('php ' . Froxlor::getInstallDir() . 'bin/froxlor-cli froxlor:cron --force');
 			// and done
 			$output->writeln('<info>All services have been configured</>');
 			return self::SUCCESS;

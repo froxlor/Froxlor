@@ -94,7 +94,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 			Database::needSqlData();
 			$sql_root = Database::getSqlData();
 			Database::needRoot(false);
-			if (!isset($sql_root) || !is_array($sql_root)) {
+			if (!is_array($sql_root)) {
 				throw new Exception("Database server with index #" . $dbserver . " is unknown", 404);
 			}
 
@@ -481,7 +481,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 	 *            optional, admin-only, select dbs of a specific customer by loginname
 	 *
 	 * @access admin, customer
-	 * @return string json-encoded array
+	 * @return string json-encoded response message
 	 * @throws Exception
 	 */
 	public function listingCount()
@@ -495,6 +495,7 @@ class Mysqls extends ApiCommand implements ResourceEntity
 		if ($result) {
 			return $this->response($result['num_dbs']);
 		}
+		return $this->response(0);
 	}
 
 	/**
