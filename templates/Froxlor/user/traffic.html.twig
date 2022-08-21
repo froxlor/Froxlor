@@ -13,84 +13,76 @@
 
 {% block content %}
 
+	<!-- Range -->
+	<!-- TODO: set url on change. e.g.: ?param=days:7 -->
+	<div class="d-flex justify-content-end">
+		<select class="form-select mb-4 w-auto mt-n4" aria-label="select the traffic range" name="range">
+			<option value="hours:24">last 24 hours</option>
+			<option value="days:7">last 7 days</option>
+			<option value="days:30">last 30 days</option>
+			<option value="months:3">last 3 months</option>
+			<option value="months:6">last 6 months</option>
+			<option value="months:12">last 12 months</option>
+			<option value="year:2022">2022</option>
+			<option value="year:2021">2021</option>
+			<option value="year:2020">2020</option>
+		</select>
+	</div>
+
+	<!-- Overview for given range -->
 	<div class="row row-cols-4 g-0 bg-white rounded shadow-sm mb-4">
 		<div class="col p-3 border-end">
-			<h3>{{ traffic_complete_http|formatBytes }}</h3>
+			<h3>{{ metrics.total|formatBytes }}</h3>
+			<span>Total</span>
+		</div>
+		<div class="col p-3 border-end">
+			<h3>{{ metrics.http|formatBytes }}</h3>
 			<span>HTTP</span>
 		</div>
 		<div class="col p-3 border-end">
-			<h3>{{ traffic_complete_ftp|formatBytes }}</h3>
+			<h3>{{ metrics.ftp|formatBytes }}</h3>
 			<span>FTP</span>
 		</div>
 		<div class="col p-3 border-end">
-			<h3>{{ traffic_complete_mail|formatBytes }}</h3>
+			<h3>{{ metrics.mail|formatBytes }}</h3>
 			<span>Mail</span>
 		</div>
-		<div class="col p-3 border-end">
-			<h3>{{ traffic_complete_total|formatBytes }}</h3>
-			<span>Total</span>
-		</div>
 	</div>
 
-	<div class="card">
-		<div class="card-header">
-			Traffic
+	<!-- Overview for given range by user -->
+	<h4 class="page-header">Traffic by customers</h4>
+	{% if users is not empty %}
+		<div class="card table-responsive">
+			<table class="table table-borderless table-striped align-middle mb-0 px-3">
+				<thead>
+				<tr>
+					<th scope="col">{{ lng('login.username') }}</th>
+					<th scope="col">Total</th>
+					<th scope="col">HTTP</th>
+					<th scope="col">FTP</th>
+					<th scope="col">Mail
+					</th>
+				</tr>
+				</thead>
+				<tbody>
+				{% for user in users %}
+				<tr>
+					<td>{{ user.loginname }}</td>
+					<td>{{ user.total|formatBytes }}</td>
+					<td>{{ user.http|formatBytes }}</td>
+					<td>{{ user.ftp|formatBytes }}</td>
+					<td>{{ user.mail|formatBytes }}</td>
+				</tr>
+				{% endfor %}
+				</tbody>
+			</table>
 		</div>
-		<div class="card-body">
-			<canvas id="trafficChart" height="75"></canvas>
-		</div>
-	</div>
-
-	{% if stats is defined %}
-		{% for yearly_stats in stats %}
+	{% else %}
 		<div class="card">
-			<div class="card-header">
-				Traffic per {{ yearly_stats.type }} in {{ yearly_stats.year }}
-			</div>
-			<div class="table-responsive">
-				{{ yearly_stats.data|json_encode }}
+			<div class="card-body">
+				<p>No data for given range found.</p>
 			</div>
 		</div>
-		{% endfor %}
 	{% endif %}
-
-	<script>
-		const data = {
-			labels: {{ labels|json_encode|raw }},
-			datasets: [{
-				label: 'Web',
-				backgroundColor: '#22D3EE',
-				borderColor: '#0891B2',
-				data: {{ http_data|json_encode|raw }},
-				fill: true
-			},{
-				label: 'FTP',
-				backgroundColor: '#34D399',
-				borderColor: '#059669',
-				data: {{ ftp_data|json_encode|raw }},
-				fill: true
-			},{
-				label: 'Mail',
-				backgroundColor: '#FDE047',
-				borderColor: '#CA8A04',
-				data: {{ mail_data|json_encode|raw }},
-				fill: true
-			}]
-		};
-
-		const ctx = document.getElementById('trafficChart');
-		const myChart = new Chart(ctx, {
-			type: 'line',
-			data: data,
-			options: {
-				scales: {
-					y: {
-						stacked: true,
-						beginAtZero: true
-					}
-				}
-			}
-		});
-	</script>
 
 {% endblock %}

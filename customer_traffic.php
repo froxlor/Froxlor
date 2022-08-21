@@ -24,7 +24,6 @@
  */
 
 const AREA = 'customer';
-$intrafficpage = 1;
 require __DIR__ . '/lib/init.php';
 
 use Froxlor\Database\Database;
@@ -38,131 +37,13 @@ if (Settings::IsInList('panel.customer_hide_options', 'traffic')) {
 	Response::redirectTo('customer_index.php');
 }
 
-$traffic = '';
-$month = null;
-$year = null;
+if ($page === null || $page == 'overview') {
 
-if (Request::exist('month') && Request::exist('year')) {
-	$month = (int)Request::get('month');
-	$year = (int)Request::get('year');
-} elseif (isset($_GET['page']) && $_GET['page'] == 'current') {
-	if (date('d') != '01') {
-		$month = date('m');
-		$year = date('Y');
-	} elseif (date('m') == '01') {
-		$month = 12;
-		$year = date('Y') - 1;
-	} else {
-		$month = date('m') - 1;
-		$year = date('Y');
-	}
+} elseif ($page == 'current') {
+
 }
 
-if (!is_null($month) && !is_null($year)) {
-	$result_stmt = Database::prepare("SELECT SUM(`http`) as 'http', SUM(`ftp_up`) AS 'ftp_up', SUM(`ftp_down`) as 'ftp_down', SUM(`mail`) as 'mail', `day`, `month`, `year`
-		FROM `" . TABLE_PANEL_TRAFFIC . "`
-		WHERE `customerid`= :customerid
-		AND `month` = :month
-		AND `year` = :year
-		GROUP BY `day`
-		ORDER BY `day` DESC");
-	$params = [
-		"customerid" => $userinfo['customerid'],
-		"month" => $month,
-		"year" => $year
-	];
-	Database::pexecute($result_stmt, $params);
-	$traf['byte'] = 0;
-	$traffic_complete['http'] = 0;
-	$traffic_complete['ftp'] = 0;
-	$traffic_complete['mail'] = 0;
-	$traf['days'] = [];
-	$traf['http_data'] = [];
-	$traf['ftp_data'] = [];
-	$traf['mail_data'] = [];
-
-	while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-		$http = $row['http'];
-		$traf['http_data'][] = (float)$http;
-		$ftp = $row['ftp_up'] + $row['ftp_down'];
-		$traf['ftp_data'][] = (float)$ftp;
-		$mail = $row['mail'];
-		$traf['mail_data'][] = (float)$mail;
-		$traf['byte'] = $http + $ftp + $mail;
-		$traffic_complete['http'] += $http;
-		$traffic_complete['ftp'] += $ftp;
-		$traffic_complete['mail'] += $mail;
-		$traf['days'][] = $row['day'];
-	}
-
-	UI::view('user/traffic.html.twig', [
-		'traffic_complete_http' => $traffic_complete['http'],
-		'traffic_complete_ftp' => $traffic_complete['ftp'],
-		'traffic_complete_mail' => $traffic_complete['mail'],
-		'traffic_complete_total' => $traf['byte'],
-		'labels' => $traf['days'],
-		'http_data' => $traf['http_data'],
-		'ftp_data' => $traf['ftp_data'],
-		'mail_data' => $traf['mail_data'],
-	]);
-} else {
-	// default to the last 36 months
-	$from_date = (new DateTime)->modify("last day of last months")->setTime(23, 59, 59)->sub(new \DateInterval('P3Y'))->format('U');
-	$result_stmt = Database::prepare("
-		SELECT `month`, `year`, SUM(`http`) AS http, SUM(`ftp_up`) AS ftp_up, SUM(`ftp_down`) AS ftp_down, SUM(`mail`) AS mail
-		FROM `" . TABLE_PANEL_TRAFFIC . "`
-		WHERE `customerid` = :customerid AND `stamp` = :fromdate
-		GROUP BY `year`, `month`
-		ORDER BY `year` ASC, `month` ASC
-	");
-	Database::pexecute($result_stmt, [
-		"customerid" => $userinfo['customerid'],
-		"fromdate" => $from_date
-	]);
-	$traffic_complete['http'] = 0;
-	$traffic_complete['ftp'] = 0;
-	$traffic_complete['mail'] = 0;
-	$traf['days'] = [];
-	$traf['http_data'] = [];
-	$traf['ftp_data'] = [];
-	$traf['mail_data'] = [];
-
-	while ($row = $result_stmt->fetch(PDO::FETCH_ASSOC)) {
-		$http = $row['http'];
-		$traf['http_data'][] = (int)$http / 1024 / 1024;
-		$ftp_up = $row['ftp_up'];
-		$ftp_down = $row['ftp_down'];
-		$traf['ftp_data'][] = (int)($ftp_up + $ftp_down) / 1024 / 1024;
-		$mail = $row['mail'];
-		$traf['mail_data'][] = (int)$mail / 1024 / 1024;
-		$traffic_complete['http'] += $http;
-		$traffic_complete['ftp'] += $ftp_up + $ftp_down;
-		$traffic_complete['mail'] += $mail;
-		$traf['month'] = $row['month'];
-		$traf['year'] = $row['year'];
-		$traf['monthname'] = lng('traffic.months.' . intval($row['month'])) . " " . $row['year'];
-		$traf['byte'] = $http + $ftp_up + $ftp_down + $mail;
-		$traf['byte_total'] = $traf['byte_total'] + $http + $ftp_up + $ftp_down + $mail;
-		$traf['days'][] = $traf['monthname'];
-	}
-
-	UI::view('user/traffic.html.twig', [
-		'traffic_complete_http' => $traffic_complete['http'],
-		'traffic_complete_ftp' => $traffic_complete['ftp'],
-		'traffic_complete_mail' => $traffic_complete['mail'],
-		'traffic_complete_total' => $traf['byte_total'],
-		'labels' => $traf['days'],
-		'http_data' => $traf['http_data'],
-		'ftp_data' => $traf['ftp_data'],
-		'mail_data' => $traf['mail_data'],
-	]);
-}
-
-function getReadableTraffic(&$traf, $index, $value, $divisor, $desc = "")
-{
-	if (extension_loaded('bcmath')) {
-		$traf[$index] = bcdiv($value, $divisor, Settings::Get('panel.decimal_places')) . (!empty($desc) ? " " . $desc : "");
-	} else {
-		$traf[$index] = round($value / $divisor, Settings::Get('panel.decimal_places')) . (!empty($desc) ? " " . $desc : "");
-	}
-}
+UI::view('user/traffic.html.twig', [
+	'metrics' => \Froxlor\Traffic\Traffic::getCustomerMetrics($userinfo),
+	'chart' => \Froxlor\Traffic\Traffic::getCustomerChart($userinfo, 30),
+]);
