@@ -25,6 +25,7 @@
 
 namespace Froxlor\Cli;
 
+use PDO;
 use Exception;
 use Froxlor\Froxlor;
 use Froxlor\Settings;
@@ -59,6 +60,60 @@ class CliCommand extends Command
 			}
 		}
 		return self::SUCCESS;
+	}
+
+	protected function getUserByName(?string $loginname, bool $deactivated_check = true): array
+	{
+		if (empty($loginname)) {
+			throw new Exception("Empty username");
+		}
+
+		$stmt = Database::prepare("
+			SELECT `loginname` AS `customer`
+			FROM `" . TABLE_PANEL_CUSTOMERS . "`
+			WHERE `loginname`= :loginname
+		");
+		Database::pexecute($stmt, [
+			"loginname" => $loginname
+		]);
+		$row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+		if ($row && $row['customer'] == $loginname) {
+			$table = "`" . TABLE_PANEL_CUSTOMERS . "`";
+			$adminsession = '0';
+		} else {
+			$stmt = Database::prepare("
+				SELECT `loginname` AS `admin` FROM `" . TABLE_PANEL_ADMINS . "`
+				WHERE `loginname`= :loginname
+			");
+			Database::pexecute($stmt, [
+				"loginname" => $loginname
+			]);
+			$row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+			if ($row && $row['admin'] == $loginname) {
+				$table = "`" . TABLE_PANEL_ADMINS . "`";
+				$adminsession = '1';
+			} else {
+				throw new Exception("Unknown user '" . $loginname . "'");
+			}
+		}
+
+		$userinfo_stmt = Database::prepare("
+			SELECT * FROM $table
+			WHERE `loginname`= :loginname
+		");
+		Database::pexecute($userinfo_stmt, [
+			"loginname" => $loginname
+		]);
+		$userinfo = $userinfo_stmt->fetch(PDO::FETCH_ASSOC);
+		$userinfo['adminsession'] = $adminsession;
+
+		if ($deactivated_check && $userinfo['deactivated']) {
+			throw new Exception("User '" . $loginname . "' is currently deactivated");
+		}
+
+		return $userinfo;
 	}
 
 	private function runUpdate(OutputInterface $output): int

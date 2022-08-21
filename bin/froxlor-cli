@@ -34,6 +34,7 @@ use Froxlor\Cli\SwitchServerIp;
 use Froxlor\Cli\UpdateCommand;
 use Froxlor\Cli\InstallCommand;
 use Froxlor\Cli\MasterCron;
+use Froxlor\Cli\UserCommand;
 use Froxlor\Froxlor;
 
 // validate correct php version
@@ -57,4 +58,5 @@ $application->add(new SwitchServerIp());
 $application->add(new UpdateCommand());
 $application->add(new InstallCommand());
 $application->add(new MasterCron());
+$application->add(new UserCommand());
 $application->run();
