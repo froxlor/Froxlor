@@ -39,7 +39,7 @@ if (!defined('_CRON_UPDATE')) {
 // last 0.10.x release
 if (Froxlor::isFroxlorVersion('0.10.99')) {
 
-	$update_to = '0.11.0-dev1';
+	$update_to = '2.0.0-beta1';
 
 	Update::showUpdateStep("Updating from 0.10.99 to ".$update_to, false);
 

@@ -154,7 +154,7 @@ UI::setLinker($linker);
 /**
  * Global Theme-variable
  */
-if (Update::versionInUpdate(Settings::Get('panel.version'), '0.11.0-dev1')) {
+if (Update::versionInUpdate(Settings::Get('panel.version'), '2.0.0-beta1')) {
 	$theme = $_deftheme;
 } else {
 	$theme = (Settings::Get('panel.default_theme') !== null) ? Settings::Get('panel.default_theme') : $_deftheme;

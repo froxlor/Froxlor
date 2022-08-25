@@ -29,12 +29,12 @@ use Froxlor\Config\ConfigParser;
 use Froxlor\Install\Update;
 
 $preconfig = [
-	'title' => '0.11.x updates',
+	'title' => '2.x updates',
 	'fields' => []
 ];
 $return = [];
 
-if (Update::versionInUpdate($current_version, '0.11.0-dev1')) {
+if (Update::versionInUpdate($current_version, '2.0.0-beta1')) {
 	$description = 'We have rearranged the settings and split them into basic and advanced categories. This makes it easier for users who do not need all the detailed or very specific settings and options and gives a better overview of the basic/mostly used settings.';
 	$return['panel_settings_mode_note'] = ['type' => 'infotext', 'value' => $description];
 	$question = '<strong>Chose settings mode (you can change that at any time)</strong>';

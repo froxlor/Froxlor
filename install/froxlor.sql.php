@@ -701,7 +701,7 @@ opcache.validate_timestamps'),
 	('system', 'distribution', ''),
 	('system', 'update_channel', 'stable'),
 	('system', 'updatecheck_data', ''),
-	('system', 'update_notify_last', '0.11.0-dev1'),
+	('system', 'update_notify_last', '2.0.0-beta1'),
 	('api', 'enabled', '0'),
 	('2fa', 'enabled', '1'),
 	('panel', 'decimal_places', '4'),
@@ -743,7 +743,7 @@ opcache.validate_timestamps'),
 	('panel', 'logo_overridetheme', '0'),
 	('panel', 'logo_overridecustom', '0'),
 	('panel', 'settings_mode', '0'),
-	('panel', 'version', '0.11.0-dev1'),
+	('panel', 'version', '2.0.0-beta1'),
 	('panel', 'db_version', '202112310');
 
 
