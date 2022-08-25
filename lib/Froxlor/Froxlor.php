@@ -297,26 +297,24 @@ final class Froxlor
 
 	private static function parseVersionArray(&$arr = null)
 	{
-		// -svn or -dev or -rc ?
+		// -dev or -beta or -rc ?
 		if (stripos($arr[count($arr) - 1], '-') !== false) {
 			$x = explode("-", $arr[count($arr) - 1]);
 			$arr[count($arr) - 1] = $x[0];
 			if (stripos($x[1], 'rc') !== false) {
 				$arr[] = '-1';
-				$arr[] = '2'; // rc > dev > svn
+				$arr[] = '2'; // dev < beta < rc
 				// number of rc
 				$arr[] = substr($x[1], 2);
-			} elseif (stripos($x[1], 'dev') !== false) {
+			} else if (stripos($x[1], 'beta') !== false) {
 				$arr[] = '-1';
-				$arr[] = '1'; // svn < dev < rc
-				// number of dev
+				$arr[] = '1'; // dev < beta < rc
+				// number of beta
 				$arr[] = substr($x[1], 3);
-			} elseif (stripos($x[1], 'svn') !== false) {
-				// -svn version are deprecated
+			} else if (stripos($x[1], 'dev') !== false) {
 				$arr[] = '-1';
-				// svn < dev < rc
-				$arr[] = '0';
-				// number of svn
+				$arr[] = '0'; // dev < beta < rc
+				// number of dev
 				$arr[] = substr($x[1], 3);
 			}
 		}

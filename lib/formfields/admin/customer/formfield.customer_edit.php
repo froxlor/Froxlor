@@ -51,7 +51,7 @@ return [
 						'label' => lng('admin.stdsubdomain_add') . '?',
 						'type' => 'checkbox',
 						'value' => '1',
-						'checked' => ($result['standardsubdomain'] != '0') ? '1' : '0'
+						'checked' => $result['standardsubdomain']
 					],
 					'deactivated' => [
 						'label' => lng('admin.deactivated_user'),
@@ -266,7 +266,7 @@ return [
 					'mysqls' => [
 						'label' => lng('customer.mysqls'),
 						'type' => 'textul',
-						'value' => empty($result['mysql']) ? '0' : $result['mysqls'],
+						'value' => empty($result['mysqls']) ? '0' : $result['mysqls'],
 						'maxlength' => 9,
 						'mandatory' => true
 					],
