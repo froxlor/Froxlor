@@ -12,6 +12,7 @@ $(function () {
 });
 
 // Load components
+require('./components/global')
 require('./components/search')
 require('./components/newsfeed')
 require('./components/updatecheck')

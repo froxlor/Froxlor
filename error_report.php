@@ -95,12 +95,13 @@ if (!empty($errid)) {
 
 			// finally remove error from fs
 			@unlink($err_file);
-			Response::redirectTo($filename);
+			Response::standardSuccess('sent_error_report', '', ['filename' => 'index.php']);
 		}
 		// show a nice summary of the error-report
 		// before actually sending anything
 		UI::view('user/error_report.html.twig', [
-			'mail_html' => $mail_body
+			'mail_html' => $mail_body,
+			'errorid' => $errid
 		]);
 	} else {
 		Response::redirectTo($filename);

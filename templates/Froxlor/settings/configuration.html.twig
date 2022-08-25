@@ -17,6 +17,11 @@
 {% endblock %}
 
 {% block content %}
+
+	<div class="alert alert-info fade show" role="alert">
+		<p>{{ lng('admin.configfiles.minihowto') }}</p>
+	</div>
+
 	<form action="{{ action|default(filename) }}" method="post" enctype="application/x-www-form-urlencoded" class="form">
 		{% block settings %}
 			<div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-3">
@@ -104,9 +109,11 @@
 				{{ lng('admin.configfiles.recommendednote') }}
 			</div>
 			<div class="col-12 col-md-6 text-end">
-				<input type="hidden" name="dist" value="{{ distribution }}" />
+				<input type="hidden" name="dist" value="{{ distribution }}"/>
 				<button type="button" class="btn btn-outline-secondary" id="selectRecommendedConfig">{{ lng('admin.configfiles.selectrecommended') }}</button>
-				<button type="button" class="btn btn-outline-secondary" id="downloadSelectionAsJson"><i class="fa-solid fa-download"></i> {{ lng('admin.configfiles.downloadselected') }}</button>
+				<button type="button" class="btn btn-outline-secondary" id="downloadSelectionAsJson">
+					<i class="fa-solid fa-download"></i>
+					{{ lng('admin.configfiles.downloadselected') }}</button>
 				<button type="submit" class="btn btn-primary">{{ lng('update.proceed') }}</button>
 			</div>
 		</div>
@@ -119,8 +126,7 @@
 					<h5 class="modal-title" id="configTplShowLabel"></h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ lng('panel.modalclose') }}"></button>
 				</div>
-				<div class="modal-body text-start">
-				</div>
+				<div class="modal-body text-start"></div>
 				<div class="modal-footer">
 					<button class="btn btn-primary" data-bs-dismiss="modal">{{ lng('panel.modalclose') }}</button>
 				</div>
