@@ -94,13 +94,13 @@ class Crypt
 			PASSWORD_DEFAULT => lng('serversettings.systemdefault')
 		];
 		if (defined('PASSWORD_BCRYPT')) {
-			$available_pwdhashes[PASSWORD_BCRYPT] = 'Bcrypt/Blowfish';
+			$available_pwdhashes[PASSWORD_BCRYPT] = 'Bcrypt/Blowfish' . (PASSWORD_DEFAULT == PASSWORD_BCRYPT ? ' (' . lng('serversettings.systemdefault') . ')' : '');
 		}
 		if (defined('PASSWORD_ARGON2I')) {
-			$available_pwdhashes[PASSWORD_ARGON2I] = 'Argon2i';
+			$available_pwdhashes[PASSWORD_ARGON2I] = 'Argon2i' . (PASSWORD_DEFAULT == PASSWORD_ARGON2I ? ' (' . lng('serversettings.systemdefault') . ')' : '');
 		}
 		if (defined('PASSWORD_ARGON2ID')) {
-			$available_pwdhashes[PASSWORD_ARGON2ID] = 'Argon2id';
+			$available_pwdhashes[PASSWORD_ARGON2ID] = 'Argon2id' . (PASSWORD_DEFAULT == PASSWORD_ARGON2ID ? ' (' . lng('serversettings.systemdefault') . ')' : '');
 		}
 
 		return $available_pwdhashes;

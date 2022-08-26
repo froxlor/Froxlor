@@ -53,7 +53,7 @@ return [
 					'settinggroup' => 'system',
 					'varname' => 'passwordcryptfunc',
 					'type' => 'select',
-					'default' => 0,
+					'default' => PASSWORD_DEFAULT,
 					'option_options_method' => [
 						'\\Froxlor\\System\\Crypt',
 						'getAvailablePasswordHashes'

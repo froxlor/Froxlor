@@ -40,6 +40,7 @@ use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Response;
 use Froxlor\User;
 use Froxlor\Validate\Validate;
+use Froxlor\Language;
 
 if ($action == '') {
 	$action = 'login';
@@ -119,6 +120,7 @@ if ($action == '2fa_entercode') {
 	]);
 	exit();
 } elseif ($action == 'login') {
+	$languages = Language::getLanguages();
 	if (isset($_POST['send']) && $_POST['send'] == 'send') {
 		$loginname = Validate::validate($_POST['loginname'], 'loginname');
 		$password = Validate::validate($_POST['password'], 'password');
