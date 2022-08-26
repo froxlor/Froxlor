@@ -262,6 +262,19 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				$phpsid_result['phpsettingid'] = intval($phpsettingid);
 			}
 
+			$allowed_phpconfigs = $customer['allowed_phpconfigs'];
+			if (! empty($allowed_phpconfigs)) {
+				$allowed_phpconfigs = json_decode($allowed_phpconfigs, true);
+			} else {
+				$allowed_phpconfigs = [];
+			}
+			// only with fcgid/fpm enabled will it be possible to select a php-setting
+			if ((int) Settings::Get('system.mod_fcgid') == 1 || (int) Settings::Get('phpfpm.enabled') == 1) {
+				if (! in_array($phpsid_result['phpsettingid'], $allowed_phpconfigs)) {
+					\Froxlor\UI\Response::standard_error('notallowedphpconfigused', '', true);
+				}
+			}
+
 			// actually insert domain
 			$stmt = Database::prepare("
 				INSERT INTO `" . TABLE_PANEL_DOMAINS . "` SET
@@ -346,9 +359,9 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 				\Froxlor\Domain\Domain::addRedirectToDomain($subdomain_id, $redirectcode);
 			}
 
-			\Froxlor\System\Cronjob::inserttask('1');
+			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_VHOST);
 			// Using nameserver, insert a task which rebuilds the server config
-			\Froxlor\System\Cronjob::inserttask('4');
+			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_DNS);
 
 			Customers::increaseUsage($customer['customerid'], 'subdomains_used');
 
@@ -616,7 +629,7 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 
 		// We can't enable let's encrypt for wildcard-domains
 		if ($iswildcarddomain == '1' && $letsencrypt == '1') {
-			\Froxlor\UI\Response::standard_error('nowildcardwithletsencrypt');
+			\Froxlor\UI\Response::standard_error('nowildcardwithletsencrypt', '', true);
 		}
 
 		// Temporarily deactivate ssl_redirect until Let's Encrypt certificate was generated
@@ -636,6 +649,19 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			Database::pexecute($stmt, $params, true, true);
 			$idna_convert = new \Froxlor\Idna\IdnaWrapper();
 			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_NOTICE, "[API] automatically deleted mail-table entries for '" . $idna_convert->decode($result['domain']) . "'");
+		}
+
+		$allowed_phpconfigs = $customer['allowed_phpconfigs'];
+		if (! empty($allowed_phpconfigs)) {
+			$allowed_phpconfigs = json_decode($allowed_phpconfigs, true);
+		} else {
+			$allowed_phpconfigs = [];
+		}
+		// only with fcgid/fpm enabled will it be possible to select a php-setting
+		if ((int) Settings::Get('system.mod_fcgid') == 1 || (int) Settings::Get('phpfpm.enabled') == 1) {
+			if (! in_array($phpsettingid, $allowed_phpconfigs)) {
+				\Froxlor\UI\Response::standard_error('notallowedphpconfigused', '', true);
+			}
 		}
 
 		// handle redirect
@@ -707,11 +733,11 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 					'id' => $id
 				), true, true);
 				// remove domain from acme.sh / lets encrypt if used
-				\Froxlor\System\Cronjob::inserttask('12', $result['domain']);
+				\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::DELETE_DOMAIN_SSL, $result['domain']);
 			}
 
-			\Froxlor\System\Cronjob::inserttask('1');
-			\Froxlor\System\Cronjob::inserttask('4');
+			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_VHOST);
+			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_DNS);
 			$idna_convert = new \Froxlor\Idna\IdnaWrapper();
 			$this->logger()->logAction($this->isAdmin() ? \Froxlor\FroxlorLogger::ADM_ACTION : \Froxlor\FroxlorLogger::USR_ACTION, LOG_INFO, "[API] edited domain '" . $idna_convert->decode($result['domain']) . "'");
 		}
@@ -993,13 +1019,13 @@ class SubDomains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resourc
 			'domainid' => $id
 		), true, true);
 
-		\Froxlor\System\Cronjob::inserttask('1');
+		\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_VHOST);
 		// Using nameserver, insert a task which rebuilds the server config
-		\Froxlor\System\Cronjob::inserttask('4');
+		\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_DNS);
 		// remove domains DNS from powerDNS if used, #581
-		\Froxlor\System\Cronjob::inserttask('11', $result['domain']);
+		\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::DELETE_DOMAIN_PDNS, $result['domain']);
 		// remove domain from acme.sh / lets encrypt if used
-		\Froxlor\System\Cronjob::inserttask('12', $result['domain']);
+		\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::DELETE_DOMAIN_SSL, $result['domain']);
 
 		// reduce subdomain-usage-counter
 		Customers::decreaseUsage($customer['customerid'], 'subdomains_used');

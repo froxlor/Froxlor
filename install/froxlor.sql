@@ -495,7 +495,6 @@ opcache.load_comments
 opcache.revalidate_path
 opcache.save_comments
 opcache.use_cwd
-opcache.validate_timestamps
 opcache.fast_shutdown'),
 	('phpfpm', 'ini_admin_values', 'cgi.redirect_status_env
 date.timezone
@@ -519,7 +518,8 @@ opcache.restrict_api
 opcache.revalidate_freq
 opcache.max_accelerated_files
 opcache.memory_consumption
-opcache.interned_strings_buffer'),
+opcache.interned_strings_buffer
+opcache.validate_timestamps'),
 	('nginx', 'fastcgiparams', '/etc/nginx/fastcgi_params'),
 	('system', 'lastaccountnumber', '0'),
 	('system', 'lastguid', '9999'),
@@ -532,7 +532,7 @@ opcache.interned_strings_buffer'),
 	('system', 'vmail_gid', '2000'),
 	('system', 'vmail_homedir', '/var/customers/mail/'),
 	('system', 'vmail_maildirname', 'Maildir'),
-	('system', 'bind_enable', '1'),
+	('system', 'bind_enable', '0'),
 	('system', 'bindconf_directory', '/etc/bind/'),
 	('system', 'bindreload_command', '/etc/init.d/bind9 reload'),
 	('system', 'hostname', 'SERVERNAME'),
@@ -682,6 +682,7 @@ opcache.interned_strings_buffer'),
 	('system', 'createstdsubdom_default', '1'),
 	('system', 'froxlorusergroup', ''),
 	('system', 'froxlorusergroup_gid', ''),
+	('system', 'acmeshpath', '/root/.acme.sh/acme.sh'),
 	('api', 'enabled', '0'),
 	('2fa', 'enabled', '1'),
 	('panel', 'decimal_places', '4'),
@@ -722,8 +723,8 @@ opcache.interned_strings_buffer'),
 	('panel', 'logo_image_login', ''),
 	('panel', 'logo_overridetheme', '0'),
 	('panel', 'logo_overridecustom', '0'),
-	('panel', 'version', '0.10.28'),
-	('panel', 'db_version', '202108180');
+	('panel', 'version', '0.10.37'),
+	('panel', 'db_version', '202112310');
 
 
 DROP TABLE IF EXISTS `panel_tasks`;
@@ -822,7 +823,8 @@ INSERT INTO `panel_languages` (`id`, `language`, `iso`, `file`) VALUES
     (4, 'Portugu&ecirc;s', 'pt', 'lng/portugues.lng.php'),
     (5, 'Italiano', 'it', 'lng/italian.lng.php'),
     (6, 'Nederlands', 'nl', 'lng/dutch.lng.php'),
-    (7, 'Svenska', 'sv', 'lng/swedish.lng.php');
+    (7, 'Svenska', 'sv', 'lng/swedish.lng.php'),
+    (8, '&#268;esk&aacute; republika', 'cs', 'lng/czech.lng.php');
 
 
 DROP TABLE IF EXISTS `panel_syslog`;

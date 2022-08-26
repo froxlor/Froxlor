@@ -1,0 +1,14 @@
+name: build-docs
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build_docs:
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          GITHUB_TOKEN: ${{ secrets.ORG_GITHUB_TOKEN }}
+        run: |
+          gh workflow run --repo Froxlor/Documentation build-docs -f ref=${{github.ref_name}}

@@ -82,10 +82,10 @@ class DbManager
 			// get all usernames from db-manager
 			$allsqlusers = $this->getManager()->getAllSqlUsers();
 			// generate random username
-			$username = $loginname . '-' . substr(md5(uniqid(microtime(), 1)), 20, 3);
+			$username = $loginname . '-' . substr(\Froxlor\Froxlor::genSessionId(), 20, 3);
 			// check whether it exists on the DBMS
 			while (in_array($username, $allsqlusers)) {
-				$username = $loginname . '-' . substr(md5(uniqid(microtime(), 1)), 20, 3);
+				$username = $loginname . '-' . substr(\Froxlor\Froxlor::genSessionId(), 20, 3);
 			}
 		} elseif (strtoupper(Settings::Get('customer.mysqlprefix')) == 'DBNAME') {
 			$username = $loginname;
@@ -173,7 +173,10 @@ class DbManager
 
 				if (isset($users[$username]) && is_array($users[$username]) && isset($users[$username]['hosts']) && is_array($users[$username]['hosts'])) {
 
-					$password = $users[$username]['password'];
+					$password = [
+						'password' => $users[$username]['password'],
+						'plugin' => $users[$username]['plugin']
+					];
 
 					foreach ($mysql_access_host_array as $mysql_access_host) {
 

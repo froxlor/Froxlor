@@ -148,7 +148,7 @@ if ($page == 'domains' || $page == 'overview') {
 			$customers = \Froxlor\UI\HTML::makeoption($lng['panel']['please_choose'], 0, 0, true);
 			$result_customers_stmt = Database::prepare("
 					SELECT `customerid`, `loginname`, `name`, `firstname`, `company`
-					FROM `" . TABLE_PANEL_CUSTOMERS . "` " . ($userinfo['customers_see_all'] ? '' : " WHERE `adminid` = '" . (int) $userinfo['adminid'] . "' ") . " ORDER BY COALESCE(NULLIF(`name`,''), `company`) ASC");
+					FROM `" . TABLE_PANEL_CUSTOMERS . "` " . ($userinfo['customers_see_all'] ? '' : " WHERE `adminid` = :adminid ") . " ORDER BY COALESCE(NULLIF(`name`,''), `company`) ASC");
 			$params = array();
 			if ($userinfo['customers_see_all'] == '0') {
 				$params['adminid'] = $userinfo['adminid'];
@@ -640,8 +640,8 @@ if ($page == 'domains' || $page == 'overview') {
 
 			// update customer/admin counters
 			\Froxlor\User::updateCounters(false);
-			\Froxlor\System\Cronjob::inserttask('1');
-			\Froxlor\System\Cronjob::inserttask('4');
+			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_VHOST);
+			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_DNS);
 
 			$result_str = $result['imported'] . ' / ' . $result['all'] . (! empty($result['note']) ? ' (' . $result['note'] . ')' : '');
 			\Froxlor\UI\Response::standard_success('domain_import_successfully', $result_str, array(
@@ -674,7 +674,7 @@ if ($page == 'domains' || $page == 'overview') {
 function formatDomainEntry(&$row, &$idna_convert)
 {
 	$row['domain'] = $idna_convert->decode($row['domain']);
-	$row['aliasdomain'] = $idna_convert->decode($row['aliasdomain']);
+	$row['aliasdomain'] = $idna_convert->decode($row['aliasdomain'] ?? '');
 
 	$row['ipandport'] = '';
 	foreach ($row['ipsandports'] as $rowip) {
@@ -685,7 +685,7 @@ function formatDomainEntry(&$row, &$idna_convert)
 		}
 	}
 	$row['ipandport'] = substr($row['ipandport'], 0, - 1);
-	$row['termination_date'] = str_replace("0000-00-00", "", $row['termination_date']);
+	$row['termination_date'] = str_replace("0000-00-00", "", $row['termination_date'] ?? '');
 
 	$row['termination_css'] = "";
 	if ($row['termination_date'] != "") {

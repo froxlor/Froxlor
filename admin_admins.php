@@ -129,7 +129,7 @@ if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
 				'userid' => $userinfo['userid']
 			));
 
-			$s = md5(uniqid(microtime(), 1));
+			$s = \Froxlor\Froxlor::genSessionId();
 			$ins_stmt = Database::prepare("
 				INSERT INTO `" . TABLE_PANEL_SESSIONS . "` SET
 				`hash` = :hash, `userid` = :userid, `ipaddress` = :ip,
@@ -260,7 +260,7 @@ if ($page == 'admins' && $userinfo['change_serversettings'] == '1') {
 				$dec_places = Settings::Get('panel.decimal_places');
 				$result['traffic'] = round($result['traffic'] / (1024 * 1024), $dec_places);
 				$result['diskspace'] = round($result['diskspace'] / 1024, $dec_places);
-				$result['email'] = $idna_convert->decode($result['email']);
+				$result['email'] = $idna_convert->decode($result['email'] ?? '');
 
 				$customers_ul = \Froxlor\UI\HTML::makecheckbox('customers_ul', $lng['customer']['unlimited'], '-1', false, $result['customers'], true, true);
 				if ($result['customers'] == '-1') {

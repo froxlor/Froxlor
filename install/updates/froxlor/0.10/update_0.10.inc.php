@@ -843,7 +843,7 @@ if (\Froxlor\Froxlor::isDatabaseVersion('202106270')) {
             throw new \Exception("img directory does not exist and cannot be created");
         }
         if (!is_writable($path)) {
-            if (!chmod($path, '0775')) {
+            if (!chmod($path, 0775)) {
                 throw new \Exception("Cannot write to img directory");
             }
         }
@@ -925,4 +925,79 @@ if (\Froxlor\Froxlor::isDatabaseVersion('202107300')) {
 if (\Froxlor\Froxlor::isFroxlorVersion('0.10.27')) {
 	showUpdateStep("Updating from 0.10.27 to 0.10.28", false);
 	\Froxlor\Froxlor::updateToVersion('0.10.28');
+}
+
+if (\Froxlor\Froxlor::isDatabaseVersion('202108180')) {
+	showUpdateStep("Adding czech language file", true);
+	Database::query("INSERT INTO `" . TABLE_PANEL_LANGUAGE . "` SET `language` = '&#268;esk&aacute; republika', `iso` = 'cs', `file` = 'lng/czech.lng.php'");
+	lastStepStatus(0);
+	\Froxlor\Froxlor::updateToDbVersion('202109040');
+}
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.28')) {
+	showUpdateStep("Updating from 0.10.28 to 0.10.29", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.29');
+}
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.29')) {
+	showUpdateStep("Updating from 0.10.29 to 0.10.29.1", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.29.1');
+}
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.29.1')) {
+	showUpdateStep("Updating from 0.10.29.1 to 0.10.30", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.30');
+}
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.30')) {
+	showUpdateStep("Updating from 0.10.30 to 0.10.31", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.31');
+}
+
+if (\Froxlor\Froxlor::isDatabaseVersion('202109040')) {
+	showUpdateStep("Add setting for acme.sh install location", true);
+	Settings::AddNew("system.acmeshpath", '/root/.acme.sh/acme.sh');
+	lastStepStatus(0);
+	\Froxlor\Froxlor::updateToDbVersion('202112310');
+}
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.31')) {
+        showUpdateStep("Updating from 0.10.31 to 0.10.32", false);
+        \Froxlor\Froxlor::updateToVersion('0.10.32');
+}
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.32')) {
+	showUpdateStep("Updating from 0.10.32 to 0.10.33", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.33');
+}
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.33')) {
+	showUpdateStep("Updating from 0.10.33 to 0.10.34", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.34');
+}
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.34')) {
+	showUpdateStep("Updating from 0.10.34 to 0.10.34.1", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.34.1');
+}
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.34.1')) {
+	showUpdateStep("Updating from 0.10.34.1 to 0.10.35", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.35');
+}
+
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.35')) {
+	showUpdateStep("Updating from 0.10.35 to 0.10.35.1", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.35.1');
+}
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.35.1')) {
+	showUpdateStep("Updating from 0.10.35.1 to 0.10.36", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.36');
+}
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.36')) {
+	showUpdateStep("Updating from 0.10.36 to 0.10.37", false);
+	\Froxlor\Froxlor::updateToVersion('0.10.37');
 }

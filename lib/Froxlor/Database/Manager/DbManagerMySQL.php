@@ -1,4 +1,5 @@
 <?php
+
 namespace Froxlor\Database\Manager;
 
 use Froxlor\Database\Database;
@@ -68,7 +69,7 @@ class DbManagerMySQL
 	 * username and sets the password for that user the given access_host
 	 *
 	 * @param string $username
-	 * @param string $password
+	 * @param string|array $password
 	 * @param string $access_host
 	 * @param bool $p_encrypted
 	 *        	optional, whether the password is encrypted or not, default false
@@ -77,7 +78,13 @@ class DbManagerMySQL
 	 */
 	public function grantPrivilegesTo($username = null, $password = null, $access_host = null, $p_encrypted = false, $update = false)
 	{
-		if (! $update) {
+		$pwd_plugin = 'mysql_native_password';
+		if (is_array($password) && count($password) == 2) {
+			$pwd_plugin = $password['plugin'];
+			$password = $password['password'];
+		}
+
+		if (!$update) {
 			// create user
 			if ($p_encrypted) {
 				if (version_compare(Database::getAttribute(\PDO::ATTR_SERVER_VERSION), '5.7.0', '<')) {
@@ -86,7 +93,7 @@ class DbManagerMySQL
 					");
 				} else {
 					$stmt = Database::prepare("
-						CREATE USER '" . $username . "'@'" . $access_host . "' IDENTIFIED WITH mysql_native_password AS :password
+						CREATE USER '" . $username . "'@'" . $access_host . "' IDENTIFIED WITH " . $pwd_plugin . " AS :password
 					");
 				}
 			} else {
@@ -115,7 +122,7 @@ class DbManagerMySQL
 				}
 			} else {
 				if ($p_encrypted) {
-					$stmt = Database::prepare("ALTER USER :username@:host IDENTIFIED WITH mysql_native_password AS :password");
+					$stmt = Database::prepare("ALTER USER :username@:host IDENTIFIED WITH " . $pwd_plugin . " AS :password");
 				} else {
 					$stmt = Database::prepare("ALTER USER :username@:host IDENTIFIED BY :password");
 				}
@@ -136,7 +143,7 @@ class DbManagerMySQL
 	 */
 	public function deleteDatabase($dbname = null)
 	{
-		if (Database::getAttribute(\PDO::ATTR_SERVER_VERSION) < '5.0.2') {
+		if (version_compare(Database::getAttribute(\PDO::ATTR_SERVER_VERSION), '5.0.2', '<')) {
 			// failsafe if user has been deleted manually (requires MySQL 4.1.2+)
 			$stmt = Database::prepare("REVOKE ALL PRIVILEGES, GRANT OPTION FROM `" . $dbname . "`");
 			Database::pexecute($stmt, array(), false);
@@ -247,9 +254,10 @@ class DbManagerMySQL
 		$allsqlusers = array();
 		while ($row = $result_stmt->fetch(\PDO::FETCH_ASSOC)) {
 			if ($user_only == false) {
-				if (! isset($allsqlusers[$row['User']]) || ! is_array($allsqlusers[$row['User']])) {
+				if (!isset($allsqlusers[$row['User']]) || !is_array($allsqlusers[$row['User']])) {
 					$allsqlusers[$row['User']] = array(
 						'password' => $row['Password'] ?? $row['authentication_string'],
+						'plugin' => $row['plugin'] ?? 'mysql_native_password',
 						'hosts' => array()
 					);
 				}

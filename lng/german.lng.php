@@ -410,7 +410,7 @@ $lng['admin']['ipsandports']['port'] = 'Port';
 
 // ADDED IN 1.2.13-rc3
 
-$lng['error']['cantchangesystemip'] = 'Sie können die letzte System-IP-Adresse nicht löschen. Entweder legen Sie eine neue IP/Port-Kombination an oder Sie ändern die System-IP-Adresse.';
+$lng['error']['cantchangesystemip'] = 'Sie können die letzte System-IP-Adresse nicht ändern. Entweder legen Sie eine neue IP/Port-Kombination an oder Sie ändern die System-IP-Adresse.';
 $lng['question']['admin_domain_reallydocrootoutofcustomerroot'] = 'Sind Sie sicher, dass der DocumentRoot dieser Domain außerhalb des Heimatverzeichnisses des Kunden liegen soll?';
 
 // ADDED IN 1.2.14-rc1
@@ -843,7 +843,7 @@ $lng['admin']['phpconfig']['pear_dir'] = 'Wird mit dem globalen Wert für das In
 $lng['admin']['phpconfig']['open_basedir_c'] = 'Wird mit einem ; (Semikolon) ersetzt, um open_basedir auszukommentieren/deaktivieren, wenn eingestellt.';
 $lng['admin']['phpconfig']['open_basedir'] = 'Wird mit der open_basedir-Einstellung der Domain ersetzt.';
 $lng['admin']['phpconfig']['tmp_dir'] = 'Wird mit der Einstellung für das temporäre Verzeichnis der Domain ersetzt.';
-$lng['admin']['phpconfig']['open_basedir_global'] = 'Wird mit der globalen Einstellung des Pfades ersetzt, der dem open_basedir hinzugefügt wird.';
+$lng['admin']['phpconfig']['open_basedir_global'] = 'Wird mit der globalen Einstellung des Pfades ersetzt, der dem open_basedir hinzugefügt wird (siehe Webserver Einstellungen).';
 $lng['admin']['phpconfig']['customer_email'] = 'Wird mit der E-Mail-Adresse des Kunden ersetzt, dem die Domain gehört.';
 $lng['admin']['phpconfig']['admin_email'] = 'Wird mit der E-Mail-Adresse des Admins ersetzt, dem die Domain gehört.';
 $lng['admin']['phpconfig']['domain'] = 'Wird mit der Domain ersetzt.';
@@ -928,11 +928,11 @@ $lng['update']['noupdatesavail'] = '<strong>Ihre Froxlor-Version ist aktuell.</s
 $lng['admin']['specialsettingsforsubdomains'] = 'Übernehme Einstellungen für alle Subdomains (*.beispiel.de)';
 $lng['serversettings']['specialsettingsforsubdomains']['description'] = 'Wenn ja, werden die individuellen Einstellungen für alle Subdomains übernommen.<br />Wenn nein, werden Subdomain-Specialsettings entfernt.';
 $lng['tasks']['outstanding_tasks'] = 'Ausstehende Cron-Aufgaben';
-$lng['tasks']['rebuild_webserverconfig'] = 'Neuerstellung der Webserver-Konfiguration';
-$lng['tasks']['adding_customer'] = 'Erstelle neuen Kunden %loginname%';
-$lng['tasks']['rebuild_bindconfig'] = 'Neuerstellung der Bind-Konfiguration';
-$lng['tasks']['creating_ftpdir'] = 'Erstelle Verzeichnis für neuen FTP-Benutzer';
-$lng['tasks']['deleting_customerfiles'] = 'Löschen von Kunden-Dateien %loginname%';
+$lng['tasks']['REBUILD_VHOST'] = 'Neuerstellung der Webserver-Konfiguration';
+$lng['tasks']['CREATE_HOME'] = 'Erstelle neuen Kunden %loginname%';
+$lng['tasks']['REBUILD_DNS'] = 'Neuerstellung der Bind-Konfiguration';
+$lng['tasks']['CREATE_FTP'] = 'Erstelle Verzeichnis für neuen FTP-Benutzer';
+$lng['tasks']['DELETE_CUSTOMER_FILES'] = 'Löschen von Kunden-Dateien %loginname%';
 $lng['tasks']['noneoutstanding'] = 'Zur Zeit gibt es keine ausstehenden Aufgaben für Froxlor';
 
 // ADDED IN FROXLOR 0.9.1
@@ -1252,7 +1252,7 @@ $lng['serversettings']['diskquota_enabled'] = 'Quota aktiviert?';
 $lng['serversettings']['diskquota_repquota_path']['description'] = 'Pfad zu repquota';
 $lng['serversettings']['diskquota_quotatool_path']['description'] = 'Pfad zu quotatool';
 $lng['serversettings']['diskquota_customer_partition']['description'] = 'Partition, auf welcher die Kundendaten liegen';
-$lng['tasks']['diskspace_set_quota'] = 'Quota auf dem Dateisystem setzen';
+$lng['tasks']['CREATE_QUOTA'] = 'Quota auf dem Dateisystem setzen';
 $lng['error']['session_timeout'] = 'Wert zu niedrig';
 $lng['error']['session_timeout_desc'] = 'Der Wert der Session-Timeout sollte nicht unter einer Minute liegen.';
 
@@ -1281,7 +1281,7 @@ $lng['admin']['speciallogwarning'] = 'ACHTUNG: Durch diese Einstellungen werden 
 // ADDED IN 0.9.28-svn2
 $lng['serversettings']['vmail_maildirname']['title'] = 'Maildir-(Unter-)Ordner';
 $lng['serversettings']['vmail_maildirname']['description'] = 'Der Maildir-Ordner innerhalb des Kontos des Benutzers (normalerweise \'Maildir\', in manchen Fällen auch \'.maildir\'). Sollen die E-Mails direkt in das Verzeichnis, diese Option leer lassen.';
-$lng['tasks']['remove_emailacc_files'] = 'E-Mail-Dateien des Kunden löschen';
+$lng['tasks']['DELETE_EMAIL_DATA'] = 'E-Mail-Dateien des Kunden löschen';
 
 // ADDED IN 0.9.28-svn5
 $lng['error']['operationnotpermitted'] = 'Diese Aktion ist nicht erlaubt!';
@@ -1411,8 +1411,8 @@ $lng['panel']['ftpdesc'] = 'FTP-Beschreibung';
 $lng['admin']['cronsettings'] = 'Cronjob-Einstellungen';
 $lng['serversettings']['system_cronconfig']['title'] = 'Cron-Konfigurationsdatei';
 $lng['serversettings']['system_cronconfig']['description'] = 'Pfad zur Konfigurationsdatei des Cron-Dienstes. Diese Datei wird von Froxlor automatisch aktualisiert.<br />Hinweis: Bitte verwenden Sie <strong>exakt</strong> die gleiche Datei wie für den Froxlor-Haupt-Cronjob (Standard: /etc/cron.d/froxlor)!<br><br>Wird <b>FreeBSD</b> verwendet, sollte hier <i>/etc/crontab</i> angegeben werden!';
-$lng['tasks']['remove_ftpacc_files'] = 'Kunden FTP-Konto Dateien löschen';
-$lng['tasks']['regenerating_crond'] = 'Neuerstellung der cron.d-Datei';
+$lng['tasks']['DELETE_FTP_DATA'] = 'Kunden FTP-Konto Dateien löschen';
+$lng['tasks']['REBUILD_CRON'] = 'Neuerstellung der cron.d-Datei';
 $lng['serversettings']['system_crondreload']['title'] = 'Cron-Daemon reload Befehl';
 $lng['serversettings']['system_crondreload']['description'] = 'Geben Sie hier den Befehl zum Neuladen des Cron-Daemons an';
 $lng['admin']['integritycheck'] = 'Datenbankpr&uuml;fung';
@@ -1445,7 +1445,7 @@ $lng['serversettings']['panel_password_special_char_required']['description'] = 
 $lng['serversettings']['panel_password_special_char']['title'] = 'Sonderzeichen-Liste';
 $lng['serversettings']['panel_password_special_char']['description'] = 'Mindestens eines dieser Sonderzeichen muss in dem Passwort vorkommen, sofern die Sonderzeichen-Option aktiviert ist.';
 $lng['phpfpm']['use_mod_proxy']['title'] = 'Verwende mod_proxy / mod_proxy_fcgi';
-$lng['phpfpm']['use_mod_proxy']['description'] = '<strong class="red">Muss gesetzt sein bei Debian 9.x (Stretch)</strong>. Diese Option kann aktiviert werden, um php-fpm via mod_proxy_fcgi einzubinden. Dies setzt mindestens apache-2.4.9 voraus';
+$lng['phpfpm']['use_mod_proxy']['description'] = '<strong class="red">Muss gesetzt sein bei Debian 9.x (Stretch) oder neuer</strong>. Diese Option kann aktiviert werden, um php-fpm via mod_proxy_fcgi einzubinden. Dies setzt mindestens apache-2.4.9 voraus';
 $lng['error']['no_phpinfo'] = 'Entschuldigung, es ist nicht möglich die phpinfo() auszulesen.';
 
 $lng['admin']['movetoadmin'] = 'Kunde verschieben';
@@ -1481,9 +1481,9 @@ $lng['admin']['mod_fcgid_umask']['title'] = 'Umask (Standard: 022)';
 
 // Added for let's encrypt
 $lng['admin']['letsencrypt']['title'] = 'SSL Zertifikat erstellen (Let\'s Encrypt)';
-$lng['admin']['letsencrypt']['description'] = 'Holt ein kostenloses Zertifikat von <a href="https://letsencrypt.org">Let\'s Encrypt</a>. Das Zertifikat wird automatisch erstellt und verlängert.<br><strong class="red">ACHTUNG:</strong> Wenn Wildcards aktiviert sind, wird diese Option automatisch deaktiviert. Dieses Feature befindet sich noch im Test.';
+$lng['admin']['letsencrypt']['description'] = 'Holt ein kostenloses Zertifikat von <a href="https://letsencrypt.org">Let\'s Encrypt</a>. Das Zertifikat wird automatisch erstellt und verlängert.<br><strong class="red">ACHTUNG:</strong> Wenn Wildcards aktiviert sind, wird diese Option automatisch deaktiviert.';
 $lng['customer']['letsencrypt']['title'] = 'SSL Zertifikat erstellen (Let\'s Encrypt)';
-$lng['customer']['letsencrypt']['description'] = 'Holt ein kostenloses Zertifikat von <a href="https://letsencrypt.org">Let\'s Encrypt</a>. Das Zertifikat wird automatisch erstellt und verlängert.<br><strong class="red">ACHTUNG:</strong> Dieses Feature befindet sich noch im Test.';
+$lng['customer']['letsencrypt']['description'] = 'Holt ein kostenloses Zertifikat von <a href="https://letsencrypt.org">Let\'s Encrypt</a>. Das Zertifikat wird automatisch erstellt und verlängert.';
 $lng['error']['sslredirectonlypossiblewithsslipport'] = 'Die Nutzung von Let\'s Encrypt ist nur möglich, wenn die Domain mindestens eine IP/Port - Kombination mit aktiviertem SSL zugewiesen hat.';
 $lng['error']['nowildcardwithletsencrypt'] = 'Let\'s Encrypt kann mittels ACME Wildcard-Domains nur via DNS validieren, sorry. Bitte den ServerAlias auf WWW setzen oder deaktivieren';
 $lng['panel']['letsencrypt'] = 'Benutzt Let\'s encrypt';
@@ -1544,7 +1544,7 @@ $lng['serversettings']['backupenabled']['title'] = "Backup für Kunden aktiviere
 $lng['serversettings']['backupenabled']['description'] = "Wenn dies aktiviert ist, kann der Kunde Sicherungen planen (cron-backup) welche ein Archiv in sein Heimatverzeichnis ablegt (Unterordner vom Kunden wählbar)";
 $lng['extras']['path_protection_label'] = '<strong class="red">Wichtig</strong>';
 $lng['extras']['path_protection_info'] = '<strong class="red">Wir raten dringend dazu den angegebenen Pfad zu schützen, siehe "Extras" -> "Verzeichnisschutz"</strong>';
-$lng['tasks']['backup_customerfiles'] = 'Datensicherung für Kunde %loginname%';
+$lng['tasks']['CREATE_CUSTOMER_BACKUP'] = 'Datensicherung für Kunde %loginname%';
 
 $lng['error']['dns_domain_nodns'] = 'DNS ist für diese Domain nicht aktiviert';
 $lng['error']['dns_content_empty'] = 'Keinen Inhalt angegeben';
@@ -1684,7 +1684,7 @@ $lng['apikeys']['allowed_from_help'] = 'Komma getrennte Liste von IPs. Standard 
 $lng['apikeys']['valid_until'] = 'Gültig bis';
 $lng['apikeys']['valid_until_help'] = 'Datum Gültigkeitsende, Format JJJJ-MM-TT';
 $lng['serversettings']['enable_api']['title'] = 'Aktiviere externe API Nutzung';
-$lng['serversettings']['enable_api']['description'] = 'Um die froxlor API nutzen zu können, muss diese Option aktiviert sein. Für detaillierte Informationen siehe <a href="https://api.froxlor.org/" target="_new">https://api.froxlor.org/</a>';
+$lng['serversettings']['enable_api']['description'] = 'Um die froxlor API nutzen zu können, muss diese Option aktiviert sein. Für detaillierte Informationen siehe <a href="https://docs.froxlor.org/apiguide/index.html" target="_new">https://docs.froxlor.org/</a>';
 $lng['serversettings']['dhparams_file']['title'] = 'DHParams Datei (Diffie–Hellman key exchange)';
 $lng['serversettings']['dhparams_file']['description'] = 'Wird eine dhparams.pem Datei hier angegeben, wir sie in die Webserver Konfiguration mit eingefügt.<br>Beispiel: /etc/ssl/webserver/dhparams.pem<br><br>Existiert die Datei nicht, wird sie wie folgt erstellt: <em>openssl dhparam -out /etc/ssl/webserver/dhparams.pem 4096<em>. Es wird empfohlen die Datei zu erstellen, bevor sie hier angegeben wird, da die Erstellung längere Zeit in Anspruch nimmt und den Cronjob blockiert.';
 $lng['2fa']['2fa'] = '2FA Optionen';
@@ -1709,8 +1709,8 @@ $lng['panel']['ihave_configured'] = 'Ich habe die Dienste konfiguriert';
 $lng['panel']['system_is_configured'] = 'Das System ist bereits konfiguriert';
 $lng['panel']['settings_before_configuration'] = 'Stelle sicher, dass die Einstellungen angepasst wurden bevor die Dienste konfiguriert werden.';
 $lng['panel']['alternative_cmdline_config'] = 'Alternativ, führe den folgenden Befehl als root-Benutzer auf der Shell aus, um die Dienste automatisch zu konfigurieren.';
-$lng['tasks']['remove_pdns_domain'] = 'Lösche Domain %s von PowerDNS Datenbank';
-$lng['tasks']['remove_ssl_domain'] = 'Lösche SSL Dateien von Domain %s';
+$lng['tasks']['DELETE_DOMAIN_PDNS'] = 'Lösche Domain %domain% von PowerDNS Datenbank';
+$lng['tasks']['DELETE_DOMAIN_SSL'] = 'Lösche SSL Dateien von Domain %domain%';
 $lng['admin']['novhostcontainer'] = '<br><br><small class="red">Keine der IPs und Ports hat die Option "' . $lng['admin']['ipsandports']['create_vhostcontainer'] . '" aktiviert, einige Einstellungen sind daher nicht verfügbar.</small>';
 $lng['serversettings']['errorlog_level']['title'] = 'Ausführlichkeit des Fehlerprotokolls';
 $lng['serversettings']['errorlog_level']['description'] = 'Steuert die Ausführlichkeit des Fehlerprotokolls. Voreinstellung ist "warn" bei Apache und "error" bei Nginx.';
@@ -1777,3 +1777,10 @@ $lng['serversettings']['froxlorusergroup']['description'] = 'Voraussetzung hierf
 $lng['error']['local_group_exists'] = 'Die angegebene Gruppe existiert bereits auf dem System';
 $lng['error']['local_group_invalid'] = 'Der angegebene Gruppen-Name ist nicht gültig';
 $lng['error']['invaliddnsforletsencrypt'] = 'Die DNS-Einträge der Domain enhalten keine der gewählten IP Adressen. Let\'s Encrypt Zertifikats-Erstellung ist nicht möglich.';
+$lng['error']['notallowedphpconfigused'] = 'Nutzung einer PHP-Konfiguration welche nicht dem Kunden zugeordnet ist';
+
+$lng['serversettings']['phpfpm_settings']['allow_all_customers']['title'] = 'Für aktuelle Kunden automatisch hinzufügen';
+$lng['serversettings']['phpfpm_settings']['allow_all_customers']['description'] = 'Ist diese Einstellung aktiv, wird die Konfiguration automatisch allen aktuell existierenden Kunden-Accounts zugewiesen. Diese Einstellung ist nicht permanent, kann aber mehrfach / nach Bedarf ausgeführt werden.';
+$lng['error']['pathmustberelative'] = 'Der Benutzer hat nicht die benötigten Berechtigungen, um Pfade außerhalb des Kunden-Heimatverzeichnisses anzugeben. Bitte einen relativen Pfad angeben (kein führendes /).';
+$lng['serversettings']['acmeshpath']['title'] = 'Pfad zu acme.sh';
+$lng['serversettings']['acmeshpath']['description'] = 'Installationspfad zu acme.sh, inklusive acme.sh Script<br>Standard ist <b>/root/.acme.sh/acme.sh</b>';

@@ -179,6 +179,18 @@ return array(
 						'cols' => 80,
 						'rows' => 20,
 						'value' => $result['phpsettings']
+					),
+					'allow_all_customers' => array(
+						'label' => $lng['serversettings']['phpfpm_settings']['allow_all_customers']['title'],
+						'desc' => $lng['serversettings']['phpfpm_settings']['allow_all_customers']['description'],
+						'type' => 'checkbox',
+						'values' => array(
+							array(
+								'label' => $lng['panel']['yes'],
+								'value' => '1'
+							)
+						),
+						'value' => array()
 					)
 				)
 			)

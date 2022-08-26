@@ -369,13 +369,12 @@ exit "$RETVAL"
 				</daemon>
 				<daemon name="powerdns" title="PowerDNS (standalone)">
 					<install><![CDATA[apt-get install pdns-server pdns-backend-mysql]]></install>
-					<file name="/etc/powerdns/pdns.conf" backup="true" chmod="600">
+					<file name="/etc/powerdns/pdns.conf" backup="true" chown="root:pdns" chmod="640">
 						<content><![CDATA[
 #################################
 # allow-axfr-ips	Allow zonetransfers only to these subnets
 #
 allow-axfr-ips=127.0.0.0/8,::1,<NAMESERVERS_IP>
-# add these entries to the list if any specified: <AXFRSERVERS>
 
 #################################
 # allow-dnsupdate-from	A global setting to allow DNS updates from these IP ranges.
@@ -894,7 +893,7 @@ include-dir=/etc/powerdns/froxlor/
 					</file>
 					<command><![CDATA[mkdir -p /etc/powerdns/froxlor/]]></command>
 					<file name="/etc/powerdns/froxlor/pdns_froxlor.conf"
-						chown="root:root" chmod="600">
+						chown="root:pdns" chmod="640">
 						<content><![CDATA[
 # mysql-settings / you need to create the power-dns database for yourself!
 launch=gmysql
@@ -904,6 +903,8 @@ gmysql-dbname=pdns
 gmysql-user=powerdns
 gmysql-group=client
 gmysql-password=
+#gmysql-ssl-ca-file=
+#gmysql-ssl-verify-server-certificate=0
 ]]>
 						</content>
 					</file>
@@ -912,13 +913,12 @@ gmysql-password=
 				<daemon name="powerdns_bind"
 					title="PowerDNS via bind-backend">
 					<install><![CDATA[apt-get install pdns-server]]></install>
-					<file name="/etc/powerdns/pdns.conf" backup="true" chmod="600">
+					<file name="/etc/powerdns/pdns.conf" backup="true" chown="root:pdns" chmod="640">
 						<content><![CDATA[
 #################################
 # allow-axfr-ips	Allow zonetransfers only to these subnets
 #
 # allow-axfr-ips=127.0.0.0/8,::1,<NAMESERVERS_IP>
-# add these entries to the list if any specified: <AXFRSERVERS>
 
 #################################
 # allow-dnsupdate-from	A global setting to allow DNS updates from these IP ranges.
@@ -1438,7 +1438,7 @@ include-dir=/etc/powerdns/froxlor/
 					</file>
 					<command><![CDATA[mkdir -p /etc/powerdns/froxlor/]]></command>
 					<file name="/etc/powerdns/froxlor/pdns_froxlor.conf"
-						chown="root:root" chmod="600">
+						chown="root:pdns" chmod="640">
 						<content><![CDATA[
 # Bind backend configuration
 
@@ -1600,7 +1600,7 @@ root:               root@<SERVERNAME>
 # is /etc/mailname.
 #myorigin = /etc/mailname
 
-smtpd_banner = $myhostname ESMTP $mail_name (@@DISTRO@@)
+smtpd_banner = $myhostname ESMTP $mail_name (Ubuntu)
 biff = no
 
 # appending .domain is the MUA's job.
@@ -3296,6 +3296,15 @@ plugin {
 ]]>
 							</content>
 						</file>
+						<file name="/etc/dovecot/conf.d/90-quota.conf" chown="root:0"
+							chmod="0644" backup="true">
+							<content><![CDATA[
+plugin {
+  quota = maildir:User quota
+}
+]]>
+							</content>
+						</file>
 					</files>
 					<commands index="1">
 						<command><![CDATA[service dovecot restart]]></command>
@@ -3952,12 +3961,6 @@ UPLOADGID=
 			</service>
 			<!-- System tools/services -->
 			<service type="system" title="{{lng.admin.configfiles.etc}}">
-				<!-- Cronjob -->
-				<daemon name="cron" title="Cronjob for froxlor"
-					mandatory="true">
-					<command><![CDATA[/usr/bin/php <BASE_PATH>scripts/froxlor_master_cronjob.php --run-task 99]]></command>
-					<command><![CDATA[{{settings.system.crondreload}}]]></command>
-				</daemon>
 				<!-- AWstats -->
 				<daemon name="awstats"
 					title="Awstats (webalizer alternative)">
@@ -4092,6 +4095,12 @@ aliases:     files
 					<!-- instead of just restarting apache, we let the cronjob do all the 
 						dirty work -->
 					<command><![CDATA[php {{const.install_dir}}scripts/froxlor_master_cronjob.php --force]]></command>
+				</daemon>
+				<!-- Cronjob -->
+				<daemon name="cron" title="Cronjob for froxlor"
+					mandatory="true">
+					<command><![CDATA[/usr/bin/php <BASE_PATH>scripts/froxlor_master_cronjob.php --run-task 99]]></command>
+					<command><![CDATA[{{settings.system.crondreload}}]]></command>
 				</daemon>
 			</service>
 		</services>

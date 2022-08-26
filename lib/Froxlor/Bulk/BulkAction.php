@@ -133,7 +133,7 @@ abstract class BulkAction
 
 		$new_data = array();
 		foreach ($this->api_params as $idx => $param) {
-			if (isset($data_array[$idx]) && ! empty($data_array[$idx])) {
+			if (isset($data_array[$idx])) {
 				$new_data[$param] = $data_array[$idx];
 			}
 		}

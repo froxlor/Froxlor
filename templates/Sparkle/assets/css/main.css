@@ -82,6 +82,7 @@ header img {
 .login header img {
 	margin: 0 auto;
 	display: block;
+	max-width: calc(100% - 20px);
 }
 
 img.small {

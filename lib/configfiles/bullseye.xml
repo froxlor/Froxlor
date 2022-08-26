@@ -75,7 +75,7 @@ Alias "/.well-known/acme-challenge" "{{settings.system.letsencryptchallengepath}
 ]]>
 						</content>
 					</file>
-					<command><![CDATA[/etc/init.d/apache2 restart]]></command>
+					<command><![CDATA[service apache2 restart]]></command>
 				</daemon>
 				<!-- HTTP Lighttpd -->
 				<daemon name="lighttpd" title="LigHTTPd">
@@ -139,7 +139,7 @@ include_shell "/usr/share/lighttpd/include-conf-enabled.pl"
 					</command>
 					<command><![CDATA[lighty-disable-mod cgi]]></command>
 					<command><![CDATA[lighty-disable-mod fastcgi]]></command>
-					<command><![CDATA[/etc/init.d/lighttpd restart]]></command>
+					<command><![CDATA[service lighttpd restart]]></command>
 				</daemon>
 				<!-- HTTP Nginx -->
 				<daemon name="nginx" title="nginx">
@@ -355,7 +355,7 @@ exit "$RETVAL"
 						</visibility>
 						<content><![CDATA[/etc/init.d/php-fcgi restart]]></content>
 					</command>
-					<command><![CDATA[/etc/init.d/nginx restart]]></command>
+					<command><![CDATA[service nginx restart]]></command>
 				</daemon>
 			</service>
 			<!--DNS -->
@@ -367,17 +367,16 @@ exit "$RETVAL"
 					<command><![CDATA[touch {{settings.system.bindconf_directory}}froxlor_bind.conf]]></command>
 					<command><![CDATA[chown bind:0 {{settings.system.bindconf_directory}}froxlor_bind.conf]]></command>
 					<command><![CDATA[chmod 0644 {{settings.system.bindconf_directory}}froxlor_bind.conf]]></command>
-					<command><![CDATA[/etc/init.d/bind9 restart]]></command>
+					<command><![CDATA[service bind9 restart]]></command>
 				</daemon>
 				<daemon name="powerdns" title="PowerDNS (standalone)">
 					<install><![CDATA[apt-get install pdns-server pdns-backend-mysql]]></install>
-					<file name="/etc/powerdns/pdns.conf" backup="true" chmod="600">
+					<file name="/etc/powerdns/pdns.conf" backup="true" chown="root:pdns" chmod="640">
 						<content><![CDATA[
 #################################
 # allow-axfr-ips	Allow zonetransfers only to these subnets
 #
 allow-axfr-ips=127.0.0.0/8,::1,<NAMESERVERS_IP>
-# add these entries to the list if any specified: <AXFRSERVERS>
 
 #################################
 # allow-dnsupdate-from	A global setting to allow DNS updates from these IP ranges.
@@ -881,7 +880,7 @@ include-dir=/etc/powerdns/froxlor/
 					</file>
 					<command><![CDATA[mkdir -p /etc/powerdns/froxlor/]]></command>
 					<file name="/etc/powerdns/froxlor/pdns_froxlor.conf"
-						chown="root:root" chmod="600">
+						chown="root:pdns" chmod="640">
 						<content><![CDATA[
 # mysql-settings / you need to create the power-dns database for yourself!
 launch=gmysql
@@ -891,21 +890,22 @@ gmysql-dbname=pdns
 gmysql-user=powerdns
 gmysql-group=client
 gmysql-password=
+#gmysql-ssl-ca-file=
+#gmysql-ssl-verify-server-certificate=0
 ]]>
 						</content>
 					</file>
-					<command><![CDATA[/etc/init.d/pdns restart]]></command>
+					<command><![CDATA[service pdns restart]]></command>
 				</daemon>
 				<daemon name="powerdns_bind"
 					title="PowerDNS via bind-backend">
 					<install><![CDATA[apt-get install pdns-server]]></install>
-					<file name="/etc/powerdns/pdns.conf" backup="true" chmod="600">
+					<file name="/etc/powerdns/pdns.conf" backup="true" chown="root:pdns" chmod="640">
 						<content><![CDATA[
 #################################
 # allow-axfr-ips	Allow zonetransfers only to these subnets
 #
 # allow-axfr-ips=127.0.0.0/8,::1,<NAMESERVERS_IP>
-# add these entries to the list if any specified: <AXFRSERVERS>
 
 #################################
 # allow-dnsupdate-from	A global setting to allow DNS updates from these IP ranges.
@@ -1410,7 +1410,7 @@ include-dir=/etc/powerdns/froxlor/
 					</file>
 					<command><![CDATA[mkdir -p /etc/powerdns/froxlor/]]></command>
 					<file name="/etc/powerdns/froxlor/pdns_froxlor.conf"
-						chown="root:root" chmod="600">
+						chown="root:pdns" chmod="640">
 						<content><![CDATA[
 # Bind backend configuration
 
@@ -1426,7 +1426,7 @@ bind-check-interval=180
 ]]>
 						</content>
 					</file>
-					<command><![CDATA[/etc/init.d/pdns restart]]></command>
+					<command><![CDATA[service pdns restart]]></command>
 				</daemon>
 			</service>
 			<!-- SMTP services -->
@@ -1549,7 +1549,7 @@ root:               root@<SERVERNAME>
 					</files>
 					<commands index="3">
 						<command><![CDATA[newaliases]]></command>
-						<command><![CDATA[/etc/init.d/postfix restart]]></command>
+						<command><![CDATA[service postfix restart]]></command>
 					</commands>
 				</general>
 				<!-- postfix with dovecot -->
@@ -3561,7 +3561,7 @@ postmaster_address = postmaster@<SERVERNAME>
 
 protocol lda {
   # Space separated list of plugins to load (default is global mail_plugins).
-  #mail_plugins = $mail_plugins
+  mail_plugins = $mail_plugins quota sieve
 }
 ]]>
 							</content>
@@ -4087,9 +4087,18 @@ plugin {
 ]]>
 							</content>
 						</file>
+						<file name="/etc/dovecot/conf.d/90-quota.conf" chown="root:0"
+							chmod="0644" backup="true">
+							<content><![CDATA[
+plugin {
+  quota = maildir:User quota
+}
+]]>
+							</content>
+						</file>
 					</files>
 					<commands index="1">
-						<command><![CDATA[/etc/init.d/dovecot restart]]></command>
+						<command><![CDATA[service dovecot restart]]></command>
 					</commands>
 				</general>
 				<!-- Dovecot with postfix -->
@@ -4516,7 +4525,7 @@ TLSVerifyClient                         off
 ]]>
 						</content>
 					</file>
-					<command><![CDATA[/etc/init.d/proftpd restart]]></command>
+					<command><![CDATA[service proftpd restart]]></command>
 				</daemon>
 				<!-- Pureftpd -->
 				<daemon name="pureftpd" title="PureFTPd">
@@ -4742,17 +4751,11 @@ UPLOADGID=
 ]]>
 						</content>
 					</file>
-					<command><![CDATA[/etc/init.d/pure-ftpd-mysql restart]]></command>
+					<command><![CDATA[service pure-ftpd-mysql restart]]></command>
 				</daemon>
 			</service>
 			<!-- System tools/services -->
 			<service type="system" title="{{lng.admin.configfiles.etc}}">
-				<!-- Cronjob -->
-				<daemon name="cron" title="Cronjob for froxlor"
-					mandatory="true">
-					<command><![CDATA[/usr/bin/php <BASE_PATH>scripts/froxlor_master_cronjob.php --run-task 99]]></command>
-					<command><![CDATA[{{settings.system.crondreload}}]]></command>
-				</daemon>
 				<!-- AWstats -->
 				<daemon name="awstats"
 					title="Awstats (webalizer alternative)">
@@ -4836,7 +4839,7 @@ aliases:     files
 						<command><![CDATA[useradd -s /bin/false -g {{settings.system.mod_fcgid_httpgroup}} {{settings.system.mod_fcgid_httpuser}}]]></command>
 						<command><![CDATA[mkdir -p {{settings.system.mod_fcgid_configdir}}]]></command>
 						<command><![CDATA[mkdir -p {{settings.system.mod_fcgid_tmpdir}}]]></command>
-						<command><![CDATA[a2dismod php7.3]]></command>
+						<command><![CDATA[a2dismod php7.4]]></command>
 					</commands>
 					<!-- instead of just restarting apache, we let the cronjob do all the 
 						dirty work -->
@@ -4869,16 +4872,22 @@ aliases:     files
 						</visibility>
 						<visibility mode="true">{{settings.phpfpm.enabled_ownvhost}}
 						</visibility>
-						<command><![CDATA[a2dismod php7.3]]></command>
+						<command><![CDATA[a2dismod php7.4]]></command>
 					</commands>
 					<commands index="5">
 						<visibility mode="equals" value="apache2">{{settings.system.webserver}}
 						</visibility>
-						<command><![CDATA[/etc/init.d/apache2 restart]]></command>
+						<command><![CDATA[service apache2 restart]]></command>
 					</commands>
 					<!-- instead of just restarting apache, we let the cronjob do all the 
 						dirty work -->
 					<command><![CDATA[php {{const.install_dir}}scripts/froxlor_master_cronjob.php --force]]></command>
+				</daemon>
+				<!-- Cronjob -->
+				<daemon name="cron" title="Cronjob for froxlor"
+					mandatory="true">
+					<command><![CDATA[/usr/bin/php <BASE_PATH>scripts/froxlor_master_cronjob.php --run-task 99]]></command>
+					<command><![CDATA[{{settings.system.crondreload}}]]></command>
 				</daemon>
 			</service>
 		</services>

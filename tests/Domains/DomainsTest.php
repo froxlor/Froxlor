@@ -138,6 +138,25 @@ class DomainsTest extends TestCase
 		$this->assertEquals(2, $result['subcanemaildomain']);
 	}
 
+	public function testResellerDomainsAddWithAbsolutePathNoChangeServerSettings()
+	{
+		global $admin_userdata;
+		// get reseller
+		$json_result = Admins::getLocal($admin_userdata, array(
+			'loginname' => 'reseller'
+		))->get();
+		$reseller_userdata = json_decode($json_result, true)['data'];
+		$reseller_userdata['adminsession'] = 1;
+		$data = [
+			'domain' => 'test3.local',
+			'customerid' => 1,
+			'documentroot' => '/some/absolute/directory/the_reseller/cannot/set/',
+			'ipandport' => 4
+		];
+		$this->expectExceptionMessage("The user does not have the permission to specify directories outside the customers home-directory. Please specify a relative path (no leading /).");
+		$json_result = Domains::getLocal($reseller_userdata, $data)->add();
+	}
+
 	/**
 	 *
 	 * @depends testAdminDomainsAdd
@@ -153,12 +172,35 @@ class DomainsTest extends TestCase
 		$reseller_userdata['adminsession'] = 1;
 		$data = [
 			'domainname' => 'test2.local',
-			'ssl_protocols' => 'TLSv1'
+			'ssl_protocols' => 'TLSv1',
+			'documentroot' => '/var/customers/webs/test1/sub/'
 		];
 		$json_result = Domains::getLocal($reseller_userdata, $data)->update();
 		$result = json_decode($json_result, true)['data'];
 		$this->assertEmpty($result['ssl_protocols']);
 		$this->assertEquals('test2.local', $result['domain']);
+		$this->assertEquals('/var/customers/webs/test1/sub/', $result['documentroot']);
+	}
+
+	/**
+	 *
+	 * @depends testResellerDomainsUpdate
+	 */
+	public function testResellerDomainsUpdateAboslutePathNotAllowed()
+	{
+		global $admin_userdata;
+		// get reseller
+		$json_result = Admins::getLocal($admin_userdata, array(
+			'loginname' => 'reseller'
+		))->get();
+		$reseller_userdata = json_decode($json_result, true)['data'];
+		$reseller_userdata['adminsession'] = 1;
+		$data = [
+			'domainname' => 'test2.local',
+			'documentroot' => '/some/other/dir'
+		];
+		$this->expectExceptionMessage("The user does not have the permission to specify directories outside the customers home-directory. Please specify a relative path (no leading /).");
+		$json_result = Domains::getLocal($reseller_userdata, $data)->update();
 	}
 
 	public function testAdminDomainsAddSysHostname()
@@ -402,6 +444,7 @@ class DomainsTest extends TestCase
 	}
 
 	/**
+	 *
 	 * @refs https://github.com/Froxlor/Froxlor/issues/899
 	 */
 	public function testAdminIdn2DomainsAdd()

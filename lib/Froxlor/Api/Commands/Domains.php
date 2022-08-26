@@ -239,7 +239,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	 *        	optional, whether to create an exclusive web-logfile for this domain, default 0 (false)
 	 * @param int $alias
 	 *        	optional, domain-id of a domain that the new domain should be an alias of, default 0 (none)
-	 * @param bool $issubof
+	 * @param int $issubof
 	 *        	optional, domain-id of a domain this domain is a subdomain of (required for webserver-cronjob to generate the correct order), default 0 (none)
 	 * @param string $registration_date
 	 *        	optional, date of domain registration in form of YYYY-MM-DD, default empty (none)
@@ -427,6 +427,20 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				}
 				$_documentroot = \Froxlor\FileDir::makeCorrectDir($customer['documentroot'] . $path_suffix);
 
+				$documentroot = \Froxlor\Validate\Validate::validate($documentroot, 'documentroot', \Froxlor\Validate\Validate::REGEX_DIR, '', array(), true);
+
+				// If path is empty and 'Use domain name as default value for DocumentRoot path' is enabled in settings,
+				// set default path to subdomain or domain name
+				if (! empty($documentroot)) {
+					if (substr($documentroot, 0, 1) != '/' && ! preg_match('/^https?\:\/\//', $documentroot)) {
+						$documentroot = $_documentroot . '/' . $documentroot;
+					} elseif (substr($documentroot, 0, 1) == '/' && $this->getUserDetail('change_serversettings') != '1') {
+						\Froxlor\UI\Response::standard_error('pathmustberelative', '', true);
+					}
+				} else {
+					$documentroot = $_documentroot;
+				}
+
 				$registration_date = \Froxlor\Validate\Validate::validate($registration_date, 'registration_date', '/^(19|20)\d\d[-](0[1-9]|1[012])[-](0[1-9]|[12][0-9]|3[01])$/', '', array(
 					'0000-00-00',
 					'0',
@@ -454,17 +468,6 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 					}
 
 					$specialsettings = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $specialsettings), 'specialsettings', \Froxlor\Validate\Validate::REGEX_CONF_TEXT, '', array(), true);
-					\Froxlor\Validate\Validate::validate($documentroot, 'documentroot', \Froxlor\Validate\Validate::REGEX_DIR, '', array(), true);
-
-					// If path is empty and 'Use domain name as default value for DocumentRoot path' is enabled in settings,
-					// set default path to subdomain or domain name
-					if (! empty($documentroot)) {
-						if (substr($documentroot, 0, 1) != '/' && ! preg_match('/^https?\:\/\//', $documentroot)) {
-							$documentroot = $_documentroot . '/' . $documentroot;
-						}
-					} else {
-						$documentroot = $_documentroot;
-					}
 
 					$ssl_protocols = array();
 					if (! empty($p_ssl_protocols) && is_numeric($p_ssl_protocols)) {
@@ -507,7 +510,6 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 					$notryfiles = '0';
 					$writeaccesslog = '1';
 					$writeerrorlog = '1';
-					$documentroot = $_documentroot;
 					$override_tls = '0';
 					$ssl_protocols = array();
 				}
@@ -855,9 +857,9 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 
 					\Froxlor\Domain\Domain::triggerLetsEncryptCSRForAliasDestinationDomain($aliasdomain, $this->logger());
 
-					\Froxlor\System\Cronjob::inserttask('1');
+					\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_VHOST);
 					// Using nameserver, insert a task which rebuilds the server config
-					\Froxlor\System\Cronjob::inserttask('4');
+					\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_DNS);
 
 					$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_WARNING, "[API] added domain '" . $domain . "'");
 
@@ -901,7 +903,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 	 *        	optional, when setting $speciallogfile to false, this needs to be set to true to confirm the action, default 0 (false)
 	 * @param int $alias
 	 *        	optional, domain-id of a domain that the new domain should be an alias of, default 0 (none)
-	 * @param bool $issubof
+	 * @param int $issubof
 	 *        	optional, domain-id of a domain this domain is a subdomain of (required for webserver-cronjob to generate the correct order), default 0 (none)
 	 * @param string $registration_date
 	 *        	optional, date of domain registration in form of YYYY-MM-DD, default empty (none)
@@ -1187,6 +1189,38 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				$serveraliasoption = $p_serveraliasoption;
 			}
 
+			$documentroot = \Froxlor\Validate\Validate::validate($documentroot, 'documentroot', \Froxlor\Validate\Validate::REGEX_DIR, '', array(), true);
+
+			if (! empty($documentroot) && $documentroot != $result['documentroot'] && substr($documentroot, 0, 1) == '/' && substr($documentroot, 0, strlen($customer['documentroot'])) != $customer['documentroot'] && $this->getUserDetail('change_serversettings') != '1') {
+				\Froxlor\UI\Response::standard_error('pathmustberelative', '', true);
+			}
+
+			// when moving customer and no path is specified, update would normally reuse the current document-root
+			// which would point to the wrong customer, therefore we will re-create that directory
+			if (! empty($documentroot) && $customerid > 0 && $customerid != $result['customerid'] && Settings::Get('panel.allow_domain_change_customer') == '1') {
+				if (Settings::Get('system.documentroot_use_default_value') == 1) {
+					$_documentroot = \Froxlor\FileDir::makeCorrectDir($customer['documentroot'] . '/' . $result['domain']);
+				} else {
+					$_documentroot = $customer['documentroot'];
+				}
+				// set the customers default docroot
+				$documentroot = $_documentroot;
+			}
+
+			if ($documentroot == '') {
+				// If path is empty and 'Use domain name as default value for DocumentRoot path' is enabled in settings,
+				// set default path to subdomain or domain name
+				if (Settings::Get('system.documentroot_use_default_value') == 1) {
+					$documentroot = \Froxlor\FileDir::makeCorrectDir($customer['documentroot'] . '/' . $result['domain']);
+				} else {
+					$documentroot = $customer['documentroot'];
+				}
+			}
+
+			if (! preg_match('/^https?\:\/\//', $documentroot) && strstr($documentroot, ":") !== false) {
+				\Froxlor\UI\Response::standard_error('pathmaynotcontaincolon', '', true);
+			}
+
 			if ($this->getUserDetail('change_serversettings') == '1') {
 
 				if (Settings::Get('system.bind_enable') == '1') {
@@ -1201,33 +1235,6 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				}
 
 				$specialsettings = \Froxlor\Validate\Validate::validate(str_replace("\r\n", "\n", $specialsettings), 'specialsettings', \Froxlor\Validate\Validate::REGEX_CONF_TEXT, '', array(), true);
-				$documentroot = \Froxlor\Validate\Validate::validate($documentroot, 'documentroot', \Froxlor\Validate\Validate::REGEX_DIR, '', array(), true);
-
-				// when moving customer and no path is specified, update would normally reuse the current document-root
-				// which would point to the wrong customer, therefore we will re-create that directory
-				if (! empty($documentroot) && $customerid > 0 && $customerid != $result['customerid'] && Settings::Get('panel.allow_domain_change_customer') == '1') {
-					if (Settings::Get('system.documentroot_use_default_value') == 1) {
-						$_documentroot = \Froxlor\FileDir::makeCorrectDir($customer['documentroot'] . '/' . $result['domain']);
-					} else {
-						$_documentroot = $customer['documentroot'];
-					}
-					// set the customers default docroot
-					$documentroot = $_documentroot;
-				}
-
-				if ($documentroot == '') {
-					// If path is empty and 'Use domain name as default value for DocumentRoot path' is enabled in settings,
-					// set default path to subdomain or domain name
-					if (Settings::Get('system.documentroot_use_default_value') == 1) {
-						$documentroot = \Froxlor\FileDir::makeCorrectDir($customer['documentroot'] . '/' . $result['domain']);
-					} else {
-						$documentroot = $customer['documentroot'];
-					}
-				}
-
-				if (! preg_match('/^https?\:\/\//', $documentroot) && strstr($documentroot, ":") !== false) {
-					\Froxlor\UI\Response::standard_error('pathmaynotcontaincolon', '', true);
-				}
 
 				$ssl_protocols = array();
 				if (! empty($p_ssl_protocols) && is_numeric($p_ssl_protocols)) {
@@ -1267,7 +1274,6 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 				$notryfiles = $result['notryfiles'];
 				$writeaccesslog = $result['writeaccesslog'];
 				$writeerrorlog = $result['writeerrorlog'];
-				$documentroot = $result['documentroot'];
 				$ssl_protocols = $p_ssl_protocols;
 				$override_tls = $result['override_tls'];
 			}
@@ -1458,8 +1464,8 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 			$wwwserveralias = ($serveraliasoption == '1') ? '1' : '0';
 			$iswildcarddomain = ($serveraliasoption == '0') ? '1' : '0';
 
-			if ($documentroot != $result['documentroot'] || $ssl_redirect != $result['ssl_redirect'] || $wwwserveralias != $result['wwwserveralias'] || $iswildcarddomain != $result['iswildcarddomain'] || $phpenabled != $result['phpenabled'] || $openbasedir != $result['openbasedir'] || $phpsettingid != $result['phpsettingid'] || $mod_fcgid_starter != $result['mod_fcgid_starter'] || $mod_fcgid_maxrequests != $result['mod_fcgid_maxrequests'] || $specialsettings != $result['specialsettings'] || $notryfiles != $result['notryfiles'] || $writeaccesslog != $result['writeaccesslog'] || $writeerrorlog != $result['writeerrorlog'] || $aliasdomain != $result['aliasdomain'] || $issubof != $result['ismainbutsubto'] || $email_only != $result['email_only'] || ($speciallogfile != $result['speciallogfile'] && $speciallogverified == '1') || $letsencrypt != $result['letsencrypt'] || $http2 != $result['http2'] || $hsts_maxage != $result['hsts'] || $hsts_sub != $result['hsts_sub'] || $hsts_preload != $result['hsts_preload'] || $ocsp_stapling != $result['ocsp_stapling']) {
-				\Froxlor\System\Cronjob::inserttask('1');
+			if ($documentroot != $result['documentroot'] || $ssl_redirect != $result['ssl_redirect'] || $wwwserveralias != $result['wwwserveralias'] || $iswildcarddomain != $result['iswildcarddomain'] || $phpenabled != $result['phpenabled'] || $openbasedir != $result['openbasedir'] || $phpsettingid != $result['phpsettingid'] || $mod_fcgid_starter != $result['mod_fcgid_starter'] || $mod_fcgid_maxrequests != $result['mod_fcgid_maxrequests'] || $specialsettings != $result['specialsettings'] || $ssl_specialsettings != $result['ssl_specialsettings'] || $notryfiles != $result['notryfiles'] || $writeaccesslog != $result['writeaccesslog'] || $writeerrorlog != $result['writeerrorlog'] || $aliasdomain != $result['aliasdomain'] || $issubof != $result['ismainbutsubto'] || $email_only != $result['email_only'] || ($speciallogfile != $result['speciallogfile'] && $speciallogverified == '1') || $letsencrypt != $result['letsencrypt'] || $http2 != $result['http2'] || $hsts_maxage != $result['hsts'] || $hsts_sub != $result['hsts_sub'] || $hsts_preload != $result['hsts_preload'] || $ocsp_stapling != $result['ocsp_stapling']) {
+				\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_VHOST);
 			}
 
 			if ($speciallogfile != $result['speciallogfile'] && $speciallogverified != '1') {
@@ -1467,11 +1473,11 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 			}
 
 			if ($isbinddomain != $result['isbinddomain'] || $zonefile != $result['zonefile'] || $dkim != $result['dkim'] || $isemaildomain != $result['isemaildomain']) {
-				\Froxlor\System\Cronjob::inserttask('4');
+				\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_DNS);
 			}
 			// check whether nameserver has been disabled, #581
 			if ($isbinddomain != $result['isbinddomain'] && $isbinddomain == 0) {
-				\Froxlor\System\Cronjob::inserttask('11', $result['domain']);
+				\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::DELETE_DOMAIN_PDNS, $result['domain']);
 			}
 
 			if ($isemaildomain == '0' && $result['isemaildomain'] == '1') {
@@ -1500,7 +1506,7 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 					'id' => $id
 				), true, true);
 				// remove domain from acme.sh / lets encrypt if used
-				\Froxlor\System\Cronjob::inserttask('12', $result['domain']);
+				\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::DELETE_DOMAIN_SSL, $result['domain']);
 			}
 
 			$updatechildren = '';
@@ -1978,16 +1984,16 @@ class Domains extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\ResourceEn
 			\Froxlor\Domain\Domain::triggerLetsEncryptCSRForAliasDestinationDomain($result['aliasdomain'], $this->logger());
 
 			// remove domains DNS from powerDNS if used, #581
-			\Froxlor\System\Cronjob::inserttask('11', $result['domain']);
+			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::DELETE_DOMAIN_PDNS, $result['domain']);
 
 			// remove domain from acme.sh / lets encrypt if used
-			\Froxlor\System\Cronjob::inserttask('12', $result['domain']);
+			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::DELETE_DOMAIN_SSL, $result['domain']);
 
 			$this->logger()->logAction(\Froxlor\FroxlorLogger::ADM_ACTION, LOG_INFO, "[API] deleted domain/subdomains (#" . $result['id'] . ")");
 			\Froxlor\User::updateCounters();
-			\Froxlor\System\Cronjob::inserttask('1');
+			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_VHOST);
 			// Using nameserver, insert a task which rebuilds the server config
-			\Froxlor\System\Cronjob::inserttask('4');
+			\Froxlor\System\Cronjob::inserttask(\Froxlor\Cron\TaskId::REBUILD_DNS);
 			return $this->response(200, "successful", $result);
 		}
 		throw new \Exception("Not allowed to execute given command.", 403);

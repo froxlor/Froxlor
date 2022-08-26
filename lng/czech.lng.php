@@ -383,7 +383,7 @@ $lng['serversettings']['pathedit']['description'] = 'Měla by cesta být na výb
 $lng['serversettings']['nameservers']['title'] = 'Názvy serverů';
 $lng['serversettings']['nameservers']['description'] = 'Seznam oddělený čárkami obsahující názvy hostitelů všech jmenných serverů. První bude primární.';
 $lng['serversettings']['mxservers']['title'] = 'MX servery';
-$lng['serversettings']['mxservers']['description'] = 'Seznam oddělený čárkami obsahující dvojici čísla a jméno hostitele oddělené mezerou (např. \ '10 mx.example.com \ ') obsahující servery mx.';
+$lng['serversettings']['mxservers']['description'] = 'Seznam oddělený čárkami obsahující dvojici čísla a jméno hostitele oddělené mezerou (např. \'10 mx.example.com\') obsahující servery mx.';
 
 /**
  * CHANGED BETWEEN 1.2.12 and 1.2.13
@@ -957,11 +957,12 @@ $lng['update']['noupdatesavail'] = '<strong>You already have the latest Froxlor 
 $lng['admin']['specialsettingsforsubdomains'] = 'Apply specialsettings to all subdomains (*.example.com)';
 $lng['serversettings']['specialsettingsforsubdomains']['description'] = 'If yes these custom vHost-settings will be added to all subdomains; if no subdomain-specialsettings are being removed.';
 $lng['tasks']['outstanding_tasks'] = 'Outstanding cron-tasks';
-$lng['tasks']['rebuild_webserverconfig'] = 'Měním konfiguraci webového serveru';
-$lng['tasks']['adding_customer'] = 'Přidávám nového zákazníka se jménem %loginname%';
-$lng['tasks']['rebuild_bindconfig'] = 'Rebuilding bind-configuration';
-$lng['tasks']['creating_ftpdir'] = 'Vytvářím adresář pro nového ftp uživatele';
-$lng['tasks']['deleting_customerfiles'] = 'Mažu soubory zákazníka s jménem %loginname%';
+
+$lng['tasks']['REBUILD_VHOST'] = 'Měním konfiguraci webového serveru';
+$lng['tasks']['CREATE_HOME'] = 'Přidávám nového zákazníka se jménem %loginname%';
+$lng['tasks']['REBUILD_DNS'] = 'Rebuilding bind-configuration';
+$lng['tasks']['CREATE_FTP'] = 'Vytvářím adresář pro nového ftp uživatele';
+$lng['tasks']['DELETE_CUSTOMER_FILES'] = 'Mažu soubory zákazníka s jménem %loginname%';
 $lng['tasks']['noneoutstanding'] = 'V současné době nejsou pro Froxlor žádné nevyřízené úkoly ';
 
 // ADDED IN FROXLOR 0.9.1
@@ -1527,7 +1528,7 @@ $lng['serversettings']['diskquota_enabled'] = 'Kvóta aktivována?';
 $lng['serversettings']['diskquota_repquota_path']['description'] = 'Cesta k repquota';
 $lng['serversettings']['diskquota_quotatool_path']['description'] = 'Cesta k quotatool';
 $lng['serversettings']['diskquota_customer_partition']['description'] = 'Oddíl, na kterém jsou uloženy soubory zákazníků';
-$lng['tasks']['diskspace_set_quota'] = 'Nastavit kvótu souborového systému';
+$lng['tasks']['CREATE_QUOTA'] = 'Nastavit kvótu souborového systému';
 $lng['error']['session_timeout'] = 'Moc nízká hodnota';
 $lng['error']['session_timeout_desc'] = 'Časový limit relace byste neměli nastavit na méně než 1 minutu.';
 
@@ -1557,7 +1558,8 @@ $lng['admin']['speciallogwarning'] = 'VAROVÁNÍ: Změnou tohoto nastavení při
 // ADDED IN 0.9.28-svn2
 $lng['serversettings']['vmail_maildirname']['title'] = 'Název e-mailového adresáře';
 $lng['serversettings']['vmail_maildirname']['description'] = 'Adresář Maildir do uživatelského účtu. Normálně \'Maildir\', v některých implementacích \'.maildir\' a přímo do adresáře uživatele, pokud je ponecháno prázdné.';
-$lng['tasks']['remove_emailacc_files'] = 'Smazat zákazníkovy e-mailové data.';
+$lng['tasks']['DELETE_EMAIL_DATA'] = 'Smazat zákazníkovy e-mailové data.';
+
 
 // ADDED IN 0.9.28-svn5
 $lng['error']['operationnotpermitted'] = 'Operace nepovolena!';
@@ -1688,8 +1690,8 @@ $lng['panel']['ftpdesc'] = 'FTP description';
 $lng['admin']['cronsettings'] = 'Cronjob settings';
 $lng['serversettings']['system_cronconfig']['title'] = 'Cron configuration file';
 $lng['serversettings']['system_cronconfig']['description'] = 'Path to the cron-service configuration-file. This file will be updated regularly and automatically by froxlor.<br />Note: Please <b>be sure</b> to use the same filename as for the main froxlor cronjob (default: /etc/cron.d/froxlor)!<br><br>If you are using <b>FreeBSD</b>, please specify <i>/etc/crontab</i> here!';
-$lng['tasks']['remove_ftpacc_files'] = 'Delete customer ftp-account data.';
-$lng['tasks']['regenerating_crond'] = 'Rebuilding the cron.d-file';
+$lng['tasks']['DELETE_FTP_DATA'] = 'Delete customer ftp-account data.';
+$lng['tasks']['REBUILD_CRON'] = 'Rebuilding the cron.d-file';
 $lng['serversettings']['system_crondreload']['title'] = 'Cron-daemon reload command';
 $lng['serversettings']['system_crondreload']['description'] = 'Specify the command to execute in order to reload your systems cron-daemon';
 $lng['admin']['integritycheck'] = 'Ověření databáze';
@@ -1894,7 +1896,7 @@ $lng['serversettings']['backupenabled']['title'] = "Povolit zálohy pro zákazn�
 $lng['serversettings']['backupenabled']['description'] = "If activated, the customer will be able to schedule backup jobs (cron-backup) which generates an archive within his docroot (subdirectory chosable by customer)";
 $lng['extras']['path_protection_label'] = '<strong class="red">Important</strong>';
 $lng['extras']['path_protection_info'] = '<strong class="red">We strongly recommend protecting the given path, see "Extras" -> "Directory protection"</strong>';
-$lng['tasks']['backup_customerfiles'] = 'Backup job for customer %loginname%';
+$lng['tasks']['CREATE_CUSTOMER_BACKUP'] = 'Backup job for customer %loginname%';
 
 $lng['error']['dns_domain_nodns'] = 'DNS pro tuto doménu je vypnuto';
 $lng['error']['dns_content_empty'] = 'No content given';
@@ -2038,7 +2040,7 @@ $lng['apikeys']['allowed_from_help'] = 'Comma separated list of ip addresses. De
 $lng['apikeys']['valid_until'] = 'Platné do';
 $lng['apikeys']['valid_until_help'] = 'Date until valid, format YYYY-MM-DD';
 $lng['serversettings']['enable_api']['title'] = 'Enable external API usage';
-$lng['serversettings']['enable_api']['description'] = 'In order to use the froxlor API you need to activate this option. For more detailed information see <a href="https://api.froxlor.org/" target="_new">https://api.froxlor.org/</a>';
+$lng['serversettings']['enable_api']['description'] = 'In order to use the froxlor API you need to activate this option. For more detailed information see <a href="https://docs.froxlor.org/apiguide/index.html" target="_new">https://docs.froxlor.org/</a>';
 $lng['serversettings']['dhparams_file']['title'] = 'DHParams file (Diffie–Hellman key exchange)';
 $lng['serversettings']['dhparams_file']['description'] = 'If a dhparams.pem file is specified here it will be included in the webserver configuration. Leave empty to disable.<br>Example: /etc/ssl/webserver/dhparams.pem<br><br>If the file does not exist, it will be created automatically with the following command: <em>openssl dhparam -out /etc/ssl/webserver/dhparams.pem 4096<em>. It is recommended to create the file prior to specifying it here as the creation takes quite a while and blocks the cronjob.';
 $lng['2fa']['2fa'] = '2FA možnosti';
@@ -2063,8 +2065,8 @@ $lng['panel']['ihave_configured'] = 'Nastavil jsem služby';
 $lng['panel']['system_is_configured'] = 'System is already set as configured';
 $lng['panel']['settings_before_configuration'] = 'Please be sure you adjusted the settings prior to configuring the services here';
 $lng['panel']['alternative_cmdline_config'] = 'Alternatively, just run the following command as root-user in your shell to configure the services automatically';
-$lng['tasks']['remove_pdns_domain'] = 'Delete domain %s from PowerDNS database';
-$lng['tasks']['remove_ssl_domain'] = 'Smazat ssl soubory domény %s';
+$lng['tasks']['DELETE_DOMAIN_PDNS'] = 'Delete domain %s from PowerDNS database';
+$lng['tasks']['DELETE_DOMAIN_SSL'] = 'Smazat ssl soubory domény %s';
 $lng['admin']['novhostcontainer'] = '<br><br><small class="red">None of the IPs and ports has the "' . $lng['admin']['ipsandports']['create_vhostcontainer'] . '" option enabled, many settings here will not be available</small>';
 $lng['serversettings']['errorlog_level']['title'] = 'Error log-level';
 $lng['serversettings']['errorlog_level']['description'] = 'Specify the error log level. Default is "warn" for apache-users and "error" for nginx-users.';

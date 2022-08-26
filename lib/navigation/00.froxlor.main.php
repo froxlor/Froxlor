@@ -44,7 +44,8 @@ return array(
 					'show_element' => (\Froxlor\Settings::Get('api.enabled') == true)
 				),
 				array(
-					'url' => 'https://api.froxlor.org/doc/?v='.\Froxlor\Froxlor::getVersion(),
+					'url' => 'https://docs.froxlor.org/apiguide/index.html',
+					'new_window' => true,
 					'label' => $lng['menue']['main']['apihelp'],
 					'show_element' => (\Froxlor\Settings::Get('api.enabled') == true)
 				),
@@ -195,7 +196,8 @@ return array(
 					'show_element' => (\Froxlor\Settings::Get('api.enabled') == true)
 				),
 				array(
-					'url' => 'https://api.froxlor.org/doc/?v='.\Froxlor\Froxlor::getVersion(),
+					'url' => 'https://docs.froxlor.org/apiguide/index.html',
+					'new_window' => true,
 					'label' => $lng['menue']['main']['apihelp'],
 					'show_element' => (\Froxlor\Settings::Get('api.enabled') == true)
 				),

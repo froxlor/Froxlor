@@ -269,7 +269,7 @@ class HTML
 		}
 
 		$text = strtr($text, array(
-			'%s' => $targetname
+			'%s' => htmlspecialchars($targetname)
 		));
 		eval("echo \"" . Template::getTemplate('misc/question_yesno', '1') . "\";");
 		exit();
@@ -302,7 +302,7 @@ class HTML
 		}
 
 		$text = strtr($text, array(
-			'%s' => $targetname
+			'%s' => htmlspecialchars($targetname)
 		));
 		eval("echo \"" . Template::getTemplate('misc/question_yesno_checkbox', '1') . "\";");
 		exit();
