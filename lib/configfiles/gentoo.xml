@@ -1551,7 +1551,7 @@ root:               root@<SERVERNAME>
 					</commands>
 				</general>
 				<!-- postfix with dovecot -->
-				<daemon name="postfix_dovecot" version="2.x"
+				<daemon name="postfix_dovecot" version="2"
 					title="Postfix 2 with dovecot">
 					<include>//service[@type='smtp']/general/commands[@index=1]
 					</include>
@@ -1699,7 +1699,7 @@ dovecot	  unix	-	n	n	-	-	pipe
 					</include>
 				</daemon>
 				<!-- postfix with dovecot -->
-				<daemon name="postfix_dovecot" version="3.x"
+				<daemon name="postfix_dovecot"
 					title="Postfix 3 with dovecot" default="true">
 					<include>//service[@type='smtp']/general/commands[@index=1]
 					</include>
@@ -1852,7 +1852,7 @@ dovecot	  unix	-	n	n	-	-	pipe
 					</include>
 				</daemon>
 				<!-- postfix with courier -->
-				<daemon name="postfix_courier" version="2.x"
+				<daemon name="postfix_courier" version="2"
 					title="Postfix 2 with courier">
 					<include>//service[@type='smtp']/general/commands[@index=1]
 					</include>

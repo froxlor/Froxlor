@@ -672,7 +672,7 @@ class Core
 			'dns' => 'x',
 			'http' => $this->validatedData['webserver'],
 			'smtp' => 'postfix_dovecot',
-			'mail' => 'dovecot_postfix',
+			'mail' => 'dovecot_postfix2',
 			'ftp' => 'proftpd',
 			'system' => $system_params
 		];
