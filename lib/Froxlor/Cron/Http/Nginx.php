@@ -214,13 +214,18 @@ class Nginx extends HttpConfigBase
 					$this->nginx_data[$vhost_filename] .= "\t" . 'location / {' . "\n";
 					$this->nginx_data[$vhost_filename] .= "\t" . '}' . "\n";
 
+					if (Settings::Get('system.froxlordirectlyviahostname')) {
+						$relpath = "/";
+					} else {
+						$relpath = "/".basename(Froxlor::getInstallDir());
+					}
 					// protect lib/userdata.inc.php
-					$this->nginx_data[$vhost_filename] .= "\t" . 'location = ' . rtrim(Froxlor::getInstallDir(), "/") . '/lib/userdata.inc.php {' . "\n";
+					$this->nginx_data[$vhost_filename] .= "\t" . 'location = ' . rtrim($relpath, "/") . '/lib/userdata.inc.php {' . "\n";
 					$this->nginx_data[$vhost_filename] .= "\t" . '    deny all;' . "\n";
 					$this->nginx_data[$vhost_filename] .= "\t" . '}' . "\n";
 
 					// protect bin/
-					$this->nginx_data[$vhost_filename] .= "\t" . 'location = ' . rtrim(Froxlor::getInstallDir(), "/") . '/bin {' . "\n";
+					$this->nginx_data[$vhost_filename] .= "\t" . 'location ~ ' . rtrim($relpath, "/") . '/(bin|cache|logs|node_modules|tests|vendor) {' . "\n";
 					$this->nginx_data[$vhost_filename] .= "\t" . '    deny all;' . "\n";
 					$this->nginx_data[$vhost_filename] .= "\t" . '}' . "\n";
 				}

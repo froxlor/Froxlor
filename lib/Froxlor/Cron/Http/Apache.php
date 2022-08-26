@@ -156,8 +156,13 @@ class Apache extends HttpConfigBase
 				}
 
 				if (!$is_redirect) {
+					if (Settings::Get('system.froxlordirectlyviahostname')) {
+						$relpath = "/";
+					} else {
+						$relpath = "/".basename(Froxlor::getInstallDir());
+					}
 					// protect lib/userdata.inc.php
-					$this->virtualhosts_data[$vhosts_filename] .= '  <Directory "' . rtrim(Froxlor::getInstallDir(), "/") . '/lib/">' . "\n";
+					$this->virtualhosts_data[$vhosts_filename] .= '  <Directory "' . rtrim($relpath, "/") . '/lib/">' . "\n";
 					$this->virtualhosts_data[$vhosts_filename] .= '    <Files "userdata.inc.php">' . "\n";
 					if (Settings::Get('system.apache24') == '1') {
 						$this->virtualhosts_data[$vhosts_filename] .= '    Require all denied' . "\n";
@@ -168,14 +173,14 @@ class Apache extends HttpConfigBase
 					$this->virtualhosts_data[$vhosts_filename] .= '    </Files>' . "\n";
 					$this->virtualhosts_data[$vhosts_filename] .= '  </Directory>' . "\n";
 					// protect bin/
-					$this->virtualhosts_data[$vhosts_filename] .= '  <Directory "' . rtrim(Froxlor::getInstallDir(), "/") . '/bin/">' . "\n";
+					$this->virtualhosts_data[$vhosts_filename] .= '  <DirectoryMatch ~ "' . rtrim($relpath, "/") . '/(bin|cache|logs|node_modules|tests|vendor)/">' . "\n";
 					if (Settings::Get('system.apache24') == '1') {
 						$this->virtualhosts_data[$vhosts_filename] .= '    Require all denied' . "\n";
 					} else {
 						$this->virtualhosts_data[$vhosts_filename] .= '    Order deny,allow' . "\n";
 						$this->virtualhosts_data[$vhosts_filename] .= '    deny from all' . "\n";
 					}
-					$this->virtualhosts_data[$vhosts_filename] .= '  </Directory>' . "\n";
+					$this->virtualhosts_data[$vhosts_filename] .= '  </DirectoryMatch>' . "\n";
 
 					// create fcgid <Directory>-Part (starter is created in apache_fcgid)
 					if (Settings::Get('system.mod_fcgid_ownvhost') == '1' && Settings::Get('system.mod_fcgid') == '1') {

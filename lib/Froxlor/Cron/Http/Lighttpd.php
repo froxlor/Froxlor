@@ -121,12 +121,17 @@ class Lighttpd extends HttpConfigBase
 				}
 
 				if (!$is_redirect) {
+					if (Settings::Get('system.froxlordirectlyviahostname')) {
+						$relpath = "/";
+					} else {
+						$relpath = "/".basename(Froxlor::getInstallDir());
+					}
 					// protect lib/userdata.inc.php
-					$this->lighttpd_data[$vhost_filename] .= '  $HTTP["host"] =~ "' . rtrim(Froxlor::getInstallDir(), "/") . '/lib" {' . "\n";
+					$this->lighttpd_data[$vhost_filename] .= '  $HTTP["url"] =~ "' . rtrim($relpath, "/") . '/lib" {' . "\n";
 					$this->lighttpd_data[$vhost_filename] .= '    url.access-deny = ("userdata.inc.php")' . "\n";
 					$this->lighttpd_data[$vhost_filename] .= '  }' . "\n";
 					// protect bin/
-					$this->lighttpd_data[$vhost_filename] .= '  $HTTP["host"] =~ "' . rtrim(Froxlor::getInstallDir(), "/") . '/bin" {' . "\n";
+					$this->lighttpd_data[$vhost_filename] .= '  $HTTP["url"] =~ "^' . rtrim($relpath, "/") . '/(bin|cache|logs|node_modules|tests|vendor)" {' . "\n";
 					$this->lighttpd_data[$vhost_filename] .= '    url.access-deny = ("")' . "\n";
 					$this->lighttpd_data[$vhost_filename] .= '  }' . "\n";
 
