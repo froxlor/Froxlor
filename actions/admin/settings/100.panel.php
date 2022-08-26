@@ -230,6 +230,15 @@ return [
 					'save_method' => 'storeSettingField',
 					'advanced_mode' => true
 				],
+				'panel_phpconfigs_hidesubdomains' => [
+					'label' => lng('serversettings.panel_phpconfigs_hidesubdomains'),
+					'settinggroup' => 'panel',
+					'varname' => 'phpconfigs_hidesubdomains',
+					'type' => 'checkbox',
+					'default' => true,
+					'save_method' => 'storeSettingField',
+					'advanced_mode' => true
+				],
 				'panel_phpconfigs_hidestdsubdomain' => [
 					'label' => lng('serversettings.panel_phpconfigs_hidestdsubdomain'),
 					'settinggroup' => 'panel',

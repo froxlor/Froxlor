@@ -2128,6 +2128,10 @@ Yours sincerely, your administrator',
 			'title' => 'Use domain name as default value for DocumentRoot path',
 			'description' => 'If enabled and DocumentRoot path is empty, default value will be the (sub)domain name.<br /><br />Examples: <br />/var/customers/customer_name/example.com/<br />/var/customers/customer_name/subdomain.example.com/',
 		],
+		'panel_phpconfigs_hidesubdomains' => [
+			'title' => 'Hide subdomains in PHP-configuration overview',
+			'description' => 'If activated the subdomains of customers will not be listed in the php-configurations overview, only the number of subdomains is shown.<br /><br />Note: This is only visible if you have enabled FCGID or PHP-FPM',
+		],
 		'panel_phpconfigs_hidestdsubdomain' => [
 			'title' => 'Hide standard-subdomains in PHP-configuration overview',
 			'description' => 'If activated the standard-subdomains for customers will not be displayed in the php-configurations overview<br /><br />Note: This is only visible if you have enabled FCGID or PHP-FPM',

@@ -140,6 +140,7 @@ if (Froxlor::isFroxlorVersion('0.10.99')) {
 	Settings::AddNew("system.update_channel", 'stable');
 	Settings::AddNew("system.updatecheck_data", '');
 	Settings::AddNew("system.update_notify_last", $update_to);
+	Settings::AddNew("panel.phpconfigs_hidesubdomains", '1');
 	Update::lastStepStatus(0);
 
 	Update::showUpdateStep("Adjusting existing settings");

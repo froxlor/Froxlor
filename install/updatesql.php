@@ -26,6 +26,7 @@
 use Froxlor\Froxlor;
 use Froxlor\FileDir;
 use Froxlor\FroxlorLogger;
+use Froxlor\Settings;
 use Froxlor\UI\Response;
 use Froxlor\Database\IntegrityCheck;
 use Froxlor\Install\Update;

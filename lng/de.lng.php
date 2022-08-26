@@ -1752,6 +1752,10 @@ Vielen Dank, Ihr Administrator',
 			'title' => 'Verwende Domainnamen im Documentroot',
 			'description' => 'Wenn aktiviert wird dem standard Documentroot zusätzlich der Domain-Name angehängt.<br /><br />Beispiel:<br />/var/customers/customer_name/example.tld/<br />/var/customers/customer_name/subdomain.example.tld/',
 		],
+		'panel_phpconfigs_hidesubdomains' => [
+			'title' => 'Verstecke Subdomains in PHP-Konfigurations-Übersicht',
+			'description' => 'Wenn aktiviert, werden die Subdomains der Kunden nicht in der PHP-Konfigurations-Übersicht angezeigt, lediglich die Anzahl.<br /><br />Hinweis: Nur relevant, wenn FCGID oder PHP-FPM aktiviert ist.',
+		],
 		'panel_phpconfigs_hidestdsubdomain' => [
 			'title' => 'Verstecke Standard-Subdomains in PHP-Konfigurations-Übersicht',
 			'description' => 'Wenn aktiviert, werden die Standard-Subdomains der Kunden nicht mehr in der PHP-Konfigurations-Übersicht angezeigt.<br /><br />Hinweis: Nur relevant, wenn FCGID oder PHP-FPM aktiviert ist.',

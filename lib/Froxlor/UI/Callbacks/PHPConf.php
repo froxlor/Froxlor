@@ -41,7 +41,13 @@ class PHPConf
 		if ($subdomains_count == 0 && empty($domains)) {
 			$domains = lng('admin.phpsettings.notused');
 		} else {
-			$domains .= !empty($subdomains_count) ? ((!empty($domains) ? '+ ' : '') . $subdomains_count . ' ' . lng('customer.subdomains')) : '';
+			if (Settings::Get('panel.phpconfigs_hidesubdomains') == '1') {
+				$domains .= !empty($subdomains_count) ? ((!empty($domains) ? '+ ' : '') . $subdomains_count . ' ' . lng('customer.subdomains')) : '';
+			} else {
+				foreach ($attributes['fields']['subdomains'] as $configdomain) {
+					$domains .= $idna->decode($configdomain) . "<br>";
+				}
+			}
 		}
 
 		return $domains;
