@@ -39,7 +39,8 @@ return [
 					],
 					'destination' => [
 						'label' => lng('emails.to'),
-						'type' => 'email'
+						'type' => 'email',
+						'mandatory' => true
 					]
 				]
 			]

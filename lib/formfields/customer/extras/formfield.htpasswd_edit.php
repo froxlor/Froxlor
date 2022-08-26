@@ -60,7 +60,8 @@ return [
 					'directory_authname' => [
 						'label' => lng('extras.htpasswdauthname'),
 						'type' => 'text',
-						'value' => $result['authname']
+						'value' => $result['authname'],
+						'mandatory' => true
 					]
 				]
 			]

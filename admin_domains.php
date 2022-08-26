@@ -53,11 +53,11 @@ if ($page == 'domains' || $page == 'overview') {
 		$log->logAction(FroxlorLogger::ADM_ACTION, LOG_NOTICE, "viewed admin_domains");
 
 		try {
+			$customerCollection = (new Collection(Customers::class, $userinfo));
 			$domain_list_data = include_once dirname(__FILE__) . '/lib/tablelisting/admin/tablelisting.domains.php';
 			$collection = (new Collection(Domains::class, $userinfo))
 				->has('customer', Customers::class, 'customerid', 'customerid')
 				->withPagination($domain_list_data['domain_list']['columns']);
-			$customerCollection = (new Collection(Customers::class, $userinfo));
 		} catch (Exception $e) {
 			Response::dynamicError($e->getMessage());
 		}

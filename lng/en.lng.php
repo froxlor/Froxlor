@@ -1240,7 +1240,7 @@ return [
 		'errordocument401path' => 'ErrorDocument 401',
 		'execute_perl' => 'Execute perl/CGI',
 		'htpasswdauthname' => 'Authentication reason (AuthName)',
-		'directoryprotection_edit' => 'edit directory protection',
+		'directoryprotection_edit' => 'Edit directory protection',
 		'backup' => 'Create backup',
 		'backup_web' => 'Backup web-data',
 		'backup_mail' => 'Backup mail-data',

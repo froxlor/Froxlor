@@ -118,6 +118,11 @@ return [
 					]
 				]
 			]
+		],
+		'buttons' => [
+			[
+				'label' => lng('panel.backtooverview')
+			]
 		]
 	]
 ];

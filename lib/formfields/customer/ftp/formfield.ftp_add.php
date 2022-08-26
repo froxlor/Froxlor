@@ -52,11 +52,13 @@ return [
 						'select_var' => $pathSelect['select_var'] ?? '',
 						'value' => $pathSelect['value'],
 						'note' => $pathSelect['note'] ?? '',
+						'mandatory' => true
 					],
 					'ftp_password' => [
 						'label' => lng('login.password'),
 						'type' => 'password',
-						'autocomplete' => 'off'
+						'autocomplete' => 'off',
+						'mandatory' => true
 					],
 					'ftp_password_suggestion' => [
 						'label' => lng('customer.generated_pwd'),

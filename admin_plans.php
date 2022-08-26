@@ -27,6 +27,7 @@ const AREA = 'admin';
 require __DIR__ . '/lib/init.php';
 
 use Froxlor\Api\Commands\HostingPlans;
+use Froxlor\Api\Commands\MysqlServer;
 use Froxlor\Database\Database;
 use Froxlor\FroxlorLogger;
 use Froxlor\PhpHelper;
@@ -105,6 +106,20 @@ if ($page == '' || $page == 'overview') {
 				'page' => $page
 			]);
 		} else {
+			$mysql_servers = [];
+			try {
+				$result_json = MysqlServer::getLocal($userinfo)->listing();
+				$result_decoded = json_decode($result_json, true)['data']['list'];
+				foreach ($result_decoded as $dbserver => $dbdata) {
+					$mysql_servers[] = [
+						'label' => $dbdata['caption'],
+						'value' => $dbserver
+					];
+				}
+			} catch (Exception $e) {
+				/* just none */
+			}
+
 			$phpconfigs = [];
 			$configs = Database::query("
 					SELECT c.*, fc.description as interpreter
@@ -128,8 +143,8 @@ if ($page == '' || $page == 'overview') {
 			// dummy to avoid unknown variables
 			$hosting_plans = null;
 
-			$plans_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/plans/formfield.plans_add.php';
-			$cust_add_data = include_once dirname(__FILE__) . '/lib/formfields/admin/customer/formfield.customer_add.php';
+			$plans_add_data = include_once __DIR__ . '/lib/formfields/admin/plans/formfield.plans_add.php';
+			$cust_add_data = include_once __DIR__ . '/lib/formfields/admin/customer/formfield.customer_add.php';
 			// unset unneeded stuff
 			unset($cust_add_data['customer_add']['sections']['section_a']);
 			unset($cust_add_data['customer_add']['sections']['section_b']);
@@ -171,6 +186,20 @@ if ($page == '' || $page == 'overview') {
 					'page' => $page
 				]);
 			} else {
+				$mysql_servers = [];
+				try {
+					$result_json = MysqlServer::getLocal($userinfo)->listing();
+					$result_decoded = json_decode($result_json, true)['data']['list'];
+					foreach ($result_decoded as $dbserver => $dbdata) {
+						$mysql_servers[] = [
+							'label' => $dbdata['caption'],
+							'value' => $dbserver
+						];
+					}
+				} catch (Exception $e) {
+					/* just none */
+				}
+
 				$phpconfigs = [];
 				$configs = Database::query("
 					SELECT c.*, fc.description as interpreter
@@ -216,8 +245,8 @@ if ($page == '' || $page == 'overview') {
 				$hosting_plans = null;
 				$admin_select = [];
 
-				$plans_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/plans/formfield.plans_edit.php';
-				$cust_edit_data = include_once dirname(__FILE__) . '/lib/formfields/admin/customer/formfield.customer_edit.php';
+				$plans_edit_data = include_once __DIR__ . '/lib/formfields/admin/plans/formfield.plans_edit.php';
+				$cust_edit_data = include_once __DIR__ . '/lib/formfields/admin/customer/formfield.customer_edit.php';
 				// unset unneeded stuff
 				unset($cust_edit_data['customer_edit']['sections']['section_a']);
 				unset($cust_edit_data['customer_edit']['sections']['section_b']);

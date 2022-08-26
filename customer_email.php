@@ -176,6 +176,11 @@ if ($page == 'overview' || $page == 'emails') {
 		$result = json_decode($json_result, true)['data'];
 
 		if (isset($result['email']) && $result['email'] != '') {
+			if (isset($_POST['send']) && $_POST['send'] == 'send') {
+				Response::redirectTo($filename, [
+					'page' => $page
+				]);
+			}
 			$result['email'] = $idna_convert->decode($result['email']);
 			$result['email_full'] = $idna_convert->decode($result['email_full']);
 			$result['destination'] = explode(' ', $result['destination']);

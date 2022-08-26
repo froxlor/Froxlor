@@ -44,6 +44,7 @@ return [
 						'label' => lng('login.password'),
 						'type' => 'password',
 						'autocomplete' => 'off',
+						'mandatory' => true,
 						'next_to' => [
 							'admin_password_suggestion' => [
 								'next_to_prefix' => lng('customer.generated_pwd') . ':',

@@ -32,7 +32,7 @@ return [
 				'title' => lng('emails.quota_edit'),
 				'image' => 'icons/email_edit.png',
 				'fields' => [
-					'email_full' => [
+					'emailaddr' => [
 						'label' => lng('emails.emailaddress'),
 						'type' => 'label',
 						'value' => $result['email_full']

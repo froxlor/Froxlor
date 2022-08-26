@@ -70,6 +70,9 @@ if (Froxlor::isFroxlor()) {
 		Update::lastStepStatus(0);
 	}
 
+	// reset cached version check
+	Settings::Set('system.updatecheck_data', '');
+
 	$filelog->logAction(FroxlorLogger::ADM_ACTION, LOG_WARNING, '--------------- END LOG ---------------');
 	unset($filelog);
 }

@@ -43,15 +43,18 @@ return [
 						'select_var' => $pathSelect['select_var'] ?? '',
 						'value' => $pathSelect['value'],
 						'note' => $pathSelect['note'] ?? '',
+						'mandatory' => true
 					],
 					'username' => [
 						'label' => lng('login.username'),
-						'type' => 'text'
+						'type' => 'text',
+						'mandatory' => true
 					],
 					'directory_password' => [
 						'label' => lng('login.password'),
 						'type' => 'password',
-						'autocomplete' => 'off'
+						'autocomplete' => 'off',
+						'mandatory' => true
 					],
 					'directory_password_suggestion' => [
 						'label' => lng('customer.generated_pwd'),
@@ -61,7 +64,8 @@ return [
 					],
 					'directory_authname' => [
 						'label' => lng('extras.htpasswdauthname'),
-						'type' => 'text'
+						'type' => 'text',
+						'mandatory' => true
 					]
 				]
 			]

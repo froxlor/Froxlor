@@ -33,7 +33,7 @@ return [
 	'domain_list' => [
 		'title' => lng('admin.domains'),
 		'icon' => 'fa-solid fa-globe',
-		'empty_msg' => lng('admin.domain_nocustomeraddingavailable'),
+		'empty_msg' => $customerCollection->count() == 0 ? lng('admin.domain_nocustomeraddingavailable') : '',
 		'self_overview' => ['section' => 'domains', 'page' => 'domains'],
 		'columns' => [
 			'd.id' => [

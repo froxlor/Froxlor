@@ -33,7 +33,7 @@ use Froxlor\UI\Listing;
 return [
 	'customer_list' => [
 		'title' => lng('admin.customers'),
-		'description' => 'Manage your customers',
+		'description' => lng('admin.customers_list_desc'),
 		'icon' => 'fa-solid fa-user',
 		'self_overview' => ['section' => 'customers', 'page' => 'customers'],
 		'columns' => [

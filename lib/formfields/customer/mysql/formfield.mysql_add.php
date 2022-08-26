@@ -45,7 +45,8 @@ return [
 					'mysql_password' => [
 						'label' => lng('login.password'),
 						'type' => 'password',
-						'autocomplete' => 'off'
+						'autocomplete' => 'off',
+						'mandatory' => true
 					],
 					'mysql_password_suggestion' => [
 						'label' => lng('customer.generated_pwd'),

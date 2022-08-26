@@ -42,6 +42,7 @@ return [
 						'select_var' => $pathSelect['select_var'] ?? '',
 						'value' => $pathSelect['value'],
 						'note' => $pathSelect['note'] ?? '',
+						'mandatory' => true
 					],
 					'options_indexes' => [
 						'label' => lng('extras.directory_browsing'),
