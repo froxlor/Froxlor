@@ -1784,3 +1784,5 @@ $lng['serversettings']['phpfpm_settings']['allow_all_customers']['description'] 
 $lng['error']['pathmustberelative'] = 'Der Benutzer hat nicht die benötigten Berechtigungen, um Pfade außerhalb des Kunden-Heimatverzeichnisses anzugeben. Bitte einen relativen Pfad angeben (kein führendes /).';
 $lng['serversettings']['acmeshpath']['title'] = 'Pfad zu acme.sh';
 $lng['serversettings']['acmeshpath']['description'] = 'Installationspfad zu acme.sh, inklusive acme.sh Script<br>Standard ist <b>/root/.acme.sh/acme.sh</b>';
+
+$lng['question']['api_reallydelete'] = 'Api-Key #%d wirklich löschen?';

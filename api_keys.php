@@ -1,5 +1,5 @@
 <?php
-if (! defined('AREA')) {
+if (!defined('AREA')) {
 	header("Location: index.php");
 	exit();
 }
@@ -27,39 +27,47 @@ use Froxlor\Database\Database;
 
 $del_stmt = Database::prepare("DELETE FROM `" . TABLE_API_KEYS . "` WHERE id = :id");
 $success_message = "";
-$id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
+$id = isset($_POST['id']) ? (int) $_POST['id'] : (isset($_GET['id']) ? (int) $_GET['id'] : 0);
 $area = AREA;
 
 // do the delete and then just show a success-message and the apikeys list again
 if ($action == 'delete') {
 	if ($id > 0) {
-		$chk = (AREA == 'admin' && $userinfo['customers_see_all'] == '1') ? true : false;
-		if (AREA == 'customer') {
-			$chk_stmt = Database::prepare("
-				SELECT c.customerid FROM `" . TABLE_PANEL_CUSTOMERS . "` c
-				LEFT JOIN `" . TABLE_API_KEYS . "` ak ON ak.customerid = c.customerid
-				WHERE ak.`id` = :id AND c.`customerid` = :cid
-			");
-			$chk = Database::pexecute_first($chk_stmt, array(
-				'id' => $id,
-				'cid' => $userinfo['customerid']
-			));
-		} elseif (AREA == 'admin' && $userinfo['customers_see_all'] == '0') {
-			$chk_stmt = Database::prepare("
-				SELECT a.adminid FROM `" . TABLE_PANEL_ADMINS . "` a
-				LEFT JOIN `" . TABLE_API_KEYS . "` ak ON ak.adminid = a.adminid
-				WHERE ak.`id` = :id AND a.`adminid` = :aid
-			");
-			$chk = Database::pexecute_first($chk_stmt, array(
-				'id' => $id,
-				'aid' => $userinfo['adminid']
-			));
-		}
-		if ($chk !== false) {
-			Database::pexecute($del_stmt, array(
+		if (isset($_POST['send']) && $_POST['send'] == 'send') {
+			$chk = (AREA == 'admin' && $userinfo['customers_see_all'] == '1') ? true : false;
+			if (AREA == 'customer') {
+				$chk_stmt = Database::prepare("
+					SELECT c.customerid FROM `" . TABLE_PANEL_CUSTOMERS . "` c
+					LEFT JOIN `" . TABLE_API_KEYS . "` ak ON ak.customerid = c.customerid
+					WHERE ak.`id` = :id AND c.`customerid` = :cid
+				");
+				$chk = Database::pexecute_first($chk_stmt, array(
+					'id' => $id,
+					'cid' => $userinfo['customerid']
+				));
+			} elseif (AREA == 'admin' && $userinfo['customers_see_all'] == '0') {
+				$chk_stmt = Database::prepare("
+					SELECT a.adminid FROM `" . TABLE_PANEL_ADMINS . "` a
+					LEFT JOIN `" . TABLE_API_KEYS . "` ak ON ak.adminid = a.adminid
+					WHERE ak.`id` = :id AND a.`adminid` = :aid
+				");
+				$chk = Database::pexecute_first($chk_stmt, array(
+					'id' => $id,
+					'aid' => $userinfo['adminid']
+				));
+			}
+			if ($chk !== false) {
+				Database::pexecute($del_stmt, array(
+					'id' => $id
+				));
+				$success_message = sprintf($lng['apikeys']['apikey_removed'], $id);
+			}
+		} else {
+			\Froxlor\UI\HTML::askYesNo('api_reallydelete', $filename, array(
+				'page' => $page,
+				'action' => $action,
 				'id' => $id
-			));
-			$success_message = sprintf($lng['apikeys']['apikey_removed'], $id);
+			), $id);
 		}
 	}
 } elseif ($action == 'add') {
@@ -85,10 +93,10 @@ if ($action == 'delete') {
 } elseif ($action == 'jqEditApiKey') {
 	$keyid = isset($_POST['id']) ? (int) $_POST['id'] : 0;
 	$allowed_from = isset($_POST['allowed_from']) ? $_POST['allowed_from'] : "";
-	$valid_until = isset($_POST['valid_until']) ? (int) $_POST['valid_until'] : - 1;
+	$valid_until = isset($_POST['valid_until']) ? (int) $_POST['valid_until'] : -1;
 
 	// validate allowed_from
-	if (! empty($allowed_from)) {
+	if (!empty($allowed_from)) {
 		$ip_list = array_map('trim', explode(",", $allowed_from));
 		$_check_list = $ip_list;
 		foreach ($_check_list as $idx => $ip) {
@@ -100,8 +108,8 @@ if ($action == 'delete') {
 		$allowed_from = implode(",", array_unique($ip_list));
 	}
 
-	if ($valid_until <= 0 || ! is_numeric($valid_until)) {
-		$valid_until = - 1;
+	if ($valid_until <= 0 || !is_numeric($valid_until)) {
+		$valid_until = -1;
 	}
 
 	$upd_stmt = Database::prepare("

@@ -2138,3 +2138,5 @@ $lng['serversettings']['phpfpm_settings']['allow_all_customers']['description'] 
 $lng['error']['pathmustberelative'] = 'The user does not have the permission to specify directories outside the customers home-directory. Please specify a relative path (no leading /).';
 $lng['serversettings']['acmeshpath']['title'] = 'Path to acme.sh';
 $lng['serversettings']['acmeshpath']['description'] = 'Set this to where acme.sh is installed to, including the acme.sh script<br>Default is <b>/root/.acme.sh/acme.sh</b>';
+
+$lng['question']['api_reallydelete'] = 'Do you really want to delete the api-key #%d?';
