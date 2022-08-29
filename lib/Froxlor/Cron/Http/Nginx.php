@@ -225,7 +225,7 @@ class Nginx extends HttpConfigBase
 					$this->nginx_data[$vhost_filename] .= "\t" . '}' . "\n";
 
 					// protect bin/
-					$this->nginx_data[$vhost_filename] .= "\t" . 'location ~ ' . rtrim($relpath, "/") . '/(bin|cache|logs|node_modules|tests|vendor) {' . "\n";
+					$this->nginx_data[$vhost_filename] .= "\t" . 'location ~ ' . rtrim($relpath, "/") . '/(bin|cache|logs|tests|vendor) {' . "\n";
 					$this->nginx_data[$vhost_filename] .= "\t" . '    deny all;' . "\n";
 					$this->nginx_data[$vhost_filename] .= "\t" . '}' . "\n";
 				}

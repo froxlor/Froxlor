@@ -131,7 +131,7 @@ class Lighttpd extends HttpConfigBase
 					$this->lighttpd_data[$vhost_filename] .= '    url.access-deny = ("userdata.inc.php")' . "\n";
 					$this->lighttpd_data[$vhost_filename] .= '  }' . "\n";
 					// protect bin/
-					$this->lighttpd_data[$vhost_filename] .= '  $HTTP["url"] =~ "^' . rtrim($relpath, "/") . '/(bin|cache|logs|node_modules|tests|vendor)" {' . "\n";
+					$this->lighttpd_data[$vhost_filename] .= '  $HTTP["url"] =~ "^' . rtrim($relpath, "/") . '/(bin|cache|logs|tests|vendor)" {' . "\n";
 					$this->lighttpd_data[$vhost_filename] .= '    url.access-deny = ("")' . "\n";
 					$this->lighttpd_data[$vhost_filename] .= '  }' . "\n";
 

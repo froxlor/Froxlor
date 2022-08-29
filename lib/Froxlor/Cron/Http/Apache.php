@@ -173,7 +173,7 @@ class Apache extends HttpConfigBase
 					$this->virtualhosts_data[$vhosts_filename] .= '    </Files>' . "\n";
 					$this->virtualhosts_data[$vhosts_filename] .= '  </Directory>' . "\n";
 					// protect bin/
-					$this->virtualhosts_data[$vhosts_filename] .= '  <DirectoryMatch ~ "' . rtrim($relpath, "/") . '/(bin|cache|logs|node_modules|tests|vendor)/">' . "\n";
+					$this->virtualhosts_data[$vhosts_filename] .= '  <DirectoryMatch ~ "' . rtrim($relpath, "/") . '/(bin|cache|logs|tests|vendor)/">' . "\n";
 					if (Settings::Get('system.apache24') == '1') {
 						$this->virtualhosts_data[$vhosts_filename] .= '    Require all denied' . "\n";
 					} else {

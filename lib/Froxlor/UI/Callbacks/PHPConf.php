@@ -25,6 +25,7 @@
 
 namespace Froxlor\UI\Callbacks;
 
+use Froxlor\Settings;
 use Froxlor\Idna\IdnaWrapper;
 use Froxlor\UI\Panel\UI;
 
