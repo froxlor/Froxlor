@@ -34,4 +34,9 @@ class Customer
 		return $attributes['fields']['loginfail_count'] >= Settings::Get('login.maxloginattempts')
 			&& $attributes['fields']['lastlogin_fail'] > (time() - Settings::Get('login.deactivatetime'));
 	}
+
+	public static function hasNote(array $attributes)
+	{
+		return !empty($attributes['fields']['custom_notes']);
+	}
 }

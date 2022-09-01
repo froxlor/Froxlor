@@ -483,6 +483,8 @@ return [
 		'no_api_keys' => 'Keine API Keys gefunden',
 		'key_add' => 'API Key hinzufügen',
 		'apikey_removed' => 'Der API Key mit der ID #%s wurde erfolgreich gelöscht.',
+		'apikey_added' => 'Der neue API Key wurde erfolgreich angelegt.',
+		'clicktoview' => 'API Key Details anzeigen',
 		'allowed_from' => 'Erlaube Zugriff von',
 		'allowed_from_help' => 'Komma getrennte Liste von IPs oder Netzen.<br>Standard ist leer (von überall erlaubt).',
 		'valid_until' => 'Gültig bis',

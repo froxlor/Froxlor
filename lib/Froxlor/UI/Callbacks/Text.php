@@ -75,6 +75,17 @@ class Text
 		return wordwrap($attributes['data'], 100, '<br>', true);
 	}
 
+	public static function customerNoteDetailModal(array $attributes): array
+	{
+		$note = $attributes['fields']['custom_notes'] ?? '';
+		return [
+			'entry' => $attributes['fields']['id'],
+			'id' => 'cnModal' . $attributes['fields']['id'],
+			'title' => lng('usersettings.custom_notes.title') . ': ' . ($attributes['fields']['loginname'] ?? $attributes['fields']['adminname']),
+			'body' => nl2br($note)
+		];
+	}
+
 	public static function apikeyDetailModal(array $attributes): array
 	{
 		$linker = UI::getLinker();

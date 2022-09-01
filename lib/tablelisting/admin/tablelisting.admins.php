@@ -24,6 +24,7 @@
  */
 
 use Froxlor\UI\Callbacks\Admin;
+use Froxlor\UI\Callbacks\Customer;
 use Froxlor\UI\Callbacks\Impersonate;
 use Froxlor\UI\Callbacks\ProgressBar;
 use Froxlor\UI\Callbacks\Style;
@@ -112,6 +113,12 @@ return [
 			'deactivated',
 		]),
 		'actions' => [
+			'show' => [
+				'icon' => 'fa fa-eye',
+				'title' => lng('usersettings.custom_notes.title'),
+				'modal' => [Text::class, 'customerNoteDetailModal'],
+				'visible' => [Customer::class, 'hasNote']
+			],
 			'edit' => [
 				'icon' => 'fa fa-edit',
 				'title' => lng('panel.edit'),

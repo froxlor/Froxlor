@@ -153,6 +153,12 @@ return [
 			'c.traffic',
 		]),
 		'actions' => [
+			'show' => [
+				'icon' => 'fa fa-eye',
+				'title' => lng('usersettings.custom_notes.title'),
+				'modal' => [Text::class, 'customerNoteDetailModal'],
+				'visible' => [Customer::class, 'hasNote']
+			],
 			'unlock' => [
 				'icon' => 'fa fa-unlock',
 				'title' => lng('panel.unlock'),
