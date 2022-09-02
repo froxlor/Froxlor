@@ -1249,7 +1249,9 @@ Vielen Dank, Ihr Administrator',
 		'remove_subbutmain_domains' => 'Auch Domains entfernen, welche als volle Domains hinzugefügt wurden, aber Subdomains von dieser Domain sind?',
 		'customer_reallyunlock' => 'Wollen Sie den Kunden "%s" wirklich entsperren?',
 		'admin_integritycheck_reallyfix' => 'M&ouml;chten Sie wirklich versuchen s&auml;mtliche Datenbank-Integrit&auml;tsprobleme automatisch zu beheben?',
-		'plan_reallydelete' => 'Wollen Sie den Api-Key wirklich löschen?',
+		'plan_reallydelete' => 'Wollen Sie den Hostingplan %s wirklich löschen?',
+		'apikey_reallydelete' => 'Wollen Sie den Api-Key wirklich löschen?',
+		'dnsentry_reallydelete' => 'Wollen Sie den DNS-Eintrag wirklich löschen?',
 	],
 	'serversettings' => [
 		'session_timeout' => [

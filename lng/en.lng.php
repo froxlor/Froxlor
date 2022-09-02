@@ -1617,6 +1617,7 @@ Yours sincerely, your administrator',
 		'admin_integritycheck_reallyfix' => 'Do you really want to try fixing all database integrity problems automatically?',
 		'plan_reallydelete' => 'Do you really want to delete the hosting plan %s?',
 		'apikey_reallydelete' => 'Do you really want to delete this api-key?',
+		'dnsentry_reallydelete' => 'Do you really want to delete this zone entry?',
 	],
 	'redirect_desc' => [
 		'rc_default' => 'default',

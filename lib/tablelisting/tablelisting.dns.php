@@ -30,6 +30,7 @@ use Froxlor\UI\Listing;
 return [
 	'dns_list' => [
 		'title' => 'DNS Entries',
+		'description' => $domain,
 		'icon' => 'fa-solid fa-globe',
 		'self_overview' => ['section' => 'domains', 'page' => 'domaindnseditor'],
 		'columns' => [

@@ -31,6 +31,7 @@ if (!defined('AREA')) {
 use Froxlor\Api\Commands\DomainZones;
 use Froxlor\Dns\Dns;
 use Froxlor\UI\Collection;
+use Froxlor\UI\HTML;
 use Froxlor\UI\Listing;
 use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
@@ -70,9 +71,22 @@ if ($action == 'add_record' && !empty($_POST)) {
 		$errors = str_replace("\n", "<br>", $e->getMessage());
 	}
 } elseif ($action == 'delete') {
-	// remove entry
 	$entry_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-	if ($entry_id > 0) {
+	HTML::askYesNo('dnsentry_reallydelete', $filename, [
+		'id' => $entry_id,
+		'domain_id' => $domain_id,
+		'page' => $page,
+		'action' => 'deletesure'
+	], '', [
+		'section' => 'domains',
+		'page' => $page,
+		'domain_id' => $domain_id
+	]);
+} elseif ($action == 'deletesure' && !empty($_POST)) {
+	$entry_id = isset($_POST['id']) ? (int)$_POST['id'] : 0;
+	$domain_id = isset($_POST['domain_id']) ? (int)$_POST['domain_id'] : 0;
+	// remove entry
+	if ($entry_id > 0 && $domain_id > 0) {
 		try {
 			DomainZones::getLocal($userinfo, [
 				'entry_id' => $entry_id,
