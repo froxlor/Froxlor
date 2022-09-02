@@ -99,7 +99,7 @@ class PhpSettings extends \Froxlor\Api\ApiCommand implements \Froxlor\Api\Resour
 				}
 
 				// check whether we use that config as froxor-vhost config
-				if (Settings::Get('system.mod_fcgid_defaultini_ownvhost') == $row['id'] || Settings::Get('phpfpm.vhost_defaultini') == $row['id']) {
+				if ((Settings::Get('system.mod_fcgid') == '1' && Settings::Get('system.mod_fcgid_defaultini_ownvhost') == $row['id']) || (Settings::Get('phpfpm.enabled') == '1' && Settings::Get('phpfpm.vhost_defaultini') == $row['id'])) {
 					$domains[] = Settings::Get('system.hostname');
 				}
 

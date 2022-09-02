@@ -1001,3 +1001,8 @@ if (\Froxlor\Froxlor::isFroxlorVersion('0.10.36')) {
 	showUpdateStep("Updating from 0.10.36 to 0.10.37", false);
 	\Froxlor\Froxlor::updateToVersion('0.10.37');
 }
+
+if (\Froxlor\Froxlor::isFroxlorVersion('0.10.37')) {
+        showUpdateStep("Updating from 0.10.37 to 0.10.38", false);
+        \Froxlor\Froxlor::updateToVersion('0.10.38');
+}
