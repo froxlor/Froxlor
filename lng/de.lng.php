@@ -789,7 +789,7 @@ return [
 		'youcantdeleteyourself' => 'Aus Sicherheitsgründen können Sie sich nicht selbst löschen.',
 		'youcanteditallfieldsofyourself' => 'Hinweis: Aus Sicherheitsgründen können Sie nicht alle Felder Ihres eigenen Accounts bearbeiten.',
 		'documentrootexists' => 'Es existiert noch ein Verzeichnis "%s" für diesen Kunden. Bitte löschen Sie dieses vorher.',
-		'formtokencompromised' => 'Das Formular scheint manipuliert worden zu sein. Aus Sicherheitsgründen wurden Sie ausgelogged.',
+		'norepymailiswrong' => 'Die "Noreply-Adresse" ist ungültig. Nur eine valide E-Mail Adresse kann akzeptiert werden.',
 		'logerror' => 'Log-Fehler: "%s"',
 		'nomessagetosend' => 'Keine Nachricht angegeben',
 		'norecipientsgiven' => 'Keine Empfänger angegeben',
@@ -1100,6 +1100,11 @@ Vielen Dank, Ihr Administrator',
 		'mysql_server' => 'MySQL-Server',
 		'database_edit' => 'Datenbank bearbeiten',
 		'size' => 'Datenbankgröße',
+		'privileged_user' => 'Privilegierter Datenbankbenutzer',
+		'privileged_passwd' => 'Passwort für privilegierten Benutzer',
+		'unprivileged_passwd' => 'Passwort für nicht privilegierten Benutzer',
+		'mysql_ssl_ca_file' => 'SSL-Serverzertifikat',
+		'mysql_ssl_verify_server_certificate' => 'Verifizieren des SSL-Serverzertifikats'
 	],
 	'panel' => [
 		'edit' => 'bearbeiten',
@@ -1854,14 +1859,6 @@ Vielen Dank, Ihr Administrator',
 		'letsencryptca' => [
 			'title' => 'ACME Umgebung',
 			'description' => 'Umgebung, welche genutzt wird um Zertifikate zu bestellen.',
-		],
-		'letsencryptcountrycode' => [
-			'title' => 'Let\'s Encrypt Ländercode',
-			'description' => '2 - stelliger Ländercode, welcher benutzt wird um Let\'s Encrypt - Zertifikate zu bestellen.',
-		],
-		'letsencryptstate' => [
-			'title' => 'Let\'s Encrypt Bundesland',
-			'description' => 'Bundesland, welches benutzt wird, um Let\'s Encrypt - Zertifikate zu bestellen.',
 		],
 		'letsencryptchallengepath' => [
 			'title' => 'Verzeichnis für Let\'s Encrypt challenges',
