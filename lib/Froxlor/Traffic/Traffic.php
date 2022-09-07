@@ -32,18 +32,33 @@ class Traffic
 {
 	public static function getCustomerStats($userinfo, $range = null): array
 	{
-		$trafficCollection = (new Collection(\Froxlor\Api\Commands\Traffic::class, $userinfo, self::getParamsByRange($range, ['customer_traffic' => true,])))
-			->has('customer', Customers::class, 'customerid', 'customerid')
-			->get();
+		$trafficCollectionObj = (new Collection(\Froxlor\Api\Commands\Traffic::class, $userinfo, self::getParamsByRange($range, ['customer_traffic' => true,])));
+		if ($userinfo['adminsession'] == 1) {
+			$trafficCollectionObj->has('customer', Customers::class, 'customerid', 'customerid');
+		}
+		$trafficCollection = $trafficCollectionObj->get();
 
 		// build stats for each user
 		$users = [];
+		$years = [];
+		$months = [];
 		foreach ($trafficCollection['data']['list'] as $item) {
+			// per user total
 			$users[$item['customerid']]['loginname'] = $item['customer']['loginname'];
 			$users[$item['customerid']]['total'] += ($item['http'] + $item['ftp_up'] + $item['ftp_down'] + $item['mail']);
 			$users[$item['customerid']]['http'] += $item['http'];
 			$users[$item['customerid']]['ftp'] += ($item['ftp_up'] + $item['ftp_down']);
 			$users[$item['customerid']]['mail'] += $item['mail'];
+			// per year
+			$years[$item['year']]['total']['total'] += ($item['http'] + $item['ftp_up'] + $item['ftp_down'] + $item['mail']);
+			$years[$item['year']]['total']['http'] += $item['http'];
+			$years[$item['year']]['total']['ftp'] += ($item['ftp_up'] + $item['ftp_down']);
+			$years[$item['year']]['total']['mail'] += $item['mail'];
+			// per month
+			$months[$item['year']][$item['month']]['total'] += ($item['http'] + $item['ftp_up'] + $item['ftp_down'] + $item['mail']);
+			$months[$item['year']][$item['month']]['http'] += $item['http'];
+			$months[$item['year']][$item['month']]['ftp'] += ($item['ftp_up'] + $item['ftp_down']);
+			$months[$item['year']][$item['month']]['mail'] += $item['mail'];
 		}
 
 		// calculate overview for given range from users
@@ -58,10 +73,12 @@ class Traffic
 		return [
 			'metrics' => $metrics,
 			'users' => $users,
+			'years' => $years,
+			'months' => $months
 		];
 	}
 
-	private static function getParamsByRange(string $range, array $params = [])
+	private static function getParamsByRange($range = null, array $params = [])
 	{
 		$dateParams = [];
 

@@ -356,6 +356,7 @@ return [
 		'store_defaultindex' => 'Standard-Index-Datei im Kundenordner erstellen',
 		'phpfpm_settings' => 'PHP-FPM',
 		'traffic' => 'Traffic',
+		'traffic_sub' => 'Details der Traffic-Nutzung',
 		'customertraffic' => 'Kunden',
 		'assignedmax' => 'Zugewiesen / Max.',
 		'usedmax' => 'Benutzt / Max.',

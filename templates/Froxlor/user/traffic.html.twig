@@ -4,9 +4,10 @@
 
 	<div>
 		<h5 class="mb-1">
-			<i class="fa fa-chart-area me-1"></i> Traffic
+			<i class="fa fa-chart-area me-1"></i>
+			{{ lng('admin.traffic') }}
 		</h5>
-		<span class="text-muted">View your traffic</span>
+		<span class="text-muted">{{ lng('admin.traffic_sub') }}</span>
 	</div>
 
 {% endblock %}
@@ -29,6 +30,15 @@
 		</select>
 	</div>
 
+	<div class="row row-cols-2 g-0 bg-white rounded shadow-sm mb-4">
+		<div class="col p-3 border-end">
+			<canvas id="trafficsummary" style="max-height:30vh;"></canvas>
+		</div>
+		<div class="col p-3 border-end">
+			<canvas id="customersummary" style="max-height:30vh;"></canvas>
+		</div>
+	</div>
+
 	<!-- Overview for given range -->
 	<div class="row row-cols-4 g-0 bg-white rounded shadow-sm mb-4">
 		<div class="col p-3 border-end">
@@ -49,40 +59,213 @@
 		</div>
 	</div>
 
-	<!-- Overview for given range by user -->
-	<h4 class="page-header">Traffic by customers</h4>
-	{% if users is not empty %}
-		<div class="card table-responsive">
-			<table class="table table-borderless table-striped align-middle mb-0 px-3">
-				<thead>
-				<tr>
-					<th scope="col">{{ lng('login.username') }}</th>
-					<th scope="col">Total</th>
-					<th scope="col">HTTP</th>
-					<th scope="col">FTP</th>
-					<th scope="col">Mail
-					</th>
-				</tr>
-				</thead>
-				<tbody>
-				{% for user in users %}
-				<tr>
-					<td>{{ user.loginname }}</td>
-					<td>{{ user.total|formatBytes }}</td>
-					<td>{{ user.http|formatBytes }}</td>
-					<td>{{ user.ftp|formatBytes }}</td>
-					<td>{{ user.mail|formatBytes }}</td>
-				</tr>
-				{% endfor %}
-				</tbody>
-			</table>
-		</div>
-	{% else %}
-		<div class="card">
-			<div class="card-body">
-				<p>No data for given range found.</p>
+	{% if userinfo.adminsession == 1 %}
+		<!-- Overview for given range by user -->
+		<h4 class="page-header">Traffic by customers</h4>
+		{% if users is not empty %}
+			<div class="card table-responsive">
+				<table class="table table-borderless table-striped align-middle mb-0 px-3">
+					<thead>
+						<tr>
+							<th scope="col">{{ lng('login.username') }}</th>
+							<th scope="col">Total</th>
+							<th scope="col">HTTP</th>
+							<th scope="col">FTP</th>
+							<th scope="col">Mail
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for uid,user in users %}
+							<tr>
+								<td>
+									<a href="{{ linker({'section':'customers','page':'customers','action':'su','id':uid}) }}">{{ user.loginname }}</a>
+								</td>
+								<td>{{ user.total|formatBytes }}</td>
+								<td>{{ user.http|formatBytes }}</td>
+								<td>{{ user.ftp|formatBytes }}</td>
+								<td>{{ user.mail|formatBytes }}</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
 			</div>
-		</div>
+		{% else %}
+			<div class="card">
+				<div class="card-body">
+					<p>No data for given range found.</p>
+				</div>
+			</div>
+		{% endif %}
 	{% endif %}
+
+	<script>
+		const labelsS = ['HTTP', 'FTP', 'Mail'];
+
+		const dataS = {
+			labels: labelsS,
+			datasets: [{
+				label: 'Traffic summary',
+				backgroundColor: ['rgb(255, 99, 132)', 'rgb(200, 199, 132)', 'rgb(255, 99, 0)'],
+				data: [{value: {{ metrics.http }}, formatted: '{{ metrics.http|formatBytes }}'}, {value: {{ metrics.ftp }}, formatted: '{{ metrics.ftp|formatBytes }}'}, {value: {{ metrics.mail }}, formatted: '{{ metrics.mail|formatBytes }}'}]
+			}]
+		};
+
+		const configS = {
+			type: 'pie',
+			data: dataS,
+			options: {
+				parsing: {
+					key: 'value'
+				},
+				responsive: true,
+				plugins: {
+					title: {
+						display: true,
+						text: 'Total traffic'
+					},
+					legend: {
+						position: 'right'
+					},
+					tooltip: {
+						enabled: true,
+						usePointStyle: true,
+						callbacks: {
+							label: (data) => {
+								return data.label + ' ' + data.raw.formatted
+							},
+						},
+					},
+				}
+			}
+		};
+
+		const sChart = new Chart(document.getElementById('trafficsummary'), configS);
+
+		{% if userinfo.adminsession == 1 %}
+			const labelsC = [];
+			const dataValues = [];
+			{% for user in users|sort((a, b) => a.total <=> b.total)|slice(0, 5) %}
+				labelsC.push('{{ user.loginname }}');
+				dataValues.push({value: {{ user.total }}, formatted: '{{ user.total|formatBytes }}'});
+			{% endfor %}
+
+			const dataC = {
+				labels: labelsC,
+				datasets: [{
+					label: 'Top 5 customers',
+					backgroundColor: ['rgb(255, 99, 132)', 'rgb(200, 199, 132)', 'rgb(255, 99, 0)', 'rgb(100, 100, 132)', 'rgb(240, 150, 232)'],
+					data: dataValues
+				}]
+			};
+
+			const configC = {
+				type: 'pie',
+				data: dataC,
+				options: {
+					parsing: {
+						key: 'value'
+					},
+					responsive: true,
+					plugins: {
+						title: {
+							display: true,
+							text: 'Top 5 customers'
+						},
+						legend: {
+							position: 'right'
+						},
+						tooltip: {
+							enabled: true,
+							usePointStyle: true,
+							callbacks: {
+								label: (data) => {
+									return data.label + ' ' + data.raw.formatted
+								},
+							},
+						},
+					}
+				}
+			};
+
+			const cChart = new Chart(document.getElementById('customersummary'), configC);
+
+		{% else %}
+
+			const labelsC = [];
+			const dataValues = [];
+			{% for yr,year in years %}
+				labelsC.push('{{ yr }}');
+				//dataValues.push({value: {{ year.total.total }}, formatted: '{{ year.total.total|formatBytes }}', year: '{{ yr }}'});
+			{% endfor %}
+
+			const dataC = {
+				labels: labelsC,
+				datasets: [
+					{
+					label: 'HTTP traffic',
+					backgroundColor: 'rgb(255, 99, 132)',
+					data: [{% for yr,year in years %}{value: {{ year.total.http }}, formatted: '{{ year.total.http|formatBytes }}', year: '{{ yr }}'},{% endfor %}],
+					parsing: {
+						xAxisKey: 'year'
+					}
+				},
+				{
+					label: 'FTP traffic',
+					backgroundColor: 'rgb(200, 199, 132)',
+					data: [{% for yr,year in years %}{value: {{ year.total.ftp }}, formatted: '{{ year.total.ftp|formatBytes }}', year: '{{ yr }}'},{% endfor %}],
+					parsing: {
+						xAxisKey: 'year'
+					}
+				},
+				{
+					label: 'Mail traffic',
+					backgroundColor: 'rgb(255, 99, 0)',
+					data: [{% for yr,year in years %}{value: {{ year.total.mail }}, formatted: '{{ year.total.mail|formatBytes }}', year: '{{ yr }}'},{% endfor %}],
+					parsing: {
+						xAxisKey: 'year'
+					}
+				},
+				]
+			};
+
+			const configC = {
+				type: 'bar',
+				data: dataC,
+				options: {
+					parsing: {
+						yAxisKey: 'value'
+					},
+					responsive: true,
+					scales: {
+						x: {
+							stacked: true,
+						},
+						y: {
+							stacked: true
+						}
+					},
+					plugins: {
+						title: {
+							display: true,
+							text: 'All-time by year'
+						},
+						tooltip: {
+							enabled: true,
+							usePointStyle: true,
+							callbacks: {
+								label: (data) => {
+									return data.raw.formatted
+								},
+							},
+						},
+					}
+				}
+			};
+
+			const cChart = new Chart(document.getElementById('customersummary'), configC);
+
+		{% endif %}
+	</script>
 
 {% endblock %}

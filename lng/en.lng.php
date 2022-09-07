@@ -358,6 +358,7 @@ return [
 		'store_defaultindex' => 'Store default index-file to customers docroot',
 		'phpfpm_settings' => 'PHP-FPM',
 		'traffic' => 'Traffic',
+		'traffic_sub' => 'Details on traffic usage',
 		'domaintraffic' => 'Domains',
 		'customertraffic' => 'Customers',
 		'assignedmax' => 'Assigned / Max',

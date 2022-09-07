@@ -26,7 +26,7 @@
 const AREA = 'customer';
 require __DIR__ . '/lib/init.php';
 
-use Froxlor\Database\Database;
+use Froxlor\Traffic\Traffic;
 use Froxlor\Settings;
 use Froxlor\UI\Panel\UI;
 use Froxlor\UI\Request;
@@ -37,13 +37,19 @@ if (Settings::IsInList('panel.customer_hide_options', 'traffic')) {
 	Response::redirectTo('customer_index.php');
 }
 
+$range = Request::get('range', 'days:30');
+
 if ($page === null || $page == 'overview') {
 
 } elseif ($page == 'current') {
 
 }
 
-UI::view('user/traffic.html.twig', [
-	'metrics' => \Froxlor\Traffic\Traffic::getCustomerMetrics($userinfo),
-	'chart' => \Froxlor\Traffic\Traffic::getCustomerChart($userinfo, 30),
-]);
+try {
+	$context = Traffic::getCustomerStats($userinfo, $range);
+} catch (Exception $e) {
+	Response::dynamicError($e->getMessage());
+}
+
+// pass metrics to the view
+UI::view('user/traffic.html.twig', $context);
