@@ -59,7 +59,7 @@ return [
 					'varname' => 'awstats_path',
 					'type' => 'text',
 					'string_type' => 'dir',
-					'default' => '/usr/bin/',
+					'default' => '/usr/share/awstats/tools/',
 					'save_method' => 'storeSettingField',
 					'visible' => Settings::Get('system.awstats_enabled') == 1
 				],
@@ -69,7 +69,7 @@ return [
 					'varname' => 'awstats_awstatspath',
 					'type' => 'text',
 					'string_type' => 'dir',
-					'default' => '/usr/bin/',
+					'default' => '/usr/lib/cgi-bin/',
 					'save_method' => 'storeSettingField',
 					'visible' => Settings::Get('system.awstats_enabled') == 1
 				],

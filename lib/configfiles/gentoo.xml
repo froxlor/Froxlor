@@ -5,6 +5,8 @@
 		<!-- OS defaults to be loaded on installation -->
 		<defaults>
 			<default settinggroup="system" varname="nssextrausers" value="1"></default>
+			<default settinggroup="system" varname="awstats_path" value="/usr/bin/"></default>
+			<default settinggroup="system" varname="awstats_awstatspath" value="/usr/share/awstats/wwwroot/cgi-bin/"></default>
 			<default for="apache24" settinggroup="system" varname="apacheconf_vhost" value="/etc/apache2/vhosts.d/"></default>
 			<default for="apache24" settinggroup="system" varname="apacheconf_diroptions" value="/etc/apache2/vhosts.d/"></default>
 			<default for="apache24" settinggroup="system" varname="apacheconf_htpasswddir" value="/etc/apache2/froxlor-htpasswd/"></default>
