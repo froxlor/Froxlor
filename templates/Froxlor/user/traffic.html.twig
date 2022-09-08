@@ -17,16 +17,20 @@
 	<!-- Range -->
 	<!-- TODO: set url on change. e.g.: ?param=days:7 -->
 	<div class="d-flex justify-content-end">
-		<select class="form-select mb-4 w-auto mt-n4" aria-label="select the traffic range" name="range">
-			<option value="hours:24">last 24 hours</option>
-			<option value="days:7">last 7 days</option>
-			<option value="days:30">last 30 days</option>
-			<option value="months:3">last 3 months</option>
-			<option value="months:6">last 6 months</option>
-			<option value="months:12">last 12 months</option>
-			<option value="year:2022">2022</option>
-			<option value="year:2021">2021</option>
-			<option value="year:2020">2020</option>
+		<select class="form-select mb-4 w-auto mt-n4" aria-label="select the traffic range" name="range" data-baseref="{{ linker({'section':'traffic'}) }}">
+			<option value="hours:24" {% if range == 'hours:24' %}selected{% endif %}>last 24 hours</option>
+			<option value="days:7" {% if range == 'days:7' %}selected{% endif %}>last 7 days</option>
+			<option value="days:30" {% if range == 'days:30' %}selected{% endif %}>last 30 days</option>
+			<option value="currentmonth" {% if range == 'currentmonth' %}selected{% endif %}>current month</option>
+			<option value="months:3" {% if range == 'months:3' %}selected{% endif %}>last 3 months</option>
+			<option value="months:6" {% if range == 'months:6' %}selected{% endif %}>last 6 months</option>
+			<option value="months:12" {% if range == 'months:12' %}selected{% endif %}>last 12 months</option>
+			<option value="currentyear" {% if range == 'currentyear' %}selected{% endif %}>current year</option>
+			{% for yd in years_avail %}
+				{% if yd.year != "now"|date('Y') %}
+					<option value="year:{{ yd.year }}" {% if range == 'year:' ~ yd.year %}selected{% endif %}>{{ yd.year }}</option>
+				{% endif %}
+			{% endfor %}
 		</select>
 	</div>
 

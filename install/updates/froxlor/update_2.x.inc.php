@@ -37,11 +37,11 @@ if (!defined('_CRON_UPDATE')) {
 }
 
 // last 0.10.x release
-if (Froxlor::isFroxlorVersion('0.10.99')) {
+if (Froxlor::isFroxlorVersion('0.10.38')) {
 
 	$update_to = '2.0.0-beta1';
 
-	Update::showUpdateStep("Updating from 0.10.99 to ".$update_to, false);
+	Update::showUpdateStep("Updating from 0.10.38 to ".$update_to, false);
 
 	Update::showUpdateStep("Removing unused table");
 	Database::query("DROP TABLE IF EXISTS `panel_sessions`;");

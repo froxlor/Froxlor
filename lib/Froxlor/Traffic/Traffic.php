@@ -25,14 +25,16 @@
 
 namespace Froxlor\Traffic;
 
+use Froxlor\Database\Database;
 use Froxlor\Api\Commands\Customers;
 use Froxlor\UI\Collection;
+use Froxlor\Api\Commands\Traffic as TrafficAPI;
 
 class Traffic
 {
 	public static function getCustomerStats($userinfo, $range = null): array
 	{
-		$trafficCollectionObj = (new Collection(\Froxlor\Api\Commands\Traffic::class, $userinfo, self::getParamsByRange($range, ['customer_traffic' => true,])));
+		$trafficCollectionObj = (new Collection(TrafficAPI::class, $userinfo, self::getParamsByRange($range, ['customer_traffic' => true,])));
 		if ($userinfo['adminsession'] == 1) {
 			$trafficCollectionObj->has('customer', Customers::class, 'customerid', 'customerid');
 		}
@@ -70,11 +72,18 @@ class Traffic
 			$metrics['mail'] += $user['mail'];
 		}
 
+		// get all possible years for filter
+		$sel_stmt = Database::prepare("SELECT DISTINCT year FROM `".TABLE_PANEL_TRAFFIC."` WHERE 1 ORDER BY `year` DESC");
+		Database::pexecute($sel_stmt);
+		$years_avail = $sel_stmt->fetchAll(\PDO::FETCH_ASSOC);
+
 		return [
 			'metrics' => $metrics,
 			'users' => $users,
 			'years' => $years,
-			'months' => $months
+			'months' => $months,
+			'range' => $range,
+			'years_avail' => $years_avail
 		];
 	}
 
@@ -85,33 +94,27 @@ class Traffic
 		if (preg_match("/year:([0-9]{4})/", $range, $matches)) {
 			$dateParams = ['year' => $matches[1]];
 		}
-
-		// TODO: get params by range: hours:x, days:x, months:x
-
-		return array_merge($dateParams, $params);
-	}
-
-	public static function getCustomerChart($userinfo, $range = 30): array
-	{
-		// FIXME: this is currently an example for the chart
-
-		$data = [];
-
-		for ($i = 0; $i < $range; $i++) {
-			$data['labels'][] = date("d.m", strtotime('-' . $i . ' days'));
-
-			// put data for given date
-			$data['http'][] = 0;
-			$data['ftp'][] = 0;
-			$data['mail'][] = 0;
+		elseif (preg_match("/months:([1-9]([0-9]+)?)/", $range, $matches)) {
+			$dt = (new \DateTime())->sub(new \DateInterval('P'.$matches[1].'M'))->format('U');
+			$dateParams = ['date_from' => $dt];
+		}
+		elseif (preg_match("/days:([1-9]([0-9]+)?)/", $range, $matches)) {
+			$dt = (new \DateTime())->sub(new \DateInterval('P'.$matches[1].'D'))->format('U');
+			$dateParams = ['date_from' => $dt];
+		}
+		elseif (preg_match("/hours:([1-9]([0-9]+)?)/", $range, $matches)) {
+			$dt = (new \DateTime())->sub(new \DateInterval('PT'.$matches[1].'H'))->format('U');
+			$dateParams = ['date_from' => $dt];
+		}
+		elseif (preg_match("/currentmonth/", $range, $matches)) {
+			$dt = (new \DateTime("first day of this month"))->setTime(0,0,0,1)->format('U');
+			$dateParams = ['date_from' => $dt];
+		}
+		elseif (preg_match("/currentyear/", $range, $matches)) {
+			$dt = \DateTime::createFromFormat("d.m.Y", '01.01.'.date('Y'))->setTime(0,0,0,1)->format('U');
+			$dateParams = ['date_from' => $dt];
 		}
 
-		return [
-			'labels' => array_reverse($data['labels']),
-			'http' => array_reverse($data['http']),
-			'ftp' => array_reverse($data['ftp']),
-			'mail' => array_reverse($data['mail']),
-			'range' => $range,
-		];
+		return array_merge($dateParams, $params);
 	}
 }

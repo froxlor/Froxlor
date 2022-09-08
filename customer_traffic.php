@@ -37,12 +37,10 @@ if (Settings::IsInList('panel.customer_hide_options', 'traffic')) {
 	Response::redirectTo('customer_index.php');
 }
 
-$range = Request::get('range', 'days:30');
+$range = Request::get('range', 'currentyear');
 
-if ($page === null || $page == 'overview') {
-
-} elseif ($page == 'current') {
-
+if ($page == 'current') {
+	$range = 'currentmonth';
 }
 
 try {
