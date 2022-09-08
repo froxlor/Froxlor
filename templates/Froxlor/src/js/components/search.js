@@ -16,7 +16,7 @@ $(function() {
 		}
 		// Show notification for short search query
 		if (query.length && query.length < 3) {
-			dropdown.html('<li class="list-group-item text-muted">Please enter more than 2 characters</li>');
+			dropdown.html('<li class="list-group-item text-muted py-1">Please enter more than 2 characters</li>');
 			dropdown.parent().show();
 			return;
 		}
@@ -31,7 +31,7 @@ $(function() {
 			success: data => {
 				// Show notification if we got no results
 				if (Object.keys(data).length === 0) {
-					dropdown.html('<li class="list-group-item text-muted">Nothing found!</li>');
+					dropdown.html('<li class="list-group-item text-muted py-1">Nothing found!</li>');
 					dropdown.parent().show();
 					return;
 				}
@@ -40,15 +40,15 @@ $(function() {
 				dropdown.html('');
 				dropdown.parent().show();
 				Object.keys(data).forEach(key => {
-					dropdown.append('<li class="list-group-item text-muted text-capitalize">' + key + '</li>');
+					dropdown.append('<li class="list-group-item text-muted text-capitalize fw-bold py-1 border-bottom">' + key + '</li>');
 					data[key].forEach(item => {
-						dropdown.append('<li class="list-group-item"><a href="' + item.href + '" class="text-decoration-none">' + item.title + '</a></li>');
+						dropdown.append('<li class="list-group-item mt-1"><a href="' + item.href + '" class="text-decoration-none">' + item.title + '</a></li>');
 					});
 				});
 			},
 			error: function (a, b) {
 				console.log(a, b);
-				dropdown.html('<li class="list-group-item text-muted">Whoops we got some errors!</li>');
+				dropdown.html('<li class="list-group-item text-muted py-1">Whoops we got some errors!</li>');
 				dropdown.parent().show();
 			}
 		});

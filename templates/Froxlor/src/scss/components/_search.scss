@@ -24,7 +24,7 @@
 
 		.search-results {
 			width: 100%; /** same as .search-results-box **/
-			max-height: calc(50vh - 2px); /** same as .search-results-box - border (top/bottom) **/
+			max-height: calc(50vh - 1.25em); /** same as .search-results-box - border (top/bottom) **/
 			overflow: auto;
 			border-radius: $border-radius;
 		}
